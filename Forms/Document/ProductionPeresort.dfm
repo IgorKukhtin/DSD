@@ -1,27 +1,26 @@
 inherited ProductionPeresortForm: TProductionPeresortForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1055#1077#1088#1077#1089#1086#1088#1090#1080#1094#1072'>'
-  ClientHeight = 674
+  ClientHeight = 627
   ClientWidth = 1128
-  ExplicitLeft = -271
   ExplicitWidth = 1144
-  ExplicitHeight = 712
+  ExplicitHeight = 662
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 126
     Width = 1128
-    Height = 548
+    Height = 501
     ExplicitTop = 126
     ExplicitWidth = 1128
     ExplicitHeight = 548
-    ClientRectBottom = 548
+    ClientRectBottom = 501
     ClientRectRight = 1128
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 1128
       ExplicitHeight = 524
       inherited cxGrid: TcxGrid
         Width = 1128
-        Height = 524
+        Height = 477
         ExplicitWidth = 1128
         ExplicitHeight = 524
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -104,6 +103,7 @@ inherited ProductionPeresortForm: TProductionPeresortForm
             DataBinding.FieldName = 'GoodsGroupNameFull'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 100
           end
           object colCode: TcxGridDBColumn [1]
@@ -142,6 +142,7 @@ inherited ProductionPeresortForm: TProductionPeresortForm
             DataBinding.FieldName = 'MeasureName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 59
           end
           object colPartionGoods: TcxGridDBColumn [5]
@@ -163,8 +164,10 @@ inherited ProductionPeresortForm: TProductionPeresortForm
           object colGoodsChildGroupNameFull: TcxGridDBColumn [7]
             Caption = #1043#1088#1091#1087#1087#1072' ('#1074#1089#1077') ('#1088#1072#1089#1093#1086#1076')'
             DataBinding.FieldName = 'GoodsChildGroupNameFull'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 100
           end
           object colGoodsChildCode: TcxGridDBColumn [8]
@@ -193,6 +196,7 @@ inherited ProductionPeresortForm: TProductionPeresortForm
           object clMeasureChildName: TcxGridDBColumn [10]
             Caption = #1045#1076'. '#1080#1079#1084'. ('#1088#1072#1089#1093#1086#1076')'
             DataBinding.FieldName = 'MeasureChildName'
+            Options.Editing = False
             Width = 59
           end
           object colGoodsKindChildName: TcxGridDBColumn [11]

@@ -1,25 +1,26 @@
 inherited Sale_PartnerForm: TSale_PartnerForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1055#1088#1086#1076#1072#1078#1072' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1102'>'
   ClientHeight = 668
-  ClientWidth = 1020
-  ExplicitWidth = 1036
-  ExplicitHeight = 703
+  ClientWidth = 1355
+  ExplicitLeft = -269
+  ExplicitWidth = 1371
+  ExplicitHeight = 706
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 126
-    Width = 1020
+    Width = 1355
     Height = 542
     ExplicitTop = 126
     ExplicitWidth = 1020
     ExplicitHeight = 542
     ClientRectBottom = 542
-    ClientRectRight = 1020
+    ClientRectRight = 1355
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 1020
       ExplicitHeight = 518
       inherited cxGrid: TcxGrid
-        Width = 1020
+        Width = 1355
         Height = 518
         ExplicitWidth = 1020
         ExplicitHeight = 518
@@ -286,7 +287,7 @@ inherited Sale_PartnerForm: TSale_PartnerForm
     end
   end
   inherited DataPanel: TPanel
-    Width = 1020
+    Width = 1355
     Height = 100
     TabOrder = 3
     ExplicitWidth = 1020
@@ -575,8 +576,8 @@ inherited Sale_PartnerForm: TSale_PartnerForm
       Caption = #1050#1091#1088#1089
     end
     object edCurrencyPartner: TcxButtonEdit
-      Left = 1072
-      Top = 23
+      Left = 1075
+      Top = 18
       Properties.Buttons = <
         item
           Default = True
@@ -1604,6 +1605,12 @@ inherited Sale_PartnerForm: TSale_PartnerForm
         Value = Null
         DataType = ftString
         ParamType = ptInput
+      end
+      item
+        Name = 'inChangePercentAmount'
+        Value = Null
+        DataType = ftFloat
+        ParamType = ptInput
       end>
     Left = 32
     Top = 304
@@ -1633,6 +1640,14 @@ inherited Sale_PartnerForm: TSale_PartnerForm
         Component = FormParams
         ComponentItem = 'inOperDate'
         DataType = ftDateTime
+        ParamType = ptInput
+      end
+      item
+        Name = 'inChangePercentAmount'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'inChangePercentAmount'
+        DataType = ftFloat
         ParamType = ptInput
       end
       item
@@ -2589,7 +2604,8 @@ inherited Sale_PartnerForm: TSale_PartnerForm
         DataType = ftString
         ParamType = ptInput
       end>
-    Left = 808
+    Left = 832
+    Top = 8
   end
   object ContractGuides: TdsdGuides
     KeyField = 'Id'
@@ -2907,7 +2923,8 @@ inherited Sale_PartnerForm: TSale_PartnerForm
         Component = CurrencyDocumentGuides
         ComponentItem = 'Key'
       end>
-    Left = 1080
+    Left = 1128
+    Top = 8
   end
   object CurrencyDocumentGuides: TdsdGuides
     KeyField = 'Id'
@@ -2959,8 +2976,8 @@ inherited Sale_PartnerForm: TSale_PartnerForm
         DataType = ftString
         ParamType = ptInput
       end>
-    Left = 987
-    Top = 12
+    Left = 995
+    Top = 4
   end
   object spSelectPrint_ExpPack: TdsdStoredProc
     StoredProcName = 'gpSelect_Movement_Sale_ExpPack_Print'

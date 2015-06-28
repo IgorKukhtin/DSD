@@ -132,6 +132,8 @@ type
     clInfoMoneyDestinationNameChild: TcxGridDBColumn;
     clInfoMoneyNameChild: TcxGridDBColumn;
     clValueWeight_calc: TcxGridDBColumn;
+    clTaxLoss: TcxGridDBColumn;
+    ValueWeight: TcxGridDBColumn;
   private
     { Private declarations }
   public

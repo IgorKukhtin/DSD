@@ -77,6 +77,34 @@ BEGIN
         		        		   
    WHERE Object_Route.DescId = zc_Object_Route()
      AND (tmpRoleAccessKey.AccessKeyId IS NOT NULL OR vbAccessKeyAll)
+
+      UNION ALL
+       SELECT 
+             0 AS Id
+           , NULL :: Integer AS Code
+           , '”ƒ¿À»“‹' :: TVarChar AS Name
+
+           , 0 AS UnitId 
+           , 0 AS UnitCode
+           , '' :: TVarChar AS UnitName
+
+           , 0 AS BranchId 
+           , 0 AS BranchCode
+           , '' :: TVarChar AS BranchName
+
+           , 0 AS RouteKindId 
+           , 0 AS RouteKindCode
+           , '' :: TVarChar AS RouteKindName
+
+           , 0 AS FreightId 
+           , 0 AS FreightCode
+           , '' :: TVarChar AS FreightName
+  
+           , 0 AS RouteGroupId 
+           , 0 AS RouteGroupCode
+           , '' :: TVarChar AS RouteGroupName       
+
+           , FALSE AS isErased
   ;
   
 END;

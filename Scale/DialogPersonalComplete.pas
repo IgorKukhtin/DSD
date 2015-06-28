@@ -88,7 +88,9 @@ uses UtilScale,DMMainScale,GuidePersonal;
 {------------------------------------------------------------------------}
 function TDialogPersonalCompleteForm.Execute(var execParamsPersonalComplete:TParams): Boolean; //Проверка корректного ввода в Edit
 begin
-     if execParamsPersonalComplete.ParamByName('MovementDescId').AsInteger<>zc_Movement_Sale
+     if (execParamsPersonalComplete.ParamByName('MovementDescId').AsInteger<>zc_Movement_Sale)
+        and(execParamsPersonalComplete.ParamByName('MovementDescId').AsInteger<>zc_Movement_Loss)
+        and(execParamsPersonalComplete.ParamByName('MovementDescId').AsInteger<>zc_Movement_SendOnPrice)
      then begin
                Result:=false;
                exit;

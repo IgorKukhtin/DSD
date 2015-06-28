@@ -1,11 +1,9 @@
 -- Function: gpComplete_Movement_OrderInternal()
 
 DROP FUNCTION IF EXISTS gpComplete_Movement_OrderInternal (Integer, TVarChar);
-DROP FUNCTION IF EXISTS gpComplete_Movement_OrderInternal (Integer, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpComplete_Movement_OrderInternal(
     IN inMovementId        Integer              , -- ключ Документа
-    IN inIsLastComplete    Boolean DEFAULT False, -- это последнее проведение после расчета с/с (для прихода параметр !!!не обрабатывается!!!)
     IN inSession           TVarChar DEFAULT ''     -- сессия пользователя
 )
 RETURNS VOID
@@ -16,6 +14,11 @@ BEGIN
      -- проверка прав пользователя на вызов процедуры
      vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Complete_OrderInternal());
 
+     -- ФИНИШ - Обязательно меняем статус документа + сохранили протокол
+     PERFORM lpComplete_Movement (inMovementId := inMovementId
+                                , inDescId     := zc_Movement_OrderInternal()
+                                , inUserId     := vbUserId
+                                 );
 
 END;
 $BODY$
@@ -24,6 +27,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 26.06.15                                        *
 */
 
 -- тест

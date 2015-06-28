@@ -43,7 +43,7 @@ BEGIN
     ;
 
     -- очень важная проверка
-    IF COALESCE (vbStatusId, 0) <> zc_Enum_Status_Complete()
+    IF COALESCE (vbStatusId, 0) = zc_Enum_Status_Erased()
     THEN
         IF vbStatusId = zc_Enum_Status_Erased()
         THEN
@@ -62,17 +62,46 @@ BEGIN
      --
     OPEN Cursor1 FOR
     
-  WITH  tmpMIMaster AS (SELECT  Max(MovementItem.ObjectId)        AS GoodsId
-                              , sum(MovementItem.amount)          AS Count
-                              , SUM (MIFloat_HeadCount.ValueData) AS HeadCount          
-                        FROM MovementItem 
-                           LEFT JOIN MovementItemFloat AS MIFloat_HeadCount
-                                                       ON MIFloat_HeadCount.MovementItemId = MovementItem.Id
-                                                      AND MIFloat_HeadCount.DescId = zc_MIFloat_HeadCount()
-                        WHERE MovementItem.MovementId = inMovementId
-                          AND MovementItem.DescId     = zc_MI_Master()
-                          AND MovementItem.isErased   = False
+    WITH tmpMIMaster AS (SELECT MAX (MovementItem.ObjectId)                     AS GoodsId
+                              , SUM (MovementItem.Amount)                       AS Count
+                              , SUM (COALESCE (MIFloat_HeadCount.ValueData, 0)) AS HeadCount          
+                         FROM MovementItem 
+                              LEFT JOIN MovementItemFloat AS MIFloat_HeadCount
+                                                          ON MIFloat_HeadCount.MovementItemId = MovementItem.Id
+                                                         AND MIFloat_HeadCount.DescId = zc_MIFloat_HeadCount()
+                         WHERE MovementItem.MovementId = inMovementId
+                           AND MovementItem.DescId     = zc_MI_Master()
+                           AND MovementItem.isErased   = FALSE
                         )
+       , tmpMIChild AS (SELECT SUM (MovementItem.Amount)  AS Count_Child
+                        FROM MovementItem 
+                        WHERE MovementItem.MovementId = inMovementId
+                          AND MovementItem.DescId     = zc_MI_Child()
+                          AND MovementItem.isErased   = FALSE
+                       )
+       , tmpMovementWeighing AS (SELECT Movement.Id AS MovementId
+                                      , MFloat_WeighingNumber.ValueData AS WeighingNumber 
+                                 FROM Movement
+                                      LEFT JOIN MovementFloat AS MFloat_WeighingNumber
+                                                              ON MFloat_WeighingNumber.MovementId = Movement.Id
+                                                             AND MFloat_WeighingNumber.DescId = zc_MovementFloat_WeighingNumber()
+                                 WHERE Movement.ParentId = inMovementId
+                                   AND Movement.StatusId = zc_Enum_Status_Complete()
+                                ) 
+      , tmpMIWeighing AS (SELECT CASE WHEN inMovementId_Weighing > 0 THEN tmpMovementWeighing.WeighingNumber ELSE 0 END AS WeighingNumber
+                               , SUM (MovementItem.Amount) AS Count
+                          FROM tmpMovementWeighing
+                              LEFT JOIN MovementBoolean AS MovementBoolean_isIncome
+                                      ON MovementBoolean_isIncome.MovementId = tmpMovementWeighing.MovementId
+                                     AND MovementBoolean_isIncome.DescId = zc_MovementBoolean_isIncome()
+                                     --AND MovementBoolean_isIncome.ValueData = FALSE
+                              LEFT JOIN MovementItem ON MovementItem.MovementId = tmpMovementWeighing.MovementId
+                                                     AND MovementItem.isErased  = FALSE
+                                                     AND MovementBoolean_isIncome.ValueData = FALSE
+                          WHERE tmpMovementWeighing.MovementId = inMovementId_Weighing 
+                             OR COALESCE (inMovementId_Weighing, 0) = 0 
+                          GROUP BY CASE WHEN inMovementId_Weighing > 0 THEN tmpMovementWeighing.WeighingNumber ELSE 0 END
+                          ) 
 
         SELECT
            Movement.InvNumber                 AS InvNumber
@@ -87,16 +116,14 @@ BEGIN
          , Object_Goods.ValueData                 AS GoodsName
          , tmpMIMaster.Count 
          , tmpMIMaster.HeadCount 
+         , CASE WHEN tmpMIMaster.Count <> 0 THEN tmpMIChild.Count_Child / tmpMIMaster.Count ELSE 0 END :: TFloat AS PersentVyhod
+         , tmpCount.Count :: TFloat       AS TotalNumber
+         , tmpMIWeighing.WeighingNumber   AS WeighingNumber
+         , tmpMIWeighing.Count ::  TFloat AS CountWeighing
      FROM Movement 
-        
-          LEFT JOIN MovementFloat AS MovementFloat_TotalCount
-                                  ON MovementFloat_TotalCount.MovementId =  Movement.Id
-                                 AND MovementFloat_TotalCount.DescId = zc_MovementFloat_TotalCount()
-
-          LEFT JOIN MovementFloat AS MovementFloat_TotalCountChild
-                                  ON MovementFloat_TotalCountChild.MovementId =  Movement.Id
-                                 AND MovementFloat_TotalCountChild.DescId = zc_MovementFloat_TotalCountChild()
-
+          LEFT JOIN (SELECT COUNT(*) AS Count from tmpMovementWeighing) AS tmpCount ON 1 = 1
+          LEFT JOIN  tmpMIWeighing ON 1 = 1
+         
           LEFT JOIN MovementString AS MovementString_PartionGoods
                                    ON MovementString_PartionGoods.MovementId =  Movement.Id
                                   AND MovementString_PartionGoods.DescId = zc_MovementString_PartionGoods()
@@ -111,29 +138,46 @@ BEGIN
                                       AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
           LEFT JOIN Object AS Object_To ON Object_To.Id = MovementLinkObject_To.ObjectId
 
-          LEFT JOIN tmpMIMaster on 1=1
+          LEFT JOIN tmpMIMaster ON 1 = 1
           LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = tmpMIMaster.GoodsId
+          LEFT JOIN tmpMIChild ON 1 = 1
 
        WHERE Movement.Id = inMovementId
-         AND Movement.StatusId = zc_Enum_Status_Complete()
-       
+         AND Movement.StatusId <> zc_Enum_Status_Erased()
       ;
 
+
     RETURN NEXT Cursor1;
-
-
     OPEN Cursor2 FOR
 
-                 
-      SELECT Object_Goods.ObjectCode  			 AS GoodsCode
+   With   tmpWeighing AS (SELECT MovementItem.ObjectId AS GoodsId 
+                                ,SUM (MovementItem.Amount) AS Count
+                          FROM  (SELECT Movement.Id AS MovementId
+                                 FROM Movement
+                                 WHERE Movement.ParentId = inMovementId
+                                   AND Movement.StatusId = zc_Enum_Status_Complete()
+                                 ) AS tmp
+                              INNER JOIN MovementBoolean AS MovementBoolean_isIncome
+                                      ON MovementBoolean_isIncome.MovementId = tmp.MovementId
+                                     AND MovementBoolean_isIncome.DescId = zc_MovementBoolean_isIncome()
+                                     AND MovementBoolean_isIncome.ValueData = TRUE
+                              INNER JOIN MovementItem ON MovementItem.MovementId = tmp.MovementId
+                                                     AND MovementItem.isErased   = FALSE
+                          WHERE tmp.MovementId = inMovementId_Weighing  
+                             OR COALESCE (inMovementId_Weighing, 0) = 0 
+                          GROUP BY MovementItem.ObjectId
+                          ) 
+
+       SELECT Object_Goods.ObjectCode  			 AS GoodsCode
            , Object_Goods.ValueData   			 AS GoodsName
            , ObjectString_Goods_GoodsGroupFull.ValueData AS GoodsGroupNameFull
            , Object_Measure.ValueData                    AS MeasureName
-
+           , SUM (CASE WHEN Object_Measure.Id = zc_Measure_Sh() THEN (MovementItem.Amount) ELSE 0 END) ::TFloat  AS Amount_Sh
+           , SUM (MovementItem.Amount * (CASE WHEN Object_Measure.Id = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END) )  ::TFloat  AS Amount_Weight
            , SUM (MovementItem.Amount)::TFloat		 AS Amount
            , SUM (MIFloat_LiveWeight.ValueData)::TFloat  AS LiveWeight
            , SUM (MIFloat_HeadCount.ValueData)::TFloat	 AS HeadCount
-
+           , SUM (tmpWeighing.Count)::TFloat	         AS WeighingCount 
      
        FROM MovementItem
                       
@@ -154,17 +198,27 @@ BEGIN
                                  ON ObjectLink_Goods_Measure.ObjectId = MovementItem.ObjectId 
                                 AND ObjectLink_Goods_Measure.DescId = zc_ObjectLink_Goods_Measure()
             LEFT JOIN Object AS Object_Measure ON Object_Measure.Id = ObjectLink_Goods_Measure.ChildObjectId
-                                           
-            where MovementItem.MovementId = inMovementId
-                             AND MovementItem.DescId     = zc_MI_Child()
-                             AND MovementItem.isErased   = false
+     
+            LEFT JOIN ObjectFloat AS ObjectFloat_Weight	
+                                  ON ObjectFloat_Weight.ObjectId = Object_Goods.Id 
+                                 AND ObjectFloat_Weight.DescId = zc_ObjectFloat_Goods_Weight()
+                                 
+            LEFT JOIN tmpWeighing ON tmpWeighing.GoodsId = MovementItem.ObjectId
+                              
+        WHERE MovementItem.MovementId = inMovementId
+          AND MovementItem.DescId     = zc_MI_Child()
+          AND MovementItem.isErased   = FALSE
+          AND MovementItem.Amount <> 0
 
             GROUP BY Object_Goods.ObjectCode
            , Object_Goods.ValueData
            , ObjectString_Goods_GoodsGroupFull.ValueData
            , Object_Measure.ValueData
+           , Object_Measure.Id 
+           , tmpWeighing.GoodsId
           
       ;
+      
 
     RETURN NEXT Cursor2;
 
@@ -179,4 +233,4 @@ ALTER FUNCTION gpSelect_Movement_ProductionSeparate_Ceh_Print (Integer,Integer, 
  15.06.15         *
 */
 -- тест
--- SELECT * FROM gpSelect_Movement_ProductionSeparate_Ceh_Print (inMovementId := 597300, inSession:= zfCalc_UserAdmin());
+-- SELECT * FROM gpSelect_Movement_ProductionSeparate_Ceh_Print (inMovementId := 597300, inMovementId_Weighing:= 0, inSession:= zfCalc_UserAdmin());

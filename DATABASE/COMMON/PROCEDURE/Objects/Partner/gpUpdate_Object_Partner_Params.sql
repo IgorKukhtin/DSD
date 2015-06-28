@@ -1,10 +1,12 @@
 -- Function: gpUpdate_Object_Partner_Params()
 
 DROP FUNCTION IF EXISTS gpUpdate_Object_Partner_Params (Integer, Integer, Integer, Integer, Integer, Integer, Integer, TFloat, TFloat, TVarChar);
+DROP FUNCTION IF EXISTS gpUpdate_Object_Partner_Params (Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TFloat, TFloat, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpUpdate_Object_Partner_Params(
  INOUT ioId                  Integer   ,    -- ключ объекта <Контрагент> 
     IN inRouteId             Integer   ,    -- 
+    IN inRouteId_30201       Integer   ,    -- 
     IN inRouteSortingId      Integer   ,    -- 
     IN inMemberId            Integer   ,    -- 
     IN inPersonalId          Integer   ,    -- Сотрудник (супервайзер)
@@ -33,6 +35,8 @@ BEGIN
        -- сохранили связь с <>
        PERFORM lpInsertUpdate_ObjectLink( zc_ObjectLink_Partner_Route(), ioId, inRouteId);
        -- сохранили связь с <>
+       PERFORM lpInsertUpdate_ObjectLink( zc_ObjectLink_Partner_Route30201(), ioId, inRouteId_30201);
+       -- сохранили связь с <>
        PERFORM lpInsertUpdate_ObjectLink( zc_ObjectLink_Partner_RouteSorting(), ioId, inRouteSortingId);
        -- сохранили связь с <>
        PERFORM lpInsertUpdate_ObjectLink( zc_ObjectLink_Partner_MemberTake(), ioId, inMemberId);
@@ -57,6 +61,7 @@ $BODY$
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 26.06.15                                        * add inRouteId_30201
  22.06.15                                        * all
  16.03.15                                        * all
  27.10.14                                        *

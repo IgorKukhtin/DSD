@@ -4,7 +4,7 @@ inherited SaleForm: TSaleForm
   ClientWidth = 1020
   AddOnFormData.OnLoadAction = actSetDefaults
   ExplicitWidth = 1036
-  ExplicitHeight = 703
+  ExplicitHeight = 706
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -1795,6 +1795,12 @@ inherited SaleForm: TSaleForm
         Name = 'OperDate_TransportGoods'
         Value = Null
         DataType = ftDateTime
+      end
+      item
+        Name = 'inChangePercentAmount'
+        Value = Null
+        DataType = ftFloat
+        ParamType = ptInputOutput
       end>
     Left = 40
     Top = 344
@@ -1824,6 +1830,14 @@ inherited SaleForm: TSaleForm
         Component = FormParams
         ComponentItem = 'inOperDate'
         DataType = ftDateTime
+        ParamType = ptInput
+      end
+      item
+        Name = 'inChangePercentAmount'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'inChangePercentAmount'
+        DataType = ftFloat
         ParamType = ptInput
       end
       item

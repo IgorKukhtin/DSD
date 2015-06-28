@@ -161,12 +161,15 @@ BEGIN
                                                                                          WHEN 11 THEN zc_ObjectFloat_OrderType_Koeff11()
                                                                                          WHEN 12 THEN zc_ObjectFloat_OrderType_Koeff12()
                                                                             END
+                                             AND ObjectFloat_Koeff.ValueData <> 0
                         LEFT JOIN ObjectFloat AS ObjectFloat_TermProduction
                                               ON ObjectFloat_TermProduction.ObjectId = ObjectLink_OrderType_Goods.ObjectId
                                              AND ObjectFloat_TermProduction.DescId = zc_ObjectFloat_OrderType_TermProduction() 
+                                             AND ObjectFloat_TermProduction.ValueData <> 0
                         LEFT JOIN ObjectFloat AS ObjectFloat_NormInDays
                                               ON ObjectFloat_NormInDays.ObjectId = ObjectLink_OrderType_Goods.ObjectId
                                              AND ObjectFloat_NormInDays.DescId = zc_ObjectFloat_OrderType_NormInDays() 
+                                             AND ObjectFloat_NormInDays.ValueData <> 0
                         LEFT JOIN ObjectFloat AS ObjectFloat_StartProductionInDays
                                               ON ObjectFloat_StartProductionInDays.ObjectId = ObjectLink_OrderType_Goods.ObjectId
                                              AND ObjectFloat_StartProductionInDays.DescId = zc_ObjectFloat_OrderType_StartProductionInDays() 

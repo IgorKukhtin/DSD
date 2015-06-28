@@ -95,6 +95,9 @@ BEGIN
           LEFT JOIN ObjectLink AS ObjectLink_Contract_PaidKind
                                ON ObjectLink_Contract_PaidKind.ObjectId = MovementLinkObject_Contract.ObjectId
                               AND ObjectLink_Contract_PaidKind.DescId = zc_ObjectLink_Contract_PaidKind()
+                              
+          LEFT JOIN Object_Contract_View ON Object_Contract_View.ContractId = MovementLinkObject_Contract.ObjectId
+          LEFT JOIN Object_InfoMoney_View ON Object_InfoMoney_View.InfoMoneyId = Object_Contract_View.InfoMoneyId
 
           LEFT JOIN ObjectString AS ObjectString_Partner_GLNCode
                                  ON ObjectString_Partner_GLNCode.ValueData = MovementString_GLNPlaceCode.ValueData
@@ -111,7 +114,7 @@ BEGIN
                                AND ObjectFloat_Partner_PrepareDayCount.DescId = zc_ObjectFloat_Partner_PrepareDayCount()
          LEFT JOIN ObjectLink AS ObjectLink_Partner_Route
                               ON ObjectLink_Partner_Route.ObjectId = ObjectString_Partner_GLNCode.ObjectId
-                             AND ObjectLink_Partner_Route.DescId = zc_ObjectLink_Partner_Route()
+                             AND ObjectLink_Partner_Route.DescId = CASE WHEN Object_InfoMoney_View.InfoMoneyId = zc_Enum_InfoMoney_30201() THEN zc_ObjectLink_Partner_Route30201() ELSE zc_ObjectLink_Partner_Route() END
          LEFT JOIN ObjectLink AS ObjectLink_Partner_RouteSorting
                               ON ObjectLink_Partner_RouteSorting.ObjectId = ObjectString_Partner_GLNCode.ObjectId
                              AND ObjectLink_Partner_RouteSorting.DescId = zc_ObjectLink_Partner_RouteSorting()

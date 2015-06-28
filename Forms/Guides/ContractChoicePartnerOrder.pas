@@ -59,6 +59,7 @@ type
     BranchName: TcxGridDBColumn;
     DocumentDayCount: TcxGridDBColumn;
     PrepareDayCount: TcxGridDBColumn;
+    actChoiceRoute_30201: TOpenChoiceForm;
   private
     { Private declarations }
   public

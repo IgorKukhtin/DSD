@@ -80,10 +80,12 @@ type
     actPrint_Send: TdsdPrintAction;
     spSelectPrint_Loss: TdsdStoredProc;
     actPrint_Loss: TdsdPrintAction;
+    spSelectPrint_ProductionSeparate: TdsdStoredProc;
+    actPrint_ProductionSeparate: TdsdPrintAction;
   private
   end;
 
-  function Print_Movement (MovementDescId,MovementId:Integer; myPrintCount:Integer; isPreview:Boolean; isSendOnPriceIn:Boolean):Boolean;
+  function Print_Movement (MovementDescId,MovementId,MovementId_by:Integer; myPrintCount:Integer; isPreview:Boolean; isSendOnPriceIn:Boolean):Boolean;
   function Print_Tax      (MovementDescId,MovementId:Integer; myPrintCount:Integer; isPreview:Boolean):Boolean;
   function Print_Account  (MovementDescId,MovementId:Integer; myPrintCount:Integer; isPreview:Boolean):Boolean;
   function Print_Spec     (MovementDescId,MovementId,MovementId_by:Integer; myPrintCount:Integer; isPreview:Boolean):Boolean;
@@ -146,6 +148,13 @@ begin
   else UtilPrintForm.actPrint_SendOnPrice_out.Execute;
 end;
 //------------------------------------------------------------------------------------------------
+procedure Print_ProductionSeparate (MovementId,MovementId_by: Integer);
+begin
+  UtilPrintForm.FormParams.ParamByName('Id').Value := MovementId;
+  UtilPrintForm.FormParams.ParamByName('MovementId_by').Value := MovementId_by;
+  UtilPrintForm.actPrint_ProductionSeparate.Execute;
+end;
+//------------------------------------------------------------------------------------------------
 procedure Print_TaxDocument (MovementId: Integer);
 begin
   UtilPrintForm.FormParams.ParamByName('Id').Value := MovementId;
@@ -186,7 +195,7 @@ begin
   UtilPrintForm.mactPrint_QualityDoc.Execute;
 end;
 //------------------------------------------------------------------------------------------------
-function Print_Movement (MovementDescId,MovementId: Integer;myPrintCount:Integer;isPreview:Boolean; isSendOnPriceIn:Boolean):Boolean;
+function Print_Movement (MovementDescId, MovementId, MovementId_by: Integer; myPrintCount:Integer; isPreview:Boolean; isSendOnPriceIn:Boolean):Boolean;
 begin
      Result:=false;
           //
@@ -212,7 +221,10 @@ begin
                             else if MovementDescId = zc_Movement_Loss
                                   then Print_Loss(MovementId)
 
-                                  else begin ShowMessage ('Ошибка.Форма печати <Накладная> не найдена.');exit;end;
+                                  else if MovementDescId = zc_Movement_ProductionSeparate
+                                        then Print_ProductionSeparate(MovementId,MovementId_by)
+
+                                        else begin ShowMessage ('Ошибка.Форма печати <Накладная> не найдена.');exit;end;
           except
                 ShowMessage('Ошибка.Печать <Накладная> не сформирована.');
                 exit;

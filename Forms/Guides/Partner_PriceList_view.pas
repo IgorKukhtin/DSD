@@ -86,6 +86,14 @@ type
     GuidesJuridical: TdsdGuides;
     GuidesRetail: TdsdGuides;
     RetailName: TcxGridDBColumn;
+    OperDate_income: TcxGridDBColumn;
+    OperDate_GP_sale: TcxGridDBColumn;
+    OperDate_GP_return: TcxGridDBColumn;
+    OperDate_GP_return_prior: TcxGridDBColumn;
+    OperDate_30103_sale: TcxGridDBColumn;
+    OperDate_30103_return: TcxGridDBColumn;
+    OperDate_30201_sale: TcxGridDBColumn;
+    OperDate_30201_return: TcxGridDBColumn;
   private
     { Private declarations }
   public

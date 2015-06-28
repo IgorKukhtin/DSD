@@ -116,6 +116,8 @@ type
     actChoicePriceList_Prior: TOpenChoiceForm;
     actChoicePriceList_30103: TOpenChoiceForm;
     actChoicePriceList_30201: TOpenChoiceForm;
+    clRouteName: TcxGridDBColumn;
+    clRouteName_30201: TcxGridDBColumn;
   private
     { Private declarations }
   public

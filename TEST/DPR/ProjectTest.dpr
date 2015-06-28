@@ -88,8 +88,8 @@ uses
   dsdDB in '..\..\SOURCE\COMPONENT\dsdDB.pas',
   ToolsWeighingTree in '..\..\Forms\Guides\ToolsWeighingTree.pas' {ToolsWeighingTreeForm},
   dbMovementItemTest in '..\SOURCE\dbMovementItemTest.pas',
-  Income in '..\..\Forms\Document\Income.pas' {IncomeForm},
-  IncomeJournal in '..\..\Forms\Document\IncomeJournal.pas' {ParentForm2},
+  IncomeTo in '..\..\Forms\Document\IncomeTo.pas' {IncomeToForm},
+  IncomeToJournal in '..\..\Forms\Document\IncomeToJournal.pas' {IncomeToJournalForm},
   dsdAddOn in '..\..\SOURCE\COMPONENT\dsdAddOn.pas',
   dbMovementCompleteTest in '..\SOURCE\dbMovementCompleteTest.pas',
   Report_Balance in '..\..\Forms\Report\Report_Balance.pas' {Report_BalanceForm},
@@ -446,8 +446,8 @@ uses
   ProvinceEdit in '..\..\Forms\Guides\ProvinceEdit.pas' {ProvinceEditForm: TParentForm},
   Inventory in '..\..\Forms\Document\Inventory.pas' {InventoryForm: TParentForm},
   InventoryJournal in '..\..\Forms\Document\InventoryJournal.pas' {InventoryJournalForm: TParentForm},
-  OrderInternalJournal in '..\..\Forms\Document\OrderInternalJournal.pas' {OrderInternalJournalForm: TParentForm},
-  OrderInternal in '..\..\Forms\Document\OrderInternal.pas' {OrderInternalForm: TParentForm},
+  OrderInternalPackJournal in '..\..\Forms\Document\OrderInternalPackJournal.pas' {OrderInternalPackJournalForm: TParentForm},
+  OrderInternalPack in '..\..\Forms\Document\OrderInternalPack.pas' {OrderInternalPackForm: TParentForm},
   OrderKind in '..\..\Forms\Kind\OrderKind.pas' {OrderKindForm: TParentForm},
   ContactPersonEdit in '..\..\Forms\Guides\ContactPersonEdit.pas' {ContactPersonEditForm: TParentForm},
   ContactPersonKind in '..\..\Forms\Kind\ContactPersonKind.pas' {ContactPersonKindForm: TParentForm},
@@ -546,7 +546,7 @@ uses
   BankTest in '..\SOURCE\Objects\All\BankTest.pas',
   Partner_PriceList_view in '..\..\Forms\Guides\Partner_PriceList_view.pas' {Partner_PriceList_viewForm: TParentForm},
   CashJournal in '..\..\Forms\Document\CashJournal.pas' {CashJournalForm: TParentForm},
-  SaleJournalChoice in '..\..\Forms\Document\SaleJournalChoice.pas' {SaleJournalChoiceForm: TParentForm},
+  ReturnInJournalChoice in '..\..\Forms\Document\ReturnInJournalChoice.pas' {ReturnInJournalChoiceForm: TParentForm},
   Sale_OrderJournal in '..\..\Forms\Document\Sale_OrderJournal.pas' {Sale_OrderJournalForm: TParentForm},
   Sale_Partner in '..\..\Forms\Document\Sale_Partner.pas' {Sale_PartnerForm: TParentForm},
   Sale_PartnerJournal in '..\..\Forms\Document\Sale_PartnerJournal.pas' {Sale_PartnerJournalForm: TParentForm},
@@ -684,7 +684,15 @@ uses
   TaxJournalDialog in '..\..\Forms\Document\TaxJournalDialog.pas' {TaxJournalDialogForm: TParentForm},
   Partner in '..\..\Forms\Guides\Partner.pas' {PartnerForm: TParentForm},
   Juridical in '..\..\Forms\Guides\Juridical.pas' {JuridicalForm: TParentForm},
-  ContractChoicePartner in '..\..\Forms\Guides\ContractChoicePartner.pas' {ContractChoicePartnerForm: TParentForm};
+  ContractChoicePartner in '..\..\Forms\Guides\ContractChoicePartner.pas' {ContractChoicePartnerForm: TParentForm},
+  IncomePartionGoodsJournal in '..\..\Forms\Document\IncomePartionGoodsJournal.pas' {IncomePartionGoodsJournalForm: TParentForm},
+  SaleJournalChoice in '..\..\Forms\Document\SaleJournalChoice.pas' {SaleJournalChoiceForm: TParentForm},
+  OrderInternal in '..\..\Forms\Document\OrderInternal.pas' {OrderInternalForm: TParentForm},
+  OrderInternalJournal in '..\..\Forms\Document\OrderInternalJournal.pas' {OrderInternalJournalForm: TParentForm},
+  IncomeJournal in '..\..\Forms\Document\IncomeJournal.pas' {IncomeJournalForm: TParentForm},
+  Income in '..\..\Forms\Document\Income.pas' {IncomeForm: TParentForm},
+  WeighingPartnerItemJournal in '..\..\Forms\Document\WeighingPartnerItemJournal.pas' {WeighingPartnerItemJournalForm: TParentForm},
+  WeighingProductionItemJournal in '..\..\Forms\Document\WeighingProductionItemJournal.pas' {WeighingProductionItemJournalForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}

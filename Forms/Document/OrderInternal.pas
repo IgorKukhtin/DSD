@@ -125,6 +125,16 @@ type
     clChAmount_next: TcxGridDBColumn;
     ColorB_AmountPartner: TcxGridDBColumn;
     ColorB_DayCountForecast: TcxGridDBColumn;
+    AmountRemainsTerm_calc: TcxGridDBColumn;
+    ColorB_AmountPrognoz: TcxGridDBColumn;
+    AmountPrognozTerm_calc: TcxGridDBColumn;
+    AmountPrognozOrderTerm_calc: TcxGridDBColumn;
+    ColorB_const: TcxGridDBColumn;
+    Color_remains_calc: TcxGridDBColumn;
+    Color_remainsTerm_calc: TcxGridDBColumn;
+    clChAmount_calc: TcxGridDBColumn;
+    TaxLoss: TcxGridDBColumn;
+    CuterCountSecond: TcxGridDBColumn;
   private
     { Private declarations }
   public

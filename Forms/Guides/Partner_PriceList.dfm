@@ -245,6 +245,14 @@ object Partner_PriceListForm: TPartner_PriceListForm
         Options.Editing = False
         Width = 71
       end
+      object clRouteName_30201: TcxGridDBColumn
+        Caption = #1052#1072#1088#1096#1088#1091#1090' ('#1052#1103#1089#1085#1086#1077' '#1089#1099#1088#1100#1077')'
+        DataBinding.FieldName = 'RouteName_30201'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 100
+      end
       object clRouteSortingName: TcxGridDBColumn
         Caption = #1057#1086#1088#1090#1080#1088#1086#1074#1082#1072' '#1084#1072#1088#1096#1088#1091#1090#1072
         DataBinding.FieldName = 'RouteSortingName'

@@ -21208,7 +21208,8 @@ begin
         Add('select Bill.Id as ObjectId');
         Add('     , Bill.BillDate as OperDate');
         Add('     , cast(Bill.BillNumber as integer)as InvNumber');
-        Add('     , case when pgUnitFrom.Id>0 then zc_rvYes() else zc_rvNo() end as isUnit_Branch');
+        //Add('     , case when pgUnitFrom.Id>0 then zc_rvYes() else zc_rvNo() end as isUnit_Branch');
+        Add('     , case when pgUnitFrom.Id_Postgres > 0 or (UnitFrom.LossId_pg > 0 and isnull (_pgPartner.PartnerId_pg, isnull (UnitFrom.Id3_Postgres, 0)) = 0)  then zc_rvYes() else zc_rvNo() end as isUnit_Branch');
         Add('     , Bill.FromID');
         Add('     , Bill.ToID');
         Add('     , Bill.MoneyKindId');
@@ -21218,6 +21219,8 @@ begin
         Add('     left outer join dba.isUnit AS isUnitTo on isUnitTo.UnitId = Bill.ToId');
         Add('     left outer join dba.Unit AS UnitFrom on UnitFrom.Id = Bill.FromId');
         Add('     left outer join dba._pgUnit as pgUnitFrom on pgUnitFrom.Id=UnitFrom.pgUnitId');
+        Add('          left outer join (select JuridicalId_pg, PartnerId_pg, UnitId from dba._pgPartner where PartnerId_pg <> 0 and UnitId <>0 group by JuridicalId_pg, PartnerId_pg, UnitId'
+           +'                          ) as _pgPartner on _pgPartner.UnitId = Bill.FromId');
         Add('where Bill.BillDate between '+FormatToDateServer_notNULL(StrToDate(StartDateCompleteEdit.Text))+' and '+FormatToDateServer_notNULL(StrToDate(EndDateCompleteEdit.Text))
            +'  and Bill.BillKind = zc_bkProductionInZakaz()'
            +'  and Bill.Id_Postgres>0'
@@ -21271,7 +21274,7 @@ begin
                                  );
                   //
                   if ((toSqlQuery.FieldByName('FromId').AsInteger>0)and((toSqlQuery.FieldByName('ContractId').AsInteger>0)))
-                      or(FieldByName('isUnit_Branch').AsInteger=zc_rvYes)
+                   or(FieldByName('isUnit_Branch').AsInteger=zc_rvYes)
                   then
                   begin
                        toStoredProc_two.Params.ParamByName('inMovementId').Value:=FieldByName('Id_Postgres').AsInteger;

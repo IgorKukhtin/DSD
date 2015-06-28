@@ -9,7 +9,8 @@ CREATE OR REPLACE FUNCTION gpSelect_Movement_ReturnIn(
     IN inIsErased      Boolean ,
     IN inSession     TVarChar    -- сессия пользователя
 )
-RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode Integer, StatusName TVarChar
+RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, ParentId Integer, InvNumber_Parent TVarChar
+             , StatusCode Integer, StatusName TVarChar
              , Checked Boolean
              , PriceWithVAT Boolean
              , OperDatePartner TDateTime, InvNumberPartner TVarChar, InvNumberMark TVarChar
@@ -25,6 +26,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , InfoMoneyGroupName TVarChar, InfoMoneyDestinationName TVarChar, InfoMoneyCode Integer, InfoMoneyName TVarChar
              , PriceListId Integer, PriceListName TVarChar
              , DocumentTaxKindId Integer, DocumentTaxKindName TVarChar
+             , Comment TVarChar
              , isEDI Boolean
               )
 AS
@@ -62,6 +64,8 @@ BEGIN
              Movement.Id                                AS Id
            , Movement.InvNumber                         AS InvNumber
            , Movement.OperDate                          AS OperDate
+           , Movement.ParentId                          AS ParentId
+           , (Movement_Parent.InvNumber || ' от ' || Movement_Parent.OperDate :: Date :: TVarChar ) :: TVarChar AS InvNumber_Parent
            , Object_Status.ObjectCode                   AS StatusCode
            , Object_Status.ValueData                    AS StatusName
            , COALESCE (MovementBoolean_Checked.ValueData, FALSE) :: Boolean AS Checked
@@ -104,7 +108,7 @@ BEGIN
            , Object_PriceList.valuedata                 AS PriceListName
            , Object_TaxKind.Id                	        AS DocumentTaxKindId
            , Object_TaxKind.ValueData        	        AS DocumentTaxKindName
-
+           , MovementString_Comment.ValueData           AS Comment
            , COALESCE (MovementLinkMovement_MasterEDI.MovementChildId, 0) <> 0 AS isEDI
 
        FROM (SELECT Movement.id
@@ -124,6 +128,7 @@ BEGIN
             ) AS tmpMovement
 
             LEFT JOIN Movement ON Movement.id = tmpMovement.id
+            LEFT JOIN Movement AS Movement_Parent ON Movement_Parent.id = Movement.ParentId
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
 
             LEFT JOIN MovementBoolean AS MovementBoolean_Checked
@@ -142,6 +147,10 @@ BEGIN
             LEFT JOIN MovementString AS MovementString_InvNumberMark
                                      ON MovementString_InvNumberMark.MovementId =  Movement.Id
                                     AND MovementString_InvNumberMark.DescId = zc_MovementString_InvNumberMark()
+
+            LEFT JOIN MovementString AS MovementString_Comment 
+                                     ON MovementString_Comment.MovementId = Movement.Id
+                                    AND MovementString_Comment.DescId = zc_MovementString_Comment()
 
             LEFT JOIN MovementFloat AS MovementFloat_VATPercent
                                     ON MovementFloat_VATPercent.MovementId =  Movement.Id
@@ -245,6 +254,7 @@ ALTER FUNCTION gpSelect_Movement_ReturnIn (TDateTime, TDateTime, Boolean, Boolea
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 26.06.15         * add Comment, Parent
  13.11.14                                        * add zc_Enum_Process_AccessKey_DocumentAll
  12.08.14                                        * add isEDI
  24.07.14         * add zc_MovementFloat_CurrencyValue

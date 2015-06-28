@@ -53,7 +53,7 @@ BEGIN
                , ObjectString_Receipt_Code.ValueData AS ReceiptCode
 
                , (MovementItem.Amount + COALESCE (MIFloat_AmountSecond.ValueData, 0)) :: TFloat AS Amount_order
-               , COALESCE (MIFloat_CuterCount.ValueData, 0) :: TFloat                           AS CuterCount_order
+               , (COALESCE (MIFloat_CuterCount.ValueData, 0)  + COALESCE (MIFloat_CuterCountSecond.ValueData, 0)) :: TFloat AS CuterCount_order
 
                , 0 :: TFloat		           AS RealWeight
                , 0 :: TFloat   		           AS CuterCount
@@ -70,26 +70,29 @@ BEGIN
                LEFT JOIN MovementItemFloat AS MIFloat_CuterCount
                                            ON MIFloat_CuterCount.MovementItemId = MovementItem.Id
                                           AND MIFloat_CuterCount.DescId = zc_MIFloat_CuterCount()
+               LEFT JOIN MovementItemFloat AS MIFloat_CuterCountSecond
+                                           ON MIFloat_CuterCountSecond.MovementItemId = MovementItem.Id
+                                          AND MIFloat_CuterCountSecond.DescId = zc_MIFloat_CuterCountSecond()
                LEFT JOIN MovementItemLinkObject AS MILO_Goods
                                                 ON MILO_Goods.MovementItemId = MovementItem.Id
                                                AND MILO_Goods.DescId = zc_MILinkObject_Goods()
-               LEFT JOIN MovementItemLinkObject AS MILO_Receipt
-                                                ON MILO_Receipt.MovementItemId = MovementItem.Id
-                                               AND MILO_Receipt.DescId = zc_MILinkObject_Receipt()
+               LEFT JOIN MovementItemLinkObject AS MILO_ReceiptBasis
+                                                ON MILO_ReceiptBasis.MovementItemId = MovementItem.Id
+                                               AND MILO_ReceiptBasis.DescId = zc_MILinkObject_ReceiptBasis()
                LEFT JOIN ObjectString AS ObjectString_Receipt_Code
-                                      ON ObjectString_Receipt_Code.ObjectId = MILO_Receipt.ObjectId
+                                      ON ObjectString_Receipt_Code.ObjectId = MILO_ReceiptBasis.ObjectId
                                      AND ObjectString_Receipt_Code.DescId = zc_ObjectString_Receipt_Code()
                LEFT JOIN ObjectLink AS ObjectLink_Receipt_GoodsKind
-                                    ON ObjectLink_Receipt_GoodsKind.ObjectId = MILO_Receipt.ObjectId
+                                    ON ObjectLink_Receipt_GoodsKind.ObjectId = MILO_ReceiptBasis.ObjectId
                                    AND ObjectLink_Receipt_GoodsKind.DescId = zc_ObjectLink_Receipt_GoodsKind()
                LEFT JOIN ObjectLink AS ObjectLink_Receipt_GoodsKindComplete
-                                    ON ObjectLink_Receipt_GoodsKindComplete.ObjectId = MILO_Receipt.ObjectId
+                                    ON ObjectLink_Receipt_GoodsKindComplete.ObjectId = MILO_ReceiptBasis.ObjectId
                                    AND ObjectLink_Receipt_GoodsKindComplete.DescId = zc_ObjectLink_Receipt_GoodsKindComplete()
 
                LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = COALESCE (MILO_Goods.ObjectId, MovementItem.ObjectId)
                LEFT JOIN Object AS Object_GoodsKind ON Object_GoodsKind.Id = ObjectLink_Receipt_GoodsKind.ChildObjectId
                LEFT JOIN Object AS Object_GoodsKindComplete ON Object_GoodsKindComplete.Id = COALESCE (ObjectLink_Receipt_GoodsKindComplete.ChildObjectId, zc_GoodsKind_Basis())
-               LEFT JOIN Object AS Object_Receipt ON Object_Receipt.Id = MILO_Receipt.ObjectId
+               LEFT JOIN Object AS Object_Receipt ON Object_Receipt.Id = MILO_ReceiptBasis.ObjectId
 
           WHERE MovementItem.Id = inMovementItemId_order;
 

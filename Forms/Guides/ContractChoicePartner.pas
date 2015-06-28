@@ -56,6 +56,8 @@ type
     Id: TcxGridDBColumn;
     PrepareDayCount: TcxGridDBColumn;
     DocumentDayCount: TcxGridDBColumn;
+    actChoiceRoute_30201: TOpenChoiceForm;
+    clRouteName: TcxGridDBColumn;
   private
     { Private declarations }
   public

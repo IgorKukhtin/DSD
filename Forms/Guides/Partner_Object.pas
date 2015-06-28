@@ -35,7 +35,7 @@ type
     ActionList: TActionList;
     bbRefresh: TdxBarButton;
     actRefresh: TdsdDataSetRefresh;
-    dsdStoredProc: TdsdStoredProc;
+    spSelect: TdsdStoredProc;
     dsdChoiceGuides: TdsdChoiceGuides;
     dsdGridToExcel: TdsdGridToExcel;
     bbGridToExel: TdxBarButton;
@@ -56,6 +56,9 @@ type
     clPriceListPromoName: TcxGridDBColumn;
     clStartPromo: TcxGridDBColumn;
     clEndPromo: TcxGridDBColumn;
+    PriceListName_Prior: TcxGridDBColumn;
+    PriceListName_30103: TcxGridDBColumn;
+    PriceListName_30201: TcxGridDBColumn;
     cxLabel6: TcxLabel;
     JuridicalGuides: TdsdGuides;
     edJuridical: TcxButtonEdit;

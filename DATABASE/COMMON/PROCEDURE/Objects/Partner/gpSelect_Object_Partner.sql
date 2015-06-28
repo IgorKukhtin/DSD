@@ -18,6 +18,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar,
                JuridicalId Integer, JuridicalCode Integer, JuridicalName TVarChar, JuridicalGroupName TVarChar, /*GLNCode_Juridical TVarChar,*/
                RetailId Integer, RetailName TVarChar,
                RouteId Integer, RouteCode Integer, RouteName TVarChar,
+               RouteId_30201 Integer, RouteCode_30201 Integer, RouteName_30201 TVarChar,
                RouteSortingId Integer, RouteSortingCode Integer, RouteSortingName TVarChar,
 
                MemberTakeId Integer, MemberTakeCode Integer, MemberTakeName TVarChar,
@@ -114,9 +115,12 @@ BEGIN
          , Object_Retail.Id                AS RetailId
          , Object_Retail.ValueData         AS RetailName
 
-         , Object_Route.Id           AS RouteId
-         , Object_Route.ObjectCode   AS RouteCode
-         , Object_Route.ValueData    AS RouteName
+         , Object_Route.Id                 AS RouteId
+         , Object_Route.ObjectCode         AS RouteCode
+         , Object_Route.ValueData          AS RouteName
+         , Object_Route_30201.Id           AS RouteId_30201
+         , Object_Route_30201.ObjectCode   AS RouteCode_30201
+         , Object_Route_30201.ValueData    AS RouteName_30201
 
          , Object_RouteSorting.Id           AS RouteSortingId
          , Object_RouteSorting.ObjectCode   AS RouteSortingCode
@@ -260,7 +264,12 @@ BEGIN
                               ON ObjectLink_Partner_Route.ObjectId = Object_Partner.Id 
                              AND ObjectLink_Partner_Route.DescId = zc_ObjectLink_Partner_Route()
          LEFT JOIN Object AS Object_Route ON Object_Route.Id = ObjectLink_Partner_Route.ChildObjectId
-         
+
+         LEFT JOIN ObjectLink AS ObjectLink_Partner_Route_30201
+                              ON ObjectLink_Partner_Route_30201.ObjectId = Object_Partner.Id 
+                             AND ObjectLink_Partner_Route_30201.DescId = zc_ObjectLink_Partner_Route30201()
+         LEFT JOIN Object AS Object_Route_30201 ON Object_Route_30201.Id = ObjectLink_Partner_Route_30201.ChildObjectId
+
          LEFT JOIN ObjectLink AS ObjectLink_Partner_RouteSorting
                               ON ObjectLink_Partner_RouteSorting.ObjectId = Object_Partner.Id 
                              AND ObjectLink_Partner_RouteSorting.DescId = zc_ObjectLink_Partner_RouteSorting()

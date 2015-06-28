@@ -34,6 +34,7 @@ AS
 $BODY$
    DECLARE vbUserId Integer;
 
+   DECLARE vbIsUserOrder  Boolean;
    DECLARE vbIsConstraint Boolean;
    DECLARE vbObjectId_Constraint Integer;
    DECLARE vbBranchId_Constraint Integer;
@@ -44,6 +45,7 @@ BEGIN
 
 
    -- определяется уровень доступа
+   vbIsUserOrder:= EXISTS (SELECT Object_RoleAccessKeyGuide_View.AccessKeyId_UserOrder FROM Object_RoleAccessKeyGuide_View WHERE Object_RoleAccessKeyGuide_View.UserId = vbUserId AND Object_RoleAccessKeyGuide_View.AccessKeyId_UserOrder > 0);
    vbObjectId_Constraint:= COALESCE ((SELECT Object_RoleAccessKeyGuide_View.JuridicalGroupId FROM Object_RoleAccessKeyGuide_View WHERE Object_RoleAccessKeyGuide_View.UserId = vbUserId AND Object_RoleAccessKeyGuide_View.JuridicalGroupId <> 0 GROUP BY Object_RoleAccessKeyGuide_View.JuridicalGroupId), 0);
    vbBranchId_Constraint:= COALESCE ((SELECT Object_RoleAccessKeyGuide_View.BranchId FROM Object_RoleAccessKeyGuide_View WHERE Object_RoleAccessKeyGuide_View.UserId = vbUserId AND Object_RoleAccessKeyGuide_View.BranchId <> 0 GROUP BY Object_RoleAccessKeyGuide_View.BranchId), 0);
    vbIsConstraint:= vbObjectId_Constraint > 0 OR vbBranchId_Constraint > 0;
@@ -128,10 +130,6 @@ BEGIN
                               AND ObjectFloat_DocumentDayCount.DescId = zc_ObjectFloat_Partner_DocumentDayCount()
 
          LEFT JOIN ObjectDesc ON ObjectDesc.Id = Object_Partner.DescId
-         LEFT JOIN ObjectLink AS ObjectLink_Partner_Route
-                              ON ObjectLink_Partner_Route.ObjectId = Object_Partner.Id 
-                             AND ObjectLink_Partner_Route.DescId = zc_ObjectLink_Partner_Route()
-         LEFT JOIN Object AS Object_Route ON Object_Route.Id = ObjectLink_Partner_Route.ChildObjectId
          
          LEFT JOIN ObjectLink AS ObjectLink_Partner_RouteSorting
                               ON ObjectLink_Partner_RouteSorting.ObjectId = Object_Partner.Id 
@@ -208,6 +206,11 @@ BEGIN
 
         LEFT JOIN Object AS Object_Branch ON Object_Branch.Id = Container_Partner_View.BranchId
 
+         LEFT JOIN ObjectLink AS ObjectLink_Partner_Route
+                              ON ObjectLink_Partner_Route.ObjectId = Object_Partner.Id 
+                             AND ObjectLink_Partner_Route.DescId = CASE WHEN Object_InfoMoney_View.InfoMoneyId = zc_Enum_InfoMoney_30201() THEN zc_ObjectLink_Partner_Route30201() ELSE zc_ObjectLink_Partner_Route() END
+         LEFT JOIN Object AS Object_Route ON Object_Route.Id = ObjectLink_Partner_Route.ChildObjectId
+
    WHERE Object_Partner.DescId = zc_Object_Partner()
      AND ((Object_InfoMoney_View.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_30100() -- Доходы + Продукция
            AND vbBranchId_Constraint > 0)
@@ -215,9 +218,14 @@ BEGIN
                                                                             , zc_Enum_InfoMoneyDestination_21500() -- Маркетинг
                                                                             , zc_Enum_InfoMoneyDestination_30400() -- услуги предоставленные
                                                                              )
-           AND vbBranchId_Constraint = 0)
+           AND vbBranchId_Constraint = 0
+           AND vbIsUserOrder = FALSE)
+       OR (Object_InfoMoney_View.InfoMoneyDestinationId IN (zc_Enum_InfoMoneyDestination_30100() -- Доходы + Продукция
+                                                          , zc_Enum_InfoMoneyDestination_30200() -- Доходы + Мясное сырье
+                                                           )
+           AND vbIsUserOrder = TRUE)
          )
-     --                                                                      )
+     --
      AND (ObjectLink_Juridical_JuridicalGroup.ChildObjectId = vbObjectId_Constraint
           OR ObjectLink_Unit_Branch_PersonalTrade.ChildObjectId = vbBranchId_Constraint
           OR vbIsConstraint = FALSE
@@ -373,10 +381,6 @@ BEGIN
                               AND ObjectFloat_DocumentDayCount.DescId = zc_ObjectFloat_Partner_DocumentDayCount()
 
          LEFT JOIN ObjectDesc ON ObjectDesc.Id = Object_Partner.DescId
-         LEFT JOIN ObjectLink AS ObjectLink_Partner_Route
-                              ON ObjectLink_Partner_Route.ObjectId = Object_Partner.Id 
-                             AND ObjectLink_Partner_Route.DescId = zc_ObjectLink_Partner_Route()
-         LEFT JOIN Object AS Object_Route ON Object_Route.Id = ObjectLink_Partner_Route.ChildObjectId
          
          LEFT JOIN ObjectLink AS ObjectLink_Partner_RouteSorting
                               ON ObjectLink_Partner_RouteSorting.ObjectId = Object_Partner.Id 
@@ -420,7 +424,7 @@ BEGIN
          LEFT JOIN Container_Partner_View ON Container_Partner_View.PartnerId = Object_Partner.Id
                                          AND Container_Partner_View.ContractId = Object_Contract_View.ContractId
                                          AND (Container_Partner_View.BranchId = vbBranchId_Constraint OR vbBranchId_Constraint = 0)
-
+                                         AND vbIsUserOrder = FALSE
         LEFT JOIN Object AS Object_Juridical ON Object_Juridical.Id = COALESCE (Container_Partner_View.JuridicalId, ObjectLink_Partner_Juridical.ChildObjectId)
         LEFT JOIN ObjectHistory_JuridicalDetails_View ON ObjectHistory_JuridicalDetails_View.JuridicalId = Object_Juridical.Id
 
@@ -453,6 +457,11 @@ BEGIN
 
         LEFT JOIN Object AS Object_Branch ON Object_Branch.Id = Container_Partner_View.BranchId
 
+         LEFT JOIN ObjectLink AS ObjectLink_Partner_Route
+                              ON ObjectLink_Partner_Route.ObjectId = Object_Partner.Id 
+                             AND ObjectLink_Partner_Route.DescId = CASE WHEN Object_InfoMoney_View.InfoMoneyId = zc_Enum_InfoMoney_30201() THEN zc_ObjectLink_Partner_Route30201() ELSE zc_ObjectLink_Partner_Route() END
+         LEFT JOIN Object AS Object_Route ON Object_Route.Id = ObjectLink_Partner_Route.ChildObjectId
+
    WHERE Object_Partner.DescId = zc_Object_Partner()
      AND Object_Partner.isErased = FALSE
      AND ((Object_InfoMoney_View.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_30100() -- Доходы + Продукция
@@ -461,8 +470,14 @@ BEGIN
                                                                             , zc_Enum_InfoMoneyDestination_21500() -- Маркетинг
                                                                             , zc_Enum_InfoMoneyDestination_30400() -- услуги предоставленные
                                                                              )
-           AND vbBranchId_Constraint = 0)
+           AND vbBranchId_Constraint = 0
+           AND vbIsUserOrder = FALSE)
+       OR (Object_InfoMoney_View.InfoMoneyDestinationId IN (zc_Enum_InfoMoneyDestination_30100() -- Доходы + Продукция
+                                                          , zc_Enum_InfoMoneyDestination_30200() -- Доходы + Мясное сырье
+                                                           )
+           AND vbIsUserOrder = TRUE)
          )
+     --
      AND (ObjectLink_Juridical_JuridicalGroup.ChildObjectId = vbObjectId_Constraint
           OR ObjectLink_Unit_Branch_PersonalTrade.ChildObjectId = vbBranchId_Constraint
           OR vbIsConstraint = FALSE

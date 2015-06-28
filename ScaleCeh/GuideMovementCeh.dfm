@@ -425,6 +425,7 @@ object GuideMovementCehForm: TGuideMovementCehForm
       Font.Style = [fsBold]
       ParentFont = False
       TabOrder = 4
+      Visible = False
     end
     object cbPrintPreview: TCheckBox
       Left = 433

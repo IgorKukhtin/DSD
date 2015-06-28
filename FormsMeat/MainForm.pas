@@ -52,7 +52,7 @@ type
     actCar: TdsdOpenForm;
     actCarModel: TdsdOpenForm;
     actSend: TdsdOpenForm;
-    actSale: TdsdOpenForm;
+    actSaleAll: TdsdOpenForm;
     actReturnOut: TdsdOpenForm;
     actReturnIn: TdsdOpenForm;
     actLoss: TdsdOpenForm;
@@ -585,6 +585,18 @@ type
     N65: TMenuItem;
     N66: TMenuItem;
     N67: TMenuItem;
+    actIncomePartionGoods: TdsdOpenForm;
+    N68: TMenuItem;
+    actSale: TdsdOpenForm;
+    N69: TMenuItem;
+    miOrderInternalPack: TMenuItem;
+    actOrderInternalPack: TdsdOpenForm;
+    actIncomeTo: TdsdOpenForm;
+    N70: TMenuItem;
+    actWeighingPartnerItem: TdsdOpenForm;
+    actWeighingProductionItem: TdsdOpenForm;
+    N71: TMenuItem;
+    N72: TMenuItem;
     procedure actReport_OLAPSoldExecute(Sender: TObject);
     procedure FormShow(Sender: TObject);
   private

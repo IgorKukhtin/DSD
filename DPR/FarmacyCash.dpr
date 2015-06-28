@@ -55,14 +55,23 @@ uses
   DataModul in '..\SOURCE\DataModul.pas' {dmMain: TDataModule},
   Updater in '..\SOURCE\COMPONENT\Updater.pas',
   MainCash in '..\FormsFarmacy\Cash\MainCash.pas' {MainCashForm: TParentForm},
-  AncestorBase in '..\Forms\Ancestor\AncestorBase.pas' {AncestorBaseForm: TParentForm};
+  AncestorBase in '..\Forms\Ancestor\AncestorBase.pas' {AncestorBaseForm: TParentForm},
+  UtilConvert in '..\SOURCE\UtilConvert.pas',
+  CashInterface in '..\FormsFarmacy\Cash\CashInterface.pas',
+  CashFactory in '..\FormsFarmacy\Cash\CashFactory.pas',
+  Cash_FP3530T in '..\FormsFarmacy\Cash\Cash_FP3530T.pas',
+  Cash_FP3530T_NEW in '..\FormsFarmacy\Cash\Cash_FP3530T_NEW.pas',
+  IniUtils in '..\FormsFarmacy\Cash\IniUtils.pas',
+  FP3141_TLB in '..\FormsFarmacy\Cash\FP3141_TLB.pas',
+  CashCloseDialog in '..\FormsFarmacy\Cash\CashCloseDialog.pas' {CashCloseDialogForm: TParentForm},
+  VIPDialog in '..\FormsFarmacy\Cash\VIPDialog.pas' {VIPDialogForm: TParentForm};
 
 {$R *.res}
 
 begin
   Application.Initialize;
   Logger.Enabled := FindCmdLineSwitch('log');
-  ConnectionPath := '..\INIT\farmacy_init.php';
+  ConnectionPath := '..\INIT\localfarmacy_init.php';
 
   TdsdApplication.Create;
 

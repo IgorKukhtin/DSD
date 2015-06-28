@@ -3,26 +3,27 @@ inherited ReturnIn_PartnerForm: TReturnIn_PartnerForm
   ClientHeight = 668
   ClientWidth = 1139
   ExplicitWidth = 1155
-  ExplicitHeight = 703
+  ExplicitHeight = 706
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Top = 126
+    Top = 166
     Width = 1139
-    Height = 542
+    Height = 502
     ExplicitTop = 126
     ExplicitWidth = 1139
     ExplicitHeight = 542
-    ClientRectBottom = 542
+    ClientRectBottom = 502
     ClientRectRight = 1139
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 1139
       ExplicitHeight = 518
       inherited cxGrid: TcxGrid
         Width = 1139
-        Height = 518
+        Height = 478
+        ExplicitLeft = 3
         ExplicitWidth = 1139
-        ExplicitHeight = 518
+        ExplicitHeight = 478
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -112,9 +113,16 @@ inherited ReturnIn_PartnerForm: TReturnIn_PartnerForm
           object colName: TcxGridDBColumn [3]
             Caption = #1058#1086#1074#1072#1088
             DataBinding.FieldName = 'GoodsName'
+            PropertiesClassName = 'TcxButtonEditProperties'
+            Properties.Buttons = <
+              item
+                Action = actGoodsChoice
+                Default = True
+                Kind = bkEllipsis
+              end>
+            Properties.ReadOnly = True
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Options.Editing = False
             Width = 200
           end
           object colGoodsKindName: TcxGridDBColumn [4]
@@ -218,16 +226,15 @@ inherited ReturnIn_PartnerForm: TReturnIn_PartnerForm
     object cxTabSheetTaxCorrective: TcxTabSheet
       Caption = #1050#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1082#1080
       ImageIndex = 2
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
+      ExplicitHeight = 518
       object cxGridTaxCorrective: TcxGrid
         Left = 0
         Top = 0
         Width = 1139
-        Height = 518
+        Height = 478
         Align = alClient
         TabOrder = 0
+        ExplicitHeight = 518
         object cxGridTaxCorrectiveDBTableView: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = TaxCorrectiveDS
@@ -578,10 +585,10 @@ inherited ReturnIn_PartnerForm: TReturnIn_PartnerForm
   end
   inherited DataPanel: TPanel
     Width = 1139
-    Height = 100
+    Height = 140
     TabOrder = 3
     ExplicitWidth = 1139
-    ExplicitHeight = 100
+    ExplicitHeight = 140
     inherited edInvNumber: TcxTextEdit
       Left = 8
       Properties.ReadOnly = False
@@ -868,6 +875,34 @@ inherited ReturnIn_PartnerForm: TReturnIn_PartnerForm
     TabOrder = 13
     Width = 127
   end
+  object cxLabel21: TcxLabel [10]
+    Left = 8
+    Top = 85
+    Caption = #1054#1089#1085#1086#1074#1072#1085#1080#1077' '#1074#1086#1079#1074#1088#1072#1090
+  end
+  object edInvNumberParent: TcxButtonEdit [11]
+    Left = 8
+    Top = 103
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    Properties.ReadOnly = True
+    TabOrder = 15
+    Width = 223
+  end
+  object cxLabel18: TcxLabel [12]
+    Left = 236
+    Top = 85
+    Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
+  end
+  object ceComment: TcxTextEdit [13]
+    Left = 236
+    Top = 103
+    TabOrder = 17
+    Width = 546
+  end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 171
     Top = 552
@@ -1134,6 +1169,49 @@ inherited ReturnIn_PartnerForm: TReturnIn_PartnerForm
           Component = TaxCorrectiveCDS
           ComponentItem = 'PartnerId'
           ParamType = ptInput
+        end>
+      isShowModal = True
+    end
+    object actGoodsChoice: TOpenChoiceForm [23]
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = 'actGoodsChoice'
+      FormName = 'TGoods_ObjectForm'
+      FormNameParam.Value = 'TGoods_ObjectForm'
+      FormNameParam.DataType = ftString
+      GuiParams = <
+        item
+          Name = 'Key'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'GoodsId'
+        end
+        item
+          Name = 'Code'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'GoodsCode'
+        end
+        item
+          Name = 'TextValue'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'GoodsName'
+          DataType = ftString
+        end
+        item
+          Name = 'GoodsGroupName'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'GoodsGroupNameFull'
+        end
+        item
+          Name = 'MeasureName'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'MeasureName'
+          DataType = ftString
         end>
       isShowModal = True
     end
@@ -1628,8 +1706,8 @@ inherited ReturnIn_PartnerForm: TReturnIn_PartnerForm
     Top = 552
   end
   inherited StatusGuides: TdsdGuides
-    Left = 24
-    Top = 56
+    Left = 72
+    Top = 48
   end
   inherited spChangeStatus: TdsdStoredProc
     StoredProcName = 'gpUpdate_Status_ReturnIn'
@@ -1835,6 +1913,25 @@ inherited ReturnIn_PartnerForm: TReturnIn_PartnerForm
         Component = DocumentTaxKindGuides
         ComponentItem = 'TextValue'
         DataType = ftString
+      end
+      item
+        Name = 'ParentId'
+        Value = Null
+        Component = ParentChoiceGuides
+        ComponentItem = 'Key'
+      end
+      item
+        Name = 'InvNumber_Parent'
+        Value = Null
+        Component = ParentChoiceGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+      end
+      item
+        Name = 'Comment'
+        Value = Null
+        Component = ceComment
+        DataType = ftString
       end>
     Left = 224
     Top = 248
@@ -1868,6 +1965,13 @@ inherited ReturnIn_PartnerForm: TReturnIn_PartnerForm
         Value = ''
         Component = edInvNumberMark
         DataType = ftString
+        ParamType = ptInput
+      end
+      item
+        Name = 'inParentId'
+        Value = Null
+        Component = ParentChoiceGuides
+        ComponentItem = 'Key'
         ParamType = ptInput
       end
       item
@@ -1955,8 +2059,11 @@ inherited ReturnIn_PartnerForm: TReturnIn_PartnerForm
         ParamType = ptInput
       end
       item
+        Name = 'inComment'
         Value = Null
-        ParamType = ptUnknown
+        Component = ceComment
+        DataType = ftString
+        ParamType = ptInput
       end>
     Left = 162
     Top = 312
@@ -2899,5 +3006,39 @@ inherited ReturnIn_PartnerForm: TReturnIn_PartnerForm
     PackSize = 1
     Left = 400
     Top = 520
+  end
+  object ParentChoiceGuides: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edInvNumberParent
+    Key = '0'
+    FormNameParam.Value = 'TReturnInJournalChoiceForm'
+    FormNameParam.DataType = ftString
+    FormName = 'TReturnInJournalChoiceForm'
+    PositionDataSet = 'MasterCDS'
+    Params = <
+      item
+        Name = 'Key'
+        Value = '0'
+        Component = ParentChoiceGuides
+        ComponentItem = 'Key'
+        DataType = ftString
+        ParamType = ptInput
+      end
+      item
+        Name = 'InvNumber_Full'
+        Value = ''
+        Component = ParentChoiceGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = edInvNumber
+        DataType = ftString
+      end>
+    Left = 84
+    Top = 88
   end
 end

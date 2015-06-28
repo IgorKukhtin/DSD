@@ -3,7 +3,6 @@
 DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_PersonalReport (integer, tvarchar, TDateTime, tfloat, tfloat, tvarchar, integer, integer, integer, integer, integer, tvarchar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_PersonalReport (integer, tvarchar, TDateTime, tfloat, tfloat, tvarchar, integer, integer, integer, integer, integer, integer, tvarchar);
 
-
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_PersonalReport(
  INOUT ioId                       Integer   , -- Ключ объекта <Документ>
     IN inInvNumber                TVarChar  , -- Номер документа

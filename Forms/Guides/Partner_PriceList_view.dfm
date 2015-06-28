@@ -2,6 +2,7 @@ inherited Partner_PriceList_viewForm: TPartner_PriceList_viewForm
   Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1050#1086#1085#1090#1088#1072#1075#1077#1085#1090' + '#1044#1086#1075#1086#1074#1086#1088' + '#1087#1088#1086#1074#1077#1088#1082#1072' '#1055#1088#1072#1081#1089'>'
   ClientHeight = 496
   ClientWidth = 1054
+  ExplicitLeft = -58
   ExplicitWidth = 1070
   ExplicitHeight = 531
   PixelsPerInch = 96
@@ -9,17 +10,17 @@ inherited Partner_PriceList_viewForm: TPartner_PriceList_viewForm
   inherited PageControl: TcxPageControl
     Width = 1054
     Height = 470
-    ExplicitWidth = 1000
+    ExplicitWidth = 1054
     ExplicitHeight = 470
     ClientRectBottom = 470
     ClientRectRight = 1054
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 1000
+      ExplicitWidth = 1054
       ExplicitHeight = 470
       inherited cxGrid: TcxGrid
         Width = 1054
         Height = 470
-        ExplicitWidth = 1000
+        ExplicitWidth = 1054
         ExplicitHeight = 470
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
@@ -190,19 +191,12 @@ inherited Partner_PriceList_viewForm: TPartner_PriceList_viewForm
             Options.Editing = False
             Width = 70
           end
-          object PriceListName_income: TcxGridDBColumn
-            Caption = #1087#1088#1072#1081#1089' '#1055#1088#1080#1093#1086#1076
-            DataBinding.FieldName = 'PriceListName_income'
+          object OperDate_GP_sale: TcxGridDBColumn
+            Caption = #1076#1072#1090#1072' '#1055#1088#1086#1076#1072#1078#1072
+            DataBinding.FieldName = 'OperDate_GP_sale'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 80
-          end
-          object DescName_income: TcxGridDBColumn
-            Caption = #1080#1085#1092'. '#1055#1088#1080#1093#1086#1076
-            DataBinding.FieldName = 'DescName_income'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 55
+            Width = 70
           end
           object PriceListName_GP_sale: TcxGridDBColumn
             Caption = #1087#1088#1072#1081#1089' '#1055#1088#1086#1076#1072#1078#1072
@@ -218,6 +212,13 @@ inherited Partner_PriceList_viewForm: TPartner_PriceList_viewForm
             HeaderAlignmentVert = vaCenter
             Width = 55
           end
+          object OperDate_GP_return: TcxGridDBColumn
+            Caption = #1076#1072#1090#1072' '#1042#1086#1079#1074#1088#1072#1090
+            DataBinding.FieldName = 'OperDate_GP_return'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 70
+          end
           object PriceListName_GP_return: TcxGridDBColumn
             Caption = #1087#1088#1072#1081#1089' '#1042#1086#1079#1074#1088#1072#1090
             DataBinding.FieldName = 'PriceListName_GP_return'
@@ -231,6 +232,13 @@ inherited Partner_PriceList_viewForm: TPartner_PriceList_viewForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 55
+          end
+          object OperDate_GP_return_prior: TcxGridDBColumn
+            Caption = #1076#1072#1090#1072' '#1042#1086#1079#1074#1088#1072#1090' '#1087#1086' '#1089#1090#1072#1088#1099#1084' '#1094'.'
+            DataBinding.FieldName = 'OperDate_GP_return_prior'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 70
           end
           object PriceListName_GP_return_prior: TcxGridDBColumn
             Caption = #1087#1088#1072#1081#1089' '#1042#1086#1079#1074#1088#1072#1090' '#1087#1086' '#1089#1090#1072#1088#1099#1084' '#1094'.'
@@ -246,33 +254,12 @@ inherited Partner_PriceList_viewForm: TPartner_PriceList_viewForm
             HeaderAlignmentVert = vaCenter
             Width = 55
           end
-          object PriceListName_30103_sale: TcxGridDBColumn
-            Caption = #1087#1088#1072#1081#1089' '#1055#1088#1086#1076#1072#1078#1072' '#1061#1083#1077#1073
-            DataBinding.FieldName = 'PriceListName_30103_sale'
+          object OperDate_30201_sale: TcxGridDBColumn
+            Caption = #1076#1072#1090#1072' '#1055#1088#1086#1076#1072#1078#1072' '#1052#1103#1089#1086
+            DataBinding.FieldName = 'OperDate_30201_sale'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 80
-          end
-          object DescName_30103_sale: TcxGridDBColumn
-            Caption = #1080#1085#1092'. '#1055#1088#1086#1076#1072#1078#1072' '#1061#1083#1077#1073
-            DataBinding.FieldName = 'DescName_30103_sale'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 55
-          end
-          object PriceListName_30103_return: TcxGridDBColumn
-            Caption = #1087#1088#1072#1081#1089' '#1042#1086#1079#1074#1088#1072#1090' '#1061#1083#1077#1073
-            DataBinding.FieldName = 'PriceListName_30103_return'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 80
-          end
-          object DescName_30103_return: TcxGridDBColumn
-            Caption = #1080#1085#1092'. '#1042#1086#1079#1074#1088#1072#1090' '#1061#1083#1077#1073
-            DataBinding.FieldName = 'DescName_30103_return'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 55
+            Width = 70
           end
           object PriceListName_30201_sale: TcxGridDBColumn
             Caption = #1087#1088#1072#1081#1089' '#1055#1088#1086#1076#1072#1078#1072' '#1052#1103#1089#1086
@@ -288,6 +275,13 @@ inherited Partner_PriceList_viewForm: TPartner_PriceList_viewForm
             HeaderAlignmentVert = vaCenter
             Width = 55
           end
+          object OperDate_30201_return: TcxGridDBColumn
+            Caption = #1076#1072#1090#1072' '#1042#1086#1079#1074#1088#1072#1090' '#1052#1103#1089#1086
+            DataBinding.FieldName = 'OperDate_30201_return'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 70
+          end
           object PriceListName_30201_return: TcxGridDBColumn
             Caption = #1087#1088#1072#1081#1089' '#1042#1086#1079#1074#1088#1072#1090' '#1052#1103#1089#1086
             DataBinding.FieldName = 'PriceListName_30201_return'
@@ -298,6 +292,69 @@ inherited Partner_PriceList_viewForm: TPartner_PriceList_viewForm
           object DescName_30201_return: TcxGridDBColumn
             Caption = #1080#1085#1092'. '#1042#1086#1079#1074#1088#1072#1090' '#1052#1103#1089#1086
             DataBinding.FieldName = 'DescName_30201_return'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 55
+          end
+          object OperDate_30103_sale: TcxGridDBColumn
+            Caption = #1076#1072#1090#1072' '#1055#1088#1086#1076#1072#1078#1072' '#1061#1083#1077#1073
+            DataBinding.FieldName = 'OperDate_30103_sale'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 70
+          end
+          object PriceListName_30103_sale: TcxGridDBColumn
+            Caption = #1087#1088#1072#1081#1089' '#1055#1088#1086#1076#1072#1078#1072' '#1061#1083#1077#1073
+            DataBinding.FieldName = 'PriceListName_30103_sale'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 80
+          end
+          object DescName_30103_sale: TcxGridDBColumn
+            Caption = #1080#1085#1092'. '#1055#1088#1086#1076#1072#1078#1072' '#1061#1083#1077#1073
+            DataBinding.FieldName = 'DescName_30103_sale'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 55
+          end
+          object OperDate_30103_return: TcxGridDBColumn
+            Caption = #1076#1072#1090#1072' '#1042#1086#1079#1074#1088#1072#1090' '#1061#1083#1077#1073
+            DataBinding.FieldName = 'OperDate_30103_return'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 70
+          end
+          object PriceListName_30103_return: TcxGridDBColumn
+            Caption = #1087#1088#1072#1081#1089' '#1042#1086#1079#1074#1088#1072#1090' '#1061#1083#1077#1073
+            DataBinding.FieldName = 'PriceListName_30103_return'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 80
+          end
+          object DescName_30103_return: TcxGridDBColumn
+            Caption = #1080#1085#1092'. '#1042#1086#1079#1074#1088#1072#1090' '#1061#1083#1077#1073
+            DataBinding.FieldName = 'DescName_30103_return'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 55
+          end
+          object OperDate_income: TcxGridDBColumn
+            Caption = #1076#1072#1090#1072' '#1055#1088#1080#1093#1086#1076
+            DataBinding.FieldName = 'OperDate_income'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 70
+          end
+          object PriceListName_income: TcxGridDBColumn
+            Caption = #1087#1088#1072#1081#1089' '#1055#1088#1080#1093#1086#1076
+            DataBinding.FieldName = 'PriceListName_income'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 80
+          end
+          object DescName_income: TcxGridDBColumn
+            Caption = #1080#1085#1092'. '#1055#1088#1080#1093#1086#1076
+            DataBinding.FieldName = 'DescName_income'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 55
@@ -896,7 +953,6 @@ inherited Partner_PriceList_viewForm: TPartner_PriceList_viewForm
     Left = 160
   end
   object spInsertUpdate: TdsdStoredProc
-    StoredProcName = 'gpUpdate_Object_Partner_Order'
     DataSets = <>
     OutputType = otResult
     Params = <

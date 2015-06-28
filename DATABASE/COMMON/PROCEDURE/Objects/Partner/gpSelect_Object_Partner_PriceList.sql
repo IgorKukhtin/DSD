@@ -21,6 +21,11 @@ RETURNS TABLE (Id Integer, Code Integer
              , PriceListName_30103_sale TVarChar, PriceListName_30103_return TVarChar
              , PriceListName_30201_sale TVarChar, PriceListName_30201_return TVarChar
 
+             , OperDate_income TDateTime
+             , OperDate_GP_sale TDateTime, OperDate_GP_return TDateTime, OperDate_GP_return_prior TDateTime
+             , OperDate_30103_sale TDateTime, OperDate_30103_return TDateTime
+             , OperDate_30201_sale TDateTime, OperDate_30201_return TDateTime
+
              , DescName_income TVarChar
              , DescName_GP_sale TVarChar, DescName_GP_return TVarChar, DescName_GP_return_prior TVarChar
              , DescName_30103_sale TVarChar, DescName_30103_return TVarChar
@@ -231,34 +236,42 @@ BEGIN
                 , InfoMoneyName
                 , InfoMoneyName_all
 
+                , OperDate_income
                 , PriceListId_income
                 , PriceListName_income
                 , DescId_income
 
+                , OperDate_GP_sale
                 , PriceListId_GP_sale
                 , PriceListName_GP_sale
                 , DescId_GP_sale
 
+                , OperDate_GP_return
                 , PriceListId_GP_return
                 , PriceListName_GP_return
                 , DescId_GP_return
 
+                , OperDate_GP_return_prior
                 , PriceListId_GP_return_prior
                 , PriceListName_GP_return_prior
                 , DescId_GP_return_prior
 
+                , OperDate_30103_sale
                 , PriceListId_30103_sale
                 , PriceListName_30103_sale
                 , DescId_30103_sale
 
+                , OperDate_30103_return
                 , PriceListId_30103_return
                 , PriceListName_30103_return
                 , DescId_30103_return
 
+                , OperDate_30201_sale
                 , PriceListId_30201_sale
                 , PriceListName_30201_sale
                 , DescId_30201_sale
 
+                , OperDate_30201_return
                 , PriceListId_30201_return
                 , PriceListName_30201_return
                 , DescId_30201_return
@@ -290,6 +303,15 @@ BEGIN
        , tmpPartner.PriceListName_30103_return
        , tmpPartner.PriceListName_30201_sale
        , tmpPartner.PriceListName_30201_return
+
+       , tmpPartner.OperDate_income
+       , tmpPartner.OperDate_GP_sale
+       , tmpPartner.OperDate_GP_return
+       , tmpPartner.OperDate_GP_return_prior
+       , tmpPartner.OperDate_30103_sale
+       , tmpPartner.OperDate_30103_return
+       , tmpPartner.OperDate_30201_sale
+       , tmpPartner.OperDate_30201_return
 
        , CASE tmpPartner.DescId_income
               WHEN zc_ObjectLink_Partner_PriceList()   THEN 'Контрагент'
@@ -541,5 +563,5 @@ ALTER FUNCTION gpSelect_Object_Partner_PriceList (TDateTime, Integer, Integer, T
 */
 
 -- тест
--- SELECT * FROM gpSelect_Object_Partner_PriceList (inOperDate:= '01.06.2015', inRetailId:= 0,  inJuridicalId:= 0, inSession := zfCalc_UserAdmin())
+-- SELECT * FROM gpSelect_Object_Partner_PriceList (inOperDate:= '01.06.2015', inRetailId:= 0,  inJuridicalId:= 78893, inSession := zfCalc_UserAdmin())
 -- SELECT * FROM gpSelect_Object_Partner_PriceList (inOperDate:= '01.01.2015', inRetailId:= 0,  inJuridicalId:= 0, inSession := zfCalc_UserAdmin())

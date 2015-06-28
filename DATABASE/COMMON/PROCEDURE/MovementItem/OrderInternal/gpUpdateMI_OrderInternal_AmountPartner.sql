@@ -12,13 +12,16 @@ RETURNS VOID
 AS
 $BODY$
    DECLARE vbUserId Integer;
-   DECLARE vbPriceListId Integer;
+
+   DECLARE vbIsPack  Boolean;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MI_OrderInternal());
 
-    -- 
-    vbPriceListId:= (SELECT ObjectId FROM MovementLinkObject WHERE MovementId = inMovementId AND DescId = zc_MovementLinkObject_PriceList());
+
+    -- расчет, временно захардкодил
+    vbIsPack:= EXISTS (SELECT MovementId FROM MovementLinkObject WHERE MovementId = inMovementId AND ObjectId = 8451); -- Цех Упаковки
+
 
     -- таблица -
    CREATE TEMP TABLE tmpAll (MovementItemId Integer, GoodsId Integer, GoodsKindId Integer, AmountPartner TFloat, AmountPartnerPrior TFloat) ON COMMIT DROP;
@@ -30,8 +33,8 @@ BEGIN
                                                         LEFT JOIN ObjectLink AS ObjectLink_Goods_InfoMoney
                                                                              ON ObjectLink_Goods_InfoMoney.ChildObjectId = Object_InfoMoney_View.InfoMoneyId
                                                                             AND ObjectLink_Goods_InfoMoney.DescId = zc_ObjectLink_Goods_InfoMoney()
-                                                   WHERE Object_InfoMoney_View.InfoMoneyId = zc_Enum_InfoMoney_30101() -- Доходы + Продукция + Готовая продукция
-                                                      OR Object_InfoMoney_View.InfoMoneyId = zc_Enum_InfoMoney_30201() -- Доходы + Продукция + Мясное сырье
+                                                   WHERE Object_InfoMoney_View.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_30100() -- Доходы + Продукция + Готовая продукция and Тушенка and Хлеб
+                                                      OR Object_InfoMoney_View.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_20900() -- Общефирменные + Ирна 
                                                   )
                                  SELECT tmp.MovementItemId
                                        , COALESCE (tmp.GoodsId,tmpOrder.GoodsId)          AS GoodsId
@@ -102,6 +105,7 @@ BEGIN
                                                  , inDescId_Param       := zc_MIFloat_AmountPartner()
                                                  , inAmount_ParamOrder  := tmpAll.AmountPartnerPrior * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData, 0) ELSE 1 END
                                                  , inDescId_ParamOrder  := zc_MIFloat_AmountPartnerPrior()
+                                                 , inIsPack             := vbIsPack
                                                  , inUserId             := vbUserId
                                                   ) 
        FROM tmpAll
@@ -119,7 +123,8 @@ $BODY$
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 27.06.15                                        * расчет, временно захардкодил
  19.06.15                                        *
  14.02.15         *
 */

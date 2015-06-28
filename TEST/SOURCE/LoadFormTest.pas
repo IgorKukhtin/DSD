@@ -545,6 +545,14 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TIncomeFuelForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TIncomeFuelJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TIncomeFuelJournalForm');
+  //
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TIncomePartionGoodsJournalForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TIncomePartionGoodsJournalForm');
+  //
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TIncomeToForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TIncomeToForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TIncomeToJournalForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TIncomeToJournalForm');
 end;
 
 procedure TLoadFormTest.LoadSendFormTest;
@@ -566,6 +574,12 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TOrderInternalForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TOrderInternalJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TOrderInternalJournalForm');
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TOrderInternalPackForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TOrderInternalPackForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TOrderInternalPackJournalForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TOrderInternalPackJournalForm');
+
 end;
 
 procedure TLoadFormTest.LoadOrderExternalFormTest;
@@ -757,6 +771,9 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TReturnIn_PartnerForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReturnIn_PartnerJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReturnIn_PartnerJournalForm');
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReturnInJournalChoiceForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReturnInJournalChoiceForm');
 end;
 { ZakazExternalForm  -> OrderExternalForm
 procedure TLoadFormTest.LoadZakazExternalFormTest;
@@ -1710,6 +1727,9 @@ end;
   TdsdFormStorageFactory.GetStorage.Load('TWeighingPartnerForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TWeighingPartnerJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TWeighingPartnerJournalForm');
+  //
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TWeighingPartnerItemJournalForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TWeighingPartnerItemJournalForm');
 end;
 
  procedure TLoadFormTest.LoadWeighingProductionFormTest;
@@ -1718,6 +1738,9 @@ end;
   TdsdFormStorageFactory.GetStorage.Load('TWeighingProductionForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TWeighingProductionJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TWeighingProductionJournalForm');
+  //
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TWeighingProductionItemJournalForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TWeighingProductionItemJournalForm');
 end;
 
 procedure TLoadFormTest.LoadRetailFormTest;

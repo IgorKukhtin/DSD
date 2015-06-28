@@ -111,6 +111,8 @@ type
     PrintItemsCDS: TClientDataSet;
     actPrint: TdsdPrintAction;
     FormParams: TdsdFormParams;
+    actShowErased: TBooleanStoredProcAction;
+    bbShowErased: TdxBarButton;
   private
   public
   end;

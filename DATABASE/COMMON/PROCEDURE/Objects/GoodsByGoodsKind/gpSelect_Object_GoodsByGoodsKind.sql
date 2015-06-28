@@ -6,7 +6,7 @@ CREATE OR REPLACE FUNCTION gpSelect_Object_GoodsByGoodsKind(
     IN inSession     TVarChar       -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, GoodsId Integer, Code Integer, GoodsName TVarChar
-             , GoodsKindName TVarChar
+             , GoodsKindId Integer, GoodsKindName TVarChar
              , GoodsGroupName TVarChar, GoodsGroupNameFull TVarChar
              , GoodsGroupAnalystName TVarChar
              , TradeMarkName TVarChar
@@ -29,6 +29,7 @@ BEGIN
            , Object_GoodsByGoodsKind_View.GoodsId
            , Object_GoodsByGoodsKind_View.GoodsCode
            , Object_GoodsByGoodsKind_View.GoodsName
+           , Object_GoodsByGoodsKind_View.GoodsKindId
            , Object_GoodsByGoodsKind_View.GoodsKindName
            
            , Object_GoodsGroup.ValueData AS GoodsGroupName 
