@@ -95,6 +95,7 @@ type
       Shift: TShiftState);
     procedure cbSpecClick(Sender: TObject);
     procedure actSetVIPExecute(Sender: TObject);
+    procedure RemainsCDSAfterScroll(DataSet: TDataSet);
   private
     FSoldRegim: boolean;
     fShift: Boolean;
@@ -527,6 +528,17 @@ begin
     result := false;
     raise;
   end;
+end;
+
+procedure TMainCashForm.RemainsCDSAfterScroll(DataSet: TDataSet);
+begin
+  if RemainsCDS.FieldByName('AlternativeGroupId').AsInteger = 0 then
+    AlternativeCDS.Filter := 'MainGoodsId='+RemainsCDS.FieldByName('Id').AsString
+  else
+    AlternativeCDS.Filter := 'MainGoodsId='+RemainsCDS.FieldByName('Id').AsString +
+      ' or (AlternativeGroupId='+RemainsCDS.FieldByName('AlternativeGroupId').AsString+
+           ' AND GoodsId <> '+RemainsCDS.FieldByName('Id').AsString+')';
+  AlternativeCDS.Filtered := true;
 end;
 
 procedure TMainCashForm.SetSoldRegim(const Value: boolean);

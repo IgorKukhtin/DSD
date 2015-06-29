@@ -447,6 +447,7 @@ inherited MainCashForm: TMainCashForm
   object RemainsCDS: TClientDataSet
     Aggregates = <>
     Params = <>
+    AfterScroll = RemainsCDSAfterScroll
     Left = 304
     Top = 136
   end
@@ -594,10 +595,6 @@ inherited MainCashForm: TMainCashForm
   end
   object AlternativeCDS: TClientDataSet
     Aggregates = <>
-    IndexFieldNames = 'MainGoodsId'
-    MasterFields = 'Id'
-    MasterSource = RemainsDS
-    PacketRecords = 0
     Params = <>
     Left = 648
     Top = 264
