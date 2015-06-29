@@ -443,16 +443,16 @@ object IncomePartnerJournalForm: TIncomePartnerJournalForm
         HeaderAlignmentVert = vaCenter
         Width = 54
       end
-      object colContractNameTo: TcxGridDBColumn
+      object colContractToName: TcxGridDBColumn
         Caption = #8470' '#1076#1086#1075'. '#1087#1086#1082'.'
-        DataBinding.FieldName = 'ContractNameTo'
+        DataBinding.FieldName = 'ContractToName'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 60
       end
-      object colPaidKindNameTo: TcxGridDBColumn
+      object colPaidKindToName: TcxGridDBColumn
         Caption = #1060#1086#1088#1084#1072' '#1086#1087#1083#1072#1090#1099' '#1087#1086#1082'.'
-        DataBinding.FieldName = 'PaidKindNameTo'
+        DataBinding.FieldName = 'PaidKindToName'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 60

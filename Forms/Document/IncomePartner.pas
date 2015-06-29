@@ -100,9 +100,6 @@ type
     edPaidKind: TcxButtonEdit;
     ContractGuides: TdsdGuides;
     PaidKindGuides: TdsdGuides;
-    cxLabel13: TcxLabel;
-    edPacker: TcxButtonEdit;
-    PackerGuides: TdsdGuides;
     SetErased: TdsdUpdateErased;
     SetUnErased: TdsdUpdateErased;
     actShowErased: TBooleanStoredProcAction;

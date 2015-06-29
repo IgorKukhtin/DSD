@@ -113,8 +113,8 @@ type
     FormParams: TdsdFormParams;
     actShowErased: TBooleanStoredProcAction;
     bbShowErased: TdxBarButton;
-    colContractNameTo: TcxGridDBColumn;
-    colPaidKindNameTo: TcxGridDBColumn;
+    colContractToName: TcxGridDBColumn;
+    colPaidKindToName: TcxGridDBColumn;
     colChangePercentTo: TcxGridDBColumn;
   private
   public
