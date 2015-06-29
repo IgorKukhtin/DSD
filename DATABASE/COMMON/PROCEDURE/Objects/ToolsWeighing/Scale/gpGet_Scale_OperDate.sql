@@ -20,7 +20,20 @@ BEGIN
 
     -- Ðåçóëüòàò
     RETURN QUERY
-      SELECT DATE_TRUNC ('DAY', CURRENT_TIMESTAMP) :: TDateTime AS OperDate;
+      SELECT CASE WHEN inBranchCode = 201 -- Dnepr-OBV: Scale + ScaleCeh
+                       THEN CASE WHEN EXTRACT ('HOUR' FROM CURRENT_TIMESTAMP) >= 0 AND EXTRACT ('HOUR' FROM CURRENT_TIMESTAMP) < 4
+                                      THEN (DATE_TRUNC ('DAY', CURRENT_TIMESTAMP) - INTERVAL '1 DAY') :: TDateTime
+                                 ELSE DATE_TRUNC ('DAY', CURRENT_TIMESTAMP) :: TDateTime
+                            END
+                  WHEN inBranchCode = 1   -- Dnepr: Scale + ScaleCeh
+                    OR inBranchCode = 101 -- Dnepr-UPAK: ScaleCeh
+                       THEN CASE WHEN EXTRACT ('HOUR' FROM CURRENT_TIMESTAMP) >= 0 AND EXTRACT ('HOUR' FROM CURRENT_TIMESTAMP) < 10
+                                      THEN (DATE_TRUNC ('DAY', CURRENT_TIMESTAMP) - INTERVAL '1 DAY') :: TDateTime
+                                 ELSE DATE_TRUNC ('DAY', CURRENT_TIMESTAMP) :: TDateTime
+                            END
+                       -- ALL - Branch
+                  ELSE DATE_TRUNC ('DAY', CURRENT_TIMESTAMP) :: TDateTime
+             END AS OperDate;
 
 END;
 $BODY$
@@ -31,6 +44,7 @@ ALTER FUNCTION gpGet_Scale_OperDate (Boolean, Integer, TVarChar) OWNER TO postgr
 /*
  ÈÑÒÎÐÈß ÐÀÇÐÀÁÎÒÊÈ: ÄÀÒÀ, ÀÂÒÎÐ
                Ôåëîíþê È.Â.   Êóõòèí È.Â.   Êëèìåíòüåâ Ê.È.   Ìàíüêî Ä.À.
+ 28.06.15                                        * all
  18.01.15                                        *
 */
 

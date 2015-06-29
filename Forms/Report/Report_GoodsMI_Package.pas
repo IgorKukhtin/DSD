@@ -17,26 +17,36 @@ uses
 
 type
   TReport_GoodsMI_PackageForm = class(TAncestorReportForm)
-    clGoodsCode: TcxGridDBColumn;
-    clGoodsName: TcxGridDBColumn;
+    GoodsCode: TcxGridDBColumn;
+    GoodsName: TcxGridDBColumn;
     FormParams: TdsdFormParams;
-    clCalc: TcxGridDBColumn;
-    clAmount_Send_in: TcxGridDBColumn;
-    clAmount_ProductionUnion: TcxGridDBColumn;
-    clMeasureName: TcxGridDBColumn;
+    Amount_Send_in: TcxGridDBColumn;
+    Amount_Production: TcxGridDBColumn;
+    MeasureName: TcxGridDBColumn;
     cxLabel3: TcxLabel;
     UnitGuides: TdsdGuides;
     edUnit: TcxButtonEdit;
-    Amount_10500_Sh: TcxGridDBColumn;
-    clAmount_Send_out: TcxGridDBColumn;
+    Weight_diff: TcxGridDBColumn;
+    Amount_Send_out: TcxGridDBColumn;
     actPrint: TdsdPrintAction;
     actPrintByGoods: TdsdPrintAction;
     bbPrint: TdxBarButton;
     bbPrintByGoods: TdxBarButton;
-    clCountPackage: TcxGridDBColumn;
-    clWeightPackage: TcxGridDBColumn;
-    clWeight_Send_out: TcxGridDBColumn;
-    clWeight_Send_in: TcxGridDBColumn;
+    CountPackage: TcxGridDBColumn;
+    WeightPackage: TcxGridDBColumn;
+    Weight_Send_out: TcxGridDBColumn;
+    Weight_Send_in: TcxGridDBColumn;
+    GoodsGroupName: TcxGridDBColumn;
+    GoodsKindName: TcxGridDBColumn;
+    Weight_Production: TcxGridDBColumn;
+    GoodsCode_basis: TcxGridDBColumn;
+    GoodsName_basis: TcxGridDBColumn;
+    ReceiptCode_code: TcxGridDBColumn;
+    ReceiptCode: TcxGridDBColumn;
+    ReceiptName: TcxGridDBColumn;
+    WeightPackage_one: TcxGridDBColumn;
+    CountPackage_calc: TcxGridDBColumn;
+    WeightPackage_calc: TcxGridDBColumn;
   private
     { Private declarations }
   public

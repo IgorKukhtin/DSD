@@ -240,11 +240,13 @@ begin
     -- 1.1. calc remains only by PartionStr
     call dba.pInsert_ReportRemainsAll_byKindPackage_onPartionStr (@inEndDate, @inEndDate);
     --
+    -- перенесли, здесь партионный учет дл€ сырь€
     insert into _tmpList_Remains_byPartionStr_two (UnitId,GoodsPropertyId,KindPackageId, PartionStr_MB, StartCount, StartCount_sh, StartSummIn, EndCount, EndCount_sh, EndSummIn)
        select UnitId,GoodsPropertyId,KindPackageId, PartionStr_MB, StartCount, StartCount_sh, StartSummIn, EndCount, EndCount_sh, EndSummIn
        from _tmpList_Remains_byPartionStr
        where fCheckUnitClientParentID (4178, UnitID) = zc_rvYes(); -- — Ћјƒ ћя—Ќќ√ќ —џ–№я
       
+    /*28.06.2015
     -- 1.2
     update _tmpList_Remains_byPartionStr_two set EndSummIn = EndCount * newPrice
     from
@@ -297,13 +299,14 @@ begin
                           ) as tmp2 on tmp2.GoodsPropertyId = tmp.GoodsPropertyId
                  where _tmpList_Remains_byPartionStr_two.GoodsPropertyId is null
                 )
-   ;
+   ;28.06.2015*/
 
     //
     //
     -- 2.1. calc remains by all
     call dba.pInsert_ReportRemainsAll_byKindPackage_onSumm (@inEndDate, @inEndDate);
     -- 
+    -- перенесли, здесь Ќ≈“ партионного учета дл€ сырь€
     insert into _tmpList_Remains_byKindPackage_two (UnitId,GoodsPropertyId,KindPackageId,PartionDate,StartCount,StartSummIn,EndCount,EndSummIn)
        select UnitId, _tmpList_Remains_byKindPackage.GoodsPropertyId, KindPackageId,PartionDate,StartCount,StartSummIn,EndCount,EndSummIn
        from _tmpList_Remains_byKindPackage
@@ -313,9 +316,10 @@ begin
 
 
     -- 2.2. my delete - error
-    delete from _tmpList_Remains_byKindPackage_two where GoodsPropertyId = 4165 and UnitId = 1325 ; -- —винина н/к (транзитна€) + ÷ех ”паковки
+    -- 28.06.2015 delete from _tmpList_Remains_byKindPackage_two where GoodsPropertyId = 4165 and UnitId = 1325 ; -- —винина н/к (транзитна€) + ÷ех ”паковки
 
     //
+    /*28.06.2015
     -- 2.3.1. my delete 
     delete from _tmpList_Remains_byKindPackage_two where Id in (select Id
                                                                 from _tmpList_Remains_byKindPackage_two
@@ -361,6 +365,7 @@ begin
                                                                               and tmp.KindPackageId = _tmpList_Remains_byKindPackage_two.KindPackageId
                                                                               and tmp.PartionDate = _tmpList_Remains_byKindPackage_two.PartionDate
                                                                 where EndCount = 0);
+    28.06.2015*/
     -- 2.3.4. my delete
     delete from _tmpList_Remains_byKindPackage_two where abs (EndCount) <= 0.01 and abs (EndSummIn) <= 0.01;
     //

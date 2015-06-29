@@ -4,9 +4,8 @@ inherited Report_GoodsMI_DefrosterForm: TReport_GoodsMI_DefrosterForm
   ClientWidth = 1058
   AddOnFormData.isSingle = False
   AddOnFormData.Params = FormParams
-  ExplicitLeft = -223
   ExplicitWidth = 1074
-  ExplicitHeight = 572
+  ExplicitHeight = 569
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -32,139 +31,73 @@ inherited Report_GoodsMI_DefrosterForm: TReport_GoodsMI_DefrosterForm
             item
               Format = ',0.####'
               Kind = skSum
+              Column = Amount_Separate_in
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = clAmount_Separate_in
+              Column = Amount_diff
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = clLoss_Calc
+              Column = Amount_Send_in
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = clAmount_Send_in
+              Column = Amount_Loss
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = cAmount_Loss
+              Column = Amount_Production
             end
             item
               Format = ',0.####'
               Kind = skSum
+              Column = Amount_Separate_out
             end
             item
               Format = ',0.####'
               Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-              Column = clAmount_ProductionUnion
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-              Column = clAmount_Separate_out
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-              Column = Amount_10500_Sh
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-              Column = clAmount_Send_out
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
+              Column = Amount_Send_out
             end>
           DataController.Summary.FooterSummaryItems = <
             item
               Format = ',0.####'
               Kind = skSum
+              Column = Amount_Separate_in
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = clAmount_Separate_in
+              Column = Amount_diff
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = clLoss_Calc
+              Column = Amount_Send_in
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = clAmount_Send_in
+              Column = Amount_Loss
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = cAmount_Loss
+              Column = Amount_Production
             end
             item
               Format = ',0.####'
               Kind = skSum
+              Column = Amount_Separate_out
             end
             item
               Format = ',0.####'
               Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-              Column = clAmount_ProductionUnion
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-              Column = clAmount_Separate_out
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-              Column = Amount_10500_Sh
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-              Column = clAmount_Send_out
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
+              Column = Amount_Send_out
             end>
           OptionsData.CancelOnExit = True
           OptionsData.Deleting = False
@@ -176,43 +109,65 @@ inherited Report_GoodsMI_DefrosterForm: TReport_GoodsMI_DefrosterForm
           Styles.Selection = nil
           Styles.Footer = nil
           Styles.Header = nil
-          object clGoodsGroupNameFull: TcxGridDBColumn
+          object PartnerCode: TcxGridDBColumn
+            Caption = #1050#1086#1076' '#1087#1086#1089#1090'.'
+            DataBinding.FieldName = 'PartnerCode'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 50
+          end
+          object PartnerName: TcxGridDBColumn
+            Caption = #1055#1086#1089#1090#1072#1074#1097#1080#1082
+            DataBinding.FieldName = 'PartnerName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 100
+          end
+          object GoodsGroupNameFull: TcxGridDBColumn
             Caption = #1043#1088#1091#1087#1087#1072' '#1090#1086#1074#1072#1088#1072' ('#1074#1089#1077')'
             DataBinding.FieldName = 'GoodsGroupNameFull'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 150
           end
-          object clGoodsCode: TcxGridDBColumn
+          object GoodsGroupName: TcxGridDBColumn
+            Caption = #1043#1088#1091#1087#1087#1072' '#1090#1086#1074#1072#1088#1072
+            DataBinding.FieldName = 'GoodsGroupName'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 80
+          end
+          object GoodsCode: TcxGridDBColumn
             Caption = #1050#1086#1076
             DataBinding.FieldName = 'GoodsCode'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 35
+            Width = 45
           end
-          object clGoodsName: TcxGridDBColumn
+          object GoodsName: TcxGridDBColumn
             Caption = #1058#1086#1074#1072#1088
             DataBinding.FieldName = 'GoodsName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 151
           end
-          object clMeasureName: TcxGridDBColumn
+          object MeasureName: TcxGridDBColumn
             Caption = #1045#1076'. '#1080#1079#1084'.'
             DataBinding.FieldName = 'MeasureName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 35
           end
-          object clPartionGoods: TcxGridDBColumn
+          object PartionGoodsName: TcxGridDBColumn
             Caption = #1055#1072#1088#1090#1080#1103
-            DataBinding.FieldName = 'PartionGoods'
+            DataBinding.FieldName = 'PartionGoodsName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 80
           end
-          object clAmount_Separate_in: TcxGridDBColumn
-            Caption = #1055#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1086' '#1087#1088#1080#1093#1086#1076
+          object Amount_Separate_in: TcxGridDBColumn
+            Caption = #1055#1088'-'#1074#1086' '#1087#1088#1080#1093#1086#1076
             DataBinding.FieldName = 'Amount_Separate_in'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
@@ -221,8 +176,8 @@ inherited Report_GoodsMI_DefrosterForm: TReport_GoodsMI_DefrosterForm
             HeaderAlignmentVert = vaCenter
             Width = 80
           end
-          object clAmount_Send_in: TcxGridDBColumn
-            Caption = #1055#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077' '#1087#1088#1080#1093#1086#1076
+          object Amount_Send_in: TcxGridDBColumn
+            Caption = #1055#1077#1088#1077#1084'. '#1087#1088#1080#1093#1086#1076
             DataBinding.FieldName = 'Amount_Send_in'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
@@ -231,8 +186,8 @@ inherited Report_GoodsMI_DefrosterForm: TReport_GoodsMI_DefrosterForm
             HeaderAlignmentVert = vaCenter
             Width = 80
           end
-          object clAmount_Separate_out: TcxGridDBColumn
-            Caption = #1055#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1086' '#1088#1072#1089#1093#1086#1076
+          object Amount_Separate_out: TcxGridDBColumn
+            Caption = #1055#1088'-'#1074#1086' '#1088#1072#1089#1093#1086#1076
             DataBinding.FieldName = 'Amount_Separate_out'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
@@ -241,8 +196,8 @@ inherited Report_GoodsMI_DefrosterForm: TReport_GoodsMI_DefrosterForm
             HeaderAlignmentVert = vaCenter
             Width = 60
           end
-          object clAmount_Send_out: TcxGridDBColumn
-            Caption = #1055#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077' '#1088#1072#1089#1093#1086#1076
+          object Amount_Send_out: TcxGridDBColumn
+            Caption = #1055#1077#1088#1077#1084'. '#1088#1072#1089#1093#1086#1076
             DataBinding.FieldName = 'Amount_Send_out'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
@@ -251,9 +206,9 @@ inherited Report_GoodsMI_DefrosterForm: TReport_GoodsMI_DefrosterForm
             HeaderAlignmentVert = vaCenter
             Width = 85
           end
-          object clLoss_Calc: TcxGridDBColumn
+          object Amount_diff: TcxGridDBColumn
             Caption = #1055#1086#1090#1077#1088#1080' ('#1088#1072#1089#1095#1077#1090')'
-            DataBinding.FieldName = 'Loss_Calc'
+            DataBinding.FieldName = 'Amount_diff'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
@@ -261,9 +216,9 @@ inherited Report_GoodsMI_DefrosterForm: TReport_GoodsMI_DefrosterForm
             HeaderAlignmentVert = vaCenter
             Width = 70
           end
-          object clAmount_ProductionUnion: TcxGridDBColumn
-            Caption = #1092#1072#1082#1090' '#1087#1088#1086#1080#1079'-'#1074#1086' ('#1088#1072#1089#1095#1077#1090')'
-            DataBinding.FieldName = 'Amount_ProductionUnion'
+          object Amount_Production: TcxGridDBColumn
+            Caption = #1055#1086#1090#1077#1088#1080' '#1087#1088'-'#1074#1086' ('#1092#1072#1082#1090')'
+            DataBinding.FieldName = 'Amount_Production'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
@@ -271,8 +226,8 @@ inherited Report_GoodsMI_DefrosterForm: TReport_GoodsMI_DefrosterForm
             HeaderAlignmentVert = vaCenter
             Width = 70
           end
-          object cAmount_Loss: TcxGridDBColumn
-            Caption = #1092#1072#1082#1090' '#1089#1087#1080#1089#1072#1085#1080#1077' ('#1088#1072#1089#1095#1077#1090')'
+          object Amount_Loss: TcxGridDBColumn
+            Caption = #1055#1086#1090#1077#1088#1080' '#1089#1087#1080#1089#1072#1085#1080#1077' ('#1092#1072#1082#1090')'
             DataBinding.FieldName = 'Amount_Loss'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
@@ -281,9 +236,9 @@ inherited Report_GoodsMI_DefrosterForm: TReport_GoodsMI_DefrosterForm
             HeaderAlignmentVert = vaCenter
             Width = 70
           end
-          object Amount_10500_Sh: TcxGridDBColumn
-            Caption = '%'
-            DataBinding.FieldName = 'Amount_10500_Sh'
+          object Tax_diff: TcxGridDBColumn
+            Caption = '% '#1088#1072#1089#1095#1077#1090
+            DataBinding.FieldName = 'Tax_diff'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
@@ -425,7 +380,7 @@ inherited Report_GoodsMI_DefrosterForm: TReport_GoodsMI_DefrosterForm
       DataSets = <
         item
           UserName = 'frxDBDMaster'
-          IndexFieldNames = 'GoodsGroupNameFull;GoodsName'
+          IndexFieldNames = 'GoodsGroupNameFull;GoodsName;PartionGoodsName'
           GridView = cxGridDBTableView
         end>
       Params = <
@@ -616,11 +571,15 @@ inherited Report_GoodsMI_DefrosterForm: TReport_GoodsMI_DefrosterForm
         end
         item
           Visible = True
-          ItemName = 'bbGridToExcel'
+          ItemName = 'bbPrint'
         end
         item
           Visible = True
-          ItemName = 'bbPrint'
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbGridToExcel'
         end
         item
           Visible = True

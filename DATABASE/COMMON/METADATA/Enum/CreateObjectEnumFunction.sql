@@ -62,6 +62,9 @@ CREATE OR REPLACE FUNCTION zc_Enum_AnalyzerId_ProfitLoss() RETURNS integer AS $B
 --
 -- в приходе если количественная или суммовая проводка по заготовителю
 CREATE OR REPLACE FUNCTION zc_Enum_AnalyzerId_Income_Packer() RETURNS integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_AnalyzerId_Income_Packer' AND DescId = zc_ObjectString_Enum()); END;  $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+--
+--  в строчной части расхода на производство если в мастере "переработка" 
+CREATE OR REPLACE FUNCTION zc_Enum_AnalyzerId_ReWork() RETURNS integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_AnalyzerId_ReWork' AND DescId = zc_ObjectString_Enum()); END;  $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 
 -- !!!
 -- !!! Типы оплат

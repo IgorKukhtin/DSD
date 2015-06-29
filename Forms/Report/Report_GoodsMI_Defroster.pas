@@ -17,29 +17,32 @@ uses
 
 type
   TReport_GoodsMI_DefrosterForm = class(TAncestorReportForm)
-    clGoodsCode: TcxGridDBColumn;
-    clGoodsName: TcxGridDBColumn;
-    clAmount_Separate_in: TcxGridDBColumn;
+    GoodsCode: TcxGridDBColumn;
+    GoodsName: TcxGridDBColumn;
+    Amount_Separate_in: TcxGridDBColumn;
     cxLabel4: TcxLabel;
     edGoodsGroup: TcxButtonEdit;
     GoodsGroupGuides: TdsdGuides;
     FormParams: TdsdFormParams;
-    clLoss_Calc: TcxGridDBColumn;
-    clAmount_Send_in: TcxGridDBColumn;
-    cAmount_Loss: TcxGridDBColumn;
-    clAmount_ProductionUnion: TcxGridDBColumn;
-    clMeasureName: TcxGridDBColumn;
+    Amount_diff: TcxGridDBColumn;
+    Amount_Send_in: TcxGridDBColumn;
+    Amount_Loss: TcxGridDBColumn;
+    Amount_Production: TcxGridDBColumn;
+    MeasureName: TcxGridDBColumn;
     cxLabel3: TcxLabel;
     UnitGuides: TdsdGuides;
     edUnit: TcxButtonEdit;
-    clAmount_Separate_out: TcxGridDBColumn;
-    Amount_10500_Sh: TcxGridDBColumn;
-    clAmount_Send_out: TcxGridDBColumn;
+    Amount_Separate_out: TcxGridDBColumn;
+    Tax_diff: TcxGridDBColumn;
+    Amount_Send_out: TcxGridDBColumn;
     actPrint: TdsdPrintAction;
     actPrintByGoods: TdsdPrintAction;
     bbPrint: TdxBarButton;
     bbPrintByGoods: TdxBarButton;
-    clPartionGoods: TcxGridDBColumn;
+    PartionGoodsName: TcxGridDBColumn;
+    GoodsGroupName: TcxGridDBColumn;
+    PartnerCode: TcxGridDBColumn;
+    PartnerName: TcxGridDBColumn;
   private
     { Private declarations }
   public

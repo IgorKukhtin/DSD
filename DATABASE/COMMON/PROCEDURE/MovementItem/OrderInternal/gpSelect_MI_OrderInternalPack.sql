@@ -41,21 +41,21 @@ BEGIN
 
 
      -- 
-     CREATE TEMP TABLE _tmpMI_master (MovementItemId Integer, GoodsId_detail Integer, GoodsKindId_detail Integer, GoodsId Integer, GoodsId_basis Integer, GoodsKindId_complete Integer
+     CREATE TEMP TABLE _tmpMI_master (MovementItemId Integer, GoodsId_detail Integer, GoodsKindId_detail Integer, GoodsId Integer, GoodsKindId_complete Integer
                                     , ReceiptId Integer, ReceiptId_basis Integer
                                     , Amount TFloat, AmountSecond TFloat, AmountRemains TFloat, AmountPartnerPrior TFloat, AmountPartner TFloat
                                     , AmountForecast TFloat, AmountForecastOrder TFloat
-                                    , KoeffLoss TFloat, TaxLoss TFloat, CuterCount TFloat, CuterCountSecond TFloat, Koeff TFloat, TermProduction TFloat, NormInDays TFloat, StartProductionInDays TFloat
+                                    , Koeff TFloat, TermProduction TFloat, NormInDays TFloat, StartProductionInDays TFloat
                                     , isErased Boolean) ON COMMIT DROP;
-     INSERT INTO _tmpMI_master (MovementItemId, GoodsId_detail, GoodsKindId_detail, GoodsId, GoodsId_basis, GoodsKindId_complete
-                              , ReceiptId , ReceiptId_basis
+     INSERT INTO _tmpMI_master (MovementItemId, GoodsId_detail, GoodsKindId_detail, GoodsId, GoodsKindId_complete
+                              , ReceiptId, ReceiptId_basis
                               , Amount, AmountSecond, AmountRemains, AmountPartnerPrior, AmountPartner
                               , AmountForecast, AmountForecastOrder
-                              , KoeffLoss, TaxLoss, CuterCount, CuterCountSecond, Koeff, TermProduction, NormInDays, StartProductionInDays
+                              , Koeff, TermProduction, NormInDays, StartProductionInDays
                               , isErased)
-                              SELECT MovementItem.Id                                       AS MovementItemId
-                                   , CASE WHEN inShowAll = TRUE THEN MovementItem.ObjectId                         ELSE 0 END AS GoodsId_detail
-                                   , CASE WHEN inShowAll = TRUE THEN COALESCE (MILinkObject_GoodsKind.ObjectId, 0) ELSE 0 END AS GoodsKindId_detail
+                              SELECT MovementItem.Id AS MovementItemId
+                                   , MovementItem.ObjectId AS GoodsId_detail
+                                   , COALESCE (MILinkObject_GoodsKind.ObjectId, 0) AS GoodsKindId_detail
 
                                    , COALESCE (MILinkObject_Goods.ObjectId
                                              , CASE WHEN ObjectLink_Goods_InfoMoney.ChildObjectId NOT IN (zc_Enum_InfoMoney_30101(), zc_Enum_InfoMoney_30201())
@@ -63,7 +63,7 @@ BEGIN
                                                     ELSE 0
                                                END
                                               )AS GoodsId
-                                   , COALESCE (MILinkObject_GoodsBasis.ObjectId, 0)        AS GoodsId_basis
+
                                    , COALESCE (MILinkObject_GoodsKindComplete.ObjectId
                                              , CASE WHEN ObjectLink_Goods_InfoMoney.ChildObjectId NOT IN (zc_Enum_InfoMoney_30101(), zc_Enum_InfoMoney_30201())
                                                          THEN zc_GoodsKind_Basis()
@@ -81,10 +81,6 @@ BEGIN
                                    , COALESCE (MIFloat_AmountPartner.ValueData, 0)         AS AmountPartner
                                    , COALESCE (MIFloat_AmountForecast.ValueData, 0)        AS AmountForecast
                                    , COALESCE (MIFloat_AmountForecastOrder.ValueData, 0)   AS AmountForecastOrder
-                                   , CASE WHEN ObjectFloat_TaxLoss.ValueData > 0 THEN 1 - ObjectFloat_TaxLoss.ValueData / 100 ELSE 0 END AS KoeffLoss
-                                   , CASE WHEN ObjectFloat_TaxLoss.ValueData > 0 THEN ObjectFloat_TaxLoss.ValueData           ELSE 0 END AS TaxLoss
-                                   , COALESCE (MIFloat_CuterCount.ValueData, 0)            AS CuterCount
-                                   , COALESCE (MIFloat_CuterCountSecond.ValueData, 0)      AS CuterCountSecond
                                    , COALESCE (MIFloat_Koeff.ValueData, 0)                 AS Koeff
                                    , COALESCE (MIFloat_TermProduction.ValueData, 0)        AS TermProduction
                                    , COALESCE (MIFloat_NormInDays.ValueData, 0)            AS NormInDays
@@ -120,12 +116,6 @@ BEGIN
                                                                ON MIFloat_AmountForecastOrder.MovementItemId = MovementItem.Id
                                                               AND MIFloat_AmountForecastOrder.DescId = zc_MIFloat_AmountForecastOrder()
  
-                                   LEFT JOIN MovementItemFloat AS MIFloat_CuterCount
-                                                               ON MIFloat_CuterCount.MovementItemId = MovementItem.Id 
-                                                              AND MIFloat_CuterCount.DescId = zc_MIFloat_CuterCount()
-                                   LEFT JOIN MovementItemFloat AS MIFloat_CuterCountSecond
-                                                               ON MIFloat_CuterCountSecond.MovementItemId = MovementItem.Id 
-                                                              AND MIFloat_CuterCountSecond.DescId = zc_MIFloat_CuterCountSecond()
                                    LEFT JOIN MovementItemFloat AS MIFloat_Koeff
                                                                ON MIFloat_Koeff.MovementItemId = MovementItem.Id 
                                                               AND MIFloat_Koeff.DescId = zc_MIFloat_Koeff()
@@ -139,9 +129,6 @@ BEGIN
                                                                ON MIFloat_StartProductionInDays.MovementItemId = MovementItem.Id 
                                                               AND MIFloat_StartProductionInDays.DescId = zc_MIFloat_StartProductionInDays()
 
-                                   LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsBasis
-                                                                    ON MILinkObject_GoodsBasis.MovementItemId = MovementItem.Id
-                                                                   AND MILinkObject_GoodsBasis.DescId = zc_MILinkObject_GoodsBasis()
                                    LEFT JOIN MovementItemLinkObject AS MILinkObject_Goods
                                                                     ON MILinkObject_Goods.MovementItemId = MovementItem.Id
                                                                    AND MILinkObject_Goods.DescId = zc_MILinkObject_Goods()
@@ -158,37 +145,21 @@ BEGIN
                                    LEFT JOIN MovementItemLinkObject AS MILinkObject_ReceiptBasis
                                                                     ON MILinkObject_ReceiptBasis.MovementItemId = MovementItem.Id
                                                                    AND MILinkObject_ReceiptBasis.DescId = zc_MILinkObject_ReceiptBasis()
-                                   LEFT JOIN ObjectFloat AS ObjectFloat_TaxLoss
-                                                         ON ObjectFloat_TaxLoss.ObjectId = MILinkObject_Receipt.ObjectId
-                                                        AND ObjectFloat_TaxLoss.DescId = zc_ObjectFloat_Receipt_TaxLoss()
-
                              ;
 
 
      -- 
-     CREATE TEMP TABLE _tmpMI_child (MovementItemId Integer, GoodsId Integer, GoodsKindId Integer, GoodsKindId_complete Integer, PartionGoodsDate TDateTime, ContainerId Integer, Amount TFloat) ON COMMIT DROP;
+     CREATE TEMP TABLE _tmpMI_child (MovementItemId Integer, GoodsId Integer, GoodsKindId Integer, Amount TFloat) ON COMMIT DROP;
      -- 
-     INSERT INTO _tmpMI_child (MovementItemId, GoodsId, GoodsKindId, GoodsKindId_complete, PartionGoodsDate, ContainerId, Amount)
+     INSERT INTO _tmpMI_child (MovementItemId, GoodsId, GoodsKindId, Amount)
              SELECT MovementItem.Id                                       AS MovementItemId
                   , MovementItem.ObjectId                                 AS GoodsId
                   , COALESCE (MILinkObject_GoodsKind.ObjectId, 0)         AS GoodsKindId
-                  , COALESCE (MILinkObject_GoodsKindComplete.ObjectId, 0) AS GoodsKindId_complete
-                  , MIDate_PartionGoods.ValueData                         AS PartionGoodsDate
-                  , MIFloat_ContainerId.ValueData                         AS ContainerId
                   , MovementItem.Amount                                   AS Amount
              FROM MovementItem
-                  LEFT JOIN MovementItemFloat AS MIFloat_ContainerId
-                                              ON MIFloat_ContainerId.MovementItemId = MovementItem.Id
-                                             AND MIFloat_ContainerId.DescId = zc_MIFloat_ContainerId()
-                  LEFT JOIN MovementItemDate AS MIDate_PartionGoods
-                                             ON MIDate_PartionGoods.MovementItemId = MovementItem.Id
-                                            AND MIDate_PartionGoods.DescId = zc_MIDate_PartionGoods()
                   LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
                                                    ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
                                                   AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
-                  LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKindComplete
-                                                   ON MILinkObject_GoodsKindComplete.MovementItemId = MovementItem.Id
-                                                  AND MILinkObject_GoodsKindComplete.DescId = zc_MILinkObject_GoodsKindComplete()
              WHERE MovementItem.MovementId = inMovementId
                AND MovementItem.DescId     = zc_MI_Child()
                AND MovementItem.isErased   = FALSE;
@@ -198,37 +169,14 @@ BEGIN
         WITH tmpMI_master_find AS (SELECT MAX (tmpMI_master.MovementItemId) AS MovementItemId
                                    FROM _tmpMI_master AS tmpMI_master
                                    WHERE tmpMI_master.isErased = FALSE
-                                   GROUP BY tmpMI_master.GoodsId_basis, tmpMI_master.GoodsKindId_complete
+                                   GROUP BY tmpMI_master.GoodsId_detail, tmpMI_master.GoodsKindId_detail
                                   )
            , tmpMIPartion_master AS (SELECT tmpMI_master.MovementItemId
-                                          , SUM (CASE WHEN _tmpMI_child.PartionGoodsDate <= (vbOperDate :: Date - tmpMI_master.TermProduction :: Integer)
-                                                           THEN _tmpMI_child.Amount * tmpMI_master.KoeffLoss
-                                                      ELSE 0
-                                                 END) AS AmountProduction_old
-                                          , SUM (CASE WHEN _tmpMI_child.PartionGoodsDate > (vbOperDate :: Date - tmpMI_master.TermProduction :: Integer)
-                                                           THEN _tmpMI_child.Amount * tmpMI_master.KoeffLoss
-                                                      ELSE 0
-                                                 END) AS AmountProduction_next
-                                          , MIN (CASE WHEN _tmpMI_child.PartionGoodsDate <= (vbOperDate :: Date - tmpMI_master.TermProduction :: Integer)
-                                                           THEN _tmpMI_child.PartionGoodsDate
-                                                      ELSE zc_DateEnd()
-                                                 END) AS StartDate_old
-                                          , MAX (CASE WHEN _tmpMI_child.PartionGoodsDate <= (vbOperDate :: Date - tmpMI_master.TermProduction :: Integer)
-                                                           THEN _tmpMI_child.PartionGoodsDate
-                                                      ELSE zc_DateStart()
-                                                 END) AS EndDate_old
-                                          , MIN (CASE WHEN _tmpMI_child.PartionGoodsDate > (vbOperDate :: Date - tmpMI_master.TermProduction :: Integer)
-                                                           THEN _tmpMI_child.PartionGoodsDate
-                                                      ELSE zc_DateEnd()
-                                                 END) AS StartDate_next
-                                          , MAX (CASE WHEN _tmpMI_child.PartionGoodsDate > (vbOperDate :: Date - tmpMI_master.TermProduction :: Integer)
-                                                           THEN _tmpMI_child.PartionGoodsDate
-                                                      ELSE zc_DateStart()
-                                                 END) AS EndDate_next
+                                          , SUM (_tmpMI_child.Amount) AS AmountRemains
                                      FROM tmpMI_master_find
                                           INNER JOIN _tmpMI_master AS tmpMI_master ON tmpMI_master.MovementItemId = tmpMI_master_find.MovementItemId
-                                          INNER JOIN _tmpMI_child ON _tmpMI_child.GoodsId              = tmpMI_master.GoodsId_basis
-                                                                 AND _tmpMI_child.GoodsKindId_complete = tmpMI_master.GoodsKindId_complete
+                                          INNER JOIN _tmpMI_child ON _tmpMI_child.GoodsId    = tmpMI_master.GoodsId_detail
+                                                                 AND _tmpMI_child.GoodsKindId = tmpMI_master.GoodsKindId_detail
                                      GROUP BY tmpMI_master.MovementItemId
                                     )
 
@@ -237,34 +185,24 @@ BEGIN
            , Object_Goods.Id                     AS GoodsId
            , Object_Goods.ObjectCode             AS GoodsCode
            , Object_Goods.ValueData              AS GoodsName
-           , CASE WHEN inShowAll = TRUE THEN 0 ELSE Object_Goods_basis.Id END AS GoodsId_basis
-           , Object_Goods_basis.ObjectCode               AS GoodsCode_basis
-           , Object_Goods_basis.ValueData                AS GoodsName_basis
            , Object_Goods_detail.ObjectCode              AS GoodsCode_detail
            , Object_Goods_detail.ValueData               AS GoodsName_detail
            , ObjectString_Goods_GoodsGroupFull.ValueData AS GoodsGroupNameFull
 
-           , CASE WHEN tmpMI.GoodsId <> tmpMI.GoodsId_basis THEN TRUE ELSE FALSE END AS isCheck_basis
+           , CASE WHEN tmpMI.GoodsId <> tmpMI.GoodsId_detail THEN TRUE ELSE FALSE END AS isCheck_detail
 
            , tmpMI.Amount           :: TFloat AS Amount           -- Заказ на пр-во
            , tmpMI.AmountSecond     :: TFloat AS AmountSecond     -- Дозаказ на пр-во
-           , tmpMI.CuterCount       :: TFloat AS CuterCount       -- Заказ на пр-во кутеров
-           , tmpMI.CuterCountSecond :: TFloat AS CuterCountSecond -- Заказ на пр-во кутеров
 
-           , CAST (tmpMI.AmountRemains - tmpMI.AmountPartnerPrior - tmpMI.AmountPartner + tmpMI.AmountProduction_old                                AS NUMERIC (16, 1)) :: TFloat AS AmountRemains_calc     -- Прогн. ост.
-           , CAST (tmpMI.AmountRemains - tmpMI.AmountPartnerPrior - tmpMI.AmountPartner + tmpMI.AmountProduction_old  + tmpMI.AmountProduction_next AS NUMERIC (16, 1)) :: TFloat AS AmountRemainsTerm_calc -- *Прогн. ост. на срок
+           , CAST (tmpMI.AmountRemains - tmpMI.AmountPartnerPrior - tmpMI.AmountPartner                             AS NUMERIC (16, 1)) :: TFloat AS AmountRemains_calc      -- Прогн. ост.
+           , CAST (tmpMI.AmountRemains - tmpMI.AmountPartnerPrior - tmpMI.AmountPartner + tmpMI.AmountRemains_child AS NUMERIC (16, 1)) :: TFloat AS AmountRemainsChild_calc -- *Прогн. ост. c учетом на упак.
 
            , CAST (tmpMI.NormInDays     * tmpMI.CountForecast      * tmpMI.Koeff AS NUMERIC (16, 1)) :: TFloat AS AmountPrognoz_calc          -- Норма запас (по пр.)
            , CAST (tmpMI.NormInDays     * tmpMI.CountForecastOrder * tmpMI.Koeff AS NUMERIC (16, 1)) :: TFloat AS AmountPrognozOrder_calc     -- Норма запас (по зв.)
            , CAST (tmpMI.TermProduction * tmpMI.CountForecast      * tmpMI.Koeff AS NUMERIC (16, 1)) :: TFloat AS AmountPrognozTerm_calc      -- *Норма зап. на срок (по пр.)
            , CAST (tmpMI.TermProduction * tmpMI.CountForecastOrder * tmpMI.Koeff AS NUMERIC (16, 1)) :: TFloat AS AmountPrognozOrderTerm_calc -- *Норма зап. на срок (по зв.)
 
-           , CAST (tmpMI.AmountProduction_old  AS NUMERIC (16, 1)) :: TFloat AS AmountProduction_old  -- Произв. сегодня
-           , CAST (tmpMI.AmountProduction_next AS NUMERIC (16, 1)) :: TFloat AS AmountProduction_next -- Произв. далее
-           , CASE WHEN tmpMI.StartDate_old  = zc_DateEnd()                                                THEN NULL ELSE tmpMI.StartDate_old  END :: TDateTime AS StartDate_old  -- Партия-1 сегодня
-           , CASE WHEN tmpMI.EndDate_old    = zc_DateStart() OR tmpMI.EndDate_old = tmpMI.StartDate_old   THEN NULL ELSE tmpMI.EndDate_old    END :: TDateTime AS EndDate_old    -- Партия-2 сегодня
-           , CASE WHEN tmpMI.StartDate_next = zc_DateEnd()                                                THEN NULL ELSE tmpMI.StartDate_next END :: TDateTime AS StartDate_next -- Партия-1 далее
-           , CASE WHEN tmpMI.EndDate_next   = zc_DateStart() OR tmpMI.EndDate_next = tmpMI.StartDate_next THEN NULL ELSE tmpMI.EndDate_next   END :: TDateTime AS EndDate_next   -- Партия-2 далее
+           , CAST (tmpMI.AmountRemains_child  AS NUMERIC (16, 1)) :: TFloat AS AmountRemains_child  -- Остаток на упак.
 
            , CASE WHEN ABS (tmpMI.AmountRemains) < 1 THEN tmpMI.AmountRemains ELSE CAST (tmpMI.AmountRemains AS NUMERIC (16, 1)) END :: TFloat AS AmountRemains -- Ост. начальн.
            , CAST (tmpMI.AmountPartnerPrior  AS NUMERIC (16, 2)) :: TFloat AS AmountPartnerPrior  -- неотгуж. заявка
@@ -293,19 +231,22 @@ BEGIN
            , tmpMI.NormInDays            :: TFloat AS NormInDays            -- Норма запас в дн.
            , tmpMI.StartProductionInDays :: TFloat AS StartProductionInDays -- Нач. произв. в дн.
 
-           , CASE WHEN inShowAll = TRUE THEN 0 ELSE Object_GoodsKind.Id END AS GoodsKindId
+           , Object_GoodsKind.Id                 AS GoodsKindId
            , Object_GoodsKind.ValueData          AS GoodsKindName
            , Object_GoodsKind_detail.ValueData   AS GoodsKindName_detail
            , Object_Measure.ValueData            AS MeasureName
-           , Object_Measure_basis.ValueData      AS MeasureName_basis
            , Object_Measure_detail.ValueData     AS MeasureName_detail
 
-           , Object_Receipt.Id                         AS ReceiptId
-           , ObjectString_Receipt_Code.ValueData       AS ReceiptCode
-           , Object_Receipt.ValueData                  AS ReceiptName
            , Object_Receipt_basis.Id                   AS ReceiptId_basis
+           , Object_Receipt_basis.ObjectCode           AS ReceiptCode_code_basis
            , ObjectString_Receipt_Code_basis.ValueData AS ReceiptCode_basis
            , Object_Receipt_basis.ValueData            AS ReceiptName_basis
+
+           , Object_Receipt.Id                         AS ReceiptId
+           , Object_Receipt.ObjectCode                 AS ReceiptCode_code
+           , ObjectString_Receipt_Code.ValueData       AS ReceiptCode
+           , Object_Receipt.ValueData                  AS ReceiptName
+
            , Object_Unit.Id                            AS UnitId
            , Object_Unit.ObjectCode                    AS UnitCode
            , Object_Unit.ValueData                     AS UnitName 
@@ -314,14 +255,14 @@ BEGIN
                        THEN 1118719 -- clRed
                   ELSE 0 -- clBlack
              END :: Integer AS Color_remains
-           , CASE WHEN tmpMI.AmountRemains - tmpMI.AmountPartnerPrior - tmpMI.AmountPartner + tmpMI.AmountProduction_old <= 0
+           , CASE WHEN tmpMI.AmountRemains - tmpMI.AmountPartnerPrior - tmpMI.AmountPartner <= 0
                        THEN 1118719 -- clRed
                   ELSE 0 -- clBlack
              END :: Integer AS Color_remains_calc
-           , CASE WHEN tmpMI.AmountRemains - tmpMI.AmountPartnerPrior - tmpMI.AmountPartner + tmpMI.AmountProduction_old + tmpMI.AmountProduction_next<= 0
+           , CASE WHEN tmpMI.AmountRemains - tmpMI.AmountPartnerPrior - tmpMI.AmountPartner + tmpMI.AmountRemains_child <= 0
                        THEN 1118719 -- clRed
                   ELSE 0 -- clBlack
-             END :: Integer AS Color_remainsTerm_calc
+             END :: Integer AS Color_remainsChild_calc
 
            , 16777158   :: Integer AS ColorB_const            -- aclAqua
            , 14862279   :: Integer AS ColorB_DayCountForecast -- $00E2C7C7
@@ -330,13 +271,11 @@ BEGIN
 
            , tmpMI.isErased
 
-       FROM (SELECT CASE WHEN inShowAll = TRUE THEN tmpMI_master.MovementItemId ELSE 0 END AS MovementItemId
+       FROM (SELECT tmpMI_master.MovementItemId AS MovementItemId
                   , tmpMI_master.GoodsId_detail
                   , tmpMI_master.GoodsKindId_detail
                   , SUM (tmpMI_master.Amount)           AS Amount
                   , SUM (tmpMI_master.AmountSecond)     AS AmountSecond
-                  , SUM (tmpMI_master.CuterCount)       AS CuterCount
-                  , SUM (tmpMI_master.CuterCountSecond) AS CuterCountSecond
 
                   , SUM (tmpMI_master.AmountRemains)       AS AmountRemains
                   , SUM (tmpMI_master.AmountPartnerPrior)  AS AmountPartnerPrior
@@ -354,20 +293,14 @@ BEGIN
                   , tmpMI_master.ReceiptId
                   , tmpMI_master.ReceiptId_basis
                   , tmpMI_master.GoodsId
-                  , tmpMI_master.GoodsId_basis
                   , tmpMI_master.GoodsKindId_complete
 
-                  , MIN (COALESCE (tmpMIPartion_master.StartDate_old,  zc_DateEnd()))   AS StartDate_old
-                  , MAX (COALESCE (tmpMIPartion_master.EndDate_old,    zc_DateStart())) AS EndDate_old
-                  , MIN (COALESCE (tmpMIPartion_master.StartDate_next, zc_DateEnd()))   AS StartDate_next
-                  , MAX (COALESCE (tmpMIPartion_master.EndDate_next,   zc_DateStart())) AS EndDate_next
-                  , SUM (COALESCE (tmpMIPartion_master.AmountProduction_old, 0))  AS AmountProduction_old
-                  , SUM (COALESCE (tmpMIPartion_master.AmountProduction_next, 0)) AS AmountProduction_next
+                  , SUM (COALESCE (tmpMIPartion_master.AmountRemains, 0))  AS AmountRemains_child
 
                   , tmpMI_master.isErased
              FROM _tmpMI_master AS tmpMI_master
                   LEFT JOIN tmpMIPartion_master ON tmpMIPartion_master.MovementItemId = tmpMI_master.MovementItemId
-             GROUP BY CASE WHEN inShowAll = TRUE THEN tmpMI_master.MovementItemId ELSE 0 END
+             GROUP BY tmpMI_master.MovementItemId
                   , tmpMI_master.GoodsId_detail
                   , tmpMI_master.GoodsKindId_detail
 
@@ -378,7 +311,6 @@ BEGIN
                   , tmpMI_master.ReceiptId
                   , tmpMI_master.ReceiptId_basis
                   , tmpMI_master.GoodsId
-                  , tmpMI_master.GoodsId_basis
                   , tmpMI_master.GoodsKindId_complete
 
                   , tmpMI_master.isErased
@@ -401,7 +333,6 @@ BEGIN
                                    ON ObjectString_Receipt_Code_basis.ObjectId = Object_Receipt_basis.Id
                                   AND ObjectString_Receipt_Code_basis.DescId = zc_ObjectString_Receipt_Code()
 
-            LEFT JOIN Object AS Object_Goods_basis ON Object_Goods_basis.Id = tmpMI.GoodsId_basis
             LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = tmpMI.GoodsId
             LEFT JOIN Object AS Object_GoodsKind ON Object_GoodsKind.Id = tmpMI.GoodsKindId_complete
 
@@ -410,13 +341,8 @@ BEGIN
                                 AND ObjectLink_Goods_Measure.DescId = zc_ObjectLink_Goods_Measure()
             LEFT JOIN Object AS Object_Measure ON Object_Measure.Id = ObjectLink_Goods_Measure.ChildObjectId
 
-            LEFT JOIN ObjectLink AS ObjectLink_Goods_Measure_basis
-                                 ON ObjectLink_Goods_Measure_basis.ObjectId = Object_Goods.Id
-                                AND ObjectLink_Goods_Measure_basis.DescId = zc_ObjectLink_Goods_Measure()
-            LEFT JOIN Object AS Object_Measure_basis ON Object_Measure_basis.Id = ObjectLink_Goods_Measure_basis.ChildObjectId
-
             LEFT JOIN ObjectString AS ObjectString_Goods_GoodsGroupFull
-                                   ON ObjectString_Goods_GoodsGroupFull.ObjectId = Object_Goods.Id
+                                   ON ObjectString_Goods_GoodsGroupFull.ObjectId = COALESCE (Object_Goods.Id, Object_Goods_detail.Id)
                                   AND ObjectString_Goods_GoodsGroupFull.DescId = zc_ObjectString_Goods_GroupNameFull()
 
             LEFT JOIN ObjectLink AS ObjectLink_OrderType_Goods
@@ -431,42 +357,27 @@ BEGIN
        RETURN NEXT Cursor1;
 
        OPEN Cursor2 FOR
-        WITH tmpMI_master_find AS (SELECT MAX (tmpMI_master.MovementItemId) AS MovementItemId, tmpMI_master.GoodsId_basis, tmpMI_master.GoodsKindId_complete
+        WITH tmpMI_master_find AS (SELECT MAX (tmpMI_master.MovementItemId) AS MovementItemId, tmpMI_master.GoodsId_detail, tmpMI_master.GoodsKindId_detail
                                    FROM _tmpMI_master AS tmpMI_master
                                    WHERE tmpMI_master.isErased = FALSE
-                                   GROUP BY tmpMI_master.GoodsId_basis, tmpMI_master.GoodsKindId_complete
+                                   GROUP BY tmpMI_master.GoodsId_detail, tmpMI_master.GoodsKindId_detail
                                   )
        SELECT
              _tmpMI_child.MovementItemId         AS Id
-           , CASE WHEN inShowAll = TRUE THEN 0 ELSE Object_Goods.Id END AS GoodsId
+           , Object_Goods.Id                     AS GoodsId
            , Object_Goods.ObjectCode             AS GoodsCode
            , Object_Goods.ValueData              AS GoodsName
            , Object_GoodsKind.ValueData          AS GoodsKindName
-           , CASE WHEN inShowAll = TRUE THEN 0 ELSE Object_GoodsKindComplete.Id END AS GoodsKindId_complete
-           , Object_GoodsKindComplete.ValueData  AS GoodsKindName_complete
            , Object_Measure.ValueData            AS MeasureName
-           , _tmpMI_child.PartionGoodsDate
            , CASE WHEN ABS (_tmpMI_child.Amount) < 1 THEN _tmpMI_child.Amount ELSE CAST (_tmpMI_child.Amount AS NUMERIC (16, 1)) END :: TFloat AS Amount
-           , CAST (_tmpMI_child.Amount * tmpMI_master.KoeffLoss AS NUMERIC (16, 1)) :: TFloat AS Amount_calc
-           , CAST (tmpMI_master.TaxLoss AS NUMERIC (16, 1))                         :: TFloat AS TaxLoss
-           , CASE WHEN _tmpMI_child.PartionGoodsDate <= (vbOperDate :: Date - tmpMI_master.TermProduction :: Integer)
-                       THEN CAST (_tmpMI_child.Amount * tmpMI_master.KoeffLoss AS NUMERIC (16, 1))
-                  ELSE 0
-             END :: TFloat AS Amount_old
-           , CASE WHEN _tmpMI_child.PartionGoodsDate > (vbOperDate :: Date - tmpMI_master.TermProduction :: Integer)
-                       THEN CAST (_tmpMI_child.Amount * tmpMI_master.KoeffLoss AS NUMERIC (16, 1))
-                  ELSE 0
-             END :: TFloat AS Amount_next
-           , _tmpMI_child.ContainerId
            , FALSE AS isErased
        FROM _tmpMI_child
-             LEFT JOIN tmpMI_master_find ON tmpMI_master_find.GoodsId_basis = _tmpMI_child.GoodsId
-                                        AND tmpMI_master_find.GoodsKindId_complete = _tmpMI_child.GoodsKindId_complete
+             LEFT JOIN tmpMI_master_find ON tmpMI_master_find.GoodsId_detail = _tmpMI_child.GoodsId
+                                        AND tmpMI_master_find.GoodsKindId_detail = _tmpMI_child.GoodsKindId
              LEFT JOIN _tmpMI_master AS tmpMI_master ON tmpMI_master.MovementItemId = tmpMI_master_find.MovementItemId
 
              LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = _tmpMI_child.GoodsId
              LEFT JOIN Object AS Object_GoodsKind ON Object_GoodsKind.Id = _tmpMI_child.GoodsKindId
-             LEFT JOIN Object AS Object_GoodsKindComplete ON Object_GoodsKindComplete.Id = _tmpMI_child.GoodsKindId_complete
 
              LEFT JOIN ObjectLink AS ObjectLink_Goods_Measure
                                   ON ObjectLink_Goods_Measure.ObjectId = _tmpMI_child.GoodsId
@@ -484,10 +395,7 @@ ALTER FUNCTION gpSelect_MI_OrderInternalPack (Integer, Boolean, Boolean, TVarCha
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
- 19.06.15                                        * all
- 31.03.15         * add GoodsGroupNameFull
- 02.03.14         * add AmountRemains, AmountPartner, AmountForecast, AmountForecastOrder
- 06.06.14                                                       *
+ 27.06.15                                        *
 */
 
 -- тест

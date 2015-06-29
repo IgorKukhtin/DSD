@@ -1,6 +1,7 @@
 -- Function: lpUpdate_MI_OrderInternal_Property()
 
 DROP FUNCTION IF EXISTS lpUpdate_MI_OrderInternal_Property (Integer, Integer, Integer, Integer, TFloat, Integer, TFloat, Integer, Integer);
+DROP FUNCTION IF EXISTS lpUpdate_MI_OrderInternal_Property (Integer, Integer, Integer, Integer, TFloat, Integer, TFloat, Integer, Boolean, Integer);
 
 CREATE OR REPLACE FUNCTION lpUpdate_MI_OrderInternal_Property(
     IN ioId                  Integer   , -- Ключ объекта <Элемент документа>
@@ -11,6 +12,7 @@ CREATE OR REPLACE FUNCTION lpUpdate_MI_OrderInternal_Property(
     IN inDescId_Param        Integer   ,
     IN inAmount_ParamOrder   TFloat    , -- 
     IN inDescId_ParamOrder   Integer   ,
+    IN inIsPack              Boolean   , -- 
     IN inUserId              Integer     -- пользователь
 )
 RETURNS VOID
@@ -56,7 +58,8 @@ BEGIN
      END IF;
 
 
-     IF vbIsInsert = TRUE OR 1=1
+     -- !!!только для заявки на производство!!!
+     IF inIsPack = FALSE AND (vbIsInsert = TRUE OR 1=1)
      THEN
          -- сохранили связь с <Рецептуры>
          PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_ReceiptBasis(), ioId, tmp.ReceiptId_basis)
@@ -175,6 +178,85 @@ BEGIN
                                              AND ObjectFloat_StartProductionInDays.DescId = zc_ObjectFloat_OrderType_StartProductionInDays() 
                        ;
      END IF;
+
+     -- !!!только для заявки на упаковку!!!
+     IF inIsPack = TRUE AND (vbIsInsert = TRUE OR 1=1)
+     THEN
+         -- сохранили связь с <Рецептуры>
+         PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_ReceiptBasis(), ioId, tmp.ReceiptId_basis)
+               , lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_Receipt(),      ioId, tmp.ReceiptId)
+               , lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_Goods(),        ioId, ObjectLink_Receipt_Goods.ChildObjectId)
+               , lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_GoodsKindComplete(), ioId, ObjectLink_Receipt_GoodsKind.ChildObjectId)
+               , lpInsertUpdate_MovementItemFloat (zc_MIFloat_TermProduction(),         ioId, COALESCE (ObjectFloat_TermProduction.ValueData, 1))
+               , lpInsertUpdate_MovementItemFloat (zc_MIFloat_NormInDays(),             ioId, COALESCE (ObjectFloat_NormInDays.ValueData, 2))
+               , lpInsertUpdate_MovementItemFloat (zc_MIFloat_Koeff(),                  ioId, COALESCE (ObjectFloat_Koeff.ValueData, 1))
+               , lpInsertUpdate_MovementItemFloat (zc_MIFloat_StartProductionInDays(),  ioId, COALESCE (ObjectFloat_StartProductionInDays.ValueData, 1))
+         FROM (SELECT inGoodsId AS GoodsId) AS tmpGoods
+              LEFT JOIN (SELECT inGoodsId AS GoodsId
+                              , Object_Receipt.Id AS ReceiptId
+                              , ObjectLink_Receipt_Parent_0.ChildObjectId AS ReceiptId_basis
+                         FROM ObjectLink AS ObjectLink_Receipt_Goods
+                              INNER JOIN ObjectLink AS ObjectLink_Receipt_GoodsKind
+                                                    ON ObjectLink_Receipt_GoodsKind.ObjectId = ObjectLink_Receipt_Goods.ObjectId
+                                                   AND ObjectLink_Receipt_GoodsKind.DescId = zc_ObjectLink_Receipt_GoodsKind()
+                                                   AND ObjectLink_Receipt_GoodsKind.ChildObjectId = inGoodsKindId
+                              INNER JOIN Object AS Object_Receipt ON Object_Receipt.Id = ObjectLink_Receipt_Goods.ObjectId
+                                                                 AND Object_Receipt.isErased = FALSE
+                              INNER JOIN ObjectBoolean AS ObjectBoolean_Main
+                                                       ON ObjectBoolean_Main.ObjectId = Object_Receipt.Id
+                                                      AND ObjectBoolean_Main.DescId = zc_ObjectBoolean_Receipt_Main()
+                                                      AND ObjectBoolean_Main.ValueData = TRUE
+                              LEFT JOIN ObjectLink AS ObjectLink_Receipt_Parent_0
+                                                   ON ObjectLink_Receipt_Parent_0.ObjectId = Object_Receipt.Id
+                                                  AND ObjectLink_Receipt_Parent_0.DescId = zc_ObjectLink_Receipt_Parent()
+                              /*LEFT JOIN ObjectLink AS ObjectLink_Receipt_GoodsKind_Parent_0
+                                                   ON ObjectLink_Receipt_GoodsKind_Parent_0.ObjectId = ObjectLink_Receipt_Parent_0.ChildObjectId
+                                                  AND ObjectLink_Receipt_GoodsKind_Parent_0.DescId = zc_ObjectLink_Receipt_GoodsKind()*/
+                         WHERE ObjectLink_Receipt_Goods.ChildObjectId = inGoodsId
+                           AND ObjectLink_Receipt_Goods.DescId = zc_ObjectLink_Receipt_Goods()
+                        ) AS tmp ON tmp.GoodsId = inGoodsId
+
+
+                        LEFT JOIN ObjectLink AS ObjectLink_Receipt_Goods
+                                             ON ObjectLink_Receipt_Goods.ObjectId = tmp.ReceiptId_basis
+                                            AND ObjectLink_Receipt_Goods.DescId = zc_ObjectLink_Receipt_Goods()
+                        LEFT JOIN ObjectLink AS ObjectLink_Receipt_GoodsKind
+                                             ON ObjectLink_Receipt_GoodsKind.ObjectId = tmp.ReceiptId_basis
+                                            AND ObjectLink_Receipt_GoodsKind.DescId = zc_ObjectLink_Receipt_GoodsKind()
+
+                        LEFT JOIN ObjectLink AS ObjectLink_OrderType_Goods
+                                             ON ObjectLink_OrderType_Goods.ChildObjectId = ObjectLink_Receipt_Goods.ChildObjectId
+                                            AND ObjectLink_OrderType_Goods.DescId = zc_ObjectLink_OrderType_Goods()
+                        LEFT JOIN ObjectFloat AS ObjectFloat_Koeff
+                                              ON ObjectFloat_Koeff.ObjectId = ObjectLink_OrderType_Goods.ObjectId
+                                             AND ObjectFloat_Koeff.DescId = CASE vbMonth WHEN 1 THEN zc_ObjectFloat_OrderType_Koeff1()
+                                                                                         WHEN 2 THEN zc_ObjectFloat_OrderType_Koeff2()
+                                                                                         WHEN 3 THEN zc_ObjectFloat_OrderType_Koeff3()
+                                                                                         WHEN 4 THEN zc_ObjectFloat_OrderType_Koeff4()
+                                                                                         WHEN 5 THEN zc_ObjectFloat_OrderType_Koeff5()
+                                                                                         WHEN 6 THEN zc_ObjectFloat_OrderType_Koeff6()
+                                                                                         WHEN 7 THEN zc_ObjectFloat_OrderType_Koeff7()
+                                                                                         WHEN 8 THEN zc_ObjectFloat_OrderType_Koeff8()
+                                                                                         WHEN 9 THEN zc_ObjectFloat_OrderType_Koeff9()
+                                                                                         WHEN 10 THEN zc_ObjectFloat_OrderType_Koeff10()
+                                                                                         WHEN 11 THEN zc_ObjectFloat_OrderType_Koeff11()
+                                                                                         WHEN 12 THEN zc_ObjectFloat_OrderType_Koeff12()
+                                                                            END
+                                             AND ObjectFloat_Koeff.ValueData <> 0
+                        LEFT JOIN ObjectFloat AS ObjectFloat_TermProduction
+                                              ON ObjectFloat_TermProduction.ObjectId = ObjectLink_OrderType_Goods.ObjectId
+                                             AND ObjectFloat_TermProduction.DescId = zc_ObjectFloat_OrderType_TermProduction() 
+                                             AND ObjectFloat_TermProduction.ValueData <> 0
+                        LEFT JOIN ObjectFloat AS ObjectFloat_NormInDays
+                                              ON ObjectFloat_NormInDays.ObjectId = ObjectLink_OrderType_Goods.ObjectId
+                                             AND ObjectFloat_NormInDays.DescId = zc_ObjectFloat_OrderType_NormInDays() 
+                                             AND ObjectFloat_NormInDays.ValueData <> 0
+                        LEFT JOIN ObjectFloat AS ObjectFloat_StartProductionInDays
+                                              ON ObjectFloat_StartProductionInDays.ObjectId = ObjectLink_OrderType_Goods.ObjectId
+                                             AND ObjectFloat_StartProductionInDays.DescId = zc_ObjectFloat_OrderType_StartProductionInDays() 
+                       ;
+     END IF;
+
 
      -- сохранили свойство
      PERFORM lpInsertUpdate_MovementItemFloat (inDescId_Param, ioId, inAmount_Param);

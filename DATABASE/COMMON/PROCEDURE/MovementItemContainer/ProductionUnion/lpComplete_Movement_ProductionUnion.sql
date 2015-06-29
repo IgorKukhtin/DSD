@@ -578,7 +578,7 @@ BEGIN
        SELECT 0, zc_MIContainer_Count() AS DescId, vbMovementDescId, inMovementId, _tmpItemChild.MovementItemId
             , _tmpItemChild.ContainerId_GoodsFrom
             , 0                                       AS AccountId              -- нет счета
-            , vbWhereObjectId_Analyzer_To             AS AnalyzerId             -- нет аналитики, но для ускорения отчетов будет Подраделение "Кому" или...
+            , CASE WHEN _tmpItem.GoodsId = zc_Goods_ReWork() THEN zc_Enum_AnalyzerId_ReWork() ELSE vbWhereObjectId_Analyzer_To END AS AnalyzerId -- есть аналитика + для ускорения отчетов будет Подраделение "Кому" или...
             , _tmpItemChild.GoodsId                   AS ObjectId_Analyzer      -- Товар
             , vbWhereObjectId_Analyzer_From           AS WhereObjectId_Analyzer -- Подраделение или...
             , _tmpItem.ContainerId_GoodsTo            AS ContainerId_Analyzer   -- количественный Контейнер-Мастер (т.е. из прихода)
@@ -722,7 +722,7 @@ BEGIN
        SELECT 0, zc_MIContainer_Summ() AS DescId, vbMovementDescId, inMovementId, _tmpItemChild.MovementItemId
             , _tmpItemSummChild.ContainerId_From
             , _tmpItemSummChild.AccountId_From        AS AccountId              -- счет есть всегда
-            , vbWhereObjectId_Analyzer_To             AS AnalyzerId             -- нет аналитики, но для ускорения отчетов будет Подраделение "Кому" или...
+            , CASE WHEN _tmpItem.GoodsId = zc_Goods_ReWork() THEN zc_Enum_AnalyzerId_ReWork() ELSE vbWhereObjectId_Analyzer_To END AS AnalyzerId -- есть аналитика + для ускорения отчетов будет Подраделение "Кому" или...
             , _tmpItemChild.GoodsId                   AS ObjectId_Analyzer      -- Товар
             , vbWhereObjectId_Analyzer_From           AS WhereObjectId_Analyzer -- Подраделение или...
             , _tmpItemSumm.ContainerId_To             AS ContainerId_Analyzer   -- суммовой Контейнер-Мастер (т.е. из прихода)
@@ -734,6 +734,7 @@ BEGIN
             JOIN _tmpItemSummChild ON _tmpItemSummChild.MovementItemId = _tmpItemChild.MovementItemId
             JOIN _tmpItemSumm ON _tmpItemSumm.MovementItemId   = _tmpItemSummChild.MovementItemId_Parent
                              AND _tmpItemSumm.ContainerId_From = _tmpItemSummChild.ContainerId_From
+            JOIN _tmpItem ON _tmpItem.MovementItemId = _tmpItemSumm.MovementItemId
        WHERE _tmpItemSummChild.MovementItemId = _tmpItemChild.MovementItemId;
 
 

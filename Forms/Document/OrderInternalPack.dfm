@@ -251,12 +251,12 @@ inherited OrderInternalPackForm: TOrderInternalPackForm
             Width = 80
           end
           object MeasureName_detail: TcxGridDBColumn [10]
-            Caption = #1045#1076'.'#1080#1079#1084'.'
+            Caption = #1045#1076'. '#1080#1079#1084'.'
             DataBinding.FieldName = 'MeasureName_detail'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 55
+            Width = 35
           end
           object isCheck_detail: TcxGridDBColumn [11]
             Caption = #1056#1072#1079#1085'. ('#1090#1086#1074'.)'
@@ -496,7 +496,7 @@ inherited OrderInternalPackForm: TOrderInternalPackForm
             Width = 60
           end
           object Amount: TcxGridDBColumn [32]
-            Caption = #1047#1072#1082#1072#1079' '#1085#1072' '#1087#1088'-'#1074#1086
+            Caption = #1047#1072#1082#1072#1079' '#1085#1072' '#1091#1087#1072#1082'.'
             DataBinding.FieldName = 'Amount'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
@@ -506,7 +506,7 @@ inherited OrderInternalPackForm: TOrderInternalPackForm
             Width = 60
           end
           object AmountSecond: TcxGridDBColumn [33]
-            Caption = #1044#1086#1079#1072#1082#1072#1079' '#1085#1072' '#1087#1088'-'#1074#1086
+            Caption = #1044#1086#1079#1072#1082#1072#1079' '#1085#1072' '#1091#1087#1072#1082'.'
             DataBinding.FieldName = 'AmountSecond'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
@@ -515,17 +515,26 @@ inherited OrderInternalPackForm: TOrderInternalPackForm
             HeaderAlignmentVert = vaCenter
             Width = 60
           end
-          object ReceiptCode: TcxGridDBColumn [34]
-            Caption = #1050#1086#1076' '#1088#1077#1094#1077#1087#1090'. '#1043#1055
-            DataBinding.FieldName = 'ReceiptCode'
+          object ReceiptCode_code: TcxGridDBColumn [34]
+            Caption = #1050#1086#1076' '#1088#1077#1094#1077#1087#1090'. ('#1082#1086#1076')'
+            DataBinding.FieldName = 'ReceiptCode_code'
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 55
           end
-          object ReceiptName: TcxGridDBColumn [35]
-            Caption = #1053#1072#1079#1074#1072#1085#1080#1077' '#1088#1077#1094#1077#1087#1090#1091#1088#1099' '#1043#1055
+          object ReceiptCode: TcxGridDBColumn [35]
+            Caption = #1050#1086#1076' '#1088#1077#1094#1077#1087#1090'.'
+            DataBinding.FieldName = 'ReceiptCode'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
+          end
+          object ReceiptName: TcxGridDBColumn [36]
+            Caption = #1053#1072#1079#1074#1072#1085#1080#1077' '#1088#1077#1094#1077#1087#1090#1091#1088#1099
             DataBinding.FieldName = 'ReceiptName'
             Visible = False
             HeaderAlignmentHorz = taCenter
@@ -533,46 +542,73 @@ inherited OrderInternalPackForm: TOrderInternalPackForm
             Options.Editing = False
             Width = 80
           end
-          object Color_remains: TcxGridDBColumn [36]
+          object ReceiptCode_code_basis: TcxGridDBColumn [37]
+            Caption = #1050#1086#1076' '#1088#1077#1094#1077#1087#1090'. ('#1075#1083'. '#1082#1086#1076')'
+            DataBinding.FieldName = 'ReceiptCode_code_basis'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 60
+          end
+          object ReceiptCode_basis: TcxGridDBColumn [38]
+            Caption = #1050#1086#1076' '#1088#1077#1094#1077#1087#1090'. ('#1075#1083'.)'
+            DataBinding.FieldName = 'ReceiptCode_basis'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
+          end
+          object ReceiptName_basis: TcxGridDBColumn [39]
+            Caption = #1053#1072#1079#1074#1072#1085#1080#1077' '#1088#1077#1094#1077#1087#1090#1091#1088#1099' ('#1075#1083'.)'
+            DataBinding.FieldName = 'ReceiptName_basis'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 90
+          end
+          object Color_remains: TcxGridDBColumn [40]
             DataBinding.FieldName = 'Color_remains'
             Visible = False
             Options.Editing = False
             VisibleForCustomization = False
             Width = 55
           end
-          object Color_remains_calc: TcxGridDBColumn [37]
+          object Color_remains_calc: TcxGridDBColumn [41]
             DataBinding.FieldName = 'Color_remains_calc'
             Visible = False
             VisibleForCustomization = False
             Width = 55
           end
-          object Color_remainsChild_calc: TcxGridDBColumn [38]
+          object Color_remainsChild_calc: TcxGridDBColumn [42]
             DataBinding.FieldName = 'Color_remainsChild_calc'
             Visible = False
             VisibleForCustomization = False
             Width = 55
           end
-          object ColorB_const: TcxGridDBColumn [39]
+          object ColorB_const: TcxGridDBColumn [43]
             DataBinding.FieldName = 'ColorB_const'
             Visible = False
             VisibleForCustomization = False
             Width = 55
           end
-          object ColorB_DayCountForecast: TcxGridDBColumn [40]
+          object ColorB_DayCountForecast: TcxGridDBColumn [44]
             DataBinding.FieldName = 'ColorB_DayCountForecast'
             Visible = False
             Options.Editing = False
             VisibleForCustomization = False
             Width = 55
           end
-          object ColorB_AmountPartner: TcxGridDBColumn [41]
+          object ColorB_AmountPartner: TcxGridDBColumn [45]
             DataBinding.FieldName = 'ColorB_AmountPartner'
             Visible = False
             Options.Editing = False
             VisibleForCustomization = False
             Width = 55
           end
-          object ColorB_AmountPrognoz: TcxGridDBColumn [42]
+          object ColorB_AmountPrognoz: TcxGridDBColumn [46]
             DataBinding.FieldName = 'ColorB_AmountPrognoz'
             Visible = False
             VisibleForCustomization = False
@@ -753,7 +789,9 @@ inherited OrderInternalPackForm: TOrderInternalPackForm
         item
           DataSet = PrintItemsCDS
           UserName = 'frxDBDMaster'
-          IndexFieldNames = 'UnitCode;GoodsGroupNameFull;GoodsName;GoodsKindName'
+          IndexFieldNames = 
+            'UnitCode;GoodsGroupNameFull;GoodsName_basis;GoodsName;GoodsKindN' +
+            'ame'
         end>
       Params = <
         item
@@ -762,8 +800,8 @@ inherited OrderInternalPackForm: TOrderInternalPackForm
           Component = FormParams
           ComponentItem = 'Id'
         end>
-      ReportName = #1047#1072#1103#1074#1082#1072' '#1085#1072' '#1087#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1086
-      ReportNameParam.Value = #1047#1072#1103#1074#1082#1072' '#1085#1072' '#1087#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1086
+      ReportName = #1047#1072#1103#1074#1082#1072' '#1085#1072' '#1091#1087#1072#1082#1086#1074#1082#1091
+      ReportNameParam.Value = #1047#1072#1103#1074#1082#1072' '#1085#1072' '#1091#1087#1072#1082#1086#1074#1082#1091
       ReportNameParam.ParamType = ptInput
     end
     inherited actUnCompleteMovement: TChangeGuidesStatus
@@ -1508,9 +1546,7 @@ inherited OrderInternalPackForm: TOrderInternalPackForm
       end
       item
         Name = 'inCuterCount'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'CuterCount'
+        Value = 0.000000000000000000
         DataType = ftFloat
         ParamType = ptInput
       end
@@ -1524,9 +1560,7 @@ inherited OrderInternalPackForm: TOrderInternalPackForm
       end
       item
         Name = 'inCuterCountSecond'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'CuterCountSecond'
+        Value = 0.000000000000000000
         DataType = ftFloat
         ParamType = ptInput
       end
@@ -1550,6 +1584,14 @@ inherited OrderInternalPackForm: TOrderInternalPackForm
         Value = Null
         Component = MasterCDS
         ComponentItem = 'ReceiptId_basis'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inIsPack'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'isPack'
+        DataType = ftBoolean
         ParamType = ptInput
       end>
     Left = 168
@@ -1591,7 +1633,7 @@ inherited OrderInternalPackForm: TOrderInternalPackForm
     Top = 334
   end
   object spSelectPrint: TdsdStoredProc
-    StoredProcName = 'gpSelect_Movement_OrderInternal_Print'
+    StoredProcName = 'gpSelect_Movement_OrderInternalPack_Print'
     DataSet = PrintHeaderCDS
     DataSets = <
       item

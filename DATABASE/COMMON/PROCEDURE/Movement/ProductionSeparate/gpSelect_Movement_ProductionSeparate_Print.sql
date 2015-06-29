@@ -10,12 +10,15 @@ RETURNS SETOF refcursor
 AS
 $BODY$
     DECLARE vbUserId Integer;
-    DECLARE vbstatusid Integer;
-    DECLARE Cursor1 refcursor;
-    DECLARE Cursor2 refcursor;
+
+    DECLARE vbStatusId Integer;
     DECLARE vbDescId Integer;
     DECLARE vbOperDate TDateTime;
-    
+
+    DECLARE vbPartionGoodsId_null Integer; 
+
+    DECLARE Cursor1 refcursor;
+    DECLARE Cursor2 refcursor;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_...());
@@ -46,16 +49,44 @@ BEGIN
     END IF;
 
 
+    -- поиск пустой партии, т.к. ее надо отбросить
+    vbPartionGoodsId_null:= (SELECT Object.Id
+                             FROM Object 
+                                  LEFT JOIN ObjectLink AS ObjectLink_Unit
+                                                       ON ObjectLink_Unit.ObjectId = Object.Id
+                                                      AND ObjectLink_Unit.DescId = zc_ObjectLink_PartionGoods_Unit()
+                             WHERE Object.ValueData = ''
+                               AND Object.DescId = zc_Object_PartionGoods()
+                               AND ObjectLink_Unit.ObjectId IS NULL
+                            ); -- 80132
 
      --
     OPEN Cursor1 FOR
 
   WITH -- список товаров для отличия в Separate основного сырья от голов
-       tmpGoods AS (SELECT GoodsId FROM lfSelect_Object_Goods_byGoodsGroup (2006))
+       tmpGoods AS (SELECT GoodsId FROM lfSelect_Object_Goods_byGoodsGroup (2006)) -- СО- ГОВ. И СВ. Н\К + СЫР
        -- текущий док. с партией
      , tmpMovement AS (SELECT Movement.InvNumber                    AS InvNumber
                             , Movement.OperDate                     AS OperDate
                             , MovementString_PartionGoods.ValueData AS PartionGoods
+
+                            , CASE WHEN zfConvert_StringToDate (split_part (TRIM (MovementString_PartionGoods.ValueData), '-', 4)) IS NOT NULL 
+                                        THEN zfConvert_StringToNumber (split_part (TRIM (MovementString_PartionGoods.ValueData), '-', 3))
+                                   WHEN zfConvert_StringToDate (split_part (TRIM (MovementString_PartionGoods.ValueData), '-', 3)) IS NOT NULL 
+                                        THEN zfConvert_StringToNumber (split_part (TRIM (MovementString_PartionGoods.ValueData), '-', 2))
+                                   ELSE NULL
+                              END AS PartnerCode_partion
+                            , CASE WHEN zfConvert_StringToDate (split_part (TRIM (MovementString_PartionGoods.ValueData), '-', 4)) IS NOT NULL 
+                                        THEN zfConvert_StringToDate (split_part (TRIM (MovementString_PartionGoods.ValueData), '-', 4))
+                                   WHEN zfConvert_StringToDate (split_part (TRIM (MovementString_PartionGoods.ValueData), '-', 3)) IS NOT NULL 
+                                        THEN zfConvert_StringToDate (split_part (TRIM (MovementString_PartionGoods.ValueData), '-', 3))
+                                   WHEN zfConvert_StringToDate (split_part (TRIM (MovementString_PartionGoods.ValueData), '-', 2)) IS NOT NULL 
+                                        THEN zfConvert_StringToDate (split_part (TRIM (MovementString_PartionGoods.ValueData), '-', 2))
+                                   WHEN zfConvert_StringToDate (split_part (TRIM (MovementString_PartionGoods.ValueData), '-', 1)) IS NOT NULL 
+                                        THEN zfConvert_StringToDate (split_part (TRIM (MovementString_PartionGoods.ValueData), '-', 1))
+                                   ELSE NULL
+                              END AS OperDate_partion
+
                         FROM Movement 
                              LEFT JOIN MovementString AS MovementString_PartionGoods
                                                       ON MovementString_PartionGoods.MovementId =  Movement.Id
@@ -97,7 +128,7 @@ BEGIN
                                  INNER JOIN ContainerLinkObject AS CLO_PartionGoods
                                                                 ON CLO_PartionGoods.ContainerId = tmpMIContainer.ContainerId
                                                                AND CLO_PartionGoods.DescId = zc_ContainerLinkObject_PartionGoods()
-                                                               AND CLO_PartionGoods.ObjectId > 0
+                                                               AND CLO_PartionGoods.ObjectId <> vbPartionGoodsId_null
                             WHERE tmpMIContainer.DescId = zc_MIContainer_Count()
                             GROUP BY CLO_PartionGoods.ObjectId
                            ) AS tmp
@@ -110,7 +141,8 @@ BEGIN
    
                  
         -- приход от поставщика : кол. и сумм.
-      , tmpIncome AS (SELECT tmpContainer.DescId
+      , tmpIncome AS (-- находим по партиям из проводкок
+                      SELECT tmpContainer.DescId
                            , tmpContainer.ContainerId
                            , MIContainer.MovementId
                            , MIContainer.ObjectId_analyzer AS GoodsId
@@ -131,6 +163,41 @@ BEGIN
                                                       AND MIFloat_HeadCount.DescId = zc_MIFloat_HeadCount()
                                                       AND MIContainer.DescId = zc_MIContainer_Count()
                       GROUP BY tmpContainer.DescId, tmpContainer.ContainerId, MIContainer.MovementId, MIContainer.ObjectId_analyzer, MIContainer.DescId
+                     UNION ALL
+                      -- находим по партиям из документа (т.к. не партионный учет то проводок по партиям нет)
+                      SELECT 0 AS DescId
+                           , 0 AS ContainerId
+                           , MIContainer.MovementId
+                           , MIContainer.ObjectId_analyzer AS GoodsId
+                           , CASE WHEN MIContainer.DescId = zc_MIContainer_Count() THEN SUM (MIContainer.Amount) ELSE 0 END AS Amount_count
+                           , CASE WHEN MIContainer.DescId = zc_MIContainer_Summ()  THEN SUM (MIContainer.Amount) ELSE 0 END AS Amount_summ
+                           , SUM (COALESCE (MIFloat_AmountPacker.ValueData, 0)) AS CountPacker
+                           , SUM (COALESCE (MIFloat_HeadCount.ValueData, 0))    AS HeadCount
+                      FROM tmpMovement
+                           LEFT JOIN tmpContainer ON 1 = 1
+                           INNER JOIN Movement ON Movement.OperDate = tmpMovement.OperDate_partion
+                                              AND Movement.DescId = zc_Movement_Income()
+                                              AND Movement.StatusId = zc_Enum_Status_Complete()
+                           INNER JOIN Object AS Object_Partner ON Object_Partner.ObjectCode = tmpMovement.PartnerCode_partion AND Object_Partner.DescId = zc_Object_Partner()
+                           INNER JOIN MovementLinkObject AS MovementLinkObject_From
+                                                         ON MovementLinkObject_From.MovementId = Movement.Id
+                                                        AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
+                                                        AND MovementLinkObject_From.ObjectId = Object_Partner.Id
+                           INNER JOIN MovementItemContainer AS MIContainer
+                                                            ON MIContainer.MovementId = Movement.Id
+                                                           AND MIContainer.ObjectId_analyzer IN (SELECT tmpMI_group.GoodsId FROM tmpMI_group)
+                                                           AND MIContainer.isActive = TRUE
+                           LEFT JOIN MovementItemFloat AS MIFloat_AmountPacker
+                                                       ON MIFloat_AmountPacker.MovementItemId = MIContainer.MovementItemId
+                                                      AND MIFloat_AmountPacker.DescId = zc_MIFloat_AmountPacker()
+                                                      AND MIContainer.DescId = zc_MIContainer_Count()
+                           LEFT JOIN MovementItemFloat AS MIFloat_HeadCount
+                                                       ON MIFloat_HeadCount.MovementItemId = MIContainer.MovementItemId
+                                                      AND MIFloat_HeadCount.DescId = zc_MIFloat_HeadCount()
+                                                      AND MIContainer.DescId = zc_MIContainer_Count()
+                      WHERE tmpContainer.ContainerId IS NULL
+                        AND tmpMovement.PartnerCode_partion > 0
+                      GROUP BY MIContainer.MovementId, MIContainer.ObjectId_analyzer, MIContainer.DescId
                      )
 
 
@@ -193,6 +260,13 @@ BEGIN
            , tmpSeparateS.Amount_count       AS CountSeparate
            , Object_Goods_separate.ValueData AS GoodsNameSeparate
            , tmpSeparateH.Amount_summ        AS SummHeadCount1  -- ср вес головы из Separate
+
+           , CASE WHEN Object_Goods.ObjectCode = 4218 -- ЖИВОЙ ВЕС СВИНИНА
+                       THEN 'Убой' -- 1
+                  WHEN ObjectLink_Goods_GoodsGroup.ChildObjectId = 2007 -- СО- ЗАКУП. СВИН. Н\\Ж* зп жил
+                       THEN 'Разжиловка' -- 3
+                  ELSE 'Обвалка' -- '2-Обвалка' 
+             END :: TVarChar AS Separate_info
           
       FROM tmpMovement
            LEFT JOIN tmpMI_group ON 1 = 1
@@ -216,36 +290,46 @@ BEGIN
            LEFT JOIN Object AS Object_Goods_income ON Object_Goods_income.Id = tmpIncomeAll.GoodsId
            LEFT JOIN Object AS Object_From ON Object_From.Id = tmpIncomeAll.FromId
            LEFT JOIN Object AS Object_PersonalPacker ON Object_PersonalPacker.Id = tmpIncomeAll.PersonalPackerId
-       ;
 
-
+           LEFT JOIN ObjectLink AS ObjectLink_Goods_GoodsGroup
+                                ON ObjectLink_Goods_GoodsGroup.ObjectId = Object_Goods.Id
+                               AND ObjectLink_Goods_GoodsGroup.DescId = zc_ObjectLink_Goods_GoodsGroup()
+          ;
     RETURN NEXT Cursor1;
 
 
     OPEN Cursor2 FOR
-     WITH tmpContainer AS (SELECT MIContainer.MovementItemId
-                            , SUM (MIContainer.Amount) AS Amount
-         
-                        FROM MovementItemContainer AS MIContainer 
-                                                           
-                        WHERE MIContainer.DescId = zc_MIContainer_Summ()
-                          AND MIContainer.MovementId = inMovementId   --386509 --
-                        GROUP BY MIContainer.MovementItemId
-                        )
+    WITH tmpMIContainer AS (SELECT MIContainer.MovementItemId
+                                 , SUM (MIContainer.Amount) AS Amount
+                            FROM MovementItemContainer AS MIContainer 
+                            WHERE MIContainer.DescId = zc_MIContainer_Summ()
+                              AND MIContainer.MovementId = inMovementId
+                              AND MIContainer.isActive = TRUE
+                            GROUP BY MIContainer.MovementItemId
+                           )
                  
       SELECT Object_Goods.ObjectCode  			 AS GoodsCode
            , Object_Goods.ValueData   			 AS GoodsName
+           , Object_GoodsGroup.ValueData   		 AS GoodsGroupName
            , ObjectString_Goods_GoodsGroupFull.ValueData AS GoodsGroupNameFull
            , Object_Measure.ValueData                    AS MeasureName
 
            , SUM (MovementItem.Amount)::TFloat		 AS Amount
            , SUM (COALESCE (MIFloat_LiveWeight.ValueData, 0)) :: TFloat  AS LiveWeight
            , SUM (COALESCE (MIFloat_HeadCount.ValueData, 0)) :: TFloat	 AS HeadCount
-           , CASE WHEN SUM (MovementItem.Amount) <> 0 THEN SUM (COALESCE (tmpContainer.Amount,0)) / SUM (MovementItem.Amount) ELSE 0 END AS SummPrice
-           , SUM (COALESCE (tmpContainer.Amount,0))      AS Summ
+           , CASE WHEN SUM (MovementItem.Amount) <> 0 THEN SUM (COALESCE (tmpMIContainer.Amount,0)) / SUM (MovementItem.Amount) ELSE 0 END AS SummPrice
+           , SUM (COALESCE (tmpMIContainer.Amount,0))      AS Summ
            , lfObjectHistory_PriceListItem.ValuePrice :: TFloat AS PricePlan
+
+           , CASE WHEN ObjectLink_Goods_GoodsGroup.ChildObjectId IN (1966 -- СО-НЕ ВХОД. В ВЫХОД маг
+                                                                   , 1967 -- ****СО-ПОТЕРИ - _toolsView_GoodsProperty_Obvalka_isLoss_TWO
+                                                                   , 1973 -- СО-КОСТИ маг
+                                                                    )
+                       THEN TRUE
+                  ELSE FALSE
+             END :: Boolean AS isLoss
+
        FROM MovementItem
-                      
             LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = MovementItem.ObjectId
 
             LEFT JOIN MovementItemFloat AS MIFloat_LiveWeight
@@ -264,24 +348,29 @@ BEGIN
                                 AND ObjectLink_Goods_Measure.DescId = zc_ObjectLink_Goods_Measure()
             LEFT JOIN Object AS Object_Measure ON Object_Measure.Id = ObjectLink_Goods_Measure.ChildObjectId
 
-            LEFT JOIN tmpContainer ON tmpContainer.MovementItemId = MovementItem.Id
+            LEFT JOIN tmpMIContainer ON tmpMIContainer.MovementItemId = MovementItem.Id
                                 
             LEFT JOIN lfSelect_ObjectHistory_PriceListItem (inPriceListId:= zc_PriceList_ProductionSeparate(), inOperDate:= vbOperDate)
                    AS lfObjectHistory_PriceListItem ON lfObjectHistory_PriceListItem.GoodsId = MovementItem.ObjectId                        
 
-            WHERE MovementItem.MovementId = inMovementId
-              AND MovementItem.DescId     = zc_MI_Child()
-              AND MovementItem.Amount     <> 0
-              AND MovementItem.isErased   = FALSE
+            LEFT JOIN ObjectLink AS ObjectLink_Goods_GoodsGroup
+                                 ON ObjectLink_Goods_GoodsGroup.ObjectId = Object_Goods.Id
+                                AND ObjectLink_Goods_GoodsGroup.DescId = zc_ObjectLink_Goods_GoodsGroup()
+            LEFT JOIN Object AS Object_GoodsGroup ON Object_GoodsGroup.Id = ObjectLink_Goods_GoodsGroup.ChildObjectId
 
-            GROUP BY Object_Goods.ObjectCode
+        WHERE MovementItem.MovementId = inMovementId
+          AND MovementItem.DescId     = zc_MI_Child()
+          AND MovementItem.Amount     <> 0
+          AND MovementItem.isErased   = FALSE
+
+        GROUP BY Object_Goods.ObjectCode
            , Object_Goods.ValueData
+           , Object_GoodsGroup.ValueData
            , ObjectString_Goods_GoodsGroupFull.ValueData
            , Object_Measure.ValueData
            , lfObjectHistory_PriceListItem.ValuePrice
-           
- ;
-
+           , ObjectLink_Goods_GoodsGroup.ChildObjectId
+       ;
     RETURN NEXT Cursor2;
 
 END;

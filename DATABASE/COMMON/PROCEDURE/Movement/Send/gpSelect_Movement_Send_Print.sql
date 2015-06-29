@@ -11,18 +11,22 @@ AS
 $BODY$
     DECLARE vbUserId Integer;
 
+    DECLARE vbIsProductionOut Boolean;
+
     DECLARE Cursor1 refcursor;
     DECLARE Cursor2 refcursor;
-
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Select_Movement_Sale());
      vbUserId:= inSession;
 
+
+     -- расчет, временно захардкодил
+     vbIsProductionOut:= EXISTS (SELECT MovementId FROM MovementLinkObject WHERE MovementId = inMovementId AND DescId = zc_MovementLinkObject_To() AND ObjectId IN (8447, 8448)) -- ЦЕХ колбасный + ЦЕХ деликатесов
+                     AND EXISTS (SELECT Id FROM Movement WHERE Id = inMovementId AND DescId = zc_Movement_ProductionUnion());
+
+
     OPEN Cursor1 FOR
---     WITH tmpObject_GoodsPropertyValue AS
-
-
        SELECT
              Movement.Id                                        AS Id
            , Movement.InvNumber                                 AS InvNumber
@@ -34,6 +38,13 @@ BEGIN
            , Object_From.ValueData                              AS FromName
            , Object_To.Id                                       AS ToId
            , Object_To.ValueData                                AS ToName
+           , CASE WHEN vbIsProductionOut = TRUE 
+                       THEN 'производства (расход)'
+                  WHEN Movement.DescId = zc_Movement_ProductionUnion()
+                       THEN 'производства (приход)'
+                  WHEN Movement.DescId = zc_Movement_Send()
+                       THEN 'перемещения'
+             END AS Movement_info
 
        FROM Movement
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
@@ -64,6 +75,7 @@ BEGIN
            , Object_Goods.Id                    AS GoodsId
            , Object_Goods.ObjectCode            AS GoodsCode
            , Object_Goods.ValueData             AS GoodsName
+           , Object_Measure.ValueData           AS MeasureName
            , MovementItem.Amount                AS Amount
            , MIFloat_Count.ValueData            AS Count
            , MIFloat_CountPack.ValueData        AS CountPack
@@ -75,7 +87,6 @@ BEGIN
            , Object_Asset.Id                    AS AssetId
            , Object_Asset.ValueData             AS AssetName
 
-
            , Object_PartionGoods.Id             AS PartionGoodsId
            , Object_PartionGoods.ValueData      AS PartionGoodsName
            , ObjectDate_Value.ValueData         AS PartionGoodsOperDate
@@ -83,9 +94,12 @@ BEGIN
            , Object_Storage_Partion.ValueData   AS StorageName_Partion
            , Object_Unit.ValueData              AS UnitName
 
-
        FROM MovementItem
             LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = MovementItem.ObjectId
+            LEFT JOIN ObjectLink AS ObjectLink_Goods_Measure
+                                 ON ObjectLink_Goods_Measure.ObjectId = Object_Goods.Id
+                                AND ObjectLink_Goods_Measure.DescId = zc_ObjectLink_Goods_Measure()
+            LEFT JOIN Object AS Object_Measure ON Object_Measure.Id = ObjectLink_Goods_Measure.ChildObjectId
 
             LEFT JOIN MovementItemFloat AS MIFloat_Count
                                         ON MIFloat_Count.MovementItemId = MovementItem.Id
@@ -130,9 +144,10 @@ BEGIN
 
             LEFT JOIN ObjectDate as objectdate_value ON objectdate_value.ObjectId = Object_PartionGoods.Id                    -- дата
                                                     AND objectdate_value.DescId = zc_ObjectDate_PartionGoods_Value()
+
        WHERE MovementItem.MovementId = inMovementId
-         AND MovementItem.DescId     = zc_MI_Master()
-         AND MovementItem.isErased   = False
+         AND MovementItem.DescId     = CASE WHEN vbIsProductionOut = TRUE THEN zc_MI_Child() ELSE zc_MI_Master() END
+         AND MovementItem.isErased   = FALSE
             ;
     RETURN NEXT Cursor2;
 
@@ -147,8 +162,4 @@ ALTER FUNCTION gpSelect_Movement_Send_Print (Integer,TVarChar) OWNER TO postgres
  12.06.15         *
 */
 
-/*
-BEGIN;
- SELECT * FROM gpSelect_Movement_Send_Print (inMovementId := 570596, inSession:= '5');
-COMMIT;
-*/
+-- SELECT * FROM gpSelect_Movement_Send_Print (inMovementId := 570596, inSession:= '5');

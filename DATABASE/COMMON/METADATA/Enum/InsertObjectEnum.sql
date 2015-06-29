@@ -160,6 +160,8 @@ BEGIN
      PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_AnalyzerId_ProfitLoss(), inDescId:= zc_Object_AnalyzerId(), inCode:= 1011, inName:= 'то что относитс€ к ќѕи”, кроме проводок с товарами', inEnumName:= 'zc_Enum_AnalyzerId_ProfitLoss');
      --
      PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_AnalyzerId_Income_Packer(), inDescId:= zc_Object_AnalyzerId(), inCode:= 1021, inName:= 'в приходе если количественна€ или суммова€ проводка по заготовителю', inEnumName:= 'zc_Enum_AnalyzerId_Income_Packer');
+     --
+     PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_AnalyzerId_ReWork(), inDescId:= zc_Object_AnalyzerId(), inCode:= 1031, inName:= 'в строчной части расхода на производство если в мастере переработка', inEnumName:= 'zc_Enum_AnalyzerId_ReWork');
 
      
      -- !!! формы оплаты
