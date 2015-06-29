@@ -1,9 +1,10 @@
-DROP FUNCTION IF EXISTS gpInsertUpdate_AlternativeGroup_Goods (Integer, Integer, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_AlternativeGroup_Goods (Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_AlternativeGroup_Goods (Integer, Integer, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_AlternativeGroup_Goods(
     IN inAlternativeGroupId       Integer   ,    -- группа альтернатив
     IN inGoodsId                  Integer   ,    -- Товар
-    IN inInGroup                  Boolean   ,    -- True - добавить в группу/ false - удалить из группы
+    IN inOldGoodsId                Integer   ,    -- Товар, который меняется
    OUT outAlternativeGroupId      Integer   ,    -- группа альтернатив
     IN inSession                  TVarChar       -- сессия пользователя
 )
@@ -14,21 +15,23 @@ BEGIN
   -- проверка прав пользователя на вызов процедуры
   -- vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Object_AlternativeGroup());
   -- vbUserId := inSession;
-  IF inInGroup = True THEN
-    PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Goods_AlternativeGroup(), inGoodsId, inAlternativeGroupId);
-  ELSE
+  IF COALESCE(inOldGoodsId,0) <> 0 THEN
     Delete from objectlink
-    Where
-      DescId = zc_ObjectLink_Goods_AlternativeGroup()
-      AND 
-      ObjectId = inGoodsId
-      AND
-      childobjectid = inAlternativeGroupId;
-  END IF;  
+      Where
+        DescId = zc_ObjectLink_Goods_AlternativeGroup()
+        AND 
+        ObjectId = inOldGoodsId
+        AND
+        childobjectid = inAlternativeGroupId;
+  END IF;
+  IF COALESCE(inGoodsId,0) <> 0 THEN  
+    PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Goods_AlternativeGroup(), inGoodsId, inAlternativeGroupId);
+  END IF;
+  outAlternativeGroupId := inAlternativeGroupId;
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpInsertUpdate_AlternativeGroup_Goods (Integer, Integer, BOOLEAN, TVarChar) OWNER TO postgres;
+ALTER FUNCTION gpInsertUpdate_AlternativeGroup_Goods (Integer, Integer, Integer, TVarChar) OWNER TO postgres;
 
 /*-------------------------------------------------------------------------------*/
 /*

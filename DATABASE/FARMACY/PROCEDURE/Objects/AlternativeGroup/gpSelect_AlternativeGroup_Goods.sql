@@ -5,7 +5,7 @@ CREATE OR REPLACE FUNCTION gpSelect_AlternativeGroup_Goods(
     IN inSession     TVarChar       -- сессия пользователя
 )
 RETURNS TABLE (AlternativeGroupId Integer, 
-  GoodsId Integer, GoodsCode INTEGER, GoodsName TVarChar, isErased boolean) 
+  OldGoodsId Integer, GoodsId Integer, GoodsCode INTEGER, GoodsName TVarChar, isErased boolean) 
 AS
 $BODY$
 DECLARE
@@ -19,6 +19,7 @@ BEGIN
   RETURN QUERY
     SELECT
       Object_AlternativeGroup_View.Id   as AlternativeGroupId,
+	  Object_Goods_View.Id              as OldGoodsId,
 	  Object_Goods_View.Id              as GoodsId,
 	  Object_Goods_View.GoodsCodeInt    as GoodsCode,
 	  Object_Goods_View.GoodsName       as GoodsName,
