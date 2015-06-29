@@ -6,7 +6,9 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_MI_ProductionPeresort(
  INOUT ioId                     Integer   , -- Ключ объекта <Элемент документа>
     IN inMovementId             Integer   , -- Ключ объекта <Документ>
     IN inGoodsId                Integer   , -- Товар
-    IN inAmount                 TFloat    , -- Количество
+    IN inAmountOut              TFloat    , -- Количество расход
+   OUT outAmountIn              TFloat    , -- Количество приход  - расчет такой : outAmountIn= inAmountOut * вес  ИЛИ inAmountOut / вес ИЛИ  inAmountOut
+                                                                 -- т.е. в зависимости от ед.изм. для товара приход и расход когда  они отличаются
     IN inPartionGoods           TVarChar  , -- Партия товара
     IN inPartionGoodsDate       TDateTime , -- Партия товара
     IN inComment                TVarChar  , -- Примечание	                   
@@ -23,6 +25,9 @@ RETURNS Record AS
 $BODY$
    DECLARE vbUserId  Integer;
    DECLARE vbChildId Integer;
+   DECLARE vbMeasureId  Integer;
+   DECLARE vbMeasureChildId Integer;
+
 BEGIN
    -- проверка прав пользователя на вызов процедуры
    vbUserId:= lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MI_ProductionUnion());
@@ -35,7 +40,28 @@ BEGIN
    --
    outGoodsChildName:= (SELECT ValueData FROM Object WHERE Id = ioGoodsChildId);
    outGoodsChilCode:= (SELECT ObjectCode FROM Object WHERE Id = ioGoodsChildId);
+   
+  
+   vbMeasureId:=(Select  ObjectLink_Goods_Measure.ChildObjectId AS Measure1
+                 FROM Object 
+                        LEFT JOIN ObjectLink AS ObjectLink_Goods_Measure ON ObjectLink_Goods_Measure.ObjectId = Object.Id
+                                                                        AND ObjectLink_Goods_Measure.DescId = zc_ObjectLink_Goods_Measure()
+                 WHERE Id = inGoodsId );
+   vbMeasureChildId:=(Select ObjectLink_Goods_Measure.ChildObjectId 
+                      FROM Object 
+                         LEFT JOIN ObjectLink AS ObjectLink_Goods_Measure ON ObjectLink_Goods_Measure.ObjectId = Object.Id
+                                                                         AND ObjectLink_Goods_Measure.DescId = zc_ObjectLink_Goods_Measure()
+                      WHERE Id = ioGoodsChildId );
 
+   outAmountIn:= CAST( (Select Case when vbMeasureId = vbMeasureChildId then inAmountOut 
+                              When (vbMeasureId = zc_Measure_Sh() and vbMeasureChildId = zc_Measure_kg()) then inAmountOut / ObjectFloat_Weight.ValueData 
+                              When (vbMeasureId = zc_Measure_kg() and vbMeasureChildId = zc_Measure_Sh()) then inAmountOut * ObjectFloat_Weight.ValueData
+                              else inAmountOut end
+                  From ObjectFloat AS ObjectFloat_Weight
+                  WHERE ObjectFloat_Weight.ObjectId = ioGoodsChildId -- Object.Id
+                    AND ObjectFloat_Weight.DescId = zc_ObjectFloat_Goods_Weight()
+                 ) AS TFloat) ;
+               
    
    IF COALESCE (ioId,0) <> 0
    THEN
@@ -48,7 +74,7 @@ BEGIN
    ioId:= lpInsertUpdate_MI_ProductionUnion_Master (ioId               := ioId
                                                   , inMovementId       := inMovementId
                                                   , inGoodsId          := inGoodsId
-                                                  , inAmount           := inAmount
+                                                  , inAmount           := inAmountOut
                                                   , inCount            := 0
                                                   , inPartionGoodsDate := inPartionGoodsDate
                                                   , inPartionGoods     := inPartionGoods
@@ -64,7 +90,7 @@ BEGIN
    vbChildId := lpInsertUpdate_MI_ProductionUnion_Child (ioId               := vbChildId
                                                        , inMovementId       := inMovementId
                                                        , inGoodsId          := ioGoodsChildId
-                                                       , inAmount           := inAmount
+                                                       , inAmount           := inAmountOut
                                                        , inParentId         := ioId
                                                        , inPartionGoodsDate := inPartionGoodsDateChild
                                                        , inPartionGoods     := inPartionGoodsChild

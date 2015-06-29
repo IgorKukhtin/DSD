@@ -2113,12 +2113,12 @@
 				<Form>IncomeForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
-			<DCCReference Include="..\..\Forms\Document\WeighingPartnerItemJournal.pas">
-				<Form>WeighingPartnerItemJournalForm</Form>
-				<DesignClass>TParentForm</DesignClass>
-			</DCCReference>
 			<DCCReference Include="..\..\Forms\Document\WeighingProductionItemJournal.pas">
 				<Form>WeighingProductionItemJournalForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Document\WeighingPartnerItemJournal.pas">
+				<Form>WeighingPartnerItemJournalForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<BuildConfiguration Include="Release">

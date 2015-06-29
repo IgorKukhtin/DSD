@@ -691,8 +691,8 @@ uses
   OrderInternalJournal in '..\..\Forms\Document\OrderInternalJournal.pas' {OrderInternalJournalForm: TParentForm},
   IncomeJournal in '..\..\Forms\Document\IncomeJournal.pas' {IncomeJournalForm: TParentForm},
   Income in '..\..\Forms\Document\Income.pas' {IncomeForm: TParentForm},
-  WeighingPartnerItemJournal in '..\..\Forms\Document\WeighingPartnerItemJournal.pas' {WeighingPartnerItemJournalForm: TParentForm},
-  WeighingProductionItemJournal in '..\..\Forms\Document\WeighingProductionItemJournal.pas' {WeighingProductionItemJournalForm: TParentForm};
+  WeighingProductionItemJournal in '..\..\Forms\Document\WeighingProductionItemJournal.pas' {WeighingProductionItemJournalForm: TParentForm},
+  WeighingPartnerItemJournal in '..\..\Forms\Document\WeighingPartnerItemJournal.pas' {WeighingPartnerItemJournalForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}

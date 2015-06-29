@@ -88,6 +88,7 @@ type
     colTotalCountTare: TcxGridDBColumn;
     colTotalCount: TcxGridDBColumn;
     colIsProductionIn: TcxGridDBColumn;
+    colStartWeighingMI: TcxGridDBColumn;
   private
   public
   end;
