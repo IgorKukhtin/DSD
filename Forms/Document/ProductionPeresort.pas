@@ -49,6 +49,7 @@ type
     clMeasureChildName: TcxGridDBColumn;
     colGoodsChildGroupNameFull: TcxGridDBColumn;
     clGoodsGroupNameFull: TcxGridDBColumn;
+    coloutAmountIn: TcxGridDBColumn;
   private
     { Private declarations }
   public
