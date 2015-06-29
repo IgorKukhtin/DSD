@@ -33,7 +33,6 @@ type
     spSelectPrint: TdsdStoredProc;
     actPrint: TdsdPrintAction;
     bbPrint: TdxBarButton;
-    PrintItemsSverkaCDS: TClientDataSet;
     colFromName: TcxGridDBColumn;
     colTotalCount: TcxGridDBColumn;
     colOperDatePartner: TcxGridDBColumn;
@@ -67,6 +66,7 @@ type
     DayCount: TcxGridDBColumn;
     RetailName: TcxGridDBColumn;
     PartnerName: TcxGridDBColumn;
+    RouteGroupName: TcxGridDBColumn;
   private
     { Private declarations }
   public

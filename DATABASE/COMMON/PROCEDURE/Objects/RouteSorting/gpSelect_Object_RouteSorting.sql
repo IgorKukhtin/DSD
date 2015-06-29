@@ -18,7 +18,15 @@ $BODY$BEGIN
    , Object.ValueData AS Name
    , Object.isErased
    FROM Object
-   WHERE Object.DescId = zc_Object_RouteSorting();
+   WHERE Object.DescId = zc_Object_RouteSorting()
+
+      UNION ALL
+       SELECT 
+             0 AS Id
+           , NULL :: Integer AS Code
+           , '”ƒ¿À»“‹' :: TVarChar AS Name
+           , FALSE AS isErased
+    ;
   
 END;$BODY$
 

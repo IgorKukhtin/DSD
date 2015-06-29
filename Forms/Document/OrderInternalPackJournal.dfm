@@ -204,6 +204,25 @@ inherited OrderInternalPackJournalForm: TOrderInternalPackJournalForm
     inherited actUpdate: TdsdInsertUpdateAction
       FormName = 'TOrderInternalPackForm'
       FormNameParam.Value = 'TOrderInternalPackForm'
+      GuiParams = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'Id'
+          ParamType = ptInput
+        end
+        item
+          Name = 'ShowAll'
+          Value = False
+          DataType = ftBoolean
+        end
+        item
+          Name = 'inOperDate'
+          Value = 41640d
+          Component = deEnd
+          DataType = ftDateTime
+        end>
     end
     object actPrint: TdsdPrintAction
       Category = 'DSDLib'
@@ -235,7 +254,9 @@ inherited OrderInternalPackJournalForm: TOrderInternalPackJournalForm
         item
           DataSet = PrintItemsCDS
           UserName = 'frxDBDMaster'
-          IndexFieldNames = 'UnitCode;GoodsGroupNameFull;GoodsName;GoodsKindName'
+          IndexFieldNames = 
+            'UnitCode;GoodsGroupNameFull;GoodsName_basis;GoodsName;GoodsKindN' +
+            'ame'
         end>
       Params = <
         item
@@ -244,8 +265,8 @@ inherited OrderInternalPackJournalForm: TOrderInternalPackJournalForm
           Component = FormParams
           ComponentItem = 'Id'
         end>
-      ReportName = #1047#1072#1103#1074#1082#1072' '#1085#1072' '#1087#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1086
-      ReportNameParam.Value = #1047#1072#1103#1074#1082#1072' '#1085#1072' '#1087#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1086
+      ReportName = #1047#1072#1103#1074#1082#1072' '#1085#1072' '#1091#1087#1072#1082#1086#1074#1082#1091
+      ReportNameParam.Value = #1047#1072#1103#1074#1082#1072' '#1085#1072' '#1091#1087#1072#1082#1086#1074#1082#1091
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
     end
@@ -445,7 +466,7 @@ inherited OrderInternalPackJournalForm: TOrderInternalPackJournalForm
     Top = 270
   end
   object spSelectPrint: TdsdStoredProc
-    StoredProcName = 'gpSelect_Movement_OrderInternal_Print'
+    StoredProcName = 'gpSelect_Movement_OrderInternalPack_Print'
     DataSet = PrintHeaderCDS
     DataSets = <
       item

@@ -33,7 +33,7 @@ type
   private
     function Checked: boolean; override;//Проверка корректного ввода в Edit
   public
-    function Execute(isMovement, isAccount, isTransport, isQuality, isPack, isSpec, isTax : Boolean): Boolean; virtual;
+    function Execute(MovementDescId:Integer;isMovement, isAccount, isTransport, isQuality, isPack, isSpec, isTax : Boolean): Boolean; virtual;
   end;
 
 var
@@ -43,25 +43,26 @@ implementation
 {$R *.dfm}
 uses UtilScale;
 {------------------------------------------------------------------------------}
-function TDialogPrintForm.Execute(isMovement, isAccount, isTransport, isQuality, isPack, isSpec, isTax : Boolean): Boolean; //Проверка корректного ввода в Edit
+function TDialogPrintForm.Execute(MovementDescId:Integer;isMovement, isAccount, isTransport, isQuality, isPack, isSpec, isTax : Boolean): Boolean; //Проверка корректного ввода в Edit
 begin
      // для ScaleCeh только одна печать
-     if SettingMain.isCeh = TRUE
+     if (SettingMain.isCeh = TRUE)or((MovementDescId<>zc_Movement_Sale)and(MovementDescId<>zc_Movement_SendOnPrice))
      then cbPrintMovement.Checked:= TRUE
-     else cbPrintMovement.Checked:=isMovement;
-     cbPrintAccount.Checked:=isAccount;
-     cbPrintTransport.Checked:=isTransport;
-     cbPrintQuality.Checked:=isQuality;
-     cbPrintPack.Checked:=isPack;
-     cbPrintSpec.Checked:=isSpec;
-     cbPrintTax.Checked:=isTax;
+     else cbPrintMovement.Checked:= isMovement;
      //
-     cbPrintAccount.Enabled:=SettingMain.isCeh = FALSE;
-     cbPrintTransport.Enabled:=SettingMain.isCeh = FALSE;
-     cbPrintQuality.Enabled:=SettingMain.isCeh = FALSE;
-     cbPrintPack.Enabled:=SettingMain.isCeh = FALSE;
-     cbPrintSpec.Enabled:=SettingMain.isCeh = FALSE;
-     cbPrintTax.Enabled:=SettingMain.isCeh = FALSE;
+     cbPrintAccount.Enabled:=(SettingMain.isCeh = FALSE)or(MovementDescId=zc_Movement_Sale)or(MovementDescId<>zc_Movement_SendOnPrice);
+     cbPrintTransport.Enabled:=SettingMain.isCeh = cbPrintAccount.Enabled;
+     cbPrintQuality.Enabled:=SettingMain.isCeh = cbPrintAccount.Enabled;
+     cbPrintPack.Enabled:=SettingMain.isCeh = cbPrintAccount.Enabled;
+     cbPrintSpec.Enabled:=SettingMain.isCeh = cbPrintAccount.Enabled;
+     cbPrintTax.Enabled:=SettingMain.isCeh = cbPrintAccount.Enabled;
+     //
+     cbPrintAccount.Checked:=(isAccount) and (cbPrintAccount.Enabled);
+     cbPrintTransport.Checked:=(isTransport) and (cbPrintTransport.Enabled);
+     cbPrintQuality.Checked:=(isQuality) and (cbPrintQuality.Enabled);
+     cbPrintPack.Checked:=(isPack) and (cbPrintPack.Enabled);
+     cbPrintSpec.Checked:=(isSpec) and (cbPrintSpec.Enabled);
+     cbPrintTax.Checked:=(isTax) and (cbPrintTax.Enabled);
      //
      cbPrintPreview.Checked:=GetArrayList_Value_byName(Default_Array,'isPrintPreview') = AnsiUpperCase('TRUE');
      PrintCountEdit.Text:=GetArrayList_Value_byName(Default_Array,'PrintCount');

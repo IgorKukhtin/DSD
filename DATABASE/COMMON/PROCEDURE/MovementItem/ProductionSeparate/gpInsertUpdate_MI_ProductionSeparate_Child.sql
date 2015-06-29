@@ -22,15 +22,15 @@ BEGIN
    vbUserId:= lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MI_ProductionSeparate());
 
    -- сохранили <Ёлемент документа>
-   ioId :=lpInsertUpdate_MI_ProductionSeparate_Master (ioId               := ioId
-                                                     , inMovementId       := inMovementId
-                                                     , inParentId         := inParentId
-                                                     , inGoodsId          := inGoodsId
-                                                     , inAmount           := inAmount
-                                                     , inLiveWeight       := inLiveWeight
-                                                     , inHeadCount        := inHeadCount
-                                                     , inUserId           := vbUserId
-                                                      );
+   ioId :=lpInsertUpdate_MI_ProductionSeparate_Child (ioId               := ioId
+                                                    , inMovementId       := inMovementId
+                                                    , inParentId         := inParentId
+                                                    , inGoodsId          := inGoodsId
+                                                    , inAmount           := inAmount
+                                                    , inLiveWeight       := inLiveWeight
+                                                    , inHeadCount        := inHeadCount
+                                                    , inUserId           := vbUserId
+                                                     );
 
 END;
 $BODY$

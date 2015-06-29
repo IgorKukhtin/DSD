@@ -276,7 +276,8 @@ begin
 
 
      //параметры для печати
-     if not DialogPrintForm.Execute(ParamsMovement.ParamByName('isMovement').asBoolean
+     if not DialogPrintForm.Execute(ParamsMovement.ParamByName('MovementDescId').asInteger
+                                   ,ParamsMovement.ParamByName('isMovement').asBoolean
                                    ,ParamsMovement.ParamByName('isAccount').asBoolean
                                    ,ParamsMovement.ParamByName('isTransport').asBoolean
                                    ,ParamsMovement.ParamByName('isQuality').asBoolean
@@ -335,7 +336,8 @@ begin
      //Movement
      if DialogPrintForm.cbPrintMovement.Checked
      then Result:=Print_Movement (ParamsMovement.ParamByName('MovementDescId').AsInteger
-                                , ParamsMovement.ParamByName('MovementId_begin').AsInteger
+                                , ParamsMovement.ParamByName('MovementId_begin').AsInteger // MovementId
+                                , ParamsMovement.ParamByName('MovementId').AsInteger       // MovementId_by
                                 , StrToInt(DialogPrintForm.PrintCountEdit.Text) // myPrintCount
                                 , DialogPrintForm.cbPrintPreview.Checked        // isPreview
                                 //, DialogMovementDescForm.Get_isSendOnPriceIn(ParamsMovement.ParamByName('MovementDescNumber').AsInteger)

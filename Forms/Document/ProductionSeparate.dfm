@@ -263,7 +263,35 @@ inherited ProductionSeparateForm: TProductionSeparateForm
     inherited actRefresh: TdsdDataSetRefresh
       RefreshOnTabSetChanges = True
     end
-    object actPrint_Ceh: TdsdPrintAction [8]
+    inherited actPrint: TdsdPrintAction
+      StoredProc = spSelectPrint
+      StoredProcList = <
+        item
+          StoredProc = spSelectPrint
+        end>
+      Caption = #1040#1082#1090' '#1086#1073#1074#1072#1083#1082#1080
+      Hint = #1040#1082#1090' '#1086#1073#1074#1072#1083#1082#1080
+      DataSets = <
+        item
+          DataSet = PrintHeaderCDS
+          UserName = 'frxDBDHeader'
+        end
+        item
+          DataSet = PrintItemsCDS
+          UserName = 'frxDBDMaster'
+          IndexFieldNames = 'GoodsGroupNameFull;GoodsName'
+        end>
+      Params = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'Id'
+        end>
+      ReportName = #1040#1082#1090' '#1086#1073#1074#1072#1083#1082#1080
+      ReportNameParam.Value = #1040#1082#1090' '#1086#1073#1074#1072#1083#1082#1080
+    end
+    object actPrint_Ceh: TdsdPrintAction [9]
       Category = 'DSDLib'
       MoveParams = <>
       StoredProc = spSelectPrintCeh
@@ -273,7 +301,7 @@ inherited ProductionSeparateForm: TProductionSeparateForm
         end>
       Caption = #1053#1072#1082#1083#1072#1076#1085#1072#1103
       Hint = #1053#1072#1082#1083#1072#1076#1085#1072#1103
-      ImageIndex = 3
+      ImageIndex = 22
       DataSets = <
         item
           DataSet = PrintHeaderCDS
@@ -296,40 +324,7 @@ inherited ProductionSeparateForm: TProductionSeparateForm
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
     end
-    object actPrint_Obval: TdsdPrintAction [9]
-      Category = 'DSDLib'
-      MoveParams = <>
-      StoredProc = spSelectPrint
-      StoredProcList = <
-        item
-          StoredProc = spSelectPrint
-        end>
-      Caption = #1040#1082#1090' '#1086#1073#1074#1072#1083#1082#1080
-      Hint = #1040#1082#1090' '#1086#1073#1074#1072#1083#1082#1080
-      ImageIndex = 22
-      DataSets = <
-        item
-          DataSet = PrintHeaderCDS
-          UserName = 'frxDBDHeader'
-        end
-        item
-          DataSet = PrintItemsCDS
-          UserName = 'frxDBDMaster'
-          IndexFieldNames = 'GoodsGroupNameFull;GoodsName'
-        end>
-      Params = <
-        item
-          Name = 'Id'
-          Value = Null
-          Component = FormParams
-          ComponentItem = 'Id'
-        end>
-      ReportName = #1040#1082#1090' '#1086#1073#1074#1072#1083#1082#1080
-      ReportNameParam.Value = #1040#1082#1090' '#1086#1073#1074#1072#1083#1082#1080
-      ReportNameParam.DataType = ftString
-      ReportNameParam.ParamType = ptInput
-    end
-    object actUpdateChildDS: TdsdUpdateDataSet [11]
+    object actUpdateChildDS: TdsdUpdateDataSet [10]
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -436,7 +431,7 @@ inherited ProductionSeparateForm: TProductionSeparateForm
         end
         item
           Visible = True
-          ItemName = 'bbPrint_Ceh'
+          ItemName = 'bbPrint'
         end
         item
           Visible = True
@@ -444,7 +439,7 @@ inherited ProductionSeparateForm: TProductionSeparateForm
         end
         item
           Visible = True
-          ItemName = 'bbPrint_obval'
+          ItemName = 'bbPrint_Ceh'
         end
         item
           Visible = True
@@ -466,13 +461,6 @@ inherited ProductionSeparateForm: TProductionSeparateForm
           Visible = True
           ItemName = 'dxBarStatic'
         end>
-    end
-    inherited bbPrint: TdxBarButton
-      Visible = ivNever
-    end
-    object bbPrint_obval: TdxBarButton
-      Action = actPrint_Obval
-      Category = 0
     end
     object bbPrint_Ceh: TdxBarButton
       Action = actPrint_Ceh

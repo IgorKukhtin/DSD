@@ -19,7 +19,8 @@ BEGIN
      IF inValue = ''
      THEN
      -- !!!это надо убрать после исправления ошибки!!!
-     vbPartionGoodsId:= (SELECT MIN (Object.Id)
+     vbPartionGoodsId:= (SELECT Object.Id
+                         -- SELECT MIN (Object.Id)
                          FROM Object 
                               LEFT JOIN ObjectLink AS ObjectLink_Unit
                                                    ON ObjectLink_Unit.ObjectId = Object.Id
@@ -61,7 +62,7 @@ BEGIN
 
          -- сохранили <Контрагенты>
          vbPartnerId:= CASE WHEN zfConvert_StringToDate (split_part (inValue, '-', 4)) IS NOT NULL 
-                                THEN zfConvert_StringToNumber (split_part (inValue, '-', 3))
+                                 THEN zfConvert_StringToNumber (split_part (inValue, '-', 3))
                             WHEN zfConvert_StringToDate (split_part (inValue, '-', 3)) IS NOT NULL 
                                  THEN zfConvert_StringToNumber (split_part (inValue, '-', 2))
                             ELSE NULL

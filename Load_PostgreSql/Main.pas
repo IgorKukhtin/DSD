@@ -13183,7 +13183,7 @@ begin
         Add('     , isnull(tmpBI_byDiscountWeight.DiscountWeight,0) as ChangePercentAmount');
         Add('     , BillItems.OperPrice as Price');
         Add('     , 1 as CountForPrice');
-        Add('     , BillItems.OperCount_sh as HeadCount');
+        //Add('     , BillItems.OperCount_sh as HeadCount');
         Add('     , BillItems.PartionStr_MB as PartionGoods');
         Add('     , KindPackage.Id_Postgres as GoodsKindId_Postgres');
         Add('     , BillItems.Id_Postgres as Id_Postgres');
@@ -13248,9 +13248,10 @@ begin
         toStoredProc.Params.AddParam ('inChangePercentAmount',ftFloat,ptInput, 0);
         toStoredProc.Params.AddParam ('inPrice',ftFloat,ptInput, 0);
         toStoredProc.Params.AddParam ('inCountForPrice',ftFloat,ptInput, 0);
-        toStoredProc.Params.AddParam ('inHeadCount',ftFloat,ptInput, 0);
+        //toStoredProc.Params.AddParam ('inHeadCount',ftFloat,ptInput, 0);
         toStoredProc.Params.AddParam ('inPartionGoods',ftString,ptInput, '');
         toStoredProc.Params.AddParam ('inGoodsKindId',ftInteger,ptInput, 0);
+        toStoredProc.Params.AddParam ('inUnitId',ftInteger,ptInput, 0);
         //
         //DisableControls;
         while not EOF do
@@ -13267,9 +13268,10 @@ begin
              toStoredProc.Params.ParamByName('inChangePercentAmount').Value:=FieldByName('ChangePercentAmount').AsFloat;
              toStoredProc.Params.ParamByName('inPrice').Value:=FieldByName('Price').AsFloat;
              toStoredProc.Params.ParamByName('inCountForPrice').Value:=FieldByName('CountForPrice').AsFloat;
-             toStoredProc.Params.ParamByName('inHeadCount').Value:=FieldByName('HeadCount').AsFloat;
+             //toStoredProc.Params.ParamByName('inHeadCount').Value:=FieldByName('HeadCount').AsFloat;
              toStoredProc.Params.ParamByName('inPartionGoods').Value:=FieldByName('PartionGoods').AsString;
              toStoredProc.Params.ParamByName('inGoodsKindId').Value:=FieldByName('GoodsKindId_Postgres').AsInteger;
+             toStoredProc.Params.ParamByName('inUnitId').Value:=0;
              if not myExecToStoredProc then ;//exit;
              //
              if (1=0)or(FieldByName('Id_Postgres').AsInteger=0)
@@ -15983,7 +15985,6 @@ begin
         toStoredProc.Params.AddParam ('inLiveWeight',ftFloat,ptInput, 0);
         toStoredProc.Params.AddParam ('inHeadCount',ftFloat,ptInput, 0);
 //        toStoredProc.Params.AddParam ('inGoodsKindId',ftInteger,ptInput, 0);
-        Add('     , BillItems.OperCount_Upakovka as LiveWeight');
         //
         //DisableControls;
         while not EOF do

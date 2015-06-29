@@ -493,7 +493,8 @@ begin
 
 
      //параметры для печати
-     if not DialogPrintForm.Execute(ParamsMovement.ParamByName('isMovement').asBoolean
+     if not DialogPrintForm.Execute(ParamsMovement.ParamByName('MovementDescId').asInteger
+                                   ,ParamsMovement.ParamByName('isMovement').asBoolean
                                    ,ParamsMovement.ParamByName('isAccount').asBoolean
                                    ,ParamsMovement.ParamByName('isTransport').asBoolean
                                    ,ParamsMovement.ParamByName('isQuality').asBoolean

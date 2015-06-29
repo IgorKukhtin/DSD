@@ -68,7 +68,7 @@ type
     bbMultiAmountForecast: TdxBarButton;
     bbUpdateAmountAll: TdxBarButton;
     MeasureName: TcxGridDBColumn;
-    ReceiptCode: TcxGridDBColumn;
+    ReceiptCode_code: TcxGridDBColumn;
     ReceiptName: TcxGridDBColumn;
     GoodsGroupNameFull: TcxGridDBColumn;
     Koeff: TcxGridDBColumn;
@@ -101,6 +101,8 @@ type
     Color_remains_calc: TcxGridDBColumn;
     AmountRemainsChild_calc: TcxGridDBColumn;
     Color_remainsChild_calc: TcxGridDBColumn;
+    ReceiptCode: TcxGridDBColumn;
+    ReceiptCode_code_basis: TcxGridDBColumn;
   private
     { Private declarations }
   public

@@ -495,7 +495,8 @@ begin
      //
      if cbPrintMovement.Checked
      then Print_Movement (CDS.FieldByName('MovementDescId').AsInteger
-                        , CDS.FieldByName('MovementId_parent').AsInteger
+                        , CDS.FieldByName('MovementId_parent').AsInteger// MovementId
+                        , CDS.FieldByName('Id').AsInteger               // MovementId_by
                         , 1    // myPrintCount
                         , TRUE // isPreview
                         , DialogMovementDescForm.Get_isSendOnPriceIn(CDS.FieldByName('MovementDescNumber').AsInteger)
