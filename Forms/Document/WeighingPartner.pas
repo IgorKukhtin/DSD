@@ -78,8 +78,6 @@ type
     cxLabel5: TcxLabel;
     cxLabel6: TcxLabel;
     edStartWeighing: TcxDateEdit;
-    edInvNumberTransport: TcxCurrencyEdit;
-    cxLabel7: TcxLabel;
     HeaderSaver: THeaderSaver;
     spGet: TdsdStoredProc;
     RefreshAddOn: TRefreshAddOn;
@@ -88,9 +86,6 @@ type
     GuidesFiller: TGuidesFiller;
     actInsertUpdateMovement: TdsdExecStoredProc;
     bbInsertUpdateMovement: TdxBarButton;
-    cxLabel13: TcxLabel;
-    edRouteSorting: TcxButtonEdit;
-    RouteSortingGuides: TdsdGuides;
     SetErased: TdsdUpdateErased;
     SetUnErased: TdsdUpdateErased;
     actShowErased: TBooleanStoredProcAction;
