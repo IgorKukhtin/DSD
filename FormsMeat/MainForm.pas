@@ -591,7 +591,7 @@ type
     N69: TMenuItem;
     miOrderInternalPack: TMenuItem;
     actOrderInternalPack: TdsdOpenForm;
-    actIncomeTo: TdsdOpenForm;
+    actIncomePartner: TdsdOpenForm;
     N70: TMenuItem;
     actWeighingPartnerItem: TdsdOpenForm;
     actWeighingProductionItem: TdsdOpenForm;

@@ -204,11 +204,11 @@
 				<Form>ToolsWeighingTreeForm</Form>
 			</DCCReference>
 			<DCCReference Include="..\SOURCE\dbMovementItemTest.pas"/>
-			<DCCReference Include="..\..\Forms\Document\IncomeTo.pas">
-				<Form>IncomeToForm</Form>
+			<DCCReference Include="..\..\Forms\Document\IncomePartner.pas">
+				<Form>IncomePartnerForm</Form>
 			</DCCReference>
-			<DCCReference Include="..\..\Forms\Document\IncomeToJournal.pas">
-				<Form>IncomeToJournalForm</Form>
+			<DCCReference Include="..\..\Forms\Document\IncomePartnerJournal.pas">
+				<Form>IncomePartnerJournalForm</Form>
 			</DCCReference>
 			<DCCReference Include="..\..\SOURCE\COMPONENT\dsdAddOn.pas"/>
 			<DCCReference Include="..\SOURCE\dbMovementCompleteTest.pas"/>

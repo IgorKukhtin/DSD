@@ -1,4 +1,4 @@
-unit IncomeTo;
+unit IncomePartner;
 
 interface
 
@@ -26,7 +26,7 @@ uses
   DataModul, dxBarExtItems, dsdAddOn, cxCheckBox, cxCurrencyEdit;
 
 type
-  TIncomeToForm = class(TParentForm)
+  TIncomePartnerForm = class(TParentForm)
     FormParams: TdsdFormParams;
     spSelectMI: TdsdStoredProc;
     dxBarManager: TdxBarManager;
@@ -160,6 +160,6 @@ implementation
 {$R *.dfm}
 
 initialization
-  RegisterClass(TIncomeToForm);
+  RegisterClass(TIncomePartnerForm);
 
 end.
