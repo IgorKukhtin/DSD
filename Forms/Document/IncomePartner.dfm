@@ -1,9 +1,9 @@
 object IncomePartnerForm: TIncomePartnerForm
   Left = 0
   Top = 0
-  Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1055#1088#1080#1093#1086#1076' '#1086#1090' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072' - '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1102'>'
+  Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1055#1088#1080#1093#1086#1076' '#1086#1090' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072' ('#1087#1086#1082#1091#1087#1072#1090#1077#1083#1102')>'
   ClientHeight = 462
-  ClientWidth = 1162
+  ClientWidth = 1080
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -21,12 +21,12 @@ object IncomePartnerForm: TIncomePartnerForm
   object DataPanel: TPanel
     Left = 0
     Top = 0
-    Width = 1162
+    Width = 1080
     Height = 100
     Align = alTop
     BevelOuter = bvNone
     TabOrder = 0
-    ExplicitLeft = -56
+    ExplicitWidth = 1162
     object edInvNumber: TcxTextEdit
       Left = 5
       Top = 23
@@ -88,15 +88,15 @@ object IncomePartnerForm: TIncomePartnerForm
       Caption = #1050#1086#1084#1091
     end
     object edPriceWithVAT: TcxCheckBox
-      Left = 947
-      Top = 23
+      Left = 797
+      Top = 18
       Caption = #1062#1077#1085#1072' '#1089' '#1053#1044#1057' ('#1076#1072'/'#1085#1077#1090')'
       TabOrder = 9
-      Width = 130
+      Width = 129
     end
     object edVATPercent: TcxCurrencyEdit
-      Left = 947
-      Top = 63
+      Left = 666
+      Top = 23
       Properties.Alignment.Horz = taRightJustify
       Properties.Alignment.Vert = taVCenter
       Properties.DecimalPlaces = 0
@@ -129,25 +129,25 @@ object IncomePartnerForm: TIncomePartnerForm
       Width = 81
     end
     object edChangePercent: TcxCurrencyEdit
-      Left = 797
-      Top = 23
+      Left = 666
+      Top = 63
       Properties.Alignment.Horz = taRightJustify
       Properties.Alignment.Vert = taVCenter
       Properties.DecimalPlaces = 3
       Properties.DisplayFormat = ',0.###'
       Properties.ReadOnly = True
       TabOrder = 8
-      Width = 144
+      Width = 124
     end
     object cxLabel7: TcxLabel
-      Left = 947
-      Top = 45
+      Left = 666
+      Top = 5
       Caption = '% '#1053#1044#1057
     end
     object cxLabel8: TcxLabel
-      Left = 797
-      Top = 5
-      Caption = '(-)% '#1057#1082#1080#1076#1082#1080' (+)% '#1053#1072#1094#1077#1085#1082#1080
+      Left = 666
+      Top = 45
+      Caption = '% (-)'#1057#1082'. (+)'#1053#1072#1094'. '#1055#1054#1057#1058'.'
     end
     object cxLabel9: TcxLabel
       Left = 351
@@ -212,12 +212,12 @@ object IncomePartnerForm: TIncomePartnerForm
       Width = 157
     end
     object cxLabel12: TcxLabel
-      Left = 747
+      Left = 1023
       Top = 45
       Caption = #1050#1091#1088#1089
     end
     object edCurrencyValue: TcxCurrencyEdit
-      Left = 747
+      Left = 1023
       Top = 63
       Properties.Alignment.Horz = taRightJustify
       Properties.Alignment.Vert = taVCenter
@@ -228,12 +228,12 @@ object IncomePartnerForm: TIncomePartnerForm
       Width = 44
     end
     object cxLabel14: TcxLabel
-      Left = 664
+      Left = 940
       Top = 45
       Caption = #1042#1072#1083#1102#1090#1072' ('#1094#1077#1085#1072')'
     end
     object edCurrencyDocument: TcxButtonEdit
-      Left = 664
+      Left = 940
       Top = 63
       Properties.Buttons = <
         item
@@ -246,12 +246,12 @@ object IncomePartnerForm: TIncomePartnerForm
       Width = 77
     end
     object cxLabel15: TcxLabel
-      Left = 664
+      Left = 940
       Top = 5
       Caption = #1042#1072#1083#1102#1090#1072' ('#1087#1086#1089#1090#1072#1074#1097#1080#1082')'
     end
     object edCurrencyPartner: TcxButtonEdit
-      Left = 664
+      Left = 940
       Top = 23
       Properties.Buttons = <
         item
@@ -264,7 +264,7 @@ object IncomePartnerForm: TIncomePartnerForm
     object cxLabel16: TcxLabel
       Left = 797
       Top = 45
-      Caption = '(-)% '#1057#1082#1080#1076#1082#1080' (+)% '#1053#1072#1094'. '#1087#1086#1082'.'
+      Caption = '% (-)'#1057#1082'. (+)'#1053#1072#1094'. '#1055#1054#1050#1059#1055'.'
     end
     object edChangePercentTo: TcxCurrencyEdit
       Left = 797
@@ -274,7 +274,7 @@ object IncomePartnerForm: TIncomePartnerForm
       Properties.DecimalPlaces = 3
       Properties.DisplayFormat = ',0.###'
       TabOrder = 30
-      Width = 144
+      Width = 132
     end
     object cxLabel17: TcxLabel
       Left = 467
@@ -315,25 +315,28 @@ object IncomePartnerForm: TIncomePartnerForm
   object cxPageControl: TcxPageControl
     Left = 0
     Top = 126
-    Width = 1162
+    Width = 1080
     Height = 336
     Align = alClient
     TabOrder = 2
     Properties.ActivePage = cxTabSheetMain
     Properties.CustomButtons.Buttons = <>
+    ExplicitWidth = 1162
     ClientRectBottom = 336
-    ClientRectRight = 1162
+    ClientRectRight = 1080
     ClientRectTop = 24
     object cxTabSheetMain: TcxTabSheet
       Caption = #1057#1090#1088#1086#1095#1085#1072#1103' '#1095#1072#1089#1090#1100
       ImageIndex = 0
+      ExplicitWidth = 1162
       object cxGrid: TcxGrid
         Left = 0
         Top = 0
-        Width = 1162
+        Width = 1080
         Height = 312
         Align = alClient
         TabOrder = 0
+        ExplicitWidth = 1162
         object cxGridDBTableView: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = MasterDS
@@ -352,12 +355,10 @@ object IncomePartnerForm: TIncomePartnerForm
             item
               Format = ',0.####'
               Kind = skSum
-              Column = colAmountPacker
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = colHeadCount
             end
             item
               Format = ',0.####'
@@ -367,7 +368,6 @@ object IncomePartnerForm: TIncomePartnerForm
             item
               Format = ',0.####'
               Kind = skSum
-              Column = colLiveWeight
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -383,12 +383,10 @@ object IncomePartnerForm: TIncomePartnerForm
             item
               Format = ',0.####'
               Kind = skSum
-              Column = colAmountPacker
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = colHeadCount
             end
             item
               Format = ',0.####'
@@ -398,7 +396,6 @@ object IncomePartnerForm: TIncomePartnerForm
             item
               Format = ',0.####'
               Kind = skSum
-              Column = colLiveWeight
             end
             item
               Kind = skSum
@@ -445,19 +442,11 @@ object IncomePartnerForm: TIncomePartnerForm
           object colGoodsKindName: TcxGridDBColumn
             Caption = #1042#1080#1076' '#1090#1086#1074#1072#1088#1072
             DataBinding.FieldName = 'GoodsKindName'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 90
-          end
-          object colPartionGoods: TcxGridDBColumn
-            Caption = #1055#1072#1088#1090#1080#1103
-            DataBinding.FieldName = 'PartionGoods'
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 100
+            Width = 90
           end
           object colMeasureName: TcxGridDBColumn
             Caption = #1045#1076'. '#1080#1079#1084'.'
@@ -485,17 +474,7 @@ object IncomePartnerForm: TIncomePartnerForm
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 75
-          end
-          object colAmountPacker: TcxGridDBColumn
-            Caption = #1050#1086#1083'-'#1074#1086' '#1091' '#1079#1072#1075#1086#1090#1086#1074'.'
-            DataBinding.FieldName = 'AmountPacker'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
-            Visible = False
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 75
           end
           object colPrice: TcxGridDBColumn
@@ -530,37 +509,6 @@ object IncomePartnerForm: TIncomePartnerForm
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 91
-          end
-          object colLiveWeight: TcxGridDBColumn
-            Caption = #1046#1080#1074#1086#1081' '#1074#1077#1089' '
-            DataBinding.FieldName = 'LiveWeight'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
-            Visible = False
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 60
-          end
-          object colHeadCount: TcxGridDBColumn
-            Caption = #1050#1086#1083'. '#1075#1086#1083#1086#1074
-            DataBinding.FieldName = 'HeadCount'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
-            Visible = False
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 55
-          end
-          object colAssetName: TcxGridDBColumn
-            Caption = #1076#1083#1103' '#1054#1089#1085#1086#1074#1085#1086#1075#1086' '#1089#1088#1077#1076#1089#1090#1074#1072
-            DataBinding.FieldName = 'AssetName'
-            Visible = False
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 100
           end
           object clInfoMoneyCode: TcxGridDBColumn
             Caption = #1050#1086#1076' '#1059#1055
@@ -622,6 +570,16 @@ object IncomePartnerForm: TIncomePartnerForm
         end
       end
     end
+  end
+  object cbCalcAmountPartner: TcxCheckBox
+    Left = 541
+    Top = 191
+    Caption = #1040#1074#1090#1086' '#1079#1072#1087#1086#1083#1085#1077#1085#1080#1077'  <'#1050#1086#1083'-'#1074#1086' '#1091' '#1087#1086#1089#1090'.>'
+    Enabled = False
+    Properties.ReadOnly = False
+    State = cbsChecked
+    TabOrder = 6
+    Width = 220
   end
   object FormParams: TdsdFormParams
     Params = <
@@ -730,6 +688,14 @@ object IncomePartnerForm: TIncomePartnerForm
         end
         item
           Visible = True
+          ItemName = 'bbAddMask'
+        end
+        item
+          Visible = True
+          ItemName = 'bbStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbErased'
         end
         item
@@ -760,6 +726,14 @@ object IncomePartnerForm: TIncomePartnerForm
         item
           Visible = True
           ItemName = 'bbPrint'
+        end
+        item
+          Visible = True
+          ItemName = 'bbStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbCalcAmountPartner'
         end
         item
           Visible = True
@@ -830,6 +804,17 @@ object IncomePartnerForm: TIncomePartnerForm
     end
     object bbMovementItemProtocol: TdxBarButton
       Action = MovementItemProtocolOpenForm
+      Category = 0
+    end
+    object bbCalcAmountPartner: TdxBarControlContainerItem
+      Caption = #1040#1074#1090#1086' '#1079#1072#1087#1086#1083#1085#1077#1085#1080#1077'  <'#1050#1086#1083'-'#1074#1086' '#1091' '#1087#1086#1089#1090'.>'
+      Category = 0
+      Hint = #1040#1074#1090#1086' '#1079#1072#1087#1086#1083#1085#1077#1085#1080#1077'  <'#1050#1086#1083'-'#1074#1086' '#1091' '#1087#1086#1089#1090'.>'
+      Visible = ivAlways
+      Control = cbCalcAmountPartner
+    end
+    object bbAddMask: TdxBarButton
+      Action = actAddMask
       Category = 0
     end
   end
@@ -1140,6 +1125,22 @@ object IncomePartnerForm: TIncomePartnerForm
         end>
       isShowModal = False
     end
+    object actAddMask: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spInsertMaskMIMaster
+      StoredProcList = <
+        item
+          StoredProc = spInsertMaskMIMaster
+        end
+        item
+          StoredProc = spSelectMI
+        end>
+      Caption = #1044#1086#1073#1072#1074#1080#1090#1100' '#1087#1086' '#1084#1072#1089#1082#1077
+      Hint = #1044#1086#1073#1072#1074#1080#1090#1100' '#1087#1086' '#1084#1072#1089#1082#1077
+      ImageIndex = 54
+    end
   end
   object MasterDS: TDataSource
     DataSet = MasterCDS
@@ -1243,26 +1244,33 @@ object IncomePartnerForm: TIncomePartnerForm
         ParamType = ptInput
       end
       item
-        Name = 'inAmount'
+        Name = 'ioAmount'
         Value = Null
         Component = MasterCDS
         ComponentItem = 'Amount'
         DataType = ftFloat
-        ParamType = ptInput
+        ParamType = ptInputOutput
       end
       item
-        Name = 'inAmountPartner'
+        Name = 'ioAmountPartner'
         Value = Null
         Component = MasterCDS
         ComponentItem = 'AmountPartner'
         DataType = ftFloat
-        ParamType = ptInput
+        ParamType = ptInputOutput
       end
       item
         Name = 'inAmountPacker'
         Value = Null
         Component = MasterCDS
         ComponentItem = 'AmountPacker'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inIsCalcAmountPartner'
+        Value = Null
+        Component = cbCalcAmountPartner
+        DataType = ftBoolean
         ParamType = ptInput
       end
       item
@@ -1274,12 +1282,19 @@ object IncomePartnerForm: TIncomePartnerForm
         ParamType = ptInput
       end
       item
-        Name = 'inCountForPrice'
+        Name = 'ioCountForPrice'
         Value = Null
         Component = MasterCDS
         ComponentItem = 'CountForPrice'
         DataType = ftFloat
-        ParamType = ptInput
+        ParamType = ptInputOutput
+      end
+      item
+        Name = 'outAmountSumm'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'AmountSumm'
+        DataType = ftFloat
       end
       item
         Name = 'inLiveWeight'
@@ -2013,8 +2028,8 @@ object IncomePartnerForm: TIncomePartnerForm
         DataType = ftString
         ParamType = ptInput
       end>
-    Left = 680
-    Top = 48
+    Left = 1024
+    Top = 88
   end
   object CurrencyPartnerGuides: TdsdGuides
     KeyField = 'Id'
@@ -2040,8 +2055,8 @@ object IncomePartnerForm: TIncomePartnerForm
         DataType = ftString
         ParamType = ptInput
       end>
-    Left = 704
-    Top = 8
+    Left = 960
+    Top = 72
   end
   object PrintHeaderCDS: TClientDataSet
     Aggregates = <>
@@ -2131,5 +2146,114 @@ object IncomePartnerForm: TIncomePartnerForm
       end>
     Left = 576
     Top = 48
+  end
+  object spInsertMaskMIMaster: TdsdStoredProc
+    StoredProcName = 'gpInsertUpdate_MovementItem_Income'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'ioId'
+        Value = 0
+        ParamType = ptInputOutput
+      end
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inGoodsId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'GoodsId'
+        ParamType = ptInput
+      end
+      item
+        Name = 'ioAmount'
+        Value = 0.000000000000000000
+        DataType = ftFloat
+        ParamType = ptInputOutput
+      end
+      item
+        Name = 'ioAmountPartner'
+        Value = 0.000000000000000000
+        DataType = ftFloat
+        ParamType = ptInputOutput
+      end
+      item
+        Name = 'inAmountPacker'
+        Value = 0.000000000000000000
+        ParamType = ptInput
+      end
+      item
+        Name = 'inIsCalcAmountPartner'
+        Value = 'True'
+        Component = cbCalcAmountPartner
+        DataType = ftBoolean
+        ParamType = ptInput
+      end
+      item
+        Name = 'inPrice'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Price'
+        DataType = ftFloat
+        ParamType = ptInput
+      end
+      item
+        Name = 'ioCountForPrice'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'CountForPrice'
+        DataType = ftFloat
+        ParamType = ptInputOutput
+      end
+      item
+        Name = 'outAmountSumm'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'AmountSumm'
+        DataType = ftFloat
+      end
+      item
+        Name = 'inLiveWeight'
+        Value = 0.000000000000000000
+        DataType = ftFloat
+        ParamType = ptInput
+      end
+      item
+        Name = 'inHeadCount'
+        Value = 0.000000000000000000
+        DataType = ftFloat
+        ParamType = ptInput
+      end
+      item
+        Name = 'inPartionGoods'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'PartionGoods'
+        DataType = ftString
+        ParamType = ptInput
+      end
+      item
+        Name = 'inGoodsKindId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'GoodsKindId'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inAssetId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'AssetId'
+        ParamType = ptInput
+      end>
+    PackSize = 1
+    Left = 150
+    Top = 359
   end
 end

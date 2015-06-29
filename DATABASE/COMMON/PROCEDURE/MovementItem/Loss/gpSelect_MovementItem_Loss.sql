@@ -23,14 +23,18 @@ RETURNS TABLE (Id Integer, GoodsId Integer, GoodsCode Integer, GoodsName TVarCha
 AS
 $BODY$
   DECLARE vbUserId Integer;
+  DECLARE vbBranchId_Constraint Integer;
 BEGIN
-
      -- проверка прав пользователя на вызов процедуры
      -- vbUserId := PERFORM lpCheckRight (inSession, zc_Enum_Process_Select_MovementItem_Loss());
-     vbUserId := inSession;
+     vbUserId:= lpGetUserBySession (inSession);
+
+   -- определяется уровень доступа
+   vbBranchId_Constraint:= COALESCE ((SELECT Object_RoleAccessKeyGuide_View.BranchId FROM Object_RoleAccessKeyGuide_View WHERE Object_RoleAccessKeyGuide_View.UserId = vbUserId AND Object_RoleAccessKeyGuide_View.BranchId <> 0 GROUP BY Object_RoleAccessKeyGuide_View.BranchId), 0);
+
 
      IF inShowAll THEN
-
+     -- Результат
      RETURN QUERY
        SELECT
              0                          AS Id
@@ -76,6 +80,7 @@ BEGIN
                   /*LEFT JOIN Object_GoodsByGoodsKind_View ON Object_GoodsByGoodsKind_View.GoodsId = Object_Goods.Id
                                                         AND Object_InfoMoney_View.InfoMoneyId IN (zc_Enum_InfoMoney_20901(), zc_Enum_InfoMoney_30101(), zc_Enum_InfoMoney_30201()) -- Ирна + Готовая продукция + Доходы Мясное сырье*/
              WHERE Object_InfoMoney_View.InfoMoneyDestinationId IN (zc_Enum_InfoMoneyDestination_20900(), zc_Enum_InfoMoneyDestination_21000(), zc_Enum_InfoMoneyDestination_21100(), zc_Enum_InfoMoneyDestination_30100())
+                OR vbBranchId_Constraint = 0
             ) AS tmpGoods
 
             LEFT JOIN (SELECT MovementItem.ObjectId                         AS GoodsId
@@ -203,7 +208,7 @@ BEGIN
 
 
      ELSE
-
+     -- Результат
      RETURN QUERY
        SELECT
              MovementItem.Id                    AS Id

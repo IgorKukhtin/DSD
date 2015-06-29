@@ -1,13 +1,15 @@
 -- Function: gpInsertUpdate_MovementItem_ReturnOut()
 
-DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_ReturnOut(integer, integer, integer, tfloat, tfloat, tfloat, tfloat, tfloat, tvarchar, integer, integer, tvarchar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_ReturnOut(Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, TVarChar, Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_ReturnOut (Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, TVarChar, Integer, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_ReturnOut(
  INOUT ioId                  Integer   , -- Ключ объекта <Элемент документа>
     IN inMovementId          Integer   , -- Ключ объекта <Документ Возврат покупателя>
     IN inGoodsId             Integer   , -- Товары
-    IN inAmount              TFloat    , -- Количество
-    IN inAmountPartner       TFloat    , -- Количество у контрагента
+ INOUT ioAmount              TFloat    , -- Количество
+ INOUT ioAmountPartner       TFloat    , -- Количество у контрагента
+    IN inIsCalcAmountPartner Boolean   , -- Признак - будет ли расчитано <Количество у контрагента>
     IN inPrice               TFloat    , -- Цена
  INOUT ioCountForPrice       TFloat    , -- Цена за количество
    OUT outAmountSumm         TFloat    , -- Сумма расчетная
@@ -26,15 +28,20 @@ BEGIN
      vbUserId:= lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MI_ReturnOut());
 
 
-     -- изменили свойство <Цена за количество>
+     -- !!!Заменили значение!!!
+     IF inIsCalcAmountPartner = TRUE OR 1 = 1 -- временно OR...
+     THEN ioAmountPartner:= ioAmount;
+     END IF;
+
+     -- Заменили свойство <Цена за количество>
      IF COALESCE (ioCountForPrice, 0) = 0 THEN ioCountForPrice := 1; END IF;
 
      -- сохранили
      ioId:= lpInsertUpdate_MovementItem_ReturnOut (ioId                 := ioId
                                                  , inMovementId         := inMovementId
                                                  , inGoodsId            := inGoodsId
-                                                 , inAmount             := inAmount
-                                                 , inAmountPartner      := inAmountPartner
+                                                 , inAmount             := ioAmount
+                                                 , inAmountPartner      := ioAmountPartner
                                                  , inPrice              := inPrice
                                                  , inCountForPrice      := ioCountForPrice
                                                  , inHeadCount          := inHeadCount
@@ -46,8 +53,8 @@ BEGIN
 
      -- расчитали сумму по элементу, для грида
      outAmountSumm := CASE WHEN ioCountForPrice > 0
-                                THEN CAST (inAmountPartner * inPrice / ioCountForPrice AS NUMERIC (16, 2))
-                           ELSE CAST (inAmountPartner * inPrice AS NUMERIC (16, 2))
+                                THEN CAST (ioAmountPartner * inPrice / ioCountForPrice AS NUMERIC (16, 2))
+                           ELSE CAST (ioAmountPartner * inPrice AS NUMERIC (16, 2))
                       END;
 
 END;
@@ -57,6 +64,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 29.06.15                                        * add inIsCalcAmountPartner
  29.05.15                                        *
 */
 

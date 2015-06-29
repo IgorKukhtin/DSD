@@ -11,10 +11,8 @@ AS
 $BODY$
   DECLARE vbUserId Integer;
 BEGIN
-
      -- проверка прав пользователя на вызов процедуры
-     -- vbUserId:= PERFORM lpCheckRight(inSession, zc_Enum_Process_UnComplete_ReturnOut());
-     vbUserId:=2;
+     vbUserId:= lpCheckRight (inSession, zc_Enum_Process_UnComplete_ReturnOut());
 
 
      -- проверка - если <Master> Удален, то <Ошибка>
@@ -33,7 +31,8 @@ LANGUAGE PLPGSQL VOLATILE;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
- 14.02.14				                                           *
+ 29.06.15                                        * all
+ 14.02.14				                        *
 */
 
 -- тест

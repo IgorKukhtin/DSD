@@ -64,13 +64,8 @@ type
     actPrint: TdsdPrintAction;
     bbPrint: TdxBarButton;
     colAmountPartner: TcxGridDBColumn;
-    colAmountPacker: TcxGridDBColumn;
     colCountForPrice: TcxGridDBColumn;
-    colHeadCount: TcxGridDBColumn;
-    colPartionGoods: TcxGridDBColumn;
-    colLiveWeight: TcxGridDBColumn;
     colGoodsKindName: TcxGridDBColumn;
-    colAssetName: TcxGridDBColumn;
     bbShowAll: TdxBarButton;
     bbStatic: TdxBarStatic;
     actShowAll: TBooleanStoredProcAction;
@@ -148,6 +143,11 @@ type
     cxLabel18: TcxLabel;
     edContractTo: TcxButtonEdit;
     ContractGuidesTo: TdsdGuides;
+    cbCalcAmountPartner: TcxCheckBox;
+    bbCalcAmountPartner: TdxBarControlContainerItem;
+    spInsertMaskMIMaster: TdsdStoredProc;
+    bbAddMask: TdxBarButton;
+    actAddMask: TdsdExecStoredProc;
   private
   public
   end;

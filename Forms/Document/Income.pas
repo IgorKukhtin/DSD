@@ -143,6 +143,12 @@ type
     PrintHeaderCDS: TClientDataSet;
     PrintItemsCDS: TClientDataSet;
     spSelectPrint: TdsdStoredProc;
+    cbCalcAmountPartner: TcxCheckBox;
+    bbCalcAmountPartner: TdxBarControlContainerItem;
+    actGoodsKindChoice: TOpenChoiceForm;
+    spInsertMaskMIMaster: TdsdStoredProc;
+    actAddMask: TdsdExecStoredProc;
+    bbAddMask: TdxBarButton;
   private
   public
   end;

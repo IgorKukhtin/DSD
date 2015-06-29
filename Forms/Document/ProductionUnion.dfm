@@ -1,5 +1,5 @@
 inherited ProductionUnionForm: TProductionUnionForm
-  Caption = #1055#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1086' - '#1089#1084#1077#1096#1080#1074#1072#1085#1080#1077
+  Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1055#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1086' - '#1089#1084#1077#1096#1080#1074#1072#1085#1080#1077'>'
   ClientWidth = 1020
   ExplicitWidth = 1036
   PixelsPerInch = 96
@@ -746,6 +746,30 @@ inherited ProductionUnionForm: TProductionUnionForm
     Left = 466
     Top = 224
   end
+  inherited GuidesFiller: TGuidesFiller
+    GuidesList = <
+      item
+        Guides = GuidesFrom
+      end
+      item
+        Guides = GuidesTo
+      end>
+  end
+  inherited HeaderSaver: THeaderSaver
+    ControlList = <
+      item
+        Control = edInvNumber
+      end
+      item
+        Control = edOperDate
+      end
+      item
+        Control = edFrom
+      end
+      item
+        Control = edTo
+      end>
+  end
   inherited spErasedMIMaster: TdsdStoredProc
     StoredProcName = 'gpMovementItem_ProductionUnion_Master_SetErased'
   end
@@ -791,6 +815,64 @@ inherited ProductionUnionForm: TProductionUnionForm
         Value = Null
         Component = MasterCDS
         ComponentItem = 'Count'
+        DataType = ftFloat
+        ParamType = ptInput
+      end
+      item
+        Name = 'inPartionGoodsDate'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'PartionGoodsDate'
+        DataType = ftDateTime
+        ParamType = ptInput
+      end
+      item
+        Name = 'inPartionGoods'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'PartionGoods'
+        DataType = ftString
+        ParamType = ptInput
+      end
+      item
+        Name = 'inGoodsKindId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'GoodsKindId'
+        ParamType = ptInput
+      end>
+  end
+  inherited spInsertMaskMIMaster: TdsdStoredProc
+    StoredProcName = 'gpInsertUpdate_MI_ProductionUnion_Master'
+    Params = <
+      item
+        Name = 'ioId'
+        Value = '0'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inGoodsId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'GoodsId'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inAmount'
+        Value = '0'
+        DataType = ftFloat
+        ParamType = ptInput
+      end
+      item
+        Name = 'inCount'
+        Value = '0'
         DataType = ftFloat
         ParamType = ptInput
       end

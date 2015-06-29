@@ -779,7 +779,6 @@ inherited AncestorDocumentMCForm: TAncestorDocumentMCForm
     object bbAddMask: TdxBarButton
       Action = actAddMask
       Category = 0
-      Visible = ivNever
     end
     object bbAddChild: TdxBarButton
       Action = InsertRecordChild
