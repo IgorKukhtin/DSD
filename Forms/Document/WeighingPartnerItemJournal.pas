@@ -66,7 +66,6 @@ type
     spMovementSetErased: TdsdStoredProc;
     colInvNumberOrder: TcxGridDBColumn;
     colMovementDescName: TcxGridDBColumn;
-    colInvNumberTransport: TcxGridDBColumn;
     colEndWeighing: TcxGridDBColumn;
     bbStatic: TdxBarStatic;
     dsdGridToExcel: TdsdGridToExcel;
@@ -81,31 +80,14 @@ type
     bbReCompleteAll: TdxBarButton;
     spMovementReCompleteAll: TdsdStoredProc;
     colUserName: TcxGridDBColumn;
-    colRouteSorting: TcxGridDBColumn;
     colStartWeighing: TcxGridDBColumn;
     clPaidKindName: TcxGridDBColumn;
     colOperDate_parent: TcxGridDBColumn;
     colWeighingNumber: TcxGridDBColumn;
-    PersonalName1: TcxGridDBColumn;
-    PersonalName2: TcxGridDBColumn;
-    PersonalName3: TcxGridDBColumn;
-    PersonalName4: TcxGridDBColumn;
-    PersonalCode1: TcxGridDBColumn;
-    PersonalCode2: TcxGridDBColumn;
-    PersonalCode3: TcxGridDBColumn;
-    PersonalCode4: TcxGridDBColumn;
-    PositionName1: TcxGridDBColumn;
-    PositionName2: TcxGridDBColumn;
-    PositionName3: TcxGridDBColumn;
-    PositionName4: TcxGridDBColumn;
     actShowErased: TBooleanStoredProcAction;
     bbShowErased: TdxBarButton;
-    colInvNumber_TransportGoods: TcxGridDBColumn;
-    colOperDate_TransportGoods: TcxGridDBColumn;
     actMovementProtocol: TdsdOpenForm;
     bbMovementProtocol: TdxBarButton;
-    colInvNumberPartner_Tax: TcxGridDBColumn;
-    colOperDate_Tax: TcxGridDBColumn;
     colMovementDescNumber: TcxGridDBColumn;
   private
   public

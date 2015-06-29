@@ -48,8 +48,8 @@ type
     GuidesRouteSorting: TdsdGuides;
     GuidesRoute: TdsdGuides;
     cxLabel3: TcxLabel;
-    edFrom: TcxButtonEdit;
-    GuidesFrom: TdsdGuides;
+    edPartner: TcxButtonEdit;
+    GuidesPartner: TdsdGuides;
     edTo: TcxButtonEdit;
     cxLabel8: TcxLabel;
     GuidesTo: TdsdGuides;
@@ -68,7 +68,6 @@ type
     bbPrint_byRoute: TdxBarButton;
     Amount_WeightSK: TcxGridDBColumn;
     FromCode: TcxGridDBColumn;
-    RouteSortingCode: TcxGridDBColumn;
     actPrint_byRouteItog: TdsdPrintAction;
     bbPrint_byRouteItog: TdxBarButton;
     InfoMoneyName: TcxGridDBColumn;

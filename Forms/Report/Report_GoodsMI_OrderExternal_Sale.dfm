@@ -1,5 +1,5 @@
 inherited Report_GoodsMI_OrderExternal_SaleForm: TReport_GoodsMI_OrderExternal_SaleForm
-  Caption = #1054#1090#1095#1077#1090' < '#1047#1072#1103#1074#1082#1072' / '#1054#1090#1075#1088#1091#1079#1082#1072' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1077#1081'> '
+  Caption = #1054#1090#1095#1077#1090' <'#1047#1072#1103#1074#1082#1072' / '#1055#1088#1086#1076#1072#1078#1072' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1103#1084'>'
   ClientHeight = 387
   ClientWidth = 1055
   AddOnFormData.Params = FormParams
@@ -230,40 +230,35 @@ inherited Report_GoodsMI_OrderExternal_SaleForm: TReport_GoodsMI_OrderExternal_S
             HeaderAlignmentVert = vaCenter
             Width = 90
           end
-          object RouteSortingCode: TcxGridDBColumn
-            Caption = #1050#1086#1076' '#1089#1086#1088#1090#1080#1088#1086#1074#1082#1080
-            DataBinding.FieldName = 'RouteSortingCode'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 44
-          end
           object RouteSortingName: TcxGridDBColumn
-            Caption = #1057#1089#1086#1088#1090#1080#1088#1086#1074#1082#1072' '#1084#1072#1088#1096#1088#1091#1090#1072
+            Caption = #1057#1086#1088#1090#1080#1088#1086#1074#1082#1072' '#1084#1072#1088#1096#1088#1091#1090#1072
             DataBinding.FieldName = 'RouteSortingName'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 100
           end
           object FromCode: TcxGridDBColumn
-            Caption = #1050#1086#1076' '#1055#1086#1082#1091#1087#1072#1090#1077#1083#1103
+            Caption = #1050#1086#1076' '#1082'.'
             DataBinding.FieldName = 'FromCode'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 44
           end
           object FromName: TcxGridDBColumn
-            Caption = #1055#1086#1082#1091#1087#1072#1090#1077#1083#1100
+            Caption = #1050#1086#1085#1090#1088#1072#1075#1077#1085#1090
             DataBinding.FieldName = 'FromName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 55
+            Width = 100
           end
           object PaidKindName: TcxGridDBColumn
             Caption = #1060#1086#1088#1084#1072' '#1086#1087#1083#1072#1090#1099
             DataBinding.FieldName = 'PaidKindName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 100
+            Width = 55
           end
           object GoodsGroupNameFull: TcxGridDBColumn
             Caption = #1043#1088#1091#1087#1087#1072' '#1090#1086#1074#1072#1088#1072' ('#1074#1089#1077')'
@@ -275,9 +270,10 @@ inherited Report_GoodsMI_OrderExternal_SaleForm: TReport_GoodsMI_OrderExternal_S
           object GoodsGroupName: TcxGridDBColumn
             Caption = #1043#1088#1091#1087#1087#1072' '#1090#1086#1074#1072#1088#1072
             DataBinding.FieldName = 'GoodsGroupName'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 70
+            Width = 100
           end
           object GoodsCode: TcxGridDBColumn
             Caption = #1050#1086#1076
@@ -291,14 +287,14 @@ inherited Report_GoodsMI_OrderExternal_SaleForm: TReport_GoodsMI_OrderExternal_S
             DataBinding.FieldName = 'GoodsName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 80
+            Width = 150
           end
           object GoodsKindName: TcxGridDBColumn
             Caption = #1042#1080#1076' '#1090#1086#1074#1072#1088#1072
             DataBinding.FieldName = 'GoodsKindName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 56
+            Width = 80
           end
           object MeasureName: TcxGridDBColumn
             Caption = #1045#1076'. '#1080#1079#1084'.'
@@ -366,7 +362,7 @@ inherited Report_GoodsMI_OrderExternal_SaleForm: TReport_GoodsMI_OrderExternal_S
             HeaderAlignmentVert = vaCenter
           end
           object Amount_Weight_Dozakaz: TcxGridDBColumn
-            Caption = #1044#1086#1079#1072#1082', '#1082#1075' '
+            Caption = #1044#1086#1079#1072#1082#1072#1079', '#1074#1077#1089
             DataBinding.FieldName = 'Amount_Weight_Dozakaz'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
@@ -375,7 +371,7 @@ inherited Report_GoodsMI_OrderExternal_SaleForm: TReport_GoodsMI_OrderExternal_S
             HeaderAlignmentVert = vaCenter
           end
           object Amount_Sh_Dozakaz: TcxGridDBColumn
-            Caption = #1044#1086#1079#1072#1082', '#1096#1090
+            Caption = #1044#1086#1079#1072#1082#1072#1079', '#1096#1090
             DataBinding.FieldName = 'Amount_Sh_Dozakaz'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
@@ -439,6 +435,7 @@ inherited Report_GoodsMI_OrderExternal_SaleForm: TReport_GoodsMI_OrderExternal_S
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 70
@@ -466,6 +463,7 @@ inherited Report_GoodsMI_OrderExternal_SaleForm: TReport_GoodsMI_OrderExternal_S
           object InfoMoneyName: TcxGridDBColumn
             Caption = #1059#1055' '#1089#1090#1072#1090#1100#1103' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
             DataBinding.FieldName = 'InfoMoneyName'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 80
@@ -481,14 +479,14 @@ inherited Report_GoodsMI_OrderExternal_SaleForm: TReport_GoodsMI_OrderExternal_S
     ExplicitHeight = 123
     inherited deStart: TcxDateEdit
       Left = 118
-      EditValue = 41640d
+      EditValue = 42005d
       Properties.SaveTime = False
       ExplicitLeft = 118
     end
     inherited deEnd: TcxDateEdit
       Left = 118
       Top = 30
-      EditValue = 41640d
+      EditValue = 42005d
       Properties.SaveTime = False
       ExplicitLeft = 118
       ExplicitTop = 30
@@ -554,9 +552,9 @@ inherited Report_GoodsMI_OrderExternal_SaleForm: TReport_GoodsMI_OrderExternal_S
     object cxLabel3: TcxLabel
       Left = 215
       Top = 12
-      Caption = #1055#1086#1082#1091#1087#1072#1090#1077#1083#1100
+      Caption = #1050#1086#1085#1090#1088#1072#1075#1077#1085#1090
     end
-    object edFrom: TcxButtonEdit
+    object edPartner: TcxButtonEdit
       Left = 215
       Top = 30
       Properties.Buttons = <
@@ -866,7 +864,7 @@ inherited Report_GoodsMI_OrderExternal_SaleForm: TReport_GoodsMI_OrderExternal_S
       item
         Name = 'inFromId'
         Value = ''
-        Component = GuidesFrom
+        Component = GuidesPartner
         ComponentItem = 'Key'
         ParamType = ptInput
       end
@@ -1023,7 +1021,7 @@ inherited Report_GoodsMI_OrderExternal_SaleForm: TReport_GoodsMI_OrderExternal_S
         Component = GoodsGroupGuides
       end
       item
-        Component = GuidesFrom
+        Component = GuidesPartner
       end
       item
         Component = GuidesRoute
@@ -1125,53 +1123,26 @@ inherited Report_GoodsMI_OrderExternal_SaleForm: TReport_GoodsMI_OrderExternal_S
     Left = 488
     Top = 72
   end
-  object GuidesFrom: TdsdGuides
+  object GuidesPartner: TdsdGuides
     KeyField = 'Id'
-    LookupControl = edFrom
-    FormNameParam.Value = 'TContractChoicePartnerForm'
+    LookupControl = edPartner
+    FormNameParam.Value = 'TPartner_ObjectForm'
     FormNameParam.DataType = ftString
-    FormName = 'TContractChoicePartnerForm'
+    FormName = 'TPartner_ObjectForm'
     PositionDataSet = 'MasterCDS'
     Params = <
       item
-        Name = 'PartnerId'
-        Value = ''
-        Component = GuidesFrom
-        ComponentItem = 'Key'
-      end
-      item
-        Name = 'PartnerName'
-        Value = ''
-        Component = GuidesFrom
-        ComponentItem = 'TextValue'
-        DataType = ftString
-      end
-      item
-        Name = 'PaidKindId'
-        Value = ''
-        ComponentItem = 'Key'
-      end
-      item
-        Name = 'PaidKindName'
-        Value = ''
-        ComponentItem = 'TextValue'
-        DataType = ftString
-      end
-      item
         Name = 'Key'
         Value = ''
+        Component = GuidesPartner
         ComponentItem = 'Key'
       end
       item
         Name = 'TextValue'
         Value = ''
+        Component = GuidesPartner
         ComponentItem = 'TextValue'
         DataType = ftString
-      end
-      item
-        Name = 'ChangePercent'
-        Value = 0.000000000000000000
-        DataType = ftFloat
       end>
     Left = 312
     Top = 8

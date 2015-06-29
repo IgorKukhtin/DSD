@@ -174,12 +174,12 @@ inherited OrderExternalJournalForm: TOrderExternalJournalForm
             Width = 75
           end
           object RouteGroupName: TcxGridDBColumn
-            Caption = #1043#1088#1091#1087#1087#1072' '#1084#1072#1088#1096#1088#1091#1090#1072
+            Caption = #1043#1088#1091#1087#1087#1072' '#1084'. / '#1052#1072#1088#1096#1088#1091#1090
             DataBinding.FieldName = 'RouteGroupName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 80
+            Width = 100
           end
           object colRouteName: TcxGridDBColumn
             Caption = #1052#1072#1088#1096#1088#1091#1090

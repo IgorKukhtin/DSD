@@ -29,7 +29,7 @@ type
     Amount_Sh1: TcxGridDBColumn;
     RouteSortingName: TcxGridDBColumn;
     PaidKindName: TcxGridDBColumn;
-    AmountSummTotal: TcxGridDBColumn;
+    AmountSumm: TcxGridDBColumn;
     AmountSumm2: TcxGridDBColumn;
     GoodsKindName: TcxGridDBColumn;
     Amount_Weight2: TcxGridDBColumn;
@@ -48,19 +48,17 @@ type
     GuidesRouteSorting: TdsdGuides;
     GuidesRoute: TdsdGuides;
     cxLabel3: TcxLabel;
-    edFrom: TcxButtonEdit;
-    GuidesFrom: TdsdGuides;
+    edPartner: TcxButtonEdit;
+    GuidesPartner: TdsdGuides;
     edTo: TcxButtonEdit;
     cxLabel8: TcxLabel;
     edByDoc: TcxCheckBox;
     GuidesTo: TdsdGuides;
-    Amount_Weight_Itog: TcxGridDBColumn;
-    Amount_Sh_Itog: TcxGridDBColumn;
-    Amount_Weight_Dozakaz: TcxGridDBColumn;
-    Amount_Sh_Dozakaz: TcxGridDBColumn;
-    AmountSumm_Dozakaz: TcxGridDBColumn;
-    InvNumberContract: TcxGridDBColumn;
-    Amount12: TcxGridDBColumn;
+    Amount_Weight: TcxGridDBColumn;
+    Amount_Sh: TcxGridDBColumn;
+    Amount_Weight_Dozakaz1: TcxGridDBColumn;
+    Amount_Sh_Dozakaz1: TcxGridDBColumn;
+    AmountSumm_Dozakaz1: TcxGridDBColumn;
     actPrint_byPack: TdsdPrintAction;
     actPrint_byProduction: TdsdPrintAction;
     bbPrint_byProduction: TdxBarButton;
@@ -70,15 +68,19 @@ type
     bbPrint_byRoute: TdxBarButton;
     Amount_WeightSK: TcxGridDBColumn;
     FromCode: TcxGridDBColumn;
-    RouteSortingCode: TcxGridDBColumn;
     actPrint_byRouteItog: TdsdPrintAction;
     bbPrint_byRouteItog: TdxBarButton;
-    InfoMoneyName: TcxGridDBColumn;
     actPrint_byCross: TdsdPrintAction;
     bbPrint_byCross: TdxBarButton;
     HeaderCDS: TClientDataSet;
     spSelect_Cross: TdsdStoredProc;
     ItemsCDS: TClientDataSet;
+    RouteGroupName: TcxGridDBColumn;
+    PersonalName: TcxGridDBColumn;
+    Amount_Sh_Dozakaz2: TcxGridDBColumn;
+    Amount_Weight_Dozakaz2: TcxGridDBColumn;
+    AmountSumm_Dozakaz2: TcxGridDBColumn;
+    Amount: TcxGridDBColumn;
   private
     { Private declarations }
   public
