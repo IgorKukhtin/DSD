@@ -669,6 +669,17 @@ inherited MainForm: TMainForm
       GuiParams = <>
       isShowModal = False
     end
+    object actAlternativeGroup: TdsdOpenForm
+      Category = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082#1080
+      MoveParams = <>
+      Caption = #1043#1088#1091#1087#1087#1099' '#1072#1083#1100#1090#1077#1088#1085#1072#1090#1080#1074
+      Hint = #1043#1088#1091#1087#1087#1099' '#1072#1083#1100#1090#1077#1088#1085#1072#1090#1080#1074
+      FormName = 'TAlternativeGroupForm'
+      FormNameParam.Value = 'TAlternativeGroupForm'
+      FormNameParam.DataType = ftString
+      GuiParams = <>
+      isShowModal = False
+    end
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 496
@@ -779,6 +790,9 @@ inherited MainForm: TMainForm
       end
       object N52: TMenuItem
         Action = actPrice
+      end
+      object N53: TMenuItem
+        Action = actAlternativeGroup
       end
     end
     object miLoad: TMenuItem [1]

@@ -88,8 +88,8 @@ uses
   dsdDB in '..\..\SOURCE\COMPONENT\dsdDB.pas',
   ToolsWeighingTree in '..\..\Forms\Guides\ToolsWeighingTree.pas' {ToolsWeighingTreeForm},
   dbMovementItemTest in '..\SOURCE\dbMovementItemTest.pas',
-  Income in '..\..\Forms\Document\Income.pas' {IncomeForm},
-  IncomeJournal in '..\..\Forms\Document\IncomeJournal.pas' {ParentForm2},
+  IncomePartner in '..\..\Forms\Document\IncomePartner.pas' {IncomePartnerForm},
+  IncomePartnerJournal in '..\..\Forms\Document\IncomePartnerJournal.pas' {IncomePartnerJournalForm},
   dsdAddOn in '..\..\SOURCE\COMPONENT\dsdAddOn.pas',
   dbMovementCompleteTest in '..\SOURCE\dbMovementCompleteTest.pas',
   Report_Balance in '..\..\Forms\Report\Report_Balance.pas' {Report_BalanceForm},
@@ -688,7 +688,11 @@ uses
   IncomePartionGoodsJournal in '..\..\Forms\Document\IncomePartionGoodsJournal.pas' {IncomePartionGoodsJournalForm: TParentForm},
   SaleJournalChoice in '..\..\Forms\Document\SaleJournalChoice.pas' {SaleJournalChoiceForm: TParentForm},
   OrderInternal in '..\..\Forms\Document\OrderInternal.pas' {OrderInternalForm: TParentForm},
-  OrderInternalJournal in '..\..\Forms\Document\OrderInternalJournal.pas' {OrderInternalJournalForm: TParentForm};
+  OrderInternalJournal in '..\..\Forms\Document\OrderInternalJournal.pas' {OrderInternalJournalForm: TParentForm},
+  IncomeJournal in '..\..\Forms\Document\IncomeJournal.pas' {IncomeJournalForm: TParentForm},
+  Income in '..\..\Forms\Document\Income.pas' {IncomeForm: TParentForm},
+  WeighingPartnerItemJournal in '..\..\Forms\Document\WeighingPartnerItemJournal.pas' {WeighingPartnerItemJournalForm: TParentForm},
+  WeighingProductionItemJournal in '..\..\Forms\Document\WeighingProductionItemJournal.pas' {WeighingProductionItemJournalForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}

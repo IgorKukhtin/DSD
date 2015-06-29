@@ -1,0 +1,340 @@
+unit Cash_FP3530T_NEW;
+
+interface
+uses Windows, CashInterface, DBTables, FP3141_TLB;
+type
+  TCashFP3530T_NEW = class(TInterfacedObject, ICash)
+  private
+    FAlwaysSold: boolean;
+    FPrinter: IFiscPRN;
+    procedure SetAlwaysSold(Value: boolean);
+    function GetAlwaysSold: boolean;
+  protected
+    function SoldCode(const GoodsCode: integer; const Amount: double; const Price: double = 0.00): boolean;
+    function SoldFromPC(const GoodsCode: integer; const GoodsName: string; const Amount, Price, NDS: double): boolean; //Продажа с компьютера
+    function ChangePrice(const GoodsCode: integer; const Price: double): boolean;
+    function OpenReceipt(const isFiscal: boolean = true): boolean;
+    function CloseReceipt: boolean;
+    function CashInputOutput(const Summa: double): boolean;
+    function ProgrammingGoods(const GoodsCode: integer; const GoodsName: string; const Price, NDS: double): boolean;
+    function ClosureFiscal: boolean;
+    function TotalSumm(Summ: double; PaidType: TPaidType): boolean;
+    function DeleteArticules(const GoodsCode: integer): boolean;
+    function XReport: boolean;
+    function GetLastErrorCode: integer;
+    function GetArticulInfo(const GoodsCode: integer; var ArticulInfo: WideString): boolean;
+    function PrintNotFiscalText(const PrintText: WideString): boolean;
+    function PrintFiscalText(const PrintText: WideString): boolean;
+    function SubTotal(isPrint, isDisplay: WordBool; Percent, Disc: Double): boolean;
+    function PrintFiscalMemoryByNum(inStart, inEnd: Integer): boolean;
+    function PrintFiscalMemoryByDate(inStart, inEnd: TDateTime): boolean;
+    function PrintReportByDate(inStart, inEnd: TDateTime): boolean;
+    function PrintReportByNum(inStart, inEnd: Integer): boolean;
+    procedure ClearArticulAttachment;
+    procedure SetTime;
+    procedure Anulirovt;
+  public
+    constructor Create;
+  end;
+
+
+
+implementation
+uses Forms, SysUtils, Dialogs, Math, Variants, BDE, StrUtils, IniUtils, Log;
+
+function СообщениеКА(k: string): boolean;
+begin
+  result := (k = '$0000') or (k = '');
+  if result then
+     exit;
+
+  if (k='$0101') then begin ShowMessage('$0101 Ошибка принтера');  exit;  end; //257
+  if (k='$0201') then begin ShowMessage('$0201 Ошибка RAM'); exit; end;    //
+  if (k='$0301') then begin ShowMessage('$0301 Ошибка Контрольная сумма памяти программ'); exit; end; ///
+  if (k='$0401') then begin ShowMessage('$0401 Ошибка flash памяти');  exit; end;                      //
+  if (k='$0501') then begin ShowMessage('$0501 Ошибка Дисплея');  exit; end;                           //
+  if (k='$0601') then begin ShowMessage('$0601 Ошибка часов');  exit; end;                             //
+  if (k='$0701') then begin ShowMessage('$0701 Ошибка возникла вследствие понижения питания');  exit; end; //
+  if (k='$0002') then begin ShowMessage('$0002 Неправильный код инструкции');  exit; end; 	          //
+
+   //0xNN03	Формат поля неверен, где NN -Порядковый номер неверного поля
+  if Copy(k, 3, 2) = '03'	then begin ShowMessage('Формат поля неверен, где NN -Порядковый номер неверного поля (' + Copy(k, 1, 2) + ')');  exit; end;
+   //0xNN04	Значение поля выходит за диапазон, где NN -Порядковый номер неверного поля
+  if Copy(k, 3, 2) = '04'	then begin ShowMessage('Значение поля выходит за диапазон, где NN -Порядковый номер неверного поля (' + Copy(k, 1, 2) + ')');  exit; end;
+   //0xXX05 Ошибка ФП
+
+  if (k='$0005')	then begin ShowMessage('$0005 Нет свободного места для записи');   exit; end;  //
+  if (k='$0105')	then begin ShowMessage('$0105 Ошибка записи в ФП');  exit; end;                //
+  if (k='$0205')	then begin ShowMessage('$0205 Заводской номер неустановлен');    exit; end;    //
+  if (k='$0305')	then begin ShowMessage('$0305 Дата последней записи в ФП более поздняя, чем та, что пытаемся установить');  exit; end; //
+  if (k='$0405')	then begin ShowMessage('$0405 Нельзя выходить за пределы суток');  exit; end; //
+  if (k='$0505')	then begin ShowMessage('$0505 Сбой данных в ФП');  exit; end; //
+  if (k='$0605')	then begin ShowMessage('$0605 фискальная память исчерпана(Запись запрещена)');  exit; end; //
+  if (k='$0705')	then begin ShowMessage('$0705 ЭККР не в фискальном режиме');  exit; end; //
+  if (k='$0805')	then begin ShowMessage('$0805 дата и время не были установлены с момента последнего аварийного обнуления ОЗУ');  exit; end; //
+  if (k='$0905')	then begin ShowMessage('$0905 С начала смены прошло более чем 24 часа');  exit; end; //
+  if (k='$0A05')	then begin ShowMessage('$0A05 необходимо скорректировать время');  exit; end; //
+  if (k='$0B05')	then begin ShowMessage('$0B05 Ошибка в таблице налоговых ставок');  exit; end; //
+  if (k='$0006')	then begin ShowMessage('$0006 Неверный пароль');  exit; end; //
+   //0xXX07 ошибка режима
+  if (k='$0007')	then begin ShowMessage('$0007 Команда в данном режиме регистратора невыполнима');  exit; end; 	//
+  if (k='$0107')	then begin ShowMessage('$0107 Команда в данном состоянии смены невыполнима');   exit; end; 	    //
+  if (k='$0008')	then begin ShowMessage('$0008 Переполнение математики'); 	 exit; end;                         //
+  if (k='$0009')	then begin ShowMessage('$0009 Не обнулено'); 	 exit; end;                                     //
+   //0xXX0A Ошибки при работе с базой товаров
+  if (k='$000A')	then begin ShowMessage('$000A Недостаточно свободного места для выполнения команды');  exit; end; //
+  if (k='$010A')	then begin ShowMessage('$010A Длина записи больше максимума'); 	 exit; end;                   //
+  if (k='$020A')	then begin ShowMessage('$020A Артикул с данным кодом не найден');  exit; end; 	                  //
+  if (k='$030A')	then begin ShowMessage('$030A Индекс за пределами базы');  exit; end; 	                          //
+  if (k='$040A')	then begin ShowMessage('$040A Артикул/отдел с данным кодом существует');  exit; end; 	          //
+  if (k='$050A')	then begin ShowMessage('$050A Запрещенная налоговая группа');  exit; end; 	                      //
+   //0хХX0B Ошибка при работе с цепочкой продаж                                                     //
+  if (k='$000B')	then begin ShowMessage('$000B Неверное состояние документа');  exit; end; 	                      //
+  if (k='$010B')	then begin ShowMessage('$010B Недостаточно свободного места для выполнения команды');  exit; end; //
+  if (k='$020B')	then begin ShowMessage('$020B Неизвестный тип записи продажи');  exit; end; 	                  //
+  if (k='$030B')	then begin ShowMessage('$030B Аннулирование не может начинаться с данной операции');  exit; end;  //
+  if (k='$040B')	then begin ShowMessage('$040B Данная операция в чеке не найдена');  exit; end; 	                  //
+  if (k='$050B')	then begin ShowMessage('$050B последовательность неполная (за последней операцией есть еще команды которые с ней связаны)');  exit; end; //
+  if (k='$060B')	then begin ShowMessage('$060B Аннулировать нечего'); 	 exit; end;                               //
+  if (k='$070B')	then begin ShowMessage('$070B Копия чека недоступна'); 	 exit; end;                               //
+  if (k='$080B')	then begin ShowMessage('$080B Недостаточно наличности для выполнения операции'); 	 exit; end;   //
+  if (k='$090B')	then begin ShowMessage('$090B Данная форма оплаты в этом чеке запрещена'); 	 exit; end;           //
+  if (k='$0A0B')	then begin ShowMessage('$0A0B Данная сдача с данной формы оплаты (в данном типе чека) запрещена');  exit; end; 	//
+  if (k='$0B0B')	then begin ShowMessage('$0B0B Значение скидки вышло за пределы');  exit; end; 	                                //
+  if (k='$0C0B')	then begin ShowMessage('$0C0B Переполнение итога по чеку');  exit; end; 	                                    //
+  if (k='$0D0B')	then begin ShowMessage('$0D0B Переполнение по оплатам');  exit; end; 	                                        //
+  if (k='$0E0B')	then begin ShowMessage('$0E0B Вышли за пределы буфера'); 	 exit; end;                                         //
+  if (k='$000C')	then begin ShowMessage('$000C Ошибки временного буфера');   exit; end; 	                                        //
+  if (k='$010C')	then begin ShowMessage('$010C Данные не совпали с ранее сохраненными');   exit; end;
+
+  ShowMessage(k + ' Недокументированная ошибка!!! Свяжитесь с разработчиком')
+end;
+
+const
+
+  Password = '000000';
+
+{ TCashFP3530T_NEW }
+constructor TCashFP3530T_NEW.Create;
+begin
+  inherited Create;
+  FAlwaysSold:=false;
+  FPrinter := CoFiscPrn.Create;
+  FPrinter.SETCOMPORT[StrToInt(iniPortNumber), StrToInt(iniPortSpeed)];
+  СообщениеКА(FPrinter.GETERROR);
+
+end;
+
+function TCashFP3530T_NEW.CloseReceipt: boolean;
+begin
+  result := false;
+  FPrinter.CLOSECHECK[1, Password];
+  result := СообщениеКА(FPrinter.GETERROR)
+end;
+
+function TCashFP3530T_NEW.GetAlwaysSold: boolean;
+begin
+  result:= FAlwaysSold;
+end;
+
+function TCashFP3530T_NEW.OpenReceipt(const isFiscal: boolean = true): boolean;
+begin
+  if isFiscal then
+     FPrinter.OPENFISKCHECK[1, 1, 0, Password]
+  else
+     FPrinter.OPENCHECK[Password];
+  result := СообщениеКА(FPrinter.GETERROR)
+end;
+
+procedure TCashFP3530T_NEW.SetAlwaysSold(Value: boolean);
+begin
+  FAlwaysSold:= Value
+end;
+
+procedure TCashFP3530T_NEW.SetTime;
+begin
+  FPrinter.SETDT[FormatDateTime('DDMMYYHHNN', Now), Password];
+  СообщениеКА(FPrinter.GETERROR)
+end;
+
+function TCashFP3530T_NEW.SoldCode(const GoodsCode: integer;
+  const Amount: double; const Price: double = 0.00): boolean;
+begin
+  Logger.AddToLog(' SALE (GoodsCode := ' + IntToStr(GoodsCode) + ', Amount := ' + ReplaceStr(FormatFloat('0.000', Amount), FormatSettings.DecimalSeparator, '.') +
+      ', Price := ' + ReplaceStr(FormatFloat('0.00', Price), FormatSettings.DecimalSeparator, '.') + ', Password := ' + Password);
+  FPrinter.SALE[GoodsCode, ReplaceStr(FormatFloat('0.000', Amount), FormatSettings.DecimalSeparator, '.'), ReplaceStr(FormatFloat('0.00', Price), FormatSettings.DecimalSeparator, '.') , Password];
+  result := СообщениеКА(FPrinter.GETERROR)
+end;
+
+function TCashFP3530T_NEW.SoldFromPC(const GoodsCode: integer; const GoodsName: string; const Amount, Price, NDS: double): boolean;
+var NDSType: char;
+    CashCode: integer;
+begin
+  result := true;
+  if FAlwaysSold then exit;
+
+  ProgrammingGoods(GoodsCode, Copy(GoodsName, 1, 20) , Price, NDS);
+  result := SoldCode(GoodsCode, Amount, Price);
+end;
+
+function TCashFP3530T_NEW.ProgrammingGoods(const GoodsCode: integer;
+  const GoodsName: string; const Price, NDS: double): boolean;
+var NDSType: Integer;
+begin//  if NDS = 0 then NDSType := 1 .033.+else NDSType := 0;
+  if NDS = 20 then NDSType := 0 else NDSType := 1;
+  // программирование артикула
+  Logger.AddToLog(' WRITEARTICLE (GoodsCode := ' + IntToStr(GoodsCode) +
+                 ', GoodsName := ' + GoodsName +
+                 ', NDSType := ' + IntToStr(NDSType) +
+                 ', Password := ' + Password);
+  FPrinter.WRITEARTICLE[GoodsCode, GoodsName, NDSType, 1, 1, '.', Password];
+
+  result := СообщениеКА(FPrinter.GETERROR)
+end;
+
+procedure TCashFP3530T_NEW.Anulirovt;
+begin
+  FPrinter.ANULIROVT[0, Password];
+  СообщениеКА(FPrinter.GETERROR)
+end;
+
+function TCashFP3530T_NEW.CashInputOutput(const Summa: double): boolean;
+begin
+  FPrinter.MONEY[1, ReplaceStr(FormatFloat('0.00', Summa), FormatSettings.DecimalSeparator, '.'), Password];
+  result := СообщениеКА(FPrinter.GETERROR)
+end;
+
+function TCashFP3530T_NEW.TotalSumm(Summ: double; PaidType: TPaidType): boolean;
+begin
+  FPrinter.PAYMENT[integer(PaidType), ReplaceStr(FormatFloat('0.00', Summ), FormatSettings.DecimalSeparator, '.'), Password];
+  result := СообщениеКА(FPrinter.GETERROR)
+end;
+
+function TCashFP3530T_NEW.ClosureFiscal: boolean;
+begin
+  FPrinter.ZREPORT[Password];
+  result := СообщениеКА(FPrinter.GETERROR)
+end;
+
+function TCashFP3530T_NEW.DeleteArticules(const GoodsCode: integer): boolean;
+begin
+end;
+
+function TCashFP3530T_NEW.XReport: boolean;
+begin
+  FPrinter.XREPORT[Password];
+  result := СообщениеКА(FPrinter.GETERROR)
+end;
+
+function TCashFP3530T_NEW.ChangePrice(const GoodsCode: integer;
+  const Price: double): boolean;
+begin
+end;
+
+function TCashFP3530T_NEW.GetLastErrorCode: integer;
+begin
+  //result:= status
+end;
+
+function TCashFP3530T_NEW.GetArticulInfo(const GoodsCode: integer;
+  var ArticulInfo: WideString): boolean;
+var i: integer;
+begin
+end;
+
+function TCashFP3530T_NEW.PrintNotFiscalText(
+  const PrintText: WideString): boolean;
+begin
+end;
+
+function TCashFP3530T_NEW.PrintFiscalText(
+  const PrintText: WideString): boolean;
+var APrintText: String;
+begin
+
+end;
+
+function TCashFP3530T_NEW.SubTotal(isPrint, isDisplay: WordBool; Percent,
+  Disc: Double): boolean;
+begin
+  FPrinter.PRNTOTAL[1, Password];
+  result := СообщениеКА(FPrinter.GETERROR)
+end;
+
+
+function TCashFP3530T_NEW.PrintFiscalMemoryByDate(inStart,
+  inEnd: TDateTime): boolean;
+var StartStr, EndStr: string;
+begin
+
+end;
+
+function TCashFP3530T_NEW.PrintFiscalMemoryByNum(inStart,
+  inEnd: Integer): boolean;
+begin
+
+end;
+
+function TCashFP3530T_NEW.PrintReportByDate(inStart,
+  inEnd: TDateTime): boolean;
+begin
+
+end;
+
+function TCashFP3530T_NEW.PrintReportByNum(inStart, inEnd: Integer): boolean;
+begin
+
+end;
+
+procedure TCashFP3530T_NEW.ClearArticulAttachment;
+begin
+end;
+
+end.
+
+
+(*
+
+int CALLBACK  PrintFiscalMemoryByNum(HWND hwnd,void (CALLBACK *Fn), LPARAM UI, LPSTR psw, int Start, int End)
+Входные данные -
+psw - пароль для снятия отчета (оператор 15)
+Start - начальный номер Z-отчета (4 байта)
+End - конечный номер Z-отчета (4 байта)
+Выходные данные - нет
+С помощью этой функции  печатается информация из фискальной памяти о Z-отчетах по номерам  (полный периодический отчет).
+
+
+
+int CALLBACK  PrintFiscalMemoryByDate(HWND hwnd,void (CALLBACK *Fn), LPARAM UI, LPSTR psw, LPSTR Start,LPSTR End)
+Входные данные -
+psw - пароль для снятия отчета (оператор 15)
+Start - начальная дата Z-отчета (DDMMYY, например 100500)
+End - конечная дата Z-отчета (DDMMYY)
+С помощью этой функции  печатается информация из фискальной памяти о Z-отчетах по датам  (полный периодический отчет).
+
+
+4Fh(79)
+Сокращенный периодический отчет (по дате) int
+CALLBACK  PrintReportByDate(HWND hwnd,void (CALLBACK *Fn),LPARAM UI, LPSTR psw, LPSTR Start,LPSTR End)
+Входные данные -
+psw - пароль для снятия отчета (оператор 15)
+Start - Начальная дата - 6 байт (DDMMYY)
+End - Конечная дата - 6 байт (DDMMYY)
+Выходные данные - нет
+С помощью этой функции  печатается сокращенный периодический отчет за указанный период времени.
+
+
+
+int CALLBACK  PrintReportByNum(HWND hwnd,void (CALLBACK *Fn),LPARAM UI, LPSTR psw, int Start,int End)
+Входные данные -
+psw - пароль для снятия отчета (оператор 15)
+Start - начальный номер Z-отчета (4 байта)
+End - конечный номер Z-отчета (4 байта)
+Выходные данные - нет
+С помощью этой функции  печатается сокращенный периодический отчет по указанным порядковым номерам Z-отчетов.
+
+
+
+
+
+
