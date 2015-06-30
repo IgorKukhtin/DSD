@@ -36,30 +36,17 @@ RETURNS TABLE (Id Integer, InvNumber Integer, OperDate TDateTime, StatusCode Int
              , PositionCode4 Integer, PositionName4 TVarChar
              , UserName TVarChar
 
-             ,  GoodsCode Integer, GoodsName TVarChar
-             , GoodsGroupNameFull TVarChar
-                  , MIAmount TFloat
-                  ,  AmountPartner TFloat
-
-                  ,  RealWeight TFloat
-                  ,CountTare TFloat
-                  , WeightTare TFloat
-                  , CountPack TFloat
-                  ,HeadCount TFloat
-                  ,  BoxCount TFloat
-                  , BoxNumber TFloat
-                  , LevelNumber TFloat
-                  ,  ChangePercentAmount TFloat
-                  ,  Price TFloat
-                  , CountForPrice TFloat
-                  
-                  , PartionGoodsDate  TDateTime
-                  , InsertDate TDateTime
-                  , UpdateDate TDateTime
-                  , GoodsKindName TVarChar
-                  ,  MeasureName TVarChar
-                  , BoxName TVarChar
-                  ,  PriceListName TVarChar
+             , GoodsCode Integer, GoodsName TVarChar, GoodsGroupNameFull TVarChar
+             , MIAmount TFloat,  AmountPartner TFloat
+             , RealWeight TFloat,CountTare TFloat, WeightTare TFloat
+             , HeadCount TFloat, BoxCount TFloat, BoxNumber TFloat
+             , LevelNumber TFloat, ChangePercentAmount TFloat
+             , Price TFloat, CountForPrice TFloat
+             , PartionGoodsDate  TDateTime
+             , InsertDate TDateTime, UpdateDate TDateTime
+             , GoodsKindName TVarChar
+             , MeasureName TVarChar, BoxName TVarChar
+             , PriceListName TVarChar
 
               )
 AS
@@ -152,15 +139,13 @@ BEGIN
                   , Object_Goods.ValueData           AS GoodsName
                   , ObjectString_Goods_GoodsGroupFull.ValueData AS GoodsGroupNameFull
 
-                  , MovementItem.Amount
+                  , MovementItem.Amount as MIAmount
                   , COALESCE (MIFloat_AmountPartner.ValueData, 0)::TFloat AS AmountPartner
 
                   , COALESCE (MIFloat_RealWeight.ValueData, 0)   ::TFloat       AS RealWeight
                   , COALESCE (MIFloat_CountTare.ValueData, 0) ::TFloat          AS CountTare
-                  , COALESCE (MIFloat_WeightTare.ValueData, 0)::TFloat AS WeightTare
+                  , COALESCE (MIFloat_WeightTare.ValueData, 0)::TFloat          AS WeightTare
 
-                  , COALESCE (MIFloat_CountPack.ValueData, 0)::TFloat           AS CountPack
-               
                   , COALESCE (MIFloat_HeadCount.ValueData, 0)::TFloat           AS HeadCount
                   , COALESCE (MIFloat_BoxCount.ValueData, 0)::TFloat            AS BoxCount
       
@@ -174,12 +159,12 @@ BEGIN
                   , COALESCE (MIDate_PartionGoods.ValueData, zc_DateStart()):: TDateTime AS PartionGoodsDate
 
            
-                  , MIDate_Insert.ValueData  AS InsertDate
-                  , MIDate_Update.ValueData AS UpdateDate
+                  , COALESCE (MIDate_Insert.ValueData, zc_DateStart()):: TDateTime   AS InsertDate
+                  , COALESCE (MIDate_Update.ValueData, zc_DateStart()):: TDateTime   AS UpdateDate
                   , Object_GoodsKind.ValueData      AS GoodsKindName
                   , Object_Measure.ValueData        AS MeasureName
-                  , Object_Box.ValueData            AS BoxName
-                  , Object_PriceList.ValueData      AS PriceListName
+                  , COALESCE (Object_Box.ValueData, '')::TVarChar              AS BoxName
+                  , COALESCE (Object_PriceList.ValueData , '')::TVarChar       AS PriceListName
 
        FROM tmpStatus
             JOIN Movement ON Movement.DescId = zc_Movement_WeighingPartner()
@@ -324,70 +309,68 @@ BEGIN
                                                                AND MS_InvNumberPartner_Tax.DescId = zc_MovementString_InvNumberPartner()
             --- строки
 
-                 INNER JOIN MovementItem ON MovementItem.MovementId = Movement.Id
+            INNER JOIN MovementItem ON MovementItem.MovementId = Movement.Id
                                          AND MovementItem.DescId     = zc_MI_Master()
                                          AND MovementItem.isErased   = False
 
-                  LEFT JOIN MovementItemDate AS MIDate_Insert
+            LEFT JOIN MovementItemDate AS MIDate_Insert
                                              ON MIDate_Insert.MovementItemId = MovementItem.Id
                                             AND MIDate_Insert.DescId = zc_MIDate_Insert()
-                  LEFT JOIN MovementItemDate AS MIDate_Update
+            LEFT JOIN MovementItemDate AS MIDate_Update
                                              ON MIDate_Update.MovementItemId = MovementItem.Id
                                             AND MIDate_Update.DescId = zc_MIDate_Update()
-                  LEFT JOIN MovementItemDate AS MIDate_PartionGoods
+            LEFT JOIN MovementItemDate AS MIDate_PartionGoods
                                              ON MIDate_PartionGoods.MovementItemId = MovementItem.Id
                                             AND MIDate_PartionGoods.DescId = zc_MIDate_PartionGoods()
                                                                  
-                  LEFT JOIN MovementItemFloat AS MIFloat_ChangePercentAmount
+            LEFT JOIN MovementItemFloat AS MIFloat_ChangePercentAmount
                                               ON MIFloat_ChangePercentAmount.MovementItemId = MovementItem.Id
                                              AND MIFloat_ChangePercentAmount.DescId = zc_MIFloat_ChangePercentAmount()
 
-                  LEFT JOIN MovementItemFloat AS MIFloat_AmountPartner
+            LEFT JOIN MovementItemFloat AS MIFloat_AmountPartner
                                               ON MIFloat_AmountPartner.MovementItemId = MovementItem.Id
                                              AND MIFloat_AmountPartner.DescId = zc_MIFloat_AmountPartner()
-                  LEFT JOIN MovementItemFloat AS MIFloat_RealWeight
+            LEFT JOIN MovementItemFloat AS MIFloat_RealWeight
                                               ON MIFloat_RealWeight.MovementItemId = MovementItem.Id
                                              AND MIFloat_RealWeight.DescId = zc_MIFloat_RealWeight()
-                  LEFT JOIN MovementItemFloat AS MIFloat_CountTare
+            LEFT JOIN MovementItemFloat AS MIFloat_CountTare
                                               ON MIFloat_CountTare.MovementItemId = MovementItem.Id
                                              AND MIFloat_CountTare.DescId = zc_MIFloat_CountTare()
-                  LEFT JOIN MovementItemFloat AS MIFloat_WeightTare
+            LEFT JOIN MovementItemFloat AS MIFloat_WeightTare
                                               ON MIFloat_WeightTare.MovementItemId = MovementItem.Id
                                              AND MIFloat_WeightTare.DescId = zc_MIFloat_WeightTare()
-                  LEFT JOIN MovementItemFloat AS MIFloat_CountPack
-                                              ON MIFloat_CountPack.MovementItemId = MovementItem.Id
-                                             AND MIFloat_CountPack.DescId = zc_MIFloat_CountPack()
-                  LEFT JOIN MovementItemFloat AS MIFloat_HeadCount
+
+            LEFT JOIN MovementItemFloat AS MIFloat_HeadCount
                                               ON MIFloat_HeadCount.MovementItemId = MovementItem.Id
                                              AND MIFloat_HeadCount.DescId = zc_MIFloat_HeadCount()
 
-                  LEFT JOIN MovementItemFloat AS MIFloat_BoxCount
+            LEFT JOIN MovementItemFloat AS MIFloat_BoxCount
                                               ON MIFloat_BoxCount.MovementItemId = MovementItem.Id
                                              AND MIFloat_BoxCount.DescId = zc_MIFloat_BoxCount()
-                  LEFT JOIN MovementItemFloat AS MIFloat_BoxNumber
+            LEFT JOIN MovementItemFloat AS MIFloat_BoxNumber
                                               ON MIFloat_BoxNumber.MovementItemId = MovementItem.Id
                                              AND MIFloat_BoxNumber.DescId = zc_MIFloat_BoxNumber()
-                  LEFT JOIN MovementItemFloat AS MIFloat_LevelNumber
+            LEFT JOIN MovementItemFloat AS MIFloat_LevelNumber
                                               ON MIFloat_LevelNumber.MovementItemId = MovementItem.Id
                                              AND MIFloat_LevelNumber.DescId = zc_MIFloat_LevelNumber()
 
-                  LEFT JOIN MovementItemFloat AS MIFloat_Price
+            LEFT JOIN MovementItemFloat AS MIFloat_Price
                                               ON MIFloat_Price.MovementItemId = MovementItem.Id
                                              AND MIFloat_Price.DescId = zc_MIFloat_Price()
-                  LEFT JOIN MovementItemFloat AS MIFloat_CountForPrice
+            LEFT JOIN MovementItemFloat AS MIFloat_CountForPrice
                                               ON MIFloat_CountForPrice.MovementItemId = MovementItem.Id
                                              AND MIFloat_CountForPrice.DescId = zc_MIFloat_CountForPrice()
                                              AND MIFloat_Price.ValueData <> 0 -- !!!временно!!!
 
-                  LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
+            LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
                                                    ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
                                                   AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
 
-                  LEFT JOIN MovementItemLinkObject AS MILinkObject_Box
+            LEFT JOIN MovementItemLinkObject AS MILinkObject_Box
                                                    ON MILinkObject_Box.MovementItemId = MovementItem.Id
                                                   AND MILinkObject_Box.DescId = zc_MILinkObject_Box()
 
-                  LEFT JOIN MovementItemLinkObject AS MILinkObject_PriceList
+            LEFT JOIN MovementItemLinkObject AS MILinkObject_PriceList
                                                    ON MILinkObject_PriceList.MovementItemId = MovementItem.Id
                                                   AND MILinkObject_PriceList.DescId = zc_MILinkObject_PriceList()
 
@@ -404,11 +387,6 @@ BEGIN
                                    ON ObjectString_Goods_GoodsGroupFull.ObjectId = MovementItem.ObjectId
                                   AND ObjectString_Goods_GoodsGroupFull.DescId = zc_ObjectString_Goods_GroupNameFull()
 
-
-
-
-
-
       ;
   
 END;
@@ -424,3 +402,4 @@ ALTER FUNCTION gpSelect_Movement_WeighingPartner_Item (TDateTime, TDateTime, Boo
 
 -- тест
 -- SELECT * FROM gpSelect_Movement_WeighingPartner_Item (inStartDate:= '01.05.2015', inEndDate:= '01.05.2015', inIsErased:= FALSE, inSession:= zfCalc_UserAdmin())
+--select * from gpSelect_Movement_WeighingPartner_Item(inStartDate := ('01.06.2015')::TDateTime , inEndDate := ('01.06.2015')::TDateTime , inIsErased := 'False' ,  inSession := '5');
