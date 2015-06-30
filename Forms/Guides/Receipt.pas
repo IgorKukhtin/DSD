@@ -134,6 +134,7 @@ type
     clValueWeight_calc: TcxGridDBColumn;
     clTaxLoss: TcxGridDBColumn;
     ValueWeight: TcxGridDBColumn;
+    clColor_calc: TcxGridDBColumn;
   private
     { Private declarations }
   public

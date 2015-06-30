@@ -367,5 +367,53 @@ ALTER FUNCTION gpSelect_Object_Partner (integer, TVarChar) OWNER TO postgres;
  03.07.13         *  + Route,RouteSorting
 */
 
+/*
+-- 1
+select Object_Partner.ObjectCode      FROM Object AS Object_Partner     WHERE Object_Partner.DescId = zc_Object_Partner()  and Object_Partner.ObjectCode <> 0 group by Object_Partner.ObjectCode having count (*) > 1
+-- 2
+update Object set ObjectCode = 15000 + LineNum
+from 
+(select CAST (row_number() OVER (ORDER BY a1, a2, a3, a4, a5 ) AS INTEGER) AS  LineNum
+      , tmp.*
+      from
+(select coalesce (Object_Retail.ValueData, '€€€€€€€') as a1
+        , coalesce (Object_JuridicalGroup.ValueData, '€€€€€€€') as a2
+        , coalesce (Object_Juridical.ValueData, '€€€€€€€')as a3
+        , coalesce (Object_Route.ValueData, '€€€€€€€')as a4
+        , coalesce (Object_Partner.ValueData, '€€€€€€€')as a5
+        , Object_Partner.*
+     FROM Object AS Object_Partner
+         LEFT JOIN ObjectLink AS ObjectLink_Partner_Juridical
+                              ON ObjectLink_Partner_Juridical.ObjectId = Object_Partner.Id 
+                             AND ObjectLink_Partner_Juridical.DescId = zc_ObjectLink_Partner_Juridical()
+         LEFT JOIN Object AS Object_Juridical ON Object_Juridical.Id = ObjectLink_Partner_Juridical.ChildObjectId
+
+
+         LEFT JOIN ObjectLink AS ObjectLink_Juridical_Retail
+                              ON ObjectLink_Juridical_Retail.ObjectId = Object_Juridical.Id 
+                             AND ObjectLink_Juridical_Retail.DescId = zc_ObjectLink_Juridical_Retail()
+         LEFT JOIN Object AS Object_Retail ON Object_Retail.Id = ObjectLink_Juridical_Retail.ChildObjectId
+
+         LEFT JOIN ObjectLink AS ObjectLink_Juridical_JuridicalGroup
+                              ON ObjectLink_Juridical_JuridicalGroup.ObjectId = Object_Juridical.Id
+                             AND ObjectLink_Juridical_JuridicalGroup.DescId = zc_ObjectLink_Juridical_JuridicalGroup()
+         LEFT JOIN Object AS Object_JuridicalGroup ON Object_JuridicalGroup.Id = ObjectLink_Juridical_JuridicalGroup.ChildObjectId
+
+         LEFT JOIN ObjectLink AS ObjectLink_Partner_Route
+                              ON ObjectLink_Partner_Route.ObjectId = Object_Partner.Id 
+                             AND ObjectLink_Partner_Route.DescId = zc_ObjectLink_Partner_Route()
+         LEFT JOIN Object AS Object_Route ON Object_Route.Id = ObjectLink_Partner_Route.ChildObjectId
+
+    WHERE Object_Partner.DescId = zc_Object_Partner() AND Object_Partner.iserased = FALSE
+and coalesce (Object_Partner.ObjectCode, 0) = 0
+order by  coalesce (Object_Retail.ValueData, '€€€€€€€')
+        , coalesce (Object_JuridicalGroup.ValueData, '€€€€€€€')
+        , coalesce (Object_Juridical.ValueData, '€€€€€€€')
+        , coalesce (Object_Route.ValueData, '€€€€€€€')
+        , coalesce (Object_Partner.ValueData, '€€€€€€€')
+) as tmp
+) as aaa
+where aaa.Id = Object.Id
+*/
 -- тест
 -- SELECT * FROM gpSelect_Object_Partner (0, zfCalc_UserAdmin())

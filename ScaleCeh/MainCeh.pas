@@ -1375,7 +1375,7 @@ begin
   begin
        StoredProcName:='gpSelect_ScaleCeh_MI';
        OutputType:=otDataSet;
-       Params.AddParam('inIsCeh', ftBoolean, ptInput,FALSE);
+       Params.AddParam('inIsGoodsComplete', ftBoolean, ptInput,SettingMain.isGoodsComplete);
        Params.AddParam('inMovementId', ftInteger, ptInput,0);
   end;
 end;
@@ -1401,7 +1401,7 @@ procedure TMainCehForm.RefreshDataSet;
 begin
   with spSelect do
   begin
-       Params.ParamByName('inIsCeh').Value:=SettingMain.isCeh;
+       Params.ParamByName('inIsGoodsComplete').Value:=SettingMain.isGoodsComplete;
        Params.ParamByName('inMovementId').Value:=ParamsMovement.ParamByName('MovementId').AsInteger;
        Execute;
   end;
