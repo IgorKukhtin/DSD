@@ -33,9 +33,9 @@ BEGIN
    PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_Partner_PriceList30201(), ioId, inPriceListId_30201);
 
    -- сохранили свойство <>
-   PERFORM lpInsertUpdate_ObjectDate (zc_ObjectDate_Partner_StartPromo(), ioId, inStartPromo);
+   PERFORM lpInsertUpdate_ObjectDate (zc_ObjectDate_Partner_StartPromo(), ioId, DATE (inStartPromo));
       -- сохранили свойство <>
-   PERFORM lpInsertUpdate_ObjectDate (zc_ObjectDate_Partner_EndPromo(), ioId, inEndPromo);
+   PERFORM lpInsertUpdate_ObjectDate (zc_ObjectDate_Partner_EndPromo(), ioId, DATE (inEndPromo));
    
    -- сохранили протокол
    PERFORM lpInsert_ObjectProtocol (ioId, vbUserId);

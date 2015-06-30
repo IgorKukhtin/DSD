@@ -22,10 +22,40 @@ RETURNS TABLE (Id Integer, LineNum Integer, GoodsId Integer, GoodsCode Integer, 
 AS
 $BODY$
   DECLARE vbUserId Integer;
+
+  DECLARE vbMovementId_order Integer;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Select_MI_Sale());
      vbUserId:= lpGetUserBySession (inSession);
+
+
+     -- находим заявку
+     vbMovementId_order:= (SELECT MLM_Order.MovementChildId FROM MovementLinkMovement AS MLM_Order WHERE MLM_Order.MovementId = inMovementId AND MLM_Order.DescId = zc_MovementLinkMovement_Order());
+     -- меняется параметр
+     -- !!!замена!!!
+     SELECT tmp.PriceListId, tmp.OperDate
+            INTO inPriceListId, inOperDate
+     FROM lfGet_Object_Partner_PriceList_onDate (inContractId     := (SELECT MLO.ObjectId FROM MovementLinkObject AS MLO WHERE MLO.MovementId = inMovementId AND MLO.DescId = zc_MovementLinkObject_Contract())
+                                               , inPartnerId      := (SELECT MLO.ObjectId FROM MovementLinkObject AS MLO WHERE MLO.MovementId = inMovementId AND MLO.DescId = zc_MovementLinkObject_To())
+                                               , inMovementDescId := zc_Movement_Sale()
+                                               , inOperDate_order := CASE WHEN vbMovementId_order <> 0
+                                                                               THEN (SELECT Movement.OperDate FROM Movement WHERE Movement.Id = vbMovementId_order)
+                                                                          ELSE NULL
+                                                                     END
+                                               , inOperDatePartner:= CASE WHEN vbMovementId_order <> 0
+                                                                               THEN NULL
+                                                                          ELSE inOperDate
+                                                                     END
+                                               , inDayPrior_PriceReturn:= 0 -- !!!параметр здесь не важен!!!
+                                               , inIsPrior        := FALSE -- !!!параметр здесь не важен!!!
+                                                ) AS tmp;
+
+     -- меняется параметр
+     IF inShowAll = TRUE
+     THEN
+         inShowAll:= inMovementId <> 0; -- AND NOT EXISTS (SELECT MovementId FROM MovementLinkMovement WHERE MovementId = inMovementId AND DescId = zc_MovementLinkMovement_Order() AND MovementChildId <> 0);
+     END IF;
 
 
      IF inShowAll THEN

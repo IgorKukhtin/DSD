@@ -42,7 +42,7 @@ type
     PrintItemsSverkaCDS: TClientDataSet;
     AmountSecond: TcxGridDBColumn;
     spUpdateAmountRemains: TdsdStoredProc;
-    spUpdateAmountPartner: TdsdStoredProc;
+    spUpdateAmountBasis: TdsdStoredProc;
     spUpdateAmountForecast: TdsdStoredProc;
     actUpdateAmountRemains: TdsdExecStoredProc;
     MultiAmountRemain: TMultiAction;
@@ -57,7 +57,6 @@ type
     AmountRemains: TcxGridDBColumn;
     AmountPartner: TcxGridDBColumn;
     AmountForecast: TcxGridDBColumn;
-    AmountForecastOrder: TcxGridDBColumn;
     bbMultiAmountRemain: TdxBarButton;
     actUpdateAmountPartner: TdsdExecStoredProc;
     MultiAmountPartner: TMultiAction;
@@ -68,41 +67,17 @@ type
     bbMultiAmountForecast: TdxBarButton;
     bbUpdateAmountAll: TdxBarButton;
     MeasureName: TcxGridDBColumn;
-    ReceiptCode_code: TcxGridDBColumn;
-    ReceiptName: TcxGridDBColumn;
     GoodsGroupNameFull: TcxGridDBColumn;
-    Koeff: TcxGridDBColumn;
     CountForecast: TcxGridDBColumn;
-    CountForecastOrder: TcxGridDBColumn;
-    CountForecastK: TcxGridDBColumn;
-    CountForecastOrderK: TcxGridDBColumn;
-    AmountPartnerPrior: TcxGridDBColumn;
-    TermProduction: TcxGridDBColumn;
-    NormInDays: TcxGridDBColumn;
-    StartProductionInDays: TcxGridDBColumn;
     UnitCode: TcxGridDBColumn;
     UnitName: TcxGridDBColumn;
     DayCountForecast: TcxGridDBColumn;
-    DayCountForecastOrder: TcxGridDBColumn;
     Color_remains: TcxGridDBColumn;
-    GoodsCode_detail: TcxGridDBColumn;
-    GoodsName_detail: TcxGridDBColumn;
-    GoodsKindName_detail: TcxGridDBColumn;
-    MeasureName_detail: TcxGridDBColumn;
-    AmountRemains_calc: TcxGridDBColumn;
-    AmountPrognoz_calc: TcxGridDBColumn;
-    AmountPrognozOrder_calc: TcxGridDBColumn;
-    AmountRemains_child: TcxGridDBColumn;
+    Amount_calc: TcxGridDBColumn;
     cxBottomSplitter: TcxSplitter;
-    ColorB_AmountPartner: TcxGridDBColumn;
     ColorB_DayCountForecast: TcxGridDBColumn;
     ColorB_AmountPrognoz: TcxGridDBColumn;
-    ColorB_const: TcxGridDBColumn;
-    Color_remains_calc: TcxGridDBColumn;
-    AmountRemainsChild_calc: TcxGridDBColumn;
-    Color_remainsChild_calc: TcxGridDBColumn;
-    ReceiptCode: TcxGridDBColumn;
-    ReceiptCode_code_basis: TcxGridDBColumn;
+    ColorB_AmountPartner: TcxGridDBColumn;
   private
     { Private declarations }
   public

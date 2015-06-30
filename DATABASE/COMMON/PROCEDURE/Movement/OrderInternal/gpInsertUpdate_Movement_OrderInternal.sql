@@ -28,6 +28,7 @@ BEGIN
 
      -- 1. эти параметры всегда +1 день
      IF inToId = 8451 -- Цех Упаковки
+        OR inFromId IN (SELECT tmp.UnitId FROM lfSelect_Object_Unit_byGroup (8446) AS tmp) -- ЦЕХ колбаса+дел-сы
      THEN
          outOperDatePartner:= inOperDate;
      ELSE 

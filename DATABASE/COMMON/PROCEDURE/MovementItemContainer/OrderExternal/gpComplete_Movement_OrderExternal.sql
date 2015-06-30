@@ -222,8 +222,8 @@ BEGIN
                                  );
      END IF;
 
-
-     IF EXISTS (SELECT Price FROM _tmpItem WHERE Price = 0)
+     -- кроме Админа
+     IF EXISTS (SELECT Price FROM _tmpItem WHERE Price = 0) AND vbUserId <> 5
      THEN
          RAISE EXCEPTION 'Ошибка. У товара установлена цена = 0.';
      END IF;

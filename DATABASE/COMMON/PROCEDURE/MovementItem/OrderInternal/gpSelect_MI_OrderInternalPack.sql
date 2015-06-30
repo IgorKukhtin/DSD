@@ -14,7 +14,6 @@ $BODY$
    DECLARE vbUserId Integer;
 
    DECLARE Cursor1 refcursor;
-   DECLARE Cursor2 refcursor;
 
    DECLARE vbOperDate TDateTime;
    DECLARE vbDayCount Integer;
@@ -219,12 +218,12 @@ BEGIN
                              THEN tmpMI.AmountRemains / (tmpMI.CountForecast * tmpMI.Koeff)
                          ELSE 0
                    END
-             AS NUMERIC (16, 1)) :: TFloat AS DayCountForecast      -- Ост. в днях (по зв.)
+             AS NUMERIC (16, 1)) :: TFloat AS DayCountForecast      -- Ост. в днях (по прод.) 
            , CAST (CASE WHEN tmpMI.CountForecastOrder > 0 AND tmpMI.Koeff > 0
                              THEN tmpMI.AmountRemains / (tmpMI.CountForecastOrder * tmpMI.Koeff)
                          ELSE 0
                    END
-             AS NUMERIC (16, 1)) :: TFloat AS DayCountForecastOrder -- Ост. в днях (по пр.) 
+             AS NUMERIC (16, 1)) :: TFloat AS DayCountForecastOrder -- Ост. в днях (по зв.)
 
            , tmpMI.Koeff                 :: TFloat AS Koeff                 -- Коэфф.
            , tmpMI.TermProduction        :: TFloat AS TermProduction        -- Срок произв. в дн.
@@ -355,37 +354,6 @@ BEGIN
           ;
 
        RETURN NEXT Cursor1;
-
-       OPEN Cursor2 FOR
-        WITH tmpMI_master_find AS (SELECT MAX (tmpMI_master.MovementItemId) AS MovementItemId, tmpMI_master.GoodsId_detail, tmpMI_master.GoodsKindId_detail
-                                   FROM _tmpMI_master AS tmpMI_master
-                                   WHERE tmpMI_master.isErased = FALSE
-                                   GROUP BY tmpMI_master.GoodsId_detail, tmpMI_master.GoodsKindId_detail
-                                  )
-       SELECT
-             _tmpMI_child.MovementItemId         AS Id
-           , Object_Goods.Id                     AS GoodsId
-           , Object_Goods.ObjectCode             AS GoodsCode
-           , Object_Goods.ValueData              AS GoodsName
-           , Object_GoodsKind.ValueData          AS GoodsKindName
-           , Object_Measure.ValueData            AS MeasureName
-           , CASE WHEN ABS (_tmpMI_child.Amount) < 1 THEN _tmpMI_child.Amount ELSE CAST (_tmpMI_child.Amount AS NUMERIC (16, 1)) END :: TFloat AS Amount
-           , FALSE AS isErased
-       FROM _tmpMI_child
-             LEFT JOIN tmpMI_master_find ON tmpMI_master_find.GoodsId_detail = _tmpMI_child.GoodsId
-                                        AND tmpMI_master_find.GoodsKindId_detail = _tmpMI_child.GoodsKindId
-             LEFT JOIN _tmpMI_master AS tmpMI_master ON tmpMI_master.MovementItemId = tmpMI_master_find.MovementItemId
-
-             LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = _tmpMI_child.GoodsId
-             LEFT JOIN Object AS Object_GoodsKind ON Object_GoodsKind.Id = _tmpMI_child.GoodsKindId
-
-             LEFT JOIN ObjectLink AS ObjectLink_Goods_Measure
-                                  ON ObjectLink_Goods_Measure.ObjectId = _tmpMI_child.GoodsId
-                                 AND ObjectLink_Goods_Measure.DescId = zc_ObjectLink_Goods_Measure()
-             LEFT JOIN Object AS Object_Measure ON Object_Measure.Id = ObjectLink_Goods_Measure.ChildObjectId
-       ;
-       RETURN NEXT Cursor2;
-
 
 END;
 $BODY$

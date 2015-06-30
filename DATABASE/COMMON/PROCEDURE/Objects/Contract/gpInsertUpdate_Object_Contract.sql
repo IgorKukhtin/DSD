@@ -236,9 +236,9 @@ BEGIN
    PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_Contract_PriceListPromo(), ioId, inPriceListPromoId);
 
    -- сохранили свойство <>
-   PERFORM lpInsertUpdate_ObjectDate (zc_ObjectDate_Contract_StartPromo(), ioId, inStartPromo);
+   PERFORM lpInsertUpdate_ObjectDate (zc_ObjectDate_Contract_StartPromo(), ioId, DATE (inStartPromo));
       -- сохранили свойство <>
-   PERFORM lpInsertUpdate_ObjectDate (zc_ObjectDate_Contract_EndPromo(), ioId, inEndPromo);
+   PERFORM lpInsertUpdate_ObjectDate (zc_ObjectDate_Contract_EndPromo(), ioId, DATE (inEndPromo));
    
    
      -- !!!обязательно!!! сформировали ключ

@@ -3249,16 +3249,17 @@ inherited MainForm: TMainForm
         Caption = '-'
       end
       object miSale: TMenuItem
-        Action = actSaleAll
-      end
-      object N69: TMenuItem
         Action = actSale
       end
       object miSale_Partner: TMenuItem
         Action = actSale_Partner
+        Caption = #1055#1088#1086#1076#1072#1078#1072' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1102' ('#1073#1091#1093#1075#1072#1083#1090#1077#1088')'
       end
       object miSale_Order: TMenuItem
         Action = actSale_Order
+      end
+      object miSale_all: TMenuItem
+        Action = actSaleAll
       end
       object miReturnIn: TMenuItem
         Action = actReturnIn

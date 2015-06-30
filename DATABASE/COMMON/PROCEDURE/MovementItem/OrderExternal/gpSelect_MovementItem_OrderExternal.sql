@@ -26,6 +26,7 @@ $BODY$
   DECLARE vbUnitId Integer;
   DECLARE vbGoodsPropertyId Integer;
   DECLARE vbIsOrderDnepr Boolean;
+
 BEGIN
      -- проверка прав пользовател€ на вызов процедуры
      -- vbUserId := lpCheckRight (inSession, zc_Enum_Process_Select_MI_OrderExternal());
@@ -33,7 +34,18 @@ BEGIN
 
 
      -- мен€етс€ параметр
-     IF COALESCE (inPriceListId, 0) = 0 THEN inPriceListId := zc_PriceList_Basis(); END IF;
+     -- !!!замена!!!
+     SELECT tmp.PriceListId, tmp.OperDate
+            INTO inPriceListId, inOperDate
+     FROM lfGet_Object_Partner_PriceList_onDate (inContractId     := (SELECT MLO.ObjectId FROM MovementLinkObject AS MLO WHERE MLO.MovementId = inMovementId AND MLO.DescId = zc_MovementLinkObject_Contract())
+                                               , inPartnerId      := (SELECT MLO.ObjectId FROM MovementLinkObject AS MLO WHERE MLO.MovementId = inMovementId AND MLO.DescId = zc_MovementLinkObject_From())
+                                               , inMovementDescId := zc_Movement_Sale() -- !!!не ошибка!!!
+                                               , inOperDate_order := (SELECT Movement.OperDate FROM Movement WHERE Movement.Id = inMovementId)
+                                               , inOperDatePartner:= NULL
+                                               , inDayPrior_PriceReturn:= 0 -- !!!параметр здесь не важен!!!
+                                               , inIsPrior        := FALSE -- !!!параметр здесь не важен!!!
+                                                ) AS tmp;
+
 
      -- определ€етс€
      vbGoodsPropertyId:= zfCalc_GoodsPropertyId ((SELECT MovementLinkObject.ObjectId FROM MovementLinkObject WHERE MovementLinkObject.MovementId = inMovementId AND MovementLinkObject.DescId = zc_MovementLinkObject_Contract())

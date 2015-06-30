@@ -222,7 +222,7 @@ type
     miIncome: TMenuItem;
     miReturnOut: TMenuItem;
     N4: TMenuItem;
-    miSale: TMenuItem;
+    miSale_all: TMenuItem;
     miSale_Partner: TMenuItem;
     miSale_Order: TMenuItem;
     miReturnIn: TMenuItem;
@@ -588,7 +588,7 @@ type
     actIncomePartionGoods: TdsdOpenForm;
     N68: TMenuItem;
     actSale: TdsdOpenForm;
-    N69: TMenuItem;
+    miSale: TMenuItem;
     miOrderInternalPack: TMenuItem;
     actOrderInternalPack: TdsdOpenForm;
     actIncomePartner: TdsdOpenForm;
