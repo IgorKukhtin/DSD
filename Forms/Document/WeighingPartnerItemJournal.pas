@@ -89,6 +89,13 @@ type
     actMovementProtocol: TdsdOpenForm;
     bbMovementProtocol: TdxBarButton;
     colMovementDescNumber: TcxGridDBColumn;
+    RealWeight: TcxGridDBColumn;
+    ChangePercentAmount: TcxGridDBColumn;
+    AmountPartner: TcxGridDBColumn;
+    BoxCount: TcxGridDBColumn;
+    BoxNumber: TcxGridDBColumn;
+    BoxName: TcxGridDBColumn;
+    Price: TcxGridDBColumn;
   private
   public
   end;
