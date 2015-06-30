@@ -298,6 +298,7 @@ begin
        Params.AddParam('inFromId', ftInteger, ptInput, execParamsMovement.ParamByName('FromId').AsInteger);
        Params.AddParam('inToId', ftInteger, ptInput, execParamsMovement.ParamByName('ToId').AsInteger);
        Params.AddParam('inIsProductionIn', ftBoolean, ptInput, execParamsMovement.ParamByName('isSendOnPriceIn').AsBoolean);
+       Params.AddParam('inBranchCode', ftInteger, ptInput, SettingMain.BranchCode);
        //try
          Execute;
          execParamsMovement.ParamByName('MovementId').AsInteger:=DataSet.FieldByName('Id').asInteger;
@@ -342,6 +343,7 @@ begin
        Params.AddParam('inWeightOther', ftFloat, ptInput, execParamsMI.ParamByName('WeightOther').AsFloat);
        Params.AddParam('inPartionGoodsDate', ftDateTime, ptInput, execParamsMI.ParamByName('PartionGoodsDate').AsDateTime);
        Params.AddParam('inPartionGoods', ftString, ptInput, execParamsMI.ParamByName('PartionGoods').AsString);
+       Params.AddParam('inBranchCode', ftInteger, ptInput, SettingMain.BranchCode);
        //try
          Execute;
        {except

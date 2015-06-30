@@ -221,6 +221,7 @@ BEGIN
                              FROM Object_InfoMoney_View AS View_InfoMoney
                              WHERE inIsGoodsComplete = FALSE
                                AND View_InfoMoney.InfoMoneyDestinationId IN (zc_Enum_InfoMoneyDestination_10100() -- Основное сырье + Мясное сырье
+                                                                           , zc_Enum_InfoMoneyDestination_30300() -- Доходы + Переработка
                                                                             )
                             UNION
                              SELECT View_InfoMoney.InfoMoneyId

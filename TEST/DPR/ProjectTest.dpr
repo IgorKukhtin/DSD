@@ -446,8 +446,8 @@ uses
   ProvinceEdit in '..\..\Forms\Guides\ProvinceEdit.pas' {ProvinceEditForm: TParentForm},
   Inventory in '..\..\Forms\Document\Inventory.pas' {InventoryForm: TParentForm},
   InventoryJournal in '..\..\Forms\Document\InventoryJournal.pas' {InventoryJournalForm: TParentForm},
-  OrderInternalPackJournal in '..\..\Forms\Document\OrderInternalPackJournal.pas' {OrderInternalPackJournalForm: TParentForm},
-  OrderInternalPack in '..\..\Forms\Document\OrderInternalPack.pas' {OrderInternalPackForm: TParentForm},
+  OrderInternalBasisJournal in '..\..\Forms\Document\OrderInternalBasisJournal.pas' {OrderInternalBasisJournalForm: TParentForm},
+  OrderInternalBasis in '..\..\Forms\Document\OrderInternalBasis.pas' {OrderInternalBasisForm: TParentForm},
   OrderKind in '..\..\Forms\Kind\OrderKind.pas' {OrderKindForm: TParentForm},
   ContactPersonEdit in '..\..\Forms\Guides\ContactPersonEdit.pas' {ContactPersonEditForm: TParentForm},
   ContactPersonKind in '..\..\Forms\Kind\ContactPersonKind.pas' {ContactPersonKindForm: TParentForm},
@@ -692,7 +692,9 @@ uses
   IncomeJournal in '..\..\Forms\Document\IncomeJournal.pas' {IncomeJournalForm: TParentForm},
   Income in '..\..\Forms\Document\Income.pas' {IncomeForm: TParentForm},
   WeighingProductionItemJournal in '..\..\Forms\Document\WeighingProductionItemJournal.pas' {WeighingProductionItemJournalForm: TParentForm},
-  WeighingPartnerItemJournal in '..\..\Forms\Document\WeighingPartnerItemJournal.pas' {WeighingPartnerItemJournalForm: TParentForm};
+  WeighingPartnerItemJournal in '..\..\Forms\Document\WeighingPartnerItemJournal.pas' {WeighingPartnerItemJournalForm: TParentForm},
+  OrderInternalPack in '..\..\Forms\Document\OrderInternalPack.pas' {OrderInternalPackForm: TParentForm},
+  OrderInternalPackJournal in '..\..\Forms\Document\OrderInternalPackJournal.pas' {OrderInternalPackJournalForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}

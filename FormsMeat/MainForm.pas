@@ -597,6 +597,8 @@ type
     actWeighingProductionItem: TdsdOpenForm;
     N71: TMenuItem;
     N72: TMenuItem;
+    actOrderInternalBasis: TdsdOpenForm;
+    bbOrderInternalBasis: TMenuItem;
     procedure actReport_OLAPSoldExecute(Sender: TObject);
     procedure FormShow(Sender: TObject);
   private

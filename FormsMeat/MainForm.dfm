@@ -4,7 +4,7 @@ inherited MainForm: TMainForm
   KeyPreview = True
   Position = poDesigned
   ExplicitWidth = 1102
-  ExplicitHeight = 265
+  ExplicitHeight = 262
   PixelsPerInch = 96
   TextHeight = 13
   object cxGrid: TcxGrid [0]
@@ -3194,6 +3194,17 @@ inherited MainForm: TMainForm
       GuiParams = <>
       isShowModal = False
     end
+    object actOrderInternalBasis: TdsdOpenForm
+      Category = #1055#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1086
+      MoveParams = <>
+      Caption = #1047#1072#1103#1074#1082#1072' '#1087#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1077#1085#1085#1072#1103' ('#1057#1099#1088#1100#1077')'
+      Hint = #1047#1072#1103#1074#1082#1072' '#1087#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1077#1085#1085#1072#1103' ('#1057#1099#1088#1100#1077')'
+      FormName = 'TOrderInternalBasisJournalForm'
+      FormNameParam.Value = 'TOrderInternalBasisJournalForm'
+      FormNameParam.DataType = ftString
+      GuiParams = <>
+      isShowModal = False
+    end
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Active = False
@@ -3335,6 +3346,9 @@ inherited MainForm: TMainForm
       end
       object miOrderInternalPack: TMenuItem
         Action = actOrderInternalPack
+      end
+      object bbOrderInternalBasis: TMenuItem
+        Action = actOrderInternalBasis
       end
       object miOrderType: TMenuItem
         Action = actOrderType

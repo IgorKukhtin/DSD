@@ -18,8 +18,6 @@ $BODY$
     DECLARE vbGoodsPropertyId Integer;
     DECLARE vbGoodsPropertyId_basis Integer;
 
-    DECLARE vbCurrencyPartnerId Integer;
-
     DECLARE vbNotNDSPayer_INN TVarChar;
 
     DECLARE Cursor1 refcursor;
@@ -231,6 +229,7 @@ BEGIN
            , CASE WHEN Movement.OperDate < '01.01.2015' AND (COALESCE (MovementFloat_TotalSummPVAT.ValueData, 0) - COALESCE (MovementFloat_TotalSummMVAT.ValueData, 0)) > 10000
                   THEN TRUE
                   WHEN Movement.OperDate >= '01.01.2015' AND Movement_child.OperDate >= '01.01.2015' AND OH_JuridicalDetails_From.INN <> vbNotNDSPayer_INN
+                       AND COALESCE (MovementFloat_TotalSummPVAT.ValueData, 0) >= 0
                   THEN TRUE
                   ELSE FALSE
              END :: Boolean AS isERPN
