@@ -223,6 +223,10 @@ BEGIN
      END IF;
 
 
+     IF EXISTS (SELECT Price FROM _tmpItem WHERE Price = 0)
+     THEN
+         RAISE EXCEPTION 'Ошибка. У товара установлена цена = 0.';
+     END IF;
 
      -- !!!формируются свойства в элементах документа!!!
      PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_Summ(), _tmpItem.MovementItemId, _tmpItem.OperSumm_Partner)

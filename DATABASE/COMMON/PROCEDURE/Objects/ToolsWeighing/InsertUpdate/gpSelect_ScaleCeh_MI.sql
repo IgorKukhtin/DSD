@@ -3,9 +3,9 @@
 DROP FUNCTION IF EXISTS gpSelect_ScaleCeh_MI (Boolean, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_ScaleCeh_MI(
-    IN inIsCeh       Boolean   , --
-    IN inMovementId  Integer   , -- ключ Документа
-    IN inSession     TVarChar    -- сессия пользователя
+    IN inIsGoodsComplete Boolean   , --
+    IN inMovementId      Integer   , -- ключ Документа
+    IN inSession         TVarChar    -- сессия пользователя
 )
 RETURNS TABLE (MovementItemId Integer, GoodsId Integer, GoodsCode Integer, GoodsName TVarChar, MeasureId Integer, MeasureName TVarChar
              , GoodsKindName TVarChar
@@ -84,11 +84,11 @@ BEGIN
                   , COALESCE (MIFloat_WeightTare.ValueData, 0)    AS WeightTare
                   , COALESCE (MIFloat_WeightOther.ValueData, 0)   AS WeightOther
 
-                  , CASE WHEN inIsCeh = FALSE THEN COALESCE (MIFloat_CountSkewer1.ValueData, 0) ELSE 0 END AS CountSkewer1_k
-                  , CASE WHEN inIsCeh = FALSE THEN COALESCE (MIFloat_WeightSkewer1.ValueData, 0) ELSE 0 END AS WeightSkewer1_k
+                  , CASE WHEN inIsGoodsComplete = FALSE THEN COALESCE (MIFloat_CountSkewer1.ValueData, 0) ELSE 0 END AS CountSkewer1_k
+                  , CASE WHEN inIsGoodsComplete = FALSE THEN COALESCE (MIFloat_WeightSkewer1.ValueData, 0) ELSE 0 END AS WeightSkewer1_k
 
-                  , CASE WHEN inIsCeh = TRUE THEN COALESCE (MIFloat_CountSkewer1.ValueData, 0) ELSE 0 END AS CountSkewer1
-                  , CASE WHEN inIsCeh = TRUE THEN COALESCE (MIFloat_WeightSkewer1.ValueData, 0) ELSE 0 END AS WeightSkewer1
+                  , CASE WHEN inIsGoodsComplete = TRUE THEN COALESCE (MIFloat_CountSkewer1.ValueData, 0) ELSE 0 END AS CountSkewer1
+                  , CASE WHEN inIsGoodsComplete = TRUE THEN COALESCE (MIFloat_WeightSkewer1.ValueData, 0) ELSE 0 END AS WeightSkewer1
                   , COALESCE (MIFloat_CountSkewer2.ValueData, 0)  AS CountSkewer2
                   , COALESCE (MIFloat_WeightSkewer2.ValueData, 0) AS WeightSkewer2
 

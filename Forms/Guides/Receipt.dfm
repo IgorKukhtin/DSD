@@ -112,7 +112,7 @@ object ReceiptForm: TReceiptForm
         Width = 55
       end
       object clGoodsName: TcxGridDBColumn
-        Caption = #1053#1072#1079#1074#1072#1085#1080#1077' '#1090#1086#1074#1072#1088#1072
+        Caption = #1053#1072#1079#1074#1072#1085#1080#1077' ('#1087#1088#1080#1093#1086#1076')'
         DataBinding.FieldName = 'GoodsName'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
@@ -495,7 +495,7 @@ object ReceiptForm: TReceiptForm
         Width = 70
       end
       object clGoodsNameChild: TcxGridDBColumn
-        Caption = #1053#1072#1079#1074#1072#1085#1080#1077' '#1090#1086#1074#1072#1088#1072
+        Caption = #1053#1072#1079#1074#1072#1085#1080#1077' ('#1088#1072#1089#1093#1086#1076')'
         DataBinding.FieldName = 'GoodsName'
         PropertiesClassName = 'TcxButtonEditProperties'
         Properties.Buttons = <
@@ -623,6 +623,12 @@ object ReceiptForm: TReceiptForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 200
+      end
+      object clColor_calc: TcxGridDBColumn
+        DataBinding.FieldName = 'Color_calc'
+        Visible = False
+        VisibleForCustomization = False
+        Width = 55
       end
       object clIsErasedChild: TcxGridDBColumn
         Caption = #1059#1076#1072#1083#1077#1085
@@ -1486,7 +1492,57 @@ object ReceiptForm: TReceiptForm
       end>
     SortImages = dmMain.SortImageList
     OnlyEditingCellOnEnter = False
-    ColorRuleList = <>
+    ColorRuleList = <
+      item
+        ColorColumn = clGroupNumberChild
+        ValueColumn = clColor_calc
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = clGoodsCodeChild
+        ValueColumn = clColor_calc
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = clGoodsNameChild
+        ValueColumn = clColor_calc
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = clMeasureNameChild
+        ValueColumn = clColor_calc
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = clGoodsKindNameclChild
+        ValueColumn = clColor_calc
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = clValueWeight_calc
+        ValueColumn = clColor_calc
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = clValueChild
+        ValueColumn = clColor_calc
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = clIsTaxExitChild
+        ValueColumn = clColor_calc
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = clIsWeightMainChild
+        ValueColumn = clColor_calc
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = clInfoMoneyNameChild
+        ValueColumn = clColor_calc
+        ColorValueList = <>
+      end>
     ColumnAddOnList = <>
     ColumnEnterList = <>
     SummaryItemList = <>

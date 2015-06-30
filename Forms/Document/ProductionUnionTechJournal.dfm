@@ -12,17 +12,17 @@ inherited ProductionUnionTechJournalForm: TProductionUnionTechJournalForm
     Height = 624
     TabOrder = 2
     ExplicitTop = 61
-    ExplicitWidth = 1028
+    ExplicitWidth = 1020
     ExplicitHeight = 624
     ClientRectBottom = 624
     ClientRectRight = 1020
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 1028
+      ExplicitWidth = 1020
       ExplicitHeight = 600
       inherited cxGrid: TcxGrid
         Width = 1020
         Height = 292
-        ExplicitWidth = 1028
+        ExplicitWidth = 1020
         ExplicitHeight = 292
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
@@ -335,7 +335,7 @@ inherited ProductionUnionTechJournalForm: TProductionUnionTechJournalForm
         Top = 297
         Width = 1020
         ExplicitTop = 297
-        ExplicitWidth = 1028
+        ExplicitWidth = 1020
         inherited cxGridDBTableViewChild: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -542,6 +542,12 @@ inherited ProductionUnionTechJournalForm: TProductionUnionTechJournalForm
             Options.Editing = False
             Width = 110
           end
+          object colChildColor_calc: TcxGridDBColumn [20]
+            DataBinding.FieldName = 'Color_calc'
+            Visible = False
+            VisibleForCustomization = False
+            Width = 55
+          end
           inherited colChildIsErased: TcxGridDBColumn
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
@@ -553,14 +559,14 @@ inherited ProductionUnionTechJournalForm: TProductionUnionTechJournalForm
         Top = 292
         Width = 1020
         ExplicitTop = 292
-        ExplicitWidth = 1028
+        ExplicitWidth = 1020
       end
     end
   end
   inherited DataPanel: TPanel
     Width = 1020
     Height = 35
-    ExplicitWidth = 1028
+    ExplicitWidth = 1020
     ExplicitHeight = 35
     inherited edInvNumber: TcxTextEdit
       Left = 835
@@ -608,6 +614,7 @@ inherited ProductionUnionTechJournalForm: TProductionUnionTechJournalForm
       ExplicitLeft = 983
       ExplicitTop = 17
       ExplicitWidth = 100
+      ExplicitHeight = 22
       Width = 100
     end
     inherited cxLabel3: TcxLabel
@@ -1013,6 +1020,7 @@ inherited ProductionUnionTechJournalForm: TProductionUnionTechJournalForm
       GuiParams = <
         item
           Name = 'Id'
+          Value = Null
           Component = ChildCDS
           ComponentItem = 'MovementItemId'
           ParamType = ptInput
@@ -1714,6 +1722,7 @@ inherited ProductionUnionTechJournalForm: TProductionUnionTechJournalForm
     Params = <
       item
         Name = 'inMovementItemId'
+        Value = Null
         Component = ChildCDS
         ComponentItem = 'MovementItemId'
         ParamType = ptInput
@@ -1727,6 +1736,7 @@ inherited ProductionUnionTechJournalForm: TProductionUnionTechJournalForm
       end
       item
         Name = 'outIsErased'
+        Value = Null
         Component = ChildCDS
         ComponentItem = 'isErased'
         DataType = ftBoolean
@@ -1737,6 +1747,7 @@ inherited ProductionUnionTechJournalForm: TProductionUnionTechJournalForm
     Params = <
       item
         Name = 'inMovementItemId'
+        Value = Null
         Component = ChildCDS
         ComponentItem = 'MovementItemId'
         ParamType = ptInput
@@ -1750,6 +1761,7 @@ inherited ProductionUnionTechJournalForm: TProductionUnionTechJournalForm
       end
       item
         Name = 'outIsErased'
+        Value = Null
         Component = ChildCDS
         ComponentItem = 'isErased'
         DataType = ftBoolean
@@ -1875,6 +1887,59 @@ inherited ProductionUnionTechJournalForm: TProductionUnionTechJournalForm
         ComponentItem = 'Comment'
         DataType = ftString
         ParamType = ptInput
+      end>
+  end
+  inherited ChildDBViewAddOn: TdsdDBViewAddOn
+    ColorRuleList = <
+      item
+        ColorColumn = colChildGroupNumber
+        ValueColumn = colChildColor_calc
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = colChildGoodsCode
+        ValueColumn = colChildColor_calc
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = colChildGoodsName
+        ValueColumn = colChildColor_calc
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = colChildMeasureName
+        ValueColumn = colChildColor_calc
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = colChildAmountReceipt
+        ValueColumn = colChildColor_calc
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = colChildAmount
+        ValueColumn = colChildColor_calc
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = colChildAmountCalc
+        ValueColumn = colChildColor_calc
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = colChildAmountWeight
+        ValueColumn = colChildColor_calc
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = colChildAmountCalcWeight
+        ValueColumn = colChildColor_calc
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = isTaxExit
+        ValueColumn = colChildColor_calc
+        ColorValueList = <>
       end>
   end
   object RefreshDispatcher: TRefreshDispatcher
