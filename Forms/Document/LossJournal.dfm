@@ -104,6 +104,12 @@ inherited LossJournalForm: TLossJournalForm
   inherited Panel: TPanel
     Width = 1020
     ExplicitWidth = 1020
+    inherited deStart: TcxDateEdit
+      EditValue = 42005d
+    end
+    inherited deEnd: TcxDateEdit
+      EditValue = 42005d
+    end
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 179
@@ -120,6 +126,25 @@ inherited LossJournalForm: TLossJournalForm
     end
     inherited actUpdate: TdsdInsertUpdateAction
       FormName = 'TLossForm'
+      GuiParams = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'Id'
+          ParamType = ptInput
+        end
+        item
+          Name = 'ShowAll'
+          Value = False
+          DataType = ftBoolean
+        end
+        item
+          Name = 'inOperDate'
+          Value = 41640d
+          Component = deEnd
+          DataType = ftDateTime
+        end>
     end
     object actPrint: TdsdPrintAction
       Category = 'DSDLib'

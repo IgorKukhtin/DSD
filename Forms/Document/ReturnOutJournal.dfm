@@ -113,6 +113,7 @@ inherited ReturnOutJournalForm: TReturnOutJournalForm
           inherited colOperDate: TcxGridDBColumn
             Caption = #1044#1072#1090#1072' ('#1089#1082#1083#1072#1076')'
             HeaderAlignmentHorz = taCenter
+            Width = 60
           end
           object colOperDatePartner: TcxGridDBColumn
             Caption = #1044#1072#1090#1072' '#1076#1086#1082'. '#1091' '#1087#1086#1082#1091#1087'.'
@@ -120,6 +121,49 @@ inherited ReturnOutJournalForm: TReturnOutJournalForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 60
+          end
+          object colFromName: TcxGridDBColumn
+            Caption = #1054#1090' '#1082#1086#1075#1086
+            DataBinding.FieldName = 'FromName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 84
+          end
+          object colToName: TcxGridDBColumn
+            Caption = #1050#1086#1084#1091
+            DataBinding.FieldName = 'ToName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 83
+          end
+          object colOKPO_To: TcxGridDBColumn
+            Caption = #1054#1050#1055#1054
+            DataBinding.FieldName = 'OKPO_To'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 45
+          end
+          object colJuridicalName_To: TcxGridDBColumn
+            Caption = #1070#1088#1080#1076#1080#1095#1077#1089#1082#1086#1077' '#1083#1080#1094#1086
+            DataBinding.FieldName = 'JuridicalName_To'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 65
+          end
+          object colPaidKindName: TcxGridDBColumn
+            Caption = #1060#1086#1088#1084#1072' '#1086#1087#1083#1072#1090#1099
+            DataBinding.FieldName = 'PaidKindName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 55
+          end
+          object colContractName: TcxGridDBColumn
+            Caption = #8470' '#1076#1086#1075'.'
+            DataBinding.FieldName = 'ContractName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 51
           end
           object colPriceWithVAT: TcxGridDBColumn
             Caption = #1062#1077#1085#1099' '#1089' '#1053#1044#1057' ('#1076#1072'/'#1085#1077#1090')'
@@ -194,49 +238,6 @@ inherited ReturnOutJournalForm: TReturnOutJournalForm
             HeaderAlignmentVert = vaCenter
             Width = 65
           end
-          object colFromName: TcxGridDBColumn
-            Caption = #1054#1090' '#1082#1086#1075#1086
-            DataBinding.FieldName = 'FromName'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 84
-          end
-          object colToName: TcxGridDBColumn
-            Caption = #1050#1086#1084#1091
-            DataBinding.FieldName = 'ToName'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 83
-          end
-          object colOKPO_To: TcxGridDBColumn
-            Caption = #1054#1050#1055#1054
-            DataBinding.FieldName = 'OKPO_To'
-            Visible = False
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 45
-          end
-          object colJuridicalName_To: TcxGridDBColumn
-            Caption = #1070#1088#1080#1076#1080#1095#1077#1089#1082#1086#1077' '#1083#1080#1094#1086
-            DataBinding.FieldName = 'JuridicalName_To'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 65
-          end
-          object colPaidKindName: TcxGridDBColumn
-            Caption = #1060#1086#1088#1084#1072' '#1086#1087#1083#1072#1090#1099
-            DataBinding.FieldName = 'PaidKindName'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 42
-          end
-          object colContractName: TcxGridDBColumn
-            Caption = #8470' '#1076#1086#1075'.'
-            DataBinding.FieldName = 'ContractName'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 51
-          end
           object colInfoMoneyCode: TcxGridDBColumn
             Caption = #1050#1086#1076' '#1059#1055
             DataBinding.FieldName = 'InfoMoneyCode'
@@ -266,23 +267,26 @@ inherited ReturnOutJournalForm: TReturnOutJournalForm
             DataBinding.FieldName = 'InfoMoneyName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 65
+            Width = 80
           end
           object colCurrencyValue: TcxGridDBColumn
             Caption = #1050#1091#1088#1089' '#1074#1072#1083#1102#1090#1099
             DataBinding.FieldName = 'CurrencyValue'
+            Visible = False
             HeaderAlignmentVert = vaCenter
             Width = 55
           end
           object colCurrencyDocumentName: TcxGridDBColumn
             Caption = #1042#1072#1083#1102#1090#1072' ('#1076#1086#1082')'
             DataBinding.FieldName = 'CurrencyDocumentName'
+            Visible = False
             HeaderAlignmentVert = vaCenter
             Width = 47
           end
           object colCurrencyPartnerName: TcxGridDBColumn
             Caption = #1042#1072#1083#1102#1090#1072' ('#1082#1086#1085#1090#1088#1072#1075#1077#1085#1090#1072')'
             DataBinding.FieldName = 'CurrencyPartnerName'
+            Visible = False
             HeaderAlignmentVert = vaCenter
             Width = 47
           end
@@ -293,6 +297,12 @@ inherited ReturnOutJournalForm: TReturnOutJournalForm
   inherited Panel: TPanel
     Width = 1110
     ExplicitWidth = 1110
+    inherited deStart: TcxDateEdit
+      EditValue = 42005d
+    end
+    inherited deEnd: TcxDateEdit
+      EditValue = 42005d
+    end
     object edIsPartnerDate: TcxCheckBox
       Left = 427
       Top = 5

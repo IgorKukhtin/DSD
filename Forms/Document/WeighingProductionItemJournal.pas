@@ -85,8 +85,6 @@ type
     colOperDate_parent: TcxGridDBColumn;
     colWeighingNumber: TcxGridDBColumn;
     colPartionGoods: TcxGridDBColumn;
-    colTotalCountTare: TcxGridDBColumn;
-    colTotalCount: TcxGridDBColumn;
     colIsProductionIn: TcxGridDBColumn;
     colStartWeighingMI: TcxGridDBColumn;
   private

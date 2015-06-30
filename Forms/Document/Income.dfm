@@ -281,7 +281,7 @@ object IncomeForm: TIncomeForm
     Width = 956
     Height = 336
     Align = alClient
-    TabOrder = 2
+    TabOrder = 1
     Properties.ActivePage = cxTabSheetMain
     Properties.CustomButtons.Buttons = <>
     ClientRectBottom = 336
@@ -375,7 +375,6 @@ object IncomeForm: TIncomeForm
           OptionsData.Deleting = False
           OptionsData.DeletingConfirmation = False
           OptionsData.Inserting = False
-          OptionsView.ColumnAutoWidth = True
           OptionsView.Footer = True
           OptionsView.GroupByBox = False
           OptionsView.HeaderAutoHeight = True
@@ -408,18 +407,23 @@ object IncomeForm: TIncomeForm
           object colGoodsKindName: TcxGridDBColumn
             Caption = #1042#1080#1076' '#1090#1086#1074#1072#1088#1072
             DataBinding.FieldName = 'GoodsKindName'
+            PropertiesClassName = 'TcxButtonEditProperties'
+            Properties.Buttons = <
+              item
+                Action = actGoodsKindChoice
+                Default = True
+                Kind = bkEllipsis
+              end>
+            Properties.ReadOnly = True
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Options.Editing = False
             Width = 90
           end
           object colPartionGoods: TcxGridDBColumn
             Caption = #1055#1072#1088#1090#1080#1103
             DataBinding.FieldName = 'PartionGoods'
-            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Options.Editing = False
             Width = 100
           end
           object colMeasureName: TcxGridDBColumn
@@ -438,7 +442,7 @@ object IncomeForm: TIncomeForm
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 75
+            Width = 70
           end
           object colAmountPartner: TcxGridDBColumn
             Caption = #1050#1086#1083'-'#1074#1086' '#1091' '#1087#1086#1089#1090'.'
@@ -448,7 +452,8 @@ object IncomeForm: TIncomeForm
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 75
+            Options.Editing = False
+            Width = 70
           end
           object colAmountPacker: TcxGridDBColumn
             Caption = #1050#1086#1083'-'#1074#1086' '#1091' '#1079#1072#1075#1086#1090#1086#1074'.'
@@ -586,6 +591,16 @@ object IncomeForm: TIncomeForm
       end
     end
   end
+  object cbCalcAmountPartner: TcxCheckBox
+    Left = 541
+    Top = 191
+    Caption = #1040#1074#1090#1086' '#1079#1072#1087#1086#1083#1085#1077#1085#1080#1077'  <'#1050#1086#1083'-'#1074#1086' '#1091' '#1087#1086#1089#1090'.>'
+    Enabled = False
+    Properties.ReadOnly = False
+    State = cbsChecked
+    TabOrder = 6
+    Width = 220
+  end
   object FormParams: TdsdFormParams
     Params = <
       item
@@ -693,6 +708,14 @@ object IncomeForm: TIncomeForm
         end
         item
           Visible = True
+          ItemName = 'bbAddMask'
+        end
+        item
+          Visible = True
+          ItemName = 'bbStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbErased'
         end
         item
@@ -723,6 +746,14 @@ object IncomeForm: TIncomeForm
         item
           Visible = True
           ItemName = 'bbPrint'
+        end
+        item
+          Visible = True
+          ItemName = 'bbStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbCalcAmountPartner'
         end
         item
           Visible = True
@@ -793,6 +824,17 @@ object IncomeForm: TIncomeForm
     end
     object bbMovementItemProtocol: TdxBarButton
       Action = MovementItemProtocolOpenForm
+      Category = 0
+    end
+    object bbCalcAmountPartner: TdxBarControlContainerItem
+      Caption = #1040#1074#1090#1086' '#1079#1072#1087#1086#1083#1085#1077#1085#1080#1077'  <'#1050#1086#1083'-'#1074#1086' '#1091' '#1087#1086#1089#1090'.>'
+      Category = 0
+      Hint = #1040#1074#1090#1086' '#1079#1072#1087#1086#1083#1085#1077#1085#1080#1077'  <'#1050#1086#1083'-'#1074#1086' '#1091' '#1087#1086#1089#1090'.>'
+      Visible = ivAlways
+      Control = cbCalcAmountPartner
+    end
+    object bbAddMask: TdxBarButton
+      Action = actAddMask
       Category = 0
     end
   end
@@ -1103,6 +1145,46 @@ object IncomeForm: TIncomeForm
         end>
       isShowModal = False
     end
+    object actGoodsKindChoice: TOpenChoiceForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = 'actGoodsKindChoice'
+      FormName = 'TGoodsKind_ObjectForm'
+      FormNameParam.Value = 'TGoodsKind_ObjectForm'
+      FormNameParam.DataType = ftString
+      GuiParams = <
+        item
+          Name = 'Key'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'GoodsKindId'
+        end
+        item
+          Name = 'TextValue'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'GoodsKindName'
+          DataType = ftString
+        end>
+      isShowModal = True
+    end
+    object actAddMask: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spInsertMaskMIMaster
+      StoredProcList = <
+        item
+          StoredProc = spInsertMaskMIMaster
+        end
+        item
+          StoredProc = spSelectMI
+        end>
+      Caption = #1044#1086#1073#1072#1074#1080#1090#1100' '#1087#1086' '#1084#1072#1089#1082#1077
+      Hint = #1044#1086#1073#1072#1074#1080#1090#1100' '#1087#1086' '#1084#1072#1089#1082#1077
+      ImageIndex = 54
+    end
   end
   object MasterDS: TDataSource
     DataSet = MasterCDS
@@ -1176,26 +1258,33 @@ object IncomeForm: TIncomeForm
         ParamType = ptInput
       end
       item
-        Name = 'inAmount'
+        Name = 'ioAmount'
         Value = Null
         Component = MasterCDS
         ComponentItem = 'Amount'
         DataType = ftFloat
-        ParamType = ptInput
+        ParamType = ptInputOutput
       end
       item
-        Name = 'inAmountPartner'
+        Name = 'ioAmountPartner'
         Value = Null
         Component = MasterCDS
         ComponentItem = 'AmountPartner'
         DataType = ftFloat
-        ParamType = ptInput
+        ParamType = ptInputOutput
       end
       item
         Name = 'inAmountPacker'
         Value = Null
         Component = MasterCDS
         ComponentItem = 'AmountPacker'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inIsCalcAmountPartner'
+        Value = Null
+        Component = cbCalcAmountPartner
+        DataType = ftBoolean
         ParamType = ptInput
       end
       item
@@ -1207,12 +1296,19 @@ object IncomeForm: TIncomeForm
         ParamType = ptInput
       end
       item
-        Name = 'inCountForPrice'
+        Name = 'ioCountForPrice'
         Value = Null
         Component = MasterCDS
         ComponentItem = 'CountForPrice'
         DataType = ftFloat
-        ParamType = ptInput
+        ParamType = ptInputOutput
+      end
+      item
+        Name = 'outAmountSumm'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'AmountSumm'
+        DataType = ftFloat
       end
       item
         Name = 'inLiveWeight'
@@ -1983,5 +2079,114 @@ object IncomeForm: TIncomeForm
     PackSize = 1
     Left = 471
     Top = 368
+  end
+  object spInsertMaskMIMaster: TdsdStoredProc
+    StoredProcName = 'gpInsertUpdate_MovementItem_Income'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'ioId'
+        Value = 0
+        ParamType = ptInput
+      end
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inGoodsId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'GoodsId'
+        ParamType = ptInput
+      end
+      item
+        Name = 'ioAmount'
+        Value = 0.000000000000000000
+        DataType = ftFloat
+        ParamType = ptInput
+      end
+      item
+        Name = 'ioAmountPartner'
+        Value = 0.000000000000000000
+        DataType = ftFloat
+        ParamType = ptInput
+      end
+      item
+        Name = 'inAmountPacker'
+        Value = 0.000000000000000000
+        ParamType = ptInput
+      end
+      item
+        Name = 'inIsCalcAmountPartner'
+        Value = 'True'
+        Component = cbCalcAmountPartner
+        DataType = ftBoolean
+        ParamType = ptInput
+      end
+      item
+        Name = 'inPrice'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Price'
+        DataType = ftFloat
+        ParamType = ptInput
+      end
+      item
+        Name = 'ioCountForPrice'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'CountForPrice'
+        DataType = ftFloat
+        ParamType = ptInput
+      end
+      item
+        Name = 'outAmountSumm'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'AmountSumm'
+        DataType = ftFloat
+      end
+      item
+        Name = 'inLiveWeight'
+        Value = 0.000000000000000000
+        DataType = ftFloat
+        ParamType = ptInput
+      end
+      item
+        Name = 'inHeadCount'
+        Value = 0.000000000000000000
+        DataType = ftFloat
+        ParamType = ptInput
+      end
+      item
+        Name = 'inPartionGoods'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'PartionGoods'
+        DataType = ftString
+        ParamType = ptInput
+      end
+      item
+        Name = 'inGoodsKindId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'GoodsKindId'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inAssetId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'AssetId'
+        ParamType = ptInput
+      end>
+    PackSize = 1
+    Left = 150
+    Top = 343
   end
 end

@@ -198,9 +198,9 @@ BEGIN
                                         AND MIString_PartionGoods.DescId = zc_MIString_PartionGoods()
                                         AND MIString_PartionGoods.ValueData <> ''
             INNER JOIN MovementItemString AS MIString_PartionGoodsCalc
-                                         ON MIString_PartionGoodsCalc.MovementItemId =  MovementItem.Id
-                                        AND MIString_PartionGoodsCalc.DescId = zc_MIString_PartionGoodsCalc()                                        
-                                        AND MIString_PartionGoodsCalc.ValueData <> ''
+                                          ON MIString_PartionGoodsCalc.MovementItemId =  MovementItem.Id
+                                         AND MIString_PartionGoodsCalc.DescId = zc_MIString_PartionGoodsCalc()                                        
+                                         AND MIString_PartionGoodsCalc.ValueData <> ''
 
 
     ;

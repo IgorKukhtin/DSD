@@ -10,17 +10,17 @@ inherited InventoryJournalForm: TInventoryJournalForm
     Width = 1020
     Height = 478
     TabOrder = 3
-    ExplicitWidth = 1073
+    ExplicitWidth = 1020
     ExplicitHeight = 478
     ClientRectBottom = 478
     ClientRectRight = 1020
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 1073
+      ExplicitWidth = 1020
       ExplicitHeight = 478
       inherited cxGrid: TcxGrid
         Width = 1020
         Height = 478
-        ExplicitWidth = 1073
+        ExplicitWidth = 1020
         ExplicitHeight = 478
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Filter.Options = [fcoCaseInsensitive, fcoShowOperatorDescription]
@@ -180,7 +180,13 @@ inherited InventoryJournalForm: TInventoryJournalForm
   end
   inherited Panel: TPanel
     Width = 1020
-    ExplicitWidth = 1073
+    ExplicitWidth = 1020
+    inherited deStart: TcxDateEdit
+      EditValue = 42005d
+    end
+    inherited deEnd: TcxDateEdit
+      EditValue = 42005d
+    end
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 179
@@ -199,6 +205,25 @@ inherited InventoryJournalForm: TInventoryJournalForm
     end
     inherited actUpdate: TdsdInsertUpdateAction
       FormName = 'TInventoryForm'
+      GuiParams = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'Id'
+          ParamType = ptInput
+        end
+        item
+          Name = 'ShowAll'
+          Value = False
+          DataType = ftBoolean
+        end
+        item
+          Name = 'inOperDate'
+          Value = 41640d
+          Component = deEnd
+          DataType = ftDateTime
+        end>
     end
     object actPrint: TdsdPrintAction
       Category = 'DSDLib'

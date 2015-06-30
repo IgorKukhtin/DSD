@@ -1,7 +1,7 @@
 object IncomePartnerJournalForm: TIncomePartnerJournalForm
   Left = 0
   Top = 0
-  Caption = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' <'#1055#1088#1080#1093#1086#1076' '#1086#1090' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072' - '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1102'>'
+  Caption = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' <'#1055#1088#1080#1093#1086#1076' '#1086#1090' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072' ('#1087#1086#1082#1091#1087#1072#1090#1077#1083#1102')>'
   ClientHeight = 427
   ClientWidth = 1240
   Color = clBtnFace
@@ -574,11 +574,11 @@ object IncomePartnerJournalForm: TIncomePartnerJournalForm
         end
         item
           Visible = True
-          ItemName = 'bbRefresh'
+          ItemName = 'bbShowErased'
         end
         item
           Visible = True
-          ItemName = 'bbShowErased'
+          ItemName = 'bbRefresh'
         end
         item
           Visible = True

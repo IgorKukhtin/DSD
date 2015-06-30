@@ -11,11 +11,8 @@ AS
 $BODY$
   DECLARE vbUserId Integer;
 BEGIN
-
      -- проверка прав пользователя на вызов процедуры
-     -- vbUserId:= PERFORM lpCheckRight(inSession, zc_Enum_Process_SetErased_ReturnOut());
-     vbUserId:=2;
-
+     vbUserId:= lpCheckRight (inSession, zc_Enum_Process_SetErased_ReturnOut());
 
      -- проверка - если <Master> Проведен, то <Ошибка>
      PERFORM lfCheck_Movement_ParentStatus (inMovementId:= inMovementId, inNewStatusId:= zc_Enum_Status_Erased(), inComment:= 'удалить');
@@ -35,7 +32,8 @@ LANGUAGE PLPGSQL VOLATILE;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
- 14.02.14				                                            *
+ 29.06.15                                        * all
+ 14.02.14				                        *
 */
 
 -- тест

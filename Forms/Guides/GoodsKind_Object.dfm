@@ -1,7 +1,7 @@
 object GoodsKind_ObjectForm: TGoodsKind_ObjectForm
   Left = 0
   Top = 0
-  Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1042#1080#1076#1099' '#1090#1086#1074#1072#1088#1072'>'
+  Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1042#1080#1076' '#1090#1086#1074#1072#1088#1072'>'
   ClientHeight = 376
   ClientWidth = 390
   Color = clBtnFace
@@ -19,13 +19,11 @@ object GoodsKind_ObjectForm: TGoodsKind_ObjectForm
   TextHeight = 13
   object cxGrid: TcxGrid
     Left = 0
-    Top = 28
+    Top = 26
     Width = 390
-    Height = 348
+    Height = 350
     Align = alClient
     TabOrder = 0
-    ExplicitTop = 26
-    ExplicitHeight = 350
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -121,7 +119,7 @@ object GoodsKind_ObjectForm: TGoodsKind_ObjectForm
     DockControlHeights = (
       0
       0
-      28
+      26
       0)
     object dxBarManagerBar1: TdxBar
       Caption = 'Custom'
@@ -213,12 +211,14 @@ object GoodsKind_ObjectForm: TGoodsKind_ObjectForm
       Params = <
         item
           Name = 'Key'
+          Value = Null
           Component = ClientDataSet
           ComponentItem = 'Id'
           DataType = ftString
         end
         item
           Name = 'TextValue'
+          Value = Null
           Component = ClientDataSet
           ComponentItem = 'Name'
         end>
@@ -244,6 +244,7 @@ object GoodsKind_ObjectForm: TGoodsKind_ObjectForm
         DataSet = ClientDataSet
       end>
     Params = <>
+    PackSize = 1
     Left = 48
     Top = 184
   end

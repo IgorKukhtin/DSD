@@ -49,8 +49,14 @@ BEGIN
      -- сохранили свойство <Количество голов>
      PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_HeadCount(), ioId, inHeadCount);
 
-     -- сохранили свойство <Партия товара>
-     PERFORM lpInsertUpdate_MovementItemString (zc_MIString_PartionGoods(), ioId, inPartionGoods);
+     IF vbIsInsert = FALSE AND EXISTS (SELECT MovementItemString.MovementItemId FROM MovementItemString WHERE MovementItemString.ValueData = inPartionGoods AND MovementItemString.MovementItemId = ioId AND MovementItemString.DescId = zc_MIString_PartionGoodsCalc())
+     THEN
+         -- сохранили свойство <Партия товара>
+         PERFORM lpInsertUpdate_MovementItemString (zc_MIString_PartionGoods(), ioId, '');
+     ELSE
+         -- сохранили свойство <Партия товара>
+         PERFORM lpInsertUpdate_MovementItemString (zc_MIString_PartionGoods(), ioId, inPartionGoods);
+     END IF;
 
      -- сохранили связь с <Виды товаров>
      PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_GoodsKind(), ioId, inGoodsKindId);
