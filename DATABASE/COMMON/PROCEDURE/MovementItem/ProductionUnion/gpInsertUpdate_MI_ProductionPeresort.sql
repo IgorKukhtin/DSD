@@ -7,8 +7,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_MI_ProductionPeresort(
     IN inMovementId             Integer   , -- Ключ объекта <Документ>
     IN inGoodsId                Integer   , -- Товар
     IN inAmountOut              TFloat    , -- Количество расход
-   OUT outAmountIn              TFloat    , -- Количество приход  - расчет такой : outAmountIn= inAmountOut * вес  ИЛИ inAmountOut / вес ИЛИ  inAmountOut
-                                                                 -- т.е. в зависимости от ед.изм. для товара приход и расход когда  они отличаются
+  
     IN inPartionGoods           TVarChar  , -- Партия товара
     IN inPartionGoodsDate       TDateTime , -- Партия товара
     IN inComment                TVarChar  , -- Примечание	                   
@@ -19,13 +18,15 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_MI_ProductionPeresort(
     IN inGoodsKindChildId       Integer   , -- Виды товаров
    OUT outGoodsChilCode         Integer   , --
    OUT outGoodsChildName        TVarChar  , --
+   OUT outAmountIn              TFloat    , -- Количество приход  - расчет такой : outAmountIn= inAmountOut * вес  ИЛИ inAmountOut / вес ИЛИ  inAmountOut
+                                                                 -- т.е. в зависимости от ед.изм. для товара приход и расход когда  они отличаются
     IN inSession                TVarChar    -- сессия пользователя
 )                              
 RETURNS Record AS
 $BODY$
    DECLARE vbUserId  Integer;
    DECLARE vbChildId Integer;
-   DECLARE vbMeasureId  Integer;
+   DECLARE vbMeasureId      Integer;
    DECLARE vbMeasureChildId Integer;
 
 BEGIN
@@ -46,22 +47,27 @@ BEGIN
                  FROM Object 
                         LEFT JOIN ObjectLink AS ObjectLink_Goods_Measure ON ObjectLink_Goods_Measure.ObjectId = Object.Id
                                                                         AND ObjectLink_Goods_Measure.DescId = zc_ObjectLink_Goods_Measure()
-                 WHERE Id = inGoodsId );
-   vbMeasureChildId:=(Select ObjectLink_Goods_Measure.ChildObjectId 
+                 WHERE Object.Id = inGoodsId );
+
+             --     RAISE EXCEPTION 'Ошибка.vbMeasureId <%> .', vbMeasureId;
+
+   vbMeasureChildId:=(Select ObjectLink_Goods_Measure.ChildObjectId AS Measure1 
                       FROM Object 
                          LEFT JOIN ObjectLink AS ObjectLink_Goods_Measure ON ObjectLink_Goods_Measure.ObjectId = Object.Id
                                                                          AND ObjectLink_Goods_Measure.DescId = zc_ObjectLink_Goods_Measure()
-                      WHERE Id = ioGoodsChildId );
+                      WHERE Object.Id = ioGoodsChildId );
 
-   outAmountIn:= CAST( (Select Case when vbMeasureId = vbMeasureChildId then inAmountOut 
-                              When (vbMeasureId = zc_Measure_Sh() and vbMeasureChildId = zc_Measure_kg()) then inAmountOut / ObjectFloat_Weight.ValueData 
+   --outAmountIn:= inAmountOut;
+
+   outAmountIn:= (Select Case when vbMeasureId = vbMeasureChildId then inAmountOut 
+                              When vbMeasureId = zc_Measure_Sh() and vbMeasureChildId = zc_Measure_kg() and ObjectFloat_Weight.ValueData<>0  then inAmountOut / ObjectFloat_Weight.ValueData 
                               When (vbMeasureId = zc_Measure_kg() and vbMeasureChildId = zc_Measure_Sh()) then inAmountOut * ObjectFloat_Weight.ValueData
-                              else inAmountOut end
+                              else inAmountOut end as calcAmount
                   From ObjectFloat AS ObjectFloat_Weight
-                  WHERE ObjectFloat_Weight.ObjectId = ioGoodsChildId -- Object.Id
+                  WHERE ObjectFloat_Weight.ObjectId = inGoodsId -- Object.Id
                     AND ObjectFloat_Weight.DescId = zc_ObjectFloat_Goods_Weight()
-                 ) AS TFloat) ;
-               
+                 ) ;
+             
    
    IF COALESCE (ioId,0) <> 0
    THEN
@@ -74,7 +80,7 @@ BEGIN
    ioId:= lpInsertUpdate_MI_ProductionUnion_Master (ioId               := ioId
                                                   , inMovementId       := inMovementId
                                                   , inGoodsId          := inGoodsId
-                                                  , inAmount           := inAmountOut
+                                                  , inAmount           := outAmountIn::TFloat
                                                   , inCount            := 0
                                                   , inPartionGoodsDate := inPartionGoodsDate
                                                   , inPartionGoods     := inPartionGoods
@@ -106,6 +112,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 29.06.15         *
  21.03.15                                        * all
  26.12.14                                        *
  11.12.14         *

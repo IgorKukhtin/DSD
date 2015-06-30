@@ -12,23 +12,23 @@ inherited ProductionPeresortForm: TProductionPeresortForm
     Height = 373
     ExplicitTop = 126
     ExplicitWidth = 1128
-    ExplicitHeight = 501
+    ExplicitHeight = 373
     ClientRectBottom = 373
     ClientRectRight = 1128
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 1128
-      ExplicitHeight = 477
+      ExplicitHeight = 349
       inherited cxGrid: TcxGrid
         Width = 1128
         Height = 349
         ExplicitWidth = 1128
-        ExplicitHeight = 477
+        ExplicitHeight = 349
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
               Format = ',0.####'
               Kind = skSum
-              Column = colAmount
+              Column = colAmountOut
             end
             item
               Format = ',0.####'
@@ -57,13 +57,13 @@ inherited ProductionPeresortForm: TProductionPeresortForm
             item
               Format = ',0.####'
               Kind = skSum
-              Column = coloutAmountIn
+              Column = colAmountIn
             end>
           DataController.Summary.FooterSummaryItems = <
             item
               Format = ',0.####'
               Kind = skSum
-              Column = colAmount
+              Column = colAmountOut
             end
             item
               Format = ',0.####'
@@ -95,7 +95,7 @@ inherited ProductionPeresortForm: TProductionPeresortForm
             item
               Format = ',0.####'
               Kind = skSum
-              Column = coloutAmountIn
+              Column = colAmountIn
             end>
           OptionsBehavior.FocusCellOnCycle = False
           OptionsCustomize.DataRowSizing = False
@@ -240,9 +240,9 @@ inherited ProductionPeresortForm: TProductionPeresortForm
             HeaderAlignmentVert = vaCenter
             Width = 70
           end
-          object colAmount: TcxGridDBColumn [14]
+          object colAmountOut: TcxGridDBColumn [14]
             Caption = #1050#1086#1083'-'#1074#1086' '#1088#1072#1089#1093#1086#1076
-            DataBinding.FieldName = 'Amount'
+            DataBinding.FieldName = 'AmountOut'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
@@ -250,9 +250,9 @@ inherited ProductionPeresortForm: TProductionPeresortForm
             HeaderAlignmentVert = vaCenter
             Width = 91
           end
-          object coloutAmountIn: TcxGridDBColumn [15]
+          object colAmountIn: TcxGridDBColumn [15]
             Caption = #1050#1086#1083'-'#1074#1086' '#1087#1088#1080#1093#1086#1076
-            DataBinding.FieldName = 'outAmountIn'
+            DataBinding.FieldName = 'AmountIn'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
@@ -1039,10 +1039,10 @@ inherited ProductionPeresortForm: TProductionPeresortForm
         ParamType = ptInput
       end
       item
-        Name = 'inAmount'
+        Name = 'inAmountOut'
         Value = Null
         Component = MasterCDS
-        ComponentItem = 'Amount'
+        ComponentItem = 'AmountOut'
         DataType = ftFloat
         ParamType = ptInput
       end
@@ -1119,6 +1119,13 @@ inherited ProductionPeresortForm: TProductionPeresortForm
         Value = Null
         Component = MasterCDS
         ComponentItem = 'GoodsChildCode'
+      end
+      item
+        Name = 'OutAmountin'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Amountin'
+        DataType = ftFloat
       end>
     Left = 160
     Top = 368
@@ -1156,13 +1163,6 @@ inherited ProductionPeresortForm: TProductionPeresortForm
         ParamType = ptInput
       end
       item
-        Name = 'outAmountIn'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'outAmountIn'
-        DataType = ftFloat
-      end
-      item
         Name = 'inPartionGoods'
         Value = Null
         Component = MasterCDS
@@ -1235,6 +1235,13 @@ inherited ProductionPeresortForm: TProductionPeresortForm
         Value = Null
         Component = MasterCDS
         ComponentItem = 'GoodsChildCode'
+      end
+      item
+        Name = 'outAmountIn'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'outAmountIn'
+        DataType = ftFloat
       end>
     Left = 368
     Top = 272
