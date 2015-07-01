@@ -764,6 +764,11 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TReturnOutForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReturnOutJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReturnOutJournalForm');
+  // возврат поставщику от покупателя
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReturnOutPartnerForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReturnOutPartnerForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReturnOutPartnerJournalForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReturnOutPartnerJournalForm');
 end;
 procedure TLoadFormTest.LoadReturnInFormTest;
 begin
