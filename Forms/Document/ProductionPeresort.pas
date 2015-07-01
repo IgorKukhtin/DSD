@@ -27,7 +27,7 @@ type
     colName: TcxGridDBColumn;
     colGoodsKindName: TcxGridDBColumn;
     colPartionGoods: TcxGridDBColumn;
-    colAmount: TcxGridDBColumn;
+    colAmountOut: TcxGridDBColumn;
     actGoodsKindChoice: TOpenChoiceForm;
     spSelectPrint: TdsdStoredProc;
     N2: TMenuItem;
@@ -49,6 +49,7 @@ type
     clMeasureChildName: TcxGridDBColumn;
     colGoodsChildGroupNameFull: TcxGridDBColumn;
     clGoodsGroupNameFull: TcxGridDBColumn;
+    colAmountIn: TcxGridDBColumn;
   private
     { Private declarations }
   public

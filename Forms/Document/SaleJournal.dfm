@@ -4,7 +4,7 @@ inherited SaleJournalForm: TSaleJournalForm
   ClientWidth = 1020
   AddOnFormData.Params = FormParams
   ExplicitWidth = 1036
-  ExplicitHeight = 679
+  ExplicitHeight = 676
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -892,6 +892,30 @@ inherited SaleJournalForm: TSaleJournalForm
     end
     inherited actInsert: TdsdInsertUpdateAction
       FormName = 'TSaleForm'
+      GuiParams = <
+        item
+          Name = 'Id'
+          Value = Null
+        end
+        item
+          Name = 'ShowAll'
+          Value = True
+          DataType = ftBoolean
+        end
+        item
+          Name = 'inOperDate'
+          Value = 41640d
+          Component = deEnd
+          DataType = ftDateTime
+        end
+        item
+          Name = 'inChangePercentAmount'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'inChangePercentAmount'
+          DataType = ftFloat
+          ParamType = ptInputOutput
+        end>
     end
     object actChecked: TdsdExecStoredProc [10]
       Category = 'DSDLib'

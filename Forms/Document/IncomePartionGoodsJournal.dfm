@@ -1,7 +1,7 @@
 object IncomePartionGoodsJournalForm: TIncomePartionGoodsJournalForm
   Left = 0
   Top = 0
-  Caption = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' <'#1055#1088#1080#1093#1086#1076' '#1087#1086' '#1087#1072#1088#1090#1080#1103#1084'>'
+  Caption = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' <'#1055#1088#1080#1093#1086#1076'  '#1086#1090' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072' ('#1087#1086' '#1087#1072#1088#1090#1080#1103#1084')>'
   ClientHeight = 427
   ClientWidth = 1240
   Color = clBtnFace
@@ -190,6 +190,14 @@ object IncomePartionGoodsJournalForm: TIncomePartionGoodsJournalForm
         HeaderAlignmentVert = vaCenter
         Width = 55
       end
+      object colPartionGoods: TcxGridDBColumn
+        Caption = #1055#1072#1088#1090#1080#1103
+        DataBinding.FieldName = 'PartionGoods'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 120
+      end
       object colInvNumber: TcxGridDBColumn
         Caption = #8470' '#1076#1086#1082'.'
         DataBinding.FieldName = 'InvNumber'
@@ -207,6 +215,7 @@ object IncomePartionGoodsJournalForm: TIncomePartionGoodsJournalForm
       object colInvNumberPartner: TcxGridDBColumn
         Caption = #8470' '#1076#1086#1082'. '#1091' '#1087#1086#1089#1090'.'
         DataBinding.FieldName = 'InvNumberPartner'
+        Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 55
@@ -214,9 +223,26 @@ object IncomePartionGoodsJournalForm: TIncomePartionGoodsJournalForm
       object colOperDatePartner: TcxGridDBColumn
         Caption = #1044#1072#1090#1072' '#1076#1086#1082'. '#1091' '#1087#1086#1089#1090'.'
         DataBinding.FieldName = 'OperDatePartner'
+        Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 70
+      end
+      object colGoodsCode: TcxGridDBColumn
+        Caption = #1050#1086#1076' '#1090#1086#1074'.'
+        DataBinding.FieldName = 'GoodsCode'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 45
+      end
+      object colGoodsName: TcxGridDBColumn
+        Caption = #1058#1086#1074#1072#1088
+        DataBinding.FieldName = 'GoodsName'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 123
       end
       object colOKPO_From: TcxGridDBColumn
         Caption = #1054#1050#1055#1054
@@ -443,30 +469,6 @@ object IncomePartionGoodsJournalForm: TIncomePartionGoodsJournalForm
         HeaderAlignmentVert = vaCenter
         Width = 54
       end
-      object colGoodsCode: TcxGridDBColumn
-        Caption = #1050#1086#1076' '#1090#1086#1074#1072#1088#1072
-        DataBinding.FieldName = 'GoodsCode'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Options.Editing = False
-        Width = 60
-      end
-      object colGoodsName: TcxGridDBColumn
-        Caption = #1058#1086#1074#1072#1088
-        DataBinding.FieldName = 'GoodsName'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Options.Editing = False
-        Width = 123
-      end
-      object colPartionGoods: TcxGridDBColumn
-        Caption = #1055#1072#1088#1090#1080#1103
-        DataBinding.FieldName = 'PartionGoods'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Options.Editing = False
-        Width = 120
-      end
     end
     object cxGridLevel: TcxGridLevel
       GridView = cxGridDBTableView
@@ -577,11 +579,11 @@ object IncomePartionGoodsJournalForm: TIncomePartionGoodsJournalForm
         end
         item
           Visible = True
-          ItemName = 'bbRefresh'
+          ItemName = 'bbShowErased'
         end
         item
           Visible = True
-          ItemName = 'bbShowErased'
+          ItemName = 'bbRefresh'
         end
         item
           Visible = True

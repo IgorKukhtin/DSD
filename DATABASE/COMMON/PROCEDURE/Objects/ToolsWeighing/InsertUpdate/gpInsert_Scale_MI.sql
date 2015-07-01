@@ -5,8 +5,9 @@ DROP FUNCTION IF EXISTS gpInsert_Scale_MI (Integer, Integer, Integer, Integer, T
 DROP FUNCTION IF EXISTS gpInsert_Scale_MI (Integer, Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, Integer, Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpInsert_Scale_MI (Integer, Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, Integer, Integer, TVarChar);
 */
-DROP FUNCTION IF EXISTS gpInsert_Scale_MI (Integer, Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, Integer, TFloat, TFloat, TVarChar, Integer, TVarChar);
-DROP FUNCTION IF EXISTS gpInsert_Scale_MI (Integer, Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, Integer, TFloat, TFloat, TFloat, Integer, TVarChar, Integer, TVarChar);
+-- DROP FUNCTION IF EXISTS gpInsert_Scale_MI (Integer, Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, Integer, TFloat, TFloat, TVarChar, Integer, TVarChar);
+-- DROP FUNCTION IF EXISTS gpInsert_Scale_MI (Integer, Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, Integer, TFloat, TFloat, TFloat, Integer, TVarChar, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpInsert_Scale_MI (Integer, Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, Integer, TFloat, TFloat, TFloat, Integer, TVarChar, Integer, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsert_Scale_MI(
     IN inId                    Integer   , -- Ключ объекта <Элемент документа>
@@ -28,6 +29,7 @@ CREATE OR REPLACE FUNCTION gpInsert_Scale_MI(
     IN inBoxCode               Integer   , -- 
     IN inPartionGoods          TVarChar  , -- Партия
     IN inPriceListId           Integer   , --
+    IN inBranchCode            Integer   , -- 
     IN inSession               TVarChar    -- сессия пользователя
 )                              
 RETURNS TABLE (Id        Integer
@@ -43,6 +45,9 @@ $BODY$
    DECLARE vbMovementId_order Integer;
    DECLARE vbBoxId Integer;
    DECLARE vbTotalSumm TFloat;
+
+   DECLARE vbPriceListId_Dnepr Integer;
+   DECLARE vbOperDate_Dnepr TDateTime;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      -- vbUserId := lpCheckRight (inSession, zc_Enum_Process_Insert_Scale_MI());
@@ -59,6 +64,34 @@ BEGIN
                                          ON MLM_Order.MovementId = Movement.Id
                                         AND MLM_Order.DescId = zc_MovementLinkMovement_Order()
      WHERE Movement.Id = inMovementId;
+
+
+     -- определили !!!только для Днепра!!!
+     IF vbMovementDescId IN (zc_Movement_Sale(), zc_Movement_ReturnIn(), zc_Movement_Income(), zc_Movement_ReturnOut())
+        AND inBranchCode IN (1, 201) -- Dnepr + Dnepr-OBV
+     THEN
+         -- !!!замена!!!
+         SELECT tmp.PriceListId, tmp.OperDate
+               INTO vbPriceListId_Dnepr, vbOperDate_Dnepr
+         FROM lfGet_Object_Partner_PriceList_onDate (inContractId     := (SELECT MLO.ObjectId FROM MovementLinkObject AS MLO WHERE MLO.MovementId = inMovementId AND MLO.DescId = zc_MovementLinkObject_Contract())
+                                                   , inPartnerId      := CASE WHEN vbMovementDescId IN (zc_Movement_Sale(), zc_Movement_ReturnOut())
+                                                                                   THEN (SELECT MLO.ObjectId FROM MovementLinkObject AS MLO WHERE MLO.MovementId = inMovementId AND MLO.DescId = zc_MovementLinkObject_To())
+                                                                              ELSE (SELECT MLO.ObjectId FROM MovementLinkObject AS MLO WHERE MLO.MovementId = inMovementId AND MLO.DescId = zc_MovementLinkObject_From())
+                                                                         END
+                                                   , inMovementDescId := vbMovementDescId
+                                                   , inOperDate_order := CASE WHEN vbMovementId_order <> 0
+                                                                                   THEN (SELECT Movement.OperDate FROM Movement WHERE Movement.Id = vbMovementId_order)
+                                                                              ELSE NULL
+                                                                         END
+                                                   , inOperDatePartner:= CASE WHEN vbMovementId_order <> 0
+                                                                                   THEN NULL
+                                                                              ELSE (SELECT tmpOperDate.OperDate FROM gpGet_Scale_OperDate (inIsCeh:= FALSE, inBranchCode:= inBranchCode, inSession:= inSession) AS tmpOperDate)
+                                                                         END
+                                                   , inDayPrior_PriceReturn:= inDayPrior_PriceReturn
+                                                   , inIsPrior        := FALSE -- !!!отказались от старых цен!!!
+                                                    ) AS tmp;
+     END IF;
+
 
      -- определили
      vbBoxId:= CASE WHEN inBoxCode > 0 THEN (SELECT Object.Id FROM Object WHERE Object.ObjectCode = inBoxCode AND Object.DescId = zc_Object_Box()) ELSE 0 END;
@@ -79,7 +112,14 @@ BEGIN
                                                        , inBoxCount            := inBoxCount
                                                        , inBoxNumber           := CASE WHEN vbMovementDescId <> zc_Movement_Sale() THEN 0 ELSE  1 + COALESCE ((SELECT MAX (MovementItemFloat.ValueData) FROM MovementItem INNER JOIN MovementItemFloat ON MovementItemFloat.MovementItemId = MovementItem.Id AND MovementItemFloat.DescId = zc_MIFloat_BoxNumber() WHERE MovementItem.MovementId = inMovementId AND MovementItem.isErased = FALSE), 0) END
                                                        , inLevelNumber         := 0
-                                                       , inPrice               := CASE WHEN vbMovementDescId = zc_Movement_ReturnIn()
+                                                       , inPrice               := CASE WHEN vbMovementDescId IN (zc_Movement_Sale(), zc_Movement_ReturnIn(), zc_Movement_Income(), zc_Movement_ReturnOut())
+                                                                                            AND vbPriceListId_Dnepr <> 0
+                                                                                            THEN COALESCE ((SELECT tmp.ValuePrice FROM gpGet_ObjectHistory_PriceListItem (inOperDate   := vbOperDate_Dnepr
+                                                                                                                                                                        , inPriceListId:= vbPriceListId_Dnepr
+                                                                                                                                                                        , inGoodsId    := inGoodsId
+                                                                                                                                                                        , inSession    := inSession
+                                                                                                                                                                         ) AS tmp), 0)
+                                                                                       WHEN vbMovementDescId = zc_Movement_ReturnIn()
                                                                                             THEN inPrice_Return
                                                                                        WHEN vbMovementDescId = zc_Movement_Sale()
                                                                                             AND vbMovementId_order = 0 -- !!!если НЕ по заявке!!!
@@ -108,7 +148,7 @@ BEGIN
                                                                                             THEN 0
                                                                                        ELSE inGoodsKindId
                                                                                   END
-                                                       , inPriceListId         := inPriceListId
+                                                       , inPriceListId         := CASE WHEN vbPriceListId_Dnepr <> 0 THEN vbPriceListId_Dnepr ELSE inPriceListId END
                                                        , inBoxId               := vbBoxId
                                                        , inSession             := inSession
                                                         );

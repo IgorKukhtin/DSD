@@ -1,8 +1,10 @@
 -- Function: gpInsertUpdate_Scale_Movement()
 
-DROP FUNCTION IF EXISTS gpInsertUpdate_Scale_Movement (Integer, TDateTime, TFloat, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar);
+/*DROP FUNCTION IF EXISTS gpInsertUpdate_Scale_Movement (Integer, TDateTime, TFloat, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Scale_Movement (Integer, TDateTime, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Scale_Movement (Integer, TDateTime, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TFloat, TVarChar);
+*/
+DROP FUNCTION IF EXISTS gpInsertUpdate_Scale_Movement (Integer, TDateTime, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TFloat, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Scale_Movement(
     IN inId                  Integer   , -- Ключ объекта <Документ>
@@ -16,6 +18,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Scale_Movement(
     IN inPriceListId         Integer   , -- 
     IN inMovementId_Order    Integer   , -- ключ Документа заявка
     IN inChangePercent       TFloat    , -- (-)% Скидки (+)% Наценки
+    IN inBranchCode          Integer   , -- 
     IN inSession             TVarChar    -- сессия пользователя
 )                              
 RETURNS TABLE (Id        Integer
@@ -27,10 +30,40 @@ AS
 $BODY$
    DECLARE vbUserId Integer;
    DECLARE vbTotalSumm TFloat;
+
+   DECLARE vbPriceListId_Dnepr Integer;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Scale_Movement());
      vbUserId:= lpGetUserBySession (inSession);
+
+
+     -- определили !!!только для Днепра!!!
+     IF inMovementDescId IN (zc_Movement_Sale(), zc_Movement_ReturnIn(), zc_Movement_Income(), zc_Movement_ReturnOut())
+        AND inBranchCode IN (1, 201) -- Dnepr + Dnepr-OBV
+     THEN
+         -- !!!замена!!!
+         vbPriceListId_Dnepr:=
+        (SELECT tmp.PriceListId
+         FROM lfGet_Object_Partner_PriceList_onDate (inContractId     := inContractId
+                                                   , inPartnerId      := CASE WHEN inMovementDescId IN (zc_Movement_Sale(), zc_Movement_ReturnOut())
+                                                                                   THEN inToId
+                                                                              ELSE inFromId
+                                                                         END
+                                                   , inMovementDescId := inMovementDescId
+                                                   , inOperDate_order := CASE WHEN inMovementId_Order <> 0
+                                                                                   THEN (SELECT Movement.OperDate FROM Movement WHERE Movement.Id = inMovementId_Order)
+                                                                              ELSE NULL
+                                                                         END
+                                                   , inOperDatePartner:= CASE WHEN inMovementId_Order <> 0
+                                                                                   THEN NULL
+                                                                              ELSE inOperDate
+                                                                         END
+                                                   , inDayPrior_PriceReturn:= 0 -- !!!параметр здесь не важен!!!
+                                                   , inIsPrior        := FALSE -- !!!отказались от старых цен!!!
+                                                    ) AS tmp);
+     END IF;
+
 
      -- сохранили
      inId:= gpInsertUpdate_Movement_WeighingPartner (ioId                  := inId
@@ -67,7 +100,7 @@ BEGIN
                                                    , inFromId              := inFromId
                                                    , inToId                := inToId
                                                    , inContractId          := inContractId
-                                                   , inPriceListId         := inPriceListId
+                                                   , inPriceListId         := CASE WHEN vbPriceListId_Dnepr <> 0 THEN vbPriceListId_Dnepr ELSE inPriceListId END
                                                    , inPaidKindId          := inPaidKindId
                                                    , inMovementId_Order    := inMovementId_Order
                                                    , inPartionGoods        := '' :: TVarChar

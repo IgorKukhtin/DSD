@@ -1,6 +1,7 @@
 -- Function: gpInsert_ScaleCeh_MI()
 
-DROP FUNCTION IF EXISTS gpInsert_ScaleCeh_MI (Integer, Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, Integer, TFloat, TFloat, TFloat, Integer, TVarChar, Integer, TVarChar);
+-- DROP FUNCTION IF EXISTS gpInsert_ScaleCeh_MI (Integer, Integer, Integer, Integer, Boolean, Boolean, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TDateTime, TVarChar, TVarChar);
+DROP FUNCTION IF EXISTS gpInsert_ScaleCeh_MI (Integer, Integer, Integer, Integer, Boolean, Boolean, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TDateTime, TVarChar, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsert_ScaleCeh_MI(
     IN inId                  Integer   , -- Ключ объекта <Элемент документа>
@@ -23,6 +24,7 @@ CREATE OR REPLACE FUNCTION gpInsert_ScaleCeh_MI(
     IN inWeightOther         TFloat    , -- Вес, прочее
     IN inPartionGoodsDate    TDateTime , -- Партия товара (дата)
     IN inPartionGoods        TVarChar  , -- Партия товара
+    IN inBranchCode          Integer   , -- 
     IN inSession             TVarChar    -- сессия пользователя
 )                              
 

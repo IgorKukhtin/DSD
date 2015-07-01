@@ -104,6 +104,7 @@ BEGIN
          OR Object_Personal_View.UnitId     = 8429  -- Отдел логистики
          OR Object_Personal_View.PositionId = 81178 -- экспедитор
          OR Object_Personal_View.PositionId = 8466  -- водитель
+         OR Object_Personal_View.PositionId = 12946 -- заготовитель ж/в
            )
        AND (View_RoleAccessKeyGuide.UnitId_PersonalService > 0
             OR vbIsAllUnit = TRUE

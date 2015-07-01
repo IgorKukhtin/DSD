@@ -3,7 +3,7 @@ inherited OrderExternalUnitJournalForm: TOrderExternalUnitJournalForm
   ClientHeight = 661
   ClientWidth = 1064
   ExplicitWidth = 1080
-  ExplicitHeight = 699
+  ExplicitHeight = 696
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -28,10 +28,6 @@ inherited OrderExternalUnitJournalForm: TOrderExternalUnitJournalForm
           DataController.Filter.TranslateIn = True
           DataController.Filter.TranslateLike = True
           DataController.Summary.DefaultGroupSummaryItems = <
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
             item
               Format = ',0.####'
               Kind = skSum
@@ -66,6 +62,11 @@ inherited OrderExternalUnitJournalForm: TOrderExternalUnitJournalForm
               Format = ',0.####'
               Kind = skSum
               Column = colTotalCountSecond
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = colTotalCount
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -197,6 +198,15 @@ inherited OrderExternalUnitJournalForm: TOrderExternalUnitJournalForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 75
+          end
+          object RouteGroupName: TcxGridDBColumn
+            Caption = #1043#1088#1091#1087#1087#1072' '#1084'. / '#1052#1072#1088#1096#1088#1091#1090
+            DataBinding.FieldName = 'RouteGroupName'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 80
           end
           object colRouteName: TcxGridDBColumn
             Caption = #1052#1072#1088#1096#1088#1091#1090
@@ -845,12 +855,6 @@ inherited OrderExternalUnitJournalForm: TOrderExternalUnitJournalForm
     PackSize = 1
     Left = 535
     Top = 248
-  end
-  object PrintItemsSverkaCDS: TClientDataSet
-    Aggregates = <>
-    Params = <>
-    Left = 628
-    Top = 294
   end
   object spSavePrintState: TdsdStoredProc
     StoredProcName = 'gpUpdate_Movement_OrderExternal_Print'

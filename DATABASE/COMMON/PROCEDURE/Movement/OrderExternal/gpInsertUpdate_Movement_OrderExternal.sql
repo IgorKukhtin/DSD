@@ -43,13 +43,26 @@ BEGIN
      -- 1. эти параметры всегда из Контрагента
      outOperDatePartner:= inOperDate + (COALESCE ((SELECT ValueData FROM ObjectFloat WHERE ObjectId = inFromId AND DescId = zc_ObjectFloat_Partner_PrepareDayCount()), 0) :: TVarChar || ' DAY') :: INTERVAL;
 
-     -- 2. эти параметры всегда из Прайс-листа !!!на дату outOperDatePartner!!!
+     -- 2. эти параметры всегда из Прайс-листа
      IF COALESCE (ioPriceListId, 0) = 0
         OR 1=1 -- !!!всегда расчет!!!
      THEN
+         -- !!!замена!!!
          SELECT tmp.PriceListId, tmp.PriceListName, tmp.PriceWithVAT, tmp.VATPercent
                 INTO ioPriceListId, outPriceListName, outPriceWithVAT, outVATPercent
-         FROM lfGet_Object_Partner_PriceList (inContractId:= inContractId, inPartnerId:= inFromId, inOperDate:= outOperDatePartner) AS tmp;
+         FROM lfGet_Object_Partner_PriceList_onDate (inContractId     := inContractId
+                                                   , inPartnerId      := inFromId
+                                                   , inMovementDescId := zc_Movement_Sale() -- !!!не ошибка!!!
+                                                   , inOperDate_order := inOperDate
+                                                   , inOperDatePartner:= NULL
+                                                   , inDayPrior_PriceReturn:= 0 -- !!!параметр здесь не важен!!!
+                                                   , inIsPrior        := FALSE -- !!!параметр здесь не важен!!!
+                                                    ) AS tmp;
+         -- !!!замена!!!
+         -- !!!на дату outOperDatePartner!!!
+         -- SELECT tmp.PriceListId, tmp.PriceListName, tmp.PriceWithVAT, tmp.VATPercent
+         --        INTO ioPriceListId, outPriceListName, outPriceWithVAT, outVATPercent
+         -- FROM lfGet_Object_Partner_PriceList (inContractId:= inContractId, inPartnerId:= inFromId, inOperDate:= outOperDatePartner) AS tmp;
      ELSE
          SELECT Object_PriceList.ValueData                             AS PriceListName
               , COALESCE (ObjectBoolean_PriceWithVAT.ValueData, FALSE) AS PriceWithVAT

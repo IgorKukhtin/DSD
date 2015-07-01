@@ -549,10 +549,10 @@ begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TIncomePartionGoodsJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TIncomePartionGoodsJournalForm');
   //
-  TdsdFormStorageFactory.GetStorage.Save(GetForm('TIncomeToForm'));
-  TdsdFormStorageFactory.GetStorage.Load('TIncomeToForm');
-  TdsdFormStorageFactory.GetStorage.Save(GetForm('TIncomeToJournalForm'));
-  TdsdFormStorageFactory.GetStorage.Load('TIncomeToJournalForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TIncomePartnerForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TIncomePartnerForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TIncomePartnerJournalForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TIncomePartnerJournalForm');
 end;
 
 procedure TLoadFormTest.LoadSendFormTest;
@@ -579,6 +579,11 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TOrderInternalPackForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TOrderInternalPackJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TOrderInternalPackJournalForm');
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TOrderInternalBasisForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TOrderInternalBasisForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TOrderInternalBasisJournalForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TOrderInternalBasisJournalForm');
 
 end;
 

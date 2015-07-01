@@ -127,11 +127,15 @@ BEGIN
          THEN vbProfitLossDirectionId := zc_Enum_ProfitLossDirection_20500(); -- Прочие потери (Списание+инвентаризация)
          ELSE
          --
+         IF vbOperDate < '01.07.2015' -- !!!временно для последнего раза!!!
+         THEN vbProfitLossDirectionId := zc_Enum_ProfitLossDirection_20500(); -- Прочие потери (Списание+инвентаризация)
+         --
          IF vbOperDate <= '01.06.2014' -- !!!временно для первого раза!!!
          THEN vbProfitLossDirectionId := zc_Enum_ProfitLossDirection_20500(); -- Прочие потери (Списание+инвентаризация)
          ELSE IF vbOperDate <= '01.04.2015' -- !!!временно для первого раза!!!
               THEN vbProfitLossDirectionId := zc_Enum_ProfitLossDirection_20100(); -- Содержание производства
               ELSE vbProfitLossDirectionId := zc_Enum_ProfitLossDirection_20500(); -- Прочие потери (Списание+инвентаризация)
+         END IF;
          END IF;
          END IF;
          END IF;
@@ -480,12 +484,13 @@ BEGIN
                    , COALESCE (Container_Summ.Id, 0) AS ContainerId
                    , COALESCE (Container_Summ.ObjectId, 0) AS AccountId
                      -- остатки по сумме должны быть загружены один раз, а потом расчитываться из HistoryCost
-                   , CASE WHEN vbOperDate <= '01.06.2014' THEN _tmpItem.OperSumm ELSE _tmpItem.OperCount * COALESCE (HistoryCost.Price, 0) END AS OperSumm
+                   -- , CASE WHEN vbOperDate <= '01.06.2014' THEN _tmpItem.OperSumm ELSE _tmpItem.OperCount * COALESCE (HistoryCost.Price, 0) END AS OperSumm
+                   , CASE WHEN vbOperDate IN ('31.05.2014', '31.05.2015', '30.06.2015') AND vbPriceListId = 0 THEN _tmpItem.OperSumm ELSE _tmpItem.OperCount * COALESCE (HistoryCost.Price, 0) END AS OperSumm
               FROM _tmpItem
                    LEFT JOIN _tmpRemainsCount ON _tmpRemainsCount.ContainerId_Goods = _tmpItem.ContainerId_Goods
                    LEFT JOIN Container AS Container_Summ ON Container_Summ.ParentId = _tmpItem.ContainerId_Goods
                                                         AND Container_Summ.DescId = zc_Container_Summ()
-                                                        AND vbOperDate >= '01.06.2014'
+                                                        AND vbOperDate >= '01.07.2015'
                    LEFT JOIN HistoryCost ON HistoryCost.ContainerId = Container_Summ.Id
                                         AND vbOperDate BETWEEN HistoryCost.StartDate AND HistoryCost.EndDate
              UNION ALL
@@ -564,6 +569,10 @@ BEGIN
                                    AND _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_21400() -- Общефирменные + услуги полученные
                                        THEN zc_Enum_InfoMoneyDestination_10200() -- Основное сырье + Прочее сырье
 
+                                  -- временно
+                                  WHEN (vbAccountDirectionId = zc_Enum_AccountDirection_20800() AND _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_10100()) -- Запасы + на на упаковке AND Основное сырье + Мясное сырье
+                                       THEN zc_Enum_InfoMoneyDestination_10200() -- Основное сырье + Прочее сырье
+
                                   ELSE _tmpItem.InfoMoneyDestinationId
                              END AS InfoMoneyDestinationId_calc
                       FROM _tmpItem
@@ -585,6 +594,10 @@ BEGIN
 
                                     WHEN vbAccountDirectionId = zc_Enum_AccountDirection_20300() -- Запасы + на хранении
                                      AND _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_21400() -- Общефирменные + услуги полученные
+                                         THEN zc_Enum_InfoMoneyDestination_10200() -- Основное сырье + Прочее сырье
+
+                                    -- временно
+                                    WHEN (vbAccountDirectionId = zc_Enum_AccountDirection_20800() AND _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_10100()) -- Запасы + на на упаковке AND Основное сырье + Мясное сырье
                                          THEN zc_Enum_InfoMoneyDestination_10200() -- Основное сырье + Прочее сырье
 
                                     ELSE _tmpItem.InfoMoneyDestinationId

@@ -493,7 +493,8 @@ begin
 
 
      //параметры для печати
-     if not DialogPrintForm.Execute(ParamsMovement.ParamByName('isMovement').asBoolean
+     if not DialogPrintForm.Execute(ParamsMovement.ParamByName('MovementDescId').asInteger
+                                   ,ParamsMovement.ParamByName('isMovement').asBoolean
                                    ,ParamsMovement.ParamByName('isAccount').asBoolean
                                    ,ParamsMovement.ParamByName('isTransport').asBoolean
                                    ,ParamsMovement.ParamByName('isQuality').asBoolean
@@ -1374,7 +1375,7 @@ begin
   begin
        StoredProcName:='gpSelect_ScaleCeh_MI';
        OutputType:=otDataSet;
-       Params.AddParam('inIsCeh', ftBoolean, ptInput,FALSE);
+       Params.AddParam('inIsGoodsComplete', ftBoolean, ptInput,SettingMain.isGoodsComplete);
        Params.AddParam('inMovementId', ftInteger, ptInput,0);
   end;
 end;
@@ -1400,7 +1401,7 @@ procedure TMainCehForm.RefreshDataSet;
 begin
   with spSelect do
   begin
-       Params.ParamByName('inIsCeh').Value:=SettingMain.isCeh;
+       Params.ParamByName('inIsGoodsComplete').Value:=SettingMain.isGoodsComplete;
        Params.ParamByName('inMovementId').Value:=ParamsMovement.ParamByName('MovementId').AsInteger;
        Execute;
   end;

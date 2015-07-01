@@ -154,6 +154,7 @@ inherited ReturnOutForm: TReturnOutForm
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 60
           end
           object colPrice: TcxGridDBColumn
@@ -436,6 +437,16 @@ inherited ReturnOutForm: TReturnOutForm
     TabOrder = 9
     Width = 44
   end
+  object cbCalcAmountPartner: TcxCheckBox [6]
+    Left = 541
+    Top = 191
+    Caption = #1040#1074#1090#1086' '#1079#1072#1087#1086#1083#1085#1077#1085#1080#1077'  <'#1050#1086#1083'-'#1074#1086' '#1091' '#1087#1086#1089#1090'.>'
+    Enabled = False
+    Properties.ReadOnly = False
+    State = cbsChecked
+    TabOrder = 10
+    Width = 220
+  end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 171
     Top = 552
@@ -605,9 +616,9 @@ inherited ReturnOutForm: TReturnOutForm
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
-      Caption = 'GoodsKindForm'
-      FormName = 'TGoodsKindForm'
-      FormNameParam.Value = ''
+      Caption = 'actGoodsKindChoice'
+      FormName = 'TGoodsKind_ObjectForm'
+      FormNameParam.Value = 'TGoodsKind_ObjectForm'
       FormNameParam.DataType = ftString
       GuiParams = <
         item
@@ -729,6 +740,14 @@ inherited ReturnOutForm: TReturnOutForm
         end
         item
           Visible = True
+          ItemName = 'bbAddMask'
+        end
+        item
+          Visible = True
+          ItemName = 'bbStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbErased'
         end
         item
@@ -757,6 +776,14 @@ inherited ReturnOutForm: TReturnOutForm
         end
         item
           Visible = True
+          ItemName = 'bbCalcAmountPartner'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbMovementItemProtocol'
         end
         item
@@ -778,6 +805,13 @@ inherited ReturnOutForm: TReturnOutForm
     object bbPrintTax: TdxBarButton [5]
       Action = mactPrint_ReturnOutTax
       Category = 0
+    end
+    object bbCalcAmountPartner: TdxBarControlContainerItem
+      Caption = #1040#1074#1090#1086' '#1079#1072#1087#1086#1083#1085#1077#1085#1080#1077'  <'#1050#1086#1083'-'#1074#1086' '#1091' '#1087#1086#1089#1090'.>'
+      Category = 0
+      Hint = #1040#1074#1090#1086' '#1079#1072#1087#1086#1083#1085#1077#1085#1080#1077'  <'#1050#1086#1083'-'#1074#1086' '#1091' '#1087#1086#1089#1090'.>'
+      Visible = ivAlways
+      Control = cbCalcAmountPartner
     end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
@@ -1252,19 +1286,26 @@ inherited ReturnOutForm: TReturnOutForm
         ParamType = ptInput
       end
       item
-        Name = 'inAmount'
+        Name = 'ioAmount'
         Value = Null
         Component = MasterCDS
         ComponentItem = 'Amount'
         DataType = ftFloat
-        ParamType = ptInput
+        ParamType = ptInputOutput
       end
       item
-        Name = 'inAmountPartner'
+        Name = 'ioAmountPartner'
         Value = Null
         Component = MasterCDS
         ComponentItem = 'AmountPartner'
         DataType = ftFloat
+        ParamType = ptInputOutput
+      end
+      item
+        Name = 'inIsCalcAmountPartner'
+        Value = Null
+        Component = cbCalcAmountPartner
+        DataType = ftBoolean
         ParamType = ptInput
       end
       item
@@ -1319,19 +1360,102 @@ inherited ReturnOutForm: TReturnOutForm
         Component = MasterCDS
         ComponentItem = 'AssetId'
         ParamType = ptInput
-      end
-      item
-        Value = Null
-        DataType = ftFloat
-        ParamType = ptUnknown
-      end
-      item
-        Value = Null
-        DataType = ftFloat
-        ParamType = ptUnknown
       end>
     Left = 160
     Top = 368
+  end
+  inherited spInsertMaskMIMaster: TdsdStoredProc
+    StoredProcName = 'gpInsertUpdate_MovementItem_ReturnOut'
+    Params = <
+      item
+        Name = 'ioId'
+        Value = 0
+        ParamType = ptInput
+      end
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inGoodsId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'GoodsId'
+        ParamType = ptInput
+      end
+      item
+        Name = 'ioAmount'
+        Value = 0.000000000000000000
+        DataType = ftFloat
+        ParamType = ptInput
+      end
+      item
+        Name = 'ioAmountPartner'
+        Value = 0.000000000000000000
+        DataType = ftFloat
+        ParamType = ptInput
+      end
+      item
+        Name = 'inIsCalcAmountPartner'
+        Value = Null
+        Component = cbCalcAmountPartner
+        DataType = ftBoolean
+        ParamType = ptInput
+      end
+      item
+        Name = 'inPrice'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Price'
+        DataType = ftFloat
+        ParamType = ptInput
+      end
+      item
+        Name = 'ioCountForPrice'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'CountForPrice'
+        DataType = ftFloat
+        ParamType = ptInput
+      end
+      item
+        Name = 'outAmountSumm'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'AmountSumm'
+        DataType = ftFloat
+      end
+      item
+        Name = 'inHeadCount'
+        Value = 0.000000000000000000
+        DataType = ftFloat
+        ParamType = ptInput
+      end
+      item
+        Name = 'inPartionGoods'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'PartionGoods'
+        DataType = ftString
+        ParamType = ptInput
+      end
+      item
+        Name = 'inGoodsKindId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'GoodsKindId'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inAssetId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'AssetId'
+        ParamType = ptInput
+      end>
   end
   object PrintHeaderCDS: TClientDataSet
     Aggregates = <>

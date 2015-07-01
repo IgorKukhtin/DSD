@@ -1,6 +1,7 @@
 -- Function: gpInsertUpdate_ScaleCeh_Movement()
 
-DROP FUNCTION IF EXISTS gpInsertUpdate_ScaleCeh_Movement (Integer, TDateTime, Integer, Integer, Integer, Integer, Boolean, TVarChar);
+-- DROP FUNCTION IF EXISTS gpInsertUpdate_ScaleCeh_Movement (Integer, TDateTime, Integer, Integer, Integer, Integer, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_ScaleCeh_Movement (Integer, TDateTime, Integer, Integer, Integer, Integer, Boolean, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_ScaleCeh_Movement(
     IN inId                  Integer   , -- Ключ объекта <Документ>
@@ -10,6 +11,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_ScaleCeh_Movement(
     IN inFromId              Integer   , -- От кого (в документе)
     IN inToId                Integer   , -- Кому (в документе)
     IN inIsProductionIn      Boolean   , -- 
+    IN inBranchCode          Integer   , -- 
     IN inSession             TVarChar    -- сессия пользователя
 )                              
 RETURNS TABLE (Id        Integer

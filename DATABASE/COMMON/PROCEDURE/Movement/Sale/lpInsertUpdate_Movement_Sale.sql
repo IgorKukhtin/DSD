@@ -70,10 +70,22 @@ BEGIN
      IF COALESCE (ioPriceListId, 0) = 0 -- OR COALESCE (ioId, 0) = 0
         OR 1=1 -- !!!всегда расчет!!!
      THEN
-         -- !!!расчет!!! эти параметры всегда из Прайс-листа !!!на дату inOperDatePartner!!!
-         SELECT PriceListId, PriceListName, PriceWithVAT, VATPercent
+         -- !!!замена!!!
+         SELECT tmp.PriceListId, tmp.PriceListName, tmp.PriceWithVAT, tmp.VATPercent
                 INTO ioPriceListId, outPriceListName, outPriceWithVAT, outVATPercent
-         FROM lfGet_Object_Partner_PriceList (inContractId:= inContractId, inPartnerId:= inToId, inOperDate:= inOperDatePartner);
+         FROM lfGet_Object_Partner_PriceList_onDate (inContractId     := inContractId
+                                                   , inPartnerId      := inToId
+                                                   , inMovementDescId := zc_Movement_Sale()
+                                                   , inOperDate_order := CASE WHEN inMovementId_Order <> 0 THEN (SELECT Movement.OperDate FROM Movement WHERE Movement.Id = inMovementId_Order) ELSE NULL END 
+                                                   , inOperDatePartner:= CASE WHEN inMovementId_Order <> 0 THEN NULL ELSE inOperDate END
+                                                   , inDayPrior_PriceReturn:= 0 -- !!!параметр здесь не важен!!!
+                                                   , inIsPrior        := FALSE -- !!!параметр здесь не важен!!!
+                                                    ) AS tmp;
+         -- !!!замена!!!
+         -- !!!расчет!!! эти параметры всегда из Прайс-листа !!!на дату inOperDatePartner!!!
+         -- SELECT PriceListId, PriceListName, PriceWithVAT, VATPercent
+         --        INTO ioPriceListId, outPriceListName, outPriceWithVAT, outVATPercent
+         -- FROM lfGet_Object_Partner_PriceList (inContractId:= inContractId, inPartnerId:= inToId, inOperDate:= inOperDatePartner);
      ELSE
          SELECT Object_PriceList.ValueData                             AS PriceListName
               , COALESCE (ObjectBoolean_PriceWithVAT.ValueData, FALSE) AS PriceWithVAT

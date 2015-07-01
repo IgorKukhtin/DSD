@@ -16,6 +16,7 @@ $BODY$
    DECLARE vbUserId  Integer;
 
    DECLARE vbIsPack  Boolean;
+   DECLARE vbIsBasis Boolean;
 BEGIN
     -- проверка прав пользователя на вызов процедуры
     vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MI_OrderInternal());
@@ -23,6 +24,8 @@ BEGIN
 
     -- расчет, временно захардкодил
     vbIsPack:= EXISTS (SELECT MovementId FROM MovementLinkObject WHERE MovementId = inMovementId AND ObjectId = 8451); -- Цех Упаковки
+    -- расчет, временно захардкодил
+    vbIsBasis:= EXISTS (SELECT MovementId FROM MovementLinkObject WHERE MovementId = inMovementId AND ObjectId IN (SELECT tmp.UnitId FROM lfSelect_Object_Unit_byGroup (8446) AS tmp)); -- ЦЕХ колбаса+дел-сы
 
 
     -- таблица
@@ -41,8 +44,20 @@ BEGIN
                                                         LEFT JOIN ObjectLink AS ObjectLink_Goods_InfoMoney
                                                                              ON ObjectLink_Goods_InfoMoney.ChildObjectId = Object_InfoMoney_View.InfoMoneyId
                                                                             AND ObjectLink_Goods_InfoMoney.DescId = zc_ObjectLink_Goods_InfoMoney()
-                                                   WHERE Object_InfoMoney_View.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_30100() -- Доходы + Продукция + Готовая продукция and Тушенка and Хлеб
-                                                      OR Object_InfoMoney_View.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_20900() -- Общефирменные + Ирна 
+                                                   WHERE ((Object_InfoMoney_View.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_30100() -- Доходы + Продукция + Готовая продукция and Тушенка and Хлеб
+                                                        OR Object_InfoMoney_View.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_30200() -- Доходы + Продукция + запечена...
+                                                        OR Object_InfoMoney_View.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_20900() -- Общефирменные + Ирна
+                                                          )
+                                                         AND vbIsPack = FALSE AND vbIsBasis = FALSE)
+                                                   OR ((Object_InfoMoney_View.InfoMoneyId = zc_Enum_InfoMoney_30101() -- Доходы + Продукция + Готовая продукция
+                                                        OR Object_InfoMoney_View.InfoMoneyId = zc_Enum_InfoMoney_30201() -- Доходы + Продукция + Готовая продукция
+                                                        OR Object_InfoMoney_View.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_20900() -- Общефирменные + Ирна
+                                                          )
+                                                         AND vbIsPack = TRUE AND vbIsBasis = FALSE)
+                                                   OR ((Object_InfoMoney_View.InfoMoneyGroupId = zc_Enum_InfoMoneyGroup_10000() -- Основное сырье
+                                                        -- OR Object_InfoMoney_View.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_21300() -- Незавершенное производство
+                                                          )
+                                                         AND vbIsPack = FALSE AND vbIsBasis = TRUE)
                                                   )
                                 SELECT tmpUnit.MIDescId
                                      , Container.Id                         AS ContainerId
@@ -157,7 +172,8 @@ BEGIN
           WHERE ObjectBoolean_Order.ValueData = TRUE
             AND ObjectBoolean_Order.DescId = zc_ObjectBoolean_GoodsByGoodsKind_Order()
             AND tmpAll.GoodsId IS NULL
-            AND vbIsPack = FALSE -- !!!только для производства!!!
+            AND vbIsPack  = FALSE -- !!!только для производства!!!
+            AND vbIsBasis = FALSE -- !!!только для производства!!!
        ;
 
 
@@ -170,7 +186,10 @@ BEGIN
                                                  , inDescId_Param       := zc_MIFloat_AmountRemains()
                                                  , inAmount_ParamOrder  := NULL
                                                  , inDescId_ParamOrder  := NULL
-                                                 , inIsPack             := vbIsPack
+                                                 , inIsPack             := CASE WHEN vbIsBasis = FALSE
+                                                                                     THEN vbIsPack
+                                                                                ELSE NULL
+                                                                           END
                                                  , inUserId             := vbUserId
                                                   ) 
        FROM tmpAll
@@ -213,10 +232,11 @@ BEGIN
                                                              ON MILO_GoodsKindComplete.MovementItemId = MIContainer.MovementItemId
                                                             AND MILO_GoodsKindComplete.DescId = zc_MILinkObject_GoodsKindComplete()
                        WHERE tmpAll.MIDescId = zc_MI_Child()
-                         AND vbIsPack = FALSE -- !!!только для производства!!!
+                         AND vbIsPack  = FALSE -- !!!только для производства!!!
                        GROUP BY tmpAll.ContainerId
                       ) AS tmp ON tmp.ContainerId = tmpAll.ContainerId
        WHERE tmpAll.MIDescId = zc_MI_Child()
+         AND vbIsBasis = FALSE -- !!!для сырья не надо!!!
       ;
 
 

@@ -88,8 +88,8 @@ uses
   dsdDB in '..\..\SOURCE\COMPONENT\dsdDB.pas',
   ToolsWeighingTree in '..\..\Forms\Guides\ToolsWeighingTree.pas' {ToolsWeighingTreeForm},
   dbMovementItemTest in '..\SOURCE\dbMovementItemTest.pas',
-  IncomeTo in '..\..\Forms\Document\IncomeTo.pas' {IncomeToForm},
-  IncomeToJournal in '..\..\Forms\Document\IncomeToJournal.pas' {IncomeToJournalForm},
+  IncomePartner in '..\..\Forms\Document\IncomePartner.pas' {IncomePartnerForm},
+  IncomePartnerJournal in '..\..\Forms\Document\IncomePartnerJournal.pas' {IncomePartnerJournalForm},
   dsdAddOn in '..\..\SOURCE\COMPONENT\dsdAddOn.pas',
   dbMovementCompleteTest in '..\SOURCE\dbMovementCompleteTest.pas',
   Report_Balance in '..\..\Forms\Report\Report_Balance.pas' {Report_BalanceForm},
@@ -353,8 +353,8 @@ uses
   Report_GoodsTax in '..\..\Forms\Report\Report_GoodsTax.pas' {Report_GoodsTaxForm: TParentForm},
   ReturnOutTest in '..\SOURCE\Movement\All\ReturnOutTest.pas',
   ReturnOutMovementItemTest in '..\SOURCE\MovementItem\All\ReturnOutMovementItemTest.pas',
-  ReturnOutJournal in '..\..\Forms\Document\ReturnOutJournal.pas' {ReturnOutJournalForm: TParentForm},
-  ReturnOut in '..\..\Forms\Document\ReturnOut.pas' {ReturnOutForm: TParentForm},
+  ReturnOutPartnerJournal in '..\..\Forms\Document\ReturnOutPartnerJournal.pas' {ReturnOutPartnerJournalForm: TParentForm},
+  ReturnOutPartner in '..\..\Forms\Document\ReturnOutPartner.pas' {ReturnOutPartnerForm: TParentForm},
   Report_CheckBonus in '..\..\Forms\Report\Report_CheckBonus.pas' {Report_CheckBonusForm: TParentForm},
   PersonalReportJournal in '..\..\Forms\Document\PersonalReportJournal.pas' {PersonalReportJournalForm: TParentForm},
   ProfitLossServiceJournal in '..\..\Forms\Document\ProfitLossServiceJournal.pas' {ProfitLossServiceJournalForm: TParentForm},
@@ -446,8 +446,8 @@ uses
   ProvinceEdit in '..\..\Forms\Guides\ProvinceEdit.pas' {ProvinceEditForm: TParentForm},
   Inventory in '..\..\Forms\Document\Inventory.pas' {InventoryForm: TParentForm},
   InventoryJournal in '..\..\Forms\Document\InventoryJournal.pas' {InventoryJournalForm: TParentForm},
-  OrderInternalPackJournal in '..\..\Forms\Document\OrderInternalPackJournal.pas' {OrderInternalPackJournalForm: TParentForm},
-  OrderInternalPack in '..\..\Forms\Document\OrderInternalPack.pas' {OrderInternalPackForm: TParentForm},
+  OrderInternalBasisJournal in '..\..\Forms\Document\OrderInternalBasisJournal.pas' {OrderInternalBasisJournalForm: TParentForm},
+  OrderInternalBasis in '..\..\Forms\Document\OrderInternalBasis.pas' {OrderInternalBasisForm: TParentForm},
   OrderKind in '..\..\Forms\Kind\OrderKind.pas' {OrderKindForm: TParentForm},
   ContactPersonEdit in '..\..\Forms\Guides\ContactPersonEdit.pas' {ContactPersonEditForm: TParentForm},
   ContactPersonKind in '..\..\Forms\Kind\ContactPersonKind.pas' {ContactPersonKindForm: TParentForm},
@@ -691,8 +691,12 @@ uses
   OrderInternalJournal in '..\..\Forms\Document\OrderInternalJournal.pas' {OrderInternalJournalForm: TParentForm},
   IncomeJournal in '..\..\Forms\Document\IncomeJournal.pas' {IncomeJournalForm: TParentForm},
   Income in '..\..\Forms\Document\Income.pas' {IncomeForm: TParentForm},
+  WeighingProductionItemJournal in '..\..\Forms\Document\WeighingProductionItemJournal.pas' {WeighingProductionItemJournalForm: TParentForm},
   WeighingPartnerItemJournal in '..\..\Forms\Document\WeighingPartnerItemJournal.pas' {WeighingPartnerItemJournalForm: TParentForm},
-  WeighingProductionItemJournal in '..\..\Forms\Document\WeighingProductionItemJournal.pas' {WeighingProductionItemJournalForm: TParentForm};
+  OrderInternalPack in '..\..\Forms\Document\OrderInternalPack.pas' {OrderInternalPackForm: TParentForm},
+  OrderInternalPackJournal in '..\..\Forms\Document\OrderInternalPackJournal.pas' {OrderInternalPackJournalForm: TParentForm},
+  ReturnOut in '..\..\Forms\Document\ReturnOut.pas' {ReturnOutForm: TParentForm},
+  ReturnOutJournal in '..\..\Forms\Document\ReturnOutJournal.pas' {ReturnOutJournalForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}
@@ -702,6 +706,8 @@ begin
   Application.Initialize;
   gc_isSetDefault := true;
   Application.CreateForm(TdmMain, dmMain);
+  Application.CreateForm(TReturnOutForm, ReturnOutForm);
+  Application.CreateForm(TReturnOutJournalForm, ReturnOutJournalForm);
   Application.Run;
   DUnitTestRunner.RunRegisteredTests;
 end.

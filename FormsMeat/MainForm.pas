@@ -222,7 +222,7 @@ type
     miIncome: TMenuItem;
     miReturnOut: TMenuItem;
     N4: TMenuItem;
-    miSale: TMenuItem;
+    miSale_all: TMenuItem;
     miSale_Partner: TMenuItem;
     miSale_Order: TMenuItem;
     miReturnIn: TMenuItem;
@@ -588,15 +588,17 @@ type
     actIncomePartionGoods: TdsdOpenForm;
     N68: TMenuItem;
     actSale: TdsdOpenForm;
-    N69: TMenuItem;
+    miSale: TMenuItem;
     miOrderInternalPack: TMenuItem;
     actOrderInternalPack: TdsdOpenForm;
-    actIncomeTo: TdsdOpenForm;
+    actIncomePartner: TdsdOpenForm;
     N70: TMenuItem;
     actWeighingPartnerItem: TdsdOpenForm;
     actWeighingProductionItem: TdsdOpenForm;
     N71: TMenuItem;
     N72: TMenuItem;
+    actOrderInternalBasis: TdsdOpenForm;
+    bbOrderInternalBasis: TMenuItem;
     procedure actReport_OLAPSoldExecute(Sender: TObject);
     procedure FormShow(Sender: TObject);
   private

@@ -10,7 +10,7 @@ uses
   cxDBData, dsdAction, Vcl.Menus, dsdAddOn, dxBarExtItems, dxBar, cxClasses,
   dsdDB, Datasnap.DBClient, Vcl.ActnList, cxPropertiesStore, cxGridLevel,
   cxGridCustomView, cxGridCustomTableView, cxGridTableView, cxGridDBTableView,
-  cxGrid, cxPC, cxButtonEdit;
+  cxGrid, cxPC, cxButtonEdit, Vcl.DBActns;
 
 type
   TAlternativeGroupForm = class(TAncestorEnumForm)
@@ -40,6 +40,16 @@ type
     dsdUpdateDataSet_Object_AlternativeGroup: TdsdUpdateDataSet;
     dsdUpdateDataSet_AlternativeGroup_Goods: TdsdUpdateDataSet;
     OpenChoiceFormGoods: TOpenChoiceForm;
+    spDelete_AlternativeGroup_Goods: TdsdStoredProc;
+    actDeleteDataSet: TDataSetDelete;
+    actExecuteDeleteLinkGoods: TdsdExecStoredProc;
+    actDeleteLink: TMultiAction;
+    dxBarButton4: TdxBarButton;
+    spErasedUnErased: TdsdStoredProc;
+    actSetErased: TdsdUpdateErased;
+    actSetUnErased: TdsdUpdateErased;
+    dxBarButton5: TdxBarButton;
+    dxBarButton6: TdxBarButton;
   private
     { Private declarations }
   public

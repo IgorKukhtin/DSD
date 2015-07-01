@@ -1,7 +1,7 @@
-object IncomeToJournalForm: TIncomeToJournalForm
+object IncomePartnerJournalForm: TIncomePartnerJournalForm
   Left = 0
   Top = 0
-  Caption = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' <'#1055#1088#1080#1093#1086#1076' '#1086#1090' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072' - '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1102'>'
+  Caption = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' <'#1055#1088#1080#1093#1086#1076' '#1086#1090' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072' ('#1087#1086#1082#1091#1087#1072#1090#1077#1083#1102')>'
   ClientHeight = 427
   ClientWidth = 1240
   Color = clBtnFace
@@ -443,16 +443,16 @@ object IncomeToJournalForm: TIncomeToJournalForm
         HeaderAlignmentVert = vaCenter
         Width = 54
       end
-      object colContractNameTo: TcxGridDBColumn
+      object colContractToName: TcxGridDBColumn
         Caption = #8470' '#1076#1086#1075'. '#1087#1086#1082'.'
-        DataBinding.FieldName = 'ContractNameTo'
+        DataBinding.FieldName = 'ContractToName'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 60
       end
-      object colPaidKindNameTo: TcxGridDBColumn
+      object colPaidKindToName: TcxGridDBColumn
         Caption = #1060#1086#1088#1084#1072' '#1086#1087#1083#1072#1090#1099' '#1087#1086#1082'.'
-        DataBinding.FieldName = 'PaidKindNameTo'
+        DataBinding.FieldName = 'PaidKindToName'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 60
@@ -574,11 +574,11 @@ object IncomeToJournalForm: TIncomeToJournalForm
         end
         item
           Visible = True
-          ItemName = 'bbRefresh'
+          ItemName = 'bbShowErased'
         end
         item
           Visible = True
-          ItemName = 'bbShowErased'
+          ItemName = 'bbRefresh'
         end
         item
           Visible = True
@@ -751,8 +751,8 @@ object IncomeToJournalForm: TIncomeToJournalForm
       MoveParams = <>
       Caption = #1044#1086#1073#1072#1074#1080#1090#1100
       ShortCut = 45
-      FormName = 'TIncomeToForm'
-      FormNameParam.Value = 'TIncomeToForm'
+      FormName = 'TIncomePartnerForm'
+      FormNameParam.Value = 'TIncomePartnerForm'
       FormNameParam.DataType = ftString
       GuiParams = <
         item
@@ -801,8 +801,8 @@ object IncomeToJournalForm: TIncomeToJournalForm
       MoveParams = <>
       Caption = #1048#1079#1084#1077#1085#1080#1090#1100
       ShortCut = 115
-      FormName = 'TIncomeToForm'
-      FormNameParam.Value = 'TIncomeToForm'
+      FormName = 'TIncomePartnerForm'
+      FormNameParam.Value = 'TIncomePartnerForm'
       FormNameParam.DataType = ftString
       GuiParams = <
         item
@@ -1033,7 +1033,7 @@ object IncomeToJournalForm: TIncomeToJournalForm
     end
   end
   object dsdStoredProc: TdsdStoredProc
-    StoredProcName = 'gpSelect_Movement_Income'
+    StoredProcName = 'gpSelect_Movement_Income_Partner'
     DataSet = ClientDataSet
     DataSets = <
       item

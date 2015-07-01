@@ -26,7 +26,6 @@ object WeighingPartnerForm: TWeighingPartnerForm
     Align = alTop
     BevelOuter = bvNone
     TabOrder = 0
-    ExplicitWidth = 1020
     object edInvNumber: TcxTextEdit
       Left = 175
       Top = 22
@@ -42,6 +41,7 @@ object WeighingPartnerForm: TWeighingPartnerForm
     object edOperDate: TcxDateEdit
       Left = 262
       Top = 22
+      EditValue = 42184d
       Properties.ReadOnly = True
       Properties.SaveTime = False
       Properties.ShowTime = False
@@ -89,18 +89,6 @@ object WeighingPartnerForm: TWeighingPartnerForm
       Top = 5
       Caption = #1050#1086#1084#1091
     end
-    object edInvNumberTransport: TcxCurrencyEdit
-      Left = 1011
-      Top = 63
-      Enabled = False
-      Properties.Alignment.Horz = taRightJustify
-      Properties.Alignment.Vert = taVCenter
-      Properties.DecimalPlaces = 0
-      Properties.DisplayFormat = ',0'
-      Properties.ReadOnly = True
-      TabOrder = 5
-      Width = 99
-    end
     object cxLabel5: TcxLabel
       Left = 114
       Top = 5
@@ -114,35 +102,13 @@ object WeighingPartnerForm: TWeighingPartnerForm
     object edStartWeighing: TcxDateEdit
       Left = 365
       Top = 63
+      EditValue = 42184d
       Properties.DisplayFormat = 'dd.mm.yyyy hh:mm'
       Properties.EditFormat = 'dd.mm.yyyy hh:mm'
       Properties.Kind = ckDateTime
       Properties.ReadOnly = True
       TabOrder = 4
       Width = 105
-    end
-    object cxLabel7: TcxLabel
-      Left = 1011
-      Top = 45
-      Caption = #8470' '#1087#1091#1090#1077#1074#1086#1075#1086' '#1083#1080#1089#1090#1072
-    end
-    object cxLabel13: TcxLabel
-      Left = 859
-      Top = 45
-      Caption = #1057#1086#1088#1090#1080#1088#1086#1074#1082#1072' '#1084#1072#1088#1096#1088#1091#1090#1072
-    end
-    object edRouteSorting: TcxButtonEdit
-      Left = 859
-      Top = 63
-      Properties.Buttons = <
-        item
-          Default = True
-          Enabled = False
-          Kind = bkEllipsis
-        end>
-      Properties.ReadOnly = True
-      TabOrder = 6
-      Width = 146
     end
     object cxLabel11: TcxLabel
       Left = 8
@@ -168,7 +134,7 @@ object WeighingPartnerForm: TWeighingPartnerForm
         end>
       Properties.Images = dmMain.ImageList
       Properties.ReadOnly = True
-      TabOrder = 16
+      TabOrder = 12
       Width = 160
     end
     object cxLabel9: TcxLabel
@@ -179,11 +145,12 @@ object WeighingPartnerForm: TWeighingPartnerForm
     object edEndWeighing: TcxDateEdit
       Left = 476
       Top = 63
+      EditValue = 42184d
       Properties.DisplayFormat = 'dd.mm.yyyy hh:mm'
       Properties.EditFormat = 'dd.mm.yyyy hh:mm'
       Properties.Kind = ckDateTime
       Properties.ReadOnly = True
-      TabOrder = 18
+      TabOrder = 14
       Width = 105
     end
     object cxLabel8: TcxLabel
@@ -201,7 +168,7 @@ object WeighingPartnerForm: TWeighingPartnerForm
           Kind = bkEllipsis
         end>
       Properties.ReadOnly = True
-      TabOrder = 20
+      TabOrder = 16
       Width = 146
     end
     object cxLabel10: TcxLabel
@@ -219,16 +186,17 @@ object WeighingPartnerForm: TWeighingPartnerForm
           Kind = bkEllipsis
         end>
       Properties.ReadOnly = True
-      TabOrder = 22
+      TabOrder = 18
       Width = 69
     end
     object edOperDate_parent: TcxDateEdit
       Left = 262
       Top = 63
+      EditValue = 42184d
       Properties.ReadOnly = True
       Properties.SaveTime = False
       Properties.ShowTime = False
-      TabOrder = 23
+      TabOrder = 19
       Width = 96
     end
     object cxLabel12: TcxLabel
@@ -240,7 +208,7 @@ object WeighingPartnerForm: TWeighingPartnerForm
       Left = 175
       Top = 63
       Properties.ReadOnly = True
-      TabOrder = 25
+      TabOrder = 21
       Width = 80
     end
     object cxLabel14: TcxLabel
@@ -257,7 +225,7 @@ object WeighingPartnerForm: TWeighingPartnerForm
       Left = 9
       Top = 22
       Properties.ReadOnly = True
-      TabOrder = 28
+      TabOrder = 24
       Width = 99
     end
     object cxLabel16: TcxLabel
@@ -274,7 +242,7 @@ object WeighingPartnerForm: TWeighingPartnerForm
           Enabled = False
           Kind = bkEllipsis
         end>
-      TabOrder = 30
+      TabOrder = 26
       Width = 92
     end
     object cxLabel17: TcxLabel
@@ -283,16 +251,16 @@ object WeighingPartnerForm: TWeighingPartnerForm
       Caption = #1055#1088#1080#1079#1085#1072#1082' '#1076#1086#1075#1086#1074#1086#1088#1072
     end
     object cxLabel18: TcxLabel
-      Left = 1011
-      Top = 4
+      Left = 859
+      Top = 45
       Caption = #1055#1072#1088#1090#1080#1103' '#1090#1086#1074#1072#1088#1072
     end
     object edPartionGoods: TcxTextEdit
-      Left = 1011
-      Top = 22
+      Left = 859
+      Top = 63
       Properties.ReadOnly = True
-      TabOrder = 33
-      Width = 98
+      TabOrder = 29
+      Width = 146
     end
     object edWeighingNumber: TcxCurrencyEdit
       Left = 115
@@ -302,7 +270,7 @@ object WeighingPartnerForm: TWeighingPartnerForm
       Properties.DecimalPlaces = 0
       Properties.DisplayFormat = ',0'
       Properties.ReadOnly = True
-      TabOrder = 34
+      TabOrder = 30
       Width = 54
     end
     object edContractTag: TcxButtonEdit
@@ -315,38 +283,38 @@ object WeighingPartnerForm: TWeighingPartnerForm
           Kind = bkEllipsis
         end>
       Properties.ReadOnly = True
-      TabOrder = 35
+      TabOrder = 31
       Width = 97
     end
     object edPriceWithVAT: TcxCheckBox
-      Left = 1121
+      Left = 1057
       Top = 22
       Caption = #1062#1077#1085#1072' '#1089' '#1053#1044#1057' ('#1076#1072'/'#1085#1077#1090')'
       Properties.ReadOnly = True
-      TabOrder = 36
+      TabOrder = 32
       Width = 128
     end
     object edChangePercent: TcxCurrencyEdit
-      Left = 1121
+      Left = 1011
       Top = 63
       Properties.DecimalPlaces = 3
       Properties.DisplayFormat = ',0.###'
       Properties.ReadOnly = True
-      TabOrder = 37
+      TabOrder = 33
       Width = 144
     end
     object cxLabel20: TcxLabel
-      Left = 1264
+      Left = 1011
       Top = 4
       Caption = '% '#1053#1044#1057
     end
     object edVATPercent: TcxCurrencyEdit
-      Left = 1264
+      Left = 1011
       Top = 22
       Properties.DecimalPlaces = 0
       Properties.DisplayFormat = ',0'
       Properties.ReadOnly = True
-      TabOrder = 39
+      TabOrder = 35
       Width = 40
     end
   end
@@ -359,14 +327,12 @@ object WeighingPartnerForm: TWeighingPartnerForm
     TabOrder = 2
     Properties.ActivePage = cxTabSheetMain
     Properties.CustomButtons.Buttons = <>
-    ExplicitWidth = 1020
     ClientRectBottom = 336
     ClientRectRight = 1373
     ClientRectTop = 24
     object cxTabSheetMain: TcxTabSheet
       Caption = #1057#1090#1088#1086#1095#1085#1072#1103' '#1095#1072#1089#1090#1100
       ImageIndex = 0
-      ExplicitWidth = 1020
       object cxGrid: TcxGrid
         Left = 0
         Top = 0
@@ -374,7 +340,6 @@ object WeighingPartnerForm: TWeighingPartnerForm
         Height = 312
         Align = alClient
         TabOrder = 0
-        ExplicitWidth = 1020
         object cxGridDBTableView: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = MasterDS
@@ -832,7 +797,7 @@ object WeighingPartnerForm: TWeighingPartnerForm
     end
   end
   object cxLabel19: TcxLabel
-    Left = 1121
+    Left = 1011
     Top = 45
     Caption = '(-)% '#1057#1082#1080#1076#1082#1080' (+)% '#1053#1072#1094#1077#1085#1082#1080
   end
@@ -1364,7 +1329,6 @@ object WeighingPartnerForm: TWeighingPartnerForm
       item
       end
       item
-        Control = edInvNumberTransport
       end
       item
       end
@@ -1373,7 +1337,6 @@ object WeighingPartnerForm: TWeighingPartnerForm
       item
       end
       item
-        Control = edRouteSorting
       end>
     GetStoredProc = spGet
     Left = 296
@@ -1423,12 +1386,6 @@ object WeighingPartnerForm: TWeighingPartnerForm
         Name = 'WeighingNumber'
         Value = 0.000000000000000000
         Component = edWeighingNumber
-      end
-      item
-        Name = 'InvNumberTransport'
-        Value = 0.000000000000000000
-        Component = edInvNumberTransport
-        DataType = ftFloat
       end
       item
         Name = 'OperDate'
@@ -1512,19 +1469,6 @@ object WeighingPartnerForm: TWeighingPartnerForm
         DataType = ftString
       end
       item
-        Name = 'RouteSortingId'
-        Value = ''
-        Component = RouteSortingGuides
-        ComponentItem = 'Key'
-      end
-      item
-        Name = 'RouteSortingName'
-        Value = ''
-        Component = RouteSortingGuides
-        ComponentItem = 'TextValue'
-        DataType = ftString
-      end
-      item
         Name = 'UserId'
         Value = ''
         Component = UserGuides
@@ -1584,33 +1528,6 @@ object WeighingPartnerForm: TWeighingPartnerForm
       end>
     Left = 144
     Top = 200
-  end
-  object RouteSortingGuides: TdsdGuides
-    KeyField = 'Id'
-    LookupControl = edRouteSorting
-    FormNameParam.Value = 'TRouteSortingForm'
-    FormNameParam.DataType = ftString
-    FormName = 'TRouteSortingForm'
-    PositionDataSet = 'ClientDataSet'
-    Params = <
-      item
-        Name = 'Key'
-        Value = ''
-        Component = RouteSortingGuides
-        ComponentItem = 'Key'
-        DataType = ftString
-        ParamType = ptInput
-      end
-      item
-        Name = 'TextValue'
-        Value = ''
-        Component = RouteSortingGuides
-        ComponentItem = 'TextValue'
-        DataType = ftString
-        ParamType = ptInput
-      end>
-    Left = 920
-    Top = 56
   end
   object ChangeStatus: TChangeStatus
     KeyField = 'Code'

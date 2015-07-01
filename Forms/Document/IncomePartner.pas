@@ -1,4 +1,4 @@
-unit IncomeTo;
+unit IncomePartner;
 
 interface
 
@@ -26,7 +26,7 @@ uses
   DataModul, dxBarExtItems, dsdAddOn, cxCheckBox, cxCurrencyEdit;
 
 type
-  TIncomeToForm = class(TParentForm)
+  TIncomePartnerForm = class(TParentForm)
     FormParams: TdsdFormParams;
     spSelectMI: TdsdStoredProc;
     dxBarManager: TdxBarManager;
@@ -64,13 +64,8 @@ type
     actPrint: TdsdPrintAction;
     bbPrint: TdxBarButton;
     colAmountPartner: TcxGridDBColumn;
-    colAmountPacker: TcxGridDBColumn;
     colCountForPrice: TcxGridDBColumn;
-    colHeadCount: TcxGridDBColumn;
-    colPartionGoods: TcxGridDBColumn;
-    colLiveWeight: TcxGridDBColumn;
     colGoodsKindName: TcxGridDBColumn;
-    colAssetName: TcxGridDBColumn;
     bbShowAll: TdxBarButton;
     bbStatic: TdxBarStatic;
     actShowAll: TBooleanStoredProcAction;
@@ -100,9 +95,6 @@ type
     edPaidKind: TcxButtonEdit;
     ContractGuides: TdsdGuides;
     PaidKindGuides: TdsdGuides;
-    cxLabel13: TcxLabel;
-    edPacker: TcxButtonEdit;
-    PackerGuides: TdsdGuides;
     SetErased: TdsdUpdateErased;
     SetUnErased: TdsdUpdateErased;
     actShowErased: TBooleanStoredProcAction;
@@ -151,6 +143,11 @@ type
     cxLabel18: TcxLabel;
     edContractTo: TcxButtonEdit;
     ContractGuidesTo: TdsdGuides;
+    cbCalcAmountPartner: TcxCheckBox;
+    bbCalcAmountPartner: TdxBarControlContainerItem;
+    spInsertMaskMIMaster: TdsdStoredProc;
+    bbAddMask: TdxBarButton;
+    actAddMask: TdsdExecStoredProc;
   private
   public
   end;
@@ -160,6 +157,6 @@ implementation
 {$R *.dfm}
 
 initialization
-  RegisterClass(TIncomeToForm);
+  RegisterClass(TIncomePartnerForm);
 
 end.

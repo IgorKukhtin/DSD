@@ -162,6 +162,12 @@ inherited SendJournalForm: TSendJournalForm
   inherited Panel: TPanel
     Width = 1073
     ExplicitWidth = 1073
+    inherited deStart: TcxDateEdit
+      EditValue = 42005d
+    end
+    inherited deEnd: TcxDateEdit
+      EditValue = 42005d
+    end
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 179
@@ -178,6 +184,25 @@ inherited SendJournalForm: TSendJournalForm
     end
     inherited actUpdate: TdsdInsertUpdateAction
       FormName = 'TSendForm'
+      GuiParams = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'Id'
+          ParamType = ptInput
+        end
+        item
+          Name = 'ShowAll'
+          Value = False
+          DataType = ftBoolean
+        end
+        item
+          Name = 'inOperDate'
+          Value = 41640d
+          Component = deEnd
+          DataType = ftDateTime
+        end>
     end
     object actPrint: TdsdPrintAction [16]
       Category = 'DSDLib'
@@ -305,11 +330,11 @@ inherited SendJournalForm: TSendJournalForm
         end
         item
           Visible = True
-          ItemName = 'bbRefresh'
+          ItemName = 'bbShowErased'
         end
         item
           Visible = True
-          ItemName = 'bbShowErased'
+          ItemName = 'bbRefresh'
         end
         item
           Visible = True

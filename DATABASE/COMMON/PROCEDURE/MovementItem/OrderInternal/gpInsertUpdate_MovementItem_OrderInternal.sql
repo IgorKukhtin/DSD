@@ -1,7 +1,6 @@
 -- Function: gpInsertUpdate_MovementItem_OrderInternal()
 
-DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_OrderInternal (Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, Integer, TVarChar);
-DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_OrderInternal (Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_OrderInternal (Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, Integer, Integer, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_OrderInternal(
  INOUT ioId                  Integer   , -- Ключ объекта <Элемент документа>
@@ -13,6 +12,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_OrderInternal(
  INOUT ioAmountSecond        TFloat    , -- Количество дозаказ
     IN inGoodsKindId         Integer   , -- Виды товаров
     IN inReceiptId_basis     Integer   ,
+    IN inIsPack              Boolean   , -- 
     IN inSession             TVarChar    -- сессия пользователя
 )
 RETURNS RECORD
@@ -36,12 +36,16 @@ BEGIN
          RAISE EXCEPTION 'Ошибка.Не определено значение <Вид товара>.';
      END IF;
      -- проверка
-     IF ioId > 0
+     IF ioId > 0 AND inIsPack = FALSE
      THEN
          RAISE EXCEPTION 'Ошибка.Отключите режим <Показать все товары>.';
      END IF;
 
 
+     IF inIsPack = TRUE
+     THEN
+          vbMovementItemId:= ioId;
+     ELSE
      -- поиск - 1
      vbMovementItemId:= (SELECT MovementItem.Id
                          FROM MovementItem
@@ -80,6 +84,8 @@ BEGIN
                               LIMIT 1
                              );
      END IF;
+     END IF;
+
      -- проверка
      IF COALESCE (vbMovementItemId, 0) = 0
      THEN
@@ -88,7 +94,7 @@ BEGIN
 
 
      -- расчет
-     IF inReceiptId_basis > 0 OR EXISTS (SELECT 1 FROM MovementItemLinkObject WHERE MovementItemLinkObject.MovementItemId = vbMovementItemId AND MovementItemLinkObject.DescId = zc_MILinkObject_ReceiptBasis())
+     IF inIsPack = FALSE -- inReceiptId_basis > 0 OR EXISTS (SELECT 1 FROM MovementItemLinkObject WHERE MovementItemLinkObject.MovementItemId = vbMovementItemId AND MovementItemLinkObject.DescId = zc_MILinkObject_ReceiptBasis())
      THEN
          -- расчет <Количество>
          SELECT COALESCE (ObjectFloat_Value.ValueData, 0) * inCuterCount
@@ -110,25 +116,28 @@ BEGIN
      -- сохранили свойство <Количество дозаказ>
      PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_AmountSecond(), vbMovementItemId, ioAmountSecond);
 
-     -- сохранили свойство <Количество кутеров>
-     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_CuterCount(), vbMovementItemId, inCuterCount);
-     -- сохранили свойство <Количество кутеров дозаказ>
-     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_CuterCountSecond(), vbMovementItemId, inCuterCountSecond);
+     IF inIsPack = FALSE
+     THEN
+          -- сохранили свойство <Количество кутеров>
+          PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_CuterCount(), vbMovementItemId, inCuterCount);
+          -- сохранили свойство <Количество кутеров дозаказ>
+          PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_CuterCountSecond(), vbMovementItemId, inCuterCountSecond);
 
-     -- сохранили связь с <Рецептуры> : ВСЕМ + удаленным
-     PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_ReceiptBasis(), MovementItem.Id, inReceiptId_basis)
-     FROM MovementItem
-          INNER JOIN MovementItemLinkObject AS MILinkObject_Goods
-                                            ON MILinkObject_Goods.MovementItemId = MovementItem.Id
-                                           AND MILinkObject_Goods.DescId = zc_MILinkObject_Goods()
-                                           AND MILinkObject_Goods.ObjectId = inGoodsId
-          INNER JOIN MovementItemLinkObject AS MILinkObject_GoodsKindComplete
-                                            ON MILinkObject_GoodsKindComplete.MovementItemId = MovementItem.Id
-                                           AND MILinkObject_GoodsKindComplete.DescId = zc_MILinkObject_GoodsKindComplete()
-                                           AND MILinkObject_GoodsKindComplete.ObjectId = inGoodsKindId
-     WHERE MovementItem.MovementId = inMovementId
-       AND MovementItem.DescId = zc_MI_Master()
-     ;
+          -- сохранили связь с <Рецептуры> : ВСЕМ + удаленным
+          /*PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_ReceiptBasis(), MovementItem.Id, inReceiptId_basis)
+          FROM MovementItem
+               INNER JOIN MovementItemLinkObject AS MILinkObject_Goods
+                                                 ON MILinkObject_Goods.MovementItemId = MovementItem.Id
+                                                AND MILinkObject_Goods.DescId = zc_MILinkObject_Goods()
+                                                AND MILinkObject_Goods.ObjectId = inGoodsId
+               INNER JOIN MovementItemLinkObject AS MILinkObject_GoodsKindComplete
+                                                 ON MILinkObject_GoodsKindComplete.MovementItemId = MovementItem.Id
+                                                AND MILinkObject_GoodsKindComplete.DescId = zc_MILinkObject_GoodsKindComplete()
+                                                AND MILinkObject_GoodsKindComplete.ObjectId = inGoodsKindId
+          WHERE MovementItem.MovementId = inMovementId
+            AND MovementItem.DescId = zc_MI_Master()
+          ;*/
+     END IF;
 
 
      -- пересчитали Итоговые суммы по накладной
@@ -145,6 +154,7 @@ LANGUAGE PLPGSQL VOLATILE;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 27.06.15                                        * all
  06.06.14                                                       *
 */
 

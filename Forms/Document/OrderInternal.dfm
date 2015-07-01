@@ -313,7 +313,7 @@ inherited OrderInternalForm: TOrderInternalForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 45
+            Width = 35
           end
           object GoodsCode_detail: TcxGridDBColumn [7]
             Caption = #1050#1086#1076' ('#1076#1077#1090'.)'
@@ -2024,6 +2024,14 @@ inherited OrderInternalForm: TOrderInternalForm
         Value = Null
         Component = MasterCDS
         ComponentItem = 'ReceiptId_basis'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inIsPack'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'isPack'
+        DataType = ftBoolean
         ParamType = ptInput
       end>
     Left = 168

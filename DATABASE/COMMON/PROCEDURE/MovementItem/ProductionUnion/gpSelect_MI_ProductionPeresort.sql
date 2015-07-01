@@ -11,7 +11,7 @@ CREATE OR REPLACE FUNCTION gpSelect_MI_ProductionPeresort(
 RETURNS TABLE (Id Integer, LineNum Integer
              , GoodsId Integer, GoodsCode Integer, GoodsName TVarChar, GoodsGroupNameFull TVarChar, MeasureName TVarChar
              , GoodsChildId Integer, GoodsChildCode Integer, GoodsChildName TVarChar, GoodsChildGroupNameFull TVarChar, MeasureChildName TVarChar
-             , Amount TFloat
+             , AmountOut TFloat, Amountin TFloat
              , PartionGoods TVarChar, PartionGoodsDate TDateTime
              , PartionGoodsChild TVarChar, PartionGoodsDateChild TDateTime
              , Comment TVarChar
@@ -42,7 +42,8 @@ BEGIN
             , CAST (NULL AS TVarchar)               AS GoodsChildGroupNameFull
             , CAST (NULL AS TVarchar)               AS MeasureChildName
 
-            , CAST (NULL AS TFloat)                 AS Amount
+            , CAST (NULL AS TFloat)                 AS AmountOut
+            , CAST (NULL AS TFloat)                 AS AmountIn            
 
             , CAST (NULL AS TVarchar)               AS PartionGoods
             , CAST (NULL AS TDateTime)              AS PartionGoodsDate
@@ -103,7 +104,8 @@ BEGIN
             , ObjectString_GoodsChild_GoodsGroupFull.ValueData AS GoodsChildGroupNameFull
             , Object_MeasureChild.ValueData                    AS MeasureChildName
 
-            , MovementItem.Amount               AS Amount
+            , MovementItemChild.Amount          AS AmountOut
+            , MovementItem.Amount               AS Amountin
 
             , MIString_PartionGoods.ValueData   AS PartionGoods
             , MIDate_PartionGoods.ValueData     AS PartionGoodsDate
@@ -205,7 +207,8 @@ BEGIN
             , ObjectString_GoodsChild_GoodsGroupFull.ValueData AS GoodsChildGroupNameFull
             , Object_MeasureChild.ValueData                    AS MeasureChildName
 
-            , MovementItem.Amount               AS Amount
+            , MovementItemChild.Amount          AS Amountout
+            , MovementItem.Amount               AS Amountin
 
             , MIString_PartionGoods.ValueData   AS PartionGoods
             , MIDate_PartionGoods.ValueData     AS PartionGoodsDate
@@ -286,6 +289,7 @@ BEGIN
                                   ON ObjectLink_GoodsChild_Measure.ObjectId = Object_GoodsChild.Id
                                  AND ObjectLink_GoodsChild_Measure.DescId = zc_ObjectLink_Goods_Measure()
              LEFT JOIN Object AS Object_MeasureChild ON Object_MeasureChild.Id = ObjectLink_Goods_Measure.ChildObjectId
+
             ;
 
    END IF;

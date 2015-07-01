@@ -36,9 +36,11 @@ type
     spSelectPrint: TdsdStoredProc;
     actPrint: TdsdPrintAction;
     bbPrint: TdxBarButton;
-    PrintItemsSverkaCDS: TClientDataSet;
     colTotalCountChild: TcxGridDBColumn;
     colPartionGoods: TcxGridDBColumn;
+    spSelectPrintCeh: TdsdStoredProc;
+    actPrint_Ceh: TdsdPrintAction;
+    bbPrint_Ceh: TdxBarButton;
   private
     { Private declarations }
   public

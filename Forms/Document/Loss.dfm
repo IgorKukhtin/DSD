@@ -55,14 +55,15 @@ inherited LossForm: TLossForm
           Styles.Selection = nil
           Styles.Footer = nil
           Styles.Header = nil
-          object clGoodsGroupNameFull: TcxGridDBColumn
+          object clGoodsGroupNameFull: TcxGridDBColumn [0]
             Caption = #1043#1088#1091#1087#1087#1072' ('#1074#1089#1077')'
             DataBinding.FieldName = 'GoodsGroupNameFull'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 136
           end
-          object colCode: TcxGridDBColumn
+          object colCode: TcxGridDBColumn [1]
             Caption = #1050#1086#1076
             DataBinding.FieldName = 'GoodsCode'
             HeaderAlignmentHorz = taCenter
@@ -70,7 +71,7 @@ inherited LossForm: TLossForm
             Options.Editing = False
             Width = 60
           end
-          object colName: TcxGridDBColumn
+          object colName: TcxGridDBColumn [2]
             Caption = #1058#1086#1074#1072#1088
             DataBinding.FieldName = 'GoodsName'
             HeaderAlignmentHorz = taCenter
@@ -78,7 +79,7 @@ inherited LossForm: TLossForm
             Options.Editing = False
             Width = 200
           end
-          object colGoodsKindName: TcxGridDBColumn
+          object colGoodsKindName: TcxGridDBColumn [3]
             Caption = #1042#1080#1076' '#1090#1086#1074#1072#1088#1072
             DataBinding.FieldName = 'GoodsKindName'
             PropertiesClassName = 'TcxButtonEditProperties'
@@ -93,15 +94,14 @@ inherited LossForm: TLossForm
             HeaderAlignmentVert = vaCenter
             Width = 100
           end
-          object colPartionGoods: TcxGridDBColumn
-            Caption = #1055#1072#1088#1090#1080#1103' '#1090#1086#1074#1072#1088#1072
+          object colPartionGoods: TcxGridDBColumn [4]
+            Caption = #1055#1072#1088#1090#1080#1103
             DataBinding.FieldName = 'PartionGoods'
-            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 80
           end
-          object PartionGoodsDate: TcxGridDBColumn
+          object PartionGoodsDate: TcxGridDBColumn [5]
             Caption = #1055#1072#1088#1090#1080#1103' ('#1076#1072#1090#1072')'
             DataBinding.FieldName = 'PartionGoodsDate'
             Visible = False
@@ -109,14 +109,15 @@ inherited LossForm: TLossForm
             HeaderAlignmentVert = vaCenter
             Width = 80
           end
-          object clMeasureName: TcxGridDBColumn
+          object clMeasureName: TcxGridDBColumn [6]
             Caption = #1045#1076'. '#1080#1079#1084'.'
             DataBinding.FieldName = 'MeasureName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 45
           end
-          object colAmount: TcxGridDBColumn
+          object colAmount: TcxGridDBColumn [7]
             Caption = #1050#1086#1083'-'#1074#1086
             DataBinding.FieldName = 'Amount'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -126,8 +127,8 @@ inherited LossForm: TLossForm
             HeaderAlignmentVert = vaCenter
             Width = 80
           end
-          object colCount: TcxGridDBColumn
-            Caption = #1050#1086#1083#1080#1095#1077#1089#1090#1074#1086' '#1073#1072#1090#1086#1085#1086#1074' '#1080#1083#1080' '#1091#1087#1072#1082#1086#1074#1086#1082
+          object colCount: TcxGridDBColumn [8]
+            Caption = #1050#1086#1083'-'#1074#1086' '#1091#1087#1072#1082'.'
             DataBinding.FieldName = 'Count'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
@@ -135,10 +136,11 @@ inherited LossForm: TLossForm
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 80
           end
-          object colHeadCount: TcxGridDBColumn
-            Caption = #1050#1086#1083#1080#1095#1077#1089#1090#1074#1086' '#1075#1086#1083#1086#1074
+          object colHeadCount: TcxGridDBColumn [9]
+            Caption = #1050#1086#1083'. '#1075#1086#1083#1086#1074
             DataBinding.FieldName = 'HeadCount'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
@@ -146,17 +148,19 @@ inherited LossForm: TLossForm
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 80
           end
-          object colAssetName: TcxGridDBColumn
+          object colAssetName: TcxGridDBColumn [10]
             Caption = #1054#1089#1085'.'#1089#1088#1077#1076#1089#1090#1074#1072
             DataBinding.FieldName = 'AssetName'
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 80
           end
-          object clInfoMoneyCode: TcxGridDBColumn
+          object clInfoMoneyCode: TcxGridDBColumn [11]
             Caption = #1050#1086#1076' '#1059#1055
             DataBinding.FieldName = 'InfoMoneyCode'
             Visible = False
@@ -165,7 +169,7 @@ inherited LossForm: TLossForm
             Options.Editing = False
             Width = 55
           end
-          object clInfoMoneyGroupName: TcxGridDBColumn
+          object clInfoMoneyGroupName: TcxGridDBColumn [12]
             Caption = #1059#1055' '#1075#1088#1091#1087#1087#1072' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
             DataBinding.FieldName = 'InfoMoneyGroupName'
             Visible = False
@@ -174,7 +178,7 @@ inherited LossForm: TLossForm
             Options.Editing = False
             Width = 70
           end
-          object clInfoMoneyDestinationName: TcxGridDBColumn
+          object clInfoMoneyDestinationName: TcxGridDBColumn [13]
             Caption = #1059#1055' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1077
             DataBinding.FieldName = 'InfoMoneyDestinationName'
             Visible = False
@@ -183,7 +187,7 @@ inherited LossForm: TLossForm
             Options.Editing = False
             Width = 70
           end
-          object clInfoMoneyName: TcxGridDBColumn
+          object clInfoMoneyName: TcxGridDBColumn [14]
             Caption = #1059#1055' '#1089#1090#1072#1090#1100#1103' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
             DataBinding.FieldName = 'InfoMoneyName'
             Visible = False
@@ -192,7 +196,7 @@ inherited LossForm: TLossForm
             Options.Editing = False
             Width = 155
           end
-          object colPartionGoodsName: TcxGridDBColumn
+          object colPartionGoodsName: TcxGridDBColumn [15]
             Caption = #1055#1072#1088#1090#1080#1103' ('#1080#1085#1074'.'#1085#1086#1084#1077#1088')'
             DataBinding.FieldName = 'PartionGoodsName'
             PropertiesClassName = 'TcxButtonEditProperties'
@@ -205,9 +209,10 @@ inherited LossForm: TLossForm
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 96
           end
-          object colPartionGoodsOperDate: TcxGridDBColumn
+          object colPartionGoodsOperDate: TcxGridDBColumn [16]
             Caption = #1055#1072#1088#1090#1080#1103' ('#1076#1072#1090#1072' '#1058#1052#1062')'
             DataBinding.FieldName = 'PartionGoodsOperDate'
             Visible = False
@@ -216,7 +221,7 @@ inherited LossForm: TLossForm
             Options.Editing = False
             Width = 75
           end
-          object colStorageName_Partion: TcxGridDBColumn
+          object colStorageName_Partion: TcxGridDBColumn [17]
             Caption = #1052#1077#1089#1090#1086' '#1093#1088#1072#1085#1077#1085#1080#1103' ('#1087#1072#1088#1090#1080#1103' '#1088#1072#1089#1093'.)'
             DataBinding.FieldName = 'StorageName_Partion'
             Visible = False
@@ -225,7 +230,7 @@ inherited LossForm: TLossForm
             Options.Editing = False
             Width = 60
           end
-          object colPrice: TcxGridDBColumn
+          object colPrice: TcxGridDBColumn [18]
             Caption = #1055#1072#1088#1090#1080#1103' '#1088#1072#1089#1093'. ('#1094#1077#1085#1072')'
             DataBinding.FieldName = 'Price'
             Visible = False
@@ -234,7 +239,7 @@ inherited LossForm: TLossForm
             Options.Editing = False
             Width = 68
           end
-          object colUnitName: TcxGridDBColumn
+          object colUnitName: TcxGridDBColumn [19]
             Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077' ('#1087#1072#1088#1090#1080#1103' '#1058#1052#1062')'
             DataBinding.FieldName = 'UnitName'
             Visible = False
@@ -618,9 +623,6 @@ inherited LossForm: TLossForm
           Visible = True
           ItemName = 'dxBarStatic'
         end>
-    end
-    inherited bbAddMask: TdxBarButton
-      Visible = ivNever
     end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
@@ -1087,25 +1089,87 @@ inherited LossForm: TLossForm
         Component = MasterCDS
         ComponentItem = 'PartionGoodsId'
         ParamType = ptInput
-      end
-      item
-        Value = Null
-        DataType = ftFloat
-        ParamType = ptUnknown
-      end
-      item
-        Value = Null
-        DataType = ftFloat
-        ParamType = ptUnknown
-      end
-      item
-        Value = Null
-        ParamType = ptUnknown
       end>
     Left = 160
     Top = 368
   end
   inherited spInsertMaskMIMaster: TdsdStoredProc
+    StoredProcName = 'gpInsertUpdate_MovementItem_Loss'
+    Params = <
+      item
+        Name = 'ioId'
+        Value = '0'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inGoodsId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'GoodsId'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inAmount'
+        Value = '0'
+        DataType = ftFloat
+        ParamType = ptInput
+      end
+      item
+        Name = 'inCount'
+        Value = '0'
+        DataType = ftFloat
+        ParamType = ptInput
+      end
+      item
+        Name = 'inHeadCount'
+        Value = '0'
+        DataType = ftFloat
+        ParamType = ptInput
+      end
+      item
+        Name = 'inPartionGoodsDate'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'PartionGoodsDate'
+        DataType = ftDateTime
+        ParamType = ptInput
+      end
+      item
+        Name = 'inPartionGoods'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'PartionGoods'
+        DataType = ftString
+        ParamType = ptInput
+      end
+      item
+        Name = 'inGoodsKindId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'GoodsKindId'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inAssetId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'AssetId'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inPartionGoodsId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'PartionGoodsId'
+        ParamType = ptInput
+      end>
     Left = 368
     Top = 272
   end

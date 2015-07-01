@@ -102,7 +102,7 @@ inherited SendForm: TSendForm
           Styles.Selection = nil
           Styles.Footer = nil
           Styles.Header = nil
-          object clGoodsGroupNameFull: TcxGridDBColumn
+          object clGoodsGroupNameFull: TcxGridDBColumn [0]
             Caption = #1043#1088#1091#1087#1087#1072' ('#1074#1089#1077')'
             DataBinding.FieldName = 'GoodsGroupNameFull'
             HeaderAlignmentHorz = taCenter
@@ -110,7 +110,7 @@ inherited SendForm: TSendForm
             Options.Editing = False
             Width = 120
           end
-          object colCode: TcxGridDBColumn
+          object colCode: TcxGridDBColumn [1]
             Caption = #1050#1086#1076
             DataBinding.FieldName = 'GoodsCode'
             HeaderAlignmentHorz = taCenter
@@ -118,7 +118,7 @@ inherited SendForm: TSendForm
             Options.Editing = False
             Width = 75
           end
-          object colName: TcxGridDBColumn
+          object colName: TcxGridDBColumn [2]
             Caption = #1058#1086#1074#1072#1088
             DataBinding.FieldName = 'GoodsName'
             HeaderAlignmentHorz = taCenter
@@ -126,7 +126,7 @@ inherited SendForm: TSendForm
             Options.Editing = False
             Width = 150
           end
-          object colGoodsKindName: TcxGridDBColumn
+          object colGoodsKindName: TcxGridDBColumn [3]
             Caption = #1042#1080#1076' '#1090#1086#1074#1072#1088#1072
             DataBinding.FieldName = 'GoodsKindName'
             PropertiesClassName = 'TcxButtonEditProperties'
@@ -141,7 +141,26 @@ inherited SendForm: TSendForm
             HeaderAlignmentVert = vaCenter
             Width = 100
           end
-          object clMeasureName: TcxGridDBColumn
+          object colPartionGoodsDate: TcxGridDBColumn [4]
+            Caption = #1055#1072#1088#1090#1080#1103' ('#1076#1072#1090#1072')'
+            DataBinding.FieldName = 'PartionGoodsDate'
+            PropertiesClassName = 'TcxDateEditProperties'
+            Properties.SaveTime = False
+            Properties.ShowTime = False
+            Properties.UseNullString = True
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 84
+          end
+          object colPartionGoods: TcxGridDBColumn [5]
+            Caption = #1055#1072#1088#1090#1080#1103
+            DataBinding.FieldName = 'PartionGoods'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 100
+          end
+          object clMeasureName: TcxGridDBColumn [6]
             Caption = #1045#1076'. '#1080#1079#1084'.'
             DataBinding.FieldName = 'MeasureName'
             HeaderAlignmentHorz = taCenter
@@ -149,25 +168,7 @@ inherited SendForm: TSendForm
             Options.Editing = False
             Width = 45
           end
-          object colPartionGoodsDate: TcxGridDBColumn
-            Caption = #1055#1072#1088#1090#1080#1103' ('#1076#1072#1090#1072')'
-            DataBinding.FieldName = 'PartionGoodsDate'
-            PropertiesClassName = 'TcxDateEditProperties'
-            Properties.SaveTime = False
-            Properties.ShowTime = False
-            Properties.UseNullString = True
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 84
-          end
-          object colPartionGoods: TcxGridDBColumn
-            Caption = #1055#1072#1088#1090#1080#1103' '#1090#1086#1074#1072#1088#1072' / '#1048#1085#1074'. '#1085#1086#1084#1077#1088
-            DataBinding.FieldName = 'PartionGoods'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 74
-          end
-          object colAmount: TcxGridDBColumn
+          object colAmount: TcxGridDBColumn [7]
             Caption = #1050#1086#1083'-'#1074#1086
             DataBinding.FieldName = 'Amount'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -177,8 +178,8 @@ inherited SendForm: TSendForm
             HeaderAlignmentVert = vaCenter
             Width = 70
           end
-          object colCount: TcxGridDBColumn
-            Caption = #1050#1086#1083'-'#1074#1086' '#1077#1076#1080#1085#1080#1094
+          object colCount: TcxGridDBColumn [8]
+            Caption = #1050#1086#1083'-'#1074#1086' '#1091#1087#1072#1082'.'
             DataBinding.FieldName = 'Count'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
@@ -186,10 +187,11 @@ inherited SendForm: TSendForm
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 60
           end
-          object colHeadCount: TcxGridDBColumn
-            Caption = #1050#1086#1083#1080#1095#1077#1089#1090#1074#1086' '#1075#1086#1083#1086#1074
+          object colHeadCount: TcxGridDBColumn [9]
+            Caption = #1050#1086#1083'. '#1075#1086#1083#1086#1074
             DataBinding.FieldName = 'HeadCount'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
@@ -197,17 +199,19 @@ inherited SendForm: TSendForm
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 55
           end
-          object colAssetName: TcxGridDBColumn
+          object colAssetName: TcxGridDBColumn [10]
             Caption = #1054#1089#1085'.'#1089#1088#1077#1076#1089#1090#1074#1072
             DataBinding.FieldName = 'AssetName'
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 80
           end
-          object colUnitName: TcxGridDBColumn
+          object colUnitName: TcxGridDBColumn [11]
             Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077' ('#1087#1072#1088#1090#1080#1103' '#1058#1052#1062')'
             DataBinding.FieldName = 'UnitName'
             PropertiesClassName = 'TcxButtonEditProperties'
@@ -217,10 +221,12 @@ inherited SendForm: TSendForm
                 Default = True
                 Kind = bkEllipsis
               end>
+            Visible = False
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 104
           end
-          object colStorageName: TcxGridDBColumn
+          object colStorageName: TcxGridDBColumn [12]
             Caption = #1052#1077#1089#1090#1086' '#1093#1088#1072#1085#1077#1085#1080#1103' ('#1087#1072#1088#1090#1080#1103' '#1087#1088#1080#1093'.)'
             DataBinding.FieldName = 'StorageName'
             PropertiesClassName = 'TcxButtonEditProperties'
@@ -230,19 +236,22 @@ inherited SendForm: TSendForm
                 Default = True
                 Kind = bkEllipsis
               end>
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 90
           end
-          object colStorageName_Partion: TcxGridDBColumn
+          object colStorageName_Partion: TcxGridDBColumn [13]
             Caption = #1052#1077#1089#1090#1086' '#1093#1088#1072#1085#1077#1085#1080#1103' ('#1087#1072#1088#1090#1080#1103' '#1088#1072#1089#1093'.)'
             DataBinding.FieldName = 'StorageName_Partion'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 81
           end
-          object colPartionGoodsName: TcxGridDBColumn
+          object colPartionGoodsName: TcxGridDBColumn [14]
             Caption = #1055#1072#1088#1090#1080#1103' '#1088#1072#1089#1093'. ('#1080#1085#1074'.'#1085#1086#1084#1077#1088')'
             DataBinding.FieldName = 'PartionGoodsName'
             PropertiesClassName = 'TcxButtonEditProperties'
@@ -252,26 +261,31 @@ inherited SendForm: TSendForm
                 Default = True
                 Kind = bkEllipsis
               end>
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 78
           end
-          object colPartionGoodsOperDate: TcxGridDBColumn
+          object colPartionGoodsOperDate: TcxGridDBColumn [15]
             Caption = #1055#1072#1088#1090#1080#1103' '#1088#1072#1089#1093'. ('#1076#1072#1090#1072' '#1058#1052#1062')'
             DataBinding.FieldName = 'PartionGoodsOperDate'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 61
           end
-          object colPrice: TcxGridDBColumn
+          object colPrice: TcxGridDBColumn [16]
             Caption = #1055#1072#1088#1090#1080#1103' '#1088#1072#1089#1093'. ('#1094#1077#1085#1072')'
             DataBinding.FieldName = 'Price'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 68
           end
-          object clInfoMoneyCode: TcxGridDBColumn
+          object clInfoMoneyCode: TcxGridDBColumn [17]
             Caption = #1050#1086#1076' '#1059#1055
             DataBinding.FieldName = 'InfoMoneyCode'
             Visible = False
@@ -279,25 +293,28 @@ inherited SendForm: TSendForm
             Options.Editing = False
             Width = 45
           end
-          object clInfoMoneyGroupName: TcxGridDBColumn
+          object clInfoMoneyGroupName: TcxGridDBColumn [18]
             Caption = #1059#1055' '#1075#1088#1091#1087#1087#1072' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
             DataBinding.FieldName = 'InfoMoneyGroupName'
             Visible = False
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 70
           end
-          object clInfoMoneyDestinationName: TcxGridDBColumn
+          object clInfoMoneyDestinationName: TcxGridDBColumn [19]
             Caption = #1059#1055' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1077
             DataBinding.FieldName = 'InfoMoneyDestinationName'
             Visible = False
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 70
           end
-          object clInfoMoneyName: TcxGridDBColumn
+          object clInfoMoneyName: TcxGridDBColumn [20]
             Caption = #1059#1055' '#1089#1090#1072#1090#1100#1103' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
             DataBinding.FieldName = 'InfoMoneyName'
             Visible = False
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 100
           end
         end
@@ -711,9 +728,6 @@ inherited SendForm: TSendForm
           Visible = True
           ItemName = 'dxBarStatic'
         end>
-    end
-    inherited bbAddMask: TdxBarButton
-      Visible = ivNever
     end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
@@ -1207,15 +1221,101 @@ inherited SendForm: TSendForm
         Component = MasterCDS
         ComponentItem = 'PartionGoodsId'
         ParamType = ptInput
-      end
-      item
-        Value = Null
-        ParamType = ptUnknown
       end>
     Left = 160
     Top = 368
   end
   inherited spInsertMaskMIMaster: TdsdStoredProc
+    StoredProcName = 'gpInsertUpdate_MovementItem_Send'
+    Params = <
+      item
+        Name = 'ioId'
+        Value = '0'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inGoodsId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'GoodsId'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inAmount'
+        Value = '0'
+        DataType = ftFloat
+        ParamType = ptInput
+      end
+      item
+        Name = 'inPartionGoodsDate'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'PartionGoodsDate'
+        DataType = ftDateTime
+        ParamType = ptInput
+      end
+      item
+        Name = 'inCount'
+        Value = '0'
+        DataType = ftFloat
+        ParamType = ptInput
+      end
+      item
+        Name = 'inHeadCount'
+        Value = '0'
+        DataType = ftFloat
+        ParamType = ptInput
+      end
+      item
+        Name = 'ioPartionGoods'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'PartionGoods'
+        DataType = ftString
+        ParamType = ptInput
+      end
+      item
+        Name = 'inGoodsKindId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'GoodsKindId'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inAssetId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'AssetId'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inUnitId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'UnitId'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inStorageId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'StorageId'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inPartionGoodsId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'PartionGoodsId'
+        ParamType = ptInput
+      end>
     Left = 368
     Top = 272
   end

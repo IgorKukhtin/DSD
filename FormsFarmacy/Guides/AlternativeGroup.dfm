@@ -2,19 +2,27 @@ inherited AlternativeGroupForm: TAlternativeGroupForm
   Caption = #1043#1088#1091#1087#1087#1099' '#1072#1083#1100#1090#1077#1088#1085#1072#1090#1080#1074
   ClientWidth = 651
   ExplicitWidth = 659
+  ExplicitHeight = 335
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Width = 651
+    ExplicitWidth = 651
     ClientRectRight = 651
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 575
+      ExplicitWidth = 651
       ExplicitHeight = 282
       inherited cxGrid: TcxGrid
         Width = 241
         Align = alLeft
         ExplicitWidth = 241
         inherited cxGridDBTableView: TcxGridDBTableView
+          DataController.Summary.FooterSummaryItems = <
+            item
+              Format = #1043#1088#1091#1087#1087': ,0'
+              Kind = skCount
+              Column = colName
+            end>
           OptionsData.Appending = True
           Styles.Content = nil
           Styles.Inactive = nil
@@ -46,23 +54,28 @@ inherited AlternativeGroupForm: TAlternativeGroupForm
         Align = alClient
         PopupMenu = PopupMenu
         TabOrder = 1
-        ExplicitLeft = 0
-        ExplicitWidth = 575
         object GridGoodsTableView: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = GoodsDS
           DataController.Filter.Options = [fcoCaseInsensitive]
           DataController.Summary.DefaultGroupSummaryItems = <>
-          DataController.Summary.FooterSummaryItems = <>
+          DataController.Summary.FooterSummaryItems = <
+            item
+              Format = #1058#1086#1074#1072#1088#1086#1074' '#1074' '#1075#1088#1091#1087#1087#1077': ,0'
+              Kind = skCount
+              Column = GridGodsColGoodsName
+            end>
           DataController.Summary.SummaryGroups = <>
           Images = dmMain.SortImageList
+          NewItemRow.InfoText = #1065#1077#1083#1082#1085#1080#1090#1077' '#1079#1076#1077#1089#1100' '#1076#1083#1103' '#1076#1086#1073#1072#1074#1083#1077#1085#1080#1103' '#1085#1086#1074#1086#1081' '#1089#1090#1088#1086#1082#1080
+          NewItemRow.Visible = True
           OptionsBehavior.FocusCellOnCycle = True
           OptionsCustomize.ColumnHiding = True
           OptionsCustomize.ColumnsQuickCustomization = True
           OptionsCustomize.DataRowSizing = True
-          OptionsData.Appending = True
           OptionsData.CancelOnExit = False
           OptionsData.Deleting = False
+          OptionsData.Inserting = False
           OptionsView.Footer = True
           OptionsView.GroupByBox = False
           OptionsView.GroupSummaryLayout = gslAlignWithColumns
@@ -216,6 +229,71 @@ inherited AlternativeGroupForm: TAlternativeGroupForm
         end>
       isShowModal = False
     end
+    object actDeleteDataSet: TDataSetDelete
+      Category = 'Delete'
+      Caption = '&Delete'
+      Hint = 'Delete'
+      ImageIndex = 76
+      DataSource = GoodsDS
+    end
+    object actExecuteDeleteLinkGoods: TdsdExecStoredProc
+      Category = 'Delete'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spDelete_AlternativeGroup_Goods
+      StoredProcList = <
+        item
+          StoredProc = spDelete_AlternativeGroup_Goods
+        end>
+      Caption = 'actExecuteDeleteLinkGoods'
+    end
+    object actDeleteLink: TMultiAction
+      Category = 'Delete'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actExecuteDeleteLinkGoods
+        end
+        item
+          Action = actDeleteDataSet
+        end>
+      QuestionBeforeExecute = #1059#1076#1072#1083#1080#1090#1100' '#1090#1086#1074#1072#1088' '#1080#1079' '#1075#1088#1091#1087#1087#1099' '#1072#1083#1100#1090#1077#1088#1085#1072#1090#1080#1074'?'
+      Caption = #1059#1076#1072#1083#1080#1090#1100
+      Hint = #1059#1076#1072#1083#1080#1090#1100
+      ImageIndex = 2
+      ShortCut = 46
+    end
+    object actSetErased: TdsdUpdateErased
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spErasedUnErased
+      StoredProcList = <
+        item
+          StoredProc = spErasedUnErased
+        end>
+      Caption = #1059#1076#1072#1083#1080#1090#1100' '#1072#1083#1100#1090#1077#1088#1085#1072#1090#1080#1074#1085#1091#1102' '#1075#1088#1091#1087#1087#1091
+      Hint = #1059#1076#1072#1083#1080#1090#1100' '#1072#1083#1100#1090#1077#1088#1085#1072#1090#1080#1074#1085#1091#1102' '#1075#1088#1091#1087#1087#1091
+      ImageIndex = 2
+      ShortCut = 46
+      ErasedFieldName = 'isErased'
+      DataSource = MasterDS
+    end
+    object actSetUnErased: TdsdUpdateErased
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spErasedUnErased
+      StoredProcList = <
+        item
+          StoredProc = spErasedUnErased
+        end>
+      Caption = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100
+      Hint = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
+      ImageIndex = 8
+      ShortCut = 32776
+      ErasedFieldName = 'isErased'
+      isSetErased = False
+      DataSource = MasterDS
+    end
   end
   inherited MasterDS: TDataSource
     Top = 64
@@ -251,6 +329,14 @@ inherited AlternativeGroupForm: TAlternativeGroupForm
         end
         item
           Visible = True
+          ItemName = 'dxBarButton5'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarButton6'
+        end
+        item
+          Visible = True
           ItemName = 'dxBarStatic'
         end
         item
@@ -276,6 +362,10 @@ inherited AlternativeGroupForm: TAlternativeGroupForm
         item
           Visible = True
           ItemName = 'dxBarButton3'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarButton4'
         end>
     end
     object dxBarButton1: TdxBarButton
@@ -297,6 +387,18 @@ inherited AlternativeGroupForm: TAlternativeGroupForm
       Category = 0
       Visible = ivAlways
       Width = 100
+    end
+    object dxBarButton4: TdxBarButton
+      Action = actDeleteLink
+      Category = 0
+    end
+    object dxBarButton5: TdxBarButton
+      Action = actSetErased
+      Category = 0
+    end
+    object dxBarButton6: TdxBarButton
+      Action = actSetUnErased
+      Category = 0
     end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
@@ -398,9 +500,61 @@ inherited AlternativeGroupForm: TAlternativeGroupForm
         Component = GoodsCDS
         ComponentItem = 'GoodsId'
         ParamType = ptInput
+      end
+      item
+        Name = 'inOldGoodsId'
+        Value = Null
+        Component = GoodsCDS
+        ComponentItem = 'OldGoodsId'
+        ParamType = ptInput
+      end
+      item
+        Name = 'outAlternativeGroupId'
+        Value = Null
+        Component = GoodsCDS
+        ComponentItem = 'AlternativeGroupId'
       end>
     PackSize = 1
     Left = 480
     Top = 72
+  end
+  object spDelete_AlternativeGroup_Goods: TdsdStoredProc
+    StoredProcName = 'gpDelete_AlternativeGroup_Goods'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inAlternativeGroupId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInputOutput
+      end
+      item
+        Name = 'inGoodsId'
+        Value = Null
+        Component = GoodsCDS
+        ComponentItem = 'GoodsId'
+        ParamType = ptInput
+      end>
+    PackSize = 1
+    Left = 480
+    Top = 120
+  end
+  object spErasedUnErased: TdsdStoredProc
+    StoredProcName = 'gpUpdateObjectIsErased'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inObjectId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+      end>
+    PackSize = 1
+    Left = 144
+    Top = 128
   end
 end

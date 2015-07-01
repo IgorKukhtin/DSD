@@ -77,6 +77,8 @@ type
     edCurrencyPartner: TcxButtonEdit;
     clGoodsGroupNameFull: TcxGridDBColumn;
     actPrint1: TdsdPrintAction;
+    cbCalcAmountPartner: TcxCheckBox;
+    bbCalcAmountPartner: TdxBarControlContainerItem;
   private
     { Private declarations }
   public

@@ -377,7 +377,7 @@ object WeighingProductionForm: TWeighingProductionForm
             DataBinding.FieldName = 'MeasureName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 29
+            Width = 36
           end
           object colPartionGoods: TcxGridDBColumn
             Caption = #1055#1072#1088#1090#1080#1103
@@ -385,7 +385,7 @@ object WeighingProductionForm: TWeighingProductionForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 68
+            Width = 67
           end
           object colPartionGoodsDate: TcxGridDBColumn
             Caption = #1044#1072#1090#1072' '#1087#1072#1088#1090#1080#1080
@@ -399,7 +399,7 @@ object WeighingProductionForm: TWeighingProductionForm
             DataBinding.FieldName = 'StartWeighing'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 54
+            Width = 53
           end
           object colUpdateDate: TcxGridDBColumn
             Caption = #1044#1072#1090#1072'/'#1074#1088#1077#1084#1103' '#1082#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1082#1080
@@ -427,7 +427,7 @@ object WeighingProductionForm: TWeighingProductionForm
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 52
+            Width = 51
           end
           object colRealWeight: TcxGridDBColumn
             Caption = #1056#1077#1072#1083'. '#1074#1077#1089
@@ -468,7 +468,7 @@ object WeighingProductionForm: TWeighingProductionForm
             DataBinding.FieldName = 'HeadCount'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 41
+            Width = 40
           end
           object colCount: TcxGridDBColumn
             Caption = #1050#1086#1083'. '#1073#1072#1090#1086#1085#1086#1074
@@ -484,7 +484,7 @@ object WeighingProductionForm: TWeighingProductionForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 47
+            Width = 46
           end
           object colIsErased: TcxGridDBColumn
             Caption = #1059#1076#1072#1083#1077#1085' ('#1076#1072'/'#1085#1077#1090')'
@@ -509,7 +509,7 @@ object WeighingProductionForm: TWeighingProductionForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 59
+            Width = 58
           end
           object colCountSkewer2: TcxGridDBColumn
             Caption = #1050#1086#1083'. '#1096#1087'. 2'
@@ -525,7 +525,7 @@ object WeighingProductionForm: TWeighingProductionForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 56
+            Width = 55
           end
           object colWeightOther: TcxGridDBColumn
             Caption = #1042#1077#1089', '#1087#1088#1086#1095#1077#1077
@@ -550,7 +550,7 @@ object WeighingProductionForm: TWeighingProductionForm
     Properties.ReadOnly = True
     Properties.SaveTime = False
     Properties.ShowTime = False
-    TabOrder = 4
+    TabOrder = 3
     Width = 96
   end
   object cxLabel18: TcxLabel

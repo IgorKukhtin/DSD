@@ -14,7 +14,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , FromId Integer, FromName TVarChar
              , ToId Integer, ToName TVarChar
              , PersonalId Integer, PersonalName TVarChar
-             , RouteId Integer, RouteName TVarChar
+             , RouteGroupName TVarChar, RouteId Integer, RouteName TVarChar
              , RouteSortingId Integer, RouteSortingName TVarChar
              , PaidKindId Integer, PaidKindName TVarChar
              , ContractId Integer, ContractCode Integer, ContractName TVarChar, ContractTagName TVarChar
@@ -70,6 +70,7 @@ BEGIN
            , Object_To.ValueData                            AS ToName
            , Object_Personal.Id                             AS PersonalId
            , Object_Personal.ValueData                      AS PersonalName
+           , Object_RouteGroup.ValueData                    AS RouteGroupName
            , Object_Route.Id                                AS RouteId
            , Object_Route.ValueData                         AS RouteName
            , Object_RouteSorting.Id                         AS RouteSortingId
@@ -150,6 +151,10 @@ BEGIN
                                          ON MovementLinkObject_Route.MovementId = Movement.Id
                                         AND MovementLinkObject_Route.DescId = zc_MovementLinkObject_Route()
             LEFT JOIN Object AS Object_Route ON Object_Route.Id = MovementLinkObject_Route.ObjectId
+
+            LEFT JOIN ObjectLink AS ObjectLink_Route_RouteGroup ON ObjectLink_Route_RouteGroup.ObjectId = Object_Route.Id
+                                                               AND ObjectLink_Route_RouteGroup.DescId = zc_ObjectLink_Route_RouteGroup()
+            LEFT JOIN Object AS Object_RouteGroup ON Object_RouteGroup.Id = COALESCE (ObjectLink_Route_RouteGroup.ChildObjectId, Object_Route.Id)
 
             LEFT JOIN MovementLinkObject AS MovementLinkObject_RouteSorting
                                          ON MovementLinkObject_RouteSorting.MovementId = Movement.Id

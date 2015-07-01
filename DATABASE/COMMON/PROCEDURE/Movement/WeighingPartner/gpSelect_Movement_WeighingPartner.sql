@@ -26,7 +26,6 @@ RETURNS TABLE (Id Integer, InvNumber Integer, OperDate TDateTime, StatusCode Int
              , PaidKindName TVarChar
              , ContractName TVarChar, ContractTagName TVarChar
              , InfoMoneyGroupName TVarChar, InfoMoneyDestinationName TVarChar, InfoMoneyCode Integer, InfoMoneyName TVarChar
-             , RouteSortingName TVarChar
              , PersonalCode1 Integer, PersonalName1 TVarChar
              , PersonalCode2 Integer, PersonalName2 TVarChar
              , PersonalCode3 Integer, PersonalName3 TVarChar
@@ -107,8 +106,6 @@ BEGIN
              , View_InfoMoney.InfoMoneyDestinationName        AS InfoMoneyDestinationName
              , View_InfoMoney.InfoMoneyCode                   AS InfoMoneyCode
              , View_InfoMoney.InfoMoneyName                   AS InfoMoneyName
-
-             , Object_RouteSorting.ValueData      AS RouteSortingName
 
              , Object_Personal1.ObjectCode AS PersonalCode1, Object_Personal1.ValueData AS PersonalName1
              , Object_Personal2.ObjectCode AS PersonalCode2, Object_Personal2.ValueData AS PersonalName2
@@ -211,11 +208,6 @@ BEGIN
                                         AND MovementLinkObject_Contract.DescId = zc_MovementLinkObject_Contract()
             LEFT JOIN Object_Contract_InvNumber_View AS View_Contract_InvNumber ON View_Contract_InvNumber.ContractId = MovementLinkObject_Contract.ObjectId
             LEFT JOIN Object_InfoMoney_View AS View_InfoMoney ON View_InfoMoney.InfoMoneyId = View_Contract_InvNumber.InfoMoneyId
-
-            LEFT JOIN MovementLinkObject AS MovementLinkObject_RouteSorting
-                                         ON MovementLinkObject_RouteSorting.MovementId = Movement.Id
-                                        AND MovementLinkObject_RouteSorting.DescId = zc_MovementLinkObject_RouteSorting()
-            LEFT JOIN Object AS Object_RouteSorting ON Object_RouteSorting.Id = MovementLinkObject_RouteSorting.ObjectId
 
             LEFT JOIN MovementLinkObject AS MovementLinkObject_Personal1
                                          ON MovementLinkObject_Personal1.MovementId = Movement.Id

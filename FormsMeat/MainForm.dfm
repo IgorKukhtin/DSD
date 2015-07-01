@@ -4,7 +4,7 @@ inherited MainForm: TMainForm
   KeyPreview = True
   Position = poDesigned
   ExplicitWidth = 1102
-  ExplicitHeight = 265
+  ExplicitHeight = 262
   PixelsPerInch = 96
   TextHeight = 13
   object cxGrid: TcxGrid [0]
@@ -106,13 +106,13 @@ inherited MainForm: TMainForm
       GuiParams = <>
       isShowModal = False
     end
-    object actIncomeTo: TdsdOpenForm [2]
+    object actIncomePartner: TdsdOpenForm [2]
       Category = #1058#1086#1074#1072#1088#1085#1099#1081' '#1091#1095#1077#1090
       MoveParams = <>
       Caption = #1055#1088#1080#1093#1086#1076' '#1086#1090' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072' - '#1055#1086#1082#1091#1087#1072#1090#1077#1083#1102
       Hint = #1055#1088#1080#1093#1086#1076' '#1086#1090' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072' - '#1055#1086#1082#1091#1087#1072#1090#1077#1083#1102
-      FormName = 'TIncomeToJournalForm'
-      FormNameParam.Value = 'TIncomeToJournalForm'
+      FormName = 'TIncomePartnerJournalForm'
+      FormNameParam.Value = 'TIncomePartnerJournalForm'
       FormNameParam.DataType = ftString
       GuiParams = <>
       isShowModal = False
@@ -3194,6 +3194,17 @@ inherited MainForm: TMainForm
       GuiParams = <>
       isShowModal = False
     end
+    object actOrderInternalBasis: TdsdOpenForm
+      Category = #1055#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1086
+      MoveParams = <>
+      Caption = #1047#1072#1103#1074#1082#1072' '#1087#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1077#1085#1085#1072#1103' ('#1057#1099#1088#1100#1077')'
+      Hint = #1047#1072#1103#1074#1082#1072' '#1087#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1077#1085#1085#1072#1103' ('#1057#1099#1088#1100#1077')'
+      FormName = 'TOrderInternalBasisJournalForm'
+      FormNameParam.Value = 'TOrderInternalBasisJournalForm'
+      FormNameParam.DataType = ftString
+      GuiParams = <>
+      isShowModal = False
+    end
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Active = False
@@ -3229,7 +3240,7 @@ inherited MainForm: TMainForm
         Action = actIncomePartionGoods
       end
       object N70: TMenuItem
-        Action = actIncomeTo
+        Action = actIncomePartner
       end
       object miReturnOut: TMenuItem
         Action = actReturnOut
@@ -3238,16 +3249,17 @@ inherited MainForm: TMainForm
         Caption = '-'
       end
       object miSale: TMenuItem
-        Action = actSaleAll
-      end
-      object N69: TMenuItem
         Action = actSale
       end
       object miSale_Partner: TMenuItem
         Action = actSale_Partner
+        Caption = #1055#1088#1086#1076#1072#1078#1072' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1102' ('#1073#1091#1093#1075#1072#1083#1090#1077#1088')'
       end
       object miSale_Order: TMenuItem
         Action = actSale_Order
+      end
+      object miSale_all: TMenuItem
+        Action = actSaleAll
       end
       object miReturnIn: TMenuItem
         Action = actReturnIn
@@ -3335,6 +3347,9 @@ inherited MainForm: TMainForm
       end
       object miOrderInternalPack: TMenuItem
         Action = actOrderInternalPack
+      end
+      object bbOrderInternalBasis: TMenuItem
+        Action = actOrderInternalBasis
       end
       object miOrderType: TMenuItem
         Action = actOrderType

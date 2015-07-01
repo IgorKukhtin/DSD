@@ -204,11 +204,11 @@
 				<Form>ToolsWeighingTreeForm</Form>
 			</DCCReference>
 			<DCCReference Include="..\SOURCE\dbMovementItemTest.pas"/>
-			<DCCReference Include="..\..\Forms\Document\IncomeTo.pas">
-				<Form>IncomeToForm</Form>
+			<DCCReference Include="..\..\Forms\Document\IncomePartner.pas">
+				<Form>IncomePartnerForm</Form>
 			</DCCReference>
-			<DCCReference Include="..\..\Forms\Document\IncomeToJournal.pas">
-				<Form>IncomeToJournalForm</Form>
+			<DCCReference Include="..\..\Forms\Document\IncomePartnerJournal.pas">
+				<Form>IncomePartnerJournalForm</Form>
 			</DCCReference>
 			<DCCReference Include="..\..\SOURCE\COMPONENT\dsdAddOn.pas"/>
 			<DCCReference Include="..\SOURCE\dbMovementCompleteTest.pas"/>
@@ -993,12 +993,12 @@
 			</DCCReference>
 			<DCCReference Include="..\SOURCE\Movement\All\ReturnOutTest.pas"/>
 			<DCCReference Include="..\SOURCE\MovementItem\All\ReturnOutMovementItemTest.pas"/>
-			<DCCReference Include="..\..\Forms\Document\ReturnOutJournal.pas">
-				<Form>ReturnOutJournalForm</Form>
+			<DCCReference Include="..\..\Forms\Document\ReturnOutPartnerJournal.pas">
+				<Form>ReturnOutPartnerJournalForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
-			<DCCReference Include="..\..\Forms\Document\ReturnOut.pas">
-				<Form>ReturnOutForm</Form>
+			<DCCReference Include="..\..\Forms\Document\ReturnOutPartner.pas">
+				<Form>ReturnOutPartnerForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<DCCReference Include="..\..\Forms\Report\Report_CheckBonus.pas">
@@ -1323,12 +1323,12 @@
 				<Form>InventoryJournalForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
-			<DCCReference Include="..\..\Forms\Document\OrderInternalPackJournal.pas">
-				<Form>OrderInternalPackJournalForm</Form>
+			<DCCReference Include="..\..\Forms\Document\OrderInternalBasisJournal.pas">
+				<Form>OrderInternalBasisJournalForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
-			<DCCReference Include="..\..\Forms\Document\OrderInternalPack.pas">
-				<Form>OrderInternalPackForm</Form>
+			<DCCReference Include="..\..\Forms\Document\OrderInternalBasis.pas">
+				<Form>OrderInternalBasisForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<DCCReference Include="..\..\Forms\Kind\OrderKind.pas">
@@ -2113,12 +2113,28 @@
 				<Form>IncomeForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
+			<DCCReference Include="..\..\Forms\Document\WeighingProductionItemJournal.pas">
+				<Form>WeighingProductionItemJournalForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
 			<DCCReference Include="..\..\Forms\Document\WeighingPartnerItemJournal.pas">
 				<Form>WeighingPartnerItemJournalForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
-			<DCCReference Include="..\..\Forms\Document\WeighingProductionItemJournal.pas">
-				<Form>WeighingProductionItemJournalForm</Form>
+			<DCCReference Include="..\..\Forms\Document\OrderInternalPack.pas">
+				<Form>OrderInternalPackForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Document\OrderInternalPackJournal.pas">
+				<Form>OrderInternalPackJournalForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Document\ReturnOut.pas">
+				<Form>ReturnOutForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Document\ReturnOutJournal.pas">
+				<Form>ReturnOutJournalForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<BuildConfiguration Include="Release">

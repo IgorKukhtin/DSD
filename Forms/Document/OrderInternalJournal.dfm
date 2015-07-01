@@ -202,6 +202,25 @@ inherited OrderInternalJournalForm: TOrderInternalJournalForm
     end
     inherited actUpdate: TdsdInsertUpdateAction
       FormName = 'TOrderInternalForm'
+      GuiParams = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'Id'
+          ParamType = ptInput
+        end
+        item
+          Name = 'ShowAll'
+          Value = False
+          DataType = ftBoolean
+        end
+        item
+          Name = 'inOperDate'
+          Value = 41640d
+          Component = deEnd
+          DataType = ftDateTime
+        end>
     end
     object actPrint: TdsdPrintAction
       Category = 'DSDLib'

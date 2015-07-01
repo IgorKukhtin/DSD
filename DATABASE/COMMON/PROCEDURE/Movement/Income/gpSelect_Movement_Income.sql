@@ -184,6 +184,12 @@ BEGIN
                                         AND MovementLinkObject_CurrencyPartner.DescId = zc_MovementLinkObject_CurrencyPartner()
             LEFT JOIN Object AS Object_CurrencyPartner ON Object_CurrencyPartner.Id = MovementLinkObject_CurrencyPartner.ObjectId
 
+            LEFT JOIN MovementBoolean AS MovementBoolean_isIncome
+                                      ON MovementBoolean_isIncome.MovementId =  Movement.Id
+                                     AND MovementBoolean_isIncome.DescId = zc_MovementBoolean_isIncome()
+                                     AND MovementBoolean_isIncome.ValueData  = False
+
+       WHERE MovementBoolean_isIncome.ValueData is NULL
     ;
   
 END;

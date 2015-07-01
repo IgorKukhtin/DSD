@@ -86,6 +86,7 @@ BEGIN
            , Object_Receipt_basis.ValueData            AS ReceiptName_basis
 
            , ObjectString_Goods_GoodsGroupFull.ValueData AS GoodsGroupNameFull
+           , Object_GoodsGroup.ValueData     AS GoodsGroupName 
            , Object_Goods.ObjectCode  	     AS GoodsCode
            , Object_Goods.ValueData          AS GoodsName
            , Object_GoodsKind.ValueData      AS GoodsKindName
@@ -166,6 +167,7 @@ BEGIN
                                   AND ObjectString_Receipt_Code_basis.DescId = zc_ObjectString_Receipt_Code()
 
             LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = tmpMI.GoodsId
+            LEFT JOIN Object AS Object_GoodsKind ON Object_GoodsKind.Id = tmpMI.GoodsKindId
             LEFT JOIN ObjectLink AS ObjectLink_Goods_Measure
                                  ON ObjectLink_Goods_Measure.ObjectId = Object_Goods.Id
                                 AND ObjectLink_Goods_Measure.DescId = zc_ObjectLink_Goods_Measure()
@@ -175,7 +177,10 @@ BEGIN
                                    ON ObjectString_Goods_GoodsGroupFull.ObjectId = Object_Goods.Id
                                   AND ObjectString_Goods_GoodsGroupFull.DescId = zc_ObjectString_Goods_GroupNameFull()
 
-            LEFT JOIN Object AS Object_GoodsKind ON Object_GoodsKind.Id = tmpMI.GoodsKindId
+            LEFT JOIN ObjectLink AS ObjectLink_Goods_GoodsGroup
+                                 ON ObjectLink_Goods_GoodsGroup.ObjectId = Object_Goods.Id
+                                AND ObjectLink_Goods_GoodsGroup.DescId = zc_ObjectLink_Goods_GoodsGroup()
+            LEFT JOIN Object AS Object_GoodsGroup ON Object_GoodsGroup.Id = ObjectLink_Goods_GoodsGroup.ChildObjectId
 
        WHERE tmpMI.Amount <> 0 OR tmpMI.AmountSecond <> 0
        ;
@@ -189,7 +194,7 @@ ALTER FUNCTION gpSelect_Movement_OrderInternal_Print (Integer, TVarChar) OWNER T
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
- 02.11.14                                        *
+ 27.06.15                                        *
 */
 
 -- ÚÂÒÚ
