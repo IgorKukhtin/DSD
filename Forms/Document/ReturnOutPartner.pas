@@ -85,8 +85,6 @@ type
     { Public declarations }
   end;
 
-var
-  ReturnOutPartnerForm: TReturnOutPartnerForm;
 
 implementation
 

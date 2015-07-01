@@ -706,8 +706,6 @@ begin
   Application.Initialize;
   gc_isSetDefault := true;
   Application.CreateForm(TdmMain, dmMain);
-  Application.CreateForm(TReturnOutForm, ReturnOutForm);
-  Application.CreateForm(TReturnOutJournalForm, ReturnOutJournalForm);
   Application.Run;
   DUnitTestRunner.RunRegisteredTests;
 end.

@@ -394,7 +394,7 @@ BEGIN
                                                     
                          WHERE Movement.OperDate BETWEEN inStartDate AND inEndDate 
                            AND Movement.DescId   = zc_Movement_ProductionSeparate()
-                          -- AND Movement.StatusId = zc_Enum_Status_UnComplete()
+                           AND Movement.StatusId = zc_Enum_Status_UnComplete()
                            AND MovementLinkObject_From.ObjectId in (SELECT _tmpLocation.LocationId FROM _tmpLocation) --133049
                            AND MovementItem.ObjectId  = inGoodsId -- 4183 --6749
                          GROUP BY MovementItem.ObjectId, MovementLinkObject_From.ObjectId

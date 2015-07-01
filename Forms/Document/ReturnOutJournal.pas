@@ -60,8 +60,6 @@ type
     { Public declarations }
   end;
 
-var
-  ReturnOutJournalForm: TReturnOutJournalForm;
 
 implementation
 

@@ -323,14 +323,14 @@ inherited ReturnOutPartnerJournalForm: TReturnOutPartnerJournalForm
     Left = 431
     Top = 202
     inherited actInsert: TdsdInsertUpdateAction
-      FormName = 'TReturnOutForm'
+      FormName = 'TReturnOutPartnerForm'
       FormNameParam.Name = 'TReturnOutForm'
-      FormNameParam.Value = 'TReturnOutForm'
+      FormNameParam.Value = 'TReturnOutPartnerForm'
     end
     inherited actUpdate: TdsdInsertUpdateAction
-      FormName = 'TReturnOutForm'
+      FormName = 'TReturnOutPartnerForm'
       FormNameParam.Name = 'TReturnOutForm'
-      FormNameParam.Value = 'TReturnOutForm'
+      FormNameParam.Value = 'TReturnOutPartnerForm'
       GuiParams = <
         item
           Name = 'Id'
