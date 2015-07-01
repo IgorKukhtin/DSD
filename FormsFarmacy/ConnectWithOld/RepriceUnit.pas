@@ -8,7 +8,10 @@ uses
   Datasnap.DBClient, dsdDB, cxGraphics, cxControls, cxLookAndFeels,
   cxLookAndFeelPainters, cxContainer, cxEdit, cxCheckListBox, cxDBCheckListBox,
   Vcl.Grids, Vcl.DBGrids, Data.Win.ADODB, cxTextEdit, cxCurrencyEdit, cxLabel,
-  Bde.DBTables, wwstorep;
+  Bde.DBTables, cxStyles, cxCustomData, cxFilter, cxData,
+  cxDataStorage, cxNavigator, cxDBData, cxMaskEdit, cxButtonEdit, dsdAddOn,
+  cxGridLevel, cxClasses, cxGridCustomView, cxGridCustomTableView,
+  cxGridTableView, cxGridDBTableView, cxGrid, Vcl.ActnList, dsdAction, dsdGuides;
 
 type
   TRepriceUnitForm = class(TForm)
@@ -24,6 +27,22 @@ type
     cePercentDifference: TcxCurrencyEdit;
     cxLabel1: TcxLabel;
     spInsertUpdate: TADOStoredProc;
+    AllGoodsPriceGridTableView: TcxGridDBTableView;
+    AllGoodsPriceGridLevel: TcxGridLevel;
+    AllGoodsPriceGrid: TcxGrid;
+    dsdDBViewAddOn1: TdsdDBViewAddOn;
+    spSelect_AllGoodsPrice: TdsdStoredProc;
+    AllGoodsPriceCDS: TClientDataSet;
+    AllGoodPriceDS: TDataSource;
+    edUnit: TcxButtonEdit;
+    rdUnit: TRefreshDispatcher;
+    FormParams: TdsdFormParams;
+    UnitGuides: TdsdGuides;
+    ActionList1: TActionList;
+    actRefresh: TdsdDataSetRefresh;
+    colGoodsCode: TcxGridDBColumn;
+    colGoodsName: TcxGridDBColumn;
+    colNewPrice: TcxGridDBColumn;
     procedure FormCreate(Sender: TObject);
     procedure Button1Click(Sender: TObject);
   private
