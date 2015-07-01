@@ -268,24 +268,27 @@ end;
 function TdsdStoredProc.FillParams: String;
 var
   i: integer;
+  ParamStr: string;
 begin
   Result := '';
   for I := 0 to Params.Count - 1 do
       with Params[i] do
-        if ParamType in [ptInput, ptInputOutput] then
+        if ParamType in [ptInput, ptInputOutput] then begin
+           ParamStr := asString;
            if DataType = ftWideString then
               Result := Result + '<' + Name +
                    '  DataType="ftBlob" '+
-                   '  Value="' + gfStrToXmlStr(asString) + '" />'
+                   '  Value="' + gfStrToXmlStr(ParamStr) + '" />'
            else
              if DataType = ftBlob then
                 Result := Result + '<' + Name +
                      '  DataType="' + GetEnumName(TypeInfo(TFieldType), ord(DataType)) + '" '+
-                     '  Value="' + (asString) + '" />'
+                     '  Value="' + ParamStr + '" />'
              else
                 Result := Result + '<' + Name +
                      '  DataType="' + GetEnumName(TypeInfo(TFieldType), ord(DataType)) + '" '+
-                     '  Value="' + gfStrToXmlStr(asString) + '" />';
+                     '  Value="' + gfStrToXmlStr(ParamStr) + '" />';
+        end;
 end;
 
 function TdsdStoredProc.GetDataSet: TDataSet;
@@ -709,7 +712,7 @@ begin
       ftInteger: Result := 0;
       ftBoolean: Result := false;
       ftFloat: Result := 0;
-      ftDateTime: Result := Now;
+      ftDateTime: Result := 'NULL';
     end;
   end;
 end;

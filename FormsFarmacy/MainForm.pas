@@ -152,8 +152,9 @@ type
     N52: TMenuItem;
     actAlternativeGroup: TdsdOpenForm;
     N53: TMenuItem;
+    miReprice: TMenuItem;
     procedure actSaveDataExecute(Sender: TObject);
-    procedure N53Click(Sender: TObject);
+    procedure miRepriceClick(Sender: TObject);
   private
     { Private declarations }
   public
@@ -164,11 +165,7 @@ var
   MainFormInstance: TMainForm;
 
 implementation
-uses UploadUnloadData, Dialogs, Forms, SysUtils, IdGlobal,
-
-
-
-     RepriceUnit;
+uses UploadUnloadData, Dialogs, Forms, SysUtils, IdGlobal, RepriceUnit;
 {$R *.dfm}
 
 procedure TMainForm.actSaveDataExecute(Sender: TObject);
@@ -184,7 +181,7 @@ begin
   ShowMessage('Выгрузили');
 end;
 
-procedure TMainForm.N53Click(Sender: TObject);
+procedure TMainForm.miRepriceClick(Sender: TObject);
 begin
   with TRepriceUnitForm.Create(nil) do
   try
