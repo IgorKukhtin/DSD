@@ -12,7 +12,7 @@ $BODY$
    DECLARE vbUserId Integer;
 BEGIN
 
-   IF COLAESCE(inId, 0) = 0 THEN
+   IF COALESCE(inId, 0) = 0 THEN
       RETURN;
    END IF;
 
