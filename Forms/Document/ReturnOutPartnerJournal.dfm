@@ -1,5 +1,5 @@
 inherited ReturnOutPartnerJournalForm: TReturnOutPartnerJournalForm
-  Caption = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' <'#1042#1086#1079#1074#1088#1072#1090' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1091'>'
+  Caption = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' <'#1042#1086#1079#1074#1088#1072#1090' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1091' '#1086#1090' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1103'>'
   ClientHeight = 535
   ClientWidth = 1110
   ExplicitWidth = 1126
@@ -404,7 +404,7 @@ inherited ReturnOutPartnerJournalForm: TReturnOutPartnerJournalForm
     Top = 139
   end
   inherited spSelect: TdsdStoredProc
-    StoredProcName = 'gpSelect_Movement_ReturnOut'
+    StoredProcName = 'gpSelect_Movement_ReturnOut_Partner'
     Params = <
       item
         Name = 'instartdate'

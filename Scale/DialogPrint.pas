@@ -51,11 +51,11 @@ begin
      else cbPrintMovement.Checked:= isMovement;
      //
      cbPrintAccount.Enabled:=(SettingMain.isCeh = FALSE);//or(MovementDescId=zc_Movement_Sale)or(MovementDescId<>zc_Movement_SendOnPrice);
-     cbPrintTransport.Enabled:=SettingMain.isCeh = cbPrintAccount.Enabled;
-     cbPrintQuality.Enabled:=SettingMain.isCeh = cbPrintAccount.Enabled;
-     cbPrintPack.Enabled:=SettingMain.isCeh = cbPrintAccount.Enabled;
-     cbPrintSpec.Enabled:=SettingMain.isCeh = cbPrintAccount.Enabled;
-     cbPrintTax.Enabled:=SettingMain.isCeh = cbPrintAccount.Enabled;
+     cbPrintTransport.Enabled:=cbPrintAccount.Enabled;
+     cbPrintQuality.Enabled:=cbPrintAccount.Enabled;
+     cbPrintPack.Enabled:=cbPrintAccount.Enabled;
+     cbPrintSpec.Enabled:=cbPrintAccount.Enabled;
+     cbPrintTax.Enabled:=cbPrintAccount.Enabled;
      //
      cbPrintAccount.Checked:=(isAccount) and (cbPrintAccount.Enabled);
      cbPrintTransport.Checked:=(isTransport) and (cbPrintTransport.Enabled);

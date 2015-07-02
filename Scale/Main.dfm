@@ -929,8 +929,6 @@ object MainForm: TMainForm
       Caption = #1042#1077#1089#1099
       TabOrder = 2
       OnClick = rgScaleClick
-      ExplicitLeft = -4
-      ExplicitTop = 116
     end
     object PanelCountPack: TPanel
       Left = 0

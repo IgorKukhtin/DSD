@@ -4,6 +4,7 @@ DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_OrderExternalUnit (Integer, TVar
 DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_OrderExternalUnit (Integer, TVarChar, TVarChar, TDateTime, TDateTime, TDateTime, TDateTime, TFloat, TFloat, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_OrderExternalUnit (Integer, TVarChar, TVarChar, TDateTime, TDateTime, TDateTime, TDateTime, TFloat, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_OrderExternalUnit (Integer, TVarChar, TVarChar, TDateTime, TDateTime, TDateTime, TDateTime, TFloat, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_OrderExternalUnit (Integer, TVarChar, TVarChar, TDateTime, TDateTime, TDateTime, TDateTime, TDateTime, TFloat, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar);
 
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_OrderExternalUnit(
@@ -11,7 +12,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_OrderExternalUnit(
     IN inInvNumber           TVarChar  , -- Номер документа
     IN inInvNumberPartner    TVarChar  , -- Номер заявки у контрагента
     IN inOperDate            TDateTime , -- Дата документа (принятия заказа от контрагента)
-   OUT outOperDatePartner    TDateTime , -- Дата документа (планируется отгрузка со склада)
+    IN inOperDatePartner     TDateTime , -- Дата документа (планируется отгрузка со склада)
     IN inOperDateMark        TDateTime , -- Дата маркировки
     IN inOperDateStart       TDateTime , -- Дата прогноз (нач.)
     IN inOperDateEnd         TDateTime , -- Дата прогноз (конечн.)
@@ -50,14 +51,14 @@ BEGIN
      -- 0.
      outDayCount:= 1 + EXTRACT (DAY FROM (inOperDateEnd - inOperDateStart));
      -- 1. эти параметры всегда из Контрагента
-     outOperDatePartner:= inOperDate + (COALESCE ((SELECT ValueData FROM ObjectFloat WHERE ObjectId = inFromId AND DescId = zc_ObjectFloat_Partner_PrepareDayCount()), 0) :: TVarChar || ' DAY') :: INTERVAL;
+     -- inOperDatePartner:= inOperDate + (COALESCE ((SELECT ValueData FROM ObjectFloat WHERE ObjectId = inFromId AND DescId = zc_ObjectFloat_Partner_PrepareDayCount()), 0) :: TVarChar || ' DAY') :: INTERVAL;
 
-     -- 2. эти параметры всегда из Прайс-листа !!!на дату outOperDatePartner!!!
+     -- 2. эти параметры всегда из Прайс-листа !!!на дату inOperDatePartner!!!
      IF COALESCE (ioPriceListId, 0) = 0
      THEN
          SELECT PriceListId, PriceListName, PriceWithVAT, VATPercent
                 INTO ioPriceListId, outPriceListName, outPriceWithVAT, outVATPercent
-         FROM lfGet_Object_Partner_PriceList (inContractId:= inContractId, inPartnerId:= inFromId, inOperDate:= outOperDatePartner);
+         FROM lfGet_Object_Partner_PriceList (inContractId:= inContractId, inPartnerId:= inFromId, inOperDate:= inOperDatePartner);
      ELSE
          SELECT Object_PriceList.ValueData                             AS PriceListName
               , COALESCE (ObjectBoolean_PriceWithVAT.ValueData, FALSE) AS PriceWithVAT
@@ -79,7 +80,7 @@ BEGIN
                                                  , inInvNumber           := inInvNumber
                                                  , inInvNumberPartner    := inInvNumberPartner
                                                  , inOperDate            := inOperDate
-                                                 , inOperDatePartner     := outOperDatePartner
+                                                 , inOperDatePartner     := inOperDatePartner
                                                  , inOperDateMark        := inOperDateMark
                                                  , inPriceWithVAT        := outPriceWithVAT
                                                  , inVATPercent          := outVATPercent

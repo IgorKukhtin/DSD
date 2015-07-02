@@ -14,7 +14,7 @@ uses
   cxCalendar, Vcl.ExtCtrls, cxGridLevel, cxGridCustomTableView, cxGridTableView,
   cxGridDBTableView, cxGridCustomView, cxGrid, cxPC, cxCheckBox, cxCurrencyEdit,
   cxButtonEdit, dsdGuides, frxClass, frxDBSet, dxSkinsCore,
-  dxSkinsDefaultPainters, dxSkinscxPCPainter;
+  dxSkinsDefaultPainters, dxSkinscxPCPainter, EDI;
 
 type
   TSaleJournalForm = class(TAncestorJournalForm)
@@ -125,6 +125,29 @@ type
     mactPrint_TTN: TMultiAction;
     colPaymentDate: TcxGridDBColumn;
     colInsertDate: TcxGridDBColumn;
+    EDI: TEDI;
+    spUpdateEdiOrdspr: TdsdStoredProc;
+    spUpdateEdiInvoice: TdsdStoredProc;
+    spUpdateEdiDesadv: TdsdStoredProc;
+    actInvoice: TEDIAction;
+    actOrdSpr: TEDIAction;
+    actDesadv: TEDIAction;
+    actUpdateEdiDesadvTrue: TdsdExecStoredProc;
+    actUpdateEdiInvoiceTrue: TdsdExecStoredProc;
+    actUpdateEdiOrdsprTrue: TdsdExecStoredProc;
+    spGetDefaultEDI: TdsdStoredProc;
+    actSetDefaults: TdsdExecStoredProc;
+    mactInvoice: TMultiAction;
+    mactOrdSpr: TMultiAction;
+    mactDesadv: TMultiAction;
+    bbInvoice: TdxBarButton;
+    bbOrdSpr: TdxBarButton;
+    bbDesadv: TdxBarButton;
+    N13: TMenuItem;
+    miInvoice: TMenuItem;
+    miOrdSpr: TMenuItem;
+    miDesadv: TMenuItem;
+    actExecPrint_EDI: TdsdExecStoredProc;
   private
     { Private declarations }
   public

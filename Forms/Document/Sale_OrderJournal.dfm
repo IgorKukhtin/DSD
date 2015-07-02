@@ -1,25 +1,26 @@
 inherited Sale_OrderJournalForm: TSale_OrderJournalForm
   Caption = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' <'#1055#1088#1086#1076#1072#1078#1072' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1102' ('#1087#1086' '#1079#1072#1103#1074#1082#1077')>'
   ClientHeight = 535
-  ClientWidth = 1020
+  ClientWidth = 1177
   AddOnFormData.Params = FormParams
-  ExplicitWidth = 1036
+  ExplicitLeft = -195
+  ExplicitWidth = 1193
   ExplicitHeight = 570
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Width = 1020
+    Width = 1177
     Height = 478
     TabOrder = 3
     ExplicitWidth = 1020
     ExplicitHeight = 478
     ClientRectBottom = 478
-    ClientRectRight = 1020
+    ClientRectRight = 1177
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 1020
       ExplicitHeight = 478
       inherited cxGrid: TcxGrid
-        Width = 1020
+        Width = 1177
         Height = 478
         ExplicitWidth = 1020
         ExplicitHeight = 478
@@ -588,17 +589,17 @@ inherited Sale_OrderJournalForm: TSale_OrderJournalForm
             HeaderAlignmentVert = vaCenter
             Width = 45
           end
-          object clEdiOrdspr: TcxGridDBColumn
-            Caption = 'EDI - '#1055#1086#1076#1090#1074#1077#1088#1078#1076#1077#1085#1080#1077
-            DataBinding.FieldName = 'EdiOrdspr'
+          object clEdiInvoice: TcxGridDBColumn
+            Caption = 'EDI - '#1057#1095#1077#1090
+            DataBinding.FieldName = 'EdiInvoice'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 60
           end
-          object clEdiInvoice: TcxGridDBColumn
-            Caption = 'EDI - '#1057#1095#1077#1090
-            DataBinding.FieldName = 'EdiInvoice'
+          object clEdiOrdspr: TcxGridDBColumn
+            Caption = 'EDI - '#1055#1086#1076#1090#1074#1077#1088#1078#1076#1077#1085#1080#1077
+            DataBinding.FieldName = 'EdiOrdspr'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
@@ -625,7 +626,7 @@ inherited Sale_OrderJournalForm: TSale_OrderJournalForm
     end
   end
   inherited Panel: TPanel
-    Width = 1020
+    Width = 1177
     ExplicitWidth = 1020
     inherited deStart: TcxDateEdit
       EditValue = 42005d
@@ -837,7 +838,17 @@ inherited Sale_OrderJournalForm: TSale_OrderJournalForm
       Hint = #1055#1077#1095#1072#1090#1100' '#1057#1095#1077#1090
       ImageIndex = 21
     end
-    object actPrintTax_Us: TdsdPrintAction [5]
+    object actInvoice: TEDIAction [5]
+      Category = 'EDI'
+      MoveParams = <>
+      StartDateParam.Value = Null
+      EndDateParam.Value = Null
+      EDI = EDI
+      EDIDocType = ediInvoice
+      HeaderDataSet = PrintHeaderCDS
+      ListDataSet = PrintItemsCDS
+    end
+    object actPrintTax_Us: TdsdPrintAction [6]
       Category = 'Print_Tax'
       MoveParams = <>
       StoredProc = spSelectTax_Us
@@ -875,7 +886,7 @@ inherited Sale_OrderJournalForm: TSale_OrderJournalForm
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
     end
-    object actPrint_Account_ReportName: TdsdExecStoredProc [7]
+    object actPrint_Account_ReportName: TdsdExecStoredProc [8]
       Category = 'Print_Account'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -914,7 +925,7 @@ inherited Sale_OrderJournalForm: TSale_OrderJournalForm
           ParamType = ptInputOutput
         end>
     end
-    object actChecked: TdsdExecStoredProc [11]
+    object actChecked: TdsdExecStoredProc [12]
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -958,7 +969,7 @@ inherited Sale_OrderJournalForm: TSale_OrderJournalForm
           ParamType = ptInput
         end>
     end
-    object actMovementCheck: TdsdOpenForm [20]
+    object actMovementCheck: TdsdOpenForm [21]
       Category = 'DSDLib'
       MoveParams = <>
       Caption = #1054#1096#1080#1073#1082#1080
@@ -1460,6 +1471,177 @@ inherited Sale_OrderJournalForm: TSale_OrderJournalForm
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
     end
+    object actOrdSpr: TEDIAction
+      Category = 'EDI'
+      MoveParams = <>
+      StartDateParam.Value = Null
+      EndDateParam.Value = Null
+      EDI = EDI
+      EDIDocType = ediOrdrsp
+      HeaderDataSet = PrintHeaderCDS
+      ListDataSet = PrintItemsCDS
+    end
+    object actDesadv: TEDIAction
+      Category = 'EDI'
+      MoveParams = <>
+      StartDateParam.Value = Null
+      EndDateParam.Value = Null
+      EDI = EDI
+      EDIDocType = ediDesadv
+      HeaderDataSet = PrintHeaderCDS
+      ListDataSet = PrintItemsCDS
+    end
+    object actUpdateEdiDesadvTrue: TdsdExecStoredProc
+      Category = 'EDI'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdateEdiDesadv
+      StoredProcList = <
+        item
+          StoredProc = spUpdateEdiDesadv
+        end>
+      Caption = 'actUpdateEdiDesadvTrue'
+    end
+    object actUpdateEdiInvoiceTrue: TdsdExecStoredProc
+      Category = 'EDI'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdateEdiInvoice
+      StoredProcList = <
+        item
+          StoredProc = spUpdateEdiInvoice
+        end>
+      Caption = 'actUpdateEdiInvoiceTrue'
+    end
+    object actUpdateEdiOrdsprTrue: TdsdExecStoredProc
+      Category = 'EDI'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdateEdiOrdspr
+      StoredProcList = <
+        item
+          StoredProc = spUpdateEdiOrdspr
+        end>
+      Caption = 'actUpdateEdiOrdsprTrue'
+    end
+    object actSetDefaults: TdsdExecStoredProc
+      Category = 'EDI'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spGetDefaultEDI
+      StoredProcList = <
+        item
+          StoredProc = spGetDefaultEDI
+        end>
+      Caption = 'actSetDefaults'
+    end
+    object mactInvoice: TMultiAction
+      Category = 'EDI'
+      MoveParams = <
+        item
+          FromParam.Name = 'Id'
+          FromParam.Value = Null
+          FromParam.Component = MasterCDS
+          FromParam.ComponentItem = 'Id'
+          ToParam.Name = 'Id'
+          ToParam.Value = Null
+          ToParam.Component = FormParams
+          ToParam.ComponentItem = 'Id'
+        end>
+      ActionList = <
+        item
+          Action = actSetDefaults
+        end
+        item
+          Action = actExecPrint_EDI
+        end
+        item
+          Action = actInvoice
+        end
+        item
+          Action = actUpdateEdiInvoiceTrue
+        end>
+      QuestionBeforeExecute = 'EXITE <'#1057#1095#1077#1090' - Invoice>.'#1044#1077#1081#1089#1090#1074#1080#1090#1077#1083#1100#1085#1086' '#1086#1090#1087#1088#1072#1074#1080#1090#1100'?'
+      InfoAfterExecute = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1057#1095#1077#1090' - Invoice> '#1086#1090#1087#1088#1072#1074#1083#1077#1085' '#1091#1089#1087#1077#1096#1085#1086' '#1074' EXITE.'
+      Caption = #1054#1090#1087#1088#1072#1074#1080#1090#1100' <'#1057#1095#1077#1090' - Invoice>'
+      Hint = #1054#1090#1087#1088#1072#1074#1080#1090#1100' <'#1057#1095#1077#1090' - Invoice>'
+      ImageIndex = 47
+    end
+    object mactOrdSpr: TMultiAction
+      Category = 'EDI'
+      MoveParams = <
+        item
+          FromParam.Name = 'Id'
+          FromParam.Value = Null
+          FromParam.Component = MasterCDS
+          FromParam.ComponentItem = 'Id'
+          ToParam.Name = 'Id'
+          ToParam.Value = Null
+          ToParam.Component = FormParams
+          ToParam.ComponentItem = 'Id'
+        end>
+      ActionList = <
+        item
+          Action = actSetDefaults
+        end
+        item
+          Action = actExecPrint_EDI
+        end
+        item
+          Action = actOrdSpr
+        end
+        item
+          Action = actUpdateEdiOrdsprTrue
+        end>
+      QuestionBeforeExecute = 'EXITE <'#1055#1086#1076#1090#1074#1077#1088#1078#1076#1077#1085#1080#1077' - Ordspr>.'#1044#1077#1081#1089#1090#1074#1080#1090#1077#1083#1100#1085#1086' '#1086#1090#1087#1088#1072#1074#1080#1090#1100'?'
+      InfoAfterExecute = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1055#1086#1076#1090#1074#1077#1088#1078#1076#1077#1085#1080#1077' - Ordspr> '#1086#1090#1087#1088#1072#1074#1083#1077#1085' '#1091#1089#1087#1077#1096#1085#1086' '#1074' EXITE.'
+      Caption = #1054#1090#1087#1088#1072#1074#1080#1090#1100' <'#1055#1086#1076#1090#1074#1077#1088#1078#1076#1077#1085#1080#1077' - Ordspr>'
+      Hint = #1054#1090#1087#1088#1072#1074#1080#1090#1100' <'#1055#1086#1076#1090#1074#1077#1088#1078#1076#1077#1085#1080#1077' - Ordspr>'
+      ImageIndex = 48
+    end
+    object mactDesadv: TMultiAction
+      Category = 'EDI'
+      MoveParams = <
+        item
+          FromParam.Name = 'Id'
+          FromParam.Value = Null
+          FromParam.Component = MasterCDS
+          FromParam.ComponentItem = 'Id'
+          ToParam.Name = 'Id'
+          ToParam.Value = Null
+          ToParam.Component = FormParams
+          ToParam.ComponentItem = 'Id'
+        end>
+      ActionList = <
+        item
+          Action = actSetDefaults
+        end
+        item
+          Action = actExecPrint_EDI
+        end
+        item
+          Action = actDesadv
+        end
+        item
+          Action = actUpdateEdiDesadvTrue
+        end>
+      QuestionBeforeExecute = 'EXITE <'#1059#1074#1077#1076#1086#1084#1083#1077#1085#1080#1077' - Desadv>.'#1044#1077#1081#1089#1090#1074#1080#1090#1077#1083#1100#1085#1086' '#1086#1090#1087#1088#1072#1074#1080#1090#1100'?'
+      InfoAfterExecute = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1059#1074#1077#1076#1086#1084#1083#1077#1085#1080#1077' - Desadv> '#1086#1090#1087#1088#1072#1074#1083#1077#1085' '#1091#1089#1087#1077#1096#1085#1086' '#1074' EXITE.'
+      Caption = #1054#1090#1087#1088#1072#1074#1080#1090#1100' <'#1059#1074#1077#1076#1086#1084#1083#1077#1085#1080#1077' - Desadv>'
+      Hint = #1054#1090#1087#1088#1072#1074#1080#1090#1100' <'#1059#1074#1077#1076#1086#1084#1083#1077#1085#1080#1077' - Desadv>'
+      ImageIndex = 49
+    end
+    object actExecPrint_EDI: TdsdExecStoredProc
+      Category = 'EDI'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spSelectPrint
+      StoredProcList = <
+        item
+          StoredProc = spSelectPrint
+        end>
+      Caption = 'actExecPrint_EDI'
+    end
   end
   inherited MasterDS: TDataSource
     Left = 64
@@ -1668,6 +1850,30 @@ inherited Sale_OrderJournalForm: TSale_OrderJournalForm
         end
         item
           Visible = True
+          ItemName = 'bbInvoice'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbOrdSpr'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbDesadv'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbGridToExcel'
         end
         item
@@ -1732,6 +1938,18 @@ inherited Sale_OrderJournalForm: TSale_OrderJournalForm
       Action = mactPrint_QualityDoc
       Category = 0
     end
+    object bbInvoice: TdxBarButton
+      Action = mactInvoice
+      Category = 0
+    end
+    object bbOrdSpr: TdxBarButton
+      Action = mactOrdSpr
+      Category = 0
+    end
+    object bbDesadv: TdxBarButton
+      Action = mactDesadv
+      Category = 0
+    end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
     Left = 320
@@ -1740,6 +1958,18 @@ inherited Sale_OrderJournalForm: TSale_OrderJournalForm
   inherited PopupMenu: TPopupMenu
     Left = 640
     Top = 152
+    object miInvoice: TMenuItem [3]
+      Action = mactInvoice
+    end
+    object miOrdSpr: TMenuItem [4]
+      Action = mactOrdSpr
+    end
+    object miDesadv: TMenuItem [5]
+      Action = mactDesadv
+    end
+    object N13: TMenuItem [6]
+      Caption = '-'
+    end
   end
   inherited PeriodChoice: TPeriodChoice
     Left = 288
@@ -1934,7 +2164,8 @@ inherited Sale_OrderJournalForm: TSale_OrderJournalForm
         DataType = ftString
         ParamType = ptInput
       end>
-    Left = 912
+    Left = 992
+    Top = 112
   end
   object PrintHeaderCDS: TClientDataSet
     Aggregates = <>
@@ -2316,5 +2547,117 @@ inherited Sale_OrderJournalForm: TSale_OrderJournalForm
     PackSize = 1
     Left = 208
     Top = 288
+  end
+  object EDI: TEDI
+    ConnectionParams.Host.Value = Null
+    ConnectionParams.Host.Component = FormParams
+    ConnectionParams.Host.ComponentItem = 'Host'
+    ConnectionParams.Host.DataType = ftString
+    ConnectionParams.User.Value = Null
+    ConnectionParams.User.Component = FormParams
+    ConnectionParams.User.ComponentItem = 'UserName'
+    ConnectionParams.User.DataType = ftString
+    ConnectionParams.Password.Value = Null
+    ConnectionParams.Password.Component = FormParams
+    ConnectionParams.Password.ComponentItem = 'Password'
+    ConnectionParams.Password.DataType = ftString
+    Left = 824
+    Top = 208
+  end
+  object spUpdateEdiOrdspr: TdsdStoredProc
+    StoredProcName = 'gpUpdateMovement_Edi'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inDescCode'
+        Value = 'zc_MovementBoolean_EdiOrdspr'
+        DataType = ftString
+        ParamType = ptInput
+      end>
+    PackSize = 1
+    Left = 768
+    Top = 176
+  end
+  object spUpdateEdiInvoice: TdsdStoredProc
+    StoredProcName = 'gpUpdateMovement_Edi'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inDescCode'
+        Value = 'zc_MovementBoolean_EdiInvoice'
+        DataType = ftString
+        ParamType = ptInput
+      end>
+    PackSize = 1
+    Left = 832
+    Top = 152
+  end
+  object spUpdateEdiDesadv: TdsdStoredProc
+    StoredProcName = 'gpUpdateMovement_Edi'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inDescCode'
+        Value = 'zc_MovementBoolean_EdiDesadv'
+        DataType = ftString
+        ParamType = ptInput
+      end>
+    PackSize = 1
+    Left = 896
+    Top = 176
+  end
+  object spGetDefaultEDI: TdsdStoredProc
+    StoredProcName = 'gpGetDefaultEDI'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'Host'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Host'
+        DataType = ftString
+      end
+      item
+        Name = 'UserName'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'UserName'
+        DataType = ftString
+      end
+      item
+        Name = 'Password'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Password'
+        DataType = ftString
+      end>
+    PackSize = 1
+    Left = 872
+    Top = 240
   end
 end
