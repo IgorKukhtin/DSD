@@ -1593,6 +1593,7 @@ object UtilPrintForm: TUtilPrintForm
       item
         Name = 'inMovementId'
         Value = Null
+        Component = FormParams
         ComponentItem = 'Id'
         ParamType = ptInput
       end>

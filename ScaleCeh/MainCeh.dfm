@@ -1717,7 +1717,7 @@ object MainCehForm: TMainCehForm
           Properties.Alignment.Horz = taRightJustify
           Properties.Alignment.Vert = taVCenter
           Properties.AssignedValues.DisplayFormat = True
-          Properties.DecimalPlaces = 0
+          Properties.DecimalPlaces = 4
           Properties.OnChange = EditCountPropertiesChange
           TabOrder = 0
           OnKeyDown = EditCountKeyDown
@@ -1754,7 +1754,7 @@ object MainCehForm: TMainCehForm
           Properties.Alignment.Horz = taRightJustify
           Properties.Alignment.Vert = taVCenter
           Properties.AssignedValues.DisplayFormat = True
-          Properties.DecimalPlaces = 2
+          Properties.DecimalPlaces = 4
           Properties.OnChange = EditCountPackPropertiesChange
           TabOrder = 0
           OnKeyDown = EditCountPackKeyDown

@@ -97,13 +97,13 @@ BEGIN
      IF inIsPack = FALSE -- inReceiptId_basis > 0 OR EXISTS (SELECT 1 FROM MovementItemLinkObject WHERE MovementItemLinkObject.MovementItemId = vbMovementItemId AND MovementItemLinkObject.DescId = zc_MILinkObject_ReceiptBasis())
      THEN
          -- расчет <Количество>
-         SELECT COALESCE (ObjectFloat_Value.ValueData, 0) * inCuterCount
-              , COALESCE (ObjectFloat_Value.ValueData, 0) * inCuterCountSecond
+         SELECT COALESCE (ObjectFloat_TaxExit.ValueData, 0) * inCuterCount
+              , COALESCE (ObjectFloat_TaxExit.ValueData, 0) * inCuterCountSecond
                 INTO ioAmount, ioAmountSecond
          FROM (SELECT inReceiptId_basis AS ReceiptId) AS tmpReceipt
-              LEFT JOIN ObjectFloat AS ObjectFloat_Value
-                                    ON ObjectFloat_Value.ObjectId = inReceiptId_basis
-                                   AND ObjectFloat_Value.DescId = zc_ObjectFloat_Receipt_Value()
+              LEFT JOIN ObjectFloat AS ObjectFloat_TaxExit
+                                    ON ObjectFloat_TaxExit.ObjectId = inReceiptId_basis
+                                   AND ObjectFloat_TaxExit.DescId = zc_ObjectFloat_Receipt_TaxExit()
         ;
      END IF;
 

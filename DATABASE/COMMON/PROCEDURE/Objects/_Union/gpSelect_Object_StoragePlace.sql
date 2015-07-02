@@ -16,7 +16,7 @@ BEGIN
      vbUserId:= lpGetUserBySession (inSession);
 
      RETURN QUERY
-       WITH tmpUserTransport AS (SELECT UserId FROM ObjectLink_UserRole_View WHERE RoleId = zc_Enum_Role_Transport())
+       WITH tmpUserTransport AS (SELECT UserId FROM ObjectLink_UserRole_View WHERE RoleId = zc_Enum_Role_Transport() AND 1=0)
      SELECT Object_Unit_View.Id
           , Object_Unit_View.Code     
           , Object_Unit_View.Name

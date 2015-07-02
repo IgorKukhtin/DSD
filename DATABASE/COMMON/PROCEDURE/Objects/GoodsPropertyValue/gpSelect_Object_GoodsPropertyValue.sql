@@ -10,7 +10,7 @@ CREATE OR REPLACE FUNCTION gpSelect_Object_GoodsPropertyValue(
 )
 RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , Amount TFloat
-             , BarCode TVarChar, Article TVarChar, BarCodeGLN TVarChar, ArticleGLN TVarChar, GroupName TVarChar
+             , BarCodeShort TVarChar, BarCode TVarChar, Article TVarChar, BarCodeGLN TVarChar, ArticleGLN TVarChar, GroupName TVarChar
              , GoodsPropertyId Integer, GoodsPropertyName TVarChar
              , GoodsKindId Integer, GoodsKindName TVarChar
              , GoodsId Integer, GoodsCode Integer, GoodsName TVarChar, MeasureName TVarChar
@@ -30,6 +30,7 @@ BEGIN
        , Object_GoodsPropertyValue.ValueData  AS Name
 
        , ObjectFloat_Amount.ValueData         AS Amount
+       , ObjectString_BarCodeShort.ValueData  AS BarCodeShort
        , ObjectString_BarCode.ValueData       AS BarCode
        , ObjectString_Article.ValueData       AS Article
        , ObjectString_BarCodeGLN.ValueData    AS BarCodeGLN
@@ -59,6 +60,9 @@ BEGIN
                                ON ObjectFloat_Amount.ObjectId = Object_GoodsPropertyValue.Id
                               AND ObjectFloat_Amount.DescId = zc_ObjectFloat_GoodsPropertyValue_Amount()
 
+        LEFT JOIN ObjectString AS ObjectString_BarCodeShort
+                               ON ObjectString_BarCodeShort.ObjectId = Object_GoodsPropertyValue.Id
+                              AND ObjectString_BarCodeShort.DescId = zc_ObjectString_GoodsPropertyValue_BarCodeShort()
         LEFT JOIN ObjectString AS ObjectString_BarCode
                                ON ObjectString_BarCode.ObjectId = Object_GoodsPropertyValue.Id
                               AND ObjectString_BarCode.DescId = zc_ObjectString_GoodsPropertyValue_BarCode()
@@ -124,6 +128,7 @@ BEGIN
        , tmpObjectLink.GoodsPropertyValueName       AS Name
 
        , tmpObjectLink.Amount
+       , tmpObjectLink.BarCodeShort
        , tmpObjectLink.BarCode
        , tmpObjectLink.Article
        , tmpObjectLink.BarCodeGLN
@@ -153,6 +158,7 @@ BEGIN
                         , ObjectLink_GoodsPropertyValue_Goods.ChildObjectId         as GoodsId
 
                         , ObjectFloat_Amount.ValueData         AS Amount
+                        , ObjectString_BarCodeShort.ValueData  AS BarCodeShort
                         , ObjectString_BarCode.ValueData       AS BarCode
                         , ObjectString_Article.ValueData       AS Article
                         , ObjectString_BarCodeGLN.ValueData    AS BarCodeGLN
@@ -180,6 +186,9 @@ BEGIN
                                ON ObjectFloat_Amount.ObjectId = Object_GoodsPropertyValue.Id 
                               AND ObjectFloat_Amount.DescId = zc_ObjectFloat_GoodsPropertyValue_Amount()
 
+                      LEFT JOIN ObjectString AS ObjectString_BarCodeShort
+                                             ON ObjectString_BarCodeShort.ObjectId = Object_GoodsPropertyValue.Id
+                                            AND ObjectString_BarCodeShort.DescId = zc_ObjectString_GoodsPropertyValue_BarCodeShort()
                       LEFT JOIN ObjectString AS ObjectString_BarCode
                                 ON ObjectString_BarCode.ObjectId = Object_GoodsPropertyValue.Id 
                               AND ObjectString_BarCode.DescId = zc_ObjectString_GoodsPropertyValue_BarCode()
@@ -222,6 +231,11 @@ END;$BODY$
  14.03.14         * add все свойства
  12.06.13         *
 */
-
+/*
+select GoodsPropertyId, GoodsId, GoodsKindId
+from gpSelect_Object_GoodsPropertyValue(inGoodsPropertyId := 0 , inShowAll := 'False' ,  inSession := '5') as a
+group by GoodsPropertyId, GoodsId, GoodsKindId
+having Count(*)  > 1
+*/
 -- тест
 -- SELECT * FROM gpSelect_Object_GoodsPropertyValue (351299 , TRUE, '2')

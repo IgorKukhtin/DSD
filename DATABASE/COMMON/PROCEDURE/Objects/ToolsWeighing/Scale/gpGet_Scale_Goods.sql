@@ -51,6 +51,7 @@ BEGIN
                                   LEFT JOIN Object_InfoMoney_View ON Object_InfoMoney_View.InfoMoneyId = ObjectLink_Goods_InfoMoney.ChildObjectId
                              WHERE ((inIsGoodsComplete = TRUE AND tmp.ObjectCode BETWEEN 1 AND 4000 - 1)
                                  OR (inIsGoodsComplete = FALSE AND tmp.ObjectCode >= 4000)
+                                 OR 1 = 1 -- !!!временно все!!!
                                  OR Object_InfoMoney_View.InfoMoneyDestinationId IN (zc_Enum_InfoMoneyDestination_20500() -- Общефирменные + Оборотная тара
                                                                                    , zc_Enum_InfoMoneyDestination_20600() -- Общефирменные + Прочие материалы
                                                                                     )

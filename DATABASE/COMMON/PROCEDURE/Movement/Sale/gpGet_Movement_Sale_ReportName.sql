@@ -42,7 +42,7 @@ BEGIN
               ON Movement.OperDate BETWEEN PrintForms_View_Default.StartDate AND PrintForms_View_Default.EndDate
              AND PrintForms_View_Default.JuridicalId = 0
              AND PrintForms_View_Default.ReportType = 'Sale'
-             AND PrintForms_View_Default.PaidKindId = MovementLinkObject_PaidKind.ObjectId
+             AND PrintForms_View_Default.PaidKindId = COALESCE (MovementLinkObject_PaidKind.ObjectId, zc_Enum_PaidKind_SecondForm())
 --             AND PrintForms_View_Default.DescId = zc_Movement_Sale()
 
 

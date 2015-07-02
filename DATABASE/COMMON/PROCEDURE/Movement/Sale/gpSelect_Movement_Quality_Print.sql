@@ -349,8 +349,11 @@ BEGIN
                                      ON MovementString_InvNumberPartner.MovementId =  tmpMI.MovementId
                                     AND MovementString_InvNumberPartner.DescId = zc_MovementString_InvNumberPartner()
 
+            LEFT JOIN ObjectLink AS ObjectLink_Unit_Juridical
+                                 ON ObjectLink_Unit_Juridical.ObjectId = MovementLinkObject_From.ObjectId
+                                AND ObjectLink_Unit_Juridical.DescId = zc_ObjectLink_Unit_Juridical()
             LEFT JOIN ObjectHistory_JuridicalDetails_ViewByDate AS OH_JuridicalDetails_From
-                                                                ON OH_JuridicalDetails_From.JuridicalId = COALESCE (View_Contract.JuridicalBasisId, MovementLinkObject_From.ObjectId)
+                                                                ON OH_JuridicalDetails_From.JuridicalId = COALESCE (View_Contract.JuridicalBasisId, COALESCE (ObjectLink_Unit_Juridical.ChildObjectId, zc_Juridical_Basis()))
                                                                AND COALESCE (MovementDate_OperDatePartner.ValueData, Movement.OperDate) >= OH_JuridicalDetails_From.StartDate
                                                                AND COALESCE (MovementDate_OperDatePartner.ValueData, Movement.OperDate) <  OH_JuridicalDetails_From.EndDate
 
@@ -635,8 +638,11 @@ BEGIN
                                      ON MovementString_InvNumberPartner.MovementId =  tmpMI.MovementId
                                     AND MovementString_InvNumberPartner.DescId = zc_MovementString_InvNumberPartner()
 
+            LEFT JOIN ObjectLink AS ObjectLink_Unit_Juridical
+                                 ON ObjectLink_Unit_Juridical.ObjectId = MovementLinkObject_From.ObjectId
+                                AND ObjectLink_Unit_Juridical.DescId = zc_ObjectLink_Unit_Juridical()
             LEFT JOIN ObjectHistory_JuridicalDetails_ViewByDate AS OH_JuridicalDetails_From
-                                                                ON OH_JuridicalDetails_From.JuridicalId = COALESCE (View_Contract.JuridicalBasisId, MovementLinkObject_From.ObjectId)
+                                                                ON OH_JuridicalDetails_From.JuridicalId = COALESCE (View_Contract.JuridicalBasisId, COALESCE (ObjectLink_Unit_Juridical.ChildObjectId, zc_Juridical_Basis()))
                                                                AND COALESCE (MovementDate_OperDatePartner.ValueData, Movement.OperDate) >= OH_JuridicalDetails_From.StartDate
                                                                AND COALESCE (MovementDate_OperDatePartner.ValueData, Movement.OperDate) <  OH_JuridicalDetails_From.EndDate
 

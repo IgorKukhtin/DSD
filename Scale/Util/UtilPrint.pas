@@ -197,6 +197,10 @@ end;
 //------------------------------------------------------------------------------------------------
 function Print_Movement (MovementDescId, MovementId, MovementId_by: Integer; myPrintCount:Integer; isPreview:Boolean; isSendOnPriceIn:Boolean):Boolean;
 begin
+     UtilPrintForm.PrintHeaderCDS.IndexFieldNames:='';
+     UtilPrintForm.PrintItemsCDS.IndexFieldNames:='';
+     UtilPrintForm.PrintItemsSverkaCDS.IndexFieldNames:='';
+     //
      Result:=false;
           //
           try
@@ -250,6 +254,10 @@ end;
 //------------------------------------------------------------------------------------------------
 function Print_Account (MovementDescId,MovementId: Integer;myPrintCount:Integer;isPreview:Boolean):Boolean;
 begin
+     UtilPrintForm.PrintHeaderCDS.IndexFieldNames:='';
+     UtilPrintForm.PrintItemsCDS.IndexFieldNames:='';
+     UtilPrintForm.PrintItemsSverkaCDS.IndexFieldNames:='';
+     //
      Result:=false;
           //
           try
@@ -266,6 +274,10 @@ end;
 //------------------------------------------------------------------------------------------------
 function Print_Spec (MovementDescId,MovementId,MovementId_by:Integer;myPrintCount:Integer;isPreview:Boolean):Boolean;
 begin
+     UtilPrintForm.PrintHeaderCDS.IndexFieldNames:='';
+     UtilPrintForm.PrintItemsCDS.IndexFieldNames:='';
+     UtilPrintForm.PrintItemsSverkaCDS.IndexFieldNames:='';
+     //
      Result:=false;
           //
           try
@@ -282,6 +294,10 @@ end;
 //------------------------------------------------------------------------------------------------
 function Print_Pack (MovementDescId,MovementId,MovementId_by:Integer;myPrintCount:Integer;isPreview:Boolean):Boolean;
 begin
+     UtilPrintForm.PrintHeaderCDS.IndexFieldNames:='';
+     UtilPrintForm.PrintItemsCDS.IndexFieldNames:='';
+     UtilPrintForm.PrintItemsSverkaCDS.IndexFieldNames:='';
+     //
      Result:=false;
           //
           try
@@ -298,6 +314,10 @@ end;
 //------------------------------------------------------------------------------------------------
 function Print_Transport (MovementDescId,MovementId,MovementId_sale: Integer;OperDate:TDateTime;myPrintCount:Integer;isPreview:Boolean):Boolean;
 begin
+     UtilPrintForm.PrintHeaderCDS.IndexFieldNames:='';
+     UtilPrintForm.PrintItemsCDS.IndexFieldNames:='';
+     UtilPrintForm.PrintItemsSverkaCDS.IndexFieldNames:='';
+     //
      Result:=false;
           //
           try
@@ -314,11 +334,15 @@ end;
 //------------------------------------------------------------------------------------------------
 function Print_Quality(MovementDescId,MovementId:Integer; myPrintCount:Integer; isPreview:Boolean):Boolean;
 begin
+     UtilPrintForm.PrintHeaderCDS.IndexFieldNames:='';
+     UtilPrintForm.PrintItemsCDS.IndexFieldNames:='';
+     UtilPrintForm.PrintItemsSverkaCDS.IndexFieldNames:='';
+     //
      Result:=false;
           //
           try
              //Print
-             if (MovementDescId = zc_Movement_Sale) or (MovementDescId = zc_Movement_Loss)
+             if (MovementDescId = zc_Movement_Sale) or (MovementDescId = zc_Movement_Loss) or (MovementDescId = zc_Movement_SendOnPrice)
              then Print_QualityDocument(MovementId)
              else begin ShowMessage ('Ошибка.Форма печати <Качественное> не найдена.');exit;end;
           except

@@ -8031,10 +8031,10 @@ begin
         Add('from dba.PriceListItems_byHistory');
         Add('     left outer join dba.PriceList_byHistory on PriceList_byHistory.Id=PriceListItems_byHistory.PriceListID');
         Add('     left outer join dba.GoodsProperty on GoodsProperty.Id=PriceListItems_byHistory.GoodsPropertyId');
-        Add('where (PriceListItems_byHistory.StartDate<>zc_DateStart() or PriceListItems_byHistory.NewPrice<>0)');
+        Add('where ((PriceListItems_byHistory.StartDate<>zc_DateStart() or PriceListItems_byHistory.NewPrice<>0))');
         if StrToInt(SessionIdEdit.Text) >= 1000
-        then
-            else if StrToInt(SessionIdEdit.Text) >= 100
+        then // ничего не делаем
+            else if StrToInt(SessionIdEdit.Text) >= 10
                  then Add('  and (PriceListItems_byHistory.EndDate>(ToDay()-'+SessionIdEdit.Text+') and PriceListItems_byHistory.NewPrice<>0)')
                  else Add('  and (PriceListItems_byHistory.StartDate>(ToDay()-'+SessionIdEdit.Text+') or PriceListItems_byHistory.Id_Postgres is null)');
 // Add('  and GoodsProperty.Id_Postgres = 7836 and PriceList_byHistory.Id_Postgres = 18840');
@@ -8047,6 +8047,8 @@ begin
         Add('order by PriceListId_PG, GoodsId_PG, OperDate');
         Open;
         cbPriceListItems.Caption:='5.2. ('+IntToStr(RecordCount)+') Прайс листы - цены';
+        //
+        if cbOKPO.Checked then myShowSql(fromQuery.Sql);
         //
         fStop:=cbOnlyOpen.Checked;
         if cbOnlyOpen.Checked then exit;
@@ -8152,13 +8154,35 @@ begin
 end;
 //----------------------------------------------------------------------------------------------------------------------------------------------------
 procedure TMainForm.pLoadGuide_GoodsPropertyValue;
+  function my_find (inGoodsPropertyId,inGoodsId,inGoodsKindId:Integer):Integer;
+  begin
+                       fOpenSqToQuery ('SELECT ObjectLink_GoodsPropertyValue_Goods.ObjectId'
+                                      +' FROM ObjectLink AS ObjectLink_GoodsPropertyValue_Goods'
+                                      +'      INNER JOIN ObjectLink AS ObjectLink_GoodsPropertyValue_GoodsProperty'
+                                      +'                            ON ObjectLink_GoodsPropertyValue_GoodsProperty.ObjectId = ObjectLink_GoodsPropertyValue_Goods.ObjectId'
+                                      +'                           AND ObjectLink_GoodsPropertyValue_GoodsProperty.ChildObjectId = ' + IntToStr(inGoodsPropertyId)
+                                      +'                           AND ObjectLink_GoodsPropertyValue_GoodsProperty.DescId = zc_ObjectLink_GoodsPropertyValue_GoodsProperty()'
+                                      +'      LEFT JOIN ObjectLink AS ObjectLink_GoodsPropertyValue_GoodsKind'
+                                      +'                           ON ObjectLink_GoodsPropertyValue_GoodsKind.ObjectId = ObjectLink_GoodsPropertyValue_Goods.ObjectId'
+                                      +'                          AND ObjectLink_GoodsPropertyValue_GoodsKind.DescId = zc_ObjectLink_GoodsPropertyValue_GoodsKind()'
+                                      +' WHERE ObjectLink_GoodsPropertyValue_Goods.DescId = zc_ObjectLink_GoodsPropertyValue_Goods()'
+                                      +'      AND ObjectLink_GoodsPropertyValue_Goods.ChildObjectId = ' + IntToStr(inGoodsId)
+                                      +'      AND COALESCE (ObjectLink_GoodsPropertyValue_GoodsKind.ChildObjectId, 0) = ' + IntToStr(inGoodsKindId));
+                        Result:=toSqlQuery.FieldByName('ObjectId').AsInteger;
+  end;
+
   procedure my1;
+  var findId :Integer;
   begin
      with fromQuery,Sql do begin
              // 1
              if FieldByName('is1').AsInteger=FieldByName('zc_rvYes').AsInteger
              then begin
-                       toStoredProc.Params.ParamByName('ioId').Value:=FieldByName('Id_Postgres1').AsInteger;
+
+                       findId:=my_find(FieldByName('GoodsPropertyId1').AsInteger
+                                             , FieldByName('GoodsId1').AsInteger
+                                         , FieldByName('GoodsKindId1').AsInteger );
+                       toStoredProc.Params.ParamByName('ioId').Value:=findId;
                        toStoredProc.Params.ParamByName('inName').Value:=FieldByName('ObjectName1').AsString;
                        toStoredProc.Params.ParamByName('inAmount').Value:=FieldByName('Amount1').AsFloat;
                        toStoredProc.Params.ParamByName('inBarCode').Value:=FieldByName('BarCode1').AsString;
@@ -8178,7 +8202,10 @@ procedure TMainForm.pLoadGuide_GoodsPropertyValue;
              // 2
              if FieldByName('is2').AsInteger=FieldByName('zc_rvYes').AsInteger
              then begin
-                       toStoredProc.Params.ParamByName('ioId').Value:=FieldByName('Id_Postgres2').AsInteger;
+                       findId:=my_find(FieldByName('GoodsPropertyId2').AsInteger
+                                             , FieldByName('GoodsId2').AsInteger
+                                         , FieldByName('GoodsKindId2').AsInteger );
+                       toStoredProc.Params.ParamByName('ioId').Value:=findId;
                        toStoredProc.Params.ParamByName('inName').Value:=FieldByName('ObjectName2').AsString;
                        toStoredProc.Params.ParamByName('inAmount').Value:=FieldByName('Amount2').AsFloat;
                        toStoredProc.Params.ParamByName('inBarCode').Value:=FieldByName('BarCode2').AsString;
@@ -8198,7 +8225,10 @@ procedure TMainForm.pLoadGuide_GoodsPropertyValue;
              // 3
              if FieldByName('is3').AsInteger=FieldByName('zc_rvYes').AsInteger
              then begin
-                       toStoredProc.Params.ParamByName('ioId').Value:=FieldByName('Id_Postgres3').AsInteger;
+                       findId:=my_find(FieldByName('GoodsPropertyId3').AsInteger
+                                             , FieldByName('GoodsId3').AsInteger
+                                         , FieldByName('GoodsKindId3').AsInteger );
+                       toStoredProc.Params.ParamByName('ioId').Value:=findId;
                        toStoredProc.Params.ParamByName('inName').Value:=FieldByName('ObjectName3').AsString;
                        toStoredProc.Params.ParamByName('inAmount').Value:=FieldByName('Amount3').AsFloat;
                        toStoredProc.Params.ParamByName('inBarCode').Value:=FieldByName('BarCode3').AsString;
@@ -8218,7 +8248,10 @@ procedure TMainForm.pLoadGuide_GoodsPropertyValue;
              // 4
              if FieldByName('is4').AsInteger=FieldByName('zc_rvYes').AsInteger
              then begin
-                       toStoredProc.Params.ParamByName('ioId').Value:=FieldByName('Id_Postgres4').AsInteger;
+                       findId:=my_find(FieldByName('GoodsPropertyId4').AsInteger
+                                             , FieldByName('GoodsId4').AsInteger
+                                         , FieldByName('GoodsKindId4').AsInteger );
+                       toStoredProc.Params.ParamByName('ioId').Value:=findId;
                        toStoredProc.Params.ParamByName('inName').Value:=FieldByName('ObjectName4').AsString;
                        toStoredProc.Params.ParamByName('inAmount').Value:=FieldByName('Amount4').AsFloat;
                        toStoredProc.Params.ParamByName('inBarCode').Value:=FieldByName('BarCode4').AsString;
@@ -8238,6 +8271,10 @@ procedure TMainForm.pLoadGuide_GoodsPropertyValue;
              // 5
              if FieldByName('is5').AsInteger=FieldByName('zc_rvYes').AsInteger
              then begin
+                       findId:=my_find(FieldByName('GoodsPropertyId5').AsInteger
+                                             , FieldByName('GoodsId5').AsInteger
+                                         , FieldByName('GoodsKindId5').AsInteger );
+                       toStoredProc.Params.ParamByName('ioId').Value:=findId;
                        toStoredProc.Params.ParamByName('ioId').Value:=FieldByName('Id_Postgres5').AsInteger;
                        toStoredProc.Params.ParamByName('inName').Value:=FieldByName('ObjectName5').AsString;
                        toStoredProc.Params.ParamByName('inAmount').Value:=FieldByName('Amount5').AsFloat;
@@ -8258,7 +8295,10 @@ procedure TMainForm.pLoadGuide_GoodsPropertyValue;
              // 6
              if FieldByName('is6').AsInteger=FieldByName('zc_rvYes').AsInteger
              then begin
-                       toStoredProc.Params.ParamByName('ioId').Value:=FieldByName('Id_Postgres6').AsInteger;
+                       findId:=my_find(FieldByName('GoodsPropertyId6').AsInteger
+                                             , FieldByName('GoodsId6').AsInteger
+                                         , FieldByName('GoodsKindId6').AsInteger );
+                       toStoredProc.Params.ParamByName('ioId').Value:=findId;
                        toStoredProc.Params.ParamByName('inName').Value:=FieldByName('ObjectName6').AsString;
                        toStoredProc.Params.ParamByName('inAmount').Value:=FieldByName('Amount6').AsFloat;
                        toStoredProc.Params.ParamByName('inBarCode').Value:=FieldByName('BarCode6').AsString;
@@ -8278,7 +8318,10 @@ procedure TMainForm.pLoadGuide_GoodsPropertyValue;
              // 7
              if FieldByName('is7').AsInteger=FieldByName('zc_rvYes').AsInteger
              then begin
-                       toStoredProc.Params.ParamByName('ioId').Value:=FieldByName('Id_Postgres7').AsInteger;
+                       findId:=my_find(FieldByName('GoodsPropertyId7').AsInteger
+                                             , FieldByName('GoodsId7').AsInteger
+                                         , FieldByName('GoodsKindId7').AsInteger );
+                       toStoredProc.Params.ParamByName('ioId').Value:=findId;
                        toStoredProc.Params.ParamByName('inName').Value:=FieldByName('ObjectName7').AsString;
                        toStoredProc.Params.ParamByName('inAmount').Value:=FieldByName('Amount7').AsFloat;
                        toStoredProc.Params.ParamByName('inBarCode').Value:=FieldByName('BarCode7').AsString;
@@ -8298,7 +8341,10 @@ procedure TMainForm.pLoadGuide_GoodsPropertyValue;
              // 8
              if FieldByName('is8').AsInteger=FieldByName('zc_rvYes').AsInteger
              then begin
-                       toStoredProc.Params.ParamByName('ioId').Value:=FieldByName('Id_Postgres8').AsInteger;
+                       findId:=my_find(FieldByName('GoodsPropertyId8').AsInteger
+                                             , FieldByName('GoodsId8').AsInteger
+                                         , FieldByName('GoodsKindId8').AsInteger );
+                       toStoredProc.Params.ParamByName('ioId').Value:=findId;
                        toStoredProc.Params.ParamByName('inName').Value:=FieldByName('ObjectName8').AsString;
                        toStoredProc.Params.ParamByName('inAmount').Value:=FieldByName('Amount8').AsFloat;
                        toStoredProc.Params.ParamByName('inBarCode').Value:=FieldByName('BarCode8').AsString;
@@ -8318,7 +8364,10 @@ procedure TMainForm.pLoadGuide_GoodsPropertyValue;
              // 9
              if FieldByName('is9').AsInteger=FieldByName('zc_rvYes').AsInteger
              then begin
-                       toStoredProc.Params.ParamByName('ioId').Value:=FieldByName('Id_Postgres9').AsInteger;
+                       findId:=my_find(FieldByName('GoodsPropertyId9').AsInteger
+                                             , FieldByName('GoodsId9').AsInteger
+                                         , FieldByName('GoodsKindId9').AsInteger );
+                       toStoredProc.Params.ParamByName('ioId').Value:=findId;
                        toStoredProc.Params.ParamByName('inName').Value:=FieldByName('ObjectName9').AsString;
                        toStoredProc.Params.ParamByName('inAmount').Value:=FieldByName('Amount9').AsFloat;
                        toStoredProc.Params.ParamByName('inBarCode').Value:=FieldByName('BarCode9').AsString;
@@ -8338,7 +8387,10 @@ procedure TMainForm.pLoadGuide_GoodsPropertyValue;
              // 10
              if FieldByName('is10').AsInteger=FieldByName('zc_rvYes').AsInteger
              then begin
-                       toStoredProc.Params.ParamByName('ioId').Value:=FieldByName('Id_Postgres10').AsInteger;
+                       findId:=my_find(FieldByName('GoodsPropertyId10').AsInteger
+                                             , FieldByName('GoodsId10').AsInteger
+                                         , FieldByName('GoodsKindId10').AsInteger );
+                       toStoredProc.Params.ParamByName('ioId').Value:=findId;
                        toStoredProc.Params.ParamByName('inName').Value:=FieldByName('ObjectName10').AsString;
                        toStoredProc.Params.ParamByName('inAmount').Value:=FieldByName('Amount10').AsFloat;
                        toStoredProc.Params.ParamByName('inBarCode').Value:=FieldByName('BarCode10').AsString;
@@ -8358,12 +8410,16 @@ procedure TMainForm.pLoadGuide_GoodsPropertyValue;
      end;
   end;
   procedure my2;
+  var findId :Integer;
   begin
      with fromQuery,Sql do begin
              // 11
              if FieldByName('is11').AsInteger=FieldByName('zc_rvYes').AsInteger
              then begin
-                       toStoredProc.Params.ParamByName('ioId').Value:=FieldByName('Id_Postgres11').AsInteger;
+                       findId:=my_find(FieldByName('GoodsPropertyId11').AsInteger
+                                             , FieldByName('GoodsId11').AsInteger
+                                         , FieldByName('GoodsKindId11').AsInteger );
+                       toStoredProc.Params.ParamByName('ioId').Value:=findId;
                        toStoredProc.Params.ParamByName('inName').Value:=FieldByName('ObjectName11').AsString;
                        toStoredProc.Params.ParamByName('inAmount').Value:=FieldByName('Amount11').AsFloat;
                        toStoredProc.Params.ParamByName('inBarCode').Value:=FieldByName('BarCode11').AsString;
@@ -8384,7 +8440,10 @@ procedure TMainForm.pLoadGuide_GoodsPropertyValue;
              // 12
              if FieldByName('is12').AsInteger=FieldByName('zc_rvYes').AsInteger
              then begin
-                       toStoredProc.Params.ParamByName('ioId').Value:=FieldByName('Id_Postgres12').AsInteger;
+                       findId:=my_find(FieldByName('GoodsPropertyId12').AsInteger
+                                             , FieldByName('GoodsId12').AsInteger
+                                         , FieldByName('GoodsKindId12').AsInteger );
+                       toStoredProc.Params.ParamByName('ioId').Value:=findId;
                        toStoredProc.Params.ParamByName('inName').Value:=FieldByName('ObjectName12').AsString;
                        toStoredProc.Params.ParamByName('inAmount').Value:=FieldByName('Amount12').AsFloat;
                        toStoredProc.Params.ParamByName('inBarCode').Value:=FieldByName('BarCode12').AsString;
@@ -8404,7 +8463,10 @@ procedure TMainForm.pLoadGuide_GoodsPropertyValue;
              // 13
              if FieldByName('is13').AsInteger=FieldByName('zc_rvYes').AsInteger
              then begin
-                       toStoredProc.Params.ParamByName('ioId').Value:=FieldByName('Id_Postgres13').AsInteger;
+                       findId:=my_find(FieldByName('GoodsPropertyId13').AsInteger
+                                             , FieldByName('GoodsId13').AsInteger
+                                         , FieldByName('GoodsKindId13').AsInteger );
+                       toStoredProc.Params.ParamByName('ioId').Value:=findId;
                        toStoredProc.Params.ParamByName('inName').Value:=FieldByName('ObjectName13').AsString;
                        toStoredProc.Params.ParamByName('inAmount').Value:=FieldByName('Amount13').AsFloat;
                        toStoredProc.Params.ParamByName('inBarCode').Value:=FieldByName('BarCode13').AsString;
@@ -8424,7 +8486,10 @@ procedure TMainForm.pLoadGuide_GoodsPropertyValue;
              // 14
              if FieldByName('is14').AsInteger=FieldByName('zc_rvYes').AsInteger
              then begin
-                       toStoredProc.Params.ParamByName('ioId').Value:=FieldByName('Id_Postgres14').AsInteger;
+                       findId:=my_find(FieldByName('GoodsPropertyId14').AsInteger
+                                             , FieldByName('GoodsId14').AsInteger
+                                         , FieldByName('GoodsKindId14').AsInteger );
+                       toStoredProc.Params.ParamByName('ioId').Value:=findId;
                        toStoredProc.Params.ParamByName('inName').Value:=FieldByName('ObjectName14').AsString;
                        toStoredProc.Params.ParamByName('inAmount').Value:=FieldByName('Amount14').AsFloat;
                        toStoredProc.Params.ParamByName('inBarCode').Value:=FieldByName('BarCode14').AsString;
@@ -8444,7 +8509,10 @@ procedure TMainForm.pLoadGuide_GoodsPropertyValue;
              // 15
              if FieldByName('is15').AsInteger=FieldByName('zc_rvYes').AsInteger
              then begin
-                       toStoredProc.Params.ParamByName('ioId').Value:=FieldByName('Id_Postgres15').AsInteger;
+                       findId:=my_find(FieldByName('GoodsPropertyId15').AsInteger
+                                             , FieldByName('GoodsId15').AsInteger
+                                         , FieldByName('GoodsKindId15').AsInteger );
+                       toStoredProc.Params.ParamByName('ioId').Value:=findId;
                        toStoredProc.Params.ParamByName('inName').Value:=FieldByName('ObjectName15').AsString;
                        toStoredProc.Params.ParamByName('inAmount').Value:=FieldByName('Amount15').AsFloat;
                        toStoredProc.Params.ParamByName('inBarCode').Value:=FieldByName('BarCode15').AsString;
@@ -8464,7 +8532,10 @@ procedure TMainForm.pLoadGuide_GoodsPropertyValue;
              // 16
              if FieldByName('is16').AsInteger=FieldByName('zc_rvYes').AsInteger
              then begin
-                       toStoredProc.Params.ParamByName('ioId').Value:=FieldByName('Id_Postgres16').AsInteger;
+                       findId:=my_find(FieldByName('GoodsPropertyId16').AsInteger
+                                             , FieldByName('GoodsId16').AsInteger
+                                         , FieldByName('GoodsKindId16').AsInteger );
+                       toStoredProc.Params.ParamByName('ioId').Value:=findId;
                        toStoredProc.Params.ParamByName('inName').Value:=FieldByName('ObjectName16').AsString;
                        toStoredProc.Params.ParamByName('inAmount').Value:=FieldByName('Amount16').AsFloat;
                        toStoredProc.Params.ParamByName('inBarCode').Value:=FieldByName('BarCode16').AsString;
@@ -8484,7 +8555,10 @@ procedure TMainForm.pLoadGuide_GoodsPropertyValue;
              // 17
              if FieldByName('is17').AsInteger=FieldByName('zc_rvYes').AsInteger
              then begin
-                       toStoredProc.Params.ParamByName('ioId').Value:=FieldByName('Id_Postgres17').AsInteger;
+                       findId:=my_find(FieldByName('GoodsPropertyId17').AsInteger
+                                             , FieldByName('GoodsId17').AsInteger
+                                         , FieldByName('GoodsKindId17').AsInteger );
+                       toStoredProc.Params.ParamByName('ioId').Value:=findId;
                        toStoredProc.Params.ParamByName('inName').Value:=FieldByName('ObjectName17').AsString;
                        toStoredProc.Params.ParamByName('inAmount').Value:=FieldByName('Amount17').AsFloat;
                        toStoredProc.Params.ParamByName('inBarCode').Value:=FieldByName('BarCode17').AsString;
@@ -8504,7 +8578,10 @@ procedure TMainForm.pLoadGuide_GoodsPropertyValue;
              // 18
              if FieldByName('is18').AsInteger=FieldByName('zc_rvYes').AsInteger
              then begin
-                       toStoredProc.Params.ParamByName('ioId').Value:=FieldByName('Id_Postgres18').AsInteger;
+                       findId:=my_find(FieldByName('GoodsPropertyId18').AsInteger
+                                             , FieldByName('GoodsId18').AsInteger
+                                         , FieldByName('GoodsKindId18').AsInteger );
+                       toStoredProc.Params.ParamByName('ioId').Value:=findId;
                        toStoredProc.Params.ParamByName('inName').Value:=FieldByName('ObjectName18').AsString;
                        toStoredProc.Params.ParamByName('inAmount').Value:=FieldByName('Amount18').AsFloat;
                        toStoredProc.Params.ParamByName('inBarCode').Value:=FieldByName('BarCode18').AsString;
@@ -8524,7 +8601,10 @@ procedure TMainForm.pLoadGuide_GoodsPropertyValue;
              // 19 Eng_byVED
              if FieldByName('is19').AsInteger=FieldByName('zc_rvYes').AsInteger
              then begin
-                       toStoredProc.Params.ParamByName('ioId').Value:=FieldByName('Id_Postgres19').AsInteger;
+                       findId:=my_find(FieldByName('GoodsPropertyId19').AsInteger
+                                             , FieldByName('GoodsId19').AsInteger
+                                         , FieldByName('GoodsKindId19').AsInteger );
+                       toStoredProc.Params.ParamByName('ioId').Value:=findId;
                        toStoredProc.Params.ParamByName('inName').Value:=FieldByName('ObjectName19').AsString;
                        toStoredProc.Params.ParamByName('inAmount').Value:=FieldByName('Amount19').AsFloat;
                        toStoredProc.Params.ParamByName('inBarCode').Value:=FieldByName('BarCode19').AsString;
@@ -8544,7 +8624,10 @@ procedure TMainForm.pLoadGuide_GoodsPropertyValue;
              // 20 Rus_byVED
              if FieldByName('is20').AsInteger=FieldByName('zc_rvYes').AsInteger
              then begin
-                       toStoredProc.Params.ParamByName('ioId').Value:=FieldByName('Id_Postgres20').AsInteger;
+                       findId:=my_find(FieldByName('GoodsPropertyId20').AsInteger
+                                             , FieldByName('GoodsId20').AsInteger
+                                         , FieldByName('GoodsKindId20').AsInteger );
+                       toStoredProc.Params.ParamByName('ioId').Value:=findId;
                        toStoredProc.Params.ParamByName('inName').Value:=FieldByName('ObjectName20').AsString;
                        toStoredProc.Params.ParamByName('inAmount').Value:=FieldByName('Amount20').AsFloat;
                        toStoredProc.Params.ParamByName('inBarCode').Value:=FieldByName('BarCode20').AsString;
@@ -8564,7 +8647,10 @@ procedure TMainForm.pLoadGuide_GoodsPropertyValue;
              // 21 fIsClient_KisheniContract
              if FieldByName('is21').AsInteger=FieldByName('zc_rvYes').AsInteger
              then begin
-                       toStoredProc.Params.ParamByName('ioId').Value:=FieldByName('Id_Postgres21').AsInteger;
+                       findId:=my_find(FieldByName('GoodsPropertyId21').AsInteger
+                                             , FieldByName('GoodsId21').AsInteger
+                                         , FieldByName('GoodsKindId21').AsInteger );
+                       toStoredProc.Params.ParamByName('ioId').Value:=findId;
                        toStoredProc.Params.ParamByName('inName').Value:=FieldByName('ObjectName21').AsString;
                        toStoredProc.Params.ParamByName('inAmount').Value:=FieldByName('Amount21').AsFloat;
                        toStoredProc.Params.ParamByName('inBarCode').Value:=FieldByName('BarCode21').AsString;

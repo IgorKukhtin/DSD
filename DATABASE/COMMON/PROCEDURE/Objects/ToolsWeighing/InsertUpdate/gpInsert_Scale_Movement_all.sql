@@ -25,6 +25,8 @@ $BODY$
    DECLARE vbMovementDescId   Integer;
    DECLARE vbIsTax            Boolean;
 
+   DECLARE vbMovementDescId_old  Integer;
+
    DECLARE vbOperDate_scale TDateTime;
    DECLARE vbId_tmp Integer;
 BEGIN
@@ -32,6 +34,8 @@ BEGIN
      -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Scale_Movement());
      vbUserId:= lpGetUserBySession (inSession);
 
+
+    vbMovementDescId_old:= vbMovementDescId;
 
      -- проверка
      IF COALESCE (inMovementId, 0) = 0
@@ -45,7 +49,19 @@ BEGIN
                   END;
      -- определили <Тип документа>
      vbMovementDescId:= (SELECT ValueData FROM MovementFloat WHERE MovementId = inMovementId AND DescId = zc_MovementFloat_MovementDesc()) :: Integer;
-     -- !!!заменили параметр!!!
+
+     -- !!!заменили параметр!!! : Продажа -> Перемещение по цене
+     IF vbMovementDescId = zc_Movement_Sale() AND EXISTS (SELECT MLM_Order.MovementChildId
+                                                          FROM MovementLinkMovement AS MLM_Order
+                                                               INNER JOIN MovementLinkObject AS MLO ON MLO.MovementId = MLM_Order.MovementChildId AND MLO.DescId = zc_MovementLinkObject_From()
+                                                               INNER JOIN Object ON Object.Id = MLO.ObjectId AND Object.DescId = zc_Object_Unit()
+                                                          WHERE MLM_Order.MovementId = inMovementId AND MLM_Order.DescId = zc_MovementLinkMovement_Order()
+                                                         )
+     THEN
+         vbMovementDescId:= zc_Movement_SendOnPrice();
+     END IF;
+
+     -- !!!заменили параметр!!! : Перемещение -> производство ПЕРЕРАБОТКА
      IF vbMovementDescId = zc_Movement_Send() AND (SELECT ObjectId FROM MovementLinkObject WHERE MovementId = inMovementId AND DescId = zc_MovementLinkObject_To())
                                                   IN (8447, 8448) -- ЦЕХ колбасный + ЦЕХ деликатесов
                                               AND (SELECT ObjectId FROM MovementLinkObject WHERE MovementId = inMovementId AND DescId = zc_MovementLinkObject_From())
@@ -146,7 +162,7 @@ BEGIN
                                   AND Movement.OperDate = inOperDate - INTERVAL '1 DAY'
                                   AND Movement.StatusId IN (zc_Enum_Status_UnComplete(), zc_Enum_Status_Complete()));
      END IF;
-     IF vbMovementDescId = zc_Movement_SendOnPrice()
+     IF vbMovementDescId_old = zc_Movement_SendOnPrice()
      THEN
          -- поиск существующего документа <Перемещение по цене> !!!сразу получаем ключ!!!
           vbMovementId_find:= (SELECT MLM_Order.MovementChildId FROM MovementLinkMovement AS MLM_Order WHERE MLM_Order.MovementId = inMovementId AND MLM_Order.DescId = zc_MovementLinkMovement_Order());

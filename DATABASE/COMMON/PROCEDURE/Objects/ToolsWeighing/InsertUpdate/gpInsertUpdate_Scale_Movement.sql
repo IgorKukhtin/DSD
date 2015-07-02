@@ -85,6 +85,9 @@ BEGIN
                                                                                                                                           ON MovementLinkObject_To.MovementId = Movement.Id
                                                                                                                                          AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
                                                                                                                                          AND MovementLinkObject_To.ObjectId = inToId
+                                                                                                            LEFT JOIN MovementLinkMovement AS MLM_Order
+                                                                                                                                           ON MLM_Order.MovementId = Movement.Id
+                                                                                                                                          AND MLM_Order.DescId = zc_MovementLinkMovement_Order()
                                                                                                             INNER JOIN MovementFloat AS MovementFloat_MovementDesc
                                                                                                                                      ON MovementFloat_MovementDesc.MovementId = Movement.Id
                                                                                                                                     AND MovementFloat_MovementDesc.DescId = zc_MovementFloat_MovementDesc()
@@ -95,6 +98,7 @@ BEGIN
                                                                                                        WHERE Movement.DescId = zc_Movement_WeighingPartner()
                                                                                                          AND Movement.OperDate = inOperDate
                                                                                                          AND Movement.StatusId <> zc_Enum_Status_Erased()
+                                                                                                         AND COALESCE (MLM_Order.MovementChildId, 0) = COALESCE (inMovementId_Order, 0)
                                                                                                       ), 0)
                                                                               END :: Integer
                                                    , inFromId              := inFromId

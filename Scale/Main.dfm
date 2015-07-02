@@ -929,6 +929,8 @@ object MainForm: TMainForm
       Caption = #1042#1077#1089#1099
       TabOrder = 2
       OnClick = rgScaleClick
+      ExplicitLeft = -4
+      ExplicitTop = 116
     end
     object PanelCountPack: TPanel
       Left = 0
@@ -953,7 +955,7 @@ object MainForm: TMainForm
         Properties.Alignment.Horz = taRightJustify
         Properties.Alignment.Vert = taVCenter
         Properties.AssignedValues.DisplayFormat = True
-        Properties.DecimalPlaces = 0
+        Properties.DecimalPlaces = 4
         Properties.OnChange = EditBarCodePropertiesChange
         TabOrder = 0
         Width = 120
@@ -982,7 +984,7 @@ object MainForm: TMainForm
         Properties.Alignment.Horz = taRightJustify
         Properties.Alignment.Vert = taVCenter
         Properties.AssignedValues.DisplayFormat = True
-        Properties.DecimalPlaces = 0
+        Properties.DecimalPlaces = 4
         Properties.OnChange = EditBarCodePropertiesChange
         TabOrder = 0
         Width = 120
@@ -1074,7 +1076,7 @@ object MainForm: TMainForm
           Properties.Alignment.Horz = taRightJustify
           Properties.Alignment.Vert = taVCenter
           Properties.AssignedValues.DisplayFormat = True
-          Properties.DecimalPlaces = 0
+          Properties.DecimalPlaces = 4
           Properties.OnChange = EditBarCodePropertiesChange
           TabOrder = 0
           Width = 55

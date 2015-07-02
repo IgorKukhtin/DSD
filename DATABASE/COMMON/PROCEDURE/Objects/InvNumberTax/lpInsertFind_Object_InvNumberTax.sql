@@ -36,7 +36,7 @@ BEGIN
      THEN
          -- !!!для скорости - напрямую!!! добавили новый
          INSERT INTO Object (DescId, ObjectCode, ValueData)
-            SELECT zc_Object_InvNumberTax(), CASE WHEN inInvNumber <> 0 THEN inInvNumber WHEN inInvNumberBranch <> '' THEN 1 ELSE 3800 END, '' RETURNING Id, ObjectCode INTO vbId, vbObjectCode;
+            SELECT zc_Object_InvNumberTax(), CASE WHEN inInvNumber <> 0 THEN inInvNumber WHEN inInvNumberBranch <> '' THEN 1 WHEN vbOperDate >= '01.07.2015' THEN 1 ELSE 3800 END, '' RETURNING Id, ObjectCode INTO vbId, vbObjectCode;
          -- !!!для скорости - напрямую!!! добавили свойство
          INSERT INTO ObjectDate (DescId, ObjectId, ValueData)
                          VALUES (zc_ObjectDate_InvNumberTax_Value(), vbId, vbOperDate);
@@ -75,5 +75,5 @@ ALTER FUNCTION lpInsertFind_Object_InvNumberTax (Integer, TDateTime, TVarChar, I
 */
 
 -- тест
--- SELECT * FROM lpInsertFind_Object_InvNumberTax (inMovementDescId:= zc_Movement_Tax(), inOperDate:= '01.04.2014', inInvNumber:= 0);
--- SELECT * FROM lpInsertFind_Object_InvNumberTax (inMovementDescId:= zc_Movement_Tax(), inOperDate:= '01.04.2014');
+-- SELECT * FROM lpInsertFind_Object_InvNumberTax (inMovementDescId:= zc_Movement_Tax(), inOperDate:= '01.04.2014', inInvNumberBranch:= '', inInvNumber:= 0);
+

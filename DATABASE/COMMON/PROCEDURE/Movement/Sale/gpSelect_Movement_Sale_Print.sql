@@ -159,11 +159,20 @@ BEGIN
                           ELSE COALESCE (MIFloat_Price.ValueData, 0)
                      END AS Price
                    , COALESCE (MIFloat_CountForPrice.ValueData, 0) AS CountForPrice
-                   , SUM (MovementItem.Amount) AS Amount
-
+                   -- , SUM (MovementItem.Amount) AS Amount
+                   , SUM (CASE WHEN Movement.DescId IN (zc_Movement_Sale())
+                                    THEN COALESCE (MIFloat_AmountPartner.ValueData, 0)
+                               WHEN Movement.DescId IN (zc_Movement_SendOnPrice()) AND vbIsProcess_BranchIn = TRUE
+                                    THEN COALESCE (MIFloat_AmountPartner.ValueData, 0)
+                               ELSE MovementItem.Amount
+ 
+                          END) AS Amount
               FROM MovementItem
                    INNER JOIN Movement ON Movement.Id = MovementItem.MovementId
-                   INNER JOIN MovementItemFloat AS MIFloat_Price
+                   LEFT JOIN MovementItemFloat AS MIFloat_AmountPartner
+                                               ON MIFloat_AmountPartner.MovementItemId = MovementItem.Id
+                                              AND MIFloat_AmountPartner.DescId = zc_MIFloat_AmountPartner()
+                   LEFT JOIN MovementItemFloat AS MIFloat_Price
                                                 ON MIFloat_Price.MovementItemId = MovementItem.Id
                                                AND MIFloat_Price.DescId = zc_MIFloat_Price()
                                                -- AND MIFloat_Price.ValueData <> 0
@@ -778,7 +787,7 @@ BEGIN
 
                          END) AS AmountPartner
              FROM MovementItem
-                  INNER JOIN MovementItemFloat AS MIFloat_Price
+                  LEFT JOIN MovementItemFloat AS MIFloat_Price
                                                ON MIFloat_Price.MovementItemId = MovementItem.Id
                                               AND MIFloat_Price.DescId = zc_MIFloat_Price()
                                               -- AND MIFloat_Price.ValueData <> 0

@@ -485,7 +485,7 @@ BEGIN
 
 
      -- проверка
-     IF COALESCE (vbContractId, 0) = 0 AND (EXISTS (SELECT _tmpItem.isCountSupplier FROM _tmpItem WHERE _tmpItem.isCountSupplier = FALSE AND OperSumm_Partner <> 0)
+     IF 1=0 AND COALESCE (vbContractId, 0) = 0 AND (EXISTS (SELECT _tmpItem.isCountSupplier FROM _tmpItem WHERE _tmpItem.isCountSupplier = FALSE AND OperSumm_Partner <> 0)
                                        -- AND vbPaidKindId <> zc_Enum_PaidKind_SecondForm() -- !!! НАЛ !!!
                                            )
      THEN

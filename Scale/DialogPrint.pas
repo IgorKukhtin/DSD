@@ -50,7 +50,7 @@ begin
      then cbPrintMovement.Checked:= TRUE
      else cbPrintMovement.Checked:= isMovement;
      //
-     cbPrintAccount.Enabled:=(SettingMain.isCeh = FALSE)or(MovementDescId=zc_Movement_Sale)or(MovementDescId<>zc_Movement_SendOnPrice);
+     cbPrintAccount.Enabled:=(SettingMain.isCeh = FALSE);//or(MovementDescId=zc_Movement_Sale)or(MovementDescId<>zc_Movement_SendOnPrice);
      cbPrintTransport.Enabled:=SettingMain.isCeh = cbPrintAccount.Enabled;
      cbPrintQuality.Enabled:=SettingMain.isCeh = cbPrintAccount.Enabled;
      cbPrintPack.Enabled:=SettingMain.isCeh = cbPrintAccount.Enabled;
@@ -96,6 +96,7 @@ begin
      then
          if  (ParamsMovement.ParamByName('MovementDescId').AsInteger<>zc_Movement_Sale)
           and(ParamsMovement.ParamByName('MovementDescId').AsInteger<>zc_Movement_SendOnPrice)
+          and(ParamsMovement.ParamByName('MovementDescId').AsInteger<>zc_Movement_Loss)
          then cbPrintQuality.Checked:=false;
 end;
 {------------------------------------------------------------------------------}

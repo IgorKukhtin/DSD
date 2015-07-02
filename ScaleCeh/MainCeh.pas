@@ -945,6 +945,7 @@ procedure TMainCehForm.EditGoodsCodeExit(Sender: TObject);
 var GoodsCode_int:Integer;
 begin
      if (ParamsMovement.ParamByName('MovementDescId').asInteger = 0)and(ActiveControl.ClassName <> 'TcxGridSite')and(ActiveControl.ClassName <> 'TcxGrid') and (ActiveControl.ClassName <> 'TcxDateEdit')
+         and (ActiveControl.ClassName <> 'TGroupButton')
      then if GetParams_MovementDesc('') = false
           then begin
                     ActiveControl:=EditGoodsCode;
@@ -968,6 +969,7 @@ begin
      end
      else begin
           if (ActiveControl.ClassName = 'TcxGridSite') or (ActiveControl.ClassName = 'TcxGrid') or (ActiveControl.ClassName = 'TcxDateEdit')
+            or (ActiveControl.ClassName = 'TGroupButton')
           then WriteParamsMovement
           else begin ActiveControl:=EditGoodsCode;
                      PanelMovementDesc.Font.Color:=clRed;

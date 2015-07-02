@@ -20,7 +20,7 @@ BEGIN
 
 
     -- расчет, временно захардкодил
-    vbIsPack:= EXISTS (SELECT MovementId FROM MovementLinkObject WHERE MovementId = inMovementId AND ObjectId = 8451); -- ÷ех ”паковки
+    vbIsPack:= EXISTS (SELECT MovementId FROM MovementLinkObject WHERE DescId = zc_MovementLinkObject_To() AND MovementId = inMovementId AND ObjectId = 8451); -- ÷ех ”паковки
 
 
     -- таблица -

@@ -81,6 +81,7 @@ type
     RefreshDispatcher: TRefreshDispatcher;
     ProtocolOpenForm: TdsdOpenForm;
     bbProtocolOpenForm: TdxBarButton;
+    BarCodeShort: TcxGridDBColumn;
   private
     { Private declarations }
   public

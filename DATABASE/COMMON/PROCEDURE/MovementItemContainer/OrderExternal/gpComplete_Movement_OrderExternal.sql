@@ -223,9 +223,12 @@ BEGIN
      END IF;
 
      -- кроме Админа
-     IF EXISTS (SELECT Price FROM _tmpItem WHERE Price = 0) AND vbUserId <> 5
+     IF EXISTS (SELECT _tmpItem.Price FROM _tmpItem WHERE _tmpItem.Price = 0) AND vbUserId <> 5
      THEN
-         RAISE EXCEPTION 'Ошибка. У товара установлена цена = 0.';
+         RAISE EXCEPTION 'Ошибка. У товара <%> <%> с количеством <%> установлена цена = 0.', (SELECT lfGet_Object_ValueData (_tmpItem.GoodsId) FROM _tmpItem WHERE _tmpItem.Price = 0 ORDER BY MovementItemId LIMIT 1)
+                                                                                           , (SELECT lfGet_Object_ValueData (_tmpItem.GoodsKindId) FROM _tmpItem WHERE _tmpItem.Price = 0 ORDER BY MovementItemId LIMIT 1)
+                                                                                           , (SELECT _tmpItem.OperCount FROM _tmpItem WHERE _tmpItem.Price = 0 ORDER BY MovementItemId LIMIT 1)
+                                                                                            ;
      END IF;
 
      -- !!!формируются свойства в элементах документа!!!
