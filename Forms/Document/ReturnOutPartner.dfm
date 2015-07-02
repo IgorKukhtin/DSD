@@ -11,17 +11,17 @@ inherited ReturnOutPartnerForm: TReturnOutPartnerForm
     Width = 1049
     Height = 553
     ExplicitTop = 115
-    ExplicitWidth = 838
+    ExplicitWidth = 1049
     ExplicitHeight = 553
     ClientRectBottom = 553
     ClientRectRight = 1049
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 838
+      ExplicitWidth = 1049
       ExplicitHeight = 529
       inherited cxGrid: TcxGrid
         Width = 1049
         Height = 529
-        ExplicitWidth = 838
+        ExplicitWidth = 1049
         ExplicitHeight = 529
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
@@ -237,7 +237,7 @@ inherited ReturnOutPartnerForm: TReturnOutPartnerForm
     Width = 1049
     Height = 89
     TabOrder = 3
-    ExplicitWidth = 838
+    ExplicitWidth = 1049
     ExplicitHeight = 89
     inherited edInvNumber: TcxTextEdit
       Left = 8
@@ -1143,13 +1143,13 @@ inherited ReturnOutPartnerForm: TReturnOutPartnerForm
         DataType = ftString
       end
       item
-        Name = 'PaidKindId'
+        Name = 'PaidKindFromId'
         Value = Null
         Component = PaidKindGuidesFrom
         ComponentItem = 'Key'
       end
       item
-        Name = 'PaidKindName'
+        Name = 'PaidKindFromName'
         Value = Null
         Component = PaidKindGuidesFrom
         ComponentItem = 'TextValue'
