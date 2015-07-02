@@ -1,36 +1,46 @@
 inherited BankAccountMovementFarmacyForm: TBankAccountMovementFarmacyForm
   Caption = #1054#1087#1077#1088#1072#1094#1080#1080' '#1089' '#1088#1072#1089#1095#1077#1090#1085#1099#1084' '#1089#1095#1077#1090#1086#1084
-  ClientHeight = 266
-  ExplicitHeight = 291
+  ClientHeight = 356
+  ExplicitHeight = 381
   PixelsPerInch = 96
   TextHeight = 13
   inherited bbOk: TcxButton
-    Top = 227
-    ExplicitTop = 227
+    Left = 170
+    Top = 323
+    ExplicitLeft = 170
+    ExplicitTop = 323
   end
   inherited bbCancel: TcxButton
-    Top = 227
-    ExplicitTop = 227
+    Left = 314
+    Top = 323
+    ExplicitLeft = 314
+    ExplicitTop = 323
   end
   inherited cxLabel6: TcxLabel
-    Left = 280
-    ExplicitLeft = 280
+    Left = 8
+    ExplicitLeft = 8
   end
   inherited ceObject: TcxButtonEdit
-    Left = 280
+    Left = 8
+    Top = 178
     TabOrder = 8
-    ExplicitLeft = 280
+    ExplicitLeft = 8
+    ExplicitTop = 178
   end
   inherited cxLabel5: TcxLabel
-    Top = 210
+    Left = 10
+    Top = 252
     Visible = False
-    ExplicitTop = 210
+    ExplicitLeft = 10
+    ExplicitTop = 252
   end
   inherited ceInfoMoney: TcxButtonEdit
-    Top = 230
+    Left = 10
+    Top = 272
     TabOrder = 9
     Visible = False
-    ExplicitTop = 230
+    ExplicitLeft = 10
+    ExplicitTop = 272
   end
   inherited ceContract: TcxButtonEdit
     TabOrder = 11
@@ -40,13 +50,17 @@ inherited BankAccountMovementFarmacyForm: TBankAccountMovementFarmacyForm
     Visible = False
   end
   inherited cxLabel10: TcxLabel
-    Top = 162
-    ExplicitTop = 162
+    Left = 10
+    Top = 205
+    ExplicitLeft = 10
+    ExplicitTop = 205
   end
   inherited ceComment: TcxTextEdit
-    Top = 182
+    Left = 10
+    Top = 225
     TabOrder = 12
-    ExplicitTop = 182
+    ExplicitLeft = 10
+    ExplicitTop = 225
   end
   inherited cxLabel9: TcxLabel
     Visible = False
@@ -79,13 +93,8 @@ inherited BankAccountMovementFarmacyForm: TBankAccountMovementFarmacyForm
     Visible = False
   end
   inherited ceAmountSumm: TcxCurrencyEdit
-    TabOrder = 30
+    TabOrder = 31
     Visible = False
-  end
-  object cxLabel14: TcxLabel [30]
-    Left = 8
-    Top = 117
-    Caption = #8470' '#1087#1088#1080#1093#1086#1076#1072
   end
   object edIncome: TcxButtonEdit [31]
     Left = 8
@@ -99,21 +108,26 @@ inherited BankAccountMovementFarmacyForm: TBankAccountMovementFarmacyForm
     TabOrder = 7
     Width = 259
   end
+  object cxLabel15: TcxLabel [33]
+    Left = 8
+    Top = 162
+    Caption = #8470' '#1087#1088#1080#1093#1086#1076#1072
+  end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 91
-    Top = 192
+    Top = 200
   end
   inherited cxPropertiesStore: TcxPropertiesStore
-    Left = 48
-    Top = 192
+    Left = 50
+    Top = 219
   end
   inherited ActionList: TActionList
     Left = 143
     Top = 191
   end
   inherited FormParams: TdsdFormParams
-    Left = 48
-    Top = 160
+    Left = 50
+    Top = 187
   end
   inherited spInsertUpdate: TdsdStoredProc
     Params = <
@@ -222,7 +236,8 @@ inherited BankAccountMovementFarmacyForm: TBankAccountMovementFarmacyForm
         DataType = ftFloat
         ParamType = ptInput
       end>
-    Top = 204
+    Left = 504
+    Top = 268
   end
   inherited spGet: TdsdStoredProc
     Params = <
@@ -385,8 +400,8 @@ inherited BankAccountMovementFarmacyForm: TBankAccountMovementFarmacyForm
         Component = GuidesIncome
         ComponentItem = 'TextValue'
       end>
-    Left = 400
-    Top = 196
+    Left = 464
+    Top = 268
   end
   inherited ObjectlGuides: TdsdGuides
     Params = <
@@ -403,8 +418,23 @@ inherited BankAccountMovementFarmacyForm: TBankAccountMovementFarmacyForm
         ComponentItem = 'TextValue'
         DataType = ftString
       end>
-    Left = 340
-    Top = 141
+    Left = 260
+    Top = 173
+  end
+  inherited InfoMoneyGuides: TdsdGuides
+    Left = 336
+    Top = 266
+  end
+  inherited ContractGuides: TdsdGuides
+    Left = 364
+    Top = 123
+  end
+  inherited BankGuides: TdsdGuides
+    Left = 528
+    Top = 10
+  end
+  inherited UnitGuides: TdsdGuides
+    Left = 528
   end
   object GuidesIncome: TdsdGuides
     KeyField = 'Id'
@@ -443,7 +473,7 @@ inherited BankAccountMovementFarmacyForm: TBankAccountMovementFarmacyForm
         ComponentItem = 'TextValue'
         DataType = ftString
       end>
-    Left = 192
-    Top = 136
+    Left = 216
+    Top = 120
   end
 end

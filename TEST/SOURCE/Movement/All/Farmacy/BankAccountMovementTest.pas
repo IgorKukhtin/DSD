@@ -17,7 +17,8 @@ type
   public
     function InsertUpdateBankAccount(const Id: integer; InvNumber: String;
         OperDate: TDateTime; Amount: Double;
-        FromId, ToId, CurrencyId, InfoMoneyId, BusinessId, ContractId, UnitId: integer): integer;
+        FromId, ToId, CurrencyId, InfoMoneyId, BusinessId, ContractId, UnitId,
+        IncomeMovementId: integer): integer;
     constructor Create; override;
   end;
 
@@ -42,7 +43,7 @@ var Id: Integer;
     InvNumber: String;
     OperDate: TDateTime;
     Amount: Double;
-    FromId, ToId, InfoMoneyId, BusinessId, ContractId, UnitId, CurrencyId: Integer;
+    FromId, ToId, InfoMoneyId, BusinessId, ContractId, UnitId, CurrencyId,IncomeMovementId: Integer;
 begin
   Id:=0;
   InvNumber:='1';
@@ -51,7 +52,9 @@ begin
   ToId := TBankAccount.Create.GetDefault;
   ContractId := 0;
   InfoMoneyId := 0;
-  CurrencyId := TCurrency.Create.GetDefault;
+  with TCurrency.Create.GetDataSet do begin
+    CurrencyId := FieldByName('Id').AsInteger;
+  end;
   with TInfoMoney.Create.GetDataSet do begin
      if Locate('Code', '10103', []) then
         InfoMoneyId := FieldByName('Id').AsInteger;
@@ -59,14 +62,15 @@ begin
   BusinessId := 0;
   UnitId := TUnit.Create.GetDefault;
   Amount := 265.68;
-
+  IncomeMovementId := 0;
   result := InsertUpdateBankAccount(Id, InvNumber, OperDate, Amount,
-              FromId, ToId, CurrencyId, InfoMoneyId, BusinessId, ContractId, UnitId);
+              FromId, ToId, CurrencyId, InfoMoneyId, BusinessId, ContractId, UnitId,
+              IncomeMovementId);
 end;
 
 function TBankAccountMovement.InsertUpdateBankAccount(const Id: integer; InvNumber: String;
         OperDate: TDateTime; Amount: Double;
-        FromId, ToId, CurrencyId, InfoMoneyId, BusinessId, ContractId, UnitId: integer): integer;
+        FromId, ToId, CurrencyId, InfoMoneyId, BusinessId, ContractId, UnitId,IncomeMovementId: integer): integer;
 begin
   FParams.Clear;
   FParams.AddParam('ioId', ftInteger, ptInputOutput, Id);
@@ -78,6 +82,7 @@ begin
   FParams.AddParam('inBankAccountId', ftInteger, ptInput, FromId);
   FParams.AddParam('inComment', ftString, ptInput, '');
   FParams.AddParam('inMoneyPlaceId', ftInteger, ptInput, ToId);
+  FParams.AddParam('inIncomeMovementId', ftInteger, ptInput, IncomeMovementId);
   FParams.AddParam('inContractId', ftInteger, ptInput, ContractId);
   FParams.AddParam('inInfoMoneyId', ftInteger, ptInput, InfoMoneyId);
   FParams.AddParam('inCurrencyId', ftInteger, ptInput, CurrencyId);
