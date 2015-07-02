@@ -132,7 +132,7 @@ BEGIN
 
             LEFT JOIN MovementFloat AS MovementFloat_ChangePercentTo
                                     ON MovementFloat_ChangePercentTo.MovementId =  Movement.Id
-                                   AND MovementFloat_ChangePercentTo.DescId = zc_MovementFloat_ChangePercentTo()
+                                   AND MovementFloat_ChangePercentTo.DescId = zc_MovementFloat_ChangePercentPartner()
 
 
             LEFT JOIN MovementFloat AS MovementFloat_TotalCount

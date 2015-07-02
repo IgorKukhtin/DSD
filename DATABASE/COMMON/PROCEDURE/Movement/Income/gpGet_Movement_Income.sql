@@ -15,6 +15,9 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , PersonalPackerId Integer, PersonalPackerName TVarChar
              , CurrencyDocumentId Integer, CurrencyDocumentName TVarChar
              , CurrencyPartnerId Integer, CurrencyPartnerName TVarChar
+             , PaidKindToId Integer, PaidKindToName TVarChar
+             , ContractToId Integer, ContractToName TVarChar
+             , ChangePercentTo TFloat
               )
 AS
 $BODY$
@@ -61,6 +64,13 @@ BEGIN
              , 0                     AS CurrencyPartnerId
              , CAST ('' as TVarChar) AS CurrencyPartnerName
 
+
+             , 0                     		    AS PaidKindToId
+             , CAST ('' as TVarChar) 		    AS PaidKindToName
+             , 0                     		    AS ContractToId
+             , CAST ('' as TVarChar) 		    AS ContractToName
+             , CAST (0 as TFloat)                   AS ChangePercentTo
+
           FROM lfGet_Object_Status(zc_Enum_Status_UnComplete()) AS Object_Status
               JOIN Object as ObjectCurrency on ObjectCurrency.descid= zc_Object_Currency()
                                             and ObjectCurrency.id = 14461;	             -- грн
@@ -99,6 +109,13 @@ BEGIN
              , Object_CurrencyPartner.Id             AS CurrencyPartnerId
              , Object_CurrencyPartner.ValueData      AS CurrencyPartnerName
 
+             , Object_PaidKindTo.Id                	AS PaidKindToId
+             , Object_PaidKindTo.ValueData         	AS PaidKindToName
+             , View_ContractTo_InvNumber.ContractId     AS ContractToId
+             , View_ContractTo_InvNumber.InvNumber      AS ContractToName
+
+             , MovementFloat_ChangePercentTo.ValueData  AS ChangePercentTo
+
        FROM Movement
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
 
@@ -118,6 +135,11 @@ BEGIN
             LEFT JOIN MovementFloat AS MovementFloat_ChangePercent
                                     ON MovementFloat_ChangePercent.MovementId =  Movement.Id
                                    AND MovementFloat_ChangePercent.DescId = zc_MovementFloat_ChangePercent()
+
+
+            LEFT JOIN MovementFloat AS MovementFloat_ChangePercentTo
+                                    ON MovementFloat_ChangePercentTo.MovementId =  Movement.Id
+                                   AND MovementFloat_ChangePercentTo.DescId = zc_MovementFloat_ChangePercentPartner()
 
             LEFT JOIN MovementFloat AS MovementFloat_CurrencyValue
                                     ON MovementFloat_CurrencyValue.MovementId =  Movement.Id
@@ -161,6 +183,17 @@ BEGIN
 	    
             LEFT JOIN Object as ObjectCurrencycyDocumentInf on ObjectCurrencycyDocumentInf.descid= zc_Object_Currency()
                                             and ObjectCurrencycyDocumentInf.id = 14461
+
+            LEFT JOIN MovementLinkObject AS MovementLinkObject_PaidKindTo
+                                         ON MovementLinkObject_PaidKindTo.MovementId = Movement.Id
+                                        AND MovementLinkObject_PaidKindTo.DescId = zc_MovementLinkObject_PaidKindTo()
+            LEFT JOIN Object AS Object_PaidKindTo ON Object_PaidKindTo.Id = MovementLinkObject_PaidKindTo.ObjectId
+
+            LEFT JOIN MovementLinkObject AS MovementLinkObject_ContractTo
+                                         ON MovementLinkObject_ContractTo.MovementId = Movement.Id
+                                        AND MovementLinkObject_ContractTo.DescId = zc_MovementLinkObject_ContractTo()
+            LEFT JOIN Object_Contract_InvNumber_View AS View_ContractTo_InvNumber ON View_ContractTo_InvNumber.ContractId = MovementLinkObject_ContractTo.ObjectId
+
        WHERE Movement.Id =  inMovementId
          AND Movement.DescId = zc_Movement_Income();
      END IF;
