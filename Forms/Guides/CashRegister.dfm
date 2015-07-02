@@ -10,24 +10,19 @@ inherited CashRegisterForm: TCashRegisterForm
   inherited PageControl: TcxPageControl
     Width = 396
     Height = 348
-    ExplicitWidth = 773
+    ExplicitWidth = 396
     ExplicitHeight = 348
     ClientRectBottom = 348
     ClientRectRight = 396
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 773
+      ExplicitWidth = 396
       ExplicitHeight = 348
       inherited cxGrid: TcxGrid
         Width = 396
         Height = 348
-        ExplicitWidth = 773
+        ExplicitWidth = 396
         ExplicitHeight = 348
         inherited cxGridDBTableView: TcxGridDBTableView
-          OnDblClick = nil
-          OnKeyDown = nil
-          OnKeyPress = nil
-          OnCustomDrawCell = nil
-          DataController.Filter.OnChanged = nil
           OptionsData.CancelOnExit = True
           OptionsData.Deleting = False
           OptionsData.DeletingConfirmation = False
@@ -37,31 +32,25 @@ inherited CashRegisterForm: TCashRegisterForm
           Styles.Selection = nil
           Styles.Footer = nil
           Styles.Header = nil
-          OnColumnHeaderClick = nil
-          OnCustomDrawColumnHeader = nil
           object clCode: TcxGridDBColumn
             Caption = #1050#1086#1076
             DataBinding.FieldName = 'Code'
-            HeaderAlignmentVert = vaCenter
             Width = 62
           end
           object clName: TcxGridDBColumn
             Caption = #1053#1072#1079#1074#1072#1085#1080#1077
             DataBinding.FieldName = 'Name'
-            HeaderAlignmentVert = vaCenter
             Width = 145
           end
           object clCashRegisterKindName: TcxGridDBColumn
             Caption = #1058#1080#1087' '#1082#1072#1089#1089#1099
             DataBinding.FieldName = 'CashRegisterKindName'
-            HeaderAlignmentVert = vaCenter
             Width = 141
           end
           object clErased: TcxGridDBColumn
             Caption = #1059#1076#1072#1083#1077#1085
             DataBinding.FieldName = 'isErased'
             Visible = False
-            HeaderAlignmentVert = vaCenter
             Width = 92
           end
         end
@@ -75,36 +64,6 @@ inherited CashRegisterForm: TCashRegisterForm
     inherited actUpdate: TdsdInsertUpdateAction
       FormName = 'TCashRegisterEditForm'
     end
-    object ProtocolOpenForm: TdsdOpenForm [4]
-      Category = 'DSDLib'
-      MoveParams = <>
-      Caption = #1055#1088#1086#1089#1084#1086#1090#1088' '#1087#1088#1086#1090#1086#1082#1086#1083#1072
-      Hint = #1055#1088#1086#1089#1084#1086#1090#1088' '#1087#1088#1086#1090#1086#1082#1086#1083#1072
-      ImageIndex = 34
-      FormName = 'TProtocolForm'
-      FormNameParam.Value = 'TProtocolForm'
-      FormNameParam.DataType = ftString
-      GuiParams = <
-        item
-          Name = 'Id'
-          Value = Null
-          Component = MasterCDS
-          ComponentItem = 'Id'
-          ParamType = ptInput
-        end
-        item
-          Name = 'TextValue'
-          Value = Null
-          Component = MasterCDS
-          ComponentItem = 'Name'
-          DataType = ftString
-          ParamType = ptInput
-        end>
-      isShowModal = False
-    end
-  end
-  inherited MasterCDS: TClientDataSet
-    AfterInsert = nil
   end
   inherited spSelect: TdsdStoredProc
     StoredProcName = 'gpSelect_Object_CashRegister'
@@ -171,10 +130,6 @@ inherited CashRegisterForm: TCashRegisterForm
           Visible = True
           ItemName = 'dxBarStatic'
         end>
-    end
-    object bbProtocolOpenForm: TdxBarButton
-      Action = ProtocolOpenForm
-      Category = 0
     end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn

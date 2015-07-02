@@ -21,7 +21,7 @@ type
        FullName, JuridicalAddress, OKPO, INN, NumberVAT,
        AccounterName, BankAccount, Phone: String): integer;
    function InsertUpdateJuridical(const Id: integer; Code: Integer;
-        Name: string; isCorporate: boolean; RetailId: Integer): integer;
+        Name: string; isCorporate: boolean; RetailId: Integer; Percent: real): integer;
     constructor Create; override;
     function GetRecord(Id: integer): TDataSet; override;
   end;
@@ -85,7 +85,7 @@ end;
 function TJuridical.InsertDefault: integer;
 begin
 
-  result := InsertUpdateJuridical(0, -1, 'ёр. лицо', false, 0);
+  result := InsertUpdateJuridical(0, -1, 'ёр. лицо', false, 0, 1.0);
 
 //  InsertUpdateJuridicalHistory(result, Date, 0, 'ёр. лицо 12', '', '1212121212', '',
 //          '', '', '', '');
@@ -100,6 +100,7 @@ begin
   FParams.AddParam('inName', ftString, ptInput, Name);
   FParams.AddParam('inisCorporate', ftBoolean, ptInput, isCorporate);
   FParams.AddParam('inRetailId', ftInteger, ptInput, RetailId);
+  FParams.AddParam('inPercent', ftFloat, ptInput, Percent);
   result := InsertUpdate(FParams);
 end;
 

@@ -16,7 +16,8 @@ type
     function InsertDefault: integer; override;
   public
     function InsertUpdateIncome(Id: Integer; InvNumber: String; OperDate: TDateTime;
-             PriceWithVAT: Boolean; FromId, ToId, NDSKindId, ContractId: Integer; PayDate: TDateTime): integer;
+             PriceWithVAT: Boolean; FromId, ToId, NDSKindId, ContractId: Integer; PayDate: TDateTime;
+             InvNumberBranch: String; OperDateBranch: TDateTime): integer;
     constructor Create; override;
   end;
 
@@ -56,13 +57,15 @@ begin
   //
   result := InsertUpdateIncome(Id, InvNumber, OperDate,
              PriceWithVAT,
-             FromId, ToId, NDSKindId, ContractId, OperDate + 10);
+             FromId, ToId, NDSKindId, ContractId, OperDate + 10,
+             '0000',OperDate + 1);
   inherited;
 end;
 
 function TIncome.InsertUpdateIncome(Id: Integer; InvNumber: String; OperDate: TDateTime;
              PriceWithVAT: Boolean;
-             FromId, ToId, NDSKindId, ContractId: Integer; PayDate: TDateTime): integer;
+             FromId, ToId, NDSKindId, ContractId: Integer; PayDate: TDateTime;
+             InvNumberBranch: String; OperDateBranch: TDateTime): integer;
 begin
   FParams.Clear;
   FParams.AddParam('ioId', ftInteger, ptInputOutput, Id);
@@ -73,7 +76,9 @@ begin
   FParams.AddParam('inToId', ftInteger, ptInput, ToId);
   FParams.AddParam('inNDSKindId', ftInteger, ptInput, NDSKindId);
   FParams.AddParam('inContractId', ftInteger, ptInput, ContractId);
-  FParams.AddParam('inPayDate', ftDateTime, ptInput, PayDate);
+  FParams.AddParam('inPaymentDate', ftDateTime, ptInput, PayDate);
+  FParams.AddParam('inInvNumberBranch', ftString, ptInput, InvNumberBranch);
+  FParams.AddParam('inOperDateBranch', ftDateTime, ptInput, OperDateBranch);
   result := InsertUpdate(FParams);
 end;
 

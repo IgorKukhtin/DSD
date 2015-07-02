@@ -50,6 +50,7 @@ begin
     try
       Connection := ZConnection;
       StoredProcName := 'gpInsertUpdate_Object_Program';
+      Params.Clear;
       Params.CreateParam(ftString, 'inProgramName', ptInput);
       Params.CreateParam(ftFloat, 'inMajorVersion', ptInput);
       Params.CreateParam(ftFloat, 'inMinorVersion', ptInput);
@@ -94,6 +95,7 @@ begin
     try
       Connection := ZConnection;
       StoredProcName := 'gpInsertUpdate_Object_Program';
+      Params.Clear;
       Params.CreateParam(ftString, 'inProgramName', ptInput);
       Params.CreateParam(ftFloat, 'inMajorVersion', ptInput);
       Params.CreateParam(ftFloat, 'inMinorVersion', ptInput);
@@ -134,6 +136,7 @@ begin
     try
       Connection := ZConnection;
       StoredProcName := 'gpInsertUpdate_Object_Program';
+      Params.Clear;
       Params.CreateParam(ftString, 'inProgramName', ptInput);
       Params.CreateParam(ftFloat, 'inMajorVersion', ptInput);
       Params.CreateParam(ftFloat, 'inMinorVersion', ptInput);

@@ -9,7 +9,7 @@ IN Session TVarChar)
 $BODY$
 BEGIN
 
-  DELETE FROM DefaultValue WHERE DefaultKeyId = (SELECT Id FROM DefaultKeys WHERE Key = inKey);
+  DELETE FROM DefaultValue WHERE DefaultKeyId in (SELECT Id FROM DefaultKeys WHERE Key = inKey);
 
   DELETE FROM DefaultKeys WHERE Key = inKey;
 END;

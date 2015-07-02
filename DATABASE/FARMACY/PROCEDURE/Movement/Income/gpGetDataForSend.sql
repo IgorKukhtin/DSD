@@ -85,6 +85,6 @@ ALTER FUNCTION gpGetDataForSend(Integer, TVarChar) OWNER TO postgres;
 -- тест
 -- SELECT * FROM gpSelect_MovementItem_Income (inMovementId:= 25173, inShowAll:= TRUE, inIsErased:= FALSE, inSession:= '9818')
 --
-SELECT * FROM gpGetDataForSend (inMovementId:= 53675  , inSession:= '2') --15532 --15476
+--SELECT * FROM gpGetDataForSend (inMovementId:= 53675  , inSession:= '2') --15532 --15476
 --call "DBA"."LoadIncomeBillItems"('БН8687','2015-01-20','2015-01-20',1,'35341093',0,79,7.0000,12654,'Тонометр Росма (...)"
 

@@ -1,5 +1,4 @@
 inherited BankAccountJournalFarmacyForm: TBankAccountJournalFarmacyForm
-  ExplicitHeight = 404
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -60,9 +59,6 @@ inherited BankAccountJournalFarmacyForm: TBankAccountJournalFarmacyForm
           inherited colInfoMoneyName_all: TcxGridDBColumn
             VisibleForCustomization = False
           end
-          inherited colUnit: TcxGridDBColumn
-            VisibleForCustomization = False
-          end
         end
       end
     end
@@ -110,6 +106,30 @@ inherited BankAccountJournalFarmacyForm: TBankAccountJournalFarmacyForm
       DataSets = <
         item
           DataSet = PrintItemsCDS
+        end>
+    end
+    inherited actPrint1: TdsdPrintAction
+      MoveParams = <
+        item
+          FromParam.Value = Null
+          ToParam.Value = Null
+        end>
+      DataSets = <
+        item
+        end>
+    end
+    inherited actIsCopy: TdsdExecStoredProc
+      MoveParams = <
+        item
+          FromParam.Value = Null
+          ToParam.Value = Null
+        end>
+    end
+    inherited actIsCopyTrue: TdsdExecStoredProc
+      MoveParams = <
+        item
+          FromParam.Value = Null
+          ToParam.Value = Null
         end>
     end
   end

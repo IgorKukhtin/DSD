@@ -10,13 +10,11 @@ uses
   Vcl.ActnList, cxPropertiesStore, cxGridLevel, cxGridCustomView,
   cxGridCustomTableView, cxGridTableView, cxGridDBTableView, cxGrid, cxPC,
   Vcl.Controls, dxSkinsCore, dxSkinsDefaultPainters, dxSkinscxPCPainter,
-  dxSkinsdxBarPainter, Vcl.Menus;
+  dxSkinsdxBarPainter, Vcl.Menus, dxBarBuiltInMenu, cxNavigator;
 
 type
   TCashRegisterForm = class(TAncestorGuidesForm)
     clCashRegisterKindName: TcxGridDBColumn;
-    ProtocolOpenForm: TdsdOpenForm;
-    bbProtocolOpenForm: TdxBarButton;
   private
     { Private declarations }
   public
