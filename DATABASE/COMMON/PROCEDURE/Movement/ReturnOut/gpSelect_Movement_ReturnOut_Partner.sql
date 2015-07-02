@@ -1,8 +1,8 @@
--- Function: gpSelect_Movement_ReturnOut()
+-- Function: gpSelect_Movement_ReturnOut_Partner()
 
-DROP FUNCTION IF EXISTS gpSelect_Movement_ReturnOut (TDateTime, TDateTime, Boolean, Boolean,TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_Movement_ReturnOut_Partner (TDateTime, TDateTime, Boolean, Boolean,TVarChar);
 
-CREATE OR REPLACE FUNCTION gpSelect_Movement_ReturnOut(
+CREATE OR REPLACE FUNCTION gpSelect_Movement_ReturnOut_Partner(
     IN inStartDate   TDateTime , --
     IN inEndDate     TDateTime , --
     IN inIsPartnerDate Boolean ,
@@ -12,7 +12,7 @@ CREATE OR REPLACE FUNCTION gpSelect_Movement_ReturnOut(
 RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode Integer, StatusName TVarChar
              , PriceWithVAT Boolean
              , OperDatePartner TDateTime
-             , VATPercent TFloat, ChangePercent TFloat
+             , VATPercent TFloat, ChangePercent TFloat, ChangePercentFrom TFloat
              , TotalCount TFloat, TotalCountPartner TFloat
              , TotalSummVAT TFloat, TotalSummMVAT TFloat, TotalSummPVAT TFloat, TotalSumm TFloat
              , CurrencyValue TFloat
@@ -22,6 +22,11 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , JuridicalName_To TVarChar, OKPO_To TVarChar
              , InfoMoneyGroupName TVarChar, InfoMoneyDestinationName TVarChar, InfoMoneyCode Integer, InfoMoneyName TVarChar
              , CurrencyDocumentName TVarChar, CurrencyPartnerName TVarChar
+
+             , PaidKindFromId Integer, PaidKindFromName TVarChar
+             , ContractFromId Integer, ContractFromName TVarChar
+             , JuridicalName_From TVarChar, OKPO_From TVarChar
+             , isIncome Boolean
               )
 AS
 $BODY$
@@ -56,6 +61,7 @@ BEGIN
            , MovementDate_OperDatePartner.ValueData         AS OperDatePartner
            , MovementFloat_VATPercent.ValueData             AS VATPercent
            , MovementFloat_ChangePercent.ValueData          AS ChangePercent
+           , MovementFloat_ChangePercentFrom.ValueData      AS ChangePercentFrom
            , MovementFloat_TotalCount.ValueData             AS TotalCount
            , MovementFloat_TotalCountPartner.ValueData      AS TotalCountPartner
            , CAST (COALESCE (MovementFloat_TotalSummPVAT.ValueData, 0) - COALESCE (MovementFloat_TotalSummMVAT.ValueData, 0) AS TFloat) AS TotalSummVAT
@@ -83,6 +89,14 @@ BEGIN
            , Object_CurrencyDocument.ValueData AS CurrencyDocumentName
            , Object_CurrencyPartner.ValueData  AS CurrencyPartnerName
 
+           , Object_PaidKindFrom.Id                             AS PaidKindFromId
+           , Object_PaidKindFrom.ValueData                      AS PaidKindFromName
+           , View_ContractFrom_InvNumber.ContractId             AS ContractFromId
+           , View_ContractFrom_InvNumber.InvNumber              AS ContractFromName
+           , Object_JuridicalFrom.ValueData                     AS JuridicalName_From
+           , ObjectHistory_JuridicalFromDetails_View.OKPO       AS OKPO_From
+
+           , MovementBoolean_isIncome.ValueData                 AS isIncome
        FROM (SELECT Movement.id
              FROM tmpStatus
                   JOIN Movement ON Movement.OperDate BETWEEN inStartDate AND inEndDate  AND Movement.DescId = zc_Movement_ReturnOut() AND Movement.StatusId = tmpStatus.StatusId
@@ -101,7 +115,12 @@ BEGIN
 
             LEFT JOIN Movement ON Movement.id = tmpMovement.id
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
-
+           
+            INNER JOIN MovementBoolean AS MovementBoolean_isIncome
+                                       ON MovementBoolean_isIncome.MovementId =  Movement.Id
+                                      AND MovementBoolean_isIncome.DescId = zc_MovementBoolean_isIncome()
+                                      AND MovementBoolean_isIncome.ValueData  = False
+           
             LEFT JOIN MovementBoolean AS MovementBoolean_PriceWithVAT
                                       ON MovementBoolean_PriceWithVAT.MovementId =  Movement.Id
                                      AND MovementBoolean_PriceWithVAT.DescId = zc_MovementBoolean_PriceWithVAT()
@@ -116,6 +135,10 @@ BEGIN
             LEFT JOIN MovementFloat AS MovementFloat_ChangePercent
                                     ON MovementFloat_ChangePercent.MovementId =  Movement.Id
                                    AND MovementFloat_ChangePercent.DescId = zc_MovementFloat_ChangePercent()
+
+            LEFT JOIN MovementFloat AS MovementFloat_ChangePercentFrom
+                                    ON MovementFloat_ChangePercentFrom.MovementId =  Movement.Id
+                                   AND MovementFloat_ChangePercentFrom.DescId = zc_MovementFloat_ChangePercentPartner()
 
             LEFT JOIN MovementFloat AS MovementFloat_TotalCount
                                     ON MovementFloat_TotalCount.MovementId =  Movement.Id
@@ -174,19 +197,31 @@ BEGIN
                                         AND MovementLinkObject_CurrencyPartner.DescId = zc_MovementLinkObject_CurrencyPartner()
             LEFT JOIN Object AS Object_CurrencyPartner ON Object_CurrencyPartner.Id = MovementLinkObject_CurrencyPartner.ObjectId
 
-            LEFT JOIN MovementBoolean AS MovementBoolean_isIncome
-                                      ON MovementBoolean_isIncome.MovementId =  Movement.Id
-                                     AND MovementBoolean_isIncome.DescId = zc_MovementBoolean_isIncome()
-                                     AND MovementBoolean_isIncome.ValueData  = False
 
-       WHERE MovementBoolean_isIncome.ValueData is NULL
+            LEFT JOIN ObjectLink AS ObjectLink_Partner_JuridicalFrom
+                                 ON ObjectLink_Partner_JuridicalFrom.ObjectId = Object_From.Id
+                                AND ObjectLink_Partner_JuridicalFrom.DescId = zc_ObjectLink_Partner_Juridical()
+            LEFT JOIN Object AS Object_JuridicalFrom ON Object_JuridicalFrom.Id = ObjectLink_Partner_JuridicalFrom.ChildObjectId
+            LEFT JOIN ObjectHistory_JuridicalDetails_View AS ObjectHistory_JuridicalFromDetails_View
+                                                          ON ObjectHistory_JuridicalFromDetails_View.JuridicalId = Object_JuridicalFrom.Id
+
+            LEFT JOIN MovementLinkObject AS MovementLinkObject_PaidKindFrom
+                                         ON MovementLinkObject_PaidKindFrom.MovementId = Movement.Id
+                                        AND MovementLinkObject_PaidKindFrom.DescId = zc_MovementLinkObject_PaidKindFrom()
+            LEFT JOIN Object AS Object_PaidKindFrom ON Object_PaidKindFrom.Id = MovementLinkObject_PaidKindFrom.ObjectId
+
+            LEFT JOIN MovementLinkObject AS MovementLinkObject_ContractFrom
+                                         ON MovementLinkObject_ContractFrom.MovementId = Movement.Id
+                                        AND MovementLinkObject_ContractFrom.DescId = zc_MovementLinkObject_ContractFrom()
+            LEFT JOIN Object_Contract_InvNumber_View AS View_ContractFrom_InvNumber ON View_ContractFrom_InvNumber.ContractId = MovementLinkObject_ContractFrom.ObjectId
+            
 
             ;
 
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpSelect_Movement_ReturnOut (TDateTime, TDateTime, Boolean, Boolean,TVarChar) OWNER TO postgres;
+ALTER FUNCTION gpSelect_Movement_ReturnOut_Partner (TDateTime, TDateTime, Boolean, Boolean,TVarChar) OWNER TO postgres;
 
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
@@ -203,4 +238,4 @@ ALTER FUNCTION gpSelect_Movement_ReturnOut (TDateTime, TDateTime, Boolean, Boole
 */
 
 -- ÚÂÒÚ
--- SELECT * FROM gpSelect_Movement_ReturnOut (inStartDate:= '30.01.2013', inEndDate:= '01.02.2013', inSession:= zfCalc_UserAdmin())
+-- SELECT * FROM gpSelect_Movement_ReturnOut_Partner (inStartDate:= '30.01.2013', inEndDate:= '01.02.2013', inSession:= zfCalc_UserAdmin())

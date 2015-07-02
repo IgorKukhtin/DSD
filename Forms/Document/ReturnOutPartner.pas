@@ -31,19 +31,19 @@ type
     edFrom: TcxButtonEdit;
     edTo: TcxButtonEdit;
     cxLabel4: TcxLabel;
-    edContract: TcxButtonEdit;
+    edContractTo: TcxButtonEdit;
     cxLabel9: TcxLabel;
     cxLabel6: TcxLabel;
-    edPaidKind: TcxButtonEdit;
+    edPaidKindTo: TcxButtonEdit;
     edPriceWithVAT: TcxCheckBox;
     edVATPercent: TcxCurrencyEdit;
     cxLabel7: TcxLabel;
-    edChangePercent: TcxCurrencyEdit;
+    edChangePercenTo: TcxCurrencyEdit;
     cxLabel8: TcxLabel;
     GuidesFrom: TdsdGuides;
     GuidesTo: TdsdGuides;
-    PaidKindGuides: TdsdGuides;
-    ContractGuides: TdsdGuides;
+    PaidKindGuidesTo: TdsdGuides;
+    ContractGuidesTo: TdsdGuides;
     edOperDatePartner: TcxDateEdit;
     cxLabel10: TcxLabel;
     colCode: TcxGridDBColumn;
@@ -79,6 +79,14 @@ type
     actPrint1: TdsdPrintAction;
     cbCalcAmountPartner: TcxCheckBox;
     bbCalcAmountPartner: TdxBarControlContainerItem;
+    cxLabel11: TcxLabel;
+    edPaidKindFrom: TcxButtonEdit;
+    cxLabel13: TcxLabel;
+    edContractFrom: TcxButtonEdit;
+    ContractGuidesFrom: TdsdGuides;
+    PaidKindGuidesFrom: TdsdGuides;
+    cxLabel16: TcxLabel;
+    edChangePercentFrom: TcxCurrencyEdit;
   private
     { Private declarations }
   public

@@ -68,7 +68,7 @@ BEGIN
      -- сохранили связь с <Договора>
      PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_ContractTo(), ioId, inContractToId);
      -- сохранили свойство <(-)% Скидки (+)% Наценки покупателя> 
-     PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_ChangePercentTo(), ioId, inChangePercentTo);
+     PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_ChangePercentPartner(), ioId, inChangePercentTo);
      -- сохранили свойство <приход>
      PERFORM lpInsertUpdate_MovementBoolean (zc_MovementBoolean_isIncome(), ioId, inisIncome);
 
