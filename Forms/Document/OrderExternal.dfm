@@ -608,7 +608,7 @@ inherited OrderExternalForm: TOrderExternalForm
         item
           DataSet = PrintItemsCDS
           UserName = 'frxDBDMaster'
-          IndexFieldNames = 'GoodsName;GoodsKindName'
+          IndexFieldNames = 'GoodsGroupNameFull;GoodsName;GoodsKindName'
         end>
       Params = <
         item

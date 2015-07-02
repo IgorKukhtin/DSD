@@ -917,6 +917,7 @@ begin
 end;
 //------------------------------------------------------------------------------------------------
 procedure TMainForm.WriteParamsMovement;
+var str_edi:String;
 begin
   with ParamsMovement do begin
 
@@ -928,7 +929,14 @@ begin
     PanelPriceList.Caption:=ParamByName('PriceListName').asString;
 
     if ParamByName('calcPartnerId').AsInteger<>0
-    then PanelPartner.Caption:='  ('+IntToStr(ParamByName('calcPartnerCode').asInteger)+') '+ParamByName('calcPartnerName').asString
+    then begin
+             str_edi:='';
+             if ParamsMovement.ParamByName('isEdiInvoice').asBoolean=TRUE then str_edi:=str_edi+'cч.';
+             if ParamsMovement.ParamByName('isEdiOrdspr').asBoolean=TRUE then str_edi:=str_edi+'пн.';
+             if ParamsMovement.ParamByName('isEdiDesadv').asBoolean=TRUE then str_edi:=str_edi+'ув.';
+
+             PanelPartner.Caption:=str_edi+'('+IntToStr(ParamByName('calcPartnerCode').asInteger)+')'+ParamByName('calcPartnerName').asString;
+         end
     else PanelPartner.Caption:='';
 
     if ParamByName('ContractId').AsInteger<>0

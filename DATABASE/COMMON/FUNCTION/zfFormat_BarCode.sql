@@ -32,21 +32,28 @@ BEGIN
      RETURN ((inBarCodePref
           ||  CASE CHAR_LENGTH (inBarCodePref)
                    WHEN 0 THEN NULL
-                   WHEN 1 THEN '00'
-                   WHEN 2 THEN '0'
-                   WHEN 3 THEN ''
+                   WHEN 1 THEN '0000'
+                   WHEN 2 THEN '000'
+                   WHEN 3 THEN '00'
+                   WHEN 4 THEN '0'
+                   WHEN 5 THEN ''
                    ELSE NULL
               END
            || CASE CHAR_LENGTH (inId :: TVarChar)
-                   WHEN 0 THEN '000000000'
-                   WHEN 1 THEN '00000000'
-                   WHEN 2 THEN '0000000'
-                   WHEN 3 THEN '000000'
-                   WHEN 4 THEN '00000'
-                   WHEN 5 THEN '0000'
-                   WHEN 6 THEN '000'
-                   WHEN 7 THEN '00'
-                   WHEN 8 THEN '0'
+                   WHEN 0 THEN '0000000'
+                   WHEN 1 THEN '000000'
+                   WHEN 2 THEN '00000'
+                   WHEN 3 THEN '0000'
+                   WHEN 4 THEN '000'
+                   WHEN 5 THEN '00'
+                   WHEN 6 THEN '0'
+                   WHEN 7 THEN ''
+                   WHEN 8 THEN '?'
+                   WHEN 9 THEN '?'
+                   WHEN 10 THEN '?'
+                   WHEN 11 THEN '?'
+                   WHEN 12 THEN '?'
+                   WHEN 13 THEN '?'
                    ELSE ''
               END
            || inId :: TVarChar));

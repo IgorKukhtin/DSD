@@ -42,7 +42,8 @@ $BODY$
 BEGIN
 
      RETURN QUERY 
-       SELECT
+       WITH tmp AS
+      (SELECT
              Movement.Id
            , Movement.InvNumber
            , Movement.OperDate
@@ -242,8 +243,13 @@ BEGIN
 
        WHERE Movement.DescId = zc_Movement_EDI()
          AND Movement.Id = inMovementId
-       ;
+      )
+     , tmp_find AS (SELECT MAX (COALESCE (tmp.MovementId_Order, 0)) AS Id_find FROM tmp)
 
+       -- Результат
+       SELECT * FROM tmp WHERE COALESCE (tmp.MovementId_Order, 0) IN (SELECT tmp_find.Id_find FROM tmp_find)
+       LIMIT 1
+       ;
 
 END;
 $BODY$

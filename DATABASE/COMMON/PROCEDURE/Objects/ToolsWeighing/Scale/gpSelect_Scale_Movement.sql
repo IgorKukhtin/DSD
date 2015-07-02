@@ -32,6 +32,7 @@ RETURNS TABLE (Id Integer, InvNumber Integer, OperDate TDateTime, StatusCode Int
              , PositionId2 Integer, PositionCode2 Integer, PositionName2 TVarChar
              , PositionId3 Integer, PositionCode3 Integer, PositionName3 TVarChar
              , PositionId4 Integer, PositionCode4 Integer, PositionName4 TVarChar
+             , EdiOrdspr Boolean, EdiInvoice Boolean, EdiDesadv Boolean
              , UserName TVarChar
               )
 AS
@@ -114,6 +115,10 @@ BEGIN
              , Object_Position2.Id AS PositionId2, Object_Position2.ObjectCode AS PositionCode2, Object_Position2.ValueData AS PositionName2
              , Object_Position3.Id AS PositionId3, Object_Position3.ObjectCode AS PositionCode3, Object_Position3.ValueData AS PositionName3
              , Object_Position4.Id AS PositionId4, Object_Position4.ObjectCode AS PositionCode4, Object_Position4.ValueData AS PositionName4
+
+             , COALESCE (MovementBoolean_EdiOrdspr.ValueData, FALSE)    AS EdiOrdspr
+             , COALESCE (MovementBoolean_EdiInvoice.ValueData, FALSE)   AS EdiInvoice
+             , COALESCE (MovementBoolean_EdiDesadv.ValueData, FALSE)    AS EdiDesadv
 
              , Object_User.ValueData              AS UserName
 
@@ -240,6 +245,19 @@ BEGIN
             LEFT JOIN Movement AS Movement_Tax ON Movement_Tax.Id = MovementLinkMovement_Tax.MovementChildId
             LEFT JOIN MovementString AS MS_InvNumberPartner_Tax ON MS_InvNumberPartner_Tax.MovementId = MovementLinkMovement_Tax.MovementChildId
                                                                AND MS_InvNumberPartner_Tax.DescId = zc_MovementString_InvNumberPartner()
+
+            LEFT JOIN MovementBoolean AS MovementBoolean_EdiOrdspr
+                                      ON MovementBoolean_EdiOrdspr.MovementId =  Movement.ParentId
+                                     AND MovementBoolean_EdiOrdspr.DescId = zc_MovementBoolean_EdiOrdspr()
+
+            LEFT JOIN MovementBoolean AS MovementBoolean_EdiInvoice
+                                      ON MovementBoolean_EdiInvoice.MovementId =  Movement.ParentId
+                                     AND MovementBoolean_EdiInvoice.DescId = zc_MovementBoolean_EdiInvoice()
+
+            LEFT JOIN MovementBoolean AS MovementBoolean_EdiDesadv
+                                      ON MovementBoolean_EdiDesadv.MovementId =  Movement.ParentId
+                                     AND MovementBoolean_EdiDesadv.DescId = zc_MovementBoolean_EdiDesadv()
+
 
        ORDER BY COALESCE (MovementDate_EndWeighing.ValueData, MovementDate_StartWeighing.ValueData) DESC
               , MovementDate_StartWeighing.ValueData DESC

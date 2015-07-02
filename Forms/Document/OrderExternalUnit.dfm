@@ -11,17 +11,17 @@ inherited OrderExternalUnitForm: TOrderExternalUnitForm
     Width = 1416
     Height = 542
     ExplicitTop = 126
-    ExplicitWidth = 1556
+    ExplicitWidth = 1416
     ExplicitHeight = 542
     ClientRectBottom = 542
     ClientRectRight = 1416
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 1556
+      ExplicitWidth = 1416
       ExplicitHeight = 518
       inherited cxGrid: TcxGrid
         Width = 1416
         Height = 518
-        ExplicitWidth = 1556
+        ExplicitWidth = 1416
         ExplicitHeight = 518
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
@@ -366,7 +366,7 @@ inherited OrderExternalUnitForm: TOrderExternalUnitForm
     Width = 1416
     Height = 100
     TabOrder = 3
-    ExplicitWidth = 1556
+    ExplicitWidth = 1416
     ExplicitHeight = 100
     inherited edInvNumber: TcxTextEdit
       Left = 8
@@ -435,8 +435,8 @@ inherited OrderExternalUnitForm: TOrderExternalUnitForm
     object edOperDatePartner: TcxDateEdit
       Left = 180
       Top = 63
-      Enabled = False
-      Properties.ReadOnly = True
+      EditValue = 42187d
+      Properties.ReadOnly = False
       Properties.SaveTime = False
       Properties.ShowTime = False
       TabOrder = 11
@@ -1532,10 +1532,11 @@ inherited OrderExternalUnitForm: TOrderExternalUnitForm
         ParamType = ptInput
       end
       item
-        Name = 'outOperDatePartner'
+        Name = 'inOperDatePartner'
         Value = 0d
         Component = edOperDatePartner
         DataType = ftDateTime
+        ParamType = ptInput
       end
       item
         Name = 'inOperDateMark'

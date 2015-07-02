@@ -102,7 +102,7 @@ BEGIN
                                                        , inMovementId          := inMovementId
                                                        , inGoodsId             := inGoodsId
                                                        , inAmount              := inRealWeight - inCountTare * inWeightTare
-                                                       , inAmountPartner       := CAST ((inRealWeight - inCountTare * inWeightTare) * (1 - inChangePercentAmount/100) AS NUMERIC (16, 3))
+                                                       , inAmountPartner       := CAST ((inRealWeight - inCountTare * inWeightTare) * (1 - inChangePercentAmount/100) AS NUMERIC (16, 2))
                                                        , inRealWeight          := inRealWeight
                                                        , inChangePercentAmount := inChangePercentAmount
                                                        , inCountTare           := inCountTare

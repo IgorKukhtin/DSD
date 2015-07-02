@@ -164,6 +164,7 @@ BEGIN
                                        ON MIFloat_CountForPrice.MovementItemId = MovementItem.Id
                                       AND MIFloat_CountForPrice.DescId = zc_MIFloat_CountForPrice()
        WHERE Movement.OperDate BETWEEN inStartDate AND inEndDate
+         AND Movement.StatusId = zc_Enum_Status_Complete()
          AND Movement.DescId = zc_Movement_OrderExternal()
          AND (COALESCE (MovementLinkObject_To.ObjectId,0) = CASE WHEN inToId <> 0 THEN inToId ELSE COALESCE (MovementLinkObject_To.ObjectId,0) END)
          AND (COALESCE (MovementLinkObject_From.ObjectId,0) = CASE WHEN inFromId <> 0 THEN inFromId ELSE COALESCE (MovementLinkObject_From.ObjectId,0) END)

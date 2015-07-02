@@ -32,11 +32,25 @@ $BODY$
     DECLARE vbTotalCountSh  TFloat;
 
     DECLARE vbIsProcess_BranchIn Boolean;
+
+    DECLARE vbStoreKeeperName TVarChar;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Select_Movement_Sale());
      vbUserId:= lpGetUserBySession (inSession);
 
+
+     -- параметры из Взвешивания
+     vbStoreKeeperName:= (SELECT Object_User.ValueData
+                          FROM Movement
+                               LEFT JOIN MovementLinkObject AS MovementLinkObject_User
+                                                            ON MovementLinkObject_User.MovementId = Movement.Id
+                                                           AND MovementLinkObject_User.DescId = zc_MovementLinkObject_User()
+                               LEFT JOIN Object AS Object_User ON Object_User.Id = MovementLinkObject_User.ObjectId
+                          WHERE Movement.ParentId = inMovementId AND Movement.DescId IN (zc_Movement_WeighingPartner(), zc_Movement_WeighingProduction())
+                            AND Movement.StatusId = zc_Enum_Status_Complete()
+                          LIMIT 1
+                         );
 
      -- параметры из документа
      SELECT Movement.DescId
@@ -246,11 +260,11 @@ BEGIN
 
            , Object_RouteSorting.ValueData 		        AS RouteSortingName
 
-           , CASE WHEN View_Contract.InfoMoneyId = zc_Enum_InfoMoney_30101() AND Object_From.Id = 8459
+           , /*CASE WHEN View_Contract.InfoMoneyId = zc_Enum_InfoMoney_30101() AND Object_From.Id = 8459
                    AND OH_JuridicalDetails_To.OKPO NOT IN ('32516492', '39135315', '39622918')
                        THEN 'Бабенко В.П.'
                   ELSE ''
-             END AS StoreKeeper -- кладовщик
+             END*/ vbStoreKeeperName AS StoreKeeper -- кладовщик
            , '' :: TVarChar                             AS Through     -- через кого
            , CASE WHEN OH_JuridicalDetails_To.OKPO IN ('32516492', '39135315', '39622918') THEN 'м. Київ, вул Ольжича, 18/22' ELSE '' END :: TVarChar  AS UnitAddress -- адреса складання
 

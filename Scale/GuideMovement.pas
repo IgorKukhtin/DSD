@@ -92,6 +92,12 @@ type
     InvNumberPartner_Tax: TcxGridDBColumn;
     OperDate_Tax: TcxGridDBColumn;
     MovementDescNumber: TcxGridDBColumn;
+    bbEDI_Invoice: TSpeedButton;
+    bbEDI_Ordspr: TSpeedButton;
+    bbEDI_Desadv: TSpeedButton;
+    EdiOrdspr: TcxGridDBColumn;
+    EdiInvoice: TcxGridDBColumn;
+    EdiDesadv: TcxGridDBColumn;
     procedure FormCreate(Sender: TObject);
     procedure FormKeyDown(Sender: TObject; var Key: Word;
       Shift: TShiftState);
@@ -113,6 +119,9 @@ type
     procedure cbPrintSpecClick(Sender: TObject);
     procedure cbPrintAccountClick(Sender: TObject);
     procedure cbPrintMovementClick(Sender: TObject);
+    procedure bbEDI_InvoiceClick(Sender: TObject);
+    procedure bbEDI_OrdsprClick(Sender: TObject);
+    procedure bbEDI_DesadvClick(Sender: TObject);
   private
     fStartWrite:Boolean;
 
@@ -547,6 +556,30 @@ begin
                        , 1    // myPrintCount
                        , TRUE // isPreview
                         );
+end;
+{------------------------------------------------------------------------------}
+procedure TGuideMovementForm.bbEDI_DesadvClick(Sender: TObject);
+begin
+     if MessageDlg('EDI <Уведомление - Desadv>.'+#10+#13+'Действительно отправить?',mtConfirmation,mbYesNoCancel,0) <> 6
+     then exit;
+     //
+     SendEDI_Desadv (CDS.FieldByName('MovementId_parent').AsInteger);
+end;
+{------------------------------------------------------------------------------}
+procedure TGuideMovementForm.bbEDI_InvoiceClick(Sender: TObject);
+begin
+     if MessageDlg('EDI <Счет - Invoice>.'+#10+#13+'Действительно отправить?',mtConfirmation,mbYesNoCancel,0) <> 6
+     then exit;
+     //
+     SendEDI_Invoice (CDS.FieldByName('MovementId_parent').AsInteger);
+end;
+{------------------------------------------------------------------------------}
+procedure TGuideMovementForm.bbEDI_OrdsprClick(Sender: TObject);
+begin
+     if MessageDlg('EDI <Подтверждение - Ordspr>.'+#10+#13+'Действительно отправить?',mtConfirmation,mbYesNoCancel,0) <> 6
+     then exit;
+     //
+     SendEDI_Ordspr (CDS.FieldByName('MovementId_parent').AsInteger);
 end;
 {------------------------------------------------------------------------------}
 end.
