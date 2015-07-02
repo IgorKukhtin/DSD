@@ -14,8 +14,8 @@ type
     FToParam: TdsdParam;
     FFromParam: TdsdParam;
   public
-   procedure Assign(Source: TPersistent); override;
-   constructor Create(Collection: TCollection); override;
+    procedure Assign(Source: TPersistent); override;
+    constructor Create(Collection: TCollection); override;
   published
     property FromParam: TdsdParam read FFromParam write FFromParam;
     property ToParam: TdsdParam read FToParam write FToParam;
@@ -85,11 +85,11 @@ type
     FCancelAction: TAction;
     FActiveControl: TWinControl;
     FTimer: TTimer;
-    FEnabledTimer: boolean;
-    FTimerInterval: integer;
+    FEnabledTimer: Boolean;
+    FTimerInterval: Integer;
     FPostDataSetAfterExecute: Boolean;
     procedure SetTabSheet(const Value: TcxTabSheet); virtual;
-    procedure SetEnabledTimer(const Value: boolean);
+    procedure SetEnabledTimer(const Value: Boolean);
     procedure OnTimer(Sender: TObject);
   protected
     property QuestionBeforeExecute: string read FQuestionBeforeExecute
@@ -123,7 +123,8 @@ type
       write FPostDataSetBeforeExecute default true;
     property PostDataSetAfterExecute: Boolean read FPostDataSetAfterExecute
       write FPostDataSetAfterExecute default false;
-    property EnabledTimer: boolean read FEnabledTimer write SetEnabledTimer default false;
+    property EnabledTimer: Boolean read FEnabledTimer write SetEnabledTimer
+      default false;
     property Timer: TTimer read FTimer write FTimer;
   end;
 
@@ -492,11 +493,9 @@ type
     property DataSource: TDataSource read GetDataSource write SetDataSource;
   end;
 
-  type
-    TcxExport = (cxegExportToHtml, cxegExportToXml,
-                 cxegExportToText, cxegExportToExcel,
-                 cxegExportToXlsx,
-                 cxegExportToDbf);
+type
+  TcxExport = (cxegExportToHtml, cxegExportToXml, cxegExportToText,
+    cxegExportToExcel, cxegExportToXlsx, cxegExportToDbf);
 
   TExportGrid = class(TdsdCustomAction)
   private
@@ -504,7 +503,7 @@ type
     FExportType: TcxExport;
     FDefaultFileName: string;
     FColumnNameDataSet: TDataSet;
-    FOpenAfterCreate: boolean;
+    FOpenAfterCreate: Boolean;
     procedure SetGrid(const Value: TcxControl);
   protected
     procedure Notification(AComponent: TComponent;
@@ -513,15 +512,19 @@ type
   public
     constructor Create(AOwner: TComponent); override;
   published
-    property ColumnNameDataSet: TDataSet read FColumnNameDataSet write FColumnNameDataSet;
-    property ExportType: TcxExport read FExportType write FExportType default cxegExportToExcel;
+    property ColumnNameDataSet: TDataSet read FColumnNameDataSet
+      write FColumnNameDataSet;
+    property ExportType: TcxExport read FExportType write FExportType
+      default cxegExportToExcel;
     property Grid: TcxControl read FGrid write SetGrid;
     property Caption;
     property Hint;
     property ImageIndex;
     property ShortCut;
-    property OpenAfterCreate: boolean read FOpenAfterCreate write FOpenAfterCreate default true;
-    property DefaultFileName: string read FDefaultFileName write FDefaultFileName;
+    property OpenAfterCreate: Boolean read FOpenAfterCreate
+      write FOpenAfterCreate default true;
+    property DefaultFileName: string read FDefaultFileName
+      write FDefaultFileName;
   end;
 
   TdsdGridToExcel = class(TExportGrid)
@@ -537,10 +540,11 @@ type
     FReportNameParam: TdsdParam;
     FDataSets: TdsdDataSets;
     FDataSetList: TList;
-    FWithOutPreview: boolean;
+    FWithOutPreview: Boolean;
+    FCopiesCount: Integer;
     function GetReportName: String;
     procedure SetReportName(const Value: String);
-    procedure SetWithOutPreview(const Value: boolean);
+    procedure SetWithOutPreview(const Value: Boolean);
   protected
     procedure Notification(AComponent: TComponent;
       Operation: TOperation); override;
@@ -550,9 +554,12 @@ type
     destructor Destroy; override;
   published
     // Печать без Preview
-    property WithOutPreview: boolean read FWithOutPreview write SetWithOutPreview default false;
+    property WithOutPreview: Boolean read FWithOutPreview
+      write SetWithOutPreview default false;
     // Список датасетов
     property DataSets: TdsdDataSets read FDataSets write FDataSets;
+    // Количество копий
+    property CopiesCount: Integer read FCopiesCount write FCopiesCount;
     property Params: TdsdParams read FParams write FParams;
     property ReportName: String read GetReportName write SetReportName;
     // Название отчета
@@ -711,24 +718,24 @@ var
 begin
   inherited;
   if csDestroying in ComponentState then
-     exit;
-    if (Operation = opRemove) and Assigned(StoredProcList) then
+    exit;
+  if (Operation = opRemove) and Assigned(StoredProcList) then
+  begin
+    if AComponent is TdsdStoredProc then
     begin
-      if AComponent is TdsdStoredProc then
-      begin
-        for i := 0 to StoredProcList.Count - 1 do
-          if StoredProcList[i].StoredProc = AComponent then
-            StoredProcList[i].StoredProc := nil;
-        if StoredProc = AComponent then
-          StoredProc := nil
-      end;
-      if AComponent is TcxTabSheet then
-      begin
-        for i := 0 to StoredProcList.Count - 1 do
-          if StoredProcList[i].TabSheet = AComponent then
-            StoredProcList[i].TabSheet := nil;
-      end;
+      for i := 0 to StoredProcList.Count - 1 do
+        if StoredProcList[i].StoredProc = AComponent then
+          StoredProcList[i].StoredProc := nil;
+      if StoredProc = AComponent then
+        StoredProc := nil
     end;
+    if AComponent is TcxTabSheet then
+    begin
+      for i := 0 to StoredProcList.Count - 1 do
+        if StoredProcList[i].TabSheet = AComponent then
+          StoredProcList[i].TabSheet := nil;
+    end;
+  end;
 end;
 
 procedure TdsdCustomDataSetAction.SetStoredProc(const Value: TdsdStoredProc);
@@ -812,7 +819,7 @@ begin
   result := true;
   ModalResult := ShowForm.ModalResult;
   if isShowModal then
-     result := ModalResult = mrOk;
+    result := ModalResult = mrOk;
 end;
 
 procedure TdsdOpenForm.Notification(AComponent: TComponent;
@@ -822,11 +829,11 @@ var
 begin
   inherited;
   if csDestroying in ComponentState then
-     exit;
-    if (Operation = opRemove) and Assigned(FParams) then
-      for i := 0 to GuiParams.Count - 1 do
-        if GuiParams[i].Component = AComponent then
-           GuiParams[i].Component := nil;
+    exit;
+  if (Operation = opRemove) and Assigned(FParams) then
+    for i := 0 to GuiParams.Count - 1 do
+      if GuiParams[i].Component = AComponent then
+        GuiParams[i].Component := nil;
 end;
 
 procedure TdsdOpenForm.OnFormClose(Params: TdsdParams);
@@ -849,11 +856,11 @@ begin
   if TParentForm(result).Execute(Self, FParams) then
   begin
     if result.WindowState = wsMinimized then
-       result.WindowState := wsNormal;
+      result.WindowState := wsNormal;
     if isShowModal then
-       result.ShowModal
+      result.ShowModal
     else
-       result.Show
+      result.Show
   end
   else
     result.Free
@@ -924,9 +931,9 @@ procedure TdsdInsertUpdateAction.Notification(AComponent: TComponent;
 begin
   inherited;
   if csDestroying in ComponentState then
-     exit;
-    if (Operation = opRemove) and (AComponent = DataSource) then
-      DataSource := nil;
+    exit;
+  if (Operation = opRemove) and (AComponent = DataSource) then
+    DataSource := nil;
 end;
 
 procedure TdsdInsertUpdateAction.OnFormClose(Params: TdsdParams);
@@ -1020,9 +1027,9 @@ procedure TdsdUpdateErased.Notification(AComponent: TComponent;
 begin
   inherited;
   if csDestroying in ComponentState then
-     exit;
-    if (Operation = opRemove) and (AComponent = DataSource) then
-      DataSource := nil;
+    exit;
+  if (Operation = opRemove) and (AComponent = DataSource) then
+    DataSource := nil;
 end;
 
 procedure TdsdUpdateErased.SetDataSource(const Value: TDataSource);
@@ -1096,8 +1103,8 @@ function TdsdChoiceGuides.LocalExecute: Boolean;
 begin
   result := true;
   if Assigned(FParams.ParamByName('Key')) and
-     Assigned(FParams.ParamByName('TextValue')) then
-     FChoiceCaller.AfterChoice(FParams, TForm(Owner))
+    Assigned(FParams.ParamByName('TextValue')) then
+    FChoiceCaller.AfterChoice(FParams, TForm(Owner))
   else
     raise Exception.Create
       ('Не определены параметры возврата значений при выборе из справочника');
@@ -1115,16 +1122,16 @@ var
 begin
   inherited;
   if csDestroying in ComponentState then
-     exit;
-    if (Operation = opRemove) then
-    begin
-      if Assigned(Params) then
-        for i := 0 to Params.Count - 1 do
-          if Params[i].Component = AComponent then
-            Params[i].Component := nil;
-      if (AComponent = DataSource) then
-        DataSource := nil;
-    end;
+    exit;
+  if (Operation = opRemove) then
+  begin
+    if Assigned(Params) then
+      for i := 0 to Params.Count - 1 do
+        if Params[i].Component = AComponent then
+          Params[i].Component := nil;
+    if (AComponent = DataSource) then
+      DataSource := nil;
+  end;
 end;
 
 procedure TdsdChoiceGuides.SetChoiceCaller(const Value: IChoiceCaller);
@@ -1271,11 +1278,13 @@ begin
 end;
 
 function TExportGrid.LocalExecute: Boolean;
- const ConstFileName = '#$#$#$';
-       cFieldName = 'FieldName';
-       cDisplayName = 'DisplayName';
-var FileName: string;
-    i: integer;
+const
+  ConstFileName = '#$#$#$';
+  cFieldName = 'FieldName';
+  cDisplayName = 'DisplayName';
+var
+  FileName: string;
+  i: Integer;
 begin
   result := true;
   if not Assigned(FGrid) then
@@ -1284,65 +1293,99 @@ begin
     exit;
   end;
   if DefaultFileName = '' then
-     FileName := ConstFileName
+    FileName := ConstFileName
   else
-     FileName := DefaultFileName;
+    FileName := DefaultFileName;
   case ExportType of
-    cxegExportToHtml: FileName := FileName + '.html';
-    cxegExportToXml: FileName := FileName + '.xml';
-    cxegExportToText: FileName := FileName + '.txt';
-    cxegExportToExcel: FileName := FileName + '.xls';
-    cxegExportToXlsx: FileName := FileName + '.xlsx';
-    cxegExportToDbf: FileName := FileName + '.dbf';
+    cxegExportToHtml:
+      FileName := FileName + '.html';
+    cxegExportToXml:
+      FileName := FileName + '.xml';
+    cxegExportToText:
+      FileName := FileName + '.txt';
+    cxegExportToExcel:
+      FileName := FileName + '.xls';
+    cxegExportToXlsx:
+      FileName := FileName + '.xlsx';
+    cxegExportToDbf:
+      FileName := FileName + '.dbf';
   end;
-  if FGrid is TcxGrid then begin
-     // грид скрыт и нужен только для выгрузки, то добавим колонки во View
-     if not FGrid.Visible then begin
-        if TcxGrid(FGrid).ViewCount > 0 then begin
-           if TcxGrid(FGrid).Views[0].DataController is TcxGridDBDataController then begin
-              while TcxGridDBTableView(TcxGrid(FGrid).Views[0]).ColumnCount > 0 do
-                    TcxGridDBTableView(TcxGrid(FGrid).Views[0]).Columns[0].Free;
-              TcxGridDBDataController(TcxGrid(FGrid).Views[0].DataController).CreateAllItems;
-              // Вот тут устанавливаем имена колонок и ширину!
-              if Assigned(ColumnNameDataSet) then begin
-                 with TcxGridDBTableView(TcxGrid(FGrid).Views[0]) do
-                   for I := 0 to ColumnCount - 1 do begin
-                     if ColumnNameDataSet.Locate(cFieldName, Columns[i].DataBinding.FieldName, [loCaseInsensitive]) then begin
-                        Columns[i].Caption := ColumnNameDataSet.FieldByName(cDisplayName).AsString;
-                        TcxGridDBColumn(Columns[i]).Width := ColumnNameDataSet.FieldByName('Width').AsInteger;
-                     end;
-                   end;
+  if FGrid is TcxGrid then
+  begin
+    // грид скрыт и нужен только для выгрузки, то добавим колонки во View
+    if not FGrid.Visible then
+    begin
+      if TcxGrid(FGrid).ViewCount > 0 then
+      begin
+        if TcxGrid(FGrid).Views[0].DataController is TcxGridDBDataController
+        then
+        begin
+          while TcxGridDBTableView(TcxGrid(FGrid).Views[0]).ColumnCount > 0 do
+            TcxGridDBTableView(TcxGrid(FGrid).Views[0]).Columns[0].Free;
+          TcxGridDBDataController(TcxGrid(FGrid).Views[0].DataController)
+            .CreateAllItems;
+          // Вот тут устанавливаем имена колонок и ширину!
+          if Assigned(ColumnNameDataSet) then
+          begin
+            with TcxGridDBTableView(TcxGrid(FGrid).Views[0]) do
+              for i := 0 to ColumnCount - 1 do
+              begin
+                if ColumnNameDataSet.Locate(cFieldName,
+                  Columns[i].DataBinding.FieldName, [loCaseInsensitive]) then
+                begin
+                  Columns[i].Caption := ColumnNameDataSet.FieldByName
+                    (cDisplayName).AsString;
+                  TcxGridDBColumn(Columns[i]).Width :=
+                    ColumnNameDataSet.FieldByName('Width').AsInteger;
+                end;
               end;
-           end;
+          end;
         end;
-     end;
-     case ExportType of
-       cxegExportToHtml:  ExportGridToHTML(FileName, TcxGrid(FGrid), IsCtrlPressed);
-       cxegExportToXml:   ExportGridToXML(FileName, TcxGrid(FGrid), IsCtrlPressed);
-       cxegExportToText:  ExportGridToText(FileName, TcxGrid(FGrid), IsCtrlPressed);
-       cxegExportToExcel: ExportGridToExcel(FileName, TcxGrid(FGrid), IsCtrlPressed);
-       cxegExportToXlsx:  ExportGridToXLSX(FileName, TcxGrid(FGrid), IsCtrlPressed);
-       cxegExportToDbf:   with TcxGridDBTableView(TcxGrid(FGrid).Views[0]).DataController.DataSource do
-                             with TFileExternalSave.Create(DataSet.FieldDefs, DataSet, FileName, true) do
-                                try
-                                  Execute(FileName);
-                                finally
-                                  Free
-                                end;
-     end;
+      end;
+    end;
+    case ExportType of
+      cxegExportToHtml:
+        ExportGridToHTML(FileName, TcxGrid(FGrid), IsCtrlPressed);
+      cxegExportToXml:
+        ExportGridToXML(FileName, TcxGrid(FGrid), IsCtrlPressed);
+      cxegExportToText:
+        ExportGridToText(FileName, TcxGrid(FGrid), IsCtrlPressed);
+      cxegExportToExcel:
+        ExportGridToExcel(FileName, TcxGrid(FGrid), IsCtrlPressed);
+      cxegExportToXlsx:
+        ExportGridToXLSX(FileName, TcxGrid(FGrid), IsCtrlPressed);
+      cxegExportToDbf:
+        with TcxGridDBTableView(TcxGrid(FGrid).Views[0])
+          .DataController.DataSource do
+          with TFileExternalSave.Create(DataSet.FieldDefs, DataSet,
+            FileName, true) do
+            try
+              Execute(FileName);
+            finally
+              Free
+            end;
+    end;
   end;
-  if FGrid is TcxCustomPivotGrid then begin
-     case ExportType of
-       cxegExportToHtml:  cxExportPivotGridToHTML(FileName, TcxCustomPivotGrid(FGrid), IsCtrlPressed);
-       cxegExportToXml:   cxExportPivotGridToXML(FileName, TcxCustomPivotGrid(FGrid), IsCtrlPressed);
-       cxegExportToText:  cxExportPivotGridToText(FileName, TcxCustomPivotGrid(FGrid), IsCtrlPressed);
-       cxegExportToExcel,
-       cxegExportToXlsx:  cxExportPivotGridToExcel(FileName, TcxCustomPivotGrid(FGrid), IsCtrlPressed);
-     end;
+  if FGrid is TcxCustomPivotGrid then
+  begin
+    case ExportType of
+      cxegExportToHtml:
+        cxExportPivotGridToHTML(FileName, TcxCustomPivotGrid(FGrid),
+          IsCtrlPressed);
+      cxegExportToXml:
+        cxExportPivotGridToXML(FileName, TcxCustomPivotGrid(FGrid),
+          IsCtrlPressed);
+      cxegExportToText:
+        cxExportPivotGridToText(FileName, TcxCustomPivotGrid(FGrid),
+          IsCtrlPressed);
+      cxegExportToExcel, cxegExportToXlsx:
+        cxExportPivotGridToExcel(FileName, TcxCustomPivotGrid(FGrid),
+          IsCtrlPressed);
+    end;
   end;
   if OpenAfterCreate then
-     ShellExecute(Application.Handle, 'open', PWideChar(FileName), nil, nil,
-       SW_SHOWNORMAL);
+    ShellExecute(Application.Handle, 'open', PWideChar(FileName), nil, nil,
+      SW_SHOWNORMAL);
 end;
 
 procedure TExportGrid.Notification(AComponent: TComponent;
@@ -1350,11 +1393,11 @@ procedure TExportGrid.Notification(AComponent: TComponent;
 begin
   inherited;
   if csDestroying in ComponentState then
-     exit;
-    if (Operation = opRemove) and (AComponent = FGrid) then
-       FGrid := nil;
-    if (Operation = opRemove) and (AComponent = FColumnNameDataSet) then
-       FColumnNameDataSet := nil;
+    exit;
+  if (Operation = opRemove) and (AComponent = FGrid) then
+    FGrid := nil;
+  if (Operation = opRemove) and (AComponent = FColumnNameDataSet) then
+    FColumnNameDataSet := nil;
 end;
 
 procedure TExportGrid.SetGrid(const Value: TcxControl);
@@ -1389,7 +1432,8 @@ begin
   FReportNameParam.DataType := ftString;
   FReportNameParam.Value := '';
   FDataSets := TdsdDataSets.Create(Self, TAddOnDataSet);
-  WithOutPreview := false
+  WithOutPreview := false;
+  FCopiesCount := 1;
 end;
 
 destructor TdsdPrintAction.Destroy;
@@ -1409,10 +1453,10 @@ end;
 
 function GetDefaultPrinter: string;
 var
-  ResStr: array[0..255] of Char;
+  ResStr: array [0 .. 255] of Char;
 begin
   GetProfileString('Windows', 'device', '', ResStr, 255);
-  Result := StrPas(ResStr);
+  result := StrPas(ResStr);
 end;
 
 function TdsdPrintAction.LocalExecute: Boolean;
@@ -1431,7 +1475,8 @@ begin
     begin
       lActiveControl := TForm(Owner).ActiveControl;
       TForm(Owner).ActiveControl := nil;
-      if (lActiveControl <> Nil) and (not(lActiveControl.ClassType = TcxCustomInnerTextEdit)) then
+      if (lActiveControl <> Nil) and
+        (not(lActiveControl.ClassType = TcxCustomInnerTextEdit)) then
         TForm(Owner).ActiveControl := lActiveControl;
     end;
 
@@ -1454,9 +1499,9 @@ begin
         if Assigned(Self.DataSets[i].DataSet) then
         begin
           if Self.DataSets[i].DataSet is TClientDataSet then
-             if TAddOnDataSet(Self.DataSets[i]).IndexFieldNames <> '' then
-                TClientDataSet(Self.DataSets[i].DataSet).IndexFieldNames :=
-                    TAddOnDataSet(Self.DataSets[i]).IndexFieldNames;
+            if TAddOnDataSet(Self.DataSets[i]).IndexFieldNames <> '' then
+              TClientDataSet(Self.DataSets[i].DataSet).IndexFieldNames :=
+                TAddOnDataSet(Self.DataSets[i]).IndexFieldNames;
           DataSet := DataSets[i].DataSet;
         end;
         if Assigned(TAddOnDataSet(Self.DataSets[i]).GridView) then
@@ -1485,8 +1530,10 @@ begin
               Variables[Params[i].Name] := Params[i].Value
           end;
           for i := 0 to Self.DataSets.Count - 1 do
-              if Assigned(TAddOnDataSet(Self.DataSets[i]).GridView) then
-                 FReport.Variables[TAddOnDataSet(Self.DataSets[i]).UserName + '_Filter'] := TAddOnDataSet(Self.DataSets[i]).GridView.DataController.Filter.FilterCaption;
+            if Assigned(TAddOnDataSet(Self.DataSets[i]).GridView) then
+              FReport.Variables[TAddOnDataSet(Self.DataSets[i]).UserName +
+                '_Filter'] := TAddOnDataSet(Self.DataSets[i])
+                .GridView.DataController.Filter.FilterCaption;
           DesignReport;
           Stream.Clear;
           SaveToStream(Stream);
@@ -1516,8 +1563,10 @@ begin
             end;
           end;
           for i := 0 to Self.DataSets.Count - 1 do
-              if Assigned(TAddOnDataSet(Self.DataSets[i]).GridView) then
-                 FReport.Variables[TAddOnDataSet(Self.DataSets[i]).UserName + '_Filter'] := TAddOnDataSet(Self.DataSets[i]).GridView.DataController.Filter.FilterCaption;
+            if Assigned(TAddOnDataSet(Self.DataSets[i]).GridView) then
+              FReport.Variables[TAddOnDataSet(Self.DataSets[i]).UserName +
+                '_Filter'] := TAddOnDataSet(Self.DataSets[i])
+                .GridView.DataController.Filter.FilterCaption;
 
           if Assigned(Self.Owner) then
             for i := 0 to Self.Owner.ComponentCount - 1 do
@@ -1526,14 +1575,16 @@ begin
           try
             // Вдруг что!
             // FReport.PreviewOptions.modal := false;
-            if WithOutPreview then begin
-               PrintOptions.ShowDialog := false;
-               PrintOptions.Printer := GetDefaultPrinter;
-               PrepareReport;
-               Print
+            if WithOutPreview then
+            begin
+              PrintOptions.ShowDialog := false;
+              PrintOptions.Printer := GetDefaultPrinter;
+              PrintOptions.Copies := FCopiesCount;
+              PrepareReport;
+              Print
             end
             else
-               ShowReport;
+              ShowReport;
           finally
             if Assigned(Self.Owner) then
               for i := 0 to Self.Owner.ComponentCount - 1 do
@@ -1563,11 +1614,11 @@ var
 begin
   inherited;
   if csDestroying in ComponentState then
-     exit;
-    if (Operation = opRemove) and Assigned(Params) then
-      for i := 0 to Params.Count - 1 do
-        if Params[i].Component = AComponent then
-           Params[i].Component := nil;
+    exit;
+  if (Operation = opRemove) and Assigned(Params) then
+    for i := 0 to Params.Count - 1 do
+      if Params[i].Component = AComponent then
+        Params[i].Component := nil;
 end;
 
 procedure TdsdPrintAction.SetReportName(const Value: String);
@@ -1578,7 +1629,7 @@ begin
     FReportName := Value;
 end;
 
-procedure TdsdPrintAction.SetWithOutPreview(const Value: boolean);
+procedure TdsdPrintAction.SetWithOutPreview(const Value: Boolean);
 begin
   FWithOutPreview := Value;
 end;
@@ -1604,9 +1655,9 @@ begin
   end;
   result := true;
   if fsModal in TForm(Owner).FormState then
-     TForm(Owner).ModalResult := mrOk
+    TForm(Owner).ModalResult := mrOk
   else
-     TForm(Owner).Close;
+    TForm(Owner).Close;
   TParentForm(Owner).CloseAction(Self);
 end;
 
@@ -1615,9 +1666,9 @@ procedure TdsdInsertUpdateGuides.Notification(AComponent: TComponent;
 begin
   inherited;
   if csDestroying in ComponentState then
-     exit;
-    if (Operation = opRemove) and (FInsertUpdateAction = AComponent) then
-      FInsertUpdateAction := nil
+    exit;
+  if (Operation = opRemove) and (FInsertUpdateAction = AComponent) then
+    FInsertUpdateAction := nil
 end;
 
 { TBooleanStoredProcAction }
@@ -1725,12 +1776,12 @@ begin
   if PostDataSetBeforeExecute then
     PostDataSet;
   if Assigned(MoveParams) then
-     for i := 0 to MoveParams.Count - 1 do
-        TParamMoveItem(MoveParams.Items[i]).ToParam.Value :=
-           TParamMoveItem(MoveParams.Items[i]).FromParam.Value;
+    for i := 0 to MoveParams.Count - 1 do
+      TParamMoveItem(MoveParams.Items[i]).ToParam.Value :=
+        TParamMoveItem(MoveParams.Items[i]).FromParam.Value;
   result := LocalExecute;
   if PostDataSetAfterExecute then
-     PostDataSet;
+    PostDataSet;
   if not result then
     if Assigned(CancelAction) then
       CancelAction.Execute;
@@ -1746,18 +1797,18 @@ procedure TdsdCustomAction.Notification(AComponent: TComponent;
 begin
   inherited;
   if csDestroying in ComponentState then
-     exit;
+    exit;
   if (Operation = opRemove) and (AComponent = TabSheet) then
-      TabSheet := nil;
+    TabSheet := nil;
   if (Operation = opRemove) and (AComponent = ActiveControl) then
-      ActiveControl := nil;
+    ActiveControl := nil;
 end;
 
 procedure TdsdCustomAction.OnPageChanging(Sender: TObject; NewPage: TcxTabSheet;
   var AllowChange: Boolean);
 begin
   if Assigned(FOnPageChanging) then
-     FOnPageChanging(Sender, NewPage, AllowChange);
+    FOnPageChanging(Sender, NewPage, AllowChange);
   Enabled := TabSheet = NewPage;
   Visible := Enabled;
 end;
@@ -1765,7 +1816,7 @@ end;
 procedure TdsdCustomAction.OnTimer(Sender: TObject);
 begin
   if csDesigning in Self.ComponentState then
-     exit;
+    exit;
   Timer.Enabled := false;
   try
     LocalExecute;
@@ -1785,19 +1836,21 @@ begin
           TDataSet(Owner.Components[i]).Post;
 end;
 
-procedure TdsdCustomAction.SetEnabledTimer(const Value: boolean);
+procedure TdsdCustomAction.SetEnabledTimer(const Value: Boolean);
 begin
-  if FEnabledTimer <> Value then begin
-     FEnabledTimer := Value;
-     if FEnabledTimer then begin
-        FTimer := TTimer.Create(Self);
-        FTimer.Name := 'Timer';
-        FTimer.Interval := 300000;
-        FTimer.OnTimer := Self.OnTimer;
-        FTimer.OnTimer(Self);
-     end
-     else
-        FreeAndNil(FTimer)
+  if FEnabledTimer <> Value then
+  begin
+    FEnabledTimer := Value;
+    if FEnabledTimer then
+    begin
+      FTimer := TTimer.Create(Self);
+      FTimer.Name := 'Timer';
+      FTimer.Interval := 300000;
+      FTimer.OnTimer := Self.OnTimer;
+      FTimer.OnTimer(Self);
+    end
+    else
+      FreeAndNil(FTimer)
   end;
 end;
 
@@ -1805,7 +1858,7 @@ procedure TdsdCustomAction.SetTabSheet(const Value: TcxTabSheet);
 begin
   // Установка данного свойства не работает в RunTime. Только в момент дизайна и загрузки
   if Self.ComponentState = [csFreeNotification] then
-     exit;
+    exit;
   FTabSheet := Value;
   if Assigned(FTabSheet) then
   begin
@@ -1918,11 +1971,11 @@ procedure TDSAction.Notification(AComponent: TComponent; Operation: TOperation);
 begin
   inherited;
   if csDestroying in ComponentState then
-     exit;
-    if AComponent = FView then
-      FView := nil;
-    if AComponent = FAction then
-      FAction := nil;
+    exit;
+  if AComponent = FView then
+    FView := nil;
+  if AComponent = FAction then
+    FAction := nil;
 end;
 
 constructor TOpenChoiceForm.Create(AOwner: TComponent);
@@ -2004,9 +2057,9 @@ procedure TChangeGuidesStatus.Notification(AComponent: TComponent;
 begin
   inherited;
   if csDestroying in ComponentState then
-     exit;
-    if (Operation = opRemove) and (AComponent = FGuides) then
-      FGuides := nil;
+    exit;
+  if (Operation = opRemove) and (AComponent = FGuides) then
+    FGuides := nil;
 end;
 
 procedure TChangeGuidesStatus.OnChange(Sender: TObject);
@@ -2142,12 +2195,12 @@ var
 begin
   inherited;
   if csDestroying in ComponentState then
-     exit;
-    if (Operation = opRemove) and Assigned(ActionList) then
-      if AComponent is TCustomAction then
-        for i := 0 to ActionList.Count - 1 do
-          if TActionItem(ActionList.Items[i]).Action = AComponent then
-            TActionItem(ActionList.Items[i]).Action := nil;
+    exit;
+  if (Operation = opRemove) and Assigned(ActionList) then
+    if AComponent is TCustomAction then
+      for i := 0 to ActionList.Count - 1 do
+        if TActionItem(ActionList.Items[i]).Action = AComponent then
+          TActionItem(ActionList.Items[i]).Action := nil;
 end;
 
 procedure TMultiAction.RestoreInfoAfterExecute;
@@ -2282,9 +2335,9 @@ procedure TExecServerStoredProc.Notification(AComponent: TComponent;
 begin
   inherited;
   if csDestroying in ComponentState then
-     exit;
-    if (Operation = opRemove) and (MasterProcedure = AComponent) then
-      MasterProcedure := nil
+    exit;
+  if (Operation = opRemove) and (MasterProcedure = AComponent) then
+    MasterProcedure := nil
 end;
 
 { TParamMoveItem }
