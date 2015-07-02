@@ -262,6 +262,7 @@ BEGIN
             , _tmpListContainer.AccountGroupId
             , _tmpListContainer.Amount
        FROM _tmpListContainer
+            INNER JOIN Container ON Container.Id = _tmpListContainer.ContainerId_begin AND Container.DescId = zc_Container_Count()
             LEFT JOIN ContainerLinkObject AS CLO_GoodsKind ON CLO_GoodsKind.ContainerId = _tmpListContainer.ContainerId_begin
                                                           AND CLO_GoodsKind.DescId = zc_ContainerLinkObject_GoodsKind()
             LEFT JOIN ContainerLinkObject AS CLO_PartionGoods ON CLO_PartionGoods.ContainerId = _tmpListContainer.ContainerId_begin
@@ -387,10 +388,11 @@ BEGIN
                          FROM Movement 
                               LEFT JOIN MovementLinkObject AS MovementLinkObject_From
                                                            ON MovementLinkObject_From.MovementId = Movement.Id
+                                                          AND MovementLinkObject_From.MovementId = Movement.Id
 
-                              LEFT JOIN MovementItem On MovementItem.MovementId = Movement.Id
+                              INNER JOIN MovementItem On MovementItem.MovementId = Movement.Id
                                                     AND MovementItem.isErased = False
-                                                    AND MovementItem.DescId = zc_MI_Master()
+                                                    -- AND MovementItem.DescId = zc_MI_Master()
                                                     
                          WHERE Movement.OperDate BETWEEN inStartDate AND inEndDate 
                            AND Movement.DescId   = zc_Movement_ProductionSeparate()
