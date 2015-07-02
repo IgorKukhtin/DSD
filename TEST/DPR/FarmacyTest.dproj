@@ -892,6 +892,14 @@
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<DCCReference Include="..\SOURCE\Objects\All\Farmacy\PriceTest.pas"/>
+			<DCCReference Include="..\SOURCE\Objects\All\Farmacy\AlternativeGroupTest.pas"/>
+			<DCCReference Include="..\..\FormsFarmacy\Guides\AlternativeGroup.pas">
+				<Form>AlternativeGroupForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\ConnectWithOld\RepriceUnit.pas">
+				<Form>RepriceUnitForm</Form>
+			</DCCReference>
 			<BuildConfiguration Include="Release">
 				<Key>Cfg_2</Key>
 				<CfgParent>Base</CfgParent>

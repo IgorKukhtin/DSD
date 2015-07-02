@@ -523,31 +523,31 @@ inherited MainForm: TMainForm
       isShowModal = False
     end
     inherited actInfoMoneyGroup: TdsdOpenForm
-      Category = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082#1080'\'
+      Category = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082#1080
     end
     inherited actInfoMoneyDestination: TdsdOpenForm
-      Category = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082#1080'\'
+      Category = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082#1080
     end
     inherited actInfoMoney: TdsdOpenForm
-      Category = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082#1080'\'
+      Category = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082#1080
     end
     inherited actAccountGroup: TdsdOpenForm
-      Category = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082#1080'\'
+      Category = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082#1080
     end
     inherited actAccountDirection: TdsdOpenForm
-      Category = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082#1080'\'
+      Category = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082#1080
     end
     inherited actProfitLossGroup: TdsdOpenForm
-      Category = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082#1080'\'
+      Category = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082#1080
     end
     inherited actProfitLossDirection: TdsdOpenForm
-      Category = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082#1080'\'
+      Category = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082#1080
     end
     inherited actAccount: TdsdOpenForm
-      Category = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082#1080'\'
+      Category = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082#1080
     end
     inherited actProfitLoss: TdsdOpenForm
-      Category = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082#1080'\'
+      Category = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082#1080
     end
     object actReturnOut: TdsdOpenForm
       Category = #1058#1086#1074#1072#1088#1085#1099#1081' '#1091#1095#1077#1090
@@ -957,6 +957,10 @@ inherited MainForm: TMainForm
       end
       object miTest: TMenuItem
         Action = actTestFormOpen
+      end
+      object miReprice: TMenuItem
+        Caption = #1055#1077#1088#1077#1086#1094#1077#1085#1082#1072
+        OnClick = miRepriceClick
       end
     end
   end

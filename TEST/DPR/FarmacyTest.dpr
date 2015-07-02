@@ -300,7 +300,8 @@ uses
   Price in '..\..\Forms\Guides\Price.pas' {PriceForm: TParentForm},
   PriceTest in '..\SOURCE\Objects\All\Farmacy\PriceTest.pas',
   AlternativeGroupTest in '..\SOURCE\Objects\All\Farmacy\AlternativeGroupTest.pas',
-  AlternativeGroup in '..\..\FormsFarmacy\Guides\AlternativeGroup.pas' {AlternativeGroupForm: TParentForm};
+  AlternativeGroup in '..\..\FormsFarmacy\Guides\AlternativeGroup.pas' {AlternativeGroupForm: TParentForm},
+  RepriceUnit in '..\..\FormsFarmacy\ConnectWithOld\RepriceUnit.pas' {RepriceUnitForm};
 
 {$R *.res}
 {$R DevExpressRus.res}

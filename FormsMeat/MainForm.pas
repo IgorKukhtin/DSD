@@ -599,6 +599,8 @@ type
     N72: TMenuItem;
     actOrderInternalBasis: TdsdOpenForm;
     bbOrderInternalBasis: TMenuItem;
+    actReturnOut_Partner: TdsdOpenForm;
+    N69: TMenuItem;
     procedure actReport_OLAPSoldExecute(Sender: TObject);
     procedure FormShow(Sender: TObject);
   private

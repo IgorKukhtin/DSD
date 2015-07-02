@@ -64,7 +64,8 @@ uses
   StatusXML in '..\SOURCE\EDI\StatusXML.pas',
   dsdApplication in '..\SOURCE\dsdApplication.pas',
   dsdException in '..\SOURCE\dsdException.pas',
-  dsdXMLTransform in '..\SOURCE\COMPONENT\dsdXMLTransform.pas';
+  dsdXMLTransform in '..\SOURCE\COMPONENT\dsdXMLTransform.pas',
+  RepriceUnit in '..\FormsFarmacy\ConnectWithOld\RepriceUnit.pas' {RepriceUnitForm};
 
 {$R *.res}
 
@@ -82,7 +83,7 @@ begin
      TUpdater.AutomaticUpdateProgram;
      TUpdater.AutomaticCheckConnect;
      Application.CreateForm(TdmMain, dmMain);
-  Application.CreateForm(TMainForm, MainFormInstance);
+     Application.CreateForm(TMainForm, MainFormInstance);
   end;
   Application.Run;
 end.

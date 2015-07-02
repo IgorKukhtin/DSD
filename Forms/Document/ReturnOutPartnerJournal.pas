@@ -1,4 +1,4 @@
-unit ReturnOutJournal;
+unit ReturnOutPartnerJournal;
 
 interface
 
@@ -27,7 +27,7 @@ uses
   cxButtonEdit, dsdGuides;
 
 type
-  TReturnOutJournalForm = class(TAncestorJournalForm)
+  TReturnOutPartnerJournalForm = class(TAncestorJournalForm)
     colOperDatePartner: TcxGridDBColumn;
     colFromName: TcxGridDBColumn;
     colToName: TcxGridDBColumn;
@@ -65,5 +65,5 @@ implementation
 
 {$R *.dfm}
 initialization
-  RegisterClass(TReturnOutJournalForm);
+  RegisterClass(TReturnOutPartnerJournalForm);
 end.

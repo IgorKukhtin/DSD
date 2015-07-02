@@ -2,14 +2,15 @@
 
 CREATE OR REPLACE FUNCTION gpSelect_Cash_Goods_Alternative (inSession Tvarchar)
 RETURNS TABLE (
-  MainGoodsID     Integer,
-  LinkType        integer,
-  GoodsId         integer,
-  GoodsCode       Integer,
-  GoodsName       TVarChar,
-  GoodsPrice      TFloat,
-  Remains         TFloat,
-  PriceAndRemains TVarChar
+  LinkType         integer,
+  MainGoodsID      Integer,
+  AlternativeGroupId Integer,
+  GoodsId          integer,
+  GoodsCode        Integer,
+  GoodsName        TVarChar,
+  GoodsPrice       TFloat,
+  Remains          TFloat,
+  PriceAndRemains  TVarChar
 ) AS
 $body$
   DECLARE vbUserId Integer;
@@ -26,8 +27,9 @@ BEGIN
   vbObjectId := lpGet_DefaultValue('zc_Object_Retail', vbUserId);
   RETURN QUERY
     SELECT
-      RES.maingoodsid               as MainGoodsId
-      ,RES.LinkType                  as LinkType
+      RES.LinkType                   as LinkType
+      ,RES.maingoodsid               as MainGoodsId
+      ,RES.AlternativeGroupId        as AlternativeGroupId
       ,Object_Goods.Id               as GoodsId
       ,Object_Goods.objectcode       as GoodsCode
       ,Object_Goods.valuedata        as GoodsName
@@ -37,41 +39,76 @@ BEGIN
                                     as PriceAndRemains
     FROM
     --Start SubQuery
-      (
-        Select
-          LinkGoods_GoodsMain.childobjectid AS MainGoodsId
-          ,Object_LinkGoods.objectcode      as LinkType
-          ,Container.ObjectId               AS GoodsId
-          ,SUM(Container.amount)            as Remains
+      (  
+        Select --Additional Goods
+          0                                  as LinkType
+          ,object_GoodsMain.Id               AS MainGoodsId
+          ,0                                 as AlternativeGroupId
+          ,Rem.GoodsId                       AS GoodsId
+          ,Rem.Remains                       AS Remains
         FROM
-          Object as Object_LinkGoods
-          Inner Join objectlink AS LinkGoods_GoodsMain
-                                ON object_linkgoods.ID = linkgoods_goodsmain.objectid
-                               AND linkgoods_goodsmain.descid = zc_ObjectLink_LinkGoods_GoodsMain()
-          Inner JOin object_goods_view AS object_MainGoods
-                            ON LinkGoods_GoodsMain.childobjectid = object_maingoods.ID
-                           AND object_maingoods.objectid = vbObjectId
+          (
+             SELECT
+               object_Goods.Id                   AS GoodsId
+              ,SUM(Container.amount)             as Remains
+            from Container
+              Inner Join containerlinkobject AS CLO_Unit
+                                             ON CLO_Unit.containerid = container.id
+                                            AND CLO_Unit.descid = zc_ContainerLinkObject_Unit()
+                                            AND CLO_Unit.objectid = vbUnitId
+              Inner Join object_goods_view AS object_Goods
+                                           ON Container.ObjectId = object_goods.ID
+                                          AND object_goods.objectid = vbObjectId
+            WHERE
+              container.descid = zc_container_count()
+              AND
+              object_Goods.IsErased = False
+            Group BY
+              object_Goods.Id
+            Having
+              SUM(Container.Amount)>0) as Rem
           Inner Join objectlink AS LinkGoods_Goods
-                                ON object_linkgoods.ID = LinkGoods_Goods.objectid
-                               AND LinkGoods_Goods.descid = zc_ObjectLink_LinkGoods_Goods()
-          Inner JOin object_goods_view AS object_Goods
-                            ON LinkGoods_Goods.childobjectid = object_goods.ID
-                           AND object_goods.objectid = vbObjectId
-          INNER JOIN container ON container.objectid = LinkGoods_Goods.childobjectid
-                              AND container.descid = zc_container_count()
+                                ON linkgoods_goods.ChildObjectId = Rem.GoodsId
+                               AND linkgoods_goods.DescId = zc_ObjectLink_LinkGoods_Goods()
+          Inner Join ObjectLink AS LinkGoods_GoodsMain
+                                ON LinkGoods_GoodsMain.ObjectId = LinkGoods_Goods.ObjectId
+                               AND LinkGoods_GoodsMain.DescId = zc_ObjectLink_LinkGoods_GoodsMain()
+          Inner Join object_goods_view AS object_GoodsMain
+                                       ON LinkGoods_GoodsMain.ChildObjectId = object_goodsMain.ID
+        WHERE
+          object_GoodsMain.IsErased = False
+        UNION ALL
+        Select --Alternative Goods
+          1                                                 as LinkType
+          ,0                                                as MainGoodsId
+          ,AlternativeGroup.Id                              as AlternativeGroupId
+          ,Container.ObjectId                               AS GoodsId
+          ,SUM(Container.amount)                            as Remains
+        from container 
           Inner Join containerlinkobject AS CLO_Unit
                                          ON CLO_Unit.containerid = container.id
                                         AND CLO_Unit.descid = zc_ContainerLinkObject_Unit()
                                         AND CLO_Unit.objectid = vbUnitId
-
-        Where
-          Object_LinkGoods.descid = zc_Object_LinkGoods()
+          Inner Join Object_Goods_View ON Container.ObjectId = Object_Goods_View.Id
+                                      AND Object_Goods_View.ObjectId = vbObjectId
+          Inner Join ObjectLink AS OL_G_AG
+                                ON Container.ObjectId = OL_G_AG.ObjectId
+                               AND OL_G_AG.DescId = zc_objectlink_goods_alternativegroup()
+          Inner Join Object AS AlternativeGroup
+                            ON OL_G_AG.ChildObjectId = AlternativeGroup.Id
+                               
+        WHERE
+          container.descid = zc_container_count()
+          AND
+          Object_Goods_View.isErased = False
+          AND
+          AlternativeGroup.IsErased = False
         Group BY
-          LinkGoods_GoodsMain.childobjectid,
-          Object_LinkGoods.objectcode,
-          Container.ObjectId
+          AlternativeGroup.Id,
+          Container.ObjectId 
         HAVING
           SUM(Container.amount) > 0
+          
       ) AS RES
     --End SubQuery
     INNER JOIN Object AS Object_Goods
