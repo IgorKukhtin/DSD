@@ -3,7 +3,7 @@ object RepriceUnitForm: TRepriceUnitForm
   Top = 0
   Caption = #1055#1077#1088#1077#1086#1094#1077#1085#1082#1072' '#1087#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1081
   ClientHeight = 594
-  ClientWidth = 469
+  ClientWidth = 670
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -48,14 +48,14 @@ object RepriceUnitForm: TRepriceUnitForm
   object AllGoodsPriceGrid: TcxGrid
     Left = 0
     Top = 287
-    Width = 469
+    Width = 670
     Height = 307
     Align = alBottom
     TabOrder = 4
-    ExplicitWidth = 636
+    ExplicitWidth = 469
     object AllGoodsPriceGridTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
-      DataController.DataSource = AllGoodPriceDS
+      DataController.DataSource = QueryDS
       DataController.Summary.DefaultGroupSummaryItems = <>
       DataController.Summary.FooterSummaryItems = <>
       DataController.Summary.SummaryGroups = <>
@@ -68,40 +68,48 @@ object RepriceUnitForm: TRepriceUnitForm
       OptionsView.GroupByBox = False
       object colGoodsCode: TcxGridDBColumn
         Caption = #1050#1086#1076
-        DataBinding.FieldName = 'GoodsCode'
+        DataBinding.FieldName = 'Code'
       end
       object colGoodsName: TcxGridDBColumn
         Caption = #1058#1086#1074#1072#1088
         DataBinding.FieldName = 'GoodsName'
         Width = 303
       end
+      object colOldPrice: TcxGridDBColumn
+        Caption = #1058#1077#1082#1091#1097#1072#1103' '#1094#1077#1085#1072
+        DataBinding.FieldName = 'LastPrice'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DisplayFormat = ',0.00'
+        Width = 82
+      end
       object colNewPrice: TcxGridDBColumn
         Caption = #1053#1086#1074#1072#1103' '#1094#1077#1085#1072
         DataBinding.FieldName = 'NewPrice'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DisplayFormat = ',0.00'
-        Width = 82
+        Width = 88
+      end
+      object colPercent: TcxGridDBColumn
+        Caption = '% '#1080#1079#1084#1077#1085#1077#1085#1080#1103
+        DataBinding.FieldName = 'Percent'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 0
+        Properties.DisplayFormat = '0'
+        Width = 92
       end
     end
     object AllGoodsPriceGridLevel: TcxGridLevel
       GridView = AllGoodsPriceGridTableView
     end
   end
-  object edUnit: TcxButtonEdit
-    Left = 0
-    Top = 266
-    Align = alBottom
-    Properties.Buttons = <
-      item
-        Default = True
-        Kind = bkEllipsis
-      end>
-    Properties.Nullstring = '<'#1042#1099#1073#1077#1088#1080#1090#1077' '#1087#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077' '#1076#1083#1103' '#1092#1086#1088#1084#1080#1088#1086#1074#1072#1085#1080#1103' '#1076#1072#1085#1085#1099#1093' '#1087#1086' '#1094#1077#1085#1072#1084'>'
-    Properties.ReadOnly = True
-    Properties.UseNullString = True
+  object Button2: TButton
+    Left = 384
+    Top = 208
+    Width = 75
+    Height = 25
+    Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
     TabOrder = 5
-    ExplicitWidth = 636
-    Width = 469
+    OnClick = Button2Click
   end
   object GetUnitsList: TdsdStoredProc
     StoredProcName = 'gpSelect_Object_UnitForReprice'
@@ -128,9 +136,32 @@ object RepriceUnitForm: TRepriceUnitForm
   end
   object ADOQuery: TADOQuery
     Connection = ADOConnection
+    OnCalcFields = ADOQueryCalcFields
     Parameters = <>
     Left = 120
     Top = 16
+    object ADOQueryId: TIntegerField
+      FieldName = 'Id'
+    end
+    object ADOQueryCode: TIntegerField
+      FieldName = 'Code'
+    end
+    object ADOQueryGoodsName: TStringField
+      FieldName = 'GoodsName'
+    end
+    object ADOQueryLastPrice: TFloatField
+      FieldName = 'LastPrice'
+    end
+    object ADOQueryNewPrice: TFloatField
+      FieldKind = fkCalculated
+      FieldName = 'NewPrice'
+      Calculated = True
+    end
+    object ADOQueryPercent: TCurrencyField
+      FieldKind = fkCalculated
+      FieldName = 'Percent'
+      Calculated = True
+    end
   end
   object ADOConnection: TADOConnection
     KeepConnection = False
@@ -224,8 +255,8 @@ object RepriceUnitForm: TRepriceUnitForm
         ParamType = ptInput
       end>
     PackSize = 1
-    Left = 264
-    Top = 432
+    Left = 312
+    Top = 408
   end
   object AllGoodsPriceCDS: TClientDataSet
     Aggregates = <>
@@ -243,7 +274,6 @@ object RepriceUnitForm: TRepriceUnitForm
     RefreshAction = actRefresh
     ComponentList = <
       item
-        Component = UnitGuides
       end>
     Left = 192
     Top = 360
@@ -270,7 +300,6 @@ object RepriceUnitForm: TRepriceUnitForm
   end
   object UnitGuides: TdsdGuides
     KeyField = 'Id'
-    LookupControl = edUnit
     FormNameParam.Value = 'TUnitTreeForm'
     FormNameParam.DataType = ftString
     FormName = 'TUnitTreeForm'
@@ -309,5 +338,21 @@ object RepriceUnitForm: TRepriceUnitForm
       ShortCut = 116
       RefreshOnTabSetChanges = False
     end
+  end
+  object QueryDS: TDataSource
+    DataSet = ResultCDS
+    Left = 488
+    Top = 176
+  end
+  object ResultCDS: TClientDataSet
+    Aggregates = <>
+    Params = <>
+    Left = 392
+    Top = 128
+  end
+  object DataSetProvider: TDataSetProvider
+    DataSet = ADOQuery
+    Left = 488
+    Top = 128
   end
 end

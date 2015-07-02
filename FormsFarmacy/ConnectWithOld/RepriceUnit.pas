@@ -11,7 +11,8 @@ uses
   Bde.DBTables, cxStyles, cxCustomData, cxFilter, cxData,
   cxDataStorage, cxNavigator, cxDBData, cxMaskEdit, cxButtonEdit, dsdAddOn,
   cxGridLevel, cxClasses, cxGridCustomView, cxGridCustomTableView,
-  cxGridTableView, cxGridDBTableView, cxGrid, Vcl.ActnList, dsdAction, dsdGuides;
+  cxGridTableView, cxGridDBTableView, cxGrid, Vcl.ActnList, dsdAction, dsdGuides,
+  Datasnap.Provider;
 
 type
   TRepriceUnitForm = class(TForm)
@@ -34,7 +35,6 @@ type
     spSelect_AllGoodsPrice: TdsdStoredProc;
     AllGoodsPriceCDS: TClientDataSet;
     AllGoodPriceDS: TDataSource;
-    edUnit: TcxButtonEdit;
     rdUnit: TRefreshDispatcher;
     FormParams: TdsdFormParams;
     UnitGuides: TdsdGuides;
@@ -42,9 +42,23 @@ type
     actRefresh: TdsdDataSetRefresh;
     colGoodsCode: TcxGridDBColumn;
     colGoodsName: TcxGridDBColumn;
+    colOldPrice: TcxGridDBColumn;
+    Button2: TButton;
+    QueryDS: TDataSource;
+    ADOQueryId: TIntegerField;
+    ADOQueryGoodsName: TStringField;
+    ADOQueryLastPrice: TFloatField;
+    ADOQueryNewPrice: TFloatField;
+    ADOQueryPercent: TCurrencyField;
     colNewPrice: TcxGridDBColumn;
+    colPercent: TcxGridDBColumn;
+    ADOQueryCode: TIntegerField;
+    ResultCDS: TClientDataSet;
+    DataSetProvider: TDataSetProvider;
     procedure FormCreate(Sender: TObject);
     procedure Button1Click(Sender: TObject);
+    procedure Button2Click(Sender: TObject);
+    procedure ADOQueryCalcFields(DataSet: TDataSet);
   private
     { Private declarations }
   public
@@ -57,9 +71,22 @@ implementation
 
 uses SimpleGauge;
 
+procedure TRepriceUnitForm.ADOQueryCalcFields(DataSet: TDataSet);
+begin
+  {}
+  if AllGoodsPriceCDS.Locate('GoodsCode', DataSet.FieldByName('Code').AsInteger, []) then begin
+     DataSet.FieldByName('NewPrice').AsFloat := AllGoodsPriceCDS.FieldByName('NewPrice').AsFloat;
+     if AllGoodsPriceCDS.FieldByName('NewPrice').AsFloat = 0 then
+        DataSet.FieldByName('Percent').AsFloat := 0
+     else
+        DataSet.FieldByName('Percent').AsFloat := (DataSet.FieldByName('LastPrice').AsInteger / AllGoodsPriceCDS.FieldByName('NewPrice').AsFloat) * 100 - 100;
+  end;
+end;
+
 procedure TRepriceUnitForm.Button1Click(Sender: TObject);
 var i: integer;
 begin
+exit;
   for i := 0 to CheckListBox.Items.Count - 1 do
       if CheckListBox.Checked[i] then begin
          UnitsCDS.Locate('UnitName', CheckListBox.Items[i], []);
@@ -98,6 +125,30 @@ begin
               end;
          end;
          ADOConnection.Close;
+      end;
+end;
+
+procedure TRepriceUnitForm.Button2Click(Sender: TObject);
+var i: integer;
+begin
+  for i := 0 to CheckListBox.Items.Count - 1 do
+      if CheckListBox.Checked[i] then begin
+         UnitsCDS.Locate('UnitName', CheckListBox.Items[i], []);
+         ADOConnection.ConnectionString := UnitsCDS.FieldByName('StringKey').AsString;
+         ADOConnection.Open;
+
+         ADOQuery.SQL.Text := 'SELECT GoodsProperty.GoodsName ' +
+                   ' , GoodsProperty.Id, LastPrice.LastPrice, GoodsProperty.Code, LastPrice.CategoriesId ' +
+                   ' FROM "DBA"."LastPrice" '+
+                    'join GoodsProperty on GoodsProperty.Id = LastPrice.GoodsPropertyID ' +
+                  ' where CategoriesId = zf_GetCategoriesOper(zc_bkSaleToUnit(), 0, ' + UnitsCDS.FieldByName('IntegerKey').AsString + ') ';
+         ADOQuery.Close;
+         spSelectPrice.ParamByName('inUnitId').Value := UnitsCDS.FieldByName('Id').AsInteger;
+         spSelect_AllGoodsPrice.Execute;
+         AllGoodsPriceCDS.IndexFieldNames := 'GoodsCode';
+         ADOQuery.Open;
+         ResultCDS.Data := DataSetProvider.Data;
+         break;
       end;
 end;
 
