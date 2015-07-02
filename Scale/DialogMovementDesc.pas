@@ -157,6 +157,7 @@ begin
 
      //!!!обнуляется т.к.было изменение MovementDescId!!!
      if  (CDS.FieldByName('MovementDescId').asInteger<>ParamsMovement.ParamByName('MovementDescId').AsInteger)
+      or (CDS.FieldByName('isSendOnPriceIn').asBoolean <> ParamsMovement.ParamByName('isSendOnPriceIn').asBoolean)
      then begin
           //!!!только если OrderExternalId был изначально!!!
           if (ParamsMovement.ParamByName('OrderExternalId').AsInteger<>0) then
@@ -324,7 +325,10 @@ begin
                     ParamByName('InfoMoneyId').AsInteger      := 0;
                     ParamByName('InfoMoneyCode').AsInteger    := 0;
                     ParamByName('InfoMoneyName').asString     := '';
-                    ParamByName('ChangePercentAmount').asFloat:= 0;
+                    //!!!!!!!ParamByName('ChangePercentAmount').asFloat:= 0;
+                    if ParamByName('isSendOnPriceIn').asBoolean = TRUE
+                    then ParamByName('ChangePercentAmount').asFloat:= 0;
+
                     {ParamByName('OrderExternalId').AsInteger        := 0;
                     ParamByName('OrderExternal_DescId').AsInteger   := 0;
                     ParamByName('OrderExternal_BarCode').asString   := '';

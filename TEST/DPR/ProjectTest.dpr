@@ -486,7 +486,6 @@ uses
   MemberTest in '..\SOURCE\Objects\All\MemberTest.pas',
   PositionTest in '..\SOURCE\Objects\All\PositionTest.pas',
   BranchLink in '..\..\FormsMeat\Guides\BranchLink.pas' {BranchLinkForm: TParentForm},
-  Report_GoodsMI_SaleReturnIn in '..\..\Forms\Report\Report_GoodsMI_SaleReturnIn.pas' {Report_GoodsMI_SaleReturnInForm: TParentForm},
   Partner_PriceList in '..\..\Forms\Guides\Partner_PriceList.pas' {Partner_PriceListForm: TParentForm},
   Report_GoodsMI_Production in '..\..\Forms\Report\Report_GoodsMI_Production.pas' {Report_GoodsMI_ProductionForm: TParentForm},
   Report_GoodsMI_ProductionSeparate in '..\..\Forms\Report\Report_GoodsMI_ProductionSeparate.pas' {Report_GoodsMI_ProductionSeparateForm: TParentForm},
@@ -696,7 +695,9 @@ uses
   OrderInternalPack in '..\..\Forms\Document\OrderInternalPack.pas' {OrderInternalPackForm: TParentForm},
   OrderInternalPackJournal in '..\..\Forms\Document\OrderInternalPackJournal.pas' {OrderInternalPackJournalForm: TParentForm},
   ReturnOut in '..\..\Forms\Document\ReturnOut.pas' {ReturnOutForm: TParentForm},
-  ReturnOutJournal in '..\..\Forms\Document\ReturnOutJournal.pas' {ReturnOutJournalForm: TParentForm};
+  ReturnOutJournal in '..\..\Forms\Document\ReturnOutJournal.pas' {ReturnOutJournalForm: TParentForm},
+  Report_GoodsMI_SaleReturnInUnit in '..\..\Forms\Report\Report_GoodsMI_SaleReturnInUnit.pas' {Report_GoodsMI_SaleReturnInUnitForm: TParentForm},
+  Report_GoodsMI_SaleReturnIn in '..\..\Forms\Report\Report_GoodsMI_SaleReturnIn.pas' {Report_GoodsMI_SaleReturnInForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}

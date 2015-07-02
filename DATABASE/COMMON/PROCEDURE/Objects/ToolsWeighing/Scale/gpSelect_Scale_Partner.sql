@@ -324,7 +324,12 @@ BEGIN
             , Object_Branch.ValueData             AS InfoMoneyName
 
             , NULL :: TFloat AS ChangePercent
-            , NULL :: TFloat AS ChangePercentAmount
+            , CASE WHEN Object_Unit.Id IN (301309 -- Склад ГП ф.Запорожье
+                                         , 346093 -- Склад ГП ф.Одесса
+                                          )
+                        THEN 0
+                        ELSE 1
+              END :: TFloat AS ChangePercentAmount
 
             , FALSE       :: Boolean AS isEdiOrdspr
             , FALSE       :: Boolean AS isEdiInvoice

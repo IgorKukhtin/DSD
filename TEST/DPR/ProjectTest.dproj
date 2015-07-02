@@ -1408,10 +1408,6 @@
 				<Form>BranchLinkForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
-			<DCCReference Include="..\..\Forms\Report\Report_GoodsMI_SaleReturnIn.pas">
-				<Form>Report_GoodsMI_SaleReturnInForm</Form>
-				<DesignClass>TParentForm</DesignClass>
-			</DCCReference>
 			<DCCReference Include="..\..\Forms\Guides\Partner_PriceList.pas">
 				<Form>Partner_PriceListForm</Form>
 				<DesignClass>TParentForm</DesignClass>
@@ -2135,6 +2131,14 @@
 			</DCCReference>
 			<DCCReference Include="..\..\Forms\Document\ReturnOutJournal.pas">
 				<Form>ReturnOutJournalForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Report\Report_GoodsMI_SaleReturnInUnit.pas">
+				<Form>Report_GoodsMI_SaleReturnInUnitForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Report\Report_GoodsMI_SaleReturnIn.pas">
+				<Form>Report_GoodsMI_SaleReturnInForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<BuildConfiguration Include="Release">

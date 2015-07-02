@@ -4,7 +4,7 @@ inherited MainForm: TMainForm
   KeyPreview = True
   Position = poDesigned
   ExplicitWidth = 1102
-  ExplicitHeight = 265
+  ExplicitHeight = 262
   PixelsPerInch = 96
   TextHeight = 13
   object cxGrid: TcxGrid [0]
@@ -3216,6 +3216,17 @@ inherited MainForm: TMainForm
       GuiParams = <>
       isShowModal = False
     end
+    object actReport_GoodsMI_SaleReturnInUnit: TdsdOpenForm
+      Category = #1054#1090#1095#1077#1090#1099' ('#1090#1086#1074'.)'
+      MoveParams = <>
+      Caption = #1057#1082#1083#1072#1076' '#1055#1088#1086#1076#1072#1078#1072' / '#1042#1086#1079#1074#1088#1072#1090' '#1087#1086' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1103#1084
+      FormName = 'TReport_GoodsMI_SaleReturnInUnitForm'
+      FormNameParam.Value = 'TReport_GoodsMI_SaleReturnInUnitForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.ParamType = ptResult
+      GuiParams = <>
+      isShowModal = False
+    end
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Active = False
@@ -3782,6 +3793,9 @@ inherited MainForm: TMainForm
       end
       object miReport_GoodsMI_SaleReturnIn: TMenuItem
         Action = actReport_GoodsMI_SaleReturnIn
+      end
+      object miReport_GoodsMI_SaleReturnInUnit: TMenuItem
+        Action = actReport_GoodsMI_SaleReturnInUnit
       end
       object miReport_GoodsMISale: TMenuItem
         Action = actReport_GoodsMISale
