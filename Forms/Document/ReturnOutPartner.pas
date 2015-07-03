@@ -87,6 +87,7 @@ type
     PaidKindGuidesFrom: TdsdGuides;
     cxLabel16: TcxLabel;
     edChangePercentFrom: TcxCurrencyEdit;
+    actGoodsChoiceForm: TOpenChoiceForm;
   private
     { Private declarations }
   public

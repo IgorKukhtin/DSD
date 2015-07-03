@@ -168,6 +168,7 @@ type
     mactPrint_TTN: TMultiAction;
     actDialog_TTN: TdsdOpenForm;
     clGoodsGroupNameFull: TcxGridDBColumn;
+    actGoodsChoiceForm: TOpenChoiceForm;
   private
     { Private declarations }
   public

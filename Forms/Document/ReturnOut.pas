@@ -79,6 +79,7 @@ type
     actPrint1: TdsdPrintAction;
     cbCalcAmountPartner: TcxCheckBox;
     bbCalcAmountPartner: TdxBarControlContainerItem;
+    actGoodsChoiceForm: TOpenChoiceForm;
   private
     { Private declarations }
   public
