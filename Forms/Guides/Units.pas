@@ -71,6 +71,8 @@ type
     clInvNumber: TcxGridDBColumn;
     clContract_JuridicalName: TcxGridDBColumn;
     clContract_InfomoneyName: TcxGridDBColumn;
+    RouteName: TcxGridDBColumn;
+    RouteSortingName: TcxGridDBColumn;
   private
     { Private declarations }
   public

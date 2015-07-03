@@ -16,6 +16,8 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar,
                Contract_InfomoneyId Integer, Contract_InfomoneyName TVarChar,
                AccountDirectionId Integer, AccountDirectionName TVarChar,
                ProfitLossDirectionId Integer, ProfitLossDirectionName TVarChar,
+               RouteId Integer, RouteName TVarChar,
+               RouteSortingId Integer, RouteSortingName TVarChar,
                isErased boolean, isLeaf boolean) AS
 $BODY$
 BEGIN
@@ -56,6 +58,12 @@ BEGIN
            , CAST (0 as Integer)   AS ProfitLossDirectionId
            , CAST ('' as TVarChar) AS ProfitLossDirectionName
          
+           , CAST (0 as Integer)    AS RouteId
+           , CAST ('' as TVarChar)  AS RouteName
+
+           , CAST (0 as Integer)    AS RouteSortingId
+           , CAST ('' as TVarChar)  AS RouteSortingName
+
            , CAST (NULL AS Boolean) AS isErased
            , CAST (NULL AS Boolean) AS isLeaf;
    ELSE
@@ -89,9 +97,16 @@ BEGIN
          
            , Object_ProfitLossDirection.Id        AS ProfitLossDirectionId
            , Object_ProfitLossDirection.ValueData AS ProfitLossDirectionName
+
+           , Object_Route.Id           AS RouteId
+           , Object_Route.ValueData    AS RouteName
+
+           , Object_RouteSorting.Id         AS RouteSortingId
+           , Object_RouteSorting.ValueData  AS RouteSortingName
          
            , Object_Unit_View.isErased
            , Object_Unit_View.isLeaf
+
        FROM Object_Unit_View
             LEFT JOIN Object_AccountDirection_View AS View_AccountDirection ON View_AccountDirection.AccountDirectionId = Object_Unit_View.AccountDirectionId
             LEFT JOIN ObjectLink AS ObjectLink_Unit_ProfitLossDirection -- "Аналитика ОПиУ - направление" установлена !!!только!!! у следующего после самого верхнего уровня 
@@ -106,6 +121,15 @@ BEGIN
             LEFT JOIN Object AS Object_Juridical ON Object_Juridical.Id = Object_Contract_View.JuridicalId
             LEFT JOIN Object AS Object_Infomoney ON Object_Infomoney.Id = Object_Contract_View.InfomoneyId
 
+            LEFT JOIN ObjectLink AS ObjectLink_Unit_Route
+                                 ON ObjectLink_Unit_Route.ObjectId = Object_Unit_View.Id 
+                                AND ObjectLink_Unit_Route.DescId = zc_ObjectLink_Unit_Route()
+            LEFT JOIN Object AS Object_Route ON Object_Route.Id = ObjectLink_Unit_Route.ChildObjectId
+          
+            LEFT JOIN ObjectLink AS ObjectLink_Unit_RouteSorting
+                                 ON ObjectLink_Unit_RouteSorting.ObjectId = Object_Unit_View.Id 
+                                AND ObjectLink_Unit_RouteSorting.DescId = zc_ObjectLink_Unit_RouteSorting()
+            LEFT JOIN Object AS Object_RouteSorting ON Object_RouteSorting.Id = ObjectLink_Unit_RouteSorting.ChildObjectId
 
       WHERE Object_Unit_View.Id = inId;
    END IF;
@@ -120,6 +144,7 @@ ALTER FUNCTION gpGet_Object_Unit(integer, TVarChar) OWNER TO postgres;
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 03.07.15         * add ObjectLink_Unit_Route, ObjectLink_Unit_RouteSorting
  15.04.15         * add Contract
  12.11.13                                        * add Object_AccountDirection_View
  04.07.13          * + If...              

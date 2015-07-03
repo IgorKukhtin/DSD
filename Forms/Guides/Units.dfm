@@ -30,7 +30,6 @@ object UnitForm: TUnitForm
     Height = 394
     Align = alClient
     TabOrder = 1
-    ExplicitWidth = 782
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = GridDS
@@ -62,7 +61,7 @@ object UnitForm: TUnitForm
         DataBinding.FieldName = 'Code'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 40
+        Width = 38
       end
       object ceName: TcxGridDBColumn
         Caption = #1053#1072#1079#1074#1072#1085#1080#1077
@@ -71,21 +70,21 @@ object UnitForm: TUnitForm
         HeaderAlignmentVert = vaCenter
         SortIndex = 0
         SortOrder = soAscending
-        Width = 150
+        Width = 142
       end
       object ceBranchName: TcxGridDBColumn
         Caption = #1060#1080#1083#1080#1072#1083
         DataBinding.FieldName = 'BranchName'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 100
+        Width = 95
       end
       object ceBusinessName: TcxGridDBColumn
         Caption = #1041#1080#1079#1085#1077#1089
         DataBinding.FieldName = 'BusinessName'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 80
+        Width = 76
       end
       object ceJuridicalName: TcxGridDBColumn
         Caption = #1043#1083#1072#1074#1085#1086#1077' '#1102#1088#1080#1076#1080#1095#1077#1089#1082#1086#1077' '#1083#1080#1094#1086
@@ -124,7 +123,7 @@ object UnitForm: TUnitForm
         DataBinding.FieldName = 'AccountDirectionName'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 80
+        Width = 76
       end
       object ceProfitLossGroupCode: TcxGridDBColumn
         Caption = #1050#1086#1076' '#1054#1055#1080#1059' '#1075#1088'.'
@@ -155,7 +154,7 @@ object UnitForm: TUnitForm
         DataBinding.FieldName = 'ProfitLossDirectionName'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 80
+        Width = 76
       end
       object clInvNumber: TcxGridDBColumn
         Caption = #1044#1086#1075#1086#1074#1086#1088' ('#1087#1077#1088#1077#1074#1099#1089#1090#1072#1074#1083#1077#1085#1080#1077' '#1079#1072#1090#1088#1072#1090')'
@@ -163,7 +162,7 @@ object UnitForm: TUnitForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 120
+        Width = 114
       end
       object clContract_JuridicalName: TcxGridDBColumn
         Caption = #1070#1088'.'#1083#1080#1094#1086' ('#1076#1086#1075#1086#1074#1086#1088')'
@@ -171,7 +170,7 @@ object UnitForm: TUnitForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 70
+        Width = 66
       end
       object clContract_InfomoneyName: TcxGridDBColumn
         Caption = #1059#1055' '#1089#1090#1072#1090#1100#1103' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103' ('#1076#1086#1075#1086#1074#1086#1088')'
@@ -179,7 +178,7 @@ object UnitForm: TUnitForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 120
+        Width = 110
       end
       object ceIsErased: TcxGridDBColumn
         Caption = #1059#1076#1072#1083#1077#1085
@@ -189,6 +188,22 @@ object UnitForm: TUnitForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 40
+      end
+      object RouteName: TcxGridDBColumn
+        Caption = #1052#1072#1088#1096#1088#1091#1090
+        DataBinding.FieldName = 'RouteName'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 67
+      end
+      object RouteSortingName: TcxGridDBColumn
+        Caption = #1057#1086#1088#1090#1080#1088#1086#1074#1082#1072' '#1084#1072#1088#1096#1088#1091#1090#1072
+        DataBinding.FieldName = 'RouteSortingName'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 98
       end
     end
     object cxGridLevel: TcxGridLevel
