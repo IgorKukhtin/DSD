@@ -100,9 +100,16 @@ inherited ReturnOutPartnerForm: TReturnOutPartnerForm
           object colName: TcxGridDBColumn
             Caption = #1058#1086#1074#1072#1088
             DataBinding.FieldName = 'GoodsName'
+            PropertiesClassName = 'TcxButtonEditProperties'
+            Properties.Buttons = <
+              item
+                Action = actGoodsChoiceForm
+                Default = True
+                Kind = bkEllipsis
+              end>
+            Properties.ReadOnly = True
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Options.Editing = False
             Width = 120
           end
           object colGoodsKindName: TcxGridDBColumn
@@ -541,6 +548,7 @@ inherited ReturnOutPartnerForm: TReturnOutPartnerForm
           DataSet = PrintItemsCDS
           UserName = 'frxDBDMaster'
         end>
+      CopiesCount = 1
       Params = <
         item
           Name = 'InvNumber'
@@ -631,6 +639,7 @@ inherited ReturnOutPartnerForm: TReturnOutPartnerForm
       Hint = #1055#1077#1095#1072#1090#1100' '#1053#1072#1083#1086#1075#1086#1074#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103
       ImageIndex = 3
       DataSets = <>
+      CopiesCount = 1
       Params = <
         item
           Name = 'Id'
@@ -720,6 +729,36 @@ inherited ReturnOutPartnerForm: TReturnOutPartnerForm
       Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
       ShortCut = 116
       RefreshOnTabSetChanges = False
+    end
+    object actGoodsChoiceForm: TOpenChoiceForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = 'GoodsForm'
+      FormName = 'TGoods_ObjectForm'
+      FormNameParam.Value = 'TGoods_ObjectForm'
+      FormNameParam.DataType = ftString
+      GuiParams = <
+        item
+          Name = 'Key'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'GoodsId'
+        end
+        item
+          Name = 'TextValue'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'GoodsName'
+          DataType = ftString
+        end
+        item
+          Name = 'Code'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'GoodsCode'
+        end>
+      isShowModal = True
     end
   end
   inherited MasterDS: TDataSource

@@ -149,6 +149,7 @@ type
     spInsertMaskMIMaster: TdsdStoredProc;
     actAddMask: TdsdExecStoredProc;
     bbAddMask: TdxBarButton;
+    actGoodsChoiceForm: TOpenChoiceForm;
   private
   public
   end;

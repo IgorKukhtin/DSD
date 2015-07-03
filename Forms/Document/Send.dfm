@@ -606,7 +606,7 @@ inherited SendForm: TSendForm
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
-      Caption = 'GoodsChildForm'
+      Caption = 'GoodsForm'
       FormName = 'TGoods_ObjectForm'
       FormNameParam.Value = 'TGoods_ObjectForm'
       FormNameParam.DataType = ftString
