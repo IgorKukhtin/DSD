@@ -66,6 +66,12 @@ type
     cxLabel10: TcxLabel;
     ceContract_Infomoney: TcxButtonEdit;
     Contract_InfomoneyGuides: TdsdGuides;
+    cxLabel11: TcxLabel;
+    cxLabel12: TcxLabel;
+    ceRoute: TcxButtonEdit;
+    RouteGuides: TdsdGuides;
+    ceRouteSorting: TcxButtonEdit;
+    RouteSortingGuides: TdsdGuides;
   private
     { Private declarations }
   public

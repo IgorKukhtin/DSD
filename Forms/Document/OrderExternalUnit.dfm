@@ -2,8 +2,9 @@ inherited OrderExternalUnitForm: TOrderExternalUnitForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1047#1072#1103#1074#1082#1072' '#1089#1090#1086#1088#1086#1085#1085#1103#1103' ('#1085#1072' '#1075#1083'.'#1089#1082#1083#1072#1076')>'
   ClientHeight = 668
   ClientWidth = 1416
+  ExplicitLeft = -411
   ExplicitWidth = 1432
-  ExplicitHeight = 703
+  ExplicitHeight = 706
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -2024,8 +2025,8 @@ inherited OrderExternalUnitForm: TOrderExternalUnitForm
         DataType = ftString
         ParamType = ptInput
       end>
-    Left = 648
-    Top = 72
+    Left = 640
+    Top = 64
   end
   object GuidesRouteSorting: TdsdGuides
     KeyField = 'Id'
@@ -2051,8 +2052,8 @@ inherited OrderExternalUnitForm: TOrderExternalUnitForm
         DataType = ftString
         ParamType = ptInput
       end>
-    Left = 528
-    Top = 48
+    Left = 1336
+    Top = 56
   end
   object GuidesFrom: TdsdGuides
     KeyField = 'Id'
@@ -2076,9 +2077,34 @@ inherited OrderExternalUnitForm: TOrderExternalUnitForm
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+      end
+      item
+        Name = 'RouteId'
+        Value = Null
+        Component = GuidesRoute
+        ComponentItem = 'Key'
+      end
+      item
+        Name = 'RouteName'
+        Value = Null
+        Component = GuidesRoute
+        ComponentItem = 'TextValue'
+        DataType = ftString
+      end
+      item
+        Name = 'RouteSortingId'
+        Value = Null
+        Component = GuidesRouteSorting
+        ComponentItem = 'Key'
+      end
+      item
+        Name = 'RouteSortingName'
+        Value = Null
+        Component = GuidesRouteSorting
+        ComponentItem = 'TextValue'
+        DataType = ftString
       end>
     Left = 336
-    Top = 65528
   end
   object GuidesRoute: TdsdGuides
     KeyField = 'Id'
@@ -2104,8 +2130,8 @@ inherited OrderExternalUnitForm: TOrderExternalUnitForm
         DataType = ftString
         ParamType = ptInput
       end>
-    Left = 1336
-    Top = 72
+    Left = 552
+    Top = 48
   end
   object GuidesPersonal: TdsdGuides
     KeyField = 'Id'
