@@ -197,8 +197,8 @@ BEGIN
            , SUM (MovementItem.Amount)::TFloat		 AS Amount
            , SUM (COALESCE (MIFloat_LiveWeight.ValueData, 0)) :: TFloat  AS LiveWeight
            , SUM (COALESCE (MIFloat_HeadCount.ValueData, 0))  :: TFloat	 AS HeadCount
-           , SUM (tmpWeighing.Count) :: TFloat	         AS WeighingCount
-           , SUM (tmpWeighing.HeadCount) :: TFloat	 AS HeadCount_item
+           , tmpWeighing.Count :: TFloat	         AS WeighingCount
+           , tmpWeighing.HeadCount :: TFloat	         AS HeadCount_item
 
        FROM MovementItem
                       
@@ -237,6 +237,8 @@ BEGIN
            , Object_Measure.ValueData
            , Object_Measure.Id 
            , tmpWeighing.GoodsId
+           , tmpWeighing.Count
+           , tmpWeighing.HeadCount
           
       ;
       

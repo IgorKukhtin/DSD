@@ -526,6 +526,7 @@ object Report_GoodsBalanceForm: TReport_GoodsBalanceForm
       OptionsCustomize.DataRowSizing = True
       OptionsData.Deleting = False
       OptionsData.DeletingConfirmation = False
+      OptionsData.Editing = False
       OptionsData.Inserting = False
       OptionsView.Footer = True
       OptionsView.GroupSummaryLayout = gslAlignWithColumns
@@ -782,6 +783,12 @@ object Report_GoodsBalanceForm: TReport_GoodsBalanceForm
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
         Width = 100
+      end
+      object ColorB_calc: TcxGridDBColumn
+        DataBinding.FieldName = 'ColorB_calc'
+        Visible = False
+        VisibleForCustomization = False
+        Width = 55
       end
     end
     object cxGridLevel: TcxGridLevel
@@ -1557,9 +1564,8 @@ object Report_GoodsBalanceForm: TReport_GoodsBalanceForm
         item
           UserName = 'frxDBDMaster'
           IndexFieldNames = 
-            'GoodsGroupNameFull;GoodsGroupName;GoodsName;GoodsKindName;Partio' +
-            'nGoodsName;AssetToName;InfoMoneyName_all;InfoMoneyName_all_Detai' +
-            'l'
+            'GoodsGroupNameFull;GoodsName;GoodsKindName;PartionGoodsName;Asse' +
+            'tToName;InfoMoneyName_all;InfoMoneyName_all_Detail'
           GridView = cxGridDBTableView
         end>
       CopiesCount = 1
@@ -1793,7 +1799,17 @@ object Report_GoodsBalanceForm: TReport_GoodsBalanceForm
     ActionItemList = <>
     SortImages = dmMain.SortImageList
     OnlyEditingCellOnEnter = False
-    ColorRuleList = <>
+    ColorRuleList = <
+      item
+        ColorColumn = CountOut
+        BackGroundValueColumn = ColorB_calc
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = CountIn
+        BackGroundValueColumn = ColorB_calc
+        ColorValueList = <>
+      end>
     ColumnAddOnList = <
       item
         Action = SaleJournal
