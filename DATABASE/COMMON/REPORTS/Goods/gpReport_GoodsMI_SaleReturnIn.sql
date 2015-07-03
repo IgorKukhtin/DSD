@@ -110,6 +110,7 @@ BEGIN
 
     -- ќграничени€ по товару
     CREATE TEMP TABLE _tmpGoods (GoodsId Integer, TradeMarkId Integer) ON COMMIT DROP;
+
     IF inGoodsGroupId <> 0
     THEN
         -- устанавливаетс€ признак

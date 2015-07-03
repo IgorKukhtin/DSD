@@ -25,6 +25,7 @@ object Report_GoodsBalanceForm: TReport_GoodsBalanceForm
     Height = 590
     Align = alClient
     TabOrder = 0
+    ExplicitTop = 87
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = MasterDS
@@ -739,7 +740,7 @@ object Report_GoodsBalanceForm: TReport_GoodsBalanceForm
         Width = 80
       end
       object CountOut: TcxGridDBColumn
-        Caption = #1056#1072#1089#1093#1086#1076' '#1082#1086#1083'.'
+        Caption = #1056#1072#1089#1093#1086#1076'* '#1082#1086#1083'-'#1074#1086
         DataBinding.FieldName = 'CountOut'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DecimalPlaces = 4
@@ -750,7 +751,7 @@ object Report_GoodsBalanceForm: TReport_GoodsBalanceForm
         Width = 80
       end
       object CountIn: TcxGridDBColumn
-        Caption = #1055#1088#1080#1093#1086#1076' '#1082#1086#1083'.'
+        Caption = #1055#1088#1080#1093#1086#1076'* '#1082#1086#1083'-'#1074#1086
         DataBinding.FieldName = 'CountIn'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DecimalPlaces = 4
@@ -761,7 +762,7 @@ object Report_GoodsBalanceForm: TReport_GoodsBalanceForm
         Width = 80
       end
       object CountOut_Remains: TcxGridDBColumn
-        Caption = #1056#1072#1089#1093#1086#1076' '#1088#1072#1089#1095'.'#1082#1086#1083'.'
+        Caption = #1060#1072#1082#1090' '#1088#1072#1089#1093#1086#1076' '#1082#1086#1083'-'#1074#1086
         DataBinding.FieldName = 'CountOut_Remains'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DecimalPlaces = 4
@@ -769,10 +770,10 @@ object Report_GoodsBalanceForm: TReport_GoodsBalanceForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 80
+        Width = 100
       end
       object CountIn_Remains: TcxGridDBColumn
-        Caption = #1055#1088#1080#1093#1086#1076' '#1088#1072#1089#1095'. '#1082#1086#1083'.'
+        Caption = #1060#1072#1082#1090' '#1087#1088#1080#1093#1086#1076' '#1082#1086#1083'-'#1074#1086
         DataBinding.FieldName = 'CountIn_Remains'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DecimalPlaces = 4
@@ -780,7 +781,7 @@ object Report_GoodsBalanceForm: TReport_GoodsBalanceForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 80
+        Width = 100
       end
     end
     object cxGridLevel: TcxGridLevel
@@ -1342,6 +1343,7 @@ object Report_GoodsBalanceForm: TReport_GoodsBalanceForm
             'l'
           GridView = cxGridDBTableView
         end>
+      CopiesCount = 1
       Params = <
         item
           Name = 'StartDate'
@@ -1560,6 +1562,7 @@ object Report_GoodsBalanceForm: TReport_GoodsBalanceForm
             'l'
           GridView = cxGridDBTableView
         end>
+      CopiesCount = 1
       Params = <
         item
           Name = 'StartDate'
@@ -1645,6 +1648,7 @@ object Report_GoodsBalanceForm: TReport_GoodsBalanceForm
             'l'
           GridView = cxGridDBTableView
         end>
+      CopiesCount = 1
       Params = <
         item
           Name = 'StartDate'

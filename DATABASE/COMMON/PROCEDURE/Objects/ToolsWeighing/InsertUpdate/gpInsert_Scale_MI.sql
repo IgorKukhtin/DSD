@@ -45,6 +45,7 @@ $BODY$
    DECLARE vbMovementId_order Integer;
    DECLARE vbBoxId Integer;
    DECLARE vbTotalSumm TFloat;
+   DECLARE vbRetailId Integer;
 
    DECLARE vbPriceListId_Dnepr Integer;
    DECLARE vbOperDate_Dnepr TDateTime;
@@ -56,13 +57,23 @@ BEGIN
 
      -- определили
      SELECT Movement.OperDate, MovementFloat.ValueData :: Integer, COALESCE (MLM_Order.MovementChildId, 0)
-            INTO vbOperDate, vbMovementDescId, vbMovementId_order
+          , ObjectLink_Juridical_Retail.ChildObjectId AS RetailId
+            INTO vbOperDate, vbMovementDescId, vbMovementId_order, vbRetailId
      FROM Movement
           LEFT JOIN MovementFloat ON MovementFloat.MovementId = Movement.Id
                                  AND MovementFloat.DescId = zc_MovementFloat_MovementDesc()
           LEFT JOIN MovementLinkMovement AS MLM_Order
                                          ON MLM_Order.MovementId = Movement.Id
                                         AND MLM_Order.DescId = zc_MovementLinkMovement_Order()
+          LEFT JOIN MovementLinkObject AS MovementLinkObject_To
+                                       ON MovementLinkObject_To.MovementId = Movement.Id
+                                      AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
+          LEFT JOIN ObjectLink AS ObjectLink_Partner_Juridical
+                               ON ObjectLink_Partner_Juridical.ObjectId = MovementLinkObject_To.ObjectId
+                              AND ObjectLink_Partner_Juridical.DescId = zc_ObjectLink_Partner_Juridical()
+          LEFT JOIN ObjectLink AS ObjectLink_Juridical_Retail
+                               ON ObjectLink_Juridical_Retail.ObjectId = ObjectLink_Partner_Juridical.ChildObjectId
+                              AND ObjectLink_Juridical_Retail.DescId = zc_ObjectLink_Juridical_Retail()
      WHERE Movement.Id = inMovementId;
 
 
@@ -102,7 +113,10 @@ BEGIN
                                                        , inMovementId          := inMovementId
                                                        , inGoodsId             := inGoodsId
                                                        , inAmount              := inRealWeight - inCountTare * inWeightTare
-                                                       , inAmountPartner       := CAST ((inRealWeight - inCountTare * inWeightTare) * (1 - inChangePercentAmount/100) AS NUMERIC (16, 2))
+                                                       , inAmountPartner       := CASE WHEN vbRetailId IN (341640, 310854) -- Фоззі + Фозі
+                                                                                            THEN CAST ((inRealWeight - inCountTare * inWeightTare) * (1 - inChangePercentAmount/100) AS NUMERIC (16, 3))
+                                                                                       ELSE CAST ((inRealWeight - inCountTare * inWeightTare) * (1 - inChangePercentAmount/100) AS NUMERIC (16, 2))
+                                                                                  END
                                                        , inRealWeight          := inRealWeight
                                                        , inChangePercentAmount := inChangePercentAmount
                                                        , inCountTare           := inCountTare

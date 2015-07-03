@@ -27,6 +27,7 @@ $BODY$
     DECLARE vbPaidKindId Integer;
     DECLARE vbOperDate TDateTime;
 
+    DECLARE vbStoreKeeperName TVarChar;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_...());
@@ -41,6 +42,19 @@ BEGIN
      FROM Movement
      WHERE Movement.Id = inMovementId
     ;
+
+     -- параметры из Взвешивания
+     vbStoreKeeperName:= (SELECT Object_User.ValueData
+                          FROM Movement
+                               LEFT JOIN MovementLinkObject AS MovementLinkObject_User
+                                                            ON MovementLinkObject_User.MovementId = Movement.Id
+                                                           AND MovementLinkObject_User.DescId = zc_MovementLinkObject_User()
+                               LEFT JOIN Object AS Object_User ON Object_User.Id = MovementLinkObject_User.ObjectId
+                          WHERE Movement.ParentId = inMovementId AND Movement.DescId IN (zc_Movement_WeighingPartner(), zc_Movement_WeighingProduction())
+                            AND Movement.StatusId = zc_Enum_Status_Complete()
+                          LIMIT 1
+                         );
+
 
     -- очень важная проверка
     IF COALESCE (vbStatusId, 0) = zc_Enum_Status_Erased()
@@ -120,6 +134,8 @@ BEGIN
          , tmpCount.Count :: TFloat       AS TotalNumber
          , tmpMIWeighing.WeighingNumber   AS WeighingNumber
          , tmpMIWeighing.Count ::  TFloat AS CountWeighing
+
+         , vbStoreKeeperName AS StoreKeeper -- кладовщик
      FROM Movement 
           LEFT JOIN (SELECT COUNT(*) AS Count from tmpMovementWeighing) AS tmpCount ON 1 = 1
           LEFT JOIN  tmpMIWeighing ON 1 = 1
@@ -152,6 +168,7 @@ BEGIN
 
    With   tmpWeighing AS (SELECT MovementItem.ObjectId AS GoodsId 
                                 ,SUM (MovementItem.Amount) AS Count
+                                ,SUM (COALESCE (MIFloat_HeadCount.ValueData, 0)) AS HeadCount
                           FROM  (SELECT Movement.Id AS MovementId
                                  FROM Movement
                                  WHERE Movement.ParentId = inMovementId
@@ -163,6 +180,9 @@ BEGIN
                                      AND MovementBoolean_isIncome.ValueData = TRUE
                               INNER JOIN MovementItem ON MovementItem.MovementId = tmp.MovementId
                                                      AND MovementItem.isErased   = FALSE
+                              LEFT JOIN MovementItemFloat AS MIFloat_HeadCount
+                                                          ON MIFloat_HeadCount.MovementItemId = MovementItem.Id
+                                                         AND MIFloat_HeadCount.DescId = zc_MIFloat_HeadCount()
                           WHERE tmp.MovementId = inMovementId_Weighing  
                              OR COALESCE (inMovementId_Weighing, 0) = 0 
                           GROUP BY MovementItem.ObjectId
@@ -175,10 +195,11 @@ BEGIN
            , SUM (CASE WHEN Object_Measure.Id = zc_Measure_Sh() THEN (MovementItem.Amount) ELSE 0 END) ::TFloat  AS Amount_Sh
            , SUM (MovementItem.Amount * (CASE WHEN Object_Measure.Id = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END) )  ::TFloat  AS Amount_Weight
            , SUM (MovementItem.Amount)::TFloat		 AS Amount
-           , SUM (MIFloat_LiveWeight.ValueData)::TFloat  AS LiveWeight
-           , SUM (MIFloat_HeadCount.ValueData)::TFloat	 AS HeadCount
-           , SUM (tmpWeighing.Count)::TFloat	         AS WeighingCount 
-     
+           , SUM (COALESCE (MIFloat_LiveWeight.ValueData, 0)) :: TFloat  AS LiveWeight
+           , SUM (COALESCE (MIFloat_HeadCount.ValueData, 0))  :: TFloat	 AS HeadCount
+           , SUM (tmpWeighing.Count) :: TFloat	         AS WeighingCount
+           , SUM (tmpWeighing.HeadCount) :: TFloat	 AS HeadCount_item
+
        FROM MovementItem
                       
             LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = MovementItem.ObjectId

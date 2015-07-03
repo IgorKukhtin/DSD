@@ -3,8 +3,9 @@ inherited SaleForm: TSaleForm
   ClientHeight = 668
   ClientWidth = 1020
   AddOnFormData.OnLoadAction = actSetDefaults
+  ExplicitLeft = -55
   ExplicitWidth = 1036
-  ExplicitHeight = 706
+  ExplicitHeight = 703
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -417,7 +418,6 @@ inherited SaleForm: TSaleForm
       Properties.Buttons = <
         item
           Default = True
-          Enabled = False
           Kind = bkEllipsis
         end>
       Properties.ReadOnly = True
@@ -751,6 +751,7 @@ inherited SaleForm: TSaleForm
           UserName = 'frxDBDMaster'
           IndexFieldNames = 'GroupName_Juridical;GoodsName_Juridical;GoodsName;GoodsKindName'
         end>
+      CopiesCount = 1
       Params = <
         item
           Name = 'Id'
@@ -787,6 +788,7 @@ inherited SaleForm: TSaleForm
           DataSet = PrintItemsSverkaCDS
           UserName = 'frxDBDSverka'
         end>
+      CopiesCount = 1
       Params = <
         item
           Name = 'Id'
@@ -820,6 +822,7 @@ inherited SaleForm: TSaleForm
           UserName = 'frxDBDMaster'
           IndexFieldNames = 'WeighingNumber;NumOrder'
         end>
+      CopiesCount = 1
       Params = <
         item
           Name = 'Id'
@@ -856,6 +859,7 @@ inherited SaleForm: TSaleForm
             'goodsgroupname;GroupName_Juridical;GoodsName_Juridical;GoodsName' +
             ';GoodsKindName'
         end>
+      CopiesCount = 1
       Params = <
         item
           Name = 'Id'
@@ -968,6 +972,7 @@ inherited SaleForm: TSaleForm
           DataSet = PrintItemsSverkaCDS
           UserName = 'frxDBDSverka'
         end>
+      CopiesCount = 1
       Params = <
         item
           Name = 'Id'
@@ -1003,6 +1008,7 @@ inherited SaleForm: TSaleForm
           DataSet = PrintItemsCDS
           UserName = 'frxDBDMaster'
         end>
+      CopiesCount = 1
       Params = <
         item
           Name = 'Id'
@@ -1036,6 +1042,7 @@ inherited SaleForm: TSaleForm
           UserName = 'frxDBDMaster'
           IndexFieldNames = 'GroupName_Juridical;GoodsName_Juridical;GoodsName;GoodsKindName'
         end>
+      CopiesCount = 1
       Params = <
         item
           Name = 'Id'
@@ -1268,6 +1275,7 @@ inherited SaleForm: TSaleForm
           UserName = 'frxDBDMaster'
           IndexFieldNames = 'WeighingNumber;BoxNumber;NumOrder'
         end>
+      CopiesCount = 1
       Params = <
         item
           Name = 'Id'
@@ -1327,6 +1335,7 @@ inherited SaleForm: TSaleForm
           UserName = 'frxDBDMaster2'
           IndexFieldNames = 'GroupName_Juridical;GoodsName_Juridical;GoodsName;GoodsKindName'
         end>
+      CopiesCount = 1
       Params = <
         item
           Name = 'Id'
@@ -1406,6 +1415,7 @@ inherited SaleForm: TSaleForm
           DataSet = PrintItemsCDS
           UserName = 'frxDBDMaster'
         end>
+      CopiesCount = 1
       Params = <
         item
           Name = 'Id'

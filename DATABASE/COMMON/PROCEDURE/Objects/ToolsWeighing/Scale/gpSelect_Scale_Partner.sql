@@ -73,6 +73,7 @@ BEGIN
                              WHERE View_InfoMoney_find.InfoMoneyDestinationId IN (zc_Enum_InfoMoneyDestination_20700() -- Общефирменные + Товары
                                                                                 , zc_Enum_InfoMoneyDestination_20900() -- Общефирменные + Ирна
                                                                                 , zc_Enum_InfoMoneyDestination_21000() -- Общефирменные + Чапли
+                                                                                , zc_Enum_InfoMoneyDestination_21100() -- Общефирменные + Дворкин
                                                                                  )
                                AND inIsGoodsComplete = TRUE
                             UNION
@@ -81,7 +82,9 @@ BEGIN
                                   , View_InfoMoney_find.InfoMoneyGroupId
                                   , zc_Movement_Sale() AS MovementDescId
                              FROM Object_InfoMoney_View AS View_InfoMoney_find
-                             WHERE View_InfoMoney_find.InfoMoneyDestinationId IN (zc_Enum_InfoMoneyDestination_30200()) -- Доходы + Мясное сырье
+                             WHERE View_InfoMoney_find.InfoMoneyDestinationId IN (zc_Enum_InfoMoneyDestination_30200() -- Доходы + Мясное сырье
+                                                                                , zc_Enum_InfoMoneyDestination_30300() -- Доходы + Переработка
+                                                                                 )
                                AND inIsGoodsComplete = FALSE
                             UNION
                              -- 2.1.
@@ -89,7 +92,10 @@ BEGIN
                                   , View_InfoMoney_find.InfoMoneyGroupId
                                   , zc_Movement_Sale() AS MovementDescId
                              FROM Object_InfoMoney_View AS View_InfoMoney_find
-                             WHERE View_InfoMoney_find.InfoMoneyId IN (zc_Enum_InfoMoney_30101()) -- Доходы + Продукция + Готовая продукция
+                             WHERE (View_InfoMoney_find.InfoMoneyId IN (zc_Enum_InfoMoney_30101()) -- Доходы + Продукция + Готовая продукция
+                                 OR View_InfoMoney_find.InfoMoneyDestinationId IN (zc_Enum_InfoMoneyDestination_30300() -- Доходы + Переработка
+                                                                                  )
+                                   )
                                AND inIsGoodsComplete = TRUE
                             /*UNION
                              -- 2.2.

@@ -47,32 +47,125 @@ RETURNS TABLE (GoodsGroupName TVarChar, GoodsGroupNameFull TVarChar
 AS
 $BODY$
    DECLARE vbUserId Integer;
+
+   DECLARE vbIsGoods Boolean;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Select_...());
      vbUserId:= lpGetUserBySession (inSession);
 
+
+
+    -- Ограничения по товару
+    CREATE TEMP TABLE _tmpGoods_report (GoodsId Integer, TradeMarkId Integer) ON COMMIT DROP;
+    IF inGoodsGroupId <> 0
+    THEN
+        -- устанавливается признак
+        vbIsGoods:= TRUE;
+        -- заполнение
+        INSERT INTO _tmpGoods_report (GoodsId, TradeMarkId)
+           SELECT lfObject_Goods_byGoodsGroup.GoodsId AS GoodsId
+                , CASE WHEN inIsTradeMark = TRUE OR inIsGoods = TRUE THEN COALESCE (ObjectLink_Goods_TradeMark.ChildObjectId, 0) ELSE 0 END AS TradeMarkId
+                -- , COALESCE (ObjectLink_Goods_Measure.ChildObjectId, 0) AS MeasureId
+                -- , COALESCE (ObjectFloat_Weight.ValueData, 0)           AS Weight
+           FROM lfSelect_Object_Goods_byGoodsGroup (inGoodsGroupId) AS lfObject_Goods_byGoodsGroup
+                LEFT JOIN ObjectLink AS ObjectLink_Goods_TradeMark
+                                     ON ObjectLink_Goods_TradeMark.ObjectId = lfObject_Goods_byGoodsGroup.GoodsId
+                                    AND ObjectLink_Goods_TradeMark.DescId = zc_ObjectLink_Goods_TradeMark()
+/*                LEFT JOIN ObjectLink AS ObjectLink_Goods_Measure
+                                     ON ObjectLink_Goods_Measure.ObjectId = lfObject_Goods_byGoodsGroup.GoodsId
+                                    AND ObjectLink_Goods_Measure.DescId = zc_ObjectLink_Goods_Measure()
+                LEFT JOIN ObjectFloat AS ObjectFloat_Weight
+                                      ON ObjectFloat_Weight.ObjectId = lfObject_Goods_byGoodsGroup.GoodsId
+                                     AND ObjectFloat_Weight.DescId = zc_ObjectFloat_Goods_Weight()*/
+           WHERE (ObjectLink_Goods_TradeMark.ChildObjectId = inTradeMarkId OR COALESCE (inTradeMarkId, 0) = 0)
+       ;
+    ELSE IF inTradeMarkId <> 0
+         THEN
+             -- устанавливается признак
+             vbIsGoods:= TRUE;
+             -- заполнение
+             INSERT INTO _tmpGoods_report (GoodsId, TradeMarkId)
+                SELECT ObjectLink_Goods_TradeMark.ObjectId AS GoodsId
+                     , CASE WHEN inIsTradeMark = TRUE OR inIsGoods = TRUE THEN COALESCE (ObjectLink_Goods_TradeMark.ChildObjectId, 0) ELSE 0 END AS TradeMarkId
+                FROM ObjectLink AS ObjectLink_Goods_TradeMark
+                WHERE ObjectLink_Goods_TradeMark.DescId = zc_ObjectLink_Goods_TradeMark()
+                  AND ObjectLink_Goods_TradeMark.ChildObjectId = inTradeMarkId
+            ;
+         ELSE
+             -- устанавливается признак
+             vbIsGoods:= FALSE;
+             -- заполнение
+             INSERT INTO _tmpGoods_report (GoodsId, TradeMarkId)
+                SELECT ObjectLink_Goods_TradeMark.ObjectId AS GoodsId
+                     , CASE WHEN inIsTradeMark = TRUE OR inIsGoods = TRUE THEN COALESCE (ObjectLink_Goods_TradeMark.ChildObjectId, 0) ELSE 0 END AS TradeMarkId
+                FROM ObjectLink AS ObjectLink_Goods_TradeMark
+                WHERE ObjectLink_Goods_TradeMark.DescId = zc_ObjectLink_Goods_TradeMark()
+                  AND ObjectLink_Goods_TradeMark.ChildObjectId > 0
+                  AND (inIsTradeMark = TRUE AND inIsGoods = FALSE)
+            ;
+
+         END IF;
+    END IF;
+
+
+    ANALYZE _tmpGoods_report;
+
+
+    -- результат
        RETURN QUERY
-       WITH tmp_Send AS  (SELECT MovementLinkObject_From.ObjectId                         AS FromId
-                               , CASE WHEN inIsPartner = TRUE THEN MovementLinkObject_To.ObjectId ELSE 0 END AS ToId
+       WITH tmp_Unit AS  (SELECT 8459 AS UnitId -- Склад Реализации
+                         UNION 
+                          SELECT UnitId FROM lfSelect_Object_Unit_byGroup (8460) AS lfSelect_Object_Unit_byGroup) -- Возвраты общие
+          , tmp_Send AS  (SELECT CASE WHEN inIsPartner = TRUE AND tmp_Unit_To.UnitId IS NULL
+                                           THEN MovementLinkObject_From.ObjectId
+                                      WHEN inIsPartner = TRUE AND tmp_Unit_From.UnitId IS NULL
+                                           THEN MovementLinkObject_To.ObjectId
+                                      ELSE 0
+                                 END AS FromId
+
+
+                               , CASE WHEN inIsPartner = TRUE AND tmp_Unit_To.UnitId IS NULL
+                                           THEN MovementLinkObject_To.ObjectId
+                                      WHEN inIsPartner = TRUE AND tmp_Unit_From.UnitId IS NULL
+                                           THEN MovementLinkObject_From.ObjectId
+                                      ELSE 0
+                                 END AS ToId
+
                                , CASE WHEN inIsGoods = TRUE OR inIsTradeMark = TRUE THEN MovementItem.ObjectId  ELSE 0 END AS GoodsId
                                , CASE WHEN inIsGoodsKind = TRUE THEN MILinkObject_GoodsKind.ObjectId ELSE 0 END AS GoodsKindId
-                               , SUM (MovementItem.Amount)                                AS Amount_Count
-                               , SUM (CASE WHEN MIFloat_CountForPrice.ValueData > 0
+
+                               , SUM (CASE WHEN tmp_Unit_From.UnitId > 0 THEN MovementItem.Amount ELSE 0 END) AS Amount_Count
+                               , SUM (CASE WHEN tmp_Unit_From.UnitId > 0 THEN MovementItem.Amount ELSE 0 END
+                                    * CASE WHEN MIFloat_CountForPrice.ValueData > 0
                                                 THEN COALESCE (MIFloat_Price.ValueData, 0) / MIFloat_CountForPrice.ValueData
                                            ELSE COALESCE (MIFloat_Price.ValueData, 0)
-                                      END * MovementItem.Amount * 1.2)                    AS Amount_Summ
+                                      END * 1.2
+                                     ) AS Amount_Summ
+
+                               , SUM (CASE WHEN tmp_Unit_To.UnitId > 0 THEN MovementItem.Amount ELSE 0 END) AS Amount_CountRet
+                               , SUM (CASE WHEN tmp_Unit_To.UnitId > 0 THEN MovementItem.Amount ELSE 0 END
+                                    * CASE WHEN MIFloat_CountForPrice.ValueData > 0
+                                                THEN COALESCE (MIFloat_Price.ValueData, 0) / MIFloat_CountForPrice.ValueData
+                                           ELSE COALESCE (MIFloat_Price.ValueData, 0)
+                                      END * 1.2
+                                     ) AS Amount_SummRet
+
                           FROM Movement
-                               INNER JOIN MovementLinkObject AS MovementLinkObject_From
+                               LEFT JOIN MovementLinkObject AS MovementLinkObject_From
                                                              ON MovementLinkObject_From.MovementId = Movement.Id
                                                             AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
-                                                            AND MovementLinkObject_From.ObjectId = 8459 -- Склад Реализации
+                               LEFT JOIN tmp_Unit AS tmp_Unit_From ON tmp_Unit_From.UnitId = MovementLinkObject_From.ObjectId
                                LEFT JOIN MovementLinkObject AS MovementLinkObject_To
-                                        ON MovementLinkObject_To.MovementId = Movement.Id
-                                       AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
+                                                            ON MovementLinkObject_To.MovementId = Movement.Id
+                                                           AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
+                               LEFT JOIN tmp_Unit AS tmp_Unit_To ON tmp_Unit_To.UnitId = MovementLinkObject_To.ObjectId
+
                                INNER JOIN MovementItem ON MovementItem.MovementId = Movement.Id
                                                       AND MovementItem.DescId     = zc_MI_Master()
                                                       AND MovementItem.isErased   = FALSE
+                               LEFT JOIN _tmpGoods_report ON _tmpGoods_report.GoodsId = MovementItem.ObjectId
+
                                LEFT JOIN MovementItemFloat AS MIFloat_Price
                                                            ON MIFloat_Price.MovementItemId = MovementItem.Id
                                                           AND MIFloat_Price.DescId = zc_MIFloat_Price()
@@ -86,7 +179,21 @@ BEGIN
                           WHERE Movement.OperDate BETWEEN inStartDate AND inEndDate
                             AND Movement.StatusId = zc_Enum_Status_Complete()
                             AND Movement.DescId = zc_Movement_SendOnPrice()
-                          GROUP BY MovementLinkObject_From.ObjectId
+                            AND (_tmpGoods_report.GoodsId > 0 OR vbIsGoods = FALSE)
+                            AND (tmp_Unit_From.UnitId > 0
+                              OR tmp_Unit_To.UnitId > 0)
+                          GROUP BY CASE WHEN inIsPartner = TRUE AND tmp_Unit_To.UnitId IS NULL
+                                             THEN MovementLinkObject_From.ObjectId
+                                        WHEN inIsPartner = TRUE AND tmp_Unit_From.UnitId IS NULL
+                                             THEN MovementLinkObject_To.ObjectId
+                                        ELSE 0
+                                   END
+                                 , CASE WHEN inIsPartner = TRUE AND tmp_Unit_To.UnitId IS NULL
+                                             THEN MovementLinkObject_To.ObjectId
+                                        WHEN inIsPartner = TRUE AND tmp_Unit_From.UnitId IS NULL
+                                             THEN MovementLinkObject_From.ObjectId
+                                        ELSE 0
+                                   END
                                  , CASE WHEN inIsPartner = TRUE THEN MovementLinkObject_To.ObjectId ELSE 0 END
                                  , CASE WHEN inIsGoods = TRUE OR inIsTradeMark = TRUE THEN MovementItem.ObjectId  ELSE 0 END
                                  , CASE WHEN inIsGoodsKind = TRUE THEN MILinkObject_GoodsKind.ObjectId ELSE 0 END
@@ -183,16 +290,16 @@ BEGIN
          , tmpOperationGroup.Amount_CountWeight :: TFloat AS Sale_AmountPartner_Weight
          , tmpOperationGroup.Amount_CountSh     :: TFloat AS Sale_AmountPartner_Sh
 
-         , 0 :: TFloat AS Return_Summ
+         , tmpOperationGroup.Amount_SummRet :: TFloat AS Return_Summ
          , 0 :: TFloat AS Return_Summ_10300
          , 0 :: TFloat AS Return_SummCost
          , 0 :: TFloat AS Return_SummCost_40200
 
-         , 0 :: TFloat AS Return_Amount_Weight
-         , 0 :: TFloat AS Return_Amount_Sh
+         , tmpOperationGroup.Amount_CountRetWeight :: TFloat AS Return_Amount_Weight
+         , tmpOperationGroup.Amount_CountRetSh :: TFloat AS Return_Amount_Sh
 
-         , 0 :: TFloat AS Return_AmountPartner_Weight
-         , 0 :: TFloat AS Return_AmountPartner_Sh
+         , tmpOperationGroup.Amount_CountRetWeight :: TFloat AS Return_AmountPartner_Weight
+         , tmpOperationGroup.Amount_CountRetSh :: TFloat AS Return_AmountPartner_Sh
 
          , 0 :: TFloat AS Sale_Amount_10500_Weight
          , 0 :: TFloat AS Sale_Amount_40200_Weight
@@ -207,6 +314,10 @@ BEGIN
                 , CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN tmp_Send.Amount_Count ELSE 0 END                                 AS Amount_CountSh
                 , tmp_Send.Amount_Count * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END  AS Amount_CountWeight
                 , tmp_Send.Amount_Summ
+
+                , CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN tmp_Send.Amount_CountRet ELSE 0 END                                 AS Amount_CountRetSh
+                , tmp_Send.Amount_CountRet * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END  AS Amount_CountRetWeight
+                , tmp_Send.Amount_SummRet
            FROM tmp_Send
                 LEFT JOIN ObjectLink AS ObjectLink_Goods_Measure ON ObjectLink_Goods_Measure.ObjectId = tmp_Send.GoodsId
                                                                 AND ObjectLink_Goods_Measure.DescId = zc_ObjectLink_Goods_Measure()

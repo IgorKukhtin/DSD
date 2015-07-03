@@ -197,6 +197,7 @@ BEGIN
 
            , COALESCE (Object_Partner.ValueData, Object_From.ValueData) AS FromName
            , Object_To.ValueData               		AS ToName
+           , (Object_PaidKind.Id - 2) :: TVarChar       AS PaidKindName_user
            , Object_PaidKind.ValueData         		AS PaidKindName
            , View_Contract.InvNumber        		AS ContractName
            , ObjectDate_Signing.ValueData               AS ContractSigningDate
