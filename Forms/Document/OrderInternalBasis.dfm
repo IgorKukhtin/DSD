@@ -1290,7 +1290,7 @@ inherited OrderInternalBasisForm: TOrderInternalBasisForm
     Top = 334
   end
   object spSelectPrint: TdsdStoredProc
-    StoredProcName = 'gpSelect_Movement_OrderInternalPack_Print'
+    StoredProcName = 'gpSelect_Movement_OrderInternalBasis_Print'
     DataSet = PrintHeaderCDS
     DataSets = <
       item

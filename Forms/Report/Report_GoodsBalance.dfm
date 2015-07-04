@@ -1,7 +1,7 @@
 object Report_GoodsBalanceForm: TReport_GoodsBalanceForm
   Left = 0
   Top = 0
-  Caption = #1054#1090#1095#1077#1090' <'#1055#1086' '#1086#1089#1090#1072#1090#1082#1072#1084' '#1090#1086#1074#1072#1088#1072'>'
+  Caption = #1054#1090#1095#1077#1090' <'#1054#1089#1090#1072#1090#1082#1080' '#1087#1086' '#1090#1086#1074#1072#1088#1072#1084'>'
   ClientHeight = 670
   ClientWidth = 1344
   Color = clBtnFace
@@ -25,7 +25,6 @@ object Report_GoodsBalanceForm: TReport_GoodsBalanceForm
     Height = 590
     Align = alClient
     TabOrder = 0
-    ExplicitTop = 87
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = MasterDS
@@ -45,73 +44,6 @@ object Report_GoodsBalanceForm: TReport_GoodsBalanceForm
         item
           Format = ',0.####'
           Kind = skSum
-          Column = CountRemains
-        end
-        item
-          Format = ',0.####'
-          Kind = skSum
-          Column = SummRemains
-        end
-        item
-          Format = ',0.####'
-          Kind = skSum
-        end
-        item
-          Format = ',0.####'
-          Kind = skSum
-        end
-        item
-          Format = ',0.####'
-          Kind = skSum
-        end
-        item
-          Format = ',0.####'
-          Kind = skSum
-        end
-        item
-          Format = ',0.####'
-          Kind = skSum
-          Column = CountOut
-        end
-        item
-          Format = ',0.####'
-          Kind = skSum
-        end
-        item
-          Format = ',0.####'
-          Kind = skSum
-        end
-        item
-          Format = ',0.####'
-          Kind = skSum
-        end
-        item
-          Format = ',0.####'
-          Kind = skSum
-        end
-        item
-          Format = ',0.####'
-          Kind = skSum
-        end
-        item
-          Format = ',0.####'
-          Kind = skSum
-        end
-        item
-          Format = ',0.####'
-          Kind = skSum
-        end
-        item
-          Format = ',0.####'
-          Kind = skSum
-        end
-        item
-          Format = ',0.####'
-          Kind = skSum
-        end
-        item
-          Format = ',0.####'
-          Kind = skSum
           Column = CountEnd
         end
         item
@@ -122,34 +54,22 @@ object Report_GoodsBalanceForm: TReport_GoodsBalanceForm
         item
           Format = ',0.####'
           Kind = skSum
+          Column = CountEnd_calc
         end
         item
           Format = ',0.####'
           Kind = skSum
+          Column = CountOut_calc
         end
         item
           Format = ',0.####'
           Kind = skSum
+          Column = CountIn_calc
         end
         item
           Format = ',0.####'
           Kind = skSum
-        end
-        item
-          Format = ',0.####'
-          Kind = skSum
-        end
-        item
-          Format = ',0.####'
-          Kind = skSum
-        end
-        item
-          Format = ',0.####'
-          Kind = skSum
-        end
-        item
-          Format = ',0.####'
-          Kind = skSum
+          Column = CountOut
         end
         item
           Format = ',0.####'
@@ -159,120 +79,87 @@ object Report_GoodsBalanceForm: TReport_GoodsBalanceForm
         item
           Format = ',0.####'
           Kind = skSum
-          Column = CountOut_Remains
+          Column = CountReal
         end
         item
           Format = ',0.####'
           Kind = skSum
+          Column = CountIn_sh
         end
         item
           Format = ',0.####'
           Kind = skSum
-          Column = CountIn_Remains
+          Column = CountIn_Weight
         end
         item
           Format = ',0.####'
           Kind = skSum
+          Column = CountOut_sh
         end
         item
           Format = ',0.####'
           Kind = skSum
+          Column = CountOut_Weight
         end
         item
           Format = ',0.####'
           Kind = skSum
+          Column = CountIn_sh_calc
         end
         item
           Format = ',0.####'
           Kind = skSum
+          Column = CountIn_Weight_calc
         end
         item
           Format = ',0.####'
           Kind = skSum
+          Column = CountOut_sh_calc
         end
         item
           Format = ',0.####'
           Kind = skSum
+          Column = CountOut_Weight_calc
         end
         item
           Format = ',0.####'
           Kind = skSum
+          Column = CountEnd_sh_calc
         end
         item
           Format = ',0.####'
           Kind = skSum
+          Column = CountEnd_Weight_calc
         end
         item
           Format = ',0.####'
           Kind = skSum
+          Column = CountReal_sh
         end
         item
           Format = ',0.####'
           Kind = skSum
+          Column = CountReal_Weight
         end
         item
           Format = ',0.####'
           Kind = skSum
+          Column = CountStart_sh
         end
         item
           Format = ',0.####'
           Kind = skSum
+          Column = CountStart_Weight
         end
         item
           Format = ',0.####'
           Kind = skSum
+          Column = CountEnd_sh
         end
         item
           Format = ',0.####'
           Kind = skSum
-        end
-        item
-          Format = ',0.####'
-          Kind = skSum
-        end
-        item
-          Format = ',0.####'
-          Kind = skSum
-        end
-        item
-          Format = ',0.####'
-          Kind = skSum
-        end
-        item
-          Format = ',0.####'
-          Kind = skSum
-        end
-        item
-          Format = ',0.####'
-          Kind = skSum
-        end
-        item
-          Format = ',0.####'
-          Kind = skSum
-        end
-        item
-          Format = ',0.####'
-          Kind = skSum
-        end
-        item
-          Format = ',0.####'
-          Kind = skSum
-        end
-        item
-          Format = ',0.####'
-          Kind = skSum
-        end
-        item
-          Format = ',0.####'
-          Kind = skSum
-        end
-        item
-          Format = ',0.####'
-          Kind = skSum
-        end
-        item
-          Format = ',0.####'
-          Kind = skSum
+          Column = CountEnd_Weight
         end>
       DataController.Summary.FooterSummaryItems = <
         item
@@ -298,28 +185,17 @@ object Report_GoodsBalanceForm: TReport_GoodsBalanceForm
         item
           Format = ',0.####'
           Kind = skSum
-          Column = CountRemains
+          Column = CountEnd_calc
         end
         item
           Format = ',0.####'
           Kind = skSum
-          Column = SummRemains
+          Column = CountOut_calc
         end
         item
           Format = ',0.####'
           Kind = skSum
-        end
-        item
-          Format = ',0.####'
-          Kind = skSum
-        end
-        item
-          Format = ',0.####'
-          Kind = skSum
-        end
-        item
-          Format = ',0.####'
-          Kind = skSum
+          Column = CountIn_calc
         end
         item
           Format = ',0.####'
@@ -329,193 +205,92 @@ object Report_GoodsBalanceForm: TReport_GoodsBalanceForm
         item
           Format = ',0.####'
           Kind = skSum
-        end
-        item
-          Format = ',0.####'
-          Kind = skSum
-        end
-        item
-          Format = ',0.####'
-          Kind = skSum
-        end
-        item
-          Format = ',0.####'
-          Kind = skSum
-        end
-        item
-          Format = ',0.####'
-          Kind = skSum
-        end
-        item
-          Format = ',0.####'
-          Kind = skSum
-        end
-        item
-          Format = ',0.####'
-          Kind = skSum
-        end
-        item
-          Format = ',0.####'
-          Kind = skSum
-        end
-        item
-          Format = ',0.####'
-          Kind = skSum
-        end
-        item
-          Format = ',0.####'
-          Kind = skSum
-        end
-        item
-          Format = ',0.####'
-          Kind = skSum
-        end
-        item
-          Format = ',0.####'
-          Kind = skSum
-        end
-        item
-          Format = ',0.####'
-          Kind = skSum
-        end
-        item
-          Format = ',0.####'
-          Kind = skSum
-        end
-        item
-          Format = ',0.####'
-          Kind = skSum
-        end
-        item
-          Format = ',0.####'
-          Kind = skSum
-        end
-        item
-          Format = ',0.####'
-          Kind = skSum
-        end
-        item
-          Format = ',0.####'
-          Kind = skSum
           Column = CountIn
         end
         item
           Format = ',0.####'
           Kind = skSum
-          Column = CountOut_Remains
+          Column = CountReal
         end
         item
           Format = ',0.####'
           Kind = skSum
+          Column = CountIn_sh
         end
         item
           Format = ',0.####'
           Kind = skSum
-          Column = CountIn_Remains
+          Column = CountIn_Weight
         end
         item
           Format = ',0.####'
           Kind = skSum
+          Column = CountOut_sh
         end
         item
           Format = ',0.####'
           Kind = skSum
+          Column = CountOut_Weight
         end
         item
           Format = ',0.####'
           Kind = skSum
+          Column = CountIn_sh_calc
         end
         item
           Format = ',0.####'
           Kind = skSum
+          Column = CountIn_Weight_calc
         end
         item
           Format = ',0.####'
           Kind = skSum
+          Column = CountOut_sh_calc
         end
         item
           Format = ',0.####'
           Kind = skSum
+          Column = CountOut_Weight_calc
         end
         item
           Format = ',0.####'
           Kind = skSum
+          Column = CountEnd_sh_calc
         end
         item
           Format = ',0.####'
           Kind = skSum
+          Column = CountEnd_Weight_calc
         end
         item
           Format = ',0.####'
           Kind = skSum
+          Column = CountReal_sh
         end
         item
           Format = ',0.####'
           Kind = skSum
+          Column = CountReal_Weight
         end
         item
           Format = ',0.####'
           Kind = skSum
+          Column = CountStart_sh
         end
         item
           Format = ',0.####'
           Kind = skSum
+          Column = CountStart_Weight
         end
         item
           Format = ',0.####'
           Kind = skSum
+          Column = CountEnd_sh
         end
         item
           Format = ',0.####'
           Kind = skSum
-        end
-        item
-          Format = ',0.####'
-          Kind = skSum
-        end
-        item
-          Format = ',0.####'
-          Kind = skSum
-        end
-        item
-          Format = ',0.####'
-          Kind = skSum
-        end
-        item
-          Format = ',0.####'
-          Kind = skSum
-        end
-        item
-          Format = ',0.####'
-          Kind = skSum
-        end
-        item
-          Format = ',0.####'
-          Kind = skSum
-        end
-        item
-          Format = ',0.####'
-          Kind = skSum
-        end
-        item
-          Format = ',0.####'
-          Kind = skSum
-        end
-        item
-          Format = ',0.####'
-          Kind = skSum
-        end
-        item
-          Format = ',0.####'
-          Kind = skSum
-        end
-        item
-          Format = ',0.####'
-          Kind = skSum
-        end
-        item
-          Format = ',0.####'
-          Kind = skSum
+          Column = CountEnd_Weight
         end>
       DataController.Summary.SummaryGroups = <>
       Images = dmMain.SortImageList
@@ -621,7 +396,7 @@ object Report_GoodsBalanceForm: TReport_GoodsBalanceForm
         Width = 70
       end
       object PartionGoodsName: TcxGridDBColumn
-        Caption = #1055#1072#1088#1090#1080#1103' '#1089#1099#1088#1100#1103
+        Caption = #1055#1072#1088#1090#1080#1103
         DataBinding.FieldName = 'PartionGoodsName'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
@@ -640,30 +415,52 @@ object Report_GoodsBalanceForm: TReport_GoodsBalanceForm
         DataBinding.FieldName = 'CountStart'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DecimalPlaces = 4
-        Properties.DisplayFormat = ',0.####;-,0.####; '
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Options.Editing = False
-        Width = 80
-      end
-      object PriceStart: TcxGridDBColumn
-        Caption = #1094#1077#1085#1072' '#1086#1089#1090'.'#1085'.'
-        DataBinding.FieldName = 'PriceStart'
-        PropertiesClassName = 'TcxCurrencyEditProperties'
-        Properties.DecimalPlaces = 4
-        Properties.DisplayFormat = ',0.####;-,0.####; '
+        Properties.DisplayFormat = ',0.####;-,0.####; ;'
         Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
         Width = 80
       end
+      object CountStart_sh: TcxGridDBColumn
+        Caption = #1054#1089#1090'. '#1085#1072#1095'. '#1096#1090'.'
+        DataBinding.FieldName = 'CountStart_sh'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.####;-,0.####; ;'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 80
+      end
+      object CountStart_Weight: TcxGridDBColumn
+        Caption = #1054#1089#1090'. '#1085#1072#1095'. '#1074#1077#1089
+        DataBinding.FieldName = 'CountStart_Weight'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.####;-,0.####; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 80
+      end
       object SummStart: TcxGridDBColumn
-        Caption = #1054#1089#1090'. '#1085#1072#1095'. '#1089#1091#1084#1084#1072
+        Caption = #1054#1089#1090'. '#1085#1072#1095'. '#1089#1091#1084#1084#1072' '#1089'/'#1089
         DataBinding.FieldName = 'SummStart'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DecimalPlaces = 4
-        Properties.DisplayFormat = ',0.####;-,0.####; '
+        Properties.DisplayFormat = ',0.####;-,0.####; ;'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 80
+      end
+      object PriceListStart: TcxGridDBColumn
+        Caption = #1094#1077#1085#1072' '#1087#1088#1072#1081#1089' '#1085#1072#1095'.'
+        DataBinding.FieldName = 'PriceListStart'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.####;-,0.####; ;'
         Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
@@ -675,117 +472,269 @@ object Report_GoodsBalanceForm: TReport_GoodsBalanceForm
         DataBinding.FieldName = 'CountEnd'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DecimalPlaces = 4
-        Properties.DisplayFormat = ',0.####;-,0.####; '
+        Properties.DisplayFormat = ',0.####;-,0.####; ;'
+        Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
         Width = 80
       end
-      object PriceEnd: TcxGridDBColumn
-        Caption = #1094#1077#1085#1072' '#1086#1089#1090'.'#1082'. '
-        DataBinding.FieldName = 'PriceEnd'
+      object CountEnd_sh: TcxGridDBColumn
+        Caption = #1054#1089#1090'. '#1082#1086#1085#1077#1095'. '#1096#1090'.'
+        DataBinding.FieldName = 'CountEnd_sh'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DecimalPlaces = 4
-        Properties.DisplayFormat = ',0.####;-,0.####; '
+        Properties.DisplayFormat = ',0.####;-,0.####; ;'
         Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Options.Editing = False
+        Width = 80
+      end
+      object CountEnd_Weight: TcxGridDBColumn
+        Caption = #1054#1089#1090'. '#1082#1086#1085#1077#1095'. '#1074#1077#1089
+        DataBinding.FieldName = 'CountEnd_Weight'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.####;-,0.####; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
         Width = 80
       end
       object SummEnd: TcxGridDBColumn
-        Caption = #1054#1089#1090'. '#1082#1086#1085#1077#1095'. '#1089#1091#1084#1084#1072
+        Caption = #1054#1089#1090'. '#1082#1086#1085#1077#1095'. '#1089#1091#1084#1084#1072' '#1089'/'#1089
         DataBinding.FieldName = 'SummEnd'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DecimalPlaces = 4
-        Properties.DisplayFormat = ',0.####;-,0.####; '
+        Properties.DisplayFormat = ',0.####;-,0.####; ;'
         Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
         Width = 80
       end
-      object CountRemains: TcxGridDBColumn
+      object PriceListEnd: TcxGridDBColumn
+        Caption = #1094#1077#1085#1072' '#1087#1088#1072#1081#1089' '#1082#1086#1085#1077#1095'.'
+        DataBinding.FieldName = 'PriceListEnd'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.####;-,0.####; ;'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 80
+      end
+      object CountEnd_calc: TcxGridDBColumn
         Caption = #1054#1089#1090'.'#1088#1072#1089#1095'. '#1082#1086#1083'.'
-        DataBinding.FieldName = 'CountRemains'
+        DataBinding.FieldName = 'CountEnd_calc'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DecimalPlaces = 4
-        Properties.DisplayFormat = ',0.####;-,0.####; '
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Options.Editing = False
-        Width = 80
-      end
-      object PriceRemains: TcxGridDBColumn
-        Caption = #1094#1077#1085#1072' '#1086#1089#1090'.'#1088#1072#1089#1095'.'
-        DataBinding.FieldName = 'PriceRemains'
-        PropertiesClassName = 'TcxCurrencyEditProperties'
-        Properties.DecimalPlaces = 4
-        Properties.DisplayFormat = ',0.####;-,0.####; '
+        Properties.DisplayFormat = ',0.####;-,0.####; ;'
         Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
         Width = 80
       end
-      object SummRemains: TcxGridDBColumn
-        Caption = #1054#1089#1090'. '#1088#1072#1089#1095'. '#1089#1091#1084#1084#1072
-        DataBinding.FieldName = 'SummRemains'
+      object CountEnd_sh_calc: TcxGridDBColumn
+        Caption = #1054#1089#1090'.'#1088#1072#1089#1095'. '#1096#1090'.'
+        DataBinding.FieldName = 'CountEnd_sh_calc'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DecimalPlaces = 4
-        Properties.DisplayFormat = ',0.####;-,0.####; '
+        Properties.DisplayFormat = ',0.####;-,0.####; ;'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 80
+      end
+      object CountEnd_Weight_calc: TcxGridDBColumn
+        Caption = #1054#1089#1090'.'#1088#1072#1089#1095'. '#1074#1077#1089
+        DataBinding.FieldName = 'CountEnd_Weight_calc'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.####;-,0.####; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 80
+      end
+      object CountIn_calc: TcxGridDBColumn
+        Caption = #1055#1088#1080#1093#1086#1076'*** '#1082#1086#1083'.'
+        DataBinding.FieldName = 'CountIn_calc'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.####;-,0.####; ;'
         Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
         Width = 80
       end
-      object CountOut: TcxGridDBColumn
-        Caption = #1056#1072#1089#1093#1086#1076'* '#1082#1086#1083'-'#1074#1086
-        DataBinding.FieldName = 'CountOut'
+      object CountIn_sh_calc: TcxGridDBColumn
+        Caption = #1055#1088#1080#1093#1086#1076'*** '#1096#1090'.'
+        DataBinding.FieldName = 'CountIn_sh_calc'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DecimalPlaces = 4
-        Properties.DisplayFormat = ',0.####;-,0.####; '
+        Properties.DisplayFormat = ',0.####;-,0.####; ;'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 80
+      end
+      object CountIn_Weight_calc: TcxGridDBColumn
+        Caption = #1055#1088#1080#1093#1086#1076'*** '#1074#1077#1089
+        DataBinding.FieldName = 'CountIn_Weight_calc'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.####;-,0.####; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 80
+      end
+      object CountOut_calc: TcxGridDBColumn
+        Caption = #1056#1072#1089#1093#1086#1076'*** '#1082#1086#1083'.'
+        DataBinding.FieldName = 'CountOut_calc'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.####;-,0.####; ;'
+        Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
+        Width = 80
+      end
+      object CountOut_sh_calc: TcxGridDBColumn
+        Caption = #1056#1072#1089#1093#1086#1076'*** '#1096#1090'.'
+        DataBinding.FieldName = 'CountOut_sh_calc'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.####;-,0.####; ;'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 80
+      end
+      object CountOut_Weight_calc: TcxGridDBColumn
+        Caption = #1056#1072#1089#1093#1086#1076'*** '#1074#1077#1089
+        DataBinding.FieldName = 'CountOut_Weight_calc'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.####;-,0.####; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
         Width = 80
       end
       object CountIn: TcxGridDBColumn
-        Caption = #1055#1088#1080#1093#1086#1076'* '#1082#1086#1083'-'#1074#1086
+        Caption = #1060#1072#1082#1090' '#1087#1088#1080#1093#1086#1076' '#1082#1086#1083'.'
         DataBinding.FieldName = 'CountIn'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DecimalPlaces = 4
-        Properties.DisplayFormat = ',0.####;-,0.####; '
+        Properties.DisplayFormat = ',0.####;-,0.####; ;'
+        Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
+        Width = 90
+      end
+      object CountIn_sh: TcxGridDBColumn
+        Caption = #1060#1072#1082#1090' '#1087#1088#1080#1093#1086#1076' '#1096#1090'.'
+        DataBinding.FieldName = 'CountIn_sh'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.####;-,0.####; ;'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
         Width = 80
       end
-      object CountOut_Remains: TcxGridDBColumn
-        Caption = #1060#1072#1082#1090' '#1088#1072#1089#1093#1086#1076' '#1082#1086#1083'-'#1074#1086
-        DataBinding.FieldName = 'CountOut_Remains'
+      object CountIn_Weight: TcxGridDBColumn
+        Caption = #1060#1072#1082#1090' '#1087#1088#1080#1093#1086#1076' '#1074#1077#1089
+        DataBinding.FieldName = 'CountIn_Weight'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DecimalPlaces = 4
-        Properties.DisplayFormat = ',0.####;-,0.####; '
+        Properties.DisplayFormat = ',0.####;-,0.####; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 80
+      end
+      object CountOut: TcxGridDBColumn
+        Caption = #1060#1072#1082#1090' '#1088#1072#1089#1093#1086#1076' '#1082#1086#1083'.'
+        DataBinding.FieldName = 'CountOut'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.####;-,0.####; ;'
+        Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 100
+        Width = 90
       end
-      object CountIn_Remains: TcxGridDBColumn
-        Caption = #1060#1072#1082#1090' '#1087#1088#1080#1093#1086#1076' '#1082#1086#1083'-'#1074#1086
-        DataBinding.FieldName = 'CountIn_Remains'
+      object CountOut_sh: TcxGridDBColumn
+        Caption = #1060#1072#1082#1090' '#1088#1072#1089#1093#1086#1076' '#1096#1090'.'
+        DataBinding.FieldName = 'CountOut_sh'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DecimalPlaces = 4
-        Properties.DisplayFormat = ',0.####;-,0.####; '
+        Properties.DisplayFormat = ',0.####;-,0.####; ;'
+        Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Options.Editing = False
-        Width = 100
+        Width = 80
       end
-      object ColorB_calc: TcxGridDBColumn
-        DataBinding.FieldName = 'ColorB_calc'
+      object CountOut_Weight: TcxGridDBColumn
+        Caption = #1060#1072#1082#1090' '#1088#1072#1089#1093#1086#1076' '#1074#1077#1089
+        DataBinding.FieldName = 'CountOut_Weight'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.####;-,0.####; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 80
+      end
+      object CountReal: TcxGridDBColumn
+        Caption = #1054#1089#1090'. '#1082#1086#1083'. '#1087#1086#1089#1083#1077#1076#1085#1080#1081
+        DataBinding.FieldName = 'CountReal'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.####;-,0.####; ;'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 80
+      end
+      object CountReal_sh: TcxGridDBColumn
+        Caption = #1054#1089#1090'. '#1096#1090'. '#1087#1086#1089#1083#1077#1076#1085#1080#1081
+        DataBinding.FieldName = 'CountReal_sh'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.####;-,0.####; ;'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 80
+      end
+      object CountReal_Weight: TcxGridDBColumn
+        Caption = #1054#1089#1090'. '#1074#1077#1089' '#1087#1086#1089#1083#1077#1076#1085#1080#1081
+        DataBinding.FieldName = 'CountReal_Weight'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.####;-,0.####; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 80
+      end
+      object ColorB_GreenL: TcxGridDBColumn
+        DataBinding.FieldName = 'ColorB_GreenL'
+        Visible = False
+        VisibleForCustomization = False
+        Width = 55
+      end
+      object ColorB_Yelow: TcxGridDBColumn
+        DataBinding.FieldName = 'ColorB_Yelow'
+        Visible = False
+        VisibleForCustomization = False
+        Width = 55
+      end
+      object ColorB_Cyan: TcxGridDBColumn
+        DataBinding.FieldName = 'ColorB_Cyan'
         Visible = False
         VisibleForCustomization = False
         Width = 55
@@ -1556,8 +1505,8 @@ object Report_GoodsBalanceForm: TReport_GoodsBalanceForm
       Category = 'DSDLib'
       MoveParams = <>
       StoredProcList = <>
-      Caption = #1054#1090#1095#1077#1090' '#1087#1086' '#1086#1089#1090#1072#1090#1082#1072#1084' '#1090#1086#1074#1072#1088#1072' ('#1076#1074#1080#1078#1077#1085#1080#1077')'
-      Hint = #1054#1090#1095#1077#1090' '#1087#1086' '#1086#1089#1090#1072#1090#1082#1072#1084' '#1090#1086#1074#1072#1088#1072' ('#1076#1074#1080#1078#1077#1085#1080#1077')'
+      Caption = #1054#1090#1095#1077#1090' <'#1054#1089#1090#1072#1090#1086#1082' '#1090#1086#1074#1072#1088#1072' '#1079#1072' '#1087#1077#1088#1080#1086#1076' ('#1088#1072#1089#1095#1077#1090#1085#1099#1081')>'
+      Hint = #1054#1090#1095#1077#1090' <'#1054#1089#1090#1072#1090#1086#1082' '#1090#1086#1074#1072#1088#1072' '#1079#1072' '#1087#1077#1088#1080#1086#1076' ('#1088#1072#1089#1095#1077#1090#1085#1099#1081')>'
       ImageIndex = 18
       ShortCut = 16464
       DataSets = <
@@ -1801,13 +1750,63 @@ object Report_GoodsBalanceForm: TReport_GoodsBalanceForm
     OnlyEditingCellOnEnter = False
     ColorRuleList = <
       item
-        ColorColumn = CountOut
-        BackGroundValueColumn = ColorB_calc
+        ColorColumn = CountOut_calc
+        BackGroundValueColumn = ColorB_GreenL
         ColorValueList = <>
       end
       item
-        ColorColumn = CountIn
-        BackGroundValueColumn = ColorB_calc
+        ColorColumn = CountOut_sh_calc
+        BackGroundValueColumn = ColorB_GreenL
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = CountOut_Weight_calc
+        BackGroundValueColumn = ColorB_GreenL
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = CountIn_calc
+        BackGroundValueColumn = ColorB_GreenL
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = CountIn_sh_calc
+        BackGroundValueColumn = ColorB_GreenL
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = CountIn_Weight_calc
+        BackGroundValueColumn = ColorB_GreenL
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = CountEnd_calc
+        BackGroundValueColumn = ColorB_Yelow
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = CountEnd_sh_calc
+        BackGroundValueColumn = ColorB_Yelow
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = CountEnd_Weight_calc
+        BackGroundValueColumn = ColorB_Yelow
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = CountReal
+        BackGroundValueColumn = ColorB_Cyan
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = CountReal_sh
+        BackGroundValueColumn = ColorB_Cyan
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = CountReal_Weight
+        BackGroundValueColumn = ColorB_Cyan
         ColorValueList = <>
       end>
     ColumnAddOnList = <

@@ -42,7 +42,7 @@ type
     CountStart: TcxGridDBColumn;
     actExportToExcel: TdsdGridToExcel;
     bbToExcel: TdxBarButton;
-    CountRemains: TcxGridDBColumn;
+    CountEnd_calc: TcxGridDBColumn;
     DBViewAddOn: TdsdDBViewAddOn;
     dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn;
     Panel1: TPanel;
@@ -51,11 +51,10 @@ type
     GoodsName: TcxGridDBColumn;
     GoodsKindName: TcxGridDBColumn;
     SummStart: TcxGridDBColumn;
-    SummRemains: TcxGridDBColumn;
     CountEnd: TcxGridDBColumn;
     SummEnd: TcxGridDBColumn;
-    CountOut: TcxGridDBColumn;
-    PriceStart: TcxGridDBColumn;
+    CountOut_calc: TcxGridDBColumn;
+    PriceListStart: TcxGridDBColumn;
     GuidesGoodsGroup: TdsdGuides;
     GuidesLocation: TdsdGuides;
     edGoodsGroup: TcxButtonEdit;
@@ -66,8 +65,7 @@ type
     RefreshDispatcher: TRefreshDispatcher;
     deStart: TcxDateEdit;
     deEnd: TcxDateEdit;
-    PriceRemains: TcxGridDBColumn;
-    PriceEnd: TcxGridDBColumn;
+    PriceListEnd: TcxGridDBColumn;
     cxLabel3: TcxLabel;
     GuidesUnitGroup: TdsdGuides;
     cxLabel1: TcxLabel;
@@ -81,9 +79,9 @@ type
     LocationCode: TcxGridDBColumn;
     actPrint: TdsdPrintAction;
     bbPrintBy_Goods: TdxBarButton;
+    CountIn_calc: TcxGridDBColumn;
+    CountOut: TcxGridDBColumn;
     CountIn: TcxGridDBColumn;
-    CountOut_Remains: TcxGridDBColumn;
-    CountIn_Remains: TcxGridDBColumn;
     GoodsGroupNameFull: TcxGridDBColumn;
     GoodsGroupName: TcxGridDBColumn;
     dxBarStatic: TdxBarStatic;
@@ -107,7 +105,26 @@ type
     actPrint3: TdsdPrintAction;
     bbPrint3: TdxBarButton;
     PartionGoodsName: TcxGridDBColumn;
-    ColorB_calc: TcxGridDBColumn;
+    ColorB_GreenL: TcxGridDBColumn;
+    ColorB_Yelow: TcxGridDBColumn;
+    CountReal: TcxGridDBColumn;
+    ColorB_Cyan: TcxGridDBColumn;
+    CountIn_sh: TcxGridDBColumn;
+    CountIn_Weight: TcxGridDBColumn;
+    CountOut_sh: TcxGridDBColumn;
+    CountOut_Weight: TcxGridDBColumn;
+    CountIn_sh_calc: TcxGridDBColumn;
+    CountIn_Weight_calc: TcxGridDBColumn;
+    CountOut_sh_calc: TcxGridDBColumn;
+    CountOut_Weight_calc: TcxGridDBColumn;
+    CountEnd_sh_calc: TcxGridDBColumn;
+    CountEnd_Weight_calc: TcxGridDBColumn;
+    CountReal_sh: TcxGridDBColumn;
+    CountReal_Weight: TcxGridDBColumn;
+    CountStart_sh: TcxGridDBColumn;
+    CountStart_Weight: TcxGridDBColumn;
+    CountEnd_sh: TcxGridDBColumn;
+    CountEnd_Weight: TcxGridDBColumn;
   private
   public
   end;

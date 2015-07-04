@@ -17184,6 +17184,7 @@ begin
         toStoredProc.Params.AddParam ('inInvNumber',ftString,ptInput, '');
         toStoredProc.Params.AddParam ('inInvNumberPartner',ftString,ptInput, '');
         toStoredProc.Params.AddParam ('inInvNumberMark',ftString,ptInput, '');
+        toStoredProc.Params.AddParam ('inParentId',ftInteger,ptInput, 0);
         toStoredProc.Params.AddParam ('inOperDate',ftDateTime,ptInput, '');
         toStoredProc.Params.AddParam ('inOperDatePartner',ftDateTime,ptInput, '');
 
@@ -17199,6 +17200,8 @@ begin
         toStoredProc.Params.AddParam ('inContractId',ftInteger,ptInput, 0);
         toStoredProc.Params.AddParam ('inCurrencyDocumentId',ftInteger,ptInput, 0);
         toStoredProc.Params.AddParam ('inCurrencyPartnerId',ftInteger,ptInput, 0);
+        toStoredProc.Params.AddParam ('inComment',ftString,ptInput, '');
+
 
         //
         while not EOF do
@@ -17554,6 +17557,7 @@ begin
         toStoredProc.Params.AddParam ('inInvNumber',ftString,ptInput, '');
         toStoredProc.Params.AddParam ('inInvNumberPartner',ftString,ptInput, '');
         toStoredProc.Params.AddParam ('inInvNumberMark',ftString,ptInput, '');
+        toStoredProc.Params.AddParam ('inParentId',ftInteger,ptInput, 0);
         toStoredProc.Params.AddParam ('inOperDate',ftDateTime,ptInput, '');
         toStoredProc.Params.AddParam ('inOperDatePartner',ftDateTime,ptInput, '');
 
@@ -17569,6 +17573,7 @@ begin
         toStoredProc.Params.AddParam ('inContractId',ftInteger,ptInput, 0);
         toStoredProc.Params.AddParam ('inCurrencyDocumentId',ftInteger,ptInput, 0);
         toStoredProc.Params.AddParam ('inCurrencyPartnerId',ftInteger,ptInput, 0);
+        toStoredProc.Params.AddParam ('inComment',ftString,ptInput, '');
 
         //
         while not EOF do
@@ -17933,6 +17938,7 @@ begin
         toStoredProc.Params.AddParam ('inInvNumber',ftString,ptInput, '');
         toStoredProc.Params.AddParam ('inInvNumberPartner',ftString,ptInput, '');
         toStoredProc.Params.AddParam ('inInvNumberMark',ftString,ptInput, '');
+        toStoredProc.Params.AddParam ('inParentId',ftInteger,ptInput, 0);
         toStoredProc.Params.AddParam ('inOperDate',ftDateTime,ptInput, '');
         toStoredProc.Params.AddParam ('inOperDatePartner',ftDateTime,ptInput, '');
 
@@ -17946,6 +17952,7 @@ begin
         toStoredProc.Params.AddParam ('inToId',ftInteger,ptInput, 0);
         toStoredProc.Params.AddParam ('inPaidKindId',ftInteger,ptInput, 0);
         toStoredProc.Params.AddParam ('inContractId',ftInteger,ptInput, 0);
+        toStoredProc.Params.AddParam ('inComment',ftString,ptInput, '');
 
         //
         while not EOF do

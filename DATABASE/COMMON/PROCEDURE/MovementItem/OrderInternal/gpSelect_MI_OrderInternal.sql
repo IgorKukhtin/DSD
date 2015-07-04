@@ -311,22 +311,22 @@ BEGIN
            , Object_Unit.ValueData                     AS UnitName 
 
            , CASE WHEN tmpMI.AmountRemains <= 0
-                       THEN 1118719 -- clRed
-                  ELSE 0 -- clBlack
+                       THEN zc_Color_Red()
+                  ELSE zc_Color_Black()
              END :: Integer AS Color_remains
            , CASE WHEN tmpMI.AmountRemains - tmpMI.AmountPartnerPrior - tmpMI.AmountPartner + tmpMI.AmountProduction_old <= 0
-                       THEN 1118719 -- clRed
-                  ELSE 0 -- clBlack
+                       THEN zc_Color_Red()
+                  ELSE zc_Color_Black()
              END :: Integer AS Color_remains_calc
            , CASE WHEN tmpMI.AmountRemains - tmpMI.AmountPartnerPrior - tmpMI.AmountPartner + tmpMI.AmountProduction_old + tmpMI.AmountProduction_next<= 0
-                       THEN 1118719 -- clRed
-                  ELSE 0 -- clBlack
+                       THEN zc_Color_Red()
+                  ELSE zc_Color_Black()
              END :: Integer AS Color_remainsTerm_calc
 
-           , 16777158   :: Integer AS ColorB_const            -- aclAqua
-           , 14862279   :: Integer AS ColorB_DayCountForecast -- $00E2C7C7
-           , 11987626   :: Integer AS ColorB_AmountPartner    -- $00B6EAAA
-           , 8978431    :: Integer AS ColorB_AmountPrognoz    -- $008FF8F2 9435378
+           , zc_Color_Aqua()   :: Integer AS ColorB_const
+           , zc_Color_Cyan()   :: Integer AS ColorB_DayCountForecast
+           , zc_Color_GreenL() :: Integer AS ColorB_AmountPartner
+           , zc_Color_Yelow()  :: Integer AS ColorB_AmountPrognoz
 
            , tmpMI.isErased
 

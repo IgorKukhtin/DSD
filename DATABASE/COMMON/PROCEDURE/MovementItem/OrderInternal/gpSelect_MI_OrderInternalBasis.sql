@@ -113,12 +113,12 @@ BEGIN
            , Object_Measure.ValueData            AS MeasureName
 
            , CASE WHEN tmpMI.AmountRemains <= 0
-                       THEN 1118719 -- clRed
-                  ELSE 0 -- clBlack
+                       THEN zc_Color_Red()
+                  ELSE zc_Color_Black()
              END :: Integer AS Color_remains
-           , 14862279   :: Integer AS ColorB_DayCountForecast -- $00E2C7C7
-           , 11987626   :: Integer AS ColorB_AmountPartner    -- $00B6EAAA
-           , 8978431    :: Integer AS ColorB_AmountPrognoz    -- $008FF8F2 9435378
+           , zc_Color_Cyan()   :: Integer AS ColorB_DayCountForecast -- $00E2C7C7
+           , zc_Color_GreenL() :: Integer AS ColorB_AmountPartner    -- $00B6EAAA
+           , zc_Color_Yelow()  :: Integer AS ColorB_AmountPrognoz    -- $008FF8F2 9435378
 
            , tmpMI.isErased
 

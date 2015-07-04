@@ -258,6 +258,28 @@ BEGIN
      END IF;
 
 
+     -- !!!только дл€ за€вки —џ–№≈!!!
+     IF inIsPack IS NULL AND (vbIsInsert = TRUE OR 1=1)
+     THEN
+         -- сохранили св€зь с <–ецептуры>
+         PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_Receipt(), ioId, tmp.ReceiptId)
+         FROM (SELECT inGoodsId AS GoodsId) AS tmpGoods
+              LEFT JOIN (SELECT inGoodsId AS GoodsId
+                              , Object_Receipt.Id AS ReceiptId
+                         FROM ObjectLink AS ObjectLink_Receipt_Goods
+                              INNER JOIN Object AS Object_Receipt ON Object_Receipt.Id = ObjectLink_Receipt_Goods.ObjectId
+                                                                 AND Object_Receipt.isErased = FALSE
+                              INNER JOIN ObjectBoolean AS ObjectBoolean_Main
+                                                       ON ObjectBoolean_Main.ObjectId = Object_Receipt.Id
+                                                      AND ObjectBoolean_Main.DescId = zc_ObjectBoolean_Receipt_Main()
+                                                      AND ObjectBoolean_Main.ValueData = TRUE
+                         WHERE ObjectLink_Receipt_Goods.ChildObjectId = inGoodsId
+                           AND ObjectLink_Receipt_Goods.DescId = zc_ObjectLink_Receipt_Goods()
+                        ) AS tmp ON tmp.GoodsId = inGoodsId
+                       ;
+     END IF;
+
+
      -- сохранили свойство
      PERFORM lpInsertUpdate_MovementItemFloat (inDescId_Param, ioId, inAmount_Param);
      -- сохранили свойство

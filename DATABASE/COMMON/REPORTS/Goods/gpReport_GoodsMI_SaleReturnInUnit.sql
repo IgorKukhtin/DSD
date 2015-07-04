@@ -200,22 +200,46 @@ BEGIN
                          )
 
 
-       SELECT * FROM gpReport_GoodsMI_SaleReturnIn (inStartDate
-                                                      , inEndDate
-                                                      , inBranchId
-                                                      , inAreaId
-                                                      , inRetailId
-                                                      , inJuridicalId
-                                                      , inPaidKindId
-                                                      , inTradeMarkId
-                                                      , inGoodsGroupId
-                                                      , inInfoMoneyId
-                                                      , inIsPartner
-                                                      , inIsTradeMark
-                                                      , inIsGoods
-                                                      , inIsGoodsKind
-                                                      , inSession
-                                                       )
+       SELECT  tmp.GoodsGroupName, tmp.GoodsGroupNameFull
+             , tmp.GoodsCode, tmp.GoodsName, tmp.GoodsKindName, tmp.MeasureName
+             , tmp.TradeMarkName, tmp.GoodsGroupAnalystName, tmp.GoodsTagName, tmp.GoodsGroupStatName
+             , tmp.GoodsPlatformName
+             , tmp.JuridicalGroupName
+             , tmp.BranchCode, tmp.BranchName
+             , tmp.JuridicalCode, tmp.JuridicalName, tmp.OKPO
+             , tmp.RetailName, tmp.RetailReportName
+             , tmp.AreaName, tmp.PartnerTagName
+             , tmp.Address, tmp.RegionName, tmp.ProvinceName, tmp.CityKindName, tmp.CityName, tmp.ProvinceCityName, tmp.StreetKindName, tmp.StreetName
+             , tmp.PartnerId, tmp.PartnerCode, tmp.PartnerName
+             , tmp.ContractCode, tmp.ContractNumber, tmp.ContractTagName, tmp.ContractTagGroupName
+             , tmp.PersonalName, tmp.UnitName_Personal, tmp.BranchName_Personal
+             , tmp.PersonalTradeName, tmp.UnitName_PersonalTrade
+             , tmp.InfoMoneyGroupName, tmp.InfoMoneyDestinationName, tmp.InfoMoneyCode, tmp.InfoMoneyName, tmp.InfoMoneyName_all
+             , tmp.AccountName
+             , tmp.Sale_Summ, tmp.Sale_Summ_10200, tmp.Sale_Summ_10300, tmp.Sale_SummCost, tmp.Sale_SummCost_10500, tmp.Sale_SummCost_40200
+             , tmp.Sale_Amount_Weight , tmp.Sale_Amount_Sh, tmp.Sale_AmountPartner_Weight , tmp.Sale_AmountPartner_Sh
+             , tmp.Return_Summ, tmp.Return_Summ_10300, tmp.Return_SummCost, tmp.Return_SummCost_40200
+             , tmp.Return_Amount_Weight, tmp.Return_Amount_Sh, tmp.Return_AmountPartner_Weight, tmp.Return_AmountPartner_Sh
+             , tmp.Sale_Amount_10500_Weight
+             , tmp.Sale_Amount_40200_Weight
+             , tmp.Return_Amount_40200_Weight
+             , tmp.ReturnPercent
+       FROM gpReport_GoodsMI_SaleReturnIn (inStartDate
+                                         , inEndDate
+                                         , inBranchId
+                                         , inAreaId
+                                         , inRetailId
+                                         , inJuridicalId
+                                         , inPaidKindId
+                                         , inTradeMarkId
+                                         , inGoodsGroupId
+                                         , inInfoMoneyId
+                                         , inIsPartner
+                                         , inIsTradeMark
+                                         , inIsGoods
+                                         , inIsGoodsKind
+                                         , inSession
+                                          ) AS tmp
     UNION ALL
 
      SELECT Object_GoodsGroup.ValueData        AS GoodsGroupName

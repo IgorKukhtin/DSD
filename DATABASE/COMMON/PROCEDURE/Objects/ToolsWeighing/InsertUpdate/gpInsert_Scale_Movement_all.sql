@@ -269,6 +269,7 @@ BEGIN
                                                   , inInvNumber             := CAST (NEXTVAL ('movement_ReturnIn_seq') AS TVarChar)
                                                   , inInvNumberPartner      := ''
                                                   , inInvNumberMark         := ''
+                                                  , inParentId              := NULL
                                                   , inOperDate              := inOperDate
                                                   , inOperDatePartner       := inOperDate
                                                   , inChecked               := NULL
@@ -282,6 +283,7 @@ BEGIN
                                                   , inCurrencyDocumentId    := NULL
                                                   , inCurrencyPartnerId     := NULL
                                                   , inCurrencyValue         := NULL
+                                                  , inComment               := ''
                                                   , inUserId                := vbUserId
                                                    )
                                           WHEN vbMovementDescId = zc_Movement_SendOnPrice()
