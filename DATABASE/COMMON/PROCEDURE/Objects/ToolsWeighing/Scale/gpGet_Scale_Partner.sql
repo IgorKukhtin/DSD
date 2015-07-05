@@ -319,6 +319,42 @@ BEGIN
                                 AND (vbBranchId_Constraint > 0
                                  OR vbUserId = zfCalc_UserAdmin() :: Integer))
                                )
+                       UNION ALL
+                        SELECT Object_Unit.DescId         AS ObjectDescId
+                             , Object_Unit.Id             AS PartnerId
+                             , Object_Unit.ObjectCode     AS PartnerCode
+                             , Object_Unit.ValueData      AS PartnerName
+                        FROM Object AS Object_Unit
+                             LEFT JOIN ObjectLink AS ObjectLink_Unit_Parent
+                                                  ON ObjectLink_Unit_Parent.ObjectId = Object_Unit.Id
+                                                 AND ObjectLink_Unit_Parent.DescId = zc_ObjectLink_Unit_Parent()
+                        WHERE Object_Unit.Id = -1 * inPartnerCode
+                          AND Object_Unit.DescId = zc_Object_Unit()
+                          AND Object_Unit.isErased = FALSE
+                          AND inPartnerCode < 0
+                          AND ((Object_Unit.Id IN (301309 -- 22121	Склад ГП ф.Запорожье	филиал Запорожье
+                                                 , 309599 -- 22122	Склад возвратов ф.Запорожье	филиал Запорожье
+                                                 , 8411   -- 22021	Склад ГП ф.Киев	филиал Киев
+                                                 , 428365 -- 22022	Склад возвратов ф.Киев	филиал Киев
+                                                 , 8413   -- 22031	Склад ГП ф.Кривой Рог	филиал Кр.Рог
+                                                 , 428366 -- 22032	Склад возвратов ф.Кривой Рог	филиал Кр.Рог
+                                                 , 8417   -- 22051	Склад ГП ф.Николаев (Херсон)	филиал Николаев (Херсон)
+                                                 , 428364 -- 22052	Склад возвратов ф.Николаев (Херсон)	филиал Николаев (Херсон)
+                                                 , 346093 -- 22081	Склад ГП ф.Одесса	филиал Одесса
+                                                 , 346094 -- 22082	Склад возвратов ф.Одесса	филиал Одесса
+                                                 , 8425   -- 22091	Склад ГП ф.Харьков	филиал Харьков
+                                                 , 409007 -- 22092	Склад возвратов ф.Харьков	филиал Харьков
+                                                 , 8415   -- 22041	Склад ГП ф.Черкассы (Кировоград)	филиал Черкассы (Кировоград)
+                                                 , 428363 -- 22042	Склад возвратов ф.Черкассы (Кировоград)	филиал Черкассы (Кировоград)
+                                                 )
+                             AND (vbBranchId_Constraint = 0
+                               OR vbUserId = zfCalc_UserAdmin() :: Integer)
+                               )
+                            OR ((ObjectLink_Unit_Parent.ChildObjectId = 8460 -- группа - Возвраты общие
+                                 OR Object_Unit.Id = 8459) -- Склад Реализации
+                                AND (vbBranchId_Constraint > 0
+                                 OR vbUserId = zfCalc_UserAdmin() :: Integer))
+                               )
                        )
        SELECT tmpUnit.ObjectDescId
             , tmpUnit.PartnerId
@@ -341,7 +377,12 @@ BEGIN
             , '' :: TVarChar  AS GoodsPropertyName
 
             , NULL :: TFloat AS ChangePercent
-            , NULL :: TFloat AS ChangePercentAmount
+            , CASE WHEN tmpUnit.PartnerId IN (301309 -- Склад ГП ф.Запорожье
+                                            , 346093 -- Склад ГП ф.Одесса
+                                             )
+                        THEN 0
+                        ELSE 1
+              END :: TFloat AS ChangePercentAmount
 
             , FALSE       :: Boolean AS isEdiOrdspr
             , FALSE       :: Boolean AS isEdiInvoice

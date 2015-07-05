@@ -3,7 +3,7 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
   ClientHeight = 420
   ClientWidth = 699
   ExplicitWidth = 715
-  ExplicitHeight = 455
+  ExplicitHeight = 458
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -84,6 +84,21 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
             HeaderAlignmentVert = vaCenter
             Width = 40
           end
+          object RouteName: TcxGridDBColumn
+            Caption = #1052#1072#1088#1096#1088#1091#1090
+            DataBinding.FieldName = 'RouteName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
+          end
+          object RouteSortingName: TcxGridDBColumn
+            Caption = #1057#1086#1088#1090#1080#1088#1086#1074#1082#1072' '#1084#1072#1088#1096#1088#1091#1090#1072
+            DataBinding.FieldName = 'RouteSortingName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 100
+          end
         end
       end
     end
@@ -121,6 +136,32 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
           Value = Null
           Component = MasterCDS
           ComponentItem = 'Name'
+          DataType = ftString
+        end
+        item
+          Name = 'RouteId'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'RouteId'
+        end
+        item
+          Name = 'RouteName'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'RouteName'
+          DataType = ftString
+        end
+        item
+          Name = 'RouteSortingId'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'RouteSortingId'
+        end
+        item
+          Name = 'RouteSortingName'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'RouteSortingName'
           DataType = ftString
         end>
     end

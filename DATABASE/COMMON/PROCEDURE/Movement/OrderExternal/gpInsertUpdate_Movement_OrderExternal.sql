@@ -40,6 +40,11 @@ BEGIN
      END IF;
 
 
+     -- !!!захардкодил временно!!!
+     IF EXISTS (SELECT View_Contract_InvNumber.ContractId FROM Object_Contract_InvNumber_View AS View_Contract_InvNumber WHERE View_Contract_InvNumber.ContractId = inContractId AND View_Contract_InvNumber.InfoMoneyId = zc_Enum_InfoMoney_30201()) -- Доходы + Мясное сырье + Мясное сырье
+     THEN inToId:= 133049; -- Склад реализации мясо
+     END IF;
+
      -- 1. эти параметры всегда из Контрагента
      outOperDatePartner:= inOperDate + (COALESCE ((SELECT ValueData FROM ObjectFloat WHERE ObjectId = inFromId AND DescId = zc_ObjectFloat_Partner_PrepareDayCount()), 0) :: TVarChar || ' DAY') :: INTERVAL;
 

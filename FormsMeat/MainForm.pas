@@ -601,6 +601,8 @@ type
     bbOrderInternalBasis: TMenuItem;
     actReturnOut_Partner: TdsdOpenForm;
     N69: TMenuItem;
+    actReport_GoodsMI_SaleReturnInUnit: TdsdOpenForm;
+    miReport_GoodsMI_SaleReturnInUnit: TMenuItem;
     procedure actReport_OLAPSoldExecute(Sender: TObject);
     procedure FormShow(Sender: TObject);
   private

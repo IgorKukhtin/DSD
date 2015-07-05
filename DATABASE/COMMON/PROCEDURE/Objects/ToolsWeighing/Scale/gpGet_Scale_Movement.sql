@@ -201,7 +201,16 @@ BEGIN
             , Object_Partner.ObjectCode                      AS PartnerCode_calc
             , Object_Partner.ValueData                       AS PartnerName_calc
             , MovementFloat_ChangePercent.ValueData          AS ChangePercent
-            , (SELECT tmp.ChangePercentAmount FROM gpGet_Scale_Partner (inOperDate, -1 * Object_Partner.Id, inSession) AS tmp WHERE tmp.ContractId = View_Contract_InvNumber.ContractId) AS ChangePercentAmount
+            , (SELECT tmp.ChangePercentAmount FROM gpGet_Scale_Partner (inOperDate       := inOperDate
+                                                                      , inMovementDescId := tmpMovement.MovementDescId :: Integer
+                                                                      , inPartnerCode    := -1 * Object_Partner.Id
+                                                                      , inInfoMoneyId    := View_Contract_InvNumber.InfoMoneyId
+                                                                      , inPaidKindId     := Object_PaidKind.Id
+                                                                      , inSession        := inSession
+                                                                       ) AS tmp
+               WHERE COALESCE (tmp.ContractId, 0) = COALESCE (View_Contract_InvNumber.ContractId, 0)
+                  OR tmpMovement.MovementDescId = zc_Movement_Send()
+              ) AS ChangePercentAmount
 
             , COALESCE (ObjectBoolean_Partner_EdiOrdspr.ValueData, FALSE)  :: Boolean AS isEdiOrdspr
             , COALESCE (ObjectBoolean_Partner_EdiInvoice.ValueData, FALSE) :: Boolean AS isEdiInvoice

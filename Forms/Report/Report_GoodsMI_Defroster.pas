@@ -43,6 +43,8 @@ type
     GoodsGroupName: TcxGridDBColumn;
     PartnerCode: TcxGridDBColumn;
     PartnerName: TcxGridDBColumn;
+    actPrint1: TdsdPrintAction;
+    bbPrint1: TdxBarButton;
   private
     { Private declarations }
   public

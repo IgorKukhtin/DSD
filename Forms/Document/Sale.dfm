@@ -131,9 +131,16 @@ inherited SaleForm: TSaleForm
           object colName: TcxGridDBColumn [3]
             Caption = #1058#1086#1074#1072#1088
             DataBinding.FieldName = 'GoodsName'
+            PropertiesClassName = 'TcxButtonEditProperties'
+            Properties.Buttons = <
+              item
+                Action = actGoodsChoiceForm
+                Default = True
+                Kind = bkEllipsis
+              end>
+            Properties.ReadOnly = True
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Options.Editing = False
             Width = 228
           end
           object colGoodsKindName: TcxGridDBColumn [4]
@@ -417,7 +424,6 @@ inherited SaleForm: TSaleForm
       Properties.Buttons = <
         item
           Default = True
-          Enabled = False
           Kind = bkEllipsis
         end>
       Properties.ReadOnly = True
@@ -751,6 +757,7 @@ inherited SaleForm: TSaleForm
           UserName = 'frxDBDMaster'
           IndexFieldNames = 'GroupName_Juridical;GoodsName_Juridical;GoodsName;GoodsKindName'
         end>
+      CopiesCount = 1
       Params = <
         item
           Name = 'Id'
@@ -787,6 +794,7 @@ inherited SaleForm: TSaleForm
           DataSet = PrintItemsSverkaCDS
           UserName = 'frxDBDSverka'
         end>
+      CopiesCount = 1
       Params = <
         item
           Name = 'Id'
@@ -820,6 +828,7 @@ inherited SaleForm: TSaleForm
           UserName = 'frxDBDMaster'
           IndexFieldNames = 'WeighingNumber;NumOrder'
         end>
+      CopiesCount = 1
       Params = <
         item
           Name = 'Id'
@@ -856,6 +865,7 @@ inherited SaleForm: TSaleForm
             'goodsgroupname;GroupName_Juridical;GoodsName_Juridical;GoodsName' +
             ';GoodsKindName'
         end>
+      CopiesCount = 1
       Params = <
         item
           Name = 'Id'
@@ -870,6 +880,36 @@ inherited SaleForm: TSaleForm
     end
     inherited actRefresh: TdsdDataSetRefresh
       RefreshOnTabSetChanges = True
+    end
+    object actGoodsChoiceForm: TOpenChoiceForm [8]
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = 'GoodsForm'
+      FormName = 'TGoods_ObjectForm'
+      FormNameParam.Value = 'TGoods_ObjectForm'
+      FormNameParam.DataType = ftString
+      GuiParams = <
+        item
+          Name = 'Key'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'GoodsId'
+        end
+        item
+          Name = 'TextValue'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'GoodsName'
+          DataType = ftString
+        end
+        item
+          Name = 'Code'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'GoodsCode'
+        end>
+      isShowModal = True
     end
     inherited actPrint: TdsdPrintAction
       StoredProc = spSelectPrint
@@ -903,7 +943,7 @@ inherited SaleForm: TSaleForm
       ReportNameParam.ComponentItem = 'ReportNameSale'
       ReportNameParam.ParamType = ptInput
     end
-    object mactPrint_Sale: TMultiAction [15]
+    object mactPrint_Sale: TMultiAction [16]
       Category = 'DSDLib'
       MoveParams = <>
       ActionList = <
@@ -917,7 +957,7 @@ inherited SaleForm: TSaleForm
       Hint = #1055#1077#1095#1072#1090#1100' '#1053#1072#1082#1083#1072#1076#1085#1072#1103
       ImageIndex = 3
     end
-    object mactPrint_Tax_Client: TMultiAction [16]
+    object mactPrint_Tax_Client: TMultiAction [17]
       Category = 'Print_Tax'
       MoveParams = <>
       ActionList = <
@@ -931,7 +971,7 @@ inherited SaleForm: TSaleForm
       Hint = #1053#1072#1083#1086#1075#1086#1074#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103' ('#1087#1086#1082#1091#1087#1072#1090#1077#1083#1100')'
       ImageIndex = 18
     end
-    object mactPrint_Account: TMultiAction [17]
+    object mactPrint_Account: TMultiAction [18]
       Category = 'Print_Account'
       MoveParams = <>
       ActionList = <
@@ -945,7 +985,7 @@ inherited SaleForm: TSaleForm
       Hint = #1055#1077#1095#1072#1090#1100' '#1057#1095#1077#1090
       ImageIndex = 21
     end
-    object actPrintTax_Client: TdsdPrintAction [18]
+    object actPrintTax_Client: TdsdPrintAction [19]
       Category = 'Print_Tax'
       MoveParams = <>
       StoredProc = spSelectTax_Client
@@ -968,6 +1008,7 @@ inherited SaleForm: TSaleForm
           DataSet = PrintItemsSverkaCDS
           UserName = 'frxDBDSverka'
         end>
+      CopiesCount = 1
       Params = <
         item
           Name = 'Id'
@@ -983,7 +1024,7 @@ inherited SaleForm: TSaleForm
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
     end
-    object actPrint_Account: TdsdPrintAction [19]
+    object actPrint_Account: TdsdPrintAction [20]
       Category = 'Print_Account'
       MoveParams = <>
       StoredProc = spSelectPrint
@@ -1003,6 +1044,7 @@ inherited SaleForm: TSaleForm
           DataSet = PrintItemsCDS
           UserName = 'frxDBDMaster'
         end>
+      CopiesCount = 1
       Params = <
         item
           Name = 'Id'
@@ -1018,7 +1060,7 @@ inherited SaleForm: TSaleForm
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
     end
-    object actPrint_ExpPack: TdsdPrintAction [20]
+    object actPrint_ExpPack: TdsdPrintAction [21]
       Category = 'Print_Export'
       MoveParams = <>
       StoredProc = spSelectPrint_ExpPack
@@ -1036,6 +1078,7 @@ inherited SaleForm: TSaleForm
           UserName = 'frxDBDMaster'
           IndexFieldNames = 'GroupName_Juridical;GoodsName_Juridical;GoodsName;GoodsKindName'
         end>
+      CopiesCount = 1
       Params = <
         item
           Name = 'Id'
@@ -1065,7 +1108,7 @@ inherited SaleForm: TSaleForm
         item
         end>
     end
-    object actGoodsKindChoice: TOpenChoiceForm [25]
+    object actGoodsKindChoice: TOpenChoiceForm [26]
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -1268,6 +1311,7 @@ inherited SaleForm: TSaleForm
           UserName = 'frxDBDMaster'
           IndexFieldNames = 'WeighingNumber;BoxNumber;NumOrder'
         end>
+      CopiesCount = 1
       Params = <
         item
           Name = 'Id'
@@ -1327,6 +1371,7 @@ inherited SaleForm: TSaleForm
           UserName = 'frxDBDMaster2'
           IndexFieldNames = 'GroupName_Juridical;GoodsName_Juridical;GoodsName;GoodsKindName'
         end>
+      CopiesCount = 1
       Params = <
         item
           Name = 'Id'
@@ -1406,6 +1451,7 @@ inherited SaleForm: TSaleForm
           DataSet = PrintItemsCDS
           UserName = 'frxDBDMaster'
         end>
+      CopiesCount = 1
       Params = <
         item
           Name = 'Id'

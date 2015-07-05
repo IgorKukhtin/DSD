@@ -5,7 +5,7 @@ inherited Report_GoodsMI_DefrosterForm: TReport_GoodsMI_DefrosterForm
   AddOnFormData.isSingle = False
   AddOnFormData.Params = FormParams
   ExplicitWidth = 1074
-  ExplicitHeight = 569
+  ExplicitHeight = 572
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -342,6 +342,75 @@ inherited Report_GoodsMI_DefrosterForm: TReport_GoodsMI_DefrosterForm
       end>
   end
   inherited ActionList: TActionList
+    object actPrint1: TdsdPrintAction
+      Category = 'DSDLib'
+      MoveParams = <
+        item
+          FromParam.Name = 'id'
+          FromParam.Value = Null
+          FromParam.ComponentItem = 'id'
+          ToParam.Value = '0'
+          ToParam.Component = FormParams
+          ToParam.ComponentItem = 'Id'
+          ToParam.ParamType = ptInputOutput
+        end
+        item
+          FromParam.Value = 42005d
+          FromParam.Component = deStart
+          FromParam.DataType = ftDateTime
+          ToParam.Name = 'StartDate'
+          ToParam.Value = Null
+          ToParam.DataType = ftDateTime
+          ToParam.ParamType = ptInputOutput
+        end
+        item
+          FromParam.Value = 42005d
+          FromParam.Component = deEnd
+          FromParam.DataType = ftDateTime
+          ToParam.Name = 'EndDate'
+          ToParam.Value = Null
+          ToParam.DataType = ftDateTime
+          ToParam.ParamType = ptInputOutput
+        end>
+      StoredProcList = <>
+      Caption = #1054#1090#1095#1077#1090' <'#1044#1077#1092#1088#1086#1089#1090#1077#1088' ('#1080#1090#1086#1075')>'
+      Hint = #1054#1090#1095#1077#1090' <'#1044#1077#1092#1088#1086#1089#1090#1077#1088' ('#1080#1090#1086#1075')>'
+      ImageIndex = 19
+      ShortCut = 16464
+      DataSets = <
+        item
+          UserName = 'frxDBDMaster'
+          IndexFieldNames = 'GoodsGroupNameFull;GoodsName;PartionGoodsName'
+          GridView = cxGridDBTableView
+        end>
+      Params = <
+        item
+          Name = 'StartDate'
+          Value = 42005d
+          Component = deStart
+          DataType = ftDateTime
+          ParamType = ptInput
+        end
+        item
+          Name = 'EndDate'
+          Value = 42005d
+          Component = deEnd
+          DataType = ftDateTime
+          ParamType = ptInput
+        end
+        item
+          Name = 'UnitName'
+          Value = ''
+          Component = UnitGuides
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          ParamType = ptInput
+        end>
+      ReportName = #1044#1077#1092#1088#1086#1089#1090#1077#1088'('#1080#1090#1086#1075')'
+      ReportNameParam.Value = #1044#1077#1092#1088#1086#1089#1090#1077#1088'('#1080#1090#1086#1075')'
+      ReportNameParam.DataType = ftString
+      ReportNameParam.ParamType = ptInput
+    end
     object actPrint: TdsdPrintAction
       Category = 'DSDLib'
       MoveParams = <
@@ -579,6 +648,14 @@ inherited Report_GoodsMI_DefrosterForm: TReport_GoodsMI_DefrosterForm
         end
         item
           Visible = True
+          ItemName = 'bbPrint1'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbGridToExcel'
         end
         item
@@ -593,6 +670,11 @@ inherited Report_GoodsMI_DefrosterForm: TReport_GoodsMI_DefrosterForm
     object bbPrintByGoods: TdxBarButton
       Action = actPrintByGoods
       Category = 0
+    end
+    object bbPrint1: TdxBarButton
+      Action = actPrint1
+      Category = 0
+      ShortCut = 16465
     end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn

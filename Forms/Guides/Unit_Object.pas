@@ -18,6 +18,8 @@ type
     ceBusinessName: TcxGridDBColumn;
     ceJuridicalName: TcxGridDBColumn;
     ceParentName: TcxGridDBColumn;
+    RouteName: TcxGridDBColumn;
+    RouteSortingName: TcxGridDBColumn;
   private
     { Private declarations }
   public

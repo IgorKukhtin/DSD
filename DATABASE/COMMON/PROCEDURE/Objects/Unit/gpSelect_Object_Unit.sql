@@ -17,6 +17,8 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar,
                AccountDirectionCode Integer, AccountDirectionName TVarChar,
                ProfitLossGroupCode Integer, ProfitLossGroupName TVarChar,
                ProfitLossDirectionCode Integer, ProfitLossDirectionName TVarChar,
+               RouteId Integer, RouteName TVarChar,
+               RouteSortingId Integer, RouteSortingName TVarChar,
                isErased boolean, isLeaf boolean) AS
 $BODY$
    DECLARE vbUserId Integer;
@@ -73,6 +75,12 @@ BEGIN
            , lfObject_Unit_byProfitLossDirection.ProfitLossGroupName
            , lfObject_Unit_byProfitLossDirection.ProfitLossDirectionCode
            , lfObject_Unit_byProfitLossDirection.ProfitLossDirectionName
+
+           , Object_Route.Id           AS RouteId
+           , Object_Route.ValueData    AS RouteName
+
+           , Object_RouteSorting.Id         AS RouteSortingId
+           , Object_RouteSorting.ValueData  AS RouteSortingName
          
            , Object_Unit_View.isErased
            , Object_Unit_View.isLeaf
@@ -86,6 +94,16 @@ BEGIN
             LEFT JOIN Object_Contract_View ON Object_Contract_View.ContractId = ObjectLink_Unit_Contract.ChildObjectId
             LEFT JOIN Object AS Object_Juridical ON Object_Juridical.Id = Object_Contract_View.JuridicalId
             LEFT JOIN Object AS Object_Infomoney ON Object_Infomoney.Id = Object_Contract_View.InfomoneyId
+
+            LEFT JOIN ObjectLink AS ObjectLink_Unit_Route
+                                 ON ObjectLink_Unit_Route.ObjectId = Object_Unit_View.Id 
+                               AND ObjectLink_Unit_Route.DescId = zc_ObjectLink_Unit_Route()
+            LEFT JOIN Object AS Object_Route ON Object_Route.Id = ObjectLink_Unit_Route.ChildObjectId
+         
+            LEFT JOIN ObjectLink AS ObjectLink_Unit_RouteSorting
+                                 ON ObjectLink_Unit_RouteSorting.ObjectId = Object_Unit_View.Id 
+                                AND ObjectLink_Unit_RouteSorting.DescId = zc_ObjectLink_Unit_RouteSorting()
+            LEFT JOIN Object AS Object_RouteSorting ON Object_RouteSorting.Id = ObjectLink_Unit_RouteSorting.ChildObjectId
 
        -- WHERE vbAccessKeyAll = TRUE
        WHERE (Object_Unit_View.BranchId = vbObjectId_Constraint
@@ -132,7 +150,13 @@ BEGIN
            , '' :: TVarChar AS ProfitLossGroupName
            , 0 :: Integer   AS ProfitLossDirectionCode
            , '' :: TVarChar AS ProfitLossDirectionName
-         
+
+           , CAST (0 as Integer)    AS RouteId
+           , CAST ('' as TVarChar)  AS RouteName
+
+           , CAST (0 as Integer)    AS RouteSortingId
+           , CAST ('' as TVarChar)  AS RouteSortingName
+
            , FALSE AS isErased
            , TRUE AS isLeaf
        FROM Object as Object_Partner
@@ -154,6 +178,7 @@ ALTER FUNCTION gpSelect_Object_Unit (TVarChar) OWNER TO postgres;
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 03.07.15         * add ObjectLink_Unit_Route, ObjectLink_Unit_RouteSorting
  15.04.15         * add Contract
  08.09.14                                        * add Object_RoleAccessKeyGuide_View
  21.12.13                                        * ParentId

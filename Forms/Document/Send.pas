@@ -52,6 +52,7 @@ type
     colPartionGoodsOperDate: TcxGridDBColumn;
     clGoodsGroupNameFull: TcxGridDBColumn;
     clMeasureName: TcxGridDBColumn;
+    actGoodsChoiceForm: TOpenChoiceForm;
   private
     { Private declarations }
   public

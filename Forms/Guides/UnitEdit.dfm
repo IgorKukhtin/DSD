@@ -2,7 +2,7 @@
   Left = 0
   Top = 0
   Caption = #1056#1077#1076#1072#1082#1090#1080#1088#1086#1074#1072#1085#1080#1077' '#1087#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1103
-  ClientHeight = 430
+  ClientHeight = 444
   ClientWidth = 497
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -18,7 +18,7 @@
   TextHeight = 13
   object edName: TcxTextEdit
     Left = 280
-    Top = 26
+    Top = 25
     TabOrder = 0
     Width = 209
   end
@@ -29,7 +29,7 @@
   end
   object cxButton1: TcxButton
     Left = 112
-    Top = 384
+    Top = 408
     Width = 75
     Height = 25
     Action = InsertUpdateGuides
@@ -38,7 +38,7 @@
   end
   object cxButton2: TcxButton
     Left = 306
-    Top = 384
+    Top = 408
     Width = 75
     Height = 25
     Action = FormClose
@@ -53,7 +53,7 @@
   end
   object ceCode: TcxCurrencyEdit
     Left = 40
-    Top = 26
+    Top = 25
     Properties.DecimalPlaces = 0
     Properties.DisplayFormat = '0'
     TabOrder = 5
@@ -71,7 +71,7 @@
   end
   object ceParent: TcxButtonEdit
     Left = 40
-    Top = 73
+    Top = 71
     Properties.Buttons = <
       item
         Default = True
@@ -82,12 +82,12 @@
   end
   object cxLabel2: TcxLabel
     Left = 40
-    Top = 113
+    Top = 100
     Caption = #1041#1080#1079#1085#1077#1089
   end
   object ceBranch: TcxButtonEdit
     Left = 280
-    Top = 73
+    Top = 71
     Properties.Buttons = <
       item
         Default = True
@@ -98,7 +98,7 @@
   end
   object ceBusiness: TcxButtonEdit
     Left = 40
-    Top = 136
+    Top = 121
     Properties.Buttons = <
       item
         Default = True
@@ -109,12 +109,12 @@
   end
   object cxLabel5: TcxLabel
     Left = 280
-    Top = 113
+    Top = 100
     Caption = #1043#1083#1072#1074#1085#1086#1077' '#1102#1088#1080#1076#1080#1095#1077#1089#1082#1086#1077' '#1083#1080#1094#1086
   end
   object ceJuridical: TcxButtonEdit
     Left = 280
-    Top = 136
+    Top = 121
     Properties.Buttons = <
       item
         Default = True
@@ -125,12 +125,12 @@
   end
   object cxLabel6: TcxLabel
     Left = 40
-    Top = 169
+    Top = 150
     Caption = #1057#1095#1077#1090' '#1085#1072#1087#1088#1072#1074#1083#1077#1085#1080#1077
   end
   object ceAccountDirection: TcxButtonEdit
     Left = 40
-    Top = 192
+    Top = 171
     Properties.Buttons = <
       item
         Default = True
@@ -141,12 +141,12 @@
   end
   object cxLabel7: TcxLabel
     Left = 280
-    Top = 169
+    Top = 150
     Caption = #1054#1055#1080#1059' '#1085#1072#1087#1088#1072#1074#1083#1077#1085#1080#1077
   end
   object ceProfitLossDirection: TcxButtonEdit
     Left = 280
-    Top = 192
+    Top = 171
     Properties.Buttons = <
       item
         Default = True
@@ -157,19 +157,19 @@
   end
   object cbPartionDate: TcxCheckBox
     Left = 40
-    Top = 232
+    Top = 208
     Caption = #1055#1072#1088#1090#1080#1080' '#1076#1072#1090#1099' '#1074' '#1091#1095#1077#1090#1077
     TabOrder = 18
     Width = 157
   end
   object cxLabel8: TcxLabel
     Left = 40
-    Top = 263
+    Top = 241
     Caption = #1044#1086#1075#1086#1074#1086#1088' ('#1087#1077#1088#1077#1074#1099#1089#1090#1072#1074#1083#1077#1085#1080#1077' '#1079#1072#1090#1088#1072#1090')'
   end
   object ceContract: TcxButtonEdit
     Left = 40
-    Top = 286
+    Top = 262
     Properties.Buttons = <
       item
         Default = True
@@ -181,7 +181,7 @@
   end
   object ceContract_Juridical: TcxButtonEdit
     Left = 280
-    Top = 286
+    Top = 262
     Properties.Buttons = <
       item
         Default = True
@@ -194,17 +194,17 @@
   end
   object cxLabel9: TcxLabel
     Left = 280
-    Top = 263
+    Top = 241
     Caption = #1070#1088'.'#1083#1080#1094#1086' ('#1076#1086#1075#1086#1074#1086#1088')'
   end
   object cxLabel10: TcxLabel
     Left = 40
-    Top = 320
+    Top = 291
     Caption = #1059#1055' '#1089#1090#1072#1090#1100#1103' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103' ('#1076#1086#1075#1086#1074#1086#1088')'
   end
   object ceContract_Infomoney: TcxButtonEdit
     Left = 40
-    Top = 340
+    Top = 312
     Properties.Buttons = <
       item
         Default = True
@@ -214,6 +214,40 @@
     Properties.ReadOnly = True
     TabOrder = 24
     Width = 449
+  end
+  object cxLabel11: TcxLabel
+    Left = 40
+    Top = 341
+    Caption = #1052#1072#1088#1096#1088#1091#1090
+  end
+  object cxLabel12: TcxLabel
+    Left = 280
+    Top = 341
+    Caption = #1057#1086#1088#1090#1080#1088#1086#1074#1082#1072' '#1084#1072#1088#1096#1088#1091#1090#1072
+  end
+  object ceRoute: TcxButtonEdit
+    Left = 40
+    Top = 362
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    Properties.ReadOnly = True
+    TabOrder = 27
+    Width = 209
+  end
+  object ceRouteSorting: TcxButtonEdit
+    Left = 280
+    Top = 362
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    Properties.ReadOnly = True
+    TabOrder = 28
+    Width = 209
   end
   object ActionList: TActionList
     Top = 40
@@ -331,10 +365,24 @@
         Component = ProfitLossDirectionGuides
         ComponentItem = 'Key'
         ParamType = ptInput
+      end
+      item
+        Name = 'inRouteID'
+        Value = Null
+        Component = RouteGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inRouteSortingId'
+        Value = Null
+        Component = RouteSortingGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
       end>
     PackSize = 1
     Left = 24
-    Top = 368
+    Top = 384
   end
   object dsdFormParams: TdsdFormParams
     Params = <
@@ -470,6 +518,32 @@
         Name = 'Contract_InfomoneyName'
         Value = Null
         Component = Contract_InfomoneyGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+      end
+      item
+        Name = 'RouteId'
+        Value = Null
+        Component = RouteGuides
+        ComponentItem = 'Key'
+      end
+      item
+        Name = 'RouteName'
+        Value = Null
+        Component = RouteGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+      end
+      item
+        Name = 'RouteSortingId'
+        Value = Null
+        Component = RouteSortingGuides
+        ComponentItem = 'Key'
+      end
+      item
+        Name = 'RouteSortingName'
+        Value = Null
+        Component = RouteSortingGuides
         ComponentItem = 'TextValue'
         DataType = ftString
       end>
@@ -747,5 +821,59 @@
       end>
     Left = 376
     Top = 272
+  end
+  object RouteGuides: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = ceRoute
+    FormNameParam.Value = 'TRouteForm'
+    FormNameParam.DataType = ftString
+    FormName = 'TRouteForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = RouteGuides
+        ComponentItem = 'Key'
+        DataType = ftString
+        ParamType = ptInput
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = RouteGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+      end>
+    Left = 96
+    Top = 340
+  end
+  object RouteSortingGuides: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = ceRouteSorting
+    FormNameParam.Value = 'TRouteSortingForm'
+    FormNameParam.DataType = ftString
+    FormName = 'TRouteSortingForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = RouteSortingGuides
+        ComponentItem = 'Key'
+        DataType = ftString
+        ParamType = ptInput
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = RouteSortingGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+      end>
+    Left = 400
+    Top = 349
   end
 end

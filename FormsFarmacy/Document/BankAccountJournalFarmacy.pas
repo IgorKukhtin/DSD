@@ -12,7 +12,7 @@ uses
   cxClasses, Datasnap.DBClient, dsdAction, Vcl.ActnList, cxPropertiesStore,
   cxLabel, cxTextEdit, cxMaskEdit, cxDropDownEdit, cxCalendar, Vcl.ExtCtrls,
   cxGridLevel, cxGridCustomTableView, cxGridTableView, cxGridDBTableView,
-  cxGridCustomView, cxGrid, cxPC;
+  cxGridCustomView, cxGrid, cxPC, dxBarBuiltInMenu, cxNavigator, Vcl.DBActns;
 
 type
   TBankAccountJournalFarmacyForm = class(TBankAccountJournalForm)

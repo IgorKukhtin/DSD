@@ -23,6 +23,7 @@ $BODY$
     DECLARE vbDiscountPercent TFloat;
     DECLARE vbExtraChargesPercent TFloat;
     DECLARE vbPaidKindId Integer;
+    DECLARE vbBranchId Integer;
 
     DECLARE vbOperSumm_MVATIn TFloat;
     DECLARE vbOperSumm_PVATIn TFloat;
@@ -49,7 +50,8 @@ BEGIN
           , CASE WHEN COALESCE (MovementFloat_ChangePercent.ValueData, 0) < 0 THEN -MovementFloat_ChangePercent.ValueData ELSE 0 END    AS DiscountPercent
           , CASE WHEN COALESCE (MovementFloat_ChangePercent.ValueData, 0) > 0 THEN MovementFloat_ChangePercent.ValueData ELSE 0 END     AS ExtraChargesPercent
           , COALESCE (MovementLinkObject_PaidKind.ObjectId, 0)
-            INTO vbDescId, vbStatusId, vbPriceWithVAT, vbVATPercent, vbDiscountPercent, vbExtraChargesPercent, vbPaidKindId
+          , COALESCE (ObjectLink_Unit_Branch.ChildObjectId, 0)
+            INTO vbDescId, vbStatusId, vbPriceWithVAT, vbVATPercent, vbDiscountPercent, vbExtraChargesPercent, vbPaidKindId, vbBranchId
      FROM Movement
           LEFT JOIN MovementBoolean AS MovementBoolean_PriceWithVAT
                                     ON MovementBoolean_PriceWithVAT.MovementId = Movement.Id
@@ -63,6 +65,12 @@ BEGIN
           LEFT JOIN MovementLinkObject AS MovementLinkObject_PaidKind
                                        ON MovementLinkObject_PaidKind.MovementId = Movement.Id
                                       AND MovementLinkObject_PaidKind.DescId IN (zc_MovementLinkObject_PaidKind())
+          LEFT JOIN MovementLinkObject AS MovementLinkObject_From
+                                       ON MovementLinkObject_From.MovementId = Movement.Id
+                                      AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
+          LEFT JOIN ObjectLink AS ObjectLink_Unit_Branch
+                               ON ObjectLink_Unit_Branch.ObjectId = MovementLinkObject_From.ObjectId
+                              AND ObjectLink_Unit_Branch.DescId = zc_ObjectLink_Unit_Branch()
           LEFT JOIN MovementLinkObject AS MovementLinkObject_To
                                        ON MovementLinkObject_To.MovementId = Movement.Id
                                       AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
@@ -456,13 +464,13 @@ BEGIN
                          ELSE COALESCE (MIFloat_Price.ValueData, 0)
                     END                                                 AS Price
                   , MIFloat_CountForPrice.ValueData                     AS CountForPrice
-                  , SUM (MovementItem.Amount)                           AS AmountOut
+                  , SUM (CASE WHEN vbBranchId = zc_Branch_Basis() THEN COALESCE (MIFloat_AmountPartner.ValueData, 0) ELSE MovementItem.Amount END) AS AmountOut
                   , SUM (COALESCE (MIFloat_AmountPartner.ValueData, 0)) AS AmountIn--Partner
              FROM MovementItem
-                  INNER JOIN MovementItemFloat AS MIFloat_Price
+                  LEFT JOIN MovementItemFloat AS MIFloat_Price
                                                ON MIFloat_Price.MovementItemId = MovementItem.Id
                                               AND MIFloat_Price.DescId = zc_MIFloat_Price()
-                                              AND MIFloat_Price.ValueData <> 0
+                                              -- AND MIFloat_Price.ValueData <> 0
                   LEFT JOIN MovementItemFloat AS MIFloat_AmountPartner
                                               ON MIFloat_AmountPartner.MovementItemId = MovementItem.Id
                                              AND MIFloat_AmountPartner.DescId = zc_MIFloat_AmountPartner()

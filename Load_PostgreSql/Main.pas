@@ -8275,7 +8275,6 @@ procedure TMainForm.pLoadGuide_GoodsPropertyValue;
                                              , FieldByName('GoodsId5').AsInteger
                                          , FieldByName('GoodsKindId5').AsInteger );
                        toStoredProc.Params.ParamByName('ioId').Value:=findId;
-                       toStoredProc.Params.ParamByName('ioId').Value:=FieldByName('Id_Postgres5').AsInteger;
                        toStoredProc.Params.ParamByName('inName').Value:=FieldByName('ObjectName5').AsString;
                        toStoredProc.Params.ParamByName('inAmount').Value:=FieldByName('Amount5').AsFloat;
                        toStoredProc.Params.ParamByName('inBarCode').Value:=FieldByName('BarCode5').AsString;

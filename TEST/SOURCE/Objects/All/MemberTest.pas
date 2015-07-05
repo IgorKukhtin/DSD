@@ -14,14 +14,16 @@ type
     function InsertDefault: integer; override;
     procedure SetDataSetParam; override;
   public
-    function InsertUpdateMember(const Id, Code : integer;  IsOfficial: boolean; Name, INN: string): integer;
+    function InsertUpdateMember(const Id, Code : integer;  IsOfficial: boolean;
+      Name, INN: string; InfoMoneyId: Integer): integer;
     constructor Create; override;
   end;
-
+var
+  InfomoneyId: Integer;
 implementation
 
 uses ZDbcIntfs, SysUtils, Storage, DBClient, XMLDoc, CommonData, Forms,
-     UtilConvert, UtilConst, ZLibEx, zLibUtil, DB;
+     UtilConvert, UtilConst, ZLibEx, zLibUtil, DB, InfoMoneyTest;
 
 { TMemberTest }
 constructor TMember.Create;
@@ -34,11 +36,11 @@ end;
 
 function TMember.InsertDefault: integer;
 begin
-  result := InsertUpdateMember(0, -1, true, 'Физические лица','123');
+  result := InsertUpdateMember(0, -1, true, 'Физические лица','123',InfomoneyId);
 end;
 
 function TMember.InsertUpdateMember(const Id, Code: Integer; IsOfficial: boolean;
-  Name, INN : string): integer;
+  Name, INN : string; InfoMoneyId: Integer): integer;
 begin
   FParams.Clear;
   FParams.AddParam('ioId', ftInteger, ptInputOutput, Id);
@@ -48,6 +50,7 @@ begin
   FParams.AddParam('inINN', ftString, ptInput, INN);
   FParams.AddParam('inDriverCertificate', ftString, ptInput, '');
   FParams.AddParam('inComment', ftString, ptInput, '');
+  FParams.AddParam('inInfoMoneyId', ftInteger, ptInput, InfoMoneyId);
   result := InsertUpdate(FParams);
 end;
 
@@ -74,6 +77,7 @@ begin
   //RecordCount :=
   ObjectTest.GetDataSet.RecordCount;
   // Вставка группы
+  InfomoneyId := TInfoMoney.Create.GetDefault;
   Id := ObjectTest.InsertDefault;
   try
     // Получение данных

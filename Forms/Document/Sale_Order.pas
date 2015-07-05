@@ -161,6 +161,7 @@ type
     clGoodsGroupNameFull: TcxGridDBColumn;
     actDialog_QualityDoc: TdsdOpenForm;
     mactPrint_QualityDoc: TMultiAction;
+    actGoodsChoiceForm: TOpenChoiceForm;
   private
     { Private declarations }
   public

@@ -2,6 +2,7 @@
 
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Unit (Integer, Integer, TVarChar, Boolean, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Unit (Integer, Integer, TVarChar, Boolean, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Unit (Integer, Integer, TVarChar, Boolean, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Unit(
  INOUT ioId                      Integer   , -- ключ объекта <Подразделение>
@@ -15,6 +16,8 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Unit(
     IN inContractId              Integer   , -- ссылка на договор
     IN inAccountDirectionId      Integer   , -- ссылка на Аналитики управленческих счетов
     IN inProfitLossDirectionId   Integer   , -- ссылка на Аналитики статей отчета ПиУ
+    IN inRouteId                 Integer   ,    -- Маршрут
+    IN inRouteSortingId          Integer   ,    -- Сортировка маршрутов
     IN inSession                 TVarChar    -- сессия пользователя
 )
   RETURNS Integer AS
@@ -65,6 +68,11 @@ BEGIN
    -- сохранили связь с <Аналитики статей отчета о прибылях и убытках - направление>
    PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_Unit_ProfitLossDirection(), ioId, inProfitLossDirectionId);
 
+   -- сохранили связь с <Маршруты>
+   PERFORM lpInsertUpdate_ObjectLink( zc_ObjectLink_Unit_Route(), ioId, inRouteId);
+   -- сохранили связь с <Сортировки маршрутов>
+   PERFORM lpInsertUpdate_ObjectLink( zc_ObjectLink_Unit_RouteSorting(), ioId, inRouteSortingId);
+
    -- Если добавляли подразделение
    IF vbOldId <> ioId THEN
       -- Установить свойство лист\папка у себя
@@ -86,12 +94,13 @@ BEGIN
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpInsertUpdate_Object_Unit (Integer, Integer, TVarChar, Boolean, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar) OWNER TO postgres;
+ALTER FUNCTION gpInsertUpdate_Object_Unit (Integer, Integer, TVarChar, Boolean, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar) OWNER TO postgres;
 
 /*-------------------------------------------------------------------------------*/
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 03.07.15         * add ObjectLink_Unit_Route, ObjectLink_Unit_RouteSorting
  15.04.15         * add Contract
  08.12.13                                        * add inAccessKeyId
  20.07.13                                        * add inPartionDate

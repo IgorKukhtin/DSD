@@ -16,8 +16,8 @@ type
     procedure ParamTest;
     procedure ShowStoredProcParamTest;
     procedure SetParamToStoredProc;
-    procedure DBFOpenTest;
-    procedure ExecuteStoredProcOnServerTest;
+    //procedure DBFOpenTest;
+    //procedure ExecuteStoredProcOnServerTest;
     procedure dsdStoredProcTest;
     procedure BinaryFlowTest;
   end;
@@ -80,55 +80,55 @@ begin
   end;
 end;
 
-procedure TComponentDBTest.DBFOpenTest;
-{var ZConnection : TZConnection;
-    ZTable : TZTable;}
-var DateTime: TDateTime;
-    I:Int64;
-    DDW: Int64;
-    TimeStamp: TTimeStamp;
-  buf: int64;
-  d: TDateTime;
-  a : Pointer;
-const
-  b: array[0..7] of Byte = ($00, $B0, $2A, $60, $01, $E8, $CC, $42);
-var
-  x: Double;
-begin
-  Move(b, x, SizeOf(x));
-  buf:=$42CCE801602AB000;
-  a:=@buf;
-  d:=Double(a^);
-  // 24.04.2015 12:35:40
-  // 63565562140000  -- миллисекунды
-  // 63565562140 - секунды
-  // 63565472140000
-  TimeStamp := MSecsToTimeStamp(63565472140000);
-  // 735712 -Day - 45340000 мсек - 45340 сек
-  // 62135578800
-  DateTime := TimeStampToDateTime(TimeStamp);
-  //buf:=4675728260250941765;
-  //buf:=$42CCE801602AB000;
-  //a:=@buf;
-  //d:=Double(a^);
-  check(false, DateTimeToStr(DateTime));
-
-{  I := $40E3118000000000;//42CCE360E0495C00;
-  DDW := StrToInt64('$' + '40E3118000000000'); // '$' отдельно для привлечения внимания
-                           //42CCE360E0495C00
-  TimeStamp := MSecsToTimeStamp(I);
-  DateTime. := TimeStampToDateTime(TimeStamp);
-  check(false, DateToStr(DateTime));}
-
-  {ZConnection := TZConnection.Create(nil);
-  ZConnection.Protocol := 'ado';
-  ZConnection.Database := 'Provider=MSDASQL.1;Persist Security Info=False;Data Source=dBASE Files;Initial Catalog=c:\';
-  ZConnection.Connected := true;
-  ZTable := TZTable.Create(nil);
-  ZTable.Connection := ZConnection;
-  ZTable.TableName := 'export';
-  ZTable.Open;}
-end;
+//procedure TComponentDBTest.DBFOpenTest;
+//{var ZConnection : TZConnection;
+//    ZTable : TZTable;}
+//var DateTime: TDateTime;
+//    I:Int64;
+//    DDW: Int64;
+//    TimeStamp: TTimeStamp;
+//  buf: int64;
+//  d: TDateTime;
+//  a : Pointer;
+//const
+//  b: array[0..7] of Byte = ($00, $B0, $2A, $60, $01, $E8, $CC, $42);
+//var
+//  x: Double;
+//begin
+//  Move(b, x, SizeOf(x));
+//  buf:=$42CCE801602AB000;
+//  a:=@buf;
+//  d:=Double(a^);
+//  // 24.04.2015 12:35:40
+//  // 63565562140000  -- миллисекунды
+//  // 63565562140 - секунды
+//  // 63565472140000
+//  TimeStamp := MSecsToTimeStamp(63565472140000);
+//  // 735712 -Day - 45340000 мсек - 45340 сек
+//  // 62135578800
+//  DateTime := TimeStampToDateTime(TimeStamp);
+//  //buf:=4675728260250941765;
+//  //buf:=$42CCE801602AB000;
+//  //a:=@buf;
+//  //d:=Double(a^);
+//  check(false, DateTimeToStr(DateTime));
+//
+//{  I := $40E3118000000000;//42CCE360E0495C00;
+//  DDW := StrToInt64('$' + '40E3118000000000'); // '$' отдельно для привлечения внимания
+//                           //42CCE360E0495C00
+//  TimeStamp := MSecsToTimeStamp(I);
+//  DateTime. := TimeStampToDateTime(TimeStamp);
+//  check(false, DateToStr(DateTime));}
+//
+//  {ZConnection := TZConnection.Create(nil);
+//  ZConnection.Protocol := 'ado';
+//  ZConnection.Database := 'Provider=MSDASQL.1;Persist Security Info=False;Data Source=dBASE Files;Initial Catalog=c:\';
+//  ZConnection.Connected := true;
+//  ZTable := TZTable.Create(nil);
+//  ZTable.Connection := ZConnection;
+//  ZTable.TableName := 'export';
+//  ZTable.Open;}
+//end;
 
 procedure TComponentDBTest.dsdStoredProcTest;
 var Form: TForm;
@@ -144,32 +144,32 @@ begin
   end;
 end;
 
-procedure TComponentDBTest.ExecuteStoredProcOnServerTest;
-var
-   MasterStoredProc: TdsdStoredProc;
-   ClientStoredProc: TdsdStoredProc;
-   SecondClientStoredProc: TdsdStoredProc;
-   ExecServerStoredProc: TExecServerStoredProc;
-begin
-  // формируем процедуры для вызовов. Одна - получит рекордсет. Вторая - будет запускаться по его результатам
-  MasterStoredProc := TdsdStoredProc.Create(nil);
-  ClientStoredProc := TdsdStoredProc.Create(nil);
-  SecondClientStoredProc := TdsdStoredProc.Create(nil);
-  ExecServerStoredProc := TExecServerStoredProc.Create(nil);
-  //
-  MasterStoredProc.StoredProcName := 'test_Select_Object';
-  ClientStoredProc.StoredProcName := 'test_Execute_Sleep';
-  SecondClientStoredProc.StoredProcName := 'test_Execute_Sleep';
-  ClientStoredProc.Params.AddParam('inId', ftInteger, ptInput, 0).ComponentItem := 'Id';
-  SecondClientStoredProc.Params.AddParam('inId', ftInteger, ptInput, 0).ComponentItem := 'Id';
-
-  ExecServerStoredProc.MasterProcedure := MasterStoredProc;
-  ExecServerStoredProc.StoredProc := ClientStoredProc;
-  ExecServerStoredProc.StoredProcList.Add.StoredProc := SecondClientStoredProc;
-
-  ExecServerStoredProc.Execute;
-
-end;
+//procedure TComponentDBTest.ExecuteStoredProcOnServerTest;
+//var
+//   MasterStoredProc: TdsdStoredProc;
+//   ClientStoredProc: TdsdStoredProc;
+//   SecondClientStoredProc: TdsdStoredProc;
+//   ExecServerStoredProc: TExecServerStoredProc;
+//begin
+//  // формируем процедуры для вызовов. Одна - получит рекордсет. Вторая - будет запускаться по его результатам
+//  MasterStoredProc := TdsdStoredProc.Create(nil);
+//  ClientStoredProc := TdsdStoredProc.Create(nil);
+//  SecondClientStoredProc := TdsdStoredProc.Create(nil);
+//  ExecServerStoredProc := TExecServerStoredProc.Create(nil);
+//  //
+//  MasterStoredProc.StoredProcName := 'test_Select_Object';
+//  ClientStoredProc.StoredProcName := 'test_Execute_Sleep';
+//  SecondClientStoredProc.StoredProcName := 'test_Execute_Sleep';
+//  ClientStoredProc.Params.AddParam('inId', ftInteger, ptInput, 0).ComponentItem := 'Id';
+//  SecondClientStoredProc.Params.AddParam('inId', ftInteger, ptInput, 0).ComponentItem := 'Id';
+//
+//  ExecServerStoredProc.MasterProcedure := MasterStoredProc;
+//  ExecServerStoredProc.StoredProc := ClientStoredProc;
+//  ExecServerStoredProc.StoredProcList.Add.StoredProc := SecondClientStoredProc;
+//
+//  ExecServerStoredProc.Execute;
+//
+//end;
 
 procedure TComponentDBTest.ParamTest;
 var param: TdsdParam;

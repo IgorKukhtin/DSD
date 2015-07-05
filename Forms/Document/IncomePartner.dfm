@@ -26,7 +26,6 @@ object IncomePartnerForm: TIncomePartnerForm
     Align = alTop
     BevelOuter = bvNone
     TabOrder = 0
-    ExplicitWidth = 1162
     object edInvNumber: TcxTextEdit
       Left = 5
       Top = 23
@@ -318,17 +317,15 @@ object IncomePartnerForm: TIncomePartnerForm
     Width = 1080
     Height = 336
     Align = alClient
-    TabOrder = 2
+    TabOrder = 1
     Properties.ActivePage = cxTabSheetMain
     Properties.CustomButtons.Buttons = <>
-    ExplicitWidth = 1162
     ClientRectBottom = 336
     ClientRectRight = 1080
     ClientRectTop = 24
     object cxTabSheetMain: TcxTabSheet
       Caption = #1057#1090#1088#1086#1095#1085#1072#1103' '#1095#1072#1089#1090#1100
       ImageIndex = 0
-      ExplicitWidth = 1162
       object cxGrid: TcxGrid
         Left = 0
         Top = 0
@@ -336,7 +333,6 @@ object IncomePartnerForm: TIncomePartnerForm
         Height = 312
         Align = alClient
         TabOrder = 0
-        ExplicitWidth = 1162
         object cxGridDBTableView: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = MasterDS
@@ -434,9 +430,16 @@ object IncomePartnerForm: TIncomePartnerForm
           object colName: TcxGridDBColumn
             Caption = #1058#1086#1074#1072#1088
             DataBinding.FieldName = 'GoodsName'
+            PropertiesClassName = 'TcxButtonEditProperties'
+            Properties.Buttons = <
+              item
+                Action = actGoodsChoiceForm
+                Default = True
+                Kind = bkEllipsis
+              end>
+            Properties.ReadOnly = True
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Options.Editing = False
             Width = 200
           end
           object colGoodsKindName: TcxGridDBColumn
@@ -949,6 +952,7 @@ object IncomePartnerForm: TIncomePartnerForm
           DataSet = PrintItemsCDS
           UserName = 'frxDBDMaster'
         end>
+      CopiesCount = 1
       Params = <
         item
           Name = 'InvNumber'
@@ -1140,6 +1144,36 @@ object IncomePartnerForm: TIncomePartnerForm
       Caption = #1044#1086#1073#1072#1074#1080#1090#1100' '#1087#1086' '#1084#1072#1089#1082#1077
       Hint = #1044#1086#1073#1072#1074#1080#1090#1100' '#1087#1086' '#1084#1072#1089#1082#1077
       ImageIndex = 54
+    end
+    object actGoodsChoiceForm: TOpenChoiceForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = 'GoodsForm'
+      FormName = 'TGoods_ObjectForm'
+      FormNameParam.Value = 'TGoods_ObjectForm'
+      FormNameParam.DataType = ftString
+      GuiParams = <
+        item
+          Name = 'Key'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'GoodsId'
+        end
+        item
+          Name = 'TextValue'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'GoodsName'
+          DataType = ftString
+        end
+        item
+          Name = 'Code'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'GoodsCode'
+        end>
+      isShowModal = True
     end
   end
   object MasterDS: TDataSource

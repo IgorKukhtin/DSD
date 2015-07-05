@@ -9,13 +9,13 @@ uses
   cxEdit, Vcl.ComCtrls, dxCore, cxDateUtils, dsdGuides, dsdDB, dsdAction,
   Vcl.ActnList, cxPropertiesStore, dsdAddOn, cxTextEdit, cxCurrencyEdit,
   cxButtonEdit, cxMaskEdit, cxDropDownEdit, cxCalendar, cxLabel, Vcl.StdCtrls,
-  cxButtons;
+  cxButtons, cxClasses;
 
 type
   TBankAccountMovementFarmacyForm = class(TBankAccountMovementForm)
-    cxLabel14: TcxLabel;
     edIncome: TcxButtonEdit;
     GuidesIncome: TdsdGuides;
+    cxLabel15: TcxLabel;
   private
     { Private declarations }
   public

@@ -495,7 +495,7 @@ BEGIN
                                                         , inAmount              := tmp.Amount
                                                         , inAmountChangePercent := tmp.AmountChangePercent
                                                         , inAmountPartner       := tmp.AmountPartner
-                                                        , inChangePercentAmount := 0
+                                                        , inChangePercentAmount := tmp.ChangePercentAmount
                                                         , inPrice               := tmp.Price
                                                         , inCountForPrice       := tmp.CountForPrice
                                                         , inPartionGoods        := '' -- !!!не ошибка, здесь не формируется!!!

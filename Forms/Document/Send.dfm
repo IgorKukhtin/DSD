@@ -3,7 +3,7 @@ inherited SendForm: TSendForm
   ClientHeight = 668
   ClientWidth = 1072
   ExplicitWidth = 1088
-  ExplicitHeight = 703
+  ExplicitHeight = 706
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -121,9 +121,16 @@ inherited SendForm: TSendForm
           object colName: TcxGridDBColumn [2]
             Caption = #1058#1086#1074#1072#1088
             DataBinding.FieldName = 'GoodsName'
+            PropertiesClassName = 'TcxButtonEditProperties'
+            Properties.Buttons = <
+              item
+                Action = actGoodsChoiceForm
+                Default = True
+                Kind = bkEllipsis
+              end>
+            Properties.ReadOnly = True
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Options.Editing = False
             Width = 150
           end
           object colGoodsKindName: TcxGridDBColumn [3]
@@ -592,6 +599,36 @@ inherited SendForm: TSendForm
           ComponentItem = 'PartionGoodsOperDate'
           DataType = ftDateTime
           ParamType = ptInput
+        end>
+      isShowModal = True
+    end
+    object actGoodsChoiceForm: TOpenChoiceForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = 'GoodsForm'
+      FormName = 'TGoods_ObjectForm'
+      FormNameParam.Value = 'TGoods_ObjectForm'
+      FormNameParam.DataType = ftString
+      GuiParams = <
+        item
+          Name = 'Key'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'GoodsId'
+        end
+        item
+          Name = 'TextValue'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'GoodsName'
+          DataType = ftString
+        end
+        item
+          Name = 'Code'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'GoodsCode'
         end>
       isShowModal = True
     end
@@ -1376,10 +1413,10 @@ inherited SendForm: TSendForm
   object GuidesFrom: TdsdGuides
     KeyField = 'Id'
     LookupControl = edFrom
-    FormNameParam.Value = 'TUnit_ObjectForm'
+    FormNameParam.Value = 'TStoragePlace_ObjectForm'
     FormNameParam.DataType = ftString
-    FormName = 'TUnit_ObjectForm'
-    PositionDataSet = 'MasterCDS'
+    FormName = 'TStoragePlace_ObjectForm'
+    PositionDataSet = 'ClientDataSet'
     Params = <
       item
         Name = 'Key'
@@ -1396,16 +1433,16 @@ inherited SendForm: TSendForm
         DataType = ftString
         ParamType = ptInput
       end>
-    Left = 328
+    Left = 312
     Top = 16
   end
   object GuidesTo: TdsdGuides
     KeyField = 'Id'
     LookupControl = edTo
-    FormNameParam.Value = 'TUnit_ObjectForm'
+    FormNameParam.Value = 'TStoragePlace_ObjectForm'
     FormNameParam.DataType = ftString
-    FormName = 'TUnit_ObjectForm'
-    PositionDataSet = 'MasterCDS'
+    FormName = 'TStoragePlace_ObjectForm'
+    PositionDataSet = 'ClientDataSet'
     Params = <
       item
         Name = 'Key'
@@ -1422,7 +1459,7 @@ inherited SendForm: TSendForm
         DataType = ftString
         ParamType = ptInput
       end>
-    Left = 536
-    Top = 8
+    Left = 544
+    Top = 16
   end
 end

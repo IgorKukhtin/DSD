@@ -29,7 +29,7 @@ BEGIN
      -- сохранили свойство <Количество>
      IF NOT (inRemains IS NULL) THEN
         PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_Remains(), ioId, inRemains);
-     END IF:
+     END IF;
 
      -- сохранили протокол
      -- PERFORM lpInsert_MovementItemProtocol (ioId, vbUserId);

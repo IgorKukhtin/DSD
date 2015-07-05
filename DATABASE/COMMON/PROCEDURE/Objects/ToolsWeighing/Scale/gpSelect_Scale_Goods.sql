@@ -211,11 +211,15 @@ BEGIN
        WITH tmpInfoMoney AS (SELECT View_InfoMoney.InfoMoneyId
                              FROM Object_InfoMoney_View AS View_InfoMoney
                              WHERE inIsGoodsComplete = TRUE
-                               AND View_InfoMoney.InfoMoneyId IN (zc_Enum_InfoMoney_20901() -- Ирна + Ирна
+                               AND (View_InfoMoney.InfoMoneyId IN (zc_Enum_InfoMoney_20901() -- Ирна + Ирна
                                                                 , zc_Enum_InfoMoney_30101() -- Доходы + Готовая продукция
                                                                 , zc_Enum_InfoMoney_30102() -- Доходы + Тушенка
+                                                                , zc_Enum_InfoMoney_30103() -- Доходы + Хлеб
                                                                 , zc_Enum_InfoMoney_30201() -- Доходы + Мясное сырье
                                                                  )
+                               OR View_InfoMoney.InfoMoneyDestinationId IN (zc_Enum_InfoMoneyDestination_30300() -- Доходы + Переработка
+                                                                           )
+                                 )
                             UNION
                              SELECT View_InfoMoney.InfoMoneyId
                              FROM Object_InfoMoney_View AS View_InfoMoney

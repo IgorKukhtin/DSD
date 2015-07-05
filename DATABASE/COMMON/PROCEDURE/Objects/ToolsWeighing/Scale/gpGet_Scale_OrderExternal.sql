@@ -260,7 +260,23 @@ BEGIN
               END :: TVarChar AS PartnerName_calc
 
             , MovementFloat_ChangePercent.ValueData AS ChangePercent
-            , (SELECT tmp.ChangePercentAmount FROM gpGet_Scale_Partner (inOperDate, zc_Movement_Sale(), -1 * Object_From.Id, zc_Enum_InfoMoney_30101(), Object_PaidKind.Id, inSession) AS tmp WHERE tmp.ContractId = View_Contract_InvNumber.ContractId) AS ChangePercentAmount
+            , (SELECT tmp.ChangePercentAmount FROM gpGet_Scale_Partner (inOperDate       := inOperDate
+                                                                      , inMovementDescId := CASE WHEN Object_From.DescId = zc_Object_ArticleLoss()
+                                                                                                      THEN zc_Movement_Loss()
+                                                                                                 WHEN Object_From.DescId = zc_Object_Unit() AND tmpMovement.DescId = zc_Movement_OrderExternal()
+                                                                                                      THEN zc_Movement_SendOnPrice()
+                                                                                                 WHEN tmpMovement.DescId = zc_Movement_OrderExternal()
+                                                                                                      THEN zc_Movement_Sale()
+                                                                                                 ELSE tmpMovement.DescId
+                                                                                            END
+                                                                      , inPartnerCode    := -1 * Object_From.Id
+                                                                      , inInfoMoneyId    := COALESCE (View_Contract_InvNumber.InfoMoneyId, zc_Enum_InfoMoney_30101())
+                                                                      , inPaidKindId     := Object_PaidKind.Id
+                                                                      , inSession        := inSession
+                                                                       ) AS tmp
+               WHERE COALESCE (tmp.ContractId, 0) = COALESCE (View_Contract_InvNumber.ContractId, 0)
+                  OR Object_From.DescId = zc_Object_Unit()
+              ) AS ChangePercentAmount
 
             , COALESCE (ObjectBoolean_Partner_EdiOrdspr.ValueData, FALSE)  :: Boolean AS isEdiOrdspr
             , COALESCE (ObjectBoolean_Partner_EdiInvoice.ValueData, FALSE) :: Boolean AS isEdiInvoice

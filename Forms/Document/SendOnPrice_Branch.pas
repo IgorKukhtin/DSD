@@ -64,6 +64,7 @@ type
     UnitChoiceForm: TOpenChoiceForm;
     actPrintUnit: TdsdPrintAction;
     bbPrintUnit: TdxBarButton;
+    actGoodsChoiceForm: TOpenChoiceForm;
   private
     { Private declarations }
   public

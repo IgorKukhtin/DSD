@@ -106,6 +106,8 @@ type
     bbPrint2: TdxBarButton;
     actPrint3: TdsdPrintAction;
     bbPrint3: TdxBarButton;
+    PartionGoodsName: TcxGridDBColumn;
+    ColorB_calc: TcxGridDBColumn;
   private
   public
   end;
