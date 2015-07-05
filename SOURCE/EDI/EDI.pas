@@ -2,7 +2,7 @@ unit EDI;
 
 interface
 
-uses Classes, DB, dsdAction, IdFTP, ComDocXML, dsdDb, OrderXML;
+uses DBClient, Classes, DB, dsdAction, IdFTP, ComDocXML, dsdDb, OrderXML;
 
 type
 
@@ -35,9 +35,12 @@ type
     FInsertEDIFile: TdsdStoredProc;
     FUpdateEDIErrorState: TdsdStoredProc;
     FUpdateDeclarFileName: TdsdStoredProc;
+    FGetSaveFilePath: TdsdStoredProc;
     ComSigner: OleVariant;
     FSendToFTP: boolean;
     FDirectory: string;
+    FDirectoryError: string;
+    FisEDISaveLocal: boolean;
     procedure InsertUpdateOrder(ORDER: IXMLORDERType;
       spHeader, spList: TdsdStoredProc);
     function InsertUpdateComDoc(ЕлектроннийДокумент
@@ -112,7 +115,7 @@ function lpStrToDateTime(DateTimeString: string): TDateTime;
 
 implementation
 
-uses Windows, VCL.ActnList, DBClient, DesadvXML, SysUtils, Dialogs, SimpleGauge,
+uses Windows, VCL.ActnList, DesadvXML, SysUtils, Dialogs, SimpleGauge,
   Variants, UtilConvert, ComObj, DeclarXML, InvoiceXML, DateUtils,
   FormStorage, UnilWin, OrdrspXML, StrUtils, StatusXML;
 
@@ -274,6 +277,12 @@ begin
   FUpdateEDIErrorState.StoredProcName := 'gpUpdate_Movement_EDIErrorState';
   FUpdateEDIErrorState.OutputType := otResult;
 
+  FGetSaveFilePath := TdsdStoredProc.Create(nil);
+  FGetSaveFilePath.OutputType := otResult;
+  FGetSaveFilePath.StoredProcName := 'gpGetDirectoryEdiName';
+  FGetSaveFilePath.Execute;
+  FDirectoryError := FGetSaveFilePath.ParamByName('Directory').AsString;
+  FisEDISaveLocal := FGetSaveFilePath.ParamByName('isEDISaveLocal').Value;
 end;
 
 procedure TEDI.ComdocLoad(spHeader, spList: TdsdStoredProc; Directory: String;
@@ -967,6 +976,7 @@ var
   DESADV: IXMLDESADVType;
   Stream: TStream;
   i: integer;
+  FileName: string;
 begin
   DESADV := NewDESADV;
   // Создать XML
@@ -1025,8 +1035,10 @@ begin
   Stream := TMemoryStream.Create;
   try
     DESADV.OwnerDocument.SaveToStream(Stream);
-    PutStreamToFTP(Stream, 'desadv_' + FormatDateTime('yyyymmddhhnn', Now) + '_'
-      + DESADV.NUMBER + '.xml', '/outbox');
+    FileName := 'desadv_' + FormatDateTime('yyyymmddhhnn', Now) + '_' + DESADV.NUMBER + '.xml';
+    if FisEDISaveLocal then
+       DESADV.OwnerDocument.SaveToFile(FDirectoryError + FileName);
+    PutStreamToFTP(Stream, FileName, '/outbox');
     if HeaderDataSet.FieldByName('EDIId').asInteger <> 0 then
     begin
       FUpdateEDIErrorState.ParamByName('inMovementId').Value := HeaderDataSet.FieldByName('EDIId').asInteger;
@@ -1198,6 +1210,7 @@ var
   INVOICE: IXMLINVOICEType;
   Stream: TStream;
   i: integer;
+  FileName: string;
 begin
   INVOICE := NewINVOICE;
   // Создать XML
@@ -1281,9 +1294,12 @@ begin
 
   Stream := TMemoryStream.Create;
   INVOICE.OwnerDocument.SaveToStream(Stream);
+  FileName := 'invoice_' + FormatDateTime('yyyymmddhhnn', Now) +
+      '_' + INVOICE.NUMBER + '.xml';
+  if FisEDISaveLocal then
+     INVOICE.OwnerDocument.SaveToFile(FDirectoryError + FileName);
   try
-    PutStreamToFTP(Stream, 'invoice_' + FormatDateTime('yyyymmddhhnn', Now) +
-      '_' + INVOICE.NUMBER + '.xml', '/outbox');
+    PutStreamToFTP(Stream, FileName, '/outbox');
     if HeaderDataSet.FieldByName('EDIId').asInteger <> 0 then
     begin
       FUpdateEDIErrorState.ParamByName('inMovementId').Value := HeaderDataSet.FieldByName('EDIId').asInteger;
@@ -1651,6 +1667,7 @@ var
   ORDRSP: IXMLORDRSPType;
   Stream: TStream;
   i: integer;
+  FileName: string;
 begin
 
   ORDRSP := NewORDRSP;
@@ -1712,8 +1729,10 @@ begin
   Stream := TMemoryStream.Create;
   try
     ORDRSP.OwnerDocument.SaveToStream(Stream);
-    PutStreamToFTP(Stream, 'ORDRSP_' + FormatDateTime('yyyymmddhhnn', Now) + '_'
-      + ORDRSP.NUMBER + '.xml', '/outbox');
+    FileName := 'ORDRSP_' + FormatDateTime('yyyymmddhhnn', Now) + '_' + ORDRSP.NUMBER + '.xml';
+    if FisEDISaveLocal then
+       ORDRSP.OwnerDocument.SaveToFile(FDirectoryError + FileName);
+    PutStreamToFTP(Stream, FileName, '/outbox');
     if HeaderDataSet.FieldByName('EDIId').asInteger <> 0 then
     begin
       FUpdateEDIErrorState.ParamByName('inMovementId').Value := HeaderDataSet.FieldByName('EDIId').asInteger;
