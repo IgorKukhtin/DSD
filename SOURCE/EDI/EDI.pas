@@ -1037,7 +1037,11 @@ begin
     DESADV.OwnerDocument.SaveToStream(Stream);
     FileName := 'desadv_' + FormatDateTime('yyyymmddhhnn', Now) + '_' + DESADV.NUMBER + '.xml';
     if FisEDISaveLocal then
-       DESADV.OwnerDocument.SaveToFile(FDirectoryError + FileName);
+       try
+         DESADV.OwnerDocument.SaveToFile(FDirectoryError + FileName);
+       except
+         DESADV.OwnerDocument.SaveToFile(FileName);
+       end;
     PutStreamToFTP(Stream, FileName, '/outbox');
     if HeaderDataSet.FieldByName('EDIId').asInteger <> 0 then
     begin
@@ -1294,10 +1298,13 @@ begin
 
   Stream := TMemoryStream.Create;
   INVOICE.OwnerDocument.SaveToStream(Stream);
-  FileName := 'invoice_' + FormatDateTime('yyyymmddhhnn', Now) +
-      '_' + INVOICE.NUMBER + '.xml';
+  FileName := 'invoice_' + FormatDateTime('yyyymmddhhnn', Now) + '_' + INVOICE.NUMBER + '.xml';
   if FisEDISaveLocal then
-     INVOICE.OwnerDocument.SaveToFile(FDirectoryError + FileName);
+     try
+       INVOICE.OwnerDocument.SaveToFile(FDirectoryError + FileName);
+     except
+       INVOICE.OwnerDocument.SaveToFile(FileName);
+     end;
   try
     PutStreamToFTP(Stream, FileName, '/outbox');
     if HeaderDataSet.FieldByName('EDIId').asInteger <> 0 then
@@ -1731,7 +1738,11 @@ begin
     ORDRSP.OwnerDocument.SaveToStream(Stream);
     FileName := 'ORDRSP_' + FormatDateTime('yyyymmddhhnn', Now) + '_' + ORDRSP.NUMBER + '.xml';
     if FisEDISaveLocal then
-       ORDRSP.OwnerDocument.SaveToFile(FDirectoryError + FileName);
+       try
+         ORDRSP.OwnerDocument.SaveToFile(FDirectoryError + FileName);
+       except
+         ORDRSP.OwnerDocument.SaveToFile(FileName);
+       end;
     PutStreamToFTP(Stream, FileName, '/outbox');
     if HeaderDataSet.FieldByName('EDIId').asInteger <> 0 then
     begin
