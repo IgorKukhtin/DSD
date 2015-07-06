@@ -5,7 +5,7 @@ inherited ReturnInJournalChoiceForm: TReturnInJournalChoiceForm
   AddOnFormData.ChoiceAction = dsdChoiceGuides
   AddOnFormData.Params = FormParams
   ExplicitWidth = 1126
-  ExplicitHeight = 573
+  ExplicitHeight = 570
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -538,6 +538,7 @@ inherited ReturnInJournalChoiceForm: TReturnInJournalChoiceForm
     object edPartner: TcxButtonEdit
       Left = 523
       Top = 5
+      Enabled = False
       Properties.Buttons = <
         item
           Default = True
@@ -895,13 +896,13 @@ inherited ReturnInJournalChoiceForm: TReturnInJournalChoiceForm
         DataType = ftDateTime
       end
       item
-        Name = 'PartnerId'
+        Name = 'inPartnerId'
         Value = Null
         Component = PartnerGuides
         ComponentItem = 'Key'
       end
       item
-        Name = 'PartnerName'
+        Name = 'inPartnerName'
         Value = Null
         Component = PartnerGuides
         ComponentItem = 'TextValue'

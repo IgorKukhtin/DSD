@@ -1,26 +1,26 @@
 inherited ReturnInForm: TReturnInForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1042#1086#1079#1074#1088#1072#1090' '#1086#1090' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1103' ('#1074#1089#1077')>'
-  ClientHeight = 668
+  ClientHeight = 650
   ClientWidth = 1104
   ExplicitWidth = 1120
-  ExplicitHeight = 706
+  ExplicitHeight = 685
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 166
     Width = 1104
-    Height = 502
+    Height = 484
     ExplicitTop = 166
     ExplicitWidth = 1104
     ExplicitHeight = 502
-    ClientRectBottom = 502
+    ClientRectBottom = 484
     ClientRectRight = 1104
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 1104
       ExplicitHeight = 478
       inherited cxGrid: TcxGrid
         Width = 1104
-        Height = 478
+        Height = 460
         ExplicitWidth = 1104
         ExplicitHeight = 478
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -43,7 +43,6 @@ inherited ReturnInForm: TReturnInForm
             item
               Format = ',0.####'
               Kind = skSum
-              Column = colHeadCount
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -64,7 +63,6 @@ inherited ReturnInForm: TReturnInForm
             item
               Format = ',0.####'
               Kind = skSum
-              Column = colHeadCount
             end
             item
               Kind = skSum
@@ -145,6 +143,7 @@ inherited ReturnInForm: TReturnInForm
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 120
           end
           object colMeasureName: TcxGridDBColumn [6]
@@ -202,23 +201,7 @@ inherited ReturnInForm: TReturnInForm
             Options.Editing = False
             Width = 91
           end
-          object colHeadCount: TcxGridDBColumn [12]
-            Caption = #1050#1086#1083'. '#1075#1086#1083#1086#1074
-            DataBinding.FieldName = 'HeadCount'
-            Visible = False
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-          end
-          object colAssetName: TcxGridDBColumn [13]
-            Caption = #1054#1089#1085'.'#1089#1088#1077#1076#1089#1090#1074#1072' '
-            DataBinding.FieldName = 'AssetName'
-            Visible = False
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 65
-          end
-          object clPartionMovementName: TcxGridDBColumn [14]
+          object clPartionMovementName: TcxGridDBColumn [12]
             Caption = #1054#1089#1085#1086#1074#1072#1085#1080#1077
             DataBinding.FieldName = 'PartionMovementName'
             PropertiesClassName = 'TcxButtonEditProperties'
@@ -239,13 +222,15 @@ inherited ReturnInForm: TReturnInForm
     object cxTabSheetTaxCorrective: TcxTabSheet
       Caption = #1050#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1082#1080
       ImageIndex = 2
+      ExplicitHeight = 478
       object cxGridTaxCorrective: TcxGrid
         Left = 0
         Top = 0
         Width = 1104
-        Height = 478
+        Height = 460
         Align = alClient
         TabOrder = 0
+        ExplicitHeight = 478
         object cxGridTaxCorrectiveDBTableView: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = TaxCorrectiveDS
@@ -819,12 +804,12 @@ inherited ReturnInForm: TReturnInForm
       Width = 97
     end
     object cxLabel19: TcxLabel
-      Left = 8
+      Left = 269
       Top = 85
-      Caption = #1054#1089#1085#1086#1074#1072#1085#1080#1077
+      Caption = #1054#1089#1085#1086#1074#1072#1085#1080#1077' '#8470' ('#1087#1088#1086#1076#1072#1078#1072' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1102')'
     end
     object edInvNumberSale: TcxButtonEdit
-      Left = 8
+      Left = 269
       Top = 103
       Properties.Buttons = <
         item
@@ -833,26 +818,26 @@ inherited ReturnInForm: TReturnInForm
         end>
       Properties.ReadOnly = True
       TabOrder = 31
-      Width = 199
+      Width = 221
     end
     object cxLabel18: TcxLabel
-      Left = 425
+      Left = 496
       Top = 85
       Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
     end
     object ceComment: TcxTextEdit
-      Left = 425
+      Left = 496
       Top = 103
       TabOrder = 33
-      Width = 563
+      Width = 466
     end
     object cxLabel21: TcxLabel
-      Left = 212
+      Left = 8
       Top = 85
-      Caption = #1054#1089#1085#1086#1074#1072#1085#1080#1077' '#1074#1086#1079#1074#1088#1072#1090
+      Caption = #1054#1089#1085#1086#1074#1072#1085#1080#1077' '#8470' ('#1074#1086#1079#1074#1088#1072#1090' '#1087#1088#1086#1074#1077#1076#1077#1085' '#1082#1083#1072#1076#1086#1074#1097#1080#1082#1086#1084')'
     end
     object edInvNumberParent: TcxButtonEdit
-      Left = 212
+      Left = 8
       Top = 103
       Properties.Buttons = <
         item
@@ -861,7 +846,7 @@ inherited ReturnInForm: TReturnInForm
         end>
       Properties.ReadOnly = True
       TabOrder = 35
-      Width = 207
+      Width = 252
     end
   end
   object edDocumentTaxKind: TcxButtonEdit [2]
@@ -1122,6 +1107,7 @@ inherited ReturnInForm: TReturnInForm
           DataSet = PrintHeaderCDS
           UserName = 'frxDBDHeader'
         end>
+      CopiesCount = 1
       Params = <
         item
           Name = 'Id'
@@ -1157,6 +1143,7 @@ inherited ReturnInForm: TReturnInForm
           DataSet = PrintHeaderCDS
           UserName = 'frxDBDHeader'
         end>
+      CopiesCount = 1
       Params = <
         item
           Name = 'Id'
@@ -1215,6 +1202,7 @@ inherited ReturnInForm: TReturnInForm
           DataSet = PrintHeaderCDS
           UserName = 'frxDBDHeader'
         end>
+      CopiesCount = 1
       Params = <
         item
           Name = 'Id'
@@ -1795,8 +1783,8 @@ inherited ReturnInForm: TReturnInForm
     Top = 552
   end
   inherited StatusGuides: TdsdGuides
-    Left = 48
-    Top = 48
+    Left = 56
+    Top = 40
   end
   inherited spChangeStatus: TdsdStoredProc
     StoredProcName = 'gpUpdate_Status_ReturnIn'
@@ -2236,6 +2224,12 @@ inherited ReturnInForm: TReturnInForm
       end
       item
         Control = edCurrencyValue
+      end
+      item
+        Control = edInvNumberParent
+      end
+      item
+        Control = ceComment
       end>
     Left = 264
     Top = 209
@@ -2486,10 +2480,15 @@ inherited ReturnInForm: TReturnInForm
   end
   object RefreshDispatcher: TRefreshDispatcher
     IdParam.Value = Null
+    IdParam.Component = FormParams
+    IdParam.ComponentItem = 'Id'
     RefreshAction = actRefreshPrice
     ComponentList = <
       item
         Component = PriceListGuides
+      end
+      item
+        Component = ParentChoiceGuides
       end>
     Left = 464
     Top = 360
@@ -3202,8 +3201,8 @@ inherited ReturnInForm: TReturnInForm
         ComponentItem = 'TextValue'
         DataType = ftString
       end>
-    Left = 84
-    Top = 88
+    Left = 340
+    Top = 104
   end
   object ParentChoiceGuides: TdsdGuides
     KeyField = 'Id'
@@ -3235,8 +3234,52 @@ inherited ReturnInForm: TReturnInForm
         Value = ''
         Component = edInvNumber
         DataType = ftString
+      end
+      item
+        Name = 'OperDate'
+        Value = Null
+        Component = edOperDate
+        DataType = ftDateTime
+      end
+      item
+        Name = 'ToId'
+        Value = Null
+        Component = GuidesTo
+        ComponentItem = 'Key'
+      end
+      item
+        Name = 'ToName'
+        Value = Null
+        Component = GuidesTo
+        ComponentItem = 'TextValue'
+        DataType = ftString
+      end
+      item
+        Name = 'inStartDate'
+        Value = Null
+        Component = edOperDate
+        DataType = ftDateTime
+      end
+      item
+        Name = 'inEndDate'
+        Value = Null
+        Component = edOperDate
+        DataType = ftDateTime
+      end
+      item
+        Name = 'inPartnerId'
+        Value = Null
+        Component = GuidesFrom
+        ComponentItem = 'Key'
+      end
+      item
+        Name = 'inPartnerName'
+        Value = Null
+        Component = GuidesFrom
+        ComponentItem = 'TextValue'
+        DataType = ftString
       end>
-    Left = 284
-    Top = 88
+    Left = 124
+    Top = 104
   end
 end

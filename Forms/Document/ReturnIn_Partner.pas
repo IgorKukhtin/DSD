@@ -50,14 +50,11 @@ type
     colCode: TcxGridDBColumn;
     colName: TcxGridDBColumn;
     colGoodsKindName: TcxGridDBColumn;
-    colPartionGoods: TcxGridDBColumn;
     colAmount: TcxGridDBColumn;
     colAmountPartner: TcxGridDBColumn;
     colPrice: TcxGridDBColumn;
     colCountForPrice: TcxGridDBColumn;
     colAmountSumm: TcxGridDBColumn;
-    colHeadCount: TcxGridDBColumn;
-    colAssetName: TcxGridDBColumn;
     actTaxJournalChoice: TOpenChoiceForm;
     N2: TMenuItem;
     N3: TMenuItem;
@@ -139,6 +136,8 @@ type
     cxLabel18: TcxLabel;
     ceComment: TcxTextEdit;
     actGoodsChoice: TOpenChoiceForm;
+    edInvNumberSale: TcxButtonEdit;
+    cxLabel19: TcxLabel;
   private
     { Private declarations }
   public

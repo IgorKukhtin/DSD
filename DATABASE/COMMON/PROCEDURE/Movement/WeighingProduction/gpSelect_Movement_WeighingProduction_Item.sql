@@ -62,6 +62,8 @@ BEGIN
              , CASE WHEN Movement_Parent.StatusId = zc_Enum_Status_Complete()
                          THEN Movement_Parent.InvNumber
                     WHEN Movement_Parent.StatusId = zc_Enum_Status_UnComplete()
+                         THEN '***' || Movement_Parent.InvNumber
+                    WHEN Movement_Parent.StatusId = zc_Enum_Status_Erased()
                          THEN '*' || Movement_Parent.InvNumber
                     ELSE ''
                END :: TVarChar AS InvNumber_parent

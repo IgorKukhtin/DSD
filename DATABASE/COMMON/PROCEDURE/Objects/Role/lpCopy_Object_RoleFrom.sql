@@ -62,15 +62,20 @@ $BODY$
  02.07.15                                         *
 */
 /*
- select tmp.Id AS FromId, 442930 AS toId
+ select tmp.Id AS FromId, tmp.*
      , lpCopy_Object_RoleFrom (inRoleId_from := tmp.Id , inRoleId_to := 442930 , inSession := zfCalc_UserAdmin()) -- Накладные полный доступ ГП - Вергуленко В.И.
  from gpSelect_Object_UserRole (zfCalc_UserAdmin()) as tmp
  where tmp.UserId = 81238 -- Вергуленко В.И.
 
- select tmp.Id AS FromId, 442930 AS toId
+ select tmp.Id AS FromId, tmp.*
      , lpCopy_Object_RoleFrom (inRoleId_from := tmp.Id , inRoleId_to := 419508  , inSession := zfCalc_UserAdmin()) -- Экономиист Хохлова К.
  from gpSelect_Object_UserRole (zfCalc_UserAdmin()) as tmp
  where tmp.UserId = 128491 -- Хохлова Е.Ю.
+ 
+ select tmp.Id AS FromId, tmp.*
+     , lpCopy_Object_RoleFrom (inRoleId_from := tmp.Id , inRoleId_to := 442931  , inSession := zfCalc_UserAdmin()) -- Экономиист Хохлова К.
+ from gpSelect_Object_UserRole (zfCalc_UserAdmin()) as tmp
+ where tmp.UserId = 80830 -- Кисличная Т.А.
 
 
    -- !!!!DELETE ROLE!!! у ПОЛЬЗОВАТЕЛЯ

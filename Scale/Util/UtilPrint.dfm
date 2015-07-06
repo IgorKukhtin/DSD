@@ -338,6 +338,11 @@ object UtilPrintForm: TUtilPrintForm
       item
         Name = 'ReportType'
         Value = Null
+      end
+      item
+        Name = 'EDIEventsName'
+        Value = Null
+        DataType = ftString
       end>
     Left = 40
     Top = 16
@@ -448,6 +453,7 @@ object UtilPrintForm: TUtilPrintForm
           UserName = 'frxDBDMaster'
           IndexFieldNames = 'GroupName_Juridical;GoodsName_Juridical;GoodsName;GoodsKindName'
         end>
+      CopiesCount = 1
       Params = <
         item
           Name = 'Id'
@@ -496,6 +502,7 @@ object UtilPrintForm: TUtilPrintForm
             'goodsgroupname;GroupName_Juridical;GoodsName_Juridical;GoodsName' +
             ';GoodsKindName'
         end>
+      CopiesCount = 1
       Params = <
         item
           Name = 'Id'
@@ -526,6 +533,7 @@ object UtilPrintForm: TUtilPrintForm
           UserName = 'frxDBDMaster'
           IndexFieldNames = 'GroupName_Juridical;GoodsName_Juridical;GoodsName;GoodsKindName'
         end>
+      CopiesCount = 1
       Params = <
         item
           Name = 'Id'
@@ -584,6 +592,7 @@ object UtilPrintForm: TUtilPrintForm
           DataSet = PrintItemsCDS
           UserName = 'frxDBDMaster'
         end>
+      CopiesCount = 1
       Params = <
         item
           Name = 'Id'
@@ -645,6 +654,7 @@ object UtilPrintForm: TUtilPrintForm
           DataSet = PrintItemsCDS
           UserName = 'frxDBDMaster'
         end>
+      CopiesCount = 1
       Params = <
         item
           Name = 'Id'
@@ -705,6 +715,7 @@ object UtilPrintForm: TUtilPrintForm
           DataSet = PrintItemsCDS
           UserName = 'frxDBDMaster'
         end>
+      CopiesCount = 1
       Params = <
         item
           Name = 'Id'
@@ -757,6 +768,7 @@ object UtilPrintForm: TUtilPrintForm
           DataSet = PrintItemsSverkaCDS
           UserName = 'frxDBDSverka'
         end>
+      CopiesCount = 1
       Params = <
         item
           Name = 'Id'
@@ -809,6 +821,7 @@ object UtilPrintForm: TUtilPrintForm
           DataSet = PrintItemsSverkaCDS
           UserName = 'frxDBDSverka'
         end>
+      CopiesCount = 1
       Params = <
         item
           Name = 'Id'
@@ -844,6 +857,7 @@ object UtilPrintForm: TUtilPrintForm
             'WeighingNumber;GoodsGroupNameFull;GoodsName_two;GoodsKindName;Nu' +
             'mOrder'
         end>
+      CopiesCount = 1
       Params = <
         item
           Name = 'Id'
@@ -874,6 +888,7 @@ object UtilPrintForm: TUtilPrintForm
           UserName = 'frxDBDMaster'
           IndexFieldNames = 'WeighingNumber;BoxNumber;NumOrder'
         end>
+      CopiesCount = 1
       Params = <
         item
           Name = 'Id'
@@ -916,6 +931,7 @@ object UtilPrintForm: TUtilPrintForm
           DataSet = PrintItemsCDS
           UserName = 'frxDBDMaster'
         end>
+      CopiesCount = 1
       Params = <
         item
           Name = 'Id'
@@ -950,8 +966,21 @@ object UtilPrintForm: TUtilPrintForm
     end
     object mactInvoice: TMultiAction
       Category = 'EDI'
-      MoveParams = <>
+      MoveParams = <
+        item
+          FromParam.Name = 'EDIEventsName'
+          FromParam.Value = 'zc_MovementBoolean_EdiInvoice'
+          FromParam.DataType = ftString
+          ToParam.Name = 'EDIEventsName'
+          ToParam.Value = Null
+          ToParam.Component = FormParams
+          ToParam.ComponentItem = 'EDIEventsName'
+          ToParam.DataType = ftString
+        end>
       ActionList = <
+        item
+          Action = actEDIEvents
+        end
         item
           Action = actSetDefaults
         end
@@ -969,8 +998,21 @@ object UtilPrintForm: TUtilPrintForm
     end
     object mactOrdSpr: TMultiAction
       Category = 'EDI'
-      MoveParams = <>
+      MoveParams = <
+        item
+          FromParam.Name = 'EDIEventsName'
+          FromParam.Value = 'zc_MovementBoolean_EdiOrdSpr'
+          FromParam.DataType = ftString
+          ToParam.Name = 'EDIEventsName'
+          ToParam.Value = Null
+          ToParam.Component = FormParams
+          ToParam.ComponentItem = 'EDIEventsName'
+          ToParam.DataType = ftString
+        end>
       ActionList = <
+        item
+          Action = actEDIEvents
+        end
         item
           Action = actSetDefaults
         end
@@ -988,8 +1030,21 @@ object UtilPrintForm: TUtilPrintForm
     end
     object mactDesadv: TMultiAction
       Category = 'EDI'
-      MoveParams = <>
+      MoveParams = <
+        item
+          FromParam.Name = 'EDIEventsName'
+          FromParam.Value = 'zc_MovementBoolean_EdiDesadv'
+          FromParam.DataType = ftString
+          ToParam.Name = 'EDIEventsName'
+          ToParam.Value = Null
+          ToParam.Component = FormParams
+          ToParam.ComponentItem = 'EDIEventsName'
+          ToParam.DataType = ftString
+        end>
       ActionList = <
+        item
+          Action = actEDIEvents
+        end
         item
           Action = actSetDefaults
         end
@@ -1060,6 +1115,17 @@ object UtilPrintForm: TUtilPrintForm
         end>
       Caption = 'actSetDefaults'
     end
+    object actEDIEvents: TdsdExecStoredProc
+      Category = 'EDI'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spEDIEvents
+      StoredProcList = <
+        item
+          StoredProc = spEDIEvents
+        end>
+      Caption = 'actSetDefaults'
+    end
     object actPrint_QualityDoc: TdsdPrintAction
       Category = 'Print_QualityDoc'
       MoveParams = <>
@@ -1082,6 +1148,7 @@ object UtilPrintForm: TUtilPrintForm
           UserName = 'frxDBDMaster2'
           IndexFieldNames = 'QualityCode;GoodsGroupName;GoodsName;GoodsKindName'
         end>
+      CopiesCount = 1
       Params = <
         item
           Name = 'Id'
@@ -1123,6 +1190,7 @@ object UtilPrintForm: TUtilPrintForm
           DataSet = PrintItemsCDS
           UserName = 'frxDBDMaster'
         end>
+      CopiesCount = 1
       Params = <
         item
           Name = 'Id'
@@ -1164,6 +1232,7 @@ object UtilPrintForm: TUtilPrintForm
           DataSet = PrintItemsCDS
           UserName = 'frxDBDMaster'
         end>
+      CopiesCount = 1
       Params = <
         item
           Name = 'Id'
@@ -1198,6 +1267,7 @@ object UtilPrintForm: TUtilPrintForm
           DataSet = PrintItemsCDS
           UserName = 'frxDBDMaster'
         end>
+      CopiesCount = 1
       Params = <
         item
           Name = 'Id'
@@ -1231,6 +1301,7 @@ object UtilPrintForm: TUtilPrintForm
           DataSet = PrintItemsCDS
           UserName = 'frxDBDMaster'
         end>
+      CopiesCount = 1
       Params = <
         item
           Name = 'Id'
@@ -1264,6 +1335,7 @@ object UtilPrintForm: TUtilPrintForm
           DataSet = PrintItemsCDS
           UserName = 'frxDBDMaster'
         end>
+      CopiesCount = 1
       Params = <
         item
           Name = 'Id'
@@ -1297,6 +1369,7 @@ object UtilPrintForm: TUtilPrintForm
           DataSet = PrintItemsCDS
           UserName = 'frxDBDMaster'
         end>
+      CopiesCount = 1
       Params = <
         item
           Name = 'Id'
@@ -1331,6 +1404,7 @@ object UtilPrintForm: TUtilPrintForm
           UserName = 'frxDBDMaster'
           IndexFieldNames = 'GoodsGroupNameFull;GoodsName'
         end>
+      CopiesCount = 1
       Params = <
         item
           Name = 'Id'
@@ -1676,5 +1750,34 @@ object UtilPrintForm: TUtilPrintForm
     PackSize = 1
     Left = 351
     Top = 528
+  end
+  object spEDIEvents: TdsdStoredProc
+    StoredProcName = 'gpInsertUpdate_Object_EDIEvents'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'ioId'
+        Value = 0
+        ParamType = ptInputOutput
+      end
+      item
+        Name = 'inCode'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inName'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'EDIEventsName'
+        DataType = ftString
+        ParamType = ptInput
+      end>
+    PackSize = 1
+    Left = 576
+    Top = 352
   end
 end

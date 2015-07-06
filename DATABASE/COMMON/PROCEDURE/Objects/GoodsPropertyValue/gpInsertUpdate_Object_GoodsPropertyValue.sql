@@ -24,6 +24,47 @@ $BODY$
    -- проверка прав пользователя на вызов процедуры
    vbUserId:= lpCheckRight(inSession, zc_Enum_Process_InsertUpdate_Object_GoodsPropertyValue());
 
+
+   -- !!!ЗАХАРДКОДИЛ ВООБЩЕ ВРЕМЕННО!!!
+   IF (inGoodsPropertyId = 83955 AND inGoodsId = 2507 AND inGoodsKindId = 8329) OR ioId = 109684 -- select * from gpGet_Object_GoodsPropertyValue (inId := 109684 ,  inSession := '5') where GoodsPropertyId = 83955 AND GoodsId = 2507 AND GoodsKindId = 8329
+   THEN
+       CREATE TEMP TABLE _tmpBAD_HARKOD (tmp Integer) ON COMMIT DROP;
+       INSERT INTO _tmpBAD_HARKOD (tmp)
+       WITH tmpGoodsProperty AS (SELECT Object_GoodsProperty.Id            AS GoodsPropertyId
+                                      , ObjectFloat_StartPosInt.ValueData  AS StartPosInt
+                                 FROM Object AS Object_GoodsProperty
+                                      INNER JOIN ObjectFloat AS ObjectFloat_StartPosInt
+                                                             ON ObjectFloat_StartPosInt.ObjectId = Object_GoodsProperty.Id
+                                                            AND ObjectFloat_StartPosInt.DescId = zc_ObjectFloat_GoodsProperty_StartPosInt()
+                                 WHERE Object_GoodsProperty.DescId = zc_Object_GoodsProperty()
+                                )
+           , tmpGoodsPropertyValue AS (SELECT ObjectLink_GoodsPropertyValue_GoodsProperty.ObjectId
+                                            , tmpGoodsProperty.StartPosInt
+                                            , ObjectString_BarCode.ValueData
+                                            , CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh()
+                                                        THEN zfFormat_BarCodeShort (ObjectString_BarCode.ValueData)
+                                                   ELSE zfFormat_BarCodeShort (SUBSTRING (ObjectString_BarCode.ValueData FROM 1 FOR (tmpGoodsProperty.StartPosInt - 1) :: Integer))
+                                              END AS Value
+                                       FROM tmpGoodsProperty
+                                            INNER JOIN ObjectLink AS ObjectLink_GoodsPropertyValue_GoodsProperty
+                                                                  ON ObjectLink_GoodsPropertyValue_GoodsProperty.ChildObjectId = tmpGoodsProperty.GoodsPropertyId
+                                                                 AND ObjectLink_GoodsPropertyValue_GoodsProperty.DescId = zc_ObjectLink_GoodsPropertyValue_GoodsProperty()
+                                            LEFT JOIN ObjectString AS ObjectString_BarCode
+                                                                    ON ObjectString_BarCode.ObjectId = ObjectLink_GoodsPropertyValue_GoodsProperty.ObjectId
+                                                                   -- AND ObjectString_BarCode.ValueData <> ''
+                                                                   AND ObjectString_BarCode.DescId = zc_ObjectString_GoodsPropertyValue_BarCode()
+                                            LEFT JOIN ObjectLink AS ObjectLink_Goods
+                                                                 ON ObjectLink_Goods.ObjectId = ObjectLink_GoodsPropertyValue_GoodsProperty.ObjectId
+                                                                AND ObjectLink_Goods.DescId = zc_ObjectLink_GoodsPropertyValue_Goods()
+                                            LEFT JOIN ObjectLink AS ObjectLink_Goods_Measure
+                                                                 ON ObjectLink_Goods_Measure.ObjectId = ObjectLink_Goods.ChildObjectId
+                                                                AND ObjectLink_Goods_Measure.DescId = zc_ObjectLink_Goods_Measure()
+                                      )
+         SELECT lpInsertUpdate_ObjectString (zc_ObjectString_GoodsPropertyValue_BarCodeShort(), tmpGoodsPropertyValue.ObjectId, tmpGoodsPropertyValue.Value) :: Integer
+         FROM tmpGoodsPropertyValue;
+   END IF;
+
+
    -- проверка
    IF COALESCE (inGoodsPropertyId, 0) = 0
    THEN

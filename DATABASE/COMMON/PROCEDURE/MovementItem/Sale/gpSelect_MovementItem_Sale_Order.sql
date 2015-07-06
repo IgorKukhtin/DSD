@@ -33,6 +33,18 @@ BEGIN
      -- находим заявку
      vbMovementId_order:= (SELECT MLM_Order.MovementChildId FROM MovementLinkMovement AS MLM_Order WHERE MLM_Order.MovementId = inMovementId AND MLM_Order.DescId = zc_MovementLinkMovement_Order());
      -- меняется параметр
+     IF inShowAll = TRUE AND vbMovementId_order > 0
+     THEN
+         inShowAll:= FALSE;
+     ELSE
+         IF inShowAll = TRUE
+         THEN
+             inShowAll:= inMovementId <> 0; -- AND NOT EXISTS (SELECT MovementId FROM MovementLinkMovement WHERE MovementId = inMovementId AND DescId = zc_MovementLinkMovement_Order() AND MovementChildId <> 0);
+         END IF;
+     END IF;
+
+
+     -- меняется параметр
      -- !!!замена!!!
      SELECT tmp.PriceListId, tmp.OperDate
             INTO inPriceListId, inOperDate
@@ -50,12 +62,6 @@ BEGIN
                                                , inDayPrior_PriceReturn:= 0 -- !!!параметр здесь не важен!!!
                                                , inIsPrior        := FALSE -- !!!параметр здесь не важен!!!
                                                 ) AS tmp;
-
-     -- меняется параметр
-     IF inShowAll = TRUE
-     THEN
-         inShowAll:= inMovementId <> 0; -- AND NOT EXISTS (SELECT MovementId FROM MovementLinkMovement WHERE MovementId = inMovementId AND DescId = zc_MovementLinkMovement_Order() AND MovementChildId <> 0);
-     END IF;
 
 
      IF inShowAll = TRUE

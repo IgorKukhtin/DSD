@@ -8773,6 +8773,7 @@ procedure TMainForm.pLoadGuide_GoodsPropertyValue;
         Add('     , trim(GoodsProperty_Detail.GoodsName_Client) as ObjectName4');
         Add('     , case when is4=zc_rvNo() then cast (null as TSumm) when GoodsProperty.MeasureId = zc_measure_Sht() then SUBSTR(GoodsProperty_Detail.GoodsCodeScaner_byMain,15,2) else cast (null as TSumm) end as Amount4');
         Add('     , case when length (GoodsProperty_Detail.GoodsCodeScaner_byMain)>=13 then SUBSTR(GoodsProperty_Detail.GoodsCodeScaner_byMain,1,13)'
+           +'            when length (GoodsProperty_Detail.GoodsCodeScaner_byMain)=8 then GoodsProperty_Detail.GoodsCodeScaner_byMain+'+FormatToVarCharServer_notNULL('00000')
 //           +'            when length (GoodsProperty_Detail.Code_byTavriya)>=13 then SUBSTR(GoodsProperty_Detail.Code_byTavriya,1,13)'
   //         +'            when length (GoodsProperty_Detail.GoodsCodeScaner_byMain)=4 then '+FormatToVarCharServer_notNULL('250')+' + GoodsProperty_Detail.GoodsCodeScaner_byMain+'+FormatToVarCharServer_notNULL('000000')
     //       +'            when length (GoodsProperty_Detail.GoodsCodeScaner_byMain)=5 then '+FormatToVarCharServer_notNULL('25')+' + GoodsProperty_Detail.GoodsCodeScaner_byMain+'+FormatToVarCharServer_notNULL('000000')
@@ -17184,6 +17185,7 @@ begin
         toStoredProc.Params.AddParam ('inInvNumber',ftString,ptInput, '');
         toStoredProc.Params.AddParam ('inInvNumberPartner',ftString,ptInput, '');
         toStoredProc.Params.AddParam ('inInvNumberMark',ftString,ptInput, '');
+        toStoredProc.Params.AddParam ('inParentId',ftInteger,ptInput, 0);
         toStoredProc.Params.AddParam ('inOperDate',ftDateTime,ptInput, '');
         toStoredProc.Params.AddParam ('inOperDatePartner',ftDateTime,ptInput, '');
 
@@ -17199,6 +17201,8 @@ begin
         toStoredProc.Params.AddParam ('inContractId',ftInteger,ptInput, 0);
         toStoredProc.Params.AddParam ('inCurrencyDocumentId',ftInteger,ptInput, 0);
         toStoredProc.Params.AddParam ('inCurrencyPartnerId',ftInteger,ptInput, 0);
+        toStoredProc.Params.AddParam ('inComment',ftString,ptInput, '');
+
 
         //
         while not EOF do
@@ -17554,6 +17558,7 @@ begin
         toStoredProc.Params.AddParam ('inInvNumber',ftString,ptInput, '');
         toStoredProc.Params.AddParam ('inInvNumberPartner',ftString,ptInput, '');
         toStoredProc.Params.AddParam ('inInvNumberMark',ftString,ptInput, '');
+        toStoredProc.Params.AddParam ('inParentId',ftInteger,ptInput, 0);
         toStoredProc.Params.AddParam ('inOperDate',ftDateTime,ptInput, '');
         toStoredProc.Params.AddParam ('inOperDatePartner',ftDateTime,ptInput, '');
 
@@ -17569,6 +17574,7 @@ begin
         toStoredProc.Params.AddParam ('inContractId',ftInteger,ptInput, 0);
         toStoredProc.Params.AddParam ('inCurrencyDocumentId',ftInteger,ptInput, 0);
         toStoredProc.Params.AddParam ('inCurrencyPartnerId',ftInteger,ptInput, 0);
+        toStoredProc.Params.AddParam ('inComment',ftString,ptInput, '');
 
         //
         while not EOF do
@@ -17933,6 +17939,7 @@ begin
         toStoredProc.Params.AddParam ('inInvNumber',ftString,ptInput, '');
         toStoredProc.Params.AddParam ('inInvNumberPartner',ftString,ptInput, '');
         toStoredProc.Params.AddParam ('inInvNumberMark',ftString,ptInput, '');
+        toStoredProc.Params.AddParam ('inParentId',ftInteger,ptInput, 0);
         toStoredProc.Params.AddParam ('inOperDate',ftDateTime,ptInput, '');
         toStoredProc.Params.AddParam ('inOperDatePartner',ftDateTime,ptInput, '');
 
@@ -17946,6 +17953,7 @@ begin
         toStoredProc.Params.AddParam ('inToId',ftInteger,ptInput, 0);
         toStoredProc.Params.AddParam ('inPaidKindId',ftInteger,ptInput, 0);
         toStoredProc.Params.AddParam ('inContractId',ftInteger,ptInput, 0);
+        toStoredProc.Params.AddParam ('inComment',ftString,ptInput, '');
 
         //
         while not EOF do

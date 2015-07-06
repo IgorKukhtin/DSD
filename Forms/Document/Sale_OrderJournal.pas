@@ -121,9 +121,9 @@ type
     spSelectPrint_TTN: TdsdStoredProc;
     actPrint_TTN: TdsdPrintAction;
     bbPrint_TTN: TdxBarButton;
-    clEdiOrdspr: TcxGridDBColumn;
-    clEdiInvoice: TcxGridDBColumn;
-    clEdiDesadv: TcxGridDBColumn;
+    EdiOrdspr: TcxGridDBColumn;
+    EdiInvoice: TcxGridDBColumn;
+    EdiDesadv: TcxGridDBColumn;
     spSelectPrint_Quality: TdsdStoredProc;
     actPrint_QualityDoc: TdsdPrintAction;
     bbPrint_Quality: TdxBarButton;

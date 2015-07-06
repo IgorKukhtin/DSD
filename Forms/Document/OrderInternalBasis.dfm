@@ -199,7 +199,6 @@ inherited OrderInternalBasisForm: TOrderInternalBasisForm
                 Kind = bkEllipsis
               end>
             Properties.ReadOnly = True
-            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
@@ -326,6 +325,24 @@ inherited OrderInternalBasisForm: TOrderInternalBasisForm
             Visible = False
             VisibleForCustomization = False
             Width = 55
+          end
+          object ReceiptCode: TcxGridDBColumn [19]
+            Caption = #1050#1086#1076' '#1088#1077#1094#1077#1087#1090'.'
+            DataBinding.FieldName = 'ReceiptCode'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 55
+          end
+          object ReceiptName: TcxGridDBColumn [20]
+            Caption = #1053#1072#1079#1074#1072#1085#1080#1077' '#1088#1077#1094#1077#1087#1090#1091#1088#1099
+            DataBinding.FieldName = 'ReceiptName'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 80
           end
           inherited colIsErased: TcxGridDBColumn
             HeaderAlignmentHorz = taCenter
@@ -502,9 +519,7 @@ inherited OrderInternalBasisForm: TOrderInternalBasisForm
         item
           DataSet = PrintItemsCDS
           UserName = 'frxDBDMaster'
-          IndexFieldNames = 
-            'UnitCode;GoodsGroupNameFull;GoodsName_basis;GoodsName;GoodsKindN' +
-            'ame'
+          IndexFieldNames = 'UnitCode;GoodsGroupNameFull;GoodsName;GoodsKindName'
         end>
       Params = <
         item
@@ -513,8 +528,8 @@ inherited OrderInternalBasisForm: TOrderInternalBasisForm
           Component = FormParams
           ComponentItem = 'Id'
         end>
-      ReportName = #1047#1072#1103#1074#1082#1072' '#1089#1099#1088#1100#1077
-      ReportNameParam.Value = #1047#1072#1103#1074#1082#1072' '#1089#1099#1088#1100#1077
+      ReportName = #1047#1072#1103#1074#1082#1072' '#1085#1072' '#1089#1099#1088#1100#1077
+      ReportNameParam.Value = #1047#1072#1103#1074#1082#1072' '#1085#1072' '#1089#1099#1088#1100#1077
       ReportNameParam.ParamType = ptInput
     end
     inherited actUnCompleteMovement: TChangeGuidesStatus
@@ -1290,7 +1305,7 @@ inherited OrderInternalBasisForm: TOrderInternalBasisForm
     Top = 334
   end
   object spSelectPrint: TdsdStoredProc
-    StoredProcName = 'gpSelect_Movement_OrderInternalPack_Print'
+    StoredProcName = 'gpSelect_Movement_OrderInternalBasis_Print'
     DataSet = PrintHeaderCDS
     DataSets = <
       item
@@ -1421,7 +1436,7 @@ inherited OrderInternalBasisForm: TOrderInternalBasisForm
         ParamType = ptInput
       end
       item
-        Name = 'inUnitId'
+        Name = 'inFromId'
         Value = ''
         Component = GuidesFrom
         ComponentItem = 'Key'
@@ -1458,7 +1473,7 @@ inherited OrderInternalBasisForm: TOrderInternalBasisForm
         ParamType = ptInput
       end
       item
-        Name = 'inUnitId'
+        Name = 'inFromId'
         Value = ''
         Component = GuidesFrom
         ComponentItem = 'Key'

@@ -54,6 +54,7 @@ type
     clBusinessName: TcxGridDBColumn;
     actShowAll: TBooleanStoredProcAction;
     bbShowAll: TdxBarButton;
+    clGoodsGroupNameFull: TcxGridDBColumn;
   private
     { Private declarations }
   public

@@ -3,7 +3,7 @@ inherited ReturnInJournalForm: TReturnInJournalForm
   ClientHeight = 535
   ClientWidth = 1106
   ExplicitWidth = 1122
-  ExplicitHeight = 573
+  ExplicitHeight = 570
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -181,11 +181,11 @@ inherited ReturnInJournalForm: TReturnInJournalForm
             Width = 55
           end
           object colInvNumber_Parent: TcxGridDBColumn
-            Caption = #1054#1089#1085'.- '#1074#1086#1079#1074#1088'.'
+            Caption = #1054#1089#1085'. '#8470' ('#1074#1086#1079#1074#1088#1072#1090')'
             DataBinding.FieldName = 'InvNumber_Parent'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 61
+            Width = 70
           end
           object colDocumentTaxKindName: TcxGridDBColumn
             Caption = #1058#1080#1087' '#1085#1072#1083#1086#1075'. '#1076#1086#1082'.'
@@ -650,6 +650,7 @@ inherited ReturnInJournalForm: TReturnInJournalForm
           DataSet = PrintItemsCDS
           UserName = 'frxDBDMaster'
         end>
+      CopiesCount = 1
       Params = <
         item
           Name = 'Id'
@@ -741,6 +742,7 @@ inherited ReturnInJournalForm: TReturnInJournalForm
           DataSet = PrintHeaderCDS
           UserName = 'frxDBDHeader'
         end>
+      CopiesCount = 1
       Params = <
         item
           Name = 'Id'
@@ -773,6 +775,7 @@ inherited ReturnInJournalForm: TReturnInJournalForm
           DataSet = PrintHeaderCDS
           UserName = 'frxDBDHeader'
         end>
+      CopiesCount = 1
       Params = <
         item
           Name = 'Id'
@@ -808,6 +811,7 @@ inherited ReturnInJournalForm: TReturnInJournalForm
           DataSet = PrintHeaderCDS
           UserName = 'frxDBDHeader'
         end>
+      CopiesCount = 1
       Params = <
         item
           Name = 'Id'

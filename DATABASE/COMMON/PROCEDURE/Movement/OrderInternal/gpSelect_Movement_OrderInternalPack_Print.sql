@@ -96,8 +96,8 @@ BEGIN
                                         , MIContainer.ContainerId
                                 ) AS tmpMI
                                 LEFT JOIN ContainerLinkObject AS CLO_GoodsKindId
-                                                             ON CLO_GoodsKindId.ContainerId = tmpMI.ContainerId
-                                                            AND CLO_GoodsKindId.DescId = zc_ContainerLinkObject_GoodsKind()
+                                                              ON CLO_GoodsKindId.ContainerId = tmpMI.ContainerId
+                                                             AND CLO_GoodsKindId.DescId = zc_ContainerLinkObject_GoodsKind()
                             GROUP BY tmpMI.GoodsId
                                    , CLO_GoodsKindId.ObjectId
                           )

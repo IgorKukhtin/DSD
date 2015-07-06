@@ -96,6 +96,7 @@ BEGIN
                                       , inInvNumber         := CASE WHEN vbMovementId_ReturnIn <> 0 THEN (SELECT InvNumber FROM Movement WHERE Id = vbMovementId_ReturnIn) ELSE CAST (NEXTVAL ('movement_returnin_seq') AS TVarChar) END :: TVarChar
                                       , inInvNumberPartner  := MovementString_InvNumberPartner.ValueData
                                       , inInvNumberMark     := (SELECT ValueData FROM MovementString WHERE MovementId = vbMovementId_ReturnIn AND DescId = zc_MovementString_InvNumberMark()) :: TVarChar
+                                      , inParentId          := NULL
                                       , inOperDate          := MovementDate_OperDatePartner.ValueData
                                       , inOperDatePartner   := MovementDate_OperDatePartner.ValueData
                                       , inChecked           := (SELECT ValueData FROM MovementBoolean WHERE MovementId = vbMovementId_ReturnIn AND DescId = zc_MovementBoolean_Checked()) :: Boolean
@@ -112,6 +113,7 @@ BEGIN
                                       , inCurrencyDocumentId:= 14461 -- грн
                                       , inCurrencyPartnerId := NULL
                                       , inCurrencyValue     := NULL
+                                      , inComment           = ''
                                       , inUserId            := inUserId
                                        ) INTO vbMovementId_ReturnIn
      FROM Movement

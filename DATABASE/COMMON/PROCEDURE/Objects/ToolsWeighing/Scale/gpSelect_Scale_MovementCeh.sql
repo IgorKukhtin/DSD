@@ -54,7 +54,14 @@ BEGIN
 
              , Movement_Parent.Id                AS MovementId_parent
              , Movement_Parent.OperDate          AS OperDate_parent
-             , Movement_Parent.InvNumber         AS InvNumber_parent
+             , CASE WHEN Movement_Parent.StatusId = zc_Enum_Status_Complete()
+                         THEN Movement_Parent.InvNumber
+                    WHEN Movement_Parent.StatusId = zc_Enum_Status_UnComplete()
+                         THEN '***' || Movement_Parent.InvNumber
+                    WHEN Movement_Parent.StatusId = zc_Enum_Status_Erased()
+                         THEN '*' || Movement_Parent.InvNumber
+                    ELSE ''
+               END :: TVarChar AS InvNumber_parent
 
              , MovementDate_StartWeighing.ValueData  AS StartWeighing  
              , MovementDate_EndWeighing.ValueData    AS EndWeighing

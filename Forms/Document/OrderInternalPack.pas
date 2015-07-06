@@ -103,6 +103,13 @@ type
     Color_remainsChild_calc: TcxGridDBColumn;
     ReceiptCode: TcxGridDBColumn;
     ReceiptCode_code_basis: TcxGridDBColumn;
+    AmountSend_sh: TcxGridDBColumn;
+    AmountSend_Weight: TcxGridDBColumn;
+    Color_send: TcxGridDBColumn;
+    Percent_diff: TcxGridDBColumn;
+    Color_Percent_diff: TcxGridDBColumn;
+    ColorB_Percent_diff: TcxGridDBColumn;
+    isPercent_diff: TcxGridDBColumn;
   private
     { Private declarations }
   public

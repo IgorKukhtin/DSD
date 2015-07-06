@@ -18,6 +18,7 @@ $BODY$
   DECLARE vbAccountId_GoodsTransit Integer;
 
   DECLARE vbMovementDescId Integer;
+  DECLARE vbMovementId_parent Integer;
 
   DECLARE vbOperSumm_PriceList_byItem TFloat;
   DECLARE vbOperSumm_PriceList TFloat;
@@ -102,7 +103,7 @@ BEGIN
 
      -- Эти параметры нужны для 
      SELECT lfObject_PriceList.PriceWithVAT, lfObject_PriceList.VATPercent
-       INTO vbPriceWithVAT_PriceList, vbVATPercent_PriceList
+            INTO vbPriceWithVAT_PriceList, vbVATPercent_PriceList
      FROM lfGet_Object_PriceList (zc_PriceList_Basis()) AS lfObject_PriceList;
 
 
@@ -113,6 +114,7 @@ BEGIN
           , CASE WHEN COALESCE (MovementFloat_ChangePercent.ValueData, 0) > 0 THEN MovementFloat_ChangePercent.ValueData ELSE 0 END AS ExtraChargesPercent
 
           , Movement.DescId                                                      AS MovementDescId
+          , COALESCE (Movement.ParentId, 0)                                      AS MovementId_parent
           , Movement.OperDate                                                    AS OperDate -- COALESCE (MovementDate_OperDatePartner.ValueData, Movement.OperDate)
           , COALESCE (MovementDate_OperDatePartner.ValueData, Movement.OperDate) AS OperDatePartner
 
@@ -171,7 +173,7 @@ BEGIN
           , COALESCE (CASE WHEN Object_To.DescId = zc_Object_Unit() THEN ObjectLink_UnitTo_Business.ChildObjectId WHEN Object_To.DescId = zc_Object_Personal() THEN ObjectLink_UnitPersonalTo_Business.ChildObjectId ELSE 0 END, 0) AS BusinessId_To
 
             INTO vbPriceWithVAT, vbVATPercent, vbDiscountPercent, vbExtraChargesPercent
-               , vbMovementDescId, vbOperDate, vbOperDatePartner
+               , vbMovementDescId, vbMovementId_parent, vbOperDate, vbOperDatePartner
                , vbJuridicalId_From, vbIsCorporate_From, vbInfoMoneyId_CorporateFrom, vbPartnerId_From , vbMemberId_From, vbInfoMoneyId_From
                , vbUnitId_To, vbMemberId_To, vbBranchId_To, vbIsPartionDoc_Branch, vbAccountDirectionId_To, vbIsPartionDate_Unit, vbUnitId_HistoryCost
                , vbJuridicalId_To, vbPartnerId_To, vbPaidKindId_To, vbContractId_To, vbInfoMoneyId_To
@@ -566,7 +568,33 @@ BEGIN
                                          -- OR !!! НАЛ !!!
                                            )
      THEN
-         RAISE EXCEPTION 'Ошибка.В документе не определен <Договор>.Проведение невозможно.';
+         RAISE EXCEPTION 'Ошибка.В документе не установлено значение <Договор>.Проведение невозможно.';
+     END IF;
+
+
+     -- !!! только НЕ для Админа проверка что ParentId заполнен!!!
+     IF inUserId <> 5 AND vbMovementId_parent = 0 AND NOT EXISTS (SELECT OperCount FROM _tmpItem WHERE OperCount <> 0 LIMIT 1)
+     THEN
+         RAISE EXCEPTION 'Ошибка.В документе не установлено значение <Основание № (возврат проведен кладовщиком)>. Проведение невозможно.';
+     END IF;
+     IF vbMovementId_parent = inMovementId
+     THEN
+         RAISE EXCEPTION 'Ошибка.В документе значение <Основание № (возврат проведен кладовщиком)> должно отличаться от текущего. Проведение невозможно.';
+     END IF;
+     IF vbMovementId_parent <> 0
+     THEN
+         -- проверка даты 
+         IF vbOperDate <> (SELECT Movement.OperDate FROM Movement WHERE Movement.Id = vbMovementId_parent)
+         THEN RAISE EXCEPTION 'Ошибка.%Значение <Дата (склад)> должно соответствовать значению <%>%из документа <Основание № (возврат проведен кладовщиком)>.%Проведение невозможно.', CHR(13), DATE ((SELECT Movement.OperDate FROM Movement WHERE Movement.Id = vbMovementId_parent)), CHR(13), CHR(13);
+         END IF;
+         -- проверка "От Кого"
+         IF vbPartnerId_From <> COALESCE ((SELECT MLO_From.ObjectId FROM MovementLinkObject AS MLO_From WHERE MLO_From.MovementId = vbMovementId_parent AND MLO_From.DescId = zc_MovementLinkObject_From()), 0)
+         THEN RAISE EXCEPTION 'Ошибка.%Значение <От кого> должно соответствовать значению <%>%из документа <Основание № (возврат проведен кладовщиком)>.%Проведение невозможно.', CHR(13), lfGet_Object_ValueData ((SELECT MLO_From.ObjectId FROM MovementLinkObject AS MLO_From WHERE MLO_From.MovementId = vbMovementId_parent AND MLO_From.DescId = zc_MovementLinkObject_From())), CHR(13), CHR(13);
+         END IF;
+         -- проверка "Кому"
+         IF vbUnitId_To <> COALESCE ((SELECT MLO_To.ObjectId FROM MovementLinkObject AS MLO_To WHERE MLO_To.MovementId = vbMovementId_parent AND MLO_To.DescId = zc_MovementLinkObject_To()), 0)
+         THEN RAISE EXCEPTION 'Ошибка.%Значение <Кому> должно соответствовать значению <%>%из документа <Основание № (возврат проведен кладовщиком)>.%Проведение невозможно.', CHR(13), lfGet_Object_ValueData ((SELECT MLO_To.ObjectId FROM MovementLinkObject AS MLO_To WHERE MLO_To.MovementId = vbMovementId_parent AND MLO_To.DescId = zc_MovementLinkObject_To())), CHR(13), CHR(13);
+         END IF;
      END IF;
 
 

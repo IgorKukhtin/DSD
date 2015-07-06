@@ -53,7 +53,7 @@ BEGIN
           , COALESCE (CASE WHEN Object_From.DescId = zc_Object_Personal() THEN ObjectLink_PersonalFrom_Member.ChildObjectId ELSE 0 END, 0) AS MemberId_From
           , COALESCE (CASE WHEN Object_From.DescId = zc_Object_Unit() THEN ObjectLink_UnitFrom_Branch.ChildObjectId ELSE 0 END, 0) AS BranchId_From
           , COALESCE (ObjectLink_UnitFrom_AccountDirection.ChildObjectId, 0) AS AccountDirectionId_From -- Аналитики счетов - направления !!!нужны только для подразделения!!!
-          , COALESCE (ObjectBoolean_PartionDate_From.ValueData, FALSE) AS vbIsPartionDate_Unit_From
+          , COALESCE (ObjectBoolean_PartionDate_From.ValueData, FALSE) AS isPartionDate_Unit_From
           , COALESCE (CASE WHEN Object_From.DescId = zc_Object_Unit() THEN ObjectLink_UnitFrom_Juridical.ChildObjectId WHEN Object_From.DescId = zc_Object_Personal() THEN ObjectLink_UnitPersonalFrom_Juridical.ChildObjectId ELSE 0 END, 0) AS JuridicalId_Basis_From
           , COALESCE (CASE WHEN Object_From.DescId = zc_Object_Unit() THEN ObjectLink_UnitFrom_Business.ChildObjectId WHEN Object_From.DescId = zc_Object_Personal() THEN ObjectLink_UnitPersonalFrom_Business.ChildObjectId ELSE 0 END, 0) AS BusinessId_From
 
@@ -273,6 +273,16 @@ BEGIN
                 AND Movement.DescId = zc_Movement_ProductionUnion()
                 AND Movement.StatusId IN (zc_Enum_Status_UnComplete(), zc_Enum_Status_Erased())
              ) AS _tmp;
+
+
+     -- !!!Важно: перед заполннением таблицы - количественные Child(расход)-элементы документа!!!
+     IF vbIsPartionDate_Unit_From = TRUE AND vbIsPartionDate_Unit_To = FALSE
+     THEN -- Расход партий П/Ф (ГП) по Рецептуре
+          PERFORM lpComplete_Movement_ProductionUnion_Partion (inMovementId:= inMovementId
+                                                             , inFromId    := vbUnitId_From
+                                                             , inUserId    := inUserId
+                                                              );
+     END IF;
 
 
      -- заполняем таблицу - количественные Child(расход)-элементы документа, со всеми свойствами для формирования Аналитик в проводках
@@ -869,6 +879,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 05.07.15                                        * add lpComplete_Movement_ProductionUnion_Partion
  03.05.15                                        * set lp
  17.08.14                                        * add MovementDescId
  13.08.14                                        * add lpInsertUpdate_MIReport_byTable
