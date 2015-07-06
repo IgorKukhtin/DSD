@@ -471,7 +471,7 @@ BEGIN
                                                           , inCurrencyDocumentId:= 14461 -- грн
                                                           , inCurrencyPartnerId := NULL
                                                           , inCurrencyValue     := NULL
-                                                          , inComment           = ''
+                                                          , inComment           := ''
                                                           , inUserId := vbUserId) AS tmp;
 
           -- сохранили свойство <Загружен из 1С>
