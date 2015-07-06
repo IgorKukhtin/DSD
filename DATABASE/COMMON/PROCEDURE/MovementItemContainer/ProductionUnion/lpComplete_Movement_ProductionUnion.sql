@@ -276,7 +276,7 @@ BEGIN
 
 
      -- !!!Важно: перед заполннением таблицы - количественные Child(расход)-элементы документа!!!
-     IF vbIsPartionDate_Unit_From = TRUE AND vbIsPartionDate_Unit_To = FALSE
+     IF vbIsPartionDate_Unit_From = TRUE AND vbIsPartionDate_Unit_To = FALSE AND vbOperDate >= '01.07.2015'
      THEN -- Расход партий П/Ф (ГП) по Рецептуре
           PERFORM lpComplete_Movement_ProductionUnion_Partion (inMovementId:= inMovementId
                                                              , inFromId    := vbUnitId_From

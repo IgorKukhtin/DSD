@@ -29,10 +29,10 @@ BEGIN
 
      -- определяется
      SELECT Movement.OperDate
-          , MovementLinkObject_From.ObjectId
-          , MovementLinkObject_To.ObjectId
           , 1 + EXTRACT (DAY FROM (MovementDate_OperDateEnd.ValueData - MovementDate_OperDateStart.ValueData))
           , EXTRACT (MONTH FROM (Movement.OperDate + INTERVAL '1 DAY'))
+          , MovementLinkObject_From.ObjectId
+          , MovementLinkObject_To.ObjectId
             INTO vbOperDate, vbDayCount, vbMonth, vbFromId, vbToId
      FROM Movement
           LEFT JOIN MovementLinkObject AS MovementLinkObject_From
@@ -80,7 +80,7 @@ BEGIN
                                                     ELSE 0
                                                END
                                               ) AS GoodsKindId_complete
-                                   , COALESCE (MILinkObject_Receipt.ObjectId, 0)           AS ReceiptId
+                                   , CASE WHEN inShowAll = TRUE THEN COALESCE (MILinkObject_Receipt.ObjectId, 0) ELSE 0 END AS ReceiptId
                                    , COALESCE (MILinkObject_ReceiptBasis.ObjectId, 0)      AS ReceiptId_basis
 
                                    , MovementItem.Amount                                   AS Amount
@@ -171,9 +171,7 @@ BEGIN
                                    LEFT JOIN ObjectFloat AS ObjectFloat_TaxLoss
                                                          ON ObjectFloat_TaxLoss.ObjectId = MILinkObject_Receipt.ObjectId
                                                         AND ObjectFloat_TaxLoss.DescId = zc_ObjectFloat_Receipt_TaxLoss()
-
                              ;
-
 
      -- 
      CREATE TEMP TABLE _tmpMI_child (MovementItemId Integer, GoodsId Integer, GoodsKindId Integer, GoodsKindId_complete Integer, PartionGoodsDate TDateTime, ContainerId Integer, Amount TFloat) ON COMMIT DROP;

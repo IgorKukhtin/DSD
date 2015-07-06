@@ -14,12 +14,15 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
               )
 AS
 $BODY$
+  DECLARE vbUserId Integer;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      -- PERFORM lpCheckRight(inSession, zc_Enum_Process_Select_Object_Goods());
+     vbUserId:= lpGetUserBySession (inSession);
+
 
    RETURN QUERY
-     WITH tmpIsErased AS (SELECT FALSE AS isErased UNION ALL SELECT inShowAll AS isErased WHERE inShowAll = TRUE)
+     WITH tmpIsErased AS (SELECT FALSE AS isErased UNION ALL SELECT inShowAll AS isErased WHERE inShowAll = TRUE AND NOT EXISTS (SELECT 1 FROM Object_RoleAccessKey_View WHERE Object_RoleAccessKey_View.UserId = vbUserId AND Object_RoleAccessKey_View.AccessKeyId = zc_Enum_Process_AccessKey_GuideTech()))
      SELECT
            Object_Goods.Id          AS Id
          , Object_Goods.ObjectCode  AS Code

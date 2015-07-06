@@ -159,6 +159,13 @@ BEGIN
      END IF;
 
 
+     -- проверка
+     IF COALESCE (vbPartnerId, 0) = 0
+     THEN
+         RAISE EXCEPTION 'Ошибка.Не найден Контрагент со значением <GLN точки доставки> = <%> в документе EDI № <%> от <%> .', (SELECT MovementString.ValueData FROM MovementString WHERE MovementString.MovementId = inMovementId AND MovementString.DescId = zc_MovementString_GLNPlaceCode()), (SELECT InvNumber FROM Movement WHERE Id = inMovementId), DATE ((SELECT OperDate FROM Movement WHERE Id = inMovementId));
+     END IF;
+
+
      -- находим, если его набирали вручную (т.е. у заявки нет связи с EDI)
      IF COALESCE (vbMovementId_Order, 0) = 0
      OR EXISTS (SELECT UserId FROM ObjectLink_UserRole_View WHERE UserId = inUserId AND RoleId = zc_Enum_Role_Admin())
@@ -194,6 +201,11 @@ BEGIN
                                                 AND Movement.StatusId = zc_Enum_Status_Complete() -- <> zc_Enum_Status_Erased()
                                                 AND Movement.DescId = zc_Movement_OrderExternal()
                                                 AND Movement.OperDate BETWEEN (vbOperDate - (INTERVAL '1 DAY')) AND (vbOperDate + (INTERVAL '1 DAY'))
+                              -- добавил условия, т.е. этой проверки теперь нет
+                              INNER JOIN MovementLinkObject AS MovementLinkObject_From
+                                                            ON MovementLinkObject_From.MovementId = Movement.Id
+                                                           AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
+                                                           AND MovementLinkObject_From.ObjectId = vbPartnerId
                         WHERE MovementString_InvNumberPartner.ValueData = vbInvNumber
                           AND MovementString_InvNumberPartner.DescId = zc_MovementString_InvNumberPartner()
                        )

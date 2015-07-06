@@ -129,7 +129,7 @@ BEGIN
                                          LEFT JOIN Object_GoodsByGoodsKind_View ON Object_GoodsByGoodsKind_View.Id = ObjectBoolean_Order.ObjectId
                                     WHERE ObjectBoolean_Order.ValueData = TRUE
                                       AND ObjectBoolean_Order.DescId = zc_ObjectBoolean_GoodsByGoodsKind_Order()
-                                      AND vbIsOrderDnepr = TRUE
+                                      -- AND vbIsOrderDnepr = TRUE
                                    )
 
           , tmpRemains AS (SELECT Container.ObjectId                          AS GoodsId
@@ -270,7 +270,8 @@ BEGIN
                   , Object_Goods.ObjectCode                                AS GoodsCode
                   , Object_Goods.ValueData                                 AS GoodsName
                   -- , zc_Enum_GoodsKind_Main()  AS GoodsKindId
-                  , COALESCE (tmpGoodsByGoodsKind.GoodsKindId, COALESCE (Object_GoodsByGoodsKind_View.GoodsKindId, 0)) AS GoodsKindId
+                  -- , COALESCE (tmpGoodsByGoodsKind.GoodsKindId, COALESCE (Object_GoodsByGoodsKind_View.GoodsKindId, 0)) AS GoodsKindId
+                  , COALESCE (tmpGoodsByGoodsKind.GoodsKindId, 0)          AS GoodsKindId
                   , ObjectString_Goods_GoodsGroupFull.ValueData            AS GoodsGroupNameFull
              FROM tmpInfoMoney
                   JOIN ObjectLink AS ObjectLink_Goods_InfoMoney
@@ -279,15 +280,15 @@ BEGIN
                   JOIN Object AS Object_Goods ON Object_Goods.Id = ObjectLink_Goods_InfoMoney.ObjectId
                                              AND Object_Goods.isErased = FALSE
                   LEFT JOIN tmpGoodsByGoodsKind ON tmpGoodsByGoodsKind.GoodsId = Object_Goods.Id
-                                               AND vbIsOrderDnepr = TRUE
+                                               /*AND vbIsOrderDnepr = TRUE
                   LEFT JOIN Object_GoodsByGoodsKind_View ON Object_GoodsByGoodsKind_View.GoodsId = Object_Goods.Id
                                                         AND tmpInfoMoney.InfoMoneyId IN (zc_Enum_InfoMoney_20901(), zc_Enum_InfoMoney_30101(), zc_Enum_InfoMoney_30201()) -- Ирна + Готовая продукция + Доходы Мясное сырье
-                                                        AND vbIsOrderDnepr = FALSE
+                                                        AND vbIsOrderDnepr = FALSE*/
 
                   LEFT JOIN ObjectString AS ObjectString_Goods_GoodsGroupFull
                                          ON ObjectString_Goods_GoodsGroupFull.ObjectId = Object_Goods.Id
                                         AND ObjectString_Goods_GoodsGroupFull.DescId = zc_ObjectString_Goods_GroupNameFull()
-             WHERE tmpGoodsByGoodsKind.GoodsId > 0 OR vbIsOrderDnepr = FALSE
+             WHERE tmpGoodsByGoodsKind.GoodsId > 0 -- OR vbIsOrderDnepr = FALSE
             ) AS tmpGoods
 
             LEFT JOIN tmpRemains ON tmpRemains.GoodsId     = tmpGoods.GoodsId
@@ -395,33 +396,36 @@ BEGIN
                                                         ON MIFloat_CountForPrice.MovementItemId = MovementItem.Id
                                                        AND MIFloat_CountForPrice.DescId = zc_MIFloat_CountForPrice()
                      )
-          , tmpRemains AS (SELECT Container.ObjectId                          AS GoodsId
-                                , Container.Amount                            AS Amount
-                                , COALESCE (CLO_GoodsKind.ObjectId, 0)        AS GoodsKindId
-                           FROM ContainerLinkObject AS CLO_Unit
-                                INNER JOIN Container ON Container.Id = CLO_Unit.ContainerId AND Container.DescId = zc_Container_Count() AND Container.Amount <> 0
+          , tmpRemains AS (SELECT tmpMI_Goods.MovementItemId
+                                , Container.Amount AS Amount
+                           FROM tmpMI_Goods
+                                INNER JOIN Container ON Container.ObjectId = tmpMI_Goods.GoodsId
+                                                    AND Container.DescId = zc_Container_Count()
+                                                    AND Container.Amount <> 0
+                                INNER JOIN ContainerLinkObject AS CLO_Unit
+                                                               ON CLO_Unit.ContainerId = Container.Id
+                                                              AND CLO_Unit.DescId = zc_ContainerLinkObject_Unit()
+                                                              AND CLO_Unit.ObjectId = vbUnitId
                                 LEFT JOIN ContainerLinkObject AS CLO_GoodsKind
-                                                              ON CLO_GoodsKind.ContainerId = CLO_Unit.ContainerId
+                                                              ON CLO_GoodsKind.ContainerId = Container.Id
                                                              AND CLO_GoodsKind.DescId = zc_ContainerLinkObject_GoodsKind()
                                 LEFT JOIN ContainerLinkObject AS CLO_Account
-                                                              ON CLO_Account.ContainerId = CLO_Unit.ContainerId
+                                                              ON CLO_Account.ContainerId = Container.Id
                                                              AND CLO_Account.DescId = zc_ContainerLinkObject_Account()
-                           WHERE CLO_Unit.ObjectId = vbUnitId
-                             AND CLO_Unit.DescId = zc_ContainerLinkObject_Unit()
+                           WHERE COALESCE (CLO_GoodsKind.ObjectId, 0) = tmpMI_Goods.GoodsKindId
                              AND CLO_Account.ContainerId IS NULL
                              AND vbIsOrderDnepr = FALSE
                           )
           , tmpMI AS (SELECT COALESCE (tmpMI_Goods.MovementItemId, 0)                   AS MovementItemId
-                           , COALESCE (tmpMI_Goods.GoodsId, tmpRemains.GoodsId)         AS GoodsId
+                           , COALESCE (tmpMI_Goods.GoodsId, 0)                          AS GoodsId
                            , COALESCE (tmpMI_Goods.Amount, 0)                           AS Amount
                            , COALESCE (tmpRemains.Amount, 0)                            AS AmountRemains
-                           , COALESCE (tmpMI_Goods.GoodsKindId, tmpRemains.GoodsKindId) AS GoodsKindId
+                           , COALESCE (tmpMI_Goods.GoodsKindId, 0)                      AS GoodsKindId
                            , COALESCE (tmpMI_Goods.Price, 0)                            AS Price
                            , COALESCE (tmpMI_Goods.CountForPrice, 1)                    AS CountForPrice
                            , COALESCE (tmpMI_Goods.isErased, FALSE)                     AS isErased
                        FROM tmpMI_Goods
-                            LEFT JOIN tmpRemains ON tmpRemains.GoodsId = tmpMI_Goods.GoodsId
-                                                AND tmpRemains.GoodsKindId = tmpMI_Goods.GoodsKindId
+                            LEFT JOIN tmpRemains ON tmpRemains.MovementItemId = tmpMI_Goods.MovementItemId
                      )
           , tmpMI_EDI AS (SELECT MovementItem.ObjectId                         AS GoodsId
                                , SUM (MovementItem.Amount)                     AS Amount

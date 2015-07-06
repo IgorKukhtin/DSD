@@ -53,6 +53,7 @@ type
     clGoodsGroupNameFull: TcxGridDBColumn;
     clMeasureName: TcxGridDBColumn;
     actGoodsChoiceForm: TOpenChoiceForm;
+    colAmountRemains: TcxGridDBColumn;
   private
     { Private declarations }
   public

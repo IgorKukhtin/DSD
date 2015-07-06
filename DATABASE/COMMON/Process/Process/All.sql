@@ -28,6 +28,7 @@ CREATE OR REPLACE FUNCTION zc_Enum_Process_AccessKey_GuideDoneck() RETURNS Integ
 CREATE OR REPLACE FUNCTION zc_Enum_Process_AccessKey_GuideZaporozhye() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_Process_AccessKey_GuideZaporozhye' AND DescId = zc_ObjectString_Enum()); END; $BODY$ LANGUAGE plpgsql IMMUTABLE;
 CREATE OR REPLACE FUNCTION zc_Enum_Process_AccessKey_GuideOdessa() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_Process_AccessKey_GuideOdessa' AND DescId = zc_ObjectString_Enum()); END; $BODY$ LANGUAGE plpgsql IMMUTABLE;
 
+CREATE OR REPLACE FUNCTION zc_Enum_Process_AccessKey_GuideTech() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_Process_AccessKey_GuideTech' AND DescId = zc_ObjectString_Enum()); END; $BODY$ LANGUAGE plpgsql IMMUTABLE;
 
 CREATE OR REPLACE FUNCTION zc_Enum_Process_AccessKey_PersonalServiceProduction() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_Process_AccessKey_PersonalServiceProduction' AND DescId = zc_ObjectString_Enum()); END; $BODY$ LANGUAGE plpgsql IMMUTABLE;
 CREATE OR REPLACE FUNCTION zc_Enum_Process_AccessKey_PersonalServiceAdmin() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_Process_AccessKey_PersonalServiceAdmin' AND DescId = zc_ObjectString_Enum()); END; $BODY$ LANGUAGE plpgsql IMMUTABLE;
@@ -407,6 +408,14 @@ BEGIN
                                    , inCode:= 110
                                    , inName:= 'Справочники Одесса (доступ просмотра)'
                                    , inEnumName:= 'zc_Enum_Process_AccessKey_GuideOdessa');
+
+ -- Одесса, ограничения в справочниках
+ PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_Process_AccessKey_GuideTech()
+                                   , inDescId:= zc_Object_Process()
+                                   , inCode:= 121
+                                   , inName:= 'Справочники Технолог (доступ просмотра)'
+                                   , inEnumName:= 'zc_Enum_Process_AccessKey_GuideTech');
+
 
  -- ЗП Производство, ограничения в справочниках + документах
  PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_Process_AccessKey_PersonalServiceProduction()

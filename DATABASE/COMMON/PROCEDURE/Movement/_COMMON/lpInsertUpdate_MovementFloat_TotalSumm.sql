@@ -464,7 +464,7 @@ BEGIN
                              , COALESCE (MIFloat_CountForPrice.ValueData, 0) AS CountForPrice
 
                                -- !!!очень важное кол-во, для него расчет сумм!!!
-                             , SUM (CASE WHEN Movement.DescId IN (zc_Movement_SendOnPrice(), zc_Movement_Sale(), zc_Movement_ReturnIn(), zc_Movement_EDI(), zc_Movement_WeighingPartner())
+                             , SUM (CASE WHEN Movement.DescId IN (zc_Movement_SendOnPrice(), zc_Movement_Sale(), zc_Movement_ReturnIn(), zc_Movement_EDI(), zc_Movement_WeighingPartner(), zc_Movement_Income(), zc_Movement_ReturnOut())
                                               THEN COALESCE (MIFloat_AmountPartner.ValueData, 0)
                                          ELSE MovementItem.Amount + COALESCE (MIFloat_AmountSecond.ValueData, 0)
                                     END) AS OperCount_calc

@@ -31,7 +31,7 @@ BEGIN
 
 
      -- !!!«аменили значение!!!
-     IF inIsCalcAmountPartner = TRUE OR 1 = 1 -- временно OR...
+     IF inIsCalcAmountPartner = TRUE --  OR 1 = 1 -- временно OR...
      THEN ioAmountPartner:= ioAmount;
      END IF;
 

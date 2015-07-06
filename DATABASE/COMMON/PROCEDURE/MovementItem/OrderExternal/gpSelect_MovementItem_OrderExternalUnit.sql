@@ -70,7 +70,7 @@ BEGIN
                                          LEFT JOIN Object_GoodsByGoodsKind_View ON Object_GoodsByGoodsKind_View.Id = ObjectBoolean_Order.ObjectId
                                     WHERE ObjectBoolean_Order.ValueData = TRUE
                                       AND ObjectBoolean_Order.DescId = zc_ObjectBoolean_GoodsByGoodsKind_Order()
-                                      AND vbIsOrderDnepr = TRUE
+                                      -- AND vbIsOrderDnepr = TRUE
                                    )
        SELECT
              0                          AS Id
@@ -121,7 +121,7 @@ BEGIN
                                              AND Object_Goods.isErased = FALSE
                   LEFT JOIN tmpGoodsByGoodsKind ON tmpGoodsByGoodsKind.GoodsId = Object_Goods.Id
              WHERE Object_InfoMoney_View.InfoMoneyDestinationId IN (zc_Enum_InfoMoneyDestination_20900(), zc_Enum_InfoMoneyDestination_21000(), zc_Enum_InfoMoneyDestination_30100(), zc_Enum_InfoMoneyDestination_30200()) -- Общефирменные + Ирна + Чапли + Доходы + Продукция + Мясное сырье
-              AND (tmpGoodsByGoodsKind.GoodsId > 0 OR vbIsOrderDnepr = FALSE)
+              AND (tmpGoodsByGoodsKind.GoodsId > 0 /*OR vbIsOrderDnepr = FALSE*/)
             ) AS tmpGoods
             LEFT JOIN (SELECT MovementItem.ObjectId                         AS GoodsId
                             , COALESCE (MILinkObject_GoodsKind.ObjectId, 0) AS GoodsKindId

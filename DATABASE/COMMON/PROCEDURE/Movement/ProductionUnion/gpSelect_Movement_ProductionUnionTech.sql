@@ -14,6 +14,9 @@ RETURNS SETOF refcursor
 AS
 $BODY$
   DECLARE vbUserId Integer;
+
+  DECLARE vbFromId_group Integer;
+
   DECLARE Cursor1 refcursor;
   DECLARE Cursor2 refcursor;
 BEGIN
@@ -22,8 +25,10 @@ BEGIN
      vbUserId:= lpGetUserBySession (inSession);
 
 
-    -- 
-    CREATE TEMP TABLE _tmpListMaster (MovementId Integer, StatusId Integer, InvNumber TVarChar, OperDate TDateTime, MovementItemId Integer, MovementItemId_order Integer, GoodsId Integer, GoodsKindId Integer, GoodsKindId_Complete Integer, ReceiptId Integer, Amount_Order TFloat, CuterCount_Order TFloat, Amount TFloat, CuterCount TFloat) ON COMMIT DROP;
+     -- определяется
+     vbFromId_group:= (SELECT ObjectLink_Parent.ChildObjectId FROM ObjectLink AS ObjectLink_Parent WHERE ObjectLink_Parent.ObjectId = inFromId AND ObjectLink_Parent.DescId = zc_ObjectLink_Unit_Parent());
+     -- 
+     CREATE TEMP TABLE _tmpListMaster (MovementId Integer, StatusId Integer, InvNumber TVarChar, OperDate TDateTime, MovementItemId Integer, MovementItemId_order Integer, GoodsId Integer, GoodsKindId Integer, GoodsKindId_Complete Integer, ReceiptId Integer, Amount_Order TFloat, CuterCount_Order TFloat, Amount TFloat, CuterCount TFloat) ON COMMIT DROP;
 
 
 
@@ -90,7 +95,7 @@ BEGIN
                           WHERE Movement.OperDate BETWEEN (inStartDate - INTERVAL '1 DAY') AND (inEndDate + INTERVAL '1 DAY')
                             AND Movement.DescId = zc_Movement_OrderInternal()
                             AND Movement.StatusId <> zc_Enum_Status_Erased()
-                            -- AND MLO_To.ObjectId = inFromId
+                            AND MLO_To.ObjectId IN (inFromId, vbFromId_group)
                             AND OrderType_Unit.ChildObjectId = inFromId
                           GROUP BY Movement.OperDate
                                  , COALESCE (MILO_Goods.ObjectId, MovementItem.ObjectId)

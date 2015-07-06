@@ -40,7 +40,7 @@ BEGIN
                            , MIContainer.ContainerId                 AS ContainerId
                            , MIContainer.ObjectId_Analyzer           AS GoodsId
                            , COALESCE (CLO_PartionGoods.ObjectId, 0) AS PartionGoodsId
-                           , MIContainer.Amount                      AS Amount
+                           , CASE WHEN MIContainer.IsActive = TRUE THEN MIContainer.Amount ELSE 0 END AS Amount
                       FROM MovementItemContainer AS MIContainer
                            INNER JOIN ContainerLinkObject AS CLO_GoodsKind
                                                           ON CLO_GoodsKind.ContainerId = MIContainer.ContainerId
@@ -56,8 +56,43 @@ BEGIN
                         AND MIContainer.IsActive = TRUE
                         AND MIContainer.Amount <> 0
                       )
-         -- приходы п/ф ГП - сгруппировать
-       , tmpMI_WorkProgress_in_group AS (SELECT ContainerId, GoodsId, PartionGoodsId FROM tmpMI_WorkProgress_in GROUP BY ContainerId, GoodsId, PartionGoodsId)
+         -- расходы п/ф ГП - что б отловить партии которых нет в tmpMI_WorkProgress_in
+       , tmpMI_WorkProgress_find AS
+                     (SELECT MIContainer.ContainerId                 AS ContainerId
+                           , MIContainer.ObjectId_Analyzer           AS GoodsId
+                           , COALESCE (CLO_PartionGoods.ObjectId, 0) AS PartionGoodsId
+                           , COALESCE (MILinkObject_GoodsKind.ObjectId, 0) AS GoodsKindId_Complete
+                      FROM ObjectDate AS ObjectDate_PartionGoods_Value
+                           INNER JOIN ContainerLinkObject AS CLO_PartionGoods
+                                                          ON CLO_PartionGoods.ObjectId = ObjectDate_PartionGoods_Value.ObjectId
+                                                         AND CLO_PartionGoods.DescId = zc_ContainerLinkObject_PartionGoods()
+                           INNER JOIN ContainerLinkObject AS CLO_Unit
+                                                          ON CLO_Unit.ContainerId = CLO_PartionGoods.ContainerId
+                                                         AND CLO_Unit.DescId = zc_ContainerLinkObject_Unit()
+                                                         AND CLO_Unit.ObjectId = inFromId
+                           INNER JOIN Container ON Container.Id = CLO_PartionGoods.ContainerId AND Container.DescId = zc_Container_Count()
+                           LEFT JOIN tmpMI_WorkProgress_in ON tmpMI_WorkProgress_in.ContainerId = CLO_PartionGoods.ContainerId
+
+                           INNER JOIN MovementItemContainer AS MIContainer
+                                                            ON MIContainer.ContainerId = Container.Id
+                                                           AND MIContainer.MovementDescId = zc_Movement_ProductionUnion()
+                                                           AND MIContainer.IsActive = FALSE
+                                                           AND MIContainer.Amount <> 0
+                           LEFT JOIN MovementItem ON MovementItem.Id = MIContainer.MovementItemId
+                           LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
+                                                            ON MILinkObject_GoodsKind.MovementItemId = MovementItem.ParentId
+                                                           AND MILinkObject_GoodsKind.DescId = zc_ContainerLinkObject_GoodsKind()
+                      WHERE ObjectDate_PartionGoods_Value.DescId = zc_ObjectDate_PartionGoods_Value()
+                        AND ObjectDate_PartionGoods_Value.ValueData BETWEEN inStartDate AND inEndDate
+                        AND tmpMI_WorkProgress_in.ContainerId IS NULL
+                      GROUP BY MIContainer.ContainerId
+                             , MIContainer.ObjectId_Analyzer
+                             , CLO_PartionGoods.ObjectId
+                             , MILinkObject_GoodsKind.ObjectId
+                     )
+       , -- приходы п/ф ГП - сгруппировать
+       , tmpMI_WorkProgress_in_group AS (SELECT ContainerId, GoodsId, PartionGoodsId FROM tmpMI_WorkProgress_in GROUP BY ContainerId, GoodsId, PartionGoodsId
+                                   UNION SELECT ContainerId, GoodsId, PartionGoodsId FROM tmpMI_WorkProgress_find GROUP BY ContainerId, GoodsId, PartionGoodsId)
          -- расходы п/ф ГП в разрезе ParentId
        , tmpMI_WorkProgress_out AS
                      (SELECT MIContainer.ParentId
@@ -132,7 +167,8 @@ BEGIN
                            , MAX (tmp.TaxExit)                AS TaxExit
                            , MAX (tmp.Comment)                AS Comment
                       FROM
-                     (SELECT tmpMI_WorkProgress_in.GoodsId
+                     (-- Производство п/ф ГП
+                      SELECT tmpMI_WorkProgress_in.GoodsId
                            , tmpMI_WorkProgress_in.PartionGoodsId
                            , COALESCE (MILO_GoodsKindComplete.ObjectId, 0)      AS GoodsKindId_Complete
                            , SUM (tmpMI_WorkProgress_in.Amount)                 AS Amount_WorkProgress_in
@@ -182,6 +218,7 @@ BEGIN
                              , tmpMI_WorkProgress_in.PartionGoodsId
                              , MILO_GoodsKindComplete.ObjectId
                      UNION ALL
+                      -- Приход ГП
                       SELECT tmpMI_GP_in.GoodsId
                            , tmpMI_GP_in.PartionGoodsId
                            , tmpMI_GP_in.GoodsKindId_Complete
@@ -201,6 +238,22 @@ BEGIN
                            LEFT JOIN ObjectFloat AS ObjectFloat_Weight	
                                                  ON ObjectFloat_Weight.ObjectId = tmpMI_GP_in.GoodsId
                                                 AND ObjectFloat_Weight.DescId = zc_ObjectFloat_Goods_Weight()
+                     UNION ALL
+                      -- Партии п/ф ГП которых нет в производстве
+                      SELECT tmpMI_WorkProgress_find.GoodsId
+                           , tmpMI_WorkProgress_find.PartionGoodsId
+                           , tmpMI_WorkProgress_find.GoodsKindId_Complete
+                           , 0 AS Amount_WorkProgress_in
+                           , 0 AS CuterCount
+                           , 0 AS RealWeight
+                           , 0 AS Amount_GP_in_calc
+                           , 0 AS TaxExit
+                           , 0 AS calcIn
+                           , 0 AS calcOut
+                           , '' AS Comment
+                           , 0 AS Amount_GP_in
+                           , 0 AS AmountReceipt_out
+                      FROM tmpMI_WorkProgress_find
                      ) AS tmp
                       GROUP BY tmp.GoodsId
                              , tmp.PartionGoodsId

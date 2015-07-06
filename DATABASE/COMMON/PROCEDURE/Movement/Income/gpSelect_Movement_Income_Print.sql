@@ -279,6 +279,14 @@ BEGIN
            , tmpMI.Price                     AS Price
            , tmpMI.CountForPrice             AS CountForPrice
 
+           , CASE WHEN tmpMI.Amount = 0
+                       THEN 0
+                  WHEN tmpMI.CountForPrice <> 0
+                       THEN CAST (tmpMI.AmountPartner * (tmpMI.Price / tmpMI.CountForPrice) AS NUMERIC (16, 2)) / tmpMI.Amount
+                  ELSE CAST (tmpMI.AmountPartner * tmpMI.Price AS NUMERIC (16, 2)) / tmpMI.Amount
+             END AS Price2
+
+
              -- сумма по ценам док-та
            , CASE WHEN tmpMI.CountForPrice <> 0
                        THEN CAST (tmpMI.AmountPartner * (tmpMI.Price / tmpMI.CountForPrice) AS NUMERIC (16, 2))
@@ -339,7 +347,7 @@ BEGIN
                     END AS Price
                   , MIFloat_CountForPrice.ValueData AS CountForPrice
                   , SUM (MovementItem.Amount) AS Amount
-                  , SUM (CASE WHEN Movement.DescId IN (zc_Movement_Sale())
+                  , SUM (CASE WHEN Movement.DescId IN (zc_Movement_Sale(), zc_Movement_Income(), zc_Movement_ReturnOut(), zc_Movement_ReturnIn())
                                    THEN COALESCE (MIFloat_AmountPartner.ValueData, 0)
                               WHEN Movement.DescId IN (zc_Movement_SendOnPrice()) AND vbIsProcess_BranchIn = TRUE
                                    THEN COALESCE (MIFloat_AmountPartner.ValueData, 0)
@@ -347,7 +355,7 @@ BEGIN
 
                          END) AS AmountPartner
              FROM MovementItem
-                  INNER JOIN MovementItemFloat AS MIFloat_Price
+                  LEFT JOIN MovementItemFloat AS MIFloat_Price
                                                ON MIFloat_Price.MovementItemId = MovementItem.Id
                                               AND MIFloat_Price.DescId = zc_MIFloat_Price()
                                               -- AND MIFloat_Price.ValueData <> 0
@@ -386,7 +394,7 @@ BEGIN
             LEFT JOIN Object_GoodsByGoodsKind_View ON Object_GoodsByGoodsKind_View.GoodsId = Object_Goods.Id
                                                   AND Object_GoodsByGoodsKind_View.GoodsKindId = Object_GoodsKind.Id
 
-       WHERE tmpMI.AmountPartner <> 0
+       -- WHERE tmpMI.AmountPartner <> 0
        ORDER BY Object_Goods.ValueData, Object_GoodsKind.ValueData
 
        ;

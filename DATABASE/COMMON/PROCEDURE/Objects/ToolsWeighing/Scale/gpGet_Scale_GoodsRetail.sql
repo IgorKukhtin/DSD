@@ -48,28 +48,38 @@ BEGIN
 
     -- Результат - по заявке
     RETURN QUERY
-       WITH tmpGoodsProperty AS (SELECT Object_GoodsProperty.Id            AS GoodsPropertyId
-                                      , ObjectFloat_StartPosInt.ValueData  AS StartPosInt
-                                      , ObjectFloat_EndPosInt.ValueData    AS EndPosInt
-                                      , ObjectFloat_StartPosFrac.ValueData AS StartPosFrac
-                                      , ObjectFloat_EndPosFrac.ValueData   AS EndPosFrac
+       WITH tmpGoodsProperty AS (SELECT tmp.GoodsPropertyId
+                                      , tmp.StartPosInt
+                                      , tmp.EndPosInt
+                                      , tmp.StartPosFrac
+                                      , tmp.EndPosFrac
                                       , zfFormat_BarCodeShort (inBarCode)  AS BarCodeShort_sht
-                                      , zfFormat_BarCodeShort (SUBSTRING (inBarCode FROM 1 FOR (ObjectFloat_StartPosInt.ValueData - 1) :: Integer)) AS BarCodeShort
-                                 FROM Object AS Object_GoodsProperty
-                                      LEFT JOIN ObjectFloat AS ObjectFloat_StartPosInt
-                                                            ON ObjectFloat_StartPosInt.ObjectId = Object_GoodsProperty.Id
-                                                           AND ObjectFloat_StartPosInt.DescId = zc_ObjectFloat_GoodsProperty_StartPosInt()
-                                      LEFT JOIN ObjectFloat AS ObjectFloat_EndPosInt
-                                                            ON ObjectFloat_EndPosInt.ObjectId = Object_GoodsProperty.Id
-                                                           AND ObjectFloat_EndPosInt.DescId = zc_ObjectFloat_GoodsProperty_EndPosInt()
-                                      LEFT JOIN ObjectFloat AS ObjectFloat_StartPosFrac
-                                                            ON ObjectFloat_StartPosFrac.ObjectId = Object_GoodsProperty.Id
-                                                           AND ObjectFloat_StartPosFrac.DescId = zc_ObjectFloat_GoodsProperty_StartPosFrac()
-                                      LEFT JOIN ObjectFloat AS ObjectFloat_EndPosFrac
-                                                            ON ObjectFloat_EndPosFrac.ObjectId = Object_GoodsProperty.Id
-                                                           AND ObjectFloat_EndPosFrac.DescId = zc_ObjectFloat_GoodsProperty_EndPosFrac()
-                                 WHERE Object_GoodsProperty.Id = inGoodsPropertyId
-                                   AND Object_GoodsProperty.DescId = zc_Object_GoodsProperty()
+                                      , zfFormat_BarCodeShort (SUBSTRING (inBarCode FROM 1 FOR (tmp.StartPosInt - 1) :: Integer)) AS BarCodeShort
+                                 FROM (SELECT Object_GoodsProperty.Id            AS GoodsPropertyId
+                                            , CASE WHEN inGoodsPropertyId = 83955 -- Алан
+                                                    AND SUBSTRING (inBarCode FROM 1 FOR 3) = '220'
+                                                        THEN ObjectFloat_StartPosInt.ValueData + 1
+                                                   ELSE ObjectFloat_StartPosInt.ValueData
+                                              END AS StartPosInt
+                                            , ObjectFloat_EndPosInt.ValueData    AS EndPosInt
+                                            , ObjectFloat_StartPosFrac.ValueData AS StartPosFrac
+                                            , ObjectFloat_EndPosFrac.ValueData   AS EndPosFrac
+                                       FROM Object AS Object_GoodsProperty
+                                            LEFT JOIN ObjectFloat AS ObjectFloat_StartPosInt
+                                                                  ON ObjectFloat_StartPosInt.ObjectId = Object_GoodsProperty.Id
+                                                                 AND ObjectFloat_StartPosInt.DescId = zc_ObjectFloat_GoodsProperty_StartPosInt()
+                                            LEFT JOIN ObjectFloat AS ObjectFloat_EndPosInt
+                                                                  ON ObjectFloat_EndPosInt.ObjectId = Object_GoodsProperty.Id
+                                                                 AND ObjectFloat_EndPosInt.DescId = zc_ObjectFloat_GoodsProperty_EndPosInt()
+                                            LEFT JOIN ObjectFloat AS ObjectFloat_StartPosFrac
+                                                                  ON ObjectFloat_StartPosFrac.ObjectId = Object_GoodsProperty.Id
+                                                                 AND ObjectFloat_StartPosFrac.DescId = zc_ObjectFloat_GoodsProperty_StartPosFrac()
+                                            LEFT JOIN ObjectFloat AS ObjectFloat_EndPosFrac
+                                                                  ON ObjectFloat_EndPosFrac.ObjectId = Object_GoodsProperty.Id
+                                                                 AND ObjectFloat_EndPosFrac.DescId = zc_ObjectFloat_GoodsProperty_EndPosFrac()
+                                       WHERE Object_GoodsProperty.Id = inGoodsPropertyId
+                                         AND Object_GoodsProperty.DescId = zc_Object_GoodsProperty()
+                                      ) AS tmp
                                 )
        , tmpGoodsPropertyValue_sht AS (SELECT tmpGoodsProperty.StartPosInt
                                             , tmpGoodsProperty.EndPosInt

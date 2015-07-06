@@ -150,6 +150,7 @@ type
     actAddMask: TdsdExecStoredProc;
     bbAddMask: TdxBarButton;
     actGoodsChoiceForm: TOpenChoiceForm;
+    colAmountRemains: TcxGridDBColumn;
   private
   public
   end;

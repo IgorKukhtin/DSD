@@ -157,7 +157,7 @@ inherited OrderExternalForm: TOrderExternalForm
             Width = 55
           end
           object AmountRemains: TcxGridDBColumn [6]
-            Caption = #1050#1086#1083'-'#1074#1086' '#1086#1089#1090'.'
+            Caption = #1054#1089#1090'. '#1082#1086#1083'-'#1074#1086' '
             DataBinding.FieldName = 'AmountRemains'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter

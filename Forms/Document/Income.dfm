@@ -331,6 +331,11 @@ object IncomeForm: TIncomeForm
               Format = ',0.####'
               Kind = skSum
               Column = colLiveWeight
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = colAmountRemains
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -366,6 +371,11 @@ object IncomeForm: TIncomeForm
             item
               Kind = skSum
               Column = colPrice
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = colAmountRemains
             end>
           DataController.Summary.SummaryGroups = <>
           Images = dmMain.SortImageList
@@ -441,6 +451,17 @@ object IncomeForm: TIncomeForm
             Options.Editing = False
             Width = 45
           end
+          object colAmountRemains: TcxGridDBColumn
+            Caption = #1054#1089#1090'. '#1082#1086#1083'-'#1074#1086' '
+            DataBinding.FieldName = 'AmountRemains'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 55
+          end
           object colAmount: TcxGridDBColumn
             Caption = #1050#1086#1083'-'#1074#1086' ('#1089#1082#1083#1072#1076')'
             DataBinding.FieldName = 'Amount'
@@ -459,7 +480,6 @@ object IncomeForm: TIncomeForm
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Options.Editing = False
             Width = 70
           end
           object colAmountPacker: TcxGridDBColumn
@@ -602,7 +622,6 @@ object IncomeForm: TIncomeForm
     Left = 541
     Top = 191
     Caption = #1040#1074#1090#1086' '#1079#1072#1087#1086#1083#1085#1077#1085#1080#1077'  <'#1050#1086#1083'-'#1074#1086' '#1091' '#1087#1086#1089#1090'.>'
-    Enabled = False
     Properties.ReadOnly = False
     State = cbsChecked
     TabOrder = 6

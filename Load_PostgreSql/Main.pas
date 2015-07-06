@@ -9242,7 +9242,8 @@ end;
 //----------------------------------------------------------------------------------------------------------------------------------------------------
 procedure TMainForm.pLoadGuide_OrderType;
 begin
-     if (not cbOrderType.Checked)or(not cbOrderType.Enabled) then exit;
+   exit;
+{     if (not cbOrderType.Checked)or(not cbOrderType.Enabled) then exit;
      //
      myEnabledCB(cbOrderType);
      //
@@ -9373,7 +9374,7 @@ begin
         end;
      end;
      //
-     myDisabledCB(cbOrderType);
+     myDisabledCB(cbOrderType);}
 end;
 //----------------------------------------------------------------------------------------------------------------------------------------------------
 procedure TMainForm.pLoadGuide_InfoMoneyGroup;

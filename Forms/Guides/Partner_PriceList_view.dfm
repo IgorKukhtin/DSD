@@ -2,7 +2,6 @@ inherited Partner_PriceList_viewForm: TPartner_PriceList_viewForm
   Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1050#1086#1085#1090#1088#1072#1075#1077#1085#1090' + '#1044#1086#1075#1086#1074#1086#1088' + '#1087#1088#1086#1074#1077#1088#1082#1072' '#1055#1088#1072#1081#1089'>'
   ClientHeight = 496
   ClientWidth = 1054
-  ExplicitLeft = -58
   ExplicitWidth = 1070
   ExplicitHeight = 531
   PixelsPerInch = 96
@@ -523,6 +522,11 @@ inherited Partner_PriceList_viewForm: TPartner_PriceList_viewForm
   end
   inherited cxPropertiesStore: TcxPropertiesStore
     Components = <
+      item
+        Component = deOperDate
+        Properties.Strings = (
+          'Date')
+      end
       item
         Component = GuidesJuridical
         Properties.Strings = (
