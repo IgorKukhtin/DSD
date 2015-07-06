@@ -1,9 +1,10 @@
 inherited ReturnIn_PartnerJournalForm: TReturnIn_PartnerJournalForm
-  Caption = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' <'#1042#1086#1079#1074#1088#1072#1090' '#1086#1090' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1103'>'
+  Caption = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' <'#1042#1086#1079#1074#1088#1072#1090' '#1086#1090' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1103' ('#1073#1091#1093#1075#1072#1083#1090#1077#1088')>'
   ClientHeight = 535
   ClientWidth = 1106
+  ExplicitLeft = -124
   ExplicitWidth = 1122
-  ExplicitHeight = 573
+  ExplicitHeight = 570
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -181,11 +182,11 @@ inherited ReturnIn_PartnerJournalForm: TReturnIn_PartnerJournalForm
             Width = 55
           end
           object colInvNumber_Parent: TcxGridDBColumn
-            Caption = #1054#1089#1085'.- '#1074#1086#1079#1074#1088'.'
+            Caption = #1054#1089#1085'. '#8470' ('#1074#1086#1079#1074#1088#1072#1090')'
             DataBinding.FieldName = 'InvNumber_Parent'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 60
+            Width = 70
           end
           object colDocumentTaxKindName: TcxGridDBColumn
             Caption = #1058#1080#1087' '#1085#1072#1083#1086#1075'. '#1076#1086#1082'.'
@@ -650,6 +651,7 @@ inherited ReturnIn_PartnerJournalForm: TReturnIn_PartnerJournalForm
           DataSet = PrintItemsCDS
           UserName = 'frxDBDMaster'
         end>
+      CopiesCount = 1
       Params = <
         item
           Name = 'Id'
@@ -741,6 +743,7 @@ inherited ReturnIn_PartnerJournalForm: TReturnIn_PartnerJournalForm
           DataSet = PrintHeaderCDS
           UserName = 'frxDBDHeader'
         end>
+      CopiesCount = 1
       Params = <
         item
           Name = 'Id'
@@ -784,6 +787,7 @@ inherited ReturnIn_PartnerJournalForm: TReturnIn_PartnerJournalForm
           DataSet = PrintHeaderCDS
           UserName = 'frxDBDHeader'
         end>
+      CopiesCount = 1
       Params = <
         item
           Name = 'Id'
@@ -819,6 +823,7 @@ inherited ReturnIn_PartnerJournalForm: TReturnIn_PartnerJournalForm
           DataSet = PrintHeaderCDS
           UserName = 'frxDBDHeader'
         end>
+      CopiesCount = 1
       Params = <
         item
           Name = 'Id'

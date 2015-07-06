@@ -160,6 +160,26 @@ object Report_GoodsBalanceForm: TReport_GoodsBalanceForm
           Format = ',0.####'
           Kind = skSum
           Column = CountEnd_Weight
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = Count_byCount
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = Count_onCount
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = CountStart_byCount
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = CountEnd_byCount
         end>
       DataController.Summary.FooterSummaryItems = <
         item
@@ -291,6 +311,26 @@ object Report_GoodsBalanceForm: TReport_GoodsBalanceForm
           Format = ',0.####'
           Kind = skSum
           Column = CountEnd_Weight
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = Count_byCount
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = Count_onCount
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = CountStart_byCount
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = CountEnd_byCount
         end>
       DataController.Summary.SummaryGroups = <>
       Images = dmMain.SortImageList
@@ -410,6 +450,13 @@ object Report_GoodsBalanceForm: TReport_GoodsBalanceForm
         Options.Editing = False
         Width = 35
       end
+      object isReprice: TcxGridDBColumn
+        Caption = #1055#1077#1088#1077#1086#1094#1077#1085#1082#1072
+        DataBinding.FieldName = 'isReprice'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 80
+      end
       object CountStart: TcxGridDBColumn
         Caption = #1054#1089#1090'. '#1085#1072#1095'. '#1082#1086#1083'.'
         DataBinding.FieldName = 'CountStart'
@@ -454,6 +501,14 @@ object Report_GoodsBalanceForm: TReport_GoodsBalanceForm
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
         Width = 80
+      end
+      object isPriceStart_diff: TcxGridDBColumn
+        Caption = #1054#1090#1082#1083'. '#1085#1072#1095'. '#1094#1077#1085#1072' '#1089'/'#1089
+        DataBinding.FieldName = 'isPriceStart_diff'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 70
       end
       object PriceListStart: TcxGridDBColumn
         Caption = #1094#1077#1085#1072' '#1087#1088#1072#1081#1089' '#1085#1072#1095'.'
@@ -511,6 +566,14 @@ object Report_GoodsBalanceForm: TReport_GoodsBalanceForm
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
         Width = 80
+      end
+      object isPriceEnd_diff: TcxGridDBColumn
+        Caption = #1054#1090#1082#1083'. '#1082#1086#1085#1077#1095'. '#1094#1077#1085#1072' '#1089'/'#1089
+        DataBinding.FieldName = 'isPriceEnd_diff'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 90
       end
       object PriceListEnd: TcxGridDBColumn
         Caption = #1094#1077#1085#1072' '#1087#1088#1072#1081#1089' '#1082#1086#1085#1077#1095'.'
@@ -720,6 +783,56 @@ object Report_GoodsBalanceForm: TReport_GoodsBalanceForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 80
+      end
+      object Weight_byCount: TcxGridDBColumn
+        Caption = #1042#1077#1089' 1 '#1073#1090'.'
+        DataBinding.FieldName = 'Weight_byCount'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.####;-,0.####; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 50
+      end
+      object Count_byCount: TcxGridDBColumn
+        Caption = #1055#1088#1080#1093#1086#1076' '#1055#1060' ('#1043#1055')'
+        DataBinding.FieldName = 'Count_byCount'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.####;-,0.####; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 70
+      end
+      object Count_onCount: TcxGridDBColumn
+        Caption = #1055#1088#1080#1093'. '#1073#1072#1090'. '#1055#1060' ('#1043#1055')'
+        DataBinding.FieldName = 'Count_onCount'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.####;-,0.####; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 70
+      end
+      object CountStart_byCount: TcxGridDBColumn
+        Caption = #1054#1089#1090'. '#1073#1090'. '#1085#1072#1095'. '
+        DataBinding.FieldName = 'CountStart_byCount'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.####;-,0.####; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 60
+      end
+      object CountEnd_byCount: TcxGridDBColumn
+        Caption = #1054#1089#1090'. '#1073#1090'. '#1082#1086#1085#1077#1095'.'
+        DataBinding.FieldName = 'CountEnd_byCount'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.####;-,0.####; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 60
       end
       object ColorB_GreenL: TcxGridDBColumn
         DataBinding.FieldName = 'ColorB_GreenL'

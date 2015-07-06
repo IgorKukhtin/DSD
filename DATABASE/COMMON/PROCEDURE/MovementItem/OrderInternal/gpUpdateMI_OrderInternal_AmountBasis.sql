@@ -5,7 +5,7 @@ DROP FUNCTION IF EXISTS gpUpdateMI_OrderInternal_AmountBasis (Integer, TDateTime
 CREATE OR REPLACE FUNCTION gpUpdateMI_OrderInternal_AmountBasis(
     IN inMovementId          Integer   , -- Ключ объекта <Документ>
     IN inOperDate            TDateTime , -- Дата документа
-    IN inUnitId              Integer   , -- 
+    IN inFromId              Integer   , -- 
     IN inSession             TVarChar    -- сессия пользователя
 )
 RETURNS VOID
@@ -19,10 +19,10 @@ BEGIN
 
 
     -- таблица -
-   CREATE TEMP TABLE tmpAll (MovementItemId Integer, GoodsId Integer, ReceiptId Integer, CuterCount TFloat, GoodsId_child Integer, Amount_child TFloat) ON COMMIT DROP;
+   CREATE TEMP TABLE tmpAll (MovementItemId Integer, GoodsId Integer, ReceiptId Integer, CuterCount TFloat, GoodsId_child Integer, GoodsKindId_child Integer, Amount_child TFloat) ON COMMIT DROP;
    --
-   INSERT INTO tmpAll (MovementItemId, GoodsId, ReceiptId, CuterCount, GoodsId_child, Amount_child)
-                                 WITH tmpUnit AS (SELECT UnitId FROM lfSelect_Object_Unit_byGroup (inUnitId) AS lfSelect_Object_Unit_byGroup)
+   INSERT INTO tmpAll (MovementItemId, GoodsId, ReceiptId, CuterCount, GoodsId_child, GoodsKindId_child, Amount_child)
+                                 WITH tmpUnit AS (SELECT UnitId FROM lfSelect_Object_Unit_byGroup (inFromId) AS lfSelect_Object_Unit_byGroup)
                                     , tmpGoods AS (SELECT ObjectLink_Goods_InfoMoney.ObjectId AS GoodsId
                                                    FROM Object_InfoMoney_View
                                                         LEFT JOIN ObjectLink AS ObjectLink_Goods_InfoMoney
@@ -32,18 +32,20 @@ BEGIN
                                                       OR Object_InfoMoney_View.InfoMoneyId = zc_Enum_InfoMoney_30201() -- Доходы + Мясное сырье + Мясное сырье : запечена...
                                                       OR Object_InfoMoney_View.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_20900() -- Общефирменные + Ирна
                                                   )
-                                 SELECT tmp.MovementItemId
+                                 SELECT 0 AS MovementItemId
                                       , tmp.GoodsId
                                       , tmp.ReceiptId
                                       , tmp.CuterCount
                                       , tmp.GoodsId_child
+                                      , tmp.GoodsKindId_child
                                       , tmp.Amount_child
-                                 FROM (-- !!!!ПРОИЗВОДСТВО!!!
-                                       SELECT MovementItem.Id                             AS MovementItemId
-                                            , MovementItem.ObjectId                       AS GoodsId
-                                            , COALESCE (ObjectLink_ReceiptChild_Goods.ChildObjectId, 0) AS GoodsId_child
-                                            , COALESCE (MILO_Receipt.ObjectId, 0)         AS ReceiptId
-                                            , COALESCE (MIFloat_CuterCount.ValueData, 0)  AS CuterCount
+                                 FROM (-- !!!!ПРОИЗВОДСТВО (подтвержденная программа)!!!
+                                       SELECT MovementItem.Id                               AS MovementItemId
+                                            , MovementItem.ObjectId                         AS GoodsId
+                                            , COALESCE (ObjectLink_ReceiptChild_Goods.ChildObjectId, 0)     AS GoodsId_child
+                                            , COALESCE (ObjectLink_ReceiptChild_GoodsKind.ChildObjectId, 0) AS GoodsKindId_child
+                                            , COALESCE (MILO_Receipt.ObjectId, 0)           AS ReceiptId
+                                            , COALESCE (MIFloat_CuterCount.ValueData, 0)    AS CuterCount
                                             , COALESCE (MIFloat_CuterCount.ValueData, 0) * COALESCE (ObjectFloat_Value.ValueData, 0) AS Amount_child
                                        FROM Movement
                                             INNER JOIN MovementLinkObject AS MovementLinkObject_From
@@ -68,10 +70,6 @@ BEGIN
                                             LEFT JOIN MovementItemLinkObject AS MILO_Receipt
                                                                              ON MILO_Receipt.MovementItemId = MovementItem.Id
                                                                             AND MILO_Receipt.DescId = zc_MILinkObject_Receipt()
-                                            LEFT JOIN ObjectFloat AS ObjectFloat_Value_master
-                                                                  ON ObjectFloat_Value_master.ObjectId = MILO_Receipt.ObjectId
-                                                                 AND ObjectFloat_Value_master.DescId = zc_ObjectFloat_Receipt_Value()
-                                                                 AND ObjectFloat_Value_master.ValueData <> 0
 
                                             INNER JOIN ObjectLink AS ObjectLink_ReceiptChild_Receipt
                                                                   ON ObjectLink_ReceiptChild_Receipt.ChildObjectId = MILO_Receipt.ObjectId
@@ -81,21 +79,74 @@ BEGIN
                                             LEFT JOIN ObjectLink AS ObjectLink_ReceiptChild_Goods
                                                                  ON ObjectLink_ReceiptChild_Goods.ObjectId = Object_ReceiptChild.Id
                                                                 AND ObjectLink_ReceiptChild_Goods.DescId = zc_ObjectLink_ReceiptChild_Goods()
-                                           INNER JOIN ObjectFloat AS ObjectFloat_Value
-                                                                  ON ObjectFloat_Value.ObjectId = Object_ReceiptChild.Id
-                                                                 AND ObjectFloat_Value.DescId = zc_ObjectFloat_ReceiptChild_Value()
-                                                                 AND ObjectFloat_Value.ValueData <> 0
+                                            LEFT JOIN ObjectLink AS ObjectLink_ReceiptChild_GoodsKind
+                                                                 ON ObjectLink_ReceiptChild_GoodsKind.ObjectId = Object_ReceiptChild.Id
+                                                                AND ObjectLink_ReceiptChild_GoodsKind.DescId = zc_ObjectLink_ReceiptChild_GoodsKind()
+                                            INNER JOIN ObjectFloat AS ObjectFloat_Value
+                                                                   ON ObjectFloat_Value.ObjectId = Object_ReceiptChild.Id
+                                                                  AND ObjectFloat_Value.DescId = zc_ObjectFloat_ReceiptChild_Value()
+                                                                  AND ObjectFloat_Value.ValueData <> 0
                                        WHERE Movement.OperDate = inOperDate
                                          AND Movement.DescId = zc_Movement_ProductionUnion()
                                          AND Movement.StatusId = zc_Enum_Status_Complete()
                                       ) AS tmp
                                      ;
 
+       -- добавили те что разворачиваются по рецептурам
+       INSERT INTO tmpAll (MovementItemId, GoodsId, ReceiptId, CuterCount, GoodsId_child, GoodsKindId_child, Amount_child)
+         WITH tmpGoods AS (SELECT tmpAll.GoodsId_child, SUM (tmpAll.Amount_child) AS Amount_child FROM tmpAll GROUP BY tmpAll.GoodsId_child)
+            , tmpReceipt AS (SELECT tmpGoods.GoodsId_child
+                                  , MAX (ObjectLink_Receipt_Goods.ObjectId) AS ReceiptId
+                             FROM tmpGoods
+                                  INNER JOIN ObjectLink AS ObjectLink_Receipt_Goods
+                                                        ON ObjectLink_Receipt_Goods.ChildObjectId = tmpGoods.GoodsId_child
+                                                       AND ObjectLink_Receipt_Goods.DescId = zc_ObjectLink_Receipt_Goods()
+                                  INNER JOIN Object AS Object_Receipt ON Object_Receipt.Id = ObjectLink_Receipt_Goods.ObjectId
+                                                                     AND Object_Receipt.isErased = FALSE
+                                  INNER JOIN ObjectBoolean AS ObjectBoolean_Main
+                                                           ON ObjectBoolean_Main.ObjectId = Object_Receipt.Id
+                                                          AND ObjectBoolean_Main.DescId = zc_ObjectBoolean_Receipt_Main()
+                                                          AND ObjectBoolean_Main.ValueData = TRUE
+                             GROUP BY tmpGoods.GoodsId_child
+                            )
+                                       -- Результат
+                                       SELECT 0 AS MovementItemId
+                                            , tmpGoods.GoodsId_child AS GoodsId
+                                            , tmpReceipt.ReceiptId
+                                            , 0 AS CuterCount
+                                            , COALESCE (ObjectLink_ReceiptChild_Goods.ChildObjectId, 0)     AS GoodsId_child
+                                            , COALESCE (ObjectLink_ReceiptChild_GoodsKind.ChildObjectId, 0) AS GoodsKindId_child
+                                            , tmpGoods.Amount_child * ObjectFloat_Value.ValueData / ObjectFloat_Value_master.ValueData
+                                       FROM tmpGoods
+                                            INNER JOIN tmpReceipt ON tmpReceipt.GoodsId_child = tmpGoods.GoodsId_child
+                                            INNER JOIN ObjectFloat AS ObjectFloat_Value_master
+                                                                   ON ObjectFloat_Value_master.ObjectId = tmpReceipt.ReceiptId
+                                                                  AND ObjectFloat_Value_master.DescId = zc_ObjectFloat_Receipt_Value()
+                                                                  AND ObjectFloat_Value_master.ValueData <> 0
+
+                                            INNER JOIN ObjectLink AS ObjectLink_ReceiptChild_Receipt
+                                                                  ON ObjectLink_ReceiptChild_Receipt.ChildObjectId = tmpReceipt.ReceiptId
+                                                                 AND ObjectLink_ReceiptChild_Receipt.DescId = zc_ObjectLink_ReceiptChild_Receipt()
+                                            INNER JOIN Object AS Object_ReceiptChild ON Object_ReceiptChild.Id = ObjectLink_ReceiptChild_Receipt.ObjectId
+                                                                                    AND Object_ReceiptChild.isErased = FALSE
+                                            LEFT JOIN ObjectLink AS ObjectLink_ReceiptChild_Goods
+                                                                 ON ObjectLink_ReceiptChild_Goods.ObjectId = Object_ReceiptChild.Id
+                                                                AND ObjectLink_ReceiptChild_Goods.DescId = zc_ObjectLink_ReceiptChild_Goods()
+                                            LEFT JOIN ObjectLink AS ObjectLink_ReceiptChild_GoodsKind
+                                                                 ON ObjectLink_ReceiptChild_GoodsKind.ObjectId = Object_ReceiptChild.Id
+                                                                AND ObjectLink_ReceiptChild_GoodsKind.DescId = zc_ObjectLink_ReceiptChild_GoodsKind()
+                                            INNER JOIN ObjectFloat AS ObjectFloat_Value
+                                                                   ON ObjectFloat_Value.ObjectId = Object_ReceiptChild.Id
+                                                                  AND ObjectFloat_Value.DescId = zc_ObjectFloat_ReceiptChild_Value()
+                                                                  AND ObjectFloat_Value.ValueData <> 0
+                                                                 ;
+
+
        -- сохранили
        PERFORM lpUpdate_MI_OrderInternal_Property (ioId                 := tmp.MovementItemId
                                                  , inMovementId         := inMovementId
                                                  , inGoodsId            := COALESCE (tmpAll.GoodsId_child, tmp.GoodsId)
-                                                 , inGoodsKindId        := NULL
+                                                 , inGoodsKindId        := COALESCE (tmpAll.GoodsKindId_child, tmp.GoodsKindId)
                                                  , inAmount_Param       := COALESCE (tmpAll.Amount_child, 0) * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData, 0) ELSE 1 END
                                                  , inDescId_Param       := zc_MIFloat_AmountPartner()
                                                  , inAmount_ParamOrder  := NULL
@@ -103,16 +154,22 @@ BEGIN
                                                  , inIsPack             := NULL
                                                  , inUserId             := vbUserId
                                                   ) 
-       FROM (SELECT tmpAll.GoodsId_child, SUM (tmpAll.Amount_child) AS Amount_child FROM tmpAll GROUP BY tmpAll.GoodsId_child) AS tmpAll
+       FROM (SELECT tmpAll.GoodsId_child, tmpAll.GoodsKindId_child, SUM (tmpAll.Amount_child) AS Amount_child FROM tmpAll GROUP BY tmpAll.GoodsId_child, tmpAll.GoodsKindId_child) AS tmpAll
                                  FULL JOIN
                                 (SELECT MAX (MovementItem.Id)                         AS MovementItemId 
                                       , MovementItem.ObjectId                         AS GoodsId
+                                      , COALESCE (MILinkObject_GoodsKind.ObjectId, 0) AS GoodsKindId
                                  FROM MovementItem 
+                                      LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
+                                                                       ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
+                                                                      AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
                                  WHERE MovementItem.MovementId = inMovementId
                                    AND MovementItem.DescId     = zc_MI_Master()
                                    AND MovementItem.isErased   = FALSE
                                  GROUP BY MovementItem.ObjectId
+                                        , MILinkObject_GoodsKind.ObjectId
                                 ) AS tmp ON tmp.GoodsId = tmpAll.GoodsId_child
+                                        AND tmp.GoodsKindId = tmpAll.GoodsKindId_child
             LEFT JOIN ObjectLink AS ObjectLink_Goods_Measure
                                  ON ObjectLink_Goods_Measure.ObjectId = tmpAll.GoodsId_child
                                 AND ObjectLink_Goods_Measure.DescId = zc_ObjectLink_Goods_Measure()

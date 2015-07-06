@@ -347,11 +347,11 @@ inherited Report_GoodsForm: TReport_GoodsForm
     Width = 1174
     ExplicitWidth = 1174
     inherited deStart: TcxDateEdit
-      EditValue = 41640d
+      EditValue = 42005d
       Properties.SaveTime = False
     end
     inherited deEnd: TcxDateEdit
-      EditValue = 41640d
+      EditValue = 42005d
       Properties.SaveTime = False
     end
     inherited cxLabel1: TcxLabel
@@ -420,6 +420,54 @@ inherited Report_GoodsForm: TReport_GoodsForm
           'TextValue')
       end>
   end
+  inherited ActionList: TActionList
+    object actPrint: TdsdPrintAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProcList = <>
+      Caption = #1054#1090#1095#1077#1090' '#1087#1086' '#1090#1086#1074#1072#1088#1091' '#1087#1086' '#1085#1072#1082#1083#1072#1076#1085#1099#1084
+      Hint = #1054#1090#1095#1077#1090' '#1087#1086' '#1090#1086#1074#1072#1088#1091' '#1087#1086' '#1085#1072#1082#1083#1072#1076#1085#1099#1084
+      ImageIndex = 3
+      ShortCut = 16464
+      DataSets = <
+        item
+          UserName = 'frxDBDataset'
+          IndexFieldNames = 'MovementDescName;ObjectByName;OperDate'
+          GridView = cxGridDBTableView
+        end>
+      CopiesCount = 1
+      Params = <
+        item
+          Name = 'StartDate'
+          Value = 41640d
+          Component = deStart
+          DataType = ftDateTime
+        end
+        item
+          Name = 'EndDate'
+          Value = 41640d
+          Component = deEnd
+          DataType = ftDateTime
+        end
+        item
+          Name = 'LocationName'
+          Value = ''
+          Component = LocationGuides
+          ComponentItem = 'TextValue'
+          DataType = ftString
+        end
+        item
+          Name = 'GoodsName'
+          Value = ''
+          Component = GoodsGuides
+          ComponentItem = 'TextValue'
+          DataType = ftString
+        end>
+      ReportName = #1054#1090#1095#1077#1090' '#1087#1086' '#1090#1086#1074#1072#1088#1091' '#1087#1086' '#1085#1072#1082#1083#1072#1076#1085#1099#1084
+      ReportNameParam.Value = #1054#1090#1095#1077#1090' '#1087#1086' '#1090#1086#1074#1072#1088#1091' '#1087#1086' '#1085#1072#1082#1083#1072#1076#1085#1099#1084
+      ReportNameParam.DataType = ftString
+    end
+  end
   inherited MasterDS: TDataSource
     Left = 72
     Top = 208
@@ -470,6 +518,41 @@ inherited Report_GoodsForm: TReport_GoodsForm
       0
       26
       0)
+    inherited Bar: TdxBar
+      ItemLinks = <
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbRefresh'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbPrint'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbGridToExcel'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end>
+    end
+    object bbPrint: TdxBarButton
+      Action = actPrint
+      Category = 0
+    end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
     Left = 368

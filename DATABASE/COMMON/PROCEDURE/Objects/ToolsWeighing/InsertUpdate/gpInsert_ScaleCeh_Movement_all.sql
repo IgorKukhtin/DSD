@@ -36,9 +36,13 @@ BEGIN
 
      -- определили <Тип документа>
      vbMovementDescId:= (SELECT ValueData FROM MovementFloat WHERE MovementId = inMovementId AND DescId = zc_MovementFloat_MovementDesc()) :: Integer;
-     -- !!!заменили параметр!!!
+
+     -- !!!заменили параметр!!! : Перемещение -> производство ПЕРЕРАБОТКА
      IF vbMovementDescId = zc_Movement_Send() AND (SELECT ObjectId FROM MovementLinkObject WHERE MovementId = inMovementId AND DescId = zc_MovementLinkObject_To())
-                                                  IN (8447, 8448) -- ЦЕХ колбасный + ЦЕХ деликатесов
+                                                  IN (SELECT UnitId FROM lfSelect_Object_Unit_byGroup (8446) -- ЦЕХ колбаса+дел-сы
+                                                     UNION
+                                                      SELECT UnitId FROM lfSelect_Object_Unit_byGroup (8439) -- Участок мясного сырья
+                                                     )
                                               AND (SELECT ObjectId FROM MovementLinkObject WHERE MovementId = inMovementId AND DescId = zc_MovementLinkObject_From())
                                                   IN (SELECT 8451 -- Цех Упаковки
                                                      UNION
@@ -50,6 +54,7 @@ BEGIN
      ELSE
          vbIsProductionIn:= NULL;
      END IF;
+
 
      -- определили <Партия товара>
      vbPartionGoods:= (SELECT MIString_PartionGoods.ValueData
@@ -81,7 +86,7 @@ BEGIN
                                      INNER JOIN MovementLinkObject AS MovementLinkObject_From
                                                                    ON MovementLinkObject_From.MovementId = Movement.Id
                                                                   AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
-                                                                  AND MovementLinkObject_From.ObjectId = MovementLinkObject_From.ObjectId
+                                                                  AND MovementLinkObject_From.ObjectId = MovementLinkObject_From_find.ObjectId
                                      INNER JOIN MovementLinkObject AS MovementLinkObject_To
                                                                    ON MovementLinkObject_To.MovementId = Movement.Id
                                                                   AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
@@ -109,7 +114,7 @@ BEGIN
                                      INNER JOIN MovementLinkObject AS MovementLinkObject_From
                                                                    ON MovementLinkObject_From.MovementId = Movement.Id
                                                                   AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
-                                                                  AND MovementLinkObject_From.ObjectId = MovementLinkObject_From.ObjectId
+                                                                  AND MovementLinkObject_From.ObjectId = MovementLinkObject_From_find.ObjectId
                                      INNER JOIN MovementLinkObject AS MovementLinkObject_To
                                                                    ON MovementLinkObject_To.MovementId = Movement.Id
                                                                   AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
@@ -523,6 +528,43 @@ BEGIN
                                 , inUserId     := vbUserId
                                  );
 
+
+     -- !!!Проверка что документ один!!!
+     IF vbMovementDescId = zc_Movement_Inventory()
+     THEN IF EXISTS (SELECT Movement.Id
+                     FROM Movement
+                          INNER JOIN MovementLinkObject AS MovementLinkObject_From_find
+                                                        ON MovementLinkObject_From_find.MovementId = inMovementId
+                                                       AND MovementLinkObject_From_find.DescId = zc_MovementLinkObject_From()
+                           INNER JOIN MovementLinkObject AS MovementLinkObject_From
+                                                         ON MovementLinkObject_From.MovementId = Movement.Id
+                                                        AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
+                                                        AND MovementLinkObject_From.ObjectId = MovementLinkObject_From_find.ObjectId
+                      WHERE Movement.Id <> vbMovementId_begin
+                        AND Movement.DescId = zc_Movement_Inventory()
+                        AND Movement.OperDate = inOperDate - INTERVAL '1 DAY'
+                        AND Movement.StatusId IN (zc_Enum_Status_UnComplete(), zc_Enum_Status_Complete())
+                    )
+          THEN
+              RAISE EXCEPTION 'Ошибка <%>.Документ <Инвентаризация> за <%> уже существует.Повторите действие через 15 сек.'
+                  , (SELECT Movement.Id
+                     FROM Movement
+                          INNER JOIN MovementLinkObject AS MovementLinkObject_From_find
+                                                        ON MovementLinkObject_From_find.MovementId = inMovementId
+                                                       AND MovementLinkObject_From_find.DescId = zc_MovementLinkObject_From()
+                           INNER JOIN MovementLinkObject AS MovementLinkObject_From
+                                                         ON MovementLinkObject_From.MovementId = Movement.Id
+                                                        AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
+                                                        AND MovementLinkObject_From.ObjectId = MovementLinkObject_From_find.ObjectId
+                      WHERE Movement.Id <> vbMovementId_begin
+                        AND Movement.DescId = zc_Movement_Inventory()
+                        AND Movement.OperDate = inOperDate - INTERVAL '1 DAY'
+                        AND Movement.StatusId IN (zc_Enum_Status_UnComplete(), zc_Enum_Status_Complete())
+                    )
+                  , DATE (inOperDate - INTERVAL '1 DAY');
+          END IF;
+     END IF;
+
      -- Результат
      RETURN QUERY
        SELECT vbMovementId_begin AS MovementId_begin;
@@ -534,9 +576,10 @@ $BODY$
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 04.07.15                                        * !!!Проверка что документ один!!!
  11.06.15                                        *
 */
 
 -- тест
--- SELECT * FROM gpInsert_ScaleCeh_Movement_all (ioId:= 0, inMovementId:= 10, inGoodsId:= 1, inAmount:= 0, inAmountPartner:= 0, inAmountPacker:= 0, inPrice:= 1, inCountForPrice:= 1, inLiveWeight:= 0, inHeadCount:= 0, inPartionGoods:= '', inGoodsKindId:= 0, inAssetId:= 0, inSession:= '2')
+-- SELECT * FROM gpInsert_ScaleCeh_Movement_all (inBranchCode:= 0, inMovementId:= 10, inOperDate:= '01.01.2015', inSession:= zfCalc_UserAdmin())

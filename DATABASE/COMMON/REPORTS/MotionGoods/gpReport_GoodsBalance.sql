@@ -42,8 +42,6 @@ RETURNS TABLE (AccountGroupName TVarChar, AccountDirectionName TVarChar
              , InfoMoneyId Integer, InfoMoneyCode Integer, InfoMoneyGroupName TVarChar, InfoMoneyDestinationName TVarChar, InfoMoneyName TVarChar, InfoMoneyName_all TVarChar
              , InfoMoneyId_Detail Integer, InfoMoneyCode_Detail Integer, InfoMoneyGroupName_Detail TVarChar, InfoMoneyDestinationName_Detail TVarChar, InfoMoneyName_Detail TVarChar, InfoMoneyName_all_Detail TVarChar
 
-             , LineNum Integer
-
              , CountIn TFloat
              , CountIn_sh TFloat
              , CountIn_Weight TFloat
@@ -59,6 +57,17 @@ RETURNS TABLE (AccountGroupName TVarChar, AccountDirectionName TVarChar
              , CountEnd_calc TFloat
              , CountEnd_sh_calc TFloat
              , CountEnd_Weight_calc TFloat
+
+             , Count_byCount      TFloat -- Приход с пр-ва ПФ(ГП)
+             , Count_onCount      TFloat -- Кол-во батонов в Приходе с пр-ва ПФ(ГП)
+             , CountStart_byCount TFloat -- Нач остаток ПФ(ГП) в Кол-ве батонов
+             , CountEnd_byCount   TFloat -- Кон остаток ПФ(ГП) в Кол-ве батонов
+             , Weight_byCount     TFloat -- вес 1 батона
+
+             , LineNum Integer
+             , isReprice Boolean
+             , isPriceStart_diff Boolean
+             , isPriceEnd_diff Boolean
 
              , ColorB_GreenL Integer, ColorB_Yelow Integer, ColorB_Cyan Integer
               )
@@ -329,40 +338,43 @@ BEGIN
                                       OR _tmpContainer.Amount <> 0
                                  )
 
-, tmpMIContainer_all AS
-       (SELECT  tmpMIContainer.GoodsId
-              , tmpMIContainer.GoodsKindId
-              , tmpMIContainer.PartionGoodsId
+, tmpMIContainer_all AS (-- Остатки + Движение товара, т.е. собираются в 1 строку zc_Container_Count and zc_Container_Summ
+                         SELECT  tmpMIContainer.GoodsId
+                               , tmpMIContainer.GoodsKindId
+                               , tmpMIContainer.PartionGoodsId
 
-              , SUM (CASE WHEN tmpMIContainer.ContainerDescId = zc_Container_Count() THEN tmpMIContainer.AmountIn ELSE 0 END) AS CountIn
-              , SUM (CASE WHEN tmpMIContainer.ContainerDescId = zc_Container_Count() THEN tmpMIContainer.AmountOut   ELSE 0 END) AS CountOut
+                               , SUM (CASE WHEN tmpMIContainer.ContainerDescId = zc_Container_Count() THEN tmpMIContainer.AmountIn ELSE 0 END) AS CountIn
+                               , SUM (CASE WHEN tmpMIContainer.ContainerDescId = zc_Container_Count() THEN tmpMIContainer.AmountOut   ELSE 0 END) AS CountOut
 
-              , SUM (CASE WHEN tmpMIContainer.ContainerDescId = zc_Container_Count() THEN tmpMIContainer.AmountReal ELSE 0 END) AS CountReal
+                               , SUM (CASE WHEN tmpMIContainer.ContainerDescId = zc_Container_Count() THEN tmpMIContainer.AmountReal ELSE 0 END) AS CountReal
 
-              , SUM (CASE WHEN tmpMIContainer.ContainerDescId = zc_Container_Count() THEN tmpMIContainer.RemainsStart ELSE 0 END) AS CountStart
-              , SUM (CASE WHEN tmpMIContainer.ContainerDescId = zc_Container_Count() THEN tmpMIContainer.RemainsEnd   ELSE 0 END) AS CountEnd
+                               , SUM (CASE WHEN tmpMIContainer.ContainerDescId = zc_Container_Count() THEN tmpMIContainer.RemainsStart ELSE 0 END) AS CountStart
+                               , SUM (CASE WHEN tmpMIContainer.ContainerDescId = zc_Container_Count() THEN tmpMIContainer.RemainsEnd   ELSE 0 END) AS CountEnd
      
-              , SUM (CASE WHEN tmpMIContainer.ContainerDescId = zc_Container_Summ() THEN tmpMIContainer.RemainsStart ELSE 0 END) AS SummStart
-              , SUM (CASE WHEN tmpMIContainer.ContainerDescId = zc_Container_Summ() THEN tmpMIContainer.RemainsEnd   ELSE 0 END) AS SummEnd
+                               , SUM (CASE WHEN tmpMIContainer.ContainerDescId = zc_Container_Summ() THEN tmpMIContainer.RemainsStart ELSE 0 END) AS SummStart
+                               , SUM (CASE WHEN tmpMIContainer.ContainerDescId = zc_Container_Summ() THEN tmpMIContainer.RemainsEnd   ELSE 0 END) AS SummEnd
           
-         FROM tmpMIContainer
-         GROUP BY tmpMIContainer.GoodsId
-                , tmpMIContainer.GoodsKindId
-                , tmpMIContainer.PartionGoodsId
-         )
-
-         , tmpPriceStart AS (SELECT lfObjectHistory_PriceListItem.GoodsId
-                                , (lfObjectHistory_PriceListItem.ValuePrice * 1.2) :: TFloat AS Price
-                           FROM lfSelect_ObjectHistory_PriceListItem (inPriceListId:= zc_PriceList_Basis(), inOperDate:= inStartDate) AS lfObjectHistory_PriceListItem
-                           WHERE lfObjectHistory_PriceListItem.ValuePrice <> 0
+                          FROM tmpMIContainer
+                          GROUP BY tmpMIContainer.GoodsId
+                                 , tmpMIContainer.GoodsKindId
+                                 , tmpMIContainer.PartionGoodsId
                           )
-         , tmpPriceEnd AS (SELECT lfObjectHistory_PriceListItem.GoodsId
+
+         , tmpPriceStart AS (-- Цены Прайс начальные !!!временно * 1.2!!!
+                             SELECT lfObjectHistory_PriceListItem.GoodsId
+                                  , (lfObjectHistory_PriceListItem.ValuePrice * 1.2) :: TFloat AS Price
+                             FROM lfSelect_ObjectHistory_PriceListItem (inPriceListId:= zc_PriceList_Basis(), inOperDate:= inStartDate) AS lfObjectHistory_PriceListItem
+                             WHERE lfObjectHistory_PriceListItem.ValuePrice <> 0
+                          )
+         , tmpPriceEnd AS (-- Цены Прайс конечные !!!временно * 1.2!!!
+                           SELECT lfObjectHistory_PriceListItem.GoodsId
                                 , (lfObjectHistory_PriceListItem.ValuePrice * 1.2) :: TFloat AS Price
                            FROM lfSelect_ObjectHistory_PriceListItem (inPriceListId:= zc_PriceList_Basis(), inOperDate:= inEndDate) AS lfObjectHistory_PriceListItem
                            WHERE lfObjectHistory_PriceListItem.ValuePrice <> 0
                           )   
 
-       , tmpMovement_all AS (SELECT MovementItem.ObjectId                                AS GoodsId
+       , tmpMovement_all AS (-- Не проведенное движение по zc_Movement_ProductionSeparate
+                             SELECT MovementItem.ObjectId                                AS GoodsId
                                   , COALESCE (MovementString_PartionGoods.ValueData, '') AS PartionGoodsName
                                   , COALESCE (MILinkObject_GoodsKind.ObjectId, 0)        AS GoodsKindId
                                   , SUM (CASE WHEN MovementLinkObject_Unit.DescId = zc_MovementLinkObject_To()   AND MovementItem.DescId = zc_MI_Child()  THEN MovementItem.Amount Else 0 END) AS CountIn_calc
@@ -388,10 +400,54 @@ BEGIN
                                     , COALESCE (MovementString_PartionGoods.ValueData, '')
                                     , COALESCE (MILinkObject_GoodsKind.ObjectId, 0)
                              )
-                         
-         , tmpResult AS (SELECT tmpAll.GoodsId
+
+, tmpContainer_Count AS (-- Партиии для кол-ва батонов
+                         SELECT _tmpContainer.ContainerId_begin
+                              , _tmpContainer.GoodsId
+                              , _tmpContainer.GoodsKindId
+                              , CLO_PartionGoods.ObjectId AS PartionGoodsId
+                         FROM _tmpContainer
+                              INNER JOIN ContainerLinkObject AS CLO_PartionGoods
+                                                             ON CLO_PartionGoods.ContainerId = _tmpContainer.ContainerId_begin
+                                                            AND CLO_PartionGoods.DescId = zc_ContainerLinkObject_PartionGoods()
+                              INNER JOIN ObjectDate AS ObjectDate_PartionGoods_Value ON ObjectDate_PartionGoods_Value.ObjectId = CLO_PartionGoods.ObjectId
+                                                                                    AND ObjectDate_PartionGoods_Value.ValueData > zc_DateStart()
+                                                                                    AND ObjectDate_PartionGoods_Value.DescId = zc_ObjectDate_PartionGoods_Value()
+                              LEFT JOIN ObjectLink AS ObjectLink_PartionGoods_Unit
+                                                   ON ObjectLink_PartionGoods_Unit.ObjectId = CLO_PartionGoods.ObjectId
+                                                  AND ObjectLink_PartionGoods_Unit.DescId = zc_ObjectLink_PartionGoods_Unit()
+                         WHERE _tmpContainer.ContainerDescId = zc_Container_Count()
+                           AND ObjectLink_PartionGoods_Unit.ObjectId IS NULL -- т.е. вообще нет этого св-ва
+                         GROUP BY _tmpContainer.ContainerId_begin
+                                , _tmpContainer.GoodsId
+                                , _tmpContainer.GoodsKindId
+                                , CLO_PartionGoods.ObjectId
+                        )
+, tmpMIContainer_Count AS (-- Расчет кол-ва батонов
+                           SELECT tmpContainer_Count.GoodsId
+                                 , tmpContainer_Count.GoodsKindId
+                                 , tmpContainer_Count.PartionGoodsId
+                                 , SUM (MIContainer.Amount)               AS Count_byCount
+                                 , -1 * SUM (COALESCE (MIFloat_Count.ValueData, 0)) AS Count_onCount
+                            FROM tmpContainer_Count
+                                 INNER JOIN MovementItemContainer AS MIContainer ON MIContainer.ContainerId    = tmpContainer_Count.ContainerId_begin
+                                                                                AND MIContainer.isActive       = FALSE
+                                                                                AND MIContainer.MovementDescId = zc_Movement_ProductionUnion()
+                                 LEFT JOIN MovementItemFloat AS MIFloat_Count
+                                                             ON MIFloat_Count.MovementItemId = MIContainer.MovementItemId
+                                                            AND MIFloat_Count.DescId = zc_MIFloat_Count()
+                            GROUP BY tmpContainer_Count.GoodsId
+                                   , tmpContainer_Count.GoodsKindId
+                                   , tmpContainer_Count.PartionGoodsId
+                           )
+                                                  
+         , tmpResult AS (-- ВСЕ данные, т.е. собираются в 1 строку
+                         SELECT tmpAll.GoodsId
                               , tmpAll.GoodsKindId
                               , tmpAll.PartionGoodsName
+
+                              , SUM (tmpAll.Count_byCount) AS Count_byCount
+                              , SUM (tmpAll.Count_onCount) AS Count_onCount
 
                               , SUM (tmpAll.CountIn_calc)  AS CountIn_calc
                               , SUM (tmpAll.CountOut_calc) AS CountOut_calc
@@ -409,7 +465,8 @@ BEGIN
 
                               , SUM (tmpAll.CountStart + tmpAll.CountIn + tmpAll.CountIn_calc - tmpAll.CountOut - tmpAll.CountOut_calc) AS CountEnd_calc
 
-                         FROM (SELECT tmpMovement_all.GoodsId
+                         FROM (-- Не проведенное движение по zc_Movement_ProductionSeparate
+                               SELECT tmpMovement_all.GoodsId
                                     , tmpMovement_all.GoodsKindId
                                     , CASE WHEN ObjectBoolean_PartionCount.ValueData = TRUE THEN zfFormat_PartionGoods (tmpMovement_all.PartionGoodsName) ELSE '' END AS PartionGoodsName
 
@@ -425,11 +482,39 @@ BEGIN
                                     , 0 AS SummStart
                                     , 0 AS SummEnd
 
+                                    , 0 AS Count_byCount
+                                    , 0 AS Count_onCount
+
                                FROM tmpMovement_all
                                     LEFT JOIN ObjectBoolean AS ObjectBoolean_PartionCount
                                                             ON ObjectBoolean_PartionCount.ObjectId = tmpMovement_all.GoodsId
                                                            AND ObjectBoolean_PartionCount.DescId = zc_ObjectBoolean_Goods_PartionCount()
                               UNION ALL
+                               -- данные для кол-ва батонов
+                               SELECT tmpMIContainer_Count.GoodsId
+                                    , tmpMIContainer_Count.GoodsKindId
+                                    , COALESCE (Object_PartionGoods.ValueData, '') AS PartionGoodsName
+
+                                    , 0 AS CountIn_calc
+                                    , 0 AS CountOut_calc
+
+                                    , 0 AS CountIn
+                                    , 0 AS CountOut
+
+                                    , 0 AS CountReal
+                                    , 0 AS CountStart
+                                    , 0 AS CountEnd
+                                    , 0 AS SummStart
+                                    , 0 AS SummEnd
+
+                                    , tmpMIContainer_Count.Count_byCount
+                                    , tmpMIContainer_Count.Count_onCount
+
+                               FROM tmpMIContainer_Count
+                                    LEFT JOIN Object AS Object_PartionGoods ON Object_PartionGoods.Id = tmpMIContainer_Count.PartionGoodsId
+
+                              UNION ALL
+                               -- Остатки + Движение товара
                                SELECT tmpMIContainer_all.GoodsId
                                     , tmpMIContainer_all.GoodsKindId
                                     , COALESCE (Object_PartionGoods.ValueData, '') AS PartionGoodsName
@@ -446,6 +531,9 @@ BEGIN
 
                                     , tmpMIContainer_all.SummStart
                                     , tmpMIContainer_all.SummEnd
+
+                                    , 0 AS Count_byCount
+                                    , 0 AS Count_onCount
 
                                FROM tmpMIContainer_all
                                     LEFT JOIN Object AS Object_PartionGoods ON Object_PartionGoods.Id = tmpMIContainer_all.PartionGoodsId
@@ -492,7 +580,7 @@ BEGIN
     
         , tmpResult.SummStart :: TFloat AS SummStart
         , tmpResult.SummEnd   :: TFloat AS SummEnd
-    
+
         , tmpPriceStart.Price AS PriceListStart
         , tmpPriceEnd.Price   AS PriceListEnd
 
@@ -509,8 +597,6 @@ BEGIN
         , View_InfoMoneyDetail.InfoMoneyDestinationName AS InfoMoneyDestinationName_Detail
         , View_InfoMoneyDetail.InfoMoneyName            AS InfoMoneyName_Detail
         , View_InfoMoneyDetail.InfoMoneyName_all        AS InfoMoneyName_all_Detail
-
-        , CAST (row_number() OVER () AS INTEGER)        AS LineNum
 
         , tmpResult.CountIn ::TFloat  AS CountIn
         , CASE WHEN Object_Measure.Id = zc_Measure_Sh() THEN tmpResult.CountIn ELSE 0 END :: TFloat AS CountIn_sh
@@ -531,6 +617,18 @@ BEGIN
         , tmpResult.CountEnd_calc :: TFloat AS CountEnd_calc
         , CASE WHEN Object_Measure.Id = zc_Measure_Sh() THEN tmpResult.CountEnd_calc ELSE 0 END :: TFloat AS CountEnd_sh_calc
         , (tmpResult.CountEnd_calc * CASE WHEN Object_Measure.Id = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END) :: TFloat AS CountEnd_Weight_calc
+
+        , tmpResult.Count_byCount :: TFloat AS Count_byCount  -- Приход с пр-ва ПФ(ГП)
+        , tmpResult.Count_onCount :: TFloat AS Count_onCount  -- Кол-во батонов в Приходе с пр-ва ПФ(ГП)
+        , CAST (CASE WHEN tmpResult.Count_byCount <> 0 THEN tmpResult.Count_onCount * tmpResult.CountStart / tmpResult.Count_byCount ELSE 0 END AS NUMERIC (16, 0)) :: TFloat AS CountStart_byCount -- Нач остаток ПФ(ГП) в Кол-ве батонов
+        , CAST (CASE WHEN tmpResult.Count_byCount <> 0 THEN tmpResult.Count_onCount * tmpResult.CountEnd   / tmpResult.Count_byCount ELSE 0 END AS NUMERIC (16, 0)) :: TFloat AS CountStart_byCount -- Кон остаток ПФ(ГП) в Кол-ве батонов
+        , CAST (CASE WHEN tmpResult.Count_onCount <> 0 THEN tmpResult.Count_byCount / tmpResult.Count_onCount ELSE 0 END AS NUMERIC (16, 2)) :: TFloat AS Weight_byCount -- вес 1 батона
+
+        , CAST (row_number() OVER () AS INTEGER)        AS LineNum
+
+        , CASE WHEN COALESCE (tmpPriceStart.Price, 0) <> COALESCE (tmpPriceEnd.Price, 0) THEN TRUE ELSE FALSE END isReprice
+        , TRUE AS isPriceStart_diff
+        , TRUE AS isPriceEnd_diff
 
         , zc_Color_GreenL() :: Integer AS ColorB_GreenL
         , zc_Color_Yelow()  :: Integer AS ColorB_Yelow

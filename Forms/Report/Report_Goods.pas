@@ -41,6 +41,8 @@ type
     edLocation: TcxButtonEdit;
     LocationGuides: TdsdGuides;
     clPartionGoods: TcxGridDBColumn;
+    actPrint: TdsdPrintAction;
+    bbPrint: TdxBarButton;
   private
     { Private declarations }
   public

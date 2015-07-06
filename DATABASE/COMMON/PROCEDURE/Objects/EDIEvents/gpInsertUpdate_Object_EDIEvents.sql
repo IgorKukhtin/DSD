@@ -47,4 +47,10 @@ ALTER FUNCTION gpInsertUpdate_Object_EDIEvents (Integer, Integer, TVarChar, TVar
 
 -- тест
 -- SELECT * FROM gpInsertUpdate_Object_EDIEvents ()
--- SELECT * FROM 
+select *
+from Object
+     left join ObjectDate on ObjectDate.ObjectId = Object.Id and ObjectDate.DescId = zc_ObjectDate_Protocol_Insert()
+     left join ObjectLink on ObjectLink.ObjectId = Object.Id and ObjectLink.DescId = zc_ObjectLink_Protocol_Insert()
+     left join Object as Object_User on Object_User.Id = ObjectLink.ChildObjectId
+     left join Movement on Movement.Id = Object.ObjectCode
+where Object.DescId = zc_Object_EDIEvents()

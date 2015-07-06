@@ -132,7 +132,7 @@ BEGIN
                                       ELSE 0
                                  END AS ToId
 
-                               , CASE WHEN inIsGoods = TRUE OR inIsTradeMark = TRUE THEN MovementItem.ObjectId  ELSE 0 END AS GoodsId
+                               , MovementItem.ObjectId AS GoodsId
                                , CASE WHEN inIsGoodsKind = TRUE THEN MILinkObject_GoodsKind.ObjectId ELSE 0 END AS GoodsKindId
 
                                , SUM (CASE WHEN tmp_Unit_From.UnitId > 0 THEN MovementItem.Amount ELSE 0 END) AS Amount_Count
@@ -195,7 +195,7 @@ BEGIN
                                         ELSE 0
                                    END
                                  , CASE WHEN inIsPartner = TRUE THEN MovementLinkObject_To.ObjectId ELSE 0 END
-                                 , CASE WHEN inIsGoods = TRUE OR inIsTradeMark = TRUE THEN MovementItem.ObjectId  ELSE 0 END
+                                 , MovementItem.ObjectId
                                  , CASE WHEN inIsGoodsKind = TRUE THEN MILinkObject_GoodsKind.ObjectId ELSE 0 END
                          )
 
@@ -333,21 +333,25 @@ BEGIN
 
      FROM (SELECT tmp_Send.FromId
                 , tmp_Send.ToId
-                , tmp_Send.GoodsId
+                , CASE WHEN inIsGoods = TRUE OR inIsTradeMark = TRUE THEN tmp_Send.GoodsId ELSE 0 END AS GoodsId
                 , tmp_Send.GoodsKindId
-                , CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN tmp_Send.Amount_Count ELSE 0 END                                 AS Amount_CountSh
-                , tmp_Send.Amount_Count * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END  AS Amount_CountWeight
-                , tmp_Send.Amount_Summ
+                , SUM (CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN tmp_Send.Amount_Count ELSE 0 END)                                AS Amount_CountSh
+                , SUM (tmp_Send.Amount_Count * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END) AS Amount_CountWeight
+                , SUM (tmp_Send.Amount_Summ) AS Amount_Summ
 
-                , CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN tmp_Send.Amount_CountRet ELSE 0 END                                 AS Amount_CountRetSh
-                , tmp_Send.Amount_CountRet * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END  AS Amount_CountRetWeight
-                , tmp_Send.Amount_SummRet
+                , SUM (CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN tmp_Send.Amount_CountRet ELSE 0 END)                                AS Amount_CountRetSh
+                , SUM (tmp_Send.Amount_CountRet * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END) AS Amount_CountRetWeight
+                , SUM (tmp_Send.Amount_SummRet) AS Amount_SummRet
            FROM tmp_Send
                 LEFT JOIN ObjectLink AS ObjectLink_Goods_Measure ON ObjectLink_Goods_Measure.ObjectId = tmp_Send.GoodsId
                                                                 AND ObjectLink_Goods_Measure.DescId = zc_ObjectLink_Goods_Measure()
                 LEFT JOIN ObjectFloat AS ObjectFloat_Weight
                                       ON ObjectFloat_Weight.ObjectId = tmp_Send.GoodsId
                                      AND ObjectFloat_Weight.DescId = zc_ObjectFloat_Goods_Weight()
+           GROUP BY tmp_Send.FromId
+                  , tmp_Send.ToId
+                  , CASE WHEN inIsGoods = TRUE OR inIsTradeMark = TRUE THEN tmp_Send.GoodsId ELSE 0 END
+                  , tmp_Send.GoodsKindId
           ) AS tmpOperationGroup
           LEFT JOIN Object AS Object_Goods on Object_Goods.Id = tmpOperationGroup.GoodsId
           LEFT JOIN Object AS Object_GoodsKind ON Object_GoodsKind.Id = tmpOperationGroup.GoodsKindId

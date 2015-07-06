@@ -17,6 +17,8 @@ $BODY$
    DECLARE Cursor2 refcursor;
 
    DECLARE vbOperDate TDateTime;
+   DECLARE vbFromId Integer;
+   DECLARE vbToId Integer;
    DECLARE vbDayCount Integer;
    DECLARE vbMonth Integer;
 BEGIN
@@ -27,10 +29,18 @@ BEGIN
 
      -- определяется
      SELECT Movement.OperDate
+          , MovementLinkObject_From.ObjectId
+          , MovementLinkObject_To.ObjectId
           , 1 + EXTRACT (DAY FROM (MovementDate_OperDateEnd.ValueData - MovementDate_OperDateStart.ValueData))
           , EXTRACT (MONTH FROM (Movement.OperDate + INTERVAL '1 DAY'))
-            INTO vbOperDate, vbDayCount, vbMonth
+            INTO vbOperDate, vbDayCount, vbMonth, vbFromId, vbToId
      FROM Movement
+          LEFT JOIN MovementLinkObject AS MovementLinkObject_From
+                                       ON MovementLinkObject_From.MovementId = Movement.Id
+                                      AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
+          LEFT JOIN MovementLinkObject AS MovementLinkObject_To
+                                       ON MovementLinkObject_To.MovementId = Movement.Id
+                                      AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
           LEFT JOIN MovementDate AS MovementDate_OperDateStart
                                  ON MovementDate_OperDateStart.MovementId =  Movement.Id
                                 AND MovementDate_OperDateStart.DescId = zc_MovementDate_OperDateStart()
@@ -232,6 +242,31 @@ BEGIN
                                      GROUP BY tmpMI_master.MovementItemId
                                     )
 
+          , _tmpMI_child_group AS (SELECT _tmpMI_child.ContainerId, MAX (_tmpMI_child.GoodsKindId_complete) AS GoodsKindId_complete FROM _tmpMI_child GROUP BY _tmpMI_child.ContainerId)
+          , tmpUnitFrom AS (SELECT UnitId FROM lfSelect_Object_Unit_byGroup (vbFromId) AS lfSelect_Object_Unit_byGroup)
+          , tmpUnitTo AS (SELECT UnitId FROM lfSelect_Object_Unit_byGroup (vbToId) AS lfSelect_Object_Unit_byGroup)
+          , tmpMI_Send AS (SELECT tmpMI.GoodsId                           AS GoodsId
+                                , COALESCE (CLO_GoodsKindId.ObjectId, 0)  AS GoodsKindId
+                                , SUM (tmpMI.Amount)                      AS Amount
+                           FROM (SELECT MIContainer.ObjectId_Analyzer AS GoodsId
+                                      , MIContainer.ContainerId
+                                      , SUM (MIContainer.Amount) AS Amount
+                                 FROM MovementItemContainer AS MIContainer
+                                      INNER JOIN tmpUnitFrom ON tmpUnitFrom.UnitId = MIContainer.WhereObjectId_Analyzer
+                                      INNER JOIN tmpUnitTo ON tmpUnitTo.UnitId = MIContainer.AnalyzerId
+                                 WHERE MIContainer.OperDate   = vbOperDate
+                                   AND MIContainer.DescId     = zc_MIContainer_Count()
+                                   AND MIContainer.MovementDescId = zc_Movement_ProductionUnion()
+                                   AND MIContainer.isActive = TRUE
+                                 GROUP BY MIContainer.ObjectId_Analyzer
+                                        , MIContainer.ContainerId
+                                ) AS tmpMI
+                                LEFT JOIN ContainerLinkObject AS CLO_GoodsKindId
+                                                              ON CLO_GoodsKindId.ContainerId = tmpMI.ContainerId
+                                                             AND CLO_GoodsKindId.DescId = zc_ContainerLinkObject_GoodsKind()
+                            GROUP BY tmpMI.GoodsId
+                                   , CLO_GoodsKindId.ObjectId
+                          )
        SELECT
              tmpMI.MovementItemId :: Integer     AS Id
            , Object_Goods.Id                     AS GoodsId
@@ -250,6 +285,9 @@ BEGIN
            , tmpMI.AmountSecond     :: TFloat AS AmountSecond     -- Дозаказ на пр-во
            , tmpMI.CuterCount       :: TFloat AS CuterCount       -- Заказ на пр-во кутеров
            , tmpMI.CuterCountSecond :: TFloat AS CuterCountSecond -- Заказ на пр-во кутеров
+
+           , CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN tmpMI_Send.Amount ELSE 0 END AS AmountSend_sh
+           , tmpMI_Send.Amount * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData, 0) ELSE 1 END AS AmountSend_Weight
 
            , CAST (tmpMI.AmountRemains - tmpMI.AmountPartnerPrior - tmpMI.AmountPartner + tmpMI.AmountProduction_old                                AS NUMERIC (16, 1)) :: TFloat AS AmountRemains_calc     -- Прогн. ост.
            , CAST (tmpMI.AmountRemains - tmpMI.AmountPartnerPrior - tmpMI.AmountPartner + tmpMI.AmountProduction_old  + tmpMI.AmountProduction_next AS NUMERIC (16, 1)) :: TFloat AS AmountRemainsTerm_calc -- *Прогн. ост. на срок
@@ -308,7 +346,7 @@ BEGIN
            , Object_Receipt_basis.ValueData            AS ReceiptName_basis
            , Object_Unit.Id                            AS UnitId
            , Object_Unit.ObjectCode                    AS UnitCode
-           , Object_Unit.ValueData                     AS UnitName 
+           , Object_Unit.ValueData                     AS UnitName
 
            , CASE WHEN tmpMI.AmountRemains <= 0
                        THEN zc_Color_Red()
@@ -322,6 +360,7 @@ BEGIN
                        THEN zc_Color_Red()
                   ELSE zc_Color_Black()
              END :: Integer AS Color_remainsTerm_calc
+           , zc_Color_Blue() AS Color_send
 
            , zc_Color_Aqua()   :: Integer AS ColorB_const
            , zc_Color_Cyan()   :: Integer AS ColorB_DayCountForecast
@@ -384,6 +423,12 @@ BEGIN
                   , tmpMI_master.isErased
             ) AS tmpMI
 
+            FULL JOIN tmpMI_Send ON tmpMI_Send.GoodsId = tmpMI.GoodsId
+                                AND tmpMI_Send.GoodsKindId  = tmpMI.GoodsKindId_complete
+            LEFT JOIN ObjectFloat AS ObjectFloat_Weight
+                                  ON ObjectFloat_Weight.ObjectId = tmpMI_Send.GoodsId
+                                 AND ObjectFloat_Weight.DescId = zc_ObjectFloat_Goods_Weight()
+
             LEFT JOIN Object AS Object_Goods_detail ON Object_Goods_detail.Id = tmpMI.GoodsId_detail
             LEFT JOIN Object AS Object_GoodsKind_detail ON Object_GoodsKind_detail.Id = tmpMI.GoodsKindId_detail
             LEFT JOIN ObjectLink AS ObjectLink_Goods_Measure_detail
@@ -402,8 +447,8 @@ BEGIN
                                   AND ObjectString_Receipt_Code_basis.DescId = zc_ObjectString_Receipt_Code()
 
             LEFT JOIN Object AS Object_Goods_basis ON Object_Goods_basis.Id = tmpMI.GoodsId_basis
-            LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = tmpMI.GoodsId
-            LEFT JOIN Object AS Object_GoodsKind ON Object_GoodsKind.Id = tmpMI.GoodsKindId_complete
+            LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = COALESCE (tmpMI.GoodsId, tmpMI_Send.GoodsId)
+            LEFT JOIN Object AS Object_GoodsKind ON Object_GoodsKind.Id = COALESCE (tmpMI.GoodsKindId_complete, tmpMI_Send.GoodsKindId)
 
             LEFT JOIN ObjectLink AS ObjectLink_Goods_Measure
                                  ON ObjectLink_Goods_Measure.ObjectId = Object_Goods.Id

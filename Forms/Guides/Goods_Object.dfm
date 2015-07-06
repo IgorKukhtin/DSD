@@ -3,7 +3,7 @@ object Goods_ObjectForm: TGoods_ObjectForm
   Top = 0
   Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <T'#1086#1074#1072#1088#1099'>'
   ClientHeight = 404
-  ClientWidth = 523
+  ClientWidth = 663
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -20,11 +20,12 @@ object Goods_ObjectForm: TGoods_ObjectForm
   object cxGrid: TcxGrid
     Left = 0
     Top = 26
-    Width = 523
+    Width = 663
     Height = 378
     Align = alClient
     TabOrder = 0
     LookAndFeel.NativeStyle = False
+    ExplicitWidth = 523
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -53,11 +54,19 @@ object Goods_ObjectForm: TGoods_ObjectForm
         DataBinding.FieldName = 'Code'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 45
+        Width = 35
+      end
+      object clGoodsGroupNameFull: TcxGridDBColumn
+        Caption = #1043#1088#1091#1087#1087#1072' ('#1074#1089#1077')'
+        DataBinding.FieldName = 'GoodsGroupNameFull'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 100
       end
       object clGoodsGroupName: TcxGridDBColumn
         Caption = #1043#1088#1091#1087#1087#1072
         DataBinding.FieldName = 'GoodsGroupName'
+        Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 100
@@ -82,15 +91,14 @@ object Goods_ObjectForm: TGoods_ObjectForm
         DataBinding.FieldName = 'MeasureName'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 40
+        Width = 25
       end
       object clWeight: TcxGridDBColumn
         Caption = #1042#1077#1089
         DataBinding.FieldName = 'Weight'
-        Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 45
+        Width = 35
       end
       object clBusinessName: TcxGridDBColumn
         Caption = #1041#1080#1079#1085#1077#1089

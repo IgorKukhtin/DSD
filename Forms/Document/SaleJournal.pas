@@ -111,9 +111,9 @@ type
     actPrint_TTN: TdsdPrintAction;
     spSelectPrint_TTN: TdsdStoredProc;
     bbTTN: TdxBarButton;
-    clEdiOrdspr: TcxGridDBColumn;
-    clEdiInvoice: TcxGridDBColumn;
-    clEdiDesadv: TcxGridDBColumn;
+    EdiOrdspr: TcxGridDBColumn;
+    EdiInvoice: TcxGridDBColumn;
+    EdiDesadv: TcxGridDBColumn;
     actPrint_QualityDoc: TdsdPrintAction;
     spSelectPrint_Quality: TdsdStoredProc;
     bbPrint_Quality: TdxBarButton;
@@ -148,6 +148,9 @@ type
     miOrdSpr: TMenuItem;
     miDesadv: TMenuItem;
     actExecPrint_EDI: TdsdExecStoredProc;
+    isEdiOrdspr_partner: TcxGridDBColumn;
+    isEdiInvoice_partner: TcxGridDBColumn;
+    isEdiDesadv_partner: TcxGridDBColumn;
   private
     { Private declarations }
   public

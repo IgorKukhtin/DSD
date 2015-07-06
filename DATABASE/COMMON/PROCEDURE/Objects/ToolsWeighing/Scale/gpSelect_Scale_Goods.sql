@@ -33,22 +33,60 @@ RETURNS TABLE (GoodsGroupNameFull TVarChar
               )
 AS
 $BODY$
-   DECLARE vbUserId Integer;
+    DECLARE vbUserId Integer;
+
+    DECLARE vbRetailId Integer;
+    DECLARE vbFromId Integer;
 BEGIN
    -- проверка прав пользователя на вызов процедуры
    vbUserId:= lpGetUserBySession (inSession);
 
    IF inOrderExternalId <> 0
    THEN
+
+        -- параметры из документа
+        SELECT COALESCE (MovementLinkObject_Retail.ObjectId, 0)         AS RetailId
+             , COALESCE (MovementLinkObject_From.ObjectId, 0)          AS FromId
+               INTO vbRetailId, vbFromId
+        FROM Movement
+             LEFT JOIN MovementLinkObject AS MovementLinkObject_Retail
+                                          ON MovementLinkObject_Retail.MovementId = Movement.Id
+                                         AND MovementLinkObject_Retail.DescId = zc_MovementLinkObject_Retail()
+             LEFT JOIN MovementLinkObject AS MovementLinkObject_From
+                                          ON MovementLinkObject_From.MovementId = Movement.Id
+                                         AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
+        WHERE Movement.Id = inOrderExternalId;
+
+
     -- Результат - по заявке
     RETURN QUERY
-       WITH tmpMI_Order AS (SELECT MovementItem.ObjectId                                                AS GoodsId
+       WITH tmpMovement AS (SELECT Movement_find.Id AS MovementId
+                            FROM (SELECT inOrderExternalId AS MovementId WHERE vbRetailId <> 0) AS tmpMovement
+                                 INNER JOIN Movement ON Movement.Id = tmpMovement.MovementId
+                                 INNER JOIN Movement AS Movement_find ON Movement_find.OperDate = Movement.OperDate
+                                                                     AND Movement_find.DescId   = Movement.DescId
+                                                                     AND Movement_find.StatusId = zc_Enum_Status_Complete()
+                                 INNER JOIN MovementLinkObject AS MovementLinkObject_From_find
+                                                               ON MovementLinkObject_From_find.MovementId = Movement_find.Id
+                                                              AND MovementLinkObject_From_find.DescId = zc_MovementLinkObject_From()
+                                                              AND MovementLinkObject_From_find.ObjectId = vbFromId
+                                 INNER JOIN MovementLinkObject AS MovementLinkObject_Retail_find
+                                                               ON MovementLinkObject_Retail_find.MovementId = Movement_find.Id
+                                                              AND MovementLinkObject_Retail_find.DescId = zc_MovementLinkObject_Retail()
+                                                              AND MovementLinkObject_Retail_find.ObjectId = vbRetailId
+                           UNION
+                            SELECT inOrderExternalId AS MovementId WHERE vbRetailId = 0
+                           )
+          , tmpMI_Order AS (SELECT MovementItem.ObjectId                                                AS GoodsId
                                  , COALESCE (MILinkObject_GoodsKind.ObjectId, CASE WHEN inIsGoodsComplete = FALSE THEN 0 ELSE zc_Enum_GoodsKind_Main() END) AS GoodsKindId
                                  , MovementItem.Amount + COALESCE (MIFloat_AmountSecond.ValueData, 0)   AS Amount
                                  , COALESCE (MIFloat_Price.ValueData, 0)                                AS Price
                                  , CASE WHEN MIFloat_CountForPrice.ValueData > 0 THEN MIFloat_CountForPrice.ValueData ELSE 1 END AS CountForPrice
                                  , FALSE AS isTare
-                            FROM MovementItem
+                            FROM tmpMovement
+                                 INNER JOIN MovementItem ON MovementItem.MovementId = tmpMovement.MovementId
+                                                        AND MovementItem.DescId     = zc_MI_Master()
+                                                        AND MovementItem.isErased   = FALSE
                                  LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
                                                                   ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
                                                                  AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
@@ -61,10 +99,7 @@ BEGIN
                                  LEFT JOIN MovementItemFloat AS MIFloat_CountForPrice
                                                              ON MIFloat_CountForPrice.MovementItemId = MovementItem.Id
                                                             AND MIFloat_CountForPrice.DescId = zc_MIFloat_CountForPrice()
-                            WHERE MovementItem.MovementId = inOrderExternalId
-                              AND MovementItem.DescId     = zc_MI_Master()
-                              AND MovementItem.isErased   = FALSE
-                           UNION
+                           UNION ALL
                             SELECT Object_Goods.Id AS GoodsId
                                  , CASE WHEN inIsGoodsComplete = FALSE THEN 0 ELSE zc_Enum_GoodsKind_Main() END  AS GoodsKindId
                                  , 0 AS Amount
@@ -81,8 +116,7 @@ BEGIN
                             WHERE View_InfoMoney.InfoMoneyDestinationId IN (zc_Enum_InfoMoneyDestination_20500() -- Общефирменные + Оборотная тара
                                                                           , zc_Enum_InfoMoneyDestination_20600() -- Общефирменные + Прочие материалы
                                                                            )
-                              AND vbUserId = 5
-
+                              -- AND vbUserId = 5
                            )
        , tmpMI_Weighing AS (SELECT MovementItem.ObjectId                         AS GoodsId
                                  , COALESCE (MILinkObject_GoodsKind.ObjectId, 0) AS GoodsKindId
@@ -175,13 +209,13 @@ BEGIN
                   , tmpMI.GoodsKindId
                   , SUM (tmpMI.Amount_Order)    AS Amount_Order
                   , SUM (tmpMI.Amount_Weighing) AS Amount_Weighing
-                  , tmpMI.Price
+                  , MAX (tmpMI.Price) AS Price
                   , tmpMI.CountForPrice
                   , tmpMI.isTare
              FROM tmpMI
              GROUP BY tmpMI.GoodsId
                     , tmpMI.GoodsKindId
-                    , tmpMI.Price
+                    -- , tmpMI.Price
                     , tmpMI.CountForPrice
                     , tmpMI.isTare
             ) AS tmpMI

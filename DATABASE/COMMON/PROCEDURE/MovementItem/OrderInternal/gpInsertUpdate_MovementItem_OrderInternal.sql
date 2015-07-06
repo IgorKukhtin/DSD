@@ -30,8 +30,8 @@ BEGIN
      THEN
          RAISE EXCEPTION 'Ошибка.Не определено значение <Товар>.';
      END IF;
-     -- проверка
-     IF COALESCE (inGoodsKindId, 0) = 0
+     -- проверка + временно захардкодил
+     IF COALESCE (inGoodsKindId, 0) = 0 AND NOT EXISTS (SELECT MovementId FROM MovementLinkObject WHERE DescId = zc_MovementLinkObject_From() AND MovementId = inMovementId AND ObjectId IN (SELECT tmp.UnitId FROM lfSelect_Object_Unit_byGroup (8446) AS tmp)) -- ЦЕХ колбаса+дел-сы
      THEN
          RAISE EXCEPTION 'Ошибка.Не определено значение <Вид товара>.';
      END IF;

@@ -38,6 +38,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , isElectron Boolean
              , isMedoc Boolean
              , EdiOrdspr Boolean, EdiInvoice Boolean, EdiDesadv Boolean
+             , isEdiOrdspr_partner Boolean, isEdiInvoice_partner Boolean, isEdiDesadv_partner Boolean
              , isError Boolean
              , InsertDate TDateTime
               )
@@ -144,6 +145,10 @@ BEGIN
            , COALESCE (MovementBoolean_EdiOrdspr.ValueData, FALSE)    AS EdiOrdspr
            , COALESCE (MovementBoolean_EdiInvoice.ValueData, FALSE)   AS EdiInvoice
            , COALESCE (MovementBoolean_EdiDesadv.ValueData, FALSE)    AS EdiDesadv
+
+           , COALESCE (ObjectBoolean_EdiOrdspr.ValueData, CAST (False AS Boolean))     AS isEdiOrdspr_partner
+           , COALESCE (ObjectBoolean_EdiInvoice.ValueData, CAST (False AS Boolean))    AS isEdiInvoice_partner
+           , COALESCE (ObjectBoolean_EdiDesadv.ValueData, CAST (False AS Boolean))     AS isEdiDesadv_partner
 
            , CAST (CASE WHEN Movement_DocumentMaster.Id IS NOT NULL -- MovementLinkMovement_Master.MovementChildId IS NOT NULL
                               AND (Movement_DocumentMaster.StatusId <> zc_Enum_Status_Complete()
@@ -367,6 +372,17 @@ BEGIN
                                          ON MovementLinkObject_Personal.MovementId = MovementLinkMovement_Order.MovementChildId
                                         AND MovementLinkObject_Personal.DescId = zc_MovementLinkObject_Personal()
             LEFT JOIN Object AS Object_Personal ON Object_Personal.Id = MovementLinkObject_Personal.ObjectId
+
+
+         LEFT JOIN ObjectBoolean AS ObjectBoolean_EdiOrdspr
+                                 ON ObjectBoolean_EdiOrdspr.ObjectId = Object_To.Id
+                                AND ObjectBoolean_EdiOrdspr.DescId = zc_ObjectBoolean_Partner_EdiOrdspr()
+         LEFT JOIN ObjectBoolean AS ObjectBoolean_EdiInvoice
+                                 ON ObjectBoolean_EdiInvoice.ObjectId = Object_To.Id
+                                AND ObjectBoolean_EdiInvoice.DescId = zc_ObjectBoolean_Partner_EdiInvoice()
+         LEFT JOIN ObjectBoolean AS ObjectBoolean_EdiDesadv
+                                 ON ObjectBoolean_EdiDesadv.ObjectId = Object_To.Id
+                                AND ObjectBoolean_EdiDesadv.DescId = zc_ObjectBoolean_Partner_EdiDesadv()
             ;
 
 END;

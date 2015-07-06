@@ -125,6 +125,14 @@ type
     CountStart_Weight: TcxGridDBColumn;
     CountEnd_sh: TcxGridDBColumn;
     CountEnd_Weight: TcxGridDBColumn;
+    isReprice: TcxGridDBColumn;
+    isPriceStart_diff: TcxGridDBColumn;
+    isPriceEnd_diff: TcxGridDBColumn;
+    Count_byCount: TcxGridDBColumn;
+    Count_onCount: TcxGridDBColumn;
+    CountStart_byCount: TcxGridDBColumn;
+    CountEnd_byCount: TcxGridDBColumn;
+    Weight_byCount: TcxGridDBColumn;
   private
   public
   end;
