@@ -261,7 +261,6 @@
 					<Source>
 						<Source Name="MainSource">Scale.dpr</Source>
 					</Source>
-					<Excluded_Packages/>
 				</Delphi.Personality>
 				<Deployment/>
 				<Platforms>
