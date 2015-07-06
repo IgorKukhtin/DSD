@@ -38,6 +38,9 @@ type
     bbPrint: TdxBarButton;
     PrintItemsSverkaCDS: TClientDataSet;
     colTotalSum: TcxGridDBColumn;
+    actPrint1: TdsdPrintAction;
+    bbPrint1: TdxBarButton;
+    spSelectPrint1: TdsdStoredProc;
   private
     { Private declarations }
   public
