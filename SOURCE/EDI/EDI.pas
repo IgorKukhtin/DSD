@@ -280,6 +280,8 @@ begin
   FGetSaveFilePath := TdsdStoredProc.Create(nil);
   FGetSaveFilePath.OutputType := otResult;
   FGetSaveFilePath.StoredProcName := 'gpGetDirectoryEdiName';
+  FGetSaveFilePath.Params.AddParam('Directory', ftString, ptOutput, '');
+  FGetSaveFilePath.Params.AddParam('isEDISaveLocal', ftBoolean, ptOutput, '');
   FGetSaveFilePath.Execute;
   FDirectoryError := FGetSaveFilePath.ParamByName('Directory').AsString;
   FisEDISaveLocal := FGetSaveFilePath.ParamByName('isEDISaveLocal').Value;
