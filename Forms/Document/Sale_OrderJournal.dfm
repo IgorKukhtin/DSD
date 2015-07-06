@@ -3,8 +3,8 @@ inherited Sale_OrderJournalForm: TSale_OrderJournalForm
   ClientHeight = 535
   ClientWidth = 1177
   AddOnFormData.Params = FormParams
-  ExplicitWidth = 1193
-  ExplicitHeight = 570
+  ExplicitWidth = 1185
+  ExplicitHeight = 562
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
