@@ -109,13 +109,15 @@ BEGIN
 
        FROM (SELECT Movement.id
              FROM tmpStatus
-                  JOIN Movement ON Movement.OperDate BETWEEN inStartDate AND inEndDate  AND Movement.DescId = zc_Movement_ReturnIn() AND Movement.StatusId = tmpStatus.StatusId
+                  JOIN Movement ON Movement.OperDate BETWEEN inStartDate AND inEndDate AND Movement.DescId = zc_Movement_ReturnIn() AND Movement.StatusId = tmpStatus.StatusId
+                               AND Movement.ParentId IS NULL
                   JOIN tmpRoleAccessKey ON tmpRoleAccessKey.AccessKeyId = COALESCE (Movement.AccessKeyId, 0)
              WHERE inIsPartnerDate = FALSE
             UNION ALL
              SELECT MovementDate_OperDatePartner.MovementId  AS Id
              FROM MovementDate AS MovementDate_OperDatePartner
                   JOIN Movement ON Movement.Id = MovementDate_OperDatePartner.MovementId AND Movement.DescId = zc_Movement_ReturnIn()
+                               AND Movement.ParentId IS NULL
                   JOIN tmpStatus ON tmpStatus.StatusId = Movement.StatusId
                   JOIN tmpRoleAccessKey ON tmpRoleAccessKey.AccessKeyId = COALESCE (Movement.AccessKeyId, 0)
              WHERE inIsPartnerDate = TRUE
@@ -246,7 +248,7 @@ BEGIN
                                         ON MovementLinkMovement_MasterEDI.MovementId = Movement.Id 
                                        AND MovementLinkMovement_MasterEDI.DescId = zc_MovementLinkMovement_MasterEDI()
 
-            WHERE MovementLinkObject_To.ObjectId = inPartnerId --OR COALESCE (inPartnerId, 0) = 0
+            WHERE MovementLinkObject_From.ObjectId = inPartnerId --OR COALESCE (inPartnerId, 0) = 0
             ;
 
 END;

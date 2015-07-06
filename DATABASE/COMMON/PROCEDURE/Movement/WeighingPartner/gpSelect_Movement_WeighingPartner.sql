@@ -64,14 +64,30 @@ BEGIN
 
              , Movement_Parent.Id                AS MovementId_parent
              , Movement_Parent.OperDate          AS OperDate_parent
-             , CASE WHEN Movement_Parent.StatusId = zc_Enum_Status_Complete() THEN Movement_Parent.InvNumber ELSE '' END :: TVarChar AS InvNumber_parent
+             , CASE WHEN Movement_Parent.StatusId = zc_Enum_Status_Complete()
+                         THEN Movement_Parent.InvNumber
+                    WHEN Movement_Parent.StatusId = zc_Enum_Status_UnComplete()
+                         THEN '***' || Movement_Parent.InvNumber
+                    WHEN Movement_Parent.StatusId = zc_Enum_Status_Erased()
+                         THEN '*' || Movement_Parent.InvNumber
+                    ELSE ''
+               END :: TVarChar AS InvNumber_parent
 
              , Movement_TransportGoods.Id            AS MovementId_TransportGoods
              , Movement_TransportGoods.InvNumber     AS InvNumber_TransportGoods
              , Movement_TransportGoods.OperDate      AS OperDate_TransportGoods
 
              , Movement_Tax.Id                       AS MovementId_Tax
-             , CASE WHEN Movement_Tax.StatusId = zc_Enum_Status_Complete() THEN MS_InvNumberPartner_Tax.ValueData ELSE '' END :: TVarChar AS InvNumberPartner_Tax
+             , CASE WHEN Movement_Tax.StatusId = zc_Enum_Status_Complete() AND MS_InvNumberPartner_Tax.ValueData <> ''
+                         THEN MS_InvNumberPartner_Tax.ValueData
+                    WHEN Movement_Tax.StatusId = zc_Enum_Status_Complete()
+                         THEN '_' || Movement_Tax.InvNumber
+                    WHEN Movement_Tax.StatusId = zc_Enum_Status_UnComplete()
+                         THEN '***' || Movement_Tax.InvNumber
+                    WHEN Movement_Tax.StatusId = zc_Enum_Status_Erased()
+                         THEN '*' || Movement_Tax.InvNumber
+                    ELSE ''
+               END :: TVarChar AS InvNumberPartner_Tax
              , Movement_Tax.OperDate                 AS OperDate_Tax
 
              , MovementDate_StartWeighing.ValueData  AS StartWeighing  

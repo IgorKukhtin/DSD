@@ -16,6 +16,7 @@ $BODY$
    DECLARE Cursor1 refcursor;
 
    DECLARE vbOperDate TDateTime;
+   DECLARE vbToId Integer;
    DECLARE vbDayCount Integer;
    DECLARE vbMonth Integer;
 BEGIN
@@ -26,10 +27,14 @@ BEGIN
 
      -- определяется
      SELECT Movement.OperDate
+          , MovementLinkObject_To.ObjectId
           , 1 + EXTRACT (DAY FROM (MovementDate_OperDateEnd.ValueData - MovementDate_OperDateStart.ValueData))
           , EXTRACT (MONTH FROM (Movement.OperDate + INTERVAL '1 DAY'))
-            INTO vbOperDate, vbDayCount, vbMonth
+            INTO vbOperDate, vbToId, vbDayCount, vbMonth
      FROM Movement
+          LEFT JOIN MovementLinkObject AS MovementLinkObject_To
+                                       ON MovementLinkObject_To.MovementId = Movement.Id
+                                      AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
           LEFT JOIN MovementDate AS MovementDate_OperDateStart
                                  ON MovementDate_OperDateStart.MovementId =  Movement.Id
                                 AND MovementDate_OperDateStart.DescId = zc_MovementDate_OperDateStart()
@@ -178,7 +183,27 @@ BEGIN
                                                                  AND _tmpMI_child.GoodsKindId = tmpMI_master.GoodsKindId_detail
                                      GROUP BY tmpMI_master.MovementItemId
                                     )
-
+          , tmpMI_Send AS (SELECT tmpMI.GoodsId                          AS GoodsId
+                                , COALESCE (CLO_GoodsKindId.ObjectId, 0) AS GoodsKindId
+                                , SUM (tmpMI.Amount)                     AS Amount
+                           FROM (SELECT MIContainer.ObjectId_Analyzer AS GoodsId
+                                      , MIContainer.ContainerId
+                                      , -1 * SUM (MIContainer.Amount) AS Amount
+                                 FROM MovementItemContainer AS MIContainer
+                                 WHERE MIContainer.OperDate   = vbOperDate
+                                   AND MIContainer.DescId     = zc_MIContainer_Count()
+                                   AND MIContainer.WhereObjectId_Analyzer = vbToId
+                                   AND MIContainer.MovementDescId = zc_Movement_Send()
+                                   AND MIContainer.isActive = FALSE
+                                 GROUP BY MIContainer.ObjectId_Analyzer
+                                        , MIContainer.ContainerId
+                                ) AS tmpMI
+                                LEFT JOIN ContainerLinkObject AS CLO_GoodsKindId
+                                                             ON CLO_GoodsKindId.ContainerId = tmpMI.ContainerId
+                                                            AND CLO_GoodsKindId.DescId = zc_ContainerLinkObject_GoodsKind()
+                            GROUP BY tmpMI.GoodsId
+                                   , CLO_GoodsKindId.ObjectId
+                          )
        SELECT
              tmpMI.MovementItemId :: Integer     AS Id
            , Object_Goods.Id                     AS GoodsId
@@ -230,6 +255,25 @@ BEGIN
            , tmpMI.NormInDays            :: TFloat AS NormInDays            -- Норма запас в дн.
            , tmpMI.StartProductionInDays :: TFloat AS StartProductionInDays -- Нач. произв. в дн.
 
+           , CASE WHEN ObjectLink_Goods_Measure_detail.ChildObjectId = zc_Measure_Sh() THEN tmpMI_Send.Amount ELSE 0 END AS AmountSend_sh
+           , tmpMI_Send.Amount * CASE WHEN ObjectLink_Goods_Measure_detail.ChildObjectId = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight_detail.ValueData, 0) ELSE 1 END AS AmountSend_Weight
+           , CASE WHEN tmpMI_Send.Amount > 0 AND (tmpMI.Amount + tmpMI.AmountSecond) = 0
+                       THEN -100
+                  WHEN COALESCE (tmpMI_Send.Amount, 0) = 0 AND (tmpMI.Amount + tmpMI.AmountSecond) <> 0
+                       THEN 0
+                  WHEN COALESCE (tmpMI_Send.Amount, 0) = 0 AND (tmpMI.Amount + tmpMI.AmountSecond) = 0
+                       THEN 0
+                  ELSE CAST (100 * tmpMI_Send.Amount / (tmpMI.Amount + tmpMI.AmountSecond) AS NUMERIC (16, 0))
+              END AS Percent_diff
+           , CASE WHEN COALESCE (tmpMI_Send.Amount, 0) = 0 AND (tmpMI.Amount + tmpMI.AmountSecond) = 0
+                       THEN FALSE
+                  WHEN (tmpMI.Amount + tmpMI.AmountSecond) = 0
+                       THEN TRUE
+                  WHEN CAST (100 * tmpMI_Send.Amount / (tmpMI.Amount + tmpMI.AmountSecond) AS NUMERIC (16, 0)) = 100
+                       THEN FALSE
+                  ELSE TRUE
+              END :: Boolean AS isPercent_diff
+
            , Object_GoodsKind.Id                 AS GoodsKindId
            , Object_GoodsKind.ValueData          AS GoodsKindName
            , Object_GoodsKind_detail.ValueData   AS GoodsKindName_detail
@@ -251,22 +295,38 @@ BEGIN
            , Object_Unit.ValueData                     AS UnitName 
 
            , CASE WHEN tmpMI.AmountRemains <= 0
-                       THEN 1118719 -- clRed
-                  ELSE 0 -- clBlack
+                       THEN zc_Color_Red()
+                  ELSE zc_Color_Black()
              END :: Integer AS Color_remains
            , CASE WHEN tmpMI.AmountRemains - tmpMI.AmountPartnerPrior - tmpMI.AmountPartner <= 0
-                       THEN 1118719 -- clRed
-                  ELSE 0 -- clBlack
+                       THEN zc_Color_Red()
+                  ELSE zc_Color_Black()
              END :: Integer AS Color_remains_calc
            , CASE WHEN tmpMI.AmountRemains - tmpMI.AmountPartnerPrior - tmpMI.AmountPartner + tmpMI.AmountRemains_child <= 0
-                       THEN 1118719 -- clRed
-                  ELSE 0 -- clBlack
+                       THEN zc_Color_Red()
+                  ELSE zc_Color_Black()
              END :: Integer AS Color_remainsChild_calc
 
-           , 16777158   :: Integer AS ColorB_const            -- aclAqua
-           , 14862279   :: Integer AS ColorB_DayCountForecast -- $00E2C7C7
-           , 11987626   :: Integer AS ColorB_AmountPartner    -- $00B6EAAA
-           , 8978431    :: Integer AS ColorB_AmountPrognoz    -- $008FF8F2 9435378
+           , zc_Color_Blue() AS Color_send
+           , CASE WHEN tmpMI_Send.Amount > 0 AND (tmpMI.Amount + tmpMI.AmountSecond) = 0
+                       THEN zc_Color_Red()
+                  WHEN COALESCE (tmpMI_Send.Amount, 0) = 0 AND (tmpMI.Amount + tmpMI.AmountSecond) <> 0
+                       THEN zc_Color_Red()
+                  WHEN COALESCE (tmpMI_Send.Amount, 0) = 0 AND (tmpMI.Amount + tmpMI.AmountSecond) = 0
+                       THEN zc_Color_Black()
+                  WHEN CAST (100 * tmpMI_Send.Amount / (tmpMI.Amount + tmpMI.AmountSecond) AS NUMERIC (16, 0)) < 100
+                       THEN zc_Color_Red()
+                  ELSE zc_Color_Black()
+              END AS Color_Percent_diff
+           , CASE WHEN COALESCE (tmpMI_Send.Amount, 0) = 0 AND (tmpMI.Amount + tmpMI.AmountSecond) <> 0
+                       THEN zc_Color_Red()
+                  ELSE zc_Color_White()
+              END AS ColorB_Percent_diff
+
+           , zc_Color_Aqua()   :: Integer AS ColorB_const
+           , zc_Color_Cyan()   :: Integer AS ColorB_DayCountForecast
+           , zc_Color_GreenL() :: Integer AS ColorB_AmountPartner
+           , zc_Color_Yelow()  :: Integer AS ColorB_AmountPrognoz
 
            , tmpMI.isErased
 
@@ -315,12 +375,19 @@ BEGIN
                   , tmpMI_master.isErased
             ) AS tmpMI
 
+            LEFT JOIN tmpMI_Send ON tmpMI_Send.GoodsId = tmpMI.GoodsId_detail
+                                AND tmpMI_Send.GoodsKindId = tmpMI.GoodsKindId_detail
+
             LEFT JOIN Object AS Object_Goods_detail ON Object_Goods_detail.Id = tmpMI.GoodsId_detail
             LEFT JOIN Object AS Object_GoodsKind_detail ON Object_GoodsKind_detail.Id = tmpMI.GoodsKindId_detail
             LEFT JOIN ObjectLink AS ObjectLink_Goods_Measure_detail
                                  ON ObjectLink_Goods_Measure_detail.ObjectId = Object_Goods_detail.Id
                                 AND ObjectLink_Goods_Measure_detail.DescId = zc_ObjectLink_Goods_Measure()
             LEFT JOIN Object AS Object_Measure_detail ON Object_Measure_detail.Id = ObjectLink_Goods_Measure_detail.ChildObjectId
+
+            LEFT JOIN ObjectFloat AS ObjectFloat_Weight_detail
+                                  ON ObjectFloat_Weight_detail.ObjectId = tmpMI.GoodsId_detail
+                                 AND ObjectFloat_Weight_detail.DescId = zc_ObjectFloat_Goods_Weight()
 
             LEFT JOIN Object AS Object_Receipt ON Object_Receipt.Id = tmpMI.ReceiptId
             LEFT JOIN ObjectString AS ObjectString_Receipt_Code

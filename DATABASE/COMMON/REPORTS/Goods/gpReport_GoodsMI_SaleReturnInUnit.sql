@@ -132,7 +132,7 @@ BEGIN
                                       ELSE 0
                                  END AS ToId
 
-                               , CASE WHEN inIsGoods = TRUE OR inIsTradeMark = TRUE THEN MovementItem.ObjectId  ELSE 0 END AS GoodsId
+                               , MovementItem.ObjectId AS GoodsId
                                , CASE WHEN inIsGoodsKind = TRUE THEN MILinkObject_GoodsKind.ObjectId ELSE 0 END AS GoodsKindId
 
                                , SUM (CASE WHEN tmp_Unit_From.UnitId > 0 THEN MovementItem.Amount ELSE 0 END) AS Amount_Count
@@ -195,27 +195,51 @@ BEGIN
                                         ELSE 0
                                    END
                                  , CASE WHEN inIsPartner = TRUE THEN MovementLinkObject_To.ObjectId ELSE 0 END
-                                 , CASE WHEN inIsGoods = TRUE OR inIsTradeMark = TRUE THEN MovementItem.ObjectId  ELSE 0 END
+                                 , MovementItem.ObjectId
                                  , CASE WHEN inIsGoodsKind = TRUE THEN MILinkObject_GoodsKind.ObjectId ELSE 0 END
                          )
 
 
-       SELECT * FROM gpReport_GoodsMI_SaleReturnIn (inStartDate
-                                                      , inEndDate
-                                                      , inBranchId
-                                                      , inAreaId
-                                                      , inRetailId
-                                                      , inJuridicalId
-                                                      , inPaidKindId
-                                                      , inTradeMarkId
-                                                      , inGoodsGroupId
-                                                      , inInfoMoneyId
-                                                      , inIsPartner
-                                                      , inIsTradeMark
-                                                      , inIsGoods
-                                                      , inIsGoodsKind
-                                                      , inSession
-                                                       )
+       SELECT  tmp.GoodsGroupName, tmp.GoodsGroupNameFull
+             , tmp.GoodsCode, tmp.GoodsName, tmp.GoodsKindName, tmp.MeasureName
+             , tmp.TradeMarkName, tmp.GoodsGroupAnalystName, tmp.GoodsTagName, tmp.GoodsGroupStatName
+             , tmp.GoodsPlatformName
+             , tmp.JuridicalGroupName
+             , tmp.BranchCode, tmp.BranchName
+             , tmp.JuridicalCode, tmp.JuridicalName, tmp.OKPO
+             , tmp.RetailName, tmp.RetailReportName
+             , tmp.AreaName, tmp.PartnerTagName
+             , tmp.Address, tmp.RegionName, tmp.ProvinceName, tmp.CityKindName, tmp.CityName, tmp.ProvinceCityName, tmp.StreetKindName, tmp.StreetName
+             , tmp.PartnerId, tmp.PartnerCode, tmp.PartnerName
+             , tmp.ContractCode, tmp.ContractNumber, tmp.ContractTagName, tmp.ContractTagGroupName
+             , tmp.PersonalName, tmp.UnitName_Personal, tmp.BranchName_Personal
+             , tmp.PersonalTradeName, tmp.UnitName_PersonalTrade
+             , tmp.InfoMoneyGroupName, tmp.InfoMoneyDestinationName, tmp.InfoMoneyCode, tmp.InfoMoneyName, tmp.InfoMoneyName_all
+             , tmp.AccountName
+             , tmp.Sale_Summ, tmp.Sale_Summ_10200, tmp.Sale_Summ_10300, tmp.Sale_SummCost, tmp.Sale_SummCost_10500, tmp.Sale_SummCost_40200
+             , tmp.Sale_Amount_Weight , tmp.Sale_Amount_Sh, tmp.Sale_AmountPartner_Weight , tmp.Sale_AmountPartner_Sh
+             , tmp.Return_Summ, tmp.Return_Summ_10300, tmp.Return_SummCost, tmp.Return_SummCost_40200
+             , tmp.Return_Amount_Weight, tmp.Return_Amount_Sh, tmp.Return_AmountPartner_Weight, tmp.Return_AmountPartner_Sh
+             , tmp.Sale_Amount_10500_Weight
+             , tmp.Sale_Amount_40200_Weight
+             , tmp.Return_Amount_40200_Weight
+             , tmp.ReturnPercent
+       FROM gpReport_GoodsMI_SaleReturnIn (inStartDate
+                                         , inEndDate
+                                         , inBranchId
+                                         , inAreaId
+                                         , inRetailId
+                                         , inJuridicalId
+                                         , inPaidKindId
+                                         , inTradeMarkId
+                                         , inGoodsGroupId
+                                         , inInfoMoneyId
+                                         , inIsPartner
+                                         , inIsTradeMark
+                                         , inIsGoods
+                                         , inIsGoodsKind
+                                         , inSession
+                                          ) AS tmp
     UNION ALL
 
      SELECT Object_GoodsGroup.ValueData        AS GoodsGroupName
@@ -309,21 +333,25 @@ BEGIN
 
      FROM (SELECT tmp_Send.FromId
                 , tmp_Send.ToId
-                , tmp_Send.GoodsId
+                , CASE WHEN inIsGoods = TRUE OR inIsTradeMark = TRUE THEN tmp_Send.GoodsId ELSE 0 END AS GoodsId
                 , tmp_Send.GoodsKindId
-                , CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN tmp_Send.Amount_Count ELSE 0 END                                 AS Amount_CountSh
-                , tmp_Send.Amount_Count * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END  AS Amount_CountWeight
-                , tmp_Send.Amount_Summ
+                , SUM (CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN tmp_Send.Amount_Count ELSE 0 END)                                AS Amount_CountSh
+                , SUM (tmp_Send.Amount_Count * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END) AS Amount_CountWeight
+                , SUM (tmp_Send.Amount_Summ) AS Amount_Summ
 
-                , CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN tmp_Send.Amount_CountRet ELSE 0 END                                 AS Amount_CountRetSh
-                , tmp_Send.Amount_CountRet * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END  AS Amount_CountRetWeight
-                , tmp_Send.Amount_SummRet
+                , SUM (CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN tmp_Send.Amount_CountRet ELSE 0 END)                                AS Amount_CountRetSh
+                , SUM (tmp_Send.Amount_CountRet * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END) AS Amount_CountRetWeight
+                , SUM (tmp_Send.Amount_SummRet) AS Amount_SummRet
            FROM tmp_Send
                 LEFT JOIN ObjectLink AS ObjectLink_Goods_Measure ON ObjectLink_Goods_Measure.ObjectId = tmp_Send.GoodsId
                                                                 AND ObjectLink_Goods_Measure.DescId = zc_ObjectLink_Goods_Measure()
                 LEFT JOIN ObjectFloat AS ObjectFloat_Weight
                                       ON ObjectFloat_Weight.ObjectId = tmp_Send.GoodsId
                                      AND ObjectFloat_Weight.DescId = zc_ObjectFloat_Goods_Weight()
+           GROUP BY tmp_Send.FromId
+                  , tmp_Send.ToId
+                  , CASE WHEN inIsGoods = TRUE OR inIsTradeMark = TRUE THEN tmp_Send.GoodsId ELSE 0 END
+                  , tmp_Send.GoodsKindId
           ) AS tmpOperationGroup
           LEFT JOIN Object AS Object_Goods on Object_Goods.Id = tmpOperationGroup.GoodsId
           LEFT JOIN Object AS Object_GoodsKind ON Object_GoodsKind.Id = tmpOperationGroup.GoodsKindId

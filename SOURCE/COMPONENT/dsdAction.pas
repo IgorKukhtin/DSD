@@ -1467,9 +1467,10 @@ var
   lActiveControl: TWinControl;
   ViewToMemTable: TcxViewToMemTable;
   MemTableList: TList;
+  OldFieldIndexList: TStringList;
 begin
   // Перед вызовом печати попробуем у формы поменять фокус, что бы вызвалась процеура сохранения
-
+  OldFieldIndexList := TStringList.Create;
   if Assigned(Owner) then
     if Owner is TForm then
     begin
@@ -1498,10 +1499,14 @@ begin
         UserName := TAddOnDataSet(DataSets[i]).UserName;
         if Assigned(Self.DataSets[i].DataSet) then
         begin
-          if Self.DataSets[i].DataSet is TClientDataSet then
-            if TAddOnDataSet(Self.DataSets[i]).IndexFieldNames <> '' then
-              TClientDataSet(Self.DataSets[i].DataSet).IndexFieldNames :=
-                TAddOnDataSet(Self.DataSets[i]).IndexFieldNames;
+          if Self.DataSets[i].DataSet is TClientDataSet then begin
+             OldFieldIndexList.Values[Self.DataSets[i].DataSet.Name] :=
+               TClientDataSet(Self.DataSets[i].DataSet).IndexFieldNames;
+             if TAddOnDataSet(Self.DataSets[i]).IndexFieldNames <> '' then begin
+                TClientDataSet(Self.DataSets[i].DataSet).IndexFieldNames :=
+                   TAddOnDataSet(Self.DataSets[i]).IndexFieldNames;
+             end;
+          end;
           DataSet := DataSets[i].DataSet;
         end;
         if Assigned(TAddOnDataSet(Self.DataSets[i]).GridView) then
@@ -1593,6 +1598,18 @@ begin
           end;
         end;
       finally
+        for i := 0 to DataSets.Count - 1 do
+          with TfrxDBDataset(FDataSetList[FDataSetList.Count - 1]) do
+          begin
+            if Assigned(Self.DataSets[i].DataSet) then
+            begin
+              if Self.DataSets[i].DataSet is TClientDataSet then
+                 TClientDataSet(Self.DataSets[i].DataSet).IndexFieldNames :=
+                   OldFieldIndexList.Values[Self.DataSets[i].DataSet.Name];
+              end;
+          end;
+
+
         for i := 0 to FDataSetList.Count - 1 do
           TObject(FDataSetList.Items[i]).Free;
         FDataSetList.Free;
@@ -1603,7 +1620,8 @@ begin
       TObject(MemTableList[i]).Free;
     MemTableList.Free;
     ViewToMemTable.Free;
-    Stream.Free
+    Stream.Free;
+    OldFieldIndexList.Free;
   end;
 end;
 

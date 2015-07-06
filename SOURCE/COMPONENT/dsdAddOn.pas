@@ -290,7 +290,6 @@ type
     property ActionItemList;
   end;
 
-
   TdsdUserSettingsStorageAddOn = class(TComponent)
   private
     FOnDestroy: TNotifyEvent;

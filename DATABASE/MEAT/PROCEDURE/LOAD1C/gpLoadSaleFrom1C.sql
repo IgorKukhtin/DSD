@@ -458,6 +458,7 @@ BEGIN
           SELECT tmp.ioId INTO vbMovementId
           FROM lpInsertUpdate_Movement_ReturnIn (ioId := vbMovementId, inInvNumber := vbInvNumber, inInvNumberPartner := vbInvNumber
                                                           , inInvNumberMark := (SELECT ValueData FROM MovementString WHERE MovementId = vbMovementId AND DescId = zc_MovementString_InvNumberMark())
+                                                          , inParentId          := NULL
                                                           , inOperDate := vbOperDate, inOperDatePartner := vbOperDate, inChecked := FALSE
                                                           , inPriceWithVAT := CASE WHEN COALESCE (vbSumaPDV, 0) = 0 THEN TRUE ELSE FALSE END
                                                           , inVATPercent := CASE WHEN COALESCE (vbSumaPDV, 0) = 0 THEN 0 ELSE 20 END
@@ -470,6 +471,7 @@ BEGIN
                                                           , inCurrencyDocumentId:= 14461 -- грн
                                                           , inCurrencyPartnerId := NULL
                                                           , inCurrencyValue     := NULL
+                                                          , inComment           := ''
                                                           , inUserId := vbUserId) AS tmp;
 
           -- сохранили свойство <Загружен из 1С>

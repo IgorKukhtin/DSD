@@ -254,10 +254,9 @@ inherited OrderInternalBasisJournalForm: TOrderInternalBasisJournalForm
         item
           DataSet = PrintItemsCDS
           UserName = 'frxDBDMaster'
-          IndexFieldNames = 
-            'UnitCode;GoodsGroupNameFull;GoodsName_basis;GoodsName;GoodsKindN' +
-            'ame'
+          IndexFieldNames = 'UnitCode;GoodsGroupNameFull;GoodsName;GoodsKindName'
         end>
+      CopiesCount = 1
       Params = <
         item
           Name = 'Id'
@@ -265,8 +264,8 @@ inherited OrderInternalBasisJournalForm: TOrderInternalBasisJournalForm
           Component = FormParams
           ComponentItem = 'Id'
         end>
-      ReportName = #1047#1072#1103#1074#1082#1072' '#1085#1072' '#1091#1087#1072#1082#1086#1074#1082#1091
-      ReportNameParam.Value = #1047#1072#1103#1074#1082#1072' '#1085#1072' '#1091#1087#1072#1082#1086#1074#1082#1091
+      ReportName = #1047#1072#1103#1074#1082#1072' '#1085#1072' '#1089#1099#1088#1100#1077
+      ReportNameParam.Value = #1047#1072#1103#1074#1082#1072' '#1085#1072' '#1089#1099#1088#1100#1077
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
     end
@@ -466,7 +465,7 @@ inherited OrderInternalBasisJournalForm: TOrderInternalBasisJournalForm
     Top = 270
   end
   object spSelectPrint: TdsdStoredProc
-    StoredProcName = 'gpSelect_Movement_OrderInternalPack_Print'
+    StoredProcName = 'gpSelect_Movement_OrderInternalBasis_Print'
     DataSet = PrintHeaderCDS
     DataSets = <
       item

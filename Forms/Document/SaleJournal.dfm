@@ -3,7 +3,6 @@ inherited SaleJournalForm: TSaleJournalForm
   ClientHeight = 641
   ClientWidth = 1142
   AddOnFormData.Params = FormParams
-  ExplicitLeft = -160
   ExplicitWidth = 1158
   ExplicitHeight = 676
   PixelsPerInch = 96
@@ -12,17 +11,17 @@ inherited SaleJournalForm: TSaleJournalForm
     Width = 1142
     Height = 584
     TabOrder = 3
-    ExplicitWidth = 1020
+    ExplicitWidth = 1142
     ExplicitHeight = 584
     ClientRectBottom = 584
     ClientRectRight = 1142
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 1020
+      ExplicitWidth = 1142
       ExplicitHeight = 584
       inherited cxGrid: TcxGrid
         Width = 1142
         Height = 584
-        ExplicitWidth = 1020
+        ExplicitWidth = 1142
         ExplicitHeight = 584
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Filter.Options = [fcoCaseInsensitive, fcoShowOperatorDescription]
@@ -588,7 +587,7 @@ inherited SaleJournalForm: TSaleJournalForm
             HeaderAlignmentVert = vaCenter
             Width = 55
           end
-          object clEdiInvoice: TcxGridDBColumn
+          object EdiInvoice: TcxGridDBColumn
             Caption = 'EDI - '#1057#1095#1077#1090
             DataBinding.FieldName = 'EdiInvoice'
             HeaderAlignmentHorz = taCenter
@@ -596,7 +595,15 @@ inherited SaleJournalForm: TSaleJournalForm
             Options.Editing = False
             Width = 60
           end
-          object clEdiOrdspr: TcxGridDBColumn
+          object isEdiInvoice_partner: TcxGridDBColumn
+            Caption = #1050#1086#1085#1090#1088#1072#1075#1077#1085#1090' - '#1057#1095#1077#1090
+            DataBinding.FieldName = 'isEdiInvoice_partner'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 60
+          end
+          object EdiOrdspr: TcxGridDBColumn
             Caption = 'EDI - '#1055#1086#1076#1090#1074#1077#1088#1078#1076#1077#1085#1080#1077
             DataBinding.FieldName = 'EdiOrdspr'
             HeaderAlignmentHorz = taCenter
@@ -604,9 +611,25 @@ inherited SaleJournalForm: TSaleJournalForm
             Options.Editing = False
             Width = 60
           end
-          object clEdiDesadv: TcxGridDBColumn
+          object isEdiOrdspr_partner: TcxGridDBColumn
+            Caption = #1050#1086#1085#1090#1088#1072#1075#1077#1085#1090' - '#1055#1086#1076#1090#1074#1077#1088#1078#1076#1077#1085#1080#1077
+            DataBinding.FieldName = 'isEdiOrdspr_partner'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 60
+          end
+          object EdiDesadv: TcxGridDBColumn
             Caption = 'EDI - '#1059#1074#1077#1076#1086#1084#1083#1077#1085#1080#1077
             DataBinding.FieldName = 'EdiDesadv'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 60
+          end
+          object isEdiDesadv_partner: TcxGridDBColumn
+            Caption = #1050#1086#1085#1090#1088#1072#1075#1077#1085#1090' - '#1059#1074#1077#1076#1086#1084#1083#1077#1085#1080#1077
+            DataBinding.FieldName = 'isEdiDesadv_partner'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
@@ -626,7 +649,7 @@ inherited SaleJournalForm: TSaleJournalForm
   end
   inherited Panel: TPanel
     Width = 1142
-    ExplicitWidth = 1020
+    ExplicitWidth = 1142
     inherited deStart: TcxDateEdit
       EditValue = 42005d
     end
@@ -754,6 +777,7 @@ inherited SaleJournalForm: TSaleJournalForm
           UserName = 'frxDBDMaster'
           IndexFieldNames = 'GroupName_Juridical;GoodsName_Juridical;GoodsName;GoodsKindName'
         end>
+      CopiesCount = 1
       Params = <
         item
           Name = 'Id'
@@ -790,6 +814,7 @@ inherited SaleJournalForm: TSaleJournalForm
           DataSet = PrintItemsSverkaCDS
           UserName = 'frxDBDSverka'
         end>
+      CopiesCount = 1
       Params = <
         item
           Name = 'Id'
@@ -833,6 +858,7 @@ inherited SaleJournalForm: TSaleJournalForm
           UserName = 'frxDBDMaster'
           IndexFieldNames = 'WeighingNumber;NumOrder'
         end>
+      CopiesCount = 1
       Params = <
         item
           Name = 'Id'
@@ -879,6 +905,7 @@ inherited SaleJournalForm: TSaleJournalForm
             'goodsgroupname;GroupName_Juridical;GoodsName_Juridical;GoodsName' +
             ';GoodsKindName'
         end>
+      CopiesCount = 1
       Params = <
         item
           Name = 'Id'
@@ -1091,6 +1118,7 @@ inherited SaleJournalForm: TSaleJournalForm
           DataSet = PrintItemsSverkaCDS
           UserName = 'frxDBDSverka'
         end>
+      CopiesCount = 1
       Params = <
         item
           Name = 'Id'
@@ -1126,6 +1154,7 @@ inherited SaleJournalForm: TSaleJournalForm
           DataSet = PrintItemsCDS
           UserName = 'frxDBDMaster'
         end>
+      CopiesCount = 1
       Params = <
         item
           Name = 'Id'
@@ -1161,6 +1190,7 @@ inherited SaleJournalForm: TSaleJournalForm
           DataSet = PrintItemsCDS
           UserName = 'frxDBDMaster'
         end>
+      CopiesCount = 1
       Params = <
         item
           Name = 'Id'
@@ -1226,6 +1256,7 @@ inherited SaleJournalForm: TSaleJournalForm
           UserName = 'frxDBDMaster'
           IndexFieldNames = 'GroupName_Juridical;GoodsName_Juridical;GoodsName;GoodsKindName'
         end>
+      CopiesCount = 1
       Params = <
         item
           Name = 'Id'
@@ -1267,6 +1298,7 @@ inherited SaleJournalForm: TSaleJournalForm
           UserName = 'frxDBDMaster'
           IndexFieldNames = 'WeighingNumber;BoxNumber;NumOrder'
         end>
+      CopiesCount = 1
       Params = <
         item
           Name = 'Id'
@@ -1312,6 +1344,7 @@ inherited SaleJournalForm: TSaleJournalForm
           UserName = 'frxDBDMaster2'
           IndexFieldNames = 'QualityCode;GoodsGroupName;GoodsName;GoodsKindName'
         end>
+      CopiesCount = 1
       Params = <
         item
           Name = 'Id'
@@ -1414,6 +1447,7 @@ inherited SaleJournalForm: TSaleJournalForm
           DataSet = PrintItemsCDS
           UserName = 'frxDBDMaster'
         end>
+      CopiesCount = 1
       Params = <
         item
           Name = 'Id'

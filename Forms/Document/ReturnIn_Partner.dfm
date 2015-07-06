@@ -1,27 +1,26 @@
 inherited ReturnIn_PartnerForm: TReturnIn_PartnerForm
-  Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1042#1086#1079#1074#1088#1072#1090' '#1086#1090' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1103'>'
-  ClientHeight = 668
+  Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1042#1086#1079#1074#1088#1072#1090' '#1086#1090' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1103' ('#1073#1091#1093#1075#1072#1083#1090#1077#1088')>'
+  ClientHeight = 637
   ClientWidth = 1139
   ExplicitWidth = 1155
-  ExplicitHeight = 706
+  ExplicitHeight = 672
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 166
     Width = 1139
-    Height = 502
-    ExplicitTop = 126
+    Height = 471
+    ExplicitTop = 166
     ExplicitWidth = 1139
-    ExplicitHeight = 542
-    ClientRectBottom = 502
+    ExplicitHeight = 502
+    ClientRectBottom = 471
     ClientRectRight = 1139
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 1139
-      ExplicitHeight = 518
+      ExplicitHeight = 478
       inherited cxGrid: TcxGrid
         Width = 1139
-        Height = 478
-        ExplicitLeft = 3
+        Height = 447
         ExplicitWidth = 1139
         ExplicitHeight = 478
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -44,7 +43,6 @@ inherited ReturnIn_PartnerForm: TReturnIn_PartnerForm
             item
               Format = ',0.####'
               Kind = skSum
-              Column = colHeadCount
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -65,7 +63,6 @@ inherited ReturnIn_PartnerForm: TReturnIn_PartnerForm
             item
               Format = ',0.####'
               Kind = skSum
-              Column = colHeadCount
             end
             item
               Kind = skSum
@@ -140,15 +137,7 @@ inherited ReturnIn_PartnerForm: TReturnIn_PartnerForm
             HeaderAlignmentVert = vaCenter
             Width = 100
           end
-          object colPartionGoods: TcxGridDBColumn [5]
-            Caption = #1055#1072#1088#1090#1080#1103
-            DataBinding.FieldName = 'PartionGoods'
-            Visible = False
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 120
-          end
-          object colMeasureName: TcxGridDBColumn [6]
+          object colMeasureName: TcxGridDBColumn [5]
             Caption = #1045#1076'. '#1080#1079#1084'.'
             DataBinding.FieldName = 'MeasureName'
             HeaderAlignmentHorz = taCenter
@@ -156,7 +145,7 @@ inherited ReturnIn_PartnerForm: TReturnIn_PartnerForm
             Options.Editing = False
             Width = 45
           end
-          object colAmount: TcxGridDBColumn [7]
+          object colAmount: TcxGridDBColumn [6]
             Caption = #1050#1086#1083'-'#1074#1086' ('#1089#1082#1083#1072#1076')'
             DataBinding.FieldName = 'Amount'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -167,7 +156,7 @@ inherited ReturnIn_PartnerForm: TReturnIn_PartnerForm
             Options.Editing = False
             Width = 60
           end
-          object colAmountPartner: TcxGridDBColumn [8]
+          object colAmountPartner: TcxGridDBColumn [7]
             Caption = #1050#1086#1083'-'#1074#1086' '#1091' '#1087#1086#1082#1091#1087'.'
             DataBinding.FieldName = 'AmountPartner'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -177,7 +166,7 @@ inherited ReturnIn_PartnerForm: TReturnIn_PartnerForm
             HeaderAlignmentVert = vaCenter
             Width = 60
           end
-          object colPrice: TcxGridDBColumn [9]
+          object colPrice: TcxGridDBColumn [8]
             Caption = #1062#1077#1085#1072
             DataBinding.FieldName = 'Price'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -187,14 +176,14 @@ inherited ReturnIn_PartnerForm: TReturnIn_PartnerForm
             HeaderAlignmentVert = vaCenter
             Width = 80
           end
-          object colCountForPrice: TcxGridDBColumn [10]
+          object colCountForPrice: TcxGridDBColumn [9]
             Caption = #1050#1086#1083' '#1074' '#1094#1077#1085#1077
             DataBinding.FieldName = 'CountForPrice'
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
           end
-          object colAmountSumm: TcxGridDBColumn [11]
+          object colAmountSumm: TcxGridDBColumn [10]
             Caption = #1057#1091#1084#1084#1072
             DataBinding.FieldName = 'AmountSumm'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -204,37 +193,21 @@ inherited ReturnIn_PartnerForm: TReturnIn_PartnerForm
             Options.Editing = False
             Width = 91
           end
-          object colHeadCount: TcxGridDBColumn [12]
-            Caption = #1050#1086#1083'. '#1075#1086#1083#1086#1074
-            DataBinding.FieldName = 'HeadCount'
-            Visible = False
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-          end
-          object colAssetName: TcxGridDBColumn [13]
-            Caption = #1054#1089#1085'.'#1089#1088#1077#1076#1089#1090#1074#1072' '
-            DataBinding.FieldName = 'AssetName'
-            Visible = False
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 65
-          end
         end
       end
     end
     object cxTabSheetTaxCorrective: TcxTabSheet
       Caption = #1050#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1082#1080
       ImageIndex = 2
-      ExplicitHeight = 518
+      ExplicitHeight = 478
       object cxGridTaxCorrective: TcxGrid
         Left = 0
         Top = 0
         Width = 1139
-        Height = 478
+        Height = 447
         Align = alClient
         TabOrder = 0
-        ExplicitHeight = 518
+        ExplicitHeight = 478
         object cxGridTaxCorrectiveDBTableView: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = TaxCorrectiveDS
@@ -635,6 +608,7 @@ inherited ReturnIn_PartnerForm: TReturnIn_PartnerForm
       Properties.Buttons = <
         item
           Default = True
+          Enabled = False
           Kind = bkEllipsis
         end>
       Properties.ReadOnly = True
@@ -806,6 +780,24 @@ inherited ReturnIn_PartnerForm: TReturnIn_PartnerForm
       TabOrder = 29
       Width = 97
     end
+    object edInvNumberSale: TcxButtonEdit
+      Left = 269
+      Top = 103
+      Enabled = False
+      Properties.Buttons = <
+        item
+          Default = True
+          Kind = bkEllipsis
+        end>
+      Properties.ReadOnly = True
+      TabOrder = 30
+      Width = 245
+    end
+    object cxLabel19: TcxLabel
+      Left = 269
+      Top = 85
+      Caption = #1054#1089#1085#1086#1074#1072#1085#1080#1077' '#8470' ('#1087#1088#1086#1076#1072#1078#1072' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1102')'
+    end
   end
   object edDocumentTaxKind: TcxButtonEdit [2]
     Left = 892
@@ -878,7 +870,7 @@ inherited ReturnIn_PartnerForm: TReturnIn_PartnerForm
   object cxLabel21: TcxLabel [10]
     Left = 8
     Top = 85
-    Caption = #1054#1089#1085#1086#1074#1072#1085#1080#1077' '#1074#1086#1079#1074#1088#1072#1090
+    Caption = #1054#1089#1085#1086#1074#1072#1085#1080#1077' '#8470' ('#1074#1086#1079#1074#1088#1072#1090' '#1087#1088#1086#1074#1077#1076#1077#1085' '#1082#1083#1072#1076#1086#1074#1097#1080#1082#1086#1084')'
   end
   object edInvNumberParent: TcxButtonEdit [11]
     Left = 8
@@ -890,18 +882,18 @@ inherited ReturnIn_PartnerForm: TReturnIn_PartnerForm
       end>
     Properties.ReadOnly = True
     TabOrder = 15
-    Width = 223
+    Width = 252
   end
   object cxLabel18: TcxLabel [12]
-    Left = 236
+    Left = 525
     Top = 85
     Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
   end
   object ceComment: TcxTextEdit [13]
-    Left = 236
+    Left = 525
     Top = 103
     TabOrder = 17
-    Width = 546
+    Width = 464
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 171
@@ -1107,6 +1099,7 @@ inherited ReturnIn_PartnerForm: TReturnIn_PartnerForm
           DataSet = PrintHeaderCDS
           UserName = 'frxDBDHeader'
         end>
+      CopiesCount = 1
       Params = <
         item
           Name = 'Id'
@@ -1335,6 +1328,7 @@ inherited ReturnIn_PartnerForm: TReturnIn_PartnerForm
           DataSet = PrintHeaderCDS
           UserName = 'frxDBDHeader'
         end>
+      CopiesCount = 1
       Params = <
         item
           Name = 'Id'
@@ -1370,6 +1364,7 @@ inherited ReturnIn_PartnerForm: TReturnIn_PartnerForm
           DataSet = PrintHeaderCDS
           UserName = 'frxDBDHeader'
         end>
+      CopiesCount = 1
       Params = <
         item
           Name = 'Id'
@@ -1706,8 +1701,8 @@ inherited ReturnIn_PartnerForm: TReturnIn_PartnerForm
     Top = 552
   end
   inherited StatusGuides: TdsdGuides
-    Left = 72
-    Top = 48
+    Left = 88
+    Top = 40
   end
   inherited spChangeStatus: TdsdStoredProc
     StoredProcName = 'gpUpdate_Status_ReturnIn'
@@ -2075,6 +2070,9 @@ inherited ReturnIn_PartnerForm: TReturnIn_PartnerForm
       end
       item
         Guides = GuidesTo
+      end
+      item
+        Guides = ParentChoiceGuides
       end>
     Left = 168
     Top = 192
@@ -2134,6 +2132,12 @@ inherited ReturnIn_PartnerForm: TReturnIn_PartnerForm
       end
       item
         Control = edCurrencyValue
+      end
+      item
+        Control = edInvNumberParent
+      end
+      item
+        Control = ceComment
       end>
     Left = 224
     Top = 209
@@ -2329,10 +2333,15 @@ inherited ReturnIn_PartnerForm: TReturnIn_PartnerForm
   end
   object RefreshDispatcher: TRefreshDispatcher
     IdParam.Value = Null
+    IdParam.Component = FormParams
+    IdParam.ComponentItem = 'Id'
     RefreshAction = actRefreshPrice
     ComponentList = <
       item
         Component = PriceListGuides
+      end
+      item
+        Component = ParentChoiceGuides
       end>
     Left = 464
     Top = 360
@@ -3037,8 +3046,52 @@ inherited ReturnIn_PartnerForm: TReturnIn_PartnerForm
         Value = ''
         Component = edInvNumber
         DataType = ftString
+      end
+      item
+        Name = 'OperDate'
+        Value = Null
+        Component = edOperDate
+        DataType = ftDateTime
+      end
+      item
+        Name = 'ToId'
+        Value = Null
+        Component = GuidesTo
+        ComponentItem = 'Key'
+      end
+      item
+        Name = 'ToName'
+        Value = Null
+        Component = GuidesTo
+        ComponentItem = 'TextValue'
+        DataType = ftString
+      end
+      item
+        Name = 'inStartDate'
+        Value = Null
+        Component = edOperDate
+        DataType = ftDateTime
+      end
+      item
+        Name = 'inEndDate'
+        Value = Null
+        Component = edOperDate
+        DataType = ftDateTime
+      end
+      item
+        Name = 'inPartnerId'
+        Value = Null
+        Component = GuidesFrom
+        ComponentItem = 'Key'
+      end
+      item
+        Name = 'inPartnerName'
+        Value = Null
+        Component = GuidesFrom
+        ComponentItem = 'TextValue'
+        DataType = ftString
       end>
-    Left = 84
-    Top = 88
+    Left = 148
+    Top = 80
   end
 end

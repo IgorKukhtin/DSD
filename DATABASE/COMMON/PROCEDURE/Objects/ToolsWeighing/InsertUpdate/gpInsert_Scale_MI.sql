@@ -113,7 +113,9 @@ BEGIN
                                                        , inMovementId          := inMovementId
                                                        , inGoodsId             := inGoodsId
                                                        , inAmount              := inRealWeight - inCountTare * inWeightTare
-                                                       , inAmountPartner       := CASE WHEN vbRetailId IN (341640, 310854) -- Ôîçç³ + Ôîç³
+                                                       , inAmountPartner       := CASE WHEN inChangePercentAmount = 0
+                                                                                            THEN (inRealWeight - inCountTare * inWeightTare)
+                                                                                       WHEN vbRetailId IN (341640, 310854) -- Ôîçç³ + Ôîç³
                                                                                             THEN CAST ((inRealWeight - inCountTare * inWeightTare) * (1 - inChangePercentAmount/100) AS NUMERIC (16, 3))
                                                                                        ELSE CAST ((inRealWeight - inCountTare * inWeightTare) * (1 - inChangePercentAmount/100) AS NUMERIC (16, 2))
                                                                                   END

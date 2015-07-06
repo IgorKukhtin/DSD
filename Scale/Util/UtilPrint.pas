@@ -82,6 +82,8 @@ type
     actPrint_Loss: TdsdPrintAction;
     spSelectPrint_ProductionSeparate: TdsdStoredProc;
     actPrint_ProductionSeparate: TdsdPrintAction;
+    spEDIEvents: TdsdStoredProc;
+    actEDIEvents: TdsdExecStoredProc;
   private
   end;
 
@@ -221,6 +223,7 @@ begin
 
                             else if (MovementDescId = zc_Movement_Send)
                                  or (MovementDescId = zc_Movement_ProductionUnion)
+                                 or (MovementDescId = zc_Movement_Inventory)
                                   then Print_Send(MovementId)
                             else if MovementDescId = zc_Movement_Loss
                                   then Print_Loss(MovementId)

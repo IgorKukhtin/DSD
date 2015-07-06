@@ -56,8 +56,6 @@ type
     colPrice: TcxGridDBColumn;
     colCountForPrice: TcxGridDBColumn;
     colAmountSumm: TcxGridDBColumn;
-    colHeadCount: TcxGridDBColumn;
-    colAssetName: TcxGridDBColumn;
     actTaxJournalChoice: TOpenChoiceForm;
     N2: TMenuItem;
     N3: TMenuItem;

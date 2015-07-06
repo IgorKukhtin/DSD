@@ -135,6 +135,9 @@ type
     clChAmount_calc: TcxGridDBColumn;
     TaxLoss: TcxGridDBColumn;
     CuterCountSecond: TcxGridDBColumn;
+    AmountSend_sh: TcxGridDBColumn;
+    AmountSend_Weight: TcxGridDBColumn;
+    Color_send: TcxGridDBColumn;
   private
     { Private declarations }
   public

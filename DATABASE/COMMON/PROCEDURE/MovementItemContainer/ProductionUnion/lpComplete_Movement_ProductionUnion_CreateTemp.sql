@@ -34,6 +34,13 @@ BEGIN
      -- таблица - суммовые Child(расход)-элементы документа, со всеми свойствами для формирования Аналитик в проводках
      CREATE TEMP TABLE _tmpItemSummChild (MovementItemId_Parent Integer, MovementItemId Integer, ContainerId_From Integer, AccountId_From Integer, InfoMoneyId_Detail_From Integer, OperSumm TFloat) ON COMMIT DROP;
 
+
+     -- таблица - 
+     CREATE TEMP TABLE _tmpItem_Partion (MovementItemId Integer, GoodsId Integer, GoodsKindId Integer, ReceiptId Integer, PartionGoodsDate TDateTime, OperCount TFloat, Count_onCount TFloat) ON COMMIT DROP;
+     -- таблица - 
+     CREATE TEMP TABLE _tmpItem_Partion_child (MovementItemId_Parent Integer, MovementItemId Integer, GoodsId Integer, GoodsKindId Integer, PartionGoodsDate TDateTime, OperCount TFloat) ON COMMIT DROP;
+
+
 END;$BODY$
   LANGUAGE plpgsql VOLATILE;
 

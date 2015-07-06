@@ -26,6 +26,11 @@ BEGIN
    -- определяется - может ли пользовать видеть весь справочник
    vbAccessKeyAll:= zfCalc_AccessKey_GuideAll (vbUserId);
 
+
+   -- !!!Временно захардкодил!!!
+   IF inOperDate IS NULL THEN inOperDate:= CURRENT_DATE; END IF;
+
+
    -- Результат
    RETURN QUERY
      SELECT Object_Partner.Id             AS Id
