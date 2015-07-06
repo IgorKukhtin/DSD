@@ -3,7 +3,7 @@ inherited InventoryJournalForm: TInventoryJournalForm
   ClientHeight = 535
   ClientWidth = 1020
   ExplicitWidth = 1036
-  ExplicitHeight = 570
+  ExplicitHeight = 573
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -256,6 +256,7 @@ inherited InventoryJournalForm: TInventoryJournalForm
           DataSet = PrintItemsCDS
           UserName = 'frxDBDMaster'
         end>
+      CopiesCount = 1
       Params = <
         item
           Name = 'Id'
@@ -266,6 +267,50 @@ inherited InventoryJournalForm: TInventoryJournalForm
       ReportName = 'PrintMovement_Sale2'
       ReportNameParam.Name = #1056#1072#1089#1093#1086#1076#1085#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103
       ReportNameParam.Value = 'PrintMovement_Sale2'
+      ReportNameParam.DataType = ftString
+      ReportNameParam.ParamType = ptInput
+    end
+    object actPrint1: TdsdPrintAction
+      Category = 'DSDLib'
+      MoveParams = <
+        item
+          FromParam.Name = 'Id'
+          FromParam.Value = Null
+          FromParam.Component = MasterCDS
+          FromParam.ComponentItem = 'Id'
+          ToParam.Value = Null
+          ToParam.Component = FormParams
+          ToParam.ComponentItem = 'Id'
+          ToParam.ParamType = ptInputOutput
+        end>
+      StoredProc = spSelectPrint1
+      StoredProcList = <
+        item
+          StoredProc = spSelectPrint1
+        end>
+      Caption = #1053#1072#1082#1083#1072#1076#1085#1072#1103
+      Hint = #1053#1072#1082#1083#1072#1076#1085#1072#1103
+      ImageIndex = 22
+      DataSets = <
+        item
+          DataSet = PrintHeaderCDS
+          UserName = 'frxDBDHeader'
+        end
+        item
+          DataSet = PrintItemsCDS
+          UserName = 'frxDBDMaster'
+          IndexFieldNames = 'GoodsGroupNameFull;GoodsName'
+        end>
+      CopiesCount = 1
+      Params = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'Id'
+        end>
+      ReportName = 'PrintMovement_Inventory'
+      ReportNameParam.Value = 'PrintMovement_Inventory'
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
     end
@@ -379,6 +424,14 @@ inherited InventoryJournalForm: TInventoryJournalForm
         end
         item
           Visible = True
+          ItemName = 'bbPrint1'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbMovementProtocol'
         end
         item
@@ -394,6 +447,10 @@ inherited InventoryJournalForm: TInventoryJournalForm
       Action = actPrint
       Category = 0
       Visible = ivNever
+    end
+    object bbPrint1: TdxBarButton
+      Action = actPrint1
+      Category = 0
     end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
@@ -542,5 +599,33 @@ inherited InventoryJournalForm: TInventoryJournalForm
     Params = <>
     Left = 628
     Top = 294
+  end
+  object spSelectPrint1: TdsdStoredProc
+    StoredProcName = 'gpSelect_Movement_Inventory_Print'
+    DataSet = PrintHeaderCDS
+    DataSets = <
+      item
+        DataSet = PrintHeaderCDS
+      end
+      item
+        DataSet = PrintItemsCDS
+      end>
+    OutputType = otMultiDataSet
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inMovementId_Weighing'
+        Value = '0'
+        ParamType = ptInput
+      end>
+    PackSize = 1
+    Left = 679
+    Top = 96
   end
 end
