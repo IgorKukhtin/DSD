@@ -30,6 +30,7 @@ type
     function PrintFiscalMemoryByDate(inStart, inEnd: TDateTime): boolean;
     function PrintReportByDate(inStart, inEnd: TDateTime): boolean;
     function PrintReportByNum(inStart, inEnd: Integer): boolean;
+    function FiscalNumber:String;
     procedure ClearArticulAttachment;
     procedure SetTime;
     procedure Anulirovt;
@@ -218,6 +219,11 @@ end;
 
 function TCashFP3530T_NEW.DeleteArticules(const GoodsCode: integer): boolean;
 begin
+end;
+
+function TCashFP3530T_NEW.FiscalNumber: String;
+begin
+  Result := FPrinter.FNUM[Password];
 end;
 
 function TCashFP3530T_NEW.XReport: boolean;

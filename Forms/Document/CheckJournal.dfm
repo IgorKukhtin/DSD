@@ -2,7 +2,6 @@ inherited CheckJournalForm: TCheckJournalForm
   Caption = #1050#1072#1089#1089#1086#1074#1099#1077' '#1095#1077#1082#1080
   ClientWidth = 582
   ExplicitWidth = 590
-  ExplicitHeight = 702
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -12,6 +11,7 @@ inherited CheckJournalForm: TCheckJournalForm
     ClientRectRight = 582
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 582
+      ExplicitHeight = 0
       inherited cxGrid: TcxGrid
         Width = 582
         ExplicitWidth = 582

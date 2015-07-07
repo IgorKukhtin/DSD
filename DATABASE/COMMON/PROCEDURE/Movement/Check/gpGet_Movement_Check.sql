@@ -10,7 +10,7 @@ CREATE OR REPLACE FUNCTION gpGet_Movement_Check(
 RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime
              , StatusCode Integer, StatusName TVarChar
              , TotalCount TFloat, TotalSumm TFloat
-             , UnitName TVarChar, CashRegisterName TVarChar, PaidKindName TVarChar)
+             , UnitName TVarChar, CashRegisterName TVarChar, PaidKindName TVarChar, PaidTypeName TVarChar)
 AS
 $BODY$
   DECLARE vbUserId Integer;
@@ -31,7 +31,8 @@ BEGIN
            , Movement_Check.TotalSumm
            , Movement_Check.UnitName
            , Movement_Check.CashRegisterName
-           , Movement_Check.PaidKindName 
+           , Movement_Check.PaidKindName
+           , Movement_Check.PaidTypeName
         FROM Movement_Check_View AS Movement_Check 
        WHERE Movement_Check.Id =  inMovementId;
 

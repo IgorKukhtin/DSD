@@ -59,6 +59,9 @@ type
     procedure LoadAdditionalGoodsFormTest;
     procedure LoadPriceFormTest;
     procedure LoadAlternativeGroupFormTest;
+    procedure LoadCheckVIPFormTest;
+    procedure LoadCheckDeferredFormTest;
+    procedure LoadPaidTypeFormTest;
     procedure FormTest;
   end;
 
@@ -537,6 +540,24 @@ procedure TLoadFormTest.LoadAlternativeGroupFormTest;
 begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TAlternativeGroupForm'));
   TdsdFormStorageFactory.GetStorage.Load('TAlternativeGroupForm');
+end;
+
+procedure TLoadFormTest.LoadCheckVIPFormTest;
+begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TCheckVIPForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TCheckVIPForm');
+end;
+
+procedure TLoadFormTest.LoadPaidTypeFormTest;
+begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TPaidTypeForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TPaidTypeForm');
+end;
+
+procedure TLoadFormTest.LoadCheckDeferredFormTest;
+begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TCheckDeferredForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TCheckDeferredForm');
 end;
 
 procedure TLoadFormTest.LoadPriceListFormTest;

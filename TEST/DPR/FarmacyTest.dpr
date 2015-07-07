@@ -301,7 +301,11 @@ uses
   PriceTest in '..\SOURCE\Objects\All\Farmacy\PriceTest.pas',
   AlternativeGroupTest in '..\SOURCE\Objects\All\Farmacy\AlternativeGroupTest.pas',
   AlternativeGroup in '..\..\FormsFarmacy\Guides\AlternativeGroup.pas' {AlternativeGroupForm: TParentForm},
-  RepriceUnit in '..\..\FormsFarmacy\ConnectWithOld\RepriceUnit.pas' {RepriceUnitForm};
+  RepriceUnit in '..\..\FormsFarmacy\ConnectWithOld\RepriceUnit.pas' {RepriceUnitForm},
+  CheckVIP in '..\..\FormsFarmacy\Document\CheckVIP.pas' {CheckVIPForm: TParentForm},
+  CheckDeferred in '..\..\FormsFarmacy\Document\CheckDeferred.pas' {CheckDeferredForm: TParentForm},
+  PaidType in '..\..\Forms\Guides\PaidType.pas' {PaidTypeForm: TParentForm},
+  PaidTypeTest in '..\SOURCE\Objects\All\Farmacy\PaidTypeTest.pas';
 
 {$R *.res}
 {$R DevExpressRus.res}

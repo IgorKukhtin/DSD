@@ -340,6 +340,13 @@ BEGIN
 -- 100301; "прибыль текущего периода";
   PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_Account_100301(), inDescId:= zc_Object_Account(), inCode:= 100301, inName:= 'Прибыль текущего периода' , inEnumName:= 'zc_Enum_Account_100301');
 
+-- !!!
+-- !!! Типі оплат 
+-- !!!
+-- 0. Наличка
+  PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_PaidType_Cash(),  inDescId:= zc_Object_PaidType(), inCode:= 1, inName:= 'Наличка', inEnumName:= 'zc_Enum_PaidType_Cash');
+  PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_PaidType_Card(), inDescId:= zc_Object_PaidType(), inCode:= 2, inName:= 'Карточка', inEnumName:= 'zc_Enum_PaidType_Card');
+  
 END $$;
 
 

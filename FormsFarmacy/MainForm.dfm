@@ -680,6 +680,16 @@ inherited MainForm: TMainForm
       GuiParams = <>
       isShowModal = False
     end
+    object actPaidType: TdsdOpenForm
+      Category = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082#1080
+      MoveParams = <>
+      Caption = #1058#1080#1087#1099' '#1086#1087#1083#1072#1090#1099
+      FormName = 'TPaidTypeForm'
+      FormNameParam.Value = 'TPaidTypeForm'
+      FormNameParam.DataType = ftString
+      GuiParams = <>
+      isShowModal = False
+    end
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 496
@@ -793,6 +803,9 @@ inherited MainForm: TMainForm
       end
       object N53: TMenuItem
         Action = actAlternativeGroup
+      end
+      object N54: TMenuItem
+        Action = actPaidType
       end
     end
     object miLoad: TMenuItem [1]

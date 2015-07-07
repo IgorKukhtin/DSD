@@ -4,6 +4,7 @@ inherited MainCashForm: TMainCashForm
   ClientHeight = 412
   ClientWidth = 772
   PopupMenu = PopupMenu
+  OnCloseQuery = ParentFormCloseQuery
   OnCreate = FormCreate
   OnKeyDown = ParentFormKeyDown
   AddOnFormData.Params = FormParams
@@ -94,6 +95,20 @@ inherited MainCashForm: TMainCashForm
         object AlternativeGridColLinkType: TcxGridDBColumn
           Caption = '*'
           DataBinding.FieldName = 'LinkType'
+          PropertiesClassName = 'TcxImageComboBoxProperties'
+          Properties.Images = dmMain.ImageList
+          Properties.Items = <
+            item
+              Description = #1044#1086#1087#1086#1083#1085#1077#1085#1080#1077
+              ImageIndex = 54
+              Value = 0
+            end
+            item
+              Description = #1040#1083#1100#1090#1077#1088#1085#1072#1090#1080#1074#1072
+              ImageIndex = 27
+              Value = 1
+            end>
+          Properties.ShowDescriptions = False
           Width = 21
         end
         object AlternativeGridColGoodsCode: TcxGridDBColumn
@@ -105,14 +120,23 @@ inherited MainCashForm: TMainCashForm
         object AlternativeGridColGoodsName: TcxGridDBColumn
           Caption = #1053#1072#1079#1074#1072#1085#1080#1077
           DataBinding.FieldName = 'GoodsName'
-          Width = 143
+          Width = 139
         end
-        object AlternativeGridColPriceAndRemains: TcxGridDBColumn
-          AlternateCaption = '['#1062#1077#1085#1072'] X ['#1054#1089#1090#1072#1090#1086#1082']'
-          Caption = #1062' / '#1054
-          DataBinding.FieldName = 'PriceAndRemains'
-          HeaderHint = '['#1062#1077#1085#1072'] X ['#1054#1089#1090#1072#1090#1086#1082']'
-          Width = 66
+        object AlternativeGridColTypeColor: TcxGridDBColumn
+          DataBinding.FieldName = 'TypeColor'
+          Visible = False
+        end
+        object AlternativeGridDColPrice: TcxGridDBColumn
+          Caption = #1062#1077#1085#1072
+          DataBinding.FieldName = 'Price'
+          PropertiesClassName = 'TcxCurrencyEditProperties'
+          Properties.DisplayFormat = ',0.00'
+          Width = 40
+        end
+        object AlternativeGridColRemains: TcxGridDBColumn
+          Caption = #1054#1089#1090'.'
+          DataBinding.FieldName = 'Remains'
+          Width = 33
         end
       end
       object AlternativeGridLevel: TcxGridLevel
@@ -199,13 +223,15 @@ inherited MainCashForm: TMainCashForm
         object MainColReserved: TcxGridDBColumn
           Caption = #1054#1090#1083#1086#1078#1077#1085#1085#1099#1077
           DataBinding.FieldName = 'Reserved'
+          OnGetDisplayText = MainColReservedGetDisplayText
           Options.Editing = False
-          Width = 87
+          Width = 58
         end
         object MainColMCSValue: TcxGridDBColumn
           Caption = #1053#1058#1047
           DataBinding.FieldName = 'MCSValue'
-          Width = 56
+          OnGetDisplayText = MainColReservedGetDisplayText
+          Width = 45
         end
       end
       object MainGridLevel: TcxGridLevel
@@ -227,7 +253,7 @@ inherited MainCashForm: TMainCashForm
         TabOrder = 0
         OnExit = ceAmountExit
         OnKeyDown = ceAmountKeyDown
-        Width = 55
+        Width = 43
       end
       object cxLabel1: TcxLabel
         Left = 224
@@ -265,13 +291,13 @@ inherited MainCashForm: TMainCashForm
       object cbSpec: TcxCheckBox
         Left = 554
         Top = 7
+        Action = actSpec
         TabOrder = 3
-        OnClick = cbSpecClick
         Width = 22
       end
       object cxButton1: TcxButton
         Left = 584
-        Top = 7
+        Top = 6
         Width = 34
         Height = 20
         Action = actCheck
@@ -279,12 +305,14 @@ inherited MainCashForm: TMainCashForm
         TabOrder = 4
       end
       object cxLabel2: TcxLabel
-        Left = 360
+        Left = 328
         Top = 7
         Caption = #1050' '#1054#1087#1083#1072#1090#1077':'
         FocusControl = ceAmount
+        ParentColor = False
         ParentFont = False
         Style.BorderStyle = ebsNone
+        Style.Color = clBtnFace
         Style.Font.Charset = DEFAULT_CHARSET
         Style.Font.Color = clWindowText
         Style.Font.Height = -13
@@ -294,7 +322,7 @@ inherited MainCashForm: TMainCashForm
         Style.IsFontAssigned = True
       end
       object lblTotalSumm: TcxLabel
-        Left = 436
+        Left = 404
         Top = 7
         Caption = '0.00'
         FocusControl = ceAmount
@@ -308,16 +336,36 @@ inherited MainCashForm: TMainCashForm
         Style.Shadow = False
         Style.IsFontAssigned = True
       end
-      object lblSoldRegim: TcxLabel
-        Left = 335
-        Top = 7
+      object btnVIP: TcxButton
+        Left = 624
+        Top = 6
+        Width = 34
+        Height = 20
+        Action = actLoadVIP
+        LookAndFeel.Kind = lfStandard
+        TabOrder = 7
+      end
+      object cxButton2: TcxButton
+        Left = 664
+        Top = 6
+        Width = 34
+        Height = 20
+        Action = actLoadDeferred
+        LookAndFeel.Kind = lfStandard
+        TabOrder = 8
+      end
+      object lblMoneyInCash: TcxLabel
+        Left = 460
+        Top = 6
+        Caption = '0.00'
+        FocusControl = ceAmount
         ParentFont = False
         Style.BorderStyle = ebsNone
         Style.Font.Charset = DEFAULT_CHARSET
         Style.Font.Color = clWindowText
         Style.Font.Height = -13
         Style.Font.Name = 'Tahoma'
-        Style.Font.Style = []
+        Style.Font.Style = [fsBold]
         Style.Shadow = False
         Style.IsFontAssigned = True
       end
@@ -403,6 +451,133 @@ inherited MainCashForm: TMainCashForm
       ShortCut = 117
       OnExecute = actSetVIPExecute
     end
+    object actDeferrent: TAction
+      Caption = #1055#1086#1089#1090#1072#1074#1080#1090#1100' '#1095#1077#1082' '#1086#1090#1083#1086#1078#1077#1085#1085#1099#1084
+      Hint = #1055#1086#1089#1090#1072#1074#1080#1090#1100' '#1095#1077#1082' '#1086#1090#1083#1086#1078#1077#1085#1085#1099#1084
+      ShortCut = 119
+      OnExecute = actDeferrentExecute
+    end
+    object actOpenCheckVIP: TOpenChoiceForm
+      Category = #1044#1086#1082#1091#1084#1077#1085#1090#1099
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = 'actOpenCheckVIP'
+      FormName = 'TCheckVIPForm'
+      FormNameParam.Value = 'TCheckVIPForm'
+      FormNameParam.DataType = ftString
+      GuiParams = <
+        item
+          Name = 'Key'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'CheckId'
+          ParamType = ptInput
+        end
+        item
+          Name = 'TextValue'
+          Value = Null
+          DataType = ftString
+        end>
+      isShowModal = True
+    end
+    object actLoadVIP: TMultiAction
+      Category = #1044#1086#1082#1091#1084#1077#1085#1090#1099
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actOpenCheckVIP
+        end
+        item
+          Action = actRefresh
+        end
+        item
+          Action = actSetTrueRemains
+        end
+        item
+          Action = actCalcTotalSumm
+        end>
+      Caption = 'VIP'
+    end
+    object actOpenCheckDeferred: TOpenChoiceForm
+      Category = #1044#1086#1082#1091#1084#1077#1085#1090#1099
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = 'actOpenCheckDeferred'
+      FormName = 'TCheckDeferredForm'
+      FormNameParam.Value = 'TCheckDeferredForm'
+      FormNameParam.DataType = ftString
+      GuiParams = <
+        item
+          Name = 'Key'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'CheckId'
+          ParamType = ptInput
+        end
+        item
+          Name = 'TextValue'
+          Value = Null
+          DataType = ftString
+        end>
+      isShowModal = True
+    end
+    object actLoadDeferred: TMultiAction
+      Category = #1044#1086#1082#1091#1084#1077#1085#1090#1099
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actOpenCheckDeferred
+        end
+        item
+          Action = actRefresh
+        end
+        item
+          Action = actSetTrueRemains
+        end
+        item
+          Action = actCalcTotalSumm
+        end>
+      Caption = #1054#1090#1083'.'
+    end
+    object actSetTrueRemains: TAction
+      Category = 'DSDLib'
+      Caption = 'actSetTrueRemains'
+      OnExecute = actSetTrueRemainsExecute
+    end
+    object actCalcTotalSumm: TAction
+      Category = 'DSDLib'
+      Caption = 'actCalcTotalSumm'
+      OnExecute = actCalcTotalSummExecute
+    end
+    object actCashWork: TAction
+      Caption = #1056#1072#1073#1086#1090#1072' '#1089' '#1082#1072#1089#1089#1086#1081
+      ShortCut = 16451
+      OnExecute = actCashWorkExecute
+    end
+    object actClearAll: TAction
+      Caption = #1057#1073#1088#1086#1089#1080#1090#1100' '#1074#1089#1077
+      Hint = #1057#1073#1088#1086#1089#1080#1090#1100' '#1074#1089#1077
+      ShortCut = 32776
+      OnExecute = actClearAllExecute
+    end
+    object actClearMoney: TAction
+      Caption = #1057#1073#1088#1086#1089#1080#1090#1100' '#1076#1077#1085#1100#1075#1080
+      Hint = #1057#1073#1088#1086#1089#1080#1090#1100' '#1076#1077#1085#1100#1075#1080
+      ShortCut = 16500
+      OnExecute = actClearMoneyExecute
+    end
+    object actGetMoneyInCash: TAction
+      Caption = #1044#1077#1085#1100#1075#1080' '#1074' '#1082#1072#1089#1089#1077
+      Hint = #1044#1077#1085#1100#1075#1080' '#1074' '#1082#1072#1089#1089#1077
+      ShortCut = 32884
+      OnExecute = actGetMoneyInCashExecute
+    end
+    object actSpec: TAction
+      AutoCheck = True
+      Caption = #1058#1080#1093#1086' / '#1043#1088#1086#1084#1082#1086
+      ShortCut = 16501
+      OnExecute = actSpecExecute
+    end
   end
   object dsdDBViewAddOnMain: TdsdDBViewAddOn
     ErasedFieldName = 'isErased'
@@ -457,11 +632,36 @@ inherited MainCashForm: TMainCashForm
     object N1: TMenuItem
       Action = actRefresh
     end
-    object actSold1: TMenuItem
-      Action = actSold
+    object N4: TMenuItem
+      Action = actClearAll
+    end
+    object N8: TMenuItem
+      Action = actGetMoneyInCash
+    end
+    object N7: TMenuItem
+      Action = actClearMoney
+    end
+    object N9: TMenuItem
+      Action = actSpec
+      AutoCheck = True
+    end
+    object N3: TMenuItem
+      Action = actCashWork
+    end
+    object N2: TMenuItem
+      Action = actDeferrent
     end
     object VIP1: TMenuItem
       Action = actSetVIP
+    end
+    object N5: TMenuItem
+      Caption = '-'
+    end
+    object actSold1: TMenuItem
+      Action = actSold
+    end
+    object N6: TMenuItem
+      Caption = '-'
     end
   end
   object spNewCheck: TdsdStoredProc
@@ -474,6 +674,13 @@ inherited MainCashForm: TMainCashForm
         Value = Null
         Component = FormParams
         ComponentItem = 'CheckId'
+      end
+      item
+        Name = 'inCashRegister'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'CashId'
+        ParamType = ptInput
       end>
     PackSize = 1
     Left = 384
@@ -483,6 +690,16 @@ inherited MainCashForm: TMainCashForm
     Params = <
       item
         Name = 'CheckId'
+        Value = Null
+      end
+      item
+        Name = 'Id'
+        Value = Null
+        DataType = ftString
+        ParamType = ptInput
+      end
+      item
+        Name = 'CashId'
         Value = Null
       end>
     Left = 48
@@ -595,6 +812,7 @@ inherited MainCashForm: TMainCashForm
   end
   object AlternativeCDS: TClientDataSet
     Aggregates = <>
+    Filtered = True
     Params = <>
     Left = 648
     Top = 264
@@ -631,7 +849,11 @@ inherited MainCashForm: TMainCashForm
       end>
     SortImages = dmMain.SortImageList
     OnlyEditingCellOnEnter = False
-    ColorRuleList = <>
+    ColorRuleList = <
+      item
+        BackGroundValueColumn = AlternativeGridColTypeColor
+        ColorValueList = <>
+      end>
     ColumnAddOnList = <>
     ColumnEnterList = <>
     SummaryItemList = <>
@@ -650,6 +872,11 @@ inherited MainCashForm: TMainCashForm
         Component = FormParams
         ComponentItem = 'CheckId'
         ParamType = ptInput
+      end
+      item
+        Name = 'inPaidType'
+        Value = Null
+        ParamType = ptInput
       end>
     PackSize = 1
     Left = 376
@@ -666,9 +893,89 @@ inherited MainCashForm: TMainCashForm
         Component = FormParams
         ComponentItem = 'CheckId'
         ParamType = ptInput
+      end
+      item
+        Name = 'inManagerId'
+        Value = Null
+        ParamType = ptInput
+      end
+      item
+        Name = 'inBayerName'
+        Value = Null
+        DataType = ftString
+        ParamType = ptInput
       end>
     PackSize = 1
     Left = 376
     Top = 304
+  end
+  object spMovementSetErased: TdsdStoredProc
+    StoredProcName = 'gpSetErased_Movement_Check'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inmovementid'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'CheckId'
+        ParamType = ptInput
+      end>
+    PackSize = 1
+    Left = 64
+    Top = 328
+  end
+  object spGet_Object_CashRegister_By_Serial: TdsdStoredProc
+    StoredProcName = 'gpGet_Object_CashRegister_By_Serial'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inSerial'
+        Value = Null
+        DataType = ftString
+        ParamType = ptInput
+      end
+      item
+        Name = 'outId'
+        Value = Null
+      end>
+    PackSize = 1
+    Left = 488
+    Top = 80
+  end
+  object spGetMoneyInCash: TdsdStoredProc
+    StoredProcName = 'gpGet_Money_in_Cash'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'outTotalSumm'
+        Value = Null
+        DataType = ftFloat
+      end
+      item
+        Name = 'inDate'
+        Value = Null
+        DataType = ftDateTime
+        ParamType = ptInput
+      end>
+    PackSize = 1
+    Left = 608
+    Top = 80
+  end
+  object spGet_Password_MoneyInCash: TdsdStoredProc
+    StoredProcName = 'gpGet_Password_MoneyInCash'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'outPassword'
+        Value = Null
+        DataType = ftString
+      end>
+    PackSize = 1
+    Left = 696
+    Top = 56
   end
 end

@@ -1,9 +1,11 @@
 -- Function: gpInsertUpdate_Movement_Check()
 
 DROP FUNCTION IF EXISTS gpInsert_Movement_Check (TVarChar);
+DROP FUNCTION IF EXISTS gpInsert_Movement_Check (Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsert_Movement_Check(
    OUT Id                  Integer   , -- Ключ объекта <Документ ЧЕК>
+    IN inCashRegister      Integer   , -- Касса
     IN inSession           TVarChar    -- сессия пользователя
 )
 RETURNS Integer AS
@@ -38,7 +40,10 @@ BEGIN
 
      -- сохранили связь с <Подразделением>
      PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_Unit(), Id, vbUnitId);
-
+	 
+	 -- сохранили связь с <Касса>
+     PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_CashRegister(), Id, inCashRegister);
+     
      -- сохранили протокол
      -- PERFORM lpInsert_MovementProtocol (ioId, vbUserId);
 

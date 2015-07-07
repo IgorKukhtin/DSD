@@ -82,7 +82,11 @@ begin
 end;
 
 procedure TdbProcedureTest.CreateMovementItemContainerProcedure;
-begin            {
+begin
+  ScriptDirectory := FarmacyProcedurePath + 'MovementItemContainer\Check\';
+  ProcedureLoad;
+
+            {
   ZQuery.SQL.LoadFromFile(ProcedurePath + 'MovementItemContainer\InsertUpdate\lpInsertUpdate_MovementItemContainer.sql');
   ZQuery.ExecSQL;
 
@@ -101,7 +105,11 @@ begin            {
 end;
 
 procedure TdbProcedureTest.CreateMovementItemProcedure;
-begin              {
+begin
+  ScriptDirectory := CommonProcedurePath + 'MovementItem\Check\';
+  ProcedureLoad;
+
+{
   ZQuery.SQL.LoadFromFile(ProcedurePath + 'MovementItem\InsertUpdate\lpInsertUpdate_MovementItem.sql');
   ZQuery.ExecSQL;
   ZQuery.SQL.LoadFromFile(ProcedurePath + 'MovementItem\InsertUpdate\lpInsertUpdate_MovementItemLinkObject.sql');
@@ -131,7 +139,10 @@ begin              {
 end;
 
 procedure TdbProcedureTest.CreateMovementProcedure;
-begin               {
+begin
+  ScriptDirectory := CommonProcedurePath + 'Movement\Check\';
+  ProcedureLoad;
+               {
   ZQuery.SQL.LoadFromFile(ProcedurePath + 'Movement\InsertUpdate\lpInsertUpdate_Movement.sql');
   ZQuery.ExecSQL;
   ZQuery.SQL.LoadFromFile(ProcedurePath + 'Movement\InsertUpdate\lpInsertUpdate_MovementLinkObject.sql');

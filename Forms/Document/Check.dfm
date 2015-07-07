@@ -22,14 +22,12 @@ inherited CheckForm: TCheckForm
               end>
             Properties.ReadOnly = True
             HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
             Width = 45
           end
           object colName: TcxGridDBColumn
             Caption = #1058#1086#1074#1072#1088
             DataBinding.FieldName = 'GoodsName'
             HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 222
           end
@@ -40,7 +38,6 @@ inherited CheckForm: TCheckForm
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
             Width = 73
           end
           object colPrice: TcxGridDBColumn
@@ -50,7 +47,6 @@ inherited CheckForm: TCheckForm
             Properties.DecimalPlaces = 2
             Properties.DisplayFormat = ',0.00;-,0.00'
             HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
             Width = 60
           end
           object colSumm: TcxGridDBColumn
@@ -60,7 +56,6 @@ inherited CheckForm: TCheckForm
             Properties.DecimalPlaces = 2
             Properties.DisplayFormat = ',0.00;-,0.00'
             HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
             Width = 60
           end
         end
@@ -92,6 +87,7 @@ inherited CheckForm: TCheckForm
       Enabled = False
       TabOrder = 7
       Text = 'cxTextEdit2'
+      Visible = False
       Width = 121
     end
     object cxTextEdit3: TcxTextEdit
@@ -116,6 +112,13 @@ inherited CheckForm: TCheckForm
       Left = 656
       Top = 5
       Caption = #1050#1072#1089#1089#1072
+    end
+    object cxTextEdit4: TcxTextEdit
+      Left = 520
+      Top = 23
+      Enabled = False
+      TabOrder = 12
+      Width = 121
     end
   end
   inherited ActionList: TActionList
@@ -264,12 +267,18 @@ inherited CheckForm: TCheckForm
       item
         Name = 'CashRegisterName'
         Value = Null
-        Component = cxTextEdit2
+        Component = cxTextEdit3
       end
       item
         Name = 'PaidKindName'
         Value = Null
-        Component = cxTextEdit3
+        Component = cxTextEdit2
+      end
+      item
+        Name = 'PaidTypeName'
+        Value = 'cxTextEdit3'
+        Component = cxTextEdit4
+        DataType = ftString
       end>
   end
 end
