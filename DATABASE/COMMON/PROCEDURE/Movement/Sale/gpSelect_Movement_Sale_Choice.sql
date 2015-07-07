@@ -41,6 +41,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , EdiOrdspr Boolean, EdiInvoice Boolean, EdiDesadv Boolean
              , isError Boolean
              , InvNumber_Full TVarChar
+             , Comment TVarChar
               )
 AS
 $BODY$
@@ -156,6 +157,7 @@ BEGIN
                    END AS Boolean) AS isError
 
         , zfCalc_PartionMovementName (Movement.DescId, MovementDesc.ItemName, Movement.InvNumber, MovementDate_OperDatePartner.ValueData) AS InvNumber_Full
+        , MovementString_Comment.ValueData       AS Comment
 
        FROM (SELECT Movement.id
              FROM tmpStatus
@@ -206,6 +208,10 @@ BEGIN
             LEFT JOIN MovementString AS MovementString_InvNumberPartner
                                      ON MovementString_InvNumberPartner.MovementId =  Movement.Id
                                     AND MovementString_InvNumberPartner.DescId = zc_MovementString_InvNumberPartner()
+
+            LEFT JOIN MovementString AS MovementString_Comment 
+                                     ON MovementString_Comment.MovementId = Movement.Id
+                                    AND MovementString_Comment.DescId = zc_MovementString_Comment()
 
             LEFT JOIN MovementFloat AS MovementFloat_VATPercent
                                     ON MovementFloat_VATPercent.MovementId =  Movement.Id

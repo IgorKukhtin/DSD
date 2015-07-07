@@ -28,6 +28,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , TotalCountKg TFloat, TotalCountSh TFloat, TotalCount TFloat, TotalCountSecond TFloat
              , DayCount TFloat
              , isEDI Boolean
+             , Comment TVarChar
               )
 AS
 $BODY$
@@ -109,6 +110,7 @@ BEGIN
                           )) :: TFloat AS DayCount
            
            , COALESCE(MovementLinkMovement_Order.MovementId, 0) <> 0 AS isEDI
+           , MovementString_Comment.ValueData       AS Comment
 
        FROM (SELECT Movement.id
              FROM tmpStatus
@@ -142,6 +144,10 @@ BEGIN
             LEFT JOIN MovementString AS MovementString_InvNumberPartner
                                      ON MovementString_InvNumberPartner.MovementId =  Movement.Id
                                     AND MovementString_InvNumberPartner.DescId = zc_MovementString_InvNumberPartner()
+
+            LEFT JOIN MovementString AS MovementString_Comment 
+                                     ON MovementString_Comment.MovementId = Movement.Id
+                                    AND MovementString_Comment.DescId = zc_MovementString_Comment()
 
             LEFT JOIN MovementLinkObject AS MovementLinkObject_From
                                          ON MovementLinkObject_From.MovementId = Movement.Id

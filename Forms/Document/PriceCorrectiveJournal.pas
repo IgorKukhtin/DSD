@@ -44,6 +44,7 @@ type
     mactPrint_TaxCorrective_Us: TMultiAction;
     spGetReportNameTaxCorrective: TdsdStoredProc;
     actSPPrintTaxCorrectiveProcName: TdsdExecStoredProc;
+    Comment: TcxGridDBColumn;
   private
     { Private declarations }
   public

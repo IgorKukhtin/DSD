@@ -50,6 +50,7 @@ type
     cxLabel6: TcxLabel;
     edPartner: TcxButtonEdit;
     PartnerGuides: TdsdGuides;
+    Comment: TcxGridDBColumn;
   private
     { Private declarations }
   public

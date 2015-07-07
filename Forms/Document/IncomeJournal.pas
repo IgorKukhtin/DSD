@@ -113,6 +113,7 @@ type
     FormParams: TdsdFormParams;
     actShowErased: TBooleanStoredProcAction;
     bbShowErased: TdxBarButton;
+    Comment: TcxGridDBColumn;
   private
   public
   end;

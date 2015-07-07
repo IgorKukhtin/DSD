@@ -2,28 +2,27 @@ inherited OrderExternalUnitForm: TOrderExternalUnitForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1047#1072#1103#1074#1082#1072' '#1089#1090#1086#1088#1086#1085#1085#1103#1103' ('#1085#1072' '#1075#1083'.'#1089#1082#1083#1072#1076')>'
   ClientHeight = 668
   ClientWidth = 1416
-  ExplicitLeft = -434
   ExplicitWidth = 1432
-  ExplicitHeight = 703
+  ExplicitHeight = 706
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Top = 126
+    Top = 166
     Width = 1416
-    Height = 542
-    ExplicitTop = 126
+    Height = 502
+    ExplicitTop = 166
     ExplicitWidth = 1416
-    ExplicitHeight = 542
-    ClientRectBottom = 542
+    ExplicitHeight = 502
+    ClientRectBottom = 502
     ClientRectRight = 1416
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 1416
-      ExplicitHeight = 518
+      ExplicitHeight = 478
       inherited cxGrid: TcxGrid
         Width = 1416
-        Height = 518
+        Height = 478
         ExplicitWidth = 1416
-        ExplicitHeight = 518
+        ExplicitHeight = 478
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -365,10 +364,10 @@ inherited OrderExternalUnitForm: TOrderExternalUnitForm
   end
   inherited DataPanel: TPanel
     Width = 1416
-    Height = 100
+    Height = 140
     TabOrder = 3
     ExplicitWidth = 1416
-    ExplicitHeight = 100
+    ExplicitHeight = 140
     inherited edInvNumber: TcxTextEdit
       Left = 8
       ExplicitLeft = 8
@@ -711,6 +710,17 @@ inherited OrderExternalUnitForm: TOrderExternalUnitForm
       Properties.ReadOnly = True
       TabOrder = 43
       Width = 140
+    end
+    object cxLabel23: TcxLabel
+      Left = 8
+      Top = 85
+      Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
+    end
+    object ceComment: TcxTextEdit
+      Left = 8
+      Top = 103
+      TabOrder = 45
+      Width = 591
     end
   end
   object cxLabel21: TcxLabel [2]
@@ -1497,6 +1507,12 @@ inherited OrderExternalUnitForm: TOrderExternalUnitForm
         Component = RetailGuides
         ComponentItem = 'TextValue'
         DataType = ftString
+      end
+      item
+        Name = 'Comment'
+        Value = Null
+        Component = ceComment
+        DataType = ftString
       end>
     Left = 216
     Top = 248
@@ -1661,6 +1677,13 @@ inherited OrderExternalUnitForm: TOrderExternalUnitForm
         Component = PartnerGuides
         ComponentItem = 'Key'
         ParamType = ptInput
+      end
+      item
+        Name = 'inComment'
+        Value = Null
+        Component = ceComment
+        DataType = ftString
+        ParamType = ptInput
       end>
     Left = 162
     Top = 312
@@ -1743,6 +1766,9 @@ inherited OrderExternalUnitForm: TOrderExternalUnitForm
       end
       item
         Control = edOperDateEnd
+      end
+      item
+        Control = ceComment
       end>
     Left = 232
     Top = 193

@@ -3,26 +3,26 @@ inherited OrderExternalForm: TOrderExternalForm
   ClientHeight = 668
   ClientWidth = 1391
   ExplicitWidth = 1407
-  ExplicitHeight = 703
+  ExplicitHeight = 706
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Top = 126
+    Top = 166
     Width = 1391
-    Height = 542
-    ExplicitTop = 126
+    Height = 502
+    ExplicitTop = 166
     ExplicitWidth = 1391
-    ExplicitHeight = 542
-    ClientRectBottom = 542
+    ExplicitHeight = 502
+    ClientRectBottom = 502
     ClientRectRight = 1391
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 1391
-      ExplicitHeight = 518
+      ExplicitHeight = 478
       inherited cxGrid: TcxGrid
         Width = 1391
-        Height = 518
+        Height = 478
         ExplicitWidth = 1391
-        ExplicitHeight = 518
+        ExplicitHeight = 478
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -281,10 +281,10 @@ inherited OrderExternalForm: TOrderExternalForm
   end
   inherited DataPanel: TPanel
     Width = 1391
-    Height = 100
+    Height = 140
     TabOrder = 3
     ExplicitWidth = 1391
-    ExplicitHeight = 100
+    ExplicitHeight = 140
     inherited edInvNumber: TcxTextEdit
       Left = 8
       ExplicitLeft = 8
@@ -560,6 +560,17 @@ inherited OrderExternalForm: TOrderExternalForm
       Properties.ReadOnly = True
       TabOrder = 35
       Width = 128
+    end
+    object cxLabel18: TcxLabel
+      Left = 8
+      Top = 85
+      Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
+    end
+    object ceComment: TcxTextEdit
+      Left = 8
+      Top = 103
+      TabOrder = 37
+      Width = 647
     end
   end
   object cxLabel21: TcxLabel [2]
@@ -1161,6 +1172,13 @@ inherited OrderExternalForm: TOrderExternalForm
         Component = PartnerGuides
         ComponentItem = 'TextValue'
         DataType = ftString
+      end
+      item
+        Name = 'inComment'
+        Value = Null
+        Component = ceComment
+        DataType = ftString
+        ParamType = ptInput
       end>
     Left = 216
     Top = 248
@@ -1297,6 +1315,13 @@ inherited OrderExternalForm: TOrderExternalForm
         Component = PartnerGuides
         ComponentItem = 'Key'
         ParamType = ptInput
+      end
+      item
+        Name = 'inComment'
+        Value = Null
+        Component = ceComment
+        DataType = ftString
+        ParamType = ptInput
       end>
     Left = 162
     Top = 312
@@ -1370,6 +1395,9 @@ inherited OrderExternalForm: TOrderExternalForm
       end
       item
         Control = edPartner
+      end
+      item
+        Control = ceComment
       end>
     Left = 232
     Top = 193
@@ -1684,8 +1712,8 @@ inherited OrderExternalForm: TOrderExternalForm
         DataType = ftString
         ParamType = ptInput
       end>
-    Left = 560
-    Top = 80
+    Left = 520
+    Top = 56
   end
   object GuidesFrom: TdsdGuides
     KeyField = 'Id'

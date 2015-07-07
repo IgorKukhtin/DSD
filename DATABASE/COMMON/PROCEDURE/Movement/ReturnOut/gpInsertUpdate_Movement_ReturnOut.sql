@@ -1,6 +1,8 @@
 -- Function: gpInsertUpdate_Movement_ReturnOut()
 
 DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_ReturnOut (Integer, TVarChar, TDateTime, TDateTime, Boolean, TFloat, TFloat, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_ReturnOut (Integer, TVarChar, TDateTime, TDateTime, Boolean, TFloat, TFloat, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar, TVarChar);
+
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_ReturnOut(
  INOUT ioId                  Integer   , -- Ключ объекта <Документ Перемещение>
@@ -17,6 +19,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_ReturnOut(
     IN inCurrencyDocumentId  Integer   , -- Валюта (документа)
     IN inCurrencyPartnerId   Integer   , -- Валюта (контрагента)
    OUT outCurrencyValue      TFloat    , -- курс валюты
+    IN inComment             TVarChar  , -- Примечание
     IN inSession             TVarChar    -- сессия пользователя
 )
 RETURNS RECORD
@@ -45,6 +48,10 @@ BEGIN
                                            , inCurrencyPartnerId  := inCurrencyPartnerId
                                            , inUserId             := vbUserId
                                             ) AS tmp;
+     -- Комментарий
+     PERFORM lpInsertUpdate_MovementString (zc_MovementString_Comment(), ioId, inComment);
+
+
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;

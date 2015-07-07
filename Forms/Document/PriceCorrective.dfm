@@ -7,22 +7,22 @@ inherited PriceCorrectiveForm: TPriceCorrectiveForm
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Top = 131
+    Top = 166
     Width = 998
-    Height = 411
-    ExplicitTop = 131
+    Height = 376
+    ExplicitTop = 166
     ExplicitWidth = 998
-    ExplicitHeight = 411
-    ClientRectBottom = 411
+    ExplicitHeight = 376
+    ClientRectBottom = 376
     ClientRectRight = 998
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 998
-      ExplicitHeight = 387
+      ExplicitHeight = 352
       inherited cxGrid: TcxGrid
         Width = 998
-        Height = 387
+        Height = 352
         ExplicitWidth = 998
-        ExplicitHeight = 387
+        ExplicitHeight = 352
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -158,10 +158,10 @@ inherited PriceCorrectiveForm: TPriceCorrectiveForm
   end
   inherited DataPanel: TPanel
     Width = 998
-    Height = 105
+    Height = 140
     TabOrder = 3
     ExplicitWidth = 998
-    ExplicitHeight = 105
+    ExplicitHeight = 140
     inherited edInvNumber: TcxTextEdit
       Left = 8
       ExplicitLeft = 8
@@ -333,6 +333,17 @@ inherited PriceCorrectiveForm: TPriceCorrectiveForm
       Top = 23
       TabOrder = 24
       Width = 63
+    end
+    object cxLabel16: TcxLabel
+      Left = 9
+      Top = 85
+      Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
+    end
+    object ceComment: TcxTextEdit
+      Left = 9
+      Top = 103
+      TabOrder = 26
+      Width = 549
     end
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
@@ -517,6 +528,7 @@ inherited PriceCorrectiveForm: TPriceCorrectiveForm
           DataSet = PrintHeaderCDS
           UserName = 'frxDBDHeader'
         end>
+      CopiesCount = 1
       Params = <
         item
           Name = 'Id'
@@ -552,6 +564,7 @@ inherited PriceCorrectiveForm: TPriceCorrectiveForm
           DataSet = PrintHeaderCDS
           UserName = 'frxDBDHeader'
         end>
+      CopiesCount = 1
       Params = <
         item
           Name = 'Id'
@@ -984,6 +997,12 @@ inherited PriceCorrectiveForm: TPriceCorrectiveForm
         Component = DocumentTaxKindGuides
         ComponentItem = 'TextValue'
         DataType = ftString
+      end
+      item
+        Name = 'Comment'
+        Value = Null
+        Component = ceComment
+        DataType = ftString
       end>
     Left = 216
     Top = 248
@@ -1074,6 +1093,13 @@ inherited PriceCorrectiveForm: TPriceCorrectiveForm
         Component = ContractGuides
         ComponentItem = 'Key'
         ParamType = ptInput
+      end
+      item
+        Name = 'inComment'
+        Value = Null
+        Component = ceComment
+        DataType = ftString
+        ParamType = ptInput
       end>
     Left = 162
     Top = 312
@@ -1125,6 +1151,7 @@ inherited PriceCorrectiveForm: TPriceCorrectiveForm
         Control = edVATPercent
       end
       item
+        Control = ceComment
       end>
     Left = 232
     Top = 193

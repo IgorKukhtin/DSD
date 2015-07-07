@@ -15,6 +15,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , OperDatePartner TDateTime, OperDateStart TDateTime, OperDateEnd TDateTime
              , FromId Integer, FromName TVarChar, ToId Integer, ToName TVarChar
              , DayCount TFloat
+             , Comment TVarChar
               )
 AS
 $BODY$
@@ -44,7 +45,8 @@ BEGIN
              , Object_To.Id                                       AS ToId
              , Object_To.ValueData                                AS ToName
              , (1 + EXTRACT (DAY FROM ((inOperDate - INTERVAL '1 DAY') - (inOperDate - INTERVAL '56 DAY')))) :: TFloat AS DayCount
-             
+             , CAST ('' as TVarChar) 		                  AS Comment
+
           FROM lfGet_Object_Status(zc_Enum_Status_UnComplete()) AS Object_Status
                LEFT JOIN Object AS Object_From ON Object_From.Id = 8457 -- Склады База + Реализации
                LEFT JOIN Object AS Object_To ON Object_To.Id = CASE WHEN inIsPack = TRUE
@@ -75,7 +77,8 @@ BEGIN
            , (1 + EXTRACT (DAY FROM (COALESCE (MovementDate_OperDateEnd.ValueData, Movement.OperDate - (INTERVAL '1 DAY')) :: TDateTime
                                    - COALESCE (MovementDate_OperDateStart.ValueData, Movement.OperDate - (INTERVAL '56 DAY')) :: TDateTime)
                           )) :: TFloat AS DayCount
-
+           , MovementString_Comment.ValueData       AS Comment
+            
        FROM Movement
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
 
@@ -89,6 +92,10 @@ BEGIN
             LEFT JOIN MovementDate AS MovementDate_OperDateEnd
                                    ON MovementDate_OperDateEnd.MovementId =  Movement.Id
                                   AND MovementDate_OperDateEnd.DescId = zc_MovementDate_OperDateEnd()
+
+            LEFT JOIN MovementString AS MovementString_Comment 
+                                     ON MovementString_Comment.MovementId = Movement.Id
+                                    AND MovementString_Comment.DescId = zc_MovementString_Comment() 
 
             LEFT JOIN MovementLinkObject AS MovementLinkObject_From
                                          ON MovementLinkObject_From.MovementId = Movement.Id

@@ -151,6 +151,8 @@ type
     bbAddMask: TdxBarButton;
     actGoodsChoiceForm: TOpenChoiceForm;
     colAmountRemains: TcxGridDBColumn;
+    cxLabel16: TcxLabel;
+    ceComment: TcxTextEdit;
   private
   public
   end;

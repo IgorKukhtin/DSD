@@ -22,7 +22,7 @@ object IncomeForm: TIncomeForm
     Left = 0
     Top = 0
     Width = 956
-    Height = 100
+    Height = 140
     Align = alTop
     BevelOuter = bvNone
     TabOrder = 0
@@ -274,29 +274,44 @@ object IncomeForm: TIncomeForm
       TabOrder = 30
       Width = 127
     end
+    object cxLabel16: TcxLabel
+      Left = 9
+      Top = 85
+      Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
+    end
+    object ceComment: TcxTextEdit
+      Left = 9
+      Top = 103
+      TabOrder = 32
+      Width = 584
+    end
   end
   object cxPageControl: TcxPageControl
     Left = 0
-    Top = 126
+    Top = 166
     Width = 956
-    Height = 336
+    Height = 296
     Align = alClient
     TabOrder = 1
     Properties.ActivePage = cxTabSheetMain
     Properties.CustomButtons.Buttons = <>
-    ClientRectBottom = 336
+    ExplicitTop = 126
+    ExplicitHeight = 336
+    ClientRectBottom = 296
     ClientRectRight = 956
     ClientRectTop = 24
     object cxTabSheetMain: TcxTabSheet
       Caption = #1057#1090#1088#1086#1095#1085#1072#1103' '#1095#1072#1089#1090#1100
       ImageIndex = 0
+      ExplicitHeight = 312
       object cxGrid: TcxGrid
         Left = 0
         Top = 0
         Width = 956
-        Height = 312
+        Height = 272
         Align = alClient
         TabOrder = 0
+        ExplicitHeight = 312
         object cxGridDBTableView: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = MasterDS
@@ -1553,6 +1568,13 @@ object IncomeForm: TIncomeForm
         Value = 0.000000000000000000
         Component = edCurrencyValue
         DataType = ftFloat
+      end
+      item
+        Name = 'inComment'
+        Value = Null
+        Component = ceComment
+        DataType = ftString
+        ParamType = ptInput
       end>
     PackSize = 1
     Left = 378
@@ -1608,6 +1630,9 @@ object IncomeForm: TIncomeForm
       end
       item
         Control = edCurrencyValue
+      end
+      item
+        Control = ceComment
       end>
     GetStoredProc = spGet
     Left = 264
@@ -1780,6 +1805,12 @@ object IncomeForm: TIncomeForm
         Value = ''
         Component = StatusGuides
         ComponentItem = 'TextValue'
+        DataType = ftString
+      end
+      item
+        Name = 'Comment'
+        Value = Null
+        Component = ceComment
         DataType = ftString
       end>
     PackSize = 1

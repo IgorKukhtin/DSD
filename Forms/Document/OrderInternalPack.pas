@@ -110,6 +110,8 @@ type
     Color_Percent_diff: TcxGridDBColumn;
     ColorB_Percent_diff: TcxGridDBColumn;
     isPercent_diff: TcxGridDBColumn;
+    cxLabel16: TcxLabel;
+    ceComment: TcxTextEdit;
   private
     { Private declarations }
   public

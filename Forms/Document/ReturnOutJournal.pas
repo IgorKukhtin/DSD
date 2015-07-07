@@ -54,6 +54,7 @@ type
     spSelectPrint: TdsdStoredProc;
     actPrint: TdsdPrintAction;
     bbPrint: TdxBarButton;
+    Comment: TcxGridDBColumn;
   private
     { Private declarations }
   public

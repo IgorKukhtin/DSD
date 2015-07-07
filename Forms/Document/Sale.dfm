@@ -8,22 +8,22 @@ inherited SaleForm: TSaleForm
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Top = 126
+    Top = 166
     Width = 1020
-    Height = 542
-    ExplicitTop = 126
+    Height = 502
+    ExplicitTop = 166
     ExplicitWidth = 1020
-    ExplicitHeight = 542
-    ClientRectBottom = 542
+    ExplicitHeight = 502
+    ClientRectBottom = 502
     ClientRectRight = 1020
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 1020
-      ExplicitHeight = 518
+      ExplicitHeight = 478
       inherited cxGrid: TcxGrid
         Width = 1020
-        Height = 518
+        Height = 478
         ExplicitWidth = 1020
-        ExplicitHeight = 518
+        ExplicitHeight = 478
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -321,10 +321,10 @@ inherited SaleForm: TSaleForm
   end
   inherited DataPanel: TPanel
     Width = 1020
-    Height = 100
+    Height = 140
     TabOrder = 3
     ExplicitWidth = 1020
-    ExplicitHeight = 100
+    ExplicitHeight = 140
     inherited edInvNumber: TcxTextEdit
       Left = 8
       ExplicitLeft = 8
@@ -492,6 +492,7 @@ inherited SaleForm: TSaleForm
     object edOperDatePartner: TcxDateEdit
       Left = 255
       Top = 63
+      EditValue = 42192d
       Properties.SaveTime = False
       Properties.ShowTime = False
       TabOrder = 22
@@ -672,8 +673,8 @@ inherited SaleForm: TSaleForm
     Width = 44
   end
   object cbCalcAmountPartner: TcxCheckBox [6]
-    Left = 557
-    Top = 199
+    Left = 8
+    Top = 103
     Caption = #1056#1072#1089#1095#1077#1090' '#1087#1086' % '#1089#1082#1080#1076#1082#1080' '#1074#1077#1089' :'
     Properties.ReadOnly = False
     State = cbsChecked
@@ -681,14 +682,25 @@ inherited SaleForm: TSaleForm
     Width = 157
   end
   object edChangePercentAmount: TcxCurrencyEdit [7]
-    Left = 714
-    Top = 199
+    Left = 171
+    Top = 103
     Properties.DecimalPlaces = 0
     Properties.DisplayFormat = ',0'
     Properties.ReadOnly = False
     Properties.UseThousandSeparator = True
     TabOrder = 11
     Width = 40
+  end
+  object cxLabel22: TcxLabel [8]
+    Left = 255
+    Top = 85
+    Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
+  end
+  object ceComment: TcxTextEdit [9]
+    Left = 255
+    Top = 103
+    TabOrder = 13
+    Width = 545
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 171
@@ -1595,18 +1607,6 @@ inherited SaleForm: TSaleForm
         end
         item
           Visible = True
-          ItemName = 'bbIsCalcAmountPartner'
-        end
-        item
-          Visible = True
-          ItemName = 'bbChangePercentAmount'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarStatic'
-        end
-        item
-          Visible = True
           ItemName = 'bbPrint'
         end
         item
@@ -2126,6 +2126,12 @@ inherited SaleForm: TSaleForm
         Component = FormParams
         ComponentItem = 'OperDate_TransportGoods'
         DataType = ftDateTime
+      end
+      item
+        Name = 'Comment'
+        Value = Null
+        Component = ceComment
+        DataType = ftString
       end>
     Left = 216
     Top = 248
@@ -2292,6 +2298,13 @@ inherited SaleForm: TSaleForm
         Component = edParPartnerValue
         DataType = ftFloat
         ParamType = ptInputOutput
+      end
+      item
+        Name = 'inComment'
+        Value = Null
+        Component = ceComment
+        DataType = ftString
+        ParamType = ptInput
       end>
     Left = 162
     Top = 312
@@ -2365,6 +2378,9 @@ inherited SaleForm: TSaleForm
       end
       item
         Control = edParPartnerValue
+      end
+      item
+        Control = ceComment
       end>
     Left = 232
     Top = 193

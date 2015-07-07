@@ -169,6 +169,8 @@ type
     actDialog_TTN: TdsdOpenForm;
     clGoodsGroupNameFull: TcxGridDBColumn;
     actGoodsChoiceForm: TOpenChoiceForm;
+    cxLabel22: TcxLabel;
+    ceComment: TcxTextEdit;
   private
     { Private declarations }
   public

@@ -18,7 +18,8 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , PaidKindToId Integer, PaidKindToName TVarChar
              , ContractToId Integer, ContractToName TVarChar
              , ChangePercentTo TFloat
-              )
+             , Comment TVarChar 
+               )
 AS
 $BODY$
    DECLARE vbUserId Integer;
@@ -70,6 +71,7 @@ BEGIN
              , 0                     		    AS ContractToId
              , CAST ('' as TVarChar) 		    AS ContractToName
              , CAST (0 as TFloat)                   AS ChangePercentTo
+             , CAST ('' as TVarChar) 		    AS Comment
 
           FROM lfGet_Object_Status(zc_Enum_Status_UnComplete()) AS Object_Status
               JOIN Object as ObjectCurrency on ObjectCurrency.descid= zc_Object_Currency()
@@ -115,6 +117,7 @@ BEGIN
              , View_ContractTo_InvNumber.InvNumber      AS ContractToName
 
              , MovementFloat_ChangePercentTo.ValueData  AS ChangePercentTo
+             , MovementString_Comment.ValueData         AS Comment
 
        FROM Movement
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
@@ -125,6 +128,10 @@ BEGIN
             LEFT JOIN MovementString AS MovementString_InvNumberPartner
                                      ON MovementString_InvNumberPartner.MovementId =  Movement.Id
                                     AND MovementString_InvNumberPartner.DescId = zc_MovementString_InvNumberPartner()
+
+            LEFT JOIN MovementString AS MovementString_Comment 
+                                     ON MovementString_Comment.MovementId = Movement.Id
+                                    AND MovementString_Comment.DescId = zc_MovementString_Comment()
 
             LEFT JOIN MovementBoolean AS MovementBoolean_PriceWithVAT
                                       ON MovementBoolean_PriceWithVAT.MovementId =  Movement.Id

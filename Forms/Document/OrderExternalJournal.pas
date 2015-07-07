@@ -67,6 +67,7 @@ type
     N13: TMenuItem;
     PartnerName: TcxGridDBColumn;
     RouteGroupName: TcxGridDBColumn;
+    Comment: TcxGridDBColumn;
   private
     { Private declarations }
   public

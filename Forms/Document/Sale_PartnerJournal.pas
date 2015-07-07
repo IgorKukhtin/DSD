@@ -136,6 +136,7 @@ type
     mactPrint_TTN: TMultiAction;
     colPaymentDate: TcxGridDBColumn;
     colInsertDate: TcxGridDBColumn;
+    Comment: TcxGridDBColumn;
   private
     { Private declarations }
   public

@@ -20,6 +20,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , PaidKindFromId Integer, PaidKindFromName TVarChar
              , ContractFromId Integer, ContractFromName TVarChar
              , ChangePercentFrom TFloat
+             , Comment TVarChar
              )
 AS
 $BODY$
@@ -66,6 +67,7 @@ BEGIN
              , 0                     		    AS ContractFromId
              , CAST ('' as TVarChar) 		    AS ContractFromName
              , CAST (0 as TFloat)                   AS ChangePercentFrom
+             , CAST ('' as TVarChar) 		    AS Comment
 
           FROM lfGet_Object_Status(zc_Enum_Status_UnComplete()) AS Object_Status
               JOIN Object as ObjectCurrency on ObjectCurrency.descid= zc_Object_Currency()
@@ -108,6 +110,8 @@ BEGIN
            , View_ContractFrom_InvNumber.InvNumber      AS ContractFromName
 
            , MovementFloat_ChangePercentFrom.ValueData  AS ChangePercentFrom
+           , MovementString_Comment.ValueData           AS Comment
+
        FROM Movement
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
 
@@ -115,9 +119,13 @@ BEGIN
                                    ON MovementDate_OperDatePartner.MovementId =  Movement.Id
                                   AND MovementDate_OperDatePartner.DescId = zc_MovementDate_OperDatePartner()
 
-           LEFT JOIN MovementBoolean AS MovementBoolean_PriceWithVAT
+            LEFT JOIN MovementBoolean AS MovementBoolean_PriceWithVAT
                                       ON MovementBoolean_PriceWithVAT.MovementId =  Movement.Id
                                      AND MovementBoolean_PriceWithVAT.DescId = zc_MovementBoolean_PriceWithVAT()
+           
+            LEFT JOIN MovementString AS MovementString_Comment 
+                                     ON MovementString_Comment.MovementId = Movement.Id
+                                    AND MovementString_Comment.DescId = zc_MovementString_Comment()
 
             LEFT JOIN MovementFloat AS MovementFloat_VATPercent
                                     ON MovementFloat_VATPercent.MovementId =  Movement.Id
