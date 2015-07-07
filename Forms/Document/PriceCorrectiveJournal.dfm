@@ -2,8 +2,8 @@ inherited PriceCorrectiveJournalForm: TPriceCorrectiveJournalForm
   Caption = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' <'#1050#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1082#1072' '#1094#1077#1085#1099'>'
   ClientHeight = 535
   ClientWidth = 1020
-  ExplicitWidth = 1028
-  ExplicitHeight = 569
+  ExplicitWidth = 1036
+  ExplicitHeight = 573
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -373,6 +373,14 @@ inherited PriceCorrectiveJournalForm: TPriceCorrectiveJournalForm
             HeaderAlignmentVert = vaCenter
             Width = 70
           end
+          object Comment: TcxGridDBColumn
+            Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
+            DataBinding.FieldName = 'Comment'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 120
+          end
         end
       end
     end
@@ -417,6 +425,7 @@ inherited PriceCorrectiveJournalForm: TPriceCorrectiveJournalForm
     object actCorrective: TdsdExecStoredProc [9]
       Category = 'DSDLib'
       MoveParams = <>
+      PostDataSetBeforeExecute = False
       StoredProc = spCorrective
       StoredProcList = <
         item
@@ -438,6 +447,7 @@ inherited PriceCorrectiveJournalForm: TPriceCorrectiveJournalForm
     object actSPPrintProcName: TdsdExecStoredProc
       Category = 'DSDLib'
       MoveParams = <>
+      PostDataSetBeforeExecute = False
       StoredProc = spGetReportName
       StoredProcList = <
         item
@@ -473,6 +483,7 @@ inherited PriceCorrectiveJournalForm: TPriceCorrectiveJournalForm
           DataSet = PrintItemsCDS
           UserName = 'frxDBDMaster'
         end>
+      CopiesCount = 1
       Params = <
         item
           Name = 'Id'
@@ -532,6 +543,7 @@ inherited PriceCorrectiveJournalForm: TPriceCorrectiveJournalForm
           DataSet = PrintHeaderCDS
           UserName = 'frxDBDHeader'
         end>
+      CopiesCount = 1
       Params = <
         item
           Name = 'Id'
@@ -567,6 +579,7 @@ inherited PriceCorrectiveJournalForm: TPriceCorrectiveJournalForm
           DataSet = PrintHeaderCDS
           UserName = 'frxDBDHeader'
         end>
+      CopiesCount = 1
       Params = <
         item
           Name = 'Id'
@@ -633,6 +646,7 @@ inherited PriceCorrectiveJournalForm: TPriceCorrectiveJournalForm
     object actSPPrintTaxCorrectiveProcName: TdsdExecStoredProc
       Category = 'DSDLib'
       MoveParams = <>
+      PostDataSetBeforeExecute = False
       StoredProc = spGetReportNameTaxCorrective
       StoredProcList = <
         item

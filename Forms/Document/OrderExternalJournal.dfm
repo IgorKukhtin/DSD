@@ -3,7 +3,7 @@ inherited OrderExternalJournalForm: TOrderExternalJournalForm
   ClientHeight = 661
   ClientWidth = 1064
   ExplicitWidth = 1080
-  ExplicitHeight = 696
+  ExplicitHeight = 699
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -403,6 +403,14 @@ inherited OrderExternalJournalForm: TOrderExternalJournalForm
             HeaderAlignmentVert = vaCenter
             Width = 80
           end
+          object Comment: TcxGridDBColumn
+            Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
+            DataBinding.FieldName = 'Comment'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
+          end
         end
       end
     end
@@ -457,6 +465,7 @@ inherited OrderExternalJournalForm: TOrderExternalJournalForm
           UserName = 'frxDBDMaster'
           IndexFieldNames = 'GoodsName;GoodsKindName'
         end>
+      CopiesCount = 1
       Params = <
         item
           Name = 'Id'
@@ -570,6 +579,7 @@ inherited OrderExternalJournalForm: TOrderExternalJournalForm
           UserName = 'frxDBDMaster'
           IndexFieldNames = 'GoodsGroupNameFull;GoodsName;GoodsKindName'
         end>
+      CopiesCount = 1
       Params = <
         item
           Name = 'Id'

@@ -138,6 +138,8 @@ type
     AmountSend_sh: TcxGridDBColumn;
     AmountSend_Weight: TcxGridDBColumn;
     Color_send: TcxGridDBColumn;
+    cxLabel16: TcxLabel;
+    ceComment: TcxTextEdit;
   private
     { Private declarations }
   public

@@ -80,6 +80,8 @@ type
     cbCalcAmountPartner: TcxCheckBox;
     bbCalcAmountPartner: TdxBarControlContainerItem;
     actGoodsChoiceForm: TOpenChoiceForm;
+    cxLabel16: TcxLabel;
+    ceComment: TcxTextEdit;
   private
     { Private declarations }
   public

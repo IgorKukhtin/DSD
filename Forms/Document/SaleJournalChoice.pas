@@ -53,6 +53,7 @@ type
     edPartner: TcxButtonEdit;
     PartnerGuides: TdsdGuides;
     colPaymentDate: TcxGridDBColumn;
+    Comment: TcxGridDBColumn;
   private
     { Private declarations }
   public

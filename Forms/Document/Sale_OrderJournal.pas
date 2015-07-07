@@ -161,6 +161,7 @@ type
     miOrdSpr: TMenuItem;
     miDesadv: TMenuItem;
     actExecPrint_EDI: TdsdExecStoredProc;
+    Comment: TcxGridDBColumn;
   private
     { Private declarations }
   public

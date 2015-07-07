@@ -78,6 +78,8 @@ type
     ColorB_DayCountForecast: TcxGridDBColumn;
     ColorB_AmountPrognoz: TcxGridDBColumn;
     ColorB_AmountPartner: TcxGridDBColumn;
+    cxLabel16: TcxLabel;
+    ceComment: TcxTextEdit;
   private
     { Private declarations }
   public

@@ -7,22 +7,22 @@ inherited ReturnOutForm: TReturnOutForm
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Top = 115
+    Top = 156
     Width = 838
-    Height = 553
-    ExplicitTop = 115
+    Height = 512
+    ExplicitTop = 156
     ExplicitWidth = 838
-    ExplicitHeight = 553
-    ClientRectBottom = 553
+    ExplicitHeight = 512
+    ClientRectBottom = 512
     ClientRectRight = 838
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 838
-      ExplicitHeight = 529
+      ExplicitHeight = 488
       inherited cxGrid: TcxGrid
         Width = 838
-        Height = 529
+        Height = 488
         ExplicitWidth = 838
-        ExplicitHeight = 529
+        ExplicitHeight = 488
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -242,10 +242,10 @@ inherited ReturnOutForm: TReturnOutForm
   end
   inherited DataPanel: TPanel
     Width = 838
-    Height = 89
+    Height = 130
     TabOrder = 3
     ExplicitWidth = 838
-    ExplicitHeight = 89
+    ExplicitHeight = 130
     inherited edInvNumber: TcxTextEdit
       Left = 8
       ExplicitLeft = 8
@@ -445,14 +445,25 @@ inherited ReturnOutForm: TReturnOutForm
     Width = 44
   end
   object cbCalcAmountPartner: TcxCheckBox [6]
-    Left = 541
-    Top = 191
+    Left = 329
+    Top = 152
     Caption = #1040#1074#1090#1086' '#1079#1072#1087#1086#1083#1085#1077#1085#1080#1077'  <'#1050#1086#1083'-'#1074#1086' '#1091' '#1087#1086#1089#1090'.>'
     Enabled = False
     Properties.ReadOnly = False
     State = cbsChecked
     TabOrder = 10
     Width = 220
+  end
+  object cxLabel16: TcxLabel [7]
+    Left = 9
+    Top = 85
+    Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
+  end
+  object ceComment: TcxTextEdit [8]
+    Left = 9
+    Top = 103
+    TabOrder = 12
+    Width = 540
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 171
@@ -1117,6 +1128,12 @@ inherited ReturnOutForm: TReturnOutForm
         Name = 'DocumentChildName'
         Value = ''
         DataType = ftString
+      end
+      item
+        Name = 'Comment'
+        Value = Null
+        Component = ceComment
+        DataType = ftString
       end>
     Left = 216
     Top = 248
@@ -1214,9 +1231,11 @@ inherited ReturnOutForm: TReturnOutForm
         ParamType = ptInput
       end
       item
+        Name = 'inComment'
         Value = ''
+        Component = ceComment
         DataType = ftString
-        ParamType = ptUnknown
+        ParamType = ptInput
       end
       item
         Value = 'False'
@@ -1281,6 +1300,7 @@ inherited ReturnOutForm: TReturnOutForm
         Control = edCurrencyValue
       end
       item
+        Control = ceComment
       end>
     Left = 232
     Top = 193

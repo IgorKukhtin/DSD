@@ -3,7 +3,7 @@ inherited ReturnInJournalForm: TReturnInJournalForm
   ClientHeight = 535
   ClientWidth = 1106
   ExplicitWidth = 1122
-  ExplicitHeight = 570
+  ExplicitHeight = 573
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl

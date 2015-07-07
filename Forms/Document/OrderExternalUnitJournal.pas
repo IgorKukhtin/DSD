@@ -67,6 +67,7 @@ type
     RetailName: TcxGridDBColumn;
     PartnerName: TcxGridDBColumn;
     RouteGroupName: TcxGridDBColumn;
+    Comment: TcxGridDBColumn;
   private
     { Private declarations }
   public

@@ -151,6 +151,7 @@ type
     isEdiOrdspr_partner: TcxGridDBColumn;
     isEdiInvoice_partner: TcxGridDBColumn;
     isEdiDesadv_partner: TcxGridDBColumn;
+    Comment: TcxGridDBColumn;
   private
     { Private declarations }
   public

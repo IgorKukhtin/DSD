@@ -1,6 +1,7 @@
 -- Function: gpInsertUpdate_Movement_Sale()
 
 DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_Sale (Integer, TVarChar, TVarChar, TVarChar, TDateTime, TDateTime, Boolean, TFloat, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TFloat, TFloat, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_Sale (Integer, TVarChar, TVarChar, TVarChar, TDateTime, TDateTime, Boolean, TFloat, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TFloat, TFloat, TVarChar, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_Sale(
  INOUT ioId                    Integer    , -- Ключ объекта <Документ Перемещение>
@@ -28,6 +29,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_Sale(
    OUT outParValue             TFloat     , -- Номинал для перевода в валюту баланса
  INOUT ioCurrencyPartnerValue  TFloat     , -- Курс для расчета суммы операции
  INOUT ioParPartnerValue       TFloat     , -- Номинал для расчета суммы операции
+    IN inComment               TVarChar   , -- Примечание
     IN inSession               TVarChar     -- сессия пользователя
 )
 RETURNS RECORD AS
@@ -73,6 +75,8 @@ BEGIN
                                       , inUserId               := vbUserId
                                        ) AS tmp;
 
+    -- Комментарий
+    PERFORM lpInsertUpdate_MovementString (zc_MovementString_Comment(), ioId, inComment);
 
     -- сформировали связь у расходной накл. с EDI (такую же как и у заявки)
     PERFORM lpUpdate_Movement_Sale_Edi_byOrder (ioId, inMovementId_Order, vbUserId);

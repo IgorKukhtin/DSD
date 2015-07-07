@@ -152,6 +152,10 @@ type
     actDialog_TTN: TdsdOpenForm;
     clGoodsGroupNameFull: TcxGridDBColumn;
     actGoodsChoiceForm: TOpenChoiceForm;
+    cxLabel22: TcxLabel;
+    ceComment: TcxTextEdit;
+    cbCalcAmountPartner: TcxCheckBox;
+    edChangePercentAmount: TcxCurrencyEdit;
   private
     { Private declarations }
   public

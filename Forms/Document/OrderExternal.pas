@@ -89,6 +89,8 @@ type
     edPartner: TcxButtonEdit;
     PartnerGuides: TdsdGuides;
     Article: TcxGridDBColumn;
+    cxLabel18: TcxLabel;
+    ceComment: TcxTextEdit;
   private
     { Private declarations }
   public

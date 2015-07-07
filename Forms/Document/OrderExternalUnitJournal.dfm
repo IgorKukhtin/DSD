@@ -3,7 +3,7 @@ inherited OrderExternalUnitJournalForm: TOrderExternalUnitJournalForm
   ClientHeight = 661
   ClientWidth = 1064
   ExplicitWidth = 1080
-  ExplicitHeight = 696
+  ExplicitHeight = 699
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -447,6 +447,14 @@ inherited OrderExternalUnitJournalForm: TOrderExternalUnitJournalForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 60
+          end
+          object Comment: TcxGridDBColumn
+            Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
+            DataBinding.FieldName = 'Comment'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
           end
         end
       end

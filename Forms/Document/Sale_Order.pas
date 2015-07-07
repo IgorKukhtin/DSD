@@ -162,6 +162,8 @@ type
     actDialog_QualityDoc: TdsdOpenForm;
     mactPrint_QualityDoc: TMultiAction;
     actGoodsChoiceForm: TOpenChoiceForm;
+    cxLabel22: TcxLabel;
+    ceComment: TcxTextEdit;
   private
     { Private declarations }
   public

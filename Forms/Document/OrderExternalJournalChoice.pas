@@ -57,6 +57,7 @@ type
     edPartner: TcxButtonEdit;
     PartnerGuides: TdsdGuides;
     PriceListName: TcxGridDBColumn;
+    Comment: TcxGridDBColumn;
   private
     { Private declarations }
   public
