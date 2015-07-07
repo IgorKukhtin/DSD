@@ -1,6 +1,7 @@
 -- Function: lpInsertUpdate_Movement_SendOnPrice_Value()
 
 DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_SendOnPrice_Value (Integer, TVarChar, TDateTime, TDateTime, Boolean, TFloat, TFloat, Integer, Integer, Integer, Integer, Integer, Integer);
+DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_SendOnPrice_Value (Integer, TVarChar, TDateTime, TDateTime, Boolean, TFloat, TFloat, Integer, Integer, Integer, Integer, Integer, Integer, Integer);
 
 CREATE OR REPLACE FUNCTION lpInsertUpdate_Movement_SendOnPrice_Value(
  INOUT ioId                  Integer   , -- Ключ объекта <Документ Перемещение>
@@ -13,6 +14,7 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_Movement_SendOnPrice_Value(
     IN inFromId              Integer   , -- От кого (в документе)
     IN inToId                Integer   , -- Кому (в документе)
     IN inRouteSortingId      Integer   , -- Сортировки маршрутов
+    IN inMovementId_Order    Integer    , -- ключ Документа
     IN ioPriceListId         Integer   , -- Прайс лист
     IN inProcessId           Integer   , -- 
     IN inUserId              Integer     -- пользователь
@@ -34,6 +36,7 @@ BEGIN
                                              , inFromId           := inFromId
                                              , inToId             := inToId
                                              , inRouteSortingId   := inRouteSortingId
+                                             , inMovementId_Order := inMovementId_Order
                                              , ioPriceListId      := ioPriceListId
                                              , inProcessId        := inProcessId
                                              , inUserId           := inUserId

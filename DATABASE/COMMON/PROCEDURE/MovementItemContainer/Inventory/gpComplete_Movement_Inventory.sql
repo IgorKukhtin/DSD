@@ -485,12 +485,14 @@ BEGIN
                    , COALESCE (Container_Summ.ObjectId, 0) AS AccountId
                      -- остатки по сумме должны быть загружены один раз, а потом расчитываться из HistoryCost
                    -- , CASE WHEN vbOperDate <= '01.06.2014' THEN _tmpItem.OperSumm ELSE _tmpItem.OperCount * COALESCE (HistoryCost.Price, 0) END AS OperSumm
-                   , CASE WHEN vbOperDate IN ('31.05.2014', '31.05.2015', '30.06.2015') AND vbPriceListId = 0 THEN _tmpItem.OperSumm ELSE _tmpItem.OperCount * COALESCE (HistoryCost.Price, 0) END AS OperSumm
+                   , CASE WHEN vbOperDate IN ('31.05.2014', '31.05.2015', '30.06.2015') AND vbPriceListId = 0 
+THEN _tmpItem.OperSumm ELSE 
+_tmpItem.OperCount * COALESCE (HistoryCost.Price, 0) END AS OperSumm
               FROM _tmpItem
                    LEFT JOIN _tmpRemainsCount ON _tmpRemainsCount.ContainerId_Goods = _tmpItem.ContainerId_Goods
                    LEFT JOIN Container AS Container_Summ ON Container_Summ.ParentId = _tmpItem.ContainerId_Goods
                                                         AND Container_Summ.DescId = zc_Container_Summ()
-                                                        AND vbOperDate >= '01.07.2015'
+                                                        AND (vbOperDate >= '01.07.2015' OR vbPriceListId <> 0) 
                    LEFT JOIN HistoryCost ON HistoryCost.ContainerId = Container_Summ.Id
                                         AND vbOperDate BETWEEN HistoryCost.StartDate AND HistoryCost.EndDate
              UNION ALL

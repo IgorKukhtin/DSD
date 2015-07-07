@@ -33,7 +33,7 @@ BEGIN
 
 
      -- очень важная проверка
-     IF COALESCE (vbStatusId, 0) <> zc_Enum_Status_Complete()
+     IF COALESCE (vbStatusId, 0) <> zc_Enum_Status_Complete() AND vbUserId <> 5 -- !!!кроме Админа!!!
      THEN
          IF vbStatusId = zc_Enum_Status_Erased()
          THEN
@@ -69,7 +69,7 @@ BEGIN
                                         AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
             LEFT JOIN Object AS Object_To ON Object_To.Id = MovementLinkObject_To.ObjectId
        WHERE Movement.Id =  inMovementId
-         AND Movement.StatusId = zc_Enum_Status_Complete()
+         -- AND Movement.StatusId = zc_Enum_Status_Complete()
       ;
     RETURN NEXT Cursor1;
 

@@ -64,7 +64,7 @@ BEGIN
 
      -- !!!заменили параметр!!! : Перемещение -> производство ПЕРЕРАБОТКА
      IF vbMovementDescId = zc_Movement_Send() AND (SELECT ObjectId FROM MovementLinkObject WHERE MovementId = inMovementId AND DescId = zc_MovementLinkObject_To())
-                                                  IN (SELECT UnitId FROM lfSelect_Object_Unit_byGroup (8446) -- ЦЕХ колбаса+дел-сы
+                                                  IN (SELECT UnitId FROM lfSelect_Object_Unit_byGroup (8446) WHERE UnitId <> 8450 -- ЦЕХ колбаса+дел-сы <> ЦЕХ копчения
                                                      UNION
                                                       SELECT UnitId FROM lfSelect_Object_Unit_byGroup (8439) -- Участок мясного сырья
                                                      )
@@ -138,6 +138,21 @@ BEGIN
                                                                     AND MovementLinkMovement_Order.DescId = zc_MovementLinkMovement_Order()
                                      INNER JOIN Movement ON Movement.Id = MovementLinkMovement_Order.MovementId
                                                         AND Movement.DescId = zc_Movement_Sale()
+                                                        AND Movement.OperDate = inOperDate
+                                                        AND Movement.StatusId IN (zc_Enum_Status_UnComplete(), zc_Enum_Status_Complete())
+                                WHERE MovementLinkMovement.MovementId = inMovementId
+                                  AND MovementLinkMovement.DescId = zc_MovementLinkMovement_Order());
+     END IF;
+     IF vbMovementDescId = zc_Movement_SendOnPrice()
+     THEN
+          -- поиск существующего документа <Перемещение по цене> по Заявке
+          vbMovementId_find:= (SELECT Movement.Id
+                               FROM MovementLinkMovement
+                                     INNER JOIN MovementLinkMovement AS MovementLinkMovement_Order
+                                                                     ON MovementLinkMovement_Order.MovementChildId = MovementLinkMovement.MovementChildId
+                                                                    AND MovementLinkMovement_Order.DescId = zc_MovementLinkMovement_Order()
+                                     INNER JOIN Movement ON Movement.Id = MovementLinkMovement_Order.MovementId
+                                                        AND Movement.DescId = zc_Movement_SendOnPrice()
                                                         AND Movement.OperDate = inOperDate
                                                         AND Movement.StatusId IN (zc_Enum_Status_UnComplete(), zc_Enum_Status_Complete())
                                 WHERE MovementLinkMovement.MovementId = inMovementId
@@ -303,6 +318,7 @@ BEGIN
                                                   , inFromId                := FromId
                                                   , inToId                  := ToId
                                                   , inRouteSortingId        := NULL
+                                                  , inMovementId_Order      := MovementId_Order
                                                   , ioPriceListId           := NULL
                                                   , inProcessId             := zc_Enum_Process_InsertUpdate_Movement_SendOnPrice_Branch()
                                                   , inUserId                := vbUserId

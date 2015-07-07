@@ -38,6 +38,7 @@ BEGIN
                                       , inFromId           := inFromId
                                       , inToId             := inToId
                                       , inRouteSortingId   := inRouteSortingId
+                                      , inMovementId_Order := (SELECT MovementChildId FROM MovementLinkMovement WHERE MovementId = ioId AND DescId = zc_MovementLinkMovement_Order())
                                       , ioPriceListId      := ioPriceListId
                                       , inProcessId        := zc_Enum_Process_InsertUpdate_Movement_SendOnPrice()
                                       , inUserId           := vbUserId

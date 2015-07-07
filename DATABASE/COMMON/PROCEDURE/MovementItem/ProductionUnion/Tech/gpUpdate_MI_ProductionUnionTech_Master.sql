@@ -67,10 +67,25 @@ BEGIN
 
 
    -- !!!сохранили св-ва <Рецептуры> у заявки!!!
-   IF inMovementItemId_order <> 0
-   THEN
-       PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_Receipt(), inMovementItemId_order, inReceiptId);
-   END IF;
+   PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_ReceiptBasis(), MovementItem_f.Id, inReceiptId)
+   FROM MovementItem
+        INNER JOIN MovementItemLinkObject AS MILO_Goods
+                                          ON MILO_Goods.MovementItemId = MovementItem.Id
+                                         AND MILO_Goods.DescId = zc_MILinkObject_Goods()
+        INNER JOIN MovementItemLinkObject AS MILO_GoodsKindComplete
+                                          ON MILO_GoodsKindComplete.MovementItemId = MovementItem.Id
+                                         AND MILO_GoodsKindComplete.DescId = zc_MILinkObject_GoodsKindComplete()
+        INNER JOIN MovementItem AS MovementItem_f ON MovementItem_f.MovementId = MovementItem.MovementId
+                                                 AND MovementItem_f.DescId = zc_MI_Master()
+        INNER JOIN MovementItemLinkObject AS MILO_Goods_f
+                                          ON MILO_Goods_f.MovementItemId = MovementItem_f.Id
+                                         AND MILO_Goods_f.DescId         = zc_MILinkObject_Goods()
+                                         AND MILO_Goods_f.ObjectId       = MILO_Goods.ObjectId
+        INNER JOIN MovementItemLinkObject AS MILO_GoodsKindComplete_f
+                                          ON MILO_GoodsKindComplete_f.MovementItemId = MovementItem_f.Id
+                                         AND MILO_GoodsKindComplete_f.DescId         = zc_MILinkObject_GoodsKindComplete()
+                                         AND MILO_GoodsKindComplete_f.ObjectId       = MILO_GoodsKindComplete.ObjectId
+   WHERE MovementItem.Id = inMovementItemId_order;
 
    -- сохранили связь с <>
    PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_Update(), ioMovementItemId, vbUserId);

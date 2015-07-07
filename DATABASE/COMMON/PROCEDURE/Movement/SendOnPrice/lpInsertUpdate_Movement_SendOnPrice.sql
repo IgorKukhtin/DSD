@@ -1,6 +1,7 @@
 -- Function: gpInsertUpdate_Movement_SendOnPrice()
 
 DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_SendOnPrice (Integer, TVarChar, TDateTime, TDateTime, Boolean, TFloat, TFloat, Integer, Integer, Integer, Integer, Integer, Integer);
+DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_SendOnPrice (Integer, TVarChar, TDateTime, TDateTime, Boolean, TFloat, TFloat, Integer, Integer, Integer, Integer, Integer, Integer, Integer);
 
 CREATE OR REPLACE FUNCTION lpInsertUpdate_Movement_SendOnPrice(
  INOUT ioId                  Integer   , -- Ключ объекта <Документ Перемещение>
@@ -13,6 +14,7 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_Movement_SendOnPrice(
     IN inFromId              Integer   , -- От кого (в документе)
     IN inToId                Integer   , -- Кому (в документе)
     IN inRouteSortingId      Integer   , -- Сортировки маршрутов
+    IN inMovementId_Order    Integer    , -- ключ Документа
  INOUT ioPriceListId         Integer   , -- Прайс лист
    OUT outPriceListName      TVarChar  , -- Прайс лист
     IN inProcessId           Integer   , -- 
@@ -38,6 +40,9 @@ BEGIN
 
      -- сохранили <Документ>
      ioId := lpInsertUpdate_Movement (ioId, zc_Movement_SendOnPrice(), inInvNumber, inOperDate, NULL, vbAccessKeyId);
+
+     -- сохранили связь с документом <Заявки сторонние>
+     PERFORM lpInsertUpdate_MovementLinkMovement (zc_MovementLinkMovement_Order(), ioId, inMovementId_Order);
 
      -- сохранили свойство <Дата накладной у контрагента>
      PERFORM lpInsertUpdate_MovementDate (zc_MovementDate_OperDatePartner(), ioId, inOperDatePartner);

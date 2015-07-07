@@ -15,7 +15,7 @@ RETURNS TABLE (Id Integer, InvNumber Integer, OperDate TDateTime, StatusCode Int
              , StartWeighing TDateTime, EndWeighing TDateTime 
              , MovementDescNumber Integer, MovementDescId Integer, MovementDescName TVarChar
              , WeighingNumber TFloat
-             , InvNumberOrder TVarChar
+             , MovementId_Order Integer, InvNumberOrder TVarChar
              , InvNumberTransport Integer
              , ChangePercent TFloat
              , TotalCount TFloat, TotalCountTare TFloat
@@ -104,6 +104,7 @@ BEGIN
              , MovementDesc.ItemName                      AS MovementDescName
              , MovementFloat_WeighingNumber.ValueData     AS WeighingNumber
 
+             , MovementLinkMovement_Order.MovementChildId AS MovementId_Order
              , MovementString_InvNumberOrder.ValueData    AS InvNumberOrder
              , MovementFloat_InvNumberTransport.ValueData :: Integer AS InvNumberTransport
 
@@ -180,6 +181,9 @@ BEGIN
                                     ON MovementFloat_WeighingNumber.MovementId =  Movement.Id
                                    AND MovementFloat_WeighingNumber.DescId = zc_MovementFloat_WeighingNumber()
 
+            LEFT JOIN MovementLinkMovement AS MovementLinkMovement_Order
+                                           ON MovementLinkMovement_Order.MovementId = Movement.Id
+                                          AND MovementLinkMovement_Order.DescId = zc_MovementLinkMovement_Order()
             LEFT JOIN MovementString AS MovementString_InvNumberOrder
                                      ON MovementString_InvNumberOrder.MovementId =  Movement.Id
                                     AND MovementString_InvNumberOrder.DescId = zc_MovementString_InvNumberOrder()

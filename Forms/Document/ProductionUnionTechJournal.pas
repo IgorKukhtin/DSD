@@ -105,6 +105,9 @@ type
     colChildInsertDate: TcxGridDBColumn;
     colChildUpdateDate: TcxGridDBColumn;
     colChildColor_calc: TcxGridDBColumn;
+    colAmount_calc: TcxGridDBColumn;
+    colIsMain: TcxGridDBColumn;
+    colComment_receipt: TcxGridDBColumn;
   private
     { Private declarations }
   public

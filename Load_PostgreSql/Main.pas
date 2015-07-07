@@ -898,6 +898,83 @@ begin
 end;
 //----------------------------------------------------------------------------------------------------------------------------------------------------
 function TMainForm.fFind_ContractId_pg(PartnerId,IMCode,IMCode_two,PaidKindId:Integer;myContractNumber:String):Integer;
+     function fNal(where_ContractNumber,where_not:String):Integer;
+     begin
+             // В 1.1.-ый раз Пытаемся найти <Договор> !!!по НОМЕРУ + УП статье + не закрыт!!!
+             Result:=0;
+             //if myContractNumber<>'' then
+             begin
+                  fOpenSqToQuery (' select max(ContractId) as ContractId'
+                                 +' from Object_Contract_View'
+                                 +'      JOIN Object_InfoMoney_View ON Object_InfoMoney_View.InfoMoneyId = Object_Contract_View.InfoMoneyId'
+                                 +'                                AND Object_InfoMoney_View.InfoMoneyCode = '+IntToStr(IMCode)
+                                 +'      JOIN ObjectLink AS ObjectLink_Partner_Juridical'
+                                 +'                         ON ObjectLink_Partner_Juridical.childobjectid = Object_Contract_View.JuridicalId'
+                                 +'                        AND ObjectLink_Partner_Juridical.DescId = zc_ObjectLink_Partner_Juridical()'
+                                 +' where ObjectLink_Partner_Juridical.ObjectId='+IntToStr(PartnerId)
+                                 +'   and PaidKindId='+IntToStr(zc_Enum_PaidKind_SecondForm)
+                                 //+'   and '+FormatToVarCharServer_notNULL(DateToStr(FieldByName('OperDate').AsDateTime))+' between StartDate and EndDate'
+                                 +'   and ContractStateKindId <> zc_Enum_ContractStateKind_Close()'
+                                 +'   and Object_Contract_View.isErased = FALSE'
+                                 + where_ContractNumber
+                                 );
+                  Result:=toSqlQuery.FieldByName('ContractId').AsInteger;
+                  //
+                  if (cbShowContract.Checked)and(Result>0) then ShowMessage('1.1.fNal'+#10+#13+IntToStr(Result)+#10+#13+toSqlQuery.Sql[0])
+                  else if cbShowAll.Checked  then ShowMessage('1.1.fNal'+#10+#13+IntToStr(Result)+#10+#13+toSqlQuery.Sql[0]);
+             end;
+
+             // В 1.2.-ый раз Пытаемся найти <Договор> !!!по НОМЕРУ + УП статье + закрыт!!!
+             if (Result=0){and(myContractNumber<>'')} then
+             begin
+                  fOpenSqToQuery (' select max(ContractId) as ContractId'
+                                 +' from Object_Contract_View'
+                                 +'      JOIN Object_InfoMoney_View ON Object_InfoMoney_View.InfoMoneyId = Object_Contract_View.InfoMoneyId'
+                                 +'                                AND Object_InfoMoney_View.InfoMoneyCode = '+IntToStr(IMCode)
+                                 +'      JOIN ObjectLink AS ObjectLink_Partner_Juridical'
+                                 +'                         ON ObjectLink_Partner_Juridical.childobjectid = Object_Contract_View.JuridicalId'
+                                 +'                        AND ObjectLink_Partner_Juridical.DescId = zc_ObjectLink_Partner_Juridical()'
+                                 +' where ObjectLink_Partner_Juridical.ObjectId='+IntToStr(PartnerId)
+                                 +'   and PaidKindId='+IntToStr(zc_Enum_PaidKind_SecondForm)
+                                 //+'   and '+FormatToVarCharServer_notNULL(DateToStr(FieldByName('OperDate').AsDateTime))+' between StartDate and EndDate'
+                                 +'   and ContractStateKindId = zc_Enum_ContractStateKind_Close()'
+                                 +'   and Object_Contract_View.isErased = FALSE'
+                                 + where_ContractNumber
+                                 + where_not
+                                 );
+                  Result:=toSqlQuery.FieldByName('ContractId').AsInteger;
+                  //
+                  if (cbShowContract.Checked)and(Result>0) then ShowMessage('1.2.fNal'+#10+#13+IntToStr(Result)+#10+#13+toSqlQuery.Sql[0])
+                  else if cbShowAll.Checked  then ShowMessage('1.2.fNal'+#10+#13+IntToStr(Result)+#10+#13+toSqlQuery.Sql[0]);
+             end;
+
+             // В 1.3.-ый раз Пытаемся найти <Договор> !!!по НОМЕРУ + без УП статьи + не закрыт!!!
+             if (Result=0){and(myContractNumber<>'')} then
+             begin
+                  fOpenSqToQuery (' select max(ContractId) as ContractId'
+                                 +' from Object_Contract_View'
+                                 +'      JOIN Object_InfoMoney_View ON Object_InfoMoney_View.InfoMoneyId = Object_Contract_View.InfoMoneyId'
+                                 +'                                AND Object_InfoMoney_View.InfoMoneyDestinationId <> zc_Enum_InfoMoneyDestination_21500()' // Маркетинг
+                                 +'                                AND (Object_InfoMoney_View.InfoMoneyDestinationId in (zc_Enum_InfoMoneyDestination_20800(),zc_Enum_InfoMoneyDestination_20900(),zc_Enum_InfoMoneyDestination_21000(),zc_Enum_InfoMoneyDestination_21100())' //
+                                 +'                                  OR Object_InfoMoney_View.InfoMoneyGroupId in (zc_Enum_InfoMoneyGroup_30000())' // Доходы
+                                 +'                                     )'
+                                 +'      JOIN ObjectLink AS ObjectLink_Partner_Juridical'
+                                 +'                         ON ObjectLink_Partner_Juridical.childobjectid = Object_Contract_View.JuridicalId'
+                                 +'                        AND ObjectLink_Partner_Juridical.DescId = zc_ObjectLink_Partner_Juridical()'
+                                 +' where ObjectLink_Partner_Juridical.ObjectId='+IntToStr(PartnerId)
+                                 +'   and PaidKindId='+IntToStr(PaidKindId)
+                                 //+'   and '+FormatToVarCharServer_notNULL(DateToStr(FieldByName('OperDate').AsDateTime))+' between StartDate and EndDate'
+                                 +'   and ContractStateKindId <> zc_Enum_ContractStateKind_Close()'
+                                 +'   and Object_Contract_View.isErased = FALSE'
+                                 + where_ContractNumber
+                                 + where_not
+                                 );
+                  Result:=toSqlQuery.FieldByName('ContractId').AsInteger;
+                  //
+                  if (cbShowContract.Checked)and(Result>0) then ShowMessage('1.3.fNal'+#10+#13+IntToStr(Result)+#10+#13+toSqlQuery.Sql[0])
+                  else if cbShowAll.Checked  then ShowMessage('1.3.fNal'+#10+#13+IntToStr(Result)+#10+#13+toSqlQuery.Sql[0]);
+             end;
+     end;
 var where_ContractNumber,where_not:string;
 begin
      if (PaidKindId=zc_Enum_PaidKind_FirstForm)and (myContractNumber<>'myContractNumber is null')
@@ -1080,7 +1157,14 @@ begin
                   if (cbShowContract.Checked)and(Result>0) then ShowMessage('4.'+#10+#13+IntToStr(Result)+#10+#13+toSqlQuery.Sql[0])
                   else if cbShowAll.Checked  then ShowMessage('4.'+#10+#13+IntToStr(Result)+#10+#13+toSqlQuery.Sql[0]);
              end;
-
+             //
+             //
+             // !!!для БН поиск среди НАЛ!!!
+             if (Result=0)and(PaidKindId=zc_Enum_PaidKind_FirstForm)
+             then Result:=fNal(where_ContractNumber,where_not);
+             //
+             //
+             //
 end;
 //----------------------------------------------------------------------------------------------------------------------------------------------------
 procedure TMainForm.StopButtonClick(Sender: TObject);

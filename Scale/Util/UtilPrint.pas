@@ -147,7 +147,8 @@ begin
   UtilPrintForm.FormParams.ParamByName('Id').Value := MovementId;
   if isSendOnPriceIn = True
   then UtilPrintForm.actPrint_SendOnPrice_in.Execute
-  else UtilPrintForm.actPrint_SendOnPrice_out.Execute;
+  else UtilPrintForm.actPrint_SendOnPrice_in.Execute; // !!!ВСЕГДА приход!!!
+  // else UtilPrintForm.actPrint_SendOnPrice_out.Execute;
 end;
 //------------------------------------------------------------------------------------------------
 procedure Print_ProductionSeparate (MovementId,MovementId_by: Integer);

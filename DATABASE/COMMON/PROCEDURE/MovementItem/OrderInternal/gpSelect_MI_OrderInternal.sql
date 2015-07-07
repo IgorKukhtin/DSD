@@ -252,7 +252,7 @@ BEGIN
                                  FROM MovementItemContainer AS MIContainer
                                       INNER JOIN tmpUnitFrom ON tmpUnitFrom.UnitId = MIContainer.WhereObjectId_Analyzer
                                       INNER JOIN tmpUnitTo ON tmpUnitTo.UnitId = MIContainer.AnalyzerId
-                                 WHERE MIContainer.OperDate   = vbOperDate
+                                 WHERE MIContainer.OperDate   = (vbOperDate + INTERVAL '1 DAY')
                                    AND MIContainer.DescId     = zc_MIContainer_Count()
                                    AND MIContainer.MovementDescId = zc_Movement_ProductionUnion()
                                    AND MIContainer.isActive = TRUE

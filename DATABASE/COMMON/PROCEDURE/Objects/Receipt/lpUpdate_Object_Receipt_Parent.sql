@@ -32,7 +32,7 @@ BEGIN
             LEFT JOIN ObjectLink AS ObjectLink_Receipt_GoodsKindComplete
                                  ON ObjectLink_Receipt_GoodsKindComplete.ObjectId = ObjectLink_Receipt_Goods.ObjectId
                                 AND ObjectLink_Receipt_GoodsKindComplete.DescId = zc_ObjectLink_Receipt_GoodsKindComplete()
-                                AND ObjectLink_Receipt_GoodsKind.ChildObjectId = zc_GoodsKind_Basis()
+                                AND ObjectLink_Receipt_GoodsKind.ChildObjectId = zc_GoodsKind_WorkProgress() -- zc_GoodsKind_Basis()
        WHERE /*(ObjectLink_Receipt_Goods.ObjectId = inReceiptId
            OR ObjectLink_Receipt_Goods.ObjectId = inGoodsId
            OR COALESCE (inGoodsId, 0) = 0 OR COALESCE (inReceiptId, 0) = 0
@@ -45,7 +45,8 @@ BEGIN
         LEFT JOIN ObjectLink AS ObjectLink_Receipt_Parent
                              ON ObjectLink_Receipt_Parent.ObjectId = ObjectLink_Receipt_Goods.ObjectId
                             AND ObjectLink_Receipt_Parent.DescId = zc_ObjectLink_Receipt_Parent()
-        LEFT JOIN (SELECT ObjectLink_Receipt_Goods.ObjectId                                               AS ReceiptId
+        LEFT JOIN (-- Все у кого Child-GoodsKind = ПФ (ГП)
+                   SELECT ObjectLink_Receipt_Goods.ObjectId                                               AS ReceiptId
                         , COALESCE (_tmpListMaster.ReceiptId, COALESCE (_tmpListMaster_two.ReceiptId, 0)) AS ReceiptId_parent
                    FROM ObjectLink AS ObjectLink_Receipt_Goods
                         INNER JOIN ObjectLink AS ObjectLink_ReceiptChild_Receipt
@@ -86,6 +87,7 @@ BEGIN
                          )
                       AND ObjectLink_Receipt_Goods.DescId = zc_ObjectLink_Receipt_Goods()
                   UNION
+                   -- Все у кого Child-GoodsKind <> ПФ (ГП) AND Child-GoodsKind <> 0 AND в найденном рецепте GoodsKindCompleteId = zc_GoodsKind_Basis()
                    SELECT ObjectLink_Receipt_Goods.ObjectId      AS ReceiptId
                         , COALESCE (_tmpListMaster.ReceiptId, 0) AS ReceiptId_parent
                    FROM ObjectLink AS ObjectLink_Receipt_Goods
@@ -228,3 +230,4 @@ ALTER FUNCTION lpUpdate_Object_Receipt_Parent (Integer, Integer, Integer) OWNER 
 */
 
 -- тест
+-- SELECT * FROM lpUpdate_Object_Receipt_Parent (0, 0, 0);

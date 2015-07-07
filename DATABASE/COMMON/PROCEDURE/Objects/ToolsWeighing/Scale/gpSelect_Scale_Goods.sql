@@ -242,7 +242,7 @@ BEGIN
    ELSE
     -- Результат - все товары
     RETURN QUERY
-       WITH tmpInfoMoney AS (SELECT View_InfoMoney.InfoMoneyId
+       WITH tmpInfoMoney AS (SELECT View_InfoMoney.InfoMoneyDestinationId, View_InfoMoney.InfoMoneyId
                              FROM Object_InfoMoney_View AS View_InfoMoney
                              WHERE inIsGoodsComplete = TRUE
                                AND (View_InfoMoney.InfoMoneyId IN (zc_Enum_InfoMoney_20901() -- Ирна + Ирна
@@ -255,14 +255,14 @@ BEGIN
                                                                            )
                                  )
                             UNION
-                             SELECT View_InfoMoney.InfoMoneyId
+                             SELECT View_InfoMoney.InfoMoneyDestinationId, View_InfoMoney.InfoMoneyId
                              FROM Object_InfoMoney_View AS View_InfoMoney
                              WHERE inIsGoodsComplete = FALSE
                                AND View_InfoMoney.InfoMoneyDestinationId IN (zc_Enum_InfoMoneyDestination_10100() -- Основное сырье + Мясное сырье
                                                                            , zc_Enum_InfoMoneyDestination_30300() -- Доходы + Переработка
                                                                             )
                             UNION
-                             SELECT View_InfoMoney.InfoMoneyId
+                             SELECT View_InfoMoney.InfoMoneyDestinationId, View_InfoMoney.InfoMoneyId
                              FROM Object_InfoMoney_View AS View_InfoMoney
                              WHERE View_InfoMoney.InfoMoneyDestinationId IN (zc_Enum_InfoMoneyDestination_20500() -- Общефирменные + Оборотная тара
                                                                            , zc_Enum_InfoMoneyDestination_20600() -- Общефирменные + Прочие материалы
@@ -277,7 +277,10 @@ BEGIN
             , Object_GoodsKind.ValueData  AS GoodsKindName
             , Object_Measure.Id           AS MeasureId
             , Object_Measure.ValueData    AS MeasureName
-            , CASE WHEN Object_Measure.Id = zc_Measure_Kg() THEN 1 ELSE 0 END :: TFloat AS ChangePercentAmount
+            , CASE WHEN tmpGoods.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_30300() THEN 0 -- Доходы + Переработка
+                   WHEN Object_Measure.Id = zc_Measure_Kg() THEN 1
+                   ELSE 0
+              END :: TFloat AS ChangePercentAmount
             , 0 :: TFloat AS Amount_Order
             , 0 :: TFloat AS Amount_OrderWeight
             , 0 :: TFloat AS Amount_Weighing
@@ -295,6 +298,8 @@ BEGIN
                   , Object_Goods.ObjectCode                                           AS GoodsCode
                   , Object_Goods.ValueData                                            AS GoodsName
                   , COALESCE (Object_GoodsByGoodsKind_View.GoodsKindId, 0)            AS GoodsKindId
+                  , tmpInfoMoney.InfoMoneyId
+                  , tmpInfoMoney.InfoMoneyDestinationId
              FROM tmpInfoMoney
                   JOIN ObjectLink AS ObjectLink_Goods_InfoMoney
                                   ON ObjectLink_Goods_InfoMoney.ChildObjectId = tmpInfoMoney.InfoMoneyId

@@ -133,6 +133,14 @@ type
     CountStart_byCount: TcxGridDBColumn;
     CountEnd_byCount: TcxGridDBColumn;
     Weight_byCount: TcxGridDBColumn;
+    PriceReal: TcxGridDBColumn;
+    PriceStart: TcxGridDBColumn;
+    PriceEnd: TcxGridDBColumn;
+    SummReal: TcxGridDBColumn;
+    SummIn: TcxGridDBColumn;
+    SummOut: TcxGridDBColumn;
+    PriceIn: TcxGridDBColumn;
+    PriceOut: TcxGridDBColumn;
   private
   public
   end;

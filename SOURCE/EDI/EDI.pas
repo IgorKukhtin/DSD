@@ -282,9 +282,11 @@ begin
   FGetSaveFilePath.StoredProcName := 'gpGetDirectoryEdiName';
   FGetSaveFilePath.Params.AddParam('Directory', ftString, ptOutput, '');
   FGetSaveFilePath.Params.AddParam('isEDISaveLocal', ftBoolean, ptOutput, '');
-  FGetSaveFilePath.Execute;
-  FDirectoryError := FGetSaveFilePath.ParamByName('Directory').AsString;
-  FisEDISaveLocal := FGetSaveFilePath.ParamByName('isEDISaveLocal').Value;
+  if not (csDesigning in ComponentState) then begin
+     FGetSaveFilePath.Execute;
+     FDirectoryError := FGetSaveFilePath.ParamByName('Directory').AsString;
+     FisEDISaveLocal := FGetSaveFilePath.ParamByName('isEDISaveLocal').Value;
+  end;
 end;
 
 procedure TEDI.ComdocLoad(spHeader, spList: TdsdStoredProc; Directory: String;

@@ -40,7 +40,6 @@ BEGIN
      -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Select_Movement_SendOnPrice_Print());
      vbUserId:= inSession;
 
-     inReportType :=  COALESCE (inReportType, 0);
 
      -- параметры из документа
      SELECT Movement.DescId
@@ -77,6 +76,12 @@ BEGIN
      WHERE Movement.Id = inMovementId
        -- AND Movement.StatusId = zc_Enum_Status_Complete()
     ;
+
+     -- !!!ћ≈Ќя≈“—я параметр!!!
+     IF vbBranchId IN (0, zc_Branch_Basis())
+     THEN inReportType :=  1; -- !!!т.е. количество пришло!!!
+     ELSE inReportType :=  COALESCE (inReportType, 0);
+     END IF;
 
 
     -- очень важна€ проверка
@@ -464,7 +469,8 @@ BEGIN
                          ELSE COALESCE (MIFloat_Price.ValueData, 0)
                     END                                                 AS Price
                   , MIFloat_CountForPrice.ValueData                     AS CountForPrice
-                  , SUM (CASE WHEN vbBranchId = zc_Branch_Basis() THEN COALESCE (MIFloat_AmountPartner.ValueData, 0) ELSE MovementItem.Amount END) AS AmountOut
+                  -- , SUM (CASE WHEN vbBranchId = zc_Branch_Basis() THEN COALESCE (MIFloat_AmountPartner.ValueData, 0) ELSE MovementItem.Amount END) AS AmountOut
+                  , SUM (MovementItem.Amount) AS AmountOut
                   , SUM (COALESCE (MIFloat_AmountPartner.ValueData, 0)) AS AmountIn--Partner
              FROM MovementItem
                   LEFT JOIN MovementItemFloat AS MIFloat_Price

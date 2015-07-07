@@ -39,7 +39,7 @@ BEGIN
 
      -- !!!заменили параметр!!! : Перемещение -> производство ПЕРЕРАБОТКА
      IF vbMovementDescId = zc_Movement_Send() AND (SELECT ObjectId FROM MovementLinkObject WHERE MovementId = inMovementId AND DescId = zc_MovementLinkObject_To())
-                                                  IN (SELECT UnitId FROM lfSelect_Object_Unit_byGroup (8446) -- ЦЕХ колбаса+дел-сы
+                                                  IN (SELECT UnitId FROM lfSelect_Object_Unit_byGroup (8446) WHERE UnitId <> 8450 -- ЦЕХ колбаса+дел-сы <> ЦЕХ копчения
                                                      UNION
                                                       SELECT UnitId FROM lfSelect_Object_Unit_byGroup (8439) -- Участок мясного сырья
                                                      )

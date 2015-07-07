@@ -119,7 +119,7 @@ BEGIN
            , Movement.InvNumber                         AS InvNumber
            , Movement.OperDate                          AS OperDate
            , MovementDate_OperDatePartner.ValueData     AS OperDatePartner
-           , MovementDate_OperDateMark.ValueData        AS OperDateMark
+           , CASE WHEN MovementDate_OperDateMark.ValueData >= Movement.OperDate THEN 'Дата маркировки : ' || (DATE (MovementDate_OperDateMark.ValueData) :: TVarChar) ELSE '' END AS OperDateMark
 
            , MovementString_InvNumberPartner.ValueData  AS InvNumberPartner
 
@@ -137,6 +137,7 @@ BEGIN
            , tmpMovement_total.TotalSumm
 
            , Object_Partner.ValueData                   AS PartnerName
+           , Object_From.ObjectCode                     AS FromCode
            , Object_From.ValueData                      AS FromName
            , Object_To.ValueData               		AS ToName
            , Object_PaidKind.ValueData         		AS PaidKindName

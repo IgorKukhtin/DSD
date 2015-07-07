@@ -32,11 +32,7 @@ BEGIN
 
 
 
-     WITH tmpStatus AS (SELECT zc_Enum_Status_Complete()   AS StatusId
-                  UNION SELECT zc_Enum_Status_UnComplete() AS StatusId
-                  UNION SELECT zc_Enum_Status_Erased()     AS StatusId -- WHERE inIsErased = TRUE
-                       )
-        , tmpMI_order AS (SELECT (Movement.OperDate :: Date + COALESCE (MIFloat_StartProductionInDays.ValueData, 0) :: Integer) :: TDateTime AS OperDate
+     WITH tmpMI_order AS (SELECT (Movement.OperDate :: Date + COALESCE (MIFloat_StartProductionInDays.ValueData, 0) :: Integer) :: TDateTime AS OperDate
                                , MAX (MovementItem.Id)                                          AS MovementItemId
                                , COALESCE (MILO_Goods.ObjectId, MovementItem.ObjectId)          AS GoodsId
                                , ObjectLink_Receipt_GoodsKind.ChildObjectId                     AS GoodsKindId
@@ -58,12 +54,6 @@ BEGIN
                                INNER JOIN MovementItem ON MovementItem.MovementId = Movement.Id
                                                       AND MovementItem.isErased = FALSE
                                                       AND MovementItem.DescId     = zc_MI_Master()
-                               LEFT JOIN ObjectLink AS ObjectLink_OrderType_Goods
-                                                    ON ObjectLink_OrderType_Goods.ChildObjectId = MovementItem.ObjectId
-                                                   AND ObjectLink_OrderType_Goods.DescId = zc_ObjectLink_OrderType_Goods()
-                               LEFT JOIN ObjectLink AS OrderType_Unit
-                                                    ON OrderType_Unit.ObjectId = ObjectLink_OrderType_Goods.ObjectId
-                                                   AND OrderType_Unit.DescId = zc_ObjectLink_OrderType_Unit()
 
                                LEFT JOIN MovementItemFloat AS MIFloat_StartProductionInDays
                                                            ON MIFloat_StartProductionInDays.MovementItemId = MovementItem.Id 
@@ -92,6 +82,15 @@ BEGIN
                                LEFT JOIN ObjectLink AS ObjectLink_Receipt_GoodsKindComplete
                                                     ON ObjectLink_Receipt_GoodsKindComplete.ObjectId = MILO_ReceiptBasis.ObjectId
                                                    AND ObjectLink_Receipt_GoodsKindComplete.DescId = zc_ObjectLink_Receipt_GoodsKindComplete()
+
+                               LEFT JOIN ObjectLink AS ObjectLink_OrderType_Goods
+                                                    ON ObjectLink_OrderType_Goods.ChildObjectId = COALESCE (MILO_Goods.ObjectId, MovementItem.ObjectId)
+                                                   AND ObjectLink_OrderType_Goods.DescId = zc_ObjectLink_OrderType_Goods()
+                               LEFT JOIN ObjectLink AS OrderType_Unit
+                                                    ON OrderType_Unit.ObjectId = ObjectLink_OrderType_Goods.ObjectId
+                                                   AND OrderType_Unit.DescId = zc_ObjectLink_OrderType_Unit()
+
+
                           WHERE Movement.OperDate BETWEEN (inStartDate - INTERVAL '1 DAY') AND (inEndDate + INTERVAL '1 DAY')
                             AND Movement.DescId = zc_Movement_OrderInternal()
                             AND Movement.StatusId <> zc_Enum_Status_Erased()
@@ -186,6 +185,12 @@ BEGIN
 
 
     OPEN Cursor1 FOR
+      WITH tmpStatus AS (SELECT 0                           AS StatusId
+                   UNION SELECT zc_Enum_Status_Complete()   AS StatusId
+                   UNION SELECT zc_Enum_Status_UnComplete() AS StatusId
+                   UNION SELECT zc_Enum_Status_Erased()     AS StatusId WHERE inIsErased = TRUE
+                       )
+
        SELECT
               CASE WHEN _tmpListMaster.MovementId <> 0 THEN row_number() OVER (ORDER BY CASE WHEN _tmpListMaster.MovementId <> 0 THEN _tmpListMaster.MovementItemId ELSE NULL END) ELSE 0 END :: Integer AS LineNum
             , _tmpListMaster.MovementId
@@ -200,6 +205,7 @@ BEGIN
 
             , _tmpListMaster.Amount
             , _tmpListMaster.CuterCount
+            , COALESCE (ObjectFloat_Receipt_Value.ValueData, 0) * _tmpListMaster.CuterCount AS  Amount_calc
 
             , COALESCE (MIBoolean_PartionClose.ValueData, FALSE) AS isPartionClose
 
@@ -222,6 +228,9 @@ BEGIN
             , Object_Receipt.Id                   AS ReceiptId
             , ObjectString_Receipt_Code.ValueData AS ReceiptCode
             , Object_Receipt.ValueData            AS ReceiptName
+            , ObjectString_Receipt_Comment.ValueData AS Comment_receipt
+            , ObjectBoolean_Receipt_Main.ValueData   AS isMain
+
             , Object_Status.ObjectCode            AS StatusCode
             , Object_Status.ValueData             AS StatusName
 
@@ -233,6 +242,7 @@ BEGIN
             , FALSE                               AS isErased
 
        FROM _tmpListMaster
+             -- INNER JOIN tmpStatus ON tmpStatus.StatusId = _tmpListMaster.StatusId
              LEFT JOIN MovementItemFloat AS MIFloat_Count
                                          ON MIFloat_Count.MovementItemId = _tmpListMaster.MovementItemId
                                         AND MIFloat_Count.DescId = zc_MIFloat_Count()
@@ -273,14 +283,24 @@ BEGIN
              LEFT JOIN Object AS Object_Receipt ON Object_Receipt.Id = _tmpListMaster.ReceiptId
              LEFT JOIN Object AS Object_Status ON Object_Status.Id = _tmpListMaster.StatusId
 
+             LEFT JOIN ObjectLink AS ObjectLink_Goods_Measure
+                                  ON ObjectLink_Goods_Measure.ObjectId = Object_Goods.Id
+                                 AND ObjectLink_Goods_Measure.DescId = zc_ObjectLink_Goods_Measure()
+
+             LEFT JOIN Object AS Object_Measure ON Object_Measure.Id = ObjectLink_Goods_Measure.ChildObjectId
 
              LEFT JOIN ObjectString AS ObjectString_Receipt_Code
                                     ON ObjectString_Receipt_Code.ObjectId = Object_Receipt.Id
                                    AND ObjectString_Receipt_Code.DescId = zc_ObjectString_Receipt_Code()
-             LEFT JOIN ObjectLink AS ObjectLink_Goods_Measure
-                                  ON ObjectLink_Goods_Measure.ObjectId = Object_Goods.Id
-                                 AND ObjectLink_Goods_Measure.DescId = zc_ObjectLink_Goods_Measure()
-             LEFT JOIN Object AS Object_Measure ON Object_Measure.Id = ObjectLink_Goods_Measure.ChildObjectId
+             LEFT JOIN ObjectString AS ObjectString_Receipt_Comment
+                                    ON ObjectString_Receipt_Comment.ObjectId = Object_Receipt.Id
+                                   AND ObjectString_Receipt_Comment.DescId = zc_ObjectString_Receipt_Comment()
+             LEFT JOIN ObjectBoolean AS ObjectBoolean_Receipt_Main
+                                     ON ObjectBoolean_Receipt_Main.ObjectId = Object_Receipt.Id
+                                    AND ObjectBoolean_Receipt_Main.DescId = zc_ObjectBoolean_Receipt_Main()
+             LEFT JOIN ObjectFloat AS ObjectFloat_Receipt_Value
+                                   ON ObjectFloat_Receipt_Value.ObjectId = Object_Receipt.Id
+                                  AND ObjectFloat_Receipt_Value.DescId = zc_ObjectFloat_Receipt_Value()
 
            ;
     RETURN NEXT Cursor1;

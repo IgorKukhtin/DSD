@@ -22,19 +22,24 @@ RETURNS TABLE (AccountGroupName TVarChar, AccountDirectionName TVarChar
              , Weight TFloat
              , PartionGoodsId Integer, PartionGoodsName TVarChar, AssetToName TVarChar
 
-             , CountReal    TFloat      -- остаток текущий
-             , CountReal_sh TFloat      -- остаток текущий
+             , CountReal        TFloat  -- остаток текущий
+             , CountReal_sh     TFloat  -- остаток текущий
              , CountReal_Weight TFloat  -- остаток текущий
+             , PriceReal        TFloat
 
-             , CountStart TFloat
-             , CountStart_sh TFloat
+             , CountStart        TFloat
+             , CountStart_sh     TFloat
              , CountStart_Weight TFloat
-             , CountEnd TFloat
-             , CountEnd_sh TFloat
+             , PriceStart        TFloat
+
+             , CountEnd        TFloat
+             , CountEnd_sh     TFloat
              , CountEnd_Weight TFloat
+             , PriceEnd        TFloat
              
              , SummStart TFloat
-             , SummEnd TFloat
+             , SummEnd   TFloat
+             , SummReal  TFloat
 
              , PriceListStart TFloat
              , PriceListEnd TFloat
@@ -42,18 +47,26 @@ RETURNS TABLE (AccountGroupName TVarChar, AccountDirectionName TVarChar
              , InfoMoneyId Integer, InfoMoneyCode Integer, InfoMoneyGroupName TVarChar, InfoMoneyDestinationName TVarChar, InfoMoneyName TVarChar, InfoMoneyName_all TVarChar
              , InfoMoneyId_Detail Integer, InfoMoneyCode_Detail Integer, InfoMoneyGroupName_Detail TVarChar, InfoMoneyDestinationName_Detail TVarChar, InfoMoneyName_Detail TVarChar, InfoMoneyName_all_Detail TVarChar
 
+             , SummIn TFloat
              , CountIn TFloat
              , CountIn_sh TFloat
              , CountIn_Weight TFloat
+             , PriceIn TFloat
+
+             , SummOut TFloat
              , CountOut TFloat
              , CountOut_sh TFloat
              , CountOut_Weight TFloat
+             , PriceOut TFloat
+
              , CountIn_calc TFloat
              , CountIn_sh_calc TFloat
              , CountIn_Weight_calc TFloat
+
              , CountOut_calc TFloat
              , CountOut_sh_calc TFloat
              , CountOut_Weight_calc TFloat
+
              , CountEnd_calc TFloat
              , CountEnd_sh_calc TFloat
              , CountEnd_Weight_calc TFloat
@@ -74,13 +87,17 @@ RETURNS TABLE (AccountGroupName TVarChar, AccountDirectionName TVarChar
 AS
 $BODY$
   DECLARE vbUserId Integer;
-BEGIN
 
+  DECLARE vbIsSummIn Boolean;
+BEGIN
     -- проверка прав пользователя на вызов процедуры
     -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Report_MotionGoods());
     vbUserId:= lpGetUserBySession (inSession);
    
- -- !!!может так будет быстрее!!!
+    -- !!!определяется!!!
+    vbIsSummIn:= NOT EXISTS (SELECT 1 FROM Object_RoleAccessKey_View WHERE UserId = vbUserId AND RoleId = 442647); -- Отчеты руководитель сырья
+
+    -- !!!может так будет быстрее!!!
     inAccountGroupId:= COALESCE (inAccountGroupId, 0);
 
     -- !!!меняются параметры для филиала!!!
@@ -89,7 +106,6 @@ BEGIN
         inAccountGroupId:= zc_Enum_AccountGroup_20000(); -- Запасы
         inIsInfoMoney:= FALSE;
     END IF;
-
 
     -- таблица -
     CREATE TEMP TABLE _tmpListContainer (LocationId Integer, ContainerDescId Integer, ContainerId_count Integer, ContainerId_begin Integer, GoodsId Integer, AccountId Integer, AccountGroupId Integer, Amount TFloat) ON COMMIT DROP;
@@ -104,7 +120,8 @@ BEGIN
                 , zc_ContainerLinkObject_Unit()       AS DescId
                 , tmpDesc.ContainerDescId
            FROM lfSelect_Object_Unit_byGroup (inUnitGroupId) AS lfSelect_Object_Unit_byGroup
-                LEFT JOIN (SELECT zc_Container_Count() AS ContainerDescId /*UNION SELECT zc_Container_Summ() AS ContainerDescId*/) AS tmpDesc ON 1 = 1
+                -- LEFT JOIN (SELECT zc_Container_Count() AS ContainerDescId /*UNION SELECT zc_Container_Summ() AS ContainerDescId*/) AS tmpDesc ON 1 = 1 -- !!!временно без с/с, для скорости!!!
+                LEFT JOIN (SELECT zc_Container_Count() AS ContainerDescId UNION SELECT zc_Container_Summ() AS ContainerDescId WHERE vbIsSummIn = TRUE) AS tmpDesc ON 1 = 1
           ;
     ELSE
         IF inLocationId <> 0
@@ -117,7 +134,8 @@ BEGIN
                       END AS DescId
                     , tmpDesc.ContainerDescId
                FROM Object
-                    LEFT JOIN (SELECT zc_Container_Count() AS ContainerDescId /*UNION SELECT zc_Container_Summ() AS ContainerDescId*/) AS tmpDesc ON 1 = 1
+                    -- LEFT JOIN (SELECT zc_Container_Count() AS ContainerDescId /*UNION SELECT zc_Container_Summ() AS ContainerDescId*/) AS tmpDesc ON 1 = 1 -- !!!временно без с/с, для скорости!!!
+                    LEFT JOIN (SELECT zc_Container_Count() AS ContainerDescId UNION SELECT zc_Container_Summ() AS ContainerDescId WHERE vbIsSummIn = TRUE) AS tmpDesc ON 1 = 1
                WHERE Object.Id = inLocationId;
         ELSE
             WITH tmpBranch AS (SELECT TRUE AS Value WHERE 1 = 0 AND NOT EXISTS (SELECT BranchId FROM Object_RoleAccessKeyGuide_View WHERE UserId = vbUserId AND BranchId <> 0))
@@ -314,8 +332,8 @@ BEGIN
                                        , _tmpContainer.Amount - COALESCE (SUM (MIContainer.Amount), 0) AS RemainsStart
                                        , _tmpContainer.Amount - COALESCE (SUM (CASE WHEN MIContainer.OperDate > inEndDate THEN MIContainer.Amount ELSE 0 END), 0) AS RemainsEnd
 
-                                       , SUM (CASE WHEN MIContainer.isActive = TRUE  AND MIContainer.OperDate <= inEndDate THEN MIContainer.Amount ELSE 0 END) AS AmountIn
-                                       , SUM (CASE WHEN MIContainer.isActive = FALSE AND MIContainer.OperDate <= inEndDate THEN -1 * MIContainer.Amount ELSE 0 END) AS AmountOut
+                                       , SUM (CASE WHEN /*MIContainer.isActive = TRUE*/  MIContainer.Amount > 0 AND MIContainer.OperDate <= inEndDate THEN MIContainer.Amount ELSE 0 END) AS AmountIn
+                                       , SUM (CASE WHEN /*MIContainer.isActive = FALSE*/ MIContainer.Amount < 0 AND MIContainer.OperDate <= inEndDate THEN -1 * MIContainer.Amount ELSE 0 END) AS AmountOut
 
                                   FROM _tmpContainer
                                        LEFT JOIN MovementItemContainer AS MIContainer ON MIContainer.ContainerId = _tmpContainer.ContainerId_begin
@@ -343,10 +361,14 @@ BEGIN
                                , tmpMIContainer.GoodsKindId
                                , tmpMIContainer.PartionGoodsId
 
-                               , SUM (CASE WHEN tmpMIContainer.ContainerDescId = zc_Container_Count() THEN tmpMIContainer.AmountIn ELSE 0 END) AS CountIn
+                               , SUM (CASE WHEN tmpMIContainer.ContainerDescId = zc_Container_Count() THEN tmpMIContainer.AmountIn ELSE 0 END)    AS CountIn
                                , SUM (CASE WHEN tmpMIContainer.ContainerDescId = zc_Container_Count() THEN tmpMIContainer.AmountOut   ELSE 0 END) AS CountOut
 
+                               , SUM (CASE WHEN tmpMIContainer.ContainerDescId = zc_Container_Summ() THEN tmpMIContainer.AmountIn ELSE 0 END)    AS SummIn
+                               , SUM (CASE WHEN tmpMIContainer.ContainerDescId = zc_Container_Summ() THEN tmpMIContainer.AmountOut   ELSE 0 END) AS SummOut
+
                                , SUM (CASE WHEN tmpMIContainer.ContainerDescId = zc_Container_Count() THEN tmpMIContainer.AmountReal ELSE 0 END) AS CountReal
+                               , SUM (CASE WHEN tmpMIContainer.ContainerDescId = zc_Container_Summ() THEN tmpMIContainer.AmountReal ELSE 0 END)  AS SummReal
 
                                , SUM (CASE WHEN tmpMIContainer.ContainerDescId = zc_Container_Count() THEN tmpMIContainer.RemainsStart ELSE 0 END) AS CountStart
                                , SUM (CASE WHEN tmpMIContainer.ContainerDescId = zc_Container_Count() THEN tmpMIContainer.RemainsEnd   ELSE 0 END) AS CountEnd
@@ -453,9 +475,12 @@ BEGIN
                               , SUM (tmpAll.CountOut_calc) AS CountOut_calc
 
                               , SUM (tmpAll.CountIn)  AS CountIn
+                              , SUM (tmpAll.SummIn)   AS SummIn
                               , SUM (tmpAll.CountOut) AS CountOut
+                              , SUM (tmpAll.SummOut)  AS SummOut
 
                               , SUM (tmpAll.CountReal) AS CountReal
+                              , SUM (tmpAll.SummReal)  AS SummReal
 
                               , SUM (tmpAll.CountStart) AS CountStart
                               , SUM (tmpAll.CountEnd)   AS CountEnd
@@ -474,9 +499,12 @@ BEGIN
                                     , (tmpMovement_all.CountOut_calc) AS  CountOut_calc
 
                                     , 0 AS CountIn
+                                    , 0 AS SummIn
                                     , 0 AS CountOut
+                                    , 0 AS SummOut
 
                                     , 0 AS CountReal
+                                    , 0 AS SummReal
                                     , 0 AS CountStart
                                     , 0 AS CountEnd
                                     , 0 AS SummStart
@@ -499,9 +527,12 @@ BEGIN
                                     , 0 AS CountOut_calc
 
                                     , 0 AS CountIn
+                                    , 0 AS SummIn
                                     , 0 AS CountOut
+                                    , 0 AS SummOut
 
                                     , 0 AS CountReal
+                                    , 0 AS SummReal
                                     , 0 AS CountStart
                                     , 0 AS CountEnd
                                     , 0 AS SummStart
@@ -523,9 +554,12 @@ BEGIN
                                     , 0 AS CountOut_calc
 
                                     , tmpMIContainer_all.CountIn
+                                    , tmpMIContainer_all.SummIn
                                     , tmpMIContainer_all.CountOut
+                                    , tmpMIContainer_all.SummOut
 
                                     , tmpMIContainer_all.CountReal
+                                    , tmpMIContainer_all.SummReal
                                     , tmpMIContainer_all.CountStart
                                     , tmpMIContainer_all.CountEnd
 
@@ -569,17 +603,21 @@ BEGIN
         , tmpResult.CountReal :: TFloat AS CountReal
         , CASE WHEN Object_Measure.Id = zc_Measure_Sh() THEN tmpResult.CountReal ELSE 0 END :: TFloat AS CountReal_sh
         , (tmpResult.CountReal * CASE WHEN Object_Measure.Id = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END) :: TFloat AS CountReal_Weight
+        , CASE WHEN tmpResult.CountReal <> 0 THEN tmpResult.SummReal / tmpResult.CountReal ELSE 0 END :: TFloat AS PriceReal
 
         , tmpResult.CountStart :: TFloat AS CountStart
         , CASE WHEN Object_Measure.Id = zc_Measure_Sh() THEN tmpResult.CountStart ELSE 0 END :: TFloat AS CountStart_sh
         , (tmpResult.CountStart * CASE WHEN Object_Measure.Id = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END) :: TFloat AS CountStart_Weight
+        , CASE WHEN tmpResult.CountStart <> 0 THEN tmpResult.SummStart / tmpResult.CountStart ELSE 0 END :: TFloat AS PriceStart
 
         , tmpResult.CountEnd  :: TFloat AS CountEnd
         , CASE WHEN Object_Measure.Id = zc_Measure_Sh() THEN tmpResult.CountEnd ELSE 0 END :: TFloat AS CountEnd_sh
         , (tmpResult.CountEnd * CASE WHEN Object_Measure.Id = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END) :: TFloat AS CountEnd_Weight
+        , CASE WHEN tmpResult.CountEnd <> 0 THEN tmpResult.SummEnd / tmpResult.CountEnd ELSE 0 END :: TFloat AS PriceEnd
     
         , tmpResult.SummStart :: TFloat AS SummStart
         , tmpResult.SummEnd   :: TFloat AS SummEnd
+        , tmpResult.SummReal  :: TFloat AS SummReal
 
         , tmpPriceStart.Price AS PriceListStart
         , tmpPriceEnd.Price   AS PriceListEnd
@@ -598,19 +636,23 @@ BEGIN
         , View_InfoMoneyDetail.InfoMoneyName            AS InfoMoneyName_Detail
         , View_InfoMoneyDetail.InfoMoneyName_all        AS InfoMoneyName_all_Detail
 
-        , tmpResult.CountIn ::TFloat  AS CountIn
+        , tmpResult.SummIn :: TFloat   AS SummIn
+        , tmpResult.CountIn :: TFloat  AS CountIn
         , CASE WHEN Object_Measure.Id = zc_Measure_Sh() THEN tmpResult.CountIn ELSE 0 END :: TFloat AS CountIn_sh
         , (tmpResult.CountIn * CASE WHEN Object_Measure.Id = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END) :: TFloat AS CountIn_Weight
+        , CASE WHEN tmpResult.CountIn <> 0 THEN tmpResult.SummIn / tmpResult.CountIn ELSE 0 END :: TFloat AS PriceIn
 
-        , tmpResult.CountOut ::TFloat AS CountOut
+        , tmpResult.SummOut :: TFloat   AS SummOut
+        , tmpResult.CountOut :: TFloat  AS CountOut
         , CASE WHEN Object_Measure.Id = zc_Measure_Sh() THEN tmpResult.CountOut ELSE 0 END :: TFloat AS CountOut_sh
         , (tmpResult.CountOut * CASE WHEN Object_Measure.Id = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END) :: TFloat AS CountOut_Weight
+        , CASE WHEN tmpResult.CountOut <> 0 THEN tmpResult.SummOut / tmpResult.CountOut ELSE 0 END :: TFloat AS PriceOut
 
-        , tmpResult.CountIn_calc ::TFloat  AS CountIn_calc
+        , tmpResult.CountIn_calc :: TFloat  AS CountIn_calc
         , CASE WHEN Object_Measure.Id = zc_Measure_Sh() THEN tmpResult.CountIn_calc ELSE 0 END :: TFloat AS CountIn_sh_calc
         , (tmpResult.CountIn_calc * CASE WHEN Object_Measure.Id = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END) :: TFloat AS CountIn_Weight_calc
 
-        , tmpResult.CountOut_calc ::TFloat AS CountOut_calc
+        , tmpResult.CountOut_calc :: TFloat AS CountOut_calc
         , CASE WHEN Object_Measure.Id = zc_Measure_Sh() THEN tmpResult.CountOut_calc ELSE 0 END :: TFloat AS CountOut_sh_calc
         , (tmpResult.CountOut_calc * CASE WHEN Object_Measure.Id = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END) :: TFloat AS CountOut_Weight_calc
 
@@ -627,9 +669,19 @@ BEGIN
         , CAST (row_number() OVER () AS INTEGER)        AS LineNum
 
         , CASE WHEN COALESCE (tmpPriceStart.Price, 0) <> COALESCE (tmpPriceEnd.Price, 0) THEN TRUE ELSE FALSE END isReprice
-        , TRUE AS isPriceStart_diff
-        , TRUE AS isPriceEnd_diff
-
+        , CASE WHEN tmpResult.CountStart = 0 
+                    THEN FALSE
+               WHEN ABS (tmpResult.SummStart / tmpResult.CountStart - COALESCE (tmpPriceStart.Price, 0)) > 0.01
+                    THEN TRUE
+               ELSE FALSE
+          END :: Boolean AS isPriceStart_diff
+        , CASE WHEN tmpResult.CountEnd = 0
+                    THEN FALSE
+               WHEN ABS (tmpResult.SummEnd / tmpResult.CountEnd - COALESCE (tmpPriceEnd.Price, 0)) > 0.01
+                    THEN TRUE
+               ELSE FALSE
+          END :: Boolean AS isPriceEnd_diff
+    
         , zc_Color_GreenL() :: Integer AS ColorB_GreenL
         , zc_Color_Yelow()  :: Integer AS ColorB_Yelow
         , zc_Color_Cyan()   :: Integer AS ColorB_Cyan
@@ -678,11 +730,21 @@ BEGIN
 
 
         WHERE tmpResult.CountReal <> 0
+           OR tmpResult.SummReal <> 0
+
            OR tmpResult.CountStart <> 0
+           OR tmpResult.SummStart <> 0
+
            OR tmpResult.CountEnd <> 0
            OR tmpResult.CountEnd_calc <> 0
+           OR tmpResult.SummEnd <> 0
+
            OR tmpResult.CountIn <> 0
+           OR tmpResult.SummIn <> 0
+
            OR tmpResult.CountOut <> 0
+           OR tmpResult.SummOut <> 0
+
            OR tmpResult.CountIn_calc <> 0
            OR tmpResult.CountOut_calc <> 0
       ;

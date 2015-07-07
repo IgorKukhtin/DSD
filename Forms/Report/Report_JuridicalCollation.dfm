@@ -12,17 +12,17 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
     Height = 330
     TabOrder = 3
     ExplicitTop = 80
-    ExplicitWidth = 1265
+    ExplicitWidth = 1020
     ExplicitHeight = 330
     ClientRectBottom = 330
     ClientRectRight = 1020
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 1265
+      ExplicitWidth = 1020
       ExplicitHeight = 330
       inherited cxGrid: TcxGrid
         Width = 1020
         Height = 330
-        ExplicitWidth = 1265
+        ExplicitWidth = 1020
         ExplicitHeight = 330
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
@@ -490,7 +490,7 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
   inherited Panel: TPanel
     Width = 1020
     Height = 54
-    ExplicitWidth = 1265
+    ExplicitWidth = 1020
     ExplicitHeight = 54
     inherited deStart: TcxDateEdit
       Left = 118
@@ -741,6 +741,11 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
           ComponentItem = 'OperDate'
           DataType = ftDateTime
           ParamType = ptInput
+        end
+        item
+          Name = 'inChangePercentAmount'
+          Value = '0'
+          DataType = ftFloat
         end>
       isShowModal = False
     end
@@ -786,6 +791,7 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
           UserName = 'frxDBDataset'
           IndexFieldNames = 'ItemName;OperDate;InvNumber'
         end>
+      CopiesCount = 1
       Params = <
         item
           Name = 'StartDate'
@@ -950,6 +956,7 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
           UserName = 'frxDBDataset'
           IndexFieldNames = 'OperDate;ItemName;InvNumber'
         end>
+      CopiesCount = 1
       Params = <
         item
           Name = 'StartDate'
@@ -1113,6 +1120,7 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
           UserName = 'frxDBDataset'
           IndexFieldNames = 'OperDate;ItemName;InvNumber'
         end>
+      CopiesCount = 1
       Params = <
         item
           Name = 'StartDate'
@@ -1279,6 +1287,7 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
           UserName = 'DataSet'
           GridView = cxGridDBTableView
         end>
+      CopiesCount = 1
       Params = <
         item
           Name = 'StartDate'

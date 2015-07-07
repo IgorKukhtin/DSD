@@ -93,7 +93,7 @@ BEGIN
           LEFT JOIN ObjectLink AS ObjectLink_JuridicalBasis_GoodsProperty
                                ON ObjectLink_JuridicalBasis_GoodsProperty.ObjectId = zc_Juridical_Basis()
                               AND ObjectLink_JuridicalBasis_GoodsProperty.DescId = zc_ObjectLink_Juridical_GoodsProperty()*/
-     WHERE Movement.Id = inMovementId
+     WHERE Movement.Id = inMovementId AND Movement.DescId <> zc_Movement_SendOnPrice()
        -- AND Movement.StatusId = zc_Enum_Status_Complete()
     ;
 
