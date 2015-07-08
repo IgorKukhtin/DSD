@@ -347,6 +347,7 @@ inherited SendOnPrice_BranchForm: TSendOnPrice_BranchForm
     object edOperDatePartner: TcxDateEdit
       Left = 183
       Top = 63
+      EditValue = 42193d
       Properties.SaveTime = False
       Properties.ShowTime = False
       TabOrder = 15
@@ -960,9 +961,22 @@ inherited SendOnPrice_BranchForm: TSendOnPrice_BranchForm
         Component = PriceListGuides
         ComponentItem = 'TextValue'
         DataType = ftString
+      end
+      item
+        Name = 'MovementId_Order'
+        Value = Null
+        Component = GuidesInvNumberOrder
+        ComponentItem = 'Key'
+      end
+      item
+        Name = 'InvNumber_Order'
+        Value = Null
+        Component = GuidesInvNumberOrder
+        ComponentItem = 'TextValue'
+        DataType = ftString
       end>
     Left = 216
-    Top = 248
+    Top = 256
   end
   inherited spInsertUpdateMovement: TdsdStoredProc
     StoredProcName = 'gpInsertUpdate_Movement_SendOnPrice_Branch'
@@ -1043,6 +1057,13 @@ inherited SendOnPrice_BranchForm: TSendOnPrice_BranchForm
         Component = PriceListGuides
         ComponentItem = 'TextValue'
         DataType = ftString
+      end
+      item
+        Name = 'inMovementId_Order'
+        Value = Null
+        Component = GuidesInvNumberOrder
+        ComponentItem = 'Key'
+        ParamType = ptInput
       end>
     Left = 162
     Top = 312
@@ -1082,6 +1103,7 @@ inherited SendOnPrice_BranchForm: TSendOnPrice_BranchForm
         Control = edVATPercent
       end
       item
+        Control = edInvNumberOrder
       end
       item
         Control = edPriceList

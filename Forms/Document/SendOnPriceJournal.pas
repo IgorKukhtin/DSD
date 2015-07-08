@@ -42,6 +42,7 @@ type
     bbPrint: TdxBarButton;
     actPrintOut: TdsdPrintAction;
     bbPrintOut: TdxBarButton;
+    InvNumber_Order: TcxGridDBColumn;
   private
     { Private declarations }
   public

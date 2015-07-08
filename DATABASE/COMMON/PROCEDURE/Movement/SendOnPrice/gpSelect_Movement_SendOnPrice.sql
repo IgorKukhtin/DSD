@@ -16,6 +16,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , TotalSummVAT TFloat, TotalSummMVAT TFloat, TotalSummPVAT TFloat, TotalSumm TFloat
              , FromId Integer, FromName TVarChar, ToId Integer, ToName TVarChar
              , RouteSortingId Integer, RouteSortingName TVarChar
+             , MovementId_Order Integer, InvNumber_Order TVarChar
               )
 AS
 $BODY$
@@ -65,6 +66,8 @@ BEGIN
            , Object_RouteSorting.Id                     AS RouteSortingId
            , Object_RouteSorting.ValueData              AS RouteSortingName
 
+           , MovementLinkMovement_Order.MovementChildId AS MovementId_Order
+           , Movement_Order.InvNumber                   AS InvNumber_Order
 
        FROM (SELECT Movement.id
              FROM tmpStatus
@@ -148,6 +151,11 @@ BEGIN
             LEFT JOIN ObjectLink AS ObjectLink_UnitTo_Branch
                                  ON ObjectLink_UnitTo_Branch.ObjectId = Object_To.Id
                                 AND ObjectLink_UnitTo_Branch.DescId = zc_ObjectLink_Unit_Branch()
+
+            LEFT JOIN MovementLinkMovement AS MovementLinkMovement_Order
+                                        ON MovementLinkMovement_Order.MovementId = Movement.Id 
+                                       AND MovementLinkMovement_Order.DescId = zc_MovementLinkMovement_Order()
+            LEFT JOIN Movement AS Movement_Order ON Movement_Order.Id = MovementLinkMovement_Order.MovementChildId
 
        WHERE tmpBranch.UserId IS NULL
           OR ObjectLink_UnitFrom_Branch.ChildObjectId = tmpBranch.BranchId
