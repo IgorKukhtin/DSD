@@ -5,7 +5,7 @@ CREATE OR REPLACE FUNCTION gpSelect_AllGoodsPrice(
     IN inUnitId        Integer     -- 
   , IN inSession       TVarChar    -- сессия пользователя
 )
-RETURNS TABLE (GoodsCode Integer, GoodsName TVarChar, NewPrice TFloat)
+RETURNS TABLE (GoodsCode Integer, GoodsName TVarChar, NDS TFloat, ExpirationDate TDateTime, NewPrice TFloat)
 
 AS
 $BODY$
@@ -44,11 +44,15 @@ BEGIN
       SELECT 
         DD.Code, 
         DD.Name, 
-        DD.NewPrice 
+		DD.NDS,
+        DD.NewPrice,
+        DD.ExpirationDate
       FROM(
         SELECT
           Object_Goods.GoodsCode AS Code,
           Object_Goods.GoodsName  AS Name, 
+		  Object_Goods.NDS AS NDS,
+		  LoadPriceListItem.ExpirationDate,
           zfCalc_SalePrice((LoadPriceListItem.Price * (100 + Object_Goods.NDS)/100), -- Цена С НДС
                             MarginCondition.MarginPercent + COALESCE(ObjectFloat_Percent.valuedata, 0), -- % наценки
                             ObjectGoodsView.isTop, -- ТОП позиция
@@ -92,7 +96,7 @@ BEGIN
       WHERE DD.NewPrice > 0.01
     )
 
-    Select DDDD.Code,DDDD.Name,DDDD.NewPrice
+    Select DDDD.Code,DDDD.Name,DDDD.NDS,DDDD.ExpirationDate ,DDDD.NewPrice
     From(
       SELECT *, row_number()over(partition by DDD.Code Order By DDD.NewPrice) as ord FROM DDD) as DDDD
     Where ord = 1; 
