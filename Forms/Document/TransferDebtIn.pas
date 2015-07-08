@@ -115,6 +115,8 @@ type
     colIsEDI: TcxGridDBColumn;
     colIsElectron: TcxGridDBColumn;
     colIsMedoc: TcxGridDBColumn;
+    cxLabel17: TcxLabel;
+    ceComment: TcxTextEdit;
   private
     { Private declarations }
   public

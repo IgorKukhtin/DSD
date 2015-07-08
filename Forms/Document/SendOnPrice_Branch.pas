@@ -65,6 +65,7 @@ type
     actPrintUnit: TdsdPrintAction;
     bbPrintUnit: TdxBarButton;
     actGoodsChoiceForm: TOpenChoiceForm;
+    GuidesInvNumberOrder: TdsdGuides;
   private
     { Private declarations }
   public

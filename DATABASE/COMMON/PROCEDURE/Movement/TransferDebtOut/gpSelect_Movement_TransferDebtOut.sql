@@ -30,6 +30,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , OperDate_TransportGoods TDateTime
              , OperDate_TransportGoods_calc TDateTime
              , isError Boolean
+             , Comment TVarChar
              )
 AS
 $BODY$
@@ -130,6 +131,7 @@ BEGIN
                         THEN TRUE
                         ELSE FALSE
                    END AS Boolean) AS isError
+           , MovementString_Comment.ValueData       AS Comment
 
        FROM tmpStatus
             INNER JOIN Movement ON Movement.OperDate BETWEEN inStartDate AND inEndDate  AND Movement.DescId = zc_Movement_TransferDebtOut() AND Movement.StatusId = tmpStatus.StatusId
@@ -144,6 +146,10 @@ BEGIN
             LEFT JOIN MovementString AS MovementString_InvNumberOrder
                                      ON MovementString_InvNumberOrder.MovementId =  Movement.Id
                                     AND MovementString_InvNumberOrder.DescId = zc_MovementString_InvNumberOrder()
+
+            LEFT JOIN MovementString AS MovementString_Comment 
+                                     ON MovementString_Comment.MovementId = Movement.Id
+                                    AND MovementString_Comment.DescId = zc_MovementString_Comment()
 
             LEFT JOIN MovementBoolean AS MovementBoolean_Checked
                                       ON MovementBoolean_Checked.MovementId =  Movement.Id

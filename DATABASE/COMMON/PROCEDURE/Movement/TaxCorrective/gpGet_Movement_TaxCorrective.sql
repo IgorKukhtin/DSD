@@ -21,6 +21,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , DocumentMasterId Integer, DocumentMasterName TVarChar
              , DocumentChildId Integer, DocumentChildName TVarChar
              , InvNumberBranch TVarChar
+             , Comment TVarChar
               )
 AS
 $BODY$
@@ -79,6 +80,7 @@ BEGIN
                          THEN '6' -- !!!Одесса!!!
                     ELSE ''
                END :: TVarChar   				AS InvNumberBranch
+             , CAST ('' as TVarChar) 		                AS Comment
 
           FROM (SELECT CAST (NEXTVAL ('movement_taxcorrective_seq') AS TVarChar) AS InvNumber) AS tmpInvNumber
           LEFT JOIN lfGet_Object_Status(zc_Enum_Status_UnComplete()) AS Object_Status ON 1=1
@@ -121,6 +123,7 @@ BEGIN
            , CAST(MS_DocumentChild_InvNumberPartner.ValueData as TVarChar)  AS DocumentChildName
            , MovementString_InvNumberBranch.ValueData                       AS InvNumberBranch
 
+           , MovementString_Comment.ValueData       AS Comment
 
        FROM Movement
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
@@ -146,6 +149,10 @@ BEGIN
             LEFT JOIN MovementString AS MovementString_InvNumberPartner
                                      ON MovementString_InvNumberPartner.MovementId =  Movement.Id
                                     AND MovementString_InvNumberPartner.DescId = zc_MovementString_InvNumberPartner()
+
+            LEFT JOIN MovementString AS MovementString_Comment 
+                                     ON MovementString_Comment.MovementId = Movement.Id
+                                    AND MovementString_Comment.DescId = zc_MovementString_Comment()
 
             LEFT JOIN MovementFloat AS MovementFloat_VATPercent
                                     ON MovementFloat_VATPercent.MovementId =  Movement.Id

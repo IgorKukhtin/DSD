@@ -23,6 +23,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, InvNumberPartner TVarChar, InvNum
              , MovementId_TransportGoods Integer
              , InvNumber_TransportGoods TVarChar
              , OperDate_TransportGoods TDateTime
+             , Comment TVarChar
               )
 AS
 $BODY$
@@ -86,9 +87,10 @@ BEGIN
              , CAST ('' AS TVarChar) 		    AS InvNumberPartner_Master
              , 0                     		    AS MovementId_Order
 
-             , 0                   			    AS MovementId_TransportGoods 
-             , '' :: TVarChar                     	    AS InvNumber_TransportGoods 
-             , inOperDate                                   AS OperDate_TransportGoods
+             , 0                   		    AS MovementId_TransportGoods 
+             , '' :: TVarChar                  	    AS InvNumber_TransportGoods 
+             , inOperDate                           AS OperDate_TransportGoods
+             , CAST ('' as TVarChar) 		    AS Comment
 
           FROM (SELECT CAST (NEXTVAL ('movement_transferdebtout_seq') AS TVarChar) AS InvNumber) AS tmpInvNum
                LEFT JOIN lfGet_Object_Status(zc_Enum_Status_UnComplete()) AS Object_Status ON 1 = 1
@@ -158,6 +160,7 @@ BEGIN
            , Movement_TransportGoods.Id                     AS MovementId_TransportGoods
            , Movement_TransportGoods.InvNumber              AS InvNumber_TransportGoods
            , COALESCE (Movement_TransportGoods.OperDate, Movement.OperDate) AS OperDate_TransportGoods
+           , MovementString_Comment.ValueData               AS Comment
 
        FROM Movement
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
@@ -169,6 +172,10 @@ BEGIN
             LEFT JOIN MovementString AS MovementString_InvNumberOrder
                                      ON MovementString_InvNumberOrder.MovementId =  Movement.Id
                                     AND MovementString_InvNumberOrder.DescId = zc_MovementString_InvNumberOrder()
+
+            LEFT JOIN MovementString AS MovementString_Comment 
+                                     ON MovementString_Comment.MovementId = Movement.Id
+                                    AND MovementString_Comment.DescId = zc_MovementString_Comment()
 
             LEFT JOIN MovementBoolean AS MovementBoolean_Checked
                                       ON MovementBoolean_Checked.MovementId =  Movement.Id

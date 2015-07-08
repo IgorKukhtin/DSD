@@ -2,26 +2,25 @@ inherited TransferDebtOutForm: TTransferDebtOutForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1055#1077#1088#1077#1074#1086#1076' '#1076#1086#1083#1075#1072' ('#1088#1072#1089#1093#1086#1076')>'
   ClientHeight = 668
   ClientWidth = 1268
-  ExplicitLeft = -303
   ExplicitWidth = 1284
-  ExplicitHeight = 703
+  ExplicitHeight = 706
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Top = 131
+    Top = 166
     Width = 1268
-    Height = 537
+    Height = 502
     ExplicitTop = 131
     ExplicitWidth = 1268
     ExplicitHeight = 537
-    ClientRectBottom = 537
+    ClientRectBottom = 502
     ClientRectRight = 1268
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 1268
       ExplicitHeight = 513
       inherited cxGrid: TcxGrid
         Width = 1268
-        Height = 513
+        Height = 478
         ExplicitWidth = 1268
         ExplicitHeight = 513
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -187,16 +186,15 @@ inherited TransferDebtOutForm: TTransferDebtOutForm
     object cxTabSheetTaxCorrective: TcxTabSheet
       Caption = #1053#1072#1083#1086#1075#1086#1074#1099#1077
       ImageIndex = 2
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
+      ExplicitHeight = 513
       object cxGridTaxCorrective: TcxGrid
         Left = 0
         Top = 0
         Width = 1268
-        Height = 513
+        Height = 478
         Align = alClient
         TabOrder = 0
+        ExplicitHeight = 513
         object cxGridTaxCorrectiveDBTableView: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = TaxDS
@@ -524,10 +522,10 @@ inherited TransferDebtOutForm: TTransferDebtOutForm
   end
   inherited DataPanel: TPanel
     Width = 1268
-    Height = 105
+    Height = 140
     TabOrder = 3
     ExplicitWidth = 1268
-    ExplicitHeight = 105
+    ExplicitHeight = 140
     inherited edInvNumber: TcxTextEdit
       Left = 8
       Top = 20
@@ -756,6 +754,17 @@ inherited TransferDebtOutForm: TTransferDebtOutForm
       Top = 48
       Caption = #8470' '#1079#1072#1103#1074#1082#1080' '#1082#1086#1085#1090#1088'.'
     end
+    object cxLabel18: TcxLabel
+      Left = 9
+      Top = 91
+      Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
+    end
+    object ceComment: TcxTextEdit
+      Left = 9
+      Top = 106
+      TabOrder = 33
+      Width = 559
+    end
   end
   object cxLabel5: TcxLabel [2]
     Left = 1021
@@ -967,6 +976,7 @@ inherited TransferDebtOutForm: TTransferDebtOutForm
           DataSet = PrintItemsSverkaCDS
           UserName = 'frxDBDSverka'
         end>
+      CopiesCount = 1
       Params = <
         item
           Name = 'Id'
@@ -1006,6 +1016,7 @@ inherited TransferDebtOutForm: TTransferDebtOutForm
           DataSet = PrintItemsSverkaCDS
           UserName = 'frxDBDSverka'
         end>
+      CopiesCount = 1
       Params = <
         item
           Name = 'Id'
@@ -1042,6 +1053,7 @@ inherited TransferDebtOutForm: TTransferDebtOutForm
           DataSet = PrintItemsCDS
           UserName = 'frxDBDMaster'
         end>
+      CopiesCount = 1
       Params = <
         item
           Name = 'Id'
@@ -1083,6 +1095,7 @@ inherited TransferDebtOutForm: TTransferDebtOutForm
           DataSet = PrintItemsCDS
           UserName = 'frxDBDMaster'
         end>
+      CopiesCount = 1
       Params = <
         item
           Name = 'Id'
@@ -1316,6 +1329,7 @@ inherited TransferDebtOutForm: TTransferDebtOutForm
           DataSet = PrintItemsCDS
           UserName = 'frxDBDMaster'
         end>
+      CopiesCount = 1
       Params = <
         item
           Name = 'Id'
@@ -1909,6 +1923,12 @@ inherited TransferDebtOutForm: TTransferDebtOutForm
         Component = FormParams
         ComponentItem = 'OperDate_TransportGoods'
         DataType = ftDateTime
+      end
+      item
+        Name = 'Comment'
+        Value = Null
+        Component = ceComment
+        DataType = ftString
       end>
     Left = 216
     Top = 248
@@ -2034,6 +2054,13 @@ inherited TransferDebtOutForm: TTransferDebtOutForm
         Component = DocumentTaxKindGuides
         ComponentItem = 'Key'
         ParamType = ptInput
+      end
+      item
+        Name = 'inComment'
+        Value = Null
+        Component = ceComment
+        DataType = ftString
+        ParamType = ptInput
       end>
     Left = 162
     Top = 312
@@ -2098,6 +2125,9 @@ inherited TransferDebtOutForm: TTransferDebtOutForm
       end
       item
         Control = edIsChecked
+      end
+      item
+        Control = ceComment
       end>
     Left = 232
     Top = 193

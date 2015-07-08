@@ -55,6 +55,7 @@ type
     ContractTagName: TcxGridDBColumn;
     colContractCode: TcxGridDBColumn;
     colIsElectron: TcxGridDBColumn;
+    Comment: TcxGridDBColumn;
   private
     { Private declarations }
   public

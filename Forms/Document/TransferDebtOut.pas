@@ -139,6 +139,8 @@ type
     colIsMedoc: TcxGridDBColumn;
     actDialog_TTN: TdsdOpenForm;
     mactPrint_TTN: TMultiAction;
+    cxLabel18: TcxLabel;
+    ceComment: TcxTextEdit;
   private
     { Private declarations }
   public
