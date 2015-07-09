@@ -302,6 +302,54 @@ inherited SendOnPriceJournalForm: TSendOnPriceJournalForm
             HeaderAlignmentVert = vaCenter
             Width = 70
           end
+          object EdiInvoice: TcxGridDBColumn
+            Caption = 'EDI - '#1057#1095#1077#1090
+            DataBinding.FieldName = 'EdiInvoice'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 60
+          end
+          object isEdiInvoice_partner: TcxGridDBColumn
+            Caption = #1050#1086#1085#1090#1088#1072#1075#1077#1085#1090' - '#1057#1095#1077#1090
+            DataBinding.FieldName = 'isEdiInvoice_partner'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 60
+          end
+          object EdiOrdspr: TcxGridDBColumn
+            Caption = 'EDI - '#1055#1086#1076#1090#1074#1077#1088#1078#1076#1077#1085#1080#1077
+            DataBinding.FieldName = 'EdiOrdspr'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 60
+          end
+          object isEdiOrdspr_partner: TcxGridDBColumn
+            Caption = #1050#1086#1085#1090#1088#1072#1075#1077#1085#1090' - '#1055#1086#1076#1090#1074#1077#1088#1078#1076#1077#1085#1080#1077
+            DataBinding.FieldName = 'isEdiOrdspr_partner'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 60
+          end
+          object EdiDesadv: TcxGridDBColumn
+            Caption = 'EDI - '#1059#1074#1077#1076#1086#1084#1083#1077#1085#1080#1077
+            DataBinding.FieldName = 'EdiDesadv'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 60
+          end
+          object isEdiDesadv_partner: TcxGridDBColumn
+            Caption = #1050#1086#1085#1090#1088#1072#1075#1077#1085#1090' - '#1059#1074#1077#1076#1086#1084#1083#1077#1085#1080#1077
+            DataBinding.FieldName = 'isEdiDesadv_partner'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 60
+          end
         end
       end
     end

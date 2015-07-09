@@ -17,6 +17,9 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , FromId Integer, FromName TVarChar, ToId Integer, ToName TVarChar
              , RouteSortingId Integer, RouteSortingName TVarChar
              , MovementId_Order Integer, InvNumber_Order TVarChar
+
+             , EdiOrdspr Boolean, EdiInvoice Boolean, EdiDesadv Boolean
+             , isEdiOrdspr_partner Boolean, isEdiInvoice_partner Boolean, isEdiDesadv_partner Boolean
               )
 AS
 $BODY$
@@ -69,6 +72,14 @@ BEGIN
            , MovementLinkMovement_Order.MovementChildId AS MovementId_Order
            , Movement_Order.InvNumber                   AS InvNumber_Order
 
+           , COALESCE (MovementBoolean_EdiOrdspr.ValueData, FALSE)    AS EdiOrdspr
+           , COALESCE (MovementBoolean_EdiInvoice.ValueData, FALSE)   AS EdiInvoice
+           , COALESCE (MovementBoolean_EdiDesadv.ValueData, FALSE)    AS EdiDesadv
+
+           , COALESCE (ObjectBoolean_EdiOrdspr.ValueData, CAST (False AS Boolean))     AS isEdiOrdspr_partner
+           , COALESCE (ObjectBoolean_EdiInvoice.ValueData, CAST (False AS Boolean))    AS isEdiInvoice_partner
+           , COALESCE (ObjectBoolean_EdiDesadv.ValueData, CAST (False AS Boolean))     AS isEdiDesadv_partner
+
        FROM (SELECT Movement.id
              FROM tmpStatus
                   JOIN Movement ON Movement.OperDate BETWEEN inStartDate AND inEndDate  AND Movement.DescId = zc_Movement_SendOnPrice() AND Movement.StatusId = tmpStatus.StatusId
@@ -93,6 +104,20 @@ BEGIN
             LEFT JOIN MovementBoolean AS MovementBoolean_PriceWithVAT
                                       ON MovementBoolean_PriceWithVAT.MovementId =  Movement.Id
                                      AND MovementBoolean_PriceWithVAT.DescId = zc_MovementBoolean_PriceWithVAT()
+
+
+            LEFT JOIN MovementBoolean AS MovementBoolean_EdiOrdspr
+                                      ON MovementBoolean_EdiOrdspr.MovementId =  Movement.Id
+                                     AND MovementBoolean_EdiOrdspr.DescId = zc_MovementBoolean_EdiOrdspr()
+
+            LEFT JOIN MovementBoolean AS MovementBoolean_EdiInvoice
+                                      ON MovementBoolean_EdiInvoice.MovementId =  Movement.Id
+                                     AND MovementBoolean_EdiInvoice.DescId = zc_MovementBoolean_EdiInvoice()
+
+            LEFT JOIN MovementBoolean AS MovementBoolean_EdiDesadv
+                                      ON MovementBoolean_EdiDesadv.MovementId =  Movement.Id
+                                     AND MovementBoolean_EdiDesadv.DescId = zc_MovementBoolean_EdiDesadv()
+
             LEFT JOIN MovementFloat AS MovementFloat_VATPercent
                                     ON MovementFloat_VATPercent.MovementId =  Movement.Id
                                    AND MovementFloat_VATPercent.DescId = zc_MovementFloat_VATPercent()
@@ -156,6 +181,20 @@ BEGIN
                                         ON MovementLinkMovement_Order.MovementId = Movement.Id 
                                        AND MovementLinkMovement_Order.DescId = zc_MovementLinkMovement_Order()
             LEFT JOIN Movement AS Movement_Order ON Movement_Order.Id = MovementLinkMovement_Order.MovementChildId
+      
+          
+            LEFT JOIN MovementLinkObject AS MovementLinkObject_Partner
+                                         ON MovementLinkObject_Partner.MovementId = Movement_Order.Id
+                                        AND MovementLinkObject_Partner.DescId = zc_MovementLinkObject_Partner()
+            LEFT JOIN ObjectBoolean AS ObjectBoolean_EdiOrdspr
+                                 ON ObjectBoolean_EdiOrdspr.ObjectId =  MovementLinkObject_Partner.ObjectId
+                                AND ObjectBoolean_EdiOrdspr.DescId = zc_ObjectBoolean_Partner_EdiOrdspr()
+            LEFT JOIN ObjectBoolean AS ObjectBoolean_EdiInvoice
+                                 ON ObjectBoolean_EdiInvoice.ObjectId =  MovementLinkObject_Partner.ObjectId
+                                AND ObjectBoolean_EdiInvoice.DescId = zc_ObjectBoolean_Partner_EdiInvoice()
+            LEFT JOIN ObjectBoolean AS ObjectBoolean_EdiDesadv
+                                 ON ObjectBoolean_EdiDesadv.ObjectId =  MovementLinkObject_Partner.ObjectId
+                                AND ObjectBoolean_EdiDesadv.DescId = zc_ObjectBoolean_Partner_EdiDesadv()
 
        WHERE tmpBranch.UserId IS NULL
           OR ObjectLink_UnitFrom_Branch.ChildObjectId = tmpBranch.BranchId
