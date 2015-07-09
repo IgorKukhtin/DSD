@@ -162,6 +162,12 @@ type
     miDesadv: TMenuItem;
     actExecPrint_EDI: TdsdExecStoredProc;
     Comment: TcxGridDBColumn;
+    mactInvoice_Simple: TMultiAction;
+    mactInvoice_All: TMultiAction;
+    mactOrdSpr_Simple: TMultiAction;
+    mactOrdSpr_All: TMultiAction;
+    mactDesadv_Simple: TMultiAction;
+    mactDesadv_All: TMultiAction;
   private
     { Private declarations }
   public

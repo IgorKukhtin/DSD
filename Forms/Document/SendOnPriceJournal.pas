@@ -14,7 +14,7 @@ uses
   cxCalendar, Vcl.ExtCtrls, cxGridLevel, cxGridCustomTableView, cxGridTableView,
   cxGridDBTableView, cxGridCustomView, cxGrid, cxPC, cxCheckBox, cxCurrencyEdit,
   cxButtonEdit, dsdGuides, frxClass, frxDBSet, dxSkinsCore,
-  dxSkinsDefaultPainters, dxSkinscxPCPainter;
+  dxSkinsDefaultPainters, dxSkinscxPCPainter, EDI;
 
 type
   TSendOnPriceJournalForm = class(TAncestorJournalForm)
@@ -42,6 +42,36 @@ type
     bbPrint: TdxBarButton;
     actPrintOut: TdsdPrintAction;
     bbPrintOut: TdxBarButton;
+    InvNumber_Order: TcxGridDBColumn;
+    spUpdateEdiOrdspr: TdsdStoredProc;
+    spUpdateEdiInvoice: TdsdStoredProc;
+    spUpdateEdiDesadv: TdsdStoredProc;
+    EDI: TEDI;
+    spGetDefaultEDI: TdsdStoredProc;
+    actInvoice: TEDIAction;
+    actOrdSpr: TEDIAction;
+    actDesadv: TEDIAction;
+    actUpdateEdiDesadvTrue: TdsdExecStoredProc;
+    actUpdateEdiInvoiceTrue: TdsdExecStoredProc;
+    actUpdateEdiOrdsprTrue: TdsdExecStoredProc;
+    actSetDefaults: TdsdExecStoredProc;
+    mactInvoice: TMultiAction;
+    mactOrdSpr: TMultiAction;
+    mactDesadv: TMultiAction;
+    actExecPrint_EDI: TdsdExecStoredProc;
+    mactInvoice_Simple: TMultiAction;
+    mactInvoice_All: TMultiAction;
+    mactOrdSpr_Simple: TMultiAction;
+    mactOrdSpr_All: TMultiAction;
+    mactDesadv_Simple: TMultiAction;
+    mactDesadv_All: TMultiAction;
+    bbInvoice: TdxBarButton;
+    bbOrdSpr: TdxBarButton;
+    bbtDesadv: TdxBarButton;
+    Invoice1: TMenuItem;
+    Ordspr1: TMenuItem;
+    Desadv1: TMenuItem;
+    N13: TMenuItem;
   private
     { Private declarations }
   public

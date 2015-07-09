@@ -13,6 +13,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , FromId Integer, FromName TVarChar, ToId Integer, ToName TVarChar
              , RouteSortingId Integer, RouteSortingName TVarChar
              , PriceListId Integer, PriceListName TVarChar
+             , MovementId_Order Integer, InvNumber_Order TVarChar
               )
 AS
 $BODY$
@@ -26,21 +27,24 @@ BEGIN
          SELECT
                0 AS Id
              , CAST (NEXTVAL ('movement_sendonprice_seq') AS TVarChar) AS InvNumber
-             , inOperDate				        AS OperDate
-             , Object_Status.Code               	        AS StatusCode
-             , Object_Status.Name              		        AS StatusName
-             , inOperDate			     	        AS OperDatePartner
-             , ObjectBoolean_PriceWithVAT.ValueData             AS PriceWithVAT
-             , ObjectFloat_VATPercent.ValueData                 AS VATPercent
-             , CAST (0 AS TFloat)                               AS ChangePercent
-             , 0                     				        AS FromId
-             , CAST ('' AS TVarChar) 				        AS FromName
-             , 0                     				        AS ToId
-             , CAST ('' AS TVarChar) 				        AS ToName
-             , 0                     				        AS RouteSortingId
-             , CAST ('' AS TVarChar) 				        AS RouteSortingName
-             , Object_PriceList.Id                                      AS PriceListId
-             , Object_PriceList.ValueData 				AS PriceListName
+             , inOperDate				  AS OperDate
+             , Object_Status.Code               	  AS StatusCode
+             , Object_Status.Name              		  AS StatusName
+             , inOperDate			     	  AS OperDatePartner
+             , ObjectBoolean_PriceWithVAT.ValueData       AS PriceWithVAT
+             , ObjectFloat_VATPercent.ValueData           AS VATPercent
+             , CAST (0 AS TFloat)                         AS ChangePercent
+             , 0                     			  AS FromId
+             , CAST ('' AS TVarChar) 			  AS FromName
+             , 0                     			  AS ToId
+             , CAST ('' AS TVarChar) 			  AS ToName
+             , 0                     			  AS RouteSortingId
+             , CAST ('' AS TVarChar) 			  AS RouteSortingName
+             , Object_PriceList.Id                        AS PriceListId
+             , Object_PriceList.ValueData 		  AS PriceListName
+
+             , 0                     			  AS MovementId_Order
+             , CAST ('' AS TVarChar) 			  AS InvNumber_Order
 
           FROM lfGet_Object_Status(zc_Enum_Status_UnComplete()) AS Object_Status
                LEFT JOIN Object AS Object_PriceList ON Object_PriceList.Id = zc_PriceList_Basis()
@@ -72,6 +76,9 @@ BEGIN
            , Object_RouteSorting.ValueData 				    AS RouteSortingName
            , Object_PriceList.id                            AS PriceListId
            , Object_PriceList.valuedata                     AS PriceListName
+
+           , MovementLinkMovement_Order.MovementChildId     AS MovementId_Order
+           , Movement_Order.InvNumber                       AS InvNumber_Order
 
        FROM Movement
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
@@ -112,6 +119,11 @@ BEGIN
                                         AND MovementLinkObject_PriceList.DescId = zc_MovementLinkObject_PriceList()
             LEFT JOIN Object AS Object_PriceList ON Object_PriceList.Id = MovementLinkObject_PriceList.ObjectId
 
+            LEFT JOIN MovementLinkMovement AS MovementLinkMovement_Order
+                                        ON MovementLinkMovement_Order.MovementId = Movement.Id 
+                                       AND MovementLinkMovement_Order.DescId = zc_MovementLinkMovement_Order()
+            LEFT JOIN Movement AS Movement_Order ON Movement_Order.Id = MovementLinkMovement_Order.MovementChildId
+
        WHERE Movement.Id =  inMovementId
          AND Movement.DescId = zc_Movement_SendOnPrice();
      END IF;
@@ -124,6 +136,7 @@ ALTER FUNCTION gpGet_Movement_SendOnPrice (Integer, TDateTime, TVarChar) OWNER T
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 08.06.15         * add Order
  05.05.14                                                        *   передалал все по новой на базе проц расхода.
  18.04.14                                                        *
  09.07.13                                        * Красота

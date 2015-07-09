@@ -73,6 +73,9 @@ type
     actPrintUnit: TdsdPrintAction;
     bbPrintUnit: TdxBarButton;
     actGoodsChoiceForm: TOpenChoiceForm;
+    cxLabel5: TcxLabel;
+    edInvNumberOrder: TcxButtonEdit;
+    GuidesInvNumberOrder: TdsdGuides;
   private
     { Private declarations }
   public

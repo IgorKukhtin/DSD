@@ -3,24 +3,24 @@ inherited TransferDebtInForm: TTransferDebtInForm
   ClientHeight = 662
   ClientWidth = 1020
   ExplicitWidth = 1036
-  ExplicitHeight = 697
+  ExplicitHeight = 700
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Top = 131
+    Top = 166
     Width = 1020
-    Height = 531
+    Height = 496
     ExplicitTop = 131
     ExplicitWidth = 1020
     ExplicitHeight = 531
-    ClientRectBottom = 531
+    ClientRectBottom = 496
     ClientRectRight = 1020
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 1020
       ExplicitHeight = 507
       inherited cxGrid: TcxGrid
         Width = 1020
-        Height = 507
+        Height = 472
         ExplicitWidth = 1020
         ExplicitHeight = 507
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -152,16 +152,15 @@ inherited TransferDebtInForm: TTransferDebtInForm
     object cxTabSheetTaxCorrective: TcxTabSheet
       Caption = #1050#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1082#1080
       ImageIndex = 2
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
+      ExplicitHeight = 507
       object cxGridTaxCorrective: TcxGrid
         Left = 0
         Top = 0
         Width = 1020
-        Height = 507
+        Height = 472
         Align = alClient
         TabOrder = 0
+        ExplicitHeight = 507
         object cxGridTaxCorrectiveDBTableView: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = TaxCorrectiveDS
@@ -514,10 +513,10 @@ inherited TransferDebtInForm: TTransferDebtInForm
   end
   inherited DataPanel: TPanel
     Width = 1020
-    Height = 105
+    Height = 140
     TabOrder = 3
     ExplicitWidth = 1020
-    ExplicitHeight = 105
+    ExplicitHeight = 140
     inherited edInvNumber: TcxTextEdit
       Left = 8
       ExplicitLeft = 8
@@ -722,6 +721,17 @@ inherited TransferDebtInForm: TTransferDebtInForm
       Caption = #1055#1088#1086#1074#1077#1088#1077#1085' ('#1076#1072'/'#1085#1077#1090')'
       TabOrder = 27
       Width = 118
+    end
+    object cxLabel17: TcxLabel
+      Left = 9
+      Top = 88
+      Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
+    end
+    object ceComment: TcxTextEdit
+      Left = 9
+      Top = 106
+      TabOrder = 29
+      Width = 584
     end
   end
   object cxLabel5: TcxLabel [2]
@@ -1084,6 +1094,7 @@ inherited TransferDebtInForm: TTransferDebtInForm
           DataSet = PrintHeaderCDS
           UserName = 'frxDBDHeader'
         end>
+      CopiesCount = 1
       Params = <
         item
           Name = 'Id'
@@ -1127,6 +1138,7 @@ inherited TransferDebtInForm: TTransferDebtInForm
           DataSet = PrintHeaderCDS
           UserName = 'frxDBDHeader'
         end>
+      CopiesCount = 1
       Params = <
         item
           Name = 'Id'
@@ -1162,6 +1174,7 @@ inherited TransferDebtInForm: TTransferDebtInForm
           DataSet = PrintHeaderCDS
           UserName = 'frxDBDHeader'
         end>
+      CopiesCount = 1
       Params = <
         item
           Name = 'Id'
@@ -1751,6 +1764,12 @@ inherited TransferDebtInForm: TTransferDebtInForm
         Component = DocumentTaxKindGuides
         ComponentItem = 'TextValue'
         DataType = ftString
+      end
+      item
+        Name = 'Comment'
+        Value = Null
+        Component = ceComment
+        DataType = ftString
       end>
     Left = 216
     Top = 248
@@ -1869,6 +1888,13 @@ inherited TransferDebtInForm: TTransferDebtInForm
         Component = GuidesPartner
         ComponentItem = 'Key'
         ParamType = ptInput
+      end
+      item
+        Name = 'inComment'
+        Value = Null
+        Component = ceComment
+        DataType = ftString
+        ParamType = ptInput
       end>
     Left = 162
     Top = 312
@@ -1930,6 +1956,9 @@ inherited TransferDebtInForm: TTransferDebtInForm
       end
       item
         Control = edIsChecked
+      end
+      item
+        Control = ceComment
       end>
     Left = 232
     Top = 193

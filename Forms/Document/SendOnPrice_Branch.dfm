@@ -347,6 +347,7 @@ inherited SendOnPrice_BranchForm: TSendOnPrice_BranchForm
     object edOperDatePartner: TcxDateEdit
       Left = 183
       Top = 63
+      EditValue = 42193d
       Properties.SaveTime = False
       Properties.ShowTime = False
       TabOrder = 15
@@ -386,7 +387,6 @@ inherited SendOnPrice_BranchForm: TSendOnPrice_BranchForm
       Properties.Buttons = <
         item
           Default = True
-          Enabled = False
           Kind = bkEllipsis
         end>
       Properties.ReadOnly = True
@@ -961,9 +961,22 @@ inherited SendOnPrice_BranchForm: TSendOnPrice_BranchForm
         Component = PriceListGuides
         ComponentItem = 'TextValue'
         DataType = ftString
+      end
+      item
+        Name = 'MovementId_Order'
+        Value = Null
+        Component = GuidesInvNumberOrder
+        ComponentItem = 'Key'
+      end
+      item
+        Name = 'InvNumber_Order'
+        Value = Null
+        Component = GuidesInvNumberOrder
+        ComponentItem = 'TextValue'
+        DataType = ftString
       end>
     Left = 216
-    Top = 248
+    Top = 256
   end
   inherited spInsertUpdateMovement: TdsdStoredProc
     StoredProcName = 'gpInsertUpdate_Movement_SendOnPrice_Branch'
@@ -1044,6 +1057,13 @@ inherited SendOnPrice_BranchForm: TSendOnPrice_BranchForm
         Component = PriceListGuides
         ComponentItem = 'TextValue'
         DataType = ftString
+      end
+      item
+        Name = 'inMovementId_Order'
+        Value = Null
+        Component = GuidesInvNumberOrder
+        ComponentItem = 'Key'
+        ParamType = ptInput
       end>
     Left = 162
     Top = 312
@@ -1083,6 +1103,7 @@ inherited SendOnPrice_BranchForm: TSendOnPrice_BranchForm
         Control = edVATPercent
       end
       item
+        Control = edInvNumberOrder
       end
       item
         Control = edPriceList
@@ -1394,5 +1415,173 @@ inherited SendOnPrice_BranchForm: TSendOnPrice_BranchForm
     PackSize = 1
     Left = 359
     Top = 440
+  end
+  object GuidesInvNumberOrder: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edInvNumberOrder
+    FormNameParam.Value = 'TOrderExternalJournalChoiceForm'
+    FormNameParam.DataType = ftString
+    FormName = 'TOrderExternalJournalChoiceForm'
+    PositionDataSet = 'MasterCDS'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GuidesInvNumberOrder
+        ComponentItem = 'Key'
+        ParamType = ptInput
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesInvNumberOrder
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+      end
+      item
+        Name = 'OperDatePartner'
+        Value = 42132d
+        Component = edOperDate
+        DataType = ftDateTime
+        ParamType = ptInput
+      end
+      item
+        Name = 'OperDatePartner_Sale'
+        Value = 42193d
+        Component = edOperDatePartner
+        DataType = ftDateTime
+        ParamType = ptInput
+      end
+      item
+        Name = 'FromId'
+        Value = ''
+        Component = GuidesTo
+        ComponentItem = 'Key'
+        ParamType = ptInput
+      end
+      item
+        Name = 'FromName'
+        Value = ''
+        Component = GuidesTo
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+      end
+      item
+        Name = 'ToId'
+        Value = ''
+        Component = GuidesFrom
+        ComponentItem = 'Key'
+        ParamType = ptInput
+      end
+      item
+        Name = 'ToName'
+        Value = ''
+        Component = GuidesFrom
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+      end
+      item
+        Name = 'RouteSortingId'
+        Value = ''
+        ComponentItem = 'Key'
+        ParamType = ptInput
+      end
+      item
+        Name = 'RouteSortingName'
+        Value = ''
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+      end
+      item
+        Name = 'PaidKindId'
+        Value = ''
+        ComponentItem = 'Key'
+        ParamType = ptInput
+      end
+      item
+        Name = 'PaidKindName'
+        Value = ''
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+      end
+      item
+        Name = 'ContractId'
+        Value = ''
+        ComponentItem = 'Key'
+        ParamType = ptInput
+      end
+      item
+        Name = 'ContractName'
+        Value = ''
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+      end
+      item
+        Name = 'ContractTagId'
+        Value = ''
+        ComponentItem = 'Key'
+        ParamType = ptInput
+      end
+      item
+        Name = 'ContractTagName'
+        Value = ''
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+      end
+      item
+        Name = 'PriceListId'
+        Value = ''
+        Component = PriceListGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+      end
+      item
+        Name = 'PriceListName'
+        Value = ''
+        Component = PriceListGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+      end
+      item
+        Name = 'PriceWithVAT'
+        Value = 'False'
+        Component = edPriceWithVAT
+        ParamType = ptInput
+      end
+      item
+        Name = 'VATPercent'
+        Value = 0.000000000000000000
+        Component = edVATPercent
+        ParamType = ptInput
+      end
+      item
+        Name = 'ChangePercent'
+        Value = 0.000000000000000000
+        Component = edChangePercent
+        ParamType = ptInput
+      end
+      item
+        Name = 'MasterPartnerId'
+        Value = ''
+        Component = GuidesTo
+        ComponentItem = 'Key'
+      end
+      item
+        Name = 'MasterPartnerName'
+        Value = ''
+        Component = GuidesTo
+        ComponentItem = 'TextValue'
+        DataType = ftString
+      end>
+    Left = 108
+    Top = 8
   end
 end

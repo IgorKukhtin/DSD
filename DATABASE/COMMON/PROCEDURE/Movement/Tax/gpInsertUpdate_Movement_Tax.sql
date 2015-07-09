@@ -4,6 +4,8 @@ DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_Tax (Integer, TVarChar, TVarChar
 DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_Tax (Integer, TVarChar, TVarChar, TDateTime, Boolean, Boolean, Boolean, TFloat, Integer, Integer, Integer, Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_Tax (Integer, TVarChar, TVarChar, TDateTime, Boolean, Boolean, Boolean, TFloat, Integer, Integer, Integer, Integer, Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_Tax (Integer, TVarChar, TVarChar, TVarChar, TDateTime, Boolean, Boolean, Boolean, TFloat, Integer, Integer, Integer, Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_Tax (Integer, TVarChar, TVarChar, TVarChar, TDateTime, Boolean, Boolean, Boolean, TFloat, Integer, Integer, Integer, Integer, Integer, TVarChar, TVarChar);
+
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_Tax(
  INOUT ioId                  Integer   , -- Ключ объекта <Документ Перемещение>
@@ -20,6 +22,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_Tax(
     IN inPartnerId           Integer   , -- Контрагент
     IN inContractId          Integer   , -- Договора
     IN inDocumentTaxKindId   Integer   , -- Тип формирования налогового документа
+    IN inComment             TVarChar  , -- Примечание
     IN inSession             TVarChar    -- сессия пользователя
 )
 RETURNS RECORD AS
@@ -52,7 +55,11 @@ BEGIN
                                                 , inGoodsKindId        := NULL
                                                 , inUserId             := vbUserId
                                                  );
+
      END IF;
+
+     -- Комментарий
+     PERFORM lpInsertUpdate_MovementString (zc_MovementString_Comment(), ioId, inComment);
 
 END;
 $BODY$

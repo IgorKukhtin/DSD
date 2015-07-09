@@ -90,6 +90,7 @@ type
     cxTextEdit1: TcxTextEdit;
     ExecuteDialog: TExecuteDialog;
     bbExecuteDialog: TdxBarButton;
+    Comment: TcxGridDBColumn;
   private
     { Private declarations }
   public

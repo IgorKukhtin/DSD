@@ -28,7 +28,8 @@ type
      function PrintFiscalMemoryByDate(inStart, inEnd: TDateTime): boolean;
      function PrintReportByDate(inStart, inEnd: TDateTime): boolean;
      function PrintReportByNum(inStart, inEnd: Integer): boolean;
-     procedure ClearArticulAttachment;     
+     function FiscalNumber:String;
+     procedure ClearArticulAttachment;
      procedure SetTime;
      procedure Anulirovt;
      property AlwaysSold: boolean read GetAlwaysSold write SetAlwaysSold;

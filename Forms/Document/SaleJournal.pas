@@ -152,6 +152,12 @@ type
     isEdiInvoice_partner: TcxGridDBColumn;
     isEdiDesadv_partner: TcxGridDBColumn;
     Comment: TcxGridDBColumn;
+    mactInvoice_Simple: TMultiAction;
+    mactInvoice_All: TMultiAction;
+    mactOrdSpr_Simple: TMultiAction;
+    mactOrdSpr_All: TMultiAction;
+    mactDesadv_Simple: TMultiAction;
+    mactDesadv_All: TMultiAction;
   private
     { Private declarations }
   public

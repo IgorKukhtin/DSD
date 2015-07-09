@@ -19,7 +19,12 @@ SELECT
            , Object_PaidKind.ValueData                  AS PaidKindName 
            , MovementLinkObject_CashRegister.ObjectId   AS CashRegisterId
            , Object_CashRegister.ValueData              AS CashRegisterName
-
+           , COALESCE(MovementBoolean_Deferred.ValueData,False) AS IsDeferred
+		   , Object_CashMember.ValueData                AS CashMember
+		   , MovementString_Bayer.ValueData             AS Bayer
+		   , MovementLinkObject_PaidType.ObjectId       AS PaidTypeId  
+           , Object_PaidType.ValueData                  AS PaidTypeName 
+           
        FROM Movement 
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
 
@@ -49,6 +54,21 @@ SELECT
 
             LEFT JOIN Object AS Object_CashRegister ON Object_CashRegister.Id = MovementLinkObject_CashRegister.ObjectId
 
+			LEFT OUTER JOIN MovementBoolean AS MovementBoolean_Deferred
+			                                ON MovementBoolean_Deferred.MovementId = Movement.Id
+										   AND MovementBoolean_Deferred.DescId = zc_MovementBoolean_Deferred()
+            LEFT JOIN MovementLinkObject AS MovementLinkObject_CheckMember
+                                         ON MovementLinkObject_CheckMember.MovementId = Movement.Id
+                                        AND MovementLinkObject_CheckMember.DescId = zc_MovementLinkObject_CheckMember()
+			LEFT JOIN Object AS Object_CashMember ON Object_CashMember.Id = MovementLinkObject_CheckMember.ObjectId
+			LEFT JOIN MovementString AS MovementString_Bayer
+                                         ON MovementString_Bayer.MovementId = Movement.Id
+                                        AND MovementString_Bayer.DescId = zc_MovementString_Bayer()
+			LEFT JOIN MovementLinkObject AS MovementLinkObject_PaidType
+                                         ON MovementLinkObject_PaidType.MovementId = Movement.Id
+                                        AND MovementLinkObject_PaidType.DescId = zc_MovementLinkObject_PaidType()
+            LEFT JOIN Object AS Object_PaidType ON Object_PaidType.Id = MovementLinkObject_PaidType.ObjectId								  
+			
            WHERE Movement.DescId = zc_Movement_Check();
 
 ALTER TABLE Movement_Check_View

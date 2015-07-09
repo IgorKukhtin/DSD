@@ -93,6 +93,7 @@ type
     mactPrint_TTN: TMultiAction;
     colContractFromCode: TcxGridDBColumn;
     colContractToCode: TcxGridDBColumn;
+    Comment: TcxGridDBColumn;
   private
     { Private declarations }
   public

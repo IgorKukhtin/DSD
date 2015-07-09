@@ -1649,6 +1649,144 @@ inherited SaleJournalForm: TSaleJournalForm
         end>
       Caption = 'actExecPrint_EDI'
     end
+    object mactInvoice_Simple: TMultiAction
+      Category = 'EDI'
+      MoveParams = <
+        item
+          FromParam.Name = 'Id'
+          FromParam.Value = Null
+          FromParam.Component = MasterCDS
+          FromParam.ComponentItem = 'Id'
+          ToParam.Name = 'Id'
+          ToParam.Value = Null
+          ToParam.Component = FormParams
+          ToParam.ComponentItem = 'Id'
+        end>
+      ActionList = <
+        item
+          Action = actSetDefaults
+        end
+        item
+          Action = actExecPrint_EDI
+        end
+        item
+          Action = actInvoice
+        end
+        item
+          Action = actUpdateEdiInvoiceTrue
+        end>
+      Caption = #1054#1090#1087#1088#1072#1074#1080#1090#1100' '#1074#1089#1077' <'#1057#1095#1077#1090#1072' - Invoice>'
+      Hint = #1054#1090#1087#1088#1072#1074#1080#1090#1100' '#1074#1089#1077' <'#1057#1095#1077#1090#1072' - Invoice>'
+      ImageIndex = 47
+    end
+    object mactInvoice_All: TMultiAction
+      Category = 'EDI'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = mactInvoice_Simple
+        end>
+      View = cxGridDBTableView
+      QuestionBeforeExecute = 'EXITE <'#1057#1095#1077#1090' - Invoice>.'#1044#1077#1081#1089#1090#1074#1080#1090#1077#1083#1100#1085#1086' '#1086#1090#1087#1088#1072#1074#1080#1090#1100' '#1042#1089#1077' '#1089#1095#1077#1090#1072'?'
+      InfoAfterExecute = #1042#1089#1077'  '#1076#1086#1082#1091#1084#1077#1085#1090#1099' <'#1057#1095#1077#1090' - Invoice> '#1086#1090#1087#1088#1072#1074#1083#1077#1085#1099' '#1091#1089#1087#1077#1096#1085#1086' '#1074' EXITE.'
+      Caption = #1054#1090#1087#1088#1072#1074#1080#1090#1100' '#1042#1089#1077' <'#1057#1095#1077#1090' - Invoice>'
+      Hint = #1054#1090#1087#1088#1072#1074#1080#1090#1100' '#1042#1089#1077' <'#1057#1095#1077#1090' - Invoice>'
+      ImageIndex = 47
+    end
+    object mactOrdSpr_Simple: TMultiAction
+      Category = 'EDI'
+      MoveParams = <
+        item
+          FromParam.Name = 'Id'
+          FromParam.Value = Null
+          FromParam.Component = MasterCDS
+          FromParam.ComponentItem = 'Id'
+          ToParam.Name = 'Id'
+          ToParam.Value = Null
+          ToParam.Component = FormParams
+          ToParam.ComponentItem = 'Id'
+        end>
+      ActionList = <
+        item
+          Action = actSetDefaults
+        end
+        item
+          Action = actExecPrint_EDI
+        end
+        item
+          Action = actOrdSpr
+        end
+        item
+          Action = actUpdateEdiOrdsprTrue
+        end>
+      Caption = #1054#1090#1087#1088#1072#1074#1080#1090#1100' <'#1055#1086#1076#1090#1074#1077#1088#1078#1076#1077#1085#1080#1077' - Ordspr>'
+      Hint = #1054#1090#1087#1088#1072#1074#1080#1090#1100' <'#1055#1086#1076#1090#1074#1077#1088#1078#1076#1077#1085#1080#1077' - Ordspr>'
+      ImageIndex = 48
+    end
+    object mactOrdSpr_All: TMultiAction
+      Category = 'EDI'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = mactOrdSpr_Simple
+        end>
+      View = cxGridDBTableView
+      QuestionBeforeExecute = 
+        'EXITE <'#1055#1086#1076#1090#1074#1077#1088#1078#1076#1077#1085#1080#1077' - Ordspr>. '#1044#1077#1081#1089#1090#1074#1080#1090#1077#1083#1100#1085#1086' '#1086#1090#1087#1088#1072#1074#1080#1090#1100' '#1042#1089#1077' '#1087#1086#1076#1090 +
+        #1074#1077#1088#1078#1076#1077#1085#1080#1103'?'
+      InfoAfterExecute = 
+        #1042#1089#1077' '#1076#1086#1082#1091#1084#1077#1085#1090#1099' <'#1055#1086#1076#1090#1074#1077#1088#1078#1076#1077#1085#1080#1077' - Ordspr> '#1086#1090#1087#1088#1072#1074#1083#1077#1085#1099' '#1091#1089#1087#1077#1096#1085#1086' '#1074' EXIT' +
+        'E.'
+      Caption = #1054#1090#1087#1088#1072#1074#1080#1090#1100' '#1042#1089#1077'  <'#1055#1086#1076#1090#1074#1077#1088#1078#1076#1077#1085#1080#1077' - Ordspr>'
+      Hint = #1054#1090#1087#1088#1072#1074#1080#1090#1100' '#1042#1089#1077'  <'#1055#1086#1076#1090#1074#1077#1088#1078#1076#1077#1085#1080#1077' - Ordspr>'
+      ImageIndex = 48
+    end
+    object mactDesadv_Simple: TMultiAction
+      Category = 'EDI'
+      MoveParams = <
+        item
+          FromParam.Name = 'Id'
+          FromParam.Value = Null
+          FromParam.Component = MasterCDS
+          FromParam.ComponentItem = 'Id'
+          ToParam.Name = 'Id'
+          ToParam.Value = Null
+          ToParam.Component = FormParams
+          ToParam.ComponentItem = 'Id'
+        end>
+      ActionList = <
+        item
+          Action = actSetDefaults
+        end
+        item
+          Action = actExecPrint_EDI
+        end
+        item
+          Action = actDesadv
+        end
+        item
+          Action = actUpdateEdiDesadvTrue
+        end>
+      Caption = #1054#1090#1087#1088#1072#1074#1080#1090#1100' <'#1059#1074#1077#1076#1086#1084#1083#1077#1085#1080#1077' - Desadv>'
+      Hint = #1054#1090#1087#1088#1072#1074#1080#1090#1100' <'#1059#1074#1077#1076#1086#1084#1083#1077#1085#1080#1077' - Desadv>'
+      ImageIndex = 49
+    end
+    object mactDesadv_All: TMultiAction
+      Category = 'EDI'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = mactDesadv_Simple
+        end>
+      View = cxGridDBTableView
+      QuestionBeforeExecute = 
+        'EXITE<'#1059#1074#1077#1076#1086#1084#1083#1077#1085#1080#1077' - Desadv>. '#1044#1077#1081#1089#1090#1074#1080#1090#1077#1083#1100#1085#1086' '#1086#1090#1087#1088#1072#1074#1080#1090#1100' '#1042#1089#1077' '#1091#1074#1077#1076#1086#1084#1083 +
+        #1077#1085#1080#1103'?'
+      InfoAfterExecute = #1042#1089#1077' '#1076#1086#1082#1091#1084#1077#1085#1090#1099' <'#1059#1074#1077#1076#1086#1084#1083#1077#1085#1080#1077' - Desadv> '#1086#1090#1087#1088#1072#1074#1083#1077#1085#1099' '#1091#1089#1087#1077#1096#1085#1086' '#1074' EXITE.'
+      Caption = #1054#1090#1087#1088#1072#1074#1080#1090#1100' '#1042#1089#1077'  <'#1059#1074#1077#1076#1086#1084#1083#1077#1085#1080#1077' - Desadv>'
+      Hint = #1054#1090#1087#1088#1072#1074#1080#1090#1100' '#1042#1089#1077'  <'#1059#1074#1077#1076#1086#1084#1083#1077#1085#1080#1077' - Desadv>'
+      ImageIndex = 49
+    end
   end
   inherited MasterDS: TDataSource
     Left = 64
@@ -1968,13 +2106,13 @@ inherited SaleJournalForm: TSaleJournalForm
       Caption = '-'
     end
     object miInvoice: TMenuItem [3]
-      Action = mactInvoice
+      Action = mactInvoice_All
     end
     object miOrdSpr: TMenuItem [4]
-      Action = mactOrdSpr
+      Action = mactOrdSpr_All
     end
     object miDesadv: TMenuItem [5]
-      Action = mactDesadv
+      Action = mactDesadv_All
     end
   end
   inherited PeriodChoice: TPeriodChoice

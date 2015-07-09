@@ -1,6 +1,8 @@
 -- Function: gpInsertUpdate_Movement_TaxCorrective()
 
 DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_TaxCorrective (Integer, TVarChar, TVarChar, TVarChar, TDateTime, Boolean, Boolean, Boolean, TFloat, Integer, Integer, Integer, Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_TaxCorrective (Integer, TVarChar, TVarChar, TVarChar, TDateTime, Boolean, Boolean, Boolean, TFloat, Integer, Integer, Integer, Integer, Integer, TVarChar, TVarChar);
+
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_TaxCorrective(
  INOUT ioId                  Integer   , -- Ключ объекта <Документ>
@@ -17,6 +19,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_TaxCorrective(
     IN inPartnerId           Integer   , -- Контрагент
     IN inContractId          Integer   , -- Договора
     IN inDocumentTaxKindId   Integer   , -- Тип формирования налогового документа
+    IN inComment             TVarChar  , -- Примечание
     IN inSession             TVarChar    -- сессия пользователя
 )
 RETURNS Integer AS
@@ -44,7 +47,11 @@ BEGIN
                                                           , inGoodsKindId        := NULL
                                                           , inUserId             := vbUserId
                                                            );
+
      END IF;
+
+     -- Комментарий
+     PERFORM lpInsertUpdate_MovementString (zc_MovementString_Comment(), ioId, inComment);
 
 END;
 $BODY$

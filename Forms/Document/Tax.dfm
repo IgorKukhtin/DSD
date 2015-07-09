@@ -3,24 +3,24 @@ inherited TaxForm: TTaxForm
   ClientHeight = 668
   ClientWidth = 1067
   ExplicitWidth = 1083
-  ExplicitHeight = 703
+  ExplicitHeight = 706
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Top = 126
+    Top = 163
     Width = 1067
-    Height = 542
+    Height = 505
     ExplicitTop = 126
     ExplicitWidth = 1067
     ExplicitHeight = 542
-    ClientRectBottom = 542
+    ClientRectBottom = 505
     ClientRectRight = 1067
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 1067
       ExplicitHeight = 518
       inherited cxGrid: TcxGrid
         Width = 1067
-        Height = 518
+        Height = 481
         ExplicitWidth = 1067
         ExplicitHeight = 518
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -152,10 +152,10 @@ inherited TaxForm: TTaxForm
   end
   inherited DataPanel: TPanel
     Width = 1067
-    Height = 100
+    Height = 137
     TabOrder = 3
     ExplicitWidth = 1067
-    ExplicitHeight = 100
+    ExplicitHeight = 137
     inherited edInvNumber: TcxTextEdit
       Left = 8
       ExplicitLeft = 8
@@ -350,6 +350,17 @@ inherited TaxForm: TTaxForm
       TabOrder = 27
       Width = 73
     end
+    object cxLabel16: TcxLabel
+      Left = 9
+      Top = 85
+      Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
+    end
+    object ceComment: TcxTextEdit
+      Left = 9
+      Top = 103
+      TabOrder = 29
+      Width = 595
+    end
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 171
@@ -421,6 +432,7 @@ inherited TaxForm: TTaxForm
       Hint = #1055#1077#1095#1072#1090#1100' '#1053#1072#1083#1086#1075#1086#1074#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103
       ImageIndex = 3
       DataSets = <>
+      CopiesCount = 1
       Params = <
         item
           Name = 'Id'
@@ -503,6 +515,7 @@ inherited TaxForm: TTaxForm
           DataSet = PrintItemsSverkaCDS
           UserName = 'frxDBDSverka'
         end>
+      CopiesCount = 1
       Params = <
         item
           Name = 'Id'
@@ -555,6 +568,7 @@ inherited TaxForm: TTaxForm
           DataSet = PrintItemsSverkaCDS
           UserName = 'frxDBDSverka'
         end>
+      CopiesCount = 1
       Params = <
         item
           Name = 'Id'
@@ -1114,6 +1128,12 @@ inherited TaxForm: TTaxForm
         Value = ''
         Component = edInvNumberBranch
         DataType = ftString
+      end
+      item
+        Name = 'Comment'
+        Value = Null
+        Component = ceComment
+        DataType = ftString
       end>
     Left = 216
     Top = 248
@@ -1218,6 +1238,13 @@ inherited TaxForm: TTaxForm
         Component = DocumentTaxKindGuides
         ComponentItem = 'Key'
         ParamType = ptInput
+      end
+      item
+        Name = 'inComment'
+        Value = Null
+        Component = ceComment
+        DataType = ftString
+        ParamType = ptInput
       end>
     Left = 162
     Top = 312
@@ -1270,6 +1297,9 @@ inherited TaxForm: TTaxForm
       end
       item
         Control = edPartner
+      end
+      item
+        Control = ceComment
       end>
     Left = 232
     Top = 193
@@ -1625,7 +1655,7 @@ inherited TaxForm: TTaxForm
   object RefreshDispatcher: TRefreshDispatcher
     IdParam.Value = Null
     ComponentList = <>
-    Left = 608
+    Left = 648
     Top = 96
   end
   object PrintHeaderCDS: TClientDataSet

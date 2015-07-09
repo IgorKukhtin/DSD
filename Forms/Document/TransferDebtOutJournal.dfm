@@ -3,7 +3,7 @@ inherited TransferDebtOutJournalForm: TTransferDebtOutJournalForm
   ClientHeight = 535
   ClientWidth = 1073
   ExplicitWidth = 1089
-  ExplicitHeight = 570
+  ExplicitHeight = 573
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -445,6 +445,14 @@ inherited TransferDebtOutJournalForm: TTransferDebtOutJournalForm
             HeaderAlignmentVert = vaCenter
             Width = 36
           end
+          object Comment: TcxGridDBColumn
+            Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
+            DataBinding.FieldName = 'Comment'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 120
+          end
         end
       end
     end
@@ -660,6 +668,7 @@ inherited TransferDebtOutJournalForm: TTransferDebtOutJournalForm
           DataSet = PrintItemsSverkaCDS
           UserName = 'frxDBDSverka'
         end>
+      CopiesCount = 1
       Params = <
         item
           Name = 'Id'
@@ -699,6 +708,7 @@ inherited TransferDebtOutJournalForm: TTransferDebtOutJournalForm
           DataSet = PrintItemsSverkaCDS
           UserName = 'frxDBDSverka'
         end>
+      CopiesCount = 1
       Params = <
         item
           Name = 'Id'
@@ -735,6 +745,7 @@ inherited TransferDebtOutJournalForm: TTransferDebtOutJournalForm
           DataSet = PrintItemsCDS
           UserName = 'frxDBDMaster'
         end>
+      CopiesCount = 1
       Params = <
         item
           Name = 'Id'
@@ -771,6 +782,7 @@ inherited TransferDebtOutJournalForm: TTransferDebtOutJournalForm
           DataSet = PrintItemsCDS
           UserName = 'frxDBDMaster'
         end>
+      CopiesCount = 1
       Params = <
         item
           Name = 'Id'
@@ -850,6 +862,7 @@ inherited TransferDebtOutJournalForm: TTransferDebtOutJournalForm
           DataSet = PrintItemsCDS
           UserName = 'frxDBDMaster'
         end>
+      CopiesCount = 1
       Params = <
         item
           Name = 'Id'
@@ -952,6 +965,7 @@ inherited TransferDebtOutJournalForm: TTransferDebtOutJournalForm
           DataSet = PrintItemsCDS
           UserName = 'frxDBDMaster'
         end>
+      CopiesCount = 1
       Params = <
         item
           Name = 'Id'

@@ -11,6 +11,7 @@ RETURNS TABLE (Id Integer, ParentId integer
              , Amount TFloat
              , Price TFloat
              , Summ TFloat
+             , NDS TFloat
              , isErased Boolean
               )
 AS
@@ -32,6 +33,7 @@ BEGIN
            , MovementItem.Amount
            , MovementItem.Price
            , MovementItem.AmountSumm
+           , MovementItem.NDS
            , MovementItem.isErased
 
        FROM MovementItem_Check_View AS MovementItem 
@@ -45,7 +47,8 @@ ALTER FUNCTION gpSelect_MovementItem_Check (Integer, TVarChar) OWNER TO postgres
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А. Воробкало А.А
+ 03.07.15                                                                       * Добавлен НДС
  25.05.15                         *
  
 */

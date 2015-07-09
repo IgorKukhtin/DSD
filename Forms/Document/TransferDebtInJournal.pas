@@ -54,6 +54,7 @@ type
     mactPrint_TaxCorrective_Us: TMultiAction;
     colContractFromCode: TcxGridDBColumn;
     colContractToCode: TcxGridDBColumn;
+    Comment: TcxGridDBColumn;
   private
     { Private declarations }
   public

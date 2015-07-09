@@ -30,6 +30,7 @@ type
     function PrintFiscalMemoryByDate(inStart, inEnd: TDateTime): boolean;
     function PrintReportByDate(inStart, inEnd: TDateTime): boolean;
     function PrintReportByNum(inStart, inEnd: Integer): boolean;
+    function FiscalNumber:String;
     procedure ClearArticulAttachment;
     procedure SetTime;
     procedure Anulirovt;
@@ -453,6 +454,11 @@ begin
        result := false;
     end;
   end;
+end;
+
+function TCashFP3530T.FiscalNumber: String;
+begin
+
 end;
 
 function TCashFP3530T.XReport: boolean;

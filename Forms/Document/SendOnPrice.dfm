@@ -248,17 +248,17 @@ inherited SendOnPriceForm: TSendOnPriceForm
       ExplicitLeft = 8
     end
     inherited edOperDate: TcxDateEdit
-      Left = 89
+      Left = 180
       Properties.SaveTime = False
       Properties.ShowTime = False
-      ExplicitLeft = 89
+      ExplicitLeft = 180
       ExplicitWidth = 85
       Width = 85
     end
     inherited cxLabel2: TcxLabel
-      Left = 89
+      Left = 180
       Caption = #1044#1072#1090#1072' ('#1088#1072#1089#1093#1086#1076')'
-      ExplicitLeft = 89
+      ExplicitLeft = 180
       ExplicitWidth = 77
     end
     inherited cxLabel15: TcxLabel
@@ -268,9 +268,9 @@ inherited SendOnPriceForm: TSendOnPriceForm
     inherited ceStatus: TcxButtonEdit
       Top = 63
       ExplicitTop = 63
-      ExplicitWidth = 257
+      ExplicitWidth = 168
       ExplicitHeight = 22
-      Width = 257
+      Width = 168
     end
     object cxLabel3: TcxLabel
       Left = 274
@@ -344,7 +344,7 @@ inherited SendOnPriceForm: TSendOnPriceForm
     end
     object edOperDatePartner: TcxDateEdit
       Left = 180
-      Top = 23
+      Top = 63
       Properties.SaveTime = False
       Properties.ShowTime = False
       TabOrder = 15
@@ -352,7 +352,7 @@ inherited SendOnPriceForm: TSendOnPriceForm
     end
     object cxLabel10: TcxLabel
       Left = 180
-      Top = 5
+      Top = 45
       Caption = #1044#1072#1090#1072' ('#1087#1088#1080#1093#1086#1076')'
     end
     object cxLabel11: TcxLabel
@@ -371,6 +371,23 @@ inherited SendOnPriceForm: TSendOnPriceForm
       Properties.ReadOnly = True
       TabOrder = 18
       Width = 111
+    end
+    object cxLabel5: TcxLabel
+      Left = 87
+      Top = 5
+      Caption = #8470' '#1079#1072#1103#1074#1082#1080
+    end
+    object edInvNumberOrder: TcxButtonEdit
+      Left = 87
+      Top = 23
+      Properties.Buttons = <
+        item
+          Default = True
+          Kind = bkEllipsis
+        end>
+      Properties.ReadOnly = True
+      TabOrder = 20
+      Width = 89
     end
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
@@ -956,6 +973,19 @@ inherited SendOnPriceForm: TSendOnPriceForm
         Component = PriceListGuides
         ComponentItem = 'TextValue'
         DataType = ftString
+      end
+      item
+        Name = 'MovementId_Order'
+        Value = Null
+        Component = GuidesInvNumberOrder
+        ComponentItem = 'Key'
+      end
+      item
+        Name = 'InvNumber_Order'
+        Value = Null
+        Component = GuidesInvNumberOrder
+        ComponentItem = 'TextValue'
+        DataType = ftString
       end>
     Left = 216
     Top = 248
@@ -1046,8 +1076,11 @@ inherited SendOnPriceForm: TSendOnPriceForm
         DataType = ftString
       end
       item
+        Name = 'inMovementId_Order'
         Value = ''
-        ParamType = ptUnknown
+        Component = GuidesInvNumberOrder
+        ComponentItem = 'Key'
+        ParamType = ptInput
       end
       item
         Value = 'False'
@@ -1109,6 +1142,7 @@ inherited SendOnPriceForm: TSendOnPriceForm
         Control = edPriceList
       end
       item
+        Control = edInvNumberOrder
       end>
     Left = 232
     Top = 193
@@ -1417,5 +1451,173 @@ inherited SendOnPriceForm: TSendOnPriceForm
     PackSize = 1
     Left = 359
     Top = 440
+  end
+  object GuidesInvNumberOrder: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edInvNumberOrder
+    FormNameParam.Value = 'TOrderExternalJournalChoiceForm'
+    FormNameParam.DataType = ftString
+    FormName = 'TOrderExternalJournalChoiceForm'
+    PositionDataSet = 'MasterCDS'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GuidesInvNumberOrder
+        ComponentItem = 'Key'
+        ParamType = ptInput
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesInvNumberOrder
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+      end
+      item
+        Name = 'OperDatePartner'
+        Value = 42132d
+        Component = edOperDate
+        DataType = ftDateTime
+        ParamType = ptInput
+      end
+      item
+        Name = 'OperDatePartner_Sale'
+        Value = 42193d
+        Component = edOperDatePartner
+        DataType = ftDateTime
+        ParamType = ptInput
+      end
+      item
+        Name = 'FromId'
+        Value = ''
+        Component = GuidesTo
+        ComponentItem = 'Key'
+        ParamType = ptInput
+      end
+      item
+        Name = 'FromName'
+        Value = ''
+        Component = GuidesTo
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+      end
+      item
+        Name = 'ToId'
+        Value = ''
+        Component = GuidesFrom
+        ComponentItem = 'Key'
+        ParamType = ptInput
+      end
+      item
+        Name = 'ToName'
+        Value = ''
+        Component = GuidesFrom
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+      end
+      item
+        Name = 'RouteSortingId'
+        Value = ''
+        ComponentItem = 'Key'
+        ParamType = ptInput
+      end
+      item
+        Name = 'RouteSortingName'
+        Value = ''
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+      end
+      item
+        Name = 'PaidKindId'
+        Value = ''
+        ComponentItem = 'Key'
+        ParamType = ptInput
+      end
+      item
+        Name = 'PaidKindName'
+        Value = ''
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+      end
+      item
+        Name = 'ContractId'
+        Value = ''
+        ComponentItem = 'Key'
+        ParamType = ptInput
+      end
+      item
+        Name = 'ContractName'
+        Value = ''
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+      end
+      item
+        Name = 'ContractTagId'
+        Value = ''
+        ComponentItem = 'Key'
+        ParamType = ptInput
+      end
+      item
+        Name = 'ContractTagName'
+        Value = ''
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+      end
+      item
+        Name = 'PriceListId'
+        Value = ''
+        Component = PriceListGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+      end
+      item
+        Name = 'PriceListName'
+        Value = ''
+        Component = PriceListGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+      end
+      item
+        Name = 'PriceWithVAT'
+        Value = 'False'
+        Component = edPriceWithVAT
+        ParamType = ptInput
+      end
+      item
+        Name = 'VATPercent'
+        Value = 0.000000000000000000
+        Component = edVATPercent
+        ParamType = ptInput
+      end
+      item
+        Name = 'ChangePercent'
+        Value = 0.000000000000000000
+        Component = edChangePercent
+        ParamType = ptInput
+      end
+      item
+        Name = 'MasterPartnerId'
+        Value = ''
+        Component = GuidesTo
+        ComponentItem = 'Key'
+      end
+      item
+        Name = 'MasterPartnerName'
+        Value = ''
+        Component = GuidesTo
+        ComponentItem = 'TextValue'
+        DataType = ftString
+      end>
+    Left = 108
+    Top = 8
   end
 end

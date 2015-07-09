@@ -3,24 +3,24 @@ inherited TaxCorrectiveForm: TTaxCorrectiveForm
   ClientHeight = 668
   ClientWidth = 1113
   ExplicitWidth = 1129
-  ExplicitHeight = 703
+  ExplicitHeight = 706
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Top = 126
+    Top = 163
     Width = 1113
-    Height = 542
+    Height = 505
     ExplicitTop = 126
     ExplicitWidth = 1113
     ExplicitHeight = 542
-    ClientRectBottom = 542
+    ClientRectBottom = 505
     ClientRectRight = 1113
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 1113
       ExplicitHeight = 518
       inherited cxGrid: TcxGrid
         Width = 1113
-        Height = 518
+        Height = 481
         ExplicitWidth = 1113
         ExplicitHeight = 518
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -152,10 +152,10 @@ inherited TaxCorrectiveForm: TTaxCorrectiveForm
   end
   inherited DataPanel: TPanel
     Width = 1113
-    Height = 100
+    Height = 137
     TabOrder = 3
     ExplicitWidth = 1113
-    ExplicitHeight = 100
+    ExplicitHeight = 137
     inherited edInvNumber: TcxTextEdit
       Left = 8
       ExplicitLeft = 8
@@ -378,6 +378,17 @@ inherited TaxCorrectiveForm: TTaxCorrectiveForm
       TabOrder = 31
       Width = 73
     end
+    object cxLabel16: TcxLabel
+      Left = 9
+      Top = 85
+      Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
+    end
+    object ceComment: TcxTextEdit
+      Left = 9
+      Top = 103
+      TabOrder = 33
+      Width = 623
+    end
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 171
@@ -519,6 +530,7 @@ inherited TaxCorrectiveForm: TTaxCorrectiveForm
           DataSet = PrintHeaderCDS
           UserName = 'frxDBDHeader'
         end>
+      CopiesCount = 1
       Params = <
         item
           Name = 'Id'
@@ -554,6 +566,7 @@ inherited TaxCorrectiveForm: TTaxCorrectiveForm
           DataSet = PrintHeaderCDS
           UserName = 'frxDBDHeader'
         end>
+      CopiesCount = 1
       Params = <
         item
           Name = 'Id'
@@ -995,6 +1008,12 @@ inherited TaxCorrectiveForm: TTaxCorrectiveForm
         Value = ''
         Component = edInvNumberBranch
         DataType = ftString
+      end
+      item
+        Name = 'Comment'
+        Value = Null
+        Component = ceComment
+        DataType = ftString
       end>
     Left = 208
     Top = 240
@@ -1099,6 +1118,13 @@ inherited TaxCorrectiveForm: TTaxCorrectiveForm
         Component = DocumentTaxKindGuides
         ComponentItem = 'Key'
         ParamType = ptInput
+      end
+      item
+        Name = 'inComment'
+        Value = Null
+        Component = ceComment
+        DataType = ftString
+        ParamType = ptInput
       end>
     Left = 162
     Top = 312
@@ -1148,6 +1174,9 @@ inherited TaxCorrectiveForm: TTaxCorrectiveForm
       end
       item
         Control = edPartner
+      end
+      item
+        Control = ceComment
       end>
     Left = 232
     Top = 193

@@ -257,7 +257,13 @@ CREATE OR REPLACE FUNCTION zc_Enum_InfoMoneyDestination_80400() RETURNS Integer 
 -- !!!
 -- 100301; "прибыль текущего периода";
 CREATE OR REPLACE FUNCTION zc_Enum_Account_100301() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_Account_100301' AND DescId = zc_ObjectString_Enum()); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
-
+-- !!!
+-- !!! Типы оплат на кассе
+-- !!!
+-- 0. наличка
+CREATE OR REPLACE FUNCTION zc_Enum_PaidType_Cash() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_PaidType_Cash' AND DescId = zc_ObjectString_Enum()); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+-- 1. карточка
+CREATE OR REPLACE FUNCTION zc_Enum_PaidType_Card() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_PaidType_Card' AND DescId = zc_ObjectString_Enum()); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 
 
 /*-------------------------------------------------------------------------------*/

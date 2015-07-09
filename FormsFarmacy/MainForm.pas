@@ -153,6 +153,8 @@ type
     actAlternativeGroup: TdsdOpenForm;
     N53: TMenuItem;
     miReprice: TMenuItem;
+    actPaidType: TdsdOpenForm;
+    N54: TMenuItem;
     procedure actSaveDataExecute(Sender: TObject);
     procedure miRepriceClick(Sender: TObject);
   private

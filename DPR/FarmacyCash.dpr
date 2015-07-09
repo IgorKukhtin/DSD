@@ -64,7 +64,8 @@ uses
   IniUtils in '..\FormsFarmacy\Cash\IniUtils.pas',
   FP3141_TLB in '..\FormsFarmacy\Cash\FP3141_TLB.pas',
   CashCloseDialog in '..\FormsFarmacy\Cash\CashCloseDialog.pas' {CashCloseDialogForm: TParentForm},
-  VIPDialog in '..\FormsFarmacy\Cash\VIPDialog.pas' {VIPDialogForm: TParentForm};
+  VIPDialog in '..\FormsFarmacy\Cash\VIPDialog.pas' {VIPDialogForm: TParentForm},
+  CashWork in '..\FormsFarmacy\Cash\CashWork.pas' {CashWorkForm};
 
 {$R *.res}
 

@@ -7,7 +7,7 @@ CREATE OR REPLACE FUNCTION gpSelect_GoodsPrice(
   , IN inUnitId        Integer     -- 
   , IN inSession       TVarChar    -- сессия пользователя
 )
-RETURNS TABLE (GoodsCode Integer, GoodsName TVarChar, NewPrice TFloat)
+RETURNS TABLE (GoodsCode Integer, GoodsName TVarChar, NDS TFloat, NewPrice TFloat, ExpirationDate TDateTime)
 
 AS
 $BODY$
@@ -30,10 +30,13 @@ BEGIN
                                               FROM DD AS FF WHERE FF.MinPrice > DD.MinPrice AND FF.MarginCategoryId = DD.MarginCategoryId), 1000000) AS MaxPrice 
                                FROM DD), 
 
-   DDD AS (SELECT DD.Code, DD.Name, DD.NewPrice FROM (
+   DDD AS (SELECT DD.Code, DD.Name, DD.NDS, DD.NewPrice, DD.ExpirationDate 
+   FROM (
    SELECT
          Object_Goods.GoodsCode AS Code,
-         Object_Goods.GoodsName  AS Name, 
+         Object_Goods.GoodsName  AS Name,
+		 Object_Goods.NDS AS NDS,
+		 LoadPriceListItem.ExpirationDate, 
          zfCalc_SalePrice((LoadPriceListItem.Price * (100 + Object_Goods.NDS)/100), -- Цена С НДС
                            MarginCondition.MarginPercent + COALESCE(ObjectFloat_Percent.valuedata, 0), -- % наценки
                            ObjectGoodsView.isTop, -- ТОП позиция

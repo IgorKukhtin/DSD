@@ -2,8 +2,9 @@ inherited SendOnPrice_BranchJournalForm: TSendOnPrice_BranchJournalForm
   Caption = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' <'#1055#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077' '#1087#1086' '#1094#1077#1085#1077' ('#1092#1080#1083#1080#1072#1083')'
   ClientHeight = 535
   ClientWidth = 1110
+  ExplicitLeft = -75
   ExplicitWidth = 1126
-  ExplicitHeight = 570
+  ExplicitHeight = 573
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -153,6 +154,14 @@ inherited SendOnPrice_BranchJournalForm: TSendOnPrice_BranchJournalForm
             Caption = #8470' '#1076#1086#1082'.'
             HeaderAlignmentHorz = taCenter
             Width = 55
+          end
+          object InvNumber_Order: TcxGridDBColumn
+            Caption = #8470' '#1076#1086#1082'. '#1079#1072#1103#1074#1082#1072
+            DataBinding.FieldName = 'InvNumber_Order'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
           end
           object colFromName: TcxGridDBColumn
             Caption = #1054#1090' '#1082#1086#1075#1086
@@ -332,6 +341,25 @@ inherited SendOnPrice_BranchJournalForm: TSendOnPrice_BranchJournalForm
     inherited actUpdate: TdsdInsertUpdateAction
       FormName = 'TSendOnPrice_BranchForm'
       FormNameParam.Value = 'TSendOnPrice_BranchForm'
+      GuiParams = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'Id'
+          ParamType = ptInput
+        end
+        item
+          Name = 'ShowAll'
+          Value = False
+          DataType = ftBoolean
+        end
+        item
+          Name = 'inOperDate'
+          Value = 41640d
+          Component = deEnd
+          DataType = ftDateTime
+        end>
     end
     object actPrintOut: TdsdPrintAction
       Category = 'DSDLib'
@@ -364,6 +392,7 @@ inherited SendOnPrice_BranchJournalForm: TSendOnPrice_BranchJournalForm
           DataSet = PrintItemsCDS
           UserName = 'frxDBDMaster'
         end>
+      CopiesCount = 1
       Params = <
         item
           Name = 'Id'
@@ -407,6 +436,7 @@ inherited SendOnPrice_BranchJournalForm: TSendOnPrice_BranchJournalForm
           DataSet = PrintItemsCDS
           UserName = 'frxDBDMaster'
         end>
+      CopiesCount = 1
       Params = <
         item
           Name = 'Id'

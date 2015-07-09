@@ -2,6 +2,7 @@
 
 DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_TransferDebtOut (integer, TVarChar, TVarChar, TDateTime, Boolean, Boolean, TFloat, TFloat, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_TransferDebtOut (integer, TVarChar, TVarChar, TVarChar, TDateTime, Boolean, Boolean, TFloat, TFloat, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_TransferDebtOut (integer, TVarChar, TVarChar, TVarChar, TDateTime, Boolean, Boolean, TFloat, TFloat, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar, TVarChar);
 
 
 
@@ -23,6 +24,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_TransferDebtOut(
     IN inPaidKindToId        Integer   , -- Виды форм оплаты (кому)
     IN inPartnerId           Integer   , -- Контрагент
     IN inDocumentTaxKindId_inf Integer  , -- Тип формирования налогового документа
+    IN inComment             TVarChar  , -- Примечание
     IN inSession             TVarChar    -- сессия пользователя
 )
 RETURNS Integer AS
@@ -58,6 +60,9 @@ BEGIN
                                                    , inPartnerId        := inPartnerId
                                                    , inUserId           := vbUserId
                                                     );
+     -- Комментарий
+     PERFORM lpInsertUpdate_MovementString (zc_MovementString_Comment(), ioId, inComment);
+
 
     -- в этом случае надо восстановить/удалить Налоговую
     IF vbMovementId_Tax <> 0

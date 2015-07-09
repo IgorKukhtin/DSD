@@ -6,6 +6,8 @@ function GetValue(const ASection,AParamName,ADefault: String): String;
 
 //возвраащет тип кассового аппарата;
 function iniCashType:String;
+//возвращает № кассового места
+function iniCashID: Integer;
 //возвращает SoldParalel
 function iniSoldParallel:Boolean;
 //возвращает порт кассового аппарата
@@ -31,6 +33,12 @@ function iniCashType:String;
 begin
   Result := GetValue('TSoldWithCompMainForm','CashType','FP3530T_NEW');
 end;
+
+function iniCashID: Integer;
+Begin
+  if not TryStrToInt(GetValue('TSoldWithCompMainForm','CashId','0'),Result) then
+    Result := 0;
+End;
 
 function iniSoldParallel:Boolean;
 Begin

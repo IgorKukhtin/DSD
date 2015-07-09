@@ -1,6 +1,7 @@
 -- Function: gpInsertUpdate_Movement_SendOnPrice_Branch()
 
 DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_SendOnPrice_Branch (Integer, TVarChar, TDateTime, TDateTime, Boolean, TFloat, TFloat, Integer, Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_SendOnPrice_Branch (Integer, TVarChar, TDateTime, TDateTime, Boolean, TFloat, TFloat, Integer, Integer, Integer, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_SendOnPrice_Branch(
  INOUT ioId                  Integer   , -- Ключ объекта <Документ Перемещение>
@@ -14,6 +15,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_SendOnPrice_Branch(
     IN inToId                Integer   , -- Кому (в документе)
  INOUT ioPriceListId         Integer   , -- Прайс лист
    OUT outPriceListName      TVarChar  , -- Прайс лист
+    IN inMovementId_Order    Integer    , -- ключ Документа
     IN inSession             TVarChar    -- сессия пользователя
 )
 RETURNS RECORD AS
@@ -89,7 +91,7 @@ BEGIN
                                       , inFromId           := CASE WHEN vbIsProcess_BranchIn = FALSE THEN inFromId ELSE (SELECT ObjectId FROM MovementLinkObject WHERE MovementId = ioId AND DescId = zc_MovementLinkObject_From()) END
                                       , inToId             := CASE WHEN vbIsProcess_BranchIn = FALSE THEN inToId ELSE (SELECT ObjectId FROM MovementLinkObject WHERE MovementId = ioId AND DescId = zc_MovementLinkObject_To()) END
                                       , inRouteSortingId   := (SELECT ObjectId FROM MovementLinkObject WHERE MovementId = ioId AND DescId = zc_MovementLinkObject_RouteSorting())
-                                      , inMovementId_Order := (SELECT MovementChildId FROM MovementLinkMovement WHERE MovementId = ioId AND DescId = zc_MovementLinkMovement_Order())
+                                      , inMovementId_Order := inMovementId_Order
                                       , ioPriceListId      := CASE WHEN vbIsProcess_BranchIn = FALSE THEN ioPriceListId ELSE (SELECT ObjectId FROM MovementLinkObject WHERE MovementId = ioId AND DescId = zc_MovementLinkObject_PriceList()) END
                                       , inProcessId        := zc_Enum_Process_InsertUpdate_Movement_SendOnPrice_Branch()
                                       , inUserId           := vbUserId
