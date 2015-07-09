@@ -4,7 +4,7 @@ inherited SaleForm: TSaleForm
   ClientWidth = 1020
   AddOnFormData.OnLoadAction = actSetDefaults
   ExplicitWidth = 1036
-  ExplicitHeight = 706
+  ExplicitHeight = 703
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -616,10 +616,9 @@ inherited SaleForm: TSaleForm
       Properties.Buttons = <
         item
           Default = True
-          Enabled = False
           Kind = bkEllipsis
         end>
-      Properties.ReadOnly = False
+      Properties.ReadOnly = True
       TabOrder = 38
       Width = 81
     end

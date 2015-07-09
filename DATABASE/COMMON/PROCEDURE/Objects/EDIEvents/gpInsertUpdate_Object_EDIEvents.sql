@@ -19,7 +19,7 @@ BEGIN
 
 
    -- Проверка Desc
-   IF NOT EXISTS (SELECT MovementBooleanDesc.Code FROM MovementBooleanDesc WHERE MovementBooleanDesc.Code = inName)
+   IF NOT EXISTS (SELECT MovementBooleanDesc.Code FROM MovementBooleanDesc WHERE LOWER (MovementBooleanDesc.Code) = LOWER (inName))
    THEN 
        RAISE EXCEPTION 'Ошибка.Название для EDIEvents не получено.';
    END IF;
@@ -47,6 +47,7 @@ ALTER FUNCTION gpInsertUpdate_Object_EDIEvents (Integer, Integer, TVarChar, TVar
 
 -- тест
 -- SELECT * FROM gpInsertUpdate_Object_EDIEvents ()
+/*
 select *
 from Object
      left join ObjectDate on ObjectDate.ObjectId = Object.Id and ObjectDate.DescId = zc_ObjectDate_Protocol_Insert()
@@ -54,3 +55,4 @@ from Object
      left join Object as Object_User on Object_User.Id = ObjectLink.ChildObjectId
      left join Movement on Movement.Id = Object.ObjectCode
 where Object.DescId = zc_Object_EDIEvents()
+*/

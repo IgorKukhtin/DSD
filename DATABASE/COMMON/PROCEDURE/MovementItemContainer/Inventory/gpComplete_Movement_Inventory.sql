@@ -14,6 +14,8 @@ $BODY$
 
   DECLARE vbMovementDescId Integer;
 
+  DECLARE vbIsGoodsGroup Boolean;
+
   DECLARE vbStatusId Integer;
   DECLARE vbOperDate TDateTime;
   DECLARE vbUnitId Integer;
@@ -33,6 +35,10 @@ $BODY$
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Complete_Inventory());
+
+
+     -- создаются временные таблицы - для формирование данных для проводок
+     PERFORM lpComplete_Movement_Inventory_CreateTemp();
 
 
      -- Эти параметры нужны для расчета остатка
@@ -109,6 +115,22 @@ BEGIN
      -- !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
 
+     -- !!!Ограничения по товарам!!!
+     IF EXISTS (SELECT UnitId FROM lfSelect_Object_Unit_byGroup (8446) AS lfSelect_Object_Unit_byGroup WHERE UnitId = vbUnitId) -- ЦЕХ колбаса+дел-сы
+       AND 1 <> EXTRACT (DAY FROM (vbOperDate :: Date + 1))
+     THEN
+         vbIsGoodsGroup:= TRUE;
+         -- 
+         INSERT INTO _tmpGoods_Complete_Inventory (GoodsId)
+            SELECT GoodsId FROM lfSelect_Object_Goods_byGoodsGroup (1945) -- СО-ОБЩАЯ
+           UNION
+            SELECT GoodsId FROM lfSelect_Object_Goods_byGoodsGroup (1942) -- СО-ЭМУЛЬСИИ
+           ;
+     ELSE
+         vbIsGoodsGroup:= FALSE;
+     END IF;
+
+
      -- Определяются параметры для проводок по прибыли
      IF EXISTS (SELECT 1
                 FROM (SELECT (lfGet_Object_Unit_byProfitLossDirection (tmpUnit.UnitId)).ProfitLossGroupId AS ProfitLossGroupId
@@ -142,8 +164,6 @@ BEGIN
      END IF;
 
 
-     -- создаются временные таблицы - для формирование данных для проводок
-     PERFORM lpComplete_Movement_Inventory_CreateTemp();
      -- заполняем таблицу - количественные элементы документа, со всеми свойствами для формирования Аналитик в проводках
      INSERT INTO _tmpItem (MovementItemId
                          , ContainerId_Goods, GoodsId, GoodsKindId, AssetId, PartionGoods, PartionGoodsDate
@@ -217,6 +237,7 @@ BEGIN
 
               FROM Movement
                    JOIN MovementItem ON MovementItem.MovementId = Movement.Id AND MovementItem.DescId = zc_MI_Master() AND MovementItem.isErased = FALSE
+                   LEFT JOIN _tmpGoods_Complete_Inventory ON _tmpGoods_Complete_Inventory.GoodsId = MovementItem.ObjectId
 
                    LEFT JOIN ObjectLink AS ObjectLink_Goods_Fuel
                                         ON ObjectLink_Goods_Fuel.ObjectId = MovementItem.ObjectId
@@ -251,7 +272,6 @@ BEGIN
                                               ON MIDate_PartionGoods.MovementItemId = MovementItem.Id
                                              AND MIDate_PartionGoods.DescId = zc_MIDate_PartionGoods()
 
-
                    LEFT JOIN ObjectBoolean AS ObjectBoolean_PartionCount
                                            ON ObjectBoolean_PartionCount.ObjectId = MovementItem.ObjectId
                                           AND ObjectBoolean_PartionCount.DescId = zc_ObjectBoolean_Goods_PartionCount()
@@ -272,6 +292,7 @@ BEGIN
               WHERE Movement.Id = inMovementId
                 AND Movement.DescId = zc_Movement_Inventory()
                 AND Movement.StatusId IN (zc_Enum_Status_UnComplete(), zc_Enum_Status_Erased())
+                AND (_tmpGoods_Complete_Inventory.GoodsId > 0 OR vbIsGoodsGroup = FALSE)
              ) AS _tmp;
 
 
@@ -350,9 +371,11 @@ BEGIN
                    -- !!!обязательно JOIN, что б "учавствовали" только товарные операции!!!
                    JOIN Container ON Container.Id = tmpContainerLinkObject_From.ContainerId
                                  AND Container.DescId = zc_Container_Count()
+                   LEFT JOIN _tmpGoods_Complete_Inventory ON _tmpGoods_Complete_Inventory.GoodsId = Container.ObjectId
                    LEFT JOIN MovementItemContainer AS MIContainer
                                                    ON MIContainer.Containerid = Container.Id
                                                   AND MIContainer.OperDate > vbOperDate
+              WHERE (_tmpGoods_Complete_Inventory.GoodsId > 0 OR vbIsGoodsGroup = FALSE)
               GROUP BY tmpContainerLinkObject_From.ContainerId
                      , Container.ObjectId
                      , Container.Amount
@@ -385,9 +408,12 @@ BEGIN
                                  AND Container.ParentId IS NOT NULL
                    JOIN Object_Account_View AS View_Account ON View_Account.AccountId = Container.ObjectId
                                                            AND View_Account.AccountGroupId <> zc_Enum_AccountGroup_110000() -- Транзит
+                   INNER JOIN ContainerLinkObject AS CLO_Goods ON CLO_Goods.ContainerId = Container.Id AND CLO_Goods.DescId = Container.Id
+                   LEFT JOIN _tmpGoods_Complete_Inventory ON _tmpGoods_Complete_Inventory.GoodsId = zc_ContainerLinkObject_Goods()
                    LEFT JOIN MovementItemContainer AS MIContainer
                                                    ON MIContainer.Containerid = Container.Id
                                                   AND MIContainer.OperDate > vbOperDate
+              WHERE (_tmpGoods_Complete_Inventory.GoodsId > 0 OR vbIsGoodsGroup = FALSE)
               GROUP BY tmpContainerLinkObject_From.ContainerId
                      , Container.ObjectId
                      , Container.ParentId

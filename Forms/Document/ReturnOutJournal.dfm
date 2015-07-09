@@ -3,7 +3,7 @@ inherited ReturnOutJournalForm: TReturnOutJournalForm
   ClientHeight = 535
   ClientWidth = 1110
   ExplicitWidth = 1126
-  ExplicitHeight = 573
+  ExplicitHeight = 570
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -328,8 +328,8 @@ inherited ReturnOutJournalForm: TReturnOutJournalForm
     Top = 243
   end
   inherited ActionList: TActionList
-    Left = 431
-    Top = 202
+    Left = 39
+    Top = 194
     inherited actInsert: TdsdInsertUpdateAction
       FormName = 'TReturnOutForm'
       FormNameParam.Name = 'TReturnOutForm'

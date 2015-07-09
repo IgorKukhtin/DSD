@@ -1731,6 +1731,22 @@ begin
           StringReplace(FormatFloat('0.000',
           ItemsDataSet.FieldByName('AmountPartner').AsFloat),
           FormatSettings.DecimalSeparator, cMainDecimalSeparator, []);
+
+        PRICE :=
+          StringReplace(FormatFloat('0.00',
+          ItemsDataSet.FieldByName('PriceNoVAT').AsFloat),
+          FormatSettings.DecimalSeparator, cMainDecimalSeparator, []);
+
+        PRICEWITHVAT :=
+          StringReplace(FormatFloat('0.00',
+          ItemsDataSet.FieldByName('PriceWVAT').AsFloat),
+          FormatSettings.DecimalSeparator, cMainDecimalSeparator, []);
+
+        VAT :=
+          StringReplace(FormatFloat('0.00',
+          HeaderDataSet.FieldByName('VATPercent').AsFloat),
+          FormatSettings.DecimalSeparator, cMainDecimalSeparator, []);
+
       end;
       inc(i);
       Next;

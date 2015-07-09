@@ -750,7 +750,7 @@ BEGIN
              END  / CASE WHEN tmpMI.CountForPrice <> 0 THEN tmpMI.CountForPrice ELSE 1 END
              AS PriceNoVAT
 
-             -- расчет цены с НДС, до 4 знаков
+             -- расчет цены с НДС и скидкой, до 4 знаков
            , CASE WHEN vbPriceWithVAT <> TRUE
                   THEN CAST ((tmpMI.Price + tmpMI.Price * (vbVATPercent / 100))
                                          * CASE WHEN vbDiscountPercent <> 0 AND vbPaidKindId = zc_Enum_PaidKind_SecondForm() -- !!!для НАЛ учитываем!!!
@@ -769,6 +769,15 @@ BEGIN
                              AS NUMERIC (16, 4))
              END / CASE WHEN tmpMI.CountForPrice <> 0 THEN tmpMI.CountForPrice ELSE 1 END
              AS PriceWVAT
+             -- расчет цены с НДС БЕЗ скидки, до 4 знаков
+           , CASE WHEN vbPriceWithVAT <> TRUE
+                  THEN CAST ((tmpMI.Price + tmpMI.Price * (vbVATPercent / 100))
+                                         * 1
+                             AS NUMERIC (16, 4))
+                  ELSE CAST (tmpMI.Price * 1
+                             AS NUMERIC (16, 4))
+             END / CASE WHEN tmpMI.CountForPrice <> 0 THEN tmpMI.CountForPrice ELSE 1 END
+             AS PriceWVAT_original
 
              -- расчет суммы без НДС, до 2 знаков
            , CAST (tmpMI.AmountPartner * CASE WHEN vbPriceWithVAT = TRUE

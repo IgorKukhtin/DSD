@@ -121,7 +121,7 @@ procedure TDialogPrintForm.cbPrintPackClick(Sender: TObject);
 begin
      if cbPrintPack.Checked
      then
-         if  (ParamsMovement.ParamByName('MovementDescId').AsInteger<>zc_Movement_Sale)
+         if  (ParamsMovement.ParamByName('MovementDescId').AsInteger<>zc_Movement_Sale)and(ParamsMovement.ParamByName('MovementDescId').AsInteger<>zc_Movement_SendOnPrice)
          then cbPrintPack.Checked:=false;
 end;
 {------------------------------------------------------------------------------}
@@ -129,7 +129,7 @@ procedure TDialogPrintForm.cbPrintSpecClick(Sender: TObject);
 begin
      if cbPrintSpec.Checked
      then
-         if  (ParamsMovement.ParamByName('MovementDescId').AsInteger<>zc_Movement_Sale)
+         if  (ParamsMovement.ParamByName('MovementDescId').AsInteger<>zc_Movement_Sale)and(ParamsMovement.ParamByName('MovementDescId').AsInteger<>zc_Movement_SendOnPrice)
          then cbPrintSpec.Checked:=false;
 end;
 {------------------------------------------------------------------------------}

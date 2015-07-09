@@ -122,6 +122,7 @@ BEGIN
            , CASE WHEN MovementDate_OperDateMark.ValueData >= Movement.OperDate THEN 'Дата маркировки : ' || (DATE (MovementDate_OperDateMark.ValueData) :: TVarChar) ELSE '' END AS OperDateMark
 
            , MovementString_InvNumberPartner.ValueData  AS InvNumberPartner
+           , MovementString_Comment.ValueData           AS Comment
 
            , vbPriceWithVAT                             AS PriceWithVAT
            , vbVATPercent                               AS VATPercent
@@ -141,7 +142,6 @@ BEGIN
            , Object_From.ValueData                      AS FromName
            , Object_To.ValueData               		AS ToName
            , Object_PaidKind.ValueData         		AS PaidKindName
-           , Object_Personal.ValueData                  AS PersonalName
            , View_Contract.InvNumber        		AS ContractName
            , View_Contract.ContractTagName              AS ContractTagName
 
@@ -199,6 +199,9 @@ BEGIN
             LEFT JOIN MovementString AS MovementString_InvNumberPartner
                                      ON MovementString_InvNumberPartner.MovementId =  Movement.Id
                                     AND MovementString_InvNumberPartner.DescId = zc_MovementString_InvNumberPartner()
+            LEFT JOIN MovementString AS MovementString_Comment
+                                     ON MovementString_Comment.MovementId = Movement.Id
+                                    AND MovementString_Comment.DescId = zc_MovementString_Comment()
 
             LEFT JOIN MovementLinkObject AS MovementLinkObject_From
                                          ON MovementLinkObject_From.MovementId = Movement.Id

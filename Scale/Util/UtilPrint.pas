@@ -210,7 +210,6 @@ begin
              //Print
              if (MovementDescId = zc_Movement_Sale)
              or (MovementDescId = zc_Movement_Loss)and(SettingMain.isCeh=false)and(SettingMain.isGoodsComplete=true)
-             or (MovementDescId = zc_Movement_ReturnOut)
              then Print_Sale(MovementId)
              else if MovementDescId = zc_Movement_ReturnIn
                   then Print_ReturnIn(MovementId)

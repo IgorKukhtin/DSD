@@ -80,27 +80,27 @@ BEGIN
      IF EXISTS (SELECT MovementString.MovementId FROM MovementString INNER JOIN MovementDesc ON MovementDesc.Code = MovementString.ValueData AND MovementDesc.Id = zc_Movement_Sale() WHERE MovementString.MovementId = inMovementId AND MovementString.DescId = zc_MovementString_Desc())
      THEN
          -- так для продажи
-         IF NOT EXISTS (SELECT MovementChildId FROM MovementLinkMovement WHERE MovementChildId = inMovementId AND DescId = zc_MovementLinkMovement_Sale())
+         IF NOT EXISTS (SELECT MLM.MovementChildId FROM MovementLinkMovement AS MLM WHERE MLM.MovementChildId = inMovementId AND MLM.DescId = zc_MovementLinkMovement_Sale())
          THEN 
-             RAISE EXCEPTION 'Ошибка.Связь с существующим документом <%> не установлена.', (SELECT ItemName FROM MovementDesc WHERE Id = zc_Movement_Sale());
+             RAISE EXCEPTION 'Ошибка.Связь с существующим документом <%> не установлена.', (SELECT MovementDesc.ItemName FROM MovementDesc WHERE MovementDesc.Id = zc_Movement_Sale());
          END IF;
          -- так для налоговой
-         IF NOT EXISTS (SELECT MovementChildId FROM MovementLinkMovement WHERE MovementChildId = inMovementId AND DescId = zc_MovementLinkMovement_Tax())
+         IF NOT EXISTS (SELECT MLM.MovementChildId FROM MovementLinkMovement AS MLM WHERE MLM.MovementChildId = inMovementId AND MLM.DescId = zc_MovementLinkMovement_Tax())
          THEN 
-             RAISE EXCEPTION 'Ошибка.Связь с существующим документом <%> не установлена.', (SELECT ItemName FROM MovementDesc WHERE Id = zc_Movement_Tax());
+             RAISE EXCEPTION 'Ошибка.Связь с существующим документом <%> не установлена.', (SELECT MovementDesc.ItemName FROM MovementDesc.MovementDesc WHERE Id = zc_Movement_Tax());
          END IF;
      ELSE
          IF EXISTS (SELECT MovementString.MovementId FROM MovementString INNER JOIN MovementDesc ON MovementDesc.Code = MovementString.ValueData AND MovementDesc.Id = zc_Movement_ReturnIn() WHERE MovementString.MovementId = inMovementId AND MovementString.DescId = zc_MovementString_Desc())
          THEN
              -- так для возврата
-             IF NOT EXISTS (SELECT MovementChildId FROM MovementLinkMovement WHERE MovementChildId = inMovementId AND DescId = zc_MovementLinkMovement_MasterEDI())
+             IF NOT EXISTS (SELECT MLM.MovementChildId FROM MovementLinkMovement AS MLM WHERE MLM.MovementChildId = inMovementId AND MLM.DescId = zc_MovementLinkMovement_MasterEDI())
              THEN 
-                 RAISE EXCEPTION 'Ошибка.Связь с существующим документом <%> не установлена.', (SELECT ItemName FROM MovementDesc WHERE Id = zc_Movement_ReturnIn());
+                 RAISE EXCEPTION 'Ошибка.Связь с существующим документом <%> не установлена.', (SELECT MovementDesc.ItemName FROM MovementDesc WHERE MovementDesc.Id = zc_Movement_ReturnIn());
              END IF;
              -- так для корректировки
-             IF NOT EXISTS (SELECT MovementChildId FROM MovementLinkMovement WHERE MovementChildId = inMovementId AND DescId = zc_MovementLinkMovement_ChildEDI())
+             IF NOT EXISTS (SELECT MLM.MovementChildId FROM MovementLinkMovement AS MLM WHERE MLM.MovementChildId = inMovementId AND MLM.DescId = zc_MovementLinkMovement_ChildEDI())
              THEN 
-                 RAISE EXCEPTION 'Ошибка.Связь с существующим документом <%> не установлена.', (SELECT ItemName FROM MovementDesc WHERE Id = zc_Movement_TaxCorrective());
+                 RAISE EXCEPTION 'Ошибка.Связь с существующим документом <%> не установлена.', (SELECT MovementDesc.ItemName FROM MovementDesc WHERE MovementDesc.Id = zc_Movement_TaxCorrective());
              END IF;
          ELSE
              RAISE EXCEPTION 'Ошибка.Нельзя обработать документ <%>.', COALESCE ((SELECT MovementDesc.ItemName FROM MovementString INNER JOIN MovementDesc ON MovementDesc.Code = MovementString.ValueData WHERE MovementString.MovementId = inMovementId AND MovementString.DescId = zc_MovementString_Desc()), '');

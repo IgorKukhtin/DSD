@@ -70,13 +70,24 @@ BEGIN
                          
                           )
         
-       , tmpMovementMI AS (SELECT MovementItem.MovementId AS MovementId
-                                , Count(MovementItem.Id) AS CountMI 
-                           FROM MovementItem 
-                           WHERE MovementItem.MovementId in (Select tmpMovement.MovementId from tmpMovement)
-                             AND MovementItem.DescId     = zc_MI_Master()
-                             AND MovementItem.isErased   = False
-                           GROUP BY MovementItem.MovementId 
+       , tmpMovementMI AS (SELECT tmpMI.MovementId AS MovementId
+                                , Count (tmpMI.MovementItemId) AS CountMI 
+                           FROM (SELECT MovementItem.MovementId
+                                      , MovementItem.ObjectId AS GoodsId
+                                      , COALESCE (MILinkObject_GoodsKind.ObjectId, 0) AS GoodsKindId
+                                      , MAX (MovementItem.Id) AS MovementItemId
+                                 FROM MovementItem
+                                      LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
+                                                                       ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
+                                                                      AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
+                                 WHERE MovementItem.MovementId in (Select tmpMovement.MovementId from tmpMovement)
+                                   AND MovementItem.DescId     = zc_MI_Master()
+                                   AND MovementItem.isErased   = False
+                                 GROUP BY MovementItem.MovementId
+                                        , MovementItem.ObjectId
+                                        , COALESCE (MILinkObject_GoodsKind.ObjectId, 0)
+                                ) AS tmpMI
+                           GROUP BY tmpMI.MovementId 
                           )
        , tmpPersonal AS (SELECT tmp.MemberId
                               , Object_Personal_View.PersonalId

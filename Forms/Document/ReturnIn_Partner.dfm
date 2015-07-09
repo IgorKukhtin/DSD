@@ -12,17 +12,17 @@ inherited ReturnIn_PartnerForm: TReturnIn_PartnerForm
     Height = 471
     ExplicitTop = 166
     ExplicitWidth = 1139
-    ExplicitHeight = 502
+    ExplicitHeight = 471
     ClientRectBottom = 471
     ClientRectRight = 1139
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 1139
-      ExplicitHeight = 478
+      ExplicitHeight = 447
       inherited cxGrid: TcxGrid
         Width = 1139
         Height = 447
         ExplicitWidth = 1139
-        ExplicitHeight = 478
+        ExplicitHeight = 447
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -199,7 +199,6 @@ inherited ReturnIn_PartnerForm: TReturnIn_PartnerForm
     object cxTabSheetTaxCorrective: TcxTabSheet
       Caption = #1050#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1082#1080
       ImageIndex = 2
-      ExplicitHeight = 478
       object cxGridTaxCorrective: TcxGrid
         Left = 0
         Top = 0
@@ -207,7 +206,6 @@ inherited ReturnIn_PartnerForm: TReturnIn_PartnerForm
         Height = 447
         Align = alClient
         TabOrder = 0
-        ExplicitHeight = 478
         object cxGridTaxCorrectiveDBTableView: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = TaxCorrectiveDS
@@ -954,6 +952,15 @@ inherited ReturnIn_PartnerForm: TReturnIn_PartnerForm
     end
     inherited actMISetUnErased: TdsdUpdateErased
       TabSheet = tsMain
+    end
+    inherited actInsertUpdateMovement: TdsdExecStoredProc
+      StoredProcList = <
+        item
+          StoredProc = spInsertUpdateMovement
+        end
+        item
+          StoredProc = spSelect
+        end>
     end
     object actUpdateTaxCorrectiveDS: TdsdUpdateDataSet [7]
       Category = 'DSDLib'
@@ -2332,6 +2339,7 @@ inherited ReturnIn_PartnerForm: TReturnIn_PartnerForm
     Top = 52
   end
   object RefreshDispatcher: TRefreshDispatcher
+    CheckIdParam = True
     IdParam.Value = Null
     IdParam.Component = FormParams
     IdParam.ComponentItem = 'Id'

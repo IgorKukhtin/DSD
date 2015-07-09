@@ -11,6 +11,9 @@ BEGIN
      PERFORM lpComplete_Movement_All_CreateTemp();
 
      -- таблица - количественный остаток
+     CREATE TEMP TABLE _tmpGoods_Complete_Inventory (GoodsId Integer) ON COMMIT DROP;
+
+     -- таблица - количественный остаток
      CREATE TEMP TABLE _tmpRemainsCount (MovementItemId Integer, ContainerId_Goods Integer, GoodsId Integer, OperCount TFloat) ON COMMIT DROP;
      -- таблица - суммовой остаток
      CREATE TEMP TABLE _tmpRemainsSumm (ContainerId_Goods Integer, ContainerId Integer, AccountId Integer, GoodsId Integer, OperSumm TFloat) ON COMMIT DROP;

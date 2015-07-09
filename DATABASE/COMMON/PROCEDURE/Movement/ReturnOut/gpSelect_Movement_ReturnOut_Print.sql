@@ -401,7 +401,7 @@ BEGIN
 
                          END) AS AmountPartner
              FROM MovementItem
-                  INNER JOIN MovementItemFloat AS MIFloat_Price
+                  LEFT JOIN MovementItemFloat AS MIFloat_Price
                                                ON MIFloat_Price.MovementItemId = MovementItem.Id
                                               AND MIFloat_Price.DescId = zc_MIFloat_Price()
                                               -- AND MIFloat_Price.ValueData <> 0
