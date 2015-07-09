@@ -195,6 +195,56 @@ object Report_GoodsBalanceForm: TReport_GoodsBalanceForm
           Format = ',0.####'
           Kind = skSum
           Column = SummOut
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = SummPriceListStart
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = SummPriceListEnd
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = CountIn_Weight_gp
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = CountLoss_sh
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = CountLoss_Weight
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = SummLoss
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = CountInventory_sh
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = CountInventory_Weight
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = SummInventory
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = SummInventory_RePrice
         end>
       DataController.Summary.FooterSummaryItems = <
         item
@@ -361,6 +411,56 @@ object Report_GoodsBalanceForm: TReport_GoodsBalanceForm
           Format = ',0.####'
           Kind = skSum
           Column = SummOut
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = SummPriceListStart
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = SummPriceListEnd
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = CountIn_Weight_gp
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = CountLoss_sh
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = CountLoss_Weight
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = SummLoss
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = CountInventory_sh
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = CountInventory_Weight
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = SummInventory
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = SummInventory_RePrice
         end>
       DataController.Summary.SummaryGroups = <>
       Images = dmMain.SortImageList
@@ -497,6 +597,7 @@ object Report_GoodsBalanceForm: TReport_GoodsBalanceForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
+        VisibleForCustomization = False
         Width = 80
       end
       object CountStart_sh: TcxGridDBColumn
@@ -520,6 +621,30 @@ object Report_GoodsBalanceForm: TReport_GoodsBalanceForm
         HeaderAlignmentVert = vaCenter
         Width = 80
       end
+      object PriceStart: TcxGridDBColumn
+        Caption = #1086#1089#1090'. '#1085#1072#1095'. '#1094'. c/c'
+        DataBinding.FieldName = 'PriceStart'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.####;-,0.####; ;'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 55
+      end
+      object PriceListStart: TcxGridDBColumn
+        Caption = #1086#1089#1090'. '#1085#1072#1095'. '#1094'. '#1087#1088#1072#1081#1089
+        DataBinding.FieldName = 'PriceListStart'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.####;-,0.####; ;'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 80
+      end
       object SummStart: TcxGridDBColumn
         Caption = #1054#1089#1090'. '#1085#1072#1095'. '#1089#1091#1084#1084#1072' '#1089'/'#1089
         DataBinding.FieldName = 'SummStart'
@@ -532,32 +657,19 @@ object Report_GoodsBalanceForm: TReport_GoodsBalanceForm
         Options.Editing = False
         Width = 80
       end
-      object PriceStart: TcxGridDBColumn
-        Caption = #1094#1077#1085#1072' c/c '#1085#1072#1095'.'
-        DataBinding.FieldName = 'PriceStart'
+      object SummPriceListStart: TcxGridDBColumn
+        Caption = #1054#1089#1090'. '#1085#1072#1095'. '#1089#1091#1084#1084#1072' '#1055#1056#1040#1049#1057
+        DataBinding.FieldName = 'SummPriceListStart'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DecimalPlaces = 4
         Properties.DisplayFormat = ',0.####;-,0.####; ;'
         Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Options.Editing = False
-        Width = 55
-      end
-      object PriceListStart: TcxGridDBColumn
-        Caption = #1094#1077#1085#1072' '#1087#1088#1072#1081#1089' '#1085#1072#1095'.'
-        DataBinding.FieldName = 'PriceListStart'
-        PropertiesClassName = 'TcxCurrencyEditProperties'
-        Properties.DecimalPlaces = 4
-        Properties.DisplayFormat = ',0.####;-,0.####; ;'
-        Visible = False
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Options.Editing = False
-        Width = 80
+        Width = 70
       end
       object isPriceStart_diff: TcxGridDBColumn
-        Caption = #1054#1090#1082#1083'. '#1085#1072#1095'. '#1094#1077#1085#1072' '#1089'/'#1089
+        Caption = #1054#1090#1082#1083'. '#1085#1072#1095'. '#1094'. '#1087#1088#1072#1081#1089
         DataBinding.FieldName = 'isPriceStart_diff'
         Visible = False
         HeaderAlignmentHorz = taCenter
@@ -574,6 +686,7 @@ object Report_GoodsBalanceForm: TReport_GoodsBalanceForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
+        VisibleForCustomization = False
         Width = 80
       end
       object CountEnd_sh: TcxGridDBColumn
@@ -597,6 +710,30 @@ object Report_GoodsBalanceForm: TReport_GoodsBalanceForm
         HeaderAlignmentVert = vaCenter
         Width = 80
       end
+      object PriceEnd: TcxGridDBColumn
+        Caption = #1086#1089#1090'. '#1082#1086#1085#1077#1095'. '#1094'. c/c'
+        DataBinding.FieldName = 'PriceEnd'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.####;-,0.####; ;'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 60
+      end
+      object PriceListEnd: TcxGridDBColumn
+        Caption = #1086#1089#1090'. '#1082#1086#1085#1077#1095'. '#1094'. '#1087#1088#1072#1081#1089
+        DataBinding.FieldName = 'PriceListEnd'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.####;-,0.####; ;'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 80
+      end
       object SummEnd: TcxGridDBColumn
         Caption = #1054#1089#1090'. '#1082#1086#1085#1077#1095'. '#1089#1091#1084#1084#1072' '#1089'/'#1089
         DataBinding.FieldName = 'SummEnd'
@@ -609,32 +746,19 @@ object Report_GoodsBalanceForm: TReport_GoodsBalanceForm
         Options.Editing = False
         Width = 80
       end
-      object PriceEnd: TcxGridDBColumn
-        Caption = #1094#1077#1085#1072' c/c '#1082#1086#1085#1077#1095'.'
-        DataBinding.FieldName = 'PriceEnd'
+      object SummPriceListEnd: TcxGridDBColumn
+        Caption = #1054#1089#1090'. '#1082#1086#1085#1077#1095'. '#1089#1091#1084#1084#1072' '#1055#1056#1040#1049#1057
+        DataBinding.FieldName = 'SummPriceListEnd'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DecimalPlaces = 4
         Properties.DisplayFormat = ',0.####;-,0.####; ;'
         Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Options.Editing = False
-        Width = 60
-      end
-      object PriceListEnd: TcxGridDBColumn
-        Caption = #1094#1077#1085#1072' '#1087#1088#1072#1081#1089' '#1082#1086#1085#1077#1095'.'
-        DataBinding.FieldName = 'PriceListEnd'
-        PropertiesClassName = 'TcxCurrencyEditProperties'
-        Properties.DecimalPlaces = 4
-        Properties.DisplayFormat = ',0.####;-,0.####; ;'
-        Visible = False
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Options.Editing = False
         Width = 80
       end
       object isPriceEnd_diff: TcxGridDBColumn
-        Caption = #1054#1090#1082#1083'. '#1082#1086#1085#1077#1095'. '#1094#1077#1085#1072' '#1089'/'#1089
+        Caption = #1054#1090#1082#1083'. '#1082#1086#1085#1077#1095'. '#1094'. '#1087#1088#1072#1081#1089
         DataBinding.FieldName = 'isPriceEnd_diff'
         Visible = False
         HeaderAlignmentHorz = taCenter
@@ -651,6 +775,7 @@ object Report_GoodsBalanceForm: TReport_GoodsBalanceForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
+        VisibleForCustomization = False
         Width = 80
       end
       object CountEnd_sh_calc: TcxGridDBColumn
@@ -684,6 +809,7 @@ object Report_GoodsBalanceForm: TReport_GoodsBalanceForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
+        VisibleForCustomization = False
         Width = 80
       end
       object CountIn_sh_calc: TcxGridDBColumn
@@ -717,6 +843,7 @@ object Report_GoodsBalanceForm: TReport_GoodsBalanceForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
+        VisibleForCustomization = False
         Width = 80
       end
       object CountOut_sh_calc: TcxGridDBColumn
@@ -750,6 +877,7 @@ object Report_GoodsBalanceForm: TReport_GoodsBalanceForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
+        VisibleForCustomization = False
         Width = 90
       end
       object CountIn_sh: TcxGridDBColumn
@@ -773,6 +901,17 @@ object Report_GoodsBalanceForm: TReport_GoodsBalanceForm
         HeaderAlignmentVert = vaCenter
         Width = 80
       end
+      object PriceIn: TcxGridDBColumn
+        Caption = #1092#1072#1082#1090' '#1087#1088#1080#1093#1086#1076' '#1094'. '#1089'/'#1089
+        DataBinding.FieldName = 'PriceIn'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.####;-,0.####; ;'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 60
+      end
       object SummIn: TcxGridDBColumn
         Caption = #1060#1072#1082#1090' '#1087#1088#1080#1093#1086#1076' '#1089#1091#1084#1084#1072' '#1089'/'#1089
         DataBinding.FieldName = 'SummIn'
@@ -784,17 +923,6 @@ object Report_GoodsBalanceForm: TReport_GoodsBalanceForm
         HeaderAlignmentVert = vaCenter
         Width = 70
       end
-      object PriceIn: TcxGridDBColumn
-        Caption = #1094#1077#1085#1072' '#1089'/'#1089' '#1092#1072#1082#1090' '#1087#1088#1080#1093'.'
-        DataBinding.FieldName = 'PriceIn'
-        PropertiesClassName = 'TcxCurrencyEditProperties'
-        Properties.DecimalPlaces = 4
-        Properties.DisplayFormat = ',0.####;-,0.####; ;'
-        Visible = False
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Width = 60
-      end
       object CountOut: TcxGridDBColumn
         Caption = #1060#1072#1082#1090' '#1088#1072#1089#1093#1086#1076' '#1082#1086#1083'.'
         DataBinding.FieldName = 'CountOut'
@@ -805,6 +933,7 @@ object Report_GoodsBalanceForm: TReport_GoodsBalanceForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
+        VisibleForCustomization = False
         Width = 90
       end
       object CountOut_sh: TcxGridDBColumn
@@ -828,6 +957,17 @@ object Report_GoodsBalanceForm: TReport_GoodsBalanceForm
         HeaderAlignmentVert = vaCenter
         Width = 80
       end
+      object PriceOut: TcxGridDBColumn
+        Caption = #1092#1072#1082#1090' '#1088#1072#1089#1093#1086#1076' '#1094'. '#1089'/'#1089
+        DataBinding.FieldName = 'PriceOut'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.####;-,0.####; ;'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 60
+      end
       object SummOut: TcxGridDBColumn
         Caption = #1060#1072#1082#1090' '#1088#1072#1089#1093#1086#1076' '#1089#1091#1084#1084#1072' '#1089'/'#1089
         DataBinding.FieldName = 'SummOut'
@@ -839,93 +979,125 @@ object Report_GoodsBalanceForm: TReport_GoodsBalanceForm
         HeaderAlignmentVert = vaCenter
         Width = 70
       end
-      object PriceOut: TcxGridDBColumn
-        Caption = #1094#1077#1085#1072' '#1089'/'#1089' '#1092#1072#1082#1090' '#1088#1072#1089#1093'.'
-        DataBinding.FieldName = 'PriceOut'
+      object CountLoss_sh: TcxGridDBColumn
+        Caption = #1057#1087#1080#1089#1072#1085#1080#1077' '#1096#1090'.'
+        DataBinding.FieldName = 'CountLoss_sh'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DecimalPlaces = 4
         Properties.DisplayFormat = ',0.####;-,0.####; ;'
         Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 60
-      end
-      object CountReal: TcxGridDBColumn
-        Caption = #1054#1089#1090'. '#1082#1086#1083'. '#1087#1086#1089#1083#1077#1076#1085#1080#1081
-        DataBinding.FieldName = 'CountReal'
-        PropertiesClassName = 'TcxCurrencyEditProperties'
-        Properties.DecimalPlaces = 4
-        Properties.DisplayFormat = ',0.####;-,0.####; ;'
-        Visible = False
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Width = 80
-      end
-      object CountReal_sh: TcxGridDBColumn
-        Caption = #1054#1089#1090'. '#1096#1090'. '#1087#1086#1089#1083#1077#1076#1085#1080#1081
-        DataBinding.FieldName = 'CountReal_sh'
-        PropertiesClassName = 'TcxCurrencyEditProperties'
-        Properties.DecimalPlaces = 4
-        Properties.DisplayFormat = ',0.####;-,0.####; ;'
-        Visible = False
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Width = 80
-      end
-      object CountReal_Weight: TcxGridDBColumn
-        Caption = #1054#1089#1090'. '#1074#1077#1089' '#1087#1086#1089#1083#1077#1076#1085#1080#1081
-        DataBinding.FieldName = 'CountReal_Weight'
-        PropertiesClassName = 'TcxCurrencyEditProperties'
-        Properties.DecimalPlaces = 4
-        Properties.DisplayFormat = ',0.####;-,0.####; ;'
-        Visible = False
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Width = 80
-      end
-      object SummReal: TcxGridDBColumn
-        Caption = #1054#1089#1090'. '#1087#1086#1089#1083'. '#1089#1091#1084#1084#1072' '#1089'/'#1089
-        DataBinding.FieldName = 'SummReal'
-        PropertiesClassName = 'TcxCurrencyEditProperties'
-        Properties.DecimalPlaces = 4
-        Properties.DisplayFormat = ',0.####;-,0.####; ;'
-        Visible = False
         Width = 70
       end
-      object PriceReal: TcxGridDBColumn
-        Caption = #1094#1077#1085#1072' c/c '#1087#1086#1089#1083'.'
-        DataBinding.FieldName = 'PriceReal'
+      object CountLoss_Weight: TcxGridDBColumn
+        Caption = #1057#1087#1080#1089#1072#1085#1080#1077' '#1074#1077#1089
+        DataBinding.FieldName = 'CountLoss_Weight'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.####;-,0.####; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 70
+      end
+      object PriceLoss: TcxGridDBColumn
+        Caption = #1089#1087#1080#1089#1072#1085#1080#1077' '#1094'. '#1089'/'#1089
+        DataBinding.FieldName = 'PriceLoss'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DecimalPlaces = 4
         Properties.DisplayFormat = ',0.####;-,0.####; ;'
         Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Options.Editing = False
-        Width = 60
+        Width = 70
       end
-      object Weight_byCount: TcxGridDBColumn
-        Caption = #1042#1077#1089' 1 '#1073#1090'.'
-        DataBinding.FieldName = 'Weight_byCount'
+      object SummLoss: TcxGridDBColumn
+        Caption = #1057#1087#1080#1089#1072#1085#1080#1077' '#1089#1091#1084#1084#1072' '#1089'/'#1089
+        DataBinding.FieldName = 'SummLoss'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.####;-,0.####; ;'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 70
+      end
+      object CountInventory_sh: TcxGridDBColumn
+        Caption = #1048#1085#1074#1077#1085#1090'. '#1096#1090'.'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.####;-,0.####; ;'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 70
+      end
+      object CountInventory_Weight: TcxGridDBColumn
+        Caption = #1048#1085#1074#1077#1085#1090'. '#1074#1077#1089
+        DataBinding.FieldName = 'CountInventory_Weight'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DecimalPlaces = 4
         Properties.DisplayFormat = ',0.####;-,0.####; ;'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 50
+        Width = 70
+      end
+      object PriceInventory: TcxGridDBColumn
+        Caption = #1080#1085#1074#1077#1085#1090'. '#1094'. '#1089'/'#1089
+        DataBinding.FieldName = 'PriceInventory'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.####;-,0.####; ;'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 70
+      end
+      object SummInventory: TcxGridDBColumn
+        Caption = #1048#1085#1074#1077#1085#1090'. '#1089#1091#1084#1084#1072' '#1089'/'#1089
+        DataBinding.FieldName = 'SummInventory'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.####;-,0.####; ;'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 70
+      end
+      object SummInventory_RePrice: TcxGridDBColumn
+        Caption = #1048#1085#1074#1077#1085#1090'. '#1087#1077#1088#1077#1086#1094#1077#1085#1082#1072' '#1089'/'#1089
+        DataBinding.FieldName = 'SummInventory_RePrice'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.####;-,0.####; ;'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 70
+      end
+      object CountIn_Weight_gp: TcxGridDBColumn
+        Caption = #1055#1088#1086#1080#1079#1074'. '#1043#1055' '#1074#1077#1089
+        DataBinding.FieldName = 'CountIn_Weight_gp'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.####;-,0.####; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 70
       end
       object Count_byCount: TcxGridDBColumn
-        Caption = #1055#1088#1080#1093#1086#1076' '#1055#1060' ('#1043#1055')'
+        Caption = #1056#1072#1089#1093#1086#1076' '#1055#1060' ('#1043#1055')'
         DataBinding.FieldName = 'Count_byCount'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DecimalPlaces = 4
         Properties.DisplayFormat = ',0.####;-,0.####; ;'
+        Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 70
       end
       object Count_onCount: TcxGridDBColumn
-        Caption = #1055#1088#1080#1093'. '#1073#1072#1090'. '#1055#1060' ('#1043#1055')'
+        Caption = #1056#1072#1089#1093'. '#1073#1072#1090'. '#1055#1060' ('#1043#1055')'
         DataBinding.FieldName = 'Count_onCount'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DecimalPlaces = 4
@@ -942,7 +1114,7 @@ object Report_GoodsBalanceForm: TReport_GoodsBalanceForm
         Properties.DisplayFormat = ',0.####;-,0.####; ;'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 60
+        Width = 55
       end
       object CountEnd_byCount: TcxGridDBColumn
         Caption = #1054#1089#1090'. '#1073#1090'. '#1082#1086#1085#1077#1095'.'
@@ -952,23 +1124,97 @@ object Report_GoodsBalanceForm: TReport_GoodsBalanceForm
         Properties.DisplayFormat = ',0.####;-,0.####; ;'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        Width = 55
+      end
+      object Weight_byCount: TcxGridDBColumn
+        Caption = #1042#1077#1089' 1 '#1073#1090'.'
+        DataBinding.FieldName = 'Weight_byCount'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.####;-,0.####; ;'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 50
+      end
+      object CountReal: TcxGridDBColumn
+        Caption = #1054#1089#1090'. '#1090#1077#1082'. '#1082#1086#1083'.'
+        DataBinding.FieldName = 'CountReal'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.####;-,0.####; ;'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        VisibleForCustomization = False
+        Width = 80
+      end
+      object CountReal_sh: TcxGridDBColumn
+        Caption = #1054#1089#1090'. '#1090#1077#1082'. '#1096#1090'.'
+        DataBinding.FieldName = 'CountReal_sh'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.####;-,0.####; ;'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 80
+      end
+      object CountReal_Weight: TcxGridDBColumn
+        Caption = #1054#1089#1090'. '#1090#1077#1082'. '#1074#1077#1089
+        DataBinding.FieldName = 'CountReal_Weight'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.####;-,0.####; ;'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 80
+      end
+      object PriceReal: TcxGridDBColumn
+        Caption = #1086#1089#1090'. '#1090#1077#1082'. '#1094'. c/c'
+        DataBinding.FieldName = 'PriceReal'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.####;-,0.####; ;'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
         Width = 60
+      end
+      object SummReal: TcxGridDBColumn
+        Caption = #1054#1089#1090'. '#1090#1077#1082'. '#1089#1091#1084#1084#1072' '#1089'/'#1089
+        DataBinding.FieldName = 'SummReal'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.####;-,0.####; ;'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 70
       end
       object ColorB_GreenL: TcxGridDBColumn
         DataBinding.FieldName = 'ColorB_GreenL'
         Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
         VisibleForCustomization = False
         Width = 55
       end
       object ColorB_Yelow: TcxGridDBColumn
         DataBinding.FieldName = 'ColorB_Yelow'
         Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
         VisibleForCustomization = False
         Width = 55
       end
       object ColorB_Cyan: TcxGridDBColumn
         DataBinding.FieldName = 'ColorB_Cyan'
         Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
         VisibleForCustomization = False
         Width = 55
       end

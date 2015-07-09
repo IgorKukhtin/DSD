@@ -3,7 +3,7 @@ inherited OrderExternalForm: TOrderExternalForm
   ClientHeight = 668
   ClientWidth = 1391
   ExplicitWidth = 1407
-  ExplicitHeight = 706
+  ExplicitHeight = 703
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -1178,7 +1178,6 @@ inherited OrderExternalForm: TOrderExternalForm
         Value = Null
         Component = ceComment
         DataType = ftString
-        ParamType = ptInput
       end>
     Left = 216
     Top = 248

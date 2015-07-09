@@ -286,7 +286,7 @@ begin
           //
           try
              //Print
-             if MovementDescId = zc_Movement_Sale
+             if (MovementDescId = zc_Movement_Sale)or(MovementDescId = zc_Movement_SendOnPrice)
              then Print_SpecDocument(MovementId,MovementId_by)
              else begin ShowMessage ('Ошибка.Форма печати <Спецификация> не найдена.');exit;end;
           except
@@ -306,7 +306,7 @@ begin
           //
           try
              //Print
-             if MovementDescId = zc_Movement_Sale
+             if (MovementDescId = zc_Movement_Sale)or(MovementDescId = zc_Movement_SendOnPrice)
              then Print_PackDocument(MovementId,MovementId_by)
              else begin ShowMessage ('Ошибка.Форма печати <Упаковочный лист> не найдена.');exit;end;
           except

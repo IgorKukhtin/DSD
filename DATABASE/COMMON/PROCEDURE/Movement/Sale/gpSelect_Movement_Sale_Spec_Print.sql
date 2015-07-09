@@ -136,6 +136,9 @@ BEGIN
            , OH_JuridicalDetails_To.JuridicalAddress                                AS JuridicalAddress_To
            , ObjectString_ToAddress.ValueData                                       AS PartnerAddress_To
 
+           , Object_From.ValueData             		                            AS FromName
+           , Object_To.ValueData                                                    AS ToName
+
            , Object_Goods.ObjectCode                                                AS GoodsCode
            , (Object_Goods.ValueData || CASE WHEN COALESCE (Object_GoodsKind.Id, zc_Enum_GoodsKind_Main()) = zc_Enum_GoodsKind_Main() THEN '' ELSE ' ' || Object_GoodsKind.ValueData END) :: TVarChar AS GoodsName
            , Object_Goods.ValueData                                                 AS GoodsName_two
@@ -151,6 +154,20 @@ BEGIN
 
        FROM tmpMovement
             INNER JOIN tmpMovementItem ON tmpMovementItem.MovementId = tmpMovement.Id
+
+            LEFT JOIN MovementLinkObject AS MovementLinkObject_From
+                                         ON MovementLinkObject_From.MovementId = tmpMovement.Id
+                                        AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
+            LEFT JOIN Object AS Object_From ON Object_From.Id = MovementLinkObject_From.ObjectId
+            LEFT JOIN ObjectLink AS ObjectLink_Unit_Juridical
+                                 ON ObjectLink_Unit_Juridical.ObjectId = Object_From.Id
+                                AND ObjectLink_Unit_Juridical.DescId = zc_ObjectLink_Unit_Juridical()
+
+            LEFT JOIN MovementLinkObject AS MovementLinkObject_To
+                                         ON MovementLinkObject_To.MovementId = tmpMovement.Id
+                                        AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
+            LEFT JOIN Object AS Object_To ON Object_To.Id = MovementLinkObject_To.ObjectId
+
 
             LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = tmpMovementItem.GoodsId
             LEFT JOIN Object AS Object_GoodsKind ON Object_GoodsKind.Id = tmpMovementItem.GoodsKindId
@@ -191,13 +208,7 @@ BEGIN
             LEFT JOIN MovementString AS MovementString_InvNumberOrder
                                      ON MovementString_InvNumberOrder.MovementId = Movement_Sale.Id
                                     AND MovementString_InvNumberOrder.DescId = zc_MovementString_InvNumberOrder()
-            LEFT JOIN MovementLinkObject AS MovementLinkObject_From
-                                         ON MovementLinkObject_From.MovementId = Movement_Sale.Id
-                                        AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
 
-            LEFT JOIN MovementLinkObject AS MovementLinkObject_To
-                                         ON MovementLinkObject_To.MovementId = Movement_Sale.Id
-                                        AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
             LEFT JOIN ObjectLink AS ObjectLink_Partner_Juridical
                                  ON ObjectLink_Partner_Juridical.ObjectId = MovementLinkObject_To.ObjectId
                                 AND ObjectLink_Partner_Juridical.DescId = zc_ObjectLink_Partner_Juridical()
@@ -208,7 +219,7 @@ BEGIN
             LEFT JOIN Object_Contract_View AS View_Contract ON View_Contract.ContractId = MovementLinkObject_Contract.ObjectId
 
             LEFT JOIN ObjectHistory_JuridicalDetails_ViewByDate AS OH_JuridicalDetails_From
-                                                                ON OH_JuridicalDetails_From.JuridicalId = View_Contract.JuridicalBasisId
+                                                                ON OH_JuridicalDetails_From.JuridicalId = COALESCE (ObjectLink_Unit_Juridical.ChildObjectId, View_Contract.JuridicalBasisId)
                                                                AND COALESCE (MovementDate_OperDatePartner.ValueData, Movement_Sale.OperDate) >= OH_JuridicalDetails_From.StartDate
                                                                AND COALESCE (MovementDate_OperDatePartner.ValueData, Movement_Sale.OperDate) <  OH_JuridicalDetails_From.EndDate
             LEFT JOIN ObjectHistory_JuridicalDetails_ViewByDate AS OH_JuridicalDetails_To

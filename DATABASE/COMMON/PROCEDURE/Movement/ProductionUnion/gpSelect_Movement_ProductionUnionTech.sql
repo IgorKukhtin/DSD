@@ -16,6 +16,7 @@ $BODY$
   DECLARE vbUserId Integer;
 
   DECLARE vbFromId_group Integer;
+  DECLARE vbIsTech Boolean;
 
   DECLARE Cursor1 refcursor;
   DECLARE Cursor2 refcursor;
@@ -30,9 +31,11 @@ BEGIN
      -- 
      CREATE TEMP TABLE _tmpListMaster (MovementId Integer, StatusId Integer, InvNumber TVarChar, OperDate TDateTime, MovementItemId Integer, MovementItemId_order Integer, GoodsId Integer, GoodsKindId Integer, GoodsKindId_Complete Integer, ReceiptId Integer, Amount_Order TFloat, CuterCount_Order TFloat, Amount TFloat, CuterCount TFloat) ON COMMIT DROP;
 
+     -- определяется
+     vbIsTech:= NOT EXISTS (SELECT UserId FROM ObjectLink_UserRole_View WHERE UserId = vbUserId AND RoleId IN (343951)); -- Экономист (производство)
 
 
-     WITH tmpMI_order AS (SELECT (Movement.OperDate :: Date + COALESCE (MIFloat_StartProductionInDays.ValueData, 0) :: Integer) :: TDateTime AS OperDate
+     WITH tmpMI_order2 AS (SELECT (Movement.OperDate :: Date + COALESCE (MIFloat_StartProductionInDays.ValueData, 0) :: Integer) :: TDateTime AS OperDate
                                , MAX (MovementItem.Id)                                          AS MovementItemId
                                , COALESCE (MILO_Goods.ObjectId, MovementItem.ObjectId)          AS GoodsId
                                , ObjectLink_Receipt_GoodsKind.ChildObjectId                     AS GoodsKindId
@@ -50,7 +53,10 @@ BEGIN
                                                 THEN COALESCE (MIFloat_CuterCount.ValueData, 0) + COALESCE (MIFloat_CuterCountSecond.ValueData, 0)
                                            ELSE 0
                                       END) AS CuterCount
-                          FROM Movement
+                          FROM (SELECT (inStartDate - INTERVAL '1 DAY') AS StartDate, (inEndDate + INTERVAL '1 DAY') AS EndDate WHERE vbIsTech = TRUE) AS tmpDate
+                               INNER JOIN Movement ON Movement.OperDate BETWEEN tmpDate.StartDate AND tmpDate.EndDate
+                                                  AND Movement.DescId = zc_Movement_OrderInternal()
+                                                  AND Movement.StatusId <> zc_Enum_Status_Erased()
                                INNER JOIN MovementItem ON MovementItem.MovementId = Movement.Id
                                                       AND MovementItem.isErased = FALSE
                                                       AND MovementItem.DescId     = zc_MI_Master()
@@ -91,11 +97,8 @@ BEGIN
                                                    AND OrderType_Unit.DescId = zc_ObjectLink_OrderType_Unit()
 
 
-                          WHERE Movement.OperDate BETWEEN (inStartDate - INTERVAL '1 DAY') AND (inEndDate + INTERVAL '1 DAY')
-                            AND Movement.DescId = zc_Movement_OrderInternal()
-                            AND Movement.StatusId <> zc_Enum_Status_Erased()
-                            AND MLO_To.ObjectId IN (inFromId, vbFromId_group)
-                            AND OrderType_Unit.ChildObjectId = inFromId
+                          WHERE MLO_To.ObjectId IN (inFromId, vbFromId_group)
+                            -- AND OrderType_Unit.ChildObjectId = inFromId
                           GROUP BY Movement.OperDate
                                  , COALESCE (MILO_Goods.ObjectId, MovementItem.ObjectId)
                                  , ObjectLink_Receipt_GoodsKind.ChildObjectId
@@ -114,6 +117,18 @@ BEGIN
                                                 THEN COALESCE (MIFloat_CuterCount.ValueData, 0) + COALESCE (MIFloat_CuterCountSecond.ValueData, 0)
                                            ELSE 0
                                       END) <> 0
+                         )
+     WITH tmpMI_order AS (SELECT tmpMI_order2.OperDate
+                               , tmpMI_order2.MovementItemId
+                               , tmpMI_order2.GoodsId
+                               , tmpMI_order2.GoodsKindId
+                               , tmpMI_order2.GoodsKindId_Complete
+                               , tmpMI_order2.ReceiptId
+                               , tmpMI_order2.ToId
+                               , tmpMI_order2.Amount
+                               , tmpMI_order2.CuterCount
+                          FROM tmpMI_order2
+                          WHERE tmpMI_order2.ToId = inFromId
                          )
    , tmpMI_production AS (SELECT Movement.Id                                                    AS MovementId
                                , Movement.StatusId                                              AS StatusId
@@ -367,7 +382,7 @@ BEGIN
                                INNER JOIN ObjectFloat AS ObjectFloat_Value
                                                       ON ObjectFloat_Value.ObjectId = Object_ReceiptChild.Id
                                                      AND ObjectFloat_Value.DescId = zc_ObjectFloat_ReceiptChild_Value()
-                                                     AND ObjectFloat_Value.ValueData <> 0
+                                                     -- AND ObjectFloat_Value.ValueData <> 0
 
                                LEFT JOIN ObjectBoolean AS ObjectBoolean_WeightMain
                                                        ON ObjectBoolean_WeightMain.ObjectId = Object_ReceiptChild.Id 

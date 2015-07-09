@@ -36,7 +36,7 @@ object GuideMovementForm: TGuideMovementForm
       TabOrder = 0
       object ButtonExit: TSpeedButton
         Left = 326
-        Top = 4
+        Top = 3
         Width = 31
         Height = 29
         Action = actExit
@@ -146,8 +146,8 @@ object GuideMovementForm: TGuideMovementForm
         OnClick = bbViewMIClick
       end
       object bbEDI_Invoice: TSpeedButton
-        Left = 599
-        Top = 2
+        Left = 526
+        Top = 3
         Width = 31
         Height = 29
         Hint = 'EDI <'#1057#1095#1077#1090' - Invoice> '#1086#1090#1087#1088#1072#1074#1080#1090#1100
@@ -191,8 +191,8 @@ object GuideMovementForm: TGuideMovementForm
         OnClick = bbEDI_InvoiceClick
       end
       object bbEDI_Ordspr: TSpeedButton
-        Left = 651
-        Top = 2
+        Left = 578
+        Top = 3
         Width = 31
         Height = 29
         Hint = 'EDI <'#1055#1086#1076#1090#1074#1077#1088#1078#1076#1077#1085#1080#1077' - Ordspr> '#1086#1090#1087#1088#1072#1074#1080#1090#1100
@@ -236,8 +236,8 @@ object GuideMovementForm: TGuideMovementForm
         OnClick = bbEDI_OrdsprClick
       end
       object bbEDI_Desadv: TSpeedButton
-        Left = 704
-        Top = 2
+        Left = 631
+        Top = 3
         Width = 31
         Height = 29
         Hint = 'EDI <'#1059#1074#1077#1076#1086#1084#1083#1077#1085#1080#1077' - Desadv> '#1086#1090#1087#1088#1072#1074#1080#1090#1100
@@ -782,7 +782,7 @@ object GuideMovementForm: TGuideMovementForm
       OnClick = cbPrintQualityClick
     end
     object cbPrintAccount: TCheckBox
-      Left = 1025
+      Left = 801
       Top = 23
       Width = 53
       Height = 17
@@ -797,8 +797,8 @@ object GuideMovementForm: TGuideMovementForm
       OnClick = cbPrintAccountClick
     end
     object cbPrintPack: TCheckBox
-      Left = 790
-      Top = 23
+      Left = 584
+      Top = 3
       Width = 100
       Height = 17
       Caption = #1059#1087#1072#1082#1086#1074#1086#1095#1085#1099#1081
@@ -812,8 +812,8 @@ object GuideMovementForm: TGuideMovementForm
       OnClick = cbPrintPackClick
     end
     object cbPrintSpec: TCheckBox
-      Left = 904
-      Top = 23
+      Left = 694
+      Top = 3
       Width = 110
       Height = 17
       Caption = #1057#1087#1077#1094#1080#1092#1080#1082#1072#1094#1080#1103

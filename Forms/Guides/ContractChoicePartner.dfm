@@ -115,13 +115,20 @@ inherited ContractChoicePartnerForm: TContractChoicePartnerForm
             Width = 55
           end
           object colChangePercent: TcxGridDBColumn
-            Caption = '(-)% '#1089#1082'. (+)% '#1085#1072#1094
+            Caption = '(-)% '#1057#1082#1080#1076'. (+)% '#1053#1072#1094'.'
             DataBinding.FieldName = 'ChangePercent'
-            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 70
+          end
+          object ChangePercentPartner: TcxGridDBColumn
+            Caption = '% '#1053#1072#1094'. '#1055#1072#1074'.'
+            DataBinding.FieldName = 'ChangePercentPartner'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 50
           end
           object DelayDay: TcxGridDBColumn
             Caption = #1059#1089#1083#1086#1074#1080#1077
@@ -340,7 +347,7 @@ inherited ContractChoicePartnerForm: TContractChoicePartnerForm
             Width = 80
           end
           object Id: TcxGridDBColumn
-            Caption = 'Id'
+            Caption = #1050#1083#1102#1095
             DataBinding.FieldName = 'ContainerId'
             PropertiesClassName = 'TcxButtonEditProperties'
             Properties.Buttons = <
@@ -503,6 +510,13 @@ inherited ContractChoicePartnerForm: TContractChoicePartnerForm
           Value = Null
           Component = MasterCDS
           ComponentItem = 'ChangePercent'
+          DataType = ftFloat
+        end
+        item
+          Name = 'ChangePercentPartner'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'ChangePercentPartner'
           DataType = ftFloat
         end
         item

@@ -20,7 +20,7 @@ BEGIN
      IF inNewStatusId = zc_Enum_Status_Erased()
      THEN
          --
-         IF EXISTS (SELECT Movement.Id FROM Movement WHERE Movement.ParentId = inMovementId AND Movement.StatusId = zc_Enum_Status_Complete())
+         IF EXISTS (SELECT Movement.Id FROM Movement WHERE Movement.ParentId = inMovementId AND Movement.StatusId = zc_Enum_Status_Complete() AND Movement.DescId NOT IN (zc_Movement_WeighingPartner(), zc_Movement_WeighingProduction))
          THEN
              -- находим параметры <Child> документа
              SELECT Movement.Id, Movement.OperDate, Movement.InvNumber, MovementDesc.ItemName
@@ -29,6 +29,7 @@ BEGIN
                    FROM Movement
                    WHERE Movement.ParentId = inMovementId
                      AND Movement.StatusId = zc_Enum_Status_Complete()
+                     AND Movement.DescId NOT IN (zc_Movement_WeighingPartner(), zc_Movement_WeighingProduction)
                   ) AS tmpMovement
                   LEFT JOIN Movement ON Movement.Id = tmpMovement.MovementId
                   LEFT JOIN MovementDesc ON MovementDesc.Id = Movement.DescId;

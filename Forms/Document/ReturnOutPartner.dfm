@@ -3,7 +3,7 @@ inherited ReturnOutPartnerForm: TReturnOutPartnerForm
   ClientHeight = 668
   ClientWidth = 1049
   ExplicitWidth = 1065
-  ExplicitHeight = 706
+  ExplicitHeight = 703
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -347,7 +347,7 @@ inherited ReturnOutPartnerForm: TReturnOutPartnerForm
       Width = 77
     end
     object edPriceWithVAT: TcxCheckBox
-      Left = 774
+      Left = 756
       Top = 23
       Caption = #1062#1077#1085#1072' '#1089' '#1053#1044#1057' ('#1076#1072'/'#1085#1077#1090')'
       TabOrder = 14
@@ -366,14 +366,14 @@ inherited ReturnOutPartnerForm: TReturnOutPartnerForm
       Top = 5
       Caption = '% '#1053#1044#1057
     end
-    object edChangePercenTo: TcxCurrencyEdit
-      Left = 624
+    object edChangePercenFrom: TcxCurrencyEdit
+      Left = 756
       Top = 63
-      Properties.DecimalPlaces = 3
-      Properties.DisplayFormat = ',0.###'
+      Properties.DecimalPlaces = 4
+      Properties.DisplayFormat = ',0.####'
       Properties.ReadOnly = True
       TabOrder = 17
-      Width = 144
+      Width = 132
     end
     object cxLabel8: TcxLabel
       Left = 624
@@ -394,12 +394,12 @@ inherited ReturnOutPartnerForm: TReturnOutPartnerForm
       Caption = #1044#1072#1090#1072' '#1076#1086#1082'. '#1091' '#1087#1086#1089#1090'.'
     end
     object cxLabel5: TcxLabel
-      Left = 912
+      Left = 897
       Top = 5
       Caption = #1042#1072#1083#1102#1090#1072' ('#1087#1086#1089#1090#1072#1074#1097#1080#1082')'
     end
     object edCurrencyPartner: TcxButtonEdit
-      Left = 912
+      Left = 897
       Top = 23
       Properties.Buttons = <
         item
@@ -410,28 +410,29 @@ inherited ReturnOutPartnerForm: TReturnOutPartnerForm
       Width = 127
     end
     object cxLabel16: TcxLabel
-      Left = 774
+      Left = 756
       Top = 45
       Caption = '% (-)'#1057#1082'. (+)'#1053#1072#1094'. '#1055#1054#1050#1059#1055'.'
     end
-    object edChangePercentFrom: TcxCurrencyEdit
-      Left = 774
+    object edChangePercent: TcxCurrencyEdit
+      Left = 624
       Top = 63
       Properties.Alignment.Horz = taRightJustify
       Properties.Alignment.Vert = taVCenter
       Properties.DecimalPlaces = 3
-      Properties.DisplayFormat = ',0.###'
+      Properties.DisplayFormat = ',0.####'
+      Properties.ReadOnly = True
       TabOrder = 24
-      Width = 132
+      Width = 124
     end
   end
   object cxLabel14: TcxLabel [2]
-    Left = 912
+    Left = 897
     Top = 45
     Caption = #1042#1072#1083#1102#1090#1072' ('#1094#1077#1085#1072')'
   end
   object edCurrencyDocument: TcxButtonEdit [3]
-    Left = 912
+    Left = 897
     Top = 63
     Properties.Buttons = <
       item
@@ -444,12 +445,12 @@ inherited ReturnOutPartnerForm: TReturnOutPartnerForm
     Width = 78
   end
   object cxLabel12: TcxLabel [4]
-    Left = 995
+    Left = 980
     Top = 45
     Caption = #1050#1091#1088#1089
   end
   object edCurrencyValue: TcxCurrencyEdit [5]
-    Left = 995
+    Left = 980
     Top = 63
     Properties.Alignment.Horz = taRightJustify
     Properties.Alignment.Vert = taVCenter
@@ -1048,7 +1049,7 @@ inherited ReturnOutPartnerForm: TReturnOutPartnerForm
       item
         Name = 'ChangePercent'
         Value = 0.000000000000000000
-        Component = edChangePercenTo
+        Component = edChangePercent
         DataType = ftFloat
       end
       item
@@ -1197,7 +1198,7 @@ inherited ReturnOutPartnerForm: TReturnOutPartnerForm
       item
         Name = 'ChangePercentFrom'
         Value = Null
-        Component = edChangePercentFrom
+        Component = edChangePercenFrom
         DataType = ftFloat
       end>
     Left = 216
@@ -1251,7 +1252,7 @@ inherited ReturnOutPartnerForm: TReturnOutPartnerForm
       item
         Name = 'inChangePercent'
         Value = 0.000000000000000000
-        Component = edChangePercenTo
+        Component = edChangePercent
         DataType = ftFloat
         ParamType = ptInput
       end
@@ -1312,7 +1313,7 @@ inherited ReturnOutPartnerForm: TReturnOutPartnerForm
       item
         Name = 'inChangePercentFrom'
         Value = ''
-        Component = edChangePercentFrom
+        Component = edChangePercenFrom
         DataType = ftFloat
         ParamType = ptInput
       end
@@ -1746,12 +1747,6 @@ inherited ReturnOutPartnerForm: TReturnOutPartnerForm
         Component = ContractGuidesFrom
         ComponentItem = 'TextValue'
         DataType = ftString
-      end
-      item
-        Name = 'ChangePercent'
-        Value = Null
-        Component = edChangePercentFrom
-        DataType = ftFloat
       end>
     Left = 280
     Top = 16
@@ -1806,8 +1801,13 @@ inherited ReturnOutPartnerForm: TReturnOutPartnerForm
       item
         Name = 'ChangePercent'
         Value = 0.000000000000000000
-        Component = edChangePercenTo
+        Component = edChangePercent
         DataType = ftFloat
+      end
+      item
+        Name = 'ChangePercentPartner'
+        Value = Null
+        Component = edChangePercenFrom
       end>
     Left = 496
     Top = 8

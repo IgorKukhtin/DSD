@@ -73,7 +73,7 @@ BEGIN
                                                    , inMovementDescNumber  := inMovementDescNumber
                                                    , inWeighingNumber      := CASE WHEN inId <> 0
                                                                                         THEN (SELECT MovementFloat.ValueData FROM MovementFloat WHERE MovementFloat.MovementId = inId AND MovementFloat.DescId = zc_MovementFloat_WeighingNumber())
-                                                                                   WHEN inMovementDescId NOT IN (zc_Movement_Sale(), zc_Movement_Inventory())
+                                                                                   WHEN inMovementDescId NOT IN (zc_Movement_Sale(), zc_Movement_Inventory(), zc_Movement_SendOnPrice())
                                                                                         THEN 1
                                                                                    ELSE 1 + COALESCE ((SELECT MAX (COALESCE (MovementFloat_WeighingNumber.ValueData, 0))
                                                                                                        FROM Movement

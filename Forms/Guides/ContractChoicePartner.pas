@@ -58,6 +58,7 @@ type
     DocumentDayCount: TcxGridDBColumn;
     actChoiceRoute_30201: TOpenChoiceForm;
     clRouteName: TcxGridDBColumn;
+    ChangePercentPartner: TcxGridDBColumn;
   private
     { Private declarations }
   public

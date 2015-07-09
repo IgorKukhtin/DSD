@@ -141,6 +141,18 @@ type
     SummOut: TcxGridDBColumn;
     PriceIn: TcxGridDBColumn;
     PriceOut: TcxGridDBColumn;
+    SummPriceListStart: TcxGridDBColumn;
+    SummPriceListEnd: TcxGridDBColumn;
+    CountLoss_sh: TcxGridDBColumn;
+    CountLoss_Weight: TcxGridDBColumn;
+    SummLoss: TcxGridDBColumn;
+    PriceLoss: TcxGridDBColumn;
+    CountInventory_sh: TcxGridDBColumn;
+    CountInventory_Weight: TcxGridDBColumn;
+    SummInventory: TcxGridDBColumn;
+    PriceInventory: TcxGridDBColumn;
+    SummInventory_RePrice: TcxGridDBColumn;
+    CountIn_Weight_gp: TcxGridDBColumn;
   private
   public
   end;

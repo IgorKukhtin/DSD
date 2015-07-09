@@ -132,8 +132,8 @@ object IncomePartnerForm: TIncomePartnerForm
       Top = 63
       Properties.Alignment.Horz = taRightJustify
       Properties.Alignment.Vert = taVCenter
-      Properties.DecimalPlaces = 3
-      Properties.DisplayFormat = ',0.###'
+      Properties.DecimalPlaces = 4
+      Properties.DisplayFormat = ',0.####'
       Properties.ReadOnly = True
       TabOrder = 8
       Width = 124
@@ -270,8 +270,9 @@ object IncomePartnerForm: TIncomePartnerForm
       Top = 63
       Properties.Alignment.Horz = taRightJustify
       Properties.Alignment.Vert = taVCenter
-      Properties.DecimalPlaces = 3
-      Properties.DisplayFormat = ',0.###'
+      Properties.DecimalPlaces = 4
+      Properties.DisplayFormat = ',0.####'
+      Properties.ReadOnly = True
       TabOrder = 30
       Width = 132
     end
@@ -1234,12 +1235,6 @@ object IncomePartnerForm: TIncomePartnerForm
         Component = ContractGuidesTo
         ComponentItem = 'TextValue'
         DataType = ftString
-      end
-      item
-        Name = 'ChangePercent'
-        Value = Null
-        Component = edChangePercentTo
-        DataType = ftFloat
       end>
     Left = 504
   end
@@ -2011,6 +2006,12 @@ object IncomePartnerForm: TIncomePartnerForm
         Name = 'ChangePercent'
         Value = 0.000000000000000000
         Component = edChangePercent
+        DataType = ftFloat
+      end
+      item
+        Name = 'ChangePercentPartner'
+        Value = Null
+        Component = edChangePercentTo
         DataType = ftFloat
       end>
     Left = 336

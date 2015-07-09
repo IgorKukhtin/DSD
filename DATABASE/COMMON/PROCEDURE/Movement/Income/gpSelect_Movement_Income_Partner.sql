@@ -238,4 +238,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpSelect_Movement_Income_Partner (inStartDate:= '01.01.2014', inEndDate:= '01.02.2014', inSession:= zfCalc_UserAdmin())
+-- SELECT * FROM gpSelect_Movement_Income_Partner (inStartDate:= '01.01.2014', inEndDate:= '01.02.2014', inIsErased:= FALSE, inSession:= zfCalc_UserAdmin())

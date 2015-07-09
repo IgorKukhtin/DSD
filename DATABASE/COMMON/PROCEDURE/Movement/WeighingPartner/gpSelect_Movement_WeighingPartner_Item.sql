@@ -160,7 +160,7 @@ BEGIN
 
                   , COALESCE (MIFloat_RealWeight.ValueData, 0)   ::TFloat       AS RealWeight
                   , COALESCE (MIFloat_CountTare.ValueData, 0) ::TFloat          AS CountTare
-                  , COALESCE (MIFloat_WeightTare.ValueData, 0)::TFloat          AS WeightTare
+                  , (COALESCE (MIFloat_CountTare.ValueData, 0) * COALESCE (MIFloat_WeightTare.ValueData, 0)) ::TFloat          AS WeightTare
 
                   , COALESCE (MIFloat_HeadCount.ValueData, 0)::TFloat           AS HeadCount
                   , COALESCE (MIFloat_BoxCount.ValueData, 0)::TFloat            AS BoxCount

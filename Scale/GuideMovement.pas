@@ -276,7 +276,7 @@ procedure TGuideMovementForm.myCheckPrintPack;
 begin
      if cbPrintPack.Checked
      then
-         if  (CDS.FieldByName('MovementDescId').AsInteger<>zc_Movement_Sale)
+         if  ((CDS.FieldByName('MovementDescId').AsInteger<>zc_Movement_Sale) and (CDS.FieldByName('MovementDescId').AsInteger<>zc_Movement_SendOnPrice))
           or (CDS.RecordCount=0)//or(isChoice_local=true)
          then cbPrintPack.Checked:=false;
 end;
@@ -285,7 +285,7 @@ procedure TGuideMovementForm.myCheckPrintSpec;
 begin
      if cbPrintSpec.Checked
      then
-         if  (CDS.FieldByName('MovementDescId').AsInteger<>zc_Movement_Sale)
+         if  ((CDS.FieldByName('MovementDescId').AsInteger<>zc_Movement_Sale) and (CDS.FieldByName('MovementDescId').AsInteger<>zc_Movement_SendOnPrice))
           or (CDS.RecordCount=0)//or(isChoice_local=true)
          then cbPrintSpec.Checked:=false;
 end;

@@ -3,26 +3,26 @@ inherited Sale_PartnerForm: TSale_PartnerForm
   ClientHeight = 668
   ClientWidth = 1355
   ExplicitWidth = 1371
-  ExplicitHeight = 706
+  ExplicitHeight = 703
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 166
     Width = 1355
     Height = 502
-    ExplicitTop = 126
+    ExplicitTop = 166
     ExplicitWidth = 1355
-    ExplicitHeight = 542
+    ExplicitHeight = 502
     ClientRectBottom = 502
     ClientRectRight = 1355
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 1355
-      ExplicitHeight = 518
+      ExplicitHeight = 478
       inherited cxGrid: TcxGrid
         Width = 1355
         Height = 478
         ExplicitWidth = 1355
-        ExplicitHeight = 518
+        ExplicitHeight = 478
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -653,7 +653,7 @@ inherited Sale_PartnerForm: TSale_PartnerForm
       Left = 255
       Top = 103
       TabOrder = 46
-      Width = 584
+      Width = 545
     end
     object cbCalcAmountPartner: TcxCheckBox
       Left = 8

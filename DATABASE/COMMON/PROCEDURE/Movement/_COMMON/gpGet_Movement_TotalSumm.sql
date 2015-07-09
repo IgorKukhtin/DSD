@@ -16,7 +16,11 @@ BEGIN
 
      RETURN QUERY 
        SELECT
-            ('Итого: '||trim (to_char (COALESCE (MovementFloat_TotalSummPVAT.ValueData, MovementFloat_TotalSumm.ValueData) , '999 999 999 999 999D99')))::TVarChar  AS TotalSumm
+            ('Итого: '||trim (to_char (COALESCE (MovementFloat_TotalSummPVAT.ValueData, MovementFloat_TotalSumm.ValueData) , '999 999 999 999 999D99'))
+                      || CASE WHEN MovementFloat_TotalSummPacker.ValueData <> 0 THEN  ' + '||trim (to_char (COALESCE (MovementFloat_TotalSummPacker.ValueData, MovementFloat_TotalSummPacker.ValueData) , '999 999 999 999 999D99'))
+                              ELSE ''
+                         END 
+            )::TVarChar  AS TotalSumm
        FROM Movement
             LEFT JOIN MovementFloat AS MovementFloat_TotalSummPVAT
                                     ON MovementFloat_TotalSummPVAT.MovementId =  Movement.Id
@@ -25,6 +29,9 @@ BEGIN
             LEFT JOIN MovementFloat AS MovementFloat_TotalSumm
                                     ON MovementFloat_TotalSumm.MovementId =  Movement.Id
                                    AND MovementFloat_TotalSumm.DescId = zc_MovementFloat_TotalSumm()
+            LEFT JOIN MovementFloat AS MovementFloat_TotalSummPacker
+                                    ON MovementFloat_TotalSummPacker.MovementId =  Movement.Id
+                                   AND MovementFloat_TotalSummPacker.DescId = zc_MovementFloat_TotalSummPacker()
        WHERE Movement.Id = inMovementId;
   
 END;

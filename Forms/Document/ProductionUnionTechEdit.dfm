@@ -562,21 +562,6 @@
         ParamType = ptInput
       end
       item
-        Name = 'GoodsId'
-        Value = ''
-        Component = ReceiptGoodsGuides
-        ComponentItem = 'Key'
-        ParamType = ptInput
-      end
-      item
-        Name = 'GoodsName'
-        Value = ''
-        Component = ReceiptGoodsGuides
-        ComponentItem = 'TextValue'
-        DataType = ftString
-        ParamType = ptInput
-      end
-      item
         Name = 'GoodsKindId'
         Value = ''
         Component = GooodsKindGuides
@@ -666,28 +651,6 @@
         ParamType = ptInput
       end
       item
-        Name = 'ReceiptId'
-        Value = ''
-        Component = ReceiptGuides
-        ComponentItem = 'Key'
-        ParamType = ptInput
-      end
-      item
-        Name = 'ReceiptName'
-        Value = ''
-        Component = ReceiptGuides
-        ComponentItem = 'TextValue'
-        DataType = ftString
-        ParamType = ptInput
-      end
-      item
-        Name = 'ReceiptCode_user'
-        Value = Null
-        Component = ceReceiptCode
-        DataType = ftString
-        ParamType = ptInput
-      end
-      item
         Name = 'GoodsKindId'
         Value = ''
         Component = GooodsKindGuides
@@ -697,19 +660,6 @@
         Name = 'GoodsKindName'
         Value = ''
         Component = GooodsKindGuides
-        ComponentItem = 'TextValue'
-        DataType = ftString
-      end
-      item
-        Name = 'GoodsKindCompleteId'
-        Value = Null
-        Component = GooodsKindCompleteGuides
-        ComponentItem = 'Key'
-      end
-      item
-        Name = 'GoodsKindCompleteName'
-        Value = Null
-        Component = GooodsKindCompleteGuides
         ComponentItem = 'TextValue'
         DataType = ftString
       end>

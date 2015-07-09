@@ -24,6 +24,7 @@ $BODY$
   DECLARE vbUserId Integer;
 
   DECLARE vbUnitId Integer;
+  DECLARE vbPriceListId Integer;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      -- vbUserId := PERFORM lpCheckRight (inSession, zc_Enum_Process_Select_MI_Income());
@@ -35,6 +36,8 @@ BEGIN
      THEN vbUnitId:= NULL;
      END IF;
 
+     -- определяется - Пав-ны приход
+     vbPriceListId:= (SELECT 140208 WHERE EXISTS (SELECT UserId FROM ObjectLink_UserRole_View WHERE UserId = vbUserId AND RoleId IN (80548, zc_Enum_Role_Admin()))); -- Бухгалтер ПАВИЛЬОНЫ
 
      -- Результат
      IF inShowAll THEN 
@@ -56,6 +59,7 @@ BEGIN
                              AND CLO_Unit.DescId = zc_ContainerLinkObject_Unit()
                              AND CLO_Account.ContainerId IS NULL
                           )
+          , tmpPrice AS (SELECT tmp.GoodsId, tmp.ValuePrice FROM lfSelect_ObjectHistory_PriceListItem (inPriceListId:= vbPriceListId, inOperDate:= (SELECT Movement.OperDate FROM Movement WHERE Movement.Id = inMovementId)) AS tmp)
        SELECT
              0 AS Id
            , tmpGoods.GoodsId
@@ -68,8 +72,8 @@ BEGIN
            , CAST (NULL AS TFloat) AS AmountPartner
            , CAST (NULL AS TFloat) AS AmountPacker
 
-           , CAST (NULL AS TFloat) AS Price
-           , CAST (NULL AS TFloat) AS CountForPrice
+           , tmpPrice.ValuePrice  AS Price
+           , 1      :: TFloat   AS CountForPrice
 
            , CAST (NULL AS TFloat) AS LiveWeight
            , CAST (NULL AS TFloat) AS HeadCount
@@ -120,6 +124,8 @@ BEGIN
                       ) AS tmpMI ON tmpMI.GoodsId     = tmpGoods.GoodsId
                                 AND tmpMI.GoodsKindId = tmpGoods.GoodsKindId
 
+            LEFT JOIN tmpPrice ON tmpPrice.GoodsId = tmpGoods.GoodsId
+
             LEFT JOIN tmpRemains ON tmpRemains.GoodsId = tmpGoods.GoodsId
                                 AND tmpRemains.GoodsKindId = tmpGoods.GoodsKindId
 
@@ -136,6 +142,7 @@ BEGIN
             LEFT JOIN Object AS Object_Measure ON Object_Measure.Id = ObjectLink_Goods_Measure.ChildObjectId
 
        WHERE tmpMI.GoodsId IS NULL
+         AND (tmpPrice.ValuePrice <> 0 OR vbPriceListId IS NULL)
 
       UNION ALL
        SELECT

@@ -140,6 +140,7 @@ BEGIN
            , View_InfoMoney.InfoMoneyDestinationName
            , View_InfoMoney.InfoMoneyCode
            , View_InfoMoney.InfoMoneyName
+           , Object_Member.Id         AS PersonalPackerId
            , Object_Member.ValueData  AS PersonalPackerName
 
            , Object_CurrencyDocument.ValueData AS CurrencyDocumentName
@@ -275,6 +276,7 @@ BEGIN
            , Object_Measure.ValueData        AS MeasureName
            , tmpMI.Amount                    AS Amount
            , tmpMI.AmountPartner             AS AmountPartner
+           , tmpMI.AmountPacker              AS AmountPacker
           
            , tmpMI.Price                     AS Price
            , tmpMI.CountForPrice             AS CountForPrice
@@ -352,8 +354,8 @@ BEGIN
                               WHEN Movement.DescId IN (zc_Movement_SendOnPrice()) AND vbIsProcess_BranchIn = TRUE
                                    THEN COALESCE (MIFloat_AmountPartner.ValueData, 0)
                               ELSE MovementItem.Amount
-
                          END) AS AmountPartner
+                  , SUM (COALESCE (MIFloat_AmountPacker.VAlueData, 0)) AS AmountPacker
              FROM MovementItem
                   LEFT JOIN MovementItemFloat AS MIFloat_Price
                                                ON MIFloat_Price.MovementItemId = MovementItem.Id
@@ -362,6 +364,9 @@ BEGIN
                   LEFT JOIN MovementItemFloat AS MIFloat_AmountPartner
                                               ON MIFloat_AmountPartner.MovementItemId = MovementItem.Id
                                              AND MIFloat_AmountPartner.DescId = zc_MIFloat_AmountPartner()
+                  LEFT JOIN MovementItemFloat AS MIFloat_AmountPacker
+                                              ON MIFloat_AmountPacker.MovementItemId = MovementItem.Id
+                                             AND MIFloat_AmountPacker.DescId = zc_MIFloat_AmountPacker()
                   LEFT JOIN Movement ON Movement.Id = MovementItem.MovementId
 
                   LEFT JOIN MovementItemFloat AS MIFloat_CountForPrice
@@ -394,7 +399,7 @@ BEGIN
             LEFT JOIN Object_GoodsByGoodsKind_View ON Object_GoodsByGoodsKind_View.GoodsId = Object_Goods.Id
                                                   AND Object_GoodsByGoodsKind_View.GoodsKindId = Object_GoodsKind.Id
 
-       -- WHERE tmpMI.AmountPartner <> 0
+       WHERE tmpMI.AmountPartner <> 0 OR tmpMI.AmountPacker <> 0
        ORDER BY Object_Goods.ValueData, Object_GoodsKind.ValueData
 
        ;
@@ -410,10 +415,7 @@ ALTER FUNCTION gpSelect_Movement_Income_Print (Integer,  TVarChar) OWNER TO post
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».   Ã‡Ì¸ÍÓ ƒ.¿.
  05.06.15         * 
-
 */
 
 -- ÚÂÒÚ
 -- SELECT * FROM gpSelect_Movement_Income_Print (inMovementId := 432692, inSession:= '5');
-
---select * from gpSelect_Movement_Income_Print(inMovementId := 357286 ,  inSession := '5');

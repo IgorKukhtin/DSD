@@ -228,4 +228,4 @@ ALTER FUNCTION gpSelect_Movement_Income (TDateTime, TDateTime, Boolean, TVarChar
 */
 
 -- тест
--- SELECT * FROM gpSelect_Movement_Income (inStartDate:= '01.01.2014', inEndDate:= '01.02.2014', inSession:= zfCalc_UserAdmin())
+-- SELECT * FROM gpSelect_Movement_Income (inStartDate:= '01.01.2015', inEndDate:= '01.02.2015', inIsErased:= FALSE, inSession:= zfCalc_UserAdmin())

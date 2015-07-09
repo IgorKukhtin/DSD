@@ -38,7 +38,7 @@ type
     edPriceWithVAT: TcxCheckBox;
     edVATPercent: TcxCurrencyEdit;
     cxLabel7: TcxLabel;
-    edChangePercenTo: TcxCurrencyEdit;
+    edChangePercenFrom: TcxCurrencyEdit;
     cxLabel8: TcxLabel;
     GuidesFrom: TdsdGuides;
     GuidesTo: TdsdGuides;
@@ -86,7 +86,7 @@ type
     ContractGuidesFrom: TdsdGuides;
     PaidKindGuidesFrom: TdsdGuides;
     cxLabel16: TcxLabel;
-    edChangePercentFrom: TcxCurrencyEdit;
+    edChangePercent: TcxCurrencyEdit;
     actGoodsChoiceForm: TOpenChoiceForm;
   private
     { Private declarations }

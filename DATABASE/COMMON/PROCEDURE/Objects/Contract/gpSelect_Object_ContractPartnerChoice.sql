@@ -21,7 +21,7 @@ RETURNS TABLE (Id Integer, Code Integer
              , personalTakeId Integer, personalTakeName TVarChar
              , InfoMoneyId Integer, InfoMoneyGroupName TVarChar, InfoMoneyDestinationName TVarChar, InfoMoneyCode Integer, InfoMoneyName TVarChar, InfoMoneyName_all TVarChar
              , OKPO TVarChar
-             , ChangePercent TFloat
+             , ChangePercent TFloat, ChangePercentPartner TFloat
              , DelayDay TVarChar
              , PrepareDayCount TFloat, DocumentDayCount TFloat
              , AmountDebet TFloat
@@ -103,6 +103,7 @@ BEGIN
        , ObjectHistory_JuridicalDetails_View.OKPO
 
        , View_ContractCondition_Value.ChangePercent
+       , View_ContractCondition_Value.ChangePercentPartner
        , View_ContractCondition_Value.DelayDay
        , ObjectFloat_PrepareDayCount.ValueData  AS PrepareDayCount
        , ObjectFloat_DocumentDayCount.ValueData AS DocumentDayCount
@@ -293,6 +294,7 @@ BEGIN
        , ObjectHistory_JuridicalDetails_View.OKPO
 
        , View_ContractCondition_Value.ChangePercent
+       , View_ContractCondition_Value.ChangePercentPartner
        , View_ContractCondition_Value.DelayDay
        , ObjectFloat_PrepareDayCount.ValueData  AS PrepareDayCount
        , ObjectFloat_DocumentDayCount.ValueData AS DocumentDayCount

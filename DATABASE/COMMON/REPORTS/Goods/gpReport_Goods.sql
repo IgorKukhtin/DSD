@@ -95,7 +95,7 @@ BEGIN
                                     , Container.Id AS ContainerId_Summ
                                     , Container.Amount
                                FROM tmpContainer_Count
-                                    INNER JOIN Container ON Container.ParentId = NULL -- tmpContainer_Count.ContainerId
+                                    INNER JOIN Container ON Container.ParentId = tmpContainer_Count.ContainerId
                                                         AND Container.DescId = zc_Container_Summ()
                               )
                 , tmpMI_Summ AS (SELECT tmpContainer_Summ.ContainerId_Count AS ContainerId
@@ -158,7 +158,9 @@ BEGIN
         , Object_GoodsKind.ValueData AS GoodsKindName
         , COALESCE (Object_PartionGoods.ValueData, '*' || DATE (MIDate_PartionGoods.ValueData) :: TVarChar) :: TVarChar AS PartionGoods
 
-        , CAST (CASE WHEN tmpMIContainer_group.MovementId = -1 AND tmpMIContainer_group.AmountStart <> 0
+        , CAST (CASE WHEN Movement.DescId = zc_Movement_Income() AND 1=0
+                          THEN MIFloat_Price.ValueData
+                     WHEN tmpMIContainer_group.MovementId = -1 AND tmpMIContainer_group.AmountStart <> 0
                           THEN tmpMIContainer_group.SummStart / tmpMIContainer_group.AmountStart
                      WHEN tmpMIContainer_group.MovementId = -2 AND tmpMIContainer_group.AmountEnd <> 0
                           THEN tmpMIContainer_group.SummEnd / tmpMIContainer_group.AmountEnd
@@ -303,6 +305,10 @@ BEGIN
                                                                             WHEN Movement.DescId IN (zc_Movement_Send(), zc_Movement_SendOnPrice(), zc_Movement_ProductionUnion(), zc_Movement_ProductionSeparate()) AND tmpMIContainer_group.isActive = TRUE THEN zc_MovementLinkObject_From()
                                                                             WHEN Movement.DescId IN (zc_Movement_Send(), zc_Movement_SendOnPrice(), zc_Movement_ProductionUnion(), zc_Movement_ProductionSeparate()) AND tmpMIContainer_group.isActive = FALSE THEN zc_MovementLinkObject_To()
                                                                        END
+
+        LEFT JOIN MovementItemFloat AS MIFloat_Price
+                                    ON MIFloat_Price.MovementItemId = tmpMIContainer_group.MovementItemId
+                                   AND MIFloat_Price.DescId = zc_MIFloat_Price()
 
         LEFT JOIN MovementItemDate AS MIDate_PartionGoods
                                    ON MIDate_PartionGoods.MovementItemId = tmpMIContainer_group.MovementItemId

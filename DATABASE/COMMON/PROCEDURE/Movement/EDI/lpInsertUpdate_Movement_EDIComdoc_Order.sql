@@ -16,6 +16,7 @@ $BODY$
    DECLARE vbInvNumber        TVarChar;
    DECLARE vbOperDate         TDateTime;
    DECLARE vbOperDatePartner  TDateTime;
+   DECLARE vbOperDate_pl      TDateTime;
    DECLARE vbPartnerId        Integer;
    DECLARE vbJuridicalId      Integer;
    DECLARE vbUnitId           Integer;
@@ -248,9 +249,16 @@ BEGIN
 
 
      -- эти параметры всегда из Прайс-листа !!!на дату vbOperDatePartner!!!
-     SELECT PriceListId, PriceWithVAT, VATPercent
-            INTO vbPriceListId, vbPriceWithVAT, vbVATPercent
-     FROM lfGet_Object_Partner_PriceList (inContractId:= vbContractId, inPartnerId:= vbPartnerId, inOperDate:= vbOperDatePartner);
+     SELECT PriceListId, PriceWithVAT, VATPercent, OperDate
+            INTO vbPriceListId, vbPriceWithVAT, vbVATPercent, vbOperDate_pl
+     FROM lfGet_Object_Partner_PriceList_onDate (inContractId     := vbContractId
+                                               , inPartnerId      := vbPartnerId
+                                               , inMovementDescId := zc_Movement_Sale()
+                                               , inOperDate_order := vbOperDate
+                                               , inOperDatePartner:= NULL
+                                               , inDayPrior_PriceReturn:= 0 -- !!!параметр здесь не важен!!!
+                                               , inIsPrior        := FALSE -- !!!параметр здесь не важен!!!
+                                                ) AS tmp;
 
 
      -- только если не нашли по значению <Номер заявки у контрагента> + набирали вручную
@@ -333,7 +341,7 @@ BEGIN
                       LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
                                                        ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
                                                       AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
-                      LEFT JOIN lfSelect_ObjectHistory_PriceListItem (inPriceListId:= vbPriceListId, inOperDate:= vbOperDatePartner)
+                      LEFT JOIN lfSelect_ObjectHistory_PriceListItem (inPriceListId:= vbPriceListId, inOperDate:= vbOperDate_pl)
                              AS lfObjectHistory_PriceListItem ON lfObjectHistory_PriceListItem.GoodsId = MovementItem.ObjectId
 
                  WHERE MovementItem.MovementId = inMovementId

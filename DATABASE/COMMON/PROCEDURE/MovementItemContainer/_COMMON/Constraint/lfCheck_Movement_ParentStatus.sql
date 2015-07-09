@@ -19,7 +19,7 @@ BEGIN
      -- проверка при изменении <Child> на Проведен/Распроведен - если <Master> Удален, то <Ошибка>
      IF inNewStatusId <> zc_Enum_Status_Erased()
      THEN
-         IF EXISTS (SELECT Movement.Id FROM Movement JOIN Movement AS Movement_Parent ON Movement_Parent.Id = Movement.ParentId AND Movement_Parent.StatusId = zc_Enum_Status_Erased() WHERE Movement.Id = inMovementId AND Movement.DescId <> zc_Movement_WeighingPartner())
+         IF EXISTS (SELECT Movement.Id FROM Movement JOIN Movement AS Movement_Parent ON Movement_Parent.Id = Movement.ParentId AND Movement_Parent.StatusId = zc_Enum_Status_Erased() WHERE Movement.Id = inMovementId AND Movement.DescId NOT IN (zc_Movement_WeighingPartner(), zc_Movement_WeighingProduction()))
          THEN
              -- находим параметры <Master> документа
              SELECT Movement.Id, Movement.OperDate, Movement.InvNumber, MovementDesc.ItemName
@@ -29,6 +29,7 @@ BEGIN
                         JOIN Movement AS Movement_Parent ON Movement_Parent.Id = Movement.ParentId
                                                         AND Movement_Parent.StatusId = zc_Enum_Status_Erased()
                    WHERE Movement.Id = inMovementId
+                     AND Movement.DescId NOT IN (zc_Movement_WeighingPartner(), zc_Movement_WeighingProduction())
                   ) AS tmpMovement
                   LEFT JOIN Movement ON Movement.Id = tmpMovement.MovementId_Parent
                   LEFT JOIN MovementDesc ON MovementDesc.Id = Movement.DescId;
@@ -40,7 +41,7 @@ BEGIN
      -- проверка при изменении <Child> на Удален - если <Master> Проведен, то <Ошибка>
      IF inNewStatusId = zc_Enum_Status_Erased()
      THEN
-         IF EXISTS (SELECT Movement.Id FROM Movement JOIN Movement AS Movement_Parent ON Movement_Parent.Id = Movement.ParentId AND Movement_Parent.StatusId = zc_Enum_Status_Complete() WHERE Movement.Id = inMovementId AND Movement.DescId <> zc_Movement_WeighingPartner())
+         IF EXISTS (SELECT Movement.Id FROM Movement JOIN Movement AS Movement_Parent ON Movement_Parent.Id = Movement.ParentId AND Movement_Parent.StatusId = zc_Enum_Status_Complete() WHERE Movement.Id = inMovementId AND Movement.DescId NOT IN (zc_Movement_WeighingPartner(), zc_Movement_WeighingProduction()))
          THEN
              -- находим параметры <Master> документа
              SELECT Movement.Id, Movement.OperDate, Movement.InvNumber, MovementDesc.ItemName
@@ -50,6 +51,7 @@ BEGIN
                         JOIN Movement AS Movement_Parent ON Movement_Parent.Id = Movement.ParentId
                                                         AND Movement_Parent.StatusId = zc_Enum_Status_Complete()
                    WHERE Movement.Id = inMovementId
+                     AND Movement.DescId NOT IN (zc_Movement_WeighingPartner(), zc_Movement_WeighingProduction())
                   ) AS tmpMovement
                   LEFT JOIN Movement ON Movement.Id = tmpMovement.MovementId_Parent
                   LEFT JOIN MovementDesc ON MovementDesc.Id = Movement.DescId;
@@ -109,4 +111,3 @@ ALTER FUNCTION lfCheck_Movement_ParentStatus (Integer, Integer, TVarChar) OWNER 
 
 -- тест
 -- SELECT * FROM lfCheck_Movement_ParentStatus (0, 'изменение')
-

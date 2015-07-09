@@ -486,8 +486,9 @@ BEGIN
                      -- остатки по сумме должны быть загружены один раз, а потом расчитыватьс€ из HistoryCost
                    -- , CASE WHEN vbOperDate <= '01.06.2014' THEN _tmpItem.OperSumm ELSE _tmpItem.OperCount * COALESCE (HistoryCost.Price, 0) END AS OperSumm
                    , CASE WHEN vbOperDate IN ('31.05.2014', '31.05.2015', '30.06.2015') AND vbPriceListId = 0 
-THEN _tmpItem.OperSumm ELSE 
-_tmpItem.OperCount * COALESCE (HistoryCost.Price, 0) END AS OperSumm
+                               THEN _tmpItem.OperSumm
+                          ELSE _tmpItem.OperCount * COALESCE (HistoryCost.Price, 0)
+                     END AS OperSumm
               FROM _tmpItem
                    LEFT JOIN _tmpRemainsCount ON _tmpRemainsCount.ContainerId_Goods = _tmpItem.ContainerId_Goods
                    LEFT JOIN Container AS Container_Summ ON Container_Summ.ParentId = _tmpItem.ContainerId_Goods
@@ -817,7 +818,7 @@ _tmpItem.OperCount * COALESCE (HistoryCost.Price, 0) END AS OperSumm
              , 0 AS AccountId_Passive
              , SUM (_tmp.OperSumm) AS OperSumm
         FROM  -- это введенные остатки по ценам с/с (их надо вычесть)
-             (SELECT _tmpItem.MovementItemId
+/*             (SELECT _tmpItem.MovementItemId
                      -- остатки по сумме должны быть загружены один раз, а потом расчитыватьс€ из HistoryCost
                    , -1 * _tmpItem.OperCount * COALESCE (HistoryCost.Price, 0) AS OperSumm
               FROM _tmpItem
@@ -828,6 +829,40 @@ _tmpItem.OperCount * COALESCE (HistoryCost.Price, 0) END AS OperSumm
                                         AND vbOperDate BETWEEN HistoryCost.StartDate AND HistoryCost.EndDate
                    LEFT JOIN Object_Account_View AS View_Account ON View_Account.AccountId = Container_Summ.ObjectId
               WHERE View_Account.AccountDirectionId <> zc_Enum_AccountDirection_60200() -- ѕрибыль будущих периодов + на филиалах
+*/
+             (SELECT _tmpItem.MovementItemId
+                   -- , CASE WHEN vbOperDate <= '01.06.2014' THEN _tmpItem.OperSumm ELSE _tmpItem.OperCount * COALESCE (HistoryCost.Price, 0) END AS OperSumm
+                   , -1 * (_tmpItem.OperCount * COALESCE (HistoryCost.Price, 0))
+                     AS OperSumm
+              FROM _tmpItem
+                   LEFT JOIN _tmpRemainsCount ON _tmpRemainsCount.ContainerId_Goods = _tmpItem.ContainerId_Goods
+                   LEFT JOIN Container AS Container_Summ ON Container_Summ.ParentId = _tmpItem.ContainerId_Goods
+                                                        AND Container_Summ.DescId = zc_Container_Summ()
+                                                        AND (vbOperDate >= '01.07.2015' OR vbPriceListId <> 0) 
+                   LEFT JOIN HistoryCost ON HistoryCost.ContainerId = Container_Summ.Id
+                                        AND vbOperDate BETWEEN HistoryCost.StartDate AND HistoryCost.EndDate
+                   LEFT JOIN Object_Account_View AS View_Account ON View_Account.AccountId = Container_Summ.ObjectId
+              WHERE View_Account.AccountDirectionId <> zc_Enum_AccountDirection_60200() -- ѕрибыль будущих периодов + на филиалах
+             UNION ALL
+              -- это расчетные остатки (их надо вычесть) - !!!дл€ филиала!!!
+              SELECT _tmpRemainsCount.MovementItemId
+                   , -1 * (-1 * _tmpRemainsCount.OperCount * COALESCE (HistoryCost.Price, 0)) AS OperSumm
+              FROM _tmpRemainsCount
+                   LEFT JOIN Container AS Container_Summ ON Container_Summ.ParentId = _tmpRemainsCount.ContainerId_Goods
+                                                        AND Container_Summ.DescId = zc_Container_Summ()
+                                                        AND vbOperDate >= '01.06.2014'
+                   LEFT JOIN HistoryCost ON HistoryCost.ContainerId = Container_Summ.Id
+                                        AND vbOperDate BETWEEN HistoryCost.StartDate AND HistoryCost.EndDate
+                   LEFT JOIN Object_Account_View AS View_Account ON View_Account.AccountId = Container_Summ.ObjectId
+              WHERE View_Account.AccountDirectionId <> zc_Enum_AccountDirection_60200() -- ѕрибыль будущих периодов + на филиалах
+             UNION ALL
+              -- это расчетные остатки (их надо вычесть) -- !!!дл€ "наших" подр!!!!
+               SELECT _tmpRemainsCount.MovementItemId
+                   , -1 * _tmpRemainsSumm.OperSumm AS OperSumm
+              FROM _tmpRemainsSumm
+                   LEFT JOIN _tmpRemainsCount ON _tmpRemainsCount.ContainerId_Goods = _tmpRemainsSumm.ContainerId_Goods
+                   LEFT JOIN Object_Account_View AS View_Account ON View_Account.AccountId = _tmpRemainsSumm.AccountId
+              WHERE View_Account.AccountDirectionId <> zc_Enum_AccountDirection_60200() -- ѕрибыль будущих периодов + на филиалах
             UNION ALL
               -- это введенные остатки по прайсу !!!плюс Ќƒ—!!!
               SELECT _tmpItem.MovementItemId
@@ -837,6 +872,9 @@ _tmpItem.OperCount * COALESCE (HistoryCost.Price, 0) END AS OperSumm
                           AS lfObjectHistory_PriceListItem ON lfObjectHistory_PriceListItem.GoodsId = _tmpItem.GoodsId
              ) AS _tmp
         GROUP BY _tmp.MovementItemId;
+
+
+     DELETE FROM _tmpItemSummRePrice WHERE MovementItemId IN (SELECT MovementItemId FROM _tmpItem WHERE InfoMoneyId = 0);
 
      -- 4.2. определ€етс€ —чет дл€ проводок по суммовому учету
      UPDATE _tmpItemSummRePrice	 SET AccountId_Active = _tmpItem_byAccount.AccountId_Active, AccountId_Passive = _tmpItem_byAccount.AccountId_Passive

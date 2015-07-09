@@ -5,8 +5,9 @@
 CREATE OR REPLACE VIEW Object_ContractCondition_ValueView AS
   SELECT ObjectLink_ContractCondition_Contract.ChildObjectId  AS ContractId
 
-       , MAX (CASE WHEN tmpContractConditionKind.Id = zc_Enum_ContractConditionKind_ChangePercent() THEN ObjectFloat_Value.ValueData ELSE NULL END) :: TFloat AS ChangePercent
-       , MAX (CASE WHEN tmpContractConditionKind.Id = zc_Enum_ContractConditionKind_ChangePrice()   THEN ObjectFloat_Value.ValueData ELSE NULL END) :: TFloat AS ChangePrice
+       , MAX (CASE WHEN tmpContractConditionKind.Id = zc_Enum_ContractConditionKind_ChangePercent()        THEN ObjectFloat_Value.ValueData ELSE NULL END) :: TFloat AS ChangePercent
+       , MAX (CASE WHEN tmpContractConditionKind.Id = zc_Enum_ContractConditionKind_ChangePercentPartner() THEN ObjectFloat_Value.ValueData ELSE NULL END) :: TFloat AS ChangePercentPartner
+       , MAX (CASE WHEN tmpContractConditionKind.Id = zc_Enum_ContractConditionKind_ChangePrice()          THEN ObjectFloat_Value.ValueData ELSE NULL END) :: TFloat AS ChangePrice
        
        , MAX (CASE WHEN tmpContractConditionKind.Id = zc_Enum_ContractConditionKind_DelayDayCalendar() THEN ObjectFloat_Value.ValueData ELSE NULL END) :: TFloat AS DayCalendar
        , MAX (CASE WHEN tmpContractConditionKind.Id = zc_Enum_ContractConditionKind_DelayDayBank()     THEN ObjectFloat_Value.ValueData ELSE NULL END) :: TFloat AS DayBank
@@ -17,9 +18,11 @@ CREATE OR REPLACE VIEW Object_ContractCondition_ValueView AS
               ELSE '0 дн.'
          END :: TVarChar  AS DelayDay
 
-  FROM (SELECT zc_Enum_ContractConditionKind_ChangePercent() AS Id -- (-)% Скидки (+)% Наценки
+  FROM (SELECT zc_Enum_ContractConditionKind_ChangePercent()        AS Id -- (-)% Скидки (+)% Наценки
        UNION ALL
-        SELECT zc_Enum_ContractConditionKind_ChangePrice()   AS Id -- Скидка в цене
+        SELECT zc_Enum_ContractConditionKind_ChangePercentPartner() AS Id -- % Наценки Павильоны (Приход покупателю)
+       UNION ALL
+        SELECT zc_Enum_ContractConditionKind_ChangePrice()          AS Id -- Скидка в цене ГСМ
 
        UNION ALL
         SELECT zc_Enum_ContractConditionKind_DelayDayCalendar() AS Id -- Отсрочка в календарных днях 

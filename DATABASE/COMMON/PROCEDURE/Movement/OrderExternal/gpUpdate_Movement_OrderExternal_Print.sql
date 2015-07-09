@@ -1,4 +1,4 @@
--- Function: gpInsertUpdate_Movement_OrderExternal_Print()
+-- Function: gpUpdate_Movement_OrderExternal_Print()
 
 DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_OrderExternal_Print (Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_OrderExternal_Print (Integer, Boolean, TVarChar);
