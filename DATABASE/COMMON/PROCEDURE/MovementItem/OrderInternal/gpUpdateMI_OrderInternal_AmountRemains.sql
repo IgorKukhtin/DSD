@@ -129,6 +129,7 @@ BEGIN
                                                    GROUP BY tmpContainer.GoodsId
                                                           , tmpContainer.GoodsKindId
                                                   )
+                      -- результат - INSERT
                       SELECT tmpMI.MovementItemId
                            , zc_MI_Master()                                          AS MIDescId
                            , 0                                                       AS ContainerId

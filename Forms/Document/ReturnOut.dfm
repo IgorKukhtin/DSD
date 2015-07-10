@@ -3,7 +3,7 @@ inherited ReturnOutForm: TReturnOutForm
   ClientHeight = 668
   ClientWidth = 838
   ExplicitWidth = 854
-  ExplicitHeight = 706
+  ExplicitHeight = 703
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -445,13 +445,14 @@ inherited ReturnOutForm: TReturnOutForm
     Width = 44
   end
   object cbCalcAmountPartner: TcxCheckBox [6]
-    Left = 329
-    Top = 152
+    Left = 555
+    Top = 103
     Caption = #1040#1074#1090#1086' '#1079#1072#1087#1086#1083#1085#1077#1085#1080#1077'  <'#1050#1086#1083'-'#1074#1086' '#1091' '#1087#1086#1089#1090'.>'
     Enabled = False
     Properties.ReadOnly = False
     State = cbsChecked
     TabOrder = 10
+    Visible = False
     Width = 220
   end
   object cxLabel16: TcxLabel [7]
@@ -819,14 +820,6 @@ inherited ReturnOutForm: TReturnOutForm
         item
           Visible = True
           ItemName = 'bbPrint'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarStatic'
-        end
-        item
-          Visible = True
-          ItemName = 'bbCalcAmountPartner'
         end
         item
           Visible = True

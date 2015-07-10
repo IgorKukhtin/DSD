@@ -307,7 +307,7 @@ begin
                         , CDS.FieldByName('Id').AsInteger               // MovementId_by
                         , 1    // myPrintCount
                         , TRUE // isPreview
-                        , DialogMovementDescForm.Get_isSendOnPriceIn(CDS.FieldByName('MovementDescNumber').AsInteger)
+                        , FALSE // DialogMovementDescForm.Get_isSendOnPriceIn(CDS.FieldByName('MovementDescNumber').AsInteger)
                          );
 end;
 {------------------------------------------------------------------------------}

@@ -461,13 +461,14 @@ inherited ReturnOutPartnerForm: TReturnOutPartnerForm
     Width = 44
   end
   object cbCalcAmountPartner: TcxCheckBox [6]
-    Left = 541
-    Top = 191
+    Left = 685
+    Top = 8
     Caption = #1040#1074#1090#1086' '#1079#1072#1087#1086#1083#1085#1077#1085#1080#1077'  <'#1050#1086#1083'-'#1074#1086' '#1091' '#1087#1086#1089#1090'.>'
     Enabled = False
     Properties.ReadOnly = False
     State = cbsChecked
     TabOrder = 10
+    Visible = False
     Width = 220
   end
   object cxLabel11: TcxLabel [7]
@@ -859,14 +860,6 @@ inherited ReturnOutPartnerForm: TReturnOutPartnerForm
         item
           Visible = True
           ItemName = 'bbPrint'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarStatic'
-        end
-        item
-          Visible = True
-          ItemName = 'bbCalcAmountPartner'
         end
         item
           Visible = True

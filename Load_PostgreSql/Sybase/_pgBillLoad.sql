@@ -53,9 +53,15 @@ insert into dba._pgBillLoad (BillNumber, FromId, ToId)
 select BillNumber, FromId, ToId from Bill where fromId in (zc_UnitId_StorePF(), zc_UnitId_StoreMaterialBasis(), zc_UnitId_StoreSalePF()) 
                                          and BillKind = zc_bkSaleToClient()
                                          and ToId in (select Id from dba.Unit where UnitCode in (1125))
-                                         and BillDate between '2014-11-01' and '2014-11-30'
-                                         and BillNumber  = '195154'
-
+                                         and BillDate between '2015-06-01' and '2015-06-30'
+                                         and BillNumber  IN ( select '235576' as InvNumber
+                                                        union select '235903' as InvNumber
+                                                        union select '235843' as InvNumber
+                                                        union select '236570' as InvNumber
+                                                        union select '236801' as InvNumber
+                                                        union select '236947' as InvNumber
+                                                        union select '236946' as InvNumber
+                                                           )
 
 -- !!!!!!!!!!!!!!!
 -- !!! ERROR PF !!!

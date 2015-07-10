@@ -153,6 +153,13 @@ type
     PriceInventory: TcxGridDBColumn;
     SummInventory_RePrice: TcxGridDBColumn;
     CountIn_Weight_gp: TcxGridDBColumn;
+    CountIn_Weight_end_gp: TcxGridDBColumn;
+    CountOut_norm_pf: TcxGridDBColumn;
+    CountIn_Weight_norm_gp: TcxGridDBColumn;
+    CountOut_byPF: TcxGridDBColumn;
+    isPartionClose_calc: TcxGridDBColumn;
+    PartionGoodsDate: TcxGridDBColumn;
+    TermProduction: TcxGridDBColumn;
   private
   public
   end;

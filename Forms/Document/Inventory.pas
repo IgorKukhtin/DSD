@@ -36,7 +36,6 @@ type
     actRefreshPrice: TdsdDataSetRefresh;
     PrintHeaderCDS: TClientDataSet;
     PrintItemsCDS: TClientDataSet;
-    PrintItemsSverkaCDS: TClientDataSet;
     colCount: TcxGridDBColumn;
     colHeadCount: TcxGridDBColumn;
     colAssetName: TcxGridDBColumn;
@@ -54,8 +53,6 @@ type
     actInsertUpdateMIAmount: TdsdExecStoredProc;
     bbInsertUpdateMIAmount: TdxBarButton;
     actPrint1: TdsdPrintAction;
-    bbPrint1: TdxBarButton;
-    spSelectPrint1: TdsdStoredProc;
   private
     { Private declarations }
   public

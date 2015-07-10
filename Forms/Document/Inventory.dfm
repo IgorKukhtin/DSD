@@ -3,7 +3,7 @@ inherited InventoryForm: TInventoryForm
   ClientHeight = 668
   ClientWidth = 1020
   ExplicitWidth = 1036
-  ExplicitHeight = 706
+  ExplicitHeight = 703
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -392,10 +392,8 @@ inherited InventoryForm: TInventoryForm
     object actPrint1: TdsdPrintAction [7]
       Category = 'DSDLib'
       MoveParams = <>
-      StoredProc = spSelectPrint1
       StoredProcList = <
         item
-          StoredProc = spSelectPrint1
         end>
       Caption = #1053#1072#1082#1083#1072#1076#1085#1072#1103
       Hint = #1053#1072#1082#1083#1072#1076#1085#1072#1103
@@ -408,7 +406,9 @@ inherited InventoryForm: TInventoryForm
         item
           DataSet = PrintItemsCDS
           UserName = 'frxDBDMaster'
-          IndexFieldNames = 'GoodsGroupNameFull;GoodsName'
+          IndexFieldNames = 
+            'GoodsGroupNameFull;GoodsName;GoodsKindName;PartionGoods;PartionG' +
+            'oodsDate'
         end>
       CopiesCount = 1
       Params = <
@@ -437,6 +437,7 @@ inherited InventoryForm: TInventoryForm
         item
           DataSet = PrintItemsCDS
           UserName = 'frxDBDMaster'
+          IndexFieldNames = 'GoodsGroupNameFull;GoodsName;GoodsKindName;PartionGoods'
         end>
       Params = <
         item
@@ -445,9 +446,8 @@ inherited InventoryForm: TInventoryForm
           Component = FormParams
           ComponentItem = 'Id'
         end>
-      ReportName = 'PrintMovement_Sale2'
-      ReportNameParam.Name = #1056#1072#1089#1093#1086#1076#1085#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103
-      ReportNameParam.Value = 'PrintMovement_Sale2'
+      ReportName = 'PrintMovement_Inventory'
+      ReportNameParam.Value = 'PrintMovement_Inventory'
       ReportNameParam.ParamType = ptInput
     end
     inherited actUnCompleteMovement: TChangeGuidesStatus
@@ -722,14 +722,6 @@ inherited InventoryForm: TInventoryForm
         end
         item
           Visible = True
-          ItemName = 'bbPrint1'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarStatic'
-        end
-        item
-          Visible = True
           ItemName = 'bbMovementItemProtocol'
         end
         item
@@ -741,18 +733,11 @@ inherited InventoryForm: TInventoryForm
           ItemName = 'bbGridToExcel'
         end>
     end
-    inherited bbPrint: TdxBarButton
-      Visible = ivNever
-    end
     inherited bbAddMask: TdxBarButton
       Visible = ivNever
     end
     object bbInsertUpdateMIAmount: TdxBarButton
       Action = actInsertUpdateMIAmount
-      Category = 0
-    end
-    object bbPrint1: TdxBarButton
-      Action = actPrint1
       Category = 0
     end
   end
@@ -1287,14 +1272,8 @@ inherited InventoryForm: TInventoryForm
     Left = 508
     Top = 246
   end
-  object PrintItemsSverkaCDS: TClientDataSet
-    Aggregates = <>
-    Params = <>
-    Left = 644
-    Top = 334
-  end
   object spSelectPrint: TdsdStoredProc
-    StoredProcName = 'gpSelect_Movement_Sale_Print'
+    StoredProcName = 'gpSelect_Movement_Inventory_Print'
     DataSet = PrintHeaderCDS
     DataSets = <
       item
@@ -1310,6 +1289,11 @@ inherited InventoryForm: TInventoryForm
         Value = Null
         Component = FormParams
         ComponentItem = 'Id'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inMovementId_Weighing'
+        Value = '0'
         ParamType = ptInput
       end>
     PackSize = 1
@@ -1383,33 +1367,5 @@ inherited InventoryForm: TInventoryForm
     PackSize = 1
     Left = 330
     Top = 384
-  end
-  object spSelectPrint1: TdsdStoredProc
-    StoredProcName = 'gpSelect_Movement_Inventory_Print'
-    DataSet = PrintHeaderCDS
-    DataSets = <
-      item
-        DataSet = PrintHeaderCDS
-      end
-      item
-        DataSet = PrintItemsCDS
-      end>
-    OutputType = otMultiDataSet
-    Params = <
-      item
-        Name = 'inMovementId'
-        Value = Null
-        Component = FormParams
-        ComponentItem = 'Id'
-        ParamType = ptInput
-      end
-      item
-        Name = 'inMovementId_Weighing'
-        Value = '0'
-        ParamType = ptInput
-      end>
-    PackSize = 1
-    Left = 679
-    Top = 96
   end
 end

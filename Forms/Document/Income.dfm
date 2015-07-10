@@ -26,15 +26,16 @@ object IncomeForm: TIncomeForm
     Align = alTop
     BevelOuter = bvNone
     TabOrder = 0
+    ExplicitLeft = 1
     object edInvNumber: TcxTextEdit
-      Left = 5
+      Left = 9
       Top = 23
       Properties.ReadOnly = True
       TabOrder = 0
-      Width = 74
+      Width = 70
     end
     object cxLabel1: TcxLabel
-      Left = 8
+      Left = 9
       Top = 5
       Caption = #8470' '#1076#1086#1082'.'
     end
@@ -199,7 +200,7 @@ object IncomeForm: TIncomeForm
     end
     object cxLabel11: TcxLabel
       Left = 8
-      Top = 45
+      Top = 40
       Caption = #1057#1090#1072#1090#1091#1089
     end
     object ceStatus: TcxButtonEdit
@@ -275,15 +276,15 @@ object IncomeForm: TIncomeForm
       Width = 127
     end
     object cxLabel16: TcxLabel
-      Left = 9
+      Left = 271
       Top = 85
       Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
     end
     object ceComment: TcxTextEdit
-      Left = 9
+      Left = 271
       Top = 103
       TabOrder = 32
-      Width = 584
+      Width = 530
     end
   end
   object cxPageControl: TcxPageControl
@@ -295,15 +296,12 @@ object IncomeForm: TIncomeForm
     TabOrder = 1
     Properties.ActivePage = cxTabSheetMain
     Properties.CustomButtons.Buttons = <>
-    ExplicitTop = 126
-    ExplicitHeight = 336
     ClientRectBottom = 296
     ClientRectRight = 956
     ClientRectTop = 24
     object cxTabSheetMain: TcxTabSheet
       Caption = #1057#1090#1088#1086#1095#1085#1072#1103' '#1095#1072#1089#1090#1100
       ImageIndex = 0
-      ExplicitHeight = 312
       object cxGrid: TcxGrid
         Left = 0
         Top = 0
@@ -311,7 +309,6 @@ object IncomeForm: TIncomeForm
         Height = 272
         Align = alClient
         TabOrder = 0
-        ExplicitHeight = 312
         object cxGridDBTableView: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = MasterDS
@@ -634,8 +631,8 @@ object IncomeForm: TIncomeForm
     end
   end
   object cbCalcAmountPartner: TcxCheckBox
-    Left = 541
-    Top = 191
+    Left = 9
+    Top = 103
     Caption = #1040#1074#1090#1086' '#1079#1072#1087#1086#1083#1085#1077#1085#1080#1077'  <'#1050#1086#1083'-'#1074#1086' '#1091' '#1087#1086#1089#1090'.>'
     Properties.ReadOnly = False
     State = cbsChecked
@@ -787,14 +784,6 @@ object IncomeForm: TIncomeForm
         item
           Visible = True
           ItemName = 'bbPrint'
-        end
-        item
-          Visible = True
-          ItemName = 'bbStatic'
-        end
-        item
-          Visible = True
-          ItemName = 'bbCalcAmountPartner'
         end
         item
           Visible = True
@@ -2105,7 +2094,7 @@ object IncomeForm: TIncomeForm
         ParamType = ptInput
       end>
     Left = 824
-    Top = 80
+    Top = 56
   end
   object CurrencyPartnerGuides: TdsdGuides
     KeyField = 'Id'
