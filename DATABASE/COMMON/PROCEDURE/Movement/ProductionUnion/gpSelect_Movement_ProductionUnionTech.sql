@@ -32,7 +32,7 @@ BEGIN
      CREATE TEMP TABLE _tmpListMaster (MovementId Integer, StatusId Integer, InvNumber TVarChar, OperDate TDateTime, MovementItemId Integer, MovementItemId_order Integer, GoodsId Integer, GoodsKindId Integer, GoodsKindId_Complete Integer, ReceiptId Integer, Amount_Order TFloat, CuterCount_Order TFloat, Amount TFloat, CuterCount TFloat) ON COMMIT DROP;
 
      -- определяется
-     vbIsTech:= NOT EXISTS (SELECT UserId FROM ObjectLink_UserRole_View WHERE UserId = vbUserId AND RoleId IN (343951)); -- Экономист (производство)
+     vbIsTech:= TRUE; -- NOT EXISTS (SELECT UserId FROM ObjectLink_UserRole_View WHERE UserId = vbUserId AND RoleId IN (343951)); -- Экономист (производство)
 
 
      WITH tmpMI_order2 AS (SELECT (Movement.OperDate :: Date + COALESCE (MIFloat_StartProductionInDays.ValueData, 0) :: Integer) :: TDateTime AS OperDate
@@ -118,18 +118,6 @@ BEGIN
                                            ELSE 0
                                       END) <> 0
                          )
-     WITH tmpMI_order AS (SELECT tmpMI_order2.OperDate
-                               , tmpMI_order2.MovementItemId
-                               , tmpMI_order2.GoodsId
-                               , tmpMI_order2.GoodsKindId
-                               , tmpMI_order2.GoodsKindId_Complete
-                               , tmpMI_order2.ReceiptId
-                               , tmpMI_order2.ToId
-                               , tmpMI_order2.Amount
-                               , tmpMI_order2.CuterCount
-                          FROM tmpMI_order2
-                          WHERE tmpMI_order2.ToId = inFromId
-                         )
    , tmpMI_production AS (SELECT Movement.Id                                                    AS MovementId
                                , Movement.StatusId                                              AS StatusId
                                , Movement.InvNumber                                             AS InvNumber
@@ -169,14 +157,52 @@ BEGIN
                               AND MLO_From.ObjectId = inFromId
                               AND MLO_To.ObjectId = inToId
                            )
+      , tmpMI_order22 AS (SELECT tmpMI_order2.OperDate
+                               , tmpMI_order2.MovementItemId AS MovementItemId_order
+                               , tmpMI_order2.GoodsId
+                               , tmpMI_order2.GoodsKindId
+                               , tmpMI_order2.GoodsKindId_Complete
+                               , tmpMI_order2.ReceiptId
+                               , tmpMI_order2.ToId
+                               , tmpMI_order2.Amount
+                               , tmpMI_order2.CuterCount
+                          FROM tmpMI_order2
+                          WHERE tmpMI_order2.ToId = inFromId
+                         )
+        , tmpMI_order_find AS (SELECT tmpMI_order22.MovementItemId_order    AS MovementItemId_order
+                                    , MAX (tmpMI_production.MovementItemId) AS MovementItemId
+                               FROM tmpMI_production
+                                    INNER JOIN tmpMI_order22 ON tmpMI_order22.GoodsId = tmpMI_production.GoodsId
+                                                           AND tmpMI_order22.GoodsKindId = tmpMI_production.GoodsKindId
+                                                           AND tmpMI_order22.GoodsKindId_Complete = tmpMI_production.GoodsKindId_Complete
+                                                           AND tmpMI_order22.ReceiptId = tmpMI_production.ReceiptId
+                                                           AND tmpMI_order22.OperDate = tmpMI_production.OperDate
+                                                           AND tmpMI_order22.ToId = tmpMI_production.FromId
+                               WHERE tmpMI_production.StatusId <> zc_Enum_Status_Erased()
+                               GROUP BY tmpMI_order22.MovementItemId_order
+                              )
+       , tmpMI_order AS (SELECT tmpMI_order22.OperDate
+                              , tmpMI_order22.MovementItemId_order
+                              , tmpMI_order22.GoodsId
+                              , tmpMI_order22.GoodsKindId
+                              , tmpMI_order22.GoodsKindId_Complete
+                              , tmpMI_order22.ReceiptId
+                              , tmpMI_order22.ToId
+                              , tmpMI_order22.Amount
+                              , tmpMI_order22.CuterCount
+                              , COALESCE (tmpMI_order_find.MovementItemId, 0) AS MovementItemId_find
+                         FROM tmpMI_order22
+                              LEFT JOIN tmpMI_order_find ON tmpMI_order_find.MovementItemId_order = tmpMI_order22.MovementItemId_order
+                         )
+
     -- !!!!!!!!!!!!!!!!!!!!!!!
     INSERT INTO _tmpListMaster (MovementId, StatusId, InvNumber, OperDate, MovementItemId, MovementItemId_order, GoodsId, GoodsKindId, GoodsKindId_Complete, ReceiptId, Amount_Order, CuterCount_Order, Amount, CuterCount)
        SELECT COALESCE (tmpMI_production.MovementId, 0)                                          AS MovementId
             , COALESCE (tmpMI_production.StatusId, 0)                                            AS StatusId
             , COALESCE (tmpMI_production.InvNumber, '')                                          AS InvNumber
             , COALESCE (tmpMI_production.OperDate, tmpMI_order.OperDate)                         AS OperDate
-            , COALESCE (tmpMI_production.MovementItemId, tmpMI_order.MovementItemId)             AS MovementItemId
-            , tmpMI_order.MovementItemId                                                         AS MovementItemId_order
+            , COALESCE (tmpMI_production.MovementItemId, tmpMI_order.MovementItemId_order)       AS MovementItemId
+            , tmpMI_order.MovementItemId_order                                                   AS MovementItemId_order
             , COALESCE (tmpMI_production.GoodsId, tmpMI_order.GoodsId)                           AS GoodsId
             , COALESCE (tmpMI_production.GoodsKindId, tmpMI_order.GoodsKindId)                   AS GoodsKindId
             , COALESCE (tmpMI_production.GoodsKindId_Complete, tmpMI_order.GoodsKindId_Complete) AS GoodsKindId_Complete
@@ -186,12 +212,13 @@ BEGIN
             , COALESCE (tmpMI_production.Amount, 0)         AS Amount
             , COALESCE (tmpMI_production.CuterCount, 0)     AS CuterCount
        FROM tmpMI_production
-            FULL JOIN tmpMI_order ON tmpMI_order.GoodsId = tmpMI_production.GoodsId
+            FULL JOIN tmpMI_order ON tmpMI_order.MovementItemId_find = tmpMI_production.MovementItemId
+                                 /*AND tmpMI_order.GoodsId = tmpMI_production.GoodsId
                                  AND tmpMI_order.GoodsKindId = tmpMI_production.GoodsKindId
                                  AND tmpMI_order.GoodsKindId_Complete = tmpMI_production.GoodsKindId_Complete
                                  AND tmpMI_order.ReceiptId = tmpMI_production.ReceiptId
                                  AND tmpMI_order.OperDate = tmpMI_production.OperDate
-                                 AND tmpMI_order.ToId = tmpMI_production.FromId
+                                 AND tmpMI_order.ToId = tmpMI_production.FromId*/
                                  -- AND (tmpMI_order.CuterCount <> 0 OR tmpMI_order.Amount <> 0)
                                 ;
 

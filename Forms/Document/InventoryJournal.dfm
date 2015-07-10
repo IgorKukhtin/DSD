@@ -3,7 +3,7 @@ inherited InventoryJournalForm: TInventoryJournalForm
   ClientHeight = 535
   ClientWidth = 1020
   ExplicitWidth = 1036
-  ExplicitHeight = 573
+  ExplicitHeight = 570
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -192,11 +192,12 @@ inherited InventoryJournalForm: TInventoryJournalForm
     Left = 179
   end
   inherited cxPropertiesStore: TcxPropertiesStore
-    Left = 40
-    Top = 243
+    Left = 32
+    Top = 203
   end
   inherited ActionList: TActionList
-    Left = 471
+    Left = 47
+    Top = 258
     inherited actInsert: TdsdInsertUpdateAction
       FormName = 'TInventoryForm'
     end
@@ -255,51 +256,7 @@ inherited InventoryJournalForm: TInventoryJournalForm
         item
           DataSet = PrintItemsCDS
           UserName = 'frxDBDMaster'
-        end>
-      CopiesCount = 1
-      Params = <
-        item
-          Name = 'Id'
-          Value = Null
-          Component = FormParams
-          ComponentItem = 'Id'
-        end>
-      ReportName = 'PrintMovement_Sale2'
-      ReportNameParam.Name = #1056#1072#1089#1093#1086#1076#1085#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103
-      ReportNameParam.Value = 'PrintMovement_Sale2'
-      ReportNameParam.DataType = ftString
-      ReportNameParam.ParamType = ptInput
-    end
-    object actPrint1: TdsdPrintAction
-      Category = 'DSDLib'
-      MoveParams = <
-        item
-          FromParam.Name = 'Id'
-          FromParam.Value = Null
-          FromParam.Component = MasterCDS
-          FromParam.ComponentItem = 'Id'
-          ToParam.Value = Null
-          ToParam.Component = FormParams
-          ToParam.ComponentItem = 'Id'
-          ToParam.ParamType = ptInputOutput
-        end>
-      StoredProc = spSelectPrint1
-      StoredProcList = <
-        item
-          StoredProc = spSelectPrint1
-        end>
-      Caption = #1053#1072#1082#1083#1072#1076#1085#1072#1103
-      Hint = #1053#1072#1082#1083#1072#1076#1085#1072#1103
-      ImageIndex = 22
-      DataSets = <
-        item
-          DataSet = PrintHeaderCDS
-          UserName = 'frxDBDHeader'
-        end
-        item
-          DataSet = PrintItemsCDS
-          UserName = 'frxDBDMaster'
-          IndexFieldNames = 'GoodsGroupNameFull;GoodsName'
+          IndexFieldNames = 'GoodsGroupNameFull;GoodsName;GoodsKindName;PartionGoods'
         end>
       CopiesCount = 1
       Params = <
@@ -424,14 +381,6 @@ inherited InventoryJournalForm: TInventoryJournalForm
         end
         item
           Visible = True
-          ItemName = 'bbPrint1'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarStatic'
-        end
-        item
-          Visible = True
           ItemName = 'bbMovementProtocol'
         end
         item
@@ -445,11 +394,6 @@ inherited InventoryJournalForm: TInventoryJournalForm
     end
     object bbPrint: TdxBarButton
       Action = actPrint
-      Category = 0
-      Visible = ivNever
-    end
-    object bbPrint1: TdxBarButton
-      Action = actPrint1
       Category = 0
     end
   end
@@ -572,35 +516,6 @@ inherited InventoryJournalForm: TInventoryJournalForm
     Top = 270
   end
   object spSelectPrint: TdsdStoredProc
-    StoredProcName = 'gpSelect_Movement_Sale_Print'
-    DataSet = PrintHeaderCDS
-    DataSets = <
-      item
-        DataSet = PrintHeaderCDS
-      end
-      item
-        DataSet = PrintItemsCDS
-      end>
-    OutputType = otMultiDataSet
-    Params = <
-      item
-        Name = 'inMovementId'
-        Value = Null
-        Component = FormParams
-        ComponentItem = 'Id'
-        ParamType = ptInput
-      end>
-    PackSize = 1
-    Left = 535
-    Top = 248
-  end
-  object PrintItemsSverkaCDS: TClientDataSet
-    Aggregates = <>
-    Params = <>
-    Left = 628
-    Top = 294
-  end
-  object spSelectPrint1: TdsdStoredProc
     StoredProcName = 'gpSelect_Movement_Inventory_Print'
     DataSet = PrintHeaderCDS
     DataSets = <
@@ -625,7 +540,7 @@ inherited InventoryJournalForm: TInventoryJournalForm
         ParamType = ptInput
       end>
     PackSize = 1
-    Left = 679
-    Top = 96
+    Left = 535
+    Top = 248
   end
 end

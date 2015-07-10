@@ -833,6 +833,7 @@ inherited Report_GoodsMI_OrderExternalForm: TReport_GoodsMI_OrderExternalForm
           UserName = 'frxDBDMaster'
           IndexFieldNames = 'goodskindname;GoodsGroupNameFull;goodsname'
         end>
+      CopiesCount = 1
       Params = <
         item
           Name = 'StartDate'
@@ -868,6 +869,7 @@ inherited Report_GoodsMI_OrderExternalForm: TReport_GoodsMI_OrderExternalForm
           UserName = 'frxDBDMaster'
           IndexFieldNames = 'GoodsGroupNameFull;goodsname;goodskindname'
         end>
+      CopiesCount = 1
       Params = <
         item
           Name = 'StartDate'
@@ -903,6 +905,7 @@ inherited Report_GoodsMI_OrderExternalForm: TReport_GoodsMI_OrderExternalForm
           UserName = 'frxDBDMaster'
           IndexFieldNames = 'GoodsGroupNameFull;GoodsName;GoodsKindName'
         end>
+      CopiesCount = 1
       Params = <
         item
           Name = 'StartDate'
@@ -938,6 +941,7 @@ inherited Report_GoodsMI_OrderExternalForm: TReport_GoodsMI_OrderExternalForm
           UserName = 'frxDBDMaster'
           IndexFieldNames = 'InfoMoneyName;routename'
         end>
+      CopiesCount = 1
       Params = <
         item
           Name = 'StartDate'
@@ -973,6 +977,7 @@ inherited Report_GoodsMI_OrderExternalForm: TReport_GoodsMI_OrderExternalForm
           UserName = 'frxDBDMaster'
           IndexFieldNames = 'routename;routesortingname;fromname;InvNumber'
         end>
+      CopiesCount = 1
       Params = <
         item
           Name = 'StartDate'
@@ -1007,9 +1012,10 @@ inherited Report_GoodsMI_OrderExternalForm: TReport_GoodsMI_OrderExternalForm
           DataSet = MasterCDS
           UserName = 'frxDBDMaster'
           IndexFieldNames = 
-            'FromName;RouteSortingName;RouteName;GoodsGroupNameFull;GoodsName' +
-            ';GoodsKindName'
+            'FromName;RouteSortingName;RouteName;InvNumber;GoodsGroupNameFull' +
+            ';GoodsName;GoodsKindName'
         end>
+      CopiesCount = 1
       Params = <
         item
           Name = 'StartDate'
@@ -1049,6 +1055,7 @@ inherited Report_GoodsMI_OrderExternalForm: TReport_GoodsMI_OrderExternalForm
           UserName = 'frxDBDMaster'
           IndexFieldNames = 'GoodsGroupNameFull;goodsgroupname;goodsname;goodskindname'
         end>
+      CopiesCount = 1
       Params = <
         item
           Name = 'StartDate'

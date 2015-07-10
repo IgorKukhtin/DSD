@@ -1417,6 +1417,41 @@ object UtilPrintForm: TUtilPrintForm
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
     end
+    object actPrint_Inventory: TdsdPrintAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spSelectPrint_Inventory
+      StoredProcList = <
+        item
+          StoredProc = spSelectPrint_Inventory
+        end>
+      Caption = #1055#1077#1095#1072#1090#1100
+      Hint = #1055#1077#1095#1072#1090#1100
+      ImageIndex = 3
+      ShortCut = 16464
+      DataSets = <
+        item
+          DataSet = PrintHeaderCDS
+          UserName = 'frxDBDHeader'
+        end
+        item
+          DataSet = PrintItemsCDS
+          UserName = 'frxDBDMaster'
+          IndexFieldNames = 'GoodsGroupNameFull;GoodsName;GoodsKindName;PartionGoods'
+        end>
+      CopiesCount = 1
+      Params = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'Id'
+        end>
+      ReportName = 'PrintMovement_Inventory'
+      ReportNameParam.Value = 'PrintMovement_Inventory'
+      ReportNameParam.DataType = ftString
+      ReportNameParam.ParamType = ptInput
+    end
   end
   object spSelectPrint_ReturnIn: TdsdStoredProc
     StoredProcName = 'gpSelect_Movement_ReturnIn_Print'
@@ -1779,5 +1814,35 @@ object UtilPrintForm: TUtilPrintForm
     PackSize = 1
     Left = 576
     Top = 352
+  end
+  object spSelectPrint_Inventory: TdsdStoredProc
+    StoredProcName = 'gpSelect_Movement_Inventory_Print'
+    DataSet = PrintHeaderCDS
+    DataSets = <
+      item
+        DataSet = PrintHeaderCDS
+      end
+      item
+        DataSet = PrintItemsCDS
+      end>
+    OutputType = otMultiDataSet
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inMovementId_Weighing'
+        Value = '0'
+        Component = FormParams
+        ComponentItem = 'MovementId_by'
+        ParamType = ptInput
+      end>
+    PackSize = 1
+    Left = 463
+    Top = 480
   end
 end

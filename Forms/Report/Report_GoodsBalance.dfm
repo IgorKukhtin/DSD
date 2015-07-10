@@ -245,6 +245,26 @@ object Report_GoodsBalanceForm: TReport_GoodsBalanceForm
           Format = ',0.####'
           Kind = skSum
           Column = SummInventory_RePrice
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = CountIn_Weight_end_gp
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = CountOut_norm_pf
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = CountIn_Weight_norm_gp
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = CountOut_byPF
         end>
       DataController.Summary.FooterSummaryItems = <
         item
@@ -461,6 +481,26 @@ object Report_GoodsBalanceForm: TReport_GoodsBalanceForm
           Format = ',0.####'
           Kind = skSum
           Column = SummInventory_RePrice
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = CountIn_Weight_end_gp
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = CountOut_norm_pf
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = CountIn_Weight_norm_gp
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = CountOut_byPF
         end>
       DataController.Summary.SummaryGroups = <>
       Images = dmMain.SortImageList
@@ -564,6 +604,13 @@ object Report_GoodsBalanceForm: TReport_GoodsBalanceForm
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
         Width = 70
+      end
+      object PartionGoodsDate: TcxGridDBColumn
+        Caption = #1055#1072#1088#1090#1080#1103' ('#1076#1072#1090#1072')'
+        DataBinding.FieldName = 'PartionGoodsDate'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 60
       end
       object PartionGoodsName: TcxGridDBColumn
         Caption = #1055#1072#1088#1090#1080#1103
@@ -1075,18 +1122,77 @@ object Report_GoodsBalanceForm: TReport_GoodsBalanceForm
         HeaderAlignmentVert = vaCenter
         Width = 70
       end
+      object CountIn_Weight_end_gp: TcxGridDBColumn
+        Caption = #1055#1088#1086#1075#1085#1086#1079' '#1043#1055' '#1074#1077#1089
+        DataBinding.FieldName = 'CountIn_Weight_end_gp'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.####;-,0.####; ;'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 70
+      end
+      object TermProduction: TcxGridDBColumn
+        Caption = #1057#1088#1086#1082' '#1087#1088#1086#1080#1079#1074'. '#1074' '#1076#1085'.'
+        DataBinding.FieldName = 'TermProduction'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 60
+      end
+      object isPartionClose_calc: TcxGridDBColumn
+        Caption = #1055#1072#1088#1090'. '#1079'. ('#1076#1072'/'#1085#1077#1090')'
+        DataBinding.FieldName = 'isPartionClose_calc'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 60
+      end
+      object CountOut_norm_pf: TcxGridDBColumn
+        Caption = #1085#1086#1088#1084#1072' '#1055#1060' '#1085#1072' '#1043#1055
+        DataBinding.FieldName = 'CountOut_norm_pf'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.####;-,0.####; ;'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 70
+      end
+      object CountIn_Weight_norm_gp: TcxGridDBColumn
+        Caption = #1085#1086#1088#1084#1072' '#1043#1055' '#1085#1072' '#1055#1060
+        DataBinding.FieldName = 'CountIn_Weight_norm_gp'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.####;-,0.####; ;'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 70
+      end
       object CountIn_Weight_gp: TcxGridDBColumn
         Caption = #1055#1088#1086#1080#1079#1074'. '#1043#1055' '#1074#1077#1089
         DataBinding.FieldName = 'CountIn_Weight_gp'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DecimalPlaces = 4
         Properties.DisplayFormat = ',0.####;-,0.####; ;'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 70
+      end
+      object CountOut_byPF: TcxGridDBColumn
+        Caption = #1056#1072#1089#1093#1086#1076' '#1055#1060' ('#1043#1055')'
+        DataBinding.FieldName = 'CountOut_byPF'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.####;-,0.####; ;'
+        Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 70
       end
       object Count_byCount: TcxGridDBColumn
-        Caption = #1056#1072#1089#1093#1086#1076' '#1055#1060' ('#1043#1055')'
+        Caption = #1056#1072#1089#1093#1086#1076' *** '#1055#1060' ('#1043#1055')'
         DataBinding.FieldName = 'Count_byCount'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DecimalPlaces = 4
@@ -1097,7 +1203,7 @@ object Report_GoodsBalanceForm: TReport_GoodsBalanceForm
         Width = 70
       end
       object Count_onCount: TcxGridDBColumn
-        Caption = #1056#1072#1089#1093'. '#1073#1072#1090'. '#1055#1060' ('#1043#1055')'
+        Caption = #1056#1072#1089#1093'. *** '#1073#1072#1090'. '#1055#1060' ('#1043#1055')'
         DataBinding.FieldName = 'Count_onCount'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DecimalPlaces = 4
@@ -2069,8 +2175,8 @@ object Report_GoodsBalanceForm: TReport_GoodsBalanceForm
       Category = 'DSDLib'
       MoveParams = <>
       StoredProcList = <>
-      Caption = #1054#1090#1095#1077#1090' '#1087#1086' '#1086#1089#1090#1072#1090#1082#1072#1084' '#1090#1086#1074#1072#1088#1072' ('#1090#1077#1082#1091#1097#1080#1081')'
-      Hint = #1054#1090#1095#1077#1090' '#1087#1086' '#1086#1089#1090#1072#1090#1082#1072#1084' '#1090#1086#1074#1072#1088#1072' ('#1090#1077#1082#1091#1097#1080#1081')'
+      Caption = #1054#1090#1095#1077#1090' '#1087#1086' '#1086#1089#1090#1072#1090#1082#1072#1084' '#1090#1086#1074#1072#1088#1072' ('#1074#1099#1093#1086#1076' '#1043#1055')'
+      Hint = #1054#1090#1095#1077#1090' '#1087#1086' '#1086#1089#1090#1072#1090#1082#1072#1084' '#1090#1086#1074#1072#1088#1072' ('#1074#1099#1093#1086#1076' '#1043#1055')'
       ImageIndex = 19
       ShortCut = 16464
       DataSets = <
@@ -2147,8 +2253,8 @@ object Report_GoodsBalanceForm: TReport_GoodsBalanceForm
           Component = cbInfoMoney
           DataType = ftBoolean
         end>
-      ReportName = #1054#1090#1095#1077#1090' '#1087#1086' '#1086#1089#1090#1072#1090#1082#1072#1084' '#1090#1086#1074#1072#1088#1072' ('#1090#1077#1082#1091#1097#1080#1081')'
-      ReportNameParam.Value = #1054#1090#1095#1077#1090' '#1087#1086' '#1086#1089#1090#1072#1090#1082#1072#1084' '#1090#1086#1074#1072#1088#1072' ('#1090#1077#1082#1091#1097#1080#1081')'
+      ReportName = #1054#1090#1095#1077#1090' '#1087#1086' '#1086#1089#1090#1072#1090#1082#1072#1084' '#1090#1086#1074#1072#1088#1072' ('#1074#1099#1093#1086#1076' '#1043#1055')'
+      ReportNameParam.Value = #1054#1090#1095#1077#1090' '#1087#1086' '#1086#1089#1090#1072#1090#1082#1072#1084' '#1090#1086#1074#1072#1088#1072' ('#1074#1099#1093#1086#1076' '#1043#1055')'
       ReportNameParam.DataType = ftString
     end
   end

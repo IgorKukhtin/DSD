@@ -84,6 +84,8 @@ type
     actPrint_ProductionSeparate: TdsdPrintAction;
     spEDIEvents: TdsdStoredProc;
     actEDIEvents: TdsdExecStoredProc;
+    spSelectPrint_Inventory: TdsdStoredProc;
+    actPrint_Inventory: TdsdPrintAction;
   private
   end;
 
@@ -105,6 +107,13 @@ var
 implementation
 uses UtilScale;
 {$R *.dfm}
+//------------------------------------------------------------------------------------------------
+procedure Print_Inventory (MovementId,MovementId_by: Integer);
+begin
+  UtilPrintForm.FormParams.ParamByName('Id').Value := MovementId;
+  UtilPrintForm.FormParams.ParamByName('MovementId_by').Value := MovementId_by;
+  UtilPrintForm.actPrint_Inventory.Execute;
+end;
 //------------------------------------------------------------------------------------------------
 procedure Print_Send (MovementId: Integer);
 begin
@@ -221,9 +230,12 @@ begin
                             else if MovementDescId = zc_Movement_ReturnOut
                                   then Print_ReturnOut(MovementId)
 
+
+                            else if (MovementDescId = zc_Movement_Inventory)
+                                  then Print_Inventory(MovementId, MovementId_by)
+
                             else if (MovementDescId = zc_Movement_Send)
                                  or (MovementDescId = zc_Movement_ProductionUnion)
-                                 or (MovementDescId = zc_Movement_Inventory)
                                   then Print_Send(MovementId)
                             else if MovementDescId = zc_Movement_Loss
                                   then Print_Loss(MovementId)

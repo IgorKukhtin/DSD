@@ -576,13 +576,14 @@ object IncomePartnerForm: TIncomePartnerForm
     end
   end
   object cbCalcAmountPartner: TcxCheckBox
-    Left = 541
-    Top = 191
+    Left = 714
+    Top = -4
     Caption = #1040#1074#1090#1086' '#1079#1072#1087#1086#1083#1085#1077#1085#1080#1077'  <'#1050#1086#1083'-'#1074#1086' '#1091' '#1087#1086#1089#1090'.>'
     Enabled = False
     Properties.ReadOnly = False
     State = cbsChecked
     TabOrder = 6
+    Visible = False
     Width = 220
   end
   object FormParams: TdsdFormParams
@@ -734,10 +735,6 @@ object IncomePartnerForm: TIncomePartnerForm
         item
           Visible = True
           ItemName = 'bbStatic'
-        end
-        item
-          Visible = True
-          ItemName = 'bbCalcAmountPartner'
         end
         item
           Visible = True
