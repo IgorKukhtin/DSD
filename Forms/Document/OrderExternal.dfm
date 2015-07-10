@@ -3,7 +3,7 @@ inherited OrderExternalForm: TOrderExternalForm
   ClientHeight = 668
   ClientWidth = 1391
   ExplicitWidth = 1407
-  ExplicitHeight = 703
+  ExplicitHeight = 706
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -352,6 +352,7 @@ inherited OrderExternalForm: TOrderExternalForm
     object edOperDatePartner: TcxDateEdit
       Left = 180
       Top = 63
+      EditValue = 42195d
       Enabled = False
       Properties.ReadOnly = True
       Properties.SaveTime = False
@@ -1174,7 +1175,7 @@ inherited OrderExternalForm: TOrderExternalForm
         DataType = ftString
       end
       item
-        Name = 'inComment'
+        Name = 'Comment'
         Value = Null
         Component = ceComment
         DataType = ftString
