@@ -3,7 +3,7 @@
 DROP FUNCTION IF EXISTS gpSelect_Movement_Sale_Order_Print (Integer, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_Movement_Sale_Order_Print(
-    IN inMovementId                 Integer  , -- ключ Документа
+    IN inMovementId                 Integer  , -- ключ Документа Заявки
     IN inMovementId_Weighing        Integer  , -- ключ Документа взвешивания
     IN inSession                    TVarChar    -- сессия пользователя
 )
@@ -15,111 +15,35 @@ $BODY$
     DECLARE Cursor1 refcursor;
     DECLARE Cursor2 refcursor;
 
-    DECLARE vbGoodsPropertyId Integer;
-    DECLARE vbGoodsPropertyId_basis Integer;
-
-    DECLARE vbDescId Integer;
-    DECLARE vbStatusId Integer;
-    DECLARE vbPriceWithVAT Boolean;
-    DECLARE vbVATPercent TFloat;
-    DECLARE vbDiscountPercent TFloat;
-    DECLARE vbExtraChargesPercent TFloat;
-    DECLARE vbPaidKindId Integer;
-    DECLARE vbOperDate TDateTime;
-
-    DECLARE vbStoreKeeperName TVarChar;
+    DECLARE vbMovementId Integer;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_...());
      vbUserId:= lpGetUserBySession (inSession);
 
+     
+     SELECT  Movement.Id
+     	INTO vbMovementId
+     FROM MovementLinkMovement 
+          inner join Movement on Movement.Id = MovementLinkMovement.MovementId
+                             AND Movement.DescId = zc_Movement_Sale()
+                             AND Movement.StatusId <> zc_Enum_Status_Erased()
+     WHERE MovementLinkMovement.MovementChildId = inMovementId   
+       AND MovementLinkMovement.DescId = zc_MovementLinkMovement_Order()
 
-     -- параметры из документа
-     SELECT Movement.DescId
-          , Movement.StatusId
-          , Movement.OperDate                  AS OperDate
-       INTO vbDescId, vbStatusId, vbOperDate
-     FROM Movement
-     WHERE Movement.Id = inMovementId
     ;
 
-     -- параметры из Взвешивания
-     vbStoreKeeperName:= (SELECT Object_User.ValueData
-                          FROM Movement
-                               LEFT JOIN MovementLinkObject AS MovementLinkObject_User
-                                                            ON MovementLinkObject_User.MovementId = Movement.Id
-                                                           AND MovementLinkObject_User.DescId = zc_MovementLinkObject_User()
-                               LEFT JOIN Object AS Object_User ON Object_User.Id = MovementLinkObject_User.ObjectId
-                          WHERE Movement.ParentId = inMovementId AND Movement.DescId IN (zc_Movement_WeighingPartner(), zc_Movement_WeighingProduction())
-                            AND Movement.StatusId = zc_Enum_Status_Complete()
-                          LIMIT 1
-                         );
-
-
-    -- очень важная проверка
-    IF COALESCE (vbStatusId, 0) = zc_Enum_Status_Erased()
-    THEN
-        IF vbStatusId = zc_Enum_Status_Erased()
-        THEN
-            RAISE EXCEPTION 'Ошибка.Документ <%> № <%> от <%> удален.', (SELECT ItemName FROM MovementDesc WHERE Id = vbDescId), (SELECT InvNumber FROM Movement WHERE Id = inMovementId), (SELECT DATE (OperDate) FROM Movement WHERE Id = inMovementId);
-        END IF;
-        IF vbStatusId = zc_Enum_Status_UnComplete()
-        THEN
-            RAISE EXCEPTION 'Ошибка.Документ <%> № <%> от <%> не проведен.', (SELECT ItemName FROM MovementDesc WHERE Id = vbDescId), (SELECT InvNumber FROM Movement WHERE Id = inMovementId), (SELECT DATE (OperDate) FROM Movement WHERE Id = inMovementId);
-        END IF;
-        -- это уже странная ошибка
-        RAISE EXCEPTION 'Ошибка.Документ <%>.', (SELECT ItemName FROM MovementDesc WHERE Id = vbDescId);
-    END IF;
-
-
-
-     --
+    --
     OPEN Cursor1 FOR
     
-    WITH /* tmpMIChild AS (SELECT SUM (MovementItem.Amount)  AS Count_Child
-                        FROM MovementItem 
-                        WHERE MovementItem.MovementId = inMovementId
-                          AND MovementItem.DescId     = zc_MI_Master()   --zc_MI_Child()
-                          AND MovementItem.isErased   = FALSE
-                       )
-       ,*/ tmpMovementWeighing AS (SELECT Movement.Id AS MovementId
-                                      , MFloat_WeighingNumber.ValueData AS WeighingNumber 
-                                 FROM Movement
-                                      LEFT JOIN MovementFloat AS MFloat_WeighingNumber
-                                                              ON MFloat_WeighingNumber.MovementId = Movement.Id
-                                                             AND MFloat_WeighingNumber.DescId = zc_MovementFloat_WeighingNumber()
-                                 WHERE Movement.ParentId = inMovementId
-                                   AND Movement.StatusId = zc_Enum_Status_unComplete()
-                                ) 
-      , tmpMIWeighing AS (SELECT CASE WHEN inMovementId_Weighing > 0 THEN tmpMovementWeighing.WeighingNumber ELSE 0 END AS WeighingNumber
-                               , SUM (MovementItem.Amount) AS Count
-                          FROM tmpMovementWeighing
-                              LEFT JOIN MovementBoolean AS MovementBoolean_isIncome
-                                      ON MovementBoolean_isIncome.MovementId = tmpMovementWeighing.MovementId
-                                     AND MovementBoolean_isIncome.DescId = zc_MovementBoolean_isIncome()
-                                     --AND MovementBoolean_isIncome.ValueData = FALSE
-                              LEFT JOIN MovementItem ON MovementItem.MovementId = tmpMovementWeighing.MovementId
-                                                     AND MovementItem.isErased  = FALSE
-                                                     AND MovementBoolean_isIncome.ValueData = FALSE
-                          WHERE tmpMovementWeighing.MovementId = inMovementId_Weighing 
-                             OR COALESCE (inMovementId_Weighing, 0) = 0 
-                          GROUP BY CASE WHEN inMovementId_Weighing > 0 THEN tmpMovementWeighing.WeighingNumber ELSE 0 END
-                          ) 
-
-        SELECT
+     SELECT
            Movement.InvNumber             AS InvNumber
          , Movement.OperDate              AS OperDate
 
          , Object_From.ValueData          AS FromName
          , Object_To.ValueData            AS ToName
-         , tmpCount.Count :: TFloat       AS TotalNumber
-         , tmpMIWeighing.WeighingNumber   AS WeighingNumber
-         , tmpMIWeighing.Count ::  TFloat AS CountWeighing
-
-         , vbStoreKeeperName AS StoreKeeper -- кладовщик
+      
      FROM Movement 
-          LEFT JOIN (SELECT COUNT(*) AS Count from tmpMovementWeighing) AS tmpCount ON 1 = 1
-          LEFT JOIN  tmpMIWeighing ON 1 = 1
          
           LEFT JOIN MovementLinkObject AS MovementLinkObject_From
                                        ON MovementLinkObject_From.MovementId = Movement.Id
@@ -130,9 +54,8 @@ BEGIN
                                        ON MovementLinkObject_To.MovementId = Movement.Id
                                       AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
           LEFT JOIN Object AS Object_To ON Object_To.Id = MovementLinkObject_To.ObjectId
-
        
-       WHERE Movement.Id = inMovementId
+       WHERE Movement.Id = vbMovementId
          AND Movement.StatusId <> zc_Enum_Status_Erased()
       ;
 
@@ -147,14 +70,12 @@ BEGIN
                                , COALESCE (MIDate_PartionGoods.ValueData, zc_DateStart())  AS PartionGoodsDate
                                , SUM (MovementItem.Amount)                                 AS Amount
                           FROM (SELECT Movement.Id AS MovementId
-                                FROM MovementLinkMovement AS MLM_Order  
-                                    LEFT JOIN MovementLinkMovement AS MLM_Weighing 
-                                                                   ON MLM_Weighing.MovementChildId = MLM_Order.MovementChildId 
+                                FROM MovementLinkMovement AS MLM_Weighing 
                                     INNER JOIN Movement ON Movement.Id = MLM_Weighing.MovementId
                                                        AND Movement.DescId = zc_Movement_WeighingPartner()
                                                        AND Movement.StatusId = zc_Enum_Status_unComplete()
                                                        AND (Movement.Id = inMovementId_Weighing OR COALESCE (inMovementId_Weighing, 0) = 0)
-                                WHERE MLM_Order.MovementId = inMovementId
+                                WHERE MLM_Weighing.MovementChildId = inMovementId -- MLM_Order.MovementChildId   id заявки 
                                   
                                 ) AS tmp
                                 INNER JOIN MovementItem ON MovementItem.MovementId = tmp.MovementId
@@ -189,7 +110,7 @@ BEGIN
                                 LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
                                                                  ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
                                                                 AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
-                          WHERE MovementItem.MovementId = inMovementId
+                          WHERE MovementItem.MovementId = vbMovementId
                             AND MovementItem.DescId     = zc_MI_Master()
                             AND MovementItem.isErased   = FALSE
                             AND MovementItem.Amount <> 0
@@ -208,9 +129,7 @@ BEGIN
                                , SUM (MovementItem.Amount) AS Amount
                                , SUM (MIFloat_AmountSecond.ValueData)     AS AmountSecond  
 
-                          FROM MovementLinkMovement AS MovementLinkMovement_Order
-                               LEFT JOIN MovementItem ON MovementItem.MovementId = MovementLinkMovement_Order.MovementChildId    --id док.заявки
-                                                     AND MovementItem.isErased   = FALSE
+                          FROM MovementItem         
                                LEFT JOIN MovementItemFloat AS MIFloat_AmountSecond
                                                            ON MIFloat_AmountSecond.MovementItemId = MovementItem.Id 
                                                           AND MIFloat_AmountSecond.DescId = zc_MIFloat_AmountSecond()
@@ -225,8 +144,8 @@ BEGIN
                                                             ON MIString_PartionGoods.MovementItemId =  MovementItem.Id
                                                            AND MIString_PartionGoods.DescId = zc_MIString_PartionGoods()                               
 
-                          WHERE MovementLinkMovement_Order.MovementId = inMovementId    --1815949 
-                            AND MovementLinkMovement_Order.DescId = zc_MovementLinkMovement_Order()
+                          WHERE MovementItem.MovementId = inMovementId 
+                            AND MovementItem.isErased   = FALSE   
                           GROUP BY MovementItem.ObjectId
                                  , COALESCE (MILinkObject_GoodsKind.ObjectId, 0) 
                                  , COALESCE (MIString_PartionGoods.ValueData, '')

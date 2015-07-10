@@ -1892,6 +1892,10 @@
         Value = Null
         DataType = ftFloat
         ParamType = ptInputOutput
+      end
+      item
+        Value = Null
+        ParamType = ptUnknown
       end>
     Left = 40
     Top = 344
@@ -3786,8 +3790,8 @@
       item
         Name = 'inMovementId'
         Value = Null
-        Component = FormParams
-        ComponentItem = 'Id'
+        Component = GuidesInvNumberOrder
+        ComponentItem = 'Key'
         ParamType = ptInput
       end
       item
