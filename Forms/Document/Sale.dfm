@@ -1,10 +1,10 @@
-inherited SaleForm: TSaleForm
+﻿inherited SaleForm: TSaleForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1055#1088#1086#1076#1072#1078#1072' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1102'  ('#1074#1089#1077')>'
   ClientHeight = 668
   ClientWidth = 1020
   AddOnFormData.OnLoadAction = actSetDefaults
   ExplicitWidth = 1036
-  ExplicitHeight = 703
+  ExplicitHeight = 706
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -1475,6 +1475,40 @@ inherited SaleForm: TSaleForm
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
     end
+    object actPrintSaleOrder: TdsdPrintAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spSelectPrint_SaleOrder
+      StoredProcList = <
+        item
+          StoredProc = spSelectPrint_SaleOrder
+        end>
+      Caption = #1047#1072#1103#1074#1082#1072'/'#1086#1090#1075#1088#1091#1079#1082#1072
+      Hint = #1047#1072#1103#1074#1082#1072'/'#1086#1090#1075#1088#1091#1079#1082#1072
+      ImageIndex = 3
+      DataSets = <
+        item
+          DataSet = PrintHeaderCDS
+          UserName = 'frxDBDHeader'
+        end
+        item
+          DataSet = PrintItemsCDS
+          UserName = 'frxDBDMaster'
+          IndexFieldNames = 'GoodsGroupNameFull;GoodsName'
+        end>
+      CopiesCount = 1
+      Params = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'Id'
+        end>
+      ReportName = 'PrintMovement_Sale_Order'
+      ReportNameParam.Value = 'PrintMovement_Sale_Order'
+      ReportNameParam.DataType = ftString
+      ReportNameParam.ParamType = ptInput
+    end
   end
   inherited MasterDS: TDataSource
     Left = 32
@@ -1678,6 +1712,14 @@ inherited SaleForm: TSaleForm
         end
         item
           Visible = True
+          ItemName = #1074#1074
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbMovementItemProtocol'
         end
         item
@@ -1771,6 +1813,10 @@ inherited SaleForm: TSaleForm
       Action = actPrint_QualityDoc
       Category = 0
     end
+    object вв: TdxBarButton
+      Action = actPrintSaleOrder
+      Category = 0
+    end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
     SummaryItemList = <
@@ -1846,6 +1892,10 @@ inherited SaleForm: TSaleForm
         Value = Null
         DataType = ftFloat
         ParamType = ptInputOutput
+      end
+      item
+        Value = Null
+        ParamType = ptUnknown
       end>
     Left = 40
     Top = 344
@@ -3724,5 +3774,33 @@ inherited SaleForm: TSaleForm
     PackSize = 1
     Left = 767
     Top = 376
+  end
+  object spSelectPrint_SaleOrder: TdsdStoredProc
+    StoredProcName = 'gpSelect_Movement_Sale_Order_Print'
+    DataSet = PrintHeaderCDS
+    DataSets = <
+      item
+        DataSet = PrintHeaderCDS
+      end
+      item
+        DataSet = PrintItemsCDS
+      end>
+    OutputType = otMultiDataSet
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = GuidesInvNumberOrder
+        ComponentItem = 'Key'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inMovementId_Weighing'
+        Value = '0'
+        ParamType = ptInput
+      end>
+    PackSize = 1
+    Left = 687
+    Top = 248
   end
 end

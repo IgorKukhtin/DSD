@@ -171,6 +171,9 @@ type
     actGoodsChoiceForm: TOpenChoiceForm;
     cxLabel22: TcxLabel;
     ceComment: TcxTextEdit;
+    spSelectPrint_SaleOrder: TdsdStoredProc;
+    actPrintSaleOrder: TdsdPrintAction;
+    тт: TdxBarButton;
   private
     { Private declarations }
   public

@@ -192,6 +192,7 @@ begin
   LoadReportFromFile('PrintMovement_Send', ReportPath + '\Товарный Учет\PrintMovement_Send.fr3');
 
   LoadReportFromFile('PrintMovement_Inventory', ReportPath + '\Товарный Учет\PrintMovement_Inventory.fr3');
+  LoadReportFromFile('PrintMovement_Sale_Order', ReportPath + '\Товарный Учет\PrintMovement_Sale_Order.fr3');
 
   LoadReportFromFile('PrintMovement_PersonalService', ReportPath + '\Персонал\PrintMovement_PersonalService.fr3');
 
