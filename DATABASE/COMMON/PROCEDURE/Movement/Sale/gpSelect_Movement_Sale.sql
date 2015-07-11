@@ -19,7 +19,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , TotalSummVAT TFloat, TotalSummMVAT TFloat, TotalSummPVAT TFloat, TotalSummChange TFloat, TotalSumm TFloat, TotalSummCurrency TFloat
              , CurrencyValue TFloat, ParValue TFloat
              , CurrencyPartnerValue TFloat, ParPartnerValue TFloat
-             , InvNumberOrder TVarChar
+             , MovementId_Order Integer, InvNumberOrder TVarChar
              , FromId Integer, FromName TVarChar, ToId Integer, ToName TVarChar
              , PaidKindId Integer, PaidKindName TVarChar
              , ContractId Integer, ContractCode Integer, ContractName TVarChar, ContractTagName TVarChar
@@ -105,6 +105,7 @@ BEGIN
            , MovementFloat_CurrencyPartnerValue.ValueData   AS CurrencyPartnerValue
            , MovementFloat_ParPartnerValue.ValueData        AS ParPartnerValue
 
+           , MovementLinkMovement_Order.MovementChildId     AS MovementId_Order
            , MovementString_InvNumberOrder.ValueData        AS InvNumberOrder
            , Object_From.Id                                 AS FromId
            , Object_From.ValueData                          AS FromName

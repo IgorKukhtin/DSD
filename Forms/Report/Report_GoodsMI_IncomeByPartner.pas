@@ -43,6 +43,15 @@ type
     bbPrint: TdxBarButton;
     actPrintByGoods: TdsdPrintAction;
     bbPrintByGoods: TdxBarButton;
+    cxLabel5: TcxLabel;
+    edUnitGroup: TcxButtonEdit;
+    GuidesUnitGroup: TdsdGuides;
+    cxLabel6: TcxLabel;
+    edUnit: TcxButtonEdit;
+    UnitGuides: TdsdGuides;
+    cxLabel7: TcxLabel;
+    edPaidKind: TcxButtonEdit;
+    PaidKindGuides: TdsdGuides;
   private
     { Private declarations }
   public

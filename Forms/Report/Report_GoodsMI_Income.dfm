@@ -1,28 +1,29 @@
 inherited Report_GoodsMI_IncomeForm: TReport_GoodsMI_IncomeForm
   Caption = #1054#1090#1095#1077#1090' <'#1087#1086' '#1090#1086#1074#1072#1088#1072#1084'>'
   ClientHeight = 344
-  ClientWidth = 973
+  ClientWidth = 971
   AddOnFormData.isSingle = False
   AddOnFormData.Params = FormParams
-  ExplicitWidth = 989
-  ExplicitHeight = 379
+  ExplicitWidth = 987
+  ExplicitHeight = 382
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Width = 973
-    Height = 287
+    Top = 99
+    Width = 971
+    Height = 245
     TabOrder = 3
     ExplicitTop = 57
     ExplicitWidth = 973
     ExplicitHeight = 287
-    ClientRectBottom = 287
-    ClientRectRight = 973
+    ClientRectBottom = 245
+    ClientRectRight = 971
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 973
       ExplicitHeight = 287
       inherited cxGrid: TcxGrid
-        Width = 973
-        Height = 287
+        Width = 971
+        Height = 245
         ExplicitWidth = 973
         ExplicitHeight = 287
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -203,26 +204,38 @@ inherited Report_GoodsMI_IncomeForm: TReport_GoodsMI_IncomeForm
     end
   end
   inherited Panel: TPanel
-    Width = 973
+    Width = 971
+    Height = 73
     ExplicitWidth = 973
+    ExplicitHeight = 73
     inherited deStart: TcxDateEdit
+      Left = 121
       EditValue = 41640d
       Properties.SaveTime = False
+      ExplicitLeft = 121
     end
     inherited deEnd: TcxDateEdit
-      Left = 316
+      Left = 121
+      Top = 30
       EditValue = 41640d
       Properties.SaveTime = False
-      ExplicitLeft = 316
+      ExplicitLeft = 121
+      ExplicitTop = 30
+    end
+    inherited cxLabel2: TcxLabel
+      Left = 10
+      Top = 31
+      ExplicitLeft = 10
+      ExplicitTop = 31
     end
     object cxLabel4: TcxLabel
-      Left = 413
-      Top = 6
+      Left = 541
+      Top = 31
       Caption = #1043#1088#1091#1087#1087#1072' '#1090#1086#1074#1072#1088#1086#1074':'
     end
     object edGoodsGroup: TcxButtonEdit
-      Left = 501
-      Top = 5
+      Left = 630
+      Top = 30
       Properties.Buttons = <
         item
           Default = True
@@ -230,12 +243,12 @@ inherited Report_GoodsMI_IncomeForm: TReport_GoodsMI_IncomeForm
         end>
       Properties.ReadOnly = True
       TabOrder = 5
-      Width = 207
+      Width = 336
     end
     object edInDescName: TcxTextEdit
       AlignWithMargins = True
-      Left = 730
-      Top = 5
+      Left = 735
+      Top = 3
       ParentCustomHint = False
       BeepOnEnter = False
       Enabled = False
@@ -249,6 +262,57 @@ inherited Report_GoodsMI_IncomeForm: TReport_GoodsMI_IncomeForm
       Style.IsFontAssigned = True
       TabOrder = 6
       Width = 231
+    end
+    object cxLabel3: TcxLabel
+      Left = 212
+      Top = 32
+      Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077':'
+    end
+    object edUnit: TcxButtonEdit
+      Left = 296
+      Top = 30
+      Properties.Buttons = <
+        item
+          Default = True
+          Kind = bkEllipsis
+        end>
+      Properties.ReadOnly = True
+      TabOrder = 8
+      Width = 241
+    end
+    object cxLabel5: TcxLabel
+      Left = 209
+      Top = 6
+      Caption = #1043#1088'. '#1087#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1081':'
+    end
+    object edUnitGroup: TcxButtonEdit
+      Left = 314
+      Top = 3
+      Properties.Buttons = <
+        item
+          Default = True
+          Kind = bkEllipsis
+        end>
+      Properties.ReadOnly = True
+      TabOrder = 10
+      Width = 223
+    end
+    object cxLabel6: TcxLabel
+      Left = 549
+      Top = 6
+      Caption = #1060#1086#1088#1084#1072' '#1086#1087#1083#1072#1090#1099':'
+    end
+    object edPaidKind: TcxButtonEdit
+      Left = 630
+      Top = 3
+      Properties.Buttons = <
+        item
+          Default = True
+          Kind = bkEllipsis
+        end>
+      Properties.ReadOnly = True
+      TabOrder = 12
+      Width = 101
     end
   end
   inherited MasterDS: TDataSource
@@ -287,6 +351,27 @@ inherited Report_GoodsMI_IncomeForm: TReport_GoodsMI_IncomeForm
         Name = 'inGoodsGroupId'
         Value = ''
         Component = GoodsGroupGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inUnitGroupId'
+        Value = Null
+        Component = GuidesUnitGroup
+        ComponentItem = 'Key'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inUnitId'
+        Value = Null
+        Component = UnitGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inPaidKindId'
+        Value = Null
+        Component = PaidKindGuides
         ComponentItem = 'Key'
         ParamType = ptInput
       end>
@@ -345,7 +430,8 @@ inherited Report_GoodsMI_IncomeForm: TReport_GoodsMI_IncomeForm
         DataType = ftString
         ParamType = ptInput
       end>
-    Left = 600
+    Left = 704
+    Top = 24
   end
   object FormParams: TdsdFormParams
     Params = <
@@ -363,5 +449,87 @@ inherited Report_GoodsMI_IncomeForm: TReport_GoodsMI_IncomeForm
       end>
     Left = 328
     Top = 170
+  end
+  object UnitGuides: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edUnit
+    FormNameParam.Value = 'TUnit_ObjectForm'
+    FormNameParam.DataType = ftString
+    FormName = 'TUnit_ObjectForm'
+    PositionDataSet = 'MasterCDS'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = UnitGuides
+        ComponentItem = 'Key'
+        DataType = ftString
+        ParamType = ptInput
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = UnitGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+      end>
+    Left = 336
+    Top = 24
+  end
+  object GuidesUnitGroup: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edUnitGroup
+    FormNameParam.Value = 'TUnitTreeForm'
+    FormNameParam.DataType = ftString
+    FormName = 'TUnitTreeForm'
+    PositionDataSet = 'ClientDataSet'
+    ParentDataSet = 'TreeDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GuidesUnitGroup
+        ComponentItem = 'Key'
+        DataType = ftString
+        ParamType = ptInput
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesUnitGroup
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+      end>
+    Left = 384
+    Top = 65528
+  end
+  object PaidKindGuides: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edPaidKind
+    FormNameParam.Value = 'TPaidKindForm'
+    FormNameParam.DataType = ftString
+    FormName = 'TPaidKindForm'
+    PositionDataSet = 'MasterCDS'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = PaidKindGuides
+        ComponentItem = 'Key'
+        DataType = ftString
+        ParamType = ptInput
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = PaidKindGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+      end>
+    Left = 648
+    Top = 65528
   end
 end

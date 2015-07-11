@@ -205,7 +205,7 @@ BEGIN
                    ELSE 0 END AS WeightDiff_B
 
             , CASE WHEN tmpResult1.Amount_Weight-tmpResult1.Amount_Order_Weight-tmpResult1.AmountSecond_Order_Weight < 0 
-                   THEN tmpResult1.Amount_Weight-tmpResult1.Amount_Order_Weight-tmpResult1.AmountSecond_Order_Weight 
+                   THEN (-1)*(tmpResult1.Amount_Weight-tmpResult1.Amount_Order_Weight-tmpResult1.AmountSecond_Order_Weight) 
                    ELSE 0 END AS WeightDiff_M
 
        FROM ( SELECT tmpResult.GoodsId 			

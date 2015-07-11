@@ -34,6 +34,15 @@ type
     clGoodsKindName: TcxGridDBColumn;
     clPaidKindName: TcxGridDBColumn;
     clFuelKindName: TcxGridDBColumn;
+    cxLabel3: TcxLabel;
+    edUnit: TcxButtonEdit;
+    UnitGuides: TdsdGuides;
+    cxLabel5: TcxLabel;
+    edUnitGroup: TcxButtonEdit;
+    GuidesUnitGroup: TdsdGuides;
+    cxLabel6: TcxLabel;
+    edPaidKind: TcxButtonEdit;
+    PaidKindGuides: TdsdGuides;
   private
     { Private declarations }
   public

@@ -652,6 +652,12 @@ inherited Sale_OrderJournalForm: TSale_OrderJournalForm
             Options.Editing = False
             Width = 120
           end
+          object MovementId_Order: TcxGridDBColumn
+            DataBinding.FieldName = 'MovementId_Order'
+            Visible = False
+            VisibleForCustomization = False
+            Width = 20
+          end
         end
       end
     end
@@ -823,7 +829,52 @@ inherited Sale_OrderJournalForm: TSale_OrderJournalForm
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
     end
-    object mactPrint_Tax_Us: TMultiAction [3]
+    object actPrintSaleOrder: TdsdPrintAction [3]
+      Category = 'DSDLib'
+      MoveParams = <
+        item
+          FromParam.Name = 'id'
+          FromParam.Value = Null
+          FromParam.Component = MasterCDS
+          FromParam.ComponentItem = 'id'
+          ToParam.Value = Null
+          ToParam.Component = FormParams
+          ToParam.ComponentItem = 'Id'
+          ToParam.ParamType = ptInputOutput
+        end>
+      StoredProc = spSelectPrint_SaleOrder
+      StoredProcList = <
+        item
+          StoredProc = spSelectPrint_SaleOrder
+        end>
+      Caption = #1047#1072#1103#1074#1082#1072'/'#1086#1090#1075#1088#1091#1079#1082#1072
+      Hint = #1047#1072#1103#1074#1082#1072'/'#1086#1090#1075#1088#1091#1079#1082#1072
+      ImageIndex = 3
+      ShortCut = 16464
+      DataSets = <
+        item
+          DataSet = PrintHeaderCDS
+          UserName = 'frxDBDHeader'
+        end
+        item
+          DataSet = PrintItemsCDS
+          UserName = 'frxDBDMaster'
+          IndexFieldNames = 'GoodsGroupNameFull;GoodsName;GoodsKindName;PartionGoods'
+        end>
+      CopiesCount = 1
+      Params = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'Id'
+        end>
+      ReportName = 'PrintMovement_Sale_Order'
+      ReportNameParam.Value = 'PrintMovement_Sale_Order'
+      ReportNameParam.DataType = ftString
+      ReportNameParam.ParamType = ptInput
+    end
+    object mactPrint_Tax_Us: TMultiAction [4]
       Category = 'Print_Tax'
       MoveParams = <
         item
@@ -847,7 +898,7 @@ inherited Sale_OrderJournalForm: TSale_OrderJournalForm
       Hint = #1053#1072#1083#1086#1075#1086#1074#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103' ('#1087#1088#1086#1076#1072#1074#1077#1094')'
       ImageIndex = 16
     end
-    object mactPrint_Account: TMultiAction [4]
+    object mactPrint_Account: TMultiAction [5]
       Category = 'Print_Account'
       MoveParams = <
         item
@@ -871,7 +922,7 @@ inherited Sale_OrderJournalForm: TSale_OrderJournalForm
       Hint = #1055#1077#1095#1072#1090#1100' '#1057#1095#1077#1090
       ImageIndex = 21
     end
-    object actInvoice: TEDIAction [5]
+    object actInvoice: TEDIAction [6]
       Category = 'EDI'
       MoveParams = <>
       StartDateParam.Value = Null
@@ -881,7 +932,7 @@ inherited Sale_OrderJournalForm: TSale_OrderJournalForm
       HeaderDataSet = PrintHeaderCDS
       ListDataSet = PrintItemsCDS
     end
-    object actPrintTax_Us: TdsdPrintAction [6]
+    object actPrintTax_Us: TdsdPrintAction [7]
       Category = 'Print_Tax'
       MoveParams = <>
       StoredProc = spSelectTax_Us
@@ -920,7 +971,7 @@ inherited Sale_OrderJournalForm: TSale_OrderJournalForm
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
     end
-    object actPrint_Account_ReportName: TdsdExecStoredProc [8]
+    object actPrint_Account_ReportName: TdsdExecStoredProc [9]
       Category = 'Print_Account'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -959,7 +1010,7 @@ inherited Sale_OrderJournalForm: TSale_OrderJournalForm
           ParamType = ptInputOutput
         end>
     end
-    object actChecked: TdsdExecStoredProc [12]
+    object actChecked: TdsdExecStoredProc [13]
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -1003,7 +1054,7 @@ inherited Sale_OrderJournalForm: TSale_OrderJournalForm
           ParamType = ptInput
         end>
     end
-    object actMovementCheck: TdsdOpenForm [21]
+    object actMovementCheck: TdsdOpenForm [22]
       Category = 'DSDLib'
       MoveParams = <>
       Caption = #1054#1096#1080#1073#1082#1080
@@ -2022,6 +2073,14 @@ inherited Sale_OrderJournalForm: TSale_OrderJournalForm
         end
         item
           Visible = True
+          ItemName = 'bb'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbMovementProtocol'
         end
         item
@@ -2128,6 +2187,10 @@ inherited Sale_OrderJournalForm: TSale_OrderJournalForm
     end
     object bbDesadv: TdxBarButton
       Action = mactDesadv
+      Category = 0
+    end
+    object bb: TdxBarButton
+      Action = actPrintSaleOrder
       Category = 0
     end
   end
@@ -2839,5 +2902,33 @@ inherited Sale_OrderJournalForm: TSale_OrderJournalForm
     PackSize = 1
     Left = 872
     Top = 240
+  end
+  object spSelectPrint_SaleOrder: TdsdStoredProc
+    StoredProcName = 'gpSelect_Movement_Sale_Order_Print'
+    DataSet = PrintHeaderCDS
+    DataSets = <
+      item
+        DataSet = PrintHeaderCDS
+      end
+      item
+        DataSet = PrintItemsCDS
+      end>
+    OutputType = otMultiDataSet
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = ''
+        Component = MasterCDS
+        ComponentItem = 'MovementId_Order'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inMovementId_Weighing'
+        Value = '0'
+        ParamType = ptInput
+      end>
+    PackSize = 1
+    Left = 1015
+    Top = 200
   end
 end

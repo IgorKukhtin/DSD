@@ -1,15 +1,17 @@
 -- Function: gpGet_Movement_SendOnPrice()
 
 DROP FUNCTION IF EXISTS gpGet_Movement_SendOnPrice (Integer, TDateTime, TVarChar);
+DROP FUNCTION IF EXISTS gpGet_Movement_SendOnPrice (Integer, TDateTime, TFloat, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpGet_Movement_SendOnPrice(
     IN inMovementId        Integer  , -- ключ Документа
     IN inOperDate          TDateTime, -- ключ Документа
+    IN inChangePercentAmount TFloat , -- Расчет по % скидки вес
     IN inSession           TVarChar   -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode Integer, StatusName TVarChar
              , OperDatePartner TDateTime
-             , PriceWithVAT Boolean, VATPercent TFloat, ChangePercent TFloat
+             , PriceWithVAT Boolean, VATPercent TFloat, ChangePercent TFloat, ChangePercentAmount TFloat
              , FromId Integer, FromName TVarChar, ToId Integer, ToName TVarChar
              , RouteSortingId Integer, RouteSortingName TVarChar
              , PriceListId Integer, PriceListName TVarChar
@@ -34,6 +36,7 @@ BEGIN
              , ObjectBoolean_PriceWithVAT.ValueData       AS PriceWithVAT
              , ObjectFloat_VATPercent.ValueData           AS VATPercent
              , CAST (0 AS TFloat)                         AS ChangePercent
+             , inChangePercentAmount                      AS ChangePercentAmount
              , 0                     			  AS FromId
              , CAST ('' AS TVarChar) 			  AS FromName
              , 0                     			  AS ToId
@@ -62,18 +65,19 @@ BEGIN
              Movement.Id                                    AS Id
            , Movement.InvNumber                             AS InvNumber
            , Movement.OperDate                              AS OperDate
-           , Object_Status.ObjectCode    				    AS StatusCode
-           , Object_Status.ValueData     				    AS StatusName
+           , Object_Status.ObjectCode    		    AS StatusCode
+           , Object_Status.ValueData     		    AS StatusName
            , MovementDate_OperDatePartner.ValueData         AS OperDatePartner
            , MovementBoolean_PriceWithVAT.ValueData         AS PriceWithVAT
            , MovementFloat_VATPercent.ValueData             AS VATPercent
            , MovementFloat_ChangePercent.ValueData          AS ChangePercent
-           , Object_From.Id                    			    AS FromId
-           , Object_From.ValueData             			    AS FromName
-           , Object_To.Id                      			    AS ToId
-           , Object_To.ValueData               			    AS ToName
-           , Object_RouteSorting.Id        				    AS RouteSortingId
-           , Object_RouteSorting.ValueData 				    AS RouteSortingName
+           , inChangePercentAmount                          AS ChangePercentAmount
+           , Object_From.Id                    	            AS FromId
+           , Object_From.ValueData             		    AS FromName
+           , Object_To.Id                      		    AS ToId
+           , Object_To.ValueData               		    AS ToName
+           , Object_RouteSorting.Id       		    AS RouteSortingId
+           , Object_RouteSorting.ValueData		    AS RouteSortingName
            , Object_PriceList.id                            AS PriceListId
            , Object_PriceList.valuedata                     AS PriceListName
 
@@ -131,11 +135,12 @@ BEGIN
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpGet_Movement_SendOnPrice (Integer, TDateTime, TVarChar) OWNER TO postgres;
+ALTER FUNCTION gpGet_Movement_SendOnPrice (Integer, TDateTime, TFloat, TVarChar) OWNER TO postgres;
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 11.06.15         * add inChangePercentAmount
  08.06.15         * add Order
  05.05.14                                                        *   передалал все по новой на базе проц расхода.
  18.04.14                                                        *

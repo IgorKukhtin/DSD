@@ -168,6 +168,10 @@ type
     mactOrdSpr_All: TMultiAction;
     mactDesadv_Simple: TMultiAction;
     mactDesadv_All: TMultiAction;
+    spSelectPrint_SaleOrder: TdsdStoredProc;
+    MovementId_Order: TcxGridDBColumn;
+    actPrintSaleOrder: TdsdPrintAction;
+    bb: TdxBarButton;
   private
     { Private declarations }
   public

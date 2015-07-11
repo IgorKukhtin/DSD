@@ -2,7 +2,7 @@ inherited SendOnPrice_BranchJournalForm: TSendOnPrice_BranchJournalForm
   Caption = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' <'#1055#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077' '#1087#1086' '#1094#1077#1085#1077' ('#1092#1080#1083#1080#1072#1083')'
   ClientHeight = 535
   ClientWidth = 1110
-  ExplicitLeft = -75
+  AddOnFormData.Params = FormParams
   ExplicitWidth = 1126
   ExplicitHeight = 573
   PixelsPerInch = 96
@@ -359,6 +359,14 @@ inherited SendOnPrice_BranchJournalForm: TSendOnPrice_BranchJournalForm
           Value = 41640d
           Component = deEnd
           DataType = ftDateTime
+        end
+        item
+          Name = 'inChangePercentAmount'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'inChangePercentAmount'
+          DataType = ftFloat
+          ParamType = ptInput
         end>
     end
     object actPrintOut: TdsdPrintAction
@@ -691,6 +699,12 @@ inherited SendOnPrice_BranchJournalForm: TSendOnPrice_BranchJournalForm
         Name = 'ReportNameSendOnPriceTax'
         Value = Null
         DataType = ftString
+        ParamType = ptInput
+      end
+      item
+        Name = 'inChangePercentAmount'
+        Value = Null
+        DataType = ftFloat
         ParamType = ptInput
       end>
     Left = 400

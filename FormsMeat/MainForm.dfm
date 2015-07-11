@@ -1486,7 +1486,12 @@ inherited MainForm: TMainForm
       FormName = 'TSendOnPriceJournalForm'
       FormNameParam.Value = ''
       FormNameParam.DataType = ftString
-      GuiParams = <>
+      GuiParams = <
+        item
+          Name = 'inChangePercentAmount'
+          Value = '1'
+          DataType = ftFloat
+        end>
       isShowModal = False
     end
     object actRegion: TdsdOpenForm
@@ -1507,7 +1512,12 @@ inherited MainForm: TMainForm
       FormName = 'TSendOnPrice_BranchJournalForm'
       FormNameParam.Value = 'TSendOnPrice_BranchJournalForm'
       FormNameParam.DataType = ftString
-      GuiParams = <>
+      GuiParams = <
+        item
+          Name = 'inChangePercentAmount'
+          Value = '0'
+          DataType = ftFloat
+        end>
       isShowModal = False
     end
     object actSend: TdsdOpenForm
