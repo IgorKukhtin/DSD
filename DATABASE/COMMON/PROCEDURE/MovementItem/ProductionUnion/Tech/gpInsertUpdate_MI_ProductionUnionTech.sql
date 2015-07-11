@@ -32,6 +32,12 @@ BEGIN
    vbUserId:= lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MI_ProductionUnionTech());
 
 
+   -- Проверка для ЦЕХ колбаса+дел-сы
+   IF (inFromId <> inToId) OR NOT EXISTS (SELECT lfSelect.UnitId FROM lfSelect_Object_Unit_byGroup (8446) AS lfSelect WHERE lfSelect.UnitId = inFromId)
+   THEN
+       RAISE EXCEPTION 'Ошибка.Изменения возможны только для подазделений <%>.', lfGet_Object_ValueData (8446);
+   END IF;
+
    -- проверка
    IF COALESCE (inGoodsId, 0) = 0 
    THEN

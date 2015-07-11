@@ -156,7 +156,7 @@ BEGIN
         , Object_Goods.ObjectCode AS GoodsCode
         , Object_Goods.ValueData  AS GoodsName
         , Object_GoodsKind.ValueData AS GoodsKindName
-        , COALESCE (Object_PartionGoods.ValueData, '*' || DATE (MIDate_PartionGoods.ValueData) :: TVarChar) :: TVarChar AS PartionGoods
+        , COALESCE (Object_PartionGoods.ValueData, '*' || TO_CHAR (MIDate_PartionGoods.ValueData, 'DD.MM.YYYY')) :: TVarChar AS PartionGoods
 
         , CAST (CASE WHEN Movement.DescId = zc_Movement_Income() AND 1=0
                           THEN MIFloat_Price.ValueData

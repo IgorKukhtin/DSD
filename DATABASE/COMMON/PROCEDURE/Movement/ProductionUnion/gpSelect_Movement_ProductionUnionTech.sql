@@ -16,7 +16,7 @@ $BODY$
   DECLARE vbUserId Integer;
 
   DECLARE vbFromId_group Integer;
-  DECLARE vbIsTech Boolean;
+  DECLARE vbIsOrder Boolean;
 
   DECLARE Cursor1 refcursor;
   DECLARE Cursor2 refcursor;
@@ -29,10 +29,10 @@ BEGIN
      -- определяется
      vbFromId_group:= (SELECT ObjectLink_Parent.ChildObjectId FROM ObjectLink AS ObjectLink_Parent WHERE ObjectLink_Parent.ObjectId = inFromId AND ObjectLink_Parent.DescId = zc_ObjectLink_Unit_Parent());
      -- 
-     CREATE TEMP TABLE _tmpListMaster (MovementId Integer, StatusId Integer, InvNumber TVarChar, OperDate TDateTime, MovementItemId Integer, MovementItemId_order Integer, GoodsId Integer, GoodsKindId Integer, GoodsKindId_Complete Integer, ReceiptId Integer, Amount_Order TFloat, CuterCount_Order TFloat, Amount TFloat, CuterCount TFloat) ON COMMIT DROP;
+     CREATE TEMP TABLE _tmpListMaster (MovementId Integer, StatusId Integer, InvNumber TVarChar, OperDate TDateTime, MovementItemId Integer, MovementItemId_order Integer, GoodsId Integer, GoodsKindId Integer, GoodsKindId_Complete Integer, ReceiptId Integer, Amount_Order TFloat, CuterCount_Order TFloat, Amount TFloat, CuterCount TFloat, isPartionDate Boolean) ON COMMIT DROP;
 
-     -- определяется
-     vbIsTech:= TRUE; -- NOT EXISTS (SELECT UserId FROM ObjectLink_UserRole_View WHERE UserId = vbUserId AND RoleId IN (343951)); -- Экономист (производство)
+     -- определяется - ЦЕХ колбаса+дел-сы
+     vbIsOrder:= (inFromId = inToId) AND EXISTS (SELECT lfSelect.UnitId FROM lfSelect_Object_Unit_byGroup (8446) AS lfSelect WHERE lfSelect.UnitId = inFromId);
 
 
      WITH tmpMI_order2 AS (SELECT (Movement.OperDate :: Date + COALESCE (MIFloat_StartProductionInDays.ValueData, 0) :: Integer) :: TDateTime AS OperDate
@@ -53,7 +53,7 @@ BEGIN
                                                 THEN COALESCE (MIFloat_CuterCount.ValueData, 0) + COALESCE (MIFloat_CuterCountSecond.ValueData, 0)
                                            ELSE 0
                                       END) AS CuterCount
-                          FROM (SELECT (inStartDate - INTERVAL '1 DAY') AS StartDate, (inEndDate + INTERVAL '1 DAY') AS EndDate WHERE vbIsTech = TRUE) AS tmpDate
+                          FROM (SELECT (inStartDate - INTERVAL '1 DAY') AS StartDate, (inEndDate + INTERVAL '1 DAY') AS EndDate WHERE vbIsOrder = TRUE) AS tmpDate
                                INNER JOIN Movement ON Movement.OperDate BETWEEN tmpDate.StartDate AND tmpDate.EndDate
                                                   AND Movement.DescId = zc_Movement_OrderInternal()
                                                   AND Movement.StatusId <> zc_Enum_Status_Erased()
@@ -96,7 +96,6 @@ BEGIN
                                                     ON OrderType_Unit.ObjectId = ObjectLink_OrderType_Goods.ObjectId
                                                    AND OrderType_Unit.DescId = zc_ObjectLink_OrderType_Unit()
 
-
                           WHERE MLO_To.ObjectId IN (inFromId, vbFromId_group)
                             -- AND OrderType_Unit.ChildObjectId = inFromId
                           GROUP BY Movement.OperDate
@@ -130,6 +129,7 @@ BEGIN
                                , MovementItem.Id                                                AS MovementItemId
                                , MovementItem.Amount                                            AS Amount
                                , COALESCE (MIFloat_CuterCount.ValueData, 0)                     AS CuterCount
+                               , COALESCE ((ObjectBoolean_UnitFrom_PartionDate.ValueData = TRUE AND ObjectBoolean_UnitTo_PartionDate.ValueData = TRUE), FALSE) AS isPartionDate
                           FROM Movement
                                INNER JOIN MovementItem ON MovementItem.MovementId = Movement.Id
                                                       AND MovementItem.isErased   = FALSE
@@ -152,6 +152,13 @@ BEGIN
                                LEFT JOIN MovementLinkObject AS MLO_To
                                                             ON MLO_To.MovementId = Movement.Id
                                                            AND MLO_To.DescId = zc_MovementLinkObject_To()
+                               LEFT JOIN ObjectBoolean AS ObjectBoolean_UnitFrom_PartionDate
+                                                       ON ObjectBoolean_UnitFrom_PartionDate.ObjectId = MLO_From.ObjectId
+                                                      AND ObjectBoolean_UnitFrom_PartionDate.DescId = zc_ObjectBoolean_Unit_PartionDate()
+                               LEFT JOIN ObjectBoolean AS ObjectBoolean_UnitTo_PartionDate
+                                                       ON ObjectBoolean_UnitTo_PartionDate.ObjectId = MLO_To.ObjectId
+                                                      AND ObjectBoolean_UnitTo_PartionDate.DescId = zc_ObjectBoolean_Unit_PartionDate()
+
                             WHERE Movement.OperDate BETWEEN inStartDate AND inEndDate
                               AND Movement.DescId = zc_Movement_ProductionUnion()
                               AND MLO_From.ObjectId = inFromId
@@ -196,7 +203,7 @@ BEGIN
                          )
 
     -- !!!!!!!!!!!!!!!!!!!!!!!
-    INSERT INTO _tmpListMaster (MovementId, StatusId, InvNumber, OperDate, MovementItemId, MovementItemId_order, GoodsId, GoodsKindId, GoodsKindId_Complete, ReceiptId, Amount_Order, CuterCount_Order, Amount, CuterCount)
+    INSERT INTO _tmpListMaster (MovementId, StatusId, InvNumber, OperDate, MovementItemId, MovementItemId_order, GoodsId, GoodsKindId, GoodsKindId_Complete, ReceiptId, Amount_Order, CuterCount_Order, Amount, CuterCount, isPartionDate)
        SELECT COALESCE (tmpMI_production.MovementId, 0)                                          AS MovementId
             , COALESCE (tmpMI_production.StatusId, 0)                                            AS StatusId
             , COALESCE (tmpMI_production.InvNumber, '')                                          AS InvNumber
@@ -207,10 +214,12 @@ BEGIN
             , COALESCE (tmpMI_production.GoodsKindId, tmpMI_order.GoodsKindId)                   AS GoodsKindId
             , COALESCE (tmpMI_production.GoodsKindId_Complete, tmpMI_order.GoodsKindId_Complete) AS GoodsKindId_Complete
             , COALESCE (tmpMI_production.ReceiptId, tmpMI_order.ReceiptId)                       AS ReceiptId
-            , COALESCE (tmpMI_order.Amount, 0)              AS Amount_Order
-            , COALESCE (tmpMI_order.CuterCount, 0)          AS CuterCount_Order
-            , COALESCE (tmpMI_production.Amount, 0)         AS Amount
-            , COALESCE (tmpMI_production.CuterCount, 0)     AS CuterCount
+            , COALESCE (tmpMI_order.Amount, 0)                 AS Amount_Order
+            , COALESCE (tmpMI_order.CuterCount, 0)             AS CuterCount_Order
+            , COALESCE (tmpMI_production.Amount, 0)            AS Amount
+            , COALESCE (tmpMI_production.CuterCount, 0)        AS CuterCount
+            , COALESCE (tmpMI_production.isPartionDate, FALSE) AS isPartionDate
+
        FROM tmpMI_production
             FULL JOIN tmpMI_order ON tmpMI_order.MovementItemId_find = tmpMI_production.MovementItemId
                                  /*AND tmpMI_order.GoodsId = tmpMI_production.GoodsId
@@ -273,6 +282,12 @@ BEGIN
             , ObjectString_Receipt_Comment.ValueData AS Comment_receipt
             , ObjectBoolean_Receipt_Main.ValueData   AS isMain
 
+
+            , ObjectFloat_TermProduction.ValueData AS TermProduction
+            , CASE WHEN _tmpListMaster.isPartionDate = TRUE THEN TO_CHAR (_tmpListMaster.OperDate, 'DD.MM.YYYY') ELSE '*' || TO_CHAR (MIDate_PartionGoods.ValueData, 'DD.MM.YYYY')  END :: TVarChar AS PartionGoodsDate
+            , (CASE WHEN _tmpListMaster.isPartionDate = TRUE THEN _tmpListMaster.OperDate ELSE MIDate_PartionGoods.ValueData END
+             + (COALESCE (ObjectFloat_TermProduction.ValueData, 0) :: TVarChar || ' DAY') :: INTERVAL) :: TDateTime AS PartionGoodsDateClose
+
             , Object_Status.ObjectCode            AS StatusCode
             , Object_Status.ValueData             AS StatusName
 
@@ -285,6 +300,18 @@ BEGIN
 
        FROM _tmpListMaster
              -- INNER JOIN tmpStatus ON tmpStatus.StatusId = _tmpListMaster.StatusId
+
+             LEFT JOIN MovementItemDate AS MIDate_PartionGoods
+                                        ON MIDate_PartionGoods.MovementItemId = _tmpListMaster.MovementItemId
+                                       AND MIDate_PartionGoods.DescId = zc_MIDate_PartionGoods()
+                                       AND _tmpListMaster.isPartionDate = FALSE
+             LEFT JOIN ObjectLink AS ObjectLink_OrderType_Goods
+                                  ON ObjectLink_OrderType_Goods.ChildObjectId = _tmpListMaster.GoodsId
+                                 AND ObjectLink_OrderType_Goods.DescId = zc_ObjectLink_OrderType_Goods()
+             LEFT JOIN ObjectFloat AS ObjectFloat_TermProduction
+                                   ON ObjectFloat_TermProduction.ObjectId = ObjectLink_OrderType_Goods.ObjectId
+                                  AND ObjectFloat_TermProduction.DescId = zc_ObjectFloat_OrderType_TermProduction() 
+
              LEFT JOIN MovementItemFloat AS MIFloat_Count
                                          ON MIFloat_Count.MovementItemId = _tmpListMaster.MovementItemId
                                         AND MIFloat_Count.DescId = zc_MIFloat_Count()

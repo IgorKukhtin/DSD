@@ -40,6 +40,7 @@ BEGIN
                                       , inAmount       := inAmount
                                       , inParentId     := inParentId
                                       , inUserId       := inUserId
+                                       );
   
    -- сохранили свойство <Партия товара>
    PERFORM lpInsertUpdate_MovementItemDate (zc_MIDate_PartionGoods(), ioId, inPartionGoodsDate);

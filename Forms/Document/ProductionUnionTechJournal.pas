@@ -31,7 +31,7 @@ type
     actUpdateChildDS: TdsdUpdateDataSet;
     colCount: TcxGridDBColumn;
     colInvNumber: TcxGridDBColumn;
-    colPartionClose: TcxGridDBColumn;
+    colIsPartionClose: TcxGridDBColumn;
     colPartionGoods: TcxGridDBColumn;
     colComment: TcxGridDBColumn;
     colRealWeight: TcxGridDBColumn;
@@ -108,6 +108,9 @@ type
     colAmount_calc: TcxGridDBColumn;
     colIsMain: TcxGridDBColumn;
     colComment_receipt: TcxGridDBColumn;
+    TermProduction: TcxGridDBColumn;
+    PartionGoodsDate: TcxGridDBColumn;
+    PartionGoodsDateClose: TcxGridDBColumn;
   private
     { Private declarations }
   public

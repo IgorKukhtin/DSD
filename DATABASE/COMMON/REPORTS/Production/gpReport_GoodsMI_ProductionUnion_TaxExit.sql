@@ -90,7 +90,7 @@ BEGIN
                              , CLO_PartionGoods.ObjectId
                              , MILinkObject_GoodsKind.ObjectId
                      )
-       , -- приходы п/ф ГП - сгруппировать
+         -- приходы п/ф ГП - сгруппировать
        , tmpMI_WorkProgress_in_group AS (SELECT ContainerId, GoodsId, PartionGoodsId FROM tmpMI_WorkProgress_in GROUP BY ContainerId, GoodsId, PartionGoodsId
                                    UNION SELECT ContainerId, GoodsId, PartionGoodsId FROM tmpMI_WorkProgress_find GROUP BY ContainerId, GoodsId, PartionGoodsId)
          -- расходы п/ф ГП в разрезе ParentId

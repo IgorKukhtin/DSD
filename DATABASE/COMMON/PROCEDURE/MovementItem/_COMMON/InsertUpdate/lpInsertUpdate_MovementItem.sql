@@ -1,6 +1,7 @@
 -- Function: lpInsertUpdate_MovementItem
 
 DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem (Integer, Integer, Integer, Integer, TFloat, Integer);
+DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem (Integer, Integer, Integer, Integer, TFloat, Integer, Integer);
 
 CREATE OR REPLACE FUNCTION lpInsertUpdate_MovementItem(
  INOUT ioId           Integer, 
@@ -9,7 +10,7 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_MovementItem(
     IN inMovementId   Integer,
     IN inAmount       TFloat,
     IN inParentId     Integer,
-    IN inUserId       Integer     -- Пользователь
+    IN inUserId       Integer DEFAULT 0 -- Пользователь
 )
   RETURNS Integer AS
 $BODY$
@@ -40,7 +41,7 @@ BEGIN
      -- определяем <Статус>
      SELECT StatusId, InvNumber INTO vbStatusId, vbInvNumber FROM Movement WHERE Id = inMovementId;
      -- проверка - проведенные/удаленные документы Изменять нельзя
-     IF vbStatusId <> zc_Enum_Status_UnComplete() AND 
+     IF vbStatusId <> zc_Enum_Status_UnComplete() AND COALESCE (inUserId, 0) <> zc_Enum_Process_Auto_PartionClose()
      THEN
          RAISE EXCEPTION 'Ошибка.Изменение документа № <%> в статусе <%> не возможно.', vbInvNumber, lfGet_Object_ValueData (vbStatusId);
      END IF;
@@ -80,7 +81,7 @@ BEGIN
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION lpInsertUpdate_MovementItem (Integer, Integer, Integer, Integer, TFloat, Integer) OWNER TO postgres; 
+ALTER FUNCTION lpInsertUpdate_MovementItem (Integer, Integer, Integer, Integer, TFloat, Integer, Integer) OWNER TO postgres; 
 
 /*-------------------------------------------------------------------------------*/
 /*

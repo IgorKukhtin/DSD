@@ -17,6 +17,9 @@ RETURNS RECORD
 AS
 $BODY$
    DECLARE vbUserId Integer;
+
+   DECLARE vbFromId Integer;
+   DECLARE vbToId   Integer;
 BEGIN
    -- проверка прав пользователя на вызов процедуры
    vbUserId:= lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MI_ProductionUnionTech_Master());
@@ -32,6 +35,14 @@ BEGIN
    IF NOT EXISTS (SELECT MovementItem.Id FROM MovementItem INNER JOIN Movement ON Movement.Id = MovementItem.MovementId AND Movement.DescId = zc_Movement_ProductionUnion() WHERE MovementItem.Id = ioMovementItemId)
    THEN
        RAISE EXCEPTION 'Ошибка.Данные по <Закладке> не сформированы.';
+   END IF;
+
+   -- Проверка для ЦЕХ колбаса+дел-сы
+   vbFromId:= COALESCE ((SELECT MovementLinkObject.ObjectId FROM MovementLinkObject WHERE MovementLinkObject.MovementId = ioMovementId AND MovementLinkObject.DescId = zc_MovementLinkObject_From()), 0);
+   vbToId  := COALESCE ((SELECT MovementLinkObject.ObjectId FROM MovementLinkObject WHERE MovementLinkObject.MovementId = ioMovementId AND MovementLinkObject.DescId = zc_MovementLinkObject_To())  , 0);
+   IF (vbFromId <> vbToId) OR NOT EXISTS (SELECT lfSelect.UnitId FROM lfSelect_Object_Unit_byGroup (8446) AS lfSelect WHERE lfSelect.UnitId = vbFromId)
+   THEN
+       RAISE EXCEPTION 'Ошибка.Изменения возможны только для подазделений <%>.', lfGet_Object_ValueData (8446);
    END IF;
 
    -- проверка
