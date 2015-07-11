@@ -83,6 +83,7 @@ inherited ProductionUnionForm: TProductionUnionForm
             DataBinding.FieldName = 'GoodsGroupNameFull'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 120
           end
           object colMeasureName: TcxGridDBColumn [3]
@@ -312,6 +313,7 @@ inherited ProductionUnionForm: TProductionUnionForm
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 120
           end
           object colChildMeasureName: TcxGridDBColumn [4]

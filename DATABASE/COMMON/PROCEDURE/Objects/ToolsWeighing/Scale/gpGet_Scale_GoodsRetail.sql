@@ -45,6 +45,13 @@ BEGIN
                                AND MovementLinkObject_Partner.DescId = zc_MovementLinkObject_Partner()
                             );
     END IF;
+    -- !!!меняется параметр!!!
+    IF COALESCE (inGoodsPropertyId, 0) = 0
+    THEN
+        -- inGoodsPropertyId:= 83956; -- Фоззи
+        inGoodsPropertyId:= 83963; -- Ашан
+    END IF;
+
 
     -- Результат - по заявке
     RETURN QUERY

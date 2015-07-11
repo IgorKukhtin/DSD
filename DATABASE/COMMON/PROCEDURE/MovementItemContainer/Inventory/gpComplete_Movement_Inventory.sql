@@ -408,8 +408,10 @@ BEGIN
                                  AND Container.ParentId IS NOT NULL
                    JOIN Object_Account_View AS View_Account ON View_Account.AccountId = Container.ObjectId
                                                            AND View_Account.AccountGroupId <> zc_Enum_AccountGroup_110000() -- Транзит
-                   INNER JOIN ContainerLinkObject AS CLO_Goods ON CLO_Goods.ContainerId = Container.Id AND CLO_Goods.DescId = Container.Id
-                   LEFT JOIN _tmpGoods_Complete_Inventory ON _tmpGoods_Complete_Inventory.GoodsId = zc_ContainerLinkObject_Goods()
+                   INNER JOIN ContainerLinkObject AS CLO_Goods
+                                                  ON CLO_Goods.ContainerId = Container.Id
+                                                 AND CLO_Goods.DescId = zc_ContainerLinkObject_Goods()
+                   LEFT JOIN _tmpGoods_Complete_Inventory ON _tmpGoods_Complete_Inventory.GoodsId = CLO_Goods.ObjectId
                    LEFT JOIN MovementItemContainer AS MIContainer
                                                    ON MIContainer.Containerid = Container.Id
                                                   AND MIContainer.OperDate > vbOperDate
@@ -466,8 +468,14 @@ BEGIN
              , zc_DateEnd() AS PartionGoodsDate
              , 0 AS OperCount
              , 0 AS OperSumm
-             , 0 AS InfoMoneyDestinationId
-             , 0 AS InfoMoneyId
+               -- Управленческие назначения
+             , CASE WHEN Object.DescId = zc_Object_Fuel() THEN COALESCE (View_InfoMoney_Fuel.InfoMoneyDestinationId, 0)
+                    ELSE COALESCE (View_InfoMoney.InfoMoneyDestinationId, 0)
+               END AS InfoMoneyDestinationId
+               -- Статьи назначения
+             , CASE WHEN Object.DescId = zc_Object_Fuel() THEN COALESCE (View_InfoMoney_Fuel.InfoMoneyId, 0)
+                    ELSE COALESCE (View_InfoMoney.InfoMoneyId, 0)
+               END AS InfoMoneyId
              , 0 AS BusinessId
              , 0 AS UnitId_Item, 0 AS StorageId_Item, 0 AS UnitId_Partion, 0 AS Price_Partion
              , FALSE AS isPartionCount -- эти параметры здесь уже не важны, т.к. уже есть ContainerId_Goods
@@ -484,6 +492,21 @@ BEGIN
              LEFT JOIN ContainerLinkObject AS ContainerLinkObject_AssetTo
                                            ON ContainerLinkObject_AssetTo.ContainerId = _tmpRemainsCount.ContainerId_Goods
                                           AND ContainerLinkObject_AssetTo.DescId = zc_ContainerLinkObject_AssetTo()
+
+             LEFT JOIN ObjectLink AS ObjectLink_Goods_Fuel
+                                  ON ObjectLink_Goods_Fuel.ObjectId = _tmpRemainsCount.GoodsId
+                                 AND ObjectLink_Goods_Fuel.DescId = zc_ObjectLink_Goods_Fuel()
+                                 AND vbCarId <> 0
+             LEFT JOIN Object ON Object.Id = COALESCE (ObjectLink_Goods_Fuel.ChildObjectId, _tmpRemainsCount.GoodsId)
+
+             LEFT JOIN Object_InfoMoney_View AS View_InfoMoney_Fuel ON View_InfoMoney_Fuel.InfoMoneyId = zc_Enum_InfoMoney_20401()
+                                                                   AND Object.DescId = zc_Object_Fuel()
+             LEFT JOIN ObjectLink AS ObjectLink_Goods_InfoMoney
+                                  ON ObjectLink_Goods_InfoMoney.ObjectId = _tmpRemainsCount.GoodsId
+                                 AND ObjectLink_Goods_InfoMoney.DescId = zc_ObjectLink_Goods_InfoMoney()
+                                 AND Object.DescId <> zc_Object_Fuel()
+             LEFT JOIN Object_InfoMoney_View AS View_InfoMoney ON View_InfoMoney.InfoMoneyId = ObjectLink_Goods_InfoMoney.ChildObjectId
+
         WHERE _tmpItem.ContainerId_Goods IS NULL;
 
 

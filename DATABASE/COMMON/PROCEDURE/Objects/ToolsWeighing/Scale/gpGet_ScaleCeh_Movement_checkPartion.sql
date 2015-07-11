@@ -57,7 +57,7 @@ BEGIN
           vbIsProductionIn:= (SELECT ValueData FROM MovementBoolean WHERE MovementId = inMovementId AND DescId = zc_MovementBoolean_isIncome());
           IF vbIsProductionIn IS NULL
           THEN 
-              RAISE EXCEPTION 'Ошибка.vbIsProductionIn-???';
+              RAISE EXCEPTION 'Ошибка.vbIsProductionIn-???   <%>   <%> ', inMovementId, zc_MovementBoolean_isIncome();
           END IF;
      END IF;
 

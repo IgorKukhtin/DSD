@@ -991,7 +991,7 @@ begin
     HeaderDataSet.FieldByName('OperDate').asDateTime);
   DESADV.ORDERNUMBER := HeaderDataSet.FieldByName('InvNumberOrder').asString;
   DESADV.ORDERDATE := FormatDateTime('yyyy-mm-dd',
-    HeaderDataSet.FieldByName('OperDate').asDateTime - 1);
+    HeaderDataSet.FieldByName('OperDate').asDateTime);
   DESADV.DELIVERYNOTENUMBER := HeaderDataSet.FieldByName('InvNumber').asString;
 
   DESADV.HEAD.SUPPLIER := HeaderDataSet.FieldByName('SupplierGLNCode').asString;
@@ -1225,15 +1225,15 @@ begin
   INVOICE.DOCUMENTNAME := '380';
   INVOICE.NUMBER := HeaderDataSet.FieldByName('InvNumber').asString;
   INVOICE.Date := FormatDateTime('yyyy-mm-dd',
-    HeaderDataSet.FieldByName('OperDate').asDateTime);
+    HeaderDataSet.FieldByName('OperDatePartner').asDateTime);
   INVOICE.DELIVERYDATE := FormatDateTime('yyyy-mm-dd',
-    HeaderDataSet.FieldByName('OperDate').asDateTime);
+    HeaderDataSet.FieldByName('OperDatePartner').asDateTime);
   INVOICE.ORDERNUMBER := HeaderDataSet.FieldByName('InvNumberOrder').asString;
   INVOICE.ORDERDATE := FormatDateTime('yyyy-mm-dd',
-    HeaderDataSet.FieldByName('OperDate').asDateTime - 1);
+    HeaderDataSet.FieldByName('OperDateOrder').asDateTime);//!!!OperDateOrder!!!
   INVOICE.DELIVERYNOTENUMBER := HeaderDataSet.FieldByName('InvNumber').asString;
   INVOICE.DELIVERYNOTEDATE := FormatDateTime('yyyy-mm-dd',
-    HeaderDataSet.FieldByName('OperDate').asDateTime);
+    HeaderDataSet.FieldByName('OperDatePartner').asDateTime);
 
   INVOICE.GOODSTOTALAMOUNT :=
     StringReplace(FormatFloat('0.00', HeaderDataSet.FieldByName('TotalSummMVAT')
@@ -1690,7 +1690,7 @@ begin
     HeaderDataSet.FieldByName('OperDate').asDateTime);
   ORDRSP.ORDERNUMBER := HeaderDataSet.FieldByName('InvNumberOrder').asString;
   ORDRSP.ORDERDATE := FormatDateTime('yyyy-mm-dd',
-    HeaderDataSet.FieldByName('OperDate').asDateTime - 1);
+    HeaderDataSet.FieldByName('OperDate').asDateTime);
 
   ORDRSP.HEAD.SUPPLIER := HeaderDataSet.FieldByName('SupplierGLNCode').asString;
   ORDRSP.HEAD.BUYER := HeaderDataSet.FieldByName('BuyerGLNCode').asString;

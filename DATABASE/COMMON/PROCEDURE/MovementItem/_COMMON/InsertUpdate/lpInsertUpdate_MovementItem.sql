@@ -3,12 +3,13 @@
 DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem (Integer, Integer, Integer, Integer, TFloat, Integer);
 
 CREATE OR REPLACE FUNCTION lpInsertUpdate_MovementItem(
- INOUT ioId Integer, 
-    IN inDescId Integer, 
-    IN inObjectId Integer, 
-    IN inMovementId Integer,
-    IN inAmount TFloat,
-    IN inParentId Integer
+ INOUT ioId           Integer, 
+    IN inDescId       Integer, 
+    IN inObjectId     Integer, 
+    IN inMovementId   Integer,
+    IN inAmount       TFloat,
+    IN inParentId     Integer,
+    IN inUserId       Integer     -- Пользователь
 )
   RETURNS Integer AS
 $BODY$
@@ -39,7 +40,7 @@ BEGIN
      -- определяем <Статус>
      SELECT StatusId, InvNumber INTO vbStatusId, vbInvNumber FROM Movement WHERE Id = inMovementId;
      -- проверка - проведенные/удаленные документы Изменять нельзя
-     IF vbStatusId <> zc_Enum_Status_UnComplete()
+     IF vbStatusId <> zc_Enum_Status_UnComplete() AND 
      THEN
          RAISE EXCEPTION 'Ошибка.Изменение документа № <%> в статусе <%> не возможно.', vbInvNumber, lfGet_Object_ValueData (vbStatusId);
      END IF;
@@ -85,6 +86,7 @@ ALTER FUNCTION lpInsertUpdate_MovementItem (Integer, Integer, Integer, Integer, 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 11.07.15                                        * add inUserId
  17.05.14                                        * add проверка - inAmount and inObjectId
  05.04.14                                        * add vbIsErased
  31.10.13                                        * add vbInvNumber

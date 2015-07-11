@@ -234,13 +234,20 @@ BEGIN
                   ELSE Movement.InvNumber
              END AS InvNumber
 
-
            , MovementString_InvNumberPartner.ValueData  AS InvNumberPartner
-           , MovementString_InvNumberOrder.ValueData    AS InvNumberOrder
+
+           , CASE WHEN MovementString_InvNumberPartner_order.ValueData <> ''
+                       THEN MovementString_InvNumberPartner_order.ValueData
+                  WHEN MovementString_InvNumberOrder.ValueData <> ''
+                       THEN MovementString_InvNumberOrder.ValueData
+                  ELSE COALESCE (Movement_order.InvNumber, '')
+             END AS InvNumberOrder
+
            , Movement.OperDate                          AS OperDate
            , COALESCE (MovementDate_OperDatePartner.ValueData, Movement.OperDate)     AS OperDatePartner
            , MovementDate_Payment.ValueData             AS PaymentDate
            , CASE WHEN MovementDate_Payment.ValueData IS NOT NULL THEN TRUE ELSE FALSE END AS isPaymentDate
+           , COALESCE (Movement_order.OperDate, Movement.OperDate) AS OperDateOrder
            , vbPriceWithVAT                             AS PriceWithVAT
            , vbVATPercent                               AS VATPercent
            , vbExtraChargesPercent - vbDiscountPercent  AS ChangePercent
@@ -380,6 +387,13 @@ BEGIN
             LEFT JOIN MovementLinkMovement AS MovementLinkMovement_Sale
                                            ON MovementLinkMovement_Sale.MovementId = Movement.Id
                                           AND MovementLinkMovement_Sale.DescId = zc_MovementLinkMovement_Sale()
+            LEFT JOIN MovementLinkMovement AS MovementLinkMovement_Order
+                                           ON MovementLinkMovement_Order.MovementId = Movement.Id
+                                          AND MovementLinkMovement_Order.DescId = zc_MovementLinkMovement_Order()
+            LEFT JOIN Movement AS Movement_order ON Movement_order.Id = MovementLinkMovement_Order.MovementChildId
+            LEFT JOIN MovementString AS MovementString_InvNumberPartner_order
+                                     ON MovementString_InvNumberPartner_order.MovementId =  Movement_order.Id
+                                    AND MovementString_InvNumberPartner_order.DescId = zc_MovementString_InvNumberPartner()
 
             LEFT JOIN MovementString AS MovementString_InvNumberOrder
                                      ON MovementString_InvNumberOrder.MovementId =  Movement.Id

@@ -105,10 +105,11 @@ BEGIN
                                          , Object_Contract_View.InvNumber        AS ContractNumber
                                          , Object_Contract_View.ContractTagName  AS ContractTagName
                                          , Object_Contract_View.PaidKindId       AS PaidKindId
+                                         , Object_Contract_View.InfoMoneyId      AS InfoMoneyId
                                          , tmpPartnerJuridical.JuridicalId
                                     FROM tmpPartnerJuridical
                                          LEFT JOIN Object_Contract_View ON Object_Contract_View.JuridicalId = tmpPartnerJuridical.JuridicalId
-                                                                       AND Object_Contract_View.InfoMoneyId = inInfoMoneyId -- zc_Enum_InfoMoney_30101()
+                                                                       AND Object_Contract_View.InfoMoneyId IN (inInfoMoneyId, zc_Enum_InfoMoney_30301()) -- Доходы + Переработка + Переработка
                                                                        AND Object_Contract_View.isErased = FALSE
                                                                        AND Object_Contract_View.ContractStateKindId <> zc_Enum_ContractStateKind_Close()
                                     )
@@ -121,6 +122,7 @@ BEGIN
                                          , tmpPartnerContract.ContractNumber
                                          , tmpPartnerContract.ContractTagName
                                          , tmpPartnerContract.PaidKindId
+                                         , tmpPartnerContract.InfoMoneyId
                                          , tmpPartnerContract.JuridicalId
                                     FROM tmpPartnerContract
                                     WHERE tmpPartnerContract.PaidKindId = inPaidKindId
@@ -134,6 +136,7 @@ BEGIN
                                          , tmpPartnerContract.ContractNumber
                                          , tmpPartnerContract.ContractTagName
                                          , tmpPartnerContract.PaidKindId
+                                         , tmpPartnerContract.InfoMoneyId
                                          , tmpPartnerContract.JuridicalId
                                     FROM tmpPartnerContract
                                          LEFT JOIN tmpPartnerContract AS tmpPartnerContract_two ON tmpPartnerContract_two.PaidKindId = inPaidKindId
@@ -161,6 +164,8 @@ BEGIN
 
             , Object_ContractCondition_PercentView.ChangePercent :: TFloat AS ChangePercent
             , CASE WHEN inMovementDescId IN (zc_Movement_Income(), zc_Movement_ReturnOut())
+                        THEN 0
+                   WHEN tmpPartner.InfoMoneyId = zc_Enum_InfoMoney_30301() -- Доходы + Переработка + Переработка
                         THEN 0
                    WHEN inInfoMoneyId = zc_Enum_InfoMoney_30201() -- Доходы + Мясное сырье
                     AND tmpPartner.JuridicalId = 15384            -- Фізична особа-підприємець Соколюк Аліса Борисівна
@@ -193,6 +198,7 @@ BEGIN
                   , tmpPartnerContract_find.ContractNumber
                   , tmpPartnerContract_find.ContractTagName
                   , tmpPartnerContract_find.PaidKindId
+                  , tmpPartnerContract_find.InfoMoneyId
                   , tmpPartnerContract_find.JuridicalId
                   , zfCalc_GoodsPropertyId (tmpPartnerContract_find.ContractId, tmpPartnerContract_find.JuridicalId) AS GoodsPropertyId
                   , lfGet_Object_Partner_PriceList_record (tmpPartnerContract_find.ContractId, tmpPartnerContract_find.PartnerId, inOperDate) AS PriceListId

@@ -91,7 +91,8 @@ $BODY$
    END IF;
 
    -- проверка уникальности
-   IF inGoodsKindId <> 0 AND EXISTS (SELECT ObjectLink_GoodsPropertyValue_Goods.ChildObjectId
+   IF /*inGoodsKindId <> 0 AND*/
+      EXISTS (SELECT ObjectLink_GoodsPropertyValue_Goods.ChildObjectId
               FROM ObjectLink AS ObjectLink_GoodsPropertyValue_Goods
                    INNER JOIN ObjectLink AS ObjectLink_GoodsPropertyValue_GoodsProperty
                                          ON ObjectLink_GoodsPropertyValue_GoodsProperty.ObjectId = ObjectLink_GoodsPropertyValue_Goods.ObjectId
