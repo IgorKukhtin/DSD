@@ -843,6 +843,12 @@ inherited SendOnPrice_BranchForm: TSendOnPrice_BranchForm
         Value = Null
         DataType = ftString
         ParamType = ptInput
+      end
+      item
+        Name = 'inChangePercentAmount'
+        Value = Null
+        DataType = ftFloat
+        ParamType = ptInputOutput
       end>
     Left = 280
     Top = 552
@@ -877,6 +883,14 @@ inherited SendOnPrice_BranchForm: TSendOnPrice_BranchForm
         Component = FormParams
         ComponentItem = 'inOperDate'
         DataType = ftDateTime
+        ParamType = ptInput
+      end
+      item
+        Name = 'inChangePercentAmount'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'inChangePercentAmount'
+        DataType = ftFloat
         ParamType = ptInput
       end
       item

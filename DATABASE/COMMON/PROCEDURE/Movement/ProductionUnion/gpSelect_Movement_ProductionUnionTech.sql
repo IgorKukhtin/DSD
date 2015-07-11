@@ -284,7 +284,7 @@ BEGIN
             , FALSE                               AS isErased
 
        FROM _tmpListMaster
-             -- INNER JOIN tmpStatus ON tmpStatus.StatusId = _tmpListMaster.StatusId
+             INNER JOIN tmpStatus ON tmpStatus.StatusId = _tmpListMaster.StatusId
              LEFT JOIN MovementItemFloat AS MIFloat_Count
                                          ON MIFloat_Count.MovementItemId = _tmpListMaster.MovementItemId
                                         AND MIFloat_Count.DescId = zc_MIFloat_Count()

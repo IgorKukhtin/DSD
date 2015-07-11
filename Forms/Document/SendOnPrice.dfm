@@ -855,6 +855,12 @@ inherited SendOnPriceForm: TSendOnPriceForm
       item
         Name = 'ReportTypeIn'
         Value = '1'
+      end
+      item
+        Name = 'inChangePercentAmount'
+        Value = Null
+        DataType = ftFloat
+        ParamType = ptInputOutput
       end>
     Left = 280
     Top = 552
@@ -889,6 +895,14 @@ inherited SendOnPriceForm: TSendOnPriceForm
         Component = FormParams
         ComponentItem = 'inOperDate'
         DataType = ftDateTime
+        ParamType = ptInput
+      end
+      item
+        Name = 'inChangePercentAmount'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'inChangePercentAmount'
+        DataType = ftFloat
         ParamType = ptInput
       end
       item
