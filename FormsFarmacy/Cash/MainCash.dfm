@@ -674,13 +674,6 @@ inherited MainCashForm: TMainCashForm
         Value = Null
         Component = FormParams
         ComponentItem = 'CheckId'
-      end
-      item
-        Name = 'inCashRegister'
-        Value = Null
-        Component = FormParams
-        ComponentItem = 'CashId'
-        ParamType = ptInput
       end>
     PackSize = 1
     Left = 384
@@ -697,10 +690,6 @@ inherited MainCashForm: TMainCashForm
         Value = Null
         DataType = ftString
         ParamType = ptInput
-      end
-      item
-        Name = 'CashId'
-        Value = Null
       end>
     Left = 48
     Top = 104
@@ -875,6 +864,11 @@ inherited MainCashForm: TMainCashForm
       end
       item
         Name = 'inPaidType'
+        Value = Null
+        ParamType = ptInput
+      end
+      item
+        Name = 'inCashRegisterId'
         Value = Null
         ParamType = ptInput
       end>

@@ -305,7 +305,11 @@ uses
   CheckVIP in '..\..\FormsFarmacy\Document\CheckVIP.pas' {CheckVIPForm: TParentForm},
   CheckDeferred in '..\..\FormsFarmacy\Document\CheckDeferred.pas' {CheckDeferredForm: TParentForm},
   PaidType in '..\..\Forms\Guides\PaidType.pas' {PaidTypeForm: TParentForm},
-  PaidTypeTest in '..\SOURCE\Objects\All\Farmacy\PaidTypeTest.pas';
+  PaidTypeTest in '..\SOURCE\Objects\All\Farmacy\PaidTypeTest.pas',
+//  InventoryTest in '..\SOURCE\Movement\All\Farmacy\InventoryTest.pas',
+//  Inventory in '..\..\FormsFarmacy\Document\Inventory.pas' {InventoryForm: TParentForm},
+//  InventoryJournal in '..\..\FormsFarmacy\Document\InventoryJournal.pas' {InventoryJournalForm: TParentForm},
+  CashRegisterTest in '..\SOURCE\Objects\All\Farmacy\CashRegisterTest.pas';
 
 {$R *.res}
 {$R DevExpressRus.res}

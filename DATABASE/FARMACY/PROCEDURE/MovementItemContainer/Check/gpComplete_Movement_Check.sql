@@ -2,10 +2,12 @@
 
 DROP FUNCTION IF EXISTS gpComplete_Movement_Check (Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpComplete_Movement_Check (Integer,Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpComplete_Movement_Check (Integer,Integer, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpComplete_Movement_Check(
     IN inMovementId        Integer              , -- ключ Документа
     IN inPaidType          Integer              , --Тип оплаты 0-деньги, 1-карта
+    IN inCashRegisterId    Integer              , --№ кассового аппарата
     IN inSession           TVarChar DEFAULT ''     -- сессия пользователя
 )
 RETURNS VOID
@@ -29,7 +31,10 @@ BEGIN
   ELSE
     RAISE EXCEPTION 'Ошибка.Не определен тип оплаты';
   END IF;
-
+  --Сохранили связь с кассовым аппаратом
+  IF inCashRegisterId <> 0 THEN
+    PERFORM lpInsertUpdate_MovementLinkObject(zc_MovementLinkObject_CashRegister(),inMovementId,inCashRegisterId);
+  END IF;
   -- пересчитали Итоговые суммы
   PERFORM lpInsertUpdate_MovementFloat_TotalSumm (inMovementId);
 
