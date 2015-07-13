@@ -3,7 +3,7 @@ inherited OrderInternalForm: TOrderInternalForm
   ClientHeight = 668
   ClientWidth = 1020
   ExplicitWidth = 1036
-  ExplicitHeight = 706
+  ExplicitHeight = 703
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -846,15 +846,27 @@ inherited OrderInternalForm: TOrderInternalForm
             VisibleForCustomization = False
             Width = 55
           end
-          inherited colIsErased: TcxGridDBColumn
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-          end
-          object Color_send: TcxGridDBColumn
+          object Color_send: TcxGridDBColumn [59]
             DataBinding.FieldName = 'Color_send'
             Visible = False
             VisibleForCustomization = False
             Width = 55
+          end
+          object Color_production_old: TcxGridDBColumn [60]
+            DataBinding.FieldName = 'Color_production_old'
+            Visible = False
+            VisibleForCustomization = False
+            Width = 55
+          end
+          object Color_production_next: TcxGridDBColumn [61]
+            DataBinding.FieldName = 'Color_production_next'
+            Visible = False
+            VisibleForCustomization = False
+            Width = 55
+          end
+          inherited colIsErased: TcxGridDBColumn
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
           end
         end
       end
@@ -1696,11 +1708,13 @@ inherited OrderInternalForm: TOrderInternalForm
       end
       item
         ColorColumn = AmountProduction_old
+        ValueColumn = Color_production_old
         BackGroundValueColumn = ColorB_AmountPartner
         ColorValueList = <>
       end
       item
         ColorColumn = AmountProduction_next
+        ValueColumn = Color_production_next
         BackGroundValueColumn = ColorB_AmountPartner
         ColorValueList = <>
       end

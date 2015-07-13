@@ -45,6 +45,11 @@ BEGIN
          THEN
              RAISE EXCEPTION 'Ошибка.Не установлен <GLN точки доставки> в документе EDI № <%> от <%> .', (SELECT InvNumber FROM Movement WHERE Id = inMovementId), DATE ((SELECT OperDate FROM Movement WHERE Id = inMovementId));
          END IF;
+         -- проверка
+         IF inPartnerOperDate IS NULL
+         THEN
+             RAISE EXCEPTION 'Ошибка.Не установлено <Дата документа (EDI)> в документе EDI № <%> от <%> .', (SELECT InvNumber FROM Movement WHERE Id = inMovementId), DATE ((SELECT OperDate FROM Movement WHERE Id = inMovementId));
+         END IF;
 
          -- временно заливаем, для предыдущих документов
          IF COALESCE (vbGLNPlace, '') = ''

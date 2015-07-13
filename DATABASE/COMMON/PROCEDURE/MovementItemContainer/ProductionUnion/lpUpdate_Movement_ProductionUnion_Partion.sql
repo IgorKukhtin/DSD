@@ -110,10 +110,6 @@ BEGIN
                                      INNER JOIN ObjectDate AS ObjectDate_PartionGoods_Value
                                                            ON ObjectDate_PartionGoods_Value.ObjectId = tmp.PartionGoodsId
                                                           AND ObjectDate_PartionGoods_Value.DescId = zc_ObjectDate_PartionGoods_Value()
-                                     LEFT JOIN ObjectLink AS ObjectLink_PartionGoods_Unit
-                                                          ON ObjectLink_PartionGoods_Unit.ObjectId = tmp.PartionGoodsId
-                                                         AND ObjectLink_PartionGoods_Unit.DescId = zc_ObjectLink_PartionGoods_Unit()
-                                WHERE ObjectLink_PartionGoods_Unit.ObjectId IS NULL -- т.е. вообще нет этого св-ва
                                )
         -- результат - ВСЕ партии которые надо закрыть/открыть
         SELECT tmpContainer_PF.ContainerId

@@ -17,16 +17,27 @@ RETURNS TABLE (Id Integer, GoodsId Integer, GoodsCode Integer, GoodsName TVarCha
              )
 AS
 $BODY$
-BEGIN
+  DECLARE vbUserId Integer;
 
+  DECLARE vbPriceListId Integer;
+BEGIN
      -- проверка прав пользователя на вызов процедуры
-     -- PERFORM lpCheckRight (inSession, zc_Enum_Process_Select_MovementItem_ReturnOut());
+     -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Select_MI_ReturnOut());
+     vbUserId:= lpGetUserBySession (inSession);
 
      -- inShowAll:= TRUE;
 
-     IF inShowAll THEN
 
+     -- определяется - Пав-ны приход
+     vbPriceListId:= (SELECT 140208 WHERE EXISTS (SELECT UserId FROM ObjectLink_UserRole_View WHERE UserId = vbUserId AND RoleId IN (80548, zc_Enum_Role_Admin()))); -- Бухгалтер ПАВИЛЬОНЫ
+
+
+     -- Результат
+     IF inShowAll = TRUE THEN
+
+     -- Результат такой
      RETURN QUERY
+       WITH tmpPrice AS (SELECT tmp.GoodsId, tmp.ValuePrice FROM lfSelect_ObjectHistory_PriceListItem (inPriceListId:= vbPriceListId, inOperDate:= (SELECT Movement.OperDate FROM Movement WHERE Movement.Id = inMovementId)) AS tmp)
        SELECT
              0                          AS Id
            , tmpGoods.GoodsId           AS GoodsId
@@ -37,8 +48,8 @@ BEGIN
 
            , CAST (NULL AS TFloat)      AS Amount
            , CAST (NULL AS TFloat)      AS AmountPartner
-           , CAST (NULL AS TFloat)      AS Price
-           , CAST (NULL AS TFloat)      AS CountForPrice
+           , tmpPrice.ValuePrice        AS Price
+           , 1      :: TFloat           AS CountForPrice
            , CAST (NULL AS TFloat)      AS HeadCount
            , CAST (NULL AS TVarChar)    AS PartionGoods
            , Object_GoodsKind.Id        AS GoodsKindId
@@ -81,10 +92,9 @@ BEGIN
                       ) AS tmpMI ON tmpMI.GoodsId     = tmpGoods.GoodsId
                                 AND tmpMI.GoodsKindId = tmpGoods.GoodsKindId
             LEFT JOIN Object AS Object_GoodsKind ON Object_GoodsKind.Id = tmpGoods.GoodsKindId
-/*
-            LEFT JOIN lfSelect_ObjectHistory_PriceListItem (inPriceListId:= zc_PriceList_Basis()/*inPriceListId*/, inOperDate:= vbOperDate)
-                   AS lfObjectHistory_PriceListItem ON lfObjectHistory_PriceListItem.GoodsId = tmpGoods.GoodsId
-*/
+
+            LEFT JOIN tmpPrice ON tmpPrice.GoodsId = tmpGoods.GoodsId
+
             LEFT JOIN ObjectString AS ObjectString_Goods_GoodsGroupFull
                                    ON ObjectString_Goods_GoodsGroupFull.ObjectId = tmpGoods.GoodsId
                                   AND ObjectString_Goods_GoodsGroupFull.DescId = zc_ObjectString_Goods_GroupNameFull()
@@ -96,6 +106,7 @@ BEGIN
 
   
        WHERE tmpMI.GoodsId IS NULL
+         AND (tmpPrice.ValuePrice <> 0 OR vbPriceListId IS NULL)
       UNION ALL
        SELECT
              MovementItem.Id				 AS Id
@@ -170,6 +181,7 @@ BEGIN
 
      ELSE
 
+     -- Результат другой
      RETURN QUERY
        SELECT
              MovementItem.Id					AS Id

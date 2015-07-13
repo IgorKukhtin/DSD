@@ -372,15 +372,29 @@ BEGIN
                        THEN zc_Color_Red()
                   ELSE zc_Color_Black()
              END :: Integer AS Color_remains
+
            , CASE WHEN tmpMI.AmountRemains - tmpMI.AmountPartnerPrior - tmpMI.AmountPartner + tmpMI.AmountProduction_old <= 0
                        THEN zc_Color_Red()
                   ELSE zc_Color_Black()
              END :: Integer AS Color_remains_calc
+
            , CASE WHEN tmpMI.AmountRemains - tmpMI.AmountPartnerPrior - tmpMI.AmountPartner + tmpMI.AmountProduction_old + tmpMI.AmountProduction_next<= 0
                        THEN zc_Color_Red()
                   ELSE zc_Color_Black()
              END :: Integer AS Color_remainsTerm_calc
+
            , zc_Color_Blue() AS Color_send
+
+           , CASE WHEN tmpMI.AmountProduction_old < 0
+                       THEN zc_Color_Red()
+                  ELSE zc_Color_Black()
+             END :: Integer AS Color_production_old
+
+           , CASE WHEN tmpMI.AmountProduction_next < 0
+                       THEN zc_Color_Red()
+                  ELSE zc_Color_Black()
+             END :: Integer AS Color_production_next
+
 
            , zc_Color_Aqua()   :: Integer AS ColorB_const
            , zc_Color_Cyan()   :: Integer AS ColorB_DayCountForecast

@@ -1116,7 +1116,7 @@ BEGIN
 
               , SUM (CASE WHEN tmpMIContainer_all.ContainerDescId = zc_Container_Count() THEN tmpMIContainer_all.RemainsStart ELSE 0 END) :: TFloat AS CountStart
               , SUM (CASE WHEN tmpMIContainer_all.ContainerDescId = zc_Container_Count() THEN tmpMIContainer_all.RemainsEnd   ELSE 0 END) :: TFloat AS CountEnd
-              , SUM (CASE WHEN tmpMIContainer_all.ContainerDescId = zc_Container_Count() THEN tmpMIContainer_all.RemainsEnd + tmpMIContainer_all.CountInventory ELSE 0 END) :: TFloat AS CountEnd_calc
+              , SUM (CASE WHEN tmpMIContainer_all.ContainerDescId = zc_Container_Count() THEN tmpMIContainer_all.RemainsEnd - tmpMIContainer_all.CountInventory ELSE 0 END) :: TFloat AS CountEnd_calc
 
               , SUM (tmpMIContainer_all.CountIncome)             :: TFloat AS CountIncome
               , SUM (tmpMIContainer_all.CountReturnOut)          :: TFloat AS CountReturnOut
@@ -1147,7 +1147,7 @@ BEGIN
 
               , SUM (CASE WHEN tmpMIContainer_all.ContainerDescId = zc_Container_Summ() THEN tmpMIContainer_all.RemainsStart ELSE 0 END) :: TFloat AS SummStart
               , SUM (CASE WHEN tmpMIContainer_all.ContainerDescId = zc_Container_Summ() THEN tmpMIContainer_all.RemainsEnd   ELSE 0 END) :: TFloat AS SummEnd
-              , SUM (CASE WHEN tmpMIContainer_all.ContainerDescId = zc_Container_Summ() THEN tmpMIContainer_all.RemainsEnd + tmpMIContainer_all.SummInventory + tmpMIContainer_all.SummInventory ELSE 0 END) :: TFloat AS SummEnd_calc
+              , SUM (CASE WHEN tmpMIContainer_all.ContainerDescId = zc_Container_Summ() THEN tmpMIContainer_all.RemainsEnd - tmpMIContainer_all.SummInventory ELSE 0 END) :: TFloat AS SummEnd_calc
 
               , SUM (tmpMIContainer_all.SummIncome)              :: TFloat AS SummIncome
               , SUM (tmpMIContainer_all.SummReturnOut)           :: TFloat AS SummReturnOut
