@@ -208,7 +208,7 @@ BEGIN
                                        WHERE _tmpMI_master.isErased = FALSE
                                        GROUP BY _tmpMI_master.GoodsId_basis, _tmpMI_master.GoodsKindId_complete
                                       )
-           , tmpMI_master_find_all AS (SELECT tmpMI_master_find_mi.MovementItemId, _tmpMI_master.GoodsId_basis, _tmpMI_master.GoodsKindId_complete, _tmpMI_master.TermProduction
+           , tmpMI_master_find_all AS (SELECT tmpMI_master_find_mi.MovementItemId, _tmpMI_master.GoodsId_basis, _tmpMI_master.GoodsKindId_complete
                                        FROM tmpMI_master_find_mi
                                             INNER JOIN _tmpMI_master ON _tmpMI_master.MovementItemId = tmpMI_master_find_mi.MovementItemId
                                       )
@@ -238,18 +238,22 @@ BEGIN
                                                       ELSE 0
                                                  END) AS AmountProduction_next
                                           , MIN (CASE WHEN _tmpMI_child.PartionGoodsDate <= (vbOperDate :: Date - COALESCE (tmpGoods_params.TermProduction, 0) :: Integer)
+                                                       AND _tmpMI_child.Amount > 0
                                                            THEN _tmpMI_child.PartionGoodsDate
                                                       ELSE zc_DateEnd()
                                                  END) AS StartDate_old
                                           , MAX (CASE WHEN _tmpMI_child.PartionGoodsDate <= (vbOperDate :: Date - COALESCE (tmpGoods_params.TermProduction, 0) :: Integer)
+                                                       AND _tmpMI_child.Amount > 0
                                                            THEN _tmpMI_child.PartionGoodsDate
                                                       ELSE zc_DateStart()
                                                  END) AS EndDate_old
                                           , MIN (CASE WHEN _tmpMI_child.PartionGoodsDate > (vbOperDate :: Date - COALESCE (tmpGoods_params.TermProduction, 0) :: Integer)
+                                                       AND _tmpMI_child.Amount > 0
                                                            THEN _tmpMI_child.PartionGoodsDate
                                                       ELSE zc_DateEnd()
                                                  END) AS StartDate_next
                                           , MAX (CASE WHEN _tmpMI_child.PartionGoodsDate > (vbOperDate :: Date - COALESCE (tmpGoods_params.TermProduction, 0) :: Integer)
+                                                       AND _tmpMI_child.Amount > 0
                                                            THEN _tmpMI_child.PartionGoodsDate
                                                       ELSE zc_DateStart()
                                                  END) AS EndDate_next

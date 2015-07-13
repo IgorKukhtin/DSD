@@ -29,7 +29,7 @@ BEGIN
                                                                   AND MLO_From.DescId = zc_MovementLinkObject_From()
                                       LEFT JOIN MovementLinkObject AS MLO_To
                                                                    ON MLO_To.MovementId = Movement.Id
-                                                                  AND MLO_To.DescId = zc_MovementLinkObject_From()
+                                                                  AND MLO_To.DescId = zc_MovementLinkObject_To()
                                  WHERE Movement.Id = inMovementId
                                    AND Movement.DescId = zc_Movement_OrderInternal()
                                  ) tmpMovement
@@ -41,7 +41,7 @@ BEGIN
                                                             AND MLO_From.DescId = zc_MovementLinkObject_From()
                                 LEFT JOIN MovementLinkObject AS MLO_To
                                                              ON MLO_To.MovementId = Movement.Id
-                                                            AND MLO_To.DescId = zc_MovementLinkObject_From()
+                                                            AND MLO_To.DescId = zc_MovementLinkObject_To()
                            WHERE COALESCE (MLO_From.ObjectId, 0) = tmpMovement.FromId
                              AND COALESCE (MLO_To.ObjectId, 0)   = tmpMovement.ToId
                              AND Movement.Id <> tmpMovement.MovementId

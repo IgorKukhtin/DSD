@@ -143,7 +143,6 @@ inherited ReturnInForm: TReturnInForm
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Options.Editing = False
             Width = 120
           end
           object colMeasureName: TcxGridDBColumn [6]
@@ -819,15 +818,15 @@ inherited ReturnInForm: TReturnInForm
       Width = 221
     end
     object cxLabel18: TcxLabel
-      Left = 496
+      Left = 759
       Top = 85
       Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
     end
     object ceComment: TcxTextEdit
-      Left = 496
+      Left = 759
       Top = 103
       TabOrder = 33
-      Width = 466
+      Width = 338
     end
     object cxLabel21: TcxLabel
       Left = 8
@@ -916,8 +915,8 @@ inherited ReturnInForm: TReturnInForm
     Width = 127
   end
   object cbCalcAmountPartner: TcxCheckBox [10]
-    Left = 680
-    Top = 191
+    Left = 496
+    Top = 103
     Caption = #1056#1072#1089#1095#1077#1090' <'#1050#1086#1083#1080#1095#1077#1089#1090#1074#1086' '#1091' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1103'>'
     Properties.ReadOnly = False
     State = cbsChecked
@@ -1641,14 +1640,6 @@ inherited ReturnInForm: TReturnInForm
         item
           Visible = True
           ItemName = 'bbPrintTaxCorrective_Us'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarStatic'
-        end
-        item
-          Visible = True
-          ItemName = 'bbCalcAmountPartner'
         end
         item
           Visible = True
@@ -2629,8 +2620,8 @@ inherited ReturnInForm: TReturnInForm
         DataType = ftString
         ParamType = ptInput
       end>
-    Left = 936
-    Top = 104
+    Left = 928
+    Top = 128
   end
   object PriceListGuides: TdsdGuides
     KeyField = 'Id'
@@ -2946,8 +2937,8 @@ inherited ReturnInForm: TReturnInForm
         DataType = ftString
         ParamType = ptInput
       end>
-    Left = 1024
-    Top = 72
+    Left = 1040
+    Top = 56
   end
   object CurrencyPartnerGuides: TdsdGuides
     KeyField = 'Id'
@@ -2974,7 +2965,7 @@ inherited ReturnInForm: TReturnInForm
         ParamType = ptInput
       end>
     Left = 984
-    Top = 64
+    Top = 32
   end
   object TaxCorrectiveCDS: TClientDataSet
     Aggregates = <>
