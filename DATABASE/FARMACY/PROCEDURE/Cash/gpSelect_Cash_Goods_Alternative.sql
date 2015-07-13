@@ -61,7 +61,7 @@ BEGIN
       (  
         Select --Additional Goods
           0                                       as LinkType
-         ,14941410                                as TypeColor
+         ,zc_Color_Goods_Additional()/*14941410*/ as TypeColor
          ,Object_AdditionalGoods_View.GoodsMainId AS MainGoodsId
          ,0                                       as AlternativeGroupId
          ,Rem.GoodsId                             AS GoodsId
@@ -73,7 +73,7 @@ BEGIN
          UNION ALL
          Select --Alternative Goods
            1                                                 as LinkType
-           ,16380671                                         as TypeColor
+           ,zc_Color_Goods_Alternative()/*16380671*/         as TypeColor
            ,0                                                as MainGoodsId
            ,AlternativeGroup.Id                              as AlternativeGroupId
            ,Rem.GoodsId                                      AS GoodsId

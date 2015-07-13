@@ -4,24 +4,19 @@ interface
 
 uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
-  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, AncestorBase, Vcl.ActnList, dsdAction,
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, AncestorDialog, Vcl.ActnList, dsdAction,
   cxClasses, cxPropertiesStore, dsdAddOn, cxGraphics, cxControls,
   cxLookAndFeels, cxLookAndFeelPainters, cxContainer, cxEdit, Vcl.Menus,
   Vcl.StdCtrls, cxButtons, cxTextEdit, Vcl.ExtCtrls, dsdGuides, dsdDB,
-  cxMaskEdit, cxButtonEdit;
+  cxMaskEdit, cxButtonEdit, AncestorBase;
 
 type
-  TVIPDialogForm = class(TAncestorBaseForm)
+  TVIPDialogForm = class(TAncestorDialogForm)
     ceMember: TcxButtonEdit;
-    FormParams: TdsdFormParams;
     MemberGuides: TdsdGuides;
     Label1: TLabel;
-    Panel1: TPanel;
     edBayerName: TcxTextEdit;
     Label2: TLabel;
-    Panel2: TPanel;
-    btnOk: TcxButton;
-    btnCancel: TcxButton;
   private
     { Private declarations }
   public

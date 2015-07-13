@@ -12,6 +12,7 @@ type
     procedure CreateHistoryProcedure;
     procedure CreateMovementProcedure;
     procedure CreateMovementItemProcedure;
+    procedure CreateCheckProcedure;
     procedure CreateMovementItemContainerProcedure;
     procedure CreateObjectProcedure;
     procedure CreateProtocolProcedure;
@@ -36,6 +37,12 @@ const
   FarmacyReportsPath = '..\DATABASE\Farmacy\REPORTS\';
 
 { TdbProcedureTest }
+
+procedure TdbProcedureTest.CreateCheckProcedure;
+begin
+  ScriptDirectory := FarmacyProcedurePath + 'Cash\';
+  ProcedureLoad;
+end;
 
 procedure TdbProcedureTest.CreateContainerProcedure;
 begin
@@ -108,7 +115,6 @@ procedure TdbProcedureTest.CreateMovementItemProcedure;
 begin
   ScriptDirectory := CommonProcedurePath + 'MovementItem\Check\';
   ProcedureLoad;
-
 {
   ZQuery.SQL.LoadFromFile(ProcedurePath + 'MovementItem\InsertUpdate\lpInsertUpdate_MovementItem.sql');
   ZQuery.ExecSQL;

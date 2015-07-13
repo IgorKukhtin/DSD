@@ -4,14 +4,14 @@ interface
 
 uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
-  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, AncestorBase, cxGraphics, cxControls,
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, AncestorDialog, cxGraphics, cxControls,
   cxLookAndFeels, cxLookAndFeelPainters, cxContainer, cxEdit, Vcl.Menus,
   Vcl.ExtCtrls, Vcl.StdCtrls, cxButtons, cxGroupBox, cxRadioGroup, cxLabel,
   cxTextEdit, cxCurrencyEdit, Vcl.ActnList, dsdAction, cxClasses,
-  cxPropertiesStore, dsdAddOn, CashInterface;
+  cxPropertiesStore, dsdAddOn, CashInterface, AncestorBase, dsdDB;
 
 type
-  TCashCloseDialogForm = class(TAncestorBaseForm)
+  TCashCloseDialogForm = class(TAncestorDialogForm)
     cxGroupBox1: TcxGroupBox;
     edSalerCash: TcxCurrencyEdit;
     cxLabel1: TcxLabel;
@@ -19,10 +19,6 @@ type
     lblTotalSumma: TcxLabel;
     lblSdacha: TcxLabel;
     rgPaidType: TcxRadioGroup;
-    btnOk: TcxButton;
-    btnCancel: TcxButton;
-    Panel1: TPanel;
-    Panel2: TPanel;
     procedure edSalerCashPropertiesChange(Sender: TObject);
     procedure ParentFormKeyDown(Sender: TObject; var Key: Word;
       Shift: TShiftState);
@@ -68,7 +64,7 @@ End;
 
 procedure TCashCloseDialogForm.edSalerCashPropertiesChange(Sender: TObject);
 begin
-  btnOk.Enabled := ((edSalerCash.Value - FSummaTotal)>=0) or
+  bbOk.Enabled := ((edSalerCash.Value - FSummaTotal)>=0) or
     (rgPaidType.ItemIndex = 1);
   if FSummaTotal <= edSalerCash.Value then
     lblSdacha.Caption := FormatCurr('0.00',edSalerCash.Value - FSummaTotal)

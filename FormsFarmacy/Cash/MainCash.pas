@@ -303,6 +303,14 @@ begin
     if PutCheckToCash(ASalerCash, PaidType) then
     begin
     // Проводим чек
+      if not Cash.AlwaysSold then
+      Begin
+        spGet_Object_CashRegister_By_Serial.ParamByName('inSerial').Value := Cash.FiscalNumber;
+        spGet_Object_CashRegister_By_Serial.Execute;
+        spComplete_Movement_Check.ParamByName('inCashRegisterId').Value := spGet_Object_CashRegister_By_Serial.ParamByName('outId').Value
+      End
+      else
+        spComplete_Movement_Check.ParamByName('inCashRegisterId').Value := 0;
       spComplete_Movement_Check.ParamByName('inPaidType').Value := Integer(PaidType);
       spComplete_Movement_Check.Execute;
        NewCheck;// процедура обновляет параметры для введения нового чека
@@ -408,9 +416,6 @@ begin
   UserSettingsStorageAddOn.LoadUserSettings;
   Cash:=TCashFactory.GetCash(iniCashType);
   SoldParallel:=iniSoldParallel;
-  spGet_Object_CashRegister_By_Serial.ParamByName('inSerial').Value := Cash.FiscalNumber;
-  spGet_Object_CashRegister_By_Serial.Execute;
-  FormParams.ParamByName('CashId').Value := spGet_Object_CashRegister_By_Serial.ParamByName('outId').Value;
   NewCheck;
   (*
   SendToCashOnly:= false;
