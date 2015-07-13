@@ -203,6 +203,7 @@ type
     CountOtherIn_by_Weight: TcxGridDBColumn;
     CountOut_by_Weight: TcxGridDBColumn;
     CountOtherOut_by_Weight: TcxGridDBColumn;
+    GoodsKindName_complete: TcxGridDBColumn;
   private
   public
   end;

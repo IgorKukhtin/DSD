@@ -605,6 +605,14 @@ object Report_GoodsBalanceForm: TReport_GoodsBalanceForm
         Options.Editing = False
         Width = 70
       end
+      object GoodsKindName_complete: TcxGridDBColumn
+        Caption = #1042#1080#1076' '#1090#1086#1074#1072#1088#1072' ('#1043#1055')'
+        DataBinding.FieldName = 'GoodsKindName_complete'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 70
+      end
       object PartionGoodsDate: TcxGridDBColumn
         Caption = #1055#1072#1088#1090#1080#1103' ('#1076#1072#1090#1072')'
         DataBinding.FieldName = 'PartionGoodsDate'

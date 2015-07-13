@@ -149,12 +149,17 @@ BEGIN
                                                  , inGoodsKindId        := COALESCE (tmpAll.GoodsKindId_child, tmp.GoodsKindId)
                                                  , inAmount_Param       := COALESCE (tmpAll.Amount_child, 0) * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData, 0) ELSE 1 END
                                                  , inDescId_Param       := zc_MIFloat_AmountPartner()
-                                                 , inAmount_ParamOrder  := NULL
-                                                 , inDescId_ParamOrder  := NULL
+                                                 , inAmount_ParamOrder  := COALESCE (tmpAll.Amount_child_add, 0) * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData, 0) ELSE 1 END
+                                                 , inDescId_ParamOrder  := zc_MIFloat_AmountPartnerPrior()
                                                  , inIsPack             := NULL
                                                  , inUserId             := vbUserId
                                                   ) 
-       FROM (SELECT tmpAll.GoodsId_child, tmpAll.GoodsKindId_child, SUM (tmpAll.Amount_child) AS Amount_child FROM tmpAll GROUP BY tmpAll.GoodsId_child, tmpAll.GoodsKindId_child) AS tmpAll
+       FROM (SELECT tmpAll.GoodsId_child, tmpAll.GoodsKindId_child
+                  , SUM (CASE WHEN CuterCount <> 0 THEN tmpAll.Amount_child ELSE 0 END)              AS Amount_child
+                  , SUM (CASE WHEN COALESCE (CuterCount, 0) = 0 THEN tmpAll.Amount_child ELSE 0 END) AS Amount_child_add
+             FROM tmpAll
+             GROUP BY tmpAll.GoodsId_child, tmpAll.GoodsKindId_child
+            ) AS tmpAll
                                  FULL JOIN
                                 (SELECT MAX (MovementItem.Id)                         AS MovementItemId 
                                       , MovementItem.ObjectId                         AS GoodsId

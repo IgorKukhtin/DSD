@@ -207,6 +207,7 @@ type
     CountProductionOut_Fact2: TcxGridDBColumn;
     SummProductionOut_Norm: TcxGridDBColumn;
     SummProductionOut_Fact2: TcxGridDBColumn;
+    GoodsKindName_complete: TcxGridDBColumn;
   private
   public
   end;

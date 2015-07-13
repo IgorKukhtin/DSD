@@ -32,6 +32,7 @@ BEGIN
                                                                                                                        , 32031, 32032, 32033 --  +,- 32031 - Склад Возвратов +,- 32032 - Склад Брак +,- 32033 - Склад УТИЛЬ
                                                                                                                        , 32022 -- Склад реализации
                                                                                                                         )
+                UNION SELECT tmp.UnitId FROM lfSelect_Object_Unit_byGroup (8446) AS tmp -- ЦЕХ колбаса+дел-сы
                )
      -- 1. From: Sale + SendOnPrice
      SELECT Movement.Id AS MovementId
@@ -148,10 +149,15 @@ BEGIN
           LEFT JOIN MovementLinkObject AS MLO_To ON MLO_To.MovementId = Movement.Id
                                                 AND MLO_To.DescId = zc_MovementLinkObject_To()
           LEFT JOIN Object AS Object_To ON Object_To.Id = MLO_To.ObjectId
+
+          LEFT JOIN tmpUnit AS tmpUnit_from ON tmpUnit_from.UnitId = MLO_From.ObjectId
+          LEFT JOIN tmpUnit AS tmpUnit_To ON tmpUnit_To.UnitId = MLO_To.ObjectId
+
           LEFT JOIN MovementDesc ON MovementDesc.Id = Movement.DescId
      WHERE Movement.OperDate BETWEEN inStartDate AND inEndDate
        AND Movement.DescId IN (zc_Movement_Send(), zc_Movement_ProductionUnion(), zc_Movement_ProductionSeparate())
        AND Movement.StatusId = zc_Enum_Status_Complete()
+       AND tmpUnit_from.UnitId > 0 AND tmpUnit_To.UnitId IS nNULL
     ;
 
 END;$BODY$

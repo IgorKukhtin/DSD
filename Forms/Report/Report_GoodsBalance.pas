@@ -160,6 +160,7 @@ type
     isPartionClose_calc: TcxGridDBColumn;
     PartionGoodsDate: TcxGridDBColumn;
     TermProduction: TcxGridDBColumn;
+    GoodsKindName_complete: TcxGridDBColumn;
   private
   public
   end;

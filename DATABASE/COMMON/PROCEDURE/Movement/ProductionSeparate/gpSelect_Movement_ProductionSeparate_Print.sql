@@ -55,9 +55,13 @@ BEGIN
                                   LEFT JOIN ObjectLink AS ObjectLink_Unit
                                                        ON ObjectLink_Unit.ObjectId = Object.Id
                                                       AND ObjectLink_Unit.DescId = zc_ObjectLink_PartionGoods_Unit()
+                                  LEFT JOIN ObjectLink AS ObjectLink_GoodsKindComplete
+                                                       ON ObjectLink_GoodsKindComplete.ObjectId = Object.Id
+                                                      AND ObjectLink_GoodsKindComplete.DescId = zc_ObjectLink_PartionGoods_GoodsKindComplete()
                              WHERE Object.ValueData = ''
                                AND Object.DescId = zc_Object_PartionGoods()
                                AND ObjectLink_Unit.ObjectId IS NULL
+                               AND ObjectLink_GoodsKindComplete.ObjectId IS NULL
                             ); -- 80132
 
      --

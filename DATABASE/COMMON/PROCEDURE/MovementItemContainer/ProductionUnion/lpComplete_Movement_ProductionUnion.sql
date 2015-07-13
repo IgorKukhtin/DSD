@@ -186,7 +186,7 @@ BEGIN
 
      -- заполняем таблицу - количественные Master(приход)-элементы документа, со всеми свойствами для формирования Аналитик в проводках
      INSERT INTO _tmpItem (MovementItemId
-                         , MIContainerId_To, ContainerId_GoodsTo, GoodsId, GoodsKindId, AssetId, PartionGoods, PartionGoodsDate
+                         , MIContainerId_To, ContainerId_GoodsTo, GoodsId, GoodsKindId, GoodsKindId_complete, AssetId, PartionGoods, PartionGoodsDate
                          , OperCount
                          , InfoMoneyDestinationId, InfoMoneyId
                          , BusinessId_To
@@ -199,6 +199,7 @@ BEGIN
              , 0 AS ContainerId_GoodsTo
              , _tmp.GoodsId
              , _tmp.GoodsKindId
+             , _tmp.GoodsKindId_complete
              , _tmp.AssetId
              , _tmp.PartionGoods
              , _tmp.PartionGoodsDate
@@ -223,6 +224,8 @@ BEGIN
 
                    , MovementItem.ObjectId AS GoodsId
                    , CASE WHEN View_InfoMoney.InfoMoneyId IN (zc_Enum_InfoMoney_20901(), zc_Enum_InfoMoney_30101(), zc_Enum_InfoMoney_30201()) THEN COALESCE (MILinkObject_GoodsKind.ObjectId, 0) ELSE 0 END AS GoodsKindId -- Ирна + Готовая продукция
+                   , COALESCE (MILinkObject_GoodsKindComplete.ObjectId, zc_GoodsKind_Basis()) AS GoodsKindId_complete
+
                    , COALESCE (MILinkObject_Asset.ObjectId, 0) AS AssetId
                    , COALESCE (MIString_PartionGoods.ValueData, '') AS PartionGoods
                    , Movement.OperDate AS PartionGoodsDate
@@ -246,6 +249,9 @@ BEGIN
                    LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
                                                     ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
                                                    AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
+                   LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKindComplete
+                                                    ON MILinkObject_GoodsKindComplete.MovementItemId = MovementItem.Id
+                                                   AND MILinkObject_GoodsKindComplete.DescId = zc_MILinkObject_GoodsKindComplete()
                    LEFT JOIN MovementItemLinkObject AS MILinkObject_Asset
                                                     ON MILinkObject_Asset.MovementItemId = MovementItem.Id
                                                    AND MILinkObject_Asset.DescId = zc_MILinkObject_Asset()
@@ -287,7 +293,7 @@ BEGIN
 
      -- заполняем таблицу - количественные Child(расход)-элементы документа, со всеми свойствами для формирования Аналитик в проводках
      INSERT INTO _tmpItemChild (MovementItemId_Parent, MovementItemId
-                              , ContainerId_GoodsFrom, GoodsId, GoodsKindId, AssetId, PartionGoods, PartionGoodsDate
+                              , ContainerId_GoodsFrom, GoodsId, GoodsKindId, GoodsKindId_complete, AssetId, PartionGoods, PartionGoodsDate
                               , OperCount
                               , InfoMoneyDestinationId, InfoMoneyId
                               , BusinessId_From
@@ -301,6 +307,7 @@ BEGIN
              , 0 AS ContainerId_GoodsFrom
              , _tmp.GoodsId
              , _tmp.GoodsKindId
+             , _tmp.GoodsKindId_complete
              , _tmp.AssetId
              , _tmp.PartionGoods
              , _tmp.PartionGoodsDate
@@ -326,6 +333,7 @@ BEGIN
 
                    , MovementItem.ObjectId AS GoodsId
                    , CASE WHEN View_InfoMoney.InfoMoneyId IN (zc_Enum_InfoMoney_20901(), zc_Enum_InfoMoney_30101(), zc_Enum_InfoMoney_30201()) THEN COALESCE (MILinkObject_GoodsKind.ObjectId, 0) ELSE 0 END AS GoodsKindId -- Ирна + Готовая продукция
+                   , _tmpItem.GoodsKindId AS GoodsKindId_complete
                    , COALESCE (MILinkObject_Asset.ObjectId, 0) AS AssetId
                    , COALESCE (MIString_PartionGoods.ValueData, '') AS PartionGoods
                    , COALESCE (MIDate_PartionGoods.ValueData, zc_DateEnd()) AS PartionGoodsDate
@@ -395,7 +403,9 @@ BEGIN
                                                 AND _tmpItem.InfoMoneyDestinationId IN (zc_Enum_InfoMoneyDestination_20900()  -- Общефирменные + Ирна
                                                                                       , zc_Enum_InfoMoneyDestination_30100()  -- Доходы + Продукция
                                                                                       , zc_Enum_InfoMoneyDestination_30200()) -- Доходы + Мясное сырье
-                                                   THEN lpInsertFind_Object_PartionGoods (_tmpItem.PartionGoodsDate)
+                                                   THEN lpInsertFind_Object_PartionGoods (inOperDate             := _tmpItem.PartionGoodsDate
+                                                                                        , inGoodsKindId_complete := _tmpItem.GoodsKindId_complete
+                                                                                         )
                                                WHEN _tmpItem.InfoMoneyDestinationId IN (zc_Enum_InfoMoneyDestination_20900()  -- Общефирменные + Ирна
                                                                                       , zc_Enum_InfoMoneyDestination_30100()  -- Доходы + Продукция
                                                                                       , zc_Enum_InfoMoneyDestination_30200()) -- Доходы + Мясное сырье
@@ -431,7 +441,9 @@ BEGIN
                                                      AND _tmpItemChild.InfoMoneyDestinationId IN (zc_Enum_InfoMoneyDestination_20900()  -- Общефирменные + Ирна
                                                                                                 , zc_Enum_InfoMoneyDestination_30100()  -- Доходы + Продукция
                                                                                                 , zc_Enum_InfoMoneyDestination_30200()) -- Доходы + Мясное сырье
-                                                        THEN lpInsertFind_Object_PartionGoods (_tmpItemChild.PartionGoodsDate)
+                                                        THEN lpInsertFind_Object_PartionGoods (inOperDate             := _tmpItemChild.PartionGoodsDate
+                                                                                             , inGoodsKindId_complete := _tmpItemChild.GoodsKindId_complete
+                                                                                              )
                                                     WHEN _tmpItemChild.InfoMoneyDestinationId IN (zc_Enum_InfoMoneyDestination_20900()  -- Общефирменные + Ирна
                                                                                                 , zc_Enum_InfoMoneyDestination_30100()  -- Доходы + Продукция
                                                                                                 , zc_Enum_InfoMoneyDestination_30200()) -- Доходы + Мясное сырье

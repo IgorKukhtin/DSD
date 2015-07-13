@@ -20,11 +20,13 @@ $BODY$
    DECLARE vbMovementDescId Integer;
    DECLARE vbMovementId_find1 Integer;
    DECLARE vbMovementId_find2 Integer;
+   DECLARE vbMovementId_find3 Integer;
    DECLARE vbOperDate TDateTime;
    DECLARE vbFromId Integer;
    DECLARE vbToId Integer;
    DECLARE vbMovementItemId_err Integer;
    DECLARE vbPartionGoods TVarChar;
+   DECLARE vbPartionGoods_partner TVarChar;
    DECLARE vbIsProductionIn Boolean;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
@@ -50,6 +52,8 @@ BEGIN
                        WHERE MovementItem.MovementId = inMovementId
                          AND MovementItem.isErased = FALSE
                       );
+     -- определили <Партия товара> - для поставщика
+     vbPartionGoods_partner:= zfFormat_PartionGoods (vbPartionGoods);
 
      -- определили <Приход или Расход>
      IF vbMovementDescId = zc_Movement_ProductionSeparate()
@@ -64,7 +68,7 @@ BEGIN
      -- 1. только для zc_Movement_ProductionSeparate + !!!на финише, т.е. inGoodsId = 0!!!
      IF vbMovementDescId = zc_Movement_ProductionSeparate() AND COALESCE (inGoodsId, 0) = 0
      THEN
-          -- поиск1 существующего документа <Производство> по ВСЕМ параметрам + партия
+          -- поиск1 существующего документа <Производство> по ВСЕМ параметрам + партия + за vbOperDate
           vbMovementId_find1:= (SELECT Movement.Id
                                 FROM (SELECT vbOperDate AS OperDate) AS tmp
                                      INNER JOIN Movement ON Movement.DescId = zc_Movement_ProductionSeparate()
@@ -84,7 +88,7 @@ BEGIN
                                                               AND MovementString_PartionGoods.ValueData = vbPartionGoods
                                 LIMIT 1
                                );
-          -- поиск2 существующего документа <Производство> по ВСЕМ параметрам + партия
+          -- поиск2 существующего документа <Производство> по ВСЕМ параметрам + партия + за vbOperDate - 1
           vbMovementId_find2:= (SELECT Movement.Id
                                 FROM (SELECT vbOperDate - INTERVAL '1 DAY' AS OperDate) AS tmp
                                      INNER JOIN Movement ON Movement.DescId = zc_Movement_ProductionSeparate()
@@ -110,6 +114,33 @@ BEGIN
                                                               AND MovementString_PartionGoods.ValueData = vbPartionGoods
                                 LIMIT 1
                                );
+          -- только для Участок Бойни
+          IF vbFromId = 8442 AND vbToId = 8442
+          THEN
+              -- поиск3 существующего документа <Приход от поставщика> по ВСЕМ параметрам + партия + за vbOperDate    -- за 2 дня
+              vbMovementId_find3:=
+                               (SELECT Movement.Id
+                                FROM (SELECT vbOperDate AS OperDate) AS tmp
+                                     INNER JOIN Movement ON Movement.DescId = zc_Movement_Income()
+                                                        AND Movement.OperDate = tmp.OperDate
+                                                        AND Movement.StatusId IN (zc_Enum_Status_UnComplete(), zc_Enum_Status_Complete())
+                                     INNER JOIN MovementLinkObject AS MovementLinkObject_To
+                                                                   ON MovementLinkObject_To.MovementId = Movement.Id
+                                                                  AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
+                                                                  AND MovementLinkObject_To.ObjectId = vbFromId -- !!!не ошибка!!!
+                                     INNER JOIN MovementItem ON MovementItem.MovementId = Movement.Id
+                                                            AND MovementItem.DescId = zc_MI_Master()
+                                                            AND MovementItem.isErased = FALSE
+                                     INNER JOIN MovementItemString AS MIString_PartionGoodsCalc
+                                                                   ON MIString_PartionGoodsCalc.MovementItemId =  MovementItem.Id
+                                                                  AND MIString_PartionGoodsCalc.DescId = zc_MIString_PartionGoodsCalc()
+                                                                  AND MIString_PartionGoodsCalc.ValueData = vbPartionGoods_partner
+                                LIMIT 1
+                               );
+         ELSE
+             -- тоесть приход проверяться не будет
+             vbMovementId_find3:= -1;
+         END IF;
 
          -- 1.1. check PartionStr is null
          vbMovementItemId_err:= (SELECT MovementItem.Id
@@ -213,14 +244,33 @@ BEGIN
          -- check для прихода
          IF vbIsProductionIn = TRUE
          THEN
-             -- 1.5. check need exists vbMovementId_find1 or vbMovementId_find2 для прихода
-             vbMovementItemId_err:= (SELECT 1 WHERE COALESCE (vbMovementId_find1, 0) = 0 AND COALESCE (vbMovementId_find2, 0) = 0);
+             -- 1.5. check need exists vbMovementId_find1 or vbMovementId_find2 для прихода + НЕ Бойня (т.е. когда vbMovementId_find3 = -1)
+             vbMovementItemId_err:= (SELECT 1 WHERE COALESCE (vbMovementId_find1, 0) = 0 AND COALESCE (vbMovementId_find2, 0) = 0 AND vbMovementId_find3 = -1);
              IF vbMovementItemId_err <> 0
              THEN
                   -- Результат - err 1
                   RETURN QUERY
                     SELECT 1 AS Code
                          , ('Ошибка.' || CHR(10) || CHR(13) || 'Сформировать приход партии <' || vbPartionGoods || '> возможно только после сформированного расхода.') :: TVarChar AS MessageStr
+                   ;
+                  -- выход
+                  RETURN;
+             END IF;
+         END IF;
+
+         -- check для Бойня
+         IF COALESCE (vbMovementId_find3, 0) <> -1
+         THEN
+             -- 1.6. check need exists vbMovementId_find3 для Бойни
+             vbMovementItemId_err:= (SELECT 1 WHERE COALESCE (vbMovementId_find3, 0) = 0);
+             IF vbMovementItemId_err <> 0
+             THEN
+                  -- Результат - err 1
+                  RETURN QUERY
+                    SELECT 1 AS Code
+                         , ('Ошибка.' || CHR(10) || CHR(13) || CASE WHEN vbIsProductionIn = TRUE THEN 'Приход' ELSE 'Расход' END || ' с бойни сформировать нельзя.'
+                                      || CHR(10) || CHR(13) || 'Не найден приход от поставщика для партии <' || vbPartionGoods_partner || '>.'
+                           ) :: TVarChar AS MessageStr
                    ;
                   -- выход
                   RETURN;

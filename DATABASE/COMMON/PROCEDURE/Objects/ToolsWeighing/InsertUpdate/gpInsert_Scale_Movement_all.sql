@@ -63,16 +63,30 @@ BEGIN
      END IF;
 
      -- !!!заменили параметр!!! : Перемещение -> производство ПЕРЕРАБОТКА
-     IF vbMovementDescId = zc_Movement_Send() AND (SELECT ObjectId FROM MovementLinkObject WHERE MovementId = inMovementId AND DescId = zc_MovementLinkObject_To())
-                                                  IN (SELECT UnitId FROM lfSelect_Object_Unit_byGroup (8446) WHERE UnitId <> 8450 -- ЦЕХ колбаса+дел-сы <> ЦЕХ копчения
-                                                     UNION
-                                                      SELECT UnitId FROM lfSelect_Object_Unit_byGroup (8439) -- Участок мясного сырья
-                                                     )
-                                              AND (SELECT ObjectId FROM MovementLinkObject WHERE MovementId = inMovementId AND DescId = zc_MovementLinkObject_From())
+     IF vbMovementDescId = zc_Movement_Send() AND -- если такие "От кого"
+                                                  (SELECT MLO.ObjectId FROM MovementLinkObject AS MLO WHERE MLO.MovementId = inMovementId AND MLO.DescId = zc_MovementLinkObject_From())
                                                   IN (SELECT 8451 -- Цех Упаковки
                                                      UNION
-                                                      SELECT UnitId FROM lfSelect_Object_Unit_byGroup (8453) -- Склады
+                                                      SELECT lfSelect.UnitId FROM lfSelect_Object_Unit_byGroup (8453) AS lfSelect -- Склады
                                                      )
+                                              AND -- если такие "Кому"
+                                                  (SELECT MLO.ObjectId FROM MovementLinkObject AS MLO WHERE MLO.MovementId = inMovementId AND MLO.DescId = zc_MovementLinkObject_To())
+                                                  IN (SELECT lfSelect.UnitId FROM lfSelect_Object_Unit_byGroup (8446) AS lfSelect WHERE lfSelect.UnitId <> 8450 -- ЦЕХ колбаса+дел-сы <> ЦЕХ копчения
+                                                     UNION
+                                                      SELECT lfSelect.UnitId FROM lfSelect_Object_Unit_byGroup (8439) AS lfSelect -- Участок мясного сырья
+                                                     )
+                                              AND -- если это не перемещение переработки
+                                                  NOT EXISTS
+                                                  (SELECT MovementItem.MovementId
+                                                   FROM MovementItem
+                                                        LEFT JOIN ObjectLink AS ObjectLink_Goods_InfoMoney
+                                                                             ON ObjectLink_Goods_InfoMoney.ObjectId = MovementItem.ObjectId
+                                                                            AND ObjectLink_Goods_InfoMoney.DescId = zc_ObjectLink_Goods_InfoMoney()
+                                                   WHERE MovementItem.MovementId = inMovementId
+                                                     AND MovementItem.DescId     = zc_MI_Master()
+                                                     AND MovementItem.isErased   = FALSE
+                                                     AND ObjectLink_Goods_InfoMoney.ChildObjectId = zc_Enum_InfoMoney_30301() -- Доходы + Переработка + Переработка
+                                                  )
      THEN
          vbMovementDescId:= zc_Movement_ProductionUnion();
          vbIsProductionIn:= FALSE;

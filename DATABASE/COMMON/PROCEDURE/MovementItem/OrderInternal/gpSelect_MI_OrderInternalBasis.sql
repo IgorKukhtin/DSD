@@ -46,12 +46,12 @@ BEGIN
      -- 
      CREATE TEMP TABLE _tmpMI_master (MovementItemId Integer, GoodsId Integer, GoodsKindId Integer
                                     , ReceiptId Integer
-                                    , Amount TFloat, AmountSecond TFloat, AmountRemains TFloat, AmountPartner TFloat
+                                    , Amount TFloat, AmountSecond TFloat, AmountRemains TFloat, AmountPartner TFloat, AmountPartnerPrior TFloat
                                     , AmountForecast TFloat
                                     , isErased Boolean) ON COMMIT DROP;
      INSERT INTO _tmpMI_master (MovementItemId, GoodsId, GoodsKindId
                               , ReceiptId
-                              , Amount, AmountSecond, AmountRemains, AmountPartner
+                              , Amount, AmountSecond, AmountRemains, AmountPartner, AmountPartnerPrior
                               , AmountForecast
                               , isErased)
                               SELECT MovementItem.Id AS MovementItemId
@@ -64,6 +64,7 @@ BEGIN
 
                                    , COALESCE (MIFloat_AmountRemains.ValueData, 0)         AS AmountRemains
                                    , COALESCE (MIFloat_AmountPartner.ValueData, 0)         AS AmountPartner
+                                   , COALESCE (MIFloat_AmountPartnerPrior.ValueData, 0)    AS AmountPartnerPrior
                                    , COALESCE (MIFloat_AmountForecast.ValueData, 0)        AS AmountForecast
 
                                    , MovementItem.isErased                                 AS isErased
@@ -82,6 +83,9 @@ BEGIN
                                    LEFT JOIN MovementItemFloat AS MIFloat_AmountPartner
                                                                ON MIFloat_AmountPartner.MovementItemId = MovementItem.Id
                                                               AND MIFloat_AmountPartner.DescId = zc_MIFloat_AmountPartner()
+                                   LEFT JOIN MovementItemFloat AS MIFloat_AmountPartnerPrior
+                                                               ON MIFloat_AmountPartnerPrior.MovementItemId = MovementItem.Id
+                                                              AND MIFloat_AmountPartnerPrior.DescId = zc_MIFloat_AmountPartnerPrior()
                                    LEFT JOIN MovementItemFloat AS MIFloat_AmountForecast
                                                                ON MIFloat_AmountForecast.MovementItemId = MovementItem.Id
                                                               AND MIFloat_AmountForecast.DescId = zc_MIFloat_AmountForecast()
@@ -117,10 +121,12 @@ BEGIN
            , tmpMI.Amount           :: TFloat AS Amount           -- Заказ на склад
            , tmpMI.AmountSecond     :: TFloat AS AmountSecond     -- Дозаказ на склад
 
-           , CASE WHEN tmpMI.AmountRemains < tmpMI.AmountPartner THEN tmpMI.AmountPartner - tmpMI.AmountRemains ELSE 0 END :: TFloat AS Amount_calc  -- Расчетный заказ
+           , CASE WHEN tmpMI.AmountRemains < tmpMI.AmountPartner + tmpMI.AmountPartnerPrior THEN tmpMI.AmountPartner + tmpMI.AmountPartnerPrior - tmpMI.AmountRemains ELSE 0 END :: TFloat AS Amount_calc  -- Расчетный заказ
 
-           , tmpMI.AmountRemains :: TFloat AS AmountRemains -- Ост. начальн.
-           , tmpMI.AmountPartner :: TFloat AS AmountPartner -- расчет составляющих по заявке на производство
+           , tmpMI.AmountRemains      :: TFloat AS AmountRemains      -- Ост. начальн.
+           , tmpMI.AmountPartner      :: TFloat AS AmountPartner      -- расчет составляющих по заявке на производство (без производства ПФ)
+           , tmpMI.AmountPartnerPrior :: TFloat AS AmountPartnerPrior -- расчет составляющих по заявке на производство (для производства ПФ)
+           , (tmpMI.AmountPartner + tmpMI.AmountPartnerPrior) :: TFloat AS AmountPartner_all -- расчет составляющих по заявке на производство (итого)
 
            , CASE WHEN ABS (tmpMI.AmountForecast) < 1 THEN tmpMI.AmountForecast ELSE CAST (tmpMI.AmountForecast AS NUMERIC (16, 1)) END :: TFloat AS AmountForecast -- Прогноз по факт. расходу на производство
            , CAST (CASE WHEN vbDayCount <> 0 THEN tmpMI.AmountForecast / vbDayCount ELSE 0 END AS NUMERIC (16, 1))                      :: TFloat AS CountForecast  -- Норм 1д (по пр.)

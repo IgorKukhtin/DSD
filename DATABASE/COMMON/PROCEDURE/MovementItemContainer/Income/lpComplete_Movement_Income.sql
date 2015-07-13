@@ -261,7 +261,7 @@ BEGIN
      INSERT INTO _tmpItem (MovementItemId
                          , ContainerId_Summ, ContainerId_Goods, ContainerId_CountSupplier, GoodsId, GoodsKindId, AssetId, PartionGoods, PartionGoodsDate
                          , ContainerId_GoodsTicketFuel, GoodsId_TicketFuel
-                         , OperCount, tmpOperSumm_Partner, OperSumm_Partner, tmpOperSumm_Packer, OperSumm_Packer
+                         , OperCount, OperCount_Packer, tmpOperSumm_Partner, OperSumm_Partner, tmpOperSumm_Packer, OperSumm_Packer
                          , AccountId, InfoMoneyGroupId, InfoMoneyDestinationId, InfoMoneyId, InfoMoneyGroupId_Detail, InfoMoneyDestinationId_Detail, InfoMoneyId_Detail
                          , BusinessId, UnitId_Asset
                          , isPartionCount, isPartionSumm, isCountSupplier
@@ -281,6 +281,7 @@ BEGIN
             , _tmp.GoodsId_TicketFuel
 
             , _tmp.OperCount
+            , _tmp.OperCount_Packer
 
               -- промежуточная сумма по Контрагенту - с округлением до 2-х знаков
             , _tmp.tmpOperSumm_Partner_ChangePrice AS tmpOperSumm_Partner
@@ -382,8 +383,9 @@ BEGIN
  
                    , MovementItem.ObjectId AS GoodsId_TicketFuel
 
-                   , MovementItem.Amount + COALESCE (MIFloat_AmountPacker.ValueData, 0) AS OperCount
-                   , COALESCE (MIFloat_Price.ValueData, 0) AS Price
+                   , MovementItem.Amount                          AS OperCount
+                   , COALESCE (MIFloat_AmountPacker.ValueData, 0) AS OperCount_Packer
+                   , COALESCE (MIFloat_Price.ValueData, 0)        AS Price
 
                      -- промежуточная сумма по Контрагенту - с округлением до 2-х знаков
                    , CASE WHEN COALESCE (MIFloat_CountForPrice.ValueData, 0) <> 0 THEN COALESCE (CAST (MIFloat_AmountPartner.ValueData * MIFloat_Price.ValueData / MIFloat_CountForPrice.ValueData AS NUMERIC (16, 2)), 0)
