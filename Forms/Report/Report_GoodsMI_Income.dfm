@@ -1,30 +1,30 @@
 inherited Report_GoodsMI_IncomeForm: TReport_GoodsMI_IncomeForm
   Caption = #1054#1090#1095#1077#1090' <'#1087#1086' '#1090#1086#1074#1072#1088#1072#1084'>'
-  ClientHeight = 344
-  ClientWidth = 971
+  ClientHeight = 352
+  ClientWidth = 1143
   AddOnFormData.isSingle = False
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
-  ExplicitWidth = 987
-  ExplicitHeight = 382
+  ExplicitWidth = 1159
+  ExplicitHeight = 390
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 99
-    Width = 971
-    Height = 245
+    Width = 1143
+    Height = 253
     TabOrder = 3
     ExplicitTop = 99
     ExplicitWidth = 971
     ExplicitHeight = 245
-    ClientRectBottom = 245
-    ClientRectRight = 971
+    ClientRectBottom = 253
+    ClientRectRight = 1143
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 971
       ExplicitHeight = 245
       inherited cxGrid: TcxGrid
-        Width = 971
-        Height = 245
+        Width = 1143
+        Height = 253
         ExplicitWidth = 971
         ExplicitHeight = 245
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -136,6 +136,7 @@ inherited Report_GoodsMI_IncomeForm: TReport_GoodsMI_IncomeForm
           object clFuelKindName: TcxGridDBColumn
             Caption = #1042#1080#1076' '#1090#1086#1087#1083#1080#1074#1072
             DataBinding.FieldName = 'FuelKindName'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderGlyphAlignmentHorz = taCenter
@@ -205,7 +206,7 @@ inherited Report_GoodsMI_IncomeForm: TReport_GoodsMI_IncomeForm
     end
   end
   inherited Panel: TPanel
-    Width = 971
+    Width = 1143
     Height = 73
     ExplicitWidth = 971
     ExplicitHeight = 73
@@ -231,12 +232,12 @@ inherited Report_GoodsMI_IncomeForm: TReport_GoodsMI_IncomeForm
     end
     object cxLabel4: TcxLabel
       Left = 541
-      Top = 31
+      Top = 4
       Caption = #1043#1088#1091#1087#1087#1072' '#1090#1086#1074#1072#1088#1086#1074':'
     end
     object edGoodsGroup: TcxButtonEdit
       Left = 630
-      Top = 30
+      Top = 3
       Properties.Buttons = <
         item
           Default = True
@@ -244,11 +245,11 @@ inherited Report_GoodsMI_IncomeForm: TReport_GoodsMI_IncomeForm
         end>
       Properties.ReadOnly = True
       TabOrder = 5
-      Width = 336
+      Width = 227
     end
     object edInDescName: TcxTextEdit
       AlignWithMargins = True
-      Left = 735
+      Left = 863
       Top = 3
       ParentCustomHint = False
       BeepOnEnter = False
@@ -299,13 +300,13 @@ inherited Report_GoodsMI_IncomeForm: TReport_GoodsMI_IncomeForm
       Width = 223
     end
     object cxLabel6: TcxLabel
-      Left = 549
-      Top = 6
+      Left = 863
+      Top = 31
       Caption = #1060#1086#1088#1084#1072' '#1086#1087#1083#1072#1090#1099':'
     end
     object edPaidKind: TcxButtonEdit
-      Left = 630
-      Top = 3
+      Left = 948
+      Top = 30
       Properties.Buttons = <
         item
           Default = True
@@ -315,6 +316,23 @@ inherited Report_GoodsMI_IncomeForm: TReport_GoodsMI_IncomeForm
       TabOrder = 12
       Width = 101
     end
+    object edJuridical: TcxButtonEdit
+      Left = 599
+      Top = 30
+      Properties.Buttons = <
+        item
+          Default = True
+          Kind = bkEllipsis
+        end>
+      Properties.ReadOnly = True
+      TabOrder = 13
+      Width = 258
+    end
+  end
+  object cxLabel7: TcxLabel [2]
+    Left = 544
+    Top = 31
+    Caption = #1070#1088'.'#1051#1080#1094#1086':'
   end
   inherited ActionList: TActionList
     object ExecuteDialog: TExecuteDialog
@@ -462,6 +480,13 @@ inherited Report_GoodsMI_IncomeForm: TReport_GoodsMI_IncomeForm
         Component = PaidKindGuides
         ComponentItem = 'Key'
         ParamType = ptInput
+      end
+      item
+        Name = 'inJuridicalId'
+        Value = Null
+        Component = JuridicalGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
       end>
     Left = 112
     Top = 208
@@ -562,8 +587,8 @@ inherited Report_GoodsMI_IncomeForm: TReport_GoodsMI_IncomeForm
         DataType = ftString
         ParamType = ptInput
       end>
-    Left = 704
-    Top = 24
+    Left = 712
+    Top = 65528
   end
   object FormParams: TdsdFormParams
     Params = <
@@ -661,7 +686,34 @@ inherited Report_GoodsMI_IncomeForm: TReport_GoodsMI_IncomeForm
         DataType = ftString
         ParamType = ptInput
       end>
-    Left = 648
-    Top = 65528
+    Left = 984
+    Top = 24
+  end
+  object JuridicalGuides: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edJuridical
+    FormNameParam.Name = 'TJuridical_ObjectForm'
+    FormNameParam.Value = 'TJuridical_ObjectForm'
+    FormNameParam.DataType = ftString
+    FormName = 'TJuridical_ObjectForm'
+    PositionDataSet = 'MasterCDS'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = JuridicalGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = JuridicalGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+      end>
+    Left = 704
+    Top = 32
   end
 end

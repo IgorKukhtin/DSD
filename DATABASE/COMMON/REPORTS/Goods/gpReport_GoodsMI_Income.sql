@@ -3,7 +3,7 @@
 
 DROP FUNCTION IF EXISTS gpReport_GoodsMI_Income (TDateTime, TDateTime, Integer, Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpReport_GoodsMI_Income (TDateTime, TDateTime, Integer, Integer, Integer, Integer,Integer, TVarChar);
-
+DROP FUNCTION IF EXISTS gpReport_GoodsMI_Income (TDateTime, TDateTime, Integer, Integer, Integer, Integer,Integer, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpReport_GoodsMI_Income (
     IN inStartDate    TDateTime ,  
@@ -13,6 +13,7 @@ CREATE OR REPLACE FUNCTION gpReport_GoodsMI_Income (
     IN inUnitGroupId  Integer   ,
     IN inUnitId       Integer   ,
     IN inPaidKindId   Integer   ,
+    IN inJuridicalId  Integer   ,
     IN inSession      TVarChar    -- сессия пользователя
 )
 RETURNS TABLE (GoodsGroupName TVarChar
@@ -67,8 +68,12 @@ BEGIN
           /*   INSERT INTO _tmpUnit (UnitId)
                SELECT Id FROM Object INNER JOIN tmpBranch ON tmpBranch.Value = TRUE WHERE DescId = zc_Object_Unit();*/
             INSERT INTO _tmpUnit (UnitId)
-               SELECT Object.Id AS UnitId FROM Object
-               WHERE DescId = zc_Object_Unit();
+                                                   /*   SELECT Object.Id AS UnitId FROM Object  WHERE DescId = zc_Object_Unit();*/
+               SELECT Id FROM Object WHERE DescId = zc_Object_Unit()
+              UNION ALL
+               SELECT Id FROM Object  WHERE DescId = zc_Object_Member()
+              UNION ALL
+               SELECT Id FROM Object  WHERE DescId = zc_Object_Car();
               
         END IF;
     END IF;
@@ -119,11 +124,15 @@ BEGIN
        /*               LEFT JOIN ContainerLinkObject AS ContainerLO_FuelKind
                                                     ON ContainerLO_FuelKind.ContainerId = tmpContainer.ContainerId
                                                    AND ContainerLO_FuelKind.DescId = zc_ContainerLinkObject_Goods()*/
-                                                   
+                      INNER JOIN ContainerLinkObject AS ContainerLO_Juridical
+                                               ON ContainerLO_Juridical.ContainerId = tmpContainer.ContainerId_analyzer
+                                              AND ContainerLO_Juridical.DescId = zc_ContainerLinkObject_Juridical()
+                                         AND (ContainerLO_Juridical.ObjectId = inJuridicalId or inJuridicalId=0)
+                                                                                   
                       LEFT JOIN ContainerLinkObject AS ContainerLO_GoodsKind
                                                     ON ContainerLO_GoodsKind.ContainerId =  tmpContainer.ContainerId
                                                    AND ContainerLO_GoodsKind.DescId = zc_ContainerLinkObject_GoodsKind()
-                      LEFT JOIN ContainerLinkObject AS ContainerLO_PaidKind
+                      INNER JOIN ContainerLinkObject AS ContainerLO_PaidKind
                                                ON ContainerLO_PaidKind.ContainerId =  tmpContainer.ContainerId_analyzer
                                               AND ContainerLO_PaidKind.DescId = zc_ContainerLinkObject_PaidKind()
                                               AND (ContainerLO_PaidKind.ObjectId = inPaidKindId or inPaidKindId=0)
@@ -167,7 +176,7 @@ BEGIN
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpReport_GoodsMI_Income (TDateTime, TDateTime, Integer, Integer, Integer, Integer,Integer, TVarChar) OWNER TO postgres;
+--ALTER FUNCTION gpReport_GoodsMI_Income (TDateTime, TDateTime, Integer, Integer, Integer, Integer,Integer, TVarChar) OWNER TO postgres;
 
 
 /*-------------------------------------------------------------------------------

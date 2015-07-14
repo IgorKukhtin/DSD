@@ -35,6 +35,9 @@ type
     edPaidKind: TcxButtonEdit;
     cxLabel2: TcxLabel;
     GuidesPaidKind: TdsdGuides;
+    cxLabel5: TcxLabel;
+    edJuridical: TcxButtonEdit;
+    JuridicalGuides: TdsdGuides;
   private
     { Private declarations }
   public

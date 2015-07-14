@@ -30,10 +30,15 @@ RETURNS TABLE (GoodsGroupName TVarChar
              )
 AS
 $BODY$
+ DECLARE vbUserId Integer;
 BEGIN
-
-    -- Ограничения по товару
+     vbUserId:= lpGetUserBySession (inSession);
+   
     CREATE TEMP TABLE _tmpGoods (GoodsId Integer) ON COMMIT DROP;
+    CREATE TEMP TABLE _tmpUnit (UnitId Integer) ON COMMIT DROP;
+    
+  
+    -- Ограничения по товару
     IF inGoodsGroupId <> 0
     THEN
         INSERT INTO _tmpGoods (GoodsId)
@@ -46,58 +51,46 @@ BEGIN
            SELECT Object.Id FROM Object WHERE DescId = zc_Object_Fuel();
     END IF;
 
+    
+
+    -- группа подразделений или подразделение или место учета (МО, Авто)
+    IF inUnitGroupId <> 0
+    THEN
+        INSERT INTO _tmpUnit (UnitId)
+           SELECT lfSelect_Object_Unit_byGroup.UnitId AS UnitId
+           FROM lfSelect_Object_Unit_byGroup (inUnitGroupId) AS lfSelect_Object_Unit_byGroup;
+    ELSE
+        IF inUnitId <> 0
+        THEN
+            INSERT INTO _tmpUnit (UnitId)
+               SELECT Object.Id AS UnitId
+               FROM Object
+               WHERE Object.Id = inUnitId;
+        ELSE
+           WITH tmpBranch AS (SELECT TRUE AS Value WHERE 1 = 0 AND NOT EXISTS (SELECT BranchId FROM Object_RoleAccessKeyGuide_View WHERE UserId = vbUserId AND BranchId <> 0))
+          /*      
+            INSERT INTO _tmpUnit (UnitId)
+               SELECT Id FROM Object INNER JOIN tmpBranch ON tmpBranch.Value = TRUE WHERE DescId = zc_Object_Unit()
+              UNION ALL
+               SELECT Id FROM Object INNER JOIN tmpBranch ON tmpBranch.Value = TRUE WHERE DescId = zc_Object_Member()
+              UNION ALL
+               SELECT Id FROM Object INNER JOIN tmpBranch ON tmpBranch.Value = TRUE WHERE DescId = zc_Object_Car();
+  */
+            INSERT INTO _tmpUnit (UnitId)
+                                                   /*   SELECT Object.Id AS UnitId FROM Object  WHERE DescId = zc_Object_Unit();*/
+               SELECT Id FROM Object WHERE DescId = zc_Object_Unit()
+              UNION ALL
+               SELECT Id FROM Object  WHERE DescId = zc_Object_Member()
+              UNION ALL
+               SELECT Id FROM Object  WHERE DescId = zc_Object_Car();
+              
+        END IF;
+    END IF;
+
 
    -- Результат
     RETURN QUERY
-
-
-
-
-    -- ограничиваем по Юр.лицу и по виду документа
-    WITH tmpMovement AS (SELECT
-                             Movement.Id AS MovementId
-                              , Movement.DescId AS MovementDescId
-                              , ContainerLO_Juridical.ObjectId  AS JuridicalId
-                              , MovementLinkObject_Partner.ObjectId AS PartnerId
-                              --, case when coalesce (ObjectLink_CardFuel_Juridical.ChildObjectId,0) = 0 then MovementLinkObject_Partner.ObjectId else ObjectLink_CardFuel_Juridical.ChildObjectId end  AS PartnerId
-                              , ContainerLinkObject_PaidKind.ObjectId AS PaidKindId
-
-                         FROM Movement
-                              JOIN MovementItemContainer AS MIContainer
-                                                         ON MIContainer.MovementId =  Movement.Id
-
-                              JOIN ContainerLinkObject AS ContainerLO_Juridical
-                                                       ON ContainerLO_Juridical.ContainerId = MIContainer.ContainerId
-                                                      AND ContainerLO_Juridical.DescId = zc_ContainerLinkObject_Juridical()
-                                                      AND (ContainerLO_Juridical.ObjectId = inJuridicalId OR inJuridicalId = 0)
-
-                              LEFT JOIN ContainerLinkObject AS ContainerLinkObject_PaidKind
-                                                            ON ContainerLinkObject_PaidKind.ContainerId = MIContainer.ContainerId
-                                                           AND ContainerLinkObject_PaidKind.DescId = zc_ContainerLinkObject_PaidKind()
-
-                              LEFT JOIN MovementLinkObject AS MovementLinkObject_Partner
-                                                           ON MovementLinkObject_Partner.MovementId = Movement.Id
-                                                          AND MovementLinkObject_Partner.DescId = zc_MovementLinkObject_From()
-
-                              /*LEFT JOIN Object AS Object_CardFuel ON Object_CardFuel.Id = MovementLinkObject_Partner.ObjectId
-                                                                AND Object_CardFuel.DescId = zc_Object_CardFuel()
-
-                              LEFT JOIN ObjectLink AS ObjectLink_CardFuel_Juridical
-                                                   ON ObjectLink_CardFuel_Juridical.ObjectId = Object_CardFuel.Id
-                                                  AND ObjectLink_CardFuel_Juridical.DescId = zc_ObjectLink_CardFuel_Juridical()
-                              LEFT JOIN Object AS Object_Juridical ON Object_Juridical.Id = ObjectLink_CardFuel_Juridical.ChildObjectId*/
-
-                         WHERE Movement.OperDate BETWEEN inStartDate AND inEndDate
-                           AND Movement.DescId = inDescId
-
-                       GROUP BY Movement.Id
-                              , ContainerLO_Juridical.ObjectId
-                              , MovementLinkObject_Partner.ObjectId
-                              --, case when coalesce (ObjectLink_CardFuel_Juridical.ChildObjectId,0) = 0 then MovementLinkObject_Partner.ObjectId else ObjectLink_CardFuel_Juridical.ChildObjectId end
-                              , ContainerLinkObject_PaidKind.ObjectId
-                         )
-
-
+    
     SELECT Object_GoodsGroup.ValueData AS GoodsGroupName
          , Object_Goods.ObjectCode     AS GoodsCode
          , Object_Goods.ValueData      AS GoodsName
@@ -121,110 +114,59 @@ BEGIN
          , CAST ((case when Object_Measure.Id = zc_Measure_Sh() then tmpOperationGroup.AmountPartner else 0 end) AS TFloat) AS AmountPartner_Sh
 
          , tmpOperationGroup.Summ :: TFloat AS Summ
+     FROM (SELECT tmpContainer.GoodsId
+                , ( COALESCE (ContainerLO_Juridical.ObjectId,0) ) AS JuridicalId
+                , ( COALESCE (ContainerLO_Partner.ObjectId,0) ) AS PartnerId 
+                , ( COALESCE (ContainerLO_PaidKind.ObjectId,0) ) AS PaidKindId
+                , 0/*( COALESCE (ContainerLO_FuelKind.ObjectId,0) )*/ AS FuelKindId
+                , ( COALESCE (ContainerLO_GoodsKind.ObjectId,0) ) AS GoodsKindId
+                , ABS (SUM (tmpContainer.Amount)):: TFloat          AS Amount 
+                , ABS (SUM (tmpContainer.AmountPartner)):: TFloat   AS AmountPartner
+                , ABS (SUM (tmpContainer.Summ)) :: TFloat           AS Summ
 
-     FROM (SELECT tmpOperation.JuridicalId
-                , tmpOperation.PartnerId
-                , tmpOperation.PaidKindId
-
-                , tmpOperation.GoodsId
-                , tmpOperation.GoodsKindId
-                , tmpOperation.FuelKindId
-                , ABS (SUM (tmpOperation.Amount)):: TFloat          AS Amount
-                , ABS (SUM (tmpOperation.AmountPartner)):: TFloat   AS AmountPartner
-                , ABS (SUM (tmpOperation.Summ)) :: TFloat           AS Summ
-
-           FROM (SELECT tmpMovement.JuridicalId
-                      , tmpMovement.PartnerId
-                      , tmpMovement.PaidKindId
-                      , MovementItem.ObjectId AS GoodsId
-                      , COALESCE (MILinkObject_GoodsKind.ObjectId, 0) AS GoodsKindId
-                      , COALESCE (ContainerLO_FuelKind.ObjectId, 0)  AS FuelKindId
-                      , SUM (COALESCE (MIContainer.Amount,0)) AS Summ
-                      , 0 AS Amount
-                      , 0 AS AmountPartner
-                 FROM tmpMovement
-
-                      JOIN MovementItemContainer AS MIContainer
-                                                 ON MIContainer.MovementId = tmpMovement.MovementId
-                                                AND MIContainer.DescId = zc_MIContainer_Summ()
-                      JOIN Container ON Container.Id = MIContainer.ContainerId
-
-                      JOIN (SELECT AccountID FROM Object_Account_View WHERE AccountGroupId = zc_Enum_AccountGroup_20000()
-                           ) AS tmpAccount on tmpAccount.AccountID = Container.ObjectId
-
-                      JOIN MovementItem ON MovementItem.Id = MIContainer.MovementItemId
-                                       AND MovementItem.DescId =  zc_MI_Master()
-                      JOIN _tmpGoods ON _tmpGoods.GoodsId = MovementItem.ObjectId
-
-                      LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
-                                                       ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
-                                                      AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
-
-                      LEFT JOIN ContainerLinkObject AS ContainerLO_FuelKind
-                                                    ON ContainerLO_FuelKind.ContainerId = Container.Id
-                                                   AND ContainerLO_FuelKind.DescId = zc_ContainerLinkObject_Goods()
-
-                      GROUP BY tmpMovement.JuridicalId
-                             , tmpMovement.PartnerId
-                             , tmpMovement.PaidKindId
-                             , MovementItem.ObjectId
-                             , COALESCE (MILinkObject_GoodsKind.ObjectId, 0)
-                             , COALESCE (ContainerLO_FuelKind.ObjectId, 0)
-              UNION
-
-                 SELECT tmpMovement.JuridicalId
-                      , tmpMovement.PartnerId
-                      , tmpMovement.PaidKindId
-                      , MovementItem.ObjectId AS GoodsId
-                      , COALESCE (MILinkObject_GoodsKind.ObjectId, 0) AS GoodsKindId
-                      , COALESCE (Container.ObjectId, 0)              AS FuelKindId
-                      , 0 AS Summ
-                      , SUM (MIContainer.Amount) AS Amount
-                      , SUM (COALESCE (MIFloat_AmountPartner.ValueData, 0)) AS AmountPartner
-                 FROM tmpMovement
-
-                      JOIN MovementItemContainer AS MIContainer
-                                                 ON MIContainer.MovementId = tmpMovement.MovementId
-                                                AND MIContainer.DescId = zc_MIContainer_Count()
-                      LEFT JOIN Container ON Container.Id = MIContainer.ContainerId
-
-                      JOIN MovementItem ON MovementItem.Id = MIContainer.MovementItemId
-                                       AND MovementItem.DescId =  zc_MI_Master()
-                      JOIN _tmpGoods ON _tmpGoods.GoodsId = MovementItem.ObjectId
-
-                      LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
-                                                       ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
-                                                      AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
-                      LEFT JOIN MovementItemFloat AS MIFloat_AmountPartner
-                                                  ON MIFloat_AmountPartner.MovementItemId = MIContainer.MovementItemId
-                                                 AND MIFloat_AmountPartner.DescId = zc_MIFloat_AmountPartner()
-
-                      LEFT JOIN MovementLinkObject AS MovementLO_From
-                                                   ON MovementLO_From.MovementId = tmpMovement.MovementId
-                                                  AND MovementLO_From.DescId = zc_MovementLinkObject_From()
-                      LEFT JOIN Object ON Object.Id = MovementLO_From.ObjectId
-                                      AND Object.DescId = zc_Object_TicketFuel()
-
-                      WHERE Object.Id IS NUll
-
-                      GROUP BY tmpMovement.JuridicalId
-                             , tmpMovement.PartnerId
-                             , tmpMovement.PaidKindId
-                             , MovementItem.ObjectId
-                             , COALESCE (MILinkObject_GoodsKind.ObjectId, 0)
-                             , COALESCE (Container.ObjectId, 0)
-
-               ) AS tmpOperation
-
-           GROUP BY tmpOperation.JuridicalId
-                  , tmpOperation.PartnerId
-                  , tmpOperation.PaidKindId
-                  , tmpOperation.GoodsId
-                  , tmpOperation.GoodsKindId
-                  , tmpOperation.FuelKindId
-
+           FROM (SELECT MIContainer.ContainerId AS ContainerId
+                      , MIContainer.ObjectId_analyzer AS GoodsId 
+                      , MIContainer.ContainerId_analyzer      
+                      , SUM ( CASE WHEN MIContainer.DescId = zc_MIContainer_Summ() THEN COALESCE (MIContainer.Amount,0) ELSE 0 end ) AS Summ
+                      , SUM ( CASE WHEN MIContainer.DescId = zc_MIContainer_Count() THEN COALESCE (MIContainer.Amount,0) ELSE 0 end ) AS Amount
+                      , SUM ( CASE WHEN MIContainer.DescId = zc_MIContainer_Count() THEN COALESCE (MIContainer.Amount,0) ELSE 0 end ) AS AmountPartner
+                      , 0 AS AmountPackage
+                      , 0 AS SummPackage
+                 FROM MovementItemContainer AS MIContainer 
+                       JOIN _tmpGoods ON _tmpGoods.GoodsId = MIContainer.ObjectId_analyzer
+                       JOIN _tmpUnit ON _tmpUnit.UnitId = MIContainer.WhereObjectId_analyzer
+                 WHERE MIContainer.OperDate BETWEEN inStartDate AND inEndDate  
+                   AND MIContainer.MovementDEscId = inDescId
+                   And MIContainer.isActive = CASE WHEN MIContainer.MovementDEscId = zc_Movement_Income() THEN True ELSE False End
+                 group by  MIContainer.ContainerId,      MIContainer.ObjectId_analyzer , MIContainer.ContainerId_analyzer 
+                 ) as tmpContainer
+       /*               LEFT JOIN ContainerLinkObject AS ContainerLO_FuelKind
+                                                    ON ContainerLO_FuelKind.ContainerId = tmpContainer.ContainerId
+                                                   AND ContainerLO_FuelKind.DescId = zc_ContainerLinkObject_Goods()*/
+                      INNER JOIN ContainerLinkObject AS ContainerLO_Juridical
+                                               ON ContainerLO_Juridical.ContainerId = tmpContainer.ContainerId_analyzer
+                                              AND ContainerLO_Juridical.DescId = zc_ContainerLinkObject_Juridical()
+                                         AND (ContainerLO_Juridical.ObjectId = inJuridicalId or inJuridicalId=0)
+                                                                                   
+                      LEFT JOIN ContainerLinkObject AS ContainerLO_GoodsKind
+                                                    ON ContainerLO_GoodsKind.ContainerId =  tmpContainer.ContainerId
+                                                   AND ContainerLO_GoodsKind.DescId = zc_ContainerLinkObject_GoodsKind()
+                      INNER JOIN ContainerLinkObject AS ContainerLO_PaidKind
+                                               ON ContainerLO_PaidKind.ContainerId =  tmpContainer.ContainerId_analyzer
+                                              AND ContainerLO_PaidKind.DescId = zc_ContainerLinkObject_PaidKind()
+                                              AND (ContainerLO_PaidKind.ObjectId = inPaidKindId or inPaidKindId=0)
+                      LEFT JOIN ContainerLinkObject AS ContainerLO_Partner
+                                               ON ContainerLO_Partner.ContainerId =  tmpContainer.ContainerId_analyzer
+                                              AND ContainerLO_Partner.DescId = zc_ContainerLinkObject_Partner()      
+                  
+                      GROUP BY tmpContainer.GoodsId
+                             , COALESCE (ContainerLO_PaidKind.ObjectId,0)
+                           --  , COALESCE (ContainerLO_FuelKind.ObjectId,0) 
+                             , COALESCE (ContainerLO_GoodsKind.ObjectId,0) 
+                             , COALESCE (ContainerLO_Partner.ObjectId,0)
+                             , COALESCE (ContainerLO_Juridical.ObjectId,0) 
           ) AS tmpOperationGroup
-
+          
           LEFT JOIN Object AS Object_Goods on Object_Goods.Id = tmpOperationGroup.GoodsId
 
           LEFT JOIN Object AS Object_GoodsKind ON Object_GoodsKind.Id = tmpOperationGroup.GoodsKindId
@@ -255,21 +197,22 @@ BEGIN
                                 ON ObjectFloat_Weight.ObjectId = Object_Goods.Id
                                AND ObjectFloat_Weight.DescId = zc_ObjectFloat_Goods_Weight()
 
-  ;
 
+  ;
+         
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpReport_GoodsMI_IncomeByPartner (TDateTime, TDateTime, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar) OWNER TO postgres;
+
 
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
  11.07.15         * add inUnitGroupId, inUnitId, inPaidKindId
- 09.02.14         *
-
+ 08.02.14         * 
+    
 */
 
 -- тест
---SELECT * FROM gpReport_GoodsMI_IncomeByPartner (inStartDate:= '01.01.2013', inEndDate:= '31.12.2014',  inDescId:= 1, inJuridicalId:= 0, inGoodsGroupId:= 0, inSession:= zfCalc_UserAdmin());  --inJuridicalId:= 15039
+--SELECT * FROM gpReport_GoodsMI_Income (inStartDate:= '01.01.2013', inEndDate:= '31.12.2013',  inDescId:= 1, inGoodsGroupId:= 0, inSession:= zfCalc_UserAdmin());

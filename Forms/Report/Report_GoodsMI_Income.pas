@@ -45,6 +45,9 @@ type
     PaidKindGuides: TdsdGuides;
     ExecuteDialog: TExecuteDialog;
     bb: TdxBarButton;
+    cxLabel7: TcxLabel;
+    edJuridical: TcxButtonEdit;
+    JuridicalGuides: TdsdGuides;
   private
     { Private declarations }
   public
