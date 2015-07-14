@@ -43,6 +43,8 @@ type
     cxLabel6: TcxLabel;
     edPaidKind: TcxButtonEdit;
     PaidKindGuides: TdsdGuides;
+    ExecuteDialog: TExecuteDialog;
+    bb: TdxBarButton;
   private
     { Private declarations }
   public
