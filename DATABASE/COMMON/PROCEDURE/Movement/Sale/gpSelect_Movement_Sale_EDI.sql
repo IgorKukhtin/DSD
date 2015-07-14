@@ -828,10 +828,10 @@ BEGIN
 
                          END) AS AmountPartner
              FROM MovementItem
-                  LEFT JOIN MovementItemFloat AS MIFloat_Price
+                  INNER JOIN MovementItemFloat AS MIFloat_Price
                                                ON MIFloat_Price.MovementItemId = MovementItem.Id
                                               AND MIFloat_Price.DescId = zc_MIFloat_Price()
-                                              -- AND MIFloat_Price.ValueData <> 0
+                                              AND MIFloat_Price.ValueData <> 0
                   LEFT JOIN MovementItemFloat AS MIFloat_AmountPartner
                                               ON MIFloat_AmountPartner.MovementItemId = MovementItem.Id
                                              AND MIFloat_AmountPartner.DescId = zc_MIFloat_AmountPartner()
@@ -903,34 +903,7 @@ ALTER FUNCTION gpSelect_Movement_Sale_EDI (Integer,TVarChar) OWNER TO postgres;
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».   Ã‡Ì¸ÍÓ ƒ.¿.
- 13.11.14                                                       * fix
- 12.11.14                                        * add AmountOrder
- 17.10.14                                                       *
- 13.05.14                                                       * Amount_Weight Amount_Sh
- 23.07.14                                        * add ArticleGLN
- 16.07.14                                        * add tmpObject_GoodsPropertyValueGroup
- 20.06.14                                                       * change InvNumber
- 05.06.14                                        * restore ContractSigningDate
- 04.06.14                                        * add tmpObject_GoodsPropertyValue.Name
- 20.05.14                                        * add Object_Contract_View
- 17.05.14                                        * add StatusId = zc_Enum_Status_Complete
- 13.05.14                                        * add calc GoodsName
- 13.05.14                                                       * zc_ObjectLink_Contract_BankAccount
- 08.05.14                        * add GLN code
- 08.05.14                                        * all
- 06.05.14                                        * add Object_Partner
- 06.05.14                                                       * zc_Movement_SendOnPrice
- 06.05.14                                        * OperDatePartner
- 05.05.14                                                       *
- 28.04.14                                                       *
- 09.04.14                                        * add JOIN MIFloat_AmountPartner
- 02.04.14                                                       *  PriceWVAT PriceNoVAT round to 2 sign
- 01.04.14                                                       *  tmpMI.Price <> 0
- 27.03.14                                                       *
- 24.02.14                                                       *  add PriceNoVAT, PriceWVAT, AmountSummNoVAT, AmountSummWVAT
- 19.02.14                                                       *  add by juridical
- 07.02.14                                                       *  change to Cursor
- 05.02.14                                                       *
+ 12.07.15                                        *
 */
 
 -- ÚÂÒÚ

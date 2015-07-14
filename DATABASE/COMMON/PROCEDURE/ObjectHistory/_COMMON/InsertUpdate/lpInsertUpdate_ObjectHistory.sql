@@ -15,6 +15,11 @@ DECLARE
   findId Integer;
 BEGIN
 
+   IF COALESCE (inObjectId, 0) = 0 
+   THEN
+       RAISE EXCEPTION 'Error. inObjectId = %', inObjectId;
+   END IF;
+
   IF ioId = 0 THEN
      -- Ищем ioId, если он равен 0
      SELECT ObjectHistory.Id INTO ioId
@@ -89,7 +94,7 @@ BEGIN
             VALUES (inDescId, inObjectId, inOperDate, lEndDate) RETURNING Id INTO ioId;
   ELSE
      -- изменили текущий элемент по значению <ключа>: <код объекта>, <данные>
-     UPDATE ObjectHistory SET StartDate = inOperDate, EndDate = lEndDate WHERE Id = ioId;
+     UPDATE ObjectHistory SET StartDate = inOperDate, EndDate = lEndDate, ObjectId = inObjectId  WHERE Id = ioId;
      IF NOT found THEN
        -- дабавили текущий элемент: <ключ класса объекта>, <код объекта> , <данные> со значением <ключа>
        INSERT INTO ObjectHistory (Id, DescId, ObjectId, StartDate, EndDate)

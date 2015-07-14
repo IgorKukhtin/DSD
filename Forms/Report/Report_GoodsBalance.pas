@@ -161,6 +161,8 @@ type
     PartionGoodsDate: TcxGridDBColumn;
     TermProduction: TcxGridDBColumn;
     GoodsKindName_complete: TcxGridDBColumn;
+    actPrint_Loss: TdsdPrintAction;
+    bbPrint_Loss: TdxBarButton;
   private
   public
   end;
