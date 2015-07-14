@@ -669,7 +669,7 @@ uses
   COMTestUnit in '..\SOURCE\COM\COMTestUnit.pas',
   RouteGroup in '..\..\Forms\Guides\RouteGroup.pas' {RouteGroupForm: TParentForm},
   RouteGroupEdit in '..\..\Forms\Guides\RouteGroupEdit.pas' {RouteGroupEditForm: TParentForm},
-  Report_GoodsBalanceDialog in '..\..\Forms\Report\Report_GoodsBalanceDialog.pas' {Report_GoodsBalanceDialogForm: TParentForm},
+  Report_GoodsMI_IncomeDialog in '..\..\Forms\Report\Report_GoodsMI_IncomeDialog.pas' {Report_GoodsMI_IncomeDialogForm: TParentForm},
   Report_GoodsBalance in '..\..\Forms\Report\Report_GoodsBalance.pas' {Report_GoodsBalanceForm: TParentForm},
   Report_MotionGoodsUpak in '..\..\Forms\Report\Report_MotionGoodsUpak.pas' {Report_MotionGoodsUpakForm: TParentForm},
   MedocJournal in '..\..\Forms\Document\MedocJournal.pas' {MedocJournalForm: TParentForm},
@@ -697,7 +697,8 @@ uses
   ReturnOut in '..\..\Forms\Document\ReturnOut.pas' {ReturnOutForm: TParentForm},
   ReturnOutJournal in '..\..\Forms\Document\ReturnOutJournal.pas' {ReturnOutJournalForm: TParentForm},
   Report_GoodsMI_SaleReturnInUnit in '..\..\Forms\Report\Report_GoodsMI_SaleReturnInUnit.pas' {Report_GoodsMI_SaleReturnInUnitForm: TParentForm},
-  Report_GoodsMI_SaleReturnIn in '..\..\Forms\Report\Report_GoodsMI_SaleReturnIn.pas' {Report_GoodsMI_SaleReturnInForm: TParentForm};
+  Report_GoodsMI_SaleReturnIn in '..\..\Forms\Report\Report_GoodsMI_SaleReturnIn.pas' {Report_GoodsMI_SaleReturnInForm: TParentForm},
+  Report_GoodsBalanceDialog in '..\..\Forms\Report\Report_GoodsBalanceDialog.pas' {Report_GoodsBalanceDialogForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}

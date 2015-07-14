@@ -29,7 +29,7 @@ type
     FormParams: TdsdFormParams;
     clAmountPartner_Weight: TcxGridDBColumn;
     clJuridicalName: TcxGridDBColumn;
-    clPartnerName: TcxGridDBColumn;
+    PartnerName: TcxGridDBColumn;
     clPaidKindName: TcxGridDBColumn;
     edInDescName: TcxTextEdit;
     clAmount_Weight: TcxGridDBColumn;
@@ -52,6 +52,8 @@ type
     cxLabel7: TcxLabel;
     edPaidKind: TcxButtonEdit;
     PaidKindGuides: TdsdGuides;
+    ExecuteDialog: TExecuteDialog;
+    bbDialog: TdxBarButton;
   private
     { Private declarations }
   public
