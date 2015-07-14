@@ -76,6 +76,8 @@ type
     cxLabel5: TcxLabel;
     edInvNumberOrder: TcxButtonEdit;
     GuidesInvNumberOrder: TdsdGuides;
+    cbCalcAmountPartner: TcxCheckBox;
+    edChangePercentAmount: TcxCurrencyEdit;
   private
     { Private declarations }
   public

@@ -390,6 +390,25 @@ inherited SendOnPriceForm: TSendOnPriceForm
       Width = 89
     end
   end
+  object cbCalcAmountPartner: TcxCheckBox [2]
+    Left = 720
+    Top = 23
+    Caption = #1056#1072#1089#1095#1077#1090' '#1087#1086' % '#1089#1082#1080#1076#1082#1080' '#1074#1077#1089' :'
+    Properties.ReadOnly = False
+    State = cbsChecked
+    TabOrder = 6
+    Width = 157
+  end
+  object edChangePercentAmount: TcxCurrencyEdit [3]
+    Left = 883
+    Top = 23
+    Properties.DecimalPlaces = 0
+    Properties.DisplayFormat = ',0'
+    Properties.ReadOnly = False
+    Properties.UseThousandSeparator = True
+    TabOrder = 7
+    Width = 40
+  end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 171
     Top = 552
@@ -1000,6 +1019,12 @@ inherited SendOnPriceForm: TSendOnPriceForm
         Component = GuidesInvNumberOrder
         ComponentItem = 'TextValue'
         DataType = ftString
+      end
+      item
+        Name = 'ChangePercentAmount'
+        Value = Null
+        Component = edChangePercentAmount
+        DataType = ftFloat
       end>
     Left = 216
     Top = 248
@@ -1097,8 +1122,10 @@ inherited SendOnPriceForm: TSendOnPriceForm
         ParamType = ptInput
       end
       item
+        Name = 'inChangePercentAmount'
         Value = 'False'
-        DataType = ftBoolean
+        Component = edChangePercentAmount
+        DataType = ftFloat
         ParamType = ptUnknown
       end
       item
