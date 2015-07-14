@@ -3,7 +3,7 @@ inherited ReturnOutJournalForm: TReturnOutJournalForm
   ClientHeight = 535
   ClientWidth = 1110
   ExplicitWidth = 1126
-  ExplicitHeight = 570
+  ExplicitHeight = 573
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -607,6 +607,22 @@ inherited ReturnOutJournalForm: TReturnOutJournalForm
   inherited FormParams: TdsdFormParams
     Left = 312
     Top = 304
+  end
+  inherited spMovementReComplete: TdsdStoredProc
+    StoredProcName = 'gpReComplete_Movement_ReturnOut'
+    Params = <
+      item
+        Name = 'inMovementId'
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inislastcomplete'
+        Value = 'false'
+        DataType = ftBoolean
+        ParamType = ptInput
+      end>
   end
   object PrintHeaderCDS: TClientDataSet
     Aggregates = <>
