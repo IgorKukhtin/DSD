@@ -212,6 +212,8 @@ BEGIN
          RAISE EXCEPTION 'Ошибка. Кол-во после распределения не может быть < 0  <%> <%>', (SELECT _tmpItem_Result.MovementItemId_out FROM _tmpItem_Result WHERE _tmpItem_Result.OperCount < 0 ORDER BY _tmpItem_Result.MovementItemId_out LIMIT 1), (SELECT _tmpItem_Result.OperCount FROM _tmpItem_Result WHERE _tmpItem_Result.OperCount < 0 ORDER BY _tmpItem_Result.MovementItemId_out LIMIT 1);
      END IF;
 
+     -- !!!не всегда!!!
+     IF inIsUpdate = TRUE THEN
      -- Сохраненние что партия закрыта/открыта ЕСЛИ OperCount > 0 !!!для всех _tmpItem_GP!!!
      PERFORM lpInsertUpdate_MovementItemBoolean (zc_MIBoolean_PartionClose(), _tmpItem_GP.MovementItemId_gp, CASE WHEN tmp.OperCount > 0 THEN TRUE ELSE FALSE END)
      FROM _tmpItem_GP
@@ -247,6 +249,10 @@ BEGIN
                                      ON MIDate_PartionGoods.MovementItemId = _tmpItem_Result.MovementItemId_gp
                                     AND MIDate_PartionGoods.DescId = zc_MIDate_PartionGoods()
      WHERE _tmpItem_Result.OperCount > 0;
+
+     
+     END IF; -- if inIsUpdate = TRUE -- !!!не всегда!!!
+
 
     -- Результат
     RETURN QUERY

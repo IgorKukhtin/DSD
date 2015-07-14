@@ -33,6 +33,7 @@ BEGIN
                                                                                                                        , 32022 -- Склад реализации
                                                                                                                         )
                 UNION SELECT tmp.UnitId FROM lfSelect_Object_Unit_byGroup (8446) AS tmp -- ЦЕХ колбаса+дел-сы
+                UNION SELECT tmp.UnitId FROM lfSelect_Object_Unit_byGroup (8454) AS tmp -- Склад специй и запчастей
                )
      -- 1. From: Sale + SendOnPrice
      SELECT Movement.Id AS MovementId
@@ -157,7 +158,8 @@ BEGIN
      WHERE Movement.OperDate BETWEEN inStartDate AND inEndDate
        AND Movement.DescId IN (zc_Movement_Send(), zc_Movement_ProductionUnion(), zc_Movement_ProductionSeparate())
        AND Movement.StatusId = zc_Enum_Status_Complete()
-       AND tmpUnit_from.UnitId > 0 AND tmpUnit_To.UnitId IS nNULL
+       AND tmpUnit_from.UnitId > 0 AND tmpUnit_To.UnitId IS NULL
+       -- AND tmpUnit_from.UnitId IS NULL AND tmpUnit_To.UnitId IS NULL
     ;
 
 END;$BODY$

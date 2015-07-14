@@ -172,6 +172,7 @@ type
     MovementId_Order: TcxGridDBColumn;
     actPrintSaleOrder: TdsdPrintAction;
     bb: TdxBarButton;
+    spSelectSale_EDI: TdsdStoredProc;
   private
     { Private declarations }
   public

@@ -3,7 +3,7 @@ inherited ProductionPeresortForm: TProductionPeresortForm
   ClientHeight = 499
   ClientWidth = 1128
   ExplicitWidth = 1144
-  ExplicitHeight = 537
+  ExplicitHeight = 534
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -1136,8 +1136,6 @@ inherited ProductionPeresortForm: TProductionPeresortForm
       item
         Name = 'ioId'
         Value = 0
-        Component = MasterCDS
-        ComponentItem = 'id'
         ParamType = ptInput
       end
       item
@@ -1157,8 +1155,6 @@ inherited ProductionPeresortForm: TProductionPeresortForm
       item
         Name = 'inAmountOut'
         Value = 0.000000000000000000
-        Component = MasterCDS
-        ComponentItem = 'Amount'
         DataType = ftFloat
         ParamType = ptInput
       end
@@ -1240,7 +1236,7 @@ inherited ProductionPeresortForm: TProductionPeresortForm
         Name = 'outAmountIn'
         Value = Null
         Component = MasterCDS
-        ComponentItem = 'outAmountIn'
+        ComponentItem = 'Amountin'
         DataType = ftFloat
       end>
     Left = 368

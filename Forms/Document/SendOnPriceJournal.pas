@@ -72,6 +72,7 @@ type
     Ordspr1: TMenuItem;
     Desadv1: TMenuItem;
     N13: TMenuItem;
+    spSelectSale_EDI: TdsdStoredProc;
   private
     { Private declarations }
   public

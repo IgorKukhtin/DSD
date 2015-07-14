@@ -52,7 +52,7 @@ BEGIN
    END IF;
 
    -- проверка
-   IF NOT EXISTS (SELECT ObjectId FROM ObjectLink  WHERE ChildObjectId = inGoodsId AND ObjectId = inReceiptId AND DescId = zc_ObjectLink_Receipt_Goods())
+   IF 1 = 0 AND NOT EXISTS (SELECT ObjectId FROM ObjectLink  WHERE ChildObjectId = inGoodsId AND ObjectId = inReceiptId AND DescId = zc_ObjectLink_Receipt_Goods())
    THEN
        RAISE EXCEPTION 'Ошибка.Для товара <%> не может быть выбрана рецептура <%>.', lfGet_Object_ValueData (inGoodsId), lfGet_Object_ValueData (inReceiptId);
    END IF;

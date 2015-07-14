@@ -2386,7 +2386,7 @@ inherited EDIJournalForm: TEDIJournalForm
     Top = 152
   end
   object spSelectPrint: TdsdStoredProc
-    StoredProcName = 'gpSelect_Movement_Sale_Print'
+    StoredProcName = 'gpSelect_Movement_Sale_EDI'
     DataSet = PrintHeaderCDS
     DataSets = <
       item

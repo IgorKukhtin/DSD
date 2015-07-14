@@ -3,7 +3,7 @@ inherited ProductionUnionTechJournalForm: TProductionUnionTechJournalForm
   ClientHeight = 685
   ClientWidth = 1020
   ExplicitWidth = 1036
-  ExplicitHeight = 723
+  ExplicitHeight = 720
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -1076,7 +1076,7 @@ inherited ProductionUnionTechJournalForm: TProductionUnionTechJournalForm
           ComponentItem = 'Key'
           ParamType = ptInput
         end>
-      isShowModal = True
+      isShowModal = False
       DataSource = MasterDS
       DataSetRefresh = actRefresh
       IdFieldName = 'MovementItemId'
