@@ -104,7 +104,7 @@ BEGIN
 
 
     -- группа товаров или товар или все товары из проводок
-    IF inGoodsGroupId <> 0
+    IF inGoodsGroupId <> 0 AND COALESCE (inGoodsId, 0) = 0
     THEN
         WITH tmpGoods AS (SELECT lfObject_Goods_byGoodsGroup.GoodsId FROM lfSelect_Object_Goods_byGoodsGroup (inGoodsGroupId) AS lfObject_Goods_byGoodsGroup)
            , tmpAccount AS (SELECT View_Account.AccountGroupId, View_Account.AccountId FROM Object_Account_View AS View_Account WHERE View_Account.AccountGroupId = inAccountGroupId)

@@ -151,39 +151,53 @@ RETURNS TABLE (AccountGroupName TVarChar, AccountDirectionName TVarChar
 AS
 $BODY$
    DECLARE vbUserId Integer;
+
+   DECLARE vbIsSummIn Boolean;
 BEGIN
     -- проверка прав пользователя на вызов процедуры
     -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Report_MotionGoods());
     vbUserId:= lpGetUserBySession (inSession);
 
 
+    -- !!!определяется!!!
+    vbIsSummIn:= NOT EXISTS (SELECT 1 FROM Object_RoleAccessKey_View WHERE UserId = vbUserId AND RoleId = 442647); -- Отчеты руководитель сырья
+
     -- таблица -
     CREATE TEMP TABLE _tmpLocation (LocationId Integer, DescId Integer, ContainerDescId Integer) ON COMMIT DROP;
     CREATE TEMP TABLE _tmpLocation_by (LocationId Integer, Number Integer) ON COMMIT DROP;
 
     -- группа подразделений или подразделение или место учета (МО, Авто)
-    IF inUnitGroupId <> 0
+    IF inUnitGroupId <> 0 AND COALESCE (inLocationId, 0) = 0
     THEN
         INSERT INTO _tmpLocation (LocationId, DescId, ContainerDescId)
            SELECT lfSelect_Object_Unit_byGroup.UnitId AS LocationId
                 , zc_ContainerLinkObject_Unit()       AS DescId
                 , tmpDesc.ContainerDescId
            FROM lfSelect_Object_Unit_byGroup (inUnitGroupId) AS lfSelect_Object_Unit_byGroup
-                LEFT JOIN (SELECT zc_Container_Count() AS ContainerDescId UNION SELECT zc_Container_Summ() AS ContainerDescId) AS tmpDesc ON 1 = 1
+                LEFT JOIN (SELECT zc_Container_Count() AS ContainerDescId UNION SELECT zc_Container_Summ() AS ContainerDescId WHERE vbIsSummIn = TRUE) AS tmpDesc ON 1 = 1
           ;
     ELSE
         IF inLocationId <> 0
         THEN
             INSERT INTO _tmpLocation (LocationId, DescId, ContainerDescId)
                SELECT Object.Id AS LocationId
-                    , CASE WHEN Object.DescId = zc_Object_Unit() THEN zc_ContainerLinkObject_Unit() 
-                           WHEN Object.DescId = zc_Object_Car() THEN zc_ContainerLinkObject_Car() 
+                    , CASE WHEN Object.DescId = zc_Object_Unit()   THEN zc_ContainerLinkObject_Unit() 
+                           WHEN Object.DescId = zc_Object_Car()    THEN zc_ContainerLinkObject_Car() 
                            WHEN Object.DescId = zc_Object_Member() THEN zc_ContainerLinkObject_Member()
                       END AS DescId
                     , tmpDesc.ContainerDescId
                FROM Object
-                    LEFT JOIN (SELECT zc_Container_Count() AS ContainerDescId UNION SELECT zc_Container_Summ() AS ContainerDescId) AS tmpDesc ON 1 = 1
-               WHERE Object.Id = inLocationId;
+                    -- LEFT JOIN (SELECT zc_Container_Count() AS ContainerDescId /*UNION SELECT zc_Container_Summ() AS ContainerDescId*/) AS tmpDesc ON 1 = 1 -- !!!временно без с/с, для скорости!!!
+                    LEFT JOIN (SELECT zc_Container_Count() AS ContainerDescId UNION SELECT zc_Container_Summ() AS ContainerDescId WHERE vbIsSummIn = TRUE) AS tmpDesc ON 1 = 1
+               WHERE Object.Id = inLocationId
+             UNION
+               SELECT lfSelect.UnitId               AS LocationId
+                    , zc_ContainerLinkObject_Unit() AS DescId
+                    , tmpDesc.ContainerDescId
+               FROM lfSelect_Object_Unit_byGroup (inLocationId) AS lfSelect
+                    -- LEFT JOIN (SELECT zc_Container_Count() AS ContainerDescId /*UNION SELECT zc_Container_Summ() AS ContainerDescId*/) AS tmpDesc ON 1 = 1 -- !!!временно без с/с, для скорости!!!
+                    LEFT JOIN (SELECT zc_Container_Count() AS ContainerDescId UNION SELECT zc_Container_Summ() AS ContainerDescId WHERE vbIsSummIn = TRUE) AS tmpDesc ON 1 = 1
+              ;
         ELSE
             WITH tmpBranch AS (SELECT TRUE AS Value WHERE 1 = 0 AND NOT EXISTS (SELECT BranchId FROM Object_RoleAccessKeyGuide_View WHERE UserId = inUserId AND BranchId <> 0))
             INSERT INTO _tmpLocation (LocationId)
@@ -609,7 +623,7 @@ BEGIN
                    + tmpMIContainer_all.SummProductionOut)   AS SummTotalOut
 
          FROM tmpReport AS tmpMIContainer_all
-              LEFT JOIN _tmpLocation ON _tmpLocation.LocationId = tmpMIContainer_all.LocationId_by
+              LEFT JOIN _tmpLocation ON _tmpLocation.LocationId = tmpMIContainer_all.LocationId_by AND 1= 0 
               LEFT JOIN _tmpLocation_by ON _tmpLocation_by.LocationId = tmpMIContainer_all.LocationId_by
          GROUP BY tmpMIContainer_all.AccountId
                 , tmpMIContainer_all.ContainerId

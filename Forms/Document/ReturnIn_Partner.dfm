@@ -2,6 +2,7 @@ inherited ReturnIn_PartnerForm: TReturnIn_PartnerForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1042#1086#1079#1074#1088#1072#1090' '#1086#1090' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1103' ('#1073#1091#1093#1075#1072#1083#1090#1077#1088')>'
   ClientHeight = 637
   ClientWidth = 1139
+  ExplicitLeft = -157
   ExplicitWidth = 1155
   ExplicitHeight = 672
   PixelsPerInch = 96
@@ -891,7 +892,7 @@ inherited ReturnIn_PartnerForm: TReturnIn_PartnerForm
     Left = 525
     Top = 103
     TabOrder = 17
-    Width = 464
+    Width = 599
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 171

@@ -149,10 +149,21 @@ BEGIN
            , (tmpMovementItem.AmountPartner * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Kg() THEN 1 WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 0 END) :: TFloat AS AmountPartnerWeight
            , (CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN tmpMovementItem.AmountPartner ELSE 0 END) :: TFloat AS AmountPartnerSh
 
-           , CASE WHEN MovementLinkObject_Contract.ObjectId > 0 THEN FALSE ELSE TRUE END AS isBranch
+           , CASE WHEN MovementLinkObject_Contract.ObjectId > 0
+                       AND Object_InfoMoney_View.InfoMoneyDestinationId NOT IN (zc_Enum_InfoMoneyDestination_20500() -- Общефирменные + Оборотная тара
+                                                                              , zc_Enum_InfoMoneyDestination_20600() -- Общефирменные + Прочие материалы
+                                                                                )
+                      THEN FALSE
+                  ELSE TRUE
+             END AS isBranch
 
        FROM tmpMovement
             INNER JOIN tmpMovementItem ON tmpMovementItem.MovementId = tmpMovement.Id AND tmpMovementItem.AmountPartner <> 0
+
+            LEFT JOIN ObjectLink AS ObjectLink_Goods_InfoMoney
+                                 ON ObjectLink_Goods_InfoMoney.ObjectId = tmpMovementItem.GoodsId
+                               AND ObjectLink_Goods_InfoMoney.DescId = zc_ObjectLink_Goods_InfoMoney()
+            LEFT JOIN Object_InfoMoney_View ON Object_InfoMoney_View.InfoMoneyId = ObjectLink_Goods_InfoMoney.ChildObjectId
 
             LEFT JOIN MovementLinkObject AS MovementLinkObject_From
                                          ON MovementLinkObject_From.MovementId = tmpMovement.Id
