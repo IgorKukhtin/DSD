@@ -612,7 +612,7 @@ inherited ReturnOutPartnerJournalForm: TReturnOutPartnerJournalForm
       end
       item
         Name = 'inislastcomplete'
-        Value = 'false'
+        Value = 'true'
         DataType = ftBoolean
         ParamType = ptInput
       end>

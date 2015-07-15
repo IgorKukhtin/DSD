@@ -613,13 +613,14 @@ inherited ReturnOutJournalForm: TReturnOutJournalForm
     Params = <
       item
         Name = 'inMovementId'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'Id'
         ParamType = ptInput
       end
       item
         Name = 'inislastcomplete'
-        Value = 'false'
+        Value = 'true'
         DataType = ftBoolean
         ParamType = ptInput
       end>

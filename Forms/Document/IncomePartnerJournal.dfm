@@ -1129,7 +1129,7 @@ object IncomePartnerJournalForm: TIncomePartnerJournalForm
         ParamType = ptInput
       end>
     PackSize = 1
-    Left = 64
+    Left = 56
     Top = 232
   end
   object PopupMenu: TPopupMenu
@@ -1322,7 +1322,7 @@ object IncomePartnerJournalForm: TIncomePartnerJournalForm
     Top = 200
   end
   object spMovementReComplete: TdsdStoredProc
-    StoredProcName = 'gpReComplete_Movement_Income_Sybase'
+    StoredProcName = 'gpReComplete_Movement_Income'
     DataSets = <>
     OutputType = otResult
     Params = <
@@ -1334,10 +1334,9 @@ object IncomePartnerJournalForm: TIncomePartnerJournalForm
         ParamType = ptInput
       end
       item
-        Name = 'inContractId'
-        Value = Null
-        Component = ClientDataSet
-        ComponentItem = 'ContractId'
+        Name = 'inIsLastComplete'
+        Value = 'True'
+        DataType = ftBoolean
         ParamType = ptInput
       end>
     PackSize = 1

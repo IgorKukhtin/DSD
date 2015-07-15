@@ -63,7 +63,6 @@ object IncomeJournalForm: TIncomeJournalForm
     PopupMenu = PopupMenu
     TabOrder = 0
     LookAndFeel.NativeStyle = False
-    ExplicitHeight = 370
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -1310,7 +1309,7 @@ object IncomeJournalForm: TIncomeJournalForm
     Top = 200
   end
   object spMovementReComplete: TdsdStoredProc
-    StoredProcName = 'gpReComplete_Movement_Income_Sybase'
+    StoredProcName = 'gpReComplete_Movement_Income'
     DataSets = <>
     OutputType = otResult
     Params = <
@@ -1322,10 +1321,9 @@ object IncomeJournalForm: TIncomeJournalForm
         ParamType = ptInput
       end
       item
-        Name = 'inContractId'
-        Value = 'False'
-        Component = ClientDataSet
-        ComponentItem = 'ContractId'
+        Name = 'inIsLastComplete'
+        Value = 'True'
+        DataType = ftBoolean
         ParamType = ptInput
       end>
     PackSize = 1
