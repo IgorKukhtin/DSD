@@ -18,7 +18,9 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar,
                ProfitLossDirectionId Integer, ProfitLossDirectionName TVarChar,
                RouteId Integer, RouteName TVarChar,
                RouteSortingId Integer, RouteSortingName TVarChar,
-               isErased boolean, isLeaf boolean) AS
+               isErased boolean, isLeaf boolean,
+               isPartionDate boolean
+) AS
 $BODY$
 BEGIN
    -- проверка прав пользователя на вызов процедуры
@@ -65,7 +67,9 @@ BEGIN
            , CAST ('' as TVarChar)  AS RouteSortingName
 
            , CAST (NULL AS Boolean) AS isErased
-           , CAST (NULL AS Boolean) AS isLeaf;
+           , CAST (NULL AS Boolean) AS isLeaf
+           , CAST (NULL AS Boolean) AS isPartionDate
+;
    ELSE
        RETURN QUERY 
        SELECT 
@@ -107,6 +111,8 @@ BEGIN
            , Object_Unit_View.isErased
            , Object_Unit_View.isLeaf
 
+           , ObjectBoolean_PartionDate.ValueData  AS isPartionDate
+
        FROM Object_Unit_View
             LEFT JOIN Object_AccountDirection_View AS View_AccountDirection ON View_AccountDirection.AccountDirectionId = Object_Unit_View.AccountDirectionId
             LEFT JOIN ObjectLink AS ObjectLink_Unit_ProfitLossDirection -- "Аналитика ОПиУ - направление" установлена !!!только!!! у следующего после самого верхнего уровня 
@@ -130,6 +136,10 @@ BEGIN
                                  ON ObjectLink_Unit_RouteSorting.ObjectId = Object_Unit_View.Id 
                                 AND ObjectLink_Unit_RouteSorting.DescId = zc_ObjectLink_Unit_RouteSorting()
             LEFT JOIN Object AS Object_RouteSorting ON Object_RouteSorting.Id = ObjectLink_Unit_RouteSorting.ChildObjectId
+        
+            LEFT JOIN ObjectBoolean AS ObjectBoolean_PartionDate
+                                    ON ObjectBoolean_PartionDate.ObjectId = Object_Unit_View.Id
+                                   AND ObjectBoolean_PartionDate.DescId = zc_ObjectBoolean_Unit_PartionDate()
 
       WHERE Object_Unit_View.Id = inId;
    END IF;

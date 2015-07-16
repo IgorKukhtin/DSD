@@ -205,6 +205,13 @@ object UnitForm: TUnitForm
         Options.Editing = False
         Width = 98
       end
+      object isPartionDate: TcxGridDBColumn
+        Caption = #1055#1072#1088#1090#1080#1080' '#1076#1072#1090#1099' '#1074' '#1091#1095#1077#1090#1077
+        DataBinding.FieldName = 'isPartionDate'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 60
+      end
     end
     object cxGridLevel: TcxGridLevel
       GridView = cxGridDBTableView

@@ -19,7 +19,9 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar,
                ProfitLossDirectionCode Integer, ProfitLossDirectionName TVarChar,
                RouteId Integer, RouteName TVarChar,
                RouteSortingId Integer, RouteSortingName TVarChar,
-               isErased boolean, isLeaf boolean) AS
+               isErased boolean, isLeaf boolean,
+               isPartionDate boolean
+) AS
 $BODY$
    DECLARE vbUserId Integer;
    -- DECLARE vbAccessKeyAll Boolean;
@@ -84,6 +86,8 @@ BEGIN
          
            , Object_Unit_View.isErased
            , Object_Unit_View.isLeaf
+           , ObjectBoolean_PartionDate.ValueData  AS isPartionDate
+
        FROM Object_Unit_View
             LEFT JOIN lfSelect_Object_Unit_byProfitLossDirection() AS lfObject_Unit_byProfitLossDirection ON lfObject_Unit_byProfitLossDirection.UnitId = Object_Unit_View.Id
             LEFT JOIN Object_AccountDirection AS View_AccountDirection ON View_AccountDirection.AccountDirectionId = Object_Unit_View.AccountDirectionId
@@ -104,7 +108,10 @@ BEGIN
                                  ON ObjectLink_Unit_RouteSorting.ObjectId = Object_Unit_View.Id 
                                 AND ObjectLink_Unit_RouteSorting.DescId = zc_ObjectLink_Unit_RouteSorting()
             LEFT JOIN Object AS Object_RouteSorting ON Object_RouteSorting.Id = ObjectLink_Unit_RouteSorting.ChildObjectId
-
+        
+            LEFT JOIN ObjectBoolean AS ObjectBoolean_PartionDate
+                                    ON ObjectBoolean_PartionDate.ObjectId = Object_Unit_View.Id
+                                   AND ObjectBoolean_PartionDate.DescId = zc_ObjectBoolean_Unit_PartionDate()
        -- WHERE vbAccessKeyAll = TRUE
        WHERE (Object_Unit_View.BranchId = vbObjectId_Constraint
               OR vbIsConstraint = FALSE
@@ -159,6 +166,7 @@ BEGIN
 
            , FALSE AS isErased
            , TRUE AS isLeaf
+           , FalSE AS isPartionDate
        FROM Object as Object_Partner
             LEFT JOIN ObjectLink AS ObjectLink_Unit_Branch
                                  ON ObjectLink_Unit_Branch.ObjectId = Object_Partner.Id

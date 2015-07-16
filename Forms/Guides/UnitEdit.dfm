@@ -311,7 +311,7 @@
         ParamType = ptInput
       end
       item
-        Name = 'inPartionDate'
+        Name = 'inisPartionDate'
         Value = 'False'
         Component = cbPartionDate
         DataType = ftBoolean
@@ -546,6 +546,12 @@
         Component = RouteSortingGuides
         ComponentItem = 'TextValue'
         DataType = ftString
+      end
+      item
+        Name = 'isPartionDate'
+        Value = Null
+        Component = cbPartionDate
+        DataType = ftBoolean
       end>
     PackSize = 1
     Left = 16
@@ -680,8 +686,8 @@
         DataType = ftString
         ParamType = ptInput
       end>
-    Left = 160
-    Top = 184
+    Left = 168
+    Top = 168
   end
   object ProfitLossDirectionGuides: TdsdGuides
     KeyField = 'Id'

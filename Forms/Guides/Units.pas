@@ -73,6 +73,7 @@ type
     clContract_InfomoneyName: TcxGridDBColumn;
     RouteName: TcxGridDBColumn;
     RouteSortingName: TcxGridDBColumn;
+    isPartionDate: TcxGridDBColumn;
   private
     { Private declarations }
   public
