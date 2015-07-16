@@ -383,6 +383,7 @@ inherited ReturnOutPartnerJournalForm: TReturnOutPartnerJournalForm
           DataSet = PrintItemsCDS
           UserName = 'frxDBDMaster'
         end>
+      CopiesCount = 1
       Params = <
         item
           Name = 'Id'
@@ -598,6 +599,25 @@ inherited ReturnOutPartnerJournalForm: TReturnOutPartnerJournalForm
   inherited FormParams: TdsdFormParams
     Left = 312
     Top = 304
+  end
+  inherited spMovementReComplete: TdsdStoredProc
+    StoredProcName = 'gpReComplete_Movement_ReturnOut'
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inislastcomplete'
+        Value = 'true'
+        DataType = ftBoolean
+        ParamType = ptInput
+      end>
+    Left = 384
+    Top = 136
   end
   object PrintHeaderCDS: TClientDataSet
     Aggregates = <>

@@ -2,7 +2,7 @@ object IncomeJournalForm: TIncomeJournalForm
   Left = 0
   Top = 0
   Caption = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' <'#1055#1088#1080#1093#1086#1076' '#1086#1090' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072'>'
-  ClientHeight = 427
+  ClientHeight = 492
   ClientWidth = 1240
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -58,7 +58,7 @@ object IncomeJournalForm: TIncomeJournalForm
     Left = 0
     Top = 57
     Width = 1240
-    Height = 370
+    Height = 435
     Align = alClient
     PopupMenu = PopupMenu
     TabOrder = 0
@@ -450,6 +450,12 @@ object IncomeJournalForm: TIncomeJournalForm
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
         Width = 60
+      end
+      object ContractId: TcxGridDBColumn
+        DataBinding.FieldName = 'ContractId'
+        Visible = False
+        VisibleForCustomization = False
+        Width = 30
       end
     end
     object cxGridLevel: TcxGridLevel
@@ -1019,6 +1025,44 @@ object IncomeJournalForm: TIncomeJournalForm
         end>
       isShowModal = False
     end
+    object spReCompete: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spMovementReComplete
+      StoredProcList = <
+        item
+          StoredProc = spMovementReComplete
+        end>
+      Caption = 'spReCompete'
+    end
+    object actSimpleReCompleteList: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = spReCompete
+        end>
+      View = cxGridDBTableView
+      Caption = #1055#1077#1088#1077#1087#1088#1086#1074#1077#1076#1077#1085#1080#1077' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074
+      Hint = #1055#1077#1088#1077#1087#1088#1086#1074#1077#1076#1077#1085#1080#1077' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074
+    end
+    object actReCompleteList: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actSimpleReCompleteList
+        end
+        item
+          Action = actRefresh
+        end>
+      QuestionBeforeExecute = #1042#1099' '#1091#1074#1077#1088#1077#1085#1099' '#1074' '#1087#1077#1088#1077#1087#1088#1086#1074#1077#1076#1077#1085#1080#1080' '#1042#1089#1077#1093' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074'? '
+      InfoAfterExecute = #1042#1089#1077' '#1076#1086#1082#1091#1084#1077#1085#1090#1099' '#1087#1077#1088#1077#1087#1088#1086#1074#1077#1076#1077#1085#1099
+      Caption = #1055#1077#1088#1077#1087#1088#1086#1074#1077#1089#1090#1080' '#1042#1089#1077' '#1076#1086#1082#1091#1084#1077#1085#1090#1099
+      Hint = #1055#1077#1088#1077#1087#1088#1086#1074#1077#1089#1090#1080' '#1042#1089#1077' '#1076#1086#1082#1091#1084#1077#1085#1090#1099
+      ImageIndex = 12
+    end
   end
   object dsdStoredProc: TdsdStoredProc
     StoredProcName = 'gpSelect_Movement_Income'
@@ -1099,6 +1143,9 @@ object IncomeJournalForm: TIncomeJournalForm
     end
     object N9: TMenuItem
       Caption = '-'
+    end
+    object N1: TMenuItem
+      Action = actReCompleteList
     end
     object N10: TMenuItem
       Action = actCompleteList
@@ -1260,5 +1307,27 @@ object IncomeJournalForm: TIncomeJournalForm
       end>
     Left = 400
     Top = 200
+  end
+  object spMovementReComplete: TdsdStoredProc
+    StoredProcName = 'gpReComplete_Movement_Income'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'Id'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inIsLastComplete'
+        Value = 'True'
+        DataType = ftBoolean
+        ParamType = ptInput
+      end>
+    PackSize = 1
+    Left = 761
+    Top = 178
   end
 end
