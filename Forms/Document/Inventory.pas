@@ -53,6 +53,11 @@ type
     actInsertUpdateMIAmount: TdsdExecStoredProc;
     bbInsertUpdateMIAmount: TdxBarButton;
     actPrint1: TdsdPrintAction;
+    mactUpdate_Summ: TMultiAction;
+    spUpdateMIMaster_Summ: TdsdStoredProc;
+    actUpdate_Summ: TdsdExecStoredProc;
+    bbUpdate_Summ: TdxBarButton;
+    mactUpdate_SummAll: TMultiAction;
   private
     { Private declarations }
   public

@@ -177,6 +177,7 @@ inherited LossJournalForm: TLossJournalForm
           DataSet = PrintItemsCDS
           UserName = 'frxDBDMaster'
         end>
+      CopiesCount = 1
       Params = <
         item
           Name = 'Id'
@@ -413,6 +414,9 @@ inherited LossJournalForm: TLossJournalForm
       end>
     Left = 400
     Top = 200
+  end
+  inherited spMovementReComplete: TdsdStoredProc
+    StoredProcName = 'gpReComplete_Movement_Loss'
   end
   object PrintHeaderCDS: TClientDataSet
     Aggregates = <>

@@ -18,7 +18,10 @@ $BODY$
   DECLARE vbMovementDescId Integer;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
-     vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Complete_Send());
+     IF inSession = zc_Enum_Process_Auto_PrimeCost() :: TVarChar
+     THEN vbUserId:= inSession :: Integer;
+     ELSE vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Complete_Send());
+     END IF;
 
      -- Эти параметры нужны для 
      inIsLastComplete:= TRUE;

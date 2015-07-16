@@ -34,7 +34,10 @@ $BODY$
   DECLARE vbProfitLossDirectionId Integer;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
-     vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Complete_Inventory());
+     IF inSession = zc_Enum_Process_Auto_PrimeCost() :: TVarChar
+     THEN vbUserId:= inSession :: Integer;
+     ELSE vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Complete_Inventory());
+     END IF;
 
 
      -- создаются временные таблицы - для формирование данных для проводок
@@ -580,7 +583,7 @@ BEGIN
         WHERE  zc_isHistoryCost() = TRUE
         GROUP BY _tmp.MovementItemId
                , _tmp.ContainerId
-               , _tmp.AccountId;
+                , _tmp.AccountId;
 
 
      -- 3.2. определяется Счет для проводок по суммовому учету

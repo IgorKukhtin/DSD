@@ -9,11 +9,11 @@ CREATE OR REPLACE FUNCTION gpReport_GoodsMI_IncomeByPartner (
     IN inStartDate    TDateTime ,
     IN inEndDate      TDateTime ,
     IN inDescId       Integer   ,  --sale(продажа покупателю) = 5, returnin (возврат покупателя) = 6
-    IN inJuridicalId  Integer   ,
     IN inGoodsGroupId Integer   ,
     IN inUnitGroupId  Integer   ,
     IN inUnitId       Integer   ,
     IN inPaidKindId   Integer   ,
+    IN inJuridicalId  Integer   ,
     IN inSession      TVarChar    -- сессия пользователя
 )
 RETURNS TABLE (GoodsGroupName TVarChar
@@ -115,9 +115,9 @@ BEGIN
 
          , tmpOperationGroup.Summ :: TFloat AS Summ
      FROM (SELECT tmpContainer.GoodsId
-                , ( COALESCE (ContainerLO_Juridical.ObjectId,0) ) AS JuridicalId
-                , ( COALESCE (ContainerLO_Partner.ObjectId,0) ) AS PartnerId 
-                , ( COALESCE (ContainerLO_PaidKind.ObjectId,0) ) AS PaidKindId
+                , COALESCE (ContainerLO_Juridical.ObjectId,  COALESCE (ContainerLO_Member.ObjectId, 0 )) AS JuridicalId
+                , COALESCE (ContainerLO_Partner.ObjectId, COALESCE (ContainerLO_Member.ObjectId, 0)) AS PartnerId 
+                , CASE WHEN ContainerLO_Member.ObjectId > 0 THEN zc_Enum_PaidKind_SecondForm() ELSE COALESCE (ContainerLO_PaidKind.ObjectId,0) END AS PaidKindId
                 , 0/*( COALESCE (ContainerLO_FuelKind.ObjectId,0) )*/ AS FuelKindId
                 , ( COALESCE (ContainerLO_GoodsKind.ObjectId,0) ) AS GoodsKindId
                 , ABS (SUM (tmpContainer.Amount)):: TFloat          AS Amount 
@@ -143,28 +143,32 @@ BEGIN
        /*               LEFT JOIN ContainerLinkObject AS ContainerLO_FuelKind
                                                     ON ContainerLO_FuelKind.ContainerId = tmpContainer.ContainerId
                                                    AND ContainerLO_FuelKind.DescId = zc_ContainerLinkObject_Goods()*/
-                      INNER JOIN ContainerLinkObject AS ContainerLO_Juridical
+                      LEFT JOIN ContainerLinkObject AS ContainerLO_Juridical
                                                ON ContainerLO_Juridical.ContainerId = tmpContainer.ContainerId_analyzer
                                               AND ContainerLO_Juridical.DescId = zc_ContainerLinkObject_Juridical()
-                                         AND (ContainerLO_Juridical.ObjectId = inJuridicalId or inJuridicalId=0)
                                                                                    
                       LEFT JOIN ContainerLinkObject AS ContainerLO_GoodsKind
                                                     ON ContainerLO_GoodsKind.ContainerId =  tmpContainer.ContainerId
                                                    AND ContainerLO_GoodsKind.DescId = zc_ContainerLinkObject_GoodsKind()
-                      INNER JOIN ContainerLinkObject AS ContainerLO_PaidKind
+                      LEFT JOIN ContainerLinkObject AS ContainerLO_PaidKind
                                                ON ContainerLO_PaidKind.ContainerId =  tmpContainer.ContainerId_analyzer
                                               AND ContainerLO_PaidKind.DescId = zc_ContainerLinkObject_PaidKind()
-                                              AND (ContainerLO_PaidKind.ObjectId = inPaidKindId or inPaidKindId=0)
                       LEFT JOIN ContainerLinkObject AS ContainerLO_Partner
                                                ON ContainerLO_Partner.ContainerId =  tmpContainer.ContainerId_analyzer
                                               AND ContainerLO_Partner.DescId = zc_ContainerLinkObject_Partner()      
+                      LEFT JOIN ContainerLinkObject AS ContainerLO_Member
+                                               ON ContainerLO_Member.ContainerId =  tmpContainer.ContainerId_analyzer
+                                              AND ContainerLO_Member.DescId = zc_ContainerLinkObject_Member()      
                   
+                      WHERE (ContainerLO_Juridical.ObjectId = inJuridicalId OR inJuridicalId=0)
+                        AND (ContainerLO_PaidKind.ObjectId = inPaidKindId OR inPaidKindId=0 OR (ContainerLO_Member.ObjectId > 0 AND inPaidKindId = zc_Enum_PaidKind_SecondForm()))
+
                       GROUP BY tmpContainer.GoodsId
-                             , COALESCE (ContainerLO_PaidKind.ObjectId,0)
+                             , CASE WHEN ContainerLO_Member.ObjectId > 0 THEN zc_Enum_PaidKind_SecondForm() ELSE COALESCE (ContainerLO_PaidKind.ObjectId,0) END
                            --  , COALESCE (ContainerLO_FuelKind.ObjectId,0) 
                              , COALESCE (ContainerLO_GoodsKind.ObjectId,0) 
-                             , COALESCE (ContainerLO_Partner.ObjectId,0)
-                             , COALESCE (ContainerLO_Juridical.ObjectId,0) 
+                             , COALESCE (ContainerLO_Partner.ObjectId, COALESCE (ContainerLO_Member.ObjectId, 0))
+                             , COALESCE (ContainerLO_Juridical.ObjectId,  COALESCE (ContainerLO_Member.ObjectId, 0 ))
           ) AS tmpOperationGroup
           
           LEFT JOIN Object AS Object_Goods on Object_Goods.Id = tmpOperationGroup.GoodsId
@@ -196,23 +200,19 @@ BEGIN
           LEFT JOIN ObjectFloat AS ObjectFloat_Weight
                                 ON ObjectFloat_Weight.ObjectId = Object_Goods.Id
                                AND ObjectFloat_Weight.DescId = zc_ObjectFloat_Goods_Weight()
-
-
   ;
          
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
 
-
-
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
  11.07.15         * add inUnitGroupId, inUnitId, inPaidKindId
  08.02.14         * 
-    
+   
 */
 
 -- тест
---SELECT * FROM gpReport_GoodsMI_Income (inStartDate:= '01.01.2013', inEndDate:= '31.12.2013',  inDescId:= 1, inGoodsGroupId:= 0, inSession:= zfCalc_UserAdmin());
+-- SELECT * FROM gpReport_GoodsMI_IncomeByPartner (inStartDate:= '01.01.2013', inEndDate:= '31.12.2013',  inDescId:= 1, inGoodsGroupId:= 0, inUnitGroupId:=0, inUnitId:= 0, inPaidKindId:=0, inJuridicalId:=0, inSession:= zfCalc_UserAdmin());

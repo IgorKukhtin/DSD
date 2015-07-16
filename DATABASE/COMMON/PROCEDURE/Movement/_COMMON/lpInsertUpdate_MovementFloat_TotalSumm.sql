@@ -629,7 +629,7 @@ BEGIN
          -- Сохранили свойство <Итого сумма скидки по накладной>
          PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_TotalSummChange(), inMovementId, vbOperSumm_Partner - vbOperSumm_PVAT_original);
          -- Сохранили свойство <Итого сумма по накладной (с учетом НДС и скидки)>
-         PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_TotalSumm(), inMovementId, vbOperSumm_Partner + vbOperSumm_Inventory);
+         PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_TotalSumm(), inMovementId, CASE WHEN vbMovementDescId = zc_Movement_Inventory() THEN vbOperSumm_Inventory ELSE vbOperSumm_Partner END);
          -- Сохранили свойство <Итого сумма !!!в валюте!!! по накладной (с учетом НДС и скидки)>
          PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_AmountCurrency(), inMovementId, vbOperSumm_Currency);
          -- Сохранили свойство <Итого сумма заготовителю по накладной (с учетом НДС)>

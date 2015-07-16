@@ -13,7 +13,10 @@ $BODY$
   DECLARE vbUserId Integer;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
-     vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Complete_ProductionUnion());
+     IF inSession = zc_Enum_Process_Auto_PrimeCost() :: TVarChar
+     THEN vbUserId:= inSession :: Integer;
+     ELSE vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Complete_ProductionUnion());
+     END IF;
 
      -- создаются временные таблицы - для формирование данных для проводок
      PERFORM lpComplete_Movement_ProductionUnion_CreateTemp();

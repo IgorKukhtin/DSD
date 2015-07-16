@@ -16,7 +16,15 @@ CREATE OR REPLACE FUNCTION lpUpdate_MI_ProductionUnionTech_Recalc(
 RETURNS RECORD
 AS
 $BODY$
+   DECLARE vbCuterCount TFloat;
+   DECLARE vbValue_Receipt TFloat;
 BEGIN
+      -- определяется <Количество кутеров>
+      vbCuterCount:= COALESCE ((SELECT MIFloat_CuterCount.ValueData FROM MovementItemFloat AS MIFloat_CuterCount WHERE MIFloat_CuterCount.MovementItemId = inParentId AND MIFloat_CuterCount.DescId = zc_MIFloat_CuterCount()), 0);
+      -- определяется
+      vbValue_Receipt:= COALESCE ((SELECT ObjectFloat_Value.ValueData FROM ObjectFloat AS ObjectFloat_Value WHERE ObjectFloat_Value.ObjectId = inReceiptId AND ObjectFloat_Value.DescId = zc_ObjectFloat_Receipt_Value()), 0);
+
+
        -- пересчет кол-во для zc_MI_Master
        outAmount_master =
                   (SELECT SUM (MovementItem.Amount * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData, 0) ELSE 1 END)
@@ -46,21 +54,26 @@ BEGIN
 
        -- !!!пересчет св-ва <Количество> для тех у кого isTaxExit=TRUE!!! (необходимо когда меняется эл-нт у которого isTaxExit=FALSE)
        PERFORM lpInsertUpdate_MovementItem (MovementItem.Id, MovementItem.DescId, MovementItem.ObjectId, MovementItem.MovementId
-                                          , CASE WHEN MovementItem.Id = inMovementItemId -- если это элемент который корректировался, тогда используется <Количество по рецептуре на 1 кутер> в док.
-                                                      THEN outAmount_master * inAmountReceipt / tmpReceiptChild.Value_master
-                                                 WHEN tmpReceiptChild.Value_master <> 0 -- для остальных используется св-во из <Рецептуры>
-                                                      THEN outAmount_master * tmpReceiptChild.Value / tmpReceiptChild.Value_master
-                                                 ELSE 0
+                                          , CASE WHEN vbValue_Receipt = 0
+                                                      THEN 0
+                                                 WHEN MovementItem.Id = inMovementItemId
+                                                      THEN -- если это элемент который корректировался, тогда используется <Количество по рецептуре на 1 кутер> в док.
+                                                           outAmount_master * inAmountReceipt / vbValue_Receipt
+                                                 ELSE -- для остальных используется <Количество по рецептуре на 1 кутер> в док. ИЛИ св-во из <Рецептуры>
+                                                      outAmount_master * COALESCE (MIFloat_AmountReceipt.ValueData, COALESCE (tmpReceiptChild.Value, 0)) / vbValue_Receipt
                                              END
                                           , MovementItem.ParentId)
-             , lpInsertUpdate_MovementItemFloat (zc_MIFloat_AmountReceipt(), MovementItem.Id, tmpReceiptChild.Value)
-             , lpInsertUpdate_MovementItemBoolean (zc_MIBoolean_TaxExit(), MovementItem.Id, COALESCE (tmpReceiptChild.isTaxExit, FALSE))
+             , lpInsertUpdate_MovementItemFloat (zc_MIFloat_AmountReceipt(), MovementItem.Id, COALESCE (MIFloat_AmountReceipt.ValueData, COALESCE (tmpReceiptChild.Value, 0)))
+             , lpInsertUpdate_MovementItemBoolean (zc_MIBoolean_TaxExit(), MovementItem.Id, COALESCE (tmpReceiptChild.isTaxExit, COALESCE (MIBoolean_TaxExit.ValueData, FALSE)))
              , lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_Update(), MovementItem.Id, inUserId)
              , lpInsertUpdate_MovementItemDate (zc_MIDate_Update(), MovementItem.Id, CURRENT_TIMESTAMP)
        FROM MovementItem
             LEFT JOIN MovementItemBoolean AS MIBoolean_TaxExit
                                           ON MIBoolean_TaxExit.MovementItemId =  MovementItem.Id
                                          AND MIBoolean_TaxExit.DescId = zc_MIBoolean_TaxExit()
+            LEFT JOIN MovementItemFloat AS MIFloat_AmountReceipt
+                                        ON MIFloat_AmountReceipt.MovementItemId =  MovementItem.Id
+                                       AND MIFloat_AmountReceipt.DescId = zc_MIFloat_AmountReceipt()
             LEFT JOIN MovementItemLinkObject AS MILO_GoodsKind
                                              ON MILO_GoodsKind.MovementItemId = MovementItem.Id
                                             AND MILO_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
@@ -68,7 +81,6 @@ BEGIN
                             , COALESCE (ObjectLink_ReceiptChild_GoodsKind.ChildObjectId, 0)  AS GoodsKindId
                             , COALESCE (ObjectBoolean_TaxExit.ValueData, FALSE)              AS isTaxExit
                             , ObjectFloat_Value.ValueData                                    AS Value
-                            , ObjectFloat_Value_master.ValueData                             AS Value_master
                       FROM ObjectLink AS ObjectLink_ReceiptChild_Receipt
                             INNER JOIN Object AS Object_ReceiptChild ON Object_ReceiptChild.Id = ObjectLink_ReceiptChild_Receipt.ObjectId
                                                                     AND Object_ReceiptChild.isErased = FALSE
@@ -78,10 +90,6 @@ BEGIN
                             LEFT JOIN ObjectLink AS ObjectLink_ReceiptChild_GoodsKind
                                                  ON ObjectLink_ReceiptChild_GoodsKind.ObjectId = Object_ReceiptChild.Id
                                                 AND ObjectLink_ReceiptChild_GoodsKind.DescId = zc_ObjectLink_ReceiptChild_GoodsKind()
-                            INNER JOIN ObjectFloat AS ObjectFloat_Value_master
-                                                   ON ObjectFloat_Value_master.ObjectId = inReceiptId
-                                                  AND ObjectFloat_Value_master.DescId = zc_ObjectFloat_Receipt_Value()
-                                                  AND ObjectFloat_Value_master.ValueData <> 0
                             INNER JOIN ObjectFloat AS ObjectFloat_Value
                                                    ON ObjectFloat_Value.ObjectId = Object_ReceiptChild.Id
                                                   AND ObjectFloat_Value.DescId = zc_ObjectFloat_ReceiptChild_Value()

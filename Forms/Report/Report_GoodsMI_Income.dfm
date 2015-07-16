@@ -6,7 +6,7 @@ inherited Report_GoodsMI_IncomeForm: TReport_GoodsMI_IncomeForm
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
   ExplicitWidth = 1159
-  ExplicitHeight = 390
+  ExplicitHeight = 387
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -15,18 +15,18 @@ inherited Report_GoodsMI_IncomeForm: TReport_GoodsMI_IncomeForm
     Height = 253
     TabOrder = 3
     ExplicitTop = 99
-    ExplicitWidth = 971
-    ExplicitHeight = 245
+    ExplicitWidth = 1143
+    ExplicitHeight = 253
     ClientRectBottom = 253
     ClientRectRight = 1143
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 971
-      ExplicitHeight = 245
+      ExplicitWidth = 1143
+      ExplicitHeight = 253
       inherited cxGrid: TcxGrid
         Width = 1143
         Height = 253
-        ExplicitWidth = 971
-        ExplicitHeight = 245
+        ExplicitWidth = 1143
+        ExplicitHeight = 253
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -208,18 +208,18 @@ inherited Report_GoodsMI_IncomeForm: TReport_GoodsMI_IncomeForm
   inherited Panel: TPanel
     Width = 1143
     Height = 73
-    ExplicitWidth = 971
+    ExplicitWidth = 1143
     ExplicitHeight = 73
     inherited deStart: TcxDateEdit
       Left = 121
-      EditValue = 41640d
+      EditValue = 42005d
       Properties.SaveTime = False
       ExplicitLeft = 121
     end
     inherited deEnd: TcxDateEdit
       Left = 121
       Top = 30
-      EditValue = 41640d
+      EditValue = 42005d
       Properties.SaveTime = False
       ExplicitLeft = 121
       ExplicitTop = 30
@@ -231,12 +231,12 @@ inherited Report_GoodsMI_IncomeForm: TReport_GoodsMI_IncomeForm
       ExplicitTop = 31
     end
     object cxLabel4: TcxLabel
-      Left = 541
+      Left = 544
       Top = 4
       Caption = #1043#1088#1091#1087#1087#1072' '#1090#1086#1074#1072#1088#1086#1074':'
     end
     object edGoodsGroup: TcxButtonEdit
-      Left = 630
+      Left = 636
       Top = 3
       Properties.Buttons = <
         item
@@ -245,7 +245,7 @@ inherited Report_GoodsMI_IncomeForm: TReport_GoodsMI_IncomeForm
         end>
       Properties.ReadOnly = True
       TabOrder = 5
-      Width = 227
+      Width = 221
     end
     object edInDescName: TcxTextEdit
       AlignWithMargins = True
@@ -266,12 +266,12 @@ inherited Report_GoodsMI_IncomeForm: TReport_GoodsMI_IncomeForm
       Width = 231
     end
     object cxLabel3: TcxLabel
-      Left = 212
+      Left = 224
       Top = 32
       Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077':'
     end
     object edUnit: TcxButtonEdit
-      Left = 296
+      Left = 314
       Top = 30
       Properties.Buttons = <
         item
@@ -280,10 +280,10 @@ inherited Report_GoodsMI_IncomeForm: TReport_GoodsMI_IncomeForm
         end>
       Properties.ReadOnly = True
       TabOrder = 8
-      Width = 241
+      Width = 223
     end
     object cxLabel5: TcxLabel
-      Left = 209
+      Left = 206
       Top = 6
       Caption = #1043#1088'. '#1087#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1081':'
     end
@@ -317,7 +317,7 @@ inherited Report_GoodsMI_IncomeForm: TReport_GoodsMI_IncomeForm
       Width = 101
     end
     object edJuridical: TcxButtonEdit
-      Left = 599
+      Left = 636
       Top = 30
       Properties.Buttons = <
         item
@@ -326,11 +326,11 @@ inherited Report_GoodsMI_IncomeForm: TReport_GoodsMI_IncomeForm
         end>
       Properties.ReadOnly = True
       TabOrder = 13
-      Width = 258
+      Width = 221
     end
   end
   object cxLabel7: TcxLabel [2]
-    Left = 544
+    Left = 581
     Top = 31
     Caption = #1070#1088'.'#1051#1080#1094#1086':'
   end
@@ -377,14 +377,14 @@ inherited Report_GoodsMI_IncomeForm: TReport_GoodsMI_IncomeForm
         item
           Name = 'UnitGroupId'
           Value = ''
-          Component = edUnitGroup
+          Component = GuidesUnitGroup
           ComponentItem = 'Key'
           ParamType = ptInputOutput
         end
         item
           Name = 'UnitGroupName'
           Value = ''
-          Component = edUnitGroup
+          Component = GuidesUnitGroup
           ComponentItem = 'TextValue'
           DataType = ftString
           ParamType = ptInputOutput
@@ -392,12 +392,14 @@ inherited Report_GoodsMI_IncomeForm: TReport_GoodsMI_IncomeForm
         item
           Name = 'GoodsGroupId'
           Value = ''
+          Component = GoodsGroupGuides
           ComponentItem = 'Key'
           ParamType = ptInputOutput
         end
         item
           Name = 'GoodsGroupName'
           Value = ''
+          Component = GoodsGroupGuides
           ComponentItem = 'TextValue'
           DataType = ftString
           ParamType = ptInputOutput
@@ -413,6 +415,21 @@ inherited Report_GoodsMI_IncomeForm: TReport_GoodsMI_IncomeForm
           Name = 'UnitName'
           Value = ''
           Component = UnitGuides
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          ParamType = ptInputOutput
+        end
+        item
+          Name = 'JuridicalId'
+          Value = Null
+          Component = JuridicalGuides
+          ComponentItem = 'Key'
+          ParamType = ptInputOutput
+        end
+        item
+          Name = 'JuridicalName'
+          Value = Null
+          Component = JuridicalGuides
           ComponentItem = 'TextValue'
           DataType = ftString
           ParamType = ptInputOutput

@@ -237,11 +237,30 @@ BEGIN
     UPDATE _tmpListContainer SET AccountId = _tmpListContainer_summ.AccountId
                                , AccountGroupId = _tmpListContainer_summ.AccountGroupId
     FROM _tmpListContainer AS _tmpListContainer_summ
+         INNER JOIN Object_InfoMoney_View AS View_InfoMoney ON View_InfoMoney.InfoMoneyGroupId = zc_Enum_InfoMoneyGroup_70000() -- Инвестиции
+         INNER JOIN ContainerLinkObject AS CLO_InfoMoneyDetail ON CLO_InfoMoneyDetail.ContainerId = _tmpListContainer_summ.ContainerId_begin
+                                                              AND CLO_InfoMoneyDetail.DescId = zc_ContainerLinkObject_InfoMoneyDetail()
+                                                              AND CLO_InfoMoneyDetail.ObjectId = View_InfoMoney.InfoMoneyId
+         /*INNER JOIN ObjectLink AS ObjectLink_Goods_InfoMoney
+                               ON ObjectLink_Goods_InfoMoney.ChildObjectId = _tmpListContainer_summ.GoodsId
+                              AND ObjectLink_Goods_InfoMoney.DescId = zc_ObjectLink_Goods_InfoMoney()
+                              AND ObjectLink_Goods_InfoMoney.ObjectId = View_InfoMoney.InfoMoneyId*/
+    WHERE _tmpListContainer.ContainerId_count = _tmpListContainer_summ.ContainerId_count
+      AND _tmpListContainer.ContainerDescId = zc_Container_Count()
+      AND _tmpListContainer_summ.ContainerDescId = zc_Container_Summ()
+      AND _tmpListContainer.AccountId = 0
+      AND _tmpListContainer_summ.AccountGroupId = zc_Enum_AccountGroup_10000(); -- Необоротные активы
+
+    -- пытаемся найти <Счет> для zc_Container_Count
+    UPDATE _tmpListContainer SET AccountId = _tmpListContainer_summ.AccountId
+                               , AccountGroupId = _tmpListContainer_summ.AccountGroupId
+    FROM _tmpListContainer AS _tmpListContainer_summ
     WHERE _tmpListContainer.ContainerId_count = _tmpListContainer_summ.ContainerId_count
       AND _tmpListContainer.ContainerDescId = zc_Container_Count()
       AND _tmpListContainer_summ.ContainerDescId = zc_Container_Summ()
       AND _tmpListContainer.AccountId = 0
       AND _tmpListContainer_summ.AccountGroupId <> zc_Enum_AccountGroup_110000() -- Транзит
+
    ;
 
     -- все ContainerId

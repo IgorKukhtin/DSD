@@ -258,8 +258,8 @@ BEGIN
           , Object_Branch.ObjectCode    AS BranchCode
           , Object_Branch.ValueData     AS BranchName
 
-          , Object_Partner.ObjectCode    AS JuridicalCode
-          , Object_Partner.ValueData     AS JuridicalName
+          , Object_Unit_Parent.ObjectCode    AS JuridicalCode
+          , Object_Unit_Parent.ValueData     AS JuridicalName
 
           , '' :: TVarChar AS OKPO
 
@@ -277,7 +277,7 @@ BEGIN
           , '' :: TVarChar AS StreetKindName
           , '' :: TVarChar AS StreetName
 
-          , Object_Partner.ObjectCode    AS PartnerId
+          , Object_Partner.Id            AS PartnerId
           , Object_Partner.ObjectCode    AS PartnerCode
           , Object_Partner.ValueData     AS PartnerName
 
@@ -402,6 +402,11 @@ BEGIN
 
           LEFT JOIN Object AS Object_Partner ON Object_Partner.Id = tmpOperationGroup.ToId
           LEFT JOIN Object AS Object_Branch ON Object_Branch.Id = zc_Branch_Basis()
+
+          LEFT JOIN ObjectLink AS ObjectLink_Unit_Parent
+                               ON ObjectLink_Unit_Parent.ObjectId = tmpOperationGroup.ToId
+                              AND ObjectLink_Unit_Parent.DescId = zc_ObjectLink_Unit_Parent()
+          LEFT JOIN Object AS Object_Unit_Parent ON Object_Unit_Parent.Id = ObjectLink_Unit_Parent.ChildObjectId
          ;
 
 END;
