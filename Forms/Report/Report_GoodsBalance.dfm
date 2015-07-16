@@ -265,6 +265,16 @@ object Report_GoodsBalanceForm: TReport_GoodsBalanceForm
           Format = ',0.####'
           Kind = skSum
           Column = CountOut_byPF
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = CuterCount
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = CountIn_byPF
         end>
       DataController.Summary.FooterSummaryItems = <
         item
@@ -501,6 +511,16 @@ object Report_GoodsBalanceForm: TReport_GoodsBalanceForm
           Format = ',0.####'
           Kind = skSum
           Column = CountOut_byPF
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = CuterCount
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = CountIn_byPF
         end>
       DataController.Summary.SummaryGroups = <>
       Images = dmMain.SortImageList
@@ -1130,6 +1150,36 @@ object Report_GoodsBalanceForm: TReport_GoodsBalanceForm
         HeaderAlignmentVert = vaCenter
         Width = 70
       end
+      object TaxExit_norm: TcxGridDBColumn
+        Caption = '% '#1074#1099#1093' ('#1085#1086#1088#1084'.)'
+        DataBinding.FieldName = 'TaxExit_norm'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.####;-,0.####; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 55
+      end
+      object TaxExit_norm_real: TcxGridDBColumn
+        Caption = '% '#1074#1099#1093' ('#1085#1086#1088#1084'. '#1092#1072#1082#1090')'
+        DataBinding.FieldName = 'TaxExit_norm_real'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.####;-,0.####; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 55
+      end
+      object TaxExit_real: TcxGridDBColumn
+        Caption = '% '#1074#1099#1093' ('#1092#1072#1082#1090')'
+        DataBinding.FieldName = 'TaxExit_real'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.####;-,0.####; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 55
+      end
       object CountIn_Weight_end_gp: TcxGridDBColumn
         Caption = #1055#1088#1086#1075#1085#1086#1079' '#1043#1055' '#1074#1077#1089
         DataBinding.FieldName = 'CountIn_Weight_end_gp'
@@ -1198,6 +1248,50 @@ object Report_GoodsBalanceForm: TReport_GoodsBalanceForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 70
+      end
+      object Value_receipt: TcxGridDBColumn
+        Caption = #1050#1086#1083'-'#1074#1086' '#1087#1086' '#1088#1077#1094#1077#1087#1090'.'
+        DataBinding.FieldName = 'Value_receipt'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.####;-,0.####; ;'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 55
+      end
+      object CuterCount_receipt: TcxGridDBColumn
+        Caption = #1050#1091#1090#1077#1088'. '#1087#1086' '#1088#1077#1094#1077#1087#1090'.'
+        DataBinding.FieldName = 'CuterCount_receipt'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.####;-,0.####; ;'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 55
+      end
+      object CuterCount: TcxGridDBColumn
+        Caption = #1055#1088#1080#1093#1086#1076' *** '#1082#1091#1090#1077#1088'.'
+        DataBinding.FieldName = 'CuterCount'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.####;-,0.####; ;'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 55
+      end
+      object CountIn_byPF: TcxGridDBColumn
+        Caption = #1055#1088#1080#1093#1086#1076' *** '#1055#1060' ('#1043#1055')'
+        DataBinding.FieldName = 'CountIn_byPF'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.####;-,0.####; ;'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 55
       end
       object Count_byCount: TcxGridDBColumn
         Caption = #1056#1072#1089#1093#1086#1076' *** '#1055#1060' ('#1043#1055')'

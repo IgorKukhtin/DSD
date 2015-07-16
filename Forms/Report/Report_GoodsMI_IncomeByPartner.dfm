@@ -5,7 +5,7 @@ inherited Report_GoodsMI_IncomeByPartnerForm: TReport_GoodsMI_IncomeByPartnerFor
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
   ExplicitWidth = 1119
-  ExplicitHeight = 591
+  ExplicitHeight = 588
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -213,16 +213,16 @@ inherited Report_GoodsMI_IncomeByPartnerForm: TReport_GoodsMI_IncomeByPartnerFor
     ExplicitHeight = 57
     inherited deStart: TcxDateEdit
       Left = 114
-      EditValue = 41640d
+      EditValue = 42005d
       Properties.SaveTime = False
       ExplicitLeft = 114
     end
     inherited deEnd: TcxDateEdit
-      Left = 114
+      Left = 110
       Top = 32
-      EditValue = 41640d
+      EditValue = 42005d
       Properties.SaveTime = False
-      ExplicitLeft = 114
+      ExplicitLeft = 110
       ExplicitTop = 32
     end
     inherited cxLabel1: TcxLabel
@@ -292,7 +292,7 @@ inherited Report_GoodsMI_IncomeByPartnerForm: TReport_GoodsMI_IncomeByPartnerFor
       Caption = #1043#1088'. '#1087#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1081':'
     end
     object edUnitGroup: TcxButtonEdit
-      Left = 306
+      Left = 309
       Top = 5
       Properties.Buttons = <
         item
@@ -301,16 +301,16 @@ inherited Report_GoodsMI_IncomeByPartnerForm: TReport_GoodsMI_IncomeByPartnerFor
         end>
       Properties.ReadOnly = True
       TabOrder = 10
-      Width = 204
+      Width = 201
     end
   end
   object cxLabel6: TcxLabel [2]
-    Left = 201
+    Left = 219
     Top = 32
     Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077':'
   end
   object edUnit: TcxButtonEdit [3]
-    Left = 289
+    Left = 309
     Top = 32
     Properties.Buttons = <
       item
@@ -319,7 +319,7 @@ inherited Report_GoodsMI_IncomeByPartnerForm: TReport_GoodsMI_IncomeByPartnerFor
       end>
     Properties.ReadOnly = True
     TabOrder = 7
-    Width = 221
+    Width = 201
   end
   object cxLabel7: TcxLabel [4]
     Left = 785
@@ -556,14 +556,14 @@ inherited Report_GoodsMI_IncomeByPartnerForm: TReport_GoodsMI_IncomeByPartnerFor
         item
           Name = 'UnitGroupId'
           Value = ''
-          Component = edUnitGroup
+          Component = GuidesUnitGroup
           ComponentItem = 'Key'
           ParamType = ptInputOutput
         end
         item
           Name = 'UnitGroupName'
           Value = ''
-          Component = edUnitGroup
+          Component = GuidesUnitGroup
           ComponentItem = 'TextValue'
           DataType = ftString
           ParamType = ptInputOutput
@@ -571,12 +571,14 @@ inherited Report_GoodsMI_IncomeByPartnerForm: TReport_GoodsMI_IncomeByPartnerFor
         item
           Name = 'GoodsGroupId'
           Value = ''
+          Component = GoodsGroupGuides
           ComponentItem = 'Key'
           ParamType = ptInputOutput
         end
         item
           Name = 'GoodsGroupName'
           Value = ''
+          Component = GoodsGroupGuides
           ComponentItem = 'TextValue'
           DataType = ftString
           ParamType = ptInputOutput
@@ -648,13 +650,6 @@ inherited Report_GoodsMI_IncomeByPartnerForm: TReport_GoodsMI_IncomeByPartnerFor
         ParamType = ptInput
       end
       item
-        Name = 'inJuridicalId'
-        Value = ''
-        Component = JuridicalGuides
-        ComponentItem = 'Key'
-        ParamType = ptInput
-      end
-      item
         Name = 'inGoodsGroupId'
         Value = ''
         Component = GoodsGroupGuides
@@ -679,6 +674,13 @@ inherited Report_GoodsMI_IncomeByPartnerForm: TReport_GoodsMI_IncomeByPartnerFor
         Name = 'inPaidKindId'
         Value = Null
         Component = PaidKindGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inJuridicalId'
+        Value = ''
+        Component = JuridicalGuides
         ComponentItem = 'Key'
         ParamType = ptInput
       end>
@@ -721,7 +723,15 @@ inherited Report_GoodsMI_IncomeByPartnerForm: TReport_GoodsMI_IncomeByPartnerFor
         end
         item
           Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbPrintByGoods'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
         end
         item
           Visible = True

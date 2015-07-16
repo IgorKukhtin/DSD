@@ -23,7 +23,7 @@ BEGIN
 
 
      -- !!! распроведение!!!
-     PERFORM lpUnComplete_Movement (inMovementId:= inMovementId, inUserId:= zfCalc_UserAdmin() :: Integer);
+     PERFORM lpUnComplete_Movement (inMovementId:= inMovementId, inUserId:= zc_Enum_Process_Auto_PrimeCost() :: Integer);
 
 
      -- !!!0 - PriceCorrective!!!
@@ -33,7 +33,7 @@ BEGIN
              PERFORM lpComplete_Movement_PriceCorrective_CreateTemp();
              -- !!! проводим - Loss !!!
              PERFORM lpComplete_Movement_PriceCorrective (inMovementId     := inMovementId
-                                                        , inUserId         := zfCalc_UserAdmin() :: Integer);
+                                                        , inUserId         := zc_Enum_Process_Auto_PrimeCost() :: Integer);
 
      ELSE
      -- !!!1 - Loss!!!
@@ -43,7 +43,7 @@ BEGIN
              PERFORM lpComplete_Movement_Loss_CreateTemp();
              -- !!! проводим - Loss !!!
              PERFORM lpComplete_Movement_Loss (inMovementId     := inMovementId
-                                             , inUserId         := zfCalc_UserAdmin() :: Integer);
+                                             , inUserId         := zc_Enum_Process_Auto_PrimeCost() :: Integer);
 
      ELSE
      -- !!!2 - SendOnPrice!!!
@@ -53,7 +53,7 @@ BEGIN
              PERFORM lpComplete_Movement_SendOnPrice_CreateTemp();
              -- !!! проводим - SendOnPrice !!!
              PERFORM lpComplete_Movement_SendOnPrice (inMovementId     := inMovementId
-                                                    , inUserId         := zfCalc_UserAdmin() :: Integer);
+                                                    , inUserId         := zc_Enum_Process_Auto_PrimeCost() :: Integer);
 
      ELSE
      -- !!!3 - ReturnIn!!!
@@ -63,7 +63,7 @@ BEGIN
              PERFORM lpComplete_Movement_ReturnIn_CreateTemp();
              -- !!! проводим - ReturnIn !!!
              PERFORM lpComplete_Movement_ReturnIn (inMovementId     := inMovementId
-                                                 , inUserId         := zfCalc_UserAdmin() :: Integer
+                                                 , inUserId         := zc_Enum_Process_Auto_PrimeCost() :: Integer
                                                  , inIsLastComplete := FALSE); -- inIsNoHistoryCost);
 
      ELSE
@@ -74,7 +74,7 @@ BEGIN
              PERFORM lpComplete_Movement_Sale_CreateTemp();
              -- !!! проводим - Sale !!!
              PERFORM lpComplete_Movement_Sale (inMovementId     := inMovementId
-                                             , inUserId         := zfCalc_UserAdmin() :: Integer
+                                             , inUserId         := zc_Enum_Process_Auto_PrimeCost() :: Integer
                                              , inIsLastComplete := FALSE); -- inIsNoHistoryCost);
      ELSE
      -- !!!5 - ReturnOut!!!
@@ -84,7 +84,7 @@ BEGIN
              PERFORM lpComplete_Movement_ReturnOut_CreateTemp();
              -- !!! проводим - ReturnOut !!!
              PERFORM lpComplete_Movement_ReturnOut (inMovementId     := inMovementId
-                                                  , inUserId         := zfCalc_UserAdmin() :: Integer
+                                                  , inUserId         := zc_Enum_Process_Auto_PrimeCost() :: Integer
                                                   , inIsLastComplete := NULL); -- inIsNoHistoryCost);
 
      ELSE
@@ -95,8 +95,8 @@ BEGIN
              -- PERFORM lpComplete_Movement_Send_CreateTemp();
              -- !!! проводим - Send !!!
              PERFORM gpComplete_Movement_Send (inMovementId     := inMovementId
-                                             , inIsLastComplete := NULL
-                                             , inSession        := zfCalc_UserAdmin());
+                                             , inIsLastComplete := TRUE
+                                             , inSession        := zc_Enum_Process_Auto_PrimeCost() :: TVarChar);
      ELSE
      -- !!!6.2. - ProductionUnion!!!
      IF vbMovementDescId = zc_Movement_ProductionUnion()
@@ -105,8 +105,8 @@ BEGIN
              -- PERFORM lpComplete_Movement_ProductionUnion_CreateTemp();
              -- !!! проводим - ProductionUnion !!!
              PERFORM gpComplete_Movement_ProductionUnion (inMovementId     := inMovementId
-                                                        , inIsLastComplete := NULL
-                                                        , inSession        := zfCalc_UserAdmin());
+                                                        , inIsLastComplete := TRUE
+                                                        , inSession        := zc_Enum_Process_Auto_PrimeCost() :: TVarChar);
      ELSE
      -- !!!6.3. - ProductionSeparate!!!
      IF vbMovementDescId = zc_Movement_ProductionSeparate()
@@ -115,8 +115,8 @@ BEGIN
              -- PERFORM lpComplete_Movement_ProductionSeparate_CreateTemp();
              -- !!! проводим - ProductionSeparate !!!
              PERFORM gpComplete_Movement_ProductionSeparate (inMovementId     := inMovementId
-                                                           , inIsLastComplete := NULL
-                                                           , inSession        := zfCalc_UserAdmin());
+                                                           , inIsLastComplete := TRUE
+                                                           , inSession        := zc_Enum_Process_Auto_PrimeCost() :: TVarChar);
      ELSE
      -- !!!10.1 - Cash!!!
      IF vbMovementDescId = zc_Movement_Cash() AND 1=0
@@ -176,10 +176,11 @@ BEGIN
      IF vbMovementDescId = zc_Movement_Income() AND 1=0
      THEN
              -- создаются временные таблицы - для формирование данных для проводок
+             PERFORM lpComplete_Movement_Income_CreateTemp();
              -- !!! проводим - Income !!!
-             PERFORM gpComplete_Movement_Income (inMovementId     := inMovementId
-                                               , inIsLastComplete := NULL
-                                               , inSession        := zfCalc_UserAdmin());
+             PERFORM lpComplete_Movement_Income (inMovementId     := inMovementId
+                                               , inUserId         := zc_Enum_Process_Auto_PrimeCost()
+                                               , inIsLastComplete := TRUE);
      ELSE
 
      -- !!!15.1 - TransferDebtIn!!!
@@ -203,7 +204,7 @@ BEGIN
              -- !!! проводим - Inventory !!!
              PERFORM gpComplete_Movement_Inventory (inMovementId     := inMovementId
                                                   , inIsLastComplete := NULL
-                                                  , inSession        := zfCalc_UserAdmin());
+                                                  , inSession        := zc_Enum_Process_Auto_PrimeCost());
      ELSE
          RAISE EXCEPTION 'NOT FIND inMovementId = %, MovementDescId = %(%)', inMovementId, vbMovementDescId, (SELECT ItemName FROM MovementDesc WHERE Id = vbMovementDescId);
      END IF;
