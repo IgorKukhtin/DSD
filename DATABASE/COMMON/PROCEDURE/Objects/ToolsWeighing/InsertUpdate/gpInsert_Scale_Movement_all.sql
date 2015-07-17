@@ -28,6 +28,7 @@ $BODY$
    DECLARE vbMovementDescId_old  Integer;
 
    DECLARE vbOperDate_scale TDateTime;
+   DECLARE vbOperDatePartner_order TDateTime;
    DECLARE vbId_tmp Integer;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
@@ -96,11 +97,13 @@ BEGIN
 
      -- !!!запомнили!!
      vbOperDate_scale:= inOperDate;
-     -- !!!если по заявке, тогда дата берется из неё, вообще - надо только для филиалов!!!
+     -- !!!определяется OperDatePartner заявки, !!!иначе inOperDate!!!
+     vbOperDatePartner_order:= COALESCE ((SELECT MovementDate.ValueData FROM MovementDate WHERE MovementDate.DescId = zc_MovementDate_OperDatePartner() AND MovementDate.MovementId = (SELECT MLM_Order.MovementChildId FROM MovementLinkMovement AS MLM_Order WHERE MLM_Order.MovementId = inMovementId AND MLM_Order.DescId = zc_MovementLinkMovement_Order()))
+                                       , inOperDate);
+     -- !!!если по заявке, тогда берется из неё OperDatePartner, вообще - надо только для филиалов!!!
      inOperDate:= CASE WHEN vbBranchId = zc_Branch_Basis()
                             THEN inOperDate
-                       ELSE COALESCE ((SELECT ValueData FROM MovementDate WHERE MovementId = (SELECT MLM_Order.MovementChildId FROM MovementLinkMovement AS MLM_Order WHERE MLM_Order.MovementId = inMovementId AND MLM_Order.DescId = zc_MovementLinkMovement_Order()) AND DescId = zc_MovementDate_OperDatePartner())
-                                    , inOperDate)
+                       ELSE vbOperDatePartner_order
                  END;
 
      -- таблица - "некоторые филиалы"
@@ -279,7 +282,9 @@ BEGIN
                                                   , inInvNumberPartner      := ''
                                                   , inInvNumberOrder        := InvNumberOrder
                                                   , inOperDate              := inOperDate
-                                                  , inOperDatePartner       := (inOperDate + (COALESCE (ObjectFloat_Partner_DocumentDayCount.ValueData, 0) :: TVarChar || ' DAY') :: INTERVAL) :: TDateTime
+                                                  , inOperDatePartner       := -- !!!если по заявке, тогда расчет OperDatePartner от OperDate заявки - надо только для inBranchCode = 201, 
+                                                                              (CASE WHEN inBranchCode = 201 THEN vbOperDatePartner_order ELSE inOperDate END
+                                                                             + (COALESCE (ObjectFloat_Partner_DocumentDayCount.ValueData, 0) :: TVarChar || ' DAY') :: INTERVAL) :: TDateTime
                                                   , inChecked               := NULL
                                                   , inChangePercent         := ChangePercent
                                                   , inFromId                := FromId

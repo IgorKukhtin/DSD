@@ -14,6 +14,7 @@ CREATE OR REPLACE FUNCTION lpReport_MotionGoods(
     IN inUserId             Integer     -- пользователь
 )
 RETURNS TABLE (AccountId Integer
+             , ContainerId_count Integer
              , ContainerId Integer
              , LocationId Integer
              , GoodsId Integer, GoodsKindId Integer
@@ -1124,6 +1125,7 @@ BEGIN
 
          -- Результат
          SELECT (tmpMIContainer_all.AccountId)       AS AccountId
+              , tmpMIContainer_all.ContainerId_count AS ContainerId_count
               , tmpMIContainer_all.ContainerId_begin AS ContainerId
               , tmpMIContainer_all.LocationId
               , tmpMIContainer_all.GoodsId
@@ -1192,6 +1194,7 @@ BEGIN
 
          FROM tmpMIContainer AS tmpMIContainer_all
          GROUP BY tmpMIContainer_all.AccountId 
+                , tmpMIContainer_all.ContainerId_count
                 , tmpMIContainer_all.ContainerId_begin
                 , tmpMIContainer_all.LocationId
                 , tmpMIContainer_all.GoodsId
