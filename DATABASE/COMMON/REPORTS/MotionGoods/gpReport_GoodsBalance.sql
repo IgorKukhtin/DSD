@@ -176,13 +176,18 @@ BEGIN
                     LEFT JOIN (SELECT zc_Container_Count() AS ContainerDescId UNION SELECT zc_Container_Summ() AS ContainerDescId WHERE vbIsSummIn = TRUE) AS tmpDesc ON 1 = 1
               ;
         ELSE
-            WITH tmpBranch AS (SELECT TRUE AS Value WHERE 1 = 0 AND NOT EXISTS (SELECT BranchId FROM Object_RoleAccessKeyGuide_View WHERE UserId = vbUserId AND BranchId <> 0))
-            INSERT INTO _tmpLocation (LocationId)
-               SELECT Id FROM Object INNER JOIN tmpBranch ON tmpBranch.Value = TRUE WHERE DescId = zc_Object_Unit()
+            INSERT INTO _tmpLocation (LocationId, DescId, ContainerDescId)
+              SELECT tmp.LocationId, tmp.DescId, tmpDesc.ContainerDescId
+              FROM
+               -- —клад специй и запчастей
+              (SELECT lfSelect.UnitId AS LocationId, zc_ContainerLinkObject_Unit() AS DescId FROM lfSelect_Object_Unit_byGroup (8454) AS lfSelect WHERE inAccountGroupId = 0 AND inGoodsGroupId = 1941 -- —ƒ-ќЅўјя
               UNION ALL
-               SELECT Id FROM Object INNER JOIN tmpBranch ON tmpBranch.Value = TRUE WHERE DescId = zc_Object_Member()
+               SELECT Object.Id AS LocationId, zc_ContainerLinkObject_Member() AS DescId  FROM Object WHERE Object.DescId = zc_Object_Member() AND inAccountGroupId = 0 AND inGoodsGroupId = 1941 -- —ƒ-ќЅўјя
               UNION ALL
-               SELECT Id FROM Object INNER JOIN tmpBranch ON tmpBranch.Value = TRUE WHERE DescId = zc_Object_Car();
+               SELECT Object.Id AS LocationId, zc_ContainerLinkObject_Car() AS DescId  FROM Object WHERE Object.DescId = zc_Object_Car() AND inAccountGroupId = 0 AND inGoodsGroupId = 1941 -- —ƒ-ќЅўјя
+              ) AS tmp
+              LEFT JOIN (SELECT zc_Container_Count() AS ContainerDescId UNION SELECT zc_Container_Summ() AS ContainerDescId WHERE vbIsSummIn = TRUE) AS tmpDesc ON 1 = 1
+             ;
         END IF;
     END IF;
     -- !!!!!!!!!!!!!!!!!!!!!!!
@@ -476,7 +481,7 @@ BEGIN
                                     , MovementItem.ObjectId
                                     , COALESCE (MovementString_PartionGoods.ValueData, '')
                                     , COALESCE (MILinkObject_GoodsKind.ObjectId, 0)
-                             )
+                            )
 
 , tmpContainer_Count AS (-- ѕартиии дл€ получени€ документов zc_Movement_ProductionUnion (по ним нужны будут приходы и расходы)
                          SELECT _tmpContainer.LocationId

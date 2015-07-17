@@ -212,17 +212,19 @@ BEGIN
         FROM Movement
              JOIN MovementItemContainer AS MIContainer_Count_Out
                                         ON MIContainer_Count_Out.MovementId = Movement.Id
-                                       AND MIContainer_Count_Out.DescId = zc_MIContainer_Count()
-                                       AND MIContainer_Count_Out.isActive = FALSE
+                                       AND MIContainer_Count_Out.DescId     = zc_MIContainer_Count()
+                                       AND MIContainer_Count_Out.isActive   = FALSE
              JOIN MovementItemContainer AS MIContainer_Summ_Out
-                                        ON MIContainer_Summ_Out.MovementItemId = MIContainer_Count_Out.MovementItemId
-                                       AND MIContainer_Summ_Out.DescId = zc_MIContainer_Summ()
+                                        ON MIContainer_Summ_Out.MovementId     = MIContainer_Count_Out.MovementId
+                                       AND MIContainer_Summ_Out.MovementItemId = MIContainer_Count_Out.MovementItemId
+                                       AND MIContainer_Summ_Out.DescId         = zc_MIContainer_Summ()
 
              JOIN MovementItemContainer AS MIContainer_Summ_In ON MIContainer_Summ_In.Id = MIContainer_Summ_Out.ParentId
              JOIN MovementItemContainer AS MIContainer_Count_In
-                                        ON MIContainer_Count_In.MovementItemId = MIContainer_Summ_In.MovementItemId
-                                       AND MIContainer_Count_In.DescId = zc_MIContainer_Count()
-                                       AND MIContainer_Count_In.isActive = TRUE
+                                        ON MIContainer_Count_In.MovementId     = MIContainer_Summ_In.MovementId
+                                       AND MIContainer_Count_In.MovementItemId = MIContainer_Summ_In.MovementItemId
+                                       AND MIContainer_Count_In.DescId         = zc_MIContainer_Count()
+                                       AND MIContainer_Count_In.isActive       = TRUE
 
              /*LEFT JOIN ContainerObjectCost AS ContainerObjectCost_Out
                                            ON ContainerObjectCost_Out.ContainerId = MIContainer_Summ_Out.ContainerId
@@ -372,10 +374,9 @@ BEGIN
      -- проверка2
      IF EXISTS (SELECT _tmpChild.MasterContainerId, _tmpChild.ContainerId FROM _tmpChild GROUP BY _tmpChild.MasterContainerId, _tmpChild.ContainerId HAVING COUNT(*) > 1)
      THEN
-         RAISE EXCEPTION 'проверка2 - SELECT MasterContainerId, ContainerId FROM _tmpChild GROUP BY MasterContainerId, ContainerId HAVING COUNT(*) > 1 :  MasterContainerId = % and ContainerId = %',
-          (SELECT MAX (_tmpChild.MasterContainerId) FROM _tmpChild WHERE MasterContainerId IN (SELECT _tmpChild.MasterContainerId FROM _tmpChild GROUP BY _tmpChild.MasterContainerId, _tmpChild.ContainerId HAVING COUNT(*) > 1))
-        , (SELECT MAX (_tmpChild.ContainerId) FROM _tmpChild WHERE _tmpChild.MasterContainerId IN (SELECT MAX (_tmpChild.MasterContainerId) FROM _tmpChild WHERE MasterContainerId IN (SELECT _tmpChild.MasterContainerId FROM _tmpChild GROUP BY _tmpChild.MasterContainerId, _tmpChild.ContainerId HAVING COUNT(*) > 1))
-                                                               AND _tmpChild.ContainerId IN (SELECT _tmpChild.ContainerId FROM _tmpChild GROUP BY _tmpChild.MasterContainerId, _tmpChild.ContainerId HAVING COUNT(*) > 1))
+         RAISE EXCEPTION 'проверка2 - SELECT MasterContainerId, ContainerId FROM _tmpChild GROUP BY MasterContainerId, ContainerId HAVING COUNT(*) > 1 :  MasterContainerId = % and ContainerId = %'
+        , (SELECT _tmpChild.MasterContainerId FROM _tmpChild GROUP BY _tmpChild.MasterContainerId, _tmpChild.ContainerId HAVING COUNT(*) > 1 ORDER BY _tmpChild.MasterContainerId, _tmpChild.ContainerId LIMIT 1)
+        , (SELECT _tmpChild.ContainerId FROM _tmpChild GROUP BY _tmpChild.MasterContainerId, _tmpChild.ContainerId HAVING COUNT(*) > 1 ORDER BY _tmpChild.MasterContainerId, _tmpChild.ContainerId LIMIT 1)
          ;
      END IF;
 
@@ -631,5 +632,5 @@ LANGUAGE PLPGSQL VOLATILE;
 -- UPDATE HistoryCost SET Price = 100 WHERE Price > 100 AND StartDate = '01.06.2014' AND EndDate = '30.06.2014'
 -- тест
 -- SELECT * FROM gpInsertUpdate_HistoryCost (inStartDate:= '01.06.2014', inEndDate:= '30.06.2014', inItearationCount:= 500, inInsert:= 12345, inDiffSumm:= 0, inSession:= '2')  WHERE Price <> PriceNext
--- SELECT * FROM gpInsertUpdate_HistoryCost (inStartDate:= '01.09.2014', inEndDate:= '30.09.2014', inItearationCount:= 100, inInsert:= -1, inDiffSumm:= 0.009, inSession:= '2') -- WHERE CalcSummCurrent <> CalcSummNext
+-- SELECT * FROM gpInsertUpdate_HistoryCost (inStartDate:= '01.07.2015', inEndDate:= '30.07.2015', inItearationCount:= 100, inInsert:= -1, inDiffSumm:= 0.009, inSession:= '2') -- WHERE CalcSummCurrent <> CalcSummNext
 

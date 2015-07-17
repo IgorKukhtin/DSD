@@ -413,8 +413,20 @@ BEGIN
 
 
      -- !!!формируются суммы ПОКУПАТЕЛЮ!!!
-     UPDATE _tmpItem SET tmpOperSumm_PartnerFrom = CAST ((1 + vbChangePercent_From / 100) * _tmpItem.tmpOperSumm_Partner AS NUMERIC (16, 2))
-                       , OperSumm_PartnerFrom    = CAST ((1 + vbChangePercent_From / 100) * _tmpItem.OperSumm_Partner AS NUMERIC (16, 2))
+     UPDATE _tmpItem SET tmpOperSumm_PartnerFrom = CAST ((1 + vbChangePercent_From / 100)
+                                                 * CASE WHEN vbPriceWithVAT OR vbVATPercent = 0
+                                                             -- если цены с НДС или %НДС=0
+                                                             THEN (tmpOperSumm_Partner)
+                                                        -- если цены без НДС
+                                                        ELSE CAST ( (1 + vbVATPercent / 100) * (tmpOperSumm_Partner) AS NUMERIC (16, 2))
+                                                   END AS NUMERIC (16, 2))
+                       , OperSumm_PartnerFrom    = CAST ((1 + vbChangePercent_From / 100)
+                                                 * CASE WHEN vbPriceWithVAT OR vbVATPercent = 0
+                                                             -- если цены с НДС или %НДС=0
+                                                             THEN (tmpOperSumm_Partner)
+                                                        -- если цены без НДС
+                                                        ELSE CAST ( (1 + vbVATPercent / 100) * (tmpOperSumm_Partner) AS NUMERIC (16, 2))
+                                                   END AS NUMERIC (16, 2))
      WHERE vbPartnerId_To <> 0;
 
 
@@ -458,14 +470,21 @@ BEGIN
                               ELSE CAST ( (1 + vbVATPercent / 100) * _tmpItem.tmpOperSumm_Partner AS NUMERIC (16, 2))
                          END
             END
-            INTO vbOperSumm_Partner
+            -- Расчет Итоговой суммы по ПОКУПАТЕЛЮ
+          , CAST ((1 + vbChangePercent_From / 100)
+          * CASE WHEN vbPriceWithVAT OR vbVATPercent = 0
+                    -- если цены с НДС или %НДС=0
+                    THEN _tmpItem.tmpOperSumm_Partner
+                 -- если цены без НДС
+                 ELSE CAST ( (1 + vbVATPercent / 100) * _tmpItem.tmpOperSumm_Partner AS NUMERIC (16, 2))
+            END AS NUMERIC (16, 2))
+
+            INTO vbOperSumm_Partner, vbOperSumm_PartnerFrom
+
      FROM (SELECT SUM (_tmpItem.tmpOperSumm_Partner) AS tmpOperSumm_Partner
            FROM _tmpItem
           ) AS _tmpItem
      ;
-
-     -- !!!Расчеты сумм ПОКУПАТЕЛЮ!!!
-     vbOperSumm_PartnerFrom:= CAST ((1 + vbChangePercent_From / 100) * vbOperSumm_Partner AS NUMERIC (16, 2));
 
 
      -- Расчет Итоговых сумм по Контрагенту (по элементам)

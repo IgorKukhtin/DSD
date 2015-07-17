@@ -175,7 +175,7 @@ type
     bbAmount: TdxBarControlContainerItem;
     actPrint_GP: TdsdPrintAction;
     bbPrint2: TdxBarButton;
-    actPrint_Remains: TdsdPrintAction;
+    actPrint_Loss: TdsdPrintAction;
     bbPrint3: TdxBarButton;
     cxLabel8: TcxLabel;
     cxLabel9: TcxLabel;
@@ -183,8 +183,6 @@ type
     edLocation_by: TcxButtonEdit;
     GuidesUnitGroup_by: TdsdGuides;
     GuidesLocation_by: TdsdGuides;
-    PriceListStart: TcxGridDBColumn;
-    PriceListEnd: TcxGridDBColumn;
     CountEnd_calc: TcxGridDBColumn;
     SummEnd_calc: TcxGridDBColumn;
     CountProductionIn_by: TcxGridDBColumn;
@@ -204,10 +202,8 @@ type
     CountOut_by_Weight: TcxGridDBColumn;
     CountOtherOut_by_Weight: TcxGridDBColumn;
     CountProductionOut_Norm: TcxGridDBColumn;
-    CountProductionOut_Fact2: TcxGridDBColumn;
-    SummProductionOut_Norm: TcxGridDBColumn;
-    SummProductionOut_Fact2: TcxGridDBColumn;
     GoodsKindName_complete: TcxGridDBColumn;
+    SummProductionOut_Norm: TcxGridDBColumn;
   private
   public
   end;
