@@ -62,6 +62,8 @@ type
     procedure LoadCheckVIPFormTest;
     procedure LoadCheckDeferredFormTest;
     procedure LoadPaidTypeFormTest;
+    procedure LoadInventoryJournalFormTest;
+    procedure LoadInventoryFormTest;
     procedure FormTest;
   end;
 
@@ -489,6 +491,18 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TInfoMoneyGroupEditForm');
 end;
 
+
+procedure TLoadFormTest.LoadInventoryFormTest;
+begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TInventoryForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TInventoryForm');
+end;
+
+procedure TLoadFormTest.LoadInventoryJournalFormTest;
+begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TInventoryJournalForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TInventoryJournalForm');
+end;
 
 procedure TLoadFormTest.LoadInfoMoneyDestinationFormTest;
 begin

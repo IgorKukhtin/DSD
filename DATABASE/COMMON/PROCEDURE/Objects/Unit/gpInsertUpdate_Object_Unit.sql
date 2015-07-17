@@ -8,7 +8,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Unit(
  INOUT ioId                      Integer   , -- ключ объекта <Подразделение>
     IN inCode                    Integer   , -- Код объекта <Подразделение>
     IN inName                    TVarChar  , -- Название объекта <Подразделение>
-    IN inPartionDate             Boolean   , -- Партии даты в учете
+    IN inisPartionDate           Boolean   , -- Партии даты в учете
     IN inParentId                Integer   , -- ссылка на подразделение
     IN inBranchId                Integer   , -- ссылка на филиал
     IN inBusinessId              Integer   , -- ссылка на бизнес
@@ -50,7 +50,7 @@ BEGIN
    -- сохранили объект
    ioId := lpInsertUpdate_Object (ioId, zc_Object_Unit(), vbCode_calc, inName, inAccessKeyId:= NULL);
    -- сохранили свойство <Партии даты в учете>
-   PERFORM lpInsertUpdate_ObjectBoolean (zc_ObjectBoolean_Unit_PartionDate(), ioId, inPartionDate);
+   PERFORM lpInsertUpdate_ObjectBoolean (zc_ObjectBoolean_Unit_PartionDate(), ioId, inisPartionDate);
    -- сохранили связь с <Подразделения>
    PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_Unit_Parent(), ioId, inParentId);
    -- сохранили связь с <Филиалы>

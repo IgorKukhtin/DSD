@@ -129,6 +129,8 @@ type
     ceRetail: TcxButtonEdit;
     RetailGuides: TdsdGuides;
     cbisTaxSummary: TcxCheckBox;
+    edDayTaxSummary: TcxCurrencyEdit;
+    cxLabel21: TcxLabel;
   private
     { Private declarations }
   public

@@ -3,7 +3,7 @@ inherited ProductionUnionTechJournalForm: TProductionUnionTechJournalForm
   ClientHeight = 685
   ClientWidth = 1020
   ExplicitWidth = 1036
-  ExplicitHeight = 720
+  ExplicitHeight = 723
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -1109,10 +1109,6 @@ inherited ProductionUnionTechJournalForm: TProductionUnionTechJournalForm
         item
           DataSet = PrintMasterCDS
           UserName = 'Master'
-        end
-        item
-          DataSet = PrintChildCDS
-          UserName = 'Client'
           IndexFieldNames = 'ReceiptId;GroupNumber;InfoMoneyName;GoodsName'
         end>
       CopiesCount = 1
@@ -2093,7 +2089,7 @@ inherited ProductionUnionTechJournalForm: TProductionUnionTechJournalForm
     Top = 264
   end
   object spPrintReceipt: TdsdStoredProc
-    StoredProcName = 'gpSelect_Object_Receipt'
+    StoredProcName = 'gpSelect_Object_Receipt_Print'
     DataSet = PrintMasterCDS
     DataSets = <
       item
@@ -2102,9 +2098,7 @@ inherited ProductionUnionTechJournalForm: TProductionUnionTechJournalForm
     Params = <
       item
         Name = 'inReceiptId'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'ReceiptId'
+        Value = '0'
         ParamType = ptInput
       end
       item

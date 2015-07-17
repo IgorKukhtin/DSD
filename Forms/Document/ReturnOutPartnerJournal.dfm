@@ -2,6 +2,7 @@ inherited ReturnOutPartnerJournalForm: TReturnOutPartnerJournalForm
   Caption = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' <'#1042#1086#1079#1074#1088#1072#1090' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1091' '#1086#1090' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1103'>'
   ClientHeight = 535
   ClientWidth = 1110
+  ExplicitLeft = -366
   ExplicitWidth = 1126
   ExplicitHeight = 573
   PixelsPerInch = 96
@@ -182,6 +183,13 @@ inherited ReturnOutPartnerJournalForm: TReturnOutPartnerJournalForm
           object colChangePercent: TcxGridDBColumn
             Caption = '(-)% '#1089#1082'. (+)% '#1085#1072#1094
             DataBinding.FieldName = 'ChangePercent'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 60
+          end
+          object ChangePercentTo: TcxGridDBColumn
+            Caption = '(-)% '#1089#1082'. (+)% '#1085#1072#1094'. '#1087#1086#1082
+            DataBinding.FieldName = 'ChangePercentTo'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 60

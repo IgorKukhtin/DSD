@@ -2,6 +2,8 @@
 
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Juridical (Integer, Integer, TVarChar, TVarChar, Boolean, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TDateTime, TDateTime, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Juridical (Integer, Integer, TVarChar, TVarChar, Boolean, Boolean, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TDateTime, TDateTime, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Juridical (Integer, Integer, TVarChar, TVarChar, Boolean, Boolean, TFloat, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TDateTime, TDateTime, TVarChar);
+
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Juridical(
  INOUT ioId                  Integer   ,    -- ключ объекта <Юридическое лицо>
@@ -10,6 +12,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Juridical(
     IN inGLNCode             TVarChar  ,    -- Код GLN
     IN inisCorporate         Boolean   ,    -- Признак наша ли собственность это юридическое лицо
     IN inisTaxSummary        Boolean   ,    -- Признак сводная налоговая
+    IN inDayTaxSummary       TFloat    ,    -- Кол-во дней для сводной налоговой
     IN inJuridicalGroupId    Integer   ,    -- Группы юридических лиц
     IN inGoodsPropertyId     Integer   ,    -- Классификаторы свойств товаров
     IN inRetailId            Integer   ,    -- Торговая сеть
@@ -71,6 +74,9 @@ BEGIN
    PERFORM lpInsertUpdate_ObjectString(zc_objectString_Juridical_GLNCode(), ioId, inGLNCode);
 
    -- сохранили свойство <>
+   PERFORM lpInsertUpdate_ObjectFloat(zc_ObjectFloat_Juridical_DayTaxSummary(), ioId, inDayTaxSummary);
+
+   -- сохранили свойство <>
    PERFORM lpInsertUpdate_ObjectBoolean(zc_ObjectBoolean_Juridical_isCorporate(), ioId, inisCorporate);
    -- сохранили свойство <>
    PERFORM lpInsertUpdate_ObjectBoolean(zc_ObjectBoolean_Juridical_isTaxSummary(), ioId, inisTaxSummary);
@@ -102,7 +108,7 @@ BEGIN
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpInsertUpdate_Object_Juridical  (Integer, Integer, TVarChar, TVarChar, Boolean, Boolean, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TDateTime, TDateTime, TVarChar) OWNER TO postgres;
+ALTER FUNCTION gpInsertUpdate_Object_Juridical  (Integer, Integer, TVarChar, TVarChar, Boolean, Boolean, TFloat, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TDateTime, TDateTime, TVarChar) OWNER TO postgres;
 
   
 /*-------------------------------------------------------------------------------*/

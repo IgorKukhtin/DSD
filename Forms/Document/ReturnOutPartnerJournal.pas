@@ -54,6 +54,7 @@ type
     spSelectPrint: TdsdStoredProc;
     actPrint: TdsdPrintAction;
     bbPrint: TdxBarButton;
+    ChangePercentTo: TcxGridDBColumn;
   private
     { Private declarations }
   public

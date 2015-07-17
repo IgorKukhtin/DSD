@@ -155,6 +155,8 @@ type
     miReprice: TMenuItem;
     actPaidType: TdsdOpenForm;
     N54: TMenuItem;
+    actInventoryJournal: TdsdOpenForm;
+    N55: TMenuItem;
     procedure actSaveDataExecute(Sender: TObject);
     procedure miRepriceClick(Sender: TObject);
   private

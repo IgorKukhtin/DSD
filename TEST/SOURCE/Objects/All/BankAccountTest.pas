@@ -70,7 +70,8 @@ begin
   BankId:= TBank.Create.GetDefault;
   CorrespondentBankId:= TBank.Create.GetDefault;
   BeneficiarysBankId:= TBank.Create.GetDefault;
-  CurrencyId:= TCurrency.Create.GetDefault;
+  WITH TCurrency.Create.GetDataSet do
+    CurrencyId:= FieldByName('Id').AsInteger;
 
   result := InsertUpdateBankAccount(0, -1, 'Расчетный счет', JuridicalId, BankId, CurrencyId, CorrespondentBankId, BeneficiarysBankId);
   inherited;
