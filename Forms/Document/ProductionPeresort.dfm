@@ -3,7 +3,7 @@ inherited ProductionPeresortForm: TProductionPeresortForm
   ClientHeight = 499
   ClientWidth = 1128
   ExplicitWidth = 1144
-  ExplicitHeight = 534
+  ExplicitHeight = 537
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -375,9 +375,9 @@ inherited ProductionPeresortForm: TProductionPeresortForm
           Component = FormParams
           ComponentItem = 'Id'
         end>
-      ReportName = 'PrintMovement_Sale2'
-      ReportNameParam.Name = #1056#1072#1089#1093#1086#1076#1085#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103
-      ReportNameParam.Value = 'PrintMovement_Sale2'
+      ReportName = 'PrintMovement_ProductionUnion'
+      ReportNameParam.Name = #1053#1072#1082#1083#1072#1076#1085#1072#1103
+      ReportNameParam.Value = 'PrintMovement_ProductionUnion'
       ReportNameParam.ParamType = ptInput
     end
     inherited actUnCompleteMovement: TChangeGuidesStatus
@@ -1267,7 +1267,7 @@ inherited ProductionPeresortForm: TProductionPeresortForm
     Top = 246
   end
   object spSelectPrint: TdsdStoredProc
-    StoredProcName = 'gpSelect_Movement_Sale_Print'
+    StoredProcName = 'gpSelect_Movement_ProductionUnion_Print'
     DataSet = PrintHeaderCDS
     DataSets = <
       item
