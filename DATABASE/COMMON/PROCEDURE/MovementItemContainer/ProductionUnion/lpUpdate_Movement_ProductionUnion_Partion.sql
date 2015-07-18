@@ -212,8 +212,11 @@ BEGIN
          RAISE EXCEPTION 'Ошибка. Кол-во после распределения не может быть < 0  <%> <%>', (SELECT _tmpItem_Result.MovementItemId_out FROM _tmpItem_Result WHERE _tmpItem_Result.OperCount < 0 ORDER BY _tmpItem_Result.MovementItemId_out LIMIT 1), (SELECT _tmpItem_Result.OperCount FROM _tmpItem_Result WHERE _tmpItem_Result.OperCount < 0 ORDER BY _tmpItem_Result.MovementItemId_out LIMIT 1);
      END IF;
 
-     -- !!!не всегда!!!
-     IF inIsUpdate = TRUE THEN
+
+     -- !!!т.е. не всегда!!!
+     IF inIsUpdate = TRUE
+     THEN
+
      -- Сохраненние что партия закрыта/открыта ЕСЛИ OperCount > 0 !!!для всех _tmpItem_GP!!!
      PERFORM lpInsertUpdate_MovementItemBoolean (zc_MIBoolean_PartionClose(), _tmpItem_GP.MovementItemId_gp, CASE WHEN tmp.OperCount > 0 THEN TRUE ELSE FALSE END)
      FROM _tmpItem_GP
@@ -251,12 +254,12 @@ BEGIN
      WHERE _tmpItem_Result.OperCount > 0;
 
      
-     END IF; -- if inIsUpdate = TRUE -- !!!не всегда!!!
+     END IF; -- if inIsUpdate = TRUE -- !!!т.е. не всегда!!!
 
 
     -- Результат
     RETURN QUERY
-    select COALESCE (_tmpItem_Result.MovementItemId_gp, _tmpItem_GP.MovementItemId_gp) :: Integer AS MovementItemId_gp
+    SELECT COALESCE (_tmpItem_Result.MovementItemId_gp, _tmpItem_GP.MovementItemId_gp) :: Integer AS MovementItemId_gp
         , _tmpItem_Result.MovementItemId_out, _tmpItem_Result.ContainerId
         , _tmpItem_Result.OperCount
         , _tmpItem_GP.OperCount      AS OperCount_gp
@@ -267,11 +270,11 @@ BEGIN
         , DATE (_tmpItem_PF_find.PartionGoodsDateClose)
         , Object_Goods.ObjectCode AS GoodsCode
         , Object_Goods.ValueData  AS GoodsName
-    from _tmpItem_Result
-         left join Object AS Object_Goods on Object_Goods.Id = _tmpItem_Result.GoodsId
-         left join _tmpItem_PF on _tmpItem_PF.MovementItemId_out = _tmpItem_Result.MovementItemId_out
-         left join _tmpItem_GP on _tmpItem_GP.MovementItemId_gp = _tmpItem_Result.MovementItemId_gp
-         left join _tmpItem_PF_find on _tmpItem_PF_find.ContainerId = _tmpItem_PF.ContainerId
+    FROM _tmpItem_Result
+         LEFT JOIN Object AS Object_Goods on Object_Goods.Id = _tmpItem_Result.GoodsId
+         LEFT JOIN _tmpItem_PF on _tmpItem_PF.MovementItemId_out = _tmpItem_Result.MovementItemId_out
+         LEFT JOIN _tmpItem_GP on _tmpItem_GP.MovementItemId_gp = _tmpItem_Result.MovementItemId_gp
+         LEFT JOIN _tmpItem_PF_find on _tmpItem_PF_find.ContainerId = _tmpItem_PF.ContainerId
     ;
 
 END;$BODY$
