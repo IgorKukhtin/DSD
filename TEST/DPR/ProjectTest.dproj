@@ -2024,8 +2024,8 @@
 				<Form>RouteGroupEditForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
-			<DCCReference Include="..\..\Forms\Report\Report_GoodsMI_IncomeDialog.pas">
-				<Form>Report_GoodsMI_IncomeDialogForm</Form>
+			<DCCReference Include="..\..\Forms\Report\Report_GoodsMI_Dialog.pas">
+				<Form>Report_GoodsMI_DialogForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<DCCReference Include="..\..\Forms\Report\Report_GoodsBalance.pas">
@@ -2143,6 +2143,10 @@
 			</DCCReference>
 			<DCCReference Include="..\..\Forms\Report\Report_GoodsBalanceDialog.pas">
 				<Form>Report_GoodsBalanceDialogForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Report\Report_GoodsMI_IncomeDialog.pas">
+				<Form>Report_GoodsMI_IncomeDialogForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<BuildConfiguration Include="Release">

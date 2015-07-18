@@ -49,6 +49,9 @@ type
     clInfoMoneyName_all: TcxGridDBColumn;
     colPartionGoodsDate: TcxGridDBColumn;
     spSelectPrint: TdsdStoredProc;
+    spSelectPrint1: TdsdStoredProc;
+    actPrint1: TdsdPrintAction;
+    bbPrint1: TdxBarButton;
   private
     { Private declarations }
   public

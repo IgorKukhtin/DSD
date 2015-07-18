@@ -6,7 +6,7 @@ inherited Report_GoodsMI_IncomeForm: TReport_GoodsMI_IncomeForm
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
   ExplicitWidth = 1159
-  ExplicitHeight = 387
+  ExplicitHeight = 390
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
