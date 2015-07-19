@@ -102,6 +102,13 @@ object UnitForm: TUnitForm
         HeaderAlignmentVert = vaCenter
         Width = 50
       end
+      object AreaName: TcxGridDBColumn
+        Caption = #1056#1077#1075#1080#1086#1085
+        DataBinding.FieldName = 'AreaName'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 60
+      end
       object ceAccountGroupName: TcxGridDBColumn
         Caption = #1057#1095#1077#1090' '#1075#1088#1091#1087#1087#1072
         DataBinding.FieldName = 'AccountGroupName'
