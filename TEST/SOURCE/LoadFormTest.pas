@@ -1231,6 +1231,11 @@ begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_PersonalCompleteForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_PersonalCompleteForm');
 
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_GoodsMI_LossForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_GoodsMI_LossForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_GoodsMI_LossDialogForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_GoodsMI_LossDialogForm')
+
 end;
 
 procedure TLoadFormTest.LoadReportProductionFormTest;

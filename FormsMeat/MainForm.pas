@@ -603,6 +603,12 @@ type
     N69: TMenuItem;
     actReport_GoodsMI_SaleReturnInUnit: TdsdOpenForm;
     miReport_GoodsMI_SaleReturnInUnit: TMenuItem;
+    actReport_GoodsMI_Loss: TdsdOpenForm;
+    N73: TMenuItem;
+    actReport_GoodsMI_Send: TdsdOpenForm;
+    actReport_GoodsMI_SendonPrice: TdsdOpenForm;
+    N74: TMenuItem;
+    N75: TMenuItem;
     procedure actReport_OLAPSoldExecute(Sender: TObject);
     procedure FormShow(Sender: TObject);
   private
