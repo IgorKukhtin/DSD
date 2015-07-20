@@ -900,6 +900,19 @@
 			<DCCReference Include="..\..\FormsFarmacy\ConnectWithOld\RepriceUnit.pas">
 				<Form>RepriceUnitForm</Form>
 			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Document\CheckVIP.pas">
+				<Form>CheckVIPForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Document\CheckDeferred.pas">
+				<Form>CheckDeferredForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Guides\PaidType.pas">
+				<Form>PaidTypeForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\SOURCE\Objects\All\Farmacy\PaidTypeTest.pas"/>
 			<BuildConfiguration Include="Release">
 				<Key>Cfg_2</Key>
 				<CfgParent>Base</CfgParent>
