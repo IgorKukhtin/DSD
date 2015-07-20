@@ -55,6 +55,8 @@ type
     actPrint: TdsdPrintAction;
     bbPrint: TdxBarButton;
     ChangePercentTo: TcxGridDBColumn;
+    PaidKindFromName: TcxGridDBColumn;
+    ContractFromName: TcxGridDBColumn;
   private
     { Private declarations }
   public
