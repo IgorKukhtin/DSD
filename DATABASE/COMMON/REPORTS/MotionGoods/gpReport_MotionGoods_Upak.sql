@@ -20,7 +20,7 @@ RETURNS TABLE (AccountGroupName TVarChar, AccountDirectionName TVarChar
              , LocationDescName TVarChar, LocationId Integer, LocationCode Integer, LocationName TVarChar
              , CarCode Integer, CarName TVarChar
              , GoodsGroupName TVarChar, GoodsGroupNameFull TVarChar
-             , GoodsId Integer, GoodsCode Integer, GoodsName TVarChar, GoodsKindId Integer, GoodsKindName TVarChar, MeasureName TVarChar
+             , GoodsId Integer, GoodsCode Integer, GoodsName TVarChar, GoodsKindId Integer, GoodsKindName TVarChar, GoodsKindName_complete TVarChar, MeasureName TVarChar
              , Weight TFloat
              , PartionGoodsId Integer, PartionGoodsName TVarChar, AssetToName TVarChar
 
@@ -151,39 +151,53 @@ RETURNS TABLE (AccountGroupName TVarChar, AccountDirectionName TVarChar
 AS
 $BODY$
    DECLARE vbUserId Integer;
+
+   DECLARE vbIsSummIn Boolean;
 BEGIN
     -- проверка прав пользователя на вызов процедуры
     -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Report_MotionGoods());
     vbUserId:= lpGetUserBySession (inSession);
 
 
+    -- !!!определяется!!!
+    vbIsSummIn:= NOT EXISTS (SELECT 1 FROM Object_RoleAccessKey_View WHERE UserId = vbUserId AND RoleId = 442647); -- Отчеты руководитель сырья
+
     -- таблица -
     CREATE TEMP TABLE _tmpLocation (LocationId Integer, DescId Integer, ContainerDescId Integer) ON COMMIT DROP;
     CREATE TEMP TABLE _tmpLocation_by (LocationId Integer, Number Integer) ON COMMIT DROP;
 
     -- группа подразделений или подразделение или место учета (МО, Авто)
-    IF inUnitGroupId <> 0
+    IF inUnitGroupId <> 0 AND COALESCE (inLocationId, 0) = 0
     THEN
         INSERT INTO _tmpLocation (LocationId, DescId, ContainerDescId)
            SELECT lfSelect_Object_Unit_byGroup.UnitId AS LocationId
                 , zc_ContainerLinkObject_Unit()       AS DescId
                 , tmpDesc.ContainerDescId
            FROM lfSelect_Object_Unit_byGroup (inUnitGroupId) AS lfSelect_Object_Unit_byGroup
-                LEFT JOIN (SELECT zc_Container_Count() AS ContainerDescId UNION SELECT zc_Container_Summ() AS ContainerDescId) AS tmpDesc ON 1 = 1
+                LEFT JOIN (SELECT zc_Container_Count() AS ContainerDescId UNION SELECT zc_Container_Summ() AS ContainerDescId WHERE vbIsSummIn = TRUE) AS tmpDesc ON 1 = 1
           ;
     ELSE
         IF inLocationId <> 0
         THEN
             INSERT INTO _tmpLocation (LocationId, DescId, ContainerDescId)
                SELECT Object.Id AS LocationId
-                    , CASE WHEN Object.DescId = zc_Object_Unit() THEN zc_ContainerLinkObject_Unit() 
-                           WHEN Object.DescId = zc_Object_Car() THEN zc_ContainerLinkObject_Car() 
+                    , CASE WHEN Object.DescId = zc_Object_Unit()   THEN zc_ContainerLinkObject_Unit() 
+                           WHEN Object.DescId = zc_Object_Car()    THEN zc_ContainerLinkObject_Car() 
                            WHEN Object.DescId = zc_Object_Member() THEN zc_ContainerLinkObject_Member()
                       END AS DescId
                     , tmpDesc.ContainerDescId
                FROM Object
-                    LEFT JOIN (SELECT zc_Container_Count() AS ContainerDescId UNION SELECT zc_Container_Summ() AS ContainerDescId) AS tmpDesc ON 1 = 1
-               WHERE Object.Id = inLocationId;
+                    -- LEFT JOIN (SELECT zc_Container_Count() AS ContainerDescId /*UNION SELECT zc_Container_Summ() AS ContainerDescId*/) AS tmpDesc ON 1 = 1 -- !!!временно без с/с, для скорости!!!
+                    LEFT JOIN (SELECT zc_Container_Count() AS ContainerDescId UNION SELECT zc_Container_Summ() AS ContainerDescId WHERE vbIsSummIn = TRUE) AS tmpDesc ON 1 = 1
+               WHERE Object.Id = inLocationId
+             UNION
+               SELECT lfSelect.UnitId               AS LocationId
+                    , zc_ContainerLinkObject_Unit() AS DescId
+                    , tmpDesc.ContainerDescId
+               FROM lfSelect_Object_Unit_byGroup (inLocationId) AS lfSelect
+                    -- LEFT JOIN (SELECT zc_Container_Count() AS ContainerDescId /*UNION SELECT zc_Container_Summ() AS ContainerDescId*/) AS tmpDesc ON 1 = 1 -- !!!временно без с/с, для скорости!!!
+                    LEFT JOIN (SELECT zc_Container_Count() AS ContainerDescId UNION SELECT zc_Container_Summ() AS ContainerDescId WHERE vbIsSummIn = TRUE) AS tmpDesc ON 1 = 1
+              ;
         ELSE
             WITH tmpBranch AS (SELECT TRUE AS Value WHERE 1 = 0 AND NOT EXISTS (SELECT BranchId FROM Object_RoleAccessKeyGuide_View WHERE UserId = inUserId AND BranchId <> 0))
             INSERT INTO _tmpLocation (LocationId)
@@ -238,6 +252,7 @@ BEGIN
         , CAST (COALESCE(Object_Goods.ValueData, '') AS TVarChar)        AS GoodsName
         , CAST (COALESCE(Object_GoodsKind.Id, 0) AS Integer)             AS GoodsKindId
         , CAST (COALESCE(Object_GoodsKind.ValueData, '') AS TVarChar)    AS GoodsKindName
+        , CAST (COALESCE(Object_GoodsKind_complete.ValueData, '') AS TVarChar) AS GoodsKindName_complete
         , Object_Measure.ValueData       AS MeasureName
         , ObjectFloat_Weight.ValueData   AS Weight
         , CAST (COALESCE(Object_PartionGoods.Id, 0) AS Integer)           AS PartionGoodsId
@@ -608,7 +623,7 @@ BEGIN
                    + tmpMIContainer_all.SummProductionOut)   AS SummTotalOut
 
          FROM tmpReport AS tmpMIContainer_all
-              LEFT JOIN _tmpLocation ON _tmpLocation.LocationId = tmpMIContainer_all.LocationId_by
+              LEFT JOIN _tmpLocation ON _tmpLocation.LocationId = tmpMIContainer_all.LocationId_by AND 1= 0 
               LEFT JOIN _tmpLocation_by ON _tmpLocation_by.LocationId = tmpMIContainer_all.LocationId_by
          GROUP BY tmpMIContainer_all.AccountId
                 , tmpMIContainer_all.ContainerId
@@ -652,6 +667,10 @@ BEGIN
         LEFT JOIN ObjectFloat AS ObjectFloat_Weight ON ObjectFloat_Weight.ObjectId = Object_Goods.Id
                              AND ObjectFloat_Weight.DescId = zc_ObjectFloat_Goods_Weight()
 
+        LEFT JOIN ObjectLink AS ObjectLink_GoodsKindComplete
+                             ON ObjectLink_GoodsKindComplete.ObjectId = tmpMIContainer_group.PartionGoodsId
+                            AND ObjectLink_GoodsKindComplete.DescId = zc_ObjectLink_PartionGoods_GoodsKindComplete()
+        LEFT JOIN Object AS Object_GoodsKind_complete ON Object_GoodsKind_complete.Id = ObjectLink_GoodsKindComplete.ChildObjectId
         LEFT JOIN Object AS Object_PartionGoods ON Object_PartionGoods.Id = tmpMIContainer_group.PartionGoodsId
         LEFT JOIN Object AS Object_AssetTo ON Object_AssetTo.Id = tmpMIContainer_group.AssetToId
 
@@ -670,9 +689,10 @@ ALTER FUNCTION gpReport_MotionGoods_Upak (TDateTime, TDateTime, Integer, Integer
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 11.07.15                                        * add GoodsKindName_complete
  13.05.15         *
 */
 
 -- тест
--- SELECT * FROM gpReport_MotionGoods_NEW (inStartDate:= '01.01.2015', inEndDate:= '01.01.2015', inAccountGroupId:= 0, inUnitGroupId:= 0, inLocationId:= 0, inGoodsGroupId:= 0, inGoodsId:= 0, inUnitGroupId_by:=0, inLocationId_by:= 0, inIsInfoMoney:= FALSE, inSession:= zfCalc_UserAdmin())
--- SELECT * from gpReport_MotionGoods_NEW (inStartDate:= '01.06.2015', inEndDate:= '30.06.2015', inAccountGroupId:= 0, inUnitGroupId := 8459 , inLocationId := 0 , inGoodsGroupId := 1860 , inGoodsId := 0 , inUnitGroupId_by:=0, inLocationId_by:= 0, inIsInfoMoney:= TRUE, inSession := zfCalc_UserAdmin());
+-- SELECT * FROM gpReport_MotionGoods_Upak (inStartDate:= '01.01.2015', inEndDate:= '01.01.2015', inAccountGroupId:= 0, inUnitGroupId:= 0, inLocationId:= 0, inGoodsGroupId:= 0, inGoodsId:= 0, inUnitGroupId_by:=0, inLocationId_by:= 0, inIsInfoMoney:= FALSE, inSession:= zfCalc_UserAdmin())
+-- SELECT * from gpReport_MotionGoods_Upak (inStartDate:= '01.08.2015', inEndDate:= '08.08.2015', inAccountGroupId:= 0, inUnitGroupId := 8459 , inLocationId := 0 , inGoodsGroupId := 1860 , inGoodsId := 0 , inUnitGroupId_by:=0, inLocationId_by:= 0, inIsInfoMoney:= TRUE, inSession := zfCalc_UserAdmin());

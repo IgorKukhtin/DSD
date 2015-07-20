@@ -25,9 +25,13 @@ BEGIN
                               LEFT JOIN ObjectLink AS ObjectLink_Unit
                                                    ON ObjectLink_Unit.ObjectId = Object.Id
                                                   AND ObjectLink_Unit.DescId = zc_ObjectLink_PartionGoods_Unit()
+                              LEFT JOIN ObjectLink AS ObjectLink_GoodsKindComplete
+                                                   ON ObjectLink_GoodsKindComplete.ObjectId = Object.Id
+                                                  AND ObjectLink_GoodsKindComplete.DescId = zc_ObjectLink_PartionGoods_GoodsKindComplete()
                          WHERE Object.ValueData = inValue
                            AND Object.DescId = zc_Object_PartionGoods()
-                           AND ObjectLink_Unit.ObjectId IS NULL
+                           AND ObjectLink_Unit.ObjectId              IS NULL -- т.е. вообще нет этого св-ва
+                           AND ObjectLink_GoodsKindComplete.ObjectId IS NULL -- т.е. вообще нет этого св-ва
                         ); -- 80132
      ELSE
      vbPartionGoodsId:= (SELECT Object.Id
@@ -35,9 +39,13 @@ BEGIN
                               LEFT JOIN ObjectLink AS ObjectLink_Unit
                                                    ON ObjectLink_Unit.ObjectId = Object.Id
                                                   AND ObjectLink_Unit.DescId = zc_ObjectLink_PartionGoods_Unit()
+                              LEFT JOIN ObjectLink AS ObjectLink_GoodsKindComplete
+                                                   ON ObjectLink_GoodsKindComplete.ObjectId = Object.Id
+                                                  AND ObjectLink_GoodsKindComplete.DescId = zc_ObjectLink_PartionGoods_GoodsKindComplete()
                          WHERE Object.ValueData = inValue
                            AND Object.DescId = zc_Object_PartionGoods()
-                           AND ObjectLink_Unit.ObjectId IS NULL -- т.е. вообще нет этого св-ва
+                           AND ObjectLink_Unit.ObjectId              IS NULL -- т.е. вообще нет этого св-ва
+                           AND ObjectLink_GoodsKindComplete.ObjectId IS NULL -- т.е. вообще нет этого св-ва
                         );
      END IF;
 

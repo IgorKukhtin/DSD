@@ -265,6 +265,16 @@ object Report_GoodsBalanceForm: TReport_GoodsBalanceForm
           Format = ',0.####'
           Kind = skSum
           Column = CountOut_byPF
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = CuterCount
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = CountIn_byPF
         end>
       DataController.Summary.FooterSummaryItems = <
         item
@@ -501,6 +511,16 @@ object Report_GoodsBalanceForm: TReport_GoodsBalanceForm
           Format = ',0.####'
           Kind = skSum
           Column = CountOut_byPF
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = CuterCount
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = CountIn_byPF
         end>
       DataController.Summary.SummaryGroups = <>
       Images = dmMain.SortImageList
@@ -600,6 +620,14 @@ object Report_GoodsBalanceForm: TReport_GoodsBalanceForm
         Caption = #1042#1080#1076' '#1090#1086#1074#1072#1088#1072
         DataBinding.FieldName = 'GoodsKindName'
         Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 70
+      end
+      object GoodsKindName_complete: TcxGridDBColumn
+        Caption = #1042#1080#1076' '#1090#1086#1074#1072#1088#1072' ('#1043#1055')'
+        DataBinding.FieldName = 'GoodsKindName_complete'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
@@ -1122,6 +1150,36 @@ object Report_GoodsBalanceForm: TReport_GoodsBalanceForm
         HeaderAlignmentVert = vaCenter
         Width = 70
       end
+      object TaxExit_norm: TcxGridDBColumn
+        Caption = '% '#1074#1099#1093' ('#1085#1086#1088#1084'.)'
+        DataBinding.FieldName = 'TaxExit_norm'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.####;-,0.####; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 55
+      end
+      object TaxExit_norm_real: TcxGridDBColumn
+        Caption = '% '#1074#1099#1093' ('#1085#1086#1088#1084'. '#1092#1072#1082#1090')'
+        DataBinding.FieldName = 'TaxExit_norm_real'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.####;-,0.####; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 55
+      end
+      object TaxExit_real: TcxGridDBColumn
+        Caption = '% '#1074#1099#1093' ('#1092#1072#1082#1090')'
+        DataBinding.FieldName = 'TaxExit_real'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.####;-,0.####; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 55
+      end
       object CountIn_Weight_end_gp: TcxGridDBColumn
         Caption = #1055#1088#1086#1075#1085#1086#1079' '#1043#1055' '#1074#1077#1089
         DataBinding.FieldName = 'CountIn_Weight_end_gp'
@@ -1190,6 +1248,50 @@ object Report_GoodsBalanceForm: TReport_GoodsBalanceForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 70
+      end
+      object Value_receipt: TcxGridDBColumn
+        Caption = #1050#1086#1083'-'#1074#1086' '#1087#1086' '#1088#1077#1094#1077#1087#1090'.'
+        DataBinding.FieldName = 'Value_receipt'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.####;-,0.####; ;'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 55
+      end
+      object CuterCount_receipt: TcxGridDBColumn
+        Caption = #1050#1091#1090#1077#1088'. '#1087#1086' '#1088#1077#1094#1077#1087#1090'.'
+        DataBinding.FieldName = 'CuterCount_receipt'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.####;-,0.####; ;'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 55
+      end
+      object CuterCount: TcxGridDBColumn
+        Caption = #1055#1088#1080#1093#1086#1076' *** '#1082#1091#1090#1077#1088'.'
+        DataBinding.FieldName = 'CuterCount'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.####;-,0.####; ;'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 55
+      end
+      object CountIn_byPF: TcxGridDBColumn
+        Caption = #1055#1088#1080#1093#1086#1076' *** '#1055#1060' ('#1043#1055')'
+        DataBinding.FieldName = 'CountIn_byPF'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.####;-,0.####; ;'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 55
       end
       object Count_byCount: TcxGridDBColumn
         Caption = #1056#1072#1089#1093#1086#1076' *** '#1055#1060' ('#1043#1055')'
@@ -1667,6 +1769,14 @@ object Report_GoodsBalanceForm: TReport_GoodsBalanceForm
         end
         item
           Visible = True
+          ItemName = 'bbPrint_Loss'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbToExcel'
         end
         item
@@ -1728,6 +1838,10 @@ object Report_GoodsBalanceForm: TReport_GoodsBalanceForm
     end
     object bbPrint3: TdxBarButton
       Action = actPrint3
+      Category = 0
+    end
+    object bbPrint_Loss: TdxBarButton
+      Action = actPrint_Loss
       Category = 0
     end
   end
@@ -2093,7 +2207,6 @@ object Report_GoodsBalanceForm: TReport_GoodsBalanceForm
       Caption = #1054#1090#1095#1077#1090' <'#1054#1089#1090#1072#1090#1086#1082' '#1090#1086#1074#1072#1088#1072' '#1079#1072' '#1087#1077#1088#1080#1086#1076' ('#1088#1072#1089#1095#1077#1090#1085#1099#1081')>'
       Hint = #1054#1090#1095#1077#1090' <'#1054#1089#1090#1072#1090#1086#1082' '#1090#1086#1074#1072#1088#1072' '#1079#1072' '#1087#1077#1088#1080#1086#1076' ('#1088#1072#1089#1095#1077#1090#1085#1099#1081')>'
       ImageIndex = 18
-      ShortCut = 16464
       DataSets = <
         item
           UserName = 'frxDBDMaster'
@@ -2178,7 +2291,6 @@ object Report_GoodsBalanceForm: TReport_GoodsBalanceForm
       Caption = #1054#1090#1095#1077#1090' '#1087#1086' '#1086#1089#1090#1072#1090#1082#1072#1084' '#1090#1086#1074#1072#1088#1072' ('#1074#1099#1093#1086#1076' '#1043#1055')'
       Hint = #1054#1090#1095#1077#1090' '#1087#1086' '#1086#1089#1090#1072#1090#1082#1072#1084' '#1090#1086#1074#1072#1088#1072' ('#1074#1099#1093#1086#1076' '#1043#1055')'
       ImageIndex = 19
-      ShortCut = 16464
       DataSets = <
         item
           UserName = 'frxDBDMaster'
@@ -2255,6 +2367,103 @@ object Report_GoodsBalanceForm: TReport_GoodsBalanceForm
         end>
       ReportName = #1054#1090#1095#1077#1090' '#1087#1086' '#1086#1089#1090#1072#1090#1082#1072#1084' '#1090#1086#1074#1072#1088#1072' ('#1074#1099#1093#1086#1076' '#1043#1055')'
       ReportNameParam.Value = #1054#1090#1095#1077#1090' '#1087#1086' '#1086#1089#1090#1072#1090#1082#1072#1084' '#1090#1086#1074#1072#1088#1072' ('#1074#1099#1093#1086#1076' '#1043#1055')'
+      ReportNameParam.DataType = ftString
+    end
+    object actPrint_Loss: TdsdPrintAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProcList = <>
+      Caption = #1054#1090#1095#1077#1090' % '#1089#1087#1080#1089#1072#1085#1080#1103
+      Hint = #1054#1090#1095#1077#1090' % '#1089#1087#1080#1089#1072#1085#1080#1103
+      ImageIndex = 17
+      DataSets = <
+        item
+          UserName = 'frxDBDMaster'
+          IndexFieldNames = 
+            'GoodsGroupNameFull;GoodsGroupName;GoodsName;GoodsKindName;Partio' +
+            'nGoodsName;AssetToName;InfoMoneyName_all;InfoMoneyName_all_Detai' +
+            'l'
+          GridView = cxGridDBTableView
+        end>
+      CopiesCount = 1
+      Params = <
+        item
+          Name = 'StartDate'
+          Value = 42005d
+          Component = deStart
+          DataType = ftDateTime
+        end
+        item
+          Name = 'EndDate'
+          Value = 42005d
+          Component = deEnd
+          DataType = ftDateTime
+        end
+        item
+          Name = 'UnitGroupName'
+          Value = ''
+          Component = GuidesUnitGroup
+          ComponentItem = 'TextValue'
+          DataType = ftString
+        end
+        item
+          Name = 'LocationName'
+          Value = ''
+          Component = GuidesLocation
+          ComponentItem = 'TextValue'
+          DataType = ftString
+        end
+        item
+          Name = 'GoodsGroupName'
+          Value = ''
+          Component = GuidesGoodsGroup
+          ComponentItem = 'TextValue'
+          DataType = ftString
+        end
+        item
+          Name = 'GoodsName'
+          Value = ''
+          Component = GuidesGoods
+          ComponentItem = 'TextValue'
+        end
+        item
+          Name = 'isGoodsKind'
+          Value = 'False'
+          Component = cbGoodsKind
+          DataType = ftBoolean
+        end
+        item
+          Name = 'isPartionGoods'
+          Value = 'False'
+          Component = cbPartionGoods
+          DataType = ftBoolean
+        end
+        item
+          Name = 'isAmount'
+          Value = 'False'
+          Component = cbAmount
+          DataType = ftBoolean
+        end
+        item
+          Name = 'isInfoMoney'
+          Value = 'False'
+          Component = cbInfoMoney
+          DataType = ftBoolean
+        end
+        item
+          Name = 'UnitGroupName_by'
+          Value = ''
+          ComponentItem = 'TextValue'
+          DataType = ftString
+        end
+        item
+          Name = 'LocationName_by'
+          Value = ''
+          ComponentItem = 'TextValue'
+          DataType = ftString
+        end>
+      ReportName = #1054#1090#1095#1077#1090' '#1087#1086' '#1086#1089#1090#1072#1090#1082#1072#1084' '#1090#1086#1074#1072#1088#1072' ('#1087#1088#1086#1094#1077#1085#1090' '#1089#1087#1080#1089#1072#1085#1080#1103')'
+      ReportNameParam.Value = #1054#1090#1095#1077#1090' '#1087#1086' '#1086#1089#1090#1072#1090#1082#1072#1084' '#1090#1086#1074#1072#1088#1072' ('#1087#1088#1086#1094#1077#1085#1090' '#1089#1087#1080#1089#1072#1085#1080#1103')'
       ReportNameParam.DataType = ftString
     end
   end

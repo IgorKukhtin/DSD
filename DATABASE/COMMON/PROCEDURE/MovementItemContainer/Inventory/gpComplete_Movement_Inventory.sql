@@ -34,7 +34,10 @@ $BODY$
   DECLARE vbProfitLossDirectionId Integer;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
-     vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Complete_Inventory());
+     IF inSession = zc_Enum_Process_Auto_PrimeCost() :: TVarChar
+     THEN vbUserId:= inSession :: Integer;
+     ELSE vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Complete_Inventory());
+     END IF;
 
 
      -- создаются временные таблицы - для формирование данных для проводок
@@ -166,7 +169,7 @@ BEGIN
 
      -- заполняем таблицу - количественные элементы документа, со всеми свойствами для формирования Аналитик в проводках
      INSERT INTO _tmpItem (MovementItemId
-                         , ContainerId_Goods, GoodsId, GoodsKindId, AssetId, PartionGoods, PartionGoodsDate
+                         , ContainerId_Goods, GoodsId, GoodsKindId, GoodsKindId_complete, AssetId, PartionGoods, PartionGoodsDate
                          , OperCount, OperSumm
                          , InfoMoneyDestinationId, InfoMoneyId
                          , BusinessId
@@ -178,6 +181,7 @@ BEGIN
              , 0 AS ContainerId_Goods
              , _tmp.GoodsId
              , _tmp.GoodsKindId
+             , _tmp.GoodsKindId_complete
              , _tmp.AssetId
              , _tmp.PartionGoods
              , _tmp.PartionGoodsDate
@@ -208,6 +212,8 @@ BEGIN
 
                    , COALESCE (ObjectLink_Goods_Fuel.ChildObjectId, MovementItem.ObjectId, 0) AS GoodsId
                    , CASE WHEN View_InfoMoney.InfoMoneyId IN (zc_Enum_InfoMoney_20901(), zc_Enum_InfoMoney_30101(), zc_Enum_InfoMoney_30201()) THEN COALESCE (MILinkObject_GoodsKind.ObjectId, 0) ELSE 0 END AS GoodsKindId -- Ирна + Готовая продукция
+                   , COALESCE (MILinkObject_GoodsKindComplete.ObjectId, zc_GoodsKind_Basis()) AS GoodsKindId_complete
+
                    , COALESCE (MILinkObject_Asset.ObjectId, 0) AS AssetId
                    , COALESCE (MILinkObject_Unit.ObjectId, 0) AS UnitId_Item
                    , COALESCE (MILinkObject_Storage.ObjectId, 0) AS StorageId_Item
@@ -248,6 +254,9 @@ BEGIN
                    LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
                                                     ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
                                                    AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
+                   LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKindComplete
+                                                    ON MILinkObject_GoodsKindComplete.MovementItemId = MovementItem.Id
+                                                   AND MILinkObject_GoodsKindComplete.DescId = zc_MILinkObject_GoodsKindComplete()
                    LEFT JOIN MovementItemLinkObject AS MILinkObject_Asset
                                                     ON MILinkObject_Asset.MovementItemId = MovementItem.Id
                                                    AND MILinkObject_Asset.DescId = zc_MILinkObject_Asset()
@@ -303,11 +312,14 @@ BEGIN
                                                    THEN lpInsertFind_Object_PartionGoods (_tmpItem.PartionGoods)
 
                                                WHEN vbIsPartionDate_Unit = TRUE
-                                                AND _tmpItem.InfoMoneyDestinationId IN (zc_Enum_InfoMoneyDestination_30100()  -- Доходы + Продукция
+                                                AND _tmpItem.InfoMoneyDestinationId IN (zc_Enum_InfoMoneyDestination_20900()  -- Общефирменные + Ирна
+                                                                                      , zc_Enum_InfoMoneyDestination_30100()  -- Доходы + Продукция
                                                                                       , zc_Enum_InfoMoneyDestination_30200()) -- Доходы + Мясное сырье
-                                                    THEN lpInsertFind_Object_PartionGoods (_tmpItem.PartionGoodsDate)
-
-                                               WHEN _tmpItem.InfoMoneyDestinationId IN (zc_Enum_InfoMoneyDestination_30100()  -- Доходы + Продукция
+                                                    THEN lpInsertFind_Object_PartionGoods (inOperDate             := _tmpItem.PartionGoodsDate
+                                                                                         , inGoodsKindId_complete := _tmpItem.GoodsKindId_complete
+                                                                                          )
+                                               WHEN _tmpItem.InfoMoneyDestinationId IN (zc_Enum_InfoMoneyDestination_20900()  -- Общефирменные + Ирна
+                                                                                      , zc_Enum_InfoMoneyDestination_30100()  -- Доходы + Продукция
                                                                                       , zc_Enum_InfoMoneyDestination_30200()) -- Доходы + Мясное сырье
                                                     THEN 0
 
@@ -571,7 +583,7 @@ BEGIN
         WHERE  zc_isHistoryCost() = TRUE
         GROUP BY _tmp.MovementItemId
                , _tmp.ContainerId
-               , _tmp.AccountId;
+                , _tmp.AccountId;
 
 
      -- 3.2. определяется Счет для проводок по суммовому учету

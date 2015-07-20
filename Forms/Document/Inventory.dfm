@@ -595,6 +595,44 @@ inherited InventoryForm: TInventoryForm
       ShortCut = 116
       RefreshOnTabSetChanges = False
     end
+    object mactUpdate_Summ: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = mactUpdate_SummAll
+        end
+        item
+          Action = actRefreshPrice
+        end>
+      QuestionBeforeExecute = #1044#1077#1081#1089#1090#1074#1080#1090#1077#1083#1100#1085#1086' '#1086#1073#1085#1091#1083#1080#1090#1100' '#1079#1085#1072#1095#1077#1085#1080#1077' <'#1057#1091#1084#1084#1072'> '#1076#1083#1103' '#1042#1057#1045#1061'?'
+      InfoAfterExecute = #1047#1085#1072#1095#1077#1085#1080#1077' <'#1057#1091#1084#1084#1072'> '#1086#1073#1085#1091#1083#1080#1083#1072#1089#1100' '#1076#1083#1103' '#1042#1057#1045#1061'.'
+      Caption = #1054#1073#1085#1091#1083#1080#1090#1100' '#1079#1085#1072#1095#1077#1085#1080#1077' <'#1057#1091#1084#1084#1072'> '#1076#1083#1103' '#1042#1057#1045#1061
+      Hint = #1054#1073#1085#1091#1083#1080#1090#1100' '#1079#1085#1072#1095#1077#1085#1080#1077' <'#1057#1091#1084#1084#1072'> '#1076#1083#1103' '#1042#1057#1045#1061
+    end
+    object actUpdate_Summ: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdateMIMaster_Summ
+      StoredProcList = <
+        item
+          StoredProc = spUpdateMIMaster_Summ
+        end>
+      Caption = 'actUpdate_Summ'
+      Hint = 'actUpdate_Summ'
+    end
+    object mactUpdate_SummAll: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actUpdate_Summ
+        end>
+      View = cxGridDBTableView
+      Caption = 'mactUpdate_SummAll'
+      Hint = 'mactUpdate_SummAll'
+    end
   end
   inherited MasterDS: TDataSource
     Left = 32
@@ -722,6 +760,14 @@ inherited InventoryForm: TInventoryForm
         end
         item
           Visible = True
+          ItemName = 'bbUpdate_Summ'
+        end
+        item
+          Visible = True
+          ItemName = 'bbStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbMovementItemProtocol'
         end
         item
@@ -738,6 +784,10 @@ inherited InventoryForm: TInventoryForm
     end
     object bbInsertUpdateMIAmount: TdxBarButton
       Action = actInsertUpdateMIAmount
+      Category = 0
+    end
+    object bbUpdate_Summ: TdxBarButton
+      Action = mactUpdate_Summ
       Category = 0
     end
   end
@@ -1367,5 +1417,27 @@ inherited InventoryForm: TInventoryForm
     PackSize = 1
     Left = 330
     Top = 384
+  end
+  object spUpdateMIMaster_Summ: TdsdStoredProc
+    StoredProcName = 'gpUpdate_MovementItem_Inventory_Summ'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inSumm'
+        Value = '0'
+        DataType = ftFloat
+        ParamType = ptInput
+      end>
+    PackSize = 1
+    Left = 240
+    Top = 440
   end
 end

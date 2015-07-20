@@ -160,6 +160,16 @@ type
     isPartionClose_calc: TcxGridDBColumn;
     PartionGoodsDate: TcxGridDBColumn;
     TermProduction: TcxGridDBColumn;
+    GoodsKindName_complete: TcxGridDBColumn;
+    actPrint_Loss: TdsdPrintAction;
+    bbPrint_Loss: TdxBarButton;
+    TaxExit_norm: TcxGridDBColumn;
+    TaxExit_norm_real: TcxGridDBColumn;
+    TaxExit_real: TcxGridDBColumn;
+    CuterCount: TcxGridDBColumn;
+    CountIn_byPF: TcxGridDBColumn;
+    Value_receipt: TcxGridDBColumn;
+    CuterCount_receipt: TcxGridDBColumn;
   private
   public
   end;

@@ -4,7 +4,7 @@ inherited Sale_OrderJournalForm: TSale_OrderJournalForm
   ClientWidth = 1177
   AddOnFormData.Params = FormParams
   ExplicitWidth = 1193
-  ExplicitHeight = 573
+  ExplicitHeight = 570
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -1728,10 +1728,10 @@ inherited Sale_OrderJournalForm: TSale_OrderJournalForm
       Category = 'EDI'
       MoveParams = <>
       PostDataSetBeforeExecute = False
-      StoredProc = spSelectPrint
+      StoredProc = spSelectSale_EDI
       StoredProcList = <
         item
-          StoredProc = spSelectPrint
+          StoredProc = spSelectSale_EDI
         end>
       Caption = 'actExecPrint_EDI'
     end
@@ -2930,5 +2930,28 @@ inherited Sale_OrderJournalForm: TSale_OrderJournalForm
     PackSize = 1
     Left = 1015
     Top = 200
+  end
+  object spSelectSale_EDI: TdsdStoredProc
+    StoredProcName = 'gpSelect_Movement_Sale_EDI'
+    DataSet = PrintHeaderCDS
+    DataSets = <
+      item
+        DataSet = PrintHeaderCDS
+      end
+      item
+        DataSet = PrintItemsCDS
+      end>
+    OutputType = otMultiDataSet
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+      end>
+    PackSize = 1
+    Left = 832
+    Top = 321
   end
 end

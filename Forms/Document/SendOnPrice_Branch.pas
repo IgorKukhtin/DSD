@@ -66,6 +66,8 @@ type
     bbPrintUnit: TdxBarButton;
     actGoodsChoiceForm: TOpenChoiceForm;
     GuidesInvNumberOrder: TdsdGuides;
+    cbCalcAmountPartner: TcxCheckBox;
+    edChangePercentAmount: TcxCurrencyEdit;
   private
     { Private declarations }
   public

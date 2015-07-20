@@ -20,36 +20,25 @@ BEGIN
          vbOperDate_str:= COALESCE (TO_CHAR (inOperDate, 'DD.MM.YYYY'), '');
      END IF;
 
-     -- Находим по св-вам: Полное значение партии + НЕТ Подразделения(для цены)
-     IF vbOperDate_str = ''
-     THEN
-     -- !!!это надо убрать после исправления ошибки!!!
-     vbPartionGoodsId:= (SELECT MIN (Object.Id)
-                         FROM Object
-                              LEFT JOIN ObjectLink AS ObjectLink_Unit
-                                                   ON ObjectLink_Unit.ObjectId = Object.Id
-                                                  AND ObjectLink_Unit.DescId = zc_ObjectLink_PartionGoods_Unit()
-                         WHERE Object.ValueData = vbOperDate_str
-                           AND Object.DescId = zc_Object_PartionGoods()
-                           AND ObjectLink_Unit.ObjectId IS NULL
-                        );
-     ELSE
+     -- Находим по св-вам: Полное значение партии + Вид товара(готовая продукция)
      vbPartionGoodsId:= (SELECT Object.Id
                          FROM Object
-                              LEFT JOIN ObjectLink AS ObjectLink_Unit
-                                                   ON ObjectLink_Unit.ObjectId = Object.Id
-                                                  AND ObjectLink_Unit.DescId = zc_ObjectLink_PartionGoods_Unit()
+                              INNER JOIN ObjectLink AS ObjectLink_GoodsKindComplete
+                                                    ON ObjectLink_GoodsKindComplete.ObjectId = Object.Id
+                                                   AND ObjectLink_GoodsKindComplete.DescId = zc_ObjectLink_PartionGoods_GoodsKindComplete()
+                                                   AND ObjectLink_GoodsKindComplete.ChildObjectId = zc_GoodsKind_Basis()
                          WHERE Object.ValueData = vbOperDate_str
                            AND Object.DescId = zc_Object_PartionGoods()
-                           AND ObjectLink_Unit.ObjectId IS NULL -- т.е. вообще нет этого св-ва
                         );
-     END IF;
 
      -- Если не нашли
      IF COALESCE (vbPartionGoodsId, 0) = 0
      THEN
          -- сохранили <Полное значение партии>
          vbPartionGoodsId := lpInsertUpdate_Object (vbPartionGoodsId, zc_Object_PartionGoods(), 0, vbOperDate_str);
+
+         -- сохранили <Вид товара(готовая продукция)>
+         PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_PartionGoods_GoodsKindComplete(), vbPartionGoodsId, zc_GoodsKind_Basis());
 
          IF vbOperDate_str <> ''
          THEN

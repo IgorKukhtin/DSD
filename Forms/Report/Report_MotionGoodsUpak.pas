@@ -209,6 +209,7 @@ type
     CountOut_by2: TcxGridDBColumn;
     CountOut_by2_Weight: TcxGridDBColumn;
     SummOut_by2: TcxGridDBColumn;
+    GoodsKindName_complete: TcxGridDBColumn;
   private
   public
   end;

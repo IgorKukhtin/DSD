@@ -3,7 +3,7 @@ inherited ProductionUnionJournalForm: TProductionUnionJournalForm
   ClientHeight = 535
   ClientWidth = 1073
   ExplicitWidth = 1089
-  ExplicitHeight = 570
+  ExplicitHeight = 573
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -255,6 +255,7 @@ inherited ProductionUnionJournalForm: TProductionUnionJournalForm
           DataSet = PrintItemsCDS
           UserName = 'frxDBDMaster'
         end>
+      CopiesCount = 1
       Params = <
         item
           Name = 'Id'
@@ -264,6 +265,52 @@ inherited ProductionUnionJournalForm: TProductionUnionJournalForm
         end>
       ReportName = 'PrintMovement_Send'
       ReportNameParam.Value = 'PrintMovement_Send'
+      ReportNameParam.DataType = ftString
+      ReportNameParam.ParamType = ptInput
+    end
+    object actPrint1: TdsdPrintAction
+      Category = 'DSDLib'
+      MoveParams = <
+        item
+          FromParam.Name = 'Id'
+          FromParam.Value = Null
+          FromParam.Component = MasterCDS
+          FromParam.ComponentItem = 'Id'
+          ToParam.Name = 'Id'
+          ToParam.Value = Null
+          ToParam.Component = FormParams
+          ToParam.ComponentItem = 'Id'
+          ToParam.ParamType = ptInputOutput
+        end>
+      StoredProc = spSelectPrint1
+      StoredProcList = <
+        item
+          StoredProc = spSelectPrint1
+        end>
+      Caption = #1055#1077#1095#1072#1090#1100
+      Hint = #1055#1077#1095#1072#1090#1100
+      ImageIndex = 3
+      ShortCut = 16464
+      DataSets = <
+        item
+          DataSet = PrintHeaderCDS
+          UserName = 'frxDBDHeader'
+        end
+        item
+          DataSet = PrintItemsCDS
+          UserName = 'frxDBDMaster'
+        end>
+      CopiesCount = 1
+      Params = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'Id'
+        end>
+      ReportName = 'PrintMovement_ProductionUnion'
+      ReportNameParam.Name = #1053#1072#1082#1083#1072#1076#1085#1072#1103
+      ReportNameParam.Value = 'PrintMovement_ProductionUnion'
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
     end
@@ -378,6 +425,14 @@ inherited ProductionUnionJournalForm: TProductionUnionJournalForm
         end
         item
           Visible = True
+          ItemName = 'bbPrint1'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbMovementProtocol'
         end
         item
@@ -396,6 +451,12 @@ inherited ProductionUnionJournalForm: TProductionUnionJournalForm
     object bbPrint: TdxBarButton
       Action = actPrint
       Category = 0
+    end
+    object bbPrint1: TdxBarButton
+      Action = actPrint1
+      Caption = #1053#1072#1082#1083#1072#1076#1085#1072#1103' '
+      Category = 0
+      ImageIndex = 16
     end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
@@ -533,5 +594,28 @@ inherited ProductionUnionJournalForm: TProductionUnionJournalForm
     PackSize = 1
     Left = 535
     Top = 248
+  end
+  object spSelectPrint1: TdsdStoredProc
+    StoredProcName = 'gpSelect_Movement_ProductionUnion_Print'
+    DataSet = PrintHeaderCDS
+    DataSets = <
+      item
+        DataSet = PrintHeaderCDS
+      end
+      item
+        DataSet = PrintItemsCDS
+      end>
+    OutputType = otMultiDataSet
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+      end>
+    PackSize = 1
+    Left = 503
+    Top = 168
   end
 end

@@ -19,7 +19,10 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar,
                ProfitLossDirectionCode Integer, ProfitLossDirectionName TVarChar,
                RouteId Integer, RouteName TVarChar,
                RouteSortingId Integer, RouteSortingName TVarChar,
-               isErased boolean, isLeaf boolean) AS
+               AreaId Integer, AreaName TVarChar,
+               isErased boolean, isLeaf boolean,
+               isPartionDate boolean
+) AS
 $BODY$
    DECLARE vbUserId Integer;
    -- DECLARE vbAccessKeyAll Boolean;
@@ -81,9 +84,14 @@ BEGIN
 
            , Object_RouteSorting.Id         AS RouteSortingId
            , Object_RouteSorting.ValueData  AS RouteSortingName
+
+           , Object_Area.Id            AS AreaId
+           , Object_Area.ValueData     AS AreaName
          
            , Object_Unit_View.isErased
            , Object_Unit_View.isLeaf
+           , ObjectBoolean_PartionDate.ValueData  AS isPartionDate
+
        FROM Object_Unit_View
             LEFT JOIN lfSelect_Object_Unit_byProfitLossDirection() AS lfObject_Unit_byProfitLossDirection ON lfObject_Unit_byProfitLossDirection.UnitId = Object_Unit_View.Id
             LEFT JOIN Object_AccountDirection AS View_AccountDirection ON View_AccountDirection.AccountDirectionId = Object_Unit_View.AccountDirectionId
@@ -105,6 +113,14 @@ BEGIN
                                 AND ObjectLink_Unit_RouteSorting.DescId = zc_ObjectLink_Unit_RouteSorting()
             LEFT JOIN Object AS Object_RouteSorting ON Object_RouteSorting.Id = ObjectLink_Unit_RouteSorting.ChildObjectId
 
+            LEFT JOIN ObjectLink AS ObjectLink_Unit_Area
+                                 ON ObjectLink_Unit_Area.ObjectId = Object_Unit_View.Id 
+                                AND ObjectLink_Unit_Area.DescId = zc_ObjectLink_Unit_Area()
+            LEFT JOIN Object AS Object_Area ON Object_Area.Id = ObjectLink_Unit_Area.ChildObjectId
+        
+            LEFT JOIN ObjectBoolean AS ObjectBoolean_PartionDate
+                                    ON ObjectBoolean_PartionDate.ObjectId = Object_Unit_View.Id
+                                   AND ObjectBoolean_PartionDate.DescId = zc_ObjectBoolean_Unit_PartionDate()
        -- WHERE vbAccessKeyAll = TRUE
        WHERE (Object_Unit_View.BranchId = vbObjectId_Constraint
               OR vbIsConstraint = FALSE
@@ -157,8 +173,12 @@ BEGIN
            , CAST (0 as Integer)    AS RouteSortingId
            , CAST ('' as TVarChar)  AS RouteSortingName
 
+           , CAST (0 as Integer)    AS AreaId
+           , CAST ('' as TVarChar)  AS AreaName
+
            , FALSE AS isErased
            , TRUE AS isLeaf
+           , FalSE AS isPartionDate
        FROM Object as Object_Partner
             LEFT JOIN ObjectLink AS ObjectLink_Unit_Branch
                                  ON ObjectLink_Unit_Branch.ObjectId = Object_Partner.Id

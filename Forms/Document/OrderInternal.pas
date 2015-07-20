@@ -140,6 +140,8 @@ type
     Color_send: TcxGridDBColumn;
     cxLabel16: TcxLabel;
     ceComment: TcxTextEdit;
+    Color_production_old: TcxGridDBColumn;
+    Color_production_next: TcxGridDBColumn;
   private
     { Private declarations }
   public

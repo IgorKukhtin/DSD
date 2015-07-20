@@ -86,6 +86,7 @@ type
     actEDIEvents: TdsdExecStoredProc;
     spSelectPrint_Inventory: TdsdStoredProc;
     actPrint_Inventory: TdsdPrintAction;
+    spSelectSale_EDI: TdsdStoredProc;
   private
   end;
 

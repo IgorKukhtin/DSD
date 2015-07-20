@@ -39,7 +39,10 @@ $BODY$
 
 BEGIN
      -- проверка прав пользователя на вызов процедуры
-     vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Complete_ProductionSeparate());
+     IF inSession = zc_Enum_Process_Auto_PrimeCost() :: TVarChar
+     THEN vbUserId:= inSession :: Integer;
+     ELSE vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Complete_ProductionSeparate());
+     END IF;
 
      -- Эти параметры нужны для 
      inIsLastComplete:= TRUE;

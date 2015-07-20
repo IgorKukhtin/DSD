@@ -84,6 +84,7 @@ BEGIN
                                     AND MLO_Contract.DescId = zc_MovementLinkObject_Contract()
                                  ) AS tmpContract
                                  INNER JOIN Object_InfoMoney_View AS View_InfoMoney ON (View_InfoMoney.InfoMoneyDestinationId  IN (zc_Enum_InfoMoneyDestination_10100() -- Мясное сырье + Основное сырье
+                                                                                                                                 , zc_Enum_InfoMoneyDestination_30300() -- Доходы + Переработка
                                                                                                                                   )
                                                                                         AND tmpContract.InfoMoneyId = zc_Enum_InfoMoney_30201() -- Доходы + Мясное сырье + Мясное сырье
                                                                                        )
@@ -96,6 +97,7 @@ BEGIN
                                                                                                                                  , zc_Enum_InfoMoneyDestination_21000() -- Общефирменные + Чапли
                                                                                                                                  , zc_Enum_InfoMoneyDestination_30100() -- Доходы + Продукция
                                                                                                                                  , zc_Enum_InfoMoneyDestination_30200() -- Доходы + Мясное сырье
+                                                                                                                                 , zc_Enum_InfoMoneyDestination_30300() -- Доходы + Переработка
                                                                                                                                   )
                                                                                         AND View_InfoMoney.InfoMoneyId <> zc_Enum_InfoMoney_30103() -- Доходы + Продукция + Хлеб
                                                                                         AND tmpContract.InfoMoneyId = zc_Enum_InfoMoney_30101() -- Доходы + Продукция + Готовая продукция

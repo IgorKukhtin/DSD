@@ -375,9 +375,9 @@ inherited ProductionPeresortForm: TProductionPeresortForm
           Component = FormParams
           ComponentItem = 'Id'
         end>
-      ReportName = 'PrintMovement_Sale2'
-      ReportNameParam.Name = #1056#1072#1089#1093#1086#1076#1085#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103
-      ReportNameParam.Value = 'PrintMovement_Sale2'
+      ReportName = 'PrintMovement_ProductionUnion'
+      ReportNameParam.Name = #1053#1072#1082#1083#1072#1076#1085#1072#1103
+      ReportNameParam.Value = 'PrintMovement_ProductionUnion'
       ReportNameParam.ParamType = ptInput
     end
     inherited actUnCompleteMovement: TChangeGuidesStatus
@@ -1136,8 +1136,6 @@ inherited ProductionPeresortForm: TProductionPeresortForm
       item
         Name = 'ioId'
         Value = 0
-        Component = MasterCDS
-        ComponentItem = 'id'
         ParamType = ptInput
       end
       item
@@ -1157,8 +1155,6 @@ inherited ProductionPeresortForm: TProductionPeresortForm
       item
         Name = 'inAmountOut'
         Value = 0.000000000000000000
-        Component = MasterCDS
-        ComponentItem = 'Amount'
         DataType = ftFloat
         ParamType = ptInput
       end
@@ -1240,7 +1236,7 @@ inherited ProductionPeresortForm: TProductionPeresortForm
         Name = 'outAmountIn'
         Value = Null
         Component = MasterCDS
-        ComponentItem = 'outAmountIn'
+        ComponentItem = 'Amountin'
         DataType = ftFloat
       end>
     Left = 368
@@ -1271,7 +1267,7 @@ inherited ProductionPeresortForm: TProductionPeresortForm
     Top = 246
   end
   object spSelectPrint: TdsdStoredProc
-    StoredProcName = 'gpSelect_Movement_Sale_Print'
+    StoredProcName = 'gpSelect_Movement_ProductionUnion_Print'
     DataSet = PrintHeaderCDS
     DataSets = <
       item

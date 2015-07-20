@@ -28,6 +28,7 @@ $BODY$
    DECLARE vbMovementDescId_old  Integer;
 
    DECLARE vbOperDate_scale TDateTime;
+   DECLARE vbOperDatePartner_order TDateTime;
    DECLARE vbId_tmp Integer;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
@@ -63,16 +64,30 @@ BEGIN
      END IF;
 
      -- !!!заменили параметр!!! : Перемещение -> производство ПЕРЕРАБОТКА
-     IF vbMovementDescId = zc_Movement_Send() AND (SELECT ObjectId FROM MovementLinkObject WHERE MovementId = inMovementId AND DescId = zc_MovementLinkObject_To())
-                                                  IN (SELECT UnitId FROM lfSelect_Object_Unit_byGroup (8446) WHERE UnitId <> 8450 -- ЦЕХ колбаса+дел-сы <> ЦЕХ копчения
-                                                     UNION
-                                                      SELECT UnitId FROM lfSelect_Object_Unit_byGroup (8439) -- Участок мясного сырья
-                                                     )
-                                              AND (SELECT ObjectId FROM MovementLinkObject WHERE MovementId = inMovementId AND DescId = zc_MovementLinkObject_From())
+     IF vbMovementDescId = zc_Movement_Send() AND -- если такие "От кого"
+                                                  (SELECT MLO.ObjectId FROM MovementLinkObject AS MLO WHERE MLO.MovementId = inMovementId AND MLO.DescId = zc_MovementLinkObject_From())
                                                   IN (SELECT 8451 -- Цех Упаковки
                                                      UNION
-                                                      SELECT UnitId FROM lfSelect_Object_Unit_byGroup (8453) -- Склады
+                                                      SELECT lfSelect.UnitId FROM lfSelect_Object_Unit_byGroup (8453) AS lfSelect -- Склады
                                                      )
+                                              AND -- если такие "Кому"
+                                                  (SELECT MLO.ObjectId FROM MovementLinkObject AS MLO WHERE MLO.MovementId = inMovementId AND MLO.DescId = zc_MovementLinkObject_To())
+                                                  IN (SELECT lfSelect.UnitId FROM lfSelect_Object_Unit_byGroup (8446) AS lfSelect WHERE lfSelect.UnitId <> 8450 -- ЦЕХ колбаса+дел-сы <> ЦЕХ копчения
+                                                     UNION
+                                                      SELECT lfSelect.UnitId FROM lfSelect_Object_Unit_byGroup (8439) AS lfSelect -- Участок мясного сырья
+                                                     )
+                                              AND -- если это не перемещение переработки
+                                                  NOT EXISTS
+                                                  (SELECT MovementItem.MovementId
+                                                   FROM MovementItem
+                                                        LEFT JOIN ObjectLink AS ObjectLink_Goods_InfoMoney
+                                                                             ON ObjectLink_Goods_InfoMoney.ObjectId = MovementItem.ObjectId
+                                                                            AND ObjectLink_Goods_InfoMoney.DescId = zc_ObjectLink_Goods_InfoMoney()
+                                                   WHERE MovementItem.MovementId = inMovementId
+                                                     AND MovementItem.DescId     = zc_MI_Master()
+                                                     AND MovementItem.isErased   = FALSE
+                                                     AND ObjectLink_Goods_InfoMoney.ChildObjectId = zc_Enum_InfoMoney_30301() -- Доходы + Переработка + Переработка
+                                                  )
      THEN
          vbMovementDescId:= zc_Movement_ProductionUnion();
          vbIsProductionIn:= FALSE;
@@ -82,11 +97,13 @@ BEGIN
 
      -- !!!запомнили!!
      vbOperDate_scale:= inOperDate;
-     -- !!!если по заявке, тогда дата берется из неё, вообще - надо только для филиалов!!!
+     -- !!!определяется OperDatePartner заявки, !!!иначе inOperDate!!!
+     vbOperDatePartner_order:= COALESCE ((SELECT MovementDate.ValueData FROM MovementDate WHERE MovementDate.DescId = zc_MovementDate_OperDatePartner() AND MovementDate.MovementId = (SELECT MLM_Order.MovementChildId FROM MovementLinkMovement AS MLM_Order WHERE MLM_Order.MovementId = inMovementId AND MLM_Order.DescId = zc_MovementLinkMovement_Order()))
+                                       , inOperDate);
+     -- !!!если по заявке, тогда берется из неё OperDatePartner, вообще - надо только для филиалов!!!
      inOperDate:= CASE WHEN vbBranchId = zc_Branch_Basis()
                             THEN inOperDate
-                       ELSE COALESCE ((SELECT ValueData FROM MovementDate WHERE MovementId = (SELECT MLM_Order.MovementChildId FROM MovementLinkMovement AS MLM_Order WHERE MLM_Order.MovementId = inMovementId AND MLM_Order.DescId = zc_MovementLinkMovement_Order()) AND DescId = zc_MovementDate_OperDatePartner())
-                                    , inOperDate)
+                       ELSE vbOperDatePartner_order
                  END;
 
      -- таблица - "некоторые филиалы"
@@ -265,7 +282,9 @@ BEGIN
                                                   , inInvNumberPartner      := ''
                                                   , inInvNumberOrder        := InvNumberOrder
                                                   , inOperDate              := inOperDate
-                                                  , inOperDatePartner       := (inOperDate + (COALESCE (ObjectFloat_Partner_DocumentDayCount.ValueData, 0) :: TVarChar || ' DAY') :: INTERVAL) :: TDateTime
+                                                  , inOperDatePartner       := -- !!!если по заявке, тогда расчет OperDatePartner от OperDate заявки - надо только для inBranchCode = 201, 
+                                                                              (CASE WHEN inBranchCode = 201 THEN vbOperDatePartner_order ELSE inOperDate END
+                                                                             + (COALESCE (ObjectFloat_Partner_DocumentDayCount.ValueData, 0) :: TVarChar || ' DAY') :: INTERVAL) :: TDateTime
                                                   , inChecked               := NULL
                                                   , inChangePercent         := ChangePercent
                                                   , inFromId                := FromId

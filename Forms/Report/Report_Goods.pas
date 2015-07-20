@@ -43,6 +43,13 @@ type
     clPartionGoods: TcxGridDBColumn;
     actPrint: TdsdPrintAction;
     bbPrint: TdxBarButton;
+    isActive: TcxGridDBColumn;
+    ObjectByDescName: TcxGridDBColumn;
+    MovementDescName_order: TcxGridDBColumn;
+    Amount: TcxGridDBColumn;
+    Summ: TcxGridDBColumn;
+    MovementId: TcxGridDBColumn;
+    isRemains: TcxGridDBColumn;
   private
     { Private declarations }
   public

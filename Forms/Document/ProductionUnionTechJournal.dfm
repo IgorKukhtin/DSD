@@ -1076,7 +1076,7 @@ inherited ProductionUnionTechJournalForm: TProductionUnionTechJournalForm
           ComponentItem = 'Key'
           ParamType = ptInput
         end>
-      isShowModal = True
+      isShowModal = False
       DataSource = MasterDS
       DataSetRefresh = actRefresh
       IdFieldName = 'MovementItemId'
@@ -1109,10 +1109,6 @@ inherited ProductionUnionTechJournalForm: TProductionUnionTechJournalForm
         item
           DataSet = PrintMasterCDS
           UserName = 'Master'
-        end
-        item
-          DataSet = PrintChildCDS
-          UserName = 'Client'
           IndexFieldNames = 'ReceiptId;GroupNumber;InfoMoneyName;GoodsName'
         end>
       CopiesCount = 1
@@ -2093,7 +2089,7 @@ inherited ProductionUnionTechJournalForm: TProductionUnionTechJournalForm
     Top = 264
   end
   object spPrintReceipt: TdsdStoredProc
-    StoredProcName = 'gpSelect_Object_Receipt'
+    StoredProcName = 'gpSelect_Object_Receipt_Print'
     DataSet = PrintMasterCDS
     DataSets = <
       item
@@ -2102,9 +2098,7 @@ inherited ProductionUnionTechJournalForm: TProductionUnionTechJournalForm
     Params = <
       item
         Name = 'inReceiptId'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'ReceiptId'
+        Value = '0'
         ParamType = ptInput
       end
       item

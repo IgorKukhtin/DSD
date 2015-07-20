@@ -891,8 +891,8 @@
 				<Form>Report_GoodsMI_IncomeByPartnerForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
-			<DCCReference Include="..\..\Forms\Report\Report_GoodsMI_Income.pas">
-				<Form>Report_GoodsMI_IncomeForm</Form>
+			<DCCReference Include="..\..\Forms\Report\Report_GoodsMI_Loss.pas">
+				<Form>Report_GoodsMI_LossForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<DCCReference Include="..\..\Forms\Guides\Account.pas">
@@ -2024,8 +2024,8 @@
 				<Form>RouteGroupEditForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
-			<DCCReference Include="..\..\Forms\Report\Report_GoodsBalanceDialog.pas">
-				<Form>Report_GoodsBalanceDialogForm</Form>
+			<DCCReference Include="..\..\Forms\Report\Report_GoodsMI_LossDialog.pas">
+				<Form>Report_GoodsMI_LossDialogForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<DCCReference Include="..\..\Forms\Report\Report_GoodsBalance.pas">
@@ -2139,6 +2139,22 @@
 			</DCCReference>
 			<DCCReference Include="..\..\Forms\Report\Report_GoodsMI_SaleReturnIn.pas">
 				<Form>Report_GoodsMI_SaleReturnInForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Report\Report_GoodsBalanceDialog.pas">
+				<Form>Report_GoodsBalanceDialogForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Report\Report_GoodsMI_IncomeDialog.pas">
+				<Form>Report_GoodsMI_IncomeDialogForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Report\Report_GoodsMI_Income.pas">
+				<Form>Report_GoodsMI_IncomeForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Report\Report_GoodsMI_Dialog.pas">
+				<Form>Report_GoodsMI_DialogForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<BuildConfiguration Include="Release">

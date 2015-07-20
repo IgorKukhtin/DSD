@@ -26,6 +26,15 @@ BEGIN
  
    -- Вставляем или меняем объект историю цен
    ioId := lpInsertUpdate_ObjectHistory (ioId, zc_ObjectHistory_PriceListItem(), vbPriceListItemId, inOperDate);
+
+
+   -- Check
+   IF NOT EXISTS (SELECT Id FROM ObjectHistory WHERE Id = ioId AND ObjectId = vbPriceListItemId)
+   THEN
+       RAISE EXCEPTION 'Error. Id = % where ObjectId <> vbPriceListItemId %', ioId, vbPriceListItemId;
+   END IF;
+
+
    -- Устанавливаем цену
    PERFORM lpInsertUpdate_ObjectHistoryFloat (zc_ObjectHistoryFloat_PriceListItem_Value(), ioId, inValue);
 

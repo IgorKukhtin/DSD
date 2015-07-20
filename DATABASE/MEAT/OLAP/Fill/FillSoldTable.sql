@@ -12,7 +12,7 @@ RETURNS VOId
 AS
 $BODY$
 BEGIN
-  inStartDate:='01.06.2014';
+  -- inStartDate:='01.06.2014';
   --
   DELETE FROM SoldTable WHERE OperDate BETWEEN inStartDate AND inEndDate;
 

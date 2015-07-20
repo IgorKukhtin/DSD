@@ -203,41 +203,67 @@ BEGIN
 
        --
        OPEN Cursor1 FOR
-        WITH tmpMI_master_find AS (SELECT MAX (tmpMI_master.MovementItemId) AS MovementItemId
-                                   FROM _tmpMI_master AS tmpMI_master
-                                   WHERE tmpMI_master.isErased = FALSE
-                                   GROUP BY tmpMI_master.GoodsId_basis, tmpMI_master.GoodsKindId_complete
-                                  )
-           , tmpMIPartion_master AS (SELECT tmpMI_master.MovementItemId
-                                          , SUM (CASE WHEN _tmpMI_child.PartionGoodsDate <= (vbOperDate :: Date - tmpMI_master.TermProduction :: Integer)
-                                                           THEN _tmpMI_child.Amount * tmpMI_master.KoeffLoss
+        WITH tmpMI_master_find_mi AS (SELECT MAX (_tmpMI_master.MovementItemId) AS MovementItemId
+                                       FROM _tmpMI_master
+                                       WHERE _tmpMI_master.isErased = FALSE
+                                       GROUP BY _tmpMI_master.GoodsId_basis, _tmpMI_master.GoodsKindId_complete
+                                      )
+           , tmpMI_master_find_all AS (SELECT tmpMI_master_find_mi.MovementItemId, _tmpMI_master.GoodsId_basis, _tmpMI_master.GoodsKindId_complete
+                                       FROM tmpMI_master_find_mi
+                                            INNER JOIN _tmpMI_master ON _tmpMI_master.MovementItemId = tmpMI_master_find_mi.MovementItemId
+                                      )
+                 , tmpGoods_params AS (SELECT _tmpMI_master.GoodsId_basis, MIN (_tmpMI_master.TermProduction) AS TermProduction, MAX (_tmpMI_master.KoeffLoss) AS KoeffLoss
+                                       FROM _tmpMI_master
+                                       GROUP BY _tmpMI_master.GoodsId_basis
+                                      )
+                  , tmpMI_find AS (SELECT tmpMI_master_find_all.MovementItemId
+                                        , COALESCE (tmpMI_master_find_all.GoodsId_basis,        _tmpMI_child.GoodsId)              AS GoodsId_basis
+                                        , COALESCE (tmpMI_master_find_all.GoodsKindId_complete, _tmpMI_child.GoodsKindId_complete) AS GoodsKindId_complete
+                                   FROM tmpMI_master_find_all
+                                        FULL JOIN _tmpMI_child ON _tmpMI_child.GoodsId              = tmpMI_master_find_all.GoodsId_basis
+                                                              AND _tmpMI_child.GoodsKindId_complete = tmpMI_master_find_all.GoodsKindId_complete
+                                   GROUP BY tmpMI_master_find_all.MovementItemId
+                                          , COALESCE (tmpMI_master_find_all.GoodsId_basis, _tmpMI_child.GoodsId)
+                                          , COALESCE (tmpMI_master_find_all.GoodsKindId_complete, _tmpMI_child.GoodsKindId_complete)
+                                      )
+           , tmpMIPartion_master AS (SELECT tmpMI_find.MovementItemId
+                                          , tmpMI_find.GoodsId_basis
+                                          , tmpMI_find.GoodsKindId_complete
+                                          , SUM (CASE WHEN _tmpMI_child.PartionGoodsDate <= (vbOperDate :: Date - COALESCE (tmpGoods_params.TermProduction, 0) :: Integer)
+                                                           THEN _tmpMI_child.Amount * COALESCE (tmpGoods_params.KoeffLoss, 1)
                                                       ELSE 0
                                                  END) AS AmountProduction_old
-                                          , SUM (CASE WHEN _tmpMI_child.PartionGoodsDate > (vbOperDate :: Date - tmpMI_master.TermProduction :: Integer)
-                                                           THEN _tmpMI_child.Amount * tmpMI_master.KoeffLoss
+                                          , SUM (CASE WHEN _tmpMI_child.PartionGoodsDate > (vbOperDate :: Date - COALESCE (tmpGoods_params.TermProduction, 0) :: Integer)
+                                                           THEN _tmpMI_child.Amount * COALESCE (tmpGoods_params.KoeffLoss, 1)
                                                       ELSE 0
                                                  END) AS AmountProduction_next
-                                          , MIN (CASE WHEN _tmpMI_child.PartionGoodsDate <= (vbOperDate :: Date - tmpMI_master.TermProduction :: Integer)
+                                          , MIN (CASE WHEN _tmpMI_child.PartionGoodsDate <= (vbOperDate :: Date - COALESCE (tmpGoods_params.TermProduction, 0) :: Integer)
+                                                       AND _tmpMI_child.Amount > 0
                                                            THEN _tmpMI_child.PartionGoodsDate
                                                       ELSE zc_DateEnd()
                                                  END) AS StartDate_old
-                                          , MAX (CASE WHEN _tmpMI_child.PartionGoodsDate <= (vbOperDate :: Date - tmpMI_master.TermProduction :: Integer)
+                                          , MAX (CASE WHEN _tmpMI_child.PartionGoodsDate <= (vbOperDate :: Date - COALESCE (tmpGoods_params.TermProduction, 0) :: Integer)
+                                                       AND _tmpMI_child.Amount > 0
                                                            THEN _tmpMI_child.PartionGoodsDate
                                                       ELSE zc_DateStart()
                                                  END) AS EndDate_old
-                                          , MIN (CASE WHEN _tmpMI_child.PartionGoodsDate > (vbOperDate :: Date - tmpMI_master.TermProduction :: Integer)
+                                          , MIN (CASE WHEN _tmpMI_child.PartionGoodsDate > (vbOperDate :: Date - COALESCE (tmpGoods_params.TermProduction, 0) :: Integer)
+                                                       AND _tmpMI_child.Amount > 0
                                                            THEN _tmpMI_child.PartionGoodsDate
                                                       ELSE zc_DateEnd()
                                                  END) AS StartDate_next
-                                          , MAX (CASE WHEN _tmpMI_child.PartionGoodsDate > (vbOperDate :: Date - tmpMI_master.TermProduction :: Integer)
+                                          , MAX (CASE WHEN _tmpMI_child.PartionGoodsDate > (vbOperDate :: Date - COALESCE (tmpGoods_params.TermProduction, 0) :: Integer)
+                                                       AND _tmpMI_child.Amount > 0
                                                            THEN _tmpMI_child.PartionGoodsDate
                                                       ELSE zc_DateStart()
                                                  END) AS EndDate_next
-                                     FROM tmpMI_master_find
-                                          INNER JOIN _tmpMI_master AS tmpMI_master ON tmpMI_master.MovementItemId = tmpMI_master_find.MovementItemId
-                                          INNER JOIN _tmpMI_child ON _tmpMI_child.GoodsId              = tmpMI_master.GoodsId_basis
-                                                                 AND _tmpMI_child.GoodsKindId_complete = tmpMI_master.GoodsKindId_complete
-                                     GROUP BY tmpMI_master.MovementItemId
+                                     FROM tmpMI_find
+                                          INNER JOIN _tmpMI_child ON _tmpMI_child.GoodsId              = tmpMI_find.GoodsId_basis
+                                                                 AND _tmpMI_child.GoodsKindId_complete = tmpMI_find.GoodsKindId_complete
+                                          LEFT JOIN tmpGoods_params ON tmpGoods_params.GoodsId_basis = tmpMI_find.GoodsId_basis
+                                     GROUP BY tmpMI_find.MovementItemId
+                                            , tmpMI_find.GoodsId_basis
+                                            , tmpMI_find.GoodsKindId_complete
                                     )
 
           , _tmpMI_child_group AS (SELECT _tmpMI_child.ContainerId, MAX (_tmpMI_child.GoodsKindId_complete) AS GoodsKindId_complete FROM _tmpMI_child GROUP BY _tmpMI_child.ContainerId)
@@ -350,15 +376,29 @@ BEGIN
                        THEN zc_Color_Red()
                   ELSE zc_Color_Black()
              END :: Integer AS Color_remains
+
            , CASE WHEN tmpMI.AmountRemains - tmpMI.AmountPartnerPrior - tmpMI.AmountPartner + tmpMI.AmountProduction_old <= 0
                        THEN zc_Color_Red()
                   ELSE zc_Color_Black()
              END :: Integer AS Color_remains_calc
+
            , CASE WHEN tmpMI.AmountRemains - tmpMI.AmountPartnerPrior - tmpMI.AmountPartner + tmpMI.AmountProduction_old + tmpMI.AmountProduction_next<= 0
                        THEN zc_Color_Red()
                   ELSE zc_Color_Black()
              END :: Integer AS Color_remainsTerm_calc
+
            , zc_Color_Blue() AS Color_send
+
+           , CASE WHEN tmpMI.AmountProduction_old < 0
+                       THEN zc_Color_Red()
+                  ELSE zc_Color_Black()
+             END :: Integer AS Color_production_old
+
+           , CASE WHEN tmpMI.AmountProduction_next < 0
+                       THEN zc_Color_Red()
+                  ELSE zc_Color_Black()
+             END :: Integer AS Color_production_next
+
 
            , zc_Color_Aqua()   :: Integer AS ColorB_const
            , zc_Color_Cyan()   :: Integer AS ColorB_DayCountForecast
@@ -390,9 +430,9 @@ BEGIN
                   , tmpMI_master.StartProductionInDays
                   , tmpMI_master.ReceiptId
                   , tmpMI_master.ReceiptId_basis
-                  , tmpMI_master.GoodsId
-                  , tmpMI_master.GoodsId_basis
-                  , tmpMI_master.GoodsKindId_complete
+                  , COALESCE (tmpMI_master.GoodsId, tmpMIPartion_master.GoodsId_basis) AS GoodsId
+                  , COALESCE (tmpMI_master.GoodsId_basis, tmpMIPartion_master.GoodsId_basis) AS GoodsId_basis
+                  , COALESCE (tmpMI_master.GoodsKindId_complete, tmpMIPartion_master.GoodsKindId_complete) AS GoodsKindId_complete
 
                   , MIN (COALESCE (tmpMIPartion_master.StartDate_old,  zc_DateEnd()))   AS StartDate_old
                   , MAX (COALESCE (tmpMIPartion_master.EndDate_old,    zc_DateStart())) AS EndDate_old
@@ -403,7 +443,7 @@ BEGIN
 
                   , tmpMI_master.isErased
              FROM _tmpMI_master AS tmpMI_master
-                  LEFT JOIN tmpMIPartion_master ON tmpMIPartion_master.MovementItemId = tmpMI_master.MovementItemId
+                  FULL JOIN tmpMIPartion_master ON tmpMIPartion_master.MovementItemId = tmpMI_master.MovementItemId
              GROUP BY CASE WHEN inShowAll = TRUE THEN tmpMI_master.MovementItemId ELSE 0 END
                   , tmpMI_master.GoodsId_detail
                   , tmpMI_master.GoodsKindId_detail
@@ -414,9 +454,9 @@ BEGIN
                   , tmpMI_master.StartProductionInDays
                   , tmpMI_master.ReceiptId
                   , tmpMI_master.ReceiptId_basis
-                  , tmpMI_master.GoodsId
-                  , tmpMI_master.GoodsId_basis
-                  , tmpMI_master.GoodsKindId_complete
+                  , COALESCE (tmpMI_master.GoodsId, tmpMIPartion_master.GoodsId_basis)
+                  , COALESCE (tmpMI_master.GoodsId_basis, tmpMIPartion_master.GoodsId_basis)
+                  , COALESCE (tmpMI_master.GoodsKindId_complete, tmpMIPartion_master.GoodsKindId_complete)
 
                   , tmpMI_master.isErased
             ) AS tmpMI
@@ -474,11 +514,10 @@ BEGIN
        RETURN NEXT Cursor1;
 
        OPEN Cursor2 FOR
-        WITH tmpMI_master_find AS (SELECT MAX (tmpMI_master.MovementItemId) AS MovementItemId, tmpMI_master.GoodsId_basis, tmpMI_master.GoodsKindId_complete
-                                   FROM _tmpMI_master AS tmpMI_master
-                                   WHERE tmpMI_master.isErased = FALSE
-                                   GROUP BY tmpMI_master.GoodsId_basis, tmpMI_master.GoodsKindId_complete
-                                  )
+        WITH tmpGoods_params AS (SELECT _tmpMI_master.GoodsId_basis, MIN (_tmpMI_master.TermProduction) AS TermProduction, MAX (_tmpMI_master.KoeffLoss) AS KoeffLoss, MAX (_tmpMI_master.TaxLoss) AS TaxLoss
+                                 FROM _tmpMI_master
+                                 GROUP BY _tmpMI_master.GoodsId_basis
+                                )
        SELECT
              _tmpMI_child.MovementItemId         AS Id
            , CASE WHEN inShowAll = TRUE THEN 0 ELSE Object_Goods.Id END AS GoodsId
@@ -490,22 +529,20 @@ BEGIN
            , Object_Measure.ValueData            AS MeasureName
            , _tmpMI_child.PartionGoodsDate
            , CASE WHEN ABS (_tmpMI_child.Amount) < 1 THEN _tmpMI_child.Amount ELSE CAST (_tmpMI_child.Amount AS NUMERIC (16, 1)) END :: TFloat AS Amount
-           , CAST (_tmpMI_child.Amount * tmpMI_master.KoeffLoss AS NUMERIC (16, 1)) :: TFloat AS Amount_calc
-           , CAST (tmpMI_master.TaxLoss AS NUMERIC (16, 1))                         :: TFloat AS TaxLoss
-           , CASE WHEN _tmpMI_child.PartionGoodsDate <= (vbOperDate :: Date - tmpMI_master.TermProduction :: Integer)
-                       THEN CAST (_tmpMI_child.Amount * tmpMI_master.KoeffLoss AS NUMERIC (16, 1))
+           , CAST (_tmpMI_child.Amount * tmpGoods_params.KoeffLoss AS NUMERIC (16, 1)) :: TFloat AS Amount_calc
+           , CAST (tmpGoods_params.TaxLoss AS NUMERIC (16, 1))                         :: TFloat AS TaxLoss
+           , CASE WHEN _tmpMI_child.PartionGoodsDate <= (vbOperDate :: Date - tmpGoods_params.TermProduction :: Integer)
+                       THEN CAST (_tmpMI_child.Amount * tmpGoods_params.KoeffLoss AS NUMERIC (16, 1))
                   ELSE 0
              END :: TFloat AS Amount_old
-           , CASE WHEN _tmpMI_child.PartionGoodsDate > (vbOperDate :: Date - tmpMI_master.TermProduction :: Integer)
-                       THEN CAST (_tmpMI_child.Amount * tmpMI_master.KoeffLoss AS NUMERIC (16, 1))
+           , CASE WHEN _tmpMI_child.PartionGoodsDate > (vbOperDate :: Date - tmpGoods_params.TermProduction :: Integer)
+                       THEN CAST (_tmpMI_child.Amount * tmpGoods_params.KoeffLoss AS NUMERIC (16, 1))
                   ELSE 0
              END :: TFloat AS Amount_next
            , _tmpMI_child.ContainerId
            , FALSE AS isErased
        FROM _tmpMI_child
-             LEFT JOIN tmpMI_master_find ON tmpMI_master_find.GoodsId_basis = _tmpMI_child.GoodsId
-                                        AND tmpMI_master_find.GoodsKindId_complete = _tmpMI_child.GoodsKindId_complete
-             LEFT JOIN _tmpMI_master AS tmpMI_master ON tmpMI_master.MovementItemId = tmpMI_master_find.MovementItemId
+             LEFT JOIN tmpGoods_params ON tmpGoods_params.GoodsId_basis = _tmpMI_child.GoodsId
 
              LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = _tmpMI_child.GoodsId
              LEFT JOIN Object AS Object_GoodsKind ON Object_GoodsKind.Id = _tmpMI_child.GoodsKindId

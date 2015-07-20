@@ -91,6 +91,7 @@ type
     actChoicePriceList_Prior: TOpenChoiceForm;
     actChoicePriceList_30103: TOpenChoiceForm;
     actChoicePriceList_30201: TOpenChoiceForm;
+    DayTaxSummary: TcxGridDBColumn;
   private
     { Private declarations }
   public

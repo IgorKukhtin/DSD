@@ -1097,10 +1097,10 @@ object UtilPrintForm: TUtilPrintForm
       Category = 'EDI'
       MoveParams = <>
       PostDataSetBeforeExecute = False
-      StoredProc = spSelectPrint_Sale
+      StoredProc = spSelectSale_EDI
       StoredProcList = <
         item
-          StoredProc = spSelectPrint_Sale
+          StoredProc = spSelectSale_EDI
         end>
       Caption = 'actExecPrintStoredProc'
     end
@@ -1844,5 +1844,28 @@ object UtilPrintForm: TUtilPrintForm
     PackSize = 1
     Left = 463
     Top = 480
+  end
+  object spSelectSale_EDI: TdsdStoredProc
+    StoredProcName = 'gpSelect_Movement_Sale_EDI'
+    DataSet = PrintHeaderCDS
+    DataSets = <
+      item
+        DataSet = PrintHeaderCDS
+      end
+      item
+        DataSet = PrintItemsCDS
+      end>
+    OutputType = otMultiDataSet
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+      end>
+    PackSize = 1
+    Left = 368
+    Top = 241
   end
 end

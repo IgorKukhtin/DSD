@@ -116,6 +116,12 @@ type
     colContractToName: TcxGridDBColumn;
     colPaidKindToName: TcxGridDBColumn;
     colChangePercentTo: TcxGridDBColumn;
+    spMovementReComplete: TdsdStoredProc;
+    ContractId: TcxGridDBColumn;
+    spReCompete: TdsdExecStoredProc;
+    actSimpleReCompleteList: TMultiAction;
+    actReCompleteList: TMultiAction;
+    N1: TMenuItem;
   private
   public
   end;

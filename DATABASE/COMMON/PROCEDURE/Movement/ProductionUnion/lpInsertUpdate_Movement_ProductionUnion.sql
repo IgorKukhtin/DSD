@@ -9,7 +9,7 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_Movement_ProductionUnion(
     IN inFromId              Integer   , -- ќт кого (в документе)
     IN inToId                Integer   , --  ому (в документе)
     IN inIsPeresort          Boolean   , -- пересорт
-    IN inUserId              Integer     -- сесси€ пользовател€
+    IN inUserId              Integer     -- пользовател€
 )
 RETURNS Integer AS
 $BODY$
@@ -33,6 +33,11 @@ BEGIN
    -- сохранили свойство <пересорт>
    PERFORM lpInsertUpdate_MovementBoolean (zc_MovementBoolean_Peresort(), ioId, inIsPeresort);
 
+   -- !!!только при создании!!!
+   IF vbIsInsert = TRUE AND inUserId IN (zc_Enum_Process_Auto_Defroster())
+   THEN
+       PERFORM lpInsertUpdate_MovementBoolean (zc_MovementBoolean_isAuto(), ioId, TRUE);
+   END IF;
 
    -- пересчитали »тоговые суммы по накладной
    PERFORM lpInsertUpdate_MovementFloat_TotalSumm (ioId);

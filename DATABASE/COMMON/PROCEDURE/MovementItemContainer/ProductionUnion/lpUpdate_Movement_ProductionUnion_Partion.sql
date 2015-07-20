@@ -1,8 +1,10 @@
--- Function: lpUpdate_Movement_ProductionUnion_Partion (TDateTime, TDateTime, Integer, Integer, Integer)
+-- Function: lpUpdate_Movement_ProductionUnion_Partion (Boolean, TDateTime, TDateTime, Integer, Integer, Integer)
 
 DROP FUNCTION IF EXISTS lpUpdate_Movement_ProductionUnion_Partion (TDateTime, TDateTime, Integer, Integer, Integer);
+DROP FUNCTION IF EXISTS lpUpdate_Movement_ProductionUnion_Partion (Boolean, TDateTime, TDateTime, Integer, Integer, Integer);
 
 CREATE OR REPLACE FUNCTION lpUpdate_Movement_ProductionUnion_Partion(
+    IN inIsUpdate     Boolean   , --
     IN inStartDate    TDateTime , --
     IN inEndDate      TDateTime , --
     IN inFromId       Integer,    -- 
@@ -11,7 +13,9 @@ CREATE OR REPLACE FUNCTION lpUpdate_Movement_ProductionUnion_Partion(
 )                              
 RETURNS TABLE (MovementItemId_gp Integer, MovementItemId_out Integer, ContainerId Integer
              , OperCount TFloat, OperCount_GP TFloat, OperCount_PF_out TFloat, OperCount_PF_in TFloat
-             , isPartionClose Boolean, PartionGoodsDate Date, PartionGoodsDateClose Date)
+             , isPartionClose Boolean, PartionGoodsDate Date, PartionGoodsDateClose Date
+             , GoodsCode Integer, GoodsName TVarChar
+              )
 AS
 $BODY$
 BEGIN
@@ -110,10 +114,6 @@ BEGIN
                                      INNER JOIN ObjectDate AS ObjectDate_PartionGoods_Value
                                                            ON ObjectDate_PartionGoods_Value.ObjectId = tmp.PartionGoodsId
                                                           AND ObjectDate_PartionGoods_Value.DescId = zc_ObjectDate_PartionGoods_Value()
-                                     LEFT JOIN ObjectLink AS ObjectLink_PartionGoods_Unit
-                                                          ON ObjectLink_PartionGoods_Unit.ObjectId = tmp.PartionGoodsId
-                                                         AND ObjectLink_PartionGoods_Unit.DescId = zc_ObjectLink_PartionGoods_Unit()
-                                WHERE ObjectLink_PartionGoods_Unit.ObjectId IS NULL -- т.е. вообще нет этого св-ва
                                )
         -- результат - ВСЕ партии которые надо закрыть/открыть
         SELECT tmpContainer_PF.ContainerId
@@ -212,22 +212,10 @@ BEGIN
          RAISE EXCEPTION 'Ошибка. Кол-во после распределения не может быть < 0  <%> <%>', (SELECT _tmpItem_Result.MovementItemId_out FROM _tmpItem_Result WHERE _tmpItem_Result.OperCount < 0 ORDER BY _tmpItem_Result.MovementItemId_out LIMIT 1), (SELECT _tmpItem_Result.OperCount FROM _tmpItem_Result WHERE _tmpItem_Result.OperCount < 0 ORDER BY _tmpItem_Result.MovementItemId_out LIMIT 1);
      END IF;
 
-    -- Результат
-    RETURN QUERY
-    select COALESCE (_tmpItem_Result.MovementItemId_gp, _tmpItem_GP.MovementItemId_gp) :: Integer AS MovementItemId_gp
-        , _tmpItem_Result.MovementItemId_out, _tmpItem_Result.ContainerId
-        , _tmpItem_Result.OperCount
-        , _tmpItem_GP.OperCount      AS OperCount_gp
-        , _tmpItem_PF.OperCount      AS OperCount_PF_out
-        , _tmpItem_PF_find.OperCount AS OperCount_PF_in
-        , _tmpItem_PF_find.isPartionClose
-        , DATE (_tmpItem_PF_find.PartionGoodsDate)
-        , DATE (_tmpItem_PF_find.PartionGoodsDateClose)
-    from _tmpItem_Result
-         left join _tmpItem_PF on _tmpItem_PF.MovementItemId_out = _tmpItem_Result.MovementItemId_out
-         left join _tmpItem_GP on _tmpItem_GP.MovementItemId_gp = _tmpItem_Result.MovementItemId_gp
-         left join _tmpItem_PF_find on _tmpItem_PF_find.ContainerId = _tmpItem_PF.ContainerId
-    ;
+
+     -- !!!т.е. не всегда!!!
+     IF inIsUpdate = TRUE
+     THEN
 
      -- Сохраненние что партия закрыта/открыта ЕСЛИ OperCount > 0 !!!для всех _tmpItem_GP!!!
      PERFORM lpInsertUpdate_MovementItemBoolean (zc_MIBoolean_PartionClose(), _tmpItem_GP.MovementItemId_gp, CASE WHEN tmp.OperCount > 0 THEN TRUE ELSE FALSE END)
@@ -265,6 +253,29 @@ BEGIN
                                     AND MIDate_PartionGoods.DescId = zc_MIDate_PartionGoods()
      WHERE _tmpItem_Result.OperCount > 0;
 
+     
+     END IF; -- if inIsUpdate = TRUE -- !!!т.е. не всегда!!!
+
+
+    -- Результат
+    RETURN QUERY
+    SELECT COALESCE (_tmpItem_Result.MovementItemId_gp, _tmpItem_GP.MovementItemId_gp) :: Integer AS MovementItemId_gp
+        , _tmpItem_Result.MovementItemId_out, _tmpItem_Result.ContainerId
+        , _tmpItem_Result.OperCount
+        , _tmpItem_GP.OperCount      AS OperCount_gp
+        , _tmpItem_PF.OperCount      AS OperCount_PF_out
+        , _tmpItem_PF_find.OperCount AS OperCount_PF_in
+        , _tmpItem_PF_find.isPartionClose
+        , DATE (_tmpItem_PF_find.PartionGoodsDate)
+        , DATE (_tmpItem_PF_find.PartionGoodsDateClose)
+        , Object_Goods.ObjectCode AS GoodsCode
+        , Object_Goods.ValueData  AS GoodsName
+    FROM _tmpItem_Result
+         LEFT JOIN Object AS Object_Goods on Object_Goods.Id = _tmpItem_Result.GoodsId
+         LEFT JOIN _tmpItem_PF on _tmpItem_PF.MovementItemId_out = _tmpItem_Result.MovementItemId_out
+         LEFT JOIN _tmpItem_GP on _tmpItem_GP.MovementItemId_gp = _tmpItem_Result.MovementItemId_gp
+         LEFT JOIN _tmpItem_PF_find on _tmpItem_PF_find.ContainerId = _tmpItem_PF.ContainerId
+    ;
 
 END;$BODY$
   LANGUAGE plpgsql VOLATILE;
@@ -276,12 +287,7 @@ END;$BODY$
 */
 
 -- тест
--- SELECT * FROM lpUpdate_Movement_ProductionUnion_Partion (inStartDate:= '01.07.2015', inEndDate:= '01.07.2015', inFromId:=8448, inToId:=8458, inUserId:= zfCalc_UserAdmin() :: Integer) -- ЦЕХ деликатесов + Склад База ГП
--- SELECT * FROM lpUpdate_Movement_ProductionUnion_Partion (inStartDate:= '01.07.2015', inEndDate:= '01.07.2015', inFromId:=8447, inToId:=8458, inUserId:= zfCalc_UserAdmin() :: Integer) -- ЦЕХ колбасный   + Склад База ГП
-
-
--- тест
--- SELECT * FROM lpUpdate_Movement_ProductionUnion_Partion (inStartDate:= '01.07.2015', inEndDate:= '01.07.2015', inFromId:=8447, inToId:=8458, inUserId:= zfCalc_UserAdmin() :: Integer) -- ЦЕХ колбасный   + Склад База ГП
+-- SELECT * FROM lpUpdate_Movement_ProductionUnion_Partion (inIsUpdate:= TRUE, inStartDate:= '01.07.2015', inEndDate:= '16.07.2015', inFromId:=8448, inToId:=8458, inUserId:= zfCalc_UserAdmin() :: Integer) -- ЦЕХ деликатесов + Склад База ГП
+-- SELECT * FROM lpUpdate_Movement_ProductionUnion_Partion (inIsUpdate:= TRUE, inStartDate:= '01.07.2015', inEndDate:= '16.07.2015', inFromId:=8447, inToId:=8458, inUserId:= zfCalc_UserAdmin() :: Integer) -- ЦЕХ колбасный   + Склад База ГП
 -- where ContainerId = 568111
--- order by 3
 -- select * from MovementItemContainer where ContainerId = 568111

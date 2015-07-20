@@ -249,6 +249,23 @@
     TabOrder = 28
     Width = 209
   end
+  object cxLabel13: TcxLabel
+    Left = 280
+    Top = 198
+    Caption = #1056#1077#1075#1080#1086#1085
+  end
+  object ceArea: TcxButtonEdit
+    Left = 280
+    Top = 214
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    Properties.ReadOnly = True
+    TabOrder = 30
+    Width = 209
+  end
   object ActionList: TActionList
     Top = 40
     object DataSetRefresh: TdsdDataSetRefresh
@@ -311,7 +328,7 @@
         ParamType = ptInput
       end
       item
-        Name = 'inPartionDate'
+        Name = 'inisPartionDate'
         Value = 'False'
         Component = cbPartionDate
         DataType = ftBoolean
@@ -377,6 +394,13 @@
         Name = 'inRouteSortingId'
         Value = Null
         Component = RouteSortingGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inAreaId'
+        Value = Null
+        Component = AreaGuides
         ComponentItem = 'Key'
         ParamType = ptInput
       end>
@@ -546,6 +570,25 @@
         Component = RouteSortingGuides
         ComponentItem = 'TextValue'
         DataType = ftString
+      end
+      item
+        Name = 'AreaId'
+        Value = Null
+        Component = AreaGuides
+        ComponentItem = 'Key'
+      end
+      item
+        Name = 'AreaName'
+        Value = Null
+        Component = AreaGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+      end
+      item
+        Name = 'isPartionDate'
+        Value = Null
+        Component = cbPartionDate
+        DataType = ftBoolean
       end>
     PackSize = 1
     Left = 16
@@ -680,8 +723,8 @@
         DataType = ftString
         ParamType = ptInput
       end>
-    Left = 160
-    Top = 184
+    Left = 168
+    Top = 168
   end
   object ProfitLossDirectionGuides: TdsdGuides
     KeyField = 'Id'
@@ -791,8 +834,8 @@
         DataType = ftString
         ParamType = ptInput
       end>
-    Left = 256
-    Top = 320
+    Left = 432
+    Top = 240
   end
   object Contract_InfomoneyGuides: TdsdGuides
     KeyField = 'Id'
@@ -819,8 +862,8 @@
         DataType = ftString
         ParamType = ptInput
       end>
-    Left = 376
-    Top = 272
+    Left = 352
+    Top = 296
   end
   object RouteGuides: TdsdGuides
     KeyField = 'Id'
@@ -875,5 +918,31 @@
       end>
     Left = 400
     Top = 349
+  end
+  object AreaGuides: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = ceArea
+    FormNameParam.Value = 'TAreaForm'
+    FormNameParam.DataType = ftString
+    FormName = 'TAreaForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = AreaGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = AreaGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+      end>
+    Left = 336
+    Top = 216
   end
 end

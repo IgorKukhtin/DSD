@@ -80,6 +80,8 @@ type
     ColorB_AmountPartner: TcxGridDBColumn;
     cxLabel16: TcxLabel;
     ceComment: TcxTextEdit;
+    AmountPartnerPrior: TcxGridDBColumn;
+    AmountPartner_all: TcxGridDBColumn;
   private
     { Private declarations }
   public

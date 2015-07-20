@@ -102,6 +102,13 @@ object UnitForm: TUnitForm
         HeaderAlignmentVert = vaCenter
         Width = 50
       end
+      object AreaName: TcxGridDBColumn
+        Caption = #1056#1077#1075#1080#1086#1085
+        DataBinding.FieldName = 'AreaName'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 60
+      end
       object ceAccountGroupName: TcxGridDBColumn
         Caption = #1057#1095#1077#1090' '#1075#1088#1091#1087#1087#1072
         DataBinding.FieldName = 'AccountGroupName'
@@ -204,6 +211,13 @@ object UnitForm: TUnitForm
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
         Width = 98
+      end
+      object isPartionDate: TcxGridDBColumn
+        Caption = #1055#1072#1088#1090#1080#1080' '#1076#1072#1090#1099' '#1074' '#1091#1095#1077#1090#1077
+        DataBinding.FieldName = 'isPartionDate'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 60
       end
     end
     object cxGridLevel: TcxGridLevel

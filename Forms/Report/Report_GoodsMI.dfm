@@ -3,31 +3,30 @@ inherited Report_GoodsMIForm: TReport_GoodsMIForm
   ClientHeight = 534
   ClientWidth = 1058
   AddOnFormData.isSingle = False
+  AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
-  ExplicitWidth = 1066
-  ExplicitHeight = 568
+  ExplicitWidth = 1074
+  ExplicitHeight = 572
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Top = 82
+    Top = 80
     Width = 1058
-    Height = 452
+    Height = 454
     TabOrder = 3
-    ExplicitTop = 82
-    ExplicitWidth = 1020
-    ExplicitHeight = 292
-    ClientRectBottom = 448
-    ClientRectRight = 1054
+    ExplicitTop = 80
+    ExplicitWidth = 1058
+    ExplicitHeight = 454
+    ClientRectBottom = 454
+    ClientRectRight = 1058
     inherited tsMain: TcxTabSheet
-      ExplicitLeft = 2
-      ExplicitTop = 2
-      ExplicitWidth = 1014
-      ExplicitHeight = 286
+      ExplicitWidth = 1058
+      ExplicitHeight = 454
       inherited cxGrid: TcxGrid
-        Width = 1052
-        Height = 446
-        ExplicitWidth = 1014
-        ExplicitHeight = 286
+        Width = 1058
+        Height = 454
+        ExplicitWidth = 1058
+        ExplicitHeight = 454
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -436,7 +435,7 @@ inherited Report_GoodsMIForm: TReport_GoodsMIForm
   inherited Panel: TPanel
     Width = 1058
     Height = 54
-    ExplicitWidth = 1020
+    ExplicitWidth = 1058
     ExplicitHeight = 54
     inherited deStart: TcxDateEdit
       Left = 118
@@ -651,6 +650,7 @@ inherited Report_GoodsMIForm: TReport_GoodsMIForm
           IndexFieldNames = 'PartnerName;GoodsGroupName'
           GridView = cxGridDBTableView
         end>
+      CopiesCount = 1
       Params = <
         item
           Name = 'StartDate'
@@ -733,6 +733,7 @@ inherited Report_GoodsMIForm: TReport_GoodsMIForm
           IndexFieldNames = 'PartnerName;GoodsGroupName'
           GridView = cxGridDBTableView
         end>
+      CopiesCount = 1
       Params = <
         item
           Name = 'StartDate'
@@ -773,6 +774,108 @@ inherited Report_GoodsMIForm: TReport_GoodsMIForm
       ReportNameParam.Value = #1054#1090#1095#1077#1090' '#1087#1086' '#1090#1086#1074#1072#1088#1091' ('#1087#1088#1080#1093#1086#1076' '#1086#1090' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072')'
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
+    end
+    object ExecuteDialog: TExecuteDialog
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1072#1088#1072#1084#1077#1090#1088#1099' '#1086#1090#1095#1077#1090#1072
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1072#1088#1072#1084#1077#1090#1088#1099' '#1086#1090#1095#1077#1090#1072
+      ImageIndex = 35
+      FormName = 'TReport_GoodsMI_DialogForm'
+      FormNameParam.Value = 'TReport_GoodsMI_DialogForm'
+      FormNameParam.DataType = ftString
+      GuiParams = <
+        item
+          Name = 'StartDate'
+          Value = 41640d
+          Component = deStart
+          DataType = ftDateTime
+          ParamType = ptInputOutput
+        end
+        item
+          Name = 'EndDate'
+          Value = 41640d
+          Component = deEnd
+          DataType = ftDateTime
+          ParamType = ptInputOutput
+        end
+        item
+          Name = 'PaidKindId'
+          Value = ''
+          Component = PaidKindGuides
+          ComponentItem = 'Key'
+          ParamType = ptInputOutput
+        end
+        item
+          Name = 'PaidKindName'
+          Value = ''
+          Component = PaidKindGuides
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          ParamType = ptInputOutput
+        end
+        item
+          Name = 'InfoMoneyId'
+          Value = ''
+          Component = InfoMoneyGuides
+          ComponentItem = 'Key'
+          ParamType = ptInputOutput
+        end
+        item
+          Name = 'InfoMoneyName'
+          Value = ''
+          Component = InfoMoneyGuides
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          ParamType = ptInputOutput
+        end
+        item
+          Name = 'GoodsGroupId'
+          Value = ''
+          Component = GoodsGroupGuides
+          ComponentItem = 'Key'
+          ParamType = ptInputOutput
+        end
+        item
+          Name = 'GoodsGroupName'
+          Value = ''
+          Component = GoodsGroupGuides
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          ParamType = ptInputOutput
+        end
+        item
+          Name = 'UnitId'
+          Value = ''
+          Component = UnitGuides
+          ComponentItem = 'Key'
+          ParamType = ptInputOutput
+        end
+        item
+          Name = 'UnitName'
+          Value = ''
+          Component = UnitGuides
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          ParamType = ptInputOutput
+        end
+        item
+          Name = 'JuridicalId'
+          Value = ''
+          Component = JuridicalGuides
+          ComponentItem = 'Key'
+          ParamType = ptInputOutput
+        end
+        item
+          Name = 'JuridicalName'
+          Value = ''
+          Component = JuridicalGuides
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          ParamType = ptInputOutput
+        end>
+      isShowModal = True
+      OpenBeforeShow = True
     end
   end
   inherited MasterDS: TDataSource
@@ -851,10 +954,18 @@ inherited Report_GoodsMIForm: TReport_GoodsMIForm
     DockControlHeights = (
       0
       0
-      28
+      26
       0)
     inherited Bar: TdxBar
       ItemLinks = <
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbExecuteDialog'
+        end
         item
           Visible = True
           ItemName = 'dxBarStatic'
@@ -890,6 +1001,10 @@ inherited Report_GoodsMIForm: TReport_GoodsMIForm
     end
     object bbPrintByGoods: TdxBarButton
       Action = actPrintByGoods
+      Category = 0
+    end
+    object bbExecuteDialog: TdxBarButton
+      Action = ExecuteDialog
       Category = 0
     end
   end

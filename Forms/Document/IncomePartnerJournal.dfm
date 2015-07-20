@@ -464,6 +464,12 @@ object IncomePartnerJournalForm: TIncomePartnerJournalForm
         HeaderAlignmentVert = vaCenter
         Width = 62
       end
+      object ContractId: TcxGridDBColumn
+        DataBinding.FieldName = 'ContractId'
+        Visible = False
+        VisibleForCustomization = False
+        Width = 20
+      end
     end
     object cxGridLevel: TcxGridLevel
       GridView = cxGridDBTableView
@@ -734,6 +740,7 @@ object IncomePartnerJournalForm: TIncomePartnerJournalForm
           DataSet = PrintItemsCDS
           UserName = 'frxDBDMaster'
         end>
+      CopiesCount = 1
       Params = <
         item
           Name = 'Id'
@@ -1031,6 +1038,44 @@ object IncomePartnerJournalForm: TIncomePartnerJournalForm
         end>
       isShowModal = False
     end
+    object spReCompete: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spMovementReComplete
+      StoredProcList = <
+        item
+          StoredProc = spMovementReComplete
+        end>
+      Caption = 'spReCompete'
+    end
+    object actSimpleReCompleteList: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = spReCompete
+        end>
+      View = cxGridDBTableView
+      Caption = #1055#1077#1088#1077#1087#1088#1086#1074#1077#1076#1077#1085#1080#1077' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074
+      Hint = #1055#1077#1088#1077#1087#1088#1086#1074#1077#1076#1077#1085#1080#1077' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074
+    end
+    object actReCompleteList: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actSimpleReCompleteList
+        end
+        item
+          Action = actRefresh
+        end>
+      QuestionBeforeExecute = #1042#1099' '#1091#1074#1077#1088#1077#1085#1099' '#1074' '#1087#1077#1088#1077#1087#1088#1086#1074#1077#1076#1077#1085#1080#1080' '#1042#1089#1077#1093' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074'? '
+      InfoAfterExecute = #1042#1089#1077' '#1076#1086#1082#1091#1084#1077#1085#1090#1099' '#1087#1077#1088#1077#1087#1088#1086#1074#1077#1076#1077#1085#1099
+      Caption = #1055#1077#1088#1077#1087#1088#1086#1074#1077#1089#1090#1080' '#1042#1089#1077' '#1076#1086#1082#1091#1084#1077#1085#1090#1099
+      Hint = #1055#1077#1088#1077#1087#1088#1086#1074#1077#1089#1090#1080' '#1042#1089#1077' '#1076#1086#1082#1091#1084#1077#1085#1090#1099
+      ImageIndex = 12
+    end
   end
   object dsdStoredProc: TdsdStoredProc
     StoredProcName = 'gpSelect_Movement_Income_Partner'
@@ -1084,7 +1129,7 @@ object IncomePartnerJournalForm: TIncomePartnerJournalForm
         ParamType = ptInput
       end>
     PackSize = 1
-    Left = 64
+    Left = 56
     Top = 232
   end
   object PopupMenu: TPopupMenu
@@ -1111,6 +1156,9 @@ object IncomePartnerJournalForm: TIncomePartnerJournalForm
     end
     object N9: TMenuItem
       Caption = '-'
+    end
+    object N1: TMenuItem
+      Action = actReCompleteList
     end
     object N10: TMenuItem
       Action = actCompleteList
@@ -1272,5 +1320,27 @@ object IncomePartnerJournalForm: TIncomePartnerJournalForm
       end>
     Left = 400
     Top = 200
+  end
+  object spMovementReComplete: TdsdStoredProc
+    StoredProcName = 'gpReComplete_Movement_Income'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'Id'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inIsLastComplete'
+        Value = 'True'
+        DataType = ftBoolean
+        ParamType = ptInput
+      end>
+    PackSize = 1
+    Left = 761
+    Top = 178
   end
 end

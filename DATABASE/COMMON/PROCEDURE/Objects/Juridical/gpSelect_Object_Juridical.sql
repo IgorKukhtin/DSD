@@ -6,6 +6,7 @@ CREATE OR REPLACE FUNCTION gpSelect_Object_Juridical(
     IN inSession        TVarChar       -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, Code Integer, Name TVarChar,
+               DayTaxSummary TFloat,
                GLNCode TVarChar, isCorporate Boolean, isTaxSummary Boolean,
                JuridicalGroupId Integer, JuridicalGroupName TVarChar,
                GoodsPropertyId Integer, GoodsPropertyName TVarChar,
@@ -78,6 +79,8 @@ BEGIN
          Object_Juridical.Id             AS Id 
        , Object_Juridical.ObjectCode     AS Code
        , Object_Juridical.ValueData      AS Name
+        
+       , COALESCE (ObjectFloat_DayTaxSummary.ValueData, CAST(0 as TFloat)) AS DayTaxSummary
 
        , ObjectString_GLNCode.ValueData      AS GLNCode
        , ObjectBoolean_isCorporate.ValueData AS isCorporate
@@ -138,6 +141,10 @@ BEGIN
         LEFT JOIN ObjectBoolean AS ObjectBoolean_isTaxSummary
                                 ON ObjectBoolean_isTaxSummary.ObjectId = Object_Juridical.Id 
                                AND ObjectBoolean_isTaxSummary.DescId = zc_ObjectBoolean_Juridical_isTaxSummary()
+
+        LEFT JOIN ObjectFloat AS ObjectFloat_DayTaxSummary 
+                              ON ObjectFloat_DayTaxSummary.ObjectId = Object_Juridical.Id 
+                             AND ObjectFloat_DayTaxSummary.DescId = zc_ObjectFloat_Juridical_DayTaxSummary()
 
         LEFT JOIN ObjectDate AS ObjectDate_StartPromo
                              ON ObjectDate_StartPromo.ObjectId = Object_Juridical.Id

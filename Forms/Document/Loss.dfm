@@ -1267,10 +1267,10 @@ inherited LossForm: TLossForm
   object GuidesFrom: TdsdGuides
     KeyField = 'Id'
     LookupControl = edFrom
-    FormNameParam.Value = 'TUnitForm'
+    FormNameParam.Value = 'TUnit_ObjectForm'
     FormNameParam.DataType = ftString
-    FormName = 'TUnitForm'
-    PositionDataSet = 'ClientDataSet'
+    FormName = 'TUnit_ObjectForm'
+    PositionDataSet = 'MasterCDS'
     Params = <
       item
         Name = 'Key'
@@ -1287,15 +1287,14 @@ inherited LossForm: TLossForm
         DataType = ftString
         ParamType = ptInput
       end>
-    Left = 488
-    Top = 65528
+    Left = 440
   end
   object GuidesTo: TdsdGuides
     KeyField = 'Id'
     LookupControl = edTo
-    FormNameParam.Value = 'TUnitForm'
+    FormNameParam.Value = 'TStoragePlace_ObjectForm'
     FormNameParam.DataType = ftString
-    FormName = 'TUnitForm'
+    FormName = 'TStoragePlace_ObjectForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
       item
@@ -1313,7 +1312,7 @@ inherited LossForm: TLossForm
         DataType = ftString
         ParamType = ptInput
       end>
-    Left = 680
+    Left = 648
     Top = 8
   end
   object GuidesArticleLoss: TdsdGuides

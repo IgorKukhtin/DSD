@@ -12,7 +12,7 @@ BEGIN
 
      -- таблица - количественные Master(приход)-элементы документа, со всеми свойствами для формирования Аналитик в проводках
      CREATE TEMP TABLE _tmpItem (MovementItemId Integer
-                               , MIContainerId_To Integer, ContainerId_GoodsTo Integer, GoodsId Integer, GoodsKindId Integer, AssetId Integer, PartionGoods TVarChar, PartionGoodsDate TDateTime
+                               , MIContainerId_To Integer, ContainerId_GoodsTo Integer, GoodsId Integer, GoodsKindId Integer, GoodsKindId_complete Integer, AssetId Integer, PartionGoods TVarChar, PartionGoodsDate TDateTime
                                , OperCount TFloat
                                , InfoMoneyDestinationId Integer, InfoMoneyId Integer
                                , BusinessId_To Integer
@@ -24,7 +24,7 @@ BEGIN
 
      -- таблица - количественные Child(расход)-элементы документа, со всеми свойствами для формирования Аналитик в проводках
      CREATE TEMP TABLE _tmpItemChild (MovementItemId_Parent Integer, MovementItemId Integer
-                                    , ContainerId_GoodsFrom Integer, GoodsId Integer, GoodsKindId Integer, AssetId Integer, PartionGoods TVarChar, PartionGoodsDate TDateTime
+                                    , ContainerId_GoodsFrom Integer, GoodsId Integer, GoodsKindId Integer, GoodsKindId_complete Integer, AssetId Integer, PartionGoods TVarChar, PartionGoodsDate TDateTime
                                     , OperCount TFloat
                                     , InfoMoneyDestinationId Integer, InfoMoneyId Integer
                                     , BusinessId_From Integer

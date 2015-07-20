@@ -732,6 +732,14 @@ object Report_MotionGoodsForm: TReport_MotionGoodsForm
         Options.Editing = False
         Width = 70
       end
+      object GoodsKindName_complete: TcxGridDBColumn
+        Caption = #1042#1080#1076' '#1090#1086#1074#1072#1088#1072' ('#1043#1055')'
+        DataBinding.FieldName = 'GoodsKindName_complete'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 70
+      end
       object PartionGoodsName: TcxGridDBColumn
         Caption = #1055#1072#1088#1090#1080#1103' '#1090#1086#1074#1072#1088#1072
         DataBinding.FieldName = 'PartionGoodsName'
@@ -2299,6 +2307,14 @@ object Report_MotionGoodsForm: TReport_MotionGoodsForm
         end
         item
           Visible = True
+          ItemName = 'dxBarButton1'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbToExcel'
         end
         item
@@ -2360,6 +2376,10 @@ object Report_MotionGoodsForm: TReport_MotionGoodsForm
     end
     object bbPrint3: TdxBarButton
       Action = actPrint_Remains
+      Category = 0
+    end
+    object dxBarButton1: TdxBarButton
+      Action = actPrint_Loss
       Category = 0
     end
   end
@@ -2546,6 +2566,7 @@ object Report_MotionGoodsForm: TReport_MotionGoodsForm
             'l'
           GridView = cxGridDBTableView
         end>
+      CopiesCount = 1
       Params = <
         item
           Name = 'StartDate'
@@ -2754,7 +2775,6 @@ object Report_MotionGoodsForm: TReport_MotionGoodsForm
       Caption = #1054#1090#1095#1077#1090' '#1076#1074#1080#1078#1077#1085#1080#1077' '#1087#1086' '#1090#1086#1074#1072#1088#1091' ('#1089#1082#1083#1072#1076' '#1043#1055')'
       Hint = #1054#1090#1095#1077#1090' '#1076#1074#1080#1078#1077#1085#1080#1077' '#1087#1086' '#1090#1086#1074#1072#1088#1091' ('#1089#1082#1083#1072#1076' '#1043#1055')'
       ImageIndex = 18
-      ShortCut = 16464
       DataSets = <
         item
           UserName = 'frxDBDMaster'
@@ -2764,6 +2784,7 @@ object Report_MotionGoodsForm: TReport_MotionGoodsForm
             'l'
           GridView = cxGridDBTableView
         end>
+      CopiesCount = 1
       Params = <
         item
           Name = 'StartDate'
@@ -2853,7 +2874,6 @@ object Report_MotionGoodsForm: TReport_MotionGoodsForm
       Caption = #1054#1090#1095#1077#1090' '#1076#1074#1080#1078#1077#1085#1080#1077' '#1087#1086' '#1090#1086#1074#1072#1088#1091' ('#1086#1089#1090#1072#1090#1086#1082' '#1085#1072' '#1076#1072#1090#1091')'
       Hint = #1054#1090#1095#1077#1090' '#1076#1074#1080#1078#1077#1085#1080#1077' '#1087#1086' '#1090#1086#1074#1072#1088#1091' ('#1086#1089#1090#1072#1090#1086#1082' '#1085#1072' '#1076#1072#1090#1091')'
       ImageIndex = 19
-      ShortCut = 16464
       DataSets = <
         item
           UserName = 'frxDBDMaster'
@@ -2863,6 +2883,7 @@ object Report_MotionGoodsForm: TReport_MotionGoodsForm
             'l'
           GridView = cxGridDBTableView
         end>
+      CopiesCount = 1
       Params = <
         item
           Name = 'StartDate'
@@ -2929,6 +2950,105 @@ object Report_MotionGoodsForm: TReport_MotionGoodsForm
         end>
       ReportName = #1054#1090#1095#1077#1090' '#1076#1074#1080#1078#1077#1085#1080#1077' '#1087#1086' '#1090#1086#1074#1072#1088#1091' ('#1086#1089#1090#1072#1090#1086#1082')'
       ReportNameParam.Value = #1054#1090#1095#1077#1090' '#1076#1074#1080#1078#1077#1085#1080#1077' '#1087#1086' '#1090#1086#1074#1072#1088#1091' ('#1086#1089#1090#1072#1090#1086#1082')'
+      ReportNameParam.DataType = ftString
+    end
+    object actPrint_Loss: TdsdPrintAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProcList = <>
+      Caption = #1054#1090#1095#1077#1090' % '#1089#1087#1080#1089#1072#1085#1080#1103
+      Hint = #1054#1090#1095#1077#1090' % '#1089#1087#1080#1089#1072#1085#1080#1103
+      ImageIndex = 17
+      DataSets = <
+        item
+          UserName = 'frxDBDMaster'
+          IndexFieldNames = 
+            'GoodsGroupNameFull;GoodsGroupName;GoodsName;GoodsKindName;Partio' +
+            'nGoodsName;AssetToName;InfoMoneyName_all;InfoMoneyName_all_Detai' +
+            'l'
+          GridView = cxGridDBTableView
+        end>
+      CopiesCount = 1
+      Params = <
+        item
+          Name = 'StartDate'
+          Value = 42005d
+          Component = deStart
+          DataType = ftDateTime
+        end
+        item
+          Name = 'EndDate'
+          Value = 42005d
+          Component = deEnd
+          DataType = ftDateTime
+        end
+        item
+          Name = 'UnitGroupName'
+          Value = ''
+          Component = GuidesUnitGroup
+          ComponentItem = 'TextValue'
+          DataType = ftString
+        end
+        item
+          Name = 'LocationName'
+          Value = ''
+          Component = GuidesLocation
+          ComponentItem = 'TextValue'
+          DataType = ftString
+        end
+        item
+          Name = 'GoodsGroupName'
+          Value = ''
+          Component = GuidesGoodsGroup
+          ComponentItem = 'TextValue'
+          DataType = ftString
+        end
+        item
+          Name = 'GoodsName'
+          Value = ''
+          Component = GuidesGoods
+          ComponentItem = 'TextValue'
+        end
+        item
+          Name = 'isGoodsKind'
+          Value = 'False'
+          Component = cbGoodsKind
+          DataType = ftBoolean
+        end
+        item
+          Name = 'isPartionGoods'
+          Value = 'False'
+          Component = cbPartionGoods
+          DataType = ftBoolean
+        end
+        item
+          Name = 'isAmount'
+          Value = 'False'
+          Component = cbAmount
+          DataType = ftBoolean
+        end
+        item
+          Name = 'isInfoMoney'
+          Value = 'False'
+          Component = cbInfoMoney
+          DataType = ftBoolean
+        end
+        item
+          Name = 'UnitGroupName_by'
+          Value = ''
+          Component = GuidesUnitGroup_by
+          ComponentItem = 'TextValue'
+          DataType = ftString
+        end
+        item
+          Name = 'LocationName_by'
+          Value = ''
+          Component = GuidesLocation_by
+          ComponentItem = 'TextValue'
+          DataType = ftString
+        end>
+      ReportName = #1054#1090#1095#1077#1090' '#1087#1086' '#1086#1089#1090#1072#1090#1082#1072#1084' '#1090#1086#1074#1072#1088#1072' ('#1087#1088#1086#1094#1077#1085#1090' '#1089#1087#1080#1089#1072#1085#1080#1103')'
+      ReportNameParam.Value = #1054#1090#1095#1077#1090' '#1087#1086' '#1086#1089#1090#1072#1090#1082#1072#1084' '#1090#1086#1074#1072#1088#1072' ('#1087#1088#1086#1094#1077#1085#1090' '#1089#1087#1080#1089#1072#1085#1080#1103')'
       ReportNameParam.DataType = ftString
     end
   end

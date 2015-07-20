@@ -59,25 +59,28 @@ BEGIN
                              GROUP BY tmpGoods.GoodsId
                                     , tmpGoods.GoodsKindId
                             )
-                , tmpPartion AS (-- поиск Партий - аналитика у проводок
-                                 SELECT tmpMI_master.GoodsId
+                , tmpPartion AS (-- поиск Партий
+                                 SELECT ObjectDate_PartionGoods_Value.ObjectId AS PartionGoodsId -- Партия нужна что б проверить закрыта ли она, если нет - такие элементы распределяться не будут
+                                      , tmpMI_master.PartionGoodsDate
+                                      , tmpMI_master.GoodsId
                                       , tmpMI_master.GoodsKindId
-                                      , MAX (ObjectDate_PartionGoods_Value.ObjectId) AS PartionGoodsId -- Партия нужна что б проверить закрыта ли она, если нет - эти элементы здесь не распределяются
                                  FROM tmpMI_master
                                       INNER JOIN ObjectDate AS ObjectDate_PartionGoods_Value ON ObjectDate_PartionGoods_Value.ValueData = tmpMI_master.PartionGoodsDate
                                                                                             AND ObjectDate_PartionGoods_Value.DescId = zc_ObjectDate_PartionGoods_Value()
-                                      LEFT JOIN ObjectLink AS ObjectLink_PartionGoods_Unit
-                                                           ON ObjectLink_PartionGoods_Unit.ObjectId = ObjectDate_PartionGoods_Value.ObjectId
-                                                          AND ObjectLink_PartionGoods_Unit.DescId = zc_ObjectLink_PartionGoods_Unit()
-                                 WHERE ObjectLink_PartionGoods_Unit.ObjectId IS NULL -- т.е. вообще нет этого св-ва
-                                 GROUP BY tmpMI_master.GoodsId
+                                      INNER JOIN ObjectLink AS ObjectLink_PartionGoods_GoodsKindComplete
+                                                            ON ObjectLink_PartionGoods_GoodsKindComplete.ObjectId = ObjectDate_PartionGoods_Value.ObjectId
+                                                           AND ObjectLink_PartionGoods_GoodsKindComplete.DescId = zc_ObjectLink_PartionGoods_GoodsKindComplete()
+                                                           AND ObjectLink_PartionGoods_GoodsKindComplete.ChildObjectId = tmpMI_master.GoodsKindId
+                                 -- надо группировать GoodsId + GoodsKindId + PartionGoodsDate в строчной части могут дублироваться
+                                 GROUP BY ObjectDate_PartionGoods_Value.ObjectId
+                                        , tmpMI_master.PartionGoodsDate
+                                        , tmpMI_master.GoodsId
                                         , tmpMI_master.GoodsKindId
                                 )
      , tmpReceipt_parent AS (-- поиск из чего делается товар + в разрезе нужных партий
                              SELECT tmpPartion.PartionGoodsId
                                   , tmpPartion.GoodsId
                                   , tmpPartion.GoodsKindId
-                                  , tmpReceipt.ReceiptId
                                   , ObjectLink_Receipt_Goods_parent.ChildObjectId     AS GoodsId_parent
                                   , ObjectLink_Receipt_GoodsKind_parent.ChildObjectId AS GoodsKindId_parent
                              FROM tmpPartion
@@ -89,11 +92,11 @@ BEGIN
                                   INNER JOIN Object AS Object_Receipt_parent ON Object_Receipt_parent.Id       = ObjectLink_Receipt_Parent.ChildObjectId
                                                                             AND Object_Receipt_parent.isErased = FALSE
                                   INNER JOIN ObjectLink AS ObjectLink_Receipt_Goods_parent
-                                                        ON ObjectLink_Receipt_Goods_parent.ChildObjectId = ObjectLink_Receipt_Parent.ChildObjectId
-                                                       AND ObjectLink_Receipt_Goods_parent.DescId        = zc_ObjectLink_Receipt_Goods()
+                                                        ON ObjectLink_Receipt_Goods_parent.ObjectId = ObjectLink_Receipt_Parent.ChildObjectId
+                                                       AND ObjectLink_Receipt_Goods_parent.DescId   = zc_ObjectLink_Receipt_Goods()
                                   LEFT JOIN ObjectLink AS ObjectLink_Receipt_GoodsKind_parent
-                                                       ON ObjectLink_Receipt_GoodsKind_parent.ChildObjectId = ObjectLink_Receipt_Parent.ChildObjectId
-                                                      AND ObjectLink_Receipt_GoodsKind_parent.DescId        = zc_ObjectLink_Receipt_GoodsKind()
+                                                       ON ObjectLink_Receipt_GoodsKind_parent.ObjectId = ObjectLink_Receipt_Parent.ChildObjectId
+                                                      AND ObjectLink_Receipt_GoodsKind_parent.DescId   = zc_ObjectLink_Receipt_GoodsKind()
                             )
        , tmpPartionClose AS (-- поиск ПФ-ГП, и определяется закрыта ли по ним партия
                              SELECT tmp.PartionGoodsId, tmp.GoodsId_parent, tmp.GoodsKindId_parent
@@ -138,11 +141,12 @@ BEGIN
         FROM tmpMI_master
              LEFT JOIN tmpReceipt ON tmpReceipt.GoodsId     = tmpMI_master.GoodsId
                                  AND tmpReceipt.GoodsKindId = tmpMI_master.GoodsKindId
-             LEFT JOIN tmpPartion ON tmpPartion.GoodsId     = tmpMI_master.GoodsId
-                                 AND tmpPartion.GoodsKindId = tmpMI_master.GoodsKindId
-             LEFT JOIN tmpReceipt_parent ON tmpReceipt_parent.PartionGoodsId = tmpPartion.PartionGoodsId
-                                        AND tmpReceipt_parent.GoodsId        = tmpPartion.GoodsId
-                                        AND tmpReceipt_parent.GoodsKindId    = tmpPartion.GoodsKindId
+             LEFT JOIN tmpPartion ON tmpPartion.GoodsId          = tmpMI_master.GoodsId
+                                 AND tmpPartion.GoodsKindId      = tmpMI_master.GoodsKindId
+                                 AND tmpPartion.PartionGoodsDate = tmpMI_master.PartionGoodsDate
+             LEFT JOIN tmpReceipt_parent ON tmpReceipt_parent.GoodsId        = tmpMI_master.GoodsId
+                                        AND tmpReceipt_parent.GoodsKindId    = tmpMI_master.GoodsKindId
+                                        AND tmpReceipt_parent.PartionGoodsId = tmpPartion.PartionGoodsId
              LEFT JOIN tmpPartionClose ON tmpPartionClose.PartionGoodsId     = tmpReceipt_parent.PartionGoodsId
                                       AND tmpPartionClose.GoodsId_parent     = tmpReceipt_parent.GoodsId_parent
                                       AND tmpPartionClose.GoodsKindId_parent = tmpReceipt_parent.GoodsKindId_parent
@@ -150,6 +154,14 @@ BEGIN
         -- WHERE COALESCE (tmpPartionClose.isPartionClose, 1) = 1
        ;
 
+     -- Проверка
+     IF EXISTS (SELECT MovementItemId, GoodsId, GoodsKindId FROM _tmpItem_Partion GROUP BY MovementItemId, GoodsId, GoodsKindId HAVING COUNT(*) > 1)
+     THEN
+         RAISE EXCEPTION 'Ошибка.Дублирование элементов <%> <%> <%>', (SELECT MovementItemId FROM _tmpItem_Partion GROUP BY MovementItemId, GoodsId, GoodsKindId HAVING COUNT(*) > 1 ORDER BY MovementItemId, GoodsId, GoodsKindId LIMIT 1)
+                                                                    , (SELECT GoodsId FROM _tmpItem_Partion GROUP BY MovementItemId, GoodsId, GoodsKindId HAVING COUNT(*) > 1 ORDER BY MovementItemId, GoodsId, GoodsKindId LIMIT 1)
+                                                                    , (SELECT GoodsKindId FROM _tmpItem_Partion GROUP BY MovementItemId, GoodsId, GoodsKindId HAVING COUNT(*) > 1 ORDER BY MovementItemId, GoodsId, GoodsKindId LIMIT 1)
+                                                                     ;
+     END IF;
 
      -- !!!!!!!!!!!!!!!!!!!!!!!
      ANALYZE _tmpItem_Partion;

@@ -65,7 +65,8 @@ uses
   FP3141_TLB in '..\FormsFarmacy\Cash\FP3141_TLB.pas',
   CashCloseDialog in '..\FormsFarmacy\Cash\CashCloseDialog.pas' {CashCloseDialogForm: TParentForm},
   VIPDialog in '..\FormsFarmacy\Cash\VIPDialog.pas' {VIPDialogForm: TParentForm},
-  CashWork in '..\FormsFarmacy\Cash\CashWork.pas' {CashWorkForm};
+  CashWork in '..\FormsFarmacy\Cash\CashWork.pas' {CashWorkForm},
+  AncestorDialog in '..\Forms\Ancestor\AncestorDialog.pas' {AncestorDialogForm: TParentForm};
 
 {$R *.res}
 

@@ -20,7 +20,7 @@ RETURNS TABLE (AccountGroupName TVarChar, AccountDirectionName TVarChar
              , LocationDescName TVarChar, LocationId Integer, LocationCode Integer, LocationName TVarChar
              , CarCode Integer, CarName TVarChar
              , GoodsGroupName TVarChar, GoodsGroupNameFull TVarChar
-             , GoodsId Integer, GoodsCode Integer, GoodsName TVarChar, GoodsKindId Integer, GoodsKindName TVarChar, MeasureName TVarChar
+             , GoodsId Integer, GoodsCode Integer, GoodsName TVarChar, GoodsKindId Integer, GoodsKindName TVarChar, GoodsKindName_complete TVarChar, MeasureName TVarChar
              , Weight TFloat
              , PartionGoodsId Integer, PartionGoodsName TVarChar, AssetToName TVarChar
 
@@ -133,13 +133,8 @@ RETURNS TABLE (AccountGroupName TVarChar, AccountDirectionName TVarChar
              , SummOtherOut_by TFloat         -- расход другой
 
              , CountProductionOut_Norm TFloat        -- Расход с произв. норма
-             , CountProductionOut_Fact2 TFloat        -- 
-             , SummProductionOut_Norm TFloat        -- Расход с произв. норма
-             , SummProductionOut_Fact2 TFloat        --
+             , SummProductionOut_Norm  TFloat        -- Расход с произв. норма
           
-             , PriceListStart TFloat
-             , PriceListEnd TFloat
-
              , InfoMoneyId Integer, InfoMoneyCode Integer, InfoMoneyGroupName TVarChar, InfoMoneyDestinationName TVarChar, InfoMoneyName TVarChar, InfoMoneyName_all TVarChar
              , InfoMoneyId_Detail Integer, InfoMoneyCode_Detail Integer, InfoMoneyGroupName_Detail TVarChar, InfoMoneyDestinationName_Detail TVarChar, InfoMoneyName_Detail TVarChar, InfoMoneyName_all_Detail TVarChar
 
@@ -150,39 +145,67 @@ RETURNS TABLE (AccountGroupName TVarChar, AccountDirectionName TVarChar
 AS
 $BODY$
    DECLARE vbUserId Integer;
+
+   DECLARE vbIsSummIn Boolean;
 BEGIN
     -- проверка прав пользователя на вызов процедуры
     -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Report_MotionGoods());
     vbUserId:= lpGetUserBySession (inSession);
 
 
+    -- !!!определяется!!!
+    vbIsSummIn:= NOT EXISTS (SELECT 1 FROM Object_RoleAccessKey_View WHERE UserId = vbUserId AND RoleId = 442647); -- Отчеты руководитель сырья
+
     -- таблица -
     CREATE TEMP TABLE _tmpLocation (LocationId Integer, DescId Integer, ContainerDescId Integer) ON COMMIT DROP;
     CREATE TEMP TABLE _tmpLocation_by (LocationId Integer) ON COMMIT DROP;
+    -- таблица -
+    CREATE TEMP TABLE _tmpGoods (GoodsId Integer) ON COMMIT DROP;
+
+    -- товары
+    IF inGoodsGroupId <> 0 AND COALESCE (inGoodsId, 0) = 0
+    THEN
+        INSERT INTO _tmpGoods (GoodsId)
+          SELECT lfObject.GoodsId FROM lfSelect_Object_Goods_byGoodsGroup (inGoodsGroupId) AS lfObject;
+    ELSE IF inGoodsId <> 0
+         THEN
+             INSERT INTO _tmpGoods (GoodsId)
+               SELECT inGoodsId;
+         END IF;
+   END IF;
 
     -- группа подразделений или подразделение или место учета (МО, Авто)
-    IF inUnitGroupId <> 0
+    IF inUnitGroupId <> 0 AND COALESCE (inLocationId, 0) = 0
     THEN
         INSERT INTO _tmpLocation (LocationId, DescId, ContainerDescId)
            SELECT lfSelect_Object_Unit_byGroup.UnitId AS LocationId
                 , zc_ContainerLinkObject_Unit()       AS DescId
                 , tmpDesc.ContainerDescId
            FROM lfSelect_Object_Unit_byGroup (inUnitGroupId) AS lfSelect_Object_Unit_byGroup
-                LEFT JOIN (SELECT zc_Container_Count() AS ContainerDescId UNION SELECT zc_Container_Summ() AS ContainerDescId) AS tmpDesc ON 1 = 1
+                LEFT JOIN (SELECT zc_Container_Count() AS ContainerDescId UNION SELECT zc_Container_Summ() AS ContainerDescId WHERE vbIsSummIn = TRUE) AS tmpDesc ON 1 = 1
           ;
     ELSE
         IF inLocationId <> 0
         THEN
             INSERT INTO _tmpLocation (LocationId, DescId, ContainerDescId)
                SELECT Object.Id AS LocationId
-                    , CASE WHEN Object.DescId = zc_Object_Unit() THEN zc_ContainerLinkObject_Unit() 
-                           WHEN Object.DescId = zc_Object_Car() THEN zc_ContainerLinkObject_Car() 
+                    , CASE WHEN Object.DescId = zc_Object_Unit()   THEN zc_ContainerLinkObject_Unit() 
+                           WHEN Object.DescId = zc_Object_Car()    THEN zc_ContainerLinkObject_Car() 
                            WHEN Object.DescId = zc_Object_Member() THEN zc_ContainerLinkObject_Member()
                       END AS DescId
                     , tmpDesc.ContainerDescId
                FROM Object
-                    LEFT JOIN (SELECT zc_Container_Count() AS ContainerDescId UNION SELECT zc_Container_Summ() AS ContainerDescId) AS tmpDesc ON 1 = 1
-               WHERE Object.Id = inLocationId;
+                    -- LEFT JOIN (SELECT zc_Container_Count() AS ContainerDescId /*UNION SELECT zc_Container_Summ() AS ContainerDescId*/) AS tmpDesc ON 1 = 1 -- !!!временно без с/с, для скорости!!!
+                    LEFT JOIN (SELECT zc_Container_Count() AS ContainerDescId UNION SELECT zc_Container_Summ() AS ContainerDescId WHERE vbIsSummIn = TRUE) AS tmpDesc ON 1 = 1
+               WHERE Object.Id = inLocationId
+             UNION
+               SELECT lfSelect.UnitId               AS LocationId
+                    , zc_ContainerLinkObject_Unit() AS DescId
+                    , tmpDesc.ContainerDescId
+               FROM lfSelect_Object_Unit_byGroup (inLocationId) AS lfSelect
+                    -- LEFT JOIN (SELECT zc_Container_Count() AS ContainerDescId /*UNION SELECT zc_Container_Summ() AS ContainerDescId*/) AS tmpDesc ON 1 = 1 -- !!!временно без с/с, для скорости!!!
+                    LEFT JOIN (SELECT zc_Container_Count() AS ContainerDescId UNION SELECT zc_Container_Summ() AS ContainerDescId WHERE vbIsSummIn = TRUE) AS tmpDesc ON 1 = 1
+              ;
         ELSE
             WITH tmpBranch AS (SELECT TRUE AS Value WHERE 1 = 0 AND NOT EXISTS (SELECT BranchId FROM Object_RoleAccessKeyGuide_View WHERE UserId = inUserId AND BranchId <> 0))
             INSERT INTO _tmpLocation (LocationId)
@@ -201,7 +224,7 @@ BEGIN
     INSERT INTO _tmpLocation_by (LocationId)                 
             SELECT lfSelect_Object_Unit_byGroup.UnitId AS LocationId
             FROM lfSelect_Object_Unit_byGroup (8439) AS lfSelect_Object_Unit_byGroup        -- "Участок мясного сырья" и все в него входящее
-          union all
+           UNION
             SELECT lfSelect_Object_Unit_byGroup.UnitId AS LocationId
             FROM lfSelect_Object_Unit_byGroup (8455) AS lfSelect_Object_Unit_byGroup        -- "Склад специй"
     ;
@@ -213,17 +236,75 @@ BEGIN
 
     -- Результат
     RETURN QUERY
-    WITH tmpPriceStart AS (SELECT lfObjectHistory_PriceListItem.GoodsId
-                                , (lfObjectHistory_PriceListItem.ValuePrice * 1.2) :: TFloat AS Price
-                           FROM lfSelect_ObjectHistory_PriceListItem (inPriceListId:= zc_PriceList_Basis(), inOperDate:= inStartDate) AS lfObjectHistory_PriceListItem
-                           WHERE lfObjectHistory_PriceListItem.ValuePrice <> 0
-                          )
-         , tmpPriceEnd AS (SELECT lfObjectHistory_PriceListItem.GoodsId
-                                , (lfObjectHistory_PriceListItem.ValuePrice * 1.2) :: TFloat AS Price
-                           FROM lfSelect_ObjectHistory_PriceListItem (inPriceListId:= zc_PriceList_Basis(), inOperDate:= inEndDate) AS lfObjectHistory_PriceListItem
-                           WHERE lfObjectHistory_PriceListItem.ValuePrice <> 0
-                          )
-       , tmpReport AS (SELECT * FROM lpReport_MotionGoods (inStartDate:= inStartDate, inEndDate:= inEndDate, inAccountGroupId:= inAccountGroupId, inUnitGroupId:= inUnitGroupId, inLocationId:= inLocationId, inGoodsGroupId:= inGoodsGroupId, inGoodsId:= inGoodsId, inIsInfoMoney:= inIsInfoMoney, inUserId:= vbUserId))
+    WITH tmpReport AS (SELECT * FROM lpReport_MotionGoods (inStartDate:= inStartDate, inEndDate:= inEndDate, inAccountGroupId:= inAccountGroupId, inUnitGroupId:= inUnitGroupId, inLocationId:= inLocationId, inGoodsGroupId:= inGoodsGroupId, inGoodsId:= inGoodsId, inIsInfoMoney:= TRUE, inUserId:= vbUserId))
+
+    , tmpLocation AS (SELECT _tmpLocation.LocationId FROM _tmpLocation GROUP BY _tmpLocation.LocationId)
+
+    , tmpMIContainer_GP AS (-- Приход с производства ГП
+                            SELECT MIContainer.AnalyzerId                           AS LocationId
+                                 , MIContainer.ObjectId_Analyzer                    AS GoodsId
+                                 , COALESCE (MILinkObject_Receipt.ObjectId, 0)      AS ReceiptId
+                                 , COALESCE (MIBoolean_TaxExit.ValueData, TRUE)     AS isTaxExit
+                                 , SUM (MIContainer.Amount)                         AS OperCount
+                                 , SUM (COALESCE (MIFloat_CuterCount.ValueData, 0)) AS CuterCount
+                            FROM tmpLocation
+                                 INNER JOIN MovementItemContainer AS MIContainer ON MIContainer.OperDate BETWEEN inStartDate AND inEndDate
+                                                                                AND MIContainer.DescId                 = zc_MIContainer_Count()
+                                                                                -- AND MIContainer.WhereObjectId_Analyzer = _tmpLocation.LocationId
+                                                                                AND MIContainer.AnalyzerId             = tmpLocation.LocationId
+                                                                                AND MIContainer.MovementDescId         = zc_Movement_ProductionUnion()
+                                                                                AND MIContainer.isActive               = TRUE
+                                 LEFT JOIN MovementItemBoolean AS MIBoolean_TaxExit
+                                                               ON MIBoolean_TaxExit.MovementItemId = MIContainer.MovementItemId
+                                                              AND MIBoolean_TaxExit.DescId = zc_MIBoolean_TaxExit()
+                                 LEFT JOIN MovementItemFloat AS MIFloat_CuterCount
+                                                             ON MIFloat_CuterCount.MovementItemId = MIContainer.MovementItemId
+                                                            AND MIFloat_CuterCount.DescId = zc_MIFloat_CuterCount()
+                                 LEFT JOIN MovementItemLinkObject AS MILinkObject_Receipt
+                                                                  ON MILinkObject_Receipt.MovementItemId = MIContainer.MovementItemId
+                                                                 AND MILinkObject_Receipt.DescId = zc_MILinkObject_Receipt()
+                            GROUP BY MIContainer.AnalyzerId
+                                   , MIContainer.ObjectId_Analyzer
+                                   , COALESCE (MILinkObject_Receipt.ObjectId, 0)
+                                   , COALESCE (MIBoolean_TaxExit.ValueData, TRUE)
+                           )
+        , tmpOut_norm AS (-- 
+                          SELECT tmpMIContainer_GP.LocationId
+                               , COALESCE (ObjectLink_ReceiptChild_Goods.ChildObjectId, 0)     AS GoodsId
+                               , COALESCE (ObjectLink_ReceiptChild_GoodsKind.ChildObjectId, 0) AS GoodsKindId
+                               , SUM (CASE WHEN tmpMIContainer_GP.CuterCount <> 0 AND tmpMIContainer_GP.isTaxExit = TRUE
+                                                THEN tmpMIContainer_GP.CuterCount * COALESCE (ObjectFloat_Value.ValueData, 0)
+                                           WHEN ObjectFloat_Value_master.ValueData <> 0
+                                                THEN tmpMIContainer_GP.OperCount * COALESCE (ObjectFloat_Value.ValueData, 0) / ObjectFloat_Value_master.ValueData
+                                           ELSE 0
+                                      END) AS OperCount
+                          FROM tmpMIContainer_GP
+                              LEFT JOIN ObjectFloat AS ObjectFloat_Value_master
+                                                    ON ObjectFloat_Value_master.ObjectId = tmpMIContainer_GP.ReceiptId
+                                                   AND ObjectFloat_Value_master.DescId = zc_ObjectFloat_Receipt_Value()
+                              LEFT JOIN ObjectLink AS ObjectLink_ReceiptChild_Receipt
+                                                   ON ObjectLink_ReceiptChild_Receipt.ChildObjectId = ObjectFloat_Value_master.ObjectId
+                                                  AND ObjectLink_ReceiptChild_Receipt.DescId = zc_ObjectLink_ReceiptChild_Receipt()
+                              LEFT JOIN Object AS Object_ReceiptChild ON Object_ReceiptChild.Id = ObjectLink_ReceiptChild_Receipt.ObjectId
+                                                                     AND Object_ReceiptChild.isErased = FALSE
+                              LEFT JOIN ObjectLink AS ObjectLink_ReceiptChild_Goods
+                                                   ON ObjectLink_ReceiptChild_Goods.ObjectId = Object_ReceiptChild.Id
+                                                  AND ObjectLink_ReceiptChild_Goods.DescId = zc_ObjectLink_ReceiptChild_Goods()
+                              LEFT JOIN ObjectLink AS ObjectLink_ReceiptChild_GoodsKind
+                                                   ON ObjectLink_ReceiptChild_GoodsKind.ObjectId = Object_ReceiptChild.Id
+                                                  AND ObjectLink_ReceiptChild_GoodsKind.DescId = zc_ObjectLink_ReceiptChild_GoodsKind()
+                              LEFT JOIN ObjectFloat AS ObjectFloat_Value
+                                                    ON ObjectFloat_Value.ObjectId = Object_ReceiptChild.Id
+                                                   AND ObjectFloat_Value.DescId = zc_ObjectFloat_ReceiptChild_Value()
+                              LEFT JOIN _tmpGoods ON _tmpGoods.GoodsId = ObjectLink_ReceiptChild_Goods.ChildObjectId
+
+                          WHERE _tmpGoods.GoodsId > 0 OR (COALESCE (inGoodsGroupId, 0) = 0 AND COALESCE (inGoodsId, 0) = 0)
+
+                          GROUP BY tmpMIContainer_GP.LocationId
+                                 , COALESCE (ObjectLink_ReceiptChild_Goods.ChildObjectId, 0)
+                                 , COALESCE (ObjectLink_ReceiptChild_GoodsKind.ChildObjectId, 0)
+                          HAVING SUM (CASE WHEN ObjectFloat_Value_master.ValueData <> 0 THEN tmpMIContainer_GP.OperCount * COALESCE (ObjectFloat_Value.ValueData, 0) / ObjectFloat_Value_master.ValueData ELSE 0 END) <> 0
+                         )
 
    -- Результат
    SELECT View_Account.AccountGroupName, View_Account.AccountDirectionName
@@ -241,6 +322,7 @@ BEGIN
         , CAST (COALESCE(Object_Goods.ValueData, '') AS TVarChar)        AS GoodsName
         , CAST (COALESCE(Object_GoodsKind.Id, 0) AS Integer)             AS GoodsKindId
         , CAST (COALESCE(Object_GoodsKind.ValueData, '') AS TVarChar)    AS GoodsKindName
+        , CAST (COALESCE(Object_GoodsKind_complete.ValueData, '') AS TVarChar) AS GoodsKindName_complete
         , Object_Measure.ValueData       AS MeasureName
         , ObjectFloat_Weight.ValueData   AS Weight
         , CAST (COALESCE(Object_PartionGoods.Id, 0) AS Integer)           AS PartionGoodsId
@@ -253,7 +335,6 @@ BEGIN
         , CAST (tmpMIContainer_group.CountEnd * CASE WHEN Object_Measure.Id = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END            AS TFloat) AS CountEnd_Weight
         , CAST (tmpMIContainer_group.CountEnd_calc       AS TFloat) AS CountEnd_calc
         , CAST (tmpMIContainer_group.CountEnd_calc * CASE WHEN Object_Measure.Id = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END       AS TFloat) AS CountEnd_calc_Weight
-
         , CAST (tmpMIContainer_group.CountIncome         AS TFloat) AS CountIncome
         , CAST (tmpMIContainer_group.CountIncome * CASE WHEN Object_Measure.Id = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END         AS TFloat) AS CountIncome_Weight
         , CAST (tmpMIContainer_group.CountReturnOut      AS TFloat) AS CountReturnOut
@@ -410,13 +491,12 @@ BEGIN
         , tmpMIContainer_group.SummOtherOut_by  :: TFloat -- расход другой
 
 
-        , 0::TFloat AS CountProductionOut_Norm
-        , 0::TFloat AS CountProductionOut_Fact2
-        , 0::TFloat AS SummProductionOut_Norm
-        , 0::TFloat AS SummProductionOut_Fact2
+        , tmpMIContainer_group.CountProductionOut_Norm ::TFloat AS CountProductionOut_Norm
+        , CASE WHEN tmpMIContainer_group.CountProductionOut <> 0
+                    THEN tmpMIContainer_group.CountProductionOut_Norm * tmpMIContainer_group.SummProductionOut / tmpMIContainer_group.CountProductionOut
+               ELSE 0
+          END :: TFloat AS SummProductionOut_Norm
 
-        , tmpPriceStart.Price AS PriceListStart
-        , tmpPriceEnd.Price   AS PriceListEnd
 
         , View_InfoMoney.InfoMoneyId
         , View_InfoMoney.InfoMoneyCode
@@ -436,13 +516,92 @@ BEGIN
         , CAST (row_number() OVER () AS INTEGER)        AS LineNum
 
       FROM 
-        (SELECT (tmpMIContainer_all.AccountId) AS AccountId
-              , tmpMIContainer_all.ContainerId
+        (SELECT tmp.AccountId
+              , tmp.ContainerId
+              , tmp.LocationId
+              , tmp.GoodsId
+              , tmp.GoodsKindId
+              , tmp.PartionGoodsId
+              , tmp.AssetToId
+
+              , SUM (tmp.CountStart) AS CountStart
+              , SUM (tmp.CountEnd) AS CountEnd
+              , SUM (tmp.CountEnd_calc) AS CountEnd_calc
+
+              , SUM (tmp.CountIncome) AS CountIncome
+              , SUM (tmp.CountReturnOut) AS CountReturnOut
+
+              , SUM (tmp.CountSendIn) AS CountSendIn
+              , SUM (tmp.CountSendOut) AS CountSendOut
+
+              , SUM (tmp.CountSendOnPriceIn) AS CountSendOnPriceIn
+              , SUM (tmp.CountSendOnPriceOut) AS CountSendOnPriceOut
+
+              , SUM (tmp.CountSale) AS CountSale
+              , SUM (tmp.CountSale_10500) AS CountSale_10500
+              , SUM (tmp.CountSale_40208) AS CountSale_40208
+
+              , SUM (tmp.CountReturnIn) AS CountReturnIn
+              , SUM (tmp.CountReturnIn_40208) AS CountReturnIn_40208
+
+              , SUM (tmp.CountLoss) AS CountLoss
+              , SUM (tmp.CountInventory) AS CountInventory
+
+              , SUM (tmp.CountProductionIn) AS CountProductionIn
+              , SUM (tmp.CountProductionOut) AS CountProductionOut
+
+              , SUM (tmp.CountProductionIn_by) AS CountProductionIn_by
+              , SUM (tmp.SummProductionIn_by) AS SummProductionIn_by
+
+              , SUM (tmp.CountIn_by) AS CountIn_by
+              , SUM (tmp.SummIn_by) AS SummIn_by
+
+              , SUM (tmp.CountOtherIn_by) AS CountOtherIn_by
+              , SUM (tmp.SummOtherIn_by) AS SummOtherIn_by
+
+              , SUM (tmp.CountOut_by) AS CountOut_by
+              , SUM (tmp.SummOut_by) AS SummOut_by
+
+              , SUM (tmp.CountOtherOut_by) AS CountOtherOut_by
+              , SUM (tmp.SummOtherOut_by) AS SummOtherOut_by
+
+              , SUM (tmp.CountTotalIn) AS CountTotalIn
+              , SUM (tmp.CountTotalOut) AS CountTotalOut
+
+              , SUM (tmp.SummStart) AS SummStart
+              , SUM (tmp.SummEnd) AS SummEnd
+              , SUM (tmp.SummEnd_calc) AS SummEnd_calc
+
+              , SUM (tmp.SummIncome) AS SummIncome
+              , SUM (tmp.SummReturnOut) AS SummReturnOut
+              , SUM (tmp.SummSendIn) AS SummSendIn
+              , SUM (tmp.SummSendOut) AS SummSendOut
+              , SUM (tmp.SummSendOnPriceIn) AS SummSendOnPriceIn
+              , SUM (tmp.SummSendOnPriceOut) AS SummSendOnPriceOut
+              , SUM (tmp.SummSale) AS SummSale
+              , SUM (tmp.SummSale_10500) AS SummSale_10500
+              , SUM (tmp.SummSale_40208) AS SummSale_40208
+              , SUM (tmp.SummReturnIn) AS SummReturnIn
+              , SUM (tmp.SummReturnIn_40208) AS SummReturnIn_40208
+              , SUM (tmp.SummLoss) AS SummLoss
+              , SUM (tmp.SummInventory) AS SummInventory
+              , SUM (tmp.SummInventory_RePrice) AS SummInventory_RePrice
+              , SUM (tmp.SummProductionIn) AS SummProductionIn
+              , SUM (tmp.SummProductionOut) AS SummProductionOut
+
+              , SUM (tmp.SummTotalIn) AS SummTotalIn
+              , SUM (tmp.SummTotalOut) AS SummTotalOut
+
+              , SUM (tmp.CountProductionOut_norm) AS CountProductionOut_norm
+         FROM
+        (SELECT 0 AS AccountId
+              , 0 AS ContainerId
               , tmpMIContainer_all.LocationId
               , tmpMIContainer_all.GoodsId
               , tmpMIContainer_all.GoodsKindId
-              , tmpMIContainer_all.PartionGoodsId
-              , tmpMIContainer_all.AssetToId
+              , CASE WHEN tmpMIContainer_all.PartionGoodsId = 80132 THEN 0 ELSE tmpMIContainer_all.PartionGoodsId END AS PartionGoodsId
+              , COALESCE (tmpMIContainer_all.AssetToId, 0)      AS AssetToId
+
               , SUM (tmpMIContainer_all.CountStart)          AS CountStart
               , SUM (tmpMIContainer_all.CountEnd)            AS CountEnd
               , SUM (tmpMIContainer_all.CountEnd_calc)       AS CountEnd_calc
@@ -469,37 +628,41 @@ BEGIN
               , SUM (tmpMIContainer_all.CountProductionIn)   AS CountProductionIn
               , SUM (tmpMIContainer_all.CountProductionOut)  AS CountProductionOut
 
-              , SUM (CASE WHEN _tmpLocation.LocationId IS NULL AND _tmpLocation_by.LocationId IS NULL THEN tmpMIContainer_all.CountProductionIn ELSE 0 END) AS CountProductionIn_by -- приход с произв. (если с другого подр., т.е. не пересорт)
-              , SUM (CASE WHEN _tmpLocation.LocationId IS NULL AND _tmpLocation_by.LocationId IS NULL THEN tmpMIContainer_all.SummProductionIn  ELSE 0 END) AS SummProductionIn_by  -- приход с произв. (если с другого подр., т.е. не пересорт)
+              , SUM (CASE WHEN _tmpLocation.LocationId > 0 THEN tmpMIContainer_all.CountProductionIn ELSE 0 END) AS CountProductionIn_by -- приход с произв. (если с другого подр., т.е. не пересорт)
+              , SUM (CASE WHEN _tmpLocation.LocationId > 0 THEN tmpMIContainer_all.SummProductionIn  ELSE 0 END) AS SummProductionIn_by  -- приход с произв. (если с другого подр., т.е. не пересорт)
 
-              , SUM (CASE WHEN _tmpLocation_by.LocationId > 0 
+              , SUM (CASE WHEN _tmpLocation_by.LocationId > 0 AND _tmpLocation.LocationId IS NULL
                                THEN tmpMIContainer_all.CountSendIn
                                   + tmpMIContainer_all.CountProductionIn
                                   + tmpMIContainer_all.CountSendOnPriceIn
                           ELSE 0
                      END) AS CountIn_by -- приход с "выбранного" подр.
-              , SUM (CASE WHEN _tmpLocation_by.LocationId > 0 
+              , SUM (CASE WHEN _tmpLocation_by.LocationId > 0 AND _tmpLocation.LocationId IS NULL
                                THEN tmpMIContainer_all.SummSendIn
                                   + tmpMIContainer_all.SummProductionIn
                                   + tmpMIContainer_all.SummSendOnPriceIn
                           ELSE 0
                      END) AS SummIn_by -- приход с "выбранного" подр.
 
-              , SUM (CASE WHEN _tmpLocation.LocationId > 0 AND _tmpLocation_by.LocationId IS NULL THEN tmpMIContainer_all.CountProductionIn ELSE 0 END
+              , SUM (CASE WHEN _tmpLocation.LocationId IS NULL AND _tmpLocation_by.LocationId IS NULL THEN tmpMIContainer_all.CountProductionIn ELSE 0 END
                    + CASE WHEN _tmpLocation_by.LocationId IS NULL
                               THEN tmpMIContainer_all.CountSendIn
                                  + tmpMIContainer_all.CountSendOnPriceIn
                           ELSE 0
                      END
                    + tmpMIContainer_all.CountIncome
+                   + tmpMIContainer_all.CountReturnIn
+                   + tmpMIContainer_all.CountReturnIn_40208
                     ) AS CountOtherIn_by -- приход другой
-              , SUM (CASE WHEN _tmpLocation.LocationId > 0 AND _tmpLocation_by.LocationId IS NULL THEN tmpMIContainer_all.SummProductionIn ELSE 0 END
+              , SUM (CASE WHEN _tmpLocation.LocationId IS NULL AND _tmpLocation_by.LocationId IS NULL THEN tmpMIContainer_all.SummProductionIn ELSE 0 END
                    + CASE WHEN _tmpLocation_by.LocationId IS NULL
                               THEN tmpMIContainer_all.SummSendIn
                                  + tmpMIContainer_all.SummSendOnPriceIn
                           ELSE 0
                      END
                    + tmpMIContainer_all.SummIncome
+                   + tmpMIContainer_all.SummReturnIn
+                   + tmpMIContainer_all.SummReturnIn_40208
                     ) AS SummOtherIn_by -- приход другой
 
               , SUM (CASE WHEN _tmpLocation_by.LocationId > 0 
@@ -514,23 +677,30 @@ BEGIN
                                   + tmpMIContainer_all.SummSendOnPriceOut
                           ELSE 0
                      END) AS SummOut_by -- расход на "выбранное" подр.
-
     
-              , SUM (CASE WHEN _tmpLocation_by.LocationId IS NULL
+              , SUM (CASE WHEN _tmpLocation.LocationId IS NULL AND _tmpLocation_by.LocationId IS NULL THEN tmpMIContainer_all.CountProductionOut ELSE 0 END
+                   + CASE WHEN _tmpLocation_by.LocationId IS NULL
                                THEN tmpMIContainer_all.CountSendOut
-                                  + tmpMIContainer_all.CountProductionOut
                                   + tmpMIContainer_all.CountSendOnPriceOut
                           ELSE 0
                      END
                    + tmpMIContainer_all.CountReturnOut
+                   + tmpMIContainer_all.CountSale
+                   + tmpMIContainer_all.CountSale_10500
+                   + tmpMIContainer_all.CountSale_40208
+                   + tmpMIContainer_all.CountLoss
                     ) AS CountOtherOut_by -- расход другой
-              , SUM (CASE WHEN _tmpLocation_by.LocationId IS NULL
+              , SUM (CASE WHEN _tmpLocation.LocationId IS NULL AND _tmpLocation_by.LocationId IS NULL THEN tmpMIContainer_all.SummProductionOut ELSE 0 END
+                   + CASE WHEN _tmpLocation_by.LocationId IS NULL
                                THEN tmpMIContainer_all.SummSendOut
-                                  + tmpMIContainer_all.SummProductionOut
                                   + tmpMIContainer_all.SummSendOnPriceOut
                           ELSE 0
                      END
                    + tmpMIContainer_all.SummReturnOut
+                   + tmpMIContainer_all.SummSale
+                   + tmpMIContainer_all.SummSale_10500
+                   + tmpMIContainer_all.SummSale_40208
+                   + tmpMIContainer_all.SummLoss
                     ) AS SummOtherOut_by -- расход другой
 
               , SUM (tmpMIContainer_all.CountIncome
@@ -583,16 +753,106 @@ BEGIN
                    + tmpMIContainer_all.SummLoss
                    + tmpMIContainer_all.SummProductionOut)   AS SummTotalOut
 
+              , 0 AS CountProductionOut_norm
+
          FROM tmpReport AS tmpMIContainer_all
-              LEFT JOIN _tmpLocation ON _tmpLocation.LocationId = tmpMIContainer_all.LocationId_by
+              LEFT JOIN _tmpLocation ON _tmpLocation.LocationId = tmpMIContainer_all.LocationId_by AND _tmpLocation.ContainerDescId = zc_Container_Count()
               LEFT JOIN _tmpLocation_by ON _tmpLocation_by.LocationId = tmpMIContainer_all.LocationId_by
+
          GROUP BY tmpMIContainer_all.AccountId
-                , tmpMIContainer_all.ContainerId
+                , CASE WHEN inIsInfoMoney = TRUE THEN tmpMIContainer_all.ContainerId ELSE 0 END
                 , tmpMIContainer_all.LocationId
                 , tmpMIContainer_all.GoodsId
                 , tmpMIContainer_all.GoodsKindId
                 , tmpMIContainer_all.PartionGoodsId
                 , tmpMIContainer_all.AssetToId
+        UNION ALL
+         SELECT 0 AS AccountId
+              , 0 AS ContainerId
+              , tmpOut_norm.LocationId
+              , tmpOut_norm.GoodsId
+              , tmpOut_norm.GoodsKindId
+              , 0 AS PartionGoodsId
+              , 0 AS AssetToId
+              , 0 AS CountStart
+              , 0 AS CountEnd
+              , 0 AS CountEnd_calc
+
+              , 0 AS CountIncome
+              , 0 AS CountReturnOut
+
+              , 0 AS CountSendIn
+              , 0 AS CountSendOut
+
+              , 0 AS CountSendOnPriceIn
+              , 0 AS CountSendOnPriceOut
+
+              , 0 AS CountSale
+              , 0 AS CountSale_10500
+              , 0 AS CountSale_40208
+
+              , 0 AS CountReturnIn
+              , 0 AS CountReturnIn_40208
+
+              , 0 AS CountLoss
+              , 0 AS CountInventory
+
+              , 0 AS CountProductionIn
+              , 0 AS CountProductionOut
+
+              , 0 AS CountProductionIn_by -- приход с произв. (если с другого подр., т.е. не пересорт)
+              , 0 AS SummProductionIn_by  -- приход с произв. (если с другого подр., т.е. не пересорт)
+
+              , 0 AS CountIn_by -- приход с "выбранного" подр.
+              , 0 AS SummIn_by -- приход с "выбранного" подр.
+
+              , 0 AS CountOtherIn_by -- приход другой
+              , 0 AS SummOtherIn_by -- приход другой
+
+              , 0 AS CountOut_by -- расход на "выбранное" подр.
+              , 0 AS SummOut_by -- расход на "выбранное" подр.
+
+              , 0 AS CountOtherOut_by -- расход другой
+              , 0 AS SummOtherOut_by -- расход другой
+
+              , 0 AS CountTotalIn
+              , 0 AS CountTotalOut
+
+              , 0 AS SummStart
+              , 0 AS SummEnd
+              , 0 AS SummEnd_calc
+
+              , 0 AS SummIncome
+              , 0 AS SummReturnOut
+              , 0 AS SummSendIn
+              , 0 AS SummSendOut
+              , 0 AS SummSendOnPriceIn
+              , 0 AS SummSendOnPriceOut
+              , 0 AS SummSale
+              , 0 AS SummSale_10500
+              , 0 AS SummSale_40208
+              , 0 AS SummReturnIn
+              , 0 AS SummReturnIn_40208
+              , 0 AS SummLoss
+              , 0 AS SummInventory
+              , 0 AS SummInventory_RePrice
+              , 0 AS SummProductionIn
+              , 0 AS SummProductionOut
+
+              , 0 AS SummTotalIn
+              , 0 AS SummTotalOut
+
+              , tmpOut_norm.OperCount AS CountProductionOut_norm
+
+         FROM tmpOut_norm
+        ) AS tmp
+         GROUP BY tmp.AccountId
+                , tmp.ContainerId
+                , tmp.LocationId
+                , tmp.GoodsId
+                , tmp.GoodsKindId
+                , tmp.PartionGoodsId
+                , tmp.AssetToId
         ) AS tmpMIContainer_group
 
         LEFT JOIN ContainerLinkObject AS CLO_InfoMoney
@@ -628,15 +888,15 @@ BEGIN
         LEFT JOIN ObjectFloat AS ObjectFloat_Weight ON ObjectFloat_Weight.ObjectId = Object_Goods.Id
                              AND ObjectFloat_Weight.DescId = zc_ObjectFloat_Goods_Weight()
 
+        LEFT JOIN ObjectLink AS ObjectLink_GoodsKindComplete
+                             ON ObjectLink_GoodsKindComplete.ObjectId = tmpMIContainer_group.PartionGoodsId
+                            AND ObjectLink_GoodsKindComplete.DescId = zc_ObjectLink_PartionGoods_GoodsKindComplete()
+        LEFT JOIN Object AS Object_GoodsKind_complete ON Object_GoodsKind_complete.Id = ObjectLink_GoodsKindComplete.ChildObjectId
         LEFT JOIN Object AS Object_PartionGoods ON Object_PartionGoods.Id = tmpMIContainer_group.PartionGoodsId
         LEFT JOIN Object AS Object_AssetTo ON Object_AssetTo.Id = tmpMIContainer_group.AssetToId
 
         LEFT JOIN Object_Account_View AS View_Account ON View_Account.AccountId = tmpMIContainer_group.AccountId
-
-        LEFT JOIN tmpPriceStart ON tmpPriceStart.GoodsId = tmpMIContainer_group.GoodsId
-        LEFT JOIN tmpPriceEnd ON tmpPriceEnd.GoodsId = tmpMIContainer_group.GoodsId
       ;
-
 
 END;
 $BODY$
@@ -646,9 +906,10 @@ ALTER FUNCTION gpReport_MotionGoods_Ceh (TDateTime, TDateTime, Integer, Integer,
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 11.07.15                                        * add GoodsKindName_complete
  13.05.15         *
 */
 
 -- тест
--- SELECT * FROM gpReport_MotionGoods_NEW (inStartDate:= '01.01.2015', inEndDate:= '01.01.2015', inAccountGroupId:= 0, inUnitGroupId:= 0, inLocationId:= 0, inGoodsGroupId:= 0, inGoodsId:= 0, inUnitGroupId_by:=0, inLocationId_by:= 0, inIsInfoMoney:= FALSE, inSession:= zfCalc_UserAdmin())
--- SELECT * from gpReport_MotionGoods_NEW (inStartDate:= '01.06.2015', inEndDate:= '30.06.2015', inAccountGroupId:= 0, inUnitGroupId := 8459 , inLocationId := 0 , inGoodsGroupId := 1860 , inGoodsId := 0 , inUnitGroupId_by:=0, inLocationId_by:= 0, inIsInfoMoney:= TRUE, inSession := zfCalc_UserAdmin());
+-- SELECT * FROM gpReport_MotionGoods_Ceh (inStartDate:= '01.01.2015', inEndDate:= '01.01.2015', inAccountGroupId:= 0, inUnitGroupId:= 0, inLocationId:= 0, inGoodsGroupId:= 0, inGoodsId:= 0, inUnitGroupId_by:=0, inLocationId_by:= 0, inIsInfoMoney:= FALSE, inSession:= zfCalc_UserAdmin())
+-- SELECT * from gpReport_MotionGoods_Ceh (inStartDate:= '01.08.2015', inEndDate:= '08.08.2015', inAccountGroupId:= 0, inUnitGroupId := 8459 , inLocationId := 0 , inGoodsGroupId := 1860 , inGoodsId := 0 , inUnitGroupId_by:=0, inLocationId_by:= 0, inIsInfoMoney:= TRUE, inSession := zfCalc_UserAdmin());

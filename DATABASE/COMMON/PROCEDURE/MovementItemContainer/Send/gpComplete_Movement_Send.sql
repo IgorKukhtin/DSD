@@ -18,7 +18,10 @@ $BODY$
   DECLARE vbMovementDescId Integer;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
-     vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Complete_Send());
+     IF inSession = zc_Enum_Process_Auto_PrimeCost() :: TVarChar
+     THEN vbUserId:= inSession :: Integer;
+     ELSE vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Complete_Send());
+     END IF;
 
      -- Эти параметры нужны для 
      inIsLastComplete:= TRUE;
@@ -195,7 +198,13 @@ BEGIN
                    LEFT JOIN MovementLinkObject AS MovementLinkObject_From
                                                 ON MovementLinkObject_From.MovementId = MovementItem.MovementId
                                                AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
-                   LEFT JOIN Object AS Object_From ON Object_From.Id = MovementLinkObject_From.ObjectId
+                   LEFT JOIN ObjectLink AS ObjectLink_Car_PersonalDriver_from
+                                        ON ObjectLink_Car_PersonalDriver_from.ObjectId = MovementLinkObject_From.ObjectId
+                                       AND ObjectLink_Car_PersonalDriver_from.DescId = zc_ObjectLink_Car_PersonalDriver()
+                   LEFT JOIN ObjectLink AS ObjectLink_Personal_Member_from
+                                        ON ObjectLink_Personal_Member_from.ObjectId = ObjectLink_Car_PersonalDriver_from.ChildObjectId
+                                       AND ObjectLink_Personal_Member_from.DescId = zc_ObjectLink_Personal_Member()
+                   LEFT JOIN Object AS Object_From ON Object_From.Id = COALESCE (ObjectLink_Personal_Member_from.ChildObjectId, MovementLinkObject_From.ObjectId)
 
                    LEFT JOIN ObjectLink AS ObjectLink_UnitFrom_Branch
                                         ON ObjectLink_UnitFrom_Branch.ObjectId = MovementLinkObject_From.ObjectId
@@ -209,7 +218,13 @@ BEGIN
                    LEFT JOIN MovementLinkObject AS MovementLinkObject_To
                                                 ON MovementLinkObject_To.MovementId = MovementItem.MovementId
                                                AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
-                   LEFT JOIN Object AS Object_To ON Object_To.Id = MovementLinkObject_To.ObjectId
+                   LEFT JOIN ObjectLink AS ObjectLink_Car_PersonalDriver_to
+                                        ON ObjectLink_Car_PersonalDriver_to.ObjectId = MovementLinkObject_To.ObjectId
+                                       AND ObjectLink_Car_PersonalDriver_to.DescId = zc_ObjectLink_Car_PersonalDriver()
+                   LEFT JOIN ObjectLink AS ObjectLink_Personal_Member_to
+                                        ON ObjectLink_Personal_Member_to.ObjectId = ObjectLink_Car_PersonalDriver_to.ChildObjectId
+                                       AND ObjectLink_Personal_Member_to.DescId = zc_ObjectLink_Personal_Member()
+                   LEFT JOIN Object AS Object_To ON Object_To.Id = COALESCE (ObjectLink_Personal_Member_to.ChildObjectId, MovementLinkObject_To.ObjectId)
 
                    LEFT JOIN ObjectLink AS ObjectLink_UnitTo_AccountDirection
                                         ON ObjectLink_UnitTo_AccountDirection.ObjectId = MovementLinkObject_To.ObjectId

@@ -14,6 +14,7 @@ CREATE OR REPLACE FUNCTION lpReport_MotionGoods(
     IN inUserId             Integer     -- пользователь
 )
 RETURNS TABLE (AccountId Integer
+             , ContainerId_count Integer
              , ContainerId Integer
              , LocationId Integer
              , GoodsId Integer, GoodsKindId Integer
@@ -104,7 +105,7 @@ BEGIN
 
 
     -- группа товаров или товар или все товары из проводок
-    IF inGoodsGroupId <> 0
+    IF inGoodsGroupId <> 0 AND COALESCE (inGoodsId, 0) = 0
     THEN
         WITH tmpGoods AS (SELECT lfObject_Goods_byGoodsGroup.GoodsId FROM lfSelect_Object_Goods_byGoodsGroup (inGoodsGroupId) AS lfObject_Goods_byGoodsGroup)
            , tmpAccount AS (SELECT View_Account.AccountGroupId, View_Account.AccountId FROM Object_Account_View AS View_Account WHERE View_Account.AccountGroupId = inAccountGroupId)
@@ -237,11 +238,30 @@ BEGIN
     UPDATE _tmpListContainer SET AccountId = _tmpListContainer_summ.AccountId
                                , AccountGroupId = _tmpListContainer_summ.AccountGroupId
     FROM _tmpListContainer AS _tmpListContainer_summ
+         INNER JOIN Object_InfoMoney_View AS View_InfoMoney ON View_InfoMoney.InfoMoneyGroupId = zc_Enum_InfoMoneyGroup_70000() -- Инвестиции
+         INNER JOIN ContainerLinkObject AS CLO_InfoMoneyDetail ON CLO_InfoMoneyDetail.ContainerId = _tmpListContainer_summ.ContainerId_begin
+                                                              AND CLO_InfoMoneyDetail.DescId = zc_ContainerLinkObject_InfoMoneyDetail()
+                                                              AND CLO_InfoMoneyDetail.ObjectId = View_InfoMoney.InfoMoneyId
+         /*INNER JOIN ObjectLink AS ObjectLink_Goods_InfoMoney
+                               ON ObjectLink_Goods_InfoMoney.ChildObjectId = _tmpListContainer_summ.GoodsId
+                              AND ObjectLink_Goods_InfoMoney.DescId = zc_ObjectLink_Goods_InfoMoney()
+                              AND ObjectLink_Goods_InfoMoney.ObjectId = View_InfoMoney.InfoMoneyId*/
+    WHERE _tmpListContainer.ContainerId_count = _tmpListContainer_summ.ContainerId_count
+      AND _tmpListContainer.ContainerDescId = zc_Container_Count()
+      AND _tmpListContainer_summ.ContainerDescId = zc_Container_Summ()
+      AND _tmpListContainer.AccountId = 0
+      AND _tmpListContainer_summ.AccountGroupId = zc_Enum_AccountGroup_10000(); -- Необоротные активы
+
+    -- пытаемся найти <Счет> для zc_Container_Count
+    UPDATE _tmpListContainer SET AccountId = _tmpListContainer_summ.AccountId
+                               , AccountGroupId = _tmpListContainer_summ.AccountGroupId
+    FROM _tmpListContainer AS _tmpListContainer_summ
     WHERE _tmpListContainer.ContainerId_count = _tmpListContainer_summ.ContainerId_count
       AND _tmpListContainer.ContainerDescId = zc_Container_Count()
       AND _tmpListContainer_summ.ContainerDescId = zc_Container_Summ()
       AND _tmpListContainer.AccountId = 0
       AND _tmpListContainer_summ.AccountGroupId <> zc_Enum_AccountGroup_110000() -- Транзит
+
    ;
 
     -- все ContainerId
@@ -1105,6 +1125,7 @@ BEGIN
 
          -- Результат
          SELECT (tmpMIContainer_all.AccountId)       AS AccountId
+              , tmpMIContainer_all.ContainerId_count AS ContainerId_count
               , tmpMIContainer_all.ContainerId_begin AS ContainerId
               , tmpMIContainer_all.LocationId
               , tmpMIContainer_all.GoodsId
@@ -1116,7 +1137,7 @@ BEGIN
 
               , SUM (CASE WHEN tmpMIContainer_all.ContainerDescId = zc_Container_Count() THEN tmpMIContainer_all.RemainsStart ELSE 0 END) :: TFloat AS CountStart
               , SUM (CASE WHEN tmpMIContainer_all.ContainerDescId = zc_Container_Count() THEN tmpMIContainer_all.RemainsEnd   ELSE 0 END) :: TFloat AS CountEnd
-              , SUM (CASE WHEN tmpMIContainer_all.ContainerDescId = zc_Container_Count() THEN tmpMIContainer_all.RemainsEnd + tmpMIContainer_all.CountInventory ELSE 0 END) :: TFloat AS CountEnd_calc
+              , SUM (CASE WHEN tmpMIContainer_all.ContainerDescId = zc_Container_Count() THEN tmpMIContainer_all.RemainsEnd - tmpMIContainer_all.CountInventory ELSE 0 END) :: TFloat AS CountEnd_calc
 
               , SUM (tmpMIContainer_all.CountIncome)             :: TFloat AS CountIncome
               , SUM (tmpMIContainer_all.CountReturnOut)          :: TFloat AS CountReturnOut
@@ -1147,7 +1168,7 @@ BEGIN
 
               , SUM (CASE WHEN tmpMIContainer_all.ContainerDescId = zc_Container_Summ() THEN tmpMIContainer_all.RemainsStart ELSE 0 END) :: TFloat AS SummStart
               , SUM (CASE WHEN tmpMIContainer_all.ContainerDescId = zc_Container_Summ() THEN tmpMIContainer_all.RemainsEnd   ELSE 0 END) :: TFloat AS SummEnd
-              , SUM (CASE WHEN tmpMIContainer_all.ContainerDescId = zc_Container_Summ() THEN tmpMIContainer_all.RemainsEnd + tmpMIContainer_all.SummInventory + tmpMIContainer_all.SummInventory ELSE 0 END) :: TFloat AS SummEnd_calc
+              , SUM (CASE WHEN tmpMIContainer_all.ContainerDescId = zc_Container_Summ() THEN tmpMIContainer_all.RemainsEnd - tmpMIContainer_all.SummInventory ELSE 0 END) :: TFloat AS SummEnd_calc
 
               , SUM (tmpMIContainer_all.SummIncome)              :: TFloat AS SummIncome
               , SUM (tmpMIContainer_all.SummReturnOut)           :: TFloat AS SummReturnOut
@@ -1173,6 +1194,7 @@ BEGIN
 
          FROM tmpMIContainer AS tmpMIContainer_all
          GROUP BY tmpMIContainer_all.AccountId 
+                , tmpMIContainer_all.ContainerId_count
                 , tmpMIContainer_all.ContainerId_begin
                 , tmpMIContainer_all.LocationId
                 , tmpMIContainer_all.GoodsId

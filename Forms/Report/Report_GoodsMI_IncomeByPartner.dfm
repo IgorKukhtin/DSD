@@ -2,9 +2,10 @@ inherited Report_GoodsMI_IncomeByPartnerForm: TReport_GoodsMI_IncomeByPartnerFor
   Caption = #1054#1090#1095#1077#1090' <'#1087#1086' '#1090#1086#1074#1072#1088#1072#1084' ('#1087#1086' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072#1084')>'
   ClientHeight = 553
   ClientWidth = 1103
+  AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
   ExplicitWidth = 1119
-  ExplicitHeight = 591
+  ExplicitHeight = 588
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -13,17 +14,17 @@ inherited Report_GoodsMI_IncomeByPartnerForm: TReport_GoodsMI_IncomeByPartnerFor
     Height = 470
     TabOrder = 3
     ExplicitTop = 83
-    ExplicitWidth = 978
+    ExplicitWidth = 1103
     ExplicitHeight = 470
     ClientRectBottom = 470
     ClientRectRight = 1103
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 978
+      ExplicitWidth = 1103
       ExplicitHeight = 470
       inherited cxGrid: TcxGrid
         Width = 1103
         Height = 470
-        ExplicitWidth = 978
+        ExplicitWidth = 1103
         ExplicitHeight = 470
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
@@ -100,7 +101,7 @@ inherited Report_GoodsMI_IncomeByPartnerForm: TReport_GoodsMI_IncomeByPartnerFor
             HeaderAlignmentVert = vaCenter
             Width = 104
           end
-          object clPartnerName: TcxGridDBColumn
+          object PartnerName: TcxGridDBColumn
             Caption = #1055#1086#1089#1090#1072#1074#1097#1080#1082
             DataBinding.FieldName = 'PartnerName'
             HeaderAlignmentHorz = taCenter
@@ -198,6 +199,7 @@ inherited Report_GoodsMI_IncomeByPartnerForm: TReport_GoodsMI_IncomeByPartnerFor
           object PartnerId: TcxGridDBColumn
             DataBinding.FieldName = 'PartnerId'
             Visible = False
+            VisibleForCustomization = False
             Width = 45
           end
         end
@@ -207,20 +209,20 @@ inherited Report_GoodsMI_IncomeByPartnerForm: TReport_GoodsMI_IncomeByPartnerFor
   inherited Panel: TPanel
     Width = 1103
     Height = 57
-    ExplicitWidth = 978
+    ExplicitWidth = 1103
     ExplicitHeight = 57
     inherited deStart: TcxDateEdit
       Left = 114
-      EditValue = 41640d
+      EditValue = 42005d
       Properties.SaveTime = False
       ExplicitLeft = 114
     end
     inherited deEnd: TcxDateEdit
-      Left = 114
+      Left = 110
       Top = 32
-      EditValue = 41640d
+      EditValue = 42005d
       Properties.SaveTime = False
-      ExplicitLeft = 114
+      ExplicitLeft = 110
       ExplicitTop = 32
     end
     inherited cxLabel1: TcxLabel
@@ -290,7 +292,7 @@ inherited Report_GoodsMI_IncomeByPartnerForm: TReport_GoodsMI_IncomeByPartnerFor
       Caption = #1043#1088'. '#1087#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1081':'
     end
     object edUnitGroup: TcxButtonEdit
-      Left = 306
+      Left = 309
       Top = 5
       Properties.Buttons = <
         item
@@ -299,16 +301,16 @@ inherited Report_GoodsMI_IncomeByPartnerForm: TReport_GoodsMI_IncomeByPartnerFor
         end>
       Properties.ReadOnly = True
       TabOrder = 10
-      Width = 204
+      Width = 201
     end
   end
   object cxLabel6: TcxLabel [2]
-    Left = 201
+    Left = 219
     Top = 32
     Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077':'
   end
   object edUnit: TcxButtonEdit [3]
-    Left = 289
+    Left = 309
     Top = 32
     Properties.Buttons = <
       item
@@ -317,7 +319,7 @@ inherited Report_GoodsMI_IncomeByPartnerForm: TReport_GoodsMI_IncomeByPartnerFor
       end>
     Properties.ReadOnly = True
     TabOrder = 7
-    Width = 221
+    Width = 201
   end
   object cxLabel7: TcxLabel [4]
     Left = 785
@@ -512,6 +514,108 @@ inherited Report_GoodsMI_IncomeByPartnerForm: TReport_GoodsMI_IncomeByPartnerFor
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
     end
+    object ExecuteDialog: TExecuteDialog
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1072#1088#1072#1084#1077#1090#1088#1099' '#1086#1090#1095#1077#1090#1072
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1072#1088#1072#1084#1077#1090#1088#1099' '#1086#1090#1095#1077#1090#1072
+      ImageIndex = 35
+      FormName = 'TReport_GoodsMI_IncomeDialogForm'
+      FormNameParam.Value = 'TReport_GoodsMI_IncomeDialogForm'
+      FormNameParam.DataType = ftString
+      GuiParams = <
+        item
+          Name = 'StartDate'
+          Value = 41640d
+          Component = deStart
+          DataType = ftDateTime
+          ParamType = ptInputOutput
+        end
+        item
+          Name = 'EndDate'
+          Value = 41640d
+          Component = deEnd
+          DataType = ftDateTime
+          ParamType = ptInputOutput
+        end
+        item
+          Name = 'PaidKindId'
+          Value = ''
+          Component = PaidKindGuides
+          ComponentItem = 'Key'
+          ParamType = ptInputOutput
+        end
+        item
+          Name = 'PaidKindName'
+          Value = ''
+          Component = PaidKindGuides
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          ParamType = ptInputOutput
+        end
+        item
+          Name = 'UnitGroupId'
+          Value = ''
+          Component = GuidesUnitGroup
+          ComponentItem = 'Key'
+          ParamType = ptInputOutput
+        end
+        item
+          Name = 'UnitGroupName'
+          Value = ''
+          Component = GuidesUnitGroup
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          ParamType = ptInputOutput
+        end
+        item
+          Name = 'GoodsGroupId'
+          Value = ''
+          Component = GoodsGroupGuides
+          ComponentItem = 'Key'
+          ParamType = ptInputOutput
+        end
+        item
+          Name = 'GoodsGroupName'
+          Value = ''
+          Component = GoodsGroupGuides
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          ParamType = ptInputOutput
+        end
+        item
+          Name = 'UnitId'
+          Value = ''
+          Component = UnitGuides
+          ComponentItem = 'Key'
+          ParamType = ptInputOutput
+        end
+        item
+          Name = 'UnitName'
+          Value = ''
+          Component = UnitGuides
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          ParamType = ptInputOutput
+        end
+        item
+          Name = 'JuridicalId'
+          Value = Null
+          Component = JuridicalGuides
+          ComponentItem = 'Key'
+          ParamType = ptInputOutput
+        end
+        item
+          Name = 'JuridicalName'
+          Value = Null
+          Component = JuridicalGuides
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          ParamType = ptInputOutput
+        end>
+      isShowModal = True
+      OpenBeforeShow = True
+    end
   end
   inherited MasterDS: TDataSource
     Left = 80
@@ -546,13 +650,6 @@ inherited Report_GoodsMI_IncomeByPartnerForm: TReport_GoodsMI_IncomeByPartnerFor
         ParamType = ptInput
       end
       item
-        Name = 'inJuridicalId'
-        Value = ''
-        Component = JuridicalGuides
-        ComponentItem = 'Key'
-        ParamType = ptInput
-      end
-      item
         Name = 'inGoodsGroupId'
         Value = ''
         Component = GoodsGroupGuides
@@ -579,6 +676,13 @@ inherited Report_GoodsMI_IncomeByPartnerForm: TReport_GoodsMI_IncomeByPartnerFor
         Component = PaidKindGuides
         ComponentItem = 'Key'
         ParamType = ptInput
+      end
+      item
+        Name = 'inJuridicalId'
+        Value = ''
+        Component = JuridicalGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
       end>
     Left = 104
     Top = 224
@@ -599,6 +703,14 @@ inherited Report_GoodsMI_IncomeByPartnerForm: TReport_GoodsMI_IncomeByPartnerFor
         end
         item
           Visible = True
+          ItemName = 'bbDialog'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbRefresh'
         end
         item
@@ -611,7 +723,15 @@ inherited Report_GoodsMI_IncomeByPartnerForm: TReport_GoodsMI_IncomeByPartnerFor
         end
         item
           Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbPrintByGoods'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
         end
         item
           Visible = True
@@ -628,6 +748,10 @@ inherited Report_GoodsMI_IncomeByPartnerForm: TReport_GoodsMI_IncomeByPartnerFor
     end
     object bbPrintByGoods: TdxBarButton
       Action = actPrintByGoods
+      Category = 0
+    end
+    object bbDialog: TdxBarButton
+      Action = ExecuteDialog
       Category = 0
     end
   end
@@ -659,6 +783,15 @@ inherited Report_GoodsMI_IncomeByPartnerForm: TReport_GoodsMI_IncomeByPartnerFor
       end
       item
         Component = deStart
+      end
+      item
+        Component = UnitGuides
+      end
+      item
+        Component = GuidesUnitGroup
+      end
+      item
+        Component = PaidKindGuides
       end>
     Left = 208
     Top = 152

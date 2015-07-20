@@ -4,7 +4,7 @@ inherited SendOnPriceJournalForm: TSendOnPriceJournalForm
   ClientWidth = 1110
   AddOnFormData.Params = FormParams
   ExplicitWidth = 1126
-  ExplicitHeight = 573
+  ExplicitHeight = 570
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -614,6 +614,7 @@ inherited SendOnPriceJournalForm: TSendOnPriceJournalForm
           Action = actSetDefaults
         end
         item
+          Action = actExecPrint_EDI
         end
         item
           Action = actInvoice
@@ -645,6 +646,7 @@ inherited SendOnPriceJournalForm: TSendOnPriceJournalForm
           Action = actSetDefaults
         end
         item
+          Action = actExecPrint_EDI
         end
         item
           Action = actOrdSpr
@@ -676,6 +678,7 @@ inherited SendOnPriceJournalForm: TSendOnPriceJournalForm
           Action = actSetDefaults
         end
         item
+          Action = actExecPrint_EDI
         end
         item
           Action = actDesadv
@@ -693,10 +696,10 @@ inherited SendOnPriceJournalForm: TSendOnPriceJournalForm
       Category = 'EDI'
       MoveParams = <>
       PostDataSetBeforeExecute = False
-      StoredProc = spSelectPrint
+      StoredProc = spSelectSale_EDI
       StoredProcList = <
         item
-          StoredProc = spSelectPrint
+          StoredProc = spSelectSale_EDI
         end>
       Caption = 'actExecPrint_EDI'
     end
@@ -1299,5 +1302,28 @@ inherited SendOnPriceJournalForm: TSendOnPriceJournalForm
     PackSize = 1
     Left = 872
     Top = 240
+  end
+  object spSelectSale_EDI: TdsdStoredProc
+    StoredProcName = 'gpSelect_Movement_Sale_EDI'
+    DataSet = PrintHeaderCDS
+    DataSets = <
+      item
+        DataSet = PrintHeaderCDS
+      end
+      item
+        DataSet = PrintItemsCDS
+      end>
+    OutputType = otMultiDataSet
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+      end>
+    PackSize = 1
+    Left = 832
+    Top = 281
   end
 end

@@ -25,6 +25,11 @@ BEGIN
    WHERE Object_UserFormSettings.DescId = zc_Object_UserFormSettings() 
      AND Object_UserFormSettings.ValueData = inFormName;
 
+
+   LOCK TABLE Object IN SHARE UPDATE EXCLUSIVE MODE;
+   LOCK TABLE ObjectLink IN SHARE UPDATE EXCLUSIVE MODE;
+   LOCK TABLE ObjectBLOB IN SHARE UPDATE EXCLUSIVE MODE;
+
    IF COALESCE(Id, 0) = 0 THEN
       Id := lpInsertUpdate_Object(Id, zc_Object_UserFormSettings(), 0, inFormName);
    END IF;
