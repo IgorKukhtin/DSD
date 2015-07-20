@@ -891,10 +891,6 @@
 				<Form>Report_GoodsMI_IncomeByPartnerForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
-			<DCCReference Include="..\..\Forms\Report\Report_GoodsMI_Loss.pas">
-				<Form>Report_GoodsMI_LossForm</Form>
-				<DesignClass>TParentForm</DesignClass>
-			</DCCReference>
 			<DCCReference Include="..\..\Forms\Guides\Account.pas">
 				<Form>AccountForm</Form>
 				<DesignClass>TParentForm</DesignClass>
@@ -2155,6 +2151,10 @@
 			</DCCReference>
 			<DCCReference Include="..\..\Forms\Report\Report_GoodsMI_Dialog.pas">
 				<Form>Report_GoodsMI_DialogForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Report\Report_GoodsMI_Loss.pas">
+				<Form>Report_GoodsMI_LossForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<BuildConfiguration Include="Release">

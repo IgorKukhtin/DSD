@@ -320,7 +320,6 @@ uses
   PersonalSendCashTest in '..\SOURCE\Movement\All\PersonalSendCashTest.pas',
   SheetWorkTimeMovementItemTest in '..\SOURCE\MovementItem\All\SheetWorkTimeMovementItemTest.pas',
   Report_GoodsMI_IncomeByPartner in '..\..\Forms\Report\Report_GoodsMI_IncomeByPartner.pas' {Report_GoodsMI_IncomeByPartnerForm: TParentForm},
-  Report_GoodsMI_Loss in '..\..\Forms\Report\Report_GoodsMI_Loss.pas' {Report_GoodsMI_LossForm: TParentForm},
   Account in '..\..\Forms\Guides\Account.pas' {AccountForm: TParentForm},
   Log in '..\..\SOURCE\Log.pas',
   Report_GoodsMI_TransferDebt in '..\..\Forms\Report\Report_GoodsMI_TransferDebt.pas' {Report_GoodsMI_TransferDebtForm: TParentForm},
@@ -701,7 +700,8 @@ uses
   Report_GoodsBalanceDialog in '..\..\Forms\Report\Report_GoodsBalanceDialog.pas' {Report_GoodsBalanceDialogForm: TParentForm},
   Report_GoodsMI_IncomeDialog in '..\..\Forms\Report\Report_GoodsMI_IncomeDialog.pas' {Report_GoodsMI_IncomeDialogForm: TParentForm},
   Report_GoodsMI_Income in '..\..\Forms\Report\Report_GoodsMI_Income.pas' {Report_GoodsMI_IncomeForm: TParentForm},
-  Report_GoodsMI_Dialog in '..\..\Forms\Report\Report_GoodsMI_Dialog.pas' {Report_GoodsMI_DialogForm: TParentForm};
+  Report_GoodsMI_Dialog in '..\..\Forms\Report\Report_GoodsMI_Dialog.pas' {Report_GoodsMI_DialogForm: TParentForm},
+  Report_GoodsMI_Loss in '..\..\Forms\Report\Report_GoodsMI_Loss.pas' {Report_GoodsMI_LossForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}

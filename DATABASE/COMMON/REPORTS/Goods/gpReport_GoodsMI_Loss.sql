@@ -17,8 +17,8 @@ RETURNS TABLE (GoodsGroupName TVarChar
              , GoodsCode Integer, GoodsName TVarChar
              , GoodsKindName TVarChar
              , TradeMarkName TVarChar
-             , Amount_Weight TFloat, Amount_Sh TFloat
-             , Summ TFloat
+             , AmountOut_Weight TFloat, AmountOut_Sh TFloat, SummOut_Total TFloat, SummOut TFloat, SummOut_60000 TFloat 
+             , AmountIn_Weight TFloat, AmountIn_Sh TFloat,  SummIn_Total TFloat, SummIn TFloat, SummIn_60000 TFloat
              )   
 AS
 $BODY$
@@ -42,6 +42,42 @@ BEGIN
     END IF;
 
 
+    CREATE TEMP TABLE _tmpUnit_From (UnitId Integer) ON COMMIT DROP;
+    CREATE TEMP TABLE _tmpUnit_To (UnitId Integer) ON COMMIT DROP;
+
+    -- группа подразделений или подразделение или место учета (МО, Авто)
+    IF inFromId <> 0 
+    THEN
+        INSERT INTO _tmpUnit_From (UnitId)
+           SELECT inFromId AS UnitId union SELECT inToId AS UnitId where inDescId <> zc_Movement_Loss();
+    ELSE
+        INSERT INTO _tmpUnit_From (UnitId)
+                                                   
+               SELECT Id AS UnitId FROM Object WHERE DescId = zc_Object_Unit()
+              UNION ALL
+               SELECT Id AS UnitId FROM Object  WHERE DescId = zc_Object_Member()
+              UNION ALL
+               SELECT Id AS UnitId FROM Object  WHERE DescId = zc_Object_Car();
+
+    END IF;  
+
+    IF inToId <> 0 
+    THEN
+        INSERT INTO _tmpUnit_To (UnitId)
+           SELECT inToId AS UnitId union SELECT inFromId AS UnitId where inDescId <> zc_Movement_Loss();
+           
+    ELSE
+        INSERT INTO _tmpUnit_To (UnitId)
+   
+               SELECT Id AS UnitId FROM Object WHERE DescId = zc_Object_Unit()
+              UNION ALL
+               SELECT Id AS UnitId FROM Object  WHERE DescId = zc_Object_Member()
+              UNION ALL
+               SELECT Id AS UnitId FROM Object  WHERE DescId = zc_Object_Car();
+              
+    END IF;
+
+
     -- Результат
     RETURN QUERY
     
@@ -51,54 +87,74 @@ BEGIN
          , Object_GoodsKind.ValueData  AS GoodsKindName
          , Object_TradeMark.ValueData  AS TradeMarkName
 
-         , (tmpOperationGroup.Amount * CASE WHEN Object_Measure.Id = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END) :: TFloat AS Amount_Weight
-         , (CASE WHEN Object_Measure.Id = zc_Measure_Sh() THEN tmpOperationGroup.Amount ELSE 0 END) :: TFloat AS Amount_Sh
-
-         , tmpOperationGroup.Summ :: TFloat AS Summ
+         , (tmpOperationGroup.AmountOut * CASE WHEN Object_Measure.Id = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END) :: TFloat AS AmountOut_Weight
+         , (CASE WHEN Object_Measure.Id = zc_Measure_Sh() THEN tmpOperationGroup.AmountOut ELSE 0 END) :: TFloat AS AmountOut_Sh
+         , tmpOperationGroup.SummOut_Total :: TFloat AS SummOut_Total
+         , tmpOperationGroup.SummOut :: TFloat AS SummOut
+         , tmpOperationGroup.SummOut_60000 :: TFloat AS SummOut_60000
+         
+         , (tmpOperationGroup.AmountIn * CASE WHEN Object_Measure.Id = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END) :: TFloat AS AmountIn_Weight
+         , (CASE WHEN Object_Measure.Id = zc_Measure_Sh() THEN tmpOperationGroup.AmountIn ELSE 0 END) :: TFloat AS AmountIn_Sh
+         , tmpOperationGroup.SummIn_Total :: TFloat AS SummIn_Total
+         , tmpOperationGroup.SummIn :: TFloat AS SummIn
+         , tmpOperationGroup.SummIn_60000 :: TFloat AS SummIn_60000
 
      FROM (SELECT tmpContainer.GoodsId
                 , COALESCE (ContainerLO_GoodsKind.ObjectId,0) AS GoodsKindId
-                , ABS (SUM (tmpContainer.Amount)):: TFloat          AS Amount 
-                , ABS (SUM (tmpContainer.Summ)) :: TFloat           AS Summ
+                , SUM (tmpContainer.AmountOut) :: TFloat         AS AmountOut 
+                , SUM (tmpContainer.SummOut)   :: TFloat         AS SummOut_Total
+                , SUM ( CASE WHEN COALESCE(Object_Account_View.AccountDirectionId,0) <> zc_Enum_AccountDirection_60200() THEN tmpContainer.SummOut ELSE 0 END) :: TFloat  AS SummOut
+                , SUM ( CASE WHEN Object_Account_View.AccountDirectionId = zc_Enum_AccountDirection_60200() THEN tmpContainer.SummOut ELSE 0 END) :: TFloat  AS SummOut_60000
 
+                , SUM (tmpContainer.AmountIn) :: TFloat          AS AmountIn 
+                , SUM (tmpContainer.SummIn) :: TFloat            AS SummIn_Total
+                , SUM ( CASE WHEN COALESCE(Object_Account_View.AccountDirectionId,0) <> zc_Enum_AccountDirection_60200() THEN tmpContainer.SummIn ELSE 0 END) :: TFloat  AS SummIn
+                , SUM ( CASE WHEN Object_Account_View.AccountDirectionId = zc_Enum_AccountDirection_60200() THEN tmpContainer.SummIn ELSE 0 END) :: TFloat  AS SummIn_60000
+
+                
            FROM (SELECT MIContainer.ContainerId AS ContainerId
-                    --  , MIContainer.WhereObjectId_analyzer AS FromId  
-                   --   , MIContainer.MovementId
                       , MIContainer.ObjectId_analyzer AS GoodsId 
-                      , MIContainer.ContainerId_analyzer    
-                      
-                      , SUM ( CASE WHEN MIContainer.DescId = zc_MIContainer_Summ() THEN COALESCE (MIContainer.Amount,0) ELSE 0 end ) AS Summ
-                      , SUM ( CASE WHEN MIContainer.DescId = zc_MIContainer_Count() THEN COALESCE (MIContainer.Amount,0) ELSE 0 end ) AS Amount
-                     
-                   FROM MovementItemContainer AS MIContainer 
-                        JOIN _tmpGoods ON _tmpGoods.GoodsId = MIContainer.ObjectId_analyzer
-                        --JOIN _tmpUnit ON _tmpUnit.UnitId = MIContainer.WhereObjectId_analyzer
-                    LEFT JOIN MovementLinkObject AS MovementLinkObject_To
-                                                   ON MovementLinkObject_To.MovementId = MIContainer.MovementId
-                                                  AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
+                      , COALESCE(MIContainer.AccountId,0) AS AccountId 
 
+                      , SUM (CASE WHEN MIContainer.isActive = FALSE AND MIContainer.DescId = zc_MIContainer_Summ()  THEN -1*COALESCE (MIContainer.Amount,0) ELSE 0 END) AS SummOut
+                      , SUM (CASE WHEN MIContainer.isActive = FALSE AND MIContainer.DescId = zc_MIContainer_Count() THEN -1*COALESCE (MIContainer.Amount,0) ELSE 0 END) AS AmountOut
+
+                      , CASE WHEN inDescId = zc_Movement_Loss() Then 0
+                         ELSE
+                           SUM (CASE WHEN MIContainer.isActive = TRUE AND MIContainer.DescId = zc_MIContainer_Summ()  THEN COALESCE (MIContainer.Amount,0) ELSE 0 END)
+                         END AS SummIn
+
+                      , CASE WHEN inDescId = zc_Movement_Loss() Then 0
+                         ELSE
+                           SUM (CASE WHEN MIContainer.isActive = True AND MIContainer.DescId = zc_MIContainer_Count() THEN COALESCE (MIContainer.Amount,0) ELSE 0 END) 
+                         END AS AmountIn
+                    
+                   FROM MovementItemContainer AS MIContainer 
+                        INNER JOIN _tmpGoods ON _tmpGoods.GoodsId = MIContainer.ObjectId_analyzer
+                        INNER JOIN _tmpUnit_From ON _tmpUnit_From.UnitId = MIContainer.WhereObjectId_analyzer
+                        Left  JOIN _tmpUnit_To   ON _tmpUnit_To.UnitId   = MIContainer.AnalyzerId
+                    
                  WHERE MIContainer.OperDate BETWEEN inStartDate AND inEndDate  
                    AND MIContainer.MovementDEscId = inDescId
-                   and ( MIContainer.WhereObjectId_analyzer = inFromId or inFromId = 0)
-                   And MIContainer.isActive = True
-                   AND (MovementLinkObject_To.ObjectId = inToid Or inToid=0)
-                 group by MIContainer.ContainerId, MIContainer.ObjectId_analyzer , MIContainer.ContainerId_analyzer 
-                        , MIContainer.WhereObjectId_analyzer
-                     --    ,  MIContainer.MovementId 
-                 ,MovementLinkObject_To.ObjectId
+                --   And MIContainer.isActive = True
+                   And (_tmpUnit_To.UnitId>0 or inDescId = zc_Movement_Loss())
+                   and  COALESCE(MIContainer.AccountId,0) <> zc_Enum_Account_100301 ()   --            AS AccountId
+                   
+                 group by MIContainer.ContainerId
+                        , MIContainer.ObjectId_analyzer 
+                        , COALESCE(MIContainer.AccountId,0)
+                        --, MIContainer.ContainerId_analyzer 
+                       -- , MIContainer.WhereObjectId_analyzer --, MIContainer.AnalyzerId
+                       -- , MIContainer.DescId--, MIContainer.isActive 
                  ) as tmpContainer
-                    /*  LEFT JOIN MovementLinkObject AS MovementLinkObject_To
-                                                   ON MovementLinkObject_To.MovementId = tmpContainer.MovementId
-                                                  AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
-                       */                          
+                         
                       LEFT JOIN ContainerLinkObject AS ContainerLO_GoodsKind
                                                     ON ContainerLO_GoodsKind.ContainerId =  tmpContainer.ContainerId
                                                    AND ContainerLO_GoodsKind.DescId = zc_ContainerLinkObject_GoodsKind()
-                     
-                    --WHERE (MovementLinkObject_To.ObjectId = inToid Or inToid=0)
-                       
-                      GROUP BY tmpContainer.GoodsId
-                             , COALESCE (ContainerLO_GoodsKind.ObjectId,0) ---,MovementLinkObject_To.ObjectId
+                      LEFT JOIN Object_Account_View ON Object_Account_View.AccountId = tmpContainer.AccountId
+                    
+                 GROUP BY tmpContainer.GoodsId
+                        , COALESCE (ContainerLO_GoodsKind.ObjectId,0) 
           
           ) AS tmpOperationGroup
 
