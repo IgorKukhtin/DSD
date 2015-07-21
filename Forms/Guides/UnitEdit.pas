@@ -72,6 +72,9 @@ type
     RouteGuides: TdsdGuides;
     ceRouteSorting: TcxButtonEdit;
     RouteSortingGuides: TdsdGuides;
+    cxLabel13: TcxLabel;
+    ceArea: TcxButtonEdit;
+    AreaGuides: TdsdGuides;
   private
     { Private declarations }
   public

@@ -74,6 +74,7 @@ type
     RouteName: TcxGridDBColumn;
     RouteSortingName: TcxGridDBColumn;
     isPartionDate: TcxGridDBColumn;
+    AreaName: TcxGridDBColumn;
   private
     { Private declarations }
   public

@@ -3,7 +3,7 @@ inherited LossForm: TLossForm
   ClientHeight = 668
   ClientWidth = 985
   ExplicitWidth = 1001
-  ExplicitHeight = 703
+  ExplicitHeight = 706
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -1287,8 +1287,7 @@ inherited LossForm: TLossForm
         DataType = ftString
         ParamType = ptInput
       end>
-    Left = 488
-    Top = 65528
+    Left = 440
   end
   object GuidesTo: TdsdGuides
     KeyField = 'Id'
@@ -1313,7 +1312,7 @@ inherited LossForm: TLossForm
         DataType = ftString
         ParamType = ptInput
       end>
-    Left = 680
+    Left = 648
     Top = 8
   end
   object GuidesArticleLoss: TdsdGuides

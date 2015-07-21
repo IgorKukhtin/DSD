@@ -2,7 +2,7 @@ inherited ReturnOutPartnerJournalForm: TReturnOutPartnerJournalForm
   Caption = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' <'#1042#1086#1079#1074#1088#1072#1090' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1091' '#1086#1090' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1103'>'
   ClientHeight = 535
   ClientWidth = 1110
-  ExplicitLeft = -366
+  ExplicitLeft = -275
   ExplicitWidth = 1126
   ExplicitHeight = 573
   PixelsPerInch = 96
@@ -297,6 +297,20 @@ inherited ReturnOutPartnerJournalForm: TReturnOutPartnerJournalForm
             Visible = False
             HeaderAlignmentVert = vaCenter
             Width = 47
+          end
+          object PaidKindFromName: TcxGridDBColumn
+            Caption = #1060#1086#1088#1084#1072' '#1086#1087#1083#1072#1090#1099' '#1087#1086#1082#1091#1087'.'
+            DataBinding.FieldName = 'PaidKindFromName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 55
+          end
+          object ContractFromName: TcxGridDBColumn
+            Caption = #8470' '#1076#1086#1075'. '#1087#1086#1082#1091#1087'.'
+            DataBinding.FieldName = 'ContractFromName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 51
           end
         end
       end

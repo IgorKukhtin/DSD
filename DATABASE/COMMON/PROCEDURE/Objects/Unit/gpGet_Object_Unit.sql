@@ -18,6 +18,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar,
                ProfitLossDirectionId Integer, ProfitLossDirectionName TVarChar,
                RouteId Integer, RouteName TVarChar,
                RouteSortingId Integer, RouteSortingName TVarChar,
+               AreaId Integer, AreaName TVarChar,
                isErased boolean, isLeaf boolean,
                isPartionDate boolean
 ) AS
@@ -66,6 +67,9 @@ BEGIN
            , CAST (0 as Integer)    AS RouteSortingId
            , CAST ('' as TVarChar)  AS RouteSortingName
 
+           , CAST (0 as Integer)    AS AreaId
+           , CAST ('' as TVarChar)  AS AreaName
+
            , CAST (NULL AS Boolean) AS isErased
            , CAST (NULL AS Boolean) AS isLeaf
            , CAST (NULL AS Boolean) AS isPartionDate
@@ -108,6 +112,9 @@ BEGIN
            , Object_RouteSorting.Id         AS RouteSortingId
            , Object_RouteSorting.ValueData  AS RouteSortingName
          
+           , Object_Area.Id            AS AreaId
+           , Object_Area.ValueData     AS AreaName
+
            , Object_Unit_View.isErased
            , Object_Unit_View.isLeaf
 
@@ -136,6 +143,11 @@ BEGIN
                                  ON ObjectLink_Unit_RouteSorting.ObjectId = Object_Unit_View.Id 
                                 AND ObjectLink_Unit_RouteSorting.DescId = zc_ObjectLink_Unit_RouteSorting()
             LEFT JOIN Object AS Object_RouteSorting ON Object_RouteSorting.Id = ObjectLink_Unit_RouteSorting.ChildObjectId
+
+            LEFT JOIN ObjectLink AS ObjectLink_Unit_Area
+                                 ON ObjectLink_Unit_Area.ObjectId = Object_Unit_View.Id 
+                                AND ObjectLink_Unit_Area.DescId = zc_ObjectLink_Unit_Area()
+            LEFT JOIN Object AS Object_Area ON Object_Area.Id = ObjectLink_Unit_Area.ChildObjectId
         
             LEFT JOIN ObjectBoolean AS ObjectBoolean_PartionDate
                                     ON ObjectBoolean_PartionDate.ObjectId = Object_Unit_View.Id
@@ -154,6 +166,7 @@ ALTER FUNCTION gpGet_Object_Unit(integer, TVarChar) OWNER TO postgres;
 /*-------------------------------------------------------------------------------
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 19.07.15         * add Area
  03.07.15         * add ObjectLink_Unit_Route, ObjectLink_Unit_RouteSorting
  15.04.15         * add Contract
  12.11.13                                        * add Object_AccountDirection_View
