@@ -185,7 +185,7 @@ BEGIN
                        ) AS tmp_All_sum ON tmp_All_sum.ContainerId = tmp_All.ContainerId
        ;
 
-     -- если распределение было с погрешностью, копейки добавим в MAX (OperCount)
+     -- если распределение было с погрешностью на "копейки" - добавим в MAX (OperCount)
      UPDATE _tmpItem_Result SET OperCount = _tmpItem_Result.OperCount + tmp_sum2.OperCount - tmp_sum1.OperCount
      FROM (-- находится MovementItemId_out с MAX (OperCount)
            SELECT _tmpItem_Result.ContainerId, MAX (_tmpItem_Result.MovementItemId_out) AS MovementItemId_out
@@ -287,7 +287,7 @@ END;$BODY$
 */
 
 -- тест
--- SELECT * FROM lpUpdate_Movement_ProductionUnion_Partion (inIsUpdate:= TRUE, inStartDate:= '01.07.2015', inEndDate:= '16.07.2015', inFromId:=8448, inToId:=8458, inUserId:= zfCalc_UserAdmin() :: Integer) -- ЦЕХ деликатесов + Склад База ГП
--- SELECT * FROM lpUpdate_Movement_ProductionUnion_Partion (inIsUpdate:= TRUE, inStartDate:= '01.07.2015', inEndDate:= '16.07.2015', inFromId:=8447, inToId:=8458, inUserId:= zfCalc_UserAdmin() :: Integer) -- ЦЕХ колбасный   + Склад База ГП
+-- SELECT * FROM lpUpdate_Movement_ProductionUnion_Partion (inIsUpdate:= TRUE, inStartDate:= '01.07.2015', inEndDate:= '19.07.2015', inFromId:=8448, inToId:=8458, inUserId:= zfCalc_UserAdmin() :: Integer) -- ЦЕХ деликатесов + Склад База ГП
+-- SELECT * FROM lpUpdate_Movement_ProductionUnion_Partion (inIsUpdate:= TRUE, inStartDate:= '01.07.2015', inEndDate:= '19.07.2015', inFromId:=8447, inToId:=8458, inUserId:= zfCalc_UserAdmin() :: Integer) -- ЦЕХ колбасный   + Склад База ГП
 -- where ContainerId = 568111
 -- select * from MovementItemContainer where ContainerId = 568111

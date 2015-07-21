@@ -18,10 +18,21 @@ RETURNS TABLE (ProfitLossGroupName TVarChar, ProfitLossDirectionName TVarChar
               )
 AS
 $BODY$
+   DECLARE vbUserId Integer;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      -- PERFORM lpCheckRight (inSession, zc_Enum_Process_Report_ProfitLoss());
+     vbUserId:= lpGetUserBySession (inSession);
 
+     -- Блокируем ему просмотр
+     IF vbUserId = 9457 -- Климентьев К.И.
+     THEN
+         vbUserId:= NULL;
+         RETURN;
+     END IF;
+
+
+     -- Результат
      RETURN QUERY 
                             -- ??? как сделать что б не попали операции переброски накопленной прибыль прошлого месяца в долг по прибыли???
       WITH tmpContainer AS (SELECT ReportContainerLink.ReportContainerId

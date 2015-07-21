@@ -20,7 +20,14 @@ BEGIN
    -- проверка прав пользователя на вызов процедуры
    vbUserId := lpCheckRight (inSession, zc_Enum_Process_Select_Object_User());
 
+     -- Блокируем ему просмотр
+     IF vbUserId = 9457 -- Климентьев К.И.
+     THEN
+         vbUserId:= NULL;
+         RETURN;
+     END IF;
 
+   -- Результат
    RETURN QUERY 
    WITH tmpPersonal AS (SELECT View_Personal.MemberId
                              , MAX (View_Personal.UnitId) AS UnitId

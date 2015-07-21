@@ -26,6 +26,29 @@ BEGIN
 
      --
      RETURN QUERY
+     WITH tmpInfoMoney AS (SELECT Object_InfoMoney_View.InfoMoneyId FROM Object_InfoMoney_View WHERE Object_InfoMoney_View.InfoMoneyId = inInfoMoneyId AND Object_InfoMoney_View.InfoMoneyGroupId <> zc_Enum_InfoMoneyGroup_10000() -- Основное сырье
+                          UNION 
+                           SELECT Object_InfoMoney_View_find.InfoMoneyId
+                           FROM Object_InfoMoney_View
+                                LEFT JOIN Object_InfoMoney_View AS Object_InfoMoney_View_find ON Object_InfoMoney_View_find.InfoMoneyDestinationId = Object_InfoMoney_View.InfoMoneyDestinationId
+                           WHERE Object_InfoMoney_View.InfoMoneyId = inInfoMoneyId
+                             AND Object_InfoMoney_View.InfoMoneyGroupId = zc_Enum_InfoMoneyGroup_10000() -- Основное сырье
+                          UNION 
+                           SELECT Object_InfoMoney_View.InfoMoneyId
+                           FROM (SELECT 1 FROM Object_InfoMoney_View WHERE Object_InfoMoney_View.InfoMoneyId = inInfoMoneyId
+                                                                       AND Object_InfoMoney_View.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_10200() -- Основное сырье + Прочее сырье
+                                 LIMIT 1
+                                ) AS tmp
+                                INNER JOIN Object_InfoMoney_View ON Object_InfoMoney_View.InfoMoneyDestinationId IN (zc_Enum_InfoMoneyDestination_20100() -- Общефирменные + Запчасти и Ремонты
+                                                                                                                   , zc_Enum_InfoMoneyDestination_20200() -- Общефирменные + Прочие ТМЦ
+                                                                                                                   , zc_Enum_InfoMoneyDestination_20300() -- Общефирменные + МНМА
+                                                                                                                   -- , zc_Enum_InfoMoneyDestination_20400() -- Общефирменные + ГСМ
+                                                                                                                   , zc_Enum_InfoMoneyDestination_20500() -- Общефирменные + Оборотная тара
+                                                                                                                   , zc_Enum_InfoMoneyDestination_20600() -- Общефирменные + Прочие материалы
+                                                                                                                    )
+                                                                 OR Object_InfoMoney_View.InfoMoneyGroupId = zc_Enum_InfoMoneyGroup_70000() -- Инвестиции
+                          )
+
      SELECT
              '0' :: TVarChar                                           AS UnitId
            , CASE WHEN Movement.DescId IN (zc_Movement_PriceCorrective())
@@ -50,6 +73,12 @@ BEGIN
                        THEN 4
                   WHEN Movement.DescId IN (zc_Movement_TransferDebtIn()) AND View_Contract_InvNumber.InfoMoneyId = zc_Enum_InfoMoney_20901() -- Ирна
                        THEN 6
+
+                  WHEN Movement.DescId IN (zc_Movement_Income())
+                       THEN 6
+                  WHEN Movement.DescId IN (zc_Movement_ReturnOut())
+                       THEN 8
+
              END :: TVarChar                                           AS VidDoc
            , Movement.InvNumber				               AS InvNumber
            , TO_CHAR (Movement.OperDatePartner, 'DD.MM.YYYY') :: TVarChar AS OperDate
@@ -60,7 +89,7 @@ BEGIN
            , COALESCE (Object_GoodsByGoodsKind_View.Id, MIMaster.ObjectId) :: TVarChar AS GoodsCode
            , Object_Goods.ValueData                                    AS GoodsName
 
-           , CASE WHEN Movement.DescId IN (zc_Movement_Sale(), zc_Movement_ReturnIn())
+           , CASE WHEN Movement.DescId IN (zc_Movement_Sale(), zc_Movement_ReturnIn(), zc_Movement_Income(), zc_Movement_ReturnOut())
                        THEN COALESCE (MIFloat_AmountPartner.ValueData, 0)
                   ELSE MIMaster.Amount
              END :: TVarChar                                           AS OperCount
@@ -79,7 +108,7 @@ BEGIN
                        THEN CAST ( (1 + MovementFloat_ChangePercent.ValueData / 100) * COALESCE (MIFloat_Price.ValueData, 0) AS NUMERIC (16, 2))
                   ELSE COALESCE (MIFloat_Price.ValueData, 0)
              END / CASE WHEN MIFloat_CountForPrice.ValueData <> 0 THEN MIFloat_CountForPrice.ValueData ELSE 1 END
-           * CASE WHEN Movement.DescId IN (zc_Movement_Sale(), zc_Movement_ReturnIn())
+           * CASE WHEN Movement.DescId IN (zc_Movement_Sale(), zc_Movement_ReturnIn(), zc_Movement_Income(), zc_Movement_ReturnOut())
                        THEN COALESCE (MIFloat_AmountPartner.ValueData, 0)
                   ELSE MIMaster.Amount
              END AS NUMERIC (16, 2)
@@ -95,7 +124,7 @@ BEGIN
                        THEN CAST ( (1 + MovementFloat_ChangePercent.ValueData / 100) * COALESCE (MIFloat_Price.ValueData, 0) AS NUMERIC (16, 2))
                   ELSE COALESCE (MIFloat_Price.ValueData, 0)
              END / CASE WHEN MIFloat_CountForPrice.ValueData <> 0 THEN MIFloat_CountForPrice.ValueData ELSE 1 END
-           * CASE WHEN Movement.DescId IN (zc_Movement_Sale(), zc_Movement_ReturnIn())
+           * CASE WHEN Movement.DescId IN (zc_Movement_Sale(), zc_Movement_ReturnIn(), zc_Movement_Income(), zc_Movement_ReturnOut())
                        THEN COALESCE (MIFloat_AmountPartner.ValueData, 0)
                   ELSE MIMaster.Amount
              END AS NUMERIC (16, 2))
@@ -106,7 +135,7 @@ BEGIN
                        THEN CAST ( (1 + MovementFloat_ChangePercent.ValueData / 100) * COALESCE (MIFloat_Price.ValueData, 0) AS NUMERIC (16, 2))
                   ELSE COALESCE (MIFloat_Price.ValueData, 0)
              END / CASE WHEN MIFloat_CountForPrice.ValueData <> 0 THEN MIFloat_CountForPrice.ValueData ELSE 1 END
-           * CASE WHEN Movement.DescId IN (zc_Movement_Sale(), zc_Movement_ReturnIn())
+           * CASE WHEN Movement.DescId IN (zc_Movement_Sale(), zc_Movement_ReturnIn(), zc_Movement_Income(), zc_Movement_ReturnOut())
                        THEN COALESCE (MIFloat_AmountPartner.ValueData, 0)
                   ELSE MIMaster.Amount
              END AS NUMERIC (16, 2))
@@ -121,7 +150,7 @@ BEGIN
                        THEN CAST ( (1 + MovementFloat_ChangePercent.ValueData / 100) * COALESCE (MIFloat_Price.ValueData, 0) AS NUMERIC (16, 2))
                   ELSE COALESCE (MIFloat_Price.ValueData, 0)
              END / CASE WHEN MIFloat_CountForPrice.ValueData <> 0 THEN MIFloat_CountForPrice.ValueData ELSE 1 END
-           * CASE WHEN Movement.DescId IN (zc_Movement_Sale(), zc_Movement_ReturnIn())
+           * CASE WHEN Movement.DescId IN (zc_Movement_Sale(), zc_Movement_ReturnIn(), zc_Movement_Income(), zc_Movement_ReturnOut())
                        THEN COALESCE (MIFloat_AmountPartner.ValueData, 0)
                   ELSE MIMaster.Amount
              END AS NUMERIC (16, 2))
@@ -160,7 +189,7 @@ BEGIN
              SELECT Movement.*, MovementDate_OperDatePartner.ValueData AS OperDatePartner
              FROM MovementDate AS MovementDate_OperDatePartner
                   INNER JOIN Movement ON Movement.Id = MovementDate_OperDatePartner.MovementId
-                                     AND Movement.DescId IN (zc_Movement_Sale(), zc_Movement_ReturnIn())
+                                     AND Movement.DescId IN (zc_Movement_Sale(), zc_Movement_ReturnIn(), zc_Movement_Income(), zc_Movement_ReturnOut())
                                      AND Movement.StatusId = zc_Enum_Status_Complete()
              WHERE MovementDate_OperDatePartner.ValueData BETWEEN inStartDate AND inEndDate
                AND MovementDate_OperDatePartner.DescId = zc_MovementDate_OperDatePartner()
@@ -168,7 +197,8 @@ BEGIN
             ) AS Movement
             LEFT JOIN MovementLinkObject AS MovementLinkObject_Contract
                                          ON MovementLinkObject_Contract.MovementId = Movement.Id
-                                        AND MovementLinkObject_Contract.DescId = CASE WHEN Movement.DescId IN (zc_Movement_Sale(), zc_Movement_ReturnIn(), zc_Movement_PriceCorrective())
+                                        AND MovementLinkObject_Contract.DescId = CASE WHEN Movement.DescId IN (zc_Movement_Sale(), zc_Movement_ReturnIn(), zc_Movement_PriceCorrective()
+                                                                                                             , zc_Movement_Income(), zc_Movement_ReturnOut())
                                                                                            THEN zc_MovementLinkObject_Contract()
                                                                                       WHEN Movement.DescId IN (zc_Movement_TransferDebtOut())
                                                                                            THEN zc_MovementLinkObject_ContractTo()
@@ -176,16 +206,19 @@ BEGIN
                                                                                            THEN zc_MovementLinkObject_ContractFrom()
                                                                                   END
             LEFT JOIN Object_Contract_InvNumber_View AS View_Contract_InvNumber ON View_Contract_InvNumber.ContractId = MovementLinkObject_Contract.ObjectId
+            INNER JOIN tmpInfoMoney ON tmpInfoMoney.InfoMoneyId = View_Contract_InvNumber.InfoMoneyId
 
-            LEFT JOIN MovementLinkObject AS MovementLinkObject_PaidKind
+            INNER JOIN MovementLinkObject AS MovementLinkObject_PaidKind
                                          ON MovementLinkObject_PaidKind.MovementId = Movement.Id
-                                        AND MovementLinkObject_PaidKind.DescId = CASE WHEN Movement.DescId IN (zc_Movement_Sale(), zc_Movement_ReturnIn(), zc_Movement_PriceCorrective())
+                                        AND MovementLinkObject_PaidKind.DescId = CASE WHEN Movement.DescId IN (zc_Movement_Sale(), zc_Movement_ReturnIn(), zc_Movement_PriceCorrective()
+                                                                                                             , zc_Movement_Income(), zc_Movement_ReturnOut())
                                                                                            THEN zc_MovementLinkObject_PaidKind()
                                                                                       WHEN Movement.DescId IN (zc_Movement_TransferDebtOut())
                                                                                            THEN zc_MovementLinkObject_PaidKindTo()
                                                                                       WHEN Movement.DescId IN (zc_Movement_TransferDebtIn())
                                                                                            THEN zc_MovementLinkObject_PaidKindFrom()
                                                                                   END
+                                        AND MovementLinkObject_PaidKind.ObjectId = inPaidKindId
 
             /*LEFT JOIN MovementDate AS MovementDate_OperDatePartner
                                    ON MovementDate_OperDatePartner.MovementId =  Movement.Id
@@ -220,9 +253,9 @@ BEGIN
                                          ON MovementLinkObject_From.MovementId = Movement.Id
                                         AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
 
-            LEFT JOIN Object AS Object_Partner ON Object_Partner.Id = CASE WHEN Movement.DescId = zc_Movement_Sale()
+            LEFT JOIN Object AS Object_Partner ON Object_Partner.Id = CASE WHEN Movement.DescId IN (zc_Movement_Sale(), zc_Movement_ReturnOut())
                                                                                 THEN MovementLinkObject_To.ObjectId
-                                                                           WHEN Movement.DescId = zc_Movement_ReturnIn()
+                                                                           WHEN Movement.DescId IN (zc_Movement_ReturnIn(), zc_Movement_Income())
                                                                                 THEN MovementLinkObject_From.ObjectId
                                                                            ELSE MovementLinkObject_Partner.ObjectId
                                                                       END
@@ -272,9 +305,9 @@ BEGIN
       WHERE /*Movement.OperDate BETWEEN inStartDate AND inEndDate 
         AND Movement.DescId IN (zc_Movement_Sale(), zc_Movement_ReturnIn(), zc_Movement_PriceCorrective(), zc_Movement_TransferDebtOut(), zc_Movement_TransferDebtIn())
         AND Movement.StatusId = zc_Enum_Status_Complete()
-        AND */(View_Contract_InvNumber.InfoMoneyId = inInfoMoneyId OR COALESCE (inInfoMoneyId, 0) = 0)
+        AND */ /*(View_Contract_InvNumber.InfoMoneyId = inInfoMoneyId OR COALESCE (inInfoMoneyId, 0) = 0)
         AND (MovementLinkObject_PaidKind.ObjectId = inPaidKindId OR COALESCE (inPaidKindId, 0) = 0)
-        AND 0 <> CASE WHEN Movement.DescId IN (zc_Movement_Sale(), zc_Movement_ReturnIn())
+        AND */0 <> CASE WHEN Movement.DescId IN (zc_Movement_Sale(), zc_Movement_ReturnIn(), zc_Movement_Income(), zc_Movement_ReturnOut())
                            THEN COALESCE (MIFloat_AmountPartner.ValueData, 0)
                       ELSE MIMaster.Amount
                  END

@@ -2183,6 +2183,9 @@ inherited Sale_PartnerForm: TSale_PartnerForm
         Control = edVATPercent
       end
       item
+        Control = edChangePercent
+      end
+      item
         Control = edIsChecked
       end
       item

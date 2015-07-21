@@ -22,6 +22,14 @@ BEGIN
      -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Select_Movement_FounderService());
      vbUserId:= lpGetUserBySession (inSession);
 
+     -- Блокируем ему просмотр
+     IF vbUserId = 9457 -- Климентьев К.И.
+     THEN
+         vbUserId:= NULL;
+         RETURN;
+     END IF;
+
+
      -- Результат
      RETURN QUERY 
        WITH tmpStatus AS (SELECT zc_Enum_Status_Complete() AS StatusId

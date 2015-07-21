@@ -3,7 +3,7 @@ inherited Sale_OrderForm: TSale_OrderForm
   ClientHeight = 668
   ClientWidth = 1020
   ExplicitWidth = 1036
-  ExplicitHeight = 706
+  ExplicitHeight = 703
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -2326,6 +2326,9 @@ inherited Sale_OrderForm: TSale_OrderForm
       end
       item
         Control = edVATPercent
+      end
+      item
+        Control = edChangePercent
       end
       item
         Control = edIsChecked

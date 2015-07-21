@@ -34,7 +34,7 @@ BEGIN
    PERFORM lpInsertUpdate_MovementBoolean (zc_MovementBoolean_Peresort(), ioId, inIsPeresort);
 
    -- !!!только при создании!!!
-   IF vbIsInsert = TRUE AND inUserId IN (zc_Enum_Process_Auto_Defroster())
+   IF vbIsInsert = TRUE AND inUserId IN (zc_Enum_Process_Auto_Defroster(), zc_Enum_Process_Auto_Pack())
    THEN
        PERFORM lpInsertUpdate_MovementBoolean (zc_MovementBoolean_isAuto(), ioId, TRUE);
    END IF;

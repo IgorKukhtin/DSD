@@ -6,11 +6,22 @@ CREATE OR REPLACE FUNCTION gpSelect_Object_Role(
     IN inSession     TVarChar       -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, isErased boolean) AS
-$BODY$BEGIN
-   
+$BODY$
+   DECLARE vbUserId Integer;
+BEGIN
    -- проверка прав пользователя на вызов процедуры
    -- PERFORM lpCheckRight(inSession, zc_Enum_Process_User());
+     vbUserId:= lpGetUserBySession (inSession);
 
+     -- Блокируем ему просмотр
+     IF vbUserId = 9457 -- Климентьев К.И.
+     THEN
+         vbUserId:= NULL;
+         RETURN;
+     END IF;
+
+
+   -- Результат
    RETURN QUERY 
    SELECT 
      Object.Id         AS Id 

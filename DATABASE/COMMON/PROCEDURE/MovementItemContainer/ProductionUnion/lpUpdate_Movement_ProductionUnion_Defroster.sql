@@ -22,7 +22,7 @@ BEGIN
 
      -- данные по движению "схема Дефростер" + найденные MovementItemId
      INSERT INTO _tmpResult (MovementId, OperDate, MovementItemId_child, MovementItemId_master, ContainerId, OperCount_child, OperCount_master, isDelete)
-             WITH tmpMI AS (-- получем движение
+             WITH tmpMI AS (-- получаем движение
                             SELECT MIContainer.ContainerId
                                    -- группируется все в дату "прихода"
                                  , CASE WHEN MIContainer.isActive = TRUE THEN MIContainer.OperDate ELSE MIContainer.OperDate - INTERVAL '1 DAY' END AS OperDate
@@ -245,6 +245,5 @@ END;$BODY$
 */
 
 -- тест
--- SELECT * FROM lpUpdate_Movement_ProductionUnion_Defroster (inIsUpdate:= TRUE, inStartDate:= '01.07.2015', inEndDate:= '16.07.2015', inUnitId:= 8440, inUserId:= zfCalc_UserAdmin() :: Integer) -- 
+-- SELECT * FROM lpUpdate_Movement_ProductionUnion_Defroster (inIsUpdate:= TRUE, inStartDate:= '01.07.2015', inEndDate:= '18.07.2015', inUnitId:= 8440, inUserId:= zfCalc_UserAdmin() :: Integer) -- Дефростер
 -- where ContainerId = 568111
--- select * from MovementItemContainer where ContainerId = 568111

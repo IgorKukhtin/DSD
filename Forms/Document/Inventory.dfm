@@ -151,7 +151,22 @@ inherited InventoryForm: TInventoryForm
             HeaderAlignmentVert = vaCenter
             Width = 80
           end
-          object clMeasureName: TcxGridDBColumn [4]
+          object GoodsKindName_Complete: TcxGridDBColumn [4]
+            Caption = #1042#1080#1076' '#1090#1086#1074#1072#1088#1072' '#1043#1055
+            DataBinding.FieldName = 'GoodsKindName_Complete'
+            PropertiesClassName = 'TcxButtonEditProperties'
+            Properties.Buttons = <
+              item
+                Action = actGoodsKindCompleteChoiceMaster
+                Default = True
+                Kind = bkEllipsis
+              end>
+            Properties.ReadOnly = True
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 80
+          end
+          object clMeasureName: TcxGridDBColumn [5]
             Caption = #1045#1076'. '#1080#1079#1084'.'
             DataBinding.FieldName = 'MeasureName'
             HeaderAlignmentHorz = taCenter
@@ -160,21 +175,21 @@ inherited InventoryForm: TInventoryForm
             Options.Editing = False
             Width = 45
           end
-          object colPartionGoods: TcxGridDBColumn [5]
+          object colPartionGoods: TcxGridDBColumn [6]
             Caption = #1055#1072#1088#1090#1080#1103' '#1090#1086#1074#1072#1088#1072
             DataBinding.FieldName = 'PartionGoods'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 120
           end
-          object colPartionGoodsDate: TcxGridDBColumn [6]
+          object colPartionGoodsDate: TcxGridDBColumn [7]
             Caption = #1055#1072#1088#1090#1080#1103' ('#1076#1072#1090#1072')'
             DataBinding.FieldName = 'PartionGoodsDate'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 60
           end
-          object colAmount: TcxGridDBColumn [7]
+          object colAmount: TcxGridDBColumn [8]
             Caption = #1050#1086#1083'-'#1074#1086
             DataBinding.FieldName = 'Amount'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -184,7 +199,7 @@ inherited InventoryForm: TInventoryForm
             HeaderAlignmentVert = vaCenter
             Width = 60
           end
-          object colCount: TcxGridDBColumn [8]
+          object colCount: TcxGridDBColumn [9]
             Caption = #1050#1086#1083#1080#1095#1077#1089#1090#1074#1086' '#1073#1072#1090#1086#1085#1086#1074' '#1080#1083#1080' '#1091#1087#1072#1082#1086#1074#1086#1082
             DataBinding.FieldName = 'Count'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -195,7 +210,7 @@ inherited InventoryForm: TInventoryForm
             HeaderAlignmentVert = vaCenter
             Width = 60
           end
-          object colHeadCount: TcxGridDBColumn [9]
+          object colHeadCount: TcxGridDBColumn [10]
             Caption = #1050#1086#1083#1080#1095#1077#1089#1090#1074#1086' '#1075#1086#1083#1086#1074
             DataBinding.FieldName = 'HeadCount'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -206,7 +221,7 @@ inherited InventoryForm: TInventoryForm
             HeaderAlignmentVert = vaCenter
             Width = 60
           end
-          object colPrice: TcxGridDBColumn [10]
+          object colPrice: TcxGridDBColumn [11]
             Caption = #1062#1077#1085#1072
             DataBinding.FieldName = 'Price'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -216,7 +231,7 @@ inherited InventoryForm: TInventoryForm
             HeaderAlignmentVert = vaCenter
             Width = 60
           end
-          object colSumm: TcxGridDBColumn [11]
+          object colSumm: TcxGridDBColumn [12]
             Caption = #1057#1091#1084#1084#1072
             DataBinding.FieldName = 'Summ'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -226,7 +241,7 @@ inherited InventoryForm: TInventoryForm
             HeaderAlignmentVert = vaCenter
             Width = 60
           end
-          object colAssetName: TcxGridDBColumn [12]
+          object colAssetName: TcxGridDBColumn [13]
             Caption = #1054#1089#1085'.'#1089#1088#1077#1076#1089#1090#1074#1072
             DataBinding.FieldName = 'AssetName'
             PropertiesClassName = 'TcxButtonEditProperties'
@@ -241,7 +256,7 @@ inherited InventoryForm: TInventoryForm
             HeaderAlignmentVert = vaCenter
             Width = 60
           end
-          object colUnitName: TcxGridDBColumn [13]
+          object colUnitName: TcxGridDBColumn [14]
             Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
             DataBinding.FieldName = 'UnitName'
             PropertiesClassName = 'TcxButtonEditProperties'
@@ -256,7 +271,7 @@ inherited InventoryForm: TInventoryForm
             HeaderAlignmentVert = vaCenter
             Width = 60
           end
-          object colStorageName: TcxGridDBColumn [14]
+          object colStorageName: TcxGridDBColumn [15]
             Caption = #1052#1077#1089#1090#1086' '#1093#1088#1072#1085#1077#1085#1080#1103
             DataBinding.FieldName = 'StorageName'
             PropertiesClassName = 'TcxButtonEditProperties'
@@ -271,14 +286,14 @@ inherited InventoryForm: TInventoryForm
             HeaderAlignmentVert = vaCenter
             Width = 60
           end
-          object clInfoMoneyCode: TcxGridDBColumn [15]
+          object clInfoMoneyCode: TcxGridDBColumn [16]
             Caption = #1050#1086#1076' '#1059#1055
             DataBinding.FieldName = 'InfoMoneyCode'
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 45
           end
-          object clInfoMoneyGroupName: TcxGridDBColumn [16]
+          object clInfoMoneyGroupName: TcxGridDBColumn [17]
             Caption = #1059#1055' '#1075#1088#1091#1087#1087#1072' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
             DataBinding.FieldName = 'InfoMoneyGroupName'
             Visible = False
@@ -286,7 +301,7 @@ inherited InventoryForm: TInventoryForm
             Options.Editing = False
             Width = 70
           end
-          object clInfoMoneyDestinationName: TcxGridDBColumn [17]
+          object clInfoMoneyDestinationName: TcxGridDBColumn [18]
             Caption = #1059#1055' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1077
             DataBinding.FieldName = 'InfoMoneyDestinationName'
             Visible = False
@@ -294,7 +309,7 @@ inherited InventoryForm: TInventoryForm
             Options.Editing = False
             Width = 70
           end
-          object clInfoMoneyName: TcxGridDBColumn [18]
+          object clInfoMoneyName: TcxGridDBColumn [19]
             Caption = #1059#1055' '#1089#1090#1072#1090#1100#1103' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
             DataBinding.FieldName = 'InfoMoneyName'
             HeaderAlignmentVert = vaCenter
@@ -632,6 +647,30 @@ inherited InventoryForm: TInventoryForm
       View = cxGridDBTableView
       Caption = 'mactUpdate_SummAll'
       Hint = 'mactUpdate_SummAll'
+    end
+    object actGoodsKindCompleteChoiceMaster: TOpenChoiceForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = 'actGoodsKindCompleteChoiceMaster'
+      FormName = 'TGoodsKind_ObjectForm'
+      FormNameParam.Value = 'TGoodsKind_ObjectForm'
+      FormNameParam.DataType = ftString
+      GuiParams = <
+        item
+          Name = 'Key'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'GoodsKindId_Complete'
+        end
+        item
+          Name = 'TextValue'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'GoodsKindName_Complete'
+          DataType = ftString
+        end>
+      isShowModal = True
     end
   end
   inherited MasterDS: TDataSource
@@ -1269,6 +1308,13 @@ inherited InventoryForm: TInventoryForm
         Value = Null
         Component = MasterCDS
         ComponentItem = 'GoodsKindId'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inGoodsKindCompleteId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'GoodsKindId_Complete'
         ParamType = ptInput
       end
       item

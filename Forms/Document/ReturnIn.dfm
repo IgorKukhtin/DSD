@@ -711,9 +711,9 @@ inherited ReturnInForm: TReturnInForm
     object edChangePercent: TcxCurrencyEdit
       Left = 496
       Top = 63
-      Properties.DecimalPlaces = 3
-      Properties.DisplayFormat = ',0.###'
-      Properties.ReadOnly = True
+      Properties.DecimalPlaces = 4
+      Properties.DisplayFormat = ',0.####'
+      Properties.ReadOnly = False
       TabOrder = 19
       Width = 132
     end
@@ -2403,7 +2403,7 @@ inherited ReturnInForm: TReturnInForm
         ParamType = ptInputOutput
       end
       item
-        Name = 'inIsChangeAmountPartner'
+        Name = 'inIsCalcAmountPartner'
         Value = Null
         Component = cbCalcAmountPartner
         DataType = ftBoolean
@@ -2439,6 +2439,20 @@ inherited ReturnInForm: TReturnInForm
         ParamType = ptInput
       end
       item
+        Name = 'inMovementId_PartionTop'
+        Value = Null
+        Component = SaleChoiceGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inMovementId_PartionMI'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'MovementId_Partion'
+        ParamType = ptInput
+      end
+      item
         Name = 'inPartionGoods'
         Value = Null
         Component = MasterCDS
@@ -2459,6 +2473,19 @@ inherited ReturnInForm: TReturnInForm
         Component = MasterCDS
         ComponentItem = 'AssetId'
         ParamType = ptInput
+      end
+      item
+        Name = 'outMovementId_Partion'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'MovementId_Partion'
+      end
+      item
+        Name = 'outPartionMovementName'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'PartionMovementName'
+        DataType = ftString
       end>
     Left = 72
     Top = 368

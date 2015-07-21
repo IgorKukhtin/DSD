@@ -17,11 +17,22 @@ RETURNS TABLE (RootName TVarChar, AccountCode Integer, AccountGroupName TVarChar
              , CountStart TFloat, CountDebet TFloat, CountKredit TFloat, CountEnd TFloat
               )
 AS
-$BODY$BEGIN
-
+$BODY$
+   DECLARE vbUserId Integer;
+BEGIN
      -- проверка прав пользователя на вызов процедуры
      -- PERFORM lpCheckRight (inSession, zc_Enum_Process_Report_Balance());
+     vbUserId:= lpGetUserBySession (inSession);
 
+     -- Блокируем ему просмотр
+     IF vbUserId = 9457 -- Климентьев К.И.
+     THEN
+         vbUserId:= NULL;
+         RETURN;
+     END IF;
+
+
+     -- Результат
      RETURN QUERY 
 
        -- некоторые счета делим на Нал/Бн

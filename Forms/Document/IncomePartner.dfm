@@ -1563,6 +1563,18 @@ object IncomePartnerForm: TIncomePartnerForm
         Control = edTo
       end
       item
+        Control = edPaidKind
+      end
+      item
+        Control = edContract
+      end
+      item
+        Control = edPaidKindTo
+      end
+      item
+        Control = edContractTo
+      end
+      item
         Control = edPriceWithVAT
       end
       item
@@ -1572,12 +1584,7 @@ object IncomePartnerForm: TIncomePartnerForm
         Control = edChangePercent
       end
       item
-        Control = edContract
-      end
-      item
-        Control = edPaidKind
-      end
-      item
+        Control = edChangePercentTo
       end
       item
         Control = edCurrencyDocument

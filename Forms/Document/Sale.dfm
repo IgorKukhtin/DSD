@@ -1,26 +1,27 @@
 ﻿inherited SaleForm: TSaleForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1055#1088#1086#1076#1072#1078#1072' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1102'  ('#1074#1089#1077')>'
   ClientHeight = 668
-  ClientWidth = 1020
+  ClientWidth = 1028
   AddOnFormData.OnLoadAction = actSetDefaults
-  ExplicitWidth = 1036
-  ExplicitHeight = 706
+  ExplicitLeft = -55
+  ExplicitWidth = 1044
+  ExplicitHeight = 703
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 166
-    Width = 1020
+    Width = 1028
     Height = 502
     ExplicitTop = 166
     ExplicitWidth = 1020
     ExplicitHeight = 502
     ClientRectBottom = 502
-    ClientRectRight = 1020
+    ClientRectRight = 1028
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 1020
       ExplicitHeight = 478
       inherited cxGrid: TcxGrid
-        Width = 1020
+        Width = 1028
         Height = 478
         ExplicitWidth = 1020
         ExplicitHeight = 478
@@ -320,7 +321,7 @@
     end
   end
   inherited DataPanel: TPanel
-    Width = 1020
+    Width = 1028
     Height = 140
     TabOrder = 3
     ExplicitWidth = 1020
@@ -460,9 +461,9 @@
     object edChangePercent: TcxCurrencyEdit
       Left = 535
       Top = 63
-      Properties.DecimalPlaces = 3
-      Properties.DisplayFormat = ',0.###'
-      Properties.ReadOnly = True
+      Properties.DecimalPlaces = 4
+      Properties.DisplayFormat = ',0.####'
+      Properties.ReadOnly = False
       TabOrder = 18
       Width = 144
     end
@@ -2397,6 +2398,9 @@
       end
       item
         Control = edVATPercent
+      end
+      item
+        Control = edChangePercent
       end
       item
         Control = edIsChecked

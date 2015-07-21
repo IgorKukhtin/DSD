@@ -2768,6 +2768,14 @@ inherited Sale_OrderJournalForm: TSale_OrderJournalForm
         ParamType = ptInput
       end
       item
+        Name = 'inChangePercentAmount'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'inChangePercentAmount'
+        DataType = ftFloat
+        ParamType = ptInput
+      end
+      item
         Name = 'MovementId_TransportGoods'
         Value = Null
         Component = MasterCDS

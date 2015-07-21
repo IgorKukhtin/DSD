@@ -2,6 +2,7 @@ inherited ReturnOutPartnerForm: TReturnOutPartnerForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1042#1086#1079#1074#1088#1072#1090' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1091' '#1086#1090' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1103'>'
   ClientHeight = 668
   ClientWidth = 1049
+  ExplicitLeft = -67
   ExplicitWidth = 1065
   ExplicitHeight = 703
   PixelsPerInch = 96
@@ -1345,14 +1346,28 @@ inherited ReturnOutPartnerForm: TReturnOutPartnerForm
         Control = edTo
       end
       item
+        Control = edPaidKindFrom
       end
       item
+        Control = edContractFrom
+      end
+      item
+        Control = edPaidKindTo
+      end
+      item
+        Control = edContractTo
       end
       item
         Control = edPriceWithVAT
       end
       item
         Control = edVATPercent
+      end
+      item
+        Control = edChangePercent
+      end
+      item
+        Control = edChangePercenFrom
       end
       item
         Control = edCurrencyDocument
@@ -1362,8 +1377,6 @@ inherited ReturnOutPartnerForm: TReturnOutPartnerForm
       end
       item
         Control = edCurrencyValue
-      end
-      item
       end>
     Left = 232
     Top = 193

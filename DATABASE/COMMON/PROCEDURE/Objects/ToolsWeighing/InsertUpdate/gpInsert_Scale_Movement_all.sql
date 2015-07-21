@@ -604,6 +604,7 @@ BEGIN
                                                         , inCount               := tmp.Count
                                                         , inPartionGoods        := tmp.PartionGoods
                                                         , inGoodsKindId         := tmp.GoodsKindId
+                                                        , inGoodsKindCompleteId := NULL
                                                         , inAssetId             := NULL
                                                         , inUnitId              := NULL
                                                         , inStorageId           := NULL

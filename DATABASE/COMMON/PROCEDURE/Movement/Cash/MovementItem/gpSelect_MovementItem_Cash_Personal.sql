@@ -32,6 +32,14 @@ BEGIN
      vbUserId:= lpGetUserBySession (inSession);
 
 
+     -- Блокируем ему просмотр
+     IF vbUserId = 9457 -- Климентьев К.И.
+     THEN
+         vbUserId:= NULL;
+         RETURN;
+     END IF;
+
+
      -- определяем <Месяц начислений>
      IF inParentId <> 0
      THEN

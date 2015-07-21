@@ -53,6 +53,14 @@ BEGIN
      -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Report_Account());
      vbUserId:= lpGetUserBySession (inSession);
      
+     -- Блокируем ему просмотр
+     IF vbUserId = 9457 -- Климентьев К.И.
+     THEN
+         vbUserId:= NULL;
+         RETURN;
+     END IF;
+
+
     RETURN QUERY
     SELECT * FROM lpReport_Account (
          inStartDate             := inStartDate,  

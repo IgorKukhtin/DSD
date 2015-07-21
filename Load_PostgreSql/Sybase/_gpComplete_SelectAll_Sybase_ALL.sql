@@ -172,8 +172,9 @@ BEGIN
 
           LEFT JOIN MovementDesc ON MovementDesc.Id = Movement.DescId
      WHERE Movement.OperDate BETWEEN inStartDate AND inEndDate
-       AND Movement.DescId IN (zc_Movement_Send(), zc_Movement_ProductionUnion(), zc_Movement_ProductionSeparate())
        AND Movement.StatusId = zc_Enum_Status_Complete()
+       AND Movement.DescId IN (zc_Movement_Send(), zc_Movement_ProductionUnion(), zc_Movement_ProductionSeparate())
+       -- AND Movement.DescId IN (zc_Movement_ProductionUnion()) -- =  ЦЕХ колбаса+дел-сы
        -- AND tmpUnit_from.UnitId > 0 AND tmpUnit_To.UnitId IS NULL      -- =  ЦЕХ колбаса+дел-сы
        -- AND tmpUnit_from.UnitId IS NULL AND tmpUnit_To.UnitId IS NULL  -- <> Склад специй и запчастей
     ;

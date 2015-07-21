@@ -530,10 +530,10 @@ BEGIN
                                            AND ContainerObjectCost_Basis.ObjectCostDescId = zc_ObjectCost_Basis()*/
              LEFT JOIN HistoryCost ON HistoryCost.ContainerId = COALESCE (lfContainerSumm_20901.ContainerId, Container_Summ.Id) -- ContainerObjectCost_Basis.ObjectCostId
                                   AND vbOperDate BETWEEN HistoryCost.StartDate AND HistoryCost.EndDate
-        WHERE zc_isHistoryCost() = TRUE -- !!!если нужны проводки!!!
+        WHERE /*zc_isHistoryCost() = TRUE -- !!!если нужны проводки!!!
           AND (ContainerLinkObject_InfoMoneyDetail.ObjectId = 0 OR zc_isHistoryCost_byInfoMoneyDetail()= TRUE)
-          AND inIsHistoryCost = TRUE -- OR (_tmpItemChild.OperCount * HistoryCost.Price) <> 0) -- !!!ќЅя«ј“≈Ћ№Ќќ!!! вставл€ем нули если это не последний раз (они нужны дл€ расчета с/с)
-          AND (_tmpItemChild.OperCount * HistoryCost.Price) <> 0 -- !!!Ќ≈!!! вставл€ем нули
+          -- AND inIsHistoryCost = TRUE -- OR (_tmpItemChild.OperCount * HistoryCost.Price) <> 0) -- !!!ќЅя«ј“≈Ћ№Ќќ!!! вставл€ем нули если это не последний раз (они нужны дл€ расчета с/с)
+          AND*/ (_tmpItemChild.OperCount * HistoryCost.Price) <> 0 -- !!!Ќ≈!!! вставл€ем нули
         GROUP BY
                  _tmpItemChild.MovementItemId_Parent
                , _tmpItemChild.MovementItemId
