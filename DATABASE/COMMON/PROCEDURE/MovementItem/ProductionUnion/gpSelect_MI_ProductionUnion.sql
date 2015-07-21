@@ -52,8 +52,8 @@ BEGIN
             , Object_InfoMoney_View.InfoMoneyDestinationName
             , Object_InfoMoney_View.InfoMoneyName
             , Object_InfoMoney_View.InfoMoneyName_all
-
-           , FALSE                                  AS isErased
+            , FALSE                                  AS isAuto
+            , FALSE                                  AS isErased
 
        FROM (SELECT Object_Goods.Id                          AS GoodsId
                   , Object_Goods.ObjectCode                  AS GoodsCode
@@ -123,6 +123,7 @@ BEGIN
             , Object_InfoMoney_View.InfoMoneyDestinationName
             , Object_InfoMoney_View.InfoMoneyName
             , Object_InfoMoney_View.InfoMoneyName_all
+            , COALESCE(MIBoolean_isAuto.ValueData, False)  AS isAuto
 
             , MovementItem.isErased               AS isErased
 
@@ -168,6 +169,10 @@ BEGIN
              LEFT JOIN MovementItemBoolean AS MIBoolean_PartionClose
                                            ON MIBoolean_PartionClose.MovementItemId = MovementItem.Id
                                           AND MIBoolean_PartionClose.DescId = zc_MIBoolean_PartionClose()
+
+             LEFT JOIN MovementItemBoolean AS MIBoolean_isAuto
+                                           ON MIBoolean_isAuto.MovementItemId = MovementItem.Id
+                                          AND MIBoolean_isAuto.DescId = zc_MIBoolean_isAuto()
 
              LEFT JOIN MovementItemString AS MIString_Comment
                                           ON MIString_Comment.MovementItemId = MovementItem.Id
@@ -235,6 +240,7 @@ BEGIN
             , Object_InfoMoney_View.InfoMoneyDestinationName
             , Object_InfoMoney_View.InfoMoneyName
             , Object_InfoMoney_View.InfoMoneyName_all
+            , COALESCE(MIBoolean_isAuto.ValueData, False)  AS isAuto
 
             , MovementItem.isErased               AS isErased
 
@@ -279,6 +285,10 @@ BEGIN
              LEFT JOIN MovementItemBoolean AS MIBoolean_PartionClose
                                            ON MIBoolean_PartionClose.MovementItemId = MovementItem.Id
                                           AND MIBoolean_PartionClose.DescId = zc_MIBoolean_PartionClose()
+
+             LEFT JOIN MovementItemBoolean AS MIBoolean_isAuto
+                                           ON MIBoolean_isAuto.MovementItemId = MovementItem.Id
+                                          AND MIBoolean_isAuto.DescId = zc_MIBoolean_isAuto()
 
              LEFT JOIN MovementItemString AS MIString_Comment
                                           ON MIString_Comment.MovementItemId = MovementItem.Id

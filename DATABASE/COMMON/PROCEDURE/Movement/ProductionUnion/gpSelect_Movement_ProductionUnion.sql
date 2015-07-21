@@ -14,6 +14,7 @@ CREATE OR REPLACE FUNCTION gpSelect_Movement_ProductionUnion(
 RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode Integer, StatusName TVarChar
              , TotalCount TFloat, TotalCountChild TFloat
              , FromId Integer, FromName TVarChar, ToId Integer, ToName TVarChar
+             , isAuto Boolean, InsertDate TDateTime
               )
 AS
 $BODY$
@@ -50,6 +51,9 @@ BEGIN
          , Object_To.Id                             AS ToId
          , Object_To.ValueData                      AS ToName
 
+         , COALESCE(MovementBoolean_isAuto.ValueData, False)          AS isAuto
+         , COALESCE(MovementDate_Insert.ValueData,  Null:: TDateTime) AS InsertDate
+ 
      FROM (SELECT Movement.id
              FROM tmpStatus
                   JOIN Movement ON Movement.OperDate BETWEEN inStartDate AND inEndDate  AND Movement.DescId = zc_Movement_ProductionUnion() AND Movement.StatusId = tmpStatus.StatusId
@@ -82,6 +86,14 @@ BEGIN
                                      ON MovementBoolean_Peresort.MovementId = Movement.Id
                                     AND MovementBoolean_Peresort.DescId = zc_MovementBoolean_Peresort()
                                     AND MovementBoolean_Peresort.ValueData = inIsPeresort
+
+          LEFT JOIN MovementBoolean AS MovementBoolean_isAuto
+                                    ON MovementBoolean_isAuto.MovementId = Movement.Id
+                                   AND MovementBoolean_isAuto.DescId = zc_MovementBoolean_isAuto()
+
+          LEFT JOIN MovementDate AS MovementDate_Insert
+                                 ON MovementDate_Insert.MovementId = Movement.Id
+                                AND MovementDate_Insert.DescId = zc_MovementDate_Insert()
     ;
 
 END;
