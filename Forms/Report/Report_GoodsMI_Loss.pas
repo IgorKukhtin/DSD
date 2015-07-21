@@ -21,13 +21,13 @@ type
     clGoodsGroupName: TcxGridDBColumn;
     clGoodsCode: TcxGridDBColumn;
     clGoodsName: TcxGridDBColumn;
-    clSumm: TcxGridDBColumn;
-    clAmount_Weight: TcxGridDBColumn;
+    SummOut: TcxGridDBColumn;
+    AmountOut_Weight: TcxGridDBColumn;
     cxLabel4: TcxLabel;
     edGoodsGroup: TcxButtonEdit;
     GoodsGroupGuides: TdsdGuides;
     FormParams: TdsdFormParams;
-    clAmount_Sh: TcxGridDBColumn;
+    AmountOut_Sh: TcxGridDBColumn;
     edInDescName: TcxTextEdit;
     clGoodsKindName: TcxGridDBColumn;
     cxLabel3: TcxLabel;

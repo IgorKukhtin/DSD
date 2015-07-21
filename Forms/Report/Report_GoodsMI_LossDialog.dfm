@@ -209,7 +209,7 @@ object Report_GoodsMI_LossDialogForm: TReport_GoodsMI_LossDialogForm
         Name = 'ToName'
         Value = ''
         Component = GuidesTo
-        ComponentItem = 'Key'
+        ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
       end
@@ -288,10 +288,10 @@ object Report_GoodsMI_LossDialogForm: TReport_GoodsMI_LossDialogForm
   object GuidesFrom: TdsdGuides
     KeyField = 'Id'
     LookupControl = edFrom
-    FormNameParam.Value = 'TUnit_ObjectForm'
+    FormNameParam.Value = 'TStoragePlace_ObjectForm'
     FormNameParam.DataType = ftString
-    FormName = 'TUnit_ObjectForm'
-    PositionDataSet = 'MasterCDS'
+    FormName = 'TStoragePlace_ObjectForm'
+    PositionDataSet = 'ClientDataSet'
     Params = <
       item
         Name = 'Key'

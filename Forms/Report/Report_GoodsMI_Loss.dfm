@@ -32,12 +32,22 @@ inherited Report_GoodsMI_LossForm: TReport_GoodsMI_LossForm
             item
               Format = ',0.####'
               Kind = skSum
-              Column = clSumm
+              Column = SummOut
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = clAmount_Weight
+              Column = SummOut_Total
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = SummOut_60000
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = AmountOut_Weight
             end
             item
               Format = ',0.####'
@@ -46,7 +56,7 @@ inherited Report_GoodsMI_LossForm: TReport_GoodsMI_LossForm
             item
               Format = ',0.####'
               Kind = skSum
-              Column = clAmount_Sh
+              Column = AmountOut_Sh
             end
             item
               Format = ',0.####'
@@ -55,26 +65,42 @@ inherited Report_GoodsMI_LossForm: TReport_GoodsMI_LossForm
             item
               Format = ',0.####'
               Kind = skSum
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = AmountIn_Weight
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = AmountIn_Sh
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = SummIn
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = SummIn_Total
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = SummIn_60000
             end>
           DataController.Summary.FooterSummaryItems = <
             item
               Format = ',0.####'
               Kind = skSum
-              Column = clSumm
+              Column = SummOut
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = clAmount_Weight
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-              Column = clAmount_Sh
+              Column = AmountOut_Weight
             end
             item
               Format = ',0.####'
@@ -83,6 +109,50 @@ inherited Report_GoodsMI_LossForm: TReport_GoodsMI_LossForm
             item
               Format = ',0.####'
               Kind = skSum
+              Column = AmountOut_Sh
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = AmountIn_Weight
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = AmountIn_Sh
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = SummIn
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = SummOut_Total
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = SummOut_60000
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = SummIn_Total
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = SummIn_60000
             end>
           OptionsData.CancelOnExit = True
           OptionsData.Deleting = False
@@ -129,9 +199,9 @@ inherited Report_GoodsMI_LossForm: TReport_GoodsMI_LossForm
             HeaderAlignmentVert = vaCenter
             Width = 113
           end
-          object clAmount_Weight: TcxGridDBColumn
-            Caption = #1050#1086#1083'-'#1074#1086' '#1042#1077#1089
-            DataBinding.FieldName = 'Amount_Weight'
+          object AmountOut_Weight: TcxGridDBColumn
+            Caption = #1050#1086#1083'-'#1074#1086' '#1042#1077#1089' ('#1088#1072#1089#1093')'
+            DataBinding.FieldName = 'AmountOut_Weight'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
@@ -139,9 +209,9 @@ inherited Report_GoodsMI_LossForm: TReport_GoodsMI_LossForm
             HeaderAlignmentVert = vaCenter
             Width = 80
           end
-          object clAmount_Sh: TcxGridDBColumn
-            Caption = #1050#1086#1083'-'#1074#1086' '#1064#1090'. '
-            DataBinding.FieldName = 'Amount_Sh'
+          object AmountOut_Sh: TcxGridDBColumn
+            Caption = #1050#1086#1083'-'#1074#1086' '#1064#1090'. ('#1088#1072#1089#1093')'
+            DataBinding.FieldName = 'AmountOut_Sh'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
@@ -149,9 +219,79 @@ inherited Report_GoodsMI_LossForm: TReport_GoodsMI_LossForm
             HeaderAlignmentVert = vaCenter
             Width = 80
           end
-          object clSumm: TcxGridDBColumn
-            Caption = #1057#1091#1084#1084#1072' '#1089' '#1053#1044#1057' ('#1080#1090#1086#1075')'
-            DataBinding.FieldName = 'Summ'
+          object SummOut_Total: TcxGridDBColumn
+            Caption = #1057#1091#1084#1084#1072' '#1089'/'#1089'  '#1048#1090#1086#1075#1086' ('#1088#1072#1089#1093')'
+            DataBinding.FieldName = 'SummOut_Total'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 80
+          end
+          object SummOut: TcxGridDBColumn
+            Caption = #1057#1091#1084#1084#1072' '#1089'/'#1089' '#1073#1077#1079' '#1073'.'#1087#1077#1088#1080#1086#1076' ('#1088#1072#1089#1093')'
+            DataBinding.FieldName = 'SummOut'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 80
+          end
+          object SummOut_60000: TcxGridDBColumn
+            Caption = #1057#1091#1084#1084#1072' '#1089'/'#1089' '#1073'.'#1087#1077#1088#1080#1086#1076' ('#1088#1072#1089#1093')'
+            DataBinding.FieldName = 'SummOut_60000'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 80
+          end
+          object AmountIn_Weight: TcxGridDBColumn
+            Caption = #1050#1086#1083'-'#1074#1086' '#1042#1077#1089' ('#1087#1088#1080#1093')'
+            DataBinding.FieldName = 'AmountIn_Weight'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 80
+          end
+          object AmountIn_Sh: TcxGridDBColumn
+            Caption = #1050#1086#1083'-'#1074#1086' '#1064#1090'. ('#1087#1088#1080#1093')'
+            DataBinding.FieldName = 'AmountIn_Sh'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 80
+          end
+          object SummIn_Total: TcxGridDBColumn
+            Caption = #1057#1091#1084#1084#1072' '#1089'/'#1089'  '#1048#1090#1086#1075#1086' ('#1087#1088#1080#1093')'
+            DataBinding.FieldName = 'SummIn_Total'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 80
+          end
+          object SummIn: TcxGridDBColumn
+            Caption = #1057#1091#1084#1084#1072' '#1089'/'#1089' '#1073#1077#1079' '#1073'.'#1087#1077#1088#1080#1086#1076' ('#1087#1088#1080#1093')'
+            DataBinding.FieldName = 'SummIn'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 80
+          end
+          object SummIn_60000: TcxGridDBColumn
+            Caption = #1057#1091#1084#1084#1072' '#1089'/'#1089' '#1073'.'#1087#1077#1088#1080#1086#1076' ('#1087#1088#1080#1093')'
+            DataBinding.FieldName = 'SummIn_60000'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
@@ -584,10 +724,10 @@ inherited Report_GoodsMI_LossForm: TReport_GoodsMI_LossForm
   object FromGuides: TdsdGuides
     KeyField = 'Id'
     LookupControl = edFrom
-    FormNameParam.Value = 'TUnit_ObjectForm'
+    FormNameParam.Value = 'TStoragePlace_ObjectForm'
     FormNameParam.DataType = ftString
-    FormName = 'TUnit_ObjectForm'
-    PositionDataSet = 'MasterCDS'
+    FormName = 'TStoragePlace_ObjectForm'
+    PositionDataSet = 'ClientDataSet'
     Params = <
       item
         Name = 'Key'
