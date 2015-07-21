@@ -174,6 +174,21 @@ inherited ProductionUnionJournalForm: TProductionUnionJournalForm
             HeaderAlignmentVert = vaCenter
             Width = 70
           end
+          object InsertDate: TcxGridDBColumn
+            Caption = #1044#1072#1090#1072' '#1089#1086#1079#1076'. '#1082#1083#1072#1076#1086#1074#1097'.'
+            DataBinding.FieldName = 'InsertDate'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 105
+          end
+          object isAuto: TcxGridDBColumn
+            Caption = #1040#1074#1090'.'
+            DataBinding.FieldName = 'isAuto'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 36
+          end
         end
       end
     end

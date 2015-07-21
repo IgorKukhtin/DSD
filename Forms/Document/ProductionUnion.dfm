@@ -2,6 +2,7 @@ inherited ProductionUnionForm: TProductionUnionForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1055#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1086' - '#1089#1084#1077#1096#1080#1074#1072#1085#1080#1077'>'
   ClientWidth = 1020
   ExplicitWidth = 1036
+  ExplicitHeight = 712
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -268,6 +269,14 @@ inherited ProductionUnionForm: TProductionUnionForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
           end
+          object isAuto: TcxGridDBColumn
+            Caption = #1040#1074#1090'.'
+            DataBinding.FieldName = 'isAuto'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 30
+          end
         end
       end
       inherited cxGridChild: TcxGrid
@@ -403,12 +412,56 @@ inherited ProductionUnionForm: TProductionUnionForm
     ExplicitWidth = 1020
     ExplicitHeight = 96
     inherited ceStatus: TcxButtonEdit
+      ExplicitWidth = 200
       ExplicitHeight = 22
+      Width = 200
+    end
+    inherited cxLabel3: TcxLabel
+      Left = 370
+      ExplicitLeft = 370
+    end
+    inherited cxLabel4: TcxLabel
+      Left = 646
+      ExplicitLeft = 646
+    end
+    inherited edFrom: TcxButtonEdit
+      Left = 370
+      ExplicitLeft = 370
+    end
+    inherited edTo: TcxButtonEdit
+      Left = 646
+      ExplicitLeft = 646
+    end
+    object cxLabel5: TcxLabel
+      Left = 216
+      Top = 5
+      Caption = #1044#1072#1090#1072'/'#1074#1088'. '#1089#1086#1079#1076'. '#1082#1083#1072#1076#1086#1074#1097'.'
     end
   end
+  object edIsAuto: TcxCheckBox [2]
+    Left = 216
+    Top = 61
+    Caption = #1057#1086#1079#1076#1072#1085' '#1072#1074#1090#1086#1084#1072#1090#1080#1095#1077#1089#1082#1080' ('#1076#1072'/'#1085#1077#1090')'
+    Properties.ReadOnly = True
+    TabOrder = 6
+    Width = 192
+  end
+  object edInsert: TcxDateEdit [3]
+    Left = 216
+    Top = 23
+    EditValue = 42206d
+    Properties.DateButtons = [btnClear, btnToday]
+    Properties.DisplayFormat = 'dd.mm.yyyy hh:mm'
+    Properties.EditFormat = 'dd.mm.yyyy hh:mm'
+    Properties.InputKind = ikMask
+    Properties.Kind = ckDateTime
+    Properties.ReadOnly = True
+    TabOrder = 7
+    Width = 145
+  end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
-    Left = 763
-    Top = 72
+    Left = 787
+    Top = 64
   end
   inherited ActionList: TActionList
     inherited actRefresh: TdsdDataSetRefresh
@@ -684,13 +737,12 @@ inherited ProductionUnionForm: TProductionUnionForm
     Top = 272
   end
   inherited StatusGuides: TdsdGuides
-    Left = 144
+    Left = 88
     Top = 56
   end
   inherited spChangeStatus: TdsdStoredProc
     StoredProcName = 'gpUpdate_Status_ProductionUnion'
-    Left = 200
-    Top = 32
+    Left = 40
   end
   inherited spGet: TdsdStoredProc
     StoredProcName = 'gpGet_Movement_ProductionUnion'
@@ -763,13 +815,16 @@ inherited ProductionUnionForm: TProductionUnionForm
         DataType = ftString
       end
       item
+        Name = 'IsAuto'
         Value = ''
-        DataType = ftString
-        ParamType = ptUnknown
+        Component = edIsAuto
+        DataType = ftBoolean
       end
       item
-        Value = Null
-        ParamType = ptUnknown
+        Name = 'InsertDate'
+        Value = 'Null'
+        Component = edInsert
+        DataType = ftDateTime
       end>
     Left = 288
     Top = 168
@@ -983,9 +1038,11 @@ inherited ProductionUnionForm: TProductionUnionForm
   end
   inherited GuidesTo: TdsdGuides
     PositionDataSet = 'MasterCDS'
+    Left = 720
   end
   inherited GuidesFrom: TdsdGuides
     PositionDataSet = 'MasterCDS'
+    Left = 416
   end
   inherited spInsertUpdateMIChild: TdsdStoredProc
     StoredProcName = 'gpInsertUpdate_MI_ProductionUnion_Child'

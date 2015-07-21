@@ -40,6 +40,8 @@ type
     spSelectPrint1: TdsdStoredProc;
     actPrint1: TdsdPrintAction;
     bbPrint1: TdxBarButton;
+    isAuto: TcxGridDBColumn;
+    InsertDate: TcxGridDBColumn;
   private
     { Private declarations }
   public

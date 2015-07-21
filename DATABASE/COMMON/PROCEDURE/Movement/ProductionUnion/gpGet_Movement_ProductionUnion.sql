@@ -13,6 +13,7 @@ CREATE OR REPLACE FUNCTION gpGet_Movement_ProductionUnion(
 RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime
              , StatusCode Integer, StatusName TVarChar
              , FromId Integer, FromName TVarChar, ToId Integer, ToName TVarChar
+             , isAuto Boolean, InsertDate TDateTime
                )
 AS
 $BODY$
@@ -31,10 +32,12 @@ BEGIN
              , inOperDate                                       AS OperDate
              , Object_Status.Code                               AS StatusCode
              , Object_Status.Name                               AS StatusName
-             , 0                     				            AS FromId
-             , CAST ('' AS TVarChar) 				            AS FromName
-             , 0                     				            AS ToId
-             , CAST ('' AS TVarChar) 				            AS ToName
+             , 0                     			        AS FromId
+             , CAST ('' AS TVarChar) 			        AS FromName
+             , 0                     			        AS ToId
+             , CAST ('' AS TVarChar) 				AS ToName
+             , CAST (False as Boolean)                          AS isAuto
+             , Null:: TDateTime                                 AS InsertDate
 
           FROM lfGet_Object_Status(zc_Enum_Status_UnComplete()) AS Object_Status;
      ELSE
@@ -43,12 +46,14 @@ BEGIN
            Movement.Id
          , Movement.InvNumber
          , Movement.OperDate
-         , Object_Status.ObjectCode                             AS StatusCode
-         , Object_Status.ValueData                              AS StatusName
-         , Object_From.Id                                       AS FromId
-         , Object_From.ValueData                                AS FromName
-         , Object_To.Id                                         AS ToId
-         , Object_To.ValueData                                  AS ToName
+         , Object_Status.ObjectCode                 AS StatusCode
+         , Object_Status.ValueData                  AS StatusName
+         , Object_From.Id                           AS FromId
+         , Object_From.ValueData                    AS FromName
+         , Object_To.Id                             AS ToId
+         , Object_To.ValueData                      AS ToName
+         , COALESCE(MovementBoolean_isAuto.ValueData, False)         AS isAuto
+         , COALESCE(MovementDate_Insert.ValueData,  Null:: TDateTime) AS InsertDate
 
      FROM Movement
           LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
@@ -62,6 +67,14 @@ BEGIN
                                        ON MovementLinkObject_To.MovementId = Movement.Id
                                       AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
           LEFT JOIN Object AS Object_To ON Object_To.Id = MovementLinkObject_To.ObjectId
+
+          LEFT JOIN MovementBoolean AS MovementBoolean_isAuto
+                                    ON MovementBoolean_isAuto.MovementId = Movement.Id
+                                   AND MovementBoolean_isAuto.DescId = zc_MovementBoolean_isAuto()
+
+          LEFT JOIN MovementDate AS MovementDate_Insert
+                                 ON MovementDate_Insert.MovementId = Movement.Id
+                                AND MovementDate_Insert.DescId = zc_MovementDate_Insert()
 
      WHERE Movement.Id = inMovementId
        AND Movement.DescId = zc_Movement_ProductionUnion();
