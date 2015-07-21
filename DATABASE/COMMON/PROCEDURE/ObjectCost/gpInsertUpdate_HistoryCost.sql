@@ -452,7 +452,6 @@ BEGIN
                                  ELSE 0
                             END AS OperPrice
                      FROM _tmpMaster
-                     WHERE COALESCE (_tmpMaster.UnitId, 0) <> CASE WHEN vbItearation < 3 THEN -1 ELSE 8451 END-- ÷ех ”паковки
                     ) AS _tmpPrice 
                     JOIN _tmpChild ON _tmpChild.ContainerId = _tmpPrice.ContainerId
                                   -- ќтбрасываем в том случае если сам в себ€
@@ -460,7 +459,9 @@ BEGIN
 
                GROUP BY _tmpChild.MasterContainerId
               ) AS _tmpSumm 
-         WHERE _tmpMaster.ContainerId = _tmpSumm.ContainerId; -- ÷ех ”паковки
+         WHERE _tmpMaster.ContainerId = _tmpSumm.ContainerId
+           AND COALESCE (_tmpMaster.UnitId, 0) <> CASE WHEN vbItearation < 2 THEN -1 ELSE 8451 END -- ÷ех ”паковки
+        ;
 
          -- сколько записей с еще неправильной с/с
          SELECT Count(*) INTO vbCountDiff
@@ -482,7 +483,6 @@ BEGIN
                                  ELSE 0
                             END AS OperPrice
                      FROM _tmpMaster
-                     WHERE COALESCE (_tmpMaster.UnitId, 0) <> CASE WHEN vbItearation < 3 THEN -1 ELSE 8451 END-- ÷ех ”паковки
                     ) AS _tmpPrice 
                     JOIN _tmpChild ON _tmpChild.ContainerId = _tmpPrice.ContainerId
                                   -- ќтбрасываем в том случае если сам в себ€
@@ -490,7 +490,9 @@ BEGIN
                GROUP BY _tmpChild.MasterContainerId
               ) AS _tmpSumm 
          WHERE _tmpMaster.ContainerId = _tmpSumm.ContainerId
-           AND ABS (_tmpMaster.CalcSumm - _tmpSumm.CalcSumm) > inDiffSumm;
+           AND ABS (_tmpMaster.CalcSumm - _tmpSumm.CalcSumm) > inDiffSumm
+           AND COALESCE (_tmpMaster.UnitId, 0) <> CASE WHEN vbItearation < 2 THEN -1 ELSE 8451 END -- ÷ех ”паковки
+        ;
 
          -- увеличивам итерации
          vbItearation:= vbItearation + 1;

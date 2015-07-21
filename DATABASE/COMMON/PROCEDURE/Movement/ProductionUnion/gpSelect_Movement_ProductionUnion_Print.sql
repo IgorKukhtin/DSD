@@ -140,11 +140,11 @@ BEGIN
              LEFT JOIN ObjectLink AS ObjectLink_GoodsChild_Measure
                                   ON ObjectLink_GoodsChild_Measure.ObjectId = Object_GoodsChild.Id
                                  AND ObjectLink_GoodsChild_Measure.DescId = zc_ObjectLink_Goods_Measure()
-             LEFT JOIN Object AS Object_MeasureChild ON Object_MeasureChild.Id = ObjectLink_Goods_Measure.ChildObjectId
+             LEFT JOIN Object AS Object_MeasureChild ON Object_MeasureChild.Id = ObjectLink_GoodsChild_Measure.ChildObjectId
 
              LEFT JOIN ObjectFloat AS ObjectFloat_Weight
-                                  ON ObjectFloat_Weight.ObjectId = Object_Goods.Id
-                                 AND ObjectFloat_Weight.DescId = zc_ObjectFloat_Goods_Weight()
+                                   ON ObjectFloat_Weight.ObjectId = Object_Goods.Id
+                                  AND ObjectFloat_Weight.DescId = zc_ObjectFloat_Goods_Weight()
              LEFT JOIN ObjectFloat AS ObjectFloat_WeightChild
                                    ON ObjectFloat_WeightChild.ObjectId = Object_GoodsChild.Id
                                   AND ObjectFloat_WeightChild.DescId = zc_ObjectFloat_Goods_Weight() 

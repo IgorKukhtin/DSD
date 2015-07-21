@@ -87,6 +87,8 @@ type
     spSelectPrint_Inventory: TdsdStoredProc;
     actPrint_Inventory: TdsdPrintAction;
     spSelectSale_EDI: TdsdStoredProc;
+    spSelectPrint_SaleOrder: TdsdStoredProc;
+    actPrintSaleOrder: TdsdPrintAction;
   private
   end;
 
@@ -97,6 +99,7 @@ type
   function Print_Pack     (MovementDescId,MovementId,MovementId_by:Integer; myPrintCount:Integer; isPreview:Boolean):Boolean;
   function Print_Transport(MovementDescId,MovementId,MovementId_sale:Integer; OperDate:TDateTime; myPrintCount:Integer; isPreview:Boolean):Boolean;
   function Print_Quality  (MovementDescId,MovementId:Integer; myPrintCount:Integer; isPreview:Boolean):Boolean;
+  function Print_Sale_Order(MovementId_order,MovementId_by:Integer; isDiff:Boolean):Boolean;
 
   procedure SendEDI_Invoice (MovementId: Integer);
   procedure SendEDI_OrdSpr (MovementId: Integer);
@@ -206,6 +209,14 @@ procedure Print_QualityDocument (MovementId: Integer);
 begin
   UtilPrintForm.FormParams.ParamByName('Id').Value := MovementId;
   UtilPrintForm.mactPrint_QualityDoc.Execute;
+end;
+//------------------------------------------------------------------------------------------------
+procedure Print_Sale_OrderDocument(MovementId_order,MovementId_by:Integer; isDiff:Boolean);
+begin
+  UtilPrintForm.FormParams.ParamByName('Id').Value := MovementId_order;
+  UtilPrintForm.FormParams.ParamByName('MovementId_by').Value := MovementId_by;
+  UtilPrintForm.FormParams.ParamByName('inIsDiff').Value := isDiff;
+  UtilPrintForm.actPrintSaleOrder.Execute;
 end;
 //------------------------------------------------------------------------------------------------
 function Print_Movement (MovementDescId, MovementId, MovementId_by: Integer; myPrintCount:Integer; isPreview:Boolean; isSendOnPriceIn:Boolean):Boolean;
@@ -363,6 +374,26 @@ begin
              else begin ShowMessage ('Ошибка.Форма печати <Качественное> не найдена.');exit;end;
           except
                 ShowMessage('Ошибка.Печать <Качественное> не сформирована.');
+                exit;
+          end;
+     Result:=true;
+end;
+//------------------------------------------------------------------------------------------------
+function Print_Sale_Order(MovementId_order,MovementId_by:Integer; isDiff:Boolean):Boolean;
+begin
+     UtilPrintForm.PrintHeaderCDS.IndexFieldNames:='';
+     UtilPrintForm.PrintItemsCDS.IndexFieldNames:='';
+     UtilPrintForm.PrintItemsSverkaCDS.IndexFieldNames:='';
+     //
+     Result:=false;
+          //
+          try
+             //Print
+             if (MovementId_order <> 0)
+             then Print_Sale_OrderDocument(MovementId_order,MovementId_by,isDiff)
+             else begin ShowMessage ('Ошибка.'+#10+#13+'№ заявки не установлен.'+#10+#13+'Печать <Сравнение Заявка/Отгрузка> не сформирована.');exit;end;
+          except
+                ShowMessage('Ошибка.Печать <Сравнение Заявка/Отгрузка> не сформирована.');
                 exit;
           end;
      Result:=true;

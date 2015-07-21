@@ -30,7 +30,6 @@ object JuridicalForm: TJuridicalForm
     Height = 379
     Align = alClient
     TabOrder = 1
-    ExplicitLeft = 14
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = GridDS
@@ -206,7 +205,7 @@ object JuridicalForm: TJuridicalForm
         Width = 40
       end
       object DayTaxSummary: TcxGridDBColumn
-        Caption = #1055#1077#1088#1080#1086#1076' '#1076#1085'. '#1089#1074#1086#1076#1085#1086#1081' '#1053#1053
+        Caption = #1055#1077#1088#1080#1086#1076' '#1074' '#1076#1085'. '#1076#1083#1103' '#1089#1074#1086#1076#1085#1086#1081' '#1053#1053
         DataBinding.FieldName = 'DayTaxSummary'
         Visible = False
         HeaderAlignmentHorz = taCenter

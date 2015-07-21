@@ -647,6 +647,7 @@ END;$BODY$
 -- where ContainerId = 568111
 -- SELECT * FROM lpUpdate_Movement_ProductionUnion_Pack (inIsUpdate:= FALSE, inStartDate:= '10.05.2015', inEndDate:= '10.05.2015', inUnitId:= 8451, inUserId:= zfCalc_UserAdmin() :: Integer) -- ÷ех ”паковки
 
+-- SELECT * FROM lpUpdate_Movement_ProductionUnion_Pack (inIsUpdate:= true, inStartDate:= '20.07.2015', inEndDate:= '20.07.2015', inUnitId:= 8451, inUserId:= zfCalc_UserAdmin() :: Integer) -- ÷ех ”паковки
 -- SELECT * FROM lpUpdate_Movement_ProductionUnion_Pack (inIsUpdate:= true, inStartDate:= '19.07.2015', inEndDate:= '19.07.2015', inUnitId:= 8451, inUserId:= zfCalc_UserAdmin() :: Integer) -- ÷ех ”паковки
 -- SELECT * FROM lpUpdate_Movement_ProductionUnion_Pack (inIsUpdate:= true, inStartDate:= '18.07.2015', inEndDate:= '18.07.2015', inUnitId:= 8451, inUserId:= zfCalc_UserAdmin() :: Integer) -- ÷ех ”паковки
 -- SELECT * FROM lpUpdate_Movement_ProductionUnion_Pack (inIsUpdate:= true, inStartDate:= '17.07.2015', inEndDate:= '17.07.2015', inUnitId:= 8451, inUserId:= zfCalc_UserAdmin() :: Integer) -- ÷ех ”паковки

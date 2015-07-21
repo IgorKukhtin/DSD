@@ -98,6 +98,8 @@ type
     EdiOrdspr: TcxGridDBColumn;
     EdiInvoice: TcxGridDBColumn;
     EdiDesadv: TcxGridDBColumn;
+    bbSale_Order_all: TSpeedButton;
+    bbSale_Order_diff: TSpeedButton;
     procedure FormCreate(Sender: TObject);
     procedure FormKeyDown(Sender: TObject; var Key: Word;
       Shift: TShiftState);
@@ -122,6 +124,8 @@ type
     procedure bbEDI_InvoiceClick(Sender: TObject);
     procedure bbEDI_OrdsprClick(Sender: TObject);
     procedure bbEDI_DesadvClick(Sender: TObject);
+    procedure bbSale_Order_allClick(Sender: TObject);
+    procedure bbSale_Order_diffClick(Sender: TObject);
   private
     fStartWrite:Boolean;
 
@@ -313,6 +317,9 @@ begin myCheckPrintSpec;end;
 {------------------------------------------------------------------------------}
 procedure TGuideMovementForm.FormKeyDown(Sender: TObject; var Key: Word;Shift: TShiftState);
 begin
+     if Key = VK_F8 then bbSale_Order_allClick(Self);
+     if Key = VK_F9 then bbSale_Order_diffClick(Self);
+
     if Key=13
     then
         if ((ActiveControl=cxDBGrid)and(CDS.RecordCount>0))or(CDS.RecordCount=1)
@@ -556,6 +563,16 @@ begin
                        , 1    // myPrintCount
                        , TRUE // isPreview
                         );
+end;
+{------------------------------------------------------------------------------}
+procedure TGuideMovementForm.bbSale_Order_allClick(Sender: TObject);
+begin
+     with CDS do Print_Sale_Order(CDS.FieldByName('MovementId_Order').AsInteger,FieldByName('Id').AsInteger,FALSE);
+end;
+{------------------------------------------------------------------------------}
+procedure TGuideMovementForm.bbSale_Order_diffClick(Sender: TObject);
+begin
+     with CDS do Print_Sale_Order(CDS.FieldByName('MovementId_Order').AsInteger,FieldByName('Id').AsInteger,TRUE);
 end;
 {------------------------------------------------------------------------------}
 procedure TGuideMovementForm.bbEDI_DesadvClick(Sender: TObject);

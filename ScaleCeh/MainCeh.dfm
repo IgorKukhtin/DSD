@@ -628,7 +628,7 @@ object MainCehForm: TMainCehForm
           Width = 200
         end
         object GoodsKindName: TcxGridDBColumn
-          Caption = #1042#1080#1076' '#1091#1087#1072#1082'.'
+          Caption = #1042#1080#1076
           DataBinding.FieldName = 'GoodsKindName'
           HeaderAlignmentHorz = taCenter
           HeaderAlignmentVert = vaCenter

@@ -55,17 +55,24 @@ BEGIN
                               AND MIContainer.AnalyzerId             = inUnitId
                               AND MIContainer.MovementDescId         = zc_Movement_ProductionUnion()
                            )
+          , tmpMovement AS (-- поиск одного документа за OperDate
+                            SELECT MIContainer.OperDate
+                                 , MAX (MIContainer.MovementId) AS MovementId
+                            FROM tmpMI_all
+                            GROUP BY MIContainer.OperDate
+                           )
            , tmpMI_find AS (-- нужен только один из элементов (по нему будет Update, иначе Insert, остальные Delete)
                             SELECT tmpMI_all.ContainerId
                                  , tmpMI_all.OperDate
                                  , MAX (tmpMI_all.MovementItemId) AS MovementItemId
-                            FROM tmpMI_all
+                            FROM tmpMovement
+                                 INNER JOIN tmpMI_all ON tmpMI_all.MovementId = tmpMovement.MovementId
                             WHERE tmpMI_all.isActive = FALSE
                             GROUP BY tmpMI_all.ContainerId
                                    , tmpMI_all.OperDate
                            )
          , tmpMI_result AS (-- данные по движению "схема Дефростер"
-                            SELECT COALESCE (MovementItem.MovementId, 0) AS MovementId
+                            SELECT COALESCE (tmpMovement.MovementId, 0)  AS MovementId
                                  , COALESCE (MovementItem.ParentId, 0)   AS MovementItemId_master
                                  , COALESCE (MovementItem.Id, 0)         AS MovementItemId_child
                                  , tmpMI.OperDate
@@ -73,6 +80,7 @@ BEGIN
                                  , tmpMI.OperCount_child
                                  , tmpMI.OperCount_master
                             FROM tmpMI
+                                 LEFT JOIN tmpMovement ON tmpMovement.OperDate = tmpMI_result.OperDate
                                  LEFT JOIN tmpMI_find ON tmpMI_find.ContainerId = tmpMI.ContainerId
                                                      AND tmpMI_find.OperDate    = tmpMI.OperDate
                                  LEFT JOIN MovementItem ON MovementItem.Id = tmpMI_find.MovementItemId
@@ -245,5 +253,5 @@ END;$BODY$
 */
 
 -- тест
--- SELECT * FROM lpUpdate_Movement_ProductionUnion_Defroster (inIsUpdate:= TRUE, inStartDate:= '01.07.2015', inEndDate:= '18.07.2015', inUnitId:= 8440, inUserId:= zfCalc_UserAdmin() :: Integer) -- Дефростер
+-- SELECT * FROM lpUpdate_Movement_ProductionUnion_Defroster (inIsUpdate:= TRUE, inStartDate:= '01.07.2015', inEndDate:= '19.07.2015', inUnitId:= 8440, inUserId:= zfCalc_UserAdmin() :: Integer) -- Дефростер
 -- where ContainerId = 568111

@@ -3,7 +3,6 @@
   ClientHeight = 668
   ClientWidth = 1028
   AddOnFormData.OnLoadAction = actSetDefaults
-  ExplicitLeft = -55
   ExplicitWidth = 1044
   ExplicitHeight = 703
   PixelsPerInch = 96
@@ -13,17 +12,17 @@
     Width = 1028
     Height = 502
     ExplicitTop = 166
-    ExplicitWidth = 1020
+    ExplicitWidth = 1028
     ExplicitHeight = 502
     ClientRectBottom = 502
     ClientRectRight = 1028
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 1020
+      ExplicitWidth = 1028
       ExplicitHeight = 478
       inherited cxGrid: TcxGrid
         Width = 1028
         Height = 478
-        ExplicitWidth = 1020
+        ExplicitWidth = 1028
         ExplicitHeight = 478
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
@@ -324,7 +323,7 @@
     Width = 1028
     Height = 140
     TabOrder = 3
-    ExplicitWidth = 1020
+    ExplicitWidth = 1028
     ExplicitHeight = 140
     inherited edInvNumber: TcxTextEdit
       Left = 8
@@ -1486,7 +1485,7 @@
         end>
       Caption = #1047#1072#1103#1074#1082#1072'/'#1086#1090#1075#1088#1091#1079#1082#1072
       Hint = #1047#1072#1103#1074#1082#1072'/'#1086#1090#1075#1088#1091#1079#1082#1072
-      ImageIndex = 3
+      ImageIndex = 21
       DataSets = <
         item
           DataSet = PrintHeaderCDS
@@ -3801,6 +3800,12 @@
       item
         Name = 'inMovementId_Weighing'
         Value = '0'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inIsDiff'
+        Value = False
+        DataType = ftBoolean
         ParamType = ptInput
       end>
     PackSize = 1

@@ -920,7 +920,7 @@ inherited Sale_OrderForm: TSale_OrderForm
         end>
       Caption = #1047#1072#1103#1074#1082#1072'/'#1086#1090#1075#1088#1091#1079#1082#1072
       Hint = #1047#1072#1103#1074#1082#1072'/'#1086#1090#1075#1088#1091#1079#1082#1072
-      ImageIndex = 3
+      ImageIndex = 21
       DataSets = <
         item
           DataSet = PrintHeaderCDS
@@ -3669,6 +3669,12 @@ inherited Sale_OrderForm: TSale_OrderForm
       item
         Name = 'inMovementId_Weighing'
         Value = '0'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inIsDiff'
+        Value = False
+        DataType = ftBoolean
         ParamType = ptInput
       end>
     PackSize = 1

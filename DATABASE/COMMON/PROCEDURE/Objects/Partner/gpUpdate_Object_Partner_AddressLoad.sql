@@ -313,6 +313,8 @@ IF inPersonalTrade = 'Пономаренко Вікторія' THEN inPersonalTrade:= 'Пономаренко 
                                               , inName             := tmp.Name
                                               , inGLNCode          := tmp.GLNCode
                                               , inisCorporate      := isCorporate
+                                              , inisTaxSummary     := NULL
+                                              , inDayTaxSummary    := 0
                                               , inJuridicalGroupId := tmp.JuridicalGroupId
                                               , inGoodsPropertyId  := tmp.GoodsPropertyId
                                               , inRetailId         := tmp.RetailId
