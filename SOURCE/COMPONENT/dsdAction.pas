@@ -531,7 +531,19 @@ type
   public
     constructor Create(AOwner: TComponent); override;
   end;
-
+  //Генерация / предпросмотр / дизайн распечаток
+  TfrxReportExt = Class(TComponent)
+    FReport : TfrxReport;
+  private
+    procedure ClosePreview(Sender: TObject);
+  protected
+  public
+    constructor Create(AOwner: TComponent); override;
+    destructor Destroy; override;
+    procedure ExecuteReport(AReportName: String; ADataSets: TdsdDataSets;
+      AParams: TdsdParams; ACopiesCount: Integer = 1; AWithOutPreview:Boolean = False;
+      ADesignReport:Boolean = False; AModal:Boolean = False; APreviewWindowMaximized:Boolean = True);
+  End;
   // Действие печати
   TdsdPrintAction = class(TdsdCustomDataSetAction)
   private
@@ -539,12 +551,15 @@ type
     FParams: TdsdParams;
     FReportNameParam: TdsdParam;
     FDataSets: TdsdDataSets;
-    FDataSetList: TList;
+//    FDataSetList: TList;
     FWithOutPreview: Boolean;
     FCopiesCount: Integer;
+    FModalPreview: Boolean;
+    FPreviewWindowMaximized: Boolean;
     function GetReportName: String;
     procedure SetReportName(const Value: String);
     procedure SetWithOutPreview(const Value: Boolean);
+
   protected
     procedure Notification(AComponent: TComponent;
       Operation: TOperation); override;
@@ -559,12 +574,14 @@ type
     // Список датасетов
     property DataSets: TdsdDataSets read FDataSets write FDataSets;
     // Количество копий
-    property CopiesCount: Integer read FCopiesCount write FCopiesCount;
+    property CopiesCount: Integer read FCopiesCount write FCopiesCount Default 1;
     property Params: TdsdParams read FParams write FParams;
     property ReportName: String read GetReportName write SetReportName;
     // Название отчета
     property ReportNameParam: TdsdParam read FReportNameParam
       write FReportNameParam;
+    Property ModalPreview: Boolean read FModalPreview write FModalPreview Default False;
+    Property PreviewWindowMaximized: Boolean read FPreviewWindowMaximized write FPreviewWindowMaximized Default True;
     property Caption;
     property Hint;
     property ImageIndex;
@@ -1434,6 +1451,8 @@ begin
   FDataSets := TdsdDataSets.Create(Self, TAddOnDataSet);
   WithOutPreview := false;
   FCopiesCount := 1;
+  FModalPreview := false;
+  FPreviewWindowMaximized := True;
 end;
 
 destructor TdsdPrintAction.Destroy;
@@ -1461,16 +1480,9 @@ end;
 
 function TdsdPrintAction.LocalExecute: Boolean;
 var
-  i: Integer;
-  Stream: TStringStream;
-  FReport: TfrxReport;
   lActiveControl: TWinControl;
-  ViewToMemTable: TcxViewToMemTable;
-  MemTableList: TList;
-  OldFieldIndexList: TStringList;
 begin
   // Перед вызовом печати попробуем у формы поменять фокус, что бы вызвалась процеура сохранения
-  OldFieldIndexList := TStringList.Create;
   if Assigned(Owner) then
     if Owner is TForm then
     begin
@@ -1484,145 +1496,9 @@ begin
   inherited;
 
   result := true;
-
-  FDataSetList := TList.Create;
-  Stream := TStringStream.Create;
-  ViewToMemTable := TcxViewToMemTable.Create;
-  MemTableList := TList.Create;
-  try
-    FReport := TfrxReport.Create(nil);
-    for i := 0 to DataSets.Count - 1 do
-    begin
-      FDataSetList.Add(TfrxDBDataset.Create(nil));
-      with TfrxDBDataset(FDataSetList[FDataSetList.Count - 1]) do
-      begin
-        UserName := TAddOnDataSet(DataSets[i]).UserName;
-        if Assigned(Self.DataSets[i].DataSet) then
-        begin
-          if Self.DataSets[i].DataSet is TClientDataSet then begin
-             OldFieldIndexList.Values[Self.DataSets[i].DataSet.Name] :=
-               TClientDataSet(Self.DataSets[i].DataSet).IndexFieldNames;
-             if TAddOnDataSet(Self.DataSets[i]).IndexFieldNames <> '' then begin
-                TClientDataSet(Self.DataSets[i].DataSet).IndexFieldNames :=
-                   TAddOnDataSet(Self.DataSets[i]).IndexFieldNames;
-             end;
-          end;
-          DataSet := DataSets[i].DataSet;
-        end;
-        if Assigned(TAddOnDataSet(Self.DataSets[i]).GridView) then
-        begin
-          MemTableList.Add
-            (ViewToMemTable.LoadData(TAddOnDataSet(Self.DataSets[i]).GridView));
-          DataSet := MemTableList[MemTableList.Count - 1];
-        end;
-        if not DataSet.Active then
-          raise Exception.Create('Датасет с данными ' + DataSet.Name +
-            ' не открыт');
-      end;
-    end;
-    with FReport do
-      try
-        if ShiftDown then
-        begin
-          LoadFromStream(TdsdFormStorageFactory.GetStorage.LoadReport
-            (ReportName));
-          for i := 0 to Params.Count - 1 do
-          begin
-            if Params[i].DataType in [ftString, ftDate, ftDateTime] then
-              Variables[Params[i].Name] := chr(39) + Params[i]
-                .AsString + chr(39)
-            else
-              Variables[Params[i].Name] := Params[i].Value
-          end;
-          for i := 0 to Self.DataSets.Count - 1 do
-            if Assigned(TAddOnDataSet(Self.DataSets[i]).GridView) then
-              FReport.Variables[TAddOnDataSet(Self.DataSets[i]).UserName +
-                '_Filter'] := TAddOnDataSet(Self.DataSets[i])
-                .GridView.DataController.Filter.FilterCaption;
-          DesignReport;
-          Stream.Clear;
-          SaveToStream(Stream);
-          Stream.Position := 0;
-          TdsdFormStorageFactory.GetStorage.SaveReport(Stream, ReportName);
-        end
-        else
-        begin
-          LoadFromStream(TdsdFormStorageFactory.GetStorage.LoadReport
-            (ReportName));
-          for i := 0 to Params.Count - 1 do
-          begin
-            case Params[i].DataType of
-              ftString, ftDate, ftDateTime:
-                Variables[Params[i].Name] := chr(39) + Params[i].AsString
-                  + chr(39);
-              ftFloat, ftCurrency:
-                case VarType(Params[i].Value) of
-                  varDouble:
-                    Variables[Params[i].Name] :=
-                      ReplaceStr(FloatToStr(Params[i].Value), ',', '.');
-                else
-                  Variables[Params[i].Name] := Params[i].Value;
-                end;
-            else
-              Variables[Params[i].Name] := Params[i].Value
-            end;
-          end;
-          for i := 0 to Self.DataSets.Count - 1 do
-            if Assigned(TAddOnDataSet(Self.DataSets[i]).GridView) then
-              FReport.Variables[TAddOnDataSet(Self.DataSets[i]).UserName +
-                '_Filter'] := TAddOnDataSet(Self.DataSets[i])
-                .GridView.DataController.Filter.FilterCaption;
-
-          if Assigned(Self.Owner) then
-            for i := 0 to Self.Owner.ComponentCount - 1 do
-              if Self.Owner.Components[i] is TDataSet then
-                TDataSet(Self.Owner.Components[i]).DisableControls;
-          try
-            // Вдруг что!
-            // FReport.PreviewOptions.modal := false;
-            if WithOutPreview then
-            begin
-              PrintOptions.ShowDialog := false;
-              PrintOptions.Printer := GetDefaultPrinter;
-              PrintOptions.Copies := FCopiesCount;
-              PrepareReport;
-              Print
-            end
-            else
-              ShowReport;
-          finally
-            if Assigned(Self.Owner) then
-              for i := 0 to Self.Owner.ComponentCount - 1 do
-                if Self.Owner.Components[i] is TDataSet then
-                  TDataSet(Self.Owner.Components[i]).EnableControls;
-          end;
-        end;
-      finally
-        for i := 0 to DataSets.Count - 1 do
-          with TfrxDBDataset(FDataSetList[FDataSetList.Count - 1]) do
-          begin
-            if Assigned(Self.DataSets[i].DataSet) then
-            begin
-              if Self.DataSets[i].DataSet is TClientDataSet then
-                 TClientDataSet(Self.DataSets[i].DataSet).IndexFieldNames :=
-                   OldFieldIndexList.Values[Self.DataSets[i].DataSet.Name];
-              end;
-          end;
-
-
-        for i := 0 to FDataSetList.Count - 1 do
-          TObject(FDataSetList.Items[i]).Free;
-        FDataSetList.Free;
-        Free;
-      end;
-  finally
-    for i := 0 to MemTableList.Count - 1 do
-      TObject(MemTableList[i]).Free;
-    MemTableList.Free;
-    ViewToMemTable.Free;
-    Stream.Free;
-    OldFieldIndexList.Free;
-  end;
+  With TfrxReportExt.Create(Self) do
+    ExecuteReport(Self.ReportName,Self.DataSets,Self.Params,Self.CopiesCount, Self.WithOutPreview,
+      ShiftDown, Self.ModalPreview, Self.PreviewWindowMaximized);
 end;
 
 procedure TdsdPrintAction.Notification(AComponent: TComponent;
@@ -2458,4 +2334,158 @@ begin
   FFileOpenDialog.FreeNotification(Self);
 end;
 
+{ TfrxReportExt }
+
+constructor TfrxReportExt.Create(AOwner: TComponent);
+begin
+  FReport := TFrxReport.Create(nil);
+  FReport.OnClosePreview := ClosePreview;
+end;
+
+destructor TfrxReportExt.Destroy;
+begin
+  if Assigned(FReport) then
+    FreeAndNil(FReport);
+  inherited;
+end;
+
+procedure TfrxReportExt.ExecuteReport(AReportName: String; ADataSets: TdsdDataSets;
+  AParams: TdsdParams; ACopiesCount: Integer = 1; AWithOutPreview:Boolean = False;
+  ADesignReport:Boolean = False; AModal:Boolean = False; APreviewWindowMaximized:Boolean = True);
+var
+  I: Integer;
+  OldFieldIndexList: TStringList;
+  DataSetList: TList;
+  MemTableList: TList;
+  ViewToMemTable: TcxViewToMemTable;
+  Stream: TStringStream;
+begin
+  DataSetList := TList.Create;
+  MemTableList := TList.Create;
+  ViewToMemTable := TcxViewToMemTable.Create;
+  Stream := TStringStream.Create;
+  OldFieldIndexList := TStringList.Create;
+  try //mainTry
+    FReport.PreviewOptions.Maximized := APreviewWindowMaximized;
+    for i := 0 to ADataSets.Count - 1 do //залить источники данных
+    begin
+      DataSetList.Add(TfrxDBDataset.Create(nil));
+      with TfrxDBDataset(DataSetList[DataSetList.Count - 1]) do
+      begin
+        UserName := TAddOnDataSet(ADataSets[i]).UserName;
+        if Assigned(ADataSets[i].DataSet) then
+        begin
+          if ADataSets[i].DataSet is TClientDataSet then
+          begin
+            OldFieldIndexList.Values[ADataSets[i].DataSet.Name] :=
+              TClientDataSet(ADataSets[i].DataSet).IndexFieldNames;
+            if TAddOnDataSet(ADataSets[i]).IndexFieldNames <> '' then
+            begin
+              TClientDataSet(ADataSets[i].DataSet).IndexFieldNames :=
+                TAddOnDataSet(ADataSets[i]).IndexFieldNames;
+            end;
+          end;
+          DataSet := ADataSets[i].DataSet;
+        end;
+        if Assigned(TAddOnDataSet(ADataSets[i]).GridView) then
+        begin
+          MemTableList.Add(ViewToMemTable.LoadData(TAddOnDataSet(ADataSets[i]).GridView));
+          DataSet := MemTableList[MemTableList.Count - 1];
+        end;
+        if not DataSet.Active then
+          raise Exception.Create('Датасет с данными ' + DataSet.Name + ' не открыт');
+      end;
+    end;
+
+    with FReport do
+    Begin
+      LoadFromStream(TdsdFormStorageFactory.GetStorage.LoadReport(AReportName));
+      for i := 0 to AParams.Count - 1 do
+      begin
+        case AParams[i].DataType of
+          ftString, ftDate, ftDateTime:
+            Variables[AParams[i].Name] := chr(39) + AParams[i].AsString + chr(39);
+          ftFloat, ftCurrency:
+            case VarType(AParams[i].Value) of
+              varDouble:
+                Variables[AParams[i].Name] := ReplaceStr(FloatToStr(AParams[i].Value), ',', '.');
+            else
+              Variables[AParams[i].Name] := AParams[i].Value;
+            end;
+        else
+          Variables[AParams[i].Name] := AParams[i].Value
+        end;
+      end;
+      if ADesignReport then  //если режим дизайнера
+      begin
+        PreviewOptions.modal := AModal;
+        DesignReport;
+        Stream.Clear;
+        FReport.SaveToStream(Stream);
+        Stream.Position := 0;
+        TdsdFormStorageFactory.GetStorage.SaveReport(Stream, AReportName);
+        self.Free;
+      end
+      else
+      begin
+        for i := 0 to ADataSets.Count - 1 do
+          if Assigned(TAddOnDataSet(ADataSets[i]).GridView) then
+            Variables[TAddOnDataSet(ADataSets[i]).UserName +'_Filter'] :=
+              TAddOnDataSet(ADataSets[i]).GridView.DataController.Filter.FilterCaption;
+        try //Previre
+          // Вдруг что!
+          PreviewOptions.modal := AModal;
+          for I := 0 to DataSetList.Count - 1 do
+            TfrxDBDataset(DataSetList[I]).DataSet.DisableControls;
+          if AWithOutPreview then
+          begin
+            PrintOptions.ShowDialog := false;
+            PrintOptions.Printer := GetDefaultPrinter;
+            PrintOptions.Copies := ACopiesCount;
+            PrepareReport;
+            Print;
+            self.Free;
+          end
+          else
+          begin
+            PrepareReport;
+            ShowPreparedReport;
+          end;
+        finally //Previre
+          for I := 0 to DataSetList.Count - 1 do
+            TfrxDBDataset(DataSetList[I]).DataSet.EnableControls;
+        end;
+      end;
+    end;
+  finally //main
+    for i := 0 to ADataSets.Count - 1 do
+      with TfrxDBDataset(DataSetList[DataSetList.Count - 1]) do
+      begin
+        if Assigned(ADataSets[i].DataSet) then
+        begin
+          if ADataSets[i].DataSet is TClientDataSet then
+            TClientDataSet(ADataSets[i].DataSet).IndexFieldNames :=
+              OldFieldIndexList.Values[ADataSets[i].DataSet.Name];
+        end;
+      end;
+    for i := 0 to DataSetList.Count - 1 do
+      TObject(DataSetList.Items[i]).Free;
+    for i := 0 to MemTableList.Count - 1 do
+      TObject(MemTableList.Items[i]).Free;
+
+    FreeAndNil(DataSetList);
+    FreeAndNil(MemTableList);
+    FreeAndNil(ViewToMemTable);
+    FreeAndNil(Stream);
+    FreeAndNil(OldFieldIndexList);
+  end;
+end;
+
+procedure TfrxReportExt.ClosePreview(Sender: TObject);
+begin
+  if Assigned(FReport) then //ClosePreview повторно вызывается при удалении frxReport
+    Self.Destroy;
+end;
+
 end.
+
