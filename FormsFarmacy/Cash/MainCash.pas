@@ -410,7 +410,7 @@ begin
   SoldParallel:=iniSoldParallel;
 //  spGet_Object_CashRegister_By_Serial.ParamByName('inSerial').Value := Cash.FiscalNumber;
 //  spGet_Object_CashRegister_By_Serial.Execute;
-  FormParams.ParamByName('CashId').Value := spGet_Object_CashRegister_By_Serial.ParamByName('outId').Value;
+//  FormParams.ParamByName('CashId').Value := spGet_Object_CashRegister_By_Serial.ParamByName('outId').Value;
   NewCheck;
   (*
   SendToCashOnly:= false;
