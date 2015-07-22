@@ -38,6 +38,7 @@ type
     bbPrint: TdxBarButton;
     colTotalSum: TcxGridDBColumn;
     bbPrint1: TdxBarButton;
+    dxBarButton1: TdxBarButton;
   private
     { Private declarations }
   public

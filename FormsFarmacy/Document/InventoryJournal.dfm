@@ -246,7 +246,6 @@ inherited InventoryJournalForm: TInventoryJournalForm
           DataSet = PrintItemsCDS
           UserName = 'frxDBDMaster'
         end>
-      CopiesCount = 1
       Params = <
         item
           Name = 'Id'
@@ -258,6 +257,7 @@ inherited InventoryJournalForm: TInventoryJournalForm
       ReportNameParam.Value = #1048#1085#1074#1077#1085#1090#1072#1088#1080#1079#1072#1094#1080#1103
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
+      PreviewWindowMaximized = False
     end
   end
   inherited MasterDS: TDataSource
@@ -394,6 +394,13 @@ inherited InventoryJournalForm: TInventoryJournalForm
       Hint = #1053#1072#1082#1083#1072#1076#1085#1072#1103
       Visible = ivAlways
       ImageIndex = 22
+    end
+    object dxBarButton1: TdxBarButton
+      Caption = #1055#1077#1095#1072#1090#1100
+      Category = 0
+      Hint = #1055#1077#1095#1072#1090#1100
+      Visible = ivAlways
+      ImageIndex = 16
     end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
