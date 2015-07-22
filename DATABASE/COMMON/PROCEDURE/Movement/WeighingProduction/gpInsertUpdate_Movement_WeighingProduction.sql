@@ -72,8 +72,12 @@ BEGIN
      -- сохранили связь с <Кому (в документе)>
      PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_To(), ioId, inToId);
 
+   -- !!!только при создании!!!
+   IF vbIsInsert = TRUE
+   THEN
      -- сохранили связь с <Пользователь>
      PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_User(), ioId, vbUserId);
+   END IF;
 
      -- пересчитали Итоговые суммы по накладной
      PERFORM lpInsertUpdate_MovementFloat_TotalSumm (ioId);

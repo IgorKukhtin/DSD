@@ -182,6 +182,23 @@ BEGIN
      WHERE _tmpResult.OperDate = tmp.OperDate;
 
 
+    -- Проверка
+    IF EXISTS (SELECT tmp.OperDate FROM (SELECT _tmpResult.MovementId, _tmpResult.OperDate FROM _tmpResult WHERE _tmpResult.MovementId <> 0 GROUP BY _tmpResult.MovementId, _tmpResult.OperDate) AS tmp GROUP BY tmp.OperDate HAVING COUNT(*) > 1)
+    THEN RAISE EXCEPTION 'Error.Many find MovementId: Date = <%>  Min = <%>  Max = <%> Count = <%>', (SELECT tmp.OperDate FROM (SELECT _tmpResult.MovementId, _tmpResult.OperDate FROM _tmpResult WHERE _tmpResult.MovementId <> 0 GROUP BY _tmpResult.MovementId, _tmpResult.OperDate) AS tmp
+                                                                               WHERE tmp.OperDate IN (SELECT tmp.OperDate FROM (SELECT _tmpResult.MovementId, _tmpResult.OperDate FROM _tmpResult WHERE _tmpResult.MovementId <> 0 GROUP BY _tmpResult.MovementId, _tmpResult.OperDate) AS tmp GROUP BY tmp.OperDate HAVING COUNT(*) > 1)
+                                                                                                      ORDER BY tmp.OperDate LIMIT 1)
+                                                                                                   , (SELECT _tmpResult.MovementId FROM (SELECT _tmpResult.MovementId, _tmpResult.OperDate FROM _tmpResult WHERE _tmpResult.MovementId <> 0 GROUP BY _tmpResult.MovementId, _tmpResult.OperDate) AS tmp
+                                                                               WHERE tmp.OperDate IN (SELECT tmp.OperDate FROM (SELECT _tmpResult.MovementId, _tmpResult.OperDate FROM _tmpResult WHERE _tmpResult.MovementId <> 0 GROUP BY _tmpResult.MovementId, _tmpResult.OperDate) AS tmp GROUP BY tmp.OperDate HAVING COUNT(*) > 1)
+                                                                                                      ORDER BY tmp.OperDate, _tmpResult.MovementId LIMIT 1)
+                                                                                                   , (SELECT _tmpResult.MovementId FROM (SELECT _tmpResult.MovementId, _tmpResult.OperDate FROM _tmpResult WHERE _tmpResult.MovementId <> 0 GROUP BY _tmpResult.MovementId, _tmpResult.OperDate) AS tmp
+                                                                               WHERE tmp.OperDate IN (SELECT tmp.OperDate FROM (SELECT _tmpResult.MovementId, _tmpResult.OperDate FROM _tmpResult WHERE _tmpResult.MovementId <> 0 GROUP BY _tmpResult.MovementId, _tmpResult.OperDate) AS tmp GROUP BY tmp.OperDate HAVING COUNT(*) > 1)
+                                                                                                      ORDER BY tmp.OperDate, _tmpResult.MovementId DESC LIMIT 1)
+                                                                                                   , (SELECT COUNT(*) FROM (SELECT _tmpResult.MovementId, _tmpResult.OperDate FROM _tmpResult WHERE _tmpResult.MovementId <> 0 GROUP BY _tmpResult.MovementId, _tmpResult.OperDate) AS tmp
+                                                                               WHERE tmp.OperDate IN (SELECT tmp.OperDate FROM (SELECT _tmpResult.MovementId, _tmpResult.OperDate FROM _tmpResult WHERE _tmpResult.MovementId <> 0 GROUP BY _tmpResult.MovementId, _tmpResult.OperDate) AS tmp GROUP BY tmp.OperDate HAVING COUNT(*) > 1)
+                                                                                                     )
+        ;
+    END IF;
+
      -- сохраняются элементы
      PERFORM lpInsertUpdate_MI_ProductionPeresort (ioId                     := _tmpResult.MovementItemId_master
                                                  , inMovementId             := _tmpResult.MovementId
@@ -220,27 +237,30 @@ BEGIN
      END IF; -- if inIsUpdate = TRUE -- !!!т.е. не всегда!!!
 
 
-    -- Результат
-    RETURN QUERY
-    SELECT _tmpResult.MovementId
-         , _tmpResult.OperDate
-         , Movement.InvNumber
-         , _tmpResult.isDelete
-         , _tmpResult.MovementItemId_child, _tmpResult.MovementItemId_master, _tmpResult.ContainerId
-         , _tmpResult.OperCount_child
-         , _tmpResult.OperCount_master
-         , Object_Goods.ObjectCode AS GoodsCode
-         , Object_Goods.ValueData  AS GoodsName
-         , Object_PartionGoods.ValueData AS PartionGoods
-    FROM _tmpResult
-         LEFT JOIN Movement ON Movement.Id = _tmpResult.MovementId
-         LEFT JOIN Container ON Container.Id = _tmpResult.ContainerId
-         LEFT JOIN Object AS Object_Goods on Object_Goods.Id = Container.ObjectId
-         LEFT JOIN ContainerLinkObject AS CLO_PartionGoods
-                                       ON CLO_PartionGoods.ContainerId = _tmpResult.ContainerId
-                                      AND CLO_PartionGoods.DescId = zc_ContainerLinkObject_PartionGoods()
-         LEFT JOIN Object AS Object_PartionGoods ON Object_PartionGoods.Id = CLO_PartionGoods.ObjectId
-    ;
+    IF inUserId = zfCalc_UserAdmin() :: Integer
+    THEN
+        -- Результат
+        RETURN QUERY
+        SELECT _tmpResult.MovementId
+             , _tmpResult.OperDate
+             , Movement.InvNumber
+             , _tmpResult.isDelete
+             , _tmpResult.MovementItemId_child, _tmpResult.MovementItemId_master, _tmpResult.ContainerId
+             , _tmpResult.OperCount_child
+             , _tmpResult.OperCount_master
+             , Object_Goods.ObjectCode AS GoodsCode
+             , Object_Goods.ValueData  AS GoodsName
+             , Object_PartionGoods.ValueData AS PartionGoods
+        FROM _tmpResult
+             LEFT JOIN Movement ON Movement.Id = _tmpResult.MovementId
+             LEFT JOIN Container ON Container.Id = _tmpResult.ContainerId
+             LEFT JOIN Object AS Object_Goods on Object_Goods.Id = Container.ObjectId
+             LEFT JOIN ContainerLinkObject AS CLO_PartionGoods
+                                           ON CLO_PartionGoods.ContainerId = _tmpResult.ContainerId
+                                          AND CLO_PartionGoods.DescId = zc_ContainerLinkObject_PartionGoods()
+             LEFT JOIN Object AS Object_PartionGoods ON Object_PartionGoods.Id = CLO_PartionGoods.ObjectId
+        ;
+    END IF;
 
 
 END;$BODY$

@@ -11,13 +11,29 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_HistoryCost(
     IN inSession         TVarChar    -- сессия пользователя
 )                              
 --  RETURNS VOID
-  RETURNS TABLE (vbItearation Integer, vbCountDiff Integer, Price TFloat, PriceNext TFloat, FromContainerId Integer, ContainerId Integer, isInfoMoney_80401 Boolean, CalcSummCurrent TFloat, CalcSummNext TFloat, StartCount TFloat, StartSumm TFloat, IncomeCount TFloat, IncomeSumm TFloat, calcCount TFloat, calcSumm TFloat, OutCount TFloat, OutSumm TFloat, UnitId Integer, UnitName TVarChar)
+  RETURNS TABLE (vbItearation Integer, vbCountDiff Integer, Price TFloat, PriceNext TFloat, Price_external TFloat, PriceNext_external TFloat, FromContainerId Integer, ContainerId Integer, isInfoMoney_80401 Boolean, CalcSummCurrent TFloat, CalcSummNext TFloat, CalcSummCurrent_external TFloat, CalcSummNext_external TFloat, StartCount TFloat, StartSumm TFloat, IncomeCount TFloat, IncomeSumm TFloat, calcCount TFloat, calcSumm TFloat, calcCount_external TFloat, calcSumm_external TFloat, OutCount TFloat, OutSumm TFloat, UnitId Integer, UnitName TVarChar)
 --  RETURNS TABLE (ContainerId Integer, StartCount TFloat, StartSumm TFloat, IncomeCount TFloat, IncomeSumm TFloat, calcCount TFloat, calcSumm TFloat, OutCount TFloat, OutSumm TFloat)
 --  RETURNS TABLE (MasterContainerId Integer, ContainerId Integer, OperCount TFloat)
 AS
 $BODY$
    DECLARE vbItearation Integer;
    DECLARE vbCountDiff Integer;
+   DECLARE vb11 TFloat;
+   DECLARE vb12 TFloat;
+   DECLARE vb21 TFloat;
+   DECLARE vb22 TFloat;
+   DECLARE vb31 TFloat;
+   DECLARE vb32 TFloat;
+   DECLARE vb41 TFloat;
+   DECLARE vb42 TFloat;
+   DECLARE vb51 TFloat;
+   DECLARE vb52 TFloat;
+   DECLARE vb61 TFloat;
+   DECLARE vb62 TFloat;
+   DECLARE vb71 TFloat;
+   DECLARE vb72 TFloat;
+   DECLARE vb81 TFloat;
+   DECLARE vb82 TFloat;
 BEGIN
 
      -- проверка прав пользователя на вызов процедуры
@@ -25,9 +41,9 @@ BEGIN
 
 
      -- таблица - Список сущностей которые являются элементами с/с.
-     CREATE TEMP TABLE _tmpMaster (ContainerId Integer, UnitId Integer, isInfoMoney_80401 Boolean, StartCount TFloat, StartSumm TFloat, IncomeCount TFloat, IncomeSumm TFloat, calcCount TFloat, calcSumm TFloat, OutCount TFloat, OutSumm TFloat) ON COMMIT DROP;
+     CREATE TEMP TABLE _tmpMaster (ContainerId Integer, UnitId Integer, isInfoMoney_80401 Boolean, StartCount TFloat, StartSumm TFloat, IncomeCount TFloat, IncomeSumm TFloat, calcCount TFloat, calcSumm TFloat, calcCount_external TFloat, calcSumm_external TFloat, OutCount TFloat, OutSumm TFloat) ON COMMIT DROP;
      -- таблица - расходы для Master
-     CREATE TEMP TABLE _tmpChild (MasterContainerId Integer, ContainerId Integer, MasterContainerId_Count Integer, ContainerId_Count Integer, OperCount TFloat) ON COMMIT DROP;
+     CREATE TEMP TABLE _tmpChild (MasterContainerId Integer, ContainerId Integer, MasterContainerId_Count Integer, ContainerId_Count Integer, OperCount TFloat, isExternal Boolean) ON COMMIT DROP;
 
      -- заполняем таблицу Количество и Сумма - ост, приход, расход
         WITH tmpContainerList AS (SELECT Container_Summ.Id, Container_Summ.ParentId, Container_Summ.ObjectId
@@ -60,7 +76,7 @@ BEGIN
                              )
        -- , tmpAccount_60000 AS (SELECT Object_Account_View.AccountId FROM Object_Account_View WHERE Object_Account_View.AccountGroupId = zc_Enum_AccountGroup_60000()) -- Прибыль будущих периодов
 
-     INSERT INTO _tmpMaster (ContainerId, UnitId, isInfoMoney_80401, StartCount, StartSumm, IncomeCount, IncomeSumm, calcCount, calcSumm, OutCount, OutSumm)
+     INSERT INTO _tmpMaster (ContainerId, UnitId, isInfoMoney_80401, StartCount, StartSumm, IncomeCount, IncomeSumm, calcCount, calcSumm, calcCount_external, calcSumm_external, OutCount, OutSumm)
         SELECT COALESCE (Container_Summ.Id, tmpContainer.ContainerId) AS ContainerId
              , tmpContainer.UnitId AS UnitId
              , CASE WHEN ContainerLinkObject_InfoMoney.ObjectId = zc_Enum_InfoMoney_80401() OR ContainerLinkObject_InfoMoneyDetail.ObjectId = zc_Enum_InfoMoney_80401()
@@ -68,8 +84,8 @@ BEGIN
                     ELSE FALSE
                END AS isInfoMoney_80401 -- прибыль текущего периода
 
-             , SUM (tmpContainer.StartCount)
-             , SUM (tmpContainer.StartSumm)
+             , SUM (tmpContainer.StartCount) AS StartCount
+             , SUM (tmpContainer.StartSumm)  AS StartSumm
              , SUM (tmpContainer.IncomeCount) + SUM (CASE WHEN ContainerLinkObject_InfoMoney.ObjectId = zc_Enum_InfoMoney_80401() OR ContainerLinkObject_InfoMoneyDetail.ObjectId = zc_Enum_InfoMoney_80401() -- прибыль текущего периода
                                                              THEN tmpContainer.SendOnPriceCountIn_Cost
                                                           ELSE 0 -- tmpContainer.SendOnPriceCountIn
@@ -77,7 +93,7 @@ BEGIN
                                               + SUM (CASE WHEN tmpContainer.isHistoryCost_ReturnIn = TRUE
                                                              THEN tmpContainer.ReturnInCount
                                                           ELSE 0
-                                                     END)
+                                                     END) AS IncomeCount
              , SUM (tmpContainer.IncomeSumm) + SUM (CASE WHEN ContainerLinkObject_InfoMoney.ObjectId = zc_Enum_InfoMoney_80401() OR ContainerLinkObject_InfoMoneyDetail.ObjectId = zc_Enum_InfoMoney_80401() -- прибыль текущего периода
                                                               THEN tmpContainer.SendOnPriceSummIn_Cost
                                                          ELSE 0 -- tmpContainer.SendOnPriceSummIn
@@ -85,23 +101,33 @@ BEGIN
                                               + SUM (CASE WHEN tmpContainer.isHistoryCost_ReturnIn = TRUE
                                                              THEN tmpContainer.ReturnInSumm
                                                           ELSE 0
-                                                     END)
+                                                     END) AS IncomeSumm
              , SUM (tmpContainer.calcCount) + SUM (CASE WHEN ContainerLinkObject_InfoMoney.ObjectId = zc_Enum_InfoMoney_80401() OR ContainerLinkObject_InfoMoneyDetail.ObjectId = zc_Enum_InfoMoney_80401() -- прибыль текущего периода
                                                              THEN 0
                                                           ELSE tmpContainer.SendOnPriceCountIn
-                                                     END)
+                                                     END) AS calcCount
              , SUM (tmpContainer.calcSumm) + SUM (CASE WHEN ContainerLinkObject_InfoMoney.ObjectId = zc_Enum_InfoMoney_80401() OR ContainerLinkObject_InfoMoneyDetail.ObjectId = zc_Enum_InfoMoney_80401() -- прибыль текущего периода
                                                               THEN 0
                                                          ELSE tmpContainer.SendOnPriceSummIn
-                                                    END)
+                                                    END) AS calcSumm
+
+             , SUM (tmpContainer.calcCount_external) + SUM (CASE WHEN ContainerLinkObject_InfoMoney.ObjectId = zc_Enum_InfoMoney_80401() OR ContainerLinkObject_InfoMoneyDetail.ObjectId = zc_Enum_InfoMoney_80401() -- прибыль текущего периода
+                                                             THEN 0
+                                                          ELSE tmpContainer.SendOnPriceCountIn
+                                                     END) AS calcCount_external
+             , SUM (tmpContainer.calcSumm_external) + SUM (CASE WHEN ContainerLinkObject_InfoMoney.ObjectId = zc_Enum_InfoMoney_80401() OR ContainerLinkObject_InfoMoneyDetail.ObjectId = zc_Enum_InfoMoney_80401() -- прибыль текущего периода
+                                                              THEN 0
+                                                         ELSE tmpContainer.SendOnPriceSummIn
+                                                    END) AS calcSumm_external
+
              , SUM (tmpContainer.OutCount) + SUM (CASE WHEN ContainerLinkObject_InfoMoney.ObjectId = zc_Enum_InfoMoney_80401() OR ContainerLinkObject_InfoMoneyDetail.ObjectId = zc_Enum_InfoMoney_80401() -- прибыль текущего периода
                                                             THEN tmpContainer.SendOnPriceCountOut_Cost
                                                        ELSE tmpContainer.SendOnPriceCountOut
-                                                  END)
+                                                  END) AS OutCount
              , SUM (tmpContainer.OutSumm) + SUM (CASE WHEN ContainerLinkObject_InfoMoney.ObjectId = zc_Enum_InfoMoney_80401() OR ContainerLinkObject_InfoMoneyDetail.ObjectId = zc_Enum_InfoMoney_80401() -- прибыль текущего периода
                                                            THEN tmpContainer.SendOnPriceSummOut_Cost
                                                       ELSE tmpContainer.SendOnPriceSummOut
-                                                 END)
+                                                 END) AS OutSumm
         FROM (SELECT Container.Id AS ContainerId
                    , Container.UnitId
                    , Container.isHistoryCost_ReturnIn
@@ -129,6 +155,13 @@ BEGIN
                    , CASE WHEN Container.DescId = zc_Container_Summ()  THEN COALESCE (SUM (CASE WHEN MIContainer.MovementDescId IN (zc_Movement_Send(), zc_Movement_ProductionSeparate()) AND MIContainer.OperDate BETWEEN inStartDate AND inEndDate AND MIContainer.Amount > 0 THEN  MIContainer.Amount ELSE 0 END), 0) ELSE 0 END
                    + CASE WHEN Container.DescId = zc_Container_Summ()  THEN COALESCE (SUM (CASE WHEN MIContainer.MovementDescId IN (zc_Movement_ProductionUnion()) AND MIContainer.OperDate BETWEEN inStartDate AND inEndDate AND MIContainer.ParentId IS NULL THEN MIContainer.Amount ELSE 0 END), 0) ELSE 0 END
                      AS CalcSumm
+                     -- Calc_external, т.е. AnalyzerId <> UnitId
+                   , CASE WHEN Container.DescId = zc_Container_Count() THEN COALESCE (SUM (CASE WHEN MIContainer.MovementDescId IN (zc_Movement_Send(), zc_Movement_ProductionUnion(), zc_Movement_ProductionSeparate()) AND COALESCE (MIContainer.AnalyzerId, 0) <> Container.UnitId AND MIContainer.OperDate BETWEEN inStartDate AND inEndDate AND MIContainer.Amount > 0 THEN  MIContainer.Amount ELSE 0 END), 0) ELSE 0 END
+                   + CASE WHEN Container.DescId = zc_Container_CountSupplier() THEN Container.Amount - COALESCE (SUM (MIContainer.Amount), 0) + COALESCE (SUM (CASE WHEN MIContainer.MovementDescId = zc_Movement_Income() AND MIContainer.OperDate BETWEEN inStartDate AND inEndDate THEN  MIContainer.Amount ELSE 0 END), 0) ELSE 0 END
+                     AS CalcCount_external
+                   , CASE WHEN Container.DescId = zc_Container_Summ()  THEN COALESCE (SUM (CASE WHEN MIContainer.MovementDescId IN (zc_Movement_Send(), zc_Movement_ProductionSeparate()) AND COALESCE (MIContainer.AnalyzerId, 0) <> Container.UnitId AND MIContainer.OperDate BETWEEN inStartDate AND inEndDate AND MIContainer.Amount > 0 THEN  MIContainer.Amount ELSE 0 END), 0) ELSE 0 END
+                   + CASE WHEN Container.DescId = zc_Container_Summ()  THEN COALESCE (SUM (CASE WHEN MIContainer.MovementDescId IN (zc_Movement_ProductionUnion()) AND COALESCE (MIContainer.AnalyzerId, 0) <> Container.UnitId AND MIContainer.OperDate BETWEEN inStartDate AND inEndDate AND MIContainer.ParentId IS NULL THEN MIContainer.Amount ELSE 0 END), 0) ELSE 0 END
+                     AS CalcSumm_external
                      -- ReturnIn
                    , CASE WHEN Container.DescId = zc_Container_Count() THEN COALESCE (SUM (CASE WHEN MIContainer.MovementDescId = zc_Movement_ReturnIn() AND MIContainer.OperDate BETWEEN inStartDate AND inEndDate THEN MIContainer.Amount ELSE 0 END), 0) ELSE 0 END AS ReturnInCount
                    , CASE WHEN Container.DescId = zc_Container_Summ()  THEN COALESCE (SUM (CASE WHEN MIContainer.MovementDescId = zc_Movement_ReturnIn() AND MIContainer.OperDate BETWEEN inStartDate AND inEndDate THEN MIContainer.Amount ELSE 0 END), 0) ELSE 0 END AS ReturnInSumm
@@ -203,7 +236,7 @@ BEGIN
                                                             );*/
 
      -- расходы для Master
-     INSERT INTO _tmpChild (MasterContainerId, ContainerId, MasterContainerId_Count, ContainerId_Count, OperCount)
+     INSERT INTO _tmpChild (MasterContainerId, ContainerId, MasterContainerId_Count, ContainerId_Count, OperCount, isExternal)
         SELECT COALESCE (MIContainer_Summ_In.ContainerId, 0)   AS MasterContainerId
              , COALESCE (MIContainer_Summ_Out.ContainerId, 0)  AS ContainerId
              , COALESCE (MIContainer_Count_In.ContainerId, 0)  AS MasterContainerId_Count
@@ -216,6 +249,7 @@ BEGIN
                              THEN COALESCE (-1 * MIContainer_Count_Out.Amount, 0)
                          ELSE 0
                     END) AS OperCount
+             , CASE WHEN MIContainer_Count_Out.WhereObjectId_Analyzer = MIContainer_Count_In.WhereObjectId_Analyzer THEN FALSE ELSE TRUE END AS isExternal
         FROM Movement
              JOIN MovementItemContainer AS MIContainer_Count_Out
                                         ON MIContainer_Count_Out.MovementId = Movement.Id
@@ -265,6 +299,8 @@ BEGIN
                , MIContainer_Summ_Out.ContainerId
                , MIContainer_Count_In.ContainerId
                , MIContainer_Count_Out.ContainerId
+               , MIContainer_Count_Out.WhereObjectId_Analyzer
+               , MIContainer_Count_In.WhereObjectId_Analyzer
         ;
 
 /*
@@ -388,12 +424,10 @@ BEGIN
      END IF;
 
 
-     -- tmp - test
-     /*RETURN QUERY
-      SELECT _tmpMaster.ContainerId, _tmpMaster.StartCount, _tmpMaster.StartSumm, _tmpMaster.IncomeCount, _tmpMaster.IncomeSumm, _tmpMaster.calcCount, _tmpMaster.calcSumm, _tmpMaster.OutCount, _tmpMaster.OutSumm FROM _tmpMaster;
-      -- SELECT _tmpChild.MasterContainerId, _tmpChild.ContainerId, _tmpChild.OperCount FROM _tmpChild;
-     RETURN;*/
-
+     -- тест 
+     -- RAISE EXCEPTION '%     %', (SELECT _tmpMaster.CalcSumm FROM _tmpMaster WHERE _tmpMaster.ContainerId = 590431), (SELECT _tmpMaster.CalcSumm_external FROM _tmpMaster WHERE _tmpMaster.ContainerId = 590431);
+     -- тест***
+     -- SELECT _tmpMaster.CalcSumm, _tmpMaster.CalcSumm_external INTO vb11, vb12 TSumm FROM _tmpMaster WHERE _tmpMaster.ContainerId = 590431;
 
 
      -- !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
@@ -401,10 +435,12 @@ BEGIN
      -- !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
      -- !!! 1-ая итерация для всех !!!
-         UPDATE _tmpMaster SET CalcSumm = _tmpSumm.CalcSumm
+         UPDATE _tmpMaster SET CalcSumm          = _tmpSumm.CalcSumm
+                             , CalcSumm_external = _tmpSumm.CalcSumm_external
                -- Расчет суммы всех составляющих
          FROM (SELECT _tmpChild.MasterContainerId AS ContainerId
                     , CAST (SUM (_tmpChild.OperCount * _tmpPrice.OperPrice) AS TFloat) AS CalcSumm
+                    , CAST (SUM (CASE WHEN _tmpChild.isExternal = TRUE THEN _tmpChild.OperCount * _tmpPrice.OperPrice_external ELSE 0 END) AS TFloat) AS CalcSumm_external
                FROM 
                     -- Расчет цены
                     (SELECT _tmpMaster.ContainerId
@@ -418,6 +454,16 @@ BEGIN
                                      THEN (_tmpMaster.StartSumm + _tmpMaster.IncomeSumm + _tmpMaster.CalcSumm) / (_tmpMaster.StartCount + _tmpMaster.IncomeCount + _tmpMaster.calcCount)
                                  ELSE 0
                             END AS OperPrice
+                          , CASE WHEN _tmpMaster.isInfoMoney_80401 = TRUE
+                                      THEN CASE WHEN (_tmpMaster.StartCount + _tmpMaster.IncomeCount + _tmpMaster.calcCount_external) <> 0
+                                                     THEN (_tmpMaster.StartSumm + _tmpMaster.IncomeSumm + _tmpMaster.CalcSumm_external) / (_tmpMaster.StartCount + _tmpMaster.IncomeCount + _tmpMaster.calcCount_external)
+                                                ELSE  0
+                                           END
+                                 WHEN (((_tmpMaster.StartCount + _tmpMaster.IncomeCount + _tmpMaster.calcCount_external) > 0 AND (_tmpMaster.StartSumm + _tmpMaster.IncomeSumm + _tmpMaster.CalcSumm_external) > 0)
+                                    OR ((_tmpMaster.StartCount + _tmpMaster.IncomeCount + _tmpMaster.calcCount_external) < 0 AND (_tmpMaster.StartSumm + _tmpMaster.IncomeSumm + _tmpMaster.CalcSumm_external) < 0))
+                                     THEN (_tmpMaster.StartSumm + _tmpMaster.IncomeSumm + _tmpMaster.CalcSumm_external) / (_tmpMaster.StartCount + _tmpMaster.IncomeCount + _tmpMaster.calcCount_external)
+                                 ELSE 0
+                            END AS OperPrice_external
                      FROM _tmpMaster
                     ) AS _tmpPrice 
                     JOIN _tmpChild ON _tmpChild.ContainerId = _tmpPrice.ContainerId
@@ -429,15 +475,21 @@ BEGIN
          WHERE _tmpMaster.ContainerId = _tmpSumm.ContainerId;
 
 
+     -- тест***
+     -- SELECT _tmpMaster.CalcSumm, _tmpMaster.CalcSumm_external INTO vb21, vb22 TSumm FROM _tmpMaster WHERE _tmpMaster.ContainerId = 590431;
+
+
      -- !!! остальные итерации без Упаковки !!!
      vbItearation:=0;
      vbCountDiff:= 100000;
      WHILE vbItearation < inItearationCount AND vbCountDiff > 0
      LOOP
-         UPDATE _tmpMaster SET CalcSumm = _tmpSumm.CalcSumm
+         UPDATE _tmpMaster SET CalcSumm          = _tmpSumm.CalcSumm
+                             , CalcSumm_external = _tmpSumm.CalcSumm_external
                -- Расчет суммы всех составляющих
          FROM (SELECT _tmpChild.MasterContainerId AS ContainerId
                     , CAST (SUM (_tmpChild.OperCount * _tmpPrice.OperPrice) AS TFloat) AS CalcSumm
+                    , CAST (SUM (CASE WHEN _tmpChild.isExternal = TRUE THEN _tmpChild.OperCount * _tmpPrice.OperPrice_external ELSE 0 END) AS TFloat) AS CalcSumm_external
                FROM 
                     -- Расчет цены
                     (SELECT _tmpMaster.ContainerId
@@ -451,6 +503,16 @@ BEGIN
                                      THEN (_tmpMaster.StartSumm + _tmpMaster.IncomeSumm + _tmpMaster.CalcSumm) / (_tmpMaster.StartCount + _tmpMaster.IncomeCount + _tmpMaster.calcCount)
                                  ELSE 0
                             END AS OperPrice
+                          , CASE WHEN _tmpMaster.isInfoMoney_80401 = TRUE
+                                      THEN CASE WHEN (_tmpMaster.StartCount + _tmpMaster.IncomeCount + _tmpMaster.calcCount_external) <> 0
+                                                     THEN (_tmpMaster.StartSumm + _tmpMaster.IncomeSumm + _tmpMaster.CalcSumm_external) / (_tmpMaster.StartCount + _tmpMaster.IncomeCount + _tmpMaster.calcCount_external)
+                                                ELSE  0
+                                           END
+                                 WHEN (((_tmpMaster.StartCount + _tmpMaster.IncomeCount + _tmpMaster.calcCount_external) > 0 AND (_tmpMaster.StartSumm + _tmpMaster.IncomeSumm + _tmpMaster.CalcSumm_external) > 0)
+                                    OR ((_tmpMaster.StartCount + _tmpMaster.IncomeCount + _tmpMaster.calcCount_external) < 0 AND (_tmpMaster.StartSumm + _tmpMaster.IncomeSumm + _tmpMaster.CalcSumm_external) < 0))
+                                     THEN (_tmpMaster.StartSumm + _tmpMaster.IncomeSumm + _tmpMaster.CalcSumm_external) / (_tmpMaster.StartCount + _tmpMaster.IncomeCount + _tmpMaster.calcCount_external)
+                                 ELSE 0
+                            END AS OperPrice_external
                      FROM _tmpMaster
                     ) AS _tmpPrice 
                     JOIN _tmpChild ON _tmpChild.ContainerId = _tmpPrice.ContainerId
@@ -462,6 +524,14 @@ BEGIN
          WHERE _tmpMaster.ContainerId = _tmpSumm.ContainerId
            AND COALESCE (_tmpMaster.UnitId, 0) <> CASE WHEN vbItearation < 2 THEN -1 ELSE 8451 END -- Цех Упаковки
         ;
+
+         -- тест***
+         -- IF vbItearation = 0 THEN SELECT _tmpMaster.CalcSumm, _tmpMaster.CalcSumm_external INTO vb31, vb32 TSumm FROM _tmpMaster WHERE _tmpMaster.ContainerId = 590431; END IF;
+         -- IF vbItearation = 1 THEN SELECT _tmpMaster.CalcSumm, _tmpMaster.CalcSumm_external INTO vb41, vb42 TSumm FROM _tmpMaster WHERE _tmpMaster.ContainerId = 590431; END IF;
+         -- IF vbItearation = 2 THEN SELECT _tmpMaster.CalcSumm, _tmpMaster.CalcSumm_external INTO vb51, vb52 TSumm FROM _tmpMaster WHERE _tmpMaster.ContainerId = 590431; END IF;
+         -- IF vbItearation = 3 THEN SELECT _tmpMaster.CalcSumm, _tmpMaster.CalcSumm_external INTO vb61, vb62 TSumm FROM _tmpMaster WHERE _tmpMaster.ContainerId = 590431; END IF;
+         -- IF vbItearation = 4 THEN SELECT _tmpMaster.CalcSumm, _tmpMaster.CalcSumm_external INTO vb71, vb72 TSumm FROM _tmpMaster WHERE _tmpMaster.ContainerId = 590431; END IF;
+         -- IF vbItearation = 5 THEN SELECT _tmpMaster.CalcSumm, _tmpMaster.CalcSumm_external INTO vb81, vb82 TSumm FROM _tmpMaster WHERE _tmpMaster.ContainerId = 590431; END IF;
 
          -- сколько записей с еще неправильной с/с
          SELECT Count(*) INTO vbCountDiff
@@ -500,13 +570,18 @@ BEGIN
      END LOOP;
 
 
+     -- тест***
+     -- RAISE EXCEPTION '%   % ; %   % ; %   % ; %   % ; %   % ; %   % ; %   % ; %   % ; ', vb11, vb12, vb21, vb22, vb31, vb32, vb41, vb42, vb51, vb52, vb61, vb62, vb71, vb72, vb81, vb82;
+
+
+
      IF inInsert > 0 THEN
 
      -- Удаляем предыдущую с/с
      DELETE FROM HistoryCost WHERE (inStartDate BETWEEN StartDate AND EndDate) OR (inEndDate BETWEEN StartDate AND EndDate);
 
      -- Сохраняем что насчитали
-     INSERT INTO HistoryCost (ContainerId, StartDate, EndDate, Price, StartCount, StartSumm, IncomeCount, IncomeSumm, CalcCount, CalcSumm, OutCount, OutSumm)
+     INSERT INTO HistoryCost (ContainerId, StartDate, EndDate, Price, Price_external, StartCount, StartSumm, IncomeCount, IncomeSumm, CalcCount, CalcSumm, CalcCount_external, CalcSumm_external, OutCount, OutSumm)
         SELECT _tmpMaster.ContainerId, inStartDate AS StartDate, inEndDate AS EndDate
              , CASE WHEN _tmpMaster.isInfoMoney_80401 = TRUE
                          THEN CASE WHEN (_tmpMaster.StartCount + _tmpMaster.IncomeCount + _tmpMaster.calcCount) <> 0
@@ -518,9 +593,20 @@ BEGIN
                          THEN (_tmpMaster.StartSumm + _tmpMaster.IncomeSumm + _tmpMaster.CalcSumm) / (_tmpMaster.StartCount + _tmpMaster.IncomeCount + _tmpMaster.calcCount)
                     ELSE 0
                END AS Price
-             , _tmpMaster.StartCount, _tmpMaster.StartSumm, _tmpMaster.IncomeCount, _tmpMaster.IncomeSumm, _tmpMaster.CalcCount, _tmpMaster.CalcSumm, _tmpMaster.OutCount, _tmpMaster.OutSumm
+             , CASE WHEN _tmpMaster.isInfoMoney_80401 = TRUE
+                         THEN CASE WHEN (_tmpMaster.StartCount + _tmpMaster.IncomeCount + _tmpMaster.calcCount_external) <> 0
+                                        THEN (_tmpMaster.StartSumm + _tmpMaster.IncomeSumm + _tmpMaster.CalcSumm_external) / (_tmpMaster.StartCount + _tmpMaster.IncomeCount + _tmpMaster.calcCount_external)
+                                   ELSE  0
+                              END
+                    WHEN (((_tmpMaster.StartCount + _tmpMaster.IncomeCount + _tmpMaster.calcCount_external) > 0 AND (_tmpMaster.StartSumm + _tmpMaster.IncomeSumm + _tmpMaster.CalcSumm_external) > 0)
+                       OR ((_tmpMaster.StartCount + _tmpMaster.IncomeCount + _tmpMaster.calcCount_external) < 0 AND (_tmpMaster.StartSumm + _tmpMaster.IncomeSumm + _tmpMaster.CalcSumm_external) < 0))
+                         THEN (_tmpMaster.StartSumm + _tmpMaster.IncomeSumm + _tmpMaster.CalcSumm_external) / (_tmpMaster.StartCount + _tmpMaster.IncomeCount + _tmpMaster.calcCount_external)
+                    ELSE 0
+               END AS Price_external
+             , _tmpMaster.StartCount, _tmpMaster.StartSumm, _tmpMaster.IncomeCount, _tmpMaster.IncomeSumm, _tmpMaster.CalcCount, _tmpMaster.CalcSumm, _tmpMaster.CalcCount_external, _tmpMaster.CalcSumm_external, _tmpMaster.OutCount, _tmpMaster.OutSumm
         FROM _tmpMaster
-        WHERE ((_tmpMaster.StartSumm + _tmpMaster.IncomeSumm + _tmpMaster.CalcSumm) <> 0)
+        WHERE ((_tmpMaster.StartSumm + _tmpMaster.IncomeSumm + _tmpMaster.CalcSumm)          <> 0)
+           OR ((_tmpMaster.StartSumm + _tmpMaster.IncomeSumm + _tmpMaster.CalcSumm_external) <> 0)
         ;
 
      END IF; -- if inInsert > 0
@@ -549,11 +635,34 @@ BEGIN
                                THEN (_tmpMaster.StartSumm + _tmpMaster.IncomeSumm + COALESCE (_tmpSumm.CalcSumm, 0)) / (_tmpMaster.StartCount + _tmpMaster.IncomeCount + _tmpMaster.CalcCount)
                           ELSE 0
                      END AS TFloat) AS PriceNext
+
+             , CAST (CASE WHEN _tmpMaster.isInfoMoney_80401 = TRUE
+                               THEN CASE WHEN (_tmpMaster.StartCount + _tmpMaster.IncomeCount + _tmpMaster.calcCount_external) <> 0
+                                              THEN (_tmpMaster.StartSumm + _tmpMaster.IncomeSumm + _tmpMaster.CalcSumm_external) / (_tmpMaster.StartCount + _tmpMaster.IncomeCount + _tmpMaster.calcCount_external)
+                                         ELSE  0
+                                    END
+                          WHEN (((_tmpMaster.StartCount + _tmpMaster.IncomeCount + _tmpMaster.CalcCount_external) > 0 AND (_tmpMaster.StartSumm + _tmpMaster.IncomeSumm + _tmpMaster.CalcSumm_external) > 0)
+                             OR ((_tmpMaster.StartCount + _tmpMaster.IncomeCount + _tmpMaster.CalcCount_external) < 0 AND (_tmpMaster.StartSumm + _tmpMaster.IncomeSumm + _tmpMaster.CalcSumm_external) < 0))
+                               THEN (_tmpMaster.StartSumm + _tmpMaster.IncomeSumm + _tmpMaster.CalcSumm_external) / (_tmpMaster.StartCount + _tmpMaster.IncomeCount + _tmpMaster.CalcCount_external)
+                          ELSE 0
+                     END AS TFloat) AS Price_external
+             , CAST (CASE WHEN _tmpMaster.isInfoMoney_80401 = TRUE
+                               THEN CASE WHEN (_tmpMaster.StartCount + _tmpMaster.IncomeCount + _tmpMaster.calcCount_external) <> 0
+                                              THEN (_tmpMaster.StartSumm + _tmpMaster.IncomeSumm + COALESCE (_tmpSumm.CalcSumm_external, 0)) / (_tmpMaster.StartCount + _tmpMaster.IncomeCount + _tmpMaster.calcCount_external)
+                                         ELSE  0
+                                    END
+                          WHEN (((_tmpMaster.StartCount + _tmpMaster.IncomeCount + _tmpMaster.CalcCount_external) > 0 AND (_tmpMaster.StartSumm + _tmpMaster.IncomeSumm + COALESCE (_tmpSumm.CalcSumm_external, 0)) > 0)
+                             OR ((_tmpMaster.StartCount + _tmpMaster.IncomeCount + _tmpMaster.CalcCount_external) < 0 AND (_tmpMaster.StartSumm + _tmpMaster.IncomeSumm + COALESCE (_tmpSumm.CalcSumm_external, 0)) < 0))
+                               THEN (_tmpMaster.StartSumm + _tmpMaster.IncomeSumm + COALESCE (_tmpSumm.CalcSumm_external, 0)) / (_tmpMaster.StartCount + _tmpMaster.IncomeCount + _tmpMaster.CalcCount_external)
+                          ELSE 0
+                     END AS TFloat) AS PriceNext_external
+
              , _tmpSumm.FromContainerId
              , _tmpMaster.ContainerId
              , _tmpMaster.isInfoMoney_80401
-             , _tmpMaster.CalcSumm AS CalcSummCurrent, CAST (COALESCE (_tmpSumm.CalcSumm, 0) AS TFloat) AS CalcSummNext
-             , _tmpMaster.StartCount, _tmpMaster.StartSumm, _tmpMaster.IncomeCount, _tmpMaster.IncomeSumm, _tmpMaster.CalcCount, _tmpMaster.CalcSumm, _tmpMaster.OutCount, _tmpMaster.OutSumm
+             , _tmpMaster.CalcSumm          AS CalcSummCurrent,          CAST (COALESCE (_tmpSumm.CalcSumm, 0)          AS TFloat) AS CalcSummNext
+             , _tmpMaster.CalcSumm_external AS CalcSummCurrent_external, CAST (COALESCE (_tmpSumm.CalcSumm_external, 0) AS TFloat) AS CalcSummNext_external
+             , _tmpMaster.StartCount, _tmpMaster.StartSumm, _tmpMaster.IncomeCount, _tmpMaster.IncomeSumm, _tmpMaster.CalcCount, _tmpMaster.CalcSumm, _tmpMaster.CalcCount_external, _tmpMaster.CalcSumm_external, _tmpMaster.OutCount, _tmpMaster.OutSumm
              , _tmpMaster.UnitId
              , Object_Unit.ValueData AS UnitName
 
@@ -563,6 +672,8 @@ BEGIN
 --                    , _tmpChild.ContainerId AS FromContainerId
                     , 0 AS FromContainerId
                     , CAST (SUM (_tmpChild.OperCount * _tmpPrice.OperPrice) AS TFloat) AS CalcSumm
+                    , CAST (SUM (CASE WHEN _tmpChild.isExternal = TRUE THEN _tmpChild.OperCount * _tmpPrice.OperPrice_external ELSE 0 END) AS TFloat) AS CalcSumm_external
+
                FROM 
                     -- Расчет цены
                     (SELECT _tmpMaster.ContainerId
@@ -576,6 +687,16 @@ BEGIN
                                       THEN (_tmpMaster.StartSumm + _tmpMaster.IncomeSumm + _tmpMaster.CalcSumm) / (_tmpMaster.StartCount + _tmpMaster.IncomeCount + _tmpMaster.calcCount)
                                  ELSE 0
                             END AS OperPrice
+                          , CASE WHEN _tmpMaster.isInfoMoney_80401 = TRUE
+                                      THEN CASE WHEN (_tmpMaster.StartCount + _tmpMaster.IncomeCount + _tmpMaster.calcCount_external) <> 0
+                                                     THEN (_tmpMaster.StartSumm + _tmpMaster.IncomeSumm + _tmpMaster.CalcSumm_external) / (_tmpMaster.StartCount + _tmpMaster.IncomeCount + _tmpMaster.calcCount_external)
+                                                ELSE  0
+                                           END
+                                 WHEN (((_tmpMaster.StartCount + _tmpMaster.IncomeCount + _tmpMaster.calcCount_external) > 0 AND (_tmpMaster.StartSumm + _tmpMaster.IncomeSumm + _tmpMaster.CalcSumm_external) > 0)
+                                    OR ((_tmpMaster.StartCount + _tmpMaster.IncomeCount + _tmpMaster.calcCount_external) < 0 AND (_tmpMaster.StartSumm + _tmpMaster.IncomeSumm + _tmpMaster.CalcSumm_external) < 0))
+                                      THEN (_tmpMaster.StartSumm + _tmpMaster.IncomeSumm + _tmpMaster.CalcSumm_external) / (_tmpMaster.StartCount + _tmpMaster.IncomeCount + _tmpMaster.calcCount_external)
+                                 ELSE 0
+                            END AS OperPrice_external
                      FROM _tmpMaster
                     ) AS _tmpPrice 
                     JOIN _tmpChild ON _tmpChild.ContainerId = _tmpPrice.ContainerId

@@ -2711,7 +2711,7 @@ BEGIN
                                  );
 
      -- 6.3. ФИНИШ - перепроводим Налоговую
-     IF (vbIsHistoryCost = FALSE)
+     IF inUserId <> zc_Enum_Process_Auto_PrimeCost()
         AND vbPaidKindId = zc_Enum_PaidKind_FirstForm()
         AND vbCurrencyDocumentId = zc_Enum_Currency_Basis()
         AND vbCurrencyPartnerId = zc_Enum_Currency_Basis()

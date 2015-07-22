@@ -33,7 +33,7 @@ BEGIN
                                 LEFT JOIN Object_InfoMoney_View AS Object_InfoMoney_View_find ON Object_InfoMoney_View_find.InfoMoneyDestinationId = Object_InfoMoney_View.InfoMoneyDestinationId
                            WHERE Object_InfoMoney_View.InfoMoneyId = inInfoMoneyId
                              AND Object_InfoMoney_View.InfoMoneyGroupId = zc_Enum_InfoMoneyGroup_10000() -- Основное сырье
-                          UNION 
+                          /*UNION 
                            SELECT Object_InfoMoney_View.InfoMoneyId
                            FROM (SELECT 1 FROM Object_InfoMoney_View WHERE Object_InfoMoney_View.InfoMoneyId = inInfoMoneyId
                                                                        AND Object_InfoMoney_View.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_10200() -- Основное сырье + Прочее сырье
@@ -47,6 +47,7 @@ BEGIN
                                                                                                                    , zc_Enum_InfoMoneyDestination_20600() -- Общефирменные + Прочие материалы
                                                                                                                     )
                                                                  OR Object_InfoMoney_View.InfoMoneyGroupId = zc_Enum_InfoMoneyGroup_70000() -- Инвестиции
+*/
                           )
 
      SELECT

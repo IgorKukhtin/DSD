@@ -104,8 +104,12 @@ BEGIN
      -- сохранили связь с <Форма оплаты>
      PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_PaidKind(), ioId, inPaidKindId);
 
+   -- !!!только при создании!!!
+   IF vbIsInsert = TRUE
+   THEN
      -- сохранили связь с <Пользователь>
      PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_User(), ioId, vbUserId);
+   END IF;
 
      -- сохранили связь с документом <Заявки сторонние>
      PERFORM lpInsertUpdate_MovementLinkMovement (zc_MovementLinkMovement_Order(), ioId, inMovementId_Order);
@@ -130,5 +134,6 @@ $BODY$
  11.10.14                                        *
 */
 
--- тест
+-- select lpInsertUpdate_MovementFloat (zc_MovementFloat_WeighingNumber(), 2005096 , 8);
+
 -- SELECT * FROM gpInsertUpdate_Movement_WeighingPartner (ioId:= 0, inInvNumber:= '-1', inOperDate:= '01.01.2013', , inSession:= '2')

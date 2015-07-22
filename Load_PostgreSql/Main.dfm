@@ -317,6 +317,7 @@ object MainForm: TMainForm
       Width = 289
       Height = 17
       Caption = '6.2. '#1047#1085#1072#1095#1077#1085#1080#1103' '#1089#1074#1086#1081#1089#1090#1074' '#1090#1086#1074#1072#1088#1086#1074' '#1076#1083#1103' '#1082#1083#1072#1089#1089#1080#1092#1080#1082#1072#1090#1086#1088#1072
+      Enabled = False
       TabOrder = 17
     end
     object cbInfoMoneyGroup: TCheckBox
@@ -416,6 +417,7 @@ object MainForm: TMainForm
       Width = 145
       Height = 26
       Caption = '4.5. '#1060#1080#1079' '#1083'. + '#1052#1072#1088#1096#1088#1091#1090#1099' + '#1040#1074#1090#1086' : Update'
+      Enabled = False
       TabOrder = 27
       WordWrap = True
     end
@@ -442,6 +444,7 @@ object MainForm: TMainForm
       Width = 168
       Height = 17
       Caption = '2.7. '#1057#1086#1088#1090#1080#1088#1086#1074#1082#1080' '#1052#1072#1088#1096#1088#1091#1090#1086#1074
+      Enabled = False
       TabOrder = 29
     end
     object cbFuel: TCheckBox
@@ -571,6 +574,7 @@ object MainForm: TMainForm
       Width = 138
       Height = 17
       Caption = '2.5. '#1044#1086#1075#1086#1074#1086#1088#1072' Int'
+      Enabled = False
       TabOrder = 39
     end
     object cbJuridicalInt: TCheckBox
@@ -580,6 +584,7 @@ object MainForm: TMainForm
       Width = 225
       Height = 17
       Caption = '2.4. '#1070#1088'.'#1083#1080#1094#1072' Int'
+      Enabled = False
       TabOrder = 40
     end
     object cbPartnerInt: TCheckBox
@@ -589,6 +594,7 @@ object MainForm: TMainForm
       Width = 146
       Height = 17
       Caption = '2.6. '#1050#1086#1085#1090#1088#1072#1075#1077#1085#1090#1099' Int'
+      Enabled = False
       TabOrder = 41
     end
     object cbGoodsProperty_Detail: TCheckBox
@@ -664,6 +670,7 @@ object MainForm: TMainForm
       Width = 266
       Height = 17
       Caption = #1059#1089#1083#1086#1074#1080#1103' '#1076#1086#1075#1086#1074#1086#1088#1072' - '#1076#1086#1082#1091#1084#1077#1085#1090#1099' '#1053#1040#1051
+      Enabled = False
       Font.Charset = DEFAULT_CHARSET
       Font.Color = clWindowText
       Font.Height = -11
@@ -679,6 +686,7 @@ object MainForm: TMainForm
       Width = 289
       Height = 17
       Caption = '6.3. '#1057#1074#1103#1079#1080' '#1089' '#1090#1086#1074#1072#1088#1086#1084' ('#1074#1077#1089' '#1091#1087#1072#1082'.)'
+      Enabled = False
       TabOrder = 50
     end
     object cbOrderType: TCheckBox
@@ -698,6 +706,7 @@ object MainForm: TMainForm
       Width = 135
       Height = 17
       Caption = '2.8. '#1050#1086#1085#1090#1088#1072#1075#1077#1085#1090#1099' Udate'
+      Enabled = False
       TabOrder = 52
     end
     object cbPrintKindItem: TCheckBox
@@ -707,6 +716,7 @@ object MainForm: TMainForm
       Width = 135
       Height = 17
       Caption = '2.9. PrintKindItem'
+      Enabled = False
       TabOrder = 53
     end
   end

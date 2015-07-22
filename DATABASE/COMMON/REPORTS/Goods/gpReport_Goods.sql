@@ -46,6 +46,9 @@ BEGIN
                                                                                    AND CLO_GoodsKind.DescId = zc_ContainerLinkObject_GoodsKind()
                                      LEFT JOIN ContainerLinkObject AS CLO_PartionGoods ON CLO_PartionGoods.ContainerId = Container.Id
                                                                                       AND CLO_PartionGoods.DescId = zc_ContainerLinkObject_PartionGoods()
+                                     LEFT JOIN ContainerLinkObject AS CLO_Account ON CLO_Account.ContainerId = Container.Id
+                                                                                 AND CLO_Account.DescId = zc_ContainerLinkObject_Account()
+                                WHERE CLO_Account.ContainerId IS NULL
                                )
                 , tmpMI_Count AS (SELECT tmpContainer_Count.ContainerId
                                        , tmpContainer_Count.LocationId
@@ -206,13 +209,19 @@ BEGIN
         , CAST (tmpMIContainer_group.AmountIn AS TFloat)    AS AmountIn
         , CAST (tmpMIContainer_group.AmountOut AS TFloat)   AS AmountOut
         , CAST (tmpMIContainer_group.AmountEnd AS TFloat)   AS AmountEnd 
-        , CAST (tmpMIContainer_group.AmountIn + tmpMIContainer_group.AmountOut AS TFloat) AS Amount
+        , CAST ((tmpMIContainer_group.AmountIn - tmpMIContainer_group.AmountOut)
+              * CASE WHEN Movement.DescId IN (zc_Movement_Sale(), zc_Movement_ReturnOut(), zc_Movement_Loss()) THEN -1 ELSE 1 END
+              * CASE WHEN Movement.DescId IN (zc_Movement_Send(), zc_Movement_SendOnPrice(), zc_Movement_ProductionUnion(), zc_Movement_ProductionSeparate()) AND tmpMIContainer_group.isActive = FALSE THEN -1 ELSE 1 END
+                AS TFloat) AS Amount
 
         , CAST (tmpMIContainer_group.SummStart AS TFloat)   AS SummStart
         , CAST (tmpMIContainer_group.SummIn AS TFloat)      AS SummIn
         , CAST (tmpMIContainer_group.SummOut AS TFloat)     AS SummOut
         , CAST (tmpMIContainer_group.SummEnd AS TFloat)     AS SummEnd 
-        , CAST (tmpMIContainer_group.SummIn + tmpMIContainer_group.SummOut AS TFloat) AS Summ
+        , CAST ((tmpMIContainer_group.SummIn - tmpMIContainer_group.SummOut)
+              * CASE WHEN Movement.DescId IN (zc_Movement_Sale(), zc_Movement_ReturnOut(), zc_Movement_Loss()) THEN -1 ELSE 1 END
+              * CASE WHEN Movement.DescId IN (zc_Movement_Send(), zc_Movement_SendOnPrice(), zc_Movement_ProductionUnion(), zc_Movement_ProductionSeparate()) AND tmpMIContainer_group.isActive = FALSE THEN -1 ELSE 1 END
+                AS TFloat) AS Summ
 
    FROM (SELECT tmpMIContainer_all.MovementId
               , MAX (tmpMIContainer_all.MovementItemId) AS MovementItemId
