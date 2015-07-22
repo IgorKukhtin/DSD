@@ -603,7 +603,7 @@ type
     N69: TMenuItem;
     actReport_GoodsMI_SaleReturnInUnit: TdsdOpenForm;
     miReport_GoodsMI_SaleReturnInUnit: TMenuItem;
-    actReport_GoodsMI_Loss: TdsdOpenForm;
+    actReport_GoodsMI_Internal: TdsdOpenForm;
     N73: TMenuItem;
     actReport_GoodsMI_Send: TdsdOpenForm;
     actReport_GoodsMI_SendonPrice: TdsdOpenForm;

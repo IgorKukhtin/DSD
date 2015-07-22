@@ -668,7 +668,7 @@ uses
   COMTestUnit in '..\SOURCE\COM\COMTestUnit.pas',
   RouteGroup in '..\..\Forms\Guides\RouteGroup.pas' {RouteGroupForm: TParentForm},
   RouteGroupEdit in '..\..\Forms\Guides\RouteGroupEdit.pas' {RouteGroupEditForm: TParentForm},
-  Report_GoodsMI_LossDialog in '..\..\Forms\Report\Report_GoodsMI_LossDialog.pas' {Report_GoodsMI_LossDialogForm: TParentForm},
+  Report_GoodsMI_InternalDialog in '..\..\Forms\Report\Report_GoodsMI_InternalDialog.pas' {Report_GoodsMI_InternalDialogForm: TParentForm},
   Report_GoodsBalance in '..\..\Forms\Report\Report_GoodsBalance.pas' {Report_GoodsBalanceForm: TParentForm},
   Report_MotionGoodsUpak in '..\..\Forms\Report\Report_MotionGoodsUpak.pas' {Report_MotionGoodsUpakForm: TParentForm},
   MedocJournal in '..\..\Forms\Document\MedocJournal.pas' {MedocJournalForm: TParentForm},
@@ -701,7 +701,7 @@ uses
   Report_GoodsMI_IncomeDialog in '..\..\Forms\Report\Report_GoodsMI_IncomeDialog.pas' {Report_GoodsMI_IncomeDialogForm: TParentForm},
   Report_GoodsMI_Income in '..\..\Forms\Report\Report_GoodsMI_Income.pas' {Report_GoodsMI_IncomeForm: TParentForm},
   Report_GoodsMI_Dialog in '..\..\Forms\Report\Report_GoodsMI_Dialog.pas' {Report_GoodsMI_DialogForm: TParentForm},
-  Report_GoodsMI_Loss in '..\..\Forms\Report\Report_GoodsMI_Loss.pas' {Report_GoodsMI_LossForm: TParentForm};
+  Report_GoodsMI_Internal in '..\..\Forms\Report\Report_GoodsMI_Internal.pas' {Report_GoodsMI_InternalForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}
