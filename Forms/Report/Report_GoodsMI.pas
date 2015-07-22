@@ -61,6 +61,9 @@ type
     bbPrintByGoods: TdxBarButton;
     ExecuteDialog: TExecuteDialog;
     bbExecuteDialog: TdxBarButton;
+    cxLabel8: TcxLabel;
+    edUnitGroup: TcxButtonEdit;
+    GuidesUnitGroup: TdsdGuides;
   private
     { Private declarations }
   public

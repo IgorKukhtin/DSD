@@ -70,8 +70,8 @@ inherited MainForm: TMainForm
       MoveParams = <>
       Caption = #1055#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077' '#1087#1086' '#1094#1077#1085#1077
       Hint = #1055#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077' '#1087#1086' '#1094#1077#1085#1077
-      FormName = 'TReport_GoodsMI_LossForm'
-      FormNameParam.Value = 'TReport_GoodsMI_LossForm'
+      FormName = 'TReport_GoodsMI_InternalForm'
+      FormNameParam.Value = 'TReport_GoodsMI_InternalForm'
       FormNameParam.DataType = ftString
       FormNameParam.ParamType = ptResult
       GuiParams = <
@@ -175,8 +175,8 @@ inherited MainForm: TMainForm
       MoveParams = <>
       Caption = #1055#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077
       Hint = #1055#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077
-      FormName = 'TReport_GoodsMI_LossForm'
-      FormNameParam.Value = 'TReport_GoodsMI_LossForm'
+      FormName = 'TReport_GoodsMI_InternalForm'
+      FormNameParam.Value = 'TReport_GoodsMI_InternalForm'
       FormNameParam.DataType = ftString
       FormNameParam.ParamType = ptResult
       GuiParams = <
@@ -360,12 +360,12 @@ inherited MainForm: TMainForm
       GuiParams = <>
       isShowModal = False
     end
-    object actReport_GoodsMI_Loss: TdsdOpenForm [18]
+    object actReport_GoodsMI_Internal: TdsdOpenForm [18]
       Category = #1054#1090#1095#1077#1090#1099' ('#1090#1086#1074'.)'
       MoveParams = <>
       Caption = #1057#1087#1080#1089#1072#1085#1080#1077
-      FormName = 'TReport_GoodsMI_LossForm'
-      FormNameParam.Value = 'TReport_GoodsMI_LossForm'
+      FormName = 'TReport_GoodsMI_InternalForm'
+      FormNameParam.Value = 'TReport_GoodsMI_InternalForm'
       FormNameParam.DataType = ftString
       FormNameParam.ParamType = ptResult
       GuiParams = <
@@ -3853,7 +3853,7 @@ inherited MainForm: TMainForm
         Action = actReport_MotionGoods_Ceh
       end
       object N73: TMenuItem
-        Action = actReport_GoodsMI_Loss
+        Action = actReport_GoodsMI_Internal
       end
       object N74: TMenuItem
         Action = actReport_GoodsMI_Send

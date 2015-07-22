@@ -1,4 +1,4 @@
-unit Report_GoodsMI_Loss;
+unit Report_GoodsMI_Internal;
 
 interface
 
@@ -16,7 +16,7 @@ uses
   dsdGuides, cxButtonEdit, cxCurrencyEdit, Vcl.Menus;
 
 type
-  TReport_GoodsMI_LossForm = class(TAncestorReportForm)
+  TReport_GoodsMI_InternalForm = class(TAncestorReportForm)
     clTradeMarkName: TcxGridDBColumn;
     clGoodsGroupName: TcxGridDBColumn;
     clGoodsCode: TcxGridDBColumn;
@@ -41,6 +41,8 @@ type
     PaidKindGuides: TdsdGuides;
     ExecuteDialog: TExecuteDialog;
     bb: TdxBarButton;
+    PriceOut: TcxGridDBColumn;
+    PriceIn: TcxGridDBColumn;
   private
     { Private declarations }
   public
@@ -51,6 +53,6 @@ implementation
 
 {$R *.dfm}
 initialization
-  RegisterClass(TReport_GoodsMI_LossForm);
+  RegisterClass(TReport_GoodsMI_InternalForm);
 
 end.

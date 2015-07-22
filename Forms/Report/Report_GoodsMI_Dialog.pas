@@ -38,6 +38,9 @@ type
     cxLabel5: TcxLabel;
     edJuridical: TcxButtonEdit;
     JuridicalGuides: TdsdGuides;
+    cxLabel8: TcxLabel;
+    edUnitGroup: TcxButtonEdit;
+    GuidesUnitGroup: TdsdGuides;
   private
     { Private declarations }
   public

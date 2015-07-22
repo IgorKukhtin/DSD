@@ -1,4 +1,4 @@
-unit Report_GoodsMI_LossDialog;
+unit Report_GoodsMI_InternalDialog;
 
 interface
 
@@ -12,7 +12,7 @@ uses
   dxSkinsDefaultPainters, cxCheckBox;
 
 type
-  TReport_GoodsMI_LossDialogForm = class(TParentForm)
+  TReport_GoodsMI_InternalDialogForm = class(TParentForm)
     cxButton1: TcxButton;
     cxButton2: TcxButton;
     deEnd: TcxDateEdit;
@@ -46,6 +46,6 @@ implementation
 {$R *.dfm}
 
 initialization
-  RegisterClass(TReport_GoodsMI_LossDialogForm);
+  RegisterClass(TReport_GoodsMI_InternalDialogForm);
 
 end.
