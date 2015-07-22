@@ -90,17 +90,24 @@ BEGIN
                               AND MIContainer.AnalyzerId             = inUnitId
                               AND MIContainer.MovementDescId         = zc_Movement_ProductionUnion()
                            )
+          , tmpMovement AS (-- поиск одного документа за OperDate
+                            SELECT tmpMI_all.OperDate
+                                 , MAX (tmpMI_all.MovementId) AS MovementId
+                            FROM tmpMI_all
+                            GROUP BY tmpMI_all.OperDate
+                           )
            , tmpMI_find AS (-- нужен только один из элементов Прихода с пр-ва (по нему будет Update, иначе Insert, остальные Delete)
                             SELECT tmpMI_all.ContainerId
                                  , tmpMI_all.OperDate
                                  , MAX (tmpMI_all.MovementItemId) AS MovementItemId
-                            FROM tmpMI_all
+                            FROM tmpMovement
+                                 INNER JOIN tmpMI_all ON tmpMI_all.MovementId = tmpMovement.MovementId
                             WHERE tmpMI_all.DescId_mi = zc_MI_Master()
                             GROUP BY tmpMI_all.ContainerId
                                    , tmpMI_all.OperDate
                            )
          , tmpMI_result AS (-- данные по элементам Прихода с пр-ва
-                            SELECT COALESCE (tmpMI_all.MovementId, 0)      AS MovementId
+                            SELECT COALESCE (tmpMovement.MovementId, 0)    AS MovementId
                                  , COALESCE (tmpMI_find.MovementItemId, 0) AS MovementItemId
                                  , Container.ObjectId                      AS GoodsId
                                  , COALESCE (CLO_GoodsKind.ObjectId)       AS GoodsKindId
@@ -109,6 +116,7 @@ BEGIN
                                  , tmpMI.DescId_mi
                                  , tmpMI.OperCount
                             FROM tmpMI
+                                 LEFT JOIN tmpMovement ON tmpMovement.OperDate = tmpMI.OperDate
                                  LEFT JOIN Container ON Container.Id = tmpMI.ContainerId
                                  LEFT JOIN ContainerLinkObject AS CLO_GoodsKind
                                                                ON CLO_GoodsKind.ContainerId = tmpMI.ContainerId
@@ -647,6 +655,7 @@ END;$BODY$
 -- where ContainerId = 568111
 -- SELECT * FROM lpUpdate_Movement_ProductionUnion_Pack (inIsUpdate:= FALSE, inStartDate:= '10.05.2015', inEndDate:= '10.05.2015', inUnitId:= 8451, inUserId:= zfCalc_UserAdmin() :: Integer) -- Цех Упаковки
 
+-- SELECT * FROM lpUpdate_Movement_ProductionUnion_Pack (inIsUpdate:= true, inStartDate:= '21.07.2015', inEndDate:= '21.07.2015', inUnitId:= 8451, inUserId:= zfCalc_UserAdmin() :: Integer) -- Цех Упаковки
 -- SELECT * FROM lpUpdate_Movement_ProductionUnion_Pack (inIsUpdate:= true, inStartDate:= '20.07.2015', inEndDate:= '20.07.2015', inUnitId:= 8451, inUserId:= zfCalc_UserAdmin() :: Integer) -- Цех Упаковки
 -- SELECT * FROM lpUpdate_Movement_ProductionUnion_Pack (inIsUpdate:= true, inStartDate:= '19.07.2015', inEndDate:= '19.07.2015', inUnitId:= 8451, inUserId:= zfCalc_UserAdmin() :: Integer) -- Цех Упаковки
 -- SELECT * FROM lpUpdate_Movement_ProductionUnion_Pack (inIsUpdate:= true, inStartDate:= '18.07.2015', inEndDate:= '18.07.2015', inUnitId:= 8451, inUserId:= zfCalc_UserAdmin() :: Integer) -- Цех Упаковки

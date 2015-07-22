@@ -56,10 +56,10 @@ BEGIN
                               AND MIContainer.MovementDescId         = zc_Movement_ProductionUnion()
                            )
           , tmpMovement AS (-- поиск одного документа за OperDate
-                            SELECT MIContainer.OperDate
-                                 , MAX (MIContainer.MovementId) AS MovementId
+                            SELECT tmpMI_all.OperDate
+                                 , MAX (tmpMI_all.MovementId) AS MovementId
                             FROM tmpMI_all
-                            GROUP BY MIContainer.OperDate
+                            GROUP BY tmpMI_all.OperDate
                            )
            , tmpMI_find AS (-- нужен только один из элементов (по нему будет Update, иначе Insert, остальные Delete)
                             SELECT tmpMI_all.ContainerId
@@ -80,7 +80,7 @@ BEGIN
                                  , tmpMI.OperCount_child
                                  , tmpMI.OperCount_master
                             FROM tmpMI
-                                 LEFT JOIN tmpMovement ON tmpMovement.OperDate = tmpMI_result.OperDate
+                                 LEFT JOIN tmpMovement ON tmpMovement.OperDate = tmpMI.OperDate
                                  LEFT JOIN tmpMI_find ON tmpMI_find.ContainerId = tmpMI.ContainerId
                                                      AND tmpMI_find.OperDate    = tmpMI.OperDate
                                  LEFT JOIN MovementItem ON MovementItem.Id = tmpMI_find.MovementItemId
