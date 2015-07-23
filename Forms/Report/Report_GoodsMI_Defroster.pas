@@ -61,6 +61,9 @@ type
     bbPartionGoods: TdxBarControlContainerItem;
     ExecuteDialog: TExecuteDialog;
     bbExecuteDialog: TdxBarButton;
+    Summ_Production_out: TcxGridDBColumn;
+    Amount_Production_out: TcxGridDBColumn;
+    Separate_CountIn: TcxGridDBColumn;
   private
     { Private declarations }
   public

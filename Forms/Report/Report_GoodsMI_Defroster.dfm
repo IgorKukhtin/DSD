@@ -351,6 +351,24 @@ inherited Report_GoodsMI_DefrosterForm: TReport_GoodsMI_DefrosterForm
             HeaderAlignmentVert = vaCenter
             Width = 60
           end
+          object Summ_Production_out: TcxGridDBColumn
+            DataBinding.FieldName = 'Summ_Production_out'
+            Visible = False
+            VisibleForCustomization = False
+            Width = 20
+          end
+          object Amount_Production_out: TcxGridDBColumn
+            DataBinding.FieldName = 'Amount_Production_out'
+            Visible = False
+            VisibleForCustomization = False
+            Width = 20
+          end
+          object Separate_CountIn: TcxGridDBColumn
+            DataBinding.FieldName = 'Separate_CountIn'
+            Visible = False
+            VisibleForCustomization = False
+            Width = 20
+          end
         end
       end
     end
@@ -518,6 +536,12 @@ inherited Report_GoodsMI_DefrosterForm: TReport_GoodsMI_DefrosterForm
           ComponentItem = 'TextValue'
           DataType = ftString
           ParamType = ptInput
+        end
+        item
+          Name = 'isPartionGoods'
+          Value = Null
+          Component = cbPartionGoods
+          DataType = ftBoolean
         end>
       ReportName = #1044#1077#1092#1088#1086#1089#1090#1077#1088'('#1080#1090#1086#1075')'
       ReportNameParam.Value = #1044#1077#1092#1088#1086#1089#1090#1077#1088'('#1080#1090#1086#1075')'
