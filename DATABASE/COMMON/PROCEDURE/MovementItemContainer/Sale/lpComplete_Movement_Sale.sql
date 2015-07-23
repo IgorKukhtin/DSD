@@ -303,6 +303,7 @@ BEGIN
                                ON ObjectLink_Partner_Branch.ObjectId = MovementLinkObject_To.ObjectId
                               AND ObjectLink_Partner_Branch.DescId = zc_ObjectLink_Unit_Branch() -- !!!не ошибка!!!
                               AND Object_To.DescId = zc_Object_Partner()
+                              AND 1 = 0 -- вроде это как наш филиал
           LEFT JOIN ObjectBoolean AS ObjectBoolean_isCorporate
                                   ON ObjectBoolean_isCorporate.ObjectId = ObjectLink_Partner_Juridical.ChildObjectId
                                  AND ObjectBoolean_isCorporate.DescId = zc_ObjectBoolean_Juridical_isCorporate()
