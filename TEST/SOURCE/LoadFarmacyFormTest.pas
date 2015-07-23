@@ -70,7 +70,7 @@ type
 implementation
 
 uses CommonData, Storage, FormStorage, Classes, Authentication, SysUtils,
-     cxPropertiesStore, cxStorage, DBClient, dsdDB, ActionTest, MainForm;
+     cxPropertiesStore, cxStorage, DBClient, dsdDB, ActionTest, MainForm, UtilConst;
 
 { TLoadFormTest }
 
@@ -454,7 +454,7 @@ end;
 procedure TLoadFormTest.SetUp;
 begin
   inherited;
-  TAuthentication.CheckLogin(TStorageFactory.GetStorage, 'Админ', 'Админ', gc_User);
+  TAuthentication.CheckLogin(TStorageFactory.GetStorage, 'Админ', gc_AdminPassword, gc_User);
 end;
 
 procedure TLoadFormTest.LoadOrderInternalFormTest;

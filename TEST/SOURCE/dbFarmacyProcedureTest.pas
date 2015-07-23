@@ -225,6 +225,8 @@ end;
 
 procedure TdbProcedureTest.CreateReportProcedure;
 begin
+  ScriptDirectory := FarmacyReportsPath + 'Remains\';
+  ProcedureLoad;
   {ZQuery.SQL.LoadFromFile(ReportsPath + 'gpReport_Balance.sql');
   ZQuery.ExecSQL;}
 end;

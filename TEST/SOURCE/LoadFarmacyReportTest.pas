@@ -25,7 +25,7 @@ type
 
 implementation
 
-uses Authentication, FormStorage, CommonData, Storage;
+uses Authentication, FormStorage, CommonData, Storage, UtilConst;
 
 const
   ReportPath = '..\Reports\Farmacy';
@@ -69,7 +69,7 @@ end;
 procedure TLoadReportTest.SetUp;
 begin
   inherited;
-  TAuthentication.CheckLogin(TStorageFactory.GetStorage, 'Админ', 'Админ', gc_User);
+  TAuthentication.CheckLogin(TStorageFactory.GetStorage, 'Админ', gc_AdminPassword, gc_User);
   Report := TfrxReport.Create(nil);
   Stream := TStringStream.Create;
 end;
