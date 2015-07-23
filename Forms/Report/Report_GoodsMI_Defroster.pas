@@ -13,7 +13,7 @@ uses
   Vcl.ActnList, cxPropertiesStore, cxLabel, cxTextEdit, cxMaskEdit,
   cxDropDownEdit, cxCalendar, Vcl.ExtCtrls, cxGridLevel, cxGridCustomView,
   cxGridCustomTableView, cxGridTableView, cxGridDBTableView, cxGrid, cxPC,
-  dsdGuides, cxButtonEdit, cxCurrencyEdit, Vcl.Menus;
+  dsdGuides, cxButtonEdit, cxCurrencyEdit, Vcl.Menus, cxCheckBox;
 
 type
   TReport_GoodsMI_DefrosterForm = class(TAncestorReportForm)
@@ -57,6 +57,10 @@ type
     Price_Send_out: TcxGridDBColumn;
     Summ_Loss_diff: TcxGridDBColumn;
     Price_Loss_diff: TcxGridDBColumn;
+    cbPartionGoods: TcxCheckBox;
+    bbPartionGoods: TdxBarControlContainerItem;
+    ExecuteDialog: TExecuteDialog;
+    bbExecuteDialog: TdxBarButton;
   private
     { Private declarations }
   public

@@ -14,17 +14,17 @@ inherited Report_GoodsMI_IncomeByPartnerForm: TReport_GoodsMI_IncomeByPartnerFor
     Height = 470
     TabOrder = 3
     ExplicitTop = 83
-    ExplicitWidth = 1103
+    ExplicitWidth = 1159
     ExplicitHeight = 470
     ClientRectBottom = 470
     ClientRectRight = 1159
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 1103
+      ExplicitWidth = 1159
       ExplicitHeight = 470
       inherited cxGrid: TcxGrid
         Width = 1159
         Height = 470
-        ExplicitWidth = 1103
+        ExplicitWidth = 1159
         ExplicitHeight = 470
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
@@ -136,6 +136,13 @@ inherited Report_GoodsMI_IncomeByPartnerForm: TReport_GoodsMI_IncomeByPartnerFor
             HeaderAlignmentVert = vaCenter
             Width = 102
           end
+          object GoodsGroupNameFull: TcxGridDBColumn
+            Caption = #1043#1088#1091#1087#1087#1072' '#1090#1086#1074#1072#1088#1072' ('#1074#1089#1077')'
+            DataBinding.FieldName = 'GoodsGroupNameFull'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 100
+          end
           object clGoodsCode: TcxGridDBColumn
             Caption = #1050#1086#1076' '#1090#1086#1074#1072#1088#1072
             DataBinding.FieldName = 'GoodsCode'
@@ -209,7 +216,7 @@ inherited Report_GoodsMI_IncomeByPartnerForm: TReport_GoodsMI_IncomeByPartnerFor
   inherited Panel: TPanel
     Width = 1159
     Height = 57
-    ExplicitWidth = 1103
+    ExplicitWidth = 1159
     ExplicitHeight = 57
     inherited deStart: TcxDateEdit
       Left = 55

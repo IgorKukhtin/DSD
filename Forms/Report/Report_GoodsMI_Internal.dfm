@@ -5,7 +5,7 @@ inherited Report_GoodsMI_InternalForm: TReport_GoodsMI_InternalForm
   AddOnFormData.isSingle = False
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
-  ExplicitLeft = -308
+  ExplicitLeft = -310
   ExplicitWidth = 1159
   ExplicitHeight = 390
   PixelsPerInch = 96
@@ -171,6 +171,13 @@ inherited Report_GoodsMI_InternalForm: TReport_GoodsMI_InternalForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 70
+          end
+          object GoodsGroupNameFull: TcxGridDBColumn
+            Caption = #1043#1088#1091#1087#1087#1072' '#1090#1086#1074#1072#1088#1072' ('#1074#1089#1077')'
+            DataBinding.FieldName = 'GoodsGroupNameFull'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 100
           end
           object clGoodsCode: TcxGridDBColumn
             Caption = #1050#1086#1076

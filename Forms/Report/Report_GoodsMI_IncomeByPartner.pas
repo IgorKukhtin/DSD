@@ -57,6 +57,7 @@ type
     cxLabel8: TcxLabel;
     ceInfoMoney: TcxButtonEdit;
     InfoMoneyGuides: TdsdGuides;
+    GoodsGroupNameFull: TcxGridDBColumn;
   private
     { Private declarations }
   public

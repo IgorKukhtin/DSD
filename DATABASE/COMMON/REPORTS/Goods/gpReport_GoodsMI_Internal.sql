@@ -14,7 +14,7 @@ CREATE OR REPLACE FUNCTION gpReport_GoodsMI_Internal (
     IN inToId         Integer   ,
     IN inSession      TVarChar    -- сессия пользователя
 )
-RETURNS TABLE (GoodsGroupName TVarChar
+RETURNS TABLE (GoodsGroupName TVarChar, GoodsGroupNameFull TVarChar
              , GoodsCode Integer, GoodsName TVarChar
              , GoodsKindName TVarChar
              , TradeMarkName TVarChar
@@ -84,6 +84,7 @@ BEGIN
     RETURN QUERY
     
      SELECT Object_GoodsGroup.ValueData AS GoodsGroupName 
+         , ObjectString_Goods_GroupNameFull.ValueData AS GoodsGroupNameFull
          , Object_Goods.ObjectCode     AS GoodsCode
          , Object_Goods.ValueData      AS GoodsName
          , Object_GoodsKind.ValueData  AS GoodsKindName
@@ -184,6 +185,10 @@ BEGIN
           LEFT JOIN ObjectFloat AS ObjectFloat_Weight
                                 ON ObjectFloat_Weight.ObjectId = Object_Goods.Id 
                                AND ObjectFloat_Weight.DescId = zc_ObjectFloat_Goods_Weight()
+
+          LEFT JOIN ObjectString AS ObjectString_Goods_GroupNameFull
+                                 ON ObjectString_Goods_GroupNameFull.ObjectId = Object_Goods.Id
+                                AND ObjectString_Goods_GroupNameFull.DescId = zc_ObjectString_Goods_GroupNameFull()
 
   ;
          

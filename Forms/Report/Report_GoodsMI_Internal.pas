@@ -43,6 +43,7 @@ type
     bb: TdxBarButton;
     PriceOut: TcxGridDBColumn;
     PriceIn: TcxGridDBColumn;
+    GoodsGroupNameFull: TcxGridDBColumn;
   private
     { Private declarations }
   public
