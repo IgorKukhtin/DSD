@@ -3,10 +3,10 @@ inherited Report_GoodsMI_DefrosterForm: TReport_GoodsMI_DefrosterForm
   ClientHeight = 534
   ClientWidth = 1058
   AddOnFormData.isSingle = False
+  AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
-  ExplicitLeft = -76
   ExplicitWidth = 1074
-  ExplicitHeight = 569
+  ExplicitHeight = 572
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -421,6 +421,14 @@ inherited Report_GoodsMI_DefrosterForm: TReport_GoodsMI_DefrosterForm
       Width = 210
     end
   end
+  object cbPartionGoods: TcxCheckBox [2]
+    Left = 436
+    Top = 87
+    Caption = #1087#1086' '#1055#1072#1088#1090#1080#1103#1084
+    Properties.ReadOnly = False
+    TabOrder = 6
+    Width = 88
+  end
   inherited cxPropertiesStore: TcxPropertiesStore
     Components = <
       item
@@ -683,6 +691,55 @@ inherited Report_GoodsMI_DefrosterForm: TReport_GoodsMI_DefrosterForm
       QuestionBeforeExecute = #1044#1077#1081#1089#1090#1074#1080#1090#1077#1083#1100#1085#1086' '#1089#1092#1086#1088#1084#1080#1088#1086#1074#1072#1090#1100' '#1076#1072#1085#1085#1099#1077' '#1079#1072' '#1087#1077#1088#1080#1086#1076' <'#1057#1093#1077#1084#1072' '#1044#1077#1092#1088#1086#1089#1090#1077#1088'>?'
       InfoAfterExecute = #1047#1072#1074#1077#1088#1096#1077#1085#1086' '#1092#1086#1088#1084#1080#1088#1086#1074#1072#1085#1080#1077' '#1076#1072#1085#1085#1099#1093' '#1079#1072' '#1087#1077#1088#1080#1086#1076' <'#1057#1093#1077#1084#1072' '#1044#1077#1092#1088#1086#1089#1090#1077#1088'>.'
     end
+    object ExecuteDialog: TExecuteDialog
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1072#1088#1072#1084#1077#1090#1088#1099' '#1086#1090#1095#1077#1090#1072
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1072#1088#1072#1084#1077#1090#1088#1099' '#1086#1090#1095#1077#1090#1072
+      ImageIndex = 35
+      FormName = 'TReport_DefrosterDialogForm'
+      FormNameParam.Value = 'TReport_DefrosterDialogForm'
+      FormNameParam.DataType = ftString
+      GuiParams = <
+        item
+          Name = 'StartDate'
+          Value = 42005d
+          Component = deStart
+          DataType = ftDateTime
+          ParamType = ptInput
+        end
+        item
+          Name = 'EndDate'
+          Value = 42005d
+          Component = deEnd
+          DataType = ftDateTime
+          ParamType = ptInput
+        end
+        item
+          Name = 'UnitId'
+          Value = ''
+          Component = UnitGuides
+          ComponentItem = 'Key'
+          ParamType = ptInput
+        end
+        item
+          Name = 'UnitName'
+          Value = ''
+          Component = UnitGuides
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          ParamType = ptInput
+        end
+        item
+          Name = 'inIsPartionGoods'
+          Value = 'False'
+          Component = cbPartionGoods
+          DataType = ftBoolean
+          ParamType = ptInput
+        end>
+      isShowModal = True
+      OpenBeforeShow = True
+    end
   end
   inherited MasterDS: TDataSource
     Left = 72
@@ -755,6 +812,14 @@ inherited Report_GoodsMI_DefrosterForm: TReport_GoodsMI_DefrosterForm
         end
         item
           Visible = True
+          ItemName = 'bbExecuteDialog'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbRefresh'
         end
         item
@@ -768,6 +833,10 @@ inherited Report_GoodsMI_DefrosterForm: TReport_GoodsMI_DefrosterForm
         item
           Visible = True
           ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbPartionGoods'
         end
         item
           Visible = True
@@ -809,6 +878,17 @@ inherited Report_GoodsMI_DefrosterForm: TReport_GoodsMI_DefrosterForm
     end
     object bbUpdateDefroster: TdxBarButton
       Action = actUpdateDefroster
+      Category = 0
+    end
+    object bbPartionGoods: TdxBarControlContainerItem
+      Caption = 'New Item'
+      Category = 0
+      Hint = 'New Item'
+      Visible = ivAlways
+      Control = cbPartionGoods
+    end
+    object bbExecuteDialog: TdxBarButton
+      Action = ExecuteDialog
       Category = 0
     end
   end

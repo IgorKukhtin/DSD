@@ -3,7 +3,7 @@ object Report_GoodsMI_IncomeDialogForm: TReport_GoodsMI_IncomeDialogForm
   Top = 0
   BorderStyle = bsDialog
   Caption = #1055#1072#1088#1072#1084#1077#1090#1088#1099' '#1086#1090#1095#1077#1090#1072' <'#1055#1086' '#1090#1086#1074#1072#1088#1072#1084'>'
-  ClientHeight = 225
+  ClientHeight = 268
   ClientWidth = 450
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -19,7 +19,7 @@ object Report_GoodsMI_IncomeDialogForm: TReport_GoodsMI_IncomeDialogForm
   TextHeight = 13
   object cxButton1: TcxButton
     Left = 98
-    Top = 184
+    Top = 224
     Width = 75
     Height = 25
     Caption = 'Ok'
@@ -29,7 +29,7 @@ object Report_GoodsMI_IncomeDialogForm: TReport_GoodsMI_IncomeDialogForm
   end
   object cxButton2: TcxButton
     Left = 272
-    Top = 184
+    Top = 224
     Width = 75
     Height = 25
     Caption = #1054#1090#1084#1077#1085#1072
@@ -147,6 +147,23 @@ object Report_GoodsMI_IncomeDialogForm: TReport_GoodsMI_IncomeDialogForm
     TabOrder = 15
     Width = 200
   end
+  object cxLabel8: TcxLabel
+    Left = 9
+    Top = 167
+    Caption = #1059#1055' '#1089#1090#1072#1090#1100#1103' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103':'
+  end
+  object edInfoMoney: TcxButtonEdit
+    Left = 9
+    Top = 187
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    Properties.ReadOnly = True
+    TabOrder = 17
+    Width = 423
+  end
   object PeriodChoice: TPeriodChoice
     DateStart = deStart
     DateEnd = deEnd
@@ -154,7 +171,7 @@ object Report_GoodsMI_IncomeDialogForm: TReport_GoodsMI_IncomeDialogForm
   end
   object dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 32
-    Top = 176
+    Top = 216
   end
   object cxPropertiesStore: TcxPropertiesStore
     Components = <
@@ -167,7 +184,7 @@ object Report_GoodsMI_IncomeDialogForm: TReport_GoodsMI_IncomeDialogForm
     StorageName = 'cxPropertiesStore'
     StorageType = stStream
     Left = 400
-    Top = 180
+    Top = 220
   end
   object FormParams: TdsdFormParams
     Params = <
@@ -259,9 +276,24 @@ object Report_GoodsMI_IncomeDialogForm: TReport_GoodsMI_IncomeDialogForm
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+      end
+      item
+        Name = 'InfoMoneyId'
+        Value = Null
+        Component = InfoMoneyGuide
+        ComponentItem = 'Key'
+        ParamType = ptInput
+      end
+      item
+        Name = 'InfoMoneyName'
+        Value = Null
+        Component = InfoMoneyGuide
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
       end>
     Left = 200
-    Top = 176
+    Top = 216
   end
   object GuidesGoodsGroup: TdsdGuides
     KeyField = 'Id'
@@ -398,5 +430,32 @@ object Report_GoodsMI_IncomeDialogForm: TReport_GoodsMI_IncomeDialogForm
       end>
     Left = 305
     Top = 9
+  end
+  object InfoMoneyGuide: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edInfoMoney
+    FormNameParam.Value = 'TInfoMoney_ObjectForm'
+    FormNameParam.DataType = ftString
+    FormName = 'TInfoMoney_ObjectForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = InfoMoneyGuide
+        ComponentItem = 'Key'
+        DataType = ftString
+        ParamType = ptInput
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = InfoMoneyGuide
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+      end>
+    Left = 232
+    Top = 168
   end
 end

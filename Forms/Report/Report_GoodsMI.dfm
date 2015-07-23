@@ -15,17 +15,17 @@ inherited Report_GoodsMIForm: TReport_GoodsMIForm
     Height = 454
     TabOrder = 3
     ExplicitTop = 80
-    ExplicitWidth = 1058
+    ExplicitWidth = 1146
     ExplicitHeight = 454
     ClientRectBottom = 454
     ClientRectRight = 1146
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 1058
+      ExplicitWidth = 1146
       ExplicitHeight = 454
       inherited cxGrid: TcxGrid
         Width = 1146
         Height = 454
-        ExplicitWidth = 1058
+        ExplicitWidth = 1146
         ExplicitHeight = 454
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
@@ -435,7 +435,7 @@ inherited Report_GoodsMIForm: TReport_GoodsMIForm
   inherited Panel: TPanel
     Width = 1146
     Height = 54
-    ExplicitWidth = 1058
+    ExplicitWidth = 1146
     ExplicitHeight = 54
     inherited deStart: TcxDateEdit
       Left = 118
@@ -537,7 +537,7 @@ inherited Report_GoodsMIForm: TReport_GoodsMIForm
     end
     object ceInfoMoney: TcxButtonEdit
       Left = 862
-      Top = 32
+      Top = 30
       Properties.Buttons = <
         item
           Default = True
@@ -1195,8 +1195,7 @@ inherited Report_GoodsMIForm: TReport_GoodsMIForm
         DataType = ftString
         ParamType = ptInput
       end>
-    Left = 856
-    Top = 65528
+    Left = 1040
   end
   object JuridicalGuides: TdsdGuides
     KeyField = 'Id'

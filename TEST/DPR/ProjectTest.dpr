@@ -678,7 +678,7 @@ uses
   QualityDoc in '..\..\Forms\Document\QualityDoc.pas' {QualityDocForm: TParentForm},
   QualityDocJournal in '..\..\Forms\Document\QualityDocJournal.pas' {QualityDocJournalForm: TParentForm},
   Report_PersonalComplete in '..\..\Forms\Report\Report_PersonalComplete.pas' {Report_PersonalCompleteForm: TParentForm},
-  Report_PersonalCompleteDialog in '..\..\Forms\Report\Report_PersonalCompleteDialog.pas' {Report_PersonalCompleteDialogForm: TParentForm},
+  Report_DefrosterDialog in '..\..\Forms\Report\Report_DefrosterDialog.pas' {Report_DefrosterDialogForm: TParentForm},
   TaxJournalDialog in '..\..\Forms\Document\TaxJournalDialog.pas' {TaxJournalDialogForm: TParentForm},
   Partner in '..\..\Forms\Guides\Partner.pas' {PartnerForm: TParentForm},
   Juridical in '..\..\Forms\Guides\Juridical.pas' {JuridicalForm: TParentForm},
@@ -701,7 +701,8 @@ uses
   Report_GoodsMI_IncomeDialog in '..\..\Forms\Report\Report_GoodsMI_IncomeDialog.pas' {Report_GoodsMI_IncomeDialogForm: TParentForm},
   Report_GoodsMI_Income in '..\..\Forms\Report\Report_GoodsMI_Income.pas' {Report_GoodsMI_IncomeForm: TParentForm},
   Report_GoodsMI_Dialog in '..\..\Forms\Report\Report_GoodsMI_Dialog.pas' {Report_GoodsMI_DialogForm: TParentForm},
-  Report_GoodsMI_Internal in '..\..\Forms\Report\Report_GoodsMI_Internal.pas' {Report_GoodsMI_InternalForm: TParentForm};
+  Report_GoodsMI_Internal in '..\..\Forms\Report\Report_GoodsMI_Internal.pas' {Report_GoodsMI_InternalForm: TParentForm},
+  Report_PersonalCompleteDialog in '..\..\Forms\Report\Report_PersonalCompleteDialog.pas' {Report_PersonalCompleteDialogForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}

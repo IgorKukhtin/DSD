@@ -34,6 +34,7 @@ RETURNS TABLE (GoodsGroupNameFull TVarChar, GoodsGroupName TVarChar
              , Price_Loss_diff TFloat
 
              , Tax_Separate_diff TFloat
+             , Summ_Production_out TFloat, Amount_Production_out TFloat, Separate_CountIn TFloat
               )
 AS
 $BODY$
@@ -246,7 +247,9 @@ BEGIN
          , CASE WHEN tmpMI_All.Amount_Production_out <> 0 THEN tmpMI_All.Summ_Production_out / tmpMI_All.Amount_Production_out ELSE 0 END :: TFloat AS Price_Loss_diff
 
          , CASE WHEN tmpMI_All.Amount_Separate_out <> 0 THEN 100 - 100 * COALESCE (tmpMI_Separate.CountIn, 0) / tmpMI_All.Amount_Separate_out ELSE 0 END :: TFloat AS Tax_Separate_diff
-
+         , tmpMI_All.Summ_Production_out   :: TFloat AS Summ_Production_out
+         , tmpMI_All.Amount_Production_out :: TFloat AS Amount_Production_out
+         , COALESCE (tmpMI_Separate.CountIn, 0) :: TFloat AS Separate_CountIn
      FROM tmpMI_All
           LEFT JOIN tmpMI_Separate ON tmpMI_Separate.GoodsId = tmpMI_All.GoodsId
                                   AND tmpMI_Separate.PartionGoodsId = tmpMI_All.PartionGoodsId

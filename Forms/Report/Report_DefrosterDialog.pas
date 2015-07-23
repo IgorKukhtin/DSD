@@ -1,4 +1,4 @@
-unit Report_GoodsMI_IncomeDialog;
+unit Report_DefrosterDialog;
 
 interface
 
@@ -12,7 +12,7 @@ uses
   dxSkinsDefaultPainters, cxCheckBox;
 
 type
-  TReport_GoodsMI_IncomeDialogForm = class(TParentForm)
+  TReport_DefrosterDialogForm = class(TParentForm)
     cxButton1: TcxButton;
     cxButton2: TcxButton;
     deEnd: TcxDateEdit;
@@ -21,26 +21,12 @@ type
     dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn;
     cxPropertiesStore: TcxPropertiesStore;
     FormParams: TdsdFormParams;
-    edGoodsGroup: TcxButtonEdit;
-    GuidesGoodsGroup: TdsdGuides;
-    edUnitGroup: TcxButtonEdit;
+    edUnit: TcxButtonEdit;
     cxLabel3: TcxLabel;
-    cxLabel1: TcxLabel;
-    GuidesUnitGroup: TdsdGuides;
     cxLabel6: TcxLabel;
     cxLabel7: TcxLabel;
-    cxLabel4: TcxLabel;
-    GuidesUnit: TdsdGuides;
-    edUnit: TcxButtonEdit;
-    edPaidKind: TcxButtonEdit;
-    cxLabel2: TcxLabel;
-    GuidesPaidKind: TdsdGuides;
-    cxLabel5: TcxLabel;
-    edJuridical: TcxButtonEdit;
-    JuridicalGuides: TdsdGuides;
-    cxLabel8: TcxLabel;
-    edInfoMoney: TcxButtonEdit;
-    InfoMoneyGuide: TdsdGuides;
+    cbPartionGoods: TcxCheckBox;
+    UnitGuides: TdsdGuides;
   private
     { Private declarations }
   public
@@ -52,6 +38,6 @@ implementation
 {$R *.dfm}
 
 initialization
-  RegisterClass(TReport_GoodsMI_IncomeDialogForm);
+  RegisterClass(TReport_DefrosterDialogForm);
 
 end.

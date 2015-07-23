@@ -2061,8 +2061,8 @@
 				<Form>Report_PersonalCompleteForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
-			<DCCReference Include="..\..\Forms\Report\Report_PersonalCompleteDialog.pas">
-				<Form>Report_PersonalCompleteDialogForm</Form>
+			<DCCReference Include="..\..\Forms\Report\Report_DefrosterDialog.pas">
+				<Form>Report_DefrosterDialogForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<DCCReference Include="..\..\Forms\Document\TaxJournalDialog.pas">
@@ -2155,6 +2155,10 @@
 			</DCCReference>
 			<DCCReference Include="..\..\Forms\Report\Report_GoodsMI_Internal.pas">
 				<Form>Report_GoodsMI_InternalForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Report\Report_PersonalCompleteDialog.pas">
+				<Form>Report_PersonalCompleteDialogForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<BuildConfiguration Include="Release">
