@@ -58,6 +58,8 @@ type
     actUpdate_Summ: TdsdExecStoredProc;
     bbUpdate_Summ: TdxBarButton;
     mactUpdate_SummAll: TMultiAction;
+    GoodsKindName_Complete: TcxGridDBColumn;
+    actGoodsKindCompleteChoiceMaster: TOpenChoiceForm;
   private
     { Private declarations }
   public

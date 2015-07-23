@@ -1651,26 +1651,28 @@ procedure TMainForm.StartProcess;
     procedure autoGuide;
     begin
                cbGoodsGroup.Checked:=true;//загрузка
-               cbJuridicalInt.Checked:=true;//загрузка
-               cbContractInt.Checked:=true;//загрузка Договора Int
-               cbPartnerInt.Checked:=true;//загрузка
+               //***cbJuridicalInt.Checked:=true;//загрузка
+               //***cbContractInt.Checked:=true;//загрузка Договора Int
+               //***cbPartnerInt.Checked:=true;//загрузка
                //Загружаем справочники
                OKGuideButtonClick(Self);
 
                cbGoodsGroup.Checked:=true;//загрузка
-               cbJuridicalInt.Checked:=false;//нет загрузка
-               cbContractInt.Checked:=false;//нет загрузка Договора Int
-               cbPartnerInt.Checked:=false;//нет загрузка
+               //***cbJuridicalInt.Checked:=false;//нет загрузка
+               //***cbContractInt.Checked:=false;//нет загрузка Договора Int
+               //***cbPartnerInt.Checked:=false;//нет загрузка
 
                cbMeasure.Checked:=true;//загрузка
                cbGoods.Checked:=true;//загрузка
                cbGoodsKind.Checked:=true;//загрузка
                cbPriceList.Checked:=true;//загрузка
                cbPriceListItems.Checked:=true;//загрузка
-               cbGoodsProperty_Detail.Checked:=true;//загрузка
-               cbGoodsPropertyValue.Checked:=true;//загрузка
-               cbGoodsByGoodsKind.Checked:=true;//загрузка
-               cbOrderType.Checked:=true;//загрузка
+               //***cbGoodsProperty_Detail.Checked:=true;//загрузка
+               //***cbGoodsPropertyValue.Checked:=true;//загрузка
+               //***cbGoodsByGoodsKind.Checked:=true;//загрузка
+               //***cbOrderType.Checked:=true;//загрузка
+               cbReceipt.Checked:=true;//загрузка
+               cbReceiptChild.Checked:=true;//загрузка
 
                //Загружаем справочники
                OKGuideButtonClick(Self);
@@ -1721,6 +1723,10 @@ begin
                OKCompleteDocumentButtonClick(Self);
      end;
 
+     if ParamStr(2)='autoGuide'
+     then begin
+               autoGuide;
+     end;
      if ParamStr(2)='autoNal'
      then begin
                autoGuide;
@@ -2606,9 +2612,10 @@ begin
                      +'        when fCheckGoodsParentID(2787,Goods.ParentId) =zc_rvYes() then 10201' // 0)СД-КУХНЯ - 10201		Основное сырье Прочее сырье	Специи
                      +'        when fCheckGoodsParentID(2647,Goods.ParentId) =zc_rvYes() then 10201' // 0)СД-ПЕКАРНЯ - 10201		Основное сырье Прочее сырье	Специи
 
-                     +'        when fCheckGoodsParentID(10523,Goods.ParentId) =zc_rvYes() then 70102' // 6)СД-Производственное оборудование - 70101	Инвестиции Капитальные инвестиции Производственное оборудование
+                     +'        when fCheckGoodsParentID(10523,Goods.ParentId) =zc_rvYes() then 20101' //!!!70102!!! 6)СД-Производственное оборудование - 70101	Инвестиции Капитальные инвестиции Производственное оборудование
+                     +'        when fCheckGoodsParentID(10577,Goods.ParentId) =zc_rvYes() then 20101' // !!!70103!!! СД-Торговое оборудование - 70103 Инвестиции Капитальные инвестиции Торговое оборудование
+
                      +'        when fCheckGoodsParentID(10576,Goods.ParentId) =zc_rvYes() then 20304' // 3)СД-СПЕЦИНСТРУМЕНТ  - 20304	Общефирменные МНМА Специнструменты
-                     +'        when fCheckGoodsParentID(10577,Goods.ParentId) =zc_rvYes() then 70103' // СД-Торговое оборудование - 70103 Инвестиции Капитальные инвестиции Торговое оборудование
                      +'        when Goods.ParentId in (5857) then 10203' // 0)СД-ТУШЕНКА - 10203		Основное сырье Прочее сырье	Упаковка
                      +'        when Goods.Id in (6041, 7013) then 10201' // 0)СД-ТУШЕНКА - 10201		Основное сырье Прочее сырье	Специи
 

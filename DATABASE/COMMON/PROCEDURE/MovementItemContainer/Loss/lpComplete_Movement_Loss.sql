@@ -306,7 +306,7 @@ BEGIN
             , 0                                       AS ParentId
             , -1 * _tmpItem.OperCount
             , vbOperDate
-            , TRUE
+            , FALSE
        FROM _tmpItem;
 
 
@@ -352,7 +352,7 @@ BEGIN
             , 0                                       AS ParentId
             , -1 * _tmpItemSumm.OperSumm
             , vbOperDate
-            , TRUE
+            , FALSE
        FROM _tmpItem
             JOIN _tmpItemSumm ON _tmpItemSumm.MovementItemId = _tmpItem.MovementItemId;
 

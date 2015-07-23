@@ -35,7 +35,7 @@ end;
 procedure TDefaults.SetUp;
 begin
   inherited;
-  TAuthentication.CheckLogin(TStorageFactory.GetStorage, 'Админ', 'Админ', gc_User);
+  TAuthentication.CheckLogin(TStorageFactory.GetStorage, 'Админ', gc_AdminPassword, gc_User);
 end;
 
 procedure TDefaults.TearDown;

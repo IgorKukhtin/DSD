@@ -94,7 +94,9 @@ BEGIN
                                                                                    THEN (SELECT Movement.OperDate FROM Movement WHERE Movement.Id = vbMovementId_order)
                                                                               ELSE NULL
                                                                          END
-                                                   , inOperDatePartner:= CASE WHEN vbMovementId_order <> 0
+                                                   , inOperDatePartner:= CASE WHEN 1=0 AND inBranchCode = 201 -- Dnepr-OBV
+                                                                                   THEN (SELECT tmpOperDate.OperDate FROM gpGet_Scale_OperDate (inIsCeh:= FALSE, inBranchCode:= inBranchCode, inSession:= inSession) AS tmpOperDate)
+                                                                              WHEN vbMovementId_order <> 0
                                                                                    THEN NULL
                                                                               ELSE (SELECT tmpOperDate.OperDate FROM gpGet_Scale_OperDate (inIsCeh:= FALSE, inBranchCode:= inBranchCode, inSession:= inSession) AS tmpOperDate)
                                                                          END

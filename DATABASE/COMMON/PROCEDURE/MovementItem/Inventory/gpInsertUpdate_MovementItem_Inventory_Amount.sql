@@ -26,6 +26,7 @@ BEGIN
                                                   , inCount              := 0
                                                   , inPartionGoods       := NULL
                                                   , inGoodsKindId        := tmp.GoodsKindId
+                                                  , inGoodsKindCompleteId:= tmp.GoodsKindCompleteId
                                                   , inAssetId            := NULL
                                                   , inUnitId             := NULL
                                                   , inStorageId          := NULL
@@ -34,10 +35,12 @@ BEGIN
      FROM (SELECT tmpMI.MovementItemId                                   AS MovementItemId
                 , COALESCE (tmpContainer.GoodsId, tmpMI.GoodsId)         AS GoodsId
                 , COALESCE (tmpContainer.GoodsKindId, tmpMI.GoodsKindId) AS GoodsKindId
+                , COALESCE (tmpContainer.GoodsKindCompleteId, tmpMI.GoodsKindCompleteId) AS GoodsKindCompleteId
                 , COALESCE (tmpContainer.Amount_End,0)                   AS Amount_End
 
            FROM (SELECT tmpContainer.GoodsId
                       , COALESCE (CLO_GoodsKind.ObjectId, 0) AS GoodsKindId
+                      , COALESCE (CLO_GoodsKindComplete.ObjectId, 0) AS GoodsKindCompleteId
                       , SUM (tmpContainer.Amount_End)        AS Amount_End
                  FROM
                 (SELECT Container.Id                                                AS ContainerId
@@ -64,6 +67,9 @@ BEGIN
                 LEFT JOIN ContainerLinkObject AS CLO_GoodsKind
                                               ON CLO_GoodsKind.ContainerId = tmpContainer.ContainerId
                                              AND CLO_GoodsKind.DescId = zc_ContainerLinkObject_GoodsKind()
+                LEFT JOIN ContainerLinkObject AS CLO_GoodsKindComplete
+                                              ON CLO_GoodsKindComplete.ContainerId = tmpContainer.ContainerId
+                                             AND CLO_GoodsKindComplete.DescId = zc_ContainerLinkObject_GoodsKindComplete()
                  GROUP BY tmpContainer.GoodsId
                         , COALESCE (CLO_GoodsKind.ObjectId, 0)
                  HAVING SUM (tmpContainer.Amount_End) <> 0
@@ -72,15 +78,20 @@ BEGIN
                 FULL JOIN (SELECT MovementItem.Id                               AS MovementItemId
                                 , MovementItem.ObjectId                         AS GoodsId
                                 , COALESCE (MILinkObject_GoodsKind.ObjectId, 0) AS GoodsKindId
+                                , COALESCE (MILinkObject_GoodsKindComplete.ObjectId, 0) AS GoodsKindCompleteId
                            FROM Movement
                                 INNER JOIN MovementItem ON Movement.id = MovementItem.MovementId
                                                        AND MovementItem.isErased = FALSE
                                 LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
                                                                  ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
                                                                 AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind() 
+                                LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKindComplete
+                                                                 ON MILinkObject_GoodsKindComplete.MovementItemId = MovementItem.Id
+                                                                AND MILinkObject_GoodsKindComplete.DescId = zc_MILinkObject_GoodsKindComplete() 
                            WHERE Movement.Id =  inMovementId
                           ) AS tmpMI ON tmpMI.GoodsId = tmpContainer.GoodsId
                                     AND tmpMI.GoodsKindId = tmpContainer.GoodsKindId
+                                    AND tmpMI.GoodsKindCompleteId = tmpContainer.GoodsKindCompleteId
            
            ) AS tmp;
 

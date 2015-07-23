@@ -264,10 +264,17 @@ BEGIN
           -- 2.2. так для продажи + НЕ ГП
           IF inMovementDescId = zc_Movement_Sale()
           THEN
+              IF inOperDatePartner IS NULL
+              THEN
+                  -- поиск даты для ...
+                  inOperDatePartner:= inOperDate_order :: Date + COALESCE ((SELECT ObjectFloat.ValueData FROM ObjectFloat WHERE ObjectFloat.ObjectId = inPartnerId AND ObjectFloat.DescId = zc_ObjectFloat_Partner_PrepareDayCount()), 0) :: Integer
+                                                               + COALESCE ((SELECT ObjectFloat.ValueData FROM ObjectFloat WHERE ObjectFloat.ObjectId = inPartnerId AND ObjectFloat.DescId = zc_ObjectFloat_Partner_DocumentDayCount()), 0) :: Integer
+                                                               ;
+              END IF;
               --
               WITH tmpPartner AS (SELECT inPartnerId AS PartnerId, inContractId AS ContractId, vbJuridicalId AS JuridicalId)
               INSERT INTO _tmpPriceList_onDate (OperDate, PriceListId, DescId)
-                 SELECT COALESCE (inOperDatePartner, inOperDate_order) AS OperDate
+                 SELECT inOperDatePartner AS OperDate
                       , COALESCE (ObjectLink_Partner_PriceList30103.ChildObjectId
                       , COALESCE (ObjectLink_Partner_PriceList30201.ChildObjectId
                       , COALESCE (ObjectLink_Contract_PriceList.ChildObjectId

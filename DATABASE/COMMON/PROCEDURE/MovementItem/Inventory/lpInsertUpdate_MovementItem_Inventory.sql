@@ -1,6 +1,7 @@
 -- Function: lpInsertUpdate_MovementItem_Inventory()
 
 DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_Inventory (Integer, Integer, Integer, TFloat, TDateTime, TFloat, TFloat, TFloat, TFloat, TVarChar, Integer, Integer, Integer, Integer, Integer);
+DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_Inventory (Integer, Integer, Integer, TFloat, TDateTime, TFloat, TFloat, TFloat, TFloat, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer);
 
 CREATE OR REPLACE FUNCTION lpInsertUpdate_MovementItem_Inventory(
  INOUT ioId                  Integer   , -- Ключ объекта <Элемент документа>
@@ -14,6 +15,7 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_MovementItem_Inventory(
     IN inCount               TFloat    , -- Количество батонов или упаковок
     IN inPartionGoods        TVarChar  , -- Партия товара/Инвентарный номер
     IN inGoodsKindId         Integer   , -- Виды товаров
+    IN inGoodsKindCompleteId Integer   , -- Виды товаров  ГП
     IN inAssetId             Integer   , -- Основные средства (для которых закупается ТМЦ)
     IN inUnitId              Integer   , -- Подразделение (для МО)
     IN inStorageId           Integer   , -- Место хранения
@@ -47,6 +49,8 @@ BEGIN
 
      -- сохранили связь с <Виды товаров>
      PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_GoodsKind(), ioId, inGoodsKindId);
+   -- сохранили связь с <Виды товаров ГП>
+   PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_GoodsKindComplete(), ioId, inGoodsKindCompleteId);
 
      -- сохранили связь с <Основные средства (для которых закупается ТМЦ)>
      PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_Asset(), ioId, inAssetId);

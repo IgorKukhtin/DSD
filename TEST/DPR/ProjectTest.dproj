@@ -2020,8 +2020,8 @@
 				<Form>RouteGroupEditForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
-			<DCCReference Include="..\..\Forms\Report\Report_GoodsMI_LossDialog.pas">
-				<Form>Report_GoodsMI_LossDialogForm</Form>
+			<DCCReference Include="..\..\Forms\Report\Report_GoodsMI_InternalDialog.pas">
+				<Form>Report_GoodsMI_InternalDialogForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<DCCReference Include="..\..\Forms\Report\Report_GoodsBalance.pas">
@@ -2153,8 +2153,8 @@
 				<Form>Report_GoodsMI_DialogForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
-			<DCCReference Include="..\..\Forms\Report\Report_GoodsMI_Loss.pas">
-				<Form>Report_GoodsMI_LossForm</Form>
+			<DCCReference Include="..\..\Forms\Report\Report_GoodsMI_Internal.pas">
+				<Form>Report_GoodsMI_InternalForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<BuildConfiguration Include="Release">

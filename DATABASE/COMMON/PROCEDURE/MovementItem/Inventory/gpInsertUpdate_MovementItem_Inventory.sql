@@ -1,6 +1,7 @@
 -- Function: gpInsertUpdate_MovementItem_Inventory()
 
 DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_Inventory (Integer, Integer, Integer, TFloat, TDateTime, TFloat, TFloat, TFloat, TFloat, TVarChar, Integer, Integer, Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_Inventory (Integer, Integer, Integer, TFloat, TDateTime, TFloat, TFloat, TFloat, TFloat, TVarChar, Integer, Integer, Integer, Integer, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_Inventory(
  INOUT ioId                  Integer   , -- Ключ объекта <Элемент документа>
@@ -14,6 +15,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_Inventory(
     IN inCount               TFloat    , -- Количество батонов или упаковок
     IN inPartionGoods        TVarChar  , -- Партия товара/Инвентарный номер
     IN inGoodsKindId         Integer   , -- Виды товаров
+    IN inGoodsKindCompleteId Integer   , -- Виды товаров  ГП
     IN inAssetId             Integer   , -- Основные средства (для которых закупается ТМЦ)
     IN inUnitId              Integer   , -- Подразделение (для МО)
     IN inStorageId           Integer   , -- Место хранения
@@ -41,6 +43,7 @@ BEGIN
                                                  , inCount              := inCount
                                                  , inPartionGoods       := inPartionGoods
                                                  , inGoodsKindId        := inGoodsKindId
+                                                 , inGoodsKindCompleteId:= inGoodsKindCompleteId
                                                  , inAssetId            := inAssetId
                                                  , inUnitId             := inUnitId
                                                  , inStorageId          := inStorageId

@@ -13,7 +13,7 @@ uses
   cxMaskEdit, cxDropDownEdit, cxCalendar, cxLabel, cxTextEdit, Vcl.ExtCtrls,
   cxGridLevel, cxGridCustomTableView, cxGridTableView, cxGridDBTableView,
   cxGridCustomView, cxGrid, cxPC, dxSkinsCore, dxSkinsDefaultPainters,
-  dxSkinscxPCPainter, dxSkinsdxBarPainter, cxSplitter;
+  dxSkinscxPCPainter, dxSkinsdxBarPainter, cxSplitter, cxCheckBox;
 
 type
   TProductionUnionForm = class(TAncestorDocumentMCForm)
@@ -52,6 +52,11 @@ type
     spSelectPrint1: TdsdStoredProc;
     actPrint1: TdsdPrintAction;
     bbPrint1: TdxBarButton;
+    actGoodsKindCompleteChoiceMaster: TOpenChoiceForm;
+    edIsAuto: TcxCheckBox;
+    cxLabel5: TcxLabel;
+    isAuto: TcxGridDBColumn;
+    edInsert: TcxDateEdit;
   private
     { Private declarations }
   public

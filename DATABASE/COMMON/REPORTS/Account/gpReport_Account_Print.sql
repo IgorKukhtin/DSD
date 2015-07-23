@@ -27,7 +27,15 @@ $BODY$
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Report_Account());
---     vbUserId:= lpGetUserBySession (inSession);
+     vbUserId:= lpGetUserBySession (inSession);
+
+     -- Блокируем ему просмотр
+     IF vbUserId = 9457 -- Климентьев К.И.
+     THEN
+         vbUserId:= NULL;
+         RETURN;
+     END IF;
+
 
     -- !!!криво!!!
     inAccountGroupId = zc_Enum_AccountGroup_40000(); -- Денежные средства

@@ -3,7 +3,7 @@ inherited ProductionUnionJournalForm: TProductionUnionJournalForm
   ClientHeight = 535
   ClientWidth = 1073
   ExplicitWidth = 1089
-  ExplicitHeight = 573
+  ExplicitHeight = 570
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -174,6 +174,21 @@ inherited ProductionUnionJournalForm: TProductionUnionJournalForm
             HeaderAlignmentVert = vaCenter
             Width = 70
           end
+          object InsertDate: TcxGridDBColumn
+            Caption = #1044#1072#1090#1072' '#1089#1086#1079#1076'. '#1082#1083#1072#1076#1086#1074#1097'.'
+            DataBinding.FieldName = 'InsertDate'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 105
+          end
+          object isAuto: TcxGridDBColumn
+            Caption = #1040#1074#1090'.'
+            DataBinding.FieldName = 'isAuto'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 36
+          end
         end
       end
     end
@@ -255,7 +270,6 @@ inherited ProductionUnionJournalForm: TProductionUnionJournalForm
           DataSet = PrintItemsCDS
           UserName = 'frxDBDMaster'
         end>
-      CopiesCount = 1
       Params = <
         item
           Name = 'Id'
@@ -300,7 +314,6 @@ inherited ProductionUnionJournalForm: TProductionUnionJournalForm
           DataSet = PrintItemsCDS
           UserName = 'frxDBDMaster'
         end>
-      CopiesCount = 1
       Params = <
         item
           Name = 'Id'
@@ -559,6 +572,9 @@ inherited ProductionUnionJournalForm: TProductionUnionJournalForm
       end>
     Left = 400
     Top = 200
+  end
+  inherited spMovementReComplete: TdsdStoredProc
+    StoredProcName = 'gpReComplete_Movement_ProductionUnion'
   end
   object PrintHeaderCDS: TClientDataSet
     Aggregates = <>

@@ -45,6 +45,9 @@ type
     PartnerName: TcxGridDBColumn;
     actPrint1: TdsdPrintAction;
     bbPrint1: TdxBarButton;
+    actUpdateDefroster: TdsdExecStoredProc;
+    spUpdateDefroster: TdsdStoredProc;
+    bbUpdateDefroster: TdxBarButton;
   private
     { Private declarations }
   public

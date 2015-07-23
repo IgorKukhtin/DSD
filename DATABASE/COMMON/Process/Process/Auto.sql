@@ -1,8 +1,8 @@
-CREATE OR REPLACE FUNCTION zc_Enum_Process_Auto_PartionDate() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_Process_Auto_PartionDate' AND DescId = zc_ObjectString_Enum()); END; $BODY$ LANGUAGE plpgsql IMMUTABLE;
+CREATE OR REPLACE FUNCTION zc_Enum_Process_Auto_PartionDate()  RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_Process_Auto_PartionDate'  AND DescId = zc_ObjectString_Enum()); END; $BODY$ LANGUAGE plpgsql IMMUTABLE;
 CREATE OR REPLACE FUNCTION zc_Enum_Process_Auto_PartionClose() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_Process_Auto_PartionClose' AND DescId = zc_ObjectString_Enum()); END; $BODY$ LANGUAGE plpgsql IMMUTABLE;
-CREATE OR REPLACE FUNCTION zc_Enum_Process_Auto_PrimeCost() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_Process_Auto_PrimeCost' AND DescId = zc_ObjectString_Enum()); END; $BODY$ LANGUAGE plpgsql IMMUTABLE;
-CREATE OR REPLACE FUNCTION zc_Enum_Process_Auto_Defroster() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_Process_Auto_Defroster' AND DescId = zc_ObjectString_Enum()); END; $BODY$ LANGUAGE plpgsql IMMUTABLE;
-
+CREATE OR REPLACE FUNCTION zc_Enum_Process_Auto_PrimeCost()    RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_Process_Auto_PrimeCost'    AND DescId = zc_ObjectString_Enum()); END; $BODY$ LANGUAGE plpgsql IMMUTABLE;
+CREATE OR REPLACE FUNCTION zc_Enum_Process_Auto_Defroster()    RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_Process_Auto_Defroster'    AND DescId = zc_ObjectString_Enum()); END; $BODY$ LANGUAGE plpgsql IMMUTABLE;
+CREATE OR REPLACE FUNCTION zc_Enum_Process_Auto_Pack()         RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_Process_Auto_Pack'         AND DescId = zc_ObjectString_Enum()); END; $BODY$ LANGUAGE plpgsql IMMUTABLE;
 
 DO $$
 BEGIN
@@ -30,8 +30,15 @@ BEGIN
  PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_Process_Auto_Defroster()
                                    , inDescId:= zc_Object_Process()
                                    , inCode:= 1004
-                                   , inName:= 'Расход партий П/Ф (ГП) при закрытии'
+                                   , inName:= 'Приход/расход схема Дефростер'
                                    , inEnumName:= 'zc_Enum_Process_Auto_Defroster');
+
+ -- для 
+ PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_Process_Auto_Pack()
+                                   , inDescId:= zc_Object_Process()
+                                   , inCode:= 1005
+                                   , inName:= 'Приход/расход Упаковка'
+                                   , inEnumName:= 'zc_Enum_Process_Auto_Pack');
  
 END $$;
 

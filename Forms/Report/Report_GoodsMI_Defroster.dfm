@@ -5,7 +5,7 @@ inherited Report_GoodsMI_DefrosterForm: TReport_GoodsMI_DefrosterForm
   AddOnFormData.isSingle = False
   AddOnFormData.Params = FormParams
   ExplicitWidth = 1074
-  ExplicitHeight = 572
+  ExplicitHeight = 569
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -560,6 +560,24 @@ inherited Report_GoodsMI_DefrosterForm: TReport_GoodsMI_DefrosterForm
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
     end
+    object actUpdateDefroster: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdateDefroster
+      StoredProcList = <
+        item
+          StoredProc = spUpdateDefroster
+        end
+        item
+          StoredProc = spSelect
+        end>
+      Caption = #1057#1092#1086#1088#1084#1080#1088#1086#1074#1072#1090#1100' '#1076#1072#1085#1085#1099#1077' <'#1057#1093#1077#1084#1072' '#1044#1077#1092#1088#1086#1089#1090#1077#1088'>'
+      Hint = #1057#1092#1086#1088#1084#1080#1088#1086#1074#1072#1090#1100' '#1076#1072#1085#1085#1099#1077' <'#1057#1093#1077#1084#1072' '#1044#1077#1092#1088#1086#1089#1090#1077#1088'>'
+      ImageIndex = 41
+      QuestionBeforeExecute = #1044#1077#1081#1089#1090#1074#1080#1090#1077#1083#1100#1085#1086' '#1089#1092#1086#1088#1084#1080#1088#1086#1074#1072#1090#1100' '#1076#1072#1085#1085#1099#1077' '#1079#1072' '#1087#1077#1088#1080#1086#1076' <'#1057#1093#1077#1084#1072' '#1044#1077#1092#1088#1086#1089#1090#1077#1088'>?'
+      InfoAfterExecute = #1047#1072#1074#1077#1088#1096#1077#1085#1086' '#1092#1086#1088#1084#1080#1088#1086#1074#1072#1085#1080#1077' '#1076#1072#1085#1085#1099#1093' '#1079#1072' '#1087#1077#1088#1080#1086#1076' <'#1057#1093#1077#1084#1072' '#1044#1077#1092#1088#1086#1089#1090#1077#1088'>.'
+    end
   end
   inherited MasterDS: TDataSource
     Left = 72
@@ -640,6 +658,14 @@ inherited Report_GoodsMI_DefrosterForm: TReport_GoodsMI_DefrosterForm
         end
         item
           Visible = True
+          ItemName = 'bbUpdateDefroster'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbPrint'
         end
         item
@@ -675,6 +701,10 @@ inherited Report_GoodsMI_DefrosterForm: TReport_GoodsMI_DefrosterForm
       Action = actPrint1
       Category = 0
       ShortCut = 16465
+    end
+    object bbUpdateDefroster: TdxBarButton
+      Action = actUpdateDefroster
+      Category = 0
     end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
@@ -772,5 +802,35 @@ inherited Report_GoodsMI_DefrosterForm: TReport_GoodsMI_DefrosterForm
         ParamType = ptInput
       end>
     Left = 360
+  end
+  object spUpdateDefroster: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Movement_ProductionUnion_Defroster'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inStartDate'
+        Value = Null
+        Component = deStart
+        DataType = ftDateTime
+        ParamType = ptInput
+      end
+      item
+        Name = 'inEndDate'
+        Value = Null
+        Component = deEnd
+        DataType = ftDateTime
+        ParamType = ptInput
+      end
+      item
+        Name = 'inUnitId'
+        Value = Null
+        Component = UnitGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+      end>
+    PackSize = 1
+    Left = 193
+    Top = 345
   end
 end

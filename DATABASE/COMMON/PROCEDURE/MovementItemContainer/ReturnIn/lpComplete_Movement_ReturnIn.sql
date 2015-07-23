@@ -89,15 +89,21 @@ BEGIN
 
 
      -- !!! только для Админа нужны проводки с/с (сделано для ускорения проведения)!!!
-     IF (EXISTS (SELECT UserId FROM ObjectLink_UserRole_View WHERE UserId = inUserId AND RoleId = zc_Enum_Role_Admin())
-         AND inIsLastComplete = FALSE
-        )
+     IF EXISTS (SELECT 1 FROM ObjectLink_UserRole_View AS View_UserRole WHERE View_UserRole.UserId = inUserId AND View_UserRole.RoleId = zc_Enum_Role_Admin())
+     THEN IF inIsLastComplete = FALSE
      -- !!! нужны еще для Запорожья, понятно что временно!!!
      -- !!! OR 301310 = (SELECT Object_RoleAccessKeyGuide_View.BranchId FROM Object_RoleAccessKeyGuide_View WHERE Object_RoleAccessKeyGuide_View.UserId = inUserId AND Object_RoleAccessKeyGuide_View.BranchId <> 0 GROUP BY Object_RoleAccessKeyGuide_View.BranchId)
      -- !!! нужны еще для Одесса, понятно что временно!!!
      -- !!! OR 8374 = (SELECT Object_RoleAccessKeyGuide_View.BranchId FROM Object_RoleAccessKeyGuide_View WHERE Object_RoleAccessKeyGuide_View.UserId = inUserId AND Object_RoleAccessKeyGuide_View.BranchId <> 0 GROUP BY Object_RoleAccessKeyGuide_View.BranchId)
-     THEN vbIsHistoryCost:= TRUE;
-     ELSE vbIsHistoryCost:= FALSE;
+          THEN vbIsHistoryCost:= TRUE;
+          ELSE vbIsHistoryCost:= FALSE;
+     ELSE
+         -- !!! для остальных тоже нужны проводки с/с!!!
+         IF 0 < (SELECT 1 FROM Object_RoleAccessKeyGuide_View AS View_RoleAccessKeyGuide WHERE View_RoleAccessKeyGuide.UserId = inUserId AND View_RoleAccessKeyGuide.BranchId <> 0 GROUP BY View_RoleAccessKeyGuide.BranchId LIMIT 1)
+           OR EXISTS (SELECT 1 FROM ObjectLink_UserRole_View AS View_UserRole WHERE View_UserRole.UserId = inUserId AND View_UserRole.RoleId IN (428382)) -- Кладовщик Днепр
+         THEN vbIsHistoryCost:= FALSE;
+         ELSE vbIsHistoryCost:= TRUE;
+         END IF;
      END IF;
 
 

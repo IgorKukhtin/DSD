@@ -558,7 +558,7 @@ BEGIN
                    LEFT JOIN HistoryCost ON HistoryCost.ContainerId = Container_Summ.Id
                                         AND vbOperDate BETWEEN HistoryCost.StartDate AND HistoryCost.EndDate
              UNION ALL
-              -- это расчетные остатки (их надо вычесть) - !!!для филиала!!!
+              -- это расчетные остатки (их надо вычесть) - !!!для филиала + "наши" подр после '01.07.2015'!!!
               SELECT _tmpRemainsCount.MovementItemId
                    , COALESCE (Container_Summ.Id, 0) AS ContainerId
                    , COALESCE (Container_Summ.ObjectId, 0) AS AccountId
@@ -569,16 +569,16 @@ BEGIN
                                                         AND vbOperDate >= '01.06.2014'
                    LEFT JOIN HistoryCost ON HistoryCost.ContainerId = Container_Summ.Id
                                         AND vbOperDate BETWEEN HistoryCost.StartDate AND HistoryCost.EndDate
-              WHERE vbPriceListId <> 0
+              WHERE vbPriceListId <> 0 OR vbOperDate >= '01.07.2015'
              UNION ALL
-              -- это расчетные остатки (их надо вычесть) -- !!!для "наших" подр!!!!
+              -- это расчетные остатки (их надо вычесть) -- !!!для "наших" подр до '01.07.2015'!!!!
                SELECT _tmpRemainsCount.MovementItemId
                    , _tmpRemainsSumm.ContainerId
                    , _tmpRemainsSumm.AccountId
                    , -1 * _tmpRemainsSumm.OperSumm AS OperSumm
               FROM _tmpRemainsSumm
                    LEFT JOIN _tmpRemainsCount ON _tmpRemainsCount.ContainerId_Goods = _tmpRemainsSumm.ContainerId_Goods
-              WHERE vbPriceListId = 0
+              WHERE vbPriceListId = 0 AND vbOperDate < '01.07.2015'
              ) AS _tmp
         WHERE  zc_isHistoryCost() = TRUE
         GROUP BY _tmp.MovementItemId

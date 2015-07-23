@@ -1,10 +1,11 @@
-inherited Report_GoodsMI_LossForm: TReport_GoodsMI_LossForm
+inherited Report_GoodsMI_InternalForm: TReport_GoodsMI_InternalForm
   Caption = #1054#1090#1095#1077#1090' <'#1087#1086' '#1090#1086#1074#1072#1088#1072#1084'>'
   ClientHeight = 352
   ClientWidth = 1143
   AddOnFormData.isSingle = False
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
+  ExplicitLeft = -308
   ExplicitWidth = 1159
   ExplicitHeight = 390
   PixelsPerInch = 96
@@ -219,6 +220,14 @@ inherited Report_GoodsMI_LossForm: TReport_GoodsMI_LossForm
             HeaderAlignmentVert = vaCenter
             Width = 80
           end
+          object PriceOut: TcxGridDBColumn
+            Caption = #1062#1077#1085#1072' ('#1088#1072#1089#1093')'
+            DataBinding.FieldName = 'PriceOut'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 60
+          end
           object SummOut_Total: TcxGridDBColumn
             Caption = #1057#1091#1084#1084#1072' '#1089'/'#1089'  '#1048#1090#1086#1075#1086' ('#1088#1072#1089#1093')'
             DataBinding.FieldName = 'SummOut_Total'
@@ -268,6 +277,14 @@ inherited Report_GoodsMI_LossForm: TReport_GoodsMI_LossForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 80
+          end
+          object PriceIn: TcxGridDBColumn
+            Caption = #1062#1077#1085#1072' ('#1087#1088#1080#1093')'
+            DataBinding.FieldName = 'PriceIn'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 60
           end
           object SummIn_Total: TcxGridDBColumn
             Caption = #1057#1091#1084#1084#1072' '#1089'/'#1089'  '#1048#1090#1086#1075#1086' ('#1087#1088#1080#1093')'
@@ -424,8 +441,8 @@ inherited Report_GoodsMI_LossForm: TReport_GoodsMI_LossForm
       Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1072#1088#1072#1084#1077#1090#1088#1099' '#1086#1090#1095#1077#1090#1072
       Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1072#1088#1072#1084#1077#1090#1088#1099' '#1086#1090#1095#1077#1090#1072
       ImageIndex = 35
-      FormName = 'TReport_GoodsMI_LossDialogForm'
-      FormNameParam.Value = 'TReport_GoodsMI_LossDialogForm'
+      FormName = 'TReport_GoodsMI_InternalDialogForm'
+      FormNameParam.Value = 'TReport_GoodsMI_InternalDialogForm'
       FormNameParam.DataType = ftString
       GuiParams = <
         item
@@ -515,7 +532,7 @@ inherited Report_GoodsMI_LossForm: TReport_GoodsMI_LossForm
     Top = 208
   end
   inherited spSelect: TdsdStoredProc
-    StoredProcName = 'gpReport_GoodsMI_Loss'
+    StoredProcName = 'gpReport_GoodsMI_Internal'
     Params = <
       item
         Name = 'inStartDate'

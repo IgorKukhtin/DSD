@@ -2,13 +2,16 @@
 
 -- DROP FUNCTION IF EXISTS gpSelect_Scale_Goods (TDateTime, Integer, Integer, Integer, TVarChar);
 -- DROP FUNCTION IF EXISTS gpSelect_Scale_Goods (TDateTime, Integer, Integer, Integer, Integer, TVarChar);
-DROP FUNCTION IF EXISTS gpSelect_Scale_Goods (Boolean, TDateTime, Integer, Integer, Integer, TVarChar);
+-- DROP FUNCTION IF EXISTS gpSelect_Scale_Goods (Boolean, TDateTime, Integer, Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_Scale_Goods (Boolean, TDateTime, Integer, Integer, Integer, Integer, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_Scale_Goods(
     IN inIsGoodsComplete       Boolean  ,    -- склад ГП/производство/упаковка or обвалка
     IN inOperDate              TDateTime,
+    IN inMovementId            Integer,
     IN inOrderExternalId       Integer,
     IN inPriceListId           Integer,
+    IN inGoodsCode             Integer,
     IN inDayPrior_PriceReturn  Integer,
     IN inSession               TVarChar      -- сессия пользователя
 )
@@ -35,11 +38,20 @@ AS
 $BODY$
     DECLARE vbUserId Integer;
 
-    DECLARE vbRetailId Integer;
-    DECLARE vbFromId Integer;
+    DECLARE vbRetailId    Integer;
+    DECLARE vbFromId      Integer;
+    DECLARE vbGoodsId     Integer;
+    DECLARE vbOperDate_price TDateTime;
+    DECLARE vbPriceListId Integer;
 BEGIN
    -- проверка прав пользователя на вызов процедуры
    vbUserId:= lpGetUserBySession (inSession);
+
+
+   -- товар которого нет как бы в заявке, но его все равно надо провести
+   IF inOrderExternalId <> 0 AND inGoodsCode <> 0 THEN vbGoodsId:= (SELECT Object.Id FROM Object WHERE Object.ObjectCode = inGoodsCode AND Object.DescId = zc_Object_Goods() AND Object.isErased = FALSE);
+   END IF;
+
 
    IF inOrderExternalId <> 0
    THEN
@@ -56,6 +68,22 @@ BEGIN
                                           ON MovementLinkObject_From.MovementId = Movement.Id
                                          AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
         WHERE Movement.Id = inOrderExternalId;
+
+
+         IF vbGoodsId <> 0
+         THEN
+              -- определили
+              SELECT tmp.PriceListId, tmp.OperDate
+                    INTO vbPriceListId, vbOperDate_price
+              FROM lfGet_Object_Partner_PriceList_onDate (inContractId     := COALESCE ((SELECT MLO.ObjectId FROM MovementLinkObject AS MLO WHERE MLO.MovementId = inMovementId AND MLO.DescId = zc_MovementLinkObject_Contract()), 1)
+                                                        , inPartnerId      := (SELECT MLO.ObjectId FROM MovementLinkObject AS MLO WHERE MLO.MovementId = inMovementId AND MLO.DescId = zc_MovementLinkObject_From())
+                                                        , inMovementDescId := zc_Movement_Sale()
+                                                        , inOperDate_order := COALESCE ((SELECT Movement.OperDate FROM Movement WHERE Movement.Id = inOrderExternalId), CURRENT_TIMESTAMP)
+                                                        , inOperDatePartner:= NULL
+                                                        , inDayPrior_PriceReturn:= NULL
+                                                        , inIsPrior        := FALSE -- !!!отказались от старых цен!!!
+                                                         ) AS tmp;
+         END IF;
 
 
     -- Результат - по заявке
@@ -151,6 +179,18 @@ BEGIN
                                  , tmpMI.CountForPrice
                                  , tmpMI.isTare
                             FROM tmpMI_Order AS tmpMI
+                           UNION ALL
+                            SELECT tmp.GoodsId
+                                 , 0            AS GoodsKindId
+                                 , 0            AS Amount_Order
+                                 , 0            AS Amount_Weighing
+                                 , (SELECT lpGet.ValuePrice FROM lpGet_ObjectHistory_PriceListItem (vbOperDate_price, vbPriceListId, vbGoodsId) AS lpGet) AS Price
+                                 , 1 AS CountForPrice -- плохое решение
+                                 , FALSE AS isTare
+                            FROM (SELECT vbGoodsId AS GoodsId) AS tmp
+                                 LEFT JOIN tmpMI_Order ON tmpMI_Order.GoodsId = tmp.GoodsId
+                                 LEFT JOIN tmpMI_Weighing ON tmpMI_Weighing.GoodsId = tmp.GoodsId
+                            WHERE tmpMI_Order.GoodsId IS NULL AND tmpMI_Weighing.GoodsId IS NULL
                            UNION ALL
                             SELECT tmpMI.GoodsId
                                  , tmpMI.GoodsKindId
@@ -335,7 +375,7 @@ BEGIN
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpSelect_Scale_Goods (Boolean, TDateTime, Integer, Integer, Integer, TVarChar) OWNER TO postgres;
+ALTER FUNCTION gpSelect_Scale_Goods (Boolean, TDateTime, Integer, Integer, Integer, Integer, Integer, TVarChar) OWNER TO postgres;
 
 /*-------------------------------------------------------------------------------*/
 /*
@@ -345,4 +385,4 @@ ALTER FUNCTION gpSelect_Scale_Goods (Boolean, TDateTime, Integer, Integer, Integ
 */
 
 -- тест
--- SELECT * FROM gpSelect_Scale_Goods (inIsGoodsComplete:= TRUE, inOperDate:= '01.01.2015', inOrderExternalId:=0, inPriceListId:=0, inDayPrior_PriceReturn:= 10, inSession:=zfCalc_UserAdmin())
+-- SELECT * FROM gpSelect_Scale_Goods (inIsGoodsComplete:= TRUE, inOperDate:= '01.01.2015', inMovementId:= 0, inOrderExternalId:=1, inPriceListId:=0, inGoodsCode:= 4444, inDayPrior_PriceReturn:= 10, inSession:=zfCalc_UserAdmin())

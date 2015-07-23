@@ -81,8 +81,19 @@ BEGIN
                        THEN MovementDate_OperDatePartner.ValueData -- совпадает с датой контрагента
                   ELSE DATE_TRUNC ('MONTH', Movement.OperDate) + INTERVAL '1 MONTH' - INTERVAL '1 DAY' -- будет последним днем месяца
              END AS OperDate
-           , DATE_TRUNC ('MONTH', CASE WHEN Movement.DescId = zc_Movement_Tax() THEN Movement.OperDate ELSE COALESCE (MovementDate_OperDatePartner.ValueData, Movement.OperDate) END) AS StartDate
-           , DATE_TRUNC ('MONTH', CASE WHEN Movement.DescId = zc_Movement_Tax() THEN Movement.OperDate ELSE COALESCE (MovementDate_OperDatePartner.ValueData, Movement.OperDate) END) + INTERVAL '1 MONTH' - INTERVAL '1 DAY' AS EndDate
+
+           , CASE WHEN COALESCE (ObjectFloat_Juridical_DayTaxSummary.ValueData, 0) = 0
+                    OR EXTRACT ('MONTH' FROM Movement.OperDate) <> EXTRACT ('MONTH' FROM Movement.OperDate - ((ObjectFloat_Juridical_DayTaxSummary.ValueData - 1) :: TVarChar || ' DAY') :: INTERVAL)
+                       THEN DATE_TRUNC ('MONTH', CASE WHEN Movement.DescId = zc_Movement_Tax() THEN Movement.OperDate ELSE COALESCE (MovementDate_OperDatePartner.ValueData, Movement.OperDate) END)
+                  WHEN COALESCE (ObjectFloat_Juridical_DayTaxSummary.ValueData, 0) > 0
+                       THEN Movement.OperDate - ((ObjectFloat_Juridical_DayTaxSummary.ValueData - 1) :: TVarChar || ' DAY') :: INTERVAL
+             END AS StartDate
+           , CASE WHEN COALESCE (ObjectFloat_Juridical_DayTaxSummary.ValueData, 0) = 0
+                       THEN DATE_TRUNC ('MONTH', CASE WHEN Movement.DescId = zc_Movement_Tax() THEN Movement.OperDate ELSE COALESCE (MovementDate_OperDatePartner.ValueData, Movement.OperDate) END) + INTERVAL '1 MONTH' - INTERVAL '1 DAY'
+                  WHEN COALESCE (ObjectFloat_Juridical_DayTaxSummary.ValueData, 0) > 0
+                       THEN Movement.OperDate
+             END AS EndDate
+
            , MovementBoolean_PriceWithVAT.ValueData AS PriceWithVAT
            , MovementFloat_VATPercent.ValueData     AS VATPercent
            , ObjectLink_Contract_JuridicalBasis.ChildObjectId AS FromId -- От кого - всегда главное юр.лицо из договора
@@ -152,6 +163,10 @@ BEGIN
            LEFT JOIN ObjectLink AS ObjectLink_Partner_Juridical
                                 ON ObjectLink_Partner_Juridical.ObjectId = MovementLinkObject_To.ObjectId
                                AND ObjectLink_Partner_Juridical.DescId = zc_ObjectLink_Partner_Juridical()
+           LEFT JOIN ObjectFloat AS ObjectFloat_Juridical_DayTaxSummary
+                                 ON ObjectFloat_Juridical_DayTaxSummary.ObjectId = CASE WHEN Movement.DescId = zc_Movement_Sale() THEN ObjectLink_Partner_Juridical.ChildObjectId ELSE MovementLinkObject_To.ObjectId END
+                                AND ObjectFloat_Juridical_DayTaxSummary.DescId = zc_ObjectFloat_Juridical_DayTaxSummary()
+
            LEFT JOIN ObjectLink AS ObjectLink_Contract_JuridicalBasis
                                 ON ObjectLink_Contract_JuridicalBasis.ObjectId = COALESCE (MovementLinkObject_ContractTo.ObjectId, MovementLinkObject_Contract.ObjectId)
                                AND ObjectLink_Contract_JuridicalBasis.DescId = zc_ObjectLink_Contract_JuridicalBasis()

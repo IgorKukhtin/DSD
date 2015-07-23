@@ -164,6 +164,8 @@ BEGIN
                                                               , inName            := tmpJuridical.JuridicalName
                                                               , inGLNCode         := NULL
                                                               , inisCorporate     := FALSE
+                                                              , inisTaxSummary     := NULL
+                                                              , inDayTaxSummary    := 0
                                                               , inJuridicalGroupId:= vbJuridicalGroupId
                                                               , inGoodsPropertyId := NULL
                                                               , inRetailId        := NULL

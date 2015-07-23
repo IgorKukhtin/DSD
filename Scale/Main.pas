@@ -181,6 +181,8 @@ type
     Label17: TLabel;
     OperDateEdit: TcxDateEdit;
     bbChangePartionGoods: TSpeedButton;
+    bbSale_Order_all: TSpeedButton;
+    bbSale_Order_diff: TSpeedButton;
     procedure FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
     procedure FormCreate(Sender: TObject);
     procedure PanelWeight_ScaleDblClick(Sender: TObject);
@@ -202,6 +204,8 @@ type
     procedure actUpdateBoxExecute(Sender: TObject);
     procedure bbChangeBoxCountClick(Sender: TObject);
     procedure bbChangePartionGoodsClick(Sender: TObject);
+    procedure bbSale_Order_allClick(Sender: TObject);
+    procedure bbSale_Order_diffClick(Sender: TObject);
   private
     Scale_BI: TCasBI;
     Scale_DB: TCasDB;
@@ -1105,6 +1109,9 @@ end;
 //------------------------------------------------------------------------------------------------
 procedure TMainForm.FormKeyDown(Sender: TObject; var Key: Word;Shift: TShiftState);
 begin
+     if Key = VK_F8 then bbSale_Order_allClick(Self);
+     if Key = VK_F9 then bbSale_Order_diffClick(Self);
+
      if Key = VK_F5 then Save_Movement_all;
      if Key = VK_F2 then GetParams_MovementDesc('');
      if Key = VK_SPACE then begin Key:= 0; GetParams_Goods(FALSE,''); end;//isRetail=FALSE
@@ -1158,6 +1165,16 @@ begin
                    RefreshDataSet;
                    WriteParamsMovement;
               end
+end;
+{------------------------------------------------------------------------}
+procedure TMainForm.bbSale_Order_allClick(Sender: TObject);
+begin
+     with ParamsMovement do Print_Sale_Order(ParamByName('OrderExternalId').AsInteger,ParamByName('MovementId').AsInteger,FALSE);
+end;
+{------------------------------------------------------------------------}
+procedure TMainForm.bbSale_Order_diffClick(Sender: TObject);
+begin
+     with ParamsMovement do Print_Sale_Order(ParamByName('OrderExternalId').AsInteger,ParamByName('MovementId').AsInteger,TRUE);
 end;
 {------------------------------------------------------------------------}
 procedure TMainForm.actExitExecute(Sender: TObject);

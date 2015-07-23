@@ -165,6 +165,8 @@ begin
      begin
        Self.Caption:='Параметры продукции на основании '+execParamsMovement.ParamByName('OrderExternalName_master').asString;
        Params.ParamByName('inOrderExternalId').Value:=execParamsMovement.ParamByName('OrderExternalId').AsInteger;
+       Params.ParamByName('inMovementId').Value:=execParamsMovement.ParamByName('MovementId').AsInteger;
+       Params.ParamByName('inGoodsCode').Value:=0;
        Execute;
      end;
 
@@ -504,6 +506,8 @@ var Code_begin:Integer;
 begin
       if fStartWrite=true then exit;
 
+      try Code_begin:=StrToInt(EditGoodsCode.Text) except Code_begin:=0;end;
+
      {try Code_begin:=StrToInt(EditGoodsCode.Text) except Code_begin:=0;end;
      if (GoodsWeight<0.0001)//and(not((GoodsCode>=_CodeStartGoods_onEnterWeight)and(GoodsCode<=_CodeEndGoods_onEnterWeight)))
      then ActiveControl:=EditGoodsCode;
@@ -513,6 +517,13 @@ begin
      //
      if (CDS.Filtered=false)and(Length(trim(EditGoodsCode.Text))>0)
      then begin fEnterGoodsCode:=true;CDS.Filtered:=true;end;
+
+     if (CDS.RecordCount=0)and(ParamsMovement.ParamByName('OrderExternalId').asInteger<>0)and(Code_begin>0)
+     then begin spSelect.Params.ParamByName('inGoodsCode').Value:=Code_begin;
+                actRefreshExecute(Self);
+     end;
+
+
 
      if CDS.RecordCount=0
      then if ParamsMovement.ParamByName('OrderExternalId').asInteger<>0
@@ -1016,8 +1027,10 @@ begin
        OutputType:=otDataSet;
        Params.AddParam('inIsGoodsComplete', ftBoolean, ptInput, SettingMain.isGoodsComplete);
        Params.AddParam('inOperDate', ftDateTime, ptInput, ParamsMovement.ParamByName('OperDate').AsDateTime);
+       Params.AddParam('inMovementId', ftInteger, ptInput, 0);
        Params.AddParam('inOrderExternalId', ftInteger, ptInput, 0);
        Params.AddParam('inPriceListId', ftInteger, ptInput, 0);
+       Params.AddParam('inGoodsCode', ftInteger, ptInput, 0);
        Params.AddParam('inDayPrior_PriceReturn', ftInteger, ptInput,GetArrayList_Value_byName(Default_Array,'DayPrior_PriceReturn'));
        Execute;
   end;

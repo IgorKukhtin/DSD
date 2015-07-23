@@ -1497,8 +1497,8 @@ begin
 
   result := true;
   With TfrxReportExt.Create(Self) do
-    ExecuteReport(Self.FReportName,Self.FDataSets,Self.FParams,Self.FCopiesCount, Self.FWithOutPreview,
-      ShiftDown, Self.FModalPreview, Self.FPreviewWindowMaximized);
+    ExecuteReport(Self.ReportName,Self.DataSets,Self.Params,Self.CopiesCount, Self.WithOutPreview,
+      ShiftDown, Self.ModalPreview, Self.PreviewWindowMaximized);
 end;
 
 procedure TdsdPrintAction.Notification(AComponent: TComponent;
@@ -2483,8 +2483,10 @@ end;
 
 procedure TfrxReportExt.ClosePreview(Sender: TObject);
 begin
-  if Assigned(FReport) then //ClosePreview повторно вызывается при удалении frxReport
+  if Assigned(FReport) AND //ClosePreview повторно вызывается при удалении frxReport
+     not Assigned(FReport.Designer) then //Не нужно самоубиваться, если в режиме дизайна
     Self.Destroy;
 end;
 
 end.
+

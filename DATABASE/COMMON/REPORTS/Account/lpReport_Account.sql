@@ -50,6 +50,14 @@ $BODY$
    DECLARE vbIsMovement Boolean;
 BEGIN
 
+     -- Блокируем ему просмотр
+     IF inUserId = 9457 -- Климентьев К.И.
+     THEN
+         inUserId:= NULL;
+         RETURN;
+     END IF;
+
+
     -- !!!определяется - будет ли разворачиваться по документам для Прибыль текущего периода
     -- 
     vbIsMovement:= (((zc_Enum_Account_100301() NOT IN (SELECT AccountId FROM Object_Account_View WHERE (AccountGroupId = COALESCE (inAccountGroupId, 0) AND COALESCE (inAccountDirectionId, 0) = 0 AND COALESCE (inAccountId, 0) = 0)

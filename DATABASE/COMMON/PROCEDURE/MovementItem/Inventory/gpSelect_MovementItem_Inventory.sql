@@ -15,6 +15,7 @@ RETURNS TABLE (Id Integer, GoodsId Integer, GoodsCode Integer, GoodsName TVarCha
              , HeadCount TFloat, Count TFloat, Price TFloat, Summ TFloat
              , PartionGoodsDate TDateTime, PartionGoods TVarChar
              , GoodsKindId Integer, GoodsKindName  TVarChar
+             , GoodsKindId_Complete Integer, GoodsKindName_Complete  TVarChar
              , AssetId Integer, AssetName TVarChar
              , InfoMoneyCode Integer, InfoMoneyGroupName TVarChar, InfoMoneyDestinationName TVarChar, InfoMoneyName TVarChar
              , UnitId Integer, UnitName TVarChar
@@ -56,6 +57,8 @@ BEGIN
            , CAST (NULL AS TVarChar)            AS PartionGoods
            , Object_GoodsKind.Id                AS GoodsKindId
            , Object_GoodsKind.ValueData         AS GoodsKindName
+           , CAST (NULL AS Integer)                AS GoodsKindId_Complete
+           , CAST (NULL AS TVarchar)               AS GoodsKindName_Complete
            , CAST (0 AS Integer)                AS AssetId
            , CAST (NULL AS TVarChar)            AS AssetName
            , Object_InfoMoney_View.InfoMoneyCode
@@ -130,6 +133,8 @@ BEGIN
            , MIString_PartionGoods.ValueData    AS PartionGoods
            , Object_GoodsKind.Id                AS GoodsKindId
            , Object_GoodsKind.ValueData         AS GoodsKindName
+           , Object_GoodsKindComplete.Id         AS GoodsKindId_Complete
+           , Object_GoodsKindComplete.ValueData  AS GoodsKindName_Complete
            , Object_Asset.Id                    AS AssetId
            , Object_Asset.ValueData             AS AssetName
            , Object_InfoMoney_View.InfoMoneyCode
@@ -175,6 +180,11 @@ BEGIN
                                              ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
                                             AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
             LEFT JOIN Object AS Object_GoodsKind ON Object_GoodsKind.Id = MILinkObject_GoodsKind.ObjectId
+
+            LEFT JOIN MovementItemLinkObject AS MILO_GoodsKindComplete
+                                             ON MILO_GoodsKindComplete.MovementItemId = MovementItem.Id
+                                            AND MILO_GoodsKindComplete.DescId = zc_MILinkObject_GoodsKindComplete()
+            LEFT JOIN Object AS Object_GoodsKindComplete ON Object_GoodsKindComplete.Id = MILO_GoodsKindComplete.ObjectId
 
             LEFT JOIN MovementItemLinkObject AS MILinkObject_Asset
                                              ON MILinkObject_Asset.MovementItemId = MovementItem.Id
@@ -236,6 +246,8 @@ BEGIN
            , MIString_PartionGoods.ValueData    AS PartionGoods
            , Object_GoodsKind.Id                AS GoodsKindId
            , Object_GoodsKind.ValueData         AS GoodsKindName
+           , Object_GoodsKindComplete.Id         AS GoodsKindId_Complete
+           , Object_GoodsKindComplete.ValueData  AS GoodsKindName_Complete
            , Object_Asset.Id                    AS AssetId
            , Object_Asset.ValueData             AS AssetName
            , Object_InfoMoney_View.InfoMoneyCode
@@ -281,6 +293,11 @@ BEGIN
                                              ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
                                             AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
             LEFT JOIN Object AS Object_GoodsKind ON Object_GoodsKind.Id = MILinkObject_GoodsKind.ObjectId
+
+            LEFT JOIN MovementItemLinkObject AS MILO_GoodsKindComplete
+                                             ON MILO_GoodsKindComplete.MovementItemId = MovementItem.Id
+                                            AND MILO_GoodsKindComplete.DescId = zc_MILinkObject_GoodsKindComplete()
+            LEFT JOIN Object AS Object_GoodsKindComplete ON Object_GoodsKindComplete.Id = MILO_GoodsKindComplete.ObjectId
 
             LEFT JOIN MovementItemLinkObject AS MILinkObject_Asset
                                              ON MILinkObject_Asset.MovementItemId = MovementItem.Id

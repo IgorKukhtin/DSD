@@ -418,10 +418,11 @@ BEGIN
                                      AND ContainerObjectCost_Basis.ObjectCostDescId = zc_ObjectCost_Basis()*/
              LEFT JOIN HistoryCost ON HistoryCost.ContainerId = Container_Summ.Id -- ContainerObjectCost_Basis.ObjectCostId
                                   AND _tmpItem.OperDate BETWEEN HistoryCost.StartDate AND HistoryCost.EndDate
-        WHERE zc_isHistoryCost() = TRUE -- !!!если нужны проводки!!!
+        WHERE /*zc_isHistoryCost() = TRUE -- !!!если нужны проводки!!!
           AND (ContainerLinkObject_InfoMoneyDetail.ObjectId = 0 OR zc_isHistoryCost_byInfoMoneyDetail()= TRUE)
-          AND (inIsLastComplete = FALSE OR (_tmpItem.OperCount * HistoryCost.Price) <> 0) -- !!!ќЅя«ј“≈Ћ№Ќќ!!! вставл€ем нули если это не последний раз (они нужны дл€ расчета с/с)
-          AND InfoMoneyDestinationId <> zc_Enum_InfoMoneyDestination_20500() -- 20500; "ќборотна€ тара"
+          -- AND (inIsLastComplete = FALSE OR (_tmpItem.OperCount * HistoryCost.Price) <> 0) -- !!!ќЅя«ј“≈Ћ№Ќќ!!! вставл€ем нули если это не последний раз (они нужны дл€ расчета с/с)
+          AND*/ (_tmpItem.OperCount * HistoryCost.Price) <> 0 -- !!!Ќ≈!!! вставл€ем нули
+          AND _tmpItem.InfoMoneyDestinationId <> zc_Enum_InfoMoneyDestination_20500() -- 20500; "ќборотна€ тара"
         GROUP BY _tmpItem.MovementItemId
                , Container_Summ.Id
                , Container_Summ.ObjectId

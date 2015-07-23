@@ -3,8 +3,9 @@
 
 
 DROP FUNCTION IF EXISTS gpReport_GoodsMI_Loss (TDateTime, TDateTime, Integer, Integer, Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpReport_GoodsMI_Internal (TDateTime, TDateTime, Integer, Integer, Integer, Integer, TVarChar);
 
-CREATE OR REPLACE FUNCTION gpReport_GoodsMI_Loss (
+CREATE OR REPLACE FUNCTION gpReport_GoodsMI_Internal (
     IN inStartDate    TDateTime ,  
     IN inEndDate      TDateTime ,
     IN inDescId       Integer   ,  --Loss списаниe
@@ -19,6 +20,7 @@ RETURNS TABLE (GoodsGroupName TVarChar
              , TradeMarkName TVarChar
              , AmountOut_Weight TFloat, AmountOut_Sh TFloat, SummOut_Total TFloat, SummOut TFloat, SummOut_60000 TFloat 
              , AmountIn_Weight TFloat, AmountIn_Sh TFloat,  SummIn_Total TFloat, SummIn TFloat, SummIn_60000 TFloat
+             , PriceOut TFloat, PriceIn TFloat
              )   
 AS
 $BODY$
@@ -98,6 +100,9 @@ BEGIN
          , tmpOperationGroup.SummIn_Total :: TFloat AS SummIn_Total
          , tmpOperationGroup.SummIn :: TFloat AS SummIn
          , tmpOperationGroup.SummIn_60000 :: TFloat AS SummIn_60000
+
+         , Case WHEN tmpOperationGroup.AmountOut<>0 THEN COALESCE(tmpOperationGroup.SummOut_Total/tmpOperationGroup.AmountOut, 0) ELSE 0 END :: TFloat AS PriceOut
+         , Case WHEN tmpOperationGroup.AmountIn<>0 THEN COALESCE(tmpOperationGroup.SummIn_Total/tmpOperationGroup.AmountIn, 0) ELSE 0 END  :: TFloat AS PriceIn
 
      FROM (SELECT tmpContainer.GoodsId
                 , COALESCE (ContainerLO_GoodsKind.ObjectId,0) AS GoodsKindId
@@ -195,5 +200,5 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpReport_GoodsMI_Loss (inStartDate:= '01.01.2013', inEndDate:= '31.12.2013',  inDescId:= 1, inGoodsGroupId:= 0, inUnitGroupId:=0, inUnitId:= 0, inFromId:=0, inToId:=0, inSession:= zfCalc_UserAdmin());
---select * from gpReport_GoodsMI_Loss(inStartDate := ('03.06.2015')::TDateTime , inEndDate := ('03.06.2015')::TDateTime , inDescId := 7 , inGoodsGroupId := 0 , inFromId := 0 , inToId := 0 ,  inSession := '5');
+-- SELECT * FROM gpReport_GoodsMI_Internal (inStartDate:= '01.01.2013', inEndDate:= '31.12.2013',  inDescId:= 1, inGoodsGroupId:= 0, inUnitGroupId:=0, inUnitId:= 0, inFromId:=0, inToId:=0, inSession:= zfCalc_UserAdmin());
+--select * from gpReport_GoodsMI_Internal (inStartDate := ('03.06.2015')::TDateTime , inEndDate := ('03.06.2015')::TDateTime , inDescId := 7 , inGoodsGroupId := 0 , inFromId := 0 , inToId := 0 ,  inSession := '5');

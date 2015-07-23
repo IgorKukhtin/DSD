@@ -22,7 +22,7 @@ BEGIN
 
      -- данные по движению "схема Дефростер" + найденные MovementItemId
      INSERT INTO _tmpResult (MovementId, OperDate, MovementItemId_child, MovementItemId_master, ContainerId, OperCount_child, OperCount_master, isDelete)
-             WITH tmpMI AS (-- получем движение
+             WITH tmpMI AS (-- получаем движение
                             SELECT MIContainer.ContainerId
                                    -- группируется все в дату "прихода"
                                  , CASE WHEN MIContainer.isActive = TRUE THEN MIContainer.OperDate ELSE MIContainer.OperDate - INTERVAL '1 DAY' END AS OperDate
@@ -55,17 +55,24 @@ BEGIN
                               AND MIContainer.AnalyzerId             = inUnitId
                               AND MIContainer.MovementDescId         = zc_Movement_ProductionUnion()
                            )
+          , tmpMovement AS (-- поиск одного документа за OperDate
+                            SELECT tmpMI_all.OperDate
+                                 , MAX (tmpMI_all.MovementId) AS MovementId
+                            FROM tmpMI_all
+                            GROUP BY tmpMI_all.OperDate
+                           )
            , tmpMI_find AS (-- нужен только один из элементов (по нему будет Update, иначе Insert, остальные Delete)
                             SELECT tmpMI_all.ContainerId
                                  , tmpMI_all.OperDate
                                  , MAX (tmpMI_all.MovementItemId) AS MovementItemId
-                            FROM tmpMI_all
+                            FROM tmpMovement
+                                 INNER JOIN tmpMI_all ON tmpMI_all.MovementId = tmpMovement.MovementId
                             WHERE tmpMI_all.isActive = FALSE
                             GROUP BY tmpMI_all.ContainerId
                                    , tmpMI_all.OperDate
                            )
          , tmpMI_result AS (-- данные по движению "схема Дефростер"
-                            SELECT COALESCE (MovementItem.MovementId, 0) AS MovementId
+                            SELECT COALESCE (tmpMovement.MovementId, 0)  AS MovementId
                                  , COALESCE (MovementItem.ParentId, 0)   AS MovementItemId_master
                                  , COALESCE (MovementItem.Id, 0)         AS MovementItemId_child
                                  , tmpMI.OperDate
@@ -73,6 +80,7 @@ BEGIN
                                  , tmpMI.OperCount_child
                                  , tmpMI.OperCount_master
                             FROM tmpMI
+                                 LEFT JOIN tmpMovement ON tmpMovement.OperDate = tmpMI.OperDate
                                  LEFT JOIN tmpMI_find ON tmpMI_find.ContainerId = tmpMI.ContainerId
                                                      AND tmpMI_find.OperDate    = tmpMI.OperDate
                                  LEFT JOIN MovementItem ON MovementItem.Id = tmpMI_find.MovementItemId
@@ -174,6 +182,23 @@ BEGIN
      WHERE _tmpResult.OperDate = tmp.OperDate;
 
 
+    -- Проверка
+    IF EXISTS (SELECT tmp.OperDate FROM (SELECT _tmpResult.MovementId, _tmpResult.OperDate FROM _tmpResult WHERE _tmpResult.MovementId <> 0 GROUP BY _tmpResult.MovementId, _tmpResult.OperDate) AS tmp GROUP BY tmp.OperDate HAVING COUNT(*) > 1)
+    THEN RAISE EXCEPTION 'Error.Many find MovementId: Date = <%>  Min = <%>  Max = <%> Count = <%>', (SELECT tmp.OperDate FROM (SELECT _tmpResult.MovementId, _tmpResult.OperDate FROM _tmpResult WHERE _tmpResult.MovementId <> 0 GROUP BY _tmpResult.MovementId, _tmpResult.OperDate) AS tmp
+                                                                               WHERE tmp.OperDate IN (SELECT tmp.OperDate FROM (SELECT _tmpResult.MovementId, _tmpResult.OperDate FROM _tmpResult WHERE _tmpResult.MovementId <> 0 GROUP BY _tmpResult.MovementId, _tmpResult.OperDate) AS tmp GROUP BY tmp.OperDate HAVING COUNT(*) > 1)
+                                                                                                      ORDER BY tmp.OperDate LIMIT 1)
+                                                                                                   , (SELECT _tmpResult.MovementId FROM (SELECT _tmpResult.MovementId, _tmpResult.OperDate FROM _tmpResult WHERE _tmpResult.MovementId <> 0 GROUP BY _tmpResult.MovementId, _tmpResult.OperDate) AS tmp
+                                                                               WHERE tmp.OperDate IN (SELECT tmp.OperDate FROM (SELECT _tmpResult.MovementId, _tmpResult.OperDate FROM _tmpResult WHERE _tmpResult.MovementId <> 0 GROUP BY _tmpResult.MovementId, _tmpResult.OperDate) AS tmp GROUP BY tmp.OperDate HAVING COUNT(*) > 1)
+                                                                                                      ORDER BY tmp.OperDate, _tmpResult.MovementId LIMIT 1)
+                                                                                                   , (SELECT _tmpResult.MovementId FROM (SELECT _tmpResult.MovementId, _tmpResult.OperDate FROM _tmpResult WHERE _tmpResult.MovementId <> 0 GROUP BY _tmpResult.MovementId, _tmpResult.OperDate) AS tmp
+                                                                               WHERE tmp.OperDate IN (SELECT tmp.OperDate FROM (SELECT _tmpResult.MovementId, _tmpResult.OperDate FROM _tmpResult WHERE _tmpResult.MovementId <> 0 GROUP BY _tmpResult.MovementId, _tmpResult.OperDate) AS tmp GROUP BY tmp.OperDate HAVING COUNT(*) > 1)
+                                                                                                      ORDER BY tmp.OperDate, _tmpResult.MovementId DESC LIMIT 1)
+                                                                                                   , (SELECT COUNT(*) FROM (SELECT _tmpResult.MovementId, _tmpResult.OperDate FROM _tmpResult WHERE _tmpResult.MovementId <> 0 GROUP BY _tmpResult.MovementId, _tmpResult.OperDate) AS tmp
+                                                                               WHERE tmp.OperDate IN (SELECT tmp.OperDate FROM (SELECT _tmpResult.MovementId, _tmpResult.OperDate FROM _tmpResult WHERE _tmpResult.MovementId <> 0 GROUP BY _tmpResult.MovementId, _tmpResult.OperDate) AS tmp GROUP BY tmp.OperDate HAVING COUNT(*) > 1)
+                                                                                                     )
+        ;
+    END IF;
+
      -- сохраняются элементы
      PERFORM lpInsertUpdate_MI_ProductionPeresort (ioId                     := _tmpResult.MovementItemId_master
                                                  , inMovementId             := _tmpResult.MovementId
@@ -212,27 +237,30 @@ BEGIN
      END IF; -- if inIsUpdate = TRUE -- !!!т.е. не всегда!!!
 
 
-    -- Результат
-    RETURN QUERY
-    SELECT _tmpResult.MovementId
-         , _tmpResult.OperDate
-         , Movement.InvNumber
-         , _tmpResult.isDelete
-         , _tmpResult.MovementItemId_child, _tmpResult.MovementItemId_master, _tmpResult.ContainerId
-         , _tmpResult.OperCount_child
-         , _tmpResult.OperCount_master
-         , Object_Goods.ObjectCode AS GoodsCode
-         , Object_Goods.ValueData  AS GoodsName
-         , Object_PartionGoods.ValueData AS PartionGoods
-    FROM _tmpResult
-         LEFT JOIN Movement ON Movement.Id = _tmpResult.MovementId
-         LEFT JOIN Container ON Container.Id = _tmpResult.ContainerId
-         LEFT JOIN Object AS Object_Goods on Object_Goods.Id = Container.ObjectId
-         LEFT JOIN ContainerLinkObject AS CLO_PartionGoods
-                                       ON CLO_PartionGoods.ContainerId = _tmpResult.ContainerId
-                                      AND CLO_PartionGoods.DescId = zc_ContainerLinkObject_PartionGoods()
-         LEFT JOIN Object AS Object_PartionGoods ON Object_PartionGoods.Id = CLO_PartionGoods.ObjectId
-    ;
+    IF inUserId = zfCalc_UserAdmin() :: Integer
+    THEN
+        -- Результат
+        RETURN QUERY
+        SELECT _tmpResult.MovementId
+             , _tmpResult.OperDate
+             , Movement.InvNumber
+             , _tmpResult.isDelete
+             , _tmpResult.MovementItemId_child, _tmpResult.MovementItemId_master, _tmpResult.ContainerId
+             , _tmpResult.OperCount_child
+             , _tmpResult.OperCount_master
+             , Object_Goods.ObjectCode AS GoodsCode
+             , Object_Goods.ValueData  AS GoodsName
+             , Object_PartionGoods.ValueData AS PartionGoods
+        FROM _tmpResult
+             LEFT JOIN Movement ON Movement.Id = _tmpResult.MovementId
+             LEFT JOIN Container ON Container.Id = _tmpResult.ContainerId
+             LEFT JOIN Object AS Object_Goods on Object_Goods.Id = Container.ObjectId
+             LEFT JOIN ContainerLinkObject AS CLO_PartionGoods
+                                           ON CLO_PartionGoods.ContainerId = _tmpResult.ContainerId
+                                          AND CLO_PartionGoods.DescId = zc_ContainerLinkObject_PartionGoods()
+             LEFT JOIN Object AS Object_PartionGoods ON Object_PartionGoods.Id = CLO_PartionGoods.ObjectId
+        ;
+    END IF;
 
 
 END;$BODY$
@@ -245,6 +273,5 @@ END;$BODY$
 */
 
 -- тест
--- SELECT * FROM lpUpdate_Movement_ProductionUnion_Defroster (inIsUpdate:= TRUE, inStartDate:= '01.07.2015', inEndDate:= '16.07.2015', inUnitId:= 8440, inUserId:= zfCalc_UserAdmin() :: Integer) -- 
+-- SELECT * FROM lpUpdate_Movement_ProductionUnion_Defroster (inIsUpdate:= TRUE, inStartDate:= '01.07.2015', inEndDate:= '19.07.2015', inUnitId:= 8440, inUserId:= zfCalc_UserAdmin() :: Integer) -- Дефростер
 -- where ContainerId = 568111
--- select * from MovementItemContainer where ContainerId = 568111

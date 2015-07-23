@@ -34,9 +34,12 @@ BEGIN
    PERFORM lpInsertUpdate_MovementBoolean (zc_MovementBoolean_Peresort(), ioId, inIsPeresort);
 
    -- !!!только при создании!!!
-   IF vbIsInsert = TRUE AND inUserId IN (zc_Enum_Process_Auto_Defroster())
+   IF vbIsInsert = TRUE AND inUserId IN (zc_Enum_Process_Auto_Defroster(), zc_Enum_Process_Auto_Pack())
    THEN
+       -- сохранили свойство <пересорт>
        PERFORM lpInsertUpdate_MovementBoolean (zc_MovementBoolean_isAuto(), ioId, TRUE);
+       -- сохранили связь с <Пользователь>
+       PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_User(), ioId, inUserId);
    END IF;
 
    -- пересчитали Итоговые суммы по накладной

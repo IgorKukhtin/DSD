@@ -1,4 +1,4 @@
-object Report_GoodsMI_LossDialogForm: TReport_GoodsMI_LossDialogForm
+object Report_GoodsMI_InternalDialogForm: TReport_GoodsMI_InternalDialogForm
   Left = 0
   Top = 0
   BorderStyle = bsDialog

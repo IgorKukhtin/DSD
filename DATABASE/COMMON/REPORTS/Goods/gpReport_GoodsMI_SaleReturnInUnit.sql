@@ -266,7 +266,7 @@ BEGIN
           , '' :: TVarChar AS RetailName
           , '' :: TVarChar AS RetailReportName
 
-          , '' :: TVarChar AS AreaName
+          , Object_Area.ValueData :: TVarChar AS AreaName
           , '' :: TVarChar AS PartnerTagName
           , '' :: TVarChar AS Address
           , '' :: TVarChar AS RegionName
@@ -407,6 +407,12 @@ BEGIN
                                ON ObjectLink_Unit_Parent.ObjectId = tmpOperationGroup.ToId
                               AND ObjectLink_Unit_Parent.DescId = zc_ObjectLink_Unit_Parent()
           LEFT JOIN Object AS Object_Unit_Parent ON Object_Unit_Parent.Id = ObjectLink_Unit_Parent.ChildObjectId
+
+          LEFT JOIN ObjectLink AS ObjectLink_Unit_Area
+                               ON ObjectLink_Unit_Area.ObjectId = tmpOperationGroup.ToId
+                              AND ObjectLink_Unit_Area.DescId = zc_ObjectLink_Unit_Area()
+          LEFT JOIN Object AS Object_Area ON Object_Area.Id = ObjectLink_Unit_Area.ChildObjectId
+
          ;
 
 END;
