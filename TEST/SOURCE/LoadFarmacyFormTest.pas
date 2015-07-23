@@ -454,7 +454,7 @@ end;
 procedure TLoadFormTest.SetUp;
 begin
   inherited;
-  TAuthentication.CheckLogin(TStorageFactory.GetStorage, 'Админ', 'Админ', gc_User);
+  TAuthentication.CheckLogin(TStorageFactory.GetStorage, 'Админ', 'Админ1234', gc_User);
 end;
 
 procedure TLoadFormTest.LoadOrderInternalFormTest;

@@ -45,6 +45,7 @@ BEGIN
 END;
 $BODY$
 LANGUAGE PLPGSQL VOLATILE;
+ALTER FUNCTION gpInsert_Movement_Check (TVarChar) OWNER TO postgres;
 
 
 /*

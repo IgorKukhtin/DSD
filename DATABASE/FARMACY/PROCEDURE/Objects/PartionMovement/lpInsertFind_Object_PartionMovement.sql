@@ -3,7 +3,7 @@
 -- DROP FUNCTION lpInsertFind_Object_PartionMovement (Integer);
 
 CREATE OR REPLACE FUNCTION lpInsertFind_Object_PartionMovement(
-    IN inMovementItemId  Integer     -- ссылка на документ Приход от постащика
+    IN inMovementId  Integer     -- ссылка на документ Приход от постащика
 )
   RETURNS Integer AS
 $BODY$
@@ -11,13 +11,13 @@ $BODY$
 BEGIN
    
    -- Находим 
-   SELECT Id INTO vbPartionMovementItemId FROM Object 
-    WHERE ObjectCode = inMovementItemId AND DescId = zc_Object_PartionMovement();
+   SELECT Id INTO vbPartionMovementId FROM Object 
+    WHERE ObjectCode = inMovementId AND DescId = zc_Object_PartionMovement();
 
    IF COALESCE (vbPartionMovementId, 0) = 0
    THEN
            -- сохранили <Объект>
-           vbPartionMovementId := lpInsertUpdate_Object (vbPartionMovementId, zc_Object_PartionMovement(), inMovementItemId, CAST (inMovementId AS TVarChar));
+           vbPartionMovementId := lpInsertUpdate_Object (vbPartionMovementId, zc_Object_PartionMovement(), inMovementId, CAST (inMovementId AS TVarChar));
 
    END IF;
    -- Возвращаем значение

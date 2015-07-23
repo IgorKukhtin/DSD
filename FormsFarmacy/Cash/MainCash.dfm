@@ -412,9 +412,6 @@ inherited MainCashForm: TMainCashForm
         end
         item
           StoredProc = spSelectCheck
-        end
-        item
-          StoredProc = spSelect_Alternative
         end>
     end
     object actChoiceGoodsInRemainsGrid: TAction

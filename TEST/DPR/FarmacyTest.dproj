@@ -913,6 +913,17 @@
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<DCCReference Include="..\SOURCE\Objects\All\Farmacy\PaidTypeTest.pas"/>
+			<DCCReference Include="..\SOURCE\Objects\All\Farmacy\CashRegisterTest.pas"/>
+			<DCCReference Include="..\SOURCE\Movement\All\Farmacy\InventoryTest.pas"/>
+			<DCCReference Include="..\..\FormsFarmacy\Document\Inventory.pas">
+				<Form>InventoryForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Document\InventoryJournal.pas">
+				<Form>InventoryJournalForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\SOURCE\MovementItem\All\Farmacy\InventoryMovementItemTest.pas"/>
 			<BuildConfiguration Include="Release">
 				<Key>Cfg_2</Key>
 				<CfgParent>Base</CfgParent>
