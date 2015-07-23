@@ -3,7 +3,7 @@ inherited SendOnPriceForm: TSendOnPriceForm
   ClientHeight = 668
   ClientWidth = 982
   ExplicitWidth = 998
-  ExplicitHeight = 706
+  ExplicitHeight = 703
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -153,7 +153,8 @@ inherited SendOnPriceForm: TSendOnPriceForm
             DataBinding.FieldName = 'ChangePercentAmount'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 55
+            Options.Editing = False
+            Width = 70
           end
           object colAmount: TcxGridDBColumn [7]
             Caption = #1050#1086#1083'-'#1074#1086' ('#1088#1072#1089#1093#1086#1076')'
@@ -173,6 +174,7 @@ inherited SendOnPriceForm: TSendOnPriceForm
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 80
           end
           object colAmountPartner: TcxGridDBColumn [9]
@@ -287,10 +289,10 @@ inherited SendOnPriceForm: TSendOnPriceForm
         end>
       Properties.ReadOnly = True
       TabOrder = 7
-      Width = 170
+      Width = 200
     end
     object edTo: TcxButtonEdit
-      Left = 452
+      Left = 488
       Top = 23
       Properties.Buttons = <
         item
@@ -299,15 +301,15 @@ inherited SendOnPriceForm: TSendOnPriceForm
         end>
       Properties.ReadOnly = True
       TabOrder = 8
-      Width = 265
+      Width = 180
     end
     object cxLabel4: TcxLabel
-      Left = 452
+      Left = 488
       Top = 5
       Caption = #1050#1086#1084#1091
     end
     object edPriceWithVAT: TcxCheckBox
-      Left = 274
+      Left = 488
       Top = 63
       Caption = #1062#1077#1085#1072' '#1089' '#1053#1044#1057' ('#1076#1072'/'#1085#1077#1090')'
       Properties.ReadOnly = True
@@ -315,7 +317,7 @@ inherited SendOnPriceForm: TSendOnPriceForm
       Width = 128
     end
     object edVATPercent: TcxCurrencyEdit
-      Left = 404
+      Left = 628
       Top = 63
       Properties.DecimalPlaces = 0
       Properties.DisplayFormat = ',0'
@@ -324,12 +326,12 @@ inherited SendOnPriceForm: TSendOnPriceForm
       Width = 40
     end
     object cxLabel7: TcxLabel
-      Left = 404
+      Left = 628
       Top = 45
       Caption = '% '#1053#1044#1057
     end
     object edChangePercent: TcxCurrencyEdit
-      Left = 454
+      Left = 680
       Top = 63
       Properties.DecimalPlaces = 3
       Properties.DisplayFormat = ',0.###'
@@ -338,7 +340,7 @@ inherited SendOnPriceForm: TSendOnPriceForm
       Width = 144
     end
     object cxLabel8: TcxLabel
-      Left = 454
+      Left = 680
       Top = 45
       Caption = '(-)% '#1057#1082#1080#1076#1082#1080' (+)% '#1053#1072#1094#1077#1085#1082#1080
     end
@@ -356,13 +358,13 @@ inherited SendOnPriceForm: TSendOnPriceForm
       Caption = #1044#1072#1090#1072' ('#1087#1088#1080#1093#1086#1076')'
     end
     object cxLabel11: TcxLabel
-      Left = 606
-      Top = 45
+      Left = 680
+      Top = 5
       Caption = #1055#1088#1072#1081#1089'-'#1083#1080#1089#1090
     end
     object edPriceList: TcxButtonEdit
-      Left = 606
-      Top = 63
+      Left = 680
+      Top = 23
       Properties.Buttons = <
         item
           Default = True
@@ -370,7 +372,7 @@ inherited SendOnPriceForm: TSendOnPriceForm
         end>
       Properties.ReadOnly = True
       TabOrder = 18
-      Width = 111
+      Width = 144
     end
     object cxLabel5: TcxLabel
       Left = 87
@@ -391,8 +393,8 @@ inherited SendOnPriceForm: TSendOnPriceForm
     end
   end
   object cbCalcAmountPartner: TcxCheckBox [2]
-    Left = 720
-    Top = 23
+    Left = 274
+    Top = 63
     Caption = #1056#1072#1089#1095#1077#1090' '#1087#1086' % '#1089#1082#1080#1076#1082#1080' '#1074#1077#1089' :'
     Properties.ReadOnly = False
     State = cbsChecked
@@ -400,8 +402,8 @@ inherited SendOnPriceForm: TSendOnPriceForm
     Width = 157
   end
   object edChangePercentAmount: TcxCurrencyEdit [3]
-    Left = 883
-    Top = 23
+    Left = 434
+    Top = 63
     Properties.DecimalPlaces = 0
     Properties.DisplayFormat = ',0'
     Properties.ReadOnly = False
@@ -502,7 +504,6 @@ inherited SendOnPriceForm: TSendOnPriceForm
           DataSet = PrintItemsCDS
           UserName = 'frxDBDMaster'
         end>
-      CopiesCount = 1
       Params = <
         item
           Name = 'Id'
@@ -545,7 +546,6 @@ inherited SendOnPriceForm: TSendOnPriceForm
           DataSet = PrintItemsCDS
           UserName = 'frxDBDMaster'
         end>
-      CopiesCount = 1
       Params = <
         item
           Name = 'Id'
@@ -1303,15 +1303,103 @@ inherited SendOnPriceForm: TSendOnPriceForm
         Component = MasterCDS
         ComponentItem = 'UnitId'
         ParamType = ptInput
-      end
-      item
-        Value = Null
-        ParamType = ptUnknown
       end>
     Left = 160
     Top = 368
   end
   inherited spInsertMaskMIMaster: TdsdStoredProc
+    StoredProcName = 'gpInsertUpdate_MovementItem_SendOnPrice'
+    Params = <
+      item
+        Name = 'ioId'
+        Value = '0'
+        ParamType = ptInputOutput
+      end
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inGoodsId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'GoodsId'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inAmount'
+        Value = '0'
+        DataType = ftFloat
+        ParamType = ptInput
+      end
+      item
+        Name = 'inAmountPartner'
+        Value = '0'
+        DataType = ftFloat
+        ParamType = ptInput
+      end
+      item
+        Name = 'inAmountChangePercent'
+        Value = '0'
+        DataType = ftFloat
+        ParamType = ptInput
+      end
+      item
+        Name = 'inChangePercentAmount'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'ChangePercentAmount'
+        DataType = ftFloat
+        ParamType = ptInput
+      end
+      item
+        Name = 'inPrice'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Price'
+        DataType = ftFloat
+        ParamType = ptInput
+      end
+      item
+        Name = 'ioCountForPrice'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'CountForPrice'
+        DataType = ftFloat
+        ParamType = ptInputOutput
+      end
+      item
+        Name = 'outAmountSumm'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'AmountSumm'
+        DataType = ftFloat
+      end
+      item
+        Name = 'inPartionGoods'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'PartionGoods'
+        DataType = ftString
+        ParamType = ptInput
+      end
+      item
+        Name = 'inGoodsKindId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'GoodsKindId'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inUnitId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'UnitId'
+        ParamType = ptInput
+      end>
     Left = 368
     Top = 272
   end
@@ -1383,8 +1471,8 @@ inherited SendOnPriceForm: TSendOnPriceForm
         Component = edVATPercent
         DataType = ftFloat
       end>
-    Left = 652
-    Top = 64
+    Left = 756
+    Top = 65528
   end
   object spSelectPrint: TdsdStoredProc
     StoredProcName = 'gpSelect_Movement_SendOnPrice_Print'
@@ -1463,7 +1551,8 @@ inherited SendOnPriceForm: TSendOnPriceForm
         DataType = ftString
         ParamType = ptInput
       end>
-    Left = 616
+    Left = 568
+    Top = 65528
   end
   object spSelectPrintOut: TdsdStoredProc
     StoredProcName = 'gpSelect_Movement_SendOnPrice_Print'

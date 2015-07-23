@@ -110,6 +110,16 @@ object IncomeJournalForm: TIncomeJournalForm
           Format = ',0.####'
           Kind = skSum
           Column = colTotalCountPartner
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = colTotalCount_unit
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = colTotalCount_diff
         end>
       DataController.Summary.FooterSummaryItems = <
         item
@@ -151,6 +161,16 @@ object IncomeJournalForm: TIncomeJournalForm
           Format = ',0.####'
           Kind = skSum
           Column = colTotalCountPartner
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = colTotalCount_unit
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = colTotalCount_diff
         end>
       DataController.Summary.SummaryGroups = <>
       Images = dmMain.SortImageList
@@ -276,6 +296,16 @@ object IncomeJournalForm: TIncomeJournalForm
         HeaderAlignmentVert = vaCenter
         Width = 70
       end
+      object colTotalCount_unit: TcxGridDBColumn
+        Caption = #1050#1086#1083'-'#1074#1086' ('#1089#1082#1083#1072#1076' '#1080#1090#1086#1075')'
+        DataBinding.FieldName = 'TotalCount_unit'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.####;-,0.####; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 80
+      end
       object colTotalCount: TcxGridDBColumn
         Caption = #1050#1086#1083'-'#1074#1086' ('#1089#1082#1083#1072#1076')'
         DataBinding.FieldName = 'TotalCount'
@@ -295,6 +325,16 @@ object IncomeJournalForm: TIncomeJournalForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 70
+      end
+      object colTotalCount_diff: TcxGridDBColumn
+        Caption = #1050#1086#1083'. (-)'#1091#1073#1099#1083#1100' (+)'#1101#1082#1086#1085#1086#1084'.'
+        DataBinding.FieldName = 'TotalCount_diff'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.####;-,0.####; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 80
       end
       object colTotalSumm: TcxGridDBColumn
         Caption = #1057#1091#1084#1084#1072' '#1089' '#1053#1044#1057' ('#1080#1090#1086#1075')'
@@ -727,7 +767,6 @@ object IncomeJournalForm: TIncomeJournalForm
           DataSet = PrintItemsCDS
           UserName = 'frxDBDMaster'
         end>
-      CopiesCount = 1
       Params = <
         item
           Name = 'Id'

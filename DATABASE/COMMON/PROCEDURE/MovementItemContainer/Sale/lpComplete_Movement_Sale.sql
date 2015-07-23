@@ -797,6 +797,16 @@ BEGIN
           ) AS _tmpItem
      ;
 
+     -- !!!меняется значение - переводится в валюту zc_Enum_Currency_Basis!!! - !!!нельзя что б переводился в строчной части!!!
+     IF vbCurrencyDocumentId <> zc_Enum_Currency_Basis() AND vbParValue <> 0
+     THEN 
+         vbOperSumm_Partner_ChangePercent:= CAST (vbOperSumm_Currency * vbCurrencyValue / vbParValue AS NUMERIC (16, 2));
+         IF vbDiscountPercent = 0 AND vbExtraChargesPercent = 0
+         THEN vbOperSumm_Partner:= vbOperSumm_Partner_ChangePercent;
+         END IF;
+     END IF;
+
+
      -- Расчет Итоговых сумм по Контрагенту (по элементам)
      SELECT SUM (_tmpItem.OperSumm_PriceList), SUM (_tmpItem.OperSumm_Partner), SUM (_tmpItem.OperSumm_Partner_ChangePercent), SUM (_tmpItem.OperSumm_Currency) INTO vbOperSumm_PriceList_byItem, vbOperSumm_Partner_byItem, vbOperSumm_Partner_ChangePercent_byItem, vbOperSumm_Currency_byItem FROM _tmpItem;
 

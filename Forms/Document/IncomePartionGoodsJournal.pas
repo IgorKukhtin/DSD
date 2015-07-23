@@ -116,6 +116,8 @@ type
     colGoodsName: TcxGridDBColumn;
     colGoodsCode: TcxGridDBColumn;
     colPartionGoods: TcxGridDBColumn;
+    colTotalCount_unit: TcxGridDBColumn;
+    colTotalCount_diff: TcxGridDBColumn;
   private
   public
   end;

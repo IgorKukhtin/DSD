@@ -502,6 +502,11 @@ inherited MovementJournalForm: TMovementJournalForm
           Value = Null
           Component = MasterCDS
           ComponentItem = 'Id'
+        end
+        item
+          Name = 'inChangePercentAmount'
+          Value = '0'
+          DataType = ftFloat
         end>
       isShowModal = False
     end

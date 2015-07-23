@@ -579,6 +579,17 @@ BEGIN
           ) AS _tmp
           ) AS _tmp;
 
+     -- !!!меняется значение - переводится в валюту zc_Enum_Currency_Basis!!! - !!!нельзя что б переводился в строчной части!!!
+     IF vbCurrencyDocumentId <> zc_Enum_Currency_Basis() AND vbParValue <> 0
+     THEN 
+         vbOperSumm_Partner:= CAST (vbOperSumm_Currency * vbCurrencyValue / vbParValue AS NUMERIC (16, 2));
+         vbOperSumm_PVAT_original:= vbOperSumm_Partner;
+         IF vbDiscountPercent = 0 AND vbExtraChargesPercent = 0
+         THEN vbOperSumm_PVAT:= vbOperSumm_Partner;
+         END IF;
+     END IF;
+
+
      -- Тест
      -- RAISE EXCEPTION '%', vbOperCount_Master;
 

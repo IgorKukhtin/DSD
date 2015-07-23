@@ -830,11 +830,26 @@ BEGIN
             , vbWhereObjectId_Analyzer                AS WhereObjectId_Analyzer -- Подраделение или...
             , vbContainerId_Analyzer                  AS ContainerId_Analyzer   -- Контейнер - по долгам поставщика
             , 0                                       AS ParentId
-            , -1 * OperCount                          AS Amount
+            , -1 * OperCount_Partner                          AS Amount
             , vbOperDate                              AS OperDate               -- т.е. по "Дате склад"
             , FALSE                                   AS isActive
        FROM _tmpItem
        WHERE vbPartnerId_From = 0 -- !!!если НЕ ПОКУПАТЕЛЮ!!!
+      UNION ALL
+       SELECT 0, zc_MIContainer_Count() AS DescId, vbMovementDescId, inMovementId, MovementItemId
+            , ContainerId_Goods
+            , 0                                       AS AccountId              -- нет счета
+            , zc_Enum_AnalyzerId_Count_40200()        AS AnalyzerId             -- есть аналитика, Разница в весе, хотя реально эта разница не попадает в статью затрат 40200...
+            , _tmpItem.GoodsId                        AS ObjectId_Analyzer      -- Товар
+            , vbWhereObjectId_Analyzer                AS WhereObjectId_Analyzer -- Подраделение или...
+            , vbContainerId_Analyzer                  AS ContainerId_Analyzer   -- Контейнер - по долгам поставщика
+            , 0                                       AS ParentId
+            , -1 * (OperCount - OperCount_Partner)    AS Amount
+            , vbOperDate                              AS OperDate               -- т.е. по "Дате склад"
+            , FALSE                                   AS isActive
+       FROM _tmpItem
+       WHERE vbPartnerId_From = 0 -- !!!если НЕ ПОКУПАТЕЛЮ!!!
+         AND OperCount <> OperCount_Partner
       ;
 
 

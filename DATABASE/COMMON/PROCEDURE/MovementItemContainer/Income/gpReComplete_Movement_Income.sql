@@ -27,8 +27,8 @@ BEGIN
      PERFORM lpComplete_Movement_Income_CreateTemp();
      -- Проводим Документ
      PERFORM lpComplete_Movement_Income (inMovementId     := inMovementId
-                                     , inUserId         := vbUserId
-                                     , inIsLastComplete := inIsLastComplete);
+                                       , inUserId         := vbUserId
+                                       , inIsLastComplete := inIsLastComplete);
 
 END;
 $BODY$
