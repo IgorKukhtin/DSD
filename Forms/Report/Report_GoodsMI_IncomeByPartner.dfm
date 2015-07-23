@@ -1,28 +1,28 @@
 inherited Report_GoodsMI_IncomeByPartnerForm: TReport_GoodsMI_IncomeByPartnerForm
   Caption = #1054#1090#1095#1077#1090' <'#1087#1086' '#1090#1086#1074#1072#1088#1072#1084' ('#1087#1086' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072#1084')>'
   ClientHeight = 553
-  ClientWidth = 1103
+  ClientWidth = 1159
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
-  ExplicitWidth = 1119
-  ExplicitHeight = 588
+  ExplicitWidth = 1175
+  ExplicitHeight = 591
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 83
-    Width = 1103
+    Width = 1159
     Height = 470
     TabOrder = 3
     ExplicitTop = 83
     ExplicitWidth = 1103
     ExplicitHeight = 470
     ClientRectBottom = 470
-    ClientRectRight = 1103
+    ClientRectRight = 1159
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 1103
       ExplicitHeight = 470
       inherited cxGrid: TcxGrid
-        Width = 1103
+        Width = 1159
         Height = 470
         ExplicitWidth = 1103
         ExplicitHeight = 470
@@ -207,41 +207,45 @@ inherited Report_GoodsMI_IncomeByPartnerForm: TReport_GoodsMI_IncomeByPartnerFor
     end
   end
   inherited Panel: TPanel
-    Width = 1103
+    Width = 1159
     Height = 57
     ExplicitWidth = 1103
     ExplicitHeight = 57
     inherited deStart: TcxDateEdit
-      Left = 114
+      Left = 55
       EditValue = 42005d
       Properties.SaveTime = False
-      ExplicitLeft = 114
+      ExplicitLeft = 55
     end
     inherited deEnd: TcxDateEdit
-      Left = 110
+      Left = 55
       Top = 32
       EditValue = 42005d
       Properties.SaveTime = False
-      ExplicitLeft = 110
+      ExplicitLeft = 55
       ExplicitTop = 32
     end
     inherited cxLabel1: TcxLabel
       Left = 4
+      Caption = #1044#1072#1090#1072' '#1089':'
       ExplicitLeft = 4
+      ExplicitWidth = 42
     end
     inherited cxLabel2: TcxLabel
       Left = 4
       Top = 33
+      Caption = #1044#1072#1090#1072' '#1087#1086':'
       ExplicitLeft = 4
       ExplicitTop = 33
+      ExplicitWidth = 49
     end
     object cxLabel4: TcxLabel
-      Left = 516
+      Left = 459
       Top = 6
-      Caption = #1043#1088'.'#1090#1086#1074#1072#1088#1072
+      Caption = #1043#1088'.'#1090#1086#1074#1072#1088#1072':'
     end
     object edGoodsGroup: TcxButtonEdit
-      Left = 574
+      Left = 520
       Top = 5
       Properties.Buttons = <
         item
@@ -253,7 +257,7 @@ inherited Report_GoodsMI_IncomeByPartnerForm: TReport_GoodsMI_IncomeByPartnerFor
       Width = 205
     end
     object edInDescName: TcxTextEdit
-      Left = 783
+      Left = 849
       Top = 5
       Enabled = False
       ParentFont = False
@@ -267,15 +271,15 @@ inherited Report_GoodsMI_IncomeByPartnerForm: TReport_GoodsMI_IncomeByPartnerFor
       Style.Font.Style = [fsBold]
       Style.IsFontAssigned = True
       TabOrder = 6
-      Width = 317
+      Width = 296
     end
     object cxLabel3: TcxLabel
-      Left = 516
+      Left = 466
       Top = 33
-      Caption = #1070#1088'.'#1051#1080#1094#1086
+      Caption = #1070#1088'.'#1051#1080#1094#1086':'
     end
     object edJuridical: TcxButtonEdit
-      Left = 574
+      Left = 520
       Top = 32
       Properties.Buttons = <
         item
@@ -287,12 +291,12 @@ inherited Report_GoodsMI_IncomeByPartnerForm: TReport_GoodsMI_IncomeByPartnerFor
       Width = 205
     end
     object cxLabel5: TcxLabel
-      Left = 201
+      Left = 146
       Top = 6
       Caption = #1043#1088'. '#1087#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1081':'
     end
     object edUnitGroup: TcxButtonEdit
-      Left = 309
+      Left = 252
       Top = 5
       Properties.Buttons = <
         item
@@ -305,12 +309,12 @@ inherited Report_GoodsMI_IncomeByPartnerForm: TReport_GoodsMI_IncomeByPartnerFor
     end
   end
   object cxLabel6: TcxLabel [2]
-    Left = 219
-    Top = 32
+    Left = 164
+    Top = 33
     Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077':'
   end
   object edUnit: TcxButtonEdit [3]
-    Left = 309
+    Left = 252
     Top = 32
     Properties.Buttons = <
       item
@@ -322,13 +326,13 @@ inherited Report_GoodsMI_IncomeByPartnerForm: TReport_GoodsMI_IncomeByPartnerFor
     Width = 201
   end
   object cxLabel7: TcxLabel [4]
-    Left = 785
-    Top = 32
-    Caption = #1060#1086#1088#1084#1072' '#1086#1087#1083#1072#1090#1099':'
+    Left = 731
+    Top = 6
+    Caption = #1060'. '#1086#1087#1083#1072#1090#1099':'
   end
   object edPaidKind: TcxButtonEdit [5]
-    Left = 865
-    Top = 32
+    Left = 793
+    Top = 5
     Properties.Buttons = <
       item
         Default = True
@@ -336,7 +340,24 @@ inherited Report_GoodsMI_IncomeByPartnerForm: TReport_GoodsMI_IncomeByPartnerFor
       end>
     Properties.ReadOnly = True
     TabOrder = 9
-    Width = 106
+    Width = 53
+  end
+  object cxLabel8: TcxLabel [6]
+    Left = 732
+    Top = 33
+    Caption = #1059#1055' '#1089#1090#1072#1090#1100#1103':'
+  end
+  object ceInfoMoney: TcxButtonEdit [7]
+    Left = 793
+    Top = 32
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    Properties.ReadOnly = True
+    TabOrder = 11
+    Width = 352
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 139
@@ -385,7 +406,6 @@ inherited Report_GoodsMI_IncomeByPartnerForm: TReport_GoodsMI_IncomeByPartnerFor
           IndexFieldNames = 'PartnerName;GoodsGroupName'
           GridView = cxGridDBTableView
         end>
-      CopiesCount = 1
       Params = <
         item
           Name = 'StartDate'
@@ -470,7 +490,6 @@ inherited Report_GoodsMI_IncomeByPartnerForm: TReport_GoodsMI_IncomeByPartnerFor
           IndexFieldNames = 'PartnerName;GoodsGroupName'
           GridView = cxGridDBTableView
         end>
-      CopiesCount = 1
       Params = <
         item
           Name = 'StartDate'
@@ -612,6 +631,21 @@ inherited Report_GoodsMI_IncomeByPartnerForm: TReport_GoodsMI_IncomeByPartnerFor
           ComponentItem = 'TextValue'
           DataType = ftString
           ParamType = ptInputOutput
+        end
+        item
+          Name = 'InfoMoneyId'
+          Value = Null
+          Component = InfoMoneyGuides
+          ComponentItem = 'Key'
+          ParamType = ptInputOutput
+        end
+        item
+          Name = 'InfoMoneyName'
+          Value = Null
+          Component = InfoMoneyGuides
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          ParamType = ptInputOutput
         end>
       isShowModal = True
       OpenBeforeShow = True
@@ -681,6 +715,13 @@ inherited Report_GoodsMI_IncomeByPartnerForm: TReport_GoodsMI_IncomeByPartnerFor
         Name = 'inJuridicalId'
         Value = ''
         Component = JuridicalGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inInfoMoneyId'
+        Value = Null
+        Component = InfoMoneyGuides
         ComponentItem = 'Key'
         ParamType = ptInput
       end>
@@ -873,8 +914,8 @@ inherited Report_GoodsMI_IncomeByPartnerForm: TReport_GoodsMI_IncomeByPartnerFor
         DataType = ftString
         ParamType = ptInput
       end>
-    Left = 704
-    Top = 32
+    Left = 560
+    Top = 24
   end
   object GuidesUnitGroup: TdsdGuides
     KeyField = 'Id'
@@ -928,7 +969,7 @@ inherited Report_GoodsMI_IncomeByPartnerForm: TReport_GoodsMI_IncomeByPartnerFor
         DataType = ftString
         ParamType = ptInput
       end>
-    Left = 432
+    Left = 312
     Top = 24
   end
   object PaidKindGuides: TdsdGuides
@@ -955,7 +996,31 @@ inherited Report_GoodsMI_IncomeByPartnerForm: TReport_GoodsMI_IncomeByPartnerFor
         DataType = ftString
         ParamType = ptInput
       end>
-    Left = 904
-    Top = 32
+    Left = 800
+    Top = 65528
+  end
+  object InfoMoneyGuides: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = ceInfoMoney
+    FormNameParam.Value = 'TInfoMoney_ObjectForm'
+    FormNameParam.DataType = ftString
+    FormName = 'TInfoMoney_ObjectForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = InfoMoneyGuides
+        ComponentItem = 'Key'
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = InfoMoneyGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+      end>
+    Left = 928
+    Top = 21
   end
 end

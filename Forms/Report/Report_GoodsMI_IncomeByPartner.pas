@@ -54,6 +54,9 @@ type
     PaidKindGuides: TdsdGuides;
     ExecuteDialog: TExecuteDialog;
     bbDialog: TdxBarButton;
+    cxLabel8: TcxLabel;
+    ceInfoMoney: TcxButtonEdit;
+    InfoMoneyGuides: TdsdGuides;
   private
     { Private declarations }
   public

@@ -3,6 +3,7 @@
 
 DROP FUNCTION IF EXISTS gpReport_GoodsMI_IncomeByPartner (TDateTime, TDateTime, Integer, Integer, Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpReport_GoodsMI_IncomeByPartner (TDateTime, TDateTime, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpReport_GoodsMI_IncomeByPartner (TDateTime, TDateTime, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar);
 
 
 CREATE OR REPLACE FUNCTION gpReport_GoodsMI_IncomeByPartner (
@@ -14,6 +15,7 @@ CREATE OR REPLACE FUNCTION gpReport_GoodsMI_IncomeByPartner (
     IN inUnitId       Integer   ,
     IN inPaidKindId   Integer   ,
     IN inJuridicalId  Integer   ,
+    IN inInfoMoneyId  Integer   , -- ”правленческа€ стать€  
     IN inSession      TVarChar    -- сесси€ пользовател€
 )
 RETURNS TABLE (GoodsGroupName TVarChar
