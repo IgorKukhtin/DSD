@@ -26,7 +26,6 @@ object IncomeForm: TIncomeForm
     Align = alTop
     BevelOuter = bvNone
     TabOrder = 0
-    ExplicitLeft = 1
     object edInvNumber: TcxTextEdit
       Left = 9
       Top = 23
@@ -348,6 +347,16 @@ object IncomeForm: TIncomeForm
               Format = ',0.####'
               Kind = skSum
               Column = colAmountRemains
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = colAmount_unit
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = colAmount_diff
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -388,6 +397,16 @@ object IncomeForm: TIncomeForm
               Format = ',0.####'
               Kind = skSum
               Column = colAmountRemains
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = colAmount_unit
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = colAmount_diff
             end>
           DataController.Summary.SummaryGroups = <>
           Images = dmMain.SortImageList
@@ -474,6 +493,17 @@ object IncomeForm: TIncomeForm
             Options.Editing = False
             Width = 55
           end
+          object colAmount_unit: TcxGridDBColumn
+            Caption = #1050#1086#1083'-'#1074#1086' ('#1089#1082#1083#1072#1076' '#1080#1090#1086#1075')'
+            DataBinding.FieldName = 'Amount_unit'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 80
+          end
           object colAmount: TcxGridDBColumn
             Caption = #1050#1086#1083'-'#1074#1086' ('#1089#1082#1083#1072#1076')'
             DataBinding.FieldName = 'Amount'
@@ -504,6 +534,18 @@ object IncomeForm: TIncomeForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 75
+          end
+          object colAmount_diff: TcxGridDBColumn
+            Caption = #1050#1086#1083'. (-)'#1091#1073#1099#1083#1100' (+)'#1101#1082#1086#1085#1086#1084'.'
+            DataBinding.FieldName = 'Amount_diff'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 80
           end
           object colPrice: TcxGridDBColumn
             Caption = #1062#1077#1085#1072
@@ -999,7 +1041,6 @@ object IncomeForm: TIncomeForm
           DataSet = PrintItemsCDS
           UserName = 'frxDBDMaster'
         end>
-      CopiesCount = 1
       Params = <
         item
           Name = 'InvNumber'

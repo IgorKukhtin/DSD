@@ -12,7 +12,7 @@ CREATE OR REPLACE FUNCTION gpSelect_Movement_Income(
 RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode Integer, StatusName TVarChar
              , OperDatePartner TDateTime, InvNumberPartner TVarChar
              , PriceWithVAT Boolean, VATPercent TFloat, ChangePercent TFloat
-             , TotalCount TFloat, TotalCountPartner TFloat, TotalSummMVAT TFloat, TotalSummPVAT TFloat, TotalSumm TFloat, TotalSummPacker TFloat, TotalSummSpending TFloat, TotalSummVAT TFloat
+             , TotalCount TFloat, TotalCount_unit TFloat, TotalCount_diff TFloat, TotalCountPartner TFloat, TotalSummMVAT TFloat, TotalSummPVAT TFloat, TotalSumm TFloat, TotalSummPacker TFloat, TotalSummSpending TFloat, TotalSummVAT TFloat
              , CurrencyValue TFloat
              , FromName TVarChar, ToName TVarChar
              , PaidKindName TVarChar
@@ -62,6 +62,8 @@ BEGIN
            , MovementFloat_ChangePercent.ValueData       AS ChangePercent
 
            , MovementFloat_TotalCount.ValueData          AS TotalCount
+           , (COALESCE (MovementFloat_TotalCount.ValueData, 0) + COALESCE (MovementFloat_TotalSummPacker.ValueData, 0)) :: TFloat AS TotalCount_unit
+           , (COALESCE (MovementFloat_TotalCount.ValueData, 0) - COALESCE (MovementFloat_TotalCountPartner.ValueData, 0)) :: TFloat AS TotalCount_diff
            , MovementFloat_TotalCountPartner.ValueData   AS TotalCountPartner
            , MovementFloat_TotalSummMVAT.ValueData       AS TotalSummMVAT
            , MovementFloat_TotalSummPVAT.ValueData       AS TotalSummPVAT

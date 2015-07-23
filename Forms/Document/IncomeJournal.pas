@@ -120,6 +120,8 @@ type
     actSimpleReCompleteList: TMultiAction;
     actReCompleteList: TMultiAction;
     N1: TMenuItem;
+    colTotalCount_unit: TcxGridDBColumn;
+    colTotalCount_diff: TcxGridDBColumn;
   private
   public
   end;

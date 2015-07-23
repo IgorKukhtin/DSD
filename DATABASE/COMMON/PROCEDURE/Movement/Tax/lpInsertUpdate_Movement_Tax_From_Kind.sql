@@ -525,7 +525,9 @@ BEGIN
               , tmpMI.GoodsKindId
               , CASE WHEN vbCurrencyDocumentId <> zc_Enum_Currency_Basis()
                           -- так переводится в валюту zc_Enum_Currency_Basis
-                          THEN CAST (tmpMI.Price * CASE WHEN vbParValue = 0 THEN 0 ELSE vbCurrencyValue / vbParValue END AS NUMERIC (16, 2))
+                          -- THEN CAST (tmpMI.Price * CASE WHEN vbParValue = 0 THEN 0 ELSE vbCurrencyValue / vbParValue END AS NUMERIC (16, 2))
+                          -- перестали округлять
+                          THEN tmpMI.Price * CASE WHEN vbParValue = 0 THEN 0 ELSE vbCurrencyValue / vbParValue END
                      ELSE tmpMI.Price
                 END AS Price
               , tmpMI.CountForPrice

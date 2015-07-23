@@ -153,6 +153,8 @@ type
     colAmountRemains: TcxGridDBColumn;
     cxLabel16: TcxLabel;
     ceComment: TcxTextEdit;
+    colAmount_unit: TcxGridDBColumn;
+    colAmount_diff: TcxGridDBColumn;
   private
   public
   end;

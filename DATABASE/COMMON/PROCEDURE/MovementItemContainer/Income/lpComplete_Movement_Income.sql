@@ -314,7 +314,7 @@ BEGIN
      INSERT INTO _tmpItem (MovementItemId
                          , ContainerId_Summ, ContainerId_Goods, ContainerId_CountSupplier, GoodsId, GoodsKindId, AssetId, PartionGoods, PartionGoodsDate
                          , ContainerId_GoodsTicketFuel, GoodsId_TicketFuel
-                         , OperCount, OperCount_Packer, tmpOperSumm_Partner, OperSumm_Partner, tmpOperSumm_Packer, OperSumm_Packer, tmpOperSumm_PartnerTo, OperSumm_PartnerTo
+                         , OperCount, OperCount_Partner, OperCount_Packer, tmpOperSumm_Partner, OperSumm_Partner, tmpOperSumm_Packer, OperSumm_Packer, tmpOperSumm_PartnerTo, OperSumm_PartnerTo
                          , AccountId, InfoMoneyGroupId, InfoMoneyDestinationId, InfoMoneyId, InfoMoneyGroupId_Detail, InfoMoneyDestinationId_Detail, InfoMoneyId_Detail
                          , BusinessId, UnitId_Asset
                          , isPartionCount, isPartionSumm, isCountSupplier
@@ -334,6 +334,7 @@ BEGIN
             , _tmp.GoodsId_TicketFuel
 
             , _tmp.OperCount
+            , _tmp.OperCount_Partner
             , _tmp.OperCount_Packer
 
               -- промежуточная сумма по Контрагенту - с округлением до 2-х знаков
@@ -440,9 +441,10 @@ BEGIN
  
                    , MovementItem.ObjectId AS GoodsId_TicketFuel
 
-                   , MovementItem.Amount                          AS OperCount
-                   , COALESCE (MIFloat_AmountPacker.ValueData, 0) AS OperCount_Packer
-                   , COALESCE (MIFloat_Price.ValueData, 0)        AS Price
+                   , MovementItem.Amount                           AS OperCount
+                   , COALESCE (MIFloat_AmountPartner.ValueData, 0) AS OperCount_Partner
+                   , COALESCE (MIFloat_AmountPacker.ValueData, 0)  AS OperCount_Packer
+                   , COALESCE (MIFloat_Price.ValueData, 0)         AS Price
 
                      -- промежуточная сумма по Контрагенту - с округлением до 2-х знаков
                    , CASE WHEN COALESCE (MIFloat_CountForPrice.ValueData, 0) <> 0 THEN COALESCE (CAST (MIFloat_AmountPartner.ValueData * MIFloat_Price.ValueData / MIFloat_CountForPrice.ValueData AS NUMERIC (16, 2)), 0)
@@ -1097,11 +1099,25 @@ BEGIN
             , vbWhereObjectId_Analyzer                AS WhereObjectId_Analyzer -- Подраделение или...
             , vbContainerId_Analyzer                  AS ContainerId_Analyzer   -- Контейнер - по долгам поставщика
             , 0                                       AS ParentId
-            , OperCount                               AS Amount
+            , OperCount_Partner                       AS Amount
             , vbOperDate                              AS OperDate               -- т.е. по "Дате склад"
             , TRUE                                    AS isActive
        FROM _tmpItem
        -- WHERE OperCount <> 0
+      UNION ALL
+       SELECT 0, zc_MIContainer_Count() AS DescId, vbMovementDescId, inMovementId, MovementItemId
+            , ContainerId_Goods
+            , 0                                       AS AccountId              -- нет счета
+            , zc_Enum_AnalyzerId_Count_40200()        AS AnalyzerId             -- есть аналитика, Разница в весе, хотя реально эта разница не попадает в статью затрат 40200...
+            , _tmpItem.GoodsId                        AS ObjectId_Analyzer      -- Товар
+            , vbWhereObjectId_Analyzer                AS WhereObjectId_Analyzer -- Подраделение или...
+            , vbContainerId_Analyzer                  AS ContainerId_Analyzer   -- Контейнер - по долгам поставщика
+            , 0                                       AS ParentId
+            , OperCount - OperCount_Partner           AS Amount
+            , vbOperDate                              AS OperDate               -- т.е. по "Дате склад"
+            , TRUE                                    AS isActive
+       FROM _tmpItem
+       WHERE OperCount <> OperCount_Partner
       UNION ALL
        SELECT 0, zc_MIContainer_Count() AS DescId, vbMovementDescId, inMovementId, MovementItemId
             , ContainerId_Goods
@@ -1243,12 +1259,27 @@ BEGIN
             , vbWhereObjectId_Analyzer                AS WhereObjectId_Analyzer -- Подраделение или...
             , vbContainerId_Analyzer                  AS ContainerId_Analyzer   -- Контейнер - по долгам поставщика
             , 0                                       AS ParentId
-            , OperSumm_Partner                        AS Amount
+            , CASE WHEN OperCount <> OperCount_Partner AND OperCount_Partner <> 0 THEN CAST (OperCount * OperSumm_Partner / OperCount_Partner AS NUMERIC (16, 4)) ELSE OperSumm_Partner END AS Amount
             , vbOperDate                              AS OperDate               -- т.е. по "Дате склад"
             , TRUE                                    AS isActive
        FROM _tmpItem
-       WHERE OperSumm_Partner <> 0 AND zc_isHistoryCost() = TRUE -- !!!если нужны проводки!!!
-      UNION
+       WHERE OperSumm_Partner <> 0
+      UNION ALL
+       SELECT 0, zc_MIContainer_Summ() AS DescId, vbMovementDescId, inMovementId, MovementItemId
+            , ContainerId_Summ
+            , _tmpItem.AccountId                      AS AccountId              -- счет есть всегда
+            , zc_Enum_AnalyzerId_Count_40200()        AS AnalyzerId             -- есть аналитика, Разница в весе, хотя реально эта разница не попадает в статью затрат 40200...
+            , _tmpItem.GoodsId                        AS ObjectId_Analyzer      -- Товар
+            , vbWhereObjectId_Analyzer                AS WhereObjectId_Analyzer -- Подраделение или...
+            , vbContainerId_Analyzer                  AS ContainerId_Analyzer   -- Контейнер - по долгам поставщика
+            , 0                                       AS ParentId
+            , CASE WHEN OperCount <> OperCount_Partner AND OperCount_Partner <> 0 THEN OperSumm_Partner - CAST (OperCount * OperSumm_Partner / OperCount_Partner AS NUMERIC (16, 4)) ELSE 0 END AS Amount
+            , vbOperDate                              AS OperDate               -- т.е. по "Дате склад"
+            , TRUE                                    AS isActive
+       FROM _tmpItem
+       WHERE OperSumm_Partner <> 0
+         AND OperCount <> OperCount_Partner
+      UNION ALL
        SELECT 0, zc_MIContainer_Summ() AS DescId, vbMovementDescId, inMovementId, MovementItemId
             , ContainerId_Summ
             , _tmpItem.AccountId                      AS AccountId              -- счет есть всегда
@@ -1261,7 +1292,7 @@ BEGIN
             , vbOperDate                              AS OperDate               -- т.е. по "Дате склад"
             , TRUE                                    AS isActive
        FROM _tmpItem
-       WHERE OperSumm_Packer <> 0 AND zc_isHistoryCost() = TRUE; -- !!!если нужны проводки!!!
+       WHERE OperSumm_Packer <> 0;
 
 
      -- 2.0.3. формируются Проводки - долг Поставщику или Физ.лицу (подотчетные лица) + !!!не добавлен MovementItemId!!! + !!!добавлен GoodsId!!!

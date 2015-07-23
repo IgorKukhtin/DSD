@@ -11,7 +11,7 @@ CREATE OR REPLACE FUNCTION gpSelect_MovementItem_Income(
 )
 RETURNS TABLE (Id Integer, GoodsId Integer, GoodsCode Integer, GoodsName TVarChar
              , GoodsGroupNameFull TVarChar, MeasureName TVarChar
-             , Amount TFloat, AmountPartner TFloat, AmountPacker TFloat
+             , Amount TFloat, AmountPartner TFloat, AmountPacker TFloat, Amount_unit TFloat
              , Price TFloat, CountForPrice TFloat, LiveWeight TFloat, HeadCount TFloat
              , PartionGoods TVarChar, GoodsKindId Integer, GoodsKindName TVarChar, AssetId  Integer, AssetName  TVarChar
              , InfoMoneyCode Integer, InfoMoneyGroupName TVarChar, InfoMoneyDestinationName TVarChar, InfoMoneyName TVarChar, InfoMoneyName_all TVarChar
@@ -71,6 +71,7 @@ BEGIN
            , CAST (NULL AS TFloat) AS Amount
            , CAST (NULL AS TFloat) AS AmountPartner
            , CAST (NULL AS TFloat) AS AmountPacker
+           , CAST (NULL AS TFloat) AS Amount_unit
 
            , tmpPrice.ValuePrice  AS Price
            , 1      :: TFloat   AS CountForPrice
@@ -156,6 +157,7 @@ BEGIN
            , MovementItem.Amount
            , MIFloat_AmountPartner.ValueData   AS AmountPartner
            , MIFloat_AmountPacker.ValueData    AS AmountPacker
+           , CAST (MovementItem.Amount + COALESCE (MIFloat_AmountPacker.ValueData, 0) AS TFloat) AS Amount_unit
 
            , MIFloat_Price.ValueData AS Price
            , MIFloat_CountForPrice.ValueData AS CountForPrice
@@ -336,6 +338,7 @@ BEGIN
            , tmpMI_Goods.Amount         :: TFloat
            , tmpMI_Goods.AmountPartner  :: TFloat
            , tmpMI_Goods.AmountPacker   :: TFloat
+           , CAST (tmpMI_Goods.Amount + tmpMI_Goods.AmountPacker AS TFloat) AS Amount_unit
 
            , tmpMI_Goods.Price         :: TFloat
            , tmpMI_Goods.CountForPrice :: TFloat AS CountForPrice
