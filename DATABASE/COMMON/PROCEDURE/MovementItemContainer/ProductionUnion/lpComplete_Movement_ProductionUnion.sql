@@ -33,6 +33,7 @@ $BODY$
   DECLARE vbBusinessId_To Integer;
 
   DECLARE vbIsPeresort Boolean;
+  DECLARE vbProcessId Integer;
 BEGIN
      -- !!!обязательно!!! очистили таблицу проводок
      DELETE FROM _tmpMIContainer_insert;
@@ -70,10 +71,11 @@ BEGIN
           , COALESCE (CASE WHEN Object_To.DescId = zc_Object_Unit() THEN ObjectLink_UnitTo_Business.ChildObjectId WHEN Object_To.DescId = zc_Object_Personal() THEN ObjectLink_UnitPersonalTo_Business.ChildObjectId ELSE 0 END, 0) AS BusinessId_To
 
           , COALESCE (MovementBoolean_Peresort.ValueData, FALSE) AS isPeresort
+          , COALESCE (MovementLinkObject_User.ObjectId, 0)       AS ProcessId
 
             INTO vbMovementDescId, vbOperDate, vbUnitId_From, vbMemberId_From, vbBranchId_From, vbAccountDirectionId_From, vbIsPartionDate_Unit_From, vbJuridicalId_Basis_From, vbBusinessId_From
                , vbUnitId_To, vbMemberId_To, vbBranchId_To, vbAccountDirectionId_To, vbIsPartionDate_Unit_To, vbJuridicalId_Basis_To, vbBusinessId_To
-               , vbIsPeresort
+               , vbIsPeresort, vbProcessId
      FROM Movement
           LEFT JOIN MovementBoolean AS MovementBoolean_Peresort
                                     ON MovementBoolean_Peresort.MovementId = Movement.Id
@@ -87,6 +89,10 @@ BEGIN
           LEFT JOIN MovementFloat AS MovementFloat_ChangePercent
                  ON MovementFloat_ChangePercent.MovementId = Movement.Id
                 AND MovementFloat_ChangePercent.DescId = zc_MovementFloat_ChangePercent()
+
+          LEFT JOIN MovementLinkObject AS MovementLinkObject_User
+                                       ON MovementLinkObject_User.MovementId = Movement.Id
+                                      AND MovementLinkObject_User.DescId = zc_MovementLinkObject_User()
 
           LEFT JOIN MovementLinkObject AS MovementLinkObject_From
                                        ON MovementLinkObject_From.MovementId = Movement.Id
@@ -511,7 +517,8 @@ BEGIN
             , COALESCE (lfContainerSumm_20901.ContainerId, COALESCE (Container_Summ.Id, 0)) AS ContainerId_From
             , COALESCE (lfContainerSumm_20901.AccountId, COALESCE (Container_Summ.ObjectId, 0)) AS AccountId_From
             , ContainerLinkObject_InfoMoneyDetail.ObjectId AS InfoMoneyId_Detail_From
-            , SUM (/*ABS*/ (_tmpItemChild.OperCount * COALESCE (HistoryCost.Price, 0))) AS OperSumm
+              -- !!!для <Схема Дефростер> другая цена!!!
+            , SUM (/*ABS*/ (CASE WHEN vbProcessId = zc_Enum_Process_Auto_Defroster() THEN _tmpItemChild.OperCount * COALESCE (HistoryCost.Price_external, 0) ELSE _tmpItemChild.OperCount * COALESCE (HistoryCost.Price, 0) END)) AS OperSumm
         FROM _tmpItemChild
              -- так находим для тары
              LEFT JOIN lfSelect_ContainerSumm_byAccount (zc_Enum_Account_20901()) AS lfContainerSumm_20901

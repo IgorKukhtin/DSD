@@ -2483,7 +2483,8 @@ end;
 
 procedure TfrxReportExt.ClosePreview(Sender: TObject);
 begin
-  if Assigned(FReport) then //ClosePreview повторно вызывается при удалении frxReport
+  if Assigned(FReport) AND //ClosePreview повторно вызывается при удалении frxReport
+     not Assigned(FReport.Designer) then //Не нужно самоубиваться, если в режиме дизайна
     Self.Destroy;
 end;
 

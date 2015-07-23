@@ -27,7 +27,7 @@ type
     Amount_diff: TcxGridDBColumn;
     Amount_Send_in: TcxGridDBColumn;
     Amount_Loss: TcxGridDBColumn;
-    Amount_Production: TcxGridDBColumn;
+    Amount_Loss_diff: TcxGridDBColumn;
     MeasureName: TcxGridDBColumn;
     cxLabel3: TcxLabel;
     UnitGuides: TdsdGuides;
@@ -45,6 +45,18 @@ type
     PartnerName: TcxGridDBColumn;
     actPrint1: TdsdPrintAction;
     bbPrint1: TdxBarButton;
+    actUpdateDefroster: TdsdExecStoredProc;
+    spUpdateDefroster: TdsdStoredProc;
+    bbUpdateDefroster: TdxBarButton;
+    Tax_Separate_diff: TcxGridDBColumn;
+    Price_in: TcxGridDBColumn;
+    Price_Separate_in: TcxGridDBColumn;
+    Price_Send_in: TcxGridDBColumn;
+    Price_out: TcxGridDBColumn;
+    Price_Separate_out: TcxGridDBColumn;
+    Price_Send_out: TcxGridDBColumn;
+    Summ_Loss_diff: TcxGridDBColumn;
+    Price_Loss_diff: TcxGridDBColumn;
   private
     { Private declarations }
   public

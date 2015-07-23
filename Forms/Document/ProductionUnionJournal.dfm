@@ -3,7 +3,7 @@ inherited ProductionUnionJournalForm: TProductionUnionJournalForm
   ClientHeight = 535
   ClientWidth = 1073
   ExplicitWidth = 1089
-  ExplicitHeight = 573
+  ExplicitHeight = 570
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -270,7 +270,6 @@ inherited ProductionUnionJournalForm: TProductionUnionJournalForm
           DataSet = PrintItemsCDS
           UserName = 'frxDBDMaster'
         end>
-      CopiesCount = 1
       Params = <
         item
           Name = 'Id'
@@ -315,7 +314,6 @@ inherited ProductionUnionJournalForm: TProductionUnionJournalForm
           DataSet = PrintItemsCDS
           UserName = 'frxDBDMaster'
         end>
-      CopiesCount = 1
       Params = <
         item
           Name = 'Id'
@@ -574,6 +572,9 @@ inherited ProductionUnionJournalForm: TProductionUnionJournalForm
       end>
     Left = 400
     Top = 200
+  end
+  inherited spMovementReComplete: TdsdStoredProc
+    StoredProcName = 'gpReComplete_Movement_ProductionUnion'
   end
   object PrintHeaderCDS: TClientDataSet
     Aggregates = <>

@@ -33,7 +33,7 @@ BEGIN
                                 LEFT JOIN Object_InfoMoney_View AS Object_InfoMoney_View_find ON Object_InfoMoney_View_find.InfoMoneyDestinationId = Object_InfoMoney_View.InfoMoneyDestinationId
                            WHERE Object_InfoMoney_View.InfoMoneyId = inInfoMoneyId
                              AND Object_InfoMoney_View.InfoMoneyGroupId = zc_Enum_InfoMoneyGroup_10000() -- Основное сырье
-                          UNION 
+                          /*UNION 
                            SELECT Object_InfoMoney_View.InfoMoneyId
                            FROM (SELECT 1 FROM Object_InfoMoney_View WHERE Object_InfoMoney_View.InfoMoneyId = inInfoMoneyId
                                                                        AND Object_InfoMoney_View.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_10200() -- Основное сырье + Прочее сырье
@@ -47,6 +47,7 @@ BEGIN
                                                                                                                    , zc_Enum_InfoMoneyDestination_20600() -- Общефирменные + Прочие материалы
                                                                                                                     )
                                                                  OR Object_InfoMoney_View.InfoMoneyGroupId = zc_Enum_InfoMoneyGroup_70000() -- Инвестиции
+*/
                           )
 
      SELECT
@@ -104,7 +105,14 @@ BEGIN
              -- Сумма без НДС
            , (
              CAST (
-             CASE WHEN MovementFloat_ChangePercent.ValueData <> 0
+             CASE WHEN MovementBoolean_PriceWithVAT.ValueData = FALSE OR COALESCE (MovementFloat_VATPercent.ValueData, 0) = 0
+                       -- если цены без НДС или %НДС=0
+                       THEN 1
+                  WHEN MovementBoolean_PriceWithVAT.ValueData = TRUE
+                       -- если цены c НДС
+                       THEN 1 / (1 + MovementFloat_VATPercent.ValueData / 100)
+             END 
+           * CASE WHEN MovementFloat_ChangePercent.ValueData <> 0
                        THEN CAST ( (1 + MovementFloat_ChangePercent.ValueData / 100) * COALESCE (MIFloat_Price.ValueData, 0) AS NUMERIC (16, 2))
                   ELSE COALESCE (MIFloat_Price.ValueData, 0)
              END / CASE WHEN MIFloat_CountForPrice.ValueData <> 0 THEN MIFloat_CountForPrice.ValueData ELSE 1 END
@@ -117,8 +125,9 @@ BEGIN
              ) :: TVarChar                       AS Summa
 
              -- Сумма НДС
-           , ((
-             CAST (
+           , (
+             -- ***Сумма с НДС
+             CAST ((
              CAST (
              CASE WHEN MovementFloat_ChangePercent.ValueData <> 0
                        THEN CAST ( (1 + MovementFloat_ChangePercent.ValueData / 100) * COALESCE (MIFloat_Price.ValueData, 0) AS NUMERIC (16, 2))
@@ -128,19 +137,40 @@ BEGIN
                        THEN COALESCE (MIFloat_AmountPartner.ValueData, 0)
                   ELSE MIMaster.Amount
              END AS NUMERIC (16, 2))
-           * (1 + COALESCE (MovementFloat_VATPercent.ValueData, 0) / 100)
-             AS NUMERIC (16, 4))
-           - CAST (
-             CASE WHEN MovementFloat_ChangePercent.ValueData <> 0
-                       THEN CAST ( (1 + MovementFloat_ChangePercent.ValueData / 100) * COALESCE (MIFloat_Price.ValueData, 0) AS NUMERIC (16, 2))
-                  ELSE COALESCE (MIFloat_Price.ValueData, 0)
-             END / CASE WHEN MIFloat_CountForPrice.ValueData <> 0 THEN MIFloat_CountForPrice.ValueData ELSE 1 END
-           * CASE WHEN Movement.DescId IN (zc_Movement_Sale(), zc_Movement_ReturnIn(), zc_Movement_Income(), zc_Movement_ReturnOut())
-                       THEN COALESCE (MIFloat_AmountPartner.ValueData, 0)
-                  ELSE MIMaster.Amount
-             END AS NUMERIC (16, 2))
+           * CASE WHEN MovementBoolean_PriceWithVAT.ValueData = TRUE OR COALESCE (MovementFloat_VATPercent.ValueData, 0) = 0
+                       -- если цены с НДС или %НДС=0
+                       THEN 1
+                  WHEN MovementBoolean_PriceWithVAT.ValueData = FALSE
+                       -- если цены c НДС
+                       THEN (1 + MovementFloat_VATPercent.ValueData / 100)
+             END
              )
            * CASE WHEN Movement.DescId = zc_Movement_PriceCorrective() THEN -1 ELSE 1 END
+             AS NUMERIC (16, 4))
+
+             -- ***минус
+           -
+             -- ***Сумма без НДС
+             (
+             CAST (
+             CASE WHEN MovementBoolean_PriceWithVAT.ValueData = FALSE OR COALESCE (MovementFloat_VATPercent.ValueData, 0) = 0
+                       -- если цены без НДС или %НДС=0
+                       THEN 1
+                  WHEN MovementBoolean_PriceWithVAT.ValueData = TRUE
+                       -- если цены c НДС
+                       THEN 1 / (1 + MovementFloat_VATPercent.ValueData / 100)
+             END 
+           * CASE WHEN MovementFloat_ChangePercent.ValueData <> 0
+                       THEN CAST ( (1 + MovementFloat_ChangePercent.ValueData / 100) * COALESCE (MIFloat_Price.ValueData, 0) AS NUMERIC (16, 2))
+                  ELSE COALESCE (MIFloat_Price.ValueData, 0)
+             END / CASE WHEN MIFloat_CountForPrice.ValueData <> 0 THEN MIFloat_CountForPrice.ValueData ELSE 1 END
+           * CASE WHEN Movement.DescId IN (zc_Movement_Sale(), zc_Movement_ReturnIn(), zc_Movement_Income(), zc_Movement_ReturnOut())
+                       THEN COALESCE (MIFloat_AmountPartner.ValueData, 0)
+                  ELSE MIMaster.Amount
+             END AS NUMERIC (16, 2)
+             )
+           * CASE WHEN Movement.DescId = zc_Movement_PriceCorrective() THEN -1 ELSE 1 END
+             )
              ) :: TVarChar                                             AS PDV
 
              -- Сумма с НДС
@@ -154,7 +184,13 @@ BEGIN
                        THEN COALESCE (MIFloat_AmountPartner.ValueData, 0)
                   ELSE MIMaster.Amount
              END AS NUMERIC (16, 2))
-          * (1 + COALESCE (MovementFloat_VATPercent.ValueData, 0) / 100)
+           * CASE WHEN MovementBoolean_PriceWithVAT.ValueData = TRUE OR COALESCE (MovementFloat_VATPercent.ValueData, 0) = 0
+                       -- если цены с НДС или %НДС=0
+                       THEN 1
+                  WHEN MovementBoolean_PriceWithVAT.ValueData = FALSE
+                       -- если цены c НДС
+                       THEN (1 + MovementFloat_VATPercent.ValueData / 100)
+             END
              )
            * CASE WHEN Movement.DescId = zc_Movement_PriceCorrective() THEN -1 ELSE 1 END
              AS NUMERIC (16, 4)) :: TVarChar                           AS SummaPDV
@@ -165,6 +201,9 @@ BEGIN
                        THEN 1
                   WHEN View_Contract_InvNumber.InfoMoneyId = zc_Enum_InfoMoney_30103() -- Хлеб
                        THEN 3
+
+                  WHEN Movement.DescId IN (zc_Movement_Income(), zc_Movement_ReturnOut())
+                       THEN 4
                   ELSE NULL
              END :: TVarChar                                           AS CLIENTKIND
 
@@ -223,6 +262,9 @@ BEGIN
             /*LEFT JOIN MovementDate AS MovementDate_OperDatePartner
                                    ON MovementDate_OperDatePartner.MovementId =  Movement.Id
                                   AND MovementDate_OperDatePartner.DescId = zc_MovementDate_OperDatePartner()*/
+            LEFT JOIN MovementBoolean AS MovementBoolean_PriceWithVAT
+                                      ON MovementBoolean_PriceWithVAT.MovementId = Movement.Id
+                                     AND MovementBoolean_PriceWithVAT.DescId = zc_MovementBoolean_PriceWithVAT()
             LEFT JOIN MovementFloat AS MovementFloat_VATPercent
                                     ON MovementFloat_VATPercent.MovementId = Movement.Id
                                    AND MovementFloat_VATPercent.DescId = zc_MovementFloat_VATPercent()

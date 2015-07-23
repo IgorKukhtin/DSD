@@ -21,6 +21,7 @@ type
  var
 
    EnumPath: string = '..\DATABASE\COMMON\METADATA\Enum\';
+   FarmacyEnumPath: string = '..\DATABASE\Farmacy\METADATA\Enum\';
 
 implementation
 
@@ -32,6 +33,9 @@ procedure TdbEnumTest.InsertObjectEnum;
 begin
   ExecFile(EnumPath + 'CreateObjectEnumFunction.sql', ZQuery);
   ExecFile(EnumPath + 'InsertObjectEnum.sql', ZQuery);
+
+  ExecFile(FarmacyEnumPath + 'CreateObjectEnumFunction.sql', ZQuery);
+  ExecFile(FarmacyEnumPath + 'InsertObjectEnum.sql', ZQuery);
 
 end;
 
