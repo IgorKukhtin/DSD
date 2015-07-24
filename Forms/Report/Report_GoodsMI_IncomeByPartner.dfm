@@ -1,28 +1,29 @@
 inherited Report_GoodsMI_IncomeByPartnerForm: TReport_GoodsMI_IncomeByPartnerForm
   Caption = #1054#1090#1095#1077#1090' <'#1055#1086' '#1090#1086#1074#1072#1088#1072#1084' ('#1087#1086' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072#1084')>'
   ClientHeight = 553
-  ClientWidth = 1159
+  ClientWidth = 1020
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
-  ExplicitWidth = 1175
+  ExplicitLeft = -38
+  ExplicitWidth = 1036
   ExplicitHeight = 588
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 83
-    Width = 1159
+    Width = 1020
     Height = 470
     TabOrder = 3
     ExplicitTop = 83
     ExplicitWidth = 1159
     ExplicitHeight = 470
     ClientRectBottom = 470
-    ClientRectRight = 1159
+    ClientRectRight = 1020
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 1159
       ExplicitHeight = 470
       inherited cxGrid: TcxGrid
-        Width = 1159
+        Width = 1020
         Height = 470
         ExplicitWidth = 1159
         ExplicitHeight = 470
@@ -314,7 +315,7 @@ inherited Report_GoodsMI_IncomeByPartnerForm: TReport_GoodsMI_IncomeByPartnerFor
     end
   end
   inherited Panel: TPanel
-    Width = 1159
+    Width = 1020
     Height = 57
     ExplicitWidth = 1159
     ExplicitHeight = 57
