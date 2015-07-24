@@ -36,14 +36,12 @@ inherited ReportOrderGoodsForm: TReportOrderGoodsForm
                 Kind = bkEllipsis
               end>
             Properties.ReadOnly = True
-            HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 39
           end
           object colName: TcxGridDBColumn
             Caption = #1053#1072#1079#1074#1072#1085#1080#1077
             DataBinding.FieldName = 'Name'
-            HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 224
           end
@@ -52,7 +50,6 @@ inherited ReportOrderGoodsForm: TReportOrderGoodsForm
             DataBinding.FieldName = 'Price'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DisplayFormat = ',0.00'
-            HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 72
           end
@@ -61,62 +58,53 @@ inherited ReportOrderGoodsForm: TReportOrderGoodsForm
             DataBinding.FieldName = 'PriceSale'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DisplayFormat = ',0.00'
-            HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 84
           end
           object colAmount: TcxGridDBColumn
             Caption = #1050#1086#1083'-'#1074#1086
             DataBinding.FieldName = 'Amount'
-            HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 46
           end
           object colStatusName: TcxGridDBColumn
             Caption = #1057#1090#1072#1090#1091#1089
             DataBinding.FieldName = 'StatusName'
-            HeaderAlignmentVert = vaCenter
             Width = 73
           end
           object colMovementDesc: TcxGridDBColumn
             Caption = #1058#1080#1087' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
             DataBinding.FieldName = 'ItemName'
-            HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 90
           end
           object colOrderKindName: TcxGridDBColumn
             Caption = #1042#1080#1076' '#1079#1072#1082#1072#1079#1072
             DataBinding.FieldName = 'OrderKindName'
-            HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 57
           end
           object colUnitName: TcxGridDBColumn
             Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
             DataBinding.FieldName = 'UnitName'
-            HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 114
           end
           object colOperDate: TcxGridDBColumn
             Caption = #1044#1072#1090#1072
             DataBinding.FieldName = 'OperDate'
-            HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 46
           end
           object colInvNumber: TcxGridDBColumn
             Caption = #8470' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
             DataBinding.FieldName = 'InvNumber'
-            HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 94
           end
           object colJuridicalName: TcxGridDBColumn
             Caption = #1055#1086#1089#1090#1072#1074#1097#1080#1082
             DataBinding.FieldName = 'JuridicalName'
-            HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 113
           end
@@ -124,7 +112,6 @@ inherited ReportOrderGoodsForm: TReportOrderGoodsForm
             Caption = #1055#1088#1086#1080#1079#1074#1086#1076#1080#1090#1077#1083#1100
             DataBinding.FieldName = 'ProducerName'
             Visible = False
-            HeaderAlignmentVert = vaCenter
             Options.Editing = False
             VisibleForCustomization = False
             Width = 105
@@ -133,7 +120,6 @@ inherited ReportOrderGoodsForm: TReportOrderGoodsForm
             Caption = #1057#1088#1086#1082' '#1093#1088#1072#1085#1077#1085#1080#1103
             DataBinding.FieldName = 'ExpirationDate'
             Visible = False
-            HeaderAlignmentVert = vaCenter
             Options.Editing = False
             VisibleForCustomization = False
             Width = 73
@@ -145,7 +131,6 @@ inherited ReportOrderGoodsForm: TReportOrderGoodsForm
             Properties.DecimalPlaces = 0
             Properties.DisplayFormat = ',0 %; ; ;'
             Visible = False
-            HeaderAlignmentVert = vaCenter
             Options.Editing = False
             VisibleForCustomization = False
             Width = 70
@@ -154,7 +139,6 @@ inherited ReportOrderGoodsForm: TReportOrderGoodsForm
             Caption = #1053#1044#1057' '#1080#1079' '#1087#1088#1072#1081#1089#1072
             DataBinding.FieldName = 'GoodsNDS'
             Visible = False
-            HeaderAlignmentVert = vaCenter
             Options.Editing = False
             VisibleForCustomization = False
             Width = 66
@@ -162,8 +146,25 @@ inherited ReportOrderGoodsForm: TReportOrderGoodsForm
           object colComment: TcxGridDBColumn
             Caption = #1050#1086#1084#1084#1077#1085#1090#1072#1088#1080#1081
             DataBinding.FieldName = 'Comment'
-            HeaderAlignmentVert = vaCenter
             Width = 100
+          end
+          object colPartionGoods: TcxGridDBColumn
+            Caption = #8470' '#1057#1077#1088#1080#1080' '#1087#1088'-'#1090#1072
+            DataBinding.FieldName = 'PartionGoods'
+            Options.Editing = False
+            Width = 75
+          end
+          object colExpirationDate2: TcxGridDBColumn
+            Caption = #1057#1088#1086#1082' '#1075#1086#1076#1085#1086#1089#1090#1080
+            DataBinding.FieldName = 'ExpirationDate'
+            Options.Editing = False
+            Width = 78
+          end
+          object colPaymentDate: TcxGridDBColumn
+            Caption = #1044#1072#1090#1072' '#1086#1087#1083#1072#1090#1099
+            DataBinding.FieldName = 'PaymentDate'
+            Options.Editing = False
+            Width = 81
           end
         end
       end
