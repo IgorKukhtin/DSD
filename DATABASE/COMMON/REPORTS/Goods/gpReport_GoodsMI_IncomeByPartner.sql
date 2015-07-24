@@ -1,15 +1,13 @@
 -- Function: gpReport_GoodsMI_IncomeByPartner ()
---SELECT * FROM Object_Account_View WHERE AccountGroupId = zc_Enum_AccountGroup_20000()
 
 DROP FUNCTION IF EXISTS gpReport_GoodsMI_IncomeByPartner (TDateTime, TDateTime, Integer, Integer, Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpReport_GoodsMI_IncomeByPartner (TDateTime, TDateTime, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpReport_GoodsMI_IncomeByPartner (TDateTime, TDateTime, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar);
 
-
 CREATE OR REPLACE FUNCTION gpReport_GoodsMI_IncomeByPartner (
     IN inStartDate    TDateTime ,
-    IN inEndDate      TDateTime ,
-    IN inDescId       Integer   ,  --sale(продажа покупателю) = 5, returnin (возврат покупателя) = 6
+    IN inENDDate      TDateTime ,
+    IN inDescId       Integer   ,
     IN inGoodsGroupId Integer   ,
     IN inUnitGroupId  Integer   ,
     IN inUnitId       Integer   ,
@@ -20,14 +18,15 @@ CREATE OR REPLACE FUNCTION gpReport_GoodsMI_IncomeByPartner (
 )
 RETURNS TABLE (GoodsGroupName TVarChar, GoodsGroupNameFull TVarChar
              , GoodsCode Integer, GoodsName TVarChar
-             , GoodsKindName TVarChar
+             , GoodsKindName TVarChar, PartionGoods TVarChar, MeasureName TVarChar
              , TradeMarkName TVarChar
              , JuridicalCode Integer, JuridicalName TVarChar
              , PartnerId Integer, PartnerCode Integer, PartnerName TVarChar
              , PaidKindName TVarChar
              , FuelKindName TVarChar
-             , Amount_Weight TFloat, Amount_Sh TFloat
-             , AmountPartner_Weight TFloat , AmountPartner_Sh TFloat
+             , Amount_Weight TFloat, Amount_Sh TFloat, Price TFloat
+             , AmountPartner_Weight TFloat , AmountPartner_Sh TFloat, PricePartner TFloat
+             , AmountDiff_Weight TFloat, AmountDiff_Sh TFloat
              , Summ TFloat
              )
 AS
@@ -98,6 +97,8 @@ BEGIN
          , Object_Goods.ObjectCode     AS GoodsCode
          , Object_Goods.ValueData      AS GoodsName
          , Object_GoodsKind.ValueData  AS GoodsKindName
+         , Object_PartionGoods.ValueData  AS PartionGoods
+         , Object_Measure.ValueData    AS MeasureName
          , Object_TradeMark.ValueData  AS TradeMarkName
 
          , Object_Juridical.ObjectCode AS JuridicalCode
@@ -111,38 +112,44 @@ BEGIN
          , Object_FuelKind.ValueData   AS FuelKindName
 
          , (tmpOperationGroup.Amount * CASE WHEN Object_Measure.Id = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END) :: TFloat AS Amount_Weight
-         , (CASE WHEN Object_Measure.Id = zc_Measure_Sh() THEN tmpOperationGroup.Amount ELSE 0 END) :: TFloat AS Amount_Sh
+         , CASE WHEN Object_Measure.Id = zc_Measure_Sh() THEN tmpOperationGroup.Amount ELSE 0 END :: TFloat AS Amount_Sh
+         , CASE WHEN tmpOperationGroup.Amount <> 0 THEN tmpOperationGroup.Summ / tmpOperationGroup.Amount ELSE 0 END :: TFloat AS Price
 
-         , CAST ((tmpOperationGroup.AmountPartner * (case when Object_Measure.Id = zc_Measure_Sh() then ObjectFloat_Weight.ValueData else 1 end )) AS TFloat) AS AmountPartner_Weight
-         , CAST ((case when Object_Measure.Id = zc_Measure_Sh() then tmpOperationGroup.AmountPartner else 0 end) AS TFloat) AS AmountPartner_Sh
+         , (tmpOperationGroup.AmountPartner * CASE WHEN Object_Measure.Id = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END) :: TFloat AS AmountPartner_Weight
+         , CASE WHEN Object_Measure.Id = zc_Measure_Sh() THEN tmpOperationGroup.AmountPartner ELSE 0 END :: TFloat AS AmountPartner_Sh
+         , CASE WHEN tmpOperationGroup.AmountPartner <> 0 THEN tmpOperationGroup.Summ / tmpOperationGroup.AmountPartner ELSE 0 END :: TFloat AS PricePartner
+
+         , ((tmpOperationGroup.Amount - tmpOperationGroup.AmountPartner) * CASE WHEN Object_Measure.Id = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END) :: TFloat AS AmountDiff_Weight
+         , CASE WHEN Object_Measure.Id = zc_Measure_Sh() THEN tmpOperationGroup.Amount - tmpOperationGroup.AmountPartner ELSE 0 END :: TFloat AS AmountDiff_Sh
 
          , tmpOperationGroup.Summ :: TFloat AS Summ
      FROM (SELECT tmpContainer.GoodsId
                 , COALESCE (ContainerLO_Juridical.ObjectId,  COALESCE (ContainerLO_Member.ObjectId, 0 )) AS JuridicalId
-                , COALESCE (ContainerLO_Partner.ObjectId, COALESCE (ContainerLO_Member.ObjectId, 0)) AS PartnerId 
+                , COALESCE (ContainerLO_Partner.ObjectId, COALESCE (ContainerLO_Member.ObjectId, 0))     AS PartnerId 
                 , CASE WHEN ContainerLO_Member.ObjectId > 0 THEN zc_Enum_PaidKind_SecondForm() ELSE COALESCE (ContainerLO_PaidKind.ObjectId,0) END AS PaidKindId
                 , 0/*( COALESCE (ContainerLO_FuelKind.ObjectId,0) )*/ AS FuelKindId
-                , ( COALESCE (ContainerLO_GoodsKind.ObjectId,0) ) AS GoodsKindId
-                , ABS (SUM (tmpContainer.Amount)):: TFloat          AS Amount 
-                , ABS (SUM (tmpContainer.AmountPartner)):: TFloat   AS AmountPartner
-                , ABS (SUM (tmpContainer.Summ)) :: TFloat           AS Summ
+                , COALESCE (ContainerLO_GoodsKind.ObjectId, 0)        AS GoodsKindId
+                , COALESCE (CLO_PartionGoods.ObjectId, 0) AS PartionGoodsId
+                , SUM (tmpContainer.Amount)                           AS Amount
+                , SUM (tmpContainer.AmountPartner)                    AS AmountPartner
+                , SUM (tmpContainer.Summ)                             AS Summ
 
-           FROM (SELECT MIContainer.ContainerId AS ContainerId
-                      , MIContainer.ObjectId_analyzer AS GoodsId 
-                      , MIContainer.ContainerId_analyzer      
-                      , SUM ( CASE WHEN MIContainer.DescId = zc_MIContainer_Summ() THEN COALESCE (MIContainer.Amount,0) ELSE 0 end ) AS Summ
-                      , SUM ( CASE WHEN MIContainer.DescId = zc_MIContainer_Count() THEN COALESCE (MIContainer.Amount,0) ELSE 0 end ) AS Amount
-                      , SUM ( CASE WHEN MIContainer.DescId = zc_MIContainer_Count() THEN COALESCE (MIContainer.Amount,0) ELSE 0 end ) AS AmountPartner
-                      , 0 AS AmountPackage
-                      , 0 AS SummPackage
+           FROM (SELECT MIContainer.ContainerId          AS ContainerId
+                      , MIContainer.ObjectId_analyzer    AS GoodsId 
+                      , MIContainer.ContainerId_analyzer AS ContainerId_analyzer
+                      , SUM (CASE WHEN MIContainer.DescId = zc_MIContainer_Count() THEN MIContainer.Amount ELSE 0 END) * CASE WHEN inDescId = zc_Movement_Income() THEN 1 ELSE -1 END AS Amount
+                      , SUM (CASE WHEN MIContainer.DescId = zc_MIContainer_Count() AND COALESCE (MIContainer.AnalyzerId, 0) <> zc_Enum_AnalyzerId_Count_40200() THEN MIContainer.Amount ELSE 0 END) * CASE WHEN inDescId = zc_Movement_Income() THEN 1 ELSE -1 END AS AmountPartner
+                      , SUM (CASE WHEN MIContainer.DescId = zc_MIContainer_Summ()  THEN MIContainer.Amount ELSE 0 END) * CASE WHEN inDescId = zc_Movement_Income() THEN 1 ELSE -1 END AS Summ
                  FROM MovementItemContainer AS MIContainer 
-                       JOIN _tmpGoods ON _tmpGoods.GoodsId = MIContainer.ObjectId_analyzer
-                       JOIN _tmpUnit ON _tmpUnit.UnitId = MIContainer.WhereObjectId_analyzer
-                 WHERE MIContainer.OperDate BETWEEN inStartDate AND inEndDate  
-                   AND MIContainer.MovementDEscId = inDescId
-                   And MIContainer.isActive = CASE WHEN MIContainer.MovementDEscId = zc_Movement_Income() THEN True ELSE False End
-                 group by  MIContainer.ContainerId,      MIContainer.ObjectId_analyzer , MIContainer.ContainerId_analyzer 
-                 ) as tmpContainer
+                      INNER JOIN _tmpGoods ON _tmpGoods.GoodsId = MIContainer.ObjectId_analyzer
+                      INNER JOIN _tmpUnit ON _tmpUnit.UnitId = MIContainer.WhereObjectId_analyzer
+                 WHERE MIContainer.OperDate BETWEEN inStartDate AND inENDDate  
+                   AND MIContainer.MovementDescId = inDescId
+                   AND MIContainer.isActive = CASE WHEN inDescId = zc_Movement_Income() THEN TRUE ELSE FALSE END
+                 GROUP BY MIContainer.ContainerId
+                        , MIContainer.ObjectId_analyzer
+                        , MIContainer.ContainerId_analyzer
+                 ) AS tmpContainer
        /*               LEFT JOIN ContainerLinkObject AS ContainerLO_FuelKind
                                                     ON ContainerLO_FuelKind.ContainerId = tmpContainer.ContainerId
                                                    AND ContainerLO_FuelKind.DescId = zc_ContainerLinkObject_Goods()*/
@@ -153,30 +160,34 @@ BEGIN
                       LEFT JOIN ContainerLinkObject AS ContainerLO_GoodsKind
                                                     ON ContainerLO_GoodsKind.ContainerId =  tmpContainer.ContainerId
                                                    AND ContainerLO_GoodsKind.DescId = zc_ContainerLinkObject_GoodsKind()
+                      LEFT JOIN ContainerLinkObject AS CLO_PartionGoods
+                                                    ON CLO_PartionGoods.ContainerId = tmpContainer.ContainerId
+                                                   AND CLO_PartionGoods.DescId = zc_ContainerLinkObject_PartionGoods()
                       LEFT JOIN ContainerLinkObject AS ContainerLO_PaidKind
-                                               ON ContainerLO_PaidKind.ContainerId =  tmpContainer.ContainerId_analyzer
-                                              AND ContainerLO_PaidKind.DescId = zc_ContainerLinkObject_PaidKind()
+                                                    ON ContainerLO_PaidKind.ContainerId =  tmpContainer.ContainerId_analyzer
+                                                   AND ContainerLO_PaidKind.DescId = zc_ContainerLinkObject_PaidKind()
                       LEFT JOIN ContainerLinkObject AS ContainerLO_Partner
-                                               ON ContainerLO_Partner.ContainerId =  tmpContainer.ContainerId_analyzer
-                                              AND ContainerLO_Partner.DescId = zc_ContainerLinkObject_Partner()      
+                                                    ON ContainerLO_Partner.ContainerId =  tmpContainer.ContainerId_analyzer
+                                                   AND ContainerLO_Partner.DescId = zc_ContainerLinkObject_Partner()      
                       LEFT JOIN ContainerLinkObject AS ContainerLO_Member
-                                               ON ContainerLO_Member.ContainerId =  tmpContainer.ContainerId_analyzer
-                                              AND ContainerLO_Member.DescId = zc_ContainerLinkObject_Member()      
-                  
+                                                    ON ContainerLO_Member.ContainerId =  tmpContainer.ContainerId_analyzer
+                                                   AND ContainerLO_Member.DescId = zc_ContainerLinkObject_Member()      
+
                       WHERE (ContainerLO_Juridical.ObjectId = inJuridicalId OR inJuridicalId=0)
                         AND (ContainerLO_PaidKind.ObjectId = inPaidKindId OR inPaidKindId=0 OR (ContainerLO_Member.ObjectId > 0 AND inPaidKindId = zc_Enum_PaidKind_SecondForm()))
 
                       GROUP BY tmpContainer.GoodsId
                              , CASE WHEN ContainerLO_Member.ObjectId > 0 THEN zc_Enum_PaidKind_SecondForm() ELSE COALESCE (ContainerLO_PaidKind.ObjectId,0) END
-                           --  , COALESCE (ContainerLO_FuelKind.ObjectId,0) 
-                             , COALESCE (ContainerLO_GoodsKind.ObjectId,0) 
+                           --  , COALESCE (ContainerLO_FuelKind.ObjectId, 0) 
+                             , COALESCE (ContainerLO_GoodsKind.ObjectId, 0) 
+                             , COALESCE (CLO_PartionGoods.ObjectId, 0) 
                              , COALESCE (ContainerLO_Partner.ObjectId, COALESCE (ContainerLO_Member.ObjectId, 0))
                              , COALESCE (ContainerLO_Juridical.ObjectId,  COALESCE (ContainerLO_Member.ObjectId, 0 ))
           ) AS tmpOperationGroup
           
           LEFT JOIN Object AS Object_Goods on Object_Goods.Id = tmpOperationGroup.GoodsId
-
           LEFT JOIN Object AS Object_GoodsKind ON Object_GoodsKind.Id = tmpOperationGroup.GoodsKindId
+          LEFT JOIN Object AS Object_PartionGoods ON Object_PartionGoods.Id = tmpOperationGroup.PartionGoodsId
 
           LEFT JOIN Object AS Object_PaidKind ON Object_PaidKind.Id = tmpOperationGroup.PaidKindId
 
@@ -222,4 +233,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpReport_GoodsMI_IncomeByPartner (inStartDate:= '01.01.2013', inEndDate:= '31.12.2013',  inDescId:= 1, inGoodsGroupId:= 0, inUnitGroupId:=0, inUnitId:= 0, inPaidKindId:=0, inJuridicalId:=0, inSession:= zfCalc_UserAdmin());
+-- SELECT * FROM gpReport_GoodsMI_IncomeByPartner (inStartDate:= '01.01.2013', inENDDate:= '31.12.2013',  inDescId:= 1, inGoodsGroupId:= 0, inUnitGroupId:=0, inUnitId:= 0, inPaidKindId:=0, inJuridicalId:=0, inInfoMoneyId:=0, inSession:= zfCalc_UserAdmin());

@@ -58,6 +58,14 @@ type
     ceInfoMoney: TcxButtonEdit;
     InfoMoneyGuides: TdsdGuides;
     GoodsGroupNameFull: TcxGridDBColumn;
+    PartnerCode: TcxGridDBColumn;
+    PartionGoods: TcxGridDBColumn;
+    MeasureName: TcxGridDBColumn;
+    Price: TcxGridDBColumn;
+    PricePartner: TcxGridDBColumn;
+    AmountDiff_Weight: TcxGridDBColumn;
+    AmountDiff_Sh: TcxGridDBColumn;
+    GoodsKindName: TcxGridDBColumn;
   private
     { Private declarations }
   public
