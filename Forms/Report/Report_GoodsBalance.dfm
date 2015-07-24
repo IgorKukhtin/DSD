@@ -1998,7 +1998,6 @@ object Report_GoodsBalanceForm: TReport_GoodsBalanceForm
             'l'
           GridView = cxGridDBTableView
         end>
-      CopiesCount = 1
       Params = <
         item
           Name = 'StartDate'
@@ -2215,7 +2214,6 @@ object Report_GoodsBalanceForm: TReport_GoodsBalanceForm
             'tToName;InfoMoneyName_all;InfoMoneyName_all_Detail'
           GridView = cxGridDBTableView
         end>
-      CopiesCount = 1
       Params = <
         item
           Name = 'StartDate'
@@ -2300,7 +2298,6 @@ object Report_GoodsBalanceForm: TReport_GoodsBalanceForm
             'l'
           GridView = cxGridDBTableView
         end>
-      CopiesCount = 1
       Params = <
         item
           Name = 'StartDate'
@@ -2385,7 +2382,6 @@ object Report_GoodsBalanceForm: TReport_GoodsBalanceForm
             'l'
           GridView = cxGridDBTableView
         end>
-      CopiesCount = 1
       Params = <
         item
           Name = 'StartDate'
