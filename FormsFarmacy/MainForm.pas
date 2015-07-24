@@ -157,6 +157,8 @@ type
     N54: TMenuItem;
     actInventoryJournal: TdsdOpenForm;
     N55: TMenuItem;
+    actLossJournal: TdsdOpenForm;
+    N56: TMenuItem;
     procedure actSaveDataExecute(Sender: TObject);
     procedure miRepriceClick(Sender: TObject);
   private

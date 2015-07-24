@@ -136,13 +136,13 @@ BEGIN
 
     -- А сюда товары
 WITH LOSS AS ( SELECT 
-                        MovementItem.Id       as MovementItemId 
-                       ,MovementItem.ObjectId as ObjectId  
-                       ,MovementItem.Amount   as Amount --
-                    FROM MovementItem
-                    WHERE MovementItem.MovementId = inMovementId
-                      AND MovementItem.IsErased = FALSE
-                      AND COALESCE(MovementItem.Amount,0) > 0
+                MovementItem.Id                    as MovementItemId 
+               ,MovementItem.ObjectId              as ObjectId
+               ,MovementItem.Amount                as Amount
+              FROM MovementItem
+              WHERE MovementItem.MovementId = inMovementId
+                AND MovementItem.IsErased = FALSE
+                AND COALESCE(MovementItem.Amount,0) > 0
              ),
 
   DD AS (SELECT 
@@ -151,7 +151,7 @@ WITH LOSS AS ( SELECT
           , Container.Amount AS ContainerAmount 
           , OperDate 
           , Container.Id
-          , SUM(Container.Amount) OVER (PARTITION BY Container.objectid ORDER BY OPERDATE) 
+          , SUM(Container.Amount) OVER (PARTITION BY Container.objectid ORDER BY OPERDATE,Container.Id) 
         FROM Container 
             JOIN LOSS ON LOSS.objectid = Container.objectid 
             JOIN containerlinkobject AS CLI_MI 
@@ -187,7 +187,7 @@ WITH LOSS AS ( SELECT
               , tmpItem.MovementItemId
               , tmpItem.Id
               , vbAccountId
-              , Amount
+              , -Amount
               , OperDate
            FROM tmpItem;
     

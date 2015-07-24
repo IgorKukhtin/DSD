@@ -48,7 +48,7 @@ BEGIN
             LEFT JOIN MovementLinkObject AS MovementLinkObject_Unit
                                          ON MovementLinkObject_Unit.MovementId = Movement.Id
                                         AND MovementLinkObject_Unit.DescId = zc_MovementLinkObject_Unit()
-            LEFT JOIN Object AS Object_Unit ON Object_From.Id = MovementLinkObject_Unit.ObjectId
+            LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = MovementLinkObject_Unit.ObjectId
 
             LEFT JOIN MovementLinkObject AS MovementLinkObject_ArticleLoss
                                          ON MovementLinkObject_ArticleLoss.MovementId = Movement.Id
@@ -67,20 +67,8 @@ BEGIN
            , Object_Goods.ObjectCode            AS GoodsCode
            , Object_Goods.ValueData             AS GoodsName
            , MovementItem.Amount                AS Amount
-           , Object_PartionGoods.Id             AS PartionGoodsId
-           , Object_PartionGoods.ValueData      AS PartionGoodsName
-           , Object_Price.Price                 AS Price
        FROM MovementItem
             LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = MovementItem.ObjectId
-
-            LEFT JOIN MovementItemLinkObject AS MILinkObject_PartionGoods
-                                             ON MILinkObject_PartionGoods.MovementItemId = MovementItem.Id
-                                            AND MILinkObject_PartionGoods.DescId = zc_MILinkObject_PartionGoods()
-            LEFT JOIN Object AS Object_PartionGoods ON Object_PartionGoods.Id = MILinkObject_PartionGoods.ObjectId
-
-            LEFT JOIN Object_Price_View AS Object_Price
-                                        ON Object_Price.GoodsId = MovementItem.ObjectId
-                                       AND Object_Price.UnitId = vbUnitId
        WHERE MovementItem.MovementId = inMovementId
          AND MovementItem.DescId     = zc_MI_Master()
          AND MovementItem.isErased   = False;
