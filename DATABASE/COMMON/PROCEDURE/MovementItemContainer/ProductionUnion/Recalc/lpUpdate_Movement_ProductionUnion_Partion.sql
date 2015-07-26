@@ -175,7 +175,7 @@ BEGIN
              , tmp_All.MovementItemId_out
              , tmp_All.ContainerId
              , tmp_All.GoodsId
-             , CASE WHEN tmp_All_sum.OperCount_Weight > 0 THEN tmpPF_find.OperCount * tmp_All.OperCount_Weight / tmp_All_sum.OperCount_Weight ELSE 0 END AS OperCount
+             , CAST (CASE WHEN tmp_All_sum.OperCount_Weight > 0 THEN tmpPF_find.OperCount * tmp_All.OperCount_Weight / tmp_All_sum.OperCount_Weight ELSE 0 END AS NUMERIC(16, 4)) AS OperCount
         FROM tmp_All
              LEFT JOIN (-- Итог по Производство + Остатки партий ПФ(ГП) !!!если надо закрыть!!!
                         SELECT _tmpItem_PF_find.ContainerId, SUM (_tmpItem_PF_find.OperCount) AS OperCount FROM _tmpItem_PF_find WHERE _tmpItem_PF_find.isPartionClose = TRUE GROUP BY _tmpItem_PF_find.ContainerId
@@ -257,6 +257,9 @@ BEGIN
      END IF; -- if inIsUpdate = TRUE -- !!!т.е. не всегда!!!
 
 
+    IF inUserId = zfCalc_UserAdmin() :: Integer
+    THEN
+
     -- Результат
     RETURN QUERY
     SELECT COALESCE (_tmpItem_Result.MovementItemId_gp, _tmpItem_GP.MovementItemId_gp) :: Integer AS MovementItemId_gp
@@ -276,6 +279,8 @@ BEGIN
          LEFT JOIN _tmpItem_GP on _tmpItem_GP.MovementItemId_gp = _tmpItem_Result.MovementItemId_gp
          LEFT JOIN _tmpItem_PF_find on _tmpItem_PF_find.ContainerId = _tmpItem_PF.ContainerId
     ;
+    END IF;
+
 
 END;$BODY$
   LANGUAGE plpgsql VOLATILE;

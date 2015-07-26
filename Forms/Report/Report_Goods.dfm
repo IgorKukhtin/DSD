@@ -2,6 +2,7 @@ inherited Report_GoodsForm: TReport_GoodsForm
   Caption = #1054#1090#1095#1077#1090' <'#1087#1086' '#1090#1086#1074#1072#1088#1091'>'
   ClientHeight = 341
   ClientWidth = 1174
+  ExplicitLeft = -192
   ExplicitWidth = 1190
   ExplicitHeight = 376
   PixelsPerInch = 96
@@ -365,6 +366,21 @@ inherited Report_GoodsForm: TReport_GoodsForm
             Options.Editing = False
             Width = 70
           end
+          object GoodsCode_parent: TcxGridDBColumn
+            Caption = #1050#1086#1076' '#1087#1088'. '#1087#1088#1080#1093'.'
+            DataBinding.FieldName = 'GoodsCode_parent'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 55
+          end
+          object GoodsName_parent: TcxGridDBColumn
+            Caption = #1053#1072#1079#1074#1072#1085#1080#1077' ('#1087#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1086' '#1087#1088#1080#1093#1086#1076')'
+            DataBinding.FieldName = 'GoodsName_parent'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 150
+          end
           object MovementDescName_order: TcxGridDBColumn
             DataBinding.FieldName = 'MovementDescName_order'
             Visible = False
@@ -491,7 +507,6 @@ inherited Report_GoodsForm: TReport_GoodsForm
           IndexFieldNames = 'MovementDescName_order;ObjectByName;OperDate;InvNumber'
           GridView = cxGridDBTableView
         end>
-      CopiesCount = 1
       Params = <
         item
           Name = 'StartDate'

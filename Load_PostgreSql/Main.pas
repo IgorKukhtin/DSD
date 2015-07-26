@@ -188,6 +188,11 @@ type
     cbShowContract: TCheckBox;
     cbPrintKindItem: TCheckBox;
     cbShowAll: TCheckBox;
+    cbDefroster: TCheckBox;
+    cbPack: TCheckBox;
+    cbKopchenie: TCheckBox;
+    cbPartion: TCheckBox;
+    fromQueryDate_recalc: TADOQuery;
     procedure OKGuideButtonClick(Sender: TObject);
     procedure cbAllGuideClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
@@ -215,6 +220,7 @@ type
     function myExecSqlUpdateErased(ObjectId:Integer;Erased,Erased_del:byte):Boolean;
 
     procedure myShowSql(mySql:TStrings);
+    procedure MyDelay(mySec:Integer);
 
     function myReplaceStr(const S, Srch, Replace: string): string;
     function FormatToVarCharServer_notNULL(_Value:string):string;
@@ -265,7 +271,10 @@ type
 
     procedure pCompleteDocument_Loss(isLastComplete:Boolean);
 
-    procedure pCompleteDocument_List(isBefoHistoryCost:Boolean);
+    procedure pCompleteDocument_List(isBefoHistoryCost,isPartion:Boolean);
+    procedure pCompleteDocument_Defroster;
+    procedure pCompleteDocument_Pack;
+    procedure pCompleteDocument_Partion;
 
     procedure pCompleteDocument_TaxFl(isLastComplete:Boolean);
     procedure pCompleteDocument_TaxCorrective(isLastComplete:Boolean);
@@ -1259,6 +1268,36 @@ begin
      Result:=true;
 end;
 //----------------------------------------------------------------------------------------------------------------------------------------------------
+procedure TMainForm.MyDelay(mySec:Integer);
+var
+  Present: TDateTime;
+  Year, Month, Day, Hour, Min, Sec, MSec: Word;
+  calcSec,calcSec2:LongInt;
+begin
+     Present:=Now;
+     DecodeDate(Present, Year, Month, Day);
+     DecodeTime(Present, Hour, Min, Sec, MSec);
+     //calcSec:=Year*12*31*24*60*60+Month*31*24*60*60+Day*24*60*60+Hour*60*60+Min*60+Sec;
+     //calcSec2:=Year*12*31*24*60*60+Month*31*24*60*60+Day*24*60*60+Hour*60*60+Min*60+Sec;
+     calcSec:=Day*24*60*60*1000+Hour*60*60*1000+Min*60*1000+Sec*1000+MSec;
+     calcSec2:=Day*24*60*60*1000+Hour*60*60*1000+Min*60*1000+Sec*1000+MSec;
+     while abs(calcSec-calcSec2)<mySec do
+     begin
+          Application.ProcessMessages;
+          Application.ProcessMessages;
+          Application.ProcessMessages;
+          Application.ProcessMessages;
+          Present:=Now;
+          DecodeDate(Present, Year, Month, Day);
+          DecodeTime(Present, Hour, Min, Sec, MSec);
+          //calcSec2:=Year*12*31*24*60*60+Month*31*24*60*60+Day*24*60*60+Hour*60*60+Min*60+Sec;
+          calcSec2:=Day*24*60*60*1000+Hour*60*60*1000+Min*60*1000+Sec*1000+MSec;
+          Application.ProcessMessages;
+          Application.ProcessMessages;
+          Application.ProcessMessages;
+     end;
+end;
+{------------------------------------------------------------------------------}
 procedure TMainForm.myShowSql(mySql:TStrings);
 var
   I: Integer;
@@ -2319,14 +2358,24 @@ begin
           if not fStop then pCompleteDocument_ProductionUnion(cbLastComplete.Checked);
           if not fStop then pCompleteDocument_ProductionSeparate(cbLastComplete.Checked);
           if not fStop then pCompleteDocument_Inventory(cbLastComplete.Checked);
-          if not fStop then pCompleteDocument_List(TRUE);
+          if not fStop then pCompleteDocument_List(TRUE, FALSE);
+
+          if not fStop then pCompleteDocument_Defroster;
+          if not fStop then pCompleteDocument_Pack;
+          if not fStop then pCompleteDocument_Partion;
+
+     end else begin
+          if not fStop then pCompleteDocument_Defroster;
+          if not fStop then pCompleteDocument_Pack;
+          if not fStop then pCompleteDocument_Partion;
      end;
+
 
      if not fStop then pInsertHistoryCost;
      //
      if (cbInsertHistoryCost.Checked)and(cbInsertHistoryCost.Enabled)
-     then pCompleteDocument_List(FALSE) //
-     else pCompleteDocument_List(FALSE);
+     then pCompleteDocument_List(FALSE, FALSE) //
+     else pCompleteDocument_List(FALSE, FALSE);
      //
      if(not fStop)and(not ((cbInsertHistoryCost.Checked)and(cbInsertHistoryCost.Enabled)))then begin pCompleteDocument_Income(cbLastComplete.Checked);pCompleteDocument_IncomeNal(cbLastComplete.Checked);end;
      if not fStop then pCompleteDocument_UpdateConrtact;
@@ -10077,7 +10126,7 @@ begin
              if cbInsertHistoryCost_andReComplete.Checked
              then begin
                        cbComplete_List.Checked:=true;
-                       pCompleteDocument_List(true);
+                       pCompleteDocument_List(true, FALSE);
                       //ShowMessage('pCompleteDocument_List-1');
                   end;
              //
@@ -10097,7 +10146,7 @@ begin
              if cbInsertHistoryCost_andReComplete.Checked
              then begin
                        cbComplete_List.Checked:=true;
-                       pCompleteDocument_List(false);
+                       pCompleteDocument_List(false, FALSE);
                        //ShowMessage('pCompleteDocument_List-2');
                   end;
              //
@@ -20489,7 +20538,7 @@ begin
      fOpenSqToQuery ('select * from FillSoldTable('+FormatToVarCharServer_isSpace(StartDateEdit.Text)+','+FormatToVarCharServer_isSpace(EndDateEdit.Text)+',zfCalc_UserAdmin())')
 end;
 //----------------------------------------------------------------------------------------------------------------------------------------------------
-procedure TMainForm.pCompleteDocument_List(isBefoHistoryCost:Boolean);
+procedure TMainForm.pCompleteDocument_List(isBefoHistoryCost,isPartion:Boolean);
   function myAdd :String;
   begin
        result:='';
@@ -20505,7 +20554,7 @@ procedure TMainForm.pCompleteDocument_List(isBefoHistoryCost:Boolean);
 var ExecStr1,ExecStr2,ExecStr3,ExecStr4,addStr:String;
     i,SaveRecord:Integer;
 begin
-     if (not cbComplete_List.Checked)or(not cbComplete_List.Enabled) then exit;
+     if isPartion = FALSE then if (not cbComplete_List.Checked)or(not cbComplete_List.Enabled) then exit;
      //
      myEnabledCB(cbComplete_List);
      //
@@ -20519,15 +20568,18 @@ begin
      then fOpenSqToQuery ('select * from gpComplete_SelectAllBranch_Sybase('+FormatToVarCharServer_isSpace(StartDateCompleteEdit.Text)+','+FormatToVarCharServer_isSpace(EndDateCompleteEdit.Text)+',FALSE)')
      else
 
-     if (isBefoHistoryCost = TRUE)and(cbInsertHistoryCost_andReComplete.Checked)
-     then fOpenSqToQuery ('select * from gpComplete_SelectHistoryCost_Sybase('+FormatToVarCharServer_isSpace(StartDateCompleteEdit.Text)+','+FormatToVarCharServer_isSpace(EndDateCompleteEdit.Text)+',TRUE)')
-     else if (isBefoHistoryCost = FALSE)and(cbInsertHistoryCost_andReComplete.Checked)
-          then fOpenSqToQuery ('select * from gpComplete_SelectHistoryCost_Sybase('+FormatToVarCharServer_isSpace(StartDateCompleteEdit.Text)+','+FormatToVarCharServer_isSpace(EndDateCompleteEdit.Text)+',FALSE)')
-          else
+     if (isPartion = TRUE)
+     then fOpenSqToQuery ('select * from gpComplete_SelectAll_Sybase_CEH('+FormatToVarCharServer_isSpace(StartDateCompleteEdit.Text)+','+FormatToVarCharServer_isSpace(EndDateCompleteEdit.Text)+',TRUE)')
+     else
+         if (isBefoHistoryCost = TRUE)and(cbInsertHistoryCost_andReComplete.Checked)
+         then fOpenSqToQuery ('select * from gpComplete_SelectHistoryCost_Sybase('+FormatToVarCharServer_isSpace(StartDateCompleteEdit.Text)+','+FormatToVarCharServer_isSpace(EndDateCompleteEdit.Text)+',TRUE)')
+         else if (isBefoHistoryCost = FALSE)and(cbInsertHistoryCost_andReComplete.Checked)
+              then fOpenSqToQuery ('select * from gpComplete_SelectHistoryCost_Sybase('+FormatToVarCharServer_isSpace(StartDateCompleteEdit.Text)+','+FormatToVarCharServer_isSpace(EndDateCompleteEdit.Text)+',FALSE)')
+              else
+                  if isBefoHistoryCost = TRUE
+                  then fOpenSqToQuery ('select * from gpComplete_SelectAll_Sybase('+FormatToVarCharServer_isSpace(StartDateCompleteEdit.Text)+','+FormatToVarCharServer_isSpace(EndDateCompleteEdit.Text)+',TRUE)')
+                  else fOpenSqToQuery ('select * from gpComplete_SelectAll_Sybase('+FormatToVarCharServer_isSpace(StartDateCompleteEdit.Text)+','+FormatToVarCharServer_isSpace(EndDateCompleteEdit.Text)+',FALSE)');
 
-     if isBefoHistoryCost = TRUE
-     then fOpenSqToQuery ('select * from gpComplete_SelectAll_Sybase('+FormatToVarCharServer_isSpace(StartDateCompleteEdit.Text)+','+FormatToVarCharServer_isSpace(EndDateCompleteEdit.Text)+',TRUE)')
-     else fOpenSqToQuery ('select * from gpComplete_SelectAll_Sybase('+FormatToVarCharServer_isSpace(StartDateCompleteEdit.Text)+','+FormatToVarCharServer_isSpace(EndDateCompleteEdit.Text)+',FALSE)');
      // delete Data on Sybase
      fExecSqFromQuery('delete dba._pgMovementReComlete');
 
@@ -20624,6 +20676,132 @@ begin
      end;
      //
      myDisabledCB(cbComplete_List);
+end;
+//----------------------------------------------------------------------------------------------------------------------------------------------------
+procedure TMainForm.pCompleteDocument_Defroster;
+begin
+     if (not cbDefroster.Checked)or(not cbDefroster.Enabled) then exit;
+     //
+     myEnabledCB(cbDefroster);
+     //
+        toStoredProc_two.StoredProcName:='gpUpdate_Movement_ProductionUnion_Defroster';
+        toStoredProc_two.OutputType := otResult;
+        toStoredProc_two.Params.Clear;
+        toStoredProc_two.Params.AddParam ('inStartDate',ftDateTime,ptInput, 0);
+        toStoredProc_two.Params.AddParam ('inEndDate',ftDateTime,ptInput, 0);
+        toStoredProc_two.Params.AddParam ('inUnitId',ftInteger,ptInput, 0);
+
+             //
+             toStoredProc_two.Params.ParamByName('inStartDate').Value:=StrToDate(StartDateCompleteEdit.Text);
+             toStoredProc_two.Params.ParamByName('inEndDate').Value:=StrToDate(EndDateCompleteEdit.Text) ;
+             toStoredProc_two.Params.ParamByName('inUnitId').Value:=8440;//Дефростер
+             if not myExecToStoredProc_two then ;//exit;
+             //
+     //
+     myDisabledCB(cbDefroster);
+end;
+//----------------------------------------------------------------------------------------------------------------------------------------------------
+procedure TMainForm.pCompleteDocument_Pack;
+var calcStartDate:TDateTime;
+begin
+     if (not cbPack.Checked)or(not cbPack.Enabled) then exit;
+     //
+     myEnabledCB(cbPack);
+     //
+     //
+     DBGrid.DataSource.DataSet:=fromQueryDate_recalc;
+     //
+     with fromQueryDate_recalc,Sql do begin
+        Close;
+        Clear;
+        //
+        calcStartDate:=StrToDate(StartDateCompleteEdit.Text);
+        while calcStartDate <= StrToDate(EndDateCompleteEdit.Text) do
+        begin
+             if calcStartDate=StrToDate(StartDateCompleteEdit.Text)
+             then Add('          select cast('+FormatToDateServer_notNULL(calcStartDate)+' as date) as StartDate, cast('+FormatToDateServer_notNULL(calcStartDate)+' as date) as EndDate')
+             else Add('union all select cast('+FormatToDateServer_notNULL(calcStartDate)+' as date) as StartDate, cast('+FormatToDateServer_notNULL(calcStartDate)+' as date) as EndDate');
+             //
+             calcStartDate:=calcStartDate+1;
+        end;
+        Add('order by StartDate, EndDate');
+        Open;
+
+        Gauge.Progress:=0;
+        Gauge.MaxValue:=RecordCount;
+
+        toStoredProc_two.StoredProcName:='gpUpdate_Movement_ProductionUnion_Pack';
+        toStoredProc_two.OutputType := otResult;
+        toStoredProc_two.Params.Clear;
+        toStoredProc_two.Params.AddParam ('inStartDate',ftDateTime,ptInput, 0);
+        toStoredProc_two.Params.AddParam ('inEndDate',ftDateTime,ptInput, 0);
+        toStoredProc_two.Params.AddParam ('inUnitId',ftInteger,ptInput, 0);
+
+        while not EOF do
+        begin
+             //!!!
+             if fStop then begin DBGrid.DataSource.DataSet:=fromQuery;exit;end;
+             //
+             toStoredProc_two.Params.ParamByName('inStartDate').Value:=FieldByName('StartDate').AsDateTime;
+             toStoredProc_two.Params.ParamByName('inEndDate').Value:=FieldByName('StartDate').AsDateTime;
+             toStoredProc_two.Params.ParamByName('inUnitId').Value:=8451;//Цех Упаковки
+             if not myExecToStoredProc_two then ;//exit;
+             //
+             MyDelay(15 * 1000);
+             //
+             Next;
+             Application.ProcessMessages;
+             Application.ProcessMessages;
+             Application.ProcessMessages;
+             Gauge.Progress:=Gauge.Progress+1;
+             Application.ProcessMessages;
+             Application.ProcessMessages;
+             Application.ProcessMessages;
+        end;
+     end;
+     //
+     myDisabledCB(cbPack);
+     //
+     DBGrid.DataSource.DataSet:=fromQuery;
+end;
+//----------------------------------------------------------------------------------------------------------------------------------------------------
+procedure TMainForm.pCompleteDocument_Partion;
+begin
+     if (not cbPartion.Checked)or(not cbPartion.Enabled) then exit;
+     //
+     myEnabledCB(cbPartion);
+     //
+        toStoredProc_two.StoredProcName:='gpUpdate_Movement_ProductionUnion_Partion';
+        toStoredProc_two.OutputType := otResult;
+        toStoredProc_two.Params.Clear;
+        toStoredProc_two.Params.AddParam ('inStartDate',ftDateTime,ptInput, 0);
+        toStoredProc_two.Params.AddParam ('inEndDate',ftDateTime,ptInput, 0);
+        toStoredProc_two.Params.AddParam ('inFromId',ftInteger,ptInput, 0);
+        toStoredProc_two.Params.AddParam ('inToId',ftInteger,ptInput, 0);
+
+        Gauge.Progress:=0;
+        Gauge.MaxValue:=2;
+
+             //
+             toStoredProc_two.Params.ParamByName('inStartDate').Value:=StrToDate(StartDateCompleteEdit.Text);
+             toStoredProc_two.Params.ParamByName('inEndDate').Value:=StrToDate(EndDateCompleteEdit.Text) ;
+             toStoredProc_two.Params.ParamByName('inFromId').Value:=8448;//ЦЕХ деликатесов
+             toStoredProc_two.Params.ParamByName('inToId').Value:=8458;//Склад База ГП
+             if not myExecToStoredProc_two then ;//exit;
+        Gauge.Progress:=1;
+        MyDelay(3 * 1000);
+             //
+             toStoredProc_two.Params.ParamByName('inStartDate').Value:=StrToDate(StartDateCompleteEdit.Text);
+             toStoredProc_two.Params.ParamByName('inEndDate').Value:=StrToDate(EndDateCompleteEdit.Text) ;
+             toStoredProc_two.Params.ParamByName('inFromId').Value:=8447;//ЦЕХ колбасный
+             toStoredProc_two.Params.ParamByName('inToId').Value:=8458;//Склад База ГП
+             if not myExecToStoredProc_two then ;//exit;
+        Gauge.Progress:=2;
+        MyDelay(1 * 1000);
+     //
+     pCompleteDocument_List(false,true);
+     //
+     myDisabledCB(cbPartion);
 end;
 //----------------------------------------------------------------------------------------------------------------------------------------------------
 procedure TMainForm.pCompleteDocument_Loss;

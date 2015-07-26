@@ -50,26 +50,48 @@ object GoodsFuel_ObjectForm: TGoodsFuel_ObjectForm
       OptionsView.HeaderHeight = 40
       OptionsView.Indicator = True
       Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
+      object clGoodsGroupNameFull: TcxGridDBColumn
+        Caption = #1043#1088#1091#1087#1087#1072' ('#1074#1089#1077')'
+        DataBinding.FieldName = 'GoodsGroupNameFull'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 150
+      end
+      object clGoodsGroupName: TcxGridDBColumn
+        Caption = #1043#1088#1091#1087#1087#1072
+        DataBinding.FieldName = 'GoodsGroupName'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 60
+      end
       object clCode: TcxGridDBColumn
         Caption = #1050#1086#1076
         DataBinding.FieldName = 'Code'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 40
+        Width = 30
       end
       object clName: TcxGridDBColumn
         Caption = #1053#1072#1079#1074#1072#1085#1080#1077
         DataBinding.FieldName = 'Name'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 120
+        Width = 100
       end
-      object clGoodsGroupName: TcxGridDBColumn
-        Caption = #1043#1088#1091#1087#1087#1072
-        DataBinding.FieldName = 'GoodsGroupName'
+      object clMeasureName: TcxGridDBColumn
+        Caption = #1045#1076'. '#1080#1079#1084'.'
+        DataBinding.FieldName = 'MeasureName'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 60
+        Width = 20
+      end
+      object clWeight: TcxGridDBColumn
+        Caption = #1042#1077#1089
+        DataBinding.FieldName = 'Weight'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 25
       end
       object clItemName: TcxGridDBColumn
         Caption = #1069#1083#1077#1084#1077#1085#1090
@@ -219,12 +241,14 @@ object GoodsFuel_ObjectForm: TGoodsFuel_ObjectForm
       Params = <
         item
           Name = 'Key'
+          Value = Null
           Component = ClientDataSet
           ComponentItem = 'Id'
           DataType = ftString
         end
         item
           Name = 'TextValue'
+          Value = Null
           Component = ClientDataSet
           ComponentItem = 'Name'
           DataType = ftString
@@ -252,6 +276,7 @@ object GoodsFuel_ObjectForm: TGoodsFuel_ObjectForm
         DataSet = ClientDataSet
       end>
     Params = <>
+    PackSize = 1
     Left = 40
     Top = 208
   end

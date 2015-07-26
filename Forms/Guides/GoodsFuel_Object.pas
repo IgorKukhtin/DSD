@@ -48,6 +48,9 @@ type
     dsdDBViewAddOn: TdsdDBViewAddOn;
     clGoodsGroupName: TcxGridDBColumn;
     clItemName: TcxGridDBColumn;
+    clGoodsGroupNameFull: TcxGridDBColumn;
+    clMeasureName: TcxGridDBColumn;
+    clWeight: TcxGridDBColumn;
 
   private
     { Private declarations }

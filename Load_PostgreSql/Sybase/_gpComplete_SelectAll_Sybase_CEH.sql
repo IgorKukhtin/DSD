@@ -1,8 +1,8 @@
--- Function: gpComplete_SelectAll_Sybase()
+-- Function: gpComplete_SelectAll_Sybase_CEH()
 
-DROP FUNCTION IF EXISTS gpComplete_SelectAll_Sybase (TDateTime, TDateTime, Boolean);
+DROP FUNCTION IF EXISTS gpComplete_SelectAll_Sybase_CEH (TDateTime, TDateTime, Boolean);
 
-CREATE OR REPLACE FUNCTION gpComplete_SelectAll_Sybase(
+CREATE OR REPLACE FUNCTION gpComplete_SelectAll_Sybase_CEH(
     IN inStartDate          TDateTime , -- 
     IN inEndDate            TDateTime , --
     IN inIsBefoHistoryCost  Boolean

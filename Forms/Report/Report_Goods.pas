@@ -50,6 +50,8 @@ type
     Summ: TcxGridDBColumn;
     MovementId: TcxGridDBColumn;
     isRemains: TcxGridDBColumn;
+    GoodsCode_parent: TcxGridDBColumn;
+    GoodsName_parent: TcxGridDBColumn;
   private
     { Private declarations }
   public
