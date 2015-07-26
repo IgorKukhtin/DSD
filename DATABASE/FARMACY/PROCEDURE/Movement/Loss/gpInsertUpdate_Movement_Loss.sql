@@ -3,7 +3,7 @@
 DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_Loss (Integer, TVarChar, TDateTime, Integer, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_Loss(
- INOUT ioId                  Integer   , -- Ключ объекта <Документ Перемещение>
+ INOUT ioId                  Integer   , -- Ключ объекта <Документ Списания>
     IN inInvNumber           TVarChar  , -- Номер документа
     IN inOperDate            TDateTime , -- Дата документа
     IN inUnitId              Integer   , -- Подразделение

@@ -1,4 +1,4 @@
-unit InventoryJournal;
+unit LossJournal;
 
 interface
 
@@ -17,17 +17,15 @@ uses
   dxBarBuiltInMenu, cxNavigator;
 
 type
-  TInventoryJournalForm = class(TAncestorJournalForm)
+  TLossJournalForm = class(TAncestorJournalForm)
     colUnitName: TcxGridDBColumn;
     colTotalCount: TcxGridDBColumn;
     PrintHeaderCDS: TClientDataSet;
     PrintItemsCDS: TClientDataSet;
-    spSelectPrint: TdsdStoredProc;
+    spSelectPrint_Loss: TdsdStoredProc;
     actPrint: TdsdPrintAction;
     bbPrint: TdxBarButton;
-    colTotalSum: TcxGridDBColumn;
-    bbPrint1: TdxBarButton;
-    dxBarButton1: TdxBarButton;
+    ArticleLossName: TcxGridDBColumn;
   private
     { Private declarations }
   public
@@ -38,5 +36,5 @@ implementation
 
 {$R *.dfm}
 initialization
-  RegisterClass(TInventoryJournalForm);
+  RegisterClass(TLossJournalForm);
 end.

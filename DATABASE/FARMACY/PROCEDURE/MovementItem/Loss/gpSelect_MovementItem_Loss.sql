@@ -10,8 +10,6 @@ CREATE OR REPLACE FUNCTION gpSelect_MovementItem_Loss(
 )
 RETURNS TABLE (Id Integer, GoodsId Integer, GoodsCode Integer, GoodsName TVarChar
              , Amount TFloat
-             , PartionGoodsId Integer, PartionGoodsName TVarChar, PartionGoodsOperDate TDateTime
-             , Price TFloat
              , isErased Boolean
               )
 AS
@@ -37,34 +35,16 @@ BEGIN
        SELECT
              COALESCE(MovementItem.Id,0)           AS Id
            , Object_Goods_View.Id                  AS GoodsId
-           , Object_Goods_View.GoodsCode           AS GoodsCode
+           , Object_Goods_View.GoodsCodeInt        AS GoodsCode
            , Object_Goods_View.GoodsName           AS GoodsName
-           
            , MovementItem.Amount                   AS Amount
-           , Object_PartionGoods.Id                AS PartionGoodsId
-           , Object_PartionGoods.ValueData         AS PartionGoodsName
-           , ObjectDate_Value.ValueData            AS PartionGoodsOperDate
-           , Object_Price.Price                    AS Price
-           
            , COALESCE(MovementItem.IsErased,FALSE) AS isErased
-
        FROM Object_Goods_View
             LEFT JOIN MovementItem ON Object_Goods_View.Id = MovementItem.ObjectId 
                                   AND MovementItem.MovementId = inMovementId
                                   AND MovementItem.DescId = zc_MI_Master()
                                   AND (MovementItem.isErased = FALSE or inIsErased = TRUE)
-            LEFT JOIN MovementItemLinkObject AS MILinkObject_PartionGoods
-                                             ON MILinkObject_PartionGoods.MovementItemId = MovementItem.Id
-                                            AND MILinkObject_PartionGoods.DescId = zc_MILinkObject_PartionGoods()
-            LEFT JOIN Object AS Object_PartionGoods ON Object_PartionGoods.Id = MILinkObject_PartionGoods.ObjectId
-            LEFT JOIN ObjectFloat AS ObjectFloat_Price ON ObjectFloat_Price.ObjectId = Object_PartionGoods.Id                      -- цена
-                                                      AND ObjectFloat_Price.DescId = zc_ObjectFloat_PartionGoods_Price()
-            LEFT JOIN ObjectDate as objectdate_value ON objectdate_value.ObjectId = Object_PartionGoods.Id                    -- дата
-                                                    AND objectdate_value.DescId = zc_ObjectDate_PartionGoods_Value()
 
-            LEFT JOIN Object_Price_View AS Object_Price
-                                        ON Object_Price.GoodsId = Object_Goods_View.Id
-                                       AND Object_Price.UnitId = vbUnitId
        WHERE Object_Goods_View.ObjectId = vbObjectId
          AND (Object_Goods_View.isErased = FALSE or MovementItem.Id IS NOT NULL);
      ELSE
@@ -73,33 +53,13 @@ BEGIN
        SELECT
              MovementItem.Id                       AS Id
            , Object_Goods_View.Id                  AS GoodsId
-           , Object_Goods_View.GoodsCode           AS GoodsCode
+           , Object_Goods_View.GoodsCodeInt        AS GoodsCode
            , Object_Goods_View.GoodsName           AS GoodsName
-           
            , MovementItem.Amount                   AS Amount
-           , Object_PartionGoods.Id                AS PartionGoodsId
-           , Object_PartionGoods.ValueData         AS PartionGoodsName
-           , ObjectDate_Value.ValueData            AS PartionGoodsOperDate
-           , Object_Price.Price                    AS Price
-           
            , COALESCE(MovementItem.IsErased,FALSE) AS isErased
-
        FROM MovementItem
             LEFT JOIN Object_Goods_View ON Object_Goods_View.Id = MovementItem.ObjectId 
-                                  AND Object_Goods_View.ObjectId = vbObjectId
-                                  
-            LEFT JOIN MovementItemLinkObject AS MILinkObject_PartionGoods
-                                             ON MILinkObject_PartionGoods.MovementItemId = MovementItem.Id
-                                            AND MILinkObject_PartionGoods.DescId = zc_MILinkObject_PartionGoods()
-            LEFT JOIN Object AS Object_PartionGoods ON Object_PartionGoods.Id = MILinkObject_PartionGoods.ObjectId
-            LEFT JOIN ObjectFloat AS ObjectFloat_Price ON ObjectFloat_Price.ObjectId = Object_PartionGoods.Id                      -- цена
-                                                      AND ObjectFloat_Price.DescId = zc_ObjectFloat_PartionGoods_Price()
-            LEFT JOIN ObjectDate as objectdate_value ON objectdate_value.ObjectId = Object_PartionGoods.Id                    -- дата
-                                                    AND objectdate_value.DescId = zc_ObjectDate_PartionGoods_Value()
-
-            LEFT JOIN Object_Price_View AS Object_Price
-                                        ON Object_Price.GoodsId = Object_Goods_View.Id
-                                       AND Object_Price.UnitId = vbUnitId
+                                       AND Object_Goods_View.ObjectId = vbObjectId
        WHERE MovementItem.MovementId = inMovementId
          AND MovementItem.DescId = zc_MI_Master()
          AND (MovementItem.isErased = FALSE or inIsErased = TRUE);

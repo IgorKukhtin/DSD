@@ -64,6 +64,7 @@ begin
   // Другие
   LoadReportFromFile('Расходная_накладная', ReportPath + '\Расходная_накладная.fr3');
   LoadReportFromFile('Инвентаризация', ReportPath + '\Инвентаризация.fr3');
+  LoadReportFromFile('Списание', ReportPath + '\Списание.fr3');
 end;
 
 procedure TLoadReportTest.SetUp;

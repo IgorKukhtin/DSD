@@ -85,11 +85,11 @@
 			<DCCReference Include="..\SOURCE\METADATA\dbMetadataTest.pas"/>
 			<DCCReference Include="..\SOURCE\zLibUtil.pas"/>
 			<DCCReference Include="..\SOURCE\Function\CommonFunctionTest.pas"/>
-			<DCCReference Include="..\SOURCE\View\dbCreateViewTest.pas"/>
 			<DCCReference Include="..\SOURCE\dbFarmacyProcedureTest.pas"/>
 			<DCCReference Include="..\..\SOURCE\UtilConst.pas"/>
-			<DCCReference Include="..\SOURCE\dbEnumTest.pas"/>
 			<DCCReference Include="..\SOURCE\Process\ProcessTest.pas"/>
+			<DCCReference Include="..\SOURCE\dbEnumTest.pas"/>
+			<DCCReference Include="..\SOURCE\View\dbCreateViewTest.pas"/>
 			<DCCReference Include="..\SOURCE\Defaults\DefaultsTest.pas"/>
 			<DCCReference Include="..\SOURCE\LoadFarmacyFormTest.pas"/>
 			<DCCReference Include="..\..\Forms\Guides\PriceListGoodsItem.pas">
@@ -900,6 +900,52 @@
 			<DCCReference Include="..\..\FormsFarmacy\ConnectWithOld\RepriceUnit.pas">
 				<Form>RepriceUnitForm</Form>
 			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Document\CheckVIP.pas">
+				<Form>CheckVIPForm</Form>
+				<FormType>dfm</FormType>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Document\CheckDeferred.pas">
+				<Form>CheckDeferredForm</Form>
+				<FormType>dfm</FormType>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Guides\PaidType.pas">
+				<Form>PaidTypeForm</Form>
+				<FormType>dfm</FormType>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\SOURCE\Objects\All\Farmacy\PaidTypeTest.pas"/>
+			<DCCReference Include="..\SOURCE\Objects\All\Farmacy\CashRegisterTest.pas"/>
+			<DCCReference Include="..\SOURCE\Movement\All\Farmacy\InventoryTest.pas"/>
+			<DCCReference Include="..\..\FormsFarmacy\Document\Inventory.pas">
+				<Form>InventoryForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Document\InventoryJournal.pas">
+				<Form>InventoryJournalForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\SOURCE\MovementItem\All\Farmacy\InventoryMovementItemTest.pas"/>
+			<DCCReference Include="..\SOURCE\Movement\All\Farmacy\LossTest.pas"/>
+			<DCCReference Include="..\SOURCE\MovementItem\All\Farmacy\LossMovementItemTest.pas"/>
+			<DCCReference Include="..\SOURCE\Objects\All\Farmacy\ArticleLossTest.pas"/>
+			<DCCReference Include="..\..\FormsFarmacy\Document\Loss.pas">
+				<Form>LossForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Document\LossJournal.pas">
+				<Form>LossJournalForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Guides\ArticleLoss.pas">
+				<Form>ArticleLossForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Guides\ArticleLossEdit.pas">
+				<Form>ArticleLossEditForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
 			<BuildConfiguration Include="Release">
 				<Key>Cfg_2</Key>
 				<CfgParent>Base</CfgParent>
@@ -966,3 +1012,11 @@
 		<Import Condition="Exists('$(BDS)\Bin\CodeGear.Delphi.Targets')" Project="$(BDS)\Bin\CodeGear.Delphi.Targets"/>
 		<Import Condition="Exists('$(APPDATA)\Embarcadero\$(BDSAPPDATABASEDIR)\$(PRODUCTVERSION)\UserTools.proj')" Project="$(APPDATA)\Embarcadero\$(BDSAPPDATABASEDIR)\$(PRODUCTVERSION)\UserTools.proj"/>
 	</Project>
+
+<!-- EurekaLog First Line
+[Exception Log]
+EurekaLog Version=7007
+Activate=0
+DeleteMapAfterCompile=0
+Encrypt Password=""
+EurekaLog Last Line -->
