@@ -24,6 +24,8 @@ CREATE TABLE MovementItemContainer(
    WhereObjectId_analyzer integer,
    ContainerId_analyzer integer,
 
+   ObjectIntId_analyzer integer,
+   ObjectExtId_analyzer integer,
    
    CONSTRAINT fk_MovementItemContainer_DescId FOREIGN KEY(DescId) REFERENCES MovementItemContainerDesc(Id),
    CONSTRAINT fk_MovementItemContainer_MovementId FOREIGN KEY(MovementId) REFERENCES Movement(Id),

@@ -4,7 +4,7 @@ inherited MainForm: TMainForm
   KeyPreview = True
   Position = poDesigned
   ExplicitWidth = 1102
-  ExplicitHeight = 265
+  ExplicitHeight = 262
   PixelsPerInch = 96
   TextHeight = 13
   object cxGrid: TcxGrid [0]
@@ -2496,26 +2496,6 @@ inherited MainForm: TMainForm
       GuiParams = <>
       isShowModal = False
     end
-    object actReport_GoodsMI_Income: TdsdOpenForm
-      Category = #1054#1090#1095#1077#1090#1099' ('#1090#1086#1074'.)'
-      MoveParams = <>
-      Caption = #1055#1088#1080#1093#1086#1076' '#1086#1090' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072
-      FormName = 'TReport_GoodsMI_IncomeForm'
-      FormNameParam.Value = 'TReport_GoodsMI_IncomeForm'
-      FormNameParam.DataType = ftString
-      FormNameParam.ParamType = ptResult
-      GuiParams = <
-        item
-          Name = 'inDescId'
-          Value = 1
-        end
-        item
-          Name = 'InDescName'
-          Value = #1055#1088#1080#1093#1086#1076' '#1086#1090' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1086#1074' ('#1080#1090#1086#1075')'
-          DataType = ftString
-        end>
-      isShowModal = False
-    end
     object actReport_GoodsMI_IncomeByPartner: TdsdOpenForm
       Category = #1054#1090#1095#1077#1090#1099' ('#1090#1086#1074'.)'
       MoveParams = <>
@@ -2531,7 +2511,27 @@ inherited MainForm: TMainForm
         end
         item
           Name = 'InDescName'
-          Value = #1055#1088#1080#1093#1086#1076' '#1086#1090' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1086#1074
+          Value = #1055#1088#1080#1093#1086#1076' '#1087#1086' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072#1084
+          DataType = ftString
+        end>
+      isShowModal = False
+    end
+    object actReport_GoodsMI_ReturnOutByPartner: TdsdOpenForm
+      Category = #1054#1090#1095#1077#1090#1099' ('#1090#1086#1074'.)'
+      MoveParams = <>
+      Caption = #1042#1086#1079#1074#1088#1072#1090' '#1087#1086' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072#1084
+      FormName = 'TReport_GoodsMI_IncomeByPartnerForm'
+      FormNameParam.Value = 'TReport_GoodsMI_IncomeByPartnerForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.ParamType = ptResult
+      GuiParams = <
+        item
+          Name = 'inDescId'
+          Value = 2
+        end
+        item
+          Name = 'InDescName'
+          Value = #1042#1086#1079#1074#1088#1072#1090' '#1087#1086' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072#1084
           DataType = ftString
         end>
       isShowModal = False
@@ -3864,11 +3864,11 @@ inherited MainForm: TMainForm
       object N23: TMenuItem
         Caption = '-'
       end
-      object miReport_GoodsMI_Income: TMenuItem
-        Action = actReport_GoodsMI_Income
-      end
       object miReport_GoodsMI_IncomeByPartner: TMenuItem
         Action = actReport_GoodsMI_IncomeByPartner
+      end
+      object miReport_GoodsMI_Income: TMenuItem
+        Action = actReport_GoodsMI_ReturnOutByPartner
       end
       object N24: TMenuItem
         Caption = '-'

@@ -459,7 +459,7 @@ BEGIN
     ;
 
      -- создаются документы - <Производство смешивание>
-     UPDATE _tmpResult SET MovementId = tmp.MovementId
+     UPDATE _tmpResult SET MovementId = CASE WHEN _tmpResult.DescId_mi = zc_MI_Master() AND _tmpResult.isDelete = FALSE THEN tmp.MovementId ELSE _tmpResult.MovementId END -- !!!иначе InsertUpdate_Movement для каждой записи!!!
      FROM (SELECT tmp.OperDate
                 , lpInsertUpdate_Movement_ProductionUnion (ioId                    := 0
                                                          , inInvNumber             := CAST (NEXTVAL ('movement_ProductionUnion_seq') AS TVarChar)
@@ -477,8 +477,9 @@ BEGIN
           ) AS tmp
      WHERE _tmpResult.OperDate = tmp.OperDate
        AND _tmpResult.MovementId = 0
-       AND _tmpResult.DescId_mi = zc_MI_Master()
-       AND _tmpResult.isDelete = FALSE;
+       -- AND _tmpResult.DescId_mi = zc_MI_Master() -- !!!иначе InsertUpdate_Movement для каждой записи!!!
+       -- AND _tmpResult.isDelete = FALSE           -- !!!иначе InsertUpdate_Movement для каждой записи!!!
+    ;
 
 
     -- Проверка

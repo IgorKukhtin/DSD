@@ -15,7 +15,7 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_ContainerCount_Goods (
     IN inPartionGoodsId         Integer , 
     IN inAssetId                Integer , 
     IN inBranchId               Integer , -- эта аналитика нужна для филиала
-    IN inAccountId              Integer   -- эта аналитика нужна для "товар в пути"
+    IN inAccountId              Integer   -- эта аналитика нужна для "товар в пути / виртуальный склад"
 )
   RETURNS Integer
 AS

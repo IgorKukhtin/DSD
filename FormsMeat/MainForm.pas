@@ -119,7 +119,7 @@ type
     actReport_GoodsMI_SaleReturnIn: TdsdOpenForm;
     actReport_Production_Union: TdsdOpenForm;
     actContractConditionValue: TdsdOpenForm;
-    actReport_GoodsMI_Income: TdsdOpenForm;
+    actReport_GoodsMI_ReturnOutByPartner: TdsdOpenForm;
     actReport_GoodsMI_IncomeByPartner: TdsdOpenForm;
     actReport_JuridicalDefermentPayment: TdsdOpenForm;
     actTax: TdsdOpenForm;

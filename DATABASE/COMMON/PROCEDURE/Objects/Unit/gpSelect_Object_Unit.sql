@@ -20,8 +20,9 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar,
                RouteId Integer, RouteName TVarChar,
                RouteSortingId Integer, RouteSortingName TVarChar,
                AreaId Integer, AreaName TVarChar,
-               isErased boolean, isLeaf boolean,
-               isPartionDate boolean
+               PartnerCode Integer, PartnerName TVarChar,
+               isLeaf Boolean, isPartionDate Boolean,
+               isErased Boolean
 ) AS
 $BODY$
    DECLARE vbUserId Integer;
@@ -88,9 +89,12 @@ BEGIN
            , Object_Area.Id            AS AreaId
            , Object_Area.ValueData     AS AreaName
          
-           , Object_Unit_View.isErased
+           , Object_Partner.ObjectCode    AS PartnerCode
+           , Object_Partner.ValueData     AS PartnerName
+
            , Object_Unit_View.isLeaf
            , ObjectBoolean_PartionDate.ValueData  AS isPartionDate
+           , Object_Unit_View.isErased
 
        FROM Object_Unit_View
             LEFT JOIN lfSelect_Object_Unit_byProfitLossDirection() AS lfObject_Unit_byProfitLossDirection ON lfObject_Unit_byProfitLossDirection.UnitId = Object_Unit_View.Id
@@ -121,6 +125,12 @@ BEGIN
             LEFT JOIN ObjectBoolean AS ObjectBoolean_PartionDate
                                     ON ObjectBoolean_PartionDate.ObjectId = Object_Unit_View.Id
                                    AND ObjectBoolean_PartionDate.DescId = zc_ObjectBoolean_Unit_PartionDate()
+
+            LEFT JOIN ObjectLink AS ObjectLink_Partner_Unit
+                                 ON ObjectLink_Partner_Unit.ChildObjectId = Object_Unit_View.Id
+                                AND ObjectLink_Partner_Unit.DescId = zc_ObjectLink_Partner_Unit()
+            LEFT JOIN Object AS Object_Partner ON Object_Partner.Id = ObjectLink_Partner_Unit.ObjectId
+
        -- WHERE vbAccessKeyAll = TRUE
        WHERE (Object_Unit_View.BranchId = vbObjectId_Constraint
               OR vbIsConstraint = FALSE
@@ -176,9 +186,13 @@ BEGIN
            , CAST (0 as Integer)    AS AreaId
            , CAST ('' as TVarChar)  AS AreaName
 
-           , FALSE AS isErased
+           , CAST (0 as Integer)    AS PartnerCode
+           , CAST ('' as TVarChar)  AS PartnerName
+
            , TRUE AS isLeaf
-           , FalSE AS isPartionDate
+           , FALSE AS isPartionDate
+           , FALSE AS isErased
+
        FROM Object as Object_Partner
             LEFT JOIN ObjectLink AS ObjectLink_Unit_Branch
                                  ON ObjectLink_Unit_Branch.ObjectId = Object_Partner.Id

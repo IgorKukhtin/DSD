@@ -21,7 +21,7 @@ type
     clGoodsGroupName: TcxGridDBColumn;
     clGoodsCode: TcxGridDBColumn;
     clGoodsName: TcxGridDBColumn;
-    clSumm: TcxGridDBColumn;
+    Summ: TcxGridDBColumn;
     clAmountPartner_Sh: TcxGridDBColumn;
     cxLabel4: TcxLabel;
     edGoodsGroup: TcxButtonEdit;
@@ -66,6 +66,9 @@ type
     AmountDiff_Weight: TcxGridDBColumn;
     AmountDiff_Sh: TcxGridDBColumn;
     GoodsKindName: TcxGridDBColumn;
+    LocationCode: TcxGridDBColumn;
+    LocationName: TcxGridDBColumn;
+    Summ_ProfitLoss: TcxGridDBColumn;
   private
     { Private declarations }
   public

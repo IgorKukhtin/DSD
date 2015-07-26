@@ -6,7 +6,7 @@ DROP FUNCTION IF EXISTS gpReport_GoodsMI_IncomeByPartner (TDateTime, TDateTime, 
 
 CREATE OR REPLACE FUNCTION gpReport_GoodsMI_IncomeByPartner (
     IN inStartDate    TDateTime ,
-    IN inENDDate      TDateTime ,
+    IN inEndDate      TDateTime ,
     IN inDescId       Integer   ,
     IN inGoodsGroupId Integer   ,
     IN inUnitGroupId  Integer   ,
@@ -20,14 +20,16 @@ RETURNS TABLE (GoodsGroupName TVarChar, GoodsGroupNameFull TVarChar
              , GoodsCode Integer, GoodsName TVarChar
              , GoodsKindName TVarChar, PartionGoods TVarChar, MeasureName TVarChar
              , TradeMarkName TVarChar
+             , LocationCode Integer, LocationName TVarChar
              , JuridicalCode Integer, JuridicalName TVarChar
              , PartnerId Integer, PartnerCode Integer, PartnerName TVarChar
              , PaidKindName TVarChar
              , FuelKindName TVarChar
+             , InfoMoneyGroupName TVarChar, InfoMoneyDestinationName TVarChar, InfoMoneyCode Integer, InfoMoneyName TVarChar, InfoMoneyName_all TVarChar
              , Amount_Weight TFloat, Amount_Sh TFloat, Price TFloat
              , AmountPartner_Weight TFloat , AmountPartner_Sh TFloat, PricePartner TFloat
              , AmountDiff_Weight TFloat, AmountDiff_Sh TFloat
-             , Summ TFloat
+             , Summ TFloat, Summ_ProfitLoss TFloat
              )
 AS
 $BODY$
@@ -55,18 +57,31 @@ BEGIN
     
 
     -- группа подразделений или подразделение или место учета (МО, Авто)
-    IF inUnitGroupId <> 0
+    IF inUnitGroupId <> 0 AND COALESCE (inUnitId, 0) = 0
     THEN
         INSERT INTO _tmpUnit (UnitId)
-           SELECT lfSelect_Object_Unit_byGroup.UnitId AS UnitId
-           FROM lfSelect_Object_Unit_byGroup (inUnitGroupId) AS lfSelect_Object_Unit_byGroup;
+           WITH tmpUnit AS (SELECT lfSelect.UnitId FROM lfSelect_Object_Unit_byGroup (inUnitGroupId) AS lfSelect)
+           SELECT tmpUnit.UnitId FROM tmpUnit
+          UNION
+           SELECT ObjectLink_Partner_Unit.ObjectId AS UnitId
+           FROM tmpUnit
+               INNER JOIN ObjectLink AS ObjectLink_Partner_Unit
+                                     ON ObjectLink_Partner_Unit.ChildObjectId = tmpUnit.UnitId
+                                    AND ObjectLink_Partner_Unit.DescId = zc_ObjectLink_Partner_Unit()
+          ;
     ELSE
         IF inUnitId <> 0
         THEN
             INSERT INTO _tmpUnit (UnitId)
                SELECT Object.Id AS UnitId
                FROM Object
-               WHERE Object.Id = inUnitId;
+               WHERE Object.Id = inUnitId
+              UNION
+               SELECT ObjectLink_Partner_Unit.ObjectId AS UnitId
+               FROM ObjectLink AS ObjectLink_Partner_Unit
+               WHERE ObjectLink_Partner_Unit.ChildObjectId = inUnitId
+                 AND ObjectLink_Partner_Unit.DescId = zc_ObjectLink_Partner_Unit()
+               ;
         ELSE
            WITH tmpBranch AS (SELECT TRUE AS Value WHERE 1 = 0 AND NOT EXISTS (SELECT BranchId FROM Object_RoleAccessKeyGuide_View WHERE UserId = vbUserId AND BranchId <> 0))
           /*      
@@ -78,12 +93,16 @@ BEGIN
                SELECT Id FROM Object INNER JOIN tmpBranch ON tmpBranch.Value = TRUE WHERE DescId = zc_Object_Car();
   */
             INSERT INTO _tmpUnit (UnitId)
-                                                   /*   SELECT Object.Id AS UnitId FROM Object  WHERE DescId = zc_Object_Unit();*/
-               SELECT Id FROM Object WHERE DescId = zc_Object_Unit()
-              UNION ALL
+               /*SELECT Id FROM Object WHERE DescId = zc_Object_Unit()
+              UNION ALL*/
                SELECT Id FROM Object  WHERE DescId = zc_Object_Member()
               UNION ALL
-               SELECT Id FROM Object  WHERE DescId = zc_Object_Car();
+               SELECT Id FROM Object  WHERE DescId = zc_Object_Car()
+              UNION ALL
+               SELECT ObjectLink_Partner_Unit.ObjectId AS UnitId
+               FROM ObjectLink AS ObjectLink_Partner_Unit
+               WHERE ObjectLink_Partner_Unit.DescId = zc_ObjectLink_Partner_Unit()
+             ;
               
         END IF;
     END IF;
@@ -101,6 +120,9 @@ BEGIN
          , Object_Measure.ValueData    AS MeasureName
          , Object_TradeMark.ValueData  AS TradeMarkName
 
+         , Object_Location.ObjectCode AS LocationCode
+         , Object_Location.ValueData  AS LocationName
+
          , Object_Juridical.ObjectCode AS JuridicalCode
          , Object_Juridical.ValueData  AS JuridicalName
 
@@ -111,9 +133,15 @@ BEGIN
          , Object_PaidKind.ValueData   AS PaidKindName
          , Object_FuelKind.ValueData   AS FuelKindName
 
+          , View_InfoMoney.InfoMoneyGroupName              AS InfoMoneyGroupName
+          , View_InfoMoney.InfoMoneyDestinationName        AS InfoMoneyDestinationName
+          , View_InfoMoney.InfoMoneyCode                   AS InfoMoneyCode
+          , View_InfoMoney.InfoMoneyName                   AS InfoMoneyName
+          , View_InfoMoney.InfoMoneyName_all               AS InfoMoneyName_all
+
          , (tmpOperationGroup.Amount * CASE WHEN Object_Measure.Id = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END) :: TFloat AS Amount_Weight
          , CASE WHEN Object_Measure.Id = zc_Measure_Sh() THEN tmpOperationGroup.Amount ELSE 0 END :: TFloat AS Amount_Sh
-         , CASE WHEN tmpOperationGroup.Amount <> 0 THEN tmpOperationGroup.Summ / tmpOperationGroup.Amount ELSE 0 END :: TFloat AS Price
+         , CASE WHEN tmpOperationGroup.Amount <> 0 THEN (tmpOperationGroup.Summ + tmpOperationGroup.Summ_ProfitLoss) / tmpOperationGroup.Amount ELSE 0 END :: TFloat AS Price
 
          , (tmpOperationGroup.AmountPartner * CASE WHEN Object_Measure.Id = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END) :: TFloat AS AmountPartner_Weight
          , CASE WHEN Object_Measure.Id = zc_Measure_Sh() THEN tmpOperationGroup.AmountPartner ELSE 0 END :: TFloat AS AmountPartner_Sh
@@ -122,40 +150,52 @@ BEGIN
          , ((tmpOperationGroup.Amount - tmpOperationGroup.AmountPartner) * CASE WHEN Object_Measure.Id = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END) :: TFloat AS AmountDiff_Weight
          , CASE WHEN Object_Measure.Id = zc_Measure_Sh() THEN tmpOperationGroup.Amount - tmpOperationGroup.AmountPartner ELSE 0 END :: TFloat AS AmountDiff_Sh
 
-         , tmpOperationGroup.Summ :: TFloat AS Summ
+         , tmpOperationGroup.Summ            :: TFloat AS Summ
+         , tmpOperationGroup.Summ_ProfitLoss :: TFloat AS Summ_ProfitLoss
+
      FROM (SELECT tmpContainer.GoodsId
+                , tmpContainer.LocationId
                 , COALESCE (ContainerLO_Juridical.ObjectId,  COALESCE (ContainerLO_Member.ObjectId, 0 )) AS JuridicalId
                 , COALESCE (ContainerLO_Partner.ObjectId, COALESCE (ContainerLO_Member.ObjectId, 0))     AS PartnerId 
                 , CASE WHEN ContainerLO_Member.ObjectId > 0 THEN zc_Enum_PaidKind_SecondForm() ELSE COALESCE (ContainerLO_PaidKind.ObjectId,0) END AS PaidKindId
+                , COALESCE (ContainerLO_InfoMoney.ObjectId, 0) AS InfoMoneyId
                 , 0/*( COALESCE (ContainerLO_FuelKind.ObjectId,0) )*/ AS FuelKindId
                 , COALESCE (ContainerLO_GoodsKind.ObjectId, 0)        AS GoodsKindId
                 , COALESCE (CLO_PartionGoods.ObjectId, 0) AS PartionGoodsId
                 , SUM (tmpContainer.Amount)                           AS Amount
                 , SUM (tmpContainer.AmountPartner)                    AS AmountPartner
                 , SUM (tmpContainer.Summ)                             AS Summ
+                , SUM (tmpContainer.Summ_ProfitLoss)                  AS Summ_ProfitLoss
 
-           FROM (SELECT MIContainer.ContainerId          AS ContainerId
-                      , MIContainer.ObjectId_analyzer    AS GoodsId 
-                      , MIContainer.ContainerId_analyzer AS ContainerId_analyzer
+           FROM (SELECT MIContainer.ContainerId            AS ContainerId
+                      , MIContainer.ObjectId_analyzer      AS GoodsId 
+                      , MIContainer.ContainerId_analyzer   AS ContainerId_analyzer
+                      , MIContainer.WhereObjectId_analyzer AS LocationId
                       , SUM (CASE WHEN MIContainer.DescId = zc_MIContainer_Count() THEN MIContainer.Amount ELSE 0 END) * CASE WHEN inDescId = zc_Movement_Income() THEN 1 ELSE -1 END AS Amount
                       , SUM (CASE WHEN MIContainer.DescId = zc_MIContainer_Count() AND COALESCE (MIContainer.AnalyzerId, 0) <> zc_Enum_AnalyzerId_Count_40200() THEN MIContainer.Amount ELSE 0 END) * CASE WHEN inDescId = zc_Movement_Income() THEN 1 ELSE -1 END AS AmountPartner
-                      , SUM (CASE WHEN MIContainer.DescId = zc_MIContainer_Summ()  THEN MIContainer.Amount ELSE 0 END) * CASE WHEN inDescId = zc_Movement_Income() THEN 1 ELSE -1 END AS Summ
+                      , SUM (CASE WHEN MIContainer.DescId = zc_MIContainer_Summ()  AND COALESCE (MIContainer.AnalyzerId, 0) <> zc_Enum_AnalyzerId_ProfitLoss() THEN MIContainer.Amount ELSE 0 END) * CASE WHEN inDescId = zc_Movement_Income() THEN 1 ELSE -1 END AS Summ
+                      , SUM (CASE WHEN MIContainer.DescId = zc_MIContainer_Summ()  AND MIContainer.AnalyzerId = zc_Enum_AnalyzerId_ProfitLoss() THEN MIContainer.Amount ELSE 0 END) AS Summ_ProfitLoss
                  FROM MovementItemContainer AS MIContainer 
                       INNER JOIN _tmpGoods ON _tmpGoods.GoodsId = MIContainer.ObjectId_analyzer
                       INNER JOIN _tmpUnit ON _tmpUnit.UnitId = MIContainer.WhereObjectId_analyzer
-                 WHERE MIContainer.OperDate BETWEEN inStartDate AND inENDDate  
+                 WHERE MIContainer.OperDate BETWEEN inStartDate AND inEndDate  
                    AND MIContainer.MovementDescId = inDescId
                    AND MIContainer.isActive = CASE WHEN inDescId = zc_Movement_Income() THEN TRUE ELSE FALSE END
+                   AND MIContainer.AccountId <> zc_Enum_Account_100301() -- прибыль текущего периода
                  GROUP BY MIContainer.ContainerId
                         , MIContainer.ObjectId_analyzer
                         , MIContainer.ContainerId_analyzer
+                        , MIContainer.WhereObjectId_analyzer
                  ) AS tmpContainer
        /*               LEFT JOIN ContainerLinkObject AS ContainerLO_FuelKind
                                                     ON ContainerLO_FuelKind.ContainerId = tmpContainer.ContainerId
                                                    AND ContainerLO_FuelKind.DescId = zc_ContainerLinkObject_Goods()*/
                       LEFT JOIN ContainerLinkObject AS ContainerLO_Juridical
-                                               ON ContainerLO_Juridical.ContainerId = tmpContainer.ContainerId_analyzer
-                                              AND ContainerLO_Juridical.DescId = zc_ContainerLinkObject_Juridical()
+                                                    ON ContainerLO_Juridical.ContainerId = tmpContainer.ContainerId_analyzer
+                                                   AND ContainerLO_Juridical.DescId = zc_ContainerLinkObject_Juridical()
+                      LEFT JOIN ContainerLinkObject AS ContainerLO_InfoMoney
+                                                    ON ContainerLO_InfoMoney.ContainerId = tmpContainer.ContainerId_analyzer
+                                                   AND ContainerLO_InfoMoney.DescId = zc_ContainerLinkObject_InfoMoney()
                                                                                    
                       LEFT JOIN ContainerLinkObject AS ContainerLO_GoodsKind
                                                     ON ContainerLO_GoodsKind.ContainerId =  tmpContainer.ContainerId
@@ -175,14 +215,17 @@ BEGIN
 
                       WHERE (ContainerLO_Juridical.ObjectId = inJuridicalId OR inJuridicalId=0)
                         AND (ContainerLO_PaidKind.ObjectId = inPaidKindId OR inPaidKindId=0 OR (ContainerLO_Member.ObjectId > 0 AND inPaidKindId = zc_Enum_PaidKind_SecondForm()))
+                        AND (ContainerLO_InfoMoney.ObjectId = inInfoMoneyId OR COALESCE (inInfoMoneyId, 0) = 0)
 
                       GROUP BY tmpContainer.GoodsId
+                             , tmpContainer.LocationId
                              , CASE WHEN ContainerLO_Member.ObjectId > 0 THEN zc_Enum_PaidKind_SecondForm() ELSE COALESCE (ContainerLO_PaidKind.ObjectId,0) END
                            --  , COALESCE (ContainerLO_FuelKind.ObjectId, 0) 
                              , COALESCE (ContainerLO_GoodsKind.ObjectId, 0) 
                              , COALESCE (CLO_PartionGoods.ObjectId, 0) 
                              , COALESCE (ContainerLO_Partner.ObjectId, COALESCE (ContainerLO_Member.ObjectId, 0))
                              , COALESCE (ContainerLO_Juridical.ObjectId,  COALESCE (ContainerLO_Member.ObjectId, 0 ))
+                             , COALESCE (ContainerLO_InfoMoney.ObjectId, 0)
           ) AS tmpOperationGroup
           
           LEFT JOIN Object AS Object_Goods on Object_Goods.Id = tmpOperationGroup.GoodsId
@@ -203,6 +246,8 @@ BEGIN
                               AND ObjectLink_Goods_GoodsGroup.DescId = zc_ObjectLink_Goods_GoodsGroup()
           LEFT JOIN Object AS Object_GoodsGroup ON Object_GoodsGroup.Id = ObjectLink_Goods_GoodsGroup.ChildObjectId
 
+          LEFT JOIN Object AS Object_Location ON Object_Location.Id = tmpOperationGroup.LocationId
+
           LEFT JOIN Object AS Object_Partner ON Object_Partner.Id = tmpOperationGroup.PartnerId
 
           LEFT JOIN Object AS Object_Juridical ON Object_Juridical.Id = tmpOperationGroup.JuridicalId
@@ -218,6 +263,7 @@ BEGIN
           LEFT JOIN ObjectString AS ObjectString_Goods_GroupNameFull
                                  ON ObjectString_Goods_GroupNameFull.ObjectId = Object_Goods.Id
                                 AND ObjectString_Goods_GroupNameFull.DescId = zc_ObjectString_Goods_GroupNameFull()
+          LEFT JOIN Object_InfoMoney_View AS View_InfoMoney ON View_InfoMoney.InfoMoneyId = tmpOperationGroup.InfoMoneyId
   ;
          
 END;
@@ -233,4 +279,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpReport_GoodsMI_IncomeByPartner (inStartDate:= '01.01.2013', inENDDate:= '31.12.2013',  inDescId:= 1, inGoodsGroupId:= 0, inUnitGroupId:=0, inUnitId:= 0, inPaidKindId:=0, inJuridicalId:=0, inInfoMoneyId:=0, inSession:= zfCalc_UserAdmin());
+-- SELECT * FROM gpReport_GoodsMI_IncomeByPartner (inStartDate:= '01.07.2015', inEndDate:= '01.07.2015',  inDescId:= 1, inGoodsGroupId:= 0, inUnitGroupId:=0, inUnitId:= 0, inPaidKindId:=0, inJuridicalId:=0, inInfoMoneyId:=0, inSession:= zfCalc_UserAdmin());

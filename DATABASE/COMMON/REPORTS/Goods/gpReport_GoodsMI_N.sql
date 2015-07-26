@@ -1,4 +1,4 @@
-п»ї-- Function: gpReport_GoodsMI ()
+-- Function: gpReport_GoodsMI ()
 --SELECT * FROM Object_Account_View WHERE AccountGroupId = zc_Enum_AccountGroup_20000()
 
 DROP FUNCTION IF EXISTS gpReport_GoodsMI (TDateTime, TDateTime, Integer, Integer, Integer, TVarChar);
@@ -9,18 +9,21 @@ DROP FUNCTION IF EXISTS gpReport_GoodsMI (TDateTime, TDateTime, Integer, Integer
 CREATE OR REPLACE FUNCTION gpReport_GoodsMI (
     IN inStartDate    TDateTime ,
     IN inEndDate      TDateTime ,
-    IN inDescId       Integer   ,  --sale(РїСЂРѕРґР°Р¶Р° РїРѕРєСѓРїР°С‚РµР»СЋ) = 5, returnin (РІРѕР·РІСЂР°С‚ РїРѕРєСѓРїР°С‚РµР»СЏ) = 6
+    IN inDescId       Integer   ,  --sale(продажа покупателю) = 5, returnin (возврат покупателя) = 6
     IN inGoodsGroupId Integer   ,
     IN inUnitGroupId  Integer   ,
     IN inUnitId       Integer   ,
     IN inPaidKindId   Integer   ,
     IN inJuridicalId  Integer   ,
     IN inInfoMoneyId  Integer   ,
-    IN inSession      TVarChar    -- СЃРµСЃСЃРёСЏ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ
+    IN inSession      TVarChar    -- сессия пользователя
 )
 RETURNS TABLE (GoodsGroupName TVarChar, GoodsGroupNameFull TVarChar
              , GoodsCode Integer, GoodsName TVarChar, GoodsKindName TVarChar, MeasureName TVarChar
              , TradeMarkName TVarChar
+             , LocationCode Integer, LocationName TVarChar
+             , JuridicalCode Integer, JuridicalName TVarChar
+             , PartnerId Integer, PartnerCode Integer, PartnerName TVarChar
              , Amount_Weight TFloat, Amount_Sh TFloat
              , AmountChangePercent_Weight TFloat, AmountChangePercent_Sh TFloat
              , AmountPartner_Weight TFloat, AmountPartner_Sh TFloat
@@ -41,7 +44,7 @@ BEGIN
     CREATE TEMP TABLE _tmpUnit (UnitId Integer) ON COMMIT DROP;
     
   
-    -- РћРіСЂР°РЅРёС‡РµРЅРёСЏ РїРѕ С‚РѕРІР°СЂСѓ
+    -- Ограничения по товару
     IF inGoodsGroupId <> 0
     THEN
         INSERT INTO _tmpGoods (GoodsId)
@@ -56,8 +59,8 @@ BEGIN
 
     
 
-    -- РіСЂСѓРїРїР° РїРѕРґСЂР°Р·РґРµР»РµРЅРёР№ РёР»Рё РїРѕРґСЂР°Р·РґРµР»РµРЅРёРµ РёР»Рё РјРµСЃС‚Рѕ СѓС‡РµС‚Р° (РњРћ, РђРІС‚Рѕ)
-    IF inUnitGroupId <> 0
+    -- группа подразделений или подразделение или место учета (МО, Авто)
+    IF inUnitGroupId <> 0 AND COALESCE (inUnitId, 0) = 0
     THEN
         INSERT INTO _tmpUnit (UnitId)
            SELECT lfSelect_Object_Unit_byGroup.UnitId AS UnitId
@@ -83,7 +86,7 @@ BEGIN
     END IF;
 
 
-   -- Р РµР·СѓР»СЊС‚Р°С‚
+   -- Результат
     RETURN QUERY
     
        SELECT Object_GoodsGroup.ValueData            AS GoodsGroupName 
@@ -247,8 +250,8 @@ $BODY$
   LANGUAGE plpgsql VOLATILE;
 
 /*-------------------------------------------------------------------------------
- РРЎРўРћР РРЇ Р РђР—Р РђР‘РћРўРљР: Р”РђРўРђ, РђР’РўРћР 
-               Р¤РµР»РѕРЅСЋРє Р.Р’.   РљСѓС…С‚РёРЅ Р.Р’.   РљР»РёРјРµРЅС‚СЊРµРІ Рљ.Р.
+ ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
  22.07.15         *                
  15.12.14                                        * all
  13.05.14                                        * all
@@ -261,5 +264,5 @@ $BODY$
  22.01.14         *
 */
 
--- С‚РµСЃС‚
+-- тест
 -- SELECT * FROM gpReport_GoodsMI (inStartDate:= '01.01.2013', inEndDate:= '31.12.2013',  inDescId:= 1, inGoodsGroupId:= 0, inUnitGroupId:=0, inUnitId:= 0, inPaidKindId:=0, inJuridicalId:=0, inSession:= zfCalc_UserAdmin());
