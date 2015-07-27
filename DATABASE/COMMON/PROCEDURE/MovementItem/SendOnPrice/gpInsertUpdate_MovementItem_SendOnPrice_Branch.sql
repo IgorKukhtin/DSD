@@ -2,6 +2,7 @@
 
 DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_SendOnPrice_Branch (Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TVarChar, Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_SendOnPrice_Branch (Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TVarChar, Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_SendOnPrice_Branch (Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, Boolean, Boolean, TFloat, TFloat, TVarChar, Integer, Integer, TVarChar);
 
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_SendOnPrice_Branch(
@@ -9,9 +10,14 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_SendOnPrice_Branch(
     IN inMovementId          Integer   , -- Ключ объекта <Документ>
     IN inGoodsId             Integer   , -- Товары
     IN inAmount              TFloat    , -- Кол-во (расход)
-    IN inAmountPartner       TFloat    , -- Кол-во (приход)
-    IN inAmountChangePercent TFloat    , -- Количество c учетом % скидки
-    IN inChangePercentAmount TFloat    , -- % скидки для кол-ва
+   
+ INOUT ioAmountPartner           TFloat    , -- Количество у контрагента
+   OUT outAmountChangePercent    TFloat    , -- Количество c учетом % скидки (!!!расчет!!!)
+    IN inChangePercentAmount     TFloat    , -- % скидки для кол-ва (!!!из грида!!!)
+ INOUT ioChangePercentAmount     TFloat    , -- % скидки для кол-ва (!!!из грида!!!)
+    IN inIsChangePercentAmount   Boolean   , -- Признак - будет ли использоваться из контрола <% скидки для кол-ва>
+    IN inIsCalcAmountPartner     Boolean   , -- Признак - будет ли расчитано <Количество у контрагента>
+
     IN inPrice               TFloat    , -- Цена
  INOUT ioCountForPrice       TFloat    , -- Цена за количество
    OUT outAmountSumm         TFloat    , -- Сумма расчетная
@@ -34,6 +40,24 @@ BEGIN
      vbIsProcess_BranchIn:= EXISTS (SELECT Id FROM Object_Unit_View WHERE Id = (SELECT ObjectId FROM MovementLinkObject WHERE MovementId = inMovementId AND DescId = zc_MovementLinkObject_To()) AND BranchId = (SELECT Object_RoleAccessKeyGuide_View.BranchId FROM Object_RoleAccessKeyGuide_View WHERE Object_RoleAccessKeyGuide_View.UserId = vbUserId AND Object_RoleAccessKeyGuide_View.BranchId <> 0 GROUP BY Object_RoleAccessKeyGuide_View.BranchId))
                            ;
 
+     -- !!!из контрола!!! - % скидки для кол-ва
+     IF inIsChangePercentAmount = TRUE
+     THEN
+         IF EXISTS (SELECT ObjectId FROM ObjectLink WHERE ObjectId = inGoodsId AND ChildObjectId = zc_Measure_Kg())
+         THEN ioChangePercentAmount:= inChangePercentAmount; -- !!!из контрола!!!
+         ELSE ioChangePercentAmount:= 0;
+         END IF;
+     END IF;
+
+     -- !!!расчет!!! - Количество c учетом % скидки
+     outAmountChangePercent:= CAST (inAmount * (1 - COALESCE (ioChangePercentAmount, 0) / 100) AS NUMERIC (16, 3));
+
+     IF inIsCalcAmountPartner = TRUE
+     THEN
+         ioAmountPartner:= outAmountChangePercent;
+     END IF;
+
+
      -- сохранили
      SELECT tmp.ioId, tmp.ioCountForPrice, tmp.outAmountSumm
             INTO ioId, ioCountForPrice, outAmountSumm
@@ -46,11 +70,11 @@ BEGIN
                                                                          ELSE COALESCE ((SELECT Amount FROM MovementItem WHERE Id = ioId), 0)
                                                                     END
                                           , inAmountPartner      := CASE WHEN vbIsProcess_BranchIn = TRUE
-                                                                              THEN inAmountPartner
+                                                                             THEN ioAmountPartner
                                                                          ELSE COALESCE ((SELECT ValueData FROM MovementItemFloat WHERE MovementItemId = ioId AND DescId = zc_MIFloat_AmountPartner()), 0)
                                                                     END
-                                          , inAmountChangePercent:= COALESCE ((SELECT ValueData FROM MovementItemFloat WHERE MovementItemId = ioId AND DescId = zc_MIFloat_AmountChangePercent()), 0)
-                                          , inChangePercentAmount:= COALESCE ((SELECT ValueData FROM MovementItemFloat WHERE MovementItemId = ioId AND DescId = zc_MIFloat_ChangePercentAmount()), 0)
+                                          , inAmountChangePercent:= outAmountChangePercent    --COALESCE ((SELECT ValueData FROM MovementItemFloat WHERE MovementItemId = ioId AND DescId = zc_MIFloat_AmountChangePercent()), 0)
+                                          , inChangePercentAmount:= inChangePercentAmount     --COALESCE ((SELECT ValueData FROM MovementItemFloat WHERE MovementItemId = ioId AND DescId = zc_MIFloat_ChangePercentAmount()), 0)
                                           , inPrice              := CASE WHEN vbIsProcess_BranchIn = FALSE
                                                                            OR 0 = COALESCE ((SELECT Amount FROM MovementItem WHERE Id = ioId), 0)
                                                                               THEN inPrice

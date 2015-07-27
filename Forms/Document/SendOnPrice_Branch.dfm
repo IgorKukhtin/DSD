@@ -3,7 +3,7 @@ inherited SendOnPrice_BranchForm: TSendOnPrice_BranchForm
   ClientHeight = 668
   ClientWidth = 944
   ExplicitWidth = 960
-  ExplicitHeight = 703
+  ExplicitHeight = 706
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -1196,27 +1196,47 @@ inherited SendOnPrice_BranchForm: TSendOnPrice_BranchForm
         ParamType = ptInput
       end
       item
-        Name = 'inAmountPartner'
+        Name = 'ioAmountPartner'
         Value = Null
         Component = MasterCDS
         ComponentItem = 'AmountPartner'
         DataType = ftFloat
-        ParamType = ptInput
+        ParamType = ptInputOutput
       end
       item
-        Name = 'inAmountChangePercent'
+        Name = 'outAmountChangePercent'
         Value = Null
         Component = MasterCDS
         ComponentItem = 'AmountChangePercent'
         DataType = ftFloat
-        ParamType = ptInput
       end
       item
         Name = 'inChangePercentAmount'
         Value = Null
+        Component = edChangePercentAmount
+        DataType = ftFloat
+        ParamType = ptInput
+      end
+      item
+        Name = 'ioChangePercentAmount'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'ChangePercentAmount'
         DataType = ftFloat
+        ParamType = ptInputOutput
+      end
+      item
+        Name = 'inIsChangePercentAmount'
+        Value = Null
+        Component = cbCalcAmountPartner
+        DataType = ftBoolean
+        ParamType = ptInput
+      end
+      item
+        Name = 'inIsCalcAmountPartner'
+        Value = Null
+        Component = cbCalcAmountPartner
+        DataType = ftBoolean
         ParamType = ptInput
       end
       item
