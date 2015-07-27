@@ -51,9 +51,11 @@ inherited GuideGoodsMovementForm: TGuideGoodsMovementForm
           Visible = True
         end
         inherited Amount_WeighingWeight: TcxGridDBColumn
+          DataBinding.FieldName = 'Amount_WeighingWeight'
           Visible = True
         end
         inherited Amount_diffWeight: TcxGridDBColumn
+          DataBinding.FieldName = 'Amount_diffWeight'
           Visible = True
         end
       end

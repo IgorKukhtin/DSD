@@ -1954,7 +1954,7 @@ BEGIN
        -- это обычная проводка
        SELECT 0, zc_MIContainer_Summ() AS DescId, vbMovementDescId, inMovementId, _tmpItem_group.MovementItemId
             , _tmpItem_group.ContainerId_Partner
-            , _tmpItem_group.AccountId_Partner   AS AccountId              -- счет есть всегда
+            , CASE WHEN tmpTransit.AccountId > 0 THEN tmpTransit.AccountId ELSE _tmpItem_group.AccountId_Partner END AS AccountId -- счет есть всегда
             , _tmpItem_group.AnalyzerId          AS AnalyzerId             -- аналитика
             , _tmpItem_group.GoodsId             AS ObjectId_Analyzer      -- Товар
             , vbWhereObjectId_Analyzer           AS WhereObjectId_Analyzer -- Подраделение или...
@@ -1962,9 +1962,9 @@ BEGIN
             , _tmpItem_group.GoodsKindId         AS ObjectIntId_Analyzer   -- вид товара
             , vbObjectExtId_Analyzer             AS ObjectExtId_Analyzer   -- покупатель / физ.лицо
             , 0                                  AS ParentId
-            , _tmpItem_group.OperSumm            AS Amount
-            , CASE WHEN vbAccountId_GoodsTransit <> 0 THEN vbOperDatePartner ELSE vbOperDate END AS OperDate -- т.е. по "определенной" Дате
-            , _tmpItem_group.isActive            AS isActive
+            , _tmpItem_group.OperSumm * CASE WHEN tmpTransit.isActive = TRUE THEN 1 ELSE -1 END AS Amount
+            , tmpTransit.OperDate                AS OperDate               -- т.е. по "определенной" Дате
+            , tmpTransit.isActive                AS isActive               -- TRUE будет всегда, остальные зависят от даты
        FROM (SELECT _tmpItem.MovementItemId, _tmpItem.ContainerId_Partner, _tmpItem.AccountId_Partner, _tmpItem.GoodsId, _tmpItem.GoodsKindId
                   -- , CASE WHEN _tmpItem.isLossMaterials = TRUE THEN zc_Enum_AnalyzerId_LossSumm_20200() ELSE zc_Enum_AnalyzerId_SaleSumm_10100() END AS AnalyzerId
                   , zc_Enum_AnalyzerId_SaleSumm_10100() AS AnalyzerId
@@ -2008,6 +2008,9 @@ BEGIN
              -- HAVING SUM (_tmpItemPartnerFrom.OperSumm_Partner) <> 0
 
             ) AS _tmpItem_group
+            LEFT JOIN (SELECT -1                       AS AccountId, TRUE  AS isActive, CASE WHEN vbAccountId_GoodsTransit <> 0 THEN vbOperDatePartner ELSE vbOperDate END AS OperDate
+             UNION ALL SELECT vbAccountId_GoodsTransit AS AccountId, TRUE  AS isActive, vbOperDate AS OperDate
+             UNION ALL SELECT vbAccountId_GoodsTransit AS AccountId, FALSE AS isActive, vbOperDate AS OperDate) AS tmpTransit ON tmpTransit.AccountId <> 0
      UNION ALL
        -- это !!!одна!!! проводка для "забалансового" Валютного счета
        SELECT 0, zc_MIContainer_SummCurrency() AS DescId, vbMovementDescId, inMovementId, 0 AS MovementItemId

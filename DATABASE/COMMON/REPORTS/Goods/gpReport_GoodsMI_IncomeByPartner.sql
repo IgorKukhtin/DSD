@@ -181,7 +181,7 @@ BEGIN
                  WHERE MIContainer.OperDate BETWEEN inStartDate AND inEndDate  
                    AND MIContainer.MovementDescId = inDescId
                    AND MIContainer.isActive = CASE WHEN inDescId = zc_Movement_Income() THEN TRUE ELSE FALSE END
-                   AND MIContainer.AccountId <> zc_Enum_Account_100301() -- прибыль текущего периода
+                   AND COALESCE (MIContainer.AccountId, 0) <> zc_Enum_Account_100301() -- прибыль текущего периода
                  GROUP BY MIContainer.ContainerId
                         , MIContainer.ObjectId_analyzer
                         , MIContainer.ContainerId_analyzer

@@ -1757,24 +1757,39 @@ BEGIN
        -- это обычная проводка
        SELECT 0, zc_MIContainer_Summ() AS DescId, vbMovementDescId, inMovementId, _tmpItem_group.MovementItemId
             , _tmpItem_group.ContainerId_Partner
-            , _tmpItem_group.AccountId_Partner        AS AccountId
-            , _tmpItem_group.AnalyzerId               AS AnalyzerId
-            , _tmpItem_group.GoodsId                  AS ObjectId_Analyzer 
-             , vbWhereObjectId_Analyzer               AS WhereObjectId_Analyzer
-            , _tmpItem_group.ContainerId_Partner      AS ContainerId_Analyzer
+            , CASE WHEN tmpTransit.AccountId > 0 THEN tmpTransit.AccountId ELSE _tmpItem_group.AccountId_Partner END AS AccountId -- счет есть всегда
+            , _tmpItem_group.AnalyzerId               AS AnalyzerId             -- аналитика
+            , _tmpItem_group.GoodsId                  AS ObjectId_Analyzer      -- Товар
+             , vbWhereObjectId_Analyzer               AS WhereObjectId_Analyzer -- Подраделение или...
+            , _tmpItem_group.ContainerId_Partner      AS ContainerId_Analyzer   -- тот же самый
             , _tmpItem_group.GoodsKindId              AS ObjectIntId_Analyzer   -- вид товара
             , vbObjectExtId_Analyzer                  AS ObjectExtId_Analyzer   -- покупатель / физ.лицо
-            , 0 AS ParentId
-            , -1 * _tmpItem_group.OperSumm
-            , CASE WHEN vbAccountId_GoodsTransit <> 0 THEN vbOperDatePartner ELSE vbOperDate END AS OperDate -- т.е. по "Дате покупателя"
-            , _tmpItem_group.isActive
-       FROM (SELECT _tmpItem.MovementItemId, _tmpItem.ContainerId_Partner, _tmpItem.AccountId_Partner, _tmpItem.GoodsId, _tmpItem.GoodsKindId, zc_Enum_AnalyzerId_ReturnInSumm_10700() AS AnalyzerId, SUM (_tmpItem.OperSumm_Partner) AS OperSumm, FALSE AS isActive
+            , 0                                       AS ParentId
+            , _tmpItem_group.OperSumm * CASE WHEN tmpTransit.isActive = TRUE THEN 1 ELSE -1 END AS Amount
+            , tmpTransit.OperDate                     AS OperDate               -- т.е. по "определенной" Дате
+            , tmpTransit.isActive                     AS isActive               -- FALSE будет всегда, остальные зависят от даты
+       FROM (SELECT _tmpItem.MovementItemId, _tmpItem.ContainerId_Partner, _tmpItem.AccountId_Partner, _tmpItem.GoodsId, _tmpItem.GoodsKindId
+                  , zc_Enum_AnalyzerId_ReturnInSumm_10700() AS AnalyzerId
+                  , SUM (_tmpItem.OperSumm_PriceList) AS OperSumm
+                  , FALSE AS isActive
              FROM _tmpItem
              GROUP BY _tmpItem.MovementItemId, _tmpItem.ContainerId_Partner, _tmpItem.AccountId_Partner, _tmpItem.GoodsId, _tmpItem.GoodsKindId
              -- !!!нельзя ограничивать, т.к. на этих проводках строятся отчеты!!!
              -- HAVING SUM (_tmpItem.OperSumm_Partner) <> 0
            UNION ALL
-             SELECT _tmpItem.MovementItemId, _tmpItem.ContainerId_Partner, _tmpItem.AccountId_Partner, _tmpItem.GoodsId, _tmpItem.GoodsKindId, zc_Enum_AnalyzerId_ReturnInSumm_10300() AS AnalyzerId, SUM (_tmpItem.OperSumm_Partner_ChangePercent - _tmpItem.OperSumm_Partner) AS OperSumm, FALSE AS isActive
+             SELECT _tmpItem.MovementItemId, _tmpItem.ContainerId_Partner, _tmpItem.AccountId_Partner, _tmpItem.GoodsId, _tmpItem.GoodsKindId
+                  , zc_Enum_AnalyzerId_ReturnInSumm_10200() AS AnalyzerId
+                  , SUM (_tmpItem.OperSumm_Partner - _tmpItem.OperSumm_PriceList) AS OperSumm
+                  , FALSE AS isActive
+             FROM _tmpItem
+             GROUP BY _tmpItem.MovementItemId, _tmpItem.ContainerId_Partner, _tmpItem.AccountId_Partner, _tmpItem.GoodsId, _tmpItem.GoodsKindId
+             HAVING SUM (_tmpItem.OperSumm_Partner - _tmpItem.OperSumm_PriceList) <> 0 -- !!!можно ограничить!!!
+
+           UNION ALL
+             SELECT _tmpItem.MovementItemId, _tmpItem.ContainerId_Partner, _tmpItem.AccountId_Partner, _tmpItem.GoodsId, _tmpItem.GoodsKindId
+                  , zc_Enum_AnalyzerId_ReturnInSumm_10300() AS AnalyzerId
+                  , SUM (_tmpItem.OperSumm_Partner_ChangePercent - _tmpItem.OperSumm_Partner) AS OperSumm
+                  , FALSE AS isActive
              FROM _tmpItem
              GROUP BY _tmpItem.MovementItemId, _tmpItem.ContainerId_Partner, _tmpItem.AccountId_Partner, _tmpItem.GoodsId, _tmpItem.GoodsKindId
              HAVING SUM (_tmpItem.OperSumm_Partner_ChangePercent - _tmpItem.OperSumm_Partner) <> 0 -- !!!можно ограничить!!!
@@ -1791,6 +1806,9 @@ BEGIN
              -- HAVING SUM (_tmpItemPartnerTo.OperSumm_Partner) <> 0
 
             ) AS _tmpItem_group
+            LEFT JOIN (SELECT -1                       AS AccountId, FALSE AS isActive, CASE WHEN vbAccountId_GoodsTransit <> 0 THEN vbOperDatePartner ELSE vbOperDate END AS OperDate
+             UNION ALL SELECT vbAccountId_GoodsTransit AS AccountId, FALSE AS isActive, vbOperDate AS OperDate
+             UNION ALL SELECT vbAccountId_GoodsTransit AS AccountId, TRUE  AS isActive, vbOperDate AS OperDate) AS tmpTransit ON tmpTransit.AccountId <> 0
      ;
 
 
