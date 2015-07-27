@@ -2,6 +2,7 @@ inherited OrderInternalJournalForm: TOrderInternalJournalForm
   Caption = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' <'#1047#1072#1103#1074#1082#1072' '#1087#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1077#1085#1085#1072#1103' ('#1062#1077#1093')>'
   ClientHeight = 535
   ClientWidth = 1073
+  AddOnFormData.Params = FormParams
   ExplicitWidth = 1089
   ExplicitHeight = 573
   PixelsPerInch = 96
@@ -207,6 +208,34 @@ inherited OrderInternalJournalForm: TOrderInternalJournalForm
     Top = 250
     inherited actInsert: TdsdInsertUpdateAction
       FormName = 'TOrderInternalForm'
+      GuiParams = <
+        item
+          Name = 'Id'
+          Value = Null
+        end
+        item
+          Name = 'ShowAll'
+          Value = True
+          DataType = ftBoolean
+        end
+        item
+          Name = 'inOperDate'
+          Value = 41640d
+          Component = deEnd
+          DataType = ftDateTime
+        end
+        item
+          Name = 'inFromId'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'inFromId'
+        end
+        item
+          Name = 'inToId'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'inToId'
+        end>
     end
     inherited actUpdate: TdsdInsertUpdateAction
       FormName = 'TOrderInternalForm'
@@ -228,6 +257,18 @@ inherited OrderInternalJournalForm: TOrderInternalJournalForm
           Value = 41640d
           Component = deEnd
           DataType = ftDateTime
+        end
+        item
+          Name = 'inFromId'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'inFromId'
+        end
+        item
+          Name = 'inToId'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'inToId'
         end>
     end
     object actPrint: TdsdPrintAction
@@ -262,7 +303,6 @@ inherited OrderInternalJournalForm: TOrderInternalJournalForm
           UserName = 'frxDBDMaster'
           IndexFieldNames = 'UnitCode;GoodsGroupNameFull;GoodsName;GoodsKindName'
         end>
-      CopiesCount = 1
       Params = <
         item
           Name = 'Id'
@@ -308,9 +348,18 @@ inherited OrderInternalJournalForm: TOrderInternalJournalForm
         ParamType = ptInput
       end
       item
+        Name = 'inFromId'
         Value = 'False'
-        DataType = ftBoolean
-        ParamType = ptUnknown
+        Component = FormParams
+        ComponentItem = 'inFromId'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inToId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'inToId'
+        ParamType = ptInput
       end>
     Left = 136
     Top = 163
@@ -455,6 +504,34 @@ inherited OrderInternalJournalForm: TOrderInternalJournalForm
     Top = 376
   end
   inherited FormParams: TdsdFormParams
+    Params = <
+      item
+        Name = 'Id'
+        Value = Null
+        ParamType = ptInputOutput
+      end
+      item
+        Name = 'Key'
+        Value = Null
+        DataType = ftString
+        ParamType = ptInput
+      end
+      item
+        Name = 'ShowAll'
+        Value = False
+        DataType = ftBoolean
+        ParamType = ptInputOutput
+      end
+      item
+        Name = 'inFromId'
+        Value = Null
+        ParamType = ptInputOutput
+      end
+      item
+        Name = 'inToId'
+        Value = Null
+        ParamType = ptInputOutput
+      end>
     Left = 400
     Top = 200
   end
