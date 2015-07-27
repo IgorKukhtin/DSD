@@ -4,7 +4,7 @@ inherited MainForm: TMainForm
   KeyPreview = True
   Position = poDesigned
   ExplicitWidth = 1102
-  ExplicitHeight = 262
+  ExplicitHeight = 265
   PixelsPerInch = 96
   TextHeight = 13
   object cxGrid: TcxGrid [0]
@@ -1622,7 +1622,15 @@ inherited MainForm: TMainForm
       FormName = 'TOrderInternalJournalForm'
       FormNameParam.Value = 'TOrderInternalJournalForm'
       FormNameParam.DataType = ftString
-      GuiParams = <>
+      GuiParams = <
+        item
+          Name = 'inFromId'
+          Value = '8447'
+        end
+        item
+          Name = 'inToId'
+          Value = '8447'
+        end>
       isShowModal = False
     end
     object actOrderInternalPack: TdsdOpenForm
