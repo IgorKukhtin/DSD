@@ -406,7 +406,7 @@ procedure TMainCashForm.FormCreate(Sender: TObject);
 begin
   inherited;
   UserSettingsStorageAddOn.LoadUserSettings;
-//  Cash:=TCashFactory.GetCash(iniCashType);
+  Cash:=TCashFactory.GetCash(iniCashType);
   SoldParallel:=iniSoldParallel;
   NewCheck;
   OnCLoseQuery := ParentFormCloseQuery;
