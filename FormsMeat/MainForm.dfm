@@ -1,16 +1,16 @@
 inherited MainForm: TMainForm
   ClientHeight = 207
-  ClientWidth = 1086
+  ClientWidth = 1093
   KeyPreview = True
   Position = poDesigned
-  ExplicitWidth = 1102
+  ExplicitWidth = 1109
   ExplicitHeight = 265
   PixelsPerInch = 96
   TextHeight = 13
   object cxGrid: TcxGrid [0]
     Left = 0
     Top = 0
-    Width = 1086
+    Width = 1093
     Height = 81
     Align = alTop
     BevelInner = bvNone
@@ -20,6 +20,7 @@ inherited MainForm: TMainForm
     TabOrder = 0
     LookAndFeel.Kind = lfStandard
     LookAndFeel.NativeStyle = True
+    ExplicitWidth = 1086
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -1641,7 +1642,15 @@ inherited MainForm: TMainForm
       FormName = 'TOrderInternalPackJournalForm'
       FormNameParam.Value = 'TOrderInternalPackJournalForm'
       FormNameParam.DataType = ftString
-      GuiParams = <>
+      GuiParams = <
+        item
+          Name = 'inFromId'
+          Value = '8451'
+        end
+        item
+          Name = 'inToId'
+          Value = '0'
+        end>
       isShowModal = False
     end
     object actLoss: TdsdOpenForm
@@ -3293,7 +3302,15 @@ inherited MainForm: TMainForm
       FormName = 'TOrderInternalBasisJournalForm'
       FormNameParam.Value = 'TOrderInternalBasisJournalForm'
       FormNameParam.DataType = ftString
-      GuiParams = <>
+      GuiParams = <
+        item
+          Name = 'inFromId'
+          Value = '8439'
+        end
+        item
+          Name = 'inToid'
+          Value = '0'
+        end>
       isShowModal = False
     end
     object actReport_GoodsMI_SaleReturnInUnit: TdsdOpenForm
