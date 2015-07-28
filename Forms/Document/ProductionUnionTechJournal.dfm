@@ -1111,7 +1111,6 @@ inherited ProductionUnionTechJournalForm: TProductionUnionTechJournalForm
           UserName = 'Master'
           IndexFieldNames = 'ReceiptId;GroupNumber;InfoMoneyName;GoodsName'
         end>
-      CopiesCount = 1
       Params = <
         item
           Name = 'StartDate'
@@ -1129,7 +1128,159 @@ inherited ProductionUnionTechJournalForm: TProductionUnionTechJournalForm
       ReportNameParam.Value = #1055#1077#1095#1072#1090#1100'_'#1088#1077#1094#1077#1087#1090#1086#1074
       ReportNameParam.DataType = ftString
     end
-    object actReport_TaxExit_Loss: TdsdPrintAction [26]
+    object actUnCompleteList: TMultiAction [26]
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actSimpleUncompleteList
+        end
+        item
+          Action = actRefresh
+        end>
+      QuestionBeforeExecute = #1042#1099' '#1091#1074#1077#1088#1077#1085#1099' '#1074' '#1088#1072#1089#1087#1088#1086#1074#1077#1076#1077#1085#1080#1080' '#1042#1089#1077#1093' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074'? '
+      InfoAfterExecute = #1042#1089#1077' '#1076#1086#1082#1091#1084#1077#1085#1090#1099' '#1088#1072#1089#1087#1088#1086#1074#1077#1076#1077#1085#1099
+      Caption = #1056#1072#1089#1087#1088#1086#1074#1077#1089#1090#1080' '#1042#1089#1077' '#1076#1086#1082#1091#1084#1077#1085#1090#1099
+      Hint = #1056#1072#1089#1087#1088#1086#1074#1077#1089#1090#1080' '#1042#1089#1077' '#1076#1086#1082#1091#1084#1077#1085#1090#1099
+      ImageIndex = 11
+    end
+    object actSetErasedList: TMultiAction [27]
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actSimpleErased
+        end
+        item
+          Action = actRefresh
+        end>
+      QuestionBeforeExecute = #1042#1099' '#1091#1074#1077#1088#1077#1085#1099' '#1074' '#1091#1076#1072#1083#1077#1085#1080#1080' '#1042#1089#1077#1093' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074'? '
+      InfoAfterExecute = #1042#1089#1077' '#1076#1086#1082#1091#1084#1077#1085#1090#1099' '#1091#1076#1072#1083#1077#1085#1099
+      Caption = #1059#1076#1072#1083#1080#1090#1100' '#1042#1089#1077' '#1076#1086#1082#1091#1084#1077#1085#1090#1099
+      Hint = #1059#1076#1072#1083#1080#1090#1100' '#1042#1089#1077' '#1076#1086#1082#1091#1084#1077#1085#1090#1099
+      ImageIndex = 13
+    end
+    object actSimpleErased: TMultiAction [28]
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = spErased
+        end>
+      View = cxGridDBTableView
+      Caption = #1059#1076#1072#1083#1080#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090#1099
+      Hint = #1059#1076#1072#1083#1080#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090#1099
+    end
+    object spErased: TdsdExecStoredProc [29]
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spMovementSetErased
+      StoredProcList = <
+        item
+          StoredProc = spMovementSetErased
+        end>
+      Caption = 'spErased'
+    end
+    object actSimpleUncompleteList: TMultiAction [30]
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = spUncomplete
+        end>
+      View = cxGridDBTableView
+      Caption = #1056#1072#1089#1087#1088#1086#1074#1077#1089#1090#1080' '#1076#1086#1082#1091#1084#1077#1085#1090#1099
+      Hint = #1056#1072#1089#1087#1088#1086#1074#1077#1089#1090#1080' '#1076#1086#1082#1091#1084#1077#1085#1090#1099
+    end
+    object spUncomplete: TdsdExecStoredProc [31]
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spMovementUnComplete
+      StoredProcList = <
+        item
+          StoredProc = spMovementUnComplete
+        end>
+      Caption = 'spUncomplete'
+    end
+    object spCompete: TdsdExecStoredProc [32]
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spMovementComplete
+      StoredProcList = <
+        item
+          StoredProc = spMovementComplete
+        end>
+      Caption = 'spCompete'
+    end
+    object actSimpleCompleteList: TMultiAction [33]
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = spCompete
+        end>
+      View = cxGridDBTableView
+      Caption = #1055#1088#1086#1074#1077#1076#1077#1085#1080#1077' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074
+      Hint = #1055#1088#1086#1074#1077#1076#1077#1085#1080#1077' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074
+    end
+    object actCompleteList: TMultiAction [34]
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actSimpleCompleteList
+        end
+        item
+          Action = actRefresh
+        end>
+      QuestionBeforeExecute = #1042#1099' '#1091#1074#1077#1088#1077#1085#1099' '#1074' '#1087#1088#1086#1074#1077#1076#1077#1085#1080#1080' '#1042#1089#1077#1093' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074'? '
+      InfoAfterExecute = #1042#1089#1077' '#1076#1086#1082#1091#1084#1077#1085#1090#1099' '#1087#1088#1086#1074#1077#1076#1077#1085#1099
+      Caption = #1055#1088#1086#1074#1077#1089#1090#1080' '#1042#1089#1077' '#1076#1086#1082#1091#1084#1077#1085#1090#1099
+      Hint = #1055#1088#1086#1074#1077#1089#1090#1080' '#1042#1089#1077' '#1076#1086#1082#1091#1084#1077#1085#1090#1099
+      ImageIndex = 12
+    end
+    object actReCompleteList: TMultiAction [35]
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actSimpleReCompleteList
+        end
+        item
+          Action = actRefresh
+        end>
+      QuestionBeforeExecute = #1042#1099' '#1091#1074#1077#1088#1077#1085#1099' '#1074' '#1087#1077#1088#1077#1087#1088#1086#1074#1077#1076#1077#1085#1080#1080' '#1042#1089#1077#1093' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074'? '
+      InfoAfterExecute = #1042#1089#1077' '#1076#1086#1082#1091#1084#1077#1085#1090#1099' '#1087#1077#1088#1077#1087#1088#1086#1074#1077#1076#1077#1085#1099
+      Caption = #1055#1077#1088#1077#1087#1088#1086#1074#1077#1089#1090#1080' '#1042#1089#1077' '#1076#1086#1082#1091#1084#1077#1085#1090#1099
+      Hint = #1055#1077#1088#1077#1087#1088#1086#1074#1077#1089#1090#1080' '#1042#1089#1077' '#1076#1086#1082#1091#1084#1077#1085#1090#1099
+      ImageIndex = 12
+    end
+    object actSimpleReCompleteList: TMultiAction [36]
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = spReCompete
+        end>
+      View = cxGridDBTableView
+      Caption = #1055#1077#1088#1077#1087#1088#1086#1074#1077#1076#1077#1085#1080#1077' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074
+      Hint = #1055#1077#1088#1077#1087#1088#1086#1074#1077#1076#1077#1085#1080#1077' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074
+    end
+    object spReCompete: TdsdExecStoredProc [37]
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spMovementReComplete
+      StoredProcList = <
+        item
+          StoredProc = spMovementReComplete
+        end>
+      Caption = 'spReCompete'
+    end
+    object actReport_TaxExit_Loss: TdsdPrintAction [38]
       Category = 'DSDLib'
       MoveParams = <
         item
@@ -1159,7 +1310,6 @@ inherited ProductionUnionTechJournalForm: TProductionUnionTechJournalForm
             'GoodsGroupNameFull;GoodsName;PartionGoodsDate;GoodsKindName_Comp' +
             'lete'
         end>
-      CopiesCount = 1
       Params = <
         item
           Name = 'StartDate'
@@ -1213,7 +1363,7 @@ inherited ProductionUnionTechJournalForm: TProductionUnionTechJournalForm
       ReportNameParam.Value = #1055#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1086' '#1080' '#1087#1088#1086#1094#1077#1085#1090' '#1074#1099#1093#1086#1076#1072' ('#1080#1090#1086#1075#1080')'
       ReportNameParam.DataType = ftString
     end
-    object actReport_TaxLoss: TdsdPrintAction [27]
+    object actReport_TaxLoss: TdsdPrintAction [39]
       Category = 'DSDLib'
       MoveParams = <
         item
@@ -1240,7 +1390,6 @@ inherited ProductionUnionTechJournalForm: TProductionUnionTechJournalForm
           UserName = 'frxDBDMaster'
           IndexFieldNames = 'GoodsGroupNameFull;GoodsName;GoodsKindName'
         end>
-      CopiesCount = 1
       Params = <
         item
           Name = 'StartDate'
@@ -1289,7 +1438,7 @@ inherited ProductionUnionTechJournalForm: TProductionUnionTechJournalForm
       ReportNameParam.Value = #1055#1088#1080#1093#1086#1076' '#1085#1072' '#1089#1082#1083#1072#1076' '#1080' '#1087#1088#1086#1094#1077#1085#1090' '#1087#1086#1090#1077#1088#1100' ('#1080#1090#1086#1075#1080')'
       ReportNameParam.DataType = ftString
     end
-    object actReceiptChoice: TOpenChoiceForm [28]
+    object actReceiptChoice: TOpenChoiceForm [40]
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -1341,7 +1490,7 @@ inherited ProductionUnionTechJournalForm: TProductionUnionTechJournalForm
         end>
       isShowModal = True
     end
-    object actUnComplete: TdsdChangeMovementStatus [32]
+    object actUnComplete: TdsdChangeMovementStatus [44]
       Category = 'DSDLib'
       MoveParams = <>
       StoredProc = spMovementUnComplete
@@ -1355,7 +1504,7 @@ inherited ProductionUnionTechJournalForm: TProductionUnionTechJournalForm
       Status = mtUncomplete
       DataSource = MasterDS
     end
-    object actComplete: TdsdChangeMovementStatus [33]
+    object actComplete: TdsdChangeMovementStatus [45]
       Category = 'DSDLib'
       MoveParams = <>
       StoredProc = spMovementComplete
@@ -1369,7 +1518,7 @@ inherited ProductionUnionTechJournalForm: TProductionUnionTechJournalForm
       Status = mtComplete
       DataSource = MasterDS
     end
-    object actSetErased: TdsdChangeMovementStatus [34]
+    object actSetErased: TdsdChangeMovementStatus [46]
       Category = 'DSDLib'
       MoveParams = <>
       StoredProc = spMovementSetErased
@@ -1596,8 +1745,53 @@ inherited ProductionUnionTechJournalForm: TProductionUnionTechJournalForm
       end>
   end
   inherited PopupMenu: TPopupMenu
-    Left = 152
-    Top = 240
+    Left = 144
+    Top = 144
+    object N7: TMenuItem [0]
+      Action = actInsert
+      Caption = #1044#1086#1073#1072#1074#1080#1090#1100
+      Hint = #1044#1086#1073#1072#1074#1080#1090#1100
+      ShortCut = 45
+    end
+    object N8: TMenuItem [1]
+      Action = actUpdate
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100
+    end
+    object N9: TMenuItem [2]
+      Caption = '-'
+    end
+    inherited N6: TMenuItem [3]
+      Action = actComplete
+    end
+    inherited N5: TMenuItem [4]
+      Action = actUnComplete
+    end
+    object N11: TMenuItem [5]
+      Action = actSetErased
+    end
+    object N12: TMenuItem [6]
+      Caption = '-'
+    end
+    object N13: TMenuItem [7]
+      Action = actReCompleteList
+    end
+    object N14: TMenuItem [8]
+      Action = actCompleteList
+    end
+    object N15: TMenuItem [9]
+      Action = actUnCompleteList
+    end
+    object N16: TMenuItem [10]
+      Action = actSetErasedList
+    end
+    object N10: TMenuItem [11]
+      Caption = '-'
+    end
+    inherited N1: TMenuItem [12]
+    end
+    inherited Excel1: TMenuItem [13]
+    end
   end
   inherited FormParams: TdsdFormParams
     Params = <
@@ -2251,5 +2445,21 @@ inherited ProductionUnionTechJournalForm: TProductionUnionTechJournalForm
     PackSize = 1
     Left = 151
     Top = 299
+  end
+  object spMovementReComplete: TdsdStoredProc
+    StoredProcName = 'gpReComplete_Movement_ProductionUnion'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'MovementId'
+        ParamType = ptInput
+      end>
+    PackSize = 1
+    Left = 912
+    Top = 144
   end
 end
