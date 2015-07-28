@@ -20,7 +20,6 @@ inherited MainForm: TMainForm
     TabOrder = 0
     LookAndFeel.Kind = lfStandard
     LookAndFeel.NativeStyle = True
-    ExplicitWidth = 1086
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -1626,11 +1625,11 @@ inherited MainForm: TMainForm
       GuiParams = <
         item
           Name = 'inFromId'
-          Value = '8447'
+          Value = '8457'
         end
         item
           Name = 'inToId'
-          Value = '8447'
+          Value = '8446'
         end>
       isShowModal = False
     end
@@ -1645,11 +1644,11 @@ inherited MainForm: TMainForm
       GuiParams = <
         item
           Name = 'inFromId'
-          Value = '8451'
+          Value = '8457'
         end
         item
           Name = 'inToId'
-          Value = '0'
+          Value = '8451'
         end>
       isShowModal = False
     end
@@ -3305,7 +3304,7 @@ inherited MainForm: TMainForm
       GuiParams = <
         item
           Name = 'inFromId'
-          Value = '8439'
+          Value = '8446'
         end
         item
           Name = 'inToid'
@@ -3322,6 +3321,25 @@ inherited MainForm: TMainForm
       FormNameParam.DataType = ftString
       FormNameParam.ParamType = ptResult
       GuiParams = <>
+      isShowModal = False
+    end
+    object actOrderInternalBasisDelik: TdsdOpenForm
+      Category = #1055#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1086
+      MoveParams = <>
+      Caption = #1047#1072#1103#1074#1082#1072' '#1087#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1077#1085#1085#1072#1103' ('#1044#1077#1083#1080#1082#1072#1090#1077#1089#1099')'
+      Hint = #1047#1072#1103#1074#1082#1072' '#1087#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1077#1085#1085#1072#1103' ('#1044#1077#1083#1080#1082#1072#1090#1077#1089#1099')'
+      FormName = 'TOrderInternalBasisJournalForm'
+      FormNameParam.Value = 'TOrderInternalBasisJournalForm'
+      FormNameParam.DataType = ftString
+      GuiParams = <
+        item
+          Name = 'inFromId'
+          Value = '8448'
+        end
+        item
+          Name = 'inToid'
+          Value = '0'
+        end>
       isShowModal = False
     end
   end
@@ -3473,6 +3491,9 @@ inherited MainForm: TMainForm
       end
       object bbOrderInternalBasis: TMenuItem
         Action = actOrderInternalBasis
+      end
+      object N76: TMenuItem
+        Action = actOrderInternalBasisDelik
       end
       object miOrderType: TMenuItem
         Action = actOrderType
