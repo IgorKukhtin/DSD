@@ -111,7 +111,7 @@ inherited PriceForm: TPriceForm
     Properties.ReadOnly = True
     Properties.UseNullString = True
     TabOrder = 5
-    Width = 411
+    Width = 299
   end
   inherited ActionList: TActionList
     inherited actRefresh: TdsdDataSetRefresh
@@ -166,6 +166,92 @@ inherited PriceForm: TPriceForm
         end>
       Caption = 'dsdUpdatePrice'
       DataSource = MasterDS
+    end
+    object actStartLoadMCS: TMultiAction
+      Category = 'LoadMCS'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actGetImportSetting_MCS
+        end
+        item
+          Action = actDoLoadMCS
+        end
+        item
+          Action = actRefresh
+        end>
+      QuestionBeforeExecute = #1053#1072#1095#1072#1090#1100' '#1079#1072#1075#1088#1091#1079#1082#1091' '#1053#1058#1047' '#1085#1072' '#1074#1099#1073#1088#1072#1085#1085#1086#1077' '#1087#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077'?'
+      Caption = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1053#1058#1047
+      Hint = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1053#1058#1047
+      ImageIndex = 41
+    end
+    object actGetImportSetting_MCS: TdsdExecStoredProc
+      Category = 'LoadMCS'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spGetImportSetting_MCS
+      StoredProcList = <
+        item
+          StoredProc = spGetImportSetting_MCS
+        end>
+      Caption = 'actGetImportSetting_MCS'
+    end
+    object actDoLoadMCS: TExecuteImportSettingsAction
+      Category = 'LoadMCS'
+      MoveParams = <>
+      ImportSettingsId.Value = Null
+      ImportSettingsId.Component = FormParams
+      ImportSettingsId.ComponentItem = 'ImportSettingId_MCS'
+      ExternalParams = <
+        item
+          Name = 'inUnitId'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'UnitId'
+        end>
+    end
+    object actStartLoadPrice: TMultiAction
+      Category = 'LoadPrice'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actGetImportSetting_Price
+        end
+        item
+          Action = actDoLoadPrice
+        end
+        item
+          Action = actRefresh
+        end>
+      QuestionBeforeExecute = #1053#1072#1095#1072#1090#1100' '#1079#1072#1075#1088#1091#1079#1082#1091' '#1094#1077#1085' '#1087#1086' '#1074#1099#1073#1088#1072#1085#1085#1086#1084#1091' '#1087#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1102'?'
+      Caption = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1094#1077#1085#1099
+      Hint = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1094#1077#1085#1099
+      ImageIndex = 75
+    end
+    object actGetImportSetting_Price: TdsdExecStoredProc
+      Category = 'LoadPrice'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spGetImportSetting_Price
+      StoredProcList = <
+        item
+          StoredProc = spGetImportSetting_Price
+        end>
+      Caption = 'actGetImportSetting_Price'
+    end
+    object actDoLoadPrice: TExecuteImportSettingsAction
+      Category = 'LoadPrice'
+      MoveParams = <>
+      ImportSettingsId.Value = Null
+      ImportSettingsId.Component = FormParams
+      ImportSettingsId.ComponentItem = 'ImportSettingId_Price'
+      ExternalParams = <
+        item
+          Name = 'inUnitId'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'UnitId'
+        end>
     end
   end
   inherited spSelect: TdsdStoredProc
@@ -230,6 +316,18 @@ inherited PriceForm: TPriceForm
           ItemName = 'dxBarButton2'
         end
         item
+          UserDefine = [udPaintStyle]
+          UserPaintStyle = psCaptionGlyph
+          Visible = True
+          ItemName = 'dxBarButton3'
+        end
+        item
+          UserDefine = [udPaintStyle]
+          UserPaintStyle = psCaptionGlyph
+          Visible = True
+          ItemName = 'dxBarButton4'
+        end
+        item
           Visible = True
           ItemName = 'dxBarControlContainerItemUnit'
         end>
@@ -248,6 +346,14 @@ inherited PriceForm: TPriceForm
     end
     object dxBarButton2: TdxBarButton
       Action = actShowDel
+      Category = 0
+    end
+    object dxBarButton3: TdxBarButton
+      Action = actStartLoadMCS
+      Category = 0
+    end
+    object dxBarButton4: TdxBarButton
+      Action = actStartLoadPrice
       Category = 0
     end
   end
@@ -291,6 +397,14 @@ inherited PriceForm: TPriceForm
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+      end
+      item
+        Name = 'ImportSettingId_MCS'
+        Value = Null
+      end
+      item
+        Name = 'ImportSettingId_Price'
+        Value = Null
       end>
     Left = 264
     Top = 48
@@ -364,5 +478,63 @@ inherited PriceForm: TPriceForm
       end>
     Left = 200
     Top = 96
+  end
+  object spGetImportSetting_MCS: TdsdStoredProc
+    StoredProcName = 'gpGet_DefaultValue'
+    DataSets = <
+      item
+      end>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inDefaultKey'
+        Value = 'TPriceForm;zc_Object_ImportSetting_MCS'
+        DataType = ftString
+        ParamType = ptInput
+      end
+      item
+        Name = 'inUserKeyId'
+        Value = '0'
+        ParamType = ptInput
+      end
+      item
+        Name = 'gpGet_DefaultValue'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'ImportSettingId_MCS'
+        DataType = ftString
+      end>
+    PackSize = 1
+    Left = 232
+    Top = 224
+  end
+  object spGetImportSetting_Price: TdsdStoredProc
+    StoredProcName = 'gpGet_DefaultValue'
+    DataSets = <
+      item
+      end>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inDefaultKey'
+        Value = 'TPriceForm;zc_Object_ImportSetting_Price'
+        DataType = ftString
+        ParamType = ptInput
+      end
+      item
+        Name = 'inUserKeyId'
+        Value = '0'
+        ParamType = ptInput
+      end
+      item
+        Name = 'gpGet_DefaultValue'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'ImportSettingId_Price'
+        DataType = ftString
+      end>
+    PackSize = 1
+    Left = 312
+    Top = 216
   end
 end

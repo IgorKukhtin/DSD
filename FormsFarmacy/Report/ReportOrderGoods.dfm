@@ -2,7 +2,6 @@ inherited ReportOrderGoodsForm: TReportOrderGoodsForm
   Caption = #1055#1086#1080#1089#1082' '#1090#1086#1074#1072#1088#1086#1074' '#1074' '#1079#1072#1103#1074#1082#1072#1093
   ClientWidth = 806
   ExplicitWidth = 814
-  ExplicitHeight = 335
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -165,6 +164,18 @@ inherited ReportOrderGoodsForm: TReportOrderGoodsForm
             DataBinding.FieldName = 'PaymentDate'
             Options.Editing = False
             Width = 81
+          end
+          object colInvNumberBranch: TcxGridDBColumn
+            Caption = #8470' '#1085#1072#1082#1083#1072#1076#1085#1086#1081' '#1074' '#1072#1087#1090#1077#1082#1077
+            DataBinding.FieldName = 'InvNumberBranch'
+            Options.Editing = False
+            Width = 85
+          end
+          object colBranchDate: TcxGridDBColumn
+            Caption = #1044#1072#1090#1072' '#1085#1072#1082#1083#1072#1076#1085#1086#1081' '#1074' '#1072#1087#1090#1077#1082#1077
+            DataBinding.FieldName = 'BranchDate'
+            Options.Editing = False
+            Width = 82
           end
         end
       end
