@@ -13,7 +13,7 @@ uses
   Vcl.ActnList, cxPropertiesStore, cxLabel, cxTextEdit, cxMaskEdit,
   cxDropDownEdit, cxCalendar, Vcl.ExtCtrls, cxGridLevel, cxGridCustomView,
   cxGridCustomTableView, cxGridTableView, cxGridDBTableView, cxGrid, cxPC,
-  dsdGuides, cxButtonEdit, cxCurrencyEdit, Vcl.Menus;
+  dsdGuides, cxButtonEdit, cxCurrencyEdit, Vcl.Menus, cxCheckBox;
 
 type
   TReport_GoodsMI_IncomeByPartnerForm = class(TAncestorReportForm)
@@ -21,7 +21,7 @@ type
     clGoodsGroupName: TcxGridDBColumn;
     clGoodsCode: TcxGridDBColumn;
     clGoodsName: TcxGridDBColumn;
-    clSumm: TcxGridDBColumn;
+    Summ: TcxGridDBColumn;
     clAmountPartner_Sh: TcxGridDBColumn;
     cxLabel4: TcxLabel;
     edGoodsGroup: TcxButtonEdit;
@@ -54,6 +54,25 @@ type
     PaidKindGuides: TdsdGuides;
     ExecuteDialog: TExecuteDialog;
     bbDialog: TdxBarButton;
+    cxLabel8: TcxLabel;
+    ceInfoMoney: TcxButtonEdit;
+    InfoMoneyGuides: TdsdGuides;
+    GoodsGroupNameFull: TcxGridDBColumn;
+    PartnerCode: TcxGridDBColumn;
+    PartionGoods: TcxGridDBColumn;
+    MeasureName: TcxGridDBColumn;
+    Price: TcxGridDBColumn;
+    PricePartner: TcxGridDBColumn;
+    AmountDiff_Weight: TcxGridDBColumn;
+    AmountDiff_Sh: TcxGridDBColumn;
+    GoodsKindName: TcxGridDBColumn;
+    LocationCode: TcxGridDBColumn;
+    LocationName: TcxGridDBColumn;
+    Summ_ProfitLoss: TcxGridDBColumn;
+    cbGoodsKind: TcxCheckBox;
+    cbPartionGoods: TcxCheckBox;
+    bbGoodsKind: TdxBarControlContainerItem;
+    bbPartionGoods: TdxBarControlContainerItem;
   private
     { Private declarations }
   public

@@ -15,6 +15,7 @@ RETURNS TABLE  (MovementId Integer, InvNumber TVarChar, OperDate TDateTime, Oper
               , ObjectByDescName TVarChar, ObjectByCode Integer, ObjectByName TVarChar
               , PaidKindName TVarChar
               , GoodsCode Integer, GoodsName TVarChar, GoodsKindName TVarChar, PartionGoods TVarChar
+              , GoodsCode_parent Integer, GoodsName_parent TVarChar
               , Price TFloat
               , AmountStart TFloat, AmountIn TFloat, AmountOut TFloat, AmountEnd TFloat, Amount TFloat
               , SummStart TFloat, SummIn TFloat, SummOut TFloat, SummEnd TFloat, Summ TFloat
@@ -191,7 +192,9 @@ BEGIN
         , Object_Goods.ObjectCode AS GoodsCode
         , Object_Goods.ValueData  AS GoodsName
         , Object_GoodsKind.ValueData AS GoodsKindName
-        , COALESCE (CASE WHEN Object_PartionGoods.ValueData <> '' THEN Object_PartionGoods.ValueData ELSE NULL END, '*' || tmpMIContainer_group.PartionGoods_item) :: TVarChar AS PartionGoods
+        , COALESCE (CASE WHEN Object_PartionGoods.ValueData <> '' THEN Object_PartionGoods.ValueData ELSE NULL END, CASE WHEN tmpMIContainer_group.PartionGoods_item <> '' THEN '*' || tmpMIContainer_group.PartionGoods_item ELSE '' END) :: TVarChar AS PartionGoods
+        , Object_Goods_parent.ObjectCode AS GoodsCode_parent
+        , Object_Goods_parent.ValueData  AS GoodsName_parent
 
         , CAST (CASE WHEN Movement.DescId = zc_Movement_Income() AND 1=0
                           THEN 0 -- MIFloat_Price.ValueData
@@ -224,7 +227,8 @@ BEGIN
                 AS TFloat) AS Summ
 
    FROM (SELECT tmpMIContainer_all.MovementId
-              , MAX (tmpMIContainer_all.MovementItemId) AS MovementItemId
+              -- , 0 AS MovementItemId
+              , tmpMIContainer_all.ParentId
               , tmpMIContainer_all.LocationId
               , tmpMIContainer_all.GoodsId
               , tmpMIContainer_all.GoodsKindId
@@ -242,7 +246,8 @@ BEGIN
               , SUM (tmpMIContainer_all.SummOut)     AS SummOut
         FROM (-- 1.1. Остатки кол-во
               SELECT -1 AS MovementId
-                   , 0 AS MovementItemId
+                   -- , 0 AS MovementItemId
+                   , 0 AS ParentId
                    , tmpMI_Count.ContainerId
                    , tmpMI_Count.LocationId
                    , tmpMI_Count.GoodsId
@@ -271,7 +276,8 @@ BEGIN
              UNION ALL
               -- 1.2. Движение кол-во
               SELECT tmpMI_Count.MovementId
-                   , tmpMI_Count.MovementItemId
+                   -- , tmpMI_Count.MovementItemId
+                   , COALESCE (MovementItem.ParentId, 0) AS ParentId
                    , tmpMI_Count.ContainerId
                    , tmpMI_Count.LocationId
                    , tmpMI_Count.GoodsId
@@ -294,6 +300,7 @@ BEGIN
                           ELSE TO_CHAR (MIDate_PartionGoods.ValueData, 'DD.MM.YYYY')
                      END AS PartionGoods_item
               FROM tmpMI_Count
+                   LEFT JOIN MovementItem ON MovementItem.Id = tmpMI_Count.MovementItemId
                    LEFT JOIN MovementItemDate AS MIDate_PartionGoods
                                               ON MIDate_PartionGoods.MovementItemId = tmpMI_Count.MovementItemId
                                              AND MIDate_PartionGoods.DescId = zc_MIDate_PartionGoods()
@@ -308,7 +315,8 @@ BEGIN
              UNION ALL
               -- 2.1. Остатки суммы
               SELECT -1 AS MovementId
-                   , 0 AS MovementItemId
+                   -- , 0 AS MovementItemId
+                   , 0 ParentId
                    , tmpMI_Summ.ContainerId
                    , tmpMI_Summ.LocationId
                    , tmpMI_Summ.GoodsId
@@ -337,7 +345,8 @@ BEGIN
              UNION ALL
               -- 2.2. Движение суммы
               SELECT tmpMI_Summ.MovementId
-                   , tmpMI_Summ.MovementItemId
+                   -- , tmpMI_Summ.MovementItemId
+                   , COALESCE (MovementItem.ParentId, 0) AS ParentId
                    , tmpMI_Summ.ContainerId
                    , tmpMI_Summ.LocationId
                    , tmpMI_Summ.GoodsId
@@ -360,6 +369,7 @@ BEGIN
                           ELSE TO_CHAR (MIDate_PartionGoods.ValueData, 'DD.MM.YYYY')
                      END AS PartionGoods_item
               FROM tmpMI_Summ
+                   LEFT JOIN MovementItem ON MovementItem.Id = tmpMI_Summ.MovementItemId
                    LEFT JOIN MovementItemDate AS MIDate_PartionGoods
                                               ON MIDate_PartionGoods.MovementItemId = tmpMI_Summ.MovementItemId
                                              AND MIDate_PartionGoods.DescId = zc_MIDate_PartionGoods()
@@ -374,6 +384,7 @@ BEGIN
              ) AS tmpMIContainer_all
          GROUP BY tmpMIContainer_all.MovementId
                 -- , tmpMIContainer_all.MovementItemId
+                , tmpMIContainer_all.ParentId
                 , tmpMIContainer_all.LocationId
                 , tmpMIContainer_all.GoodsId
                 , tmpMIContainer_all.GoodsKindId
@@ -406,6 +417,9 @@ BEGIN
         LEFT JOIN MovementDate AS MovementDate_OperDatePartner
                                ON MovementDate_OperDatePartner.MovementId = tmpMIContainer_group.MovementId
                               AND MovementDate_OperDatePartner.DescId = zc_MovementDate_OperDatePartner()
+
+        LEFT JOIN MovementItem AS MovementItem_parent ON MovementItem_parent.Id = tmpMIContainer_group.ParentId
+        LEFT JOIN Object AS Object_Goods_parent ON Object_Goods_parent.Id = MovementItem_parent.ObjectId
 
         LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = tmpMIContainer_group.GoodsId
         LEFT JOIN Object AS Object_GoodsKind ON Object_GoodsKind.Id = tmpMIContainer_group.GoodsKindId

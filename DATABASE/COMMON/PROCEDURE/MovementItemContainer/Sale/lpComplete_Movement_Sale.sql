@@ -17,6 +17,7 @@ $BODY$
   DECLARE vbContainerId_Analyzer Integer;
   DECLARE vbContainerId_Analyzer_PartnerFrom Integer;
   DECLARE vbWhereObjectId_Analyzer Integer;
+  DECLARE vbObjectExtId_Analyzer Integer;
   DECLARE vbAccountId_GoodsTransit Integer;
 
   DECLARE vbMovementDescId Integer;
@@ -66,6 +67,7 @@ $BODY$
   DECLARE vbContractId Integer;
   DECLARE vbJuridicalId_Basis_From Integer;
   DECLARE vbBusinessId_From Integer;
+  DECLARE vbBusinessId_To Integer;
 
   DECLARE vbCurrencyDocumentId Integer;
   DECLARE vbCurrencyPartnerId Integer;
@@ -178,6 +180,7 @@ BEGIN
 
           , COALESCE (CASE WHEN Object_From.DescId = zc_Object_Unit() THEN ObjectLink_UnitFrom_Juridical.ChildObjectId WHEN Object_From.DescId = zc_Object_Partner() THEN ObjectLink_ContractFrom_JuridicalBasis.ChildObjectId WHEN Object_From.DescId = zc_Object_Personal() THEN ObjectLink_UnitPersonalFrom_Juridical.ChildObjectId ELSE 0 END, 0) AS JuridicalId_Basis_From
           , COALESCE (CASE WHEN Object_From.DescId = zc_Object_Unit() THEN ObjectLink_UnitFrom_Business.ChildObjectId WHEN Object_From.DescId = zc_Object_Personal() THEN ObjectLink_UnitPersonalFrom_Business.ChildObjectId ELSE 0 END, 0) AS BusinessId_From
+          , COALESCE (ObjectLink_PartnerTo_Business.ObjectId, 0) AS BusinessId_To
 
           , COALESCE (MovementLinkObject_CurrencyDocument.ObjectId, zc_Enum_Currency_Basis()) AS CurrencyDocumentId
           , COALESCE (MovementLinkObject_CurrencyPartner.ObjectId, zc_Enum_Currency_Basis())  AS CurrencyPartnerId
@@ -192,7 +195,7 @@ BEGIN
                , vbJuridicalId_From, vbPartnerId_From, vbPaidKindId_From, vbContractId_From, vbInfoMoneyId_From
                , vbJuridicalId_To, vbIsCorporate_To, vbInfoMoneyId_CorporateTo, vbPartnerId_To , vbMemberId_To, vbInfoMoneyId_To
                , vbPaidKindId, vbContractId
-               , vbJuridicalId_Basis_From, vbBusinessId_From
+               , vbJuridicalId_Basis_From, vbBusinessId_From, vbBusinessId_To
                , vbCurrencyDocumentId, vbCurrencyPartnerId, vbCurrencyValue, vbParValue, vbCurrencyPartnerValue, vbParPartnerValue
      FROM Movement
           LEFT JOIN MovementDate AS MovementDate_OperDatePartner
@@ -303,6 +306,15 @@ BEGIN
                                ON ObjectLink_Partner_Branch.ObjectId = MovementLinkObject_To.ObjectId
                               AND ObjectLink_Partner_Branch.DescId = zc_ObjectLink_Unit_Branch() -- !!!не ошибка!!!
                               AND Object_To.DescId = zc_Object_Partner()
+                              AND 1 = 0 -- вроде это как наш филиал
+          LEFT JOIN ObjectLink AS ObjectLink_Partner_Unit
+                               ON ObjectLink_Partner_Unit.ObjectId = MovementLinkObject_To.ObjectId
+                              AND ObjectLink_Partner_Unit.DescId = zc_ObjectLink_Partner_Unit()
+                              AND Object_To.DescId = zc_Object_Partner()
+          LEFT JOIN ObjectLink AS ObjectLink_PartnerTo_Business
+                               ON ObjectLink_PartnerTo_Business.ObjectId = ObjectLink_Partner_Unit.ChildObjectId
+                              AND ObjectLink_PartnerTo_Business.DescId = zc_ObjectLink_Unit_Business()
+
           LEFT JOIN ObjectBoolean AS ObjectBoolean_isCorporate
                                   ON ObjectBoolean_isCorporate.ObjectId = ObjectLink_Partner_Juridical.ChildObjectId
                                  AND ObjectBoolean_isCorporate.DescId = zc_ObjectBoolean_Juridical_isCorporate()
@@ -501,8 +513,8 @@ BEGIN
               -- Статьи назначения
             , _tmp.InfoMoneyId
 
-              -- значение Бизнес !!!выбирается!!! из Товара или Подраделения/Сотрудника
-            , CASE WHEN _tmp.BusinessId_From = 0 THEN vbBusinessId_From ELSE _tmp.BusinessId_From END AS BusinessId_From
+              -- значение Бизнес !!!выбирается!!!: 1) покупатель (для павильонов)  2) Товар 3) Подраделение/Сотрудник
+            , CASE WHEN vbBusinessId_To <> 0 THEN vbBusinessId_To WHEN _tmp.BusinessId_From = 0 THEN vbBusinessId_From ELSE _tmp.BusinessId_From END AS BusinessId_From
 
             , _tmp.isPartionCount
             , _tmp.isPartionSumm 
@@ -796,6 +808,16 @@ BEGIN
           ) AS _tmpItem
      ;
 
+     -- !!!меняется значение - переводится в валюту zc_Enum_Currency_Basis!!! - !!!нельзя что б переводился в строчной части!!!
+     IF vbCurrencyDocumentId <> zc_Enum_Currency_Basis() AND vbParValue <> 0
+     THEN 
+         vbOperSumm_Partner_ChangePercent:= CAST (vbOperSumm_Currency * vbCurrencyValue / vbParValue AS NUMERIC (16, 2));
+         IF vbDiscountPercent = 0 AND vbExtraChargesPercent = 0
+         THEN vbOperSumm_Partner:= vbOperSumm_Partner_ChangePercent;
+         END IF;
+     END IF;
+
+
      -- Расчет Итоговых сумм по Контрагенту (по элементам)
      SELECT SUM (_tmpItem.OperSumm_PriceList), SUM (_tmpItem.OperSumm_Partner), SUM (_tmpItem.OperSumm_Partner_ChangePercent), SUM (_tmpItem.OperSumm_Currency) INTO vbOperSumm_PriceList_byItem, vbOperSumm_Partner_byItem, vbOperSumm_Partner_ChangePercent_byItem, vbOperSumm_Currency_byItem FROM _tmpItem;
 
@@ -1070,6 +1092,8 @@ BEGIN
      -- определили
      vbWhereObjectId_Analyzer:= CASE WHEN vbUnitId_From <> 0 THEN vbUnitId_From WHEN vbMemberId_From <> 0 THEN vbMemberId_From WHEN vbPartnerId_From <> 0 THEN vbPartnerId_From END;
      -- определили
+     vbObjectExtId_Analyzer:= CASE WHEN vbPartnerId_To <> 0 THEN vbPartnerId_To WHEN vbMemberId_To <> 0 THEN vbMemberId_To END;
+     -- определили
      vbAccountId_GoodsTransit:= CASE WHEN vbOperDate <> vbOperDatePartner AND vbMemberId_From = 0 AND vbMemberId_To = 0 THEN zc_Enum_Account_110101() ELSE 0 END; -- Транзит + товар в пути
 
 
@@ -1094,7 +1118,7 @@ BEGIN
 
      -- 1.1.2. формируются !!!забалансовые!!! Проводки для количественного учета - долги Покупателя или Физ.лица
      INSERT INTO _tmpMIContainer_insert (Id, DescId, MovementDescId, MovementId, MovementItemId, ContainerId
-                                       , AccountId, AnalyzerId, ObjectId_Analyzer, WhereObjectId_Analyzer, ContainerId_Analyzer
+                                       , AccountId, AnalyzerId, ObjectId_Analyzer, WhereObjectId_Analyzer, ContainerId_Analyzer, ObjectIntId_Analyzer, ObjectExtId_Analyzer
                                        , ParentId, Amount, OperDate, isActive)
        SELECT 0, zc_MIContainer_CountSupplier() AS DescId, vbMovementDescId, inMovementId, MovementItemId
             , ContainerId_GoodsPartner
@@ -1103,6 +1127,8 @@ BEGIN
             , _tmpItem.GoodsId                        AS ObjectId_Analyzer      -- Товар
             , CASE WHEN vbMemberId_To <> 0 THEN vbMemberId_To ELSE vbPartnerId_To END AS WhereObjectId_Analyzer -- Покупатель или Физ.лицо
             , 0                                       AS ContainerId_Analyzer   -- !!!нет!!!
+            , 0                                       AS ObjectIntId_Analyzer   -- !!!нет!!!
+            , 0                                       AS ObjectExtId_Analyzer   -- !!!нет!!!
             , 0                                       AS ParentId
             , OperCount                               AS Amountt
             , vbOperDate                              AS OperDate               -- т.е. по "Дате склад"
@@ -1167,7 +1193,7 @@ BEGIN
             (SELECT MovementItemId
                   , ContainerId_Goods
                   , ContainerId_GoodsTransit
-                  , GoodsId
+                  , GoodsId, GoodsKindId
                   , zc_Enum_AnalyzerId_LossCount_20200() AS AnalyzerId -- Кол-во, списание при реализации/перемещении по цене
                   , 0 AS ParentId
                   , -1 * OperCount         AS Amount
@@ -1179,7 +1205,7 @@ BEGIN
              SELECT MovementItemId
                   , ContainerId_Goods
                   , ContainerId_GoodsTransit
-                  , GoodsId
+                  , GoodsId, GoodsKindId
                   , CASE WHEN isTareReturning = TRUE THEN 0 ELSE zc_Enum_AnalyzerId_SaleCount_10400() END AS AnalyzerId --  Кол-во, реализация, у покупателя
                   , 0 AS ParentId
                   , -1 * OperCount_Partner AS Amount
@@ -1193,7 +1219,7 @@ BEGIN
              SELECT MovementItemId
                   , ContainerId_Goods
                   , ContainerId_GoodsTransit
-                  , GoodsId
+                  , GoodsId, GoodsKindId
                   , CASE WHEN isTareReturning = TRUE THEN 0 ELSE zc_Enum_AnalyzerId_SaleCount_10500() END AS AnalyzerId --  Кол-во, реализация, Скидка за вес
                   , 0 AS ParentId
                   , -1 * (OperCount - OperCount_ChangePercent) AS Amount
@@ -1206,7 +1232,7 @@ BEGIN
              SELECT MovementItemId
                   , ContainerId_Goods
                   , ContainerId_GoodsTransit
-                  , GoodsId
+                  , GoodsId, GoodsKindId
                   , CASE WHEN isTareReturning = TRUE THEN 0 ELSE zc_Enum_AnalyzerId_SaleCount_40200() END AS AnalyzerId -- Кол-во, реализация, Разница в весе
                   , 0 AS ParentId
                   , -1 * (OperCount_ChangePercent - OperCount_Partner) AS Amount
@@ -1218,16 +1244,18 @@ BEGIN
             )
      -- проводки: AnalyzerId <> 0 всегда, ContainerId_Analyzer <> 0 тогда попадает в отчеты покупателя, иначе "виртуальная" (т.е. AccountId <> 0, AnalyzerId <> 0, ContainerId_Analyzer = 0)
      INSERT INTO _tmpMIContainer_insert (Id, DescId, MovementDescId, MovementId, MovementItemId, ContainerId
-                                       , AccountId, AnalyzerId, ObjectId_Analyzer, WhereObjectId_Analyzer, ContainerId_Analyzer
+                                       , AccountId, AnalyzerId, ObjectId_Analyzer, WhereObjectId_Analyzer, ContainerId_Analyzer, ObjectIntId_Analyzer, ObjectExtId_Analyzer
                                        , ParentId, Amount, OperDate, isActive)
        -- это обычная проводка
        SELECT 0, zc_MIContainer_Count() AS DescId, vbMovementDescId, inMovementId, tmpMIContainer.MovementItemId
             , tmpMIContainer.ContainerId_Goods
-            , 0                                       AS AccountId  -- нет счета
-            , tmpMIContainer.AnalyzerId               AS AnalyzerId -- !!!аналитика есть всегда!!! (даже если через транзит, она нужна для склада)
+            , 0                                       AS AccountId              -- нет счета
+            , tmpMIContainer.AnalyzerId               AS AnalyzerId             -- !!!аналитика есть всегда!!! (даже если через транзит, она нужна для склада)
             , tmpMIContainer.GoodsId                  AS ObjectId_Analyzer
             , vbWhereObjectId_Analyzer                AS WhereObjectId_Analyzer
             , CASE WHEN vbAccountId_GoodsTransit <> 0 AND tmpMIContainer.AnalyzerId <> zc_Enum_AnalyzerId_LossCount_20200() THEN 0 ELSE vbContainerId_Analyzer END AS ContainerId_Analyzer -- если это транзит, тогда в реализацию за vbOperDate не попадет
+            , tmpMIContainer.GoodsKindId              AS ObjectIntId_Analyzer   -- вид товара
+            , vbObjectExtId_Analyzer                  AS ObjectExtId_Analyzer   -- покупатель / физ.лицо
             , tmpMIContainer.ParentId
             , tmpMIContainer.Amount
             , vbOperDate -- т.е. по "Дате склад"
@@ -1238,11 +1266,13 @@ BEGIN
        -- это две проводки для счета Транзит
        SELECT 0, zc_MIContainer_Count() AS DescId, vbMovementDescId, inMovementId, tmpMIContainer.MovementItemId
             , tmpMIContainer.ContainerId_GoodsTransit
-            , vbAccountId_GoodsTransit                AS AccountId  -- есть счет (т.е. в отчетах определяется "транзит")
-            , tmpMIContainer.AnalyzerId               AS AnalyzerId -- !!!аналитика есть всегда!!! (даже для "виртуальной")
+            , vbAccountId_GoodsTransit                AS AccountId              -- есть счет (т.е. в отчетах определяется "транзит")
+            , tmpMIContainer.AnalyzerId               AS AnalyzerId             -- !!!аналитика есть всегда!!! (даже для "виртуальной")
             , tmpMIContainer.GoodsId                  AS ObjectId_Analyzer
             , vbWhereObjectId_Analyzer                AS WhereObjectId_Analyzer
             , CASE WHEN tmpOperDate.OperDate = vbOperDate THEN 0 ELSE vbContainerId_Analyzer END AS ContainerId_Analyzer -- т.е. в реализацию попадет "реальная" за vbOperDatePartner
+            , tmpMIContainer.GoodsKindId              AS ObjectIntId_Analyzer   -- вид товара
+            , vbObjectExtId_Analyzer                  AS ObjectExtId_Analyzer   -- покупатель / физ.лицо
             , tmpMIContainer.ParentId
             , tmpMIContainer.Amount * CASE WHEN tmpOperDate.OperDate = vbOperDate THEN -1 ELSE 1 END AS Amount -- "виртуальная" с обратным знаком
             , tmpOperDate.OperDate -- !!!две проводки за разные даты!!!
@@ -1255,11 +1285,13 @@ BEGIN
        -- это обычная проводка - !!!если продажа от Контрагента -> Контрагенту!!!
        SELECT 0, zc_MIContainer_Count() AS DescId, vbMovementDescId, inMovementId, _tmpItemPartnerFrom.MovementItemId
             , _tmpItemPartnerFrom.ContainerId_Goods
-            , 0                                    AS AccountId  -- нет счета
-            , zc_Enum_AnalyzerId_SaleCount_10400() AS AnalyzerId -- !!!аналитика есть всегда!!! Кол-во, реализация, у покупателя 
-            , _tmpItem.GoodsId                     AS ObjectId_Analyzer
+            , 0                                       AS AccountId              -- нет счета
+            , zc_Enum_AnalyzerId_SaleCount_10400()    AS AnalyzerId             -- !!!аналитика есть всегда!!! Кол-во, реализация, у покупателя 
+            , _tmpItem.GoodsId                        AS ObjectId_Analyzer
             , CASE WHEN tmpIsActive.isActive = TRUE THEN vbPartnerId_From ELSE vbPartnerId_To END AS WhereObjectId_Analyzer
             , CASE WHEN tmpIsActive.isActive = TRUE THEN vbContainerId_Analyzer_PartnerFrom ELSE vbContainerId_Analyzer END AS ContainerId_Analyzer
+            , _tmpItem.GoodsKindId                    AS ObjectIntId_Analyzer   -- вид товара
+            , vbObjectExtId_Analyzer                  AS ObjectExtId_Analyzer   -- покупатель / физ.лицо
             , 0 AS ParentId
             , _tmpItem.OperCount_Partner * CASE WHEN tmpIsActive.isActive = TRUE THEN 1 ELSE -1 END AS Amount
             , vbOperDatePartner -- т.е. по "Дате покупателя"
@@ -1425,16 +1457,18 @@ BEGIN
             )
      -- проводки: AnalyzerId <> 0 всегда, ContainerId_Analyzer <> 0 тогда попадает в отчеты покупателя, иначе "виртуальная" (т.е. AccountId <> 0, AnalyzerId <> 0, ContainerId_Analyzer = 0)
      INSERT INTO _tmpMIContainer_insert (Id, DescId, MovementDescId, MovementId, MovementItemId, ContainerId
-                                       , AccountId, AnalyzerId, ObjectId_Analyzer, WhereObjectId_Analyzer, ContainerId_Analyzer
+                                       , AccountId, AnalyzerId, ObjectId_Analyzer, WhereObjectId_Analyzer, ContainerId_Analyzer, ObjectIntId_Analyzer, ObjectExtId_Analyzer
                                        , ParentId, Amount, OperDate, isActive)
        -- это обычная проводка
        SELECT 0, zc_MIContainer_Summ() AS DescId, vbMovementDescId, inMovementId, tmpMIContainer.MovementItemId
             , tmpMIContainer.ContainerId
-            , tmpMIContainer.AccountId                AS AccountId  -- счет есть всегда
-            , tmpMIContainer.AnalyzerId               AS AnalyzerId -- !!!аналитика есть всегда!!! (даже если через транзит, она нужна для склада)
+            , tmpMIContainer.AccountId                AS AccountId              -- счет есть всегда
+            , tmpMIContainer.AnalyzerId               AS AnalyzerId             -- !!!аналитика есть всегда!!! (даже если через транзит, она нужна для склада)
             , _tmpItem.GoodsId                        AS ObjectId_Analyzer
             , vbWhereObjectId_Analyzer                AS WhereObjectId_Analyzer
             , CASE WHEN vbAccountId_GoodsTransit <> 0 AND _tmpItem.isLossMaterials = FALSE THEN 0 ELSE vbContainerId_Analyzer END AS ContainerId_Analyzer -- если это транзит, тогда в реализацию за vbOperDate не попадет
+            , _tmpItem.GoodsKindId                    AS ObjectIntId_Analyzer   -- вид товара
+            , vbObjectExtId_Analyzer                  AS ObjectExtId_Analyzer   -- покупатель / физ.лицо
             , tmpMIContainer.ParentId
             , tmpMIContainer.Amount
             , vbOperDate -- т.е. по "Дате склад"
@@ -1445,11 +1479,13 @@ BEGIN
        -- это две проводки для счета Транзит
        SELECT 0, zc_MIContainer_Summ() AS DescId, vbMovementDescId, inMovementId, tmpMIContainer.MovementItemId
             , tmpMIContainer.ContainerId_Transit
-            , vbAccountId_GoodsTransit                AS AccountId  -- есть счет (т.е. в отчетах определяется "транзит") + он такой же как у проводки кол-ва
-            , tmpMIContainer.AnalyzerId               AS AnalyzerId -- !!!аналитика есть всегда!!! (даже для "виртуальной")
+            , vbAccountId_GoodsTransit                AS AccountId              -- есть счет (т.е. в отчетах определяется "транзит") + он такой же как у проводки кол-ва
+            , tmpMIContainer.AnalyzerId               AS AnalyzerId             -- !!!аналитика есть всегда!!! (даже для "виртуальной")
             , _tmpItem.GoodsId                        AS ObjectId_Analyzer
             , vbWhereObjectId_Analyzer                AS WhereObjectId_Analyzer
             , CASE WHEN tmpOperDate.OperDate = vbOperDate THEN 0 ELSE vbContainerId_Analyzer END AS ContainerId_Analyzer -- т.е. в реализацию попадет "реальная" за vbOperDatePartner
+            , _tmpItem.GoodsKindId                    AS ObjectIntId_Analyzer   -- вид товара
+            , vbObjectExtId_Analyzer                  AS ObjectExtId_Analyzer   -- покупатель / физ.лицо
             , tmpMIContainer.ParentId
             , tmpMIContainer.Amount * CASE WHEN tmpOperDate.OperDate = vbOperDate THEN -1 ELSE 1 END AS Amount -- "виртуальная" с обратным знаком
             , tmpOperDate.OperDate -- !!!две проводки за разные даты!!!
@@ -1769,9 +1805,9 @@ BEGIN
                                      AND _tmpItem_byDestination.BusinessId_From = _tmpItem.BusinessId_From
      WHERE _tmpItemSumm.MovementItemId = _tmpItem.MovementItemId;
 
-     -- 2.2. формируются Проводки - Прибыль (Себестоимость) + !!!нет MovementItemId!!! + !!!добавлен GoodsId!!!
+     -- 2.2. формируются Проводки - Прибыль (Себестоимость) + !!!нет MovementItemId!!! + !!!добавлен GoodsId + GoodsKindId!!!
      INSERT INTO _tmpMIContainer_insert (Id, DescId, MovementDescId, MovementId, MovementItemId, ContainerId
-                                       , AccountId, AnalyzerId, ObjectId_Analyzer, WhereObjectId_Analyzer, ContainerId_Analyzer
+                                       , AccountId, AnalyzerId, ObjectId_Analyzer, WhereObjectId_Analyzer, ContainerId_Analyzer, ObjectIntId_Analyzer, ObjectExtId_Analyzer
                                        , ParentId, Amount, OperDate, isActive)
        SELECT 0, zc_MIContainer_Summ() AS DescId, vbMovementDescId, inMovementId, 0 AS MovementItemId, _tmpItem_group.ContainerId_ProfitLoss
             , zc_Enum_Account_100301()                AS AccountId              -- прибыль текущего периода
@@ -1779,6 +1815,8 @@ BEGIN
             , _tmpItem_group.GoodsId                  AS ObjectId_Analyzer      -- Товар
             , vbWhereObjectId_Analyzer                AS WhereObjectId_Analyzer -- Подраделение или...
             , 0                                       AS ContainerId_Analyzer   -- в ОПиУ не нужен
+            , _tmpItem_group.GoodsKindId              AS ObjectIntId_Analyzer   -- вид товара
+            , vbObjectExtId_Analyzer                  AS ObjectExtId_Analyzer   -- покупатель / физ.лицо
             , 0                                       AS ParentId
             , _tmpItem_group.OperSumm                 AS Amount
             , CASE WHEN vbAccountId_GoodsTransit <> 0 AND _tmpItem_group.isLossMaterials = FALSE THEN vbOperDatePartner ELSE vbOperDate END AS OperDate -- т.е. по "Дате покупателя"
@@ -1786,69 +1824,75 @@ BEGIN
        FROM -- Проводки по разнице в весе : с/с2 - с/с3
             (SELECT _tmpItemSumm.ContainerId_ProfitLoss_40208 AS ContainerId_ProfitLoss
                   , _tmpItem.GoodsId                          AS GoodsId
+                  , _tmpItem.GoodsKindId                      AS GoodsKindId
                   , 0                                         AS AnalyzerId -- zc_Enum_AnalyzerId_SaleSumm_40200()       AS AnalyzerId -- Сумма с/с, реализация, Разница в весе
                   , SUM (_tmpItemSumm.OperSumm_ChangePercent - _tmpItemSumm.OperSumm_Partner) AS OperSumm
                   , _tmpItem.isLossMaterials                  AS isLossMaterials
              FROM _tmpItemSumm
                   INNER JOIN _tmpItem ON _tmpItem.MovementItemId = _tmpItemSumm.MovementItemId
              WHERE _tmpItem.isLossMaterials = FALSE -- !!!если НЕ списание!!!
-             GROUP BY _tmpItemSumm.ContainerId_ProfitLoss_40208, _tmpItem.GoodsId, _tmpItem.isLossMaterials
+             GROUP BY _tmpItemSumm.ContainerId_ProfitLoss_40208, _tmpItem.GoodsId, _tmpItem.GoodsKindId, _tmpItem.isLossMaterials
             UNION ALL
              -- Проводки по скидкам в весе : с/с1 - с/с2
              SELECT _tmpItemSumm.ContainerId_ProfitLoss_10500 AS ContainerId_ProfitLoss
                   , _tmpItem.GoodsId                          AS GoodsId
+                  , _tmpItem.GoodsKindId                      AS GoodsKindId
                   , 0                                         AS AnalyzerId -- zc_Enum_AnalyzerId_SaleSumm_10500()       AS AnalyzerId -- Сумма с/с, реализация, Скидка за вес
                   , SUM (_tmpItemSumm.OperSumm - _tmpItemSumm.OperSumm_ChangePercent) AS OperSumm
                   , _tmpItem.isLossMaterials                  AS isLossMaterials
              FROM _tmpItemSumm
                   INNER JOIN _tmpItem ON _tmpItem.MovementItemId = _tmpItemSumm.MovementItemId
              WHERE _tmpItem.isLossMaterials = FALSE -- !!!если НЕ списание!!!
-             GROUP BY _tmpItemSumm.ContainerId_ProfitLoss_10500, _tmpItem.GoodsId, _tmpItem.isLossMaterials
+             GROUP BY _tmpItemSumm.ContainerId_ProfitLoss_10500, _tmpItem.GoodsId, _tmpItem.GoodsKindId, _tmpItem.isLossMaterials
             UNION ALL
              -- Проводки по себестоимости реализации : с/с3
              SELECT _tmpItemSumm.ContainerId_ProfitLoss_10400 AS ContainerId_ProfitLoss
                   , _tmpItem.GoodsId                          AS GoodsId
+                  , _tmpItem.GoodsKindId                      AS GoodsKindId
                   , 0                                         AS AnalyzerId -- zc_Enum_AnalyzerId_SaleSumm_10400()       AS AnalyzerId --  Сумма с/с, реализация, у покупателя 
                   , SUM (_tmpItemSumm.OperSumm_Partner)       AS OperSumm
                   , _tmpItem.isLossMaterials                  AS isLossMaterials
              FROM _tmpItemSumm
                   INNER JOIN _tmpItem ON _tmpItem.MovementItemId = _tmpItemSumm.MovementItemId
              WHERE _tmpItem.isLossMaterials = FALSE -- !!!если НЕ списание!!!
-             GROUP BY _tmpItemSumm.ContainerId_ProfitLoss_10400, _tmpItem.GoodsId, _tmpItem.isLossMaterials
+             GROUP BY _tmpItemSumm.ContainerId_ProfitLoss_10400, _tmpItem.GoodsId, _tmpItem.GoodsKindId, _tmpItem.isLossMaterials
 
             UNION ALL
              -- Проводки по списанию
              SELECT _tmpItemSumm.ContainerId_ProfitLoss_20200 AS ContainerId_ProfitLoss
                   , _tmpItem.GoodsId                          AS GoodsId
+                  , _tmpItem.GoodsKindId                      AS GoodsKindId
                   , 0                                         AS AnalyzerId -- zc_Enum_AnalyzerId_LossSumm_20200()       AS AnalyzerId --  Сумма с/с, списание при реализации/перемещении по цене
                   , SUM (_tmpItemSumm.OperSumm)               AS OperSumm
                   , _tmpItem.isLossMaterials                  AS isLossMaterials
              FROM _tmpItemSumm
                   INNER JOIN _tmpItem ON _tmpItem.MovementItemId = _tmpItemSumm.MovementItemId
              WHERE _tmpItem.isLossMaterials = TRUE -- !!!если списание!!!
-             GROUP BY _tmpItemSumm.ContainerId_ProfitLoss_20200, _tmpItem.GoodsId, _tmpItem.isLossMaterials
+             GROUP BY _tmpItemSumm.ContainerId_ProfitLoss_20200, _tmpItem.GoodsId, _tmpItem.GoodsKindId, _tmpItem.isLossMaterials
 
             -- !!!если продажа от Контрагента -> Контрагенту!!!
             UNION ALL
              -- Проводки по себестоимости реализации : От Кого
              SELECT _tmpItemSumm.ContainerId_ProfitLoss_10400 AS ContainerId_ProfitLoss
                   , _tmpItem.GoodsId                          AS GoodsId
+                  , _tmpItem.GoodsKindId                      AS GoodsKindId
                   , 0                                         AS AnalyzerId -- zc_Enum_AnalyzerId_SaleSumm_10400()       AS AnalyzerId --  Сумма с/с, реализация, у покупателя 
                   , -1 * SUM (_tmpItemSumm.OperSumm_Partner)  AS OperSumm
                   , _tmpItem.isLossMaterials                  AS isLossMaterials
              FROM _tmpItemPartnerFrom AS _tmpItemSumm
                   INNER JOIN _tmpItem ON _tmpItem.MovementItemId = _tmpItemSumm.MovementItemId
-             GROUP BY _tmpItemSumm.ContainerId_ProfitLoss_10400, _tmpItem.GoodsId, _tmpItem.isLossMaterials
+             GROUP BY _tmpItemSumm.ContainerId_ProfitLoss_10400, _tmpItem.GoodsId, _tmpItem.GoodsKindId, _tmpItem.isLossMaterials
             UNION ALL
              -- Проводки по себестоимости реализации : Кому
              SELECT _tmpItemSumm.ContainerId_ProfitLoss_10400 AS ContainerId_ProfitLoss
                   , _tmpItem.GoodsId                          AS GoodsId
+                  , _tmpItem.GoodsKindId                      AS GoodsKindId
                   , 0                                         AS AnalyzerId -- zc_Enum_AnalyzerId_SaleSumm_10400()       AS AnalyzerId --  Сумма с/с, реализация, у покупателя 
                   , 1 * SUM (_tmpItemSumm.OperSumm_Partner)   AS OperSumm
                   , _tmpItem.isLossMaterials                  AS isLossMaterials
              FROM _tmpItemPartnerFrom AS _tmpItemSumm
                   INNER JOIN _tmpItem ON _tmpItem.MovementItemId = _tmpItemSumm.MovementItemId
-             GROUP BY _tmpItemSumm.ContainerId_ProfitLoss_10400, _tmpItem.GoodsId, _tmpItem.isLossMaterials
+             GROUP BY _tmpItemSumm.ContainerId_ProfitLoss_10400, _tmpItem.GoodsId, _tmpItem.GoodsKindId, _tmpItem.isLossMaterials
             ) AS _tmpItem_group
        WHERE _tmpItem_group.OperSumm <> 0 -- !!!нулевые не нужны!!!
        ;
@@ -1903,65 +1947,70 @@ BEGIN
           ) AS _tmpItem_byInfoMoney
      WHERE _tmpItem.InfoMoneyId = _tmpItem_byInfoMoney.InfoMoneyId;
 
-     -- 3.3. формируются Проводки - долг Покупателя или Физ.лица (подотчетные лица) + !!!добавлен MovementItemId!!! + !!!добавлен GoodsId!!!
+     -- 3.3. формируются Проводки - долг Покупателя или Физ.лица (подотчетные лица) + !!!добавлен MovementItemId!!! + !!!добавлен GoodsId + GoodsKindId!!!
      INSERT INTO _tmpMIContainer_insert (Id, DescId, MovementDescId, MovementId, MovementItemId, ContainerId
-                                       , AccountId, AnalyzerId, ObjectId_Analyzer, WhereObjectId_Analyzer, ContainerId_Analyzer
+                                       , AccountId, AnalyzerId, ObjectId_Analyzer, WhereObjectId_Analyzer, ContainerId_Analyzer, ObjectIntId_Analyzer, ObjectExtId_Analyzer
                                        , ParentId, Amount, OperDate, isActive)
        -- это обычная проводка
        SELECT 0, zc_MIContainer_Summ() AS DescId, vbMovementDescId, inMovementId, _tmpItem_group.MovementItemId
             , _tmpItem_group.ContainerId_Partner
-            , _tmpItem_group.AccountId_Partner   AS AccountId              -- счет есть всегда
+            , CASE WHEN tmpTransit.AccountId > 0 THEN tmpTransit.AccountId ELSE _tmpItem_group.AccountId_Partner END AS AccountId -- счет есть всегда
             , _tmpItem_group.AnalyzerId          AS AnalyzerId             -- аналитика
             , _tmpItem_group.GoodsId             AS ObjectId_Analyzer      -- Товар
             , vbWhereObjectId_Analyzer           AS WhereObjectId_Analyzer -- Подраделение или...
             , _tmpItem_group.ContainerId_Partner AS ContainerId_Analyzer   -- тот же самый
+            , _tmpItem_group.GoodsKindId         AS ObjectIntId_Analyzer   -- вид товара
+            , vbObjectExtId_Analyzer             AS ObjectExtId_Analyzer   -- покупатель / физ.лицо
             , 0                                  AS ParentId
-            , _tmpItem_group.OperSumm            AS Amount
-            , CASE WHEN vbAccountId_GoodsTransit <> 0 THEN vbOperDatePartner ELSE vbOperDate END AS OperDate -- т.е. по "определенной" Дате
-            , _tmpItem_group.isActive            AS isActive
-       FROM (SELECT _tmpItem.MovementItemId, _tmpItem.ContainerId_Partner, _tmpItem.AccountId_Partner, _tmpItem.GoodsId
+            , _tmpItem_group.OperSumm * CASE WHEN tmpTransit.isActive = TRUE THEN 1 ELSE -1 END AS Amount
+            , tmpTransit.OperDate                AS OperDate               -- т.е. по "определенной" Дате
+            , tmpTransit.isActive                AS isActive               -- TRUE будет всегда, остальные зависят от даты
+       FROM (SELECT _tmpItem.MovementItemId, _tmpItem.ContainerId_Partner, _tmpItem.AccountId_Partner, _tmpItem.GoodsId, _tmpItem.GoodsKindId
                   -- , CASE WHEN _tmpItem.isLossMaterials = TRUE THEN zc_Enum_AnalyzerId_LossSumm_20200() ELSE zc_Enum_AnalyzerId_SaleSumm_10100() END AS AnalyzerId
                   , zc_Enum_AnalyzerId_SaleSumm_10100() AS AnalyzerId
                   , SUM (_tmpItem.OperSumm_PriceList) AS OperSumm
                   , TRUE AS isActive
              FROM _tmpItem
              WHERE _tmpItem.isLossMaterials = FALSE -- !!!если НЕ списание!!!
-             GROUP BY _tmpItem.MovementItemId, _tmpItem.ContainerId_Partner, _tmpItem.AccountId_Partner, _tmpItem.GoodsId --, _tmpItem.isLossMaterials
+             GROUP BY _tmpItem.MovementItemId, _tmpItem.ContainerId_Partner, _tmpItem.AccountId_Partner, _tmpItem.GoodsId, _tmpItem.GoodsKindId --, _tmpItem.isLossMaterials
              -- !!!нельзя ограничивать, т.к. на этих проводках строятся отчеты!!!
              -- HAVING SUM (_tmpItem.OperSumm_PriceList) <> 0
            UNION ALL
-             SELECT _tmpItem.MovementItemId, _tmpItem.ContainerId_Partner, _tmpItem.AccountId_Partner, _tmpItem.GoodsId
+             SELECT _tmpItem.MovementItemId, _tmpItem.ContainerId_Partner, _tmpItem.AccountId_Partner, _tmpItem.GoodsId, _tmpItem.GoodsKindId
                   -- , CASE WHEN _tmpItem.isLossMaterials = TRUE THEN zc_Enum_AnalyzerId_LossSumm_20200() ELSE zc_Enum_AnalyzerId_SaleSumm_10200() END AS AnalyzerId
                   , zc_Enum_AnalyzerId_SaleSumm_10200() AS AnalyzerId
                   , SUM (_tmpItem.OperSumm_Partner - _tmpItem.OperSumm_PriceList) AS OperSumm
                   , TRUE AS isActive
              FROM _tmpItem
              WHERE _tmpItem.isLossMaterials = FALSE -- !!!если НЕ списание!!!
-             GROUP BY _tmpItem.MovementItemId, _tmpItem.ContainerId_Partner, _tmpItem.AccountId_Partner, _tmpItem.GoodsId --, _tmpItem.isLossMaterials
+             GROUP BY _tmpItem.MovementItemId, _tmpItem.ContainerId_Partner, _tmpItem.AccountId_Partner, _tmpItem.GoodsId, _tmpItem.GoodsKindId --, _tmpItem.isLossMaterials
              HAVING SUM (_tmpItem.OperSumm_Partner - _tmpItem.OperSumm_PriceList) <> 0 -- !!!можно ограничить!!!
            UNION ALL
-             SELECT _tmpItem.MovementItemId, _tmpItem.ContainerId_Partner, _tmpItem.AccountId_Partner, _tmpItem.GoodsId
+             SELECT _tmpItem.MovementItemId, _tmpItem.ContainerId_Partner, _tmpItem.AccountId_Partner, _tmpItem.GoodsId, _tmpItem.GoodsKindId
                   -- , CASE WHEN _tmpItem.isLossMaterials = TRUE THEN zc_Enum_AnalyzerId_LossSumm_20200() ELSE zc_Enum_AnalyzerId_SaleSumm_10300() END AS AnalyzerId
                   , zc_Enum_AnalyzerId_SaleSumm_10300() AS AnalyzerId
                   , SUM (_tmpItem.OperSumm_Partner_ChangePercent - _tmpItem.OperSumm_Partner) AS OperSumm
                   , TRUE AS isActive
              FROM _tmpItem
              WHERE _tmpItem.isLossMaterials = FALSE -- !!!если НЕ списание!!!
-             GROUP BY _tmpItem.MovementItemId, _tmpItem.ContainerId_Partner, _tmpItem.AccountId_Partner, _tmpItem.GoodsId --, _tmpItem.isLossMaterials
+             GROUP BY _tmpItem.MovementItemId, _tmpItem.ContainerId_Partner, _tmpItem.AccountId_Partner, _tmpItem.GoodsId, _tmpItem.GoodsKindId --, _tmpItem.isLossMaterials
              HAVING SUM (_tmpItem.OperSumm_Partner_ChangePercent - _tmpItem.OperSumm_Partner) <> 0 -- !!!можно ограничить!!!
 
            -- !!!если продажа от Контрагента -> Контрагенту!!!
            UNION ALL
-             SELECT _tmpItemPartnerFrom.MovementItemId, _tmpItemPartnerFrom.ContainerId_Partner, _tmpItemPartnerFrom.AccountId_Partner, _tmpItem.GoodsId, zc_Enum_AnalyzerId_SaleSumm_10100() AS AnalyzerId
+             SELECT _tmpItemPartnerFrom.MovementItemId, _tmpItemPartnerFrom.ContainerId_Partner, _tmpItemPartnerFrom.AccountId_Partner, _tmpItem.GoodsId, _tmpItem.GoodsKindId, zc_Enum_AnalyzerId_SaleSumm_10100() AS AnalyzerId
                   , -1 * SUM (_tmpItemPartnerFrom.OperSumm_Partner) AS OperSumm
                   , FALSE AS isActive
              FROM _tmpItemPartnerFrom
                   INNER JOIN _tmpItem ON _tmpItem.MovementItemId = _tmpItemPartnerFrom.MovementItemId
-             GROUP BY _tmpItemPartnerFrom.MovementItemId, _tmpItemPartnerFrom.ContainerId_Partner, _tmpItemPartnerFrom.AccountId_Partner, _tmpItem.GoodsId
+             GROUP BY _tmpItemPartnerFrom.MovementItemId, _tmpItemPartnerFrom.ContainerId_Partner, _tmpItemPartnerFrom.AccountId_Partner, _tmpItem.GoodsId, _tmpItem.GoodsKindId
              -- !!!нельзя ограничивать, т.к. на этих проводках строятся отчеты!!!
              -- HAVING SUM (_tmpItemPartnerFrom.OperSumm_Partner) <> 0
 
             ) AS _tmpItem_group
+            LEFT JOIN (SELECT -1                       AS AccountId, TRUE  AS isActive, CASE WHEN vbAccountId_GoodsTransit <> 0 THEN vbOperDatePartner ELSE vbOperDate END AS OperDate
+             UNION ALL SELECT vbAccountId_GoodsTransit AS AccountId, TRUE  AS isActive, vbOperDate AS OperDate
+             UNION ALL SELECT vbAccountId_GoodsTransit AS AccountId, FALSE AS isActive, vbOperDate AS OperDate) AS tmpTransit ON tmpTransit.AccountId <> 0
      UNION ALL
        -- это !!!одна!!! проводка для "забалансового" Валютного счета
        SELECT 0, zc_MIContainer_SummCurrency() AS DescId, vbMovementDescId, inMovementId, 0 AS MovementItemId
@@ -1971,6 +2020,8 @@ BEGIN
             , 0                                   AS ObjectId_Analyzer
             , 0                                   AS WhereObjectId_Analyzer
             , _tmpItem_group.ContainerId_Currency AS ContainerId_Analyzer
+            , 0                                   AS ObjectIntId_Analyzer   -- !!!нет!!!
+            , 0                                   AS ObjectExtId_Analyzer   -- !!!нет!!!
             , 0 AS ParentId
             , _tmpItem_group.OperSumm
             , CASE WHEN vbAccountId_GoodsTransit <> 0 THEN vbOperDatePartner ELSE vbOperDate END AS OperDate -- т.е. по "определенной" Дате
@@ -2181,9 +2232,9 @@ BEGIN
      WHERE _tmpItem.InfoMoneyDestinationId = _tmpItem_byDestination.InfoMoneyDestinationId
        AND _tmpItem.BusinessId_From = _tmpItem_byDestination.BusinessId_From;
 
-     -- 4.1.2. формируются Проводки - Прибыль (Сумма реализации и Скидка по акциям и Скидка дополнительная) + !!!нет MovementItemId!!! + !!!добавлен GoodsId!!!
+     -- 4.1.2. формируются Проводки - Прибыль (Сумма реализации и Скидка по акциям и Скидка дополнительная) + !!!нет MovementItemId!!! + !!!добавлен GoodsId + GoodsKindId!!!
      INSERT INTO _tmpMIContainer_insert (Id, DescId, MovementDescId, MovementId, MovementItemId, ContainerId
-                                       , AccountId, AnalyzerId, ObjectId_Analyzer, WhereObjectId_Analyzer, ContainerId_Analyzer
+                                       , AccountId, AnalyzerId, ObjectId_Analyzer, WhereObjectId_Analyzer, ContainerId_Analyzer, ObjectIntId_Analyzer, ObjectExtId_Analyzer
                                        , ParentId, Amount, OperDate, isActive)
        SELECT 0, zc_MIContainer_Summ() AS DescId, vbMovementDescId, inMovementId, 0 AS MovementItemId, _tmpItem_group.ContainerId_ProfitLoss
             , zc_Enum_Account_100301 ()               AS AccountId              -- прибыль текущего периода
@@ -2191,6 +2242,8 @@ BEGIN
             , _tmpItem_group.GoodsId                  AS ObjectId_Analyzer      -- Товар
             , vbWhereObjectId_Analyzer                AS WhereObjectId_Analyzer -- Подраделение или...
             , 0                                       AS ContainerId_Analyzer   -- в ОПиУ не нужен
+            , _tmpItem_group.GoodsKindId              AS ObjectIntId_Analyzer   -- вид товара
+            , vbObjectExtId_Analyzer                  AS ObjectExtId_Analyzer   -- покупатель / физ.лицо
             , 0                                       AS ParentId
             , _tmpItem_group.OperSumm                 AS Amount
             , CASE WHEN vbAccountId_GoodsTransit <> 0 THEN vbOperDatePartner ELSE vbOperDate END AS OperDate -- т.е. по "определенной" Дате
@@ -2198,36 +2251,40 @@ BEGIN
        FROM  -- Сумма реализации
             (SELECT _tmpItem.ContainerId_ProfitLoss_10100  AS ContainerId_ProfitLoss
                   , _tmpItem.GoodsId                       AS GoodsId
+                  , _tmpItem.GoodsKindId                   AS GoodsKindId
                   , 0                                      AS AnalyzerId -- zc_Enum_AnalyzerId_SaleSumm_10100()    AS AnalyzerId -- Сумма, реализация, у покупателя
                   , -1 * SUM (_tmpItem.OperSumm_PriceList) AS OperSumm
              FROM _tmpItem
-             GROUP BY _tmpItem.ContainerId_ProfitLoss_10100, _tmpItem.GoodsId
+             GROUP BY _tmpItem.ContainerId_ProfitLoss_10100, _tmpItem.GoodsId, _tmpItem.GoodsKindId
             UNION ALL
              -- Разница с оптовыми ценами (Скидка по акциям)
-             SELECT _tmpItem.ContainerId_ProfitLoss_10200 AS ContainerId_ProfitLoss
-                  , _tmpItem.GoodsId                      AS GoodsId
-                  , 0                                     AS AnalyzerId -- zc_Enum_AnalyzerId_SaleSumm_10200()   AS AnalyzerId --  Сумма, реализация, Разница с оптовыми ценами(акции) 
+             SELECT _tmpItem.ContainerId_ProfitLoss_10200  AS ContainerId_ProfitLoss
+                  , _tmpItem.GoodsId                       AS GoodsId
+                  , _tmpItem.GoodsKindId                   AS GoodsKindId
+                  , 0                                      AS AnalyzerId -- zc_Enum_AnalyzerId_SaleSumm_10200()   AS AnalyzerId --  Сумма, реализация, Разница с оптовыми ценами(акции) 
                   , 1 * SUM (_tmpItem.OperSumm_PriceList - _tmpItem.OperSumm_Partner) AS OperSumm
              FROM _tmpItem
-             GROUP BY _tmpItem.ContainerId_ProfitLoss_10200, _tmpItem.GoodsId
+             GROUP BY _tmpItem.ContainerId_ProfitLoss_10200, _tmpItem.GoodsId, _tmpItem.GoodsKindId
             UNION ALL
              -- Скидка дополнительная
-             SELECT _tmpItem.ContainerId_ProfitLoss_10300 AS ContainerId_ProfitLoss
-                  , _tmpItem.GoodsId                      AS GoodsId
-                  , 0                                     AS AnalyzerId -- zc_Enum_AnalyzerId_SaleSumm_10300()   AS AnalyzerId -- Сумма, реализация, Скидка дополнительная
+             SELECT _tmpItem.ContainerId_ProfitLoss_10300  AS ContainerId_ProfitLoss
+                  , _tmpItem.GoodsId                       AS GoodsId
+                  , _tmpItem.GoodsKindId                   AS GoodsKindId
+                  , 0                                      AS AnalyzerId -- zc_Enum_AnalyzerId_SaleSumm_10300()   AS AnalyzerId -- Сумма, реализация, Скидка дополнительная
                   , 1 * SUM (_tmpItem.OperSumm_Partner - _tmpItem.OperSumm_Partner_ChangePercent) AS OperSumm
              FROM _tmpItem
-             GROUP BY _tmpItem.ContainerId_ProfitLoss_10300, _tmpItem.GoodsId
+             GROUP BY _tmpItem.ContainerId_ProfitLoss_10300, _tmpItem.GoodsId, _tmpItem.GoodsKindId
             -- !!!если продажа от Контрагента -> Контрагенту!!!
             UNION ALL
              -- Сумма реализации От Кого
              SELECT _tmpItemPartnerFrom.ContainerId_ProfitLoss_10100 AS ContainerId_ProfitLoss
-                  , _tmpItem.GoodsId                      AS GoodsId
-                  , 0                                     AS AnalyzerId -- zc_Enum_AnalyzerId_SaleSumm_10100()   AS AnalyzerId -- Сумма, реализация, у покупателя
+                  , _tmpItem.GoodsId                       AS GoodsId
+                  , _tmpItem.GoodsKindId                   AS GoodsKindId
+                  , 0                                      AS AnalyzerId -- zc_Enum_AnalyzerId_SaleSumm_10100()   AS AnalyzerId -- Сумма, реализация, у покупателя
                   , 1 * SUM (_tmpItemPartnerFrom.OperSumm_Partner) AS OperSumm
              FROM _tmpItemPartnerFrom
                   INNER JOIN _tmpItem ON _tmpItem.MovementItemId = _tmpItemPartnerFrom.MovementItemId
-             GROUP BY _tmpItemPartnerFrom.ContainerId_ProfitLoss_10100, _tmpItem.GoodsId
+             GROUP BY _tmpItemPartnerFrom.ContainerId_ProfitLoss_10100, _tmpItem.GoodsId, _tmpItem.GoodsKindId
             ) AS _tmpItem_group
        WHERE _tmpItem_group.OperSumm <> 0 -- !!!ограничение - пустые проводки не формируются!!!
       ;

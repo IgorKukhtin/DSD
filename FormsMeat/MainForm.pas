@@ -119,7 +119,7 @@ type
     actReport_GoodsMI_SaleReturnIn: TdsdOpenForm;
     actReport_Production_Union: TdsdOpenForm;
     actContractConditionValue: TdsdOpenForm;
-    actReport_GoodsMI_Income: TdsdOpenForm;
+    actReport_GoodsMI_ReturnOutByPartner: TdsdOpenForm;
     actReport_GoodsMI_IncomeByPartner: TdsdOpenForm;
     actReport_JuridicalDefermentPayment: TdsdOpenForm;
     actTax: TdsdOpenForm;
@@ -609,6 +609,8 @@ type
     actReport_GoodsMI_SendonPrice: TdsdOpenForm;
     N74: TMenuItem;
     N75: TMenuItem;
+    actOrderInternalBasisDelik: TdsdOpenForm;
+    N76: TMenuItem;
     procedure actReport_OLAPSoldExecute(Sender: TObject);
     procedure FormShow(Sender: TObject);
   private

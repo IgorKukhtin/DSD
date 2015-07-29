@@ -3,7 +3,7 @@ inherited ProductionPeresortForm: TProductionPeresortForm
   ClientHeight = 499
   ClientWidth = 1128
   ExplicitWidth = 1144
-  ExplicitHeight = 537
+  ExplicitHeight = 534
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -1311,21 +1311,6 @@ inherited ProductionPeresortForm: TProductionPeresortForm
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
-      end
-      item
-        Name = 'Key_two'
-        Value = Null
-        Component = GuidesTo
-        ComponentItem = 'Key'
-        ParamType = ptInput
-      end
-      item
-        Name = 'TextValue_two'
-        Value = Null
-        Component = GuidesTo
-        ComponentItem = 'TextValue'
-        DataType = ftString
-        ParamType = ptInput
       end>
     Left = 328
     Top = 16
@@ -1349,21 +1334,6 @@ inherited ProductionPeresortForm: TProductionPeresortForm
         Name = 'TextValue'
         Value = ''
         Component = GuidesTo
-        ComponentItem = 'TextValue'
-        DataType = ftString
-        ParamType = ptInput
-      end
-      item
-        Name = 'Key_two'
-        Value = Null
-        Component = GuidesFrom
-        ComponentItem = 'Key'
-        ParamType = ptInput
-      end
-      item
-        Name = 'TextValue_two'
-        Value = Null
-        Component = GuidesFrom
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput

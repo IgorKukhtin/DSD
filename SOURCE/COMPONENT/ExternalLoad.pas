@@ -102,22 +102,24 @@ type
   private
     FExternalLoad: TExternalLoad;
     FImportSettings: TImportSettings;
+    FExternalParams: TdsdParams;
     function GetFieldName(AFieldName: AnsiString; AImportSettings: TImportSettings): string;
     procedure ProcessingOneRow(AExternalLoad: TExternalLoad; AImportSettings: TImportSettings);
   public
-    constructor Create(FileType: TDataSetType; FileName: string; ImportSettings: TImportSettings); overload;
-    constructor Create(ConnectionString, SQL: string; ImportSettings: TImportSettings); overload;
+    constructor Create(FileType: TDataSetType; FileName: string; ImportSettings: TImportSettings; ExternalParams: TdsdParams = nil); overload;
+    constructor Create(ConnectionString, SQL: string; ImportSettings: TImportSettings; ExternalParams: TdsdParams = nil); overload;
     destructor Destroy; override;
     procedure Load;
   end;
 
   TExecuteImportSettings = class
-    class procedure Execute(ImportSettings: TImportSettings);
+    class procedure Execute(ImportSettings: TImportSettings; ExternalParams: TdsdParams = nil);
   end;
 
   TExecuteImportSettingsAction = class(TdsdCustomAction)
   private
     FImportSettingsId: TdsdParam;
+    FExternalParams: TdsdParams;
   protected
     function LocalExecute: boolean; override;
   public
@@ -125,6 +127,7 @@ type
     destructor Destroy; override;
   published
     property ImportSettingsId: TdsdParam read FImportSettingsId write FImportSettingsId;
+    property ExternalParams: TdsdParams read FExternalParams Write FExternalParams;
   end;
 
   procedure Register;
@@ -478,7 +481,8 @@ end;
 
 { TExecuteProcedureFromFile }
 
-constructor TExecuteProcedureFromExternalDataSet.Create(FileType: TDataSetType; FileName: string; ImportSettings: TImportSettings);
+constructor TExecuteProcedureFromExternalDataSet.Create(FileType: TDataSetType; FileName: string; ImportSettings: TImportSettings;
+  ExternalParams: TdsdParams = nil);
 var ExtendedProperties: string;
 begin
   if ImportSettings.HDR then
@@ -486,14 +490,16 @@ begin
   else
      ExtendedProperties := '; HDR=No';
   FImportSettings := ImportSettings;
+  FExternalParams := ExternalParams;
   FExternalLoad := TFileExternalLoad.Create(FileType, ImportSettings.StartRow, ExtendedProperties);
   TFileExternalLoad(FExternalLoad).Open(FileName);
 end;
 
 constructor TExecuteProcedureFromExternalDataSet.Create(ConnectionString,
-  SQL: string; ImportSettings: TImportSettings);
+  SQL: string; ImportSettings: TImportSettings; ExternalParams: TdsdParams = nil);
 begin
   FImportSettings := ImportSettings;
+  FExternalParams := ExternalParams;
   FExternalLoad := TODBCExternalLoad.Create;
   TODBCExternalLoad(FExternalLoad).Open(ConnectionString, SQL);
   TODBCExternalLoad(FExternalLoad).Activate;
@@ -563,44 +569,57 @@ begin
            else
              if TImportSettingsItems(Items[i]).ItemName = '%LASTRECORD%' then
                 StoredProc.Params.Items[i].Value := AExternalLoad.isLastRecord
-             else begin
-               if TImportSettingsItems(Items[i]).ItemName <> '' then begin
-                  vbFieldName := GetFieldName(TImportSettingsItems(Items[i]).ItemName, AImportSettings);
-                  Field := AExternalLoad.FDataSet.FindField(vbFieldName);
-                  if not Assigned(Field) then
-                     raise Exception.Create('Не найдено значение для ячейки ' + TImportSettingsItems(Items[i]).ItemName);
-                  case StoredProc.Params[i].DataType of
-                    ftDateTime: begin
-                       try
-                         Value := Field.Value;
-                         D := VarToDateTime(Value);
-                         StoredProc.Params.Items[i].Value := D;
-                       except
-                         on E: EVariantTypeCastError do
-                            StoredProc.Params.Items[i].Value := Date;
-                         on E: Exception do
-                            raise E;
-                       end;
-                    end;
-                    ftFloat: begin
-                       try
-                         Value := Field.Value;
-                         Ft := gfStrToFloat(Value);
-                         StoredProc.Params.Items[i].Value := Ft;
-                       except
-                         on E: EVariantTypeCastError do
-                            StoredProc.Params.Items[i].Value := 0;
-                         on E: Exception do
-                            raise E;
-                       end;
-                    end
-                    else
-                      if VarIsNULL(Field.Value) then
-                         StoredProc.Params.Items[i].Value := ''
+             else
+               if TImportSettingsItems(Items[i]).ItemName = '%EXTERNALPARAM%' then
+               Begin
+                 if Assigned(FexternalParams) then
+                   if FexternalParams.ParamByName(StoredProc.Params[i].Name) <> nil then
+                     StoredProc.Params.Items[i].Value := FexternalParams.ParamByName(StoredProc.Params[i].Name).Value
+                   else
+                     raise Exception.Create('В наборе внешних параметров не найден параметр с именем <'+StoredProc.Params[i].Name+'>')
+                 else
+                   raise Exception.Create('Не определен набор внешних параметров');
+
+               end
+               else
+               begin
+                 if TImportSettingsItems(Items[i]).ItemName <> '' then begin
+                    vbFieldName := GetFieldName(TImportSettingsItems(Items[i]).ItemName, AImportSettings);
+                    Field := AExternalLoad.FDataSet.FindField(vbFieldName);
+                    if not Assigned(Field) then
+                       raise Exception.Create('Не найдено значение для ячейки ' + TImportSettingsItems(Items[i]).ItemName);
+                    case StoredProc.Params[i].DataType of
+                      ftDateTime: begin
+                         try
+                           Value := Field.Value;
+                           D := VarToDateTime(Value);
+                           StoredProc.Params.Items[i].Value := D;
+                         except
+                           on E: EVariantTypeCastError do
+                              StoredProc.Params.Items[i].Value := Date;
+                           on E: Exception do
+                              raise E;
+                         end;
+                      end;
+                      ftFloat: begin
+                         try
+                           Value := Field.Value;
+                           Ft := gfStrToFloat(Value);
+                           StoredProc.Params.Items[i].Value := Ft;
+                         except
+                           on E: EVariantTypeCastError do
+                              StoredProc.Params.Items[i].Value := 0;
+                           on E: Exception do
+                              raise E;
+                         end;
+                      end
                       else
-                         StoredProc.Params.Items[i].Value := trim(Field.Value);
-                  end;
-               end;
+                        if VarIsNULL(Field.Value) then
+                           StoredProc.Params.Items[i].Value := ''
+                        else
+                           StoredProc.Params.Items[i].Value := trim(Field.Value);
+                    end;
+                 end;
           end;
     end;
     StoredProc.Execute;
@@ -609,7 +628,7 @@ end;
 
 { TExecuteImportSettings }
 
-class procedure TExecuteImportSettings.Execute(ImportSettings: TImportSettings);
+class procedure TExecuteImportSettings.Execute(ImportSettings: TImportSettings; ExternalParams: TdsdParams = nil);
 var iFilesCount: Integer;
     saFound: TStrings;
     i: integer;
@@ -644,7 +663,7 @@ begin
           end;
           TStringList(saFound).Sort;
           for I := 0 to saFound.Count - 1 do
-              with TExecuteProcedureFromExternalDataSet.Create(ImportSettings.FileType, saFound[i], ImportSettings) do
+              with TExecuteProcedureFromExternalDataSet.Create(ImportSettings.FileType, saFound[i], ImportSettings, ExternalParams) do
                 try
                   // Загрузили
                   Load;
@@ -661,7 +680,7 @@ begin
         end;
     end;
     dtODBC: begin
-              with TExecuteProcedureFromExternalDataSet.Create(ImportSettings.Directory, ImportSettings.Query, ImportSettings) do
+              with TExecuteProcedureFromExternalDataSet.Create(ImportSettings.Directory, ImportSettings.Query, ImportSettings, ExternalParams) do
                 try
                   // Загрузили
                   Load;
@@ -782,17 +801,19 @@ constructor TExecuteImportSettingsAction.Create(AOwner: TComponent);
 begin
   inherited;
   FImportSettingsId := TdsdParam.Create(nil);
+  FExternalParams := TdsdParams.Create(Self,TdsdParam);
 end;
 
 destructor TExecuteImportSettingsAction.Destroy;
 begin
   FreeAndNil(FImportSettingsId);
+  FreeAndNil(FExternalParams);
   inherited;
 end;
 
 function TExecuteImportSettingsAction.LocalExecute: boolean;
 begin
-  TExecuteImportSettings.Execute(TImportSettingsFactory.CreateImportSettings(ImportSettingsId.Value));
+  TExecuteImportSettings.Execute(TImportSettingsFactory.CreateImportSettings(ImportSettingsId.Value),FExternalParams);
   result := true;
 end;
 

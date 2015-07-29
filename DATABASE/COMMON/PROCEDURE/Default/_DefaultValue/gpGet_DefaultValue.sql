@@ -10,9 +10,7 @@ CREATE OR REPLACE FUNCTION gpGet_DefaultValue(
 RETURNS TVarChar AS
 $BODY$
 BEGIN
-
-   RETURN( 'ffff');
-    
+    RETURN(lpGet_DefaultValue(inDefaultKey,inUserKeyId));
 END;
 $BODY$
 

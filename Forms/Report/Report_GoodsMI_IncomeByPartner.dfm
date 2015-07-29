@@ -1,46 +1,43 @@
 inherited Report_GoodsMI_IncomeByPartnerForm: TReport_GoodsMI_IncomeByPartnerForm
-  Caption = #1054#1090#1095#1077#1090' <'#1087#1086' '#1090#1086#1074#1072#1088#1072#1084' ('#1087#1086' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072#1084')>'
+  Caption = #1054#1090#1095#1077#1090' <'#1055#1086' '#1090#1086#1074#1072#1088#1072#1084'>'
   ClientHeight = 553
-  ClientWidth = 1103
+  ClientWidth = 1020
+  AddOnFormData.isSingle = False
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
-  ExplicitWidth = 1119
-  ExplicitHeight = 588
+  ExplicitWidth = 1036
+  ExplicitHeight = 591
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 83
-    Width = 1103
+    Width = 1020
     Height = 470
     TabOrder = 3
     ExplicitTop = 83
-    ExplicitWidth = 1103
+    ExplicitWidth = 1020
     ExplicitHeight = 470
     ClientRectBottom = 470
-    ClientRectRight = 1103
+    ClientRectRight = 1020
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 1103
+      ExplicitWidth = 1020
       ExplicitHeight = 470
       inherited cxGrid: TcxGrid
-        Width = 1103
+        Width = 1020
         Height = 470
-        ExplicitWidth = 1103
+        ExplicitWidth = 1020
         ExplicitHeight = 470
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
               Format = ',0.####'
               Kind = skSum
-              Column = clSumm
+              Column = Summ
             end
             item
               Format = ',0.####'
               Kind = skSum
               Column = clAmountPartner_Sh
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
             end
             item
               Format = ',0.####'
@@ -56,21 +53,32 @@ inherited Report_GoodsMI_IncomeByPartnerForm: TReport_GoodsMI_IncomeByPartnerFor
               Format = ',0.####'
               Kind = skSum
               Column = clAmount_Sh
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = AmountDiff_Weight
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = AmountDiff_Sh
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Summ_ProfitLoss
             end>
           DataController.Summary.FooterSummaryItems = <
             item
               Format = ',0.####'
               Kind = skSum
-              Column = clSumm
+              Column = Summ
             end
             item
               Format = ',0.####'
               Kind = skSum
               Column = clAmountPartner_Sh
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
             end
             item
               Format = ',0.####'
@@ -86,6 +94,21 @@ inherited Report_GoodsMI_IncomeByPartnerForm: TReport_GoodsMI_IncomeByPartnerFor
               Format = ',0.####'
               Kind = skSum
               Column = clAmount_Sh
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = AmountDiff_Weight
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = AmountDiff_Sh
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Summ_ProfitLoss
             end>
           OptionsData.Editing = False
           OptionsView.GroupByBox = True
@@ -94,50 +117,69 @@ inherited Report_GoodsMI_IncomeByPartnerForm: TReport_GoodsMI_IncomeByPartnerFor
           Styles.Selection = nil
           Styles.Footer = nil
           Styles.Header = nil
+          object PartnerCode: TcxGridDBColumn
+            Caption = #1050#1086#1076' '#1087#1086#1089#1090'.'
+            DataBinding.FieldName = 'PartnerCode'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 55
+          end
           object clJuridicalName: TcxGridDBColumn
             Caption = #1070#1088'.'#1083#1080#1094#1086
             DataBinding.FieldName = 'JuridicalName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 104
+            Width = 150
           end
           object PartnerName: TcxGridDBColumn
             Caption = #1055#1086#1089#1090#1072#1074#1097#1080#1082
             DataBinding.FieldName = 'PartnerName'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 152
           end
           object clPaidKindName: TcxGridDBColumn
-            Caption = #1053#1072#1083'/'#1041#1085
+            Caption = #1060#1086#1088#1084#1072' '#1086#1087#1083#1072#1090#1099
             DataBinding.FieldName = 'PaidKindName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 26
+            Width = 55
           end
-          object clFuelKindName: TcxGridDBColumn
-            Caption = #1042#1080#1076' '#1090#1086#1087#1083#1080#1074#1072
-            DataBinding.FieldName = 'FuelKindName'
+          object LocationCode: TcxGridDBColumn
+            Caption = #1050#1086#1076' '#1084#1077#1089#1090#1072' '#1091#1095'.'
+            DataBinding.FieldName = 'LocationCode'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 60
+            Options.Editing = False
+            Width = 55
           end
-          object clTradeMarkName: TcxGridDBColumn
-            Caption = #1058#1086#1088#1075#1086#1074#1072#1103' '#1084#1072#1088#1082#1072
-            DataBinding.FieldName = 'TradeMarkName'
+          object LocationName: TcxGridDBColumn
+            Caption = #1052#1077#1089#1090#1086' '#1091#1095#1077#1090#1072
+            DataBinding.FieldName = 'LocationName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 76
+            Options.Editing = False
+            Width = 100
+          end
+          object GoodsGroupNameFull: TcxGridDBColumn
+            Caption = #1043#1088#1091#1087#1087#1072' '#1090#1086#1074#1072#1088#1072' ('#1074#1089#1077')'
+            DataBinding.FieldName = 'GoodsGroupNameFull'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 150
           end
           object clGoodsGroupName: TcxGridDBColumn
             Caption = #1043#1088#1091#1087#1087#1072' '#1090#1086#1074#1072#1088#1072
             DataBinding.FieldName = 'GoodsGroupName'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 102
           end
           object clGoodsCode: TcxGridDBColumn
-            Caption = #1050#1086#1076' '#1090#1086#1074#1072#1088#1072
+            Caption = #1050#1086#1076
             DataBinding.FieldName = 'GoodsCode'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
@@ -148,7 +190,37 @@ inherited Report_GoodsMI_IncomeByPartnerForm: TReport_GoodsMI_IncomeByPartnerFor
             DataBinding.FieldName = 'GoodsName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 108
+            Width = 150
+          end
+          object GoodsKindName: TcxGridDBColumn
+            Caption = #1042#1080#1076
+            DataBinding.FieldName = 'GoodsKindName'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 70
+          end
+          object PartionGoods: TcxGridDBColumn
+            Caption = #1055#1072#1088#1090#1080#1103
+            DataBinding.FieldName = 'PartionGoods'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 100
+          end
+          object MeasureName: TcxGridDBColumn
+            Caption = #1045#1076'. '#1080#1079#1084'.'
+            DataBinding.FieldName = 'MeasureName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 45
+          end
+          object clFuelKindName: TcxGridDBColumn
+            Caption = #1042#1080#1076' '#1090#1086#1087#1083#1080#1074#1072
+            DataBinding.FieldName = 'FuelKindName'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 60
           end
           object clAmount_Weight: TcxGridDBColumn
             Caption = #1050#1086#1083'-'#1074#1086' '#1042#1077#1089' ('#1089#1082#1083#1072#1076')'
@@ -156,37 +228,63 @@ inherited Report_GoodsMI_IncomeByPartnerForm: TReport_GoodsMI_IncomeByPartnerFor
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
-            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 70
           end
           object clAmount_Sh: TcxGridDBColumn
-            Caption = #1050#1086#1083'-'#1074#1086' '#1064#1090'. ('#1089#1082#1083#1072#1076')'
+            Caption = #1050#1086#1083'-'#1074#1086' '#1096#1090'. ('#1089#1082#1083#1072#1076')'
             DataBinding.FieldName = 'Amount_Sh'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
             Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 70
           end
           object clAmountPartner_Weight: TcxGridDBColumn
-            Caption = #1050#1086#1083'-'#1074#1086' '#1042#1077#1089' ('#1087#1086#1082#1091#1087'.)'
+            Caption = #1050#1086#1083'-'#1074#1086' '#1042#1077#1089' ('#1087#1086#1089#1090'.)'
             DataBinding.FieldName = 'AmountPartner_Weight'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 91
+            Width = 70
           end
           object clAmountPartner_Sh: TcxGridDBColumn
-            Caption = #1050#1086#1083'-'#1074#1086' '#1064#1090'. ('#1087#1086#1082#1091#1087'.)'
+            Caption = #1050#1086#1083'-'#1074#1086' '#1096#1090'. ('#1087#1086#1089#1090'.)'
             DataBinding.FieldName = 'AmountPartner_Sh'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 70
+          end
+          object Price: TcxGridDBColumn
+            Caption = #1062#1077#1085#1072' ('#1089#1082#1083#1072#1076')'
+            DataBinding.FieldName = 'Price'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 87
+            Width = 55
           end
-          object clSumm: TcxGridDBColumn
+          object PricePartner: TcxGridDBColumn
+            Caption = #1062#1077#1085#1072' ('#1087#1086#1089#1090'.)'
+            DataBinding.FieldName = 'PricePartner'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 55
+          end
+          object Summ: TcxGridDBColumn
             Caption = #1057#1091#1084#1084#1072' '#1089' '#1053#1044#1057' ('#1080#1090#1086#1075')'
             DataBinding.FieldName = 'Summ'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -194,7 +292,91 @@ inherited Report_GoodsMI_IncomeByPartnerForm: TReport_GoodsMI_IncomeByPartnerFor
             Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 73
+            Width = 70
+          end
+          object Summ_ProfitLoss: TcxGridDBColumn
+            Caption = #1057#1091#1084#1084#1072' (-)'#1091#1073#1099#1090#1086#1082' (+)'#1087#1088#1080#1073#1099#1083#1100
+            DataBinding.FieldName = 'Summ_ProfitLoss'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 80
+          end
+          object AmountDiff_Weight: TcxGridDBColumn
+            Caption = #1050#1086#1083'. '#1074#1077#1089' (-)'#1091#1073#1099#1083#1100' (+)'#1101#1082#1086#1085#1086#1084'.'
+            DataBinding.FieldName = 'AmountDiff_Weight'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 70
+          end
+          object AmountDiff_Sh: TcxGridDBColumn
+            Caption = #1050#1086#1083'. '#1096#1090'. (-)'#1091#1073#1099#1083#1100' (+)'#1101#1082#1086#1085#1086#1084'.'
+            DataBinding.FieldName = 'AmountDiff_Sh'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 70
+          end
+          object clTradeMarkName: TcxGridDBColumn
+            Caption = #1058#1086#1088#1075#1086#1074#1072#1103' '#1084#1072#1088#1082#1072
+            DataBinding.FieldName = 'TradeMarkName'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 76
+          end
+          object colInfoMoneyCode: TcxGridDBColumn
+            Caption = #1050#1086#1076' '#1059#1055
+            DataBinding.FieldName = 'InfoMoneyCode'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 45
+          end
+          object colInfoMoneyGroupName: TcxGridDBColumn
+            Caption = #1059#1055' '#1075#1088#1091#1087#1087#1072' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
+            DataBinding.FieldName = 'InfoMoneyGroupName'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 80
+          end
+          object colInfoMoneyDestinationName: TcxGridDBColumn
+            Caption = #1059#1055' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1077
+            DataBinding.FieldName = 'InfoMoneyDestinationName'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 80
+          end
+          object colInfoMoneyName: TcxGridDBColumn
+            Caption = #1059#1055' '#1089#1090#1072#1090#1100#1103' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
+            DataBinding.FieldName = 'InfoMoneyName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 100
+          end
+          object InfoMoneyName_all: TcxGridDBColumn
+            Caption = #1059#1055' '#1089#1090#1072#1090#1100#1103
+            DataBinding.FieldName = 'InfoMoneyName_all'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 100
           end
           object PartnerId: TcxGridDBColumn
             DataBinding.FieldName = 'PartnerId'
@@ -207,41 +389,45 @@ inherited Report_GoodsMI_IncomeByPartnerForm: TReport_GoodsMI_IncomeByPartnerFor
     end
   end
   inherited Panel: TPanel
-    Width = 1103
+    Width = 1020
     Height = 57
-    ExplicitWidth = 1103
+    ExplicitWidth = 1020
     ExplicitHeight = 57
     inherited deStart: TcxDateEdit
-      Left = 114
+      Left = 55
       EditValue = 42005d
       Properties.SaveTime = False
-      ExplicitLeft = 114
+      ExplicitLeft = 55
     end
     inherited deEnd: TcxDateEdit
-      Left = 110
+      Left = 55
       Top = 32
       EditValue = 42005d
       Properties.SaveTime = False
-      ExplicitLeft = 110
+      ExplicitLeft = 55
       ExplicitTop = 32
     end
     inherited cxLabel1: TcxLabel
       Left = 4
+      Caption = #1044#1072#1090#1072' '#1089':'
       ExplicitLeft = 4
+      ExplicitWidth = 42
     end
     inherited cxLabel2: TcxLabel
       Left = 4
       Top = 33
+      Caption = #1044#1072#1090#1072' '#1087#1086':'
       ExplicitLeft = 4
       ExplicitTop = 33
+      ExplicitWidth = 49
     end
     object cxLabel4: TcxLabel
-      Left = 516
+      Left = 459
       Top = 6
-      Caption = #1043#1088'.'#1090#1086#1074#1072#1088#1072
+      Caption = #1043#1088'.'#1090#1086#1074#1072#1088#1072':'
     end
     object edGoodsGroup: TcxButtonEdit
-      Left = 574
+      Left = 520
       Top = 5
       Properties.Buttons = <
         item
@@ -253,7 +439,7 @@ inherited Report_GoodsMI_IncomeByPartnerForm: TReport_GoodsMI_IncomeByPartnerFor
       Width = 205
     end
     object edInDescName: TcxTextEdit
-      Left = 783
+      Left = 849
       Top = 5
       Enabled = False
       ParentFont = False
@@ -267,15 +453,15 @@ inherited Report_GoodsMI_IncomeByPartnerForm: TReport_GoodsMI_IncomeByPartnerFor
       Style.Font.Style = [fsBold]
       Style.IsFontAssigned = True
       TabOrder = 6
-      Width = 317
+      Width = 296
     end
     object cxLabel3: TcxLabel
-      Left = 516
+      Left = 466
       Top = 33
-      Caption = #1070#1088'.'#1051#1080#1094#1086
+      Caption = #1070#1088'.'#1051#1080#1094#1086':'
     end
     object edJuridical: TcxButtonEdit
-      Left = 574
+      Left = 520
       Top = 32
       Properties.Buttons = <
         item
@@ -287,12 +473,12 @@ inherited Report_GoodsMI_IncomeByPartnerForm: TReport_GoodsMI_IncomeByPartnerFor
       Width = 205
     end
     object cxLabel5: TcxLabel
-      Left = 201
+      Left = 146
       Top = 6
       Caption = #1043#1088'. '#1087#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1081':'
     end
     object edUnitGroup: TcxButtonEdit
-      Left = 309
+      Left = 252
       Top = 5
       Properties.Buttons = <
         item
@@ -305,12 +491,12 @@ inherited Report_GoodsMI_IncomeByPartnerForm: TReport_GoodsMI_IncomeByPartnerFor
     end
   end
   object cxLabel6: TcxLabel [2]
-    Left = 219
-    Top = 32
+    Left = 164
+    Top = 33
     Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077':'
   end
   object edUnit: TcxButtonEdit [3]
-    Left = 309
+    Left = 252
     Top = 32
     Properties.Buttons = <
       item
@@ -322,13 +508,13 @@ inherited Report_GoodsMI_IncomeByPartnerForm: TReport_GoodsMI_IncomeByPartnerFor
     Width = 201
   end
   object cxLabel7: TcxLabel [4]
-    Left = 785
-    Top = 32
-    Caption = #1060#1086#1088#1084#1072' '#1086#1087#1083#1072#1090#1099':'
+    Left = 731
+    Top = 6
+    Caption = #1060'. '#1086#1087#1083#1072#1090#1099':'
   end
   object edPaidKind: TcxButtonEdit [5]
-    Left = 865
-    Top = 32
+    Left = 793
+    Top = 5
     Properties.Buttons = <
       item
         Default = True
@@ -336,11 +522,93 @@ inherited Report_GoodsMI_IncomeByPartnerForm: TReport_GoodsMI_IncomeByPartnerFor
       end>
     Properties.ReadOnly = True
     TabOrder = 9
-    Width = 106
+    Width = 53
+  end
+  object cxLabel8: TcxLabel [6]
+    Left = 732
+    Top = 33
+    Caption = #1059#1055' '#1089#1090#1072#1090#1100#1103':'
+  end
+  object ceInfoMoney: TcxButtonEdit [7]
+    Left = 793
+    Top = 32
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    Properties.ReadOnly = True
+    TabOrder = 11
+    Width = 352
+  end
+  object cbGoodsKind: TcxCheckBox [8]
+    Left = 93
+    Top = 87
+    Caption = #1087#1086' '#1042#1080#1076#1072#1084' '#1090#1086#1074#1072#1088#1072
+    Properties.ReadOnly = False
+    TabOrder = 12
+    Width = 114
+  end
+  object cbPartionGoods: TcxCheckBox [9]
+    Left = 217
+    Top = 87
+    Caption = #1087#1086' '#1055#1072#1088#1090#1080#1103#1084
+    Properties.ReadOnly = False
+    TabOrder = 13
+    Width = 88
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 139
     Top = 280
+  end
+  inherited cxPropertiesStore: TcxPropertiesStore
+    Components = <
+      item
+        Component = deEnd
+        Properties.Strings = (
+          'Date')
+      end
+      item
+        Component = deStart
+        Properties.Strings = (
+          'Date')
+      end
+      item
+        Component = GoodsGroupGuides
+        Properties.Strings = (
+          'Key'
+          'TextValue')
+      end
+      item
+        Component = GuidesUnitGroup
+        Properties.Strings = (
+          'Key'
+          'TextValue')
+      end
+      item
+        Component = InfoMoneyGuides
+        Properties.Strings = (
+          'Key'
+          'TextValue')
+      end
+      item
+        Component = JuridicalGuides
+        Properties.Strings = (
+          'Key'
+          'TextValue')
+      end
+      item
+        Component = PaidKindGuides
+        Properties.Strings = (
+          'Key'
+          'TextValue')
+      end
+      item
+        Component = UnitGuides
+        Properties.Strings = (
+          'Key'
+          'TextValue')
+      end>
   end
   inherited ActionList: TActionList
     Top = 359
@@ -382,10 +650,11 @@ inherited Report_GoodsMI_IncomeByPartnerForm: TReport_GoodsMI_IncomeByPartnerFor
       DataSets = <
         item
           UserName = 'frxDBDItems'
-          IndexFieldNames = 'PartnerName;GoodsGroupName'
+          IndexFieldNames = 
+            'JuridicalName;PartnerName;GoodsGroupNameFull;GoodsName;GoodsKind' +
+            'Name;PartionGoods'
           GridView = cxGridDBTableView
         end>
-      CopiesCount = 1
       Params = <
         item
           Name = 'StartDate'
@@ -423,6 +692,18 @@ inherited Report_GoodsMI_IncomeByPartnerForm: TReport_GoodsMI_IncomeByPartnerFor
           Component = FormParams
           ComponentItem = 'ReportType0'
           ParamType = ptInput
+        end
+        item
+          Name = 'isPartionGoods'
+          Value = Null
+          Component = cbPartionGoods
+          DataType = ftBoolean
+        end
+        item
+          Name = 'isGoodsKind'
+          Value = Null
+          Component = cbGoodsKind
+          DataType = ftBoolean
         end>
       ReportName = #1054#1090#1095#1077#1090' '#1087#1086' '#1090#1086#1074#1072#1088#1091' ('#1087#1088#1080#1093#1086#1076' '#1086#1090' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072')'
       ReportNameParam.Value = #1054#1090#1095#1077#1090' '#1087#1086' '#1090#1086#1074#1072#1088#1091' ('#1087#1088#1080#1093#1086#1076' '#1086#1090' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072')'
@@ -467,10 +748,11 @@ inherited Report_GoodsMI_IncomeByPartnerForm: TReport_GoodsMI_IncomeByPartnerFor
       DataSets = <
         item
           UserName = 'frxDBDItems'
-          IndexFieldNames = 'PartnerName;GoodsGroupName'
+          IndexFieldNames = 
+            'JuridicalName;PartnerName;GoodsGroupNameFull;GoodsName;GoodsKind' +
+            'Name;PartionGoods'
           GridView = cxGridDBTableView
         end>
-      CopiesCount = 1
       Params = <
         item
           Name = 'StartDate'
@@ -612,6 +894,21 @@ inherited Report_GoodsMI_IncomeByPartnerForm: TReport_GoodsMI_IncomeByPartnerFor
           ComponentItem = 'TextValue'
           DataType = ftString
           ParamType = ptInputOutput
+        end
+        item
+          Name = 'InfoMoneyId'
+          Value = Null
+          Component = InfoMoneyGuides
+          ComponentItem = 'Key'
+          ParamType = ptInputOutput
+        end
+        item
+          Name = 'InfoMoneyName'
+          Value = Null
+          Component = InfoMoneyGuides
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          ParamType = ptInputOutput
         end>
       isShowModal = True
       OpenBeforeShow = True
@@ -683,6 +980,13 @@ inherited Report_GoodsMI_IncomeByPartnerForm: TReport_GoodsMI_IncomeByPartnerFor
         Component = JuridicalGuides
         ComponentItem = 'Key'
         ParamType = ptInput
+      end
+      item
+        Name = 'inInfoMoneyId'
+        Value = Null
+        Component = InfoMoneyGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
       end>
     Left = 104
     Top = 224
@@ -712,6 +1016,18 @@ inherited Report_GoodsMI_IncomeByPartnerForm: TReport_GoodsMI_IncomeByPartnerFor
         item
           Visible = True
           ItemName = 'bbRefresh'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbGoodsKind'
+        end
+        item
+          Visible = True
+          ItemName = 'bbPartionGoods'
         end
         item
           Visible = True
@@ -754,6 +1070,20 @@ inherited Report_GoodsMI_IncomeByPartnerForm: TReport_GoodsMI_IncomeByPartnerFor
       Action = ExecuteDialog
       Category = 0
     end
+    object bbGoodsKind: TdxBarControlContainerItem
+      Caption = 'New Item'
+      Category = 0
+      Hint = 'New Item'
+      Visible = ivAlways
+      Control = cbGoodsKind
+    end
+    object bbPartionGoods: TdxBarControlContainerItem
+      Caption = 'New Item'
+      Category = 0
+      Hint = 'New Item'
+      Visible = ivAlways
+      Control = cbPartionGoods
+    end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
     Left = 320
@@ -773,25 +1103,28 @@ inherited Report_GoodsMI_IncomeByPartnerForm: TReport_GoodsMI_IncomeByPartnerFor
         Component = PeriodChoice
       end
       item
-        Component = JuridicalGuides
-      end
-      item
-        Component = GoodsGroupGuides
+        Component = deStart
       end
       item
         Component = deEnd
       end
       item
-        Component = deStart
+        Component = GuidesUnitGroup
       end
       item
         Component = UnitGuides
       end
       item
-        Component = GuidesUnitGroup
+        Component = GoodsGroupGuides
+      end
+      item
+        Component = JuridicalGuides
       end
       item
         Component = PaidKindGuides
+      end
+      item
+        Component = InfoMoneyGuides
       end>
     Left = 208
     Top = 152
@@ -873,8 +1206,8 @@ inherited Report_GoodsMI_IncomeByPartnerForm: TReport_GoodsMI_IncomeByPartnerFor
         DataType = ftString
         ParamType = ptInput
       end>
-    Left = 704
-    Top = 32
+    Left = 560
+    Top = 24
   end
   object GuidesUnitGroup: TdsdGuides
     KeyField = 'Id'
@@ -928,7 +1261,7 @@ inherited Report_GoodsMI_IncomeByPartnerForm: TReport_GoodsMI_IncomeByPartnerFor
         DataType = ftString
         ParamType = ptInput
       end>
-    Left = 432
+    Left = 312
     Top = 24
   end
   object PaidKindGuides: TdsdGuides
@@ -955,7 +1288,31 @@ inherited Report_GoodsMI_IncomeByPartnerForm: TReport_GoodsMI_IncomeByPartnerFor
         DataType = ftString
         ParamType = ptInput
       end>
-    Left = 904
-    Top = 32
+    Left = 800
+    Top = 65528
+  end
+  object InfoMoneyGuides: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = ceInfoMoney
+    FormNameParam.Value = 'TInfoMoney_ObjectForm'
+    FormNameParam.DataType = ftString
+    FormName = 'TInfoMoney_ObjectForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = InfoMoneyGuides
+        ComponentItem = 'Key'
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = InfoMoneyGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+      end>
+    Left = 928
+    Top = 21
   end
 end

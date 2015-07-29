@@ -13,7 +13,7 @@ uses
   Vcl.ActnList, cxPropertiesStore, cxLabel, cxTextEdit, cxMaskEdit,
   cxDropDownEdit, cxCalendar, Vcl.ExtCtrls, cxGridLevel, cxGridCustomView,
   cxGridCustomTableView, cxGridTableView, cxGridDBTableView, cxGrid, cxPC,
-  dsdGuides, cxButtonEdit, cxCurrencyEdit, Vcl.Menus;
+  dsdGuides, cxButtonEdit, cxCurrencyEdit, Vcl.Menus, cxCheckBox;
 
 type
   TReport_GoodsMI_DefrosterForm = class(TAncestorReportForm)
@@ -27,7 +27,7 @@ type
     Amount_diff: TcxGridDBColumn;
     Amount_Send_in: TcxGridDBColumn;
     Amount_Loss: TcxGridDBColumn;
-    Amount_Production: TcxGridDBColumn;
+    Amount_Loss_diff: TcxGridDBColumn;
     MeasureName: TcxGridDBColumn;
     cxLabel3: TcxLabel;
     UnitGuides: TdsdGuides;
@@ -48,6 +48,22 @@ type
     actUpdateDefroster: TdsdExecStoredProc;
     spUpdateDefroster: TdsdStoredProc;
     bbUpdateDefroster: TdxBarButton;
+    Tax_Separate_diff: TcxGridDBColumn;
+    Price_in: TcxGridDBColumn;
+    Price_Separate_in: TcxGridDBColumn;
+    Price_Send_in: TcxGridDBColumn;
+    Price_out: TcxGridDBColumn;
+    Price_Separate_out: TcxGridDBColumn;
+    Price_Send_out: TcxGridDBColumn;
+    Summ_Loss_diff: TcxGridDBColumn;
+    Price_Loss_diff: TcxGridDBColumn;
+    cbPartionGoods: TcxCheckBox;
+    bbPartionGoods: TdxBarControlContainerItem;
+    ExecuteDialog: TExecuteDialog;
+    bbExecuteDialog: TdxBarButton;
+    Summ_Production_out: TcxGridDBColumn;
+    Amount_Production_out: TcxGridDBColumn;
+    Separate_CountIn: TcxGridDBColumn;
   private
     { Private declarations }
   public

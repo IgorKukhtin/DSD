@@ -4,11 +4,14 @@
 DROP FUNCTION IF EXISTS gpGet_Movement_OrderInternal (Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpGet_Movement_OrderInternal (Integer, TDateTime, TVarChar);
 DROP FUNCTION IF EXISTS gpGet_Movement_OrderInternal (Integer, TDateTime, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpGet_Movement_OrderInternal (Integer, TDateTime, Boolean, Integer, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpGet_Movement_OrderInternal(
     IN inMovementId        Integer  , -- ключ Документа
     IN inOperDate          TDateTime, -- дата Документа
     IN inIsPack            Boolean  , -- 
+    IN inFromId            Integer ,   -- от кого
+    IN inToId              Integer ,   -- кому
     IN inSession           TVarChar   -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode Integer, StatusName TVarChar
@@ -48,10 +51,16 @@ BEGIN
              , CAST ('' as TVarChar) 		                  AS Comment
 
           FROM lfGet_Object_Status(zc_Enum_Status_UnComplete()) AS Object_Status
-               LEFT JOIN Object AS Object_From ON Object_From.Id = 8457 -- Склады База + Реализации
+               LEFT JOIN Object AS Object_From ON Object_From.Id = CASE WHEN inFromId <> 0 
+                                                                             THEN inFromId 
+                                                                        ELSE 8457 -- Склады База + Реализации
+                                                                   END
                LEFT JOIN Object AS Object_To ON Object_To.Id = CASE WHEN inIsPack = TRUE
                                                                          THEN 8451 -- Цех Упаковки
-                                                                    ELSE 8446 -- ЦЕХ колбаса+дел-сы
+                                                                    ELSE CASE WHEN inToId <> 0 
+                                                                                   THEN IntoId
+                                                                              ELSE 8446 -- ЦЕХ колбаса+дел-сы
+                                                                         END
                                                                END
          ;
 
@@ -116,7 +125,7 @@ BEGIN
 END;
 $BODY$
   LANGUAGE PLPGSQL VOLATILE;
-ALTER FUNCTION gpGet_Movement_OrderInternal (Integer, TDateTime, Boolean, TVarChar) OWNER TO postgres;
+ALTER FUNCTION gpGet_Movement_OrderInternal (Integer, TDateTime, Boolean, Integer, Integer, TVarChar) OWNER TO postgres;
 
 
 /*

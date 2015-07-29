@@ -20,6 +20,8 @@ type
     ceParentName: TcxGridDBColumn;
     RouteName: TcxGridDBColumn;
     RouteSortingName: TcxGridDBColumn;
+    PartnerCode: TcxGridDBColumn;
+    PartnerName: TcxGridDBColumn;
   private
     { Private declarations }
   public

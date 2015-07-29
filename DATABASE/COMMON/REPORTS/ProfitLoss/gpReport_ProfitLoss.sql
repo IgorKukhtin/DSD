@@ -35,7 +35,7 @@ BEGIN
      -- Результат
      RETURN QUERY 
                             -- ??? как сделать что б не попали операции переброски накопленной прибыль прошлого месяца в долг по прибыли???
-      WITH tmpContainer AS (SELECT ReportContainerLink.ReportContainerId
+      WITH /*tmpContainer AS (SELECT ReportContainerLink.ReportContainerId
                                  -- , ReportContainerLink.ChildContainerId   AS ContainerId_inf
                                  , CLO_Branch.ObjectId                    AS BranchId_ProfitLoss
                                  , CLO_ProfitLoss.ObjectId                AS ProfitLossId
@@ -63,87 +63,58 @@ BEGIN
                             WHERE Container.ObjectId = zc_Enum_Account_100301() -- 100301; "прибыль текущего периода"
                               AND Container.DescId = zc_Container_Summ()
                            )
-          , tmpProfitLoss /*tmpMIReport*/ AS (SELECT /*tmpContainer.ContainerId
-                                 , tmpContainer.ContainerId_inf*/
-                                   tmpContainer.BranchId_ProfitLoss
-                                 , tmpContainer.ProfitLossId
-                                 , tmpContainer.BusinessId
-                                 , tmpContainer.JuridicalId_Basis
-                                 , tmpContainer.InfoMoneyId_inf
-                                 -- , MIReport.MovementItemId
-                                 , SUM (CASE WHEN MIReport.ActiveAccountId = zc_Enum_Account_100301() THEN -1 ELSE 1 END * MIReport.Amount) AS Amount
-                                 , MILinkObject_Unit.ObjectId   AS UnitId_ProfitLoss
-                                 -- , COALESCE (MILinkObject_Branch.ObjectId, MovementLinkObject_Branch.ObjectId) AS BranchId_ProfitLoss
-                                 , MILinkObject_Route.ObjectId  AS RouteId_inf
-                            FROM tmpContainer
-
-                                 INNER JOIN MovementItemReport AS MIReport ON MIReport.ReportContainerId = tmpContainer.ReportContainerId
-                                                                          AND MIReport.OperDate BETWEEN inStartDate AND inEndDate
-                                 LEFT JOIN MovementItemLinkObject AS MILinkObject_Unit
-                                                                  ON MILinkObject_Unit.MovementItemId = MIReport.MovementItemId
+     ,*/ tmpMIContainer AS (SELECT MIContainer.ContainerId
+                                 , -1 * SUM (MIContainer.Amount) AS Amount
+                                 , 0 AS UnitId_ProfitLoss
+                                 , 0 AS RouteId_inf
+--                                 , MILinkObject_Unit.ObjectId   AS UnitId_ProfitLoss
+--                                 , MILinkObject_Route.ObjectId  AS RouteId_inf
+                            FROM MovementItemContainer AS MIContainer 
+                                 /*LEFT JOIN MovementItemLinkObject AS MILinkObject_Unit
+                                                                  ON MILinkObject_Unit.MovementItemId = MIContainer .MovementItemId
                                                                  AND MILinkObject_Unit.DescId = zc_MILinkObject_Unit()
                                                                  -- AND MILinkObject_Unit.ObjectId >0
-                                 /*LEFT JOIN MovementItemLinkObject AS MILinkObject_Branch
-                                                                  ON MILinkObject_Branch.MovementItemId = MIReport.MovementItemId
-                                                                 AND MILinkObject_Branch.DescId = zc_MILinkObject_Branch()
-                                                                 -- AND MILinkObject_Branch.ObjectId >0*/
                                  LEFT JOIN MovementItemLinkObject AS MILinkObject_Route
-                                                                  ON MILinkObject_Route.MovementItemId = MIReport.MovementItemId
+                                                                  ON MILinkObject_Route.MovementItemId = MIContainer .MovementItemId
                                                                  AND MILinkObject_Route.DescId = zc_MILinkObject_Route()
-                                                                 -- AND MILinkObject_Route.ObjectId >0
-                                /*LEFT JOIN MovementLinkObject AS MovementLinkObject_Branch
-                                                             ON MovementLinkObject_Branch.MovementId = MIReport.MovementId
-                                                            AND MovementLinkObject_Branch.DescId = zc_MovementLinkObject_Branch()*/
-                            GROUP BY /*tmpContainer.ContainerId
-                                   , tmpContainer.ContainerId_inf*/
-                                     tmpContainer.BranchId_ProfitLoss
-                                   , tmpContainer.ProfitLossId
-                                   , tmpContainer.BusinessId
-                                   , tmpContainer.JuridicalId_Basis
-                                   -- , MIReport.MovementItemId
-                                   , MILinkObject_Unit.ObjectId
-                                   , MILinkObject_Route.ObjectId
-                                   , tmpContainer.InfoMoneyId_inf
-                                   -- , MILinkObject_Branch.ObjectId
-                                   -- , MovementLinkObject_Branch.ObjectId
+                                                                 -- AND MILinkObject_Route.ObjectId >0*/
+                            WHERE MIContainer.OperDate BETWEEN inStartDate AND inEndDate
+                              AND MIContainer.AccountId = zc_Enum_Account_100301()
+                              AND MIContainer.isActive = FALSE
+                            GROUP BY MIContainer.ContainerId
                            )
-  /*, tmpProfitLoss AS (SELECT tmpMIReport.ContainerId_inf
-                           -- , COALESCE (ContainerLinkObject_Branch.ObjectId, tmpMIReport.BranchId_ProfitLoss) AS BranchId_ProfitLoss
-                           , tmpMIReport.BranchId_ProfitLoss
-                           , tmpMIReport.ProfitLossId
-                           , tmpMIReport.BusinessId
-                           , tmpMIReport.JuridicalId_Basis
-                           , tmpMIReport.UnitId_ProfitLoss
-                           , tmpMIReport.RouteId_inf
-                           , SUM (tmpMIReport.Amount) AS Amount
-                           --, ContainerLinkObject_ProfitLoss.ObjectId AS ProfitLossId
-                           , ContainerLinkObject_Business.ObjectId AS BusinessId
-                           , ContainerLinkObject_JuridicalBasis.ObjectId AS JuridicalId_Basis--
-                      FROM tmpMIReport
-                           --LEFT JOIN ContainerLinkObject AS ContainerLinkObject_ProfitLoss
-                                                         ON ContainerLinkObject_ProfitLoss.ContainerId = tmpMIReport.ContainerId
-                                                        AND ContainerLinkObject_ProfitLoss.DescId = zc_ContainerLinkObject_ProfitLoss()
-                           LEFT JOIN ContainerLinkObject AS ContainerLinkObject_Branch
-                                                         ON ContainerLinkObject_Branch.ContainerId = tmpMIReport.ContainerId
-                                                        AND ContainerLinkObject_Branch.DescId = zc_ContainerLinkObject_Branch()
-                           LEFT JOIN ContainerLinkObject AS ContainerLinkObject_Business
-                                                         ON ContainerLinkObject_Business.ContainerId = tmpMIReport.ContainerId
-                                                        AND ContainerLinkObject_Business.DescId = zc_ContainerLinkObject_Business()
-                           LEFT JOIN ContainerLinkObject AS ContainerLinkObject_JuridicalBasis
-                                                         ON ContainerLinkObject_JuridicalBasis.ContainerId = tmpMIReport.ContainerId
-                                                        AND ContainerLinkObject_JuridicalBasis.DescId = zc_ContainerLinkObject_JuridicalBasis()--
-                      GROUP BY tmpMIReport.ContainerId_inf
-                             --, COALESCE (ContainerLinkObject_Branch.ObjectId, tmpMIReport.BranchId_ProfitLoss)
-                             , tmpMIReport.BranchId_ProfitLoss
-                             , tmpMIReport.ProfitLossId
-                             , tmpMIReport.BusinessId
-                             , tmpMIReport.JuridicalId_Basis
-                             , tmpMIReport.RouteId_inf
-                             , tmpMIReport.UnitId_ProfitLoss
-                             --, ContainerLinkObject_ProfitLoss.ObjectId
-                             , ContainerLinkObject_Business.ObjectId
-                             , ContainerLinkObject_JuridicalBasis.ObjectId
-                     )*/
+        , tmpProfitLoss AS (SELECT CLO_Branch.ObjectId                    AS BranchId_ProfitLoss
+                                 , CLO_ProfitLoss.ObjectId                AS ProfitLossId
+                                 , CLO_Business.ObjectId                  AS BusinessId
+                                 , CLO_JuridicalBasis.ObjectId            AS JuridicalId_Basis
+                                 , 0                                      AS InfoMoneyId_inf
+                                 , tmpMIContainer.UnitId_ProfitLoss
+                                 , tmpMIContainer.RouteId_inf
+                                 , SUM (tmpMIContainer.Amount) AS Amount
+                            FROM tmpMIContainer
+                                 LEFT JOIN ContainerLinkObject AS CLO_Branch
+                                                               ON CLO_Branch.ContainerId = tmpMIContainer.ContainerId
+                                                              AND CLO_Branch.DescId = zc_ContainerLinkObject_Branch()
+                                 LEFT JOIN ContainerLinkObject AS CLO_ProfitLoss
+                                                               ON CLO_ProfitLoss.ContainerId = tmpMIContainer.ContainerId
+                                                              AND CLO_ProfitLoss.DescId = zc_ContainerLinkObject_ProfitLoss()
+                                 LEFT JOIN ContainerLinkObject AS CLO_Business
+                                                               ON CLO_Business.ContainerId = tmpMIContainer.ContainerId
+                                                              AND CLO_Business.DescId = zc_ContainerLinkObject_Business()
+                                 LEFT JOIN ContainerLinkObject AS CLO_JuridicalBasis
+                                                               ON CLO_JuridicalBasis.ContainerId = tmpMIContainer.ContainerId
+                                                              AND CLO_JuridicalBasis.DescId = zc_ContainerLinkObject_JuridicalBasis()
+                                 /*LEFT JOIN ContainerLinkObject AS ContainerLinkObject_InfoMoney
+                                                               ON ContainerLinkObject_InfoMoney.ContainerId = ReportContainerLink.ChildContainerId
+                                                              AND ContainerLinkObject_InfoMoney.DescId = zc_ContainerLinkObject_InfoMoney()*/
+                            GROUP BY CLO_Branch.ObjectId
+                                   , CLO_ProfitLoss.ObjectId
+                                   , CLO_Business.ObjectId
+                                   , CLO_JuridicalBasis.ObjectId
+                                   , tmpMIContainer.UnitId_ProfitLoss
+                                   , tmpMIContainer.RouteId_inf
+                           )
+
       , tmpReport AS (SELECT tmpProfitLoss.ProfitLossId
                            , tmpProfitLoss.BusinessId
                            , tmpProfitLoss.JuridicalId_Basis
@@ -278,4 +249,4 @@ ALTER FUNCTION gpReport_ProfitLoss (TDateTime, TDateTime, TVarChar) OWNER TO pos
 */
 
 -- тест
--- SELECT * FROM gpReport_ProfitLoss (inStartDate:= '01.01.2014', inEndDate:= '01.01.2014', inSession:= '2') WHERE Amount <> 0 ORDER BY 5
+-- SELECT * FROM gpReport_ProfitLoss (inStartDate:= '01.07.2015', inEndDate:= '31.07.2015', inSession:= '2') WHERE Amount <> 0 ORDER BY 5

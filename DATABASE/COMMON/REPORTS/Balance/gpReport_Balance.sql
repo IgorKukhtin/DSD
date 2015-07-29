@@ -171,7 +171,7 @@ BEGIN
                  , ContainerLinkObject_Member.ObjectId AS MemberId
                  , ContainerLinkObject_Unit.ObjectId AS UnitId
                  , ContainerLinkObject_Car.ObjectId  AS CarId
-                 , ContainerLinkObject_Goods.ObjectId AS GoodsId
+                 , 0 AS GoodsId -- ContainerLinkObject_Goods.ObjectId AS GoodsId
                  , ContainerLinkObject_PaidKind.ObjectId AS PaidKindId
 
                  , ContainerLO_JuridicalBasis.ObjectId AS JuridicalBasisId
@@ -206,23 +206,6 @@ BEGIN
                      OR (COALESCE (SUM (CASE WHEN MIContainer.Amount > 0 AND MIContainer.OperDate BETWEEN inStartDate AND inEndDate THEN  MIContainer.Amount ELSE 0 END), 0) <> 0) -- AmountDebet <> 0
                      OR (COALESCE (SUM (CASE WHEN MIContainer.Amount < 0 AND MIContainer.OperDate BETWEEN inStartDate AND inEndDate THEN -MIContainer.Amount ELSE 0 END), 0) <> 0) -- AmountKredit <> 0
                 ) AS tmpMIContainer_Remains
-                /*LEFT JOIN
-                (SELECT Container.Id AS ContainerId
-                      , COALESCE (SUM (CASE WHEN MIContainer.Amount > 0 AND MIContainer.OperDate BETWEEN inStartDate AND inEndDate THEN  MIContainer.Amount ELSE 0 END), 0) AS AmountDebet
-                      , COALESCE (SUM (CASE WHEN MIContainer.Amount < 0 AND MIContainer.OperDate BETWEEN inStartDate AND inEndDate THEN -MIContainer.Amount ELSE 0 END), 0) AS AmountKredit
-                      , Container.Amount - COALESCE (SUM (MIContainer.Amount), 0) AS AmountRemainsStart
-                 FROM Container
-                      LEFT JOIN MovementItemContainer AS MIContainer
-                                                      ON MIContainer.Containerid = Container.Id
-                                                     AND MIContainer.OperDate >= inStartDate
-                 WHERE Container.DescId = zc_Container_Count()
-                 GROUP BY Container.ObjectId
-                        , Container.Amount
-                        , Container.Id
-                 HAVING (Container.Amount - COALESCE (SUM (MIContainer.Amount), 0) <> 0) -- AmountRemainsStart <> 0
-                     OR (COALESCE (SUM (CASE WHEN MIContainer.Amount > 0 AND MIContainer.OperDate BETWEEN inStartDate AND inEndDate THEN  MIContainer.Amount ELSE 0 END), 0) <> 0) -- AmountDebet <> 0
-                     OR (COALESCE (SUM (CASE WHEN MIContainer.Amount < 0 AND MIContainer.OperDate BETWEEN inStartDate AND inEndDate THEN -MIContainer.Amount ELSE 0 END), 0) <> 0) -- AmountKredit <> 0
-                ) AS tmpMIContainer_RemainsCount ON tmpMIContainer_RemainsCount.ContainerId = tmpMIContainer_Remains.ParentId*/
                 LEFT JOIN ContainerLinkObject AS ContainerLinkObject_InfoMoney
                                               ON ContainerLinkObject_InfoMoney.ContainerId = tmpMIContainer_Remains.ContainerId
                                              AND ContainerLinkObject_InfoMoney.DescId = zc_ContainerLinkObject_InfoMoney()
@@ -247,12 +230,13 @@ BEGIN
                 LEFT JOIN ContainerLinkObject AS ContainerLinkObject_Car
                                               ON ContainerLinkObject_Car.ContainerId = tmpMIContainer_Remains.ContainerId
                                              AND ContainerLinkObject_Car.DescId = zc_ContainerLinkObject_Car()
-                LEFT JOIN ContainerLinkObject AS ContainerLinkObject_Goods
+                /*LEFT JOIN ContainerLinkObject AS ContainerLinkObject_Goods
                                               ON ContainerLinkObject_Goods.ContainerId = tmpMIContainer_Remains.ContainerId
-                                             AND ContainerLinkObject_Goods.DescId = zc_ContainerLinkObject_Goods()
+                                             AND ContainerLinkObject_Goods.DescId = zc_ContainerLinkObject_Goods()*/
                 LEFT JOIN ContainerLinkObject AS ContainerLinkObject_PaidKind
                                               ON ContainerLinkObject_PaidKind.ContainerId = tmpMIContainer_Remains.ContainerId
                                              AND ContainerLinkObject_PaidKind.DescId = zc_ContainerLinkObject_PaidKind()
+
                 LEFT JOIN ContainerLinkObject AS ContainerLO_JuridicalBasis
                                               ON ContainerLO_JuridicalBasis.ContainerId = tmpMIContainer_Remains.ContainerId
                                              AND ContainerLO_JuridicalBasis.DescId = zc_ContainerLinkObject_JuridicalBasis()
@@ -268,7 +252,7 @@ BEGIN
                    , ContainerLinkObject_Member.ObjectId
                    , ContainerLinkObject_Unit.ObjectId
                    , ContainerLinkObject_Car.ObjectId
-                   , ContainerLinkObject_Goods.ObjectId
+                   -- , ContainerLinkObject_Goods.ObjectId
                    , ContainerLinkObject_PaidKind.ObjectId
                    , ContainerLO_JuridicalBasis.ObjectId
                    -- , ContainerLO_Business.ObjectId
@@ -323,4 +307,4 @@ ALTER FUNCTION gpReport_Balance (TDateTime, TDateTime, TVarChar) OWNER TO postgr
 */
 
 -- тест
--- SELECT * FROM gpReport_Balance (inStartDate:= '01.01.2013', inEndDate:= '01.02.2013', inSession:= '2') 
+-- SELECT * FROM gpReport_Balance (inStartDate:= '01.07.2015', inEndDate:= '31.07.2015', inSession:= '2')

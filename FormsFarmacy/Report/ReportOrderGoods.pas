@@ -13,7 +13,7 @@ uses
   cxGridTableView, cxGridDBTableView, cxGrid, cxPC, cxContainer, cxTextEdit,
   cxLabel, cxCurrencyEdit, cxButtonEdit, Vcl.DBActns, cxMaskEdit, Vcl.ExtCtrls,
   Vcl.ComCtrls, dxCore, cxDateUtils, ChoicePeriod, cxDropDownEdit, cxCalendar,
-  dsdGuides;
+  dsdGuides, dxBarBuiltInMenu, cxNavigator;
 
 type
   TReportOrderGoodsForm = class(TAncestorReportForm)
@@ -43,6 +43,11 @@ type
     colPriceSale: TcxGridDBColumn;
     getMovementForm: TdsdStoredProc;
     FormParams: TdsdFormParams;
+    colPartionGoods: TcxGridDBColumn;
+    colExpirationDate2: TcxGridDBColumn;
+    colPaymentDate: TcxGridDBColumn;
+    colInvNumberBranch: TcxGridDBColumn;
+    colBranchDate: TcxGridDBColumn;
   private
     { Private declarations }
   public

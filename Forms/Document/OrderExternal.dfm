@@ -1,26 +1,26 @@
 inherited OrderExternalForm: TOrderExternalForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1047#1072#1103#1074#1082#1072' '#1089#1090#1086#1088#1086#1085#1085#1103#1103' ('#1086#1090' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1103')>'
-  ClientHeight = 668
+  ClientHeight = 647
   ClientWidth = 1391
   ExplicitWidth = 1407
-  ExplicitHeight = 706
+  ExplicitHeight = 682
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 166
     Width = 1391
-    Height = 502
+    Height = 481
     ExplicitTop = 166
     ExplicitWidth = 1391
     ExplicitHeight = 502
-    ClientRectBottom = 502
+    ClientRectBottom = 481
     ClientRectRight = 1391
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 1391
       ExplicitHeight = 478
       inherited cxGrid: TcxGrid
         Width = 1391
-        Height = 478
+        Height = 457
         ExplicitWidth = 1391
         ExplicitHeight = 478
         inherited cxGridDBTableView: TcxGridDBTableView

@@ -3,7 +3,7 @@ inherited OrderInternalBasisForm: TOrderInternalBasisForm
   ClientHeight = 668
   ClientWidth = 1020
   ExplicitWidth = 1036
-  ExplicitHeight = 703
+  ExplicitHeight = 706
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -1021,6 +1021,14 @@ inherited OrderInternalBasisForm: TOrderInternalBasisForm
         Name = 'isPack'
         Value = True
         DataType = ftBoolean
+      end
+      item
+        Name = 'inFromId'
+        Value = Null
+      end
+      item
+        Name = 'inToId'
+        Value = Null
       end>
     Left = 280
     Top = 369
@@ -1058,6 +1066,20 @@ inherited OrderInternalBasisForm: TOrderInternalBasisForm
         Component = FormParams
         ComponentItem = 'isPack'
         DataType = ftBoolean
+        ParamType = ptInput
+      end
+      item
+        Name = 'inFromId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'inFromId'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inToId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'inToId'
         ParamType = ptInput
       end
       item
@@ -1351,8 +1373,8 @@ inherited OrderInternalBasisForm: TOrderInternalBasisForm
     Top = 392
   end
   inherited spInsertMaskMIMaster: TdsdStoredProc
-    Left = 368
-    Top = 272
+    Left = 296
+    Top = 296
   end
   inherited spGetTotalSumm: TdsdStoredProc
     Left = 412

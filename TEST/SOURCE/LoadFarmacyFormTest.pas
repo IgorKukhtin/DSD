@@ -64,6 +64,10 @@ type
     procedure LoadPaidTypeFormTest;
     procedure LoadInventoryJournalFormTest;
     procedure LoadInventoryFormTest;
+    procedure LoadLossJournalFormTest;
+    procedure LoadLossFormTest;
+    procedure LoadArticleLossEditFormTest;
+    procedure LoadArticleLossFormTest;
     procedure FormTest;
   end;
 
@@ -502,6 +506,30 @@ procedure TLoadFormTest.LoadInventoryJournalFormTest;
 begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TInventoryJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TInventoryJournalForm');
+end;
+
+procedure TLoadFormTest.LoadLossFormTest;
+begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TLossForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TLossForm');
+end;
+
+procedure TLoadFormTest.LoadLossJournalFormTest;
+begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TLossJournalForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TLossJournalForm');
+end;
+
+procedure TLoadFormTest.LoadArticleLossFormTest;
+begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TArticleLossForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TArticleLossForm');
+end;
+
+procedure TLoadFormTest.LoadArticleLossEditFormTest;
+begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TArticleLossEditForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TArticleLossEditForm');
 end;
 
 procedure TLoadFormTest.LoadInfoMoneyDestinationFormTest;

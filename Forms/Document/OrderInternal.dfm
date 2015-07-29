@@ -3,7 +3,7 @@ inherited OrderInternalForm: TOrderInternalForm
   ClientHeight = 668
   ClientWidth = 1020
   ExplicitWidth = 1036
-  ExplicitHeight = 703
+  ExplicitHeight = 706
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -1793,6 +1793,15 @@ inherited OrderInternalForm: TOrderInternalForm
         Name = 'isPack'
         Value = False
         DataType = ftBoolean
+      end
+      item
+        Name = 'inFromId'
+        Value = Null
+      end
+      item
+        Name = 'inToId'
+        Value = Null
+        ParamType = ptInput
       end>
     Left = 280
     Top = 369
@@ -1830,6 +1839,20 @@ inherited OrderInternalForm: TOrderInternalForm
         Component = FormParams
         ComponentItem = 'isPack'
         DataType = ftBoolean
+        ParamType = ptInput
+      end
+      item
+        Name = 'inFromId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'inFromId'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inToId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'inToId'
         ParamType = ptInput
       end
       item

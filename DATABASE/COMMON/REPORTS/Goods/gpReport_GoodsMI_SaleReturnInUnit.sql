@@ -182,6 +182,7 @@ BEGIN
                             AND (_tmpGoods_report.GoodsId > 0 OR vbIsGoods = FALSE)
                             AND (tmp_Unit_From.UnitId > 0
                               OR tmp_Unit_To.UnitId > 0)
+                            AND (inBranchId = zc_Branch_Basis() OR COALESCE (inBranchId, 0) = 0)
                           GROUP BY CASE WHEN inIsPartner = TRUE AND tmp_Unit_To.UnitId IS NULL
                                              THEN MovementLinkObject_From.ObjectId
                                         WHEN inIsPartner = TRUE AND tmp_Unit_From.UnitId IS NULL

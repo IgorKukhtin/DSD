@@ -14,7 +14,7 @@ $BODY$
 BEGIN
 
      RETURN QUERY 
-     WITH tmpUnit AS (SELECT 8411 AS UnitId, FALSE AS isMain -- Склад гп ф.Киев
+     WITH tmpUnit AS (/*SELECT 8411 AS UnitId, FALSE AS isMain -- Склад гп ф.Киев
                 UNION SELECT 8413 AS UnitId, FALSE AS isMain  -- ф. Кр.Рог
                 UNION SELECT 8415 AS UnitId, FALSE AS isMain  -- ф. Черкассы ( Кировоград)
                 UNION SELECT 8417 AS UnitId, FALSE AS isMain  -- ф. Николаев (Херсон)
@@ -31,7 +31,7 @@ BEGIN
                 UNION SELECT tmp.UnitId, TRUE AS isMain FROM lfSelect_Object_Unit_byGroup (8446) AS tmp -- ЦЕХ колбаса+дел-сы
                 UNION SELECT tmp.UnitId, TRUE AS isMain FROM lfSelect_Object_Unit_byGroup (8454) AS tmp -- Склад специй и запчастей
 
-                UNION SELECT tmp.UnitId, TRUE AS isMain FROM lfSelect_Object_Unit_byGroup (8432) AS tmp -- 30000 - Общепроизводственные
+                UNION */SELECT tmp.UnitId, TRUE AS isMain FROM lfSelect_Object_Unit_byGroup (8432) AS tmp -- 30000 - Общепроизводственные
                )
      -- 1. From: Sale + SendOnPrice
      SELECT Movement.Id AS MovementId

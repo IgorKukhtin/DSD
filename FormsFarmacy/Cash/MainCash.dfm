@@ -405,13 +405,13 @@ inherited MainCashForm: TMainCashForm
   inherited ActionList: TActionList
     Images = dmMain.ImageList
     inherited actRefresh: TdsdDataSetRefresh
-      StoredProc = spSelectRemains
+      StoredProc = spSelectCheck
       StoredProcList = <
         item
-          StoredProc = spSelectRemains
+          StoredProc = spSelectCheck
         end
         item
-          StoredProc = spSelectCheck
+          StoredProc = spSelectRemains
         end
         item
           StoredProc = spSelect_Alternative
@@ -488,7 +488,7 @@ inherited MainCashForm: TMainCashForm
           Action = actOpenCheckVIP
         end
         item
-          Action = actRefresh
+          Action = actRefreshLite
         end
         item
           Action = actSetTrueRemains
@@ -529,7 +529,7 @@ inherited MainCashForm: TMainCashForm
           Action = actOpenCheckDeferred
         end
         item
-          Action = actRefresh
+          Action = actRefreshLite
         end
         item
           Action = actSetTrueRemains
@@ -578,6 +578,22 @@ inherited MainCashForm: TMainCashForm
       ShortCut = 16501
       OnExecute = actSpecExecute
     end
+    object actRefreshLite: TdsdDataSetRefresh
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spSelectCheck
+      StoredProcList = <
+        item
+          StoredProc = spSelectCheck
+        end
+        item
+          StoredProc = spSelectRemains_Lite
+        end>
+      Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
+      Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
+      ShortCut = 116
+      RefreshOnTabSetChanges = False
+    end
   end
   object dsdDBViewAddOnMain: TdsdDBViewAddOn
     ErasedFieldName = 'isErased'
@@ -602,7 +618,7 @@ inherited MainCashForm: TMainCashForm
     Top = 96
   end
   object spSelectRemains: TdsdStoredProc
-    StoredProcName = 'gpSelect_CashRemains '
+    StoredProcName = 'gpSelect_CashRemains'
     DataSet = RemainsCDS
     DataSets = <
       item
@@ -971,5 +987,25 @@ inherited MainCashForm: TMainCashForm
     PackSize = 1
     Left = 696
     Top = 56
+  end
+  object spSelectRemains_Lite: TdsdStoredProc
+    StoredProcName = 'gpSelect_CashRemains_Lite'
+    DataSet = Remains_LiteCDS
+    DataSets = <
+      item
+        DataSet = Remains_LiteCDS
+      end>
+    Params = <>
+    PackSize = 1
+    AutoWidth = True
+    Left = 232
+    Top = 48
+  end
+  object Remains_LiteCDS: TClientDataSet
+    Aggregates = <>
+    Params = <>
+    AfterScroll = RemainsCDSAfterScroll
+    Left = 304
+    Top = 48
   end
 end

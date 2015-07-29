@@ -22,7 +22,7 @@ BEGIN
      WHERE MovementItem.MovementId = inMovementId AND MovementItem.isErased = false;
 
 
-      -- Сохранили свойство <Итого Сумма инвентаризации>
+      -- Сохранили свойство <Итого количество>
       PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_TotalCount(), inMovementId, vbTotalCountLoss);
 
 END;

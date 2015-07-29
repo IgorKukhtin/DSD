@@ -162,10 +162,12 @@ BEGIN
                                                        ON MIFloat_AmountPacker.MovementItemId = MIContainer.MovementItemId
                                                       AND MIFloat_AmountPacker.DescId = zc_MIFloat_AmountPacker()
                                                       AND MIContainer.DescId = zc_MIContainer_Count()
+                                                      AND COALESCE (MIContainer.AnalyzerId, 0) = 0
                            LEFT JOIN MovementItemFloat AS MIFloat_HeadCount
                                                        ON MIFloat_HeadCount.MovementItemId = MIContainer.MovementItemId
                                                       AND MIFloat_HeadCount.DescId = zc_MIFloat_HeadCount()
                                                       AND MIContainer.DescId = zc_MIContainer_Count()
+                                                      AND COALESCE (MIContainer.AnalyzerId, 0) = 0
                       GROUP BY tmpContainer.DescId, tmpContainer.ContainerId, MIContainer.MovementId, MIContainer.ObjectId_analyzer, MIContainer.DescId
                      UNION ALL
                       -- находим по партиям из документа (т.к. не партионный учет то проводок по партиям нет)

@@ -11,7 +11,7 @@ CREATE OR REPLACE FUNCTION gpSelect_MovementItem_Income(
 )
 RETURNS TABLE (Id Integer, GoodsId Integer, GoodsCode Integer, GoodsName TVarChar
              , GoodsGroupNameFull TVarChar, MeasureName TVarChar
-             , Amount TFloat, AmountPartner TFloat, AmountPacker TFloat
+             , Amount TFloat, AmountPartner TFloat, AmountPacker TFloat, Amount_unit TFloat, Amount_diff TFloat
              , Price TFloat, CountForPrice TFloat, LiveWeight TFloat, HeadCount TFloat
              , PartionGoods TVarChar, GoodsKindId Integer, GoodsKindName TVarChar, AssetId  Integer, AssetName  TVarChar
              , InfoMoneyCode Integer, InfoMoneyGroupName TVarChar, InfoMoneyDestinationName TVarChar, InfoMoneyName TVarChar, InfoMoneyName_all TVarChar
@@ -71,6 +71,8 @@ BEGIN
            , CAST (NULL AS TFloat) AS Amount
            , CAST (NULL AS TFloat) AS AmountPartner
            , CAST (NULL AS TFloat) AS AmountPacker
+           , CAST (NULL AS TFloat) AS Amount_unit
+           , CAST (NULL AS TFloat) AS Amount_diff
 
            , tmpPrice.ValuePrice  AS Price
            , 1      :: TFloat   AS CountForPrice
@@ -156,6 +158,8 @@ BEGIN
            , MovementItem.Amount
            , MIFloat_AmountPartner.ValueData   AS AmountPartner
            , MIFloat_AmountPacker.ValueData    AS AmountPacker
+           , CAST (MovementItem.Amount + COALESCE (MIFloat_AmountPacker.ValueData, 0) AS TFloat) AS Amount_unit
+           , CAST (MovementItem.Amount - COALESCE (MIFloat_AmountPartner.ValueData, 0) AS TFloat) AS Amount_diff
 
            , MIFloat_Price.ValueData AS Price
            , MIFloat_CountForPrice.ValueData AS CountForPrice
@@ -257,12 +261,12 @@ BEGIN
                                  , MovementItem.Amount                           AS Amount
                                  , COALESCE (MILinkObject_GoodsKind.ObjectId, 0) AS GoodsKindId
                                  , COALESCE (MILinkObject_Asset.ObjectId, 0)     AS AssetId
-                                 , MIFloat_AmountPartner.ValueData AS AmountPartner
-                                 , MIFloat_AmountPacker.ValueData  AS AmountPacker
-                                 , MIFloat_Price.ValueData         AS Price
+                                 , COALESCE (MIFloat_AmountPartner.ValueData, 0) AS AmountPartner
+                                 , COALESCE (MIFloat_AmountPacker.ValueData, 0)  AS AmountPacker
+                                 , COALESCE (MIFloat_Price.ValueData, 0)         AS Price
                                  , CASE WHEN MIFloat_CountForPrice.ValueData <> 0 THEN MIFloat_CountForPrice.ValueData ELSE 1 END AS CountForPrice
-                                 , MIFloat_LiveWeight.ValueData    AS LiveWeight
-                                 , MIFloat_HeadCount.ValueData     AS HeadCount
+                                 , COALESCE (MIFloat_LiveWeight.ValueData, 0)    AS LiveWeight
+                                 , COALESCE (MIFloat_HeadCount.ValueData, 0)     AS HeadCount
                                  , COALESCE (MIString_PartionGoods.ValueData, MIString_PartionGoodsCalc.ValueData) :: TVarChar AS PartionGoods
                                  , MovementItem.isErased
                             FROM (SELECT FALSE AS isErased UNION ALL SELECT inIsErased AS isErased WHERE inIsErased = TRUE) AS tmpIsErased
@@ -333,15 +337,17 @@ BEGIN
            , ObjectString_Goods_GoodsGroupFull.ValueData AS GoodsGroupNameFull
            , Object_Measure.ValueData     AS MeasureName
 
-           , tmpMI_Goods.Amount
-           , tmpMI_Goods.AmountPartner
-           , tmpMI_Goods.AmountPacker
+           , tmpMI_Goods.Amount         :: TFloat
+           , tmpMI_Goods.AmountPartner  :: TFloat
+           , tmpMI_Goods.AmountPacker   :: TFloat
+           , CAST (tmpMI_Goods.Amount + tmpMI_Goods.AmountPacker AS TFloat) AS Amount_unit
+           , CAST (tmpMI_Goods.Amount - tmpMI_Goods.AmountPartner AS TFloat) AS Amount_diff
 
-           , tmpMI_Goods.Price
+           , tmpMI_Goods.Price         :: TFloat
            , tmpMI_Goods.CountForPrice :: TFloat AS CountForPrice
 
-           , tmpMI_Goods.LiveWeight
-           , tmpMI_Goods.HeadCount
+           , tmpMI_Goods.LiveWeight  :: TFloat
+           , tmpMI_Goods.HeadCount   :: TFloat
 
            , tmpMI_Goods.PartionGoods
 

@@ -310,7 +310,14 @@ uses
   InventoryTest in '..\SOURCE\Movement\All\Farmacy\InventoryTest.pas',
   Inventory in '..\..\FormsFarmacy\Document\Inventory.pas' {InventoryForm: TParentForm},
   InventoryJournal in '..\..\FormsFarmacy\Document\InventoryJournal.pas' {InventoryJournalForm: TParentForm},
-  InventoryMovementItemTest in '..\SOURCE\MovementItem\All\Farmacy\InventoryMovementItemTest.pas';
+  InventoryMovementItemTest in '..\SOURCE\MovementItem\All\Farmacy\InventoryMovementItemTest.pas',
+  LossTest in '..\SOURCE\Movement\All\Farmacy\LossTest.pas',
+  LossMovementItemTest in '..\SOURCE\MovementItem\All\Farmacy\LossMovementItemTest.pas',
+  ArticleLossTest in '..\SOURCE\Objects\All\Farmacy\ArticleLossTest.pas',
+  Loss in '..\..\FormsFarmacy\Document\Loss.pas' {LossForm: TParentForm},
+  LossJournal in '..\..\FormsFarmacy\Document\LossJournal.pas' {LossJournalForm: TParentForm},
+  ArticleLoss in '..\..\Forms\Guides\ArticleLoss.pas' {ArticleLossForm: TParentForm},
+  ArticleLossEdit in '..\..\Forms\Guides\ArticleLossEdit.pas' {ArticleLossEditForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}

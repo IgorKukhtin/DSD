@@ -28,11 +28,25 @@ $BODY$
 
     DECLARE vbOperSumm_MVAT TFloat;
     DECLARE vbOperSumm_PVAT TFloat;
+
+    DECLARE vbStoreKeeperName TVarChar;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Select_Movement_ReturnIn());
      vbUserId:= inSession;
 
+
+     -- параметры из Взвешивания
+     vbStoreKeeperName:= (SELECT Object_User.ValueData
+                          FROM Movement
+                               LEFT JOIN MovementLinkObject AS MovementLinkObject_User
+                                                            ON MovementLinkObject_User.MovementId = Movement.Id
+                                                           AND MovementLinkObject_User.DescId = zc_MovementLinkObject_User()
+                               LEFT JOIN Object AS Object_User ON Object_User.Id = MovementLinkObject_User.ObjectId
+                          WHERE Movement.ParentId = inMovementId AND Movement.DescId IN (zc_Movement_WeighingPartner(), zc_Movement_WeighingProduction())
+                            AND Movement.StatusId = zc_Enum_Status_Complete()
+                          LIMIT 1
+                         );
 
      -- параметры из документа
      SELECT Movement.DescId
@@ -220,12 +234,15 @@ BEGIN
            , OH_JuridicalDetails_To.AccounterName       AS AccounterName_To
            , OH_JuridicalDetails_To.Phone               AS Phone_To
 
+           , CASE WHEN ObjectLink_Contract_JuridicalDocument.ChildObjectId > 0 THEN TRUE ELSE FALSE END AS isJuridicalDocument
+
            , Movement_Sale.InvNumber                        AS InvNumber_Sale
            , MovementString_InvNumberPartner_Sale.ValueData AS InvNumberPartner_Sale
            , MovementString_InvNumberOrder_Sale.ValueData   AS InvNumberOrder_Sale
            , MovementDate_OperDatePartner_Sale.ValueData    AS OperDatePartner_Sale
 
-           , CASE WHEN View_Contract.InfoMoneyId = zc_Enum_InfoMoney_30101() THEN 'Бабенко В.П.' ELSE '' END AS StoreKeeper -- кладовщик
+           -- , CASE WHEN View_Contract.InfoMoneyId = zc_Enum_InfoMoney_30101() THEN 'Бабенко В.П.' ELSE '' END AS StoreKeeper -- кладовщик
+           , vbStoreKeeperName AS StoreKeeper
            , Object_BankAccount.Name                            AS BankAccount_ByContract
            , Object_BankAccount.MFO                             AS BankMFO_ByContract
            , Object_BankAccount.BankName                        AS BankName_ByContract

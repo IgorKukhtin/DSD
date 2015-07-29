@@ -111,6 +111,29 @@ type
     TermProduction: TcxGridDBColumn;
     PartionGoodsDate: TcxGridDBColumn;
     PartionGoodsDateClose: TcxGridDBColumn;
+    N7: TMenuItem;
+    N8: TMenuItem;
+    N9: TMenuItem;
+    N10: TMenuItem;
+    N11: TMenuItem;
+    N12: TMenuItem;
+    spMovementReComplete: TdsdStoredProc;
+    spReCompete: TdsdExecStoredProc;
+    actSimpleReCompleteList: TMultiAction;
+    actReCompleteList: TMultiAction;
+    N13: TMenuItem;
+    spCompete: TdsdExecStoredProc;
+    actSimpleCompleteList: TMultiAction;
+    actCompleteList: TMultiAction;
+    N14: TMenuItem;
+    spUncomplete: TdsdExecStoredProc;
+    actSimpleUncompleteList: TMultiAction;
+    actUnCompleteList: TMultiAction;
+    N15: TMenuItem;
+    spErased: TdsdExecStoredProc;
+    actSimpleErased: TMultiAction;
+    actSetErasedList: TMultiAction;
+    N16: TMenuItem;
   private
     { Private declarations }
   public

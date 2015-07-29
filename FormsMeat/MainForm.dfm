@@ -1,16 +1,16 @@
 inherited MainForm: TMainForm
   ClientHeight = 207
-  ClientWidth = 1086
+  ClientWidth = 1093
   KeyPreview = True
   Position = poDesigned
-  ExplicitWidth = 1102
+  ExplicitWidth = 1109
   ExplicitHeight = 265
   PixelsPerInch = 96
   TextHeight = 13
   object cxGrid: TcxGrid [0]
     Left = 0
     Top = 0
-    Width = 1086
+    Width = 1093
     Height = 81
     Align = alTop
     BevelInner = bvNone
@@ -1622,7 +1622,15 @@ inherited MainForm: TMainForm
       FormName = 'TOrderInternalJournalForm'
       FormNameParam.Value = 'TOrderInternalJournalForm'
       FormNameParam.DataType = ftString
-      GuiParams = <>
+      GuiParams = <
+        item
+          Name = 'inFromId'
+          Value = '8457'
+        end
+        item
+          Name = 'inToId'
+          Value = '8446'
+        end>
       isShowModal = False
     end
     object actOrderInternalPack: TdsdOpenForm
@@ -1633,7 +1641,15 @@ inherited MainForm: TMainForm
       FormName = 'TOrderInternalPackJournalForm'
       FormNameParam.Value = 'TOrderInternalPackJournalForm'
       FormNameParam.DataType = ftString
-      GuiParams = <>
+      GuiParams = <
+        item
+          Name = 'inFromId'
+          Value = '8457'
+        end
+        item
+          Name = 'inToId'
+          Value = '8451'
+        end>
       isShowModal = False
     end
     object actLoss: TdsdOpenForm
@@ -2496,26 +2512,6 @@ inherited MainForm: TMainForm
       GuiParams = <>
       isShowModal = False
     end
-    object actReport_GoodsMI_Income: TdsdOpenForm
-      Category = #1054#1090#1095#1077#1090#1099' ('#1090#1086#1074'.)'
-      MoveParams = <>
-      Caption = #1055#1088#1080#1093#1086#1076' '#1086#1090' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072
-      FormName = 'TReport_GoodsMI_IncomeForm'
-      FormNameParam.Value = 'TReport_GoodsMI_IncomeForm'
-      FormNameParam.DataType = ftString
-      FormNameParam.ParamType = ptResult
-      GuiParams = <
-        item
-          Name = 'inDescId'
-          Value = 1
-        end
-        item
-          Name = 'InDescName'
-          Value = #1055#1088#1080#1093#1086#1076' '#1086#1090' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1086#1074' ('#1080#1090#1086#1075')'
-          DataType = ftString
-        end>
-      isShowModal = False
-    end
     object actReport_GoodsMI_IncomeByPartner: TdsdOpenForm
       Category = #1054#1090#1095#1077#1090#1099' ('#1090#1086#1074'.)'
       MoveParams = <>
@@ -2531,7 +2527,27 @@ inherited MainForm: TMainForm
         end
         item
           Name = 'InDescName'
-          Value = #1055#1088#1080#1093#1086#1076' '#1086#1090' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1086#1074
+          Value = #1055#1088#1080#1093#1086#1076' '#1087#1086' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072#1084
+          DataType = ftString
+        end>
+      isShowModal = False
+    end
+    object actReport_GoodsMI_ReturnOutByPartner: TdsdOpenForm
+      Category = #1054#1090#1095#1077#1090#1099' ('#1090#1086#1074'.)'
+      MoveParams = <>
+      Caption = #1042#1086#1079#1074#1088#1072#1090' '#1087#1086' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072#1084
+      FormName = 'TReport_GoodsMI_IncomeByPartnerForm'
+      FormNameParam.Value = 'TReport_GoodsMI_IncomeByPartnerForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.ParamType = ptResult
+      GuiParams = <
+        item
+          Name = 'inDescId'
+          Value = 2
+        end
+        item
+          Name = 'InDescName'
+          Value = #1042#1086#1079#1074#1088#1072#1090' '#1087#1086' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072#1084
           DataType = ftString
         end>
       isShowModal = False
@@ -3285,7 +3301,15 @@ inherited MainForm: TMainForm
       FormName = 'TOrderInternalBasisJournalForm'
       FormNameParam.Value = 'TOrderInternalBasisJournalForm'
       FormNameParam.DataType = ftString
-      GuiParams = <>
+      GuiParams = <
+        item
+          Name = 'inFromId'
+          Value = '8446'
+        end
+        item
+          Name = 'inToid'
+          Value = '0'
+        end>
       isShowModal = False
     end
     object actReport_GoodsMI_SaleReturnInUnit: TdsdOpenForm
@@ -3297,6 +3321,25 @@ inherited MainForm: TMainForm
       FormNameParam.DataType = ftString
       FormNameParam.ParamType = ptResult
       GuiParams = <>
+      isShowModal = False
+    end
+    object actOrderInternalBasisDelik: TdsdOpenForm
+      Category = #1055#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1086
+      MoveParams = <>
+      Caption = #1047#1072#1103#1074#1082#1072' '#1087#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1077#1085#1085#1072#1103' ('#1044#1077#1083#1080#1082#1072#1090#1077#1089#1099')'
+      Hint = #1047#1072#1103#1074#1082#1072' '#1087#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1077#1085#1085#1072#1103' ('#1044#1077#1083#1080#1082#1072#1090#1077#1089#1099')'
+      FormName = 'TOrderInternalBasisJournalForm'
+      FormNameParam.Value = 'TOrderInternalBasisJournalForm'
+      FormNameParam.DataType = ftString
+      GuiParams = <
+        item
+          Name = 'inFromId'
+          Value = '8448'
+        end
+        item
+          Name = 'inToid'
+          Value = '0'
+        end>
       isShowModal = False
     end
   end
@@ -3448,6 +3491,9 @@ inherited MainForm: TMainForm
       end
       object bbOrderInternalBasis: TMenuItem
         Action = actOrderInternalBasis
+      end
+      object N76: TMenuItem
+        Action = actOrderInternalBasisDelik
       end
       object miOrderType: TMenuItem
         Action = actOrderType
@@ -3864,11 +3910,11 @@ inherited MainForm: TMainForm
       object N23: TMenuItem
         Caption = '-'
       end
-      object miReport_GoodsMI_Income: TMenuItem
-        Action = actReport_GoodsMI_Income
-      end
       object miReport_GoodsMI_IncomeByPartner: TMenuItem
         Action = actReport_GoodsMI_IncomeByPartner
+      end
+      object miReport_GoodsMI_Income: TMenuItem
+        Action = actReport_GoodsMI_ReturnOutByPartner
       end
       object N24: TMenuItem
         Caption = '-'
