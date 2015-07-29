@@ -46,6 +46,8 @@ type
     colPartionGoods: TcxGridDBColumn;
     colExpirationDate2: TcxGridDBColumn;
     colPaymentDate: TcxGridDBColumn;
+    colInvNumberBranch: TcxGridDBColumn;
+    colBranchDate: TcxGridDBColumn;
   private
     { Private declarations }
   public

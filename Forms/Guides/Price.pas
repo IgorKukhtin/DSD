@@ -11,7 +11,7 @@ uses
   Datasnap.DBClient, dsdAction, Vcl.ActnList, cxPropertiesStore, cxGridLevel,
   cxGridCustomView, cxGridCustomTableView, cxGridTableView, cxGridDBTableView,
   cxGrid, cxPC, Vcl.ExtCtrls, cxContainer, dsdGuides, cxTextEdit, cxMaskEdit,
-  cxButtonEdit, cxCurrencyEdit;
+  cxButtonEdit, cxCurrencyEdit, ExternalLoad;
 
 type
   TPriceForm = class(TAncestorEnumForm)
@@ -33,6 +33,16 @@ type
     rdUnit: TRefreshDispatcher;
     clMCSValue: TcxGridDBColumn;
     clMCSDateChange: TcxGridDBColumn;
+    actStartLoadMCS: TMultiAction;
+    actDoLoadMCS: TExecuteImportSettingsAction;
+    dxBarButton3: TdxBarButton;
+    spGetImportSetting_MCS: TdsdStoredProc;
+    actGetImportSetting_MCS: TdsdExecStoredProc;
+    spGetImportSetting_Price: TdsdStoredProc;
+    actGetImportSetting_Price: TdsdExecStoredProc;
+    actDoLoadPrice: TExecuteImportSettingsAction;
+    actStartLoadPrice: TMultiAction;
+    dxBarButton4: TdxBarButton;
   private
     { Private declarations }
   public

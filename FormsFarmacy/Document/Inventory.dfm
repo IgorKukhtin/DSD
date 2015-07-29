@@ -10,19 +10,19 @@ inherited InventoryForm: TInventoryForm
     Top = 77
     Width = 705
     Height = 484
-    ExplicitTop = 126
-    ExplicitWidth = 1020
-    ExplicitHeight = 542
+    ExplicitTop = 77
+    ExplicitWidth = 705
+    ExplicitHeight = 484
     ClientRectBottom = 484
     ClientRectRight = 705
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 1020
-      ExplicitHeight = 518
+      ExplicitWidth = 705
+      ExplicitHeight = 460
       inherited cxGrid: TcxGrid
         Width = 705
         Height = 460
-        ExplicitWidth = 1020
-        ExplicitHeight = 518
+        ExplicitWidth = 705
+        ExplicitHeight = 460
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -159,7 +159,7 @@ inherited InventoryForm: TInventoryForm
     Width = 705
     Height = 51
     TabOrder = 3
-    ExplicitWidth = 1020
+    ExplicitWidth = 705
     ExplicitHeight = 51
     inherited edInvNumber: TcxTextEdit
       Left = 8
@@ -396,6 +396,48 @@ inherited InventoryForm: TInventoryForm
       ShortCut = 116
       RefreshOnTabSetChanges = False
     end
+    object actStartLoad: TMultiAction
+      Category = 'Load'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actGetImportSettingId
+        end
+        item
+          Action = actDoLoad
+        end
+        item
+          Action = actRefresh
+        end>
+      QuestionBeforeExecute = #1053#1072#1095#1072#1090#1100' '#1079#1072#1075#1088#1091#1079#1082#1091' '#1086#1089#1090#1072#1090#1082#1072' '#1074' '#1090#1077#1082#1091#1097#1091#1102' '#1080#1085#1074#1077#1085#1090#1072#1088#1080#1079#1072#1094#1080#1102'?'
+      Caption = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1086#1089#1090#1072#1090#1082#1080
+      ImageIndex = 41
+    end
+    object actGetImportSettingId: TdsdExecStoredProc
+      Category = 'Load'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spGetImportSettingId
+      StoredProcList = <
+        item
+          StoredProc = spGetImportSettingId
+        end>
+      Caption = 'actGetImportSettingId'
+    end
+    object actDoLoad: TExecuteImportSettingsAction
+      Category = 'Load'
+      MoveParams = <>
+      ImportSettingsId.Value = Null
+      ImportSettingsId.Component = FormParams
+      ImportSettingsId.ComponentItem = 'ImportSettingId'
+      ExternalParams = <
+        item
+          Name = 'inMovementId'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'Id'
+        end>
+    end
   end
   inherited MasterDS: TDataSource
     Left = 32
@@ -522,6 +564,12 @@ inherited InventoryForm: TInventoryForm
           ItemName = 'dxBarStatic'
         end
         item
+          UserDefine = [udPaintStyle]
+          UserPaintStyle = psCaptionGlyph
+          Visible = True
+          ItemName = 'dxBarButton1'
+        end
+        item
           Visible = True
           ItemName = 'dxBarStatic'
         end
@@ -551,6 +599,10 @@ inherited InventoryForm: TInventoryForm
       Hint = #1053#1072#1082#1083#1072#1076#1085#1072#1103
       Visible = ivNever
       ImageIndex = 22
+    end
+    object dxBarButton1: TdxBarButton
+      Action = actStartLoad
+      Category = 0
     end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
@@ -612,6 +664,10 @@ inherited InventoryForm: TInventoryForm
         Value = Null
         DataType = ftString
         ParamType = ptInput
+      end
+      item
+        Name = 'ImportSettingId'
+        Value = Null
       end>
     Left = 120
     Top = 144
@@ -1115,5 +1171,34 @@ inherited InventoryForm: TInventoryForm
     PackSize = 1
     Left = 330
     Top = 384
+  end
+  object spGetImportSettingId: TdsdStoredProc
+    StoredProcName = 'gpGet_DefaultValue'
+    DataSets = <
+      item
+      end>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inDefaultKey'
+        Value = 'TInventoryForm;zc_Object_ImportSetting_Inventory'
+        DataType = ftString
+        ParamType = ptInput
+      end
+      item
+        Name = 'inUserKeyId'
+        Value = '0'
+        ParamType = ptInput
+      end
+      item
+        Name = 'gpGet_DefaultValue'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'ImportSettingId'
+        DataType = ftString
+      end>
+    PackSize = 1
+    Left = 144
+    Top = 480
   end
 end

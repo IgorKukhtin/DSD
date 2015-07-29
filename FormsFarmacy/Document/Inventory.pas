@@ -14,7 +14,7 @@ uses
   cxGridLevel, cxGridCustomTableView, cxGridTableView, cxGridDBTableView,
   cxGridCustomView, cxGrid, cxPC, cxCurrencyEdit, cxCheckBox, frxClass, frxDBSet,
   dxSkinsCore, dxSkinsDefaultPainters, dxSkinscxPCPainter, dxBarBuiltInMenu,
-  cxNavigator;
+  cxNavigator, ExternalLoad;
 
 type
   TInventoryForm = class(TAncestorDocumentForm)
@@ -41,6 +41,11 @@ type
     actInsertUpdateMIAmount: TdsdExecStoredProc;
     bbInsertUpdateMIAmount: TdxBarButton;
     bbPrint1: TdxBarButton;
+    spGetImportSettingId: TdsdStoredProc;
+    actStartLoad: TMultiAction;
+    actGetImportSettingId: TdsdExecStoredProc;
+    actDoLoad: TExecuteImportSettingsAction;
+    dxBarButton1: TdxBarButton;
   private
     { Private declarations }
   public
