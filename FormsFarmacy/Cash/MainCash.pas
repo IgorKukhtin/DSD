@@ -416,12 +416,25 @@ begin
 end;
 
 procedure TMainCashForm.FormCreate(Sender: TObject);
+var
+  F: String;
 begin
   inherited;
+  if NOT GetIniFile(F) then
+  Begin
+    Application.Terminate;
+    exit;
+  End;
   UserSettingsStorageAddOn.LoadUserSettings;
-  Cash:=TCashFactory.GetCash(iniCashType);
+  try
+    Cash:=TCashFactory.GetCash(iniCashType);
+  except
+    Begin
+      ShowMessage('Внимание! Программа не может подключится к фискальному аппарату.'+#13+
+                  'Дальнейшая работа программы возможна только в нефискальном режиме!');
+    End;
+  end;
   SoldParallel:=iniSoldParallel;
-  actRefresh.Execute;
   NewCheck;
   (*
   SendToCashOnly:= false;
@@ -737,7 +750,9 @@ begin
   Begin
     actRefreshLite.Execute;
     UpdateRemains;
-  End;
+  End
+  else
+    actRefresh.Execute;
   CalcTotalSumm;
   ceAmount.Value := 0;
   ceAmount.Enabled := true;
