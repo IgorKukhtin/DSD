@@ -29,7 +29,7 @@ BEGIN
 
      -- сохранили проводки
      INSERT INTO MovementItemContainer (DescId, MovementDescId, MovementId, MovementItemId, ParentId, ContainerId
-                                      , AccountId, AnalyzerId, ObjectId_Analyzer, WhereObjectId_Analyzer, ContainerId_Analyzer
+                                      , AccountId, AnalyzerId, ObjectId_Analyzer, WhereObjectId_Analyzer, ContainerId_Analyzer, ObjectIntId_Analyzer, ObjectExtId_Analyzer
                                       , Amount, OperDate, IsActive)
         SELECT DescId, MovementDescId, MovementId
              , CASE WHEN MovementItemId = 0 THEN NULL ELSE MovementItemId END
@@ -40,6 +40,8 @@ BEGIN
              , CASE WHEN ObjectId_Analyzer = 0 THEN NULL ELSE ObjectId_Analyzer END
              , CASE WHEN WhereObjectId_Analyzer = 0 THEN NULL ELSE WhereObjectId_Analyzer END
              , CASE WHEN ContainerId_Analyzer = 0 THEN NULL ELSE ContainerId_Analyzer END
+             , CASE WHEN ObjectIntId_Analyzer = 0 THEN NULL ELSE ObjectIntId_Analyzer END
+             , CASE WHEN ObjectExtId_Analyzer = 0 THEN NULL ELSE ObjectExtId_Analyzer END
              , COALESCE (Amount, 0)
              , OperDate
              , IsActive
@@ -54,6 +56,7 @@ ALTER FUNCTION lpInsertUpdate_MovementItemContainer_byTable () OWNER TO postgres
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 29.07.15                                        * add ObjectIntId_Analyzer, ObjectExtId_Analyzer
  20.12.14                                        * add AccountId, ObjectId_Analyzer, WhereObjectId_Analyzer, ContainerId_Analyzer
  06.12.14                                        * add AnalyzerId
  17.08.14                                        * add MovementDescId

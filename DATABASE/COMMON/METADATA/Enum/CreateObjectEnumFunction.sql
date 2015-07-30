@@ -71,6 +71,11 @@ CREATE OR REPLACE FUNCTION zc_Enum_AnalyzerId_ReWork() RETURNS integer AS $BODY$
 -- Кол-во, приход от пост. + возврат пост., Разница в весе, хотя реально эта разница не попадает в статью затрат 40200... 
 CREATE OR REPLACE FUNCTION zc_Enum_AnalyzerId_Count_40200() RETURNS integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_AnalyzerId_Count_40200' AND DescId = zc_ObjectString_Enum()); END;  $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 
+-- Сумма, забалансовый счет, приход транзит
+CREATE OR REPLACE FUNCTION zc_Enum_AnalyzerId_SummIn_110101()  RETURNS integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_AnalyzerId_SummIn_110101' AND DescId = zc_ObjectString_Enum()); END;  $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+-- Сумма, забалансовый счет, расход транзит
+CREATE OR REPLACE FUNCTION zc_Enum_AnalyzerId_SummOut_110101() RETURNS integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_AnalyzerId_SummOut_110101' AND DescId = zc_ObjectString_Enum()); END;  $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+
 -- !!!
 -- !!! Типы оплат
 -- !!!

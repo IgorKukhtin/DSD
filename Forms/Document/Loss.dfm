@@ -3,7 +3,7 @@ inherited LossForm: TLossForm
   ClientHeight = 668
   ClientWidth = 985
   ExplicitWidth = 1001
-  ExplicitHeight = 706
+  ExplicitHeight = 703
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -1267,10 +1267,10 @@ inherited LossForm: TLossForm
   object GuidesFrom: TdsdGuides
     KeyField = 'Id'
     LookupControl = edFrom
-    FormNameParam.Value = 'TUnit_ObjectForm'
+    FormNameParam.Value = 'TStoragePlace_ObjectForm'
     FormNameParam.DataType = ftString
-    FormName = 'TUnit_ObjectForm'
-    PositionDataSet = 'MasterCDS'
+    FormName = 'TStoragePlace_ObjectForm'
+    PositionDataSet = 'ClientDataSet'
     Params = <
       item
         Name = 'Key'

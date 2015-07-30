@@ -542,6 +542,8 @@ BEGIN
                                                                                 , inObjectId_Analyzer       := _tmpItem.GoodsId               -- Товар
                                                                                 , inWhereObjectId_Analyzer  := vbWhereObjectId_Analyzer_To    -- Подраделение или...
                                                                                 , inContainerId_Analyzer    := _tmpItem.ContainerId_GoodsFrom -- количественный Контейнер-Корреспондент (т.е. из расхода)
+                                                                                , inObjectIntId_Analyzer    := 0                              -- вид товара
+                                                                                , inObjectExtId_Analyzer    := 0                              -- покупатель / физ.лицо / Подраделение "От кого"
                                                                                 , inAmount         := CASE WHEN _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_20500() -- Оборотная тара
                                                                                                                 THEN _tmpItem.OperCount -- !!!количество ушло!!!
                                                                                                            ELSE _tmpItem.OperCount_Partner -- !!!количество пришло!!!
@@ -864,6 +866,8 @@ BEGIN
                                                                                     , inObjectId_Analyzer       := _tmpItem.GoodsId              -- Товар
                                                                                     , inWhereObjectId_Analyzer  := vbWhereObjectId_Analyzer_To   -- Подраделение или...
                                                                                     , inContainerId_Analyzer    := _tmpItemSumm.ContainerId_From -- суммовой Контейнер-Корреспондент (т.е. из расхода)
+                                                                                    , inObjectIntId_Analyzer    := 0                              -- вид товара
+                                                                                    , inObjectExtId_Analyzer    := 0                              -- покупатель / физ.лицо / Подраделение "От кого"
                                                                                     , inAmount         := _tmpItemSumm.OperSumm_Partner + _tmpItemSumm.OperSumm_Account_60000
                                                                                     , inOperDate       := vbOperDatePartner -- !!!по "Дате покупателя"!!!
                                                                                     , inIsActive       := TRUE

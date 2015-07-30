@@ -1165,7 +1165,8 @@ BEGIN
             , tmpMIContainer.AnalyzerId               AS AnalyzerId             -- !!!аналитика есть всегда!!! (даже если через транзит, она нужна для склада)
             , tmpMIContainer.GoodsId                  AS ObjectId_Analyzer
             , vbWhereObjectId_Analyzer                AS WhereObjectId_Analyzer
-            , CASE WHEN vbAccountId_GoodsTransit <> 0 THEN 0 ELSE vbContainerId_Analyzer END AS ContainerId_Analyzer -- если это транзит, тогда в реализацию за vbOperDate не попадет
+            -- , CASE WHEN vbAccountId_GoodsTransit <> 0 THEN 0 ELSE vbContainerId_Analyzer END AS ContainerId_Analyzer -- если это транзит, тогда в реализацию за vbOperDate не попадет
+            , vbContainerId_Analyzer                  AS ContainerId_Analyzer   -- если это транзит, тогда в реализацию за vbOperDate попадет 2 раза с + и -
             , tmpMIContainer.GoodsKindId              AS ObjectIntId_Analyzer   -- вид товара
             , vbObjectExtId_Analyzer                  AS ObjectExtId_Analyzer   -- покупатель / физ.лицо
             , tmpMIContainer.ParentId
@@ -1181,7 +1182,8 @@ BEGIN
             , tmpMIContainer.AnalyzerId               AS AnalyzerId             -- !!!аналитика есть всегда!!! (даже для "виртуальной")
             , tmpMIContainer.GoodsId                  AS ObjectId_Analyzer
             , vbWhereObjectId_Analyzer                AS WhereObjectId_Analyzer
-            , CASE WHEN tmpOperDate.OperDate = vbOperDate THEN 0 ELSE vbContainerId_Analyzer END AS ContainerId_Analyzer -- т.е. в реализацию попадет "реальная" за vbOperDatePartner
+            -- , CASE WHEN tmpOperDate.OperDate = vbOperDate THEN 0 ELSE vbContainerId_Analyzer END AS ContainerId_Analyzer -- т.е. в реализацию попадет "реальная" за vbOperDatePartner
+            , vbContainerId_Analyzer                  AS ContainerId_Analyzer   -- т.е. в реализацию попадет "реальная" за vbOperDatePartner + за vbOperDate попадет 2 раза с + и -
             , tmpMIContainer.GoodsKindId              AS ObjectIntId_Analyzer   -- вид товара
             , vbObjectExtId_Analyzer                  AS ObjectExtId_Analyzer   -- покупатель / физ.лицо
             , tmpMIContainer.ParentId
@@ -1420,7 +1422,8 @@ BEGIN
             , tmpMIContainer.AnalyzerId               AS AnalyzerId             -- !!!аналитика есть всегда!!! (даже если через транзит, она нужна для склада)
             , _tmpItem.GoodsId                        AS ObjectId_Analyzer
             , vbWhereObjectId_Analyzer                AS WhereObjectId_Analyzer
-            , CASE WHEN vbAccountId_GoodsTransit <> 0 THEN 0 ELSE vbContainerId_Analyzer END AS ContainerId_Analyzer -- если это транзит, тогда в реализацию за vbOperDate не попадет
+            -- , CASE WHEN vbAccountId_GoodsTransit <> 0 THEN 0 ELSE vbContainerId_Analyzer END AS ContainerId_Analyzer -- если это транзит, тогда в реализацию за vbOperDate не попадет
+            , vbContainerId_Analyzer                  AS ContainerId_Analyzer   -- если это транзит, тогда в реализацию за vbOperDate попадет 2 раза с + и -
             , _tmpItem.GoodsKindId                    AS ObjectIntId_Analyzer   -- вид товара
             , vbObjectExtId_Analyzer                  AS ObjectExtId_Analyzer   -- покупатель / физ.лицо
             , tmpMIContainer.ParentId
@@ -1438,7 +1441,8 @@ BEGIN
             , tmpMIContainer.AnalyzerId               AS AnalyzerId             -- !!!аналитика есть всегда!!! (даже для "виртуальной")
             , _tmpItem.GoodsId                        AS ObjectId_Analyzer
             , vbWhereObjectId_Analyzer                AS WhereObjectId_Analyzer
-            , CASE WHEN tmpOperDate.OperDate = vbOperDate THEN 0 ELSE vbContainerId_Analyzer END AS ContainerId_Analyzer -- т.е. в реализацию попадет "реальная" за vbOperDatePartner
+            -- , CASE WHEN tmpOperDate.OperDate = vbOperDate THEN 0 ELSE vbContainerId_Analyzer END AS ContainerId_Analyzer -- т.е. в реализацию попадет "реальная" за vbOperDatePartner
+            , vbContainerId_Analyzer                  AS ContainerId_Analyzer   -- т.е. в реализацию попадет "реальная" за vbOperDatePartner + за vbOperDate попадет 2 раза с + и -
             , _tmpItem.GoodsKindId                    AS ObjectIntId_Analyzer   -- вид товара
             , vbObjectExtId_Analyzer                  AS ObjectExtId_Analyzer   -- покупатель / физ.лицо
             , tmpMIContainer.ParentId
@@ -1806,9 +1810,12 @@ BEGIN
              -- HAVING SUM (_tmpItemPartnerTo.OperSumm_Partner) <> 0
 
             ) AS _tmpItem_group
-            LEFT JOIN (SELECT -1                       AS AccountId, FALSE AS isActive, CASE WHEN vbAccountId_GoodsTransit <> 0 THEN vbOperDatePartner ELSE vbOperDate END AS OperDate
-             UNION ALL SELECT vbAccountId_GoodsTransit AS AccountId, FALSE AS isActive, vbOperDate AS OperDate
-             UNION ALL SELECT vbAccountId_GoodsTransit AS AccountId, TRUE  AS isActive, vbOperDate AS OperDate) AS tmpTransit ON tmpTransit.AccountId <> 0
+            LEFT JOIN (SELECT -1                                  AS AccountId, FALSE  AS isActive, CASE WHEN vbAccountId_GoodsTransit <> 0 THEN vbOperDatePartner ELSE vbOperDate END AS OperDate
+             UNION ALL SELECT zc_Enum_AnalyzerId_SummIn_110101()  AS AccountId, TRUE  AS isActive, vbOperDate        AS OperDate WHERE vbAccountId_GoodsTransit <> 0
+             UNION ALL SELECT zc_Enum_AnalyzerId_SummIn_110101()  AS AccountId, FALSE AS isActive, vbOperDate        AS OperDate WHERE vbAccountId_GoodsTransit <> 0
+             UNION ALL SELECT zc_Enum_AnalyzerId_SummOut_110101() AS AccountId, TRUE  AS isActive, vbOperDatePartner AS OperDate WHERE vbAccountId_GoodsTransit <> 0
+             UNION ALL SELECT zc_Enum_AnalyzerId_SummOut_110101() AS AccountId, FALSE AS isActive, vbOperDatePartner AS OperDate WHERE vbAccountId_GoodsTransit <> 0
+                      ) AS tmpTransit ON tmpTransit.AccountId <> 0
      ;
 
 

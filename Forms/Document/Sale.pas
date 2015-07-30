@@ -174,6 +174,8 @@ type
     spSelectPrint_SaleOrder: TdsdStoredProc;
     actPrintSaleOrder: TdsdPrintAction;
     тт: TdxBarButton;
+    PriceCost: TcxGridDBColumn;
+    SumCost: TcxGridDBColumn;
   private
     { Private declarations }
   public

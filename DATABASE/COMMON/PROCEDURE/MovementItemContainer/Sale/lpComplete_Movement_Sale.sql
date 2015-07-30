@@ -103,7 +103,7 @@ BEGIN
           -- !!! нужны еще для Одесса, понятно что временно!!!
           -- !!! OR 8374 = (SELECT Object_RoleAccessKeyGuide_View.BranchId FROM Object_RoleAccessKeyGuide_View WHERE Object_RoleAccessKeyGuide_View.UserId = inUserId AND Object_RoleAccessKeyGuide_View.BranchId <> 0 GROUP BY Object_RoleAccessKeyGuide_View.BranchId)
           THEN vbIsHistoryCost:= TRUE;
-          ELSE vbIsHistoryCost:= FALSE;
+          ELSE vbIsHistoryCost:= TRUE; -- FALSE
           END IF;
      ELSE
          -- !!! для остальных тоже нужны проводки с/с!!!
@@ -1253,7 +1253,8 @@ BEGIN
             , tmpMIContainer.AnalyzerId               AS AnalyzerId             -- !!!аналитика есть всегда!!! (даже если через транзит, она нужна для склада)
             , tmpMIContainer.GoodsId                  AS ObjectId_Analyzer
             , vbWhereObjectId_Analyzer                AS WhereObjectId_Analyzer
-            , CASE WHEN vbAccountId_GoodsTransit <> 0 AND tmpMIContainer.AnalyzerId <> zc_Enum_AnalyzerId_LossCount_20200() THEN 0 ELSE vbContainerId_Analyzer END AS ContainerId_Analyzer -- если это транзит, тогда в реализацию за vbOperDate не попадет
+            -- , CASE WHEN vbAccountId_GoodsTransit <> 0 AND tmpMIContainer.AnalyzerId <> zc_Enum_AnalyzerId_LossCount_20200() THEN 0 ELSE vbContainerId_Analyzer END AS ContainerId_Analyzer -- если это транзит, тогда в реализацию за vbOperDate не попадет
+            , vbContainerId_Analyzer                  AS ContainerId_Analyzer   -- если это транзит, тогда в реализацию за vbOperDate попадет 2 раза с + и -
             , tmpMIContainer.GoodsKindId              AS ObjectIntId_Analyzer   -- вид товара
             , vbObjectExtId_Analyzer                  AS ObjectExtId_Analyzer   -- покупатель / физ.лицо
             , tmpMIContainer.ParentId
@@ -1270,7 +1271,8 @@ BEGIN
             , tmpMIContainer.AnalyzerId               AS AnalyzerId             -- !!!аналитика есть всегда!!! (даже для "виртуальной")
             , tmpMIContainer.GoodsId                  AS ObjectId_Analyzer
             , vbWhereObjectId_Analyzer                AS WhereObjectId_Analyzer
-            , CASE WHEN tmpOperDate.OperDate = vbOperDate THEN 0 ELSE vbContainerId_Analyzer END AS ContainerId_Analyzer -- т.е. в реализацию попадет "реальная" за vbOperDatePartner
+            -- , CASE WHEN tmpOperDate.OperDate = vbOperDate THEN 0 ELSE vbContainerId_Analyzer END AS ContainerId_Analyzer -- т.е. в реализацию попадет "реальная" за vbOperDatePartner
+            , vbContainerId_Analyzer                  AS ContainerId_Analyzer   -- т.е. в реализацию попадет "реальная" за vbOperDatePartner + за vbOperDate попадет 2 раза с + и -
             , tmpMIContainer.GoodsKindId              AS ObjectIntId_Analyzer   -- вид товара
             , vbObjectExtId_Analyzer                  AS ObjectExtId_Analyzer   -- покупатель / физ.лицо
             , tmpMIContainer.ParentId
@@ -1406,7 +1408,8 @@ BEGIN
 
 
      -- 1.3.2. формируются Проводки для суммового учета (c/c остаток) + !!!есть MovementItemId!!!
-        WITH tmpMIContainer AS
+        WITH tmpAccount_60000 AS (SELECT Object_Account_View.AccountId FROM Object_Account_View WHERE Object_Account_View.AccountGroupId = zc_Enum_AccountGroup_60000()) -- Прибыль будущих периодов
+           , tmpMIContainer AS
             (SELECT _tmpItemSumm.MovementItemId
                   , _tmpItemSumm.AccountId
                   , _tmpItemSumm.ContainerId
@@ -1466,7 +1469,8 @@ BEGIN
             , tmpMIContainer.AnalyzerId               AS AnalyzerId             -- !!!аналитика есть всегда!!! (даже если через транзит, она нужна для склада)
             , _tmpItem.GoodsId                        AS ObjectId_Analyzer
             , vbWhereObjectId_Analyzer                AS WhereObjectId_Analyzer
-            , CASE WHEN vbAccountId_GoodsTransit <> 0 AND _tmpItem.isLossMaterials = FALSE THEN 0 ELSE vbContainerId_Analyzer END AS ContainerId_Analyzer -- если это транзит, тогда в реализацию за vbOperDate не попадет
+            -- , CASE WHEN vbAccountId_GoodsTransit <> 0 AND _tmpItem.isLossMaterials = FALSE THEN 0 ELSE vbContainerId_Analyzer END AS ContainerId_Analyzer -- если это транзит, тогда в реализацию за vbOperDate не попадет
+            , vbContainerId_Analyzer                  AS ContainerId_Analyzer   -- если это транзит, тогда в реализацию за vbOperDate попадет 2 раза с + и -
             , _tmpItem.GoodsKindId                    AS ObjectIntId_Analyzer   -- вид товара
             , vbObjectExtId_Analyzer                  AS ObjectExtId_Analyzer   -- покупатель / физ.лицо
             , tmpMIContainer.ParentId
@@ -1479,11 +1483,17 @@ BEGIN
        -- это две проводки для счета Транзит
        SELECT 0, zc_MIContainer_Summ() AS DescId, vbMovementDescId, inMovementId, tmpMIContainer.MovementItemId
             , tmpMIContainer.ContainerId_Transit
-            , vbAccountId_GoodsTransit                AS AccountId              -- есть счет (т.е. в отчетах определяется "транзит") + он такой же как у проводки кол-ва
+            , CASE WHEN tmpAccount_60000.AccountId > 0 AND tmpOperDate.OperDate = vbOperDate
+                        THEN zc_Enum_AnalyzerId_SummIn_110101()
+                   WHEN tmpAccount_60000.AccountId > 0 AND tmpOperDate.OperDate = vbOperDatePartner
+                        THEN zc_Enum_AnalyzerId_SummOut_110101()
+                   ELSE vbAccountId_GoodsTransit -- такой же как у проводки кол-ва
+              END AS AccountId                                                  -- есть счет (т.е. в отчетах определяется "транзит")
             , tmpMIContainer.AnalyzerId               AS AnalyzerId             -- !!!аналитика есть всегда!!! (даже для "виртуальной")
             , _tmpItem.GoodsId                        AS ObjectId_Analyzer
             , vbWhereObjectId_Analyzer                AS WhereObjectId_Analyzer
-            , CASE WHEN tmpOperDate.OperDate = vbOperDate THEN 0 ELSE vbContainerId_Analyzer END AS ContainerId_Analyzer -- т.е. в реализацию попадет "реальная" за vbOperDatePartner
+            -- , CASE WHEN tmpOperDate.OperDate = vbOperDate THEN 0 ELSE vbContainerId_Analyzer END AS ContainerId_Analyzer -- т.е. в реализацию попадет "реальная" за vbOperDatePartner
+            , vbContainerId_Analyzer                  AS ContainerId_Analyzer   -- т.е. в реализацию попадет "реальная" за vbOperDatePartner + за vbOperDate попадет 2 раза с + и -
             , _tmpItem.GoodsKindId                    AS ObjectIntId_Analyzer   -- вид товара
             , vbObjectExtId_Analyzer                  AS ObjectExtId_Analyzer   -- покупатель / физ.лицо
             , tmpMIContainer.ParentId
@@ -1494,6 +1504,7 @@ BEGIN
             INNER JOIN _tmpItem ON vbAccountId_GoodsTransit <> 0
                                AND _tmpItem.isLossMaterials = FALSE -- !!!если НЕ списание!!!
             INNER JOIN tmpMIContainer ON tmpMIContainer.MovementItemId = _tmpItem.MovementItemId
+            LEFT JOIN tmpAccount_60000 ON tmpAccount_60000.AccountId = tmpMIContainer.AccountId
       ;
 
 
@@ -1954,7 +1965,7 @@ BEGIN
        -- это обычная проводка
        SELECT 0, zc_MIContainer_Summ() AS DescId, vbMovementDescId, inMovementId, _tmpItem_group.MovementItemId
             , _tmpItem_group.ContainerId_Partner
-            , CASE WHEN tmpTransit.AccountId > 0 THEN tmpTransit.AccountId ELSE _tmpItem_group.AccountId_Partner END AS AccountId -- счет есть всегда
+            , CASE WHEN tmpTransit.AccountId > 0 THEN tmpTransit.AccountId ELSE _tmpItem_group.AccountId_Partner END AS AccountId -- счет есть всегда, !!но это иногда zc_Enum_AnalyzerId_Summ...!!
             , _tmpItem_group.AnalyzerId          AS AnalyzerId             -- аналитика
             , _tmpItem_group.GoodsId             AS ObjectId_Analyzer      -- Товар
             , vbWhereObjectId_Analyzer           AS WhereObjectId_Analyzer -- Подраделение или...
@@ -2008,9 +2019,12 @@ BEGIN
              -- HAVING SUM (_tmpItemPartnerFrom.OperSumm_Partner) <> 0
 
             ) AS _tmpItem_group
-            LEFT JOIN (SELECT -1                       AS AccountId, TRUE  AS isActive, CASE WHEN vbAccountId_GoodsTransit <> 0 THEN vbOperDatePartner ELSE vbOperDate END AS OperDate
-             UNION ALL SELECT vbAccountId_GoodsTransit AS AccountId, TRUE  AS isActive, vbOperDate AS OperDate
-             UNION ALL SELECT vbAccountId_GoodsTransit AS AccountId, FALSE AS isActive, vbOperDate AS OperDate) AS tmpTransit ON tmpTransit.AccountId <> 0
+            LEFT JOIN (SELECT -1                                  AS AccountId, TRUE  AS isActive, CASE WHEN vbAccountId_GoodsTransit <> 0 THEN vbOperDatePartner ELSE vbOperDate END AS OperDate
+             UNION ALL SELECT zc_Enum_AnalyzerId_SummIn_110101()  AS AccountId, TRUE  AS isActive, vbOperDate        AS OperDate WHERE vbAccountId_GoodsTransit <> 0
+             UNION ALL SELECT zc_Enum_AnalyzerId_SummIn_110101()  AS AccountId, FALSE AS isActive, vbOperDate        AS OperDate WHERE vbAccountId_GoodsTransit <> 0
+             UNION ALL SELECT zc_Enum_AnalyzerId_SummOut_110101() AS AccountId, TRUE  AS isActive, vbOperDatePartner AS OperDate WHERE vbAccountId_GoodsTransit <> 0
+             UNION ALL SELECT zc_Enum_AnalyzerId_SummOut_110101() AS AccountId, FALSE AS isActive, vbOperDatePartner AS OperDate WHERE vbAccountId_GoodsTransit <> 0
+                      ) AS tmpTransit ON tmpTransit.AccountId <> 0
      UNION ALL
        -- это !!!одна!!! проводка для "забалансового" Валютного счета
        SELECT 0, zc_MIContainer_SummCurrency() AS DescId, vbMovementDescId, inMovementId, 0 AS MovementItemId
@@ -2756,6 +2770,9 @@ BEGIN
           ) AS tmp;
      -- !!!6.0.2. формируются свойство связь с <филиал> в документе из данных для проводок!!!
      PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_Branch(), inMovementId, vbBranchId_From);
+     -- !!!6.0.3. формируются свойства в элементах документа из данных для проводок!!!
+     PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_Business(), _tmpItem.MovementItemId, _tmpItem.BusinessId_From)
+     FROM _tmpItem;
 
 
      -- 6.1. ФИНИШ - Обязательно сохраняем Проводки
@@ -2769,6 +2786,7 @@ BEGIN
 
      -- 6.3. ФИНИШ - перепроводим Налоговую
      IF inUserId <> zc_Enum_Process_Auto_PrimeCost()
+        AND inUserId <> 343013 -- Нагорная Я.Г.
         AND vbPaidKindId = zc_Enum_PaidKind_FirstForm()
         AND vbCurrencyDocumentId = zc_Enum_Currency_Basis()
         AND vbCurrencyPartnerId = zc_Enum_Currency_Basis()
