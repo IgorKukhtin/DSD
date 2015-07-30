@@ -950,7 +950,6 @@ object IncomePartnerForm: TIncomePartnerForm
           DataSet = PrintItemsCDS
           UserName = 'frxDBDMaster'
         end>
-      CopiesCount = 1
       Params = <
         item
           Name = 'InvNumber'

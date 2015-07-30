@@ -22,6 +22,7 @@ $BODY$
     DECLARE vbVATPercent TFloat;
     DECLARE vbDiscountPercent TFloat;
     DECLARE vbExtraChargesPercent TFloat;
+    DECLARE vbChangePercentTo TFloat;
     DECLARE vbPaidKindId Integer;
 
     DECLARE vbOperSumm_MVAT TFloat;
@@ -47,11 +48,13 @@ BEGIN
           , COALESCE (MovementFloat_VATPercent.ValueData, 0)        AS VATPercent
           , CASE WHEN COALESCE (MovementFloat_ChangePercent.ValueData, 0) < 0 THEN -MovementFloat_ChangePercent.ValueData ELSE 0 END    AS DiscountPercent
           , CASE WHEN COALESCE (MovementFloat_ChangePercent.ValueData, 0) > 0 THEN MovementFloat_ChangePercent.ValueData ELSE 0 END     AS ExtraChargesPercent
+          , COALESCE (MovementFloat_ChangePercentTo.ValueData, 0)   AS ChangePercentTo
           , zfCalc_GoodsPropertyId (MovementLinkObject_Contract.ObjectId, COALESCE (ObjectLink_Partner_Juridical.ChildObjectId, MovementLinkObject_To.ObjectId)) AS GoodsPropertyId
           , zfCalc_GoodsPropertyId (0, zc_Juridical_Basis())        AS GoodsPropertyId_basis
           , COALESCE (MovementLinkObject_PaidKind.ObjectId, 0)      AS PaidKindId
           , COALESCE (MovementLinkObject_Contract.ObjectId, 0)      AS ContractId
-            INTO vbDescId, vbStatusId, vbPriceWithVAT, vbVATPercent, vbDiscountPercent, vbExtraChargesPercent, vbGoodsPropertyId, vbGoodsPropertyId_basis, vbPaidKindId, vbContractId
+
+            INTO vbDescId, vbStatusId, vbPriceWithVAT, vbVATPercent, vbDiscountPercent, vbExtraChargesPercent, vbChangePercentTo, vbGoodsPropertyId, vbGoodsPropertyId_basis, vbPaidKindId, vbContractId
      FROM Movement
           LEFT JOIN MovementBoolean AS MovementBoolean_PriceWithVAT
                                     ON MovementBoolean_PriceWithVAT.MovementId = Movement.Id
@@ -75,6 +78,10 @@ BEGIN
           LEFT JOIN ObjectLink AS ObjectLink_Partner_Juridical
                                ON ObjectLink_Partner_Juridical.ObjectId = MovementLinkObject_To.ObjectId
                               AND ObjectLink_Partner_Juridical.DescId = zc_ObjectLink_Partner_Juridical()
+
+          LEFT JOIN MovementFloat AS MovementFloat_ChangePercentTo
+                                  ON MovementFloat_ChangePercentTo.MovementId = Movement.Id
+                                 AND MovementFloat_ChangePercentTo.DescId = zc_MovementFloat_ChangePercentPartner()                              
       
      WHERE Movement.Id = inMovementId
        -- AND Movement.StatusId = zc_Enum_Status_Complete()
@@ -151,6 +158,8 @@ BEGIN
                   ELSE ''
              END AS Price_info
 
+           , MovementBoolean_isIncome.ValueData            AS isIncome
+           
        FROM Movement
           --  JOIN tmpRoleAccessKey ON tmpRoleAccessKey.AccessKeyId = Movement.AccessKeyId
 
@@ -162,6 +171,10 @@ BEGIN
             LEFT JOIN MovementString AS MovementString_InvNumberPartner
                                      ON MovementString_InvNumberPartner.MovementId =  Movement.Id
                                     AND MovementString_InvNumberPartner.DescId = zc_MovementString_InvNumberPartner()
+
+            LEFT JOIN MovementBoolean AS MovementBoolean_isIncome
+                                      ON MovementBoolean_isIncome.MovementId =  Movement.Id
+                                     AND MovementBoolean_isIncome.DescId = zc_MovementBoolean_isIncome()
 
             LEFT JOIN MovementBoolean AS MovementBoolean_PriceWithVAT
                                       ON MovementBoolean_PriceWithVAT.MovementId =  Movement.Id
@@ -339,6 +352,23 @@ BEGIN
            , CAST ((tmpMI.AmountPartner * (CASE WHEN Object_Measure.Id = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData, 0) ELSE 1 END )) AS TFloat) AS Amount_Weight
 --           , CAST ((CASE WHEN Object_Measure.Id = zc_Measure_Sh() THEN tmpMI.AmountPartner ELSE 0 END) AS TFloat) AS Amount_Sh
 
+             -- расчет цены C НДС покупателя , до 4 знаков, для  (с учетом скидки)
+           , CASE WHEN vbPriceWithVAT <> TRUE
+                  THEN CAST ((tmpMI.PriceOriginal + tmpMI.PriceOriginal * (vbVATPercent / 100))
+                                         * CASE WHEN vbChangePercentTo <> 0 
+                                                     THEN (1 + vbChangePercentTo / 100)
+                                                ELSE 1
+                                           END
+                             AS NUMERIC (16, 4))
+                  ELSE CAST (tmpMI.PriceOriginal * CASE WHEN vbChangePercentTo <> 0
+                                                             THEN (1 + vbChangePercentTo / 100)
+                                                        ELSE 1
+                                                   END
+                             AS NUMERIC (16, 4))
+             END   AS PriceWVAT_To
+   
+           , vbChangePercentTo
+      
        FROM (SELECT MovementItem.ObjectId AS GoodsId
                   , COALESCE (MILinkObject_GoodsKind.ObjectId, 0) AS GoodsKindId
                   , CASE WHEN vbDiscountPercent <> 0 AND vbPaidKindId <> zc_Enum_PaidKind_SecondForm() -- !!!для НАЛ не учитываем!!!
@@ -356,6 +386,7 @@ BEGIN
                               ELSE MovementItem.Amount
                          END) AS AmountPartner
                   , SUM (COALESCE (MIFloat_AmountPacker.VAlueData, 0)) AS AmountPacker
+                  , COALESCE (MIFloat_Price.ValueData, 0) AS PriceOriginal
              FROM MovementItem
                   LEFT JOIN MovementItemFloat AS MIFloat_Price
                                                ON MIFloat_Price.MovementItemId = MovementItem.Id
