@@ -130,6 +130,7 @@ BEGIN
            , MovementFloat_TotalSummPacker.ValueData     AS TotalSummPacker
            , MovementFloat_TotalSummSpending.ValueData   AS TotalSummSpending
            , CAST (COALESCE (MovementFloat_TotalSummPVAT.ValueData, 0) - COALESCE (MovementFloat_TotalSummMVAT.ValueData, 0) AS TFloat) AS TotalSummVAT
+           , (select Sum (Amount)  from MovementItemContainer where MovementId = inMovementId and DescId = 2 and isactive = True and AccountId <> zc_Enum_Account_100301 ()) AS TotalSummPVAT_To
 
            , CAST (COALESCE (MovementFloat_CurrencyValue.ValueData, 0) AS TFloat)  AS CurrencyValue
 

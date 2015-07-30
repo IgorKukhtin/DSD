@@ -21,6 +21,7 @@ $BODY$
     DECLARE vbVATPercent TFloat;
     DECLARE vbDiscountPercent TFloat;
     DECLARE vbExtraChargesPercent TFloat;
+    DECLARE vbChangePercentFrom TFloat;
     DECLARE vbPaidKindId Integer;
 
     DECLARE vbOperSumm_MVAT TFloat;
@@ -46,11 +47,12 @@ BEGIN
           , COALESCE (MovementFloat_VATPercent.ValueData, 0)        AS VATPercent
           , CASE WHEN COALESCE (MovementFloat_ChangePercent.ValueData, 0) < 0 THEN -MovementFloat_ChangePercent.ValueData ELSE 0 END    AS DiscountPercent
           , CASE WHEN COALESCE (MovementFloat_ChangePercent.ValueData, 0) > 0 THEN MovementFloat_ChangePercent.ValueData ELSE 0 END     AS ExtraChargesPercent
+          , MovementFloat_ChangePercentFrom.ValueData      AS ChangePercentFrom
           , zfCalc_GoodsPropertyId (MovementLinkObject_Contract.ObjectId, COALESCE (ObjectLink_Partner_Juridical.ChildObjectId, MovementLinkObject_To.ObjectId)) AS GoodsPropertyId
           , zfCalc_GoodsPropertyId (0, zc_Juridical_Basis())        AS GoodsPropertyId_basis
           , COALESCE (MovementLinkObject_PaidKind.ObjectId, 0)      AS PaidKindId
           , COALESCE (MovementLinkObject_Contract.ObjectId, 0)      AS ContractId
-            INTO vbDescId, vbStatusId, vbPriceWithVAT, vbVATPercent, vbDiscountPercent, vbExtraChargesPercent, vbGoodsPropertyId, vbGoodsPropertyId_basis, vbPaidKindId, vbContractId
+            INTO vbDescId, vbStatusId, vbPriceWithVAT, vbVATPercent, vbDiscountPercent, vbExtraChargesPercent, vbChangePercentFrom, vbGoodsPropertyId, vbGoodsPropertyId_basis, vbPaidKindId, vbContractId
      FROM Movement
           LEFT JOIN MovementBoolean AS MovementBoolean_PriceWithVAT
                                     ON MovementBoolean_PriceWithVAT.MovementId = Movement.Id
@@ -61,6 +63,11 @@ BEGIN
           LEFT JOIN MovementFloat AS MovementFloat_ChangePercent
                                   ON MovementFloat_ChangePercent.MovementId = Movement.Id
                                  AND MovementFloat_ChangePercent.DescId = zc_MovementFloat_ChangePercent()
+
+            LEFT JOIN MovementFloat AS MovementFloat_ChangePercentFrom
+                                    ON MovementFloat_ChangePercentFrom.MovementId =  Movement.Id
+                                   AND MovementFloat_ChangePercentFrom.DescId = zc_MovementFloat_ChangePercentPartner()
+
           LEFT JOIN MovementLinkObject AS MovementLinkObject_Contract
                                        ON MovementLinkObject_Contract.MovementId = Movement.Id
                                       AND MovementLinkObject_Contract.DescId IN (zc_MovementLinkObject_Contract(), zc_MovementLinkObject_ContractTo())
@@ -122,7 +129,7 @@ BEGIN
            , MovementFloat_TotalSummPacker.ValueData     AS TotalSummPacker
            , MovementFloat_TotalSummSpending.ValueData   AS TotalSummSpending
            , CAST (COALESCE (MovementFloat_TotalSummPVAT.ValueData, 0) - COALESCE (MovementFloat_TotalSummMVAT.ValueData, 0) AS TFloat) AS TotalSummVAT
-
+           , (select Sum (Amount)*(-1)  from MovementItemContainer where MovementId = inMovementId and DescId = 2 and isactive = False and AccountId <> zc_Enum_Account_100301 ()) AS TotalSummVAT_From
          --  , CAST (COALESCE (MovementFloat_CurrencyValue.ValueData, 0) AS TFloat)  AS CurrencyValue
 
            , Object_From.ValueData             AS FromName
@@ -140,7 +147,8 @@ BEGIN
                         THEN ' та знижкой'
                   ELSE ''
              END AS Price_info
-
+           , COALESCE(MovementBoolean_isIncome.ValueData, True)    ::Boolean            AS isIncome
+           
        FROM Movement
           --  JOIN tmpRoleAccessKey ON tmpRoleAccessKey.AccessKeyId = Movement.AccessKeyId
 
@@ -149,7 +157,10 @@ BEGIN
             LEFT JOIN MovementDate AS MovementDate_OperDatePartner
                                    ON MovementDate_OperDatePartner.MovementId =  Movement.Id
                                   AND MovementDate_OperDatePartner.DescId = zc_MovementDate_OperDatePartner()
-
+                                  
+            LEFT JOIN MovementBoolean AS MovementBoolean_isIncome
+                                       ON MovementBoolean_isIncome.MovementId =  Movement.Id
+                                      AND MovementBoolean_isIncome.DescId = zc_MovementBoolean_isIncome()
 
             LEFT JOIN MovementBoolean AS MovementBoolean_PriceWithVAT
                                       ON MovementBoolean_PriceWithVAT.MovementId =  Movement.Id
@@ -383,6 +394,23 @@ BEGIN
            , CAST ((tmpMI.AmountPartner * (CASE WHEN Object_Measure.Id = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData, 0) ELSE 1 END )) AS TFloat) AS Amount_Weight
 --           , CAST ((CASE WHEN Object_Measure.Id = zc_Measure_Sh() THEN tmpMI.AmountPartner ELSE 0 END) AS TFloat) AS Amount_Sh
 
+           , vbChangePercentFrom
+           -- расчет цены с НДС, до 4 знаков
+           , CASE WHEN vbPriceWithVAT <> TRUE
+                  THEN CAST ((tmpMI.PriceOriginal + tmpMI.PriceOriginal * (vbVATPercent / 100))
+                                         * CASE WHEN vbChangePercentFrom <> 0 
+                                                     THEN (1 + vbChangePercentFrom / 100)
+                                                ELSE 1
+                                           END
+                             AS NUMERIC (16, 4))
+                  ELSE CAST (tmpMI.PriceOriginal * CASE WHEN vbChangePercentFrom <> 0
+                                                          THEN (1 + vbChangePercentFrom / 100)
+                                                        ELSE 1
+                                                   END
+                             AS NUMERIC (16, 4))
+             END / CASE WHEN tmpMI.CountForPrice <> 0 THEN tmpMI.CountForPrice ELSE 1 END
+             AS PriceWVAT_From
+
        FROM (SELECT MovementItem.ObjectId AS GoodsId
                   , COALESCE (MILinkObject_GoodsKind.ObjectId, 0) AS GoodsKindId
                   , CASE WHEN vbDiscountPercent <> 0 AND vbPaidKindId <> zc_Enum_PaidKind_SecondForm() -- !!!для НАЛ не учитываем!!!
@@ -400,6 +428,7 @@ BEGIN
                               ELSE MovementItem.Amount
 
                          END) AS AmountPartner
+                   , COALESCE (MIFloat_Price.ValueData, 0) AS PriceOriginal
              FROM MovementItem
                   LEFT JOIN MovementItemFloat AS MIFloat_Price
                                                ON MIFloat_Price.MovementItemId = MovementItem.Id
