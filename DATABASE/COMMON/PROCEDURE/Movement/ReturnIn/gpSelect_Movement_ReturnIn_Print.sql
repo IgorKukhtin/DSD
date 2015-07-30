@@ -236,6 +236,14 @@ BEGIN
 
            , CASE WHEN ObjectLink_Contract_JuridicalDocument.ChildObjectId > 0 THEN TRUE ELSE FALSE END AS isJuridicalDocument
 
+           , (SELECT MS_InvNumberPartner.ValueData
+              FROM MovementLinkMovement AS MLM_Master
+                   LEFT JOIN MovementString AS MS_InvNumberPartner ON MS_InvNumberPartner.MovementId = MLM_Master.MovementId
+                                                                  AND MS_InvNumberPartner.DescId = zc_MovementString_InvNumberPartner()
+              WHERE MLM_Master.MovementChildId = inMovementId
+                AND MLM_Master.DescId = zc_MovementLinkMovement_Master()
+             LIMIT 1) AS InvNumberPartner_TaxCorrective
+
            , Movement_Sale.InvNumber                        AS InvNumber_Sale
            , MovementString_InvNumberPartner_Sale.ValueData AS InvNumberPartner_Sale
            , MovementString_InvNumberOrder_Sale.ValueData   AS InvNumberOrder_Sale

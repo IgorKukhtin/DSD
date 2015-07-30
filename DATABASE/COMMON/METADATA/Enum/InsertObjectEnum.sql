@@ -164,7 +164,10 @@ BEGIN
      --
      PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_AnalyzerId_ReWork(), inDescId:= zc_Object_AnalyzerId(), inCode:= 1031, inName:= 'в строчной части расхода на производство если в мастере переработка', inEnumName:= 'zc_Enum_AnalyzerId_ReWork');
      --
-     PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_AnalyzerId_Count_40200(),  inDescId:= zc_Object_AnalyzerId(), inCode:= 1041, inName:= 'Кол-во, приход от пост. + возврат пост., Разница в весе', inEnumName:= 'zc_Enum_AnalyzerId_Count_40200');
+     PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_AnalyzerId_Count_40200(), inDescId:= zc_Object_AnalyzerId(), inCode:= 1041, inName:= 'Кол-во, приход от пост. + возврат пост., Разница в весе', inEnumName:= 'zc_Enum_AnalyzerId_Count_40200');
+     --
+     PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_AnalyzerId_SummIn_110101() , inDescId:= zc_Object_AnalyzerId(), inCode:= 1051, inName:= 'Сумма, забалансовый счет, приход транзит', inEnumName:= 'zc_Enum_AnalyzerId_SummIn_110101');
+     PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_AnalyzerId_SummOut_110101(), inDescId:= zc_Object_AnalyzerId(), inCode:= 1052, inName:= 'Сумма, забалансовый счет, расход транзит', inEnumName:= 'zc_Enum_AnalyzerId_SummOut_110101');
 
      
      -- !!! формы оплаты

@@ -3,6 +3,7 @@
 DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItemContainer (Integer, Integer, Integer, Integer, Integer, Integer, Integer, TFloat, TDateTime, Boolean);
 DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItemContainer (Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TFloat, TDateTime, Boolean);
 DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItemContainer (Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TFloat, TDateTime, Boolean);
+DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItemContainer (Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TFloat, TDateTime, Boolean);
 
 CREATE OR REPLACE FUNCTION lpInsertUpdate_MovementItemContainer(
  INOUT ioId                      Integer               ,
@@ -17,6 +18,8 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_MovementItemContainer(
     IN inObjectId_Analyzer       Integer               ,
     IN inWhereObjectId_Analyzer  Integer               ,
     IN inContainerId_Analyzer    Integer               ,
+    IN inObjectIntId_Analyzer    Integer               ,
+    IN inObjectExtId_Analyzer    Integer               ,
     IN inAmount                  TFloat                ,
     IN inOperDate                TDateTime             ,
     IN inIsActive                Boolean
@@ -45,7 +48,7 @@ BEGIN
      UPDATE Container SET Amount = Amount + COALESCE (inAmount, 0) WHERE Id = inContainerId;
      -- сохранили проводку
      INSERT INTO MovementItemContainer (DescId, MovementDescId, MovementId, MovementItemId, ParentId, ContainerId
-                                      , AccountId, AnalyzerId, ObjectId_Analyzer, WhereObjectId_Analyzer, ContainerId_Analyzer
+                                      , AccountId, AnalyzerId, ObjectId_Analyzer, WhereObjectId_Analyzer, ContainerId_Analyzer, ObjectIntId_Analyzer, ObjectExtId_Analyzer
                                       , Amount, OperDate, IsActive)
                                 VALUES (inDescId, inMovementDescId, inMovementId, inMovementItemId, inParentId, inContainerId
                                       , CASE WHEN inAccountId = 0 THEN NULL ELSE inAccountId END
@@ -53,6 +56,8 @@ BEGIN
                                       , CASE WHEN inObjectId_Analyzer = 0 THEN NULL ELSE inObjectId_Analyzer END
                                       , CASE WHEN inWhereObjectId_Analyzer = 0 THEN NULL ELSE inWhereObjectId_Analyzer END
                                       , CASE WHEN inContainerId_Analyzer = 0 THEN NULL ELSE inContainerId_Analyzer END
+                                      , CASE WHEN inObjectIntId_Analyzer = 0 THEN NULL ELSE inObjectIntId_Analyzer END
+                                      , CASE WHEN inObjectExtId_Analyzer = 0 THEN NULL ELSE inObjectExtId_Analyzer END
                                       , COALESCE (inAmount, 0), inOperDate, inIsActive
                                        ) RETURNING Id INTO ioId;
 END;
@@ -64,6 +69,7 @@ ALTER FUNCTION lpInsertUpdate_MovementItemContainer (Integer, Integer, Integer, 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 29.07.15                                        * add inObjectIntId_Analyzer, inObjectExtId_Analyzer
  20.12.14                                        * add inAccountId, inObjectId_Analyzer, inWhereObjectId_Analyzer, inContainerId_Analyzer
  06.12.14                                        * add inAnalyzerId
  17.08.14                                        * add inMovementDescId

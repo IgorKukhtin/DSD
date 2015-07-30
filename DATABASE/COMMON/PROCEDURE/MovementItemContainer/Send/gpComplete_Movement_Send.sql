@@ -375,6 +375,8 @@ BEGIN
                                                                                 , inObjectId_Analyzer       := _tmpItem.GoodsId               -- Товар
                                                                                 , inWhereObjectId_Analyzer  := vbWhereObjectId_Analyzer_To    -- Подраделение или...
                                                                                 , inContainerId_Analyzer    := _tmpItem.ContainerId_GoodsFrom -- количественный Контейнер-Корреспондент (т.е. из расхода)
+                                                                                , inObjectIntId_Analyzer    := 0                              -- вид товара
+                                                                                , inObjectExtId_Analyzer    := 0                              -- покупатель / физ.лицо / Подраделение "От кого"
                                                                                 , inAmount         := _tmpItem.OperCount
                                                                                 , inOperDate       := _tmpItem.OperDate
                                                                                 , inIsActive       := TRUE                                                                                 );
@@ -527,6 +529,8 @@ BEGIN
                                                                                     , inObjectId_Analyzer       := _tmpItem.GoodsId               -- Товар
                                                                                     , inWhereObjectId_Analyzer  := vbWhereObjectId_Analyzer_To    -- Подраделение или...
                                                                                     , inContainerId_Analyzer    := _tmpItemSumm.ContainerId_From  -- суммовой Контейнер-Корреспондент (т.е. из расхода)
+                                                                                    , inObjectIntId_Analyzer    := 0                              -- вид товара
+                                                                                    , inObjectExtId_Analyzer    := 0                              -- покупатель / физ.лицо / Подраделение "От кого"
                                                                                     , inAmount         := OperSumm
                                                                                     , inOperDate       := OperDate
                                                                                     , inIsActive       := TRUE
