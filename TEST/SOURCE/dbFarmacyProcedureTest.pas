@@ -100,6 +100,10 @@ begin
 
   ScriptDirectory := FarmacyProcedurePath + 'MovementItemContainer\Loss\';
   ProcedureLoad;
+
+  ScriptDirectory := FarmacyProcedurePath + 'MovementItemContainer\Send\';
+  ProcedureLoad;
+
             {
   ZQuery.SQL.LoadFromFile(ProcedurePath + 'MovementItemContainer\InsertUpdate\lpInsertUpdate_MovementItemContainer.sql');
   ZQuery.ExecSQL;
@@ -128,7 +132,8 @@ begin
   ProcedureLoad;
   ScriptDirectory := FarmacyProcedurePath + 'MovementItem\Loss\';
   ProcedureLoad;
-
+  ScriptDirectory := FarmacyProcedurePath + 'MovementItem\Send\';
+  ProcedureLoad;
   {
   ZQuery.SQL.LoadFromFile(ProcedurePath + 'MovementItem\InsertUpdate\lpInsertUpdate_MovementItem.sql');
   ZQuery.ExecSQL;
@@ -167,6 +172,8 @@ begin
   ScriptDirectory := FarmacyProcedurePath + 'Movement\Inventory\';
   ProcedureLoad;
   ScriptDirectory := FarmacyProcedurePath + 'Movement\Loss\';
+  ProcedureLoad;
+  ScriptDirectory := FarmacyProcedurePath + 'Movement\Send\';
   ProcedureLoad;
 {
   ZQuery.SQL.LoadFromFile(ProcedurePath + 'Movement\InsertUpdate\lpInsertUpdate_Movement.sql');

@@ -68,6 +68,8 @@ type
     procedure LoadLossFormTest;
     procedure LoadArticleLossEditFormTest;
     procedure LoadArticleLossFormTest;
+    procedure LoadSendJournalFormTest;
+    procedure LoadSendFormTest;
     procedure FormTest;
   end;
 
@@ -608,6 +610,18 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TPriceListForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TPriceListJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TPriceListJournalForm');
+end;
+
+procedure TLoadFormTest.LoadSendFormTest;
+begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TSendForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TSendForm');
+end;
+
+procedure TLoadFormTest.LoadSendJournalFormTest;
+begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TSendJournalForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TSendJournalForm');
 end;
 
 procedure TLoadFormTest.LoadSendOnPriceFormTest;
