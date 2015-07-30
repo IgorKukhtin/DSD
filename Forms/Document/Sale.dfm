@@ -4,7 +4,7 @@
   ClientWidth = 1028
   AddOnFormData.OnLoadAction = actSetDefaults
   ExplicitWidth = 1044
-  ExplicitHeight = 703
+  ExplicitHeight = 706
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -55,6 +55,11 @@
               Format = ',0.####'
               Kind = skSum
               Column = BoxCount
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = SumCost
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -89,6 +94,11 @@
             item
               Kind = skSum
               Column = BoxCount
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = SumCost
             end>
           OptionsBehavior.FocusCellOnCycle = False
           OptionsCustomize.DataRowSizing = False
@@ -241,7 +251,18 @@
             Options.Editing = False
             Width = 80
           end
-          object colHeadCount: TcxGridDBColumn [14]
+          object PriceCost: TcxGridDBColumn [14]
+            Caption = #1062#1077#1085#1072' '#1089'/'#1089
+            DataBinding.FieldName = 'PriceCost'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
+          end
+          object colHeadCount: TcxGridDBColumn [15]
             Caption = #1050#1086#1083'. '#1075#1086#1083#1086#1074
             DataBinding.FieldName = 'HeadCount'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -250,7 +271,7 @@
             HeaderAlignmentVert = vaCenter
             Width = 60
           end
-          object colAssetName: TcxGridDBColumn [15]
+          object colAssetName: TcxGridDBColumn [16]
             Caption = #1054#1089#1085'.'#1089#1088#1077#1076#1089#1090#1074#1072' '
             DataBinding.FieldName = 'AssetName'
             Visible = False
@@ -259,7 +280,18 @@
             Options.Editing = False
             Width = 80
           end
-          object BoxCount: TcxGridDBColumn [16]
+          object SumCost: TcxGridDBColumn [17]
+            Caption = #1057#1091#1084#1084#1072' '#1089'/'#1089
+            DataBinding.FieldName = 'SumCost'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 2
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 80
+          end
+          object BoxCount: TcxGridDBColumn [18]
             Caption = #1050#1086#1083'-'#1074#1086' '#1103#1097#1080#1082#1086#1074
             DataBinding.FieldName = 'BoxCount'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -269,7 +301,7 @@
             HeaderAlignmentVert = vaCenter
             Width = 60
           end
-          object BoxName: TcxGridDBColumn [17]
+          object BoxName: TcxGridDBColumn [19]
             Caption = #1042#1080#1076' '#1103#1097#1080#1082#1086#1074
             DataBinding.FieldName = 'BoxName'
             PropertiesClassName = 'TcxButtonEditProperties'
@@ -284,28 +316,28 @@
             HeaderAlignmentVert = vaCenter
             Width = 70
           end
-          object clInfoMoneyCode: TcxGridDBColumn [18]
+          object clInfoMoneyCode: TcxGridDBColumn [20]
             Caption = #1050#1086#1076' '#1059#1055
             DataBinding.FieldName = 'InfoMoneyCode'
             Visible = False
             HeaderAlignmentVert = vaCenter
             Width = 45
           end
-          object clInfoMoneyGroupName: TcxGridDBColumn [19]
+          object clInfoMoneyGroupName: TcxGridDBColumn [21]
             Caption = #1059#1055' '#1075#1088#1091#1087#1087#1072' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
             DataBinding.FieldName = 'InfoMoneyGroupName'
             Visible = False
             HeaderAlignmentVert = vaCenter
             Width = 70
           end
-          object clInfoMoneyDestinationName: TcxGridDBColumn [20]
+          object clInfoMoneyDestinationName: TcxGridDBColumn [22]
             Caption = #1059#1055' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1077
             DataBinding.FieldName = 'InfoMoneyDestinationName'
             Visible = False
             HeaderAlignmentVert = vaCenter
             Width = 70
           end
-          object clInfoMoneyName: TcxGridDBColumn [21]
+          object clInfoMoneyName: TcxGridDBColumn [23]
             Caption = #1059#1055' '#1089#1090#1072#1090#1100#1103' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
             DataBinding.FieldName = 'InfoMoneyName'
             Visible = False
@@ -768,7 +800,6 @@
           UserName = 'frxDBDMaster'
           IndexFieldNames = 'GroupName_Juridical;GoodsName_Juridical;GoodsName;GoodsKindName'
         end>
-      CopiesCount = 1
       Params = <
         item
           Name = 'Id'
@@ -805,7 +836,6 @@
           DataSet = PrintItemsSverkaCDS
           UserName = 'frxDBDSverka'
         end>
-      CopiesCount = 1
       Params = <
         item
           Name = 'Id'
@@ -839,7 +869,6 @@
           UserName = 'frxDBDMaster'
           IndexFieldNames = 'WeighingNumber;NumOrder'
         end>
-      CopiesCount = 1
       Params = <
         item
           Name = 'Id'
@@ -876,7 +905,6 @@
             'goodsgroupname;GroupName_Juridical;GoodsName_Juridical;GoodsName' +
             ';GoodsKindName'
         end>
-      CopiesCount = 1
       Params = <
         item
           Name = 'Id'
@@ -1019,7 +1047,6 @@
           DataSet = PrintItemsSverkaCDS
           UserName = 'frxDBDSverka'
         end>
-      CopiesCount = 1
       Params = <
         item
           Name = 'Id'
@@ -1055,7 +1082,6 @@
           DataSet = PrintItemsCDS
           UserName = 'frxDBDMaster'
         end>
-      CopiesCount = 1
       Params = <
         item
           Name = 'Id'
@@ -1089,7 +1115,6 @@
           UserName = 'frxDBDMaster'
           IndexFieldNames = 'GroupName_Juridical;GoodsName_Juridical;GoodsName;GoodsKindName'
         end>
-      CopiesCount = 1
       Params = <
         item
           Name = 'Id'
@@ -1322,7 +1347,6 @@
           UserName = 'frxDBDMaster'
           IndexFieldNames = 'WeighingNumber;BoxNumber;NumOrder'
         end>
-      CopiesCount = 1
       Params = <
         item
           Name = 'Id'
@@ -1382,7 +1406,6 @@
           UserName = 'frxDBDMaster2'
           IndexFieldNames = 'GroupName_Juridical;GoodsName_Juridical;GoodsName;GoodsKindName'
         end>
-      CopiesCount = 1
       Params = <
         item
           Name = 'Id'
@@ -1462,7 +1485,6 @@
           DataSet = PrintItemsCDS
           UserName = 'frxDBDMaster'
         end>
-      CopiesCount = 1
       Params = <
         item
           Name = 'Id'
@@ -1496,7 +1518,6 @@
           UserName = 'frxDBDMaster'
           IndexFieldNames = 'GoodsGroupNameFull;GoodsName'
         end>
-      CopiesCount = 1
       Params = <
         item
           Name = 'Id'
