@@ -115,7 +115,7 @@ BEGIN
                                         AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
             LEFT JOIN Object AS Object_To ON Object_To.Id = MovementLinkObject_To.ObjectId
          WHERE (Object_From.Id = inFromId or inFromId=0)
-           AND (Object_To.Id = inToId or inFromId=0)
+           AND (Object_To.Id = inToId or inToId=0)
             ;
 
 END;

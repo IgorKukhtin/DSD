@@ -1400,6 +1400,14 @@ inherited OrderInternalPackForm: TOrderInternalPackForm
         Name = 'isPack'
         Value = True
         DataType = ftBoolean
+      end
+      item
+        Name = 'inFromId'
+        Value = Null
+      end
+      item
+        Name = 'inToId'
+        Value = Null
       end>
     Left = 280
     Top = 369
@@ -1437,6 +1445,20 @@ inherited OrderInternalPackForm: TOrderInternalPackForm
         Component = FormParams
         ComponentItem = 'isPack'
         DataType = ftBoolean
+        ParamType = ptInput
+      end
+      item
+        Name = 'inFromId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'inFromId'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inToId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'inToId'
         ParamType = ptInput
       end
       item

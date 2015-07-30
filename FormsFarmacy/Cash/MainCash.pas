@@ -110,6 +110,9 @@ type
     spGet_Password_MoneyInCash: TdsdStoredProc;
     actSpec: TAction;
     N9: TMenuItem;
+    spSelectRemains_Lite: TdsdStoredProc;
+    Remains_LiteCDS: TClientDataSet;
+    actRefreshLite: TdsdDataSetRefresh;
     procedure FormCreate(Sender: TObject);
     procedure actChoiceGoodsInRemainsGridExecute(Sender: TObject);
     procedure lcNameKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
@@ -156,6 +159,8 @@ type
     procedure CalcTotalSumm;
     // Пробивает чек через ЭККА
     function PutCheckToCash(SalerCash: real; PaidType: TPaidType): boolean;
+    //  обновляет остаток на рабочем датасете
+    procedure UpdateRemains;
 
     property SoldRegim: boolean read FSoldRegim write SetSoldRegim;
   public
@@ -411,10 +416,24 @@ begin
 end;
 
 procedure TMainCashForm.FormCreate(Sender: TObject);
+var
+  F: String;
 begin
   inherited;
+  if NOT GetIniFile(F) then
+  Begin
+    Application.Terminate;
+    exit;
+  End;
   UserSettingsStorageAddOn.LoadUserSettings;
-  Cash:=TCashFactory.GetCash(iniCashType);
+  try
+    Cash:=TCashFactory.GetCash(iniCashType);
+  except
+    Begin
+      ShowMessage('Внимание! Программа не может подключится к фискальному аппарату.'+#13+
+                  'Дальнейшая работа программы возможна только в нефискальном режиме!');
+    End;
+  end;
   SoldParallel:=iniSoldParallel;
   NewCheck;
   (*
@@ -590,6 +609,74 @@ begin
   end;
 end;
 
+procedure TMainCashForm.UpdateRemains;
+var
+  B: TBookmark;
+begin
+  if not RemainsCDS.Active or not not Remains_LiteCDS.Active  then exit;
+  
+  B := RemainsCDS.GetBookmark;
+  RemainsCDS.DisableControls;
+  RemainsCDS.AfterScroll := Nil;
+  AlternativeCDS.DisableControls;
+  AlternativeCDS.Filtered := False;
+  Remains_LiteCDS.DisableControls;
+  try
+    RemainsCDS.First;
+    while Not RemainsCDS.eof do
+    Begin
+      if Remains_LiteCDS.locate('Id',RemainsCDS.fieldByName('Id').AsInteger,[]) then
+      Begin
+        if RemainsCDS.FieldByName('Remains').AsFloat <> Remains_LiteCDS.FieldByName('Remains').AsFloat then
+        Begin
+          RemainsCDS.Edit;
+          RemainsCDS.FieldByName('Remains').AsFloat := Remains_LiteCDS.FieldByName('Remains').AsFloat;
+          RemainsCDS.Post;
+        End;
+      End
+      else
+      if RemainsCDS.FieldByName('Remains').AsFloat <> 0 then
+      Begin
+        RemainsCDS.Edit;
+        RemainsCDS.FieldByName('Remains').AsFloat := 0;
+        RemainsCDS.Post;
+      End;
+      RemainsCDS.Next;
+    End;
+
+    AlternativeCDS.First;
+    while Not AlternativeCDS.eof do
+    Begin
+      if Remains_LiteCDS.locate('Id',AlternativeCDS.fieldByName('Id').AsInteger,[]) then
+      Begin
+        if AlternativeCDS.FieldByName('Remains').AsFloat <> Remains_LiteCDS.FieldByName('Remains').AsFloat then
+        Begin
+          AlternativeCDS.Edit;
+          AlternativeCDS.FieldByName('Remains').AsFloat := Remains_LiteCDS.FieldByName('Remains').AsFloat;
+          AlternativeCDS.Post;
+        End;
+      End
+      else
+      if AlternativeCDS.FieldByName('Remains').AsFloat <> 0 then
+      Begin
+        AlternativeCDS.Edit;
+        AlternativeCDS.FieldByName('Remains').AsFloat := 0;
+        AlternativeCDS.Post;
+      End;
+      AlternativeCDS.Next;
+    End;
+    RemainsCDS.GotoBookmark(B);
+    RemainsCDS.FreeBookmark(B);
+  finally
+    RemainsCDS.EnableControls;
+    RemainsCDS.AfterScroll := RemainsCDSAfterScroll;
+    RemainsCDSAfterScroll(RemainsCDS);
+    AlternativeCDS.Filtered := true;
+    AlternativeCDS.EnableControls;
+    Remains_LiteCDS.EnableControls;
+  end;
+end;
+
 procedure TMainCashForm.CalcTotalSumm;
 var
   B:TBookmark;
@@ -659,7 +746,13 @@ begin
   SoldRegim := true;
   actSpec.Checked := false;
   spNewCheck.Execute;
-  actRefresh.Execute;
+  if Self.Visible then
+  Begin
+    actRefreshLite.Execute;
+    UpdateRemains;
+  End
+  else
+    actRefresh.Execute;
   CalcTotalSumm;
   ceAmount.Value := 0;
   ceAmount.Enabled := true;

@@ -4,7 +4,6 @@ inherited ImportSettingsForm: TImportSettingsForm
   ClientWidth = 1184
   AddOnFormData.isAlwaysRefresh = False
   AddOnFormData.ChoiceAction = dsdChoiceGuides
-  ExplicitLeft = -386
   ExplicitWidth = 1192
   ExplicitHeight = 366
   PixelsPerInch = 96
@@ -36,13 +35,11 @@ inherited ImportSettingsForm: TImportSettingsForm
             Caption = #1050#1086#1076
             DataBinding.FieldName = 'Code'
             Visible = False
-            HeaderAlignmentVert = vaCenter
             Width = 34
           end
           object clName: TcxGridDBColumn
             Caption = #1053#1072#1080#1084#1077#1085#1086#1074#1072#1085#1080#1077
             DataBinding.FieldName = 'Name'
-            HeaderAlignmentVert = vaCenter
             Width = 97
           end
           object clDirectory: TcxGridDBColumn
@@ -55,7 +52,6 @@ inherited ImportSettingsForm: TImportSettingsForm
                 Default = True
                 Kind = bkEllipsis
               end>
-            HeaderAlignmentVert = vaCenter
             Width = 84
           end
           object clJuridicalName: TcxGridDBColumn
@@ -69,7 +65,6 @@ inherited ImportSettingsForm: TImportSettingsForm
                 Kind = bkEllipsis
               end>
             Properties.ReadOnly = True
-            HeaderAlignmentVert = vaCenter
             Width = 67
           end
           object clContractName: TcxGridDBColumn
@@ -83,7 +78,6 @@ inherited ImportSettingsForm: TImportSettingsForm
                 Kind = bkEllipsis
               end>
             Properties.ReadOnly = True
-            HeaderAlignmentVert = vaCenter
             Width = 61
           end
           object clFileTypeName: TcxGridDBColumn
@@ -96,7 +90,6 @@ inherited ImportSettingsForm: TImportSettingsForm
                 Default = True
                 Kind = bkEllipsis
               end>
-            HeaderAlignmentVert = vaCenter
             Width = 90
           end
           object clImportTypeName: TcxGridDBColumn
@@ -110,13 +103,11 @@ inherited ImportSettingsForm: TImportSettingsForm
                 Kind = bkEllipsis
               end>
             Properties.ReadOnly = False
-            HeaderAlignmentVert = vaCenter
             Width = 56
           end
           object clStartRow: TcxGridDBColumn
             Caption = #8470' '#1089#1090#1088#1086#1082#1080' '#1076#1083#1103' Excel'
             DataBinding.FieldName = 'StartRow'
-            HeaderAlignmentVert = vaCenter
             Width = 71
           end
           object clQuery: TcxGridDBColumn
@@ -124,19 +115,16 @@ inherited ImportSettingsForm: TImportSettingsForm
             DataBinding.FieldName = 'Query'
             PropertiesClassName = 'TcxBlobEditProperties'
             Properties.BlobPaintStyle = bpsText
-            HeaderAlignmentVert = vaCenter
             Width = 58
           end
           object clHDR: TcxGridDBColumn
             DataBinding.FieldName = 'HDR'
             HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
             Width = 46
           end
           object clisErased: TcxGridDBColumn
             Caption = #1059#1076#1072#1083#1077#1085
             DataBinding.FieldName = 'isErased'
-            HeaderAlignmentVert = vaCenter
             Width = 53
           end
         end
@@ -173,7 +161,6 @@ inherited ImportSettingsForm: TImportSettingsForm
           object colParamNumber: TcxGridDBColumn
             Caption = #8470' '#1087#1087
             DataBinding.FieldName = 'ParamNumber'
-            HeaderAlignmentVert = vaCenter
             Options.Editing = False
             SortIndex = 0
             SortOrder = soAscending
@@ -183,14 +170,12 @@ inherited ImportSettingsForm: TImportSettingsForm
             Caption = #1053#1072#1080#1084#1077#1085#1086#1074#1072#1085#1080#1077' '#1087#1072#1088#1072#1084#1077#1090#1088#1072
             DataBinding.FieldName = 'ParamName'
             Visible = False
-            HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 101
           end
           object colUserParamName: TcxGridDBColumn
             Caption = #1053#1072#1079#1074#1072#1085#1080#1077' '#1076#1083#1103' '#1087#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1103
             DataBinding.FieldName = 'UserParamName'
-            HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 129
           end
@@ -202,20 +187,18 @@ inherited ImportSettingsForm: TImportSettingsForm
             Properties.Items.Strings = (
               '%OBJECT%'
               '%CONTRACT%'
-              '%LASTRECORD%')
-            HeaderAlignmentVert = vaCenter
+              '%LASTRECORD%'
+              '%EXTERNALPARAM%')
             Width = 113
           end
           object colDefaultValue: TcxGridDBColumn
             Caption = #1055#1086' '#1091#1084#1086#1083#1095#1072#1085#1080#1102
             DataBinding.FieldName = 'DefaultValue'
-            HeaderAlignmentVert = vaCenter
             Width = 95
           end
           object clIisErased: TcxGridDBColumn
             Caption = #1059#1076#1072#1083#1077#1085
             DataBinding.FieldName = 'isErased'
-            HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 48
           end
@@ -264,6 +247,7 @@ inherited ImportSettingsForm: TImportSettingsForm
     object dsdUpdateMaster: TdsdUpdateDataSet
       Category = 'DSDLib'
       MoveParams = <>
+      PostDataSetBeforeExecute = False
       StoredProc = spInsertUpdateImportType
       StoredProcList = <
         item
@@ -275,6 +259,7 @@ inherited ImportSettingsForm: TImportSettingsForm
     object dsdUpdateChild: TdsdUpdateDataSet
       Category = 'DSDLib'
       MoveParams = <>
+      PostDataSetBeforeExecute = False
       StoredProc = spInsertUpdateImportTypeItems
       StoredProcList = <
         item
@@ -369,6 +354,7 @@ inherited ImportSettingsForm: TImportSettingsForm
     object FileTypeKindChoiceForm: TOpenChoiceForm
       Category = 'DSDLib'
       MoveParams = <>
+      PostDataSetBeforeExecute = False
       Caption = 'FileTypeKindChoiceForm'
       FormName = 'TFileTypeKindForm'
       FormNameParam.Value = 'TFileTypeKindForm'
@@ -392,6 +378,7 @@ inherited ImportSettingsForm: TImportSettingsForm
     object ContractChoiceForm: TOpenChoiceForm
       Category = 'DSDLib'
       MoveParams = <>
+      PostDataSetBeforeExecute = False
       Caption = 'JuridicalChoiceForm'
       FormName = 'TContractForm'
       FormNameParam.Value = 'TContractForm'
@@ -415,6 +402,7 @@ inherited ImportSettingsForm: TImportSettingsForm
     object LoadObjectChoiceForm: TOpenChoiceForm
       Category = 'DSDLib'
       MoveParams = <>
+      PostDataSetBeforeExecute = False
       Caption = 'JuridicalChoiceForm'
       FormName = 'TLoadObjectForm'
       FormNameParam.Value = 'TLoadObjectForm'
@@ -449,6 +437,7 @@ inherited ImportSettingsForm: TImportSettingsForm
     object ImportType: TOpenChoiceForm
       Category = 'DSDLib'
       MoveParams = <>
+      PostDataSetBeforeExecute = False
       Caption = 'ImportType'
       FormName = 'TImportTypeForm'
       FormNameParam.Value = 'TImportTypeForm'

@@ -26,6 +26,8 @@ RETURNS TABLE (MovementId Integer      --ИД Документа
               ,PartionGoods TVarChar   --№ серии препарата
               ,ExpirationDate TDateTime--Срок годности
               ,PaymentDate TDateTime   --Дата оплаты
+              ,InvNumberBranch TVarChar--№ накладной в аптеке
+              ,BranchDate TDateTime    --Дата накладной в аптеке
               )
 
 
@@ -45,24 +47,27 @@ BEGIN
     vbUnitId := vbUnitKey::Integer;
 
     RETURN QUERY
-      SELECT Movement.Id                        AS MovementId
-            ,MovementDesc.ItemName              AS ItemName
-            ,MovementItem.Amount                AS Amount
-            ,Object.ObjectCode                  AS Code
-            ,Object.ValueData                   AS Name
-            ,Movement.OperDate                  AS OperDate
-            ,Movement.InvNumber                 AS InvNumber
-            ,Object_Unit.ValueData              AS UnitName
-            ,Object_From.ValueData              AS JuridicalName
-            ,MIFloat_Price.ValueData            AS Price
-            ,Status.ValueData                   AS STatusNAme
-            ,MIFloat_PriceSale.ValueData        AS PriceSale
-            ,Object_OrderKind.Id                AS OrderKindId
-            ,Object_OrderKind.ValueData         AS OrderKindName
-            ,MIString_Comment.ValueData         AS Comment
-            ,MIString_PartionGoods.ValueData    AS PartionGoods
-            ,MIDate_ExpirationDate.ValueData    AS ExpirationDate
-            ,MovementDate_Payment.ValueData     AS PaymentDate
+      SELECT Movement.Id                              AS MovementId
+            ,MovementDesc.ItemName                    AS ItemName
+            ,MovementItem.Amount                      AS Amount
+            ,Object.ObjectCode                        AS Code
+            ,Object.ValueData                         AS Name
+            ,Movement.OperDate                        AS OperDate
+            ,Movement.InvNumber                       AS InvNumber
+            ,Object_Unit.ValueData                    AS UnitName
+            ,Object_From.ValueData                    AS JuridicalName
+            ,MIFloat_Price.ValueData                  AS Price
+            ,Status.ValueData                         AS STatusNAme
+            ,MIFloat_PriceSale.ValueData              AS PriceSale
+            ,Object_OrderKind.Id                      AS OrderKindId
+            ,Object_OrderKind.ValueData               AS OrderKindName
+            ,MIString_Comment.ValueData               AS Comment
+            ,MIString_PartionGoods.ValueData          AS PartionGoods
+            ,MIDate_ExpirationDate.ValueData          AS ExpirationDate
+            ,MovementDate_Payment.ValueData           AS PaymentDate
+            ,MovementString_InvNumberBranch.ValueData AS InvNumberBranch
+            ,MovementDate_Branch.ValueData            AS BranchDate
+            
       FROM Movement 
         JOIN Object AS Status 
                     ON Status.Id = Movement.StatusId 
@@ -111,7 +116,13 @@ BEGIN
         LEFT JOIN MovementDate AS MovementDate_Payment
                                ON MovementDate_Payment.MovementId = Movement.Id
                               AND MovementDate_Payment.DescId = zc_MovementDate_Payment()
-                                  
+        
+        LEFT JOIN MovementString AS MovementString_InvNumberBranch
+                                 ON MovementString_InvNumberBranch.MovementId = Movement.Id
+                                AND MovementString_InvNumberBranch.DescId = zc_MovementString_InvNumberBranch()
+        LEFT JOIN MovementDate AS MovementDate_Branch
+                               ON MovementDate_Branch.MovementId = Movement.Id
+                              AND MovementDate_Branch.DescId = zc_MovementDate_Branch()
     WHERE 
         Movement.DescId in (zc_Movement_OrderInternal(), zc_Movement_OrderExternal(), zc_Movement_Income())
         AND 

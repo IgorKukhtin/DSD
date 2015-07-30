@@ -317,7 +317,11 @@ uses
   Loss in '..\..\FormsFarmacy\Document\Loss.pas' {LossForm: TParentForm},
   LossJournal in '..\..\FormsFarmacy\Document\LossJournal.pas' {LossJournalForm: TParentForm},
   ArticleLoss in '..\..\Forms\Guides\ArticleLoss.pas' {ArticleLossForm: TParentForm},
-  ArticleLossEdit in '..\..\Forms\Guides\ArticleLossEdit.pas' {ArticleLossEditForm: TParentForm};
+  ArticleLossEdit in '..\..\Forms\Guides\ArticleLossEdit.pas' {ArticleLossEditForm: TParentForm},
+  Send in '..\..\FormsFarmacy\Document\Send.pas' {SendForm: TParentForm},
+  SendJournal in '..\..\FormsFarmacy\Document\SendJournal.pas' {SendJournalForm: TParentForm},
+  SendTest in '..\SOURCE\Movement\All\Farmacy\SendTest.pas',
+  SendMovementItemTest in '..\SOURCE\MovementItem\All\Farmacy\SendMovementItemTest.pas';
 
 {$R *.res}
 {$R DevExpressRus.res}

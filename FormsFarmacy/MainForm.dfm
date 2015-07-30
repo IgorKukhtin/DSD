@@ -710,6 +710,16 @@ inherited MainForm: TMainForm
       GuiParams = <>
       isShowModal = False
     end
+    object actSendJournal: TdsdOpenForm
+      Category = #1044#1086#1082#1091#1084#1077#1085#1090#1099
+      MoveParams = <>
+      Caption = #1055#1077#1088#1077#1084#1077#1097#1077#1085#1080#1103
+      FormName = 'TSendJournalForm'
+      FormNameParam.Value = 'TSendJournalForm'
+      FormNameParam.DataType = ftString
+      GuiParams = <>
+      isShowModal = False
+    end
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 496
@@ -880,6 +890,9 @@ inherited MainForm: TMainForm
       end
       object N56: TMenuItem
         Action = actLossJournal
+      end
+      object N57: TMenuItem
+        Action = actSendJournal
       end
     end
     object N36: TMenuItem [3]

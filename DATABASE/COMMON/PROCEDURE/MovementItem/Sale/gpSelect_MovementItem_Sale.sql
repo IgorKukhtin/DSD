@@ -13,7 +13,8 @@ CREATE OR REPLACE FUNCTION gpSelect_MovementItem_Sale(
 RETURNS TABLE (Id Integer, LineNum Integer, GoodsId Integer, GoodsCode Integer, GoodsName TVarChar
              , GoodsGroupNameFull TVarChar
              , Amount TFloat, AmountChangePercent TFloat, AmountPartner TFloat, ChangePercentAmount TFloat
-             , Price TFloat, CountForPrice TFloat, HeadCount TFloat, BoxCount TFloat
+             , Price TFloat, CountForPrice TFloat , PriceCost TFloat, SumCost TFloat
+             , HeadCount TFloat, BoxCount TFloat
              , PartionGoods TVarChar, GoodsKindId Integer, GoodsKindName  TVarChar, MeasureName TVarChar
              , AssetId Integer, AssetName TVarChar
              , BoxId Integer, BoxName TVarChar
@@ -65,6 +66,17 @@ BEGIN
      IF inShowAll THEN
 
      RETURN QUERY
+     
+     -- себестоимость 
+     WITH tmpPriceCost AS (SELECT MIC.MovementItemId, Sum ( MIC.Amount) *(-1) AS SumCost 
+                           FROM MovementItemContainer AS MIC
+                           WHERE MIC.MovementId = inMovementId 
+                             and MIC.DescId = zc_MIContainer_Summ()
+                             and MIC.isactive = False 
+                             and MIC.AccountId <> zc_Enum_Account_100301 ()
+                           GROUP BY MIC.MovementItemId
+                           )
+
        SELECT
              0                          AS Id
            , 0 :: Integer               AS LineNum
@@ -79,6 +91,8 @@ BEGIN
            , CAST (NULL AS TFloat)      AS ChangePercentAmount
            , CAST (lfObjectHistory_PriceListItem.ValuePrice AS TFloat) AS Price
            , CAST (1 AS TFloat)         AS CountForPrice
+           , CAST (0 AS TFloat)         AS PriceCost
+           , CAST (0 AS TFloat)         AS SumCost
            , CAST (NULL AS TFloat)      AS HeadCount
            , CAST (NULL AS TFloat)      AS BoxCount
            , CAST (NULL AS TVarChar)    AS PartionGoods
@@ -150,6 +164,8 @@ BEGIN
 
            , MIFloat_Price.ValueData                AS Price
            , MIFloat_CountForPrice.ValueData        AS CountForPrice
+           , CASE WHEN MovementItem.Amount <> 0 THEN tmpPriceCost.SumCost / MovementItem.Amount ELSE CAST (0 AS TFloat) END  ::TFloat AS PriceCost
+           , tmpPriceCost.SumCost    ::TFloat       AS SumCost
 
            , MIFloat_HeadCount.ValueData            AS HeadCount
            , MIFloat_BoxCount.ValueData             AS BoxCount
@@ -228,10 +244,23 @@ BEGIN
             LEFT JOIN ObjectString AS ObjectString_Goods_GoodsGroupFull
                                    ON ObjectString_Goods_GoodsGroupFull.ObjectId = MovementItem.ObjectId
                                   AND ObjectString_Goods_GoodsGroupFull.DescId = zc_ObjectString_Goods_GroupNameFull()
+                                  
+            LEFT JOIN tmpPriceCost ON tmpPriceCost.MovementItemId=MovementItem.Id
             ;
      ELSE
 
      RETURN QUERY
+
+     -- себестоимость 
+     WITH tmpPriceCost AS (SELECT MIC.MovementItemId, Sum ( MIC.Amount) *(-1) AS SumCost 
+                           FROM MovementItemContainer AS MIC
+                           WHERE MIC.MovementId = inMovementId 
+                             and MIC.DescId = zc_MIContainer_Summ()
+                             and MIC.isactive = False 
+                             and MIC.AccountId <> zc_Enum_Account_100301 ()
+                           GROUP BY MIC.MovementItemId
+                           )
+
        SELECT
              MovementItem.Id                        AS Id
            , CAST (row_number() OVER (ORDER BY MovementItem.Id) AS Integer) AS LineNum
@@ -247,6 +276,8 @@ BEGIN
 
            , MIFloat_Price.ValueData                AS Price
            , MIFloat_CountForPrice.ValueData        AS CountForPrice
+           , CASE WHEN MovementItem.Amount <> 0 THEN tmpPriceCost.SumCost / MovementItem.Amount ELSE CAST (0 AS TFloat) END  ::TFloat AS PriceCost
+           , tmpPriceCost.SumCost ::TFloat          AS SumCost
 
            , MIFloat_HeadCount.ValueData            AS HeadCount
            , MIFloat_BoxCount.ValueData             AS BoxCount
@@ -323,6 +354,8 @@ BEGIN
             LEFT JOIN ObjectString AS ObjectString_Goods_GoodsGroupFull
                                    ON ObjectString_Goods_GoodsGroupFull.ObjectId = MovementItem.ObjectId
                                   AND ObjectString_Goods_GoodsGroupFull.DescId = zc_ObjectString_Goods_GroupNameFull()
+
+            LEFT JOIN tmpPriceCost ON tmpPriceCost.MovementItemId=MovementItem.Id
             ;
 
      END IF;
