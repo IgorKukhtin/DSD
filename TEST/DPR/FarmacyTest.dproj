@@ -85,11 +85,11 @@
 			<DCCReference Include="..\SOURCE\METADATA\dbMetadataTest.pas"/>
 			<DCCReference Include="..\SOURCE\zLibUtil.pas"/>
 			<DCCReference Include="..\SOURCE\Function\CommonFunctionTest.pas"/>
-			<DCCReference Include="..\SOURCE\View\dbCreateViewTest.pas"/>
 			<DCCReference Include="..\SOURCE\dbFarmacyProcedureTest.pas"/>
 			<DCCReference Include="..\..\SOURCE\UtilConst.pas"/>
-			<DCCReference Include="..\SOURCE\dbEnumTest.pas"/>
 			<DCCReference Include="..\SOURCE\Process\ProcessTest.pas"/>
+			<DCCReference Include="..\SOURCE\dbEnumTest.pas"/>
+			<DCCReference Include="..\SOURCE\View\dbCreateViewTest.pas"/>
 			<DCCReference Include="..\SOURCE\Defaults\DefaultsTest.pas"/>
 			<DCCReference Include="..\SOURCE\LoadFarmacyFormTest.pas"/>
 			<DCCReference Include="..\..\Forms\Guides\PriceListGoodsItem.pas">
@@ -924,6 +924,25 @@
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<DCCReference Include="..\SOURCE\MovementItem\All\Farmacy\InventoryMovementItemTest.pas"/>
+			<DCCReference Include="..\SOURCE\Movement\All\Farmacy\LossTest.pas"/>
+			<DCCReference Include="..\SOURCE\MovementItem\All\Farmacy\LossMovementItemTest.pas"/>
+			<DCCReference Include="..\SOURCE\Objects\All\Farmacy\ArticleLossTest.pas"/>
+			<DCCReference Include="..\..\FormsFarmacy\Document\Loss.pas">
+				<Form>LossForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Document\LossJournal.pas">
+				<Form>LossJournalForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Guides\ArticleLoss.pas">
+				<Form>ArticleLossForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Guides\ArticleLossEdit.pas">
+				<Form>ArticleLossEditForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
 			<BuildConfiguration Include="Release">
 				<Key>Cfg_2</Key>
 				<CfgParent>Base</CfgParent>

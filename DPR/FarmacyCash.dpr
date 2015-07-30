@@ -5,7 +5,6 @@ uses
   SysUtils,
   Controls,
   UtilConst in '..\SOURCE\UtilConst.pas',
-  dsdApplication in '..\SOURCE\dsdApplication.pas',
   dsdException in '..\SOURCE\dsdException.pas',
   Log in '..\SOURCE\Log.pas',
   dsdDB in '..\SOURCE\COMPONENT\dsdDB.pas',
@@ -66,7 +65,8 @@ uses
   CashCloseDialog in '..\FormsFarmacy\Cash\CashCloseDialog.pas' {CashCloseDialogForm: TParentForm},
   VIPDialog in '..\FormsFarmacy\Cash\VIPDialog.pas' {VIPDialogForm: TParentForm},
   CashWork in '..\FormsFarmacy\Cash\CashWork.pas' {CashWorkForm},
-  AncestorDialog in '..\Forms\Ancestor\AncestorDialog.pas' {AncestorDialogForm: TParentForm};
+  AncestorDialog in '..\Forms\Ancestor\AncestorDialog.pas' {AncestorDialogForm: TParentForm},
+  dsdApplication in '..\SOURCE\dsdApplication.pas';
 
 {$R *.res}
 
