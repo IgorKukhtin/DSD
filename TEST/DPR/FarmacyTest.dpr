@@ -334,7 +334,7 @@ begin
   LocalProcedurePath := '..\DATABASE\FARMACY\PROCEDURE\';
   LocalProcessPath := '..\DATABASE\COMMON\PROCESS\';
 
-  gc_AdminPassword := 'Админ1234';
+  gc_AdminPassword := 'Админ';
   gc_ProgramName := 'Farmacy.exe';
 
   Application.Initialize;

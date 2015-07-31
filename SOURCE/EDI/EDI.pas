@@ -109,9 +109,15 @@ type
     property Directory: string read FDirectory write FDirectory;
   end;
 
-procedure Register;
 
+procedure Register;
 function lpStrToDateTime(DateTimeString: string): TDateTime;
+
+const
+  caType = 'UA1';  // Не обязательный, если не используется крипто-заголовок
+	euKeyTypeAccountant = 1;  // для подписи бухгалтера
+	euKeyTypeDirector   = 2;     // для подписи директора
+	euKeyTypeDigitalStamp = 3;   // для подписи печати
 
 implementation
 
@@ -651,15 +657,16 @@ begin
     + '0' + C_DOC_VER + C_DOC_STAN + '0' + C_DOC_TYPE +
     PAD0(copy(trim(HeaderDataSet.FieldByName('InvNumberPartner').asString), 1,
     7), 7) + '1' + FormatDateTime('mmyyyy',
-    HeaderDataSet.FieldByName('OperDate').asDateTime) + C_REG + C_RAJ + '.xml';
+    HeaderDataSet.FieldByName('OperDate').asDateTime) + C_REG + C_RAJ + '.p7s';
   DECLAR.OwnerDocument.SaveToFile(XMLFileName);
   if not SendToFTP then begin
      if Assigned(StoredProc) then
         StoredProc.Execute;
      exit;
   end;
+  P7SFileName := XMLFileName; //StringReplace(XMLFileName, 'xml', 'p7s', [rfIgnoreCase]);
 
-  P7SFileName := StringReplace(XMLFileName, 'xml', 'p7s', [rfIgnoreCase]);
+//  P7SFileName := StringReplace(XMLFileName, 'xml', 'p7s', [rfIgnoreCase]);
   try
     // подписать
     SignFile(XMLFileName, stDeclar);
@@ -919,14 +926,14 @@ begin
     C_DOC_SUB + '0' + C_DOC_VER + C_DOC_STAN + '0' + C_DOC_TYPE +
     PAD0(copy(trim(HeaderDataSet.FieldByName('InvNumberPartner').asString), 1,
     7), 7) + '1' + FormatDateTime('mmyyyy',
-    HeaderDataSet.FieldByName('OperDate').asDateTime) + C_REG + C_RAJ + '.xml';
+    HeaderDataSet.FieldByName('OperDate').asDateTime) + C_REG + C_RAJ + '.p7s';
   DECLAR.OwnerDocument.SaveToFile(XMLFileName);
   if not SendToFTP then begin
      if Assigned(StoredProc) then
         StoredProc.Execute;
      exit;
   end;
-  P7SFileName := StringReplace(XMLFileName, 'xml', 'p7s', [rfIgnoreCase]);
+  P7SFileName := XMLFileName; //StringReplace(XMLFileName, 'xml', 'p7s', [rfIgnoreCase]);
   try
     // подписать
     SignFile(XMLFileName, stDeclar);
@@ -1069,14 +1076,7 @@ var
   i: integer;
 begin
   if not VarIsNull(ComSigner) then
-    repeat
-      i := IUnknown(ComSigner)._Release;
-      if i < 0 then
-      begin
-        // ошибка;
-        Break;
-      end;
-    until i = 0;
+     ComSigner.Finalize;
   ComSigner := null;
 
   FreeAndNil(FIdFTP);
@@ -1332,50 +1332,49 @@ var
   privateKey: string;
   FileName: string;
 begin
-  ComSigner := CreateOleObject('ComSigner.ComSigner');
-  privateKey := '<RSAKeyValue>' +
-    '<Modulus>0vCnV3tJx2QhZl6KoCpyskW2Q4EB4lUspJVmvaqGIhWujFpaNESHmIKlbc47JCIFY+VtYenKJVPnfZN+xlw7QsfRiKX7AdOmUm+No+X2U3eDkq0+byeMvT9m1zo3MaX6yCWlicvpYDPO29iJn8RfGYmVIO0p54ERXdZg6GuD4Nc=</Modulus>'
-    + '<Exponent>AQAB</Exponent>' +
-    '<P>77+YBsrKezqaqOaQV0LFfP+c9J+N2qzmOlm04MD4TzbXC9huCQjaywzqadcdfNWERtQT1Dc0iOhHpR4xLSVgmw==</P>  '
-    + '<Q>4T0kYYkrJIZdBwaewETHk52yHIIu2jr4WFEKiwCSYI++WcocVVoRKabx96v3NDmTzQUIhmH0xFOYJY+BzzbOdQ==</Q>  '
-    + '<DP>CkEEjI3R2TFpef3agJDvh2gbW28Tjx3D/wzlKpO2SxUKX4xTMHm7eeHEiOBVd4heTvU1H+d4jL56ifpfmhG2Lw==</DP>  '
-    + '<DQ>N7CyahtMO3+tSKtuXQOkhO8ctsfJZdPmy49eF/hQOOfRnMnIL6JRVAcfFKnEOXly/eIctX1K07AHkmHlKqLWcQ==</DQ>  '
-    + '<InverseQ>01ZjPqfM69PA0hsYb6/5O38XT7IITGQPt1hMkTpVjhlDc3r3isPV8mgoTY/iKmTWx66Exjn+IlT6qB/X1FwDsw==</InverseQ> '
-    + '<D>YN9/YpgusmDkS+CYNmU4JnIIeejZxilKps0sEWeqUSX28uMdsQpV4W8CbTK8i2QKaK25NbHKEal+Uvf1TUCXP8b7xE5+FIcSykHd/Ta+veQM1Ljxnuwylkbq3N4GvyYro7D1z3trt6AxlGgDu8QjRoBc2Ba9XXRtlAToiN4i8y0=</D>'
-    + '</RSAKeyValue>';
+  ComSigner := CreateOleObject('EUTaxServiceFile.Library.1');
+
+  ComSigner.Initialize(caType);
+  ComSigner.SetUIMode(false);
+
   try
-    ComSigner.Initialize('ifin.ua', privateKey);
+  	ComSigner.ResetPrivateKey(euKeyTypeAccountant);
   except
     on E: Exception do
     begin
       ComSigner := null;
       raise Exception.Create
-        ('Ошибка библиотеки Exite. ComSigner.Initialize'#10#13 + E.Message);
-    end;
-  end;
-  try
-    ComSigner.ResetPrivateKey;
-  except
-    on E: Exception do
-    begin
-      ComSigner := null;
-      raise Exception.Create
-        ('Ошибка библиотеки Exite. ComSigner.ResetPrivateKey'#10#13 +
-        E.Message);
-    end;
-  end;
-  try
-    ComSigner.ResetCryptToCert;
-  except
-    on E: Exception do
-    begin
-      ComSigner := null;
-      raise Exception.Create
-        ('Ошибка библиотеки Exite. ComSigner.ResetCryptToCert'#10#13 +
+        ('Ошибка библиотеки Exite. EUTaxService.ResetPrivateKey(euKeyTypeAccountant)'#10#13 +
         E.Message);
     end;
   end;
 
+  try
+  	ComSigner.ResetPrivateKey(euKeyTypeDirector);
+  except
+    on E: Exception do
+    begin
+      ComSigner := null;
+      raise Exception.Create
+        ('Ошибка библиотеки Exite. EUTaxService.ResetPrivateKey(euKeyTypeAccountant)'#10#13 +
+        E.Message);
+    end;
+  end;
+
+  try
+  	ComSigner.ResetPrivateKey(euKeyTypeDigitalStamp);
+  except
+    on E: Exception do
+    begin
+      ComSigner := null;
+      raise Exception.Create
+        ('Ошибка библиотеки Exite. EUTaxService.ResetPrivateKey(euKeyTypeAccountant)'#10#13 +
+        E.Message);
+    end;
+  end;
+
+
+(*
   // Установка сетификатов
   try
     FileName := ExtractFilePath(ParamStr(0)) +
@@ -1458,16 +1457,17 @@ begin
         #10#13 + E.Message);
     end;
   end;
+*)
 
   try
     // Установка ключей
     FileName := ExtractFilePath(ParamStr(0)) + 'Ключ - Неграш О.В..ZS2';
-    ComSigner.SetPrivateKey(FileName, '24447183', 1); // бухгалтер
+	  ComSigner.SetPrivateKeyFile (euKeyTypeAccountant, FileName, '24447183', false); // бухгалтер
   except
     on E: Exception do
     begin
       ComSigner := null;
-      raise Exception.Create('Ошибка библиотеки Exite. ComSigner.SetPrivateKey '
+      raise Exception.Create('Ошибка библиотеки Exite. ComSigner.SetPrivateKeyFile '
         + FileName + #10#13 + E.Message);
     end;
   end;
@@ -1476,12 +1476,12 @@ begin
     // Установка ключей
     FileName := ExtractFilePath(ParamStr(0)) +
       'Ключ - для в_дтиску - Товариство з обмеженою в_дпов_дальн_стю АЛАН.ZS2';
-    ComSigner.SetPrivateKey(FileName, '24447183', 3); // Печать
+	  ComSigner.SetPrivateKeyFile (euKeyTypeDigitalStamp, FileName, '24447183', false); // Печать
   except
     on E: Exception do
     begin
       ComSigner := null;
-      raise Exception.Create('Ошибка библиотеки Exite. ComSigner.SetPrivateKey '
+      raise Exception.Create('Ошибка библиотеки Exite. ComSigner.SetPrivateKeyFile '
         + FileName + #10#13 + E.Message);
     end;
   end;
@@ -1490,12 +1490,12 @@ begin
     // Установка ключей
     FileName := ExtractFilePath(ParamStr(0)) +
       'Ключ - для шифрування - Товариство з обмеженою в_дпов_дальн_стю АЛАН.ZS2';
-    ComSigner.SetPrivateKey(FileName, '24447183', 4); // Печать
+	  ComSigner.SetPrivateKeyFile (euKeyTypeDigitalStamp, FileName, '24447183', false); // Печать
   except
     on E: Exception do
     begin
       ComSigner := null;
-      raise Exception.Create('Ошибка библиотеки Exite. ComSigner.SetPrivateKey '
+      raise Exception.Create('Ошибка библиотеки Exite. ComSigner.SetPrivateKeyFile '
         + FileName + #10#13 + E.Message);
     end;
   end;
@@ -2014,14 +2014,20 @@ begin
   // Подписание и/или шифрование
   for i := 1 to 10 do
     try
-      ComSigner.Process(FileName, vbSignType);
+      if SignType = stComDoc then
+          ComSigner.SetFilesOptions(False);
+      if SignType = stDeclar then
+          ComSigner.SetFilesOptions(true);
+
+      ComSigner.SignFilesByAccountant(FileName);
+      ComSigner.SignFilesByDigitalStamp(FileName);
       Break;
     except
       on E: Exception do
       begin
         if i > 9 then
           raise Exception.Create
-            ('Ошибка библиотеки Exite. ComSigner.Process'#10#13 + E.Message);
+            ('Ошибка библиотеки Exite. ComSigner.SignFilesByAccountant'#10#13 + E.Message);
       end;
     end;
 end;

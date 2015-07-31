@@ -82,7 +82,6 @@
 				<MainSource>MainSource</MainSource>
 			</DelphiCompile>
 			<DCCReference Include="..\SOURCE\UtilConst.pas"/>
-			<DCCReference Include="..\SOURCE\dsdApplication.pas"/>
 			<DCCReference Include="..\SOURCE\dsdException.pas"/>
 			<DCCReference Include="..\SOURCE\Log.pas"/>
 			<DCCReference Include="..\SOURCE\COMPONENT\dsdDB.pas"/>
@@ -152,6 +151,29 @@
 				<Form>AncestorBaseForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
+			<DCCReference Include="..\SOURCE\UtilConvert.pas"/>
+			<DCCReference Include="..\FormsFarmacy\Cash\CashInterface.pas"/>
+			<DCCReference Include="..\FormsFarmacy\Cash\CashFactory.pas"/>
+			<DCCReference Include="..\FormsFarmacy\Cash\Cash_FP3530T.pas"/>
+			<DCCReference Include="..\FormsFarmacy\Cash\Cash_FP3530T_NEW.pas"/>
+			<DCCReference Include="..\FormsFarmacy\Cash\IniUtils.pas"/>
+			<DCCReference Include="..\FormsFarmacy\Cash\FP3141_TLB.pas"/>
+			<DCCReference Include="..\FormsFarmacy\Cash\CashCloseDialog.pas">
+				<Form>CashCloseDialogForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\FormsFarmacy\Cash\VIPDialog.pas">
+				<Form>VIPDialogForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\FormsFarmacy\Cash\CashWork.pas">
+				<Form>CashWorkForm</Form>
+			</DCCReference>
+			<DCCReference Include="..\Forms\Ancestor\AncestorDialog.pas">
+				<Form>AncestorDialogForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\SOURCE\dsdApplication.pas"/>
 			<BuildConfiguration Include="Release">
 				<Key>Cfg_2</Key>
 				<CfgParent>Base</CfgParent>

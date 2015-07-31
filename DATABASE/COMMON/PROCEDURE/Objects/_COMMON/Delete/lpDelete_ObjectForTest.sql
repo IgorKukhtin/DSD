@@ -8,7 +8,6 @@ IN Session tvarchar)
   RETURNS void AS
 $BODY$
 BEGIN
-  /*
   -- Серьезный скрипт !!!НЕ ДЛЯ РАБОЧЕЙ БАЗЫ!!!
   DELETE FROM ObjectHistoryFloat WHERE ObjectHistoryFloat.objecthistoryid IN 
         (SELECT ID FROM ObjectHistory WHERE ObjectId = inId);
@@ -31,7 +30,6 @@ BEGIN
   DELETE FROM MovementItem WHERE ObjectId = inId;
   DELETE FROM Container WHERE ObjectId = inId;
   DELETE FROM ContainerLinkObject WHERE ObjectId = inId;
-  */
   DELETE FROM ObjectLink WHERE ObjectId = inId;
   DELETE FROM ObjectLink WHERE ChildObjectId = inId;
   DELETE FROM ObjectString WHERE ObjectId = inId;

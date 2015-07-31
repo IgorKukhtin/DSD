@@ -2199,12 +2199,13 @@ BEGIN
      DELETE FROM MovementItemLinkObject WHERE DescId = zc_MILinkObject_Branch() AND MovementItemId IN (SELECT MovementItemId FROM _tmpItem);
      DELETE FROM MovementLinkObject WHERE DescId = zc_MILinkObject_Branch() AND MovementId = inMovementId;*/
      -- !!!6.0.1. формируются свойства в элементах документа из данных для проводок!!!
-     PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_Branch(), tmp.MovementItemId, vbBranchId_To)
-     FROM (SELECT _tmpItem.MovementItemId
-           FROM _tmpItem
-          ) AS tmp;
+     PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_Branch(), _tmpItem.MovementItemId, vbBranchId_To)
+     FROM _tmpItem;
      -- !!!6.0.2. формируются свойство связь с <филиал> в документе из данных для проводок!!!
      PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_Branch(), inMovementId, vbBranchId_To);
+     -- !!!6.0.3. формируются свойства в элементах документа из данных для проводок!!!
+     PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_Business(), _tmpItem.MovementItemId, _tmpItem.BusinessId_To)
+     FROM _tmpItem;
 
 
      -- 6.1. ФИНИШ - Обязательно сохраняем Проводки

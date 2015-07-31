@@ -308,14 +308,6 @@ begin
     if PutCheckToCash(ASalerCash, PaidType) then
     begin
     // Проводим чек
-      if not Cash.AlwaysSold then
-      Begin
-        spGet_Object_CashRegister_By_Serial.ParamByName('inSerial').Value := Cash.FiscalNumber;
-        spGet_Object_CashRegister_By_Serial.Execute;
-        spComplete_Movement_Check.ParamByName('inCashRegisterId').Value := spGet_Object_CashRegister_By_Serial.ParamByName('outId').Value
-      End
-      else
-        spComplete_Movement_Check.ParamByName('inCashRegisterId').Value := 0;
       spComplete_Movement_Check.ParamByName('inPaidType').Value := Integer(PaidType);
       spComplete_Movement_Check.Execute;
        NewCheck;// процедура обновляет параметры для введения нового чека
@@ -436,74 +428,6 @@ begin
   end;
   SoldParallel:=iniSoldParallel;
   NewCheck;
-  (*
-  SendToCashOnly:= false;
-  FFilterRemains:=TStringList.Create;
-  FListStoreRemains:= TStringList.Create;
-  FFilterCheck:= TStringList.Create;
-  gbSaler.Visible:=GetDefaultValue_fromFile(ifDefaults,'Common','ShowSalerPanel','false')='true';
-  gbDiscount.Visible:=GetDefaultValue_fromFile(ifDefaults,'Saler','ShowDiscPanel','false')='true';
-  TotalPanel.Visible:=gbDiscount.Visible;
-  SpeedBar.Visible:=gbDiscount.Visible;
-  SoldParallel:=GetDefaultValue_fromFile(ifDefaults,'Common','SoldParallel','false')='true';
-  Application.HelpFile:=GetDefaultValue_fromFile(ifDefaults,'Common','HelpFile','CompToCash.hlp');
-  pKillDontEnterCheck;//удалить чеки не введенные в программу
-  inherited;
-  GuideCheck.IncSearchComponent:=IncrementalSearchCheck;
-  fEditFieldList.Add('NTZ');
-  fEditFieldList.Add('isReceipt');
-//------------------------------------------------------------------------------
-//       Установки по умолчанию
-  SoldEightReg:=GetDefaultValue_fromFile(ifDefaults,Self.ClassName,'EightReg','true')='true';
-
-  Cash:=TCashFactory.GetCash(GetDefaultValue_fromFile(ifDefaults, Self.ClassName, 'CashType','FP3530T_NEW'));
-
-  ceCount.Text:=GetDefaultValue_fromFile(ifDefaults,Self.ClassName,'CheckCount','1');
-  PrepareCheckID := 0;
-  UnitID := -abs(StrToInt(GetDefaultValue_fromFile(ifDefaults,'Common','CurrentUnit','-2')));
-  CashID := StrToInt(GetDefaultValue_fromFile(ifDefaults,Self.ClassName,'CashID','0'));
-  Grid.Color:=StrToInt(GetDefaultValue_fromFile(ifDefaults,Self.ClassName,'GridColor','-2147483644'));
-  CheckGrid.Color:=StrToInt(GetDefaultValue_fromFile(ifDefaults,Self.ClassName,'GridColor','-2147483644'));
-  // Пауза между отпуском одного товара в ms
-
-  isSold:=false;
-
-  AssignFile(SendFile,'###.###');
-
-  with NewQuery do begin
-    TFloatField(FieldByName('RemainsCount')).DisplayFormat:=   _fmtCount;
-    TFloatField(FieldByName('NTZ')).DisplayFormat:=   ',0.###; ; ';
-    TFloatField(FieldByName('OperCount')).DisplayFormat:=   _fmtCountOper;
-    TFloatField(FieldByName('LastPrice')).DisplayFormat:=      _fmtPrice;
-  end;
-  with CheckQuery do begin
-    TFloatField(FieldByName('OperCount')).DisplayFormat:= _fmtCountOper;
-    TFloatField(FieldByName('OperPrice')).DisplayFormat:= _fmtPrice;
-    TFloatField(FieldByName('OperSumm')).DisplayFormat:=  _fmtPrice;
-  end;
-
-  Query.ParamByName('@UnitId').AsInteger := abs(UnitId);
-  Query.ParamByName('@CategoriesId').AsInteger := StrToInt(GetDefaultValue_fromFile(ifOper,Self.ClassName,'CategoriesID','1'));
-
-  NewCheck;// процедура обновляет параметры для введения нового чека
-
-  FNameTimer:= TTimer.create(self);
-  FNameTimer.enabled:= False;
-  FNameTimer.Interval:= 333;
-  FNameTimer.OnTimer:= OnNameEditTimerEvent;
-
-  FTimer:= TTimer.create(self);
-  FTimer.enabled:= False;
-  FTimer.Interval:= 333;
-//  FTimer.OnTimer:= OnEditTimerEv11ent;
-//  NewQueryRemainsStore.Visible:=ShowStoreRemains;
-  NewQuerySendCount.Visible:=false;
-  cbQuite.Checked:=false;
-  Cash.AlwaysSold:=GetDefaultValue_fromFile(ifDefaults,Self.ClassName,'AlwaysSold','true')='true';
-  Grid.OnKeyDown := GridKeyDown;
-  NewQuery.Filtered := true;
-
-  *)
   OnCLoseQuery := ParentFormCloseQuery;
 end;
 

@@ -165,9 +165,15 @@ BEGIN
 
    -- Результат
     RETURN QUERY
-    WITH tmpAnalyzer AS (SELECT Constant_ProfitLoss_AnalyzerId_View.*
+    WITH tmpAnalyzer AS (SELECT AnalyzerId, isSale, isCost, isSumm, FALSE AS isLoss
                          FROM Constant_ProfitLoss_AnalyzerId_View
                          WHERE (isSale = TRUE AND inDescId = zc_Movement_Sale()) OR (isSale = FALSE AND inDescId = zc_Movement_ReturnIn())
+                        UNION
+                         SELECT zc_Enum_AnalyzerId_LossCount_20200() AS AnalyzerId -- Кол-во, списание при реализации/перемещении по цене 
+                              , FALSE AS isSale, FALSE AS isCost, FALSE AS isSumm, TRUE AS isLoss
+                        UNION
+                         SELECT zc_Enum_AnalyzerId_LossSumm_20200() AS AccountId --  Сумма с/с, списание при реализации/перемещении по цене 
+                              , FALSE AS isSale, TRUE AS isCost, FALSE AS isSumm, TRUE AS isLoss
                         ) 
         , tmpAccount AS (SELECT Object_Account_View.AccountGroupId, Object_Account_View.AccountId
                          FROM Object_Account_View
@@ -175,9 +181,9 @@ BEGIN
                                                                     , zc_Enum_AccountGroup_110000() -- Транзит
                                                                      )
                         UNION
-                         SELECT 0 AS AccountGroupId, zc_Enum_AnalyzerId_SummIn_110101() AS AccountId
+                         SELECT 0 AS AccountGroupId, zc_Enum_AnalyzerId_SummIn_110101() AS AccountId -- Сумма, забалансовый счет, приход транзит, хотя поле пишется в AccountId, при этом ContainerId - стандартный и в нем другой AccountId
                         UNION
-                         SELECT 0 AS AccountGroupId, zc_Enum_AnalyzerId_SummOut_110101() AS AccountId
+                         SELECT 0 AS AccountGroupId, zc_Enum_AnalyzerId_SummOut_110101() AS AccountId -- Сумма, забалансовый счет, расходтранзит, хотя поле пишется в AccountId, при этом ContainerId - стандартный и в нем другой AccountId
                         ) 
        SELECT Object_GoodsGroup.ValueData            AS GoodsGroupName 
          , ObjectString_Goods_GroupNameFull.ValueData AS GoodsGroupNameFull
@@ -426,22 +432,22 @@ BEGIN
                       , COALESCE (MLO_Branch.ObjectId, 0)   AS BranchId
 
                         -- 1.1. Кол-во, без AnalyzerId
-                      , SUM (CASE WHEN tmpAnalyzer.isSale = TRUE  AND tmpAnalyzer.isSumm = FALSE THEN -1 * MIContainer.Amount
-                                  WHEN tmpAnalyzer.isSale = FALSE AND tmpAnalyzer.isSumm = FALSE THEN  1 * MIContainer.Amount
+                      , SUM (CASE WHEN tmpAnalyzer.isSale = TRUE  AND tmpAnalyzer.isSumm = FALSE AND tmpAnalyzer.isLoss = FALSE THEN -1 * MIContainer.Amount
+                                  WHEN tmpAnalyzer.isSale = FALSE AND tmpAnalyzer.isSumm = FALSE AND tmpAnalyzer.isLoss = FALSE THEN  1 * MIContainer.Amount
                                   ELSE 0
                              END) AS OperCount
                         -- 1.2. Себестоимость, без AnalyzerId
-                      , SUM (CASE WHEN tmpAnalyzer.isSale = TRUE  AND tmpAnalyzer.isSumm = TRUE AND tmpAnalyzer.isCost = TRUE
+                      , SUM (CASE WHEN tmpAnalyzer.isSale = TRUE  AND tmpAnalyzer.isSumm = TRUE AND tmpAnalyzer.isCost = TRUE AND tmpAnalyzer.isLoss = FALSE
                                    AND COALESCE (tmpAnalyzer.AnalyzerId, 0) NOT IN (zc_Enum_AnalyzerId_SaleSumm_10500(), zc_Enum_AnalyzerId_SaleSumm_40200())
                                        THEN -1 * MIContainer.Amount
-                                  WHEN tmpAnalyzer.isSale = FALSE AND tmpAnalyzer.isSumm = TRUE AND tmpAnalyzer.isCost = TRUE
+                                  WHEN tmpAnalyzer.isSale = FALSE AND tmpAnalyzer.isSumm = TRUE AND tmpAnalyzer.isCost = TRUE AND tmpAnalyzer.isLoss = FALSE
                                    AND COALESCE (tmpAnalyzer.AnalyzerId, 0) <> zc_Enum_AnalyzerId_ReturnInSumm_40200()
                                        THEN  1 * MIContainer.Amount
                                   ELSE 0
                              END) AS SummIn
                         -- 1.3. Сумма, без AnalyzerId (на самом деле для OperCount_Partner)
-                      , SUM (CASE WHEN tmpAnalyzer.isSale = TRUE  AND tmpAnalyzer.isSumm = TRUE AND tmpAnalyzer.isCost = FALSE THEN  1 * MIContainer.Amount -- знак наоборот т.к. это проводка покупателя
-                                  WHEN tmpAnalyzer.isSale = FALSE AND tmpAnalyzer.isSumm = TRUE AND tmpAnalyzer.isCost = FALSE THEN -1 * MIContainer.Amount -- знак наоборот т.к. это проводка покупателя
+                      , SUM (CASE WHEN tmpAnalyzer.isSale = TRUE  AND tmpAnalyzer.isSumm = TRUE AND tmpAnalyzer.isCost = FALSE AND tmpAnalyzer.isLoss = FALSE THEN  1 * MIContainer.Amount -- знак наоборот т.к. это проводка покупателя
+                                  WHEN tmpAnalyzer.isSale = FALSE AND tmpAnalyzer.isSumm = TRUE AND tmpAnalyzer.isCost = FALSE AND tmpAnalyzer.isLoss = FALSE THEN -1 * MIContainer.Amount -- знак наоборот т.к. это проводка покупателя
                                   ELSE 0
                              END) AS SummOut_Partner
 
@@ -509,7 +515,7 @@ BEGIN
                       LEFT JOIN MovementItemLinkObject AS MLO_Business ON MLO_Business.MovementItemId = MIContainer.MovementItemId
                                                                       AND MLO_Business.DescId = zc_MILinkObject_Business()
                       LEFT JOIN MovementItemLinkObject AS MLO_Branch ON MLO_Branch.MovementItemId = MIContainer.MovementItemId
-                                                                    AND MLO_Branch.DescId = zc_MovementLinkObject_Branch()
+                                                                    AND MLO_Branch.DescId = zc_MILinkObject_Branch()
 
                  GROUP BY MIContainer.ContainerId
                         , MIContainer.WhereObjectId_analyzer
