@@ -13,7 +13,7 @@ uses
   cxMaskEdit, cxDropDownEdit, cxCalendar, cxLabel, cxTextEdit, Vcl.ExtCtrls,
   cxGridLevel, cxGridCustomTableView, cxGridTableView, cxGridDBTableView,
   cxGridCustomView, cxGrid, cxPC, cxCurrencyEdit, cxCheckBox, frxClass, frxDBSet,
-  dxSkinsCore, dxSkinsDefaultPainters, dxSkinscxPCPainter;
+  dxSkinsCore, dxSkinsDefaultPainters, dxSkinscxPCPainter, cxImageComboBox;
 
 type
   TPriceCorrectiveForm = class(TAncestorDocumentForm)
@@ -78,6 +78,16 @@ type
     clGoodsGroupNameFull: TcxGridDBColumn;
     cxLabel16: TcxLabel;
     ceComment: TcxTextEdit;
+    TaxCorrectiveDS: TDataSource;
+    TaxCorrectiveCDS: TClientDataSet;
+    spMovementUnCompleteTaxCorrective: TdsdStoredProc;
+    spSelectTaxCorrective: TdsdStoredProc;
+    gpUpdateTaxCorrective: TdsdStoredProc;
+    spMovementCompleteTaxCorrective: TdsdStoredProc;
+    spMovementSetErasedTaxCorrective: TdsdStoredProc;
+    TaxCorrectiveViewAddOn: TdsdDBViewAddOn;
+    actOpenTaxCorrective: TdsdOpenForm;
+    bbOpenTaxCorrective: TdxBarButton;
   private
     { Private declarations }
   public
