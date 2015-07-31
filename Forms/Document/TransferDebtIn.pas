@@ -117,6 +117,8 @@ type
     colIsMedoc: TcxGridDBColumn;
     cxLabel17: TcxLabel;
     ceComment: TcxTextEdit;
+    bbOpenTaxCorrective: TdxBarButton;
+    actOpenTaxCorrective: TdsdOpenForm;
   private
     { Private declarations }
   public
