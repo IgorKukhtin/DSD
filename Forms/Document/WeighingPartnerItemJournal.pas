@@ -96,6 +96,9 @@ type
     BoxNumber: TcxGridDBColumn;
     BoxName: TcxGridDBColumn;
     Price: TcxGridDBColumn;
+    RouteGroupName: TcxGridDBColumn;
+    RouteName: TcxGridDBColumn;
+    RouteSortingName: TcxGridDBColumn;
   private
   public
   end;
