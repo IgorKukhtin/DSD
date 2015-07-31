@@ -2204,6 +2204,7 @@ inherited Report_GoodsMIForm: TReport_GoodsMIForm
     Top = 128
   end
   inherited RefreshDispatcher: TRefreshDispatcher
+    ShowDialogAction = ExecuteDialog
     ComponentList = <
       item
         Component = PeriodChoice
