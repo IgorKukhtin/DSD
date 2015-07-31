@@ -3,13 +3,14 @@ inherited ReturnInForm: TReturnInForm
   ClientHeight = 650
   ClientWidth = 1104
   ExplicitWidth = 1120
-  ExplicitHeight = 685
+  ExplicitHeight = 688
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 166
     Width = 1104
     Height = 484
+    Properties.ActivePage = cxTabSheetTaxCorrective
     ExplicitTop = 166
     ExplicitWidth = 1104
     ExplicitHeight = 484
@@ -977,13 +978,52 @@ inherited ReturnInForm: TReturnInForm
         end>
       RefreshOnTabSetChanges = True
     end
+    inherited actGridToExcel: TdsdGridToExcel
+      Enabled = False
+    end
     inherited actMISetErased: TdsdUpdateErased
       TabSheet = tsMain
+      Enabled = False
     end
     inherited actMISetUnErased: TdsdUpdateErased
       TabSheet = tsMain
+      Enabled = False
     end
-    object actUpdateTaxCorrectiveDS: TdsdUpdateDataSet [7]
+    object actOpenTaxCorrective: TdsdOpenForm [7]
+      Category = 'DSDLib'
+      TabSheet = cxTabSheetTaxCorrective
+      MoveParams = <>
+      Caption = #1055#1088#1086#1089#1084#1086#1090#1088' <'#1044#1086#1082#1091#1084#1077#1085#1090#1072' '#1082#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1082#1080'>'
+      Hint = #1055#1088#1086#1089#1084#1086#1090#1088' <'#1044#1086#1082#1091#1084#1077#1085#1090#1072' '#1082#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1082#1080'>'
+      ImageIndex = 1
+      FormName = 'TTaxCorrectiveForm'
+      FormNameParam.Value = 'TTaxCorrectiveForm'
+      FormNameParam.DataType = ftString
+      GuiParams = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = TaxCorrectiveCDS
+          ComponentItem = 'Id'
+          ParamType = ptInput
+        end
+        item
+          Name = 'inmask'
+          Value = 'False'
+          DataType = ftBoolean
+          ParamType = ptInput
+        end
+        item
+          Name = 'inOperDate'
+          Value = Null
+          Component = TaxCorrectiveCDS
+          ComponentItem = 'OperDate'
+          DataType = ftDateTime
+          ParamType = ptInput
+        end>
+      isShowModal = False
+    end
+    object actUpdateTaxCorrectiveDS: TdsdUpdateDataSet [8]
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -995,11 +1035,10 @@ inherited ReturnInForm: TReturnInForm
       Caption = 'actUpdateTaxCorrectiveDS'
       DataSource = TaxCorrectiveDS
     end
-    object actUnCompleteTaxCorrective: TdsdChangeMovementStatus [9]
+    object actUnCompleteTaxCorrective: TdsdChangeMovementStatus [10]
       Category = 'DSDLib'
       TabSheet = cxTabSheetTaxCorrective
       MoveParams = <>
-      Enabled = False
       StoredProc = spMovementUnCompleteTaxCorrective
       StoredProcList = <
         item
@@ -1014,11 +1053,10 @@ inherited ReturnInForm: TReturnInForm
       Status = mtUncomplete
       DataSource = TaxCorrectiveDS
     end
-    object actSetErasedTaxCorrective: TdsdChangeMovementStatus [10]
+    object actSetErasedTaxCorrective: TdsdChangeMovementStatus [11]
       Category = 'DSDLib'
       TabSheet = cxTabSheetTaxCorrective
       MoveParams = <>
-      Enabled = False
       StoredProc = spMovementSetErasedTaxCorrective
       StoredProcList = <
         item
@@ -1034,11 +1072,10 @@ inherited ReturnInForm: TReturnInForm
       Status = mtDelete
       DataSource = TaxCorrectiveDS
     end
-    object actCompleteTaxCorrective: TdsdChangeMovementStatus [11]
+    object actCompleteTaxCorrective: TdsdChangeMovementStatus [12]
       Category = 'DSDLib'
       TabSheet = cxTabSheetTaxCorrective
       MoveParams = <>
-      Enabled = False
       StoredProc = spMovementCompleteTaxCorrective
       StoredProcList = <
         item
@@ -1084,7 +1121,7 @@ inherited ReturnInForm: TReturnInForm
       ReportNameParam.ComponentItem = 'ReportName'
       ReportNameParam.ParamType = ptInput
     end
-    object actPrint_TaxCorrective_Us: TdsdPrintAction [13]
+    object actPrint_TaxCorrective_Us: TdsdPrintAction [14]
       Category = 'DSDLib'
       MoveParams = <>
       StoredProc = spSelectPrintTaxCorrective_Us
@@ -1104,7 +1141,6 @@ inherited ReturnInForm: TReturnInForm
           DataSet = PrintHeaderCDS
           UserName = 'frxDBDHeader'
         end>
-      CopiesCount = 1
       Params = <
         item
           Name = 'Id'
@@ -1120,7 +1156,7 @@ inherited ReturnInForm: TReturnInForm
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
     end
-    object actPrint_TaxCorrective_Client: TdsdPrintAction [14]
+    object actPrint_TaxCorrective_Client: TdsdPrintAction [15]
       Category = 'DSDLib'
       MoveParams = <>
       StoredProc = spSelectPrintTaxCorrective_Client
@@ -1140,7 +1176,6 @@ inherited ReturnInForm: TReturnInForm
           DataSet = PrintHeaderCDS
           UserName = 'frxDBDHeader'
         end>
-      CopiesCount = 1
       Params = <
         item
           Name = 'Id'
@@ -1164,7 +1199,7 @@ inherited ReturnInForm: TReturnInForm
         item
         end>
     end
-    object mactPrint: TMultiAction [16]
+    object mactPrint: TMultiAction [17]
       Category = 'DSDLib'
       MoveParams = <>
       ActionList = <
@@ -1179,7 +1214,7 @@ inherited ReturnInForm: TReturnInForm
       ImageIndex = 3
       ShortCut = 16464
     end
-    object actPrint_ReturnIn_by_TaxCorrective: TdsdPrintAction [17]
+    object actPrint_ReturnIn_by_TaxCorrective: TdsdPrintAction [18]
       Category = 'DSDLib'
       MoveParams = <>
       StoredProc = spSelectPrintTaxCorrective_Client
@@ -1199,7 +1234,6 @@ inherited ReturnInForm: TReturnInForm
           DataSet = PrintHeaderCDS
           UserName = 'frxDBDHeader'
         end>
-      CopiesCount = 1
       Params = <
         item
           Name = 'Id'
@@ -1220,7 +1254,7 @@ inherited ReturnInForm: TReturnInForm
         item
         end>
     end
-    object actTaxJournalChoice: TOpenChoiceForm [21]
+    object actTaxJournalChoice: TOpenChoiceForm [22]
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -1267,6 +1301,7 @@ inherited ReturnInForm: TReturnInForm
     end
     inherited actAddMask: TdsdExecStoredProc
       TabSheet = tsMain
+      Enabled = False
     end
     object actSPPrintProcName: TdsdExecStoredProc
       Category = 'DSDLib'
@@ -1611,6 +1646,14 @@ inherited ReturnInForm: TReturnInForm
         end
         item
           Visible = True
+          ItemName = 'bbOpenTaxCorrective'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbMovementItemContainer'
         end
         item
@@ -1704,6 +1747,10 @@ inherited ReturnInForm: TReturnInForm
       Hint = #1056#1072#1089#1095#1077#1090' <'#1050#1086#1083#1080#1095#1077#1089#1090#1074#1086' '#1091' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1103'>'
       Visible = ivAlways
       Control = cbCalcAmountPartner
+    end
+    object bbOpenTaxCorrective: TdxBarButton
+      Action = actOpenTaxCorrective
+      Category = 0
     end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn

@@ -138,6 +138,8 @@ type
     actGoodsChoice: TOpenChoiceForm;
     edInvNumberSale: TcxButtonEdit;
     cxLabel19: TcxLabel;
+    actOpenTaxCorrective: TdsdOpenForm;
+    bbOpenTaxCorrective: TdxBarButton;
   private
     { Private declarations }
   public

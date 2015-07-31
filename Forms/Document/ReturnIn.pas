@@ -144,6 +144,8 @@ type
     edInvNumberParent: TcxButtonEdit;
     ParentChoiceGuides: TdsdGuides;
     actGoodsChoice: TOpenChoiceForm;
+    actOpenTaxCorrective: TdsdOpenForm;
+    bbOpenTaxCorrective: TdxBarButton;
   private
     { Private declarations }
   public

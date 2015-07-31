@@ -10,19 +10,20 @@ inherited TransferDebtInForm: TTransferDebtInForm
     Top = 166
     Width = 1020
     Height = 496
-    ExplicitTop = 131
+    Properties.ActivePage = cxTabSheetTaxCorrective
+    ExplicitTop = 166
     ExplicitWidth = 1020
-    ExplicitHeight = 531
+    ExplicitHeight = 496
     ClientRectBottom = 496
     ClientRectRight = 1020
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 1020
-      ExplicitHeight = 507
+      ExplicitHeight = 472
       inherited cxGrid: TcxGrid
         Width = 1020
         Height = 472
         ExplicitWidth = 1020
-        ExplicitHeight = 507
+        ExplicitHeight = 472
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -152,7 +153,6 @@ inherited TransferDebtInForm: TTransferDebtInForm
     object cxTabSheetTaxCorrective: TcxTabSheet
       Caption = #1050#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1082#1080
       ImageIndex = 2
-      ExplicitHeight = 507
       object cxGridTaxCorrective: TcxGrid
         Left = 0
         Top = 0
@@ -160,7 +160,6 @@ inherited TransferDebtInForm: TTransferDebtInForm
         Height = 472
         Align = alClient
         TabOrder = 0
-        ExplicitHeight = 507
         object cxGridTaxCorrectiveDBTableView: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = TaxCorrectiveDS
@@ -808,11 +807,16 @@ inherited TransferDebtInForm: TTransferDebtInForm
         end>
       RefreshOnTabSetChanges = True
     end
+    inherited actGridToExcel: TdsdGridToExcel
+      Enabled = False
+    end
     inherited actMISetErased: TdsdUpdateErased
       TabSheet = tsMain
+      Enabled = False
     end
     inherited actMISetUnErased: TdsdUpdateErased
       TabSheet = tsMain
+      Enabled = False
     end
     object MedocAction: TMedocAction [4]
       Category = 'TaxLib'
@@ -953,6 +957,41 @@ inherited TransferDebtInForm: TTransferDebtInForm
     end
     inherited actAddMask: TdsdExecStoredProc
       TabSheet = tsMain
+      Enabled = False
+    end
+    object actOpenTaxCorrective: TdsdOpenForm
+      Category = 'DSDLib'
+      TabSheet = cxTabSheetTaxCorrective
+      MoveParams = <>
+      Caption = #1055#1088#1086#1089#1084#1086#1090#1088' <'#1044#1086#1082#1091#1084#1077#1085#1090#1072' '#1082#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1082#1080'>'
+      Hint = #1055#1088#1086#1089#1084#1086#1090#1088' <'#1044#1086#1082#1091#1084#1077#1085#1090#1072' '#1082#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1082#1080'>'
+      ImageIndex = 1
+      FormName = 'TTaxCorrectiveForm'
+      FormNameParam.Value = 'TTaxCorrectiveForm'
+      FormNameParam.DataType = ftString
+      GuiParams = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = TaxCorrectiveCDS
+          ComponentItem = 'Id'
+          ParamType = ptInput
+        end
+        item
+          Name = 'inmask'
+          Value = 'False'
+          DataType = ftBoolean
+          ParamType = ptInput
+        end
+        item
+          Name = 'inOperDate'
+          Value = Null
+          Component = TaxCorrectiveCDS
+          ComponentItem = 'OperDate'
+          DataType = ftDateTime
+          ParamType = ptInput
+        end>
+      isShowModal = False
     end
     object actTaxCorrective: TdsdExecStoredProc
       Category = 'DSDLib'
@@ -1020,7 +1059,6 @@ inherited TransferDebtInForm: TTransferDebtInForm
       Category = 'DSDLib'
       TabSheet = cxTabSheetTaxCorrective
       MoveParams = <>
-      Enabled = False
       StoredProc = spMovementUnCompleteTaxCorrective
       StoredProcList = <
         item
@@ -1039,7 +1077,6 @@ inherited TransferDebtInForm: TTransferDebtInForm
       Category = 'DSDLib'
       TabSheet = cxTabSheetTaxCorrective
       MoveParams = <>
-      Enabled = False
       StoredProc = spMovementSetErasedTaxCorrective
       StoredProcList = <
         item
@@ -1059,7 +1096,6 @@ inherited TransferDebtInForm: TTransferDebtInForm
       Category = 'DSDLib'
       TabSheet = cxTabSheetTaxCorrective
       MoveParams = <>
-      Enabled = False
       StoredProc = spMovementCompleteTaxCorrective
       StoredProcList = <
         item
@@ -1094,7 +1130,6 @@ inherited TransferDebtInForm: TTransferDebtInForm
           DataSet = PrintHeaderCDS
           UserName = 'frxDBDHeader'
         end>
-      CopiesCount = 1
       Params = <
         item
           Name = 'Id'
@@ -1138,7 +1173,6 @@ inherited TransferDebtInForm: TTransferDebtInForm
           DataSet = PrintHeaderCDS
           UserName = 'frxDBDHeader'
         end>
-      CopiesCount = 1
       Params = <
         item
           Name = 'Id'
@@ -1174,7 +1208,6 @@ inherited TransferDebtInForm: TTransferDebtInForm
           DataSet = PrintHeaderCDS
           UserName = 'frxDBDHeader'
         end>
-      CopiesCount = 1
       Params = <
         item
           Name = 'Id'
@@ -1244,7 +1277,6 @@ inherited TransferDebtInForm: TTransferDebtInForm
       Category = 'TaxLib'
       TabSheet = cxTabSheetTaxCorrective
       MoveParams = <>
-      Enabled = False
       ActionList = <
         item
           Action = actMedocProcedure
@@ -1407,6 +1439,14 @@ inherited TransferDebtInForm: TTransferDebtInForm
         end
         item
           Visible = True
+          ItemName = 'bbOpenTaxCorrective'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbMovementItemContainer'
         end
         item
@@ -1487,6 +1527,10 @@ inherited TransferDebtInForm: TTransferDebtInForm
     end
     object bbtMeDoc: TdxBarButton
       Action = mactMeDoc
+      Category = 0
+    end
+    object bbOpenTaxCorrective: TdxBarButton
+      Action = actOpenTaxCorrective
       Category = 0
     end
   end
