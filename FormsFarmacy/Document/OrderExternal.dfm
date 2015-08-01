@@ -168,6 +168,7 @@ inherited OrderExternalForm: TOrderExternalForm
         Width = 250
         Height = 200
         TabOrder = 1
+        Visible = False
         object cxGridExportDBTableView: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = ExportDS

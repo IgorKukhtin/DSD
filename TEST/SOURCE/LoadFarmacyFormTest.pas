@@ -76,7 +76,8 @@ type
 implementation
 
 uses CommonData, Storage, FormStorage, Classes, Authentication, SysUtils,
-     cxPropertiesStore, cxStorage, DBClient, dsdDB, ActionTest, MainForm, UtilConst;
+     cxPropertiesStore, cxStorage, DBClient, dsdDB, ActionTest, MainForm,
+     UtilConst;
 
 { TLoadFormTest }
 

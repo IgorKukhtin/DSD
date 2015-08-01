@@ -432,9 +432,9 @@ type
     // данное свойство нужно только в случае открытия диалога ДО формы. Что бы не быдо 2-х перечитываний запроса
     RefreshAllow: boolean;
     function Execute: boolean; override;
-    property RefreshDispatcher: TRefreshDispatcher read FRefreshDispatcher write FRefreshDispatcher;
     constructor Create(AOwner: TComponent); override;
   published
+    property RefreshDispatcher: TRefreshDispatcher read FRefreshDispatcher write FRefreshDispatcher;
     property OpenBeforeShow: boolean read FOpenBeforeShow write FOpenBeforeShow;
   end;
 

@@ -543,7 +543,7 @@ type
     procedure ExecuteReport(AReportName: String; ADataSets: TdsdDataSets;
       AParams: TdsdParams; ACopiesCount: Integer = 1; AWithOutPreview:Boolean = False;
       ADesignReport:Boolean = False; AModal:Boolean = False; APreviewWindowMaximized:Boolean = True);
-  End;
+  end;
   // Действие печати
   TdsdPrintAction = class(TdsdCustomDataSetAction)
   private
