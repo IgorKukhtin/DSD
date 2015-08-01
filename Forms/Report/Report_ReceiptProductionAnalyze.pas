@@ -13,7 +13,8 @@ uses
   dsdAction, Vcl.ActnList, cxPropertiesStore, cxLabel, cxTextEdit, cxMaskEdit,
   cxDropDownEdit, cxCalendar, Vcl.ExtCtrls, cxGridLevel, cxGridCustomView,
   cxGridCustomTableView, cxGridTableView, cxGridDBTableView, cxGrid, cxPC,
-  dsdGuides, cxButtonEdit, Vcl.Grids, Vcl.DBGrids, cxCurrencyEdit;
+  dsdGuides, cxButtonEdit, Vcl.Grids, Vcl.DBGrids, cxCurrencyEdit, dxSkinsCore,
+  dxSkinsDefaultPainters, dxSkinscxPCPainter, dxSkinsdxBarPainter;
 
 type
   TReport_ReceiptProductionAnalyzeForm = class(TAncestorReportForm)
@@ -27,7 +28,6 @@ type
     edToUnit: TcxButtonEdit;
     ToUnitGuides: TdsdGuides;
     colGoodsGroupNameFull: TcxGridDBColumn;
-    colReceiptCode: TcxGridDBColumn;
     cxLabel11: TcxLabel;
     edPriceList_1: TcxButtonEdit;
     PriceList_1_Guides: TdsdGuides;
@@ -42,8 +42,8 @@ type
     PriceList_sale_Guides: TdsdGuides;
     cxGridLevel1: TcxGridLevel;
     ChildView: TcxGridDBTableView;
-    clMainReceiptid: TcxGridDBColumn;
-    clValue: TcxGridDBColumn;
+    clReceiptid: TcxGridDBColumn;
+    AmountChild: TcxGridDBColumn;
     clGoodsCode: TcxGridDBColumn;
     clGoodsName: TcxGridDBColumn;
     clPrice1: TcxGridDBColumn;
@@ -52,10 +52,25 @@ type
     ChildViewAddOn: TdsdDBViewAddOn;
     clPrice2: TcxGridDBColumn;
     clPrice3: TcxGridDBColumn;
-    clSum1: TcxGridDBColumn;
-    clSum2: TcxGridDBColumn;
-    clSum3: TcxGridDBColumn;
-    colAmountSumm: TcxGridDBColumn;
+    Summ1: TcxGridDBColumn;
+    Summ2: TcxGridDBColumn;
+    Summ3: TcxGridDBColumn;
+    OperSumm: TcxGridDBColumn;
+    Amount: TcxGridDBColumn;
+    Amount_Weight: TcxGridDBColumn;
+    OperCount_Weight: TcxGridDBColumn;
+    Price_in: TcxGridDBColumn;
+    GroupNumber: TcxGridDBColumn;
+    GoodsKindName: TcxGridDBColumn;
+    MeasureNameChild: TcxGridDBColumn;
+    GoodsGroupNameFull: TcxGridDBColumn;
+    Color_calc: TcxGridDBColumn;
+    Receiptid: TcxGridDBColumn;
+    isStart: TcxGridDBColumn;
+    Amount_start: TcxGridDBColumn;
+    Summ1_Start: TcxGridDBColumn;
+    Summ2_Start: TcxGridDBColumn;
+    Summ3_Start: TcxGridDBColumn;
   private
     { Private declarations }
   public

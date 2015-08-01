@@ -602,6 +602,23 @@ BEGIN
              ) AS tmpMIReport
        ;
 
+     -- !!!формируется свойство <Цена>!!!
+     PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_PartionGoods_Price(), tmp.PartionGoodsId, tmp.Price)
+     FROM (SELECT _tmpItem.PartionGoodsId_To AS PartionGoodsId, SUM (tmp.OperSumm) / SUM (_tmpItem.OperCount) AS Price
+           FROM _tmpItem
+                INNER JOIN (SELECT _tmpItemSumm.MovementItemId, SUM (_tmpItemSumm.OperSumm) AS OperSumm FROM _tmpItemSumm GROUP BY _tmpItemSumm.MovementItemId
+                           ) AS tmp ON tmp.MovementItemId = _tmpItem.MovementItemId
+           WHERE _tmpItem.PartionGoodsId_To > 0
+             AND _tmpItem.OperCount > 0
+             AND (_tmpItem.InfoMoneyDestinationId IN (zc_Enum_InfoMoneyDestination_20200() -- Общефирменные + Прочие ТМЦ
+                                                    , zc_Enum_InfoMoneyDestination_20300() -- Общефирменные + МНМА
+                                                    , zc_Enum_InfoMoneyDestination_70100() -- Капитальные инвестиции
+                                                     )
+                  )
+           GROUP BY _tmpItem.PartionGoodsId_To
+          ) AS tmp;
+
+
      -- 5.1. ФИНИШ - Обязательно сохраняем Проводки
      PERFORM lpInsertUpdate_MovementItemContainer_byTable ();
      -- 5.2. ФИНИШ - Обязательно сохраняем Проводки для Отчета

@@ -92,7 +92,7 @@ BEGIN
             LEFT JOIN Object AS Object_Juridical ON Object_Juridical.Id = ObjectLink_Car_Juridical.ChildObjectId            
 
      WHERE Object_Car.DescId = zc_Object_Car()
-       AND (tmpRoleAccessKey.AccessKeyId IS NOT NULL OR vbAccessKeyAll)
+       AND (tmpRoleAccessKey.AccessKeyId IS NOT NULL OR vbAccessKeyAll = TRUE OR Object_Unit.Id = 8395) -- 21000 Транспорт - сбыт
     ;
 
 END;

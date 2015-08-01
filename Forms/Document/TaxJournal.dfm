@@ -3,7 +3,7 @@ inherited TaxJournalForm: TTaxJournalForm
   ClientHeight = 535
   ClientWidth = 1110
   ExplicitWidth = 1126
-  ExplicitHeight = 573
+  ExplicitHeight = 570
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -384,6 +384,12 @@ inherited TaxJournalForm: TTaxJournalForm
             Options.Editing = False
             Width = 120
           end
+          object DateRegistered_notNull: TcxGridDBColumn
+            DataBinding.FieldName = 'DateRegistered_notNull'
+            Visible = False
+            VisibleForCustomization = False
+            Width = 55
+          end
         end
       end
     end
@@ -693,7 +699,6 @@ inherited TaxJournalForm: TTaxJournalForm
           DataSet = PrintItemsSverkaCDS
           UserName = 'frxDBDSverka'
         end>
-      CopiesCount = 1
       Params = <
         item
           Name = 'Id'
@@ -733,7 +738,6 @@ inherited TaxJournalForm: TTaxJournalForm
           DataSet = PrintItemsSverkaCDS
           UserName = 'frxDBDSverka'
         end>
-      CopiesCount = 1
       Params = <
         item
           Name = 'Id'
@@ -830,7 +834,7 @@ inherited TaxJournalForm: TTaxJournalForm
           Name = 'DateRegistered'
           Value = 41640d
           Component = MasterCDS
-          ComponentItem = 'DateRegistered'
+          ComponentItem = 'DateRegistered_notNull'
           DataType = ftDateTime
           ParamType = ptInputOutput
         end

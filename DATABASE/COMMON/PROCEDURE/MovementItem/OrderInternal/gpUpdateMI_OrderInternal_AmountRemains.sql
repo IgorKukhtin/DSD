@@ -22,11 +22,6 @@ BEGIN
     vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MI_OrderInternal());
 
 
-    -- пересчет Рецептур, временно захардкодил
-    PERFORM lpUpdate_Object_Receipt_Total (Object.Id, zfCalc_UserAdmin() :: Integer) FROM Object WHERE DescId = zc_Object_Receipt();
-    -- пересчет Рецептур, временно захардкодил
-    PERFORM lpUpdate_Object_Receipt_Parent (0, 0, 0);
-
     -- расчет, временно захардкодил
     vbIsPack:= EXISTS (SELECT MovementId FROM MovementLinkObject WHERE DescId = zc_MovementLinkObject_To() AND MovementId = inMovementId AND ObjectId = 8451); -- Цех Упаковки
     -- расчет, временно захардкодил

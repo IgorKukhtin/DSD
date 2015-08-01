@@ -10,7 +10,7 @@ CREATE OR REPLACE FUNCTION gpSelect_Movement_TaxCorrective(
     IN inSession        TVarChar    -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, InvNumber Integer, OperDate TDateTime, StatusCode Integer, StatusName TVarChar
-             , Checked Boolean, Document Boolean, DocumentValue TVarChar, DateRegistered TDateTime, InvNumberRegistered TVarChar
+             , Checked Boolean, Document Boolean, DocumentValue TVarChar, DateRegistered TDateTime, DateRegistered_notNull TDateTime, InvNumberRegistered TVarChar
              , PriceWithVAT Boolean, VATPercent TFloat
              , TotalCount TFloat
              , TotalSummVAT TFloat, TotalSummMVAT TFloat, TotalSummPVAT TFloat, TotalSumm TFloat
@@ -64,6 +64,7 @@ BEGIN
            , COALESCE (MovementBoolean_Document.ValueData, FALSE) :: Boolean         AS Document
            , CASE WHEN MovementBoolean_Document.ValueData = TRUE THEN 'V' ELSE '-' END :: TVarChar AS DocumentValue
            , MovementDate_DateRegistered.ValueData      AS DateRegistered
+           , COALESCE (MovementDate_DateRegistered.ValueData, inEndDate) :: TDateTime AS DateRegistered_notNull
            , MovementString_InvNumberRegistered.ValueData   AS InvNumberRegistered
            , MovementBoolean_PriceWithVAT.ValueData     AS PriceWithVAT
            , MovementFloat_VATPercent.ValueData         AS VATPercent
@@ -308,4 +309,4 @@ ALTER FUNCTION gpSelect_Movement_TaxCorrective (TDateTime, TDateTime, Boolean, B
 */
 
 -- тест
--- SELECT * FROM gpSelect_Movement_TaxCorrective (inStartDate:= '01.02.2014', inEndDate:= '01.02.2014', inIsRegisterDate:= FALSE, inIsErased:= TRUE, inSession:= zfCalc_UserAdmin())
+-- SELECT * FROM gpSelect_Movement_TaxCorrective (inStartDate:= '01.02.2015', inEndDate:= '01.02.2015', inIsRegisterDate:= FALSE, inIsErased:= TRUE, inSession:= zfCalc_UserAdmin())

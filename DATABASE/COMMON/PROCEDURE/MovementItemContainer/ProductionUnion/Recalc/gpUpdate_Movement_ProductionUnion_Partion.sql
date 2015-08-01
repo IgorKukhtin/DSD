@@ -17,14 +17,20 @@ BEGIN
    -- проверка прав пользователя на вызов процедуры
    -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Update_Movement_ProductionUnion_Partion());
 
-   -- Пересчет
-   PERFORM lpUpdate_Movement_ProductionUnion_Partion (inIsUpdate  := TRUE
-                                                 , inStartDate := inStartDate
-                                                 , inEndDate   := inEndDate
-                                                 , inFromId    := inFromId
-                                                 , inToId      := inToId
-                                                 , inUserId    := zc_Enum_Process_Auto_PartionClose() -- vbUserId
-                                                 );
+    -- пересчет Рецептур, временно захардкодил
+    PERFORM lpUpdate_Object_Receipt_Total (Object.Id, zfCalc_UserAdmin() :: Integer) FROM Object WHERE DescId = zc_Object_Receipt();
+    -- пересчет Рецептур, временно захардкодил
+    PERFORM lpUpdate_Object_Receipt_Parent (0, 0, 0);
+
+
+    -- Пересчет
+    PERFORM lpUpdate_Movement_ProductionUnion_Partion (inIsUpdate  := TRUE
+                                                     , inStartDate := inStartDate
+                                                     , inEndDate   := inEndDate
+                                                     , inFromId    := inFromId
+                                                     , inToId      := inToId
+                                                     , inUserId    := zc_Enum_Process_Auto_PartionClose() -- vbUserId
+                                                      );
 
 END;$BODY$
   LANGUAGE plpgsql VOLATILE;

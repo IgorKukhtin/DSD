@@ -254,8 +254,19 @@ BEGIN
         , CAST (COALESCE(Object_GoodsKind_complete.ValueData, '') AS TVarChar) AS GoodsKindName_complete
         , Object_Measure.ValueData       AS MeasureName
         , ObjectFloat_Weight.ValueData   AS Weight
+
         , CAST (COALESCE(Object_PartionGoods.Id, 0) AS Integer)           AS PartionGoodsId
-        , CAST (COALESCE(Object_PartionGoods.ValueData,'') AS TVarChar)  AS PartionGoodsName
+        , CASE WHEN ObjectLink_Goods.ChildObjectId <> 0
+                    THEN zfCalc_PartionGoodsName_InvNumber (inInvNumber       := Object_PartionGoods.ValueData
+                                                          , inOperDate        := ObjectDate_PartionGoods_Value.ValueData
+                                                          , inPrice           := ObjectFloat_PartionGoods_Price.ValueData
+                                                          , inUnitName_Partion:= Object_Unit.ValueData
+                                                          , inStorageName     := Object_Storage.ValueData
+                                                          , inGoodsName       := ''
+                                                           )
+               ELSE COALESCE (Object_PartionGoods.ValueData, '')
+          END :: TVarChar AS PartionGoodsName
+
         , Object_AssetTo.ValueData       AS AssetToName
 
         , CAST (tmpMIContainer_group.CountStart          AS TFloat) AS CountStart
@@ -635,6 +646,25 @@ BEGIN
         LEFT JOIN Object AS Object_GoodsKind_complete ON Object_GoodsKind_complete.Id = ObjectLink_GoodsKindComplete.ChildObjectId
         LEFT JOIN Object AS Object_PartionGoods ON Object_PartionGoods.Id = tmpMIContainer_group.PartionGoodsId
         LEFT JOIN Object AS Object_AssetTo ON Object_AssetTo.Id = tmpMIContainer_group.AssetToId
+
+                                    LEFT JOIN ObjectLink AS ObjectLink_Goods
+                                                         ON ObjectLink_Goods.ObjectId = tmpMIContainer_group.PartionGoodsId
+                                                        AND ObjectLink_Goods.DescId = zc_ObjectLink_PartionGoods_Goods()
+                                    LEFT JOIN ObjectLink AS ObjectLink_Unit
+                                                         ON ObjectLink_Unit.ObjectId = tmpMIContainer_group.PartionGoodsId
+                                                        AND ObjectLink_Unit.DescId = zc_ObjectLink_PartionGoods_Unit()
+                                    LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = ObjectLink_Unit.ChildObjectId
+                                    LEFT JOIN ObjectLink AS ObjectLink_Storage
+                                                         ON ObjectLink_Storage.ObjectId = tmpMIContainer_group.PartionGoodsId
+                                                        AND ObjectLink_Storage.DescId = zc_ObjectLink_PartionGoods_Storage()
+                                    LEFT JOIN Object AS Object_Storage ON Object_Storage.Id = ObjectLink_Storage.ChildObjectId
+                                    LEFT JOIN ObjectDate AS ObjectDate_PartionGoods_Value
+                                                         ON ObjectDate_PartionGoods_Value.ObjectId = tmpMIContainer_group.PartionGoodsId
+                                                        AND ObjectDate_PartionGoods_Value.DescId = zc_ObjectDate_PartionGoods_Value()
+                                    LEFT JOIN ObjectFloat AS ObjectFloat_PartionGoods_Price
+                                                          ON ObjectFloat_PartionGoods_Price.ObjectId = tmpMIContainer_group.PartionGoodsId
+                                                         AND ObjectFloat_PartionGoods_Price.DescId = zc_ObjectFloat_PartionGoods_Price()
+
 
         LEFT JOIN Object_Account_View AS View_Account ON View_Account.AccountId = tmpMIContainer_group.AccountId
 

@@ -204,7 +204,7 @@ BEGIN
              -- !!! проводим - Inventory !!!
              PERFORM gpComplete_Movement_Inventory (inMovementId     := inMovementId
                                                   , inIsLastComplete := NULL
-                                                  , inSession        := zc_Enum_Process_Auto_PrimeCost());
+                                                  , inSession        := zc_Enum_Process_Auto_PrimeCost() :: TVarChar);
      ELSE
          RAISE EXCEPTION 'NOT FIND inMovementId = %, MovementDescId = %(%)', inMovementId, vbMovementDescId, (SELECT ItemName FROM MovementDesc WHERE Id = vbMovementDescId);
      END IF;
