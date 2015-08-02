@@ -149,14 +149,12 @@ inherited IncomePharmacyJournalForm: TIncomePharmacyJournalForm
             Caption = #1054#1090' '#1082#1086#1075#1086' '#1087#1088#1080#1093#1086#1076
             DataBinding.FieldName = 'FromName'
             HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
             Width = 187
           end
           object colToName: TcxGridDBColumn
             Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
             DataBinding.FieldName = 'ToName'
             HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
             Width = 200
           end
           object colTotalCount: TcxGridDBColumn
@@ -166,7 +164,6 @@ inherited IncomePharmacyJournalForm: TIncomePharmacyJournalForm
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
             Width = 60
           end
           object colSaleSumm: TcxGridDBColumn
@@ -180,27 +177,23 @@ inherited IncomePharmacyJournalForm: TIncomePharmacyJournalForm
           object colNDSKindName: TcxGridDBColumn
             Caption = #1053#1044#1057
             DataBinding.FieldName = 'NDSKindName'
-            HeaderAlignmentVert = vaCenter
             Width = 50
           end
           object colInvNumberBranch: TcxGridDBColumn
             Caption = #8470' '#1074' '#1072#1087#1090#1077#1082#1077
             DataBinding.FieldName = 'InvNumberBranch'
-            HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 47
           end
           object colBranchDate: TcxGridDBColumn
             Caption = #1044#1072#1090#1072' '#1074' '#1072#1087#1090#1077#1082#1077
             DataBinding.FieldName = 'BranchDate'
-            HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 50
           end
           object colChecked: TcxGridDBColumn
             Caption = #1055#1088#1086#1074#1077#1088#1077#1085#1086' '#1092#1072#1088#1084#1072#1094#1077#1074#1090#1086#1084
             DataBinding.FieldName = 'Checked'
-            HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 95
           end
@@ -294,6 +287,32 @@ inherited IncomePharmacyJournalForm: TIncomePharmacyJournalForm
       ReportNameParam.Value = #1056#1072#1089#1093#1086#1076#1085#1072#1103'_'#1085#1072#1082#1083#1072#1076#1085#1072#1103
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
+    end
+    object actPrintForManager: TdsdPrintAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spSelectPrint
+      StoredProcList = <
+        item
+          StoredProc = spSelectPrint
+        end>
+      Caption = #1055#1077#1095#1072#1090#1100' '#1056#1072#1089#1093#1086#1076#1085#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103' '#1076#1083#1103' '#1084#1077#1085#1077#1076#1078#1077#1088#1072
+      Hint = #1055#1077#1095#1072#1090#1100' '#1056#1072#1089#1093#1086#1076#1085#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103' '#1076#1083#1103' '#1084#1077#1085#1077#1076#1078#1077#1088#1072
+      ImageIndex = 16
+      DataSets = <
+        item
+          DataSet = PrintHeaderCDS
+          UserName = 'frxDBDHeader'
+        end
+        item
+          DataSet = PrintItemsCDS
+          UserName = 'frxDBDMaster'
+        end>
+      Params = <>
+      ReportName = #1056#1072#1089#1093#1086#1076#1085#1072#1103'_'#1085#1072#1082#1083#1072#1076#1085#1072#1103'_'#1076#1083#1103'_'#1084#1077#1085#1077#1076#1078#1077#1088#1072
+      ReportNameParam.Name = #1056#1072#1089#1093#1086#1076#1085#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103' '#1076#1083#1103' '#1084#1077#1085#1077#1076#1078#1077#1088#1072
+      ReportNameParam.Value = #1056#1072#1089#1093#1086#1076#1085#1072#1103'_'#1085#1072#1082#1083#1072#1076#1085#1072#1103'_'#1076#1083#1103'_'#1084#1077#1085#1077#1076#1078#1077#1088#1072
+      ReportNameParam.DataType = ftString
     end
   end
   inherited MasterDS: TDataSource
@@ -401,6 +420,10 @@ inherited IncomePharmacyJournalForm: TIncomePharmacyJournalForm
         end
         item
           Visible = True
+          ItemName = 'dxBarButton1'
+        end
+        item
+          Visible = True
           ItemName = 'dxBarStatic'
         end
         item
@@ -447,6 +470,10 @@ inherited IncomePharmacyJournalForm: TIncomePharmacyJournalForm
       Hint = #1057#1095#1077#1090
       Visible = ivAlways
       ImageIndex = 21
+    end
+    object dxBarButton1: TdxBarButton
+      Action = actPrintForManager
+      Category = 0
     end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn

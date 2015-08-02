@@ -161,6 +161,8 @@ type
     N56: TMenuItem;
     actSendJournal: TdsdOpenForm;
     N57: TMenuItem;
+    actCreateOrderFromMCS: TdsdOpenForm;
+    N58: TMenuItem;
     procedure actSaveDataExecute(Sender: TObject);
     procedure miRepriceClick(Sender: TObject);
   private

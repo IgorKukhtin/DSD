@@ -4,23 +4,30 @@
 DROP FUNCTION IF EXISTS gpReport_GoodsMI (TDateTime, TDateTime, Integer, Integer, Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpReport_GoodsMI (TDateTime, TDateTime, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpReport_GoodsMI (TDateTime, TDateTime, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpReport_GoodsMI (TDateTime, TDateTime, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Boolean, Boolean, Boolean, Boolean, Boolean, TVarChar);
 
 
 CREATE OR REPLACE FUNCTION gpReport_GoodsMI (
-    IN inStartDate    TDateTime ,
-    IN inEndDate      TDateTime ,
-    IN inDescId       Integer   ,  --sale(продажа покупателю) = 5, returnin (возврат покупателя) = 6
-    IN inGoodsGroupId Integer   ,
-    IN inUnitGroupId  Integer   ,
-    IN inUnitId       Integer   ,
-    IN inPaidKindId   Integer   ,
-    IN inJuridicalId  Integer   ,
-    IN inInfoMoneyId  Integer   ,
-    IN inSession      TVarChar    -- сессия пользователя
+    IN inStartDate         TDateTime ,
+    IN inEndDate           TDateTime ,
+    IN inDescId            Integer   ,  --sale(продажа покупателю) = 5, returnin (возврат покупателя) = 6
+    IN inGoodsGroupId      Integer   ,
+    IN inUnitGroupId       Integer   ,
+    IN inUnitId            Integer   ,
+    IN inPaidKindId        Integer   ,
+    IN inJuridicalId       Integer   ,
+    IN inInfoMoneyId       Integer   ,
+    IN inIsPartner         Boolean   , --
+    IN inIsTradeMark       Boolean   , --
+    IN inIsGoods           Boolean   , --
+    IN inIsGoodsKind       Boolean   , --
+    IN inIsPartionGoods    Boolean   , --
+    IN inSession           TVarChar    -- сессия пользователя
 )
 RETURNS TABLE (GoodsGroupName TVarChar, GoodsGroupNameFull TVarChar
              , GoodsCode Integer, GoodsName TVarChar, GoodsKindName TVarChar, MeasureName TVarChar
              , TradeMarkName TVarChar
+             , PartionGoods TVarChar
              , LocationCode Integer, LocationName TVarChar
              , JuridicalCode Integer, JuridicalName TVarChar
              , PartnerId Integer, PartnerCode Integer, PartnerName TVarChar
@@ -192,6 +199,7 @@ BEGIN
          , Object_GoodsKind.ValueData             AS GoodsKindName
          , Object_Measure.ValueData               AS MeasureName
          , Object_TradeMark.ValueData             AS TradeMarkName
+         , CAST ('' AS TVarChar )                 AS PartionGoods
 
          , Object_Location.ObjectCode AS LocationCode
          , Object_Location.ValueData  AS LocationName
@@ -606,6 +614,7 @@ $BODY$
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 02.08.15         * add inIsPartner, inIsTradeMark, inIsGoods, inIsGoodsKind, inIsPartionGoods
  27.07.14                                        * all
  22.07.15         *                
  15.12.14                                        * all

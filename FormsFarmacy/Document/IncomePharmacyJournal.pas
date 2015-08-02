@@ -12,7 +12,8 @@ uses
   dxBarExtItems, dxBar, cxClasses, Datasnap.DBClient, Vcl.ActnList,
   cxPropertiesStore, cxLabel, cxTextEdit, cxMaskEdit, cxDropDownEdit,
   cxCalendar, Vcl.ExtCtrls, cxGridLevel, cxGridCustomTableView, cxGridTableView,
-  cxGridDBTableView, cxGridCustomView, cxGrid, cxPC, ExternalSave;
+  cxGridDBTableView, cxGridCustomView, cxGrid, cxPC, ExternalSave,
+  dxBarBuiltInMenu, cxNavigator;
 
 type
   TIncomePharmacyJournalForm = class(TAncestorJournalForm)
@@ -33,6 +34,8 @@ type
     colNDSKindName: TcxGridDBColumn;
     spGetDataForSendNew: TdsdStoredProc;
     colSaleSumm: TcxGridDBColumn;
+    actPrintForManager: TdsdPrintAction;
+    dxBarButton1: TdxBarButton;
   private
     { Private declarations }
   public

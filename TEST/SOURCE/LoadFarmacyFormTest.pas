@@ -70,6 +70,7 @@ type
     procedure LoadArticleLossFormTest;
     procedure LoadSendJournalFormTest;
     procedure LoadSendFormTest;
+    procedure LoadCreateOrderFromMCSFormTest;
     procedure FormTest;
   end;
 
@@ -203,6 +204,12 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TContractForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TContractEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TContractEditForm');
+end;
+
+procedure TLoadFormTest.LoadCreateOrderFromMCSFormTest;
+begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TCreateOrderFromMCSForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TCreateOrderFromMCSForm');
 end;
 
 procedure TLoadFormTest.LoadCurrencyFormTest;
