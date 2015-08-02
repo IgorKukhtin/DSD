@@ -1,5 +1,5 @@
 inherited Report_ReceiptProductionAnalyzeForm: TReport_ReceiptProductionAnalyzeForm
-  Caption = #1054#1090#1095#1077#1090' '#1072#1085#1072#1083#1080#1079' '#1088#1077#1094#1077#1087#1090#1091#1088' '#1080' '#1087#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1072
+  Caption = #1054#1090#1095#1077#1090' <'#1040#1085#1072#1083#1080#1079' '#1088#1077#1094#1077#1087#1090#1091#1088' '#1080' '#1087#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1072'>'
   ClientHeight = 430
   ClientWidth = 1130
   ExplicitLeft = -148
@@ -232,6 +232,36 @@ inherited Report_ReceiptProductionAnalyzeForm: TReport_ReceiptProductionAnalyzeF
             Options.Editing = False
             Width = 55
           end
+          object Price1_cost: TcxGridDBColumn
+            Caption = #1062#1077#1085#1072' '#1079'. '#1055#1088#1072#1081#1089'1'
+            DataBinding.FieldName = 'Price1_cost'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 55
+          end
+          object Price2_cost: TcxGridDBColumn
+            Caption = #1062#1077#1085#1072' '#1079'. '#1055#1088#1072#1081#1089'2'
+            DataBinding.FieldName = 'Price2_cost'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 55
+          end
+          object Price3_cost: TcxGridDBColumn
+            Caption = #1062#1077#1085#1072' '#1079'. '#1055#1088#1072#1081#1089'3'
+            DataBinding.FieldName = 'Price3_cost'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 55
+          end
           object Price_sale: TcxGridDBColumn
             Caption = #1062#1077#1085#1072' '#1089' '#1053#1044#1057
             DataBinding.FieldName = 'Price_sale'
@@ -429,12 +459,6 @@ inherited Report_ReceiptProductionAnalyzeForm: TReport_ReceiptProductionAnalyzeF
               Format = ',0.####'
               Kind = skSum
               Position = spFooter
-              Column = Amount_start
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-              Position = spFooter
               Column = Summ1_Start
             end
             item
@@ -448,11 +472,6 @@ inherited Report_ReceiptProductionAnalyzeForm: TReport_ReceiptProductionAnalyzeF
               Kind = skSum
               Position = spFooter
               Column = Summ3_Start
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-              Column = Amount_start
             end
             item
               Format = ',0.####'
@@ -488,11 +507,6 @@ inherited Report_ReceiptProductionAnalyzeForm: TReport_ReceiptProductionAnalyzeF
             item
               Format = ',0.####'
               Kind = skSum
-              Column = Amount_start
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
               Column = Summ1_Start
             end
             item
@@ -513,7 +527,9 @@ inherited Report_ReceiptProductionAnalyzeForm: TReport_ReceiptProductionAnalyzeF
           OptionsData.Inserting = False
           OptionsView.ColumnAutoWidth = True
           OptionsView.Footer = True
+          OptionsView.GroupByBox = False
           OptionsView.GroupFooters = gfVisibleWhenExpanded
+          OptionsView.HeaderAutoHeight = True
           Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
           object GroupNumber: TcxGridDBColumn
             Caption = #1043#1088#1091#1087#1087#1072' '#8470
@@ -657,7 +673,7 @@ inherited Report_ReceiptProductionAnalyzeForm: TReport_ReceiptProductionAnalyzeF
             Width = 70
           end
           object Summ1_Start: TcxGridDBColumn
-            Caption = #1057#1091#1084#1084#1072' '#1073#1072#1079'. '#1055#1088#1072#1081#1089'1'
+            Caption = #1057#1091#1084#1084#1072' '#1073#1072#1079'. '#1055#1088'1'
             DataBinding.FieldName = 'Summ1_Start'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
@@ -667,7 +683,7 @@ inherited Report_ReceiptProductionAnalyzeForm: TReport_ReceiptProductionAnalyzeF
             Width = 70
           end
           object Summ2_Start: TcxGridDBColumn
-            Caption = #1057#1091#1084#1084#1072' '#1073#1072#1079'. '#1055#1088#1072#1081#1089'2'
+            Caption = #1057#1091#1084#1084#1072' '#1073#1072#1079'. '#1055#1088'2'
             DataBinding.FieldName = 'Summ2_Start'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
@@ -677,11 +693,28 @@ inherited Report_ReceiptProductionAnalyzeForm: TReport_ReceiptProductionAnalyzeF
             Width = 70
           end
           object Summ3_Start: TcxGridDBColumn
-            Caption = #1057#1091#1084#1084#1072' '#1073#1072#1079'. '#1055#1088#1072#1081#1089'3'
+            Caption = #1057#1091#1084#1084#1072' '#1073#1072#1079'. '#1055#1088'3'
             DataBinding.FieldName = 'Summ3_Start'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 70
+          end
+          object ReceiptCode: TcxGridDBColumn
+            Caption = #1050#1086#1076' '#1073#1072#1079'.'
+            DataBinding.FieldName = 'ReceiptCode'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 0
+            Properties.DisplayFormat = '0.;-0.; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 55
+          end
+          object ReceiptCode_user: TcxGridDBColumn
+            Caption = #1050#1086#1076' '#1088#1077#1094#1077#1087#1090'. '#1073#1072#1079'.'
+            DataBinding.FieldName = 'ReceiptCode_user'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 70

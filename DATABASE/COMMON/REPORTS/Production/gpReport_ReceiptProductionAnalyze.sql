@@ -22,35 +22,29 @@ $BODY$
   DECLARE Cursor2 refcursor;
 BEGIN
 
-     -- CREATE TEMP TABLE tmpReceiptTable (Id Integer) ON COMMIT DROP;
+     CREATE TEMP TABLE _tmpGoods (GoodsId Integer) ON COMMIT DROP;
      CREATE TEMP TABLE tmpChildReceiptTable (ReceiptId_from Integer, ReceiptId Integer, GoodsId_in Integer, GoodsKindId_in Integer, Amount_in TFloat
                                            , ReceiptChildId integer, GoodsId_out Integer, GoodsKindId_out Integer, Amount_out TFloat, isStart Boolean, isCost Boolean
                                            , Price1 TFloat, Price2 TFloat, Price3 TFloat) ON COMMIT DROP;
 
-     /*WITH RECURSIVE tmpGroup (GoodsGroupId, GoodsGroupParentId, GoodsName)
-       AS (SELECT Id, NULL :: Integer, Object.ValueData AS GoodsName
+     WITH RECURSIVE tmpGroup (GoodsGroupId, GoodsGroupParentId)
+       AS (SELECT Object.Id, NULL :: Integer
            FROM Object 
            WHERE Object.Id = inGoodsGroupId
           UNION 
-           SELECT Object_GoodsGroup.Id, tmpGroup.GoodsGroupId, Object_GoodsGroup.ValueData AS GoodsName
+           SELECT ObjectLink_GoodsGroup.ObjectId, tmpGroup.GoodsGroupId
            FROM tmpGroup
                 INNER JOIN ObjectLink AS ObjectLink_GoodsGroup
                                       ON ObjectLink_GoodsGroup.ChildObjectId = tmpGroup.GoodsGroupId
                                      AND ObjectLink_GoodsGroup.DescId = zc_ObjectLink_GoodsGroup_Parent()
-                INNER JOIN Object AS Object_GoodsGroup ON Object_GoodsGroup.Id = ObjectLink_GoodsGroup.ObjectId
           )
-     INSERT INTO tmpReceiptTable (Id)
-        SELECT Object_Receipt.Id
+     INSERT INTO _tmpGoods (GoodsId)
+        SELECT ObjectLink_Goods_GoodsGroup.ObjectId
         FROM tmpGroup
              INNER JOIN ObjectLink AS ObjectLink_Goods_GoodsGroup
                                    ON ObjectLink_Goods_GoodsGroup.ChildObjectId = tmpGroup.GoodsGroupId
                                   AND ObjectLink_Goods_GoodsGroup.DescId = zc_ObjectLink_Goods_GoodsGroup()
-             INNER JOIN ObjectLink AS ObjectLink_Receipt_Goods
-                                   ON ObjectLink_Receipt_Goods.ChildObjectId = ObjectLink_Goods_GoodsGroup.ObjectId
-                                  AND ObjectLink_Receipt_Goods.DescId = zc_ObjectLink_Receipt_Goods()
-             INNER JOIN Object AS Object_Receipt ON Object_Receipt.Id = ObjectLink_Receipt_Goods.ObjectId
-                                                AND Object_Receipt.isErased = FALSE
-       ;*/
+       ;
 
                                
      INSERT INTO tmpChildReceiptTable (ReceiptId_from, ReceiptId, GoodsId_in, GoodsKindId_in, Amount_in
@@ -75,9 +69,9 @@ BEGIN
      -- Результат
      OPEN Cursor1 FOR
      WITH tmpMIContainer AS 
-           (SELECT MIContainer.ObjectId_Analyzer AS GoodsId
-                 , MIContainer.ContainerId       AS ContainerId
-                 , MIReceipt.ObjectId            AS ReceiptId
+           (SELECT MIContainer.ObjectId_Analyzer    AS GoodsId
+                 , MIContainer.ContainerId          AS ContainerId
+                 , COALESCE (MIReceipt.ObjectId, 0) AS ReceiptId
                  , SUM (CASE WHEN MIContainer.DescId = zc_MIContainer_Count() THEN MIContainer.Amount ELSE 0 END) AS OperCount
                  , SUM (CASE WHEN MIContainer.DescId = zc_MIContainer_Summ()  THEN MIContainer.Amount ELSE 0 END) AS OperSumm
             FROM MovementItemContainer AS MIContainer
@@ -85,20 +79,39 @@ BEGIN
                                                ON MLO_From.MovementId = MIContainer.MovementId
                                               AND MLO_From.DescId = zc_MovementLinkObject_From()
                                               AND MLO_From.ObjectId = inUnitFromId
-                 INNER JOIN MovementItemLinkObject AS MIReceipt 
-                                                   ON MIReceipt.MovementItemId = MIContainer.MovementItemId
-                                                  AND MIReceipt.DescId = zc_MILinkObject_Receipt()
+                 LEFT JOIN MovementItemLinkObject AS MIReceipt 
+                                                  ON MIReceipt.MovementItemId = MIContainer.MovementItemId
+                                                 AND MIReceipt.DescId = zc_MILinkObject_Receipt()
+                 LEFT JOIN _tmpGoods ON _tmpGoods.GoodsId = MIContainer.ObjectId_Analyzer
             WHERE MIContainer.OperDate BETWEEN inStartDate AND inEndDate 
               AND MIContainer.WhereObjectId_Analyzer = inUnitToId
               AND MIContainer.MovementDescId = zc_Movement_ProductionUnion()
               AND MIContainer.IsActive = TRUE
               AND MIContainer.Amount <> 0
+              AND (_tmpGoods.GoodsId > 0 OR COALESCE (inGoodsGroupId, 0) = 0)
             GROUP BY MIContainer.ObjectId_Analyzer
                    , MIContainer.ContainerId
                    , MIReceipt.ObjectId
            )
+        , tmpReceipt AS (SELECT tmp.GoodsId, COALESCE (ObjectLink_Receipt_GoodsKind.ChildObjectId, 0) AS GoodsKindId, MAX (ObjectLink_Receipt_Goods.ObjectId) AS ReceiptId
+                         FROM (SELECT tmpMIContainer.GoodsId FROM tmpMIContainer WHERE tmpMIContainer.ReceiptId = 0 GROUP BY tmpMIContainer.GoodsId
+                              ) AS tmp
+                              INNER JOIN ObjectLink AS ObjectLink_Receipt_Goods
+                                                    ON ObjectLink_Receipt_Goods.ChildObjectId = tmp.GoodsId
+                                                   AND ObjectLink_Receipt_Goods.DescId = zc_ObjectLink_Receipt_Goods()
+                              INNER JOIN Object AS Object_Receipt ON Object_Receipt.Id = ObjectLink_Receipt_Goods.ObjectId
+                                                                 AND Object_Receipt.isErased = FALSE
+                              INNER JOIN ObjectBoolean AS ObjectBoolean_Main
+                                                       ON ObjectBoolean_Main.ObjectId = Object_Receipt.Id
+                                                      AND ObjectBoolean_Main.DescId = zc_ObjectBoolean_Receipt_Main()
+                                                      AND ObjectBoolean_Main.ValueData = TRUE
+                              LEFT JOIN ObjectLink AS ObjectLink_Receipt_GoodsKind
+                                                   ON ObjectLink_Receipt_GoodsKind.ObjectId = Object_Receipt.Id
+                                                  AND ObjectLink_Receipt_GoodsKind.DescId = zc_ObjectLink_Receipt_GoodsKind()
+                         GROUP BY tmp.GoodsId, COALESCE (ObjectLink_Receipt_GoodsKind.ChildObjectId, 0)
+                        )
         , tmpAll AS 
-           (SELECT tmpMIContainer.ReceiptId
+           (SELECT COALESCE (tmpReceipt.ReceiptId, tmpMIContainer.ReceiptId) AS ReceiptId
                  , tmpMIContainer.GoodsId
                  , COALESCE (CLO_GoodsKind.ObjectId, 0)                       AS GoodsKindId
                  , COALESCE (ObjectLink_GoodsKindComplete.ChildObjectId, 0)   AS GoodsKindId_complete
@@ -107,6 +120,9 @@ BEGIN
                  , 0 AS Summ1
                  , 0 AS Summ2
                  , 0 AS Summ3
+                 , 0 AS Summ1_cost
+                 , 0 AS Summ2_cost
+                 , 0 AS Summ3_cost
             FROM tmpMIContainer
                  LEFT JOIN ContainerLinkObject AS CLO_GoodsKind ON CLO_GoodsKind.ContainerId = tmpMIContainer.ContainerId
                                                                AND CLO_GoodsKind.DescId = zc_ContainerLinkObject_GoodsKind()
@@ -115,7 +131,9 @@ BEGIN
                  LEFT JOIN ObjectLink AS ObjectLink_GoodsKindComplete
                                       ON ObjectLink_GoodsKindComplete.ObjectId = CLO_PartionGoods.ObjectId
                                      AND ObjectLink_GoodsKindComplete.DescId = zc_ObjectLink_PartionGoods_GoodsKindComplete()
-            GROUP BY tmpMIContainer.ReceiptId
+                 LEFT JOIN tmpReceipt ON tmpReceipt.GoodsId = tmpMIContainer.GoodsId
+                                     AND tmpReceipt.GoodsKindId = COALESCE (CLO_GoodsKind.ObjectId, 0)
+            GROUP BY COALESCE (tmpReceipt.ReceiptId, tmpMIContainer.ReceiptId)
                    , tmpMIContainer.GoodsId
                    , COALESCE (CLO_GoodsKind.ObjectId, 0)
                    , COALESCE (ObjectLink_GoodsKindComplete.ChildObjectId, 0)
@@ -130,10 +148,16 @@ BEGIN
                  , SUM (tmp.Summ1) AS Summ1
                  , SUM (tmp.Summ2) AS Summ2
                  , SUM (tmp.Summ3) AS Summ3
+                 , SUM (tmp.Summ1_cost) AS Summ1_cost
+                 , SUM (tmp.Summ2_cost) AS Summ2_cost
+                 , SUM (tmp.Summ3_cost) AS Summ3_cost
             FROM (SELECT tmpChildReceiptTable.ReceiptId
                        , SUM (tmpChildReceiptTable.Amount_out * tmpChildReceiptTable.Price1) AS Summ1
                        , SUM (tmpChildReceiptTable.Amount_out * tmpChildReceiptTable.Price2) AS Summ2
                        , SUM (tmpChildReceiptTable.Amount_out * tmpChildReceiptTable.Price3) AS Summ3
+                       , SUM (CASE WHEN tmpChildReceiptTable.isCost = TRUE THEN tmpChildReceiptTable.Amount_out * tmpChildReceiptTable.Price1 ELSE 0 END) AS Summ1_cost
+                       , SUM (CASE WHEN tmpChildReceiptTable.isCost = TRUE THEN tmpChildReceiptTable.Amount_out * tmpChildReceiptTable.Price2 ELSE 0 END) AS Summ2_cost
+                       , SUM (CASE WHEN tmpChildReceiptTable.isCost = TRUE THEN tmpChildReceiptTable.Amount_out * tmpChildReceiptTable.Price3 ELSE 0 END) AS Summ3_cost
                   FROM tmpChildReceiptTable
                   WHERE tmpChildReceiptTable.ReceiptId_from = 0
                   GROUP BY  tmpChildReceiptTable.ReceiptId
@@ -147,6 +171,8 @@ BEGIN
                  LEFT JOIN ObjectLink AS ObjectLink_Receipt_GoodsKind_complete
                                       ON ObjectLink_Receipt_GoodsKind_complete.ObjectId = tmp.ReceiptId
                                      AND ObjectLink_Receipt_GoodsKind_complete.DescId = zc_ObjectLink_Receipt_GoodsKindComplete()
+                 LEFT JOIN _tmpGoods ON _tmpGoods.GoodsId = ObjectLink_Receipt_Goods.ChildObjectId
+            WHERE _tmpGoods.GoodsId > 0 OR COALESCE (inGoodsGroupId, 0) = 0
             GROUP BY tmp.ReceiptId
                    , COALESCE (ObjectLink_Receipt_Goods.ChildObjectId, 0)
                    , COALESCE (ObjectLink_Receipt_GoodsKind.ChildObjectId, 0)
@@ -158,11 +184,14 @@ BEGIN
                  , tmpAll.GoodsId
                  , tmpAll.GoodsKindId
                  , tmpAll.GoodsKindId_complete
-                 , SUM (tmpAll.OperCount) AS OperCount
-                 , SUM (tmpAll.OperSumm)  AS OperSumm
-                 , SUM (tmpAll.Summ1)     AS Summ1
-                 , SUM (tmpAll.Summ2)     AS Summ2
-                 , SUM (tmpAll.Summ3)     AS Summ3
+                 , SUM (tmpAll.OperCount)  AS OperCount
+                 , SUM (tmpAll.OperSumm)   AS OperSumm
+                 , SUM (tmpAll.Summ1)      AS Summ1
+                 , SUM (tmpAll.Summ2)      AS Summ2
+                 , SUM (tmpAll.Summ3)      AS Summ3
+                 , SUM (tmpAll.Summ1_cost) AS Summ1_cost
+                 , SUM (tmpAll.Summ2_cost) AS Summ2_cost
+                 , SUM (tmpAll.Summ3_cost) AS Summ3_cost
             FROM tmpAll
             GROUP BY tmpAll.ReceiptId
                    , tmpAll.GoodsId
@@ -203,6 +232,9 @@ BEGIN
            , CAST (tmpResult.Summ1 / ObjectFloat_Value.ValueData AS NUMERIC (16, 3)) AS Price1
            , CAST (tmpResult.Summ2 / ObjectFloat_Value.ValueData AS NUMERIC (16, 3)) AS Price2
            , CAST (tmpResult.Summ3 / ObjectFloat_Value.ValueData AS NUMERIC (16, 3)) AS Price3
+           , CAST (tmpResult.Summ1_cost / ObjectFloat_Value.ValueData AS NUMERIC (16, 3)) AS Price1_cost
+           , CAST (tmpResult.Summ2_cost / ObjectFloat_Value.ValueData AS NUMERIC (16, 3)) AS Price2_cost
+           , CAST (tmpResult.Summ3_cost / ObjectFloat_Value.ValueData AS NUMERIC (16, 3)) AS Price3_cost
            , PriceListSale.Price * 1.2 AS Price_sale -- !!!захардкодил временно!!!
            , tmpResult.OperCount
            , tmpResult.OperCount * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData, 0) ELSE 1 END AS OperCount_Weight
@@ -317,9 +349,12 @@ BEGIN
 
             , ObjectString_Goods_GoodsGroupFull.ValueData AS GoodsGroupNameFull
             , Object_Goods.Objectcode     AS GoodsCode
-            , Object_Goods.ValueData      AS GoodsName  
+            , Object_Goods.ValueData      AS GoodsName
             , Object_GoodsKind.ValueData  AS GoodsKindName
             , Object_Measure.ValueData    AS MeasureName
+
+            , Object_Receipt.ObjectCode   AS ReceiptCode
+            , ObjectString_Code.ValueData AS ReceiptCode_user
 
             , CASE WHEN Object_Goods.Id = zc_Goods_WorkIce() THEN NULL ELSE tmpReceiptChild.InfoMoneyCode            END :: Integer  AS InfoMoneyCode
             , CASE WHEN Object_Goods.Id = zc_Goods_WorkIce() THEN NULL ELSE tmpReceiptChild.InfoMoneyGroupName       END :: TVarChar AS InfoMoneyGroupName
@@ -392,8 +427,14 @@ BEGIN
             LEFT JOIN ObjectLink AS ObjectLink_Goods_Measure
                                  ON ObjectLink_Goods_Measure.ObjectId = Object_Goods.Id 
                                 AND ObjectLink_Goods_Measure.DescId = zc_ObjectLink_Goods_Measure()
-            LEFT JOIN Object AS Object_Measure ON Object_Measure.Id = ObjectLink_Goods_Measure.ChildObjectId;
+            LEFT JOIN Object AS Object_Measure ON Object_Measure.Id = ObjectLink_Goods_Measure.ChildObjectId
      
+            LEFT JOIN Object AS Object_Receipt ON Object_Receipt.Id = tmpReceiptChild.ReceiptId_from
+            LEFT JOIN ObjectString AS ObjectString_Code
+                                   ON ObjectString_Code.ObjectId = tmpReceiptChild.ReceiptId_from
+                                  AND ObjectString_Code.DescId = zc_ObjectString_Receipt_Code()
+           ;
+
      RETURN NEXT Cursor2;
    
          

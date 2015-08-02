@@ -71,6 +71,11 @@ type
     Summ1_Start: TcxGridDBColumn;
     Summ2_Start: TcxGridDBColumn;
     Summ3_Start: TcxGridDBColumn;
+    ReceiptCode: TcxGridDBColumn;
+    ReceiptCode_user: TcxGridDBColumn;
+    Price1_cost: TcxGridDBColumn;
+    Price2_cost: TcxGridDBColumn;
+    Price3_cost: TcxGridDBColumn;
   private
     { Private declarations }
   public
