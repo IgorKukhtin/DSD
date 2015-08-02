@@ -41,6 +41,11 @@ type
     cxLabel8: TcxLabel;
     edUnitGroup: TcxButtonEdit;
     GuidesUnitGroup: TdsdGuides;
+    cbPartner: TcxCheckBox;
+    cbTradeMark: TcxCheckBox;
+    cbGoods: TcxCheckBox;
+    cbGoodsKind: TcxCheckBox;
+    cbPartionGoods: TcxCheckBox;
   private
     { Private declarations }
   public

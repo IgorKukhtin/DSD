@@ -29,6 +29,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime
 AS
 $BODY$
    DECLARE vbUserId Integer;
+   DECLARE vbIsOd Boolean;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Select_Movement_TransportGoods());
@@ -41,6 +42,9 @@ BEGIN
          inMovementId:= (SELECT MovementChildId FROM MovementLinkMovement WHERE MovementId = inMovementId_Sale AND DescId = zc_MovementLinkMovement_TransportGoods());
      END IF;
 
+     -- !!! для Одесса, понятно что временно!!!
+     vbIsOd:= 8374 = (SELECT Object_RoleAccessKeyGuide_View.BranchId FROM Object_RoleAccessKeyGuide_View WHERE Object_RoleAccessKeyGuide_View.UserId = vbUserId AND Object_RoleAccessKeyGuide_View.BranchId <> 0 GROUP BY Object_RoleAccessKeyGuide_View.BranchId);
+
      -- если надо - создаем
      IF COALESCE (inMovementId, 0) = 0
      THEN inMovementId:= lpInsertUpdate_Movement_TransportGoods (ioId              := inMovementId
@@ -48,11 +52,11 @@ BEGIN
                                                                , inOperDate        := inOperDate
                                                                , inMovementId_Sale := inMovementId_Sale
                                                                , inInvNumberMark   := NULL
-                                                               , inCarId           := NULL
+                                                               , inCarId           := CASE WHEN vbIsOd = TRUE THEN 8682 ELSE NULL END -- 850-51 АВ
                                                                , inCarTrailerId    := NULL
-                                                               , inPersonalDriverId:= NULL
+                                                               , inPersonalDriverId:= CASE WHEN vbIsOd = TRUE THEN 427054 ELSE NULL END -- Строкун Артем Миколайович
                                                                , inRouteId         := (SELECT MLO.ObjectId FROM MovementLinkObject AS MLO WHERE MLO.MovementId = inMovementId_Sale AND MLO.DescId = zc_MovementLinkObject_Route())
-                                                               , inMemberId1       := NULL
+                                                               , inMemberId1       := CASE WHEN vbIsOd = TRUE THEN 427054 ELSE NULL END -- Строкун Артем Миколайович
                                                                , inMemberId2       := NULL
                                                                , inMemberId3       := NULL
                                                                , inMemberId4       := NULL

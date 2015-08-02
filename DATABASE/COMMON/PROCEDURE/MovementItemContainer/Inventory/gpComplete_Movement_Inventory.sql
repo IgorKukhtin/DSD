@@ -221,7 +221,7 @@ BEGIN
                    , COALESCE (MIDate_PartionGoods.ValueData, zc_DateEnd()) AS PartionGoodsDate
 
                    , MovementItem.Amount AS OperCount
-                   , COALESCE (MIFloat_Price.ValueData, 0) AS Price_Partion
+                   , CASE WHEN vbOperDate = '30.06.2015' AND MovementItem.Amount <> 0 THEN CAST (COALESCE (MIFloat_Summ.ValueData, 0) / MovementItem.Amount AS NUMERIC (16, 4)) ELSE COALESCE (MIFloat_Price.ValueData, 0) END AS Price_Partion
                    , COALESCE (MIFloat_Summ.ValueData, 0) AS OperSumm
 
                      -- Управленческие назначения
@@ -1101,6 +1101,18 @@ BEGIN
            FROM _tmpItemSumm
            WHERE _tmpItemSumm.OperSumm <> 0
            ) AS _tmpItem_byProfitLoss;
+
+
+
+     -- !!!формируется свойство <Цена>!!!
+     PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_PartionGoods_Price(), _tmpItem.PartionGoodsId, Price_Partion)
+     FROM _tmpItem
+     WHERE _tmpItem.PartionGoodsId > 0
+        AND _tmpItem.InfoMoneyDestinationId IN (zc_Enum_InfoMoneyDestination_20200() -- Общефирменные + Прочие ТМЦ
+                                              , zc_Enum_InfoMoneyDestination_20300() -- Общефирменные + МНМА
+                                              , zc_Enum_InfoMoneyDestination_70100() -- Капитальные инвестиции
+                                               );
+
 
 
      -- 5.1. ФИНИШ - Обязательно сохраняем Проводки

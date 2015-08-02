@@ -19,7 +19,7 @@ object Report_GoodsMI_DialogForm: TReport_GoodsMI_DialogForm
   TextHeight = 13
   object cxButton1: TcxButton
     Left = 98
-    Top = 248
+    Top = 263
     Width = 75
     Height = 25
     Caption = 'Ok'
@@ -29,7 +29,7 @@ object Report_GoodsMI_DialogForm: TReport_GoodsMI_DialogForm
   end
   object cxButton2: TcxButton
     Left = 272
-    Top = 248
+    Top = 263
     Width = 75
     Height = 25
     Caption = #1054#1090#1084#1077#1085#1072
@@ -54,7 +54,7 @@ object Report_GoodsMI_DialogForm: TReport_GoodsMI_DialogForm
   end
   object edGoodsGroup: TcxButtonEdit
     Left = 9
-    Top = 139
+    Top = 154
     Properties.Buttons = <
       item
         Default = True
@@ -65,8 +65,8 @@ object Report_GoodsMI_DialogForm: TReport_GoodsMI_DialogForm
     Width = 200
   end
   object edInfoMoney: TcxButtonEdit
-    Left = 9
-    Top = 191
+    Left = 232
+    Top = 206
     Properties.Buttons = <
       item
         Default = True
@@ -74,16 +74,16 @@ object Report_GoodsMI_DialogForm: TReport_GoodsMI_DialogForm
       end>
     Properties.ReadOnly = True
     TabOrder = 5
-    Width = 423
+    Width = 200
   end
   object cxLabel3: TcxLabel
-    Left = 9
-    Top = 171
+    Left = 232
+    Top = 183
     Caption = #1059#1055' '#1089#1090#1072#1090#1100#1103' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103':'
   end
   object cxLabel1: TcxLabel
     Left = 9
-    Top = 117
+    Top = 132
     Caption = #1043#1088#1091#1087#1087#1072' '#1090#1086#1074#1072#1088#1086#1074':'
   end
   object cxLabel6: TcxLabel
@@ -98,12 +98,12 @@ object Report_GoodsMI_DialogForm: TReport_GoodsMI_DialogForm
   end
   object cxLabel4: TcxLabel
     Left = 232
-    Top = 67
+    Top = 82
     Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077':'
   end
   object edUnit: TcxButtonEdit
     Left = 232
-    Top = 87
+    Top = 102
     Properties.Buttons = <
       item
         Default = True
@@ -115,7 +115,7 @@ object Report_GoodsMI_DialogForm: TReport_GoodsMI_DialogForm
   end
   object edPaidKind: TcxButtonEdit
     Left = 232
-    Top = 137
+    Top = 152
     Properties.Buttons = <
       item
         Default = True
@@ -127,17 +127,17 @@ object Report_GoodsMI_DialogForm: TReport_GoodsMI_DialogForm
   end
   object cxLabel2: TcxLabel
     Left = 233
-    Top = 117
+    Top = 132
     Caption = #1060#1086#1088#1084#1072' '#1086#1087#1083#1072#1090#1099':'
   end
   object cxLabel5: TcxLabel
-    Left = 232
-    Top = 7
+    Left = 9
+    Top = 183
     Caption = #1070#1088'.'#1051#1080#1094#1086
   end
   object edJuridical: TcxButtonEdit
-    Left = 232
-    Top = 27
+    Left = 9
+    Top = 206
     Properties.Buttons = <
       item
         Default = True
@@ -149,12 +149,12 @@ object Report_GoodsMI_DialogForm: TReport_GoodsMI_DialogForm
   end
   object cxLabel8: TcxLabel
     Left = 9
-    Top = 67
+    Top = 82
     Caption = #1043#1088'. '#1087#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1081':'
   end
   object edUnitGroup: TcxButtonEdit
     Left = 9
-    Top = 87
+    Top = 102
     Properties.Buttons = <
       item
         Default = True
@@ -164,6 +164,46 @@ object Report_GoodsMI_DialogForm: TReport_GoodsMI_DialogForm
     TabOrder = 17
     Width = 200
   end
+  object cbPartner: TcxCheckBox
+    Left = 232
+    Top = 7
+    Caption = #1087#1086' '#1050#1086#1085#1090#1088#1072#1075#1077#1085#1090#1072#1084
+    Properties.ReadOnly = False
+    TabOrder = 18
+    Width = 127
+  end
+  object cbTradeMark: TcxCheckBox
+    Left = 232
+    Top = 27
+    Caption = #1087#1086' '#1058#1086#1088#1075#1086#1074#1099#1084' '#1084#1072#1088#1082#1072#1084
+    Properties.ReadOnly = False
+    TabOrder = 19
+    Width = 127
+  end
+  object cbGoods: TcxCheckBox
+    Left = 353
+    Top = 7
+    Caption = #1087#1086' '#1058#1086#1074#1072#1088#1072#1084
+    Properties.ReadOnly = False
+    TabOrder = 20
+    Width = 87
+  end
+  object cbGoodsKind: TcxCheckBox
+    Left = 353
+    Top = 27
+    Caption = #1087#1086' '#1042#1080#1076#1072#1084
+    Properties.ReadOnly = False
+    TabOrder = 21
+    Width = 87
+  end
+  object cbPartionGoods: TcxCheckBox
+    Left = 232
+    Top = 48
+    Caption = #1087#1086' '#1055#1072#1088#1090#1080#1103#1084
+    Properties.ReadOnly = False
+    TabOrder = 22
+    Width = 88
+  end
   object PeriodChoice: TPeriodChoice
     DateStart = deStart
     DateEnd = deEnd
@@ -171,7 +211,7 @@ object Report_GoodsMI_DialogForm: TReport_GoodsMI_DialogForm
   end
   object dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 32
-    Top = 240
+    Top = 255
   end
   object cxPropertiesStore: TcxPropertiesStore
     Components = <
@@ -184,7 +224,7 @@ object Report_GoodsMI_DialogForm: TReport_GoodsMI_DialogForm
     StorageName = 'cxPropertiesStore'
     StorageType = stStream
     Left = 400
-    Top = 244
+    Top = 259
   end
   object FormParams: TdsdFormParams
     Params = <
@@ -291,9 +331,44 @@ object Report_GoodsMI_DialogForm: TReport_GoodsMI_DialogForm
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+      end
+      item
+        Name = 'isPartner'
+        Value = Null
+        Component = cbPartner
+        DataType = ftBoolean
+        ParamType = ptInput
+      end
+      item
+        Name = 'isGoods'
+        Value = Null
+        Component = cbGoods
+        DataType = ftBoolean
+        ParamType = ptInput
+      end
+      item
+        Name = 'isGoodsKind'
+        Value = Null
+        Component = cbGoodsKind
+        DataType = ftBoolean
+        ParamType = ptInput
+      end
+      item
+        Name = 'isPartionGoods'
+        Value = Null
+        Component = cbPartionGoods
+        DataType = ftBoolean
+        ParamType = ptInput
+      end
+      item
+        Name = 'isTradeMark'
+        Value = Null
+        Component = cbTradeMark
+        DataType = ftBoolean
+        ParamType = ptInput
       end>
     Left = 200
-    Top = 240
+    Top = 255
   end
   object GuidesGoodsGroup: TdsdGuides
     KeyField = 'Id'
@@ -320,7 +395,7 @@ object Report_GoodsMI_DialogForm: TReport_GoodsMI_DialogForm
         ParamType = ptInput
       end>
     Left = 96
-    Top = 120
+    Top = 135
   end
   object InfoMoneyGuide: TdsdGuides
     KeyField = 'Id'
@@ -346,8 +421,8 @@ object Report_GoodsMI_DialogForm: TReport_GoodsMI_DialogForm
         DataType = ftString
         ParamType = ptInput
       end>
-    Left = 80
-    Top = 176
+    Left = 368
+    Top = 183
   end
   object GuidesUnit: TdsdGuides
     KeyField = 'Id'
@@ -374,7 +449,7 @@ object Report_GoodsMI_DialogForm: TReport_GoodsMI_DialogForm
         ParamType = ptInput
       end>
     Left = 328
-    Top = 73
+    Top = 88
   end
   object GuidesPaidKind: TdsdGuides
     KeyField = 'Id'
@@ -401,7 +476,7 @@ object Report_GoodsMI_DialogForm: TReport_GoodsMI_DialogForm
         ParamType = ptInput
       end>
     Left = 312
-    Top = 128
+    Top = 143
   end
   object JuridicalGuides: TdsdGuides
     KeyField = 'Id'
@@ -427,8 +502,8 @@ object Report_GoodsMI_DialogForm: TReport_GoodsMI_DialogForm
         DataType = ftString
         ParamType = ptInput
       end>
-    Left = 305
-    Top = 9
+    Left = 97
+    Top = 192
   end
   object GuidesUnitGroup: TdsdGuides
     KeyField = 'Id'
@@ -456,6 +531,6 @@ object Report_GoodsMI_DialogForm: TReport_GoodsMI_DialogForm
         ParamType = ptInput
       end>
     Left = 80
-    Top = 56
+    Top = 71
   end
 end

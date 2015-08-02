@@ -321,7 +321,8 @@ uses
   Send in '..\..\FormsFarmacy\Document\Send.pas' {SendForm: TParentForm},
   SendJournal in '..\..\FormsFarmacy\Document\SendJournal.pas' {SendJournalForm: TParentForm},
   SendTest in '..\SOURCE\Movement\All\Farmacy\SendTest.pas',
-  SendMovementItemTest in '..\SOURCE\MovementItem\All\Farmacy\SendMovementItemTest.pas';
+  SendMovementItemTest in '..\SOURCE\MovementItem\All\Farmacy\SendMovementItemTest.pas',
+  CreateOrderFromMCS in '..\..\FormsFarmacy\Document\CreateOrderFromMCS.pas' {CreateOrderFromMCSForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}

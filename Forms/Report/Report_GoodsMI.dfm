@@ -6,7 +6,7 @@ inherited Report_GoodsMIForm: TReport_GoodsMIForm
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
   ExplicitWidth = 1162
-  ExplicitHeight = 569
+  ExplicitHeight = 572
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -1564,6 +1564,14 @@ inherited Report_GoodsMIForm: TReport_GoodsMIForm
             HeaderAlignmentVert = vaCenter
             Width = 129
           end
+          object PartionGoods: TcxGridDBColumn
+            Caption = #1055#1072#1088#1090#1080#1103
+            DataBinding.FieldName = 'PartionGoods'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 30
+          end
         end
       end
     end
@@ -1718,6 +1726,46 @@ inherited Report_GoodsMIForm: TReport_GoodsMIForm
       Width = 210
     end
   end
+  object cbPartner: TcxCheckBox [2]
+    Left = 76
+    Top = 87
+    Caption = #1087#1086' '#1050#1086#1085#1090#1088#1072#1075#1077#1085#1090#1072#1084
+    Properties.ReadOnly = False
+    TabOrder = 6
+    Width = 118
+  end
+  object cbTradeMark: TcxCheckBox [3]
+    Left = 200
+    Top = 87
+    Caption = #1087#1086' '#1058#1086#1088#1075#1086#1074#1099#1084' '#1084#1072#1088#1082#1072#1084
+    Properties.ReadOnly = False
+    TabOrder = 7
+    Width = 137
+  end
+  object cbGoods: TcxCheckBox [4]
+    Left = 351
+    Top = 87
+    Caption = #1087#1086' '#1058#1086#1074#1072#1088#1072#1084
+    Properties.ReadOnly = False
+    TabOrder = 8
+    Width = 88
+  end
+  object cbGoodsKind: TcxCheckBox [5]
+    Left = 445
+    Top = 87
+    Caption = #1087#1086' '#1042#1080#1076#1072#1084' '#1090#1086#1074#1072#1088#1072
+    Properties.ReadOnly = False
+    TabOrder = 9
+    Width = 113
+  end
+  object cbPartionGoods: TcxCheckBox [6]
+    Left = 564
+    Top = 87
+    Caption = #1087#1086' '#1055#1072#1088#1090#1080#1103#1084
+    Properties.ReadOnly = False
+    TabOrder = 10
+    Width = 85
+  end
   inherited cxPropertiesStore: TcxPropertiesStore
     Components = <
       item
@@ -1768,6 +1816,123 @@ inherited Report_GoodsMIForm: TReport_GoodsMIForm
       end>
   end
   inherited ActionList: TActionList
+    object actPrint2: TdsdPrintAction
+      Category = 'DSDLib'
+      MoveParams = <
+        item
+          FromParam.Name = 'id'
+          FromParam.Value = Null
+          FromParam.ComponentItem = 'id'
+          ToParam.Value = '0'
+          ToParam.Component = FormParams
+          ToParam.ComponentItem = 'Id'
+          ToParam.ParamType = ptInputOutput
+        end
+        item
+          FromParam.Value = 42005d
+          FromParam.Component = deStart
+          FromParam.DataType = ftDateTime
+          ToParam.Name = 'StartDate'
+          ToParam.Value = Null
+          ToParam.DataType = ftDateTime
+          ToParam.ParamType = ptInputOutput
+        end
+        item
+          FromParam.Value = 42005d
+          FromParam.Component = deEnd
+          FromParam.DataType = ftDateTime
+          ToParam.Name = 'EndDate'
+          ToParam.Value = Null
+          ToParam.DataType = ftDateTime
+          ToParam.ParamType = ptInputOutput
+        end>
+      StoredProcList = <>
+      Caption = #1054#1090#1095#1077#1090' '#1087#1086' '#1090#1086#1074#1072#1088#1091' ('#1088#1077#1072#1083#1080#1079#1072#1094#1080#1103')'
+      Hint = #1054#1090#1095#1077#1090' '#1087#1086' '#1090#1086#1074#1072#1088#1091' ('#1088#1077#1072#1083#1080#1079#1072#1094#1080#1103')'
+      ImageIndex = 3
+      ShortCut = 16464
+      DataSets = <
+        item
+          UserName = 'frxDBDItems'
+          IndexFieldNames = 'PartnerName;GoodsGroupName'
+          GridView = cxGridDBTableView
+        end>
+      Params = <
+        item
+          Name = 'StartDate'
+          Value = 42005d
+          Component = deStart
+          DataType = ftDateTime
+          ParamType = ptInput
+        end
+        item
+          Name = 'EndDate'
+          Value = 42005d
+          Component = deEnd
+          DataType = ftDateTime
+          ParamType = ptInput
+        end
+        item
+          Name = 'GoodsGroupName'
+          Value = ''
+          Component = GoodsGroupGuides
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          ParamType = ptInput
+        end
+        item
+          Name = 'JuridicalName'
+          Value = ''
+          Component = JuridicalGuides
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          ParamType = ptInput
+        end
+        item
+          Name = 'ReportType'
+          Value = '1'
+          ParamType = ptInput
+        end
+        item
+          Name = 'isGoods'
+          Value = 'False'
+          Component = cbGoods
+          DataType = ftBoolean
+          ParamType = ptInput
+        end
+        item
+          Name = 'isPartner'
+          Value = 'False'
+          Component = cbPartner
+          DataType = ftBoolean
+          ParamType = ptInput
+        end
+        item
+          Name = 'isTradeMark'
+          Value = 'False'
+          Component = cbTradeMark
+          DataType = ftBoolean
+          ParamType = ptInput
+        end
+        item
+          Name = 'isGoodsKind'
+          Value = 'False'
+          Component = cbGoodsKind
+          DataType = ftBoolean
+          ParamType = ptInput
+        end
+        item
+          Name = 'isPartionGoods'
+          Value = 'False'
+          Component = cbPartionGoods
+          DataType = ftBoolean
+          ParamType = ptInput
+        end>
+      ReportName = #1054#1090#1095#1077#1090' '#1087#1086' '#1090#1086#1074#1072#1088#1091' ('#1087#1088#1086#1076#1072#1078#1072' '#1087#1086' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1103#1084')'
+      ReportNameParam.Value = #1054#1090#1095#1077#1090' '#1087#1086' '#1090#1086#1074#1072#1088#1091' ('#1087#1088#1086#1076#1072#1078#1072' '#1087#1086' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1103#1084')'
+      ReportNameParam.DataType = ftString
+      ReportNameParam.ParamType = ptInput
+    end
     object actPrint: TdsdPrintAction
       Category = 'DSDLib'
       MoveParams = <
@@ -1844,91 +2009,44 @@ inherited Report_GoodsMIForm: TReport_GoodsMIForm
           Name = 'ReportType'
           Value = '2'
           ParamType = ptInput
-        end>
-      ReportName = #1054#1090#1095#1077#1090' '#1087#1086' '#1090#1086#1074#1072#1088#1091' ('#1087#1088#1080#1093#1086#1076' '#1086#1090' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072')'
-      ReportNameParam.Value = #1054#1090#1095#1077#1090' '#1087#1086' '#1090#1086#1074#1072#1088#1091' ('#1087#1088#1080#1093#1086#1076' '#1086#1090' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072')'
-      ReportNameParam.DataType = ftString
-      ReportNameParam.ParamType = ptInput
-    end
-    object actPrintByGoods: TdsdPrintAction
-      Category = 'DSDLib'
-      MoveParams = <
-        item
-          FromParam.Name = 'id'
-          FromParam.Value = Null
-          FromParam.ComponentItem = 'id'
-          ToParam.Value = '0'
-          ToParam.Component = FormParams
-          ToParam.ComponentItem = 'Id'
-          ToParam.ParamType = ptInputOutput
         end
         item
-          FromParam.Value = 41640d
-          FromParam.Component = deStart
-          FromParam.DataType = ftDateTime
-          ToParam.Name = 'StartDate'
-          ToParam.Value = Null
-          ToParam.DataType = ftDateTime
-          ToParam.ParamType = ptInputOutput
-        end
-        item
-          FromParam.Value = 41640d
-          FromParam.Component = deEnd
-          FromParam.DataType = ftDateTime
-          ToParam.Name = 'EndDate'
-          ToParam.Value = Null
-          ToParam.DataType = ftDateTime
-          ToParam.ParamType = ptInputOutput
-        end>
-      StoredProcList = <>
-      Caption = #1054#1090#1095#1077#1090' '#1087#1086' '#1090#1086#1074#1072#1088#1091' ('#1088#1077#1072#1083#1080#1079#1072#1094#1080#1103', '#1087#1086' '#1090#1086#1074#1072#1088#1091')'
-      Hint = #1054#1090#1095#1077#1090' '#1087#1086' '#1090#1086#1074#1072#1088#1091' ('#1088#1077#1072#1083#1080#1079#1072#1094#1080#1103', '#1087#1086' '#1090#1086#1074#1072#1088#1091')'
-      ImageIndex = 16
-      ShortCut = 16464
-      DataSets = <
-        item
-          UserName = 'frxDBDItems'
-          IndexFieldNames = 'PartnerName;GoodsGroupName'
-          GridView = cxGridDBTableView
-        end>
-      Params = <
-        item
-          Name = 'StartDate'
-          Value = 41640d
-          Component = deStart
-          DataType = ftDateTime
+          Name = 'isGoods'
+          Value = Null
+          Component = cbGoods
+          DataType = ftBoolean
           ParamType = ptInput
         end
         item
-          Name = 'EndDate'
-          Value = 41640d
-          Component = deEnd
-          DataType = ftDateTime
+          Name = 'isPartner'
+          Value = Null
+          Component = cbPartner
+          DataType = ftBoolean
           ParamType = ptInput
         end
         item
-          Name = 'GoodsGroupName'
-          Value = ''
-          Component = GoodsGroupGuides
-          ComponentItem = 'TextValue'
-          DataType = ftString
+          Name = 'isTradeMark'
+          Value = Null
+          Component = cbTradeMark
+          DataType = ftBoolean
           ParamType = ptInput
         end
         item
-          Name = 'JuridicalName'
-          Value = ''
-          Component = JuridicalGuides
-          ComponentItem = 'TextValue'
-          DataType = ftString
+          Name = 'isGoodsKind'
+          Value = Null
+          Component = cbGoodsKind
+          DataType = ftBoolean
           ParamType = ptInput
         end
         item
-          Name = 'ReportType'
-          Value = '3'
+          Name = 'isPartionGoods'
+          Value = Null
+          Component = cbPartionGoods
+          DataType = ftBoolean
           ParamType = ptInput
         end>
-      ReportName = #1054#1090#1095#1077#1090' '#1087#1086' '#1090#1086#1074#1072#1088#1091' ('#1087#1088#1080#1093#1086#1076' '#1086#1090' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072')'
-      ReportNameParam.Value = #1054#1090#1095#1077#1090' '#1087#1086' '#1090#1086#1074#1072#1088#1091' ('#1087#1088#1080#1093#1086#1076' '#1086#1090' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072')'
+      ReportName = #1054#1090#1095#1077#1090' '#1087#1086' '#1090#1086#1074#1072#1088#1091' ('#1087#1088#1086#1076#1072#1078#1072' '#1087#1086' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1103#1084')'
+      ReportNameParam.Value = #1054#1090#1095#1077#1090' '#1087#1086' '#1090#1086#1074#1072#1088#1091' ('#1087#1088#1086#1076#1072#1078#1072' '#1087#1086' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1103#1084')'
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
     end
@@ -2045,8 +2163,44 @@ inherited Report_GoodsMIForm: TReport_GoodsMIForm
           ComponentItem = 'TextValue'
           DataType = ftString
           ParamType = ptInput
+        end
+        item
+          Name = 'isGoods'
+          Value = Null
+          Component = cbGoods
+          DataType = ftBoolean
+          ParamType = ptInputOutput
+        end
+        item
+          Name = 'isGoodsKind'
+          Value = Null
+          Component = cbGoodsKind
+          DataType = ftBoolean
+          ParamType = ptInputOutput
+        end
+        item
+          Name = 'isPartionGoods'
+          Value = Null
+          Component = cbPartionGoods
+          DataType = ftBoolean
+          ParamType = ptInputOutput
+        end
+        item
+          Name = 'isPartner'
+          Value = Null
+          Component = cbPartner
+          DataType = ftBoolean
+          ParamType = ptInputOutput
+        end
+        item
+          Name = 'isTradeMark'
+          Value = Null
+          Component = cbTradeMark
+          DataType = ftBoolean
+          ParamType = ptInputOutput
         end>
       isShowModal = True
+      RefreshDispatcher = RefreshDispatcher
       OpenBeforeShow = True
     end
   end
@@ -2123,6 +2277,41 @@ inherited Report_GoodsMIForm: TReport_GoodsMIForm
         Component = InfoMoneyGuides
         ComponentItem = 'Key'
         ParamType = ptInput
+      end
+      item
+        Name = 'inisPartner'
+        Value = Null
+        Component = cbPartner
+        DataType = ftBoolean
+        ParamType = ptInput
+      end
+      item
+        Name = 'inisTradeMark'
+        Value = Null
+        Component = cbTradeMark
+        DataType = ftBoolean
+        ParamType = ptInput
+      end
+      item
+        Name = 'inisGoods'
+        Value = Null
+        Component = cbGoods
+        DataType = ftBoolean
+        ParamType = ptInput
+      end
+      item
+        Name = 'inisGoodsKind'
+        Value = Null
+        Component = cbGoodsKind
+        DataType = ftBoolean
+        ParamType = ptInput
+      end
+      item
+        Name = 'inisPartionGoods'
+        Value = Null
+        Component = cbPartionGoods
+        DataType = ftBoolean
+        ParamType = ptInput
       end>
     Left = 112
     Top = 192
@@ -2159,6 +2348,30 @@ inherited Report_GoodsMIForm: TReport_GoodsMIForm
         end
         item
           Visible = True
+          ItemName = 'bbPartner'
+        end
+        item
+          Visible = True
+          ItemName = 'bb'
+        end
+        item
+          Visible = True
+          ItemName = 'bbGoods'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarControlContainerItem1'
+        end
+        item
+          Visible = True
+          ItemName = 'bbPartionGoods'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbPrint'
         end
         item
@@ -2187,12 +2400,47 @@ inherited Report_GoodsMIForm: TReport_GoodsMIForm
       Category = 0
     end
     object bbPrintByGoods: TdxBarButton
-      Action = actPrintByGoods
+      Action = actPrint2
       Category = 0
     end
     object bbExecuteDialog: TdxBarButton
       Action = ExecuteDialog
       Category = 0
+    end
+    object bbGoods: TdxBarControlContainerItem
+      Caption = #1087#1086' '#1058#1086#1074#1072#1088#1072#1084
+      Category = 0
+      Hint = #1087#1086' '#1058#1086#1074#1072#1088#1072#1084
+      Visible = ivAlways
+      Control = cbGoods
+    end
+    object bbPartner: TdxBarControlContainerItem
+      Caption = #1087#1086' '#1050#1086#1085#1090#1088#1072#1075#1077#1085#1090#1072#1084
+      Category = 0
+      Hint = #1087#1086' '#1050#1086#1085#1090#1088#1072#1075#1077#1085#1090#1072#1084
+      Visible = ivAlways
+      Control = cbPartner
+    end
+    object bb: TdxBarControlContainerItem
+      Caption = #1087#1086' '#1058#1086#1088#1075#1086#1074#1099#1084' '#1084#1072#1088#1082#1072#1084
+      Category = 0
+      Hint = #1087#1086' '#1058#1086#1088#1075#1086#1074#1099#1084' '#1084#1072#1088#1082#1072#1084
+      Visible = ivAlways
+      Control = cbTradeMark
+    end
+    object dxBarControlContainerItem1: TdxBarControlContainerItem
+      Caption = #1087#1086' '#1042#1080#1076#1072#1084' '#1090#1086#1074#1072#1088#1072
+      Category = 0
+      Hint = #1087#1086' '#1042#1080#1076#1072#1084' '#1090#1086#1074#1072#1088#1072
+      Visible = ivAlways
+      Control = cbGoodsKind
+    end
+    object bbPartionGoods: TdxBarControlContainerItem
+      Caption = #1087#1086' '#1055#1088#1072#1090#1080#1103#1084
+      Category = 0
+      Hint = #1087#1086' '#1055#1088#1072#1090#1080#1103#1084
+      Visible = ivAlways
+      Control = cbPartionGoods
     end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn

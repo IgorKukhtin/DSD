@@ -1,4 +1,4 @@
-unit Report_ReceiptProductionAnalyze;
+unit Report_ReceiptSaleAnalyze;
 
 interface
 
@@ -17,7 +17,7 @@ uses
   dxSkinsDefaultPainters, dxSkinscxPCPainter, dxSkinsdxBarPainter;
 
 type
-  TReport_ReceiptProductionAnalyzeForm = class(TAncestorReportForm)
+  TReport_ReceiptSaleAnalyzeForm = class(TAncestorReportForm)
     cxLabel4: TcxLabel;
     edGoodsGroup: TcxButtonEdit;
     GoodsGroupGuides: TdsdGuides;
@@ -88,7 +88,7 @@ implementation
 {$R *.dfm}
 
 initialization
-  RegisterClass(TReport_ReceiptProductionAnalyzeForm)
+  RegisterClass(TReport_ReceiptSaleAnalyzeForm)
 
 
 end.

@@ -39,6 +39,7 @@ object TaxJournalDialogForm: TTaxJournalDialogForm
   object edDateRegistered: TcxDateEdit
     Left = 19
     Top = 99
+    EditValue = 42216d
     Properties.ShowTime = False
     TabOrder = 2
     Width = 101

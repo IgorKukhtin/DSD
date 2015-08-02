@@ -126,8 +126,7 @@ BEGIN
            , MovementItem.Amount                AS Amount
            , MIFloat_HeadCount.ValueData        AS HeadCount
            , MIFloat_Count.ValueData            AS Count
-           -- , MIFloat_Price.ValueData            AS Price
-           , tmpPrice.Price :: TFloat           AS Price
+           , CASE WHEN MIFloat_Price.ValueData <> 0 THEN MIFloat_Price.ValueData ELSE tmpPrice.Price END :: TFloat           AS Price
            , MIFloat_Summ.ValueData             AS Summ
            , MIDate_PartionGoods.ValueData      AS PartionGoodsDate
            , MIString_PartionGoods.ValueData    AS PartionGoods
@@ -239,8 +238,7 @@ BEGIN
            , MovementItem.Amount                AS Amount
            , MIFloat_HeadCount.ValueData        AS HeadCount
            , MIFloat_Count.ValueData            AS Count
-           -- , MIFloat_Price.ValueData            AS Price
-           , tmpPrice.Price :: TFloat           AS Price
+           , CASE WHEN MIFloat_Price.ValueData <> 0 THEN MIFloat_Price.ValueData ELSE tmpPrice.Price END :: TFloat           AS Price
            , MIFloat_Summ.ValueData             AS Summ
            , MIDate_PartionGoods.ValueData      AS PartionGoodsDate
            , MIString_PartionGoods.ValueData    AS PartionGoods

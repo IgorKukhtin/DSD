@@ -52,6 +52,8 @@ type
     isRemains: TcxGridDBColumn;
     GoodsCode_parent: TcxGridDBColumn;
     GoodsName_parent: TcxGridDBColumn;
+    GoodsKindName_complete: TcxGridDBColumn;
+    GoodsKindName_parent: TcxGridDBColumn;
   private
     { Private declarations }
   public

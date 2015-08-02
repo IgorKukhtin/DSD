@@ -1903,8 +1903,8 @@
 				<Form>GoodsByGoodsKindForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
-			<DCCReference Include="..\..\Forms\Report\Report_ReceiptProductionAnalyze.pas">
-				<Form>Report_ReceiptProductionAnalyzeForm</Form>
+			<DCCReference Include="..\..\Forms\Report\Report_ReceiptSaleAnalyze.pas">
+				<Form>Report_ReceiptSaleAnalyzeForm</Form>
 				<FormType>dfm</FormType>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
@@ -2159,6 +2159,10 @@
 			</DCCReference>
 			<DCCReference Include="..\..\Forms\Report\Report_PersonalCompleteDialog.pas">
 				<Form>Report_PersonalCompleteDialogForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Report\Report_ReceiptProductionAnalyze.pas">
+				<Form>Report_ReceiptProductionAnalyzeForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<BuildConfiguration Include="Release">

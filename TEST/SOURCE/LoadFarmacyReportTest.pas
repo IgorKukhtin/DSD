@@ -63,6 +63,7 @@ begin
 
   // Другие
   LoadReportFromFile('Расходная_накладная', ReportPath + '\Расходная_накладная.fr3');
+  LoadReportFromFile('Расходная_накладная_для_менеджера', ReportPath + '\Расходная_накладная_для_менеджера.fr3');
   LoadReportFromFile('Инвентаризация', ReportPath + '\Инвентаризация.fr3');
   LoadReportFromFile('Списание', ReportPath + '\Списание.fr3');
   LoadReportFromFile('Перемещение', ReportPath + '\Перемещение.fr3');

@@ -635,7 +635,7 @@ uses
   JuridicalGLN in '..\..\Forms\Guides\JuridicalGLN.pas' {JuridicalGLNForm: TParentForm},
   PartnerGLN in '..\..\Forms\Guides\PartnerGLN.pas' {PartnerGLNForm: TParentForm},
   GoodsByGoodsKind in '..\..\Forms\Guides\GoodsByGoodsKind.pas' {GoodsByGoodsKindForm: TParentForm},
-  Report_ReceiptProductionAnalyze in '..\..\Forms\Report\Report_ReceiptProductionAnalyze.pas' {Report_ReceiptProductionAnalyzeForm: TParentForm},
+  Report_ReceiptSaleAnalyze in '..\..\Forms\Report\Report_ReceiptSaleAnalyze.pas' {Report_ReceiptSaleAnalyzeForm: TParentForm},
   Report_GoodsMI_Defroster in '..\..\Forms\Report\Report_GoodsMI_Defroster.pas' {Report_GoodsMI_DefrosterForm: TParentForm},
   MeDocCOMTest in '..\SOURCE\Component\MeDocCOMTest.pas',
   StatusXML in '..\..\SOURCE\EDI\StatusXML.pas',
@@ -702,7 +702,8 @@ uses
   Report_GoodsMI_Income in '..\..\Forms\Report\Report_GoodsMI_Income.pas' {Report_GoodsMI_IncomeForm: TParentForm},
   Report_GoodsMI_Dialog in '..\..\Forms\Report\Report_GoodsMI_Dialog.pas' {Report_GoodsMI_DialogForm: TParentForm},
   Report_GoodsMI_Internal in '..\..\Forms\Report\Report_GoodsMI_Internal.pas' {Report_GoodsMI_InternalForm: TParentForm},
-  Report_PersonalCompleteDialog in '..\..\Forms\Report\Report_PersonalCompleteDialog.pas' {Report_PersonalCompleteDialogForm: TParentForm};
+  Report_PersonalCompleteDialog in '..\..\Forms\Report\Report_PersonalCompleteDialog.pas' {Report_PersonalCompleteDialogForm: TParentForm},
+  Report_ReceiptProductionAnalyze in '..\..\Forms\Report\Report_ReceiptProductionAnalyze.pas' {Report_ReceiptProductionAnalyzeForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}

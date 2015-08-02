@@ -39,6 +39,8 @@ BEGIN
      vbUserId:= lpGetUserBySession (inSession);
 
 
+     IF NOT EXISTS (SELECT Object.Id FROM Object WHERE Object.Id = inPersonalDriverId AND Object.DescId = zc_Object_Personal() AND Object.ValueData = inPersonalDriverName)
+     THEN
      -- нашли <Сотрудник (водитель)>
      inPersonalDriverId:= (SELECT Object_MemberExternal.Id FROM Object AS Object_MemberExternal WHERE Object_MemberExternal.ValueData = TRIM (inPersonalDriverName) AND Object_MemberExternal.DescId = zc_Object_MemberExternal());
      IF COALESCE (inPersonalDriverId, 0) = 0 AND TRIM (inPersonalDriverName) <> ''
@@ -50,7 +52,10 @@ BEGIN
                                                                   , inUserId:= vbUserId
                                                                    );
      END IF;
+     END IF;
 
+     IF NOT EXISTS (SELECT Object.Id FROM Object WHERE Object.Id = inMemberId1 AND Object.DescId = zc_Object_Personal() AND Object.ValueData = inMemberName1)
+     THEN
      -- нашли <отримав водій/експедитор>
      inMemberId1:= (SELECT Object_MemberExternal.Id FROM Object AS Object_MemberExternal WHERE Object_MemberExternal.ValueData = TRIM (inMemberName1) AND Object_MemberExternal.DescId = zc_Object_MemberExternal());
      IF COALESCE (inMemberId1, 0) = 0 AND TRIM (inMemberName1) <> ''
@@ -61,6 +66,7 @@ BEGIN
                                                            , inName  := inMemberName1
                                                            , inUserId:= vbUserId
                                                             );
+     END IF;
      END IF;
 
      -- нашли <Бухгалтер (відповідальна особа вантажовідправника)>
@@ -87,6 +93,8 @@ BEGIN
                                                             );
      END IF;
 
+     -- IF NOT EXISTS (SELECT Object.Id FROM Object WHERE Object.Id = inMemberId4 AND Object.DescId = zc_Object_Personal() AND Object.ValueData = inMemberName4)
+     -- THEN
      -- нашли <Здав (відповідальна особа вантажовідправника)>
      inMemberId4:= (SELECT Object_MemberExternal.Id FROM Object AS Object_MemberExternal WHERE Object_MemberExternal.ValueData = TRIM (inMemberName4) AND Object_MemberExternal.DescId = zc_Object_MemberExternal());
      IF COALESCE (inMemberId4, 0) = 0 AND TRIM (inMemberName4) <> ''
@@ -98,7 +106,10 @@ BEGIN
                                                            , inUserId:= vbUserId
                                                             );
      END IF;
+     -- END IF;
 
+     IF NOT EXISTS (SELECT Object.Id FROM Object WHERE Object.Id = inMemberId5 AND Object.DescId = zc_Object_Personal() AND Object.ValueData = inMemberName5)
+     THEN
      -- нашли <Прийняв водій/експедитор>
      inMemberId5:= (SELECT Object_MemberExternal.Id FROM Object AS Object_MemberExternal WHERE Object_MemberExternal.ValueData = TRIM (inMemberName5) AND Object_MemberExternal.DescId = zc_Object_MemberExternal());
      IF COALESCE (inMemberId5, 0) = 0 AND TRIM (inMemberName5) <> ''
@@ -110,7 +121,10 @@ BEGIN
                                                            , inUserId:= vbUserId
                                                             );
      END IF;
+     END IF;
 
+     IF NOT EXISTS (SELECT Object.Id FROM Object WHERE Object.Id = inMemberId6 AND Object.DescId = zc_Object_Personal() AND Object.ValueData = inMemberName6)
+     THEN
      -- нашли <Здав водій/експедитор>
      inMemberId6:= (SELECT Object_MemberExternal.Id FROM Object AS Object_MemberExternal WHERE Object_MemberExternal.ValueData = TRIM (inMemberName6) AND Object_MemberExternal.DescId = zc_Object_MemberExternal());
      IF COALESCE (inMemberId6, 0) = 0 AND TRIM (inMemberName6) <> ''
@@ -121,6 +135,7 @@ BEGIN
                                                            , inName  := inMemberName6
                                                            , inUserId:= vbUserId
                                                             );
+     END IF;
      END IF;
 
      -- нашли <Прийняв (відповідальна особа вантажоодержувача)>

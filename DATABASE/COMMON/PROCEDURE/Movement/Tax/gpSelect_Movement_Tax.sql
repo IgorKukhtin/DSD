@@ -10,7 +10,7 @@ CREATE OR REPLACE FUNCTION gpSelect_Movement_Tax(
     IN inSession        TVarChar    -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, InvNumber Integer, OperDate TDateTime, StatusCode Integer, StatusName TVarChar
-             , Checked Boolean, Document Boolean, DateRegistered TDateTime, InvNumberRegistered TVarChar
+             , Checked Boolean, Document Boolean, DateRegistered TDateTime, DateRegistered_notNull TDateTime, InvNumberRegistered TVarChar
              , PriceWithVAT Boolean, VATPercent TFloat
              , TotalCount TFloat
              , TotalSummVAT TFloat, TotalSummMVAT TFloat, TotalSummPVAT TFloat, TotalSumm TFloat
@@ -61,6 +61,7 @@ BEGIN
            , COALESCE (MovementBoolean_Checked.ValueData, FALSE) :: Boolean          AS Checked
            , COALESCE (MovementBoolean_Document.ValueData, FALSE) :: Boolean         AS Document
            , MovementDate_DateRegistered.ValueData      AS DateRegistered
+           , COALESCE (MovementDate_DateRegistered.ValueData, inEndDate) :: TDateTime AS DateRegistered_notNull
            , MovementString_InvNumberRegistered.ValueData   AS InvNumberRegistered
            , MovementBoolean_PriceWithVAT.ValueData     AS PriceWithVAT
            , MovementFloat_VATPercent.ValueData         AS VATPercent

@@ -14,8 +14,8 @@ RETURNS TABLE  (MovementId Integer, InvNumber TVarChar, OperDate TDateTime, Oper
               , CarCode Integer, CarName TVarChar
               , ObjectByDescName TVarChar, ObjectByCode Integer, ObjectByName TVarChar
               , PaidKindName TVarChar
-              , GoodsCode Integer, GoodsName TVarChar, GoodsKindName TVarChar, PartionGoods TVarChar
-              , GoodsCode_parent Integer, GoodsName_parent TVarChar
+              , GoodsCode Integer, GoodsName TVarChar, GoodsKindName TVarChar, GoodsKindName_complete TVarChar, PartionGoods TVarChar
+              , GoodsCode_parent Integer, GoodsName_parent TVarChar, GoodsKindName_parent TVarChar
               , Price TFloat
               , AmountStart TFloat, AmountIn TFloat, AmountOut TFloat, AmountEnd TFloat, Amount TFloat
               , SummStart TFloat, SummIn TFloat, SummOut TFloat, SummEnd TFloat, Summ TFloat
@@ -192,9 +192,11 @@ BEGIN
         , Object_Goods.ObjectCode AS GoodsCode
         , Object_Goods.ValueData  AS GoodsName
         , Object_GoodsKind.ValueData AS GoodsKindName
+        , Object_GoodsKind_complete.ValueData AS GoodsKindName_complete
         , COALESCE (CASE WHEN Object_PartionGoods.ValueData <> '' THEN Object_PartionGoods.ValueData ELSE NULL END, CASE WHEN tmpMIContainer_group.PartionGoods_item <> '' THEN '*' || tmpMIContainer_group.PartionGoods_item ELSE '' END) :: TVarChar AS PartionGoods
         , Object_Goods_parent.ObjectCode AS GoodsCode_parent
         , Object_Goods_parent.ValueData  AS GoodsName_parent
+        , Object_GoodsKind_parent.ValueData AS GoodsKindName_parent
 
         , CAST (CASE WHEN Movement.DescId = zc_Movement_Income() AND 1=0
                           THEN 0 -- MIFloat_Price.ValueData
@@ -408,7 +410,6 @@ BEGIN
                                                                             WHEN Movement.DescId IN (zc_Movement_Send(), zc_Movement_SendOnPrice(), zc_Movement_ProductionUnion(), zc_Movement_ProductionSeparate()) AND tmpMIContainer_group.isActive = TRUE THEN zc_MovementLinkObject_From()
                                                                             WHEN Movement.DescId IN (zc_Movement_Send(), zc_Movement_SendOnPrice(), zc_Movement_ProductionUnion(), zc_Movement_ProductionSeparate()) AND tmpMIContainer_group.isActive = FALSE THEN zc_MovementLinkObject_To()
                                                                        END
-
         LEFT JOIN MovementLinkObject AS MovementLinkObject_PaidKind
                                      ON MovementLinkObject_PaidKind.MovementId = tmpMIContainer_group.MovementId
                                     AND MovementLinkObject_PaidKind.DescId = zc_MovementLinkObject_PaidKind()
@@ -420,6 +421,10 @@ BEGIN
 
         LEFT JOIN MovementItem AS MovementItem_parent ON MovementItem_parent.Id = tmpMIContainer_group.ParentId
         LEFT JOIN Object AS Object_Goods_parent ON Object_Goods_parent.Id = MovementItem_parent.ObjectId
+        LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind_parent
+                                         ON MILinkObject_GoodsKind_parent.MovementItemId = tmpMIContainer_group.ParentId
+                                        AND MILinkObject_GoodsKind_parent.DescId = zc_MILinkObject_GoodsKind()
+        LEFT JOIN Object AS Object_GoodsKind_parent ON Object_GoodsKind_parent.Id = MILinkObject_GoodsKind_parent.ObjectId
 
         LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = tmpMIContainer_group.GoodsId
         LEFT JOIN Object AS Object_GoodsKind ON Object_GoodsKind.Id = tmpMIContainer_group.GoodsKindId
@@ -432,7 +437,10 @@ BEGIN
         LEFT JOIN Object AS Object_By ON Object_By.Id = CASE WHEN CLO_Object_By.ObjectId > 0 THEN CLO_Object_By.ObjectId ELSE MovementLinkObject_By.ObjectId END
         LEFT JOIN ObjectDesc AS ObjectDesc_By ON ObjectDesc_By.Id = Object_By.DescId
         LEFT JOIN Object AS Object_PartionGoods ON Object_PartionGoods.Id = tmpMIContainer_group.PartionGoodsId
-
+        LEFT JOIN ObjectLink AS ObjectLink_GoodsKindComplete
+                             ON ObjectLink_GoodsKindComplete.ObjectId = tmpMIContainer_group.PartionGoodsId
+                            AND ObjectLink_GoodsKindComplete.DescId = zc_ObjectLink_PartionGoods_GoodsKindComplete()
+        LEFT JOIN Object AS Object_GoodsKind_complete ON Object_GoodsKind_complete.Id = ObjectLink_GoodsKindComplete.ChildObjectId
    ;
     
         

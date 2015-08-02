@@ -576,6 +576,7 @@ object ReceiptForm: TReceiptForm
         Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        Options.Editing = False
         Width = 77
       end
       object clEndDateChild: TcxGridDBColumn
@@ -584,6 +585,7 @@ object ReceiptForm: TReceiptForm
         Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        Options.Editing = False
         Width = 77
       end
       object clInfoMoneyCodeChild: TcxGridDBColumn
@@ -592,6 +594,7 @@ object ReceiptForm: TReceiptForm
         Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        Options.Editing = False
         Width = 55
       end
       object clInfoMoneyGroupNameChild: TcxGridDBColumn
@@ -600,6 +603,7 @@ object ReceiptForm: TReceiptForm
         Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        Options.Editing = False
         Width = 80
       end
       object clInfoMoneyDestinationNameChild: TcxGridDBColumn
@@ -608,6 +612,7 @@ object ReceiptForm: TReceiptForm
         Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        Options.Editing = False
         Width = 70
       end
       object clInfoMoneyNameChild: TcxGridDBColumn
@@ -615,6 +620,7 @@ object ReceiptForm: TReceiptForm
         DataBinding.FieldName = 'InfoMoneyName'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        Options.Editing = False
         Width = 138
       end
       object clCommentChild: TcxGridDBColumn

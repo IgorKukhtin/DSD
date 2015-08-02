@@ -36,6 +36,20 @@ BEGIN
    -- сохранили свойство <Количество батонов>
    PERFORM lpInsertUpdate_MovementItemFloat(zc_MIFloat_Count(), ioId, inCount);
 
+   
+   -- сохранили свойство <Партия товара> у Child
+   IF vbIsInsert = FALSE
+   THEN
+       PERFORM lpInsertUpdate_MovementItemDate (zc_MIDate_PartionGoods(), MovementItem.Id, inPartionGoodsDate)
+       FROM MovementItemDate
+            INNER JOIN MovementItem ON MovementItem.ParentId = ioId
+            INNER JOIN MovementItemDate AS MovementItemDate_find ON MovementItemDate_find.MovementItemId = MovementItem.Id
+                                                                AND MovementItemDate_find.DescId = zc_MIDate_PartionGoods()
+                                                                AND MovementItemDate_find.ValueData = MovementItemDate.ValueData
+       WHERE MovementItemDate.MovementItemId = ioId
+         AND MovementItemDate.DescId = zc_MIDate_PartionGoods();
+   END IF;
+
    -- сохранили свойство <Партия товара>
    PERFORM lpInsertUpdate_MovementItemDate (zc_MIDate_PartionGoods(), ioId, inPartionGoodsDate);
    -- сохранили свойство <Партия товара>

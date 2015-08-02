@@ -105,6 +105,7 @@ type
     ExecuteDialog: TExecuteDialog;
     bbExecuteDialog: TdxBarButton;
     Comment: TcxGridDBColumn;
+    DateRegistered_notNull: TcxGridDBColumn;
   private
     { Private declarations }
   public

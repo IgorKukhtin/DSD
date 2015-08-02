@@ -134,6 +134,7 @@ BEGIN
            , tmpTransportGoods.CarTrailerName
            , tmpTransportGoods.CarTrailerModelName
            , tmpTransportGoods.PersonalDriverName
+           , ObjectString_DriverCertificate.ValueData AS DriverCertificate
            , tmpTransportGoods.MemberName1
            , tmpTransportGoods.MemberName2
            , tmpTransportGoods.MemberName3
@@ -159,6 +160,13 @@ BEGIN
        FROM Movement
             LEFT JOIN tmpTransportGoods ON tmpTransportGoods.MovementId_Sale = Movement.Id
 
+
+            LEFT JOIN ObjectLink AS ObjectLink_Personal_Member
+                                 ON ObjectLink_Personal_Member.ObjectId = tmpTransportGoods.PersonalDriverId
+                                AND ObjectLink_Personal_Member.DescId = zc_ObjectLink_Personal_Member()
+            LEFT JOIN ObjectString AS ObjectString_DriverCertificate
+                                   ON ObjectString_DriverCertificate.ObjectId = ObjectLink_Personal_Member.ChildObjectId
+                                  AND ObjectString_DriverCertificate.DescId = zc_ObjectString_Member_DriverCertificate()
 
             LEFT JOIN MovementDate AS MovementDate_OperDatePartner
                                    ON MovementDate_OperDatePartner.MovementId =  Movement.Id

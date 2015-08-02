@@ -1,5 +1,5 @@
-inherited Report_ReceiptProductionAnalyzeForm: TReport_ReceiptProductionAnalyzeForm
-  Caption = #1054#1090#1095#1077#1090' <'#1040#1085#1072#1083#1080#1079' '#1088#1077#1094#1077#1087#1090#1091#1088' '#1080' '#1087#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1072'>'
+inherited Report_ReceiptSaleAnalyzeForm: TReport_ReceiptSaleAnalyzeForm
+  Caption = #1054#1090#1095#1077#1090' <'#1040#1085#1072#1083#1080#1079' '#1088#1077#1094#1077#1087#1090#1091#1088' '#1080' '#1088#1077#1072#1083#1080#1079#1072#1094#1080#1080'>'
   ClientHeight = 430
   ClientWidth = 1130
   ExplicitWidth = 1146
@@ -985,7 +985,7 @@ inherited Report_ReceiptProductionAnalyzeForm: TReport_ReceiptProductionAnalyzeF
       end>
   end
   inherited spSelect: TdsdStoredProc
-    StoredProcName = 'gpReport_ReceiptProductionAnalyze'
+    StoredProcName = 'gpReport_ReceiptSaleAnalyze'
     DataSets = <
       item
         DataSet = MasterCDS

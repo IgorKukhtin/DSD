@@ -44,6 +44,7 @@ BEGIN
 
       -- пересчитали Итоговые суммы
      PERFORM lpInsertUpdate_MovementFloat_TotalSumm (inMovementId);
+     PERFORM lpInsertUpdate_MovementFloat_TotalSummSale (inMovementId);
 
      -- собственно проводки
      PERFORM lpComplete_Movement_Income(inMovementId, -- ключ Документа

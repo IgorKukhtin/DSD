@@ -3,7 +3,7 @@ inherited TaxCorrectiveJournalForm: TTaxCorrectiveJournalForm
   ClientHeight = 535
   ClientWidth = 1118
   ExplicitWidth = 1134
-  ExplicitHeight = 573
+  ExplicitHeight = 570
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -396,6 +396,11 @@ inherited TaxCorrectiveJournalForm: TTaxCorrectiveJournalForm
             Options.Editing = False
             Width = 120
           end
+          object DateRegistered_notNull: TcxGridDBColumn
+            DataBinding.FieldName = 'DateRegistered_notNull'
+            Visible = False
+            VisibleForCustomization = False
+          end
         end
       end
     end
@@ -633,7 +638,7 @@ inherited TaxCorrectiveJournalForm: TTaxCorrectiveJournalForm
           Name = 'DateRegistered'
           Value = Null
           Component = MasterCDS
-          ComponentItem = 'DateRegistered'
+          ComponentItem = 'DateRegistered_notNull'
           DataType = ftDateTime
           ParamType = ptInputOutput
         end
@@ -694,7 +699,6 @@ inherited TaxCorrectiveJournalForm: TTaxCorrectiveJournalForm
           UserName = 'frxDBDMaster'
           GridView = cxGridDBTableView
         end>
-      CopiesCount = 1
       Params = <
         item
           Name = 'StartDate'
@@ -784,7 +788,6 @@ inherited TaxCorrectiveJournalForm: TTaxCorrectiveJournalForm
           DataSet = PrintHeaderCDS
           UserName = 'frxDBDHeader'
         end>
-      CopiesCount = 1
       Params = <
         item
           Name = 'Id'
@@ -820,7 +823,6 @@ inherited TaxCorrectiveJournalForm: TTaxCorrectiveJournalForm
           DataSet = PrintHeaderCDS
           UserName = 'frxDBDHeader'
         end>
-      CopiesCount = 1
       Params = <
         item
           Name = 'Id'

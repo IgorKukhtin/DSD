@@ -4,7 +4,7 @@ inherited MainForm: TMainForm
   KeyPreview = True
   Position = poDesigned
   ExplicitWidth = 1109
-  ExplicitHeight = 265
+  ExplicitHeight = 262
   PixelsPerInch = 96
   TextHeight = 13
   object cxGrid: TcxGrid [0]
@@ -3342,6 +3342,17 @@ inherited MainForm: TMainForm
         end>
       isShowModal = False
     end
+    object actReport_ReceiptSaleAnalyzeForm: TdsdOpenForm
+      Category = #1054#1090#1095#1077#1090#1099' ('#1087#1088'-'#1074#1086')'
+      MoveParams = <>
+      Caption = #1054#1090#1095#1077#1090' '#1072#1085#1072#1083#1080#1079' '#1088#1077#1094#1077#1087#1090#1091#1088' '#1080' '#1088#1077#1072#1083#1080#1079#1072#1094#1080#1080
+      FormName = 'TReport_ReceiptSaleAnalyzeForm'
+      FormNameParam.Value = 'TReport_ReceiptSaleAnalyzeForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.ParamType = ptResult
+      GuiParams = <>
+      isShowModal = False
+    end
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Active = False
@@ -3831,6 +3842,9 @@ inherited MainForm: TMainForm
       end
       object N49: TMenuItem
         Action = actReport_ReceiptProductionAnalyzeForm
+      end
+      object N77: TMenuItem
+        Action = actReport_ReceiptSaleAnalyzeForm
       end
       object N27: TMenuItem
         Caption = '-'

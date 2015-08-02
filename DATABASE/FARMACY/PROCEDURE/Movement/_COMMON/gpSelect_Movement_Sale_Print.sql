@@ -55,6 +55,7 @@ BEGIN
            , MovementItem.PartnerGoodsName
            , MovementItem.Amount
            , MovementItem.Price
+           , MovementItem.PriceWithVAT
            , MovementItem.PriceSale
            , MovementItem.SummSale
            , MovementItem.ExpirationDate
