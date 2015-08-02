@@ -279,6 +279,33 @@ object WeighingPartnerJournalForm: TWeighingPartnerJournalForm
         Options.Editing = False
         Width = 65
       end
+      object RouteGroupName: TcxGridDBColumn
+        Caption = #1043#1088#1091#1087#1087#1072' '#1084'. / '#1052#1072#1088#1096#1088#1091#1090
+        DataBinding.FieldName = 'RouteGroupName'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 90
+      end
+      object RouteName: TcxGridDBColumn
+        Caption = #1052#1072#1088#1096#1088#1091#1090
+        DataBinding.FieldName = 'RouteName'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 73
+      end
+      object RouteSortingName: TcxGridDBColumn
+        Caption = #1057#1086#1088#1090#1080#1088#1086#1074#1082#1072' '#1084#1072#1088#1096#1088#1091#1090#1072
+        DataBinding.FieldName = 'RouteSortingName'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 90
+      end
       object colStartWeighing: TcxGridDBColumn
         Caption = #1053#1072#1095'. '#1074#1079#1074#1077#1096'.'
         DataBinding.FieldName = 'StartWeighing'

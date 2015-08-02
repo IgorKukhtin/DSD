@@ -26,6 +26,7 @@ RETURNS TABLE (Id Integer, InvNumber Integer, OperDate TDateTime, StatusCode Int
              , PaidKindName TVarChar
              , ContractName TVarChar, ContractTagName TVarChar
              , InfoMoneyGroupName TVarChar, InfoMoneyDestinationName TVarChar, InfoMoneyCode Integer, InfoMoneyName TVarChar
+             , RouteSortingName TVarChar, RouteGroupName TVarChar, RouteName TVarChar
              , PersonalCode1 Integer, PersonalName1 TVarChar
              , PersonalCode2 Integer, PersonalName2 TVarChar
              , PersonalCode3 Integer, PersonalName3 TVarChar
@@ -122,6 +123,10 @@ BEGIN
              , View_InfoMoney.InfoMoneyDestinationName        AS InfoMoneyDestinationName
              , View_InfoMoney.InfoMoneyCode                   AS InfoMoneyCode
              , View_InfoMoney.InfoMoneyName                   AS InfoMoneyName
+
+             , Object_RouteSorting.ValueData      AS RouteSortingName
+             , Object_RouteGroup.ValueData        AS RouteGroupName
+             , Object_Route.ValueData             AS RouteName
 
              , Object_Personal1.ObjectCode AS PersonalCode1, Object_Personal1.ValueData AS PersonalName1
              , Object_Personal2.ObjectCode AS PersonalCode2, Object_Personal2.ValueData AS PersonalName2
@@ -271,6 +276,26 @@ BEGIN
             LEFT JOIN Movement AS Movement_Tax ON Movement_Tax.Id = MovementLinkMovement_Tax.MovementChildId
             LEFT JOIN MovementString AS MS_InvNumberPartner_Tax ON MS_InvNumberPartner_Tax.MovementId = MovementLinkMovement_Tax.MovementChildId
                                                                AND MS_InvNumberPartner_Tax.DescId = zc_MovementString_InvNumberPartner()
+
+            LEFT JOIN MovementLinkMovement AS MovementLinkMovement_Order
+                                           ON MovementLinkMovement_Order.MovementId = Movement.Id
+                                          AND MovementLinkMovement_Order.DescId = zc_MovementLinkMovement_Order()
+            --LEFT JOIN Movement AS Movement_Order ON Movement_Order.Id = MovementLinkMovement_Order.MovementChildId
+
+            LEFT JOIN MovementLinkObject AS MovementLinkObject_Route
+                                         ON MovementLinkObject_Route.MovementId = MovementLinkMovement_Order.MovementChildId
+                                        AND MovementLinkObject_Route.DescId = zc_MovementLinkObject_Route()
+            LEFT JOIN Object AS Object_Route ON Object_Route.Id = MovementLinkObject_Route.ObjectId
+
+            LEFT JOIN ObjectLink AS ObjectLink_Route_RouteGroup ON ObjectLink_Route_RouteGroup.ObjectId = Object_Route.Id
+                                                               AND ObjectLink_Route_RouteGroup.DescId = zc_ObjectLink_Route_RouteGroup()
+            LEFT JOIN Object AS Object_RouteGroup ON Object_RouteGroup.Id = COALESCE (ObjectLink_Route_RouteGroup.ChildObjectId, Object_Route.Id)
+
+            LEFT JOIN MovementLinkObject AS MovementLinkObject_RouteSorting
+                                         ON MovementLinkObject_RouteSorting.MovementId = MovementLinkMovement_Order.MovementChildId
+                                        AND MovementLinkObject_RouteSorting.DescId = zc_MovementLinkObject_RouteSorting()
+            LEFT JOIN Object AS Object_RouteSorting ON Object_RouteSorting.Id = MovementLinkObject_RouteSorting.ObjectId
+
       ;
   
 END;
