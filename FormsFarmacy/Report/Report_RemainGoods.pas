@@ -12,7 +12,7 @@ uses
   dsdAction, Vcl.ActnList, cxPropertiesStore, cxLabel, cxTextEdit, cxMaskEdit,
   cxDropDownEdit, cxCalendar, Vcl.ExtCtrls, cxGridLevel, cxGridCustomView,
   cxGridCustomTableView, cxGridTableView, cxGridDBTableView, cxGrid, cxPC,
-  cxButtonEdit, dsdGuides, cxCurrencyEdit;
+  cxButtonEdit, dsdGuides, cxCurrencyEdit, dxBarBuiltInMenu, cxNavigator;
 
 type
   TReport_GoodsRemainsForm = class(TAncestorReportForm)
@@ -26,6 +26,8 @@ type
     colPrice: TcxGridDBColumn;
     actOpenPartionReport: TdsdOpenForm;
     bbGoodsPartyReport: TdxBarButton;
+    colPriceSale: TcxGridDBColumn;
+    colSumSale: TcxGridDBColumn;
   private
     { Private declarations }
   public
