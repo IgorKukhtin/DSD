@@ -328,7 +328,7 @@ uses
 {$R DevExpressRus.res}
 
 begin
-  ConnectionPath := '..\INIT\localfarmacy_init.php';
+  ConnectionPath := '..\INIT\farmacy_init.php';
   EnumPath := '..\DATABASE\FARMACY\METADATA\Enum\';
   CreateStructurePath := '..\DATABASE\FARMACY\STRUCTURE\';
   LocalViewPath := '..\DATABASE\FARMACY\View\';
