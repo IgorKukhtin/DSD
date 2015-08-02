@@ -13,7 +13,7 @@ uses
   Vcl.ActnList, cxPropertiesStore, cxLabel, cxTextEdit, cxMaskEdit,
   cxDropDownEdit, cxCalendar, Vcl.ExtCtrls, cxGridLevel, cxGridCustomView,
   cxGridCustomTableView, cxGridTableView, cxGridDBTableView, cxGrid, cxPC,
-  dsdGuides, cxButtonEdit, cxCurrencyEdit, Vcl.Menus;
+  dsdGuides, cxButtonEdit, cxCurrencyEdit, Vcl.Menus, cxCheckBox;
 
 type
   TReport_GoodsMIForm = class(TAncestorReportForm)
@@ -56,7 +56,6 @@ type
     OperCount_40200_real: TcxGridDBColumn;
     OperCount_Loss: TcxGridDBColumn;
     actPrint: TdsdPrintAction;
-    actPrintByGoods: TdsdPrintAction;
     bbPrint: TdxBarButton;
     bbPrintByGoods: TdxBarButton;
     ExecuteDialog: TExecuteDialog;
@@ -118,6 +117,18 @@ type
     PriceList_Partner: TcxGridDBColumn;
     BusinessName: TcxGridDBColumn;
     BranchName: TcxGridDBColumn;
+    cbPartner: TcxCheckBox;
+    cbTradeMark: TcxCheckBox;
+    cbGoods: TcxCheckBox;
+    cbGoodsKind: TcxCheckBox;
+    bbGoods: TdxBarControlContainerItem;
+    bbPartner: TdxBarControlContainerItem;
+    bb: TdxBarControlContainerItem;
+    dxBarControlContainerItem1: TdxBarControlContainerItem;
+    cbPartionGoods: TcxCheckBox;
+    bbPartionGoods: TdxBarControlContainerItem;
+    PartionGoods: TcxGridDBColumn;
+    actPrint2: TdsdPrintAction;
   private
     { Private declarations }
   public
