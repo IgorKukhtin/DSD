@@ -611,6 +611,8 @@ type
     N75: TMenuItem;
     actOrderInternalBasisDelik: TdsdOpenForm;
     N76: TMenuItem;
+    N77: TMenuItem;
+    actReport_ReceiptSaleAnalyzeForm: TdsdOpenForm;
     procedure actReport_OLAPSoldExecute(Sender: TObject);
     procedure FormShow(Sender: TObject);
   private
