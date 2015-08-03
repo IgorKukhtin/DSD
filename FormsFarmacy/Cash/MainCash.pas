@@ -718,12 +718,13 @@ function TMainCashForm.PutCheckToCash(SalerCash: real;
         result := true
      else
        if not SoldParallel then
-         with CheckCDS do
+         with CheckCDS do begin
             result := Cash.SoldFromPC(FieldByName('GoodsCode').asInteger,
                                       AnsiUpperCase(FieldByName('GoodsName').Text),
                                       FieldByName('Amount').asFloat,
                                       FieldByName('Price').asFloat,
                                       FieldByName('NDS').asFloat)
+         end
        else result:=true;
   end;
 {------------------------------------------------------------------------------}
@@ -736,7 +737,10 @@ begin
       while not EOF do
       begin
         if result then
-          result := PutOneRecordToCash;//послали строку в кассу
+           begin
+             if CheckCDS.FieldByName('Amount').asFloat > 0.009 then
+                result := PutOneRecordToCash;//послали строку в кассу
+           end;
         Next;
       end;
       if not Cash.AlwaysSold then
