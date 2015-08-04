@@ -40,7 +40,7 @@ BEGIN
     WHERE MovementLinkObject.MovementId = inMovementId 
       AND MovementLinkObject.DescId = zc_MovementLinkObject_Unit();
       
-    SELECT Movement.OperDate INTO vbInventoryDate
+    SELECT date_trunc('day', Movement.OperDate) INTO vbInventoryDate
     FROM Movement
     WHERE Movement.Id = inMovementId;
 
@@ -149,7 +149,7 @@ BEGIN
             FROM 
                 Container
                 LEFT OUTER JOIN MovementItemContainer ON Container.Id = MovementItemContainer.ContainerId
-                                                     AND MovementItemContainer.Operdate > vbInventoryDate
+                                                     AND date_trunc('day', MovementItemContainer.Operdate) > vbInventoryDate
                            JOIN containerlinkobject AS CLI_Unit ON CLI_Unit.containerid = Container.Id
                                                                AND CLI_Unit.descid = zc_ContainerLinkObject_Unit()
                                                                AND CLI_Unit.ObjectId = vbUnitId                                   
@@ -180,7 +180,7 @@ WITH DIFFSALDO AS ( SELECT
                                                    ,Container.Amount - COALESCE(SUM(MovementItemContainer.amount),0) as Amount  --Тек. остаток - Движение после даты переучета
                                              FROM Container
                                                 LEFT OUTER JOIN MovementItemContainer ON Container.Id = MovementItemContainer.ContainerId
-                                                                                     AND MovementItemContainer.Operdate > vbInventoryDate
+                                                                                     AND date_trunc('day', MovementItemContainer.Operdate) > vbInventoryDate
                                                 JOIN containerlinkobject AS CLI_Unit ON CLI_Unit.containerid = Container.Id
                                                                                     AND CLI_Unit.descid = zc_ContainerLinkObject_Unit()
                                                                                     AND CLI_Unit.ObjectId = vbUnitId                                   
