@@ -12,7 +12,7 @@ uses
   cxClasses, Datasnap.DBClient, Vcl.ActnList, cxPropertiesStore, cxButtonEdit,
   cxMaskEdit, cxDropDownEdit, cxCalendar, cxLabel, cxTextEdit, Vcl.ExtCtrls,
   cxGridLevel, cxGridCustomTableView, cxGridTableView, cxGridDBTableView,
-  cxGridCustomView, cxGrid, cxPC;
+  cxGridCustomView, cxGrid, cxPC, dxBarBuiltInMenu, cxNavigator;
 
 type
   TIncomeForm = class(TAncestorDocumentForm)

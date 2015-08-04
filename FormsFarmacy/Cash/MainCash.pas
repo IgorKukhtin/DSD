@@ -307,6 +307,15 @@ begin
     // Отбиваем чек через ЭККА
     if PutCheckToCash(ASalerCash, PaidType) then
     begin
+      //Достаем серийник кассового аппарата
+      if not Cash.AlwaysSold then
+      Begin
+        spGet_Object_CashRegister_By_Serial.ParamByName('inSerial').Value := Cash.FiscalNumber;
+        spGet_Object_CashRegister_By_Serial.Execute;
+        spComplete_Movement_Check.ParamByName('inCashRegisterId').Value := spGet_Object_CashRegister_By_Serial.ParamByName('outId').Value
+      End
+      else
+        spComplete_Movement_Check.ParamByName('inCashRegisterId').Value := 0;
     // Проводим чек
       spComplete_Movement_Check.ParamByName('inPaidType').Value := Integer(PaidType);
       spComplete_Movement_Check.Execute;

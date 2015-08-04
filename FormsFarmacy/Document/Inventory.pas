@@ -46,6 +46,8 @@ type
     actGetImportSettingId: TdsdExecStoredProc;
     actDoLoad: TExecuteImportSettingsAction;
     dxBarButton1: TdxBarButton;
+    spInsertUpdate_MovementItem_Inventory_Set_Zero: TdsdStoredProc;
+    actInsertUpdate_MovementItem_Inventory_Set_Zero: TdsdExecStoredProc;
   private
     { Private declarations }
   public

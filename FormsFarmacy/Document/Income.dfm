@@ -112,28 +112,24 @@ inherited IncomeForm: TIncomeForm
               end>
             Properties.ReadOnly = True
             HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
             Width = 45
           end
           object colName: TcxGridDBColumn
             Caption = #1058#1086#1074#1072#1088
             DataBinding.FieldName = 'GoodsName'
             HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 222
           end
           object colPartnerGoodsCode: TcxGridDBColumn
             Caption = #1050#1086#1076' '#1091' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072
             DataBinding.FieldName = 'PartnerGoodsCode'
-            HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 82
           end
           object colPartnerGoodsName: TcxGridDBColumn
             Caption = #1053#1072#1079#1074#1072#1085#1080#1077' '#1091' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072
             DataBinding.FieldName = 'PartnerGoodsName'
-            HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 173
           end
@@ -144,7 +140,6 @@ inherited IncomeForm: TIncomeForm
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
             Width = 73
           end
           object colPrice: TcxGridDBColumn
@@ -154,7 +149,6 @@ inherited IncomeForm: TIncomeForm
             Properties.DecimalPlaces = 2
             Properties.DisplayFormat = ',0.00;-,0.00'
             HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
             Width = 60
           end
           object colSumm: TcxGridDBColumn
@@ -164,7 +158,6 @@ inherited IncomeForm: TIncomeForm
             Properties.DecimalPlaces = 2
             Properties.DisplayFormat = ',0.00;-,0.00'
             HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 60
           end
@@ -188,7 +181,6 @@ inherited IncomeForm: TIncomeForm
             DataBinding.FieldName = 'MarginPercent'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DisplayFormat = ',0.##'
-            HeaderAlignmentVert = vaCenter
             Options.Editing = False
           end
           object colSaleSumm: TcxGridDBColumn
@@ -202,32 +194,27 @@ inherited IncomeForm: TIncomeForm
           object colExpirationDate: TcxGridDBColumn
             Caption = #1057#1088#1086#1082' '#1075#1086#1076#1085#1086#1089#1090#1080
             DataBinding.FieldName = 'ExpirationDate'
-            HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 70
           end
           object colPartitionGoods: TcxGridDBColumn
             Caption = #1057#1077#1088#1080#1103
             DataBinding.FieldName = 'PartionGoods'
-            HeaderAlignmentVert = vaCenter
             Width = 70
           end
           object colMakerName: TcxGridDBColumn
             Caption = #1055#1088#1086#1080#1079#1074#1086#1076#1080#1090#1077#1083#1100
             DataBinding.FieldName = 'MakerName'
-            HeaderAlignmentVert = vaCenter
             Width = 100
           end
           object colFEA: TcxGridDBColumn
             Caption = #1059#1050' '#1042#1069#1044
             DataBinding.FieldName = 'FEA'
-            HeaderAlignmentVert = vaCenter
             Width = 82
           end
           object colMeasure: TcxGridDBColumn
             Caption = #1045#1076'. '#1080#1079#1084
             DataBinding.FieldName = 'Measure'
-            HeaderAlignmentVert = vaCenter
             Width = 53
           end
         end
@@ -365,7 +352,6 @@ inherited IncomeForm: TIncomeForm
       Enabled = False
       ParentFont = False
       Properties.Alignment.Horz = taRightJustify
-      Properties.Alignment.Vert = taVCenter
       Properties.DisplayFormat = ',0.00;-,0.00'
       Style.BorderColor = clBtnFace
       Style.Font.Charset = DEFAULT_CHARSET
@@ -387,7 +373,6 @@ inherited IncomeForm: TIncomeForm
       Enabled = False
       ParentFont = False
       Properties.Alignment.Horz = taRightJustify
-      Properties.Alignment.Vert = taVCenter
       Properties.DisplayFormat = ',0.00;-,0.00'
       Style.BorderColor = clBtnFace
       Style.Font.Charset = DEFAULT_CHARSET
@@ -540,9 +525,9 @@ inherited IncomeForm: TIncomeForm
           Component = FormParams
           ComponentItem = 'Id'
         end>
-      ReportName = 'PrintMovement_Sale2'
-      ReportNameParam.Name = #1056#1072#1089#1093#1086#1076#1085#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103
-      ReportNameParam.Value = 'PrintMovement_Sale2'
+      ReportName = #1056#1072#1089#1093#1086#1076#1085#1072#1103'_'#1085#1072#1082#1083#1072#1076#1085#1072#1103'_'#1076#1083#1103'_'#1084#1077#1085#1077#1076#1078#1077#1088#1072
+      ReportNameParam.Name = #1056#1072#1089#1093#1086#1076#1085#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103' '#1076#1083#1103' '#1084#1077#1085#1077#1076#1078#1077#1088#1072
+      ReportNameParam.Value = #1056#1072#1089#1093#1086#1076#1085#1072#1103'_'#1085#1072#1082#1083#1072#1076#1085#1072#1103'_'#1076#1083#1103'_'#1084#1077#1085#1077#1076#1078#1077#1088#1072
       ReportNameParam.ParamType = ptInput
     end
     inherited actUnCompleteMovement: TChangeGuidesStatus
@@ -801,9 +786,6 @@ inherited IncomeForm: TIncomeForm
           Visible = True
           ItemName = 'bbGridToExcel'
         end>
-    end
-    inherited bbPrint: TdxBarButton
-      Visible = ivNever
     end
     object bbPrint_Bill: TdxBarButton [5]
       Caption = #1057#1095#1077#1090

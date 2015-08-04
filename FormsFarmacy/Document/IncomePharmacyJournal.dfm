@@ -474,6 +474,7 @@ inherited IncomePharmacyJournalForm: TIncomePharmacyJournalForm
     object dxBarButton1: TdxBarButton
       Action = actPrintForManager
       Category = 0
+      Visible = ivNever
     end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
