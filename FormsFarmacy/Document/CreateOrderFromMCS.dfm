@@ -1,8 +1,6 @@
 inherited CreateOrderFromMCSForm: TCreateOrderFromMCSForm
   Caption = #1057#1086#1079#1076#1072#1085#1080#1077' '#1079#1072#1103#1074#1086#1082' '#1085#1072' '#1086#1089#1085#1086#1074#1077' '#1053#1058#1047
   AddOnFormData.Params = FormParams
-  ExplicitWidth = 583
-  ExplicitHeight = 335
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -48,6 +46,7 @@ inherited CreateOrderFromMCSForm: TCreateOrderFromMCSForm
             Width = 43
           end
           object colMovementId: TcxGridDBColumn
+            AlternateCaption = #1055#1077#1088#1077#1081#1090#1080' '#1074' '#1079#1072#1103#1074#1082#1091
             Caption = '->'
             DataBinding.FieldName = 'MovementId'
             PropertiesClassName = 'TcxButtonEditProperties'
@@ -59,6 +58,7 @@ inherited CreateOrderFromMCSForm: TCreateOrderFromMCSForm
               end>
             Properties.ReadOnly = True
             Properties.ViewStyle = vsButtonsOnly
+            HeaderHint = #1055#1077#1088#1077#1081#1090#1080' '#1074' '#1079#1072#1103#1074#1082#1091
             Width = 34
           end
         end
@@ -76,7 +76,8 @@ inherited CreateOrderFromMCSForm: TCreateOrderFromMCSForm
         item
           Action = actOpenOrderInternalForm
         end>
-      Caption = 'mactOpenForm'
+      Caption = #1055#1077#1088#1077#1081#1090#1080' '#1074' '#1079#1072#1103#1074#1082#1091
+      Hint = #1055#1077#1088#1077#1081#1090#1080' '#1074' '#1079#1072#1103#1074#1082#1091
     end
     object actGet_MovementId_OrderInternal_Auto: TdsdExecStoredProc
       Category = 'OpenInternalOrder'
@@ -127,7 +128,8 @@ inherited CreateOrderFromMCSForm: TCreateOrderFromMCSForm
           Action = actRefresh
         end>
       QuestionBeforeExecute = #1053#1072#1095#1072#1090#1100' '#1089#1086#1079#1076#1072#1085#1080#1077' '#1079#1072#1103#1074#1086#1082' '#1087#1086' '#1074#1099#1073#1088#1072#1085#1085#1099#1084' '#1087#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1103#1084'?'
-      Caption = #1053#1072#1095#1072#1090#1100' '#1089#1086#1079#1076#1072#1085#1080#1077' '#1079#1072#1103#1074#1086#1082' '#1087#1086' '#1074#1099#1073#1088#1072#1085#1085#1099#1084' '#1087#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1103#1084'?'
+      Caption = #1053#1072#1095#1072#1090#1100' '#1089#1086#1079#1076#1072#1085#1080#1077' '#1079#1072#1103#1074#1086#1082' '#1087#1086' '#1074#1099#1073#1088#1072#1085#1085#1099#1084' '#1087#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1103#1084
+      Hint = #1053#1072#1095#1072#1090#1100' '#1089#1086#1079#1076#1072#1085#1080#1077' '#1079#1072#1103#1074#1086#1082' '#1087#1086' '#1074#1099#1073#1088#1072#1085#1085#1099#1084' '#1087#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1103#1084
       ImageIndex = 30
     end
     object actStartExec: TMultiAction
@@ -138,7 +140,8 @@ inherited CreateOrderFromMCSForm: TCreateOrderFromMCSForm
           Action = actExecInsertUpdate_MovementItem_OrderInternalMCS
         end>
       DataSource = MasterDS
-      Caption = 'actStartExec'
+      Caption = #1057#1086#1079#1076#1072#1085#1080#1077' '#1079#1072#1103#1074#1086#1082
+      Hint = #1057#1086#1079#1076#1072#1085#1080#1077' '#1079#1072#1103#1074#1086#1082
     end
     object actSelectAll: TBooleanStoredProcAction
       Category = 'DSDLib'
