@@ -73,7 +73,7 @@ BEGIN
                            WHERE MIC.MovementId = inMovementId 
                              and MIC.DescId = zc_MIContainer_Summ()
                              and MIC.isactive = False 
-                             and MIC.AccountId <> zc_Enum_Account_100301 ()
+                             and MIC.AccountId <> zc_Enum_Account_100301()
                            GROUP BY MIC.MovementItemId
                            )
 

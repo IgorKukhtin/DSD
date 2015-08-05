@@ -205,7 +205,9 @@ type
     CountOtherOut_by_Weight: TcxGridDBColumn;
     GoodsKindName_complete: TcxGridDBColumn;
     actPrint_Loss: TdsdPrintAction;
-    dxBarButton1: TdxBarButton;
+    bbPrint_Loss: TdxBarButton;
+    actPrint_Inventory: TdsdPrintAction;
+    bbPrint_Inventory: TdxBarButton;
   private
   public
   end;

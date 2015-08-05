@@ -18,15 +18,19 @@ AS
 $BODY$
    DECLARE vbCuterCount TFloat;
    DECLARE vbValue_Receipt TFloat;
+   DECLARE vbGoodsId_master Integer;
 BEGIN
       -- определяется <Количество кутеров>
       vbCuterCount:= COALESCE ((SELECT MIFloat_CuterCount.ValueData FROM MovementItemFloat AS MIFloat_CuterCount WHERE MIFloat_CuterCount.MovementItemId = inParentId AND MIFloat_CuterCount.DescId = zc_MIFloat_CuterCount()), 0);
       -- определяется
       vbValue_Receipt:= COALESCE ((SELECT ObjectFloat_Value.ValueData FROM ObjectFloat AS ObjectFloat_Value WHERE ObjectFloat_Value.ObjectId = inReceiptId AND ObjectFloat_Value.DescId = zc_ObjectFloat_Receipt_Value()), 0);
+      -- определяется
+      vbGoodsId_master:= COALESCE ((SELECT MovementItem.ObjectId FROM MovementItem WHERE MovementItem.Id = inParentId AND MovementItem.ObjectId IN (7129, 2328)), 0); -- ЯЗЫК СВИН. ВАРЕН.
 
 
        -- пересчет кол-во для zc_MI_Master
-       outAmount_master =
+       outAmount_master = CASE WHEN vbGoodsId_master > 0 THEN vbCuterCount * vbValue_Receipt
+                               ELSE
                   (SELECT SUM (MovementItem.Amount * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData, 0) ELSE 1 END)
                    FROM MovementItem
                         LEFT JOIN MovementItemBoolean AS MIBoolean_TaxExit
@@ -44,7 +48,8 @@ BEGIN
                      AND MovementItem.DescId = zc_MI_Child()
                      AND MovementItem.isErased = FALSE
                      AND MIBoolean_TaxExit.MovementItemId IS NULL
-                  );
+                  )
+                          END;
 
        -- !!!сохранили св-ва <Количество> у zc_MI_Master!!!
        PERFORM lpInsertUpdate_MovementItem (MovementItem.Id, MovementItem.DescId, MovementItem.ObjectId, MovementItem.MovementId, outAmount_master, MovementItem.ParentId)
@@ -110,6 +115,7 @@ BEGIN
            OR tmpReceiptChild.isTaxExit = TRUE   -- только те что по <Рецептуре> isTaxExit=TRUE
              )
          AND (MovementItem.Id = inMovementItemId OR inIsTaxExit = FALSE) -- если это элемент isTaxExit=TRUE, тогда остальные пересчитывать не надо
+         AND vbGoodsId_master = 0 -- !!!только если расчет не по кол-ву кутеров!!!
         ;
         IF inIsTaxExit = TRUE
         THEN
@@ -129,6 +135,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 03.08.15                                        * add !!!только если расчет не по кол-ву кутеров!!!
  04.05.15                                        *
 */
 

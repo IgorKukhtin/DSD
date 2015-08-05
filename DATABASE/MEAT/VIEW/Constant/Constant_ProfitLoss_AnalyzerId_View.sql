@@ -5,7 +5,8 @@
 CREATE OR REPLACE VIEW Constant_ProfitLoss_AnalyzerId_View
 AS
    --
-   SELECT Object.Id AS AnalyzerId
+   SELECT Object.DescId
+        , Object.Id AS AnalyzerId
         , Object.ObjectCode
         , Object.ValueData
         , CASE WHEN Object.ObjectCode BETWEEN 101 AND 199 THEN TRUE ELSE FALSE END AS isSale
@@ -14,9 +15,11 @@ AS
    FROM Object
    WHERE Object.DescId = zc_Object_AnalyzerId()
      AND Object.Id NOT IN (zc_Enum_AnalyzerId_LossCount_20200(), zc_Enum_AnalyzerId_LossSumm_20200()) -- !!!списание!!!
+     AND Object.ObjecCode < 1000
   UNION ALL
    -- Сумма реализации + Разница с оптовыми ценами + Скидка дополнительная
-   SELECT Object.Id AS AnalyzerId
+   SELECT Object.DescId
+        , Object.Id AS AnalyzerId
         , Object.ObjectCode
         , Object.ValueData
         , TRUE AS isSale
@@ -27,7 +30,8 @@ AS
      AND Object.ObjectCode IN (10100, 10200, 10300)
   UNION ALL
    -- Сумма возвратов + Скидка дополнительная
-   SELECT Object.Id AS AnalyzerId
+   SELECT Object.DescId
+        , Object.Id AS AnalyzerId
         , Object.ObjectCode
         , Object.ValueData
         , FALSE AS isSale
@@ -38,7 +42,8 @@ AS
      AND Object.ObjectCode IN (10200, 10700)
   UNION ALL
    -- с/с реализации + Скидка за вес + Разница в весе
-   SELECT Object.Id AS AnalyzerId
+   SELECT Object.DescId
+        , Object.Id AS AnalyzerId
         , Object.ObjectCode
         , Object.ValueData
         , TRUE AS isSale
@@ -49,7 +54,8 @@ AS
      AND Object.ObjectCode IN (10400, 10500, 40200)
   UNION ALL
    -- с/с возвратов + Разница в весе
-   SELECT Object.Id AS AnalyzerId
+   SELECT Object.DescId
+        , Object.Id AS AnalyzerId
         , Object.ObjectCode
         , Object.ValueData
         , FALSE AS isSale
@@ -61,7 +67,8 @@ AS
 
   UNION ALL
    -- Кол-во реализации + Скидка за вес + Разница в весе
-   SELECT Object.Id AS AnalyzerId
+   SELECT Object.DescId
+        , Object.Id AS AnalyzerId
         , Object.ObjectCode
         , Object.ValueData
         , TRUE AS isSale
@@ -72,7 +79,8 @@ AS
      AND Object.ObjectCode IN (10400, 10500, 40200)
   UNION ALL
    -- Кол-во возвратов + Разница в весе
-   SELECT Object.Id AS AnalyzerId
+   SELECT Object.DescId
+        , Object.Id AS AnalyzerId
         , Object.ObjectCode
         , Object.ValueData
         , FALSE AS isSale

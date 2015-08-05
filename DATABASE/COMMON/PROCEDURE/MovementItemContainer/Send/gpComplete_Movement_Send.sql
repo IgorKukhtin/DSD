@@ -10,6 +10,7 @@ CREATE OR REPLACE FUNCTION gpComplete_Movement_Send(
 RETURNS VOID
 AS
 $BODY$
+  DECLARE vbIsHistoryCost Boolean; -- нужны проводки с/с для этого пользователя
   DECLARE vbUserId Integer;
 
   DECLARE vbWhereObjectId_Analyzer_From Integer;
@@ -24,8 +25,22 @@ BEGIN
      END IF;
 
      -- Эти параметры нужны для 
-     inIsLastComplete:= TRUE;
      vbMovementDescId:= zc_Movement_Send();
+
+
+     -- !!! только для Админа нужны проводки с/с (сделано для ускорения проведения)!!!
+     IF EXISTS (SELECT 1 FROM ObjectLink_UserRole_View AS View_UserRole WHERE View_UserRole.UserId = vbUserId AND View_UserRole.RoleId = zc_Enum_Role_Admin())
+     THEN 
+          vbIsHistoryCost:= TRUE;
+     ELSE
+         -- !!! для остальных тоже нужны проводки с/с!!!
+         IF 0 < (SELECT 1 FROM Object_RoleAccessKeyGuide_View AS View_RoleAccessKeyGuide WHERE View_RoleAccessKeyGuide.UserId = vbUserId AND View_RoleAccessKeyGuide.BranchId <> 0 GROUP BY View_RoleAccessKeyGuide.BranchId LIMIT 1)
+           OR EXISTS (SELECT 1 FROM ObjectLink_UserRole_View AS View_UserRole WHERE View_UserRole.UserId = vbUserId AND View_UserRole.RoleId IN (428382)) -- Кладовщик Днепр
+           OR EXISTS (SELECT 1 FROM ObjectLink_UserRole_View AS View_UserRole WHERE View_UserRole.UserId = vbUserId AND View_UserRole.RoleId IN (97837)) -- Бухгалтер ДНЕПР
+         THEN vbIsHistoryCost:= FALSE;
+         ELSE vbIsHistoryCost:= TRUE;
+         END IF;
+     END IF;
 
 
      -- создаются временные таблицы - для формирование данных для проводок
@@ -425,6 +440,7 @@ BEGIN
           -- AND (inIsLastComplete = FALSE OR (_tmpItem.OperCount * HistoryCost.Price) <> 0) -- !!!ОБЯЗАТЕЛЬНО!!! вставляем нули если это не последний раз (они нужны для расчета с/с)
           AND*/ (_tmpItem.OperCount * HistoryCost.Price) <> 0 -- !!!НЕ!!! вставляем нули
           AND _tmpItem.InfoMoneyDestinationId <> zc_Enum_InfoMoneyDestination_20500() -- 20500; "Оборотная тара"
+          AND vbIsHistoryCost= TRUE -- !!! только для Админа нужны проводки с/с (сделано для ускорения проведения)!!!
         GROUP BY _tmpItem.MovementItemId
                , Container_Summ.Id
                , Container_Summ.ObjectId
@@ -557,6 +573,10 @@ BEGIN
             JOIN _tmpItemSumm ON _tmpItemSumm.MovementItemId = _tmpItem.MovementItemId;
 
 
+     -- !!!не всегда Проводки для отчета!!!
+     IF vbIsHistoryCost = TRUE
+     THEN
+
      -- 2. формируются Проводки для отчета (Аналитики: Товар расход и Товар приход)
      INSERT INTO _tmpMIReport_insert (Id, MovementDescId, MovementId, MovementItemId, ActiveContainerId, PassiveContainerId, ActiveAccountId, PassiveAccountId, ReportContainerId, ChildReportContainerId, Amount, OperDate)
         SELECT 0, vbMovementDescId, inMovementId, MovementItemId, ActiveContainerId, PassiveContainerId, ActiveAccountId, PassiveAccountId, ReportContainerId, ChildReportContainerId, Amount, OperDate
@@ -601,6 +621,9 @@ BEGIN
                    ) AS tmpMIReport
              ) AS tmpMIReport
        ;
+
+     END IF; -- if vbIsHistoryCost = TRUE -- !!!не всегда Проводки для отчета!!!
+
 
      -- !!!формируется свойство <Цена>!!!
      PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_PartionGoods_Price(), tmp.PartionGoodsId, tmp.Price)

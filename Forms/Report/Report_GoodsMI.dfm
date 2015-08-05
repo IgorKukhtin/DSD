@@ -6,7 +6,7 @@ inherited Report_GoodsMIForm: TReport_GoodsMIForm
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
   ExplicitWidth = 1162
-  ExplicitHeight = 572
+  ExplicitHeight = 569
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -333,6 +333,21 @@ inherited Report_GoodsMIForm: TReport_GoodsMIForm
               Format = ',0.####'
               Kind = skSum
               Column = SummProfit_zavod
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = OperCount_total
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = SummIn_branch_total
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = SummIn_zavod_total
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -639,6 +654,21 @@ inherited Report_GoodsMIForm: TReport_GoodsMIForm
               Format = ',0.####'
               Kind = skSum
               Column = SummProfit_zavod
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = OperCount_total
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = SummIn_branch_total
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = SummIn_zavod_total
             end>
           OptionsData.CancelOnExit = True
           OptionsData.Deleting = False
@@ -762,6 +792,16 @@ inherited Report_GoodsMIForm: TReport_GoodsMIForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 35
+          end
+          object OperCount_total: TcxGridDBColumn
+            Caption = #1050#1086#1083'. '#1074#1077#1089'  '#1080#1090#1086#1075' ('#1089#1082#1083#1072#1076')'
+            DataBinding.FieldName = 'OperCount_total'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 70
           end
           object OperCount_real: TcxGridDBColumn
             Caption = #1050#1086#1083'. '#1074#1077#1089'  ('#1089#1082#1083#1072#1076')'
@@ -966,6 +1006,28 @@ inherited Report_GoodsMIForm: TReport_GoodsMIForm
           object SummIn_Loss_zavod: TcxGridDBColumn
             Caption = #1057#1087#1080#1089#1072#1085#1080#1077' '#1089#1091#1084#1084#1072' '#1089'/'#1089' ('#1079#1072#1074#1086#1076')'
             DataBinding.FieldName = 'SummIn_Loss_zavod'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 70
+          end
+          object SummIn_branch_total: TcxGridDBColumn
+            Caption = #1057#1091#1084#1084#1072' '#1089'/'#1089' '#1092#1083'. '#1080#1090#1086#1075' ('#1089#1082#1083#1072#1076')'
+            DataBinding.FieldName = 'SummIn_branch_total'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 70
+          end
+          object SummIn_zavod_total: TcxGridDBColumn
+            Caption = #1057#1091#1084#1084#1072' '#1089'/'#1089' '#1079#1072#1074#1086#1076' '#1080#1090#1086#1075' ('#1089#1082#1083#1072#1076')'
+            DataBinding.FieldName = 'SummIn_zavod_total'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
@@ -2373,14 +2435,6 @@ inherited Report_GoodsMIForm: TReport_GoodsMIForm
         item
           Visible = True
           ItemName = 'bbPrint'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarStatic'
-        end
-        item
-          Visible = True
-          ItemName = 'bbPrintByGoods'
         end
         item
           Visible = True

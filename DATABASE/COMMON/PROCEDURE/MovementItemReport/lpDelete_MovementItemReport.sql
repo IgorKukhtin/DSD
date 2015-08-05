@@ -3,9 +3,15 @@
 -- DROP FUNCTION lpDelete_MovementItemReport (Integer);
 
 CREATE OR REPLACE FUNCTION lpDelete_MovementItemReport (inMovementId Integer)
-  RETURNS void AS
+RETURNS VOID
+AS
 $BODY$
 BEGIN
+
+    IF zc_IsLockTable() = FALSE
+    THEN
+        PERFORM MovementItemReport.* FROM MovementItemReport WHERE MovementItemReport.MovementId = inMovementId FOR UPDATE;
+    END IF;
 
     -- Удалить все проводки для отчета
     DELETE FROM MovementItemReport WHERE MovementId = inMovementId;

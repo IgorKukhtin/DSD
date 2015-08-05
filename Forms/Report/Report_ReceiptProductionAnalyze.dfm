@@ -362,6 +362,9 @@ inherited Report_ReceiptProductionAnalyzeForm: TReport_ReceiptProductionAnalyzeF
           object GoodsCode_Parent: TcxGridDBColumn
             Caption = #1050#1086#1076' '#1090#1086#1074'. ('#1087#1086#1080#1089#1082')'
             DataBinding.FieldName = 'GoodsCode_Parent'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 0
+            Properties.DisplayFormat = '0.;-0.; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False

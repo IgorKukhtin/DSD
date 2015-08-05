@@ -129,6 +129,9 @@ type
     bbPartionGoods: TdxBarControlContainerItem;
     PartionGoods: TcxGridDBColumn;
     actPrint2: TdsdPrintAction;
+    OperCount_total: TcxGridDBColumn;
+    SummIn_branch_total: TcxGridDBColumn;
+    SummIn_zavod_total: TcxGridDBColumn;
   private
     { Private declarations }
   public

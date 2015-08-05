@@ -65,3 +65,114 @@ END;$BODY$
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
  04.11.14                                        *
 */
+
+
+
+/*
+
+
+select  lpInsertUpdate_MovementFloat_TotalSumm (Movement.Id)
+from
+(select 777 as inv
+union all select 776 as inv
+union all select 775 as inv
+union all select 773 as inv
+union all select 772 as inv
+union all select 771 as inv
+union all select 743 as inv
+union all select 446 as inv
+union all select 445 as inv
+union all select 443 as inv
+union all select 440 as inv
+union all select 437 as inv
+union all select 436 as inv
+union all select 435 as inv
+union all select 454 as inv
+union all select 453 as inv
+union all select 452 as inv
+union all select 449 as inv
+union all select 447 as inv
+union all select 498 as inv
+union all select 496 as inv
+union all select 495 as inv
+union all select 494 as inv
+union all select 493 as inv
+union all select 491 as inv
+union all select 490 as inv
+union all select 488 as inv
+union all select 487 as inv
+union all select 486 as inv
+union all select 485 as inv
+union all select 484 as inv
+union all select 462 as inv
+union all select 774 as inv
+) as a
+left join  Movement ON Movement.OperDate BETWEEN '01.07.2015' AND '10.07.2015'  
+              AND Movement.DescId = zc_Movement_SendOnPrice() AND Movement.StatusId = zc_Enum_Status_Complete()
+              AND Movement.InvNumber = a.inv :: TVarChar
+
+
+
+
+
+
+
+select lpInsertUpdate_MovementItemFloat (zc_MIFloat_AmountPartner(), Id, cast (Amount * 0.99 AS NUMERIC (16, 2)))
+     , lpInsertUpdate_MovementItemFloat (zc_MIFloat_AmountChangePercent(), Id, cast (Amount * 0.99 AS NUMERIC (16, 2)))
+     , lpInsertUpdate_MovementItemFloat (zc_MIFloat_ChangePercentAmount(), Id, 1)
+
+from(
+
+
+select  MovementItem.Id, MovementItem.Amount
+from
+(select 777 as inv
+union all select 776 as inv
+union all select 775 as inv
+union all select 773 as inv
+union all select 772 as inv
+union all select 771 as inv
+union all select 743 as inv
+union all select 446 as inv
+union all select 445 as inv
+union all select 443 as inv
+union all select 440 as inv
+union all select 437 as inv
+union all select 436 as inv
+union all select 435 as inv
+union all select 454 as inv
+union all select 453 as inv
+union all select 452 as inv
+union all select 449 as inv
+union all select 447 as inv
+union all select 498 as inv
+union all select 496 as inv
+union all select 495 as inv
+union all select 494 as inv
+union all select 493 as inv
+union all select 491 as inv
+union all select 490 as inv
+union all select 488 as inv
+union all select 487 as inv
+union all select 486 as inv
+union all select 485 as inv
+union all select 484 as inv
+union all select 462 as inv
+union all select 774 as inv
+) as a
+left join  Movement ON Movement.OperDate BETWEEN '01.07.2015' AND '10.07.2015'  
+              AND Movement.DescId = zc_Movement_SendOnPrice() AND Movement.StatusId = zc_Enum_Status_Complete()
+              AND Movement.InvNumber = a.inv :: TVarChar
+
+left join MovementItem ON MovementItem.MovementId = Movement.Id
+
+            LEFT JOIN ObjectLink AS ObjectLink_Goods_Measure
+                                 ON ObjectLink_Goods_Measure.ObjectId = MovementItem.ObjectId
+                                AND ObjectLink_Goods_Measure.DescId = zc_ObjectLink_Goods_Measure()
+
+
+where ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Kg()
+-- and Movement.InvNumber = '777'
+) as aaaa
+
+*/

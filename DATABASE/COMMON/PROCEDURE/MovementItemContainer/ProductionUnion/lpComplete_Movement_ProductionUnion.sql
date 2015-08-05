@@ -10,6 +10,8 @@ CREATE OR REPLACE FUNCTION lpComplete_Movement_ProductionUnion(
 RETURNS VOID
 AS
 $BODY$
+  DECLARE vbIsHistoryCost Boolean; -- нужны проводки с/с для этого пользователя
+
   DECLARE vbWhereObjectId_Analyzer_From Integer;
   DECLARE vbWhereObjectId_Analyzer_To Integer;
 
@@ -46,6 +48,22 @@ BEGIN
      DELETE FROM _tmpItemChild;
      -- !!!обязательно!!! очистили таблицу - суммовые Child(расход)-элементы документа, со всеми свойствами для формирования Аналитик в проводках
      DELETE FROM _tmpItemSummChild;
+
+
+     -- !!! только для Админа нужны проводки с/с (сделано для ускорения проведения)!!!
+     IF EXISTS (SELECT 1 FROM ObjectLink_UserRole_View AS View_UserRole WHERE View_UserRole.UserId = inUserId AND View_UserRole.RoleId = zc_Enum_Role_Admin())
+     THEN 
+          vbIsHistoryCost:= TRUE;
+     ELSE
+         -- !!! для остальных тоже нужны проводки с/с!!!
+         /*IF 0 < (SELECT 1 FROM Object_RoleAccessKeyGuide_View AS View_RoleAccessKeyGuide WHERE View_RoleAccessKeyGuide.UserId = inUserId AND View_RoleAccessKeyGuide.BranchId <> 0 GROUP BY View_RoleAccessKeyGuide.BranchId LIMIT 1)
+           OR EXISTS (SELECT 1 FROM ObjectLink_UserRole_View AS View_UserRole WHERE View_UserRole.UserId = inUserId AND View_UserRole.RoleId IN (428382)) -- Кладовщик Днепр
+           OR EXISTS (SELECT 1 FROM ObjectLink_UserRole_View AS View_UserRole WHERE View_UserRole.UserId = inUserId AND View_UserRole.RoleId IN (97837)) -- Бухгалтер ДНЕПР
+         THEN vbIsHistoryCost:= FALSE;
+         ELSE vbIsHistoryCost:= TRUE;
+         END IF;*/
+         vbIsHistoryCost:= FALSE;
+     END IF;
 
 
      -- Эти параметры нужны для формирования Аналитик в проводках
@@ -541,6 +559,7 @@ BEGIN
           AND (ContainerLinkObject_InfoMoneyDetail.ObjectId = 0 OR zc_isHistoryCost_byInfoMoneyDetail()= TRUE)
           -- AND inIsHistoryCost = TRUE -- OR (_tmpItemChild.OperCount * HistoryCost.Price) <> 0) -- !!!ОБЯЗАТЕЛЬНО!!! вставляем нули если это не последний раз (они нужны для расчета с/с)
           AND*/ (_tmpItemChild.OperCount * HistoryCost.Price) <> 0 -- !!!НЕ!!! вставляем нули
+          AND vbIsHistoryCost= TRUE -- !!! только для Админа нужны проводки с/с (сделано для ускорения проведения)!!!
         GROUP BY
                  _tmpItemChild.MovementItemId_Parent
                , _tmpItemChild.MovementItemId
@@ -777,6 +796,10 @@ BEGIN
        WHERE _tmpItemSummChild.MovementItemId = _tmpItemChild.MovementItemId;
 
 
+     -- !!!не всегда Проводки для отчета!!!
+     IF vbIsHistoryCost = TRUE
+     THEN
+
      -- формируются Проводки для отчета (Аналитики: Товар расход и Товар приход)
      INSERT INTO _tmpMIReport_insert (Id, MovementDescId, MovementId, MovementItemId, ActiveContainerId, PassiveContainerId, ActiveAccountId, PassiveAccountId, ReportContainerId, ChildReportContainerId, Amount, OperDate)
         SELECT 0, vbMovementDescId, inMovementId, MovementItemId, ActiveContainerId, PassiveContainerId, ActiveAccountId, PassiveAccountId, ReportContainerId, ChildReportContainerId, Amount, OperDate
@@ -821,6 +844,9 @@ BEGIN
                    ) AS tmpMIReport
              ) AS tmpMIReport
        ;
+
+     END IF; -- if vbIsHistoryCost = TRUE -- !!!не всегда Проводки для отчета!!!
+
 
      -- !!!5.0. формируются свойства в элементах документа - <Рецептуры>, если не ПФ-ГП и не пересортица!!!
      IF vbIsPeresort = FALSE

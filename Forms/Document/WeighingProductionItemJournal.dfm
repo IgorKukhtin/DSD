@@ -787,28 +787,19 @@ object WeighingProductionItemJournalForm: TWeighingProductionItemJournalForm
         end
         item
           Visible = True
-          ItemName = 'bbComplete'
+          ItemName = 'bbRefresh'
         end
         item
-          Visible = True
-          ItemName = 'bbUnComplete'
-        end
-        item
-          Visible = True
-          ItemName = 'bbDelete'
-        end
-        item
-          BeginGroup = True
           Visible = True
           ItemName = 'bbStatic'
         end
         item
           Visible = True
-          ItemName = 'bbRefresh'
+          ItemName = 'bbGridToExcel'
         end
         item
           Visible = True
-          ItemName = 'bbGridToExcel'
+          ItemName = 'bbStatic'
         end>
       OneOnRow = True
       Row = 0
@@ -823,7 +814,6 @@ object WeighingProductionItemJournalForm: TWeighingProductionItemJournalForm
     object bbInsert: TdxBarButton
       Action = actInsert
       Category = 0
-      Enabled = False
       ImageIndex = 0
     end
     object bbEdit: TdxBarButton
@@ -887,6 +877,7 @@ object WeighingProductionItemJournalForm: TWeighingProductionItemJournalForm
     object actInsert: TdsdInsertUpdateAction
       Category = 'DSDLib'
       MoveParams = <>
+      Enabled = False
       Caption = #1044#1086#1073#1072#1074#1080#1090#1100
       ShortCut = 45
       FormName = 'TIncomeForm'
@@ -936,6 +927,7 @@ object WeighingProductionItemJournalForm: TWeighingProductionItemJournalForm
     object actUnComplete: TdsdChangeMovementStatus
       Category = 'DSDLib'
       MoveParams = <>
+      Enabled = False
       StoredProc = spMovementUnComplete
       StoredProcList = <
         item
@@ -950,6 +942,7 @@ object WeighingProductionItemJournalForm: TWeighingProductionItemJournalForm
     object actComplete: TdsdChangeMovementStatus
       Category = 'DSDLib'
       MoveParams = <>
+      Enabled = False
       StoredProc = spMovementComplete
       StoredProcList = <
         item
@@ -964,6 +957,7 @@ object WeighingProductionItemJournalForm: TWeighingProductionItemJournalForm
     object actSetErased: TdsdChangeMovementStatus
       Category = 'DSDLib'
       MoveParams = <>
+      Enabled = False
       StoredProc = spMovementSetErased
       StoredProcList = <
         item
@@ -978,6 +972,7 @@ object WeighingProductionItemJournalForm: TWeighingProductionItemJournalForm
     object actReCompleteAll: TdsdExecStoredProc
       Category = 'DSDLib'
       MoveParams = <>
+      Enabled = False
       PostDataSetBeforeExecute = False
       StoredProc = spMovementReCompleteAll
       StoredProcList = <
@@ -1024,7 +1019,6 @@ object WeighingProductionItemJournalForm: TWeighingProductionItemJournalForm
     Top = 184
   end
   object spMovementComplete: TdsdStoredProc
-    StoredProcName = 'gpComplete_Movement_WeighingProduction'
     DataSets = <>
     OutputType = otResult
     Params = <
@@ -1051,7 +1045,6 @@ object WeighingProductionItemJournalForm: TWeighingProductionItemJournalForm
     end
   end
   object spMovementUnComplete: TdsdStoredProc
-    StoredProcName = 'gpUnComplete_Movement'
     DataSets = <>
     OutputType = otResult
     Params = <
@@ -1067,7 +1060,6 @@ object WeighingProductionItemJournalForm: TWeighingProductionItemJournalForm
     Top = 272
   end
   object spMovementSetErased: TdsdStoredProc
-    StoredProcName = 'gpSetErased_Movement'
     DataSet = ClientDataSet
     DataSets = <
       item
@@ -1128,7 +1120,6 @@ object WeighingProductionItemJournalForm: TWeighingProductionItemJournalForm
     Top = 24
   end
   object spMovementReCompleteAll: TdsdStoredProc
-    StoredProcName = 'gpCompletePeriod_Movement_WeighingProduction'
     DataSets = <>
     OutputType = otResult
     Params = <

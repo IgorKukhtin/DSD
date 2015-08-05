@@ -1502,8 +1502,26 @@ begin
         HostName:='integer-srv.alan.dp.ua';
         User:='admin';
         Password:='vas6ok';
+        try Connected:=true; except ShowMessage ('not Connected');end;
         //
         isGlobalLoad:=zc_rvYes;
+        if Connected
+        then Self.Caption:= Self.Caption + ' : ' + HostName + ' : TRUE'
+        else Self.Caption:= Self.Caption + ' : ' + HostName + ' : FALSE';
+     end
+     else
+     if ParamStr(1)='alan_dp_ua_test' then
+     with toZConnection do begin
+        Connected:=false;
+        HostName:='integer-srv-r.alan.dp.ua';
+        User:='admin';
+        Password:='vas6ok';
+        try Connected:=true; except ShowMessage ('not Connected');end;
+        //
+        isGlobalLoad:=zc_rvYes;
+        if Connected
+        then Self.Caption:= Self.Caption + ' : ' + HostName + ' : TRUE'
+        else Self.Caption:= Self.Caption + ' : ' + HostName + ' : FALSE';
      end
      else
      with toZConnection do begin
@@ -1511,9 +1529,13 @@ begin
         HostName:='localhost';
         User:='postgres';
         Password:='postgres';
+        try Connected:=true; except ShowMessage ('not Connected');end;
         //
         //if ParamCount = 2 then isGlobalLoad:=zc_rvYes else isGlobalLoad:=zc_rvNo;
         isGlobalLoad:=zc_rvNo;
+        if Connected
+        then Self.Caption:= Self.Caption + ' : ' + HostName + ' : TRUE'
+        else Self.Caption:= Self.Caption + ' : ' + HostName + ' : FALSE';
      end;
      //
      //cbAllGuide.Checked:=true;

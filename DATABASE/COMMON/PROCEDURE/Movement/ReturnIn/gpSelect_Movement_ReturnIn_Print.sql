@@ -246,7 +246,10 @@ BEGIN
 
            , Movement_Sale.InvNumber                        AS InvNumber_Sale
            , MovementString_InvNumberPartner_Sale.ValueData AS InvNumberPartner_Sale
-           , MovementString_InvNumberOrder_Sale.ValueData   AS InvNumberOrder_Sale
+           , CASE WHEN zfConvert_StringToNumber (MovementString_InvNumberOrder_Sale.ValueData) <> 0
+                       THEN zfConvert_StringToNumber (MovementString_InvNumberOrder_Sale.ValueData) :: TVarChar
+                  ELSE MovementString_InvNumberOrder_Sale.ValueData
+             END AS InvNumberOrder_Sale
            , MovementDate_OperDatePartner_Sale.ValueData    AS OperDatePartner_Sale
 
            -- , CASE WHEN View_Contract.InfoMoneyId = zc_Enum_InfoMoney_30101() THEN 'Бабенко В.П.' ELSE '' END AS StoreKeeper -- кладовщик
@@ -488,6 +491,7 @@ BEGIN
            , CASE WHEN Movement.DescId <> zc_Movement_PriceCorrective() THEN 1 ELSE -1 END * tmpMI.AmountPartner              AS AmountPartner
            , CASE WHEN Movement.DescId = zc_Movement_PriceCorrective() THEN -1 ELSE 1 END * tmpMI.Price / tmpMI.CountForPrice AS Price
            , tmpMI.CountForPrice             AS CountForPrice
+           , CASE WHEN Movement.DescId = zc_Movement_PriceCorrective() THEN -1 ELSE 0 END * tmpMI.AmountPartner              AS AmountPartner_ashan
 
            , COALESCE (tmpObject_GoodsPropertyValue.Name, '')       AS GoodsName_Juridical
            , COALESCE (tmpObject_GoodsPropertyValue.Amount, 0)      AS AmountInPack_Juridical

@@ -170,6 +170,10 @@ type
     CountIn_byPF: TcxGridDBColumn;
     Value_receipt: TcxGridDBColumn;
     CuterCount_receipt: TcxGridDBColumn;
+    actPrint_Inventory: TdsdPrintAction;
+    bbPrint_Inventory: TdxBarButton;
+    CountTotalIn_Weight: TcxGridDBColumn;
+    SummTotalIn: TcxGridDBColumn;
   private
   public
   end;

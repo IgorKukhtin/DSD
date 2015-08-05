@@ -23,7 +23,7 @@ BEGIN
    vbUserId:= lpGetUserBySession (inSession);
 
    -- определяется уровень доступа
-   vbBranchId_Constraint:= (SELECT Object_RoleAccessKeyGuide_View.BranchId FROM Object_RoleAccessKeyGuide_View WHERE Object_RoleAccessKeyGuide_View.UserId = vbUserId AND Object_RoleAccessKeyGuide_View.BranchId <> 0 GROUP BY Object_RoleAccessKeyGuide_View.BranchId);
+   vbBranchId_Constraint:= (SELECT Object_RoleAccessKeyGuide_View.BranchId FROM Object_RoleAccessKeyGuide_View WHERE Object_RoleAccessKeyGuide_View.UserId = vbUserId AND Object_RoleAccessKeyGuide_View.BranchId NOT IN (0, zc_Branch_Basis()) GROUP BY Object_RoleAccessKeyGuide_View.BranchId);
 
    -- Результат
    RETURN QUERY 

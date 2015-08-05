@@ -29,23 +29,83 @@ inherited Report_ReceiptSaleAnalyzeForm: TReport_ReceiptSaleAnalyzeForm
             item
               Format = ',0.####'
               Kind = skSum
-              Column = OperCount_Weight
+              Column = OperCount_Weight_sale
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = OperSumm
+              Column = SummIn_sale
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = SummOut_PriceList_sale
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = SummOut_sale
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = OperCount_Weight_return
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = SummIn_return
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = SummOut_PriceList_return
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = SummOut_return
             end>
           DataController.Summary.FooterSummaryItems = <
             item
               Format = ',0.####'
               Kind = skSum
-              Column = OperCount_Weight
+              Column = OperCount_Weight_sale
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = OperSumm
+              Column = SummIn_sale
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = SummOut_PriceList_sale
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = SummOut_sale
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = OperCount_Weight_return
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = SummIn_return
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = SummOut_PriceList_return
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = SummOut_return
             end>
           OptionsData.CancelOnExit = True
           OptionsData.Deleting = False
@@ -272,9 +332,9 @@ inherited Report_ReceiptSaleAnalyzeForm: TReport_ReceiptSaleAnalyzeForm
             Options.Editing = False
             Width = 55
           end
-          object OperCount: TcxGridDBColumn
-            Caption = #1050#1086#1083'-'#1074#1086' '#1087#1088#1086#1080#1079#1074'.'
-            DataBinding.FieldName = 'OperCount'
+          object OperCount_sale: TcxGridDBColumn
+            Caption = #1050#1086#1083'-'#1074#1086' '#1088#1077#1072#1083#1080#1079'.'
+            DataBinding.FieldName = 'OperCount_sale'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
@@ -283,9 +343,9 @@ inherited Report_ReceiptSaleAnalyzeForm: TReport_ReceiptSaleAnalyzeForm
             Options.Editing = False
             Width = 60
           end
-          object OperCount_Weight: TcxGridDBColumn
-            Caption = #1050#1086#1083'-'#1074#1086' '#1087#1088#1086#1080#1079#1074'. ('#1074#1077#1089')'
-            DataBinding.FieldName = 'OperCount_Weight'
+          object OperCount_Weight_sale: TcxGridDBColumn
+            Caption = #1050#1086#1083'-'#1074#1086' '#1088#1077#1072#1083#1080#1079'. ('#1074#1077#1089')'
+            DataBinding.FieldName = 'OperCount_Weight_sale'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
@@ -293,9 +353,9 @@ inherited Report_ReceiptSaleAnalyzeForm: TReport_ReceiptSaleAnalyzeForm
             HeaderAlignmentVert = vaCenter
             Width = 60
           end
-          object Price_in: TcxGridDBColumn
-            Caption = #1062#1077#1085#1072' '#1087#1088#1086#1080#1079#1074'.'
-            DataBinding.FieldName = 'Price_in'
+          object Price_in_sale: TcxGridDBColumn
+            Caption = #1062#1077#1085#1072' '#1089'/'#1089' '#1088#1077#1072#1083#1080#1079'.'
+            DataBinding.FieldName = 'Price_in_sale'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
@@ -303,15 +363,137 @@ inherited Report_ReceiptSaleAnalyzeForm: TReport_ReceiptSaleAnalyzeForm
             HeaderAlignmentVert = vaCenter
             Width = 60
           end
-          object OperSumm: TcxGridDBColumn
-            Caption = #1057#1091#1084#1084#1072' '#1087#1088#1086#1080#1079#1074'.'
-            DataBinding.FieldName = 'OperSumm'
+          object SummIn_sale: TcxGridDBColumn
+            Caption = #1057#1091#1084#1084#1072' '#1089'/'#1089' '#1088#1077#1072#1083#1080#1079'.'
+            DataBinding.FieldName = 'SummIn_sale'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
+            Width = 81
+          end
+          object Price_out_pl_sale: TcxGridDBColumn
+            Caption = #1062#1077#1085#1072' '#1087#1088#1072#1081#1089' '#1088#1077#1072#1083#1080#1079'.'
+            DataBinding.FieldName = 'Price_out_pl_sale'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 60
+          end
+          object SummOut_PriceList_sale: TcxGridDBColumn
+            Caption = #1057#1091#1084#1084#1072' '#1087#1088#1072#1081#1089' '#1088#1077#1072#1083#1080#1079'.'
+            DataBinding.FieldName = 'SummOut_PriceList_sale'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 81
+          end
+          object Price_out_sale: TcxGridDBColumn
+            Caption = #1062#1077#1085#1072' '#1088#1077#1072#1083#1080#1079'.'
+            DataBinding.FieldName = 'Price_out_sale'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 60
+          end
+          object SummOut_sale: TcxGridDBColumn
+            Caption = #1057#1091#1084#1084#1072' '#1088#1077#1072#1083#1080#1079'.'
+            DataBinding.FieldName = 'SummOut_sale'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 81
+          end
+          object OperCount_return: TcxGridDBColumn
+            Caption = #1050#1086#1083'-'#1074#1086' '#1074#1086#1079#1074#1088'.'
+            DataBinding.FieldName = 'OperCount_return'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 60
+          end
+          object OperCount_Weight_return: TcxGridDBColumn
+            Caption = #1050#1086#1083'-'#1074#1086' '#1074#1086#1079#1074#1088'. ('#1074#1077#1089')'
+            DataBinding.FieldName = 'OperCount_Weight_return'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 60
+          end
+          object Price_in_return: TcxGridDBColumn
+            Caption = #1062#1077#1085#1072' '#1089'/'#1089' '#1074#1086#1079#1074#1088'.'
+            DataBinding.FieldName = 'Price_in_return'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 60
+          end
+          object SummIn_return: TcxGridDBColumn
+            Caption = #1057#1091#1084#1084#1072' '#1089'/'#1089' '#1074#1086#1079#1074#1088'.'
+            DataBinding.FieldName = 'SummIn_return'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 81
+          end
+          object Price_out_pl_return: TcxGridDBColumn
+            Caption = #1062#1077#1085#1072' '#1087#1088#1072#1081#1089' '#1074#1086#1079#1074#1088'.'
+            DataBinding.FieldName = 'Price_out_pl_return'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 60
+          end
+          object SummOut_PriceList_return: TcxGridDBColumn
+            Caption = #1057#1091#1084#1084#1072' '#1087#1088#1072#1081#1089' '#1074#1086#1079#1074#1088'.'
+            DataBinding.FieldName = 'SummOut_PriceList_return'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 81
+          end
+          object Price_out_return: TcxGridDBColumn
+            Caption = #1062#1077#1085#1072' '#1074#1086#1079#1074#1088'.'
+            DataBinding.FieldName = 'Price_out_return'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 60
+          end
+          object SummOut_return: TcxGridDBColumn
+            Caption = #1057#1091#1084#1084#1072' '#1074#1086#1079#1074#1088'.'
+            DataBinding.FieldName = 'SummOut_return'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
             Width = 81
           end
           object clComment: TcxGridDBColumn
@@ -362,6 +544,9 @@ inherited Report_ReceiptSaleAnalyzeForm: TReport_ReceiptSaleAnalyzeForm
           object GoodsCode_Parent: TcxGridDBColumn
             Caption = #1050#1086#1076' '#1090#1086#1074'. ('#1087#1086#1080#1089#1082')'
             DataBinding.FieldName = 'GoodsCode_Parent'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 0
+            Properties.DisplayFormat = '0.;-0.; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
@@ -827,12 +1012,12 @@ inherited Report_ReceiptSaleAnalyzeForm: TReport_ReceiptSaleAnalyzeForm
       Width = 171
     end
     object cxLabel3: TcxLabel
-      Left = 206
+      Left = 211
       Top = 6
-      Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077' ('#1086#1090' '#1082#1086#1075#1086'):'
+      Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077' ('#1088#1077#1072#1083#1080#1079'.):'
     end
     object edFromUnit: TcxButtonEdit
-      Left = 347
+      Left = 352
       Top = 5
       Properties.Buttons = <
         item
@@ -841,15 +1026,15 @@ inherited Report_ReceiptSaleAnalyzeForm: TReport_ReceiptSaleAnalyzeForm
         end>
       Properties.ReadOnly = True
       TabOrder = 7
-      Width = 169
+      Width = 160
     end
     object cxLabel5: TcxLabel
-      Left = 220
+      Left = 209
       Top = 29
-      Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077' ('#1082#1086#1084#1091'):'
+      Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077' ('#1074#1086#1079#1074#1088#1072#1090'):'
     end
     object edToUnit: TcxButtonEdit
-      Left = 347
+      Left = 352
       Top = 29
       Properties.Buttons = <
         item
@@ -858,7 +1043,7 @@ inherited Report_ReceiptSaleAnalyzeForm: TReport_ReceiptSaleAnalyzeForm
         end>
       Properties.ReadOnly = True
       TabOrder = 9
-      Width = 169
+      Width = 160
     end
     object cxLabel11: TcxLabel
       Left = 519

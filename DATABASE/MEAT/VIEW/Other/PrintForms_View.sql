@@ -266,6 +266,21 @@ AS
       WHERE Object_Juridical.DescId = zc_Object_Juridical()
 
       UNION
+-- Ashan
+      SELECT
+             zc_movement_returnin()
+           , CAST ('ReturnIn' AS TVarChar)
+           , CAST ('01.01.2000' AS TDateTime)
+           , CAST ('01.01.2200' AS TDateTime)
+           , CAST (Object_Juridical.Id AS INTEGER)
+           , zc_Enum_PaidKind_FirstForm()
+           , CAST ('PrintMovement_ReturnIn35442481' AS TVarChar)
+      FROM Object AS Object_Juridical
+      JOIN ObjectHistory_JuridicalDetails_View AS OH_JuridicalDetails ON OH_JuridicalDetails.JuridicalId = Object_Juridical.Id
+       AND OH_JuridicalDetails.OKPO IN ('35442481')
+      WHERE Object_Juridical.DescId = zc_Object_Juridical()
+
+      UNION
 -- Amstor
       SELECT
              zc_movement_returnin()

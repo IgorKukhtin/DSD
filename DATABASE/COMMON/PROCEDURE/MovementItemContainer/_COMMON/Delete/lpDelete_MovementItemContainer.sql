@@ -7,18 +7,25 @@ CREATE OR REPLACE FUNCTION lpDelete_MovementItemContainer (IN inMovementId Integ
 $BODY$
   DECLARE vbLock Boolean;
 BEGIN
-    -- так блокируем что б не было ОШИБКИ: обнаружена взаимоблокировка
-    LOCK TABLE Container IN SHARE UPDATE EXCLUSIVE MODE;
-    -- так блокируем что б не было ОШИБКИ: обнаружена взаимоблокировка
-    /*vbLock := FALSE;
-    WHILE NOT vbLock LOOP
-        BEGIN
-           LOCK TABLE Container IN SHARE UPDATE EXCLUSIVE MODE;
-           vbLock := TRUE;
-        EXCEPTION 
-            WHEN OTHERS THEN
-        END;
-    END LOOP;*/
+    IF zc_IsLockTable() = TRUE
+    THEN
+        -- так блокируем что б не было ОШИБКИ: обнаружена взаимоблокировка
+        LOCK TABLE Container IN SHARE UPDATE EXCLUSIVE MODE;
+        -- так блокируем что б не было ОШИБКИ: обнаружена взаимоблокировка
+        /*vbLock := FALSE;
+        WHILE NOT vbLock LOOP
+            BEGIN
+               LOCK TABLE Container IN SHARE UPDATE EXCLUSIVE MODE;
+               vbLock := TRUE;
+            EXCEPTION 
+                WHEN OTHERS THEN
+            END;
+        END LOOP;*/
+    ELSE
+        PERFORM Container.* FROM Container WHERE Container.Id IN (SELECT MovementItemContainer.ContainerId FROM MovementItemContainer WHERE MovementItemContainer.MovementId = inMovementId) FOR UPDATE;
+        PERFORM MovementItemContainer.* FROM MovementItemContainer WHERE MovementItemContainer.MovementId = inMovementId FOR UPDATE;
+    END IF;
+
 
     -- Изменить значение остатка
     UPDATE Container SET Amount = Container.Amount - _tmpMIContainer.Amount

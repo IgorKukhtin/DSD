@@ -76,7 +76,7 @@ BEGIN
    vbIsCommerce:= vbIsConstraint OR (EXISTS (SELECT 1 FROM Object_RoleAccessKeyGuide_View WHERE Object_RoleAccessKeyGuide_View.UserId = vbUserId AND Object_RoleAccessKeyGuide_View.AccessKeyId_GuideCommerce <> 0)
                                      AND NOT EXISTS (SELECT 1 FROM Object_RoleAccessKeyGuide_View WHERE Object_RoleAccessKeyGuide_View.UserId = vbUserId AND Object_RoleAccessKeyGuide_View.AccessKeyId_GuideCommerceAll <> 0)
                                     );
-   vbIsCommerce:= 347192 <> vbUserId AND vbIsCommerce; -- Бережной А.О.
+   vbIsCommerce:= 347192 <> vbUserId AND 106593 <> vbUserId AND vbIsCommerce; -- Бережной А.О. + Галат Е.Н.
 
    -- Результат
    RETURN QUERY 

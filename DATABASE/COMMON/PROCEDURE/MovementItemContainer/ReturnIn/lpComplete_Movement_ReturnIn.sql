@@ -99,10 +99,12 @@ BEGIN
           THEN vbIsHistoryCost:= TRUE;
           ELSE vbIsHistoryCost:= FALSE;
           END IF;
+          vbIsHistoryCost:= TRUE;
      ELSE
          -- !!! для остальных тоже нужны проводки с/с!!!
          IF 0 < (SELECT 1 FROM Object_RoleAccessKeyGuide_View AS View_RoleAccessKeyGuide WHERE View_RoleAccessKeyGuide.UserId = inUserId AND View_RoleAccessKeyGuide.BranchId <> 0 GROUP BY View_RoleAccessKeyGuide.BranchId LIMIT 1)
            OR EXISTS (SELECT 1 FROM ObjectLink_UserRole_View AS View_UserRole WHERE View_UserRole.UserId = inUserId AND View_UserRole.RoleId IN (428382)) -- Кладовщик Днепр
+           OR EXISTS (SELECT 1 FROM ObjectLink_UserRole_View AS View_UserRole WHERE View_UserRole.UserId = inUserId AND View_UserRole.RoleId IN (97837)) -- Бухгалтер ДНЕПР
          THEN vbIsHistoryCost:= FALSE;
          ELSE vbIsHistoryCost:= TRUE;
          END IF;
@@ -280,6 +282,7 @@ BEGIN
                                ON ObjectLink_Partner_Branch.ObjectId = MovementLinkObject_From.ObjectId
                               AND ObjectLink_Partner_Branch.DescId = zc_ObjectLink_Unit_Branch() -- !!!не ошибка!!!
                               AND Object_From.DescId = zc_Object_Partner()
+                              AND 1 = 0 -- вроде это как наш филиал
           LEFT JOIN ObjectBoolean AS ObjectBoolean_isCorporate
                                   ON ObjectBoolean_isCorporate.ObjectId = ObjectLink_Partner_Juridical.ChildObjectId
                                  AND ObjectBoolean_isCorporate.DescId = zc_ObjectBoolean_Juridical_isCorporate()
@@ -1981,6 +1984,10 @@ BEGIN
        WHERE _tmpItem_group.OperSumm <> 0 -- !!!ограничение - пустые проводки не формируются!!!
        ;
 
+     -- !!!не всегда Проводки для отчета!!!
+     IF vbIsHistoryCost = TRUE
+     THEN
+
      -- 5.1.1. формируются Проводки для отчета (Счета: Товар(с/с) <-> ОПиУ(Себестоимость возврата-только разнице в весе))
      PERFORM lpInsertUpdate_MovementItemReport (inMovementDescId     := vbMovementDescId
                                               , inMovementId         := inMovementId
@@ -2193,6 +2200,8 @@ BEGIN
                             , _tmp_byContainer.ContainerId
                     ) AS _tmpItemSumm_group ON _tmpItemSumm_group.MovementItemId = _tmpItem_byProfitLoss.MovementItemId
      ;
+
+     END IF; -- if vbIsHistoryCost = TRUE -- !!!не всегда Проводки для отчета!!!
 
 
      /*-- убрал, т.к. св-во пишется теперь в ОПиУ

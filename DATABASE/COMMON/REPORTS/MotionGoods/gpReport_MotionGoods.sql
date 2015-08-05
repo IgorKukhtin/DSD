@@ -256,7 +256,7 @@ BEGIN
         , ObjectFloat_Weight.ValueData   AS Weight
 
         , CAST (COALESCE(Object_PartionGoods.Id, 0) AS Integer)           AS PartionGoodsId
-        , CASE WHEN ObjectLink_Goods.ChildObjectId <> 0
+        , CASE WHEN ObjectLink_Goods.ChildObjectId <> 0 AND ObjectLink_Unit.ChildObjectId <> 0
                     THEN zfCalc_PartionGoodsName_InvNumber (inInvNumber       := Object_PartionGoods.ValueData
                                                           , inOperDate        := ObjectDate_PartionGoods_Value.ValueData
                                                           , inPrice           := ObjectFloat_PartionGoods_Price.ValueData

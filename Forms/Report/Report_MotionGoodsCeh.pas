@@ -176,7 +176,7 @@ type
     actPrint_GP: TdsdPrintAction;
     bbPrint2: TdxBarButton;
     actPrint_Loss: TdsdPrintAction;
-    bbPrint3: TdxBarButton;
+    bbPrint_Loss: TdxBarButton;
     cxLabel8: TcxLabel;
     cxLabel9: TcxLabel;
     edUnitGroup_by: TcxButtonEdit;
@@ -204,6 +204,8 @@ type
     CountProductionOut_Norm: TcxGridDBColumn;
     GoodsKindName_complete: TcxGridDBColumn;
     SummProductionOut_Norm: TcxGridDBColumn;
+    actPrint_Inventory: TdsdPrintAction;
+    bbPrint_Inventory: TdxBarButton;
   private
   public
   end;

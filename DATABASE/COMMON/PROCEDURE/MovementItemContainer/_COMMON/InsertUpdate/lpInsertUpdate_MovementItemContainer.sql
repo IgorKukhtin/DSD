@@ -28,18 +28,24 @@ AS
 $BODY$
   DECLARE vbLock Boolean;
 BEGIN
-    -- так блокируем что б не было ОШИБКИ: обнаружена взаимоблокировка
-    LOCK TABLE Container IN SHARE UPDATE EXCLUSIVE MODE;
-    -- так блокируем что б не было ОШИБКИ: обнаружена взаимоблокировка
-    /*vbLock := FALSE;
-    WHILE NOT vbLock LOOP
-        BEGIN
-           LOCK TABLE Container IN SHARE UPDATE EXCLUSIVE MODE;
-           vbLock := TRUE;
-        EXCEPTION 
-            WHEN OTHERS THEN
-        END;
-    END LOOP;*/
+    IF zc_IsLockTable() = TRUE
+    THEN
+        -- так блокируем что б не было ОШИБКИ: обнаружена взаимоблокировка
+        LOCK TABLE Container IN SHARE UPDATE EXCLUSIVE MODE;
+        -- так блокируем что б не было ОШИБКИ: обнаружена взаимоблокировка
+        /*vbLock := FALSE;
+        WHILE NOT vbLock LOOP
+            BEGIN
+               LOCK TABLE Container IN SHARE UPDATE EXCLUSIVE MODE;
+               vbLock := TRUE;
+            EXCEPTION 
+                WHEN OTHERS THEN
+            END;
+        END LOOP;*/
+    ELSE
+        PERFORM Container.* FROM Container WHERE Container.Id = inContainerId FOR UPDATE;
+    END IF;
+
 
      -- меняем параметр
      IF inParentId = 0 THEN inParentId:= NULL; END IF;
@@ -63,7 +69,7 @@ BEGIN
 END;
 $BODY$
   LANGUAGE PLPGSQL VOLATILE;
-ALTER FUNCTION lpInsertUpdate_MovementItemContainer (Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TFloat, TDateTime, Boolean) OWNER TO postgres;
+ALTER FUNCTION lpInsertUpdate_MovementItemContainer (Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TFloat, TDateTime, Boolean) OWNER TO postgres;
 
 /*-------------------------------------------------------------------------------*/
 /*

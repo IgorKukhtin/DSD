@@ -135,16 +135,16 @@ BEGIN
                                , MovementItem.ObjectId AS GoodsId
                                , CASE WHEN inIsGoodsKind = TRUE THEN MILinkObject_GoodsKind.ObjectId ELSE 0 END AS GoodsKindId
 
-                               , SUM (CASE WHEN tmp_Unit_From.UnitId > 0 THEN MovementItem.Amount ELSE 0 END) AS Amount_Count
-                               , SUM (CASE WHEN tmp_Unit_From.UnitId > 0 THEN MovementItem.Amount ELSE 0 END
+                               , SUM (CASE WHEN tmp_Unit_From.UnitId > 0 THEN COALESCE (MIFloat_AmountPartner.ValueData, 0) /*MovementItem.Amount*/ ELSE 0 END) AS Amount_Count
+                               , SUM (CASE WHEN tmp_Unit_From.UnitId > 0 THEN COALESCE (MIFloat_AmountPartner.ValueData, 0) /*MovementItem.Amount*/ ELSE 0 END
                                     * CASE WHEN MIFloat_CountForPrice.ValueData > 0
                                                 THEN COALESCE (MIFloat_Price.ValueData, 0) / MIFloat_CountForPrice.ValueData
                                            ELSE COALESCE (MIFloat_Price.ValueData, 0)
                                       END * 1.2
                                      ) AS Amount_Summ
 
-                               , SUM (CASE WHEN tmp_Unit_To.UnitId > 0 THEN MovementItem.Amount ELSE 0 END) AS Amount_CountRet
-                               , SUM (CASE WHEN tmp_Unit_To.UnitId > 0 THEN MovementItem.Amount ELSE 0 END
+                               , SUM (CASE WHEN tmp_Unit_To.UnitId > 0 THEN COALESCE (MIFloat_AmountPartner.ValueData, 0) /*MovementItem.Amount*/ ELSE 0 END) AS Amount_CountRet
+                               , SUM (CASE WHEN tmp_Unit_To.UnitId > 0 THEN COALESCE (MIFloat_AmountPartner.ValueData, 0) /*MovementItem.Amount*/ ELSE 0 END
                                     * CASE WHEN MIFloat_CountForPrice.ValueData > 0
                                                 THEN COALESCE (MIFloat_Price.ValueData, 0) / MIFloat_CountForPrice.ValueData
                                            ELSE COALESCE (MIFloat_Price.ValueData, 0)
@@ -165,6 +165,10 @@ BEGIN
                                                       AND MovementItem.DescId     = zc_MI_Master()
                                                       AND MovementItem.isErased   = FALSE
                                LEFT JOIN _tmpGoods_report ON _tmpGoods_report.GoodsId = MovementItem.ObjectId
+
+                               LEFT JOIN MovementItemFloat AS MIFloat_AmountPartner
+                                                           ON MIFloat_AmountPartner.MovementItemId = MovementItem.Id
+                                                          AND MIFloat_AmountPartner.DescId = zc_MIFloat_AmountPartner()
 
                                LEFT JOIN MovementItemFloat AS MIFloat_Price
                                                            ON MIFloat_Price.MovementItemId = MovementItem.Id
