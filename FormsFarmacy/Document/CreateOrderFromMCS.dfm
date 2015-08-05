@@ -1,6 +1,8 @@
 inherited CreateOrderFromMCSForm: TCreateOrderFromMCSForm
   Caption = #1057#1086#1079#1076#1072#1085#1080#1077' '#1079#1072#1103#1074#1086#1082' '#1085#1072' '#1086#1089#1085#1086#1074#1077' '#1053#1058#1047
   AddOnFormData.Params = FormParams
+  ExplicitWidth = 583
+  ExplicitHeight = 335
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -138,6 +140,25 @@ inherited CreateOrderFromMCSForm: TCreateOrderFromMCSForm
       DataSource = MasterDS
       Caption = 'actStartExec'
     end
+    object actSelectAll: TBooleanStoredProcAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spSelect
+      StoredProcList = <
+        item
+          StoredProc = spSelect
+        end>
+      Caption = #1054#1090#1084#1077#1090#1080#1090#1100' '#1074#1089#1077
+      Hint = #1054#1090#1084#1077#1090#1080#1090#1100' '#1074#1089#1077
+      ImageIndex = 63
+      Value = False
+      HintTrue = #1057#1085#1103#1090#1100' '#1086#1090#1084#1077#1090#1082#1080
+      HintFalse = #1054#1090#1084#1077#1090#1080#1090#1100' '#1074#1089#1077
+      CaptionTrue = #1057#1085#1103#1090#1100' '#1086#1090#1084#1077#1090#1082#1080
+      CaptionFalse = #1054#1090#1084#1077#1090#1080#1090#1100' '#1074#1089#1077
+      ImageIndexTrue = 62
+      ImageIndexFalse = 63
+    end
   end
   inherited MasterDS: TDataSource
     Left = 64
@@ -149,6 +170,14 @@ inherited CreateOrderFromMCSForm: TCreateOrderFromMCSForm
   end
   inherited spSelect: TdsdStoredProc
     StoredProcName = 'gpSelect_Object_UnitForOrderInternal'
+    Params = <
+      item
+        Name = 'inSelectAll'
+        Value = Null
+        Component = actSelectAll
+        DataType = ftBoolean
+        ParamType = ptInput
+      end>
     Left = 96
     Top = 96
   end
@@ -165,6 +194,10 @@ inherited CreateOrderFromMCSForm: TCreateOrderFromMCSForm
         item
           Visible = True
           ItemName = 'bbChoice'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarButton2'
         end
         item
           Visible = True
@@ -189,6 +222,10 @@ inherited CreateOrderFromMCSForm: TCreateOrderFromMCSForm
     end
     object dxBarButton1: TdxBarButton
       Action = actStartInsertUpdate_MovementItem_OrderInternalMCS
+      Category = 0
+    end
+    object dxBarButton2: TdxBarButton
+      Action = actSelectAll
       Category = 0
     end
   end

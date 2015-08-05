@@ -404,6 +404,9 @@ inherited InventoryForm: TInventoryForm
           Action = actGetImportSettingId
         end
         item
+          Action = actInsertUpdate_MovementItem_Inventory_Set_Zero
+        end
+        item
           Action = actDoLoad
         end
         item
@@ -423,6 +426,17 @@ inherited InventoryForm: TInventoryForm
           StoredProc = spGetImportSettingId
         end>
       Caption = 'actGetImportSettingId'
+    end
+    object actInsertUpdate_MovementItem_Inventory_Set_Zero: TdsdExecStoredProc
+      Category = 'Load'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spInsertUpdate_MovementItem_Inventory_Set_Zero
+      StoredProcList = <
+        item
+          StoredProc = spInsertUpdate_MovementItem_Inventory_Set_Zero
+        end>
+      Caption = 'actInsertUpdate_MovementItem_Inventory_Set_Zero'
     end
     object actDoLoad: TExecuteImportSettingsAction
       Category = 'Load'
@@ -1200,5 +1214,21 @@ inherited InventoryForm: TInventoryForm
     PackSize = 1
     Left = 144
     Top = 480
+  end
+  object spInsertUpdate_MovementItem_Inventory_Set_Zero: TdsdStoredProc
+    StoredProcName = 'gpInsertUpdate_MovementItem_Inventory_Set_Zero'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+      end>
+    PackSize = 1
+    Left = 322
+    Top = 432
   end
 end

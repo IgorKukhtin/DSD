@@ -40,7 +40,7 @@ BEGIN
     WHERE MovementLinkObject.MovementId = inMovementId 
       AND MovementLinkObject.DescId = zc_MovementLinkObject_Unit();
       
-    SELECT Movement.OperDate INTO vbInventoryDate
+    SELECT date_trunc('day', Movement.OperDate) INTO vbInventoryDate
     FROM Movement
     WHERE Movement.Id = inMovementId;
 
@@ -135,6 +135,40 @@ BEGIN
  */
 
     -- А сюда товары
+    --Добавить в переучет строки, которые есть на остатке, но нет в переучете
+    PERFORM lpInsertUpdate_MovementItem_Inventory(ioId := 0, inMovementId := inMovementId, inGoodsId := Saldo.ObjectId, inAmount := 0, inPrice := 0, inSumm := 0, inUserId := inUserId)
+    FROM (
+        SELECT 
+            T0.ObjectId
+           ,SUM(T0.Amount) as Amount
+        FROM(
+            SELECT 
+                Container.Id 
+               ,Container.ObjectId --Товар
+               ,Container.Amount - COALESCE(SUM(MovementItemContainer.amount),0) as Amount  --Тек. остаток - Движение после даты переучета
+            FROM 
+                Container
+                LEFT OUTER JOIN MovementItemContainer ON Container.Id = MovementItemContainer.ContainerId
+                                                     AND date_trunc('day', MovementItemContainer.Operdate) > vbInventoryDate
+                           JOIN containerlinkobject AS CLI_Unit ON CLI_Unit.containerid = Container.Id
+                                                               AND CLI_Unit.descid = zc_ContainerLinkObject_Unit()
+                                                               AND CLI_Unit.ObjectId = vbUnitId                                   
+            WHERE Container.DescID = zc_Container_Count()
+            GROUP BY 
+                Container.Id 
+               ,Container.ObjectId
+            ) as T0
+        GROUP By T0.ObjectId
+        ) as Saldo
+        LEFT OUTER JOIN MovementItem AS MovementItem_Inventory
+                                     ON Saldo.ObjectId = MovementItem_Inventory.ObjectId
+                                    AND MovementItem_Inventory.MovementId = inMovementId
+                                    AND MovementItem_Inventory.DescId = zc_MI_Master()
+    WHERE
+        Saldo.Amount > 0
+        AND
+        MovementItem_Inventory.Id is null;
+    
 WITH DIFFSALDO AS ( SELECT 
                         MovementItem.Id                                            as MovementItemId 
                        ,MovementItem.ObjectId                                      as ObjectId  
@@ -146,7 +180,7 @@ WITH DIFFSALDO AS ( SELECT
                                                    ,Container.Amount - COALESCE(SUM(MovementItemContainer.amount),0) as Amount  --Тек. остаток - Движение после даты переучета
                                              FROM Container
                                                 LEFT OUTER JOIN MovementItemContainer ON Container.Id = MovementItemContainer.ContainerId
-                                                                                     AND MovementItemContainer.Operdate > vbInventoryDate
+                                                                                     AND date_trunc('day', MovementItemContainer.Operdate) > vbInventoryDate
                                                 JOIN containerlinkobject AS CLI_Unit ON CLI_Unit.containerid = Container.Id
                                                                                     AND CLI_Unit.descid = zc_ContainerLinkObject_Unit()
                                                                                     AND CLI_Unit.ObjectId = vbUnitId                                   
@@ -281,7 +315,8 @@ $BODY$
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.  Воробкало А.А.
+ 03.08.15                                                                  *Добавить в переучет строки, которые есть на остатке, но нет в переучете
  11.02.14                        * 
  05.02.14                        * 
 */

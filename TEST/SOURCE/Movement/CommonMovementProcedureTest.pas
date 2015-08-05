@@ -23,6 +23,8 @@ begin
   inherited;
   ScriptDirectory := LocalProcedurePath + 'Movement\_Common\';
   inherited;
+  ZQuery.SQL.LoadFromFile(LocalProcedurePath + 'Movement\lpInsertUpdate_MovementFloat_TotalSumm.sql');
+  ZQuery.ExecSQL;
 end;
 
 initialization

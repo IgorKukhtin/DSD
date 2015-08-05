@@ -1,8 +1,10 @@
 -- Function: gpSelect_Object_Unit()
 
 DROP FUNCTION IF EXISTS gpSelect_Object_UnitForOrderInternal(TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_Object_UnitForOrderInternal(Boolean,TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_Object_UnitForOrderInternal(
+    IN inSelectAll   Boolean,       -- выделить все подразделения
     IN inSession     TVarChar       -- сессия пользователя
 )
 RETURNS TABLE (NeedReorder Boolean, UnitId Integer, UnitCode Integer, UnitName TVarChar, ExistsOrderInternal Boolean, MovementId Integer) 
@@ -38,7 +40,7 @@ BEGIN
                             GROUP BY
                                 MovementLinkObject_Unit.ObjectId
                           ) 
-    SELECT True::Boolean                            as NeedReorder
+    SELECT inSelectAll                              as NeedReorder
          , Object_Unit_View.Id                      as UnitId
          , Object_Unit_View.Code                    as UnitCode 
          , Object_Unit_View.Name                    as UnitName
@@ -57,13 +59,13 @@ END;
 $BODY$
 
 LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpSelect_Object_UnitForOrderInternal(TVarChar) OWNER TO postgres;
+ALTER FUNCTION gpSelect_Object_UnitForOrderInternal(Boolean,TVarChar) OWNER TO postgres;
 
 /*-------------------------------------------------------------------------------*/
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
- 25.06.15                         *
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Воробкало А.А
+ 04.08.15                                                         *
 */
 
 -- тест

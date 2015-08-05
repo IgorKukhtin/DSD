@@ -44,6 +44,8 @@ BEGIN
      PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_To(), ioId, inToId);
      -- сохранили связь с <Типы НДС>
      PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_NDSKind(), ioId, inNDSKindId);
+     -- сохранили значение <НДС>
+     PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_VATPercent(), ioId, (Select ValueData from ObjectFloat Where ObjectID = inNDSKindId AND DescId = zc_ObjectFloat_NDSKind_NDS()));
 
      -- сохранили связь с <Договор>
      PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_Contract(), ioId, inContractId);

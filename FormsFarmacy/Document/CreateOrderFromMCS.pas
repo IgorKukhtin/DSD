@@ -29,6 +29,8 @@ type
     FormParams: TdsdFormParams;
     mactOpenForm: TMultiAction;
     actGet_MovementId_OrderInternal_Auto: TdsdExecStoredProc;
+    dxBarButton2: TdxBarButton;
+    actSelectAll: TBooleanStoredProcAction;
   private
     { Private declarations }
   public

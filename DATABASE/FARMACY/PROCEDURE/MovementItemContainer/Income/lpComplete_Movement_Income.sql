@@ -107,7 +107,7 @@ BEGIN
                                      , inInfoMoneyId            := NULL
                                      , inUserId                 := inUserId)
         , Movement_Income_View.JuridicalId
-        , Movement_Income_View.OperDate
+        , Movement_Income_View.BranchDate
         , Movement_Income_View.ToId
      FROM MovementItem_Income_View, Movement_Income_View
     WHERE MovementItem_Income_View.MovementId = Movement_Income_View.Id AND Movement_Income_View.Id =  inMovementId;
@@ -135,19 +135,18 @@ BEGIN
               , OperSumm
               , OperDate
            FROM _tmpItem;
-   
      --Создать переоценку
-     PERFORM lpInsertUpdate_Object_Price(inGoodsId := MI.goodsid,
-                                         inUnitId := M.toid,
-                                         inPrice := MI.pricesale,
-										 inDate := M.OperDate,
-                                         inUserId := inUserId)
-     FROM Movement_Income_View AS M
-       INNER JOIN MovementItem_Income_View AS MI ON MI.MovementId = M.Id
-     WHERE
-       M.Id =  inMovementId
-       AND
-       COALESCE(MI.PriceSale,0)>0;
+      PERFORM lpInsertUpdate_Object_Price(inGoodsId := MI.goodsid,
+                                          inUnitId := M.toid,
+                                          inPrice := MI.pricesale,
+										  inDate := M.BranchDate,
+                                          inUserId := inUserId)
+      FROM Movement_Income_View AS M
+        INNER JOIN MovementItem_Income_View AS MI ON MI.MovementId = M.Id
+      WHERE
+        M.Id =  inMovementId
+        AND
+        COALESCE(MI.PriceSale,0)>0;
       -- пересчитали Итоговые суммы
      PERFORM lpInsertUpdate_MovementFloat_TotalSumm (inMovementId);
     
@@ -190,10 +189,16 @@ BEGIN
      SELECT SUM(Amount) INTO vbOperSumm_Partner_byItem FROM _tmpMIContainer_insert WHERE AnalyzerId = 0;
  
      IF (vbOperSumm_Partner <> vbOperSumm_Partner_byItem) THEN
-        UPDATE _tmpMIContainer_insert SET Amount = Amount - (vbOperSumm_Partner_byItem - vbOperSumm_Partner)
-         WHERE MovementItemId IN (SELECT MAX (MovementItemId) FROM _tmpMIContainer_insert WHERE AnalyzerId = 0 
-                      AND Amount IN (SELECT MAX (Amount) FROM _tmpMIContainer_insert WHERE AnalyzerId = 0)
-                                 );
+        UPDATE _tmpMIContainer_insert SET 
+            Amount = Amount - (vbOperSumm_Partner_byItem - vbOperSumm_Partner)
+        WHERE MovementItemId IN (SELECT MAX (MovementItemId) 
+                                 FROM _tmpMIContainer_insert 
+                                 WHERE AnalyzerId = 0 
+                                     AND Amount IN (SELECT MAX (Amount) 
+                                                    FROM _tmpMIContainer_insert 
+                                                    WHERE AnalyzerId = 0)
+                                )
+            AND AnalyzerId = 0;
       END IF;	
 
      PERFORM lpInsertUpdate_MovementItemContainer_byTable();

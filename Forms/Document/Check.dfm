@@ -70,7 +70,6 @@ inherited CheckForm: TCheckForm
       Enabled = False
     end
     inherited ceStatus: TcxButtonEdit
-      Enabled = False
       ExplicitHeight = 22
     end
     object cxTextEdit1: TcxTextEdit
@@ -225,6 +224,9 @@ inherited CheckForm: TCheckForm
         Param.DataType = ftString
         DataSummaryItemIndex = 0
       end>
+  end
+  inherited spChangeStatus: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Status_Check'
   end
   inherited spGet: TdsdStoredProc
     StoredProcName = 'gpGet_Movement_Check'
