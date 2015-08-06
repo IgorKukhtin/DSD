@@ -58,7 +58,7 @@ BEGIN
         WHERE MovementItem.MovementId = vbMovementId;
         --заливаем согласно разници между остатком и НТЗ
         PERFORM 
-          lpInsertUpdate_MovementItem_OrderInternal(0, vbMovementId, Object_Price.GoodsId, (Object_Price.MCSValue - SUM(COALESCE(Container.Amount,0)))::TFloat, Object_Price.Price, vbUserId)
+          lpInsertUpdate_MovementItem_OrderInternal(0, vbMovementId, Object_Price.GoodsId, floor(Object_Price.MCSValue - SUM(COALESCE(Container.Amount,0)))::TFloat, Object_Price.Price, vbUserId)
         from Object_Price_View AS Object_Price
             LEFT OUTER JOIN ContainerLinkObject AS ContainerLinkObject_Unit
                                                 ON ContainerLinkObject_Unit.DescId = zc_ContainerLinkObject_Unit()
@@ -77,7 +77,7 @@ BEGIN
             Object_Price.MCSValue,
             Object_Price.Price
         HAVING
-            Object_Price.MCSValue>SUM(COALESCE(Container.Amount,0));
+            floor(Object_Price.MCSValue - SUM(COALESCE(Container.Amount,0)))::TFloat > 0;
         --Записываем признак авторасчета в содержимое
         PERFORM lpInsertUpdate_MovementItemBoolean(zc_MIBoolean_Calculated(),Id,True)
         FROM MovementItem
