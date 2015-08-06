@@ -46,6 +46,7 @@ inherited CreateOrderFromMCSForm: TCreateOrderFromMCSForm
             Width = 43
           end
           object colMovementId: TcxGridDBColumn
+            AlternateCaption = #1055#1077#1088#1077#1081#1090#1080' '#1074' '#1079#1072#1103#1074#1082#1091
             Caption = '->'
             DataBinding.FieldName = 'MovementId'
             PropertiesClassName = 'TcxButtonEditProperties'
@@ -57,6 +58,7 @@ inherited CreateOrderFromMCSForm: TCreateOrderFromMCSForm
               end>
             Properties.ReadOnly = True
             Properties.ViewStyle = vsButtonsOnly
+            HeaderHint = #1055#1077#1088#1077#1081#1090#1080' '#1074' '#1079#1072#1103#1074#1082#1091
             Width = 34
           end
         end
@@ -74,7 +76,8 @@ inherited CreateOrderFromMCSForm: TCreateOrderFromMCSForm
         item
           Action = actOpenOrderInternalForm
         end>
-      Caption = 'mactOpenForm'
+      Caption = #1055#1077#1088#1077#1081#1090#1080' '#1074' '#1079#1072#1103#1074#1082#1091
+      Hint = #1055#1077#1088#1077#1081#1090#1080' '#1074' '#1079#1072#1103#1074#1082#1091
     end
     object actGet_MovementId_OrderInternal_Auto: TdsdExecStoredProc
       Category = 'OpenInternalOrder'
@@ -125,7 +128,8 @@ inherited CreateOrderFromMCSForm: TCreateOrderFromMCSForm
           Action = actRefresh
         end>
       QuestionBeforeExecute = #1053#1072#1095#1072#1090#1100' '#1089#1086#1079#1076#1072#1085#1080#1077' '#1079#1072#1103#1074#1086#1082' '#1087#1086' '#1074#1099#1073#1088#1072#1085#1085#1099#1084' '#1087#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1103#1084'?'
-      Caption = #1053#1072#1095#1072#1090#1100' '#1089#1086#1079#1076#1072#1085#1080#1077' '#1079#1072#1103#1074#1086#1082' '#1087#1086' '#1074#1099#1073#1088#1072#1085#1085#1099#1084' '#1087#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1103#1084'?'
+      Caption = #1053#1072#1095#1072#1090#1100' '#1089#1086#1079#1076#1072#1085#1080#1077' '#1079#1072#1103#1074#1086#1082' '#1087#1086' '#1074#1099#1073#1088#1072#1085#1085#1099#1084' '#1087#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1103#1084
+      Hint = #1053#1072#1095#1072#1090#1100' '#1089#1086#1079#1076#1072#1085#1080#1077' '#1079#1072#1103#1074#1086#1082' '#1087#1086' '#1074#1099#1073#1088#1072#1085#1085#1099#1084' '#1087#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1103#1084
       ImageIndex = 30
     end
     object actStartExec: TMultiAction
@@ -136,7 +140,27 @@ inherited CreateOrderFromMCSForm: TCreateOrderFromMCSForm
           Action = actExecInsertUpdate_MovementItem_OrderInternalMCS
         end>
       DataSource = MasterDS
-      Caption = 'actStartExec'
+      Caption = #1057#1086#1079#1076#1072#1085#1080#1077' '#1079#1072#1103#1074#1086#1082
+      Hint = #1057#1086#1079#1076#1072#1085#1080#1077' '#1079#1072#1103#1074#1086#1082
+    end
+    object actSelectAll: TBooleanStoredProcAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spSelect
+      StoredProcList = <
+        item
+          StoredProc = spSelect
+        end>
+      Caption = #1054#1090#1084#1077#1090#1080#1090#1100' '#1074#1089#1077
+      Hint = #1054#1090#1084#1077#1090#1080#1090#1100' '#1074#1089#1077
+      ImageIndex = 63
+      Value = False
+      HintTrue = #1057#1085#1103#1090#1100' '#1086#1090#1084#1077#1090#1082#1080
+      HintFalse = #1054#1090#1084#1077#1090#1080#1090#1100' '#1074#1089#1077
+      CaptionTrue = #1057#1085#1103#1090#1100' '#1086#1090#1084#1077#1090#1082#1080
+      CaptionFalse = #1054#1090#1084#1077#1090#1080#1090#1100' '#1074#1089#1077
+      ImageIndexTrue = 62
+      ImageIndexFalse = 63
     end
   end
   inherited MasterDS: TDataSource
@@ -149,6 +173,14 @@ inherited CreateOrderFromMCSForm: TCreateOrderFromMCSForm
   end
   inherited spSelect: TdsdStoredProc
     StoredProcName = 'gpSelect_Object_UnitForOrderInternal'
+    Params = <
+      item
+        Name = 'inSelectAll'
+        Value = Null
+        Component = actSelectAll
+        DataType = ftBoolean
+        ParamType = ptInput
+      end>
     Left = 96
     Top = 96
   end
@@ -165,6 +197,10 @@ inherited CreateOrderFromMCSForm: TCreateOrderFromMCSForm
         item
           Visible = True
           ItemName = 'bbChoice'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarButton2'
         end
         item
           Visible = True
@@ -189,6 +225,10 @@ inherited CreateOrderFromMCSForm: TCreateOrderFromMCSForm
     end
     object dxBarButton1: TdxBarButton
       Action = actStartInsertUpdate_MovementItem_OrderInternalMCS
+      Category = 0
+    end
+    object dxBarButton2: TdxBarButton
+      Action = actSelectAll
       Category = 0
     end
   end

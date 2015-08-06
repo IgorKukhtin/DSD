@@ -25,12 +25,19 @@ $BODY$
    DECLARE vbEndDate  TDateTime;
 BEGIN
 
-  -- 1. проверка <Зарегестрирован>
-  IF EXISTS (SELECT MovementId FROM MovementBoolean WHERE MovementId = inMovementId AND DescId = zc_MovementBoolean_Registered() AND ValueData = TRUE)
+  -- 1.1. проверка <Зарегестрирован>
+  IF  EXISTS (SELECT MovementId FROM MovementBoolean WHERE MovementId = inMovementId AND DescId = zc_MovementBoolean_Registered() AND ValueData = TRUE)
+   OR EXISTS (SELECT MovementId FROM MovementBoolean WHERE MovementId = inMovementId AND DescId = zc_MovementBoolean_Electron() AND ValueData = TRUE)
   THEN
       RAISE EXCEPTION 'Ошибка.Документ зарегестрирован.<Распроведение> невозможно.';
   END IF;
-  -- END 1. проверка <Зарегестрирован>
+  -- END 1.1. проверка <Зарегестрирован>
+  -- 1.2. проверка <Медок>
+  /*IF  EXISTS (SELECT MovementId FROM MovementBoolean WHERE MovementId = inMovementId AND DescId = zc_MovementBoolean_Medoc() AND ValueData = TRUE)
+  THEN
+      RAISE EXCEPTION 'Ошибка.Документ выгружен в Медок.<Распроведение> невозможно.';
+  END IF;*/
+  -- END 1.2. проверка <Медок>
 
 
   IF NOT EXISTS (SELECT UserId FROM ObjectLink_UserRole_View WHERE UserId = inUserId AND RoleId = zc_Enum_Role_Admin())

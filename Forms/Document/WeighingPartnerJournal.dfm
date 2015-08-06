@@ -1172,7 +1172,7 @@ object WeighingPartnerJournalForm: TWeighingPartnerJournalForm
     end
   end
   object spMovementUnComplete: TdsdStoredProc
-    StoredProcName = 'gpUnComplete_Movement'
+    StoredProcName = 'gpUnComplete_Movement_WeighingPartner'
     DataSets = <>
     OutputType = otResult
     Params = <
@@ -1188,7 +1188,7 @@ object WeighingPartnerJournalForm: TWeighingPartnerJournalForm
     Top = 272
   end
   object spMovementSetErased: TdsdStoredProc
-    StoredProcName = 'gpSetErased_Movement'
+    StoredProcName = 'gpSetErased_Movement_WeighingPartner'
     DataSet = ClientDataSet
     DataSets = <
       item
@@ -1249,7 +1249,6 @@ object WeighingPartnerJournalForm: TWeighingPartnerJournalForm
     Top = 24
   end
   object spMovementReCompleteAll: TdsdStoredProc
-    StoredProcName = 'gpCompletePeriod_Movement_WeighingPartner'
     DataSets = <>
     OutputType = otResult
     Params = <

@@ -14,7 +14,7 @@ uses
   cxMaskEdit, cxDropDownEdit, cxCalendar, cxLabel, cxTextEdit, Vcl.ExtCtrls,
   cxGridLevel, cxGridCustomTableView, cxGridTableView, cxGridDBTableView,
   cxGridCustomView, cxGrid, cxPC, cxCurrencyEdit, cxCheckBox, frxClass, frxDBSet,
-  dsdInternetAction;
+  dsdInternetAction, dxBarBuiltInMenu, cxNavigator;
 
 type
   TOrderExternalForm = class(TAncestorDocumentForm)
@@ -58,6 +58,7 @@ type
     actExportStoredproc: TdsdExecStoredProc;
     spGetExportParam: TdsdStoredProc;
     actExportToPartner: TExportGrid;
+    colComment: TcxGridDBColumn;
   private
     { Private declarations }
   public

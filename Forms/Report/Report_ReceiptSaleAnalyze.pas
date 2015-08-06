@@ -55,11 +55,11 @@ type
     Summ1: TcxGridDBColumn;
     Summ2: TcxGridDBColumn;
     Summ3: TcxGridDBColumn;
-    OperSumm: TcxGridDBColumn;
+    SummIn_sale: TcxGridDBColumn;
     Amount: TcxGridDBColumn;
     Amount_Weight: TcxGridDBColumn;
-    OperCount_Weight: TcxGridDBColumn;
-    Price_in: TcxGridDBColumn;
+    OperCount_Weight_sale: TcxGridDBColumn;
+    Price_in_sale: TcxGridDBColumn;
     GroupNumber: TcxGridDBColumn;
     GoodsKindName: TcxGridDBColumn;
     MeasureNameChild: TcxGridDBColumn;
@@ -76,6 +76,10 @@ type
     Price1_cost: TcxGridDBColumn;
     Price2_cost: TcxGridDBColumn;
     Price3_cost: TcxGridDBColumn;
+    SummOut_PriceList_sale: TcxGridDBColumn;
+    Price_out_pl_sale: TcxGridDBColumn;
+    SummOut_sale: TcxGridDBColumn;
+    Price_out_sale: TcxGridDBColumn;
   private
     { Private declarations }
   public

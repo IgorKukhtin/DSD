@@ -425,7 +425,6 @@ inherited InventoryForm: TInventoryForm
             'GoodsGroupNameFull;GoodsName;GoodsKindName;PartionGoods;PartionG' +
             'oodsDate'
         end>
-      CopiesCount = 1
       Params = <
         item
           Name = 'Id'
@@ -817,9 +816,6 @@ inherited InventoryForm: TInventoryForm
           Visible = True
           ItemName = 'bbGridToExcel'
         end>
-    end
-    inherited bbAddMask: TdxBarButton
-      Visible = ivNever
     end
     object bbInsertUpdateMIAmount: TdxBarButton
       Action = actInsertUpdateMIAmount
@@ -1342,6 +1338,116 @@ inherited InventoryForm: TInventoryForm
     Top = 368
   end
   inherited spInsertMaskMIMaster: TdsdStoredProc
+    StoredProcName = 'gpInsertUpdate_MovementItem_Inventory'
+    Params = <
+      item
+        Name = 'ioId'
+        Value = '0'
+        ParamType = ptInputOutput
+      end
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inGoodsId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'GoodsId'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inAmount'
+        Value = '0'
+        DataType = ftFloat
+        ParamType = ptInput
+      end
+      item
+        Name = 'inPartionGoodsDate'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'PartionGoodsDate'
+        DataType = ftDateTime
+        ParamType = ptInput
+      end
+      item
+        Name = 'inPrice'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Price'
+        DataType = ftFloat
+        ParamType = ptInput
+      end
+      item
+        Name = 'inSumm'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Summ'
+        DataType = ftFloat
+        ParamType = ptInput
+      end
+      item
+        Name = 'inHeadCount'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'HeadCount'
+        DataType = ftFloat
+        ParamType = ptInput
+      end
+      item
+        Name = 'inCount'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Count'
+        DataType = ftFloat
+        ParamType = ptInput
+      end
+      item
+        Name = 'inPartionGoods'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'PartionGoods'
+        DataType = ftString
+        ParamType = ptInput
+      end
+      item
+        Name = 'inGoodsKindId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'GoodsKindId'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inGoodsKindCompleteId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'GoodsKindId_Complete'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inAssetId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'AssetId'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inUnitId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'UnitId'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inStorageId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'StorageId'
+        ParamType = ptInput
+      end>
     Left = 368
     Top = 272
   end

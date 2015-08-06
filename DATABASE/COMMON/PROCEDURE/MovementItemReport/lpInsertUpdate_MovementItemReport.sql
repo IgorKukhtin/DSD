@@ -18,7 +18,6 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_MovementItemReport(
   RETURNS void AS
 $BODY$
 BEGIN
-    return;
      -- меняем параметр
      IF inChildReportContainerId = 0 THEN inChildReportContainerId := NULL; END IF;
      -- меняем параметр

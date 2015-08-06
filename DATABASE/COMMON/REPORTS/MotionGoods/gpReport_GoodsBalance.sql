@@ -55,6 +55,9 @@ RETURNS TABLE (AccountGroupName TVarChar, AccountDirectionName TVarChar
              , CountIn_Weight TFloat
              , PriceIn TFloat
 
+             , CountTotalIn_Weight TFloat
+             , SummTotalIn TFloat
+
              , SummOut TFloat
              , CountOut TFloat
              , CountOut_sh TFloat
@@ -400,8 +403,8 @@ BEGIN
                                          , _tmpContainer.Amount
                                   HAVING _tmpContainer.Amount - COALESCE (SUM (MIContainer.Amount), 0) <> 0
                                       OR _tmpContainer.Amount - COALESCE (SUM (CASE WHEN MIContainer.OperDate > inEndDate THEN MIContainer.Amount ELSE 0 END), 0) <> 0
-                                      OR SUM (CASE WHEN MIContainer.isActive = TRUE  AND MIContainer.OperDate <= inEndDate THEN MIContainer.Amount ELSE 0 END) <> 0
-                                      OR SUM (CASE WHEN MIContainer.isActive = FALSE AND MIContainer.OperDate <= inEndDate THEN -1 * MIContainer.Amount ELSE 0 END) <> 0
+                                      OR SUM (CASE WHEN MIContainer.Amount > 0 AND MIContainer.OperDate <= inEndDate THEN MIContainer.Amount ELSE 0 END) <> 0
+                                      OR SUM (CASE WHEN MIContainer.Amount < 0 AND MIContainer.OperDate <= inEndDate THEN -1 * MIContainer.Amount ELSE 0 END) <> 0
                                       -- **** OR _tmpContainer.Amount <> 0
                                  )
 
@@ -757,7 +760,7 @@ BEGIN
                                     , tmpMIContainer_all.GoodsId
                                     , tmpMIContainer_all.GoodsKindId
                                     , COALESCE (ObjectLink_GoodsKindComplete.ChildObjectId, 0)           AS GoodsKindId_complete
-                                    , CASE WHEN ObjectLink_Goods.ChildObjectId <> 0
+                                    , CASE WHEN ObjectLink_Goods.ChildObjectId <> 0 AND ObjectLink_Unit.ChildObjectId <> 0
                                                 THEN zfCalc_PartionGoodsName_InvNumber (inInvNumber       := Object_PartionGoods.ValueData
                                                                                       , inOperDate        := ObjectDate_PartionGoods_Value.ValueData
                                                                                       , inPrice           := ObjectFloat_PartionGoods_Price.ValueData
@@ -1029,6 +1032,9 @@ BEGIN
         , (tmpResult.CountIn * CASE WHEN Object_Measure.Id = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END) :: TFloat AS CountIn_Weight
         , CASE WHEN tmpResult.CountIn <> 0 THEN tmpResult.SummIn / tmpResult.CountIn ELSE 0 END :: TFloat AS PriceIn
 
+        , (tmpResult.CountIn * CASE WHEN Object_Measure.Id = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END) :: TFloat AS CountTotalIn_Weight
+        , tmpResult.SummIn :: TFloat   AS SummTotalIn
+        
         , tmpResult.SummOut :: TFloat   AS SummOut
         , tmpResult.CountOut :: TFloat  AS CountOut
         , CASE WHEN Object_Measure.Id = zc_Measure_Sh() THEN tmpResult.CountOut ELSE 0 END :: TFloat AS CountOut_sh

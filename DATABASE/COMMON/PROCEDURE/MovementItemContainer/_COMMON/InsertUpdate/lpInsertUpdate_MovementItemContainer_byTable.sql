@@ -1,4 +1,4 @@
--- Function: lpInsertUpdate_MovementItemContainer_byTable ()
+ -- Function: lpInsertUpdate_MovementItemContainer_byTable ()
 
 DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItemContainer_byTable ();
 
@@ -9,18 +9,23 @@ $BODY$
    DECLARE vbCount Integer;
    DECLARE vbLock Boolean;
 BEGIN
-    -- так блокируем что б не было ОШИБКИ: обнаружена взаимоблокировка
-    LOCK TABLE Container IN SHARE UPDATE EXCLUSIVE MODE;
-    -- так блокируем что б не было ОШИБКИ: обнаружена взаимоблокировка
-    /*vbLock := FALSE;
-    WHILE NOT vbLock LOOP
-        BEGIN
-           LOCK TABLE Container IN SHARE UPDATE EXCLUSIVE MODE;
-           vbLock := TRUE;
-        EXCEPTION 
-            WHEN OTHERS THEN
-        END;
-    END LOOP;*/
+    IF zc_IsLockTable() = TRUE
+    THEN
+        -- так блокируем что б не было ОШИБКИ: обнаружена взаимоблокировка
+        LOCK TABLE Container IN SHARE UPDATE EXCLUSIVE MODE;
+        -- так блокируем что б не было ОШИБКИ: обнаружена взаимоблокировка
+        /*vbLock := FALSE;
+        WHILE NOT vbLock LOOP
+            BEGIN
+               LOCK TABLE Container IN SHARE UPDATE EXCLUSIVE MODE;
+               vbLock := TRUE;
+            EXCEPTION 
+                WHEN OTHERS THEN
+            END;
+        END LOOP;*/
+    ELSE
+        PERFORM Container.* FROM Container WHERE Container.Id IN (SELECT _tmpMIContainer_insert.ContainerId FROM _tmpMIContainer_insert) FOR UPDATE;
+    END IF;
 
      -- изменить значение остатка
      UPDATE Container SET Amount = Container.Amount + _tmpMIContainer.Amount

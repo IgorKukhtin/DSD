@@ -41,6 +41,34 @@ BEGIN
                        UNION
                         SELECT zc_Enum_Status_Erased() AS StatusId WHERE inIsErased = TRUE
                        )
+     , tmpMovement AS (SELECT Movement.*, MovementLinkObject_To.ObjectId AS ToId, MovementLinkObject_Partner.ObjectId AS PartnerId
+                       FROM (SELECT inStartDate AS StartDate, inEndDate AS EndDate, zc_Movement_Tax() AS DescId WHERE inIsRegisterDate = FALSE) AS tmp
+                            INNER JOIN Movement ON Movement.OperDate BETWEEN tmp.StartDate AND tmp.EndDate AND Movement.DescId = tmp.DescId
+                            INNER JOIN tmpStatus ON tmpStatus.StatusId = Movement.StatusId
+                            INNER JOIN MovementLinkObject AS MovementLinkObject_To
+                                                          ON MovementLinkObject_To.MovementId = Movement.Id
+                                                         AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
+                                                         AND MovementLinkObject_To.ObjectId = inJuridicalId
+                            LEFT JOIN MovementLinkObject AS MovementLinkObject_Partner
+                                                         ON MovementLinkObject_Partner.MovementId = Movement.Id
+                                                        AND MovementLinkObject_Partner.DescId = zc_MovementLinkObject_Partner()
+                       WHERE inIsRegisterDate = FALSE AND (MovementLinkObject_Partner.ObjectId = inPartnerId OR inPartnerId = 0)
+                      UNION ALL
+                       SELECT Movement.*, MovementLinkObject_To.ObjectId AS ToId, MovementLinkObject_Partner.ObjectId AS PartnerId
+                       FROM (SELECT inStartDate AS StartDate, inEndDate AS EndDate, zc_MovementDate_DateRegistered() AS DescId WHERE inIsRegisterDate = TRUE) AS tmp
+                            INNER JOIN MovementDate AS MovementDate_DateRegistered ON MovementDate_DateRegistered.ValueData BETWEEN inStartDate AND inEndDate
+                                                                                  AND MovementDate_DateRegistered.DescId = tmp.DescId
+                            INNER JOIN Movement ON Movement.Id = MovementDate_DateRegistered.MovementId
+                            INNER JOIN tmpStatus ON tmpStatus.StatusId = Movement.StatusId
+                            INNER JOIN MovementLinkObject AS MovementLinkObject_To
+                                                          ON MovementLinkObject_To.MovementId = Movement.Id
+                                                         AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
+                                                         AND MovementLinkObject_To.ObjectId = inJuridicalId
+                            LEFT JOIN MovementLinkObject AS MovementLinkObject_Partner
+                                                         ON MovementLinkObject_Partner.MovementId = Movement.Id
+                                                        AND MovementLinkObject_Partner.DescId = zc_MovementLinkObject_Partner()
+                       WHERE inIsRegisterDate = TRUE AND (MovementLinkObject_Partner.ObjectId = inPartnerId OR inPartnerId = 0)
+                       )
      SELECT
              Movement.Id				AS Id
            , Movement.InvNumber				AS InvNumber
@@ -81,18 +109,7 @@ BEGIN
            , View_InfoMoney.InfoMoneyName
            , MovementString_Comment.ValueData       AS Comment
 
-       FROM (SELECT Movement.id FROM  tmpStatus
-               JOIN Movement ON Movement.OperDate BETWEEN inStartDate AND inEndDate  AND Movement.DescId = zc_Movement_Tax() AND Movement.StatusId = tmpStatus.StatusId
-               WHERE inIsRegisterDate = FALSE
-
-             UNION ALL SELECT MovementDate_DateRegistered.movementid  AS Id FROM MovementDate AS MovementDate_DateRegistered
-                        JOIN Movement ON Movement.Id = MovementDate_DateRegistered.MovementId AND Movement.DescId = zc_Movement_Tax()
-                        JOIN tmpStatus ON tmpStatus.StatusId = Movement.StatusId
-                       WHERE inIsRegisterDate = TRUE AND MovementDate_DateRegistered.ValueData BETWEEN inStartDate AND inEndDate
-                         AND MovementDate_DateRegistered.DescId = zc_MovementDate_DateRegistered()
-            ) AS tmpMovement
-
-            JOIN Movement ON Movement.id = tmpMovement.id
+       FROM tmpMovement AS Movement
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
 
             LEFT JOIN MovementBoolean AS MovementBoolean_Checked
@@ -146,17 +163,10 @@ BEGIN
 
             LEFT JOIN Object AS Object_From ON Object_From.Id = MovementLinkObject_From.ObjectId
 
-            INNER JOIN MovementLinkObject AS MovementLinkObject_To
-                                         ON MovementLinkObject_To.MovementId = Movement.Id
-                                        AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
-                                        AND MovementLinkObject_To.ObjectId = inJuridicalId
-            LEFT JOIN Object AS Object_To ON Object_To.Id = MovementLinkObject_To.ObjectId
+            LEFT JOIN Object AS Object_To ON Object_To.Id = Movement.ToId
             LEFT JOIN ObjectHistory_JuridicalDetails_View ON ObjectHistory_JuridicalDetails_View.JuridicalId = Object_To.Id
 
-            LEFT JOIN MovementLinkObject AS MovementLinkObject_Partner
-                                         ON MovementLinkObject_Partner.MovementId = Movement.Id
-                                        AND MovementLinkObject_Partner.DescId = zc_MovementLinkObject_Partner()
-            LEFT JOIN Object AS Object_Partner ON Object_Partner.Id = MovementLinkObject_Partner.ObjectId
+            LEFT JOIN Object AS Object_Partner ON Object_Partner.Id = Movement.PartnerId
 
             LEFT JOIN MovementLinkObject AS MovementLinkObject_DocumentTaxKind
                                          ON MovementLinkObject_DocumentTaxKind.MovementId = Movement.Id
@@ -178,7 +188,6 @@ BEGIN
                                          ON MovementLinkObject_From_Child.MovementId = MovementLinkMovement_Master.MovementId
                                         AND MovementLinkObject_From_Child.DescId = zc_MovementLinkObject_From()
             LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = MovementLinkObject_From_Child.ObjectId
-       WHERE MovementLinkObject_Partner.ObjectId = inPartnerId OR COALESCE (inPartnerId, 0) = 0
            ;
 
 END;

@@ -15,6 +15,7 @@ AS
 $BODY$
   DECLARE vbUserId Integer;
   DECLARE vbObjectId Integer;
+  DECLARE vbUnitId Integer;
   DECLARE Cursor1 refcursor;
   DECLARE Cursor2 refcursor;
 BEGIN
@@ -23,7 +24,11 @@ BEGIN
      -- vbUserId := PERFORM lpCheckRight (inSession, zc_Enum_Process_Select_MovementItem_OrderInternal());
      vbUserId := inSession;
    vbObjectId := lpGet_DefaultValue('zc_Object_Retail', vbUserId);
-
+    SELECT MovementLinkObject.ObjectId INTO vbUnitId
+    FROM MovementLinkObject
+    WHERE MovementLinkObject.MovementId = inMovementId
+      AND MovementLinkObject.DescId = zc_MovementLinkObject_Unit();
+      
      PERFORM lpCreateTempTable_OrderInternal(inMovementId, vbObjectId, 0, vbUserId);
 
 
@@ -56,8 +61,9 @@ BEGIN
            , COALESCE(tmpMI.isCalculated, FALSE) AS isCalculated
            , CASE WHEN tmpMI.PartionGoodsDate < (CURRENT_DATE + INTERVAL '180 DAY') THEN 456
                      ELSE 0
-                END AS PartionGoodsDateColor      
-
+                END AS PartionGoodsDateColor   
+           , Remains.Amount              AS RemainsInUnit                
+           , Object_Price_View.MCSValue  AS MCS
        FROM (SELECT Object_Goods.Id                              AS GoodsId
                   , Object_Goods.GoodsCodeInt                    AS GoodsCode
                   , Object_Goods.GoodsName                       AS GoodsName
@@ -138,7 +144,25 @@ BEGIN
                   LEFT JOIN MovementItemFloat AS MIFloat_Summ
                                               ON MIFloat_Summ.MovementItemId = MovementItem.Id
                                              AND MIFloat_Summ.DescId = zc_MIFloat_Summ()
-                      ) AS tmpMI ON tmpMI.GoodsId     = tmpGoods.GoodsId;
+                      ) AS tmpMI ON tmpMI.GoodsId     = tmpGoods.GoodsId
+            LEFT JOIN Object_Price_View ON COALESCE(tmpMI.GoodsId,tmpGoods.GoodsId) = Object_Price_View.GoodsId
+                                       AND Object_Price_View.UnitId = vbUnitId
+            LEFT JOIN (
+                        SELECT 
+                            Container.ObjectId
+                           ,SUM(Container.Amount) as Amount
+                        FROM
+                            Container
+                            Inner Join ContainerLinkObject as ContainerLinkObject_Unit
+                                                           ON ContainerLinkObject_Unit.ContainerId = Container.Id
+                                                          AND ContainerLinkObject_Unit.ObjectId = vbUnitId
+                        WHERE 
+                          Container.DescId = zc_Container_Count()
+                          AND
+                          Container.Amount<>0
+                        GROUP BY Container.ObjectId
+                      ) AS Remains
+                        ON  COALESCE(tmpMI.GoodsId,tmpGoods.GoodsId) = Remains.ObjectId;
         RETURN NEXT Cursor1;
      
 

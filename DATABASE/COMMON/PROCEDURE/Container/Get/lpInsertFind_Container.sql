@@ -42,7 +42,7 @@ $BODY$
    DECLARE vbChildKeyValue BigInt;
 BEGIN
      -- так блокируем что б не было ОШИБКИ: обнаружена взаимоблокировка
-     LOCK TABLE Container IN SHARE UPDATE EXCLUSIVE MODE;
+     -- LOCK TABLE Container IN SHARE UPDATE EXCLUSIVE MODE;
 
 
      --
@@ -155,6 +155,12 @@ BEGIN
      -- Если не нашли, добавляем
      IF COALESCE (vbContainerId, 0) = 0
      THEN
+         IF zc_IsLockTable() = TRUE
+         THEN
+             -- так блокируем что б не было ОШИБКИ: обнаружена взаимоблокировка
+             LOCK TABLE Container IN SHARE UPDATE EXCLUSIVE MODE;
+         END IF;
+
          -- добавили Остаток
          INSERT INTO Container (DescId, ObjectId, ParentId, Amount, KeyValue, MasterKeyValue, ChildKeyValue)
                         VALUES (inContainerDescId, inObjectId, CASE WHEN inParentId = 0 THEN NULL ELSE inParentId END, 0, vbKeyValue, vbMasterKeyValue, vbChildKeyValue)
@@ -186,6 +192,14 @@ BEGIN
            UNION ALL
             SELECT inDescId_10, vbContainerId, inObjectId_10 WHERE inDescId_10 <> 0;
      ELSE
+         IF zc_IsLockTable() = TRUE
+         THEN
+             -- так блокируем что б не было ОШИБКИ: обнаружена взаимоблокировка
+             LOCK TABLE Container IN SHARE UPDATE EXCLUSIVE MODE;
+         ELSE
+             PERFORM Container.* FROM Container WHERE Container.Id = vbContainerId FOR UPDATE;
+         END IF;
+
          -- update !!!only!! Parent
          UPDATE Container SET ParentId = CASE WHEN COALESCE (inParentId, 0) = 0 THEN NULL ELSE inParentId END
          WHERE Id = vbContainerId AND COALESCE (ParentId, 0) <> COALESCE (inParentId, 0);

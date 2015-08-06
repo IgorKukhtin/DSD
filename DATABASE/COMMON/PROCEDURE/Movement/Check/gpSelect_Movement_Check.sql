@@ -27,7 +27,7 @@ BEGIN
      vbUserId:= lpGetUserBySession (inSession);
 
      vbUnitKey := COALESCE(lpGet_DefaultValue('zc_Object_Unit', vbUserId), '');
-     IF vbUnitKey = '' THEN
+     IF (vbUnitKey = '') OR Exists(SELECT UserId FROM ObjectLink_UserRole_View WHERE RoleId = zc_Enum_Role_Admin() AND UserId = vbUserId) THEN
         vbUnitKey := '0';
      END IF;   
      vbUnitId := vbUnitKey::Integer;

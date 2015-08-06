@@ -1,25 +1,25 @@
 inherited SaleJournalForm: TSaleJournalForm
   Caption = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' <'#1055#1088#1086#1076#1072#1078#1072' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1102' ('#1074#1089#1077')>'
   ClientHeight = 641
-  ClientWidth = 1142
+  ClientWidth = 1242
   AddOnFormData.Params = FormParams
-  ExplicitWidth = 1158
+  ExplicitWidth = 1258
   ExplicitHeight = 676
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Width = 1142
+    Width = 1242
     Height = 584
     TabOrder = 3
     ExplicitWidth = 1142
     ExplicitHeight = 584
     ClientRectBottom = 584
-    ClientRectRight = 1142
+    ClientRectRight = 1242
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 1142
       ExplicitHeight = 584
       inherited cxGrid: TcxGrid
-        Width = 1142
+        Width = 1242
         Height = 584
         ExplicitWidth = 1142
         ExplicitHeight = 584
@@ -662,7 +662,7 @@ inherited SaleJournalForm: TSaleJournalForm
     end
   end
   inherited Panel: TPanel
-    Width = 1142
+    Width = 1242
     ExplicitWidth = 1142
     inherited deStart: TcxDateEdit
       EditValue = 42005d
@@ -671,20 +671,20 @@ inherited SaleJournalForm: TSaleJournalForm
       EditValue = 42005d
     end
     object edIsPartnerDate: TcxCheckBox
-      Left = 427
+      Left = 404
       Top = 5
       Action = actRefresh
-      Caption = #1055#1077#1088#1080#1086#1076' '#1076#1083#1103' <'#1044#1072#1090#1072' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' '#1091' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1103'>'
+      Caption = #1055#1077#1088#1080#1086#1076' '#1076#1083#1103' <'#1044#1072#1090#1072' '#1091' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1103'>'
       TabOrder = 4
-      Width = 262
+      Width = 203
     end
     object cxLabel14: TcxLabel
-      Left = 690
+      Left = 613
       Top = 6
-      Caption = #1058#1080#1087' '#1076#1083#1103'  '#1092#1086#1088#1084#1080#1088#1086#1074#1072#1085#1080#1103' '#1085#1072#1083#1086#1075'.'#1076#1086#1082'.'
+      Caption = #1058#1080#1087' '#1076#1083#1103'  '#1085#1072#1083#1086#1075'.'#1076#1086#1082'.'
     end
     object edDocumentTaxKind: TcxButtonEdit
-      Left = 875
+      Left = 721
       Top = 5
       Properties.Buttons = <
         item
@@ -692,7 +692,23 @@ inherited SaleJournalForm: TSaleJournalForm
           Kind = bkEllipsis
         end>
       TabOrder = 6
-      Width = 200
+      Width = 166
+    end
+    object cxLabel3: TcxLabel
+      Left = 894
+      Top = 7
+      Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077' <'#1050#1086#1084#1091'>:'
+    end
+    object edTo: TcxButtonEdit
+      Left = 1028
+      Top = 5
+      Properties.Buttons = <
+        item
+          Default = True
+          Kind = bkEllipsis
+        end>
+      TabOrder = 8
+      Width = 154
     end
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
@@ -791,7 +807,6 @@ inherited SaleJournalForm: TSaleJournalForm
           UserName = 'frxDBDMaster'
           IndexFieldNames = 'GroupName_Juridical;GoodsName_Juridical;GoodsName;GoodsKindName'
         end>
-      CopiesCount = 1
       Params = <
         item
           Name = 'Id'
@@ -828,7 +843,6 @@ inherited SaleJournalForm: TSaleJournalForm
           DataSet = PrintItemsSverkaCDS
           UserName = 'frxDBDSverka'
         end>
-      CopiesCount = 1
       Params = <
         item
           Name = 'Id'
@@ -872,7 +886,6 @@ inherited SaleJournalForm: TSaleJournalForm
           UserName = 'frxDBDMaster'
           IndexFieldNames = 'WeighingNumber;NumOrder'
         end>
-      CopiesCount = 1
       Params = <
         item
           Name = 'Id'
@@ -919,7 +932,6 @@ inherited SaleJournalForm: TSaleJournalForm
             'goodsgroupname;GroupName_Juridical;GoodsName_Juridical;GoodsName' +
             ';GoodsKindName'
         end>
-      CopiesCount = 1
       Params = <
         item
           Name = 'Id'
@@ -964,7 +976,6 @@ inherited SaleJournalForm: TSaleJournalForm
           UserName = 'frxDBDMaster'
           IndexFieldNames = 'GoodsGroupNameFull;GoodsName;GoodsKindName;PartionGoods'
         end>
-      CopiesCount = 1
       Params = <
         item
           Name = 'Id'
@@ -1177,7 +1188,6 @@ inherited SaleJournalForm: TSaleJournalForm
           DataSet = PrintItemsSverkaCDS
           UserName = 'frxDBDSverka'
         end>
-      CopiesCount = 1
       Params = <
         item
           Name = 'Id'
@@ -1213,7 +1223,6 @@ inherited SaleJournalForm: TSaleJournalForm
           DataSet = PrintItemsCDS
           UserName = 'frxDBDMaster'
         end>
-      CopiesCount = 1
       Params = <
         item
           Name = 'Id'
@@ -1249,7 +1258,6 @@ inherited SaleJournalForm: TSaleJournalForm
           DataSet = PrintItemsCDS
           UserName = 'frxDBDMaster'
         end>
-      CopiesCount = 1
       Params = <
         item
           Name = 'Id'
@@ -1315,7 +1323,6 @@ inherited SaleJournalForm: TSaleJournalForm
           UserName = 'frxDBDMaster'
           IndexFieldNames = 'GroupName_Juridical;GoodsName_Juridical;GoodsName;GoodsKindName'
         end>
-      CopiesCount = 1
       Params = <
         item
           Name = 'Id'
@@ -1357,7 +1364,6 @@ inherited SaleJournalForm: TSaleJournalForm
           UserName = 'frxDBDMaster'
           IndexFieldNames = 'WeighingNumber;BoxNumber;NumOrder'
         end>
-      CopiesCount = 1
       Params = <
         item
           Name = 'Id'
@@ -1403,7 +1409,6 @@ inherited SaleJournalForm: TSaleJournalForm
           UserName = 'frxDBDMaster2'
           IndexFieldNames = 'QualityCode;GoodsGroupName;GoodsName;GoodsKindName'
         end>
-      CopiesCount = 1
       Params = <
         item
           Name = 'Id'
@@ -1506,7 +1511,6 @@ inherited SaleJournalForm: TSaleJournalForm
           DataSet = PrintItemsCDS
           UserName = 'frxDBDMaster'
         end>
-      CopiesCount = 1
       Params = <
         item
           Name = 'Id'
@@ -1838,6 +1842,33 @@ inherited SaleJournalForm: TSaleJournalForm
       Hint = #1054#1090#1087#1088#1072#1074#1080#1090#1100' '#1042#1089#1077'  <'#1059#1074#1077#1076#1086#1084#1083#1077#1085#1080#1077' - Desadv>'
       ImageIndex = 49
     end
+    object mactUpdateMovementDesc: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actUpdateMovementDesc
+        end>
+      View = cxGridDBTableView
+      QuestionBeforeExecute = 
+        #1044#1077#1081#1089#1090#1074#1080#1090#1077#1083#1100#1085#1086' '#1087#1077#1088#1077#1085#1077#1089#1090#1080' '#1042#1057#1045' '#1076#1086#1082#1091#1084#1077#1085#1090#1099' '#1074' '#1078#1091#1088#1085#1072#1083' <'#1055#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077' '#1087#1086' '#1094 +
+        #1077#1085#1077'> '#1085#1072' '#1087#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077' <'#1050#1086#1084#1091'>?'
+      InfoAfterExecute = #1042#1057#1045' '#1076#1086#1082#1091#1084#1077#1085#1090#1099' '#1091#1089#1087#1077#1096#1085#1086' '#1087#1077#1088#1077#1085#1077#1089#1077#1085#1099' '#1074' '#1078#1091#1088#1085#1072#1083' <'#1055#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077' '#1087#1086' '#1094#1077#1085#1077'>'
+      Caption = #1055#1077#1088#1077#1085#1077#1089#1090#1080' '#1076#1086#1082#1091#1084#1077#1085#1090#1099' '#1085#1072' '#1087#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077' <'#1050#1086#1084#1091'>'
+      Hint = #1055#1077#1088#1077#1085#1077#1089#1090#1080' '#1076#1086#1082#1091#1084#1077#1085#1090#1099' '#1085#1072' '#1087#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077' <'#1050#1086#1084#1091'>'
+      ImageIndex = 10
+    end
+    object actUpdateMovementDesc: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdateMovementDesc
+      StoredProcList = <
+        item
+          StoredProc = spUpdateMovementDesc
+        end>
+      Caption = 'spUncomplete'
+    end
   end
   inherited MasterDS: TDataSource
     Left = 64
@@ -1959,6 +1990,14 @@ inherited SaleJournalForm: TSaleJournalForm
         item
           Visible = True
           ItemName = 'bbspChecked'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarButton1'
         end
         item
           Visible = True
@@ -2155,6 +2194,10 @@ inherited SaleJournalForm: TSaleJournalForm
     end
     object bbPrintSaleOrder: TdxBarButton
       Action = actPrintSaleOrder
+      Category = 0
+    end
+    object dxBarButton1: TdxBarButton
+      Action = mactUpdateMovementDesc
       Category = 0
     end
   end
@@ -2931,5 +2974,67 @@ inherited SaleJournalForm: TSaleJournalForm
     PackSize = 1
     Left = 824
     Top = 281
+  end
+  object spUpdateMovementDesc: TdsdStoredProc
+    StoredProcName = 'gpUpdateMovement_Desc'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inMovementDescId_new'
+        Value = 'zc_Movement_SendOnPrice'
+        DataType = ftString
+        ParamType = ptInput
+      end
+      item
+        Name = 'inFromId_new'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'FromId'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inToId_new'
+        Value = Null
+        Component = GuidesTo
+        ComponentItem = 'Key'
+        ParamType = ptInput
+      end>
+    PackSize = 1
+    Left = 49
+    Top = 306
+  end
+  object GuidesTo: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edTo
+    FormNameParam.Value = 'TUnit_ObjectForm'
+    FormNameParam.DataType = ftString
+    FormName = 'TUnit_ObjectForm'
+    PositionDataSet = 'MasterCDS'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GuidesTo
+        ComponentItem = 'Key'
+        ParamType = ptInput
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesTo
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+      end>
+    Left = 1184
+    Top = 40
   end
 end

@@ -9,6 +9,8 @@ CREATE OR REPLACE FUNCTION lpComplete_Movement_SendOnPrice(
  RETURNS VOID
 AS
 $BODY$
+  DECLARE vbIsHistoryCost Boolean; -- нужны проводки с/с для этого пользователя
+
   DECLARE vbMovementDescId Integer;
 
   DECLARE vbWhereObjectId_Analyzer_From Integer;
@@ -56,6 +58,21 @@ BEGIN
      DELETE FROM _tmpItemSumm;
      -- !!!обязательно!!! очистили таблицу - количественные элементы документа, со всеми свойствами для формирования Аналитик в проводках
      DELETE FROM _tmpItem;
+
+
+     -- !!! только для Админа нужны проводки с/с (сделано для ускорения проведения)!!!
+     IF EXISTS (SELECT 1 FROM ObjectLink_UserRole_View AS View_UserRole WHERE View_UserRole.UserId = inUserId AND View_UserRole.RoleId = zc_Enum_Role_Admin())
+     THEN
+          vbIsHistoryCost:= TRUE;
+     ELSE
+         -- !!! для остальных тоже нужны проводки с/с!!!
+         IF 0 < (SELECT 1 FROM Object_RoleAccessKeyGuide_View AS View_RoleAccessKeyGuide WHERE View_RoleAccessKeyGuide.UserId = inUserId AND View_RoleAccessKeyGuide.BranchId <> 0 GROUP BY View_RoleAccessKeyGuide.BranchId LIMIT 1)
+           OR EXISTS (SELECT 1 FROM ObjectLink_UserRole_View AS View_UserRole WHERE View_UserRole.UserId = inUserId AND View_UserRole.RoleId IN (428382)) -- Кладовщик Днепр
+           OR EXISTS (SELECT 1 FROM ObjectLink_UserRole_View AS View_UserRole WHERE View_UserRole.UserId = inUserId AND View_UserRole.RoleId IN (97837)) -- Бухгалтер ДНЕПР
+         THEN vbIsHistoryCost:= FALSE;
+         ELSE vbIsHistoryCost:= TRUE;
+         END IF;
+     END IF;
 
 
      -- Эти параметры нужны для 
@@ -687,6 +704,7 @@ BEGIN
           --   AND ContainerLinkObject_InfoMoneyDetail.ObjectId <> zc_Enum_InfoMoney_80401()) -- + УП = прибыль текущего периода
           --   OR (_tmpItem.OperCount * HistoryCost.Price) <> 0                               -- + вставлять нули !!!НЕ надо!!!
           --     )
+          AND vbIsHistoryCost= TRUE -- !!! только для Админа нужны проводки с/с (сделано для ускорения проведения)!!!
         GROUP BY _tmpItem.MovementItemId
                , _tmpItem.isLossMaterials
                , Container_Summ.Id
@@ -1184,6 +1202,10 @@ BEGIN
      ;
 
 
+     -- !!!не всегда Проводки для отчета!!!
+     IF vbIsHistoryCost = TRUE
+     THEN
+
      -- 5.1. формируются Проводки для отчета (Счета: Товар(с/с, от кого) <-> ОПиУ(Общепроизводственные расходы + Содержание складов Прочие материалы))
      INSERT INTO _tmpMIReport_insert (Id, MovementDescId, MovementId, MovementItemId, ActiveContainerId, PassiveContainerId, ActiveAccountId, PassiveAccountId, ReportContainerId, ChildReportContainerId, Amount, OperDate)
         SELECT 0, vbMovementDescId, inMovementId, MovementItemId, ActiveContainerId, PassiveContainerId, ActiveAccountId, PassiveAccountId, ReportContainerId, ChildReportContainerId, Amount, OperDate
@@ -1480,6 +1502,7 @@ BEGIN
              ) AS tmpMIReport
        ;
 
+     END IF; -- if vbIsHistoryCost = TRUE -- !!!не всегда Проводки для отчета!!!
 
      -- !!!6.0. формируется свойство <Спец. алгоритм для расчета с/с (да/нет)>!!!
      PERFORM lpInsertUpdate_MovementBoolean (zc_MovementBoolean_HistoryCost(), inMovementId, CASE WHEN vbBranchId_From = 0 OR vbBranchId_From = zc_Branch_Basis() THEN TRUE ELSE FALSE END);

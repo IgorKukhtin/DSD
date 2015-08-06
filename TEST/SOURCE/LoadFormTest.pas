@@ -99,7 +99,7 @@ type
     procedure LoadReportFormTest;
     procedure LoadReportProductionAnalyzeFormTest;
     procedure LoadReportSaleAnalyzeFormTest;
-    procedure LoadReportProductionFormTest;
+    procedure LoadReportProductionOrderFormTest;
     procedure LoadReturnInFormTest;
     procedure LoadReturnOutFormTest;
     procedure LoadRetailFormTest;
@@ -1089,13 +1089,16 @@ end;
 
 procedure TLoadFormTest.LoadReportFormTest;
 begin
-//exit;
+
+// exit;
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_BalanceForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_BalanceForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_ProfitLossForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_ProfitLossForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_HistoryCostForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_HistoryCostForm');
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_MotionGoodsForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_MotionGoodsForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_MotionGoodsDialogForm'));
@@ -1111,6 +1114,7 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TReport_GoodsBalanceForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_GoodsBalanceDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_GoodsBalanceDialogForm');
+
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_FuelForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_FuelForm');
@@ -1242,7 +1246,7 @@ begin
 
 end;
 
-procedure TLoadFormTest.LoadReportProductionFormTest;
+procedure TLoadFormTest.LoadReportProductionOrderFormTest;
 begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TProductionOrderReportForm'));
   TdsdFormStorageFactory.GetStorage.Load('TProductionOrderReportForm');

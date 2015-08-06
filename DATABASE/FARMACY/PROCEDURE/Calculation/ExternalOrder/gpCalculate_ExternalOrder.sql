@@ -47,8 +47,9 @@ BEGIN
                     inAmount := CEIL(MovementItem.Amount 
                                       / COALESCE(Object_Goods.MinimumLot, 1)) * COALESCE(Object_Goods.MinimumLot, 1), 
                      inPrice := COALESCE(PriceList.Price, MinPrice.Price), 
-          inPartionGoodsDate := COALESCE(PriceList.PartionGoodsDate, MinPrice.PartionGoodsDate),  
-                   inUserId := vbUserId)
+          inPartionGoodsDate := COALESCE(PriceList.PartionGoodsDate, MinPrice.PartionGoodsDate),
+                   inComment := MIString_Comment.ValueData,
+                    inUserId := vbUserId)
          FROM  MovementItem 
                        LEFT JOIN MovementItemLinkObject AS MILinkObject_Juridical 
                                                         ON MILinkObject_Juridical.DescId = zc_MILinkObject_Juridical()
@@ -78,6 +79,9 @@ BEGIN
                     LEFT JOIN Object_Goods_View AS Object_Goods 
                                                 ON Object_Goods.Id = MovementItem.ObjectId 
 
+                    LEFT OUTER JOIN MovementItemString AS MIString_Comment
+                                                       ON MIString_Comment.MovementItemId = MovementItem.Id
+                                                      AND MIString_Comment.DescId = zc_MIString_Comment()
             WHERE MovementItem.MovementId = ininternalorder
               AND MovementItem.DescId     = zc_MI_Master()
               AND MovementItem.isErased   = FALSE
@@ -88,7 +92,7 @@ BEGIN
 
 -- А тут встьавляются те, которых нет в прайсе
 
-   PERFORM lpCreate_ExternalOrder(
+    PERFORM lpCreate_ExternalOrder(
              inInternalOrder := inInternalOrder ,
                inJuridicalId := 0,
                 inContractId := 0,
@@ -98,26 +102,27 @@ BEGIN
                     inAmount := ddd.Amount, 
                      inPrice := 0, 
           inPartionGoodsDate := NULL, 
+                   inComment := Comment,
                     inUserId := vbUserId)
-         FROM 
+    FROM(
+        WITH DDD AS(
+                    SELECT DISTINCT MovementItem.Id 
+                    FROM MovementItem  
+                        JOIN Object_LinkGoods_View ON Object_LinkGoods_View.GoodsId = movementItem.objectid
+                        JOIN MovementItem AS PriceList ON Object_LinkGoods_View.GoodsMainId = PriceList.objectid
+                        JOIN LastPriceList_View ON LastPriceList_View.MovementId =  PriceList.MovementId
+                    WHERE MovementItem.MovementId = inInternalOrder
+                    )
 
-
-(WITH DDD AS (SELECT DISTINCT MovementItem.Id 
-
-    FROM MovementItem  
-       JOIN Object_LinkGoods_View ON Object_LinkGoods_View.GoodsId = movementItem.objectid
-       JOIN MovementItem AS PriceList ON Object_LinkGoods_View.GoodsMainId = PriceList.objectid
-
-       JOIN LastPriceList_View ON LastPriceList_View.MovementId =  PriceList.MovementId
-       
-   WHERE MovementItem.MovementId = inInternalOrder)
-
-
-SELECT * FROM MovementItem 
-
-WHERE MovementId = inInternalOrder AND Id NOT IN(
-SELECT Id FROM ddd
- )) AS DDD;
+        SELECT MovementItem.*, MIString_Comment.ValueData as Comment
+        FROM MovementItem 
+            LEFT OUTER JOIN MovementItemString AS MIString_Comment
+                                               ON MIString_Comment.MovementItemId = MovementItem.Id
+                                              AND MIString_Comment.DescId = zc_MIString_Comment()
+        WHERE 
+            MovementId = inInternalOrder 
+            AND 
+            Id NOT IN(SELECT Id FROM ddd)) AS DDD;
 
 END;
 $BODY$

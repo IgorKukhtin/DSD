@@ -13,7 +13,7 @@ uses
   cxMaskEdit, cxDropDownEdit, cxCalendar, cxLabel, cxTextEdit, Vcl.ExtCtrls,
   cxGridLevel, cxGridCustomTableView, cxGridTableView, cxGridDBTableView,
   cxGridCustomView, cxGrid, cxPC, cxCurrencyEdit, cxCheckBox, frxClass, frxDBSet,
-  dxSkinsCore, dxSkinsDefaultPainters, cxSplitter;
+  dxSkinsCore, dxSkinsDefaultPainters, cxSplitter, dxBarBuiltInMenu, cxNavigator;
 
 type
   TOrderInternalForm = class(TAncestorDocumentForm)
@@ -88,6 +88,8 @@ type
     colComment: TcxGridDBColumn;
     colisTopColor: TcxGridDBColumn;
     colTop: TcxGridDBColumn;
+    colRemainsInUnit: TcxGridDBColumn;
+    colMCS: TcxGridDBColumn;
   private
     { Private declarations }
   public

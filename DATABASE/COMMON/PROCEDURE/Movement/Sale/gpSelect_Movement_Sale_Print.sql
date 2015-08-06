@@ -237,7 +237,10 @@ BEGIN
            , MovementString_InvNumberPartner.ValueData  AS InvNumberPartner
 
            , CASE WHEN MovementString_InvNumberPartner_order.ValueData <> ''
-                       THEN MovementString_InvNumberPartner_order.ValueData
+                       THEN CASE WHEN zfConvert_StringToNumber (MovementString_InvNumberPartner_order.ValueData) <> 0
+                                      THEN zfConvert_StringToNumber (MovementString_InvNumberPartner_order.ValueData) :: TVarChar
+                                 ELSE MovementString_InvNumberPartner_order.ValueData
+                            END
                   WHEN MovementString_InvNumberOrder.ValueData <> ''
                        THEN MovementString_InvNumberOrder.ValueData
                   ELSE COALESCE (Movement_order.InvNumber, '')
@@ -886,7 +889,9 @@ BEGIN
                                                   AND Object_GoodsByGoodsKind_View.GoodsKindId = Object_GoodsKind.Id
 
        WHERE tmpMI.AmountPartner <> 0
-       ORDER BY CASE WHEN vbGoodsPropertyId = 83954 -- Метро
+       ORDER BY CASE WHEN vbGoodsPropertyId IN (83954 -- Метро
+                                              , 83963 -- Ашан
+                                               )
                           THEN COALESCE (tmpObject_GoodsPropertyValueGroup.Article, COALESCE (tmpObject_GoodsPropertyValue.Article, ''))
                      ELSE ''
                 END

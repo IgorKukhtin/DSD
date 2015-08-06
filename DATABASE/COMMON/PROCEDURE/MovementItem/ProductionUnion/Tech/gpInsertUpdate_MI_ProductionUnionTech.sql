@@ -27,10 +27,21 @@ $BODY$
    DECLARE vbUserId Integer;
 
    DECLARE vbAmount TFloat;
+   DECLARE vbGoodsId_master Integer;
 BEGIN
    -- проверка прав пользователя на вызов процедуры
    vbUserId:= lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MI_ProductionUnionTech());
 
+
+   -- !!!Проверка закрытия периода только для <Технолог Днепр>!!!
+   IF EXISTS (SELECT 1 FROM Object_RoleAccessKey_View WHERE UserId = vbUserId AND RoleId = 439522) -- Технолог Днепр
+   THEN
+       IF  (SELECT gpGet.OperDate FROM gpGet_Scale_OperDate (FALSE, 1, inSession) AS gpGet) > inOperDate
+        OR (SELECT gpGet.OperDate FROM gpGet_Scale_OperDate (FALSE, 1, inSession) AS gpGet) > COALESCE ((SELECT Movement.OperDate FROM Movement WHERE Movement.Id = ioMovementId), zc_DateEnd())
+       THEN
+           RAISE EXCEPTION 'Ошибка.Период закрыт до <%>.', DATE ((SELECT gpGet.OperDate FROM gpGet_Scale_OperDate (FALSE, 1, inSession) AS gpGet));
+       END IF;
+   END IF;
 
    -- Проверка для ЦЕХ колбаса+дел-сы
    IF (inFromId <> inToId) OR NOT EXISTS (SELECT lfSelect.UnitId FROM lfSelect_Object_Unit_byGroup (8446) AS lfSelect WHERE lfSelect.UnitId = inFromId)
@@ -49,6 +60,9 @@ BEGIN
        RAISE EXCEPTION 'Ошибка.Значение <Название рецептуры> не установлено.';
    END IF;
 
+
+   -- определяется
+   vbGoodsId_master:= COALESCE ((SELECT inGoodsId WHERE inGoodsId IN (7129, 2328)), 0); -- ЯЗЫК СВИН. ВАРЕН. + ГОЛОВЫ СВИН.ВАР.
 
    -- сохранили <Документ>
    IF COALESCE (ioMovementId, 0) = 0
@@ -226,7 +240,10 @@ BEGIN
 
 
    -- Расчет кол-во
-   vbAmount = (SELECT Amount_master FROM _tmpChild LIMIT 1);
+   vbAmount:= CASE WHEN vbGoodsId_master > 0
+                        THEN inCuterCount * COALESCE ((SELECT ObjectFloat_Value.ValueData FROM ObjectFloat AS ObjectFloat_Value WHERE ObjectFloat_Value.ObjectId = inReceiptId AND ObjectFloat_Value.DescId = zc_ObjectFloat_Receipt_Value()), 0)
+                   ELSE (SELECT Amount_master FROM _tmpChild LIMIT 1)
+              END;
 
    -- сохранили <Главный элемент документа>
    ioMovementItemId:= lpInsertUpdate_MI_ProductionUnionTech_Master (ioId                 := ioMovementItemId

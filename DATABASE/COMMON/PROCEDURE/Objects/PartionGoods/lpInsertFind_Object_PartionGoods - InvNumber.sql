@@ -15,11 +15,15 @@ $BODY$
    DECLARE vbPartionGoodsId Integer;
 BEGIN
      -- в этом случае партия не нужна
-     IF COALESCE (inUnitId_Partion, 0) = 0 AND COALESCE (inGoodsId, 0) = 0 
+     -- + Захардкодил, учет пока вести не будем
+     IF 1 = 1 OR (COALESCE (inUnitId_Partion, 0) = 0 AND COALESCE (inGoodsId, 0) = 0)
      THEN
-         RETURN (0);
+         RETURN (80132); -- !!!Пустая партия!!!
+         -- RETURN (0);
      END IF;
 
+
+     RAISE EXCEPTION 'Ошибка.Учет не организован.';
 
      -- проверка
      IF inUnitId_Partion IS NULL

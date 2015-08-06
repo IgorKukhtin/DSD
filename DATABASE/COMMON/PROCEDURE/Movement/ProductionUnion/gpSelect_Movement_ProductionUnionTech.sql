@@ -299,7 +299,7 @@ BEGIN
             , FALSE                               AS isErased
 
        FROM _tmpListMaster
-             -- INNER JOIN tmpStatus ON tmpStatus.StatusId = _tmpListMaster.StatusId
+             INNER JOIN tmpStatus ON tmpStatus.StatusId = _tmpListMaster.StatusId
 
              LEFT JOIN MovementItemDate AS MIDate_PartionGoods
                                         ON MIDate_PartionGoods.MovementItemId = _tmpListMaster.MovementItemId

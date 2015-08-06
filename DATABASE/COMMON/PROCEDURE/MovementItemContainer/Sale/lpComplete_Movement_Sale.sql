@@ -103,12 +103,14 @@ BEGIN
           -- !!! нужны еще для Одесса, понятно что временно!!!
           -- !!! OR 8374 = (SELECT Object_RoleAccessKeyGuide_View.BranchId FROM Object_RoleAccessKeyGuide_View WHERE Object_RoleAccessKeyGuide_View.UserId = inUserId AND Object_RoleAccessKeyGuide_View.BranchId <> 0 GROUP BY Object_RoleAccessKeyGuide_View.BranchId)
           THEN vbIsHistoryCost:= TRUE;
-          ELSE vbIsHistoryCost:= TRUE; -- FALSE
+          ELSE vbIsHistoryCost:= FALSE;
           END IF;
+          vbIsHistoryCost:= TRUE;
      ELSE
          -- !!! для остальных тоже нужны проводки с/с!!!
          IF 0 < (SELECT 1 FROM Object_RoleAccessKeyGuide_View AS View_RoleAccessKeyGuide WHERE View_RoleAccessKeyGuide.UserId = inUserId AND View_RoleAccessKeyGuide.BranchId <> 0 GROUP BY View_RoleAccessKeyGuide.BranchId LIMIT 1)
            OR EXISTS (SELECT 1 FROM ObjectLink_UserRole_View AS View_UserRole WHERE View_UserRole.UserId = inUserId AND View_UserRole.RoleId IN (428382)) -- Кладовщик Днепр
+           OR EXISTS (SELECT 1 FROM ObjectLink_UserRole_View AS View_UserRole WHERE View_UserRole.UserId = inUserId AND View_UserRole.RoleId IN (97837)) -- Бухгалтер ДНЕПР
          THEN vbIsHistoryCost:= FALSE;
          ELSE vbIsHistoryCost:= TRUE;
          END IF;
@@ -2303,6 +2305,11 @@ BEGIN
        WHERE _tmpItem_group.OperSumm <> 0 -- !!!ограничение - пустые проводки не формируются!!!
       ;
 
+
+     -- !!!не всегда Проводки для отчета!!!
+     IF vbIsHistoryCost = TRUE
+     THEN
+
      -- 5.1.1. формируются Проводки для отчета (Счета: Товар(с/с) <-> ОПиУ(разница в весе))
      PERFORM lpInsertUpdate_MovementItemReport (inMovementDescId     := vbMovementDescId
                                               , inMovementId         := inMovementId
@@ -2758,6 +2765,10 @@ BEGIN
                             , _tmp_byContainer.ContainerId
                     ) AS _tmpItemSumm_group ON _tmpItemSumm_group.MovementItemId = _tmpItem_byProfitLoss.MovementItemId
      ;
+
+     
+     END IF; -- if vbIsHistoryCost = TRUE -- !!!не всегда Проводки для отчета!!!
+
 
 
      /*-- убрал, т.к. св-во пишется теперь в ОПиУ

@@ -163,6 +163,13 @@ type
     MovementId_Order: TcxGridDBColumn;
     bbPrintSaleOrder: TdxBarButton;
     spSelectSale_EDI: TdsdStoredProc;
+    cxLabel3: TcxLabel;
+    edTo: TcxButtonEdit;
+    mactUpdateMovementDesc: TMultiAction;
+    actUpdateMovementDesc: TdsdExecStoredProc;
+    spUpdateMovementDesc: TdsdStoredProc;
+    GuidesTo: TdsdGuides;
+    dxBarButton1: TdxBarButton;
   private
     { Private declarations }
   public

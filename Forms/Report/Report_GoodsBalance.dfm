@@ -1402,6 +1402,18 @@ object Report_GoodsBalanceForm: TReport_GoodsBalanceForm
         HeaderAlignmentVert = vaCenter
         Width = 70
       end
+      object CountTotalIn_Weight: TcxGridDBColumn
+        DataBinding.FieldName = 'CountTotalIn_Weight'
+        Visible = False
+        VisibleForCustomization = False
+        Width = 55
+      end
+      object SummTotalIn: TcxGridDBColumn
+        DataBinding.FieldName = 'SummTotalIn'
+        Visible = False
+        VisibleForCustomization = False
+        Width = 55
+      end
       object ColorB_GreenL: TcxGridDBColumn
         DataBinding.FieldName = 'ColorB_GreenL'
         Visible = False
@@ -1777,6 +1789,14 @@ object Report_GoodsBalanceForm: TReport_GoodsBalanceForm
         end
         item
           Visible = True
+          ItemName = 'bbPrint_Inventory'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbToExcel'
         end
         item
@@ -1842,6 +1862,10 @@ object Report_GoodsBalanceForm: TReport_GoodsBalanceForm
     end
     object bbPrint_Loss: TdxBarButton
       Action = actPrint_Loss
+      Category = 0
+    end
+    object bbPrint_Inventory: TdxBarButton
+      Action = actPrint_Inventory
       Category = 0
     end
   end
@@ -1979,6 +2003,7 @@ object Report_GoodsBalanceForm: TReport_GoodsBalanceForm
           ParamType = ptInput
         end>
       isShowModal = True
+      RefreshDispatcher = RefreshDispatcher
       OpenBeforeShow = True
     end
     object actPrint: TdsdPrintAction
@@ -2370,8 +2395,8 @@ object Report_GoodsBalanceForm: TReport_GoodsBalanceForm
       Category = 'DSDLib'
       MoveParams = <>
       StoredProcList = <>
-      Caption = #1054#1090#1095#1077#1090' % '#1089#1087#1080#1089#1072#1085#1080#1103
-      Hint = #1054#1090#1095#1077#1090' % '#1089#1087#1080#1089#1072#1085#1080#1103
+      Caption = #1054#1090#1095#1077#1090' <% '#1089#1087#1080#1089#1072#1085#1080#1103'>'
+      Hint = #1054#1090#1095#1077#1090' <% '#1089#1087#1080#1089#1072#1085#1080#1103'>'
       ImageIndex = 17
       DataSets = <
         item
@@ -2457,6 +2482,112 @@ object Report_GoodsBalanceForm: TReport_GoodsBalanceForm
           Value = ''
           ComponentItem = 'TextValue'
           DataType = ftString
+        end
+        item
+          Name = 'isLoss'
+          Value = True
+          DataType = ftBoolean
+        end>
+      ReportName = #1054#1090#1095#1077#1090' '#1087#1086' '#1086#1089#1090#1072#1090#1082#1072#1084' '#1090#1086#1074#1072#1088#1072' ('#1087#1088#1086#1094#1077#1085#1090' '#1089#1087#1080#1089#1072#1085#1080#1103')'
+      ReportNameParam.Value = #1054#1090#1095#1077#1090' '#1087#1086' '#1086#1089#1090#1072#1090#1082#1072#1084' '#1090#1086#1074#1072#1088#1072' ('#1087#1088#1086#1094#1077#1085#1090' '#1089#1087#1080#1089#1072#1085#1080#1103')'
+      ReportNameParam.DataType = ftString
+    end
+    object actPrint_Inventory: TdsdPrintAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProcList = <>
+      Caption = #1054#1090#1095#1077#1090' <'#1040#1082#1090' '#1080#1085#1074#1077#1085#1090#1072#1088#1080#1079#1072#1094#1080#1080'>'
+      Hint = #1054#1090#1095#1077#1090' <'#1040#1082#1090' '#1080#1085#1074#1077#1085#1090#1072#1088#1080#1079#1072#1094#1080#1080'>'
+      ImageIndex = 17
+      DataSets = <
+        item
+          UserName = 'frxDBDMaster'
+          IndexFieldNames = 
+            'GoodsGroupNameFull;GoodsGroupName;GoodsName;GoodsKindName;Partio' +
+            'nGoodsName;AssetToName;InfoMoneyName_all;InfoMoneyName_all_Detai' +
+            'l'
+          GridView = cxGridDBTableView
+        end>
+      Params = <
+        item
+          Name = 'StartDate'
+          Value = 42005d
+          Component = deStart
+          DataType = ftDateTime
+        end
+        item
+          Name = 'EndDate'
+          Value = 42005d
+          Component = deEnd
+          DataType = ftDateTime
+        end
+        item
+          Name = 'UnitGroupName'
+          Value = ''
+          Component = GuidesUnitGroup
+          ComponentItem = 'TextValue'
+          DataType = ftString
+        end
+        item
+          Name = 'LocationName'
+          Value = ''
+          Component = GuidesLocation
+          ComponentItem = 'TextValue'
+          DataType = ftString
+        end
+        item
+          Name = 'GoodsGroupName'
+          Value = ''
+          Component = GuidesGoodsGroup
+          ComponentItem = 'TextValue'
+          DataType = ftString
+        end
+        item
+          Name = 'GoodsName'
+          Value = ''
+          Component = GuidesGoods
+          ComponentItem = 'TextValue'
+        end
+        item
+          Name = 'isGoodsKind'
+          Value = 'False'
+          Component = cbGoodsKind
+          DataType = ftBoolean
+        end
+        item
+          Name = 'isPartionGoods'
+          Value = 'False'
+          Component = cbPartionGoods
+          DataType = ftBoolean
+        end
+        item
+          Name = 'isAmount'
+          Value = 'False'
+          Component = cbAmount
+          DataType = ftBoolean
+        end
+        item
+          Name = 'isInfoMoney'
+          Value = 'False'
+          Component = cbInfoMoney
+          DataType = ftBoolean
+        end
+        item
+          Name = 'UnitGroupName_by'
+          Value = ''
+          ComponentItem = 'TextValue'
+          DataType = ftString
+        end
+        item
+          Name = 'LocationName_by'
+          Value = ''
+          ComponentItem = 'TextValue'
+          DataType = ftString
+        end
+        item
+          Name = 'isLoss'
+          Value = False
+          DataType = ftBoolean
         end>
       ReportName = #1054#1090#1095#1077#1090' '#1087#1086' '#1086#1089#1090#1072#1090#1082#1072#1084' '#1090#1086#1074#1072#1088#1072' ('#1087#1088#1086#1094#1077#1085#1090' '#1089#1087#1080#1089#1072#1085#1080#1103')'
       ReportNameParam.Value = #1054#1090#1095#1077#1090' '#1087#1086' '#1086#1089#1090#1072#1090#1082#1072#1084' '#1090#1086#1074#1072#1088#1072' ('#1087#1088#1086#1094#1077#1085#1090' '#1089#1087#1080#1089#1072#1085#1080#1103')'
