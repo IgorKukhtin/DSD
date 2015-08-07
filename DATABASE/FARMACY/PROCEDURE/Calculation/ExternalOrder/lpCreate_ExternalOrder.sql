@@ -3,6 +3,8 @@
 DROP FUNCTION IF EXISTS lpCreate_ExternalOrder(Integer, Integer, Integer, Integer, Integer, Integer, Integer, TFloat, TFloat, Integer);
 DROP FUNCTION IF EXISTS lpCreate_ExternalOrder(Integer, Integer, Integer, Integer, Integer, Integer, TFloat, TFloat, Integer);
 DROP FUNCTION IF EXISTS lpCreate_ExternalOrder(Integer, Integer, Integer, Integer, Integer, Integer, TFloat, TFloat, TDateTime, Integer);
+DROP FUNCTION IF EXISTS lpCreate_ExternalOrder(Integer, Integer, Integer, Integer, Integer, Integer, TFloat, TFloat, TDateTime, TVarChar, Integer);
+
 
 CREATE OR REPLACE FUNCTION lpCreate_ExternalOrder(
     IN inInternalOrder     Integer ,
@@ -14,6 +16,7 @@ CREATE OR REPLACE FUNCTION lpCreate_ExternalOrder(
     IN inAmount            TFloat  , 
     IN inPrice             TFloat  , 
     IN inPartionGoodsDate  TDateTime , -- Партия товара
+    IN inComment           TVarChar , -- Примечание
     IN inUserId            Integer     -- сессия пользователя
 )
 RETURNS VOID
@@ -71,17 +74,23 @@ BEGIN
     vbMovementItemId := lpInsertUpdate_MovementItem_OrderExternal(vbMovementItemId, vbMovementId, inMainGoodsId, inGoodsId
                                                     , inAmount, inPrice, inPartionGoodsDate, inUserId);
     PERFORM lpInsertUpdate_MovementItemBoolean(zc_MIBoolean_Calculated(), vbMovementItemId, true);
+    --Сохранили комментарий из внутренней заявки
+    IF COALESCE(inComment,'') <> ''
+    THEN
+        PERFORM lpInsertUpdate_MovementItemString (zc_MIString_Comment(), vbMovementItemId, inComment);
+    END IF;
 
 
 END;
 $BODY$
   LANGUAGE PLPGSQL VOLATILE;
-ALTER FUNCTION lpCreate_ExternalOrder(Integer, Integer, Integer, Integer, Integer, Integer, TFloat, TFloat, TDateTime, Integer) OWNER TO postgres;
+ALTER FUNCTION lpCreate_ExternalOrder(Integer, Integer, Integer, Integer, Integer, Integer, TFloat, TFloat, TDateTime, TVarChar, Integer) OWNER TO postgres;
 
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.  Воробкало А.А.
+ 05.08.15                                                                      * inComment
  06.11.14                         *
  02.10.14                         *
  19.09.14                         *

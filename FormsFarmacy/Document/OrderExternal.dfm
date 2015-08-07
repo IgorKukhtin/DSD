@@ -1,25 +1,25 @@
 inherited OrderExternalForm: TOrderExternalForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1047#1072#1103#1074#1082#1072' '#1074#1085#1077#1096#1085#1103#1103'>'
   ClientHeight = 668
-  ClientWidth = 846
-  ExplicitWidth = 854
+  ClientWidth = 844
+  ExplicitWidth = 852
   ExplicitHeight = 695
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 73
-    Width = 846
+    Width = 844
     Height = 595
     ExplicitTop = 73
     ExplicitWidth = 846
     ExplicitHeight = 595
     ClientRectBottom = 595
-    ClientRectRight = 846
+    ClientRectRight = 844
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 846
       ExplicitHeight = 571
       inherited cxGrid: TcxGrid
-        Width = 846
+        Width = 844
         Height = 571
         ExplicitWidth = 846
         ExplicitHeight = 571
@@ -89,6 +89,7 @@ inherited OrderExternalForm: TOrderExternalForm
               Kind = skSum
               Column = colSumm
             end>
+          OptionsBehavior.CellHints = True
           OptionsBehavior.FocusCellOnCycle = False
           OptionsCustomize.DataRowSizing = False
           OptionsData.CancelOnExit = True
@@ -104,25 +105,22 @@ inherited OrderExternalForm: TOrderExternalForm
           object colClientCode: TcxGridDBColumn
             Caption = #1050#1086#1076' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1103
             DataBinding.FieldName = 'PartnerGoodsCode'
-            HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 100
+            Width = 96
           end
           object colCode: TcxGridDBColumn
             Caption = #1050#1086#1076
             DataBinding.FieldName = 'GoodsCode'
             HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 55
+            Width = 53
           end
           object colName: TcxGridDBColumn
             Caption = #1058#1086#1074#1072#1088
             DataBinding.FieldName = 'GoodsName'
             HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 283
+            Width = 271
           end
           object colAmount: TcxGridDBColumn
             Caption = #1050#1086#1083'-'#1074#1086
@@ -131,8 +129,7 @@ inherited OrderExternalForm: TOrderExternalForm
             Properties.DecimalPlaces = 3
             Properties.DisplayFormat = ',0.###;-,0.###; ;'
             HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 46
+            Width = 44
           end
           object colPrice: TcxGridDBColumn
             Caption = #1062#1077#1085#1072
@@ -140,8 +137,7 @@ inherited OrderExternalForm: TOrderExternalForm
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 2
             Properties.DisplayFormat = ',0.00'
-            HeaderAlignmentVert = vaCenter
-            Width = 73
+            Width = 71
           end
           object colSumm: TcxGridDBColumn
             Caption = #1057#1091#1084#1084#1072' '#1079#1072#1082#1072#1079#1072
@@ -150,15 +146,19 @@ inherited OrderExternalForm: TOrderExternalForm
             Properties.DecimalPlaces = 2
             Properties.DisplayFormat = ',0.00'
             HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 119
+            Width = 115
           end
           object colPartionGoodsDate: TcxGridDBColumn
             Caption = #1057#1088#1086#1082' '#1075#1086#1076#1085#1086#1089#1090#1080
             DataBinding.FieldName = 'PartionGoodsDate'
-            HeaderAlignmentVert = vaCenter
-            Width = 100
+            Width = 87
+          end
+          object colComment: TcxGridDBColumn
+            Caption = #1050#1086#1084#1084#1077#1085#1090#1072#1088#1080#1081
+            DataBinding.FieldName = 'Comment'
+            Options.Editing = False
+            Width = 93
           end
         end
       end
@@ -183,7 +183,7 @@ inherited OrderExternalForm: TOrderExternalForm
     end
   end
   inherited DataPanel: TPanel
-    Width = 846
+    Width = 844
     Height = 47
     TabOrder = 3
     ExplicitWidth = 846

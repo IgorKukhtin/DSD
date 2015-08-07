@@ -58,12 +58,7 @@ BEGIN
         WHERE MovementItem.MovementId = vbMovementId;
         --заливаем согласно разници между остатком и НТЗ
         PERFORM 
-          lpInsertUpdate_MovementItem_OrderInternal(0 
-                                                   ,vbMovementId
-                                                   ,Object_Price.GoodsId
-                                                   ,CEIL(Object_Price.MCSValue - (SUM(COALESCE(Container.Amount,0)) + COALESCE(Income.Amount_Income,0)))::TFloat
-                                                   ,Object_Price.Price
-                                                   ,vbUserId)
+          lpInsertUpdate_MovementItem_OrderInternal(0, vbMovementId, Object_Price.GoodsId, floor(Object_Price.MCSValue - SUM(COALESCE(Container.Amount,0)))::TFloat, Object_Price.Price, vbUserId)
         from Object_Price_View AS Object_Price
             LEFT OUTER JOIN ContainerLinkObject AS ContainerLinkObject_Unit
                                                 ON ContainerLinkObject_Unit.DescId = zc_ContainerLinkObject_Unit()
@@ -72,35 +67,6 @@ BEGIN
                                      AND Container.ObjectId = Object_Price.GoodsId
                                      AND Container.DescId = zc_Container_Count() 
                                      AND Container.Amount > 0
-            LEFT OUTER JOIN (
-                                SELECT
-                                    MovementItem_Income.ObjectId    as GoodsId 
-                                   ,SUM(MovementItem_Income.Amount) as Amount_Income
-                                FROM
-                                    Movement AS Movement_Income
-                                    INNER JOIN MovementItem AS MovementItem_Income
-                                                            ON Movement_Income.Id = MovementItem_Income.MovementId
-                                                           AND MovementItem_Income.DescId = zc_MI_Master()
-                                                           AND MovementItem_Income.isErased = FALSE
-                                    INNER JOIN MovementLinkObject AS MovementLinkObject_To
-                                                                  ON Movement_Income.Id = MovementLinkObject_To.MovementId
-                                                                 AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
-                                                                 AND MovementLinkObject_To.ObjectId = inUnitId
-                                    INNER JOIN MovementDate AS MovementDate_Branch
-                                                            ON MovementDate_Branch.MovementId = Movement_Income.Id
-                                                           AND MovementDate_Branch.DescId = zc_MovementDate_Branch() 
-                                WHERE
-                                    Movement_Income.DescId = zc_Movement_Income()
-                                    AND
-                                    Movement_Income.StatusId = (Select Id from Object Where DescId = zc_Object_Status() AND ObjectCode = zc_Enum_StatusCode_UnComplete())
-                                    AND
-                                    MovementDate_Branch.ValueData >= CURRENT_DATE
-                                GROUP BY
-                                    MovementItem_Income.ObjectId
-                                HAVING
-                                    SUM(MovementItem_Income.Amount) > 0
-                             ) AS Income
-                               ON Object_Price.GoodsId = Income.GoodsId
         WHERE
             Object_Price.MCSValue > 0
             AND
@@ -109,10 +75,9 @@ BEGIN
             Object_Price.UnitId,
             Object_Price.GoodsId,
             Object_Price.MCSValue,
-            Object_Price.Price,
-            Income.Amount_Income
+            Object_Price.Price
         HAVING
-            (CEIL(Object_Price.MCSValue - (SUM(COALESCE(Container.Amount,0)) + COALESCE(Income.Amount_Income,0)))>0);
+            floor(Object_Price.MCSValue - SUM(COALESCE(Container.Amount,0)))::TFloat > 0;
         --Записываем признак авторасчета в содержимое
         PERFORM lpInsertUpdate_MovementItemBoolean(zc_MIBoolean_Calculated(),Id,True)
         FROM MovementItem

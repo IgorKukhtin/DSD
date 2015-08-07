@@ -11,7 +11,7 @@ CREATE OR REPLACE FUNCTION gpSelect_MovementItem_OrderExternal(
 RETURNS TABLE (Id Integer, GoodsId Integer, GoodsCode Integer, GoodsName TVarChar
              , PartnerGoodsId Integer, PartnerGoodsCode TVarChar
              , Amount TFloat, Price TFloat, Summ TFloat, PartionGoodsDate TDateTime
-             , isErased Boolean
+             ,Comment TVarChar, isErased Boolean
               )
 AS
 $BODY$
@@ -34,6 +34,7 @@ BEGIN
            , tmpMI.Price                AS Price
            , tmpMI.Summ::TFloat         AS Summ
            , tmpMI.PartionGoodsDate     AS PartionGoodsDate
+           , tmpMI.Comment              AS Comment
            , FALSE                      AS isErased
 
        FROM (SELECT Object_Goods.Id                                                   AS GoodsId
@@ -55,7 +56,8 @@ BEGIN
                             , MovementItem.isErased
                             , MovementItem.GoodsId
                             , MovementItem.PartionGoodsDate
-
+                            , MovementItem.Comment
+                            
                        FROM (SELECT FALSE AS isErased UNION ALL SELECT inIsErased AS isErased WHERE inIsErased = TRUE) AS tmpIsErased
                             JOIN MovementItem_OrderExternal_View AS MovementItem 
                                               ON MovementItem.MovementId = inMovementId

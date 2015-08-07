@@ -84,6 +84,8 @@ begin
   inherited;
   ScriptDirectory := LocalProcedurePath + 'MovementItem\OrderExternal\';
   inherited;
+  ScriptDirectory := LocalProcedurePath + 'Calculation\ExternalOrder\';
+  inherited;
 end;
 
 procedure TOrderExternalTest.Test;

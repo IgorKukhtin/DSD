@@ -2002,6 +2002,8 @@ procedure TEDI.SignFile(FileName: string; SignType: TSignType);
 var
   vbSignType: integer;
   i: integer;
+  EUTaxService_СертификатExite, EUTaxService_СертификатМДС: string;
+  ddd: OleVariant;
 begin
   if VarIsNull(ComSigner) then
     InitializeComSigner;
@@ -2014,13 +2016,24 @@ begin
   // Подписание и/или шифрование
   for i := 1 to 10 do
     try
-      if SignType = stComDoc then
+      if SignType = stComDoc then begin
           ComSigner.SetFilesOptions(False);
-      if SignType = stDeclar then
-          ComSigner.SetFilesOptions(true);
-
-      ComSigner.SignFilesByAccountant(FileName);
-      ComSigner.SignFilesByDigitalStamp(FileName);
+          ComSigner.SignFilesByAccountant(FileName);
+          ComSigner.SignFilesByDigitalStamp(FileName);
+      end;
+      if SignType = stDeclar then begin
+         // O=Фізична особа ;OU=Фізична особа;Title=підписувач;CN=Алієв Арсен Шакірович;SN=Алієв;GivenName=Арсен Шакірович;Serial=1497059;C=UA;L=Крюківщина;ST=Київська
+         // O=Державна фіскальна служба України;OU=Державна фіскальна служба України;Title=електронна печатка;CN=Державна фіскальна служба України. ОТРИМАНО;Serial=1671693;C=UA;L=Київ
+//         EUTaxService_СертификатExite := ComSigner.SelectServerCert;
+//         EUTaxService_СертификатМДС := ComSigner.SelectServerCert;
+         EUTaxService_СертификатExite := 'O=Фізична особа ;OU=Фізична особа;Title=підписувач;CN=Алієв Арсен Шакірович;SN=Алієв;GivenName=Арсен Шакірович;Serial=1497059;C=UA;L=Крюківщина;ST=Київська';
+         EUTaxService_СертификатМДС := 'O=Державна фіскальна служба України;OU=Державна фіскальна служба України;Title=електронна печатка;CN=Державна фіскальна служба України. ОТРИМАНО;Serial=1671693;C=UA;L=Київ';
+         ddd := VarArrayCreate([0, 1], varOleStr);
+         ddd[0] := EUTaxService_СертификатExite;
+         ddd[1] := EUTaxService_СертификатМДС;
+         ComSigner.SetFilesOptions(true);
+         ComSigner.ProtectFilesEx(FileName, true, false, true, true, false, 'pn@exite.ua', ddd);
+      end;
       Break;
     except
       on E: Exception do

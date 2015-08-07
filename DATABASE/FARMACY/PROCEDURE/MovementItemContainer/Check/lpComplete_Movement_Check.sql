@@ -13,6 +13,7 @@ $BODY$
    DECLARE vbOperSumm_Partner TFloat;
    DECLARE vbOperSumm_Partner_byItem TFloat;
    DECLARE vbUnitId Integer;
+   DECLARE vbOperDate TDateTime;
 BEGIN
 
      -- создаютс€ временные таблицы - дл€ формирование данных дл€ проводок
@@ -23,6 +24,8 @@ BEGIN
   --   DELETE FROM _tmpMIReport_insert;
      -- !!!об€зательно!!! очистили таблицу - элементы документа, со всеми свойствами дл€ формировани€ јналитик в проводках
      DELETE FROM _tmpItem;
+
+     SELECT OperDate INTO vbOperDate FROM Movement WHERE Id = inMovementId;
 
    vbAccountId := lpInsertFind_Object_Account (inAccountGroupId         := zc_Enum_AccountGroup_20000() -- «апасы
                                      , inAccountDirectionId     := zc_Enum_AccountDirection_20100() -- Cклад 
@@ -131,7 +134,7 @@ BEGIN
                         MI_Sale.Id AS MovementItemId
                       , MI_Sale.Amount AS SaleAmount
                       , Container.Amount AS ContainerAmount
-                      , OperDate
+                      , vbOperDate AS OperDate
                       , Container.Id
                       , SUM(Container.Amount) OVER (PARTITION BY Container.objectid ORDER BY OPERDATE, Movement.Id) 
                     FROM Container 
@@ -170,7 +173,7 @@ BEGIN
               , tmpItem.Id
               , vbAccountId
               , - Amount
-              , OperDate
+              , vbOperDate
            FROM tmpItem;
     
 --     CREATE TEMP TABLE _tmpMIContainer_insert (Id Integer, DescId Integer, MovementDescId Integer, MovementId Integer, MovementItemId Integer, ContainerId Integer, ParentId Integer

@@ -154,7 +154,9 @@ type
     // Изменение тела чека
     procedure InsertUpdateBillCheckItems;
     // Расчет актуального остатка по позиции
-    procedure UpdateQuantityInQuery(GoodsId: integer);
+    procedure UpdateQuantityInQuery(GoodsId: integer); overload;
+    procedure UpdateQuantityInQuery(GoodsId: integer; Remains: Real); overload;
+
     // Обновляет сумму по чеку
     procedure CalcTotalSumm;
     // Пробивает чек через ЭККА
@@ -481,7 +483,7 @@ begin
   if not assigned(SourceClientDataSet) then
     SourceClientDataSet := RemainsCDS;
   if SoldRegim
-     and (ceAmount.Value > GetGoodsPropertyRemains(SourceClientDataSet.FieldByName('Id').asInteger)) then
+     and (ceAmount.Value > SourceClientDataSet.FieldByName('Remains').AsFloat) then
   begin
     ShowMessage('Не хватает количества для продажи!');
     exit;
@@ -499,27 +501,72 @@ begin
         ParamByName('inGoodsId').Value := SourceClientDataSet.FieldByName('Id').asInteger
      else
         ParamByName('inGoodsId').Value := CheckCDS.FieldByName('GoodsId').asInteger;
-     Execute;
-     spSelectCheck.Execute;
-     CalcTotalSumm;// Пересчитали значение Суммы в TotalPanel
-     UpdateQuantityInQuery(ParamByName('inGoodsId').Value);
+     try
+       Execute;
+     except on E: Exception do
+       BEGIN
+         raise exception.Create(E.Message);
+         exit;
+       END;
+     end;
+     //обновить данные чека
+     try //Если что то пойдет не так - на экране должно быть то что в базе
+       if CheckCDS.Locate('Id',ParamByName('outMovementItemId').Value,[]) then
+       BEGIN
+         CheckCDS.Edit;
+         CheckCDS.FieldByName('Amount').AsFloat := ParamByName('outAmount').AsFloat;
+         CheckCDS.FieldByName('Summ').AsFloat := ParamByName('outSumm').AsFloat;
+         CheckCDS.Post;
+       END
+       ELSE
+       BEGIN
+         CheckCDS.Append;
+         CheckCDS.FieldByName('Id').AsInteger := ParamByName('outMovementItemId').Value;
+         CheckCDS.FieldByName('GoodsId').AsInteger := SourceClientDataSet.FieldByName('Id').asInteger;
+         CheckCDS.FieldByName('GoodsCode').AsInteger := SourceClientDataSet.FieldByName('GoodsCode').asInteger;
+         CheckCDS.FieldByName('GoodsName').AsString := SourceClientDataSet.FieldByName('GoodsName').AsString;
+         CheckCDS.FieldByName('Amount').AsFloat := ParamByName('outAmount').AsFloat;
+         CheckCDS.FieldByName('Price').AsFloat := SourceClientDataSet.FieldByName('Price').asFloat;
+         CheckCDS.FieldByName('Summ').AsFloat := ParamByName('outSumm').AsFloat;
+         CheckCDS.FieldByName('NDS').AsFloat := ParamByName('outNDS').AsFloat;
+         CheckCDS.FieldByName('isErased').AsBoolean := False;
+         CheckCDS.Post;
+       END;
+       //обновить остаток в гл. ДС
+       //Обновить остаок в альтернативе
+       UpdateQuantityInQuery(SourceClientDataSet.FieldByName('Id').asInteger,
+         ParamByName('outRemains').AsFloat);
+       //Обновить сумму документа
+       FTotalSumm := ParamByName('outTotalSummCheck').AsFloat;
+       lblTotalSumm.Caption := FormatFloat(',0.00',ParamByName('outTotalSummCheck').AsFloat);
+     Except ON E: Exception DO
+       BEGIN
+         spSelectCheck.Execute;
+         CalcTotalSumm;// Пересчитали значение Суммы в TotalPanel
+         UpdateQuantityInQuery(ParamByName('inGoodsId').Value);
+         raise exception.Create(E.Message);
+       END;
+     end;
   end;
 end;
 
 {------------------------------------------------------------------------------}
 procedure TMainCashForm.UpdateQuantityInQuery(GoodsId: integer);
-var
-  R: Real;
+begin
+  UpdateQuantityInQuery(GoodsId, GetGoodsPropertyRemains(GoodsId));
+end;
+
+procedure TMainCashForm.UpdateQuantityInQuery(GoodsId: integer; Remains: Real);
 begin
   RemainsCDS.DisableControls;
   RemainsCDS.AfterScroll := nil;
   AlternativeCDS.DisableControls;
   AlternativeCDS.Filtered := False;
   try
-    R := GetGoodsPropertyRemains(GoodsId);
-    if RemainsCDS.Locate('Id', GoodsId, []) then begin
+    if RemainsCDS.Locate('Id', GoodsId, []) AND (RemainsCDS.FieldByName('Remains').AsFloat <> Remains) then
+    begin
        RemainsCDS.Edit;
-       RemainsCDS.FieldByName('Remains').AsFloat := R;
+       RemainsCDS.FieldByName('Remains').AsFloat := Remains;
        RemainsCDS.Post;
     end;
 
@@ -529,7 +576,7 @@ begin
     while Not AlternativeCDS.eof do
     Begin
       AlternativeCDS.Edit;
-      AlternativeCDS.FieldByName('Remains').AsFloat := R;
+      AlternativeCDS.FieldByName('Remains').AsFloat := Remains;
       AlternativeCDS.Post;
       AlternativeCDS.Next;
     End;
