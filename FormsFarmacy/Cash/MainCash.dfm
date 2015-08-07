@@ -788,6 +788,35 @@ inherited MainCashForm: TMainCashForm
         Value = Null
         DataType = ftFloat
         ParamType = ptInput
+      end
+      item
+        Name = 'outMovementItemId'
+        Value = Null
+      end
+      item
+        Name = 'outAmount'
+        Value = Null
+        DataType = ftFloat
+      end
+      item
+        Name = 'outSumm'
+        Value = Null
+        DataType = ftFloat
+      end
+      item
+        Name = 'outRemains'
+        Value = Null
+        DataType = ftFloat
+      end
+      item
+        Name = 'outTotalSummCheck'
+        Value = Null
+        DataType = ftFloat
+      end
+      item
+        Name = 'outNDS'
+        Value = Null
+        DataType = ftFloat
       end>
     PackSize = 1
     Left = 240
