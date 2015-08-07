@@ -459,9 +459,9 @@ inherited Report_GoodsMI_PackageForm: TReport_GoodsMI_PackageForm
       ShortCut = 16464
       DataSets = <
         item
-          DataSet = MasterCDS
           UserName = 'frxDBDMaster'
           IndexFieldNames = 'GoodsGroupNameFull;GoodsName_basis;GoodsName;GoodsKindName'
+          GridView = cxGridDBTableView
         end>
       Params = <
         item

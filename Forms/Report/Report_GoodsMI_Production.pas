@@ -25,11 +25,16 @@ type
     clAmount_Weight: TcxGridDBColumn;
     cxLabel4: TcxLabel;
     edGoodsGroup: TcxButtonEdit;
-    GoodsGroupGuides: TdsdGuides;
+    GuidesGoodsGroup: TdsdGuides;
     FormParams: TdsdFormParams;
     clAmount_Sh: TcxGridDBColumn;
     edInDescName: TcxTextEdit;
     clGoodsKindName: TcxGridDBColumn;
+    OperDate: TcxGridDBColumn;
+    cxLabel3: TcxLabel;
+    edUnit: TcxButtonEdit;
+    GuidesUnit: TdsdGuides;
+    Price: TcxGridDBColumn;
   private
     { Private declarations }
   public

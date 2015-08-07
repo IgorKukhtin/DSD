@@ -141,7 +141,12 @@ BEGIN
                                         ON OHS_AccounterName.ObjectHistoryId = ViewHistory_JuridicalDetails.ObjectHistoryId
                                        AND OHS_AccounterName.DescId = zc_ObjectHistoryString_JuridicalDetails_AccounterName()
 
-          LEFT JOIN Object AS Object_Juridical_Basis ON Object_Juridical_Basis.Id = COALESCE (View_Contract.JuridicalBasisId, zc_Juridical_Basis())
+            LEFT JOIN ObjectLink AS ObjectLink_Contract_JuridicalDocument
+                                 ON ObjectLink_Contract_JuridicalDocument.ObjectId = inContractId
+                                AND ObjectLink_Contract_JuridicalDocument.DescId = zc_ObjectLink_Contract_JuridicalDocument()
+                                AND inPaidKindId = zc_Enum_PaidKind_SecondForm()
+
+          LEFT JOIN Object AS Object_Juridical_Basis ON Object_Juridical_Basis.Id = COALESCE (ObjectLink_Contract_JuridicalDocument.ChildObjectId, COALESCE (View_Contract.JuridicalBasisId, zc_Juridical_Basis()))
           LEFT JOIN ObjectHistory_JuridicalDetails_View AS ViewHistory_JuridicalDetails_Basis ON ViewHistory_JuridicalDetails_Basis.JuridicalId = Object_Juridical_Basis.Id
           LEFT JOIN ObjectHistoryString AS OHS_FullName_Basis
                                         ON OHS_FullName_Basis.ObjectHistoryId = ViewHistory_JuridicalDetails_Basis.ObjectHistoryId

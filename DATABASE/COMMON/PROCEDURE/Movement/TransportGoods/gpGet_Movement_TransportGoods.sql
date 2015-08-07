@@ -52,12 +52,48 @@ BEGIN
                                                                , inOperDate        := inOperDate
                                                                , inMovementId_Sale := inMovementId_Sale
                                                                , inInvNumberMark   := NULL
-                                                               , inCarId           := CASE WHEN vbIsOd = TRUE THEN 8682 ELSE NULL END -- 850-51 АВ
+                                                               , inCarId           := CASE -- vbIsOd + Фоззі
+                                                                                           WHEN vbIsOd = TRUE AND 341640 = (SELECT OL_Retail.ChildObjectId
+                                                                                                                            FROM MovementLinkObject AS MLO
+                                                                                                                                 LEFT JOIN ObjectLink AS OL_Juridical ON OL_Juridical.ObjectId = MLO.ObjectId AND OL_Juridical.DescId = zc_ObjectLink_Partner_Juridical()
+                                                                                                                                 LEFT JOIN ObjectLink AS OL_Retail ON OL_Retail.ObjectId = OL_Juridical.ChildObjectId AND OL_Retail.DescId = zc_ObjectLink_Juridical_Retail()
+                                                                                                                            WHERE MLO.MovementId = inMovementId_Sale AND MLO.DescId = zc_MovementLinkObject_To()
+                                                                                                                           )
+                                                                                                THEN 148689 -- АЕ 12-54 СА
+                                                                                           WHEN vbIsOd = TRUE
+                                                                                                THEN 8682   -- 850-51 АВ
+                                                                                           ELSE NULL
+                                                                                      END
                                                                , inCarTrailerId    := NULL
-                                                               , inPersonalDriverId:= CASE WHEN vbIsOd = TRUE THEN 427054 ELSE NULL END -- Строкун Артем Миколайович
+                                                               , inPersonalDriverId:= CASE -- vbIsOd + Фоззі
+                                                                                           WHEN vbIsOd = TRUE AND 341640 = (SELECT OL_Retail.ChildObjectId
+                                                                                                                            FROM MovementLinkObject AS MLO
+                                                                                                                                 LEFT JOIN ObjectLink AS OL_Juridical ON OL_Juridical.ObjectId = MLO.ObjectId AND OL_Juridical.DescId = zc_ObjectLink_Partner_Juridical()
+                                                                                                                                 LEFT JOIN ObjectLink AS OL_Retail ON OL_Retail.ObjectId = OL_Juridical.ChildObjectId AND OL_Retail.DescId = zc_ObjectLink_Juridical_Retail()
+                                                                                                                            WHERE MLO.MovementId = inMovementId_Sale AND MLO.DescId = zc_MovementLinkObject_To()
+                                                                                                                           )
+                                                                                                THEN 343903 -- Шульгін Олексій Валерійович
+                                                                                           WHEN vbIsOd = TRUE
+                                                                                                THEN 427054 -- Строкун Артем Миколайович
+                                                                                           ELSE NULL
+                                                                                      END
                                                                , inRouteId         := (SELECT MLO.ObjectId FROM MovementLinkObject AS MLO WHERE MLO.MovementId = inMovementId_Sale AND MLO.DescId = zc_MovementLinkObject_Route())
-                                                               , inMemberId1       := CASE WHEN vbIsOd = TRUE THEN 427054 ELSE NULL END -- Строкун Артем Миколайович
-                                                               , inMemberId2       := NULL
+                                                               , inMemberId1       := CASE -- vbIsOd + Фоззі
+                                                                                           WHEN vbIsOd = TRUE AND 341640 = (SELECT OL_Retail.ChildObjectId
+                                                                                                                            FROM MovementLinkObject AS MLO
+                                                                                                                                 LEFT JOIN ObjectLink AS OL_Juridical ON OL_Juridical.ObjectId = MLO.ObjectId AND OL_Juridical.DescId = zc_ObjectLink_Partner_Juridical()
+                                                                                                                                 LEFT JOIN ObjectLink AS OL_Retail ON OL_Retail.ObjectId = OL_Juridical.ChildObjectId AND OL_Retail.DescId = zc_ObjectLink_Juridical_Retail()
+                                                                                                                            WHERE MLO.MovementId = inMovementId_Sale AND MLO.DescId = zc_MovementLinkObject_To()
+                                                                                                                           )
+                                                                                                THEN 343903 -- Шульгін Олексій Валерійович
+                                                                                           WHEN vbIsOd = TRUE
+                                                                                                THEN 427054 -- Строкун Артем Миколайович
+                                                                                           ELSE NULL
+                                                                                      END
+                                                               , inMemberId2       := CASE WHEN vbIsOd = TRUE
+                                                                                                THEN 418699 -- Бирдіна Оксана Євгенівна
+                                                                                           ELSE NULL
+                                                                                      END
                                                                , inMemberId3       := NULL
                                                                , inMemberId4       := NULL
                                                                , inMemberId5       := NULL

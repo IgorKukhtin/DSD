@@ -69,6 +69,8 @@ BEGIN
      END IF;
      END IF;
 
+     IF NOT EXISTS (SELECT Object.Id FROM Object WHERE Object.Id = inMemberId2 AND Object.DescId = zc_Object_Personal() AND Object.ValueData = inMemberName2)
+     THEN
      -- нашли <Бухгалтер (відповідальна особа вантажовідправника)>
      inMemberId2:= (SELECT Object_MemberExternal.Id FROM Object AS Object_MemberExternal WHERE Object_MemberExternal.ValueData = TRIM (inMemberName2) AND Object_MemberExternal.DescId = zc_Object_MemberExternal());
      IF COALESCE (inMemberId2, 0) = 0 AND TRIM (inMemberName2) <> ''
@@ -79,6 +81,7 @@ BEGIN
                                                            , inName  := inMemberName2
                                                            , inUserId:= vbUserId
                                                             );
+     END IF;
      END IF;
 
      -- нашли <Відпуск дозволив>

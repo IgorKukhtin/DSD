@@ -58,6 +58,7 @@ RETURNS TABLE (GoodsGroupName TVarChar, GoodsGroupNameFull TVarChar
              , OperCount_Partner_110000_A TFloat  -- *вес покупател€ транзит приход (по дате склада, т.е. информативно)
              , OperCount_Partner_110000_P TFloat  -- *вес покупател€ транзит расход (по дате склада, т.е. информативно)
              , OperCount_Partner_real     TFloat  -- вес покупател€ (по дате покупател€, т.е. факт)
+             , OperCount_sh_Partner_real  TFloat  -- шт. покупател€ (по дате покупател€, т.е. факт)
 
              , SummIn_branch_total          TFloat  -- склад (итог: с потер€ми и скидкой) —ебестоимость филиальна€ (дл€ подразделений завода здесь заводска€)
              , SummIn_zavod_total           TFloat  -- склад (итог: с потер€ми и скидкой) —ебестоимость к заводска€
@@ -248,6 +249,7 @@ BEGIN
          , (tmpOperationGroup.OperCount_Partner_110000_A * CASE WHEN Object_Measure.Id = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END) :: TFloat AS OperCount_Partner_110000_A
          , (tmpOperationGroup.OperCount_Partner_110000_P * CASE WHEN Object_Measure.Id = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END) :: TFloat AS OperCount_Partner_110000_P
          , (tmpOperationGroup.OperCount_Partner_real     * CASE WHEN Object_Measure.Id = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END) :: TFloat AS OperCount_Partner_real
+         , CASE WHEN Object_Measure.Id = zc_Measure_Sh() THEN tmpOperationGroup.OperCount_Partner_real ELSE 0 END :: TFloat AS OperCount_sh_Partner_real
 
            -- 1.2. —ебестоимость, без AnalyzerId, т.е. филиальна€ + заводска€ и это со склада, на транзит, с транзита (!!!в транзите филиальной нет!!!)
          , (tmpOperationGroup.SummIn_real)                                        :: TFloat AS SummIn_branch_total  -- склад (итог: с потер€ми и скидкой) —ебестоимость филиальна€ (дл€ подразделений завода здесь заводска€)
@@ -641,4 +643,3 @@ $BODY$
 
 -- тест
 -- SELECT * FROM gpReport_GoodsMI (inStartDate:= '01.07.2015', inEndDate:= '01.07.2015',  inDescId:= 5, inGoodsGroupId:= 0, inUnitGroupId:=0, inUnitId:= 8459, inPaidKindId:=0, inJuridicalId:=0, inInfoMoneyId:=0, inIsPartner:= TRUE, inIsTradeMark:= TRUE, inIsGoods:= TRUE, inIsGoodsKind:= TRUE, inIsPartionGoods:= TRUE, inSession:= zfCalc_UserAdmin());
-

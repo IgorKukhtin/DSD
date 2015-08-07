@@ -1,7 +1,7 @@
 -- Function: gpReport_GoodsMI_Production ()
 
 DROP FUNCTION IF EXISTS gpReport_GoodsMI_Production (TDateTime, TDateTime, Integer, Boolean, Integer, TVarChar);
-
+DROP FUNCTION IF EXISTS gpReport_GoodsMI_Production (TDateTime, TDateTime, Integer, Boolean, Integer, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpReport_GoodsMI_Production (
     IN inStartDate    TDateTime ,  
@@ -9,6 +9,7 @@ CREATE OR REPLACE FUNCTION gpReport_GoodsMI_Production (
     IN inDescId       Integer   ,  --производство смешивание (8) , разделение (9)
     IN inisActive     Boolean   ,  -- приход true/ расход false
     IN inGoodsGroupId Integer   ,
+    IN inUnitId       Integer   , 
     IN inSession      TVarChar    -- сессия пользователя
 )
 RETURNS TABLE (GoodsGroupName TVarChar
@@ -17,6 +18,8 @@ RETURNS TABLE (GoodsGroupName TVarChar
              , TradeMarkName TVarChar
              , Amount_Weight TFloat, Amount_Sh TFloat
              , Summ TFloat
+             , Price TFloat
+             , OperDate TDateTime
              )   
 AS
 $BODY$
@@ -30,24 +33,17 @@ BEGIN
         INSERT INTO _tmpGoods (GoodsId)
            SELECT lfObject_Goods_byGoodsGroup.GoodsId
            FROM  lfSelect_Object_Goods_byGoodsGroup (inGoodsGroupId) AS lfObject_Goods_byGoodsGroup;
-    ELSE 
+    /*ELSE 
         INSERT INTO _tmpGoods (GoodsId)
-           SELECT Object.Id FROM Object WHERE DescId = zc_Object_Goods();
+           SELECT Object.Id FROM Object WHERE DescId = zc_Object_Goods();*/
          
     END IF;
 
    -- Результат
     RETURN QUERY
     
-    -- ограничиваем по виду документа 
-      WITH tmpMovement AS 
-                        (SELECT Movement.Id AS MovementId
-                         FROM Movement 
-                         WHERE Movement.OperDate BETWEEN inStartDate AND inEndDate 
-                           AND Movement.DescId  = inDescId   
-                         GROUP BY Movement.Id 
-                         )
-
+    -- ограничиваем
+    WITH tmpUnit AS (SELECT lfSelect.UnitId AS UnitId FROM lfSelect_Object_Unit_byGroup (inUnitId) AS lfSelect)
 
     SELECT Object_GoodsGroup.ValueData AS GoodsGroupName 
          , Object_Goods.ObjectCode     AS GoodsCode
@@ -60,72 +56,42 @@ BEGIN
 
          , tmpOperationGroup.Summ :: TFloat AS Summ
 
+         , CASE WHEN tmpOperationGroup.Amount <> 0 THEN tmpOperationGroup.Summ / tmpOperationGroup.Amount ELSE 0 END :: TFloat AS Price
+
+         , tmpOperationGroup.OperDate
+
      FROM (SELECT tmpOperation.GoodsId
-                , tmpOperation.GoodsKindId
+                , COALESCE (CLO_GoodsKind.ObjectId, 0) AS GoodsKindId
+                , tmpOperation.OperDate
                 , ABS (SUM (tmpOperation.Amount)):: TFloat          AS Amount
                 , ABS (SUM (tmpOperation.Summ)) :: TFloat           AS Summ
 
-           FROM (SELECT MovementItem.ObjectId AS GoodsId       
-                      , COALESCE (MILinkObject_GoodsKind.ObjectId, 0) AS GoodsKindId
-                      , SUM (COALESCE (MIContainer.Amount,0)) AS Summ
-                      , 0 AS Amount
-                      
-                 FROM tmpMovement
+           FROM (SELECT MIContainer.ContainerId
+                      , MIContainer.ObjectId_Analyzer AS GoodsId       
+                      , MIContainer.OperDate
+                      , SUM (CASE WHEN MIContainer.DescId = zc_MIContainer_Count() THEN MIContainer.Amount ELSE 0 END) AS Amount
+                      , SUM (CASE WHEN MIContainer.DescId = zc_MIContainer_Summ()  THEN MIContainer.Amount ELSE 0 END) AS Summ
+                 FROM tmpUnit
+                      INNER JOIN MovementItemContainer AS MIContainer 
+                                                       ON MIContainer.WhereObjectId_analyzer = tmpUnit.UnitId
+                                                      AND MIContainer.OperDate BETWEEN inStartDate AND inEndDate
+                                                      AND MIContainer.isActive = inIsActive
+                                                      AND MIContainer.MovementDescId = inDescId
+                      LEFT JOIN _tmpGoods ON _tmpGoods.GoodsId = MIContainer.ObjectId_Analyzer
 
-                      JOIN MovementItemContainer AS MIContainer 
-                                                 ON MIContainer.MovementId = tmpMovement.MovementId
-                                                AND MIContainer.DescId = zc_MIContainer_Summ()
-                                                AND MIContainer.isActive = inisActive   --True / False
-                      JOIN Container ON Container.Id = MIContainer.ContainerId
-
-                      JOIN (SELECT AccountID FROM Object_Account_View WHERE AccountGroupId = zc_Enum_AccountGroup_20000()
-                           ) AS tmpAccount on tmpAccount.AccountID = Container.ObjectId
-
-                      JOIN MovementItem ON MovementItem.Id = MIContainer.MovementItemId
-                                       
-                      JOIN _tmpGoods ON _tmpGoods.GoodsId = MovementItem.ObjectId
-           
-                      LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
-                                                       ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
-                                                      AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
-
-                      GROUP BY MovementItem.ObjectId
-                             , COALESCE (MILinkObject_GoodsKind.ObjectId, 0) 
-              UNION
-                
-                  SELECT MovementItem.ObjectId AS GoodsId       
-                      , COALESCE (MILinkObject_GoodsKind.ObjectId, 0) AS GoodsKindId
-                      , 0 AS Summ
-                      , SUM (MIContainer.Amount) AS Amount
-                 FROM tmpMovement
-
-                      JOIN MovementItemContainer AS MIContainer 
-                                                 ON MIContainer.MovementId = tmpMovement.MovementId
-                                                AND MIContainer.DescId = zc_MIContainer_Count()
-                                                AND MIContainer.isActive = inisActive   --True / False
-                      LEFT JOIN Container ON Container.Id = MIContainer.ContainerId
-                                         
-                      JOIN MovementItem ON MovementItem.Id = MIContainer.MovementItemId
-                                       
-                      JOIN _tmpGoods ON _tmpGoods.GoodsId = MovementItem.ObjectId
-           
-                      LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
-                                                       ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
-                                                      AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
-                                                 
-                      LEFT JOIN MovementLinkObject AS MovementLO_From
-                                                   ON MovementLO_From.MovementId = tmpMovement.MovementId
-                                                  AND MovementLO_From.DescId = zc_MovementLinkObject_From()   
-                      
-                      GROUP BY MovementItem.ObjectId    
-                             , COALESCE (MILinkObject_GoodsKind.ObjectId, 0) 
-                             , COALESCE (Container.ObjectId, 0) 
-
-
+                 WHERE _tmpGoods.GoodsId > 0 OR inGoodsGroupId = 0
+                 GROUP BY MIContainer.ContainerId
+                        , MIContainer.ObjectId_Analyzer
+                        , MIContainer.OperDate
                ) AS tmpOperation
 
+                      LEFT JOIN ContainerLinkObject AS CLO_GoodsKind
+                                                       ON CLO_GoodsKind.ContainerId = tmpOperation.ContainerId
+                                                      AND CLO_GoodsKind.DescId = zc_ContainerLinkObject_GoodsKind()
+
            GROUP BY tmpOperation.GoodsId
-                  , tmpOperation.GoodsKindId
+                  , CLO_GoodsKind.ObjectId
+                  , tmpOperation.OperDate
                  
           ) AS tmpOperationGroup
 
@@ -156,22 +122,20 @@ BEGIN
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpReport_GoodsMI_Production (TDateTime, TDateTime, Integer, Boolean, Integer, TVarChar) OWNER TO postgres;
+ALTER FUNCTION gpReport_GoodsMI_Production (TDateTime, TDateTime, Integer, Boolean, Integer, Integer, TVarChar) OWNER TO postgres;
 
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 06.08.15                                        * all
  21.08.14         * 
-    
 */
 
 -- тест
---SELECT * FROM gpReport_GoodsMI_Production (inStartDate:= '01.01.2014', inEndDate:= '31.01.2014',  inDescId:= 8, inisActive:='True' , inGoodsGroupId:= 0, inSession:= zfCalc_UserAdmin());
---SELECT * FROM gpReport_GoodsMI_Production (inStartDate:= '01.01.2014', inEndDate:= '31.01.2014',  inDescId:= 8, inisActive:='False' , inGoodsGroupId:= 0, inSession:= zfCalc_UserAdmin());
-
---SELECT * FROM gpReport_GoodsMI_Production (inStartDate:= '01.08.2014', inEndDate:= '01.09.2014',  inDescId:= 9, inisActive:='True' , inGoodsGroupId:= 0, inSession:= zfCalc_UserAdmin());
---SELECT * FROM gpReport_GoodsMI_Production (inStartDate:= '01.08.2014', inEndDate:= '01.09.2014',  inDescId:= 9, inisActive:='False' , inGoodsGroupId:= 0, inSession:= zfCalc_UserAdmin());
-
+-- SELECT * FROM gpReport_GoodsMI_Production (inStartDate:= '01.01.2015', inEndDate:= '31.01.2015',  inDescId:= 8, inisActive:='True' , inGoodsGroupId:= 0, inUnitId:=0, inSession:= zfCalc_UserAdmin());
+-- SELECT * FROM gpReport_GoodsMI_Production (inStartDate:= '01.01.2015', inEndDate:= '31.01.2015',  inDescId:= 8, inisActive:='False' , inGoodsGroupId:= 0, inUnitId:=0, inSession:= zfCalc_UserAdmin());
 
 -- inDescId:= 9 - разделение
+--SELECT * FROM gpReport_GoodsMI_Production (inStartDate:= '01.08.2015', inEndDate:= '01.09.2015',  inDescId:= 9, inisActive:='True' , inGoodsGroupId:= 0, inUnitId:=0, inSession:= zfCalc_UserAdmin());
+--SELECT * FROM gpReport_GoodsMI_Production (inStartDate:= '01.08.2015', inEndDate:= '01.09.2015',  inDescId:= 9, inisActive:='False' , inGoodsGroupId:= 0, inUnitId:=0, inSession:= zfCalc_UserAdmin());

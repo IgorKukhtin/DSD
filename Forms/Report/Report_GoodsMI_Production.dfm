@@ -1,27 +1,27 @@
 inherited Report_GoodsMI_ProductionForm: TReport_GoodsMI_ProductionForm
-  Caption = #1054#1090#1095#1077#1090' <'#1055#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1072'>'
+  Caption = #1054#1090#1095#1077#1090' <'#1055#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1086'>'
   ClientHeight = 344
-  ClientWidth = 973
+  ClientWidth = 1137
   AddOnFormData.isSingle = False
   AddOnFormData.Params = FormParams
-  ExplicitWidth = 989
+  ExplicitWidth = 1153
   ExplicitHeight = 379
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Width = 973
+    Width = 1137
     Height = 287
     TabOrder = 3
     ExplicitTop = 57
     ExplicitWidth = 973
     ExplicitHeight = 287
     ClientRectBottom = 287
-    ClientRectRight = 973
+    ClientRectRight = 1137
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 973
       ExplicitHeight = 287
       inherited cxGrid: TcxGrid
-        Width = 973
+        Width = 1137
         Height = 287
         ExplicitWidth = 973
         ExplicitHeight = 287
@@ -87,34 +87,14 @@ inherited Report_GoodsMI_ProductionForm: TReport_GoodsMI_ProductionForm
           OptionsData.DeletingConfirmation = False
           OptionsData.Editing = False
           OptionsView.GroupByBox = True
+          Styles.Content = nil
           Styles.Inactive = nil
           Styles.Selection = nil
           Styles.Footer = nil
           Styles.Header = nil
-          object clGoodsGroupName: TcxGridDBColumn
-            Caption = #1043#1088#1091#1087#1087#1072
-            DataBinding.FieldName = 'GoodsGroupName'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 162
-          end
-          object clGoodsCode: TcxGridDBColumn
-            Caption = #1050#1086#1076
-            DataBinding.FieldName = 'GoodsCode'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 40
-          end
-          object clGoodsName: TcxGridDBColumn
-            Caption = #1058#1086#1074#1072#1088
-            DataBinding.FieldName = 'GoodsName'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 149
-          end
-          object clGoodsKindName: TcxGridDBColumn
-            Caption = #1042#1080#1076' '#1090#1086#1074#1072#1088#1072
-            DataBinding.FieldName = 'GoodsKindName'
+          object OperDate: TcxGridDBColumn
+            Caption = #1044#1072#1090#1072
+            DataBinding.FieldName = 'OperDate'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 70
@@ -122,62 +102,113 @@ inherited Report_GoodsMI_ProductionForm: TReport_GoodsMI_ProductionForm
           object clTradeMarkName: TcxGridDBColumn
             Caption = #1058#1086#1088#1075#1086#1074#1072#1103' '#1084#1072#1088#1082#1072
             DataBinding.FieldName = 'TradeMarkName'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 109
           end
-          object clAmount_Weight: TcxGridDBColumn
-            Caption = #1050#1086#1083'-'#1074#1086' '#1042#1077#1089' ('#1089#1082#1083#1072#1076')'
-            DataBinding.FieldName = 'Amount_Weight'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+          object clGoodsGroupName: TcxGridDBColumn
+            Caption = #1043#1088#1091#1087#1087#1072
+            DataBinding.FieldName = 'GoodsGroupName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 60
+            Width = 300
+          end
+          object clGoodsCode: TcxGridDBColumn
+            Caption = #1050#1086#1076
+            DataBinding.FieldName = 'GoodsCode'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 50
+          end
+          object clGoodsName: TcxGridDBColumn
+            Caption = #1058#1086#1074#1072#1088
+            DataBinding.FieldName = 'GoodsName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 250
+          end
+          object clGoodsKindName: TcxGridDBColumn
+            Caption = #1042#1080#1076' '#1090#1086#1074#1072#1088#1072
+            DataBinding.FieldName = 'GoodsKindName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 100
           end
           object clAmount_Sh: TcxGridDBColumn
-            Caption = #1050#1086#1083'-'#1074#1086' '#1064#1090'. ('#1089#1082#1083#1072#1076')'
+            Caption = #1050#1086#1083'-'#1074#1086' '#1064#1090'.'
             DataBinding.FieldName = 'Amount_Sh'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 60
+            Width = 80
+          end
+          object clAmount_Weight: TcxGridDBColumn
+            Caption = #1050#1086#1083'-'#1074#1086' '#1042#1077#1089
+            DataBinding.FieldName = 'Amount_Weight'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 80
+          end
+          object Price: TcxGridDBColumn
+            Caption = #1062#1077#1085#1072' '#1089'/'#1089
+            DataBinding.FieldName = 'Price'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 55
           end
           object clSumm: TcxGridDBColumn
-            Caption = #1057#1091#1084#1084#1072' '#1089' '#1053#1044#1057' ('#1080#1090#1086#1075')'
+            Caption = #1057#1091#1084#1084#1072' '#1089'/'#1089
             DataBinding.FieldName = 'Summ'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 60
+            Width = 80
           end
         end
       end
     end
   end
   inherited Panel: TPanel
-    Width = 973
+    Width = 1137
     ExplicitWidth = 973
     inherited deStart: TcxDateEdit
-      EditValue = 41640d
+      Left = 97
+      EditValue = 42005d
       Properties.SaveTime = False
+      ExplicitLeft = 97
     end
     inherited deEnd: TcxDateEdit
-      EditValue = 41640d
+      Left = 300
+      EditValue = 42005d
       Properties.SaveTime = False
+      ExplicitLeft = 300
+    end
+    inherited cxLabel1: TcxLabel
+      Left = 5
+      ExplicitLeft = 5
+    end
+    inherited cxLabel2: TcxLabel
+      Left = 189
+      ExplicitLeft = 189
     end
     object cxLabel4: TcxLabel
-      Left = 413
+      Left = 660
       Top = 6
       Caption = #1043#1088#1091#1087#1087#1072' '#1090#1086#1074#1072#1088#1086#1074':'
     end
     object edGoodsGroup: TcxButtonEdit
-      Left = 501
+      Left = 751
       Top = 5
       Properties.Buttons = <
         item
@@ -185,11 +216,11 @@ inherited Report_GoodsMI_ProductionForm: TReport_GoodsMI_ProductionForm
           Kind = bkEllipsis
         end>
       TabOrder = 5
-      Width = 207
+      Width = 176
     end
     object edInDescName: TcxTextEdit
       AlignWithMargins = True
-      Left = 730
+      Left = 930
       Top = 5
       ParentCustomHint = False
       BeepOnEnter = False
@@ -204,6 +235,23 @@ inherited Report_GoodsMI_ProductionForm: TReport_GoodsMI_ProductionForm
       Style.IsFontAssigned = True
       TabOrder = 6
       Width = 231
+    end
+    object cxLabel3: TcxLabel
+      Left = 394
+      Top = 6
+      Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077':'
+    end
+    object edUnit: TcxButtonEdit
+      Left = 483
+      Top = 5
+      Properties.Buttons = <
+        item
+          Default = True
+          Kind = bkEllipsis
+        end>
+      Properties.ReadOnly = True
+      TabOrder = 8
+      Width = 169
     end
   end
   inherited MasterDS: TDataSource
@@ -249,7 +297,14 @@ inherited Report_GoodsMI_ProductionForm: TReport_GoodsMI_ProductionForm
       item
         Name = 'inGoodsGroupId'
         Value = ''
-        Component = GoodsGroupGuides
+        Component = GuidesGoodsGroup
+        ComponentItem = 'Key'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inUnitId'
+        Value = Null
+        Component = GuidesUnit
         ComponentItem = 'Key'
         ParamType = ptInput
       end>
@@ -279,12 +334,15 @@ inherited Report_GoodsMI_ProductionForm: TReport_GoodsMI_ProductionForm
         Component = PeriodChoice
       end
       item
-        Component = GoodsGroupGuides
+        Component = GuidesGoodsGroup
+      end
+      item
+        Component = GuidesUnit
       end>
     Left = 224
     Top = 136
   end
-  object GoodsGroupGuides: TdsdGuides
+  object GuidesGoodsGroup: TdsdGuides
     KeyField = 'Id'
     LookupControl = edGoodsGroup
     FormNameParam.Value = 'TGoodsGroup_ObjectForm'
@@ -295,7 +353,7 @@ inherited Report_GoodsMI_ProductionForm: TReport_GoodsMI_ProductionForm
       item
         Name = 'Key'
         Value = ''
-        Component = GoodsGroupGuides
+        Component = GuidesGoodsGroup
         ComponentItem = 'Key'
         DataType = ftString
         ParamType = ptInput
@@ -303,12 +361,12 @@ inherited Report_GoodsMI_ProductionForm: TReport_GoodsMI_ProductionForm
       item
         Name = 'TextValue'
         Value = ''
-        Component = GoodsGroupGuides
+        Component = GuidesGoodsGroup
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
       end>
-    Left = 600
+    Left = 856
   end
   object FormParams: TdsdFormParams
     Params = <
@@ -332,5 +390,32 @@ inherited Report_GoodsMI_ProductionForm: TReport_GoodsMI_ProductionForm
       end>
     Left = 328
     Top = 170
+  end
+  object GuidesUnit: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edUnit
+    FormNameParam.Value = 'TUnit_ObjectForm'
+    FormNameParam.DataType = ftString
+    FormName = 'TUnit_ObjectForm'
+    PositionDataSet = 'MasterCDS'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GuidesUnit
+        ComponentItem = 'Key'
+        DataType = ftString
+        ParamType = ptInput
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesUnit
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+      end>
+    Left = 544
+    Top = 8
   end
 end

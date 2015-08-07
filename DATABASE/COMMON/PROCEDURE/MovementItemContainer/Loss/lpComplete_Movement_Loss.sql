@@ -294,7 +294,7 @@ BEGIN
                                                                                  );
      -- 1.1.2. формируются Проводки для количественного учета
      INSERT INTO _tmpMIContainer_insert (Id, DescId, MovementDescId, MovementId, MovementItemId, ContainerId --, ParentId, Amount, OperDate, IsActive)
-                                       , AccountId, AnalyzerId, ObjectId_Analyzer, WhereObjectId_Analyzer, ContainerId_Analyzer
+                                       , AccountId, AnalyzerId, ObjectId_Analyzer, WhereObjectId_Analyzer, ContainerId_Analyzer, ObjectIntId_Analyzer, ObjectExtId_Analyzer
                                        , ParentId, Amount, OperDate, isActive)
        SELECT 0, zc_MIContainer_Count() AS DescId, vbMovementDescId, inMovementId, MovementItemId
             , _tmpItem.ContainerId_Goods
@@ -303,6 +303,8 @@ BEGIN
             , _tmpItem.GoodsId                        AS ObjectId_Analyzer      -- Товар
             , vbWhereObjectId_Analyzer                AS WhereObjectId_Analyzer -- Подраделение или...
             , 0                                       AS ContainerId_Analyzer   -- !!!нет!!!
+            , _tmpItem.GoodsKindId                    AS ObjectIntId_Analyzer   -- вид товара
+            , 0                                       AS ObjectExtId_Analyzer   -- !!!нет!!!
             , 0                                       AS ParentId
             , -1 * _tmpItem.OperCount
             , vbOperDate
@@ -340,7 +342,7 @@ BEGIN
 
      -- 1.2.2. формируются Проводки для суммового учета
      INSERT INTO _tmpMIContainer_insert (Id, DescId, MovementDescId, MovementId, MovementItemId, ContainerId --, ParentId, Amount, OperDate, IsActive)
-                                       , AccountId, AnalyzerId, ObjectId_Analyzer, WhereObjectId_Analyzer, ContainerId_Analyzer
+                                       , AccountId, AnalyzerId, ObjectId_Analyzer, WhereObjectId_Analyzer, ContainerId_Analyzer, ObjectIntId_Analyzer, ObjectExtId_Analyzer
                                        , ParentId, Amount, OperDate, IsActive)
        SELECT 0, zc_MIContainer_Summ() AS DescId, vbMovementDescId, inMovementId, _tmpItemSumm.MovementItemId
             , _tmpItemSumm.ContainerId
@@ -349,6 +351,8 @@ BEGIN
             , _tmpItem.GoodsId                        AS ObjectId_Analyzer      -- Товар
             , vbWhereObjectId_Analyzer                AS WhereObjectId_Analyzer -- Подраделение или...
             , 0                                       AS ContainerId_Analyzer   -- !!!нет!!!
+            , _tmpItem.GoodsKindId                    AS ObjectIntId_Analyzer   -- вид товара
+            , 0                                       AS ObjectExtId_Analyzer   -- !!!нет!!!
             , 0                                       AS ParentId
             , -1 * _tmpItemSumm.OperSumm
             , vbOperDate
@@ -431,7 +435,7 @@ BEGIN
 
      -- 2.2. формируются Проводки - Прибыль
      INSERT INTO _tmpMIContainer_insert (Id, DescId, MovementDescId, MovementId, MovementItemId, ContainerId -- , ParentId, Amount, OperDate, IsActive)
-                                       , AccountId, AnalyzerId, ObjectId_Analyzer, WhereObjectId_Analyzer, ContainerId_Analyzer
+                                       , AccountId, AnalyzerId, ObjectId_Analyzer, WhereObjectId_Analyzer, ContainerId_Analyzer, ObjectIntId_Analyzer, ObjectExtId_Analyzer
                                        , ParentId, Amount, OperDate, isActive)
        SELECT 0, zc_MIContainer_Summ() AS DescId, vbMovementDescId, inMovementId, _tmpItemSumm_group.MovementItemId
            , _tmpItemSumm_group.ContainerId_ProfitLoss
@@ -440,6 +444,8 @@ BEGIN
            , _tmpItemSumm_group.GoodsId              AS ObjectId_Analyzer      -- Товар
            , vbWhereObjectId_Analyzer                AS WhereObjectId_Analyzer -- Подраделение или...
            , 0                                       AS ContainerId_Analyzer   -- в ОПиУ не нужен
+           , _tmpItemSumm_group.GoodsKindId          AS ObjectIntId_Analyzer   -- вид товара
+           , 0                                       AS ObjectExtId_Analyzer   -- !!!нет!!!
            , 0                                       AS ParentId
            , _tmpItemSumm_group.OperSumm
            , vbOperDate
@@ -447,12 +453,14 @@ BEGIN
        FROM (SELECT _tmpItemSumm.MovementItemId
                   , _tmpItemSumm.ContainerId_ProfitLoss
                   , _tmpItem.GoodsId
+                  , _tmpItem.GoodsKindId
                   , SUM (_tmpItemSumm.OperSumm) AS OperSumm
              FROM _tmpItemSumm
                   INNER JOIN _tmpItem ON _tmpItem.MovementItemId = _tmpItemSumm.MovementItemId
              GROUP BY _tmpItemSumm.MovementItemId
                     , _tmpItemSumm.ContainerId_ProfitLoss
                     , _tmpItem.GoodsId
+                    , _tmpItem.GoodsKindId
             ) AS _tmpItemSumm_group;
 
 

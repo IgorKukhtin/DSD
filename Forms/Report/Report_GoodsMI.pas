@@ -132,6 +132,7 @@ type
     OperCount_total: TcxGridDBColumn;
     SummIn_branch_total: TcxGridDBColumn;
     SummIn_zavod_total: TcxGridDBColumn;
+    OperCount_sh_Partner_real: TcxGridDBColumn;
   private
     { Private declarations }
   public

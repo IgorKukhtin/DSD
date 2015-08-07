@@ -348,6 +348,11 @@ inherited Report_GoodsMIForm: TReport_GoodsMIForm
               Format = ',0.####'
               Kind = skSum
               Column = SummIn_zavod_total
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = OperCount_sh_Partner_real
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -669,6 +674,11 @@ inherited Report_GoodsMIForm: TReport_GoodsMIForm
               Format = ',0.####'
               Kind = skSum
               Column = SummIn_zavod_total
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = OperCount_sh_Partner_real
             end>
           OptionsData.CancelOnExit = True
           OptionsData.Deleting = False
@@ -974,6 +984,16 @@ inherited Report_GoodsMIForm: TReport_GoodsMIForm
           object OperCount_Partner_real: TcxGridDBColumn
             Caption = #1050#1086#1083'. '#1074#1077#1089'  ('#1087#1086#1082#1091#1087'.)'
             DataBinding.FieldName = 'OperCount_Partner_real'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 70
+          end
+          object OperCount_sh_Partner_real: TcxGridDBColumn
+            Caption = #1050#1086#1083'. '#1096#1090'.  ('#1087#1086#1082#1091#1087'.)'
+            DataBinding.FieldName = 'OperCount_sh_Partner_real'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####;-,0.####; ;'

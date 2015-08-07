@@ -621,15 +621,15 @@ BEGIN
                                                  , inObjectId_Analyzer       := _tmpItem.GoodsId               -- Товар
                                                  , inWhereObjectId_Analyzer  := vbWhereObjectId_Analyzer_To    -- Подраделение или...
                                                  , inContainerId_Analyzer    := 0                              -- количественный Контейнер-Мастер (для прихода не надо)
-                                                 , inObjectIntId_Analyzer    := 0                              -- вид товара
-                                                 , inObjectExtId_Analyzer    := 0                              -- покупатель / физ.лицо / Подраделение "От кого"
+                                                 , inObjectIntId_Analyzer    := _tmpItem.GoodsKindId           -- вид товара
+                                                 , inObjectExtId_Analyzer    := vbWhereObjectId_Analyzer_From  -- Подраделение "От кого"
                                                  , inAmount         := _tmpItem.OperCount
                                                  , inOperDate       := vbOperDate
                                                  , inIsActive       := TRUE
                                                   );
      -- формируются Проводки для количественного учета - От кого
      INSERT INTO _tmpMIContainer_insert (Id, DescId, MovementDescId, MovementId, MovementItemId, ContainerId --, ParentId, Amount, OperDate, IsActive)
-                                       , AccountId, AnalyzerId, ObjectId_Analyzer, WhereObjectId_Analyzer, ContainerId_Analyzer
+                                       , AccountId, AnalyzerId, ObjectId_Analyzer, WhereObjectId_Analyzer, ContainerId_Analyzer, ObjectIntId_Analyzer, ObjectExtId_Analyzer
                                        , ParentId, Amount, OperDate, isActive)
        SELECT 0, zc_MIContainer_Count() AS DescId, vbMovementDescId, inMovementId, _tmpItemChild.MovementItemId
             , _tmpItemChild.ContainerId_GoodsFrom
@@ -638,6 +638,8 @@ BEGIN
             , _tmpItemChild.GoodsId                   AS ObjectId_Analyzer      -- Товар
             , vbWhereObjectId_Analyzer_From           AS WhereObjectId_Analyzer -- Подраделение или...
             , _tmpItem.ContainerId_GoodsTo            AS ContainerId_Analyzer   -- количественный Контейнер-Мастер (т.е. из прихода)
+            , _tmpItemChild.GoodsKindId               AS ObjectIntId_Analyzer   -- вид товара
+            , vbWhereObjectId_Analyzer_To             AS ObjectExtId_Analyzer   -- Подраделение "Кому"
             , _tmpItem.MIContainerId_To               AS ParentId
             , -1 * _tmpItemChild.OperCount
             , vbOperDate
@@ -758,8 +760,8 @@ BEGIN
                                                       , inObjectId_Analyzer       := _tmpItem.GoodsId               -- Товар
                                                       , inWhereObjectId_Analyzer  := vbWhereObjectId_Analyzer_To    -- Подраделение или...
                                                       , inContainerId_Analyzer    := 0                              -- суммовой Контейнер-Мастер (для прихода не надо)
-                                                      , inObjectIntId_Analyzer    := 0                              -- вид товара
-                                                      , inObjectExtId_Analyzer    := 0                              -- покупатель / физ.лицо / Подраделение "От кого"
+                                                      , inObjectIntId_Analyzer    := _tmpItem.GoodsKindId           -- вид товара
+                                                      , inObjectExtId_Analyzer    := vbWhereObjectId_Analyzer_From  -- Подраделение "От кого"
                                                       , inAmount         := _tmpItemSumm_group.OperSumm
                                                       , inOperDate       := vbOperDate
                                                       , inIsActive       := TRUE
@@ -775,7 +777,7 @@ BEGIN
 
      -- формируются Проводки для суммового учета - От кого
      INSERT INTO _tmpMIContainer_insert (Id, DescId, MovementDescId, MovementId, MovementItemId, ContainerId
-                                       , AccountId, AnalyzerId, ObjectId_Analyzer, WhereObjectId_Analyzer, ContainerId_Analyzer
+                                       , AccountId, AnalyzerId, ObjectId_Analyzer, WhereObjectId_Analyzer, ContainerId_Analyzer, ObjectIntId_Analyzer, ObjectExtId_Analyzer
                                        , ParentId, Amount, OperDate, IsActive)
        SELECT 0, zc_MIContainer_Summ() AS DescId, vbMovementDescId, inMovementId, _tmpItemChild.MovementItemId
             , _tmpItemSummChild.ContainerId_From
@@ -784,6 +786,8 @@ BEGIN
             , _tmpItemChild.GoodsId                   AS ObjectId_Analyzer      -- Товар
             , vbWhereObjectId_Analyzer_From           AS WhereObjectId_Analyzer -- Подраделение или...
             , _tmpItemSumm.ContainerId_To             AS ContainerId_Analyzer   -- суммовой Контейнер-Мастер (т.е. из прихода)
+            , _tmpItemChild.GoodsKindId               AS ObjectIntId_Analyzer   -- вид товара
+            , vbWhereObjectId_Analyzer_To             AS ObjectExtId_Analyzer   -- Подраделение "Кому"
             , _tmpItemSumm.MIContainerId_To           AS ParentId
             , -1 * _tmpItemSummChild.OperSumm
             , vbOperDate

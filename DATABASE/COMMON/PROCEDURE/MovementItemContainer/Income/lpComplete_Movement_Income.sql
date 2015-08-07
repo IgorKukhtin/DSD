@@ -1090,6 +1090,8 @@ BEGIN
      vbContainerId_Analyzer_Packer:= (SELECT ContainerId FROM _tmpItem_SummPacker GROUP BY ContainerId);
      -- определили
      vbWhereObjectId_Analyzer:= CASE WHEN vbUnitId <> 0 THEN vbUnitId WHEN vbCarId <> 0 THEN vbCarId WHEN vbPartnerId_To <> 0 THEN vbPartnerId_To END;
+     -- определили
+     vbObjectExtId_Analyzer:= CASE WHEN vbPartnerId_From <> 0 THEN vbPartnerId_From WHEN vbMemberId_From <> 0 THEN vbMemberId_From WHEN vbCardFuelId_From <> 0 THEN vbCardFuelId_From WHEN vbTicketFuelId_From <> 0 THEN vbTicketFuelId_From END;
 
 
      -- 3.0.4. !!!Ход конем - удалили, если ПОКУПАТЕЛЮ!!!
@@ -1114,7 +1116,7 @@ BEGIN
 
      -- 1.1.2. формируются !!!забалансовые!!! Проводки для количественного учета - долги поставщику
      INSERT INTO _tmpMIContainer_insert (Id, DescId, MovementDescId, MovementId, MovementItemId, ContainerId
-                                       , AccountId, AnalyzerId, ObjectId_Analyzer, WhereObjectId_Analyzer, ContainerId_Analyzer
+                                       , AccountId, AnalyzerId, ObjectId_Analyzer, WhereObjectId_Analyzer, ContainerId_Analyzer, ObjectIntId_Analyzer, ObjectExtId_Analyzer
                                        , ParentId, Amount, OperDate, isActive)
        SELECT 0, zc_MIContainer_CountSupplier() AS DescId, vbMovementDescId, inMovementId, MovementItemId
             , ContainerId_CountSupplier
@@ -1123,6 +1125,8 @@ BEGIN
             , _tmpItem.GoodsId                        AS ObjectId_Analyzer      -- Товар
             , vbPartnerId_From                        AS WhereObjectId_Analyzer -- Поставщик
             , 0                                       AS ContainerId_Analyzer   -- !!!нет!!!
+            , _tmpItem.GoodsKindId                    AS ObjectIntId_Analyzer   -- вид товара
+            , vbPartnerId_From                        AS ObjectExtId_Analyzer   -- Поставщик
             , 0                                       AS ParentId
             , -1 * OperCount                          AS Amount
             , vbOperDate                              AS OperDate               -- т.е. по "Дате склад"
@@ -1149,7 +1153,7 @@ BEGIN
 
      -- 1.2.2. формируются Проводки для количественного учета
      INSERT INTO _tmpMIContainer_insert (Id, DescId, MovementDescId, MovementId, MovementItemId, ContainerId
-                                       , AccountId, AnalyzerId, ObjectId_Analyzer, WhereObjectId_Analyzer, ContainerId_Analyzer
+                                       , AccountId, AnalyzerId, ObjectId_Analyzer, WhereObjectId_Analyzer, ContainerId_Analyzer, ObjectIntId_Analyzer, ObjectExtId_Analyzer
                                        , ParentId, Amount, OperDate, isActive)
        SELECT 0, zc_MIContainer_Count() AS DescId, vbMovementDescId, inMovementId, MovementItemId
             , ContainerId_Goods
@@ -1158,6 +1162,8 @@ BEGIN
             , _tmpItem.GoodsId                        AS ObjectId_Analyzer      -- Товар
             , vbWhereObjectId_Analyzer                AS WhereObjectId_Analyzer -- Подраделение или...
             , vbContainerId_Analyzer                  AS ContainerId_Analyzer   -- Контейнер - по долгам поставщика
+            , _tmpItem.GoodsKindId                    AS ObjectIntId_Analyzer   -- вид товара
+            , vbObjectExtId_Analyzer                  AS ObjectExtId_Analyzer   -- Поставщик или...
             , 0                                       AS ParentId
             , OperCount_Partner                       AS Amount
             , vbOperDate                              AS OperDate               -- т.е. по "Дате склад"
@@ -1172,6 +1178,8 @@ BEGIN
             , _tmpItem.GoodsId                        AS ObjectId_Analyzer      -- Товар
             , vbWhereObjectId_Analyzer                AS WhereObjectId_Analyzer -- Подраделение или...
             , vbContainerId_Analyzer                  AS ContainerId_Analyzer   -- Контейнер - по долгам поставщика
+            , _tmpItem.GoodsKindId                    AS ObjectIntId_Analyzer   -- вид товара
+            , vbObjectExtId_Analyzer                  AS ObjectExtId_Analyzer   -- Поставщик или...
             , 0                                       AS ParentId
             , OperCount - OperCount_Partner           AS Amount
             , vbOperDate                              AS OperDate               -- т.е. по "Дате склад"
@@ -1186,6 +1194,8 @@ BEGIN
             , _tmpItem.GoodsId                        AS ObjectId_Analyzer      -- Товар
             , vbWhereObjectId_Analyzer                AS WhereObjectId_Analyzer -- Подраделение или...
             , vbContainerId_Analyzer_Packer           AS ContainerId_Analyzer   -- Контейнер - по долгам заготовителю
+            , _tmpItem.GoodsKindId                    AS ObjectIntId_Analyzer   -- вид товара
+            , vbMemberId_Packer                       AS ObjectExtId_Analyzer   -- заготовитель
             , 0                                       AS ParentId
             , OperCount_Packer                        AS Amount
             , vbOperDate                              AS OperDate               -- т.е. по "Дате склад"
@@ -1212,7 +1222,7 @@ BEGIN
 
      -- 1.2.4. формируются Проводки для количественного учета - Расход талонов
      INSERT INTO _tmpMIContainer_insert (Id, DescId, MovementDescId, MovementId, MovementItemId, ContainerId
-                                       , AccountId, AnalyzerId, ObjectId_Analyzer, WhereObjectId_Analyzer, ContainerId_Analyzer
+                                       , AccountId, AnalyzerId, ObjectId_Analyzer, WhereObjectId_Analyzer, ContainerId_Analyzer, ObjectIntId_Analyzer, ObjectExtId_Analyzer
                                        , ParentId, Amount, OperDate, isActive)
        SELECT 0, zc_MIContainer_Count() AS DescId, vbMovementDescId, inMovementId, MovementItemId
             , ContainerId_GoodsTicketFuel
@@ -1221,6 +1231,8 @@ BEGIN
             , _tmpItem.GoodsId_TicketFuel             AS ObjectId_Analyzer      -- Товар
             , vbMemberId_Driver                       AS WhereObjectId_Analyzer -- vbMemberId_Driver
             , 0                                       AS ContainerId_Analyzer   -- !!!нет!!!
+            , 0                                       AS ObjectIntId_Analyzer   -- вид товара
+            , 0                                       AS ObjectExtId_Analyzer   -- ... или ...
             , 0                                       AS ParentId
             , -1 * OperCount                          AS Amount
             , vbOperDate                              AS OperDate               -- т.е. по "Дате склад"
@@ -1309,7 +1321,7 @@ BEGIN
 
      -- 1.3.3. формируются Проводки для суммового учета
      INSERT INTO _tmpMIContainer_insert (Id, DescId, MovementDescId, MovementId, MovementItemId, ContainerId
-                                       , AccountId, AnalyzerId, ObjectId_Analyzer, WhereObjectId_Analyzer, ContainerId_Analyzer
+                                       , AccountId, AnalyzerId, ObjectId_Analyzer, WhereObjectId_Analyzer, ContainerId_Analyzer, ObjectIntId_Analyzer, ObjectExtId_Analyzer
                                        , ParentId, Amount, OperDate, isActive)
        SELECT 0, zc_MIContainer_Summ() AS DescId, vbMovementDescId, inMovementId, MovementItemId
             , ContainerId_Summ
@@ -1318,6 +1330,8 @@ BEGIN
             , _tmpItem.GoodsId                        AS ObjectId_Analyzer      -- Товар
             , vbWhereObjectId_Analyzer                AS WhereObjectId_Analyzer -- Подраделение или...
             , vbContainerId_Analyzer                  AS ContainerId_Analyzer   -- Контейнер - по долгам поставщика
+            , _tmpItem.GoodsKindId                    AS ObjectIntId_Analyzer   -- вид товара
+            , vbObjectExtId_Analyzer                  AS ObjectExtId_Analyzer   -- Поставщик или...
             , 0                                       AS ParentId
             , CASE WHEN OperCount <> OperCount_Partner AND OperCount_Partner <> 0 THEN CAST (OperCount * OperSumm_Partner / OperCount_Partner AS NUMERIC (16, 4)) ELSE OperSumm_Partner END AS Amount
             , vbOperDate                              AS OperDate               -- т.е. по "Дате склад"
@@ -1332,6 +1346,8 @@ BEGIN
             , _tmpItem.GoodsId                        AS ObjectId_Analyzer      -- Товар
             , vbWhereObjectId_Analyzer                AS WhereObjectId_Analyzer -- Подраделение или...
             , vbContainerId_Analyzer                  AS ContainerId_Analyzer   -- Контейнер - по долгам поставщика
+            , _tmpItem.GoodsKindId                    AS ObjectIntId_Analyzer   -- вид товара
+            , vbObjectExtId_Analyzer                  AS ObjectExtId_Analyzer   -- Поставщик или...
             , 0                                       AS ParentId
             , CASE WHEN OperCount <> OperCount_Partner AND OperCount_Partner <> 0 THEN OperSumm_Partner - CAST (OperCount * OperSumm_Partner / OperCount_Partner AS NUMERIC (16, 4)) ELSE 0 END AS Amount
             , vbOperDate                              AS OperDate               -- т.е. по "Дате склад"
@@ -1347,6 +1363,8 @@ BEGIN
             , _tmpItem.GoodsId                        AS ObjectId_Analyzer      -- Товар
             , vbWhereObjectId_Analyzer                AS WhereObjectId_Analyzer -- Подраделение или...
             , vbContainerId_Analyzer_Packer           AS ContainerId_Analyzer   -- Контейнер - по долгам заготовителю
+            , _tmpItem.GoodsKindId                    AS ObjectIntId_Analyzer   -- вид товара
+            , vbMemberId_Packer                       AS ObjectExtId_Analyzer   -- заготовитель
             , 0                                       AS ParentId
             , OperSumm_Packer                         AS Amount
             , vbOperDate                              AS OperDate               -- т.е. по "Дате склад"
@@ -1355,9 +1373,9 @@ BEGIN
        WHERE OperSumm_Packer <> 0;
 
 
-     -- 2.0.3. формируются Проводки - долг Поставщику или Физ.лицу (подотчетные лица) + !!!не добавлен MovementItemId!!! + !!!добавлен GoodsId!!!
+     -- 2.0.3. формируются Проводки - долг Поставщику или Физ.лицу (подотчетные лица) + !!!не добавлен MovementItemId!!! + !!!добавлен GoodsId + GoodsKindId!!!
      INSERT INTO _tmpMIContainer_insert (Id, DescId, MovementDescId, MovementId, MovementItemId, ContainerId
-                                       , AccountId, AnalyzerId, ObjectId_Analyzer, WhereObjectId_Analyzer, ContainerId_Analyzer
+                                       , AccountId, AnalyzerId, ObjectId_Analyzer, WhereObjectId_Analyzer, ContainerId_Analyzer, ObjectIntId_Analyzer, ObjectExtId_Analyzer
                                        , ParentId, Amount, OperDate, IsActive)
        -- это обычная проводка
        SELECT 0, zc_MIContainer_Summ() AS DescId, vbMovementDescId, inMovementId, 0 AS MovementItemId
@@ -1367,6 +1385,8 @@ BEGIN
             , _tmpItem_SummPartner.GoodsId            AS ObjectId_Analyzer      -- Товар
             , vbWhereObjectId_Analyzer                AS WhereObjectId_Analyzer -- Подраделение или...
             , _tmpItem_SummPartner.ContainerId        AS ContainerId_Analyzer   -- тот же самый
+            , _tmpItem_SummPartner.GoodsKindId        AS ObjectIntId_Analyzer   -- вид товара
+            , vbObjectExtId_Analyzer                  AS ObjectExtId_Analyzer   -- Поставщик или...
             , 0                                       AS ParentId
             , -1 * _tmpItem_SummPartner.OperSumm_Partner
             , CASE WHEN _tmpItem_SummPartner.AccountId_Transit <> 0 THEN vbOperDatePartner ELSE vbOperDate END AS OperDate
@@ -1383,6 +1403,8 @@ BEGIN
             , _tmpItem_SummPartner.GoodsId            AS ObjectId_Analyzer      -- Товар
             , vbWhereObjectId_Analyzer                AS WhereObjectId_Analyzer -- Подраделение или...
             , CASE WHEN tmpOperDate.OperDate = vbOperDate THEN _tmpItem_SummPartner.ContainerId_Transit ELSE _tmpItem_SummPartner.ContainerId_Transit END AS ContainerId_Analyzer -- тот же самый, т.е. в приход попадет "виртуальная" за vbOperDate + "реальная" за vbOperDatePartner
+            , _tmpItem_SummPartner.GoodsKindId        AS ObjectIntId_Analyzer   -- вид товара
+            , vbObjectExtId_Analyzer                  AS ObjectExtId_Analyzer   -- Поставщик или...
             , 0                                       AS ParentId
             , CASE WHEN tmpOperDate.OperDate = vbOperDate THEN -1 ELSE 1 END * _tmpItem_SummPartner.OperSumm_Partner
             , tmpOperDate.OperDate
@@ -1394,7 +1416,7 @@ BEGIN
 
      -- 2.1.2. формируются "виртуальные" Проводки - для количественного учета по ПОКУПАТЕЛЮ + !!!добавлен MovementItemId!!! + !!!добавлен GoodsId!!!
      INSERT INTO _tmpMIContainer_insert (Id, DescId, MovementDescId, MovementId, MovementItemId, ContainerId
-                                       , AccountId, AnalyzerId, ObjectId_Analyzer, WhereObjectId_Analyzer, ContainerId_Analyzer
+                                       , AccountId, AnalyzerId, ObjectId_Analyzer, WhereObjectId_Analyzer, ContainerId_Analyzer, ObjectIntId_Analyzer, ObjectExtId_Analyzer
                                        , ParentId, Amount, OperDate, isActive)
        SELECT 0, zc_MIContainer_Count() AS DescId, vbMovementDescId, inMovementId, _tmpItem_SummPartner_To.MovementItemId
             , _tmpItem_SummPartner_To.ContainerId_Goods
@@ -1403,6 +1425,8 @@ BEGIN
             , _tmpItem_SummPartner_To.GoodsId         AS ObjectId_Analyzer      -- Товар
             , vbWhereObjectId_Analyzer                AS WhereObjectId_Analyzer -- Покупатель
             , vbContainerId_Analyzer                  AS ContainerId_Analyzer   -- Контейнер - по долгам поставщика
+            , 0                                       AS ObjectIntId_Analyzer   -- !!!нет!!!
+            , vbObjectExtId_Analyzer                  AS ObjectExtId_Analyzer   -- Поставщик или...
             , 0                                       AS ParentId
             , _tmpItem_SummPartner_To.OperCount_PartnerFrom * CASE WHEN tmp.isActive = TRUE THEN 1 ELSE -1 END AS Amount -- с противоположными знаками
             , vbOperDate                              AS OperDate
@@ -1417,6 +1441,8 @@ BEGIN
             , _tmpItem_SummPartner_To.GoodsId         AS ObjectId_Analyzer      -- Товар
             , vbWhereObjectId_Analyzer                AS WhereObjectId_Analyzer -- Покупатель
             , vbContainerId_Analyzer                  AS ContainerId_Analyzer   -- Контейнер - по долгам поставщика
+            , 0                                       AS ObjectIntId_Analyzer   -- !!!нет!!!
+            , vbObjectExtId_Analyzer                  AS ObjectExtId_Analyzer   -- Поставщик или...
             , 0                                       AS ParentId
             , (_tmpItem_SummPartner_To.OperCount - _tmpItem_SummPartner_To.OperCount_PartnerFrom) * CASE WHEN tmp.isActive = TRUE THEN 1 ELSE -1 END AS Amount -- с противоположными знаками
             , vbOperDate                              AS OperDate
@@ -1430,7 +1456,7 @@ BEGIN
 
      -- 2.1.3. формируются Проводки - долг ПОКУПАТЕЛЮ + !!!добавлен MovementItemId!!! + !!!добавлен GoodsId!!!
      INSERT INTO _tmpMIContainer_insert (Id, DescId, MovementDescId, MovementId, MovementItemId, ContainerId
-                                       , AccountId, AnalyzerId, ObjectId_Analyzer, WhereObjectId_Analyzer, ContainerId_Analyzer
+                                       , AccountId, AnalyzerId, ObjectId_Analyzer, WhereObjectId_Analyzer, ContainerId_Analyzer, ObjectIntId_Analyzer, ObjectExtId_Analyzer
                                        , ParentId, Amount, OperDate, IsActive)
        -- это обычная проводка (на сумму поставщика)
        SELECT 0, zc_MIContainer_Summ() AS DescId, vbMovementDescId, inMovementId, _tmpItem_SummPartner.MovementItemId
@@ -1440,6 +1466,8 @@ BEGIN
             , _tmpItem_SummPartner.GoodsId            AS ObjectId_Analyzer      -- Товар
             , vbWhereObjectId_Analyzer                AS WhereObjectId_Analyzer -- Покупатель
             , vbContainerId_Analyzer                  AS ContainerId_Analyzer   -- Контейнер - по долгам поставщика
+            , 0                                       AS ObjectIntId_Analyzer   -- !!!нет!!!
+            , vbObjectExtId_Analyzer                  AS ObjectExtId_Analyzer   -- Поставщик или...
             , 0                                       AS ParentId
             , 1 * (_tmpItem_SummPartner.OperSumm_Partner - _tmpItem_SummPartner.OperSumm_70201)
             , vbOperDate                              AS OperDate
@@ -1456,6 +1484,8 @@ BEGIN
             , _tmpItem_SummPartner.GoodsId            AS ObjectId_Analyzer      -- Товар
             , vbWhereObjectId_Analyzer                AS WhereObjectId_Analyzer -- Покупатель
             , vbContainerId_Analyzer                  AS ContainerId_Analyzer   -- Контейнер - по долгам поставщика
+            , 0                                       AS ObjectIntId_Analyzer   -- !!!нет!!!
+            , vbObjectExtId_Analyzer                  AS ObjectExtId_Analyzer   -- Поставщик или...
             , 0                                       AS ParentId
             , 1 * _tmpItem_SummPartner.OperSumm_70201
             , vbOperDate                              AS OperDate
@@ -1466,7 +1496,7 @@ BEGIN
 
      -- 2.1.4. формируются Проводки - Прибыль ПОКУПАТЕЛЮ + !!!нет MovementItemId!!! + !!!добавлен GoodsId!!!
      INSERT INTO _tmpMIContainer_insert (Id, DescId, MovementDescId, MovementId, MovementItemId, ContainerId
-                                       , AccountId, AnalyzerId, ObjectId_Analyzer, WhereObjectId_Analyzer, ContainerId_Analyzer
+                                       , AccountId, AnalyzerId, ObjectId_Analyzer, WhereObjectId_Analyzer, ContainerId_Analyzer, ObjectIntId_Analyzer, ObjectExtId_Analyzer
                                        , ParentId, Amount, OperDate, isActive)
        SELECT 0, zc_MIContainer_Summ() AS DescId, vbMovementDescId, inMovementId, 0 AS MovementItemId
             , _tmpItem_group.ContainerId_ProfitLoss
@@ -1475,6 +1505,8 @@ BEGIN
             , _tmpItem_group.GoodsId                  AS ObjectId_Analyzer      -- Товар
             , vbWhereObjectId_Analyzer                AS WhereObjectId_Analyzer -- Подраделение или...
             , 0                                       AS ContainerId_Analyzer   -- в ОПиУ не нужен
+            , 0                                       AS ObjectIntId_Analyzer   -- !!!нет!!!
+            , vbObjectExtId_Analyzer                  AS ObjectExtId_Analyzer   -- Поставщик или...
             , 0                                       AS ParentId
             , _tmpItem_group.OperSumm                 AS Amount
             , vbOperDate                              AS OperDate               -- т.е. по "Дате склад"
@@ -1491,7 +1523,7 @@ BEGIN
 
      -- 3.3. формируются Проводки - доплата Физ.лицу(заготовитель)
      INSERT INTO _tmpMIContainer_insert (Id, DescId, MovementDescId, MovementId, MovementItemId, ContainerId
-                                       , AccountId, AnalyzerId, ObjectId_Analyzer, WhereObjectId_Analyzer, ContainerId_Analyzer
+                                       , AccountId, AnalyzerId, ObjectId_Analyzer, WhereObjectId_Analyzer, ContainerId_Analyzer, ObjectIntId_Analyzer, ObjectExtId_Analyzer
                                        , ParentId, Amount, OperDate, IsActive)
        SELECT 0, zc_MIContainer_Summ() AS DescId, vbMovementDescId, inMovementId, 0 AS MovementItemId
             , ContainerId
@@ -1500,6 +1532,8 @@ BEGIN
             , 0                                       AS ObjectId_Analyzer      -- нет Товара
             , vbWhereObjectId_Analyzer                AS WhereObjectId_Analyzer -- Подраделение или...
             , ContainerId                             AS ContainerId_Analyzer   -- тот же самый
+            , 0                                       AS ObjectIntId_Analyzer   -- !!!нет!!!
+            , vbMemberId_Packer                       AS ObjectExtId_Analyzer   -- заготовитель
             , 0                                       AS ParentId
             , -1 * OperSumm_Packer                    AS Amount
             , vbOperDate                              AS OperDate               -- т.е. по "Дате склад"
@@ -1563,7 +1597,7 @@ BEGIN
 
      -- 4.3. формируются Проводки - расчеты с поставщиком Физ.лицо(Водитель)
      INSERT INTO _tmpMIContainer_insert (Id, DescId, MovementDescId, MovementId, MovementItemId, ContainerId
-                                       , AccountId, AnalyzerId, ObjectId_Analyzer, WhereObjectId_Analyzer, ContainerId_Analyzer
+                                       , AccountId, AnalyzerId, ObjectId_Analyzer, WhereObjectId_Analyzer, ContainerId_Analyzer -- , ObjectIntId_Analyzer, ObjectExtId_Analyzer
                                        , ParentId, Amount, OperDate, IsActive)
        -- это списание с водителя
        SELECT 0, zc_MIContainer_Summ() AS DescId, vbMovementDescId, inMovementId, 0 AS MovementItemId

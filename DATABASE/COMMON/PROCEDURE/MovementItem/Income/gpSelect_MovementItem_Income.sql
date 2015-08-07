@@ -37,7 +37,7 @@ BEGIN
      END IF;
 
      -- определяется - Пав-ны приход
-     vbPriceListId:= (SELECT 140208 WHERE EXISTS (SELECT UserId FROM ObjectLink_UserRole_View WHERE UserId = vbUserId AND RoleId IN (80548, zc_Enum_Role_Admin()))); -- Бухгалтер ПАВИЛЬОНЫ
+     vbPriceListId:= (SELECT 140208 WHERE EXISTS (SELECT UserId FROM ObjectLink_UserRole_View WHERE UserId = vbUserId AND RoleId IN (80548))); -- Бухгалтер ПАВИЛЬОНЫ
 
      -- Результат
      IF inShowAll THEN 

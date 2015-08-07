@@ -1132,7 +1132,7 @@ BEGIN
             , 0                                       AS ObjectIntId_Analyzer   -- !!!нет!!!
             , 0                                       AS ObjectExtId_Analyzer   -- !!!нет!!!
             , 0                                       AS ParentId
-            , OperCount                               AS Amountt
+            , OperCount                               AS Amount
             , vbOperDate                              AS OperDate               -- т.е. по "Дате склад"
             , TRUE                                    AS isActive
        FROM _tmpItem

@@ -46,6 +46,9 @@ BEGIN
      -- сохранили свойство <Режим начала взвешивания>
      PERFORM lpInsertUpdate_MovementItemBoolean (zc_MIBoolean_StartWeighing(), ioId, inIsStartWeighing);
 
+     -- сохранили свойство <Дата/время создания>
+     PERFORM lpInsertUpdate_MovementItemDate (zc_MIDate_Insert(), ioId, CURRENT_TIMESTAMP);
+
      -- сохранили свойство <Реальный вес (без учета: минус тара и прочее)
      PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_RealWeight(), ioId, inRealWeight);
      -- сохранили свойство <Вес тары>

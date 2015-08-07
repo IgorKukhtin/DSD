@@ -14,7 +14,7 @@ uses
   cxDropDownEdit, cxCalendar, Vcl.ExtCtrls, cxGridLevel, cxGridCustomView,
   cxGridCustomTableView, cxGridTableView, cxGridDBTableView, cxGrid, cxPC,
   dsdGuides, cxButtonEdit, Vcl.Grids, Vcl.DBGrids, cxCurrencyEdit, dxSkinsCore,
-  dxSkinsDefaultPainters, dxSkinscxPCPainter, dxSkinsdxBarPainter;
+  dxSkinsDefaultPainters, dxSkinscxPCPainter, dxSkinsdxBarPainter, cxCheckBox;
 
 type
   TReport_ReceiptSaleAnalyzeForm = class(TAncestorReportForm)
@@ -80,6 +80,21 @@ type
     Price_out_pl_sale: TcxGridDBColumn;
     SummOut_sale: TcxGridDBColumn;
     Price_out_sale: TcxGridDBColumn;
+    actPrint: TdsdPrintAction;
+    bbPrint: TdxBarButton;
+    actPrint_Real: TdsdPrintAction;
+    bbPrint_Real: TdxBarButton;
+    Summ_sale: TcxGridDBColumn;
+    SummPrice1_sale: TcxGridDBColumn;
+    SummPrice2_sale: TcxGridDBColumn;
+    SummPrice3_sale: TcxGridDBColumn;
+    Tax_Summ_sale: TcxGridDBColumn;
+    Tax_SummOut_sale: TcxGridDBColumn;
+    Tax_return: TcxGridDBColumn;
+    OperCount_sh_return: TcxGridDBColumn;
+    OperCount_sh_sale: TcxGridDBColumn;
+    cbGoodsKind: TcxCheckBox;
+    bbGoodsKind: TdxBarControlContainerItem;
   private
     { Private declarations }
   public

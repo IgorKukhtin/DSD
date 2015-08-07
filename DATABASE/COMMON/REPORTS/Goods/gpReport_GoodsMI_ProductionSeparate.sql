@@ -188,6 +188,35 @@ BEGIN
                                , tmpMI_Container.GoodsId 
                                , tmpMI_Container.isActive
                            )
+
+  , tmpMI_total AS
+           (SELECT tmpMI.GoodsId 
+                , -1* SUM (tmpMI.Summ) AS Summ
+                , -1* SUM (tmpMI.Amount) AS Amount
+                ,  SUM (tmpMI.HeadCount) AS HeadCount
+            FROM (SELECT  tmpMI_out.GoodsId as GoodsId       
+                        , tmpMI_out.Summ
+                        , tmpMI_out.Amount
+                        , tmpMI_out.HeadCount
+                  FROM tmpMI_Count AS tmpMI_out
+                       JOIN _tmpGoods ON _tmpGoods.GoodsId = tmpMI_out.GoodsId
+                  Where tmpMI_out.isActive = FALSE
+                    AND inGroupMovement = FALSE
+                    AND inGroupPartion  = FALSE
+              UNION ALL
+                  SELECT  tmpMI_out_Sum.GoodsId       
+                        , tmpMI_out_Sum.Summ
+                        , tmpMI_out_Sum.Amount
+                        , 0 AS HeadCount
+                  FROM tmpMI_sum AS tmpMI_out_Sum
+                       JOIN _tmpGoods ON _tmpGoods.GoodsId = tmpMI_out_Sum.GoodsId
+                  Where tmpMI_out_Sum.isActive = FALSE
+                    AND inGroupMovement = FALSE
+                    AND inGroupPartion  = FALSE
+            ) AS tmpMI 
+            GROUP BY tmpMI.GoodsId
+            )
+
       -- –≈«”À‹“¿“
       SELECT CAST (tmpOperationGroup.InvNumber AS TVarChar) AS InvNumber
            , CAST (tmpOperationGroup.OperDate AS TDateTime)  AS OperDate
@@ -197,10 +226,10 @@ BEGIN
            , Object_Goods.ObjectCode     AS GoodsCode
            , Object_Goods.ValueData      AS GoodsName  
 
-           , tmpOperationGroup.Amount :: TFloat AS Amount
-           , tmpOperationGroup.HeadCount :: TFloat AS HeadCount
+           , COALESCE (tmpMI_total.Amount, tmpOperationGroup.Amount) :: TFloat AS Amount
+           , COALESCE (tmpMI_total.HeadCount, tmpOperationGroup.HeadCount) :: TFloat AS HeadCount
 
-           , tmpOperationGroup.Summ :: TFloat AS Summ
+           , COALESCE (tmpMI_total.Summ, tmpOperationGroup.Summ) :: TFloat AS Summ
 
 
            , Object_GoodsGroupChild.ValueData AS ChildGoodsGroupName 
@@ -213,7 +242,7 @@ BEGIN
            , CAST (lfObjectHistory_PriceListItem.ValuePrice AS TFloat) AS Price
            
            , CASE WHEN tmpOperationGroup.ChildAmount <> 0 THEN COALESCE ((tmpOperationGroup.ChildSumm / tmpOperationGroup.ChildAmount) ,0) ELSE 0 END  :: TFloat         AS ChildPrice
-           , CASE WHEN tmpOperationGroup.Amount <> 0 THEN COALESCE((tmpOperationGroup.ChildAmount * 100 / tmpOperationGroup.Amount) ,0) ELSE 0 END   ::TFloat   AS Percent  
+           , CASE WHEN COALESCE (tmpMI_total.Amount, tmpOperationGroup.Amount) <> 0 THEN COALESCE((tmpOperationGroup.ChildAmount * 100 / COALESCE (tmpMI_total.Amount, tmpOperationGroup.Amount)) ,0) ELSE 0 END   ::TFloat   AS Percent  
 
       FROM (
             SELECT CASE when inGroupMovement = True THEN tmpMI.InvNumber ELSE '' END AS InvNumber
@@ -244,7 +273,7 @@ BEGIN
                        JOIN _tmpChildGoods ON _tmpChildGoods.ChildGoodsId = tmpMI_in.GoodsId
                   Where tmpMI_out.isActive = FALSE
                    AND COALESCE (tmpMI_in.Amount, -1 ) <> 0
-              UNION
+              UNION ALL
                   SELECT  tmpMI_out_Sum.InvNumber
                         , tmpMI_out_Sum.OperDate
                         , tmpMI_out_Sum.PartionGoods 
@@ -270,6 +299,8 @@ BEGIN
                    , tmpMI.GoodsId       
                    , tmpMI.ChildGoodsId   
             ) AS tmpOperationGroup
+
+             LEFT JOIN tmpMI_total ON tmpMI_total.GoodsId = tmpOperationGroup.GoodsId
 
              LEFT JOIN Object AS Object_Goods on Object_Goods.Id = tmpOperationGroup.GoodsId
              LEFT JOIN Object AS Object_GoodsChild on Object_GoodsChild.Id = tmpOperationGroup.ChildGoodsId

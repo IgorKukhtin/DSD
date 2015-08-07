@@ -42,10 +42,34 @@ BEGIN
                           );
      IF vbMovementId_check <> 0
      THEN
-         RAISE EXCEPTION 'Ошибка.Найдена другая <Ведомость начисления> № <%> от <%> для <%> за <%>.Дублирование запрещено.', (SELECT Movement.InvNumber FROM Movement WHERE Movement.Id = vbMovementId_check)
+         RAISE EXCEPTION 'Ошибка.Найдена другая <Ведомость начисления> № <%> от <%> для <%> за <%>.Дублирование запрещено. <%>', (SELECT Movement.InvNumber FROM Movement WHERE Movement.Id = vbMovementId_check)
                                                                                                                            , DATE ((SELECT Movement.OperDate FROM Movement WHERE Movement.Id = vbMovementId_check))
                                                                                                                            , lfGet_Object_ValueData ((SELECT MovementLinkObject.ObjectId FROM MovementLinkObject WHERE MovementLinkObject.MovementId = vbMovementId_check AND MovementLinkObject.DescId = zc_MovementLinkObject_PersonalServiceList()))
-                                                                                                                           , zfCalc_MonthYearName ((SELECT MovementDate.ValueData FROM MovementDate WHERE MovementDate.MovementId = vbMovementId_check AND MovementDate.DescId = zc_MIDate_ServiceDate()));
+                                                                                                                           , zfCalc_MonthYearName ((SELECT MovementDate.ValueData FROM MovementDate WHERE MovementDate.MovementId = vbMovementId_check AND MovementDate.DescId = zc_MIDate_ServiceDate()))
+                                                                                                                           , zfCalc_MonthYearName ((SELECT MovementDate.ValueData FROM MovementDate WHERE MovementDate.MovementId = vbMovementId_check AND MovementDate.DescId = zc_MIDate_ServiceDate()))
+                        , (SELECT MovementDate_ServiceDate.MovementId
+                           FROM (SELECT MovementDate.MovementId     AS MovementId
+                                      , MovementDate.ValueData      AS ServiceDate
+                                      , MovementLinkObject.ObjectId AS PersonalServiceListId
+                                 FROM MovementDate
+                                      LEFT JOIN MovementLinkObject ON MovementLinkObject.MovementId = MovementDate.MovementId
+                                                                  AND MovementLinkObject.DescId = zc_MovementLinkObject_PersonalServiceList()
+                                 WHERE MovementDate.MovementId = inMovementId
+                                   AND MovementDate.DescId = zc_MIDate_ServiceDate()
+                                 ) tmpMovement
+                                INNER JOIN MovementDate AS MovementDate_ServiceDate
+                                                        ON MovementDate_ServiceDate.ValueData = tmpMovement.ServiceDate
+                                                       AND MovementDate_ServiceDate.DescId = zc_MIDate_ServiceDate()
+                                                       AND MovementDate_ServiceDate.MovementId <> tmpMovement.MovementId
+                                INNER JOIN Movement ON Movement.Id = MovementDate_ServiceDate.MovementId
+                                                   AND Movement.StatusId = zc_Enum_Status_Complete()
+                                INNER JOIN MovementLinkObject AS MovementLinkObject_PersonalServiceList
+                                                              ON MovementLinkObject_PersonalServiceList.MovementId = MovementDate_ServiceDate.MovementId
+                                                             AND MovementLinkObject_PersonalServiceList.DescId = zc_MovementLinkObject_PersonalServiceList()
+                                                             AND MovementLinkObject_PersonalServiceList.ObjectId = tmpMovement.PersonalServiceListId
+                           LIMIT 1
+                          )
+                         ;
      END IF;
 
 

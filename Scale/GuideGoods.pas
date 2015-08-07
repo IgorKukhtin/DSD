@@ -481,6 +481,8 @@ begin
           end;
           //сохранение MovementItem
           Result:=DMMainScaleForm.gpInsert_Scale_MI(ParamsMovement,ParamsMI);
+          if not Result then ShowMessage('Error.not Result');
+          Result:=true;
      end;
 end;
 {------------------------------------------------------------------------------}
@@ -999,7 +1001,7 @@ begin Close;end;
 {------------------------------------------------------------------------------}
 procedure TGuideGoodsForm.actSaveExecute(Sender: TObject);
 begin
-     if Checked then ModalResult:=mrOK;
+     if Checked then begin ModalResult:=mrOK;Close;end;
 end;
 {------------------------------------------------------------------------------}
 procedure TGuideGoodsForm.FormCreate(Sender: TObject);
@@ -1058,6 +1060,5 @@ begin
   if Assigned (ParamsMI) then begin ParamsMI.Free;ParamsMI:=nil;end;
   if Assigned (ParamsMovement) then begin ParamsMovement.Free;ParamsMovement:=nil;end;
 end;
-
 {------------------------------------------------------------------------------}
 end.
