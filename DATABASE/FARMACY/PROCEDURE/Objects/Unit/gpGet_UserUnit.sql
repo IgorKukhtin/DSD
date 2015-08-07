@@ -23,7 +23,7 @@ BEGIN
      vbUnitId := vbUnitKey::Integer;
 
      RETURN QUERY
-     SELECT Id, ValueData FROM Object WHERE Id = vbUnitKey;
+     SELECT Id, ValueData FROM Object WHERE Id = vbUnitId;
 
 END;
 $BODY$

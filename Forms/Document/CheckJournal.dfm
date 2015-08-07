@@ -1,21 +1,36 @@
 inherited CheckJournalForm: TCheckJournalForm
   Caption = #1050#1072#1089#1089#1086#1074#1099#1077' '#1095#1077#1082#1080
-  ClientWidth = 582
-  ExplicitWidth = 590
+  ClientWidth = 697
+  AddOnFormData.RefreshAction = actRefreshStart
+  ExplicitWidth = 705
+  ExplicitHeight = 702
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Width = 582
+    Top = 77
+    Width = 697
+    Height = 598
     TabOrder = 3
-    ExplicitWidth = 582
-    ClientRectRight = 582
+    ExplicitTop = 77
+    ExplicitWidth = 697
+    ExplicitHeight = 598
+    ClientRectBottom = 598
+    ClientRectRight = 697
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 582
-      ExplicitHeight = 0
+      ExplicitWidth = 697
+      ExplicitHeight = 598
       inherited cxGrid: TcxGrid
-        Width = 582
-        ExplicitWidth = 582
+        Width = 697
+        Height = 598
+        ExplicitWidth = 697
+        ExplicitHeight = 598
         inherited cxGridDBTableView: TcxGridDBTableView
+          DataController.Summary.FooterSummaryItems = <
+            item
+              Format = ',0.00'
+              Kind = skSum
+              Column = colTotalSumm
+            end>
           Styles.Content = nil
           Styles.Inactive = nil
           Styles.Selection = nil
@@ -52,16 +67,44 @@ inherited CheckJournalForm: TCheckJournalForm
           object colTotalSumm: TcxGridDBColumn
             Caption = #1057#1091#1084#1084#1072
             DataBinding.FieldName = 'TotalSumm'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.00'
             Options.Editing = False
             Width = 79
+          end
+          object coPaidTypeName: TcxGridDBColumn
+            Caption = #1058#1080#1087' '#1086#1087#1083#1072#1090#1099
+            DataBinding.FieldName = 'PaidTypeName'
+            Width = 70
           end
         end
       end
     end
   end
   inherited Panel: TPanel
-    Width = 582
-    ExplicitWidth = 582
+    Width = 697
+    Height = 51
+    ExplicitWidth = 697
+    ExplicitHeight = 51
+    object ceUnit: TcxButtonEdit
+      Left = 107
+      Top = 29
+      Properties.Buttons = <
+        item
+          Default = True
+          Kind = bkEllipsis
+        end>
+      Properties.Nullstring = '<'#1042#1099#1073#1077#1088#1080#1090#1077' '#1087#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077'>'
+      Properties.ReadOnly = True
+      Properties.UseNullString = True
+      TabOrder = 4
+      Width = 288
+    end
+    object cxLabel3: TcxLabel
+      Left = 10
+      Top = 29
+      Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077':'
+    end
   end
   inherited ActionList: TActionList
     inherited actInsert: TdsdInsertUpdateAction
@@ -121,9 +164,65 @@ inherited CheckJournalForm: TCheckJournalForm
     inherited actSimpleErased: TMultiAction
       Enabled = False
     end
+    object actGet_UserUnit: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spGet_UserUnit
+      StoredProcList = <
+        item
+          StoredProc = spGet_UserUnit
+        end>
+      Caption = 'actGet_UserUnit'
+    end
+    object actRefreshStart: TdsdDataSetRefresh
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spGet_UserUnit
+      StoredProcList = <
+        item
+          StoredProc = spGet_UserUnit
+        end
+        item
+          StoredProc = spSelect
+        end>
+      Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
+      Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
+      ShortCut = 116
+      RefreshOnTabSetChanges = False
+    end
   end
   inherited spSelect: TdsdStoredProc
     StoredProcName = 'gpSelect_Movement_Check'
+    Params = <
+      item
+        Name = 'inStartDate'
+        Value = 41640d
+        Component = deStart
+        DataType = ftDateTime
+        ParamType = ptInputOutput
+      end
+      item
+        Name = 'inEndDate'
+        Value = 41640d
+        Component = deEnd
+        DataType = ftDateTime
+        ParamType = ptInput
+      end
+      item
+        Name = 'inIsErased'
+        Value = False
+        Component = actShowErased
+        DataType = ftBoolean
+        ParamType = ptInput
+      end
+      item
+        Name = 'inUnitId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'UnitId'
+        ParamType = ptInput
+      end>
   end
   inherited BarManager: TdxBarManager
     DockControlHeights = (
@@ -194,5 +293,97 @@ inherited CheckJournalForm: TCheckJournalForm
     inherited bbDelete: TdxBarButton
       Visible = ivNever
     end
+  end
+  inherited RefreshDispatcher: TRefreshDispatcher
+    RefreshAction = actRefreshStart
+    ComponentList = <
+      item
+        Component = PeriodChoice
+      end
+      item
+        Component = UnitGuides
+      end>
+  end
+  inherited FormParams: TdsdFormParams
+    Params = <
+      item
+        Name = 'Id'
+        Value = Null
+        ParamType = ptInputOutput
+      end
+      item
+        Name = 'Key'
+        Value = Null
+        DataType = ftString
+        ParamType = ptInput
+      end
+      item
+        Name = 'ShowAll'
+        Value = False
+        DataType = ftBoolean
+        ParamType = ptInputOutput
+      end
+      item
+        Name = 'UnitId'
+        Value = Null
+        Component = UnitGuides
+        ComponentItem = 'Key'
+      end>
+  end
+  object UnitGuides: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = ceUnit
+    FormNameParam.Value = 'TUnitTreeForm'
+    FormNameParam.DataType = ftString
+    FormName = 'TUnitTreeForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = UnitGuides
+        ComponentItem = 'Key'
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = UnitGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+      end>
+    Left = 336
+    Top = 24
+  end
+  object rdUnit: TRefreshDispatcher
+    IdParam.Value = Null
+    RefreshAction = actRefresh
+    ComponentList = <
+      item
+        Component = UnitGuides
+      end>
+    Left = 296
+    Top = 24
+  end
+  object spGet_UserUnit: TdsdStoredProc
+    StoredProcName = 'gpGet_UserUnit'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'UnitId'
+        Value = Null
+        Component = UnitGuides
+        ComponentItem = 'Key'
+      end
+      item
+        Name = 'UnitName'
+        Value = Null
+        Component = UnitGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+      end>
+    PackSize = 1
+    Left = 432
+    Top = 424
   end
 end

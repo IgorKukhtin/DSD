@@ -322,13 +322,14 @@ uses
   SendJournal in '..\..\FormsFarmacy\Document\SendJournal.pas' {SendJournalForm: TParentForm},
   SendTest in '..\SOURCE\Movement\All\Farmacy\SendTest.pas',
   SendMovementItemTest in '..\SOURCE\MovementItem\All\Farmacy\SendMovementItemTest.pas',
-  CreateOrderFromMCS in '..\..\FormsFarmacy\Document\CreateOrderFromMCS.pas' {CreateOrderFromMCSForm: TParentForm};
+  CreateOrderFromMCS in '..\..\FormsFarmacy\Document\CreateOrderFromMCS.pas' {CreateOrderFromMCSForm: TParentForm},
+  CheckJournalUser in '..\..\Forms\Document\CheckJournalUser.pas' {CheckJournalUserForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}
 
 begin
-  ConnectionPath := '..\INIT\farmacy_init.php';
+  ConnectionPath := '..\INIT\realfarmacy_init.php';
   EnumPath := '..\DATABASE\FARMACY\METADATA\Enum\';
   CreateStructurePath := '..\DATABASE\FARMACY\STRUCTURE\';
   LocalViewPath := '..\DATABASE\FARMACY\View\';

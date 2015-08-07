@@ -12,7 +12,8 @@ uses
   Datasnap.DBClient, dsdAction, Vcl.ActnList, cxPropertiesStore, cxLabel,
   cxTextEdit, cxMaskEdit, cxDropDownEdit, cxCalendar, Vcl.ExtCtrls, cxGridLevel,
   cxGridCustomTableView, cxGridTableView, cxGridDBTableView, cxGridCustomView,
-  cxGrid, cxPC, dxBarBuiltInMenu, cxNavigator;
+  cxGrid, cxPC, dxBarBuiltInMenu, cxNavigator, cxCurrencyEdit, dsdGuides,
+  cxButtonEdit;
 
 type
   TCheckJournalForm = class(TAncestorJournalForm)
@@ -20,6 +21,14 @@ type
     colCashNumber: TcxGridDBColumn;
     colTotalCount: TcxGridDBColumn;
     colTotalSumm: TcxGridDBColumn;
+    coPaidTypeName: TcxGridDBColumn;
+    ceUnit: TcxButtonEdit;
+    cxLabel3: TcxLabel;
+    UnitGuides: TdsdGuides;
+    rdUnit: TRefreshDispatcher;
+    spGet_UserUnit: TdsdStoredProc;
+    actGet_UserUnit: TdsdExecStoredProc;
+    actRefreshStart: TdsdDataSetRefresh;
   private
     { Private declarations }
   public
