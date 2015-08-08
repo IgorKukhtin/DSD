@@ -2029,8 +2029,8 @@ begin
          EUTaxService_СертификатExite := 'O=Фізична особа ;OU=Фізична особа;Title=підписувач;CN=Алієв Арсен Шакірович;SN=Алієв;GivenName=Арсен Шакірович;Serial=1497059;C=UA;L=Крюківщина;ST=Київська';
          EUTaxService_СертификатМДС := 'O=Державна фіскальна служба України;OU=Державна фіскальна служба України;Title=електронна печатка;CN=Державна фіскальна служба України. ОТРИМАНО;Serial=1671693;C=UA;L=Київ';
          ddd := VarArrayCreate([0, 1], varOleStr);
-         ddd[0] := EUTaxService_СертификатExite;
-         ddd[1] := EUTaxService_СертификатМДС;
+         ddd[1] := EUTaxService_СертификатExite;
+         ddd[0] := EUTaxService_СертификатМДС;
          ComSigner.SetFilesOptions(true);
          ComSigner.ProtectFilesEx(FileName, true, false, true, true, false, 'pn@exite.ua', ddd);
       end;

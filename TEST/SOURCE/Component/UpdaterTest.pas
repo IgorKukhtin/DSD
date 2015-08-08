@@ -11,7 +11,9 @@ type
     procedure SaveFile(FilePath: string);
   published
     procedure ProcedureLoad; override;
-    procedure Test; override;
+    procedure UpdateAllProgram;
+    procedure UpdateScale;
+    procedure UpdateScaleCeh;
   end;
 
   TUpdaterScaleTest = class (TdbObjectTestNew)
@@ -21,6 +23,7 @@ type
     procedure ProcedureLoad; override;
     procedure Test; override;
   end;
+
   TUpdaterScaleCehTest = class (TdbObjectTestNew)
   private
     procedure SaveFile(FilePath: string);
@@ -69,8 +72,9 @@ begin
   end;
 end;
 
-procedure TUpdaterTest.Test;
+procedure TUpdaterTest.UpdateAllProgram;
 begin
+  inherited;
   SaveFile(ExtractFileDir(ParamStr(0)) + '\midas.dll');
   SaveFile(ExtractFileDir(ParamStr(0)) + '\Upgrader4.exe');
   SaveFile(ExtractFileDir(ParamStr(0)) + '\' + gc_ProgramName);
@@ -78,6 +82,17 @@ begin
   SaveFile(ExtractFileDir(ParamStr(0)) + '\ScaleCeh.exe');
 end;
 
+procedure TUpdaterTest.UpdateScale;
+begin
+  inherited;
+
+end;
+
+procedure TUpdaterTest.UpdateScaleCeh;
+begin
+  inherited;
+
+end;
 
 {-----------------Scale--------------------------------}
 
