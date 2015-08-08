@@ -594,6 +594,16 @@ inherited MainCashForm: TMainCashForm
       ShortCut = 116
       RefreshOnTabSetChanges = False
     end
+    object actCheckUser: TdsdOpenForm
+      Category = #1044#1086#1082#1091#1084#1077#1085#1090#1099
+      MoveParams = <>
+      Caption = #1063#1077#1082#1080
+      FormName = 'TCheckJournalUserForm'
+      FormNameParam.Value = 'TCheckJournalUserForm'
+      FormNameParam.DataType = ftString
+      GuiParams = <>
+      isShowModal = False
+    end
   end
   object dsdDBViewAddOnMain: TdsdDBViewAddOn
     ErasedFieldName = 'isErased'
@@ -1036,5 +1046,19 @@ inherited MainCashForm: TMainCashForm
     AfterScroll = RemainsCDSAfterScroll
     Left = 304
     Top = 48
+  end
+  object spGet_User_IsAdmin: TdsdStoredProc
+    StoredProcName = 'gpGet_User_IsAdmin'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'gpGet_User_IsAdmin'
+        Value = Null
+        DataType = ftBoolean
+      end>
+    PackSize = 1
+    Left = 152
+    Top = 352
   end
 end

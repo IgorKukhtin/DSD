@@ -113,6 +113,8 @@ type
     spSelectRemains_Lite: TdsdStoredProc;
     Remains_LiteCDS: TClientDataSet;
     actRefreshLite: TdsdDataSetRefresh;
+    actCheckUser: TdsdOpenForm;
+    spGet_User_IsAdmin: TdsdStoredProc;
     procedure FormCreate(Sender: TObject);
     procedure actChoiceGoodsInRemainsGridExecute(Sender: TObject);
     procedure lcNameKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
@@ -437,6 +439,12 @@ begin
                   'Дальнейшая работа программы возможна только в нефискальном режиме!');
     End;
   end;
+  spGet_User_IsAdmin.Execute;
+  if spGet_User_IsAdmin.ParamByName('gpGet_User_IsAdmin').Value = True then
+    cxButton1.Action := actCheck
+  Else
+    cxButton1.Action := actCheckUser;
+
   SoldParallel:=iniSoldParallel;
   NewCheck;
   OnCLoseQuery := ParentFormCloseQuery;
