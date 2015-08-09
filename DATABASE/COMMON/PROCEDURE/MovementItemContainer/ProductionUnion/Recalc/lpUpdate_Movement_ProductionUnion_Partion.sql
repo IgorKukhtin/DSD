@@ -18,7 +18,28 @@ RETURNS TABLE (MovementItemId_gp Integer, MovementItemId_out Integer, ContainerI
               )
 AS
 $BODY$
+  DECLARE vbMovementId_inv Integer;
 BEGIN
+     -- определяется документ Инвентаризация, т.к. надо её учесть + распределить "Ковбаси сирокопчені"
+     vbMovementId_inv:= (SELECT Movement.Id
+                         FROM Movement
+                              INNER JOIN MovementLinkObject AS MovementLinkObject_From
+                                                            ON MovementLinkObject_From.MovementId = Movement.Id
+                                                           AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
+                                                           AND MovementLinkObject_From.ObjectId = inFromId
+                              INNER JOIN MovementItem ON MovementItem.MovementId = Movement.Id
+                                                     AND MovementItem.isErased = FALSE
+                                                     AND MovementItem.Amount <> 0
+                              INNER JOIN ObjectLink ON ObjectLink.ObjectId = MovementItem.ObjectId
+                                                   AND ObjectLink.DescId = zc_ObjectLink_Goods_InfoMoney()
+                              INNER JOIN Object_InfoMoney_View AS View_InfoMoney ON View_InfoMoney.InfoMoneyId = ObjectLink.ChildObjectId
+                                                                                AND View_InfoMoney.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_30100() -- Продукция
+                         WHERE Movement.OperDate = DATE_TRUNC ('MONTH', inStartDate) + INTERVAL '1 MONTH' - INTERVAL '1 DAY'
+                           AND Movement.StatusId <> zc_Enum_Status_Erased()
+                           AND Movement.DescId = zc_Movement_Inventory()
+                         LIMIT 1
+                        );
+
 
      -- таблица - Приходы ГП с пр-ва
      CREATE TEMP TABLE _tmpItem_GP (MovementId Integer, MovementItemId_gp Integer, GoodsId Integer, OperCount TFloat) ON COMMIT DROP;
@@ -30,10 +51,10 @@ BEGIN
      CREATE TEMP TABLE _tmpItem_Result (MovementId Integer, MovementItemId_gp Integer, MovementItemId_out Integer, ContainerId Integer, GoodsId Integer, OperCount TFloat) ON COMMIT DROP;
 
 
-     -- Приходы ГП с пр-ва
+     -- Приходы ГП с пр-ва на Склад
      INSERT INTO _tmpItem_GP (MovementId, MovementItemId_gp, GoodsId, OperCount)
              -- !!!Товары временно захардкодил: Ковбаси сирокопчені!!!
-        WITH tmpGoodsCK AS (SELECT ObjectId AS GoodsId FROM ObjectLink WHERE ObjectLink.DescId = zc_ObjectLink_Goods_GoodsGroupAnalyst() AND ObjectLink.ChildObjectId = 340591)
+        WITH tmpGoodsCK AS (SELECT ObjectId AS GoodsId FROM ObjectLink WHERE ObjectLink.DescId = zc_ObjectLink_Goods_GoodsGroupAnalyst() AND ObjectLink.ChildObjectId = 340591 AND vbMovementId_inv IS NULL)
         SELECT MIContainer.MovementId
              , MIContainer.MovementItemId           AS MovementItemId_gp
              , MIContainer.ObjectId_Analyzer        AS GoodsId
@@ -95,9 +116,36 @@ BEGIN
 
      -- Производство + Остатки партий, их и будем распределять
      INSERT INTO _tmpItem_PF_find (ContainerId, MovementItemId_In, OperCount, isPartionClose, PartionGoodsDate, PartionGoodsDateClose)
-       WITH tmpContainer_PF AS (-- Партии ПФ(ГП)
+       WITH tmpInventory_PF AS (-- Инвентаризация ПФ(ГП)
+                                SELECT MovementItem.ObjectId                    AS GoodsId
+                                     , MIDate_PartionGoods.ValueData            AS PartionGoodsDate
+                                     , MILinkObject_GoodsKind.ObjectId          AS GoodsKindId
+                                     , COALESCE (MILinkObject_GoodsKind_complete.ObjectId, zc_GoodsKind_Basis()) AS GoodsKindId_complete
+                                     , SUM (MovementItem.Amount)                AS Amount
+                                FROM MovementItem
+                                     INNER JOIN MovementItemDate AS MIDate_PartionGoods
+                                                                 ON MIDate_PartionGoods.MovementItemId = MovementItem.Id
+                                                                AND MIDate_PartionGoods.DescId = zc_MIDate_PartionGoods()
+                                     INNER JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
+                                                                       ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
+                                                                      AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
+                                     LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind_complete
+                                                                      ON MILinkObject_GoodsKind_complete.MovementItemId = MovementItem.Id
+                                                                     AND MILinkObject_GoodsKind_complete.DescId = zc_MILinkObject_GoodsKindComplete()
+                                WHERE MovementItem.MovementId = vbMovementId_inv
+                                  AND MovementItem.isErased = FALSE
+                                  AND MovementItem.Amount <> 0
+                                GROUP BY MovementItem.ObjectId
+                                       , MIDate_PartionGoods.ValueData
+                                       , MILinkObject_GoodsKind.ObjectId
+                                       , MILinkObject_GoodsKind_complete.ObjectId
+                               )
+          , tmpContainer_PF AS (-- Партии ПФ(ГП)
                                 SELECT tmp.ContainerId
+                                     , tmp.GoodsId
+                                     , tmp.PartionGoodsId
                                      , CASE WHEN (ObjectDate_PartionGoods_Value.ValueData + (COALESCE (tmp.TermProduction, 0) :: TVarChar || ' DAY') :: INTERVAL) <= inEndDate
+                                              OR vbMovementId_inv > 0
                                                  THEN TRUE
                                             ELSE FALSE
                                        END AS isPartionClose
@@ -105,10 +153,12 @@ BEGIN
                                      , ObjectDate_PartionGoods_Value.ValueData + (COALESCE (tmp.TermProduction, 0) :: TVarChar || ' DAY') :: INTERVAL AS PartionGoodsDateClose
                                 FROM (-- Расходы ПФ(ГП) + !!!минимальный TermProduction!!! т.к. их может быть несколько
                                       SELECT _tmpItem_PF.ContainerId
+                                           , _tmpItem_PF.GoodsId
                                            , _tmpItem_PF.PartionGoodsId
                                            , MIN (_tmpItem_PF.TermProduction) AS TermProduction
                                       FROM _tmpItem_PF
                                       GROUP BY _tmpItem_PF.ContainerId
+                                             , _tmpItem_PF.GoodsId
                                              , _tmpItem_PF.PartionGoodsId
                                      ) AS tmp
                                      INNER JOIN ObjectDate AS ObjectDate_PartionGoods_Value
@@ -116,7 +166,16 @@ BEGIN
                                                           AND ObjectDate_PartionGoods_Value.DescId = zc_ObjectDate_PartionGoods_Value()
                                )
         -- результат - ВСЕ партии которые надо закрыть/открыть
-        SELECT tmpContainer_PF.ContainerId
+        SELECT tmp.ContainerId
+             , tmp.MovementItemId_In
+             , tmp.Amount - COALESCE (tmpInventory_PF.Amount, 0)
+             , tmp.isPartionClose
+             , tmp.PartionGoodsDate
+             , tmp.PartionGoodsDateClose
+        FROM
+       (SELECT tmpContainer_PF.ContainerId
+             , tmpContainer_PF.GoodsId
+             , tmpContainer_PF.PartionGoodsId
              , CASE WHEN MIContainer.OperDate BETWEEN inStartDate AND inEndDate AND MIContainer.isActive = TRUE AND MIContainer.MovementDescId = zc_Movement_ProductionUnion()
                          THEN MIContainer.MovementItemId -- нужен только для zc_Movement_ProductionUnion, т.к. надо закрыть по нему партию
                     ELSE 0
@@ -135,6 +194,8 @@ BEGIN
         FROM tmpContainer_PF
              INNER JOIN MovementItemContainer AS MIContainer ON MIContainer.ContainerId = tmpContainer_PF.ContainerId
         GROUP BY tmpContainer_PF.ContainerId
+               , tmpContainer_PF.GoodsId
+               , tmpContainer_PF.PartionGoodsId
                , CASE WHEN MIContainer.OperDate BETWEEN inStartDate AND inEndDate AND MIContainer.isActive = TRUE AND MIContainer.MovementDescId = zc_Movement_ProductionUnion()
                            THEN MIContainer.MovementItemId
                       ELSE 0
@@ -148,7 +209,19 @@ BEGIN
                               THEN MIContainer.Amount
                          ELSE 0
                     END) <> 0
+       ) AS tmp
+                  LEFT JOIN ContainerLinkObject AS CLO_GoodsKind ON CLO_GoodsKind.ContainerId = tmp.ContainerId
+                                                                AND CLO_GoodsKind.DescId      = zc_ContainerLinkObject_GoodsKind()
+                  LEFT JOIN ObjectLink AS ObjectLink_GoodsKindComplete
+                                       ON ObjectLink_GoodsKindComplete.ObjectId = tmp.PartionGoodsId
+                                      AND ObjectLink_GoodsKindComplete.DescId = zc_ObjectLink_PartionGoods_GoodsKindComplete()
+                  LEFT JOIN tmpInventory_PF ON tmpInventory_PF.GoodsId              = tmp.GoodsId
+                                           AND tmpInventory_PF.PartionGoodsDate     = tmp.PartionGoodsDate
+                                           AND tmpInventory_PF.GoodsKindId          = CLO_GoodsKind.ObjectId
+                                           AND tmpInventory_PF.GoodsKindId_complete = COALESCE (ObjectLink_GoodsKindComplete.ChildObjectId, zc_GoodsKind_Basis())
+        WHERE tmp.Amount - COALESCE (tmpInventory_PF.Amount, 0) > 0
        ;
+
 
      -- распределение Производство + Остатки партий ИТОГ ПФ(ГП) -> _tmpItem_PF
      INSERT INTO _tmpItem_Result (MovementId, MovementItemId_gp, MovementItemId_out, ContainerId, GoodsId, OperCount)

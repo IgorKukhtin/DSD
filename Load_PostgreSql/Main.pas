@@ -193,6 +193,7 @@ type
     cbKopchenie: TCheckBox;
     cbPartion: TCheckBox;
     fromQueryDate_recalc: TADOQuery;
+    cbHistoryCost_diff: TCheckBox;
     procedure OKGuideButtonClick(Sender: TObject);
     procedure cbAllGuideClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
@@ -271,10 +272,12 @@ type
 
     procedure pCompleteDocument_Loss(isLastComplete:Boolean);
 
-    procedure pCompleteDocument_List(isBefoHistoryCost,isPartion:Boolean);
+    procedure pCompleteDocument_List(isBefoHistoryCost,isPartion,isDiff:Boolean);
     procedure pCompleteDocument_Defroster;
     procedure pCompleteDocument_Pack;
+    procedure pCompleteDocument_Kopchenie;
     procedure pCompleteDocument_Partion;
+    procedure pCompleteDocument_Diff;
 
     procedure pCompleteDocument_TaxFl(isLastComplete:Boolean);
     procedure pCompleteDocument_TaxCorrective(isLastComplete:Boolean);
@@ -2380,7 +2383,7 @@ begin
           if not fStop then pCompleteDocument_ProductionUnion(cbLastComplete.Checked);
           if not fStop then pCompleteDocument_ProductionSeparate(cbLastComplete.Checked);
           if not fStop then pCompleteDocument_Inventory(cbLastComplete.Checked);
-          if not fStop then pCompleteDocument_List(TRUE, FALSE);
+          if not fStop then pCompleteDocument_List(TRUE, FALSE, FALSE);
 
           if not fStop then pCompleteDocument_Defroster;
           if not fStop then pCompleteDocument_Pack;
@@ -2396,8 +2399,8 @@ begin
      if not fStop then pInsertHistoryCost;
      //
      if (cbInsertHistoryCost.Checked)and(cbInsertHistoryCost.Enabled)
-     then pCompleteDocument_List(FALSE, FALSE) //
-     else pCompleteDocument_List(FALSE, FALSE);
+     then pCompleteDocument_List(FALSE, FALSE, FALSE) //
+     else pCompleteDocument_List(FALSE, FALSE, FALSE);
      //
      if(not fStop)and(not ((cbInsertHistoryCost.Checked)and(cbInsertHistoryCost.Enabled)))then begin pCompleteDocument_Income(cbLastComplete.Checked);pCompleteDocument_IncomeNal(cbLastComplete.Checked);end;
      if not fStop then pCompleteDocument_UpdateConrtact;
@@ -2419,6 +2422,8 @@ begin
 
      if not fStop then pCompleteDocument_OrderExternal;
      if not fStop then pCompleteDocument_OrderInternal;
+
+     if not fStop then pCompleteDocument_Diff;
 
      //
      Gauge.Visible:=false;
@@ -10148,7 +10153,7 @@ begin
              if cbInsertHistoryCost_andReComplete.Checked
              then begin
                        cbComplete_List.Checked:=true;
-                       pCompleteDocument_List(true, FALSE);
+                       pCompleteDocument_List(true, FALSE, FALSE);
                       //ShowMessage('pCompleteDocument_List-1');
                   end;
              //
@@ -10168,7 +10173,7 @@ begin
              if cbInsertHistoryCost_andReComplete.Checked
              then begin
                        cbComplete_List.Checked:=true;
-                       pCompleteDocument_List(false, FALSE);
+                       pCompleteDocument_List(false, FALSE, FALSE);
                        //ShowMessage('pCompleteDocument_List-2');
                   end;
              //
@@ -20560,7 +20565,7 @@ begin
      fOpenSqToQuery ('select * from FillSoldTable('+FormatToVarCharServer_isSpace(StartDateEdit.Text)+','+FormatToVarCharServer_isSpace(EndDateEdit.Text)+',zfCalc_UserAdmin())')
 end;
 //----------------------------------------------------------------------------------------------------------------------------------------------------
-procedure TMainForm.pCompleteDocument_List(isBefoHistoryCost,isPartion:Boolean);
+procedure TMainForm.pCompleteDocument_List(isBefoHistoryCost,isPartion,isDiff:Boolean);
   function myAdd :String;
   begin
        result:='';
@@ -20576,7 +20581,7 @@ procedure TMainForm.pCompleteDocument_List(isBefoHistoryCost,isPartion:Boolean);
 var ExecStr1,ExecStr2,ExecStr3,ExecStr4,addStr:String;
     i,SaveRecord:Integer;
 begin
-     if isPartion = FALSE then if (not cbComplete_List.Checked)or(not cbComplete_List.Enabled) then exit;
+     if (isPartion = FALSE) and (isDiff = FALSE) then if (not cbComplete_List.Checked)or(not cbComplete_List.Enabled) then exit;
      //
      myEnabledCB(cbComplete_List);
      //
@@ -20590,6 +20595,9 @@ begin
      then fOpenSqToQuery ('select * from gpComplete_SelectAllBranch_Sybase('+FormatToVarCharServer_isSpace(StartDateCompleteEdit.Text)+','+FormatToVarCharServer_isSpace(EndDateCompleteEdit.Text)+',FALSE)')
      else
 
+     if (isDiff = TRUE)
+     then fOpenSqToQuery ('select * from gpComplete_SelectAll_Sybase_diff('+FormatToVarCharServer_isSpace(StartDateCompleteEdit.Text)+','+FormatToVarCharServer_isSpace(EndDateCompleteEdit.Text)+',NULL)')
+     else
      if (isPartion = TRUE)
      then fOpenSqToQuery ('select * from gpComplete_SelectAll_Sybase_CEH('+FormatToVarCharServer_isSpace(StartDateCompleteEdit.Text)+','+FormatToVarCharServer_isSpace(EndDateCompleteEdit.Text)+',TRUE)')
      else
@@ -20642,9 +20650,13 @@ begin
      with fromQuery,Sql do begin
         Close;
         Clear;
-        Add('select *');
+        Add('select case when Code = ' + FormatToVarCharServer_notNULL('zc_Movement_Inventory')
+           +'                 then 1'
+           +'            else 0'
+           +'       end as Order_master'
+           +'    , _pgMovementReComlete.*');
         Add('from dba._pgMovementReComlete');
-        Add('order by OperDate,InvNumber,MovementId');
+        Add('order by Order_master,OperDate,InvNumber,MovementId');
         Open;
 
         cbComplete_List.Caption:='('+IntToStr(SaveRecord)+')('+IntToStr(RecordCount)+') !!!Cписок накладных!!!';
@@ -20787,6 +20799,99 @@ begin
      DBGrid.DataSource.DataSet:=fromQuery;
 end;
 //----------------------------------------------------------------------------------------------------------------------------------------------------
+procedure TMainForm.pCompleteDocument_Kopchenie;
+var calcStartDate:TDateTime;
+begin
+     if (not cbKopchenie.Checked)or(not cbKopchenie.Enabled) then exit;
+     //
+     myEnabledCB(cbKopchenie);
+     //
+     //
+     DBGrid.DataSource.DataSet:=fromQueryDate_recalc;
+     //
+     with fromQueryDate_recalc,Sql do begin
+        Close;
+        Clear;
+        //
+        calcStartDate:=StrToDate(StartDateCompleteEdit.Text);
+        while calcStartDate <= StrToDate(EndDateCompleteEdit.Text) do
+        begin
+             if calcStartDate=StrToDate(StartDateCompleteEdit.Text)
+             then Add('          select cast('+FormatToDateServer_notNULL(calcStartDate)+' as date) as StartDate, cast('+FormatToDateServer_notNULL(calcStartDate)+' as date) as EndDate')
+             else Add('union all select cast('+FormatToDateServer_notNULL(calcStartDate)+' as date) as StartDate, cast('+FormatToDateServer_notNULL(calcStartDate)+' as date) as EndDate');
+             //
+             calcStartDate:=calcStartDate+1;
+        end;
+        Add('order by StartDate, EndDate');
+        Open;
+
+        Gauge.Progress:=0;
+        Gauge.MaxValue:=RecordCount;
+
+        toStoredProc_two.StoredProcName:='gpUpdate_Movement_ProductionUnion_Kopchenie';
+        toStoredProc_two.OutputType := otResult;
+        toStoredProc_two.Params.Clear;
+        toStoredProc_two.Params.AddParam ('inStartDate',ftDateTime,ptInput, 0);
+        toStoredProc_two.Params.AddParam ('inEndDate',ftDateTime,ptInput, 0);
+        toStoredProc_two.Params.AddParam ('inUnitId',ftInteger,ptInput, 0);
+
+        while not EOF do
+        begin
+             //!!!
+             if fStop then begin DBGrid.DataSource.DataSet:=fromQuery;exit;end;
+             //
+             toStoredProc_two.Params.ParamByName('inStartDate').Value:=FieldByName('StartDate').AsDateTime;
+             toStoredProc_two.Params.ParamByName('inEndDate').Value:=FieldByName('StartDate').AsDateTime;
+             toStoredProc_two.Params.ParamByName('inUnitId').Value:=8450;//ЦЕХ копчения
+             if not myExecToStoredProc_two then ;//exit;
+             //
+             MyDelay(5 * 1000);
+             //
+             Next;
+             Application.ProcessMessages;
+             Application.ProcessMessages;
+             Application.ProcessMessages;
+             Gauge.Progress:=Gauge.Progress+1;
+             Application.ProcessMessages;
+             Application.ProcessMessages;
+             Application.ProcessMessages;
+        end;
+     end;
+     //
+     myDisabledCB(cbKopchenie);
+     //
+     DBGrid.DataSource.DataSet:=fromQuery;
+end;
+//----------------------------------------------------------------------------------------------------------------------------------------------------
+procedure TMainForm.pCompleteDocument_Diff;
+begin
+     if (not cbHistoryCost_diff.Checked)or(not cbHistoryCost_diff.Enabled) then exit;
+     //
+     myEnabledCB(cbHistoryCost_diff);
+     //
+        toStoredProc_two.StoredProcName:='gpUpdate_HistoryCost_diff';
+        toStoredProc_two.OutputType := otResult;
+        toStoredProc_two.Params.Clear;
+        toStoredProc_two.Params.AddParam ('inStartDate',ftDateTime,ptInput, 0);
+        toStoredProc_two.Params.AddParam ('inEndDate',ftDateTime,ptInput, 0);
+        toStoredProc_two.Params.AddParam ('inIsUpdate',ftBoolean,ptInput, TRUE);
+
+        Gauge.Progress:=0;
+        Gauge.MaxValue:=1;
+
+             //
+             toStoredProc_two.Params.ParamByName('inStartDate').Value:=StrToDate(StartDateCompleteEdit.Text);
+             toStoredProc_two.Params.ParamByName('inEndDate').Value:=StrToDate(EndDateCompleteEdit.Text) ;
+             toStoredProc_two.Params.ParamByName('inIsUpdate').Value:= TRUE;
+             if not cbOnlyOpen.Checked then if not myExecToStoredProc_two then ;//exit;
+        Gauge.Progress:=1;
+        MyDelay(3 * 1000);
+     //
+     pCompleteDocument_List(false, FALSE, TRUE);
+     //
+     myDisabledCB(cbHistoryCost_diff);
+end;
+//----------------------------------------------------------------------------------------------------------------------------------------------------
 procedure TMainForm.pCompleteDocument_Partion;
 begin
      if (not cbPartion.Checked)or(not cbPartion.Enabled) then exit;
@@ -20821,7 +20926,7 @@ begin
         Gauge.Progress:=2;
         MyDelay(1 * 1000);
      //
-     pCompleteDocument_List(false,true);
+     pCompleteDocument_List(false,true, FALSE);
      //
      myDisabledCB(cbPartion);
 end;

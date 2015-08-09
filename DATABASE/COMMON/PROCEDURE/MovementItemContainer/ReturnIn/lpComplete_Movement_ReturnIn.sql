@@ -984,7 +984,7 @@ BEGIN
             , CASE WHEN vbMemberId_From <> 0 THEN vbMemberId_From ELSE vbPartnerId_From END AS WhereObjectId_Analyzer -- Покупатель или Физ.лицо
             , 0                                       AS ContainerId_Analyzer   -- !!!нет!!!
             , 0                                       AS ObjectIntId_Analyzer   -- !!!нет!!!
-            , 0                                       AS ObjectExtId_Analyzer   -- !!!нет!!!
+            , vbWhereObjectId_Analyzer                AS ObjectExtId_Analyzer   -- подразделение или...
             , 0                                       AS ParentId
             , -1 * OperCount                          AS Amountt
             , vbOperDate                              AS OperDate               -- т.е. по "Дате склад"
@@ -1306,9 +1306,9 @@ BEGIN
             , COALESCE (lfContainerSumm_20901.AccountId, COALESCE (Container_Summ_Alternative.ObjectId, COALESCE (Container_Summ.ObjectId, 0))) AS AccountId
             , 0 AS ContainerId_Transit -- Счет Транзит, определим позже
               -- с/с1 - для количества: приход на остаток
-            , SUM ((_tmpItem.OperCount * COALESCE (HistoryCost.Price, 0))) AS OperSumm
+            , SUM (CAST (_tmpItem.OperCount * COALESCE (HistoryCost.Price, 0) AS NUMERIC (16,4))) AS OperSumm
               -- с/с2 - для количества: контрагента
-            , SUM ((_tmpItem.OperCount_Partner * COALESCE (HistoryCost.Price, 0))) AS OperSumm_Partner
+            , SUM (CAST (_tmpItem.OperCount_Partner * COALESCE (HistoryCost.Price, 0) AS NUMERIC (16,4))) AS OperSumm_Partner
         FROM _tmpItem
              -- так находим для тары
              LEFT JOIN lfSelect_ContainerSumm_byAccount (zc_Enum_Account_20901()) AS lfContainerSumm_20901

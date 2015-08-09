@@ -106,6 +106,11 @@ type
     bbExecuteDialog: TdxBarButton;
     Comment: TcxGridDBColumn;
     DateRegistered_notNull: TcxGridDBColumn;
+    spCopyTaxCorrective: TdsdStoredProc;
+    actCopyTaxCorrective: TdsdExecStoredProc;
+    mactCopyTaxCorrective: TMultiAction;
+    bbCopyTaxCorrective: TdxBarButton;
+    isCopy: TcxGridDBColumn;
   private
     { Private declarations }
   public

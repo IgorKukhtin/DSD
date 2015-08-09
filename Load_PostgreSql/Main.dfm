@@ -2077,7 +2077,7 @@ object MainForm: TMainForm
       Tag = 30
       Left = 16
       Top = 421
-      Width = 184
+      Width = 79
       Height = 17
       Caption = #1059#1087#1072#1082#1086#1074#1082#1072
       Font.Charset = DEFAULT_CHARSET
@@ -2119,6 +2119,22 @@ object MainForm: TMainForm
       Font.Style = []
       ParentFont = False
       TabOrder = 41
+      OnClick = cbCompleteIncomeBNClick
+    end
+    object cbHistoryCost_diff: TCheckBox
+      Tag = 30
+      Left = 104
+      Top = 421
+      Width = 107
+      Height = 17
+      Caption = #1089'/'#1089' "'#1054#1082#1088#1091#1075#1083#1077#1085#1080#1103'"'
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clHighlight
+      Font.Height = -11
+      Font.Name = 'MS Sans Serif'
+      Font.Style = []
+      ParentFont = False
+      TabOrder = 42
       OnClick = cbCompleteIncomeBNClick
     end
   end

@@ -179,9 +179,29 @@ BEGIN
      WHERE Movement.OperDate BETWEEN inStartDate AND inEndDate
        AND Movement.StatusId = zc_Enum_Status_Complete()
        AND Movement.DescId IN (zc_Movement_Send(), zc_Movement_ProductionUnion(), zc_Movement_ProductionSeparate())
-       -- AND Movement.DescId IN (zc_Movement_ProductionUnion()) -- =  ЦЕХ колбаса+дел-сы
-       -- AND tmpUnit_from.UnitId > 0 AND tmpUnit_To.UnitId IS NULL      -- =  ЦЕХ колбаса+дел-сы
-       -- AND tmpUnit_from.UnitId IS NULL AND tmpUnit_To.UnitId IS NULL  -- <> Склад специй и запчастей
+
+
+     -- !!!Inventory!!!
+    UNION
+     -- 6. Inventory
+     SELECT Movement.Id AS MovementId
+          , Movement.OperDate
+          , Movement.InvNumber
+          , MovementDesc.Code
+          , (MovementDesc.ItemName || ' ' || COALESCE (Object_From.ValueData, '') || ' ' || COALESCE (Object_To.ValueData, '')) ::TVarChar
+     FROM Movement
+          LEFT JOIN MovementLinkObject AS MLO_From ON MLO_From.MovementId = Movement.Id
+                                                  AND MLO_From.DescId = zc_MovementLinkObject_From()
+          LEFT JOIN Object AS Object_From ON Object_From.Id = MLO_From.ObjectId
+          LEFT JOIN MovementLinkObject AS MLO_To ON MLO_To.MovementId = Movement.Id
+                                                AND MLO_To.DescId = zc_MovementLinkObject_To()
+          LEFT JOIN Object AS Object_To ON Object_To.Id = MLO_To.ObjectId
+
+          LEFT JOIN MovementDesc ON MovementDesc.Id = Movement.DescId
+     WHERE Movement.OperDate BETWEEN inStartDate AND inEndDate
+       AND Movement.StatusId = zc_Enum_Status_Complete()
+       AND Movement.DescId IN (zc_Movement_Inventory())
+       AND inIsBefoHistoryCost = FALSE
 
 
      -- !!!BRANCH!!!

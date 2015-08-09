@@ -12,12 +12,12 @@ CREATE OR REPLACE FUNCTION gpSelect_Movement_PriceCorrective(
 RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode Integer, StatusName TVarChar
              , PriceWithVAT Boolean, VATPercent TFloat
              , TotalCount TFloat, TotalCountSh TFloat, TotalCountKg TFloat
-             , TotalSummMVAT TFloat, TotalSummPVAT TFloat
+             , TotalSummVAT TFloat, TotalSummMVAT TFloat, TotalSummPVAT TFloat
              , InvNumberPartner TVarChar, InvNumberMark TVarChar
              , FromId Integer, FromName TVarChar, ToId Integer, ToName TVarChar
              , PartnerCode Integer, PartnerName TVarChar
              , PaidKindId Integer, PaidKindName TVarChar
-             , ContractId Integer, ContractName TVarChar, ContractTagName TVarChar
+             , ContractId Integer, ContractCode Integer, ContractName TVarChar, ContractTagName TVarChar
              , JuridicalName_From TVarChar, OKPO_From TVarChar
              , InfoMoneyGroupName TVarChar, InfoMoneyDestinationName TVarChar, InfoMoneyCode Integer, InfoMoneyName TVarChar
              , DocumentTaxKindId Integer, DocumentTaxKindName TVarChar
@@ -52,6 +52,7 @@ BEGIN
            , MovementFloat_TotalCount.ValueData         AS TotalCount
            , MovementFloat_TotalCountSh.ValueData       AS TotalCountSh
            , MovementFloat_TotalCountKg.ValueData       AS TotalCountKg
+           , CAST (COALESCE (MovementFloat_TotalSummPVAT.ValueData, 0) - COALESCE (MovementFloat_TotalSummMVAT.ValueData, 0) AS TFloat) AS TotalSummVAT
            , MovementFloat_TotalSummMVAT.ValueData      AS TotalSummMVAT
            , MovementFloat_TotalSummPVAT.ValueData      AS TotalSummPVAT
            
@@ -69,6 +70,7 @@ BEGIN
            , Object_PaidKind.Id                         AS PaidKindId
            , Object_PaidKind.ValueData                  AS PaidKindName
            , View_Contract_InvNumber.ContractId         AS ContractId
+           , View_Contract_InvNumber.ContractCode     	AS ContractCode
            , View_Contract_InvNumber.InvNumber          AS ContractName
            , View_Contract_InvNumber.ContractTagName
            , Object_JuridicalFrom.ValueData             AS JuridicalName_From
@@ -182,9 +184,5 @@ ALTER FUNCTION gpSelect_Movement_PriceCorrective (TDateTime, TDateTime, Boolean,
  29.05.14         *
 */
 
-
 -- тест
 -- SELECT * FROM gpSelect_Movement_PriceCorrective (inStartDate:= '01.01.2014', inEndDate:= '02.02.2014', inIsErased :=TRUE, inSession:= zfCalc_UserAdmin())
-
-
-

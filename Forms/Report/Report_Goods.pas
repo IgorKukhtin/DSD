@@ -54,6 +54,10 @@ type
     GoodsName_parent: TcxGridDBColumn;
     GoodsKindName_complete: TcxGridDBColumn;
     GoodsKindName_parent: TcxGridDBColumn;
+    Price_end: TcxGridDBColumn;
+    Price_partner: TcxGridDBColumn;
+    SummPartnerOut: TcxGridDBColumn;
+    SummPartnerIn: TcxGridDBColumn;
   private
     { Private declarations }
   public

@@ -72,9 +72,14 @@ BEGIN
                                                                    AND CLO_Unit.DescId = zc_ContainerLinkObject_Unit()
                                      INNER JOIN tmpUnit ON tmpUnit.UnitId = CLO_Unit.ObjectId
 
+                                     LEFT JOIN ContainerLinkObject AS CLO_Account
+                                                                   ON CLO_Account.ContainerId = Container.Id
+                                                                  AND CLO_Account.DescId = zc_ContainerLinkObject_Account()
                                      LEFT JOIN ContainerLinkObject AS CLO_GoodsKind 
                                                                    ON CLO_GoodsKind.ContainerId = Container.Id
-                                                                  AND CLO_GoodsKind.DescId = zc_ContainerLinkObject_GoodsKind();
+                                                                  AND CLO_GoodsKind.DescId = zc_ContainerLinkObject_GoodsKind()
+                                WHERE CLO_Account.ContainerId IS NULL -- !!!т.е. без счета Транзит!!!
+                               ;
 
        --
        -- Остатки кол-во для всех подразделений

@@ -45,6 +45,7 @@ type
     spGetReportNameTaxCorrective: TdsdStoredProc;
     actSPPrintTaxCorrectiveProcName: TdsdExecStoredProc;
     Comment: TcxGridDBColumn;
+    ContractCode: TcxGridDBColumn;
   private
     { Private declarations }
   public

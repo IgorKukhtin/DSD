@@ -2,8 +2,9 @@ inherited PriceCorrectiveJournalForm: TPriceCorrectiveJournalForm
   Caption = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' <'#1050#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1082#1072' '#1094#1077#1085#1099'>'
   ClientHeight = 535
   ClientWidth = 1020
+  ExplicitLeft = -38
   ExplicitWidth = 1036
-  ExplicitHeight = 573
+  ExplicitHeight = 570
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -52,6 +53,11 @@ inherited PriceCorrectiveJournalForm: TPriceCorrectiveJournalForm
               Format = ',0.####'
               Kind = skSum
               Column = colTotalCountKg
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = colTotalSummVAT
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -78,6 +84,11 @@ inherited PriceCorrectiveJournalForm: TPriceCorrectiveJournalForm
               Format = ',0.####'
               Kind = skSum
               Column = colTotalCountKg
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = colTotalSummVAT
             end>
           OptionsBehavior.GoToNextCellOnEnter = False
           OptionsBehavior.FocusCellOnCycle = False
@@ -166,121 +177,65 @@ inherited PriceCorrectiveJournalForm: TPriceCorrectiveJournalForm
             HeaderAlignmentVert = vaCenter
             Width = 45
           end
-          object colOKPO_To: TcxGridDBColumn
-            Caption = #1054#1050#1055#1054' ('#1082#1086#1084#1091')'
-            DataBinding.FieldName = 'OKPO_To'
-            Visible = False
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 45
-          end
-          object colPaidKindFromName: TcxGridDBColumn
-            Caption = #1060#1054' ('#1086#1090' '#1082#1086#1075#1086')'
-            DataBinding.FieldName = 'PaidKindFromName'
+          object PaidKindName: TcxGridDBColumn
+            Caption = #1060#1086#1088#1084#1072' '#1086#1087#1083#1072#1090#1099
+            DataBinding.FieldName = 'PaidKindName'
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 60
           end
-          object colPaidKindToName: TcxGridDBColumn
-            Caption = #1060#1054' ('#1082#1086#1084#1091')'
-            DataBinding.FieldName = 'PaidKindToName'
+          object ContractCode: TcxGridDBColumn
+            Caption = #1050#1086#1076' '#1076#1086#1075'.'
+            DataBinding.FieldName = 'ContractCode'
             Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 55
+          end
+          object ContractName: TcxGridDBColumn
+            Caption = #8470' '#1076#1086#1075'. '
+            DataBinding.FieldName = 'ContractName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 60
           end
-          object colContractFromName: TcxGridDBColumn
-            Caption = #8470' '#1076#1086#1075'. ('#1086#1090' '#1082#1086#1075#1086')'
-            DataBinding.FieldName = 'ContractFromName'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 60
-          end
-          object colContractTagFromName: TcxGridDBColumn
-            Caption = #1055#1088#1080#1079#1085#1072#1082' '#1076#1086#1075'. ('#1086#1090' '#1082#1086#1075#1086')'
-            DataBinding.FieldName = 'ContractTagFromName'
-            Visible = False
+          object ContractTagName: TcxGridDBColumn
+            Caption = #1055#1088#1080#1079#1085#1072#1082' '#1076#1086#1075'.'
+            DataBinding.FieldName = 'ContractTagName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 55
+            Width = 70
           end
-          object colContractToName: TcxGridDBColumn
-            Caption = #8470' '#1076#1086#1075'. ('#1082#1086#1084#1091')'
-            DataBinding.FieldName = 'ContractToName'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 60
-          end
-          object colContractTagToName: TcxGridDBColumn
-            Caption = #1055#1088#1080#1079#1085#1072#1082' '#1076#1086#1075'. ('#1082#1086#1084#1091')'
-            DataBinding.FieldName = 'ContractTagToName'
-            Visible = False
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 55
-          end
-          object colInfoMoneyCode_from: TcxGridDBColumn
-            Caption = #1050#1086#1076' '#1059#1055' ('#1086#1090' '#1082#1086#1075#1086')'
-            DataBinding.FieldName = 'InfoMoneyCode_from'
+          object InfoMoneyCode: TcxGridDBColumn
+            Caption = #1050#1086#1076' '#1059#1055
+            DataBinding.FieldName = 'InfoMoneyCode'
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 50
           end
-          object colInfoMoneyGroupName_from: TcxGridDBColumn
-            Caption = #1059#1055' '#1075#1088#1091#1087#1087#1072' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103' ('#1086#1090' '#1082#1086#1075#1086')'
-            DataBinding.FieldName = 'InfoMoneyGroupName_from'
+          object InfoMoneyGroupName: TcxGridDBColumn
+            Caption = #1059#1055' '#1075#1088#1091#1087#1087#1072' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
+            DataBinding.FieldName = 'InfoMoneyGroupName'
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 70
           end
-          object colInfoMoneyDestinationName_from: TcxGridDBColumn
-            Caption = #1059#1055' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1077' ('#1086#1090' '#1082#1086#1075#1086')'
-            DataBinding.FieldName = 'InfoMoneyDestinationName_from'
+          object InfoMoneyDestinationName: TcxGridDBColumn
+            Caption = #1059#1055' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1077
+            DataBinding.FieldName = 'InfoMoneyDestinationName'
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 70
           end
-          object colInfoMoneyName_from: TcxGridDBColumn
-            Caption = #1059#1055' '#1089#1090#1072#1090#1100#1103' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103' ('#1086#1090' '#1082#1086#1075#1086')'
-            DataBinding.FieldName = 'InfoMoneyName_from'
+          object InfoMoneyName: TcxGridDBColumn
+            Caption = #1059#1055' '#1089#1090#1072#1090#1100#1103' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
+            DataBinding.FieldName = 'InfoMoneyName'
             Visible = False
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 70
-          end
-          object colInfoMoneyCode_to: TcxGridDBColumn
-            Caption = #1050#1086#1076' '#1059#1055' ('#1082#1086#1084#1091')'
-            DataBinding.FieldName = 'InfoMoneyCode_to'
-            Visible = False
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 50
-          end
-          object colInfoMoneyGroupName_to: TcxGridDBColumn
-            Caption = #1059#1055' '#1075#1088#1091#1087#1087#1072' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103' ('#1082#1086#1084#1091')'
-            DataBinding.FieldName = 'InfoMoneyGroupName_to'
-            Visible = False
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 70
-          end
-          object colInfoMoneyDestinationName_to: TcxGridDBColumn
-            Caption = #1059#1055' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1077' ('#1082#1086#1084#1091')'
-            DataBinding.FieldName = 'InfoMoneyDestinationName_to'
-            Visible = False
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 70
-          end
-          object colInfoMoneyName_to: TcxGridDBColumn
-            Caption = #1059#1055' '#1089#1090#1072#1090#1100#1103' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103' ('#1082#1086#1084#1091')'
-            DataBinding.FieldName = 'InfoMoneyName_to'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 100
@@ -293,7 +248,7 @@ inherited PriceCorrectiveJournalForm: TPriceCorrectiveJournalForm
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 45
+            Width = 60
           end
           object colTotalCountSh: TcxGridDBColumn
             Caption = #1050#1086#1083'-'#1074#1086' '#1096#1090'.'
@@ -317,20 +272,12 @@ inherited PriceCorrectiveJournalForm: TPriceCorrectiveJournalForm
             HeaderAlignmentVert = vaCenter
             Width = 55
           end
-          object colChangePercent: TcxGridDBColumn
-            Caption = '(-)% '#1089#1082'. (+)% '#1085#1072#1094
-            DataBinding.FieldName = 'ChangePercent'
-            Visible = False
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 53
-          end
           object colVATPercent: TcxGridDBColumn
             Caption = '% '#1053#1044#1057
             DataBinding.FieldName = 'VATPercent'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 30
+            Width = 40
           end
           object colPriceWithVAT: TcxGridDBColumn
             Caption = #1062#1077#1085#1099' '#1089' '#1053#1044#1057' ('#1076#1072'/'#1085#1077#1090')'
@@ -346,7 +293,6 @@ inherited PriceCorrectiveJournalForm: TPriceCorrectiveJournalForm
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
-            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 60
@@ -357,7 +303,6 @@ inherited PriceCorrectiveJournalForm: TPriceCorrectiveJournalForm
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
-            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 80
@@ -368,7 +313,6 @@ inherited PriceCorrectiveJournalForm: TPriceCorrectiveJournalForm
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
-            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 70
@@ -388,6 +332,12 @@ inherited PriceCorrectiveJournalForm: TPriceCorrectiveJournalForm
   inherited Panel: TPanel
     Width = 1020
     ExplicitWidth = 1020
+    inherited deStart: TcxDateEdit
+      EditValue = 42005d
+    end
+    inherited deEnd: TcxDateEdit
+      EditValue = 42005d
+    end
     object cxLabel14: TcxLabel
       Left = 615
       Top = 6
@@ -483,7 +433,6 @@ inherited PriceCorrectiveJournalForm: TPriceCorrectiveJournalForm
           DataSet = PrintItemsCDS
           UserName = 'frxDBDMaster'
         end>
-      CopiesCount = 1
       Params = <
         item
           Name = 'Id'
@@ -543,7 +492,6 @@ inherited PriceCorrectiveJournalForm: TPriceCorrectiveJournalForm
           DataSet = PrintHeaderCDS
           UserName = 'frxDBDHeader'
         end>
-      CopiesCount = 1
       Params = <
         item
           Name = 'Id'
@@ -579,7 +527,6 @@ inherited PriceCorrectiveJournalForm: TPriceCorrectiveJournalForm
           DataSet = PrintHeaderCDS
           UserName = 'frxDBDHeader'
         end>
-      CopiesCount = 1
       Params = <
         item
           Name = 'Id'

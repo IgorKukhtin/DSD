@@ -364,8 +364,8 @@ BEGIN
 
            UNION ALL
             SELECT tmp.ReceiptId
-                 , tmpMIContainer.GoodsId
-                 , tmpMIContainer.GoodsKindId
+                 , tmpMI.GoodsId
+                 , tmpMI.GoodsKindId
                  , 0 AS OperCount_sale
                  , 0 AS SummIn_sale
                  , 0 AS SummOut_PriceList_sale
@@ -397,13 +397,14 @@ BEGIN
                  LEFT JOIN ObjectLink AS ObjectLink_Receipt_GoodsKind
                                       ON ObjectLink_Receipt_GoodsKind.ObjectId = tmp.ReceiptId
                                      AND ObjectLink_Receipt_GoodsKind.DescId   = zc_ObjectLink_Receipt_GoodsKind()
-                 INNER JOIN tmpMIContainer ON tmpMIContainer.GoodsId     = ObjectLink_Receipt_Goods.ChildObjectId
-                                          AND tmpMIContainer.GoodsKindId = COALESCE (ObjectLink_Receipt_GoodsKind.ChildObjectId, 0)
-                                          AND (tmpMIContainer.OperCount_sale <> 0
-                                            OR tmpMIContainer.OperCount_return <> 0)
+                 INNER JOIN (SELECT tmpMIContainer.GoodsId, tmpMIContainer.GoodsKindId FROM tmpMIContainer WHERE tmpMIContainer.OperCount_sale <> 0 OR tmpMIContainer.OperCount_return <> 0 GROUP BY tmpMIContainer.GoodsId, tmpMIContainer.GoodsKindId
+                            UNION
+                             SELECT tmp_Send.GoodsId, tmp_Send.GoodsKindId FROM tmp_Send WHERE tmp_Send.Amount_Count <> 0 OR tmp_Send.Amount_CountRet <> 0 GROUP BY tmp_Send.GoodsId, tmp_Send.GoodsKindId
+                            ) AS tmpMI ON tmpMI.GoodsId     = ObjectLink_Receipt_Goods.ChildObjectId
+                                      AND tmpMI.GoodsKindId = COALESCE (ObjectLink_Receipt_GoodsKind.ChildObjectId, 0)
             GROUP BY tmp.ReceiptId
-                   , tmpMIContainer.GoodsId
-                   , tmpMIContainer.GoodsKindId
+                   , tmpMI.GoodsId
+                   , tmpMI.GoodsKindId
            )
 
         , tmpResult AS 
@@ -467,26 +468,34 @@ BEGIN
            , Object_GoodsKind_Parent.ValueData           AS GoodsKindName_Parent
            , Object_GoodsKindComplete_Parent.ValueData   AS GoodsKindCompleteName_Parent
 
-           , CAST (tmpResult.Summ1 / ObjectFloat_Value.ValueData AS NUMERIC (16, 3)) AS Price1
+           , CAST (CASE WHEN View_InfoMoney.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_20900() THEN PriceListSale.Price * 1.2 * 0.85 ELSE tmpResult.Summ1 / ObjectFloat_Value.ValueData END AS NUMERIC (16, 3)) AS Price1
            , CAST (tmpResult.Summ2 / ObjectFloat_Value.ValueData AS NUMERIC (16, 3)) AS Price2
            , CAST (tmpResult.Summ3 / ObjectFloat_Value.ValueData AS NUMERIC (16, 3)) AS Price3
-           , CAST (tmpResult.Summ1_cost / ObjectFloat_Value.ValueData AS NUMERIC (16, 3)) AS Price1_cost
+           , CAST (CASE WHEN View_InfoMoney.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_20900() THEN 0 ELSE tmpResult.Summ1_cost / ObjectFloat_Value.ValueData END AS NUMERIC (16, 3)) AS Price1_cost
            , CAST (tmpResult.Summ2_cost / ObjectFloat_Value.ValueData AS NUMERIC (16, 3)) AS Price2_cost
            , CAST (tmpResult.Summ3_cost / ObjectFloat_Value.ValueData AS NUMERIC (16, 3)) AS Price3_cost
            , PriceListSale.Price * 1.2 AS Price_sale -- !!!захардкодил временно!!!
 
-           , tmpResult.OperCount_sale * CAST (tmpResult.Summ1 / ObjectFloat_Value.ValueData AS NUMERIC (16, 3)) AS SummPrice1_sale -- с/с реализ по план1
+           , tmpResult.OperCount_sale * CAST (CASE WHEN View_InfoMoney.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_20900() THEN PriceListSale.Price * 1.2 * 0.85 ELSE tmpResult.Summ1 / ObjectFloat_Value.ValueData END AS NUMERIC (16, 3)) AS SummPrice1_sale -- с/с реализ по план1
            , tmpResult.OperCount_sale * CAST (tmpResult.Summ2 / ObjectFloat_Value.ValueData AS NUMERIC (16, 3)) AS SummPrice2_sale -- с/с реализ по план2
            , tmpResult.OperCount_sale * CAST (tmpResult.Summ3 / ObjectFloat_Value.ValueData AS NUMERIC (16, 3)) AS SummPrice3_sale -- с/с реализ по план3
            , tmpResult.OperCount_sale * PriceListSale.Price * 1.2                     AS Summ_sale       -- сумма по прайсу расчетному
 
-           , CASE WHEN (tmpResult.OperCount_sale * tmpResult.Summ1 / ObjectFloat_Value.ValueData) <> 0
+           , CASE WHEN View_InfoMoney.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_20900()
+                       THEN 100 * 1
+                                / 0.85
+                          - 100
+                  WHEN (tmpResult.OperCount_sale * tmpResult.Summ1 / ObjectFloat_Value.ValueData) <> 0
                        THEN 100 * (tmpResult.OperCount_sale * PriceListSale.Price * 1.2)
                                 / (tmpResult.OperCount_sale * CAST (tmpResult.Summ1 / ObjectFloat_Value.ValueData AS NUMERIC (16, 3)))
                           - 100
                        ELSE 0 
              END AS Tax_Summ_sale -- % рент. для план1 / сумма по прайсу расчетному
-           , CASE WHEN (tmpResult.OperCount_sale * tmpResult.Summ1 / ObjectFloat_Value.ValueData) <> 0
+           , CASE WHEN View_InfoMoney.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_20900() AND tmpResult.OperCount_sale * PriceListSale.Price <> 0
+                       THEN 100 * tmpResult.SummOut_sale
+                                / (tmpResult.OperCount_sale * CAST (PriceListSale.Price * 1.2 * 0.85 AS NUMERIC (16, 3)))
+                          - 100
+                  WHEN (tmpResult.OperCount_sale * tmpResult.Summ1 / ObjectFloat_Value.ValueData) <> 0
                        THEN 100 * tmpResult.SummOut_sale
                                 / (tmpResult.OperCount_sale * CAST (tmpResult.Summ1 / ObjectFloat_Value.ValueData AS NUMERIC (16, 3)))
                           - 100
@@ -518,6 +527,11 @@ BEGIN
            , CAST (CASE WHEN tmpResult.OperCount_return <> 0 THEN tmpResult.SummOut_return / tmpResult.OperCount_return ELSE 0 END AS NUMERIC (16, 3)) AS Price_out_return
 
            , CASE WHEN Object_Goods.Id <> Object_Goods_Parent.Id THEN TRUE ELSE FALSE END AS isCheck_Parent
+
+           , View_InfoMoney.InfoMoneyGroupName              AS InfoMoneyGroupName
+           , View_InfoMoney.InfoMoneyDestinationName        AS InfoMoneyDestinationName
+           , View_InfoMoney.InfoMoneyCode                   AS InfoMoneyCode
+           , View_InfoMoney.InfoMoneyName                   AS InfoMoneyName
 
        FROM tmpResult
             LEFT JOIN ObjectHistory_PriceListItem_View AS PriceListSale ON PriceListSale.PriceListId = inPriceListId_sale
@@ -602,7 +616,12 @@ BEGIN
 
           LEFT JOIN ObjectBoolean AS ObjectBoolean_Main_Parent
                                   ON ObjectBoolean_Main_Parent.ObjectId = Object_Receipt_Parent.Id
-                                 AND ObjectBoolean_Main_Parent.DescId = zc_ObjectBoolean_Receipt_Main();
+                                 AND ObjectBoolean_Main_Parent.DescId = zc_ObjectBoolean_Receipt_Main()
+          LEFT JOIN ObjectLink AS ObjectLink_Goods_InfoMoney ON ObjectLink_Goods_InfoMoney.ObjectId = Object_Goods.Id 
+                                                            AND ObjectLink_Goods_InfoMoney.DescId = zc_ObjectLink_Goods_InfoMoney()
+          LEFT JOIN Object_InfoMoney_View AS View_InfoMoney ON View_InfoMoney.InfoMoneyId = ObjectLink_Goods_InfoMoney.ChildObjectId
+         ;
+
       -- Результат
       RETURN NEXT Cursor1;
 

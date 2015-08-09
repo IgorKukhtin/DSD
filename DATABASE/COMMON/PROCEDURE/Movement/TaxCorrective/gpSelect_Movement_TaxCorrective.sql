@@ -27,6 +27,7 @@ RETURNS TABLE (Id Integer, InvNumber Integer, OperDate TDateTime, StatusCode Int
              , isEDI Boolean
              , isElectron Boolean
              , isMedoc Boolean
+             , isCopy Boolean
              , Comment TVarChar
               )
 AS
@@ -125,7 +126,8 @@ BEGIN
 
            , COALESCE (MovementLinkMovement_ChildEDI.MovementChildId, 0) <> 0 AS isEDI
            , COALESCE (MovementBoolean_Electron.ValueData, FALSE) :: Boolean  AS isElectron
-           , COALESCE (MovementBoolean_Medoc.ValueData, FALSE)                AS isMedoc
+           , COALESCE (MovementBoolean_Medoc.ValueData, FALSE)    :: Boolean  AS isMedoc
+           , COALESCE(MovementBoolean_isCopy.ValueData, FALSE)    :: Boolean  AS isCopy
            , MovementString_Comment.ValueData                                 AS Comment
 
        FROM (SELECT Movement.Id
@@ -149,6 +151,9 @@ BEGIN
             LEFT JOIN MovementBoolean AS MovementBoolean_Checked
                                       ON MovementBoolean_Checked.MovementId =  Movement.Id
                                      AND MovementBoolean_Checked.DescId = zc_MovementBoolean_Checked()
+            LEFT JOIN MovementBoolean AS MovementBoolean_isCopy
+                                      ON MovementBoolean_isCopy.MovementId = Movement.Id
+                                     AND MovementBoolean_isCopy.DescId = zc_MovementBoolean_isCopy()
 
             LEFT JOIN MovementBoolean AS MovementBoolean_Document
                                       ON MovementBoolean_Document.MovementId =  Movement.Id

@@ -535,8 +535,14 @@ BEGIN
             , COALESCE (lfContainerSumm_20901.ContainerId, COALESCE (Container_Summ.Id, 0)) AS ContainerId_From
             , COALESCE (lfContainerSumm_20901.AccountId, COALESCE (Container_Summ.ObjectId, 0)) AS AccountId_From
             , ContainerLinkObject_InfoMoneyDetail.ObjectId AS InfoMoneyId_Detail_From
-              -- !!!для <Схема Дефростер> другая цена!!!
-            , SUM (/*ABS*/ (CASE WHEN vbProcessId = zc_Enum_Process_Auto_Defroster() THEN _tmpItemChild.OperCount * COALESCE (HistoryCost.Price_external, 0) ELSE _tmpItemChild.OperCount * COALESCE (HistoryCost.Price, 0) END)) AS OperSumm
+            , SUM (/*ABS*/ (CASE WHEN vbProcessId = zc_Enum_Process_Auto_Defroster() -- !!!для <Схема Дефростер> другая цена!!!
+                                      THEN CAST (_tmpItemChild.OperCount * COALESCE (HistoryCost.Price_external, 0) AS NUMERIC (16,4))
+                                 ELSE CAST (_tmpItemChild.OperCount * COALESCE (HistoryCost.Price, 0) AS NUMERIC (16,4))
+                                    + CASE WHEN _tmpItemChild.MovementItemId = HistoryCost.MovementItemId_diff AND ABS (CAST (_tmpItemChild.OperCount * COALESCE (HistoryCost.Price, 0) AS NUMERIC (16,4))) >= -1 * HistoryCost.Summ_diff
+                                                THEN HistoryCost.Summ_diff -- !!!если есть "погрешность" при округлении, добавили сумму!!!
+                                           ELSE 0
+                                      END
+                            END)) AS OperSumm
         FROM _tmpItemChild
              -- так находим для тары
              LEFT JOIN lfSelect_ContainerSumm_byAccount (zc_Enum_Account_20901()) AS lfContainerSumm_20901
