@@ -200,14 +200,28 @@ type
   TdsdDataSetRefresh = class(TdsdCustomDataSetAction)
   private
     FRefreshOnTabSetChanges: Boolean;
+    FAfterScrollTimerInterval: Cardinal;
+    FDataSet: TDataSet;
+    FOriginalAfterScrol: TDataSetNotifyEvent;
+    FTimer: TTimer;
+    procedure SetAfterScrollTimerInterval(AValue: Cardinal);
+    procedure SetDataSet(AValue: TDataSet);
+    procedure OnTimerNotifyEvent(Sender: TObject);
+    procedure AfterScrollNotifyEvent(DataSet: TDataSet);
   protected
     procedure OnPageChanging(Sender: TObject; NewPage: TcxTabSheet;
       var AllowChange: Boolean); override;
+    procedure Notification(AComponent: TComponent;
+      Operation: TOperation); override;
   public
     constructor Create(AOwner: TComponent); override;
+    destructor Destroy; override;
   published
     property RefreshOnTabSetChanges: Boolean read FRefreshOnTabSetChanges
       write FRefreshOnTabSetChanges;
+    property AfterScrollTimerInterval: Cardinal Read FAfterScrollTimerInterval
+      write SetAfterScrollTimerInterval default 500;
+    property DataSet: TDataSet read FDataSet write SetDataSet;
   end;
 
   // Сохраняет или изменяет значение в справочнике и закрывает форму
@@ -780,12 +794,54 @@ end;
 
 { TdsdDataSetRefresh }
 
+procedure TdsdDataSetRefresh.AfterScrollNotifyEvent(DataSet: TDataSet);
+begin
+  if Assigned(FOriginalAfterScrol) then
+    FOriginalAfterScrol(DataSet);
+  if Assigned(FTimer) then
+  Begin
+    FTimer.Enabled := False;
+    FTimer.Enabled := True;
+  End;
+end;
+
 constructor TdsdDataSetRefresh.Create(AOwner: TComponent);
 begin
   inherited;
   Caption := 'Перечитать';
   Hint := 'Обновить данные';
-  ShortCut := VK_F5
+  ShortCut := VK_F5;
+  AfterScrollTimerInterval := 500;
+end;
+
+destructor TdsdDataSetRefresh.Destroy;
+begin
+  if assigned(FTimer) then
+  Begin
+    FTimer.Free;
+    FTimer:=nil;
+  End;
+  if Assigned(FDataSet) then
+  Begin
+    FDataset.AfterScroll := FOriginalAfterScrol;
+    FOriginalAfterScrol := Nil;
+    FDataset := nil;
+  End;
+  inherited;
+end;
+
+procedure TdsdDataSetRefresh.Notification(AComponent: TComponent;
+  Operation: TOperation);
+begin
+  inherited;
+  if csDestroying in ComponentState then
+    exit;
+  if (Operation = opRemove) and Assigned(FDataSet) then
+  begin
+    if AComponent is TDataSet then
+      if AComponent = FDataSet then
+        DataSet := Nil;
+  end;
 end;
 
 procedure TdsdDataSetRefresh.OnPageChanging(Sender: TObject;
@@ -795,6 +851,47 @@ begin
   if not(csDesigning in ComponentState) then
     if Enabled and RefreshOnTabSetChanges then
       Execute;
+end;
+
+procedure TdsdDataSetRefresh.OnTimerNotifyEvent(Sender: TObject);
+begin
+//запуск процедур и отключение таймера
+  if not Assigned(FTimer) then exit;
+  FTimer.Enabled := False;
+  if Enabled then
+    Execute;
+end;
+
+procedure TdsdDataSetRefresh.SetAfterScrollTimerInterval(AValue: Cardinal);
+begin
+  if AValue < 1 then
+    raise Exception.Create('Значение не может быть меньше 1')
+  else
+  Begin
+    FAfterScrollTimerInterval := AValue;
+    if Assigned(FTimer) then
+      FTimer.Interval := AValue;
+  End;
+end;
+
+procedure TdsdDataSetRefresh.SetDataSet(AValue: TDataSet);
+begin
+  if FDataSet = AValue then exit;
+  if (AValue <> nil) AND (FTimer = nil) then
+  Begin
+    FTimer := TTimer.Create(Self);
+    FTimer.Enabled := False;
+    FTimer.Interval := FAfterScrollTimerInterval;
+    FTimer.OnTimer := OnTimerNotifyEvent;
+    FOriginalAfterScrol := AValue.AfterScroll;
+    AValue.AfterScroll := AfterScrollNotifyEvent;
+  End;
+  if (AValue = nil) AND (FTimer <> nil) then
+  Begin
+    FTimer.Free;
+    FTimer := nil;
+  End;
+  FDataSet := AValue;
 end;
 
 { TdsdOpenForm }

@@ -241,7 +241,6 @@ inherited ImportSettingsForm: TImportSettingsForm
           StoredProc = spSelect
         end
         item
-          StoredProc = spSelectItems
         end>
     end
     object dsdUpdateMaster: TdsdUpdateDataSet
@@ -458,6 +457,21 @@ inherited ImportSettingsForm: TImportSettingsForm
         end>
       isShowModal = False
     end
+    object actAfterScroll: TdsdDataSetRefresh
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spSelectItems
+      StoredProcList = <
+        item
+          StoredProc = spSelectItems
+        end>
+      Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
+      Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
+      ShortCut = 116
+      RefreshOnTabSetChanges = False
+      AfterScrollTimerInterval = 500
+      DataSet = MasterCDS
+    end
   end
   inherited MasterDS: TDataSource
     Top = 80
@@ -652,10 +666,6 @@ inherited ImportSettingsForm: TImportSettingsForm
   end
   object ChildCDS: TClientDataSet
     Aggregates = <>
-    IndexFieldNames = 'ImportSettingsId '
-    MasterFields = 'Id'
-    MasterSource = MasterDS
-    PacketRecords = 0
     Params = <>
     Left = 688
     Top = 72
@@ -670,7 +680,9 @@ inherited ImportSettingsForm: TImportSettingsForm
     Params = <
       item
         Name = 'inImportSettingsId'
-        Value = '0'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Id'
         ParamType = ptInput
       end>
     PackSize = 1
