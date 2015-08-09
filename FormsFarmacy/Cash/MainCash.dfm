@@ -295,7 +295,7 @@ inherited MainCashForm: TMainCashForm
         TabOrder = 3
         Width = 22
       end
-      object cxButton1: TcxButton
+      object btnCheck: TcxButton
         Left = 584
         Top = 6
         Width = 34
@@ -345,7 +345,7 @@ inherited MainCashForm: TMainCashForm
         LookAndFeel.Kind = lfStandard
         TabOrder = 7
       end
-      object cxButton2: TcxButton
+      object btnLoadDeferred: TcxButton
         Left = 664
         Top = 6
         Width = 34
@@ -594,16 +594,6 @@ inherited MainCashForm: TMainCashForm
       ShortCut = 116
       RefreshOnTabSetChanges = False
     end
-    object actCheckUser: TdsdOpenForm
-      Category = #1044#1086#1082#1091#1084#1077#1085#1090#1099
-      MoveParams = <>
-      Caption = #1063#1077#1082#1080
-      FormName = 'TCheckJournalUserForm'
-      FormNameParam.Value = 'TCheckJournalUserForm'
-      FormNameParam.DataType = ftString
-      GuiParams = <>
-      isShowModal = False
-    end
   end
   object dsdDBViewAddOnMain: TdsdDBViewAddOn
     ErasedFieldName = 'isErased'
@@ -647,6 +637,8 @@ inherited MainCashForm: TMainCashForm
   end
   object RemainsCDS: TClientDataSet
     Aggregates = <>
+    Filter = 'Remains > 0'
+    Filtered = True
     Params = <>
     AfterScroll = RemainsCDSAfterScroll
     Left = 304
