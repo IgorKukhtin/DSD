@@ -295,7 +295,7 @@ inherited MainCashForm: TMainCashForm
         TabOrder = 3
         Width = 22
       end
-      object cxButton1: TcxButton
+      object btnCheck: TcxButton
         Left = 584
         Top = 6
         Width = 34
@@ -345,7 +345,7 @@ inherited MainCashForm: TMainCashForm
         LookAndFeel.Kind = lfStandard
         TabOrder = 7
       end
-      object cxButton2: TcxButton
+      object btnLoadDeferred: TcxButton
         Left = 664
         Top = 6
         Width = 34
@@ -637,6 +637,8 @@ inherited MainCashForm: TMainCashForm
   end
   object RemainsCDS: TClientDataSet
     Aggregates = <>
+    Filter = 'Remains > 0'
+    Filtered = True
     Params = <>
     AfterScroll = RemainsCDSAfterScroll
     Left = 304
@@ -1036,5 +1038,19 @@ inherited MainCashForm: TMainCashForm
     AfterScroll = RemainsCDSAfterScroll
     Left = 304
     Top = 48
+  end
+  object spGet_User_IsAdmin: TdsdStoredProc
+    StoredProcName = 'gpGet_User_IsAdmin'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'gpGet_User_IsAdmin'
+        Value = Null
+        DataType = ftBoolean
+      end>
+    PackSize = 1
+    Left = 152
+    Top = 352
   end
 end

@@ -11,7 +11,7 @@ uses
   Datasnap.DBClient, dsdAction, Vcl.ActnList, cxPropertiesStore, cxGridLevel,
   cxGridCustomView, cxGridCustomTableView, cxGridTableView, cxGridDBTableView,
   cxGrid, cxPC, cxButtonEdit, cxSplitter, Vcl.StdActns, cxDropDownEdit,
-  ExternalLoad, cxBlobEdit;
+  ExternalLoad, cxBlobEdit, dxBarBuiltInMenu, cxNavigator;
 
 type
   TImportSettingsForm = class(TAncestorDBGridForm)
@@ -61,6 +61,7 @@ type
     colDefaultValue: TcxGridDBColumn;
     clQuery: TcxGridDBColumn;
     colUserParamName: TcxGridDBColumn;
+    actAfterScroll: TdsdDataSetRefresh;
   private
     { Private declarations }
   public

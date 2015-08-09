@@ -32,7 +32,7 @@ BEGIN
                                              ON MovementLinkObject_PaidType.MovementId = Movement_Check.Id
                                             AND MovementLinkObject_PaidType.DescId = zc_MovementLinkObject_PaidType()
                 WHERE Movement_Check.Id =  inMovementId;
-                PERFORM gpComplete_Movement_Check (inMovementId, vbPaidType, vbCashRegisterId, inSession);
+                PERFORM gpComplete_Movement_CheckAdmin (inMovementId, vbPaidType, vbCashRegisterId, inSession);
             END;   
          WHEN zc_Enum_StatusCode_Erased() THEN
             PERFORM gpSetErased_Movement_Check (inMovementId, inSession);

@@ -59,7 +59,7 @@ type
     FormParams: TdsdFormParams;
     cbSpec: TcxCheckBox;
     actCheck: TdsdOpenForm;
-    cxButton1: TcxButton;
+    btnCheck: TcxButton;
     actInsertUpdateCheckItems: TAction;
     spGoodsRemains: TdsdStoredProc;
     spSelectCheck: TdsdStoredProc;
@@ -88,7 +88,7 @@ type
     btnVIP: TcxButton;
     actOpenCheckVIP: TOpenChoiceForm;
     actLoadVIP: TMultiAction;
-    cxButton2: TcxButton;
+    btnLoadDeferred: TcxButton;
     actOpenCheckDeferred: TOpenChoiceForm;
     actLoadDeferred: TMultiAction;
     actSetTrueRemains: TAction;
@@ -113,6 +113,7 @@ type
     spSelectRemains_Lite: TdsdStoredProc;
     Remains_LiteCDS: TClientDataSet;
     actRefreshLite: TdsdDataSetRefresh;
+    spGet_User_IsAdmin: TdsdStoredProc;
     procedure FormCreate(Sender: TObject);
     procedure actChoiceGoodsInRemainsGridExecute(Sender: TObject);
     procedure lcNameKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
@@ -176,7 +177,7 @@ implementation
 
 {$R *.dfm}
 
-uses CashFactory, IniUtils, CashCloseDialog, VIPDialog, CashWork;
+uses CashFactory, IniUtils, CashCloseDialog, VIPDialog, CashWork, MessagesUnit;
 
 procedure TMainCashForm.actCalcTotalSummExecute(Sender: TObject);
 begin
@@ -437,6 +438,12 @@ begin
                   'Дальнейшая работа программы возможна только в нефискальном режиме!');
     End;
   end;
+  spGet_User_IsAdmin.Execute;
+  if spGet_User_IsAdmin.ParamByName('gpGet_User_IsAdmin').Value = True then
+    actCheck.FormNameParam.Value := 'TCheckJournalForm'
+  Else
+    actCheck.FormNameParam.Value := 'TCheckJournalUserForm';
+
   SoldParallel:=iniSoldParallel;
   NewCheck;
   OnCLoseQuery := ParentFormCloseQuery;
@@ -501,25 +508,18 @@ begin
         ParamByName('inGoodsId').Value := SourceClientDataSet.FieldByName('Id').asInteger
      else
         ParamByName('inGoodsId').Value := CheckCDS.FieldByName('GoodsId').asInteger;
-     try
-       Execute;
-     except on E: Exception do
-       BEGIN
-         raise exception.Create(E.Message);
-         exit;
-       END;
-     end;
+     Execute;
      //обновить данные чека
      try //Если что то пойдет не так - на экране должно быть то что в базе
        if CheckCDS.Locate('Id',ParamByName('outMovementItemId').Value,[]) then
-       BEGIN
+       begin
          CheckCDS.Edit;
          CheckCDS.FieldByName('Amount').AsFloat := ParamByName('outAmount').AsFloat;
          CheckCDS.FieldByName('Summ').AsFloat := ParamByName('outSumm').AsFloat;
          CheckCDS.Post;
-       END
-       ELSE
-       BEGIN
+       end
+       else
+       begin
          CheckCDS.Append;
          CheckCDS.FieldByName('Id').AsInteger := ParamByName('outMovementItemId').Value;
          CheckCDS.FieldByName('GoodsId').AsInteger := SourceClientDataSet.FieldByName('Id').asInteger;
@@ -531,7 +531,7 @@ begin
          CheckCDS.FieldByName('NDS').AsFloat := ParamByName('outNDS').AsFloat;
          CheckCDS.FieldByName('isErased').AsBoolean := False;
          CheckCDS.Post;
-       END;
+       end;
        //обновить остаток в гл. ДС
        //Обновить остаок в альтернативе
        UpdateQuantityInQuery(SourceClientDataSet.FieldByName('Id').asInteger,
@@ -540,12 +540,12 @@ begin
        FTotalSumm := ParamByName('outTotalSummCheck').AsFloat;
        lblTotalSumm.Caption := FormatFloat(',0.00',ParamByName('outTotalSummCheck').AsFloat);
      Except ON E: Exception DO
-       BEGIN
+       begin
          spSelectCheck.Execute;
          CalcTotalSumm;// Пересчитали значение Суммы в TotalPanel
          UpdateQuantityInQuery(ParamByName('inGoodsId').Value);
-         raise exception.Create(E.Message);
-       END;
+         raise Exception.Create(E.Message);
+       end;
      end;
   end;
 end;
@@ -593,10 +593,11 @@ procedure TMainCashForm.UpdateRemains;
 var
   B: TBookmark;
 begin
-  if not RemainsCDS.Active or not not Remains_LiteCDS.Active  then exit;
+  if not RemainsCDS.Active or not Remains_LiteCDS.Active  then exit;
   
   B := RemainsCDS.GetBookmark;
   RemainsCDS.DisableControls;
+  RemainsCDS.Filtered := False;
   RemainsCDS.AfterScroll := Nil;
   AlternativeCDS.DisableControls;
   AlternativeCDS.Filtered := False;
@@ -645,9 +646,16 @@ begin
       End;
       AlternativeCDS.Next;
     End;
-    RemainsCDS.GotoBookmark(B);
-    RemainsCDS.FreeBookmark(B);
+    try
+      RemainsCDS.GotoBookmark(B);
+    except
+    end;
+    try
+      RemainsCDS.FreeBookmark(B);
+    except
+    end;
   finally
+    RemainsCDS.Filtered := True;
     RemainsCDS.EnableControls;
     RemainsCDS.AfterScroll := RemainsCDSAfterScroll;
     RemainsCDSAfterScroll(RemainsCDS);
@@ -815,10 +823,10 @@ end;
 procedure TMainCashForm.RemainsCDSAfterScroll(DataSet: TDataSet);
 begin
   if RemainsCDS.FieldByName('AlternativeGroupId').AsInteger = 0 then
-    AlternativeCDS.Filter := 'MainGoodsId='+RemainsCDS.FieldByName('Id').AsString
+    AlternativeCDS.Filter := 'Remains > 0 AND MainGoodsId='+RemainsCDS.FieldByName('Id').AsString
   else
-    AlternativeCDS.Filter := 'MainGoodsId='+RemainsCDS.FieldByName('Id').AsString +
-      ' or (AlternativeGroupId='+RemainsCDS.FieldByName('AlternativeGroupId').AsString+
+    AlternativeCDS.Filter := '(Remains > 0 AND MainGoodsId='+RemainsCDS.FieldByName('Id').AsString +
+      ') or (Remains > 0 AND AlternativeGroupId='+RemainsCDS.FieldByName('AlternativeGroupId').AsString+
            ' AND Id <> '+RemainsCDS.FieldByName('Id').AsString+')';
 end;
 

@@ -90,8 +90,12 @@ end;
 
 procedure TdbProcedureTest.CreateMovementItemContainerProcedure;
 begin
+  ScriptDirectory := FarmacyProcedurePath + 'MovementItemContainer\_COMMON\';
+  ProcedureLoad;
+
   ScriptDirectory := FarmacyProcedurePath + 'MovementItemContainer\Income\';
   ProcedureLoad;
+
   ScriptDirectory := FarmacyProcedurePath + 'MovementItemContainer\Check\';
   ProcedureLoad;
 
