@@ -170,6 +170,7 @@ type
     bbEDIError: TdxBarButton;
     mactDeclarSilent: TMultiAction;
     clGoodsPropertyName: TcxGridDBColumn;
+    ClientRefresh: TdsdDataSetRefresh;
   private
     { Private declarations }
   public
