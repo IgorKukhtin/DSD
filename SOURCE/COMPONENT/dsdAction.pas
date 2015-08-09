@@ -883,13 +883,22 @@ begin
     FTimer.Enabled := False;
     FTimer.Interval := FAfterScrollTimerInterval;
     FTimer.OnTimer := OnTimerNotifyEvent;
-    FOriginalAfterScrol := AValue.AfterScroll;
-    AValue.AfterScroll := AfterScrollNotifyEvent;
   End;
   if (AValue = nil) AND (FTimer <> nil) then
   Begin
     FTimer.Free;
     FTimer := nil;
+  End;
+  if AValue <> Nil then
+  Begin
+    FOriginalAfterScrol := AValue.AfterScroll;
+    AValue.AfterScroll := AfterScrollNotifyEvent;
+  end
+  else
+  if (AValue = Nil) AND (FDataSet <> Nil) then
+  Begin
+    FDataSet.AfterScroll := FOriginalAfterScrol;
+    FOriginalAfterScrol := nil;
   End;
   FDataSet := AValue;
 end;
