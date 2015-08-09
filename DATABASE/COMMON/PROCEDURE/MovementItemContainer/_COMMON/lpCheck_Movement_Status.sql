@@ -29,7 +29,10 @@ BEGIN
   IF  EXISTS (SELECT MovementId FROM MovementBoolean WHERE MovementId = inMovementId AND DescId = zc_MovementBoolean_Registered() AND ValueData = TRUE)
    OR EXISTS (SELECT MovementId FROM MovementBoolean WHERE MovementId = inMovementId AND DescId = zc_MovementBoolean_Electron() AND ValueData = TRUE)
   THEN
-      RAISE EXCEPTION 'Ошибка.Документ зарегестрирован.<Распроведение> невозможно.';
+      RAISE EXCEPTION 'Ошибка.Установлен признак <Электронный документ> в <%> № <%> от <%>.<Распроведение> невозможно.', (SELECT MovementDesc.ItemName FROM Movement JOIN MovementDesc ON MovementDesc.Id = Movement.DescId WHERE Movement.Id = inMovementId)
+                                                                                                    , (SELECT InvNumber FROM Movement WHERE Id = inMovementId)
+                                                                                                    , DATE ((SELECT OperDate FROM Movement WHERE Id = inMovementId))
+                                                                                                     ;
   END IF;
   -- END 1.1. проверка <Зарегестрирован>
   -- 1.2. проверка <Медок>

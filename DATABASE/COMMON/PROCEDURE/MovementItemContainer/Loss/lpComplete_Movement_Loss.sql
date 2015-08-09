@@ -319,7 +319,11 @@ BEGIN
             , 0 AS ContainerId_ProfitLoss
             , COALESCE (lfContainerSumm_20901.ContainerId, COALESCE (Container_Summ.Id, 0))     AS ContainerId
             , COALESCE (lfContainerSumm_20901.AccountId, COALESCE (Container_Summ.ObjectId, 0)) AS AccountId
-            , SUM (_tmpItem.OperCount * COALESCE (HistoryCost.Price, 0)) AS OperSumm
+            , SUM (CAST (_tmpItem.OperCount * COALESCE (HistoryCost.Price, 0) AS NUMERIC (16,4))
+                 + CASE WHEN _tmpItem.MovementItemId = HistoryCost.MovementItemId_diff AND ABS (CAST (_tmpItem.OperCount * COALESCE (HistoryCost.Price, 0) AS NUMERIC (16,4))) >= -1 * HistoryCost.Summ_diff
+                             THEN HistoryCost.Summ_diff -- !!!если есть "погрешность" при округлении, добавили сумму!!!
+                        ELSE 0
+                   END) AS OperSumm
         FROM _tmpItem
              -- так находим для тары
              LEFT JOIN lfSelect_ContainerSumm_byAccount (zc_Enum_Account_20901()) AS lfContainerSumm_20901
@@ -341,7 +345,7 @@ BEGIN
                , lfContainerSumm_20901.AccountId;
 
      -- 1.2.2. формируются Проводки для суммового учета
-     INSERT INTO _tmpMIContainer_insert (Id, DescId, MovementDescId, MovementId, MovementItemId, ContainerId --, ParentId, Amount, OperDate, IsActive)
+     INSERT INTO _tmpMIContainer_insert (Id, DescId, MovementDescId, MovementId, MovementItemId, ContainerId
                                        , AccountId, AnalyzerId, ObjectId_Analyzer, WhereObjectId_Analyzer, ContainerId_Analyzer, ObjectIntId_Analyzer, ObjectExtId_Analyzer
                                        , ParentId, Amount, OperDate, IsActive)
        SELECT 0, zc_MIContainer_Summ() AS DescId, vbMovementDescId, inMovementId, _tmpItemSumm.MovementItemId
@@ -434,22 +438,22 @@ BEGIN
      WHERE _tmpItemSumm.MovementItemId = _tmpItem.MovementItemId;
 
      -- 2.2. формируются Проводки - Прибыль
-     INSERT INTO _tmpMIContainer_insert (Id, DescId, MovementDescId, MovementId, MovementItemId, ContainerId -- , ParentId, Amount, OperDate, IsActive)
+     INSERT INTO _tmpMIContainer_insert (Id, DescId, MovementDescId, MovementId, MovementItemId, ContainerId
                                        , AccountId, AnalyzerId, ObjectId_Analyzer, WhereObjectId_Analyzer, ContainerId_Analyzer, ObjectIntId_Analyzer, ObjectExtId_Analyzer
                                        , ParentId, Amount, OperDate, isActive)
        SELECT 0, zc_MIContainer_Summ() AS DescId, vbMovementDescId, inMovementId, _tmpItemSumm_group.MovementItemId
-           , _tmpItemSumm_group.ContainerId_ProfitLoss
-           , zc_Enum_Account_100301 ()               AS AccountId  -- прибыль текущего периода
-           , 0                                       AS AnalyzerId -- !!!нет!!!
-           , _tmpItemSumm_group.GoodsId              AS ObjectId_Analyzer      -- Товар
-           , vbWhereObjectId_Analyzer                AS WhereObjectId_Analyzer -- Подраделение или...
-           , 0                                       AS ContainerId_Analyzer   -- в ОПиУ не нужен
-           , _tmpItemSumm_group.GoodsKindId          AS ObjectIntId_Analyzer   -- вид товара
-           , 0                                       AS ObjectExtId_Analyzer   -- !!!нет!!!
-           , 0                                       AS ParentId
-           , _tmpItemSumm_group.OperSumm
-           , vbOperDate
-           , FALSE
+            , _tmpItemSumm_group.ContainerId_ProfitLoss
+            , zc_Enum_Account_100301 ()               AS AccountId              -- прибыль текущего периода
+            , 0                                       AS AnalyzerId             -- !!!нет!!!
+            , _tmpItemSumm_group.GoodsId              AS ObjectId_Analyzer      -- Товар
+            , vbWhereObjectId_Analyzer                AS WhereObjectId_Analyzer -- Подраделение или...
+            , 0                                       AS ContainerId_Analyzer   -- в ОПиУ не нужен
+            , _tmpItemSumm_group.GoodsKindId          AS ObjectIntId_Analyzer   -- вид товара
+            , 0                                       AS ObjectExtId_Analyzer   -- !!!нет!!!
+            , 0                                       AS ParentId
+            , _tmpItemSumm_group.OperSumm
+            , vbOperDate
+            , FALSE
        FROM (SELECT _tmpItemSumm.MovementItemId
                   , _tmpItemSumm.ContainerId_ProfitLoss
                   , _tmpItem.GoodsId

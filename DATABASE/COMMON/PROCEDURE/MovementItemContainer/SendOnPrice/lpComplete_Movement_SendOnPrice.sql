@@ -659,21 +659,30 @@ BEGIN
             , ContainerLinkObject_InfoMoney.ObjectId AS InfoMoneyId_From
             , ContainerLinkObject_InfoMoneyDetail.ObjectId AS InfoMoneyId_Detail_From
               -- с/с1 - для количества расхода с остатка (+ RestoreAccount_60000)
-            , CASE WHEN ContainerLinkObject_InfoMoney.ObjectId = zc_Enum_InfoMoney_80401()
-                     OR ContainerLinkObject_InfoMoneyDetail.ObjectId = zc_Enum_InfoMoney_80401()
-                        THEN SUM (_tmpItem.OperCount * COALESCE (HistoryCost.Price, 0))
-                   ELSE SUM ((_tmpItem.OperCount * COALESCE (HistoryCost.Price, 0))) -- ABS
+            , CASE WHEN ContainerLinkObject_InfoMoney.ObjectId       = zc_Enum_InfoMoney_80401() -- прибыль текущего периода
+                     OR ContainerLinkObject_InfoMoneyDetail.ObjectId = zc_Enum_InfoMoney_80401() -- прибыль текущего периода
+                        THEN SUM (CAST (_tmpItem.OperCount * COALESCE (HistoryCost.Price, 0) AS NUMERIC (16,4))
+                                + CASE WHEN _tmpItem.MovementItemId = HistoryCost.MovementItemId_diff AND ABS (CAST (_tmpItem.OperCount * COALESCE (HistoryCost.Price, 0) AS NUMERIC (16,4))) >= -1 * HistoryCost.Summ_diff
+                                            THEN HistoryCost.Summ_diff -- !!!если есть "погрешность" при округлении, добавили сумму!!!
+                                       ELSE 0
+                                  END)
+                   ELSE SUM (CAST (_tmpItem.OperCount * COALESCE (HistoryCost.Price, 0) AS NUMERIC (16,4)) -- ABS
+                           + CASE WHEN _tmpItem.MovementItemId = HistoryCost.MovementItemId_diff AND CAST (_tmpItem.OperCount * COALESCE (HistoryCost.Price, 0) AS NUMERIC (16,4)) >= -1 * HistoryCost.Summ_diff
+                                       THEN HistoryCost.Summ_diff -- !!!если есть "погрешность" при округлении, добавили сумму!!!
+                                  ELSE 0
+                             END)
+
               END AS OperSumm
               -- с/с2 - для количества с учетом % скидки
-            , SUM (CASE WHEN ContainerLinkObject_InfoMoney.ObjectId <> zc_Enum_InfoMoney_80401()
-                         AND ContainerLinkObject_InfoMoneyDetail.ObjectId <> zc_Enum_InfoMoney_80401()
-                             THEN (_tmpItem.OperCount_ChangePercent * COALESCE (HistoryCost.Price, 0)) -- ABS
+            , SUM (CASE WHEN ContainerLinkObject_InfoMoney.ObjectId       <> zc_Enum_InfoMoney_80401() -- прибыль текущего периода
+                         AND ContainerLinkObject_InfoMoneyDetail.ObjectId <> zc_Enum_InfoMoney_80401() -- прибыль текущего периода
+                             THEN CAST (_tmpItem.OperCount_ChangePercent * COALESCE (HistoryCost.Price, 0) AS NUMERIC (16,4)) -- ABS
                         ELSE 0
                    END) AS OperSumm_ChangePercent
               -- с/с3 - для количества контрагента
-            , SUM (CASE WHEN ContainerLinkObject_InfoMoney.ObjectId <> zc_Enum_InfoMoney_80401()
-                         AND ContainerLinkObject_InfoMoneyDetail.ObjectId <> zc_Enum_InfoMoney_80401()
-                             THEN (_tmpItem.OperCount_Partner * COALESCE (HistoryCost.Price, 0)) -- ABS
+            , SUM (CASE WHEN ContainerLinkObject_InfoMoney.ObjectId       <> zc_Enum_InfoMoney_80401() -- прибыль текущего периода
+                         AND ContainerLinkObject_InfoMoneyDetail.ObjectId <> zc_Enum_InfoMoney_80401() -- прибыль текущего периода
+                             THEN CAST (_tmpItem.OperCount_Partner * COALESCE (HistoryCost.Price, 0) AS NUMERIC (16,4)) -- ABS
                         ELSE 0
                    END) AS OperSumm_Partner
               -- 

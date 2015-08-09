@@ -11,17 +11,17 @@ inherited SaleJournalForm: TSaleJournalForm
     Width = 1242
     Height = 584
     TabOrder = 3
-    ExplicitWidth = 1142
+    ExplicitWidth = 1242
     ExplicitHeight = 584
     ClientRectBottom = 584
     ClientRectRight = 1242
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 1142
+      ExplicitWidth = 1242
       ExplicitHeight = 584
       inherited cxGrid: TcxGrid
         Width = 1242
         Height = 584
-        ExplicitWidth = 1142
+        ExplicitWidth = 1242
         ExplicitHeight = 584
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Filter.Options = [fcoCaseInsensitive, fcoShowOperatorDescription]
@@ -663,7 +663,7 @@ inherited SaleJournalForm: TSaleJournalForm
   end
   inherited Panel: TPanel
     Width = 1242
-    ExplicitWidth = 1142
+    ExplicitWidth = 1242
     inherited deStart: TcxDateEdit
       EditValue = 42005d
     end
@@ -1867,7 +1867,7 @@ inherited SaleJournalForm: TSaleJournalForm
         item
           StoredProc = spUpdateMovementDesc
         end>
-      Caption = 'spUncomplete'
+      Caption = 'actUpdateMovementDesc'
     end
   end
   inherited MasterDS: TDataSource

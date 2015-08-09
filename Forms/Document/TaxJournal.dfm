@@ -376,6 +376,13 @@ inherited TaxJournalForm: TTaxJournalForm
             HeaderAlignmentVert = vaCenter
             Width = 65
           end
+          object isCopy: TcxGridDBColumn
+            Caption = #1050#1086#1087#1080#1103' '#1074' '#1082#1086#1088#1088#1077#1082#1090'.'
+            DataBinding.FieldName = 'isCopy'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 65
+          end
           object Comment: TcxGridDBColumn
             Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
             DataBinding.FieldName = 'Comment'
@@ -882,6 +889,39 @@ inherited TaxJournalForm: TTaxJournalForm
       isShowModal = True
       OpenBeforeShow = True
     end
+    object mactCopyTaxCorrective: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actCopyTaxCorrective
+        end>
+      View = cxGridDBTableView
+      QuestionBeforeExecute = 
+        #1044#1077#1081#1089#1090#1074#1080#1090#1077#1083#1100#1085#1086' '#1089#1086#1079#1076#1072#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090#1099' <'#1050#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1082#1072'> '#1085#1072' '#1086#1089#1085#1086#1074#1072#1085#1080#1080' '#1076#1086#1082 +
+        #1091#1084#1077#1085#1090#1086#1074' <'#1053#1072#1083#1086#1075#1086#1074#1072#1103'>?'
+      InfoAfterExecute = 
+        #1059#1089#1087#1077#1096#1085#1086'  '#1089#1086#1079#1076#1072#1085#1099' '#1042#1057#1045' '#1076#1086#1082#1091#1084#1077#1085#1090#1099' <'#1050#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1082#1072'> '#1085#1072' '#1086#1089#1085#1086#1074#1072#1085#1080#1080' '#1076#1086#1082#1091 +
+        #1084#1077#1085#1090#1086#1074' <'#1053#1072#1083#1086#1075#1086#1074#1072#1103'>'
+      Caption = 
+        #1057#1086#1079#1076#1072#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090#1099' <'#1050#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1082#1072'> '#1085#1072' '#1086#1089#1085#1086#1074#1072#1085#1080#1080' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' <'#1053#1072#1083#1086#1075#1086 +
+        #1074#1072#1103'>'
+      Hint = 
+        #1057#1086#1079#1076#1072#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090#1099' <'#1050#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1082#1072'> '#1085#1072' '#1086#1089#1085#1086#1074#1072#1085#1080#1080' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' <'#1053#1072#1083#1086#1075#1086 +
+        #1074#1072#1103'>'
+      ImageIndex = 10
+    end
+    object actCopyTaxCorrective: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spCopyTaxCorrective
+      StoredProcList = <
+        item
+          StoredProc = spCopyTaxCorrective
+        end>
+      Caption = 'actCopyTaxCorrective'
+    end
     object MedocAction: TMedocAction
       Category = 'TaxLib'
       MoveParams = <>
@@ -1150,6 +1190,14 @@ inherited TaxJournalForm: TTaxJournalForm
         end
         item
           Visible = True
+          ItemName = 'bbCopyTaxCorrective'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbPrintTax_Client'
         end
         item
@@ -1247,6 +1295,10 @@ inherited TaxJournalForm: TTaxJournalForm
     end
     object bbExecuteDialog: TdxBarButton
       Action = ExecuteDialog
+      Category = 0
+    end
+    object bbCopyTaxCorrective: TdxBarButton
+      Action = mactCopyTaxCorrective
       Category = 0
     end
   end
@@ -1696,5 +1748,21 @@ inherited TaxJournalForm: TTaxJournalForm
     PackSize = 1
     Left = 535
     Top = 416
+  end
+  object spCopyTaxCorrective: TdsdStoredProc
+    StoredProcName = 'gpInsert_Movement_TaxCorrective_Tax'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+      end>
+    PackSize = 1
+    Left = 201
+    Top = 298
   end
 end

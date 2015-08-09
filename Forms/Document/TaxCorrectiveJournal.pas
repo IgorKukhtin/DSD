@@ -92,6 +92,7 @@ type
     bbExecuteDialog: TdxBarButton;
     Comment: TcxGridDBColumn;
     DateRegistered_notNull: TcxGridDBColumn;
+    isCopy: TcxGridDBColumn;
   private
     { Private declarations }
   public

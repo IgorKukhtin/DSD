@@ -3,6 +3,7 @@ CREATE OR REPLACE FUNCTION zc_Enum_Process_Auto_PartionClose() RETURNS Integer A
 CREATE OR REPLACE FUNCTION zc_Enum_Process_Auto_PrimeCost()    RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_Process_Auto_PrimeCost'    AND DescId = zc_ObjectString_Enum()); END; $BODY$ LANGUAGE plpgsql IMMUTABLE;
 CREATE OR REPLACE FUNCTION zc_Enum_Process_Auto_Defroster()    RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_Process_Auto_Defroster'    AND DescId = zc_ObjectString_Enum()); END; $BODY$ LANGUAGE plpgsql IMMUTABLE;
 CREATE OR REPLACE FUNCTION zc_Enum_Process_Auto_Pack()         RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_Process_Auto_Pack'         AND DescId = zc_ObjectString_Enum()); END; $BODY$ LANGUAGE plpgsql IMMUTABLE;
+CREATE OR REPLACE FUNCTION zc_Enum_Process_Auto_Kopchenie()    RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_Process_Auto_Kopchenie'    AND DescId = zc_ObjectString_Enum()); END; $BODY$ LANGUAGE plpgsql IMMUTABLE;
 
 DO $$
 BEGIN
@@ -37,8 +38,15 @@ BEGIN
  PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_Process_Auto_Pack()
                                    , inDescId:= zc_Object_Process()
                                    , inCode:= 1005
-                                   , inName:= 'Приход/расход Упаковка'
+                                   , inName:= 'Приход/расход цех Упаковки'
                                    , inEnumName:= 'zc_Enum_Process_Auto_Pack');
+ -- для 
+ PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_Process_Auto_Kopchenie()
+                                   , inDescId:= zc_Object_Process()
+                                   , inCode:= 1006
+                                   , inName:= 'Приход/расход цех Копчения'
+                                   , inEnumName:= 'zc_Enum_Process_Auto_Kopchenie');
+
  
 END $$;
 

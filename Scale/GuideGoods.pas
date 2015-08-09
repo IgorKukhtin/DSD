@@ -1001,7 +1001,7 @@ begin Close;end;
 {------------------------------------------------------------------------------}
 procedure TGuideGoodsForm.actSaveExecute(Sender: TObject);
 begin
-     if Checked then begin ModalResult:=mrOK;Close;end;
+     if Checked then begin Close;ModalResult:=mrOK;end;
 end;
 {------------------------------------------------------------------------------}
 procedure TGuideGoodsForm.FormCreate(Sender: TObject);

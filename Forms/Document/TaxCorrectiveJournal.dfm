@@ -2,6 +2,7 @@ inherited TaxCorrectiveJournalForm: TTaxCorrectiveJournalForm
   Caption = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' <'#1050#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1082#1072' '#1082' '#1085#1072#1083#1086#1075#1086#1074#1086#1081' '#1085#1072#1082#1083#1072#1076#1085#1086#1081'>'
   ClientHeight = 535
   ClientWidth = 1118
+  ExplicitLeft = -297
   ExplicitWidth = 1134
   ExplicitHeight = 570
   PixelsPerInch = 96
@@ -388,6 +389,13 @@ inherited TaxCorrectiveJournalForm: TTaxCorrectiveJournalForm
             Options.Editing = False
             Width = 74
           end
+          object isCopy: TcxGridDBColumn
+            Caption = #1050#1086#1087#1080#1103' '#1080#1079' '#1085#1072#1083#1086#1075'.'
+            DataBinding.FieldName = 'isCopy'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 55
+          end
           object Comment: TcxGridDBColumn
             Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
             DataBinding.FieldName = 'Comment'
@@ -408,6 +416,12 @@ inherited TaxCorrectiveJournalForm: TTaxCorrectiveJournalForm
   inherited Panel: TPanel
     Width = 1118
     ExplicitWidth = 1118
+    inherited deStart: TcxDateEdit
+      EditValue = 42005d
+    end
+    inherited deEnd: TcxDateEdit
+      EditValue = 42005d
+    end
     object edIsRegisterDate: TcxCheckBox
       Left = 427
       Top = 5
@@ -588,6 +602,25 @@ inherited TaxCorrectiveJournalForm: TTaxCorrectiveJournalForm
       FormName = 'TTaxCorrectiveForm'
       FormNameParam.Name = 'TTaxCorrectiveForm'
       FormNameParam.Value = 'TTaxCorrectiveForm'
+      GuiParams = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'Id'
+          ParamType = ptInput
+        end
+        item
+          Name = 'ShowAll'
+          Value = False
+          DataType = ftBoolean
+        end
+        item
+          Name = 'inOperDate'
+          Value = 41640d
+          Component = deEnd
+          DataType = ftDateTime
+        end>
     end
     inherited actInsert: TdsdInsertUpdateAction [10]
       FormName = 'TTaxCorrectiveForm'

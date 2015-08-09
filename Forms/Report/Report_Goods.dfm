@@ -65,6 +65,16 @@ inherited Report_GoodsForm: TReport_GoodsForm
               Format = ',0.####'
               Kind = skSum
               Column = clAmountEnd
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = SummPartnerIn
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = SummPartnerOut
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -106,6 +116,16 @@ inherited Report_GoodsForm: TReport_GoodsForm
               Format = ',0.####'
               Kind = skSum
               Column = clAmountEnd
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = SummPartnerIn
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = SummPartnerOut
             end>
           OptionsData.CancelOnExit = True
           OptionsData.Deleting = False
@@ -282,6 +302,25 @@ inherited Report_GoodsForm: TReport_GoodsForm
             HeaderAlignmentVert = vaCenter
             Width = 50
           end
+          object Price_end: TcxGridDBColumn
+            Caption = #1062#1077#1085#1072' '#1086#1089#1090'. '#1082#1086#1085#1077#1095'.'
+            DataBinding.FieldName = 'Price_end'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+          end
+          object Price_partner: TcxGridDBColumn
+            Caption = #1062#1077#1085#1072' '#1082#1086#1085#1090#1088#1072#1075#1077#1085#1090#1072
+            DataBinding.FieldName = 'Price_partner'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 80
+          end
           object clAmountStart: TcxGridDBColumn
             Caption = #1054#1089#1090'. '#1085#1072#1095'. '#1082#1086#1083'-'#1074#1086
             DataBinding.FieldName = 'AmountStart'
@@ -373,6 +412,26 @@ inherited Report_GoodsForm: TReport_GoodsForm
             Options.Editing = False
             Width = 70
           end
+          object SummPartnerIn: TcxGridDBColumn
+            Caption = #1055#1088#1080#1093#1086#1076' '#1089#1091#1084#1084#1072' '#1089' '#1053#1044#1057
+            DataBinding.FieldName = 'SummPartnerIn'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 70
+          end
+          object SummPartnerOut: TcxGridDBColumn
+            Caption = #1056#1072#1089#1093#1086#1076' '#1089#1091#1084#1084#1072' '#1089' '#1053#1044#1057
+            DataBinding.FieldName = 'SummPartnerOut'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 70
+          end
           object GoodsCode_parent: TcxGridDBColumn
             Caption = #1050#1086#1076' '#1087#1088'. '#1087#1088#1080#1093'.'
             DataBinding.FieldName = 'GoodsCode_parent'
@@ -398,30 +457,40 @@ inherited Report_GoodsForm: TReport_GoodsForm
           object MovementDescName_order: TcxGridDBColumn
             DataBinding.FieldName = 'MovementDescName_order'
             Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
             VisibleForCustomization = False
             Width = 55
           end
           object Amount: TcxGridDBColumn
             DataBinding.FieldName = 'Amount'
             Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
             VisibleForCustomization = False
             Width = 55
           end
           object Summ: TcxGridDBColumn
             DataBinding.FieldName = 'Summ'
             Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
             VisibleForCustomization = False
             Width = 55
           end
           object MovementId: TcxGridDBColumn
             DataBinding.FieldName = 'MovementId'
             Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
             VisibleForCustomization = False
             Width = 55
           end
           object isRemains: TcxGridDBColumn
             DataBinding.FieldName = 'isRemains'
             Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
             VisibleForCustomization = False
             Width = 55
           end

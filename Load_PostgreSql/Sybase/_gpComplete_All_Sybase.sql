@@ -199,7 +199,7 @@ BEGIN
      ELSE
 
      -- !!!16 - Inventory!!!
-     IF vbMovementDescId = zc_Movement_Inventory() AND 1=0
+     IF vbMovementDescId = zc_Movement_Inventory() AND 1=1 -- !!!ADD!!!
      THEN
              -- !!! проводим - Inventory !!!
              PERFORM gpComplete_Movement_Inventory (inMovementId     := inMovementId

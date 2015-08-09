@@ -3,14 +3,13 @@ inherited PriceCorrectiveForm: TPriceCorrectiveForm
   ClientHeight = 542
   ClientWidth = 1042
   ExplicitWidth = 1058
-  ExplicitHeight = 580
+  ExplicitHeight = 577
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 166
     Width = 1042
     Height = 376
-    Properties.ActivePage = cxTabSheetTaxCorrective
     ExplicitTop = 166
     ExplicitWidth = 1042
     ExplicitHeight = 376
@@ -739,9 +738,6 @@ inherited PriceCorrectiveForm: TPriceCorrectiveForm
         end>
       RefreshOnTabSetChanges = True
     end
-    inherited actGridToExcel: TdsdGridToExcel
-      Enabled = False
-    end
     inherited actPrint: TdsdPrintAction
       StoredProc = spSelectPrint
       StoredProcList = <
@@ -831,6 +827,7 @@ inherited PriceCorrectiveForm: TPriceCorrectiveForm
       Category = 'DSDLib'
       TabSheet = cxTabSheetTaxCorrective
       MoveParams = <>
+      Enabled = False
       Caption = #1055#1088#1086#1089#1084#1086#1090#1088' <'#1044#1086#1082#1091#1084#1077#1085#1090#1072' '#1082#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1082#1080'>'
       Hint = #1055#1088#1086#1089#1084#1086#1090#1088' <'#1044#1086#1082#1091#1084#1077#1085#1090#1072' '#1082#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1082#1080'>'
       ImageIndex = 1

@@ -16,7 +16,8 @@ RETURNS TABLE  (MovementId Integer, InvNumber TVarChar, OperDate TDateTime, Oper
               , PaidKindName TVarChar
               , GoodsCode Integer, GoodsName TVarChar, GoodsKindName TVarChar, GoodsKindName_complete TVarChar, PartionGoods TVarChar
               , GoodsCode_parent Integer, GoodsName_parent TVarChar, GoodsKindName_parent TVarChar
-              , Price TFloat
+              , Price TFloat, Price_end TFloat, Price_partner TFloat
+              , SummPartnerIn TFloat, SummPartnerOut TFloat
               , AmountStart TFloat, AmountIn TFloat, AmountOut TFloat, AmountEnd TFloat, Amount TFloat
               , SummStart TFloat, SummIn TFloat, SummOut TFloat, SummEnd TFloat, Summ TFloat
                )  
@@ -49,7 +50,7 @@ BEGIN
                                                                                       AND CLO_PartionGoods.DescId = zc_ContainerLinkObject_PartionGoods()
                                      LEFT JOIN ContainerLinkObject AS CLO_Account ON CLO_Account.ContainerId = Container.Id
                                                                                  AND CLO_Account.DescId = zc_ContainerLinkObject_Account()
-                                WHERE CLO_Account.ContainerId IS NULL
+                                WHERE CLO_Account.ContainerId IS NULL -- !!!т.е. без счета Транзит!!!
                                )
                 , tmpMI_Count AS (SELECT tmpContainer_Count.ContainerId
                                        , tmpContainer_Count.LocationId
@@ -161,6 +162,17 @@ BEGIN
                                         , MIContainer.MovementDescId
                                         , MIContainer.isActive
                                 )
+
+         , tmpMI_SummPartner AS (SELECT tmpMI_Summ.MovementItemId
+                                      , SUM (MIContainer.Amount * CASE WHEN MIContainer.MovementDescId IN (zc_Movement_ReturnOut(), zc_Movement_Sale()) THEN 1 ELSE -1 END) AS Amount
+                                 FROM tmpMI_Summ
+                                      LEFT JOIN MovementItemContainer AS MIContainer ON MIContainer.MovementId     = tmpMI_Summ.MovementId
+                                                                                    AND MIContainer.MovementItemId = tmpMI_Summ.MovementItemId
+                                                                                    AND MIContainer.ContainerId    = tmpMI_Summ.ContainerId_Analyzer
+                                                                                    AND MIContainer.isActive      <> tmpMI_Summ.isActive
+                                 WHERE tmpMI_Summ.MovementItemId > 0
+                                 GROUP BY tmpMI_Summ.MovementItemId
+                                )
    SELECT Movement.Id AS MovementId
         , Movement.InvNumber
         , Movement.OperDate
@@ -200,16 +212,30 @@ BEGIN
 
         , CAST (CASE WHEN Movement.DescId = zc_Movement_Income() AND 1=0
                           THEN 0 -- MIFloat_Price.ValueData
-                     WHEN tmpMIContainer_group.MovementId = -1 AND tmpMIContainer_group.AmountStart <> 0
+                     WHEN /*tmpMIContainer_group.MovementId = -1 AND */tmpMIContainer_group.AmountStart <> 0
                           THEN tmpMIContainer_group.SummStart / tmpMIContainer_group.AmountStart
-                     WHEN tmpMIContainer_group.MovementId = -2 AND tmpMIContainer_group.AmountEnd <> 0
-                          THEN tmpMIContainer_group.SummEnd / tmpMIContainer_group.AmountEnd
+                     /*WHEN tmpMIContainer_group.MovementId = -2 AND tmpMIContainer_group.AmountEnd <> 0
+                          THEN tmpMIContainer_group.SummEnd / tmpMIContainer_group.AmountEnd*/
                      WHEN tmpMIContainer_group.AmountIn <> 0
                           THEN tmpMIContainer_group.SummIn / tmpMIContainer_group.AmountIn
                      WHEN tmpMIContainer_group.AmountOut <> 0
                           THEN tmpMIContainer_group.SummOut / tmpMIContainer_group.AmountOut
                      ELSE 0
                 END AS TFloat) AS Price
+        , CAST (CASE WHEN tmpMIContainer_group.AmountEnd <> 0
+                          THEN tmpMIContainer_group.SummEnd / tmpMIContainer_group.AmountEnd
+                     ELSE 0
+                END AS TFloat) AS Price_end
+        , CAST (CASE WHEN tmpMIContainer_group.AmountIn <> 0
+                          THEN tmpMIContainer_group.SummPartnerIn / tmpMIContainer_group.AmountIn
+                     WHEN tmpMIContainer_group.AmountOut <> 0
+                          THEN tmpMIContainer_group.SummPartnerOut / tmpMIContainer_group.AmountOut
+                     ELSE 0
+                END AS TFloat) AS Price_partner
+
+        , CAST (tmpMIContainer_group.SummPartnerIn AS TFloat)      AS SummPartnerIn
+        , CAST (tmpMIContainer_group.SummPartnerOut AS TFloat)     AS SummPartnerOut
+
         , CAST (tmpMIContainer_group.AmountStart AS TFloat) AS AmountStart
         , CAST (tmpMIContainer_group.AmountIn AS TFloat)    AS AmountIn
         , CAST (tmpMIContainer_group.AmountOut AS TFloat)   AS AmountOut
@@ -222,7 +248,7 @@ BEGIN
         , CAST (tmpMIContainer_group.SummStart AS TFloat)   AS SummStart
         , CAST (tmpMIContainer_group.SummIn AS TFloat)      AS SummIn
         , CAST (tmpMIContainer_group.SummOut AS TFloat)     AS SummOut
-        , CAST (tmpMIContainer_group.SummEnd AS TFloat)     AS SummEnd 
+        , CAST (tmpMIContainer_group.SummEnd AS TFloat)     AS SummEnd
         , CAST ((tmpMIContainer_group.SummIn - tmpMIContainer_group.SummOut)
               * CASE WHEN Movement.DescId IN (zc_Movement_Sale(), zc_Movement_ReturnOut(), zc_Movement_Loss()) THEN -1 ELSE 1 END
               * CASE WHEN Movement.DescId IN (zc_Movement_Send(), zc_Movement_SendOnPrice(), zc_Movement_ProductionUnion(), zc_Movement_ProductionSeparate()) AND tmpMIContainer_group.isActive = FALSE THEN -1 ELSE 1 END
@@ -246,6 +272,8 @@ BEGIN
               , SUM (tmpMIContainer_all.SummEnd)     AS SummEnd
               , SUM (tmpMIContainer_all.SummIn)      AS SummIn
               , SUM (tmpMIContainer_all.SummOut)     AS SummOut
+              , SUM (tmpMIContainer_all.SummPartnerIn)  AS SummPartnerIn
+              , SUM (tmpMIContainer_all.SummPartnerOut) AS SummPartnerOut
         FROM (-- 1.1. Остатки кол-во
               SELECT -1 AS MovementId
                    -- , 0 AS MovementItemId
@@ -261,6 +289,8 @@ BEGIN
                    , tmpMI_Count.Amount - SUM (tmpMI_Count.Amount_Total) + SUM (tmpMI_Count.Amount_Period) AS AmountEnd
                    , 0 AS AmountIn
                    , 0 AS AmountOut
+                   , 0 AS SummPartnerIn
+                   , 0 AS SummPartnerOut
                    , 0 AS SummStart
                    , 0 AS SummEnd
                    , 0 AS SummIn
@@ -291,6 +321,8 @@ BEGIN
                    , 0 AS AmountEnd
                    , CASE WHEN tmpMI_Count.Amount_Period > 0 THEN      tmpMI_Count.Amount_Period ELSE 0 END AS AmountIn
                    , CASE WHEN tmpMI_Count.Amount_Period < 0 THEN -1 * tmpMI_Count.Amount_Period ELSE 0 END AS AmountOut
+                   , CASE WHEN tmpMI_Count.Amount_Period > 0 THEN tmpMI_SummPartner.Amount ELSE 0 END AS SummPartnerIn
+                   , CASE WHEN tmpMI_Count.Amount_Period < 0 THEN tmpMI_SummPartner.Amount ELSE 0 END AS SummPartnerOut
                    , 0 AS SummStart
                    , 0 AS SummEnd
                    , 0 AS SummIn
@@ -302,6 +334,8 @@ BEGIN
                           ELSE TO_CHAR (MIDate_PartionGoods.ValueData, 'DD.MM.YYYY')
                      END AS PartionGoods_item
               FROM tmpMI_Count
+                   LEFT JOIN tmpMI_SummPartner ON tmpMI_SummPartner.MovementItemId = tmpMI_Count.MovementItemId
+
                    LEFT JOIN MovementItem ON MovementItem.Id = tmpMI_Count.MovementItemId
                    LEFT JOIN MovementItemDate AS MIDate_PartionGoods
                                               ON MIDate_PartionGoods.MovementItemId = tmpMI_Count.MovementItemId
@@ -330,6 +364,8 @@ BEGIN
                    , 0 AS AmountEnd
                    , 0 AS AmountIn
                    , 0 AS AmountOut
+                   , 0 AS SummPartnerIn
+                   , 0 AS SummPartnerOut
                    , tmpMI_Summ.Amount - SUM (tmpMI_Summ.Amount_Total) AS SummStart
                    , tmpMI_Summ.Amount - SUM (tmpMI_Summ.Amount_Total) + SUM (tmpMI_Summ.Amount_Period) AS SummEnd
                    , 0 AS SummIn
@@ -360,6 +396,8 @@ BEGIN
                    , 0 AS AmountEnd
                    , 0 AS AmountIn
                    , 0 AS AmountOut
+                   , 0 AS SummPartnerIn
+                   , 0 AS SummPartnerOut
                    , 0 AS SummStart
                    , 0 AS SummEnd
                    , CASE WHEN tmpMI_Summ.Amount_Period > 0 THEN      tmpMI_Summ.Amount_Period ELSE 0 END AS SummIn

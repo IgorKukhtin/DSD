@@ -15,7 +15,7 @@ BEGIN
 
 
      CREATE TEMP TABLE tmpReceipt_basis (ReceiptId Integer, GoodsId Integer) ON COMMIT DROP;
-     INSERT INTO tmpReceipt_basis (GoodsId, ReceiptId)
+     INSERT INTO tmpReceipt_basis (ReceiptId, GoodsId)
         SELECT MAX (ObjectLink_Receipt_Goods.ObjectId) AS ReceiptId
              , ObjectLink_Receipt_Goods.ChildObjectId  AS GoodsId
         FROM ObjectLink AS ObjectLink_Receipt_Goods

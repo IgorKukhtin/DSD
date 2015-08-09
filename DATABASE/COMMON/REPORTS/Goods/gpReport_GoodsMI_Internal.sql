@@ -51,12 +51,12 @@ BEGIN
     IF inFromId <> 0 
     THEN
         INSERT INTO _tmpUnit_From (UnitId)
-           SELECT inFromId AS UnitId union SELECT inToId AS UnitId where inDescId <> zc_Movement_Loss();
+           -- SELECT inFromId AS UnitId union SELECT inToId AS UnitId where inDescId <> zc_Movement_Loss();
+           SELECT lfSelect.UnitId FROM lfSelect_Object_Unit_byGroup (inFromId) AS lfSelect;
     ELSE
         INSERT INTO _tmpUnit_From (UnitId)
-                                                   
-               SELECT Id AS UnitId FROM Object WHERE DescId = zc_Object_Unit()
-              UNION ALL
+               /*SELECT Id AS UnitId FROM Object WHERE DescId = zc_Object_Unit()
+              UNION ALL*/
                SELECT Id AS UnitId FROM Object  WHERE DescId = zc_Object_Member()
               UNION ALL
                SELECT Id AS UnitId FROM Object  WHERE DescId = zc_Object_Car();
@@ -66,13 +66,12 @@ BEGIN
     IF inToId <> 0 
     THEN
         INSERT INTO _tmpUnit_To (UnitId)
-           SELECT inToId AS UnitId union SELECT inFromId AS UnitId where inDescId <> zc_Movement_Loss();
-           
+           -- SELECT inToId AS UnitId union SELECT inFromId AS UnitId where inDescId <> zc_Movement_Loss();
+           SELECT lfSelect.UnitId FROM lfSelect_Object_Unit_byGroup (inToId) AS lfSelect;
     ELSE
         INSERT INTO _tmpUnit_To (UnitId)
-   
-               SELECT Id AS UnitId FROM Object WHERE DescId = zc_Object_Unit()
-              UNION ALL
+               /*SELECT Id AS UnitId FROM Object WHERE DescId = zc_Object_Unit()
+              UNION ALL*/
                SELECT Id AS UnitId FROM Object  WHERE DescId = zc_Object_Member()
               UNION ALL
                SELECT Id AS UnitId FROM Object  WHERE DescId = zc_Object_Car();

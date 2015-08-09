@@ -59,7 +59,7 @@ BEGIN
                                                              AND CLO_Account.DescId = zc_ContainerLinkObject_Account()
                            WHERE CLO_Unit.ObjectId = vbUnitId
                              AND CLO_Unit.DescId = zc_ContainerLinkObject_Unit()
-                             AND CLO_Account.ContainerId IS NULL
+                             AND CLO_Account.ContainerId IS NULL -- !!!т.е. без счета Транзит!!!
                           )
        SELECT
              0                          AS Id
@@ -290,7 +290,7 @@ BEGIN
                                                               ON CLO_Account.ContainerId = Container.Id
                                                              AND CLO_Account.DescId = zc_ContainerLinkObject_Account()
                            WHERE COALESCE (CLO_GoodsKind.ObjectId, 0) = tmpMI_Goods.GoodsKindId
-                             AND CLO_Account.ContainerId IS NULL
+                             AND CLO_Account.ContainerId IS NULL -- !!!т.е. без счета Транзит!!!
                           )
        SELECT
              tmpMI_Goods.MovementItemId         AS Id

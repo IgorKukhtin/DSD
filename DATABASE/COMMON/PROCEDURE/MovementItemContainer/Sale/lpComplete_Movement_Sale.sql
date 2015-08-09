@@ -1130,7 +1130,7 @@ BEGIN
             , CASE WHEN vbMemberId_To <> 0 THEN vbMemberId_To ELSE vbPartnerId_To END AS WhereObjectId_Analyzer -- Покупатель или Физ.лицо
             , 0                                       AS ContainerId_Analyzer   -- !!!нет!!!
             , 0                                       AS ObjectIntId_Analyzer   -- !!!нет!!!
-            , 0                                       AS ObjectExtId_Analyzer   -- !!!нет!!!
+            , vbWhereObjectId_Analyzer                AS ObjectExtId_Analyzer   -- подразделение или...
             , 0                                       AS ParentId
             , OperCount                               AS Amount
             , vbOperDate                              AS OperDate               -- т.е. по "Дате склад"
@@ -1325,11 +1325,23 @@ BEGIN
             , COALESCE (lfContainerSumm_20901.AccountId, COALESCE (Container_Summ.ObjectId, 0)) AS AccountId
             , 0 AS ContainerId_Transit -- Счет Транзит, определим позже
               -- с/с1 - для количества: расход с остатка
-            , SUM ((_tmpItem.OperCount * COALESCE (HistoryCost.Price, 0))) AS OperSumm
+            , SUM (CAST (_tmpItem.OperCount * COALESCE (HistoryCost.Price, 0) AS NUMERIC (16,4))
+                 + CASE WHEN _tmpItem.MovementItemId = HistoryCost.MovementItemId_diff AND ABS (CAST (_tmpItem.OperCount * COALESCE (HistoryCost.Price, 0) AS NUMERIC (16,4))) >= -1 * HistoryCost.Summ_diff
+                             THEN HistoryCost.Summ_diff -- !!!если есть "погрешность" при округлении, добавили сумму!!!
+                        ELSE 0
+                   END) AS OperSumm
               -- с/с2 - для количества: с учетом % скидки
-            , SUM ((_tmpItem.OperCount_ChangePercent * COALESCE (HistoryCost.Price, 0))) AS OperSumm_ChangePercent
+            , SUM (CAST (_tmpItem.OperCount_ChangePercent * COALESCE (HistoryCost.Price, 0) AS NUMERIC (16,4))
+                 + CASE WHEN _tmpItem.MovementItemId = HistoryCost.MovementItemId_diff AND ABS (CAST (_tmpItem.OperCount * COALESCE (HistoryCost.Price, 0) AS NUMERIC (16,4))) >= -1 * HistoryCost.Summ_diff
+                             THEN HistoryCost.Summ_diff -- !!!если есть "погрешность" при округлении, добавили сумму!!!
+                        ELSE 0
+                   END) AS OperSumm_ChangePercent
               -- с/с3 - для количества: контрагента
-            , SUM ((_tmpItem.OperCount_Partner * COALESCE (HistoryCost.Price, 0))) AS OperSumm_Partner
+            , SUM (CAST (_tmpItem.OperCount_Partner * COALESCE (HistoryCost.Price, 0) AS NUMERIC (16,4))
+                 + CASE WHEN _tmpItem.MovementItemId = HistoryCost.MovementItemId_diff AND ABS (CAST (_tmpItem.OperCount * COALESCE (HistoryCost.Price, 0) AS NUMERIC (16,4))) >= -1 * HistoryCost.Summ_diff
+                             THEN HistoryCost.Summ_diff -- !!!если есть "погрешность" при округлении, добавили сумму!!!
+                        ELSE 0
+                   END) AS OperSumm_Partner
             , _tmpItem.isLossMaterials
         FROM _tmpItem
              -- так находим для тары
