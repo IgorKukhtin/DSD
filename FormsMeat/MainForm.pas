@@ -502,7 +502,7 @@ type
     N46: TMenuItem;
     actProductionUnionTechDelic: TdsdOpenForm;
     N47: TMenuItem;
-    N50: TMenuItem;
+    miReport_ProductionOrder: TMenuItem;
     miCashPav: TMenuItem;
     actCashOperationPav: TdsdOpenForm;
     actJuridicalGLN: TdsdOpenForm;
@@ -512,7 +512,7 @@ type
     actGoodsByGoodsKind: TdsdOpenForm;
     N48: TMenuItem;
     actReport_ReceiptProductionAnalyzeForm: TdsdOpenForm;
-    N49: TMenuItem;
+    miReport_ReceiptProductionAnalyze: TMenuItem;
     actReport_GoodsMI_Defroster: TdsdOpenForm;
     N51: TMenuItem;
     N52: TMenuItem;
@@ -611,8 +611,10 @@ type
     N75: TMenuItem;
     actOrderInternalBasisDelik: TdsdOpenForm;
     N76: TMenuItem;
-    N77: TMenuItem;
+    miReport_ReceiptSaleAnalyze: TMenuItem;
     actReport_ReceiptSaleAnalyzeForm: TdsdOpenForm;
+    actReport_ReceiptProductionOutAnalyzeForm: TdsdOpenForm;
+    miReport_ReceiptProductionOutAnalyze: TMenuItem;
     procedure actReport_OLAPSoldExecute(Sender: TObject);
     procedure FormShow(Sender: TObject);
   private

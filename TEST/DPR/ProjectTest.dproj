@@ -2161,8 +2161,8 @@
 				<Form>Report_PersonalCompleteDialogForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
-			<DCCReference Include="..\..\Forms\Report\Report_ReceiptProductionAnalyze.pas">
-				<Form>Report_ReceiptProductionAnalyzeForm</Form>
+			<DCCReference Include="..\..\Forms\Report\Report_ReceiptProductionOutAnalyze.pas">
+				<Form>Report_ReceiptProductionOutAnalyzeForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<BuildConfiguration Include="Release">
