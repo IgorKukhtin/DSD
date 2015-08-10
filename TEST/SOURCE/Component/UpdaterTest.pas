@@ -11,7 +11,7 @@ type
     procedure SaveFile(FilePath: string);
   published
     procedure ProcedureLoad; override;
-    procedure UpdateAllProgram;
+    procedure UpdateMainProgram;
     procedure UpdateScale;
     procedure UpdateScaleCeh;
     procedure UpdateFarmacyCash;
@@ -57,19 +57,16 @@ begin
   end;
 end;
 
-procedure TUpdaterTest.UpdateAllProgram;
-begin
-  inherited;
-  SaveFile(ExtractFileDir(ParamStr(0)) + '\midas.dll');
-  SaveFile(ExtractFileDir(ParamStr(0)) + '\Upgrader4.exe');
-  SaveFile(ExtractFileDir(ParamStr(0)) + '\' + gc_ProgramName);
-  SaveFile(ExtractFileDir(ParamStr(0)) + '\Scale.exe');
-  SaveFile(ExtractFileDir(ParamStr(0)) + '\ScaleCeh.exe');
-end;
-
 procedure TUpdaterTest.UpdateFarmacyCash;
 begin
   SaveFile(ExtractFileDir(ParamStr(0)) + '\FarmacyCash.exe');
+end;
+
+procedure TUpdaterTest.UpdateMainProgram;
+begin
+  SaveFile(ExtractFileDir(ParamStr(0)) + '\midas.dll');
+  SaveFile(ExtractFileDir(ParamStr(0)) + '\Upgrader4.exe');
+  SaveFile(ExtractFileDir(ParamStr(0)) + '\' + gc_ProgramName);
 end;
 
 procedure TUpdaterTest.UpdateScale;
