@@ -94,9 +94,9 @@
 			<VerInfo_Locale>1033</VerInfo_Locale>
 		</PropertyGroup>
 		<PropertyGroup Condition="'$(Cfg_1_Win32)'!=''">
-			<VerInfo_Build>3</VerInfo_Build>
-			<VerInfo_Release>7</VerInfo_Release>
-			<VerInfo_Keys>CompanyName=;FileDescription=;FileVersion=1.3.7.3;InternalName=;LegalCopyright=;LegalTrademarks=;OriginalFilename=;ProductName=;ProductVersion=1.0.0.0;Comments=</VerInfo_Keys>
+			<VerInfo_Build>1</VerInfo_Build>
+			<VerInfo_Release>8</VerInfo_Release>
+			<VerInfo_Keys>CompanyName=;FileDescription=;FileVersion=1.3.8.1;InternalName=;LegalCopyright=;LegalTrademarks=;OriginalFilename=;ProductName=;ProductVersion=1.0.0.0;Comments=</VerInfo_Keys>
 			<Debugger_DebugSourcePath>D:\WORK\ExtLib\Components\FastReport 4.12\Source\ExportPack\;$(Debugger_DebugSourcePath)</Debugger_DebugSourcePath>
 			<Manifest_File>$(BDS)\bin\default_app.manifest</Manifest_File>
 			<VerInfo_Locale>1033</VerInfo_Locale>

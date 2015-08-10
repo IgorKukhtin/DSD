@@ -1,10 +1,10 @@
 -- Function: gpSelect_MI_EDI()
 
 DROP FUNCTION IF EXISTS gpSelect_MI_EDI (TDateTime, TDateTime, TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_MI_EDI (Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_MI_EDI(
-    IN inStartDate   TDateTime , --
-    IN inEndDate     TDateTime , --
+    IN inMovementId  Integer, --
     IN inSession     TVarChar       -- сессия пользователя
 )
 RETURNS TABLE (MovementId Integer, MovementItemId Integer, GLNCode TVarChar, GoodsNameEDI TVarChar
@@ -48,8 +48,7 @@ BEGIN
                                  LEFT JOIN MovementLinkMovement AS MovementLinkMovement_Order_Sale
                                                                 ON MovementLinkMovement_Order_Sale.MovementId = Movement_Sale.Id
                                                                AND MovementLinkMovement_Order_Sale.DescId = zc_MovementLinkMovement_Order()
-                            WHERE Movement.DescId = zc_Movement_EDI()
-                              AND Movement.OperDate BETWEEN inStartDate AND inEndDate
+                            WHERE Movement.Id = inMovementId
                            )
        , tmpMI_Order AS (SELECT tmpMovement.MovementId
                               , tmpMovement.GoodsPropertyId
@@ -277,11 +276,12 @@ BEGIN
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpSelect_MI_EDI (TDateTime, TDateTime, TVarChar) OWNER TO postgres;
+ALTER FUNCTION gpSelect_MI_EDI (Integer, TVarChar) OWNER TO postgres;
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 09.08.15                        * add inMovementId
  09.10.14                                        * rem --***
  31.07.14                                        * add zc_MovementLinkMovement_MasterEDI
  19.07.14                                        * ALL

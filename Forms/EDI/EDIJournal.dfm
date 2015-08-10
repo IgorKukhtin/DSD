@@ -3,8 +3,8 @@ inherited EDIJournalForm: TEDIJournalForm
   ClientHeight = 453
   ClientWidth = 1284
   AddOnFormData.OnLoadAction = actSetDefaults
-  ExplicitWidth = 1300
-  ExplicitHeight = 488
+  ExplicitWidth = 1292
+  ExplicitHeight = 480
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -803,19 +803,24 @@ inherited EDIJournalForm: TEDIJournalForm
   end
   inherited ActionList: TActionList
     Top = 183
-    inherited actRefresh: TdsdDataSetRefresh
+    object ClientRefresh: TdsdDataSetRefresh [0]
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spClient
       StoredProcList = <
-        item
-          StoredProc = spSelect
-        end
         item
           StoredProc = spClient
         end
         item
           StoredProc = spProtocol
         end>
+      Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
+      Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
+      ShortCut = 116
+      RefreshOnTabSetChanges = False
+      DataSet = MasterCDS
     end
-    object actInvoice: TEDIAction [1]
+    object actInvoice: TEDIAction [2]
       Category = 'EDI'
       MoveParams = <>
       StartDateParam.Value = Null
@@ -825,7 +830,7 @@ inherited EDIJournalForm: TEDIJournalForm
       HeaderDataSet = PrintHeaderCDS
       ListDataSet = PrintItemsCDS
     end
-    object actOrdSpr: TEDIAction [2]
+    object actOrdSpr: TEDIAction [3]
       Category = 'EDI'
       MoveParams = <>
       StartDateParam.Value = Null
@@ -835,7 +840,7 @@ inherited EDIJournalForm: TEDIJournalForm
       HeaderDataSet = PrintHeaderCDS
       ListDataSet = PrintItemsCDS
     end
-    object mactInvoice: TMultiAction [3]
+    object mactInvoice: TMultiAction [4]
       Category = 'EDI'
       MoveParams = <>
       ActionList = <
@@ -852,7 +857,7 @@ inherited EDIJournalForm: TEDIJournalForm
       Caption = #1057#1095#1077#1090
       Hint = #1054#1090#1087#1088#1072#1074#1080#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090' <'#1057#1095#1077#1090'> '#1074' EXITE'
     end
-    object mactErrorEDI: TMultiAction [4]
+    object mactErrorEDI: TMultiAction [5]
       Category = 'EDI Load'
       MoveParams = <>
       ActionList = <
@@ -867,7 +872,7 @@ inherited EDIJournalForm: TEDIJournalForm
       Caption = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1086#1096#1080#1073#1082#1080
       Hint = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1086#1096#1080#1073#1082#1080
     end
-    object EDIError: TEDIAction [5]
+    object EDIError: TEDIAction [6]
       Category = 'EDI Load'
       MoveParams = <>
       StartDateParam.Value = 42005d
@@ -880,7 +885,7 @@ inherited EDIJournalForm: TEDIJournalForm
       EDIDocType = ediError
       Directory = '/error'
     end
-    object mactDeclarSilent: TMultiAction [6]
+    object mactDeclarSilent: TMultiAction [7]
       Category = 'EDI COMDOC DataSet'
       MoveParams = <>
       ActionList = <
@@ -891,7 +896,7 @@ inherited EDIJournalForm: TEDIJournalForm
           Action = EDIDeclar
         end>
     end
-    object mactOrdSpr: TMultiAction [7]
+    object mactOrdSpr: TMultiAction [8]
       Category = 'EDI'
       MoveParams = <>
       ActionList = <
@@ -908,7 +913,7 @@ inherited EDIJournalForm: TEDIJournalForm
       Caption = #1055#1086#1076#1090#1074#1077#1088#1078#1076#1077#1085#1080#1077
       Hint = #1054#1090#1087#1088#1072#1074#1080#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090' <'#1055#1086#1076#1090#1074#1077#1088#1078#1076#1077#1085#1080#1077' '#1086#1090#1075#1088#1091#1079#1082#1080'> '#1074' EXITE'
     end
-    object actDesadv: TEDIAction [8]
+    object actDesadv: TEDIAction [9]
       Category = 'EDI'
       MoveParams = <>
       StartDateParam.Value = Null
@@ -918,7 +923,7 @@ inherited EDIJournalForm: TEDIJournalForm
       HeaderDataSet = PrintHeaderCDS
       ListDataSet = PrintItemsCDS
     end
-    object mactDesadv: TMultiAction [9]
+    object mactDesadv: TMultiAction [10]
       Category = 'EDI'
       MoveParams = <>
       ActionList = <
@@ -1747,17 +1752,10 @@ inherited EDIJournalForm: TEDIJournalForm
       end>
     Params = <
       item
-        Name = 'inStartDate'
+        Name = 'inMovementId'
         Value = 41640d
-        Component = deStart
-        DataType = ftDateTime
-        ParamType = ptInput
-      end
-      item
-        Name = 'inEndDate'
-        Value = 41640d
-        Component = deEnd
-        DataType = ftDateTime
+        Component = MasterCDS
+        ComponentItem = 'Id'
         ParamType = ptInput
       end>
     PackSize = 1
@@ -1995,17 +1993,10 @@ inherited EDIJournalForm: TEDIJournalForm
       end>
     Params = <
       item
-        Name = 'inStartDate'
+        Name = 'inMovementId'
         Value = 41640d
-        Component = deStart
-        DataType = ftDateTime
-        ParamType = ptInput
-      end
-      item
-        Name = 'inEndDate'
-        Value = 41640d
-        Component = deEnd
-        DataType = ftDateTime
+        Component = MasterCDS
+        ComponentItem = 'Id'
         ParamType = ptInput
       end>
     PackSize = 1
