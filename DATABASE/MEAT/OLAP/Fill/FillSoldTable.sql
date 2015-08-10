@@ -623,4 +623,4 @@ group by object_p.ValueData, object_g.ValueData , object_gk.ValueData
 -- тест
 -- SELECT * FROM SoldTable
 -- SELECT * FROM FillSoldTable ('01.11.2014', '31.12.2014', zfCalc_UserAdmin()) 
--- SELECT * FROM FillSoldTable ('01.02.2015', '01.02.2015', zfCalc_UserAdmin()) 
+-- SELECT * FROM FillSoldTable ('01.07.2015', '31.07.2015', zfCalc_UserAdmin()) 

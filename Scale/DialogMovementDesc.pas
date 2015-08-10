@@ -574,6 +574,7 @@ begin
        and(ParamsMovement_local.ParamByName('MovementDescId').AsInteger<>zc_Movement_Loss)
        and(ParamsMovement_local.ParamByName('MovementDescId').AsInteger<>zc_Movement_SendOnPrice)
      then begin
+               ParamsMovement_local.ParamByName('calcPartnerId').AsInteger:=0;
                ShowMessage('Ошибка.У контрагента не определено значение <Договор>.');
                ActiveControl:=EditPartnerCode;
                exit;
@@ -582,6 +583,7 @@ begin
        and(ParamsMovement_local.ParamByName('MovementDescId').AsInteger<>zc_Movement_Loss)
        and(ParamsMovement_local.ParamByName('MovementDescId').AsInteger<>zc_Movement_SendOnPrice)
      then begin
+               ParamsMovement_local.ParamByName('calcPartnerId').AsInteger:=0;
                ShowMessage('Ошибка.У контрагента не определено значение <Прайс-лист>.');
                ActiveControl:=EditPartnerCode;
                exit;
@@ -590,6 +592,7 @@ begin
        and(ParamsMovement_local.ParamByName('MovementDescId').AsInteger<>zc_Movement_Loss)
        and(ParamsMovement_local.ParamByName('MovementDescId').AsInteger<>zc_Movement_SendOnPrice)
      then begin
+               ParamsMovement_local.ParamByName('calcPartnerId').AsInteger:=0;
                ShowMessage('Ошибка.У контрагента не определено значение <Форма оплаты>.');
                ActiveControl:=EditPartnerCode;
                exit;

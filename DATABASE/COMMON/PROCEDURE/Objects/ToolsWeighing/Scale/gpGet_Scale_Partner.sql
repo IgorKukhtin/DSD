@@ -172,8 +172,9 @@ BEGIN
                         THEN 1
                    WHEN inInfoMoneyId = zc_Enum_InfoMoney_30201() -- Доходы + Мясное сырье
                         THEN 0
-                   WHEN tmpPartner.PartnerCode IN (12345678) -- ???
-                        THEN 1
+                   WHEN inInfoMoneyId = zc_Enum_InfoMoney_30101() -- Доходы + Продукция
+                    AND ObjectLink_Juridical_Retail.ChildObjectId IN (310855) -- Варус
+                        THEN 1.5
                    ELSE 1
               END :: TFloat AS ChangePercentAmount
 
@@ -227,6 +228,9 @@ BEGIN
                                     ON ObjectBoolean_Partner_EdiDesadv.ObjectId =  tmpPartner.PartnerId
                                    AND ObjectBoolean_Partner_EdiDesadv.DescId = zc_ObjectBoolean_Partner_EdiDesadv()
                                    AND 1=0 -- убрал, т.к. проверка по связи заявки с EDI
+            LEFT JOIN ObjectLink AS ObjectLink_Juridical_Retail
+                                 ON ObjectLink_Juridical_Retail.ObjectId = tmpPartner.JuridicalId
+                                AND ObjectLink_Juridical_Retail.DescId = zc_ObjectLink_Juridical_Retail()
       ;
    ELSE
    IF inMovementDescId IN (zc_Movement_Loss())

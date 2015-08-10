@@ -704,6 +704,13 @@ inherited Report_GoodsMI_IncomeByPartnerForm: TReport_GoodsMI_IncomeByPartnerFor
           Value = Null
           Component = cbGoodsKind
           DataType = ftBoolean
+        end
+        item
+          Name = 'DescName'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'InDescName'
+          DataType = ftString
         end>
       ReportName = #1054#1090#1095#1077#1090' '#1087#1086' '#1090#1086#1074#1072#1088#1091' ('#1087#1088#1080#1093#1086#1076' '#1086#1090' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072')'
       ReportNameParam.Value = #1054#1090#1095#1077#1090' '#1087#1086' '#1090#1086#1074#1072#1088#1091' ('#1087#1088#1080#1093#1086#1076' '#1086#1090' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072')'
@@ -1155,7 +1162,7 @@ inherited Report_GoodsMI_IncomeByPartnerForm: TReport_GoodsMI_IncomeByPartnerFor
         ParamType = ptInput
       end
       item
-        Name = 'InDescName'
+        Name = 'inDescName'
         Value = ''
         Component = edInDescName
         DataType = ftString

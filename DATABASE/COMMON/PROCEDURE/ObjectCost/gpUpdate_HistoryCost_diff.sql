@@ -16,7 +16,7 @@ BEGIN
      -- проверка прав пользователя на вызов процедуры
      -- PERFORM lpCheckRight (inSession, zc_Enum_InsertUpdate_HistoryCost());
 
-     IF inIsUpdate = TRUE THEN RETURN; END IF;
+     -- IF inIsUpdate = TRUE THEN RETURN; END IF;
 
      -- таблица - Список
      CREATE TEMP TABLE _tmpDiff (OperDate TDateTime, ContainerId Integer, MovementItemId Integer, Amount TFloat, Amount_diff TFloat) ON COMMIT DROP;
@@ -83,9 +83,9 @@ BEGIN
                              )
           , tmpListMI_all AS (-- 
                               SELECT tmpListAll.ContainerId, MAX (tmpListAll.Id) AS Id
-                              FROM tmpList_Summ_sale
-                                   INNER JOIN tmpListAll ON tmpListAll.ContainerId  = tmpList_Summ_sale.ContainerId
-                                                        AND ABS (tmpListAll.Amount) = ABS (tmpList_Summ_sale.Amount)
+                              FROM tmpList_Summ_all
+                                   INNER JOIN tmpListAll ON tmpListAll.ContainerId  = tmpList_Summ_all.ContainerId
+                                                        AND ABS (tmpListAll.Amount) = ABS (tmpList_Summ_all.Amount)
                                                         AND tmpListAll.MovementDescId NOT IN (zc_Movement_Sale(), zc_Movement_Loss(), zc_Movement_Inventory(), zc_Movement_ReturnOut())
                               GROUP BY tmpListAll.ContainerId
                              )
@@ -115,9 +115,9 @@ BEGIN
            AND _tmpDiff.OperDate BETWEEN HistoryCost.StartDate AND HistoryCost.EndDate
             ;
           -- Результат
-          RETURN QUERY
+          /*RETURN QUERY
              SELECT * FROM _tmpDiff
-            ;
+            ;*/
      ELSE
           -- Результат
           RETURN QUERY
@@ -135,4 +135,6 @@ $BODY$
  08.08.15                                        *
 */
 
--- SELECT * FROM gpUpdate_HistoryCost_diff (inStartDate:= '01.07.2015', inEndDate:= '31.07.2015', inIsUpdate:= FALSE, inSession:= zfCalc_UserAdmin())
+-- SELECT * FROM gpUpdate_HistoryCost_diff (inStartDate:= '01.07.2015', inEndDate:= '31.07.2015', inIsUpdate:= TRUE, inSession:= zfCalc_UserAdmin()) AS a
+-- SELECT * FROM gpUpdate_HistoryCost_diff (inStartDate:= '01.07.2015', inEndDate:= '31.07.2015', inIsUpdate:= FALSE, inSession:= zfCalc_UserAdmin()) AS a
+-- WHEER ContainerId in (179397, 156105)

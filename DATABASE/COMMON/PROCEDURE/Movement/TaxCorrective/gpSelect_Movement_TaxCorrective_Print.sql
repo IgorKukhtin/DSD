@@ -194,7 +194,12 @@ BEGIN
            , CASE WHEN MovementString_InvNumberBranch.ValueData = '6' THEN 'Книш В.П.' ELSE 'Рудик Н.В.' END :: TVarChar AS N10
            -- , 'А.В. МАРУХНО'::TVarChar                                        AS N10
            , 'оплата з поточного рахунка'::TVarChar                         AS N9
-           , CASE WHEN MovementLinkObject_DocumentTaxKind.ObjectId = zc_Enum_DocumentTaxKind_CorrectivePrice() THEN 'Змiна цiни'  ELSE 'повернення' END :: TVarChar AS KindName
+           , CASE WHEN MovementLinkObject_DocumentTaxKind.ObjectId = zc_Enum_DocumentTaxKind_CorrectivePrice()
+                       THEN 'Змiна цiни'
+                  WHEN MovementBoolean_isCopy.ValueData = TRUE
+                       THEN 'ВИПРАВЛЕННЯ ПОМИЛКИ'
+                  ELSE 'повернення'
+             END :: TVarChar AS KindName
            , MovementBoolean_PriceWithVAT.ValueData                         AS PriceWithVAT
            , MovementFloat_VATPercent.ValueData                             AS VATPercent
            , CAST (REPEAT (' ', 8 - LENGTH (MovementString_InvNumberPartner.ValueData)) || MovementString_InvNumberPartner.ValueData AS TVarChar) AS InvNumberPartner
@@ -347,6 +352,10 @@ BEGIN
 
 
        FROM tmpMovement
+
+            LEFT JOIN MovementBoolean AS MovementBoolean_isCopy
+                                      ON MovementBoolean_isCopy.MovementId = tmpMovement.Id
+                                     AND MovementBoolean_isCopy.DescId = zc_MovementBoolean_isCopy()
 
             LEFT JOIN MovementLinkMovement AS MovementLinkMovement_ChildEDI
                                            ON MovementLinkMovement_ChildEDI.MovementId = tmpMovement.Id

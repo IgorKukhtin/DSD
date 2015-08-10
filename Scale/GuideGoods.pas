@@ -1019,6 +1019,7 @@ begin
   //Скидка по весу
   for i := 0 to Length(ChangePercentAmount_Array)-1 do
     rgChangePercentAmount.Items.Add('('+IntToStr(ChangePercentAmount_Array[i].Code)+') '+ ChangePercentAmount_Array[i].Name);
+  rgChangePercentAmount.Columns:=Length(ChangePercentAmount_Array);
   //прайс-лист
   {for i := 0 to Length(PriceList_Array)-1 do
     rgPriceList.Items.Add('('+IntToStr(PriceList_Array[i].Code)+') '+ PriceList_Array[i].Name);}

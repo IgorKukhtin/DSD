@@ -334,7 +334,10 @@ var i: Integer;
 begin
   Result:=-1;
   for i := 0 to Length(ArrayList)-1 do
-    if ArrayList[i].Value = Value then begin Result:=i;break;end;
+    if (ArrayList[i].Value = Value)
+       or ((myStrToFloat(ArrayList[i].Value) = myStrToFloat(Value))
+           and (myStrToFloat(Value) <> 0))
+    then begin Result:=i;break;end;
 end;
 {------------------------------------------------------------------------}
 function GetArrayList_lpIndex_GoodsKind(ArrayList:TArrayList;GoodsKindWeighingGroupId,Code:Integer):Integer;

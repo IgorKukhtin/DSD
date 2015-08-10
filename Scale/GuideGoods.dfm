@@ -388,7 +388,7 @@ object GuideGoodsForm: TGuideGoodsForm
           Align = alClient
           Caption = #1057#1082#1080#1076#1082#1072' '#1087#1086' '#1074#1077#1089#1091
           Color = clBtnFace
-          Columns = 2
+          Columns = 3
           ParentColor = False
           TabOrder = 1
           OnClick = rgChangePercentAmountClick
