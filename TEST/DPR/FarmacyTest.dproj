@@ -953,6 +953,19 @@
 			</DCCReference>
 			<DCCReference Include="..\SOURCE\Movement\All\Farmacy\SendTest.pas"/>
 			<DCCReference Include="..\SOURCE\MovementItem\All\Farmacy\SendMovementItemTest.pas"/>
+			<DCCReference Include="..\..\FormsFarmacy\Document\CreateOrderFromMCS.pas">
+				<Form>CreateOrderFromMCSForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Document\CheckJournalUser.pas">
+				<Form>CheckJournalUserForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Report\ReportMovementCheck.pas">
+				<Form>ReportMovementCheckForm</Form>
+				<FormType>dfm</FormType>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
 			<BuildConfiguration Include="Release">
 				<Key>Cfg_2</Key>
 				<CfgParent>Base</CfgParent>

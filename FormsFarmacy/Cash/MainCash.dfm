@@ -9,7 +9,7 @@ inherited MainCashForm: TMainCashForm
   OnKeyDown = ParentFormKeyDown
   AddOnFormData.Params = FormParams
   ExplicitWidth = 780
-  ExplicitHeight = 439
+  ExplicitHeight = 446
   PixelsPerInch = 96
   TextHeight = 13
   object BottomPanel: TPanel [0]

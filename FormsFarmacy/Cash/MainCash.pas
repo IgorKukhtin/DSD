@@ -311,11 +311,13 @@ begin
     if PutCheckToCash(ASalerCash, PaidType) then
     begin
       //ƒостаем серийник кассового аппарата
-      if not Cash.AlwaysSold then
+      if Assigned(Cash) AND not Cash.AlwaysSold then
       Begin
-        spGet_Object_CashRegister_By_Serial.ParamByName('inSerial').Value := Cash.FiscalNumber;
+        spGet_Object_CashRegister_By_Serial.ParamByName('inSerial').Value :=
+          Cash.FiscalNumber;
         spGet_Object_CashRegister_By_Serial.Execute;
-        spComplete_Movement_Check.ParamByName('inCashRegisterId').Value := spGet_Object_CashRegister_By_Serial.ParamByName('outId').Value
+        spComplete_Movement_Check.ParamByName('inCashRegisterId').Value :=
+          spGet_Object_CashRegister_By_Serial.ParamByName('outId').Value
       End
       else
         spComplete_Movement_Check.ParamByName('inCashRegisterId').Value := 0;
@@ -403,7 +405,8 @@ end;
 
 procedure TMainCashForm.actSpecExecute(Sender: TObject);
 begin
-  Cash.AlwaysSold := actSpec.Checked;
+  if Assigned(Cash) then
+    Cash.AlwaysSold := actSpec.Checked;
 end;
 
 procedure TMainCashForm.ceAmountExit(Sender: TObject);
@@ -778,7 +781,7 @@ function TMainCashForm.PutCheckToCash(SalerCash: real;
   function PutOneRecordToCash: boolean; //ѕродажа одного наименовани€
   begin
      // посылаем строку в кассу и если все OK, то ставим метку о продаже
-     if Cash.AlwaysSold then
+     if not Assigned(Cash) or Cash.AlwaysSold then
         result := true
      else
        if not SoldParallel then
@@ -794,7 +797,7 @@ function TMainCashForm.PutCheckToCash(SalerCash: real;
 {------------------------------------------------------------------------------}
 begin
   try
-    result := Cash.AlwaysSold or Cash.OpenReceipt;
+    result := not Assigned(Cash) or Cash.AlwaysSold or Cash.OpenReceipt;
     with CheckCDS do
     begin
       First;
@@ -807,7 +810,7 @@ begin
            end;
         Next;
       end;
-      if not Cash.AlwaysSold then
+      if Assigned(Cash) AND not Cash.AlwaysSold then
       begin
         Cash.SubTotal(true, true, 0, 0);
         Cash.TotalSumm(SalerCash, PaidType);

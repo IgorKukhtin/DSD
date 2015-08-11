@@ -163,6 +163,8 @@ type
     N57: TMenuItem;
     actCreateOrderFromMCS: TdsdOpenForm;
     N58: TMenuItem;
+    actReportMovementCheckForm: TdsdOpenForm;
+    N59: TMenuItem;
     procedure actSaveDataExecute(Sender: TObject);
     procedure miRepriceClick(Sender: TObject);
   private
