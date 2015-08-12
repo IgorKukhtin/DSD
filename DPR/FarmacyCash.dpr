@@ -66,14 +66,15 @@ uses
   VIPDialog in '..\FormsFarmacy\Cash\VIPDialog.pas' {VIPDialogForm: TParentForm},
   CashWork in '..\FormsFarmacy\Cash\CashWork.pas' {CashWorkForm},
   AncestorDialog in '..\Forms\Ancestor\AncestorDialog.pas' {AncestorDialogForm: TParentForm},
-  dsdApplication in '..\SOURCE\dsdApplication.pas';
+  dsdApplication in '..\SOURCE\dsdApplication.pas',
+  ExternalLoad in '..\SOURCE\COMPONENT\ExternalLoad.pas';
 
 {$R *.res}
 
 begin
   Application.Initialize;
   Logger.Enabled := FindCmdLineSwitch('log');
-  ConnectionPath := '..\INIT\farmacy_init.php';
+  ConnectionPath := '..\INIT\localfarmacy_init.php';
 
   TdsdApplication.Create;
 

@@ -114,6 +114,8 @@ type
     Remains_LiteCDS: TClientDataSet;
     actRefreshLite: TdsdDataSetRefresh;
     spGet_User_IsAdmin: TdsdStoredProc;
+    actOpenMCSForm: TdsdOpenForm;
+    btnOpenMCSForm: TcxButton;
     procedure FormCreate(Sender: TObject);
     procedure actChoiceGoodsInRemainsGridExecute(Sender: TObject);
     procedure lcNameKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);

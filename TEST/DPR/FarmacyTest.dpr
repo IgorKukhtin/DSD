@@ -324,7 +324,9 @@ uses
   SendMovementItemTest in '..\SOURCE\MovementItem\All\Farmacy\SendMovementItemTest.pas',
   CreateOrderFromMCS in '..\..\FormsFarmacy\Document\CreateOrderFromMCS.pas' {CreateOrderFromMCSForm: TParentForm},
   CheckJournalUser in '..\..\Forms\Document\CheckJournalUser.pas' {CheckJournalUserForm: TParentForm},
-  ReportMovementCheck in '..\..\FormsFarmacy\Report\ReportMovementCheck.pas' {ReportMovementCheckForm: TParentForm};
+  ReportMovementCheck in '..\..\FormsFarmacy\Report\ReportMovementCheck.pas' {ReportMovementCheckForm: TParentForm},
+  MCS in '..\..\Forms\Guides\MCS.pas' {MCSForm: TParentForm},
+  PartionGoodsChoice in '..\..\Forms\Guides\PartionGoodsChoice.pas' {PartionGoodsChoiceForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}

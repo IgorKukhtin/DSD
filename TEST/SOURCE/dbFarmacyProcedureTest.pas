@@ -220,6 +220,9 @@ begin
   DirectoryLoad(CommonProcedurePath + 'OBJECTS\ImportSettingsItems\');
   DirectoryLoad(CommonProcedurePath + 'OBJECTS\NDSKind\');
   DirectoryLoad(CommonProcedurePath + 'OBJECTS\Role\');
+
+  ZQuery.SQL.LoadFromFile(FarmacyProcedurePath + 'OBJECTS\PartionGoods\gpSelect_Object_PartionGoods.sql');
+  ZQuery.ExecSQL;
 end;
 
 procedure TdbProcedureTest.CreatePeriodCloseProcedure;

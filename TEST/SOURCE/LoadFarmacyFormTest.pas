@@ -251,6 +251,10 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TGoodsPartnerCodeForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsPartnerCodeMasterForm'));
   TdsdFormStorageFactory.GetStorage.Load('TGoodsPartnerCodeMasterForm');
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TPartionGoodsChoiceForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TPartionGoodsChoiceForm');
+
 end;
 
 procedure TLoadFormTest.LoadMemberFormTest;
@@ -590,6 +594,8 @@ procedure TLoadFormTest.LoadPriceFormTest;
 begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TPriceForm'));
   TdsdFormStorageFactory.GetStorage.Load('TPriceForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TMCSForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TMCSForm');
 end;
 
 procedure TLoadFormTest.LoadAlternativeGroupFormTest;

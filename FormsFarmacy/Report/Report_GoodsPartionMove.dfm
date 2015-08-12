@@ -34,51 +34,43 @@ inherited Report_GoodsPartionMoveForm: TReport_GoodsPartionMoveForm
           object colOperDate: TcxGridDBColumn
             Caption = #1044#1072#1090#1072' '#1087#1072#1088#1090#1080#1080
             DataBinding.FieldName = 'OperDate'
-            HeaderAlignmentVert = vaCenter
             Options.Editing = False
           end
           object colInvNumber: TcxGridDBColumn
             Caption = #1053#1086#1084#1077#1088' '#1087#1072#1088#1090#1080#1080
             DataBinding.FieldName = 'InvNumber'
-            HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 91
           end
           object colGoodsCode: TcxGridDBColumn
             Caption = #1050#1086#1076' '#1090#1086#1074#1072#1088#1072
             DataBinding.FieldName = 'GoodsCode'
-            HeaderAlignmentVert = vaCenter
             Options.Editing = False
           end
           object colGoodsName: TcxGridDBColumn
             Caption = #1053#1072#1080#1084#1077#1085#1086#1074#1072#1085#1080#1077
             DataBinding.FieldName = 'GoodsName'
-            HeaderAlignmentVert = vaCenter
             Options.Editing = False
           end
           object colStartRemainsAmount: TcxGridDBColumn
             Caption = #1053#1072#1095#1072#1083#1100#1085#1099#1081' '#1086#1089#1090#1072#1090#1086#1082
             DataBinding.FieldName = 'StartRemainsAmount'
-            HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 145
           end
           object colIncomeAmount: TcxGridDBColumn
             Caption = #1055#1088#1080#1093#1086#1076#1099
             DataBinding.FieldName = 'IncomeAmount'
-            HeaderAlignmentVert = vaCenter
             Options.Editing = False
           end
           object colOutcomeAmount: TcxGridDBColumn
             Caption = #1056#1072#1089#1093#1086#1076#1099
             DataBinding.FieldName = 'OutcomeAmount'
-            HeaderAlignmentVert = vaCenter
             Options.Editing = False
           end
           object colEndRemainsAmount: TcxGridDBColumn
             Caption = #1050#1086#1085#1077#1095#1085#1099#1081' '#1086#1089#1090#1072#1090#1086#1082
             DataBinding.FieldName = 'EndRemainsAmount'
-            HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 130
           end
@@ -104,6 +96,7 @@ inherited Report_GoodsPartionMoveForm: TReport_GoodsPartionMoveForm
           Default = True
           Kind = bkEllipsis
         end>
+      Properties.ReadOnly = True
       TabOrder = 5
       Width = 184
     end
@@ -120,6 +113,7 @@ inherited Report_GoodsPartionMoveForm: TReport_GoodsPartionMoveForm
           Default = True
           Kind = bkEllipsis
         end>
+      Properties.ReadOnly = True
       TabOrder = 7
       Width = 184
     end
@@ -136,6 +130,7 @@ inherited Report_GoodsPartionMoveForm: TReport_GoodsPartionMoveForm
           Default = True
           Kind = bkEllipsis
         end>
+      Properties.ReadOnly = True
       TabOrder = 9
       Width = 184
     end
@@ -217,8 +212,8 @@ inherited Report_GoodsPartionMoveForm: TReport_GoodsPartionMoveForm
         DataType = ftString
         ParamType = ptInput
       end>
-    Left = 240
-    Top = 64
+    Left = 232
+    Top = 24
   end
   object GuidesGoods: TdsdGuides
     KeyField = 'Id'
@@ -243,15 +238,15 @@ inherited Report_GoodsPartionMoveForm: TReport_GoodsPartionMoveForm
         DataType = ftString
         ParamType = ptInput
       end>
-    Left = 304
-    Top = 64
+    Left = 424
+    Top = 24
   end
   object GuidesParty: TdsdGuides
     KeyField = 'Id'
     LookupControl = edParty
-    FormNameParam.Value = 'TUnit_ObjectForm'
+    FormNameParam.Value = 'TPartionGoodsChoiceForm'
     FormNameParam.DataType = ftString
-    FormName = 'TUnit_ObjectForm'
+    FormName = 'TPartionGoodsChoiceForm'
     PositionDataSet = 'MasterCDS'
     Params = <
       item
@@ -268,9 +263,21 @@ inherited Report_GoodsPartionMoveForm: TReport_GoodsPartionMoveForm
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+      end
+      item
+        Name = 'inUnitId'
+        Value = Null
+        Component = GuidesUnit
+        ComponentItem = 'Key'
+      end
+      item
+        Name = 'inGoodsId'
+        Value = Null
+        Component = GuidesGoods
+        ComponentItem = 'Key'
       end>
-    Left = 360
-    Top = 64
+    Left = 632
+    Top = 24
   end
   object FormParams: TdsdFormParams
     Params = <

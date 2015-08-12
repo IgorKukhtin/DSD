@@ -4,7 +4,7 @@ inherited MainForm: TMainForm
   ClientWidth = 666
   KeyPreview = True
   ExplicitWidth = 674
-  ExplicitHeight = 225
+  ExplicitHeight = 217
   PixelsPerInch = 96
   TextHeight = 13
   inherited ActionList: TActionList
@@ -741,6 +741,16 @@ inherited MainForm: TMainForm
       GuiParams = <>
       isShowModal = False
     end
+    object actReport_GoodsPartionMoveForm: TdsdOpenForm
+      Category = #1054#1090#1095#1077#1090#1099
+      MoveParams = <>
+      Caption = #1044#1074#1080#1078#1077#1085#1080#1077' '#1087#1086' '#1087#1072#1088#1090#1080#1103#1084' '#1090#1086#1074#1072#1088#1072
+      FormName = 'TReport_GoodsPartionMoveForm'
+      FormNameParam.Value = 'TReport_GoodsPartionMoveForm'
+      FormNameParam.DataType = ftString
+      GuiParams = <>
+      isShowModal = False
+    end
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 496
@@ -959,6 +969,9 @@ inherited MainForm: TMainForm
       end
       object N59: TMenuItem
         Action = actReportMovementCheckForm
+      end
+      object N60: TMenuItem
+        Action = actReport_GoodsPartionMoveForm
       end
     end
     inherited miService: TMenuItem
