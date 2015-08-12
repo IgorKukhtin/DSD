@@ -12,7 +12,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , TotalCount TFloat, TotalSummMVAT TFloat, TotalSumm TFloat
              , PriceWithVAT Boolean
              , FromId Integer, FromName TVarChar
-             , ToId Integer, ToName TVarChar
+             , ToId Integer, ToName TVarChar, ToParentName TVarChar
              , NDSKindId Integer, NDSKindName TVarChar
              , ContractId Integer, ContractName TVarChar
              , PaymentDate TDateTime, PaySumm TFloat, SaleSumm TFloat
@@ -55,6 +55,7 @@ BEGIN
            , Movement_Income_View.FromName
            , Movement_Income_View.ToId
            , Movement_Income_View.ToName
+           , Movement_Income_View.ToParentName
            , Movement_Income_View.NDSKindId
            , Movement_Income_View.NDSKindName
            , Movement_Income_View.ContractId
