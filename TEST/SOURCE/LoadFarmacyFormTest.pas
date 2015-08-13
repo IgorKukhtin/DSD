@@ -251,6 +251,10 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TGoodsPartnerCodeForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsPartnerCodeMasterForm'));
   TdsdFormStorageFactory.GetStorage.Load('TGoodsPartnerCodeMasterForm');
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TPartionGoodsChoiceForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TPartionGoodsChoiceForm');
+
 end;
 
 procedure TLoadFormTest.LoadMemberFormTest;
@@ -328,6 +332,8 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TReport_GoodsRemainsForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_GoodsPartionMoveForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_GoodsPartionMoveForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReportMovementCheckForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReportMovementCheckForm');
 end;
 
 procedure TLoadFormTest.LoadRetailFormTest;
@@ -588,6 +594,8 @@ procedure TLoadFormTest.LoadPriceFormTest;
 begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TPriceForm'));
   TdsdFormStorageFactory.GetStorage.Load('TPriceForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TMCSForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TMCSForm');
 end;
 
 procedure TLoadFormTest.LoadAlternativeGroupFormTest;

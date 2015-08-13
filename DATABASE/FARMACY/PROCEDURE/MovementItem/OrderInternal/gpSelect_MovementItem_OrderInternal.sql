@@ -64,6 +64,7 @@ BEGIN
                 END AS PartionGoodsDateColor   
            , Remains.Amount              AS RemainsInUnit                
            , Object_Price_View.MCSValue  AS MCS
+           , Income.Income_Amount        AS Income_Amount
        FROM (SELECT Object_Goods.Id                              AS GoodsId
                   , Object_Goods.GoodsCodeInt                    AS GoodsCode
                   , Object_Goods.GoodsName                       AS GoodsName
@@ -162,7 +163,34 @@ BEGIN
                           Container.Amount<>0
                         GROUP BY Container.ObjectId
                       ) AS Remains
-                        ON  COALESCE(tmpMI.GoodsId,tmpGoods.GoodsId) = Remains.ObjectId;
+                        ON  COALESCE(tmpMI.GoodsId,tmpGoods.GoodsId) = Remains.ObjectId
+            LEFT JOIN (
+                        SELECT
+                            MovementItem_Income.ObjectId            AS Income_GoodsId,
+                            SUM(MovementItem_Income.Amount)::TFloat AS Income_Amount
+                        FROM
+                            Movement AS Movement_Income
+                            INNER JOIN MovementItem AS MovementItem_Income
+                                                    ON Movement_Income.Id = MovementItem_Income.MovementId
+                                                   AND MovementItem_Income.DescId = zc_MI_Master()
+                                                   AND MovementItem_Income.isErased = FALSE
+                                                   AND MovementItem_Income.Amount > 0
+                            INNER JOIN MovementLinkObject AS MovementLinkObject_To
+                                                          ON MovementLinkObject_To.MovementId = Movement_Income.Id
+                                                         AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
+                                                         AND MovementLinkObject_To.ObjectId = vbUnitId
+                            INNER JOIN MovementDate AS MovementDate_Branch
+                                                    ON MovementDate_Branch.MovementId = Movement_Income.Id
+                                                   AND MovementDate_Branch.DescId = zc_MovementDate_Branch() 
+                        WHERE
+                            Movement_Income.DescId = zc_Movement_Income()
+                            AND
+                            MovementDate_Branch.ValueData >= CURRENT_DATE
+                            AND
+                            Movement_Income.StatusId = zc_Enum_Status_UnComplete()
+                        GROUP BY
+                            MovementItem_Income.ObjectId
+                      ) AS Income ON COALESCE(tmpMI.GoodsId,tmpGoods.GoodsId) = Income.Income_GoodsId;
         RETURN NEXT Cursor1;
      
 

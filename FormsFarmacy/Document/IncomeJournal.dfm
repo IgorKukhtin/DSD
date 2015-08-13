@@ -122,6 +122,11 @@ inherited IncomeJournalForm: TIncomeJournalForm
               Format = ',0.00;-,0.00; ;'
               Kind = skSum
               Column = colTotalSummMVAT
+            end
+            item
+              Format = ',0.00'
+              Kind = skSum
+              Column = colSaleSumm
             end>
           OptionsBehavior.GoToNextCellOnEnter = False
           OptionsBehavior.FocusCellOnCycle = False
@@ -160,6 +165,12 @@ inherited IncomeJournalForm: TIncomeJournalForm
             DataBinding.FieldName = 'ToName'
             HeaderAlignmentHorz = taCenter
             Width = 200
+          end
+          object colJuridicalName: TcxGridDBColumn
+            Caption = #1063#1055
+            DataBinding.FieldName = 'JuridicalName'
+            HeaderAlignmentHorz = taCenter
+            Width = 123
           end
           object colContractName: TcxGridDBColumn
             Caption = #1059#1089#1083#1086#1074#1080#1103' '#1076#1086#1075#1086#1074#1086#1088#1072' '#1087#1086#1089#1090'-'#1082#1072

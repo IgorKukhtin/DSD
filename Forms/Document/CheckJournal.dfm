@@ -3,27 +3,29 @@ inherited CheckJournalForm: TCheckJournalForm
   ClientWidth = 697
   AddOnFormData.RefreshAction = actRefreshStart
   ExplicitWidth = 705
-  ExplicitHeight = 702
+  ExplicitHeight = 709
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Top = 77
+    Top = 79
     Width = 697
-    Height = 598
+    Height = 596
     TabOrder = 3
-    ExplicitTop = 77
+    ExplicitTop = 79
     ExplicitWidth = 697
-    ExplicitHeight = 598
-    ClientRectBottom = 598
-    ClientRectRight = 697
+    ExplicitHeight = 596
+    ClientRectBottom = 592
+    ClientRectRight = 693
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 697
-      ExplicitHeight = 598
+      ExplicitLeft = 2
+      ExplicitTop = 2
+      ExplicitWidth = 691
+      ExplicitHeight = 590
       inherited cxGrid: TcxGrid
-        Width = 697
-        Height = 598
-        ExplicitWidth = 697
-        ExplicitHeight = 598
+        Width = 691
+        Height = 590
+        ExplicitWidth = 691
+        ExplicitHeight = 590
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.FooterSummaryItems = <
             item
@@ -228,7 +230,7 @@ inherited CheckJournalForm: TCheckJournalForm
     DockControlHeights = (
       0
       0
-      26
+      28
       0)
     inherited Bar: TdxBar
       ItemLinks = <
@@ -301,7 +303,6 @@ inherited CheckJournalForm: TCheckJournalForm
         Component = PeriodChoice
       end
       item
-        Component = UnitGuides
       end>
   end
   inherited FormParams: TdsdFormParams

@@ -12,7 +12,7 @@ uses
   dsdAction, Vcl.ActnList, cxPropertiesStore, cxLabel, cxTextEdit, cxMaskEdit,
   cxDropDownEdit, cxCalendar, Vcl.ExtCtrls, cxGridLevel, cxGridCustomView,
   cxGridCustomTableView, cxGridTableView, cxGridDBTableView, cxGrid, cxPC,
-  cxButtonEdit, dsdGuides;
+  cxButtonEdit, dsdGuides, dxBarBuiltInMenu, cxNavigator;
 
 type
   TReport_GoodsPartionMoveForm = class(TAncestorReportForm)

@@ -199,7 +199,7 @@ WITH DIFFSALDO AS ( SELECT
           , Container.Amount AS ContainerAmount 
           , OperDate 
           , Container.Id
-          , SUM(Container.Amount) OVER (PARTITION BY Container.objectid ORDER BY OPERDATE) 
+          , SUM(Container.Amount) OVER (PARTITION BY Container.objectid ORDER BY Movement.OperDate, Movement.Id) 
         FROM Container 
             JOIN DIFFSALDO ON DIFFSALDO.objectid = Container.objectid 
             JOIN containerlinkobject AS CLI_MI 

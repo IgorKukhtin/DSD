@@ -13,7 +13,8 @@ CREATE OR REPLACE VIEW Movement_OrderExternal_View AS
            , MovementLinkObject_From.ObjectId                   AS FromId
            , Object_From.ValueData                              AS FromName
            , MovementLinkObject_To.ObjectId                     AS ToId
-           , Object_To.ValueData                                AS ToName
+           , Object_To.Name                                     AS ToName
+           , Object_To.JuridicalName                            AS JuridicalName
            , MovementLinkObject_Contract.ObjectId               AS ContractId
            , Object_Contract.ValueData                          AS ContractName
            , MovementFloat_TotalCount.ValueData                 AS TotalCount
@@ -40,8 +41,8 @@ CREATE OR REPLACE VIEW Movement_OrderExternal_View AS
                                          ON MovementLinkObject_To.MovementId = Movement.Id
                                         AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
 
-            LEFT JOIN Object AS Object_To ON Object_To.Id = MovementLinkObject_To.ObjectId
-
+            LEFT JOIN Object_Unit_View AS Object_To ON Object_To.Id = MovementLinkObject_To.ObjectId
+            
             LEFT JOIN MovementLinkObject AS MovementLinkObject_Contract
                                          ON MovementLinkObject_Contract.MovementId = Movement.Id
                                         AND MovementLinkObject_Contract.DescId = zc_MovementLinkObject_Contract()

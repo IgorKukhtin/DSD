@@ -220,6 +220,9 @@ begin
   DirectoryLoad(CommonProcedurePath + 'OBJECTS\ImportSettingsItems\');
   DirectoryLoad(CommonProcedurePath + 'OBJECTS\NDSKind\');
   DirectoryLoad(CommonProcedurePath + 'OBJECTS\Role\');
+
+  ZQuery.SQL.LoadFromFile(FarmacyProcedurePath + 'OBJECTS\PartionGoods\gpSelect_Object_PartionGoods.sql');
+  ZQuery.ExecSQL;
 end;
 
 procedure TdbProcedureTest.CreatePeriodCloseProcedure;
@@ -239,6 +242,8 @@ begin
   ScriptDirectory := FarmacyReportsPath + 'Remains\';
   ProcedureLoad;
   ScriptDirectory := FarmacyReportsPath + 'Goods\';
+  ProcedureLoad;
+  ScriptDirectory := FarmacyReportsPath + 'Check\';
   ProcedureLoad;
   {ZQuery.SQL.LoadFromFile(ReportsPath + 'gpReport_Balance.sql');
   ZQuery.ExecSQL;}

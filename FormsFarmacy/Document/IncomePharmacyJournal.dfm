@@ -118,6 +118,11 @@ inherited IncomePharmacyJournalForm: TIncomePharmacyJournalForm
             item
               Format = ',0.00;-,0.00; ;'
               Kind = skSum
+            end
+            item
+              Format = ',0.00'
+              Kind = skSum
+              Column = colSaleSumm
             end>
           OptionsBehavior.GoToNextCellOnEnter = False
           OptionsBehavior.FocusCellOnCycle = False
@@ -196,6 +201,12 @@ inherited IncomePharmacyJournalForm: TIncomePharmacyJournalForm
             DataBinding.FieldName = 'Checked'
             Options.Editing = False
             Width = 95
+          end
+          object colJuridicalName: TcxGridDBColumn
+            Caption = #1063#1055
+            DataBinding.FieldName = 'JuridicalName'
+            HeaderAlignmentHorz = taCenter
+            Width = 126
           end
         end
       end

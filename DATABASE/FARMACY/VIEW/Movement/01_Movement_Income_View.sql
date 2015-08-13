@@ -17,6 +17,7 @@ SELECT       Movement.Id                                AS Id
            , Object_From.ValueData                      AS FromName
            , MovementLinkObject_To.ObjectId             AS ToId
            , Object_To.Name                             AS ToName
+           , Object_To.JuridicalName                    AS JuridicalName
            , Object_To.JuridicalId                      AS JuridicalId
            , MovementLinkObject_NDSKind.ObjectId        AS NDSKindId
            , Object_NDSKind.ValueData                   AS NDSKindName
@@ -60,7 +61,7 @@ SELECT       Movement.Id                                AS Id
                                         AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
 
             LEFT JOIN Object_Unit_View AS Object_To ON Object_To.Id = MovementLinkObject_To.ObjectId
-
+            
             LEFT JOIN MovementLinkObject AS MovementLinkObject_NDSKind
                                          ON MovementLinkObject_NDSKind.MovementId = Movement.Id
                                         AND MovementLinkObject_NDSKind.DescId = zc_MovementLinkObject_NDSKind()

@@ -730,6 +730,27 @@ inherited MainForm: TMainForm
       GuiParams = <>
       isShowModal = False
     end
+    object actReportMovementCheckForm: TdsdOpenForm
+      Category = #1054#1090#1095#1077#1090#1099
+      MoveParams = <>
+      Caption = #1054#1090#1095#1077#1090' '#1087#1086' '#1087#1088#1086#1076#1072#1078#1072#1084' '#1085#1072' '#1082#1072#1089#1089#1072#1093
+      Hint = #1054#1090#1095#1077#1090' '#1087#1086' '#1087#1088#1086#1076#1072#1078#1072#1084' '#1085#1072' '#1082#1072#1089#1089#1072#1093
+      FormName = 'TReportMovementCheckForm'
+      FormNameParam.Value = 'TReportMovementCheckForm'
+      FormNameParam.DataType = ftString
+      GuiParams = <>
+      isShowModal = False
+    end
+    object actReport_GoodsPartionMoveForm: TdsdOpenForm
+      Category = #1054#1090#1095#1077#1090#1099
+      MoveParams = <>
+      Caption = #1044#1074#1080#1078#1077#1085#1080#1077' '#1087#1086' '#1087#1072#1088#1090#1080#1103#1084' '#1090#1086#1074#1072#1088#1072
+      FormName = 'TReport_GoodsPartionMoveForm'
+      FormNameParam.Value = 'TReport_GoodsPartionMoveForm'
+      FormNameParam.DataType = ftString
+      GuiParams = <>
+      isShowModal = False
+    end
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 496
@@ -945,6 +966,12 @@ inherited MainForm: TMainForm
       end
       object N51: TMenuItem
         Action = actReport_GoodRemains
+      end
+      object N59: TMenuItem
+        Action = actReportMovementCheckForm
+      end
+      object N60: TMenuItem
+        Action = actReport_GoodsPartionMoveForm
       end
     end
     inherited miService: TMenuItem

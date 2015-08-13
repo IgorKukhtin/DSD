@@ -11,7 +11,7 @@ CREATE OR REPLACE FUNCTION gpSelect_Movement_IncomePharmacy(
 RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode Integer, StatusName TVarChar
              , TotalCount TFloat
              , FromId Integer, FromName TVarChar
-             , ToId Integer, ToName TVarChar
+             , ToId Integer, ToName TVarChar, JuridicalName TVarChar
              , NDSKindId Integer, NDSKindName TVarChar
              , SaleSumm TFloat
              , InvNumberBranch TVarChar, BranchDate TDateTime, Checked Boolean 
@@ -57,6 +57,7 @@ BEGIN
            , Movement_Income_View.FromName
            , Movement_Income_View.ToId
            , Movement_Income_View.ToName
+           , Movement_Income_View.JuridicalName
            , Movement_Income_View.NDSKindId
            , Movement_Income_View.NDSKindName
            , Movement_Income_View.SaleSumm

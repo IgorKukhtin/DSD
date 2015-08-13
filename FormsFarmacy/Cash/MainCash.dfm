@@ -369,6 +369,15 @@ inherited MainCashForm: TMainCashForm
         Style.Shadow = False
         Style.IsFontAssigned = True
       end
+      object btnOpenMCSForm: TcxButton
+        Left = 704
+        Top = 6
+        Width = 34
+        Height = 20
+        Action = actOpenMCSForm
+        LookAndFeel.Kind = lfStandard
+        TabOrder = 10
+      end
     end
   end
   inherited cxPropertiesStore: TcxPropertiesStore
@@ -593,6 +602,17 @@ inherited MainCashForm: TMainCashForm
       Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
       ShortCut = 116
       RefreshOnTabSetChanges = False
+    end
+    object actOpenMCSForm: TdsdOpenForm
+      Category = #1044#1086#1082#1091#1084#1077#1085#1090#1099
+      MoveParams = <>
+      Caption = #1053#1058#1047
+      Hint = #1056#1077#1077#1089#1090#1088' '#1085#1077#1089#1085#1080#1078#1072#1077#1086#1075#1086' '#1090#1086#1074#1072#1088#1085#1086#1075#1086' '#1079#1072#1087#1072#1089#1072
+      FormName = 'TMCSForm'
+      FormNameParam.Value = 'TMCSForm'
+      FormNameParam.DataType = ftString
+      GuiParams = <>
+      isShowModal = False
     end
   end
   object dsdDBViewAddOnMain: TdsdDBViewAddOn
