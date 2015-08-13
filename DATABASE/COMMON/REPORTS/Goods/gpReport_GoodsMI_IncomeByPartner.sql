@@ -27,7 +27,7 @@ RETURNS TABLE (GoodsGroupName TVarChar, GoodsGroupNameFull TVarChar
              , FuelKindName TVarChar
              , InfoMoneyGroupName TVarChar, InfoMoneyDestinationName TVarChar, InfoMoneyCode Integer, InfoMoneyName TVarChar, InfoMoneyName_all TVarChar
              , Amount_Weight TFloat, Amount_Sh TFloat, Price TFloat
-             , AmountPartner_Weight TFloat , AmountPartner_Sh TFloat, PricePartner TFloat
+             , AmountPartner TFloat, AmountPartner_Weight TFloat , AmountPartner_Sh TFloat, PricePartner TFloat
              , AmountDiff_Weight TFloat, AmountDiff_Sh TFloat
              , Summ TFloat, Summ_ProfitLoss TFloat
              )
@@ -143,6 +143,7 @@ BEGIN
          , CASE WHEN Object_Measure.Id = zc_Measure_Sh() THEN tmpOperationGroup.Amount ELSE 0 END :: TFloat AS Amount_Sh
          , CASE WHEN tmpOperationGroup.Amount <> 0 THEN (tmpOperationGroup.Summ + tmpOperationGroup.Summ_ProfitLoss) / tmpOperationGroup.Amount ELSE 0 END :: TFloat AS Price
 
+         , tmpOperationGroup.AmountPartner :: TFloat AS AmountPartner
          , (tmpOperationGroup.AmountPartner * CASE WHEN Object_Measure.Id = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END) :: TFloat AS AmountPartner_Weight
          , CASE WHEN Object_Measure.Id = zc_Measure_Sh() THEN tmpOperationGroup.AmountPartner ELSE 0 END :: TFloat AS AmountPartner_Sh
          , CASE WHEN tmpOperationGroup.AmountPartner <> 0 THEN tmpOperationGroup.Summ / tmpOperationGroup.AmountPartner ELSE 0 END :: TFloat AS PricePartner
@@ -160,36 +161,76 @@ BEGIN
                 , CASE WHEN ContainerLO_Member.ObjectId > 0 THEN zc_Enum_PaidKind_SecondForm() ELSE COALESCE (ContainerLO_PaidKind.ObjectId,0) END AS PaidKindId
                 , COALESCE (ContainerLO_InfoMoney.ObjectId, 0) AS InfoMoneyId
                 , 0/*( COALESCE (ContainerLO_FuelKind.ObjectId,0) )*/ AS FuelKindId
-                , COALESCE (ContainerLO_GoodsKind.ObjectId, 0)        AS GoodsKindId
-                , COALESCE (CLO_PartionGoods.ObjectId, 0) AS PartionGoodsId
+                , tmpContainer.GoodsKindId                            AS GoodsKindId
+                , COALESCE (CLO_PartionGoods.ObjectId, 0)             AS PartionGoodsId
                 , SUM (tmpContainer.Amount)                           AS Amount
                 , SUM (tmpContainer.AmountPartner)                    AS AmountPartner
-                , SUM (tmpContainer.Summ)                             AS Summ
-                , SUM (tmpContainer.Summ_ProfitLoss)                  AS Summ_ProfitLoss
+                , SUM (tmpContainer.Summ - tmpContainer.Summ_ProfitLoss) AS Summ
+                , SUM (tmpContainer.Summ_ProfitLoss + tmpContainer.Summ_ProfitLoss_partner) AS Summ_ProfitLoss
 
-           FROM (SELECT MIContainer.ContainerId            AS ContainerId
-                      , MIContainer.ObjectId_analyzer      AS GoodsId 
-                      , MIContainer.ContainerId_analyzer   AS ContainerId_analyzer
-                      , MIContainer.WhereObjectId_analyzer AS LocationId
-                      , SUM (CASE WHEN MIContainer.DescId = zc_MIContainer_Count() THEN MIContainer.Amount ELSE 0 END) * CASE WHEN inDescId = zc_Movement_Income() THEN 1 ELSE -1 END AS Amount
-                      , SUM (CASE WHEN MIContainer.DescId = zc_MIContainer_Count() AND COALESCE (MIContainer.AnalyzerId, 0) <> zc_Enum_AnalyzerId_Count_40200() THEN MIContainer.Amount ELSE 0 END) * CASE WHEN inDescId = zc_Movement_Income() THEN 1 ELSE -1 END AS AmountPartner
-                      , SUM (CASE WHEN MIContainer.DescId = zc_MIContainer_Summ()  AND COALESCE (MIContainer.AnalyzerId, 0) <> zc_Enum_AnalyzerId_ProfitLoss() THEN MIContainer.Amount ELSE 0 END) * CASE WHEN inDescId = zc_Movement_Income() THEN 1 ELSE -1 END AS Summ
-                      , SUM (CASE WHEN MIContainer.DescId = zc_MIContainer_Summ()  AND MIContainer.AnalyzerId = zc_Enum_AnalyzerId_ProfitLoss() THEN MIContainer.Amount ELSE 0 END) AS Summ_ProfitLoss
-                 FROM MovementItemContainer AS MIContainer 
+           FROM (SELECT MIContainer.ContainerId                        AS ContainerId
+                      , MIContainer.ObjectId_analyzer                  AS GoodsId 
+                      , COALESCE (MIContainer.ObjectIntId_Analyzer, 0) AS GoodsKindId 
+                      , MIContainer.ContainerId_analyzer               AS ContainerId_analyzer
+                      , MIContainer.WhereObjectId_analyzer             AS LocationId
+                      , SUM (CASE WHEN MIContainer.DescId = zc_MIContainer_Count() AND MIContainer.MovementDescId = zc_Movement_Income() AND MIContainer.isActive = TRUE
+                                       THEN MIContainer.Amount
+                                  WHEN MIContainer.DescId = zc_MIContainer_Count() AND MIContainer.MovementDescId = zc_Movement_ReturnOut() AND MIContainer.isActive = FALSE
+                                       THEN -1 * MIContainer.Amount
+                                  ELSE 0
+                             END) AS Amount
+                      , SUM (CASE WHEN MIContainer.DescId = zc_MIContainer_Count() AND MIContainer.MovementDescId = zc_Movement_Income() AND MIContainer.isActive = TRUE
+                                   AND COALESCE (MIContainer.AnalyzerId, 0) <> zc_Enum_AnalyzerId_Count_40200()
+                                       THEN MIContainer.Amount
+                                  WHEN MIContainer.DescId = zc_MIContainer_Count() AND MIContainer.MovementDescId = zc_Movement_ReturnOut() AND MIContainer.isActive = FALSE
+                                   AND COALESCE (MIContainer.AnalyzerId, 0) <> zc_Enum_AnalyzerId_Count_40200()
+                                       THEN -1 * MIContainer.Amount
+                                  ELSE 0
+                             END) AS AmountPartner
+
+                      , SUM (CASE WHEN MIContainer.DescId = zc_MIContainer_Summ() AND MIContainer.MovementDescId = zc_Movement_Income() AND MIContainer.isActive = TRUE
+                                   AND COALESCE (MIContainer.AnalyzerId, 0) <> zc_Enum_AnalyzerId_ProfitLoss()
+                                       THEN MIContainer.Amount
+                                  WHEN MIContainer.DescId = zc_MIContainer_Summ() AND MIContainer.MovementDescId = zc_Movement_ReturnOut() AND MIContainer.isActive = FALSE
+                                   AND COALESCE (MIContainer.AnalyzerId, 0) <> zc_Enum_AnalyzerId_ProfitLoss()
+                                       THEN -1 * MIContainer.Amount
+                                  ELSE 0
+                             END) AS Summ
+                      , SUM (CASE WHEN MIContainer.DescId = zc_MIContainer_Summ()
+                                   AND MIContainer.AnalyzerId = zc_Enum_AnalyzerId_ProfitLoss()
+                                   AND ((MIContainer.MovementDescId = zc_Movement_ReturnOut() AND MIContainer.isActive = FALSE)
+                                     OR (MIContainer.MovementDescId = zc_Movement_Income() AND MIContainer.isActive = TRUE))
+                                       THEN MIContainer.Amount
+                                  ELSE 0
+                             END) AS Summ_ProfitLoss_partner
+                      , SUM (CASE WHEN MIContainer.DescId = zc_MIContainer_Summ()
+                                   AND MIContainer.AnalyzerId = zc_Enum_AnalyzerId_ProfitLoss()
+                                   AND MIContainer.MovementDescId = zc_Movement_ReturnOut()
+                                   AND MIContainer.isActive = TRUE
+                                       THEN -1 * MIContainer.Amount
+                                  ELSE 0
+                             END) AS Summ_ProfitLoss
+                 FROM MovementItemContainer AS MIContainer
                       INNER JOIN _tmpGoods ON _tmpGoods.GoodsId = MIContainer.ObjectId_analyzer
                       INNER JOIN _tmpUnit ON _tmpUnit.UnitId = MIContainer.WhereObjectId_analyzer
                  WHERE MIContainer.OperDate BETWEEN inStartDate AND inEndDate  
                    AND MIContainer.MovementDescId = inDescId
-                   AND MIContainer.isActive = CASE WHEN inDescId = zc_Movement_Income() THEN TRUE ELSE FALSE END
+                   -- AND MIContainer.isActive = CASE WHEN inDescId = zc_Movement_Income() THEN TRUE ELSE FALSE END
                    AND COALESCE (MIContainer.AccountId, 0) <> zc_Enum_Account_100301() -- прибыль текущего периода
                  GROUP BY MIContainer.ContainerId
                         , MIContainer.ObjectId_analyzer
+                        , MIContainer.ObjectIntId_Analyzer
                         , MIContainer.ContainerId_analyzer
                         , MIContainer.WhereObjectId_analyzer
-                 ) AS tmpContainer
+                ) AS tmpContainer
        /*               LEFT JOIN ContainerLinkObject AS ContainerLO_FuelKind
                                                     ON ContainerLO_FuelKind.ContainerId = tmpContainer.ContainerId
                                                    AND ContainerLO_FuelKind.DescId = zc_ContainerLinkObject_Goods()*/
+
+                      LEFT JOIN ContainerLinkObject AS CLO_PartionGoods
+                                                    ON CLO_PartionGoods.ContainerId = tmpContainer.ContainerId
+                                                   AND CLO_PartionGoods.DescId = zc_ContainerLinkObject_PartionGoods()
+
                       LEFT JOIN ContainerLinkObject AS ContainerLO_Juridical
                                                     ON ContainerLO_Juridical.ContainerId = tmpContainer.ContainerId_analyzer
                                                    AND ContainerLO_Juridical.DescId = zc_ContainerLinkObject_Juridical()
@@ -197,12 +238,6 @@ BEGIN
                                                     ON ContainerLO_InfoMoney.ContainerId = tmpContainer.ContainerId_analyzer
                                                    AND ContainerLO_InfoMoney.DescId = zc_ContainerLinkObject_InfoMoney()
                                                                                    
-                      LEFT JOIN ContainerLinkObject AS ContainerLO_GoodsKind
-                                                    ON ContainerLO_GoodsKind.ContainerId =  tmpContainer.ContainerId
-                                                   AND ContainerLO_GoodsKind.DescId = zc_ContainerLinkObject_GoodsKind()
-                      LEFT JOIN ContainerLinkObject AS CLO_PartionGoods
-                                                    ON CLO_PartionGoods.ContainerId = tmpContainer.ContainerId
-                                                   AND CLO_PartionGoods.DescId = zc_ContainerLinkObject_PartionGoods()
                       LEFT JOIN ContainerLinkObject AS ContainerLO_PaidKind
                                                     ON ContainerLO_PaidKind.ContainerId =  tmpContainer.ContainerId_analyzer
                                                    AND ContainerLO_PaidKind.DescId = zc_ContainerLinkObject_PaidKind()
@@ -218,10 +253,10 @@ BEGIN
                         AND (ContainerLO_InfoMoney.ObjectId = inInfoMoneyId OR COALESCE (inInfoMoneyId, 0) = 0)
 
                       GROUP BY tmpContainer.GoodsId
+                             , tmpContainer.GoodsKindId
                              , tmpContainer.LocationId
                              , CASE WHEN ContainerLO_Member.ObjectId > 0 THEN zc_Enum_PaidKind_SecondForm() ELSE COALESCE (ContainerLO_PaidKind.ObjectId,0) END
                            --  , COALESCE (ContainerLO_FuelKind.ObjectId, 0) 
-                             , COALESCE (ContainerLO_GoodsKind.ObjectId, 0) 
                              , COALESCE (CLO_PartionGoods.ObjectId, 0) 
                              , COALESCE (ContainerLO_Partner.ObjectId, COALESCE (ContainerLO_Member.ObjectId, 0))
                              , COALESCE (ContainerLO_Juridical.ObjectId,  COALESCE (ContainerLO_Member.ObjectId, 0 ))

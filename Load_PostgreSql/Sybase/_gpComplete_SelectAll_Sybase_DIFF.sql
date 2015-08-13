@@ -26,7 +26,9 @@ BEGIN
           INNER JOIN MovementItem ON MovementItem.Id = HistoryCost.MovementItemId_diff
           INNER JOIN Movement ON Movement.Id = MovementItem.MovementId
                              AND Movement.StatusId = zc_Enum_Status_Complete()
+                             -- AND Movement.OperDate BETWEEN inStartDate AND inEndDate
                              -- AND Movement.DescId = zc_Movement_Sale()
+                             -- AND Movement.DescId <> zc_Movement_Inventory()
           /*INNER JOIN MovementItemContainer ON MovementItemContainer.MovementId = Movement.Id
                                           AND MovementItemContainer.MovementItemId = HistoryCost.MovementItemId_diff
                                           AND MovementItemContainer.ContainerId = HistoryCost.ContainerId*/

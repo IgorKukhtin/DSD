@@ -13,7 +13,7 @@ uses
   Vcl.ActnList, cxPropertiesStore, cxLabel, cxTextEdit, cxMaskEdit,
   cxDropDownEdit, cxCalendar, Vcl.ExtCtrls, cxGridLevel, cxGridCustomView,
   cxGridCustomTableView, cxGridTableView, cxGridDBTableView, cxGrid, cxPC,
-  dsdGuides, cxButtonEdit, cxCurrencyEdit, Vcl.Menus;
+  dsdGuides, cxButtonEdit, cxCurrencyEdit, Vcl.Menus, cxCheckBox;
 
 type
   TReport_GoodsMI_InternalForm = class(TAncestorReportForm)
@@ -21,7 +21,7 @@ type
     clGoodsGroupName: TcxGridDBColumn;
     clGoodsCode: TcxGridDBColumn;
     clGoodsName: TcxGridDBColumn;
-    SummOut: TcxGridDBColumn;
+    SummOut_branch: TcxGridDBColumn;
     AmountOut_Weight: TcxGridDBColumn;
     cxLabel4: TcxLabel;
     edGoodsGroup: TcxButtonEdit;
@@ -41,9 +41,24 @@ type
     PaidKindGuides: TdsdGuides;
     ExecuteDialog: TExecuteDialog;
     bb: TdxBarButton;
-    PriceOut: TcxGridDBColumn;
-    PriceIn: TcxGridDBColumn;
+    PriceOut_zavod: TcxGridDBColumn;
+    PriceIn_zavod: TcxGridDBColumn;
     GoodsGroupNameFull: TcxGridDBColumn;
+    PriceOut_branch: TcxGridDBColumn;
+    PriceIn_branch: TcxGridDBColumn;
+    LocationCode: TcxGridDBColumn;
+    LocationName: TcxGridDBColumn;
+    LocationCode_by: TcxGridDBColumn;
+    LocationName_by: TcxGridDBColumn;
+    ArticleLossCode: TcxGridDBColumn;
+    ArticleLossName: TcxGridDBColumn;
+    ProfitLossName_All: TcxGridDBColumn;
+    ProfitLossGroupName: TcxGridDBColumn;
+    ProfitLossDirectionName: TcxGridDBColumn;
+    ProfitLossName: TcxGridDBColumn;
+    ProfitLossCode: TcxGridDBColumn;
+    MeasureName: TcxGridDBColumn;
+    cbMO_all: TcxCheckBox;
   private
     { Private declarations }
   public

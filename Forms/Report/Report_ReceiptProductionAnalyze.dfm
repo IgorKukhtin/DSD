@@ -1104,11 +1104,10 @@ inherited Report_ReceiptProductionAnalyzeForm: TReport_ReceiptProductionAnalyzeF
   object FromUnitGuides: TdsdGuides
     KeyField = 'Id'
     LookupControl = edFromUnit
-    FormNameParam.Value = 'TUnitTreeForm'
+    FormNameParam.Value = 'TUnit_ObjectForm'
     FormNameParam.DataType = ftString
-    FormName = 'TUnitTreeForm'
-    PositionDataSet = 'ClientDataSet'
-    ParentDataSet = 'TreeDataSet'
+    FormName = 'TUnit_ObjectForm'
+    PositionDataSet = 'MasterCDS'
     Params = <
       item
         Name = 'Key'
@@ -1131,11 +1130,10 @@ inherited Report_ReceiptProductionAnalyzeForm: TReport_ReceiptProductionAnalyzeF
   object ToUnitGuides: TdsdGuides
     KeyField = 'Id'
     LookupControl = edToUnit
-    FormNameParam.Value = 'TUnitTreeForm'
+    FormNameParam.Value = 'TUnit_ObjectForm'
     FormNameParam.DataType = ftString
-    FormName = 'TUnitTreeForm'
-    PositionDataSet = 'ClientDataSet'
-    ParentDataSet = 'TreeDataSet'
+    FormName = 'TUnit_ObjectForm'
+    PositionDataSet = 'MasterCDS'
     Params = <
       item
         Name = 'Key'

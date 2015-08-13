@@ -16,7 +16,7 @@ BEGIN
      -- проверка прав пользователя на вызов процедуры
      -- PERFORM lpCheckRight (inSession, zc_Enum_InsertUpdate_HistoryCost());
 
-     -- IF inIsUpdate = TRUE THEN RETURN; END IF;
+     IF inIsUpdate = TRUE THEN RETURN; END IF;
 
      -- таблица - Список
      CREATE TEMP TABLE _tmpDiff (OperDate TDateTime, ContainerId Integer, MovementItemId Integer, Amount TFloat, Amount_diff TFloat) ON COMMIT DROP;
@@ -135,6 +135,9 @@ $BODY$
  08.08.15                                        *
 */
 
--- SELECT * FROM gpUpdate_HistoryCost_diff (inStartDate:= '01.07.2015', inEndDate:= '31.07.2015', inIsUpdate:= TRUE, inSession:= zfCalc_UserAdmin()) AS a
+-- SELECT MovementDesc.Code, Count(*), SUM (Summ_diff) FROM HistoryCost
+--               LEFT JOIN MovementItem ON MovementItem.Id = MovementItemId_diff LEFT JOIN Movement ON Movement.Id = MovementItem.MovementId LEFT JOIN MovementDesc ON MovementDesc.Id = Movement.DescId WHERE StartDate= '01.08.2015' GROUP BY MovementDesc.Code
+-- SELECT MovementDesc.Code, Count(*), SUM (Amount_diff) FROM gpUpdate_HistoryCost_diff (inStartDate:= '01.07.2015', inEndDate:= '31.07.2015', inIsUpdate:= FALSE, inSession:= zfCalc_UserAdmin()) AS a
+--               LEFT JOIN MovementItem ON MovementItem.Id = MovementItemId LEFT JOIN Movement ON Movement.Id = MovementItem.MovementId LEFT JOIN MovementDesc ON MovementDesc.Id = Movement.DescId GROUP BY MovementDesc.Code
 -- SELECT * FROM gpUpdate_HistoryCost_diff (inStartDate:= '01.07.2015', inEndDate:= '31.07.2015', inIsUpdate:= FALSE, inSession:= zfCalc_UserAdmin()) AS a
--- WHEER ContainerId in (179397, 156105)
+-- WHERE ContainerId in (179397, 156105)

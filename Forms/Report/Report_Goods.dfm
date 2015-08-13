@@ -2,28 +2,28 @@ inherited Report_GoodsForm: TReport_GoodsForm
   Caption = #1054#1090#1095#1077#1090' <'#1087#1086' '#1090#1086#1074#1072#1088#1091'>'
   ClientHeight = 341
   ClientWidth = 1174
-  ExplicitLeft = -192
   ExplicitWidth = 1190
   ExplicitHeight = 376
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
+    Top = 80
     Width = 1174
-    Height = 284
+    Height = 261
     TabOrder = 3
-    ExplicitTop = 57
+    ExplicitTop = 80
     ExplicitWidth = 1174
-    ExplicitHeight = 284
-    ClientRectBottom = 284
+    ExplicitHeight = 261
+    ClientRectBottom = 261
     ClientRectRight = 1174
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 1174
-      ExplicitHeight = 284
+      ExplicitHeight = 261
       inherited cxGrid: TcxGrid
         Width = 1174
-        Height = 284
+        Height = 261
         ExplicitWidth = 1174
-        ExplicitHeight = 284
+        ExplicitHeight = 261
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -500,53 +500,97 @@ inherited Report_GoodsForm: TReport_GoodsForm
   end
   inherited Panel: TPanel
     Width = 1174
+    Height = 54
     ExplicitWidth = 1174
+    ExplicitHeight = 54
     inherited deStart: TcxDateEdit
+      Left = 118
       EditValue = 42005d
       Properties.SaveTime = False
+      ExplicitLeft = 118
     end
     inherited deEnd: TcxDateEdit
+      Left = 118
+      Top = 30
       EditValue = 42005d
       Properties.SaveTime = False
+      ExplicitLeft = 118
+      ExplicitTop = 30
     end
     inherited cxLabel1: TcxLabel
-      Left = 8
-      ExplicitLeft = 8
+      Left = 25
+      ExplicitLeft = 25
     end
     inherited cxLabel2: TcxLabel
-      Left = 198
-      ExplicitLeft = 198
+      Left = 6
+      Top = 31
+      ExplicitLeft = 6
+      ExplicitTop = 31
     end
     object cxLabel3: TcxLabel
-      Left = 724
-      Top = 6
+      Left = 589
+      Top = 31
       Caption = #1058#1086#1074#1072#1088
     end
     object edGoods: TcxButtonEdit
-      Left = 760
-      Top = 5
+      Left = 629
+      Top = 30
       Properties.Buttons = <
         item
           Default = True
           Kind = bkEllipsis
         end>
       TabOrder = 5
-      Width = 225
+      Width = 300
     end
     object cxLabel4: TcxLabel
-      Left = 420
-      Top = 6
+      Left = 244
+      Top = 31
       Caption = #1052#1077#1089#1090#1086' '#1091#1095#1077#1090#1072':'
     end
     object edLocation: TcxButtonEdit
-      Left = 493
-      Top = 5
+      Left = 318
+      Top = 30
       Properties.Buttons = <
         item
           Default = True
           Kind = bkEllipsis
         end>
       TabOrder = 7
+      Width = 210
+    end
+    object cxLabel5: TcxLabel
+      Left = 538
+      Top = 6
+      Caption = #1043#1088#1091#1087#1087#1072' '#1090#1086#1074#1072#1088#1086#1074':'
+    end
+    object edGoodsGroup: TcxButtonEdit
+      Left = 629
+      Top = 5
+      Properties.Buttons = <
+        item
+          Default = True
+          Kind = bkEllipsis
+        end>
+      Properties.ReadOnly = True
+      TabOrder = 9
+      Width = 300
+    end
+    object cxLabel8: TcxLabel
+      Left = 210
+      Top = 6
+      Caption = #1043#1088'. '#1087#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1081':'
+    end
+    object edUnitGroup: TcxButtonEdit
+      Left = 318
+      Top = 5
+      Properties.Buttons = <
+        item
+          Default = True
+          Kind = bkEllipsis
+        end>
+      Properties.ReadOnly = True
+      TabOrder = 11
       Width = 210
     end
   end
@@ -616,6 +660,19 @@ inherited Report_GoodsForm: TReport_GoodsForm
           Component = GoodsGuides
           ComponentItem = 'TextValue'
           DataType = ftString
+        end
+        item
+          Name = 'GoodsGroupId'
+          Value = Null
+          Component = GoodsGroupGuides
+          ComponentItem = 'Key'
+        end
+        item
+          Name = 'GoodsGroupName'
+          Value = Null
+          Component = GoodsGroupGuides
+          ComponentItem = 'TextValue'
+          DataType = ftString
         end>
       ReportName = #1054#1090#1095#1077#1090' '#1087#1086' '#1090#1086#1074#1072#1088#1091' '#1087#1086' '#1085#1072#1082#1083#1072#1076#1085#1099#1084
       ReportNameParam.Value = #1054#1090#1095#1077#1090' '#1087#1086' '#1090#1086#1074#1072#1088#1091' '#1087#1086' '#1085#1072#1082#1083#1072#1076#1085#1099#1084
@@ -648,9 +705,23 @@ inherited Report_GoodsForm: TReport_GoodsForm
         ParamType = ptInput
       end
       item
+        Name = 'inUnitGroupId'
+        Value = Null
+        Component = GuidesUnitGroup
+        ComponentItem = 'Key'
+        ParamType = ptInput
+      end
+      item
         Name = 'inLocationId'
         Value = ''
         Component = LocationGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inGoodsGroupId'
+        Value = Null
+        Component = GoodsGroupGuides
         ComponentItem = 'Key'
         ParamType = ptInput
       end
@@ -752,8 +823,8 @@ inherited Report_GoodsForm: TReport_GoodsForm
         DataType = ftString
         ParamType = ptInput
       end>
-    Left = 848
-    Top = 3
+    Left = 712
+    Top = 27
   end
   object LocationGuides: TdsdGuides
     KeyField = 'Id'
@@ -779,6 +850,60 @@ inherited Report_GoodsForm: TReport_GoodsForm
         DataType = ftString
         ParamType = ptInput
       end>
-    Left = 592
+    Left = 416
+    Top = 48
+  end
+  object GuidesUnitGroup: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edUnitGroup
+    FormNameParam.Value = 'TUnitTreeForm'
+    FormNameParam.DataType = ftString
+    FormName = 'TUnitTreeForm'
+    PositionDataSet = 'ClientDataSet'
+    ParentDataSet = 'TreeDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GuidesUnitGroup
+        ComponentItem = 'Key'
+        DataType = ftString
+        ParamType = ptInput
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesUnitGroup
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+      end>
+    Left = 384
+  end
+  object GoodsGroupGuides: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edGoodsGroup
+    FormNameParam.Value = 'TGoodsGroup_ObjectForm'
+    FormNameParam.DataType = ftString
+    FormName = 'TGoodsGroup_ObjectForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GoodsGroupGuides
+        ComponentItem = 'Key'
+        DataType = ftString
+        ParamType = ptInput
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GoodsGroupGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+      end>
+    Left = 792
   end
 end

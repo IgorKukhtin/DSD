@@ -20,7 +20,7 @@ BEGIN
      IF inNewStatusId = zc_Enum_Status_Erased()
      THEN
          --
-         IF EXISTS (SELECT Movement.Id FROM Movement WHERE Movement.ParentId = inMovementId AND Movement.StatusId = zc_Enum_Status_Complete() AND Movement.DescId NOT IN (zc_Movement_WeighingPartner(), zc_Movement_WeighingProduction()))
+         IF EXISTS (SELECT Movement.Id FROM Movement WHERE Movement.ParentId = inMovementId AND Movement.StatusId = zc_Enum_Status_Complete() AND Movement.DescId NOT IN (zc_Movement_WeighingPartner(), zc_Movement_WeighingProduction(), zc_Movement_TransportGoods(), zc_Movement_QualityDoc()))
          THEN
              -- находим параметры <Child> документа
              SELECT Movement.Id, Movement.OperDate, Movement.InvNumber, MovementDesc.ItemName
@@ -29,12 +29,12 @@ BEGIN
                    FROM Movement
                    WHERE Movement.ParentId = inMovementId
                      AND Movement.StatusId = zc_Enum_Status_Complete()
-                     AND Movement.DescId NOT IN (zc_Movement_WeighingPartner(), zc_Movement_WeighingProduction())
+                     AND Movement.DescId NOT IN (zc_Movement_WeighingPartner(), zc_Movement_WeighingProduction(), zc_Movement_TransportGoods(), zc_Movement_QualityDoc())
                   ) AS tmpMovement
                   LEFT JOIN Movement ON Movement.Id = tmpMovement.MovementId
                   LEFT JOIN MovementDesc ON MovementDesc.Id = Movement.DescId;
              --
-             RAISE EXCEPTION 'Ошибка.Невозможно % документ т.к. проведен <Подчиненный> документ <%> № <%> от <%> ... (%).', inComment, vbItemName, vbInvNumber, DATE (vbOperDate), vbMovementId;
+             RAISE EXCEPTION 'Ошибка.Невозможно % документ т.к. проведен <Подчиненный> документ <%> № <%> от <%> .... (%).', inComment, vbItemName, vbInvNumber, DATE (vbOperDate), vbMovementId;
          END IF;
          --
          IF EXISTS (SELECT Movement.Id FROM Movement WHERE Movement.Id IN (SELECT MovementChildId FROM MovementLinkMovement WHERE MovementId = inMovementId AND DescId = zc_MovementLinkMovement_Child())
@@ -51,11 +51,13 @@ BEGIN
                   LEFT JOIN Movement ON Movement.Id = tmpMovement.MovementId
                   LEFT JOIN MovementDesc ON MovementDesc.Id = Movement.DescId;
              --
-             RAISE EXCEPTION 'Ошибка.Невозможно % документ т.к. проведен документ <%> № <%> от <%> ... (%)(%).', inComment, vbItemName, vbInvNumber, DATE (vbOperDate), vbMovementId, inMovementId;
+             RAISE EXCEPTION 'Ошибка.Невозможно % документ т.к. проведен документ <%> № <%> от <%> ..... (%)(%).', inComment, vbItemName, vbInvNumber, DATE (vbOperDate), vbMovementId, inMovementId;
          END IF;
          --
          IF EXISTS (SELECT Movement.Id FROM Movement WHERE Movement.Id IN (SELECT MovementId FROM MovementLinkMovement WHERE MovementChildId = inMovementId AND DescId = zc_MovementLinkMovement_Child())
-                                                       AND Movement.StatusId = zc_Enum_Status_Complete())
+                                                       AND Movement.StatusId = zc_Enum_Status_Complete()
+                                                       AND Movement.DescId NOT IN (zc_Movement_QualityDoc())
+                   )
          THEN
              -- находим параметры <Child> документа
              SELECT Movement.Id, Movement.OperDate, Movement.InvNumber, MovementDesc.ItemName
@@ -68,7 +70,7 @@ BEGIN
                   LEFT JOIN Movement ON Movement.Id = tmpMovement.MovementId
                   LEFT JOIN MovementDesc ON MovementDesc.Id = Movement.DescId;
              --
-             RAISE EXCEPTION 'Ошибка.Невозможно % документ т.к. проведен документ <%> № <%> от <%> ... (%)(%).', inComment, vbItemName, vbInvNumber, DATE (vbOperDate), vbMovementId, inMovementId;
+             RAISE EXCEPTION 'Ошибка.Невозможно % документ т.к. проведен документ <%> № <%> от <%> ....... (%)(%).', inComment, vbItemName, vbInvNumber, DATE (vbOperDate), vbMovementId, inMovementId;
          END IF;
      END IF;
 

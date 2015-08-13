@@ -524,7 +524,7 @@ BEGIN
                GROUP BY _tmpChild.MasterContainerId
               ) AS _tmpSumm 
          WHERE _tmpMaster.ContainerId = _tmpSumm.ContainerId
-           AND COALESCE (_tmpMaster.UnitId, 0) <> CASE WHEN vbItearation < 2 THEN -1 ELSE 8451 END -- Цех Упаковки
+           AND COALESCE (_tmpMaster.UnitId, 0) <> CASE WHEN vbItearation < 20 THEN -1 ELSE 8451 END -- Цех Упаковки
         ;
 
          -- тест***
@@ -563,7 +563,7 @@ BEGIN
               ) AS _tmpSumm 
          WHERE _tmpMaster.ContainerId = _tmpSumm.ContainerId
            AND ABS (_tmpMaster.CalcSumm - _tmpSumm.CalcSumm) > inDiffSumm
-           AND COALESCE (_tmpMaster.UnitId, 0) <> CASE WHEN vbItearation < 2 THEN -1 ELSE 8451 END -- Цех Упаковки
+           AND COALESCE (_tmpMaster.UnitId, 0) <> CASE WHEN vbItearation < 20 THEN -1 ELSE 8451 END -- Цех Упаковки
         ;
 
          -- увеличивам итерации

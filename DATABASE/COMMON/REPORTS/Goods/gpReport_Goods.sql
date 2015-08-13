@@ -1,11 +1,14 @@
 -- Function: gpReport_Goods ()
 
 DROP FUNCTION IF EXISTS gpReport_Goods (TDateTime, TDateTime, Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpReport_Goods (TDateTime, TDateTime, Integer, Integer, Integer, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpReport_Goods (
     IN inStartDate    TDateTime ,  
     IN inEndDate      TDateTime ,
+    IN inUnitGroupId  Integer   ,
     IN inLocationId   Integer   , 
+    IN inGoodsGroupId Integer   ,
     IN inGoodsId      Integer   ,
     IN inSession      TVarChar    -- сессия пользователя
 )
@@ -20,10 +23,39 @@ RETURNS TABLE  (MovementId Integer, InvNumber TVarChar, OperDate TDateTime, Oper
               , SummPartnerIn TFloat, SummPartnerOut TFloat
               , AmountStart TFloat, AmountIn TFloat, AmountOut TFloat, AmountEnd TFloat, Amount TFloat
               , SummStart TFloat, SummIn TFloat, SummOut TFloat, SummEnd TFloat, Summ TFloat
+              , Amount_Change TFloat, Summ_Change TFloat
+              , Amount_40200 TFloat, Summ_40200 TFloat
+              , Amount_Loss TFloat, Summ_Loss TFloat
                )  
 AS
 $BODY$
 BEGIN
+
+    IF inGoodsId = 0 AND inGoodsGroupId <> 0
+    THEN
+         RETURN QUERY
+         SELECT gpReport.MovementId, gpReport.InvNumber, gpReport.OperDate, gpReport.OperDatePartner, gpReport.MovementDescName, gpReport.MovementDescName_order, gpReport.isActive, gpReport.isRemains
+              , gpReport.LocationDescName, gpReport.LocationCode, gpReport.LocationName
+              , gpReport.CarCode, gpReport.CarName
+              , gpReport.ObjectByDescName, gpReport.ObjectByCode, gpReport.ObjectByName
+              , gpReport.PaidKindName
+              , gpReport.GoodsCode, gpReport.GoodsName, gpReport.GoodsKindName, gpReport.GoodsKindName_complete, gpReport.PartionGoods
+              , gpReport.GoodsCode_parent, gpReport.GoodsName_parent, gpReport.GoodsKindName_parent
+              , gpReport.Price, gpReport.Price_end, gpReport.Price_partner
+              , gpReport.SummPartnerIn, gpReport.SummPartnerOut
+              , gpReport.AmountStart, gpReport.AmountIn, gpReport.AmountOut, gpReport.AmountEnd, gpReport.Amount
+              , gpReport.SummStart, gpReport.SummIn, gpReport.SummOut, gpReport.SummEnd, gpReport.Summ
+              , gpReport.Amount_Change, gpReport.Summ_Change
+              , gpReport.Amount_40200, gpReport.Summ_40200
+              , gpReport.Amount_Loss, gpReport.Summ_Loss
+         FROM gpReport_GoodsGroup (inStartDate   := inStartDate
+                                 , inEndDate     := inEndDate
+                                 , inUnitGroupId := inUnitGroupId
+                                 , inLocationId  := inLocationId
+                                 , inGoodsGroupId:= inGoodsGroupId
+                                 , inSession     := inSession
+                                  ) AS gpReport;
+    ELSE
 
     RETURN QUERY
     WITH tmpWhere AS (SELECT lfSelect.UnitId AS LocationId, zc_ContainerLinkObject_Unit() AS DescId, inGoodsId AS GoodsId FROM lfSelect_Object_Unit_byGroup (inLocationId) AS lfSelect
@@ -163,15 +195,16 @@ BEGIN
                                         , MIContainer.isActive
                                 )
 
-         , tmpMI_SummPartner AS (SELECT tmpMI_Summ.MovementItemId
+         , tmpMI_Summ_group AS (SELECT tmpMI_Summ.MovementId, tmpMI_Summ.MovementItemId, tmpMI_Summ.ContainerId_Analyzer, tmpMI_Summ.isActive FROM tmpMI_Summ WHERE tmpMI_Summ.MovementItemId > 0 GROUP BY tmpMI_Summ.MovementId, tmpMI_Summ.MovementItemId, tmpMI_Summ.ContainerId_Analyzer, tmpMI_Summ.isActive)
+         , tmpMI_SummPartner AS (SELECT tmpMI_Summ_group.MovementItemId
                                       , SUM (MIContainer.Amount * CASE WHEN MIContainer.MovementDescId IN (zc_Movement_ReturnOut(), zc_Movement_Sale()) THEN 1 ELSE -1 END) AS Amount
-                                 FROM tmpMI_Summ
-                                      LEFT JOIN MovementItemContainer AS MIContainer ON MIContainer.MovementId     = tmpMI_Summ.MovementId
-                                                                                    AND MIContainer.MovementItemId = tmpMI_Summ.MovementItemId
-                                                                                    AND MIContainer.ContainerId    = tmpMI_Summ.ContainerId_Analyzer
-                                                                                    AND MIContainer.isActive      <> tmpMI_Summ.isActive
-                                 WHERE tmpMI_Summ.MovementItemId > 0
-                                 GROUP BY tmpMI_Summ.MovementItemId
+                                 FROM tmpMI_Summ_group
+                                      INNER JOIN MovementItemContainer AS MIContainer ON MIContainer.MovementId     = tmpMI_Summ_group.MovementId
+                                                                                     AND MIContainer.DescId         = zc_MIContainer_Summ()
+                                                                                     AND MIContainer.MovementItemId = tmpMI_Summ_group.MovementItemId
+                                                                                     AND MIContainer.ContainerId    = tmpMI_Summ_group.ContainerId_Analyzer
+                                                                                     AND MIContainer.isActive      <> tmpMI_Summ_group.isActive
+                                 GROUP BY tmpMI_Summ_group.MovementItemId
                                 )
    SELECT Movement.Id AS MovementId
         , Movement.InvNumber
@@ -253,6 +286,10 @@ BEGIN
               * CASE WHEN Movement.DescId IN (zc_Movement_Sale(), zc_Movement_ReturnOut(), zc_Movement_Loss()) THEN -1 ELSE 1 END
               * CASE WHEN Movement.DescId IN (zc_Movement_Send(), zc_Movement_SendOnPrice(), zc_Movement_ProductionUnion(), zc_Movement_ProductionSeparate()) AND tmpMIContainer_group.isActive = FALSE THEN -1 ELSE 1 END
                 AS TFloat) AS Summ
+
+        , 0 :: TFloat AS Amount_Change, 0 :: TFloat AS Summ_Change
+        , 0 :: TFloat AS Amount_40200,  0 :: TFloat AS Summ_40200
+        , 0 :: TFloat AS Amount_Loss,   0 :: TFloat AS Summ_Loss
 
    FROM (SELECT tmpMIContainer_all.MovementId
               -- , 0 AS MovementItemId
@@ -480,16 +517,18 @@ BEGIN
                             AND ObjectLink_GoodsKindComplete.DescId = zc_ObjectLink_PartionGoods_GoodsKindComplete()
         LEFT JOIN Object AS Object_GoodsKind_complete ON Object_GoodsKind_complete.Id = ObjectLink_GoodsKindComplete.ChildObjectId
    ;
-    
+
+   END IF;
         
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpReport_Goods (TDateTime, TDateTime, Integer, Integer, TVarChar) OWNER TO postgres;
+ALTER FUNCTION gpReport_Goods (TDateTime, TDateTime, Integer, Integer, Integer, Integer, TVarChar) OWNER TO postgres;
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 11.08.15                                        * add inUnitGroupId AND inGoodsGroupId
  30.05.14                                        * ALL
  10.04.14                                        * ALL
  09.02.14         *  GROUP BY tmp_All
@@ -499,4 +538,4 @@ ALTER FUNCTION gpReport_Goods (TDateTime, TDateTime, Integer, Integer, TVarChar)
 */
 
 -- тест
--- SELECT * FROM gpReport_Goods (inStartDate:= '01.01.2015', inEndDate:= '01.01.2015', inLocationId:=0, inGoodsId:= 1826, inSession:= zfCalc_UserAdmin());
+-- SELECT * FROM gpReport_Goods (inStartDate:= '01.01.2015', inEndDate:= '01.01.2015', inUnitGroupId:= 0, inLocationId:= 0, inGoodsGroupId:= 0, inGoodsId:= 1826, inSession:= zfCalc_UserAdmin());

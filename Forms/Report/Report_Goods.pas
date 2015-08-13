@@ -58,6 +58,12 @@ type
     Price_partner: TcxGridDBColumn;
     SummPartnerOut: TcxGridDBColumn;
     SummPartnerIn: TcxGridDBColumn;
+    cxLabel5: TcxLabel;
+    edGoodsGroup: TcxButtonEdit;
+    cxLabel8: TcxLabel;
+    edUnitGroup: TcxButtonEdit;
+    GuidesUnitGroup: TdsdGuides;
+    GoodsGroupGuides: TdsdGuides;
   private
     { Private declarations }
   public

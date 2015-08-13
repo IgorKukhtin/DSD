@@ -9,17 +9,17 @@ inherited GoodsByGoodsKindForm: TGoodsByGoodsKindForm
   inherited PageControl: TcxPageControl
     Width = 1030
     Height = 394
-    ExplicitWidth = 699
+    ExplicitWidth = 1030
     ExplicitHeight = 394
     ClientRectBottom = 394
     ClientRectRight = 1030
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 699
+      ExplicitWidth = 1030
       ExplicitHeight = 394
       inherited cxGrid: TcxGrid
         Width = 1030
         Height = 394
-        ExplicitWidth = 699
+        ExplicitWidth = 1030
         ExplicitHeight = 394
         inherited cxGridDBTableView: TcxGridDBTableView
           OptionsData.Appending = True
@@ -122,7 +122,6 @@ inherited GoodsByGoodsKindForm: TGoodsByGoodsKindForm
             Properties.ReadOnly = True
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Options.Editing = False
             Width = 80
           end
           object clMeasureName: TcxGridDBColumn

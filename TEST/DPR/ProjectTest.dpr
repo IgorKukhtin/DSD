@@ -703,7 +703,8 @@ uses
   Report_GoodsMI_Dialog in '..\..\Forms\Report\Report_GoodsMI_Dialog.pas' {Report_GoodsMI_DialogForm: TParentForm},
   Report_GoodsMI_Internal in '..\..\Forms\Report\Report_GoodsMI_Internal.pas' {Report_GoodsMI_InternalForm: TParentForm},
   Report_PersonalCompleteDialog in '..\..\Forms\Report\Report_PersonalCompleteDialog.pas' {Report_PersonalCompleteDialogForm: TParentForm},
-  Report_ReceiptProductionOutAnalyze in '..\..\Forms\Report\Report_ReceiptProductionOutAnalyze.pas' {Report_ReceiptProductionOutAnalyzeForm: TParentForm};
+  Report_ReceiptProductionOutAnalyze in '..\..\Forms\Report\Report_ReceiptProductionOutAnalyze.pas' {Report_ReceiptProductionOutAnalyzeForm: TParentForm},
+  Report_ReceiptProductionAnalyze in '..\..\Forms\Report\Report_ReceiptProductionAnalyze.pas' {Report_ReceiptProductionAnalyzeForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}

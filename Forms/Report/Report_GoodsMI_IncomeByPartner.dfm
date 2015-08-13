@@ -264,6 +264,12 @@ inherited Report_GoodsMI_IncomeByPartnerForm: TReport_GoodsMI_IncomeByPartnerFor
             HeaderAlignmentVert = vaCenter
             Width = 70
           end
+          object AmountPartner: TcxGridDBColumn
+            DataBinding.FieldName = 'AmountPartner'
+            Visible = False
+            VisibleForCustomization = False
+            Width = 55
+          end
           object Price: TcxGridDBColumn
             Caption = #1062#1077#1085#1072' ('#1089#1082#1083#1072#1076')'
             DataBinding.FieldName = 'Price'

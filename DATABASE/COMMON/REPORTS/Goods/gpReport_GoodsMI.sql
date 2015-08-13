@@ -128,21 +128,42 @@ $BODY$
 BEGIN
      vbUserId:= lpGetUserBySession (inSession);
    
-    CREATE TEMP TABLE _tmpGoods (GoodsId Integer) ON COMMIT DROP;
-    CREATE TEMP TABLE _tmpUnit (UnitId Integer) ON COMMIT DROP;
+
+     IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.tables WHERE TABLE_NAME = '_tmpgoods')
+     THEN
+         DELETE FROM _tmpGoods;
+         DELETE FROM _tmpUnit;
+     ELSE
+         -- таблица - 
+         CREATE TEMP TABLE _tmpGoods (GoodsId Integer, InfoMoneyId Integer, TradeMarkId Integer) ON COMMIT DROP;
+         CREATE TEMP TABLE _tmpUnit (UnitId Integer, UnitId_by Integer, isActive Boolean) ON COMMIT DROP;
+     END IF;
     
   
     -- Ограничения по товару
     IF inGoodsGroupId <> 0
     THEN
-        INSERT INTO _tmpGoods (GoodsId)
-           SELECT lfObject_Goods_byGoodsGroup.GoodsId
-           FROM  lfSelect_Object_Goods_byGoodsGroup (inGoodsGroupId) AS lfObject_Goods_byGoodsGroup;
+        INSERT INTO _tmpGoods (GoodsId, InfoMoneyId, TradeMarkId)
+           SELECT lfSelect.GoodsId, COALESCE (ObjectLink_Goods_InfoMoney.ChildObjectId, 0) AS InfoMoneyId, COALESCE (ObjectLink_Goods_TradeMark.ChildObjectId, 0) AS TradeMarkId
+           FROM lfSelect_Object_Goods_byGoodsGroup (inGoodsGroupId) AS lfSelect
+                LEFT JOIN ObjectLink AS ObjectLink_Goods_InfoMoney ON ObjectLink_Goods_InfoMoney.ObjectId = lfSelect.GoodsId
+                                                                  AND ObjectLink_Goods_InfoMoney.DescId = zc_ObjectLink_Goods_InfoMoney()
+                LEFT JOIN ObjectLink AS ObjectLink_Goods_TradeMark
+                                     ON ObjectLink_Goods_TradeMark.ObjectId = lfSelect.GoodsId
+                                    AND ObjectLink_Goods_TradeMark.DescId   = zc_ObjectLink_Goods_TradeMark()
+          ;
     ELSE
-        INSERT INTO _tmpGoods (GoodsId)
-           SELECT Object.Id FROM Object WHERE DescId = zc_Object_Goods()
+        INSERT INTO _tmpGoods (GoodsId, InfoMoneyId, TradeMarkId)
+           SELECT Object.Id, COALESCE (ObjectLink_Goods_InfoMoney.ChildObjectId, 0) AS InfoMoneyId, COALESCE (ObjectLink_Goods_TradeMark.ChildObjectId, 0) AS TradeMarkId
+           FROM Object
+                LEFT JOIN ObjectLink AS ObjectLink_Goods_InfoMoney ON ObjectLink_Goods_InfoMoney.ObjectId = Object.Id
+                                                                  AND ObjectLink_Goods_InfoMoney.DescId = zc_ObjectLink_Goods_InfoMoney()
+                LEFT JOIN ObjectLink AS ObjectLink_Goods_TradeMark
+                                     ON ObjectLink_Goods_TradeMark.ObjectId = Object.Id
+                                    AND ObjectLink_Goods_TradeMark.DescId   = zc_ObjectLink_Goods_TradeMark()
+           WHERE Object.DescId = zc_Object_Goods()
          UNION
-           SELECT Object.Id FROM Object WHERE DescId = zc_Object_Fuel();
+           SELECT Object.Id, 0 AS InfoMoneyId, 0 AS TradeMarkId FROM Object WHERE Object.DescId = zc_Object_Fuel();
     END IF;
 
     
@@ -358,8 +379,10 @@ BEGIN
                 , tmpContainer.PartnerId
                 , tmpContainer.BusinessId
                 , tmpContainer.BranchId
-                , COALESCE (ContainerLO_Juridical.ObjectId,  COALESCE (ContainerLO_Member.ObjectId, 0 )) AS JuridicalId
-                , CASE WHEN ContainerLO_Member.ObjectId > 0 THEN zc_Enum_PaidKind_SecondForm() ELSE COALESCE (ContainerLO_PaidKind.ObjectId,0) END AS PaidKindId
+                , tmpContainer.InfoMoneyId_goods
+                , tmpContainer.TradeMarkId
+                , CASE WHEN inIsPartner = TRUE THEN COALESCE (ContainerLO_Juridical.ObjectId,  COALESCE (ContainerLO_Member.ObjectId, 0 )) ELSE 0 END AS JuridicalId
+                , CASE WHEN ContainerLO_Member.ObjectId > 0 THEN zc_Enum_PaidKind_SecondForm() ELSE COALESCE (ContainerLO_PaidKind.ObjectId,0) END    AS PaidKindId
                 , ContainerLinkObject_InfoMoney.ObjectId AS InfoMoneyId
 
                   -- 1.1. Кол-во, без AnalyzerId
@@ -442,15 +465,17 @@ BEGIN
                 , SUM (CASE WHEN tmpContainer.AccountId = zc_Enum_AnalyzerId_SummOut_110101() AND tmpContainer.isActive = TRUE THEN tmpContainer.SummOut_Change ELSE 0 END) AS SummOut_Change_110000_P
 
            FROM (SELECT MIContainer.WhereObjectId_analyzer  AS LocationId
-                      , MIContainer.ContainerId             AS ContainerId
-                      , MIContainer.ObjectId_analyzer       AS GoodsId
-                      , MIContainer.ObjectIntId_analyzer    AS GoodsKindId
-                      , MIContainer.ObjectExtId_analyzer    AS PartnerId
+                      -- , MIContainer.ContainerId             AS ContainerId + inIsPartionGoods
+                      , CASE WHEN inIsGoods     = TRUE THEN MIContainer.ObjectId_analyzer    ELSE 0 END AS GoodsId
+                      , CASE WHEN inIsGoodsKind = TRUE THEN MIContainer.ObjectIntId_analyzer ELSE 0 END AS GoodsKindId
+                      , CASE WHEN inIsPartner   = TRUE THEN MIContainer.ObjectExtId_analyzer ELSE 0 END AS PartnerId
                       , MIContainer.ContainerId_analyzer
                       , MIContainer.isActive
                       , COALESCE (MIContainer.AccountId, 0) AS AccountId
                       , COALESCE (MLO_Business.ObjectId, 0) AS BusinessId
                       , COALESCE (MLO_Branch.ObjectId, 0)   AS BranchId
+                      , _tmpGoods.InfoMoneyId               AS InfoMoneyId_goods
+                      , CASE WHEN inIsTradeMark = TRUE OR inIsGoods   = TRUE THEN _tmpGoods.TradeMarkId ELSE 0 END AS TradeMarkId
 
                         -- 1.1. Кол-во, без AnalyzerId
                       , SUM (CASE WHEN tmpAnalyzer.isSale = TRUE  AND tmpAnalyzer.isSumm = FALSE AND tmpAnalyzer.isLoss = FALSE THEN -1 * MIContainer.Amount
@@ -538,16 +563,18 @@ BEGIN
                       LEFT JOIN MovementItemLinkObject AS MLO_Branch ON MLO_Branch.MovementItemId = MIContainer.MovementItemId
                                                                     AND MLO_Branch.DescId = zc_MILinkObject_Branch()
 
-                 GROUP BY MIContainer.ContainerId
-                        , MIContainer.WhereObjectId_analyzer
-                        , MIContainer.ObjectId_analyzer
-                        , MIContainer.ObjectIntId_analyzer
-                        , MIContainer.ObjectExtId_analyzer
+                 GROUP BY MIContainer.WhereObjectId_analyzer
+                        , CASE WHEN inIsGoods     = TRUE THEN MIContainer.ObjectId_analyzer    ELSE 0 END
+                        , CASE WHEN inIsGoodsKind = TRUE THEN MIContainer.ObjectIntId_analyzer ELSE 0 END
+                        , CASE WHEN inIsPartner   = TRUE THEN MIContainer.ObjectExtId_analyzer ELSE 0 END
                         , MIContainer.ContainerId_analyzer       
+                        -- , MIContainer.ContainerId + inIsPartionGoods
                         , MIContainer.AccountId
                         , MIContainer.isActive
                         , MLO_Business.ObjectId
                         , MLO_Branch.ObjectId
+                        , _tmpGoods.InfoMoneyId
+                        , CASE WHEN inIsTradeMark = TRUE OR inIsGoods   = TRUE THEN _tmpGoods.TradeMarkId ELSE 0 END
                       
                   ) AS tmpContainer
      
@@ -563,9 +590,9 @@ BEGIN
                                                     ON ContainerLO_Member.ContainerId =  tmpContainer.ContainerId_analyzer
                                                    AND ContainerLO_Member.DescId = zc_ContainerLinkObject_Member()       
                       INNER JOIN ContainerLinkObject AS ContainerLinkObject_InfoMoney
-                                                                 ON ContainerLinkObject_InfoMoney.ContainerId = tmpContainer.ContainerId_analyzer
-                                                                AND ContainerLinkObject_InfoMoney.DescId = zc_ContainerLinkObject_InfoMoney()
-                                                                AND (ContainerLinkObject_InfoMoney.ObjectId = inInfoMoneyId OR COALESCE (inInfoMoneyId, 0) = 0)  
+                                                     ON ContainerLinkObject_InfoMoney.ContainerId = tmpContainer.ContainerId_analyzer
+                                                    AND ContainerLinkObject_InfoMoney.DescId = zc_ContainerLinkObject_InfoMoney()
+                                                    AND (ContainerLinkObject_InfoMoney.ObjectId = inInfoMoneyId OR COALESCE (inInfoMoneyId, 0) = 0)  
                   
                       WHERE (ContainerLO_Juridical.ObjectId = inJuridicalId OR inJuridicalId = 0)
                         AND (ContainerLO_PaidKind.ObjectId = inPaidKindId OR inPaidKindId=0 OR (ContainerLO_Member.ObjectId > 0 AND inPaidKindId = zc_Enum_PaidKind_SecondForm()))
@@ -576,8 +603,10 @@ BEGIN
                              , tmpContainer.PartnerId
                              , tmpContainer.BusinessId
                              , tmpContainer.BranchId
+                             , tmpContainer.InfoMoneyId_goods
+                             , tmpContainer.TradeMarkId
                              , CASE WHEN ContainerLO_Member.ObjectId > 0 THEN zc_Enum_PaidKind_SecondForm() ELSE COALESCE (ContainerLO_PaidKind.ObjectId,0) END
-                             , COALESCE (ContainerLO_Juridical.ObjectId,  COALESCE (ContainerLO_Member.ObjectId, 0 ))
+                             , CASE WHEN inIsPartner = TRUE THEN COALESCE (ContainerLO_Juridical.ObjectId,  COALESCE (ContainerLO_Member.ObjectId, 0 )) ELSE 0 END
                              , ContainerLinkObject_InfoMoney.ObjectId
 
                     ) AS tmpOperationGroup
@@ -591,10 +620,7 @@ BEGIN
 
           LEFT JOIN Object AS Object_Goods on Object_Goods.Id = tmpOperationGroup.GoodsId
           LEFT JOIN Object AS Object_GoodsKind ON Object_GoodsKind.Id = tmpOperationGroup.GoodsKindId
-          LEFT JOIN ObjectLink AS ObjectLink_Goods_TradeMark
-                               ON ObjectLink_Goods_TradeMark.ObjectId = Object_Goods.Id 
-                              AND ObjectLink_Goods_TradeMark.DescId = zc_ObjectLink_Goods_TradeMark()
-          LEFT JOIN Object AS Object_TradeMark ON Object_TradeMark.Id = ObjectLink_Goods_TradeMark.ChildObjectId
+          LEFT JOIN Object AS Object_TradeMark ON Object_TradeMark.Id = tmpOperationGroup.TradeMarkId
 
           LEFT JOIN ObjectLink AS ObjectLink_Goods_GoodsGroup
                                ON ObjectLink_Goods_GoodsGroup.ObjectId = Object_Goods.Id
@@ -613,10 +639,7 @@ BEGIN
                                AND ObjectFloat_Weight.DescId = zc_ObjectFloat_Goods_Weight()
 
           LEFT JOIN Object_InfoMoney_View AS View_InfoMoney ON View_InfoMoney.InfoMoneyId = tmpOperationGroup.InfoMoneyId
-
-          LEFT JOIN ObjectLink AS ObjectLink_Goods_InfoMoney ON ObjectLink_Goods_InfoMoney.ObjectId = Object_Goods.Id 
-                                                            AND ObjectLink_Goods_InfoMoney.DescId = zc_ObjectLink_Goods_InfoMoney()
-          LEFT JOIN Object_InfoMoney_View AS View_InfoMoney_Goods ON View_InfoMoney_Goods.InfoMoneyId = ObjectLink_Goods_InfoMoney.ChildObjectId
+          LEFT JOIN Object_InfoMoney_View AS View_InfoMoney_Goods ON View_InfoMoney_Goods.InfoMoneyId = tmpOperationGroup.InfoMoneyId_goods
           
   ;
          

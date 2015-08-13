@@ -65,6 +65,8 @@ BEGIN
 
      -- сохранили <Документ>
      ioId := lpInsertUpdate_Movement (ioId, zc_Movement_PersonalService(), inInvNumber, inOperDate, NULL, vbAccessKeyId);
+     -- !!!ВАЖНО!!!
+     UPDATE Movement SET AccessKeyId = vbAccessKeyId WHERE Id = ioId;
 
      -- Комментарий
      PERFORM lpInsertUpdate_MovementString (zc_MovementString_Comment(), ioId, inComment);

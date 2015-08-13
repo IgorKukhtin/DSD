@@ -78,8 +78,7 @@ uses
   DialogPrint in '..\Scale\DialogPrint.pas' {DialogPrintForm},
   AxLibLib_TLB in '..\Scale\Util\AxLibLib_TLB.pas',
   DialogStringValue in '..\Scale\DialogStringValue.pas' {DialogStringValueForm},
-  DialogNumberValue in '..\Scale\DialogNumberValue.pas' {DialogNumberValueForm},
-  Report_ReceiptProductionAnalyze in '..\Forms\Report\Report_ReceiptProductionAnalyze.pas' {Report_ReceiptProductionAnalyzeForm: TParentForm};
+  DialogNumberValue in '..\Scale\DialogNumberValue.pas' {DialogNumberValueForm};
 
 {$R *.res}
 
