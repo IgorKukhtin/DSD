@@ -11,7 +11,7 @@ CREATE OR REPLACE FUNCTION gpSelect_Movement_OrderExternal(
 RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode Integer, StatusName TVarChar
              , TotalCount TFloat, TotalSumm TFloat
              , FromId Integer, FromName TVarChar
-             , ToId Integer, ToName TVarChar, ToParentName TVarChar
+             , ToId Integer, ToName TVarChar, JuridicalName TVarChar
              , ContractId Integer, ContractName TVarChar
               )
 
@@ -50,7 +50,7 @@ BEGIN
            , Movement_OrderExternal_View.FromName
            , Movement_OrderExternal_View.ToId
            , Movement_OrderExternal_View.ToName
-           , Movement_OrderExternal_View.ToParentName
+           , Movement_OrderExternal_View.JuridicalName
            , Movement_OrderExternal_View.ContractId
            , Movement_OrderExternal_View.ContractName
 

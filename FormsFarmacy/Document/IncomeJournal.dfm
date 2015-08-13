@@ -2,8 +2,6 @@ inherited IncomeJournalForm: TIncomeJournalForm
   Caption = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' <'#1055#1088#1080#1093#1086#1076'>'
   ClientHeight = 469
   ClientWidth = 831
-  ExplicitLeft = -49
-  ExplicitTop = -36
   ExplicitWidth = 839
   ExplicitHeight = 496
   PixelsPerInch = 96
@@ -168,9 +166,9 @@ inherited IncomeJournalForm: TIncomeJournalForm
             HeaderAlignmentHorz = taCenter
             Width = 200
           end
-          object colToParentName: TcxGridDBColumn
+          object colJuridicalName: TcxGridDBColumn
             Caption = #1063#1055
-            DataBinding.FieldName = 'ToParentName'
+            DataBinding.FieldName = 'JuridicalName'
             HeaderAlignmentHorz = taCenter
             Width = 123
           end

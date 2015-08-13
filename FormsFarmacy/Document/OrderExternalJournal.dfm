@@ -2,8 +2,7 @@ inherited OrderExternalJournalForm: TOrderExternalJournalForm
   Caption = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' <'#1047#1072#1103#1074#1082#1072' '#1074#1085#1077#1096#1085#1103#1103'>'
   ClientHeight = 535
   ClientWidth = 1073
-  ExplicitLeft = -291
-  ExplicitTop = -102
+  ExplicitLeft = -268
   ExplicitWidth = 1081
   ExplicitHeight = 562
   PixelsPerInch = 96
@@ -173,9 +172,9 @@ inherited OrderExternalJournalForm: TOrderExternalJournalForm
             Options.Editing = False
             Width = 187
           end
-          object colToParentName: TcxGridDBColumn
+          object colJuridicalName: TcxGridDBColumn
             Caption = #1063#1055
-            DataBinding.FieldName = 'ToParentName'
+            DataBinding.FieldName = 'JuridicalName'
             HeaderAlignmentHorz = taCenter
             Width = 105
           end
@@ -528,6 +527,9 @@ inherited OrderExternalJournalForm: TOrderExternalJournalForm
       end>
     Left = 400
     Top = 200
+  end
+  inherited spMovementReComplete: TdsdStoredProc
+    Top = 128
   end
   object PrintHeaderCDS: TClientDataSet
     Aggregates = <>

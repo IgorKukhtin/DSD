@@ -36,7 +36,7 @@ type
     colSaleSumm: TcxGridDBColumn;
     actPrintForManager: TdsdPrintAction;
     dxBarButton1: TdxBarButton;
-    colToParentName: TcxGridDBColumn;
+    colJuridicalName: TcxGridDBColumn;
   private
     { Private declarations }
   public

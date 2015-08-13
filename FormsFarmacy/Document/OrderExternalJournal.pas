@@ -33,7 +33,7 @@ type
     PrintItemsSverkaCDS: TClientDataSet;
     colTotalSumm: TcxGridDBColumn;
     colContract: TcxGridDBColumn;
-    colToParentName: TcxGridDBColumn;
+    colJuridicalName: TcxGridDBColumn;
   private
     { Private declarations }
   public

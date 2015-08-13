@@ -50,7 +50,7 @@ type
     colInvNumberBranch: TcxGridDBColumn;
     colBranchDate: TcxGridDBColumn;
     colChecked: TcxGridDBColumn;
-    colToParentName: TcxGridDBColumn;
+    colJuridicalName: TcxGridDBColumn;
   private
     { Private declarations }
   public
