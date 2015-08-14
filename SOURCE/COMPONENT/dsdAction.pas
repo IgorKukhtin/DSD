@@ -661,7 +661,8 @@ uses Windows, Storage, SysUtils, CommonData, UtilConvert, FormStorage,
   frxDesgn, messages, ParentForm, SimpleGauge, TypInfo,
   cxExportPivotGridLink, cxGrid, cxCustomPivotGrid, StrUtils, Variants,
   frxDBSet, Printers,
-  cxGridAddOn, cxTextEdit, cxGridDBDataDefinitions, ExternalSave;
+  cxGridAddOn, cxTextEdit, cxGridDBDataDefinitions, ExternalSave,
+  dxmdaset, dxCore, cxGridLevel;
 
 procedure Register;
 begin
@@ -2465,6 +2466,8 @@ var
   MemTableList: TList;
   ViewToMemTable: TcxViewToMemTable;
   Stream: TStringStream;
+  SortIdx,SI: Integer;
+  OldSort, NewSort: String;
 begin
   DataSetList := TList.Create;
   MemTableList := TList.Create;
@@ -2495,7 +2498,65 @@ begin
         end;
         if Assigned(TAddOnDataSet(ADataSets[i]).GridView) then
         begin
-          MemTableList.Add(ViewToMemTable.LoadData(TAddOnDataSet(ADataSets[i]).GridView));
+          TcxGrid(TcxGridLevel(TAddOnDataSet(ADataSets[i]).GridView.Level).Control).BeginUpdate;
+          try
+            if TAddOnDataSet(ADataSets[i]).IndexFieldNames <> '' then //если есть сортировка
+            begin
+              with TAddOnDataSet(ADataSets[i]).GridView do
+              begin
+                OldSort := '';
+                for SortIdx := 0 to SortedItemCount-1 do             //сохраняем старую сортировку
+                Begin
+                  if SortedItems[SortIdx].SortOrder = soAscending then
+                    OldSort := OldSort + IntToStr(SortedItems[SortIdx].Index)+';'
+                  else
+                  if SortedItems[SortIdx].SortOrder = soDescending then
+                    OldSort := OldSort + IntToStr(1000+SortedItems[SortIdx].Index)+';';
+                End;
+                OldFieldIndexList.Values[Name] := OldSort;
+                DataController.ClearSorting(false); //очистили сортировку
+                NewSort := TAddOnDataSet(ADataSets[i]).IndexFieldNames;
+                if NewSort[Length(NewSort)] <> ';' then
+                  NewSort := NewSort + ';';
+                while NewSort <> '' do
+                Begin
+                  for SortIdx := 0 to ColumnCount - 1 do
+                    if ((Columns[SortIdx] is TcxGridDBColumn)
+                        AND
+                        (CompareText(TcxGridDBColumn(Columns[SortIdx]).DataBinding.FieldName,
+                                     Copy(NewSort,1,pos(';',NewSort)-1))=0)) then
+                    Begin
+                      DataController.ChangeSorting(SortIdx,soAscending);
+                      break;
+                    End;
+                  Delete(NewSort,1,pos(';',NewSort));
+                End;
+              end;
+            end;
+            //перегрузили отсортированные данные в dxMemData
+            (TcxGridLevel(TAddOnDataSet(ADataSets[i]).GridView.Level).Control as TcxGrid).EndUpdate;
+            MemTableList.Add(ViewToMemTable.LoadData(TAddOnDataSet(ADataSets[i]).GridView));
+            (TcxGridLevel(TAddOnDataSet(ADataSets[i]).GridView.Level).Control as TcxGrid).BeginUpdate;
+            //вернули сортировку наместо
+            if TAddOnDataSet(ADataSets[i]).IndexFieldNames <> '' then
+              TAddOnDataSet(ADataSets[i]).GridView.DataController.ClearSorting(false);
+            if OldSort <> '' then
+            Begin
+              while OldSort <> '' do
+              Begin
+                SI := StrToInt(Copy(OldSort,1,pos(';',OldSort)-1));
+                Delete(OldSort,1,pos(';',OldSort));
+                if SI >= 1000 then
+                  TAddOnDataSet(ADataSets[i]).GridView.DataController.ChangeSorting(
+                    SI-1000,soDescending)
+                else
+                  TAddOnDataSet(ADataSets[i]).GridView.DataController.ChangeSorting(
+                    SI,soAscending);
+              End;
+            End;
+          finally
+            (TcxGridLevel(TAddOnDataSet(ADataSets[i]).GridView.Level).Control as TcxGrid).EndUpdate;
+          end;
           DataSet := MemTableList[MemTableList.Count - 1];
         end;
         if not DataSet.Active then
