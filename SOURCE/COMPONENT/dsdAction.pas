@@ -662,7 +662,7 @@ uses Windows, Storage, SysUtils, CommonData, UtilConvert, FormStorage,
   cxExportPivotGridLink, cxGrid, cxCustomPivotGrid, StrUtils, Variants,
   frxDBSet, Printers,
   cxGridAddOn, cxTextEdit, cxGridDBDataDefinitions, ExternalSave,
-  dxmdaset, dxCore, cxGridLevel;
+  dxmdaset, dxCore, cxCustomData, cxGridLevel;
 
 procedure Register;
 begin
