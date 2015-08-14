@@ -55,9 +55,9 @@ type
     OperCount_40200_110000_P: TcxGridDBColumn;
     OperCount_40200_real: TcxGridDBColumn;
     OperCount_Loss: TcxGridDBColumn;
-    actPrint: TdsdPrintAction;
+    actPrint_Real: TdsdPrintAction;
+    bbPrint_Real: TdxBarButton;
     bbPrint: TdxBarButton;
-    bbPrintByGoods: TdxBarButton;
     ExecuteDialog: TExecuteDialog;
     bbExecuteDialog: TdxBarButton;
     cxLabel8: TcxLabel;
@@ -128,7 +128,7 @@ type
     cbPartionGoods: TcxCheckBox;
     bbPartionGoods: TdxBarControlContainerItem;
     PartionGoods: TcxGridDBColumn;
-    actPrint2: TdsdPrintAction;
+    actPrint: TdsdPrintAction;
     OperCount_total: TcxGridDBColumn;
     SummIn_branch_total: TcxGridDBColumn;
     SummIn_zavod_total: TcxGridDBColumn;

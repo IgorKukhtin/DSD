@@ -18,7 +18,7 @@ $BODY$
 BEGIN
    -- проверка прав пользователя на вызов процедуры
    -- vbCode:= lpCheckRight(inSession, zc_Enum_Process_InsertUpdate_Object_PriceList());
-   vbCode:= inSession;
+   vbUserId:= lpGetUserBySession (inSession);
 
    -- проверка
    IF COALESCE (inCurrencyId, 0) = 0

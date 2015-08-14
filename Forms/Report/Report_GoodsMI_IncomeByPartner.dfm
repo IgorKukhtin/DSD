@@ -548,7 +548,7 @@ inherited Report_GoodsMI_IncomeByPartnerForm: TReport_GoodsMI_IncomeByPartnerFor
     Width = 352
   end
   object cbGoodsKind: TcxCheckBox [8]
-    Left = 93
+    Left = 188
     Top = 87
     Caption = #1087#1086' '#1042#1080#1076#1072#1084' '#1090#1086#1074#1072#1088#1072
     Properties.ReadOnly = False
@@ -556,12 +556,20 @@ inherited Report_GoodsMI_IncomeByPartnerForm: TReport_GoodsMI_IncomeByPartnerFor
     Width = 114
   end
   object cbPartionGoods: TcxCheckBox [9]
-    Left = 217
+    Left = 312
     Top = 87
     Caption = #1087#1086' '#1055#1072#1088#1090#1080#1103#1084
     Properties.ReadOnly = False
     TabOrder = 13
     Width = 88
+  end
+  object cbPartner: TcxCheckBox [10]
+    Left = 69
+    Top = 87
+    Caption = #1087#1086' '#1050#1086#1085#1090#1088#1072#1075#1077#1085#1090#1072#1084
+    Properties.ReadOnly = False
+    TabOrder = 14
+    Width = 118
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 139
@@ -569,6 +577,21 @@ inherited Report_GoodsMI_IncomeByPartnerForm: TReport_GoodsMI_IncomeByPartnerFor
   end
   inherited cxPropertiesStore: TcxPropertiesStore
     Components = <
+      item
+        Component = cbGoodsKind
+        Properties.Strings = (
+          'Checked')
+      end
+      item
+        Component = cbPartionGoods
+        Properties.Strings = (
+          'Checked')
+      end
+      item
+        Component = cbPartner
+        Properties.Strings = (
+          'Checked')
+      end
       item
         Component = deEnd
         Properties.Strings = (
@@ -649,8 +672,8 @@ inherited Report_GoodsMI_IncomeByPartnerForm: TReport_GoodsMI_IncomeByPartnerFor
           ToParam.ParamType = ptInputOutput
         end>
       StoredProcList = <>
-      Caption = #1054#1090#1095#1077#1090' '#1087#1086' '#1090#1086#1074#1072#1088#1091' ('#1087#1088#1080#1093#1086#1076' '#1086#1090' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072')'
-      Hint = #1054#1090#1095#1077#1090' '#1087#1086' '#1090#1086#1074#1072#1088#1091' ('#1087#1088#1080#1093#1086#1076' '#1086#1090' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072')'
+      Caption = #1054#1090#1095#1077#1090' '#1087#1086' '#1090#1086#1074#1072#1088#1091
+      Hint = #1054#1090#1095#1077#1090' '#1087#1086' '#1090#1086#1074#1072#1088#1091
       ImageIndex = 3
       ShortCut = 16464
       DataSets = <
@@ -693,11 +716,10 @@ inherited Report_GoodsMI_IncomeByPartnerForm: TReport_GoodsMI_IncomeByPartnerFor
           ParamType = ptInput
         end
         item
-          Name = 'ReportType'
-          Value = '0'
-          Component = FormParams
-          ComponentItem = 'ReportType0'
-          ParamType = ptInput
+          Name = 'isPartner'
+          Value = Null
+          Component = cbPartner
+          DataType = ftBoolean
         end
         item
           Name = 'isPartionGoods'
@@ -754,10 +776,9 @@ inherited Report_GoodsMI_IncomeByPartnerForm: TReport_GoodsMI_IncomeByPartnerFor
           ToParam.ParamType = ptInputOutput
         end>
       StoredProcList = <>
-      Caption = #1054#1090#1095#1077#1090' '#1087#1086' '#1090#1086#1074#1072#1088#1091' ('#1087#1088#1080#1093#1086#1076' '#1086#1090' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072', '#1087#1086' '#1090#1086#1074#1072#1088#1091')'
-      Hint = #1054#1090#1095#1077#1090' '#1087#1086' '#1090#1086#1074#1072#1088#1091' ('#1087#1088#1080#1093#1086#1076' '#1086#1090' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072', '#1087#1086' '#1090#1086#1074#1072#1088#1091')'
-      ImageIndex = 16
-      ShortCut = 16464
+      Caption = #1054#1090#1095#1077#1090
+      Hint = #1054#1090#1095#1077#1090
+      ImageIndex = 17
       DataSets = <
         item
           UserName = 'frxDBDItems'
@@ -783,7 +804,7 @@ inherited Report_GoodsMI_IncomeByPartnerForm: TReport_GoodsMI_IncomeByPartnerFor
         end
         item
           Name = 'GoodsGroupName'
-          Value = ''
+          Value = Null
           Component = GoodsGroupGuides
           ComponentItem = 'TextValue'
           DataType = ftString
@@ -791,21 +812,39 @@ inherited Report_GoodsMI_IncomeByPartnerForm: TReport_GoodsMI_IncomeByPartnerFor
         end
         item
           Name = 'JuridicalName'
-          Value = ''
+          Value = Null
           Component = JuridicalGuides
           ComponentItem = 'TextValue'
           DataType = ftString
           ParamType = ptInput
         end
         item
-          Name = 'ReportType'
-          Value = '1'
+          Name = 'isPartner'
+          Value = Null
+          Component = cbPartner
+          DataType = ftBoolean
+        end
+        item
+          Name = 'isPartionGoods'
+          Value = Null
+          Component = cbPartionGoods
+          DataType = ftBoolean
+        end
+        item
+          Name = 'isGoodsKind'
+          Value = Null
+          Component = cbGoodsKind
+          DataType = ftBoolean
+        end
+        item
+          Name = 'DescName'
+          Value = Null
           Component = FormParams
-          ComponentItem = 'ReportType1'
-          ParamType = ptInput
+          ComponentItem = 'InDescName'
+          DataType = ftString
         end>
-      ReportName = #1054#1090#1095#1077#1090' '#1087#1086' '#1090#1086#1074#1072#1088#1091' ('#1087#1088#1080#1093#1086#1076' '#1086#1090' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072')'
-      ReportNameParam.Value = #1054#1090#1095#1077#1090' '#1087#1086' '#1090#1086#1074#1072#1088#1091' ('#1087#1088#1080#1093#1086#1076' '#1086#1090' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072')'
+      ReportName = #1054#1090#1095#1077#1090
+      ReportNameParam.Value = #1054#1090#1095#1077#1090
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
     end
@@ -1036,6 +1075,10 @@ inherited Report_GoodsMI_IncomeByPartnerForm: TReport_GoodsMI_IncomeByPartnerFor
         end
         item
           Visible = True
+          ItemName = 'bbPartner'
+        end
+        item
+          Visible = True
           ItemName = 'bbGoodsKind'
         end
         item
@@ -1075,17 +1118,24 @@ inherited Report_GoodsMI_IncomeByPartnerForm: TReport_GoodsMI_IncomeByPartnerFor
       Action = ExecuteDialog
       Category = 0
     end
-    object bbGoodsKind: TdxBarControlContainerItem
-      Caption = 'New Item'
+    object bbPartner: TdxBarControlContainerItem
+      Caption = 'bbPartner'
       Category = 0
-      Hint = 'New Item'
+      Hint = 'bbPartner'
+      Visible = ivAlways
+      Control = cbPartner
+    end
+    object bbGoodsKind: TdxBarControlContainerItem
+      Caption = 'bbGoodsKind'
+      Category = 0
+      Hint = 'bbGoodsKind'
       Visible = ivAlways
       Control = cbGoodsKind
     end
     object bbPartionGoods: TdxBarControlContainerItem
-      Caption = 'New Item'
+      Caption = 'bbPartionGoods'
       Category = 0
-      Hint = 'New Item'
+      Hint = 'bbPartionGoods'
       Visible = ivAlways
       Control = cbPartionGoods
     end
@@ -1172,16 +1222,6 @@ inherited Report_GoodsMI_IncomeByPartnerForm: TReport_GoodsMI_IncomeByPartnerFor
         Value = ''
         Component = edInDescName
         DataType = ftString
-        ParamType = ptInput
-      end
-      item
-        Name = 'ReportType0'
-        Value = '0'
-        ParamType = ptInput
-      end
-      item
-        Name = 'ReportType1'
-        Value = '1'
         ParamType = ptInput
       end>
     Left = 328

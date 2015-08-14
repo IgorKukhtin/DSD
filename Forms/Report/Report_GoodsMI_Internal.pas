@@ -60,6 +60,14 @@ type
     MeasureName: TcxGridDBColumn;
     cbMO_all: TcxCheckBox;
     PartionGoods: TcxGridDBColumn;
+    actPrint: TdsdPrintAction;
+    bbPrint: TdxBarButton;
+    cbLocation: TcxCheckBox;
+    cbGoodsKind: TcxCheckBox;
+    cbPartionGoods: TcxCheckBox;
+    bbLocation: TdxBarControlContainerItem;
+    bbGoodsKind: TdxBarControlContainerItem;
+    bbPartionGoods: TdxBarControlContainerItem;
   private
     { Private declarations }
   public

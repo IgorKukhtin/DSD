@@ -629,6 +629,7 @@ BEGIN
                                                  , inContainerId_Analyzer    := 0                              -- количественный Контейнер-Мастер (для прихода не надо)
                                                  , inObjectIntId_Analyzer    := _tmpItem.GoodsKindId           -- вид товара
                                                  , inObjectExtId_Analyzer    := vbWhereObjectId_Analyzer_From  -- Подраделение "От кого"
+                                                 , inContainerIntId_Analyzer := 0                              -- Контейнер "товар"
                                                  , inAmount         := _tmpItem.OperCount
                                                  , inOperDate       := vbOperDate
                                                  , inIsActive       := TRUE
@@ -768,6 +769,7 @@ BEGIN
                                                       , inContainerId_Analyzer    := 0                              -- суммовой Контейнер-Мастер (для прихода не надо)
                                                       , inObjectIntId_Analyzer    := _tmpItem.GoodsKindId           -- вид товара
                                                       , inObjectExtId_Analyzer    := vbWhereObjectId_Analyzer_From  -- Подраделение "От кого"
+                                                      , inContainerIntId_Analyzer := 0                              -- Контейнер "товар"
                                                       , inAmount         := _tmpItemSumm_group.OperSumm
                                                       , inOperDate       := vbOperDate
                                                       , inIsActive       := TRUE

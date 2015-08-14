@@ -309,7 +309,12 @@ BEGIN
                                  ON ObjectString_Goods_GroupNameFull.ObjectId = Object_Goods.Id
                                 AND ObjectString_Goods_GroupNameFull.DescId = zc_ObjectString_Goods_GroupNameFull()
           LEFT JOIN Object_InfoMoney_View AS View_InfoMoney ON View_InfoMoney.InfoMoneyId = tmpOperationGroup.InfoMoneyId
-  ;
+     FROM (SELECT tmpContainer.GoodsId
+     WHERE 0 <> tmpOperationGroup.Amount
+        OR 0 <> tmpOperationGroup.AmountPartner
+        OR 0 <> tmpOperationGroup.Summ
+        OR 0 <> tmpOperationGroup.Summ_ProfitLoss
+    ;
          
 END;
 $BODY$

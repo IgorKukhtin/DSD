@@ -442,6 +442,30 @@ inherited Report_GoodsMI_InternalForm: TReport_GoodsMI_InternalForm
           end
         end
       end
+      object cbLocation: TcxCheckBox
+        Left = 111
+        Top = 7
+        Caption = #1087#1086' '#1052#1077#1089#1090#1072#1084' '#1091#1095#1077#1090#1072
+        Properties.ReadOnly = False
+        TabOrder = 1
+        Width = 118
+      end
+      object cbGoodsKind: TcxCheckBox
+        Left = 230
+        Top = 7
+        Caption = #1087#1086' '#1042#1080#1076#1072#1084' '#1090#1086#1074#1072#1088#1072
+        Properties.ReadOnly = False
+        TabOrder = 2
+        Width = 114
+      end
+      object cbPartionGoods: TcxCheckBox
+        Left = 354
+        Top = 7
+        Caption = #1087#1086' '#1055#1072#1088#1090#1080#1103#1084
+        Properties.ReadOnly = False
+        TabOrder = 3
+        Width = 88
+      end
     end
   end
   inherited Panel: TPanel
@@ -569,7 +593,22 @@ inherited Report_GoodsMI_InternalForm: TReport_GoodsMI_InternalForm
   inherited cxPropertiesStore: TcxPropertiesStore
     Components = <
       item
+        Component = cbGoodsKind
+        Properties.Strings = (
+          'Checked')
+      end
+      item
+        Component = cbLocation
+        Properties.Strings = (
+          'Checked')
+      end
+      item
         Component = cbMO_all
+        Properties.Strings = (
+          'Checked')
+      end
+      item
+        Component = cbPartionGoods
         Properties.Strings = (
           'Checked')
       end
@@ -672,6 +711,117 @@ inherited Report_GoodsMI_InternalForm: TReport_GoodsMI_InternalForm
       isShowModal = True
       OpenBeforeShow = True
     end
+    object actPrint: TdsdPrintAction
+      Category = 'DSDLib'
+      MoveParams = <
+        item
+          FromParam.Name = 'id'
+          FromParam.Value = Null
+          FromParam.ComponentItem = 'id'
+          ToParam.Value = '0'
+          ToParam.Component = FormParams
+          ToParam.ComponentItem = 'Id'
+          ToParam.ParamType = ptInputOutput
+        end
+        item
+          FromParam.Value = 42005d
+          FromParam.Component = deStart
+          FromParam.DataType = ftDateTime
+          ToParam.Name = 'StartDate'
+          ToParam.Value = Null
+          ToParam.DataType = ftDateTime
+          ToParam.ParamType = ptInputOutput
+        end
+        item
+          FromParam.Value = 42005d
+          FromParam.Component = deEnd
+          FromParam.DataType = ftDateTime
+          ToParam.Name = 'EndDate'
+          ToParam.Value = Null
+          ToParam.DataType = ftDateTime
+          ToParam.ParamType = ptInputOutput
+        end>
+      StoredProcList = <>
+      Caption = #1054#1090#1095#1077#1090' '#1087#1086' '#1090#1086#1074#1072#1088#1091
+      Hint = #1054#1090#1095#1077#1090' '#1087#1086' '#1090#1086#1074#1072#1088#1091
+      ImageIndex = 3
+      DataSets = <
+        item
+          UserName = 'frxDBDItems'
+          IndexFieldNames = 
+            'JuridicalName;PartnerName;GoodsGroupNameFull;GoodsName;GoodsKind' +
+            'Name;PartionGoods'
+          GridView = cxGridDBTableView
+        end>
+      Params = <
+        item
+          Name = 'StartDate'
+          Value = 42005d
+          Component = deStart
+          DataType = ftDateTime
+          ParamType = ptInput
+        end
+        item
+          Name = 'EndDate'
+          Value = 42005d
+          Component = deEnd
+          DataType = ftDateTime
+          ParamType = ptInput
+        end
+        item
+          Name = 'GoodsGroupName'
+          Value = ''
+          Component = GoodsGroupGuides
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          ParamType = ptInput
+        end
+        item
+          Name = 'FromName'
+          Value = ''
+          Component = FromGuides
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          ParamType = ptInput
+        end
+        item
+          Name = 'ToName'
+          Value = '1'
+          Component = ToGuides
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          ParamType = ptInput
+        end
+        item
+          Name = 'isLocation'
+          Value = Null
+          Component = cbLocation
+          DataType = ftBoolean
+        end
+        item
+          Name = 'isGoodsKind'
+          Value = Null
+          Component = cbGoodsKind
+          DataType = ftBoolean
+        end
+        item
+          Name = 'isPartionGoods'
+          Value = Null
+          Component = cbPartionGoods
+          DataType = ftBoolean
+        end
+        item
+          Name = 'DescName'
+          Value = ''
+          Component = FormParams
+          ComponentItem = 'InDescName'
+          DataType = ftString
+        end>
+      ReportName = #1054#1090#1095#1077#1090' '#1087#1086' '#1090#1086#1074#1072#1088#1091' ('#1074#1085#1091#1090#1088#1077#1085#1085#1080#1081')'
+      ReportNameParam.Value = #1054#1090#1095#1077#1090' '#1087#1086' '#1090#1086#1074#1072#1088#1091' ('#1074#1085#1091#1090#1088#1077#1085#1085#1080#1081')'
+      ReportNameParam.DataType = ftString
+      ReportNameParam.ParamType = ptInput
+    end
   end
   inherited MasterDS: TDataSource
     Left = 72
@@ -768,6 +918,30 @@ inherited Report_GoodsMI_InternalForm: TReport_GoodsMI_InternalForm
         end
         item
           Visible = True
+          ItemName = 'bbLocation'
+        end
+        item
+          Visible = True
+          ItemName = 'bbGoodsKind'
+        end
+        item
+          Visible = True
+          ItemName = 'bbPartionGoods'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbPrint'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbGridToExcel'
         end
         item
@@ -779,14 +953,39 @@ inherited Report_GoodsMI_InternalForm: TReport_GoodsMI_InternalForm
       Action = ExecuteDialog
       Category = 0
     end
+    object bbPrint: TdxBarButton
+      Action = actPrint
+      Category = 0
+    end
+    object bbLocation: TdxBarControlContainerItem
+      Caption = 'bbLocation'
+      Category = 0
+      Hint = 'bbLocation'
+      Visible = ivAlways
+      Control = cbLocation
+    end
+    object bbGoodsKind: TdxBarControlContainerItem
+      Caption = 'bbGoodsKind'
+      Category = 0
+      Hint = 'bbGoodsKind'
+      Visible = ivAlways
+      Control = cbGoodsKind
+    end
+    object bbPartionGoods: TdxBarControlContainerItem
+      Caption = 'bbPartionGoods'
+      Category = 0
+      Hint = 'bbPartionGoods'
+      Visible = ivAlways
+      Control = cbPartionGoods
+    end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
     Left = 320
     Top = 232
   end
   inherited PeriodChoice: TPeriodChoice
-    Left = 112
-    Top = 128
+    Left = 72
+    Top = 8
   end
   inherited RefreshDispatcher: TRefreshDispatcher
     ComponentList = <
@@ -811,8 +1010,8 @@ inherited Report_GoodsMI_InternalForm: TReport_GoodsMI_InternalForm
       item
         Component = deEnd
       end>
-    Left = 224
-    Top = 160
+    Left = 216
+    Top = 208
   end
   object GoodsGroupGuides: TdsdGuides
     KeyField = 'Id'
