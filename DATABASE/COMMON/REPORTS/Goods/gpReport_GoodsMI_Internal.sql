@@ -20,6 +20,7 @@ RETURNS TABLE (GoodsGroupName TVarChar, GoodsGroupNameFull TVarChar
              , GoodsCode Integer, GoodsName TVarChar
              , GoodsKindName TVarChar, MeasureName TVarChar
              , TradeMarkName TVarChar
+             , PartionGoods TVarChar
              , LocationCode Integer, LocationName TVarChar
              , LocationCode_by Integer, LocationName_by TVarChar
              , ArticleLossCode Integer, ArticleLossName TVarChar
@@ -91,13 +92,14 @@ BEGIN
     -- Результат
     RETURN QUERY
     
-    SELECT Object_GoodsGroup.ValueData AS GoodsGroupName 
+    SELECT Object_GoodsGroup.ValueData                AS GoodsGroupName 
          , ObjectString_Goods_GroupNameFull.ValueData AS GoodsGroupNameFull
-         , Object_Goods.ObjectCode     AS GoodsCode
-         , Object_Goods.ValueData      AS GoodsName
-         , Object_GoodsKind.ValueData  AS GoodsKindName
-         , Object_Measure.ValueData    AS MeasureName
-         , Object_TradeMark.ValueData  AS TradeMarkName
+         , Object_Goods.ObjectCode                    AS GoodsCode
+         , Object_Goods.ValueData                     AS GoodsName
+         , Object_GoodsKind.ValueData                 AS GoodsKindName
+         , Object_Measure.ValueData                   AS MeasureName
+         , Object_TradeMark.ValueData                 AS TradeMarkName
+         , Object_PartionGoods.ValueData              AS PartionGoods
 
          , Object_Location.ObjectCode AS LocationCode
          , Object_Location.ValueData  AS LocationName
@@ -132,6 +134,7 @@ BEGIN
                 , tmpContainer.UnitId_by
                 , tmpContainer.GoodsId
                 , tmpContainer.GoodsKindId
+                , CLO_PartionGoods.ObjectId AS PartionGoodsId
 
                 , SUM (tmpContainer.AmountOut)         AS AmountOut 
                 , SUM (tmpContainer.SummOut)           AS SummOut_zavod
@@ -178,13 +181,17 @@ BEGIN
                         , CASE WHEN inDescId = zc_Movement_Loss() THEN COALESCE (MIContainer.ContainerId_Analyzer, 0) ELSE 0 END
                  ) AS tmpContainer
                  LEFT JOIN Object_Account_View ON Object_Account_View.AccountId = tmpContainer.AccountId
-                    
+                 LEFT JOIN ContainerLinkObject AS CLO_PartionGoods
+                                               ON CLO_PartionGoods.ContainerId = tmpContainer.ContainerId
+                                              AND CLO_PartionGoods.DescId = zc_ContainerLinkObject_PartionGoods()
+
            GROUP BY tmpContainer.ArticleLossId
                   , tmpContainer.ContainerId_Analyzer
                   , tmpContainer.UnitId
                   , tmpContainer.UnitId_by
                   , tmpContainer.GoodsId
                   , tmpContainer.GoodsKindId
+                  , CLO_PartionGoods.ObjectId
           ) AS tmpOperationGroup
 
           LEFT JOIN ContainerLinkObject AS ContainerLO_ProfitLoss
@@ -197,6 +204,7 @@ BEGIN
           LEFT JOIN Object AS Object_Location_by ON Object_Location_by.Id = tmpOperationGroup.UnitId_by
           LEFT JOIN Object AS Object_Goods on Object_Goods.Id = tmpOperationGroup.GoodsId
           LEFT JOIN Object AS Object_GoodsKind ON Object_GoodsKind.Id = tmpOperationGroup.GoodsKindId
+          LEFT JOIN Object AS Object_PartionGoods ON Object_PartionGoods.Id = tmpOperationGroup.PartionGoodsId
 
           LEFT JOIN ObjectLink AS ObjectLink_Goods_TradeMark
                                ON ObjectLink_Goods_TradeMark.ObjectId = Object_Goods.Id 

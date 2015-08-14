@@ -23,9 +23,9 @@ RETURNS TABLE  (MovementId Integer, InvNumber TVarChar, OperDate TDateTime, Oper
               , SummPartnerIn TFloat, SummPartnerOut TFloat
               , AmountStart TFloat, AmountIn TFloat, AmountOut TFloat, AmountEnd TFloat, Amount TFloat
               , SummStart TFloat, SummIn TFloat, SummOut TFloat, SummEnd TFloat, Summ TFloat
-              , Amount_Change TFloat, Summ_Change TFloat
-              , Amount_40200 TFloat, Summ_40200 TFloat
-              , Amount_Loss TFloat, Summ_Loss TFloat
+              , Amount_Change TFloat, Summ_Change_branch TFloat, Summ_Change_zavod TFloat
+              , Amount_40200 TFloat, Summ_40200_branch TFloat, Summ_40200_zavod TFloat
+              , Amount_Loss TFloat, Summ_Loss_branch TFloat, Summ_Loss_zavod TFloat
                )  
 AS
 $BODY$
@@ -45,9 +45,9 @@ BEGIN
               , gpReport.SummPartnerIn, gpReport.SummPartnerOut
               , gpReport.AmountStart, gpReport.AmountIn, gpReport.AmountOut, gpReport.AmountEnd, gpReport.Amount
               , gpReport.SummStart, gpReport.SummIn, gpReport.SummOut, gpReport.SummEnd, gpReport.Summ
-              , gpReport.Amount_Change, gpReport.Summ_Change
-              , gpReport.Amount_40200, gpReport.Summ_40200
-              , gpReport.Amount_Loss, gpReport.Summ_Loss
+              , gpReport.Amount_Change, gpReport.Summ_Change_branch, gpReport.Summ_Change_zavod
+              , gpReport.Amount_40200, gpReport.Summ_40200_branch, gpReport.Summ_40200_zavod
+              , gpReport.Amount_Loss, gpReport.Summ_Loss_branch, gpReport.Summ_Loss_zavod
          FROM gpReport_GoodsGroup (inStartDate   := inStartDate
                                  , inEndDate     := inEndDate
                                  , inUnitGroupId := inUnitGroupId
@@ -287,9 +287,9 @@ BEGIN
               * CASE WHEN Movement.DescId IN (zc_Movement_Send(), zc_Movement_SendOnPrice(), zc_Movement_ProductionUnion(), zc_Movement_ProductionSeparate()) AND tmpMIContainer_group.isActive = FALSE THEN -1 ELSE 1 END
                 AS TFloat) AS Summ
 
-        , 0 :: TFloat AS Amount_Change, 0 :: TFloat AS Summ_Change
-        , 0 :: TFloat AS Amount_40200,  0 :: TFloat AS Summ_40200
-        , 0 :: TFloat AS Amount_Loss,   0 :: TFloat AS Summ_Loss
+        , 0 :: TFloat AS Amount_Change, 0 :: TFloat AS Summ_Change_branch, 0 :: TFloat AS Summ_Change_zavod
+        , 0 :: TFloat AS Amount_40200,  0 :: TFloat AS Summ_40200_branch,  0 :: TFloat AS Summ_40200_zavod
+        , 0 :: TFloat AS Amount_Loss,   0 :: TFloat AS Summ_Loss_branch,   0 :: TFloat AS Summ_Loss_zavod
 
    FROM (SELECT tmpMIContainer_all.MovementId
               -- , 0 AS MovementItemId

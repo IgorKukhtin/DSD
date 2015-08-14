@@ -107,8 +107,8 @@ type
     SummIn_Partner_P: TcxGridDBColumn;
     SummIn_Partner_branch_real: TcxGridDBColumn;
     SummIn_Partner_zavod_real: TcxGridDBColumn;
-    SummProfit_branch: TcxGridDBColumn;
-    SummProfit_zavod: TcxGridDBColumn;
+    SummProfit_branch_real: TcxGridDBColumn;
+    SummProfit_zavod_real: TcxGridDBColumn;
     PriceIn_branch: TcxGridDBColumn;
     PriceIn_zavod: TcxGridDBColumn;
     PriceOut_Partner: TcxGridDBColumn;
@@ -133,6 +133,11 @@ type
     SummIn_branch_total: TcxGridDBColumn;
     SummIn_zavod_total: TcxGridDBColumn;
     OperCount_sh_Partner_real: TcxGridDBColumn;
+    AreaName: TcxGridDBColumn;
+    RetailName: TcxGridDBColumn;
+    PartnerTagName: TcxGridDBColumn;
+    SummProfit_branch: TcxGridDBColumn;
+    SummProfit_zavod: TcxGridDBColumn;
   private
     { Private declarations }
   public

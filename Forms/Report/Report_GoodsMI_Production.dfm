@@ -13,17 +13,17 @@ inherited Report_GoodsMI_ProductionForm: TReport_GoodsMI_ProductionForm
     Height = 287
     TabOrder = 3
     ExplicitTop = 57
-    ExplicitWidth = 973
+    ExplicitWidth = 1137
     ExplicitHeight = 287
     ClientRectBottom = 287
     ClientRectRight = 1137
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 973
+      ExplicitWidth = 1137
       ExplicitHeight = 287
       inherited cxGrid: TcxGrid
         Width = 1137
         Height = 287
-        ExplicitWidth = 973
+        ExplicitWidth = 1137
         ExplicitHeight = 287
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
@@ -99,13 +99,41 @@ inherited Report_GoodsMI_ProductionForm: TReport_GoodsMI_ProductionForm
             HeaderAlignmentVert = vaCenter
             Width = 70
           end
-          object clTradeMarkName: TcxGridDBColumn
-            Caption = #1058#1086#1088#1075#1086#1074#1072#1103' '#1084#1072#1088#1082#1072
-            DataBinding.FieldName = 'TradeMarkName'
+          object LocationCode: TcxGridDBColumn
+            Caption = #1050#1086#1076' '#1084#1077#1089#1090#1086' '#1091#1095'.'
+            DataBinding.FieldName = 'LocationCode'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 45
+          end
+          object LocationName: TcxGridDBColumn
+            Caption = #1052#1077#1089#1090#1086' '#1091#1095#1077#1090#1072
+            DataBinding.FieldName = 'LocationName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 100
+          end
+          object LocationCode_by: TcxGridDBColumn
+            Caption = #1050#1086#1076' '#1087#1086#1076#1088'. '#1082#1086#1084#1091
+            DataBinding.FieldName = 'LocationCode_by'
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 109
+            Width = 45
+          end
+          object LocationName_by: TcxGridDBColumn
+            Caption = #1054#1090' '#1082#1086#1075#1086' / '#1050#1086#1084#1091
+            DataBinding.FieldName = 'LocationName_by'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 100
+          end
+          object GoodsGroupNameFull: TcxGridDBColumn
+            Caption = #1043#1088#1091#1087#1087#1072' ('#1074#1089#1077')'
+            DataBinding.FieldName = 'GoodsGroupNameFull'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 100
           end
           object clGoodsGroupName: TcxGridDBColumn
             Caption = #1043#1088#1091#1087#1087#1072
@@ -134,6 +162,20 @@ inherited Report_GoodsMI_ProductionForm: TReport_GoodsMI_ProductionForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 100
+          end
+          object PartionGoods: TcxGridDBColumn
+            Caption = #1055#1072#1088#1090#1080#1103
+            DataBinding.FieldName = 'PartionGoods'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 55
+          end
+          object MeasureName: TcxGridDBColumn
+            Caption = #1045#1076'. '#1080#1079#1084'.'
+            DataBinding.FieldName = 'MeasureName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 55
           end
           object clAmount_Sh: TcxGridDBColumn
             Caption = #1050#1086#1083'-'#1074#1086' '#1064#1090'.'
@@ -175,13 +217,21 @@ inherited Report_GoodsMI_ProductionForm: TReport_GoodsMI_ProductionForm
             HeaderAlignmentVert = vaCenter
             Width = 80
           end
+          object clTradeMarkName: TcxGridDBColumn
+            Caption = #1058#1086#1088#1075#1086#1074#1072#1103' '#1084#1072#1088#1082#1072
+            DataBinding.FieldName = 'TradeMarkName'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 109
+          end
         end
       end
     end
   end
   inherited Panel: TPanel
     Width = 1137
-    ExplicitWidth = 973
+    ExplicitWidth = 1137
     inherited deStart: TcxDateEdit
       Left = 97
       EditValue = 42005d

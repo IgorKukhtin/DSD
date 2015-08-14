@@ -34,12 +34,22 @@ RETURNS TABLE (GoodsGroupName TVarChar, GoodsGroupNameFull TVarChar
 AS
 $BODY$
  DECLARE vbUserId Integer;
+ DECLARE vbIsGroup Boolean;
 BEGIN
      vbUserId:= lpGetUserBySession (inSession);
    
-    CREATE TEMP TABLE _tmpGoods (GoodsId Integer) ON COMMIT DROP;
-    CREATE TEMP TABLE _tmpUnit (UnitId Integer) ON COMMIT DROP;
-    
+      vbIsGroup:= (inSession = '');
+
+     IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.tables WHERE TABLE_NAME = '_tmpgoods')
+     THEN
+         DELETE FROM _tmpGoods;
+         DELETE FROM _tmpUnit;
+     ELSE
+         -- таблица - 
+         CREATE TEMP TABLE _tmpGoods (GoodsId Integer, InfoMoneyId Integer, TradeMarkId Integer) ON COMMIT DROP;
+         CREATE TEMP TABLE _tmpUnit (UnitId Integer, UnitId_by Integer, isActive Boolean) ON COMMIT DROP;
+     END IF;
+
   
     -- Ограничения по товару
     IF inGoodsGroupId <> 0
@@ -162,15 +172,15 @@ BEGIN
                 , COALESCE (ContainerLO_InfoMoney.ObjectId, 0) AS InfoMoneyId
                 , 0/*( COALESCE (ContainerLO_FuelKind.ObjectId,0) )*/ AS FuelKindId
                 , tmpContainer.GoodsKindId                            AS GoodsKindId
-                , COALESCE (CLO_PartionGoods.ObjectId, 0)             AS PartionGoodsId
+                , CASE WHEN vbIsGroup = TRUE THEN 0 ELSE COALESCE (CLO_PartionGoods.ObjectId, 0) END AS PartionGoodsId
                 , SUM (tmpContainer.Amount)                           AS Amount
                 , SUM (tmpContainer.AmountPartner)                    AS AmountPartner
                 , SUM (tmpContainer.Summ - tmpContainer.Summ_ProfitLoss) AS Summ
                 , SUM (tmpContainer.Summ_ProfitLoss + tmpContainer.Summ_ProfitLoss_partner) AS Summ_ProfitLoss
 
            FROM (SELECT MIContainer.ContainerId                        AS ContainerId
-                      , MIContainer.ObjectId_analyzer                  AS GoodsId 
-                      , COALESCE (MIContainer.ObjectIntId_Analyzer, 0) AS GoodsKindId 
+                      , CASE WHEN vbIsGroup = TRUE THEN 0 ELSE MIContainer.ObjectId_analyzer                  END AS GoodsId 
+                      , CASE WHEN vbIsGroup = TRUE THEN 0 ELSE COALESCE (MIContainer.ObjectIntId_Analyzer, 0) END AS GoodsKindId 
                       , MIContainer.ContainerId_analyzer               AS ContainerId_analyzer
                       , MIContainer.WhereObjectId_analyzer             AS LocationId
                       , SUM (CASE WHEN MIContainer.DescId = zc_MIContainer_Count() AND MIContainer.MovementDescId = zc_Movement_Income() AND MIContainer.isActive = TRUE
@@ -218,8 +228,8 @@ BEGIN
                    -- AND MIContainer.isActive = CASE WHEN inDescId = zc_Movement_Income() THEN TRUE ELSE FALSE END
                    AND COALESCE (MIContainer.AccountId, 0) <> zc_Enum_Account_100301() -- прибыль текущего периода
                  GROUP BY MIContainer.ContainerId
-                        , MIContainer.ObjectId_analyzer
-                        , MIContainer.ObjectIntId_Analyzer
+                        , CASE WHEN vbIsGroup = TRUE THEN 0 ELSE MIContainer.ObjectId_analyzer                  END
+                        , CASE WHEN vbIsGroup = TRUE THEN 0 ELSE COALESCE (MIContainer.ObjectIntId_Analyzer, 0) END
                         , MIContainer.ContainerId_analyzer
                         , MIContainer.WhereObjectId_analyzer
                 ) AS tmpContainer
@@ -257,7 +267,7 @@ BEGIN
                              , tmpContainer.LocationId
                              , CASE WHEN ContainerLO_Member.ObjectId > 0 THEN zc_Enum_PaidKind_SecondForm() ELSE COALESCE (ContainerLO_PaidKind.ObjectId,0) END
                            --  , COALESCE (ContainerLO_FuelKind.ObjectId, 0) 
-                             , COALESCE (CLO_PartionGoods.ObjectId, 0) 
+                             , CASE WHEN vbIsGroup = TRUE THEN 0 ELSE COALESCE (CLO_PartionGoods.ObjectId, 0) END
                              , COALESCE (ContainerLO_Partner.ObjectId, COALESCE (ContainerLO_Member.ObjectId, 0))
                              , COALESCE (ContainerLO_Juridical.ObjectId,  COALESCE (ContainerLO_Member.ObjectId, 0 ))
                              , COALESCE (ContainerLO_InfoMoney.ObjectId, 0)

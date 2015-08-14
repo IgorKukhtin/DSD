@@ -35,6 +35,13 @@ type
     edUnit: TcxButtonEdit;
     GuidesUnit: TdsdGuides;
     Price: TcxGridDBColumn;
+    GoodsGroupNameFull: TcxGridDBColumn;
+    MeasureName: TcxGridDBColumn;
+    PartionGoods: TcxGridDBColumn;
+    LocationCode: TcxGridDBColumn;
+    LocationName: TcxGridDBColumn;
+    LocationCode_by: TcxGridDBColumn;
+    LocationName_by: TcxGridDBColumn;
   private
     { Private declarations }
   public

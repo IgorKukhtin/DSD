@@ -30,6 +30,8 @@ RETURNS TABLE (GoodsGroupName TVarChar, GoodsGroupNameFull TVarChar
              , LocationCode Integer, LocationName TVarChar
              , JuridicalCode Integer, JuridicalName TVarChar
              , PartnerId Integer, PartnerCode Integer, PartnerName TVarChar
+             , RetailName TVarChar
+             , AreaName TVarChar, PartnerTagName TVarChar
              , PaidKindName TVarChar
              , BusinessName TVarChar
              , BranchName TVarChar
@@ -112,6 +114,8 @@ RETURNS TABLE (GoodsGroupName TVarChar, GoodsGroupNameFull TVarChar
 
              , SummProfit_branch            TFloat  -- 
              , SummProfit_zavod             TFloat  -- 
+             , SummProfit_branch_real       TFloat  -- 
+             , SummProfit_zavod_real        TFloat  -- 
              , PriceIn_branch               TFloat  -- 
              , PriceIn_zavod                TFloat  -- 
              , PriceOut_Partner             TFloat  -- 
@@ -217,14 +221,14 @@ BEGIN
                         UNION
                          SELECT 0 AS AccountGroupId, zc_Enum_AnalyzerId_SummOut_110101() AS AccountId -- Сумма, забалансовый счет, расходтранзит, хотя поле пишется в AccountId, при этом ContainerId - стандартный и в нем другой AccountId
                         ) 
-       SELECT Object_GoodsGroup.ValueData            AS GoodsGroupName 
+       SELECT Object_GoodsGroup.ValueData             AS GoodsGroupName 
          , ObjectString_Goods_GroupNameFull.ValueData AS GoodsGroupNameFull
-         , Object_Goods.ObjectCode                AS GoodsCode
-         , Object_Goods.ValueData                 AS GoodsName
-         , Object_GoodsKind.ValueData             AS GoodsKindName
-         , Object_Measure.ValueData               AS MeasureName
-         , Object_TradeMark.ValueData             AS TradeMarkName
-         , CAST ('' AS TVarChar )                 AS PartionGoods
+         , Object_Goods.ObjectCode                    AS GoodsCode
+         , Object_Goods.ValueData                     AS GoodsName
+         , Object_GoodsKind.ValueData                 AS GoodsKindName
+         , Object_Measure.ValueData                   AS MeasureName
+         , Object_TradeMark.ValueData                 AS TradeMarkName
+         , Object_PartionGoods.ValueData              AS PartionGoods
 
          , Object_Location.ObjectCode AS LocationCode
          , Object_Location.ValueData  AS LocationName
@@ -235,6 +239,10 @@ BEGIN
          , Object_Partner.Id           AS PartnerId
          , Object_Partner.ObjectCode   AS PartnerCode
          , Object_Partner.ValueData    AS PartnerName
+
+          , Object_Retail.ValueData     AS RetailName
+          , Object_Area.ValueData       AS AreaName
+          , Object_PartnerTag.ValueData AS PartnerTagName
 
          , Object_PaidKind.ValueData   AS PaidKindName
          , Object_Business.ValueData   AS BusinessName
@@ -336,17 +344,28 @@ BEGIN
          , tmpOperationGroup.SummOut_Partner_110000_P                                     :: TFloat AS SummOut_Partner_110000_P
          , tmpOperationGroup.SummOut_Partner_real                                         :: TFloat AS SummOut_Partner_real
 
+           -- ***Прибыль
+         , CAST ((tmpOperationGroup.SummOut_Partner_real + tmpOperationGroup.SummOut_Partner_110000_A - tmpOperationGroup.SummOut_Partner_110000_P)
+                - tmpOperationGroup.SummIn_Partner
+               * CASE WHEN inDescId = zc_Movement_Sale() THEN 1 ELSE -1 END AS NUMERIC (16, 1)) :: TFloat AS SummProfit_branch
+         , CAST ((tmpOperationGroup.SummOut_Partner_real + tmpOperationGroup.SummOut_Partner_110000_A - tmpOperationGroup.SummOut_Partner_110000_P)
+               - (tmpOperationGroup.SummIn_Partner + tmpOperationGroup.SummIn_Partner_60000)
+               * CASE WHEN inDescId = zc_Movement_Sale() THEN 1 ELSE -1 END AS NUMERIC (16, 1)) :: TFloat AS SummProfit_zavod
+           -- Прибыль
          , CAST ((tmpOperationGroup.SummOut_Partner_real - tmpOperationGroup.SummIn_Partner_real
                 + tmpOperationGroup.SummIn_Partner_60000 - tmpOperationGroup.SummIn_Partner_60000_A + tmpOperationGroup.SummIn_Partner_60000_P)
-               * CASE WHEN inDescId = zc_Movement_Sale() THEN 1 ELSE -1 END AS NUMERIC (16, 1)) :: TFloat AS SummProfit_branch
-         , CAST ((tmpOperationGroup.SummOut_Partner_real - tmpOperationGroup.SummIn_Partner_real) * CASE WHEN inDescId = zc_Movement_Sale() THEN 1 ELSE -1 END AS NUMERIC (16, 1)) :: TFloat AS SummProfit_zavod
+               * CASE WHEN inDescId = zc_Movement_Sale() THEN 1 ELSE -1 END AS NUMERIC (16, 1)) :: TFloat AS SummProfit_branch_real
+         , CAST ((tmpOperationGroup.SummOut_Partner_real - tmpOperationGroup.SummIn_Partner_real) * CASE WHEN inDescId = zc_Movement_Sale() THEN 1 ELSE -1 END AS NUMERIC (16, 1)) :: TFloat AS SummProfit_zavod_real
 
+           -- Цена с/с
          , CAST (CASE WHEN tmpOperationGroup.OperCount_Partner_real <> 0 THEN (tmpOperationGroup.SummIn_Partner_real - tmpOperationGroup.SummIn_Partner_60000 + tmpOperationGroup.SummIn_Partner_60000_A - tmpOperationGroup.SummIn_Partner_60000_P) / tmpOperationGroup.OperCount_Partner_real ELSE 0 END AS NUMERIC (16, 1)) :: TFloat AS PriceIn_branch
          , CAST (CASE WHEN tmpOperationGroup.OperCount_Partner_real <> 0 THEN  tmpOperationGroup.SummIn_Partner_real                                           / tmpOperationGroup.OperCount_Partner_real ELSE 0 END AS NUMERIC (16, 1)) :: TFloat AS PriceIn_zavod
 
+           -- Цена покупателя
          , CAST (CASE WHEN tmpOperationGroup.OperCount_Partner_real <> 0 THEN tmpOperationGroup.SummOut_Partner_real   / tmpOperationGroup.OperCount_Partner_real ELSE 0 END AS NUMERIC (16, 2)) :: TFloat AS PriceOut_Partner
          , CAST (CASE WHEN tmpOperationGroup.OperCount_Partner_real <> 0 THEN tmpOperationGroup.SummOut_PriceList_real / tmpOperationGroup.OperCount_Partner_real ELSE 0 END AS NUMERIC (16, 2)) :: TFloat AS PriceList_Partner
 
+           -- % рент
          , CAST (CASE WHEN tmpOperationGroup.SummIn_Partner_real - tmpOperationGroup.SummIn_Partner_60000 + tmpOperationGroup.SummIn_Partner_60000_A - tmpOperationGroup.SummIn_Partner_60000_P = 0
                        AND tmpOperationGroup.SummOut_Partner_real > 0
                            THEN 100
@@ -356,6 +375,7 @@ BEGIN
                                     / (tmpOperationGroup.SummIn_Partner_real - tmpOperationGroup.SummIn_Partner_60000 + tmpOperationGroup.SummIn_Partner_60000_A - tmpOperationGroup.SummIn_Partner_60000_P)
                       ELSE 0
                  END AS NUMERIC (16, 1)) :: TFloat AS Tax_branch
+           -- % рент
          , CAST (CASE WHEN tmpOperationGroup.SummIn_Partner_real = 0 AND tmpOperationGroup.SummOut_Partner_real > 0
                            THEN 100
                       WHEN tmpOperationGroup.SummIn_Partner_real <> 0
@@ -384,6 +404,7 @@ BEGIN
                 , CASE WHEN inIsPartner = TRUE THEN COALESCE (ContainerLO_Juridical.ObjectId,  COALESCE (ContainerLO_Member.ObjectId, 0 )) ELSE 0 END AS JuridicalId
                 , CASE WHEN ContainerLO_Member.ObjectId > 0 THEN zc_Enum_PaidKind_SecondForm() ELSE COALESCE (ContainerLO_PaidKind.ObjectId,0) END    AS PaidKindId
                 , ContainerLinkObject_InfoMoney.ObjectId AS InfoMoneyId
+                , CLO_PartionGoods.ObjectId              AS PartionGoodsId
 
                   -- 1.1. Кол-во, без AnalyzerId
                 , SUM (tmpContainer.OperCount) AS OperCount
@@ -465,17 +486,18 @@ BEGIN
                 , SUM (CASE WHEN tmpContainer.AccountId = zc_Enum_AnalyzerId_SummOut_110101() AND tmpContainer.isActive = TRUE THEN tmpContainer.SummOut_Change ELSE 0 END) AS SummOut_Change_110000_P
 
            FROM (SELECT MIContainer.WhereObjectId_analyzer  AS LocationId
-                      -- , MIContainer.ContainerId             AS ContainerId + inIsPartionGoods
-                      , CASE WHEN inIsGoods     = TRUE THEN MIContainer.ObjectId_analyzer    ELSE 0 END AS GoodsId
-                      , CASE WHEN inIsGoodsKind = TRUE THEN MIContainer.ObjectIntId_analyzer ELSE 0 END AS GoodsKindId
-                      , CASE WHEN inIsPartner   = TRUE THEN MIContainer.ObjectExtId_analyzer ELSE 0 END AS PartnerId
+                      , CASE WHEN inIsPartionGoods = TRUE THEN MIContainer.ContainerId          ELSE 0 END AS ContainerId
+                      , CASE WHEN inIsGoods        = TRUE THEN MIContainer.ObjectId_analyzer    ELSE 0 END AS GoodsId
+                      , CASE WHEN inIsGoodsKind    = TRUE THEN MIContainer.ObjectIntId_analyzer ELSE 0 END AS GoodsKindId
+                      , CASE WHEN inIsPartner      = TRUE THEN MIContainer.ObjectExtId_analyzer ELSE 0 END AS PartnerId
                       , MIContainer.ContainerId_analyzer
+                      , MIContainer.ContainerIntId_analyzer
                       , MIContainer.isActive
                       , COALESCE (MIContainer.AccountId, 0) AS AccountId
                       , COALESCE (MLO_Business.ObjectId, 0) AS BusinessId
                       , COALESCE (MLO_Branch.ObjectId, 0)   AS BranchId
                       , _tmpGoods.InfoMoneyId               AS InfoMoneyId_goods
-                      , CASE WHEN inIsTradeMark = TRUE OR inIsGoods   = TRUE THEN _tmpGoods.TradeMarkId ELSE 0 END AS TradeMarkId
+                      , CASE WHEN inIsTradeMark = TRUE OR inIsGoods = TRUE THEN _tmpGoods.TradeMarkId ELSE 0 END AS TradeMarkId
 
                         -- 1.1. Кол-во, без AnalyzerId
                       , SUM (CASE WHEN tmpAnalyzer.isSale = TRUE  AND tmpAnalyzer.isSumm = FALSE AND tmpAnalyzer.isLoss = FALSE THEN -1 * MIContainer.Amount
@@ -564,21 +586,25 @@ BEGIN
                                                                     AND MLO_Branch.DescId = zc_MILinkObject_Branch()
 
                  GROUP BY MIContainer.WhereObjectId_analyzer
-                        , CASE WHEN inIsGoods     = TRUE THEN MIContainer.ObjectId_analyzer    ELSE 0 END
-                        , CASE WHEN inIsGoodsKind = TRUE THEN MIContainer.ObjectIntId_analyzer ELSE 0 END
-                        , CASE WHEN inIsPartner   = TRUE THEN MIContainer.ObjectExtId_analyzer ELSE 0 END
+                        , CASE WHEN inIsGoods        = TRUE THEN MIContainer.ObjectId_analyzer    ELSE 0 END
+                        , CASE WHEN inIsGoodsKind    = TRUE THEN MIContainer.ObjectIntId_analyzer ELSE 0 END
+                        , CASE WHEN inIsPartner      = TRUE THEN MIContainer.ObjectExtId_analyzer ELSE 0 END
+                        , CASE WHEN inIsPartionGoods = TRUE THEN MIContainer.ContainerId          ELSE 0 END
                         , MIContainer.ContainerId_analyzer       
-                        -- , MIContainer.ContainerId + inIsPartionGoods
+                        , MIContainer.ContainerIntId_analyzer
                         , MIContainer.AccountId
                         , MIContainer.isActive
                         , MLO_Business.ObjectId
                         , MLO_Branch.ObjectId
                         , _tmpGoods.InfoMoneyId
-                        , CASE WHEN inIsTradeMark = TRUE OR inIsGoods   = TRUE THEN _tmpGoods.TradeMarkId ELSE 0 END
+                        , CASE WHEN inIsTradeMark = TRUE OR inIsGoods = TRUE THEN _tmpGoods.TradeMarkId ELSE 0 END
                       
                   ) AS tmpContainer
      
                       LEFT JOIN tmpAccount ON tmpAccount.AccountId = tmpContainer.AccountId
+                      LEFT JOIN ContainerLinkObject AS CLO_PartionGoods
+                                                    ON CLO_PartionGoods.ContainerId = tmpContainer.ContainerIntId_analyzer
+                                                   AND CLO_PartionGoods.DescId = zc_ContainerLinkObject_PartionGoods()
 
                       LEFT JOIN ContainerLinkObject AS ContainerLO_Juridical
                                                     ON ContainerLO_Juridical.ContainerId = tmpContainer.ContainerId_analyzer
@@ -607,6 +633,7 @@ BEGIN
                              , tmpContainer.TradeMarkId
                              , CASE WHEN ContainerLO_Member.ObjectId > 0 THEN zc_Enum_PaidKind_SecondForm() ELSE COALESCE (ContainerLO_PaidKind.ObjectId,0) END
                              , CASE WHEN inIsPartner = TRUE THEN COALESCE (ContainerLO_Juridical.ObjectId,  COALESCE (ContainerLO_Member.ObjectId, 0 )) ELSE 0 END
+                             , CLO_PartionGoods.ObjectId
                              , ContainerLinkObject_InfoMoney.ObjectId
 
                     ) AS tmpOperationGroup
@@ -621,6 +648,7 @@ BEGIN
           LEFT JOIN Object AS Object_Goods on Object_Goods.Id = tmpOperationGroup.GoodsId
           LEFT JOIN Object AS Object_GoodsKind ON Object_GoodsKind.Id = tmpOperationGroup.GoodsKindId
           LEFT JOIN Object AS Object_TradeMark ON Object_TradeMark.Id = tmpOperationGroup.TradeMarkId
+          LEFT JOIN Object AS Object_PartionGoods ON Object_PartionGoods.Id = tmpOperationGroup.PartionGoodsId
 
           LEFT JOIN ObjectLink AS ObjectLink_Goods_GoodsGroup
                                ON ObjectLink_Goods_GoodsGroup.ObjectId = Object_Goods.Id
@@ -641,6 +669,20 @@ BEGIN
           LEFT JOIN Object_InfoMoney_View AS View_InfoMoney ON View_InfoMoney.InfoMoneyId = tmpOperationGroup.InfoMoneyId
           LEFT JOIN Object_InfoMoney_View AS View_InfoMoney_Goods ON View_InfoMoney_Goods.InfoMoneyId = tmpOperationGroup.InfoMoneyId_goods
           
+          LEFT JOIN ObjectLink AS ObjectLink_Juridical_Retail
+                               ON ObjectLink_Juridical_Retail.ObjectId = Object_Juridical.Id
+                              AND ObjectLink_Juridical_Retail.DescId = zc_ObjectLink_Juridical_Retail()
+          LEFT JOIN Object AS Object_Retail ON Object_Retail.Id = ObjectLink_Juridical_Retail.ChildObjectId
+
+         LEFT JOIN ObjectLink AS ObjectLink_Partner_Area
+                              ON ObjectLink_Partner_Area.ObjectId = Object_Partner.Id
+                             AND ObjectLink_Partner_Area.DescId = zc_ObjectLink_Partner_Area()
+         LEFT JOIN Object AS Object_Area ON Object_Area.Id = ObjectLink_Partner_Area.ChildObjectId
+
+         LEFT JOIN ObjectLink AS ObjectLink_Partner_PartnerTag
+                              ON ObjectLink_Partner_PartnerTag.ObjectId = Object_Partner.Id
+                             AND ObjectLink_Partner_PartnerTag.DescId = zc_ObjectLink_Partner_PartnerTag()
+         LEFT JOIN Object AS Object_PartnerTag ON Object_PartnerTag.Id = ObjectLink_Partner_PartnerTag.ChildObjectId
   ;
          
 END;

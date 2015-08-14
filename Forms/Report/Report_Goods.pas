@@ -64,6 +64,15 @@ type
     edUnitGroup: TcxButtonEdit;
     GuidesUnitGroup: TdsdGuides;
     GoodsGroupGuides: TdsdGuides;
+    Amount_Change: TcxGridDBColumn;
+    Summ_Change_branch: TcxGridDBColumn;
+    Amount_40200: TcxGridDBColumn;
+    Summ_40200_branch: TcxGridDBColumn;
+    Amount_Loss: TcxGridDBColumn;
+    Summ_Loss_branch: TcxGridDBColumn;
+    Summ_Change_zavod: TcxGridDBColumn;
+    Summ_40200_zavod: TcxGridDBColumn;
+    Summ_Loss_zavod: TcxGridDBColumn;
   private
     { Private declarations }
   public

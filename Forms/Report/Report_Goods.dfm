@@ -75,6 +75,51 @@ inherited Report_GoodsForm: TReport_GoodsForm
               Format = ',0.####'
               Kind = skSum
               Column = SummPartnerOut
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Amount_Change
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Summ_Change_branch
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Summ_Change_zavod
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Amount_40200
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Summ_40200_branch
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Summ_40200_zavod
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Amount_Loss
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Summ_Loss_branch
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Summ_Loss_zavod
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -126,6 +171,51 @@ inherited Report_GoodsForm: TReport_GoodsForm
               Format = ',0.####'
               Kind = skSum
               Column = SummPartnerOut
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Amount_Change
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Summ_Change_branch
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Summ_Change_zavod
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Amount_40200
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Summ_40200_branch
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Summ_40200_zavod
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Amount_Loss
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Summ_Loss_branch
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Summ_Loss_zavod
             end>
           OptionsData.CancelOnExit = True
           OptionsData.Deleting = False
@@ -453,6 +543,96 @@ inherited Report_GoodsForm: TReport_GoodsForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 80
+          end
+          object Amount_Change: TcxGridDBColumn
+            Caption = #1050#1086#1083'. '#1074#1077#1089'  ('#1089#1082'.1%)'
+            DataBinding.FieldName = 'Amount_Change'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 70
+          end
+          object Summ_Change_branch: TcxGridDBColumn
+            Caption = #1057#1091#1084#1084#1072' '#1089'/'#1089' '#1092#1083'. ('#1089#1082'.1%)'
+            DataBinding.FieldName = 'Summ_Change_branch'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 70
+          end
+          object Summ_Change_zavod: TcxGridDBColumn
+            Caption = #1057#1091#1084#1084#1072' '#1089'/'#1089' '#1079#1072#1074#1086#1076' ('#1089#1082'.1%)'
+            DataBinding.FieldName = 'Summ_Change_zavod'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 70
+          end
+          object Amount_40200: TcxGridDBColumn
+            Caption = #1050#1086#1083'. '#1074#1077#1089' (-)'#1091#1073#1099#1083#1100' (+)'#1101#1082#1086#1085#1086#1084'.'
+            DataBinding.FieldName = 'Amount_40200'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 70
+          end
+          object Summ_40200_branch: TcxGridDBColumn
+            Caption = #1057#1091#1084#1084#1072' '#1089'/'#1089' '#1092#1083'. (-)'#1091#1073#1099#1083#1100' (+)'#1101#1082#1086#1085#1086#1084'.'
+            DataBinding.FieldName = 'Summ_40200_branch'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 70
+          end
+          object Summ_40200_zavod: TcxGridDBColumn
+            Caption = #1057#1091#1084#1084#1072' '#1089'/'#1089' '#1079#1072#1074#1086#1076' (-)'#1091#1073#1099#1083#1100' (+)'#1101#1082#1086#1085#1086#1084'.'
+            DataBinding.FieldName = 'Summ_40200_zavod'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 70
+          end
+          object Amount_Loss: TcxGridDBColumn
+            Caption = #1057#1087#1080#1089#1072#1085#1080#1077' '#1082#1086#1083'-'#1074#1086
+            DataBinding.FieldName = 'Amount_Loss'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 70
+          end
+          object Summ_Loss_branch: TcxGridDBColumn
+            Caption = #1057#1087#1080#1089#1072#1085#1080#1077' '#1089#1091#1084#1084#1072' '#1089'/'#1089' ('#1092#1083'.)'
+            DataBinding.FieldName = 'Summ_Loss_branch'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 70
+          end
+          object Summ_Loss_zavod: TcxGridDBColumn
+            Caption = #1057#1087#1080#1089#1072#1085#1080#1077' '#1089#1091#1084#1084#1072' '#1089'/'#1089' ('#1079#1072#1074#1086#1076')'
+            DataBinding.FieldName = 'Summ_Loss_zavod'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 70
           end
           object MovementDescName_order: TcxGridDBColumn
             DataBinding.FieldName = 'MovementDescName_order'

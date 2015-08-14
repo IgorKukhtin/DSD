@@ -59,6 +59,7 @@ type
     ProfitLossCode: TcxGridDBColumn;
     MeasureName: TcxGridDBColumn;
     cbMO_all: TcxCheckBox;
+    PartionGoods: TcxGridDBColumn;
   private
     { Private declarations }
   public

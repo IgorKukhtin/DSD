@@ -617,6 +617,31 @@ BEGIN
            OR ((_tmpMaster.StartSumm + _tmpMaster.IncomeSumm + _tmpMaster.CalcSumm_external) <> 0)
         ;
 
+
+        -- !!!бпелеммн-1!!!
+        /*UPDATE MovementItemContainer SET ContainerIntId_analyzer = ContainerId
+        WHERE MovementItemContainer.OperDate BETWEEN inStartDate AND inEndDate
+          AND MovementItemContainer.MovementDescId = zc_Movement_Sale()
+          AND MovementItemContainer.DescId = zc_MIContainer_Count()
+          AND MovementItemContainer.ContainerIntId_analyzer IS NULL
+       ;
+        -- !!!бпелеммн-2!!!
+        CREATE TEMP TABLE _tmpMIContainer_update_analyzer (MovementId Integer, MovementItemId Integer, ContainerId Integer) ON COMMIT DROP;
+        INSERT INTO _tmpMIContainer_update_analyzer (MovementId, MovementItemId, ContainerId)
+              SELECT DISTINCT MIContainer.MovementId, MIContainer.MovementItemId, MIContainer.ContainerId
+              FROM MovementItemContainer AS MIContainer
+              WHERE MIContainer.OperDate BETWEEN inStartDate AND inEndDate
+                AND MIContainer.MovementDescId = zc_Movement_Sale()
+                AND MIContainer.DescId = zc_MIContainer_Count()
+       ;
+        UPDATE MovementItemContainer SET ContainerIntId_analyzer = _tmpMIContainer_update_analyzer.ContainerId
+        FROM _tmpMIContainer_update_analyzer
+        WHERE MovementItemContainer.MovementId     = _tmpMIContainer_update_analyzer.MovementId
+          AND MovementItemContainer.MovementItemId = _tmpMIContainer_update_analyzer.MovementItemId
+          AND MovementItemContainer.DescId         = zc_MIContainer_Summ()
+          AND MovementItemContainer.ContainerIntId_analyzer IS NULL
+       ;*/
+
      END IF; -- if inInsert > 0
 
      IF inInsert <> 12345 THEN -- 12345 - ДКЪ Load_PostgreSql
