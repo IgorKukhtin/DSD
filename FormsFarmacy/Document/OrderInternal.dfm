@@ -1,26 +1,26 @@
 inherited OrderInternalForm: TOrderInternalForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1047#1072#1103#1074#1082#1072' '#1074#1085#1091#1090#1088#1077#1085#1085#1103#1103'>'
   ClientHeight = 532
-  ClientWidth = 1230
-  ExplicitLeft = -94
-  ExplicitWidth = 1238
+  ClientWidth = 1229
+  ExplicitLeft = -431
+  ExplicitWidth = 1237
   ExplicitHeight = 559
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 75
-    Width = 1230
+    Width = 1229
     Height = 457
     ExplicitTop = 75
     ExplicitWidth = 1230
     ExplicitHeight = 457
     ClientRectBottom = 457
-    ClientRectRight = 1230
+    ClientRectRight = 1229
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 1230
       ExplicitHeight = 433
       inherited cxGrid: TcxGrid
-        Width = 1230
+        Width = 1229
         Height = 205
         ExplicitWidth = 1230
         ExplicitHeight = 205
@@ -239,16 +239,29 @@ inherited OrderInternalForm: TOrderInternalForm
             DataBinding.FieldName = 'MCS'
             Width = 37
           end
+          object colGoodsGroupName: TcxGridDBColumn
+            Caption = #1043#1088#1091#1087#1087#1072' '#1090#1086#1074#1072#1088#1086#1074
+            DataBinding.FieldName = 'GoodsGroupName'
+            Options.Editing = False
+            Width = 104
+          end
+          object colNDSKindName: TcxGridDBColumn
+            Caption = #1057#1090#1072#1074#1082#1072' '#1053#1044#1057
+            DataBinding.FieldName = 'NDSKindName'
+            Options.Editing = False
+            Width = 71
+          end
         end
       end
       object cxGrid1: TcxGrid
         Left = 0
         Top = 208
-        Width = 1230
+        Width = 1229
         Height = 225
         Align = alBottom
         PopupMenu = PopupMenu
         TabOrder = 1
+        ExplicitWidth = 1230
         object cxGridDBTableView1: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = ChildDS
@@ -428,15 +441,16 @@ inherited OrderInternalForm: TOrderInternalForm
       object cxSplitter1: TcxSplitter
         Left = 0
         Top = 205
-        Width = 1230
+        Width = 1229
         Height = 3
         AlignSplitter = salBottom
         Control = cxGrid
+        ExplicitWidth = 1230
       end
     end
   end
   inherited DataPanel: TPanel
-    Width = 1230
+    Width = 1229
     Height = 49
     ParentBackground = False
     TabOrder = 3

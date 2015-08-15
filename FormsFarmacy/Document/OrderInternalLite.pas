@@ -46,6 +46,8 @@ type
     colRemainsInUnit: TcxGridDBColumn;
     colMCS: TcxGridDBColumn;
     colIncome_Amount: TcxGridDBColumn;
+    colNDSKindName: TcxGridDBColumn;
+    colGoodsGroupName: TcxGridDBColumn;
   private
     { Private declarations }
   public

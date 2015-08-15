@@ -1,25 +1,26 @@
 inherited OrderInternalLiteForm: TOrderInternalLiteForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1047#1072#1103#1074#1082#1072' '#1074#1085#1091#1090#1088#1077#1085#1085#1103#1103'>'
   ClientHeight = 532
-  ClientWidth = 1222
-  ExplicitWidth = 1230
+  ClientWidth = 1071
+  ExplicitLeft = -273
+  ExplicitWidth = 1079
   ExplicitHeight = 559
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 75
-    Width = 1222
+    Width = 1071
     Height = 457
     ExplicitTop = 75
     ExplicitWidth = 1222
     ExplicitHeight = 457
     ClientRectBottom = 457
-    ClientRectRight = 1222
+    ClientRectRight = 1071
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 1222
       ExplicitHeight = 433
       inherited cxGrid: TcxGrid
-        Width = 1222
+        Width = 1071
         Height = 430
         ExplicitWidth = 1222
         ExplicitHeight = 430
@@ -165,20 +166,33 @@ inherited OrderInternalLiteForm: TOrderInternalLiteForm
             DataBinding.FieldName = 'Income_Amount'
             Width = 69
           end
+          object colGoodsGroupName: TcxGridDBColumn
+            Caption = #1043#1088#1091#1087#1087#1072' '#1090#1086#1074#1072#1088#1086#1074
+            DataBinding.FieldName = 'GoodsGroupName'
+            Options.Editing = False
+            Width = 108
+          end
+          object colNDSKindName: TcxGridDBColumn
+            Caption = #1057#1090#1072#1074#1082#1072' '#1053#1044#1057
+            DataBinding.FieldName = 'NDSKindName'
+            Options.Editing = False
+            Width = 69
+          end
         end
       end
       object cxSplitter1: TcxSplitter
         Left = 0
         Top = 430
-        Width = 1222
+        Width = 1071
         Height = 3
         AlignSplitter = salBottom
         Control = cxGrid
+        ExplicitWidth = 1222
       end
     end
   end
   inherited DataPanel: TPanel
-    Width = 1222
+    Width = 1071
     Height = 49
     TabOrder = 3
     ExplicitWidth = 1222
