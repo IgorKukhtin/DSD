@@ -12,17 +12,17 @@ inherited OrderInternalForm: TOrderInternalForm
     Width = 1229
     Height = 457
     ExplicitTop = 75
-    ExplicitWidth = 1230
+    ExplicitWidth = 1229
     ExplicitHeight = 457
     ClientRectBottom = 457
     ClientRectRight = 1229
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 1230
+      ExplicitWidth = 1229
       ExplicitHeight = 433
       inherited cxGrid: TcxGrid
         Width = 1229
         Height = 205
-        ExplicitWidth = 1230
+        ExplicitWidth = 1229
         ExplicitHeight = 205
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
@@ -207,7 +207,7 @@ inherited OrderInternalForm: TOrderInternalForm
             Width = 78
           end
           object clMinimumLot: TcxGridDBColumn
-            Caption = #1043#1088#1091#1087#1087#1086#1074#1072#1103' '#1091#1087#1072#1082#1086#1074#1082#1072
+            Caption = #1052#1080#1085#1080#1084#1072#1083#1100#1085#1086#1077' '#1086#1082#1088#1091#1075#1083#1077#1085#1080#1077
             DataBinding.FieldName = 'MinimumLot'
             Options.Editing = False
             Width = 88
@@ -261,7 +261,6 @@ inherited OrderInternalForm: TOrderInternalForm
         Align = alBottom
         PopupMenu = PopupMenu
         TabOrder = 1
-        ExplicitWidth = 1230
         object cxGridDBTableView1: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = ChildDS
@@ -424,7 +423,7 @@ inherited OrderInternalForm: TOrderInternalForm
             IsCaptionAssigned = True
           end
           object colMinimumLot: TcxGridDBColumn
-            Caption = #1043#1088#1091#1087#1087'. '#1091#1087#1072#1082#1086#1074#1082#1072
+            Caption = #1052#1080#1085'. '#1086#1082#1088#1091#1075#1083#1077#1085#1080#1077
             DataBinding.FieldName = 'MinimumLot'
             Width = 83
           end
@@ -445,7 +444,6 @@ inherited OrderInternalForm: TOrderInternalForm
         Height = 3
         AlignSplitter = salBottom
         Control = cxGrid
-        ExplicitWidth = 1230
       end
     end
   end
@@ -454,7 +452,7 @@ inherited OrderInternalForm: TOrderInternalForm
     Height = 49
     ParentBackground = False
     TabOrder = 3
-    ExplicitWidth = 1230
+    ExplicitWidth = 1229
     ExplicitHeight = 49
     inherited edInvNumber: TcxTextEdit
       Left = 155

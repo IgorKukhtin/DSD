@@ -40,12 +40,10 @@ inherited GoodsPartnerCodeForm: TGoodsPartnerCodeForm
                 Kind = bkEllipsis
               end>
             Properties.ReadOnly = True
-            HeaderAlignmentVert = vaCenter
           end
           object colGoodsMainName: TcxGridDBColumn
             Caption = #1053#1072#1079#1074#1072#1085#1080#1077
             DataBinding.FieldName = 'GoodsMainName'
-            HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 187
           end
@@ -53,38 +51,33 @@ inherited GoodsPartnerCodeForm: TGoodsPartnerCodeForm
             Caption = #1050#1086#1076' '#1087#1072#1088#1090#1085#1077#1088#1072
             DataBinding.FieldName = 'GoodsCodeInt'
             HeaderAlignmentHorz = taRightJustify
-            HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 70
           end
           object clCode: TcxGridDBColumn
             Caption = #1050#1086#1076' '#1087#1072#1088#1090#1085#1077#1088#1072' ('#1089#1090#1088#1086#1082')'
             DataBinding.FieldName = 'GoodsCode'
-            HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 107
           end
           object clName: TcxGridDBColumn
             Caption = #1053#1072#1079#1074#1072#1085#1080#1077' '#1091' '#1087#1072#1088#1090#1085#1077#1088#1072
             DataBinding.FieldName = 'GoodsName'
-            HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 189
           end
           object clMakerName: TcxGridDBColumn
             Caption = #1055#1088#1086#1080#1079#1074#1086#1076#1080#1090#1077#1083#1100
             DataBinding.FieldName = 'MakerName'
-            HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 110
           end
           object clMinimumLot: TcxGridDBColumn
-            Caption = #1043#1088#1091#1087#1087#1086#1074#1072#1103' '#1091#1087#1072#1082#1086#1074#1082#1072
+            Caption = #1052#1080#1085#1080#1084#1072#1083#1100#1085#1086#1077' '#1086#1082#1088#1091#1075#1083#1077#1085#1080#1077
             DataBinding.FieldName = 'MinimumLot'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 0
             Properties.DisplayFormat = '0'
-            HeaderAlignmentVert = vaCenter
             Width = 134
           end
         end
@@ -271,6 +264,63 @@ inherited GoodsPartnerCodeForm: TGoodsPartnerCodeForm
       Caption = 'dsdUpdateDataSet'
       DataSource = MasterDS
     end
+    object actStartLoad: TMultiAction
+      Category = #1047#1072#1075#1088#1091#1079#1082#1072
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actGetImportSetting_Goods_MinimumLot
+        end
+        item
+          Action = actDelete_ObjectFloat_Goods_MinimumLot
+        end
+        item
+          Action = actDoLoad
+        end
+        item
+          Action = actRefresh
+        end>
+      QuestionBeforeExecute = #1053#1072#1095#1072#1090#1100' '#1079#1072#1075#1088#1091#1079#1082#1091' '#1084#1080#1085#1080#1084#1072#1083#1100#1085#1086#1075#1086' '#1086#1082#1088#1091#1075#1083#1077#1085#1080#1103'?'
+      Caption = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1084#1080#1085#1080#1084#1072#1083#1100#1085#1086#1077' '#1086#1082#1088#1091#1075#1083#1077#1085#1080#1077
+      Hint = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1084#1080#1085#1080#1084#1072#1083#1100#1085#1086#1077' '#1086#1082#1088#1091#1075#1083#1077#1085#1080#1077
+      ImageIndex = 41
+    end
+    object actGetImportSetting_Goods_MinimumLot: TdsdExecStoredProc
+      Category = #1047#1072#1075#1088#1091#1079#1082#1072
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spGetImportSetting_Goods_MinimumLot
+      StoredProcList = <
+        item
+          StoredProc = spGetImportSetting_Goods_MinimumLot
+        end>
+      Caption = 'actGetImportSetting_Goods_MinimumLot'
+    end
+    object actDelete_ObjectFloat_Goods_MinimumLot: TdsdExecStoredProc
+      Category = #1047#1072#1075#1088#1091#1079#1082#1072
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spDelete_ObjectFloat_Goods_MinimumLot
+      StoredProcList = <
+        item
+          StoredProc = spDelete_ObjectFloat_Goods_MinimumLot
+        end>
+      Caption = 'actDelete_ObjectFloat_Goods_MinimumLot'
+    end
+    object actDoLoad: TExecuteImportSettingsAction
+      Category = #1047#1072#1075#1088#1091#1079#1082#1072
+      MoveParams = <>
+      ImportSettingsId.Value = Null
+      ImportSettingsId.Component = FormParams
+      ImportSettingsId.ComponentItem = 'ImportSettingId'
+      ExternalParams = <
+        item
+          Name = 'inObjectId'
+          Component = FormParams
+          ComponentItem = 'ObjectId'
+          ParamType = ptInput
+        end>
+    end
   end
   inherited MasterDS: TDataSource
     Left = 56
@@ -342,6 +392,12 @@ inherited GoodsPartnerCodeForm: TGoodsPartnerCodeForm
         item
           Visible = True
           ItemName = 'dxBarStatic'
+        end
+        item
+          UserDefine = [udPaintStyle]
+          UserPaintStyle = psCaptionGlyph
+          Visible = True
+          ItemName = 'dxBarButton1'
         end>
     end
     inherited bbInsert: TdxBarButton
@@ -370,6 +426,10 @@ inherited GoodsPartnerCodeForm: TGoodsPartnerCodeForm
       Hint = 'New Item'
       Visible = ivAlways
       Control = edPartnerCode
+    end
+    object dxBarButton1: TdxBarButton
+      Action = actStartLoad
+      Category = 0
     end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
@@ -405,6 +465,7 @@ inherited GoodsPartnerCodeForm: TGoodsPartnerCodeForm
   object PartnerCodeGuides: TdsdGuides
     KeyField = 'Id'
     LookupControl = edPartnerCode
+    Key = '0'
     FormNameParam.Value = 'TPartnerCodeForm'
     FormNameParam.DataType = ftString
     FormName = 'TPartnerCodeForm'
@@ -520,5 +581,63 @@ inherited GoodsPartnerCodeForm: TGoodsPartnerCodeForm
     PackSize = 1
     Left = 344
     Top = 288
+  end
+  object spDelete_ObjectFloat_Goods_MinimumLot: TdsdStoredProc
+    StoredProcName = 'gpDelete_ObjectFloat_Goods_MinimumLot'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inObjectId'
+        Component = FormParams
+        ComponentItem = 'ObjectId'
+        ParamType = ptInput
+      end>
+    PackSize = 1
+    Left = 520
+    Top = 312
+  end
+  object spGetImportSetting_Goods_MinimumLot: TdsdStoredProc
+    StoredProcName = 'gpGet_DefaultValue'
+    DataSets = <
+      item
+      end>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inDefaultKey'
+        Value = 'TGoodsPartnerCodeForm;zc_Object_ImportSetting_Goods_MinimumLot'
+        DataType = ftString
+        ParamType = ptInput
+      end
+      item
+        Name = 'inUserKeyId'
+        Value = '0'
+        ParamType = ptInput
+      end
+      item
+        Name = 'gpGet_DefaultValue'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'ImportSettingId'
+        DataType = ftString
+      end>
+    PackSize = 1
+    Left = 520
+    Top = 264
+  end
+  object FormParams: TdsdFormParams
+    Params = <
+      item
+        Name = 'ObjectId'
+        Component = PartnerCodeGuides
+        ComponentItem = 'Key'
+      end
+      item
+        Name = 'ImportSettingId'
+        Value = Null
+      end>
+    Left = 472
+    Top = 104
   end
 end

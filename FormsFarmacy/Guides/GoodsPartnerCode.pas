@@ -11,7 +11,8 @@ uses
   cxGridCustomTableView, cxGridTableView, cxGridDBTableView, cxGridCustomView,
   Vcl.Controls, cxGrid, AncestorGuides, cxPCdxBarPopupMenu, Vcl.Menus, cxPC,
   dxSkinsCore, dxSkinsDefaultPainters, cxContainer, cxTextEdit, cxMaskEdit,
-  cxButtonEdit, cxLabel, dsdGuides, cxSplitter, Vcl.DBActns;
+  cxButtonEdit, cxLabel, dsdGuides, cxSplitter, Vcl.DBActns, dxBarBuiltInMenu,
+  cxNavigator, ExternalLoad;
 
 type
   TGoodsPartnerCodeForm = class(TAncestorGuidesForm)
@@ -40,6 +41,14 @@ type
     dsdUpdateDataSet: TdsdUpdateDataSet;
     clMinimumLot: TcxGridDBColumn;
     spUpdate_Goods_MinimumLot: TdsdStoredProc;
+    spDelete_ObjectFloat_Goods_MinimumLot: TdsdStoredProc;
+    actStartLoad: TMultiAction;
+    actDelete_ObjectFloat_Goods_MinimumLot: TdsdExecStoredProc;
+    actDoLoad: TExecuteImportSettingsAction;
+    spGetImportSetting_Goods_MinimumLot: TdsdStoredProc;
+    actGetImportSetting_Goods_MinimumLot: TdsdExecStoredProc;
+    dxBarButton1: TdxBarButton;
+    FormParams: TdsdFormParams;
   private
     { Private declarations }
   public
