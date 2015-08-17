@@ -11,7 +11,8 @@ uses
   cxClasses, dsdDB, Datasnap.DBClient, dsdAction, Vcl.ActnList,
   cxPropertiesStore, cxGridLevel, cxGridCustomView, cxGridCustomTableView,
   cxGridTableView, cxGridDBTableView, cxGrid, cxPC, cxContainer, cxTextEdit,
-  cxLabel, cxCurrencyEdit, cxButtonEdit, Vcl.DBActns, cxMaskEdit, Vcl.ExtCtrls;
+  cxLabel, cxCurrencyEdit, cxButtonEdit, Vcl.DBActns, cxMaskEdit, Vcl.ExtCtrls,
+  dxBarBuiltInMenu, cxNavigator;
 
 type
   TChoiceGoodsFromPriceListForm = class(TAncestorEnumForm)
@@ -44,6 +45,11 @@ type
     spDeleteLink: TdsdStoredProc;
     colMargin: TcxGridDBColumn;
     colCashPrice: TcxGridDBColumn;
+    edProducerSearch: TcxTextEdit;
+    cxLabel2: TcxLabel;
+    actRefreshSearch2: TdsdExecStoredProc;
+    cxLabel3: TcxLabel;
+    cxLabel4: TcxLabel;
   private
     { Private declarations }
   public
