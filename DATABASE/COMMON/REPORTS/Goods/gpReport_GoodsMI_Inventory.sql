@@ -1,13 +1,10 @@
--- Function: gpReport_GoodsMI_Production ()
+-- Function: gpReport_GoodsMI_Inventory ()
 
-DROP FUNCTION IF EXISTS gpReport_GoodsMI_Production (TDateTime, TDateTime, Integer, Boolean, Integer, TVarChar);
-DROP FUNCTION IF EXISTS gpReport_GoodsMI_Production (TDateTime, TDateTime, Integer, Boolean, Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpReport_GoodsMI_Inventory (TDateTime, TDateTime, Integer, Integer, TVarChar);
 
-CREATE OR REPLACE FUNCTION gpReport_GoodsMI_Production (
+CREATE OR REPLACE FUNCTION gpReport_GoodsMI_Inventory (
     IN inStartDate    TDateTime ,  
     IN inEndDate      TDateTime ,
-    IN inDescId       Integer   ,  --производство смешивание (8) , разделение (9)
-    IN inIsActive     Boolean   ,  -- приход true/ расход false
     IN inUnitId       Integer   , 
     IN inGoodsGroupId Integer   ,
     IN inSession      TVarChar    -- сессия пользователя
@@ -18,11 +15,15 @@ RETURNS TABLE (GoodsGroupName TVarChar, GoodsGroupNameFull TVarChar
              , TradeMarkName TVarChar
              , PartionGoods TVarChar
              , LocationCode Integer, LocationName TVarChar
-             , LocationCode_by Integer, LocationName_by TVarChar
+             , AmountIn TFloat, AmountIn_Weight TFloat, AmountIn_Sh TFloat
+             , AmountOut TFloat, AmountOut_Weight TFloat, AmountOut_Sh TFloat
              , Amount TFloat, Amount_Weight TFloat, Amount_Sh TFloat
+             , SummIn_zavod TFloat, SummIn_branch TFloat, SummIn_60000 TFloat
+             , SummOut_zavod TFloat, SummOut_branch TFloat, SummOut_60000 TFloat
              , Summ_zavod TFloat, Summ_branch TFloat, Summ_60000 TFloat
+             , PriceIn_zavod TFloat, PriceIn_branch TFloat
+             , PriceOut_zavod TFloat, PriceOut_branch TFloat
              , Price_zavod TFloat, Price_branch TFloat
-             , OperDate TDateTime
              )   
 AS
 $BODY$
@@ -86,58 +87,77 @@ BEGIN
 
          , Object_Location.ObjectCode AS LocationCode
          , Object_Location.ValueData  AS LocationName
-         , Object_Location_by.ObjectCode AS LocationCode_by
-         , Object_Location_by.ValueData  AS LocationName_by
 
-         , tmpOperationGroup.Amount        :: TFloat AS Amount
-         , tmpOperationGroup.Amount_Weight :: TFloat AS Amount_Weight
-         , tmpOperationGroup.Amount_Sh     :: TFloat AS Amount_Sh
+         , tmpOperationGroup.AmountIn        :: TFloat AS AmountIn
+         , tmpOperationGroup.AmountIn_Weight :: TFloat AS AmountIn_Weight
+         , tmpOperationGroup.AmountIn_Sh     :: TFloat AS AmountIn_Sh
 
-         , tmpOperationGroup.Summ_branch :: TFloat AS Summ_branch
-         , tmpOperationGroup.Summ_zavod  :: TFloat AS Summ_zavod
-         , tmpOperationGroup.Summ_60000  :: TFloat AS Summ_60000
+         , tmpOperationGroup.AmountOut        :: TFloat AS AmountOut
+         , tmpOperationGroup.AmountOut_Weight :: TFloat AS AmountOut_Weight
+         , tmpOperationGroup.AmountOut_Sh     :: TFloat AS AmountOut_Sh
 
-         , CASE WHEN tmpOperationGroup.Amount <> 0 THEN tmpOperationGroup.Summ_zavod / tmpOperationGroup.Amount ELSE 0 END :: TFloat AS Price_zavod
-         , CASE WHEN tmpOperationGroup.Amount <> 0 THEN tmpOperationGroup.Summ_branch / tmpOperationGroup.Amount ELSE 0 END :: TFloat AS Price_branch
+         , (tmpOperationGroup.AmountIn        - tmpOperationGroup.AmountOut)        :: TFloat AS Amount
+         , (tmpOperationGroup.AmountIn_Weight - tmpOperationGroup.AmountOut_Weight) :: TFloat AS Amount_Weight
+         , (tmpOperationGroup.AmountIn_Sh     - tmpOperationGroup.AmountOut_Sh)     :: TFloat AS Amount_Sh
 
-         , tmpOperationGroup.OperDate
+         , tmpOperationGroup.SummIn_branch :: TFloat AS SummIn_branch
+         , tmpOperationGroup.SummIn_zavod  :: TFloat AS SummIn_zavod
+         , tmpOperationGroup.SummIn_60000  :: TFloat AS SummIn_60000
+
+         , tmpOperationGroup.SummOut_branch :: TFloat AS SummOut_branch
+         , tmpOperationGroup.SummOut_zavod  :: TFloat AS SummOut_zavod
+         , tmpOperationGroup.SummOut_60000  :: TFloat AS SummOut_60000
+
+         , (tmpOperationGroup.SummIn_branch - tmpOperationGroup.SummOut_branch) :: TFloat AS Summ_branch
+         , (tmpOperationGroup.SummIn_zavod  - tmpOperationGroup.SummOut_zavod)  :: TFloat AS Summ_zavod
+         , (tmpOperationGroup.SummIn_60000  - tmpOperationGroup.SummOut_60000)  :: TFloat AS Summ_60000
+
+         , CASE WHEN tmpOperationGroup.AmountIn <> 0 THEN tmpOperationGroup.SummIn_zavod  / tmpOperationGroup.AmountIn ELSE 0 END :: TFloat AS PriceIn_zavod
+         , CASE WHEN tmpOperationGroup.AmountIn <> 0 THEN tmpOperationGroup.SummIn_branch / tmpOperationGroup.AmountIn ELSE 0 END :: TFloat AS PriceIn_branch
+         , CASE WHEN tmpOperationGroup.AmountOut <> 0 THEN tmpOperationGroup.SummOut_zavod  / tmpOperationGroup.AmountOut ELSE 0 END :: TFloat AS PriceOut_zavod
+         , CASE WHEN tmpOperationGroup.AmountOut <> 0 THEN tmpOperationGroup.SummOut_branch / tmpOperationGroup.AmountOut ELSE 0 END :: TFloat AS PriceOut_branch
+         , CASE WHEN (tmpOperationGroup.AmountIn - tmpOperationGroup.AmountOut) <> 0 THEN (tmpOperationGroup.SummIn_zavod  - tmpOperationGroup.SummOut_zavod)  / (tmpOperationGroup.AmountIn - tmpOperationGroup.AmountOut) ELSE 0 END :: TFloat AS Price_zavod
+         , CASE WHEN (tmpOperationGroup.AmountIn - tmpOperationGroup.AmountOut) <> 0 THEN (tmpOperationGroup.SummIn_branch - tmpOperationGroup.SummOut_branch) / (tmpOperationGroup.AmountIn - tmpOperationGroup.AmountOut) ELSE 0 END :: TFloat AS Price_branch
 
      FROM (SELECT tmpContainer.UnitId
-                , tmpContainer.UnitId_by
                 , CASE WHEN vbIsGroup = TRUE THEN 0 ELSE tmpContainer.GoodsId END AS GoodsId
                 , tmpContainer.GoodsKindId
-                , tmpContainer.OperDate
-                , CLO_PartionGoods.ObjectId AS PartionGoodsId
-                , SUM (tmpContainer.Amount) AS Amount
-                , SUM (tmpContainer.Amount * CASE WHEN _tmpGoods.MeasureId = zc_Measure_Sh() THEN _tmpGoods.Weight ELSE 1 END) AS Amount_Weight
-                , SUM (CASE WHEN _tmpGoods.MeasureId = zc_Measure_Sh() THEN tmpContainer.Amount ELSE 0 END) AS Amount_sh
-                , SUM (tmpContainer.Summ)   AS Summ_zavod
-                , SUM (CASE WHEN COALESCE (Object_Account_View.AccountDirectionId, 0) <> zc_Enum_AccountDirection_60200() THEN tmpContainer.Summ ELSE 0 END) AS Summ_branch
-                , SUM (CASE WHEN COALESCE (Object_Account_View.AccountDirectionId, 0) =  zc_Enum_AccountDirection_60200() THEN tmpContainer.Summ ELSE 0 END) AS Summ_60000
+                , CLO_PartionGoods.ObjectId     AS PartionGoodsId
+
+                , SUM (tmpContainer.AmountIn)   AS AmountIn
+                , SUM (tmpContainer.AmountIn * CASE WHEN _tmpGoods.MeasureId = zc_Measure_Sh() THEN _tmpGoods.Weight ELSE 1 END) AS AmountIn_Weight
+                , SUM (CASE WHEN _tmpGoods.MeasureId = zc_Measure_Sh() THEN tmpContainer.AmountIn ELSE 0 END) AS AmountIn_sh
+
+                , SUM (tmpContainer.AmountOut)  AS AmountOut
+                , SUM (tmpContainer.AmountOut * CASE WHEN _tmpGoods.MeasureId = zc_Measure_Sh() THEN _tmpGoods.Weight ELSE 1 END) AS AmountOut_Weight
+                , SUM (CASE WHEN _tmpGoods.MeasureId = zc_Measure_Sh() THEN tmpContainer.AmountOut ELSE 0 END) AS AmountOut_sh
+
+                , SUM (tmpContainer.SummIn)     AS SummIn_zavod
+                , SUM (tmpContainer.SummOut)    AS SummOut_zavod
+                , SUM (CASE WHEN COALESCE (Object_Account_View.AccountDirectionId, 0) <> zc_Enum_AccountDirection_60200() THEN tmpContainer.SummIn  ELSE 0 END) AS SummIn_branch
+                , SUM (CASE WHEN COALESCE (Object_Account_View.AccountDirectionId, 0) <> zc_Enum_AccountDirection_60200() THEN tmpContainer.SummOut ELSE 0 END) AS SummOut_branch
+                , SUM (CASE WHEN COALESCE (Object_Account_View.AccountDirectionId, 0) =  zc_Enum_AccountDirection_60200() THEN tmpContainer.SummIn  ELSE 0 END) AS SummIn_60000
+                , SUM (CASE WHEN COALESCE (Object_Account_View.AccountDirectionId, 0) =  zc_Enum_AccountDirection_60200() THEN tmpContainer.SummOut ELSE 0 END) AS SummOut_60000
 
            FROM (SELECT CASE WHEN vbIsGroup = TRUE THEN 0 ELSE MIContainer.ContainerId END AS ContainerId
                       , MIContainer.WhereObjectId_analyzer AS UnitId
-                      , MIContainer.ObjectExtId_Analyzer   AS UnitId_by
-                      , MIContainer.ObjectId_Analyzer      AS GoodsId       
+                      , MIContainer.ObjectId_Analyzer      AS GoodsId
                       , CASE WHEN vbIsGroup = TRUE THEN 0 ELSE MIContainer.ObjectIntId_Analyzer END AS GoodsKindId
-                      , CASE WHEN vbIsGroup = TRUE THEN zc_DateStart() ELSE MIContainer.OperDate END AS OperDate
                       , COALESCE (MIContainer.AccountId, 0)  AS AccountId
-                      , SUM (CASE WHEN MIContainer.DescId = zc_MIContainer_Count() THEN MIContainer.Amount ELSE 0 END * CASE WHEN MIContainer.isActive = TRUE THEN 1 ELSE -1 END) AS Amount
-                      , SUM (CASE WHEN MIContainer.DescId = zc_MIContainer_Summ()  THEN MIContainer.Amount ELSE 0 END * CASE WHEN MIContainer.isActive = TRUE THEN 1 ELSE -1 END) AS Summ
+                      , SUM (CASE WHEN MIContainer.DescId = zc_MIContainer_Count() AND MIContainer.Amount > 0 THEN      MIContainer.Amount ELSE 0 END) AS AmountIn
+                      , SUM (CASE WHEN MIContainer.DescId = zc_MIContainer_Count() AND MIContainer.Amount < 0 THEN -1 * MIContainer.Amount ELSE 0 END) AS AmountOut
+                      , SUM (CASE WHEN MIContainer.DescId = zc_MIContainer_Summ()  AND MIContainer.Amount > 0 THEN      MIContainer.Amount ELSE 0 END) AS SummIn
+                      , SUM (CASE WHEN MIContainer.DescId = zc_MIContainer_Summ()  AND MIContainer.Amount < 0 THEN -1 * MIContainer.Amount ELSE 0 END) AS SummOut
                  FROM _tmpUnit
                       INNER JOIN MovementItemContainer AS MIContainer 
                                                        ON MIContainer.WhereObjectId_analyzer = _tmpUnit.UnitId
                                                       AND MIContainer.OperDate BETWEEN inStartDate AND inEndDate
-                                                      AND MIContainer.isActive = inIsActive
-                                                      AND MIContainer.MovementDescId = inDescId
-                      -- LEFT JOIN _tmpGoods ON _tmpGoods.GoodsId = MIContainer.ObjectId_Analyzer
-                 -- WHERE _tmpGoods.GoodsId > 0 OR inGoodsGroupId = 0
+                                                      AND COALESCE (MIContainer.AccountId,0) <> zc_Enum_Account_100301() -- Прибыль текущего периода
+                                                      AND MIContainer.MovementDescId = zc_Movement_Inventory()
                  GROUP BY CASE WHEN vbIsGroup = TRUE THEN 0 ELSE MIContainer.ContainerId END
                         , MIContainer.WhereObjectId_analyzer
-                        , MIContainer.ObjectExtId_Analyzer
                         , MIContainer.ObjectId_Analyzer
                         , CASE WHEN vbIsGroup = TRUE THEN 0 ELSE MIContainer.ObjectIntId_Analyzer END
-                        , CASE WHEN vbIsGroup = TRUE THEN zc_DateStart() ELSE MIContainer.OperDate END
                         , COALESCE (MIContainer.AccountId, 0)
                ) AS tmpContainer
                INNER JOIN _tmpGoods ON _tmpGoods.GoodsId = tmpContainer.GoodsId
@@ -146,16 +166,13 @@ BEGIN
                                             AND CLO_PartionGoods.DescId = zc_ContainerLinkObject_PartionGoods()
                LEFT JOIN Object_Account_View ON Object_Account_View.AccountId = tmpContainer.AccountId
            GROUP BY tmpContainer.UnitId
-                  , tmpContainer.UnitId_by
                   , CASE WHEN vbIsGroup = TRUE THEN 0 ELSE tmpContainer.GoodsId END
                   , tmpContainer.GoodsKindId
-                  , tmpContainer.OperDate
                   , CLO_PartionGoods.ObjectId
                  
           ) AS tmpOperationGroup
 
           LEFT JOIN Object AS Object_Location ON Object_Location.Id = tmpOperationGroup.UnitId
-          LEFT JOIN Object AS Object_Location_by ON Object_Location_by.Id = tmpOperationGroup.UnitId_by
           LEFT JOIN Object AS Object_Goods on Object_Goods.Id = tmpOperationGroup.GoodsId
           LEFT JOIN Object AS Object_GoodsKind ON Object_GoodsKind.Id = tmpOperationGroup.GoodsKindId
           LEFT JOIN Object AS Object_PartionGoods ON Object_PartionGoods.Id = tmpOperationGroup.PartionGoodsId
@@ -177,23 +194,19 @@ BEGIN
           LEFT JOIN ObjectString AS ObjectString_Goods_GroupNameFull
                                  ON ObjectString_Goods_GroupNameFull.ObjectId = Object_Goods.Id
                                 AND ObjectString_Goods_GroupNameFull.DescId = zc_ObjectString_Goods_GroupNameFull()
-
   ;
          
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpReport_GoodsMI_Production (TDateTime, TDateTime, Integer, Boolean, Integer, Integer, TVarChar) OWNER TO postgres;
+ALTER FUNCTION gpReport_GoodsMI_Inventory (TDateTime, TDateTime, Integer, Integer, TVarChar) OWNER TO postgres;
+
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
- 06.08.15                                        * all
- 21.08.14         * 
+ 16.08.15                                        *
 */
 
 -- тест
--- SELECT * FROM gpReport_GoodsMI_Production (inStartDate:= '01.07.2015', inEndDate:= '01.07.2015', inDescId:= zc_Movement_ProductionSeparate(), inIsActive:= TRUE,  inUnitId:=0, inGoodsGroupId:= 0, inSession:= zfCalc_UserAdmin());
--- SELECT * FROM gpReport_GoodsMI_Production (inStartDate:= '01.07.2015', inEndDate:= '01.07.2015', inDescId:= zc_Movement_ProductionSeparate(), inIsActive:= FALSE, inUnitId:=0, inGoodsGroupId:= 0, inSession:= zfCalc_UserAdmin());
--- SELECT * FROM gpReport_GoodsMI_Production (inStartDate:= '01.07.2015', inEndDate:= '01.07.2015', inDescId:= zc_Movement_ProductionUnion(),    inIsActive:= TRUE,  inUnitId:=0, inGoodsGroupId:= 0, inSession:= zfCalc_UserAdmin());
--- SELECT * FROM gpReport_GoodsMI_Production (inStartDate:= '01.07.2015', inEndDate:= '01.07.2015', inDescId:= zc_Movement_ProductionUnion(),    inIsActive:= FALSE, inUnitId:=0, inGoodsGroupId:= 0, inSession:= zfCalc_UserAdmin());
+-- SELECT * FROM gpReport_GoodsMI_Inventory (inStartDate:= '01.07.2015', inEndDate:= '01.07.2015', inUnitId:=0, inGoodsGroupId:= 0, inSession:= zfCalc_UserAdmin());

@@ -1,6 +1,7 @@
 -- Function: gpReport_GoodsGroup ()
 
 DROP FUNCTION IF EXISTS gpReport_GoodsGroup (TDateTime, TDateTime, Integer, Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpReport_GoodsGroup (TDateTime, TDateTime, Integer, Integer, Integer, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpReport_GoodsGroup (
     IN inStartDate    TDateTime ,  
@@ -8,6 +9,7 @@ CREATE OR REPLACE FUNCTION gpReport_GoodsGroup (
     IN inUnitGroupId  Integer   ,
     IN inLocationId   Integer   , 
     IN inGoodsGroupId Integer   ,
+    IN inIsPartner    Boolean   ,
     IN inSession      TVarChar    -- ÒÂÒÒËˇ ÔÓÎ¸ÁÓ‚‡ÚÂÎˇ
 )
 RETURNS TABLE  (MovementId Integer, InvNumber TVarChar, OperDate TDateTime, OperDatePartner TDateTime, MovementDescName TVarChar, MovementDescName_order TVarChar, isActive Boolean, isRemains Boolean
@@ -24,66 +26,71 @@ RETURNS TABLE  (MovementId Integer, InvNumber TVarChar, OperDate TDateTime, Oper
               , Amount_Change TFloat, Summ_Change_branch TFloat, Summ_Change_zavod TFloat
               , Amount_40200 TFloat, Summ_40200_branch TFloat, Summ_40200_zavod TFloat
               , Amount_Loss TFloat, Summ_Loss_branch TFloat, Summ_Loss_zavod TFloat
+              , isPage3 Boolean, isExistsPage3 Boolean
                )  
 AS
 $BODY$
 BEGIN
 
+         -- Ú‡·ÎËˆ‡ - 
+         CREATE TEMP TABLE _tmpGoods (GoodsId Integer, InfoMoneyId Integer, TradeMarkId Integer, MeasureId Integer, Weight TFloat) ON COMMIT DROP;
+         CREATE TEMP TABLE _tmpUnit (UnitId Integer, UnitId_by Integer, isActive Boolean) ON COMMIT DROP;
+
     RETURN QUERY
     WITH tmpSendOnPrice_out AS (SELECT * FROM gpReport_GoodsMI_Internal (inStartDate    := inStartDate
                                                                        , inEndDate      := inEndDate
                                                                        , inDescId       := zc_Movement_SendOnPrice()
-                                                                       , inGoodsGroupId := inGoodsGroupId
                                                                        , inFromId       := CASE WHEN inLocationId <> 0 THEN inLocationId ELSE inUnitGroupId END
                                                                        , inToId         := 0
+                                                                       , inGoodsGroupId := inGoodsGroupId
                                                                        , inIsMO_all     := FALSE
                                                                        , inSession      := ''
                                                                         ) AS gpReport)
         , tmpSendOnPrice_in AS (SELECT * FROM gpReport_GoodsMI_Internal (inStartDate    := inStartDate
                                                                        , inEndDate      := inEndDate
                                                                        , inDescId       := zc_Movement_SendOnPrice()
-                                                                       , inGoodsGroupId := inGoodsGroupId
                                                                        , inFromId       := 0
                                                                        , inToId         := CASE WHEN inLocationId <> 0 THEN inLocationId ELSE inUnitGroupId END
+                                                                       , inGoodsGroupId := inGoodsGroupId
                                                                        , inIsMO_all     := FALSE
                                                                        , inSession      := ''
                                                                         ) AS gpReport)
                   , tmpLoss AS (SELECT * FROM gpReport_GoodsMI_Internal (inStartDate    := inStartDate
                                                                        , inEndDate      := inEndDate
                                                                        , inDescId       := zc_Movement_Loss()
-                                                                       , inGoodsGroupId := inGoodsGroupId
                                                                        , inFromId       := CASE WHEN inLocationId <> 0 THEN inLocationId ELSE inUnitGroupId END
                                                                        , inToId         := 0
+                                                                       , inGoodsGroupId := inGoodsGroupId
                                                                        , inIsMO_all     := FALSE
                                                                        , inSession      := ''
                                                                         ) AS gpReport)
               , tmpSend_out AS (SELECT * FROM gpReport_GoodsMI_Internal (inStartDate    := inStartDate
                                                                        , inEndDate      := inEndDate
                                                                        , inDescId       := zc_Movement_Send()
-                                                                       , inGoodsGroupId := inGoodsGroupId
                                                                        , inFromId       := CASE WHEN inLocationId <> 0 THEN inLocationId ELSE inUnitGroupId END
                                                                        , inToId         := 0
+                                                                       , inGoodsGroupId := inGoodsGroupId
                                                                        , inIsMO_all     := FALSE
                                                                        , inSession      := ''
                                                                         ) AS gpReport)
                , tmpSend_in AS (SELECT * FROM gpReport_GoodsMI_Internal (inStartDate    := inStartDate
                                                                        , inEndDate      := inEndDate
                                                                        , inDescId       := zc_Movement_Send()
-                                                                       , inGoodsGroupId := inGoodsGroupId
                                                                        , inFromId       := 0
                                                                        , inToId         := CASE WHEN inLocationId <> 0 THEN inLocationId ELSE inUnitGroupId END
+                                                                       , inGoodsGroupId := inGoodsGroupId
                                                                        , inIsMO_all     := FALSE
                                                                        , inSession      := ''
                                                                         ) AS gpReport)
                            , tmpSale AS (SELECT * FROM gpReport_GoodsMI (inStartDate         := inStartDate
                                                                        , inEndDate           := inEndDate
                                                                        , inDescId            := zc_Movement_Sale()
-                                                                       , inGoodsGroupId      := inGoodsGroupId
+                                                                       , inJuridicalId       := 0
+                                                                       , inPaidKindId        := 0
+                                                                       , inInfoMoneyId       := 0
                                                                        , inUnitGroupId       := CASE WHEN inLocationId <> 0 THEN inLocationId ELSE inUnitGroupId END
                                                                        , inUnitId            := 0
-                                                                       , inPaidKindId        := 0
-                                                                       , inJuridicalId       := 0
-                                                                       , inInfoMoneyId       := 0
+                                                                       , inGoodsGroupId      := inGoodsGroupId
                                                                        , inIsPartner         := TRUE
                                                                        , inIsTradeMark       := FALSE
                                                                        , inIsGoods           := FALSE
@@ -94,12 +101,12 @@ BEGIN
                        , tmpReturnIn AS (SELECT * FROM gpReport_GoodsMI (inStartDate         := inStartDate
                                                                        , inEndDate           := inEndDate
                                                                        , inDescId            := zc_Movement_ReturnIn()
-                                                                       , inGoodsGroupId      := inGoodsGroupId
+                                                                       , inJuridicalId       := 0
+                                                                       , inPaidKindId        := 0
+                                                                       , inInfoMoneyId       := 0
                                                                        , inUnitGroupId       := CASE WHEN inLocationId <> 0 THEN inLocationId ELSE inUnitGroupId END
                                                                        , inUnitId            := 0
-                                                                       , inPaidKindId        := 0
-                                                                       , inJuridicalId       := 0
-                                                                       , inInfoMoneyId       := 0
+                                                                       , inGoodsGroupId      := inGoodsGroupId
                                                                        , inIsPartner         := TRUE
                                                                        , inIsTradeMark       := FALSE
                                                                        , inIsGoods           := FALSE
@@ -110,42 +117,177 @@ BEGIN
          , tmpIncome AS (SELECT * FROM gpReport_GoodsMI_IncomeByPartner (inStartDate         := inStartDate
                                                                        , inEndDate           := inEndDate
                                                                        , inDescId            := zc_Movement_Income()
-                                                                       , inGoodsGroupId      := inGoodsGroupId
+                                                                       , inJuridicalId       := 0
+                                                                       , inPaidKindId        := 0
+                                                                       , inInfoMoneyId       := 0
                                                                        , inUnitGroupId       := CASE WHEN inLocationId <> 0 THEN inLocationId ELSE inUnitGroupId END
                                                                        , inUnitId            := 0
-                                                                       , inPaidKindId        := 0
-                                                                       , inJuridicalId       := 0
-                                                                       , inInfoMoneyId       := 0
+                                                                       , inGoodsGroupId      := inGoodsGroupId
                                                                        , inSession           := ''
                                                                         ) AS gpReport)
       , tmpReturnOut AS (SELECT * FROM gpReport_GoodsMI_IncomeByPartner (inStartDate         := inStartDate
                                                                        , inEndDate           := inEndDate
                                                                        , inDescId            := zc_Movement_ReturnOut()
-                                                                       , inGoodsGroupId      := inGoodsGroupId
+                                                                       , inJuridicalId       := 0
+                                                                       , inPaidKindId        := 0
+                                                                       , inInfoMoneyId       := 0
                                                                        , inUnitGroupId       := 0
                                                                        , inUnitId            := CASE WHEN inLocationId <> 0 THEN inLocationId ELSE inUnitGroupId END
-                                                                       , inPaidKindId        := 0
-                                                                       , inJuridicalId       := 0
-                                                                       , inInfoMoneyId       := 0
+                                                                       , inGoodsGroupId      := inGoodsGroupId
                                                                        , inSession           := ''
                                                                         ) AS gpReport)
   , tmpProductionUnion_in AS (SELECT * FROM gpReport_GoodsMI_Production (inStartDate         := inStartDate
                                                                        , inEndDate           := inEndDate
                                                                        , inDescId            := zc_Movement_ProductionUnion()
-                                                                       , inisActive          := TRUE
-                                                                       , inGoodsGroupId      := inGoodsGroupId
+                                                                       , inIsActive          := TRUE
                                                                        , inUnitId            := CASE WHEN inLocationId <> 0 THEN inLocationId ELSE inUnitGroupId END
+                                                                       , inGoodsGroupId      := inGoodsGroupId
                                                                        , inSession           := ''
                                                                         ) AS gpReport)
  , tmpProductionUnion_out AS (SELECT * FROM gpReport_GoodsMI_Production (inStartDate         := inStartDate
                                                                        , inEndDate           := inEndDate
                                                                        , inDescId            := zc_Movement_ProductionUnion()
-                                                                       , inisActive          := TRUE
-                                                                       , inGoodsGroupId      := inGoodsGroupId
+                                                                       , inIsActive          := FALSE
                                                                        , inUnitId            := CASE WHEN inLocationId <> 0 THEN inLocationId ELSE inUnitGroupId END
+                                                                       , inGoodsGroupId      := inGoodsGroupId
                                                                        , inSession           := ''
                                                                         ) AS gpReport)
-       , tmpResult AS (-- 1.1. SendOnPrice - Out
+  , tmpProductionSeparate_in AS (SELECT * FROM gpReport_GoodsMI_Production (inStartDate         := inStartDate
+                                                                       , inEndDate           := inEndDate
+                                                                       , inDescId            := zc_Movement_ProductionSeparate()
+                                                                       , inIsActive          := TRUE
+                                                                       , inUnitId            := CASE WHEN inLocationId <> 0 THEN inLocationId ELSE inUnitGroupId END
+                                                                       , inGoodsGroupId      := inGoodsGroupId
+                                                                       , inSession           := ''
+                                                                        ) AS gpReport)
+ , tmpProductionSeparate_out AS (SELECT * FROM gpReport_GoodsMI_Production (inStartDate         := inStartDate
+                                                                       , inEndDate           := inEndDate
+                                                                       , inDescId            := zc_Movement_ProductionSeparate()
+                                                                       , inIsActive          := FALSE
+                                                                       , inUnitId            := CASE WHEN inLocationId <> 0 THEN inLocationId ELSE inUnitGroupId END
+                                                                       , inGoodsGroupId      := inGoodsGroupId
+                                                                       , inSession           := ''
+                                                                        ) AS gpReport)
+            , tmpInventory AS (SELECT * FROM gpReport_GoodsMI_Inventory (inStartDate         := inStartDate
+                                                                       , inEndDate           := inEndDate
+                                                                       , inUnitId            := CASE WHEN inLocationId <> 0 THEN inLocationId ELSE inUnitGroupId END
+                                                                       , inGoodsGroupId      := inGoodsGroupId
+                                                                       , inSession           := ''
+                                                                        ) AS gpReport)
+
+       , tmpWhere AS (SELECT lfSelect.UnitId AS LocationId FROM lfSelect_Object_Unit_byGroup (CASE WHEN inLocationId <> 0 THEN inLocationId ELSE inUnitGroupId END) AS lfSelect)
+       , tmpGoods AS (SELECT lfSelect.GoodsId FROM  lfSelect_Object_Goods_byGoodsGroup (inGoodsGroupId) AS lfSelect)
+       , tmpContainer_Count AS (SELECT Container.Id          AS ContainerId
+                                     , tmpWhere.LocationId   AS LocationId
+                                     , Container.ObjectId    AS GoodsId
+                                     , Container.Amount
+                                FROM tmpWhere
+                                     INNER JOIN ContainerLinkObject AS CLO_Location ON CLO_Location.ObjectId = tmpWhere.LocationId
+                                                                                   AND CLO_Location.DescId = zc_ContainerLinkObject_Unit()
+                                     INNER JOIN Container ON Container.Id = CLO_Location.ContainerId
+                                                         AND Container.DescId = zc_Container_Count()
+                                     INNER JOIN tmpGoods ON tmpGoods.GoodsId = Container.ObjectId
+                                     LEFT JOIN ContainerLinkObject AS CLO_Account ON CLO_Account.ContainerId = Container.Id
+                                                                                 AND CLO_Account.DescId = zc_ContainerLinkObject_Account()
+                                WHERE CLO_Account.ContainerId IS NULL -- !!!Ú.Â. ·ÂÁ Ò˜ÂÚ‡ “‡ÌÁËÚ!!!
+                               )
+                , tmpMI_Count AS (SELECT tmpContainer_Count.ContainerId
+                                       , tmpContainer_Count.LocationId
+                                       , tmpContainer_Count.GoodsId
+                                       , tmpContainer_Count.Amount - COALESCE (SUM (COALESCE (MIContainer.Amount, 0)), 0) AS AmountStart
+                                       , tmpContainer_Count.Amount - COALESCE (SUM (CASE WHEN MIContainer.OperDate > inEndDate THEN MIContainer.Amount ELSE 0 END), 0) AS AmountEnd
+                                  FROM tmpContainer_Count
+                                       LEFT JOIN MovementItemContainer AS MIContainer ON MIContainer.ContainerId = tmpContainer_Count.ContainerId
+                                                                                     AND MIContainer.OperDate >= inStartDate
+                                  GROUP BY tmpContainer_Count.ContainerId
+                                         , tmpContainer_Count.LocationId
+                                         , tmpContainer_Count.GoodsId
+                                         , tmpContainer_Count.Amount
+                                 )
+        , tmpContainer_Summ AS (SELECT tmpContainer_Count.LocationId
+                                     , tmpContainer_Count.GoodsId
+                                     , Container.Id AS ContainerId
+                                     , Container.ObjectId AS AccountId
+                                     , Container.Amount
+                                FROM tmpContainer_Count
+                                     INNER JOIN Container ON Container.ParentId = tmpContainer_Count.ContainerId
+                                                         AND Container.DescId = zc_Container_Summ()
+                               )
+                 , tmpMI_Summ AS (SELECT tmpContainer_Summ.AccountId
+                                       , tmpContainer_Summ.LocationId
+                                       , tmpContainer_Summ.Amount - COALESCE (SUM (COALESCE (MIContainer.Amount, 0)), 0) AS AmountStart
+                                       , tmpContainer_Summ.Amount - COALESCE (SUM (CASE WHEN MIContainer.OperDate > inEndDate THEN MIContainer.Amount ELSE 0 END), 0) AS AmountEnd
+                                  FROM tmpContainer_Summ
+                                       LEFT JOIN MovementItemContainer AS MIContainer ON MIContainer.ContainerId = tmpContainer_Summ.ContainerId
+                                                                                     AND MIContainer.OperDate >= inStartDate
+                                  GROUP BY tmpContainer_Summ.AccountId
+                                         , tmpContainer_Summ.ContainerId
+                                         , tmpContainer_Summ.LocationId
+                                         , tmpContainer_Summ.Amount
+                                 )
+       , tmpRemains AS (SELECT tmpMI_Count.LocationId
+                             , SUM (tmpMI_Count.AmountStart * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END) AS AmountStart_Weight
+                             , SUM (tmpMI_Count.AmountEnd   * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END) AS AmountEnd_Weight
+                             , 0 AS SummStart_zavod
+                             , 0 AS SummStart_branch
+                             , 0 AS SummStart_60000
+                             , 0 AS SummEnd_zavod
+                             , 0 AS SummEnd_branch
+                             , 0 AS SummEnd_60000
+                        FROM tmpMI_Count
+                             LEFT JOIN ObjectLink AS ObjectLink_Goods_Measure ON ObjectLink_Goods_Measure.ObjectId = tmpMI_Count.GoodsId
+                                                                             AND ObjectLink_Goods_Measure.DescId = zc_ObjectLink_Goods_Measure()
+                             LEFT JOIN ObjectFloat AS ObjectFloat_Weight
+                                                   ON ObjectFloat_Weight.ObjectId = tmpMI_Count.GoodsId
+                                                  AND ObjectFloat_Weight.DescId = zc_ObjectFloat_Goods_Weight()
+                        GROUP BY tmpMI_Count.LocationId
+                       UNION ALL
+                        SELECT tmpMI_Summ.LocationId
+                             , 0 AS AmountStart_Weight
+                             , 0 AS AmountEnd_Weight
+                             , SUM (tmpMI_Summ.AmountStart) AS SummStart_zavod
+                             , SUM (CASE WHEN COALESCE (Object_Account_View.AccountDirectionId, 0) <> zc_Enum_AccountDirection_60200() THEN tmpMI_Summ.AmountStart ELSE 0 END) AS SummStart_branch
+                             , SUM (CASE WHEN COALESCE (Object_Account_View.AccountDirectionId, 0) =  zc_Enum_AccountDirection_60200() THEN tmpMI_Summ.AmountStart ELSE 0 END) AS SummStart_60000
+                             , SUM (tmpMI_Summ.AmountEnd) AS SummEnd_zavod
+                             , SUM (CASE WHEN COALESCE (Object_Account_View.AccountDirectionId, 0) <> zc_Enum_AccountDirection_60200() THEN tmpMI_Summ.AmountEnd ELSE 0 END) AS SummEnd_branch
+                             , SUM (CASE WHEN COALESCE (Object_Account_View.AccountDirectionId, 0) =  zc_Enum_AccountDirection_60200() THEN tmpMI_Summ.AmountEnd ELSE 0 END) AS SummEnd_60000
+                        FROM tmpMI_Summ
+                             LEFT JOIN Object_Account_View ON Object_Account_View.AccountId = tmpMI_Summ.AccountId
+                        GROUP BY tmpMI_Summ.LocationId
+                       )
+       , tmpResult AS (-- 0. Remains
+                       SELECT 0                               AS MovementDescId
+                            , Object_Location.ObjectCode      AS LocationCode
+                            , Object_Location.ValueData       AS LocationName
+                            , 0                               AS ObjectByCode
+                            , ''                              AS ObjectByName
+                            , 0                               AS AmountOut
+                            , 0                               AS SummOut
+                            , 0                               AS SummPartnerOut
+                            , 0                               AS AmountIn
+                            , 0                               AS SummIn
+                            , 0                               AS SummPartnerIn
+                            , SUM (tmp.AmountStart_Weight)    AS AmountStart
+                            , SUM (tmp.AmountEnd_Weight)      AS AmountEnd 
+                            , SUM (tmp.SummStart_branch)      AS SummStart
+                            , SUM (tmp.SummEnd_branch)        AS SummEnd
+                            , 0                               AS Amount_Change
+                            , 0                               AS Summ_Change_branch
+                            , 0                               AS Summ_Change_zavod
+                            , 0                               AS Amount_40200 
+                            , 0                               AS Summ_40200_branch
+                            , 0                               AS Summ_40200_zavod
+                            , 0                               AS Amount_Loss 
+                            , 0                               AS Summ_Loss_branch
+                            , 0                               AS Summ_Loss_zavod
+                            , FALSE                           AS isActive
+                            , FALSE                           AS isPage3
+                       FROM tmpRemains AS tmp
+                            LEFT JOIN Object AS Object_Location ON Object_Location.Id = tmp.LocationId
+                       GROUP BY Object_Location.ObjectCode
+                              , Object_Location.ValueData
+                      UNION ALL
+                       -- 1.1. SendOnPrice - Out
                        SELECT zc_Movement_SendOnPrice()       AS MovementDescId
                             , tmp.LocationCode                AS LocationCode
                             , tmp.LocationName                AS LocationName
@@ -153,7 +295,10 @@ BEGIN
                             , tmp.LocationName_by             AS ObjectByName
                             , tmp.AmountIn_Weight             AS AmountOut
                             , tmp.SummIn_zavod                AS SummOut
-                            , tmp.SummIn_branch               AS SummPartnerOut
+                            , CASE WHEN tmp.LocationCode_by IN (22121, 22122, 22081, 22082)
+                                        THEN tmp.SummIn_branch
+                                   ELSE tmp.Summ_calc
+                              END AS SummPartnerOut
                             , 0                               AS AmountIn
                             , 0                               AS SummIn
                             , 0                               AS SummPartnerIn
@@ -161,7 +306,6 @@ BEGIN
                             , 0                               AS AmountEnd 
                             , 0                               AS SummStart
                             , 0                               AS SummEnd 
-                            , FALSE                           AS isActive
                             , tmp.AmountOut_Weight - tmp.AmountIn_Weight  AS Amount_Change
                             , tmp.SummOut_branch   - tmp.SummIn_zavod    AS Summ_Change_branch
                             , tmp.SummOut_zavod    - tmp.SummIn_zavod     AS Summ_Change_zavod
@@ -171,6 +315,8 @@ BEGIN
                             , 0                               AS Amount_Loss 
                             , 0                               AS Summ_Loss_branch
                             , 0                               AS Summ_Loss_zavod
+                            , FALSE                           AS isActive
+                            , TRUE                            AS isPage3
                        FROM tmpSendOnPrice_out AS tmp
                       UNION ALL
                        -- 1.2. SendOnPrice - In
@@ -184,12 +330,14 @@ BEGIN
                             , 0                               AS SummPartnerOut
                             , tmp.AmountIn_Weight             AS AmountIn
                             , tmp.SummIn_zavod                AS SummIn
-                            , tmp.SummOut_branch              AS SummPartnerIn
+                            , CASE WHEN tmp.LocationCode IN (22121, 22122, 22081, 22082)
+                                        THEN tmp.SummOut_branch
+                                   ELSE tmp.Summ_calc
+                              END AS SummPartnerIn
                             , 0                               AS AmountStart
                             , 0                               AS AmountEnd 
                             , 0                               AS SummStart
                             , 0                               AS SummEnd 
-                            , TRUE                            AS isActive
                             , 0                               AS Amount_Change
                             , 0                               AS Summ_Change_branch
                             , 0                               AS Summ_Change_zavod
@@ -199,14 +347,24 @@ BEGIN
                             , 0                               AS Amount_Loss 
                             , 0                               AS Summ_Loss_branch
                             , 0                               AS Summ_Loss_zavod
+                            , TRUE                            AS isActive
+                            , TRUE                            AS isPage3
                        FROM tmpSendOnPrice_in AS tmp
                       UNION ALL
                        -- 2. Loss
                        SELECT zc_Movement_Loss()              AS MovementDescId
                             , tmp.LocationCode                AS LocationCode
                             , tmp.LocationName                AS LocationName
-                            , 0                               AS ObjectByCode
-                            , COALESCE (tmp.LocationName_by, '') ||  CASE WHEN tmp.LocationName_by <> '' AND tmp.ArticleLossName <> '' THEN ' *** ' ELSE '' END || COALESCE (tmp.ArticleLossName, '') AS ObjectByName
+                            , CASE WHEN tmp.ArticleLossName <> ''
+                                        THEN ArticleLossCode
+                                   WHEN tmp.LocationName_by <> ''
+                                        THEN LocationCode_by
+                                   ELSE tmp.LocationCode
+                              END AS ObjectByCode
+                            , CASE WHEN tmp.LocationName_by <> '' OR tmp.ArticleLossName <> ''
+                                        THEN COALESCE (tmp.LocationName_by, '') ||  CASE WHEN tmp.LocationName_by <> '' AND tmp.ArticleLossName <> '' THEN ' *** ' ELSE '' END || COALESCE (tmp.ArticleLossName, '')
+                                   ELSE tmp.LocationName
+                              END AS ObjectByName
                             , tmp.AmountOut_Weight            AS AmountOut
                             , tmp.SummOut_zavod               AS SummOut
                             , tmp.SummOut_branch              AS SummPartnerOut
@@ -217,7 +375,6 @@ BEGIN
                             , 0                               AS AmountEnd 
                             , 0                               AS SummStart
                             , 0                               AS SummEnd 
-                            , FALSE                           AS isActive
                             , 0                               AS Amount_Change
                             , 0                               AS Summ_Change_branch
                             , 0                               AS Summ_Change_zavod
@@ -227,6 +384,8 @@ BEGIN
                             , 0                               AS Amount_Loss 
                             , 0                               AS Summ_Loss_branch
                             , 0                               AS Summ_Loss_zavod
+                            , FALSE                           AS isActive
+                            , FALSE                           AS isPage3
                        FROM tmpLoss AS tmp
                       UNION ALL
                        -- 3.1. Send - Out
@@ -245,7 +404,6 @@ BEGIN
                             , 0                               AS AmountEnd 
                             , 0                               AS SummStart
                             , 0                               AS SummEnd 
-                            , FALSE                           AS isActive
                             , 0                               AS Amount_Change
                             , 0                               AS Summ_Change_branch
                             , 0                               AS Summ_Change_zavod
@@ -255,6 +413,8 @@ BEGIN
                             , 0                               AS Amount_Loss 
                             , 0                               AS Summ_Loss_branch
                             , 0                               AS Summ_Loss_zavod
+                            , FALSE                           AS isActive
+                            , FALSE                           AS isPage3
                        FROM tmpSend_out AS tmp
                       UNION ALL
                        -- 3.2. Send - In
@@ -273,7 +433,6 @@ BEGIN
                             , 0                               AS AmountEnd 
                             , 0                               AS SummStart
                             , 0                               AS SummEnd 
-                            , TRUE                            AS isActive
                             , 0                               AS Amount_Change
                             , 0                               AS Summ_Change_branch
                             , 0                               AS Summ_Change_zavod
@@ -283,16 +442,16 @@ BEGIN
                             , 0                               AS Amount_Loss 
                             , 0                               AS Summ_Loss_branch
                             , 0                               AS Summ_Loss_zavod
+                            , TRUE                            AS isActive
+                            , FALSE                           AS isPage3
                        FROM tmpSend_in AS tmp
                       UNION ALL
                        -- 4.1. Sale
                        SELECT zc_Movement_Sale()              AS MovementDescId
                             , tmp.LocationCode                AS LocationCode
                             , tmp.LocationName                AS LocationName
-                            -- , tmp.PartnerCode                 AS ObjectByCode
-                            -- , tmp.PartnerName                 AS ObjectByName
-                            , tmp.JuridicalCode               AS ObjectByCode
-                            , tmp.JuridicalName               AS ObjectByName
+                            , CASE WHEN inIsPartner = TRUE THEN tmp.JuridicalCode /*tmp.PartnerCode*/ ELSE 0  END AS ObjectByCode
+                            , CASE WHEN inIsPartner = TRUE THEN tmp.JuridicalName /*tmp.PartnerName*/ ELSE '' END AS ObjectByName
                             , SUM (tmp.OperCount_Partner)     AS AmountOut
                             , SUM (tmp.SummIn_Partner_branch) AS SummOut
                             , SUM (tmp.SummOut_Partner)       AS SummPartnerOut
@@ -303,7 +462,6 @@ BEGIN
                             , 0                               AS AmountEnd 
                             , 0                               AS SummStart
                             , 0                               AS SummEnd 
-                            , FALSE                           AS isActive
                             , SUM (tmp.OperCount_Change)      AS Amount_Change
                             , SUM (tmp.SummIn_Change_branch)  AS Summ_Change_branch
                             , SUM (tmp.SummIn_Change_zavod)   AS Summ_Change_zavod
@@ -313,18 +471,19 @@ BEGIN
                             , SUM (tmp.OperCount_Loss)        AS Amount_Loss 
                             , SUM (tmp.SummIn_Loss)           AS Summ_Loss_branch
                             , SUM (tmp.SummIn_Loss_zavod)     AS Summ_Loss_zavod
+                            , FALSE                           AS isActive
+                            , TRUE                            AS isPage3
                        FROM tmpSale AS tmp
-                       -- GROUP BY tmp.LocationCode, tmp.LocationName, tmp.PartnerCode, tmp.PartnerName
-                       GROUP BY tmp.LocationCode, tmp.LocationName, tmp.JuridicalCode, tmp.JuridicalName
+                       GROUP BY tmp.LocationCode, tmp.LocationName
+                              , CASE WHEN inIsPartner = TRUE THEN tmp.JuridicalCode /*tmp.PartnerCode*/ ELSE 0  END
+                              , CASE WHEN inIsPartner = TRUE THEN tmp.JuridicalName /*tmp.PartnerName*/ ELSE '' END
                       UNION ALL
                        -- 4.2. ReturnIn
                        SELECT zc_Movement_ReturnIn()          AS MovementDescId
                             , tmp.LocationCode                AS LocationCode
                             , tmp.LocationName                AS LocationName
-                            -- , tmp.PartnerCode                 AS ObjectByCode
-                            -- , tmp.PartnerName                 AS ObjectByName
-                            , tmp.JuridicalCode               AS ObjectByCode
-                            , tmp.JuridicalName               AS ObjectByName
+                            , CASE WHEN inIsPartner = TRUE THEN tmp.JuridicalCode /*tmp.PartnerCode*/ ELSE 0  END AS ObjectByCode
+                            , CASE WHEN inIsPartner = TRUE THEN tmp.JuridicalName /*tmp.PartnerName*/ ELSE '' END AS ObjectByName
                             , 0                               AS AmountOut
                             , 0                               AS SummOut
                             , 0                               AS SummPartnerOut
@@ -335,7 +494,6 @@ BEGIN
                             , 0                               AS AmountEnd 
                             , 0                               AS SummStart
                             , 0                               AS SummEnd 
-                            , TRUE                            AS isActive
                             , SUM (tmp.OperCount_Change)      AS Amount_Change
                             , SUM (tmp.SummIn_Change_branch)  AS Summ_Change_branch
                             , SUM (tmp.SummIn_Change_zavod)   AS Summ_Change_zavod
@@ -345,18 +503,19 @@ BEGIN
                             , 0                               AS Amount_Loss
                             , 0                               AS Summ_Loss_branch
                             , 0                               AS Summ_Loss_zavod
+                            , TRUE                            AS isActive
+                            , TRUE                            AS isPage3
                        FROM tmpReturnIn AS tmp
-                       -- GROUP BY tmp.LocationCode, tmp.LocationName, tmp.PartnerCode, tmp.PartnerName
-                       GROUP BY tmp.LocationCode, tmp.LocationName, tmp.JuridicalCode, tmp.JuridicalName
+                       GROUP BY tmp.LocationCode, tmp.LocationName
+                              , CASE WHEN inIsPartner = TRUE THEN tmp.JuridicalCode /*tmp.PartnerCode*/ ELSE 0  END
+                              , CASE WHEN inIsPartner = TRUE THEN tmp.JuridicalName /*tmp.PartnerName*/ ELSE '' END
                       UNION ALL
                        -- 5.1. Income
                        SELECT zc_Movement_Income()            AS MovementDescId
                             , tmp.LocationCode                AS LocationCode
                             , tmp.LocationName                AS LocationName
-                            -- , tmp.PartnerCode                 AS ObjectByCode
-                            -- , tmp.PartnerName                 AS ObjectByName
-                            , tmp.JuridicalCode               AS ObjectByCode
-                            , tmp.JuridicalName               AS ObjectByName
+                            , CASE WHEN inIsPartner = TRUE THEN tmp.JuridicalCode /*tmp.PartnerCode*/ ELSE 0  END AS ObjectByCode
+                            , CASE WHEN inIsPartner = TRUE THEN tmp.JuridicalName /*tmp.PartnerName*/ ELSE '' END AS ObjectByName
                             , 0                               AS AmountOut
                             , 0                               AS SummOut
                             , 0                               AS SummPartnerOut
@@ -367,7 +526,6 @@ BEGIN
                             , 0                               AS AmountEnd 
                             , 0                               AS SummStart
                             , 0                               AS SummEnd 
-                            , TRUE                            AS isActive
                             , 0                               AS Amount_Change
                             , 0                               AS Summ_Change_branch
                             , 0                               AS Summ_Change_zavod
@@ -377,18 +535,19 @@ BEGIN
                             , 0                               AS Amount_Loss
                             , 0                               AS Summ_Loss_branch
                             , 0                               AS Summ_Loss_zavod
+                            , TRUE                            AS isActive
+                            , FALSE                           AS isPage3
                        FROM tmpIncome AS tmp
-                       -- GROUP BY tmp.LocationCode, tmp.LocationName, tmp.PartnerCode, tmp.PartnerName
-                       GROUP BY tmp.LocationCode, tmp.LocationName, tmp.JuridicalCode, tmp.JuridicalName
+                       GROUP BY tmp.LocationCode, tmp.LocationName
+                              , CASE WHEN inIsPartner = TRUE THEN tmp.JuridicalCode /*tmp.PartnerCode*/ ELSE 0  END
+                              , CASE WHEN inIsPartner = TRUE THEN tmp.JuridicalName /*tmp.PartnerName*/ ELSE '' END
                       UNION ALL
                        -- 5.2. ReturnOut
                        SELECT zc_Movement_ReturnOut()         AS MovementDescId
                             , tmp.LocationCode                AS LocationCode
                             , tmp.LocationName                AS LocationName
-                            -- , tmp.PartnerCode                 AS ObjectByCode
-                            -- , tmp.PartnerName                 AS ObjectByName
-                            , tmp.JuridicalCode               AS ObjectByCode
-                            , tmp.JuridicalName               AS ObjectByName
+                            , CASE WHEN inIsPartner = TRUE THEN tmp.JuridicalCode /*tmp.PartnerCode*/ ELSE 0  END AS ObjectByCode
+                            , CASE WHEN inIsPartner = TRUE THEN tmp.JuridicalName /*tmp.PartnerName*/ ELSE '' END AS ObjectByName
                             , SUM (tmp.AmountPartner_Weight)  AS AmountOut
                             , SUM (tmp.Summ - Summ_ProfitLoss) AS SummOut
                             , SUM (tmp.Summ)                  AS SummPartnerOut
@@ -399,7 +558,6 @@ BEGIN
                             , 0                               AS AmountEnd 
                             , 0                               AS SummStart
                             , 0                               AS SummEnd 
-                            , FALSE                           AS isActive
                             , 0                               AS Amount_Change
                             , 0                               AS Summ_Change_branch
                             , 0                               AS Summ_Change_zavod
@@ -409,9 +567,200 @@ BEGIN
                             , 0                               AS Amount_Loss
                             , 0                               AS Summ_Loss_branch
                             , 0                               AS Summ_Loss_zavod
+                            , FALSE                           AS isActive
+                            , TRUE                            AS isPage3
                        FROM tmpReturnOut AS tmp
-                       -- GROUP BY tmp.LocationCode, tmp.LocationName, tmp.PartnerCode, tmp.PartnerName
-                       GROUP BY tmp.LocationCode, tmp.LocationName, tmp.JuridicalCode, tmp.JuridicalName
+                       GROUP BY tmp.LocationCode, tmp.LocationName
+                              , CASE WHEN inIsPartner = TRUE THEN tmp.JuridicalCode /*tmp.PartnerCode*/ ELSE 0  END
+                              , CASE WHEN inIsPartner = TRUE THEN tmp.JuridicalName /*tmp.PartnerName*/ ELSE '' END
+                      UNION ALL
+                       -- 5.1. ProductionUnion
+                       SELECT zc_Movement_ProductionUnion()   AS MovementDescId
+                            , tmp.LocationCode                AS LocationCode
+                            , tmp.LocationName                AS LocationName
+                            , tmp.LocationCode_by             AS ObjectByCode
+                            , tmp.LocationName_by             AS ObjectByName
+                            , 0                               AS AmountOut
+                            , 0                               AS SummOut
+                            , 0                               AS SummPartnerOut
+                            , SUM (tmp.Amount_Weight)         AS AmountIn
+                            , SUM (tmp.Summ_branch)           AS SummIn
+                            , 0                               AS SummPartnerIn
+                            , 0                               AS AmountStart
+                            , 0                               AS AmountEnd 
+                            , 0                               AS SummStart
+                            , 0                               AS SummEnd 
+                            , 0                               AS Amount_Change
+                            , 0                               AS Summ_Change_branch
+                            , 0                               AS Summ_Change_zavod
+                            , 0                               AS Amount_40200
+                            , 0                               AS Summ_40200_branch
+                            , 0                               AS Summ_40200_zavod
+                            , 0                               AS Amount_Loss
+                            , 0                               AS Summ_Loss_branch
+                            , 0                               AS Summ_Loss_zavod
+                            , TRUE                            AS isActive
+                            , FALSE                           AS isPage3
+                       FROM tmpProductionUnion_in AS tmp
+                       GROUP BY tmp.LocationCode, tmp.LocationName, tmp.LocationCode_by, tmp.LocationName_by
+                      UNION ALL
+                       -- 5.2. ProductionUnion
+                       SELECT zc_Movement_ProductionUnion()   AS MovementDescId
+                            , tmp.LocationCode                AS LocationCode
+                            , tmp.LocationName                AS LocationName
+                            , tmp.LocationCode_by             AS ObjectByCode
+                            , tmp.LocationName_by             AS ObjectByName
+                            , SUM (tmp.Amount_Weight)         AS AmountOut
+                            , SUM (tmp.Summ_branch)           AS SummOut
+                            , 0                               AS SummPartnerOut
+                            , 0                               AS AmountIn
+                            , 0                               AS SummIn
+                            , 0                               AS SummPartnerIn
+                            , 0                               AS AmountStart
+                            , 0                               AS AmountEnd 
+                            , 0                               AS SummStart
+                            , 0                               AS SummEnd 
+                            , 0                               AS Amount_Change
+                            , 0                               AS Summ_Change_branch
+                            , 0                               AS Summ_Change_zavod
+                            , 0                               AS Amount_40200
+                            , 0                               AS Summ_40200_branch
+                            , 0                               AS Summ_40200_zavod
+                            , 0                               AS Amount_Loss
+                            , 0                               AS Summ_Loss_branch
+                            , 0                               AS Summ_Loss_zavod
+                            , FALSE                           AS isActive
+                            , FALSE                           AS isPage3
+                       FROM tmpProductionUnion_out AS tmp
+                       GROUP BY tmp.LocationCode, tmp.LocationName, tmp.LocationCode_by, tmp.LocationName_by
+
+                      UNION ALL
+                       -- 6.1. ProductionSeparate
+                       SELECT zc_Movement_ProductionSeparate() AS MovementDescId
+                            , tmp.LocationCode                AS LocationCode
+                            , tmp.LocationName                AS LocationName
+                            , tmp.LocationCode_by             AS ObjectByCode
+                            , tmp.LocationName_by             AS ObjectByName
+                            , 0                               AS AmountOut
+                            , 0                               AS SummOut
+                            , 0                               AS SummPartnerOut
+                            , SUM (tmp.Amount_Weight)         AS AmountIn
+                            , SUM (tmp.Summ_branch)           AS SummIn
+                            , 0                               AS SummPartnerIn
+                            , 0                               AS AmountStart
+                            , 0                               AS AmountEnd 
+                            , 0                               AS SummStart
+                            , 0                               AS SummEnd 
+                            , 0                               AS Amount_Change
+                            , 0                               AS Summ_Change_branch
+                            , 0                               AS Summ_Change_zavod
+                            , 0                               AS Amount_40200
+                            , 0                               AS Summ_40200_branch
+                            , 0                               AS Summ_40200_zavod
+                            , 0                               AS Amount_Loss
+                            , 0                               AS Summ_Loss_branch
+                            , 0                               AS Summ_Loss_zavod
+                            , TRUE                            AS isActive
+                            , FALSE                           AS isPage3
+                       FROM tmpProductionSeparate_in AS tmp
+                       GROUP BY tmp.LocationCode, tmp.LocationName, tmp.LocationCode_by, tmp.LocationName_by
+                      UNION ALL
+                       -- 6.2. ProductionSeparate
+                       SELECT zc_Movement_ProductionSeparate() AS MovementDescId
+                            , tmp.LocationCode                AS LocationCode
+                            , tmp.LocationName                AS LocationName
+                            , tmp.LocationCode_by             AS ObjectByCode
+                            , tmp.LocationName_by             AS ObjectByName
+                            , SUM (tmp.Amount_Weight)         AS AmountOut
+                            , SUM (tmp.Summ_branch)           AS SummOut
+                            , 0                               AS SummPartnerOut
+                            , 0                               AS AmountIn
+                            , 0                               AS SummIn
+                            , 0                               AS SummPartnerIn
+                            , 0                               AS AmountStart
+                            , 0                               AS AmountEnd 
+                            , 0                               AS SummStart
+                            , 0                               AS SummEnd 
+                            , 0                               AS Amount_Change
+                            , 0                               AS Summ_Change_branch
+                            , 0                               AS Summ_Change_zavod
+                            , 0                               AS Amount_40200
+                            , 0                               AS Summ_40200_branch
+                            , 0                               AS Summ_40200_zavod
+                            , 0                               AS Amount_Loss
+                            , 0                               AS Summ_Loss_branch
+                            , 0                               AS Summ_Loss_zavod
+                            , FALSE                           AS isActive
+                            , FALSE                           AS isPage3
+                       FROM tmpProductionSeparate_out AS tmp
+                       GROUP BY tmp.LocationCode, tmp.LocationName, tmp.LocationCode_by, tmp.LocationName_by
+                      UNION ALL
+                       -- 7.1. Inventory
+                       SELECT zc_Movement_Inventory()         AS MovementDescId
+                            , tmp.LocationCode                AS LocationCode
+                            , tmp.LocationName                AS LocationName
+                            , tmp.LocationCode                AS ObjectByCode
+                            , '+' || tmp.LocationName         AS ObjectByName
+                            , 0                               AS AmountOut
+                            , 0                               AS SummOut
+                            , 0                               AS SummPartnerOut
+                            , SUM (tmp.AmountIn_Weight)       AS AmountIn
+                            , SUM (tmp.SummIn_branch)         AS SummIn
+                            , 0                               AS SummPartnerIn
+                            , 0                               AS AmountStart
+                            , 0                               AS AmountEnd 
+                            , 0                               AS SummStart
+                            , 0                               AS SummEnd 
+                            , 0                               AS Amount_Change
+                            , 0                               AS Summ_Change_branch
+                            , 0                               AS Summ_Change_zavod
+                            , 0                               AS Amount_40200
+                            , 0                               AS Summ_40200_branch
+                            , 0                               AS Summ_40200_zavod
+                            , 0                               AS Amount_Loss
+                            , 0                               AS Summ_Loss_branch
+                            , 0                               AS Summ_Loss_zavod
+                            , TRUE                            AS isActive
+                            , FALSE                           AS isPage3
+                       FROM tmpInventory AS tmp
+                       GROUP BY tmp.LocationCode, tmp.LocationName
+                      UNION ALL
+                       -- 7.2. Inventory
+                       SELECT zc_Movement_Inventory()         AS MovementDescId
+                            , tmp.LocationCode                AS LocationCode
+                            , tmp.LocationName                AS LocationName
+                            , tmp.LocationCode                AS ObjectByCode
+                            , '-' || tmp.LocationName         AS ObjectByName
+                            , SUM (tmp.AmountOut_Weight)      AS AmountOut
+                            , SUM (tmp.SummOut_branch)        AS SummOut
+                            , 0                               AS SummPartnerOut
+                            , 0                               AS AmountIn
+                            , 0                               AS SummIn
+                            , 0                               AS SummPartnerIn
+                            , 0                               AS AmountStart
+                            , 0                               AS AmountEnd 
+                            , 0                               AS SummStart
+                            , 0                               AS SummEnd 
+                            , 0                               AS Amount_Change
+                            , 0                               AS Summ_Change_branch
+                            , 0                               AS Summ_Change_zavod
+                            , 0                               AS Amount_40200
+                            , 0                               AS Summ_40200_branch
+                            , 0                               AS Summ_40200_zavod
+                            , 0                               AS Amount_Loss
+                            , 0                               AS Summ_Loss_branch
+                            , 0                               AS Summ_Loss_zavod
+                            , FALSE                           AS isActive
+                            , FALSE                           AS isPage3
+                       FROM tmpInventory AS tmp
+                       GROUP BY tmp.LocationCode, tmp.LocationName
+                      )
+        , tmpPage3 AS (SELECT TRUE AS isExists WHERE EXISTS (SELECT 1 FROM tmpSendOnPrice_in
+                                                       UNION SELECT 1 FROM tmpSendOnPrice_out
+                                                       UNION SELECT 1 FROM tmpSale
+                                                       UNION SELECT 1 FROM tmpReturnIn
+                                                             LIMIT 1
+                                                            )
                       )
    SELECT 0    :: Integer   AS MovementId
         , ''   :: TVarChar  AS InvNumber
@@ -425,11 +774,39 @@ BEGIN
           END :: TVarChar AS MovementDescName
         , CASE WHEN tmpResult.MovementDescId = zc_Movement_Income()
                     THEN '01 ' || MovementDesc.ItemName
-               ELSE MovementDesc.ItemName
+               WHEN tmpResult.MovementDescId = zc_Movement_ReturnOut()
+                    THEN '02 ' || MovementDesc.ItemName
+               WHEN tmpResult.MovementDescId = zc_Movement_Send() AND tmpResult.isActive = TRUE
+                    THEN '03 ' || MovementDesc.ItemName
+               WHEN tmpResult.MovementDescId = zc_Movement_Send() AND tmpResult.isActive = FALSE
+                    THEN '04 ' || MovementDesc.ItemName
+               WHEN tmpResult.MovementDescId = zc_Movement_ProductionUnion() AND tmpResult.isActive = TRUE
+                    THEN '05 ' || MovementDesc.ItemName
+               WHEN tmpResult.MovementDescId = zc_Movement_ProductionUnion() AND tmpResult.isActive = FALSE
+                    THEN '06 ' || MovementDesc.ItemName
+               WHEN tmpResult.MovementDescId = zc_Movement_ProductionSeparate() AND tmpResult.isActive = TRUE
+                    THEN '07 ' || MovementDesc.ItemName
+               WHEN tmpResult.MovementDescId = zc_Movement_ProductionSeparate() AND tmpResult.isActive = FALSE
+                    THEN '08 ' || MovementDesc.ItemName
+               WHEN tmpResult.MovementDescId = zc_Movement_SendOnPrice() AND tmpResult.isActive = TRUE
+                    THEN '109 ' || MovementDesc.ItemName
+               WHEN tmpResult.MovementDescId = zc_Movement_SendOnPrice() AND tmpResult.isActive = FALSE
+                    THEN '110 ' || MovementDesc.ItemName
+               WHEN tmpResult.MovementDescId = zc_Movement_Sale()
+                    THEN '111 ' || MovementDesc.ItemName
+               WHEN tmpResult.MovementDescId = zc_Movement_ReturnIn()
+                    THEN '112 ' || MovementDesc.ItemName
+               WHEN tmpResult.MovementDescId = zc_Movement_Loss()
+                    THEN '13 ' || MovementDesc.ItemName
+               WHEN tmpResult.MovementDescId = zc_Movement_Inventory() AND tmpResult.isActive = TRUE
+                    THEN '14 ' || MovementDesc.ItemName
+               WHEN tmpResult.MovementDescId = zc_Movement_Inventory() AND tmpResult.isActive = FALSE
+                    THEN '15 ' || MovementDesc.ItemName
+               ELSE '201 ' || MovementDesc.ItemName
           END :: TVarChar AS MovementDescName_order
 
         , tmpResult.isActive AS isActive
-        , FALSE              AS isRemains
+        , CASE WHEN tmpResult.MovementDescId = 0 THEN TRUE ELSE FALSE END :: Boolean AS isRemains
 
         , ''   :: TVarChar  AS LocationDescName
         , tmpResult.LocationCode
@@ -450,8 +827,6 @@ BEGIN
         , 0    :: Integer   AS GoodsCode_parent
         , ''   :: TVarChar  AS GoodsName_parent
         , ''   :: TVarChar  AS GoodsKindName_parent
-
-
 
         , CAST (CASE WHEN tmpResult.MovementDescId = zc_Movement_Income() AND 1=0
                           THEN 0 -- MIFloat_Price.ValueData
@@ -507,7 +882,10 @@ BEGIN
         , tmpResult.Summ_Loss_branch    :: TFloat  AS Summ_Loss_branch
         , tmpResult.Summ_Loss_zavod     :: TFloat  AS Summ_Loss_zavod
 
+        , tmpResult.isPage3                   :: Boolean AS isPage3
+        , COALESCE (tmpPage3.isExists, FALSE) :: Boolean AS isExistsPage3
    FROM tmpResult
+        LEFT JOIN tmpPage3 ON tmpPage3.isExists = TRUE
         LEFT JOIN MovementDesc ON MovementDesc.Id = tmpResult.MovementDescId
    ;
     
@@ -515,7 +893,7 @@ BEGIN
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpReport_GoodsGroup (TDateTime, TDateTime, Integer, Integer, Integer, TVarChar) OWNER TO postgres;
+ALTER FUNCTION gpReport_GoodsGroup (TDateTime, TDateTime, Integer, Integer, Integer, Boolean, TVarChar) OWNER TO postgres;
 
 /*-------------------------------------------------------------------------------
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
@@ -524,4 +902,4 @@ ALTER FUNCTION gpReport_GoodsGroup (TDateTime, TDateTime, Integer, Integer, Inte
 */
 
 -- ÚÂÒÚ
--- SELECT * FROM gpReport_GoodsGroup (inStartDate:= '01.01.2015', inEndDate:= '01.01.2015', inUnitGroupId:= 0, inLocationId:= 8459, inGoodsGroupId:= 1832, inSession:= zfCalc_UserAdmin());
+-- SELECT * FROM gpReport_GoodsGroup (inStartDate:= '01.01.2015', inEndDate:= '01.01.2015', inUnitGroupId:= 0, inLocationId:= 8459, inGoodsGroupId:= 1832, inIsPartner:= FALSE, inSession:= zfCalc_UserAdmin());

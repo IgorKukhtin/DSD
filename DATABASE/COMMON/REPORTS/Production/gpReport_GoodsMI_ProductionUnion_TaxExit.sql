@@ -42,10 +42,10 @@ BEGIN
                            , COALESCE (CLO_PartionGoods.ObjectId, 0) AS PartionGoodsId
                            , CASE WHEN MIContainer.IsActive = TRUE THEN MIContainer.Amount ELSE 0 END AS Amount
                       FROM MovementItemContainer AS MIContainer
-                           INNER JOIN ContainerLinkObject AS CLO_GoodsKind
+                           /*INNER JOIN ContainerLinkObject AS CLO_GoodsKind
                                                           ON CLO_GoodsKind.ContainerId = MIContainer.ContainerId
                                                          AND CLO_GoodsKind.DescId = zc_ContainerLinkObject_GoodsKind()
-                                                         AND CLO_GoodsKind.ObjectId = zc_GoodsKind_WorkProgress() -- ограничение что это п/ф ГП
+                                                         AND CLO_GoodsKind.ObjectId = zc_GoodsKind_WorkProgress() -- ограничение что это п/ф ГП*/
                            LEFT JOIN ContainerLinkObject AS CLO_PartionGoods
                                                          ON CLO_PartionGoods.ContainerId = MIContainer.ContainerId
                                                         AND CLO_PartionGoods.DescId = zc_ContainerLinkObject_PartionGoods()
@@ -55,13 +55,14 @@ BEGIN
                         AND MIContainer.MovementDescId = zc_Movement_ProductionUnion()
                         AND MIContainer.IsActive = TRUE
                         AND MIContainer.Amount <> 0
+                        AND MIContainer.ObjectIntId_Analyzer = zc_GoodsKind_WorkProgress() -- ограничение что это п/ф ГП
                       )
          -- расходы п/ф ГП - что б отловить партии которых нет в tmpMI_WorkProgress_in
        , tmpMI_WorkProgress_find AS
                      (SELECT MIContainer.ContainerId                 AS ContainerId
                            , MIContainer.ObjectId_Analyzer           AS GoodsId
                            , COALESCE (CLO_PartionGoods.ObjectId, 0) AS PartionGoodsId
-                           , COALESCE (MILinkObject_GoodsKind.ObjectId, 0) AS GoodsKindId_Complete
+                           , COALESCE (MIContainer.ObjectIntId_Analyzer, 0) AS GoodsKindId_Complete
                       FROM ObjectDate AS ObjectDate_PartionGoods_Value
                            INNER JOIN ContainerLinkObject AS CLO_PartionGoods
                                                           ON CLO_PartionGoods.ObjectId = ObjectDate_PartionGoods_Value.ObjectId
@@ -79,16 +80,16 @@ BEGIN
                                                            AND MIContainer.IsActive = FALSE
                                                            AND MIContainer.Amount <> 0
                            LEFT JOIN MovementItem ON MovementItem.Id = MIContainer.MovementItemId
-                           LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
+                           /*LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
                                                             ON MILinkObject_GoodsKind.MovementItemId = MovementItem.ParentId
-                                                           AND MILinkObject_GoodsKind.DescId = zc_ContainerLinkObject_GoodsKind()
+                                                           AND MILinkObject_GoodsKind.DescId = zc_ContainerLinkObject_GoodsKind()*/
                       WHERE ObjectDate_PartionGoods_Value.DescId = zc_ObjectDate_PartionGoods_Value()
                         AND ObjectDate_PartionGoods_Value.ValueData BETWEEN inStartDate AND inEndDate
                         AND tmpMI_WorkProgress_in.ContainerId IS NULL
                       GROUP BY MIContainer.ContainerId
                              , MIContainer.ObjectId_Analyzer
                              , CLO_PartionGoods.ObjectId
-                             , MILinkObject_GoodsKind.ObjectId
+                             , MIContainer.ObjectIntId_Analyzer
                      )
          -- приходы п/ф ГП - сгруппировать
        , tmpMI_WorkProgress_in_group AS (SELECT ContainerId, GoodsId, PartionGoodsId FROM tmpMI_WorkProgress_in GROUP BY ContainerId, GoodsId, PartionGoodsId
@@ -112,16 +113,16 @@ BEGIN
        , tmpMI_GP_in AS
                      (SELECT tmpMI_WorkProgress_out.GoodsId
                            , tmpMI_WorkProgress_out.PartionGoodsId
-                           , COALESCE (CLO_GoodsKind.ObjectId, 0) AS GoodsKindId_Complete
+                           , COALESCE (MIContainer.ObjectIntId_Analyzer, 0) AS GoodsKindId_Complete
                            , SUM (MIContainer.Amount)             AS Amount
                            , SUM (CASE WHEN ObjectFloat_Value_master.ValueData <> 0 THEN COALESCE (ObjectFloat_Value_child.ValueData, 0) * MIContainer.Amount / ObjectFloat_Value_master.ValueData ELSE 0 END) AS AmountReceipt
                       FROM tmpMI_WorkProgress_out
                            INNER JOIN MovementItemContainer AS MIContainer
                                                             ON MIContainer.Id = tmpMI_WorkProgress_out.ParentId
                                                            AND MIContainer.WhereObjectId_Analyzer <> inFromId -- !!!если "производство ГП"!!!
-                           LEFT JOIN ContainerLinkObject AS CLO_GoodsKind
+                           /*LEFT JOIN ContainerLinkObject AS CLO_GoodsKind
                                                          ON CLO_GoodsKind.ContainerId = MIContainer.ContainerId
-                                                        AND CLO_GoodsKind.DescId = zc_ContainerLinkObject_GoodsKind()
+                                                        AND CLO_GoodsKind.DescId = zc_ContainerLinkObject_GoodsKind()*/
                            LEFT JOIN MovementItemLinkObject AS MILO_Receipt
                                                             ON MILO_Receipt.MovementItemId = MIContainer.MovementItemId
                                                            AND MILO_Receipt.DescId = zc_MILinkObject_Receipt()
@@ -148,7 +149,7 @@ BEGIN
                                                 AND ObjectFloat_Value_child.DescId = zc_ObjectFloat_ReceiptChild_Value()
                       GROUP BY tmpMI_WorkProgress_out.GoodsId
                              , tmpMI_WorkProgress_out.PartionGoodsId
-                             , CLO_GoodsKind.ObjectId
+                             , MIContainer.ObjectIntId_Analyzer
 
                      )
          -- результат - группируется

@@ -2,6 +2,7 @@
 
 DROP FUNCTION IF EXISTS gpReport_Goods (TDateTime, TDateTime, Integer, Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpReport_Goods (TDateTime, TDateTime, Integer, Integer, Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpReport_Goods (TDateTime, TDateTime, Integer, Integer, Integer, Integer, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpReport_Goods (
     IN inStartDate    TDateTime ,  
@@ -10,6 +11,7 @@ CREATE OR REPLACE FUNCTION gpReport_Goods (
     IN inLocationId   Integer   , 
     IN inGoodsGroupId Integer   ,
     IN inGoodsId      Integer   ,
+    IN inIsPartner    Boolean   ,
     IN inSession      TVarChar    -- ñåññèÿ ïîëüçîâàòåëÿ
 )
 RETURNS TABLE  (MovementId Integer, InvNumber TVarChar, OperDate TDateTime, OperDatePartner TDateTime, MovementDescName TVarChar, MovementDescName_order TVarChar, isActive Boolean, isRemains Boolean
@@ -26,6 +28,7 @@ RETURNS TABLE  (MovementId Integer, InvNumber TVarChar, OperDate TDateTime, Oper
               , Amount_Change TFloat, Summ_Change_branch TFloat, Summ_Change_zavod TFloat
               , Amount_40200 TFloat, Summ_40200_branch TFloat, Summ_40200_zavod TFloat
               , Amount_Loss TFloat, Summ_Loss_branch TFloat, Summ_Loss_zavod TFloat
+              , isPage3 Boolean, isExistsPage3 Boolean
                )  
 AS
 $BODY$
@@ -48,21 +51,23 @@ BEGIN
               , gpReport.Amount_Change, gpReport.Summ_Change_branch, gpReport.Summ_Change_zavod
               , gpReport.Amount_40200, gpReport.Summ_40200_branch, gpReport.Summ_40200_zavod
               , gpReport.Amount_Loss, gpReport.Summ_Loss_branch, gpReport.Summ_Loss_zavod
+              , gpReport.isPage3, gpReport.isExistsPage3
          FROM gpReport_GoodsGroup (inStartDate   := inStartDate
                                  , inEndDate     := inEndDate
                                  , inUnitGroupId := inUnitGroupId
                                  , inLocationId  := inLocationId
                                  , inGoodsGroupId:= inGoodsGroupId
+                                 , inIsPartner   := inIsPartner
                                  , inSession     := inSession
                                   ) AS gpReport;
     ELSE
 
     RETURN QUERY
     WITH tmpWhere AS (SELECT lfSelect.UnitId AS LocationId, zc_ContainerLinkObject_Unit() AS DescId, inGoodsId AS GoodsId FROM lfSelect_Object_Unit_byGroup (inLocationId) AS lfSelect
-                    UNION
-                     SELECT Object.Id AS LocationId, zc_ContainerLinkObject_Car() AS DescId, inGoodsId AS GoodsId FROM Object WHERE Object.DescId = zc_Object_Car() AND (Object.Id = inLocationId OR COALESCE(inLocationId, 0) = 0)
-                    UNION
-                     SELECT Object.Id AS LocationId, zc_ContainerLinkObject_Member() AS DescId, inGoodsId AS GoodsId FROM Object WHERE Object.DescId = zc_Object_Member() AND (Object.Id = inLocationId OR COALESCE(inLocationId, 0) = 0)
+                     UNION
+                      SELECT Object.Id AS LocationId, zc_ContainerLinkObject_Car() AS DescId, inGoodsId AS GoodsId FROM Object WHERE Object.DescId = zc_Object_Car() AND (Object.Id = inLocationId OR COALESCE(inLocationId, 0) = 0)
+                     UNION
+                      SELECT Object.Id AS LocationId, zc_ContainerLinkObject_Member() AS DescId, inGoodsId AS GoodsId FROM Object WHERE Object.DescId = zc_Object_Member() AND (Object.Id = inLocationId OR COALESCE(inLocationId, 0) = 0)
                     )
        , tmpContainer_Count AS (SELECT Container.Id          AS ContainerId
                                      , CLO_Location.ObjectId AS LocationId
@@ -210,16 +215,47 @@ BEGIN
         , Movement.InvNumber
         , Movement.OperDate
         , MovementDate_OperDatePartner.ValueData AS OperDatePartner
+
         , CASE WHEN Movement.DescId IN (zc_Movement_Send(), zc_Movement_SendOnPrice(), zc_Movement_ProductionUnion(), zc_Movement_ProductionSeparate()) AND tmpMIContainer_group.isActive = TRUE
                     THEN MovementDesc.ItemName || ' ÏÐÈÕÎÄ'
                WHEN Movement.DescId IN (zc_Movement_Send(), zc_Movement_SendOnPrice(), zc_Movement_ProductionUnion(), zc_Movement_ProductionSeparate()) AND tmpMIContainer_group.isActive = FALSE
                     THEN MovementDesc.ItemName || ' ÐÀÑÕÎÄ'
                ELSE MovementDesc.ItemName
           END :: TVarChar AS MovementDescName
+
         , CASE WHEN Movement.DescId = zc_Movement_Income()
                     THEN '01 ' || MovementDesc.ItemName
-               ELSE MovementDesc.ItemName
+               WHEN Movement.DescId = zc_Movement_ReturnOut()
+                    THEN '02 ' || MovementDesc.ItemName
+               WHEN Movement.DescId = zc_Movement_Send() AND tmpMIContainer_group.isActive = TRUE
+                    THEN '03 ' || MovementDesc.ItemName
+               WHEN Movement.DescId = zc_Movement_Send() AND tmpMIContainer_group.isActive = FALSE
+                    THEN '04 ' || MovementDesc.ItemName
+               WHEN Movement.DescId = zc_Movement_ProductionUnion() AND tmpMIContainer_group.isActive = TRUE
+                    THEN '05 ' || MovementDesc.ItemName
+               WHEN Movement.DescId = zc_Movement_ProductionUnion() AND tmpMIContainer_group.isActive = FALSE
+                    THEN '06 ' || MovementDesc.ItemName
+               WHEN Movement.DescId = zc_Movement_ProductionSeparate() AND tmpMIContainer_group.isActive = TRUE
+                    THEN '07 ' || MovementDesc.ItemName
+               WHEN Movement.DescId = zc_Movement_ProductionSeparate() AND tmpMIContainer_group.isActive = FALSE
+                    THEN '08 ' || MovementDesc.ItemName
+               WHEN Movement.DescId = zc_Movement_SendOnPrice() AND tmpMIContainer_group.isActive = TRUE
+                    THEN '109 ' || MovementDesc.ItemName
+               WHEN Movement.DescId = zc_Movement_SendOnPrice() AND tmpMIContainer_group.isActive = FALSE
+                    THEN '110 ' || MovementDesc.ItemName
+               WHEN Movement.DescId = zc_Movement_Sale()
+                    THEN '111 ' || MovementDesc.ItemName
+               WHEN Movement.DescId = zc_Movement_ReturnIn()
+                    THEN '112 ' || MovementDesc.ItemName
+               WHEN Movement.DescId = zc_Movement_Loss()
+                    THEN '13 ' || MovementDesc.ItemName
+               WHEN Movement.DescId = zc_Movement_Inventory() AND tmpMIContainer_group.isActive = TRUE
+                    THEN '14 ' || MovementDesc.ItemName
+               WHEN Movement.DescId = zc_Movement_Inventory() AND tmpMIContainer_group.isActive = FALSE
+                    THEN '15 ' || MovementDesc.ItemName
+               ELSE '201 ' || MovementDesc.ItemName
           END :: TVarChar AS MovementDescName_order
+
         , CASE WHEN tmpMIContainer_group.MovementId <= 0 THEN NULL ELSE tmpMIContainer_group.isActive END :: Boolean AS isActive
         , CASE WHEN tmpMIContainer_group.MovementId <= 0 THEN TRUE ELSE FALSE END :: Boolean AS isRemains
 
@@ -290,6 +326,9 @@ BEGIN
         , 0 :: TFloat AS Amount_Change, 0 :: TFloat AS Summ_Change_branch, 0 :: TFloat AS Summ_Change_zavod
         , 0 :: TFloat AS Amount_40200,  0 :: TFloat AS Summ_40200_branch,  0 :: TFloat AS Summ_40200_zavod
         , 0 :: TFloat AS Amount_Loss,   0 :: TFloat AS Summ_Loss_branch,   0 :: TFloat AS Summ_Loss_zavod
+
+        , FALSE AS isPage3
+        , FALSE AS isExistsPage3
 
    FROM (SELECT tmpMIContainer_all.MovementId
               -- , 0 AS MovementItemId
@@ -523,7 +562,7 @@ BEGIN
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpReport_Goods (TDateTime, TDateTime, Integer, Integer, Integer, Integer, TVarChar) OWNER TO postgres;
+ALTER FUNCTION gpReport_Goods (TDateTime, TDateTime, Integer, Integer, Integer, Integer, Boolean, TVarChar) OWNER TO postgres;
 
 /*-------------------------------------------------------------------------------
  ÈÑÒÎÐÈß ÐÀÇÐÀÁÎÒÊÈ: ÄÀÒÀ, ÀÂÒÎÐ
@@ -538,4 +577,4 @@ ALTER FUNCTION gpReport_Goods (TDateTime, TDateTime, Integer, Integer, Integer, 
 */
 
 -- òåñò
--- SELECT * FROM gpReport_Goods (inStartDate:= '01.01.2015', inEndDate:= '01.01.2015', inUnitGroupId:= 0, inLocationId:= 0, inGoodsGroupId:= 0, inGoodsId:= 1826, inSession:= zfCalc_UserAdmin());
+-- SELECT * FROM gpReport_Goods (inStartDate:= '01.01.2015', inEndDate:= '01.01.2015', inUnitGroupId:= 0, inLocationId:= 0, inGoodsGroupId:= 0, inGoodsId:= 1826, inIsPartner:= FALSE, inSession:= zfCalc_UserAdmin());

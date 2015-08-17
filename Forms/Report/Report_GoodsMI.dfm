@@ -1,29 +1,29 @@
 inherited Report_GoodsMIForm: TReport_GoodsMIForm
   Caption = #1054#1090#1095#1077#1090' <'#1087#1086' '#1090#1086#1074#1072#1088#1072#1084'>'
   ClientHeight = 534
-  ClientWidth = 1146
+  ClientWidth = 1020
   AddOnFormData.isSingle = False
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
-  ExplicitWidth = 1162
+  ExplicitWidth = 1036
   ExplicitHeight = 569
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 80
-    Width = 1146
+    Width = 1020
     Height = 454
     TabOrder = 3
     ExplicitTop = 80
     ExplicitWidth = 1146
     ExplicitHeight = 454
     ClientRectBottom = 454
-    ClientRectRight = 1146
+    ClientRectRight = 1020
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 1146
       ExplicitHeight = 454
       inherited cxGrid: TcxGrid
-        Width = 1146
+        Width = 1020
         Height = 454
         ExplicitWidth = 1146
         ExplicitHeight = 454
@@ -1731,7 +1731,7 @@ inherited Report_GoodsMIForm: TReport_GoodsMIForm
     end
   end
   inherited Panel: TPanel
-    Width = 1146
+    Width = 1020
     Height = 54
     ExplicitWidth = 1146
     ExplicitHeight = 54
@@ -2423,9 +2423,23 @@ inherited Report_GoodsMIForm: TReport_GoodsMIForm
         ParamType = ptInput
       end
       item
-        Name = 'inGoodsGroupId'
+        Name = 'inJuridicalId'
         Value = ''
-        Component = GoodsGroupGuides
+        Component = JuridicalGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inPaidKindId'
+        Value = ''
+        Component = PaidKindGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inInfoMoneyId'
+        Value = ''
+        Component = InfoMoneyGuides
         ComponentItem = 'Key'
         ParamType = ptInput
       end
@@ -2444,56 +2458,42 @@ inherited Report_GoodsMIForm: TReport_GoodsMIForm
         ParamType = ptInput
       end
       item
-        Name = 'inPaidKindId'
+        Name = 'inGoodsGroupId'
         Value = ''
-        Component = PaidKindGuides
+        Component = GoodsGroupGuides
         ComponentItem = 'Key'
         ParamType = ptInput
       end
       item
-        Name = 'inJuridicalId'
-        Value = ''
-        Component = JuridicalGuides
-        ComponentItem = 'Key'
-        ParamType = ptInput
-      end
-      item
-        Name = 'inInfoMoneyId'
-        Value = ''
-        Component = InfoMoneyGuides
-        ComponentItem = 'Key'
-        ParamType = ptInput
-      end
-      item
-        Name = 'inisPartner'
+        Name = 'inIsPartner'
         Value = Null
         Component = cbPartner
         DataType = ftBoolean
         ParamType = ptInput
       end
       item
-        Name = 'inisTradeMark'
+        Name = 'inIsTradeMark'
         Value = Null
         Component = cbTradeMark
         DataType = ftBoolean
         ParamType = ptInput
       end
       item
-        Name = 'inisGoods'
+        Name = 'inIsGoods'
         Value = Null
         Component = cbGoods
         DataType = ftBoolean
         ParamType = ptInput
       end
       item
-        Name = 'inisGoodsKind'
+        Name = 'inIsGoodsKind'
         Value = Null
         Component = cbGoodsKind
         DataType = ftBoolean
         ParamType = ptInput
       end
       item
-        Name = 'inisPartionGoods'
+        Name = 'inIsPartionGoods'
         Value = Null
         Component = cbPartionGoods
         DataType = ftBoolean

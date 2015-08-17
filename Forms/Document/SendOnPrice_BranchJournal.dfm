@@ -4,7 +4,7 @@ inherited SendOnPrice_BranchJournalForm: TSendOnPrice_BranchJournalForm
   ClientWidth = 1110
   AddOnFormData.Params = FormParams
   ExplicitWidth = 1126
-  ExplicitHeight = 573
+  ExplicitHeight = 570
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -400,7 +400,6 @@ inherited SendOnPrice_BranchJournalForm: TSendOnPrice_BranchJournalForm
           DataSet = PrintItemsCDS
           UserName = 'frxDBDMaster'
         end>
-      CopiesCount = 1
       Params = <
         item
           Name = 'Id'
@@ -444,7 +443,6 @@ inherited SendOnPrice_BranchJournalForm: TSendOnPrice_BranchJournalForm
           DataSet = PrintItemsCDS
           UserName = 'frxDBDMaster'
         end>
-      CopiesCount = 1
       Params = <
         item
           Name = 'Id'
@@ -709,6 +707,9 @@ inherited SendOnPrice_BranchJournalForm: TSendOnPrice_BranchJournalForm
       end>
     Left = 400
     Top = 200
+  end
+  inherited spMovementReComplete: TdsdStoredProc
+    StoredProcName = 'gpReComplete_Movement_SendOnPrice'
   end
   object PrintHeaderCDS: TClientDataSet
     Aggregates = <>

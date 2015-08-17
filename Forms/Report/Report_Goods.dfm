@@ -1,26 +1,26 @@
 inherited Report_GoodsForm: TReport_GoodsForm
   Caption = #1054#1090#1095#1077#1090' <'#1087#1086' '#1090#1086#1074#1072#1088#1091'>'
   ClientHeight = 341
-  ClientWidth = 1174
-  ExplicitWidth = 1190
+  ClientWidth = 1020
+  ExplicitWidth = 1036
   ExplicitHeight = 376
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 80
-    Width = 1174
+    Width = 1020
     Height = 261
     TabOrder = 3
     ExplicitTop = 80
     ExplicitWidth = 1174
     ExplicitHeight = 261
     ClientRectBottom = 261
-    ClientRectRight = 1174
+    ClientRectRight = 1020
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 1174
       ExplicitHeight = 261
       inherited cxGrid: TcxGrid
-        Width = 1174
+        Width = 1020
         Height = 261
         ExplicitWidth = 1174
         ExplicitHeight = 261
@@ -674,12 +674,24 @@ inherited Report_GoodsForm: TReport_GoodsForm
             VisibleForCustomization = False
             Width = 55
           end
+          object isPage3: TcxGridDBColumn
+            DataBinding.FieldName = 'isPage3'
+            Visible = False
+            VisibleForCustomization = False
+            Width = 55
+          end
+          object isExistsPage3: TcxGridDBColumn
+            DataBinding.FieldName = 'isExistsPage3'
+            Visible = False
+            VisibleForCustomization = False
+            Width = 55
+          end
         end
       end
     end
   end
   inherited Panel: TPanel
-    Width = 1174
+    Width = 1020
     Height = 54
     ExplicitWidth = 1174
     ExplicitHeight = 54
@@ -773,9 +785,23 @@ inherited Report_GoodsForm: TReport_GoodsForm
       TabOrder = 11
       Width = 210
     end
+    object cbPartner: TcxCheckBox
+      Left = 938
+      Top = 5
+      Caption = #1055#1086' '#1082#1086#1085#1090#1088#1072#1075#1077#1085#1090#1072#1084
+      Properties.ReadOnly = False
+      State = cbsChecked
+      TabOrder = 12
+      Width = 113
+    end
   end
   inherited cxPropertiesStore: TcxPropertiesStore
     Components = <
+      item
+        Component = cbPartner
+        Properties.Strings = (
+          'Checked')
+      end
       item
         Component = deEnd
         Properties.Strings = (
@@ -787,7 +813,19 @@ inherited Report_GoodsForm: TReport_GoodsForm
           'Date')
       end
       item
+        Component = GoodsGroupGuides
+        Properties.Strings = (
+          'Key'
+          'TextValue')
+      end
+      item
         Component = GoodsGuides
+        Properties.Strings = (
+          'Key'
+          'TextValue')
+      end
+      item
+        Component = GuidesUnitGroup
         Properties.Strings = (
           'Key'
           'TextValue')
@@ -911,6 +949,13 @@ inherited Report_GoodsForm: TReport_GoodsForm
         Component = GoodsGuides
         ComponentItem = 'Key'
         ParamType = ptInput
+      end
+      item
+        Name = 'inIsPartner'
+        Value = Null
+        Component = cbPartner
+        DataType = ftBoolean
+        ParamType = ptInput
       end>
     Left = 112
     Top = 208
@@ -972,7 +1017,13 @@ inherited Report_GoodsForm: TReport_GoodsForm
         Component = PeriodChoice
       end
       item
+        Component = GuidesUnitGroup
+      end
+      item
         Component = LocationGuides
+      end
+      item
+        Component = GoodsGroupGuides
       end
       item
         Component = GoodsGuides

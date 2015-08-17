@@ -91,6 +91,14 @@ type
     PartionGoodsDate: TcxGridDBColumn;
     cbPartionGoods: TcxCheckBox;
     bbPartionGoods: TdxBarControlContainerItem;
+    CuterCount: TcxGridDBColumn;
+    OperCount_gp_real: TcxGridDBColumn;
+    TaxGP_real: TcxGridDBColumn;
+    TaxGP_plan: TcxGridDBColumn;
+    OperCount_gp_plan: TcxGridDBColumn;
+    actPrint_TaxReal: TdsdPrintAction;
+    dxBarButton1: TdxBarButton;
+    Price_sale: TcxGridDBColumn;
   private
     { Private declarations }
   public

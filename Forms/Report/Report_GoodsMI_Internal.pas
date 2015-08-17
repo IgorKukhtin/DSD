@@ -68,6 +68,9 @@ type
     bbLocation: TdxBarControlContainerItem;
     bbGoodsKind: TdxBarControlContainerItem;
     bbPartionGoods: TdxBarControlContainerItem;
+    Summ_calc: TcxGridDBColumn;
+    AmountOut: TcxGridDBColumn;
+    AmountIn: TcxGridDBColumn;
   private
     { Private declarations }
   public

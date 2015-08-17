@@ -1,27 +1,27 @@
 inherited Report_GoodsMI_ProductionForm: TReport_GoodsMI_ProductionForm
   Caption = #1054#1090#1095#1077#1090' <'#1055#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1086'>'
   ClientHeight = 344
-  ClientWidth = 1137
+  ClientWidth = 1020
   AddOnFormData.isSingle = False
   AddOnFormData.Params = FormParams
-  ExplicitWidth = 1153
+  ExplicitWidth = 1036
   ExplicitHeight = 379
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Width = 1137
+    Width = 1020
     Height = 287
     TabOrder = 3
     ExplicitTop = 57
     ExplicitWidth = 1137
     ExplicitHeight = 287
     ClientRectBottom = 287
-    ClientRectRight = 1137
+    ClientRectRight = 1020
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 1137
       ExplicitHeight = 287
       inherited cxGrid: TcxGrid
-        Width = 1137
+        Width = 1020
         Height = 287
         ExplicitWidth = 1137
         ExplicitHeight = 287
@@ -30,21 +30,12 @@ inherited Report_GoodsMI_ProductionForm: TReport_GoodsMI_ProductionForm
             item
               Format = ',0.####'
               Kind = skSum
-              Column = clSumm
+              Column = Summ_zavod
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = clAmount_Weight
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-              Column = clAmount_Sh
+              Column = Amount_Weight
             end
             item
               Format = ',0.####'
@@ -53,26 +44,36 @@ inherited Report_GoodsMI_ProductionForm: TReport_GoodsMI_ProductionForm
             item
               Format = ',0.####'
               Kind = skSum
+              Column = Amount_Sh
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Summ_branch
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Summ_60000
             end>
           DataController.Summary.FooterSummaryItems = <
             item
               Format = ',0.####'
               Kind = skSum
-              Column = clSumm
+              Column = Summ_zavod
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = clAmount_Weight
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-              Column = clAmount_Sh
+              Column = Amount_Weight
             end
             item
               Format = ',0.####'
@@ -81,6 +82,25 @@ inherited Report_GoodsMI_ProductionForm: TReport_GoodsMI_ProductionForm
             item
               Format = ',0.####'
               Kind = skSum
+              Column = Amount_Sh
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Summ_branch
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Summ_60000
             end>
           OptionsData.CancelOnExit = True
           OptionsData.Deleting = False
@@ -177,7 +197,18 @@ inherited Report_GoodsMI_ProductionForm: TReport_GoodsMI_ProductionForm
             HeaderAlignmentVert = vaCenter
             Width = 55
           end
-          object clAmount_Sh: TcxGridDBColumn
+          object Amount: TcxGridDBColumn
+            Caption = #1050#1086#1083'-'#1074#1086
+            DataBinding.FieldName = 'Amount'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 60
+          end
+          object Amount_Sh: TcxGridDBColumn
             Caption = #1050#1086#1083'-'#1074#1086' '#1064#1090'.'
             DataBinding.FieldName = 'Amount_Sh'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -187,7 +218,7 @@ inherited Report_GoodsMI_ProductionForm: TReport_GoodsMI_ProductionForm
             HeaderAlignmentVert = vaCenter
             Width = 80
           end
-          object clAmount_Weight: TcxGridDBColumn
+          object Amount_Weight: TcxGridDBColumn
             Caption = #1050#1086#1083'-'#1074#1086' '#1042#1077#1089
             DataBinding.FieldName = 'Amount_Weight'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -197,9 +228,9 @@ inherited Report_GoodsMI_ProductionForm: TReport_GoodsMI_ProductionForm
             HeaderAlignmentVert = vaCenter
             Width = 80
           end
-          object Price: TcxGridDBColumn
-            Caption = #1062#1077#1085#1072' '#1089'/'#1089
-            DataBinding.FieldName = 'Price'
+          object Price_zavod: TcxGridDBColumn
+            Caption = #1062#1077#1085#1072' '#1089'/'#1089' '#1079#1072#1074#1086#1076
+            DataBinding.FieldName = 'Price_zavod'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
@@ -207,15 +238,48 @@ inherited Report_GoodsMI_ProductionForm: TReport_GoodsMI_ProductionForm
             HeaderAlignmentVert = vaCenter
             Width = 55
           end
-          object clSumm: TcxGridDBColumn
-            Caption = #1057#1091#1084#1084#1072' '#1089'/'#1089
-            DataBinding.FieldName = 'Summ'
+          object Price_branch: TcxGridDBColumn
+            Caption = #1062#1077#1085#1072' '#1089'/'#1089' '#1092#1080#1083#1080#1072#1083
+            DataBinding.FieldName = 'Price_branch'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 55
+          end
+          object Summ_zavod: TcxGridDBColumn
+            Caption = #1057#1091#1084#1084#1072' '#1089'/'#1089' '#1079#1072#1074#1086#1076
+            DataBinding.FieldName = 'Summ_zavod'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 80
+          end
+          object Summ_branch: TcxGridDBColumn
+            Caption = #1057#1091#1084#1084#1072' '#1089'/'#1089' '#1092#1080#1083#1080#1072#1083
+            DataBinding.FieldName = 'Summ_branch'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 70
+          end
+          object Summ_60000: TcxGridDBColumn
+            Caption = #1057#1091#1084#1084#1072' '#1089'/'#1089' '#1087#1088'.'#1073#1091#1076'. '#1087#1077#1088#1080#1086#1076
+            DataBinding.FieldName = 'Summ_60000'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 70
           end
           object clTradeMarkName: TcxGridDBColumn
             Caption = #1058#1086#1088#1075#1086#1074#1072#1103' '#1084#1072#1088#1082#1072
@@ -230,7 +294,7 @@ inherited Report_GoodsMI_ProductionForm: TReport_GoodsMI_ProductionForm
     end
   end
   inherited Panel: TPanel
-    Width = 1137
+    Width = 1020
     ExplicitWidth = 1137
     inherited deStart: TcxDateEdit
       Left = 97
@@ -337,7 +401,7 @@ inherited Report_GoodsMI_ProductionForm: TReport_GoodsMI_ProductionForm
         ParamType = ptInput
       end
       item
-        Name = 'inisActive'
+        Name = 'inIsActive'
         Value = Null
         Component = FormParams
         ComponentItem = 'inisActive'
@@ -345,16 +409,16 @@ inherited Report_GoodsMI_ProductionForm: TReport_GoodsMI_ProductionForm
         ParamType = ptInput
       end
       item
-        Name = 'inGoodsGroupId'
-        Value = ''
-        Component = GuidesGoodsGroup
+        Name = 'inUnitId'
+        Value = Null
+        Component = GuidesUnit
         ComponentItem = 'Key'
         ParamType = ptInput
       end
       item
-        Name = 'inUnitId'
-        Value = Null
-        Component = GuidesUnit
+        Name = 'inGoodsGroupId'
+        Value = ''
+        Component = GuidesGoodsGroup
         ComponentItem = 'Key'
         ParamType = ptInput
       end>

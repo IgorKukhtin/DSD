@@ -39,14 +39,20 @@ BEGIN
                       WHERE Object_InfoMoney_View.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_20900() -- Общефирменные + Ирна
                          OR Object_InfoMoney_View.InfoMoneyGroupId       = zc_Enum_InfoMoneyGroup_30000() -- Доходы 
                      )
-        , tmpMI_1 AS  (SELECT MIContainer.ContainerId                 AS ContainerId
-                           , MIContainer.ObjectId_Analyzer           AS GoodsId
+   , tmpMI_Union AS  (SELECT tmpMI.GoodsId
+                           , tmpMI.GoodsKindId
+                           , tmpMI.Amount_Send_in
+                           , tmpMI.Amount_Send_out
+                           , tmpMI.Amount_Production
+                           , tmpMI.CountPack
+                      FROM
+                     (SELECT MIContainer.ObjectId_Analyzer           AS GoodsId
+                           , COALESCE (MIContainer.ObjectIntId_Analyzer, 0) AS GoodsKindId
                            , SUM (CASE WHEN MIContainer.MovementDescId = zc_Movement_Send()            AND MIContainer.IsActive = TRUE  THEN      MIContainer.Amount ELSE 0 END) AS Amount_Send_in
                            , SUM (CASE WHEN MIContainer.MovementDescId = zc_Movement_Send()            AND MIContainer.IsActive = FALSE THEN -1 * MIContainer.Amount ELSE 0 END) AS Amount_Send_out
                            , SUM (CASE WHEN MIContainer.MovementDescId = zc_Movement_ProductionUnion() AND MIContainer.IsActive = FALSE AND MIContainer.AnalyzerId = zc_Enum_AnalyzerId_ReWork() THEN -1 * MIContainer.Amount ELSE 0 END) AS Amount_Production
                            , SUM (COALESCE (MIFloat_CountPack.ValueData ,0)) AS CountPack
                       FROM MovementItemContainer AS MIContainer
-                           INNER JOIN tmpGoods ON tmpGoods.GoodsId = MIContainer.ObjectId_Analyzer
                            LEFT JOIN MovementItemFloat AS MIFloat_CountPack
                                                        ON MIFloat_CountPack.MovementItemId = MIContainer.MovementItemId
                                                       AND MIFloat_CountPack.DescId = zc_MIFloat_CountPack()
@@ -57,23 +63,11 @@ BEGIN
                         AND MIContainer.WhereObjectId_Analyzer = inUnitId
                         AND MIContainer.MovementDescId IN (zc_Movement_Send(), zc_Movement_ProductionUnion())
                         -- AND MIContainer.Amount <> 0
-                      GROUP BY MIContainer.ContainerId
-                             , MIContainer.ObjectId_Analyzer
-                      )
-       
-    
-       , tmpMI_Union AS (SELECT tmpMI_1.GoodsId
-                              , COALESCE (CLO_GoodsKind.ObjectId, 0) AS GoodsKindId
-                              , SUM (tmpMI_1.Amount_Send_in)         AS Amount_Send_in
-                              , SUM (tmpMI_1.Amount_Send_out)        AS Amount_Send_out
-                              , SUM (tmpMI_1.Amount_Production) AS Amount_Production
-                              , SUM (tmpMI_1.CountPack)              AS CountPack
-                         FROM tmpMI_1
-                              LEFT JOIN ContainerLinkObject AS CLO_GoodsKind
-                                                            ON CLO_GoodsKind.ContainerId = tmpMI_1.ContainerId
-                                                           AND CLO_GoodsKind.DescId = zc_ContainerLinkObject_GoodsKind()
-                         GROUP BY tmpMI_1.GoodsId, CLO_GoodsKind.ObjectId
-                         )
+                      GROUP BY MIContainer.ObjectId_Analyzer
+                             , MIContainer.ObjectIntId_Analyzer
+                     ) AS tmpMI
+                     INNER JOIN tmpGoods ON tmpGoods.GoodsId = tmpMI.GoodsId
+                     )
            , tmpReceipt AS (SELECT tmpMI_Union.GoodsId
                                  , tmpMI_Union.GoodsKindId
                                  , MAX (Object_Receipt.Id) AS ReceiptId
@@ -199,4 +193,4 @@ ALTER FUNCTION gpReport_GoodsMI_Package (TDateTime, TDateTime, Integer, TVarChar
 */
 
 -- тест
--- SELECT * FROM gpReport_GoodsMI_Package(inStartDate:= '01.06.2015', inEndDate:= '01.06.2015', inUnitId:= 8451, inSession:= zfCalc_UserAdmin()) ORDER BY 2;
+-- SELECT * FROM gpReport_GoodsMI_Package(inStartDate:= '01.07.2015', inEndDate:= '31.07.2015', inUnitId:= 8451, inSession:= zfCalc_UserAdmin()) ORDER BY 2;

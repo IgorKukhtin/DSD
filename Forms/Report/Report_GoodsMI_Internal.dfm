@@ -1,29 +1,29 @@
 inherited Report_GoodsMI_InternalForm: TReport_GoodsMI_InternalForm
   Caption = #1054#1090#1095#1077#1090' <'#1087#1086' '#1090#1086#1074#1072#1088#1072#1084'>'
   ClientHeight = 352
-  ClientWidth = 1143
+  ClientWidth = 1020
   AddOnFormData.isSingle = False
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
-  ExplicitWidth = 1159
+  ExplicitWidth = 1036
   ExplicitHeight = 387
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 99
-    Width = 1143
+    Width = 1020
     Height = 253
     TabOrder = 3
     ExplicitTop = 99
     ExplicitWidth = 1143
     ExplicitHeight = 253
     ClientRectBottom = 253
-    ClientRectRight = 1143
+    ClientRectRight = 1020
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 1143
       ExplicitHeight = 253
       inherited cxGrid: TcxGrid
-        Width = 1143
+        Width = 1020
         Height = 253
         ExplicitWidth = 1143
         ExplicitHeight = 253
@@ -78,6 +78,11 @@ inherited Report_GoodsMI_InternalForm: TReport_GoodsMI_InternalForm
               Format = ',0.####'
               Kind = skSum
               Column = SummIn_60000
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Summ_calc
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -129,6 +134,11 @@ inherited Report_GoodsMI_InternalForm: TReport_GoodsMI_InternalForm
               Format = ',0.####'
               Kind = skSum
               Column = SummIn_60000
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Summ_calc
             end>
           OptionsData.CancelOnExit = True
           OptionsData.Deleting = False
@@ -248,6 +258,17 @@ inherited Report_GoodsMI_InternalForm: TReport_GoodsMI_InternalForm
             HeaderAlignmentVert = vaCenter
             Width = 55
           end
+          object AmountOut: TcxGridDBColumn
+            Caption = #1050#1086#1083'-'#1074#1086' ('#1088#1072#1089#1093')'
+            DataBinding.FieldName = 'AmountOut'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 70
+          end
           object AmountOut_Weight: TcxGridDBColumn
             Caption = #1050#1086#1083'-'#1074#1086' '#1042#1077#1089' ('#1088#1072#1089#1093')'
             DataBinding.FieldName = 'AmountOut_Weight'
@@ -319,6 +340,17 @@ inherited Report_GoodsMI_InternalForm: TReport_GoodsMI_InternalForm
             HeaderAlignmentVert = vaCenter
             Width = 70
           end
+          object AmountIn: TcxGridDBColumn
+            Caption = #1050#1086#1083'-'#1074#1086' ('#1087#1088#1080#1093')'
+            DataBinding.FieldName = 'AmountIn'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 70
+          end
           object AmountIn_Weight: TcxGridDBColumn
             Caption = #1050#1086#1083'-'#1074#1086' '#1042#1077#1089' ('#1087#1088#1080#1093')'
             DataBinding.FieldName = 'AmountIn_Weight'
@@ -383,6 +415,16 @@ inherited Report_GoodsMI_InternalForm: TReport_GoodsMI_InternalForm
           object SummIn_60000: TcxGridDBColumn
             Caption = #1057#1091#1084#1084#1072' '#1089'/'#1089' '#1087#1088'.'#1073#1091#1076'. '#1087#1077#1088#1080#1086#1076' ('#1087#1088#1080#1093')'
             DataBinding.FieldName = 'SummIn_60000'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 70
+          end
+          object Summ_calc: TcxGridDBColumn
+            Caption = '***'#1057#1091#1084#1084#1072' '#1087#1088#1072#1081#1089' ('#1087#1088#1080#1093')'
+            DataBinding.FieldName = 'Summ_calc'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
@@ -469,7 +511,7 @@ inherited Report_GoodsMI_InternalForm: TReport_GoodsMI_InternalForm
     end
   end
   inherited Panel: TPanel
-    Width = 1143
+    Width = 1020
     Height = 73
     ExplicitWidth = 1143
     ExplicitHeight = 73
@@ -856,13 +898,6 @@ inherited Report_GoodsMI_InternalForm: TReport_GoodsMI_InternalForm
         ParamType = ptInput
       end
       item
-        Name = 'inGoodsGroupId'
-        Value = ''
-        Component = GoodsGroupGuides
-        ComponentItem = 'Key'
-        ParamType = ptInput
-      end
-      item
         Name = 'inFromId'
         Value = Null
         Component = FromGuides
@@ -873,6 +908,13 @@ inherited Report_GoodsMI_InternalForm: TReport_GoodsMI_InternalForm
         Name = 'inToId'
         Value = Null
         Component = ToGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inGoodsGroupId'
+        Value = ''
+        Component = GoodsGroupGuides
         ComponentItem = 'Key'
         ParamType = ptInput
       end
@@ -993,22 +1035,13 @@ inherited Report_GoodsMI_InternalForm: TReport_GoodsMI_InternalForm
         Component = PeriodChoice
       end
       item
-        Component = GoodsGroupGuides
-      end
-      item
         Component = FromGuides
-      end
-      item
-        Component = PaidKindGuides
       end
       item
         Component = ToGuides
       end
       item
-        Component = deStart
-      end
-      item
-        Component = deEnd
+        Component = GoodsGroupGuides
       end>
     Left = 216
     Top = 208

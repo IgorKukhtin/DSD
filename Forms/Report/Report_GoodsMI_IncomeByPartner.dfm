@@ -222,6 +222,17 @@ inherited Report_GoodsMI_IncomeByPartnerForm: TReport_GoodsMI_IncomeByPartnerFor
             HeaderAlignmentVert = vaCenter
             Width = 60
           end
+          object Amount: TcxGridDBColumn
+            Caption = #1050#1086#1083'-'#1074#1086' ('#1089#1082#1083#1072#1076')'
+            DataBinding.FieldName = 'Amount'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 70
+          end
           object clAmount_Weight: TcxGridDBColumn
             Caption = #1050#1086#1083'-'#1074#1086' '#1042#1077#1089' ('#1089#1082#1083#1072#1076')'
             DataBinding.FieldName = 'Amount_Weight'
@@ -235,6 +246,17 @@ inherited Report_GoodsMI_IncomeByPartnerForm: TReport_GoodsMI_IncomeByPartnerFor
           object clAmount_Sh: TcxGridDBColumn
             Caption = #1050#1086#1083'-'#1074#1086' '#1096#1090'. ('#1089#1082#1083#1072#1076')'
             DataBinding.FieldName = 'Amount_Sh'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 70
+          end
+          object AmountPartner: TcxGridDBColumn
+            Caption = #1050#1086#1083'-'#1074#1086' ('#1087#1086#1089#1090'.)'
+            DataBinding.FieldName = 'AmountPartner'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
@@ -263,12 +285,6 @@ inherited Report_GoodsMI_IncomeByPartnerForm: TReport_GoodsMI_IncomeByPartnerFor
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 70
-          end
-          object AmountPartner: TcxGridDBColumn
-            DataBinding.FieldName = 'AmountPartner'
-            Visible = False
-            VisibleForCustomization = False
-            Width = 55
           end
           object Price: TcxGridDBColumn
             Caption = #1062#1077#1085#1072' ('#1089#1082#1083#1072#1076')'
@@ -999,9 +1015,23 @@ inherited Report_GoodsMI_IncomeByPartnerForm: TReport_GoodsMI_IncomeByPartnerFor
         ParamType = ptInput
       end
       item
-        Name = 'inGoodsGroupId'
+        Name = 'inJuridicalId'
         Value = ''
-        Component = GoodsGroupGuides
+        Component = JuridicalGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inPaidKindId'
+        Value = Null
+        Component = PaidKindGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inInfoMoneyId'
+        Value = Null
+        Component = InfoMoneyGuides
         ComponentItem = 'Key'
         ParamType = ptInput
       end
@@ -1020,23 +1050,9 @@ inherited Report_GoodsMI_IncomeByPartnerForm: TReport_GoodsMI_IncomeByPartnerFor
         ParamType = ptInput
       end
       item
-        Name = 'inPaidKindId'
-        Value = Null
-        Component = PaidKindGuides
-        ComponentItem = 'Key'
-        ParamType = ptInput
-      end
-      item
-        Name = 'inJuridicalId'
+        Name = 'inGoodsGroupId'
         Value = ''
-        Component = JuridicalGuides
-        ComponentItem = 'Key'
-        ParamType = ptInput
-      end
-      item
-        Name = 'inInfoMoneyId'
-        Value = Null
-        Component = InfoMoneyGuides
+        Component = GoodsGroupGuides
         ComponentItem = 'Key'
         ParamType = ptInput
       end>

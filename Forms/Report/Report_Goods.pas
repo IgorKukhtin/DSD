@@ -13,7 +13,7 @@ uses
   Vcl.ActnList, cxPropertiesStore, cxLabel, cxTextEdit, cxMaskEdit,
   cxDropDownEdit, cxCalendar, Vcl.ExtCtrls, cxGridLevel, cxGridCustomView,
   cxGridCustomTableView, cxGridTableView, cxGridDBTableView, cxGrid, cxPC,
-  dsdGuides, cxButtonEdit, cxCurrencyEdit, Vcl.Menus;
+  dsdGuides, cxButtonEdit, cxCurrencyEdit, Vcl.Menus, cxCheckBox;
 
 type
   TReport_GoodsForm = class(TAncestorReportForm)
@@ -73,6 +73,9 @@ type
     Summ_Change_zavod: TcxGridDBColumn;
     Summ_40200_zavod: TcxGridDBColumn;
     Summ_Loss_zavod: TcxGridDBColumn;
+    cbPartner: TcxCheckBox;
+    isPage3: TcxGridDBColumn;
+    isExistsPage3: TcxGridDBColumn;
   private
     { Private declarations }
   public

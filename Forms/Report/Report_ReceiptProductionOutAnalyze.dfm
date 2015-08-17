@@ -85,6 +85,21 @@ inherited Report_ReceiptProductionOutAnalyzeForm: TReport_ReceiptProductionOutAn
               Format = ',0.####'
               Kind = skSum
               Column = OperSummPlan_real
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = CuterCount
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = OperCount_gp_real
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = OperCount_gp_plan
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -146,6 +161,21 @@ inherited Report_ReceiptProductionOutAnalyzeForm: TReport_ReceiptProductionOutAn
               Format = ',0.####'
               Kind = skSum
               Column = OperSummPlan_real
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = CuterCount
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = OperCount_gp_real
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = OperCount_gp_plan
             end>
           OptionsData.CancelOnExit = True
           OptionsData.Deleting = False
@@ -396,6 +426,69 @@ inherited Report_ReceiptProductionOutAnalyzeForm: TReport_ReceiptProductionOutAn
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 70
+          end
+          object CuterCount: TcxGridDBColumn
+            Caption = #1050#1086#1083'. '#1082#1091#1090#1077#1088#1086#1074
+            DataBinding.FieldName = 'CuterCount'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 60
+          end
+          object OperCount_gp_real: TcxGridDBColumn
+            Caption = #1055#1088#1080#1093#1086#1076' '#1043#1055'  '#1092#1072#1082#1090' ('#1080#1090#1086#1075')'
+            DataBinding.FieldName = 'OperCount_gp_real'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 60
+          end
+          object OperCount_gp_plan: TcxGridDBColumn
+            Caption = #1055#1088#1080#1093#1086#1076' '#1043#1055'  '#1087#1083#1072#1085' ('#1080#1090#1086#1075')'
+            DataBinding.FieldName = 'OperCount_gp_plan'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 60
+          end
+          object TaxGP_real: TcxGridDBColumn
+            Caption = '% '#1074#1099#1093'. '#1092#1072#1082#1090
+            DataBinding.FieldName = 'TaxGP_real'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 60
+          end
+          object TaxGP_plan: TcxGridDBColumn
+            Caption = '% '#1074#1099#1093'. '#1087#1083#1072#1085
+            DataBinding.FieldName = 'TaxGP_plan'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 60
+          end
+          object Price_sale: TcxGridDBColumn
+            Caption = #1062#1077#1085#1072' '#1087#1088#1072#1081#1089' '#1088#1077#1072#1083#1080#1079'.'
+            DataBinding.FieldName = 'Price_sale'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Visible = False
+            Width = 55
           end
           object TaxSumm_min: TcxGridDBColumn
             Caption = '% '#1076#1086#1083#1103' '#1074' '#1089'/'#1089' '#1086#1090
@@ -1331,6 +1424,79 @@ inherited Report_ReceiptProductionOutAnalyzeForm: TReport_ReceiptProductionOutAn
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
     end
+    object actPrint_TaxReal: TdsdPrintAction
+      Category = 'DSDLib'
+      MoveParams = <
+        item
+          FromParam.Name = 'id'
+          FromParam.Value = Null
+          FromParam.ComponentItem = 'id'
+          ToParam.Value = '0'
+          ToParam.ComponentItem = 'Id'
+          ToParam.ParamType = ptInputOutput
+        end
+        item
+          FromParam.Value = 42186d
+          FromParam.Component = deStart
+          FromParam.DataType = ftDateTime
+          ToParam.Name = 'StartDate'
+          ToParam.Value = Null
+          ToParam.DataType = ftDateTime
+          ToParam.ParamType = ptInputOutput
+        end
+        item
+          FromParam.Value = 42186d
+          FromParam.Component = deEnd
+          FromParam.DataType = ftDateTime
+          ToParam.Name = 'EndDate'
+          ToParam.Value = Null
+          ToParam.DataType = ftDateTime
+          ToParam.ParamType = ptInputOutput
+        end>
+      StoredProcList = <>
+      Caption = #1055#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1086' '#1080' '#1087#1088#1086#1094#1077#1085#1090' '#1074#1099#1093#1086#1076#1072' ('#1094#1077#1085#1072' '#1092#1072#1082#1090')'
+      Hint = #1055#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1086' '#1080' '#1087#1088#1086#1094#1077#1085#1090' '#1074#1099#1093#1086#1076#1072' ('#1094#1077#1085#1072' '#1092#1072#1082#1090')'
+      ImageIndex = 21
+      DataSets = <
+        item
+          UserName = 'frxDBDMaster'
+          IndexFieldNames = 'GoodsGroupNameFull;GoodsName;GoodsKindName'
+          GridView = cxGridDBTableView
+        end>
+      Params = <
+        item
+          Name = 'StartDate'
+          Value = 42186d
+          Component = deStart
+          DataType = ftDateTime
+          ParamType = ptInput
+        end
+        item
+          Name = 'EndDate'
+          Value = 42186d
+          Component = deEnd
+          DataType = ftDateTime
+          ParamType = ptInput
+        end
+        item
+          Name = 'GoodsGroupName'
+          Value = ''
+          Component = GoodsGroupGuides
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          ParamType = ptInput
+        end
+        item
+          Name = 'isGoodsKind'
+          Value = 'False'
+          DataType = ftBoolean
+          ParamType = ptInput
+        end>
+      ReportName = #1055#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1086' '#1080' '#1087#1088#1086#1094#1077#1085#1090' '#1074#1099#1093#1086#1076#1072' ('#1094#1077#1085#1072' '#1092#1072#1082#1090')'
+      ReportNameParam.Value = #1055#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1086' '#1080' '#1087#1088#1086#1094#1077#1085#1090' '#1074#1099#1093#1086#1076#1072' ('#1094#1077#1085#1072' '#1092#1072#1082#1090')'
+      ReportNameParam.DataType = ftString
+      ReportNameParam.ParamType = ptInput
+    end
   end
   inherited MasterDS: TDataSource
     Left = 48
@@ -1471,6 +1637,14 @@ inherited Report_ReceiptProductionOutAnalyzeForm: TReport_ReceiptProductionOutAn
         end
         item
           Visible = True
+          ItemName = 'dxBarButton1'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbGridToExcel'
         end
         item
@@ -1487,11 +1661,15 @@ inherited Report_ReceiptProductionOutAnalyzeForm: TReport_ReceiptProductionOutAn
       Category = 0
     end
     object bbPartionGoods: TdxBarControlContainerItem
-      Caption = 'New Item'
+      Caption = 'bbPartionGoods'
       Category = 0
-      Hint = 'New Item'
+      Hint = 'bbPartionGoods'
       Visible = ivAlways
       Control = cbPartionGoods
+    end
+    object dxBarButton1: TdxBarButton
+      Action = actPrint_TaxReal
+      Category = 0
     end
   end
   inherited PeriodChoice: TPeriodChoice
