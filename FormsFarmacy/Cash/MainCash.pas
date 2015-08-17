@@ -539,7 +539,7 @@ begin
        end;
        //обновить остаток в гл. ДС
        //Обновить остаок в альтернативе
-       UpdateQuantityInQuery(SourceClientDataSet.FieldByName('Id').asInteger,
+       UpdateQuantityInQuery(ParamByName('inGoodsId').Value,
          ParamByName('outRemains').AsFloat);
        //Обновить сумму документа
        FTotalSumm := ParamByName('outTotalSummCheck').AsFloat;
@@ -565,6 +565,7 @@ procedure TMainCashForm.UpdateQuantityInQuery(GoodsId: integer; Remains: Real);
 begin
   RemainsCDS.DisableControls;
   RemainsCDS.AfterScroll := nil;
+  RemainsCDS.Filtered := False;
   AlternativeCDS.DisableControls;
   AlternativeCDS.Filtered := False;
   try
@@ -589,6 +590,7 @@ begin
     RemainsCDS.AfterScroll := RemainsCDSAfterScroll;
     RemainsCDSAfterScroll(RemainsCDS);
     AlternativeCDS.Filtered := True;
+    RemainsCDS.Filtered := true;
     RemainsCDS.EnableControls;
     AlternativeCDS.EnableControls;
   end;
