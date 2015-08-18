@@ -269,8 +269,12 @@ BEGIN
                             , 0                               AS SummPartnerIn
                             , SUM (tmp.AmountStart_Weight)    AS AmountStart
                             , SUM (tmp.AmountEnd_Weight)      AS AmountEnd 
-                            , SUM (tmp.SummStart_branch)      AS SummStart
-                            , SUM (tmp.SummEnd_branch)        AS SummEnd
+                            , SUM (tmp.SummStart_zavod)       AS SummStart
+                            , SUM (tmp.SummEnd_zavod)         AS SummEnd
+                            , SUM (tmp.SummStart_branch)      AS SummStart_branch
+                            , SUM (tmp.SummEnd_branch)        AS SummEnd_branch
+                            , 0                               AS Summ
+                            , 0                               AS Summ_branch
                             , 0                               AS Amount_Change
                             , 0                               AS Summ_Change_branch
                             , 0                               AS Summ_Change_zavod
@@ -281,6 +285,7 @@ BEGIN
                             , 0                               AS Summ_Loss_branch
                             , 0                               AS Summ_Loss_zavod
                             , FALSE                           AS isActive
+                            , FALSE                           AS isReprice
                             , FALSE                           AS isPage3
                        FROM tmpRemains AS tmp
                             LEFT JOIN Object AS Object_Location ON Object_Location.Id = tmp.LocationId
@@ -302,13 +307,19 @@ BEGIN
                             , 0                               AS AmountIn
                             , 0                               AS SummIn
                             , 0                               AS SummPartnerIn
+
                             , 0                               AS AmountStart
                             , 0                               AS AmountEnd 
                             , 0                               AS SummStart
                             , 0                               AS SummEnd 
-                            , tmp.AmountOut_Weight - tmp.AmountIn_Weight  AS Amount_Change
+                            , 0                               AS SummStart_branch
+                            , 0                               AS SummEnd_branch
+                            , 0                               AS Summ
+                            , 0                               AS Summ_branch
+
+                            , tmp.AmountOut_Weight - tmp.AmountIn_Weight AS Amount_Change
                             , tmp.SummOut_branch   - tmp.SummIn_zavod    AS Summ_Change_branch
-                            , tmp.SummOut_zavod    - tmp.SummIn_zavod     AS Summ_Change_zavod
+                            , tmp.SummOut_zavod    - tmp.SummIn_zavod    AS Summ_Change_zavod
                             , 0                               AS Amount_40200 
                             , 0                               AS Summ_40200_branch
                             , 0                               AS Summ_40200_zavod
@@ -316,6 +327,7 @@ BEGIN
                             , 0                               AS Summ_Loss_branch
                             , 0                               AS Summ_Loss_zavod
                             , FALSE                           AS isActive
+                            , FALSE                           AS isReprice
                             , TRUE                            AS isPage3
                        FROM tmpSendOnPrice_out AS tmp
                       UNION ALL
@@ -338,6 +350,11 @@ BEGIN
                             , 0                               AS AmountEnd 
                             , 0                               AS SummStart
                             , 0                               AS SummEnd 
+                            , 0                               AS SummStart_branch
+                            , 0                               AS SummEnd_branch
+                            , 0                               AS Summ
+                            , 0                               AS Summ_branch
+
                             , 0                               AS Amount_Change
                             , 0                               AS Summ_Change_branch
                             , 0                               AS Summ_Change_zavod
@@ -348,6 +365,7 @@ BEGIN
                             , 0                               AS Summ_Loss_branch
                             , 0                               AS Summ_Loss_zavod
                             , TRUE                            AS isActive
+                            , FALSE                           AS isReprice
                             , TRUE                            AS isPage3
                        FROM tmpSendOnPrice_in AS tmp
                       UNION ALL
@@ -371,10 +389,16 @@ BEGIN
                             , 0                               AS AmountIn
                             , 0                               AS SummIn
                             , 0                               AS SummPartnerIn
+
                             , 0                               AS AmountStart
                             , 0                               AS AmountEnd 
                             , 0                               AS SummStart
                             , 0                               AS SummEnd 
+                            , 0                               AS SummStart_branch
+                            , 0                               AS SummEnd_branch
+                            , 0                               AS Summ
+                            , 0                               AS Summ_branch
+
                             , 0                               AS Amount_Change
                             , 0                               AS Summ_Change_branch
                             , 0                               AS Summ_Change_zavod
@@ -385,6 +409,7 @@ BEGIN
                             , 0                               AS Summ_Loss_branch
                             , 0                               AS Summ_Loss_zavod
                             , FALSE                           AS isActive
+                            , FALSE                           AS isReprice
                             , FALSE                           AS isPage3
                        FROM tmpLoss AS tmp
                       UNION ALL
@@ -400,10 +425,16 @@ BEGIN
                             , 0                               AS AmountIn
                             , 0                               AS SummIn
                             , 0                               AS SummPartnerIn
+
                             , 0                               AS AmountStart
                             , 0                               AS AmountEnd 
                             , 0                               AS SummStart
                             , 0                               AS SummEnd 
+                            , 0                               AS SummStart_branch
+                            , 0                               AS SummEnd_branch
+                            , 0                               AS Summ
+                            , 0                               AS Summ_branch
+
                             , 0                               AS Amount_Change
                             , 0                               AS Summ_Change_branch
                             , 0                               AS Summ_Change_zavod
@@ -414,6 +445,7 @@ BEGIN
                             , 0                               AS Summ_Loss_branch
                             , 0                               AS Summ_Loss_zavod
                             , FALSE                           AS isActive
+                            , FALSE                           AS isReprice
                             , FALSE                           AS isPage3
                        FROM tmpSend_out AS tmp
                       UNION ALL
@@ -429,10 +461,16 @@ BEGIN
                             , tmp.AmountIn_Weight             AS AmountIn
                             , tmp.SummIn_zavod                AS SummIn
                             , 0                               AS SummPartnerIn
+
                             , 0                               AS AmountStart
                             , 0                               AS AmountEnd 
                             , 0                               AS SummStart
                             , 0                               AS SummEnd 
+                            , 0                               AS SummStart_branch
+                            , 0                               AS SummEnd_branch
+                            , 0                               AS Summ
+                            , 0                               AS Summ_branch
+
                             , 0                               AS Amount_Change
                             , 0                               AS Summ_Change_branch
                             , 0                               AS Summ_Change_zavod
@@ -443,6 +481,7 @@ BEGIN
                             , 0                               AS Summ_Loss_branch
                             , 0                               AS Summ_Loss_zavod
                             , TRUE                            AS isActive
+                            , FALSE                           AS isReprice
                             , FALSE                           AS isPage3
                        FROM tmpSend_in AS tmp
                       UNION ALL
@@ -458,10 +497,16 @@ BEGIN
                             , 0                               AS AmountIn
                             , 0                               AS SummIn
                             , 0                               AS SummPartnerIn
+
                             , 0                               AS AmountStart
                             , 0                               AS AmountEnd 
                             , 0                               AS SummStart
                             , 0                               AS SummEnd 
+                            , 0                               AS SummStart_branch
+                            , 0                               AS SummEnd_branch
+                            , 0                               AS Summ
+                            , 0                               AS Summ_branch
+
                             , SUM (tmp.OperCount_Change)      AS Amount_Change
                             , SUM (tmp.SummIn_Change_branch)  AS Summ_Change_branch
                             , SUM (tmp.SummIn_Change_zavod)   AS Summ_Change_zavod
@@ -472,6 +517,7 @@ BEGIN
                             , SUM (tmp.SummIn_Loss)           AS Summ_Loss_branch
                             , SUM (tmp.SummIn_Loss_zavod)     AS Summ_Loss_zavod
                             , FALSE                           AS isActive
+                            , FALSE                           AS isReprice
                             , TRUE                            AS isPage3
                        FROM tmpSale AS tmp
                        GROUP BY tmp.LocationCode, tmp.LocationName
@@ -490,10 +536,16 @@ BEGIN
                             , SUM (tmp.OperCount_Partner)     AS AmountIn
                             , SUM (tmp.SummIn_Partner_branch) AS SummIn
                             , SUM (tmp.SummOut_Partner)       AS SummPartnerIn
+
                             , 0                               AS AmountStart
                             , 0                               AS AmountEnd 
                             , 0                               AS SummStart
                             , 0                               AS SummEnd 
+                            , 0                               AS SummStart_branch
+                            , 0                               AS SummEnd_branch
+                            , 0                               AS Summ
+                            , 0                               AS Summ_branch
+
                             , SUM (tmp.OperCount_Change)      AS Amount_Change
                             , SUM (tmp.SummIn_Change_branch)  AS Summ_Change_branch
                             , SUM (tmp.SummIn_Change_zavod)   AS Summ_Change_zavod
@@ -504,6 +556,7 @@ BEGIN
                             , 0                               AS Summ_Loss_branch
                             , 0                               AS Summ_Loss_zavod
                             , TRUE                            AS isActive
+                            , FALSE                           AS isReprice
                             , TRUE                            AS isPage3
                        FROM tmpReturnIn AS tmp
                        GROUP BY tmp.LocationCode, tmp.LocationName
@@ -522,10 +575,16 @@ BEGIN
                             , SUM (tmp.AmountPartner_Weight)  AS AmountIn
                             , SUM (tmp.Summ - Summ_ProfitLoss) AS SummIn
                             , SUM (tmp.Summ)                  AS SummPartnerIn
+
                             , 0                               AS AmountStart
                             , 0                               AS AmountEnd 
                             , 0                               AS SummStart
                             , 0                               AS SummEnd 
+                            , 0                               AS SummStart_branch
+                            , 0                               AS SummEnd_branch
+                            , 0                               AS Summ
+                            , 0                               AS Summ_branch
+
                             , 0                               AS Amount_Change
                             , 0                               AS Summ_Change_branch
                             , 0                               AS Summ_Change_zavod
@@ -536,6 +595,7 @@ BEGIN
                             , 0                               AS Summ_Loss_branch
                             , 0                               AS Summ_Loss_zavod
                             , TRUE                            AS isActive
+                            , FALSE                           AS isReprice
                             , FALSE                           AS isPage3
                        FROM tmpIncome AS tmp
                        GROUP BY tmp.LocationCode, tmp.LocationName
@@ -554,10 +614,16 @@ BEGIN
                             , 0                               AS AmountIn
                             , 0                               AS SummIn
                             , 0                               AS SummPartnerIn
+
                             , 0                               AS AmountStart
                             , 0                               AS AmountEnd 
                             , 0                               AS SummStart
                             , 0                               AS SummEnd 
+                            , 0                               AS SummStart_branch
+                            , 0                               AS SummEnd_branch
+                            , 0                               AS Summ
+                            , 0                               AS Summ_branch
+
                             , 0                               AS Amount_Change
                             , 0                               AS Summ_Change_branch
                             , 0                               AS Summ_Change_zavod
@@ -568,6 +634,7 @@ BEGIN
                             , 0                               AS Summ_Loss_branch
                             , 0                               AS Summ_Loss_zavod
                             , FALSE                           AS isActive
+                            , FALSE                           AS isReprice
                             , TRUE                            AS isPage3
                        FROM tmpReturnOut AS tmp
                        GROUP BY tmp.LocationCode, tmp.LocationName
@@ -586,10 +653,16 @@ BEGIN
                             , SUM (tmp.Amount_Weight)         AS AmountIn
                             , SUM (tmp.Summ_branch)           AS SummIn
                             , 0                               AS SummPartnerIn
+
                             , 0                               AS AmountStart
                             , 0                               AS AmountEnd 
                             , 0                               AS SummStart
                             , 0                               AS SummEnd 
+                            , 0                               AS SummStart_branch
+                            , 0                               AS SummEnd_branch
+                            , 0                               AS Summ
+                            , 0                               AS Summ_branch
+
                             , 0                               AS Amount_Change
                             , 0                               AS Summ_Change_branch
                             , 0                               AS Summ_Change_zavod
@@ -600,6 +673,7 @@ BEGIN
                             , 0                               AS Summ_Loss_branch
                             , 0                               AS Summ_Loss_zavod
                             , TRUE                            AS isActive
+                            , FALSE                           AS isReprice
                             , FALSE                           AS isPage3
                        FROM tmpProductionUnion_in AS tmp
                        GROUP BY tmp.LocationCode, tmp.LocationName, tmp.LocationCode_by, tmp.LocationName_by
@@ -616,10 +690,16 @@ BEGIN
                             , 0                               AS AmountIn
                             , 0                               AS SummIn
                             , 0                               AS SummPartnerIn
+
                             , 0                               AS AmountStart
                             , 0                               AS AmountEnd 
                             , 0                               AS SummStart
                             , 0                               AS SummEnd 
+                            , 0                               AS SummStart_branch
+                            , 0                               AS SummEnd_branch
+                            , 0                               AS Summ
+                            , 0                               AS Summ_branch
+
                             , 0                               AS Amount_Change
                             , 0                               AS Summ_Change_branch
                             , 0                               AS Summ_Change_zavod
@@ -630,6 +710,7 @@ BEGIN
                             , 0                               AS Summ_Loss_branch
                             , 0                               AS Summ_Loss_zavod
                             , FALSE                           AS isActive
+                            , FALSE                           AS isReprice
                             , FALSE                           AS isPage3
                        FROM tmpProductionUnion_out AS tmp
                        GROUP BY tmp.LocationCode, tmp.LocationName, tmp.LocationCode_by, tmp.LocationName_by
@@ -647,10 +728,16 @@ BEGIN
                             , SUM (tmp.Amount_Weight)         AS AmountIn
                             , SUM (tmp.Summ_branch)           AS SummIn
                             , 0                               AS SummPartnerIn
+
                             , 0                               AS AmountStart
                             , 0                               AS AmountEnd 
                             , 0                               AS SummStart
                             , 0                               AS SummEnd 
+                            , 0                               AS SummStart_branch
+                            , 0                               AS SummEnd_branch
+                            , 0                               AS Summ
+                            , 0                               AS Summ_branch
+
                             , 0                               AS Amount_Change
                             , 0                               AS Summ_Change_branch
                             , 0                               AS Summ_Change_zavod
@@ -661,6 +748,7 @@ BEGIN
                             , 0                               AS Summ_Loss_branch
                             , 0                               AS Summ_Loss_zavod
                             , TRUE                            AS isActive
+                            , FALSE                           AS isReprice
                             , FALSE                           AS isPage3
                        FROM tmpProductionSeparate_in AS tmp
                        GROUP BY tmp.LocationCode, tmp.LocationName, tmp.LocationCode_by, tmp.LocationName_by
@@ -677,10 +765,16 @@ BEGIN
                             , 0                               AS AmountIn
                             , 0                               AS SummIn
                             , 0                               AS SummPartnerIn
+
                             , 0                               AS AmountStart
                             , 0                               AS AmountEnd 
                             , 0                               AS SummStart
                             , 0                               AS SummEnd 
+                            , 0                               AS SummStart_branch
+                            , 0                               AS SummEnd_branch
+                            , 0                               AS Summ
+                            , 0                               AS Summ_branch
+
                             , 0                               AS Amount_Change
                             , 0                               AS Summ_Change_branch
                             , 0                               AS Summ_Change_zavod
@@ -691,6 +785,7 @@ BEGIN
                             , 0                               AS Summ_Loss_branch
                             , 0                               AS Summ_Loss_zavod
                             , FALSE                           AS isActive
+                            , FALSE                           AS isReprice
                             , FALSE                           AS isPage3
                        FROM tmpProductionSeparate_out AS tmp
                        GROUP BY tmp.LocationCode, tmp.LocationName, tmp.LocationCode_by, tmp.LocationName_by
@@ -707,10 +802,16 @@ BEGIN
                             , SUM (tmp.AmountIn_Weight)       AS AmountIn
                             , SUM (tmp.SummIn_branch)         AS SummIn
                             , 0                               AS SummPartnerIn
+
                             , 0                               AS AmountStart
                             , 0                               AS AmountEnd 
                             , 0                               AS SummStart
                             , 0                               AS SummEnd 
+                            , 0                               AS SummStart_branch
+                            , 0                               AS SummEnd_branch
+                            , 0                               AS Summ
+                            , 0                               AS Summ_branch
+
                             , 0                               AS Amount_Change
                             , 0                               AS Summ_Change_branch
                             , 0                               AS Summ_Change_zavod
@@ -721,6 +822,7 @@ BEGIN
                             , 0                               AS Summ_Loss_branch
                             , 0                               AS Summ_Loss_zavod
                             , TRUE                            AS isActive
+                            , FALSE                           AS isReprice
                             , FALSE                           AS isPage3
                        FROM tmpInventory AS tmp
                        GROUP BY tmp.LocationCode, tmp.LocationName
@@ -737,10 +839,16 @@ BEGIN
                             , 0                               AS AmountIn
                             , 0                               AS SummIn
                             , 0                               AS SummPartnerIn
+
                             , 0                               AS AmountStart
                             , 0                               AS AmountEnd 
                             , 0                               AS SummStart
                             , 0                               AS SummEnd 
+                            , 0                               AS SummStart_branch
+                            , 0                               AS SummEnd_branch
+                            , 0                               AS Summ
+                            , 0                               AS Summ_branch
+
                             , 0                               AS Amount_Change
                             , 0                               AS Summ_Change_branch
                             , 0                               AS Summ_Change_zavod
@@ -751,6 +859,81 @@ BEGIN
                             , 0                               AS Summ_Loss_branch
                             , 0                               AS Summ_Loss_zavod
                             , FALSE                           AS isActive
+                            , FALSE                           AS isReprice
+                            , FALSE                           AS isPage3
+                       FROM tmpInventory AS tmp
+                       GROUP BY tmp.LocationCode, tmp.LocationName
+                      UNION ALL
+                       -- 7.3. Inventory - RePrice
+                       SELECT zc_Movement_Inventory()         AS MovementDescId
+                            , tmp.LocationCode                AS LocationCode
+                            , tmp.LocationName                AS LocationName
+                            , tmp.LocationCode                AS ObjectByCode
+                            , '+' || tmp.LocationName         AS ObjectByName
+                            , 0                               AS AmountOut
+                            , 0                               AS SummOut
+                            , 0                               AS SummPartnerOut
+                            , 0                               AS AmountIn
+                            , SUM (tmp.SummIn_RePrice)        AS SummIn
+                            , 0                               AS SummPartnerIn
+
+                            , 0                               AS AmountStart
+                            , 0                               AS AmountEnd 
+                            , 0                               AS SummStart
+                            , 0                               AS SummEnd 
+                            , 0                               AS SummStart_branch
+                            , 0                               AS SummEnd_branch
+                            , 0                               AS Summ
+                            , 0                               AS Summ_branch
+
+                            , 0                               AS Amount_Change
+                            , 0                               AS Summ_Change_branch
+                            , 0                               AS Summ_Change_zavod
+                            , 0                               AS Amount_40200
+                            , 0                               AS Summ_40200_branch
+                            , 0                               AS Summ_40200_zavod
+                            , 0                               AS Amount_Loss
+                            , 0                               AS Summ_Loss_branch
+                            , 0                               AS Summ_Loss_zavod
+                            , TRUE                            AS isActive
+                            , TRUE                            AS isReprice
+                            , FALSE                           AS isPage3
+                       FROM tmpInventory AS tmp
+                       GROUP BY tmp.LocationCode, tmp.LocationName
+                      UNION ALL
+                       -- 7.4. Inventory - RePrice
+                       SELECT zc_Movement_Inventory()         AS MovementDescId
+                            , tmp.LocationCode                AS LocationCode
+                            , tmp.LocationName                AS LocationName
+                            , tmp.LocationCode                AS ObjectByCode
+                            , '-' || tmp.LocationName         AS ObjectByName
+                            , 0                               AS AmountOut
+                            , SUM (tmp.SummOut_RePrice)       AS SummOut
+                            , 0                               AS SummPartnerOut
+                            , 0                               AS AmountIn
+                            , 0                               AS SummIn
+                            , 0                               AS SummPartnerIn
+
+                            , 0                               AS AmountStart
+                            , 0                               AS AmountEnd 
+                            , 0                               AS SummStart
+                            , 0                               AS SummEnd 
+                            , 0                               AS SummStart_branch
+                            , 0                               AS SummEnd_branch
+                            , 0                               AS Summ
+                            , 0                               AS Summ_branch
+
+                            , 0                               AS Amount_Change
+                            , 0                               AS Summ_Change_branch
+                            , 0                               AS Summ_Change_zavod
+                            , 0                               AS Amount_40200
+                            , 0                               AS Summ_40200_branch
+                            , 0                               AS Summ_40200_zavod
+                            , 0                               AS Amount_Loss
+                            , 0                               AS Summ_Loss_branch
+                            , 0                               AS Summ_Loss_zavod
+                            , FALSE                           AS isActive
+                            , TRUE                            AS isReprice
                             , FALSE                           AS isPage3
                        FROM tmpInventory AS tmp
                        GROUP BY tmp.LocationCode, tmp.LocationName
@@ -766,7 +949,9 @@ BEGIN
         , ''   :: TVarChar  AS InvNumber
         , NULL :: TDateTime AS OperDate
         , NULL :: TDateTime AS OperDatePartner
-        , CASE WHEN tmpResult.MovementDescId IN (zc_Movement_Send(), zc_Movement_SendOnPrice(), zc_Movement_ProductionUnion(), zc_Movement_ProductionSeparate()) AND tmpResult.isActive = TRUE
+        , CASE WHEN tmpResult.MovementDescId = zc_Movement_Inventory() AND tmpResult.isReprice = TRUE
+                    THEN MovementDesc.ItemName || ' ïåðåîöåíêà'
+               WHEN tmpResult.MovementDescId IN (zc_Movement_Send(), zc_Movement_SendOnPrice(), zc_Movement_ProductionUnion(), zc_Movement_ProductionSeparate()) AND tmpResult.isActive = TRUE
                     THEN MovementDesc.ItemName || ' ÏÐÈÕÎÄ'
                WHEN tmpResult.MovementDescId IN (zc_Movement_Send(), zc_Movement_SendOnPrice(), zc_Movement_ProductionUnion(), zc_Movement_ProductionSeparate()) AND tmpResult.isActive = FALSE
                     THEN MovementDesc.ItemName || ' ÐÀÑÕÎÄ'
@@ -798,10 +983,15 @@ BEGIN
                     THEN '112 ' || MovementDesc.ItemName
                WHEN tmpResult.MovementDescId = zc_Movement_Loss()
                     THEN '13 ' || MovementDesc.ItemName
-               WHEN tmpResult.MovementDescId = zc_Movement_Inventory() AND tmpResult.isActive = TRUE
+               WHEN tmpResult.MovementDescId = zc_Movement_Inventory() AND tmpResult.isActive = TRUE  AND tmpResult.isRePrice = FALSE
                     THEN '14 ' || MovementDesc.ItemName
-               WHEN tmpResult.MovementDescId = zc_Movement_Inventory() AND tmpResult.isActive = FALSE
+               WHEN tmpResult.MovementDescId = zc_Movement_Inventory() AND tmpResult.isActive = FALSE AND tmpResult.isRePrice = FALSE
                     THEN '15 ' || MovementDesc.ItemName
+               WHEN tmpResult.MovementDescId = zc_Movement_Inventory() AND tmpResult.isActive = TRUE  AND tmpResult.isRePrice = TRUE
+                    THEN '16 ' || MovementDesc.ItemName
+               WHEN tmpResult.MovementDescId = zc_Movement_Inventory() AND tmpResult.isActive = FALSE AND tmpResult.isRePrice = TRUE
+                    THEN '17 ' || MovementDesc.ItemName
+
                ELSE '201 ' || MovementDesc.ItemName
           END :: TVarChar AS MovementDescName_order
 

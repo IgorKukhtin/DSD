@@ -76,6 +76,8 @@ type
     cbPartner: TcxCheckBox;
     isPage3: TcxGridDBColumn;
     isExistsPage3: TcxGridDBColumn;
+    cbSumm_branch: TcxCheckBox;
+    bbSumm_branch: TdxBarControlContainerItem;
   private
     { Private declarations }
   public

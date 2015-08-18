@@ -1110,7 +1110,7 @@ BEGIN
         , tmpResult.CountOut_norm_pf :: TFloat AS CountOut_norm_pf
 
           -- Приход по норме с пр-ва (ГП), расчет для CountOut_byPF ИЛИ для CountOut_byPF + CountEnd
-        , CASE WHEN (tmpResult.PartionGoodsDate + (COALESCE (tmpGoods_Term.TermProduction, 0) :: TVarChar || ' DAY') :: INTERVAL) <= inEndDate
+        , CASE WHEN 1 = 0 AND (tmpResult.PartionGoodsDate + (COALESCE (tmpGoods_Term.TermProduction, 0) :: TVarChar || ' DAY') :: INTERVAL) <= inEndDate
                     THEN (tmpResult.CountOut_byPF + tmpResult.CountEnd) * ObjectFloat_TaxExit.ValueData / ObjectFloat_Value.ValueData
                WHEN ObjectFloat_Value.ValueData <> 0
                     THEN tmpResult.CountOut_byPF * ObjectFloat_TaxExit.ValueData / ObjectFloat_Value.ValueData

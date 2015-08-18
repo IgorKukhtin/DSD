@@ -2,6 +2,7 @@ inherited Report_ReceiptProductionOutAnalyzeForm: TReport_ReceiptProductionOutAn
   Caption = #1054#1090#1095#1077#1090' <'#1040#1085#1072#1083#1080#1079' '#1087#1083#1072#1085'/'#1092#1072#1082#1090' '#1088#1072#1089#1093#1086#1076' '#1085#1072' '#1087#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1086'>'
   ClientHeight = 430
   ClientWidth = 1130
+  ExplicitLeft = -148
   ExplicitWidth = 1146
   ExplicitHeight = 465
   PixelsPerInch = 96
@@ -438,7 +439,7 @@ inherited Report_ReceiptProductionOutAnalyzeForm: TReport_ReceiptProductionOutAn
             Width = 60
           end
           object OperCount_gp_real: TcxGridDBColumn
-            Caption = #1055#1088#1080#1093#1086#1076' '#1043#1055'  '#1092#1072#1082#1090' ('#1080#1090#1086#1075')'
+            Caption = #1055#1088#1080#1093#1086#1076' '#1043#1055' '#1092#1072#1082#1090' '#1074#1077#1089' ('#1080#1090#1086#1075')'
             DataBinding.FieldName = 'OperCount_gp_real'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
@@ -449,7 +450,7 @@ inherited Report_ReceiptProductionOutAnalyzeForm: TReport_ReceiptProductionOutAn
             Width = 60
           end
           object OperCount_gp_plan: TcxGridDBColumn
-            Caption = #1055#1088#1080#1093#1086#1076' '#1043#1055'  '#1087#1083#1072#1085' ('#1080#1090#1086#1075')'
+            Caption = #1055#1088#1080#1093#1086#1076' '#1043#1055' '#1087#1083#1072#1085' '#1074#1077#1089' ('#1080#1090#1086#1075')'
             DataBinding.FieldName = 'OperCount_gp_plan'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
@@ -488,6 +489,8 @@ inherited Report_ReceiptProductionOutAnalyzeForm: TReport_ReceiptProductionOutAn
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
             Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
             Width = 55
           end
           object TaxSumm_min: TcxGridDBColumn
@@ -548,18 +551,24 @@ inherited Report_ReceiptProductionOutAnalyzeForm: TReport_ReceiptProductionOutAn
           object GoodsId: TcxGridDBColumn
             DataBinding.FieldName = 'GoodsId'
             Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
             VisibleForCustomization = False
             Width = 55
           end
           object GoodsKindId: TcxGridDBColumn
             DataBinding.FieldName = 'GoodsKindId'
             Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
             VisibleForCustomization = False
             Width = 55
           end
           object MasterKey: TcxGridDBColumn
             DataBinding.FieldName = 'MasterKey'
             Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
             VisibleForCustomization = False
             Width = 55
           end

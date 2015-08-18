@@ -12,17 +12,17 @@ inherited Report_GoodsForm: TReport_GoodsForm
     Height = 261
     TabOrder = 3
     ExplicitTop = 80
-    ExplicitWidth = 1174
+    ExplicitWidth = 1020
     ExplicitHeight = 261
     ClientRectBottom = 261
     ClientRectRight = 1020
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 1174
+      ExplicitWidth = 1020
       ExplicitHeight = 261
       inherited cxGrid: TcxGrid
         Width = 1020
         Height = 261
-        ExplicitWidth = 1174
+        ExplicitWidth = 1020
         ExplicitHeight = 261
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
@@ -688,12 +688,20 @@ inherited Report_GoodsForm: TReport_GoodsForm
           end
         end
       end
+      object cbSumm_branch: TcxCheckBox
+        Left = 69
+        Top = 3
+        Caption = #1087#1077#1095#1072#1090#1100' '#1089'/'#1089' '#1092#1080#1083#1080#1072#1083
+        Properties.ReadOnly = False
+        TabOrder = 1
+        Width = 125
+      end
     end
   end
   inherited Panel: TPanel
     Width = 1020
     Height = 54
-    ExplicitWidth = 1174
+    ExplicitWidth = 1020
     ExplicitHeight = 54
     inherited deStart: TcxDateEdit
       Left = 118
@@ -803,6 +811,11 @@ inherited Report_GoodsForm: TReport_GoodsForm
           'Checked')
       end
       item
+        Component = cbSumm_branch
+        Properties.Strings = (
+          'Checked')
+      end
+      item
         Component = deEnd
         Properties.Strings = (
           'Date')
@@ -866,16 +879,16 @@ inherited Report_GoodsForm: TReport_GoodsForm
           DataType = ftDateTime
         end
         item
-          Name = 'LocationName'
-          Value = ''
-          Component = LocationGuides
+          Name = 'UnitGroupName'
+          Value = Null
+          Component = GuidesUnitGroup
           ComponentItem = 'TextValue'
           DataType = ftString
         end
         item
-          Name = 'GoodsName'
+          Name = 'LocationName'
           Value = ''
-          Component = GoodsGuides
+          Component = LocationGuides
           ComponentItem = 'TextValue'
           DataType = ftString
         end
@@ -891,6 +904,19 @@ inherited Report_GoodsForm: TReport_GoodsForm
           Component = GoodsGroupGuides
           ComponentItem = 'TextValue'
           DataType = ftString
+        end
+        item
+          Name = 'GoodsName'
+          Value = ''
+          Component = GoodsGuides
+          ComponentItem = 'TextValue'
+          DataType = ftString
+        end
+        item
+          Name = 'isSumm_branch'
+          Value = Null
+          Component = cbSumm_branch
+          DataType = ftBoolean
         end>
       ReportName = #1054#1090#1095#1077#1090' '#1087#1086' '#1090#1086#1074#1072#1088#1091' '#1087#1086' '#1085#1072#1082#1083#1072#1076#1085#1099#1084
       ReportNameParam.Value = #1054#1090#1095#1077#1090' '#1087#1086' '#1090#1086#1074#1072#1088#1091' '#1087#1086' '#1085#1072#1082#1083#1072#1076#1085#1099#1084
@@ -984,6 +1010,14 @@ inherited Report_GoodsForm: TReport_GoodsForm
         end
         item
           Visible = True
+          ItemName = 'bbSumm_branch'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbPrint'
         end
         item
@@ -1002,6 +1036,13 @@ inherited Report_GoodsForm: TReport_GoodsForm
     object bbPrint: TdxBarButton
       Action = actPrint
       Category = 0
+    end
+    object bbSumm_branch: TdxBarControlContainerItem
+      Caption = 'bbSumm_branch'
+      Category = 0
+      Hint = 'bbSumm_branch'
+      Visible = ivAlways
+      Control = cbSumm_branch
     end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn

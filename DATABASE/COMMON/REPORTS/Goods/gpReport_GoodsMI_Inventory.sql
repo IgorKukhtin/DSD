@@ -24,7 +24,9 @@ RETURNS TABLE (GoodsGroupName TVarChar, GoodsGroupNameFull TVarChar
              , PriceIn_zavod TFloat, PriceIn_branch TFloat
              , PriceOut_zavod TFloat, PriceOut_branch TFloat
              , Price_zavod TFloat, Price_branch TFloat
-             )   
+             , SummIn_RePrice TFloat, SummOut_RePrice TFloat
+             , SummIn_RePrice_60000 TFloat, SummOut_RePrice_60000 TFloat
+              )
 AS
 $BODY$
  DECLARE vbUserId Integer;
@@ -119,6 +121,11 @@ BEGIN
          , CASE WHEN (tmpOperationGroup.AmountIn - tmpOperationGroup.AmountOut) <> 0 THEN (tmpOperationGroup.SummIn_zavod  - tmpOperationGroup.SummOut_zavod)  / (tmpOperationGroup.AmountIn - tmpOperationGroup.AmountOut) ELSE 0 END :: TFloat AS Price_zavod
          , CASE WHEN (tmpOperationGroup.AmountIn - tmpOperationGroup.AmountOut) <> 0 THEN (tmpOperationGroup.SummIn_branch - tmpOperationGroup.SummOut_branch) / (tmpOperationGroup.AmountIn - tmpOperationGroup.AmountOut) ELSE 0 END :: TFloat AS Price_branch
 
+         , tmpOperationGroup.SummIn_RePrice        :: TFloat AS SummIn_RePrice
+         , tmpOperationGroup.SummOut_RePrice       :: TFloat AS SummOut_RePrice
+         , tmpOperationGroup.SummIn_RePrice_60000  :: TFloat AS SummIn_RePrice_60000
+         , tmpOperationGroup.SummOut_RePrice_60000 :: TFloat AS SummOut_RePrice_60000
+
      FROM (SELECT tmpContainer.UnitId
                 , CASE WHEN vbIsGroup = TRUE THEN 0 ELSE tmpContainer.GoodsId END AS GoodsId
                 , tmpContainer.GoodsKindId
@@ -132,16 +139,22 @@ BEGIN
                 , SUM (tmpContainer.AmountOut * CASE WHEN _tmpGoods.MeasureId = zc_Measure_Sh() THEN _tmpGoods.Weight ELSE 1 END) AS AmountOut_Weight
                 , SUM (CASE WHEN _tmpGoods.MeasureId = zc_Measure_Sh() THEN tmpContainer.AmountOut ELSE 0 END) AS AmountOut_sh
 
-                , SUM (tmpContainer.SummIn)     AS SummIn_zavod
-                , SUM (tmpContainer.SummOut)    AS SummOut_zavod
-                , SUM (CASE WHEN COALESCE (Object_Account_View.AccountDirectionId, 0) <> zc_Enum_AccountDirection_60200() THEN tmpContainer.SummIn  ELSE 0 END) AS SummIn_branch
-                , SUM (CASE WHEN COALESCE (Object_Account_View.AccountDirectionId, 0) <> zc_Enum_AccountDirection_60200() THEN tmpContainer.SummOut ELSE 0 END) AS SummOut_branch
-                , SUM (CASE WHEN COALESCE (Object_Account_View.AccountDirectionId, 0) =  zc_Enum_AccountDirection_60200() THEN tmpContainer.SummIn  ELSE 0 END) AS SummIn_60000
-                , SUM (CASE WHEN COALESCE (Object_Account_View.AccountDirectionId, 0) =  zc_Enum_AccountDirection_60200() THEN tmpContainer.SummOut ELSE 0 END) AS SummOut_60000
+                , SUM (CASE WHEN tmpContainer.AnalyzerId <> zc_Enum_AccountGroup_60000() THEN tmpContainer.SummIn  ELSE 0 END) AS SummIn_zavod
+                , SUM (CASE WHEN tmpContainer.AnalyzerId <> zc_Enum_AccountGroup_60000() THEN tmpContainer.SummOut ELSE 0 END) AS SummOut_zavod
+                , SUM (CASE WHEN tmpContainer.AnalyzerId <> zc_Enum_AccountGroup_60000() AND COALESCE (Object_Account_View.AccountDirectionId, 0) <> zc_Enum_AccountDirection_60200() THEN tmpContainer.SummIn  ELSE 0 END) AS SummIn_branch
+                , SUM (CASE WHEN tmpContainer.AnalyzerId <> zc_Enum_AccountGroup_60000() AND COALESCE (Object_Account_View.AccountDirectionId, 0) <> zc_Enum_AccountDirection_60200() THEN tmpContainer.SummOut ELSE 0 END) AS SummOut_branch
+                , SUM (CASE WHEN tmpContainer.AnalyzerId <> zc_Enum_AccountGroup_60000() AND COALESCE (Object_Account_View.AccountDirectionId, 0) =  zc_Enum_AccountDirection_60200() THEN tmpContainer.SummIn  ELSE 0 END) AS SummIn_60000
+                , SUM (CASE WHEN tmpContainer.AnalyzerId <> zc_Enum_AccountGroup_60000() AND COALESCE (Object_Account_View.AccountDirectionId, 0) =  zc_Enum_AccountDirection_60200() THEN tmpContainer.SummOut ELSE 0 END) AS SummOut_60000
+
+                , SUM (CASE WHEN tmpContainer.AnalyzerId = zc_Enum_AccountGroup_60000() AND COALESCE (Object_Account_View.AccountDirectionId, 0) <> zc_Enum_AccountDirection_60200() THEN tmpContainer.SummIn  ELSE 0 END) AS SummIn_RePrice
+                , SUM (CASE WHEN tmpContainer.AnalyzerId = zc_Enum_AccountGroup_60000() AND COALESCE (Object_Account_View.AccountDirectionId, 0) <> zc_Enum_AccountDirection_60200() THEN tmpContainer.SummOut ELSE 0 END) AS SummOut_RePrice
+                , SUM (CASE WHEN tmpContainer.AnalyzerId = zc_Enum_AccountGroup_60000() AND COALESCE (Object_Account_View.AccountDirectionId, 0) =  zc_Enum_AccountDirection_60200() THEN tmpContainer.SummIn  ELSE 0 END) AS SummIn_RePrice_60000
+                , SUM (CASE WHEN tmpContainer.AnalyzerId = zc_Enum_AccountGroup_60000() AND COALESCE (Object_Account_View.AccountDirectionId, 0) =  zc_Enum_AccountDirection_60200() THEN tmpContainer.SummOut ELSE 0 END) AS SummOut_RePrice_60000
 
            FROM (SELECT CASE WHEN vbIsGroup = TRUE THEN 0 ELSE MIContainer.ContainerId END AS ContainerId
-                      , MIContainer.WhereObjectId_analyzer AS UnitId
-                      , MIContainer.ObjectId_Analyzer      AS GoodsId
+                      , COALESCE (MIContainer.AnalyzerId, 0) AS AnalyzerId
+                      , MIContainer.WhereObjectId_analyzer   AS UnitId
+                      , MIContainer.ObjectId_Analyzer        AS GoodsId
                       , CASE WHEN vbIsGroup = TRUE THEN 0 ELSE MIContainer.ObjectIntId_Analyzer END AS GoodsKindId
                       , COALESCE (MIContainer.AccountId, 0)  AS AccountId
                       , SUM (CASE WHEN MIContainer.DescId = zc_MIContainer_Count() AND MIContainer.Amount > 0 THEN      MIContainer.Amount ELSE 0 END) AS AmountIn
@@ -155,6 +168,7 @@ BEGIN
                                                       AND COALESCE (MIContainer.AccountId,0) <> zc_Enum_Account_100301() -- Прибыль текущего периода
                                                       AND MIContainer.MovementDescId = zc_Movement_Inventory()
                  GROUP BY CASE WHEN vbIsGroup = TRUE THEN 0 ELSE MIContainer.ContainerId END
+                        , MIContainer.AnalyzerId
                         , MIContainer.WhereObjectId_analyzer
                         , MIContainer.ObjectId_Analyzer
                         , CASE WHEN vbIsGroup = TRUE THEN 0 ELSE MIContainer.ObjectIntId_Analyzer END
@@ -209,4 +223,4 @@ ALTER FUNCTION gpReport_GoodsMI_Inventory (TDateTime, TDateTime, Integer, Intege
 */
 
 -- тест
--- SELECT * FROM gpReport_GoodsMI_Inventory (inStartDate:= '01.07.2015', inEndDate:= '01.07.2015', inUnitId:=0, inGoodsGroupId:= 0, inSession:= zfCalc_UserAdmin());
+-- SELECT * FROM gpReport_GoodsMI_Inventory (inStartDate:= '01.07.2015', inEndDate:= '31.07.2015', inUnitId:= 301309, inGoodsGroupId:= 0, inSession:= zfCalc_UserAdmin());

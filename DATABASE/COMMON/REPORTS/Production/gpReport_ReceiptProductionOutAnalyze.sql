@@ -178,7 +178,8 @@ BEGIN
                    , MIContainer.ContainerId
                    , MIDate_PartionGoods.ValueData
            )
-          , tmpCuterCount_find AS 
+          , -- Приход с пр-ва пф/гп - кутеров
+            tmpCuterCount_find AS 
            (SELECT tmpMI_WorkProgress_in.ContainerId                AS ContainerId
                  , SUM (tmpMI_WorkProgress_in.Amount)               AS Amount
                  , SUM (COALESCE (MIFloat_CuterCount.ValueData, 0)) AS CuterCount
@@ -199,12 +200,15 @@ BEGIN
                                                  AND MILO_Receipt.DescId = zc_MILinkObject_Receipt()*/
             GROUP BY tmpMI_WorkProgress_in.ContainerId
            )
-          , tmpCuterCount AS 
-           (SELECT tmpCuterCount_find.ContainerId
+          , -- Приход - кутеров
+            tmpCuterCount AS 
+           (-- факт
+            SELECT tmpCuterCount_find.ContainerId
                  , tmpCuterCount_find.Amount
                  , tmpCuterCount_find.CuterCount
             FROM tmpCuterCount_find
            UNION
+            -- из рецепту (т.к. до 01.07.2015 нет "адекватного" производства)
             SELECT tmpMIContainer.ContainerId
                  , MAX (ObjectFloat_Value.ValueData) AS Amount
                  , 1 AS CuterCount
@@ -230,8 +234,57 @@ BEGIN
             WHERE tmpCuterCount_find.ContainerId IS NULL
             GROUP BY tmpMIContainer.ContainerId
            )
+            -- Пасчет с/с для ПФ !!!без isCost!!!
+          , tmpMIReceipt_from AS 
+           (SELECT Object_Receipt.Id AS ReceiptId
+                 , tmp.GoodsId
+                 , tmp.GoodsKindId
+                 , CASE WHEN tmp.GoodsKindId = zc_GoodsKind_WorkProgress() THEN COALESCE (ObjectLink_Receipt_GoodsKindComplete.ChildObjectId, zc_GoodsKind_Basis()) ELSE 0 END AS GoodsKindId_complete
+                 , SUM (tmpChildReceiptTable.Amount_out * COALESCE (PriceList1.Price, 0)) / ObjectFloat_Value.ValueData AS Price1
+                 , SUM (tmpChildReceiptTable.Amount_out * COALESCE (PriceList2.Price, 0)) / ObjectFloat_Value.ValueData AS Price2
+                 , SUM (tmpChildReceiptTable.Amount_out * COALESCE (PriceList3.Price, 0)) / ObjectFloat_Value.ValueData AS Price3
+            FROM (SELECT tmpMIContainer.GoodsId, tmpMIContainer.GoodsKindId FROM tmpMIContainer GROUP BY tmpMIContainer.GoodsId, tmpMIContainer.GoodsKindId
+                 ) AS tmp
+                 INNER JOIN ObjectLink AS ObjectLink_Receipt_Goods
+                                       ON ObjectLink_Receipt_Goods.ChildObjectId = tmp.GoodsId
+                                      AND ObjectLink_Receipt_Goods.DescId = zc_ObjectLink_Receipt_Goods()
+                 INNER JOIN ObjectLink AS ObjectLink_Receipt_GoodsKind
+                                       ON ObjectLink_Receipt_GoodsKind.ObjectId = ObjectLink_Receipt_Goods.ObjectId
+                                      AND ObjectLink_Receipt_GoodsKind.ChildObjectId = tmp.GoodsKindId
+                                      AND ObjectLink_Receipt_GoodsKind.DescId = zc_ObjectLink_Receipt_GoodsKind()
+                 LEFT JOIN ObjectLink AS ObjectLink_Receipt_GoodsKindComplete
+                                      ON ObjectLink_Receipt_GoodsKindComplete.ObjectId = ObjectLink_Receipt_Goods.ObjectId
+                                     AND ObjectLink_Receipt_GoodsKindComplete.DescId = zc_ObjectLink_Receipt_GoodsKindComplete()
+                 INNER JOIN Object AS Object_Receipt ON Object_Receipt.Id = ObjectLink_Receipt_Goods.ObjectId
+                                                    AND Object_Receipt.isErased = FALSE
+                 INNER JOIN ObjectBoolean AS ObjectBoolean_Main
+                                          ON ObjectBoolean_Main.ObjectId = Object_Receipt.Id
+                                         AND ObjectBoolean_Main.DescId = zc_ObjectBoolean_Receipt_Main()
+                                         AND ObjectBoolean_Main.ValueData = TRUE
+                 INNER JOIN ObjectFloat AS ObjectFloat_Value
+                                        ON ObjectFloat_Value.ObjectId = Object_Receipt.Id
+                                       AND ObjectFloat_Value.DescId = zc_ObjectFloat_Receipt_Value()
+                                       AND ObjectFloat_Value.ValueData <> 0
+                 INNER JOIN tmpChildReceiptTable ON tmpChildReceiptTable.ReceiptId = Object_Receipt.Id
+                                                AND tmpChildReceiptTable.ReceiptId_from = 0
+                                                AND tmpChildReceiptTable.isCost = FALSE
+                 LEFT JOIN ObjectHistory_PriceListItem_View AS PriceList1 ON PriceList1.PriceListId = inPriceListId_1
+                                                                         AND PriceList1.GoodsId = tmpChildReceiptTable.GoodsId_out
+                                                                         AND inEndDate >= PriceList1.StartDate AND inEndDate < PriceList1.EndDate
+                 LEFT JOIN ObjectHistory_PriceListItem_View AS PriceList2 ON PriceList2.PriceListId = inPriceListId_2
+                                                                         AND PriceList2.GoodsId = tmpChildReceiptTable.GoodsId_out
+                                                                         AND inEndDate >= PriceList2.StartDate AND inEndDate < PriceList2.EndDate
+                 LEFT JOIN ObjectHistory_PriceListItem_View AS PriceList3 ON PriceList3.PriceListId = inPriceListId_3
+                                                                         AND PriceList3.GoodsId = tmpChildReceiptTable.GoodsId_out
+                                                                         AND inEndDate >= PriceList3.StartDate AND inEndDate < PriceList3.EndDate
+            GROUP BY Object_Receipt.Id
+                   , tmp.GoodsId
+                   , tmp.GoodsKindId
+                   , ObjectLink_Receipt_GoodsKindComplete.ChildObjectId
+                   , ObjectFloat_Value.ValueData
+            )
             -- Расходы - План
-         , tmpMIReceipt AS 
+          , tmpMIReceipt AS 
            (SELECT tmpResult_in.ReceiptId                AS ReceiptId
                  , tmpResult_in.PartionGoodsDate         AS PartionGoodsDate_in
                  , tmpResult_in.GoodsId                  AS GoodsId_in
@@ -245,14 +298,18 @@ BEGIN
 
                  , CASE WHEN ObjectFloat_Value.ValueData <> 0 THEN tmpResult_in.OperCount * tmpChildReceiptTable.Amount_out / ObjectFloat_Value.ValueData ELSE 0 END AS OperCountPlan
                  , CASE WHEN ObjectFloat_Value.ValueData <> 0 THEN tmpResult_in.OperCount * tmpChildReceiptTable.Amount_out / ObjectFloat_Value.ValueData ELSE 0 END
-                   * COALESCE (PriceList1.Price, 0) AS OperSummPlan1
+                   * COALESCE (tmpMIReceipt_from.Price1, COALESCE (PriceList1.Price, 0)) AS OperSummPlan1
                  , CASE WHEN ObjectFloat_Value.ValueData <> 0 THEN tmpResult_in.OperCount * tmpChildReceiptTable.Amount_out / ObjectFloat_Value.ValueData ELSE 0 END
-                   * COALESCE (PriceList2.Price, 0) AS OperSummPlan2
+                   * COALESCE (tmpMIReceipt_from.Price2, COALESCE (PriceList2.Price, 0)) AS OperSummPlan2
                  , CASE WHEN ObjectFloat_Value.ValueData <> 0 THEN tmpResult_in.OperCount * tmpChildReceiptTable.Amount_out / ObjectFloat_Value.ValueData ELSE 0 END
-                   * COALESCE (PriceList3.Price, 0) AS OperSummPlan3
+                   * COALESCE (tmpMIReceipt_from.Price3, COALESCE (PriceList3.Price, 0)) AS OperSummPlan3
             FROM tmpResult_in
                  LEFT JOIN tmpChildReceiptTable ON tmpChildReceiptTable.ReceiptId = tmpResult_in.ReceiptId
                  LEFT JOIN _tmpGoods ON _tmpGoods.GoodsId = tmpChildReceiptTable.GoodsId_out
+                 LEFT JOIN tmpMIReceipt_from ON tmpMIReceipt_from.GoodsId              = tmpChildReceiptTable.GoodsId_out
+                                            AND tmpMIReceipt_from.GoodsKindId          = tmpChildReceiptTable.GoodsKindId_out
+                                            AND tmpMIReceipt_from.GoodsKindId_complete = CASE WHEN tmpChildReceiptTable.GoodsKindId_out = zc_GoodsKind_WorkProgress() THEN tmpResult_in.GoodsKindId ELSE 0 END
+
                  LEFT JOIN ObjectFloat AS ObjectFloat_Value
                                        ON ObjectFloat_Value.ObjectId = tmpResult_in.ReceiptId
                                       AND ObjectFloat_Value.DescId = zc_ObjectFloat_Receipt_Value()
@@ -377,7 +434,7 @@ BEGIN
                                , tmpResult.GoodsKindId
                                , tmpResult.PartionGoodsDate
                                , tmpResult.GoodsKindId_complete
-                               , SUM (tmpResult_in.OperCount) AS OperCount_gp
+                               , SUM (tmpResult_in.OperCount * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData, 0) ELSE 1 END) AS OperCount_Weight_gp
                                , MIN (CAST (100 * tmpResult.OperSumm / tmpResult_in.OperSumm AS NUMERIC(16, 1))) AS TaxSumm_min
                                , MAX (CAST (100 * tmpResult.OperSumm / tmpResult_in.OperSumm AS NUMERIC(16, 1))) AS TaxSumm_max
                           FROM tmpResult_out AS tmpResult
@@ -386,6 +443,13 @@ BEGIN
                                                      AND tmpResult_in.GoodsId              = tmpResult.GoodsId_in
                                                      AND tmpResult_in.GoodsKindId          = tmpResult.GoodsKindId_in
                                                      AND tmpResult_in.GoodsKindId_complete = tmpResult.GoodsKindId_complete_in
+                               LEFT JOIN ObjectFloat AS ObjectFloat_Weight
+                                                     ON ObjectFloat_Weight.ObjectId = tmpResult_in.GoodsId
+                                                    AND ObjectFloat_Weight.DescId = zc_ObjectFloat_Goods_Weight()
+                               LEFT JOIN ObjectLink AS ObjectLink_Goods_Measure
+                                                    ON ObjectLink_Goods_Measure.ObjectId = tmpResult_in.GoodsId
+                                                   AND ObjectLink_Goods_Measure.DescId = zc_ObjectLink_Goods_Measure()
+
                           WHERE tmpResult_in.OperSumm <> 0 AND tmpResult.OperSumm <> 0
                           GROUP BY tmpResult.GoodsId
                                  , tmpResult.GoodsKindId
@@ -431,12 +495,15 @@ BEGIN
            , tmpTaxSumm.TaxSumm_max
 
            , tmpResult.CuterCount
-           , tmpResult.OperCount_gp  AS OperCount_gp_plan
-           , tmpTaxSumm.OperCount_gp AS OperCount_gp_real
-           , CAST (CASE WHEN tmpResult.CuterCount <> 0 THEN tmpTaxSumm.OperCount_gp / tmpResult.CuterCount ELSE 0 END AS NUMERIC (16, 1)) AS TaxGP_real
-           , CAST (CASE WHEN tmpResult.CuterCount <> 0 THEN tmpResult.OperCount_gp  / tmpResult.CuterCount ELSE 0 END AS NUMERIC (16, 1)) AS TaxGP_plan
+           , tmpResult.OperCount_gp * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData, 0) ELSE 1 END AS OperCount_gp_plan
+           , tmpTaxSumm.OperCount_Weight_gp AS OperCount_gp_real
+           , CAST (CASE WHEN tmpResult.CuterCount <> 0 THEN tmpTaxSumm.OperCount_Weight_gp / tmpResult.CuterCount ELSE 0 END AS NUMERIC (16, 1)) AS TaxGP_real
+           , CAST (CASE WHEN tmpResult.CuterCount <> 0 THEN (tmpResult.OperCount_gp * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData, 0) ELSE 1 END)
+                                                          / tmpResult.CuterCount
+                        ELSE 0
+                   END AS NUMERIC (16, 1)) AS TaxGP_plan
 
-           , PriceListSale.Price * 1.2 AS Price_sale -- !!!захардкодил временно!!!
+           , PriceListSale.Price * 1.2 / CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() AND ObjectFloat_Weight.ValueData <> 0 THEN ObjectFloat_Weight.ValueData ELSE 1 END AS Price_sale -- !!!захардкодил временно!!!
 
            , View_InfoMoney.InfoMoneyGroupName              AS InfoMoneyGroupName
            , View_InfoMoney.InfoMoneyDestinationName        AS InfoMoneyDestinationName
@@ -451,7 +518,7 @@ BEGIN
                   , SUM (tmpResult_out.OperSummPlan2) AS OperSummPlan2
                   , SUM (tmpResult_out.OperSummPlan3) AS OperSummPlan3
                   , SUM (tmpResult_out.CuterCount)    AS CuterCount
-                  , SUM (CASE WHEN (1 - ObjectFloat_TaxLoss.ValueData / 100) <> 0 THEN tmpResult_out.OperCount * (1 - ObjectFloat_TaxLoss.ValueData / 100) ELSE 0 END) AS OperCount_gp
+                  , SUM (CASE WHEN (1 - COALESCE (ObjectFloat_TaxLoss.ValueData, 0) / 100) <> 0 THEN tmpResult_out.OperCount * (1 - COALESCE (ObjectFloat_TaxLoss.ValueData, 0) / 100) ELSE 0 END) AS OperCount_gp
              FROM tmpResult_out
                   LEFT JOIN ObjectFloat AS ObjectFloat_TaxLoss
                                         ON ObjectFloat_TaxLoss.ObjectId = tmpResult_out.ReceiptId
