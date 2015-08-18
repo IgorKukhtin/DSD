@@ -102,16 +102,16 @@ BEGIN
          , (tmpOperationGroup.AmountIn_Weight - tmpOperationGroup.AmountOut_Weight) :: TFloat AS Amount_Weight
          , (tmpOperationGroup.AmountIn_Sh     - tmpOperationGroup.AmountOut_Sh)     :: TFloat AS Amount_Sh
 
-         , tmpOperationGroup.SummIn_branch :: TFloat AS SummIn_branch
          , tmpOperationGroup.SummIn_zavod  :: TFloat AS SummIn_zavod
+         , tmpOperationGroup.SummIn_branch :: TFloat AS SummIn_branch
          , tmpOperationGroup.SummIn_60000  :: TFloat AS SummIn_60000
 
-         , tmpOperationGroup.SummOut_branch :: TFloat AS SummOut_branch
          , tmpOperationGroup.SummOut_zavod  :: TFloat AS SummOut_zavod
+         , tmpOperationGroup.SummOut_branch :: TFloat AS SummOut_branch
          , tmpOperationGroup.SummOut_60000  :: TFloat AS SummOut_60000
 
-         , (tmpOperationGroup.SummIn_branch - tmpOperationGroup.SummOut_branch) :: TFloat AS Summ_branch
          , (tmpOperationGroup.SummIn_zavod  - tmpOperationGroup.SummOut_zavod)  :: TFloat AS Summ_zavod
+         , (tmpOperationGroup.SummIn_branch - tmpOperationGroup.SummOut_branch) :: TFloat AS Summ_branch
          , (tmpOperationGroup.SummIn_60000  - tmpOperationGroup.SummOut_60000)  :: TFloat AS Summ_60000
 
          , CASE WHEN tmpOperationGroup.AmountIn <> 0 THEN tmpOperationGroup.SummIn_zavod  / tmpOperationGroup.AmountIn ELSE 0 END :: TFloat AS PriceIn_zavod
@@ -223,4 +223,4 @@ ALTER FUNCTION gpReport_GoodsMI_Inventory (TDateTime, TDateTime, Integer, Intege
 */
 
 -- тест
--- SELECT * FROM gpReport_GoodsMI_Inventory (inStartDate:= '01.07.2015', inEndDate:= '31.07.2015', inUnitId:= 301309, inGoodsGroupId:= 0, inSession:= zfCalc_UserAdmin());
+-- SELECT * FROM gpReport_GoodsMI_Inventory (inStartDate:= '01.07.2015', inEndDate:= '31.07.2015', inUnitId:= 346093, inGoodsGroupId:= 0, inSession:= zfCalc_UserAdmin()); -- Склад ГП ф.Одесса

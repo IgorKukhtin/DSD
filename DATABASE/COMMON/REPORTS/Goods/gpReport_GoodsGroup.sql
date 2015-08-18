@@ -22,7 +22,8 @@ RETURNS TABLE  (MovementId Integer, InvNumber TVarChar, OperDate TDateTime, Oper
               , Price TFloat, Price_end TFloat, Price_partner TFloat
               , SummPartnerIn TFloat, SummPartnerOut TFloat
               , AmountStart TFloat, AmountIn TFloat, AmountOut TFloat, AmountEnd TFloat, Amount TFloat
-              , SummStart TFloat, SummIn TFloat, SummOut TFloat, SummEnd TFloat, Summ TFloat
+              , SummStart TFloat, SummStart_branch TFloat, SummIn TFloat, SummOut TFloat, SummEnd TFloat, SummEnd_branch TFloat, Summ TFloat, Summ_branch TFloat
+
               , Amount_Change TFloat, Summ_Change_branch TFloat, Summ_Change_zavod TFloat
               , Amount_40200 TFloat, Summ_40200_branch TFloat, Summ_40200_zavod TFloat
               , Amount_Loss TFloat, Summ_Loss_branch TFloat, Summ_Loss_zavod TFloat
@@ -30,7 +31,12 @@ RETURNS TABLE  (MovementId Integer, InvNumber TVarChar, OperDate TDateTime, Oper
                )  
 AS
 $BODY$
+ DECLARE vbUserId Integer;
+ DECLARE vbIsBranch Boolean;
 BEGIN
+     vbUserId:= lpGetUserBySession (inSession);
+
+     vbIsBranch:= 1 = 1 OR EXISTS (SELECT BranchId FROM Object_RoleAccessKeyGuide_View WHERE UserId = vbUserId AND BranchId <> 0 GROUP BY BranchId);
 
          -- таблица - 
          CREATE TEMP TABLE _tmpGoods (GoodsId Integer, InfoMoneyId Integer, TradeMarkId Integer, MeasureId Integer, Weight TFloat) ON COMMIT DROP;
@@ -269,8 +275,8 @@ BEGIN
                             , 0                               AS SummPartnerIn
                             , SUM (tmp.AmountStart_Weight)    AS AmountStart
                             , SUM (tmp.AmountEnd_Weight)      AS AmountEnd 
-                            , SUM (tmp.SummStart_zavod)       AS SummStart
-                            , SUM (tmp.SummEnd_zavod)         AS SummEnd
+                            , CASE WHEN vbIsBranch = TRUE THEN SUM (tmp.SummStart_branch) ELSE SUM (tmp.SummStart_zavod) END AS SummStart
+                            , CASE WHEN vbIsBranch = TRUE THEN SUM (tmp.SummEnd_branch)   ELSE SUM (tmp.SummEnd_zavod)   END AS SummEnd
                             , SUM (tmp.SummStart_branch)      AS SummStart_branch
                             , SUM (tmp.SummEnd_branch)        AS SummEnd_branch
                             , 0                               AS Summ
@@ -299,9 +305,11 @@ BEGIN
                             , tmp.LocationCode_by             AS ObjectByCode
                             , tmp.LocationName_by             AS ObjectByName
                             , tmp.AmountIn_Weight             AS AmountOut
-                            , tmp.SummIn_zavod                AS SummOut
+                            , CASE WHEN vbIsBranch = TRUE THEN tmp.SummOut_branch ELSE tmp.SummOut_zavod END AS SummOut
                             , CASE WHEN tmp.LocationCode_by IN (22121, 22122, 22081, 22082)
                                         THEN tmp.SummIn_branch
+                                   WHEN tmp.LocationCode IN (22121, 22122, 22081, 22082)
+                                        THEN tmp.SummOut_branch
                                    ELSE tmp.Summ_calc
                               END AS SummPartnerOut
                             , 0                               AS AmountIn
@@ -314,8 +322,8 @@ BEGIN
                             , 0                               AS SummEnd 
                             , 0                               AS SummStart_branch
                             , 0                               AS SummEnd_branch
-                            , 0                               AS Summ
-                            , 0                               AS Summ_branch
+                            , tmp.SummOut_zavod               AS Summ
+                            , tmp.SummOut_branch              AS Summ_branch
 
                             , tmp.AmountOut_Weight - tmp.AmountIn_Weight AS Amount_Change
                             , tmp.SummOut_branch   - tmp.SummIn_zavod    AS Summ_Change_branch
@@ -341,8 +349,10 @@ BEGIN
                             , 0                               AS SummOut
                             , 0                               AS SummPartnerOut
                             , tmp.AmountIn_Weight             AS AmountIn
-                            , tmp.SummIn_zavod                AS SummIn
-                            , CASE WHEN tmp.LocationCode IN (22121, 22122, 22081, 22082)
+                            , CASE WHEN vbIsBranch = TRUE THEN tmp.SummIn_branch ELSE tmp.SummIn_zavod END AS SummIn
+                            , CASE WHEN tmp.LocationCode_by IN (22121, 22122, 22081, 22082)
+                                        THEN tmp.SummIn_branch
+                                   WHEN tmp.LocationCode IN (22121, 22122, 22081, 22082)
                                         THEN tmp.SummOut_branch
                                    ELSE tmp.Summ_calc
                               END AS SummPartnerIn
@@ -352,8 +362,8 @@ BEGIN
                             , 0                               AS SummEnd 
                             , 0                               AS SummStart_branch
                             , 0                               AS SummEnd_branch
-                            , 0                               AS Summ
-                            , 0                               AS Summ_branch
+                            , tmp.SummIn_zavod                AS Summ
+                            , tmp.SummIn_branch               AS Summ_branch
 
                             , 0                               AS Amount_Change
                             , 0                               AS Summ_Change_branch
@@ -384,7 +394,7 @@ BEGIN
                                    ELSE tmp.LocationName
                               END AS ObjectByName
                             , tmp.AmountOut_Weight            AS AmountOut
-                            , tmp.SummOut_zavod               AS SummOut
+                            , CASE WHEN vbIsBranch = TRUE THEN tmp.SummOut_branch ELSE tmp.SummOut_zavod END AS SummOut
                             , tmp.SummOut_branch              AS SummPartnerOut
                             , 0                               AS AmountIn
                             , 0                               AS SummIn
@@ -396,8 +406,8 @@ BEGIN
                             , 0                               AS SummEnd 
                             , 0                               AS SummStart_branch
                             , 0                               AS SummEnd_branch
-                            , 0                               AS Summ
-                            , 0                               AS Summ_branch
+                            , tmp.SummOut_zavod               AS Summ
+                            , tmp.SummOut_branch              AS Summ_branch
 
                             , 0                               AS Amount_Change
                             , 0                               AS Summ_Change_branch
@@ -420,7 +430,7 @@ BEGIN
                             , tmp.LocationCode_by             AS ObjectByCode
                             , tmp.LocationName_by             AS ObjectByName
                             , tmp.AmountOut_Weight            AS AmountOut
-                            , tmp.SummOut_zavod               AS SummOut
+                            , CASE WHEN vbIsBranch = TRUE THEN tmp.SummOut_branch ELSE tmp.SummOut_zavod END AS SummOut
                             , 0                               AS SummPartnerOut
                             , 0                               AS AmountIn
                             , 0                               AS SummIn
@@ -432,8 +442,8 @@ BEGIN
                             , 0                               AS SummEnd 
                             , 0                               AS SummStart_branch
                             , 0                               AS SummEnd_branch
-                            , 0                               AS Summ
-                            , 0                               AS Summ_branch
+                            , tmp.SummOut_zavod               AS Summ
+                            , tmp.SummOut_branch              AS Summ_branch
 
                             , 0                               AS Amount_Change
                             , 0                               AS Summ_Change_branch
@@ -459,7 +469,7 @@ BEGIN
                             , 0                               AS SummOut
                             , 0                               AS SummPartnerOut
                             , tmp.AmountIn_Weight             AS AmountIn
-                            , tmp.SummIn_zavod                AS SummIn
+                            , CASE WHEN vbIsBranch = TRUE THEN tmp.SummIn_branch ELSE tmp.SummIn_zavod END AS SummIn
                             , 0                               AS SummPartnerIn
 
                             , 0                               AS AmountStart
@@ -468,8 +478,8 @@ BEGIN
                             , 0                               AS SummEnd 
                             , 0                               AS SummStart_branch
                             , 0                               AS SummEnd_branch
-                            , 0                               AS Summ
-                            , 0                               AS Summ_branch
+                            , tmp.SummIn_zavod                AS Summ
+                            , tmp.SummIn_branch               AS Summ_branch
 
                             , 0                               AS Amount_Change
                             , 0                               AS Summ_Change_branch
@@ -492,7 +502,7 @@ BEGIN
                             , CASE WHEN inIsPartner = TRUE THEN tmp.JuridicalCode /*tmp.PartnerCode*/ ELSE 0  END AS ObjectByCode
                             , CASE WHEN inIsPartner = TRUE THEN tmp.JuridicalName /*tmp.PartnerName*/ ELSE '' END AS ObjectByName
                             , SUM (tmp.OperCount_Partner)     AS AmountOut
-                            , SUM (tmp.SummIn_Partner_branch) AS SummOut
+                            , CASE WHEN vbIsBranch = TRUE THEN SUM (tmp.SummIn_Partner_branch) ELSE SUM (tmp.SummIn_Partner_zavod) END AS SummOut
                             , SUM (tmp.SummOut_Partner)       AS SummPartnerOut
                             , 0                               AS AmountIn
                             , 0                               AS SummIn
@@ -504,8 +514,8 @@ BEGIN
                             , 0                               AS SummEnd 
                             , 0                               AS SummStart_branch
                             , 0                               AS SummEnd_branch
-                            , 0                               AS Summ
-                            , 0                               AS Summ_branch
+                            , SUM (tmp.SummIn_Partner_zavod)  AS Summ
+                            , SUM (tmp.SummIn_Partner_branch) AS Summ_branch
 
                             , SUM (tmp.OperCount_Change)      AS Amount_Change
                             , SUM (tmp.SummIn_Change_branch)  AS Summ_Change_branch
@@ -534,7 +544,7 @@ BEGIN
                             , 0                               AS SummOut
                             , 0                               AS SummPartnerOut
                             , SUM (tmp.OperCount_Partner)     AS AmountIn
-                            , SUM (tmp.SummIn_Partner_branch) AS SummIn
+                            , CASE WHEN vbIsBranch = TRUE THEN SUM (tmp.SummIn_Partner_branch) ELSE SUM (tmp.SummIn_Partner_zavod) END AS SummIn
                             , SUM (tmp.SummOut_Partner)       AS SummPartnerIn
 
                             , 0                               AS AmountStart
@@ -543,8 +553,8 @@ BEGIN
                             , 0                               AS SummEnd 
                             , 0                               AS SummStart_branch
                             , 0                               AS SummEnd_branch
-                            , 0                               AS Summ
-                            , 0                               AS Summ_branch
+                            , SUM (tmp.SummIn_Partner_zavod)  AS Summ
+                            , SUM (tmp.SummIn_Partner_branch) AS Summ_branch
 
                             , SUM (tmp.OperCount_Change)      AS Amount_Change
                             , SUM (tmp.SummIn_Change_branch)  AS Summ_Change_branch
@@ -582,8 +592,8 @@ BEGIN
                             , 0                               AS SummEnd 
                             , 0                               AS SummStart_branch
                             , 0                               AS SummEnd_branch
-                            , 0                               AS Summ
-                            , 0                               AS Summ_branch
+                            , SUM (tmp.Summ - Summ_ProfitLoss) AS Summ
+                            , SUM (tmp.Summ - Summ_ProfitLoss) AS Summ_branch
 
                             , 0                               AS Amount_Change
                             , 0                               AS Summ_Change_branch
@@ -621,8 +631,8 @@ BEGIN
                             , 0                               AS SummEnd 
                             , 0                               AS SummStart_branch
                             , 0                               AS SummEnd_branch
-                            , 0                               AS Summ
-                            , 0                               AS Summ_branch
+                            , SUM (tmp.Summ - Summ_ProfitLoss) AS Summ
+                            , SUM (tmp.Summ - Summ_ProfitLoss) AS Summ_branch
 
                             , 0                               AS Amount_Change
                             , 0                               AS Summ_Change_branch
@@ -651,7 +661,7 @@ BEGIN
                             , 0                               AS SummOut
                             , 0                               AS SummPartnerOut
                             , SUM (tmp.Amount_Weight)         AS AmountIn
-                            , SUM (tmp.Summ_branch)           AS SummIn
+                            , CASE WHEN vbIsBranch = TRUE THEN SUM (tmp.Summ_branch) ELSE SUM (tmp.Summ_zavod) END AS SummIn
                             , 0                               AS SummPartnerIn
 
                             , 0                               AS AmountStart
@@ -660,8 +670,8 @@ BEGIN
                             , 0                               AS SummEnd 
                             , 0                               AS SummStart_branch
                             , 0                               AS SummEnd_branch
-                            , 0                               AS Summ
-                            , 0                               AS Summ_branch
+                            , SUM (tmp.Summ_zavod)            AS Summ
+                            , SUM (tmp.Summ_branch)           AS Summ_branch
 
                             , 0                               AS Amount_Change
                             , 0                               AS Summ_Change_branch
@@ -685,7 +695,7 @@ BEGIN
                             , tmp.LocationCode_by             AS ObjectByCode
                             , tmp.LocationName_by             AS ObjectByName
                             , SUM (tmp.Amount_Weight)         AS AmountOut
-                            , SUM (tmp.Summ_branch)           AS SummOut
+                            , CASE WHEN vbIsBranch = TRUE THEN SUM (tmp.Summ_branch) ELSE SUM (tmp.Summ_zavod) END AS SummOut
                             , 0                               AS SummPartnerOut
                             , 0                               AS AmountIn
                             , 0                               AS SummIn
@@ -697,8 +707,8 @@ BEGIN
                             , 0                               AS SummEnd 
                             , 0                               AS SummStart_branch
                             , 0                               AS SummEnd_branch
-                            , 0                               AS Summ
-                            , 0                               AS Summ_branch
+                            , SUM (tmp.Summ_zavod)            AS Summ
+                            , SUM (tmp.Summ_branch)           AS Summ_branch
 
                             , 0                               AS Amount_Change
                             , 0                               AS Summ_Change_branch
@@ -726,7 +736,7 @@ BEGIN
                             , 0                               AS SummOut
                             , 0                               AS SummPartnerOut
                             , SUM (tmp.Amount_Weight)         AS AmountIn
-                            , SUM (tmp.Summ_branch)           AS SummIn
+                            , CASE WHEN vbIsBranch = TRUE THEN SUM (tmp.Summ_branch) ELSE SUM (tmp.Summ_zavod) END AS SummIn
                             , 0                               AS SummPartnerIn
 
                             , 0                               AS AmountStart
@@ -735,8 +745,8 @@ BEGIN
                             , 0                               AS SummEnd 
                             , 0                               AS SummStart_branch
                             , 0                               AS SummEnd_branch
-                            , 0                               AS Summ
-                            , 0                               AS Summ_branch
+                            , SUM (tmp.Summ_zavod)            AS Summ
+                            , SUM (tmp.Summ_branch)           AS Summ_branch
 
                             , 0                               AS Amount_Change
                             , 0                               AS Summ_Change_branch
@@ -760,7 +770,7 @@ BEGIN
                             , tmp.LocationCode_by             AS ObjectByCode
                             , tmp.LocationName_by             AS ObjectByName
                             , SUM (tmp.Amount_Weight)         AS AmountOut
-                            , SUM (tmp.Summ_branch)           AS SummOut
+                            , CASE WHEN vbIsBranch = TRUE THEN SUM (tmp.Summ_branch) ELSE SUM (tmp.Summ_zavod) END AS SummOut
                             , 0                               AS SummPartnerOut
                             , 0                               AS AmountIn
                             , 0                               AS SummIn
@@ -772,8 +782,8 @@ BEGIN
                             , 0                               AS SummEnd 
                             , 0                               AS SummStart_branch
                             , 0                               AS SummEnd_branch
-                            , 0                               AS Summ
-                            , 0                               AS Summ_branch
+                            , SUM (tmp.Summ_zavod)            AS Summ
+                            , SUM (tmp.Summ_branch)           AS Summ_branch
 
                             , 0                               AS Amount_Change
                             , 0                               AS Summ_Change_branch
@@ -800,7 +810,7 @@ BEGIN
                             , 0                               AS SummOut
                             , 0                               AS SummPartnerOut
                             , SUM (tmp.AmountIn_Weight)       AS AmountIn
-                            , SUM (tmp.SummIn_branch)         AS SummIn
+                            , CASE WHEN vbIsBranch = TRUE THEN SUM (tmp.SummIn_branch) ELSE SUM (tmp.SummIn_zavod) END AS SummIn
                             , 0                               AS SummPartnerIn
 
                             , 0                               AS AmountStart
@@ -809,8 +819,8 @@ BEGIN
                             , 0                               AS SummEnd 
                             , 0                               AS SummStart_branch
                             , 0                               AS SummEnd_branch
-                            , 0                               AS Summ
-                            , 0                               AS Summ_branch
+                            , SUM (tmp.SummIn_zavod)          AS Summ
+                            , SUM (tmp.SummIn_branch)         AS Summ_branch
 
                             , 0                               AS Amount_Change
                             , 0                               AS Summ_Change_branch
@@ -834,7 +844,7 @@ BEGIN
                             , tmp.LocationCode                AS ObjectByCode
                             , '-' || tmp.LocationName         AS ObjectByName
                             , SUM (tmp.AmountOut_Weight)      AS AmountOut
-                            , SUM (tmp.SummOut_branch)        AS SummOut
+                            , -1 * CASE WHEN vbIsBranch = TRUE THEN SUM (tmp.SummOut_branch) ELSE SUM (tmp.SummOut_zavod) END AS SummOut
                             , 0                               AS SummPartnerOut
                             , 0                               AS AmountIn
                             , 0                               AS SummIn
@@ -846,8 +856,8 @@ BEGIN
                             , 0                               AS SummEnd 
                             , 0                               AS SummStart_branch
                             , 0                               AS SummEnd_branch
-                            , 0                               AS Summ
-                            , 0                               AS Summ_branch
+                            , -1 * SUM (tmp.SummOut_zavod)    AS Summ
+                            , -1 * SUM (tmp.SummOut_branch)   AS Summ_branch
 
                             , 0                               AS Amount_Change
                             , 0                               AS Summ_Change_branch
@@ -874,7 +884,7 @@ BEGIN
                             , 0                               AS SummOut
                             , 0                               AS SummPartnerOut
                             , 0                               AS AmountIn
-                            , SUM (tmp.SummIn_RePrice)        AS SummIn
+                            , CASE WHEN vbIsBranch = TRUE THEN SUM (tmp.SummIn_RePrice) ELSE 0 END AS SummIn
                             , 0                               AS SummPartnerIn
 
                             , 0                               AS AmountStart
@@ -884,7 +894,7 @@ BEGIN
                             , 0                               AS SummStart_branch
                             , 0                               AS SummEnd_branch
                             , 0                               AS Summ
-                            , 0                               AS Summ_branch
+                            , SUM (tmp.SummIn_RePrice)        AS Summ_branch
 
                             , 0                               AS Amount_Change
                             , 0                               AS Summ_Change_branch
@@ -908,7 +918,7 @@ BEGIN
                             , tmp.LocationCode                AS ObjectByCode
                             , '-' || tmp.LocationName         AS ObjectByName
                             , 0                               AS AmountOut
-                            , SUM (tmp.SummOut_RePrice)       AS SummOut
+                            , CASE WHEN vbIsBranch = TRUE THEN -1 * SUM (tmp.SummOut_RePrice) ELSE 0 END AS SummOut
                             , 0                               AS SummPartnerOut
                             , 0                               AS AmountIn
                             , 0                               AS SummIn
@@ -921,7 +931,7 @@ BEGIN
                             , 0                               AS SummStart_branch
                             , 0                               AS SummEnd_branch
                             , 0                               AS Summ
-                            , 0                               AS Summ_branch
+                            , -1 * SUM (tmp.SummOut_RePrice)  AS Summ_branch
 
                             , 0                               AS Amount_Change
                             , 0                               AS Summ_Change_branch
@@ -1054,13 +1064,17 @@ BEGIN
                 AS TFloat) AS Amount
 
         , CAST (tmpResult.SummStart AS TFloat)   AS SummStart
+        , CAST (tmpResult.SummStart AS TFloat)   AS SummStart_branch
         , CAST (tmpResult.SummIn AS TFloat)      AS SummIn
         , CAST (tmpResult.SummOut AS TFloat)     AS SummOut
         , CAST (tmpResult.SummEnd AS TFloat)     AS SummEnd
-        , CAST ((tmpResult.SummIn - tmpResult.SummOut)
+        , CAST (tmpResult.SummEnd AS TFloat)     AS SummEnd_branch
+        /*, CAST ((tmpResult.SummIn - tmpResult.SummOut)
               * CASE WHEN tmpResult.MovementDescId IN (zc_Movement_Sale(), zc_Movement_ReturnOut(), zc_Movement_Loss()) THEN -1 ELSE 1 END
               * CASE WHEN tmpResult.MovementDescId IN (zc_Movement_Send(), zc_Movement_SendOnPrice(), zc_Movement_ProductionUnion(), zc_Movement_ProductionSeparate()) AND tmpResult.isActive = FALSE THEN -1 ELSE 1 END
-                AS TFloat) AS Summ
+                AS TFloat) AS Summ*/
+        , CASE WHEN vbIsBranch = TRUE THEN tmpResult.Summ_branch ELSE tmpResult.Summ END :: TFloat AS Summ
+        , tmpResult.Summ_branch :: TFloat AS Summ_branch
 
         , tmpResult.Amount_Change       :: TFloat  AS Amount_Change
         , tmpResult.Summ_Change_branch  :: TFloat  AS Summ_Change_branch
@@ -1092,4 +1106,4 @@ ALTER FUNCTION gpReport_GoodsGroup (TDateTime, TDateTime, Integer, Integer, Inte
 */
 
 -- тест
--- SELECT * FROM gpReport_GoodsGroup (inStartDate:= '01.01.2015', inEndDate:= '01.01.2015', inUnitGroupId:= 0, inLocationId:= 8459, inGoodsGroupId:= 1832, inIsPartner:= FALSE, inSession:= zfCalc_UserAdmin());
+-- SELECT * FROM gpReport_GoodsGroup (inStartDate:= '01.01.2016', inEndDate:= '01.01.2016', inUnitGroupId:= 0, inLocationId:= 8459, inGoodsGroupId:= 1832, inIsPartner:= FALSE, inSession:= zfCalc_UserAdmin());
