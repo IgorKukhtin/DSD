@@ -22,6 +22,8 @@ inherited Report_ReceiptSaleAnalyzeForm: TReport_ReceiptSaleAnalyzeForm
       inherited cxGrid: TcxGrid
         Width = 1130
         Height = 347
+        ExplicitLeft = 3
+        ExplicitTop = 3
         ExplicitWidth = 1130
         ExplicitHeight = 347
         inherited cxGridDBTableView: TcxGridDBTableView

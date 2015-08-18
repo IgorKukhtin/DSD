@@ -24,6 +24,7 @@ inherited SetUserDefaultsForm: TSetUserDefaultsForm
         inherited cxGridDBTableView: TcxGridDBTableView
           OptionsData.Appending = True
           OptionsData.Inserting = True
+          Styles.Content = nil
           Styles.Inactive = nil
           Styles.Selection = nil
           Styles.Footer = nil
@@ -83,17 +84,23 @@ inherited SetUserDefaultsForm: TSetUserDefaultsForm
   inherited ActionList: TActionList
     object OpenDefaultsKeyForm: TOpenChoiceForm
       Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
       Caption = 'OpenDefaultsKeyForm'
       FormName = 'TDefaultsKeyForm'
+      FormNameParam.Value = ''
+      FormNameParam.DataType = ftString
       GuiParams = <
         item
           Name = 'Key'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'KeyId'
           ParamType = ptInput
         end
         item
           Name = 'TextValue'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'Key'
           DataType = ftString
@@ -102,16 +109,22 @@ inherited SetUserDefaultsForm: TSetUserDefaultsForm
     end
     object OpenUserKeyForm: TOpenChoiceForm
       Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
       Caption = 'OpenUserKeyForm'
       FormName = 'TUserKeyForm'
+      FormNameParam.Value = ''
+      FormNameParam.DataType = ftString
       GuiParams = <
         item
           Name = 'Key'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'UserId'
         end
         item
           Name = 'TextValue'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'UserName'
           DataType = ftString
@@ -120,16 +133,22 @@ inherited SetUserDefaultsForm: TSetUserDefaultsForm
     end
     object OpenObjectForm: TOpenChoiceForm
       Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
       Caption = 'OpenObjectForm'
       FormName = 'TObjectForm'
+      FormNameParam.Value = ''
+      FormNameParam.DataType = ftString
       GuiParams = <
         item
           Name = 'Key'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'ObjectId'
         end
         item
           Name = 'TextValue'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'ObjectName'
           DataType = ftString
@@ -138,6 +157,8 @@ inherited SetUserDefaultsForm: TSetUserDefaultsForm
     end
     object UpdateDataSet: TdsdUpdateDataSet
       Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
       StoredProc = spInsertUpdate
       StoredProcList = <
         item
@@ -175,29 +196,34 @@ inherited SetUserDefaultsForm: TSetUserDefaultsForm
     Params = <
       item
         Name = 'ioid'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'Id'
         ParamType = ptInputOutput
       end
       item
         Name = 'indefaultkeyid'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'KeyId'
         ParamType = ptInput
       end
       item
         Name = 'inuserkey'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'UserId'
         ParamType = ptInput
       end
       item
         Name = 'indefaultvalue'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'ObjectId'
         DataType = ftBlob
         ParamType = ptInput
       end>
+    PackSize = 1
     Left = 456
     Top = 264
   end

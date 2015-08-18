@@ -66,6 +66,8 @@ procedure TdbProcedureTest.CreateFunction;
 begin
   ZQuery.SQL.LoadFromFile(CommonFunctionPath + 'ConstantFunction.sql');
   ZQuery.ExecSQL;
+  ZQuery.SQL.LoadFromFile(FarmacyProcedurePath + 'FUNCTION\zfCalc_SalePrice.sql');
+  ZQuery.ExecSQL;
 end;
 
 procedure TdbProcedureTest.CreateHistoryProcedure;

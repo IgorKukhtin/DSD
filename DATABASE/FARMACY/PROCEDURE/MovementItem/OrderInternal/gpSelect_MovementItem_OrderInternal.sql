@@ -35,19 +35,24 @@ BEGIN
      OPEN Cursor1 FOR
        SELECT
              tmpMI.Id                   AS Id
-           , COALESCE(tmpMI.GoodsId, tmpGoods.GoodsId)     AS GoodsId
-           , COALESCE(tmpMI.GoodsCode, tmpGoods.GoodsCode) AS GoodsCode
-           , COALESCE(tmpMI.GoodsName, tmpGoods.GoodsName) AS GoodsName
-           , COALESCE(tmpMI.isTOP, tmpGoods.isTOP)     AS isTOP
+           , COALESCE(tmpMI.GoodsId, tmpGoods.GoodsId)              AS GoodsId
+           , COALESCE(tmpMI.GoodsCode, tmpGoods.GoodsCode)          AS GoodsCode
+           , COALESCE(tmpMI.GoodsName, tmpGoods.GoodsName)          AS GoodsName
+           , COALESCE(tmpMI.isTOP, tmpGoods.isTOP)                  AS isTOP
+           , COALESCE(tmpMI.GoodsGroupId, tmpGoods.GoodsGroupId)     AS GoodsGroupId
+           , COALESCE(tmpMI.GoodsGroupName, tmpGoods.GoodsGroupName) AS GoodsGroupName
+           , COALESCE(tmpMI.NDSKindId, tmpGoods.NDSKindId)           AS NDSKindId
+           , COALESCE(tmpMI.NDSKindName, tmpGoods.NDSKindName)       AS NDSKindName
+           , COALESCE(tmpMI.NDS, tmpGoods.NDS)                       AS NDS
            , CASE 
                WHEN COALESCE(tmpMI.isTOP, tmpGoods.isTOP) THEN 12615935
                ELSE 0
-             END                                           AS isTopColor
-           , COALESCE(tmpMI.Multiplicity, tmpGoods.Multiplicity) AS Multiplicity
+             END                                                    AS isTopColor
+           , COALESCE(tmpMI.Multiplicity, tmpGoods.Multiplicity)    AS Multiplicity
            , tmpMI.CalcAmount
-           , tmpMI.Amount               AS Amount
-           , tmpMI.Price * tmpMI.CalcAmount AS Summ
-           , FALSE                      AS isErased
+           , tmpMI.Amount                                           AS Amount
+           , tmpMI.Price * tmpMI.CalcAmount                         AS Summ
+           , FALSE                                                  AS isErased
            , tmpMI.Price
            , tmpMI.MinimumLot
            , tmpMI.PartionGoodsDate
@@ -58,18 +63,23 @@ BEGIN
            , tmpMI.ContractName 
            , tmpMI.MakerName 
            , tmpMI.SuperFinalPrice 
-           , COALESCE(tmpMI.isCalculated, FALSE) AS isCalculated
+           , COALESCE(tmpMI.isCalculated, FALSE)                    AS isCalculated
            , CASE WHEN tmpMI.PartionGoodsDate < (CURRENT_DATE + INTERVAL '180 DAY') THEN 456
                      ELSE 0
                 END AS PartionGoodsDateColor   
-           , Remains.Amount              AS RemainsInUnit                
-           , Object_Price_View.MCSValue  AS MCS
-           , Income.Income_Amount        AS Income_Amount
+           , Remains.Amount                                         AS RemainsInUnit
+           , Object_Price_View.MCSValue                             AS MCS
+           , Income.Income_Amount                                   AS Income_Amount
        FROM (SELECT Object_Goods.Id                              AS GoodsId
                   , Object_Goods.GoodsCodeInt                    AS GoodsCode
                   , Object_Goods.GoodsName                       AS GoodsName
                   , Object_Goods.MinimumLot                      AS Multiplicity
                   , Object_Goods.isTOP                           AS isTOP
+                  , Object_Goods.GoodsGroupId                    AS GoodsGroupId
+                  , Object_Goods.GoodsGroupName                  AS GoodsGroupName
+                  , Object_Goods.NDSKindId                       AS NDSKindId
+                  , Object_Goods.NDSKindName                     AS NDSKindName
+                  , Object_Goods.NDS                             AS NDS
              FROM Object_Goods_View AS Object_Goods
              WHERE Object_Goods.ObjectId = vbObjectId AND Object_Goods.isErased = FALSE
                    AND inShowAll = true       
@@ -85,6 +95,11 @@ BEGIN
                             , Object_Goods.GoodsCodeInt          AS GoodsCode
                             , Object_Goods.GoodsName             AS GoodsName
                             , Object_Goods.MinimumLot            AS Multiplicity
+                            , Object_Goods.GoodsGroupId          AS GoodsGroupId
+                            , Object_Goods.GoodsGroupName        AS GoodsGroupName
+                            , Object_Goods.NDSKindId             AS NDSKindId
+                            , Object_Goods.NDSKindName           AS NDSKindName
+                            , Object_Goods.NDS                   AS NDS
                             , MIString_Comment.ValueData         AS Comment
                             , COALESCE(PriceList.MakerName, MinPrice.MakerName) AS MakerName
                             , MIBoolean_Calculated.ValueData     AS isCalculated

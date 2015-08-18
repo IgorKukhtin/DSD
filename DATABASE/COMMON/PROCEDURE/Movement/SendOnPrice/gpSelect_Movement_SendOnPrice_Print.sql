@@ -296,6 +296,10 @@ BEGIN
 
            , OH_JuridicalDetails_From.FullName          AS JuridicalName_From
 
+           , Object_Retail_order.ValueData                 AS RetailName_order
+           , Object_Partner_order.ValueData                AS PartnerName_order
+           , TRIM (COALESCE (MovementString_Comment_order.ValueData, '')) :: TVarChar AS Comment_order
+
            , inReportType AS ReportType
 
        FROM Movement
@@ -355,6 +359,22 @@ BEGIN
                                                                 ON OH_JuridicalDetails_From.JuridicalId = ObjectLink_Unit_Juridical.ChildObjectId
                                                                AND Movement.OperDate >= OH_JuridicalDetails_From.StartDate
                                                                AND Movement.OperDate <  OH_JuridicalDetails_From.EndDate
+
+            LEFT JOIN MovementLinkMovement AS MovementLinkMovement_Order
+                                           ON MovementLinkMovement_Order.MovementId = Movement.Id 
+                                          AND MovementLinkMovement_Order.DescId = zc_MovementLinkMovement_Order()
+            LEFT JOIN MovementLinkObject AS MovementLinkObject_Partner_order
+                                         ON MovementLinkObject_Partner_order.MovementId = MovementLinkMovement_Order.MovementChildId
+                                        AND MovementLinkObject_Partner_order.DescId = zc_MovementLinkObject_Partner()
+            LEFT JOIN Object AS Object_Partner_order ON Object_Partner_order.Id = MovementLinkObject_Partner_order.ObjectId
+            LEFT JOIN MovementLinkObject AS MovementLinkObject_Retail_order
+                                         ON MovementLinkObject_Retail_order.MovementId = MovementLinkMovement_Order.MovementChildId
+                                        AND MovementLinkObject_Retail_order.DescId = zc_MovementLinkObject_Retail()
+            LEFT JOIN Object AS Object_Retail_order ON Object_Retail_order.Id = MovementLinkObject_Retail_order.ObjectId
+
+            LEFT JOIN MovementString AS MovementString_Comment_order
+                                     ON MovementString_Comment_order.MovementId = MovementLinkMovement_Order.MovementChildId
+                                    AND MovementString_Comment_order.DescId = zc_MovementString_Comment()
 
        WHERE Movement.Id =  inMovementId
          AND Movement.StatusId = zc_Enum_Status_Complete()

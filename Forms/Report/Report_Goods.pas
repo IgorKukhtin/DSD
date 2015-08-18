@@ -13,7 +13,7 @@ uses
   Vcl.ActnList, cxPropertiesStore, cxLabel, cxTextEdit, cxMaskEdit,
   cxDropDownEdit, cxCalendar, Vcl.ExtCtrls, cxGridLevel, cxGridCustomView,
   cxGridCustomTableView, cxGridTableView, cxGridDBTableView, cxGrid, cxPC,
-  dsdGuides, cxButtonEdit, cxCurrencyEdit, Vcl.Menus;
+  dsdGuides, cxButtonEdit, cxCurrencyEdit, Vcl.Menus, cxCheckBox;
 
 type
   TReport_GoodsForm = class(TAncestorReportForm)
@@ -58,6 +58,28 @@ type
     Price_partner: TcxGridDBColumn;
     SummPartnerOut: TcxGridDBColumn;
     SummPartnerIn: TcxGridDBColumn;
+    cxLabel5: TcxLabel;
+    edGoodsGroup: TcxButtonEdit;
+    cxLabel8: TcxLabel;
+    edUnitGroup: TcxButtonEdit;
+    GuidesUnitGroup: TdsdGuides;
+    GoodsGroupGuides: TdsdGuides;
+    Amount_Change: TcxGridDBColumn;
+    Summ_Change_branch: TcxGridDBColumn;
+    Amount_40200: TcxGridDBColumn;
+    Summ_40200_branch: TcxGridDBColumn;
+    Amount_Loss: TcxGridDBColumn;
+    Summ_Loss_branch: TcxGridDBColumn;
+    Summ_Change_zavod: TcxGridDBColumn;
+    Summ_40200_zavod: TcxGridDBColumn;
+    Summ_Loss_zavod: TcxGridDBColumn;
+    cbPartner: TcxCheckBox;
+    isPage3: TcxGridDBColumn;
+    isExistsPage3: TcxGridDBColumn;
+    cbSumm_branch: TcxCheckBox;
+    bbSumm_branch: TdxBarControlContainerItem;
+    ExecuteDialog: TExecuteDialog;
+    bbExecuteDialog: TdxBarButton;
   private
     { Private declarations }
   public

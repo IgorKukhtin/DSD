@@ -14,7 +14,7 @@ uses
   cxDropDownEdit, cxCalendar, Vcl.ExtCtrls, cxGridLevel, cxGridCustomView,
   cxGridCustomTableView, cxGridTableView, cxGridDBTableView, cxGrid, cxPC,
   dsdGuides, cxButtonEdit, Vcl.Grids, Vcl.DBGrids, cxCurrencyEdit, dxSkinsCore,
-  dxSkinsDefaultPainters, dxSkinscxPCPainter, dxSkinsdxBarPainter;
+  dxSkinsDefaultPainters, dxSkinscxPCPainter, dxSkinsdxBarPainter, cxCheckBox;
 
 type
   TReport_ReceiptProductionOutAnalyzeForm = class(TAncestorReportForm)
@@ -27,7 +27,7 @@ type
     cxLabel5: TcxLabel;
     edToUnit: TcxButtonEdit;
     ToUnitGuides: TdsdGuides;
-    colGoodsGroupNameFull: TcxGridDBColumn;
+    GoodsGroupNameFull_ch: TcxGridDBColumn;
     cxLabel11: TcxLabel;
     edPriceList_1: TcxButtonEdit;
     PriceList_1_Guides: TdsdGuides;
@@ -42,40 +42,66 @@ type
     PriceList_sale_Guides: TdsdGuides;
     cxGridLevel1: TcxGridLevel;
     ChildView: TcxGridDBTableView;
-    clReceiptid: TcxGridDBColumn;
-    AmountChild: TcxGridDBColumn;
-    clGoodsCode: TcxGridDBColumn;
-    clGoodsName: TcxGridDBColumn;
-    clPrice1: TcxGridDBColumn;
+    GoodsId_ch: TcxGridDBColumn;
+    OperCount: TcxGridDBColumn;
+    GoodsCode: TcxGridDBColumn;
+    GoodsName: TcxGridDBColumn;
+    PricePlan1: TcxGridDBColumn;
     ChildCDS: TClientDataSet;
     ChildDS: TDataSource;
     ChildViewAddOn: TdsdDBViewAddOn;
-    clPrice2: TcxGridDBColumn;
-    clPrice3: TcxGridDBColumn;
-    Summ1: TcxGridDBColumn;
-    Summ2: TcxGridDBColumn;
-    Summ3: TcxGridDBColumn;
-    OperSumm: TcxGridDBColumn;
-    Amount: TcxGridDBColumn;
-    Amount_Weight: TcxGridDBColumn;
-    OperCount_Weight: TcxGridDBColumn;
-    Price_in: TcxGridDBColumn;
-    GroupNumber: TcxGridDBColumn;
+    PricePlan2: TcxGridDBColumn;
+    PricePlan3: TcxGridDBColumn;
+    OperSummPlan1: TcxGridDBColumn;
+    OperSummPlan2: TcxGridDBColumn;
+    OperSummPlan3: TcxGridDBColumn;
+    OperCountIn_ch: TcxGridDBColumn;
+    OperCountIn_Weight_ch: TcxGridDBColumn;
     GoodsKindName: TcxGridDBColumn;
-    MeasureNameChild: TcxGridDBColumn;
+    MeasureName: TcxGridDBColumn;
+    GoodsKindId: TcxGridDBColumn;
+    Price: TcxGridDBColumn;
+    OperSumm: TcxGridDBColumn;
+    OperCountPlan: TcxGridDBColumn;
+    OperCountPlan_Weight: TcxGridDBColumn;
     GoodsGroupNameFull: TcxGridDBColumn;
-    Color_calc: TcxGridDBColumn;
-    Receiptid: TcxGridDBColumn;
-    isStart: TcxGridDBColumn;
-    Amount_start: TcxGridDBColumn;
-    Summ1_Start: TcxGridDBColumn;
-    Summ2_Start: TcxGridDBColumn;
-    Summ3_Start: TcxGridDBColumn;
-    ReceiptCode: TcxGridDBColumn;
-    ReceiptCode_user: TcxGridDBColumn;
-    Price1_cost: TcxGridDBColumn;
-    Price2_cost: TcxGridDBColumn;
-    Price3_cost: TcxGridDBColumn;
+    OperCount_Weight: TcxGridDBColumn;
+    OperSummIn_ch: TcxGridDBColumn;
+    PriceIn_ch: TcxGridDBColumn;
+    OperSummPlan1_real: TcxGridDBColumn;
+    OperSummPlan2_real: TcxGridDBColumn;
+    OperSummPlan3_real: TcxGridDBColumn;
+    GoodsKindId_ch: TcxGridDBColumn;
+    GoodsId: TcxGridDBColumn;
+    MasterKey: TcxGridDBColumn;
+    MasterKey_ch: TcxGridDBColumn;
+    PartionGoodsDate_ch: TcxGridDBColumn;
+    GoodsKindName_complete_ch: TcxGridDBColumn;
+    TaxSumm_ch: TcxGridDBColumn;
+    TaxSumm_min: TcxGridDBColumn;
+    TaxSumm_max: TcxGridDBColumn;
+    GoodsGroupName: TcxGridDBColumn;
+    actPrint: TdsdPrintAction;
+    actPrint_Reserve: TdsdPrintAction;
+    bbPrint: TdxBarButton;
+    bbPrint_Reserve: TdxBarButton;
+    OperSummPlan_real: TcxGridDBColumn;
+    OperSummPlan_real_ch: TcxGridDBColumn;
+    GoodsKindName_complete: TcxGridDBColumn;
+    PartionGoodsDate: TcxGridDBColumn;
+    cbPartionGoods: TcxCheckBox;
+    bbPartionGoods: TdxBarControlContainerItem;
+    CuterCount: TcxGridDBColumn;
+    OperCount_gp_real: TcxGridDBColumn;
+    TaxGP_real: TcxGridDBColumn;
+    TaxGP_plan: TcxGridDBColumn;
+    OperCount_gp_plan: TcxGridDBColumn;
+    actPrint_TaxReal: TdsdPrintAction;
+    dxBarButton1: TdxBarButton;
+    Price_sale: TcxGridDBColumn;
+    OperCount_ReWork: TcxGridDBColumn;
+    LossGP_real: TcxGridDBColumn;
+    LossGP_plan: TcxGridDBColumn;
   private
     { Private declarations }
   public

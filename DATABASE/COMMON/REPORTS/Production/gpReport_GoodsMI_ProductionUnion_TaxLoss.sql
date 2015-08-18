@@ -33,19 +33,19 @@ BEGIN
                      (SELECT MIContainer.Id                          AS Id
                            , MIContainer.MovementItemId              AS MovementItemId
                            , MIContainer.ObjectId_Analyzer           AS GoodsId
-                           , CLO_GoodsKind.ObjectId                  AS GoodsKindId
+                           , MIContainer.ObjectIntId_Analyzer        AS GoodsKindId
                            , MIContainer.Amount                      AS Amount
                            , CASE WHEN ObjectFloat_Value_master.ValueData <> 0 THEN COALESCE (ObjectFloat_Value_child.ValueData, 0) * MIContainer.Amount / ObjectFloat_Value_master.ValueData ELSE 0 END
                            * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData, 0) ELSE 1 END
                              AS AmountReceipt_out
                       FROM MovementItemContainer AS MIContainer
-                           INNER JOIN MovementLinkObject AS MLO_From
+                           /*INNER JOIN MovementLinkObject AS MLO_From
                                                          ON MLO_From.MovementId = MIContainer.MovementId
                                                         AND MLO_From.DescId = zc_MovementLinkObject_From()
-                                                        AND MLO_From.ObjectId = inFromId
-                           INNER JOIN ContainerLinkObject AS CLO_GoodsKind
+                                                        AND MLO_From.ObjectId = inFromId*/
+                           /*INNER JOIN ContainerLinkObject AS CLO_GoodsKind
                                                           ON CLO_GoodsKind.ContainerId = MIContainer.ContainerId
-                                                         AND CLO_GoodsKind.DescId = zc_ContainerLinkObject_GoodsKind()
+                                                         AND CLO_GoodsKind.DescId = zc_ContainerLinkObject_GoodsKind()*/
                            LEFT JOIN MovementItemLinkObject AS MILO_Receipt
                                                             ON MILO_Receipt.MovementItemId = MIContainer.MovementItemId
                                                            AND MILO_Receipt.DescId = zc_MILinkObject_Receipt()
@@ -80,6 +80,8 @@ BEGIN
                       WHERE MIContainer.OperDate BETWEEN inStartDate AND inEndDate
                         AND MIContainer.DescId = zc_MIContainer_Count()
                         AND MIContainer.WhereObjectId_Analyzer = inToId
+                        AND MIContainer.ObjectExtId_Analyzer = inFromId
+                        AND MIContainer.ObjectIntId_Analyzer > 0
                         AND MIContainer.MovementDescId = zc_Movement_ProductionUnion()
                         AND MIContainer.IsActive = TRUE
                         AND MIContainer.Amount <> 0
@@ -104,28 +106,30 @@ BEGIN
          -- перемещени ГП с inFromId на inToId + с inToId на inFromId, т.е. возврат в цех и приход из цеха по перемещению
        , tmpMI_GP_send AS
                      (SELECT MIContainer.ObjectId_Analyzer           AS GoodsId
-                           , CLO_GoodsKind.ObjectId                  AS GoodsKindId
+                           , MIContainer.ObjectIntId_Analyzer        AS GoodsKindId
                            , SUM (CASE WHEN MIContainer.isActive = TRUE THEN -1 * MIContainer.Amount ELSE 0 END) AS Amount_out   -- !!!не ошибка, т.е. расход в цех по перемещению!!!
                            , SUM (CASE WHEN MIContainer.isActive = FALSE  THEN -1 * MIContainer.Amount ELSE 0 END) AS Amount_In  -- !!!не ошибка, т.е. расход из цеха по перемещению!!!
                       FROM MovementItemContainer AS MIContainer
-                           INNER JOIN MovementLinkObject AS MLO_From
+                           /*INNER JOIN MovementLinkObject AS MLO_From
                                                          ON MLO_From.MovementId = MIContainer.MovementId
                                                         AND MLO_From.DescId = zc_MovementLinkObject_From()
                                                         AND MLO_From.ObjectId IN (inFromId, inToId)
                            INNER JOIN MovementLinkObject AS MLO_To
                                                          ON MLO_To.MovementId = MIContainer.MovementId
                                                         AND MLO_To.DescId = zc_MovementLinkObject_To()
-                                                        AND MLO_To.ObjectId IN (inFromId, inToId)
-                           INNER JOIN ContainerLinkObject AS CLO_GoodsKind
+                                                        AND MLO_To.ObjectId IN (inFromId, inToId)*/
+                           /*INNER JOIN ContainerLinkObject AS CLO_GoodsKind
                                                           ON CLO_GoodsKind.ContainerId = MIContainer.ContainerId
-                                                         AND CLO_GoodsKind.DescId = zc_ContainerLinkObject_GoodsKind()
+                                                         AND CLO_GoodsKind.DescId = zc_ContainerLinkObject_GoodsKind()*/
                       WHERE MIContainer.OperDate BETWEEN inStartDate AND inEndDate
                         AND MIContainer.DescId = zc_MIContainer_Count()
                         AND MIContainer.WhereObjectId_Analyzer = inFromId
+                        AND MIContainer.ObjectExtId_Analyzer = inToId
+                        AND MIContainer.ObjectIntId_Analyzer > 0
                         AND MIContainer.MovementDescId = zc_Movement_Send()
                         AND MIContainer.Amount <> 0
                       GROUP BY MIContainer.ObjectId_Analyzer
-                             , CLO_GoodsKind.ObjectId
+                             , MIContainer.ObjectIntId_Analyzer
                       )
          -- результат - группируется
        , tmpResult AS

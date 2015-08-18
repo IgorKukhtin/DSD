@@ -76,6 +76,8 @@ type
     clRetailName_main: TcxGridDBColumn;
     clContractTagGroupName: TcxGridDBColumn;
     clPersonalTradeName: TcxGridDBColumn;
+    ExecuteDialog: TExecuteDialog;
+    bbExecuteDialog: TdxBarButton;
   private
     { Private declarations }
   public

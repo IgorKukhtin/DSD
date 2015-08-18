@@ -73,6 +73,10 @@ type
     cbPartionGoods: TcxCheckBox;
     bbGoodsKind: TdxBarControlContainerItem;
     bbPartionGoods: TdxBarControlContainerItem;
+    AmountPartner: TcxGridDBColumn;
+    cbPartner: TcxCheckBox;
+    bbPartner: TdxBarControlContainerItem;
+    Amount: TcxGridDBColumn;
   private
     { Private declarations }
   public

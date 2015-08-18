@@ -2165,6 +2165,42 @@
 				<Form>Report_ReceiptProductionOutAnalyzeForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
+			<DCCReference Include="..\..\Forms\Report\Report_ReceiptProductionAnalyze.pas">
+				<Form>Report_ReceiptProductionAnalyzeForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\System\SetUserDefaults.pas">
+				<Form>SetUserDefaultsForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Report\Report_GoodsDialog.pas">
+				<Form>Report_GoodsDialogForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Report\Report_JuridicalDefermentIncomeDialog.pas">
+				<Form>Report_JuridicalDefermentIncomeDialogForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Report\Report_JuridicalDefermentPaymentDialog.pas">
+				<Form>Report_JuridicalDefermentPaymentDialogForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Report\Report_JuridicalSoldDialog.pas">
+				<Form>Report_JuridicalSoldDialogForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Report\Report_JuridicalCollationDialog.pas">
+				<Form>Report_JuridicalCollationDialogForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Report\Report_GoodsMI_OrderExternalDialog.pas">
+				<Form>Report_GoodsMI_OrderExternalDialogForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Report\Report_GoodsMI_ProductionDialog.pas">
+				<Form>Report_GoodsMI_ProductionDialogForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
 			<BuildConfiguration Include="Release">
 				<Key>Cfg_2</Key>
 				<CfgParent>Base</CfgParent>

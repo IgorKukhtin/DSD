@@ -90,6 +90,8 @@ type
     colTop: TcxGridDBColumn;
     colRemainsInUnit: TcxGridDBColumn;
     colMCS: TcxGridDBColumn;
+    colGoodsGroupName: TcxGridDBColumn;
+    colNDSKindName: TcxGridDBColumn;
   private
     { Private declarations }
   public

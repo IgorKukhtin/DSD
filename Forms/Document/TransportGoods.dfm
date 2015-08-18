@@ -705,7 +705,7 @@
       item
         Name = 'MemberName3'
         Value = Null
-        Component = GuideMember4
+        Component = GuideMember3
         ComponentItem = 'TextValue'
         DataType = ftString
       end

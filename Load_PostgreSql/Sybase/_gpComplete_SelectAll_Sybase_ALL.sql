@@ -14,31 +14,33 @@ $BODY$
 BEGIN
 
      RETURN QUERY 
-     WITH tmpUnit AS (/*SELECT 8411 AS UnitId, FALSE AS isMain -- Склад гп ф.Киев
-                UNION SELECT 8413 AS UnitId, FALSE AS isMain  -- ф. Кр.Рог
-                UNION SELECT 8415 AS UnitId, FALSE AS isMain  -- ф. Черкассы ( Кировоград)
-                UNION SELECT 8417 AS UnitId, FALSE AS isMain  -- ф. Николаев (Херсон)
-                UNION SELECT 8421 AS UnitId, FALSE AS isMain  -- ф. Донецк
-                UNION SELECT 8425 AS UnitId, FALSE AS isMain  -- ф. Харьков
-                UNION SELECT 301309 AS UnitId, FALSE AS isMain  -- Склад ГП ф.Запорожье
-                -- UNION SELECT 309599 AS UnitId, FALSE AS isMain  -- Склад возвратов ф.Запорожье
-                UNION SELECT 18341 AS UnitId, FALSE AS isMain  -- ф. Никополь
-                UNION SELECT 8419 AS UnitId, FALSE AS isMain  -- ф. Крым
-                UNION SELECT 8423 AS UnitId, FALSE AS isMain  -- ф. Одесса
-                UNION SELECT 346093  AS UnitId, FALSE AS isMain  -- Склад ГП ф.Одесса
-                -- UNION SELECT 346094  AS UnitId, FALSE AS isMain  -- Склад возвратов ф.Одесса
+     WITH tmpUnit AS (/*SELECT 8411 AS UnitId, NULL AS isMain -- Склад гп ф.Киев
+                UNION SELECT 8413 AS UnitId, NULL AS isMain  -- ф. Кр.Рог
+                UNION SELECT 8415 AS UnitId, NULL AS isMain  -- ф. Черкассы ( Кировоград)
+                UNION SELECT 8417 AS UnitId, NULL AS isMain  -- ф. Николаев (Херсон)
+                UNION SELECT 8421 AS UnitId, NULL AS isMain  -- ф. Донецк
+                UNION SELECT 8425 AS UnitId, NULL AS isMain  -- ф. Харьков
+                UNION SELECT 301309 AS UnitId, NULL AS isMain  -- Склад ГП ф.Запорожье
+                -- UNION SELECT 309599 AS UnitId, NULL AS isMain  -- Склад возвратов ф.Запорожье
+                UNION SELECT 18341 AS UnitId, NULL AS isMain  -- ф. Никополь
+                UNION SELECT 8419 AS UnitId, NULL AS isMain  -- ф. Крым
+                UNION SELECT 8423 AS UnitId, NULL AS isMain  -- ф. Одесса
+                UNION SELECT 346093  AS UnitId, NULL AS isMain  -- Склад ГП ф.Одесса
+                -- UNION SELECT 346094  AS UnitId, NULL AS isMain  -- Склад возвратов ф.Одесса
 
-                UNION SELECT tmp.UnitId, TRUE AS isMain FROM lfSelect_Object_Unit_byGroup (8446) AS tmp -- ЦЕХ колбаса+дел-сы
-                UNION SELECT tmp.UnitId, TRUE AS isMain FROM lfSelect_Object_Unit_byGroup (8454) AS tmp -- Склад специй и запчастей
+                UNION SELECT tmp.UnitId, NULL AS isMain FROM lfSelect_Object_Unit_byGroup (8446) AS tmp -- ЦЕХ колбаса+дел-сы
+                UNION SELECT tmp.UnitId, NULL AS isMain FROM lfSelect_Object_Unit_byGroup (8454) AS tmp -- Склад специй и запчастей
 
-                UNION */SELECT tmp.UnitId, TRUE AS isMain FROM lfSelect_Object_Unit_byGroup (8432) AS tmp -- 30000 - Общепроизводственные
+                UNION */SELECT tmp.UnitId, NULL AS isMain FROM lfSelect_Object_Unit_byGroup (8432) AS tmp -- 30000 - Общепроизводственные
                )
-      ,tmpUnit_branch AS (SELECT 301309 AS UnitId, FALSE AS isMain  -- Склад ГП ф.Запорожье
-                    UNION SELECT 309599 AS UnitId, FALSE AS isMain  -- Склад возвратов ф.Запорожье
-                    UNION SELECT 346093  AS UnitId, FALSE AS isMain  -- Склад ГП ф.Одесса
-                    UNION SELECT 346094  AS UnitId, FALSE AS isMain  -- Склад возвратов ф.Одесса
+     , tmpUnit_pack AS (SELECT 8451 AS UnitId, NULL AS isMain  -- Цех Упаковки
+                       )
+     , tmpUnit_branch AS (SELECT 301309 AS UnitId, NULL AS isMain  -- Склад ГП ф.Запорожье
+                    UNION SELECT 309599 AS UnitId, NULL AS isMain  -- Склад возвратов ф.Запорожье
+                    UNION SELECT 346093  AS UnitId, NULL AS isMain  -- Склад ГП ф.Одесса
+                    UNION SELECT 346094  AS UnitId, NULL AS isMain  -- Склад возвратов ф.Одесса
                    )
-     -- 1. From: Sale + SendOnPrice
+     -- 1.1. From: Sale + !!!NOT SendOnPrice!!!
      SELECT Movement.Id AS MovementId
           , Movement.OperDate
           , Movement.InvNumber
@@ -57,13 +59,13 @@ BEGIN
           LEFT JOIN tmpUnit AS tmpUnit_To ON tmpUnit_To.UnitId = MLO_To.ObjectId
 
      WHERE Movement.OperDate BETWEEN inStartDate AND inEndDate
-       AND Movement.DescId IN (zc_Movement_Sale(), zc_Movement_SendOnPrice())
+       AND Movement.DescId IN (zc_Movement_Sale()) -- , zc_Movement_SendOnPrice()
        AND Movement.StatusId = zc_Enum_Status_Complete()
        AND inIsBefoHistoryCost = FALSE
-       AND (tmpUnit_from.UnitId > 0 OR tmpUnit_To.UnitId > 0)
+       AND (tmpUnit_from.UnitId > 0/* OR tmpUnit_To.UnitId > 0*/)
 
     UNION
-     -- 2. From: Loss
+     -- 1.2. From: Loss
      SELECT Movement.Id AS MovementId
           , Movement.OperDate
           , Movement.InvNumber
@@ -86,7 +88,7 @@ BEGIN
        AND (tmpUnit_from.UnitId > 0)
 
     UNION
-     -- 3. To: ReturnIn
+     -- 1.3. To: ReturnIn
      SELECT Movement.Id AS MovementId
           , Movement.OperDate
           , Movement.InvNumber
@@ -109,7 +111,7 @@ BEGIN
        AND (tmpUnit_To.UnitId > 0)
 
     UNION
-     -- 5. From: ReturnOut
+     -- 1.4. From: ReturnOut
      SELECT Movement.Id AS MovementId
           , Movement.OperDate
           , Movement.InvNumber
@@ -131,8 +133,9 @@ BEGIN
        AND inIsBefoHistoryCost = FALSE
        AND (tmpUnit_from.UnitId > 0)
 
+     -- !!!Internal - PACK!!!
     UNION
-     -- 4. To: SendOnPrice
+     -- 1.5. Send + ProductionUnion
      SELECT Movement.Id AS MovementId
           , Movement.OperDate
           , Movement.InvNumber
@@ -145,20 +148,22 @@ BEGIN
           LEFT JOIN MovementLinkObject AS MLO_To ON MLO_To.MovementId = Movement.Id
                                                 AND MLO_To.DescId = zc_MovementLinkObject_To()
           LEFT JOIN Object AS Object_To ON Object_To.Id = MLO_To.ObjectId
-          LEFT JOIN MovementDesc ON MovementDesc.Id = Movement.DescId
 
-          LEFT JOIN tmpUnit AS tmpUnit_from ON tmpUnit_from.UnitId = MLO_From.ObjectId
-          LEFT JOIN tmpUnit AS tmpUnit_To ON tmpUnit_To.UnitId = MLO_To.ObjectId
+          LEFT JOIN tmpUnit_pack AS tmpUnit_from ON tmpUnit_from.UnitId = MLO_From.ObjectId
+          LEFT JOIN tmpUnit_pack AS tmpUnit_To ON tmpUnit_To.UnitId = MLO_To.ObjectId
+
+          LEFT JOIN MovementDesc ON MovementDesc.Id = Movement.DescId
      WHERE Movement.OperDate BETWEEN inStartDate AND inEndDate
-       AND Movement.DescId IN (zc_Movement_SendOnPrice())
        AND Movement.StatusId = zc_Enum_Status_Complete()
-       -- AND inIsBefoHistoryCost = FALSE -- !!!!!!!
-       AND (tmpUnit_from.UnitId > 0 OR tmpUnit_To.UnitId > 0)
-       AND 1 = 0
+       AND Movement.DescId IN (zc_Movement_Send(), zc_Movement_ProductionUnion())
+       AND inIsBefoHistoryCost = FALSE
+       AND ((tmpUnit_from.UnitId > 0 AND tmpUnit_To.UnitId IS NULL AND Movement.DescId = zc_Movement_Send())
+         OR (tmpUnit_from.UnitId > 0 AND Movement.DescId = zc_Movement_ProductionUnion())
+           )
 
      -- !!!Internal!!!
     UNION
-     -- 5. Send + ProductionUnion + ProductionSeparate
+     -- 2.1. Send + ProductionUnion + ProductionSeparate
      SELECT Movement.Id AS MovementId
           , Movement.OperDate
           , Movement.InvNumber
@@ -179,11 +184,35 @@ BEGIN
      WHERE Movement.OperDate BETWEEN inStartDate AND inEndDate
        AND Movement.StatusId = zc_Enum_Status_Complete()
        AND Movement.DescId IN (zc_Movement_Send(), zc_Movement_ProductionUnion(), zc_Movement_ProductionSeparate())
+       -- AND inIsBefoHistoryCost = TRUE
 
-
-     -- !!!Inventory!!!
     UNION
-     -- 6. Inventory
+     -- 2.2. !!!Internal - SendOnPrice!!!
+     SELECT Movement.Id AS MovementId
+          , Movement.OperDate
+          , Movement.InvNumber
+          , MovementDesc.Code
+          , (MovementDesc.ItemName || ' ' || COALESCE (Object_From.ValueData, '') || ' ' || COALESCE (Object_To.ValueData, '')) ::TVarChar
+     FROM Movement
+          LEFT JOIN MovementLinkObject AS MLO_From ON MLO_From.MovementId = Movement.Id
+                                                  AND MLO_From.DescId = zc_MovementLinkObject_From()
+          LEFT JOIN Object AS Object_From ON Object_From.Id = MLO_From.ObjectId
+          LEFT JOIN MovementLinkObject AS MLO_To ON MLO_To.MovementId = Movement.Id
+                                                AND MLO_To.DescId = zc_MovementLinkObject_To()
+          LEFT JOIN Object AS Object_To ON Object_To.Id = MLO_To.ObjectId
+          LEFT JOIN MovementDesc ON MovementDesc.Id = Movement.DescId
+
+          LEFT JOIN tmpUnit AS tmpUnit_from ON tmpUnit_from.UnitId = MLO_From.ObjectId
+          LEFT JOIN tmpUnit AS tmpUnit_To ON tmpUnit_To.UnitId = MLO_To.ObjectId
+     WHERE Movement.OperDate BETWEEN inStartDate AND inEndDate
+       AND Movement.DescId IN (zc_Movement_SendOnPrice())
+       AND Movement.StatusId = zc_Enum_Status_Complete()
+       AND inIsBefoHistoryCost = TRUE -- !!!!!!!
+       AND (tmpUnit_from.UnitId > 0 OR tmpUnit_To.UnitId > 0)
+
+
+    UNION
+     -- 3. !!!Inventory!!!
      SELECT Movement.Id AS MovementId
           , Movement.OperDate
           , Movement.InvNumber
@@ -206,7 +235,7 @@ BEGIN
 
      -- !!!BRANCH!!!
     UNION
-     -- 1. From: Sale + SendOnPrice
+     -- 4.1. From: Sale + SendOnPrice
      SELECT Movement.Id AS MovementId
           , Movement.OperDate
           , Movement.InvNumber
@@ -226,7 +255,7 @@ BEGIN
        AND Movement.StatusId = zc_Enum_Status_Complete()
        AND inIsBefoHistoryCost = FALSE
     UNION
-     -- 2. From: Loss
+     -- 4.2. From: Loss
      SELECT Movement.Id AS MovementId
           , Movement.OperDate
           , Movement.InvNumber
@@ -246,7 +275,7 @@ BEGIN
        AND Movement.StatusId = zc_Enum_Status_Complete()
        AND inIsBefoHistoryCost = FALSE
     UNION
-     -- 3. To: ReturnIn
+     -- 4.3. To: ReturnIn
      SELECT Movement.Id AS MovementId
           , Movement.OperDate
           , Movement.InvNumber
@@ -266,7 +295,7 @@ BEGIN
        AND Movement.StatusId = zc_Enum_Status_Complete()
        AND inIsBefoHistoryCost = TRUE
     UNION
-     -- 4. To: Peresort
+     -- 4.4. To: Peresort
      SELECT Movement.Id AS MovementId
           , Movement.OperDate
           , Movement.InvNumber

@@ -1,25 +1,25 @@
 inherited SendOnPriceJournalForm: TSendOnPriceJournalForm
   Caption = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' <'#1055#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077' '#1087#1086' '#1094#1077#1085#1077'>'
   ClientHeight = 535
-  ClientWidth = 1110
+  ClientWidth = 1020
   AddOnFormData.Params = FormParams
-  ExplicitWidth = 1126
+  ExplicitWidth = 1036
   ExplicitHeight = 570
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Width = 1110
+    Width = 1020
     Height = 478
     TabOrder = 3
     ExplicitWidth = 1110
     ExplicitHeight = 478
     ClientRectBottom = 478
-    ClientRectRight = 1110
+    ClientRectRight = 1020
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 1110
       ExplicitHeight = 478
       inherited cxGrid: TcxGrid
-        Width = 1110
+        Width = 1020
         Height = 478
         ExplicitWidth = 1110
         ExplicitHeight = 478
@@ -356,7 +356,7 @@ inherited SendOnPriceJournalForm: TSendOnPriceJournalForm
     end
   end
   inherited Panel: TPanel
-    Width = 1110
+    Width = 1020
     ExplicitWidth = 1110
     inherited deStart: TcxDateEdit
       EditValue = 42005d
@@ -465,7 +465,6 @@ inherited SendOnPriceJournalForm: TSendOnPriceJournalForm
           DataSet = PrintItemsCDS
           UserName = 'frxDBDMaster'
         end>
-      CopiesCount = 1
       Params = <
         item
           Name = 'Id'
@@ -518,7 +517,6 @@ inherited SendOnPriceJournalForm: TSendOnPriceJournalForm
           DataSet = PrintItemsCDS
           UserName = 'frxDBDMaster'
         end>
-      CopiesCount = 1
       Params = <
         item
           Name = 'Id'
@@ -1148,6 +1146,9 @@ inherited SendOnPriceJournalForm: TSendOnPriceJournalForm
       end>
     Left = 400
     Top = 200
+  end
+  inherited spMovementReComplete: TdsdStoredProc
+    StoredProcName = 'gpReComplete_Movement_SendOnPrice'
   end
   object PrintHeaderCDS: TClientDataSet
     Aggregates = <>

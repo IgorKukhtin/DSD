@@ -21,20 +21,33 @@ type
     clGoodsGroupName: TcxGridDBColumn;
     clGoodsCode: TcxGridDBColumn;
     clGoodsName: TcxGridDBColumn;
-    clSumm: TcxGridDBColumn;
-    clAmount_Weight: TcxGridDBColumn;
+    Summ_zavod: TcxGridDBColumn;
+    Amount_Weight: TcxGridDBColumn;
     cxLabel4: TcxLabel;
     edGoodsGroup: TcxButtonEdit;
     GuidesGoodsGroup: TdsdGuides;
     FormParams: TdsdFormParams;
-    clAmount_Sh: TcxGridDBColumn;
+    Amount_Sh: TcxGridDBColumn;
     edInDescName: TcxTextEdit;
     clGoodsKindName: TcxGridDBColumn;
     OperDate: TcxGridDBColumn;
     cxLabel3: TcxLabel;
     edUnit: TcxButtonEdit;
     GuidesUnit: TdsdGuides;
-    Price: TcxGridDBColumn;
+    Price_branch: TcxGridDBColumn;
+    GoodsGroupNameFull: TcxGridDBColumn;
+    MeasureName: TcxGridDBColumn;
+    PartionGoods: TcxGridDBColumn;
+    LocationCode: TcxGridDBColumn;
+    LocationName: TcxGridDBColumn;
+    LocationCode_by: TcxGridDBColumn;
+    LocationName_by: TcxGridDBColumn;
+    Price_zavod: TcxGridDBColumn;
+    Amount: TcxGridDBColumn;
+    Summ_branch: TcxGridDBColumn;
+    Summ_60000: TcxGridDBColumn;
+    ExecuteDialog: TExecuteDialog;
+    bbExecuteDialog: TdxBarButton;
   private
     { Private declarations }
   public

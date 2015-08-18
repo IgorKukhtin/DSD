@@ -63,7 +63,8 @@ requires
   cxVerticalGridRS16,
   fs16,
   frx16,
-  frxDB16;
+  frxDB16,
+  ZLibEx;
 
 contains
   dsdDB in '..\SOURCE\COMPONENT\dsdDB.pas',

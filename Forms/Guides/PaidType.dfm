@@ -9,16 +9,18 @@ inherited PaidTypeForm: TPaidTypeForm
   inherited PageControl: TcxPageControl
     Width = 451
     Height = 284
-    ExplicitWidth = 479
+    ExplicitWidth = 451
+    ExplicitHeight = 284
     ClientRectBottom = 284
     ClientRectRight = 451
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 479
-      ExplicitHeight = 282
+      ExplicitWidth = 451
+      ExplicitHeight = 284
       inherited cxGrid: TcxGrid
         Width = 451
         Height = 284
-        ExplicitWidth = 479
+        ExplicitWidth = 451
+        ExplicitHeight = 284
         inherited cxGridDBTableView: TcxGridDBTableView
           OptionsData.Deleting = False
           OptionsData.DeletingConfirmation = False
@@ -40,11 +42,11 @@ inherited PaidTypeForm: TPaidTypeForm
             Properties.Items = <
               item
                 Caption = #1053#1072#1083#1080#1095#1085#1099#1081
-                Value = 0
+                Value = 1
               end
               item
                 Caption = #1050#1072#1088#1090#1072
-                Value = 1
+                Value = 2
               end>
             Width = 202
           end

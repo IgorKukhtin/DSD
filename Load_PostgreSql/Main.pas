@@ -2388,11 +2388,13 @@ begin
           if not fStop then pCompleteDocument_Defroster;
           if not fStop then pCompleteDocument_Pack;
           if not fStop then pCompleteDocument_Partion;
+          if not fStop then pCompleteDocument_Kopchenie;
 
      end else begin
           if not fStop then pCompleteDocument_Defroster;
           if not fStop then pCompleteDocument_Pack;
           if not fStop then pCompleteDocument_Partion;
+          if not fStop then pCompleteDocument_Kopchenie;
      end;
 
 

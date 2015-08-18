@@ -392,6 +392,7 @@ BEGIN
                                                                                 , inContainerId_Analyzer    := _tmpItem.ContainerId_GoodsFrom -- количественный Контейнер-Корреспондент (т.е. из расхода)
                                                                                 , inObjectIntId_Analyzer    := _tmpItem.GoodsKindId           -- вид товара
                                                                                 , inObjectExtId_Analyzer    := vbWhereObjectId_Analyzer_From  -- Подраделение "От кого"
+                                                                                , inContainerIntId_Analyzer := 0                              -- Контейнер "товар"
                                                                                 , inAmount         := _tmpItem.OperCount
                                                                                 , inOperDate       := _tmpItem.OperDate
                                                                                 , inIsActive       := TRUE
@@ -554,6 +555,7 @@ BEGIN
                                                                                     , inContainerId_Analyzer    := _tmpItemSumm.ContainerId_From  -- суммовой Контейнер-Корреспондент (т.е. из расхода)
                                                                                     , inObjectIntId_Analyzer    := _tmpItem.GoodsKindId           -- вид товара
                                                                                     , inObjectExtId_Analyzer    := vbWhereObjectId_Analyzer_From  -- Подраделение "От кого"
+                                                                                    , inContainerIntId_Analyzer := 0                              -- Контейнер "товар"
                                                                                     , inAmount         := OperSumm
                                                                                     , inOperDate       := OperDate
                                                                                     , inIsActive       := TRUE

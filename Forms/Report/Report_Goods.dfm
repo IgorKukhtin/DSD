@@ -1,29 +1,30 @@
 inherited Report_GoodsForm: TReport_GoodsForm
   Caption = #1054#1090#1095#1077#1090' <'#1087#1086' '#1090#1086#1074#1072#1088#1091'>'
   ClientHeight = 341
-  ClientWidth = 1174
-  ExplicitLeft = -192
-  ExplicitWidth = 1190
-  ExplicitHeight = 376
+  ClientWidth = 1026
+  AddOnFormData.ExecuteDialogAction = ExecuteDialog
+  ExplicitWidth = 1042
+  ExplicitHeight = 379
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Width = 1174
-    Height = 284
+    Top = 80
+    Width = 1026
+    Height = 261
     TabOrder = 3
-    ExplicitTop = 57
-    ExplicitWidth = 1174
-    ExplicitHeight = 284
-    ClientRectBottom = 284
-    ClientRectRight = 1174
+    ExplicitTop = 80
+    ExplicitWidth = 1026
+    ExplicitHeight = 261
+    ClientRectBottom = 261
+    ClientRectRight = 1026
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 1174
-      ExplicitHeight = 284
+      ExplicitWidth = 1026
+      ExplicitHeight = 261
       inherited cxGrid: TcxGrid
-        Width = 1174
-        Height = 284
-        ExplicitWidth = 1174
-        ExplicitHeight = 284
+        Width = 1026
+        Height = 261
+        ExplicitWidth = 1026
+        ExplicitHeight = 261
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -75,6 +76,51 @@ inherited Report_GoodsForm: TReport_GoodsForm
               Format = ',0.####'
               Kind = skSum
               Column = SummPartnerOut
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Amount_Change
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Summ_Change_branch
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Summ_Change_zavod
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Amount_40200
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Summ_40200_branch
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Summ_40200_zavod
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Amount_Loss
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Summ_Loss_branch
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Summ_Loss_zavod
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -126,6 +172,51 @@ inherited Report_GoodsForm: TReport_GoodsForm
               Format = ',0.####'
               Kind = skSum
               Column = SummPartnerOut
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Amount_Change
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Summ_Change_branch
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Summ_Change_zavod
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Amount_40200
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Summ_40200_branch
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Summ_40200_zavod
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Amount_Loss
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Summ_Loss_branch
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Summ_Loss_zavod
             end>
           OptionsData.CancelOnExit = True
           OptionsData.Deleting = False
@@ -454,6 +545,96 @@ inherited Report_GoodsForm: TReport_GoodsForm
             HeaderAlignmentVert = vaCenter
             Width = 80
           end
+          object Amount_Change: TcxGridDBColumn
+            Caption = #1050#1086#1083'. '#1074#1077#1089'  ('#1089#1082'.1%)'
+            DataBinding.FieldName = 'Amount_Change'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 70
+          end
+          object Summ_Change_branch: TcxGridDBColumn
+            Caption = #1057#1091#1084#1084#1072' '#1089'/'#1089' '#1092#1083'. ('#1089#1082'.1%)'
+            DataBinding.FieldName = 'Summ_Change_branch'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 70
+          end
+          object Summ_Change_zavod: TcxGridDBColumn
+            Caption = #1057#1091#1084#1084#1072' '#1089'/'#1089' '#1079#1072#1074#1086#1076' ('#1089#1082'.1%)'
+            DataBinding.FieldName = 'Summ_Change_zavod'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 70
+          end
+          object Amount_40200: TcxGridDBColumn
+            Caption = #1050#1086#1083'. '#1074#1077#1089' (-)'#1091#1073#1099#1083#1100' (+)'#1101#1082#1086#1085#1086#1084'.'
+            DataBinding.FieldName = 'Amount_40200'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 70
+          end
+          object Summ_40200_branch: TcxGridDBColumn
+            Caption = #1057#1091#1084#1084#1072' '#1089'/'#1089' '#1092#1083'. (-)'#1091#1073#1099#1083#1100' (+)'#1101#1082#1086#1085#1086#1084'.'
+            DataBinding.FieldName = 'Summ_40200_branch'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 70
+          end
+          object Summ_40200_zavod: TcxGridDBColumn
+            Caption = #1057#1091#1084#1084#1072' '#1089'/'#1089' '#1079#1072#1074#1086#1076' (-)'#1091#1073#1099#1083#1100' (+)'#1101#1082#1086#1085#1086#1084'.'
+            DataBinding.FieldName = 'Summ_40200_zavod'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 70
+          end
+          object Amount_Loss: TcxGridDBColumn
+            Caption = #1057#1087#1080#1089#1072#1085#1080#1077' '#1082#1086#1083'-'#1074#1086
+            DataBinding.FieldName = 'Amount_Loss'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 70
+          end
+          object Summ_Loss_branch: TcxGridDBColumn
+            Caption = #1057#1087#1080#1089#1072#1085#1080#1077' '#1089#1091#1084#1084#1072' '#1089'/'#1089' ('#1092#1083'.)'
+            DataBinding.FieldName = 'Summ_Loss_branch'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 70
+          end
+          object Summ_Loss_zavod: TcxGridDBColumn
+            Caption = #1057#1087#1080#1089#1072#1085#1080#1077' '#1089#1091#1084#1084#1072' '#1089'/'#1089' ('#1079#1072#1074#1086#1076')'
+            DataBinding.FieldName = 'Summ_Loss_zavod'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 70
+          end
           object MovementDescName_order: TcxGridDBColumn
             DataBinding.FieldName = 'MovementDescName_order'
             Visible = False
@@ -494,53 +675,83 @@ inherited Report_GoodsForm: TReport_GoodsForm
             VisibleForCustomization = False
             Width = 55
           end
+          object isPage3: TcxGridDBColumn
+            DataBinding.FieldName = 'isPage3'
+            Visible = False
+            VisibleForCustomization = False
+            Width = 55
+          end
+          object isExistsPage3: TcxGridDBColumn
+            DataBinding.FieldName = 'isExistsPage3'
+            Visible = False
+            VisibleForCustomization = False
+            Width = 55
+          end
         end
+      end
+      object cbSumm_branch: TcxCheckBox
+        Left = 69
+        Top = 3
+        Caption = #1087#1077#1095#1072#1090#1100' '#1089'/'#1089' '#1092#1080#1083#1080#1072#1083
+        Properties.ReadOnly = False
+        TabOrder = 1
+        Width = 125
       end
     end
   end
   inherited Panel: TPanel
-    Width = 1174
-    ExplicitWidth = 1174
+    Width = 1026
+    Height = 54
+    ExplicitWidth = 1026
+    ExplicitHeight = 54
     inherited deStart: TcxDateEdit
+      Left = 118
       EditValue = 42005d
       Properties.SaveTime = False
+      ExplicitLeft = 118
     end
     inherited deEnd: TcxDateEdit
+      Left = 118
+      Top = 30
       EditValue = 42005d
       Properties.SaveTime = False
+      ExplicitLeft = 118
+      ExplicitTop = 30
     end
     inherited cxLabel1: TcxLabel
-      Left = 8
-      ExplicitLeft = 8
+      Left = 25
+      ExplicitLeft = 25
     end
     inherited cxLabel2: TcxLabel
-      Left = 198
-      ExplicitLeft = 198
+      Left = 6
+      Top = 31
+      ExplicitLeft = 6
+      ExplicitTop = 31
     end
     object cxLabel3: TcxLabel
-      Left = 724
-      Top = 6
+      Left = 589
+      Top = 31
       Caption = #1058#1086#1074#1072#1088
     end
     object edGoods: TcxButtonEdit
-      Left = 760
-      Top = 5
+      Left = 629
+      Top = 30
       Properties.Buttons = <
         item
           Default = True
           Kind = bkEllipsis
         end>
       TabOrder = 5
-      Width = 225
+      Width = 300
     end
     object cxLabel4: TcxLabel
-      Left = 420
-      Top = 6
+      Left = 244
+      Top = 31
       Caption = #1052#1077#1089#1090#1086' '#1091#1095#1077#1090#1072':'
     end
     object edLocation: TcxButtonEdit
-      Left = 493
-      Top = 5
+      Left = 318
+      Top = 30
       Properties.Buttons = <
         item
           Default = True
@@ -549,9 +760,62 @@ inherited Report_GoodsForm: TReport_GoodsForm
       TabOrder = 7
       Width = 210
     end
+    object cxLabel5: TcxLabel
+      Left = 538
+      Top = 6
+      Caption = #1043#1088#1091#1087#1087#1072' '#1090#1086#1074#1072#1088#1086#1074':'
+    end
+    object edGoodsGroup: TcxButtonEdit
+      Left = 629
+      Top = 5
+      Properties.Buttons = <
+        item
+          Default = True
+          Kind = bkEllipsis
+        end>
+      Properties.ReadOnly = True
+      TabOrder = 9
+      Width = 300
+    end
+    object cxLabel8: TcxLabel
+      Left = 210
+      Top = 6
+      Caption = #1043#1088'. '#1087#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1081':'
+    end
+    object edUnitGroup: TcxButtonEdit
+      Left = 318
+      Top = 5
+      Properties.Buttons = <
+        item
+          Default = True
+          Kind = bkEllipsis
+        end>
+      Properties.ReadOnly = True
+      TabOrder = 11
+      Width = 210
+    end
+    object cbPartner: TcxCheckBox
+      Left = 938
+      Top = 5
+      Caption = #1055#1086' '#1082#1086#1085#1090#1088#1072#1075#1077#1085#1090#1072#1084
+      Properties.ReadOnly = False
+      State = cbsChecked
+      TabOrder = 12
+      Width = 113
+    end
   end
   inherited cxPropertiesStore: TcxPropertiesStore
     Components = <
+      item
+        Component = cbPartner
+        Properties.Strings = (
+          'Checked')
+      end
+      item
+        Component = cbSumm_branch
+        Properties.Strings = (
+          'Checked')
+      end
       item
         Component = deEnd
         Properties.Strings = (
@@ -563,7 +827,19 @@ inherited Report_GoodsForm: TReport_GoodsForm
           'Date')
       end
       item
+        Component = GoodsGroupGuides
+        Properties.Strings = (
+          'Key'
+          'TextValue')
+      end
+      item
         Component = GoodsGuides
+        Properties.Strings = (
+          'Key'
+          'TextValue')
+      end
+      item
+        Component = GuidesUnitGroup
         Properties.Strings = (
           'Key'
           'TextValue')
@@ -604,9 +880,29 @@ inherited Report_GoodsForm: TReport_GoodsForm
           DataType = ftDateTime
         end
         item
+          Name = 'UnitGroupName'
+          Value = Null
+          Component = GuidesUnitGroup
+          ComponentItem = 'TextValue'
+          DataType = ftString
+        end
+        item
           Name = 'LocationName'
           Value = ''
           Component = LocationGuides
+          ComponentItem = 'TextValue'
+          DataType = ftString
+        end
+        item
+          Name = 'GoodsGroupId'
+          Value = Null
+          Component = GoodsGroupGuides
+          ComponentItem = 'Key'
+        end
+        item
+          Name = 'GoodsGroupName'
+          Value = Null
+          Component = GoodsGroupGuides
           ComponentItem = 'TextValue'
           DataType = ftString
         end
@@ -616,10 +912,112 @@ inherited Report_GoodsForm: TReport_GoodsForm
           Component = GoodsGuides
           ComponentItem = 'TextValue'
           DataType = ftString
+        end
+        item
+          Name = 'isSumm_branch'
+          Value = Null
+          Component = cbSumm_branch
+          DataType = ftBoolean
         end>
       ReportName = #1054#1090#1095#1077#1090' '#1087#1086' '#1090#1086#1074#1072#1088#1091' '#1087#1086' '#1085#1072#1082#1083#1072#1076#1085#1099#1084
       ReportNameParam.Value = #1054#1090#1095#1077#1090' '#1087#1086' '#1090#1086#1074#1072#1088#1091' '#1087#1086' '#1085#1072#1082#1083#1072#1076#1085#1099#1084
       ReportNameParam.DataType = ftString
+    end
+    object ExecuteDialog: TExecuteDialog
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1072#1088#1072#1084#1077#1090#1088#1099' '#1086#1090#1095#1077#1090#1072
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1072#1088#1072#1084#1077#1090#1088#1099' '#1086#1090#1095#1077#1090#1072
+      ImageIndex = 35
+      FormName = 'TReport_GoodsDialogForm'
+      FormNameParam.Value = 'TReport_GoodsDialogForm'
+      FormNameParam.DataType = ftString
+      GuiParams = <
+        item
+          Name = 'StartDate'
+          Value = 42005d
+          Component = deStart
+          DataType = ftDateTime
+          ParamType = ptInput
+        end
+        item
+          Name = 'EndDate'
+          Value = 42005d
+          Component = deEnd
+          DataType = ftDateTime
+          ParamType = ptInput
+        end
+        item
+          Name = 'GoodsId'
+          Value = ''
+          Component = GoodsGuides
+          ComponentItem = 'Key'
+          DataType = ftString
+          ParamType = ptInput
+        end
+        item
+          Name = 'GoodsName'
+          Value = ''
+          Component = GoodsGuides
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          ParamType = ptInput
+        end
+        item
+          Name = 'GoodsGroupId'
+          Value = ''
+          Component = GoodsGroupGuides
+          ComponentItem = 'Key'
+          ParamType = ptInput
+        end
+        item
+          Name = 'GoodsGroupName'
+          Value = ''
+          Component = GoodsGroupGuides
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          ParamType = ptInput
+        end
+        item
+          Name = 'UnitGroupId'
+          Value = ''
+          Component = GuidesUnitGroup
+          ComponentItem = 'Key'
+          ParamType = ptInput
+        end
+        item
+          Name = 'UnitGroupName'
+          Value = ''
+          Component = GuidesUnitGroup
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          ParamType = ptInput
+        end
+        item
+          Name = 'LocationId'
+          Value = ''
+          Component = LocationGuides
+          ComponentItem = 'Key'
+          ParamType = ptInput
+        end
+        item
+          Name = 'LocationName'
+          Value = ''
+          Component = LocationGuides
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          ParamType = ptInput
+        end
+        item
+          Name = 'isPartner'
+          Value = 'False'
+          Component = cbPartner
+          DataType = ftBoolean
+          ParamType = ptInput
+        end>
+      isShowModal = True
+      RefreshDispatcher = RefreshDispatcher
+      OpenBeforeShow = True
     end
   end
   inherited MasterDS: TDataSource
@@ -648,9 +1046,23 @@ inherited Report_GoodsForm: TReport_GoodsForm
         ParamType = ptInput
       end
       item
+        Name = 'inUnitGroupId'
+        Value = Null
+        Component = GuidesUnitGroup
+        ComponentItem = 'Key'
+        ParamType = ptInput
+      end
+      item
         Name = 'inLocationId'
         Value = ''
         Component = LocationGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inGoodsGroupId'
+        Value = Null
+        Component = GoodsGroupGuides
         ComponentItem = 'Key'
         ParamType = ptInput
       end
@@ -659,6 +1071,13 @@ inherited Report_GoodsForm: TReport_GoodsForm
         Value = ''
         Component = GoodsGuides
         ComponentItem = 'Key'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inIsPartner'
+        Value = Null
+        Component = cbPartner
+        DataType = ftBoolean
         ParamType = ptInput
       end>
     Left = 112
@@ -680,7 +1099,23 @@ inherited Report_GoodsForm: TReport_GoodsForm
         end
         item
           Visible = True
+          ItemName = 'bbExecuteDialog'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbRefresh'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbSumm_branch'
         end
         item
           Visible = True
@@ -707,6 +1142,17 @@ inherited Report_GoodsForm: TReport_GoodsForm
       Action = actPrint
       Category = 0
     end
+    object bbSumm_branch: TdxBarControlContainerItem
+      Caption = 'bbSumm_branch'
+      Category = 0
+      Hint = 'bbSumm_branch'
+      Visible = ivAlways
+      Control = cbSumm_branch
+    end
+    object bbExecuteDialog: TdxBarButton
+      Action = ExecuteDialog
+      Category = 0
+    end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
     Left = 368
@@ -721,7 +1167,13 @@ inherited Report_GoodsForm: TReport_GoodsForm
         Component = PeriodChoice
       end
       item
+        Component = GuidesUnitGroup
+      end
+      item
         Component = LocationGuides
+      end
+      item
+        Component = GoodsGroupGuides
       end
       item
         Component = GoodsGuides
@@ -752,8 +1204,8 @@ inherited Report_GoodsForm: TReport_GoodsForm
         DataType = ftString
         ParamType = ptInput
       end>
-    Left = 848
-    Top = 3
+    Left = 712
+    Top = 27
   end
   object LocationGuides: TdsdGuides
     KeyField = 'Id'
@@ -779,6 +1231,60 @@ inherited Report_GoodsForm: TReport_GoodsForm
         DataType = ftString
         ParamType = ptInput
       end>
-    Left = 592
+    Left = 416
+    Top = 48
+  end
+  object GuidesUnitGroup: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edUnitGroup
+    FormNameParam.Value = 'TUnitTreeForm'
+    FormNameParam.DataType = ftString
+    FormName = 'TUnitTreeForm'
+    PositionDataSet = 'ClientDataSet'
+    ParentDataSet = 'TreeDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GuidesUnitGroup
+        ComponentItem = 'Key'
+        DataType = ftString
+        ParamType = ptInput
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesUnitGroup
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+      end>
+    Left = 384
+  end
+  object GoodsGroupGuides: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edGoodsGroup
+    FormNameParam.Value = 'TGoodsGroup_ObjectForm'
+    FormNameParam.DataType = ftString
+    FormName = 'TGoodsGroup_ObjectForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GoodsGroupGuides
+        ComponentItem = 'Key'
+        DataType = ftString
+        ParamType = ptInput
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GoodsGroupGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+      end>
+    Left = 792
   end
 end

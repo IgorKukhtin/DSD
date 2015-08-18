@@ -88,6 +88,8 @@ type
     edInvNumberSale: TcxButtonEdit;
     colPartionMovementName: TcxGridDBColumn;
     clPaymentDate: TcxGridDBColumn;
+    ExecuteDialog: TExecuteDialog;
+    bbExecuteDialog: TdxBarButton;
   private
     { Private declarations }
   public

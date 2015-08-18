@@ -29,6 +29,12 @@ BEGIN
    INSERT INTO tmpAll (MovementItemId, GoodsId, GoodsKindId, AmountPartner, AmountPartnerPrior)
                                  WITH tmpUnit AS (SELECT UnitId FROM lfSelect_Object_Unit_byGroup (inFromId) AS lfSelect_Object_Unit_byGroup WHERE UnitId <> inFromId)
                                     , tmpGoods AS (SELECT ObjectLink_Goods_InfoMoney.ObjectId AS GoodsId
+                                                        , CASE WHEN Object_InfoMoney_View.InfoMoneyId IN (zc_Enum_InfoMoney_20901() -- Ирна
+                                                                                                        , zc_Enum_InfoMoney_30101() -- Готовая продукция
+                                                                                                         )
+                                                                    THEN TRUE
+                                                               ELSE FALSE
+                                                          END AS isGoodsKind
                                                    FROM Object_InfoMoney_View
                                                         LEFT JOIN ObjectLink AS ObjectLink_Goods_InfoMoney
                                                                              ON ObjectLink_Goods_InfoMoney.ChildObjectId = Object_InfoMoney_View.InfoMoneyId
@@ -73,6 +79,7 @@ BEGIN
                                             LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
                                                                              ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
                                                                             AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
+                                                                            AND tmpGoods.isGoodsKind = TRUE
                                             LEFT JOIN MovementItemFloat AS MIFloat_AmountSecond
                                                                         ON MIFloat_AmountSecond.MovementItemId = MovementItem.Id
                                                                        AND MIFloat_AmountSecond.DescId = zc_MIFloat_AmountSecond()

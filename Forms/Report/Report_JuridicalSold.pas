@@ -125,6 +125,8 @@ type
     clPaymentDate: TcxGridDBColumn;
     SaleRealSumm_total: TcxGridDBColumn;
     ReturnInRealSumm_total: TcxGridDBColumn;
+    ExecuteDialog: TExecuteDialog;
+    bbExecuteDialog: TdxBarButton;
   private
     { Private declarations }
   public

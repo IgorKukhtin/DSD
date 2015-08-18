@@ -1,10 +1,12 @@
 -- Function: gpSelect_Movement_PriceList()
 
 DROP FUNCTION IF EXISTS gpSelect_GoodsSearch (TVarChar, TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_GoodsSearch (TVarChar, TVarChar, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_GoodsSearch(
-    IN inGoodsSearch   TVarChar    -- поиск товаров
-  , IN inSession       TVarChar    -- сессия пользователя
+    IN inGoodsSearch    TVarChar    -- поиск товаров
+  , IN inProducerSearch TVarChar    -- поиск производителя
+  , IN inSession        TVarChar    -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, CommonCode Integer, BarCode TVarChar, 
                GoodsCode TVarChar, GoodsName TVarChar, GoodsNDS TVarChar, 
@@ -99,18 +101,29 @@ BEGIN
             LEFT JOIN Object_LinkGoods_View AS LinkGoodsObject ON LinkGoodsObject.GoodsMainId = Object_Goods.Id 
                                                               AND LinkGoodsObject.ObjectId = vbObjectId
             LEFT JOIN Object_Goods_View AS ObjectGoodsView ON ObjectGoodsView.Id = LinkGoodsObject.GoodsId
-      WHERE upper(LoadPriceListItem.GoodsName) LIKE UPPER('%'||inGoodsSearch||'%') AND inGoodsSearch <> ''
-        AND COALESCE(JuridicalSettings.isPriceClose, FALSE) <> TRUE; 
+      WHERE 
+        upper(LoadPriceListItem.GoodsName) LIKE UPPER('%'||inGoodsSearch||'%') 
+        AND
+        upper(LoadPriceListItem.ProducerName) LIKE UPPER('%'||inProducerSearch||'%')
+        AND
+        (
+            inGoodsSearch <> ''
+            or
+            inProducerSearch <> ''
+        )
+        AND 
+        COALESCE(JuridicalSettings.isPriceClose, FALSE) <> TRUE; 
 
 END;
 $BODY$
   LANGUAGE PLPGSQL VOLATILE;
-ALTER FUNCTION gpSelect_GoodsSearch (TVarChar, TVarChar) OWNER TO postgres;
+ALTER FUNCTION gpSelect_GoodsSearch (TVarChar, TVarChar, TVarChar) OWNER TO postgres;
 
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.  Воробкало А.А.
+ 18.08.15                                                                        * inProducerSearch
  27.04.15                        *
  02.04.15                        *
  29.10.14                        *

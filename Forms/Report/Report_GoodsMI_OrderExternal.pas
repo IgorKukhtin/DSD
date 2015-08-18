@@ -81,6 +81,8 @@ type
     Amount_Weight_Dozakaz2: TcxGridDBColumn;
     AmountSumm_Dozakaz2: TcxGridDBColumn;
     Amount: TcxGridDBColumn;
+    ExecuteDialog: TExecuteDialog;
+    bbExecuteDialog: TdxBarButton;
   private
     { Private declarations }
   public
