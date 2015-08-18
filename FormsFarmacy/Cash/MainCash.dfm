@@ -168,7 +168,7 @@ inherited MainCashForm: TMainCashForm
     Height = 213
     Align = alClient
     BevelOuter = bvNone
-    TabOrder = 1
+    TabOrder = 0
     object MainGrid: TcxGrid
       Left = 0
       Top = 0
@@ -387,6 +387,7 @@ inherited MainCashForm: TMainCashForm
         Left = 744
         Top = 8
         TabOrder = 11
+        Visible = False
         Width = 21
       end
     end
