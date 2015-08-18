@@ -91,7 +91,7 @@ type
     btnLoadDeferred: TcxButton;
     actOpenCheckDeferred: TOpenChoiceForm;
     actLoadDeferred: TMultiAction;
-    actSetTrueRemains: TAction;
+    actUpdateRemains: TAction;
     actCalcTotalSumm: TAction;
     actCashWork: TAction;
     N3: TMenuItem;
@@ -116,6 +116,8 @@ type
     spGet_User_IsAdmin: TdsdStoredProc;
     actOpenMCSForm: TdsdOpenForm;
     btnOpenMCSForm: TcxButton;
+    chbTracing: TcxCheckBox;
+    procedure WM_KEYDOWN(var Msg: TWMKEYDOWN);
     procedure FormCreate(Sender: TObject);
     procedure actChoiceGoodsInRemainsGridExecute(Sender: TObject);
     procedure lcNameKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
@@ -130,7 +132,6 @@ type
     procedure actSetVIPExecute(Sender: TObject);
     procedure RemainsCDSAfterScroll(DataSet: TDataSet);
     procedure actDeferrentExecute(Sender: TObject);
-    procedure actSetTrueRemainsExecute(Sender: TObject);
     procedure actCalcTotalSummExecute(Sender: TObject);
     procedure MainColReservedGetDisplayText(Sender: TcxCustomGridTableItem;
       ARecord: TcxCustomGridRecord; var AText: string);
@@ -140,6 +141,8 @@ type
     procedure actGetMoneyInCashExecute(Sender: TObject);
     procedure actSpecExecute(Sender: TObject);
     procedure ParentFormCloseQuery(Sender: TObject; var CanClose: Boolean);
+    procedure lcNameExit(Sender: TObject);
+    procedure actUpdateRemainsExecute(Sender: TObject);
   private
     FSoldRegim: boolean;
     fShift: Boolean;
@@ -147,6 +150,8 @@ type
     Cash: ICash;
     SoldParallel: Boolean;
     SourceClientDataSet: TClientDataSet;
+    TimeArray: Array [0..29] of TDateTime;
+    ASCount: Integer;
     procedure SetSoldRegim(const Value: boolean);
     // возвращает остаток
     function GetGoodsPropertyRemains(GoodsId: integer): real;
@@ -166,6 +171,8 @@ type
     function PutCheckToCash(SalerCash: real; PaidType: TPaidType): boolean;
     //  обновляет остаток на рабочем датасете
     procedure UpdateRemains;
+
+    procedure ShowTimeTracing;
 
     property SoldRegim: boolean read FSoldRegim write SetSoldRegim;
   public
@@ -331,57 +338,6 @@ begin
   end;
 end;
 
-procedure TMainCashForm.actSetTrueRemainsExecute(Sender: TObject);
-var
-  ExecuteGoodsRemains: Boolean;
-begin
-  CheckCDS.DisableControls;
-  RemainsCDS.DisableControls;
-  RemainsCDS.AfterScroll := nil;
-  AlternativeCDS.DisableControls;
-  AlternativeCDS.Filtered := False;
-  try
-    CheckCDS.First;
-    while Not CheckCDS.EOF do
-    Begin
-      ExecuteGoodsRemains:=False;
-      if RemainsCDS.Locate('Id',CheckCDS.FieldByName('GoodsId').asInteger,[]) then
-      Begin
-        spGoodsRemains.ParamByName('inGoodsId').Value := CheckCDS.FieldByName('GoodsId').asInteger;
-        spGoodsRemains.Execute;
-        ExecuteGoodsRemains := True;
-        RemainsCDS.Edit;
-        RemainsCDS.FieldByName('Remains').AsFloat := spGoodsRemains.ParamByName('outRemains').asFloat - CheckCDS.FieldByName('Amount').AsFloat;
-        RemainsCDS.Post;
-      End;
-      AlternativeCDS.Filter := 'Id = '+CheckCDS.FieldByName('GoodsId').asString;
-      AlternativeCDS.Filtered := True;
-      AlternativeCDS.First;
-      while Not AlternativeCDS.eof do
-      Begin
-        if not ExecuteGoodsRemains then
-        Begin
-          spGoodsRemains.ParamByName('inGoodsId').Value := CheckCDS.FieldByName('GoodsId').asInteger;
-          spGoodsRemains.Execute;
-          ExecuteGoodsRemains := True;
-        End;
-        AlternativeCDS.Edit;
-        AlternativeCDS.FieldByName('Remains').AsFloat := spGoodsRemains.ParamByName('outRemains').asFloat - CheckCDS.FieldByName('Amount').AsFloat;
-        AlternativeCDS.Post;
-        AlternativeCDS.Next;
-      End;
-      CheckCDS.Next;
-    end;
-  finally
-    CheckCDS.EnableControls;
-    RemainsCDS.EnableControls;
-    RemainsCDS.AfterScroll := RemainsCDSAfterScroll;
-    RemainsCDSAfterScroll(RemainsCDS);
-    AlternativeCDS.filtered := True;
-    AlternativeCDS.EnableControls;
-  end;
-end;
-
 procedure TMainCashForm.actSetVIPExecute(Sender: TObject);
 var
   ManagerID:Integer;
@@ -409,6 +365,11 @@ procedure TMainCashForm.actSpecExecute(Sender: TObject);
 begin
   if Assigned(Cash) then
     Cash.AlwaysSold := actSpec.Checked;
+end;
+
+procedure TMainCashForm.actUpdateRemainsExecute(Sender: TObject);
+begin
+  UpdateRemains;
 end;
 
 procedure TMainCashForm.ceAmountExit(Sender: TObject);
@@ -489,6 +450,8 @@ Begin
 End;
 
 procedure TMainCashForm.InsertUpdateBillCheckItems;
+var
+  I: Integer;
 begin
   if ceAmount.Value = 0 then
      exit;
@@ -506,6 +469,9 @@ begin
       ShowMessage('Не хватает количества для возврата!');
       exit;
   end;
+for I := low(TimeArray) to High(TimeArray) do
+  TimeArray[I] := 0;
+TimeArray[0] := Now;
   with spInsertUpdateCheckItems do begin
      ParamByName('inAmount').Value := ceAmount.Value;
      ParamByName('inPrice').Value := SourceClientDataSet.FieldByName('Price').asFloat;
@@ -513,18 +479,23 @@ begin
         ParamByName('inGoodsId').Value := SourceClientDataSet.FieldByName('Id').asInteger
      else
         ParamByName('inGoodsId').Value := CheckCDS.FieldByName('GoodsId').asInteger;
+TimeArray[1] := Now;
      Execute;
      //обновить данные чека
      try //Если что то пойдет не так - на экране должно быть то что в базе
+TimeArray[2] := Now;
        if CheckCDS.Locate('Id',ParamByName('outMovementItemId').Value,[]) then
        begin
+TimeArray[3] := Now;
          CheckCDS.Edit;
          CheckCDS.FieldByName('Amount').AsFloat := ParamByName('outAmount').AsFloat;
          CheckCDS.FieldByName('Summ').AsFloat := ParamByName('outSumm').AsFloat;
          CheckCDS.Post;
+TimeArray[4] := Now;
        end
        else
        begin
+TimeArray[3] := Now;
          CheckCDS.Append;
          CheckCDS.FieldByName('Id').AsInteger := ParamByName('outMovementItemId').Value;
          CheckCDS.FieldByName('GoodsId').AsInteger := SourceClientDataSet.FieldByName('Id').asInteger;
@@ -536,23 +507,33 @@ begin
          CheckCDS.FieldByName('NDS').AsFloat := ParamByName('outNDS').AsFloat;
          CheckCDS.FieldByName('isErased').AsBoolean := False;
          CheckCDS.Post;
+TimeArray[4] := Now;
        end;
        //обновить остаток в гл. ДС
        //Обновить остаок в альтернативе
        UpdateQuantityInQuery(ParamByName('inGoodsId').Value,
          ParamByName('outRemains').AsFloat);
        //Обновить сумму документа
+TimeArray[23]:=Now;
        FTotalSumm := ParamByName('outTotalSummCheck').AsFloat;
+TimeArray[24]:=Now;
        lblTotalSumm.Caption := FormatFloat(',0.00',ParamByName('outTotalSummCheck').AsFloat);
+TimeArray[25]:=Now;
      Except ON E: Exception DO
        begin
+TimeArray[26]:=Now;
          spSelectCheck.Execute;
+TimeArray[27]:=Now;
          CalcTotalSumm;// Пересчитали значение Суммы в TotalPanel
+TimeArray[28]:=Now;
          UpdateQuantityInQuery(ParamByName('inGoodsId').Value);
+TimeArray[29]:=Now;
          raise Exception.Create(E.Message);
        end;
      end;
   end;
+  if chbTracing.Checked then
+    ShowTimeTracing;
 end;
 
 {------------------------------------------------------------------------------}
@@ -563,22 +544,34 @@ end;
 
 procedure TMainCashForm.UpdateQuantityInQuery(GoodsId: integer; Remains: Real);
 begin
+ASCount := 0;
+TimeArray[5]:=Now;
   RemainsCDS.DisableControls;
+TimeArray[6]:=Now;
   RemainsCDS.AfterScroll := nil;
+TimeArray[7]:=Now;
   RemainsCDS.Filtered := False;
+TimeArray[8]:=Now;
   AlternativeCDS.DisableControls;
+TimeArray[9]:=Now;
   AlternativeCDS.Filtered := False;
+TimeArray[10]:=Now;
   try
     if RemainsCDS.Locate('Id', GoodsId, []) AND (RemainsCDS.FieldByName('Remains').AsFloat <> Remains) then
     begin
+TimeArray[11]:=Now;
        RemainsCDS.Edit;
        RemainsCDS.FieldByName('Remains').AsFloat := Remains;
        RemainsCDS.Post;
+TimeArray[12]:=Now;
     end;
 
     AlternativeCDS.Filter := 'Id = '+CheckCDS.FieldByName('GoodsId').asString;
+TimeArray[13]:=Now;
     AlternativeCDS.Filtered := True;
+TimeArray[14]:=Now;
     AlternativeCDS.First;
+TimeArray[15]:=Now;
     while Not AlternativeCDS.eof do
     Begin
       AlternativeCDS.Edit;
@@ -586,23 +579,31 @@ begin
       AlternativeCDS.Post;
       AlternativeCDS.Next;
     End;
+TimeArray[16]:=Now;
   finally
-    RemainsCDS.AfterScroll := RemainsCDSAfterScroll;
-    RemainsCDSAfterScroll(RemainsCDS);
     AlternativeCDS.Filtered := True;
+TimeArray[17]:=Now;
     RemainsCDS.Filtered := true;
+TimeArray[18]:=Now;
     RemainsCDS.EnableControls;
+TimeArray[19]:=Now;
+    RemainsCDS.AfterScroll := RemainsCDSAfterScroll;
+TimeArray[20]:=Now;
+    RemainsCDSAfterScroll(RemainsCDS);
+TimeArray[21]:=Now;
+
     AlternativeCDS.EnableControls;
+TimeArray[22]:=Now;
   end;
 end;
 
 procedure TMainCashForm.UpdateRemains;
 var
-  B: TBookmark;
+  GoodsId : Integer;
 begin
   if not RemainsCDS.Active or not Remains_LiteCDS.Active  then exit;
-  
-  B := RemainsCDS.GetBookmark;
+
+  GoodsId := RemainsCDS.FieldByName('Id').asInteger;
   RemainsCDS.DisableControls;
   RemainsCDS.Filtered := False;
   RemainsCDS.AfterScroll := Nil;
@@ -615,10 +616,12 @@ begin
     Begin
       if Remains_LiteCDS.locate('Id',RemainsCDS.fieldByName('Id').AsInteger,[]) then
       Begin
-        if RemainsCDS.FieldByName('Remains').AsFloat <> Remains_LiteCDS.FieldByName('Remains').AsFloat then
+        if (RemainsCDS.FieldByName('Remains').AsFloat <> Remains_LiteCDS.FieldByName('Remains').AsFloat) or
+           (RemainsCDS.FieldByName('Reserved').AsFloat <> Remains_LiteCDS.FieldByName('Reserve_Amount').AsFloat) then
         Begin
           RemainsCDS.Edit;
           RemainsCDS.FieldByName('Remains').AsFloat := Remains_LiteCDS.FieldByName('Remains').AsFloat;
+          RemainsCDS.FieldByName('Reserved').AsFloat := Remains_LiteCDS.FieldByName('Reserve_Amount').AsFloat;
           RemainsCDS.Post;
         End;
       End
@@ -653,14 +656,7 @@ begin
       End;
       AlternativeCDS.Next;
     End;
-    try
-      RemainsCDS.GotoBookmark(B);
-    except
-    end;
-    try
-      RemainsCDS.FreeBookmark(B);
-    except
-    end;
+    RemainsCDS.Locate('Id',GoodsId,[]);
   finally
     RemainsCDS.Filtered := True;
     RemainsCDS.EnableControls;
@@ -697,6 +693,23 @@ Begin
   lblTotalSumm.Caption := FormatFloat(',0.00',FTotalSumm);
 End;
 
+procedure TMainCashForm.WM_KEYDOWN(var Msg: TWMKEYDOWN);
+begin
+  if (Msg.charcode = VK_TAB) and (ActiveControl=lcName) then
+     ActiveControl:=MainGrid;
+end;
+
+procedure TMainCashForm.lcNameExit(Sender: TObject);
+begin
+  inherited;
+  if (GetKeyState(VK_TAB)<0) and (GetKeyState(VK_CONTROL)<0) then begin
+     ActiveControl:=CheckGrid;
+     exit
+  end;
+  if GetKeyState(VK_TAB)<0 then
+     ActiveControl:=MainGrid;
+end;
+
 procedure TMainCashForm.lcNameKeyDown(Sender: TObject; var Key: Word;
   Shift: TShiftState);
 begin
@@ -723,8 +736,8 @@ begin
         ceAmount.Value := - 1;
      ActiveControl := ceAmount;
   end;
-  if (Key=VK_Tab) then
-     ActiveControl := MainGrid
+  if Key = VK_TAB then
+    ActiveControl:=MainGrid;
 end;
 
 procedure TMainCashForm.MainColReservedGetDisplayText(
@@ -740,6 +753,8 @@ procedure TMainCashForm.NewCheck;
 begin
   SoldRegim := true;
   actSpec.Checked := false;
+  if Assigned(Cash) then
+    Cash.AlwaysSold := False;
   spNewCheck.Execute;
   if Self.Visible then
   Begin
@@ -771,6 +786,7 @@ end;
 procedure TMainCashForm.ParentFormKeyDown(Sender: TObject; var Key: Word;
   Shift: TShiftState);
 begin
+  if (Key=VK_Tab) and (CheckGrid.IsFocused) then ActiveControl:=lcName;
   if (Key = VK_ADD) or ((Key = VK_Return) AND (ssShift in Shift)) then
   Begin
     fShift := ssShift in Shift;
@@ -809,7 +825,7 @@ begin
       begin
         if result then
            begin
-             if CheckCDS.FieldByName('Amount').asFloat > 0.009 then
+             if CheckCDS.FieldByName('Amount').asFloat >= 0.001 then
                 result := PutOneRecordToCash;//послали строку в кассу
            end;
         Next;
@@ -829,6 +845,7 @@ end;
 
 procedure TMainCashForm.RemainsCDSAfterScroll(DataSet: TDataSet);
 begin
+inc(ASCount);
   if RemainsCDS.FieldByName('AlternativeGroupId').AsInteger = 0 then
     AlternativeCDS.Filter := 'Remains > 0 AND MainGoodsId='+RemainsCDS.FieldByName('Id').AsString
   else
@@ -850,6 +867,26 @@ begin
   end;
 end;
 
+
+procedure TMainCashForm.ShowTimeTracing;
+var
+  I: Integer;
+  S: String;
+begin
+  S:= '';
+  for I := Low(TimeArray) to High(TimeArray) do
+  Begin
+    if I = Low(TimeArray) then
+      S:=S+IntToStr(I)+':   '+
+        FormatDateTime('hh:mm:ss:zzz',TimeArray[I])+#13
+    else
+      S:=S+IntToStr(I)+':   '+
+        FormatDateTime('hh:mm:ss:zzz',TimeArray[I])+#9+
+        FormatDateTime('hh:mm:ss:zzz',TimeArray[I]-TimeArray[I-1])+#9+
+        FormatDateTime('hh:mm:ss:zzz',TimeArray[I]-TimeArray[Low(TimeArray)])+#13;
+  End;
+  ShowMessage(S+IntToSTr(ASCount));
+end;
 
 initialization
   RegisterClass(TMainCashForm)
