@@ -739,14 +739,14 @@ begin
   Result.HDR := GetStoredProc.Params.ParamByName('HDR').Value;
   Result.Query := GetStoredProc.Params.ParamByName('Query').Value;
 
-  if Result.Directory = '' then begin
-     Result.StoredProc.OutputType := otResult;
-     Result.StoredProc.PackSize := 1;
-  end
-  else begin
+  //if Result.Directory = '' then begin
+  //   Result.StoredProc.OutputType := otResult;
+  //   Result.StoredProc.PackSize := 1;
+  //end
+  //else begin
      Result.StoredProc.OutputType := otMultiExecute;
      Result.StoredProc.PackSize := 100;
-  end;
+  //end;
 
   Result.StoredProc.StoredProcName := GetStoredProc.Params.ParamByName('ProcedureName').Value;
 

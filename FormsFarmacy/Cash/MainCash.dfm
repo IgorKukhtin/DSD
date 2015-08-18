@@ -659,7 +659,15 @@ inherited MainCashForm: TMainCashForm
     Aggregates = <>
     Filter = 'Remains > 0'
     Filtered = True
+    FieldDefs = <>
+    IndexDefs = <
+      item
+        Name = 'RemainsCDSIndexId'
+        Fields = 'Id'
+        Options = [ixPrimary, ixUnique]
+      end>
     Params = <>
+    StoreDefs = True
     AfterScroll = RemainsCDSAfterScroll
     Left = 304
     Top = 136
@@ -869,7 +877,14 @@ inherited MainCashForm: TMainCashForm
   object AlternativeCDS: TClientDataSet
     Aggregates = <>
     Filtered = True
+    FieldDefs = <>
+    IndexDefs = <
+      item
+        Name = 'AlternativeCDSIndexId'
+        Fields = 'Id'
+      end>
     Params = <>
+    StoreDefs = True
     Left = 648
     Top = 264
   end
