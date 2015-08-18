@@ -2,9 +2,10 @@ inherited Report_JuridicalDefermentIncomeForm: TReport_JuridicalDefermentIncomeF
   Caption = #1054#1090#1095#1077#1090' <'#1055#1086#1089#1090#1072#1074#1097#1080#1082#1080' '#1089' '#1086#1090#1089#1088#1086#1095#1082#1086#1081'>'
   ClientHeight = 394
   ClientWidth = 1115
+  AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
   ExplicitWidth = 1131
-  ExplicitHeight = 429
+  ExplicitHeight = 432
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -516,10 +517,10 @@ inherited Report_JuridicalDefermentIncomeForm: TReport_JuridicalDefermentIncomeF
     end
     inherited cxLabel2: TcxLabel
       Left = 966
-      Top = -2
+      Top = -1
       Visible = False
       ExplicitLeft = 966
-      ExplicitTop = -2
+      ExplicitTop = -1
     end
     object edAccount: TcxButtonEdit
       Left = 246
@@ -573,13 +574,13 @@ inherited Report_JuridicalDefermentIncomeForm: TReport_JuridicalDefermentIncomeF
       Width = 120
     end
     object cxLabel4: TcxLabel
-      Left = 890
+      Left = 891
       Top = 6
       Caption = #1043#1088#1091#1087#1087#1072' '#1102#1088'.'#1083#1080#1094':'
     end
     object edJuridicalGroup: TcxButtonEdit
-      Left = 975
-      Top = 5
+      Left = 981
+      Top = -2
       Properties.Buttons = <
         item
           Default = True
@@ -1163,6 +1164,88 @@ inherited Report_JuridicalDefermentIncomeForm: TReport_JuridicalDefermentIncomeF
       ReportNameParam.Value = #1054#1090#1095#1077#1090' '#1048#1090#1086#1075' '#1087#1086' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1102' (c '#1086#1090#1089#1088#1086#1095#1082#1086#1081')'
       ReportNameParam.DataType = ftString
     end
+    object ExecuteDialog: TExecuteDialog
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1072#1088#1072#1084#1077#1090#1088#1099' '#1086#1090#1095#1077#1090#1072
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1072#1088#1072#1084#1077#1090#1088#1099' '#1086#1090#1095#1077#1090#1072
+      ImageIndex = 35
+      FormName = 'TReport_JuridicalDefermentIncomeDialogForm'
+      FormNameParam.Value = 'TReport_JuridicalDefermentIncomeDialogForm'
+      FormNameParam.DataType = ftString
+      GuiParams = <
+        item
+          Name = 'StartDate'
+          Value = 42005d
+          Component = deStart
+          DataType = ftDateTime
+          ParamType = ptInput
+        end
+        item
+          Name = 'AccountId'
+          Value = ''
+          Component = GuidesAccount
+          ComponentItem = 'Key'
+          DataType = ftString
+          ParamType = ptInput
+        end
+        item
+          Name = 'AccountName'
+          Value = ''
+          Component = GuidesAccount
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          ParamType = ptInput
+        end
+        item
+          Name = 'PaidKindId'
+          Value = ''
+          Component = GuidesPaidKind
+          ComponentItem = 'Key'
+          ParamType = ptInput
+        end
+        item
+          Name = 'PaidKindName'
+          Value = ''
+          Component = GuidesPaidKind
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          ParamType = ptInput
+        end
+        item
+          Name = 'BranchId'
+          Value = ''
+          Component = GuidesBranch
+          ComponentItem = 'Key'
+          ParamType = ptInput
+        end
+        item
+          Name = 'BranchName'
+          Value = ''
+          Component = GuidesBranch
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          ParamType = ptInput
+        end
+        item
+          Name = 'JuridicalGroupId'
+          Value = ''
+          Component = GuidesJuridicalGroup
+          ComponentItem = 'Key'
+          ParamType = ptInput
+        end
+        item
+          Name = 'JuridicalGroupName'
+          Value = ''
+          Component = GuidesJuridicalGroup
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          ParamType = ptInput
+        end>
+      isShowModal = True
+      RefreshDispatcher = RefreshDispatcher
+      OpenBeforeShow = True
+    end
     object actPrintIncome: TdsdPrintAction
       Category = 'DSDLib'
       MoveParams = <>
@@ -1312,6 +1395,14 @@ inherited Report_JuridicalDefermentIncomeForm: TReport_JuridicalDefermentIncomeF
         end
         item
           Visible = True
+          ItemName = 'bbExecuteDialog'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbRefresh'
         end
         item
@@ -1395,6 +1486,10 @@ inherited Report_JuridicalDefermentIncomeForm: TReport_JuridicalDefermentIncomeF
       Action = actPrintIncome
       Category = 0
     end
+    object bbExecuteDialog: TdxBarButton
+      Action = ExecuteDialog
+      Category = 0
+    end
   end
   inherited PeriodChoice: TPeriodChoice
     DateStart = nil
@@ -1448,8 +1543,7 @@ inherited Report_JuridicalDefermentIncomeForm: TReport_JuridicalDefermentIncomeF
         Value = 'zc_Object_Juridical'
         DataType = ftString
       end>
-    Left = 456
-    Top = 8
+    Left = 424
   end
   object spReport: TdsdStoredProc
     StoredProcName = 'gpReport_JuridicalDefermentPaymentByDocument'
@@ -1688,7 +1782,7 @@ inherited Report_JuridicalDefermentIncomeForm: TReport_JuridicalDefermentIncomeF
         DataType = ftString
         ParamType = ptInput
       end>
-    Left = 1016
-    Top = 16
+    Left = 1048
+    Top = 48
   end
 end

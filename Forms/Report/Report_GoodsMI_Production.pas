@@ -46,6 +46,8 @@ type
     Amount: TcxGridDBColumn;
     Summ_branch: TcxGridDBColumn;
     Summ_60000: TcxGridDBColumn;
+    ExecuteDialog: TExecuteDialog;
+    bbExecuteDialog: TdxBarButton;
   private
     { Private declarations }
   public

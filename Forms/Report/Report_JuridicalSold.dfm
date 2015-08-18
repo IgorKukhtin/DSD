@@ -1,26 +1,27 @@
 inherited Report_JuridicalSoldForm: TReport_JuridicalSoldForm
   Caption = #1054#1090#1095#1077#1090' <'#1054#1073#1086#1088#1086#1090#1099' '#1087#1086' '#1102#1088'.'#1083#1080#1094#1072#1084'>'
   ClientHeight = 556
-  ClientWidth = 1084
-  ExplicitWidth = 1100
-  ExplicitHeight = 591
+  ClientWidth = 1107
+  AddOnFormData.ExecuteDialogAction = ExecuteDialog
+  ExplicitWidth = 1123
+  ExplicitHeight = 594
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 83
-    Width = 1084
+    Width = 1107
     Height = 473
     TabOrder = 3
     ExplicitTop = 83
     ExplicitWidth = 1084
     ExplicitHeight = 473
     ClientRectBottom = 473
-    ClientRectRight = 1084
+    ClientRectRight = 1107
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 1084
       ExplicitHeight = 473
       inherited cxGrid: TcxGrid
-        Width = 1084
+        Width = 1107
         Height = 473
         ExplicitWidth = 1084
         ExplicitHeight = 473
@@ -984,7 +985,7 @@ inherited Report_JuridicalSoldForm: TReport_JuridicalSoldForm
     end
   end
   inherited Panel: TPanel
-    Width = 1084
+    Width = 1107
     Height = 57
     ExplicitWidth = 1084
     ExplicitHeight = 57
@@ -1034,8 +1035,8 @@ inherited Report_JuridicalSoldForm: TReport_JuridicalSoldForm
       Width = 125
     end
     object edInfoMoneyDestination: TcxButtonEdit
-      Left = 435
-      Top = 30
+      Left = 434
+      Top = 29
       Properties.Buttons = <
         item
           Default = True
@@ -2708,6 +2709,154 @@ inherited Report_JuridicalSoldForm: TReport_JuridicalSoldForm
         end>
       isShowModal = False
     end
+    object ExecuteDialog: TExecuteDialog
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1072#1088#1072#1084#1077#1090#1088#1099' '#1086#1090#1095#1077#1090#1072
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1072#1088#1072#1084#1077#1090#1088#1099' '#1086#1090#1095#1077#1090#1072
+      ImageIndex = 35
+      FormName = 'TReport_JuridicalSoldDialogForm'
+      FormNameParam.Value = 'TReport_JuridicalSoldDialogForm'
+      FormNameParam.DataType = ftString
+      GuiParams = <
+        item
+          Name = 'StartDate'
+          Value = 42005d
+          Component = deStart
+          DataType = ftDateTime
+          ParamType = ptInput
+        end
+        item
+          Name = 'EndDate'
+          Value = 42005d
+          Component = deEnd
+          DataType = ftDateTime
+          ParamType = ptInput
+        end
+        item
+          Name = 'AccountId'
+          Value = ''
+          Component = GuidesAccount
+          ComponentItem = 'Key'
+          DataType = ftString
+          ParamType = ptInput
+        end
+        item
+          Name = 'AccountName'
+          Value = ''
+          Component = GuidesAccount
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          ParamType = ptInput
+        end
+        item
+          Name = 'InfoMoneyGroupId'
+          Value = ''
+          Component = GuidesInfoMoneyGroup
+          ComponentItem = 'Key'
+          ParamType = ptInput
+        end
+        item
+          Name = 'InfoMoneyGroupName'
+          Value = ''
+          Component = GuidesInfoMoneyGroup
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          ParamType = ptInput
+        end
+        item
+          Name = 'InfoMoneyDestinationId'
+          Value = ''
+          Component = GuidesInfoMoneyDestination
+          ComponentItem = 'Key'
+          ParamType = ptInput
+        end
+        item
+          Name = 'InfoMoneyDestinationName'
+          Value = ''
+          Component = GuidesInfoMoneyDestination
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          ParamType = ptInput
+        end
+        item
+          Name = 'InfoMoneyId'
+          Value = ''
+          Component = GuidesInfoMoney
+          ComponentItem = 'Key'
+          ParamType = ptInput
+        end
+        item
+          Name = 'InfoMoneyName'
+          Value = ''
+          Component = GuidesInfoMoney
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          ParamType = ptInput
+        end
+        item
+          Name = 'PaidKindId'
+          Value = ''
+          Component = GuidesPaidKind
+          ComponentItem = 'Key'
+          ParamType = ptInput
+        end
+        item
+          Name = 'PaidKindName'
+          Value = ''
+          Component = GuidesPaidKind
+          ComponentItem = 'TextValue'
+          ParamType = ptInput
+        end
+        item
+          Name = 'BranchId'
+          Value = 'False'
+          Component = GuidesBranch
+          ComponentItem = 'Key'
+          ParamType = ptInput
+        end
+        item
+          Name = 'BranchName'
+          Value = Null
+          Component = GuidesBranch
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          ParamType = ptInput
+        end
+        item
+          Name = 'JuridicalGroupId'
+          Value = Null
+          Component = GuidesJuridicalGroup
+          ComponentItem = 'Key'
+          ParamType = ptInput
+        end
+        item
+          Name = 'JuridicalGroupName'
+          Value = Null
+          Component = GuidesJuridicalGroup
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          ParamType = ptInput
+        end
+        item
+          Name = 'CurrencyId'
+          Value = Null
+          Component = GuidesCurrency
+          ComponentItem = 'Key'
+          ParamType = ptInput
+        end
+        item
+          Name = 'CurrencyName'
+          Value = Null
+          Component = GuidesCurrency
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          ParamType = ptInput
+        end>
+      isShowModal = True
+      RefreshDispatcher = RefreshDispatcher
+      OpenBeforeShow = True
+    end
     object ReturnInRealJournal: TdsdOpenForm
       Category = 'DSDLib'
       MoveParams = <>
@@ -3682,6 +3831,14 @@ inherited Report_JuridicalSoldForm: TReport_JuridicalSoldForm
         end
         item
           Visible = True
+          ItemName = 'bbExecuteDialog'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbRefresh'
         end
         item
@@ -3759,6 +3916,10 @@ inherited Report_JuridicalSoldForm: TReport_JuridicalSoldForm
     end
     object bbPrintIncomePartner: TdxBarButton
       Action = actPrintIncomePartner
+      Category = 0
+    end
+    object bbExecuteDialog: TdxBarButton
+      Action = ExecuteDialog
       Category = 0
     end
   end

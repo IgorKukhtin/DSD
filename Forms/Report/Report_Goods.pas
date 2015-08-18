@@ -78,6 +78,8 @@ type
     isExistsPage3: TcxGridDBColumn;
     cbSumm_branch: TcxCheckBox;
     bbSumm_branch: TdxBarControlContainerItem;
+    ExecuteDialog: TExecuteDialog;
+    bbExecuteDialog: TdxBarButton;
   private
     { Private declarations }
   public

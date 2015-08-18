@@ -1,28 +1,29 @@
 inherited Report_GoodsForm: TReport_GoodsForm
   Caption = #1054#1090#1095#1077#1090' <'#1087#1086' '#1090#1086#1074#1072#1088#1091'>'
   ClientHeight = 341
-  ClientWidth = 1020
-  ExplicitWidth = 1036
-  ExplicitHeight = 376
+  ClientWidth = 1026
+  AddOnFormData.ExecuteDialogAction = ExecuteDialog
+  ExplicitWidth = 1042
+  ExplicitHeight = 379
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 80
-    Width = 1020
+    Width = 1026
     Height = 261
     TabOrder = 3
     ExplicitTop = 80
-    ExplicitWidth = 1020
+    ExplicitWidth = 1026
     ExplicitHeight = 261
     ClientRectBottom = 261
-    ClientRectRight = 1020
+    ClientRectRight = 1026
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 1020
+      ExplicitWidth = 1026
       ExplicitHeight = 261
       inherited cxGrid: TcxGrid
-        Width = 1020
+        Width = 1026
         Height = 261
-        ExplicitWidth = 1020
+        ExplicitWidth = 1026
         ExplicitHeight = 261
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
@@ -699,9 +700,9 @@ inherited Report_GoodsForm: TReport_GoodsForm
     end
   end
   inherited Panel: TPanel
-    Width = 1020
+    Width = 1026
     Height = 54
-    ExplicitWidth = 1020
+    ExplicitWidth = 1026
     ExplicitHeight = 54
     inherited deStart: TcxDateEdit
       Left = 118
@@ -922,6 +923,102 @@ inherited Report_GoodsForm: TReport_GoodsForm
       ReportNameParam.Value = #1054#1090#1095#1077#1090' '#1087#1086' '#1090#1086#1074#1072#1088#1091' '#1087#1086' '#1085#1072#1082#1083#1072#1076#1085#1099#1084
       ReportNameParam.DataType = ftString
     end
+    object ExecuteDialog: TExecuteDialog
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1072#1088#1072#1084#1077#1090#1088#1099' '#1086#1090#1095#1077#1090#1072
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1072#1088#1072#1084#1077#1090#1088#1099' '#1086#1090#1095#1077#1090#1072
+      ImageIndex = 35
+      FormName = 'TReport_GoodsDialogForm'
+      FormNameParam.Value = 'TReport_GoodsDialogForm'
+      FormNameParam.DataType = ftString
+      GuiParams = <
+        item
+          Name = 'StartDate'
+          Value = 42005d
+          Component = deStart
+          DataType = ftDateTime
+          ParamType = ptInput
+        end
+        item
+          Name = 'EndDate'
+          Value = 42005d
+          Component = deEnd
+          DataType = ftDateTime
+          ParamType = ptInput
+        end
+        item
+          Name = 'GoodsId'
+          Value = ''
+          Component = GoodsGuides
+          ComponentItem = 'Key'
+          DataType = ftString
+          ParamType = ptInput
+        end
+        item
+          Name = 'GoodsName'
+          Value = ''
+          Component = GoodsGuides
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          ParamType = ptInput
+        end
+        item
+          Name = 'GoodsGroupId'
+          Value = ''
+          Component = GoodsGroupGuides
+          ComponentItem = 'Key'
+          ParamType = ptInput
+        end
+        item
+          Name = 'GoodsGroupName'
+          Value = ''
+          Component = GoodsGroupGuides
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          ParamType = ptInput
+        end
+        item
+          Name = 'UnitGroupId'
+          Value = ''
+          Component = GuidesUnitGroup
+          ComponentItem = 'Key'
+          ParamType = ptInput
+        end
+        item
+          Name = 'UnitGroupName'
+          Value = ''
+          Component = GuidesUnitGroup
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          ParamType = ptInput
+        end
+        item
+          Name = 'LocationId'
+          Value = ''
+          Component = LocationGuides
+          ComponentItem = 'Key'
+          ParamType = ptInput
+        end
+        item
+          Name = 'LocationName'
+          Value = ''
+          Component = LocationGuides
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          ParamType = ptInput
+        end
+        item
+          Name = 'isPartner'
+          Value = 'False'
+          Component = cbPartner
+          DataType = ftBoolean
+          ParamType = ptInput
+        end>
+      isShowModal = True
+      RefreshDispatcher = RefreshDispatcher
+      OpenBeforeShow = True
+    end
   end
   inherited MasterDS: TDataSource
     Left = 72
@@ -1002,6 +1099,14 @@ inherited Report_GoodsForm: TReport_GoodsForm
         end
         item
           Visible = True
+          ItemName = 'bbExecuteDialog'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbRefresh'
         end
         item
@@ -1043,6 +1148,10 @@ inherited Report_GoodsForm: TReport_GoodsForm
       Hint = 'bbSumm_branch'
       Visible = ivAlways
       Control = cbSumm_branch
+    end
+    object bbExecuteDialog: TdxBarButton
+      Action = ExecuteDialog
+      Category = 0
     end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
