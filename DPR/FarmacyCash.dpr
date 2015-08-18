@@ -74,7 +74,7 @@ uses
 begin
   Application.Initialize;
   Logger.Enabled := FindCmdLineSwitch('log');
-  ConnectionPath := '..\INIT\localfarmacy_init.php';
+  ConnectionPath := '..\INIT\farmacy_init.php';
 
   TdsdApplication.Create;
 
