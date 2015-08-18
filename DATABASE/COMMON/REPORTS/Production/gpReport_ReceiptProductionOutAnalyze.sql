@@ -32,7 +32,7 @@ BEGIN
                                            , ReceiptChildId integer, GoodsId_out Integer, GoodsKindId_out Integer, Amount_out TFloat, isStart Boolean, isCost Boolean
                                             ) ON COMMIT DROP;
      CREATE TEMP TABLE tmpResult_in  (ReceiptId Integer, PartionGoodsDate TDateTime, GoodsId Integer, GoodsKindId Integer, GoodsKindId_complete Integer, OperCount TFloat, OperSumm TFloat) ON COMMIT DROP;
-     CREATE TEMP TABLE tmpResult_out (ReceiptId Integer, PartionGoodsDate_in TDateTime, GoodsId_in Integer, GoodsKindId_in Integer, GoodsKindId_complete_in Integer, PartionGoodsDate TDateTime, GoodsId Integer, GoodsKindId Integer, GoodsKindId_complete Integer, OperCountPlan TFloat, OperSummPlan1 TFloat, OperSummPlan2 TFloat, OperSummPlan3 TFloat, OperCount TFloat, OperSumm TFloat, CuterCount TFloat) ON COMMIT DROP;
+     CREATE TEMP TABLE tmpResult_out (ReceiptId Integer, PartionGoodsDate_in TDateTime, GoodsId_in Integer, GoodsKindId_in Integer, GoodsKindId_complete_in Integer, PartionGoodsDate TDateTime, GoodsId Integer, GoodsKindId Integer, GoodsKindId_complete Integer, OperCountPlan TFloat, OperSummPlan1 TFloat, OperSummPlan2 TFloat, OperSummPlan3 TFloat, OperCount TFloat, OperSumm TFloat, CuterCount TFloat, OperCount_ReWork TFloat) ON COMMIT DROP;
 
 
      -- Ограничения по товару
@@ -136,7 +136,7 @@ BEGIN
 
 
      -- Расходы
-     INSERT INTO tmpResult_out (ReceiptId, PartionGoodsDate_in, GoodsId_in, GoodsKindId_in, GoodsKindId_complete_in, PartionGoodsDate, GoodsId, GoodsKindId, GoodsKindId_complete, OperCountPlan, OperSummPlan1, OperSummPlan2, OperSummPlan3, OperCount, OperSumm, CuterCount)
+     INSERT INTO tmpResult_out (ReceiptId, PartionGoodsDate_in, GoodsId_in, GoodsKindId_in, GoodsKindId_complete_in, PartionGoodsDate, GoodsId, GoodsKindId, GoodsKindId_complete, OperCountPlan, OperSummPlan1, OperSummPlan2, OperSummPlan3, OperCount, OperSumm, CuterCount, OperCount_ReWork)
        WITH -- Расходы - Факт
             tmpMIContainer AS 
            (SELECT COALESCE (MIReceipt.ObjectId, 0)                AS ReceiptId
@@ -178,6 +178,23 @@ BEGIN
                    , MIContainer.ContainerId
                    , MIDate_PartionGoods.ValueData
            )
+
+          , -- товары "переработка"
+            tmpGoods_ReWork AS (SELECT ObjectLink.ObjectId AS GoodsId FROM ObjectLink WHERE ObjectLink.ChildObjectId = zc_Enum_InfoMoney_30301() AND ObjectLink.DescId = zc_ObjectLink_Goods_InfoMoney())
+          , -- расход переработки
+            tmpMIContainer_ReWork AS 
+           (SELECT MIContainer_parent.ContainerId, -1 * SUM (MIContainer.Amount) AS Amount
+            FROM _tmpUnit_from
+                 INNER JOIN MovementItemContainer AS MIContainer ON MIContainer.OperDate BETWEEN inStartDate AND inEndDate
+                                                                AND MIContainer.DescId = zc_MIContainer_Count()
+                                                                AND MIContainer.MovementDescId = zc_Movement_ProductionUnion()
+                                                                AND MIContainer.WhereObjectId_analyzer = _tmpUnit_from.UnitId
+                                                                AND MIContainer.isActive = FALSE
+                 INNER JOIN tmpGoods_ReWork ON tmpGoods_ReWork.GoodsId = MIContainer.ObjectId_Analyzer
+                 INNER JOIN MovementItemContainer AS MIContainer_parent ON MIContainer_parent.Id = MIContainer.ParentId
+            GROUP BY MIContainer_parent.ContainerId
+           )
+
           , -- Приход с пр-ва пф/гп - кутеров
             tmpCuterCount_find AS 
            (SELECT tmpMI_WorkProgress_in.ContainerId                AS ContainerId
@@ -342,6 +359,7 @@ BEGIN
              , SUM (tmp.OperCount)      AS OperCount
              , SUM (tmp.OperSumm)       AS OperSumm
              , SUM (tmp.CuterCount)     AS CuterCount
+             , SUM (tmp.OperCount_ReWork)  AS OperCount_ReWork
 
         FROM (SELECT tmpMIContainer.ReceiptId                                           AS ReceiptId
                    , CASE WHEN inIsPartionGoods = TRUE THEN COALESCE (ObjectDate_PartionGoods_Value.ValueData, COALESCE (tmpMIContainer.PartionGoodsDate, zc_DateStart())) ELSE zc_DateStart() END AS PartionGoodsDate_in
@@ -360,8 +378,11 @@ BEGIN
                    , 0 AS OperSummPlan2
                    , 0 AS OperSummPlan3
                    , SUM (CASE WHEN tmpCuterCount.Amount <> 0 THEN tmpCuterCount.CuterCount * tmpMIContainer.OperCount / tmpCuterCount.Amount ELSE 0 END) AS CuterCount
+                   , SUM (CASE WHEN tmpCuterCount.Amount <> 0 THEN COALESCE (tmpMIContainer_ReWork.Amount, 0) * tmpMIContainer.OperCount / tmpCuterCount.Amount ELSE 0 END) AS OperCount_ReWork
+
               FROM tmpMIContainer
                    LEFT JOIN tmpCuterCount ON tmpCuterCount.ContainerId = tmpMIContainer.ContainerId
+                   LEFT JOIN tmpMIContainer_ReWork ON tmpMIContainer_ReWork.ContainerId = tmpMIContainer.ContainerId
 
                    LEFT JOIN ContainerLinkObject AS CLO_PartionGoods_out
                                                  ON CLO_PartionGoods_out.ContainerId = tmpMIContainer.ContainerId
@@ -414,6 +435,7 @@ BEGIN
                    , tmpMIReceipt.OperSummPlan2
                    , tmpMIReceipt.OperSummPlan3
                    , 0 AS CuterCount
+                   , 0 AS OperCount_ReWork
               FROM tmpMIReceipt
              ) AS tmp
         GROUP BY tmp.ReceiptId
@@ -494,9 +516,20 @@ BEGIN
            , tmpTaxSumm.TaxSumm_min
            , tmpTaxSumm.TaxSumm_max
 
+           , tmpResult.OperCount_ReWork
            , tmpResult.CuterCount
            , tmpResult.OperCount_gp * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData, 0) ELSE 1 END AS OperCount_gp_plan
            , tmpTaxSumm.OperCount_Weight_gp AS OperCount_gp_real
+
+           , CAST (CASE WHEN (tmpResult.OperCount * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData, 0) ELSE 1 END) <> 0
+                             THEN 100 - 100 * tmpTaxSumm.OperCount_Weight_gp / (tmpResult.OperCount * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData, 0) ELSE 1 END)
+                         ELSE 0
+                    END AS NUMERIC (16, 1)) AS LossGP_real
+           , CAST (CASE WHEN (tmpResult.OperCountPlan) <> 0
+                             THEN 100 - 100 * tmpResult.OperCount_gp / tmpResult.OperCountPlan
+                         ELSE 0
+                    END AS NUMERIC (16, 1)) AS LossGP_plan
+
            , CAST (CASE WHEN tmpResult.CuterCount <> 0 THEN tmpTaxSumm.OperCount_Weight_gp / tmpResult.CuterCount ELSE 0 END AS NUMERIC (16, 1)) AS TaxGP_real
            , CAST (CASE WHEN tmpResult.CuterCount <> 0 THEN (tmpResult.OperCount_gp * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData, 0) ELSE 1 END)
                                                           / tmpResult.CuterCount
@@ -511,13 +544,14 @@ BEGIN
            , View_InfoMoney.InfoMoneyName                   AS InfoMoneyName
 
        FROM (SELECT tmpResult_out.PartionGoodsDate, tmpResult_out.GoodsId, tmpResult_out.GoodsKindId, tmpResult_out.GoodsKindId_complete
-                  , SUM (tmpResult_out.OperCount)     AS OperCount
-                  , SUM (tmpResult_out.OperSumm)      AS OperSumm
-                  , SUM (tmpResult_out.OperCountPlan) AS OperCountPlan
-                  , SUM (tmpResult_out.OperSummPlan1) AS OperSummPlan1
-                  , SUM (tmpResult_out.OperSummPlan2) AS OperSummPlan2
-                  , SUM (tmpResult_out.OperSummPlan3) AS OperSummPlan3
-                  , SUM (tmpResult_out.CuterCount)    AS CuterCount
+                  , SUM (tmpResult_out.OperCount)        AS OperCount
+                  , SUM (tmpResult_out.OperSumm)         AS OperSumm
+                  , SUM (tmpResult_out.OperCountPlan)    AS OperCountPlan
+                  , SUM (tmpResult_out.OperSummPlan1)    AS OperSummPlan1
+                  , SUM (tmpResult_out.OperSummPlan2)    AS OperSummPlan2
+                  , SUM (tmpResult_out.OperSummPlan3)    AS OperSummPlan3
+                  , SUM (tmpResult_out.CuterCount)       AS CuterCount
+                  , SUM (tmpResult_out.OperCount_ReWork) AS OperCount_ReWork
                   , SUM (CASE WHEN (1 - COALESCE (ObjectFloat_TaxLoss.ValueData, 0) / 100) <> 0 THEN tmpResult_out.OperCount * (1 - COALESCE (ObjectFloat_TaxLoss.ValueData, 0) / 100) ELSE 0 END) AS OperCount_gp
              FROM tmpResult_out
                   LEFT JOIN ObjectFloat AS ObjectFloat_TaxLoss

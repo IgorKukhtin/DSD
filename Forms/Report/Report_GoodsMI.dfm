@@ -15,17 +15,17 @@ inherited Report_GoodsMIForm: TReport_GoodsMIForm
     Height = 454
     TabOrder = 3
     ExplicitTop = 80
-    ExplicitWidth = 1146
+    ExplicitWidth = 1020
     ExplicitHeight = 454
     ClientRectBottom = 454
     ClientRectRight = 1020
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 1146
+      ExplicitWidth = 1020
       ExplicitHeight = 454
       inherited cxGrid: TcxGrid
         Width = 1020
         Height = 454
-        ExplicitWidth = 1146
+        ExplicitWidth = 1020
         ExplicitHeight = 454
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
@@ -1733,7 +1733,7 @@ inherited Report_GoodsMIForm: TReport_GoodsMIForm
   inherited Panel: TPanel
     Width = 1020
     Height = 54
-    ExplicitWidth = 1146
+    ExplicitWidth = 1020
     ExplicitHeight = 54
     inherited deStart: TcxDateEdit
       Left = 118
@@ -2109,6 +2109,10 @@ inherited Report_GoodsMIForm: TReport_GoodsMIForm
           Component = FormParams
           ComponentItem = 'InDescName'
           DataType = ftString
+        end
+        item
+          Name = 'ReportType'
+          Value = '1'
         end>
       ReportName = #1054#1090#1095#1077#1090' '#1087#1086' '#1090#1086#1074#1072#1088#1091' ('#1087#1088#1086#1076#1072#1078#1072' '#1087#1086' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1103#1084')'
       ReportNameParam.Value = #1054#1090#1095#1077#1090' '#1087#1086' '#1090#1086#1074#1072#1088#1091' ('#1087#1088#1086#1076#1072#1078#1072' '#1087#1086' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1103#1084')'
@@ -2230,6 +2234,10 @@ inherited Report_GoodsMIForm: TReport_GoodsMIForm
           Component = FormParams
           ComponentItem = 'InDescName'
           DataType = ftString
+        end
+        item
+          Name = 'ReportType'
+          Value = '2'
         end>
       ReportName = #1054#1090#1095#1077#1090' '#1087#1086' '#1090#1086#1074#1072#1088#1091' ('#1087#1088#1086#1076#1072#1078#1072' '#1087#1086' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1103#1084')'
       ReportNameParam.Value = #1054#1090#1095#1077#1090' '#1087#1086' '#1090#1086#1074#1072#1088#1091' ('#1087#1088#1086#1076#1072#1078#1072' '#1087#1086' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1103#1084')'

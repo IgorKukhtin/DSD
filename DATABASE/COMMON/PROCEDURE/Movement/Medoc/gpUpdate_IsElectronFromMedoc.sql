@@ -49,8 +49,15 @@ BEGIN
      FROM Movement_Medoc_View 
     WHERE zfConvert_StringToNumber(InvNumber) = inMedocCode; 
 
+
+-- IF TRIM (inInvNumberRegistered) = '9159204066'
+-- then 
+--     RAISE EXCEPTION '"%" %   %', inInvNumberRegistered, vbMedocId, vbAccessKey;
+-- end if;
+
    -- Если ключ пустой, то добавили новый ключ МЕДОК
-   IF COALESCE(vbMedocId, 0) = 0 THEN 
+   IF COALESCE(vbMedocId, 0) = 0
+   THEN 
       vbMedocId := lpInsertUpdate_Movement_Medoc(vbMedocId, inMedocCode, inInvNumber, inOperDate,
                            inFromINN, inToINN, inInvNumberBranch, inInvNumberRegistered, inDateRegistered, inDocKind, inContract, 
                            inTotalSumm, vbUserId);

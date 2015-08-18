@@ -215,4 +215,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpSelect_Movement_SendOnPrice (inStartDate:= '01.01.2013', inEndDate:= '01.02.2014', inIsPartnerDate:= FALSE, inIsErased:= TRUE, inSession:= zfCalc_UserAdmin())
+-- SELECT * FROM gpSelect_Movement_SendOnPrice (inStartDate:= '01.08.2015', inEndDate:= '01.08.2015', inIsPartnerDate:= FALSE, inIsErased:= TRUE, inSession:= zfCalc_UserAdmin())

@@ -99,6 +99,9 @@ type
     actPrint_TaxReal: TdsdPrintAction;
     dxBarButton1: TdxBarButton;
     Price_sale: TcxGridDBColumn;
+    OperCount_ReWork: TcxGridDBColumn;
+    LossGP_real: TcxGridDBColumn;
+    LossGP_plan: TcxGridDBColumn;
   private
     { Private declarations }
   public

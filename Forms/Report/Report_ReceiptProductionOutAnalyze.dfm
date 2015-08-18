@@ -2,7 +2,6 @@ inherited Report_ReceiptProductionOutAnalyzeForm: TReport_ReceiptProductionOutAn
   Caption = #1054#1090#1095#1077#1090' <'#1040#1085#1072#1083#1080#1079' '#1087#1083#1072#1085'/'#1092#1072#1082#1090' '#1088#1072#1089#1093#1086#1076' '#1085#1072' '#1087#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1086'>'
   ClientHeight = 430
   ClientWidth = 1130
-  ExplicitLeft = -148
   ExplicitWidth = 1146
   ExplicitHeight = 465
   PixelsPerInch = 96
@@ -101,6 +100,11 @@ inherited Report_ReceiptProductionOutAnalyzeForm: TReport_ReceiptProductionOutAn
               Format = ',0.####'
               Kind = skSum
               Column = OperCount_gp_plan
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = OperCount_ReWork
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -177,6 +181,11 @@ inherited Report_ReceiptProductionOutAnalyzeForm: TReport_ReceiptProductionOutAn
               Format = ',0.####'
               Kind = skSum
               Column = OperCount_gp_plan
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = OperCount_ReWork
             end>
           OptionsData.CancelOnExit = True
           OptionsData.Deleting = False
@@ -459,6 +468,36 @@ inherited Report_ReceiptProductionOutAnalyzeForm: TReport_ReceiptProductionOutAn
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 60
+          end
+          object OperCount_ReWork: TcxGridDBColumn
+            Caption = #1056#1072#1089#1093#1086#1076' '#1087#1077#1088#1077#1088#1072#1073#1086#1090#1082#1080' ('#1080#1090#1086#1075')'
+            DataBinding.FieldName = 'OperCount_ReWork'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 70
+          end
+          object LossGP_real: TcxGridDBColumn
+            Caption = '% '#1087#1086#1090#1077#1088#1100' '#1092#1072#1082#1090
+            DataBinding.FieldName = 'LossGP_real'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 55
+          end
+          object LossGP_plan: TcxGridDBColumn
+            Caption = '% '#1087#1086#1090#1077#1088#1100' '#1087#1083#1072#1085
+            DataBinding.FieldName = 'LossGP_plan'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 55
           end
           object TaxGP_real: TcxGridDBColumn
             Caption = '% '#1074#1099#1093'. '#1092#1072#1082#1090
@@ -1233,6 +1272,11 @@ inherited Report_ReceiptProductionOutAnalyzeForm: TReport_ReceiptProductionOutAn
   inherited cxPropertiesStore: TcxPropertiesStore
     Components = <
       item
+        Component = cbPartionGoods
+        Properties.Strings = (
+          'Checked')
+      end
+      item
         Component = deEnd
         Properties.Strings = (
           'Date')
@@ -1350,8 +1394,9 @@ inherited Report_ReceiptProductionOutAnalyzeForm: TReport_ReceiptProductionOutAn
           ParamType = ptInput
         end
         item
-          Name = 'isGoodsKind'
+          Name = 'isPartionGoods'
           Value = 'False'
+          Component = cbPartionGoods
           DataType = ftBoolean
           ParamType = ptInput
         end>
@@ -1423,8 +1468,9 @@ inherited Report_ReceiptProductionOutAnalyzeForm: TReport_ReceiptProductionOutAn
           ParamType = ptInput
         end
         item
-          Name = 'isGoodsKind'
+          Name = 'isPartionGoods'
           Value = 'False'
+          Component = cbPartionGoods
           DataType = ftBoolean
           ParamType = ptInput
         end>
@@ -1463,8 +1509,8 @@ inherited Report_ReceiptProductionOutAnalyzeForm: TReport_ReceiptProductionOutAn
           ToParam.ParamType = ptInputOutput
         end>
       StoredProcList = <>
-      Caption = #1055#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1086' '#1080' '#1087#1088#1086#1094#1077#1085#1090' '#1074#1099#1093#1086#1076#1072' ('#1094#1077#1085#1072' '#1092#1072#1082#1090')'
-      Hint = #1055#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1086' '#1080' '#1087#1088#1086#1094#1077#1085#1090' '#1074#1099#1093#1086#1076#1072' ('#1094#1077#1085#1072' '#1092#1072#1082#1090')'
+      Caption = #1040#1085#1072#1083#1080#1079' '#1074#1099#1093#1086#1076#1086#1074' '#1043#1055
+      Hint = #1040#1085#1072#1083#1080#1079' '#1074#1099#1093#1086#1076#1086#1074' '#1043#1055
       ImageIndex = 21
       DataSets = <
         item
@@ -1496,13 +1542,14 @@ inherited Report_ReceiptProductionOutAnalyzeForm: TReport_ReceiptProductionOutAn
           ParamType = ptInput
         end
         item
-          Name = 'isGoodsKind'
+          Name = 'isPartionGoods'
           Value = 'False'
+          Component = cbPartionGoods
           DataType = ftBoolean
           ParamType = ptInput
         end>
-      ReportName = #1055#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1086' '#1080' '#1087#1088#1086#1094#1077#1085#1090' '#1074#1099#1093#1086#1076#1072' ('#1094#1077#1085#1072' '#1092#1072#1082#1090')'
-      ReportNameParam.Value = #1055#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1086' '#1080' '#1087#1088#1086#1094#1077#1085#1090' '#1074#1099#1093#1086#1076#1072' ('#1094#1077#1085#1072' '#1092#1072#1082#1090')'
+      ReportName = #1055#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1086' '#1080' '#1087#1088#1086#1094#1077#1085#1090' '#1074#1099#1093#1086#1076#1072' ('#1040#1085#1072#1083#1080#1079')'
+      ReportNameParam.Value = #1055#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1086' '#1080' '#1087#1088#1086#1094#1077#1085#1090' '#1074#1099#1093#1086#1076#1072' ('#1040#1085#1072#1083#1080#1079')'
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
     end

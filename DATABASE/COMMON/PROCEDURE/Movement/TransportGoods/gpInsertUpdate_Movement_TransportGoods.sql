@@ -84,6 +84,8 @@ BEGIN
      END IF;
      END IF;
 
+     IF NOT EXISTS (SELECT Object.Id FROM Object WHERE Object.Id = inMemberId3 AND Object.DescId = zc_Object_Personal() AND Object.ValueData = inMemberName3)
+     THEN
      -- нашли <Відпуск дозволив>
      inMemberId3:= (SELECT Object_MemberExternal.Id FROM Object AS Object_MemberExternal WHERE Object_MemberExternal.ValueData = TRIM (inMemberName3) AND Object_MemberExternal.DescId = zc_Object_MemberExternal());
      IF COALESCE (inMemberId3, 0) = 0 AND TRIM (inMemberName3) <> ''
@@ -94,6 +96,7 @@ BEGIN
                                                            , inName  := inMemberName3
                                                            , inUserId:= vbUserId
                                                             );
+     END IF;
      END IF;
 
      -- IF NOT EXISTS (SELECT Object.Id FROM Object WHERE Object.Id = inMemberId4 AND Object.DescId = zc_Object_Personal() AND Object.ValueData = inMemberName4)

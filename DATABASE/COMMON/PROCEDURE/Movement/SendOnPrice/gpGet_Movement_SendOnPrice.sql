@@ -124,8 +124,8 @@ BEGIN
             LEFT JOIN Object AS Object_PriceList ON Object_PriceList.Id = MovementLinkObject_PriceList.ObjectId
 
             LEFT JOIN MovementLinkMovement AS MovementLinkMovement_Order
-                                        ON MovementLinkMovement_Order.MovementId = Movement.Id 
-                                       AND MovementLinkMovement_Order.DescId = zc_MovementLinkMovement_Order()
+                                           ON MovementLinkMovement_Order.MovementId = Movement.Id 
+                                          AND MovementLinkMovement_Order.DescId = zc_MovementLinkMovement_Order()
             LEFT JOIN Movement AS Movement_Order ON Movement_Order.Id = MovementLinkMovement_Order.MovementChildId
 
        WHERE Movement.Id =  inMovementId
@@ -150,4 +150,4 @@ ALTER FUNCTION gpGet_Movement_SendOnPrice (Integer, TDateTime, TFloat, TVarChar)
 */
 
 -- тест
--- SELECT * FROM gpGet_Movement_SendOnPrice (inMovementId:= 1, inSession:= '2')
+-- SELECT * FROM gpGet_Movement_SendOnPrice (inMovementId:= 1, inOperDate:= NULL, inChangePercentAmount:= 0, inSession:= '2')
