@@ -3,9 +3,10 @@ inherited Report_GoodsMI_ProductionForm: TReport_GoodsMI_ProductionForm
   ClientHeight = 344
   ClientWidth = 1020
   AddOnFormData.isSingle = False
+  AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
   ExplicitWidth = 1036
-  ExplicitHeight = 379
+  ExplicitHeight = 382
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -13,17 +14,17 @@ inherited Report_GoodsMI_ProductionForm: TReport_GoodsMI_ProductionForm
     Height = 287
     TabOrder = 3
     ExplicitTop = 57
-    ExplicitWidth = 1137
+    ExplicitWidth = 1020
     ExplicitHeight = 287
     ClientRectBottom = 287
     ClientRectRight = 1020
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 1137
+      ExplicitWidth = 1020
       ExplicitHeight = 287
       inherited cxGrid: TcxGrid
         Width = 1020
         Height = 287
-        ExplicitWidth = 1137
+        ExplicitWidth = 1020
         ExplicitHeight = 287
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
@@ -295,7 +296,7 @@ inherited Report_GoodsMI_ProductionForm: TReport_GoodsMI_ProductionForm
   end
   inherited Panel: TPanel
     Width = 1020
-    ExplicitWidth = 1137
+    ExplicitWidth = 1020
     inherited deStart: TcxDateEdit
       Left = 97
       EditValue = 42005d
@@ -368,6 +369,66 @@ inherited Report_GoodsMI_ProductionForm: TReport_GoodsMI_ProductionForm
       Width = 169
     end
   end
+  inherited ActionList: TActionList
+    object ExecuteDialog: TExecuteDialog
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1072#1088#1072#1084#1077#1090#1088#1099' '#1086#1090#1095#1077#1090#1072
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1072#1088#1072#1084#1077#1090#1088#1099' '#1086#1090#1095#1077#1090#1072
+      ImageIndex = 35
+      FormName = 'TReport_GoodsMI_ProductionDialogForm'
+      FormNameParam.Value = 'TReport_GoodsMI_ProductionDialogForm'
+      FormNameParam.DataType = ftString
+      GuiParams = <
+        item
+          Name = 'StartDate'
+          Value = 42005d
+          Component = deStart
+          DataType = ftDateTime
+          ParamType = ptInput
+        end
+        item
+          Name = 'EndDate'
+          Value = 42005d
+          Component = deEnd
+          DataType = ftDateTime
+          ParamType = ptInput
+        end
+        item
+          Name = 'GoodsGroupId'
+          Value = ''
+          Component = GuidesGoodsGroup
+          ComponentItem = 'Key'
+          ParamType = ptInput
+        end
+        item
+          Name = 'GoodsGroupName'
+          Value = ''
+          Component = GuidesGoodsGroup
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          ParamType = ptInput
+        end
+        item
+          Name = 'UnitId'
+          Value = ''
+          Component = GuidesUnit
+          ComponentItem = 'Key'
+          ParamType = ptInput
+        end
+        item
+          Name = 'UnitName'
+          Value = ''
+          Component = GuidesUnit
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          ParamType = ptInput
+        end>
+      isShowModal = True
+      RefreshDispatcher = RefreshDispatcher
+      OpenBeforeShow = True
+    end
+  end
   inherited MasterDS: TDataSource
     Left = 72
     Top = 208
@@ -433,6 +494,41 @@ inherited Report_GoodsMI_ProductionForm: TReport_GoodsMI_ProductionForm
       0
       26
       0)
+    inherited Bar: TdxBar
+      ItemLinks = <
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbExecuteDialog'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbRefresh'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbGridToExcel'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end>
+    end
+    object bbExecuteDialog: TdxBarButton
+      Action = ExecuteDialog
+      Category = 0
+    end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
     Left = 320

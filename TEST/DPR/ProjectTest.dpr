@@ -704,7 +704,15 @@ uses
   Report_GoodsMI_Internal in '..\..\Forms\Report\Report_GoodsMI_Internal.pas' {Report_GoodsMI_InternalForm: TParentForm},
   Report_PersonalCompleteDialog in '..\..\Forms\Report\Report_PersonalCompleteDialog.pas' {Report_PersonalCompleteDialogForm: TParentForm},
   Report_ReceiptProductionOutAnalyze in '..\..\Forms\Report\Report_ReceiptProductionOutAnalyze.pas' {Report_ReceiptProductionOutAnalyzeForm: TParentForm},
-  Report_ReceiptProductionAnalyze in '..\..\Forms\Report\Report_ReceiptProductionAnalyze.pas' {Report_ReceiptProductionAnalyzeForm: TParentForm};
+  Report_ReceiptProductionAnalyze in '..\..\Forms\Report\Report_ReceiptProductionAnalyze.pas' {Report_ReceiptProductionAnalyzeForm: TParentForm},
+  SetUserDefaults in '..\..\Forms\System\SetUserDefaults.pas' {SetUserDefaultsForm: TParentForm},
+  Report_GoodsDialog in '..\..\Forms\Report\Report_GoodsDialog.pas' {Report_GoodsDialogForm: TParentForm},
+  Report_JuridicalDefermentIncomeDialog in '..\..\Forms\Report\Report_JuridicalDefermentIncomeDialog.pas' {Report_JuridicalDefermentIncomeDialogForm: TParentForm},
+  Report_JuridicalDefermentPaymentDialog in '..\..\Forms\Report\Report_JuridicalDefermentPaymentDialog.pas' {Report_JuridicalDefermentPaymentDialogForm: TParentForm},
+  Report_JuridicalSoldDialog in '..\..\Forms\Report\Report_JuridicalSoldDialog.pas' {Report_JuridicalSoldDialogForm: TParentForm},
+  Report_JuridicalCollationDialog in '..\..\Forms\Report\Report_JuridicalCollationDialog.pas' {Report_JuridicalCollationDialogForm: TParentForm},
+  Report_GoodsMI_OrderExternalDialog in '..\..\Forms\Report\Report_GoodsMI_OrderExternalDialog.pas' {Report_GoodsMI_OrderExternalDialogForm: TParentForm},
+  Report_GoodsMI_ProductionDialog in '..\..\Forms\Report\Report_GoodsMI_ProductionDialog.pas' {Report_GoodsMI_ProductionDialogForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}

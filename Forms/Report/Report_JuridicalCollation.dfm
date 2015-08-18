@@ -2,8 +2,9 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
   Caption = #1054#1090#1095#1077#1090' <'#1040#1082#1090' '#1089#1074#1077#1088#1082#1080'>'
   ClientHeight = 410
   ClientWidth = 1020
+  AddOnFormData.ExecuteDialogAction = ExecuteDialog
   ExplicitWidth = 1036
-  ExplicitHeight = 445
+  ExplicitHeight = 448
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -791,7 +792,6 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
           UserName = 'frxDBDataset'
           IndexFieldNames = 'ItemName;OperDate;InvNumber'
         end>
-      CopiesCount = 1
       Params = <
         item
           Name = 'StartDate'
@@ -956,7 +956,6 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
           UserName = 'frxDBDataset'
           IndexFieldNames = 'OperDate;ItemName;InvNumber'
         end>
-      CopiesCount = 1
       Params = <
         item
           Name = 'StartDate'
@@ -1120,7 +1119,6 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
           UserName = 'frxDBDataset'
           IndexFieldNames = 'OperDate;ItemName;InvNumber'
         end>
-      CopiesCount = 1
       Params = <
         item
           Name = 'StartDate'
@@ -1287,7 +1285,6 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
           UserName = 'DataSet'
           GridView = cxGridDBTableView
         end>
-      CopiesCount = 1
       Params = <
         item
           Name = 'StartDate'
@@ -1434,6 +1431,122 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
       ReportNameParam.Value = #1054#1073#1086#1088#1086#1090#1099' '#1080#1079' '#1072#1082#1090#1072' '#1089#1074#1077#1088#1082#1080
       ReportNameParam.DataType = ftString
     end
+    object ExecuteDialog: TExecuteDialog
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1072#1088#1072#1084#1077#1090#1088#1099' '#1086#1090#1095#1077#1090#1072
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1072#1088#1072#1084#1077#1090#1088#1099' '#1086#1090#1095#1077#1090#1072
+      ImageIndex = 35
+      FormName = 'TReport_JuridicalCollationDialogForm'
+      FormNameParam.Value = 'TReport_JuridicalCollationDialogForm'
+      FormNameParam.DataType = ftString
+      GuiParams = <
+        item
+          Name = 'StartDate'
+          Value = 41640d
+          Component = deStart
+          DataType = ftDateTime
+          ParamType = ptInput
+        end
+        item
+          Name = 'EndDate'
+          Value = 41640d
+          Component = deEnd
+          DataType = ftDateTime
+          ParamType = ptInput
+        end
+        item
+          Name = 'AccountId'
+          Value = ''
+          Component = AccountGuides
+          ComponentItem = 'Key'
+          DataType = ftString
+          ParamType = ptInput
+        end
+        item
+          Name = 'AccountName'
+          Value = ''
+          Component = AccountGuides
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          ParamType = ptInput
+        end
+        item
+          Name = 'InfoMoneyId'
+          Value = ''
+          ComponentItem = 'Key'
+          ParamType = ptInput
+        end
+        item
+          Name = 'InfoMoneyName'
+          Value = ''
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          ParamType = ptInput
+        end
+        item
+          Name = 'JuridicalId'
+          Value = ''
+          Component = JuridicalGuides
+          ComponentItem = 'Key'
+          ParamType = ptInput
+        end
+        item
+          Name = 'JuridicalName'
+          Value = ''
+          Component = JuridicalGuides
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          ParamType = ptInput
+        end
+        item
+          Name = 'PartnerId'
+          Value = ''
+          Component = PartnerGuides
+          ComponentItem = 'Key'
+          ParamType = ptInput
+        end
+        item
+          Name = 'PartnerName'
+          Value = ''
+          Component = PartnerGuides
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          ParamType = ptInput
+        end
+        item
+          Name = 'PaidKindId'
+          Value = ''
+          Component = PaidKindGuides
+          ComponentItem = 'Key'
+          ParamType = ptInput
+        end
+        item
+          Name = 'PaidKindName'
+          Value = ''
+          Component = PaidKindGuides
+          ComponentItem = 'TextValue'
+          ParamType = ptInput
+        end
+        item
+          Name = 'ContractId'
+          Value = ''
+          Component = ContractGuides
+          ComponentItem = 'Key'
+          ParamType = ptInput
+        end
+        item
+          Name = 'ContractName'
+          Value = ''
+          Component = ContractGuides
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          ParamType = ptInput
+        end>
+      isShowModal = True
+      RefreshDispatcher = RefreshDispatcher
+      OpenBeforeShow = True
+    end
   end
   inherited MasterDS: TDataSource
     Top = 164
@@ -1534,6 +1647,14 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
         end
         item
           Visible = True
+          ItemName = 'bbExecuteDialog'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbRefresh'
         end
         item
@@ -1607,6 +1728,10 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
     end
     object bbPrintCurrency: TdxBarButton
       Action = actPrintCurrency
+      Category = 0
+    end
+    object bbExecuteDialog: TdxBarButton
+      Action = ExecuteDialog
       Category = 0
     end
   end

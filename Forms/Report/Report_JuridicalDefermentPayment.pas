@@ -80,6 +80,8 @@ type
     clPersonalTradeName: TcxGridDBColumn;
     colPersonalTradeName_Partner: TcxGridDBColumn;
     clAreaName_Partner: TcxGridDBColumn;
+    ExecuteDialog: TExecuteDialog;
+    bbExecuteDialog: TdxBarButton;
   private
     { Private declarations }
   public
