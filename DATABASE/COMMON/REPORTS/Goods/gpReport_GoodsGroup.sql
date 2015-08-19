@@ -34,13 +34,17 @@ $BODY$
  DECLARE vbUserId Integer;
  DECLARE vbIsBranch Boolean;
 BEGIN
+     -- проверка прав пользователя на вызов процедуры
+     -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Report_GoodsGroup());
      vbUserId:= lpGetUserBySession (inSession);
 
+     -- !!!определяется!!!
      vbIsBranch:= 1 = 1 OR EXISTS (SELECT BranchId FROM Object_RoleAccessKeyGuide_View WHERE UserId = vbUserId AND BranchId <> 0 GROUP BY BranchId);
 
-         -- таблица - 
-         CREATE TEMP TABLE _tmpGoods (GoodsId Integer, InfoMoneyId Integer, TradeMarkId Integer, MeasureId Integer, Weight TFloat) ON COMMIT DROP;
-         CREATE TEMP TABLE _tmpUnit (UnitId Integer, UnitId_by Integer, isActive Boolean) ON COMMIT DROP;
+     -- таблица - 
+     CREATE TEMP TABLE _tmpGoods (GoodsId Integer, InfoMoneyId Integer, TradeMarkId Integer, MeasureId Integer, Weight TFloat) ON COMMIT DROP;
+     CREATE TEMP TABLE _tmpUnit (UnitId Integer, UnitId_by Integer, isActive Boolean) ON COMMIT DROP;
+
 
     RETURN QUERY
     WITH tmpSendOnPrice_out AS (SELECT * FROM gpReport_GoodsMI_Internal (inStartDate    := inStartDate

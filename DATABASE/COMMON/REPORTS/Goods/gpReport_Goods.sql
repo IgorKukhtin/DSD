@@ -32,7 +32,17 @@ RETURNS TABLE  (MovementId Integer, InvNumber TVarChar, OperDate TDateTime, Oper
                )  
 AS
 $BODY$
+ DECLARE vbUserId Integer;
+ DECLARE vbIsBranch Boolean;
 BEGIN
+
+     -- проверка прав пользователя на вызов процедуры
+     -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Report_Goods());
+     vbUserId:= lpGetUserBySession (inSession);
+
+     -- !!!определяется!!!
+     vbIsBranch:= 1 = 1 OR EXISTS (SELECT BranchId FROM Object_RoleAccessKeyGuide_View WHERE UserId = vbUserId AND BranchId <> 0 GROUP BY BranchId);
+
 
     IF inGoodsId = 0 AND inGoodsGroupId <> 0
     THEN
