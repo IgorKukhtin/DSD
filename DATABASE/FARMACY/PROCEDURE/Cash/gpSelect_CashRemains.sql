@@ -1,8 +1,10 @@
 -- Function: gpSelect_Movement_Income()
 
 DROP FUNCTION IF EXISTS gpSelect_CashRemains (TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_CashRemains (Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_CashRemains(
+    IN inMovementId    Integer,    -- Текущая накладная
     IN inSession       TVarChar    -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, GoodsName TVarChar, GoodsCode Integer,
@@ -27,38 +29,55 @@ BEGIN
      RETURN QUERY
        WITH GoodsRemains
        AS
-       (
-         SELECT 
-           SUM(Amount) AS Remains, 
-           container.objectid 
-         FROM container
-           INNER JOIN containerlinkobject AS CLO_Unit
-                                          ON CLO_Unit.containerid = container.id 
-                                         AND CLO_Unit.descid = zc_ContainerLinkObject_Unit()
-                                         AND CLO_Unit.objectid = vbUnitId
-         WHERE 
-           container.descid = zc_container_count() 
-           AND 
-           Amount<>0
-         GROUP BY 
-           container.objectid
-       ),
-       RESERVE
-       AS
-       (
-         SELECT
-           GoodsId,
-           SUM(Amount) as Amount
-         FROM
-           gpSelect_MovementItem_CheckDeferred(inSession) 
-         Group By
-           GoodsId
-       )   
+        (
+            SELECT 
+                SUM(Amount) AS Remains, 
+                container.objectid 
+            FROM container
+                INNER JOIN containerlinkobject AS CLO_Unit
+                                               ON CLO_Unit.containerid = container.id 
+                                              AND CLO_Unit.descid = zc_ContainerLinkObject_Unit()
+                                              AND CLO_Unit.objectid = vbUnitId
+            WHERE 
+                container.descid = zc_container_count() 
+                AND 
+                Amount<>0
+            GROUP BY 
+                container.objectid
+        ),
+        RESERVE
+        AS
+        (
+            SELECT
+                GoodsId,
+                SUM(Amount)::TFloat as Amount
+            FROM
+                gpSelect_MovementItem_CheckDeferred(inSession)
+            WHERE
+                MovementId <> inMovementId
+            Group By
+                GoodsId
+        ),
+        CurrentMovement
+        AS
+        (
+            SELECT
+                ObjectId,
+                SUM(Amount)::TFloat as Amount
+            FROM
+                MovementItem
+            WHERE
+                MovementId = inMovementId
+                AND
+                Amount <> 0
+            Group By
+                ObjectId
+        )   
 
        SELECT Goods.Id,
               Goods.ValueData,
               Goods.ObjectCode,
-              GoodsRemains.Remains::TFloat,
+              (GoodsRemains.Remains - COALESCE(CurrentMovement.Amount,0))::TFloat,
               object_Price_view.price,
               Reserve.Amount::TFloat,
               object_Price_view.mcsvalue,
@@ -71,17 +90,19 @@ BEGIN
                                   ON Goods.Id = Link_Goods_AlternativeGroup.ObjectId
                                  AND Link_Goods_AlternativeGroup.DescId = zc_ObjectLink_Goods_AlternativeGroup()
        LEFT OUTER JOIN RESERVE ON GoodsRemains.ObjectId = RESERVE.GoodsId
+       LEFT OUTER JOIN CurrentMovement ON GoodsRemains.ObjectId = CurrentMovement.ObjectId
      ORDER BY
        Goods.ValueData;
 END;
 $BODY$
   LANGUAGE PLPGSQL VOLATILE;
-ALTER FUNCTION gpSelect_CashRemains (TVarChar) OWNER TO postgres;
+ALTER FUNCTION gpSelect_CashRemains (Integer, TVarChar) OWNER TO postgres;
 
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А.А.
+ 19.08.15                                                                       *CurrentMovement
  05.05.15                        *
 
 */

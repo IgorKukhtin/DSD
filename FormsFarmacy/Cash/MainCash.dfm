@@ -19,7 +19,7 @@ inherited MainCashForm: TMainCashForm
     Height = 196
     Align = alBottom
     BevelOuter = bvNone
-    TabOrder = 1
+    TabOrder = 2
     object CheckGrid: TcxGrid
       Left = 0
       Top = 0
@@ -168,7 +168,7 @@ inherited MainCashForm: TMainCashForm
     Height = 213
     Align = alClient
     BevelOuter = bvNone
-    TabOrder = 2
+    TabOrder = 0
     object MainGrid: TcxGrid
       Left = 0
       Top = 0
@@ -180,6 +180,7 @@ inherited MainCashForm: TMainCashForm
         Navigator.Buttons.CustomButtons = <>
         DataController.DataSource = RemainsDS
         DataController.Filter.Options = [fcoCaseInsensitive]
+        DataController.KeyFieldNames = 'Id'
         DataController.Summary.DefaultGroupSummaryItems = <>
         DataController.Summary.FooterSummaryItems = <>
         DataController.Summary.SummaryGroups = <>
@@ -208,6 +209,9 @@ inherited MainCashForm: TMainCashForm
         object MainColRemains: TcxGridDBColumn
           Caption = #1054#1089#1090#1072#1090#1086#1082
           DataBinding.FieldName = 'Remains'
+          PropertiesClassName = 'TcxCurrencyEditProperties'
+          Properties.DecimalPlaces = 3
+          Properties.DisplayFormat = ',0.###'
           Options.Editing = False
           Styles.Content = dmMain.cxRemainsContentStyle
           Width = 58
@@ -248,9 +252,9 @@ inherited MainCashForm: TMainCashForm
       object ceAmount: TcxCurrencyEdit
         Left = 282
         Top = 7
-        Properties.DecimalPlaces = 4
-        Properties.DisplayFormat = ',0.####'
-        TabOrder = 0
+        Properties.DecimalPlaces = 3
+        Properties.DisplayFormat = ',0.###'
+        TabOrder = 1
         OnExit = ceAmountExit
         OnKeyDown = ceAmountKeyDown
         Width = 43
@@ -284,7 +288,8 @@ inherited MainCashForm: TMainCashForm
         Properties.ListOptions.ShowHeader = False
         Properties.ListOptions.SyncMode = True
         Properties.ListSource = RemainsDS
-        TabOrder = 2
+        TabOrder = 0
+        OnExit = lcNameExit
         OnKeyDown = lcNameKeyDown
         Width = 210
       end
@@ -377,6 +382,13 @@ inherited MainCashForm: TMainCashForm
         Action = actOpenMCSForm
         LookAndFeel.Kind = lfStandard
         TabOrder = 10
+      end
+      object chbTracing: TcxCheckBox
+        Left = 744
+        Top = 8
+        TabOrder = 11
+        Visible = False
+        Width = 21
       end
     end
   end
@@ -500,7 +512,7 @@ inherited MainCashForm: TMainCashForm
           Action = actRefreshLite
         end
         item
-          Action = actSetTrueRemains
+          Action = actUpdateRemains
         end
         item
           Action = actCalcTotalSumm
@@ -541,17 +553,17 @@ inherited MainCashForm: TMainCashForm
           Action = actRefreshLite
         end
         item
-          Action = actSetTrueRemains
+          Action = actUpdateRemains
         end
         item
           Action = actCalcTotalSumm
         end>
       Caption = #1054#1090#1083'.'
     end
-    object actSetTrueRemains: TAction
+    object actUpdateRemains: TAction
       Category = 'DSDLib'
-      Caption = 'actSetTrueRemains'
-      OnExecute = actSetTrueRemainsExecute
+      Caption = 'actUpdateRemains'
+      OnExecute = actUpdateRemainsExecute
     end
     object actCalcTotalSumm: TAction
       Category = 'DSDLib'
@@ -644,7 +656,14 @@ inherited MainCashForm: TMainCashForm
       item
         DataSet = RemainsCDS
       end>
-    Params = <>
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'CheckId'
+        ParamType = ptInput
+      end>
     PackSize = 1
     AutoWidth = True
     Left = 232
@@ -1061,7 +1080,14 @@ inherited MainCashForm: TMainCashForm
       item
         DataSet = Remains_LiteCDS
       end>
-    Params = <>
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'CheckId'
+        ParamType = ptInput
+      end>
     PackSize = 1
     AutoWidth = True
     Left = 232
