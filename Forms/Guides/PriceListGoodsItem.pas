@@ -13,7 +13,8 @@ uses
   cxGridBandedTableView, cxGridDBBandedTableView, cxCheckBox, dxSkinsCore,
   Vcl.ExtCtrls, cxPC, dxDockControl, dxDockPanel, cxContainer, dsdGuides,
   cxTextEdit, cxMaskEdit, cxButtonEdit, cxLabel, Vcl.ComCtrls, dxCore,
-  cxDateUtils, cxDropDownEdit, cxCalendar, cxCurrencyEdit;
+  cxDateUtils, cxDropDownEdit, cxCalendar, cxCurrencyEdit,
+  dxSkinsDefaultPainters, dxSkinscxPCPainter, dxSkinsdxBarPainter;
 
 type
   TPriceListGoodsItemForm = class(TParentForm)

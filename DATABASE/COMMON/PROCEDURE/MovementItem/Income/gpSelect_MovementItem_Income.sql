@@ -409,5 +409,5 @@ ALTER FUNCTION gpSelect_MovementItem_Income (Integer, Boolean, Boolean, TVarChar
 */
 
 -- тест
--- SELECT * FROM gpSelect_MovementItem_Income (inMovementId:= 25173, inShowAll:= TRUE, inIsErased:= TRUE, inSession:= '2')
--- SELECT * FROM gpSelect_MovementItem_Income (inMovementId:= 25173, inShowAll:= FALSE, inIsErased:= FALSE, inSession:= '2')
+-- SELECT * FROM gpSelect_MovementItem_Income (inMovementId:= 25173, inShowAll:= TRUE, inIsErased:= TRUE, inSession:= zfCalc_UserAdmin())
+-- SELECT * FROM gpSelect_MovementItem_Income (inMovementId:= 25173, inShowAll:= FALSE, inIsErased:= FALSE, inSession:= zfCalc_UserAdmin())

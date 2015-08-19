@@ -1,7 +1,7 @@
 object PriceListGoodsItemForm: TPriceListGoodsItemForm
   Left = 0
   Top = 0
-  Caption = #1048#1079#1084#1077#1085#1077#1085#1080#1077' '#1094#1077#1085' '#1090#1086#1074#1072#1088#1072
+  Caption = #1055#1088#1086#1089#1084#1086#1090#1088'/'#1048#1079#1084#1077#1085#1077#1085#1080#1077' '#1080#1089#1090#1086#1088#1080#1080' '#1094#1077#1085
   ClientHeight = 398
   ClientWidth = 497
   Color = clBtnFace
@@ -18,15 +18,13 @@ object PriceListGoodsItemForm: TPriceListGoodsItemForm
   TextHeight = 13
   object cxGrid: TcxGrid
     Left = 0
-    Top = 65
+    Top = 63
     Width = 497
-    Height = 333
+    Height = 335
     Align = alClient
     TabOrder = 0
     LookAndFeel.NativeStyle = True
     LookAndFeel.SkinName = 'UserSkin'
-    ExplicitTop = 63
-    ExplicitHeight = 335
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -47,13 +45,13 @@ object PriceListGoodsItemForm: TPriceListGoodsItemForm
       OptionsView.Indicator = True
       Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
       object clStartDate: TcxGridDBColumn
-        Caption = #1062#1077#1085#1072' '#1089' '
+        Caption = #1044#1072#1090#1072' '#1089
         DataBinding.FieldName = 'StartDate'
         HeaderAlignmentVert = vaCenter
         Width = 78
       end
       object clEndDate: TcxGridDBColumn
-        Caption = #1062#1077#1085#1072' '#1087#1086
+        Caption = #1044#1072#1090#1072' '#1087#1086
         DataBinding.FieldName = 'EndDate'
         HeaderAlignmentVert = vaCenter
         Width = 80
@@ -74,13 +72,12 @@ object PriceListGoodsItemForm: TPriceListGoodsItemForm
   end
   object Panel: TPanel
     Left = 0
-    Top = 28
+    Top = 26
     Width = 497
     Height = 37
     Align = alTop
     BevelOuter = bvNone
     TabOrder = 1
-    ExplicitTop = 26
     object cxLabel1: TcxLabel
       Left = 4
       Top = 9
@@ -162,7 +159,7 @@ object PriceListGoodsItemForm: TPriceListGoodsItemForm
     DockControlHeights = (
       0
       0
-      28
+      26
       0)
     object dxBarManagerBar1: TdxBar
       Caption = 'Custom'
@@ -178,11 +175,23 @@ object PriceListGoodsItemForm: TPriceListGoodsItemForm
       ItemLinks = <
         item
           Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbRefresh'
         end
         item
           Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbToExcel'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
         end>
       NotDocking = [dsLeft]
       OneOnRow = True
@@ -256,6 +265,7 @@ object PriceListGoodsItemForm: TPriceListGoodsItemForm
         ComponentItem = 'GoodsId'
         ParamType = ptInput
       end>
+    PackSize = 1
     Left = 144
     Top = 104
   end
@@ -361,7 +371,7 @@ object PriceListGoodsItemForm: TPriceListGoodsItemForm
         DataType = ftString
         ParamType = ptInput
       end>
-    Left = 256
-    Top = 8
+    Left = 280
+    Top = 88
   end
 end

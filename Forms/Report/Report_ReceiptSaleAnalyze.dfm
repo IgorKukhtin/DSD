@@ -22,8 +22,6 @@ inherited Report_ReceiptSaleAnalyzeForm: TReport_ReceiptSaleAnalyzeForm
       inherited cxGrid: TcxGrid
         Width = 1130
         Height = 347
-        ExplicitLeft = 3
-        ExplicitTop = 3
         ExplicitWidth = 1130
         ExplicitHeight = 347
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -389,7 +387,7 @@ inherited Report_ReceiptSaleAnalyzeForm: TReport_ReceiptSaleAnalyzeForm
             Width = 55
           end
           object Price1_cost: TcxGridDBColumn
-            Caption = #1062#1077#1085#1072' '#1079'. '#1055#1088#1072#1081#1089'1'
+            Caption = #1062#1077#1085#1072' '#1079#1072#1090#1088#1072#1090#1099' '#1055#1088'.1'
             DataBinding.FieldName = 'Price1_cost'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
@@ -399,7 +397,7 @@ inherited Report_ReceiptSaleAnalyzeForm: TReport_ReceiptSaleAnalyzeForm
             Width = 55
           end
           object Price2_cost: TcxGridDBColumn
-            Caption = #1062#1077#1085#1072' '#1079'. '#1055#1088#1072#1081#1089'2'
+            Caption = #1062#1077#1085#1072' '#1079#1072#1090#1088#1072#1090#1099' '#1055#1088'.2'
             DataBinding.FieldName = 'Price2_cost'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
@@ -410,7 +408,7 @@ inherited Report_ReceiptSaleAnalyzeForm: TReport_ReceiptSaleAnalyzeForm
             Width = 55
           end
           object Price3_cost: TcxGridDBColumn
-            Caption = #1062#1077#1085#1072' '#1079'. '#1055#1088#1072#1081#1089'3'
+            Caption = #1062#1077#1085#1072' '#1079#1072#1090#1088#1072#1090#1099' '#1055#1088'.3'
             DataBinding.FieldName = 'Price3_cost'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
@@ -1161,10 +1159,10 @@ inherited Report_ReceiptSaleAnalyzeForm: TReport_ReceiptSaleAnalyzeForm
       object cbGoodsKind: TcxCheckBox
         Left = 77
         Top = 15
-        Caption = #1087#1077#1095#1072#1090#1100' '#1087#1086' '#1042#1080#1076#1072#1084' '#1090#1086#1074#1072#1088#1072
+        Caption = #1087#1086' '#1042#1080#1076#1072#1084' '#1090#1086#1074#1072#1088#1072
         Properties.ReadOnly = False
         TabOrder = 1
-        Width = 150
+        Width = 116
       end
     end
   end
@@ -1609,6 +1607,13 @@ inherited Report_ReceiptSaleAnalyzeForm: TReport_ReceiptSaleAnalyzeForm
         Value = Null
         Component = PriceList_sale_Guides
         ComponentItem = 'Key'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inIsGoodsKind'
+        Value = Null
+        Component = cbGoodsKind
+        DataType = ftBoolean
         ParamType = ptInput
       end>
     Left = 80

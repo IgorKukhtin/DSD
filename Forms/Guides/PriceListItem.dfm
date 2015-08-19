@@ -1,9 +1,9 @@
 object PriceListItemForm: TPriceListItemForm
   Left = 0
   Top = 0
-  Caption = #1055#1088#1072#1081#1089' '#1083#1080#1089#1090
+  Caption = #1055#1088#1072#1081#1089' '#1083#1080#1089#1090' - '#1055#1088#1086#1089#1084#1086#1090#1088' / '#1048#1079#1084#1077#1085#1077#1085#1080#1077' '#1087#1086#1089#1083#1077#1076#1085#1080#1093' '#1094#1077#1085
   ClientHeight = 398
-  ClientWidth = 724
+  ClientWidth = 834
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -17,12 +17,13 @@ object PriceListItemForm: TPriceListItemForm
   object cxGrid: TcxGrid
     Left = 0
     Top = 67
-    Width = 724
+    Width = 834
     Height = 331
     Align = alClient
     TabOrder = 0
     LookAndFeel.NativeStyle = True
     LookAndFeel.SkinName = 'UserSkin'
+    ExplicitWidth = 724
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -35,43 +36,66 @@ object PriceListItemForm: TPriceListItemForm
       OptionsCustomize.ColumnsQuickCustomization = True
       OptionsData.Deleting = False
       OptionsData.DeletingConfirmation = False
-      OptionsData.Editing = False
       OptionsData.Inserting = False
       OptionsView.ColumnAutoWidth = True
       OptionsView.GroupByBox = False
       OptionsView.HeaderHeight = 40
       OptionsView.Indicator = True
       Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
-      object clGoodsCode: TcxGridDBColumn
-        Caption = #1050#1086#1076' '#1090#1086#1074#1072#1088#1072
-        DataBinding.FieldName = 'GoodsCode'
+      object GoodsGroupNameFull: TcxGridDBColumn
+        Caption = #1043#1088#1091#1087#1087#1072' ('#1074#1089#1077')'
+        DataBinding.FieldName = 'GoodsGroupNameFull'
+        HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 60
+        Options.Editing = False
+        Width = 100
+      end
+      object clGoodsCode: TcxGridDBColumn
+        Caption = #1050#1086#1076
+        DataBinding.FieldName = 'GoodsCode'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 35
       end
       object clName: TcxGridDBColumn
         Caption = #1058#1086#1074#1072#1088
         DataBinding.FieldName = 'GoodsName'
+        HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 243
+        Options.Editing = False
+        Width = 150
+      end
+      object MeasureName: TcxGridDBColumn
+        Caption = #1045#1076'. '#1080#1079#1084'.'
+        DataBinding.FieldName = 'MeasureName'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 35
       end
       object clStartDate: TcxGridDBColumn
-        Caption = #1062#1077#1085#1072' '#1089' '
+        Caption = #1044#1072#1090#1072' '#1089
         DataBinding.FieldName = 'StartDate'
+        HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 78
+        Options.Editing = False
+        Width = 55
       end
       object clEndDate: TcxGridDBColumn
-        Caption = #1062#1077#1085#1072' '#1087#1086
+        Caption = #1044#1072#1090#1072' '#1087#1086
         DataBinding.FieldName = 'EndDate'
+        HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 70
+        Options.Editing = False
+        Width = 55
       end
       object clPrice: TcxGridDBColumn
         Caption = #1062#1077#1085#1072
         DataBinding.FieldName = 'ValuePrice'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DisplayFormat = ',0.00;-,0.00'
-        HeaderAlignmentHorz = taRightJustify
+        HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 70
       end
@@ -83,14 +107,15 @@ object PriceListItemForm: TPriceListItemForm
   object Panel: TPanel
     Left = 0
     Top = 26
-    Width = 724
+    Width = 834
     Height = 41
     Align = alTop
     BevelOuter = bvNone
     TabOrder = 2
+    ExplicitWidth = 724
     object cxLabel1: TcxLabel
       Left = 16
-      Top = 9
+      Top = 10
       Caption = #1055#1088#1072#1081#1089'-'#1083#1080#1089#1090':'
     end
     object edPriceList: TcxButtonEdit
@@ -102,31 +127,36 @@ object PriceListItemForm: TPriceListItemForm
           Kind = bkEllipsis
         end>
       TabOrder = 1
-      Width = 182
+      Width = 238
     end
     object edShowDate: TcxDateEdit
-      Left = 333
+      Left = 433
       Top = 9
-      EditValue = 41275d
+      EditValue = 42005d
+      Properties.SaveTime = False
+      Properties.ShowTime = False
       TabOrder = 2
-      Width = 121
+      Width = 100
     end
     object cxLabel2: TcxLabel
-      Left = 280
-      Top = 9
-      Caption = #1062#1077#1085#1072' '#1085#1072':'
+      Left = 339
+      Top = 10
+      Caption = #1055#1088#1086#1089#1084#1086#1090#1088' '#1094#1077#1085' '#1085#1072':'
     end
   end
   object cxLabel3: TcxLabel
-    Left = 462
+    Left = 578
     Top = 36
-    Caption = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1094#1077#1085#1091' '#1085#1072':'
+    Caption = #1048#1079#1084#1077#1085#1077#1085#1080#1077' '#1094#1077#1085#1099' '#1089':'
   end
   object edOperDate: TcxDateEdit
-    Left = 572
+    Left = 679
     Top = 35
+    EditValue = 42235d
+    Properties.SaveTime = False
+    Properties.ShowTime = False
     TabOrder = 7
-    Width = 121
+    Width = 100
   end
   object DataSource: TDataSource
     DataSet = ClientDataSet
@@ -141,6 +171,22 @@ object PriceListItemForm: TPriceListItemForm
   end
   object cxPropertiesStore: TcxPropertiesStore
     Components = <
+      item
+        Component = edOperDate
+        Properties.Strings = (
+          'Date')
+      end
+      item
+        Component = edShowDate
+        Properties.Strings = (
+          'Date')
+      end
+      item
+        Component = PriceListGuides
+        Properties.Strings = (
+          'Key'
+          'TextValue')
+      end
       item
         Component = Owner
         Properties.Strings = (
@@ -157,8 +203,8 @@ object PriceListItemForm: TPriceListItemForm
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
-    Font.Height = -11
-    Font.Name = 'Tahoma'
+    Font.Height = -12
+    Font.Name = 'Segoe UI'
     Font.Style = []
     Categories.Strings = (
       'Default')
@@ -192,10 +238,13 @@ object PriceListItemForm: TPriceListItemForm
       ItemLinks = <
         item
           Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbPriceListGoodsItem'
         end
         item
-          BeginGroup = True
           Visible = True
           ItemName = 'dxBarStatic'
         end
@@ -205,7 +254,15 @@ object PriceListItemForm: TPriceListItemForm
         end
         item
           Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbToExcel'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
         end>
       NotDocking = [dsLeft]
       OneOnRow = True
@@ -263,8 +320,8 @@ object PriceListItemForm: TPriceListItemForm
     object actPriceListGoods: TdsdOpenForm
       Category = 'DSDLib'
       MoveParams = <>
-      Caption = #1062#1077#1085#1099' '#1087#1086' '#1090#1086#1074#1072#1088#1091
-      Hint = #1062#1077#1085#1099' '#1087#1086' '#1090#1086#1074#1072#1088#1091
+      Caption = #1055#1088#1086#1089#1084#1086#1090#1088'/'#1048#1079#1084#1077#1085#1077#1085#1080#1077' '#1080#1089#1090#1086#1088#1080#1080
+      Hint = #1055#1088#1086#1089#1084#1086#1090#1088'/'#1048#1079#1084#1077#1085#1077#1085#1080#1077' '#1080#1089#1090#1086#1088#1080#1080
       ImageIndex = 28
       FormName = 'TPriceListGoodsItemForm'
       FormNameParam.Value = ''
@@ -285,16 +342,30 @@ object PriceListItemForm: TPriceListItemForm
         end
         item
           Name = 'GoodsId'
+          Value = Null
           Component = ClientDataSet
           ComponentItem = 'GoodsId'
         end
         item
           Name = 'GoodsName'
+          Value = Null
           Component = ClientDataSet
           ComponentItem = 'GoodsName'
           DataType = ftString
         end>
       isShowModal = False
+    end
+    object actUpdateDataSet: TdsdUpdateDataSet
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spInsertUpdate
+      StoredProcList = <
+        item
+          StoredProc = spInsertUpdate
+        end>
+      Caption = 'actUpdateDataSet'
+      DataSource = DataSource
     end
   end
   object dsdStoredProc: TdsdStoredProc
@@ -319,6 +390,7 @@ object PriceListItemForm: TPriceListItemForm
         DataType = ftDateTime
         ParamType = ptInput
       end>
+    PackSize = 1
     Left = 144
     Top = 104
   end
@@ -366,5 +438,80 @@ object PriceListItemForm: TPriceListItemForm
       end>
     Left = 160
     Top = 16
+  end
+  object spInsertUpdate: TdsdStoredProc
+    StoredProcName = 'gpInsertUpdate_ObjectHistory_PriceListItemLast'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'ioId'
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'Id'
+        ParamType = ptInputOutput
+      end
+      item
+        Name = 'inPriceListId'
+        Value = Null
+        Component = PriceListGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inGoodsId'
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'GoodsId'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inOperDate'
+        Value = Null
+        Component = edOperDate
+        DataType = ftDateTime
+        ParamType = ptInput
+      end
+      item
+        Name = 'inValue'
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'ValuePrice'
+        DataType = ftFloat
+        ParamType = ptInput
+      end
+      item
+        Name = 'inIsLast'
+        Value = True
+        DataType = ftBoolean
+        ParamType = ptInput
+      end
+      item
+        Name = 'outStartDate'
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'StartDate'
+        DataType = ftDateTime
+      end
+      item
+        Name = 'outEndDate'
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'EndDate'
+        DataType = ftDateTime
+      end>
+    PackSize = 1
+    Left = 72
+    Top = 272
+  end
+  object RefreshDispatcher: TRefreshDispatcher
+    IdParam.Value = Null
+    RefreshAction = actRefresh
+    ComponentList = <
+      item
+        Component = PriceListGuides
+      end>
+    Left = 536
+    Top = 168
   end
 end
