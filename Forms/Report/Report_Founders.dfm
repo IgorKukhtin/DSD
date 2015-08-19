@@ -1,29 +1,30 @@
 inherited Report_FoundersForm: TReport_FoundersForm
   Caption = #1054#1090#1095#1077#1090' <'#1054#1073#1086#1088#1086#1090#1099' '#1087#1086' '#1091#1095#1088#1077#1076#1080#1090#1077#1083#1103#1084'>'
   ClientHeight = 555
-  ClientWidth = 1084
-  ExplicitWidth = 1100
-  ExplicitHeight = 590
+  ClientWidth = 1103
+  AddOnFormData.ExecuteDialogAction = ExecuteDialog
+  ExplicitWidth = 1119
+  ExplicitHeight = 593
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Top = 61
-    Width = 1084
-    Height = 494
+    Top = 75
+    Width = 1103
+    Height = 480
     TabOrder = 3
-    ExplicitTop = 61
-    ExplicitWidth = 1084
-    ExplicitHeight = 494
-    ClientRectBottom = 494
-    ClientRectRight = 1084
+    ExplicitTop = 91
+    ExplicitWidth = 1103
+    ExplicitHeight = 464
+    ClientRectBottom = 480
+    ClientRectRight = 1103
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 1084
-      ExplicitHeight = 494
+      ExplicitWidth = 1103
+      ExplicitHeight = 464
       inherited cxGrid: TcxGrid
-        Width = 1084
-        Height = 494
-        ExplicitWidth = 1084
-        ExplicitHeight = 494
+        Width = 1103
+        Height = 480
+        ExplicitWidth = 1103
+        ExplicitHeight = 464
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -137,6 +138,13 @@ inherited Report_FoundersForm: TReport_FoundersForm
           Styles.Selection = nil
           Styles.Footer = nil
           Styles.Header = nil
+          object OperDate: TcxGridDBColumn
+            Caption = #1044#1072#1090#1072
+            DataBinding.FieldName = 'OperDate'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 48
+          end
           object GroupName: TcxGridDBColumn
             Caption = #1042#1080#1076
             DataBinding.FieldName = 'GroupName'
@@ -364,51 +372,51 @@ inherited Report_FoundersForm: TReport_FoundersForm
     end
   end
   inherited Panel: TPanel
-    Width = 1084
-    Height = 35
-    ExplicitWidth = 1084
-    ExplicitHeight = 35
+    Width = 1103
+    Height = 49
+    ExplicitWidth = 1103
+    ExplicitHeight = 49
     inherited deStart: TcxDateEdit
-      Left = 52
-      Top = 8
+      Left = 58
+      Top = 15
       EditValue = 42005d
       Properties.SaveTime = False
-      ExplicitLeft = 52
-      ExplicitTop = 8
+      ExplicitLeft = 58
+      ExplicitTop = 15
     end
     inherited deEnd: TcxDateEdit
-      Left = 204
-      Top = 8
+      Left = 202
+      Top = 15
       EditValue = 42005d
       Properties.SaveTime = False
-      ExplicitLeft = 204
-      ExplicitTop = 8
+      ExplicitLeft = 202
+      ExplicitTop = 15
     end
     inherited cxLabel1: TcxLabel
       Left = 5
-      Top = 8
+      Top = 16
       Caption = #1044#1072#1090#1072' '#1089' :'
       ExplicitLeft = 5
-      ExplicitTop = 8
+      ExplicitTop = 16
       ExplicitWidth = 45
     end
     inherited cxLabel2: TcxLabel
-      Left = 150
-      Top = 8
+      Left = 149
+      Top = 16
       Caption = #1044#1072#1090#1072' '#1087#1086' :'
-      ExplicitLeft = 150
-      ExplicitTop = 8
+      ExplicitLeft = 149
+      ExplicitTop = 16
       ExplicitWidth = 52
     end
     object cxLabel3: TcxLabel
-      Left = 603
-      Top = 0
+      Left = 689
+      Top = 9
       Caption = #1059#1055' '#1075#1088#1091#1087#1087#1072' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103':'
       Visible = False
     end
     object ceInfoMoneyGroup: TcxButtonEdit
-      Left = 603
-      Top = 24
+      Left = 814
+      Top = 8
       Properties.Buttons = <
         item
           Default = True
@@ -417,11 +425,11 @@ inherited Report_FoundersForm: TReport_FoundersForm
       Properties.ReadOnly = True
       TabOrder = 5
       Visible = False
-      Width = 160
+      Width = 193
     end
     object ceInfoMoneyDestination: TcxButtonEdit
-      Left = 769
-      Top = 24
+      Left = 512
+      Top = 34
       Properties.Buttons = <
         item
           Default = True
@@ -430,17 +438,17 @@ inherited Report_FoundersForm: TReport_FoundersForm
       Properties.ReadOnly = True
       TabOrder = 6
       Visible = False
-      Width = 160
+      Width = 169
     end
     object cxLabel4: TcxLabel
-      Left = 769
-      Top = 0
+      Left = 422
+      Top = 32
       Caption = #1059#1055' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1077':'
       Visible = False
     end
     object ceInfoMoney: TcxButtonEdit
-      Left = 935
-      Top = 24
+      Left = 814
+      Top = 34
       Properties.Buttons = <
         item
           Default = True
@@ -449,23 +457,23 @@ inherited Report_FoundersForm: TReport_FoundersForm
       Properties.ReadOnly = True
       TabOrder = 8
       Visible = False
-      Width = 160
+      Width = 193
     end
     object cxLabel5: TcxLabel
-      Left = 935
-      Top = 0
+      Left = 689
+      Top = 35
       Caption = #1059#1055' '#1089#1090#1072#1090#1100#1103' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103':'
       Visible = False
     end
     object cxLabel6: TcxLabel
-      Left = 398
-      Top = 1
+      Left = 423
+      Top = 9
       Caption = #1057#1095#1077#1090' '#1085#1072#1079#1074#1072#1085#1080#1077':'
       Visible = False
     end
     object edAccount: TcxButtonEdit
-      Left = 398
-      Top = 24
+      Left = 512
+      Top = 8
       Properties.Buttons = <
         item
           Default = True
@@ -474,7 +482,15 @@ inherited Report_FoundersForm: TReport_FoundersForm
       Properties.ReadOnly = True
       TabOrder = 11
       Visible = False
-      Width = 199
+      Width = 169
+    end
+    object cbisDate: TcxCheckBox
+      Left = 293
+      Top = 15
+      Caption = #1087#1086' '#1076#1072#1090#1072#1084
+      Properties.ReadOnly = False
+      TabOrder = 12
+      Width = 76
     end
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
@@ -910,6 +926,102 @@ inherited Report_FoundersForm: TReport_FoundersForm
           DataType = ftString
         end>
       isShowModal = False
+    end
+    object ExecuteDialog: TExecuteDialog
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1072#1088#1072#1084#1077#1090#1088#1099' '#1086#1090#1095#1077#1090#1072
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1072#1088#1072#1084#1077#1090#1088#1099' '#1086#1090#1095#1077#1090#1072
+      ImageIndex = 35
+      FormName = 'TReport_FoundersDialogForm'
+      FormNameParam.Value = 'TReport_FoundersDialogForm'
+      FormNameParam.DataType = ftString
+      GuiParams = <
+        item
+          Name = 'StartDate'
+          Value = 42005d
+          Component = deStart
+          DataType = ftDateTime
+          ParamType = ptInput
+        end
+        item
+          Name = 'EndDate'
+          Value = 42005d
+          Component = deEnd
+          DataType = ftDateTime
+          ParamType = ptInput
+        end
+        item
+          Name = 'AccountId'
+          Value = ''
+          Component = AccountGuides
+          ComponentItem = 'Key'
+          DataType = ftString
+          ParamType = ptInput
+        end
+        item
+          Name = 'AccountName'
+          Value = ''
+          Component = AccountGuides
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          ParamType = ptInput
+        end
+        item
+          Name = 'InfoMoneyGroupId'
+          Value = ''
+          Component = InfoMoneyGroupGuides
+          ComponentItem = 'Key'
+          ParamType = ptInput
+        end
+        item
+          Name = 'InfoMoneyGroupName'
+          Value = ''
+          Component = InfoMoneyGroupGuides
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          ParamType = ptInput
+        end
+        item
+          Name = 'InfoMoneyDestinationId'
+          Value = ''
+          Component = InfoMoneyDestinationGuides
+          ComponentItem = 'Key'
+          ParamType = ptInput
+        end
+        item
+          Name = 'InfoMoneyDestinationName'
+          Value = ''
+          Component = InfoMoneyDestinationGuides
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          ParamType = ptInput
+        end
+        item
+          Name = 'InfoMoneyId'
+          Value = ''
+          Component = InfoMoneyGuides
+          ComponentItem = 'Key'
+          ParamType = ptInput
+        end
+        item
+          Name = 'InfoMoneyName'
+          Value = ''
+          Component = InfoMoneyGuides
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          ParamType = ptInput
+        end
+        item
+          Name = 'inisDate'
+          Value = Null
+          Component = cbisDate
+          DataType = ftBoolean
+          ParamType = ptInput
+        end>
+      isShowModal = True
+      RefreshDispatcher = RefreshDispatcher
+      OpenBeforeShow = True
     end
     object ReturnInJournal: TdsdOpenForm
       Category = 'DSDLib'
@@ -1821,8 +1933,11 @@ inherited Report_FoundersForm: TReport_FoundersForm
         ParamType = ptInput
       end
       item
+        Name = 'inisDate'
         Value = ''
-        ParamType = ptUnknown
+        Component = cbisDate
+        DataType = ftBoolean
+        ParamType = ptInput
       end>
     Left = 112
     Top = 184
@@ -1837,6 +1952,14 @@ inherited Report_FoundersForm: TReport_FoundersForm
       0)
     inherited Bar: TdxBar
       ItemLinks = <
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbExecuteDialog'
+        end
         item
           Visible = True
           ItemName = 'dxBarStatic'
@@ -1883,6 +2006,10 @@ inherited Report_FoundersForm: TReport_FoundersForm
       Action = dsdPrintRealAction
       Category = 0
       Visible = ivNever
+    end
+    object bbExecuteDialog: TdxBarButton
+      Action = ExecuteDialog
+      Category = 0
     end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
@@ -1952,8 +2079,8 @@ inherited Report_FoundersForm: TReport_FoundersForm
         DataType = ftString
         ParamType = ptInput
       end>
-    Left = 776
-    Top = 53
+    Left = 824
+    Top = 65533
   end
   object InfoMoneyDestinationGuides: TdsdGuides
     KeyField = 'Id'
@@ -1979,8 +2106,8 @@ inherited Report_FoundersForm: TReport_FoundersForm
         DataType = ftString
         ParamType = ptInput
       end>
-    Left = 584
-    Top = 53
+    Left = 536
+    Top = 37
   end
   object InfoMoneyGuides: TdsdGuides
     KeyField = 'Id'
@@ -2003,8 +2130,8 @@ inherited Report_FoundersForm: TReport_FoundersForm
         ComponentItem = 'TextValue'
         DataType = ftString
       end>
-    Left = 440
-    Top = 61
+    Left = 824
+    Top = 29
   end
   object AccountGuides: TdsdGuides
     KeyField = 'Id'
@@ -2029,8 +2156,7 @@ inherited Report_FoundersForm: TReport_FoundersForm
         DataType = ftString
         ParamType = ptInput
       end>
-    Left = 312
-    Top = 48
+    Left = 552
   end
   object spGetDescSets: TdsdStoredProc
     StoredProcName = 'gpGetDescSets'
