@@ -422,8 +422,8 @@ object PriceListGoodsItemForm: TPriceListGoodsItemForm
         DataType = ftString
         ParamType = ptInput
       end>
-    Left = 128
-    Top = 48
+    Left = 144
+    Top = 16
   end
   object GoodsGuides: TdsdGuides
     KeyField = 'Id'

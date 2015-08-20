@@ -47,14 +47,10 @@ type
     GoodsGuides: TdsdGuides;
     FormParams: TdsdFormParams;
     actInsert: TdsdInsertUpdateAction;
-    bbInsert: TdxBarButton;
+    bb: TdxBarButton;
     actUpdate: TdsdInsertUpdateAction;
     dsdSetErased: TdsdUpdateErased;
     spErasedUnErased: TdsdStoredProc;
-    bbUpdate: TdxBarButton;
-    bbSetErased: TdxBarButton;
-    dsdSetUnErased: TdsdUpdateErased;
-    bbSetUnErased: TdxBarButton;
   private
     { Private declarations }
   public
