@@ -14,7 +14,7 @@ uses
   cxGridCustomTableView, cxGridTableView, cxGridDBTableView, cxGrid, cxPC,
   cxCurrencyEdit, DataModul, frxClass, frxDBSet, dsdGuides, cxButtonEdit,
   dxSkinsCore, dxSkinsDefaultPainters, dxSkinscxPCPainter, dxSkinsdxBarPainter,
-  cxImageComboBox;
+  cxImageComboBox, cxCheckBox;
 
 type
   TReport_FoundersForm = class(TAncestorReportForm)
@@ -66,6 +66,10 @@ type
     Name_by: TcxGridDBColumn;
     ItemName_by: TcxGridDBColumn;
     GroupName: TcxGridDBColumn;
+    ExecuteDialog: TExecuteDialog;
+    bbExecuteDialog: TdxBarButton;
+    cbisDate: TcxCheckBox;
+    OperDate: TcxGridDBColumn;
   private
     { Private declarations }
   public

@@ -3,13 +3,14 @@ inherited PriceCorrectiveForm: TPriceCorrectiveForm
   ClientHeight = 542
   ClientWidth = 1042
   ExplicitWidth = 1058
-  ExplicitHeight = 577
+  ExplicitHeight = 580
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 166
     Width = 1042
     Height = 376
+    Properties.ActivePage = cxTabSheetTaxCorrective
     ExplicitTop = 166
     ExplicitWidth = 1042
     ExplicitHeight = 376
@@ -329,6 +330,7 @@ inherited PriceCorrectiveForm: TPriceCorrectiveForm
             PropertiesClassName = 'TcxButtonEditProperties'
             Properties.Buttons = <
               item
+                Action = actTaxJournalChoice
                 Default = True
                 Kind = bkEllipsis
               end>
@@ -738,6 +740,21 @@ inherited PriceCorrectiveForm: TPriceCorrectiveForm
         end>
       RefreshOnTabSetChanges = True
     end
+    inherited actGridToExcel: TdsdGridToExcel
+      Enabled = False
+    end
+    object actUpdateTaxCorrectiveDS: TdsdUpdateDataSet [8]
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = gpUpdateTaxCorrective
+      StoredProcList = <
+        item
+          StoredProc = gpUpdateTaxCorrective
+        end>
+      Caption = 'actUpdateTaxCorrectiveDS'
+      DataSource = TaxCorrectiveDS
+    end
     inherited actPrint: TdsdPrintAction
       StoredProc = spSelectPrint
       StoredProcList = <
@@ -769,7 +786,7 @@ inherited PriceCorrectiveForm: TPriceCorrectiveForm
       ReportNameParam.ComponentItem = 'ReportName'
       ReportNameParam.ParamType = ptInput
     end
-    object mactPrint: TMultiAction [9]
+    object mactPrint: TMultiAction [10]
       Category = 'DSDLib'
       MoveParams = <>
       ActionList = <
@@ -782,6 +799,51 @@ inherited PriceCorrectiveForm: TPriceCorrectiveForm
       Caption = #1053#1072#1082#1083#1072#1076#1085#1072#1103
       Hint = #1053#1072#1082#1083#1072#1076#1085#1072#1103
       ImageIndex = 3
+    end
+    object actTaxJournalChoice: TOpenChoiceForm [11]
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = 'TaxJournalSelectForm'
+      FormName = 'TTaxJournalChoiceForm'
+      FormNameParam.Value = 'TTaxJournalChoiceForm'
+      FormNameParam.DataType = ftString
+      GuiParams = <
+        item
+          Name = 'Key'
+          Value = Null
+          Component = TaxCorrectiveCDS
+          ComponentItem = 'DocumentChildId'
+        end
+        item
+          Name = 'TextValue'
+          Value = Null
+          Component = TaxCorrectiveCDS
+          ComponentItem = 'InvNumberPartner_Child'
+          DataType = ftString
+        end
+        item
+          Name = 'OperDate_Tax'
+          Value = Null
+          Component = TaxCorrectiveCDS
+          ComponentItem = 'OperDate_Child'
+          DataType = ftDateTime
+        end
+        item
+          Name = 'JuridicalId'
+          Value = Null
+          Component = TaxCorrectiveCDS
+          ComponentItem = 'FromId'
+          ParamType = ptInput
+        end
+        item
+          Name = 'PartnerId'
+          Value = Null
+          Component = TaxCorrectiveCDS
+          ComponentItem = 'PartnerId'
+          ParamType = ptInput
+        end>
+      isShowModal = True
     end
     inherited actUnCompleteMovement: TChangeGuidesStatus
       StoredProcList = <
@@ -799,7 +861,7 @@ inherited PriceCorrectiveForm: TPriceCorrectiveForm
         item
         end>
     end
-    object actGoodsKindChoice: TOpenChoiceForm [12]
+    object actGoodsKindChoice: TOpenChoiceForm [14]
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -823,11 +885,10 @@ inherited PriceCorrectiveForm: TPriceCorrectiveForm
         end>
       isShowModal = True
     end
-    object actOpenTaxCorrective: TdsdOpenForm [14]
+    object actOpenTaxCorrective: TdsdOpenForm [16]
       Category = 'DSDLib'
       TabSheet = cxTabSheetTaxCorrective
       MoveParams = <>
-      Enabled = False
       Caption = #1055#1088#1086#1089#1084#1086#1090#1088' <'#1044#1086#1082#1091#1084#1077#1085#1090#1072' '#1082#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1082#1080'>'
       Hint = #1055#1088#1086#1089#1084#1086#1090#1088' <'#1044#1086#1082#1091#1084#1077#1085#1090#1072' '#1082#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1082#1080'>'
       ImageIndex = 1
@@ -1010,6 +1071,61 @@ inherited PriceCorrectiveForm: TPriceCorrectiveForm
       Hint = #1050#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1082#1072' '#1082' '#1085#1072#1083#1086#1075#1086#1074#1086#1081' ('#1087#1088#1086#1076#1072#1074#1077#1094')'
       ImageIndex = 19
     end
+    object actUnCompleteTaxCorrective: TdsdChangeMovementStatus
+      Category = 'DSDLib'
+      TabSheet = cxTabSheetTaxCorrective
+      MoveParams = <>
+      StoredProc = spMovementUnCompleteTaxCorrective
+      StoredProcList = <
+        item
+          StoredProc = spMovementUnCompleteTaxCorrective
+        end
+        item
+          StoredProc = spSelectTaxCorrective
+        end>
+      Caption = #1056#1072#1089#1087#1088#1086#1074#1077#1089#1090#1080' '#1076#1086#1082#1091#1084#1077#1085#1090' <'#1050#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1082#1072' '#1082' '#1085#1072#1083#1086#1075#1086#1074#1086#1081'>'
+      Hint = #1056#1072#1089#1087#1088#1086#1074#1077#1089#1090#1080' '#1076#1086#1082#1091#1084#1077#1085#1090' <'#1050#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1082#1072' '#1082' '#1085#1072#1083#1086#1075#1086#1074#1086#1081'>'
+      ImageIndex = 11
+      Status = mtUncomplete
+      DataSource = TaxCorrectiveDS
+    end
+    object actSetErasedTaxCorrective: TdsdChangeMovementStatus
+      Category = 'DSDLib'
+      TabSheet = cxTabSheetTaxCorrective
+      MoveParams = <>
+      StoredProc = spMovementSetErasedTaxCorrective
+      StoredProcList = <
+        item
+          StoredProc = spMovementSetErasedTaxCorrective
+        end
+        item
+        end
+        item
+        end>
+      Caption = #1059#1076#1072#1083#1080#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090' <'#1050#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1082#1072' '#1082' '#1085#1072#1083#1086#1075#1086#1074#1086#1081'>'
+      Hint = #1059#1076#1072#1083#1080#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090' <'#1050#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1082#1072' '#1082' '#1085#1072#1083#1086#1075#1086#1074#1086#1081'>'
+      ImageIndex = 13
+      Status = mtDelete
+      DataSource = TaxCorrectiveDS
+    end
+    object actCompleteTaxCorrective: TdsdChangeMovementStatus
+      Category = 'DSDLib'
+      TabSheet = cxTabSheetTaxCorrective
+      MoveParams = <>
+      StoredProc = spMovementCompleteTaxCorrective
+      StoredProcList = <
+        item
+          StoredProc = spMovementCompleteTaxCorrective
+        end
+        item
+          StoredProc = spSelectTaxCorrective
+        end>
+      Caption = #1055#1088#1086#1074#1077#1089#1090#1080' '#1076#1086#1082#1091#1084#1077#1085#1090' <'#1050#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1082#1072' '#1082' '#1085#1072#1083#1086#1075#1086#1074#1086#1081'>'
+      Hint = #1055#1088#1086#1074#1077#1089#1090#1080' '#1076#1086#1082#1091#1084#1077#1085#1090' <'#1050#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1082#1072' '#1082' '#1085#1072#1083#1086#1075#1086#1074#1086#1081'>'
+      ImageIndex = 12
+      Status = mtComplete
+      DataSource = TaxCorrectiveDS
+    end
   end
   inherited MasterDS: TDataSource
     Left = 32
@@ -1110,6 +1226,22 @@ inherited PriceCorrectiveForm: TPriceCorrectiveForm
         end
         item
           Visible = True
+          ItemName = 'bbCompleteTaxCorrective'
+        end
+        item
+          Visible = True
+          ItemName = 'bbUnCompleteTaxCorrective'
+        end
+        item
+          Visible = True
+          ItemName = 'bbSetErasedTaxCorrective'
+        end
+        item
+          Visible = True
+          ItemName = 'bbStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbRefresh'
         end
         item
@@ -1186,6 +1318,18 @@ inherited PriceCorrectiveForm: TPriceCorrectiveForm
     end
     object bbOpenTaxCorrective: TdxBarButton
       Action = actOpenTaxCorrective
+      Category = 0
+    end
+    object bbCompleteTaxCorrective: TdxBarButton
+      Action = actCompleteTaxCorrective
+      Category = 0
+    end
+    object bbUnCompleteTaxCorrective: TdxBarButton
+      Action = actUnCompleteTaxCorrective
+      Category = 0
+    end
+    object bbSetErasedTaxCorrective: TdxBarButton
+      Action = actSetErasedTaxCorrective
       Category = 0
     end
   end
@@ -1567,8 +1711,8 @@ inherited PriceCorrectiveForm: TPriceCorrectiveForm
       item
         Control = ceComment
       end>
-    Left = 232
-    Top = 193
+    Left = 216
+    Top = 225
   end
   inherited RefreshAddOn: TRefreshAddOn
     DataSet = ''
@@ -1762,8 +1906,8 @@ inherited PriceCorrectiveForm: TPriceCorrectiveForm
         ParamType = ptInput
       end>
     PackSize = 1
-    Left = 319
-    Top = 208
+    Left = 311
+    Top = 256
   end
   object spGetReportName: TdsdStoredProc
     StoredProcName = 'gpGet_Movement_ReturnIn_ReportName'

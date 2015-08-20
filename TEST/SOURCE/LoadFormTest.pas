@@ -1254,6 +1254,8 @@ begin
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_FoundersForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_FoundersForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_FoundersDialogForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_FoundersDialogForm');
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_GoodsMI_DefrosterForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_GoodsMI_DefrosterForm');

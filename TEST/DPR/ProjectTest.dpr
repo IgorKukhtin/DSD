@@ -713,7 +713,8 @@ uses
   Report_JuridicalCollationDialog in '..\..\Forms\Report\Report_JuridicalCollationDialog.pas' {Report_JuridicalCollationDialogForm: TParentForm},
   Report_GoodsMI_OrderExternalDialog in '..\..\Forms\Report\Report_GoodsMI_OrderExternalDialog.pas' {Report_GoodsMI_OrderExternalDialogForm: TParentForm},
   Report_GoodsMI_ProductionDialog in '..\..\Forms\Report\Report_GoodsMI_ProductionDialog.pas' {Report_GoodsMI_ProductionDialogForm: TParentForm},
-  Report_GoodsMI_PackageDialog in '..\..\Forms\Report\Report_GoodsMI_PackageDialog.pas' {Report_GoodsMI_PackageDialogForm: TParentForm};
+  Report_GoodsMI_PackageDialog in '..\..\Forms\Report\Report_GoodsMI_PackageDialog.pas' {Report_GoodsMI_PackageDialogForm: TParentForm},
+  Report_FoundersDialog in '..\..\Forms\Report\Report_FoundersDialog.pas' {Report_FoundersDialogForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}
