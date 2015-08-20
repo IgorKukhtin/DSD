@@ -279,15 +279,25 @@ BEGIN
                               OR tmp_Unit_To.UnitId > 0)
                           GROUP BY MovementItem.ObjectId
                                  , MILinkObject_GoodsKind.ObjectId
-                         /*UNION 
-                          SELECT
-                          FROM _tmpUnit
-                              INNER JOIN MovementItemContainer AS MIContainer
-                                                  ON MIContainer.WhereObjectId_analyzer = _tmpUnit.UnitId
-                                                 AND MIContainer.AnalyzerId = tmpAnalyzer.AnalyzerId
-                                                 AND MIContainer.OperDate BETWEEN inStartDate AND inEndDate
-                     LEFT JOIN _tmpGoods ON _tmpGoods.GoodsId = MIContainer.ObjectId_Analyzer*/
+                         UNION ALL
+                          SELECT MIContainer.ObjectId_Analyzer    AS GoodsId
+                               , MIContainer.ObjectIntId_Analyzer AS GoodsKindId
+                               , 0 AS Amount_Count
+                               , 0 AS Amount_Summ
+                               , SUM (CASE WHEN MIContainer.isActive = FALSE THEN -1 * MIContainer.Amount ELSE 0 END) AS Amount_SummIn
 
+                               , 0 AS Amount_CountRet
+                               , 0 AS Amount_SummRet
+                               , SUM (CASE WHEN MIContainer.isActive = TRUE THEN MIContainer.Amount ELSE 0 END) AS Amount_SummInRet
+                          FROM _tmpUnit
+                               INNER JOIN MovementItemContainer AS MIContainer
+                                                                ON MIContainer.WhereObjectId_analyzer = _tmpUnit.UnitId
+                                                               AND MIContainer.AnalyzerId = zc_Enum_AnalyzerId_SendSumm_in()
+                                                               AND MIContainer.OperDate BETWEEN inStartDate AND inEndDate
+                               LEFT JOIN _tmpGoods ON _tmpGoods.GoodsId = MIContainer.ObjectId_Analyzer
+                          WHERE (_tmpGoods.GoodsId > 0 OR COALESCE (inGoodsGroupId, 0) = 0)
+                          GROUP BY MIContainer.ObjectId_Analyzer
+                                 , MIContainer.ObjectIntId_Analyzer
                          )
         , tmpReceipt AS (SELECT tmp.GoodsId, tmp.GoodsKindId, MAX (ObjectLink_Receipt_Goods.ObjectId) AS ReceiptId
                          FROM (SELECT tmpMIContainer.GoodsId, tmpMIContainer.GoodsKindId FROM tmpMIContainer GROUP BY tmpMIContainer.GoodsId, tmpMIContainer.GoodsKindId

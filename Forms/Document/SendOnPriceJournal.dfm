@@ -11,17 +11,17 @@ inherited SendOnPriceJournalForm: TSendOnPriceJournalForm
     Width = 1020
     Height = 478
     TabOrder = 3
-    ExplicitWidth = 1110
+    ExplicitWidth = 1020
     ExplicitHeight = 478
     ClientRectBottom = 478
     ClientRectRight = 1020
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 1110
+      ExplicitWidth = 1020
       ExplicitHeight = 478
       inherited cxGrid: TcxGrid
         Width = 1020
         Height = 478
-        ExplicitWidth = 1110
+        ExplicitWidth = 1020
         ExplicitHeight = 478
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Filter.Options = [fcoCaseInsensitive, fcoShowOperatorDescription]
@@ -357,7 +357,7 @@ inherited SendOnPriceJournalForm: TSendOnPriceJournalForm
   end
   inherited Panel: TPanel
     Width = 1020
-    ExplicitWidth = 1110
+    ExplicitWidth = 1020
     inherited deStart: TcxDateEdit
       EditValue = 42005d
     end
@@ -384,6 +384,29 @@ inherited SendOnPriceJournalForm: TSendOnPriceJournalForm
     Left = 31
     inherited actInsert: TdsdInsertUpdateAction
       FormName = 'TSendOnPriceForm'
+      GuiParams = <
+        item
+          Name = 'Id'
+          Value = Null
+        end
+        item
+          Name = 'ShowAll'
+          Value = True
+          DataType = ftBoolean
+        end
+        item
+          Name = 'inOperDate'
+          Value = 41640d
+          Component = deEnd
+          DataType = ftDateTime
+        end
+        item
+          Name = 'inChangePercentAmount'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'inChangePercentAmount'
+          DataType = ftFloat
+        end>
     end
     inherited actUpdate: TdsdInsertUpdateAction
       FormName = 'TSendOnPriceForm'

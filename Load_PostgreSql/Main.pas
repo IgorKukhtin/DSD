@@ -8201,6 +8201,7 @@ begin
         Add('     left outer join dba.PriceList_byHistory on PriceList_byHistory.Id=PriceListItems_byHistory.PriceListID');
         Add('     left outer join dba.GoodsProperty on GoodsProperty.Id=PriceListItems_byHistory.GoodsPropertyId');
         Add('where ((PriceListItems_byHistory.StartDate<>zc_DateStart() or PriceListItems_byHistory.NewPrice<>0))');
+        Add('    and PriceList_byHistory.Id_Postgres not in (18885 , 18887)'); // ÏÐÀÉÑ - ÔÀÊÒ ñ/ñ (ÑÛÐÜÅ) ãîñò + ÏÐÀÉÑ - ÔÀÊÒ êàëüêóëÿöèè (ÑÛÐÜÅ)
         if StrToInt(SessionIdEdit.Text) >= 1000
         then // íè÷åãî íå äåëàåì
             else if StrToInt(SessionIdEdit.Text) >= 10

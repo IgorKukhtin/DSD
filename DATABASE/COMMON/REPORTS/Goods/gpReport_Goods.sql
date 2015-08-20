@@ -41,7 +41,7 @@ BEGIN
      vbUserId:= lpGetUserBySession (inSession);
 
      -- !!!определяется!!!
-     vbIsBranch:= 1 = 1 OR EXISTS (SELECT BranchId FROM Object_RoleAccessKeyGuide_View WHERE UserId = vbUserId AND BranchId <> 0 GROUP BY BranchId);
+     vbIsBranch:= EXISTS (SELECT BranchId FROM Object_RoleAccessKeyGuide_View WHERE UserId = vbUserId AND BranchId <> 0 GROUP BY BranchId);
 
 
     IF inGoodsId = 0 AND inGoodsGroupId <> 0
@@ -158,6 +158,8 @@ BEGIN
                                FROM tmpContainer_Count
                                     INNER JOIN Container ON Container.ParentId = tmpContainer_Count.ContainerId
                                                         AND Container.DescId = zc_Container_Summ()
+                                    LEFT JOIN Object_Account_View ON Object_Account_View.AccountId = Container.ObjectId
+                               WHERE Object_Account_View.AccountDirectionId <> zc_Enum_AccountDirection_60200() OR vbIsBranch = FALSE
                               )
                 , tmpMI_Summ AS (SELECT tmpContainer_Summ.ContainerId_Count AS ContainerId
                                       , tmpContainer_Summ.LocationId
@@ -356,8 +358,18 @@ BEGIN
               , SUM (tmpMIContainer_all.AmountOut)   AS AmountOut
               , SUM (tmpMIContainer_all.SummStart)   AS SummStart
               , SUM (tmpMIContainer_all.SummEnd)     AS SummEnd
-              , SUM (tmpMIContainer_all.SummIn)      AS SummIn
-              , SUM (tmpMIContainer_all.SummOut)     AS SummOut
+              , CASE WHEN SUM (tmpMIContainer_all.AmountIn) <> 0 AND SUM (tmpMIContainer_all.AmountOut) <> 0
+                          THEN SUM (tmpMIContainer_all.SummIn)
+                     WHEN SUM (tmpMIContainer_all.AmountIn) > 0 AND SUM (tmpMIContainer_all.AmountOut) = 0
+                          THEN SUM (tmpMIContainer_all.SummIn - tmpMIContainer_all.SummOut)
+                     ELSE 0
+                END AS SummIn
+              , CASE WHEN SUM (tmpMIContainer_all.AmountIn) <> 0 AND SUM (tmpMIContainer_all.AmountOut) <> 0
+                          THEN SUM (tmpMIContainer_all.SummOut)
+                     WHEN SUM (tmpMIContainer_all.AmountOut) > 0 AND SUM (tmpMIContainer_all.AmountIn) = 0
+                          THEN SUM (tmpMIContainer_all.SummOut - tmpMIContainer_all.SummIn)
+                     ELSE 0
+                END AS SummOut
               , SUM (tmpMIContainer_all.SummPartnerIn)  AS SummPartnerIn
               , SUM (tmpMIContainer_all.SummPartnerOut) AS SummPartnerOut
         FROM (-- 1.1. Остатки кол-во
