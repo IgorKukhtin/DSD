@@ -715,7 +715,10 @@ uses
   Report_GoodsMI_ProductionDialog in '..\..\Forms\Report\Report_GoodsMI_ProductionDialog.pas' {Report_GoodsMI_ProductionDialogForm: TParentForm},
   Report_GoodsMI_PackageDialog in '..\..\Forms\Report\Report_GoodsMI_PackageDialog.pas' {Report_GoodsMI_PackageDialogForm: TParentForm},
   Report_FoundersDialog in '..\..\Forms\Report\Report_FoundersDialog.pas' {Report_FoundersDialogForm: TParentForm},
-  PriceListGoodsItemEdit in '..\..\Forms\Guides\PriceListGoodsItemEdit.pas' {PriceListGoodsItemEditForm: TParentForm};
+  PriceListGoodsItemEdit in '..\..\Forms\Guides\PriceListGoodsItemEdit.pas' {PriceListGoodsItemEditForm: TParentForm},
+  Report_ReceiptProductionAnalyzeDialog in '..\..\Forms\Report\Report_ReceiptProductionAnalyzeDialog.pas' {Report_ReceiptProductionAnalyzeDialogForm: TParentForm},
+  Report_ReceiptProductionOutAnalyzeDialog in '..\..\Forms\Report\Report_ReceiptProductionOutAnalyzeDialog.pas' {Report_ReceiptProductionOutAnalyzeDialogForm: TParentForm},
+  Report_ReceiptSaleAnalyzeDialog in '..\..\Forms\Report\Report_ReceiptSaleAnalyzeDialog.pas' {Report_ReceiptSaleAnalyzeDialogForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}

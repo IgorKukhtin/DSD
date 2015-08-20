@@ -110,6 +110,8 @@ type
     bbPrint_DiffPriceIn: TdxBarButton;
     SummCost4_sale: TcxGridDBColumn;
     Price4_cost: TcxGridDBColumn;
+    ExecuteDialog: TExecuteDialog;
+    bbExecuteDialog: TdxBarButton;
   private
     { Private declarations }
   public

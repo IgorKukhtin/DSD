@@ -102,6 +102,8 @@ type
     OperCount_ReWork: TcxGridDBColumn;
     LossGP_real: TcxGridDBColumn;
     LossGP_plan: TcxGridDBColumn;
+    ExecuteDialog: TExecuteDialog;
+    bbExecuteDialog: TdxBarButton;
   private
     { Private declarations }
   public
