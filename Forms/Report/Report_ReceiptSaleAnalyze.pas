@@ -101,6 +101,11 @@ type
     bbPrint_CalcPrice: TdxBarButton;
     actPrint_DiffPrice: TdsdPrintAction;
     bbPrint_DiffPrice: TdxBarButton;
+    SummCost1_sale: TcxGridDBColumn;
+    SummCost2_sale: TcxGridDBColumn;
+    SummCost3_sale: TcxGridDBColumn;
+    actPrint_Calc_PriceList: TdsdPrintAction;
+    dxBarButton1: TdxBarButton;
   private
     { Private declarations }
   public

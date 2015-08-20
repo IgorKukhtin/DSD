@@ -95,6 +95,21 @@ inherited Report_ReceiptSaleAnalyzeForm: TReport_ReceiptSaleAnalyzeForm
               Format = ',0.####'
               Kind = skSum
               Column = OperCount_sh_sale
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = SummCost1_sale
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = SummCost2_sale
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = SummCost3_sale
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -166,6 +181,21 @@ inherited Report_ReceiptSaleAnalyzeForm: TReport_ReceiptSaleAnalyzeForm
               Format = ',0.####'
               Kind = skSum
               Column = OperCount_sh_sale
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = SummCost1_sale
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = SummCost2_sale
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = SummCost3_sale
             end>
           OptionsData.CancelOnExit = True
           OptionsData.Deleting = False
@@ -417,6 +447,36 @@ inherited Report_ReceiptSaleAnalyzeForm: TReport_ReceiptSaleAnalyzeForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 55
+          end
+          object SummCost1_sale: TcxGridDBColumn
+            Caption = #1047#1072#1090#1088#1072#1090#1099' '#1055#1088#1072#1081#1089'1 '#1088#1077#1072#1083#1080#1079'. ('#1088#1072#1089#1095'.)'
+            DataBinding.FieldName = 'SummCost1_sale'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 80
+          end
+          object SummCost2_sale: TcxGridDBColumn
+            Caption = #1047#1072#1090#1088#1072#1090#1099' '#1055#1088#1072#1081#1089'2 '#1088#1077#1072#1083#1080#1079'. ('#1088#1072#1089#1095'.)'
+            DataBinding.FieldName = 'SummCost2_sale'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 80
+          end
+          object SummCost3_sale: TcxGridDBColumn
+            Caption = #1047#1072#1090#1088#1072#1090#1099' '#1055#1088#1072#1081#1089'3 '#1088#1077#1072#1083#1080#1079'. ('#1088#1072#1089#1095'.)'
+            DataBinding.FieldName = 'SummCost3_sale'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 80
           end
           object SummPrice1_sale: TcxGridDBColumn
             Caption = #1057#1091#1084#1084#1072' '#1055#1088#1072#1081#1089'1 '#1088#1077#1072#1083#1080#1079'. ('#1088#1072#1089#1095'.)'
@@ -1526,6 +1586,84 @@ inherited Report_ReceiptSaleAnalyzeForm: TReport_ReceiptSaleAnalyzeForm
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
     end
+    object actPrint_Calc_PriceList: TdsdPrintAction
+      Category = 'DSDLib'
+      MoveParams = <
+        item
+          FromParam.Name = 'id'
+          FromParam.Value = Null
+          FromParam.ComponentItem = 'id'
+          ToParam.Value = '0'
+          ToParam.ComponentItem = 'Id'
+          ToParam.ParamType = ptInputOutput
+        end
+        item
+          FromParam.Value = 42186d
+          FromParam.Component = deStart
+          FromParam.DataType = ftDateTime
+          ToParam.Name = 'StartDate'
+          ToParam.Value = Null
+          ToParam.DataType = ftDateTime
+          ToParam.ParamType = ptInputOutput
+        end
+        item
+          FromParam.Value = 42186d
+          FromParam.Component = deEnd
+          FromParam.DataType = ftDateTime
+          ToParam.Name = 'EndDate'
+          ToParam.Value = Null
+          ToParam.DataType = ftDateTime
+          ToParam.ParamType = ptInputOutput
+        end>
+      StoredProcList = <>
+      Caption = 
+        #1055#1083#1072#1085#1086#1074#1072#1103' '#1055#1088#1080#1073#1099#1083#1100' ('#1088#1077#1072#1083#1080#1079'. '#1055#1088#1072#1081#1089' + '#1094#1077#1085#1072' c/c '#1092#1072#1082#1090' + '#1088#1072#1089#1093#1086#1076#1099' '#1087#1086' '#1087#1088#1072 +
+        #1081#1089#1091'2)'
+      Hint = 
+        #1055#1083#1072#1085#1086#1074#1072#1103' '#1055#1088#1080#1073#1099#1083#1100' ('#1088#1077#1072#1083#1080#1079'. '#1055#1088#1072#1081#1089' + '#1094#1077#1085#1072' c/c '#1092#1072#1082#1090' + '#1088#1072#1089#1093#1086#1076#1099' '#1087#1086' '#1087#1088#1072 +
+        #1081#1089#1091'2)'
+      ImageIndex = 22
+      DataSets = <
+        item
+          UserName = 'frxDBDMaster'
+          IndexFieldNames = 'GoodsGroupNameFull;GoodsName;GoodsKindName'
+          GridView = cxGridDBTableView
+        end>
+      Params = <
+        item
+          Name = 'StartDate'
+          Value = 42186d
+          Component = deStart
+          DataType = ftDateTime
+          ParamType = ptInput
+        end
+        item
+          Name = 'EndDate'
+          Value = 42186d
+          Component = deEnd
+          DataType = ftDateTime
+          ParamType = ptInput
+        end
+        item
+          Name = 'GoodsGroupName'
+          Value = ''
+          Component = GoodsGroupGuides
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          ParamType = ptInput
+        end
+        item
+          Name = 'isGoodsKind'
+          Value = 'False'
+          Component = cbGoodsKind
+          DataType = ftBoolean
+          ParamType = ptInput
+        end>
+      ReportName = #1055#1083#1072#1085#1086#1074#1072#1103' '#1055#1088#1080#1073#1099#1083#1100' ('#1060#1072#1082#1090' '#1089#1077#1073#1077#1089#1090#1086#1080#1084#1086#1089#1090#1100' '#1080' '#1088#1072#1089#1093#1086#1076#1099' '#1080' '#1087#1088#1072#1081#1089')'
+      ReportNameParam.Value = #1055#1083#1072#1085#1086#1074#1072#1103' '#1055#1088#1080#1073#1099#1083#1100' ('#1060#1072#1082#1090' '#1089#1077#1073#1077#1089#1090#1086#1080#1084#1086#1089#1090#1100' '#1080' '#1088#1072#1089#1093#1086#1076#1099' '#1080' '#1087#1088#1072#1081#1089')'
+      ReportNameParam.DataType = ftString
+      ReportNameParam.ParamType = ptInput
+    end
     object actPrint_Calc: TdsdPrintAction
       Category = 'DSDLib'
       MoveParams = <
@@ -1556,8 +1694,12 @@ inherited Report_ReceiptSaleAnalyzeForm: TReport_ReceiptSaleAnalyzeForm
           ToParam.ParamType = ptInputOutput
         end>
       StoredProcList = <>
-      Caption = #1055#1083#1072#1085#1086#1074#1072#1103' '#1055#1088#1080#1073#1099#1083#1100' ('#1094#1077#1085#1072' c/c '#1092#1072#1082#1090' + '#1088#1072#1089#1093#1086#1076#1099' '#1087#1086' '#1087#1088#1072#1081#1089#1091'2)'
-      Hint = #1055#1083#1072#1085#1086#1074#1072#1103' '#1055#1088#1080#1073#1099#1083#1100' ('#1094#1077#1085#1072' c/c '#1092#1072#1082#1090' + '#1088#1072#1089#1093#1086#1076#1099' '#1087#1086' '#1087#1088#1072#1081#1089#1091'2)'
+      Caption = 
+        #1055#1083#1072#1085#1086#1074#1072#1103' '#1055#1088#1080#1073#1099#1083#1100' ('#1088#1077#1072#1083#1080#1079'. '#1060#1072#1082#1090' + '#1094#1077#1085#1072' c/c '#1092#1072#1082#1090' + '#1088#1072#1089#1093#1086#1076#1099' '#1087#1086' '#1087#1088#1072#1081 +
+        #1089#1091'2)'
+      Hint = 
+        #1055#1083#1072#1085#1086#1074#1072#1103' '#1055#1088#1080#1073#1099#1083#1100' ('#1088#1077#1072#1083#1080#1079'. '#1060#1072#1082#1090' + '#1094#1077#1085#1072' c/c '#1092#1072#1082#1090' + '#1088#1072#1089#1093#1086#1076#1099' '#1087#1086' '#1087#1088#1072#1081 +
+        #1089#1091'2)'
       ImageIndex = 18
       DataSets = <
         item
@@ -1888,6 +2030,14 @@ inherited Report_ReceiptSaleAnalyzeForm: TReport_ReceiptSaleAnalyzeForm
         end
         item
           Visible = True
+          ItemName = 'dxBarButton1'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbPrint_Calc'
         end
         item
@@ -1933,6 +2083,10 @@ inherited Report_ReceiptSaleAnalyzeForm: TReport_ReceiptSaleAnalyzeForm
       Hint = 'bbGoodsKind'
       Visible = ivAlways
       Control = cbGoodsKind
+    end
+    object dxBarButton1: TdxBarButton
+      Action = actPrint_Calc_PriceList
+      Category = 0
     end
     object bbPrint_Calc: TdxBarButton
       Action = actPrint_Calc
