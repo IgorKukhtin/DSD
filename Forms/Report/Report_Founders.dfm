@@ -4,7 +4,7 @@ inherited Report_FoundersForm: TReport_FoundersForm
   ClientWidth = 1103
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   ExplicitWidth = 1119
-  ExplicitHeight = 593
+  ExplicitHeight = 590
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -12,19 +12,19 @@ inherited Report_FoundersForm: TReport_FoundersForm
     Width = 1103
     Height = 480
     TabOrder = 3
-    ExplicitTop = 91
+    ExplicitTop = 75
     ExplicitWidth = 1103
-    ExplicitHeight = 464
+    ExplicitHeight = 480
     ClientRectBottom = 480
     ClientRectRight = 1103
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 1103
-      ExplicitHeight = 464
+      ExplicitHeight = 480
       inherited cxGrid: TcxGrid
         Width = 1103
         Height = 480
         ExplicitWidth = 1103
-        ExplicitHeight = 464
+        ExplicitHeight = 480
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -504,6 +504,11 @@ inherited Report_FoundersForm: TReport_FoundersForm
         Properties.Strings = (
           'Key'
           'TextValue')
+      end
+      item
+        Component = cbisDate
+        Properties.Strings = (
+          'Checked')
       end
       item
         Component = deEnd

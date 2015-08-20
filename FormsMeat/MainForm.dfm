@@ -3296,7 +3296,7 @@ inherited MainForm: TMainForm
     object actOrderInternalBasis: TdsdOpenForm
       Category = #1055#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1086
       MoveParams = <>
-      Caption = #1047#1072#1103#1074#1082#1072' '#1087#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1077#1085#1085#1072#1103' ('#1057#1099#1088#1100#1077')'
+      Caption = #1047#1072#1103#1074#1082#1072' '#1089#1099#1088#1100#1103' ('#1062#1045#1061' '#1082#1086#1083#1073#1072#1089#1085#1099#1081')'
       Hint = #1047#1072#1103#1074#1082#1072' '#1087#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1077#1085#1085#1072#1103' ('#1057#1099#1088#1100#1077')'
       FormName = 'TOrderInternalBasisJournalForm'
       FormNameParam.Value = 'TOrderInternalBasisJournalForm'
@@ -3304,7 +3304,7 @@ inherited MainForm: TMainForm
       GuiParams = <
         item
           Name = 'inFromId'
-          Value = '8446'
+          Value = '8447'
         end
         item
           Name = 'inToid'
@@ -3326,7 +3326,7 @@ inherited MainForm: TMainForm
     object actOrderInternalBasisDelik: TdsdOpenForm
       Category = #1055#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1086
       MoveParams = <>
-      Caption = #1047#1072#1103#1074#1082#1072' '#1087#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1077#1085#1085#1072#1103' ('#1044#1077#1083#1080#1082#1072#1090#1077#1089#1099')'
+      Caption = #1047#1072#1103#1074#1082#1072' '#1089#1099#1088#1100#1103' ('#1062#1077#1093' '#1076#1077#1083#1080#1082#1072#1090#1077#1089#1086#1074')'
       Hint = #1047#1072#1103#1074#1082#1072' '#1087#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1077#1085#1085#1072#1103' ('#1044#1077#1083#1080#1082#1072#1090#1077#1089#1099')'
       FormName = 'TOrderInternalBasisJournalForm'
       FormNameParam.Value = 'TOrderInternalBasisJournalForm'
@@ -3511,10 +3511,10 @@ inherited MainForm: TMainForm
       object miOrderInternalPack: TMenuItem
         Action = actOrderInternalPack
       end
-      object bbOrderInternalBasis: TMenuItem
+      object miOrderInternalBasis: TMenuItem
         Action = actOrderInternalBasis
       end
-      object N76: TMenuItem
+      object miOrderInternalBasisDelik: TMenuItem
         Action = actOrderInternalBasisDelik
       end
       object miOrderType: TMenuItem

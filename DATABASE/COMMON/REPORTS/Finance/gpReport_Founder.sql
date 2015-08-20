@@ -11,7 +11,7 @@ CREATE OR REPLACE FUNCTION gpReport_Founder(
     IN inInfoMoneyId      Integer,    -- Управленческая статья
     IN inInfoMoneyGroupId Integer,    -- Группа управленческих статей
     IN inInfoMoneyDestinationId   Integer,    --
-    IN inisDate           Boolean,    -- по датам
+    IN inIsDate           Boolean,    -- по датам
     IN inSession          TVarChar    -- сессия пользователя
 )
 RETURNS TABLE (ContainerId Integer, OperDate TDatetime
@@ -65,7 +65,7 @@ BEGIN
 
      SELECT
         Operation.ContainerId,
-        Operation.OperDate,
+        CASE WHEN Operation.OperDate = zc_DateStart() THEN NULL ELSE Operation.OperDate END :: TDateTime AS OperDate,
         CASE WHEN Operation.ContainerId > 0 THEN 1          WHEN Operation.DebetSumm > 0 THEN 2           WHEN Operation.KreditSumm > 0 THEN 3              ELSE -1 END :: Integer AS GroupId,
         CASE WHEN Operation.ContainerId > 0 THEN '1.Сальдо' WHEN Operation.DebetSumm > 0 THEN '2.Расчеты' WHEN Operation.KreditSumm > 0 THEN '3.Начисления' ELSE '' END :: TVarChar AS GroupName,
         Object_Founder.ObjectCode                                                                   AS FounderCode,
@@ -139,7 +139,7 @@ BEGIN
                     , MILO_MoneyPlace.ObjectId                  AS MoneyPlaceId
                     , MILO_InfoMoney.ObjectId                   AS InfoMoneyId
                     , COALESCE (MIString_Comment.ValueData, '') AS Comment
-                    , CASE WHEN inisDate = TRUE THEN MIContainer.OperDate ELSE zc_DateStart() END :: TDatetime AS OperDate
+                    , CASE WHEN inIsDate = TRUE THEN MIContainer.OperDate ELSE zc_DateStart() END :: TDatetime AS OperDate
                FROM tmpContainer
                     LEFT JOIN MovementItemContainer AS MIContainer
                                                     ON MIContainer.ContainerId = tmpContainer.Id
@@ -160,7 +160,7 @@ BEGIN
                       , MILO_MoneyPlace.ObjectId
                       , MILO_InfoMoney.ObjectId
                       , MIString_Comment.ValueData
-                      , CASE WHEN inisDate = TRUE THEN MIContainer.OperDate ELSE zc_DateStart() END :: TDatetime
+                      , CASE WHEN inIsDate = TRUE THEN MIContainer.OperDate ELSE zc_DateStart() END :: TDatetime
              ) AS Operation_all
           GROUP BY Operation_all.ContainerId, Operation_all.AccountId, Operation_all.FounderId
                  , Operation_all.ObjectId, Operation_all.MoneyPlaceId, Operation_all.InfoMoneyId, Operation_all.Comment
@@ -187,10 +187,10 @@ ALTER FUNCTION gpReport_Founder (TDateTime, TDateTime, Integer, Integer, Integer
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
- 19.08.15         * add inisDate
+ 19.08.15         * add inIsDate
  27.09.14                                        *
  10.09.14                                                        *
 */
 
 -- тест
--- SELECT * FROM gpReport_Founder (inStartDate:= '01.08.2014', inEndDate:= '05.08.2014', inAccountId:= 0, inInfoMoneyId:= 0, inInfoMoneyGroupId:= 0, inInfoMoneyDestinationId:= 0, inSession:= '2');
+-- SELECT * FROM gpReport_Founder (inStartDate:= '01.08.2014', inEndDate:= '05.08.2014', inAccountId:= 0, inInfoMoneyId:= 0, inInfoMoneyGroupId:= 0, inInfoMoneyDestinationId:= 0, inIsDate:= FALSE, inSession:= '2');
