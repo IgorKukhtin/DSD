@@ -105,7 +105,11 @@ type
     SummCost2_sale: TcxGridDBColumn;
     SummCost3_sale: TcxGridDBColumn;
     actPrint_Calc_PriceList: TdsdPrintAction;
-    dxBarButton1: TdxBarButton;
+    bbPrint_Calc_PriceList: TdxBarButton;
+    actPrint_DiffPriceIn: TdsdPrintAction;
+    bbPrint_DiffPriceIn: TdxBarButton;
+    SummCost4_sale: TcxGridDBColumn;
+    Price4_cost: TcxGridDBColumn;
   private
     { Private declarations }
   public
