@@ -25,6 +25,7 @@ object PriceListGoodsItemForm: TPriceListGoodsItemForm
     TabOrder = 0
     LookAndFeel.NativeStyle = True
     LookAndFeel.SkinName = 'UserSkin'
+    ExplicitTop = 62
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -39,6 +40,7 @@ object PriceListGoodsItemForm: TPriceListGoodsItemForm
       OptionsData.DeletingConfirmation = False
       OptionsData.Editing = False
       OptionsData.Inserting = False
+      OptionsSelection.InvertSelect = False
       OptionsView.ColumnAutoWidth = True
       OptionsView.GroupByBox = False
       OptionsView.HeaderHeight = 40
@@ -119,8 +121,8 @@ object PriceListGoodsItemForm: TPriceListGoodsItemForm
   object ClientDataSet: TClientDataSet
     Aggregates = <>
     Params = <>
-    Left = 24
-    Top = 144
+    Left = 32
+    Top = 160
   end
   object cxPropertiesStore: TcxPropertiesStore
     Components = <
@@ -134,8 +136,8 @@ object PriceListGoodsItemForm: TPriceListGoodsItemForm
       end>
     StorageName = 'cxPropertiesStore'
     StorageType = stStream
-    Left = 392
-    Top = 128
+    Left = 240
+    Top = 152
   end
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
@@ -154,8 +156,8 @@ object PriceListGoodsItemForm: TPriceListGoodsItemForm
     PopupMenuLinks = <>
     ShowShortCutInHint = True
     UseSystemFont = True
-    Left = 224
-    Top = 128
+    Left = 144
+    Top = 112
     DockControlHeights = (
       0
       0
@@ -253,8 +255,8 @@ object PriceListGoodsItemForm: TPriceListGoodsItemForm
   end
   object ActionList: TActionList
     Images = dmMain.ImageList
-    Left = 304
-    Top = 112
+    Left = 224
+    Top = 200
     object actRefresh: TdsdDataSetRefresh
       Category = 'DSDLib'
       MoveParams = <>
@@ -291,8 +293,34 @@ object PriceListGoodsItemForm: TPriceListGoodsItemForm
         item
           Name = 'Id'
           Value = Null
-          Component = ClientDataSet
-          ComponentItem = 'Id'
+        end
+        item
+          Name = 'GoodsId'
+          Value = Null
+          Component = GoodsGuides
+          ComponentItem = 'Key'
+          ParamType = ptInput
+        end
+        item
+          Name = 'GoodsName'
+          Value = Null
+          Component = GoodsGuides
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          ParamType = ptInput
+        end
+        item
+          Name = 'StartDate'
+          Value = '01.09.2015'
+          DataType = ftDateTime
+          ParamType = ptInput
+        end
+        item
+          Name = 'PriceListId'
+          Value = Null
+          Component = PriceListGuides
+          ComponentItem = 'Key'
+          ParamType = ptInput
         end>
       isShowModal = True
       DataSource = DataSource
@@ -315,6 +343,43 @@ object PriceListGoodsItemForm: TPriceListGoodsItemForm
           Value = Null
           Component = ClientDataSet
           ComponentItem = 'Id'
+          ParamType = ptInput
+        end
+        item
+          Name = 'GoodsId'
+          Value = Null
+          Component = GoodsGuides
+          ComponentItem = 'Key'
+          ParamType = ptInput
+        end
+        item
+          Name = 'GoodsName'
+          Value = Null
+          Component = GoodsGuides
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          ParamType = ptInput
+        end
+        item
+          Name = 'PriceListId'
+          Component = PriceListGuides
+          ComponentItem = 'Key'
+          ParamType = ptInput
+        end
+        item
+          Name = 'StartDate'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'StartDate'
+          DataType = ftDateTime
+          ParamType = ptInput
+        end
+        item
+          Name = 'EndDate'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'EndDate'
+          DataType = ftDateTime
           ParamType = ptInput
         end>
       isShowModal = False
@@ -378,8 +443,8 @@ object PriceListGoodsItemForm: TPriceListGoodsItemForm
         ParamType = ptInput
       end>
     PackSize = 1
-    Left = 144
-    Top = 104
+    Left = 24
+    Top = 216
   end
   object dsdDBViewAddOn: TdsdDBViewAddOn
     ErasedFieldName = 'isErased'
@@ -392,12 +457,12 @@ object PriceListGoodsItemForm: TPriceListGoodsItemForm
     ColumnAddOnList = <>
     ColumnEnterList = <>
     SummaryItemList = <>
-    Left = 184
-    Top = 240
+    Left = 336
+    Top = 168
   end
   object dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
-    Left = 288
-    Top = 200
+    Left = 112
+    Top = 240
   end
   object PriceListGuides: TdsdGuides
     KeyField = 'Id'
@@ -458,7 +523,7 @@ object PriceListGoodsItemForm: TPriceListGoodsItemForm
         Value = ''
         Component = PriceListGuides
         ComponentItem = 'Key'
-        ParamType = ptInput
+        ParamType = ptInputOutput
       end
       item
         Name = 'PriceListName'
@@ -499,7 +564,7 @@ object PriceListGoodsItemForm: TPriceListGoodsItemForm
         ParamType = ptInput
       end>
     PackSize = 1
-    Left = 400
-    Top = 192
+    Left = 344
+    Top = 240
   end
 end

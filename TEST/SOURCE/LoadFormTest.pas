@@ -1293,18 +1293,24 @@ procedure TLoadFormTest.LoadReportProductionAnalyzeFormTest;
 begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_ReceiptProductionAnalyzeForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_ReceiptProductionAnalyzeForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_ReceiptProductionAnalyzeDialogForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_ReceiptProductionAnalyzeDialogForm');
 end;
 
 procedure TLoadFormTest.LoadReportSaleAnalyzeFormTest;
 begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_ReceiptSaleAnalyzeForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_ReceiptSaleAnalyzeForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_ReceiptSaleAnalyzeDialogForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_ReceiptSaleAnalyzeDialogForm');
 end;
 
 procedure TLoadFormTest.LoadReportProductionOutAnalyzeFormTest;
 begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_ReceiptProductionOutAnalyzeForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_ReceiptProductionOutAnalyzeForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_ReceiptProductionOutAnalyzeDialogForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_ReceiptProductionOutAnalyzeDialogForm');
 end;
 
 procedure TLoadFormTest.LoadUnionFormTest;

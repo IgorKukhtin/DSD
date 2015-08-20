@@ -2213,6 +2213,18 @@
 				<Form>PriceListGoodsItemEditForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
+			<DCCReference Include="..\..\Forms\Report\Report_ReceiptProductionAnalyzeDialog.pas">
+				<Form>Report_ReceiptProductionAnalyzeDialogForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Report\Report_ReceiptProductionOutAnalyzeDialog.pas">
+				<Form>Report_ReceiptProductionOutAnalyzeDialogForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Report\Report_ReceiptSaleAnalyzeDialog.pas">
+				<Form>Report_ReceiptSaleAnalyzeDialogForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
 			<BuildConfiguration Include="Release">
 				<Key>Cfg_2</Key>
 				<CfgParent>Base</CfgParent>
