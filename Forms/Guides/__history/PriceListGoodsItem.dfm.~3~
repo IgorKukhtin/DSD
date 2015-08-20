@@ -179,19 +179,7 @@ object PriceListGoodsItemForm: TPriceListGoodsItemForm
         end
         item
           Visible = True
-          ItemName = 'bbInsert'
-        end
-        item
-          Visible = True
-          ItemName = 'bbUpdate'
-        end
-        item
-          Visible = True
-          ItemName = 'bbSetErased'
-        end
-        item
-          Visible = True
-          ItemName = 'bbSetUnErased'
+          ItemName = 'bb'
         end
         item
           Visible = True
@@ -234,20 +222,8 @@ object PriceListGoodsItemForm: TPriceListGoodsItemForm
       Hint = '       '
       Visible = ivAlways
     end
-    object bbInsert: TdxBarButton
+    object bb: TdxBarButton
       Action = actInsert
-      Category = 0
-    end
-    object bbUpdate: TdxBarButton
-      Action = actUpdate
-      Category = 0
-    end
-    object bbSetErased: TdxBarButton
-      Action = dsdSetErased
-      Category = 0
-    end
-    object bbSetUnErased: TdxBarButton
-      Action = dsdSetUnErased
       Category = 0
     end
   end
@@ -291,8 +267,6 @@ object PriceListGoodsItemForm: TPriceListGoodsItemForm
         item
           Name = 'Id'
           Value = Null
-          Component = ClientDataSet
-          ComponentItem = 'Id'
         end>
       isShowModal = True
       DataSource = DataSource
@@ -336,22 +310,6 @@ object PriceListGoodsItemForm: TPriceListGoodsItemForm
       ImageIndex = 2
       ShortCut = 46
       ErasedFieldName = 'isErased'
-      DataSource = DataSource
-    end
-    object dsdSetUnErased: TdsdUpdateErased
-      Category = 'DSDLib'
-      MoveParams = <>
-      StoredProc = spErasedUnErased
-      StoredProcList = <
-        item
-          StoredProc = spErasedUnErased
-        end>
-      Caption = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100
-      Hint = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
-      ImageIndex = 8
-      ShortCut = 32776
-      ErasedFieldName = 'isErased'
-      isSetErased = False
       DataSource = DataSource
     end
   end
@@ -422,8 +380,8 @@ object PriceListGoodsItemForm: TPriceListGoodsItemForm
         DataType = ftString
         ParamType = ptInput
       end>
-    Left = 128
-    Top = 48
+    Left = 144
+    Top = 16
   end
   object GoodsGuides: TdsdGuides
     KeyField = 'Id'

@@ -518,6 +518,10 @@ BEGIN
            , tmpResult.OperCount_sale * CAST (tmpResult.Summ3 / tmpResult.Value_receipt AS NUMERIC (16, 3)) AS SummPrice3_sale -- с/с реализ по план3
            , tmpResult.OperCount_sale * PriceListSale.Price * 1.2                     AS Summ_sale       -- сумма по прайсу расчетному
 
+           , tmpResult.OperCount_sale * CAST (tmpResult.Summ1_cost / tmpResult.Value_receipt AS NUMERIC (16, 3)) AS SummCost1_sale -- сумма затрат на реализ по план1
+           , tmpResult.OperCount_sale * CAST (tmpResult.Summ2_cost / tmpResult.Value_receipt AS NUMERIC (16, 3)) AS SummCost2_sale -- сумма затрат на реализ по план2
+           , tmpResult.OperCount_sale * CAST (tmpResult.Summ3_cost / tmpResult.Value_receipt AS NUMERIC (16, 3)) AS SummCost3_sale -- сумма затрат на реализ по план3
+
            , CASE WHEN View_InfoMoney.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_20900()
                        THEN 100 * 1
                                 / 0.85
