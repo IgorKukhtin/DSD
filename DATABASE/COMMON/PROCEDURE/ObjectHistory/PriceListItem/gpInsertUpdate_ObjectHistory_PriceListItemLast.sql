@@ -51,6 +51,9 @@ BEGIN
    --
    SELECT StartDate, EndDate INTO outStartDate, outEndDate FROM ObjectHistory WHERE Id = ioId;
 
+   -- сохранили протокол
+   PERFORM lpInsert_ObjectHistoryProtocol (vbPriceListItemId, vbUserId, outStartDate ,outEndDate,inValue);
+
 END;$BODY$
   LANGUAGE plpgsql VOLATILE;
   
@@ -58,5 +61,6 @@ END;$BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
+ 20.08.15         * lpInsert_ObjectHistoryProtocol
  09.12.14                                        *
 */

@@ -2,25 +2,39 @@
 
 DROP FUNCTION IF EXISTS gpSelect_ObjectHistory_PriceListItem (Integer, TDateTime);
 DROP FUNCTION IF EXISTS gpSelect_ObjectHistory_PriceListItem (Integer, TDateTime, TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_ObjectHistory_PriceListItem (Integer, TDateTime, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_ObjectHistory_PriceListItem(
     IN inPriceListId        Integer   , -- ключ 
     IN inOperDate           TDateTime , -- Дата действия
+    IN inShowAll            Boolean,   
     IN inSession            TVarChar    -- сессия пользователя
 )                              
-RETURNS TABLE (Id Integer, GoodsId Integer, GoodsCode Integer, GoodsName TVarChar, GoodsGroupNameFull TVarChar, MeasureName TVarChar, StartDate TDateTime, EndDate TDateTime, ValuePrice TFloat)
+RETURNS TABLE (Id Integer , ObjectId Integer
+                , GoodsId Integer, GoodsCode Integer, GoodsName TVarChar, isErased Boolean, GoodsGroupNameFull TVarChar
+                , MeasureName TVarChar, StartDate TDateTime, EndDate TDateTime, ValuePrice TFloat
+               )
 AS
 $BODY$
 BEGIN
 
      -- Выбираем данные
      RETURN QUERY 
+       WITH tmpIsErased AS (SELECT FALSE AS isErased UNION ALL SELECT inShowAll AS isErased WHERE inShowAll = TRUE),
+            tmpGoods    AS (SELECT Object_Goods.Id        , Object_Goods.ValueData 
+                                 , Object_Goods.ObjectCode, Object_Goods.isErased 
+                            FROM Object AS Object_Goods
+                              JOIN tmpIsErased on tmpIsErased.isErased= Object_Goods.isErased
+                           )
+            
        SELECT
              ObjectHistory_PriceListItem.Id
+           , ObjectHistory_PriceListItem.ObjectId
            , ObjectLink_PriceListItem_Goods.ChildObjectId AS GoodsId
            , Object_Goods.ObjectCode AS GoodsCode
-           , Object_Goods.ValueData AS GoodsName
-
+           , Object_Goods.ValueData  AS GoodsName
+           , Object_Goods.isErased   AS isErased 
+           
            , ObjectString_Goods_GoodsGroupFull.ValueData AS GoodsGroupNameFull
            , Object_Measure.ValueData     AS MeasureName
 
@@ -32,8 +46,8 @@ BEGIN
             LEFT JOIN ObjectLink AS ObjectLink_PriceListItem_Goods
                                  ON ObjectLink_PriceListItem_Goods.ObjectId = ObjectLink_PriceListItem_PriceList.ObjectId
                                 AND ObjectLink_PriceListItem_Goods.DescId = zc_ObjectLink_PriceListItem_Goods()
-            LEFT JOIN Object AS Object_Goods
-                             ON Object_Goods.Id = ObjectLink_PriceListItem_Goods.ChildObjectId
+            LEFT JOIN tmpGoods AS Object_Goods
+                               ON Object_Goods.Id = ObjectLink_PriceListItem_Goods.ChildObjectId
 
             LEFT JOIN ObjectHistory AS ObjectHistory_PriceListItem
                                     ON ObjectHistory_PriceListItem.ObjectId = ObjectLink_PriceListItem_PriceList.ObjectId
@@ -61,12 +75,13 @@ END;
 $BODY$
 
 LANGUAGE PLPGSQL VOLATILE;
-ALTER FUNCTION gpSelect_ObjectHistory_PriceListItem (Integer, TDateTime, TVarChar) OWNER TO postgres;
+ALTER FUNCTION gpSelect_ObjectHistory_PriceListItem (Integer, TDateTime, Boolean, TVarChar) OWNER TO postgres;
 
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 20.08.15         * add inShowAll
  25.07.13                        *
 */
 

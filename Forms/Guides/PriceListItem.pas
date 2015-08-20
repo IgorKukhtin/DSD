@@ -65,6 +65,12 @@ type
     GoodsGroupNameFull: TcxGridDBColumn;
     MeasureName: TcxGridDBColumn;
     RefreshDispatcher: TRefreshDispatcher;
+    actShowAll: TBooleanStoredProcAction;
+    bbShowAll: TdxBarButton;
+    GoodsisErased: TcxGridDBColumn;
+    ProtocolOpenForm: TdsdOpenForm;
+    bbProtocol: TdxBarButton;
+    ObjectId: TcxGridDBColumn;
   private
     { Private declarations }
   public

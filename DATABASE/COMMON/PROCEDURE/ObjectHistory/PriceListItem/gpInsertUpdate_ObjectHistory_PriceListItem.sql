@@ -27,6 +27,9 @@ BEGIN
    -- Устанавливаем цену
    PERFORM lpInsertUpdate_ObjectHistoryFloat (zc_ObjectHistoryFloat_PriceListItem_Value(), ioId, inValue);
 
+   -- сохранили протокол
+   PERFORM lpInsert_ObjectProtocol (vbPriceListItemId, UserId);
+
 END;$BODY$
   LANGUAGE plpgsql VOLATILE;
   
