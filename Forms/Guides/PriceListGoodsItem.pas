@@ -49,12 +49,12 @@ type
     actInsert: TdsdInsertUpdateAction;
     bbInsert: TdxBarButton;
     actUpdate: TdsdInsertUpdateAction;
-    dsdSetErased: TdsdUpdateErased;
     spErasedUnErased: TdsdStoredProc;
     bbUpdate: TdxBarButton;
     bbSetErased: TdxBarButton;
-    dsdSetUnErased: TdsdUpdateErased;
     bbSetUnErased: TdxBarButton;
+    dsdSetErased: TdsdUpdateErased;
+    dsdSetUnErased: TdsdUpdateErased;
   private
     { Private declarations }
   public
