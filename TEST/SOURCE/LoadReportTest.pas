@@ -74,8 +74,7 @@ procedure TLoadReportTest.LoadAllReportFormTest;
 var
  i : integer;
 begin
-  LoadReportFromFile('Плановая Прибыль (сравнение цен себестоимости)', ReportPath + '\Отчеты (производство)\Плановая Прибыль (сравнение цен себестоимости).fr3');
- exit;
+// exit;
   // Другие
   LoadReportFromFile('Шаблон по точкам доставки', ReportPath + '\Отчеты (товарные)\Шаблон по точкам доставки.fr3');
 

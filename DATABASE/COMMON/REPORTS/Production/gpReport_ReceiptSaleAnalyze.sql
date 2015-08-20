@@ -444,6 +444,7 @@ BEGIN
                  , SUM (tmpAll.Summ1_cost) AS Summ1_cost
                  , SUM (tmpAll.Summ2_cost) AS Summ2_cost
                  , SUM (tmpAll.Summ3_cost) AS Summ3_cost
+                 , SUM (tmpAll.Summ4_cost) AS Summ4_cost
             FROM
            (SELECT tmpAll.ReceiptId
                  , tmpAll.GoodsId
@@ -462,6 +463,7 @@ BEGIN
                  , SUM (tmpAll.Summ1_cost) AS Summ1_cost
                  , SUM (tmpAll.Summ2_cost) AS Summ2_cost
                  , SUM (tmpAll.Summ3_cost) AS Summ3_cost
+                 , SUM (tmpAll.Summ4_cost) AS Summ4_cost
             FROM tmpAll
             GROUP BY tmpAll.ReceiptId
                    , tmpAll.GoodsId
