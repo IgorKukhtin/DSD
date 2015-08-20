@@ -278,7 +278,7 @@ object PriceListItemForm: TPriceListItemForm
         end
         item
           Visible = True
-          ItemName = 'bbToExcel'
+          ItemName = 'bbProtocol'
         end
         item
           Visible = True
@@ -286,7 +286,7 @@ object PriceListItemForm: TPriceListItemForm
         end
         item
           Visible = True
-          ItemName = 'bbProtocol'
+          ItemName = 'bbToExcel'
         end
         item
           Visible = True
