@@ -95,6 +95,7 @@ type
     colContractCode: TcxGridDBColumn;
     colInvNumber_Parent: TcxGridDBColumn;
     colComment: TcxGridDBColumn;
+    isPartner: TcxGridDBColumn;
   private
     { Private declarations }
   public

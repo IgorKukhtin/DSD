@@ -10,6 +10,7 @@ CREATE OR REPLACE FUNCTION gpGet_Movement_ReturnIn(
 RETURNS TABLE (Id Integer, InvNumber TVarChar, InvNumberPartner TVarChar, InvNumberMark TVarChar, OperDate TDateTime
              , ParentId Integer, InvNumber_Parent TVarChar
              , StatusId Integer, StatusCode Integer, StatusName TVarChar, Checked Boolean
+             , isPartner Boolean
              , OperDatePartner TDateTime
              , PriceWithVAT Boolean, VATPercent TFloat, ChangePercent TFloat
              , TotalCount TFloat, TotalSummMVAT TFloat, TotalSummPVAT TFloat, TotalSumm TFloat
@@ -48,6 +49,7 @@ BEGIN
              , Object_Status.Code                       AS StatusCode
              , Object_Status.Name                       AS StatusName
              , FALSE :: Boolean                         AS Checked
+             , FALSE :: Boolean                         AS isPartner
              , inOperDate				AS OperDatePartner
              , CAST (False as Boolean)                  AS PriceWithVAT
              , CAST (TaxPercent_View.Percent as TFloat) AS VATPercent
@@ -118,7 +120,8 @@ BEGIN
            , Movement.StatusId
            , Object_Status.ObjectCode          	    AS StatusCode
            , Object_Status.ValueData         	    AS StatusName
-           , COALESCE (MovementBoolean_Checked.ValueData, FALSE) :: Boolean AS Checked
+           , COALESCE (MovementBoolean_Checked.ValueData, FALSE) :: Boolean   AS Checked
+           , COALESCE (MovementBoolean_isPartner.ValueData, FALSE) :: Boolean AS isPartner
            , MovementDate_OperDatePartner.ValueData AS OperDatePartner
            , MovementBoolean_PriceWithVAT.ValueData AS PriceWithVAT
            , MovementFloat_VATPercent.ValueData     AS VATPercent
@@ -175,6 +178,10 @@ BEGIN
             LEFT JOIN MovementBoolean AS MovementBoolean_Checked
                                       ON MovementBoolean_Checked.MovementId =  Movement.Id
                                      AND MovementBoolean_Checked.DescId = zc_MovementBoolean_Checked()
+
+            LEFT JOIN MovementBoolean AS MovementBoolean_isPartner
+                                      ON MovementBoolean_isPartner.MovementId =  Movement.Id
+                                     AND MovementBoolean_isPartner.DescId = zc_MovementBoolean_isPartner()
 
             LEFT JOIN MovementDate AS MovementDate_OperDatePartner
                                    ON MovementDate_OperDatePartner.MovementId =  Movement.Id
@@ -266,6 +273,7 @@ ALTER FUNCTION gpGet_Movement_ReturnIn (Integer, TDateTime, TVarChar) OWNER TO p
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».     Ã‡Ì¸ÍÓ ƒ.¿.
+ 21.08.15         * add isPartner
  26.06.15         * add Comment, Parent
  24.07.14         * add zc_MovementFloat_CurrencyValue
                         zc_MovementLinkObject_CurrencyDocument

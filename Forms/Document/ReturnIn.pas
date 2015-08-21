@@ -146,6 +146,7 @@ type
     actGoodsChoice: TOpenChoiceForm;
     actOpenTaxCorrective: TdsdOpenForm;
     bbOpenTaxCorrective: TdxBarButton;
+    cbisPartner: TcxCheckBox;
   private
     { Private declarations }
   public

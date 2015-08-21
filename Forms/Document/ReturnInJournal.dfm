@@ -457,6 +457,14 @@ inherited ReturnInJournalForm: TReturnInJournalForm
             HeaderAlignmentVert = vaCenter
             Width = 60
           end
+          object isPartner: TcxGridDBColumn
+            Caption = #1040#1082#1090' '#1085#1077#1076#1086#1074#1086#1079#1072
+            DataBinding.FieldName = 'isPartner'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 67
+          end
         end
       end
     end
@@ -650,7 +658,6 @@ inherited ReturnInJournalForm: TReturnInJournalForm
           DataSet = PrintItemsCDS
           UserName = 'frxDBDMaster'
         end>
-      CopiesCount = 1
       Params = <
         item
           Name = 'Id'
@@ -742,7 +749,6 @@ inherited ReturnInJournalForm: TReturnInJournalForm
           DataSet = PrintHeaderCDS
           UserName = 'frxDBDHeader'
         end>
-      CopiesCount = 1
       Params = <
         item
           Name = 'Id'
@@ -775,7 +781,6 @@ inherited ReturnInJournalForm: TReturnInJournalForm
           DataSet = PrintHeaderCDS
           UserName = 'frxDBDHeader'
         end>
-      CopiesCount = 1
       Params = <
         item
           Name = 'Id'
@@ -811,7 +816,6 @@ inherited ReturnInJournalForm: TReturnInJournalForm
           DataSet = PrintHeaderCDS
           UserName = 'frxDBDHeader'
         end>
-      CopiesCount = 1
       Params = <
         item
           Name = 'Id'

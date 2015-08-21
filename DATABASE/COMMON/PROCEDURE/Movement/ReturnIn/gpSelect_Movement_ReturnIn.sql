@@ -12,6 +12,7 @@ CREATE OR REPLACE FUNCTION gpSelect_Movement_ReturnIn(
 RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, ParentId Integer, InvNumber_Parent TVarChar
              , StatusCode Integer, StatusName TVarChar
              , Checked Boolean
+             , isPartner Boolean
              , PriceWithVAT Boolean
              , OperDatePartner TDateTime, InvNumberPartner TVarChar, InvNumberMark TVarChar
              , VATPercent TFloat, ChangePercent TFloat
@@ -76,6 +77,7 @@ BEGIN
            , Object_Status.ObjectCode                   AS StatusCode
            , Object_Status.ValueData                    AS StatusName
            , COALESCE (MovementBoolean_Checked.ValueData, FALSE) :: Boolean AS Checked
+           , COALESCE (MovementBoolean_isPartner.ValueData, FALSE) :: Boolean AS isPartner
            , MovementBoolean_PriceWithVAT.ValueData     AS PriceWithVAT
            , MovementDate_OperDatePartner.ValueData     AS OperDatePartner
            , MovementString_InvNumberPartner.ValueData  AS InvNumberPartner
@@ -144,6 +146,10 @@ BEGIN
             LEFT JOIN MovementBoolean AS MovementBoolean_PriceWithVAT
                                       ON MovementBoolean_PriceWithVAT.MovementId =  Movement.Id
                                      AND MovementBoolean_PriceWithVAT.DescId = zc_MovementBoolean_PriceWithVAT()
+
+            LEFT JOIN MovementBoolean AS MovementBoolean_isPartner
+                                      ON MovementBoolean_isPartner.MovementId =  Movement.Id
+                                     AND MovementBoolean_isPartner.DescId = zc_MovementBoolean_isPartner()
 
             LEFT JOIN MovementDate AS MovementDate_OperDatePartner
                                    ON MovementDate_OperDatePartner.MovementId =  Movement.Id
@@ -263,6 +269,7 @@ ALTER FUNCTION gpSelect_Movement_ReturnIn (TDateTime, TDateTime, Boolean, Boolea
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».   Ã‡Ì¸ÍÓ ƒ.¿.
+ 21.08.15         * add isPartner
  26.06.15         * add Comment, Parent
  13.11.14                                        * add zc_Enum_Process_AccessKey_DocumentAll
  12.08.14                                        * add isEDI
