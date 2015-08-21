@@ -278,6 +278,14 @@ object PriceListItemForm: TPriceListItemForm
         end
         item
           Visible = True
+          ItemName = 'bbPriceListTaxDialog'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbProtocol'
         end
         item
@@ -323,6 +331,10 @@ object PriceListItemForm: TPriceListItemForm
     end
     object bbProtocol: TdxBarButton
       Action = ProtocolOpenForm
+      Category = 0
+    end
+    object bbPriceListTaxDialog: TdxBarButton
+      Action = PriceListTaxDialoglOpenForm
       Category = 0
     end
   end
@@ -449,6 +461,37 @@ object PriceListItemForm: TPriceListItemForm
         end>
       isShowModal = False
     end
+    object PriceListTaxDialoglOpenForm: TdsdOpenForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = #1055#1077#1088#1077#1086#1094#1077#1085#1082#1072' '#1085#1072' '#1086#1089#1085#1086#1074#1072#1085#1080#1080
+      Hint = #1055#1077#1088#1077#1086#1094#1077#1085#1082#1072' '#1085#1072' '#1086#1089#1085#1086#1074#1072#1085#1080#1080
+      ImageIndex = 74
+      FormName = 'TPriceListTaxDialogForm'
+      FormNameParam.Value = 'TPriceListTaxDialogForm'
+      FormNameParam.DataType = ftString
+      GuiParams = <
+        item
+          Name = 'PriceListId'
+          Value = '0'
+          Component = PriceListGuides
+          ComponentItem = 'Key'
+        end
+        item
+          Name = 'PriceListName'
+          Value = ''
+          Component = PriceListGuides
+          ComponentItem = 'TextValue'
+          DataType = ftString
+        end
+        item
+          Name = 'OperDate'
+          Value = Null
+          Component = edOperDate
+          DataType = ftDateTime
+        end>
+      isShowModal = False
+    end
   end
   object dsdStoredProc: TdsdStoredProc
     StoredProcName = 'gpSelect_ObjectHistory_PriceListItem'
@@ -525,8 +568,8 @@ object PriceListItemForm: TPriceListItemForm
         DataType = ftString
         ParamType = ptInput
       end>
-    Left = 160
-    Top = 16
+    Left = 200
+    Top = 56
   end
   object spInsertUpdate: TdsdStoredProc
     StoredProcName = 'gpInsertUpdate_ObjectHistory_PriceListItemLast'
