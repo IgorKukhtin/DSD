@@ -14,6 +14,7 @@ object Report_AccountForm: TReport_AccountForm
   OldCreateOrder = False
   AddOnFormData.RefreshAction = actRefresh
   AddOnFormData.isSingle = False
+  AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
   PixelsPerInch = 96
   TextHeight = 13
@@ -554,7 +555,7 @@ object Report_AccountForm: TReport_AccountForm
       Width = 180
     end
     object cxLabel5: TcxLabel
-      Left = 310
+      Left = 305
       Top = 6
       Caption = #1057#1095#1077#1090' '#1085#1072#1087#1088#1072#1074#1083#1077#1085#1080#1077':'
     end
@@ -762,7 +763,7 @@ object Report_AccountForm: TReport_AccountForm
     PopupMenuLinks = <>
     ShowShortCutInHint = True
     UseSystemFont = True
-    Left = 120
+    Left = 88
     Top = 40
     DockControlHeights = (
       0
@@ -781,6 +782,14 @@ object Report_AccountForm: TReport_AccountForm
       FloatClientWidth = 0
       FloatClientHeight = 0
       ItemLinks = <
+        item
+          Visible = True
+          ItemName = 'bbStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbExecuteDialog'
+        end
         item
           Visible = True
           ItemName = 'bbStatic'
@@ -844,6 +853,10 @@ object Report_AccountForm: TReport_AccountForm
       Action = actPrint
       Category = 0
       Visible = ivNever
+    end
+    object bbExecuteDialog: TdxBarButton
+      Action = ExecuteDialog
+      Category = 0
     end
   end
   object ActionList: TActionList
@@ -967,6 +980,169 @@ object Report_AccountForm: TReport_AccountForm
       ReportNameParam.Value = #1054#1073#1086#1088#1086#1090#1099' '#1087#1086' '#1088#1072#1089#1095#1077#1090#1085#1086#1084#1091' '#1089#1095#1077#1090#1091
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
+    end
+    object ExecuteDialog: TExecuteDialog
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1072#1088#1072#1084#1077#1090#1088#1099' '#1086#1090#1095#1077#1090#1072
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1072#1088#1072#1084#1077#1090#1088#1099' '#1086#1090#1095#1077#1090#1072
+      ImageIndex = 35
+      FormName = 'TReport_AccountDialogForm'
+      FormNameParam.Value = 'TReport_AccountDialogForm'
+      FormNameParam.DataType = ftString
+      GuiParams = <
+        item
+          Name = 'StartDate'
+          Value = 42005d
+          Component = deStart
+          DataType = ftDateTime
+          ParamType = ptInput
+        end
+        item
+          Name = 'EndDate'
+          Value = 42005d
+          Component = deEnd
+          DataType = ftDateTime
+          ParamType = ptInput
+        end
+        item
+          Name = 'AccountGroupId'
+          Value = ''
+          Component = AccountGroupGuides
+          ComponentItem = 'Key'
+          ParamType = ptInput
+        end
+        item
+          Name = 'AccountGroupName'
+          Value = ''
+          Component = AccountGroupGuides
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          ParamType = ptInput
+        end
+        item
+          Name = 'ProfitLossGroupId'
+          Value = ''
+          Component = ProfitLossGroupGuides
+          ComponentItem = 'Key'
+          ParamType = ptInput
+        end
+        item
+          Name = 'ProfitLossGroupName'
+          Value = ''
+          Component = ProfitLossGroupGuides
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          ParamType = ptInput
+        end
+        item
+          Name = 'AccountDirectionId'
+          Value = ''
+          Component = AccountDirectionGuides
+          ComponentItem = 'Key'
+          ParamType = ptInput
+        end
+        item
+          Name = 'AccountDirectionName'
+          Value = ''
+          Component = AccountDirectionGuides
+          ComponentItem = 'TextValue'
+          ParamType = ptInput
+        end
+        item
+          Name = 'ProfitLossDirectionId'
+          Value = ''
+          Component = ProfitLossDirectionGuides
+          ComponentItem = 'Key'
+          ParamType = ptInput
+        end
+        item
+          Name = 'ProfitLossDirectionName'
+          Value = ''
+          Component = ProfitLossDirectionGuides
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          ParamType = ptInput
+        end
+        item
+          Name = 'AccountId'
+          Value = ''
+          Component = AccountGuides
+          ComponentItem = 'Key'
+          DataType = ftString
+          ParamType = ptInput
+        end
+        item
+          Name = 'AccountName'
+          Value = ''
+          Component = AccountGuides
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          ParamType = ptInput
+        end
+        item
+          Name = 'ProfitLossId'
+          Value = Null
+          Component = ProfitLossGuides
+          ComponentItem = 'Key'
+          ParamType = ptInput
+        end
+        item
+          Name = 'ProfitLossName'
+          Value = Null
+          Component = ProfitLossGuides
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          ParamType = ptInput
+        end
+        item
+          Name = 'InfoMoneyId'
+          Value = ''
+          Component = InfoMoneyGuides
+          ComponentItem = 'Key'
+          ParamType = ptInput
+        end
+        item
+          Name = 'InfoMoneyName'
+          Value = ''
+          Component = InfoMoneyGuides
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          ParamType = ptInput
+        end
+        item
+          Name = 'BranchId'
+          Value = ''
+          Component = BranchGuides
+          ComponentItem = 'Key'
+          ParamType = ptInput
+        end
+        item
+          Name = 'BranchName'
+          Value = ''
+          Component = BranchGuides
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          ParamType = ptInput
+        end
+        item
+          Name = 'BusinessId'
+          Value = ''
+          Component = BusinessGuides
+          ComponentItem = 'Key'
+          ParamType = ptInput
+        end
+        item
+          Name = 'BusinessName'
+          Value = ''
+          Component = BusinessGuides
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          ParamType = ptInput
+        end>
+      isShowModal = True
+      RefreshDispatcher = RefreshDispatcher
+      OpenBeforeShow = True
     end
   end
   object dsdStoredProc: TdsdStoredProc

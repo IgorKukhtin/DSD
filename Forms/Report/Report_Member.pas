@@ -63,6 +63,8 @@ type
     MoneyPlaceName: TcxGridDBColumn;
     ItemName: TcxGridDBColumn;
     Comment: TcxGridDBColumn;
+    ExecuteDialog: TExecuteDialog;
+    bbExecuteDialog: TdxBarButton;
   private
     { Private declarations }
   public

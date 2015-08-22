@@ -719,7 +719,9 @@ uses
   Report_ReceiptProductionAnalyzeDialog in '..\..\Forms\Report\Report_ReceiptProductionAnalyzeDialog.pas' {Report_ReceiptProductionAnalyzeDialogForm: TParentForm},
   Report_ReceiptProductionOutAnalyzeDialog in '..\..\Forms\Report\Report_ReceiptProductionOutAnalyzeDialog.pas' {Report_ReceiptProductionOutAnalyzeDialogForm: TParentForm},
   Report_ReceiptSaleAnalyzeDialog in '..\..\Forms\Report\Report_ReceiptSaleAnalyzeDialog.pas' {Report_ReceiptSaleAnalyzeDialogForm: TParentForm},
-  PriceListTaxDialog in '..\..\Forms\Guides\PriceListTaxDialog.pas' {PriceListTaxDialogForm: TParentForm};
+  PriceListTaxDialog in '..\..\Forms\Guides\PriceListTaxDialog.pas' {PriceListTaxDialogForm: TParentForm},
+  Report_AccountDialog in '..\..\Forms\Report\Report_AccountDialog.pas' {Report_AccountDialogForm: TParentForm},
+  Report_MemberDialog in '..\..\Forms\Report\Report_MemberDialog.pas' {Report_MemberDialogForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}

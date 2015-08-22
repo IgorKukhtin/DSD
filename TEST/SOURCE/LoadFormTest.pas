@@ -1149,6 +1149,8 @@ begin
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_AccountForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_AccountForm');
+    TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_AccountDialogForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_AccountDialogForm');
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_TransportHoursWorkForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_TransportHoursWorkForm');
@@ -1254,6 +1256,8 @@ begin
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_MemberForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_MemberForm');
+    TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_MemberDialogForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_MemberDialogForm');
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_CashForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_CashForm');
