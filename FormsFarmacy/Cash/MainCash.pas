@@ -117,6 +117,7 @@ type
     btnOpenMCSForm: TcxButton;
     spGet_User_IsAdmin: TdsdStoredProc;
     actSetFocus: TAction;
+    N10: TMenuItem;
     procedure WM_KEYDOWN(var Msg: TWMKEYDOWN);
     procedure FormCreate(Sender: TObject);
     procedure actChoiceGoodsInRemainsGridExecute(Sender: TObject);
