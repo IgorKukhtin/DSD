@@ -3,7 +3,7 @@ inherited Sale_OrderForm: TSale_OrderForm
   ClientHeight = 668
   ClientWidth = 1020
   ExplicitWidth = 1036
-  ExplicitHeight = 703
+  ExplicitHeight = 706
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -744,7 +744,6 @@ inherited Sale_OrderForm: TSale_OrderForm
           UserName = 'frxDBDMaster'
           IndexFieldNames = 'GroupName_Juridical;GoodsName_Juridical;GoodsName;GoodsKindName'
         end>
-      CopiesCount = 1
       Params = <
         item
           Name = 'Id'
@@ -826,7 +825,6 @@ inherited Sale_OrderForm: TSale_OrderForm
             'goodsgroupname;GroupName_Juridical;GoodsName_Juridical;GoodsName' +
             ';GoodsKindName'
         end>
-      CopiesCount = 1
       Params = <
         item
           Name = 'Id'
@@ -871,7 +869,6 @@ inherited Sale_OrderForm: TSale_OrderForm
           UserName = 'frxDBDMaster'
           IndexFieldNames = 'GroupName_Juridical;GoodsName_Juridical;GoodsName;GoodsKindName'
         end>
-      CopiesCount = 1
       Params = <
         item
           Name = 'Id'
@@ -931,7 +928,6 @@ inherited Sale_OrderForm: TSale_OrderForm
           UserName = 'frxDBDMaster'
           IndexFieldNames = 'GoodsGroupNameFull;GoodsName'
         end>
-      CopiesCount = 1
       Params = <
         item
           Name = 'Id'
@@ -967,7 +963,6 @@ inherited Sale_OrderForm: TSale_OrderForm
           DataSet = PrintItemsSverkaCDS
           UserName = 'frxDBDSverka'
         end>
-      CopiesCount = 1
       Params = <
         item
           Name = 'Id'
@@ -1090,7 +1085,6 @@ inherited Sale_OrderForm: TSale_OrderForm
           DataSet = PrintItemsSverkaCDS
           UserName = 'frxDBDSverka'
         end>
-      CopiesCount = 1
       Params = <
         item
           Name = 'Id'
@@ -1134,7 +1128,6 @@ inherited Sale_OrderForm: TSale_OrderForm
           DataSet = PrintItemsCDS
           UserName = 'frxDBDMaster'
         end>
-      CopiesCount = 1
       Params = <
         item
           Name = 'Id'
@@ -1263,7 +1256,6 @@ inherited Sale_OrderForm: TSale_OrderForm
           UserName = 'frxDBDMaster'
           IndexFieldNames = 'WeighingNumber;NumOrder'
         end>
-      CopiesCount = 1
       Params = <
         item
           Name = 'Id'
@@ -1294,7 +1286,6 @@ inherited Sale_OrderForm: TSale_OrderForm
           UserName = 'frxDBDMaster'
           IndexFieldNames = 'WeighingNumber;BoxNumber;NumOrder'
         end>
-      CopiesCount = 1
       Params = <
         item
           Name = 'Id'
@@ -1353,7 +1344,6 @@ inherited Sale_OrderForm: TSale_OrderForm
           UserName = 'frxDBDMaster2'
           IndexFieldNames = 'QualityCode;GoodsGroupName;GoodsName;GoodsKindName'
         end>
-      CopiesCount = 1
       Params = <
         item
           Name = 'Id'
@@ -1443,7 +1433,6 @@ inherited Sale_OrderForm: TSale_OrderForm
           DataSet = PrintItemsCDS
           UserName = 'frxDBDMaster'
         end>
-      CopiesCount = 1
       Params = <
         item
           Name = 'Id'
@@ -1455,6 +1444,27 @@ inherited Sale_OrderForm: TSale_OrderForm
       ReportNameParam.Value = 'PrintMovement_TTN'
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
+    end
+    object actUpdatePrice: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spInsertUpdateMovement
+      StoredProcList = <
+        item
+          StoredProc = spInsertUpdateMovement
+        end
+        item
+          StoredProc = spUpdate_MI_Sale_Price
+        end
+        item
+          StoredProc = spSelect
+        end>
+      Caption = #1048#1089#1087#1088#1072#1074#1080#1090#1100' '#1094#1077#1085#1099' '#1085#1072' '#1086#1089#1085#1086#1074#1072#1085#1080#1080' '#1087#1088#1072#1081#1089#1072
+      Hint = #1048#1089#1087#1088#1072#1074#1080#1090#1100' '#1094#1077#1085#1099' '#1085#1072' '#1086#1089#1085#1086#1074#1072#1085#1080#1080' '#1087#1088#1072#1081#1089#1072
+      ImageIndex = 42
+      QuestionBeforeExecute = #1044#1077#1081#1089#1090#1074#1080#1090#1077#1083#1100#1085#1086' '#1080#1089#1087#1088#1072#1074#1080#1090#1100' '#1094#1077#1085#1099' '#1085#1072' '#1086#1089#1085#1086#1074#1072#1085#1080#1080' '#1087#1088#1072#1081#1089#1072'?'
+      InfoAfterExecute = #1047#1072#1074#1077#1088#1096#1077#1085#1086' '#1080#1089#1087#1088#1072#1074#1083#1077#1085#1080#1077' '#1094#1077#1085' '#1085#1072' '#1086#1089#1085#1086#1074#1072#1085#1080#1080' '#1087#1088#1072#1081#1089#1072'.'
     end
   end
   inherited MasterDS: TDataSource
@@ -1567,6 +1577,10 @@ inherited Sale_OrderForm: TSale_OrderForm
         end
         item
           Visible = True
+          ItemName = 'bbUpdatePrice'
+        end
+        item
+          Visible = True
           ItemName = 'bbStatic'
         end
         item
@@ -1659,7 +1673,7 @@ inherited Sale_OrderForm: TSale_OrderForm
         end
         item
           Visible = True
-          ItemName = 'bb'
+          ItemName = 'bbPrintSaleOrder'
         end
         item
           Visible = True
@@ -1752,8 +1766,12 @@ inherited Sale_OrderForm: TSale_OrderForm
       Action = mactPrint_QualityDoc
       Category = 0
     end
-    object bb: TdxBarButton
+    object bbPrintSaleOrder: TdxBarButton
       Action = actPrintSaleOrder
+      Category = 0
+    end
+    object bbUpdatePrice: TdxBarButton
+      Action = actUpdatePrice
       Category = 0
     end
   end
@@ -3680,5 +3698,21 @@ inherited Sale_OrderForm: TSale_OrderForm
     PackSize = 1
     Left = 687
     Top = 248
+  end
+  object spUpdate_MI_Sale_Price: TdsdStoredProc
+    StoredProcName = 'gpUpdate_MovementItem_Sale_Price'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+      end>
+    PackSize = 1
+    Left = 584
+    Top = 552
   end
 end

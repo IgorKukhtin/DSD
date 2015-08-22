@@ -987,7 +987,7 @@
       MoveParams = <>
       ActionList = <
         item
-          Action = actSPPrintSaleProcName
+          Action = actUpdatePrice
         end
         item
           Action = actPrint
@@ -1128,6 +1128,19 @@
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
     end
+    object dsdDataSetRefresh1: TdsdDataSetRefresh [22]
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spSelect
+      StoredProcList = <
+        item
+          StoredProc = spSelect
+        end>
+      Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
+      Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
+      ShortCut = 116
+      RefreshOnTabSetChanges = False
+    end
     inherited actUnCompleteMovement: TChangeGuidesStatus
       StoredProcList = <
         item
@@ -1144,7 +1157,7 @@
         item
         end>
     end
-    object actGoodsKindChoice: TOpenChoiceForm [26]
+    object actGoodsKindChoice: TOpenChoiceForm [27]
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -1178,17 +1191,6 @@
           StoredProc = spGetReporNameBill
         end>
       Caption = 'actPrint_Account_ReportName'
-    end
-    object actSPPrintSaleProcName: TdsdExecStoredProc
-      Category = 'DSDLib'
-      MoveParams = <>
-      PostDataSetBeforeExecute = False
-      StoredProc = spGetReportName
-      StoredProcList = <
-        item
-          StoredProc = spGetReportName
-        end>
-      Caption = 'actSPPrintSaleProcName'
     end
     object actRefreshPrice: TdsdDataSetRefresh
       Category = 'DSDLib'
@@ -1328,6 +1330,27 @@
           DataType = ftString
         end>
       isShowModal = True
+    end
+    object actUpdatePrice: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spInsertUpdateMovement
+      StoredProcList = <
+        item
+          StoredProc = spInsertUpdateMovement
+        end
+        item
+          StoredProc = spUpdate_MI_Sale_Price
+        end
+        item
+          StoredProc = spSelect
+        end>
+      Caption = #1048#1089#1087#1088#1072#1074#1080#1090#1100' '#1094#1077#1085#1099' '#1085#1072' '#1086#1089#1085#1086#1074#1072#1085#1080#1080' '#1087#1088#1072#1081#1089#1072
+      Hint = #1048#1089#1087#1088#1072#1074#1080#1090#1100' '#1094#1077#1085#1099' '#1085#1072' '#1086#1089#1085#1086#1074#1072#1085#1080#1080' '#1087#1088#1072#1081#1089#1072
+      ImageIndex = 42
+      QuestionBeforeExecute = #1044#1077#1081#1089#1090#1074#1080#1090#1077#1083#1100#1085#1086' '#1080#1089#1087#1088#1072#1074#1080#1090#1100' '#1094#1077#1085#1099' '#1085#1072' '#1086#1089#1085#1086#1074#1072#1085#1080#1080' '#1087#1088#1072#1081#1089#1072'?'
+      InfoAfterExecute = #1047#1072#1074#1077#1088#1096#1077#1085#1086' '#1080#1089#1087#1088#1072#1074#1083#1077#1085#1080#1077' '#1094#1077#1085' '#1085#1072' '#1086#1089#1085#1086#1074#1072#1085#1080#1080' '#1087#1088#1072#1081#1089#1072'.'
     end
     object actPrint_Spec: TdsdPrintAction
       Category = 'Print_Fozzy'
@@ -1641,6 +1664,10 @@
         end
         item
           Visible = True
+          ItemName = 'bbUpdatePrice'
+        end
+        item
+          Visible = True
           ItemName = 'dxBarStatic'
         end
         item
@@ -1838,6 +1865,10 @@
       Action = actPrintSaleOrder
       Category = 0
     end
+    object bbUpdatePrice: TdxBarButton
+      Action = actUpdatePrice
+      Category = 0
+    end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
     SummaryItemList = <
@@ -1927,7 +1958,7 @@
   end
   inherited spChangeStatus: TdsdStoredProc
     StoredProcName = 'gpUpdate_Status_Sale'
-    Left = 184
+    Left = 224
     Top = 128
   end
   inherited spGet: TdsdStoredProc
@@ -3033,7 +3064,7 @@
         Component = edVATPercent
         DataType = ftFloat
       end>
-    Left = 808
+    Left = 824
   end
   object ContractGuides: TdsdGuides
     KeyField = 'Id'
@@ -3832,5 +3863,21 @@
     PackSize = 1
     Left = 687
     Top = 248
+  end
+  object spUpdate_MI_Sale_Price: TdsdStoredProc
+    StoredProcName = 'gpUpdate_MovementItem_Sale_Price'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+      end>
+    PackSize = 1
+    Left = 584
+    Top = 552
   end
 end
