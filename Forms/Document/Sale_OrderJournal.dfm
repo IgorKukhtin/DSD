@@ -483,6 +483,13 @@ inherited Sale_OrderJournalForm: TSale_OrderJournalForm
             HeaderAlignmentVert = vaCenter
             Width = 90
           end
+          object RouteGroupName: TcxGridDBColumn
+            Caption = #1043#1088#1091#1087#1087#1072' '#1084'. / '#1052#1072#1088#1096#1088#1091#1090
+            DataBinding.FieldName = 'RouteGroupName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 80
+          end
           object clRouteName: TcxGridDBColumn
             Caption = #1052#1072#1088#1096#1088#1091#1090
             DataBinding.FieldName = 'RouteName'
@@ -655,6 +662,8 @@ inherited Sale_OrderJournalForm: TSale_OrderJournalForm
           object MovementId_Order: TcxGridDBColumn
             DataBinding.FieldName = 'MovementId_Order'
             Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
             VisibleForCustomization = False
             Width = 20
           end
@@ -757,7 +766,6 @@ inherited Sale_OrderJournalForm: TSale_OrderJournalForm
           UserName = 'frxDBDMaster'
           IndexFieldNames = 'GroupName_Juridical;GoodsName_Juridical;GoodsName;GoodsKindName'
         end>
-      CopiesCount = 1
       Params = <
         item
           Name = 'Id'
@@ -816,7 +824,6 @@ inherited Sale_OrderJournalForm: TSale_OrderJournalForm
             'goodsgroupname;GroupName_Juridical;GoodsName_Juridical;GoodsName' +
             ';GoodsKindName'
         end>
-      CopiesCount = 1
       Params = <
         item
           Name = 'Id'
@@ -861,7 +868,6 @@ inherited Sale_OrderJournalForm: TSale_OrderJournalForm
           UserName = 'frxDBDMaster'
           IndexFieldNames = 'GoodsGroupNameFull;GoodsName;GoodsKindName;PartionGoods'
         end>
-      CopiesCount = 1
       Params = <
         item
           Name = 'Id'
@@ -955,7 +961,6 @@ inherited Sale_OrderJournalForm: TSale_OrderJournalForm
           DataSet = PrintItemsSverkaCDS
           UserName = 'frxDBDSverka'
         end>
-      CopiesCount = 1
       Params = <
         item
           Name = 'Id'
@@ -1159,7 +1164,6 @@ inherited Sale_OrderJournalForm: TSale_OrderJournalForm
           DataSet = PrintItemsSverkaCDS
           UserName = 'frxDBDSverka'
         end>
-      CopiesCount = 1
       Params = <
         item
           Name = 'Id'
@@ -1195,7 +1199,6 @@ inherited Sale_OrderJournalForm: TSale_OrderJournalForm
           DataSet = PrintItemsCDS
           UserName = 'frxDBDMaster'
         end>
-      CopiesCount = 1
       Params = <
         item
           Name = 'Id'
@@ -1231,7 +1234,6 @@ inherited Sale_OrderJournalForm: TSale_OrderJournalForm
           DataSet = PrintItemsCDS
           UserName = 'frxDBDMaster'
         end>
-      CopiesCount = 1
       Params = <
         item
           Name = 'Id'
@@ -1286,7 +1288,6 @@ inherited Sale_OrderJournalForm: TSale_OrderJournalForm
           UserName = 'frxDBDMaster'
           IndexFieldNames = 'GroupName_Juridical;GoodsName_Juridical;GoodsName;GoodsKindName'
         end>
-      CopiesCount = 1
       Params = <
         item
           Name = 'Id'
@@ -1328,7 +1329,6 @@ inherited Sale_OrderJournalForm: TSale_OrderJournalForm
           UserName = 'frxDBDMaster'
           IndexFieldNames = 'WeighingNumber;NumOrder'
         end>
-      CopiesCount = 1
       Params = <
         item
           Name = 'Id'
@@ -1369,7 +1369,6 @@ inherited Sale_OrderJournalForm: TSale_OrderJournalForm
           UserName = 'frxDBDMaster'
           IndexFieldNames = 'WeighingNumber;BoxNumber;NumOrder'
         end>
-      CopiesCount = 1
       Params = <
         item
           Name = 'Id'
@@ -1471,7 +1470,6 @@ inherited Sale_OrderJournalForm: TSale_OrderJournalForm
           DataSet = PrintItemsCDS
           UserName = 'frxDBDMaster'
         end>
-      CopiesCount = 1
       Params = <
         item
           Name = 'Id'
@@ -1551,7 +1549,6 @@ inherited Sale_OrderJournalForm: TSale_OrderJournalForm
           UserName = 'frxDBDMaster2'
           IndexFieldNames = 'QualityCode;GoodsGroupName;GoodsName;GoodsKindName'
         end>
-      CopiesCount = 1
       Params = <
         item
           Name = 'Id'

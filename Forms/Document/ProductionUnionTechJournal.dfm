@@ -3,7 +3,7 @@ inherited ProductionUnionTechJournalForm: TProductionUnionTechJournalForm
   ClientHeight = 685
   ClientWidth = 1020
   ExplicitWidth = 1036
-  ExplicitHeight = 723
+  ExplicitHeight = 720
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -1098,9 +1098,6 @@ inherited ProductionUnionTechJournalForm: TProductionUnionTechJournalForm
       StoredProcList = <
         item
           StoredProc = spPrintReceipt
-        end
-        item
-          StoredProc = spPrintReceiptChild
         end>
       Caption = #1055#1077#1095#1072#1090#1100' '#1088#1077#1094#1077#1087#1090#1091#1088#1099
       Hint = #1055#1077#1095#1072#1090#1100' '#1088#1077#1094#1077#1087#1090#1091#1088#1099
@@ -1109,7 +1106,7 @@ inherited ProductionUnionTechJournalForm: TProductionUnionTechJournalForm
         item
           DataSet = PrintMasterCDS
           UserName = 'Master'
-          IndexFieldNames = 'ReceiptId;GroupNumber;InfoMoneyName;GoodsName'
+          IndexFieldNames = 'ReceiptCode;ReceiptId;GroupNumber;InfoMoneyName;GoodsName'
         end>
       Params = <
         item
@@ -1763,9 +1760,11 @@ inherited ProductionUnionTechJournalForm: TProductionUnionTechJournalForm
     end
     inherited N6: TMenuItem [3]
       Action = actComplete
+      Enabled = False
     end
     inherited N5: TMenuItem [4]
       Action = actUnComplete
+      Enabled = False
     end
     object N11: TMenuItem [5]
       Action = actSetErased
@@ -2228,12 +2227,6 @@ inherited ProductionUnionTechJournalForm: TProductionUnionTechJournalForm
     Left = 708
     Top = 233
   end
-  object PrintChildCDS: TClientDataSet
-    Aggregates = <>
-    Params = <>
-    Left = 708
-    Top = 278
-  end
   object spReport_TaxExit: TdsdStoredProc
     StoredProcName = 'gpReport_GoodsMI_ProductionUnion_TaxExit'
     DataSet = PrintMasterCDS
@@ -2318,31 +2311,6 @@ inherited ProductionUnionTechJournalForm: TProductionUnionTechJournalForm
     PackSize = 1
     Left = 424
     Top = 185
-  end
-  object spPrintReceiptChild: TdsdStoredProc
-    StoredProcName = 'gpSelect_Object_ReceiptChild'
-    DataSet = PrintChildCDS
-    DataSets = <
-      item
-        DataSet = PrintChildCDS
-      end>
-    Params = <
-      item
-        Name = 'inReceiptId'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'ReceiptId'
-        ParamType = ptInput
-      end
-      item
-        Name = 'inShowAll'
-        Value = True
-        DataType = ftBoolean
-        ParamType = ptInput
-      end>
-    PackSize = 1
-    Left = 440
-    Top = 201
   end
   object spReport_TaxLoss: TdsdStoredProc
     StoredProcName = 'gpReport_GoodsMI_ProductionUnion_TaxLoss'

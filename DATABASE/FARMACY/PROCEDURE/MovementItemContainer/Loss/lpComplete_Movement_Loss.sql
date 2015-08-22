@@ -151,7 +151,7 @@ WITH LOSS AS ( SELECT
           , Container.Amount AS ContainerAmount 
           , OperDate 
           , Container.Id
-          , SUM(Container.Amount) OVER (PARTITION BY Container.objectid ORDER BY OPERDATE,Container.Id) 
+          , SUM(Container.Amount) OVER (PARTITION BY Container.objectid ORDER BY OPERDATE, Container.Id)
         FROM Container 
             JOIN LOSS ON LOSS.objectid = Container.objectid 
             JOIN containerlinkobject AS CLI_MI 

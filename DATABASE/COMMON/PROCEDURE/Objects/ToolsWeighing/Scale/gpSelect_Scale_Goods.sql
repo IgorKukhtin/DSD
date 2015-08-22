@@ -187,7 +187,7 @@ BEGIN
                                  , (SELECT lpGet.ValuePrice FROM lpGet_ObjectHistory_PriceListItem (vbOperDate_price, vbPriceListId, vbGoodsId) AS lpGet) AS Price
                                  , 1 AS CountForPrice -- плохое решение
                                  , FALSE AS isTare
-                            FROM (SELECT vbGoodsId AS GoodsId) AS tmp
+                            FROM (SELECT vbGoodsId AS GoodsId WHERE vbGoodsId <> 0) AS tmp
                                  LEFT JOIN tmpMI_Order ON tmpMI_Order.GoodsId = tmp.GoodsId
                                  LEFT JOIN tmpMI_Weighing ON tmpMI_Weighing.GoodsId = tmp.GoodsId
                             WHERE tmpMI_Order.GoodsId IS NULL AND tmpMI_Weighing.GoodsId IS NULL

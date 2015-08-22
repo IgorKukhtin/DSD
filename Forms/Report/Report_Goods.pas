@@ -25,18 +25,18 @@ type
     clGoodsCode: TcxGridDBColumn;
     clGoodsName: TcxGridDBColumn;
     clMovementDescName: TcxGridDBColumn;
-    clSummStart: TcxGridDBColumn;
-    clSummIn: TcxGridDBColumn;
-    clSummOut: TcxGridDBColumn;
-    clSummEnd: TcxGridDBColumn;
+    SummStart: TcxGridDBColumn;
+    SummIn: TcxGridDBColumn;
+    SummOut: TcxGridDBColumn;
+    SummEnd: TcxGridDBColumn;
     clInvNumber: TcxGridDBColumn;
     clGoodsKindName: TcxGridDBColumn;
     clOperDate: TcxGridDBColumn;
     clObjectByName: TcxGridDBColumn;
     clOperDatePartner: TcxGridDBColumn;
     clObjectByCode: TcxGridDBColumn;
-    clAmountStart: TcxGridDBColumn;
-    clPrice: TcxGridDBColumn;
+    AmountStart: TcxGridDBColumn;
+    Price: TcxGridDBColumn;
     cxLabel4: TcxLabel;
     edLocation: TcxButtonEdit;
     LocationGuides: TdsdGuides;
@@ -80,6 +80,15 @@ type
     bbSumm_branch: TdxBarControlContainerItem;
     ExecuteDialog: TExecuteDialog;
     bbExecuteDialog: TdxBarButton;
+    Price_branch: TcxGridDBColumn;
+    Price_branch_end: TcxGridDBColumn;
+    SummStart_branch: TcxGridDBColumn;
+    SummIn_branch: TcxGridDBColumn;
+    SummOut_branch: TcxGridDBColumn;
+    SummEnd_branch: TcxGridDBColumn;
+    Summ_branch: TcxGridDBColumn;
+    isRePrice: TcxGridDBColumn;
+    isInv: TcxGridDBColumn;
   private
     { Private declarations }
   public

@@ -12,17 +12,18 @@ CREATE OR REPLACE FUNCTION gpReport_GoodsGroup (
     IN inIsPartner    Boolean   ,
     IN inSession      TVarChar    -- сессия пользователя
 )
-RETURNS TABLE  (MovementId Integer, InvNumber TVarChar, OperDate TDateTime, OperDatePartner TDateTime, MovementDescName TVarChar, MovementDescName_order TVarChar, isActive Boolean, isRemains Boolean
+RETURNS TABLE  (MovementId Integer, InvNumber TVarChar, OperDate TDateTime, OperDatePartner TDateTime, MovementDescName TVarChar, MovementDescName_order TVarChar
+              , isActive Boolean, isRemains Boolean, isRePrice Boolean, isInv Boolean
               , LocationDescName TVarChar, LocationCode Integer, LocationName TVarChar
               , CarCode Integer, CarName TVarChar
               , ObjectByDescName TVarChar, ObjectByCode Integer, ObjectByName TVarChar
               , PaidKindName TVarChar
               , GoodsCode Integer, GoodsName TVarChar, GoodsKindName TVarChar, GoodsKindName_complete TVarChar, PartionGoods TVarChar
               , GoodsCode_parent Integer, GoodsName_parent TVarChar, GoodsKindName_parent TVarChar
-              , Price TFloat, Price_end TFloat, Price_partner TFloat
+              , Price TFloat, Price_branch TFloat, Price_end TFloat, Price_branch_end TFloat, Price_partner TFloat
               , SummPartnerIn TFloat, SummPartnerOut TFloat
               , AmountStart TFloat, AmountIn TFloat, AmountOut TFloat, AmountEnd TFloat, Amount TFloat
-              , SummStart TFloat, SummStart_branch TFloat, SummIn TFloat, SummOut TFloat, SummEnd TFloat, SummEnd_branch TFloat, Summ TFloat, Summ_branch TFloat
+              , SummStart TFloat, SummStart_branch TFloat, SummIn TFloat, SummIn_branch TFloat, SummOut TFloat, SummOut_branch TFloat, SummEnd TFloat, SummEnd_branch TFloat, Summ TFloat, Summ_branch TFloat
 
               , Amount_Change TFloat, Summ_Change_branch TFloat, Summ_Change_zavod TFloat
               , Amount_40200 TFloat, Summ_40200_branch TFloat, Summ_40200_zavod TFloat
@@ -1011,6 +1012,8 @@ BEGIN
 
         , tmpResult.isActive AS isActive
         , CASE WHEN tmpResult.MovementDescId = 0 THEN TRUE ELSE FALSE END :: Boolean AS isRemains
+        , tmpResult.isRePrice
+        , CASE WHEN tmpResult.MovementDescId = zc_Movement_Inventory() THEN TRUE ELSE FALSE END :: Boolean AS isInv
 
         , ''   :: TVarChar  AS LocationDescName
         , tmpResult.LocationCode
@@ -1044,10 +1047,16 @@ BEGIN
                           THEN tmpResult.SummOut / tmpResult.AmountOut
                      ELSE 0
                 END AS TFloat) AS Price
+
+        , 0 :: TFLoat AS Price_branch
+
         , CAST (CASE WHEN tmpResult.AmountEnd <> 0
                           THEN tmpResult.SummEnd / tmpResult.AmountEnd
                      ELSE 0
                 END AS TFloat) AS Price_end
+
+        , 0 :: TFLoat AS Price_branch_end
+
         , CAST (CASE WHEN tmpResult.AmountIn <> 0
                           THEN tmpResult.SummPartnerIn / tmpResult.AmountIn
                      WHEN tmpResult.AmountOut <> 0
@@ -1061,7 +1070,7 @@ BEGIN
         , CAST (tmpResult.AmountStart AS TFloat) AS AmountStart
         , CAST (tmpResult.AmountIn AS TFloat)    AS AmountIn
         , CAST (tmpResult.AmountOut AS TFloat)   AS AmountOut
-        , CAST (tmpResult.AmountEnd AS TFloat)   AS AmountEnd 
+        , CAST (tmpResult.AmountEnd AS TFloat)   AS AmountEnd
         , CAST ((tmpResult.AmountIn - tmpResult.AmountOut)
               * CASE WHEN tmpResult.MovementDescId IN (zc_Movement_Sale(), zc_Movement_ReturnOut(), zc_Movement_Loss()) THEN -1 ELSE 1 END
               * CASE WHEN tmpResult.MovementDescId IN (zc_Movement_Send(), zc_Movement_SendOnPrice(), zc_Movement_ProductionUnion(), zc_Movement_ProductionSeparate()) AND tmpResult.isActive = FALSE THEN -1 ELSE 1 END
@@ -1070,7 +1079,9 @@ BEGIN
         , CAST (tmpResult.SummStart AS TFloat)   AS SummStart
         , CAST (tmpResult.SummStart AS TFloat)   AS SummStart_branch
         , CAST (tmpResult.SummIn AS TFloat)      AS SummIn
+        , CAST (tmpResult.SummIn AS TFloat)      AS SummIn_branch
         , CAST (tmpResult.SummOut AS TFloat)     AS SummOut
+        , CAST (tmpResult.SummOut AS TFloat)     AS SummOut_branch
         , CAST (tmpResult.SummEnd AS TFloat)     AS SummEnd
         , CAST (tmpResult.SummEnd AS TFloat)     AS SummEnd_branch
         /*, CAST ((tmpResult.SummIn - tmpResult.SummOut)

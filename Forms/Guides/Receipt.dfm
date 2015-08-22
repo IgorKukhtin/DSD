@@ -27,7 +27,7 @@ object ReceiptForm: TReceiptForm
     LookAndFeel.NativeStyle = False
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
-      DataController.DataSource = DataSource
+      DataController.DataSource = MasterDS
       DataController.Filter.Options = [fcoCaseInsensitive]
       DataController.Filter.Active = True
       DataController.Summary.DefaultGroupSummaryItems = <>
@@ -446,7 +446,7 @@ object ReceiptForm: TReceiptForm
     LookAndFeel.SkinName = ''
     object cxGridDBTableViewReceiptChild: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
-      DataController.DataSource = ReceiptChildDS
+      DataController.DataSource = ChildDS
       DataController.Filter.Options = [fcoCaseInsensitive]
       DataController.Filter.Active = True
       DataController.Summary.DefaultGroupSummaryItems = <
@@ -655,12 +655,12 @@ object ReceiptForm: TReceiptForm
     AlignSplitter = salBottom
     Control = cxGridContractCondition
   end
-  object DataSource: TDataSource
-    DataSet = ClientDataSet
+  object MasterDS: TDataSource
+    DataSet = MasterCDS
     Left = 56
     Top = 96
   end
-  object ClientDataSet: TClientDataSet
+  object MasterCDS: TClientDataSet
     Aggregates = <>
     MasterFields = 'Id'
     Params = <>
@@ -778,14 +778,6 @@ object ReceiptForm: TReceiptForm
         item
           Visible = True
           ItemName = 'bbPrint'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarStatic1'
-        end
-        item
-          Visible = True
-          ItemName = 'bbPrintDetail'
         end
         item
           Visible = True
@@ -929,12 +921,12 @@ object ReceiptForm: TReceiptForm
         item
           Name = 'InMaskId'
           Value = 'True'
-          Component = ClientDataSet
+          Component = MasterCDS
           ComponentItem = 'Id'
           ParamType = ptInput
         end>
       isShowModal = True
-      DataSource = DataSource
+      DataSource = MasterDS
       DataSetRefresh = actRefresh
       IdFieldName = 'Id'
     end
@@ -962,7 +954,7 @@ object ReceiptForm: TReceiptForm
           DataType = ftString
         end>
       isShowModal = True
-      DataSource = DataSource
+      DataSource = MasterDS
       DataSetRefresh = actRefresh
       IdFieldName = 'Id'
     end
@@ -979,7 +971,7 @@ object ReceiptForm: TReceiptForm
         item
           Name = 'Id'
           Value = Null
-          Component = ClientDataSet
+          Component = MasterCDS
           ComponentItem = 'Id'
           ParamType = ptInput
         end
@@ -990,7 +982,7 @@ object ReceiptForm: TReceiptForm
         end>
       isShowModal = True
       ActionType = acUpdate
-      DataSource = DataSource
+      DataSource = MasterDS
       DataSetRefresh = actRefresh
       IdFieldName = 'Id'
     end
@@ -1007,7 +999,7 @@ object ReceiptForm: TReceiptForm
       ImageIndex = 2
       ShortCut = 46
       ErasedFieldName = 'isErased'
-      DataSource = DataSource
+      DataSource = MasterDS
     end
     object dsdSetUnErased: TdsdUpdateErased
       Category = 'DSDLib'
@@ -1023,7 +1015,7 @@ object ReceiptForm: TReceiptForm
       ShortCut = 32776
       ErasedFieldName = 'isErased'
       isSetErased = False
-      DataSource = DataSource
+      DataSource = MasterDS
     end
     object dsdChoiceGuides: TdsdChoiceGuides
       Category = 'DSDLib'
@@ -1032,13 +1024,13 @@ object ReceiptForm: TReceiptForm
         item
           Name = 'Key'
           Value = Null
-          Component = ClientDataSet
+          Component = MasterCDS
           ComponentItem = 'Id'
         end
         item
           Name = 'TextValue'
           Value = Null
-          Component = ClientDataSet
+          Component = MasterCDS
           ComponentItem = 'Name'
           DataType = ftString
         end>
@@ -1067,13 +1059,13 @@ object ReceiptForm: TReceiptForm
         item
           Name = 'Key'
           Value = Null
-          Component = ReceiptChildCDS
+          Component = ChildCDS
           ComponentItem = 'GoodsKindId'
         end
         item
           Name = 'TextValue'
           Value = Null
-          Component = ReceiptChildCDS
+          Component = ChildCDS
           ComponentItem = 'GoodsKindName'
           DataType = ftString
         end>
@@ -1113,13 +1105,13 @@ object ReceiptForm: TReceiptForm
         item
           Name = 'Key'
           Value = Null
-          Component = ReceiptChildCDS
+          Component = ChildCDS
           ComponentItem = 'GoodsId'
         end
         item
           Name = 'TextValue'
           Value = Null
-          Component = ReceiptChildCDS
+          Component = ChildCDS
           ComponentItem = 'GoodsName'
           DataType = ftString
         end>
@@ -1146,7 +1138,7 @@ object ReceiptForm: TReceiptForm
           StoredProc = spInsertUpdateReceiptChild
         end>
       Caption = 'actUpdateDataSetCCK'
-      DataSource = ReceiptChildDS
+      DataSource = ChildDS
     end
     object actUpdateDataSet: TdsdUpdateDataSet
       Category = 'DSDLib'
@@ -1158,24 +1150,24 @@ object ReceiptForm: TReceiptForm
           StoredProc = spInsertUpdate
         end>
       Caption = 'actUpdateDataSet'
-      DataSource = DataSource
+      DataSource = MasterDS
     end
     object actPrint: TdsdPrintAction
       Category = 'Print'
       MoveParams = <>
-      StoredProcList = <>
+      StoredProc = spPrintReceipt
+      StoredProcList = <
+        item
+          StoredProc = spPrintReceipt
+        end>
       Caption = #1055#1077#1095#1072#1090#1100' '#1088#1077#1094#1077#1087#1090#1091#1088#1099
       Hint = #1055#1077#1095#1072#1090#1100' '#1088#1077#1094#1077#1087#1090#1091#1088#1099
       ImageIndex = 16
       DataSets = <
         item
-          DataSet = ClientDataSet
+          DataSet = PrintMasterCDS
           UserName = 'Master'
-        end
-        item
-          DataSet = ReceiptChildCDS
-          UserName = 'Client'
-          IndexFieldNames = 'ReceiptId;GroupNumber;InfoMoneyName;GoodsName'
+          IndexFieldNames = 'ReceiptCode;ReceiptId;GroupNumber;InfoMoneyName;GoodsName'
         end>
       Params = <>
       ReportName = #1055#1077#1095#1072#1090#1100'_'#1088#1077#1094#1077#1087#1090#1086#1074
@@ -1195,7 +1187,7 @@ object ReceiptForm: TReceiptForm
       ImageIndex = 15
       DataSets = <
         item
-          DataSet = ClientDataSet
+          DataSet = MasterCDS
           UserName = 'Master'
         end
         item
@@ -1211,10 +1203,10 @@ object ReceiptForm: TReceiptForm
   end
   object spSelect: TdsdStoredProc
     StoredProcName = 'gpSelect_Object_Receipt'
-    DataSet = ClientDataSet
+    DataSet = MasterCDS
     DataSets = <
       item
-        DataSet = ClientDataSet
+        DataSet = MasterCDS
       end>
     Params = <
       item
@@ -1255,7 +1247,7 @@ object ReceiptForm: TReceiptForm
       item
         Name = 'inObjectId'
         Value = Null
-        Component = ClientDataSet
+        Component = MasterCDS
         ComponentItem = 'Id'
         ParamType = ptInput
       end>
@@ -1295,16 +1287,16 @@ object ReceiptForm: TReceiptForm
     Left = 272
     Top = 184
   end
-  object ReceiptChildDS: TDataSource
-    DataSet = ReceiptChildCDS
+  object ChildDS: TDataSource
+    DataSet = ChildCDS
     Left = 102
     Top = 413
   end
-  object ReceiptChildCDS: TClientDataSet
+  object ChildCDS: TClientDataSet
     Aggregates = <>
     IndexFieldNames = 'ReceiptId;GroupNumber'
     MasterFields = 'Id'
-    MasterSource = DataSource
+    MasterSource = MasterDS
     PacketRecords = 0
     Params = <>
     Left = 225
@@ -1318,14 +1310,14 @@ object ReceiptForm: TReceiptForm
       item
         Name = 'ioId'
         Value = Null
-        Component = ReceiptChildCDS
+        Component = ChildCDS
         ComponentItem = 'Id'
         ParamType = ptInputOutput
       end
       item
         Name = 'inValue'
         Value = Null
-        Component = ReceiptChildCDS
+        Component = ChildCDS
         ComponentItem = 'Value'
         DataType = ftFloat
         ParamType = ptInput
@@ -1333,14 +1325,14 @@ object ReceiptForm: TReceiptForm
       item
         Name = 'outValueWeight'
         Value = Null
-        Component = ReceiptChildCDS
+        Component = ChildCDS
         ComponentItem = 'ValueWeight'
         DataType = ftFloat
       end
       item
         Name = 'inIsWeightMain'
         Value = Null
-        Component = ReceiptChildCDS
+        Component = ChildCDS
         ComponentItem = 'isWeightMain'
         DataType = ftBoolean
         ParamType = ptInput
@@ -1348,7 +1340,7 @@ object ReceiptForm: TReceiptForm
       item
         Name = 'inIsTaxExit'
         Value = Null
-        Component = ReceiptChildCDS
+        Component = ChildCDS
         ComponentItem = 'isTaxExit'
         DataType = ftBoolean
         ParamType = ptInput
@@ -1356,7 +1348,7 @@ object ReceiptForm: TReceiptForm
       item
         Name = 'inStartDate'
         Value = Null
-        Component = ReceiptChildCDS
+        Component = ChildCDS
         ComponentItem = 'StartDate'
         DataType = ftDateTime
         ParamType = ptInput
@@ -1364,7 +1356,7 @@ object ReceiptForm: TReceiptForm
       item
         Name = 'inEndDate'
         Value = Null
-        Component = ReceiptChildCDS
+        Component = ChildCDS
         ComponentItem = 'EndDate'
         DataType = ftDateTime
         ParamType = ptInput
@@ -1372,7 +1364,7 @@ object ReceiptForm: TReceiptForm
       item
         Name = 'inComment'
         Value = Null
-        Component = ReceiptChildCDS
+        Component = ChildCDS
         ComponentItem = 'Comment'
         DataType = ftString
         ParamType = ptInput
@@ -1380,21 +1372,21 @@ object ReceiptForm: TReceiptForm
       item
         Name = 'inReceiptId'
         Value = Null
-        Component = ClientDataSet
+        Component = MasterCDS
         ComponentItem = 'Id'
         ParamType = ptInput
       end
       item
         Name = 'inGoodsId'
         Value = Null
-        Component = ReceiptChildCDS
+        Component = ChildCDS
         ComponentItem = 'GoodsId'
         ParamType = ptInput
       end
       item
         Name = 'inGoodsKindId'
         Value = Null
-        Component = ReceiptChildCDS
+        Component = ChildCDS
         ComponentItem = 'GoodsKindId'
         ParamType = ptInput
       end>
@@ -1404,10 +1396,10 @@ object ReceiptForm: TReceiptForm
   end
   object spSelectReceiptChild: TdsdStoredProc
     StoredProcName = 'gpSelect_Object_ReceiptChild'
-    DataSet = ReceiptChildCDS
+    DataSet = ChildCDS
     DataSets = <
       item
-        DataSet = ReceiptChildCDS
+        DataSet = ChildCDS
       end>
     Params = <
       item
@@ -1434,42 +1426,42 @@ object ReceiptForm: TReceiptForm
       item
         Name = 'ioId'
         Value = Null
-        Component = ClientDataSet
+        Component = MasterCDS
         ComponentItem = 'Id'
         ParamType = ptInputOutput
       end
       item
         Name = 'inPersonalId'
         Value = Null
-        Component = ClientDataSet
+        Component = MasterCDS
         ComponentItem = 'PersonalId'
         ParamType = ptInput
       end
       item
         Name = 'inPersonalTradeId'
         Value = Null
-        Component = ClientDataSet
+        Component = MasterCDS
         ComponentItem = 'PersonalTradeId'
         ParamType = ptInput
       end
       item
         Name = 'inPersonalCollationId'
         Value = Null
-        Component = ClientDataSet
+        Component = MasterCDS
         ComponentItem = 'PersonalCollationId'
         ParamType = ptInput
       end
       item
         Name = 'inBankAccountId'
         Value = Null
-        Component = ClientDataSet
+        Component = MasterCDS
         ComponentItem = 'BankAccountId'
         ParamType = ptInput
       end
       item
         Name = 'inContractTagId'
         Value = Null
-        Component = ClientDataSet
+        Component = MasterCDS
         ComponentItem = 'ContractTagId'
         ParamType = ptInput
       end>
@@ -1580,7 +1572,7 @@ object ReceiptForm: TReceiptForm
       item
         Name = 'ReceiptId'
         Value = Null
-        Component = ClientDataSet
+        Component = MasterCDS
         ComponentItem = 'Id'
         ParamType = ptInput
       end>
@@ -1593,5 +1585,48 @@ object ReceiptForm: TReceiptForm
     Params = <>
     Left = 216
     Top = 288
+  end
+  object PrintMasterCDS: TClientDataSet
+    Aggregates = <>
+    Params = <>
+    Left = 420
+    Top = 273
+  end
+  object spPrintReceipt: TdsdStoredProc
+    StoredProcName = 'gpSelect_Object_Receipt_Print'
+    DataSet = PrintMasterCDS
+    DataSets = <
+      item
+        DataSet = PrintMasterCDS
+      end>
+    Params = <
+      item
+        Name = 'inReceiptId'
+        Value = '0'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inGoodsId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'GoodsId'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inGoodsKindId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'GoodsKindId'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inShowAll'
+        Value = True
+        DataType = ftBoolean
+        ParamType = ptInput
+      end>
+    PackSize = 1
+    Left = 496
+    Top = 249
   end
 end

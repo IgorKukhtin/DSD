@@ -21,10 +21,6 @@ BEGIN
             JOIN MovementLinkObject AS MovementLinkObject_Unit
                                     ON MovementLinkObject_Unit.MovementId = Movement.Id
                                    AND MovementLinkObject_Unit.DescId = zc_MovementLinkObject_Unit()
-            JOIN MovementBoolean AS MovementBoolean_isAuto
-                                 ON MovementBoolean_isAuto.MovementId = Movement.Id 
-                                AND MovementBoolean_isAuto.DescId = zc_MovementBoolean_isAuto()
-                                    
         WHERE 
             Movement.StatusId = zc_Enum_Status_UnComplete() 
             AND 
@@ -33,8 +29,6 @@ BEGIN
             Movement.OperDate = CURRENT_DATE 
             AND 
             MovementLinkObject_Unit.ObjectId = inUnitId
-            AND
-            MovementBoolean_isAuto.ValueData = True
         ORDER BY
             Movement.Id
         LIMIT 1;

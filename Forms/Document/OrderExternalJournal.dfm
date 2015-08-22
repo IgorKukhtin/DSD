@@ -3,7 +3,7 @@ inherited OrderExternalJournalForm: TOrderExternalJournalForm
   ClientHeight = 661
   ClientWidth = 1064
   ExplicitWidth = 1080
-  ExplicitHeight = 699
+  ExplicitHeight = 696
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -150,6 +150,13 @@ inherited OrderExternalJournalForm: TOrderExternalJournalForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 70
+          end
+          object OperDatePartner_sale: TcxGridDBColumn
+            Caption = #1044#1072#1090#1072' '#1082#1086#1085#1090#1088#1072#1075#1077#1085#1090#1072
+            DataBinding.FieldName = 'OperDatePartner_sale'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 80
           end
           object colOperDateMark: TcxGridDBColumn
             Caption = #1044#1072#1090#1072' '#1084#1072#1088#1082'.'
@@ -465,7 +472,6 @@ inherited OrderExternalJournalForm: TOrderExternalJournalForm
           UserName = 'frxDBDMaster'
           IndexFieldNames = 'GoodsName;GoodsKindName'
         end>
-      CopiesCount = 1
       Params = <
         item
           Name = 'Id'
@@ -579,7 +585,6 @@ inherited OrderExternalJournalForm: TOrderExternalJournalForm
           UserName = 'frxDBDMaster'
           IndexFieldNames = 'GoodsGroupNameFull;GoodsName;GoodsKindName'
         end>
-      CopiesCount = 1
       Params = <
         item
           Name = 'Id'

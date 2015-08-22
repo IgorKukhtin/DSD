@@ -9,10 +9,10 @@ CREATE OR REPLACE FUNCTION gpselect_object_receipt_print(
     IN inshowall boolean,
     IN insession tvarchar
     )
-  RETURNS TABLE(receiptid integer, code integer, name tvarchar, receiptcode tvarchar
+  RETURNS TABLE(receiptid integer, code integer, name tvarchar, receiptcode tvarchar, isMain Boolean
               , value tfloat, ValueWeight TFloat, taxexit tfloat, partionvalue tfloat, partioncount tfloat, weightpackage tfloat
               , startdate tdatetime
-              , goodsid integer, goodsname tvarchar, goodskindname tvarchar
+              , GoodsGroupName tvarchar, goodsid integer, goodsCode integer, goodsname tvarchar, goodskindname tvarchar
               , measurename tvarchar
               , infomoneyname tvarchar
               , ChildValueWeight TFloat
@@ -38,6 +38,7 @@ BEGIN
          , Object_Receipt.ValueData  AS Name
 
          , ObjectString_Code.ValueData    AS ReceiptCode
+         , ObjectBoolean_Main.ValueData   AS isMain
         
          , ObjectFloat_Value.ValueData   ::TFloat      AS Value
          , (ObjectFloat_Value.ValueData * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData, 0) ELSE 1 END) :: TFloat AS ValueWeight         
@@ -49,10 +50,12 @@ BEGIN
 
          , ObjectDate_StartDate.ValueData  AS StartDate
       
-         , Object_Goods.Id          AS GoodsId
-         , Object_Goods.ValueData ::TVarChar  AS GoodsName
-         , Object_GoodsKind.ValueData  AS GoodsKindName
-         , Object_Measure.ValueData     AS MeasureName
+         , Object_GoodsGroup.ValueData   AS GoodsGroupName
+         , Object_Goods.Id               AS GoodsId
+         , Object_Goods.ObjectCode       AS GoodsCode
+         , Object_Goods.ValueData        AS GoodsName
+         , Object_GoodsKind.ValueData    AS GoodsKindName
+         , Object_Measure.ValueData      AS MeasureName
          , Object_InfoMoney_View.InfoMoneyName ::TVarChar as InfoMoneyName
 
          , tmpReceiptChild.ValueWeight ::TFloat AS ChildValueWeight
@@ -80,6 +83,11 @@ BEGIN
                                ON ObjectLink_Goods_InfoMoney.ObjectId = Object_Goods.Id
                               AND ObjectLink_Goods_InfoMoney.DescId = zc_ObjectLink_Goods_InfoMoney()
           LEFT JOIN Object_InfoMoney_View ON Object_InfoMoney_View.InfoMoneyId = ObjectLink_Goods_InfoMoney.ChildObjectId
+
+            LEFT JOIN ObjectLink AS ObjectLink_Goods_GoodsGroup
+                                 ON ObjectLink_Goods_GoodsGroup.ObjectId = Object_Goods.Id
+                                AND ObjectLink_Goods_GoodsGroup.DescId = zc_ObjectLink_Goods_GoodsGroup()
+            LEFT JOIN Object AS Object_GoodsGroup ON Object_GoodsGroup.Id = ObjectLink_Goods_GoodsGroup.ChildObjectId
 
           LEFT JOIN ObjectFloat AS ObjectFloat_Weight
                                 ON ObjectFloat_Weight.ObjectId = Object_Goods.Id 
@@ -215,8 +223,9 @@ BEGIN
       AND (ObjectLink_Receipt_Goods.ChildObjectId = inGoodsId OR inGoodsId = 0)
       AND (ObjectLink_Receipt_GoodsKind.ChildObjectId = inGoodsKindId OR inGoodsKindId = 0)
       AND Object_Receipt.isErased = False
+      AND tmpReceiptChild.ValueWeight <> 0
        
-;
+    ;
 
    -- RETURN NEXT Cursor1;
 
@@ -229,9 +238,7 @@ $BODY$
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
               ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».   Ã‡Ì¸ÍÓ ƒ.
  16.07.15        *
-
 */
 
 -- ÚÂÒÚ
--- SELECT * FROM gpSelect_Object_Receipt (0, 0, 0, FALSE, zfCalc_UserAdmin())
-
+-- SELECT * FROM gpselect_object_receipt_print (1, 0, 0, FALSE, zfCalc_UserAdmin())
