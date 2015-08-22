@@ -16,32 +16,33 @@ $BODY$
    DECLARE vbOperDate TDateTime;
 BEGIN
 
-     -- создаются временные таблицы - для формирование данных для проводок
-     PERFORM lpComplete_Movement_Finance_CreateTemp();
+    -- создаются временные таблицы - для формирование данных для проводок
+    PERFORM lpComplete_Movement_Finance_CreateTemp();
 
-     -- !!!обязательно!!! очистили таблицу проводок
-     DELETE FROM _tmpMIContainer_insert;
-  --   DELETE FROM _tmpMIReport_insert;
-     -- !!!обязательно!!! очистили таблицу - элементы документа, со всеми свойствами для формирования Аналитик в проводках
-     DELETE FROM _tmpItem;
+    -- !!!обязательно!!! очистили таблицу проводок
+    DELETE FROM _tmpMIContainer_insert;
+    -- DELETE FROM _tmpMIReport_insert;
+    -- !!!обязательно!!! очистили таблицу - элементы документа, со всеми свойствами для формирования Аналитик в проводках
+    DELETE FROM _tmpItem;
 
-     SELECT OperDate INTO vbOperDate FROM Movement WHERE Id = inMovementId;
+    SELECT OperDate INTO vbOperDate FROM Movement WHERE Id = inMovementId;
 
-   vbAccountId := lpInsertFind_Object_Account (inAccountGroupId         := zc_Enum_AccountGroup_20000() -- Запасы
-                                     , inAccountDirectionId     := zc_Enum_AccountDirection_20100() -- Cклад 
-                                     , inInfoMoneyDestinationId := zc_Enum_InfoMoneyDestination_10200() -- Медикаменты
-                                     , inInfoMoneyId            := NULL
-                                     , inUserId                 := inUserId);
+    vbAccountId := lpInsertFind_Object_Account (inAccountGroupId         := zc_Enum_AccountGroup_20000() -- Запасы
+                                              , inAccountDirectionId     := zc_Enum_AccountDirection_20100() -- Cклад 
+                                              , inInfoMoneyDestinationId := zc_Enum_InfoMoneyDestination_10200() -- Медикаменты
+                                              , inInfoMoneyId            := NULL
+                                              , inUserId                 := inUserId);
 
-   SELECT MovementLinkObject.ObjectId INTO vbUnitId 
-     FROM MovementLinkObject 
+    SELECT MovementLinkObject.ObjectId INTO vbUnitId 
+    FROM MovementLinkObject 
     WHERE MovementLinkObject.MovementId = inMovementId 
       AND MovementLinkObject.DescId = zc_MovementLinkObject_Unit();
 
-   -- Проводки по суммам документа. Деньги в кассу
+    -- Проводки по суммам документа. Деньги в кассу
    
-/*   INSERT INTO _tmpItem(ObjectId, OperSumm, AccountId, JuridicalId_Basis, OperDate)   
-   SELECT Movement_Income_View.FromId
+/*  
+    INSERT INTO _tmpItem(ObjectId, OperSumm, AccountId, JuridicalId_Basis, OperDate)   
+    SELECT Movement_Income_View.FromId
         , Movement_Income_View.TotalSumm
         , lpInsertFind_Object_Account (inAccountGroupId         := zc_Enum_AccountGroup_70000()
                                      , inAccountDirectionId     := zc_Enum_AccountDirection_70100()
@@ -50,53 +51,54 @@ BEGIN
                                      , inUserId                 := inUserId)
         , Movement_Income_View.JuridicalId
         , Movement_Income_View.OperDate
-     FROM Movement_Income_View
+    FROM Movement_Income_View
     WHERE Movement_Income_View.Id =  inMovementId;
     
     INSERT INTO _tmpMIContainer_insert(DescId, MovementDescId, MovementId, ContainerId, AccountId, Amount, OperDate)
-         SELECT 
-                zc_Container_Summ()
-              , zc_Movement_Income()  
-              , inMovementId
-              , lpInsertFind_Container(
-                          inContainerDescId := zc_Container_Summ(), -- DescId Остатка
-                          inParentId        := NULL               , -- Главный Container
-                          inObjectId := _tmpItem.AccountId, -- Объект (Счет или Товар или ...)
-                          inJuridicalId_basis := _tmpItem.JuridicalId_Basis, -- Главное юридическое лицо
-                          inBusinessId := NULL, -- Бизнесы
-                          inObjectCostDescId  := NULL, -- DescId для <элемент с/с>
-                          inObjectCostId       := NULL, -- <элемент с/с> - необычная аналитика счета 
-                          inDescId_1          := zc_ContainerLinkObject_Juridical(), -- DescId для 1-ой Аналитики
-                          inObjectId_1        := _tmpItem.ObjectId) 
-              , AccountId
-              , - OperSumm
-              , OperDate
-           FROM _tmpItem;
-                 
-           SELECT SUM(OperSumm) INTO vbOperSumm_Partner
-             FROM _tmpItem;
+    SELECT 
+        zc_Container_Summ()
+      , zc_Movement_Income()  
+      , inMovementId
+      , lpInsertFind_Container(
+                      inContainerDescId   := zc_Container_Summ(), -- DescId Остатка
+                      inParentId          := NULL               , -- Главный Container
+                      inObjectId          := _tmpItem.AccountId, -- Объект (Счет или Товар или ...)
+                      inJuridicalId_basis := _tmpItem.JuridicalId_Basis, -- Главное юридическое лицо
+                      inBusinessId        := NULL, -- Бизнесы
+                      inObjectCostDescId  := NULL, -- DescId для <элемент с/с>
+                      inObjectCostId      := NULL, -- <элемент с/с> - необычная аналитика счета 
+                      inDescId_1          := zc_ContainerLinkObject_Juridical(), -- DescId для 1-ой Аналитики
+                      inObjectId_1        := _tmpItem.ObjectId) 
+      , AccountId
+      , - OperSumm
+      , OperDate
+    FROM _tmpItem;
+             
+    SELECT SUM(OperSumm) INTO vbOperSumm_Partner
+    FROM _tmpItem;
 
     -- Сумма платежа
     INSERT INTO _tmpMIContainer_insert(DescId, MovementDescId, MovementId, ContainerId, AccountId, Amount, OperDate)
-         SELECT 
-                zc_Container_SummIncomeMovementPayment()
-              , zc_Movement_Income()  
-              , inMovementId
-              , lpInsertFind_Container(
-                          inContainerDescId := zc_Container_SummIncomeMovementPayment(), -- DescId Остатка
-                          inParentId        := NULL               , -- Главный Container
-                          inObjectId := lpInsertFind_Object_PartionMovement(inMovementId), -- Объект (Счет или Товар или ...)
-                          inJuridicalId_basis := _tmpItem.JuridicalId_Basis, -- Главное юридическое лицо
-                          inBusinessId := NULL, -- Бизнесы
-                          inObjectCostDescId  := NULL, -- DescId для <элемент с/с>
-                          inObjectCostId       := NULL) -- <элемент с/с> - необычная аналитика счета) 
-              , null
-              , OperSumm
-              , OperDate
-           FROM _tmpItem;
+    SELECT 
+        zc_Container_SummIncomeMovementPayment()
+      , zc_Movement_Income()  
+      , inMovementId
+      , lpInsertFind_Container(
+                  inContainerDescId := zc_Container_SummIncomeMovementPayment(), -- DescId Остатка
+                  inParentId        := NULL               , -- Главный Container
+                  inObjectId := lpInsertFind_Object_PartionMovement(inMovementId), -- Объект (Счет или Товар или ...)
+                  inJuridicalId_basis := _tmpItem.JuridicalId_Basis, -- Главное юридическое лицо
+                  inBusinessId := NULL, -- Бизнесы
+                  inObjectCostDescId  := NULL, -- DescId для <элемент с/с>
+                  inObjectCostId       := NULL) -- <элемент с/с> - необычная аналитика счета) 
+      , null
+      , OperSumm
+      , OperDate
+    FROM _tmpItem;
 
-  */               
- /*    CREATE TEMP TABLE _tmpItem (MovementDescId Integer, OperDate TDateTime, ObjectId Integer, ObjectDescId Integer, OperSumm TFloat, OperSumm_Currency TFloat, OperSumm_Diff TFloat
+*/               
+/*
+    CREATE TEMP TABLE _tmpItem (MovementDescId Integer, OperDate TDateTime, ObjectId Integer, ObjectDescId Integer, OperSumm TFloat, OperSumm_Currency TFloat, OperSumm_Diff TFloat
                                , MovementItemId Integer, ContainerId Integer, ContainerId_Currency Integer, ContainerId_Diff Integer, ProfitLossId_Diff Integer
                                , AccountGroupId Integer, AccountDirectionId Integer, AccountId Integer
                                , ProfitLossGroupId Integer, ProfitLossDirectionId Integer
@@ -109,34 +111,34 @@ BEGIN
                                 ) ON COMMIT DROP;
 */
 /*
-   DELETE FROM _tmpItem;
-   INSERT INTO _tmpItem(MovementDescId, MovementItemId, ObjectId, OperSumm, AccountId, JuridicalId_Basis, OperDate, UnitId)   
-   SELECT
-          zc_Movement_Income()
-        , MovementItem_Income_View.Id
-        , MovementItem_Income_View.GoodsId
-        , MovementItem_Income_View.Amount
-        , lpInsertFind_Object_Account (inAccountGroupId         := zc_Enum_AccountGroup_20000() -- Запасы
-                                     , inAccountDirectionId     := zc_Enum_AccountDirection_20100() -- Cклад 
-                                     , inInfoMoneyDestinationId := zc_Enum_InfoMoneyDestination_10200() -- Медикаменты
-                                     , inInfoMoneyId            := NULL
-                                     , inUserId                 := inUserId)
-        , Movement_Income_View.JuridicalId
-        , Movement_Income_View.OperDate
-        , Movement_Income_View.ToId
-     FROM MovementItem_Income_View, Movement_Income_View
+    DELETE FROM _tmpItem;
+    INSERT INTO _tmpItem(MovementDescId, MovementItemId, ObjectId, OperSumm, AccountId, JuridicalId_Basis, OperDate, UnitId)   
+    SELECT
+        zc_Movement_Income()
+      , MovementItem_Income_View.Id
+      , MovementItem_Income_View.GoodsId
+      , MovementItem_Income_View.Amount
+      , lpInsertFind_Object_Account (inAccountGroupId         := zc_Enum_AccountGroup_20000() -- Запасы
+                                   , inAccountDirectionId     := zc_Enum_AccountDirection_20100() -- Cклад 
+                                   , inInfoMoneyDestinationId := zc_Enum_InfoMoneyDestination_10200() -- Медикаменты
+                                   , inInfoMoneyId            := NULL
+                                   , inUserId                 := inUserId)
+      , Movement_Income_View.JuridicalId
+      , Movement_Income_View.OperDate
+      , Movement_Income_View.ToId
+    FROM MovementItem_Income_View, Movement_Income_View
     WHERE MovementItem_Income_View.MovementId = Movement_Income_View.Id AND Movement_Income_View.Id =  inMovementId;
  */
 
     -- А сюда товары
     WITH DD AS (
                     SELECT 
-                        MI_Sale.Id AS MovementItemId
-                      , MI_Sale.Amount AS SaleAmount
+                        MI_Sale.Id       AS MovementItemId
+                      , MI_Sale.Amount   AS SaleAmount
                       , Container.Amount AS ContainerAmount
-                      , vbOperDate AS OperDate
+                      , vbOperDate       AS OperDate
                       , Container.Id
-                      , SUM(Container.Amount) OVER (PARTITION BY Container.objectid ORDER BY OPERDATE, Movement.Id) 
+                      , SUM(Container.Amount) OVER (PARTITION BY Container.objectid ORDER BY OPERDATE, Container.Id) 
                     FROM Container 
                         JOIN MovementItem AS MI_Sale ON MI_Sale.objectid = Container.objectid 
                         JOIN containerlinkobject AS CLI_MI 
@@ -150,7 +152,8 @@ BEGIN
                         JOIN movementitem ON movementitem.Id = Object_PartionMovementItem.ObjectCode
                         JOIN Movement ON Movement.Id = movementitem.movementid
                     WHERE MI_Sale.MovementId = inMovementId  
-                      AND Container.Amount > 0), 
+                      AND Container.Amount > 0
+                      AND MI_Sale.Amount > 0), 
   
          tmpItem AS (
                         SELECT 
@@ -165,16 +168,16 @@ BEGIN
                         WHERE SaleAmount - (SUM - ContainerAmount) > 0)
 
     INSERT INTO _tmpMIContainer_insert(DescId, MovementDescId, MovementId, MovementItemId, ContainerId, AccountId, Amount, OperDate)
-         SELECT 
-                zc_Container_Count()
-              , zc_Movement_Income()  
-              , inMovementId
-              , tmpItem.MovementItemId
-              , tmpItem.Id
-              , vbAccountId
-              , - Amount
-              , vbOperDate
-           FROM tmpItem;
+    SELECT 
+        zc_Container_Count()
+      , zc_Movement_Income()  
+      , inMovementId
+      , tmpItem.MovementItemId
+      , tmpItem.Id
+      , vbAccountId
+      , - Amount
+      , vbOperDate
+    FROM tmpItem;
     
 --     CREATE TEMP TABLE _tmpMIContainer_insert (Id Integer, DescId Integer, MovementDescId Integer, MovementId Integer, MovementItemId Integer, ContainerId Integer, ParentId Integer
   --                                           , AccountId Integer, AnalyzerId Integer, ObjectId_Analyzer Integer, WhereObjectId_Analyzer Integer, ContainerId_Analyzer Integer

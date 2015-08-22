@@ -1079,6 +1079,10 @@ begin
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TPriceList_ObjectForm'));
   TdsdFormStorageFactory.GetStorage.Load('TPriceList_ObjectForm');
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TPriceListTaxDialogForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TPriceListTaxDialogForm');
+
 end;
 
 procedure TLoadFormTest.LoadQualityFormTest;

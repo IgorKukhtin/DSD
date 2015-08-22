@@ -71,6 +71,8 @@ type
     ProtocolOpenForm: TdsdOpenForm;
     bbProtocol: TdxBarButton;
     ObjectId: TcxGridDBColumn;
+    PriceListTaxDialoglOpenForm: TdsdOpenForm;
+    bbPriceListTaxDialog: TdxBarButton;
   private
     { Private declarations }
   public

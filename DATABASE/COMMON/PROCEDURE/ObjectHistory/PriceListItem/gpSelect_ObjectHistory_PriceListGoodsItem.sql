@@ -1,13 +1,13 @@
 -- Function: gpSelect_ObjectHistory_PriceListGoodsItem ()
 
--- DROP FUNCTION gpSelect_ObjectHistory_PriceListGoodsItem (Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_ObjectHistory_PriceListGoodsItem (Integer, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_ObjectHistory_PriceListGoodsItem(
     IN inPriceListId        Integer   , -- Прайс-Лист 
     IN inGoodsId            Integer   , -- Товар
     IN inSession            TVarChar    -- сессия пользователя
 )                              
-RETURNS TABLE (Id Integer, StartDate TDateTime, EndDate TDateTime, ValuePrice TFloat)
+RETURNS TABLE (Id Integer, StartDate TDateTime, EndDate TDateTime, ValuePrice TFloat, isErased Boolean)
 AS
 $BODY$
 BEGIN
@@ -20,7 +20,7 @@ BEGIN
            , ObjectHistory_PriceListItem.StartDate
            , ObjectHistory_PriceListItem.EndDate
            , ObjectHistoryFloat_PriceListItem_Value.ValueData AS ValuePrice
-
+           , False AS isErased
        FROM ObjectLink AS ObjectLink_PriceListItem_PriceList
             LEFT JOIN ObjectLink AS ObjectLink_PriceListItem_Goods
                                  ON ObjectLink_PriceListItem_Goods.ObjectId = ObjectLink_PriceListItem_PriceList.ObjectId

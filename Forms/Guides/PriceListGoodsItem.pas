@@ -55,6 +55,7 @@ type
     bbSetUnErased: TdxBarButton;
     dsdSetErased: TdsdUpdateErased;
     dsdSetUnErased: TdsdUpdateErased;
+    isErased: TcxGridDBColumn;
   private
     { Private declarations }
   public

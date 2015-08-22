@@ -92,6 +92,10 @@ type
     colMCS: TcxGridDBColumn;
     colGoodsGroupName: TcxGridDBColumn;
     colNDSKindName: TcxGridDBColumn;
+    colAmountSecond: TcxGridDBColumn;
+    colAmountAll: TcxGridDBColumn;
+    colCalcAmountAll: TcxGridDBColumn;
+    colSummAll: TcxGridDBColumn;
   private
     { Private declarations }
   public

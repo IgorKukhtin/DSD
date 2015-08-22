@@ -30,10 +30,6 @@ BEGIN
             JOIN MovementLinkObject AS MovementLinkObject_Unit
                                     ON MovementLinkObject_Unit.MovementId = Movement.Id
                                    AND MovementLinkObject_Unit.DescId = zc_MovementLinkObject_Unit()
-            JOIN MovementBoolean AS MovementBoolean_isAuto
-                                 ON MovementBoolean_isAuto.MovementId = Movement.Id 
-                                AND MovementBoolean_isAuto.DescId = zc_MovementBoolean_isAuto()
-                                    
         WHERE 
             Movement.StatusId = zc_Enum_Status_UnComplete() 
             AND 
@@ -42,23 +38,32 @@ BEGIN
             Movement.OperDate = vbOperDate 
             AND 
             MovementLinkObject_Unit.ObjectId = inUnitId
-            AND
-            MovementBoolean_isAuto.ValueData = True
         ORDER BY
             Movement.Id
         LIMIT 1;
 
         IF COALESCE(vbMovementId, 0) = 0 THEN --Если такой нет - создаем
             vbMovementId := gpInsertUpdate_Movement_OrderInternal(0, '', vbOperDate, inUnitId, 0, inSession);
-            PERFORM lpInsertUpdate_MovementBoolean (zc_MovementBoolean_isAuto(), vbMovementId, True);
         END IF;
         --Очищаем содержимое заявки
-        PERFORM lpDelete_MovementItem(Id, inSession)
-        FROM MovementItem
-        WHERE MovementItem.MovementId = vbMovementId;
+        DELETE FROM MovementItemFloat
+        WHERE 
+            MovementItemId in (
+                                SELECT Id from MovementItem
+                                Where MovementItem.MovementId = vbMovementId
+                              )
+            AND
+            DescId = zc_MIFloat_AmountSecond();
         --заливаем согласно разници между остатком и НТЗ
-        PERFORM 
-          lpInsertUpdate_MovementItem_OrderInternal(0, vbMovementId, Object_Price.GoodsId, floor(Object_Price.MCSValue - SUM(COALESCE(Container.Amount,0)))::TFloat, Object_Price.Price, vbUserId)
+        PERFORM
+            lpInsertUpdate_MovementItemFloat(inDescId         := zc_MIFloat_AmountSecond()
+                                            ,inMovementItemId := lpInsertUpdate_MovementItem_OrderInternal(ioId         := COALESCE(MovementItemSaved.Id,0)
+                                                                                                          ,inMovementId := vbMovementId
+                                                                                                          ,inGoodsId    := Object_Price.GoodsId
+                                                                                                          ,inAmount     := COALESCE(MovementItemSaved.Amount,0)
+                                                                                                          ,inPrice      := Object_Price.Price
+                                                                                                          ,inUserId     := vbUserId)
+                                           ,inValueData       := floor(Object_Price.MCSValue - SUM(COALESCE(Container.Amount,0)))::TFloat)                                                                                                          
         from Object_Price_View AS Object_Price
             LEFT OUTER JOIN ContainerLinkObject AS ContainerLinkObject_Unit
                                                 ON ContainerLinkObject_Unit.DescId = zc_ContainerLinkObject_Unit()
@@ -67,6 +72,9 @@ BEGIN
                                      AND Container.ObjectId = Object_Price.GoodsId
                                      AND Container.DescId = zc_Container_Count() 
                                      AND Container.Amount > 0
+            LEFT OUTER JOIN MovementItem AS MovementItemSaved
+                                         ON MovementItemSaved.MovementId = vbMovementId
+                                        AND MovementItemSaved.ObjectId = Object_Price.GoodsId
         WHERE
             Object_Price.MCSValue > 0
             AND
@@ -75,13 +83,11 @@ BEGIN
             Object_Price.UnitId,
             Object_Price.GoodsId,
             Object_Price.MCSValue,
-            Object_Price.Price
+            Object_Price.Price,
+            MovementItemSaved.Id,
+            MovementItemSaved.Amount
         HAVING
             floor(Object_Price.MCSValue - SUM(COALESCE(Container.Amount,0)))::TFloat > 0;
-        --Записываем признак авторасчета в содержимое
-        PERFORM lpInsertUpdate_MovementItemBoolean(zc_MIBoolean_Calculated(),Id,True)
-        FROM MovementItem
-        WHERE MovementId = vbMovementId;
         
     END IF;
     IF EXISTS(  SELECT Movement.Id
@@ -89,10 +95,6 @@ BEGIN
                     JOIN MovementLinkObject AS MovementLinkObject_Unit
                                             ON MovementLinkObject_Unit.MovementId = Movement.Id
                                            AND MovementLinkObject_Unit.DescId = zc_MovementLinkObject_Unit()
-                    JOIN MovementBoolean AS MovementBoolean_isAuto
-                                         ON MovementBoolean_isAuto.MovementId = Movement.Id 
-                                        AND MovementBoolean_isAuto.DescId = zc_MovementBoolean_isAuto()
-                                            
                 WHERE 
                     Movement.StatusId = zc_Enum_Status_UnComplete() 
                     AND 
@@ -101,8 +103,6 @@ BEGIN
                     Movement.OperDate = vbOperDate 
                     AND 
                     MovementLinkObject_Unit.ObjectId = inUnitId
-                    AND
-                    MovementBoolean_isAuto.ValueData = True
              )
     THEN
         outOrderExists := True;

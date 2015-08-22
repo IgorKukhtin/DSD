@@ -48,6 +48,8 @@ type
     colIncome_Amount: TcxGridDBColumn;
     colNDSKindName: TcxGridDBColumn;
     colGoodsGroupName: TcxGridDBColumn;
+    colAmountSecond: TcxGridDBColumn;
+    colAmountAll: TcxGridDBColumn;
   private
     { Private declarations }
   public

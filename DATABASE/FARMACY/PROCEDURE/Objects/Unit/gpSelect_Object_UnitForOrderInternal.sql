@@ -25,9 +25,6 @@ BEGIN
                                 JOIN MovementLinkObject AS MovementLinkObject_Unit
                                                         ON MovementLinkObject_Unit.MovementId = Movement.Id
                                                        AND MovementLinkObject_Unit.DescId = zc_MovementLinkObject_Unit()
-                                JOIN MovementBoolean AS MovementBoolean_isAuto
-                                                     ON MovementBoolean_isAuto.MovementId = Movement.Id 
-                                                    AND MovementBoolean_isAuto.DescId = zc_MovementBoolean_isAuto()
                                                         
                             WHERE 
                                 Movement.StatusId = zc_Enum_Status_UnComplete() 
@@ -35,8 +32,6 @@ BEGIN
                                 Movement.DescId = zc_Movement_OrderInternal() 
                                 AND 
                                 Movement.OperDate = vbOperDate 
-                                AND 
-                                MovementBoolean_isAuto.ValueData = True
                             GROUP BY
                                 MovementLinkObject_Unit.ObjectId
                           ) 

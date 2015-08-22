@@ -67,6 +67,12 @@ object PriceListGoodsItemForm: TPriceListGoodsItemForm
         HeaderAlignmentVert = vaCenter
         Width = 80
       end
+      object isErased: TcxGridDBColumn
+        DataBinding.FieldName = 'isErased'
+        Visible = False
+        VisibleForCustomization = False
+        Width = 20
+      end
     end
     object cxGridLevel: TcxGridLevel
       GridView = cxGridDBTableView
@@ -190,10 +196,6 @@ object PriceListGoodsItemForm: TPriceListGoodsItemForm
         item
           Visible = True
           ItemName = 'bbSetErased'
-        end
-        item
-          Visible = True
-          ItemName = 'bbSetUnErased'
         end
         item
           Visible = True
@@ -362,6 +364,7 @@ object PriceListGoodsItemForm: TPriceListGoodsItemForm
         end
         item
           Name = 'PriceListId'
+          Value = Null
           Component = PriceListGuides
           ComponentItem = 'Key'
           ParamType = ptInput
@@ -552,12 +555,12 @@ object PriceListGoodsItemForm: TPriceListGoodsItemForm
     Top = 88
   end
   object spErasedUnErased: TdsdStoredProc
-    StoredProcName = 'gpUpdateObjectIsErased'
+    StoredProcName = 'gpDelete_ObjectHistory'
     DataSets = <>
     OutputType = otResult
     Params = <
       item
-        Name = 'inObjectId'
+        Name = 'inId'
         Value = Null
         Component = ClientDataSet
         ComponentItem = 'Id'

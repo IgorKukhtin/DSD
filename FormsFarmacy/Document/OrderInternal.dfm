@@ -2,7 +2,6 @@ inherited OrderInternalForm: TOrderInternalForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1047#1072#1103#1074#1082#1072' '#1074#1085#1091#1090#1088#1077#1085#1085#1103#1103'>'
   ClientHeight = 532
   ClientWidth = 1229
-  ExplicitLeft = -431
   ExplicitWidth = 1237
   ExplicitHeight = 559
   PixelsPerInch = 96
@@ -22,6 +21,8 @@ inherited OrderInternalForm: TOrderInternalForm
       inherited cxGrid: TcxGrid
         Width = 1229
         Height = 205
+        ExplicitLeft = -3
+        ExplicitTop = -3
         ExplicitWidth = 1229
         ExplicitHeight = 205
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -89,6 +90,26 @@ inherited OrderInternalForm: TOrderInternalForm
               Format = ',0.####'
               Kind = skSum
               Column = colSumm
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = colAmountSecond
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = colAmountAll
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = colCalcAmountAll
+            end
+            item
+              Format = ',0.00'
+              Kind = skSum
+              Column = colSummAll
             end>
           OptionsBehavior.IncSearch = True
           OptionsBehavior.FocusCellOnCycle = False
@@ -132,12 +153,28 @@ inherited OrderInternalForm: TOrderInternalForm
             Options.IncSearch = False
             Width = 48
           end
+          object colAmountSecond: TcxGridDBColumn
+            Caption = #1040#1074#1090#1086#1079#1072#1082#1072#1079
+            DataBinding.FieldName = 'AmountSecond'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.####'
+            Options.Editing = False
+            Width = 54
+          end
+          object colAmountAll: TcxGridDBColumn
+            Caption = #1042#1089#1077#1075#1086' '#1082' '#1079#1072#1082#1072#1079#1091
+            DataBinding.FieldName = 'AmountAll'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.####'
+            Options.Editing = False
+            Width = 62
+          end
           object colSumm: TcxGridDBColumn
             Caption = #1057#1091#1084#1084#1072' '#1079#1072#1082#1072#1079#1072
             DataBinding.FieldName = 'Summ'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 2
-            Properties.DisplayFormat = ',0.00;-,0.00; ;'
+            Properties.DisplayFormat = ',0.00;-,0.00'
             HeaderAlignmentHorz = taCenter
             Options.Editing = False
             Width = 60
@@ -250,6 +287,17 @@ inherited OrderInternalForm: TOrderInternalForm
             DataBinding.FieldName = 'NDSKindName'
             Options.Editing = False
             Width = 71
+          end
+          object colCalcAmountAll: TcxGridDBColumn
+            Caption = #1042#1089#1077#1075#1086' '#1082' '#1079#1072#1082#1072#1079#1091' '#1089' '#1082#1088#1072#1090#1085#1086#1089#1090#1100#1102
+            DataBinding.FieldName = 'CalcAmountAll'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.####'
+            Options.Editing = False
+          end
+          object colSummAll: TcxGridDBColumn
+            Caption = #1042#1089#1077#1075#1086' '#1079#1091#1084#1084#1072' '#1079#1072#1082#1072#1079#1072
+            DataBinding.FieldName = 'SummAll'
           end
         end
       end
@@ -1254,6 +1302,27 @@ inherited OrderInternalForm: TOrderInternalForm
         Value = Null
         Component = MasterCDS
         ComponentItem = 'CalcAmount'
+        DataType = ftFloat
+      end
+      item
+        Name = 'outSummAll'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'SummAll'
+        DataType = ftFloat
+      end
+      item
+        Name = 'outAmountAll'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'AmountAll'
+        DataType = ftFloat
+      end
+      item
+        Name = 'outCalcAmountAll'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'CalcAmountAll'
         DataType = ftFloat
       end>
     Left = 160

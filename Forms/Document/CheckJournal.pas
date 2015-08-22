@@ -29,6 +29,8 @@ type
     spGet_UserUnit: TdsdStoredProc;
     actGet_UserUnit: TdsdExecStoredProc;
     actRefreshStart: TdsdDataSetRefresh;
+    dsdStoredProc1: TdsdStoredProc;
+    N13: TMenuItem;
   private
     { Private declarations }
   public

@@ -29,14 +29,26 @@ BEGIN
         AS
         (
             SELECT
-                GoodsId,
-                SUM(Amount)::TFloat as Amount
+                MovementItem_Reserve.GoodsId,
+                SUM(CASE 
+                      WHEN MovementLinkObject_CheckMember.MovementId is null 
+                        THEN MovementItem_Reserve.Amount
+                    ELSE 0
+                    END)::TFloat as Amount_Reserve,
+                SUM(CASE 
+                      WHEN MovementLinkObject_CheckMember.MovementId is not null 
+                        THEN MovementItem_Reserve.Amount
+                    ELSE 0
+                    END)::TFloat as Amount_VIP
             FROM
-                gpSelect_MovementItem_CheckDeferred(inSession)
+                gpSelect_MovementItem_CheckDeferred(inSession) as MovementItem_Reserve
+                LEFT JOIN MovementLinkObject AS MovementLinkObject_CheckMember
+                                             ON MovementLinkObject_CheckMember.MovementId = MovementItem_Reserve.MovementId
+                                            AND MovementLinkObject_CheckMember.DescId = zc_MovementLinkObject_CheckMember()
             WHERE
-                MovementId <> inMovementId
+                MovementItem_Reserve.MovementId <> inMovementId
             Group By
-                GoodsId
+                MovementItem_Reserve.GoodsId
         ),
         CurrentMovement
         AS
@@ -55,8 +67,10 @@ BEGIN
         )
         SELECT 
             container.objectid
-           ,(SUM(container.Amount) - COALESCE(CurrentMovement.Amount,0))::TFloat AS Remains
-           ,RESERVE.Amount                                                   AS Reserve_Amount 
+           ,(SUM(container.Amount) 
+             - COALESCE(CurrentMovement.Amount,0) 
+             - COALESCE(Reserve.Amount_VIP,0))::TFloat AS Remains
+           ,RESERVE.Amount_Reserve                     AS Reserve_Amount 
         FROM container
             INNER JOIN containerlinkobject AS CLO_Unit
                                            ON CLO_Unit.containerid = container.id 
@@ -71,7 +85,8 @@ BEGIN
             container.Amount<>0
         GROUP BY 
             container.objectid
-           ,RESERVE.Amount
+           ,RESERVE.Amount_Reserve
+           ,RESERVE.Amount_VIP
            ,CurrentMovement.Amount;
 END;
 $BODY$
@@ -81,6 +96,7 @@ ALTER FUNCTION gpSelect_CashRemains_Lite (Integer, TVarChar) OWNER TO postgres;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А.А.
+ 22.08.15                                                                       *разделение вип и отложеных
  19.08.15                                                                       *CurrentMovement
  29.07.15                                                                       *
 */

@@ -20,9 +20,6 @@ BEGIN
    vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Complete_Income());
   --vbUserId:= inSession;
 
-  --ѕеребили дату документа 
-  UPDATE Movement SET OperDate = CURRENT_TIMESTAMP WHERE Id = inMovementId;
-  
   --прописали тип оплаты
   if inPaidType = 0 then
     PERFORM lpInsertUpdate_MovementLinkObject(zc_MovementLinkObject_PaidType(),inMovementId,zc_Enum_PaidType_Cash());
