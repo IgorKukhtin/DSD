@@ -47,7 +47,6 @@ BEGIN
          RAISE EXCEPTION 'Ошибка.Значение <Прайс лист> должно быть установлено.';
      END IF;
    
-
      -- сохранили
      PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_Price()
                                              , MovementItem.Id
