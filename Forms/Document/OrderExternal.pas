@@ -91,6 +91,8 @@ type
     Article: TcxGridDBColumn;
     cxLabel18: TcxLabel;
     ceComment: TcxTextEdit;
+    cxLabel19: TcxLabel;
+    edOperDatePartner_sale: TcxDateEdit;
   private
     { Private declarations }
   public

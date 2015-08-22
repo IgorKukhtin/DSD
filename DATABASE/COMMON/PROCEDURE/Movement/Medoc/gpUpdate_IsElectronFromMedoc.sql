@@ -52,6 +52,8 @@ BEGIN
 
 -- IF TRIM (inInvNumberRegistered) = '9159204066'
 -- then 
+       -- INSERT INTO ObjectProtocol (ObjectId, OperDate, UserId, ProtocolData, isInsert)
+       --    SELECT 5, CURRENT_TIMESTAMP, 5, inInvNumberRegistered || ';' || vbMedocId || ';' || vbAccessKey, true;
 --     RAISE EXCEPTION '"%" %   %', inInvNumberRegistered, vbMedocId, vbAccessKey;
 -- end if;
 

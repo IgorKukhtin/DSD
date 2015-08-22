@@ -3,7 +3,7 @@ inherited SendOnPrice_BranchForm: TSendOnPrice_BranchForm
   ClientHeight = 668
   ClientWidth = 944
   ExplicitWidth = 960
-  ExplicitHeight = 706
+  ExplicitHeight = 703
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -1292,9 +1292,7 @@ inherited SendOnPrice_BranchForm: TSendOnPrice_BranchForm
     Params = <
       item
         Name = 'ioId'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'Id'
+        Value = '0'
         ParamType = ptInputOutput
       end
       item
@@ -1313,34 +1311,50 @@ inherited SendOnPrice_BranchForm: TSendOnPrice_BranchForm
       end
       item
         Name = 'inAmount'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'Amount'
+        Value = '0'
         DataType = ftFloat
         ParamType = ptInput
       end
       item
-        Name = 'inAmountPartner'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'AmountPartner'
+        Name = 'ioAmountPartner'
+        Value = '0'
         DataType = ftFloat
-        ParamType = ptInput
+        ParamType = ptInputOutput
       end
       item
-        Name = 'inAmountChangePercent'
+        Name = 'outAmountChangePercent'
         Value = Null
         Component = MasterCDS
         ComponentItem = 'AmountChangePercent'
         DataType = ftFloat
-        ParamType = ptInput
       end
       item
         Name = 'inChangePercentAmount'
         Value = Null
+        Component = edChangePercentAmount
+        DataType = ftFloat
+        ParamType = ptInput
+      end
+      item
+        Name = 'ioChangePercentAmount'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'ChangePercentAmount'
         DataType = ftFloat
+        ParamType = ptInputOutput
+      end
+      item
+        Name = 'inIsChangePercentAmount'
+        Value = Null
+        Component = cbCalcAmountPartner
+        DataType = ftBoolean
+        ParamType = ptInput
+      end
+      item
+        Name = 'inIsCalcAmountPartner'
+        Value = Null
+        Component = cbCalcAmountPartner
+        DataType = ftBoolean
         ParamType = ptInput
       end
       item

@@ -30,7 +30,7 @@ type
     colTotalSummVAT: TcxGridDBColumn;
     colTotalSummMVAT: TcxGridDBColumn;
     colTotalSummPVAT: TcxGridDBColumn;
-    colRouteSortingName: TcxGridDBColumn;
+    RouteName: TcxGridDBColumn;
     edIsPartnerDate: TcxCheckBox;
     colTotalCountTare: TcxGridDBColumn;
     colTotalCountSh: TcxGridDBColumn;
@@ -73,6 +73,11 @@ type
     Desadv1: TMenuItem;
     N13: TMenuItem;
     spSelectSale_EDI: TdsdStoredProc;
+    RetailName_order: TcxGridDBColumn;
+    PartnerName_order: TcxGridDBColumn;
+    Comment_order: TcxGridDBColumn;
+    RouteGroupName: TcxGridDBColumn;
+    PersonalName: TcxGridDBColumn;
   private
     { Private declarations }
   public

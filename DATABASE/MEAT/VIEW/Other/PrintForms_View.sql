@@ -165,6 +165,20 @@ AS
        AND OH_JuridicalDetails.OKPO IN ('36387249', '36387233', '38916558')
       WHERE Object_Juridical.DescId = zc_Object_Juridical()
       UNION
+-- Objora
+      SELECT
+             zc_movement_sale()
+           , CAST ('Sale' AS TVarChar)
+           , CAST ('01.01.2000' AS TDateTime)
+           , CAST ('01.01.2200' AS TDateTime)
+           , CAST (Object_Juridical.Id AS INTEGER)
+           , zc_Enum_PaidKind_FirstForm()
+           , CAST ('PrintMovement_Sale22447463' AS TVarChar)
+      FROM Object AS Object_Juridical
+      JOIN ObjectHistory_JuridicalDetails_View AS OH_JuridicalDetails ON OH_JuridicalDetails.JuridicalId = Object_Juridical.Id
+       AND OH_JuridicalDetails.OKPO IN ('22447463', '37223357', '37223320')
+      WHERE Object_Juridical.DescId = zc_Object_Juridical()
+      UNION
 
 --налоговая
       SELECT
@@ -240,6 +254,32 @@ AS
            , CAST (0 AS INTEGER)
            , CAST ('PrintMovement_SaleTax_2014' AS TVarChar)
 */
+-- корректировка цены - стандарт
+      UNION
+      SELECT
+             zc_Movement_PriceCorrective()
+           , CAST ('PriceCorrective' AS TVarChar)
+           , CAST ('01.01.2000' AS TDateTime)
+           , CAST ('01.01.2200' AS TDateTime)
+           , CAST (0 AS INTEGER)
+           , CAST (0 AS INTEGER)
+           , CAST ('PrintMovement_ReturnIn' AS TVarChar)
+      UNION
+-- Ashan
+      SELECT
+             zc_Movement_PriceCorrective()
+           , CAST ('PriceCorrective' AS TVarChar)
+           , CAST ('01.01.2000' AS TDateTime)
+           , CAST ('01.01.2200' AS TDateTime)
+           , CAST (Object_Juridical.Id AS INTEGER)
+           , zc_Enum_PaidKind_FirstForm()
+           , CAST ('PrintMovement_PriceCorrective35442481' AS TVarChar)
+      FROM Object AS Object_Juridical
+      JOIN ObjectHistory_JuridicalDetails_View AS OH_JuridicalDetails ON OH_JuridicalDetails.JuridicalId = Object_Juridical.Id
+       AND OH_JuridicalDetails.OKPO IN ('35442481')
+      WHERE Object_Juridical.DescId = zc_Object_Juridical()
+
+
 -- возвраты от пок стандарт
       UNION
       SELECT

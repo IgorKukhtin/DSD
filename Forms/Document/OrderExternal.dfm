@@ -12,17 +12,17 @@ inherited OrderExternalForm: TOrderExternalForm
     Height = 481
     ExplicitTop = 166
     ExplicitWidth = 1391
-    ExplicitHeight = 502
+    ExplicitHeight = 481
     ClientRectBottom = 481
     ClientRectRight = 1391
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 1391
-      ExplicitHeight = 478
+      ExplicitHeight = 457
       inherited cxGrid: TcxGrid
         Width = 1391
         Height = 457
         ExplicitWidth = 1391
-        ExplicitHeight = 478
+        ExplicitHeight = 457
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -296,17 +296,17 @@ inherited OrderExternalForm: TOrderExternalForm
       ExplicitLeft = 8
     end
     inherited edOperDate: TcxDateEdit
-      Left = 180
+      Left = 183
       Properties.SaveTime = False
       Properties.ShowTime = False
-      ExplicitLeft = 180
-      ExplicitWidth = 93
-      Width = 93
+      ExplicitLeft = 183
+      ExplicitWidth = 85
+      Width = 85
     end
     inherited cxLabel2: TcxLabel
-      Left = 180
+      Left = 183
       Caption = #1044#1072#1090#1072' '#1079#1072#1103#1074#1082#1080
-      ExplicitLeft = 180
+      ExplicitLeft = 183
       ExplicitWidth = 68
     end
     inherited cxLabel15: TcxLabel
@@ -345,12 +345,12 @@ inherited OrderExternalForm: TOrderExternalForm
       Width = 130
     end
     object cxLabel10: TcxLabel
-      Left = 180
+      Left = 183
       Top = 45
       Caption = #1044#1072#1090#1072' '#1086#1090#1075#1088#1091#1079#1082#1080
     end
     object edOperDatePartner: TcxDateEdit
-      Left = 180
+      Left = 183
       Top = 63
       EditValue = 42195d
       Enabled = False
@@ -358,15 +358,15 @@ inherited OrderExternalForm: TOrderExternalForm
       Properties.SaveTime = False
       Properties.ShowTime = False
       TabOrder = 11
-      Width = 93
+      Width = 85
     end
     object cxLabel4: TcxLabel
-      Left = 279
+      Left = 277
       Top = 5
       Caption = #1054#1090' '#1082#1086#1075#1086
     end
     object edFrom: TcxButtonEdit
-      Left = 279
+      Left = 277
       Top = 23
       Properties.Buttons = <
         item
@@ -375,7 +375,7 @@ inherited OrderExternalForm: TOrderExternalForm
         end>
       Properties.ReadOnly = True
       TabOrder = 13
-      Width = 224
+      Width = 226
     end
     object cxLabel6: TcxLabel
       Left = 661
@@ -413,12 +413,12 @@ inherited OrderExternalForm: TOrderExternalForm
       Width = 77
     end
     object cxLabel13: TcxLabel
-      Left = 509
+      Left = 1223
       Top = 45
       Caption = #1057#1086#1088#1090#1080#1088#1086#1074#1082#1072' '#1084#1072#1088#1096#1088#1091#1090#1072
     end
     object edRouteSorting: TcxButtonEdit
-      Left = 509
+      Left = 1223
       Top = 63
       Properties.Buttons = <
         item
@@ -428,15 +428,15 @@ inherited OrderExternalForm: TOrderExternalForm
         end>
       Properties.ReadOnly = True
       TabOrder = 19
-      Width = 146
+      Width = 168
     end
     object cxLabel7: TcxLabel
-      Left = 279
+      Left = 385
       Top = 45
       Caption = #1052#1072#1088#1096#1088#1091#1090
     end
     object edRoute: TcxButtonEdit
-      Left = 279
+      Left = 385
       Top = 63
       Properties.Buttons = <
         item
@@ -446,7 +446,7 @@ inherited OrderExternalForm: TOrderExternalForm
         end>
       Properties.ReadOnly = True
       TabOrder = 21
-      Width = 224
+      Width = 270
     end
     object cxLabel16: TcxLabel
       Left = 1083
@@ -572,6 +572,22 @@ inherited OrderExternalForm: TOrderExternalForm
       Top = 103
       TabOrder = 37
       Width = 647
+    end
+    object cxLabel19: TcxLabel
+      Left = 277
+      Top = 45
+      Caption = #1044#1072#1090#1072' '#1082#1086#1085#1090#1088#1072#1075#1077#1085#1090#1072
+    end
+    object edOperDatePartner_sale: TcxDateEdit
+      Left = 277
+      Top = 63
+      EditValue = 42195d
+      Enabled = False
+      Properties.ReadOnly = True
+      Properties.SaveTime = False
+      Properties.ShowTime = False
+      TabOrder = 39
+      Width = 98
     end
   end
   object cxLabel21: TcxLabel [2]
@@ -962,8 +978,8 @@ inherited OrderExternalForm: TOrderExternalForm
         Component = cbPrinted
         DataType = ftBoolean
       end>
-    Left = 128
-    Top = 56
+    Left = 112
+    Top = 24
   end
   inherited spGet: TdsdStoredProc
     StoredProcName = 'gpGet_Movement_OrderExternal'
@@ -1012,6 +1028,12 @@ inherited OrderExternalForm: TOrderExternalForm
         Name = 'OperDatePartner'
         Value = 0d
         Component = edOperDatePartner
+        DataType = ftDateTime
+      end
+      item
+        Name = 'OperDatePartner_sale'
+        Value = Null
+        Component = edOperDatePartner_sale
         DataType = ftDateTime
       end
       item
@@ -1218,6 +1240,12 @@ inherited OrderExternalForm: TOrderExternalForm
         Name = 'outOperDatePartner'
         Value = 0d
         Component = edOperDatePartner
+        DataType = ftDateTime
+      end
+      item
+        Name = 'outOperDatePartner_sale'
+        Value = Null
+        Component = edOperDatePartner_sale
         DataType = ftDateTime
       end
       item

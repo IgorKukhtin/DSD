@@ -25,7 +25,9 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , ContractId Integer, ContractCode Integer, ContractName TVarChar, ContractTagName TVarChar
              , JuridicalName_To TVarChar, OKPO_To TVarChar
              , InfoMoneyGroupName TVarChar, InfoMoneyDestinationName TVarChar, InfoMoneyCode Integer, InfoMoneyName TVarChar
-             , RouteSortingId Integer, RouteSortingName TVarChar, RouteName TVarChar, PersonalName TVarChar
+             , RouteSortingId Integer, RouteSortingName TVarChar, RouteGroupName TVarChar, RouteName TVarChar, PersonalName TVarChar
+             , RetailName_order TVarChar
+             , PartnerName_order TVarChar
              , PriceListName TVarChar
              , CurrencyDocumentName TVarChar, CurrencyPartnerName TVarChar
              , DocumentTaxKindId Integer, DocumentTaxKindName TVarChar
@@ -131,10 +133,15 @@ BEGIN
            , View_InfoMoney.InfoMoneyDestinationName        AS InfoMoneyDestinationName
            , View_InfoMoney.InfoMoneyCode                   AS InfoMoneyCode
            , View_InfoMoney.InfoMoneyName                   AS InfoMoneyName
+
            , Object_RouteSorting.Id                         AS RouteSortingId
            , Object_RouteSorting.ValueData                  AS RouteSortingName
+           , Object_RouteGroup.ValueData                    AS RouteGroupName
            , Object_Route.ValueData                         AS RouteName
            , Object_Personal.ValueData                      AS PersonalName
+           , Object_Retail_order.ValueData                  AS RetailName_order
+           , Object_Partner_order.ValueData                 AS PartnerName_order
+
            , Object_PriceList.ValueData                     AS PriceListName
            , Object_CurrencyDocument.ValueData              AS CurrencyDocumentName
            , Object_CurrencyPartner.ValueData               AS CurrencyPartnerName
@@ -146,7 +153,7 @@ BEGIN
            , Movement_TransportGoods.Id                     AS MovementId_TransportGoods
            , Movement_TransportGoods.InvNumber              AS InvNumber_TransportGoods
            , Movement_TransportGoods.OperDate               AS OperDate_TransportGoods
-           , COALESCE (Movement_TransportGoods.OperDate, Movement.OperDate) AS OperDate_TransportGoods_calc
+           , COALESCE (Movement_TransportGoods.OperDate, Movement.OperDate) :: TDateTime AS OperDate_TransportGoods_calc
 
            , COALESCE (MovementLinkMovement_Sale.MovementChildId, 0) <> 0 AS isEDI
            , COALESCE (MovementBoolean_Electron.ValueData, FALSE)         AS isElectron
@@ -389,6 +396,18 @@ BEGIN
                                         AND MovementLinkObject_Personal.DescId = zc_MovementLinkObject_Personal()
             LEFT JOIN Object AS Object_Personal ON Object_Personal.Id = MovementLinkObject_Personal.ObjectId
 
+            LEFT JOIN ObjectLink AS ObjectLink_Route_RouteGroup ON ObjectLink_Route_RouteGroup.ObjectId = Object_Route.Id
+                                                               AND ObjectLink_Route_RouteGroup.DescId = zc_ObjectLink_Route_RouteGroup()
+            LEFT JOIN Object AS Object_RouteGroup ON Object_RouteGroup.Id = COALESCE (ObjectLink_Route_RouteGroup.ChildObjectId, Object_Route.Id)
+
+            LEFT JOIN MovementLinkObject AS MovementLinkObject_Partner_order
+                                         ON MovementLinkObject_Partner_order.MovementId = MovementLinkMovement_Order.MovementChildId
+                                        AND MovementLinkObject_Partner_order.DescId = zc_MovementLinkObject_Partner()
+            LEFT JOIN Object AS Object_Partner_order ON Object_Partner_order.Id = MovementLinkObject_Partner_order.ObjectId
+            LEFT JOIN MovementLinkObject AS MovementLinkObject_Retail_order
+                                         ON MovementLinkObject_Retail_order.MovementId = MovementLinkMovement_Order.MovementChildId
+                                        AND MovementLinkObject_Retail_order.DescId = zc_MovementLinkObject_Retail()
+            LEFT JOIN Object AS Object_Retail_order ON Object_Retail_order.Id = MovementLinkObject_Retail_order.ObjectId
 
          LEFT JOIN ObjectBoolean AS ObjectBoolean_EdiOrdspr
                                  ON ObjectBoolean_EdiOrdspr.ObjectId = Object_To.Id

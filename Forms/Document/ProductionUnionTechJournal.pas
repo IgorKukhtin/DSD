@@ -67,13 +67,11 @@ type
     colChildPartionGoods: TcxGridDBColumn;
     colChildComment: TcxGridDBColumn;
     PrintMasterCDS: TClientDataSet;
-    PrintChildCDS: TClientDataSet;
     spReport_TaxExit: TdsdStoredProc;
     isTaxExit: TcxGridDBColumn;
     isWeightMain: TcxGridDBColumn;
     actPrintReceipt: TdsdPrintAction;
     spPrintReceipt: TdsdStoredProc;
-    spPrintReceiptChild: TdsdStoredProc;
     bbPrintReceipt: TdxBarButton;
     actReceiptChoice: TOpenChoiceForm;
     colLineNum: TcxGridDBColumn;

@@ -173,6 +173,7 @@ type
     actPrintSaleOrder: TdsdPrintAction;
     bb: TdxBarButton;
     spSelectSale_EDI: TdsdStoredProc;
+    RouteGroupName: TcxGridDBColumn;
   private
     { Private declarations }
   public

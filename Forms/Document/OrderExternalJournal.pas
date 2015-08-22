@@ -68,6 +68,7 @@ type
     PartnerName: TcxGridDBColumn;
     RouteGroupName: TcxGridDBColumn;
     Comment: TcxGridDBColumn;
+    OperDatePartner_sale: TcxGridDBColumn;
   private
     { Private declarations }
   public
