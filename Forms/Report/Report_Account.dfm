@@ -475,11 +475,12 @@ object Report_AccountForm: TReport_AccountForm
   end
   object Panel1: TPanel
     Left = 0
-    Top = 26
+    Top = 0
     Width = 1189
     Height = 111
     Align = alTop
     TabOrder = 1
+    ExplicitTop = -14
     object deStart: TcxDateEdit
       Left = 10
       Top = 29

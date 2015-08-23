@@ -14,6 +14,7 @@ object Report_FuelForm: TReport_FuelForm
   OldCreateOrder = False
   AddOnFormData.RefreshAction = actRefresh
   AddOnFormData.isSingle = False
+  AddOnFormData.ExecuteDialogAction = ExecuteDialog
   PixelsPerInch = 96
   TextHeight = 13
   object cxGrid: TcxGrid
@@ -23,6 +24,7 @@ object Report_FuelForm: TReport_FuelForm
     Height = 341
     Align = alClient
     TabOrder = 0
+    ExplicitTop = 58
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -571,11 +573,8 @@ object Report_FuelForm: TReport_FuelForm
       Category = 0
     end
     object bbDialogForm: TdxBarButton
-      Caption = #1044#1080#1072#1083#1086#1075' '#1091#1089#1090#1072#1085#1086#1074#1082#1080' '#1087#1072#1088#1072#1084#1077#1090#1088#1086#1074
+      Action = ExecuteDialog
       Category = 0
-      Hint = #1044#1080#1072#1083#1086#1075' '#1091#1089#1090#1072#1085#1086#1074#1082#1080' '#1087#1072#1088#1072#1084#1077#1090#1088#1086#1074
-      Visible = ivAlways
-      ImageIndex = 35
     end
     object bbPrint: TdxBarButton
       Action = dsdPrintAction
@@ -653,6 +652,80 @@ object Report_FuelForm: TReport_FuelForm
       ReportName = #1042#1077#1076#1086#1084#1086#1089#1090#1100' '#1088#1072#1089#1093#1086#1076#1072' '#1090#1086#1087#1083#1080#1074#1072
       ReportNameParam.Value = ''
       ReportNameParam.DataType = ftString
+    end
+    object ExecuteDialog: TExecuteDialog
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1072#1088#1072#1084#1077#1090#1088#1099' '#1086#1090#1095#1077#1090#1072
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1072#1088#1072#1084#1077#1090#1088#1099' '#1086#1090#1095#1077#1090#1072
+      ImageIndex = 35
+      FormName = 'TReport_FuelDialogForm'
+      FormNameParam.Value = 'TReport_FuelDialogForm'
+      FormNameParam.DataType = ftString
+      GuiParams = <
+        item
+          Name = 'StartDate'
+          Value = 41640d
+          Component = deStart
+          DataType = ftDateTime
+          ParamType = ptInput
+        end
+        item
+          Name = 'EndDate'
+          Value = 41640d
+          Component = deEnd
+          DataType = ftDateTime
+          ParamType = ptInput
+        end
+        item
+          Name = 'FuelId'
+          Value = ''
+          Component = FuelGuides
+          ComponentItem = 'Key'
+          DataType = ftString
+          ParamType = ptInput
+        end
+        item
+          Name = 'FuelName'
+          Value = ''
+          Component = FuelGuides
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          ParamType = ptInput
+        end
+        item
+          Name = 'CarId'
+          Value = ''
+          Component = CarGuides
+          ComponentItem = 'Key'
+          ParamType = ptInput
+        end
+        item
+          Name = 'CarName'
+          Value = ''
+          Component = CarGuides
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          ParamType = ptInput
+        end
+        item
+          Name = 'BranchId'
+          Value = ''
+          Component = BranchGuides
+          ComponentItem = 'Key'
+          ParamType = ptInput
+        end
+        item
+          Name = 'BranchName'
+          Value = ''
+          Component = BranchGuides
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          ParamType = ptInput
+        end>
+      isShowModal = True
+      RefreshDispatcher = RefreshDispatcher
+      OpenBeforeShow = True
     end
   end
   object dsdStoredProc: TdsdStoredProc

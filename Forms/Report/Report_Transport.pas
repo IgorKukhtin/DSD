@@ -82,6 +82,7 @@ type
     colBranchName: TcxGridDBColumn;
     clWeight: TcxGridDBColumn;
     clWeightTransport: TcxGridDBColumn;
+    ExecuteDialog: TExecuteDialog;
   private
   public
   end;

@@ -23,7 +23,7 @@ uses
   dxSkinXmas2008Blue, dxSkinscxPCPainter, dxSkinsdxBarPainter, dsdAddOn,
   cxContainer, Vcl.ComCtrls, dxCore, cxDateUtils, cxTextEdit, cxMaskEdit,
   cxDropDownEdit, cxCalendar, Vcl.ExtCtrls, cxCurrencyEdit, dsdGuides,
-  cxButtonEdit, ChoicePeriod, cxLabel;
+  cxButtonEdit, ChoicePeriod, cxLabel, dxBarExtItems;
 
 type
   TReport_TransportHoursWorkForm = class(TParentForm)
@@ -67,6 +67,8 @@ type
     edBranch: TcxButtonEdit;
     BranchGuides: TdsdGuides;
     clBranchName: TcxGridDBColumn;
+    ExecuteDialog: TExecuteDialog;
+    dxBarStatic1: TdxBarStatic;
   private
   public
   end;

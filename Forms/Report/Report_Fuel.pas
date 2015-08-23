@@ -76,6 +76,7 @@ type
     edBranch: TcxButtonEdit;
     BranchGuides: TdsdGuides;
     colBranchName: TcxGridDBColumn;
+    ExecuteDialog: TExecuteDialog;
   private
   public
   end;
