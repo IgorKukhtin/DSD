@@ -1,10 +1,12 @@
 -- Function: gpInsertUpdate_HistoryCost()
 
 DROP FUNCTION IF EXISTS gpInsertUpdate_HistoryCost (TDateTime, TDateTime, Integer, Integer, TFloat, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_HistoryCost (TDateTime, TDateTime, Integer, Integer, Integer, TFloat, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_HistoryCost(
     IN inStartDate       TDateTime , --
     IN inEndDate         TDateTime , --
+    IN inBranchId        Integer , --
     IN inItearationCount Integer , --
     IN inInsert          Integer , --
     IN inDiffSumm        TFloat , --
@@ -44,8 +46,26 @@ BEGIN
      CREATE TEMP TABLE _tmpMaster (ContainerId Integer, UnitId Integer, isInfoMoney_80401 Boolean, StartCount TFloat, StartSumm TFloat, IncomeCount TFloat, IncomeSumm TFloat, calcCount TFloat, calcSumm TFloat, calcCount_external TFloat, calcSumm_external TFloat, OutCount TFloat, OutSumm TFloat) ON COMMIT DROP;
      -- таблица - расходы для Master
      CREATE TEMP TABLE _tmpChild (MasterContainerId Integer, ContainerId Integer, MasterContainerId_Count Integer, ContainerId_Count Integer, OperCount TFloat, isExternal Boolean) ON COMMIT DROP;
-     -- таблица - расходы для Master
+     -- таблица - "округления"
      CREATE TEMP TABLE _tmpDiff (ContainerId Integer, MovementItemId_diff Integer, Summ_diff TFloat) ON COMMIT DROP;
+
+     -- таблица - филиал Одесса + филиал Запорожье
+     CREATE TEMP TABLE _tmpUnit_branch (UnitId Integer) ON COMMIT DROP;
+     INSERT INTO _tmpUnit_branch (UnitId)
+        SELECT ObjectLink_Unit_Branch.ObjectId AS UnitId
+        FROM ObjectLink AS ObjectLink_Unit_Branch
+        WHERE COALESCE (inBranchId, 0) = 0
+          -- AND ObjectLink_Unit_Branch.ChildObjectId <> zc_Branch_Basis()
+          AND ObjectLink_Unit_Branch.DescId = zc_ObjectLink_Unit_Branch()
+          AND ObjectLink_Unit_Branch.ChildObjectId IN (8374, 301310) -- филиал Одесса + филиал Запорожье
+      UNION
+       SELECT ObjectLink_Unit_Branch.ObjectId AS UnitId
+        FROM ObjectLink AS ObjectLink_Unit_Branch
+        WHERE inBranchId <> 0
+          AND ObjectLink_Unit_Branch.ChildObjectId = inBranchId
+          AND ObjectLink_Unit_Branch.DescId = zc_ObjectLink_Unit_Branch()
+       ;     
+
 
      -- заполняем таблицу Количество и Сумма - ост, приход, расход
         WITH tmpContainerList AS (SELECT Container_Summ.Id, Container_Summ.ParentId, Container_Summ.ObjectId
@@ -583,39 +603,96 @@ BEGIN
      /*INSERT INTO _tmpDiff (ContainerId, MovementItemId_diff, Summ_diff)
         SELECT HistoryCost.ContainerId, MAX (HistoryCost.MovementItemId_diff), SUM (HistoryCost.Summ_diff) FROM HistoryCost WHERE HistoryCost.Summ_diff <> 0 AND ((inStartDate BETWEEN StartDate AND EndDate) OR (inEndDate BETWEEN StartDate AND EndDate)) GROUP BY HistoryCost.ContainerId;
      */
-     -- Удаляем предыдущую с/с
-     DELETE FROM HistoryCost WHERE (inStartDate BETWEEN StartDate AND EndDate) OR (inEndDate BETWEEN StartDate AND EndDate);
+     IF inBranchId <> 0
+     THEN
+         -- Удаляем предыдущую с/с - !!!для 1-ого Филиала!!!
+         DELETE FROM HistoryCost WHERE ((inStartDate BETWEEN StartDate AND EndDate) OR (inEndDate BETWEEN StartDate AND EndDate))
+                                   AND HistoryCost.ContainerId IN (SELECT ContainerLinkObject.ContainerId
+                                                                   FROM _tmpUnit_branch
+                                                                        INNER JOIN ContainerLinkObject ON ContainerLinkObject.ObjectId = _tmpUnit_branch.UnitId
+                                                                                                      AND ContainerLinkObject.DescId = zc_ContainerLinkObject_Unit()
+                                                                  );
+         -- Сохраняем что насчитали - !!!для 1-ого Филиала!!!
+         INSERT INTO HistoryCost (ContainerId, StartDate, EndDate, Price, Price_external, StartCount, StartSumm, IncomeCount, IncomeSumm, CalcCount, CalcSumm, CalcCount_external, CalcSumm_external, OutCount, OutSumm, MovementItemId_diff, Summ_diff)
+            SELECT _tmpMaster.ContainerId, inStartDate AS StartDate, inEndDate AS EndDate
+                 , CASE WHEN _tmpMaster.isInfoMoney_80401 = TRUE
+                             THEN CASE WHEN (_tmpMaster.StartCount + _tmpMaster.IncomeCount + _tmpMaster.calcCount) <> 0
+                                            THEN (_tmpMaster.StartSumm + _tmpMaster.IncomeSumm + _tmpMaster.CalcSumm) / (_tmpMaster.StartCount + _tmpMaster.IncomeCount + _tmpMaster.calcCount)
+                                       ELSE  0
+                                  END
+                        WHEN (((_tmpMaster.StartCount + _tmpMaster.IncomeCount + _tmpMaster.calcCount) > 0 AND (_tmpMaster.StartSumm + _tmpMaster.IncomeSumm + _tmpMaster.CalcSumm) > 0)
+                           OR ((_tmpMaster.StartCount + _tmpMaster.IncomeCount + _tmpMaster.calcCount) < 0 AND (_tmpMaster.StartSumm + _tmpMaster.IncomeSumm + _tmpMaster.CalcSumm) < 0))
+                             THEN (_tmpMaster.StartSumm + _tmpMaster.IncomeSumm + _tmpMaster.CalcSumm) / (_tmpMaster.StartCount + _tmpMaster.IncomeCount + _tmpMaster.calcCount)
+                        ELSE 0
+                   END AS Price
+                 , CASE WHEN _tmpMaster.isInfoMoney_80401 = TRUE
+                             THEN CASE WHEN (_tmpMaster.StartCount + _tmpMaster.IncomeCount + _tmpMaster.calcCount_external) <> 0
+                                            THEN (_tmpMaster.StartSumm + _tmpMaster.IncomeSumm + _tmpMaster.CalcSumm_external) / (_tmpMaster.StartCount + _tmpMaster.IncomeCount + _tmpMaster.calcCount_external)
+                                       ELSE  0
+                                  END
+                        WHEN (((_tmpMaster.StartCount + _tmpMaster.IncomeCount + _tmpMaster.calcCount_external) > 0 AND (_tmpMaster.StartSumm + _tmpMaster.IncomeSumm + _tmpMaster.CalcSumm_external) > 0)
+                           OR ((_tmpMaster.StartCount + _tmpMaster.IncomeCount + _tmpMaster.calcCount_external) < 0 AND (_tmpMaster.StartSumm + _tmpMaster.IncomeSumm + _tmpMaster.CalcSumm_external) < 0))
+                             THEN (_tmpMaster.StartSumm + _tmpMaster.IncomeSumm + _tmpMaster.CalcSumm_external) / (_tmpMaster.StartCount + _tmpMaster.IncomeCount + _tmpMaster.calcCount_external)
+                        ELSE 0
+                   END AS Price_external
+                 , _tmpMaster.StartCount, _tmpMaster.StartSumm, _tmpMaster.IncomeCount, _tmpMaster.IncomeSumm, _tmpMaster.CalcCount, _tmpMaster.CalcSumm, _tmpMaster.CalcCount_external, _tmpMaster.CalcSumm_external, _tmpMaster.OutCount, _tmpMaster.OutSumm
+                 , _tmpDiff.MovementItemId_diff, _tmpDiff.Summ_diff
+            FROM _tmpMaster
+                 LEFT JOIN _tmpDiff ON _tmpDiff.ContainerId = _tmpMaster.ContainerId
+            WHERE (((_tmpMaster.StartSumm + _tmpMaster.IncomeSumm + _tmpMaster.CalcSumm)          <> 0)
+                OR ((_tmpMaster.StartSumm + _tmpMaster.IncomeSumm + _tmpMaster.CalcSumm_external) <> 0)
+                  )
+              AND _tmpMaster.ContainerId IN (SELECT ContainerLinkObject.ContainerId
+                                             FROM _tmpUnit_branch
+                                                  INNER JOIN ContainerLinkObject ON ContainerLinkObject.ObjectId = _tmpUnit_branch.UnitId
+                                                                                AND ContainerLinkObject.DescId = zc_ContainerLinkObject_Unit()
+                                            );
+     ELSE
+         -- Удаляем предыдущую с/с - !!!кроме всех Филиалов!!!
+         DELETE FROM HistoryCost WHERE ((inStartDate BETWEEN StartDate AND EndDate) OR (inEndDate BETWEEN StartDate AND EndDate))
+                                   AND HistoryCost.ContainerId NOT IN (SELECT ContainerLinkObject.ContainerId
+                                                                       FROM _tmpUnit_branch
+                                                                            INNER JOIN ContainerLinkObject ON ContainerLinkObject.ObjectId = _tmpUnit_branch.UnitId
+                                                                                                          AND ContainerLinkObject.DescId = zc_ContainerLinkObject_Unit()
+                                                                      );
+         -- Сохраняем что насчитали - !!!кроме всех Филиалов!!!
+         INSERT INTO HistoryCost (ContainerId, StartDate, EndDate, Price, Price_external, StartCount, StartSumm, IncomeCount, IncomeSumm, CalcCount, CalcSumm, CalcCount_external, CalcSumm_external, OutCount, OutSumm, MovementItemId_diff, Summ_diff)
+            SELECT _tmpMaster.ContainerId, inStartDate AS StartDate, inEndDate AS EndDate
+                 , CASE WHEN _tmpMaster.isInfoMoney_80401 = TRUE
+                             THEN CASE WHEN (_tmpMaster.StartCount + _tmpMaster.IncomeCount + _tmpMaster.calcCount) <> 0
+                                            THEN (_tmpMaster.StartSumm + _tmpMaster.IncomeSumm + _tmpMaster.CalcSumm) / (_tmpMaster.StartCount + _tmpMaster.IncomeCount + _tmpMaster.calcCount)
+                                       ELSE  0
+                                  END
+                        WHEN (((_tmpMaster.StartCount + _tmpMaster.IncomeCount + _tmpMaster.calcCount) > 0 AND (_tmpMaster.StartSumm + _tmpMaster.IncomeSumm + _tmpMaster.CalcSumm) > 0)
+                           OR ((_tmpMaster.StartCount + _tmpMaster.IncomeCount + _tmpMaster.calcCount) < 0 AND (_tmpMaster.StartSumm + _tmpMaster.IncomeSumm + _tmpMaster.CalcSumm) < 0))
+                             THEN (_tmpMaster.StartSumm + _tmpMaster.IncomeSumm + _tmpMaster.CalcSumm) / (_tmpMaster.StartCount + _tmpMaster.IncomeCount + _tmpMaster.calcCount)
+                        ELSE 0
+                   END AS Price
+                 , CASE WHEN _tmpMaster.isInfoMoney_80401 = TRUE
+                             THEN CASE WHEN (_tmpMaster.StartCount + _tmpMaster.IncomeCount + _tmpMaster.calcCount_external) <> 0
+                                            THEN (_tmpMaster.StartSumm + _tmpMaster.IncomeSumm + _tmpMaster.CalcSumm_external) / (_tmpMaster.StartCount + _tmpMaster.IncomeCount + _tmpMaster.calcCount_external)
+                                       ELSE  0
+                                  END
+                        WHEN (((_tmpMaster.StartCount + _tmpMaster.IncomeCount + _tmpMaster.calcCount_external) > 0 AND (_tmpMaster.StartSumm + _tmpMaster.IncomeSumm + _tmpMaster.CalcSumm_external) > 0)
+                           OR ((_tmpMaster.StartCount + _tmpMaster.IncomeCount + _tmpMaster.calcCount_external) < 0 AND (_tmpMaster.StartSumm + _tmpMaster.IncomeSumm + _tmpMaster.CalcSumm_external) < 0))
+                             THEN (_tmpMaster.StartSumm + _tmpMaster.IncomeSumm + _tmpMaster.CalcSumm_external) / (_tmpMaster.StartCount + _tmpMaster.IncomeCount + _tmpMaster.calcCount_external)
+                        ELSE 0
+                   END AS Price_external
+                 , _tmpMaster.StartCount, _tmpMaster.StartSumm, _tmpMaster.IncomeCount, _tmpMaster.IncomeSumm, _tmpMaster.CalcCount, _tmpMaster.CalcSumm, _tmpMaster.CalcCount_external, _tmpMaster.CalcSumm_external, _tmpMaster.OutCount, _tmpMaster.OutSumm
+                 , _tmpDiff.MovementItemId_diff, _tmpDiff.Summ_diff
+            FROM _tmpMaster
+                 LEFT JOIN _tmpDiff ON _tmpDiff.ContainerId = _tmpMaster.ContainerId
+            WHERE (((_tmpMaster.StartSumm + _tmpMaster.IncomeSumm + _tmpMaster.CalcSumm)          <> 0)
+                OR ((_tmpMaster.StartSumm + _tmpMaster.IncomeSumm + _tmpMaster.CalcSumm_external) <> 0)
+                  )
+              AND _tmpMaster.ContainerId NOT IN (SELECT ContainerLinkObject.ContainerId
+                                                 FROM _tmpUnit_branch
+                                                      INNER JOIN ContainerLinkObject ON ContainerLinkObject.ObjectId = _tmpUnit_branch.UnitId
+                                                                                    AND ContainerLinkObject.DescId = zc_ContainerLinkObject_Unit()
+                                                );
+     END IF;
 
-     -- Сохраняем что насчитали
-     INSERT INTO HistoryCost (ContainerId, StartDate, EndDate, Price, Price_external, StartCount, StartSumm, IncomeCount, IncomeSumm, CalcCount, CalcSumm, CalcCount_external, CalcSumm_external, OutCount, OutSumm, MovementItemId_diff, Summ_diff)
-        SELECT _tmpMaster.ContainerId, inStartDate AS StartDate, inEndDate AS EndDate
-             , CASE WHEN _tmpMaster.isInfoMoney_80401 = TRUE
-                         THEN CASE WHEN (_tmpMaster.StartCount + _tmpMaster.IncomeCount + _tmpMaster.calcCount) <> 0
-                                        THEN (_tmpMaster.StartSumm + _tmpMaster.IncomeSumm + _tmpMaster.CalcSumm) / (_tmpMaster.StartCount + _tmpMaster.IncomeCount + _tmpMaster.calcCount)
-                                   ELSE  0
-                              END
-                    WHEN (((_tmpMaster.StartCount + _tmpMaster.IncomeCount + _tmpMaster.calcCount) > 0 AND (_tmpMaster.StartSumm + _tmpMaster.IncomeSumm + _tmpMaster.CalcSumm) > 0)
-                       OR ((_tmpMaster.StartCount + _tmpMaster.IncomeCount + _tmpMaster.calcCount) < 0 AND (_tmpMaster.StartSumm + _tmpMaster.IncomeSumm + _tmpMaster.CalcSumm) < 0))
-                         THEN (_tmpMaster.StartSumm + _tmpMaster.IncomeSumm + _tmpMaster.CalcSumm) / (_tmpMaster.StartCount + _tmpMaster.IncomeCount + _tmpMaster.calcCount)
-                    ELSE 0
-               END AS Price
-             , CASE WHEN _tmpMaster.isInfoMoney_80401 = TRUE
-                         THEN CASE WHEN (_tmpMaster.StartCount + _tmpMaster.IncomeCount + _tmpMaster.calcCount_external) <> 0
-                                        THEN (_tmpMaster.StartSumm + _tmpMaster.IncomeSumm + _tmpMaster.CalcSumm_external) / (_tmpMaster.StartCount + _tmpMaster.IncomeCount + _tmpMaster.calcCount_external)
-                                   ELSE  0
-                              END
-                    WHEN (((_tmpMaster.StartCount + _tmpMaster.IncomeCount + _tmpMaster.calcCount_external) > 0 AND (_tmpMaster.StartSumm + _tmpMaster.IncomeSumm + _tmpMaster.CalcSumm_external) > 0)
-                       OR ((_tmpMaster.StartCount + _tmpMaster.IncomeCount + _tmpMaster.calcCount_external) < 0 AND (_tmpMaster.StartSumm + _tmpMaster.IncomeSumm + _tmpMaster.CalcSumm_external) < 0))
-                         THEN (_tmpMaster.StartSumm + _tmpMaster.IncomeSumm + _tmpMaster.CalcSumm_external) / (_tmpMaster.StartCount + _tmpMaster.IncomeCount + _tmpMaster.calcCount_external)
-                    ELSE 0
-               END AS Price_external
-             , _tmpMaster.StartCount, _tmpMaster.StartSumm, _tmpMaster.IncomeCount, _tmpMaster.IncomeSumm, _tmpMaster.CalcCount, _tmpMaster.CalcSumm, _tmpMaster.CalcCount_external, _tmpMaster.CalcSumm_external, _tmpMaster.OutCount, _tmpMaster.OutSumm
-             , _tmpDiff.MovementItemId_diff, _tmpDiff.Summ_diff
-        FROM _tmpMaster
-             LEFT JOIN _tmpDiff ON _tmpDiff.ContainerId = _tmpMaster.ContainerId
-        WHERE ((_tmpMaster.StartSumm + _tmpMaster.IncomeSumm + _tmpMaster.CalcSumm)          <> 0)
-           OR ((_tmpMaster.StartSumm + _tmpMaster.IncomeSumm + _tmpMaster.CalcSumm_external) <> 0)
-        ;
+
 
 
         -- !!!ВРЕМЕННО-1!!!
@@ -806,6 +883,7 @@ LANGUAGE PLPGSQL VOLATILE;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 24.08.15                                        * add inBranchId
  08.11.14                                        * add zc_ObjectLink_Unit_HistoryCost
  13.08.14                                        * ObjectCostId -> ContainerId
  10.08.14                                        * add SendOnPrice
@@ -826,10 +904,10 @@ LANGUAGE PLPGSQL VOLATILE;
 -- SELECT MIN (MovementItemContainer.OperDate), MAX (MovementItemContainer.OperDate), Count(*), MovementDesc.Code FROM MovementItemContainer left join Movement on Movement.Id = MovementId left join MovementDesc on MovementDesc.Id = Movement.DescId where MovementItemContainer.OperDate between '01.01.2013' and '31.01.2013' group by MovementDesc.Code;
 -- SELECT StartDate, EndDate, Count(*) FROM HistoryCost GROUP BY StartDate, EndDate ORDER BY 1;
 
--- SELECT * FROM gpInsertUpdate_HistoryCost (inStartDate:= '01.11.2014', inEndDate:= '25.11.2014', inItearationCount:= 1000, inInsert:= 12345, inDiffSumm:= 0.009, inSession:= '2') -- WHERE CalcSummCurrent <> CalcSummNext
--- SELECT * FROM gpInsertUpdate_HistoryCost (inStartDate:= '26.11.2014', inEndDate:= '30.11.2014', inItearationCount:= 1000, inInsert:= 12345, inDiffSumm:= 0.009, inSession:= '2') -- WHERE CalcSummCurrent <> CalcSummNext
+-- SELECT * FROM gpInsertUpdate_HistoryCost (inStartDate:= '01.11.2014', inEndDate:= '25.11.2014', inBranchId:= 0, inItearationCount:= 1000, inInsert:= 12345, inDiffSumm:= 0.009, inSession:= '2') -- WHERE CalcSummCurrent <> CalcSummNext
+-- SELECT * FROM gpInsertUpdate_HistoryCost (inStartDate:= '26.11.2014', inEndDate:= '30.11.2014', inBranchId:= 0, inItearationCount:= 1000, inInsert:= 12345, inDiffSumm:= 0.009, inSession:= '2') -- WHERE CalcSummCurrent <> CalcSummNext
 
 -- UPDATE HistoryCost SET Price = 100 WHERE Price > 100 AND StartDate = '01.06.2014' AND EndDate = '30.06.2014'
 -- тест
--- SELECT * FROM gpInsertUpdate_HistoryCost (inStartDate:= '01.06.2014', inEndDate:= '30.06.2014', inItearationCount:= 500, inInsert:= 12345, inDiffSumm:= 0, inSession:= '2')  WHERE Price <> PriceNext
--- SELECT * FROM gpInsertUpdate_HistoryCost (inStartDate:= '01.07.2015', inEndDate:= '31.07.2015', inItearationCount:= 100, inInsert:= -1, inDiffSumm:= 0.009, inSession:= '2') -- WHERE CalcSummCurrent <> CalcSummNext
+-- SELECT * FROM gpInsertUpdate_HistoryCost (inStartDate:= '01.06.2014', inEndDate:= '30.06.2014', inBranchId:= 0, inItearationCount:= 500, inInsert:= -1, inDiffSumm:= 0, inSession:= '2')  WHERE Price <> PriceNext
+-- SELECT * FROM gpInsertUpdate_HistoryCost (inStartDate:= '01.07.2015', inEndDate:= '31.07.2015', inBranchId:= 0, inItearationCount:= 100, inInsert:= -1, inDiffSumm:= 0.009, inSession:= '2') -- WHERE CalcSummCurrent <> CalcSummNext

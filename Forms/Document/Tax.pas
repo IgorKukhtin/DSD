@@ -80,7 +80,7 @@ type
     actUpdateIsMedoc: TdsdExecStoredProc;
     actInsertMaskDoc: TdsdInsertUpdateAction;
     actInsertMaskMulti: TMultiAction;
-    bb: TdxBarButton;
+    bbInsertMask: TdxBarButton;
     clGoodsGroupNameFull: TcxGridDBColumn;
     clMeasureName: TcxGridDBColumn;
     cxLabel16: TcxLabel;

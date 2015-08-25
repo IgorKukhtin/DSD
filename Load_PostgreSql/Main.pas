@@ -10113,15 +10113,32 @@ begin
         while calcStartDate <= StrToDate(EndDateCompleteEdit.Text) do
         begin
              if calcStartDate=StrToDate(StartDateCompleteEdit.Text)
-             then Add('          select cast('+FormatToDateServer_notNULL(calcStartDate)+' as date) as StartDate, cast('+FormatToDateServer_notNULL(calcEndDate)+' as date) as EndDate')
-             else Add('union all select cast('+FormatToDateServer_notNULL(calcStartDate)+' as date) as StartDate, cast('+FormatToDateServer_notNULL(calcEndDate)+' as date) as EndDate');
+             then Add('          select cast('+FormatToDateServer_notNULL(calcStartDate)+' as date) as StartDate, cast('+FormatToDateServer_notNULL(calcEndDate)+' as date) as EndDate, 0 as BranchId, 0 as BranchCode, null as BranchName')
+             else Add('union all select cast('+FormatToDateServer_notNULL(calcStartDate)+' as date) as StartDate, cast('+FormatToDateServer_notNULL(calcEndDate)+' as date) as EndDate, 0 as BranchId, 0 as BranchCode, null as BranchName');
+             //
+             //
+             fOpenSqToQuery (' select *'
+                            +' from gpSelect_HistoryCost_Branch ('+FormatToDateServer_notNULL(calcStartDate)
+                            +'                                  ,'+FormatToDateServer_notNULL(calcEndDate)
+                            +'                                  ,zfCalc_UserAdmin()'
+                            +'                                  )');
+             while not toSqlQuery.EOF do
+             begin
+                  Add(' union all select cast('+FormatToDateServer_notNULL(toSqlQuery.FieldByName('StartDate').AsDatetime)+' as date) as StartDate'
+                     +'                , cast('+FormatToDateServer_notNULL(toSqlQuery.FieldByName('EndDate').AsDatetime)+' as date) as EndDate'
+                     +'                , '+IntToStr(toSqlQuery.FieldByName('BranchId').AsInteger)+' as BranchId'
+                     +'                , '+IntToStr(toSqlQuery.FieldByName('BranchCode').AsInteger)+' as BranchCode'
+                     +'                , '+FormatToVarCharServer_notNULL(toSqlQuery.FieldByName('BranchName').AsString)+' as BranchName');
+                  toSqlQuery.Next;
+             end;
+             //
              //
              calcStartDate:=calcEndDate+1;
              DecodeDate(calcStartDate, Year, Month, Day);
              if Month=12 then begin Year:=Year+1;Month:=0;end;
              calcEndDate:=EncodeDate(Year, Month+1, 1)-1;
         end;
-        Add('order by StartDate, EndDate');
+        Add('order by StartDate, BranchCode, EndDate');
         Open;
         //
         Application.ProcessMessages;
@@ -10139,6 +10156,7 @@ begin
         toStoredProc.Params.Clear;
         toStoredProc.Params.AddParam ('inStartDate',ftDateTime,ptInput, 0);
         toStoredProc.Params.AddParam ('inEndDate',ftDateTime,ptInput, 0);
+        toStoredProc.Params.AddParam ('inBranchId',ftInteger,ptInput, 0);
         toStoredProc.Params.AddParam ('inItearationCount',ftInteger,ptInput, 0);
         toStoredProc.Params.AddParam ('inInsert',ftInteger,ptInput, 0);
         toStoredProc.Params.AddParam ('inDiffSumm',ftFloat,ptInput, 0);
@@ -10165,12 +10183,15 @@ begin
              //
              toStoredProc.Params.ParamByName('inStartDate').Value:=FieldByName('StartDate').AsDateTime;
              toStoredProc.Params.ParamByName('inEndDate').Value:=FieldByName('EndDate').AsDateTime;
+             toStoredProc.Params.ParamByName('inBranchId').Value:=FieldByName('BranchId').AsInteger;
              toStoredProc.Params.ParamByName('inItearationCount').Value:=800;
              toStoredProc.Params.ParamByName('inInsert').Value:=12345;//захардкодил
              toStoredProc.Params.ParamByName('inDiffSumm').Value:=0.009;
              //ShowMessage('pInsertHistoryCost');
              if not myExecToStoredProc then exit;
              //
+             //
+             MyDelay(5 * 1000);
              //
              //
              if cbInsertHistoryCost_andReComplete.Checked

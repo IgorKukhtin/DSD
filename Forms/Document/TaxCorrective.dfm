@@ -3,26 +3,26 @@ inherited TaxCorrectiveForm: TTaxCorrectiveForm
   ClientHeight = 668
   ClientWidth = 1113
   ExplicitWidth = 1129
-  ExplicitHeight = 706
+  ExplicitHeight = 703
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 163
     Width = 1113
     Height = 505
-    ExplicitTop = 126
+    ExplicitTop = 163
     ExplicitWidth = 1113
-    ExplicitHeight = 542
+    ExplicitHeight = 505
     ClientRectBottom = 505
     ClientRectRight = 1113
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 1113
-      ExplicitHeight = 518
+      ExplicitHeight = 481
       inherited cxGrid: TcxGrid
         Width = 1113
         Height = 481
         ExplicitWidth = 1113
-        ExplicitHeight = 518
+        ExplicitHeight = 481
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -530,7 +530,6 @@ inherited TaxCorrectiveForm: TTaxCorrectiveForm
           DataSet = PrintHeaderCDS
           UserName = 'frxDBDHeader'
         end>
-      CopiesCount = 1
       Params = <
         item
           Name = 'Id'
@@ -566,7 +565,6 @@ inherited TaxCorrectiveForm: TTaxCorrectiveForm
           DataSet = PrintHeaderCDS
           UserName = 'frxDBDHeader'
         end>
-      CopiesCount = 1
       Params = <
         item
           Name = 'Id'
@@ -851,6 +849,19 @@ inherited TaxCorrectiveForm: TTaxCorrectiveForm
         ComponentItem = 'inOperDate'
         DataType = ftDateTime
         ParamType = ptInput
+      end
+      item
+        Name = 'Id'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+      end
+      item
+        Name = 'isMask'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'isMask'
+        DataType = ftBoolean
       end
       item
         Name = 'InvNumber'

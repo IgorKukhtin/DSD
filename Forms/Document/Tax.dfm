@@ -3,26 +3,26 @@ inherited TaxForm: TTaxForm
   ClientHeight = 668
   ClientWidth = 1067
   ExplicitWidth = 1083
-  ExplicitHeight = 706
+  ExplicitHeight = 703
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 163
     Width = 1067
     Height = 505
-    ExplicitTop = 126
+    ExplicitTop = 163
     ExplicitWidth = 1067
-    ExplicitHeight = 542
+    ExplicitHeight = 505
     ClientRectBottom = 505
     ClientRectRight = 1067
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 1067
-      ExplicitHeight = 518
+      ExplicitHeight = 481
       inherited cxGrid: TcxGrid
         Width = 1067
         Height = 481
         ExplicitWidth = 1067
-        ExplicitHeight = 518
+        ExplicitHeight = 481
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -432,7 +432,6 @@ inherited TaxForm: TTaxForm
       Hint = #1055#1077#1095#1072#1090#1100' '#1053#1072#1083#1086#1075#1086#1074#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103
       ImageIndex = 3
       DataSets = <>
-      CopiesCount = 1
       Params = <
         item
           Name = 'Id'
@@ -515,7 +514,6 @@ inherited TaxForm: TTaxForm
           DataSet = PrintItemsSverkaCDS
           UserName = 'frxDBDSverka'
         end>
-      CopiesCount = 1
       Params = <
         item
           Name = 'Id'
@@ -568,7 +566,6 @@ inherited TaxForm: TTaxForm
           DataSet = PrintItemsSverkaCDS
           UserName = 'frxDBDSverka'
         end>
-      CopiesCount = 1
       Params = <
         item
           Name = 'Id'
@@ -805,7 +802,7 @@ inherited TaxForm: TTaxForm
         end
         item
           Visible = True
-          ItemName = 'bb'
+          ItemName = 'bbInsertMask'
         end
         item
           Visible = True
@@ -881,10 +878,10 @@ inherited TaxForm: TTaxForm
       Category = 0
     end
     object bbMeDoc: TdxBarButton
-      Action = actInsertMaskMulti
+      Action = mactMeDoc
       Category = 0
     end
-    object bb: TdxBarButton
+    object bbInsertMask: TdxBarButton
       Action = actInsertMaskMulti
       Category = 0
     end
@@ -990,6 +987,19 @@ inherited TaxForm: TTaxForm
         ComponentItem = 'inOperDate'
         DataType = ftDateTime
         ParamType = ptInput
+      end
+      item
+        Name = 'Id'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+      end
+      item
+        Name = 'isMask'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'inMask'
+        DataType = ftBoolean
       end
       item
         Name = 'InvNumber'

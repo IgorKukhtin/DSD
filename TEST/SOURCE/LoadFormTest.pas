@@ -1098,9 +1098,6 @@ end;
 
 procedure TLoadFormTest.LoadReportFormTest;
 begin
-  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_GoodsForm'));
-  TdsdFormStorageFactory.GetStorage.Load('TReport_GoodsForm');
- exit;
  {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_GoodsMIForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_GoodsMIForm');
