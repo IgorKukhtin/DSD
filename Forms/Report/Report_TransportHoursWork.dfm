@@ -14,6 +14,7 @@ object Report_TransportHoursWorkForm: TReport_TransportHoursWorkForm
   OldCreateOrder = False
   AddOnFormData.RefreshAction = actRefresh
   AddOnFormData.isSingle = False
+  AddOnFormData.ExecuteDialogAction = ExecuteDialog
   PixelsPerInch = 96
   TextHeight = 13
   object cxGrid: TcxGrid
@@ -460,7 +461,19 @@ object Report_TransportHoursWorkForm: TReport_TransportHoursWorkForm
       ItemLinks = <
         item
           Visible = True
+          ItemName = 'bbDialogForm'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic1'
+        end
+        item
+          Visible = True
           ItemName = 'bbRefresh'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic1'
         end
         item
           BeginGroup = True
@@ -481,12 +494,15 @@ object Report_TransportHoursWorkForm: TReport_TransportHoursWorkForm
       Action = actExportToExcel
       Category = 0
     end
-    object bbDialogForm: TdxBarButton
-      Caption = #1044#1080#1072#1083#1086#1075' '#1091#1089#1090#1072#1085#1086#1074#1082#1080' '#1087#1072#1088#1072#1084#1077#1090#1088#1086#1074
+    object dxBarStatic1: TdxBarStatic
+      Caption = '     '
       Category = 0
-      Hint = #1044#1080#1072#1083#1086#1075' '#1091#1089#1090#1072#1085#1086#1074#1082#1080' '#1087#1072#1088#1072#1084#1077#1090#1088#1086#1074
+      Hint = '     '
       Visible = ivAlways
-      ImageIndex = 35
+    end
+    object bbDialogForm: TdxBarButton
+      Action = ExecuteDialog
+      Category = 0
     end
   end
   object ActionList: TActionList
@@ -515,6 +531,65 @@ object Report_TransportHoursWorkForm: TReport_TransportHoursWorkForm
       Hint = #1042#1099#1075#1088#1091#1079#1082#1072' '#1074' Excel'
       ImageIndex = 6
       ShortCut = 16472
+    end
+    object ExecuteDialog: TExecuteDialog
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1072#1088#1072#1084#1077#1090#1088#1099' '#1086#1090#1095#1077#1090#1072
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1072#1088#1072#1084#1077#1090#1088#1099' '#1086#1090#1095#1077#1090#1072
+      ImageIndex = 35
+      FormName = 'TReport_TransportHoursWorkDialogForm'
+      FormNameParam.Value = 'TReport_TransportHoursWorkDialogForm'
+      FormNameParam.DataType = ftString
+      GuiParams = <
+        item
+          Name = 'StartDate'
+          Value = 41640d
+          Component = deStart
+          DataType = ftDateTime
+          ParamType = ptInput
+        end
+        item
+          Name = 'EndDate'
+          Value = 41640d
+          Component = deEnd
+          DataType = ftDateTime
+          ParamType = ptInput
+        end
+        item
+          Name = 'PersonalDriverId'
+          Value = ''
+          Component = PersonalDriverGuides
+          ComponentItem = 'Key'
+          DataType = ftString
+          ParamType = ptInput
+        end
+        item
+          Name = 'PersonalDriverName'
+          Value = ''
+          Component = PersonalDriverGuides
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          ParamType = ptInput
+        end
+        item
+          Name = 'BranchId'
+          Value = ''
+          Component = BranchGuides
+          ComponentItem = 'Key'
+          ParamType = ptInput
+        end
+        item
+          Name = 'BranchName'
+          Value = ''
+          Component = BranchGuides
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          ParamType = ptInput
+        end>
+      isShowModal = True
+      RefreshDispatcher = RefreshDispatcher
+      OpenBeforeShow = True
     end
   end
   object dsdStoredProc: TdsdStoredProc

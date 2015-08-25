@@ -1,0 +1,82 @@
+-- Function: gpUpdate_MovementItem_Sale_Price()
+
+DROP FUNCTION IF EXISTS gpUpdate_MovementItem_Sale_Price (Integer, TVarChar);
+
+CREATE OR REPLACE FUNCTION gpUpdate_MovementItem_Sale_Price(
+    IN inMovementId              Integer   , -- Ключ объекта <Документ>
+    IN inSession                 TVarChar    -- сессия пользователя
+)
+RETURNS VOID
+AS
+$BODY$
+   DECLARE vbUserId Integer;
+
+   DECLARE vbStatusId Integer;
+   DECLARE vbInvNumber TVarChar;
+   DECLARE vbOperDate TDateTime;
+   DECLARE vbPriceListId Integer;
+
+ 
+BEGIN
+     -- проверка прав пользователя на вызов процедуры
+     vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MI_Sale());
+
+
+     -- определяются параметры документа
+     SELECT Movement.StatusId
+          , Movement.InvNumber
+          , Movement.OperDate
+          , MovementLinkObject_PriceList.ObjectId   AS PriceListId
+
+            INTO vbStatusId, vbInvNumber, vbOperDate, vbPriceListId
+     FROM Movement
+          LEFT JOIN MovementLinkObject AS MovementLinkObject_PriceList
+                                       ON MovementLinkObject_PriceList.MovementId = Movement.Id
+                                      AND MovementLinkObject_PriceList.DescId = zc_MovementLinkObject_PriceList()
+     WHERE Movement.Id = inMovementId;
+
+
+     -- проверка - проведенные/удаленные документы Изменять нельзя
+     IF vbStatusId <> zc_Enum_Status_UnComplete()
+     THEN
+         RAISE EXCEPTION 'Ошибка.Изменение документа № <%> в статусе <%> не возможно.', vbInvNumber, lfGet_Object_ValueData (vbStatusId);
+     END IF;
+     -- Проверка - Прайс лист должен быть установлен
+     IF COALESCE (vbPriceListId, 0) = 0 
+     THEN
+         RAISE EXCEPTION 'Ошибка.Значение <Прайс лист> должно быть установлено.';
+     END IF;
+   
+     -- сохранили
+     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_Price()
+                                             , MovementItem.Id
+                                             , lfObjectHistory_PriceListItem.ValuePrice
+                                              )
+                              
+          FROM MovementItem
+              LEFT JOIN lfSelect_ObjectHistory_PriceListItem (inPriceListId:= vbPriceListId, inOperDate:= vbOperDate)
+                     AS lfObjectHistory_PriceListItem ON lfObjectHistory_PriceListItem.GoodsId = MovementItem.ObjectId
+          WHERE MovementId = inMovementId;
+
+     -- сохранили протокол
+     PERFORM lpInsert_MovementItemProtocol (MovementItem.Id, vbUserId, FALSE)
+     FROM MovementItem
+     WHERE MovementId = inMovementId;
+
+     -- сохранили связь с <PriceList>
+     PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_PriceList(), inMovementId, vbPriceListId);
+
+     -- пересчитали Итоговые суммы по накладной
+     PERFORM lpInsertUpdate_MovementFloat_TotalSumm (inMovementId);
+
+
+END;
+$BODY$
+  LANGUAGE plpgsql VOLATILE;
+
+/*
+ ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
+ 22.08.15         *
+
+*/

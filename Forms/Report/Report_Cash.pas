@@ -70,6 +70,8 @@ type
     ProfitLossGroupName: TcxGridDBColumn;
     ProfitLossDirectionCode: TcxGridDBColumn;
     ProfitLossDirectionName: TcxGridDBColumn;
+    ExecuteDialog: TExecuteDialog;
+    bbExecuteDialog: TdxBarButton;
   private
     { Private declarations }
   public

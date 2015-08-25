@@ -77,6 +77,8 @@ type
     PositionName: TcxGridDBColumn;
     PersonalServiceListCode: TcxGridDBColumn;
     PersonalServiceListName: TcxGridDBColumn;
+    ExecuteDialog: TExecuteDialog;
+    bbExecuteDialog: TdxBarButton;
   private
     { Private declarations }
   public
