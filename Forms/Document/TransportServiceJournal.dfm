@@ -60,9 +60,12 @@ inherited TransportServiceJournalForm: TTransportServiceJournalForm
           object StartRunPlan: TcxGridDBColumn
             Caption = #1044#1072#1090#1072'/'#1042#1088'.'#1074#1099#1077#1079#1076#1072' '#1087#1083#1072#1085
             DataBinding.FieldName = 'StartRunPlan'
+            PropertiesClassName = 'TcxDateEditProperties'
+            Properties.DisplayFormat = 'dd.mm.yyyy hh:mm'
+            Properties.EditFormat = 'dd.mm.yyyy hh:mm'
+            Properties.Kind = ckDateTime
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Options.Editing = False
             Width = 62
           end
           object StartRun: TcxGridDBColumn
@@ -574,6 +577,10 @@ inherited TransportServiceJournalForm: TTransportServiceJournalForm
     Left = 640
     Top = 232
   end
+  inherited spMovementReComplete: TdsdStoredProc
+    Left = 432
+    Top = 120
+  end
   object spInsertUpdate: TdsdStoredProc
     StoredProcName = 'gpInsertUpdate_Movement_TransportService'
     DataSets = <>
@@ -606,6 +613,14 @@ inherited TransportServiceJournalForm: TTransportServiceJournalForm
         Value = Null
         Component = MasterCDS
         ComponentItem = 'OperDate'
+        DataType = ftDateTime
+        ParamType = ptInput
+      end
+      item
+        Name = 'inStartRunPlan'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'StartRunPlan'
         DataType = ftDateTime
         ParamType = ptInput
       end
