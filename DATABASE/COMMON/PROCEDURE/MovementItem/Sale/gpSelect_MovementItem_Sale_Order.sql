@@ -14,11 +14,14 @@ RETURNS TABLE (Id Integer, LineNum Integer, GoodsId Integer, GoodsCode Integer, 
              , GoodsGroupNameFull TVarChar
              , Amount TFloat, AmountChangePercent TFloat, AmountPartner TFloat, AmountOrder TFloat
              , ChangePercentAmount TFloat
-             , Price TFloat, CountForPrice TFloat, HeadCount TFloat, BoxCount TFloat
+             , Price TFloat, CountForPrice TFloat, Price_Pricelist TFloat
+             , HeadCount TFloat, BoxCount TFloat
              , PartionGoods TVarChar, GoodsKindId Integer, GoodsKindName  TVarChar, MeasureName TVarChar
              , AssetId Integer, AssetName TVarChar
              , BoxId Integer, BoxName TVarChar
-             , AmountSumm TFloat, isErased Boolean
+             , AmountSumm TFloat
+             , isCheck_Pricelist Boolean
+             , isErased Boolean
               )
 AS
 $BODY$
@@ -150,6 +153,11 @@ BEGIN
                           FROM tmpMI
                                FULL JOIN tmpMI_Order_find ON tmpMI_Order_find.MovementItemId = tmpMI.MovementItemId
                          )
+          , tmpPriceList AS (SELECT lfObjectHistory_PriceListItem.GoodsId AS GoodsId
+                                  , lfObjectHistory_PriceListItem.ValuePrice AS Price_PriceList
+                             FROM lfSelect_ObjectHistory_PriceListItem (inPriceListId:= inPriceListId, inOperDate:= inOperDate) AS lfObjectHistory_PriceListItem 
+                             )
+
        SELECT
              0                          AS Id
            , 0 :: Integer               AS LineNum
@@ -163,8 +171,9 @@ BEGIN
            , CAST (NULL AS TFloat)      AS AmountPartner
            , CAST (NULL AS TFloat)      AS AmountOrder
            , CAST (NULL AS TFloat)      AS ChangePercentAmount
-           , CAST (lfObjectHistory_PriceListItem.ValuePrice AS TFloat) AS Price
+           , CAST (tmpPriceList.Price_Pricelist AS TFloat) AS Price
            , CAST (1 AS TFloat)         AS CountForPrice
+           , CAST (tmpPriceList.Price_Pricelist AS TFloat) AS Price_Pricelist
            , CAST (NULL AS TFloat)      AS HeadCount
            , CAST (NULL AS TFloat)      AS BoxCount
            , CAST (NULL AS TVarChar)    AS PartionGoods
@@ -176,6 +185,7 @@ BEGIN
            , 0 ::Integer                AS BoxId
            , '' ::TVarChar              AS BoxName
            , CAST (NULL AS TFloat)      AS AmountSumm
+           , FALSE                      AS isCheck_PricelistBoolean
            , FALSE                      AS isErased
 
        FROM (SELECT Object_Goods.Id                                                   AS GoodsId
@@ -197,8 +207,7 @@ BEGIN
                                         AND tmpMI.GoodsKindId = tmpGoods.GoodsKindId
 
             LEFT JOIN Object AS Object_GoodsKind ON Object_GoodsKind.Id = tmpGoods.GoodsKindId
-            LEFT JOIN lfSelect_ObjectHistory_PriceListItem (inPriceListId:= inPriceListId, inOperDate:= inOperDate)
-                   AS lfObjectHistory_PriceListItem ON lfObjectHistory_PriceListItem.GoodsId = tmpGoods.GoodsId
+            LEFT JOIN tmpPriceList ON tmpPriceList.GoodsId = tmpGoods.GoodsId
 
             LEFT JOIN ObjectLink AS ObjectLink_Goods_Measure
                                  ON ObjectLink_Goods_Measure.ObjectId = tmpGoods.GoodsId
@@ -229,6 +238,7 @@ BEGIN
 
            , tmpMI.Price :: TFloat              AS Price
            , tmpMI.CountForPrice :: TFloat      AS CountForPrice
+           , CAST (tmpPriceList.Price_Pricelist AS TFloat) AS Price_Pricelist
 
            , MIFloat_HeadCount.ValueData            AS HeadCount
            , MIFloat_BoxCount.ValueData             AS BoxCount
@@ -245,6 +255,7 @@ BEGIN
            , Object_Box.ValueData                   AS BoxName
 
            , CAST (COALESCE (MIFloat_AmountPartner.ValueData, 0) * tmpMI.Price / tmpMI.CountForPrice AS NUMERIC (16, 2)) :: TFloat AS AmountSumm
+           , CASE WHEN COALESCE(tmpMI.Price,0) = COALESCE(tmpPriceList.Price_Pricelist,0) THEN FALSE ELSE TRUE END AS isCheck_PricelistBoolean
            , tmpMI.isErased                     AS isErased
 
        FROM tmpMI_all AS tmpMI
@@ -290,7 +301,7 @@ BEGIN
             LEFT JOIN ObjectString AS ObjectString_Goods_GoodsGroupFull
                                    ON ObjectString_Goods_GoodsGroupFull.ObjectId = tmpMI.GoodsId
                                   AND ObjectString_Goods_GoodsGroupFull.DescId = zc_ObjectString_Goods_GroupNameFull()
-
+            LEFT JOIN tmpPriceList ON tmpPriceList.GoodsId = tmpGoods.GoodsId
             ;
      ELSE
 
@@ -397,6 +408,7 @@ BEGIN
 
            , MIFloat_HeadCount.ValueData            AS HeadCount
            , MIFloat_BoxCount.ValueData             AS BoxCount
+           , CAST (lfObjectHistory_PriceListItem.ValuePrice AS TFloat) AS Price_Pricelist
 
            , MIString_PartionGoods.ValueData        AS PartionGoods
            , Object_GoodsKind.Id                    AS GoodsKindId
@@ -410,6 +422,7 @@ BEGIN
            , Object_Box.ValueData                   AS BoxName
 
            , CAST (COALESCE (MIFloat_AmountPartner.ValueData, 0) * tmpMI.Price / tmpMI.CountForPrice AS NUMERIC (16, 2)) :: TFloat AS AmountSumm
+           , CASE WHEN COALESCE(tmpMI.Price,0) = COALESCE(lfObjectHistory_PriceListItem.ValuePrice,0) THEN FALSE ELSE TRUE END AS isCheck_PricelistBoolean
            , tmpMI.isErased                     AS isErased
 
        FROM tmpMI_all AS tmpMI
@@ -455,6 +468,10 @@ BEGIN
             LEFT JOIN ObjectString AS ObjectString_Goods_GoodsGroupFull
                                    ON ObjectString_Goods_GoodsGroupFull.ObjectId = tmpMI.GoodsId
                                   AND ObjectString_Goods_GoodsGroupFull.DescId = zc_ObjectString_Goods_GroupNameFull()
+
+            LEFT JOIN lfSelect_ObjectHistory_PriceListItem (inPriceListId:= inPriceListId, inOperDate:= inOperDate)
+                   AS lfObjectHistory_PriceListItem ON lfObjectHistory_PriceListItem.GoodsId = tmpMI.GoodsId
+
             ;
 
      END IF;

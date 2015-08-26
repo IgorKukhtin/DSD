@@ -1,28 +1,29 @@
 ﻿inherited SaleForm: TSaleForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1055#1088#1086#1076#1072#1078#1072' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1102'  ('#1074#1089#1077')>'
   ClientHeight = 668
-  ClientWidth = 1028
+  ClientWidth = 1382
   AddOnFormData.OnLoadAction = actSetDefaults
-  ExplicitWidth = 1044
+  ExplicitLeft = -281
+  ExplicitWidth = 1398
   ExplicitHeight = 706
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 166
-    Width = 1028
+    Width = 1382
     Height = 502
     ExplicitTop = 166
-    ExplicitWidth = 1028
+    ExplicitWidth = 1382
     ExplicitHeight = 502
     ClientRectBottom = 502
-    ClientRectRight = 1028
+    ClientRectRight = 1382
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 1028
+      ExplicitWidth = 1382
       ExplicitHeight = 478
       inherited cxGrid: TcxGrid
-        Width = 1028
+        Width = 1382
         Height = 478
-        ExplicitWidth = 1028
+        ExplicitWidth = 1382
         ExplicitHeight = 478
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
@@ -233,7 +234,19 @@
             HeaderAlignmentVert = vaCenter
             Width = 70
           end
-          object colCountForPrice: TcxGridDBColumn [12]
+          object Price_Pricelist: TcxGridDBColumn [12]
+            Caption = #1062#1077#1085#1072' '#1087#1086' '#1087#1088#1072#1081#1089#1091
+            DataBinding.FieldName = 'Price_Pricelist'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Properties.ReadOnly = False
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
+          end
+          object colCountForPrice: TcxGridDBColumn [13]
             Caption = #1050#1086#1083'. '#1074' '#1094#1077#1085#1077
             DataBinding.FieldName = 'CountForPrice'
             Visible = False
@@ -241,7 +254,15 @@
             HeaderAlignmentVert = vaCenter
             Width = 55
           end
-          object colAmountSumm: TcxGridDBColumn [13]
+          object isCheck_Pricelist: TcxGridDBColumn [14]
+            Caption = #1054#1090#1082#1083#1086#1085#1077#1085#1080#1077' '#1086#1090' '#1087#1088#1072#1081#1089#1072
+            DataBinding.FieldName = 'isCheck_Pricelist'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 61
+          end
+          object colAmountSumm: TcxGridDBColumn [15]
             Caption = #1057#1091#1084#1084#1072
             DataBinding.FieldName = 'AmountSumm'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -251,7 +272,7 @@
             Options.Editing = False
             Width = 80
           end
-          object PriceCost: TcxGridDBColumn [14]
+          object PriceCost: TcxGridDBColumn [16]
             Caption = #1062#1077#1085#1072' '#1089'/'#1089
             DataBinding.FieldName = 'PriceCost'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -262,7 +283,7 @@
             Options.Editing = False
             Width = 70
           end
-          object colHeadCount: TcxGridDBColumn [15]
+          object colHeadCount: TcxGridDBColumn [17]
             Caption = #1050#1086#1083'. '#1075#1086#1083#1086#1074
             DataBinding.FieldName = 'HeadCount'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -271,7 +292,7 @@
             HeaderAlignmentVert = vaCenter
             Width = 60
           end
-          object colAssetName: TcxGridDBColumn [16]
+          object colAssetName: TcxGridDBColumn [18]
             Caption = #1054#1089#1085'.'#1089#1088#1077#1076#1089#1090#1074#1072' '
             DataBinding.FieldName = 'AssetName'
             Visible = False
@@ -280,7 +301,7 @@
             Options.Editing = False
             Width = 80
           end
-          object SumCost: TcxGridDBColumn [17]
+          object SumCost: TcxGridDBColumn [19]
             Caption = #1057#1091#1084#1084#1072' '#1089'/'#1089
             DataBinding.FieldName = 'SumCost'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -291,7 +312,7 @@
             Options.Editing = False
             Width = 80
           end
-          object BoxCount: TcxGridDBColumn [18]
+          object BoxCount: TcxGridDBColumn [20]
             Caption = #1050#1086#1083'-'#1074#1086' '#1103#1097#1080#1082#1086#1074
             DataBinding.FieldName = 'BoxCount'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -301,7 +322,7 @@
             HeaderAlignmentVert = vaCenter
             Width = 60
           end
-          object BoxName: TcxGridDBColumn [19]
+          object BoxName: TcxGridDBColumn [21]
             Caption = #1042#1080#1076' '#1103#1097#1080#1082#1086#1074
             DataBinding.FieldName = 'BoxName'
             PropertiesClassName = 'TcxButtonEditProperties'
@@ -316,28 +337,28 @@
             HeaderAlignmentVert = vaCenter
             Width = 70
           end
-          object clInfoMoneyCode: TcxGridDBColumn [20]
+          object clInfoMoneyCode: TcxGridDBColumn [22]
             Caption = #1050#1086#1076' '#1059#1055
             DataBinding.FieldName = 'InfoMoneyCode'
             Visible = False
             HeaderAlignmentVert = vaCenter
             Width = 45
           end
-          object clInfoMoneyGroupName: TcxGridDBColumn [21]
+          object clInfoMoneyGroupName: TcxGridDBColumn [23]
             Caption = #1059#1055' '#1075#1088#1091#1087#1087#1072' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
             DataBinding.FieldName = 'InfoMoneyGroupName'
             Visible = False
             HeaderAlignmentVert = vaCenter
             Width = 70
           end
-          object clInfoMoneyDestinationName: TcxGridDBColumn [22]
+          object clInfoMoneyDestinationName: TcxGridDBColumn [24]
             Caption = #1059#1055' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1077
             DataBinding.FieldName = 'InfoMoneyDestinationName'
             Visible = False
             HeaderAlignmentVert = vaCenter
             Width = 70
           end
-          object clInfoMoneyName: TcxGridDBColumn [23]
+          object clInfoMoneyName: TcxGridDBColumn [25]
             Caption = #1059#1055' '#1089#1090#1072#1090#1100#1103' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
             DataBinding.FieldName = 'InfoMoneyName'
             Visible = False
@@ -352,10 +373,10 @@
     end
   end
   inherited DataPanel: TPanel
-    Width = 1028
+    Width = 1382
     Height = 140
     TabOrder = 3
-    ExplicitWidth = 1028
+    ExplicitWidth = 1382
     ExplicitHeight = 140
     inherited edInvNumber: TcxTextEdit
       Left = 8
@@ -610,7 +631,7 @@
     object cxLabel19: TcxLabel
       Left = 1072
       Top = 5
-      Caption = #1042#1072#1083#1102#1090#1072' ('#1087#1086#1082#1091#1087#1072#1090#1077#1083#1100')'
+      Caption = #1042#1072#1083#1102#1090#1072' ('#1087#1086#1082')'
     end
     object edCurrencyPartner: TcxButtonEdit
       Left = 1072
@@ -622,7 +643,7 @@
         end>
       Properties.ReadOnly = True
       TabOrder = 35
-      Width = 177
+      Width = 78
     end
     object edContractTag: TcxButtonEdit
       Left = 972
@@ -655,7 +676,7 @@
       Width = 81
     end
     object edParPartnerValue: TcxCurrencyEdit
-      Left = 1202
+      Left = 1205
       Top = 63
       EditValue = 1.000000000000000000
       Properties.DecimalPlaces = 0
@@ -665,7 +686,7 @@
       Width = 47
     end
     object cxLabel21: TcxLabel
-      Left = 1202
+      Left = 1205
       Top = 44
       Caption = #1053#1086#1084#1080#1085#1072#1083
     end
@@ -732,6 +753,37 @@
     Top = 103
     TabOrder = 13
     Width = 545
+  end
+  object cxLabel23: TcxLabel [10]
+    Left = 1156
+    Top = 5
+    Caption = #1050#1091#1088#1089' '#1059#1055
+  end
+  object edCurrencyValue: TcxCurrencyEdit [11]
+    Left = 1155
+    Top = 23
+    Properties.Alignment.Horz = taRightJustify
+    Properties.Alignment.Vert = taVCenter
+    Properties.DecimalPlaces = 4
+    Properties.DisplayFormat = ',0.####;-,0.####; ;'
+    Properties.ReadOnly = True
+    TabOrder = 15
+    Width = 44
+  end
+  object cxLabel24: TcxLabel [12]
+    Left = 1205
+    Top = 5
+    Caption = #1053#1086#1084'. '#1059#1055
+  end
+  object edParValue: TcxCurrencyEdit [13]
+    Left = 1205
+    Top = 23
+    EditValue = 1.000000000000000000
+    Properties.DecimalPlaces = 0
+    Properties.DisplayFormat = ',0.'
+    Properties.ReadOnly = True
+    TabOrder = 17
+    Width = 47
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 171
@@ -1664,6 +1716,10 @@
         end
         item
           Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbUpdatePrice'
         end
         item
@@ -2233,6 +2289,18 @@
         Value = Null
         Component = ceComment
         DataType = ftString
+      end
+      item
+        Name = 'CurrencyValue'
+        Value = Null
+        Component = edCurrencyValue
+        DataType = ftFloat
+      end
+      item
+        Name = 'ParValue'
+        Value = Null
+        Component = edParValue
+        DataType = ftFloat
       end>
     Left = 216
     Top = 248
@@ -2385,6 +2453,18 @@
         Component = PriceListGuides
         ComponentItem = 'TextValue'
         DataType = ftString
+      end
+      item
+        Name = 'outCurrencyValue'
+        Value = Null
+        Component = edCurrencyValue
+        DataType = ftFloat
+      end
+      item
+        Name = 'outParValue'
+        Value = Null
+        Component = edParValue
+        DataType = ftFloat
       end
       item
         Name = 'ioCurrencyPartnerValue'
@@ -3470,7 +3550,8 @@
         Component = CurrencyDocumentGuides
         ComponentItem = 'Key'
       end>
-    Left = 1120
+    Left = 1192
+    Top = 96
   end
   object ContractTagGuides: TdsdGuides
     KeyField = 'Id'

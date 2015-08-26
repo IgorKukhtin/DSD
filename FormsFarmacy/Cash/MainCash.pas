@@ -13,7 +13,8 @@ uses
   cxGrid, Vcl.ExtCtrls, cxSplitter, dsdDB, Datasnap.DBClient, cxContainer,
   cxTextEdit, cxCurrencyEdit, cxLabel, cxMaskEdit, cxDropDownEdit, cxLookupEdit,
   cxDBLookupEdit, cxDBLookupComboBox, Vcl.Menus, cxCheckBox, Vcl.StdCtrls,
-  cxButtons, cxNavigator, CashInterface, IniFIles, cxImageComboBox;
+  cxButtons, cxNavigator, CashInterface, IniFIles, cxImageComboBox, dxSkinsCore,
+  dxSkinsDefaultPainters, dxSkinscxPCPainter;
 
 type
   TMainCashForm = class(TAncestorBaseForm)
@@ -554,7 +555,7 @@ begin
     End;
   finally
     RemainsCDS.Filtered := true;
-    RemainsCDS.Locate('Id', CurrGoodsId, []);
+    RemainsCDS.Locate('Id', GoodsId, []);
     RemainsCDS.EnableControls;
     RemainsCDS.AfterScroll := RemainsCDSAfterScroll;
     RemainsCDSAfterScroll(RemainsCDS);

@@ -3,7 +3,7 @@ inherited Sale_PartnerForm: TSale_PartnerForm
   ClientHeight = 668
   ClientWidth = 1355
   ExplicitWidth = 1371
-  ExplicitHeight = 703
+  ExplicitHeight = 706
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -228,14 +228,34 @@ inherited Sale_PartnerForm: TSale_PartnerForm
             HeaderAlignmentVert = vaCenter
             Width = 70
           end
-          object colCountForPrice: TcxGridDBColumn [12]
+          object Price_Pricelist: TcxGridDBColumn [12]
+            Caption = #1062#1077#1085#1072' '#1087#1086' '#1087#1088#1072#1081#1089#1091
+            DataBinding.FieldName = 'Price_Pricelist'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Properties.ReadOnly = False
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
+          end
+          object colCountForPrice: TcxGridDBColumn [13]
             Caption = #1050#1086#1083'. '#1074' '#1094#1077#1085#1077
             DataBinding.FieldName = 'CountForPrice'
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
           end
-          object colAmountSumm: TcxGridDBColumn [13]
+          object isCheck_Pricelist: TcxGridDBColumn [14]
+            Caption = #1054#1090#1082#1083#1086#1085#1077#1085#1080#1077' '#1086#1090' '#1087#1088#1072#1081#1089#1072
+            DataBinding.FieldName = 'isCheck_Pricelist'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 61
+          end
+          object colAmountSumm: TcxGridDBColumn [15]
             Caption = #1057#1091#1084#1084#1072
             DataBinding.FieldName = 'AmountSumm'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -245,14 +265,14 @@ inherited Sale_PartnerForm: TSale_PartnerForm
             Options.Editing = False
             Width = 100
           end
-          object colHeadCount: TcxGridDBColumn [14]
+          object colHeadCount: TcxGridDBColumn [16]
             Caption = #1050#1086#1083'. '#1075#1086#1083#1086#1074
             DataBinding.FieldName = 'HeadCount'
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
           end
-          object colAssetName: TcxGridDBColumn [15]
+          object colAssetName: TcxGridDBColumn [17]
             Caption = #1054#1089#1085'.'#1089#1088#1077#1076#1089#1090#1074#1072' '
             DataBinding.FieldName = 'AssetName'
             Visible = False
@@ -261,7 +281,7 @@ inherited Sale_PartnerForm: TSale_PartnerForm
             Options.Editing = False
             Width = 65
           end
-          object BoxCount: TcxGridDBColumn [16]
+          object BoxCount: TcxGridDBColumn [18]
             Caption = #1050#1086#1083'-'#1074#1086' '#1103#1097#1080#1082#1086#1074
             DataBinding.FieldName = 'BoxCount'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -272,7 +292,7 @@ inherited Sale_PartnerForm: TSale_PartnerForm
             HeaderAlignmentVert = vaCenter
             Width = 60
           end
-          object BoxName: TcxGridDBColumn [17]
+          object BoxName: TcxGridDBColumn [19]
             Caption = #1042#1080#1076' '#1103#1097#1080#1082#1086#1074
             DataBinding.FieldName = 'BoxName'
             PropertiesClassName = 'TcxButtonEditProperties'
@@ -583,7 +603,7 @@ inherited Sale_PartnerForm: TSale_PartnerForm
     end
     object edCurrencyPartner: TcxButtonEdit
       Left = 1075
-      Top = 18
+      Top = 23
       Properties.Buttons = <
         item
           Default = True
@@ -591,12 +611,12 @@ inherited Sale_PartnerForm: TSale_PartnerForm
         end>
       Properties.ReadOnly = True
       TabOrder = 38
-      Width = 177
+      Width = 75
     end
     object cxLabel19: TcxLabel
       Left = 1072
       Top = 5
-      Caption = #1042#1072#1083#1102#1090#1072' ('#1087#1086#1082#1091#1087#1072#1090#1077#1083#1100')'
+      Caption = #1042#1072#1083#1102#1090#1072' ('#1087#1086#1082')'
     end
     object cxLabel20: TcxLabel
       Left = 972
@@ -673,6 +693,37 @@ inherited Sale_PartnerForm: TSale_PartnerForm
       TabOrder = 48
       Width = 40
     end
+    object cxLabel23: TcxLabel
+      Left = 1156
+      Top = 5
+      Caption = #1050#1091#1088#1089' '#1059#1055
+    end
+    object cxLabel24: TcxLabel
+      Left = 1205
+      Top = 5
+      Caption = #1053#1086#1084'. '#1059#1055
+    end
+    object edCurrencyValue: TcxCurrencyEdit
+      Left = 1155
+      Top = 23
+      Properties.Alignment.Horz = taRightJustify
+      Properties.Alignment.Vert = taVCenter
+      Properties.DecimalPlaces = 4
+      Properties.DisplayFormat = ',0.####;-,0.####; ;'
+      Properties.ReadOnly = True
+      TabOrder = 51
+      Width = 44
+    end
+    object edParValue: TcxCurrencyEdit
+      Left = 1205
+      Top = 23
+      EditValue = 1.000000000000000000
+      Properties.DecimalPlaces = 0
+      Properties.DisplayFormat = ',0.'
+      Properties.ReadOnly = True
+      TabOrder = 52
+      Width = 47
+    end
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 171
@@ -712,7 +763,6 @@ inherited Sale_PartnerForm: TSale_PartnerForm
           UserName = 'frxDBDMaster'
           IndexFieldNames = 'WeighingNumber;NumOrder'
         end>
-      CopiesCount = 1
       Params = <
         item
           Name = 'Id'
@@ -812,7 +862,6 @@ inherited Sale_PartnerForm: TSale_PartnerForm
           UserName = 'frxDBDMaster'
           IndexFieldNames = 'GroupName_Juridical;GoodsName_Juridical;GoodsName;GoodsKindName'
         end>
-      CopiesCount = 1
       Params = <
         item
           Name = 'Id'
@@ -850,7 +899,6 @@ inherited Sale_PartnerForm: TSale_PartnerForm
             'goodsgroupname;GroupName_Juridical;GoodsName_Juridical;GoodsName' +
             ';GoodsKindName'
         end>
-      CopiesCount = 1
       Params = <
         item
           Name = 'Id'
@@ -881,7 +929,6 @@ inherited Sale_PartnerForm: TSale_PartnerForm
           UserName = 'frxDBDMaster'
           IndexFieldNames = 'WeighingNumber;BoxNumber;NumOrder'
         end>
-      CopiesCount = 1
       Params = <
         item
           Name = 'Id'
@@ -912,7 +959,6 @@ inherited Sale_PartnerForm: TSale_PartnerForm
           UserName = 'frxDBDMaster'
           IndexFieldNames = 'GroupName_Juridical;GoodsName_Juridical;GoodsName;GoodsKindName'
         end>
-      CopiesCount = 1
       Params = <
         item
           Name = 'Id'
@@ -1005,7 +1051,6 @@ inherited Sale_PartnerForm: TSale_PartnerForm
           DataSet = PrintItemsSverkaCDS
           UserName = 'frxDBDSverka'
         end>
-      CopiesCount = 1
       Params = <
         item
           Name = 'Id'
@@ -1044,7 +1089,6 @@ inherited Sale_PartnerForm: TSale_PartnerForm
           DataSet = PrintItemsSverkaCDS
           UserName = 'frxDBDSverka'
         end>
-      CopiesCount = 1
       Params = <
         item
           Name = 'Id'
@@ -1088,7 +1132,6 @@ inherited Sale_PartnerForm: TSale_PartnerForm
           DataSet = PrintItemsCDS
           UserName = 'frxDBDMaster'
         end>
-      CopiesCount = 1
       Params = <
         item
           Name = 'Id'
@@ -1268,7 +1311,6 @@ inherited Sale_PartnerForm: TSale_PartnerForm
           UserName = 'frxDBDMaster2'
           IndexFieldNames = 'GroupName_Juridical;GoodsName_Juridical;GoodsName;GoodsKindName'
         end>
-      CopiesCount = 1
       Params = <
         item
           Name = 'Id'
@@ -1345,7 +1387,6 @@ inherited Sale_PartnerForm: TSale_PartnerForm
           DataSet = PrintItemsCDS
           UserName = 'frxDBDMaster'
         end>
-      CopiesCount = 1
       Params = <
         item
           Name = 'Id'
@@ -1965,6 +2006,18 @@ inherited Sale_PartnerForm: TSale_PartnerForm
         Value = Null
         Component = ceComment
         DataType = ftString
+      end
+      item
+        Name = 'CurrencyValue'
+        Value = Null
+        Component = edCurrencyValue
+        DataType = ftFloat
+      end
+      item
+        Name = 'ParValue'
+        Value = Null
+        Component = edParValue
+        DataType = ftFloat
       end>
     Left = 216
     Top = 248
@@ -2117,6 +2170,18 @@ inherited Sale_PartnerForm: TSale_PartnerForm
         Component = PriceListGuides
         ComponentItem = 'TextValue'
         DataType = ftString
+      end
+      item
+        Name = 'outCurrencyValue'
+        Value = Null
+        Component = edCurrencyValue
+        DataType = ftFloat
+      end
+      item
+        Name = 'outParValue'
+        Value = Null
+        Component = edParValue
+        DataType = ftFloat
       end
       item
         Name = 'ioCurrencyPartnerValue'
@@ -3017,7 +3082,7 @@ inherited Sale_PartnerForm: TSale_PartnerForm
         Component = CurrencyDocumentGuides
         ComponentItem = 'Key'
       end>
-    Left = 1128
+    Left = 1096
     Top = 8
   end
   object CurrencyDocumentGuides: TdsdGuides

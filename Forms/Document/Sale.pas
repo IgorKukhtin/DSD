@@ -179,6 +179,11 @@ type
     dsdDataSetRefresh1: TdsdDataSetRefresh;
     spUpdate_MI_Sale_Price: TdsdStoredProc;
     bbUpdatePrice: TdxBarButton;
+    cxLabel23: TcxLabel;
+    edCurrencyValue: TcxCurrencyEdit;
+    cxLabel24: TcxLabel;
+    edParValue: TcxCurrencyEdit;
+    Price_Pricelist: TcxGridDBColumn;
   private
     { Private declarations }
   public
