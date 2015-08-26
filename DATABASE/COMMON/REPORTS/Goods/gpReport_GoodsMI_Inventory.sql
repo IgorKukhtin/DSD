@@ -32,9 +32,12 @@ $BODY$
  DECLARE vbUserId Integer;
  DECLARE vbIsGroup Boolean;
 BEGIN
-      vbUserId:= lpGetUserBySession (inSession);
+     -- проверка прав пользователя на вызов процедуры
+     -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Report_GoodsMI_Inventory());
+     vbUserId:= lpGetUserBySession (inSession);
 
-      vbIsGroup:= (inSession = '');
+     -- !!!определяется!!!
+     vbIsGroup:= (inSession = '');
 
      IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.tables WHERE TABLE_NAME = '_tmpgoods')
      THEN

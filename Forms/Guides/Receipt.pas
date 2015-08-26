@@ -20,8 +20,8 @@ type
     cxGridDBTableView: TcxGridDBTableView;
     clValue: TcxGridDBColumn;
     cxGridLevel: TcxGridLevel;
-    DataSource: TDataSource;
-    ClientDataSet: TClientDataSet;
+    MasterDS: TDataSource;
+    MasterCDS: TClientDataSet;
     cxPropertiesStore: TcxPropertiesStore;
     dxBarManager: TdxBarManager;
     dxBarManagerBar1: TdxBar;
@@ -64,8 +64,8 @@ type
     clValueChild: TcxGridDBColumn;
     clIsErasedChild: TcxGridDBColumn;
     cxGridLevel2: TcxGridLevel;
-    ReceiptChildDS: TDataSource;
-    ReceiptChildCDS: TClientDataSet;
+    ChildDS: TDataSource;
+    ChildCDS: TClientDataSet;
     spInsertUpdateReceiptChild: TdsdStoredProc;
     spSelectReceiptChild: TdsdStoredProc;
     ReceiptChildChoiceForm: TOpenChoiceForm;
@@ -135,6 +135,8 @@ type
     clTaxLoss: TcxGridDBColumn;
     ValueWeight: TcxGridDBColumn;
     clColor_calc: TcxGridDBColumn;
+    PrintMasterCDS: TClientDataSet;
+    spPrintReceipt: TdsdStoredProc;
   private
     { Private declarations }
   public

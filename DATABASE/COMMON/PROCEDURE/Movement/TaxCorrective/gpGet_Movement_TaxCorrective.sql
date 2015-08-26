@@ -9,7 +9,7 @@ CREATE OR REPLACE FUNCTION gpGet_Movement_TaxCorrective(
     IN inOperDate          TDateTime, -- ключ Документа
     IN inSession           TVarChar   -- сессия пользователя
 )
-RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode Integer, StatusName TVarChar
+RETURNS TABLE (Id Integer, isMask Boolean, InvNumber TVarChar, OperDate TDateTime, StatusCode Integer, StatusName TVarChar
              , Checked Boolean, Document Boolean, isElectron Boolean, DateisElectron TDateTime
              , PriceWithVAT Boolean, VATPercent TFloat
              , TotalCount TFloat
@@ -44,6 +44,7 @@ BEGIN
          RETURN QUERY
          SELECT
                0 				    AS Id
+             , FALSE                                AS isMask
              , tmpInvNumber.InvNumber               AS InvNumber
              , inOperDate                           AS OperDate
              , Object_Status.Code                   AS StatusCode
@@ -91,11 +92,12 @@ BEGIN
 
      RETURN QUERY
        SELECT
-             Movement.Id								                    AS Id
-           , Movement.InvNumber							                    AS InvNumber
-           , Movement.OperDate							                    AS OperDate
-           , Object_Status.ObjectCode    				                    AS StatusCode
-           , Object_Status.ValueData     				                    AS StatusName
+             Movement.Id						    AS Id
+           , FALSE                                                          AS isMask
+           , Movement.InvNumber						    AS InvNumber
+           , Movement.OperDate						    AS OperDate
+           , Object_Status.ObjectCode    				    AS StatusCode
+           , Object_Status.ValueData     				    AS StatusName
            , COALESCE (MovementBoolean_Checked.ValueData, FALSE)            AS Checked
            , COALESCE (MovementBoolean_Document.ValueData, FALSE)           AS Document
            , COALESCE (MovementBoolean_Electron.ValueData, FALSE)           AS isElectron

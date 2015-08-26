@@ -13,7 +13,8 @@ uses
   cxGridBandedTableView, cxGridDBBandedTableView, cxCheckBox, dxSkinsCore,
   Vcl.ExtCtrls, cxPC, dxDockControl, dxDockPanel, cxContainer, dsdGuides,
   cxTextEdit, cxMaskEdit, cxButtonEdit, cxLabel, Vcl.ComCtrls, dxCore,
-  cxDateUtils, cxDropDownEdit, cxCalendar, cxCurrencyEdit;
+  cxDateUtils, cxDropDownEdit, cxCalendar, cxCurrencyEdit,
+  dxSkinsDefaultPainters, dxSkinscxPCPainter, dxSkinsdxBarPainter;
 
 type
   TPriceListGoodsItemForm = class(TParentForm)
@@ -45,6 +46,16 @@ type
     edGoods: TcxButtonEdit;
     GoodsGuides: TdsdGuides;
     FormParams: TdsdFormParams;
+    actInsert: TdsdInsertUpdateAction;
+    bbInsert: TdxBarButton;
+    actUpdate: TdsdInsertUpdateAction;
+    spErasedUnErased: TdsdStoredProc;
+    bbUpdate: TdxBarButton;
+    bbSetErased: TdxBarButton;
+    bbSetUnErased: TdxBarButton;
+    dsdSetErased: TdsdUpdateErased;
+    dsdSetUnErased: TdsdUpdateErased;
+    isErased: TcxGridDBColumn;
   private
     { Private declarations }
   public

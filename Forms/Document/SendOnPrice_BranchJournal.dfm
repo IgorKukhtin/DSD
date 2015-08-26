@@ -337,6 +337,29 @@ inherited SendOnPrice_BranchJournalForm: TSendOnPrice_BranchJournalForm
     inherited actInsert: TdsdInsertUpdateAction
       FormName = 'TSendOnPrice_BranchForm'
       FormNameParam.Value = 'TSendOnPrice_BranchForm'
+      GuiParams = <
+        item
+          Name = 'Id'
+          Value = Null
+        end
+        item
+          Name = 'ShowAll'
+          Value = True
+          DataType = ftBoolean
+        end
+        item
+          Name = 'inOperDate'
+          Value = 41640d
+          Component = deEnd
+          DataType = ftDateTime
+        end
+        item
+          Name = 'inChangePercentAmount'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'inChangePercentAmount'
+          DataType = ftFloat
+        end>
     end
     inherited actUpdate: TdsdInsertUpdateAction
       FormName = 'TSendOnPrice_BranchForm'

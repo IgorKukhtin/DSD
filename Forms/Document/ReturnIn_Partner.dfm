@@ -3,14 +3,13 @@ inherited ReturnIn_PartnerForm: TReturnIn_PartnerForm
   ClientHeight = 637
   ClientWidth = 1139
   ExplicitWidth = 1155
-  ExplicitHeight = 675
+  ExplicitHeight = 672
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 166
     Width = 1139
     Height = 471
-    Properties.ActivePage = cxTabSheetTaxCorrective
     ExplicitTop = 166
     ExplicitWidth = 1139
     ExplicitHeight = 471
@@ -780,7 +779,7 @@ inherited ReturnIn_PartnerForm: TReturnIn_PartnerForm
       Width = 97
     end
     object edInvNumberSale: TcxButtonEdit
-      Left = 269
+      Left = 344
       Top = 103
       Enabled = False
       Properties.Buttons = <
@@ -790,12 +789,20 @@ inherited ReturnIn_PartnerForm: TReturnIn_PartnerForm
         end>
       Properties.ReadOnly = True
       TabOrder = 30
-      Width = 245
+      Width = 313
     end
     object cxLabel19: TcxLabel
-      Left = 269
+      Left = 342
       Top = 85
-      Caption = #1054#1089#1085#1086#1074#1072#1085#1080#1077' '#8470' ('#1087#1088#1086#1076#1072#1078#1072' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1102')'
+      Caption = #1054#1089#1085#1086#1074#1072#1085#1080#1077' '#8470' ('#1087#1088#1086#1076#1072#1078#1072')'
+    end
+    object cbisPartner: TcxCheckBox
+      Left = 236
+      Top = 103
+      Caption = #1040#1082#1090' '#1085#1077#1076#1086#1074#1086#1079#1072
+      Properties.ReadOnly = False
+      TabOrder = 32
+      Width = 100
     end
   end
   object edDocumentTaxKind: TcxButtonEdit [2]
@@ -869,7 +876,7 @@ inherited ReturnIn_PartnerForm: TReturnIn_PartnerForm
   object cxLabel21: TcxLabel [10]
     Left = 8
     Top = 85
-    Caption = #1054#1089#1085#1086#1074#1072#1085#1080#1077' '#8470' ('#1074#1086#1079#1074#1088#1072#1090' '#1087#1088#1086#1074#1077#1076#1077#1085' '#1082#1083#1072#1076#1086#1074#1097#1080#1082#1086#1084')'
+    Caption = #1054#1089#1085#1086#1074#1072#1085#1080#1077' '#8470' ('#1074#1086#1079#1074#1088#1072#1090' '#1085#1072' '#1089#1082#1083#1072#1076')'
   end
   object edInvNumberParent: TcxButtonEdit [11]
     Left = 8
@@ -881,18 +888,18 @@ inherited ReturnIn_PartnerForm: TReturnIn_PartnerForm
       end>
     Properties.ReadOnly = True
     TabOrder = 15
-    Width = 252
+    Width = 223
   end
   object cxLabel18: TcxLabel [12]
-    Left = 525
+    Left = 664
     Top = 85
     Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
   end
   object ceComment: TcxTextEdit [13]
-    Left = 525
+    Left = 664
     Top = 103
     TabOrder = 17
-    Width = 599
+    Width = 460
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 171
@@ -948,16 +955,11 @@ inherited ReturnIn_PartnerForm: TReturnIn_PartnerForm
         end>
       RefreshOnTabSetChanges = True
     end
-    inherited actGridToExcel: TdsdGridToExcel
-      Enabled = False
-    end
     inherited actMISetErased: TdsdUpdateErased
       TabSheet = tsMain
-      Enabled = False
     end
     inherited actMISetUnErased: TdsdUpdateErased
       TabSheet = tsMain
-      Enabled = False
     end
     inherited actInsertUpdateMovement: TdsdExecStoredProc
       StoredProcList = <
@@ -972,6 +974,7 @@ inherited ReturnIn_PartnerForm: TReturnIn_PartnerForm
       Category = 'DSDLib'
       TabSheet = cxTabSheetTaxCorrective
       MoveParams = <>
+      Enabled = False
       Caption = #1055#1088#1086#1089#1084#1086#1090#1088' <'#1044#1086#1082#1091#1084#1077#1085#1090#1072' '#1082#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1082#1080'>'
       Hint = #1055#1088#1086#1089#1084#1086#1090#1088' <'#1044#1086#1082#1091#1084#1077#1085#1090#1072' '#1082#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1082#1080'>'
       ImageIndex = 1
@@ -1018,6 +1021,7 @@ inherited ReturnIn_PartnerForm: TReturnIn_PartnerForm
       Category = 'DSDLib'
       TabSheet = cxTabSheetTaxCorrective
       MoveParams = <>
+      Enabled = False
       StoredProc = spMovementUnCompleteTaxCorrective
       StoredProcList = <
         item
@@ -1036,6 +1040,7 @@ inherited ReturnIn_PartnerForm: TReturnIn_PartnerForm
       Category = 'DSDLib'
       TabSheet = cxTabSheetTaxCorrective
       MoveParams = <>
+      Enabled = False
       StoredProc = spMovementSetErasedTaxCorrective
       StoredProcList = <
         item
@@ -1055,6 +1060,7 @@ inherited ReturnIn_PartnerForm: TReturnIn_PartnerForm
       Category = 'DSDLib'
       TabSheet = cxTabSheetTaxCorrective
       MoveParams = <>
+      Enabled = False
       StoredProc = spMovementCompleteTaxCorrective
       StoredProcList = <
         item
@@ -1253,7 +1259,6 @@ inherited ReturnIn_PartnerForm: TReturnIn_PartnerForm
     end
     inherited actAddMask: TdsdExecStoredProc
       TabSheet = tsMain
-      Enabled = False
     end
     object actSPPrintProcName: TdsdExecStoredProc
       Category = 'DSDLib'
@@ -1981,6 +1986,12 @@ inherited ReturnIn_PartnerForm: TReturnIn_PartnerForm
         Value = Null
         Component = ceComment
         DataType = ftString
+      end
+      item
+        Name = 'isPartner'
+        Value = Null
+        Component = cbisPartner
+        DataType = ftBoolean
       end>
     Left = 224
     Top = 248
@@ -2041,6 +2052,13 @@ inherited ReturnIn_PartnerForm: TReturnIn_PartnerForm
         Name = 'inChecked'
         Value = 'False'
         Component = edIsChecked
+        DataType = ftBoolean
+        ParamType = ptInput
+      end
+      item
+        Name = 'inisPartner'
+        Value = Null
+        Component = cbisPartner
         DataType = ftBoolean
         ParamType = ptInput
       end
@@ -2972,8 +2990,8 @@ inherited ReturnIn_PartnerForm: TReturnIn_PartnerForm
         ParamType = ptInput
       end>
     PackSize = 1
-    Left = 888
-    Top = 321
+    Left = 896
+    Top = 329
   end
   object spMovementSetErasedTaxCorrective: TdsdStoredProc
     StoredProcName = 'gpSetErased_Movement_TaxCorrective'
@@ -3146,7 +3164,7 @@ inherited ReturnIn_PartnerForm: TReturnIn_PartnerForm
         ComponentItem = 'TextValue'
         DataType = ftString
       end>
-    Left = 148
+    Left = 100
     Top = 80
   end
 end

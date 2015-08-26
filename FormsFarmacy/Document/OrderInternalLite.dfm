@@ -2,7 +2,6 @@ inherited OrderInternalLiteForm: TOrderInternalLiteForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1047#1072#1103#1074#1082#1072' '#1074#1085#1091#1090#1088#1077#1085#1085#1103#1103'>'
   ClientHeight = 532
   ClientWidth = 1071
-  ExplicitLeft = -273
   ExplicitWidth = 1079
   ExplicitHeight = 559
   PixelsPerInch = 96
@@ -12,17 +11,17 @@ inherited OrderInternalLiteForm: TOrderInternalLiteForm
     Width = 1071
     Height = 457
     ExplicitTop = 75
-    ExplicitWidth = 1222
+    ExplicitWidth = 1071
     ExplicitHeight = 457
     ClientRectBottom = 457
     ClientRectRight = 1071
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 1222
+      ExplicitWidth = 1071
       ExplicitHeight = 433
       inherited cxGrid: TcxGrid
         Width = 1071
         Height = 430
-        ExplicitWidth = 1222
+        ExplicitWidth = 1071
         ExplicitHeight = 430
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
@@ -86,6 +85,24 @@ inherited OrderInternalLiteForm: TOrderInternalLiteForm
             end
             item
               Format = ',0.####'
+              Kind = skSum
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = colAmountSecond
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = colAmountAll
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+            end
+            item
+              Format = ',0.00'
               Kind = skSum
             end>
           OptionsBehavior.IncSearch = True
@@ -178,6 +195,22 @@ inherited OrderInternalLiteForm: TOrderInternalLiteForm
             Options.Editing = False
             Width = 69
           end
+          object colAmountSecond: TcxGridDBColumn
+            Caption = #1040#1074#1090#1086#1079#1072#1082#1072#1079
+            DataBinding.FieldName = 'AmountSecond'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.####'
+            Options.Editing = False
+            Width = 49
+          end
+          object colAmountAll: TcxGridDBColumn
+            Caption = #1042#1089#1077#1075#1086' '#1082' '#1079#1072#1082#1072#1079#1091
+            DataBinding.FieldName = 'AmountAll'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.####'
+            Options.Editing = False
+            Width = 51
+          end
         end
       end
       object cxSplitter1: TcxSplitter
@@ -187,7 +220,6 @@ inherited OrderInternalLiteForm: TOrderInternalLiteForm
         Height = 3
         AlignSplitter = salBottom
         Control = cxGrid
-        ExplicitWidth = 1222
       end
     end
   end
@@ -195,7 +227,7 @@ inherited OrderInternalLiteForm: TOrderInternalLiteForm
     Width = 1071
     Height = 49
     TabOrder = 3
-    ExplicitWidth = 1222
+    ExplicitWidth = 1071
     ExplicitHeight = 49
     inherited edInvNumber: TcxTextEdit
       Left = 155
@@ -947,6 +979,27 @@ inherited OrderInternalLiteForm: TOrderInternalLiteForm
         Value = Null
         Component = MasterCDS
         ComponentItem = 'CalcAmount'
+        DataType = ftFloat
+      end
+      item
+        Name = 'outSummAll'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'CalcAmountAll'
+        DataType = ftFloat
+      end
+      item
+        Name = 'outAmountAll'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'AmountAll'
+        DataType = ftFloat
+      end
+      item
+        Name = 'outCalcAmountAll'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'CalcAmountAll'
         DataType = ftFloat
       end>
     Left = 160

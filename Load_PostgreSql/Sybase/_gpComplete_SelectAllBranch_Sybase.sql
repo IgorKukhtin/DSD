@@ -1,8 +1,8 @@
--- Function: gpComplete_SelectAllBranch_Sybase()
+-- Function: gpComplete_SelectAll_Sybase()
 
-DROP FUNCTION IF EXISTS gpComplete_SelectAllBranch_Sybase (TDateTime, TDateTime, Boolean);
+DROP FUNCTION IF EXISTS gpComplete_SelectAll_Sybase (TDateTime, TDateTime, Boolean);
 
-CREATE OR REPLACE FUNCTION gpComplete_SelectAllBranch_Sybase(
+CREATE OR REPLACE FUNCTION gpComplete_SelectAll_Sybase(
     IN inStartDate          TDateTime , -- 
     IN inEndDate            TDateTime , --
     IN inIsBefoHistoryCost  Boolean
@@ -37,7 +37,7 @@ BEGIN
      WHERE Movement.OperDate BETWEEN inStartDate AND inEndDate
        AND Movement.DescId IN (zc_Movement_Sale(), zc_Movement_SendOnPrice())
        AND Movement.StatusId = zc_Enum_Status_Complete()
-       AND inIsBefoHistoryCost = FALSE
+       -- AND inIsBefoHistoryCost = FALSE
     UNION
      -- 2. From: Loss
      SELECT Movement.Id AS MovementId
@@ -57,7 +57,7 @@ BEGIN
      WHERE Movement.OperDate BETWEEN inStartDate AND inEndDate
        AND Movement.DescId IN (zc_Movement_Loss())
        AND Movement.StatusId = zc_Enum_Status_Complete()
-       AND inIsBefoHistoryCost = FALSE
+       -- AND inIsBefoHistoryCost = FALSE
     UNION
      -- 3. To: ReturnIn
      SELECT Movement.Id AS MovementId
@@ -77,8 +77,8 @@ BEGIN
      WHERE Movement.OperDate BETWEEN inStartDate AND inEndDate
        AND Movement.DescId IN (zc_Movement_ReturnIn())
        AND Movement.StatusId = zc_Enum_Status_Complete()
-       AND inIsBefoHistoryCost = TRUE
-    UNION
+       -- AND inIsBefoHistoryCost = TRUE
+    /*UNION
      -- 4. To: SendOnPrice
      SELECT Movement.Id AS MovementId
           , Movement.OperDate
@@ -97,7 +97,7 @@ BEGIN
      WHERE Movement.OperDate BETWEEN inStartDate AND inEndDate
        AND Movement.DescId IN (zc_Movement_SendOnPrice())
        AND Movement.StatusId = zc_Enum_Status_Complete()
-       AND inIsBefoHistoryCost = TRUE
+       -- AND inIsBefoHistoryCost = TRUE*/
     UNION
      -- 4. To: Peresort
      SELECT Movement.Id AS MovementId
@@ -118,7 +118,7 @@ BEGIN
      WHERE Movement.OperDate BETWEEN inStartDate AND inEndDate
        AND Movement.DescId IN (zc_Movement_ProductionUnion())
        AND Movement.StatusId = zc_Enum_Status_Complete()
-       AND inIsBefoHistoryCost = TRUE
+       -- AND inIsBefoHistoryCost = TRUE
     ;
 
 END;$BODY$
@@ -131,4 +131,4 @@ END;$BODY$
 */
 
 -- тест
--- SELECT * FROM gpComplete_SelectAllBranch_Sybase (inStartDate:= '01.06.2014', inEndDate:= '30.06.2014', inIsBefoHistoryCost:= FALSE)
+-- SELECT * FROM gpComplete_SelectAll_Sybase (inStartDate:= '01.06.2014', inEndDate:= '30.06.2014', inIsBefoHistoryCost:= FALSE)

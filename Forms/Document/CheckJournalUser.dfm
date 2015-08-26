@@ -24,6 +24,11 @@ inherited CheckJournalUserForm: TCheckJournalUserForm
       ExplicitLeft = 13
     end
   end
+  inherited ActionList: TActionList
+    inherited actSimpleReCompleteList: TMultiAction
+      Enabled = False
+    end
+  end
   inherited BarManager: TdxBarManager
     DockControlHeights = (
       0

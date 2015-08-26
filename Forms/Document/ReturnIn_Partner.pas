@@ -140,6 +140,7 @@ type
     cxLabel19: TcxLabel;
     actOpenTaxCorrective: TdsdOpenForm;
     bbOpenTaxCorrective: TdxBarButton;
+    cbisPartner: TcxCheckBox;
   private
     { Private declarations }
   public

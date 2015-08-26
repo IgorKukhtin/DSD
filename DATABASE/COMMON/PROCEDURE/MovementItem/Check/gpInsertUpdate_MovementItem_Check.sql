@@ -20,6 +20,7 @@ $BODY$
    DECLARE vbUserId Integer;
    DECLARE vbUnitId Integer;
    DECLARE vbRemains TFloat;
+   DECLARE vbAmount_VIP TFloat;
 BEGIN
 
     -- проверка прав пользователя на вызов процедуры
@@ -50,7 +51,21 @@ BEGIN
       AND DescId = zc_MovementLinkObject_Unit();
 
     --Вытянуть текущий остаток
-    SELECT SUM(Container.Amount)::TFloat INTO outRemains
+    SELECT
+        SUM(MovementItem_Reserve.Amount)::TFloat INTO vbAmount_VIP
+    FROM
+        gpSelect_MovementItem_CheckDeferred(inSession) as MovementItem_Reserve
+        LEFT JOIN MovementLinkObject AS MovementLinkObject_CheckMember
+                                     ON MovementLinkObject_CheckMember.MovementId = MovementItem_Reserve.MovementId
+                                    AND MovementLinkObject_CheckMember.DescId = zc_MovementLinkObject_CheckMember()
+    WHERE
+        MovementItem_Reserve.MovementId <> inMovementId
+        AND
+        MovementItem_Reserve.GoodsId = inGoodsId
+        AND
+        MovementLinkObject_CheckMember.MovementId is not null;
+        
+    SELECT (SUM(Container.Amount) - COALESCE(vbAmount_VIP,0))::TFloat INTO outRemains
     FROM 
         Container
         INNER JOIN ContainerLinkObject AS ContainerLinkObject_Unit
@@ -63,6 +78,8 @@ BEGIN
         Container.ObjectId = inGoodsId
         AND
         Container.Amount <> 0;
+
+    
     IF COALESCE(outRemains,0) < outAmount
     THEN
         RAISE EXCEPTION 'Ошибка. Не хватает количества <%> для продажи <%>',outRemains,outAmount;

@@ -1,27 +1,29 @@
 inherited Sale_OrderForm: TSale_OrderForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1055#1088#1086#1076#1072#1078#1072' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1102' ('#1087#1086' '#1079#1072#1103#1074#1082#1077')>'
   ClientHeight = 668
-  ClientWidth = 1020
-  ExplicitWidth = 1036
-  ExplicitHeight = 703
+  ClientWidth = 1356
+  ExplicitLeft = -255
+  ExplicitTop = -126
+  ExplicitWidth = 1372
+  ExplicitHeight = 706
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 166
-    Width = 1020
+    Width = 1356
     Height = 502
     ExplicitTop = 166
-    ExplicitWidth = 1020
+    ExplicitWidth = 1356
     ExplicitHeight = 502
     ClientRectBottom = 502
-    ClientRectRight = 1020
+    ClientRectRight = 1356
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 1020
+      ExplicitWidth = 1356
       ExplicitHeight = 478
       inherited cxGrid: TcxGrid
-        Width = 1020
+        Width = 1356
         Height = 478
-        ExplicitWidth = 1020
+        ExplicitWidth = 1356
         ExplicitHeight = 478
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
@@ -232,17 +234,7 @@ inherited Sale_OrderForm: TSale_OrderForm
             Options.Editing = False
             Width = 70
           end
-          object colPrice: TcxGridDBColumn [12]
-            Caption = #1062#1077#1085#1072
-            DataBinding.FieldName = 'Price'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 70
-          end
-          object colCountForPrice: TcxGridDBColumn [13]
+          object colCountForPrice: TcxGridDBColumn [12]
             Caption = #1050#1086#1083'. '#1074' '#1094#1077#1085#1077
             DataBinding.FieldName = 'CountForPrice'
             Visible = False
@@ -250,7 +242,7 @@ inherited Sale_OrderForm: TSale_OrderForm
             HeaderAlignmentVert = vaCenter
             Width = 55
           end
-          object colAmountSumm: TcxGridDBColumn [14]
+          object colAmountSumm: TcxGridDBColumn [13]
             Caption = #1057#1091#1084#1084#1072
             DataBinding.FieldName = 'AmountSumm'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -259,6 +251,14 @@ inherited Sale_OrderForm: TSale_OrderForm
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 80
+          end
+          object isCheck_Pricelist: TcxGridDBColumn [14]
+            Caption = #1054#1090#1082#1083#1086#1085#1077#1085#1080#1077' '#1086#1090' '#1087#1088#1072#1081#1089#1072
+            DataBinding.FieldName = 'isCheck_Pricelist'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 61
           end
           object colHeadCount: TcxGridDBColumn [15]
             Caption = #1050#1086#1083'. '#1075#1086#1083#1086#1074
@@ -304,6 +304,28 @@ inherited Sale_OrderForm: TSale_OrderForm
             HeaderAlignmentVert = vaCenter
             Width = 70
           end
+          object colPrice: TcxGridDBColumn [19]
+            Caption = #1062#1077#1085#1072
+            DataBinding.FieldName = 'Price'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 70
+          end
+          object Price_Pricelist: TcxGridDBColumn [20]
+            Caption = #1062#1077#1085#1072' '#1087#1086' '#1087#1088#1072#1081#1089#1091
+            DataBinding.FieldName = 'Price_Pricelist'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Properties.ReadOnly = True
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
+          end
           inherited colIsErased: TcxGridDBColumn
             Width = 25
           end
@@ -312,10 +334,10 @@ inherited Sale_OrderForm: TSale_OrderForm
     end
   end
   inherited DataPanel: TPanel
-    Width = 1020
+    Width = 1356
     Height = 140
     TabOrder = 3
-    ExplicitWidth = 1020
+    ExplicitWidth = 1356
     ExplicitHeight = 140
     inherited edInvNumber: TcxTextEdit
       Left = 8
@@ -609,12 +631,12 @@ inherited Sale_OrderForm: TSale_OrderForm
         end>
       Properties.ReadOnly = True
       TabOrder = 38
-      Width = 177
+      Width = 78
     end
     object cxLabel19: TcxLabel
       Left = 1072
       Top = 5
-      Caption = #1042#1072#1083#1102#1090#1072' ('#1087#1086#1082#1091#1087#1072#1090#1077#1083#1100')'
+      Caption = #1042#1072#1083#1102#1090#1072' ('#1087#1086#1082')'
     end
     object cxLabel20: TcxLabel
       Left = 972
@@ -671,6 +693,37 @@ inherited Sale_OrderForm: TSale_OrderForm
       Top = 103
       TabOrder = 46
       Width = 545
+    end
+    object cxLabel23: TcxLabel
+      Left = 1156
+      Top = 5
+      Caption = #1050#1091#1088#1089' '#1059#1055
+    end
+    object edCurrencyValue: TcxCurrencyEdit
+      Left = 1155
+      Top = 23
+      Properties.Alignment.Horz = taRightJustify
+      Properties.Alignment.Vert = taVCenter
+      Properties.DecimalPlaces = 4
+      Properties.DisplayFormat = ',0.####;-,0.####; ;'
+      Properties.ReadOnly = True
+      TabOrder = 48
+      Width = 44
+    end
+    object cxLabel24: TcxLabel
+      Left = 1205
+      Top = 5
+      Caption = #1053#1086#1084'. '#1059#1055
+    end
+    object edParValue: TcxCurrencyEdit
+      Left = 1205
+      Top = 23
+      EditValue = 1.000000000000000000
+      Properties.DecimalPlaces = 0
+      Properties.DisplayFormat = ',0.'
+      Properties.ReadOnly = True
+      TabOrder = 50
+      Width = 47
     end
   end
   object edChangePercentAmount: TcxCurrencyEdit [2]
@@ -744,7 +797,6 @@ inherited Sale_OrderForm: TSale_OrderForm
           UserName = 'frxDBDMaster'
           IndexFieldNames = 'GroupName_Juridical;GoodsName_Juridical;GoodsName;GoodsKindName'
         end>
-      CopiesCount = 1
       Params = <
         item
           Name = 'Id'
@@ -826,7 +878,6 @@ inherited Sale_OrderForm: TSale_OrderForm
             'goodsgroupname;GroupName_Juridical;GoodsName_Juridical;GoodsName' +
             ';GoodsKindName'
         end>
-      CopiesCount = 1
       Params = <
         item
           Name = 'Id'
@@ -871,7 +922,6 @@ inherited Sale_OrderForm: TSale_OrderForm
           UserName = 'frxDBDMaster'
           IndexFieldNames = 'GroupName_Juridical;GoodsName_Juridical;GoodsName;GoodsKindName'
         end>
-      CopiesCount = 1
       Params = <
         item
           Name = 'Id'
@@ -931,7 +981,6 @@ inherited Sale_OrderForm: TSale_OrderForm
           UserName = 'frxDBDMaster'
           IndexFieldNames = 'GoodsGroupNameFull;GoodsName'
         end>
-      CopiesCount = 1
       Params = <
         item
           Name = 'Id'
@@ -967,7 +1016,6 @@ inherited Sale_OrderForm: TSale_OrderForm
           DataSet = PrintItemsSverkaCDS
           UserName = 'frxDBDSverka'
         end>
-      CopiesCount = 1
       Params = <
         item
           Name = 'Id'
@@ -1090,7 +1138,6 @@ inherited Sale_OrderForm: TSale_OrderForm
           DataSet = PrintItemsSverkaCDS
           UserName = 'frxDBDSverka'
         end>
-      CopiesCount = 1
       Params = <
         item
           Name = 'Id'
@@ -1134,7 +1181,6 @@ inherited Sale_OrderForm: TSale_OrderForm
           DataSet = PrintItemsCDS
           UserName = 'frxDBDMaster'
         end>
-      CopiesCount = 1
       Params = <
         item
           Name = 'Id'
@@ -1263,7 +1309,6 @@ inherited Sale_OrderForm: TSale_OrderForm
           UserName = 'frxDBDMaster'
           IndexFieldNames = 'WeighingNumber;NumOrder'
         end>
-      CopiesCount = 1
       Params = <
         item
           Name = 'Id'
@@ -1294,7 +1339,6 @@ inherited Sale_OrderForm: TSale_OrderForm
           UserName = 'frxDBDMaster'
           IndexFieldNames = 'WeighingNumber;BoxNumber;NumOrder'
         end>
-      CopiesCount = 1
       Params = <
         item
           Name = 'Id'
@@ -1353,7 +1397,6 @@ inherited Sale_OrderForm: TSale_OrderForm
           UserName = 'frxDBDMaster2'
           IndexFieldNames = 'QualityCode;GoodsGroupName;GoodsName;GoodsKindName'
         end>
-      CopiesCount = 1
       Params = <
         item
           Name = 'Id'
@@ -1443,7 +1486,6 @@ inherited Sale_OrderForm: TSale_OrderForm
           DataSet = PrintItemsCDS
           UserName = 'frxDBDMaster'
         end>
-      CopiesCount = 1
       Params = <
         item
           Name = 'Id'
@@ -1455,6 +1497,27 @@ inherited Sale_OrderForm: TSale_OrderForm
       ReportNameParam.Value = 'PrintMovement_TTN'
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
+    end
+    object actUpdatePrice: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spInsertUpdateMovement
+      StoredProcList = <
+        item
+          StoredProc = spInsertUpdateMovement
+        end
+        item
+          StoredProc = spUpdate_MI_Sale_Price
+        end
+        item
+          StoredProc = spSelect
+        end>
+      Caption = #1048#1089#1087#1088#1072#1074#1080#1090#1100' '#1094#1077#1085#1099' '#1085#1072' '#1086#1089#1085#1086#1074#1072#1085#1080#1080' '#1087#1088#1072#1081#1089#1072
+      Hint = #1048#1089#1087#1088#1072#1074#1080#1090#1100' '#1094#1077#1085#1099' '#1085#1072' '#1086#1089#1085#1086#1074#1072#1085#1080#1080' '#1087#1088#1072#1081#1089#1072
+      ImageIndex = 42
+      QuestionBeforeExecute = #1044#1077#1081#1089#1090#1074#1080#1090#1077#1083#1100#1085#1086' '#1080#1089#1087#1088#1072#1074#1080#1090#1100' '#1094#1077#1085#1099' '#1085#1072' '#1086#1089#1085#1086#1074#1072#1085#1080#1080' '#1087#1088#1072#1081#1089#1072'?'
+      InfoAfterExecute = #1047#1072#1074#1077#1088#1096#1077#1085#1086' '#1080#1089#1087#1088#1072#1074#1083#1077#1085#1080#1077' '#1094#1077#1085' '#1085#1072' '#1086#1089#1085#1086#1074#1072#1085#1080#1080' '#1087#1088#1072#1081#1089#1072'.'
     end
   end
   inherited MasterDS: TDataSource
@@ -1567,6 +1630,14 @@ inherited Sale_OrderForm: TSale_OrderForm
         end
         item
           Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbUpdatePrice'
+        end
+        item
+          Visible = True
           ItemName = 'bbStatic'
         end
         item
@@ -1659,7 +1730,7 @@ inherited Sale_OrderForm: TSale_OrderForm
         end
         item
           Visible = True
-          ItemName = 'bb'
+          ItemName = 'bbPrintSaleOrder'
         end
         item
           Visible = True
@@ -1752,8 +1823,12 @@ inherited Sale_OrderForm: TSale_OrderForm
       Action = mactPrint_QualityDoc
       Category = 0
     end
-    object bb: TdxBarButton
+    object bbPrintSaleOrder: TdxBarButton
       Action = actPrintSaleOrder
+      Category = 0
+    end
+    object bbUpdatePrice: TdxBarButton
+      Action = actUpdatePrice
       Category = 0
     end
   end
@@ -2107,6 +2182,18 @@ inherited Sale_OrderForm: TSale_OrderForm
         Value = Null
         Component = ceComment
         DataType = ftString
+      end
+      item
+        Name = 'CurrencyValue'
+        Value = Null
+        Component = edCurrencyValue
+        DataType = ftFloat
+      end
+      item
+        Name = 'ParValue'
+        Value = Null
+        Component = edParValue
+        DataType = ftFloat
       end>
     Left = 216
     Top = 248
@@ -2259,6 +2346,18 @@ inherited Sale_OrderForm: TSale_OrderForm
         Component = PriceListGuides
         ComponentItem = 'TextValue'
         DataType = ftString
+      end
+      item
+        Name = 'outCurrencyValue'
+        Value = Null
+        Component = edCurrencyValue
+        DataType = ftFloat
+      end
+      item
+        Name = 'outParValue'
+        Value = Null
+        Component = edParValue
+        DataType = ftFloat
       end
       item
         Name = 'ioCurrencyPartnerValue'
@@ -2758,8 +2857,8 @@ inherited Sale_OrderForm: TSale_OrderForm
         DataType = ftString
         ParamType = ptInput
       end>
-    Left = 1168
-    Top = 64
+    Left = 1104
+    Top = 56
   end
   object spTax: TdsdStoredProc
     StoredProcName = 'gpInsertUpdate_Movement_Tax_From_Kind'
@@ -3261,7 +3360,8 @@ inherited Sale_OrderForm: TSale_OrderForm
         Component = CurrencyDocumentGuides
         ComponentItem = 'Key'
       end>
-    Left = 1080
+    Left = 1096
+    Top = 8
   end
   object CurrencyDocumentGuides: TdsdGuides
     KeyField = 'Id'
@@ -3680,5 +3780,21 @@ inherited Sale_OrderForm: TSale_OrderForm
     PackSize = 1
     Left = 687
     Top = 248
+  end
+  object spUpdate_MI_Sale_Price: TdsdStoredProc
+    StoredProcName = 'gpUpdate_MovementItem_Sale_Price'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+      end>
+    PackSize = 1
+    Left = 584
+    Top = 552
   end
 end

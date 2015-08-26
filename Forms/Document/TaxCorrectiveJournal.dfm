@@ -2,7 +2,6 @@ inherited TaxCorrectiveJournalForm: TTaxCorrectiveJournalForm
   Caption = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' <'#1050#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1082#1072' '#1082' '#1085#1072#1083#1086#1075#1086#1074#1086#1081' '#1085#1072#1082#1083#1072#1076#1085#1086#1081'>'
   ClientHeight = 535
   ClientWidth = 1118
-  ExplicitLeft = -297
   ExplicitWidth = 1134
   ExplicitHeight = 570
   PixelsPerInch = 96
@@ -620,12 +619,38 @@ inherited TaxCorrectiveJournalForm: TTaxCorrectiveJournalForm
           Value = 41640d
           Component = deEnd
           DataType = ftDateTime
+        end
+        item
+          Name = 'inMask'
+          Value = False
+          DataType = ftBoolean
         end>
     end
     inherited actInsert: TdsdInsertUpdateAction [10]
       FormName = 'TTaxCorrectiveForm'
       FormNameParam.Name = 'TTaxCorrectiveForm'
       FormNameParam.Value = 'TTaxCorrectiveForm'
+      GuiParams = <
+        item
+          Name = 'Id'
+          Value = Null
+        end
+        item
+          Name = 'ShowAll'
+          Value = True
+          DataType = ftBoolean
+        end
+        item
+          Name = 'inOperDate'
+          Value = 41640d
+          Component = deEnd
+          DataType = ftDateTime
+        end
+        item
+          Name = 'inMask'
+          Value = False
+          DataType = ftBoolean
+        end>
     end
     object actMovementCheck: TdsdOpenForm [13]
       Category = 'DSDLib'

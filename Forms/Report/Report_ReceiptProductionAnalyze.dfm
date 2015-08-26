@@ -2,8 +2,9 @@ inherited Report_ReceiptProductionAnalyzeForm: TReport_ReceiptProductionAnalyzeF
   Caption = #1054#1090#1095#1077#1090' <'#1040#1085#1072#1083#1080#1079' '#1088#1077#1094#1077#1087#1090#1091#1088' '#1080' '#1087#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1072'>'
   ClientHeight = 430
   ClientWidth = 1130
+  AddOnFormData.ExecuteDialogAction = ExecuteDialog
   ExplicitWidth = 1146
-  ExplicitHeight = 465
+  ExplicitHeight = 468
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -987,6 +988,146 @@ inherited Report_ReceiptProductionAnalyzeForm: TReport_ReceiptProductionAnalyzeF
           'TextValue')
       end>
   end
+  inherited ActionList: TActionList
+    object ExecuteDialog: TExecuteDialog
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1072#1088#1072#1084#1077#1090#1088#1099' '#1086#1090#1095#1077#1090#1072
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1072#1088#1072#1084#1077#1090#1088#1099' '#1086#1090#1095#1077#1090#1072
+      ImageIndex = 35
+      FormName = 'TReport_ReceiptProductionAnalyzeDialogForm'
+      FormNameParam.Value = 'TReport_ReceiptProductionAnalyzeDialogForm'
+      FormNameParam.DataType = ftString
+      GuiParams = <
+        item
+          Name = 'StartDate'
+          Value = 42186d
+          Component = deStart
+          DataType = ftDateTime
+          ParamType = ptInput
+        end
+        item
+          Name = 'EndDate'
+          Value = 42186d
+          Component = deEnd
+          DataType = ftDateTime
+          ParamType = ptInput
+        end
+        item
+          Name = 'FromUnitId'
+          Value = ''
+          Component = FromUnitGuides
+          ComponentItem = 'Key'
+          ParamType = ptInput
+        end
+        item
+          Name = 'FromUnitName'
+          Value = ''
+          Component = FromUnitGuides
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          ParamType = ptInput
+        end
+        item
+          Name = 'ToUnitId'
+          Value = ''
+          Component = ToUnitGuides
+          ComponentItem = 'Key'
+          ParamType = ptInput
+        end
+        item
+          Name = 'ToUnitName'
+          Value = ''
+          Component = ToUnitGuides
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          ParamType = ptInput
+        end
+        item
+          Name = 'PriceListId_1'
+          Value = ''
+          Component = PriceList_1_Guides
+          ComponentItem = 'Key'
+          ParamType = ptInput
+        end
+        item
+          Name = 'PriceList_1_Name'
+          Value = ''
+          Component = PriceList_1_Guides
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          ParamType = ptInput
+        end
+        item
+          Name = 'PriceListId_2'
+          Value = ''
+          Component = PriceList_2_Guides
+          ComponentItem = 'Key'
+          ParamType = ptInput
+        end
+        item
+          Name = 'PriceList_2_Name'
+          Value = ''
+          Component = PriceList_2_Guides
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          ParamType = ptInput
+        end
+        item
+          Name = 'PriceListId_3'
+          Value = ''
+          Component = PriceList_3_Guides
+          ComponentItem = 'Key'
+          ParamType = ptInput
+        end
+        item
+          Name = 'PriceList_3_Name'
+          Value = ''
+          Component = PriceList_3_Guides
+          ComponentItem = 'TextValue'
+          ParamType = ptInput
+        end
+        item
+          Name = 'PriceListId_sale'
+          Value = ''
+          Component = PriceList_sale_Guides
+          ComponentItem = 'Key'
+          ParamType = ptInput
+        end
+        item
+          Name = 'PriceList_sale_Name'
+          Value = ''
+          Component = PriceList_sale_Guides
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          ParamType = ptInput
+        end
+        item
+          Name = 'GoodsGroupId'
+          Value = ''
+          Component = GoodsGroupGuides
+          ComponentItem = 'Key'
+          ParamType = ptInput
+        end
+        item
+          Name = 'GoodsGroupName'
+          Value = ''
+          Component = GoodsGroupGuides
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          ParamType = ptInput
+        end>
+      isShowModal = True
+      RefreshDispatcher = RefreshDispatcher
+      OpenBeforeShow = True
+    end
+  end
+  inherited MasterDS: TDataSource
+    Top = 88
+  end
+  inherited MasterCDS: TClientDataSet
+    Top = 96
+  end
   inherited spSelect: TdsdStoredProc
     StoredProcName = 'gpReport_ReceiptProductionAnalyze'
     DataSets = <
@@ -1069,6 +1210,41 @@ inherited Report_ReceiptProductionAnalyzeForm: TReport_ReceiptProductionAnalyzeF
       0
       26
       0)
+    inherited Bar: TdxBar
+      ItemLinks = <
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbExecuteDialog'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbRefresh'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbGridToExcel'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end>
+    end
+    object bbExecuteDialog: TdxBarButton
+      Action = ExecuteDialog
+      Category = 0
+    end
   end
   inherited RefreshDispatcher: TRefreshDispatcher
     Left = 96

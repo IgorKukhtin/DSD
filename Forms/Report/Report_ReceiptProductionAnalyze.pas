@@ -76,6 +76,8 @@ type
     Price1_cost: TcxGridDBColumn;
     Price2_cost: TcxGridDBColumn;
     Price3_cost: TcxGridDBColumn;
+    ExecuteDialog: TExecuteDialog;
+    bbExecuteDialog: TdxBarButton;
   private
     { Private declarations }
   public

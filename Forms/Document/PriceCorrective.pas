@@ -88,6 +88,14 @@ type
     TaxCorrectiveViewAddOn: TdsdDBViewAddOn;
     actOpenTaxCorrective: TdsdOpenForm;
     bbOpenTaxCorrective: TdxBarButton;
+    actUnCompleteTaxCorrective: TdsdChangeMovementStatus;
+    actSetErasedTaxCorrective: TdsdChangeMovementStatus;
+    actCompleteTaxCorrective: TdsdChangeMovementStatus;
+    bbCompleteTaxCorrective: TdxBarButton;
+    bbUnCompleteTaxCorrective: TdxBarButton;
+    bbSetErasedTaxCorrective: TdxBarButton;
+    actTaxJournalChoice: TOpenChoiceForm;
+    actUpdateTaxCorrectiveDS: TdsdUpdateDataSet;
   private
     { Private declarations }
   public

@@ -360,8 +360,8 @@ inherited MainCashForm: TMainCashForm
         TabOrder = 8
       end
       object lblMoneyInCash: TcxLabel
-        Left = 460
-        Top = 6
+        Left = 476
+        Top = 7
         Caption = '0.00'
         FocusControl = ceAmount
         ParentFont = False
@@ -382,13 +382,6 @@ inherited MainCashForm: TMainCashForm
         Action = actOpenMCSForm
         LookAndFeel.Kind = lfStandard
         TabOrder = 10
-      end
-      object chbTracing: TcxCheckBox
-        Left = 744
-        Top = 8
-        TabOrder = 11
-        Visible = False
-        Width = 21
       end
     end
   end
@@ -516,6 +509,9 @@ inherited MainCashForm: TMainCashForm
         end
         item
           Action = actCalcTotalSumm
+        end
+        item
+          Action = actSetFocus
         end>
       Caption = 'VIP'
     end
@@ -557,6 +553,9 @@ inherited MainCashForm: TMainCashForm
         end
         item
           Action = actCalcTotalSumm
+        end
+        item
+          Action = actSetFocus
         end>
       Caption = #1054#1090#1083'.'
     end
@@ -610,9 +609,9 @@ inherited MainCashForm: TMainCashForm
         item
           StoredProc = spSelectRemains_Lite
         end>
-      Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
-      Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
-      ShortCut = 116
+      Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100' '#1090#1086#1083#1100#1082#1086' '#1086#1089#1090#1072#1090#1086#1082
+      Hint = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100' '#1090#1086#1083#1100#1082#1086' '#1086#1089#1090#1072#1090#1086#1082
+      ShortCut = 115
       RefreshOnTabSetChanges = False
     end
     object actOpenMCSForm: TdsdOpenForm
@@ -625,6 +624,11 @@ inherited MainCashForm: TMainCashForm
       FormNameParam.DataType = ftString
       GuiParams = <>
       isShowModal = False
+    end
+    object actSetFocus: TAction
+      Category = #1044#1086#1082#1091#1084#1077#1085#1090#1099
+      Caption = 'actSetFocus'
+      OnExecute = actSetFocusExecute
     end
   end
   object dsdDBViewAddOnMain: TdsdDBViewAddOn
@@ -727,6 +731,9 @@ inherited MainCashForm: TMainCashForm
     end
     object N6: TMenuItem
       Caption = '-'
+    end
+    object N10: TMenuItem
+      Action = actRefreshLite
     end
   end
   object spNewCheck: TdsdStoredProc
@@ -1111,7 +1118,7 @@ inherited MainCashForm: TMainCashForm
         DataType = ftBoolean
       end>
     PackSize = 1
-    Left = 152
-    Top = 352
+    Left = 440
+    Top = 256
   end
 end

@@ -25,7 +25,6 @@ object Report_PersonalCompleteForm: TReport_PersonalCompleteForm
     Height = 416
     Align = alClient
     TabOrder = 0
-    ExplicitTop = 87
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = MasterDS
@@ -778,13 +777,23 @@ object Report_PersonalCompleteForm: TReport_PersonalCompleteForm
           'Checked')
       end
       item
-        Component = PositionGuides
+        Component = deEnd
+        Properties.Strings = (
+          'Date')
+      end
+      item
+        Component = deStart
+        Properties.Strings = (
+          'Date')
+      end
+      item
+        Component = PersonalGuides
         Properties.Strings = (
           'Key'
           'TextValue')
       end
       item
-        Component = PersonalGuides
+        Component = PositionGuides
         Properties.Strings = (
           'Key'
           'TextValue')
@@ -1012,6 +1021,7 @@ object Report_PersonalCompleteForm: TReport_PersonalCompleteForm
           ParamType = ptInput
         end>
       isShowModal = True
+      RefreshDispatcher = RefreshDispatcher
       OpenBeforeShow = True
     end
     object SaleJournal: TdsdOpenForm

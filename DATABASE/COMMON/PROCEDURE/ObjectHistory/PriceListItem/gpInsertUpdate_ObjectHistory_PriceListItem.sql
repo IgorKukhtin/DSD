@@ -1,6 +1,6 @@
 -- Function: gpInsertUpdate_ObjectHistory_PriceListItem()
 
--- DROP FUNCTION IF EXISTS gpInsertUpdate_ObjectHistory_PriceListItem();
+DROP FUNCTION IF EXISTS gpInsertUpdate_ObjectHistory_PriceListItem (Integer,Integer,Integer,TDateTime,TFloat,TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_ObjectHistory_PriceListItem(
  INOUT ioId                     Integer,    -- ключ объекта <Элемент прайс-листа>
@@ -14,18 +14,20 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_ObjectHistory_PriceListItem(
 $BODY$
 DECLARE
    DECLARE vbUserId Integer;
-   DECLARE vbPriceListItemId Integer;
+   
 BEGIN
    -- проверка прав пользователя на вызов процедуры
    vbUserId:= lpCheckRight(inSession, zc_Enum_Process_InsertUpdate_ObjectHistory_PriceListItem());
 
-   -- Получаем ссылку на объект цен
-   vbPriceListItemId := lpGetInsert_Object_PriceListItem (inPriceListId, inGoodsId);
+    -- 
+   ioId := lpInsertUpdate_ObjectHistory_PriceListItem (ioId := ioId
+                                                     , inPriceListId := inPriceListId
+                                                     , inGoodsId     := inGoodsId
+                                                     , inOperDate    := inOperDate
+                                                     , inValue       := inValue
+                                                     , inUserId      := vbUserId
+                                                     );
  
-   -- Вставляем или меняем объект историю цен
-   ioId := lpInsertUpdate_ObjectHistory (ioId, zc_ObjectHistory_PriceListItem(), vbPriceListItemId, inOperDate);
-   -- Устанавливаем цену
-   PERFORM lpInsertUpdate_ObjectHistoryFloat (zc_ObjectHistoryFloat_PriceListItem_Value(), ioId, inValue);
 
 END;$BODY$
   LANGUAGE plpgsql VOLATILE;
@@ -34,6 +36,7 @@ END;$BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
+ 21.08.15         * lpInsertUpdate_ObjectHistory_PriceListItem
  18.04.14                                        * add zc_Enum_Process_InsertUpdate_ObjectHistory_PriceListItem
  06.06.13                        *
 */

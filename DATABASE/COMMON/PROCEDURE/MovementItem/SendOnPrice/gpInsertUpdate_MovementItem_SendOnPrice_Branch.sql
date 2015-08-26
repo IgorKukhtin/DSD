@@ -41,13 +41,16 @@ BEGIN
                            ;
 
      -- !!!из контрола!!! - % скидки для кол-ва
-     IF inIsChangePercentAmount = TRUE
+     /*IF inIsChangePercentAmount = TRUE
      THEN
          IF EXISTS (SELECT ObjectId FROM ObjectLink WHERE ObjectId = inGoodsId AND ChildObjectId = zc_Measure_Kg())
          THEN ioChangePercentAmount:= inChangePercentAmount; -- !!!из контрола!!!
          ELSE ioChangePercentAmount:= 0;
          END IF;
-     END IF;
+     END IF;*/
+
+     -- !!!для филиала!!!
+     ioChangePercentAmount:= 0;
 
      -- !!!расчет!!! - Количество c учетом % скидки
      outAmountChangePercent:= CAST (inAmount * (1 - COALESCE (ioChangePercentAmount, 0) / 100) AS NUMERIC (16, 3));

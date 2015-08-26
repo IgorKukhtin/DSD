@@ -11,17 +11,17 @@ inherited SendOnPriceJournalForm: TSendOnPriceJournalForm
     Width = 1020
     Height = 478
     TabOrder = 3
-    ExplicitWidth = 1110
+    ExplicitWidth = 1020
     ExplicitHeight = 478
     ClientRectBottom = 478
     ClientRectRight = 1020
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 1110
+      ExplicitWidth = 1020
       ExplicitHeight = 478
       inherited cxGrid: TcxGrid
         Width = 1020
         Height = 478
-        ExplicitWidth = 1110
+        ExplicitWidth = 1020
         ExplicitHeight = 478
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Filter.Options = [fcoCaseInsensitive, fcoShowOperatorDescription]
@@ -295,13 +295,49 @@ inherited SendOnPriceJournalForm: TSendOnPriceJournalForm
             HeaderAlignmentVert = vaCenter
             Width = 70
           end
-          object colRouteSortingName: TcxGridDBColumn
-            Caption = #1057#1086#1088#1090#1080#1088#1086#1074#1082#1072' '#1084#1072#1088#1096#1088#1091#1090#1072
-            DataBinding.FieldName = 'RouteSortingName'
+          object RetailName_order: TcxGridDBColumn
+            Caption = #1058#1086#1088#1075#1086#1074#1072#1103' '#1089#1077#1090#1100
+            DataBinding.FieldName = 'RetailName_order'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 80
+          end
+          object PartnerName_order: TcxGridDBColumn
+            Caption = #1050#1086#1085#1090#1088#1072#1075#1077#1085#1090
+            DataBinding.FieldName = 'PartnerName_order'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 80
+          end
+          object RouteGroupName: TcxGridDBColumn
+            Caption = #1043#1088#1091#1087#1087#1072' '#1084'. / '#1052#1072#1088#1096#1088#1091#1090
+            DataBinding.FieldName = 'RouteGroupName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 80
+          end
+          object RouteName: TcxGridDBColumn
+            Caption = #1052#1072#1088#1096#1088#1091#1090
+            DataBinding.FieldName = 'RouteName'
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 70
+          end
+          object Comment_order: TcxGridDBColumn
+            Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077' ('#1079#1072#1103#1074#1082#1072')'
+            DataBinding.FieldName = 'Comment_order'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 80
+          end
+          object PersonalName: TcxGridDBColumn
+            Caption = #1057#1086#1090#1088#1091#1076#1085#1080#1082' ('#1101#1082#1089#1087#1077#1076#1080#1090#1086#1088')'
+            DataBinding.FieldName = 'PersonalName'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 80
           end
           object EdiInvoice: TcxGridDBColumn
             Caption = 'EDI - '#1057#1095#1077#1090
@@ -357,7 +393,7 @@ inherited SendOnPriceJournalForm: TSendOnPriceJournalForm
   end
   inherited Panel: TPanel
     Width = 1020
-    ExplicitWidth = 1110
+    ExplicitWidth = 1020
     inherited deStart: TcxDateEdit
       EditValue = 42005d
     end
@@ -384,6 +420,29 @@ inherited SendOnPriceJournalForm: TSendOnPriceJournalForm
     Left = 31
     inherited actInsert: TdsdInsertUpdateAction
       FormName = 'TSendOnPriceForm'
+      GuiParams = <
+        item
+          Name = 'Id'
+          Value = Null
+        end
+        item
+          Name = 'ShowAll'
+          Value = True
+          DataType = ftBoolean
+        end
+        item
+          Name = 'inOperDate'
+          Value = 41640d
+          Component = deEnd
+          DataType = ftDateTime
+        end
+        item
+          Name = 'inChangePercentAmount'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'inChangePercentAmount'
+          DataType = ftFloat
+        end>
     end
     inherited actUpdate: TdsdInsertUpdateAction
       FormName = 'TSendOnPriceForm'

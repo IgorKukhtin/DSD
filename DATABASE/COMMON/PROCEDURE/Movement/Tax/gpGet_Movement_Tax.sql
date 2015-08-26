@@ -11,7 +11,7 @@ CREATE OR REPLACE FUNCTION gpGet_Movement_Tax(
     IN inOperDate          TDateTime, -- ключ Документа
     IN inSession           TVarChar   -- сессия пользователя
 )
-RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode Integer, StatusName TVarChar
+RETURNS TABLE (Id Integer, isMask Boolean, InvNumber TVarChar, OperDate TDateTime, StatusCode Integer, StatusName TVarChar
              , Checked Boolean, Document Boolean, isElectron Boolean, DateRegistered TDateTime
              , PriceWithVAT Boolean, VATPercent TFloat
              , TotalCount TFloat
@@ -46,6 +46,7 @@ BEGIN
          RETURN QUERY
          SELECT
                0 					AS Id
+             , FALSE                                    AS isMask
              , tmpInvNumber.InvNumber                   AS InvNumber
              , inOperDate				AS OperDate
              , Object_Status.Code               	AS StatusCode
@@ -90,6 +91,7 @@ BEGIN
      RETURN QUERY
        SELECT
              Movement.Id						AS Id
+           , FALSE                                                      AS isMask
 
            , Movement.InvNumber                                         AS InvNumber
            , Movement.OperDate                                          AS OperDate
@@ -117,8 +119,8 @@ BEGIN
            , Object_Contract.ContractTagName
            , Object_TaxKind.Id                			AS TaxKindId
            , Object_TaxKind.ValueData         			AS TaxKindName
-           , MovementString_InvNumberBranch.ValueData   AS InvNumberBranch
-           , MovementString_Comment.ValueData           AS Comment
+           , MovementString_InvNumberBranch.ValueData           AS InvNumberBranch
+           , MovementString_Comment.ValueData                   AS Comment
 
        FROM Movement
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId

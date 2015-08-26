@@ -133,7 +133,16 @@ begin
   LoadReportFromFile('Производство и процент выхода (итоги)', ReportPath + '\Отчеты (производство)\Производство и процент выхода (итоги).fr3');
   LoadReportFromFile('Производство и процент выхода (Анализ)', ReportPath + '\Отчеты (производство)\Производство и процент выхода (Анализ).fr3');
   LoadReportFromFile('Приход на склад и процент потерь (итоги)', ReportPath + '\Отчеты (производство)\Приход на склад и процент потерь (итоги).fr3');
+
   LoadReportFromFile('Плановая Прибыль', ReportPath + '\Отчеты (производство)\Плановая Прибыль.fr3');
+  LoadReportFromFile('Плановая Прибыль (Факт)', ReportPath + '\Отчеты (производство)\Плановая Прибыль (Факт).fr3');
+  LoadReportFromFile('Плановая Прибыль (Факт себестоимость и расходы)', ReportPath + '\Отчеты (производство)\Плановая Прибыль (Факт себестоимость и расходы).fr3');
+  LoadReportFromFile('Плановая Прибыль (Факт себестоимость и расходы и прайс)', ReportPath + '\Отчеты (производство)\Плановая Прибыль (Факт себестоимость и расходы и прайс).fr3');
+  LoadReportFromFile('Плановая Прибыль (цена себестоимость и расходы)', ReportPath + '\Отчеты (производство)\Плановая Прибыль (цена себестоимость и расходы).fr3');
+  LoadReportFromFile('Плановая Прибыль (цена себестоимость сравнение)', ReportPath + '\Отчеты (производство)\Плановая Прибыль (цена себестоимость сравнение).fr3');
+  LoadReportFromFile('Плановая Прибыль (сравнение цен)', ReportPath + '\Отчеты (производство)\Плановая Прибыль (сравнение цен).fr3');
+  LoadReportFromFile('Плановая Прибыль (сравнение цен себестоимости)', ReportPath + '\Отчеты (производство)\Плановая Прибыль (сравнение цен себестоимости).fr3');
+
   LoadReportFromFile('Производство План и Факт расход сырья', ReportPath + '\Отчеты (производство)\Производство План и Факт расход сырья.fr3');
   LoadReportFromFile('Производство План и Факт запас цен', ReportPath + '\Отчеты (производство)\Производство План и Факт запас цен.fr3');
 
@@ -176,6 +185,7 @@ begin
   LoadReportFromFile('PrintMovement_ReturnIn32049199', ReportPath + '\Товарный Учет\PrintMovement_ReturnIn32049199.fr3');
   LoadReportFromFile('PrintMovement_ReturnIn32516492', ReportPath + '\Товарный Учет\PrintMovement_ReturnIn32516492.fr3');
   LoadReportFromFile('PrintMovement_ReturnIn35442481', ReportPath + '\Товарный Учет\PrintMovement_ReturnIn35442481.fr3');
+  LoadReportFromFile('PrintMovement_PriceCorrective35442481', ReportPath + '\Товарный Учет\PrintMovement_PriceCorrective35442481.fr3');
   LoadReportFromFile('PrintMovement_Tax', ReportPath + '\Товарный Учет\PrintMovement_Tax.fr3');
   LoadReportFromFile('PrintMovement_Tax1214', ReportPath + '\Товарный Учет\PrintMovement_Tax1214.fr3');
   LoadReportFromFile('PrintMovement_Tax0115', ReportPath + '\Товарный Учет\PrintMovement_Tax0115.fr3');
@@ -206,7 +216,7 @@ begin
 
 
 
-  TStrArrAdd(['35275230','30982361','30487219','37910513','32294926','01074874','32516492','35442481','36387249','32049199', '31929492']);
+  TStrArrAdd(['35275230','30982361','30487219','37910513','32294926','01074874','32516492','35442481','36387249','32049199', '31929492', '22447463']);
   for i := Low(OKPO) to High(OKPO) do
     LoadReportFromFile('PrintMovement_Sale' + OKPO[i], ReportPath + '\Товарный Учет\PrintMovement_Sale' + OKPO[i] + '.fr3');
 

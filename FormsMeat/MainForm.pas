@@ -598,7 +598,7 @@ type
     N71: TMenuItem;
     N72: TMenuItem;
     actOrderInternalBasis: TdsdOpenForm;
-    bbOrderInternalBasis: TMenuItem;
+    miOrderInternalBasis: TMenuItem;
     actReturnOut_Partner: TdsdOpenForm;
     N69: TMenuItem;
     actReport_GoodsMI_SaleReturnInUnit: TdsdOpenForm;
@@ -610,7 +610,7 @@ type
     N74: TMenuItem;
     N75: TMenuItem;
     actOrderInternalBasisDelik: TdsdOpenForm;
-    N76: TMenuItem;
+    miOrderInternalBasisDelik: TMenuItem;
     miReport_ReceiptSaleAnalyze: TMenuItem;
     actReport_ReceiptSaleAnalyzeForm: TdsdOpenForm;
     actReport_ReceiptProductionOutAnalyzeForm: TdsdOpenForm;

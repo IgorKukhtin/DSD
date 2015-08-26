@@ -38,7 +38,7 @@ BEGIN
    PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_GoodsKindComplete(), ioId, inGoodsKindId_complete);
 
    -- сохранили протокол
-   PERFORM lpInsert_MovementItemProtocol (ioId, inUserId, vbIsInsert);
+   -- !!!что б не росла база!!! PERFORM lpInsert_MovementItemProtocol (ioId, inUserId, vbIsInsert);
    
 END;
 $BODY$

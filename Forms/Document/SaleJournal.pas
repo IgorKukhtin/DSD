@@ -170,6 +170,8 @@ type
     spUpdateMovementDesc: TdsdStoredProc;
     GuidesTo: TdsdGuides;
     dxBarButton1: TdxBarButton;
+    PersonalName: TcxGridDBColumn;
+    RouteGroupName: TcxGridDBColumn;
   private
     { Private declarations }
   public

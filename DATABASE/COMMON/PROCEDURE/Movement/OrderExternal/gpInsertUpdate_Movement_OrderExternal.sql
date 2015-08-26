@@ -10,7 +10,8 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_OrderExternal(
     IN inInvNumber           TVarChar  , -- Номер документа
     IN inInvNumberPartner    TVarChar  , -- Номер заявки у контрагента
     IN inOperDate            TDateTime , -- Дата документа
-   OUT outOperDatePartner    TDateTime , -- Дата принятия заказа от контрагента
+   OUT outOperDatePartner    TDateTime , -- Дата отгрузки со склада
+   OUT outOperDatePartner_sale TDateTime , -- Дата расходного документа у контрагента
     IN inOperDateMark        TDateTime , -- Дата маркировки
    OUT outPriceWithVAT       Boolean   , -- Цена с НДС (да/нет)
    OUT outVATPercent         TFloat    , -- % НДС
@@ -49,6 +50,7 @@ BEGIN
 
      -- 1. эти параметры всегда из Контрагента
      outOperDatePartner:= inOperDate + (COALESCE ((SELECT ValueData FROM ObjectFloat WHERE ObjectId = inFromId AND DescId = zc_ObjectFloat_Partner_PrepareDayCount()), 0) :: TVarChar || ' DAY') :: INTERVAL;
+     outOperDatePartner_sale:= outOperDatePartner + (COALESCE ((SELECT ValueData FROM ObjectFloat WHERE ObjectId = inFromId AND DescId = zc_ObjectFloat_Partner_DocumentDayCount()), 0) :: TVarChar || ' DAY') :: INTERVAL;
 
      -- 2. эти параметры всегда из Прайс-листа
      IF COALESCE (ioPriceListId, 0) = 0

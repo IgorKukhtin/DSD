@@ -15,8 +15,11 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , TotalCountKg TFloat, TotalCountSh TFloat, TotalCountTare TFloat, TotalCount TFloat, TotalCountPartner TFloat
              , TotalSummVAT TFloat, TotalSummMVAT TFloat, TotalSummPVAT TFloat, TotalSumm TFloat
              , FromId Integer, FromName TVarChar, ToId Integer, ToName TVarChar
-             , RouteSortingId Integer, RouteSortingName TVarChar
+             , RouteSortingId Integer, RouteSortingName TVarChar, RouteGroupName TVarChar, RouteName TVarChar, PersonalName TVarChar
              , MovementId_Order Integer, InvNumber_Order TVarChar
+             , RetailName_order TVarChar
+             , PartnerName_order TVarChar
+             , Comment_order TVarChar
 
              , EdiOrdspr Boolean, EdiInvoice Boolean, EdiDesadv Boolean
              , isEdiOrdspr_partner Boolean, isEdiInvoice_partner Boolean, isEdiDesadv_partner Boolean
@@ -68,9 +71,15 @@ BEGIN
 
            , Object_RouteSorting.Id                     AS RouteSortingId
            , Object_RouteSorting.ValueData              AS RouteSortingName
+           , Object_RouteGroup.ValueData                AS RouteGroupName
+           , Object_Route.ValueData                     AS RouteName
+           , Object_Personal.ValueData                  AS PersonalName
 
            , MovementLinkMovement_Order.MovementChildId AS MovementId_Order
            , Movement_Order.InvNumber                   AS InvNumber_Order
+           , Object_Retail_order.ValueData              AS RetailName_order
+           , Object_Partner_order.ValueData             AS PartnerName_order
+           , TRIM (COALESCE (MovementString_Comment_order.ValueData, '')) :: TVarChar AS Comment_order
 
            , COALESCE (MovementBoolean_EdiOrdspr.ValueData, FALSE)    AS EdiOrdspr
            , COALESCE (MovementBoolean_EdiInvoice.ValueData, FALSE)   AS EdiInvoice
@@ -182,6 +191,32 @@ BEGIN
                                        AND MovementLinkMovement_Order.DescId = zc_MovementLinkMovement_Order()
             LEFT JOIN Movement AS Movement_Order ON Movement_Order.Id = MovementLinkMovement_Order.MovementChildId
       
+            LEFT JOIN MovementLinkObject AS MovementLinkObject_Partner_order
+                                         ON MovementLinkObject_Partner_order.MovementId = MovementLinkMovement_Order.MovementChildId
+                                        AND MovementLinkObject_Partner_order.DescId = zc_MovementLinkObject_Partner()
+            LEFT JOIN Object AS Object_Partner_order ON Object_Partner_order.Id = MovementLinkObject_Partner_order.ObjectId
+            LEFT JOIN MovementLinkObject AS MovementLinkObject_Retail_order
+                                         ON MovementLinkObject_Retail_order.MovementId = MovementLinkMovement_Order.MovementChildId
+                                        AND MovementLinkObject_Retail_order.DescId = zc_MovementLinkObject_Retail()
+            LEFT JOIN Object AS Object_Retail_order ON Object_Retail_order.Id = MovementLinkObject_Retail_order.ObjectId
+
+            LEFT JOIN MovementString AS MovementString_Comment_order
+                                     ON MovementString_Comment_order.MovementId = MovementLinkMovement_Order.MovementChildId
+                                    AND MovementString_Comment_order.DescId = zc_MovementString_Comment()
+
+            LEFT JOIN MovementLinkObject AS MovementLinkObject_Route
+                                         ON MovementLinkObject_Route.MovementId = MovementLinkMovement_Order.MovementChildId
+                                        AND MovementLinkObject_Route.DescId = zc_MovementLinkObject_Route()
+            LEFT JOIN Object AS Object_Route ON Object_Route.Id = MovementLinkObject_Route.ObjectId
+
+            LEFT JOIN ObjectLink AS ObjectLink_Route_RouteGroup ON ObjectLink_Route_RouteGroup.ObjectId = Object_Route.Id
+                                                               AND ObjectLink_Route_RouteGroup.DescId = zc_ObjectLink_Route_RouteGroup()
+            LEFT JOIN Object AS Object_RouteGroup ON Object_RouteGroup.Id = COALESCE (ObjectLink_Route_RouteGroup.ChildObjectId, Object_Route.Id)
+
+            LEFT JOIN MovementLinkObject AS MovementLinkObject_Personal
+                                         ON MovementLinkObject_Personal.MovementId = MovementLinkMovement_Order.MovementChildId
+                                        AND MovementLinkObject_Personal.DescId = zc_MovementLinkObject_Personal()
+            LEFT JOIN Object AS Object_Personal ON Object_Personal.Id = MovementLinkObject_Personal.ObjectId
           
             LEFT JOIN MovementLinkObject AS MovementLinkObject_Partner
                                          ON MovementLinkObject_Partner.MovementId = Movement_Order.Id

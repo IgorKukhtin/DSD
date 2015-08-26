@@ -44,6 +44,7 @@ BEGIN
          AND inUserId <> 128491 -- Хохлова Е.Ю. !!!временно!!!
          AND inUserId <> 442559 -- Богатикова Н.В. -- 409618 -- Скрипник А.В. !!!временно!!!
          AND inUserId <> 81707 -- Неграш О.В.
+         AND inUserId <> 131160 -- Удовик Е.Е. !!!временно!!!
          -- AND inUserId <> 81241 -- Марухно А.В. !!!временно!!!
       THEN
           RAISE EXCEPTION 'Ошибка.У Пользователя <%> нет прав на проведение документа № <%> от <%> филиал <%>.', lfGet_Object_ValueData (inUserId), (SELECT InvNumber FROM Movement WHERE Id = inMovementId), DATE (vbOperDate), lfGet_Object_ValueData ((SELECT ObjectId FROM MovementLinkObject WHERE MovementId = inMovementId AND DescId = zc_MovementLinkObject_Branch()));
@@ -56,6 +57,7 @@ BEGIN
          AND inUserId <> 128491 -- Хохлова Е.Ю. !!!временно!!!
          AND inUserId <> 442559 -- Богатикова Н.В. -- 409618 -- Скрипник А.В. !!!временно!!!
          AND inUserId <> 81707 -- Неграш О.В.
+         AND inUserId <> 131160 -- Удовик Е.Е. !!!временно!!!
          -- AND inUserId <> 81241 -- Марухно А.В. !!!временно!!!
       THEN
           RAISE EXCEPTION 'Ошибка.У Пользователя <%> нет прав на проведение документа № <%> от <%> филиал <%>.', lfGet_Object_ValueData (inUserId), (SELECT InvNumber FROM Movement WHERE Id = inMovementId), DATE (vbOperDate), lfGet_Object_ValueData ((SELECT ObjectId FROM MovementLinkObject WHERE MovementId = inMovementId AND DescId = zc_MovementLinkObject_Branch()));

@@ -1,6 +1,8 @@
 -- Function: gpReport_Founder
 
 DROP FUNCTION IF EXISTS gpReport_Founder (TDateTime, TDateTime, Integer, Integer, Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpReport_Founder (TDateTime, TDateTime, Integer, Integer, Integer, Integer, Boolean, TVarChar);
+
 
 CREATE OR REPLACE FUNCTION gpReport_Founder(
     IN inStartDate        TDateTime , --
@@ -9,9 +11,10 @@ CREATE OR REPLACE FUNCTION gpReport_Founder(
     IN inInfoMoneyId      Integer,    -- Управленческая статья
     IN inInfoMoneyGroupId Integer,    -- Группа управленческих статей
     IN inInfoMoneyDestinationId   Integer,    --
+    IN inIsDate           Boolean,    -- по датам
     IN inSession          TVarChar    -- сессия пользователя
 )
-RETURNS TABLE (ContainerId Integer
+RETURNS TABLE (ContainerId Integer, OperDate TDatetime
              , GroupId Integer, GroupName TVarChar
              , FounderCode Integer, FounderName TVarChar
              , InfoMoneyGroupName TVarChar, InfoMoneyDestinationName TVarChar, InfoMoneyCode Integer, InfoMoneyName TVarChar
@@ -40,10 +43,10 @@ BEGIN
      END IF;
 
 
-     -- Результат
-  RETURN QUERY
-     WITH tmpContainer AS
-                 (SELECT CLO_Founder.ContainerId AS Id, Container.Amount, Container.ObjectId AS AccountId, CLO_Founder.ObjectId AS FounderId -- , CLO_InfoMoney.ObjectId AS InfoMoneyId
+ CREATE TEMP TABLE tmpContainer (Id integer, Amount Tfloat, AccountId Integer, FounderId Integer) ON COMMIT DROP;
+ 
+      INSERT INTO tmpContainer (Id , Amount , AccountId , FounderId )
+                 SELECT CLO_Founder.ContainerId AS Id, Container.Amount, Container.ObjectId AS AccountId, CLO_Founder.ObjectId AS FounderId -- , CLO_InfoMoney.ObjectId AS InfoMoneyId
                   FROM ContainerLinkObject AS CLO_Founder
                        INNER JOIN Container ON Container.Id = CLO_Founder.ContainerId AND Container.DescId = zc_Container_Summ()
                        /*LEFT JOIN ContainerLinkObject AS CLO_InfoMoney
@@ -53,10 +56,16 @@ BEGIN
                     /*AND (Object_InfoMoney_View.InfoMoneyDestinationId = inInfoMoneyDestinationId OR inInfoMoneyDestinationId = 0)
                     AND (Object_InfoMoney_View.InfoMoneyId = inInfoMoneyId OR inInfoMoneyId = 0)
                     AND (Object_InfoMoney_View.InfoMoneyGroupId = inInfoMoneyGroupId OR inInfoMoneyGroupId = 0)*/
-                    AND (Container.ObjectId = inAccountId OR inAccountId = 0)
-                  )
+       ;  
+       ANALYZE tmpContainer;
+
+     -- Результат
+  RETURN QUERY
+    
+
      SELECT
         Operation.ContainerId,
+        CASE WHEN Operation.OperDate = zc_DateStart() THEN NULL ELSE Operation.OperDate END :: TDateTime AS OperDate,
         CASE WHEN Operation.ContainerId > 0 THEN 1          WHEN Operation.DebetSumm > 0 THEN 2           WHEN Operation.KreditSumm > 0 THEN 3              ELSE -1 END :: Integer AS GroupId,
         CASE WHEN Operation.ContainerId > 0 THEN '1.Сальдо' WHEN Operation.DebetSumm > 0 THEN '2.Расчеты' WHEN Operation.KreditSumm > 0 THEN '3.Начисления' ELSE '' END :: TVarChar AS GroupName,
         Object_Founder.ObjectCode                                                                   AS FounderCode,
@@ -98,6 +107,7 @@ BEGIN
                    , Operation_all.MoneyPlaceId
                    , Operation_all.InfoMoneyId
                    , Operation_all.Comment
+                   , Operation_all.OperDate
           FROM
               (SELECT tmpContainer.Id AS ContainerId, tmpContainer.AccountId, tmpContainer.FounderId
                     , tmpContainer.Amount - COALESCE(SUM (MIContainer.Amount), 0) AS StartAmount
@@ -110,11 +120,13 @@ BEGIN
                     , 0 AS MoneyPlaceId
                     , 0 AS InfoMoneyId
                     , '' AS Comment
+                    , zc_DateStart() :: TDatetime AS OperDate
                FROM tmpContainer
                     LEFT JOIN MovementItemContainer AS MIContainer
                                                     ON MIContainer.ContainerId = tmpContainer.Id
                                                    AND MIContainer.OperDate >= inStartDate
                GROUP BY tmpContainer.Id , tmpContainer.AccountId, tmpContainer.FounderId, tmpContainer.Amount
+                      
               UNION ALL
                SELECT 0 AS ContainerId, tmpContainer.AccountId, tmpContainer.FounderId
                     , 0 AS StartAmount
@@ -127,6 +139,7 @@ BEGIN
                     , MILO_MoneyPlace.ObjectId                  AS MoneyPlaceId
                     , MILO_InfoMoney.ObjectId                   AS InfoMoneyId
                     , COALESCE (MIString_Comment.ValueData, '') AS Comment
+                    , CASE WHEN inIsDate = TRUE THEN MIContainer.OperDate ELSE zc_DateStart() END :: TDatetime AS OperDate
                FROM tmpContainer
                     LEFT JOIN MovementItemContainer AS MIContainer
                                                     ON MIContainer.ContainerId = tmpContainer.Id
@@ -147,9 +160,11 @@ BEGIN
                       , MILO_MoneyPlace.ObjectId
                       , MILO_InfoMoney.ObjectId
                       , MIString_Comment.ValueData
+                      , CASE WHEN inIsDate = TRUE THEN MIContainer.OperDate ELSE zc_DateStart() END :: TDatetime
              ) AS Operation_all
           GROUP BY Operation_all.ContainerId, Operation_all.AccountId, Operation_all.FounderId
                  , Operation_all.ObjectId, Operation_all.MoneyPlaceId, Operation_all.InfoMoneyId, Operation_all.Comment
+                 , Operation_all.OperDate
          ) AS Operation
 
      LEFT JOIN Object AS Object_MoneyPlace ON Object_MoneyPlace.Id = Operation.MoneyPlaceId
@@ -167,14 +182,15 @@ BEGIN
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpReport_Founder (TDateTime, TDateTime, Integer, Integer, Integer, Integer, TVarChar) OWNER TO postgres;
+ALTER FUNCTION gpReport_Founder (TDateTime, TDateTime, Integer, Integer, Integer, Integer, Boolean, TVarChar) OWNER TO postgres;
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 19.08.15         * add inIsDate
  27.09.14                                        *
  10.09.14                                                        *
 */
 
 -- тест
--- SELECT * FROM gpReport_Founder (inStartDate:= '01.08.2014', inEndDate:= '05.08.2014', inAccountId:= 0, inInfoMoneyId:= 0, inInfoMoneyGroupId:= 0, inInfoMoneyDestinationId:= 0, inSession:= '2');
+-- SELECT * FROM gpReport_Founder (inStartDate:= '01.08.2014', inEndDate:= '05.08.2014', inAccountId:= 0, inInfoMoneyId:= 0, inInfoMoneyGroupId:= 0, inInfoMoneyDestinationId:= 0, inIsDate:= FALSE, inSession:= '2');

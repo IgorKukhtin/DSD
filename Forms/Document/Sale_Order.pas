@@ -166,7 +166,14 @@ type
     ceComment: TcxTextEdit;
     spSelectPrint_SaleOrder: TdsdStoredProc;
     actPrintSaleOrder: TdsdPrintAction;
-    bb: TdxBarButton;
+    bbPrintSaleOrder: TdxBarButton;
+    spUpdate_MI_Sale_Price: TdsdStoredProc;
+    actUpdatePrice: TdsdExecStoredProc;
+    bbUpdatePrice: TdxBarButton;
+    cxLabel23: TcxLabel;
+    edCurrencyValue: TcxCurrencyEdit;
+    cxLabel24: TcxLabel;
+    edParValue: TcxCurrencyEdit;
   private
     { Private declarations }
   public

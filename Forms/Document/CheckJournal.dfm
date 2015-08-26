@@ -3,29 +3,27 @@ inherited CheckJournalForm: TCheckJournalForm
   ClientWidth = 697
   AddOnFormData.RefreshAction = actRefreshStart
   ExplicitWidth = 705
-  ExplicitHeight = 709
+  ExplicitHeight = 702
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Top = 79
+    Top = 77
     Width = 697
-    Height = 596
+    Height = 598
     TabOrder = 3
-    ExplicitTop = 79
+    ExplicitTop = 77
     ExplicitWidth = 697
-    ExplicitHeight = 596
-    ClientRectBottom = 592
-    ClientRectRight = 693
+    ExplicitHeight = 598
+    ClientRectBottom = 598
+    ClientRectRight = 697
     inherited tsMain: TcxTabSheet
-      ExplicitLeft = 2
-      ExplicitTop = 2
-      ExplicitWidth = 691
-      ExplicitHeight = 590
+      ExplicitWidth = 697
+      ExplicitHeight = 598
       inherited cxGrid: TcxGrid
-        Width = 691
-        Height = 590
-        ExplicitWidth = 691
-        ExplicitHeight = 590
+        Width = 697
+        Height = 598
+        ExplicitWidth = 697
+        ExplicitHeight = 598
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.FooterSummaryItems = <
             item
@@ -142,9 +140,6 @@ inherited CheckJournalForm: TCheckJournalForm
     inherited actSetErasedList: TMultiAction
       Enabled = False
     end
-    inherited spReCompete: TdsdExecStoredProc
-      Enabled = False
-    end
     inherited spCompete: TdsdExecStoredProc
       Enabled = False
     end
@@ -161,7 +156,7 @@ inherited CheckJournalForm: TCheckJournalForm
       Enabled = False
     end
     inherited actSimpleReCompleteList: TMultiAction
-      Enabled = False
+      QuestionBeforeExecute = #1053#1072#1095#1072#1090#1100' '#1087#1088#1086#1094#1077#1076#1091#1088#1091' '#1087#1077#1088#1077#1087#1088#1086#1074#1077#1076#1077#1085#1080#1103' '#1086#1090#1086#1073#1088#1072#1085#1085#1099#1093' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074'?'
     end
     inherited actSimpleErased: TMultiAction
       Enabled = False
@@ -230,7 +225,7 @@ inherited CheckJournalForm: TCheckJournalForm
     DockControlHeights = (
       0
       0
-      28
+      26
       0)
     inherited Bar: TdxBar
       ItemLinks = <
@@ -296,6 +291,11 @@ inherited CheckJournalForm: TCheckJournalForm
       Visible = ivNever
     end
   end
+  inherited PopupMenu: TPopupMenu
+    object N13: TMenuItem [11]
+      Action = actSimpleReCompleteList
+    end
+  end
   inherited RefreshDispatcher: TRefreshDispatcher
     RefreshAction = actRefreshStart
     ComponentList = <
@@ -304,6 +304,18 @@ inherited CheckJournalForm: TCheckJournalForm
       end
       item
       end>
+  end
+  inherited spMovementComplete: TdsdStoredProc
+    Left = 88
+    Top = 296
+  end
+  inherited spMovementUnComplete: TdsdStoredProc
+    Left = 88
+    Top = 344
+  end
+  inherited spMovementSetErased: TdsdStoredProc
+    Left = 88
+    Top = 448
   end
   inherited FormParams: TdsdFormParams
     Params = <
@@ -330,6 +342,11 @@ inherited CheckJournalForm: TCheckJournalForm
         Component = UnitGuides
         ComponentItem = 'Key'
       end>
+  end
+  inherited spMovementReComplete: TdsdStoredProc
+    StoredProcName = 'gpReComplete_Movement_Check'
+    Left = 88
+    Top = 392
   end
   object UnitGuides: TdsdGuides
     KeyField = 'Id'
@@ -386,5 +403,26 @@ inherited CheckJournalForm: TCheckJournalForm
     PackSize = 1
     Left = 432
     Top = 424
+  end
+  object dsdStoredProc1: TdsdStoredProc
+    StoredProcName = 'gpReComplete_Movement_Income'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        ComponentItem = 'Id'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inIsLastComplete'
+        Value = 'True'
+        DataType = ftBoolean
+        ParamType = ptInput
+      end>
+    PackSize = 1
+    Left = 761
+    Top = 178
   end
 end

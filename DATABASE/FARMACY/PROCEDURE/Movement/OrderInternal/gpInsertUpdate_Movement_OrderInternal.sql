@@ -15,25 +15,47 @@ $BODY$
    DECLARE vbUserId Integer;
 BEGIN
 
-     -- проверка прав пользователя на вызов процедуры
-     -- PERFORM lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Movement_OrderInternal());
-     vbUserId := inSession;
+    -- проверка прав пользователя на вызов процедуры
+    -- PERFORM lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Movement_OrderInternal());
+    vbUserId := inSession;
 
-     IF (COALESCE(ioId, 0) = 0) AND (COALESCE(inInvNumber, '') = '') THEN
+     
+    --Проверить что бы в 1 дне не было 2 неподписаных заказа
+    IF EXISTS(  SELECT Movement.Id
+                FROM Movement
+                    JOIN MovementLinkObject AS MovementLinkObject_Unit
+                                            ON MovementLinkObject_Unit.MovementId = Movement.Id
+                                           AND MovementLinkObject_Unit.DescId = zc_MovementLinkObject_Unit()
+                WHERE 
+                    Movement.StatusId = zc_Enum_Status_UnComplete() 
+                    AND 
+                    Movement.DescId = zc_Movement_OrderInternal() 
+                    AND 
+                    Movement.OperDate = inOperDate 
+                    AND 
+                    Movement.Id <> COALESCE(ioId,0)
+                    AND
+                    MovementLinkObject_Unit.ObjectId = inUnitId
+             )
+    THEN
+        RAISE EXCEPTION 'Ошибка. В одном дне <%> может быть только одна неподписанная заявка на подразделение <%>.', inOperDate, (Select ValueData from Object Where Id = inUnitId);
+    END IF;
+     
+    IF (COALESCE(ioId, 0) = 0) AND (COALESCE(inInvNumber, '') = '') THEN
         inInvNumber := (NEXTVAL ('movement_OrderInternal_seq'))::TVarChar;
-     END IF;
+    END IF;
 
-     -- сохранили <Документ>
-     ioId := lpInsertUpdate_Movement (ioId, zc_Movement_OrderInternal(), inInvNumber, inOperDate, NULL);
+    -- сохранили <Документ>
+    ioId := lpInsertUpdate_Movement (ioId, zc_Movement_OrderInternal(), inInvNumber, inOperDate, NULL);
 
-     -- сохранили связь с <Подразделения>
-     PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_Unit(), ioId, inUnitId);
+    -- сохранили связь с <Подразделения>
+    PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_Unit(), ioId, inUnitId);
 
-     -- сохранили связь с Тип заказа>
-     PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_OrderKind(), ioId, inOrderKindId);
+    -- сохранили связь с Тип заказа>
+    PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_OrderKind(), ioId, inOrderKindId);
 
-     -- сохранили протокол
-     -- PERFORM lpInsert_MovementProtocol (ioId, vbUserId);
+    -- сохранили протокол
+    -- PERFORM lpInsert_MovementProtocol (ioId, vbUserId);
 
 END;
 $BODY$

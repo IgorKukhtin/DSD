@@ -70,6 +70,11 @@ BEGIN
            , Remains.Amount                                         AS RemainsInUnit
            , Object_Price_View.MCSValue                             AS MCS
            , Income.Income_Amount                                   AS Income_Amount
+           , tmpMI.AmountSecond                                     AS AmountSecond
+           , tmpMI.AmountAll                                        AS AmountAll
+           , tmpMI.CalcAmountAll                                    AS CalcAmountAll
+           , tmpMI.Price * tmpMI.CalcAmountAll                      AS SummAll
+           
        FROM (SELECT Object_Goods.Id                              AS GoodsId
                   , Object_Goods.GoodsCodeInt                    AS GoodsCode
                   , Object_Goods.GoodsName                       AS GoodsName
@@ -86,32 +91,35 @@ BEGIN
             ) AS tmpGoods
 
             FULL JOIN (SELECT MovementItem.Id
-                            , MovementItem.ObjectId              AS GoodsId
-                            , MovementItem.Amount                AS Amount
-                            , CEIL(MovementItem.Amount 
-                                      / COALESCE(Object_Goods.MinimumLot, 1)) * COALESCE(Object_Goods.MinimumLot, 1) 
-                                                                 AS CalcAmount
-                            , MIFloat_Summ.ValueData             AS Summ
-                            , Object_Goods.GoodsCodeInt          AS GoodsCode
-                            , Object_Goods.GoodsName             AS GoodsName
-                            , Object_Goods.MinimumLot            AS Multiplicity
-                            , Object_Goods.GoodsGroupId          AS GoodsGroupId
-                            , Object_Goods.GoodsGroupName        AS GoodsGroupName
-                            , Object_Goods.NDSKindId             AS NDSKindId
-                            , Object_Goods.NDSKindName           AS NDSKindName
-                            , Object_Goods.NDS                   AS NDS
-                            , MIString_Comment.ValueData         AS Comment
-                            , COALESCE(PriceList.MakerName, MinPrice.MakerName) AS MakerName
-                            , MIBoolean_Calculated.ValueData     AS isCalculated
-                            , ObjectFloat_Goods_MinimumLot.valuedata AS MinimumLot
-                            , COALESCE(PriceList.Price, MinPrice.Price) AS Price
-                            , COALESCE(PriceList.PartionGoodsDate, MinPrice.PartionGoodsDate) AS PartionGoodsDate
-                            , COALESCE(PriceList.GoodsCode, MinPrice.GoodsCode)         AS PartnerGoodsCode 
-                            , COALESCE(PriceList.GoodsName, MinPrice.GoodsName)         AS PartnerGoodsName
-                            , COALESCE(PriceList.JuridicalName, MinPrice.JuridicalName) AS JuridicalName
-                            , COALESCE(PriceList.ContractName, MinPrice.ContractName)   AS ContractName
-                            , COALESCE(PriceList.SuperFinalPrice, MinPrice.SuperFinalPrice) AS SuperFinalPrice
-                            , Object_Goods.isTOP                           AS isTOP
+                            , MovementItem.ObjectId                                            AS GoodsId
+                            , MovementItem.Amount                                              AS Amount
+                            , CEIL(MovementItem.Amount / COALESCE(Object_Goods.MinimumLot, 1)) 
+                                * COALESCE(Object_Goods.MinimumLot, 1)                         AS CalcAmount
+                            , MIFloat_Summ.ValueData                                           AS Summ
+                            , Object_Goods.GoodsCodeInt                                        AS GoodsCode
+                            , Object_Goods.GoodsName                                           AS GoodsName
+                            , Object_Goods.MinimumLot                                          AS Multiplicity
+                            , Object_Goods.GoodsGroupId                                        AS GoodsGroupId
+                            , Object_Goods.GoodsGroupName                                      AS GoodsGroupName
+                            , Object_Goods.NDSKindId                                           AS NDSKindId
+                            , Object_Goods.NDSKindName                                         AS NDSKindName
+                            , Object_Goods.NDS                                                 AS NDS
+                            , MIString_Comment.ValueData                                       AS Comment
+                            , COALESCE(PriceList.MakerName, MinPrice.MakerName)                AS MakerName
+                            , MIBoolean_Calculated.ValueData                                   AS isCalculated
+                            , ObjectFloat_Goods_MinimumLot.valuedata                           AS MinimumLot
+                            , COALESCE(PriceList.Price, MinPrice.Price)                        AS Price
+                            , COALESCE(PriceList.PartionGoodsDate, MinPrice.PartionGoodsDate)  AS PartionGoodsDate
+                            , COALESCE(PriceList.GoodsCode, MinPrice.GoodsCode)                AS PartnerGoodsCode 
+                            , COALESCE(PriceList.GoodsName, MinPrice.GoodsName)                AS PartnerGoodsName
+                            , COALESCE(PriceList.JuridicalName, MinPrice.JuridicalName)        AS JuridicalName
+                            , COALESCE(PriceList.ContractName, MinPrice.ContractName)          AS ContractName
+                            , COALESCE(PriceList.SuperFinalPrice, MinPrice.SuperFinalPrice)    AS SuperFinalPrice
+                            , Object_Goods.isTOP                                               AS isTOP
+                            , MIFloat_AmountSecond.ValueData                                   AS AmountSecond
+                            , MovementItem.Amount+COALESCE(MIFloat_AmountSecond.ValueData,0)   AS AmountAll
+                            , CEIL((MovementItem.Amount+COALESCE(MIFloat_AmountSecond.ValueData,0)) / COALESCE(Object_Goods.MinimumLot, 1)) 
+                               * COALESCE(Object_Goods.MinimumLot, 1)                          AS CalcAmountAll
                        FROM (SELECT FALSE AS isErased UNION ALL SELECT inIsErased AS isErased WHERE inIsErased = TRUE) AS tmpIsErased
                             JOIN MovementItem ON MovementItem.MovementId = inMovementId
                                              AND MovementItem.DescId     = zc_MI_Master()
@@ -160,6 +168,9 @@ BEGIN
                   LEFT JOIN MovementItemFloat AS MIFloat_Summ
                                               ON MIFloat_Summ.MovementItemId = MovementItem.Id
                                              AND MIFloat_Summ.DescId = zc_MIFloat_Summ()
+                       LEFT OUTER JOIN MovementItemFloat AS MIFloat_AmountSecond
+                                                         ON MIFloat_AmountSecond.MovementItemId = MovementItem.Id
+                                                        AND MIFloat_AmountSecond.DescId = zc_MIFloat_AmountSecond()  
                       ) AS tmpMI ON tmpMI.GoodsId     = tmpGoods.GoodsId
             LEFT JOIN Object_Price_View ON COALESCE(tmpMI.GoodsId,tmpGoods.GoodsId) = Object_Price_View.GoodsId
                                        AND Object_Price_View.UnitId = vbUnitId

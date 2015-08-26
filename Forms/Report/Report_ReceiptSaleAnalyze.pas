@@ -95,6 +95,23 @@ type
     OperCount_sh_sale: TcxGridDBColumn;
     cbGoodsKind: TcxCheckBox;
     bbGoodsKind: TdxBarControlContainerItem;
+    actPrint_Calc: TdsdPrintAction;
+    actPrint_CalcPrice: TdsdPrintAction;
+    bbPrint_Calc: TdxBarButton;
+    bbPrint_CalcPrice: TdxBarButton;
+    actPrint_DiffPrice: TdsdPrintAction;
+    bbPrint_DiffPrice: TdxBarButton;
+    SummCost1_sale: TcxGridDBColumn;
+    SummCost2_sale: TcxGridDBColumn;
+    SummCost3_sale: TcxGridDBColumn;
+    actPrint_Calc_PriceList: TdsdPrintAction;
+    bbPrint_Calc_PriceList: TdxBarButton;
+    actPrint_DiffPriceIn: TdsdPrintAction;
+    bbPrint_DiffPriceIn: TdxBarButton;
+    SummCost4_sale: TcxGridDBColumn;
+    Price4_cost: TcxGridDBColumn;
+    ExecuteDialog: TExecuteDialog;
+    bbExecuteDialog: TdxBarButton;
   private
     { Private declarations }
   public

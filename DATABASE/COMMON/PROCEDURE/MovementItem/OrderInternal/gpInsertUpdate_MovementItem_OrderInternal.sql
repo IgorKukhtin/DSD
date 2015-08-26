@@ -108,6 +108,9 @@ BEGIN
      END IF;
 
 
+     -- сохранили протокол !!!до изменений!!!
+     PERFORM lpInsert_MovementItemProtocol (vbMovementItemId, vbUserId, FALSE);
+
      -- сохранили <Элемент документа>
      PERFORM lpInsertUpdate_MovementItem (MovementItem.Id, MovementItem.DescId, MovementItem.ObjectId, MovementItem.MovementId, ioAmount, NULL)
      FROM MovementItem
@@ -143,7 +146,7 @@ BEGIN
      -- пересчитали Итоговые суммы по накладной
      PERFORM lpInsertUpdate_MovementFloat_TotalSumm (inMovementId);
 
-     -- сохранили протокол
+     -- сохранили протокол !!!после изменений!!!
      PERFORM lpInsert_MovementItemProtocol (vbMovementItemId, vbUserId, FALSE);
 
 END;

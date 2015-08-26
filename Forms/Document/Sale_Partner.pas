@@ -156,6 +156,11 @@ type
     ceComment: TcxTextEdit;
     cbCalcAmountPartner: TcxCheckBox;
     edChangePercentAmount: TcxCurrencyEdit;
+    cxLabel23: TcxLabel;
+    cxLabel24: TcxLabel;
+    edCurrencyValue: TcxCurrencyEdit;
+    edParValue: TcxCurrencyEdit;
+    isCheck_Pricelist: TcxGridDBColumn;
   private
     { Private declarations }
   public

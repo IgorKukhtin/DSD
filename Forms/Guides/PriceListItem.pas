@@ -60,6 +60,19 @@ type
     clGoodsCode: TcxGridDBColumn;
     actPriceListGoods: TdsdOpenForm;
     bbPriceListGoodsItem: TdxBarButton;
+    spInsertUpdate: TdsdStoredProc;
+    actUpdateDataSet: TdsdUpdateDataSet;
+    GoodsGroupNameFull: TcxGridDBColumn;
+    MeasureName: TcxGridDBColumn;
+    RefreshDispatcher: TRefreshDispatcher;
+    actShowAll: TBooleanStoredProcAction;
+    bbShowAll: TdxBarButton;
+    GoodsisErased: TcxGridDBColumn;
+    ProtocolOpenForm: TdsdOpenForm;
+    bbProtocol: TdxBarButton;
+    ObjectId: TcxGridDBColumn;
+    PriceListTaxDialoglOpenForm: TdsdOpenForm;
+    bbPriceListTaxDialog: TdxBarButton;
   private
     { Private declarations }
   public

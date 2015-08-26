@@ -712,7 +712,22 @@ uses
   Report_JuridicalSoldDialog in '..\..\Forms\Report\Report_JuridicalSoldDialog.pas' {Report_JuridicalSoldDialogForm: TParentForm},
   Report_JuridicalCollationDialog in '..\..\Forms\Report\Report_JuridicalCollationDialog.pas' {Report_JuridicalCollationDialogForm: TParentForm},
   Report_GoodsMI_OrderExternalDialog in '..\..\Forms\Report\Report_GoodsMI_OrderExternalDialog.pas' {Report_GoodsMI_OrderExternalDialogForm: TParentForm},
-  Report_GoodsMI_ProductionDialog in '..\..\Forms\Report\Report_GoodsMI_ProductionDialog.pas' {Report_GoodsMI_ProductionDialogForm: TParentForm};
+  Report_GoodsMI_ProductionDialog in '..\..\Forms\Report\Report_GoodsMI_ProductionDialog.pas' {Report_GoodsMI_ProductionDialogForm: TParentForm},
+  Report_GoodsMI_PackageDialog in '..\..\Forms\Report\Report_GoodsMI_PackageDialog.pas' {Report_GoodsMI_PackageDialogForm: TParentForm},
+  Report_FoundersDialog in '..\..\Forms\Report\Report_FoundersDialog.pas' {Report_FoundersDialogForm: TParentForm},
+  PriceListGoodsItemEdit in '..\..\Forms\Guides\PriceListGoodsItemEdit.pas' {PriceListGoodsItemEditForm: TParentForm},
+  Report_ReceiptProductionAnalyzeDialog in '..\..\Forms\Report\Report_ReceiptProductionAnalyzeDialog.pas' {Report_ReceiptProductionAnalyzeDialogForm: TParentForm},
+  Report_ReceiptProductionOutAnalyzeDialog in '..\..\Forms\Report\Report_ReceiptProductionOutAnalyzeDialog.pas' {Report_ReceiptProductionOutAnalyzeDialogForm: TParentForm},
+  Report_ReceiptSaleAnalyzeDialog in '..\..\Forms\Report\Report_ReceiptSaleAnalyzeDialog.pas' {Report_ReceiptSaleAnalyzeDialogForm: TParentForm},
+  PriceListTaxDialog in '..\..\Forms\Guides\PriceListTaxDialog.pas' {PriceListTaxDialogForm: TParentForm},
+  Report_AccountDialog in '..\..\Forms\Report\Report_AccountDialog.pas' {Report_AccountDialogForm: TParentForm},
+  Report_MemberDialog in '..\..\Forms\Report\Report_MemberDialog.pas' {Report_MemberDialogForm: TParentForm},
+  Report_PersonalDialog in '..\..\Forms\Report\Report_PersonalDialog.pas' {Report_PersonalDialogForm: TParentForm},
+  Report_FuelDialog in '..\..\Forms\Report\Report_FuelDialog.pas' {Report_FuelDialogForm: TParentForm},
+  Report_TransportDialog in '..\..\Forms\Report\Report_TransportDialog.pas' {Report_TransportDialogForm: TParentForm},
+  Report_TransportHoursWorkDialog in '..\..\Forms\Report\Report_TransportHoursWorkDialog.pas' {Report_TransportHoursWorkDialogForm: TParentForm},
+  Report_BankAccountDialog in '..\..\Forms\Report\Report_BankAccountDialog.pas' {Report_BankAccountDialogForm: TParentForm},
+  Report_CashDialog in '..\..\Forms\Report\Report_CashDialog.pas' {Report_CashDialogForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}

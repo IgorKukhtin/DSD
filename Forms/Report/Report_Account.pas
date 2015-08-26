@@ -107,6 +107,8 @@ type
     PrintItemsCDS: TClientDataSet;
     actPrint: TdsdPrintAction;
     bbPrint: TdxBarButton;
+    ExecuteDialog: TExecuteDialog;
+    bbExecuteDialog: TdxBarButton;
   private
   public
   end;

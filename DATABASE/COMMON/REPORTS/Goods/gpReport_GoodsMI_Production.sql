@@ -93,8 +93,8 @@ BEGIN
          , tmpOperationGroup.Amount_Weight :: TFloat AS Amount_Weight
          , tmpOperationGroup.Amount_Sh     :: TFloat AS Amount_Sh
 
-         , tmpOperationGroup.Summ_branch :: TFloat AS Summ_branch
          , tmpOperationGroup.Summ_zavod  :: TFloat AS Summ_zavod
+         , tmpOperationGroup.Summ_branch :: TFloat AS Summ_branch
          , tmpOperationGroup.Summ_60000  :: TFloat AS Summ_60000
 
          , CASE WHEN tmpOperationGroup.Amount <> 0 THEN tmpOperationGroup.Summ_zavod / tmpOperationGroup.Amount ELSE 0 END :: TFloat AS Price_zavod
@@ -111,7 +111,7 @@ BEGIN
                 , SUM (tmpContainer.Amount) AS Amount
                 , SUM (tmpContainer.Amount * CASE WHEN _tmpGoods.MeasureId = zc_Measure_Sh() THEN _tmpGoods.Weight ELSE 1 END) AS Amount_Weight
                 , SUM (CASE WHEN _tmpGoods.MeasureId = zc_Measure_Sh() THEN tmpContainer.Amount ELSE 0 END) AS Amount_sh
-                , SUM (tmpContainer.Summ)   AS Summ_zavod
+                , SUM (tmpContainer.Summ) AS Summ_zavod
                 , SUM (CASE WHEN COALESCE (Object_Account_View.AccountDirectionId, 0) <> zc_Enum_AccountDirection_60200() THEN tmpContainer.Summ ELSE 0 END) AS Summ_branch
                 , SUM (CASE WHEN COALESCE (Object_Account_View.AccountDirectionId, 0) =  zc_Enum_AccountDirection_60200() THEN tmpContainer.Summ ELSE 0 END) AS Summ_60000
 

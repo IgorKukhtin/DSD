@@ -74,7 +74,7 @@ type
     N2: TMenuItem;
     N3: TMenuItem;
     mactPrint_Sale: TMultiAction;
-    actSPPrintSaleProcName: TdsdExecStoredProc;
+    actUpdatePrice: TdsdExecStoredProc;
     spGetReportName: TdsdStoredProc;
     RefreshDispatcher: TRefreshDispatcher;
     actRefreshPrice: TdsdDataSetRefresh;
@@ -176,6 +176,14 @@ type
     тт: TdxBarButton;
     PriceCost: TcxGridDBColumn;
     SumCost: TcxGridDBColumn;
+    dsdDataSetRefresh1: TdsdDataSetRefresh;
+    spUpdate_MI_Sale_Price: TdsdStoredProc;
+    bbUpdatePrice: TdxBarButton;
+    cxLabel23: TcxLabel;
+    edCurrencyValue: TcxCurrencyEdit;
+    cxLabel24: TcxLabel;
+    edParValue: TcxCurrencyEdit;
+    Price_Pricelist: TcxGridDBColumn;
   private
     { Private declarations }
   public

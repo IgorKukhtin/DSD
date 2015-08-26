@@ -15,6 +15,7 @@ inherited AncestorReportForm: TAncestorReportForm
         ExplicitWidth = 567
         ExplicitHeight = 241
         inherited cxGridDBTableView: TcxGridDBTableView
+          Styles.Content = nil
           Styles.Inactive = nil
           Styles.Selection = nil
           Styles.Footer = nil
@@ -113,6 +114,7 @@ inherited AncestorReportForm: TAncestorReportForm
     Top = 88
   end
   object RefreshDispatcher: TRefreshDispatcher
+    IdParam.Value = Null
     RefreshAction = actRefresh
     ComponentList = <
       item
