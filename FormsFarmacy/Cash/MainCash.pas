@@ -591,7 +591,7 @@ begin
   end;
   try
     AlternativeCDS.DisableControls;
-    AlternativeCDS.Filter := 'Id = '+CheckCDS.FieldByName('GoodsId').asString;
+    AlternativeCDS.Filter := 'Id = '+intToStr(GoodsId);
     AlternativeCDS.First;
     while Not AlternativeCDS.eof do
     Begin

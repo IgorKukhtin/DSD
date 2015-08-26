@@ -8,8 +8,8 @@ inherited MainCashForm: TMainCashForm
   OnCreate = FormCreate
   OnKeyDown = ParentFormKeyDown
   AddOnFormData.Params = FormParams
-  ExplicitWidth = 788
-  ExplicitHeight = 450
+  ExplicitWidth = 780
+  ExplicitHeight = 442
   PixelsPerInch = 96
   TextHeight = 13
   object BottomPanel: TPanel [0]
@@ -20,7 +20,6 @@ inherited MainCashForm: TMainCashForm
     Align = alBottom
     BevelOuter = bvNone
     TabOrder = 2
-    ExplicitTop = 216
     object CheckGrid: TcxGrid
       Left = 0
       Top = 0
@@ -161,7 +160,6 @@ inherited MainCashForm: TMainCashForm
     Height = 3
     AlignSplitter = salBottom
     Control = BottomPanel
-    ExplicitTop = 213
   end
   object MainPanel: TPanel [2]
     Left = 0
@@ -178,7 +176,6 @@ inherited MainCashForm: TMainCashForm
       Height = 183
       Align = alClient
       TabOrder = 0
-      ExplicitHeight = 180
       object MainGridDBTableView: TcxGridDBTableView
         Navigator.Buttons.CustomButtons = <>
         DataController.DataSource = RemainsDS
@@ -821,6 +818,8 @@ inherited MainCashForm: TMainCashForm
   end
   object CheckCDS: TClientDataSet
     Aggregates = <>
+    Filter = 'Amount > 0'
+    Filtered = True
     Params = <>
     Left = 248
     Top = 296
