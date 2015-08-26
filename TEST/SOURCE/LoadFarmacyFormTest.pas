@@ -334,6 +334,8 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TReport_GoodsPartionMoveForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReportMovementCheckForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReportMovementCheckForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_GoodsPartionHistoryForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_GoodsPartionHistoryForm');
 end;
 
 procedure TLoadFormTest.LoadRetailFormTest;

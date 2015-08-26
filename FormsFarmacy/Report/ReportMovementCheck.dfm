@@ -2,28 +2,27 @@ inherited ReportMovementCheckForm: TReportMovementCheckForm
   Caption = #1054#1090#1095#1077#1090' '#1087#1086' '#1087#1088#1086#1076#1072#1078#1072#1084' '#1085#1072' '#1082#1072#1089#1089#1072#1093
   ClientWidth = 702
   ExplicitWidth = 710
-  ExplicitHeight = 342
+  ExplicitHeight = 335
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Top = 60
+    Top = 58
     Width = 702
-    Height = 248
+    Height = 250
     TabOrder = 3
-    ExplicitTop = 81
-    ExplicitHeight = 227
-    ClientRectBottom = 244
-    ClientRectRight = 698
+    ExplicitTop = 58
+    ExplicitWidth = 702
+    ExplicitHeight = 250
+    ClientRectBottom = 250
+    ClientRectRight = 702
     inherited tsMain: TcxTabSheet
-      ExplicitLeft = 2
-      ExplicitTop = 2
-      ExplicitWidth = 569
-      ExplicitHeight = 221
+      ExplicitWidth = 702
+      ExplicitHeight = 250
       inherited cxGrid: TcxGrid
-        Width = 696
-        Height = 242
-        ExplicitWidth = 569
-        ExplicitHeight = 221
+        Width = 702
+        Height = 250
+        ExplicitWidth = 702
+        ExplicitHeight = 250
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.FooterSummaryItems = <
             item
@@ -46,6 +45,9 @@ inherited ReportMovementCheckForm: TReportMovementCheckForm
               Kind = skCount
               Column = colGoodsName
             end>
+          OptionsData.Deleting = False
+          OptionsData.DeletingConfirmation = False
+          OptionsData.Editing = False
           Styles.Content = nil
           Styles.Inactive = nil
           Styles.Selection = nil
@@ -115,6 +117,7 @@ inherited ReportMovementCheckForm: TReportMovementCheckForm
     Width = 702
     Height = 32
     Visible = False
+    ExplicitWidth = 702
     ExplicitHeight = 32
     inherited deStart: TcxDateEdit
       Left = 29
@@ -195,7 +198,7 @@ inherited ReportMovementCheckForm: TReportMovementCheckForm
     DockControlHeights = (
       0
       0
-      28
+      26
       0)
     inherited Bar: TdxBar
       ItemLinks = <

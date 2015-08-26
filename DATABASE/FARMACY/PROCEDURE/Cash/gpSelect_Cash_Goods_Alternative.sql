@@ -1,6 +1,7 @@
 ﻿DROP FUNCTION IF EXISTS gpSelect_Cash_Goods_Alternative(TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_Cash_Goods_Alternative(Integer,TVarChar);
 
-CREATE OR REPLACE FUNCTION gpSelect_Cash_Goods_Alternative (inSession Tvarchar)
+CREATE OR REPLACE FUNCTION gpSelect_Cash_Goods_Alternative (inMovementId Integer, inSession Tvarchar)
 RETURNS TABLE (
   LinkType         integer,
   MainGoodsID      Integer,
@@ -26,25 +27,60 @@ BEGIN
   vbUnitId := vbUnitKey::Integer;
   vbObjectId := lpGet_DefaultValue('zc_Object_Retail', vbUserId);
   RETURN QUERY
-    WITH Rem
+    WITH
+    CurrentMovement
+    AS
+    (
+        SELECT
+            ObjectId,
+            SUM(Amount)::TFloat as Amount
+        FROM
+            MovementItem
+        WHERE
+            MovementId = inMovementId
+            AND
+            Amount <> 0
+        Group By
+            ObjectId
+    ),
+    RESERVE
+    AS
+    (
+        SELECT
+            MovementItem_Reserve.GoodsId,
+            SUM(MovementItem_Reserve.Amount)::TFloat as Amount
+        FROM
+            gpSelect_MovementItem_CheckDeferred(inSession) as MovementItem_Reserve
+        WHERE
+            MovementItem_Reserve.MovementId <> inMovementId
+        Group By
+            MovementItem_Reserve.GoodsId
+    ),
+    Rem
     AS
       (
-         SELECT
+        SELECT
             Container.ObjectId    AS GoodsId
-           ,SUM(Container.amount) as Remains
-          from Container
+           ,(SUM(Container.amount) 
+             - COALESCE(CurrentMovement.Amount,0) 
+             - COALESCE(Reserve.Amount,0))::TFloat as Remains
+        from Container
             Inner Join containerlinkobject AS CLO_Unit
                                            ON CLO_Unit.containerid = container.id
                                           AND CLO_Unit.descid = zc_ContainerLinkObject_Unit()
                                           AND CLO_Unit.objectid = vbUnitId
             Inner Join object_Goods_View ON Container.ObjectId = object_Goods_View.Id
                                         AND object_Goods_View.ObjectId = vbObjectId                             
-            WHERE
-              container.descid = zc_container_count()
-            Group BY
-              Container.ObjectId
-            Having
-              SUM(Container.Amount)>0
+            LEFT OUTER JOIN RESERVE ON container.objectid = RESERVE.GoodsId
+            LEFT OUTER JOIN CurrentMovement ON container.objectid = CurrentMovement.ObjectId                            
+        WHERE
+            container.descid = zc_container_count()
+        GROUP BY
+            Container.ObjectId
+           ,CurrentMovement.Amount
+           ,Reserve.Amount
+        HAVING
+            SUM(Container.Amount)>0
       )
     SELECT
       RES.LinkType                   as LinkType
@@ -106,11 +142,12 @@ END;
 $body$
 LANGUAGE plpgsql VOLATILE;
 
-ALTER FUNCTION gpSelect_Cash_Goods_Alternative(TVarChar) OWNER TO postgres;
+ALTER FUNCTION gpSelect_Cash_Goods_Alternative(Integer, TVarChar) OWNER TO postgres;
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.     Воробкало А.А
+ 22.08.15                                                                          *inMovementId
  03.07.15                                                                          *
 
 */

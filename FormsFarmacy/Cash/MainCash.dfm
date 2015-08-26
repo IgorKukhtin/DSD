@@ -1,7 +1,7 @@
 inherited MainCashForm: TMainCashForm
   ActiveControl = lcName
   Caption = #1055#1088#1086#1076#1072#1078#1072
-  ClientHeight = 412
+  ClientHeight = 415
   ClientWidth = 772
   PopupMenu = PopupMenu
   OnCloseQuery = ParentFormCloseQuery
@@ -14,12 +14,13 @@ inherited MainCashForm: TMainCashForm
   TextHeight = 13
   object BottomPanel: TPanel [0]
     Left = 0
-    Top = 216
+    Top = 219
     Width = 772
     Height = 196
     Align = alBottom
     BevelOuter = bvNone
     TabOrder = 2
+    ExplicitTop = 216
     object CheckGrid: TcxGrid
       Left = 0
       Top = 0
@@ -155,17 +156,18 @@ inherited MainCashForm: TMainCashForm
   end
   object cxSplitter2: TcxSplitter [1]
     Left = 0
-    Top = 213
+    Top = 216
     Width = 772
     Height = 3
     AlignSplitter = salBottom
     Control = BottomPanel
+    ExplicitTop = 213
   end
   object MainPanel: TPanel [2]
     Left = 0
     Top = 0
     Width = 772
-    Height = 213
+    Height = 216
     Align = alClient
     BevelOuter = bvNone
     TabOrder = 0
@@ -173,9 +175,10 @@ inherited MainCashForm: TMainCashForm
       Left = 0
       Top = 0
       Width = 772
-      Height = 180
+      Height = 183
       Align = alClient
       TabOrder = 0
+      ExplicitHeight = 180
       object MainGridDBTableView: TcxGridDBTableView
         Navigator.Buttons.CustomButtons = <>
         DataController.DataSource = RemainsDS
@@ -244,7 +247,7 @@ inherited MainCashForm: TMainCashForm
     end
     object SearchPanel: TPanel
       Left = 0
-      Top = 180
+      Top = 183
       Width = 772
       Height = 33
       Align = alBottom
@@ -630,6 +633,12 @@ inherited MainCashForm: TMainCashForm
       Caption = 'actSetFocus'
       OnExecute = actSetFocusExecute
     end
+    object actRefreshRemains: TAction
+      Caption = #1054#1073#1085#1086#1074#1080#1090#1100' '#1090#1086#1083#1100#1082#1086' '#1086#1089#1090#1072#1090#1086#1082
+      Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1090#1086#1083#1100#1082#1086' '#1086#1089#1090#1072#1090#1086#1082
+      ShortCut = 115
+      OnExecute = actRefreshRemainsExecute
+    end
   end
   object dsdDBViewAddOnMain: TdsdDBViewAddOn
     ErasedFieldName = 'isErased'
@@ -680,7 +689,7 @@ inherited MainCashForm: TMainCashForm
   end
   object RemainsCDS: TClientDataSet
     Aggregates = <>
-    Filter = 'Remains > 0'
+    Filter = 'Remains > 0 or Reserved <> 0'
     Filtered = True
     FieldDefs = <>
     IndexDefs = <
@@ -733,7 +742,7 @@ inherited MainCashForm: TMainCashForm
       Caption = '-'
     end
     object N10: TMenuItem
-      Action = actRefreshLite
+      Action = actRefreshRemains
     end
   end
   object spNewCheck: TdsdStoredProc
@@ -926,7 +935,14 @@ inherited MainCashForm: TMainCashForm
       item
         DataSet = AlternativeCDS
       end>
-    Params = <>
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+      end>
     PackSize = 1
     AutoWidth = True
     Left = 704

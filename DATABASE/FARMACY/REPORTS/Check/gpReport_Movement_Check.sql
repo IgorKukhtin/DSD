@@ -33,15 +33,15 @@ BEGIN
             Object_Goods.Id                                                 AS GoodsId
            ,Object_Goods.ObjectCode::Integer                                AS GoodsCode
            ,Object_Goods.ValueData                                          AS GoodsName
-           ,SUM(MI_Check.Amount)::TFloat                                    AS Amount
-           ,(SUM(MI_Check.Amount*MIFloat_Income_Price.ValueData)
-             / SUM(MI_Check.Amount))::TFloat                                AS Price
-           ,(SUM(MI_Check.Amount*MIFloat_Price.ValueData)
-             / SUM(MI_Check.Amount))::TFloat                                AS PriceSale
-           ,SUM(MI_Check.Amount*MIFloat_Income_Price.ValueData)::TFloat     AS Summa
-           ,SUM(MI_Check.Amount*MIFloat_Price.ValueData)::TFloat            AS SummaSale
-           ,(SUM(MI_Check.Amount*MIFloat_Price.ValueData)
-             - SUM(MI_Check.Amount*MIFloat_Income_Price.ValueData))::TFloat AS SummaMargin
+           ,SUM(-MIContainer.Amount)::TFloat                                    AS Amount
+           ,(SUM(-MIContainer.Amount*MIFloat_Income_Price.ValueData)
+             / SUM(-MIContainer.Amount))::TFloat                                AS Price
+           ,(SUM(-MIContainer.Amount*MIFloat_Price.ValueData)
+             / SUM(-MIContainer.Amount))::TFloat                                AS PriceSale
+           ,SUM(-MIContainer.Amount*MIFloat_Income_Price.ValueData)::TFloat     AS Summa
+           ,SUM(-MIContainer.Amount*MIFloat_Price.ValueData)::TFloat            AS SummaSale
+           ,(SUM(-MIContainer.Amount*MIFloat_Price.ValueData)
+             - SUM(-MIContainer.Amount*MIFloat_Income_Price.ValueData))::TFloat AS SummaMargin
         FROM
             Movement AS Movement_Check
             INNER JOIN MovementLinkObject AS MovementLinkObject_Unit
@@ -57,7 +57,9 @@ BEGIN
                                              AND MIFloat_Price.DescId = zc_MIFloat_Price()
             LEFT OUTER JOIN MovementItemContainer AS MIContainer
                                                   ON MIContainer.MovementItemId = MI_Check.Id
+                                                 AND MIContainer.DescId = zc_Container_Count() 
             LEFT OUTER JOIN Container ON MIContainer.ContainerId = Container.Id
+                                     AND Container.DescId = zc_Container_Count()
             LEFT OUTER JOIN containerlinkobject AS ContainerLinkObject_MovementItem 
                                                 ON ContainerLinkObject_MovementItem.containerid = Container.Id
                                                AND ContainerLinkObject_MovementItem.descid = zc_ContainerLinkObject_PartionMovementItem()
@@ -67,6 +69,7 @@ BEGIN
                                          ON MI_Income.Id = Object_PartionMovementItem.ObjectCode
             LEFT OUTER JOIN MovementItemFloat AS MIFloat_Income_Price 
                                               ON MIFloat_Income_Price.MovementItemId = MI_Income.Id
+                                             AND MIFloat_Income_Price.DescId = zc_MIFloat_Price() 
             LEFT OUTER JOIN Object AS Object_Goods
                                    ON Object_Goods.Id = MI_Check.ObjectId
         WHERE
@@ -79,6 +82,8 @@ BEGIN
             Object_Goods.Id
            ,Object_Goods.ObjectCode
            ,Object_Goods.ValueData
+        HAVING
+           SUM(MI_Check.Amount) <> 0 
         ORDER BY
             GoodsName;
 END;

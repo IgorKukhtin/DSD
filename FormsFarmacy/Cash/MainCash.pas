@@ -119,6 +119,7 @@ type
     spGet_User_IsAdmin: TdsdStoredProc;
     actSetFocus: TAction;
     N10: TMenuItem;
+    actRefreshRemains: TAction;
     procedure WM_KEYDOWN(var Msg: TWMKEYDOWN);
     procedure FormCreate(Sender: TObject);
     procedure actChoiceGoodsInRemainsGridExecute(Sender: TObject);
@@ -146,6 +147,7 @@ type
     procedure lcNameExit(Sender: TObject);
     procedure actUpdateRemainsExecute(Sender: TObject);
     procedure actSetFocusExecute(Sender: TObject);
+    procedure actRefreshRemainsExecute(Sender: TObject);
   private
     FSoldRegim: boolean;
     fShift: Boolean;
@@ -335,6 +337,12 @@ begin
        NewCheck;// процедура обновляет параметры для введения нового чека
     end;
   end;
+end;
+
+procedure TMainCashForm.actRefreshRemainsExecute(Sender: TObject);
+begin
+  actRefreshLite.Execute;
+  UpdateRemains;
 end;
 
 procedure TMainCashForm.actSetFocusExecute(Sender: TObject);
@@ -531,18 +539,57 @@ end;
 procedure TMainCashForm.UpdateQuantityInQuery(GoodsId: integer; Remains: Real);
 var
   CurrGoodsId: Integer;
+  B: TBookmark;
 begin
   RemainsCDS.AfterScroll := nil;
-  RemainsCDS.DisableControls;
-  CurrGoodsId:=RemainsCDS.FieldByName('Id').AsInteger;
-  RemainsCDS.Filtered := False;
   try
-    if RemainsCDS.Locate('Id', GoodsId, []) AND (RemainsCDS.FieldByName('Remains').AsFloat <> Remains) then
-    begin
-      RemainsCDS.Edit;
-      RemainsCDS.FieldByName('Remains').AsFloat := Remains;
-      RemainsCDS.Post;
+    if GoodsId = RemainsCDS.FieldByName('Id').AsInteger then
+    Begin
+      if (RemainsCDS.FieldByName('Remains').AsFloat <> Remains) then
+      Begin
+        RemainsCDS.Edit;
+        RemainsCDS.FieldByName('Remains').AsFloat := Remains;
+        RemainsCDS.Post;
+      End;
+    End
+    else
+    Begin
+      RemainsCDS.DisableControls;
+      B := RemainsCDS.GetBookmark;
+      try
+        if RemainsCDS.Locate('Id', GoodsId, []) then
+        begin
+          if (RemainsCDS.FieldByName('Remains').AsFloat <> Remains) then
+          Begin
+            RemainsCDS.Edit;
+            RemainsCDS.FieldByName('Remains').AsFloat := Remains;
+            RemainsCDS.Post;
+          End;
+        end
+        else
+        Begin
+          RemainsCDS.Filtered := False;
+          if RemainsCDS.Locate('Id', GoodsId, []) then
+          begin
+            if (RemainsCDS.FieldByName('Remains').AsFloat <> Remains) then
+            Begin
+              RemainsCDS.Edit;
+              RemainsCDS.FieldByName('Remains').AsFloat := Remains;
+              RemainsCDS.Post;
+            End;
+          end;
+          RemainsCDS.Filtered := True;
+        End;
+        if RemainsCDS.BookmarkValid(B) then
+          RemainsCDS.GoToBookmark(B);
+      finally
+        RemainsCDS.EnableControls;
+      end;
     end;
+  finally
+    RemainsCDS.AfterScroll := RemainsCDSAfterScroll;
+  end;
+  try
     AlternativeCDS.DisableControls;
     AlternativeCDS.Filter := 'Id = '+CheckCDS.FieldByName('GoodsId').asString;
     AlternativeCDS.First;
@@ -554,10 +601,6 @@ begin
       AlternativeCDS.Next;
     End;
   finally
-    RemainsCDS.Filtered := true;
-    RemainsCDS.Locate('Id', GoodsId, []);
-    RemainsCDS.EnableControls;
-    RemainsCDS.AfterScroll := RemainsCDSAfterScroll;
     RemainsCDSAfterScroll(RemainsCDS);
     AlternativeCDS.EnableControls;
   end;

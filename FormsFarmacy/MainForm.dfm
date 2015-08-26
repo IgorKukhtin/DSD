@@ -751,6 +751,17 @@ inherited MainForm: TMainForm
       GuiParams = <>
       isShowModal = False
     end
+    object actReport_GoodsPartionHistoryForm: TdsdOpenForm
+      Category = #1054#1090#1095#1077#1090#1099
+      MoveParams = <>
+      Caption = #1044#1074#1080#1078#1077#1085#1080#1077' '#1087#1086' '#1087#1072#1088#1090#1080#1080' '#1090#1086#1074#1072#1088#1072
+      Hint = #1044#1074#1080#1078#1077#1085#1080#1077' '#1087#1086' '#1087#1072#1088#1090#1080#1080' '#1090#1086#1074#1072#1088#1072
+      FormName = 'TReport_GoodsPartionHistoryForm'
+      FormNameParam.Value = 'TReport_GoodsPartionHistoryForm'
+      FormNameParam.DataType = ftString
+      GuiParams = <>
+      isShowModal = False
+    end
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 496
@@ -972,6 +983,9 @@ inherited MainForm: TMainForm
       end
       object N60: TMenuItem
         Action = actReport_GoodsPartionMoveForm
+      end
+      object N61: TMenuItem
+        Action = actReport_GoodsPartionHistoryForm
       end
     end
     inherited miService: TMenuItem
