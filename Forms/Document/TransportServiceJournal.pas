@@ -38,6 +38,8 @@ type
     clInfoMoneyGroupName: TcxGridDBColumn;
     clInfoMoneyDestinationName: TcxGridDBColumn;
     clUnitForwardingName: TcxGridDBColumn;
+    StartRun: TcxGridDBColumn;
+    StartRunPlan: TcxGridDBColumn;
   private
     { Private declarations }
   public

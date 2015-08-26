@@ -1,10 +1,10 @@
 ﻿inherited TransportServiceForm: TTransportServiceForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1053#1072#1095#1080#1089#1083#1077#1085#1080#1103' '#1085#1072#1077#1084#1085#1099#1081' '#1090#1088#1072#1085#1089#1087#1086#1088#1090'>'
   ClientHeight = 338
-  ClientWidth = 594
+  ClientWidth = 597
   AddOnFormData.isSingle = False
-  ExplicitWidth = 600
-  ExplicitHeight = 363
+  ExplicitWidth = 603
+  ExplicitHeight = 366
   PixelsPerInch = 96
   TextHeight = 13
   inherited bbOk: TcxButton
@@ -45,7 +45,7 @@
   end
   object cxLabel2: TcxLabel [6]
     Left = 312
-    Top = 205
+    Top = 253
     Caption = #1060#1086#1088#1084#1072' '#1086#1087#1083#1072#1090#1099
   end
   object cxLabel67: TcxLabel [7]
@@ -55,7 +55,7 @@
   end
   object cxLabel5: TcxLabel [8]
     Left = 312
-    Top = 156
+    Top = 205
     Caption = #1059#1055' '#1089#1090#1072#1090#1100#1103' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
   end
   object ceContractConditionKind: TcxButtonEdit [9]
@@ -71,7 +71,7 @@
   end
   object cePaidKind: TcxButtonEdit [10]
     Left = 312
-    Top = 228
+    Top = 276
     Properties.Buttons = <
       item
         Default = True
@@ -96,7 +96,7 @@
   end
   object ceInfoMoney: TcxButtonEdit [12]
     Left = 312
-    Top = 179
+    Top = 228
     Properties.Buttons = <
       item
         Default = True
@@ -110,6 +110,7 @@
   object ceOperDate: TcxDateEdit [13]
     Left = 152
     Top = 34
+    EditValue = 42242d
     Properties.SaveTime = False
     Properties.ShowTime = False
     TabOrder = 3
@@ -151,7 +152,7 @@
   end
   object ceContract: TcxButtonEdit [18]
     Left = 456
-    Top = 228
+    Top = 276
     Properties.Buttons = <
       item
         Default = True
@@ -164,7 +165,7 @@
   end
   object cxLabel8: TcxLabel [19]
     Left = 456
-    Top = 205
+    Top = 253
     Caption = #1044#1086#1075#1086#1074#1086#1088
   end
   object cxLabel10: TcxLabel [20]
@@ -176,16 +177,16 @@
     Left = 8
     Top = 276
     TabOrder = 21
-    Width = 577
+    Width = 273
   end
   object cxLabel4: TcxLabel [22]
     Left = 312
-    Top = 16
+    Top = 61
     Caption = #1055#1088#1086#1073#1077#1075' '#1092#1072#1082#1090', '#1082#1084
   end
   object ceDistance: TcxCurrencyEdit [23]
     Left = 312
-    Top = 33
+    Top = 79
     Properties.DecimalPlaces = 2
     Properties.DisplayFormat = ',0.00'
     TabOrder = 23
@@ -193,12 +194,12 @@
   end
   object cxLabel11: TcxLabel [24]
     Left = 456
-    Top = 17
+    Top = 61
     Caption = #1062#1077#1085#1072' ('#1090#1086#1087#1083#1080#1074#1072')'
   end
   object cePrice: TcxCurrencyEdit [25]
     Left = 456
-    Top = 34
+    Top = 79
     Properties.DecimalPlaces = 2
     Properties.DisplayFormat = ',0.00'
     TabOrder = 25
@@ -206,12 +207,12 @@
   end
   object cxLabel12: TcxLabel [26]
     Left = 312
-    Top = 61
+    Top = 106
     Caption = #1050#1086#1083'-'#1074#1086' '#1090#1086#1095#1077#1082
   end
   object ceCountPoint: TcxCurrencyEdit [27]
     Left = 312
-    Top = 78
+    Top = 126
     Properties.DecimalPlaces = 2
     Properties.DisplayFormat = ',0.00'
     TabOrder = 27
@@ -219,12 +220,12 @@
   end
   object cxLabel13: TcxLabel [28]
     Left = 456
-    Top = 61
+    Top = 106
     Caption = #1042#1088#1077#1084#1103' '#1074' '#1087#1091#1090#1080', '#1095#1072#1089#1086#1074
   end
   object ceTrevelTime: TcxCurrencyEdit [29]
     Left = 456
-    Top = 78
+    Top = 126
     Properties.DecimalPlaces = 2
     Properties.DisplayFormat = ',0.00'
     TabOrder = 29
@@ -232,12 +233,12 @@
   end
   object cxLabel7: TcxLabel [30]
     Left = 312
-    Top = 106
+    Top = 156
     Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077' ('#1052#1077#1089#1090#1086' '#1086#1090#1087#1088#1072#1074#1082#1080')'
   end
   object ceUnit: TcxButtonEdit [31]
     Left = 312
-    Top = 129
+    Top = 178
     Properties.Buttons = <
       item
         Default = True
@@ -247,6 +248,40 @@
     Properties.ReadOnly = True
     TabOrder = 31
     Width = 273
+  end
+  object cxLabel14: TcxLabel [32]
+    Left = 312
+    Top = 11
+    Caption = #1044#1072#1090#1072'/'#1042#1088'.'#1074#1099#1077#1079#1076#1072' '#1087#1083#1072#1085' '
+  end
+  object edStartRunPlan: TcxDateEdit [33]
+    Left = 312
+    Top = 34
+    EditValue = 42242d
+    Properties.DateButtons = [btnClear, btnToday]
+    Properties.DisplayFormat = 'dd.mm.yyyy hh:mm'
+    Properties.EditFormat = 'dd.mm.yyyy hh:mm'
+    Properties.InputKind = ikMask
+    Properties.Kind = ckDateTime
+    TabOrder = 33
+    Width = 129
+  end
+  object cxLabel15: TcxLabel [34]
+    Left = 456
+    Top = 11
+    Caption = #1044#1072#1090#1072'/'#1042#1088'.'#1074#1099#1077#1079#1076#1072' '#1092#1072#1082#1090
+  end
+  object edStartRun: TcxDateEdit [35]
+    Left = 456
+    Top = 34
+    EditValue = 42242d
+    Properties.DisplayFormat = 'dd.mm.yyyy hh:mm'
+    Properties.EditFormat = 'dd.mm.yyyy hh:mm'
+    Properties.InputKind = ikMask
+    Properties.Kind = ckDateTime
+    Properties.ReadOnly = True
+    TabOrder = 35
+    Width = 129
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 59
@@ -308,6 +343,13 @@
         Name = 'inoperdate'
         Value = 0d
         Component = ceOperDate
+        DataType = ftDateTime
+        ParamType = ptInput
+      end
+      item
+        Name = 'inStartRunPlan'
+        Value = Null
+        Component = edStartRunPlan
         DataType = ftDateTime
         ParamType = ptInput
       end
@@ -594,6 +636,18 @@
         Component = ContractConditionKindGuides
         ComponentItem = 'TextValue'
         DataType = ftString
+      end
+      item
+        Name = 'StartRunPlan'
+        Value = Null
+        Component = edStartRunPlan
+        DataType = ftDateTime
+      end
+      item
+        Name = 'StartRun'
+        Value = Null
+        Component = edStartRun
+        DataType = ftDateTime
       end>
     Left = 280
     Top = 108
@@ -650,7 +704,7 @@
         DataType = ftString
       end>
     Left = 402
-    Top = 217
+    Top = 265
   end
   object RouteGuides: TdsdGuides
     KeyField = 'Id'
@@ -698,7 +752,7 @@
         DataType = ftString
       end>
     Left = 480
-    Top = 163
+    Top = 211
   end
   object CarGuides: TdsdGuides
     KeyField = 'Id'
@@ -879,7 +933,7 @@
         DataType = ftString
       end>
     Left = 520
-    Top = 209
+    Top = 257
   end
   object UnitGuides: TdsdGuides
     KeyField = 'Id'
@@ -905,6 +959,6 @@
         ParamType = ptInput
       end>
     Left = 368
-    Top = 112
+    Top = 160
   end
 end

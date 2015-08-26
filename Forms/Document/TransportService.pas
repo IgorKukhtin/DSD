@@ -51,6 +51,10 @@ type
     cxLabel7: TcxLabel;
     ceUnit: TcxButtonEdit;
     UnitGuides: TdsdGuides;
+    cxLabel14: TcxLabel;
+    edStartRunPlan: TcxDateEdit;
+    cxLabel15: TcxLabel;
+    edStartRun: TcxDateEdit;
   private
     { Private declarations }
   public
