@@ -62,6 +62,9 @@ type
     cxLabel8: TcxLabel;
     cePersonalServiceList: TcxButtonEdit;
     PersonalServiceListGuides: TdsdGuides;
+    cxLabel9: TcxLabel;
+    cePersonalServiceListOfficial: TcxButtonEdit;
+    PersonalServiceListOfficialGuides: TdsdGuides;
   private
     { Private declarations }
   public

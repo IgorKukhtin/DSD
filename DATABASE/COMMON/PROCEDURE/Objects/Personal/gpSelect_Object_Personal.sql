@@ -15,6 +15,7 @@ RETURNS TABLE (Id Integer, MemberCode Integer, MemberName TVarChar, DriverCertif
                UnitId Integer, UnitCode Integer, UnitName TVarChar,
                PersonalGroupId Integer, PersonalGroupCode Integer, PersonalGroupName TVarChar,
                PersonalServiceListId Integer, PersonalServiceListName TVarChar,
+               PersonalServiceListOfficialId Integer, PersonalServiceListOfficialName TVarChar,
                InfoMoneyId Integer, InfoMoneyName TVarChar, InfoMoneyName_all TVarChar,
                DateIn TDateTime, DateOut TDateTime, isDateOut Boolean, isMain Boolean, isOfficial Boolean, isErased Boolean) AS
 $BODY$
@@ -74,6 +75,9 @@ BEGIN
          , Object_PersonalServiceList.Id           AS PersonalServiceListId 
          , Object_PersonalServiceList.ValueData    AS PersonalServiceListName 
 
+         , Object_PersonalServiceListOfficial.Id           AS PersonalServiceListOfficialId 
+         , Object_PersonalServiceListOfficial.ValueData    AS PersonalServiceListOfficialName 
+
          , vbInfoMoneyId       AS InfoMoneyId
          , vbInfoMoneyName     AS InfoMoneyName
          , vbInfoMoneyName_all AS InfoMoneyName_all
@@ -97,6 +101,11 @@ BEGIN
                                ON ObjectLink_Personal_PersonalServiceList.ObjectId = Object_Personal_View.PersonalId
                               AND ObjectLink_Personal_PersonalServiceList.DescId = zc_ObjectLink_Personal_PersonalServiceList()
           LEFT JOIN Object AS Object_PersonalServiceList ON Object_PersonalServiceList.Id = ObjectLink_Personal_PersonalServiceList.ChildObjectId
+
+          LEFT JOIN ObjectLink AS ObjectLink_Personal_PersonalServiceListOfficial
+                               ON ObjectLink_Personal_PersonalServiceListOfficial.ObjectId = Object_Personal_View.PersonalId
+                              AND ObjectLink_Personal_PersonalServiceListOfficial.DescId = zc_ObjectLink_Personal_PersonalServiceListOfficial()
+          LEFT JOIN Object AS Object_PersonalServiceListOfficial ON Object_PersonalServiceListOfficial.Id = ObjectLink_Personal_PersonalServiceListOfficial.ChildObjectId
 
      WHERE (tmpRoleAccessKey.AccessKeyId IS NOT NULL
          OR vbAccessKeyAll = TRUE
@@ -134,6 +143,7 @@ ALTER FUNCTION gpSelect_Object_Personal (TDateTime, TDateTime, Boolean, Boolean,
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 26.08.15         * add ObjectLink_Personal_PersonalServiceListOfficial
  07.05.15         * add ObjectLink_Personal_PersonalServiceList
  24.09.13                                        * add vbIsAllUnit
  12.09.13                                        * add inIsShowAll

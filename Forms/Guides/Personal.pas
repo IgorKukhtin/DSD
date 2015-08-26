@@ -80,6 +80,8 @@ type
     ProtocolOpenForm: TdsdOpenForm;
     bb: TdxBarButton;
     clPersonalServiceListName: TcxGridDBColumn;
+    PersonalServiceListOfficialName: TcxGridDBColumn;
+    PersonalServiceListOfficialChoice: TOpenChoiceForm;
   private
     { Private declarations }
   public

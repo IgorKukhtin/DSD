@@ -2,8 +2,8 @@
   Left = 0
   Top = 0
   Caption = #1044#1086#1073#1072#1074#1080#1090#1100'/'#1048#1079#1084#1077#1085#1080#1090#1100' <C'#1086#1090#1088#1091#1076#1085#1080#1082'>'
-  ClientHeight = 360
-  ClientWidth = 335
+  ClientHeight = 402
+  ClientWidth = 338
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -17,8 +17,8 @@
   PixelsPerInch = 96
   TextHeight = 13
   object cxButton1: TcxButton
-    Left = 72
-    Top = 330
+    Left = 85
+    Top = 373
     Width = 75
     Height = 25
     Action = dsdInsertUpdateGuides
@@ -27,8 +27,8 @@
     TabOrder = 6
   end
   object cxButton2: TcxButton
-    Left = 176
-    Top = 330
+    Left = 189
+    Top = 373
     Width = 75
     Height = 25
     Action = dsdFormClose1
@@ -195,6 +195,23 @@
     TabOrder = 21
     Width = 305
   end
+  object cxLabel9: TcxLabel
+    Left = 16
+    Top = 322
+    Caption = #1042#1077#1076#1086#1084#1086#1089#1090#1100' '#1085#1072#1095#1080#1089#1083#1077#1085#1080#1103'('#1041#1053')'
+  end
+  object cePersonalServiceListOfficial: TcxButtonEdit
+    Left = 16
+    Top = 339
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    Properties.ReadOnly = True
+    TabOrder = 23
+    Width = 305
+  end
   object ActionList: TActionList
     Top = 296
     object dsdDataSetRefresh: TdsdDataSetRefresh
@@ -279,6 +296,13 @@
         Name = 'inPersonalServiceListId'
         Value = Null
         Component = PersonalServiceListGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inPersonalServiceListOfficialId'
+        Value = Null
+        Component = PersonalServiceListOfficialGuides
         ComponentItem = 'Key'
         ParamType = ptInput
       end
@@ -452,6 +476,19 @@
         Name = 'PersonalServiceListName'
         Value = Null
         Component = PersonalServiceListGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+      end
+      item
+        Name = 'PersonalServiceListOfficialId'
+        Value = Null
+        Component = PersonalServiceListOfficialGuides
+        ComponentItem = 'Key'
+      end
+      item
+        Name = 'PersonalServiceListOfficialName'
+        Value = Null
+        Component = PersonalServiceListOfficialGuides
         ComponentItem = 'TextValue'
         DataType = ftString
       end>
@@ -645,5 +682,32 @@
       end>
     Left = 239
     Top = 289
+  end
+  object PersonalServiceListOfficialGuides: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = cePersonalServiceListOfficial
+    FormNameParam.Value = 'TPersonalServiceListForm'
+    FormNameParam.DataType = ftString
+    FormName = 'TPersonalServiceListForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = PersonalServiceListOfficialGuides
+        ComponentItem = 'Key'
+        DataType = ftString
+        ParamType = ptInput
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = PersonalServiceListOfficialGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+      end>
+    Left = 167
+    Top = 329
   end
 end

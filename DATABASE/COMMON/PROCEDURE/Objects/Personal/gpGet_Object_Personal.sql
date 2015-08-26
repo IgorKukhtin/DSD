@@ -13,6 +13,7 @@ RETURNS TABLE (MemberId Integer, MemberCode Integer, MemberName TVarChar,
                UnitId Integer, UnitName TVarChar,
                PersonalGroupId Integer, PersonalGroupName TVarChar,
                PersonalServiceListId Integer, PersonalServiceListName TVarChar,
+               PersonalServiceListOfficialId Integer, PersonalServiceListOfficialName TVarChar,
                DateIn TDateTime, DateOut TDateTime, isDateOut Boolean, isMain Boolean) AS
 $BODY$
 BEGIN
@@ -42,6 +43,9 @@ BEGIN
          , Object_PersonalServiceList.Id           AS PersonalServiceListId 
          , Object_PersonalServiceList.ValueData    AS PersonalServiceListName 
 
+         , COALESCE (Object_PersonalServiceListOfficial.Id, CAST (0 as Integer))           AS PersonalServiceListOfficialId 
+         , COALESCE (Object_PersonalServiceListOfficial.ValueData, CAST ('' as TVarChar))  AS PersonalServiceListOfficialName 
+
          , Object_Personal_View.DateIn
          -- , Object_Personal_View.DateOut
          , CASE WHEN Object_Personal_View.DateOut_user IS NULL THEN CURRENT_DATE ELSE Object_Personal_View.DateOut_user END :: TDateTime AS DateOut
@@ -54,6 +58,11 @@ BEGIN
                                ON ObjectLink_Personal_PersonalServiceList.ObjectId = Object_Personal_View.PersonalId
                               AND ObjectLink_Personal_PersonalServiceList.DescId = zc_ObjectLink_Personal_PersonalServiceList()
           LEFT JOIN Object AS Object_PersonalServiceList ON Object_PersonalServiceList.Id = ObjectLink_Personal_PersonalServiceList.ChildObjectId
+
+          LEFT JOIN ObjectLink AS ObjectLink_Personal_PersonalServiceListOfficial
+                               ON ObjectLink_Personal_PersonalServiceListOfficial.ObjectId = Object_Personal_View.PersonalId
+                              AND ObjectLink_Personal_PersonalServiceListOfficial.DescId = zc_ObjectLink_Personal_PersonalServiceListOfficial()
+          LEFT JOIN Object AS Object_PersonalServiceListOfficial ON Object_PersonalServiceListOfficial.Id = ObjectLink_Personal_PersonalServiceListOfficial.ChildObjectId
 
     WHERE Object_Personal_View.PersonalId = inMaskId;
    END IF;
@@ -80,6 +89,9 @@ BEGIN
 
            , CAST (0 as Integer)   AS PersonalServiceListId 
            , CAST ('' as TVarChar) AS PersonalServiceListName
+
+           , CAST (0 as Integer)   AS PersonalServiceListOfficialId 
+           , CAST ('' as TVarChar) AS PersonalServiceListOfficialName
 
            , CURRENT_DATE :: TDateTime AS DateIn
            , CURRENT_DATE :: TDateTime AS DateOut
@@ -110,6 +122,9 @@ BEGIN
          , Object_PersonalServiceList.Id           AS PersonalServiceListId 
          , Object_PersonalServiceList.ValueData    AS PersonalServiceListName 
 
+         , COALESCE (Object_PersonalServiceListOfficial.Id, CAST (0 as Integer))           AS PersonalServiceListOfficialId 
+         , COALESCE (Object_PersonalServiceListOfficial.ValueData, CAST ('' as TVarChar))  AS PersonalServiceListOfficialName 
+
          , Object_Personal_View.DateIn
          -- , Object_Personal_View.DateOut
          , CASE WHEN Object_Personal_View.DateOut_user IS NULL THEN CURRENT_DATE ELSE Object_Personal_View.DateOut_user END :: TDateTime AS DateOut
@@ -122,6 +137,11 @@ BEGIN
                                ON ObjectLink_Personal_PersonalServiceList.ObjectId = Object_Personal_View.PersonalId
                               AND ObjectLink_Personal_PersonalServiceList.DescId = zc_ObjectLink_Personal_PersonalServiceList()
           LEFT JOIN Object AS Object_PersonalServiceList ON Object_PersonalServiceList.Id = ObjectLink_Personal_PersonalServiceList.ChildObjectId
+
+          LEFT JOIN ObjectLink AS ObjectLink_Personal_PersonalServiceListOfficial
+                               ON ObjectLink_Personal_PersonalServiceListOfficial.ObjectId = Object_Personal_View.PersonalId
+                              AND ObjectLink_Personal_PersonalServiceListOfficial.DescId = zc_ObjectLink_Personal_PersonalServiceListOfficial()
+          LEFT JOIN Object AS Object_PersonalServiceListOfficial ON Object_PersonalServiceListOfficial.Id = ObjectLink_Personal_PersonalServiceListOfficial.ChildObjectId
 
     WHERE Object_Personal_View.PersonalId = inId;
 
