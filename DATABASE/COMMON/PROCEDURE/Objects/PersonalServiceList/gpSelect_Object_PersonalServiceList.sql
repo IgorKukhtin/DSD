@@ -10,6 +10,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , PaidKindId Integer, PaidKindName TVarChar 
              , BranchId Integer, BranchName TVarChar 
              , BankId Integer, BankName TVarChar 
+             , MemberId Integer, MemberName TVarChar
              , isErased Boolean
               )
 AS
@@ -41,6 +42,9 @@ BEGIN
            , Object_Bank.Id                       AS BankId
            , Object_Bank.ValueData                AS BankName
 
+           , Object_Member.Id                     AS MemberId
+           , Object_Member.ValueData              AS MemberName
+
            , Object_PersonalServiceList.isErased   AS isErased
 
        FROM Object AS Object_PersonalServiceList
@@ -64,6 +68,11 @@ BEGIN
                                AND ObjectLink_PersonalServiceList_Bank.DescId = zc_ObjectLink_PersonalServiceList_Bank()
            LEFT JOIN Object AS Object_Bank ON Object_Bank.Id = ObjectLink_PersonalServiceList_Bank.ChildObjectId
           
+           LEFT JOIN ObjectLink AS ObjectLink_PersonalServiceList_Member
+                                ON ObjectLink_PersonalServiceList_Member.ObjectId = Object_PersonalServiceList.Id 
+                               AND ObjectLink_PersonalServiceList_Member.DescId = zc_ObjectLink_PersonalServiceList_Member()
+           LEFT JOIN Object AS Object_Member ON Object_Member.Id = ObjectLink_PersonalServiceList_Member.ChildObjectId
+
    WHERE Object_PersonalServiceList.DescId = zc_Object_PersonalServiceList()
       AND (ObjectLink_PersonalServiceList_Branch.ChildObjectId = vbBranchId_Constraint
            OR vbBranchId_Constraint IS NULL)
@@ -77,6 +86,7 @@ $BODY$
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                 ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 26.08.15          * add Member
  15.04.15          * add PaidKind, Branch, Bank
  30.09.14          * add Juridical
  12.09.14          *
