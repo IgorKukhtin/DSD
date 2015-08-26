@@ -32,13 +32,22 @@ BEGIN
    CREATE TEMP TABLE tmpAll (MovementItemId Integer, GoodsId Integer, GoodsKindId Integer, AmountForecastOrder TFloat, AmountForecast TFloat) ON COMMIT DROP;
     
    INSERT INTO tmpAll (MovementItemId, GoodsId, GoodsKindId, AmountForecastOrder, AmountForecast)
+                                 WITH tmpGoods AS (SELECT ObjectLink_Goods_InfoMoney.ObjectId AS GoodsId
+                                                        , TRUE AS isGoodsKind
+                                                   FROM ObjectLink AS ObjectLink_Goods_InfoMoney
+                                                   WHERE ObjectLink_Goods_InfoMoney.DescId = zc_ObjectLink_Goods_InfoMoney()
+                                                     AND ObjectLink_Goods_InfoMoney.ChildObjectId IN (zc_Enum_InfoMoney_20901() -- Ирна
+                                                                                                    , zc_Enum_InfoMoney_30101() -- Готовая продукция
+                                                                                                    , zc_Enum_InfoMoney_30201() -- Мясное сырье
+                                                                                                     )
+                                                  )
                                  SELECT tmp.MovementItemId
                                        , COALESCE (tmp.GoodsId,tmpAll.GoodsId)          AS GoodsId
                                        , COALESCE (tmp.GoodsKindId, tmpAll.GoodsKindId) AS GoodsKindId
                                        , COALESCE (tmpAll.AmountOrder, 0)               AS AmountForecastOrder
                                        , COALESCE (tmpAll.AmountSale, 0)                AS AmountForecast
                                  FROM (SELECT tmpAll.GoodsId
-                                            , tmpAll.GoodsKindId
+                                            , CASE WHEN tmpGoods.isGoodsKind = TRUE THEN tmpAll.GoodsKindId ELSE 0 END AS GoodsKindId
                                             , SUM (tmpAll.AmountOrder) AS AmountOrder
                                             , SUM (tmpAll.AmountSale)  AS AmountSale
                                        FROM
@@ -95,8 +104,9 @@ BEGIN
                                               , MILinkObject_GoodsKind.ObjectId
                                        HAVING SUM (COALESCE (MIFloat_AmountPartner.ValueData, 0)) <> 0   
                                        ) AS tmpAll
+                                       LEFT JOIN tmpGoods ON tmpGoods.GoodsId = tmpAll.GoodsId
                                        GROUP BY tmpAll.GoodsId
-                                              , tmpAll.GoodsKindId
+                                              , CASE WHEN tmpGoods.isGoodsKind = TRUE THEN tmpAll.GoodsKindId ELSE 0 END
                                        ) AS tmpAll
                                  FULL JOIN
                                 (SELECT MovementItem.Id                               AS MovementItemId 

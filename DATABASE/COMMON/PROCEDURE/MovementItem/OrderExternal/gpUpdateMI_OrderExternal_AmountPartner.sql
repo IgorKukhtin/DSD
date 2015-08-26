@@ -25,6 +25,15 @@ BEGIN
    CREATE TEMP TABLE tmpAll (MovementItemId Integer, GoodsId Integer, GoodsKindId Integer, AmountPartner TFloat) ON COMMIT DROP;
    --
    INSERT INTO tmpAll (MovementItemId, GoodsId, GoodsKindId, AmountPartner)
+                                 WITH tmpGoods AS (SELECT ObjectLink_Goods_InfoMoney.ObjectId AS GoodsId
+                                                        , TRUE AS isGoodsKind
+                                                   FROM ObjectLink AS ObjectLink_Goods_InfoMoney
+                                                   WHERE ObjectLink_Goods_InfoMoney.DescId = zc_ObjectLink_Goods_InfoMoney()
+                                                     AND ObjectLink_Goods_InfoMoney.ChildObjectId IN (zc_Enum_InfoMoney_20901() -- Ирна
+                                                                                                    , zc_Enum_InfoMoney_30101() -- Готовая продукция
+                                                                                                    , zc_Enum_InfoMoney_30201() -- Мясное сырье
+                                                                                                     )
+                                                  )
                                  SELECT tmp.MovementItemId
                                        , COALESCE (tmp.GoodsId,tmpOrder.GoodsId)          AS GoodsId
                                        , COALESCE (tmp.GoodsKindId, tmpOrder.GoodsKindId) AS GoodsKindId
@@ -40,9 +49,11 @@ BEGIN
                                             INNER JOIN MovementItem ON MovementItem.MovementId = Movement.Id
                                                                    AND MovementItem.DescId     = zc_MI_Master()
                                                                    AND MovementItem.isErased   = FALSE
+                                            LEFT JOIN tmpGoods ON tmpGoods.GoodsId = MovementItem.ObjectId
                                             LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
                                                                              ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
                                                                             AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
+                                                                            AND tmpGoods.isGoodsKind = TRUE
                                             LEFT JOIN MovementItemFloat AS MIFloat_AmountSecond
                                                                         ON MIFloat_AmountSecond.MovementItemId = MovementItem.Id
                                                                        AND MIFloat_AmountSecond.DescId = zc_MIFloat_AmountSecond()

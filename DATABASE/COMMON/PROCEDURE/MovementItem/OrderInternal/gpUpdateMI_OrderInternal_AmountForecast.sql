@@ -35,6 +35,7 @@ BEGIN
                                     , tmpGoods AS (SELECT ObjectLink_Goods_InfoMoney.ObjectId AS GoodsId
                                                         , CASE WHEN Object_InfoMoney_View.InfoMoneyId IN (zc_Enum_InfoMoney_20901() -- Ирна
                                                                                                         , zc_Enum_InfoMoney_30101() -- Готовая продукция
+                                                                                                        , zc_Enum_InfoMoney_30201() -- Мясное сырье
                                                                                                          )
                                                                     THEN TRUE
                                                                ELSE FALSE

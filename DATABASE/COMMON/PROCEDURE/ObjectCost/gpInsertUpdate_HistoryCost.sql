@@ -18,6 +18,9 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_HistoryCost(
 --  RETURNS TABLE (MasterContainerId Integer, ContainerId Integer, OperCount TFloat)
 AS
 $BODY$
+   DECLARE vbStartDate_zavod TDateTime;
+   DECLARE vbEndDate_zavod TDateTime;
+
    DECLARE vbItearation Integer;
    DECLARE vbCountDiff Integer;
    DECLARE vb11 TFloat;
@@ -37,9 +40,14 @@ $BODY$
    DECLARE vb81 TFloat;
    DECLARE vb82 TFloat;
 BEGIN
-
      -- проверка прав пользователя на вызов процедуры
      -- PERFORM lpCheckRight (inSession, zc_Enum_InsertUpdate_HistoryCost());
+
+
+     -- !!!если не филиал, тогда начальная дата всегда 1-ое число месяца!!!
+     vbStartDate_zavod:= DATE_TRUNC ('MONTH', inStartDate);
+     -- !!!если не филиал, тогда конечная дата всегда последнее число месяца!!!
+     vbEndDate_zavod:= DATE_TRUNC ('MONTH', inStartDate) + INTERVAL '1 MONTH' - INTERVAL '1 DAY';
 
 
      -- таблица - Список сущностей которые являются элементами с/с.
@@ -65,11 +73,49 @@ BEGIN
           AND ObjectLink_Unit_Branch.ChildObjectId = inBranchId
           AND ObjectLink_Unit_Branch.DescId = zc_ObjectLink_Unit_Branch()
        ;     
+     -- таблица - филиал Одесса + филиал Запорожье
+     CREATE TEMP TABLE _tmpContainer_branch (ContainerId Integer) ON COMMIT DROP;
+     INSERT INTO _tmpContainer_branch (ContainerId)
+        SELECT ContainerLinkObject.ContainerId
+        FROM _tmpUnit_branch
+             INNER JOIN ContainerLinkObject ON ContainerLinkObject.ObjectId = _tmpUnit_branch.UnitId
+                                           AND ContainerLinkObject.DescId = zc_ContainerLinkObject_Unit()
+       ;
 
 
      -- заполняем таблицу Количество и Сумма - ост, приход, расход
-        WITH tmpContainerList AS (SELECT Container_Summ.Id, Container_Summ.ParentId, Container_Summ.ObjectId
-                                  FROM Container AS Container_Summ
+       WITH tmpContainerS_zavod AS (SELECT Container_Summ.*
+                                    FROM Container AS Container_Summ
+                                         LEFT JOIN _tmpContainer_branch ON _tmpContainer_branch.ContainerId = Container_Summ.Id
+                                    WHERE _tmpContainer_branch.ContainerId IS NULL
+                                      AND Container_Summ.DescId = zc_Container_Summ()
+                                      AND Container_Summ.ParentId > 0
+                                      AND Container_Summ.ObjectId <> zc_Enum_Account_20901()  -- Запасы + Оборотная тара
+                                      AND Container_Summ.ObjectId <> zc_Enum_Account_110101() -- Транзит + товар в пути
+                                   )
+         , tmpContainerS_branch AS (SELECT Container_Summ.*
+                                    FROM Container AS Container_Summ
+                                         INNER JOIN _tmpContainer_branch ON _tmpContainer_branch.ContainerId = Container_Summ.Id
+                                    WHERE Container_Summ.DescId = zc_Container_Summ()
+                                      AND Container_Summ.ParentId > 0
+                                      AND Container_Summ.ObjectId <> zc_Enum_Account_20901()  -- Запасы + Оборотная тара
+                                      AND Container_Summ.ObjectId <> zc_Enum_Account_110101() -- Транзит + товар в пути
+                                   )
+           , tmpContainerList AS (SELECT Container_Summ.Id, Container_Summ.ParentId, Container_Summ.ObjectId
+                                  FROM tmpContainerS_zavod AS Container_Summ
+                                       LEFT JOIN MovementItemContainer AS MIContainer
+                                                                       ON MIContainer.ContainerId = Container_Summ.Id
+                                                                      AND MIContainer.OperDate >= vbStartDate_zavod
+                                  WHERE Container_Summ.DescId = zc_Container_Summ()
+                                    AND Container_Summ.ParentId > 0
+                                    AND Container_Summ.ObjectId <> zc_Enum_Account_20901()  -- Запасы + Оборотная тара
+                                    AND Container_Summ.ObjectId <> zc_Enum_Account_110101() -- Транзит + товар в пути
+                                  GROUP BY Container_Summ.Id, Container_Summ.ParentId, Container_Summ.Amount, Container_Summ.ObjectId
+                                  HAVING Container_Summ.Amount - COALESCE (SUM (MIContainer.Amount), 0) <> 0 -- AS StartSumm
+                                      OR MAX (CASE WHEN MIContainer.OperDate BETWEEN vbStartDate_zavod AND vbEndDate_zavod THEN Container_Summ.Id ELSE 0 END) > 0
+                                 UNION ALL
+                                  SELECT Container_Summ.Id, Container_Summ.ParentId, Container_Summ.ObjectId
+                                  FROM tmpContainerS_branch AS Container_Summ
                                        LEFT JOIN MovementItemContainer AS MIContainer
                                                                        ON MIContainer.ContainerId = Container_Summ.Id
                                                                       AND MIContainer.OperDate >= inStartDate
@@ -81,9 +127,10 @@ BEGIN
                                   HAVING Container_Summ.Amount - COALESCE (SUM (MIContainer.Amount), 0) <> 0 -- AS StartSumm
                                       OR MAX (CASE WHEN MIContainer.OperDate BETWEEN inStartDate AND inEndDate THEN Container_Summ.Id ELSE 0 END) > 0
                                  )
-           , tmpContainer AS (SELECT Container.*, COALESCE (ContainerLinkObject_Unit.ObjectId, 0) AS UnitId
+     , tmpContainer_zavod AS (SELECT Container.*, COALESCE (ContainerLinkObject_Unit.ObjectId, 0) AS UnitId
                                    , CASE WHEN ObjectLink_Unit_HistoryCost.ChildObjectId > 0 THEN TRUE ELSE FALSE END AS isHistoryCost_ReturnIn
                               FROM Container
+                                   LEFT JOIN _tmpContainer_branch ON _tmpContainer_branch.ContainerId = Container.Id
                                    LEFT JOIN ContainerLinkObject AS ContainerLinkObject_Account
                                                                  ON ContainerLinkObject_Account.ContainerId = Container.Id
                                                                 AND ContainerLinkObject_Account.DescId = zc_ContainerLinkObject_Account()
@@ -93,8 +140,27 @@ BEGIN
                                    LEFT JOIN ObjectLink AS ObjectLink_Unit_HistoryCost
                                                         ON ObjectLink_Unit_HistoryCost.ObjectId = ContainerLinkObject_Unit.ObjectId
                                                        AND ObjectLink_Unit_HistoryCost.DescId = zc_ObjectLink_Unit_HistoryCost()
-                              WHERE (Container.DescId = zc_Container_Count() AND ContainerLinkObject_Account.ContainerId IS NULL)
-                                 OR (Container.DescId = zc_Container_Summ() AND Container.ParentId > 0 AND Container.ObjectId <> zc_Enum_Account_110101()) -- Транзит + товар в пути
+                              WHERE _tmpContainer_branch.ContainerId IS NULL
+                                AND ((Container.DescId = zc_Container_Count() AND ContainerLinkObject_Account.ContainerId IS NULL)
+                                  OR (Container.DescId = zc_Container_Summ() AND Container.ParentId > 0 AND Container.ObjectId <> zc_Enum_Account_110101()) -- Транзит + товар в пути
+                                    )
+                             )
+    , tmpContainer_branch AS (SELECT Container.*, COALESCE (ContainerLinkObject_Unit.ObjectId, 0) AS UnitId
+                                   , CASE WHEN ObjectLink_Unit_HistoryCost.ChildObjectId > 0 THEN TRUE ELSE FALSE END AS isHistoryCost_ReturnIn
+                              FROM Container
+                                   INNER JOIN _tmpContainer_branch ON _tmpContainer_branch.ContainerId = Container.Id
+                                   LEFT JOIN ContainerLinkObject AS ContainerLinkObject_Account
+                                                                 ON ContainerLinkObject_Account.ContainerId = Container.Id
+                                                                AND ContainerLinkObject_Account.DescId = zc_ContainerLinkObject_Account()
+                                   LEFT JOIN ContainerLinkObject AS ContainerLinkObject_Unit
+                                                                 ON ContainerLinkObject_Unit.ContainerId = Container.Id
+                                                                AND ContainerLinkObject_Unit.DescId = zc_ContainerLinkObject_Unit()
+                                   LEFT JOIN ObjectLink AS ObjectLink_Unit_HistoryCost
+                                                        ON ObjectLink_Unit_HistoryCost.ObjectId = ContainerLinkObject_Unit.ObjectId
+                                                       AND ObjectLink_Unit_HistoryCost.DescId = zc_ObjectLink_Unit_HistoryCost()
+                              WHERE ((Container.DescId = zc_Container_Count() AND ContainerLinkObject_Account.ContainerId IS NULL)
+                                  OR (Container.DescId = zc_Container_Summ() AND Container.ParentId > 0 AND Container.ObjectId <> zc_Enum_Account_110101()) -- Транзит + товар в пути
+                                    )
                              )
        -- , tmpAccount_60000 AS (SELECT Object_Account_View.AccountId FROM Object_Account_View WHERE Object_Account_View.AccountGroupId = zc_Enum_AccountGroup_60000()) -- Прибыль будущих периодов
 
@@ -159,6 +225,66 @@ BEGIN
                    , CASE WHEN Container.DescId = zc_Container_Count() THEN Container.Amount - COALESCE (SUM (MIContainer.Amount), 0) ELSE 0 END AS StartCount
                    , CASE WHEN Container.DescId = zc_Container_Summ()  THEN Container.Amount - COALESCE (SUM (MIContainer.Amount), 0) ELSE 0 END AS StartSumm
                      -- Income
+                   , CASE WHEN Container.DescId = zc_Container_Count() THEN COALESCE (SUM (CASE WHEN MIContainer.MovementDescId IN (zc_Movement_Income()) AND MIContainer.OperDate BETWEEN vbStartDate_zavod AND vbEndDate_zavod /*AND MIContainer.Amount > 0*/ THEN  MIContainer.Amount ELSE 0 END), 0) ELSE 0 END AS IncomeCount
+                   , CASE WHEN Container.DescId = zc_Container_Summ()  THEN COALESCE (SUM (CASE WHEN MIContainer.MovementDescId IN (zc_Movement_Income()) AND MIContainer.OperDate BETWEEN vbStartDate_zavod AND vbEndDate_zavod /*AND MIContainer.Amount > 0*/ THEN  MIContainer.Amount ELSE 0 END), 0) ELSE 0 END AS IncomeSumm
+                     -- SendOnPrice
+                   , CASE WHEN Container.DescId = zc_Container_Count() THEN COALESCE (SUM (CASE WHEN MIContainer.MovementDescId = zc_Movement_SendOnPrice() AND MIContainer.OperDate BETWEEN vbStartDate_zavod AND vbEndDate_zavod AND MIContainer.Amount > 0 THEN MIContainer.Amount ELSE 0 END), 0) ELSE 0 END AS SendOnPriceCountIn
+                   , CASE WHEN Container.DescId = zc_Container_Summ()  THEN COALESCE (SUM (CASE WHEN MIContainer.MovementDescId = zc_Movement_SendOnPrice() AND MIContainer.OperDate BETWEEN vbStartDate_zavod AND vbEndDate_zavod AND MIContainer.Amount > 0 THEN MIContainer.Amount ELSE 0 END), 0) ELSE 0 END AS SendOnPriceSummIn
+                   , CASE WHEN Container.DescId = zc_Container_Count() THEN COALESCE (SUM (CASE WHEN MIContainer.MovementDescId = zc_Movement_SendOnPrice() AND MIContainer.OperDate BETWEEN vbStartDate_zavod AND vbEndDate_zavod AND MIContainer.Amount < 0 THEN -1 * MIContainer.Amount ELSE 0 END), 0) ELSE 0 END AS SendOnPriceCountOut
+                   , CASE WHEN Container.DescId = zc_Container_Summ()  THEN COALESCE (SUM (CASE WHEN MIContainer.MovementDescId = zc_Movement_SendOnPrice() AND MIContainer.OperDate BETWEEN vbStartDate_zavod AND vbEndDate_zavod AND MIContainer.Amount < 0 THEN -1 * MIContainer.Amount ELSE 0 END), 0) ELSE 0 END AS SendOnPriceSummOut
+                   , CASE WHEN Container.DescId = zc_Container_Count() THEN COALESCE (SUM (CASE WHEN MovementBoolean_HistoryCost.ValueData = TRUE AND MIContainer.OperDate BETWEEN vbStartDate_zavod AND vbEndDate_zavod THEN MIContainer.Amount ELSE 0 END), 0) ELSE 0 END AS SendOnPriceCountIn_Cost
+                   , CASE WHEN Container.DescId = zc_Container_Summ()  THEN COALESCE (SUM (CASE WHEN MovementBoolean_HistoryCost.ValueData = TRUE AND MIContainer.OperDate BETWEEN vbStartDate_zavod AND vbEndDate_zavod THEN MIContainer.Amount ELSE 0 END), 0) ELSE 0 END AS SendOnPriceSummIn_Cost
+                   , CASE WHEN Container.DescId = zc_Container_Count() THEN COALESCE (SUM (CASE WHEN COALESCE (MovementBoolean_HistoryCost.ValueData, FALSE) = FALSE AND MIContainer.OperDate BETWEEN vbStartDate_zavod AND vbEndDate_zavod THEN -1 * MIContainer.Amount ELSE 0 END), 0) ELSE 0 END AS SendOnPriceCountOut_Cost
+                   , CASE WHEN Container.DescId = zc_Container_Summ()  THEN COALESCE (SUM (CASE WHEN COALESCE (MovementBoolean_HistoryCost.ValueData, FALSE) = FALSE AND MIContainer.OperDate BETWEEN vbStartDate_zavod AND vbEndDate_zavod THEN -1 * MIContainer.Amount ELSE 0 END), 0) ELSE 0 END AS SendOnPriceSummOut_Cost
+                     -- Calc
+                   , CASE WHEN Container.DescId = zc_Container_Count() THEN COALESCE (SUM (CASE WHEN MIContainer.MovementDescId IN (zc_Movement_Send(), zc_Movement_ProductionUnion(), zc_Movement_ProductionSeparate()) AND MIContainer.OperDate BETWEEN vbStartDate_zavod AND vbEndDate_zavod AND MIContainer.Amount > 0 THEN  MIContainer.Amount ELSE 0 END), 0) ELSE 0 END
+                   + CASE WHEN Container.DescId = zc_Container_CountSupplier() THEN Container.Amount - COALESCE (SUM (MIContainer.Amount), 0) + COALESCE (SUM (CASE WHEN MIContainer.MovementDescId = zc_Movement_Income() AND MIContainer.OperDate BETWEEN vbStartDate_zavod AND vbEndDate_zavod THEN  MIContainer.Amount ELSE 0 END), 0) ELSE 0 END
+                     AS CalcCount
+                   , CASE WHEN Container.DescId = zc_Container_Summ()  THEN COALESCE (SUM (CASE WHEN MIContainer.MovementDescId IN (zc_Movement_Send(), zc_Movement_ProductionSeparate()) AND MIContainer.OperDate BETWEEN vbStartDate_zavod AND vbEndDate_zavod AND MIContainer.Amount > 0 THEN  MIContainer.Amount ELSE 0 END), 0) ELSE 0 END
+                   + CASE WHEN Container.DescId = zc_Container_Summ()  THEN COALESCE (SUM (CASE WHEN MIContainer.MovementDescId IN (zc_Movement_ProductionUnion()) AND MIContainer.OperDate BETWEEN vbStartDate_zavod AND vbEndDate_zavod AND MIContainer.ParentId IS NULL THEN MIContainer.Amount ELSE 0 END), 0) ELSE 0 END
+                     AS CalcSumm
+                     -- Calc_external, т.е. AnalyzerId <> UnitId
+                   , CASE WHEN Container.DescId = zc_Container_Count() THEN COALESCE (SUM (CASE WHEN MIContainer.MovementDescId IN (zc_Movement_Send(), zc_Movement_ProductionUnion(), zc_Movement_ProductionSeparate()) AND COALESCE (MIContainer.AnalyzerId, 0) <> Container.UnitId AND MIContainer.OperDate BETWEEN vbStartDate_zavod AND vbEndDate_zavod AND MIContainer.Amount > 0 THEN  MIContainer.Amount ELSE 0 END), 0) ELSE 0 END
+                   + CASE WHEN Container.DescId = zc_Container_CountSupplier() THEN Container.Amount - COALESCE (SUM (MIContainer.Amount), 0) + COALESCE (SUM (CASE WHEN MIContainer.MovementDescId = zc_Movement_Income() AND MIContainer.OperDate BETWEEN vbStartDate_zavod AND vbEndDate_zavod THEN  MIContainer.Amount ELSE 0 END), 0) ELSE 0 END
+                     AS CalcCount_external
+                   , CASE WHEN Container.DescId = zc_Container_Summ()  THEN COALESCE (SUM (CASE WHEN MIContainer.MovementDescId IN (zc_Movement_Send(), zc_Movement_ProductionSeparate()) AND COALESCE (MIContainer.AnalyzerId, 0) <> Container.UnitId AND MIContainer.OperDate BETWEEN vbStartDate_zavod AND vbEndDate_zavod AND MIContainer.Amount > 0 THEN  MIContainer.Amount ELSE 0 END), 0) ELSE 0 END
+                   + CASE WHEN Container.DescId = zc_Container_Summ()  THEN COALESCE (SUM (CASE WHEN MIContainer.MovementDescId IN (zc_Movement_ProductionUnion()) AND COALESCE (MIContainer.AnalyzerId, 0) <> Container.UnitId AND MIContainer.OperDate BETWEEN vbStartDate_zavod AND vbEndDate_zavod AND MIContainer.ParentId IS NULL THEN MIContainer.Amount ELSE 0 END), 0) ELSE 0 END
+                     AS CalcSumm_external
+                     -- ReturnIn
+                   , CASE WHEN Container.DescId = zc_Container_Count() THEN COALESCE (SUM (CASE WHEN MIContainer.MovementDescId = zc_Movement_ReturnIn() AND MIContainer.OperDate BETWEEN vbStartDate_zavod AND vbEndDate_zavod THEN MIContainer.Amount ELSE 0 END), 0) ELSE 0 END AS ReturnInCount
+                   , CASE WHEN Container.DescId = zc_Container_Summ()  THEN COALESCE (SUM (CASE WHEN MIContainer.MovementDescId = zc_Movement_ReturnIn() AND MIContainer.OperDate BETWEEN vbStartDate_zavod AND vbEndDate_zavod THEN MIContainer.Amount ELSE 0 END), 0) ELSE 0 END AS ReturnInSumm
+                     -- Out
+                   , CASE WHEN Container.DescId = zc_Container_Count() THEN COALESCE (SUM (CASE WHEN MIContainer.MovementDescId NOT IN (zc_Movement_Income(), zc_Movement_SendOnPrice(), zc_Movement_Send(), zc_Movement_ProductionUnion(), zc_Movement_ProductionSeparate()) AND MIContainer.OperDate BETWEEN vbStartDate_zavod AND vbEndDate_zavod /*AND MIContainer.Amount < 0*/ THEN -1 * MIContainer.Amount ELSE 0 END), 0) ELSE 0 END AS OutCount
+                   , CASE WHEN Container.DescId = zc_Container_Summ()  THEN COALESCE (SUM (CASE WHEN MIContainer.MovementDescId NOT IN (zc_Movement_Income(), zc_Movement_SendOnPrice(), zc_Movement_Send(), zc_Movement_ProductionUnion(), zc_Movement_ProductionSeparate()) AND MIContainer.OperDate BETWEEN vbStartDate_zavod AND vbEndDate_zavod /*AND MIContainer.Amount < 0*/ THEN -1 * MIContainer.Amount ELSE 0 END), 0) ELSE 0 END AS OutSumm
+              FROM tmpContainer_zavod AS Container
+                   LEFT JOIN ContainerLinkObject AS ContainerLinkObject_Account
+                                                 ON ContainerLinkObject_Account.ContainerId = Container.Id
+                                                AND ContainerLinkObject_Account.DescId = zc_ContainerLinkObject_Account()
+                   LEFT JOIN MovementItemContainer AS MIContainer
+                                                   ON MIContainer.ContainerId = Container.Id
+                                                  AND MIContainer.OperDate >= vbStartDate_zavod
+                   LEFT JOIN MovementBoolean AS MovementBoolean_HistoryCost
+                                             ON MovementBoolean_HistoryCost.MovementId = MIContainer.MovementId
+                                            AND MovementBoolean_HistoryCost.DescId = zc_MovementBoolean_HistoryCost()
+              GROUP BY Container.Id
+                     , Container.UnitId
+                     , Container.isHistoryCost_ReturnIn
+                     , Container.DescId
+                     , Container.ObjectId
+                     , Container.Amount
+              HAVING (Container.Amount - COALESCE (SUM (MIContainer.Amount), 0) <> 0)
+                  OR (COALESCE (SUM (CASE WHEN MIContainer.OperDate BETWEEN vbStartDate_zavod AND vbEndDate_zavod AND MIContainer.Amount > 0 THEN MIContainer.Amount ELSE 0 END), 0) <> 0)
+                  OR (COALESCE (SUM (CASE WHEN MIContainer.OperDate BETWEEN vbStartDate_zavod AND vbEndDate_zavod AND MIContainer.Amount < 0 THEN -MIContainer.Amount ELSE 0 END), 0) <> 0)
+             UNION ALL
+              SELECT Container.Id AS ContainerId
+                   , Container.UnitId
+                   , Container.isHistoryCost_ReturnIn
+                   , Container.DescId
+                   , Container.ObjectId
+                     -- Start
+                   , CASE WHEN Container.DescId = zc_Container_Count() THEN Container.Amount - COALESCE (SUM (MIContainer.Amount), 0) ELSE 0 END AS StartCount
+                   , CASE WHEN Container.DescId = zc_Container_Summ()  THEN Container.Amount - COALESCE (SUM (MIContainer.Amount), 0) ELSE 0 END AS StartSumm
+                     -- Income
                    , CASE WHEN Container.DescId = zc_Container_Count() THEN COALESCE (SUM (CASE WHEN MIContainer.MovementDescId IN (zc_Movement_Income()) AND MIContainer.OperDate BETWEEN inStartDate AND inEndDate /*AND MIContainer.Amount > 0*/ THEN  MIContainer.Amount ELSE 0 END), 0) ELSE 0 END AS IncomeCount
                    , CASE WHEN Container.DescId = zc_Container_Summ()  THEN COALESCE (SUM (CASE WHEN MIContainer.MovementDescId IN (zc_Movement_Income()) AND MIContainer.OperDate BETWEEN inStartDate AND inEndDate /*AND MIContainer.Amount > 0*/ THEN  MIContainer.Amount ELSE 0 END), 0) ELSE 0 END AS IncomeSumm
                      -- SendOnPrice
@@ -190,7 +316,7 @@ BEGIN
                      -- Out
                    , CASE WHEN Container.DescId = zc_Container_Count() THEN COALESCE (SUM (CASE WHEN MIContainer.MovementDescId NOT IN (zc_Movement_Income(), zc_Movement_SendOnPrice(), zc_Movement_Send(), zc_Movement_ProductionUnion(), zc_Movement_ProductionSeparate()) AND MIContainer.OperDate BETWEEN inStartDate AND inEndDate /*AND MIContainer.Amount < 0*/ THEN -1 * MIContainer.Amount ELSE 0 END), 0) ELSE 0 END AS OutCount
                    , CASE WHEN Container.DescId = zc_Container_Summ()  THEN COALESCE (SUM (CASE WHEN MIContainer.MovementDescId NOT IN (zc_Movement_Income(), zc_Movement_SendOnPrice(), zc_Movement_Send(), zc_Movement_ProductionUnion(), zc_Movement_ProductionSeparate()) AND MIContainer.OperDate BETWEEN inStartDate AND inEndDate /*AND MIContainer.Amount < 0*/ THEN -1 * MIContainer.Amount ELSE 0 END), 0) ELSE 0 END AS OutSumm
-              FROM tmpContainer AS Container
+              FROM tmpContainer_branch AS Container
                    LEFT JOIN ContainerLinkObject AS ContainerLinkObject_Account
                                                  ON ContainerLinkObject_Account.ContainerId = Container.Id
                                                 AND ContainerLinkObject_Account.DescId = zc_ContainerLinkObject_Account()
@@ -607,11 +733,12 @@ BEGIN
      THEN
          -- Удаляем предыдущую с/с - !!!для 1-ого Филиала!!!
          DELETE FROM HistoryCost WHERE ((inStartDate BETWEEN StartDate AND EndDate) OR (inEndDate BETWEEN StartDate AND EndDate))
-                                   AND HistoryCost.ContainerId IN (SELECT ContainerLinkObject.ContainerId
+                                   AND HistoryCost.ContainerId IN (SELECT _tmpContainer_branch.ContainerId FROM _tmpContainer_branch);
+                                                                  /*(SELECT ContainerLinkObject.ContainerId
                                                                    FROM _tmpUnit_branch
                                                                         INNER JOIN ContainerLinkObject ON ContainerLinkObject.ObjectId = _tmpUnit_branch.UnitId
                                                                                                       AND ContainerLinkObject.DescId = zc_ContainerLinkObject_Unit()
-                                                                  );
+                                                                  );*/
          -- Сохраняем что насчитали - !!!для 1-ого Филиала!!!
          INSERT INTO HistoryCost (ContainerId, StartDate, EndDate, Price, Price_external, StartCount, StartSumm, IncomeCount, IncomeSumm, CalcCount, CalcSumm, CalcCount_external, CalcSumm_external, OutCount, OutSumm, MovementItemId_diff, Summ_diff)
             SELECT _tmpMaster.ContainerId, inStartDate AS StartDate, inEndDate AS EndDate
@@ -642,19 +769,21 @@ BEGIN
             WHERE (((_tmpMaster.StartSumm + _tmpMaster.IncomeSumm + _tmpMaster.CalcSumm)          <> 0)
                 OR ((_tmpMaster.StartSumm + _tmpMaster.IncomeSumm + _tmpMaster.CalcSumm_external) <> 0)
                   )
-              AND _tmpMaster.ContainerId IN (SELECT ContainerLinkObject.ContainerId
+              AND _tmpMaster.ContainerId IN (SELECT _tmpContainer_branch.ContainerId FROM _tmpContainer_branch);
+                                            /*(SELECT ContainerLinkObject.ContainerId
                                              FROM _tmpUnit_branch
                                                   INNER JOIN ContainerLinkObject ON ContainerLinkObject.ObjectId = _tmpUnit_branch.UnitId
                                                                                 AND ContainerLinkObject.DescId = zc_ContainerLinkObject_Unit()
-                                            );
+                                            );*/
      ELSE
          -- Удаляем предыдущую с/с - !!!кроме всех Филиалов!!!
          DELETE FROM HistoryCost WHERE ((inStartDate BETWEEN StartDate AND EndDate) OR (inEndDate BETWEEN StartDate AND EndDate))
-                                   AND HistoryCost.ContainerId NOT IN (SELECT ContainerLinkObject.ContainerId
+                                   AND HistoryCost.ContainerId NOT IN (SELECT _tmpContainer_branch.ContainerId FROM _tmpContainer_branch);
+                                                                      /*(SELECT ContainerLinkObject.ContainerId
                                                                        FROM _tmpUnit_branch
                                                                             INNER JOIN ContainerLinkObject ON ContainerLinkObject.ObjectId = _tmpUnit_branch.UnitId
                                                                                                           AND ContainerLinkObject.DescId = zc_ContainerLinkObject_Unit()
-                                                                      );
+                                                                      );*/
          -- Сохраняем что насчитали - !!!кроме всех Филиалов!!!
          INSERT INTO HistoryCost (ContainerId, StartDate, EndDate, Price, Price_external, StartCount, StartSumm, IncomeCount, IncomeSumm, CalcCount, CalcSumm, CalcCount_external, CalcSumm_external, OutCount, OutSumm, MovementItemId_diff, Summ_diff)
             SELECT _tmpMaster.ContainerId, inStartDate AS StartDate, inEndDate AS EndDate
@@ -685,11 +814,12 @@ BEGIN
             WHERE (((_tmpMaster.StartSumm + _tmpMaster.IncomeSumm + _tmpMaster.CalcSumm)          <> 0)
                 OR ((_tmpMaster.StartSumm + _tmpMaster.IncomeSumm + _tmpMaster.CalcSumm_external) <> 0)
                   )
-              AND _tmpMaster.ContainerId NOT IN (SELECT ContainerLinkObject.ContainerId
+              AND _tmpMaster.ContainerId NOT IN (SELECT _tmpContainer_branch.ContainerId FROM _tmpContainer_branch);
+                                                /*(SELECT ContainerLinkObject.ContainerId
                                                  FROM _tmpUnit_branch
                                                       INNER JOIN ContainerLinkObject ON ContainerLinkObject.ObjectId = _tmpUnit_branch.UnitId
                                                                                     AND ContainerLinkObject.DescId = zc_ContainerLinkObject_Unit()
-                                                );
+                                                );*/
      END IF;
 
 
@@ -910,4 +1040,4 @@ LANGUAGE PLPGSQL VOLATILE;
 -- UPDATE HistoryCost SET Price = 100 WHERE Price > 100 AND StartDate = '01.06.2014' AND EndDate = '30.06.2014'
 -- тест
 -- SELECT * FROM gpInsertUpdate_HistoryCost (inStartDate:= '01.06.2014', inEndDate:= '30.06.2014', inBranchId:= 0, inItearationCount:= 500, inInsert:= -1, inDiffSumm:= 0, inSession:= '2')  WHERE Price <> PriceNext
--- SELECT * FROM gpInsertUpdate_HistoryCost (inStartDate:= '01.07.2015', inEndDate:= '31.07.2015', inBranchId:= 0, inItearationCount:= 100, inInsert:= -1, inDiffSumm:= 0.009, inSession:= '2') -- WHERE CalcSummCurrent <> CalcSummNext
+-- SELECT * FROM gpInsertUpdate_HistoryCost (inStartDate:= '01.08.2015', inEndDate:= '31.08.2015', inBranchId:= 0, inItearationCount:= 100, inInsert:= -1, inDiffSumm:= 0.009, inSession:= '2') -- WHERE CalcSummCurrent <> CalcSummNext

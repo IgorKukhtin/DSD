@@ -101,6 +101,7 @@ inherited TransportServiceJournalForm: TTransportServiceJournalForm
                 Default = True
                 Kind = bkEllipsis
               end>
+            Properties.ReadOnly = True
             HeaderAlignmentVert = vaCenter
             Width = 92
           end

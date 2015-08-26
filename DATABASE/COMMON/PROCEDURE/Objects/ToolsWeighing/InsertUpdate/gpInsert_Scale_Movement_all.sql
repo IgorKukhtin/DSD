@@ -311,6 +311,7 @@ BEGIN
                                                   , inOperDate              := inOperDate
                                                   , inOperDatePartner       := inOperDate
                                                   , inChecked               := NULL
+                                                  , inIsPartner             := NULL
                                                   , inPriceWithVAT          := PriceWithVAT
                                                   , inVATPercent            := VATPercent
                                                   , inChangePercent         := ChangePercent

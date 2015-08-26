@@ -14,7 +14,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_ReturnIn(
     IN inOperDate            TDateTime , -- Дата документа
     IN inOperDatePartner     TDateTime , -- Дата накладной у контрагента
     IN inChecked             Boolean   , -- Проверен
-    IN inisPartner           Boolean   , -- основание - Акт недовоза
+    IN inIsPartner           Boolean   , -- основание - Акт недовоза
     IN inPriceWithVAT        Boolean   , -- Цена с НДС (да/нет)
     IN inVATPercent          TFloat    , -- % НДС
     IN inChangePercent       TFloat    , -- (-)% Скидки (+)% Наценки
@@ -78,7 +78,7 @@ BEGIN
                                       , inOperDate         := inOperDate
                                       , inOperDatePartner  := CASE WHEN vbUserId = 5 AND ioId > 0 AND 1 = 0 THEN COALESCE ((SELECT ValueData FROM MovementDate WHERE MovementId = ioId AND DescId = zc_MovementDate_OperDatePartner()), inOperDatePartner) ELSE inOperDatePartner END
                                       , inChecked          := CASE WHEN vbUserId = 5 AND ioId > 0 AND 1 = 0 THEN COALESCE ((SELECT ValueData FROM MovementBoolean WHERE MovementId = ioId AND DescId = zc_MovementBoolean_Checked()), inChecked) ELSE inChecked END
-                                      , inisPartner        := inisPartner
+                                      , inIsPartner        := inIsPartner
                                       , inPriceWithVAT     := inPriceWithVAT
                                       , inVATPercent       := inVATPercent
                                       , inChangePercent    := inChangePercent
@@ -101,7 +101,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
- 21.08.15         * ADD inisPartner
+ 21.08.15         * ADD inIsPartner
  26.06.15         * add
  26.08.14                                        * add только в GP - рассчитали свойство <Курс для перевода в валюту баланса>
  24.07.14         * add inCurrencyDocumentId
