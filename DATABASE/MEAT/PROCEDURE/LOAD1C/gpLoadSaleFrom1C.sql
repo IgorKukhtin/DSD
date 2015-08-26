@@ -459,7 +459,9 @@ BEGIN
           FROM lpInsertUpdate_Movement_ReturnIn (ioId := vbMovementId, inInvNumber := vbInvNumber, inInvNumberPartner := vbInvNumber
                                                           , inInvNumberMark := (SELECT ValueData FROM MovementString WHERE MovementId = vbMovementId AND DescId = zc_MovementString_InvNumberMark())
                                                           , inParentId          := NULL
-                                                          , inOperDate := vbOperDate, inOperDatePartner := vbOperDate, inChecked := FALSE
+                                                          , inOperDate := vbOperDate, inOperDatePartner := vbOperDate
+                                                          , inChecked  := FALSE
+                                                          , inIsPartner:= FALSE
                                                           , inPriceWithVAT := CASE WHEN COALESCE (vbSumaPDV, 0) = 0 THEN TRUE ELSE FALSE END
                                                           , inVATPercent := CASE WHEN COALESCE (vbSumaPDV, 0) = 0 THEN 0 ELSE 20 END
                                                           , inChangePercent := -1 * CASE WHEN vbPaidKindId = zc_Enum_PaidKind_SecondForm() AND vbDiscount_min = vbDiscount_max THEN vbDiscount

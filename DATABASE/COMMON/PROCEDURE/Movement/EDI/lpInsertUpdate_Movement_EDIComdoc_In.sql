@@ -100,6 +100,7 @@ BEGIN
                                       , inOperDate          := MovementDate_OperDatePartner.ValueData
                                       , inOperDatePartner   := MovementDate_OperDatePartner.ValueData
                                       , inChecked           := (SELECT ValueData FROM MovementBoolean WHERE MovementId = vbMovementId_ReturnIn AND DescId = zc_MovementBoolean_Checked()) :: Boolean
+                                      , inIsPartner         := (SELECT ValueData FROM MovementBoolean WHERE MovementId = vbMovementId_ReturnIn AND DescId = zc_MovementBoolean_isPartner()) :: Boolean
                                       , inPriceWithVAT      := MovementBoolean_PriceWithVAT.ValueData
                                       , inVATPercent        := MovementFloat_VATPercent.ValueData
                                       , inChangePercent     := (SELECT ValueData FROM MovementFloat WHERE MovementId = vbMovementId_ReturnIn AND DescId = zc_MovementFloat_ChangePercent())

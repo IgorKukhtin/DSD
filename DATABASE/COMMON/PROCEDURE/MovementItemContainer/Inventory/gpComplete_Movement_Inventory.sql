@@ -155,6 +155,7 @@ BEGIN
          ELSE
          --
          IF vbOperDate < '01.07.2015' -- !!!временно для последнего раза!!!
+            OR inMovementId = 2184096 -- Кротон хранение - 31.07.2015
          THEN vbProfitLossDirectionId := zc_Enum_ProfitLossDirection_20500(); -- Прочие потери (Списание+инвентаризация)
          --
          IF vbOperDate <= '01.06.2014' -- !!!временно для первого раза!!!
@@ -579,6 +580,8 @@ BEGIN
                                THEN 0 -- !!!один раз выравниваем филиал!!
                           WHEN vbOperDate IN ('31.05.2014', '31.05.2015', '30.06.2015') AND vbPriceListId = 0 
                                THEN _tmpItem.OperSumm
+                          WHEN inMovementId = 2184096 -- Кротон хранение - 31.07.2015
+                               THEN _tmpItem.OperSumm
                           ELSE CAST (_tmpItem.OperCount * COALESCE (HistoryCost.Price, 0) AS NUMERIC (16,4))
                      END AS OperSumm
               FROM _tmpItem
@@ -586,6 +589,7 @@ BEGIN
                    LEFT JOIN Container AS Container_Summ ON Container_Summ.ParentId = _tmpItem.ContainerId_Goods
                                                         AND Container_Summ.DescId = zc_Container_Summ()
                                                         AND (vbOperDate >= '01.07.2015' OR vbPriceListId <> 0) 
+                                                        AND inMovementId <> 2184096 -- Кротон хранение - 31.07.2015
                    LEFT JOIN HistoryCost ON HistoryCost.ContainerId = Container_Summ.Id
                                         AND vbOperDate BETWEEN HistoryCost.StartDate AND HistoryCost.EndDate
                    LEFT JOIN Object_Account_View AS View_Account ON View_Account.AccountId = Container_Summ.ObjectId
@@ -602,6 +606,7 @@ BEGIN
                    LEFT JOIN HistoryCost ON HistoryCost.ContainerId = Container_Summ.Id
                                         AND vbOperDate BETWEEN HistoryCost.StartDate AND HistoryCost.EndDate
               WHERE (vbPriceListId = 0 AND vbOperDate >= '01.07.2015')
+                 AND inMovementId <> 2184096 -- Кротон хранение - 31.07.2015
                  AND vbUnitId NOT IN (301309 -- Склад ГП ф.Запорожье
                                     , 309599 -- Склад возвратов ф.Запорожье
                                     , 346093 -- Склад ГП ф.Одесса
@@ -616,6 +621,7 @@ BEGIN
               FROM _tmpRemainsSumm
                    LEFT JOIN _tmpRemainsCount ON _tmpRemainsCount.ContainerId_Goods = _tmpRemainsSumm.ContainerId_Goods
               WHERE (vbPriceListId = 0 AND vbOperDate < '01.07.2015')
+                 OR inMovementId = 2184096 -- Кротон хранение - 31.07.2015
                  OR (vbPriceListId <> 0)
                      /*AND vbUnitId NOT IN (301309 -- Склад ГП ф.Запорожье
                                         , 309599 -- Склад возвратов ф.Запорожье
@@ -851,6 +857,11 @@ BEGIN
                                                 -- !!!временно для первого раза!!!
                                            ELSE (SELECT Id FROM Object WHERE DescId = zc_Object_ProfitLoss() AND ObjectCode = 60101) -- Амортизация + Административные ОС + Основные средства*****
                                       END
+
+                             WHEN tmpItem_group.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_21400() -- услуги полученные
+                              AND vbOperDate < '01.08.2015' -- !!!временно для последнего раза!!!
+                                 THEN (SELECT Id FROM Object WHERE DescId = zc_Object_ProfitLoss() AND ObjectCode = 20502) -- Общепроизводственные расходы + Прочие потери (Списание+инвентаризация) + Прочее сырье
+
 
                              WHEN(tmpItem_group.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_20100() -- Общефирменные + Запчасти и Ремонты
                                OR tmpItem_group.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_20200() -- Общефирменные + Прочие ТМЦ

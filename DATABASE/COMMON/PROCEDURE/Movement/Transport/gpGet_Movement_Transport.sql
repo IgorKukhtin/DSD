@@ -6,7 +6,7 @@ CREATE OR REPLACE FUNCTION gpGet_Movement_Transport(
     IN inMovementId        Integer  , -- ключ Документа
     IN inSession           TVarChar   -- сессия пользователя
 )
-RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime
+RETURNS TABLE (Id Integer, IdBarCode TVarChar, InvNumber TVarChar, OperDate TDateTime
              , StatusCode Integer, StatusName TVarChar
              , StartRunPlan TDateTime, EndRunPlan TDateTime, StartRun TDateTime, EndRun TDateTime
              , HoursWork TFloat, HoursAdd TFloat
@@ -34,6 +34,7 @@ BEGIN
      RETURN QUERY 
        SELECT
              0 AS Id
+           , '' :: TVarChar AS IdBarCode
            , CAST (NEXTVAL ('Movement_Transport_seq') AS TVarChar) AS InvNumber
            , CAST (CURRENT_DATE AS TDateTime)      AS OperDate
            , lfObject_Status.Code                  AS StatusCode
@@ -82,6 +83,7 @@ BEGIN
      RETURN QUERY 
        SELECT
              Movement.Id
+           , zfFormat_BarCode (zc_BarCodePref_Movement(), Movement.Id) AS IdBarCode
            , Movement.InvNumber
            , Movement.OperDate
            , Object_Status.ObjectCode   AS StatusCode
@@ -220,4 +222,4 @@ ALTER FUNCTION gpGet_Movement_Transport (Integer, TVarChar) OWNER TO postgres;
 
 
 -- тест
--- SELECT * FROM gpGet_Movement_Transport (inMovementId:= 0, inSession:= '2')
+-- SELECT * FROM gpGet_Movement_Transport (inMovementId:= 2156006, inSession:= '2')

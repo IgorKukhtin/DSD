@@ -13,7 +13,7 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_Movement_ReturnIn(
     IN inOperDate            TDateTime , -- Дата(склад)
     IN inOperDatePartner     TDateTime , -- Дата документа у покупателя
     IN inChecked             Boolean   , -- Проверен
-    IN inisPartner           Boolean   , -- основание - Акт недовоза
+    IN inIsPartner           Boolean   , -- основание - Акт недовоза
     IN inPriceWithVAT        Boolean   , -- Цена с НДС (да/нет)
     IN inVATPercent          TFloat    , -- % НДС
     IN inChangePercent       TFloat    , -- (-)% Скидки (+)% Наценки
@@ -107,7 +107,7 @@ BEGIN
      -- сохранили свойство <Проверен>
      PERFORM lpInsertUpdate_MovementBoolean (zc_MovementBoolean_Checked(), ioId, inChecked);
      -- сохранили свойство <>
-     PERFORM lpInsertUpdate_MovementBoolean (zc_MovementBoolean_isPartner(), ioId, inisPartner);
+     PERFORM lpInsertUpdate_MovementBoolean (zc_MovementBoolean_isPartner(), ioId, inIsPartner);
 
      -- сохранили свойство <Цена с НДС (да/нет)>
      PERFORM lpInsertUpdate_MovementBoolean (zc_MovementBoolean_PriceWithVAT(), ioId, inPriceWithVAT);
@@ -152,7 +152,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
- 21.08.15         * ADD inisPartner
+ 21.08.15         * ADD inIsPartner
  26.06.15         * add Comment, ParentId
  24.12.14				         * add меняется дата у всех корректировок
  26.08.14                                        * add только в GP - рассчитали свойство <Курс для перевода в валюту баланса>
