@@ -2339,7 +2339,6 @@ begin
                          end;
                end;
      end;
-
      //
      fStop:=false;
      DBGrid.Enabled:=false;
@@ -10090,6 +10089,7 @@ end;
 //----------------------------------------------------------------------------------------------------------------------------------------------------
 procedure TMainForm.pInsertHistoryCost;
 var calcStartDate,calcEndDate:TDateTime;
+    saveStartDate,saveEndDate:TDateTime;
     Year, Month, Day: Word;
     myComponent:TADOQuery;
 begin
@@ -10097,6 +10097,8 @@ begin
      //
      myEnabledCB(cbInsertHistoryCost);
      //
+     saveStartDate:=StrToDate(StartDateCompleteEdit.Text);
+     saveEndDate:=StrToDate(EndDateCompleteEdit.Text);
      //
      if cbInsertHistoryCost_andReComplete.Checked
      then myComponent:=fromQueryDate
@@ -10209,6 +10211,9 @@ begin
              Application.ProcessMessages;
         end;
      end;
+     //
+     StartDateCompleteEdit.Text:=DateToStr(saveStartDate);
+     EndDateCompleteEdit.Text:=DateToStr(saveEndDate);
      //
      myDisabledCB(cbInsertHistoryCost);
 end;

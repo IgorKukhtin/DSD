@@ -5,7 +5,7 @@ inherited Report_CashForm: TReport_CashForm
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
   ExplicitWidth = 1036
-  ExplicitHeight = 593
+  ExplicitHeight = 590
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -1880,7 +1880,7 @@ inherited Report_CashForm: TReport_CashForm
           ParamType = ptInput
         end
         item
-          Name = 'GuidesId'
+          Name = 'CashId'
           Value = ''
           Component = GuidesCash
           ComponentItem = 'Key'
@@ -1888,7 +1888,7 @@ inherited Report_CashForm: TReport_CashForm
           ParamType = ptInput
         end
         item
-          Name = 'GuidesName'
+          Name = 'CashName'
           Value = ''
           Component = GuidesCash
           ComponentItem = 'TextValue'

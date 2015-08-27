@@ -318,6 +318,7 @@ BEGIN
                                        , _tmpContainer.AccountGroupId
 
                                        , CASE WHEN MIContainer.MovementDescId IN (zc_Movement_SendOnPrice(), zc_Movement_Send(), zc_Movement_ProductionUnion(), zc_Movement_ProductionSeparate())
+                                               AND inIsInfoMoney = FALSE
                                                    THEN MIContainer.AnalyzerId
                                               ELSE 0
                                          END AS LocationId_by
@@ -694,6 +695,7 @@ BEGIN
                                          , _tmpContainer.AccountId
                                          , _tmpContainer.AccountGroupId
                                          , CASE WHEN MIContainer.MovementDescId IN (zc_Movement_SendOnPrice(), zc_Movement_Send(), zc_Movement_ProductionUnion(), zc_Movement_ProductionSeparate())
+                                                 AND inIsInfoMoney = FALSE
                                                      THEN MIContainer.AnalyzerId
                                                 ELSE 0
                                            END

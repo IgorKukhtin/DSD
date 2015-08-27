@@ -15,8 +15,7 @@ $BODY$
    DECLARE vbInvNumber TVarChar;
    DECLARE vbOperDate TDateTime;
    DECLARE vbPriceListId Integer;
-
- 
+   DECLARE vbMovementId_order Integer;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MI_Sale());
@@ -26,13 +25,17 @@ BEGIN
      SELECT Movement.StatusId
           , Movement.InvNumber
           , Movement.OperDate
-          , MovementLinkObject_PriceList.ObjectId   AS PriceListId
+          , MovementLinkObject_PriceList.ObjectId AS PriceListId
+          , MLM_Order.MovementChildId             AS MovementId_order
 
             INTO vbStatusId, vbInvNumber, vbOperDate, vbPriceListId
      FROM Movement
           LEFT JOIN MovementLinkObject AS MovementLinkObject_PriceList
                                        ON MovementLinkObject_PriceList.MovementId = Movement.Id
                                       AND MovementLinkObject_PriceList.DescId = zc_MovementLinkObject_PriceList()
+          LEFT JOIN MovementLinkMovement AS MLM_Order
+                                         ON MLM_Order.MovementId = Movement.Id
+                                        AND MLM_Order.DescId = zc_MovementLinkMovement_Order()
      WHERE Movement.Id = inMovementId;
 
 
@@ -47,16 +50,34 @@ BEGIN
          RAISE EXCEPTION 'Ошибка.Значение <Прайс лист> должно быть установлено.';
      END IF;
    
+
+     -- меняется параметр
+     -- !!!замена!!!
+     SELECT tmp.OperDate
+            INTO vbOperDate
+     FROM lfGet_Object_Partner_PriceList_onDate (inContractId     := (SELECT MLO.ObjectId FROM MovementLinkObject AS MLO WHERE MLO.MovementId = inMovementId AND MLO.DescId = zc_MovementLinkObject_Contract())
+                                               , inPartnerId      := (SELECT MLO.ObjectId FROM MovementLinkObject AS MLO WHERE MLO.MovementId = inMovementId AND MLO.DescId = zc_MovementLinkObject_To())
+                                               , inMovementDescId := zc_Movement_Sale()
+                                               , inOperDate_order := CASE WHEN vbMovementId_order <> 0
+                                                                               THEN (SELECT Movement.OperDate FROM Movement WHERE Movement.Id = vbMovementId_order)
+                                                                          ELSE NULL
+                                                                     END
+                                               , inOperDatePartner:= CASE WHEN vbMovementId_order <> 0
+                                                                               THEN NULL
+                                                                          ELSE vbOperDate
+                                                                     END
+                                               , inDayPrior_PriceReturn:= 0 -- !!!параметр здесь не важен!!!
+                                               , inIsPrior        := FALSE -- !!!параметр здесь не важен!!!
+                                                ) AS tmp;
+
+
      -- сохранили
-     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_Price()
-                                             , MovementItem.Id
-                                             , lfObjectHistory_PriceListItem.ValuePrice
-                                              )
-                              
-          FROM MovementItem
-              LEFT JOIN lfSelect_ObjectHistory_PriceListItem (inPriceListId:= vbPriceListId, inOperDate:= vbOperDate)
-                     AS lfObjectHistory_PriceListItem ON lfObjectHistory_PriceListItem.GoodsId = MovementItem.ObjectId
-          WHERE MovementId = inMovementId;
+     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_Price(), MovementItem.Id, COALESCE (lfObjectHistory_PriceListItem.ValuePrice, 0))
+     FROM MovementItem
+          LEFT JOIN lfSelect_ObjectHistory_PriceListItem (inPriceListId:= vbPriceListId, inOperDate:= vbOperDate)
+                 AS lfObjectHistory_PriceListItem ON lfObjectHistory_PriceListItem.GoodsId = MovementItem.ObjectId
+     WHERE MovementId = inMovementId;
+
 
      -- сохранили протокол
      PERFORM lpInsert_MovementItemProtocol (MovementItem.Id, vbUserId, FALSE)
@@ -64,7 +85,7 @@ BEGIN
      WHERE MovementId = inMovementId;
 
      -- сохранили связь с <PriceList>
-     PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_PriceList(), inMovementId, vbPriceListId);
+     -- PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_PriceList(), inMovementId, vbPriceListId);
 
      -- пересчитали Итоговые суммы по накладной
      PERFORM lpInsertUpdate_MovementFloat_TotalSumm (inMovementId);

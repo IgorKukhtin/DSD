@@ -272,6 +272,7 @@ BEGIN
                             , Object_Location.ValueData       AS LocationName
                             , 0                               AS ObjectByCode
                             , ''                              AS ObjectByName
+                            , 0                               AS PaidKindId
 
                             , 0                               AS AmountOut
                             , 0                               AS SummOut
@@ -315,6 +316,7 @@ BEGIN
                             , tmp.LocationName                AS LocationName
                             , tmp.LocationCode_by             AS ObjectByCode
                             , tmp.LocationName_by             AS ObjectByName
+                            , 0                               AS PaidKindId
 
                             , tmp.AmountIn_Weight             AS AmountOut
                             , CASE WHEN vbIsBranch = TRUE THEN tmp.SummOut_branch ELSE tmp.SummOut_zavod END AS SummOut
@@ -359,6 +361,7 @@ BEGIN
                             , tmp.LocationName_by             AS LocationName
                             , tmp.LocationCode                AS ObjectByCode
                             , tmp.LocationName                AS ObjectByName
+                            , 0                               AS PaidKindId
 
                             , 0                               AS AmountOut
                             , 0                               AS SummOut
@@ -412,6 +415,7 @@ BEGIN
                                         THEN COALESCE (tmp.LocationName_by, '') ||  CASE WHEN tmp.LocationName_by <> '' AND tmp.ArticleLossName <> '' THEN ' *** ' ELSE '' END || COALESCE (tmp.ArticleLossName, '')
                                    ELSE tmp.LocationName
                               END AS ObjectByName
+                            , 0                               AS PaidKindId
 
                             , tmp.AmountOut_Weight            AS AmountOut
                             , CASE WHEN vbIsBranch = TRUE THEN tmp.SummOut_branch ELSE tmp.SummOut_zavod END AS SummOut
@@ -452,6 +456,7 @@ BEGIN
                             , tmp.LocationName                AS LocationName
                             , tmp.LocationCode_by             AS ObjectByCode
                             , tmp.LocationName_by             AS ObjectByName
+                            , 0                               AS PaidKindId
 
                             , tmp.AmountOut_Weight            AS AmountOut
                             , CASE WHEN vbIsBranch = TRUE THEN tmp.SummOut_branch ELSE tmp.SummOut_zavod END AS SummOut
@@ -492,6 +497,7 @@ BEGIN
                             , tmp.LocationName_by             AS LocationName
                             , tmp.LocationCode                AS ObjectByCode
                             , tmp.LocationName                AS ObjectByName
+                            , 0                               AS PaidKindId
 
                             , 0                               AS AmountOut
                             , 0                               AS SummOut
@@ -532,6 +538,7 @@ BEGIN
                             , tmp.LocationName                AS LocationName
                             , CASE WHEN inIsPartner = TRUE THEN tmp.JuridicalCode /*tmp.PartnerCode*/ ELSE 0  END AS ObjectByCode
                             , CASE WHEN inIsPartner = TRUE THEN tmp.JuridicalName /*tmp.PartnerName*/ ELSE '' END AS ObjectByName
+                            , tmp.PaidKindId                 AS PaidKindId
 
                             , SUM (tmp.OperCount_Partner)     AS AmountOut
                             , CASE WHEN vbIsBranch = TRUE THEN SUM (tmp.SummIn_Partner_branch) ELSE SUM (tmp.SummIn_Partner_zavod) END AS SummOut
@@ -568,6 +575,7 @@ BEGIN
                        GROUP BY tmp.LocationCode, tmp.LocationName
                               , CASE WHEN inIsPartner = TRUE THEN tmp.JuridicalCode /*tmp.PartnerCode*/ ELSE 0  END
                               , CASE WHEN inIsPartner = TRUE THEN tmp.JuridicalName /*tmp.PartnerName*/ ELSE '' END
+                              , tmp.PaidKindId
                       UNION ALL
                        -- 4.2. ReturnIn
                        SELECT zc_Movement_ReturnIn()          AS MovementDescId
@@ -575,6 +583,7 @@ BEGIN
                             , tmp.LocationName                AS LocationName
                             , CASE WHEN inIsPartner = TRUE THEN tmp.JuridicalCode /*tmp.PartnerCode*/ ELSE 0  END AS ObjectByCode
                             , CASE WHEN inIsPartner = TRUE THEN tmp.JuridicalName /*tmp.PartnerName*/ ELSE '' END AS ObjectByName
+                            , tmp.PaidKindId                 AS PaidKindId
 
                             , 0                               AS AmountOut
                             , 0                               AS SummOut
@@ -611,6 +620,7 @@ BEGIN
                        GROUP BY tmp.LocationCode, tmp.LocationName
                               , CASE WHEN inIsPartner = TRUE THEN tmp.JuridicalCode /*tmp.PartnerCode*/ ELSE 0  END
                               , CASE WHEN inIsPartner = TRUE THEN tmp.JuridicalName /*tmp.PartnerName*/ ELSE '' END
+                              , tmp.PaidKindId
                       UNION ALL
                        -- 5.1. Income
                        SELECT zc_Movement_Income()            AS MovementDescId
@@ -618,6 +628,7 @@ BEGIN
                             , tmp.LocationName                AS LocationName
                             , CASE WHEN inIsPartner = TRUE THEN tmp.JuridicalCode /*tmp.PartnerCode*/ ELSE 0  END AS ObjectByCode
                             , CASE WHEN inIsPartner = TRUE THEN tmp.JuridicalName /*tmp.PartnerName*/ ELSE '' END AS ObjectByName
+                            , tmp.PaidKindId                  AS PaidKindId
 
                             , 0                               AS AmountOut
                             , 0                               AS SummOut
@@ -654,6 +665,7 @@ BEGIN
                        GROUP BY tmp.LocationCode, tmp.LocationName
                               , CASE WHEN inIsPartner = TRUE THEN tmp.JuridicalCode /*tmp.PartnerCode*/ ELSE 0  END
                               , CASE WHEN inIsPartner = TRUE THEN tmp.JuridicalName /*tmp.PartnerName*/ ELSE '' END
+                              , tmp.PaidKindId
                       UNION ALL
                        -- 5.2. ReturnOut
                        SELECT zc_Movement_ReturnOut()         AS MovementDescId
@@ -661,6 +673,7 @@ BEGIN
                             , tmp.LocationName                AS LocationName
                             , CASE WHEN inIsPartner = TRUE THEN tmp.JuridicalCode /*tmp.PartnerCode*/ ELSE 0  END AS ObjectByCode
                             , CASE WHEN inIsPartner = TRUE THEN tmp.JuridicalName /*tmp.PartnerName*/ ELSE '' END AS ObjectByName
+                            , tmp.PaidKindId                  AS PaidKindId
 
                             , SUM (tmp.AmountPartner_Weight)  AS AmountOut
                             , SUM (tmp.Summ - Summ_ProfitLoss) AS SummOut
@@ -697,6 +710,7 @@ BEGIN
                        GROUP BY tmp.LocationCode, tmp.LocationName
                               , CASE WHEN inIsPartner = TRUE THEN tmp.JuridicalCode /*tmp.PartnerCode*/ ELSE 0  END
                               , CASE WHEN inIsPartner = TRUE THEN tmp.JuridicalName /*tmp.PartnerName*/ ELSE '' END
+                              , tmp.PaidKindId
                       UNION ALL
                        -- 5.1. ProductionUnion
                        SELECT zc_Movement_ProductionUnion()   AS MovementDescId
@@ -704,6 +718,7 @@ BEGIN
                             , tmp.LocationName                AS LocationName
                             , tmp.LocationCode_by             AS ObjectByCode
                             , tmp.LocationName_by             AS ObjectByName
+                            , 0                               AS PaidKindId
 
                             , 0                               AS AmountOut
                             , 0                               AS SummOut
@@ -745,6 +760,7 @@ BEGIN
                             , tmp.LocationName                AS LocationName
                             , tmp.LocationCode_by             AS ObjectByCode
                             , tmp.LocationName_by             AS ObjectByName
+                            , 0                               AS PaidKindId
 
                             , SUM (tmp.Amount_Weight)         AS AmountOut
                             , CASE WHEN vbIsBranch = TRUE THEN SUM (tmp.Summ_branch) ELSE SUM (tmp.Summ_zavod) END AS SummOut
@@ -787,6 +803,7 @@ BEGIN
                             , tmp.LocationName                AS LocationName
                             , tmp.LocationCode_by             AS ObjectByCode
                             , tmp.LocationName_by             AS ObjectByName
+                            , 0                               AS PaidKindId
 
                             , 0                               AS AmountOut
                             , 0                               AS SummOut
@@ -828,6 +845,7 @@ BEGIN
                             , tmp.LocationName                AS LocationName
                             , tmp.LocationCode_by             AS ObjectByCode
                             , tmp.LocationName_by             AS ObjectByName
+                            , 0                               AS PaidKindId
 
                             , SUM (tmp.Amount_Weight)         AS AmountOut
                             , CASE WHEN vbIsBranch = TRUE THEN SUM (tmp.Summ_branch) ELSE SUM (tmp.Summ_zavod) END AS SummOut
@@ -869,6 +887,7 @@ BEGIN
                             , tmp.LocationName                AS LocationName
                             , tmp.LocationCode                AS ObjectByCode
                             , '+' || tmp.LocationName         AS ObjectByName
+                            , 0                               AS PaidKindId
 
                             , 0                               AS AmountOut
                             , 0                               AS SummOut
@@ -910,6 +929,7 @@ BEGIN
                             , tmp.LocationName                AS LocationName
                             , tmp.LocationCode                AS ObjectByCode
                             , '-' || tmp.LocationName         AS ObjectByName
+                            , 0                               AS PaidKindId
 
                             , SUM (tmp.AmountOut_Weight)      AS AmountOut
                             , 1 * CASE WHEN vbIsBranch = TRUE THEN SUM (tmp.SummOut_branch) ELSE SUM (tmp.SummOut_zavod) END AS SummOut
@@ -950,6 +970,7 @@ BEGIN
                             , tmp.LocationName                AS LocationName
                             , tmp.LocationCode                AS ObjectByCode
                             , '+' || tmp.LocationName         AS ObjectByName
+                            , 0                               AS PaidKindId
 
                             , 0                               AS AmountOut
                             , 0                               AS SummOut
@@ -991,6 +1012,7 @@ BEGIN
                             , tmp.LocationName                AS LocationName
                             , tmp.LocationCode                AS ObjectByCode
                             , '-' || tmp.LocationName         AS ObjectByName
+                            , 0                               AS PaidKindId
 
                             , 0                               AS AmountOut
                             , CASE WHEN vbIsBranch = TRUE THEN 1 * SUM (tmp.SummOut_RePrice) ELSE 0 END AS SummOut
@@ -1097,7 +1119,7 @@ BEGIN
         , tmpResult.ObjectByCode :: Integer  AS ObjectByCode
         , tmpResult.ObjectByName :: TVarChar AS ObjectByName
 
-        , ''   :: TVarChar  AS PaidKindName
+        , Object_PaidKind.ValueData AS PaidKindName
 
         , 0    :: Integer   AS GoodsCode
         , ''   :: TVarChar  AS GoodsName
@@ -1192,6 +1214,7 @@ BEGIN
    FROM tmpResult
         LEFT JOIN tmpPage3 ON tmpPage3.isExists = TRUE
         LEFT JOIN MovementDesc ON MovementDesc.Id = tmpResult.MovementDescId
+        LEFT JOIN Object AS Object_PaidKind ON Object_PaidKind.Id = tmpResult.PaidKindId
    ;
     
         

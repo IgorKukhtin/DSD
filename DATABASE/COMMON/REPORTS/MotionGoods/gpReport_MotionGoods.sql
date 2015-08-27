@@ -233,7 +233,86 @@ BEGIN
                            FROM lfSelect_ObjectHistory_PriceListItem (inPriceListId:= zc_PriceList_Basis(), inOperDate:= inEndDate) AS lfObjectHistory_PriceListItem
                            WHERE lfObjectHistory_PriceListItem.ValuePrice <> 0
                           )
-       , tmpReport AS (SELECT * FROM lpReport_MotionGoods (inStartDate:= inStartDate, inEndDate:= inEndDate, inAccountGroupId:= inAccountGroupId, inUnitGroupId:= inUnitGroupId, inLocationId:= inLocationId, inGoodsGroupId:= inGoodsGroupId, inGoodsId:= inGoodsId, inIsInfoMoney:= inIsInfoMoney, inUserId:= vbUserId))
+       , tmpReport_all AS (SELECT * FROM lpReport_MotionGoods (inStartDate:= inStartDate, inEndDate:= inEndDate, inAccountGroupId:= inAccountGroupId, inUnitGroupId:= inUnitGroupId, inLocationId:= inLocationId, inGoodsGroupId:= inGoodsGroupId, inGoodsId:= inGoodsId, inIsInfoMoney:= inIsInfoMoney, inUserId:= vbUserId))
+       , tmpReport_summ AS (SELECT * FROM tmpReport_all WHERE inIsInfoMoney = FALSE OR ContainerId_count <> ContainerId)
+       , tmpReport_count AS (SELECT * FROM tmpReport_all WHERE inIsInfoMoney = TRUE AND ContainerId_count = ContainerId)
+       , tmpReport AS (SELECT COALESCE (tmpReport_summ.AccountId,         tmpReport_count.AccountId)         AS AccountId
+                            , COALESCE (tmpReport_summ.ContainerId_count, tmpReport_count.ContainerId_count) AS ContainerId_count
+                            , COALESCE (tmpReport_summ.ContainerId,       tmpReport_count.ContainerId)       AS ContainerId
+                            , COALESCE (tmpReport_summ.LocationId,        tmpReport_count.LocationId)        AS LocationId
+                            , COALESCE (tmpReport_summ.GoodsId,           tmpReport_count.GoodsId)           AS GoodsId
+                            , COALESCE (tmpReport_summ.GoodsKindId,       tmpReport_count.GoodsKindId)       AS GoodsKindId
+                            , COALESCE (tmpReport_summ.PartionGoodsId,    tmpReport_count.PartionGoodsId)    AS PartionGoodsId
+                            , COALESCE (tmpReport_summ.AssetToId,         tmpReport_count.AssetToId)         AS AssetToId
+
+                            , COALESCE (tmpReport_summ.LocationId_by,      tmpReport_count.LocationId_by)    AS LocationId_by
+
+                            , COALESCE (tmpReport_count.CountStart,        tmpReport_summ.CountStart)        AS CountStart    
+                            , COALESCE (tmpReport_count.CountEnd,          tmpReport_summ.CountEnd)          AS CountEnd      
+                            , COALESCE (tmpReport_count.CountEnd_calc,     tmpReport_summ.CountEnd_calc)     AS CountEnd_calc 
+
+                            , COALESCE (tmpReport_count.CountIncome,       tmpReport_summ.CountIncome)       AS CountIncome   
+                            , COALESCE (tmpReport_count.CountReturnOut,    tmpReport_summ.CountReturnOut)    AS CountReturnOut
+
+                            , COALESCE (tmpReport_count.CountSendIn,       tmpReport_summ.CountSendIn)       AS CountSendIn 
+                            , COALESCE (tmpReport_count.CountSendOut,      tmpReport_summ.CountSendOut)      AS CountSendOut
+
+                            , COALESCE (tmpReport_count.CountSendOnPriceIn,  tmpReport_summ.CountSendOnPriceIn)  AS CountSendOnPriceIn 
+                            , COALESCE (tmpReport_count.CountSendOnPriceOut, tmpReport_summ.CountSendOnPriceOut) AS CountSendOnPriceOut
+
+                            , COALESCE (tmpReport_count.CountSale,           tmpReport_summ.CountSale)           AS CountSale
+                            , COALESCE (tmpReport_count.CountSale_10500,     tmpReport_summ.CountSale_10500)     AS CountSale_10500
+                            , COALESCE (tmpReport_count.CountSale_40208,     tmpReport_summ.CountSale_40208)     AS CountSale_40208
+                            , COALESCE (tmpReport_count.CountSaleReal,       tmpReport_summ.CountSaleReal)       AS CountSaleReal
+                            , COALESCE (tmpReport_count.CountSaleReal_10500, tmpReport_summ.CountSaleReal_10500) AS CountSaleReal_10500
+                            , COALESCE (tmpReport_count.CountSaleReal_40208, tmpReport_summ.CountSaleReal_40208) AS CountSaleReal_40208
+
+                            , COALESCE (tmpReport_count.CountReturnIn,           tmpReport_summ.CountReturnIn)           AS CountReturnIn          
+                            , COALESCE (tmpReport_count.CountReturnIn_40208,     tmpReport_summ.CountReturnIn_40208)     AS CountReturnIn_40208    
+                            , COALESCE (tmpReport_count.CountReturnInReal,       tmpReport_summ.CountReturnInReal)       AS CountReturnInReal      
+                            , COALESCE (tmpReport_count.CountReturnInReal_40208, tmpReport_summ.CountReturnInReal_40208) AS CountReturnInReal_40208
+
+                            , COALESCE (tmpReport_count.CountLoss,      tmpReport_summ.CountLoss)      AS CountLoss     
+                            , COALESCE (tmpReport_count.CountInventory, tmpReport_summ.CountInventory) AS CountInventory
+
+                            , COALESCE (tmpReport_count.CountProductionIn,  tmpReport_summ.CountProductionIn)  AS CountProductionIn 
+                            , COALESCE (tmpReport_count.CountProductionOut, tmpReport_summ.CountProductionOut) AS CountProductionOut
+
+                            , COALESCE (tmpReport_summ.SummStart, 0)    AS SummStart   
+                            , COALESCE (tmpReport_summ.SummEnd, 0)      AS SummEnd     
+                            , COALESCE (tmpReport_summ.SummEnd_calc, 0) AS SummEnd_calc
+
+                            , COALESCE (tmpReport_summ.SummIncome, 0)    AS SummIncome   
+                            , COALESCE (tmpReport_summ.SummReturnOut, 0) AS SummReturnOut
+
+                            , COALESCE (tmpReport_summ.SummSendIn, 0)  AS SummSendIn 
+                            , COALESCE (tmpReport_summ.SummSendOut, 0) AS SummSendOut
+
+                            , COALESCE (tmpReport_summ.SummSendOnPriceIn, 0)  AS SummSendOnPriceIn
+                            , COALESCE (tmpReport_summ.SummSendOnPriceOut, 0) AS SummSendOnPriceOut
+
+                            , COALESCE (tmpReport_summ.SummSale, 0)           AS SummSale           
+                            , COALESCE (tmpReport_summ.SummSale_10500, 0)     AS SummSale_10500     
+                            , COALESCE (tmpReport_summ.SummSale_40208, 0)     AS SummSale_40208     
+                            , COALESCE (tmpReport_summ.SummSaleReal, 0)       AS SummSaleReal       
+                            , COALESCE (tmpReport_summ.SummSaleReal_10500, 0) AS SummSaleReal_10500 
+                            , COALESCE (tmpReport_summ.SummSaleReal_40208, 0) AS SummSaleReal_40208 
+
+                            , COALESCE (tmpReport_summ.SummReturnIn, 0)           AS SummReturnIn          
+                            , COALESCE (tmpReport_summ.SummReturnIn_40208, 0)     AS SummReturnIn_40208    
+                            , COALESCE (tmpReport_summ.SummReturnInReal, 0)       AS SummReturnInReal      
+                            , COALESCE (tmpReport_summ.SummReturnInReal_40208, 0) AS SummReturnInReal_40208
+
+                            , COALESCE (tmpReport_summ.SummLoss, 0)              AS SummLoss             
+                            , COALESCE (tmpReport_summ.SummInventory, 0)         AS SummInventory        
+                            , COALESCE (tmpReport_summ.SummInventory_RePrice, 0) AS SummInventory_RePrice
+
+                            , COALESCE (tmpReport_summ.SummProductionIn, 0)  AS SummProductionIn 
+                            , COALESCE (tmpReport_summ.SummProductionOut, 0) AS SummProductionOut
+                       FROM tmpReport_summ
+                            FULL JOIN tmpReport_count ON tmpReport_count.ContainerId_count = tmpReport_summ.ContainerId_count
+                      )
+
 
    -- Результат
    SELECT View_Account.AccountGroupName, View_Account.AccountDirectionName
@@ -687,4 +766,4 @@ ALTER FUNCTION gpReport_MotionGoods (TDateTime, TDateTime, Integer, Integer, Int
 
 -- тест
 -- SELECT * FROM gpReport_MotionGoods (inStartDate:= '01.01.2015', inEndDate:= '01.01.2015', inAccountGroupId:= 0, inUnitGroupId:= 0, inLocationId:= 0, inGoodsGroupId:= 0, inGoodsId:= 0, inUnitGroupId_by:=0, inLocationId_by:= 0, inIsInfoMoney:= FALSE, inSession:= zfCalc_UserAdmin())
--- SELECT * from gpReport_MotionGoods (inStartDate:= '01.08.2015', inEndDate:= '01.08.2015', inAccountGroupId:= 0, inUnitGroupId := 8459 , inLocationId := 0 , inGoodsGroupId := 1860 , inGoodsId := 0 , inUnitGroupId_by:=0, inLocationId_by:= 0, inIsInfoMoney:= TRUE, inSession := zfCalc_UserAdmin());
+-- SELECT * from gpReport_MotionGoods (inStartDate:= '01.08.2015', inEndDate:= '01.08.2015', inAccountGroupId:= 0, inUnitGroupId:= 8459, inLocationId:= 0, inGoodsGroupId:= 1860, inGoodsId:= 1, inUnitGroupId_by:= 0, inLocationId_by:= 0, inIsInfoMoney:= TRUE, inSession := zfCalc_UserAdmin());

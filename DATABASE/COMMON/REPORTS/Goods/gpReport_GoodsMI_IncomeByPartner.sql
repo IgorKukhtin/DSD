@@ -26,7 +26,7 @@ RETURNS TABLE (GoodsGroupName TVarChar, GoodsGroupNameFull TVarChar
              , LocationCode Integer, LocationName TVarChar
              , JuridicalCode Integer, JuridicalName TVarChar
              , PartnerId Integer, PartnerCode Integer, PartnerName TVarChar
-             , PaidKindName TVarChar
+             , PaidKindId Integer, PaidKindName TVarChar
              , FuelKindName TVarChar
              , InfoMoneyGroupName TVarChar, InfoMoneyDestinationName TVarChar, InfoMoneyCode Integer, InfoMoneyName TVarChar, InfoMoneyName_all TVarChar
              , Amount TFloat, Amount_Weight TFloat, Amount_Sh TFloat, Price TFloat
@@ -156,6 +156,7 @@ BEGIN
          , Object_Partner.ObjectCode   AS PartnerCode
          , Object_Partner.ValueData    AS PartnerName
 
+         , Object_PaidKind.Id          AS PaidKindId
          , Object_PaidKind.ValueData   AS PaidKindName
          , Object_FuelKind.ValueData   AS FuelKindName
 

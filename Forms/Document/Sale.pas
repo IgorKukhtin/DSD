@@ -176,7 +176,6 @@ type
     тт: TdxBarButton;
     PriceCost: TcxGridDBColumn;
     SumCost: TcxGridDBColumn;
-    dsdDataSetRefresh1: TdsdDataSetRefresh;
     spUpdate_MI_Sale_Price: TdsdStoredProc;
     bbUpdatePrice: TdxBarButton;
     cxLabel23: TcxLabel;
@@ -184,6 +183,7 @@ type
     cxLabel24: TcxLabel;
     edParValue: TcxCurrencyEdit;
     Price_Pricelist: TcxGridDBColumn;
+    actSPPrintSaleProcName: TdsdExecStoredProc;
   private
     { Private declarations }
   public

@@ -1098,6 +1098,11 @@ end;
 
 procedure TLoadFormTest.LoadReportFormTest;
 begin
+{
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_CashUserForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_CashUserForm');
+ exit;
+ }
  {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_GoodsMIForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_GoodsMIForm');
@@ -1150,7 +1155,7 @@ begin
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_AccountForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_AccountForm');
-    TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_AccountDialogForm'));
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_AccountDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_AccountDialogForm');
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_TransportHoursWorkForm'));
@@ -1261,7 +1266,7 @@ begin
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_MemberForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_MemberForm');
-    TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_MemberDialogForm'));
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_MemberDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_MemberDialogForm');
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_CashForm'));

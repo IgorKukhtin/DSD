@@ -31,7 +31,7 @@ RETURNS TABLE (GoodsGroupName TVarChar, GoodsGroupNameFull TVarChar
              , PartnerId Integer, PartnerCode Integer, PartnerName TVarChar
              , RetailName TVarChar
              , AreaName TVarChar, PartnerTagName TVarChar
-             , PaidKindName TVarChar
+             , PaidKindId Integer, PaidKindName TVarChar
              , BusinessName TVarChar
              , BranchName TVarChar
 
@@ -257,6 +257,7 @@ BEGIN
           , Object_Area.ValueData       AS AreaName
           , Object_PartnerTag.ValueData AS PartnerTagName
 
+         , Object_PaidKind.Id          AS PaidKindId
          , Object_PaidKind.ValueData   AS PaidKindName
          , Object_Business.ValueData   AS BusinessName
          , Object_Branch.ValueData     AS BranchName

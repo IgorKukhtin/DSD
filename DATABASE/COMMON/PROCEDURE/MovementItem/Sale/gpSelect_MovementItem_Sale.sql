@@ -256,7 +256,7 @@ BEGIN
                                   AND ObjectString_Goods_GoodsGroupFull.DescId = zc_ObjectString_Goods_GroupNameFull()
                                   
             LEFT JOIN tmpPriceCost ON tmpPriceCost.MovementItemId=MovementItem.Id
-            LEFT JOIN tmpPriceList ON tmpPriceList.GoodsId = tmpGoods.GoodsId
+            LEFT JOIN tmpPriceList ON tmpPriceList.GoodsId = MovementItem.ObjectId
             ;
      ELSE
 

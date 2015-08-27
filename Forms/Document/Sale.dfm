@@ -3,9 +3,8 @@
   ClientHeight = 668
   ClientWidth = 1382
   AddOnFormData.OnLoadAction = actSetDefaults
-  ExplicitLeft = -281
   ExplicitWidth = 1398
-  ExplicitHeight = 706
+  ExplicitHeight = 703
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -1039,7 +1038,7 @@
       MoveParams = <>
       ActionList = <
         item
-          Action = actUpdatePrice
+          Action = actSPPrintSaleProcName
         end
         item
           Action = actPrint
@@ -1180,19 +1179,6 @@
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
     end
-    object dsdDataSetRefresh1: TdsdDataSetRefresh [22]
-      Category = 'DSDLib'
-      MoveParams = <>
-      StoredProc = spSelect
-      StoredProcList = <
-        item
-          StoredProc = spSelect
-        end>
-      Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
-      Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
-      ShortCut = 116
-      RefreshOnTabSetChanges = False
-    end
     inherited actUnCompleteMovement: TChangeGuidesStatus
       StoredProcList = <
         item
@@ -1209,7 +1195,7 @@
         item
         end>
     end
-    object actGoodsKindChoice: TOpenChoiceForm [27]
+    object actGoodsKindChoice: TOpenChoiceForm [26]
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -1604,6 +1590,17 @@
       ReportNameParam.Value = 'PrintMovement_Sale_Order'
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
+    end
+    object actSPPrintSaleProcName: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spGetReportName
+      StoredProcList = <
+        item
+          StoredProc = spGetReportName
+        end>
+      Caption = 'actSPPrintSaleProcName'
     end
   end
   inherited MasterDS: TDataSource
