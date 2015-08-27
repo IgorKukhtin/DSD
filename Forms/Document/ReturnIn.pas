@@ -147,6 +147,11 @@ type
     actOpenTaxCorrective: TdsdOpenForm;
     bbOpenTaxCorrective: TdxBarButton;
     cbisPartner: TcxCheckBox;
+    spUpdate_MI_ReturnIn_Price: TdsdStoredProc;
+    actUpdatePrice: TdsdExecStoredProc;
+    bbUpdatePrice: TdxBarButton;
+    Price_Pricelist: TcxGridDBColumn;
+    isCheck_Pricelist: TcxGridDBColumn;
   private
     { Private declarations }
   public
