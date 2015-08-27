@@ -615,6 +615,8 @@ type
     actReport_ReceiptSaleAnalyzeForm: TdsdOpenForm;
     actReport_ReceiptProductionOutAnalyzeForm: TdsdOpenForm;
     miReport_ReceiptProductionOutAnalyze: TMenuItem;
+    actReport_TransportList: TdsdOpenForm;
+    N49: TMenuItem;
     procedure actReport_OLAPSoldExecute(Sender: TObject);
     procedure FormShow(Sender: TObject);
   private

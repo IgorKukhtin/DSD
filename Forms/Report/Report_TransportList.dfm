@@ -24,7 +24,6 @@ object Report_TransportListForm: TReport_TransportListForm
     Height = 338
     Align = alClient
     TabOrder = 0
-    ExplicitWidth = 834
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -315,6 +314,13 @@ object Report_TransportListForm: TReport_TransportListForm
         HeaderAlignmentVert = vaCenter
         Width = 104
       end
+      object IdBarCode: TcxGridDBColumn
+        DataBinding.FieldName = 'IdBarCode'
+        Visible = False
+        Options.Editing = False
+        VisibleForCustomization = False
+        Width = 40
+      end
     end
     object cxGridLevel: TcxGridLevel
       GridView = cxGridDBTableView
@@ -327,7 +333,6 @@ object Report_TransportListForm: TReport_TransportListForm
     Height = 31
     Align = alTop
     TabOrder = 5
-    ExplicitWidth = 834
     object deStart: TcxDateEdit
       Left = 101
       Top = 5

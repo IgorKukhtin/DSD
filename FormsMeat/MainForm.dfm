@@ -2207,6 +2207,17 @@ inherited MainForm: TMainForm
       GuiParams = <>
       isShowModal = False
     end
+    object actReport_TransportList: TdsdOpenForm
+      Category = #1058#1088#1072#1085#1089#1087#1086#1088#1090
+      MoveParams = <>
+      Caption = #1056#1077#1077#1089#1090#1088' '#1087#1091#1090#1077#1074#1099#1093' + '#1085#1072#1077#1084#1085#1099#1081' '#1090#1088#1072#1085#1089#1087#1086#1088#1090
+      Hint = #1056#1077#1077#1089#1090#1088' '#1087#1091#1090#1077#1074#1099#1093' + '#1085#1072#1077#1084#1085#1099#1081' '#1090#1088#1072#1085#1089#1087#1086#1088#1090
+      FormName = 'TReport_TransportListForm'
+      FormNameParam.Value = 'TReport_TransportListForm'
+      FormNameParam.DataType = ftString
+      GuiParams = <>
+      isShowModal = False
+    end
     object actReport_GoodsTax: TdsdOpenForm
       Category = #1054#1090#1095#1077#1090#1099' ('#1090#1086#1074'.)'
       MoveParams = <>
@@ -3763,6 +3774,9 @@ inherited MainForm: TMainForm
       end
       object miReport_TransportHoursWork: TMenuItem
         Action = actReport_TransportHoursWork
+      end
+      object N49: TMenuItem
+        Action = actReport_TransportList
       end
     end
     object miPersonalDocuments: TMenuItem [7]

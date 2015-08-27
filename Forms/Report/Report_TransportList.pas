@@ -64,6 +64,7 @@ type
     ExecuteDialog: TExecuteDialog;
     dxBarStatic1: TdxBarStatic;
     UnitForwardingName: TcxGridDBColumn;
+    IdBarCode: TcxGridDBColumn;
   private
   public
   end;
