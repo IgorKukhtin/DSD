@@ -1153,6 +1153,11 @@ begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_TransportDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_TransportDialogForm');
 
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_TransportListForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_TransportListForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_TransportListDialogForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_TransportListDialogForm');
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_AccountForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_AccountForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_AccountDialogForm'));
