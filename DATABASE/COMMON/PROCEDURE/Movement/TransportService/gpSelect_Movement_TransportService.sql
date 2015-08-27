@@ -10,6 +10,7 @@ CREATE OR REPLACE FUNCTION gpSelect_Movement_TransportService(
 )
 RETURNS TABLE (Id Integer, MIId Integer, InvNumber Integer, OperDate TDateTime
              , StatusCode Integer, StatusName TVarChar
+             , StartRunPlan TDateTime, StartRun TDateTime
              , Amount TFloat, Distance TFloat, Price TFloat, CountPoint TFloat, TrevelTime TFloat
              , Comment TVarChar
              , ContractId Integer, ContractName TVarChar
@@ -39,6 +40,9 @@ BEGIN
            , Movement.OperDate
            , Object_Status.ObjectCode   AS StatusCode
            , Object_Status.ValueData    AS StatusName
+
+           , CAST (DATE_TRUNC ('MINUTE', MovementDate_StartRunPlan.ValueData) AS TDateTime) AS StartRunPlan
+           , CAST (DATE_TRUNC ('MINUTE', MovementDate_StartRun.ValueData)     AS TDateTime) AS StartRun
 
            , MovementItem.Amount
            , MIFloat_Distance.ValueData     AS Distance
@@ -142,6 +146,13 @@ BEGIN
                                          ON MovementLinkObject_UnitForwarding.MovementId = Movement.Id
                                         AND MovementLinkObject_UnitForwarding.DescId = zc_MovementLinkObject_UnitForwarding()
             LEFT JOIN Object AS Object_UnitForwarding ON Object_UnitForwarding.Id = MovementLinkObject_UnitForwarding.ObjectId
+
+            LEFT JOIN MovementDate AS MovementDate_StartRunPlan
+                                   ON MovementDate_StartRunPlan.MovementId = Movement.Id
+                                  AND MovementDate_StartRunPlan.DescId = zc_MovementDate_StartRunPlan()
+            LEFT JOIN MovementDate AS MovementDate_StartRun
+                                   ON MovementDate_StartRun.MovementId = Movement.Id
+                                  AND MovementDate_StartRun.DescId = zc_MovementDate_StartRun()
 
        WHERE Movement.DescId = zc_Movement_TransportService()
          AND Movement.OperDate BETWEEN inStartDate AND inEndDate

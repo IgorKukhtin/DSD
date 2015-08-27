@@ -2,6 +2,7 @@
 
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_PersonalServiceList(Integer, Integer, TVarChar, Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_PersonalServiceList(Integer, Integer, TVarChar, Integer, Integer, Integer, Integer, TVarChar);
+--DROP FUNCTION IF EXISTS gpInsertUpdate_Object_PersonalServiceList(Integer, Integer, TVarChar, Integer, Integer, Integer, Integer, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_PersonalServiceList(
  INOUT ioId             Integer   ,     -- ключ объекта <> 
@@ -11,6 +12,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_PersonalServiceList(
     IN inPaidKindId     Integer   ,     -- 
     IN inBranchId       Integer   ,     -- 
     IN inBankId         Integer   ,     -- 
+   -- IN inMemberId       Integer   ,     -- Физ лица(пользователь)
     IN inSession        TVarChar        -- сессия пользователя
 )
   RETURNS integer AS
@@ -45,6 +47,8 @@ BEGIN
    PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_PersonalServiceList_Branch(), ioId, inBranchId);
    -- сохранили св-во 
    PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_PersonalServiceList_Bank(), ioId, inBankId);
+   -- сохранили св-во 
+   --PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_PersonalServiceList_Member(), ioId, inMemberId);
         
    -- сохранили протокол
    PERFORM lpInsert_ObjectProtocol (ioId, vbUserId);
@@ -58,7 +62,8 @@ ALTER FUNCTION gpInsertUpdate_Object_PersonalServiceList (Integer, Integer, TVar
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
- 15.04.15          * add PaidKind, Branch, Bank
+ 26.08.15         * add inMemberId
+ 15.04.15         * add PaidKind, Branch, Bank
  12.09.14         *
 */
 

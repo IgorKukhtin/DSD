@@ -145,7 +145,7 @@ BEGIN
             SELECT 
                 Container.Id 
                ,Container.ObjectId --Товар
-               ,Container.Amount - COALESCE(SUM(MovementItemContainer.amount),0) as Amount  --Тек. остаток - Движение после даты переучета
+               ,Container.Amount - COALESCE(SUM(MovementItemContainer.amount),0.0) as Amount  --Тек. остаток - Движение после даты переучета
             FROM 
                 Container
                 LEFT OUTER JOIN MovementItemContainer ON Container.Id = MovementItemContainer.ContainerId
@@ -172,12 +172,12 @@ BEGIN
 WITH DIFFSALDO AS ( SELECT 
                         MovementItem.Id                                            as MovementItemId 
                        ,MovementItem.ObjectId                                      as ObjectId  
-                       ,COALESCE(MovementItem.Amount,0) - COALESCE(Saldo.Amount,0) as Amount -- -недостача, +Излишек
+                       ,COALESCE(MovementItem.Amount,0.0) - COALESCE(Saldo.Amount,0.0) as Amount -- -недостача, +Излишек
                     FROM MovementItem
                         LEFT OUTER JOIN (SELECT T0.ObjectId, SUM(T0.Amount) as Amount
                                         FROM(SELECT Container.Id 
                                                    ,Container.ObjectId --Товар
-                                                   ,Container.Amount - COALESCE(SUM(MovementItemContainer.amount),0) as Amount  --Тек. остаток - Движение после даты переучета
+                                                   ,(Container.Amount - COALESCE(SUM(MovementItemContainer.amount),0.0))::TFloat as Amount  --Тек. остаток - Движение после даты переучета
                                              FROM Container
                                                 LEFT OUTER JOIN MovementItemContainer ON Container.Id = MovementItemContainer.ContainerId
                                                                                      AND date_trunc('day', MovementItemContainer.Operdate) > vbInventoryDate
@@ -191,16 +191,29 @@ WITH DIFFSALDO AS ( SELECT
                                                             ON MovementItem.ObjectId = Saldo.ObjectId
                     WHERE MovementItem.MovementId = inMovementId
                       AND MovementItem.IsErased = FALSE
-                      AND COALESCE(MovementItem.Amount,0) - COALESCE(Saldo.Amount,0) <> 0),
+                      AND COALESCE(MovementItem.Amount,0.0) - COALESCE(Saldo.Amount,0.0) <> 0.0),
 
   DD AS (SELECT 
             DIFFSALDO.MovementItemId 
           , DIFFSALDO.Amount 
           , Container.Amount AS ContainerAmount 
-          , OperDate 
+          , vbInventoryDate as OperDate 
           , Container.Id
           , SUM(Container.Amount) OVER (PARTITION BY Container.objectid ORDER BY Movement.OperDate, Container.Id) 
-        FROM Container 
+        FROM(
+                SELECT Container.Id 
+                   ,Container.ObjectId --Товар
+                   ,(Container.Amount - COALESCE(SUM(MovementItemContainer.amount),0.0))::TFloat as Amount  --Тек. остаток - Движение после даты переучета
+                FROM Container
+                    LEFT OUTER JOIN MovementItemContainer ON Container.Id = MovementItemContainer.ContainerId
+                                                         AND date_trunc('day', MovementItemContainer.Operdate) > vbInventoryDate
+                    JOIN containerlinkobject AS CLI_Unit ON CLI_Unit.containerid = Container.Id
+                                                        AND CLI_Unit.descid = zc_ContainerLinkObject_Unit()
+                                                        AND CLI_Unit.ObjectId = vbUnitId                                    
+                WHERE Container.DescID = zc_Container_Count()
+                GROUP BY Container.Id 
+                     ,Container.ObjectId
+            ) AS Container 
             JOIN DIFFSALDO ON DIFFSALDO.objectid = Container.objectid 
             JOIN containerlinkobject AS CLI_MI 
                                      ON CLI_MI.containerid = Container.Id
@@ -212,14 +225,14 @@ WITH DIFFSALDO AS ( SELECT
             JOIN OBJECT AS Object_PartionMovementItem ON Object_PartionMovementItem.Id = CLI_MI.ObjectId
             JOIN movementitem ON movementitem.Id = Object_PartionMovementItem.ObjectCode
             JOIN Movement ON Movement.Id = movementitem.movementid
-        WHERE Container.Amount > 0 AND DIFFSALDO.Amount < 0), 
+        WHERE Container.Amount > 0.0 AND DIFFSALDO.Amount < 0.0), 
   
   tmpItem AS (SELECT 
                 Id
 			  , MovementItemId
 			  , OperDate
 			  , CASE 
-                  WHEN -Amount - SUM > 0 THEN ContainerAmount 
+                  WHEN -Amount - SUM > 0.0 THEN ContainerAmount 
                   ELSE -Amount - SUM + ContainerAmount
                 END AS Amount
               FROM DD

@@ -3,7 +3,7 @@ object PersonalServiceListForm: TPersonalServiceListForm
   Top = 0
   Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1042#1077#1076#1086#1084#1086#1089#1090#1080' '#1085#1072#1095#1080#1089#1083#1077#1085#1080#1103'>'
   ClientHeight = 321
-  ClientWidth = 627
+  ClientWidth = 728
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -20,14 +20,13 @@ object PersonalServiceListForm: TPersonalServiceListForm
   object cxGrid: TcxGrid
     Left = 0
     Top = 26
-    Width = 627
+    Width = 728
     Height = 295
     Align = alClient
     TabOrder = 0
     LookAndFeel.NativeStyle = True
     LookAndFeel.SkinName = 'UserSkin'
-    ExplicitWidth = 390
-    ExplicitHeight = 350
+    ExplicitWidth = 627
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -40,7 +39,6 @@ object PersonalServiceListForm: TPersonalServiceListForm
       OptionsCustomize.ColumnsQuickCustomization = True
       OptionsData.Deleting = False
       OptionsData.DeletingConfirmation = False
-      OptionsData.Editing = False
       OptionsData.Inserting = False
       OptionsView.ColumnAutoWidth = True
       OptionsView.GroupByBox = False
@@ -53,20 +51,21 @@ object PersonalServiceListForm: TPersonalServiceListForm
         HeaderAlignmentHorz = taRightJustify
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 65
+        Width = 62
       end
       object clName: TcxGridDBColumn
         Caption = #1053#1072#1079#1074#1072#1085#1080#1077
         DataBinding.FieldName = 'Name'
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 200
+        Width = 187
       end
       object clJuridicalName: TcxGridDBColumn
         Caption = #1070#1088'.'#1083#1080#1094#1086
         DataBinding.FieldName = 'JuridicalName'
         HeaderAlignmentVert = vaCenter
-        Width = 101
+        Options.Editing = False
+        Width = 95
       end
       object clErased: TcxGridDBColumn
         Caption = #1059#1076#1072#1083#1077#1085
@@ -84,7 +83,7 @@ object PersonalServiceListForm: TPersonalServiceListForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 81
+        Width = 76
       end
       object clBankName: TcxGridDBColumn
         Caption = #1041#1072#1085#1082
@@ -92,7 +91,7 @@ object PersonalServiceListForm: TPersonalServiceListForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 106
+        Width = 99
       end
       object clPaidKindName: TcxGridDBColumn
         Caption = #1060#1086#1088#1084#1072' '#1086#1087#1083#1072#1090#1099
@@ -100,7 +99,22 @@ object PersonalServiceListForm: TPersonalServiceListForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 60
+        Width = 57
+      end
+      object MemberName: TcxGridDBColumn
+        Caption = #1060#1080#1079'.'#1083#1080#1094#1086' ('#1087#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1100') '
+        DataBinding.FieldName = 'MemberName'
+        PropertiesClassName = 'TcxButtonEditProperties'
+        Properties.Buttons = <
+          item
+            Action = MemberChoice
+            Default = True
+            Kind = bkEllipsis
+          end>
+        Properties.ReadOnly = True
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 95
       end
     end
     object cxGridLevel: TcxGridLevel
@@ -412,6 +426,42 @@ object PersonalServiceListForm: TPersonalServiceListForm
         end>
       isShowModal = False
     end
+    object MemberChoice: TOpenChoiceForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = 'TPositionForm'
+      FormName = 'TMember_ObjectForm'
+      FormNameParam.Value = 'TMember_ObjectForm'
+      FormNameParam.DataType = ftString
+      GuiParams = <
+        item
+          Name = 'Key'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'MemberId'
+        end
+        item
+          Name = 'TextValue'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'MemberName'
+          DataType = ftString
+        end>
+      isShowModal = True
+    end
+    object actUpdateMember: TdsdUpdateDataSet
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdate
+      StoredProcList = <
+        item
+          StoredProc = spUpdate
+        end>
+      Caption = 'actUpdateDataSet'
+      DataSource = DataSource
+    end
   end
   object dsdStoredProc: TdsdStoredProc
     StoredProcName = 'gpSelect_Object_PersonalServiceList'
@@ -472,5 +522,28 @@ object PersonalServiceListForm: TPersonalServiceListForm
     SummaryItemList = <>
     Left = 48
     Top = 216
+  end
+  object spUpdate: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Object_PersonalServiceList_Member'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inId'
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'Id'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inMemberId'
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'MemberId'
+        ParamType = ptInput
+      end>
+    PackSize = 1
+    Left = 571
+    Top = 110
   end
 end

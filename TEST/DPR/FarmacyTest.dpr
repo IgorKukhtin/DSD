@@ -326,7 +326,8 @@ uses
   CheckJournalUser in '..\..\Forms\Document\CheckJournalUser.pas' {CheckJournalUserForm: TParentForm},
   ReportMovementCheck in '..\..\FormsFarmacy\Report\ReportMovementCheck.pas' {ReportMovementCheckForm: TParentForm},
   MCS in '..\..\Forms\Guides\MCS.pas' {MCSForm: TParentForm},
-  PartionGoodsChoice in '..\..\Forms\Guides\PartionGoodsChoice.pas' {PartionGoodsChoiceForm: TParentForm};
+  PartionGoodsChoice in '..\..\Forms\Guides\PartionGoodsChoice.pas' {PartionGoodsChoiceForm: TParentForm},
+  Report_GoodsPartionHistory in '..\..\FormsFarmacy\Report\Report_GoodsPartionHistory.pas' {Report_GoodsPartionHistoryForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}

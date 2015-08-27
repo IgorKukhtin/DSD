@@ -11,7 +11,7 @@ uses
   cxGrid, Datasnap.DBClient, cxPropertiesStore, dxBar,
   Vcl.ActnList, DataModul, ParentForm, dsdDB, dsdAction, dsdAddOn, dxBarExtItems,
   cxGridBandedTableView, cxGridDBBandedTableView, cxCheckBox, dxSkinsCore,
-  dxSkinsDefaultPainters, dxSkinscxPCPainter, dxSkinsdxBarPainter;
+  dxSkinsDefaultPainters, dxSkinscxPCPainter, dxSkinsdxBarPainter, cxButtonEdit;
 
 type
   TPersonalServiceListForm = class(TParentForm)
@@ -50,6 +50,10 @@ type
     clPaidKindName: TcxGridDBColumn;
     clBranchName: TcxGridDBColumn;
     clBankName: TcxGridDBColumn;
+    MemberName: TcxGridDBColumn;
+    MemberChoice: TOpenChoiceForm;
+    actUpdateMember: TdsdUpdateDataSet;
+    spUpdate: TdsdStoredProc;
   private
     { Private declarations }
   public

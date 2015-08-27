@@ -2,6 +2,8 @@
 
 
 DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_TransportService (Integer, Integer, TVarChar, TDateTime, TFloat, TFloat, TFloat, TFloat, TFloat, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_TransportService (Integer, Integer, TVarChar, TDateTime, TDateTime, TFloat, TFloat, TFloat, TFloat, TFloat, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar);
+
 
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_TransportService(
@@ -9,6 +11,8 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_TransportService(
  INOUT ioMIId                     Integer   , -- Ключ объекта <строчная часть Документа>
     IN inInvNumber                TVarChar  , -- Номер документа
     IN inOperDate                 TDateTime , -- Дата документа
+  
+    IN inStartRunPlan             TDateTime , -- Дата/Время выезда план
 
  INOUT ioAmount                   TFloat    , -- Сумма
     IN inDistance                 TFloat    , -- Пробег факт, км
@@ -142,6 +146,9 @@ BEGIN
       -- сохранили <Документ>
      ioId := lpInsertUpdate_Movement (ioId, zc_Movement_TransportService(), inInvNumber, inOperDate, NULL, vbAccessKeyId);
 
+     -- сохранили связь с <Дата/Время выезда план>
+     PERFORM lpInsertUpdate_MovementDate (zc_MovementDate_StartRunPlan(), ioId, inStartRunPlan);
+
      -- сохранили связь с <Подразделение (Место отправки)>
      PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_UnitForwarding(), ioId, inUnitForwardingId);
 
@@ -195,6 +202,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
+ 26.08.15         * add inStartRunPlan
  12.11.14                                        * add lpComplete_Movement_Finance_CreateTemp
  12.09.14                                        * add PositionId and ServiceDateId and BusinessId_... and BranchId_...
  17.08.14                                        * add MovementDescId

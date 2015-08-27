@@ -10,6 +10,7 @@ CREATE OR REPLACE FUNCTION gpGet_Movement_TransportService(
 )
 RETURNS TABLE (Id Integer, MIId Integer, InvNumber Integer, OperDate TDateTime
              , StatusCode Integer, StatusName TVarChar
+             , StartRunPlan TDateTime, StartRun TDateTime
              , Amount TFloat, Distance TFloat, Price TFloat, CountPoint TFloat, TrevelTime TFloat
              , Comment TVarChar
              , ContractId Integer, ContractName TVarChar
@@ -43,6 +44,9 @@ BEGIN
            , lfObject_Status.Code             AS StatusCode
            , lfObject_Status.Name             AS StatusName
            
+           , CAST (DATE_TRUNC ('MINUTE', CURRENT_TIMESTAMP) AS TDateTime) AS StartRunPlan 
+           , CAST (DATE_TRUNC ('MINUTE', CURRENT_TIMESTAMP) AS TDateTime) AS StartRun 
+
            , 0::TFloat                        AS Amount
            , 0::TFloat                        AS Distance
            , 0::TFloat                        AS Price
@@ -91,6 +95,9 @@ BEGIN
            , Object_Status.ObjectCode   AS StatusCode
            , Object_Status.ValueData    AS StatusName
            
+           , COALESCE (CAST (DATE_TRUNC ('MINUTE', MovementDate_StartRunPlan.ValueData) AS TDateTime), CAST (DATE_TRUNC ('MINUTE', Movement.OperDate) AS TDateTime))  AS StartRunPlan
+           , COALESCE (CAST (DATE_TRUNC ('MINUTE', MovementDate_StartRun.ValueData)     AS TDateTime), CAST (DATE_TRUNC ('MINUTE', Movement.OperDate) AS TDateTime)) AS StartRun
+
            , MovementItem.Amount            AS Amount
            , MIFloat_Distance.ValueData     AS Distance
            , MIFloat_Price.ValueData        AS Price
@@ -186,6 +193,13 @@ BEGIN
                                          ON MovementLinkObject_UnitForwarding.MovementId = Movement.Id
                                         AND MovementLinkObject_UnitForwarding.DescId = zc_MovementLinkObject_UnitForwarding()
             LEFT JOIN Object AS Object_UnitForwarding ON Object_UnitForwarding.Id = MovementLinkObject_UnitForwarding.ObjectId
+
+            LEFT JOIN MovementDate AS MovementDate_StartRunPlan
+                                   ON MovementDate_StartRunPlan.MovementId = Movement.Id
+                                  AND MovementDate_StartRunPlan.DescId = zc_MovementDate_StartRunPlan()
+            LEFT JOIN MovementDate AS MovementDate_StartRun
+                                   ON MovementDate_StartRun.MovementId = Movement.Id
+                                  AND MovementDate_StartRun.DescId = zc_MovementDate_StartRun()
 
        WHERE Movement.Id =  inMovementId
          AND Movement.DescId = zc_Movement_TransportService();

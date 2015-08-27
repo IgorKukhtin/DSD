@@ -20,7 +20,7 @@ $BODY$
    DECLARE vbUserId Integer;
    DECLARE vbUnitId Integer;
    DECLARE vbRemains TFloat;
-   DECLARE vbAmount_VIP TFloat;
+   DECLARE vbAmount_Reserve TFloat;
 BEGIN
 
     -- проверка прав пользователя на вызов процедуры
@@ -52,20 +52,15 @@ BEGIN
 
     --Вытянуть текущий остаток
     SELECT
-        SUM(MovementItem_Reserve.Amount)::TFloat INTO vbAmount_VIP
+        SUM(MovementItem_Reserve.Amount)::TFloat INTO vbAmount_Reserve
     FROM
         gpSelect_MovementItem_CheckDeferred(inSession) as MovementItem_Reserve
-        LEFT JOIN MovementLinkObject AS MovementLinkObject_CheckMember
-                                     ON MovementLinkObject_CheckMember.MovementId = MovementItem_Reserve.MovementId
-                                    AND MovementLinkObject_CheckMember.DescId = zc_MovementLinkObject_CheckMember()
     WHERE
         MovementItem_Reserve.MovementId <> inMovementId
         AND
-        MovementItem_Reserve.GoodsId = inGoodsId
-        AND
-        MovementLinkObject_CheckMember.MovementId is not null;
+        MovementItem_Reserve.GoodsId = inGoodsId;
         
-    SELECT (SUM(Container.Amount) - COALESCE(vbAmount_VIP,0))::TFloat INTO outRemains
+    SELECT (SUM(Container.Amount) - COALESCE(vbAmount_Reserve,0))::TFloat INTO outRemains
     FROM 
         Container
         INNER JOIN ContainerLinkObject AS ContainerLinkObject_Unit

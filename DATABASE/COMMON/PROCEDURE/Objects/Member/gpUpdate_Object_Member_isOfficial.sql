@@ -1,4 +1,4 @@
--- Function: gpUpdate_Object_Personal_Property ()
+-- Function: gpUpdate_Object_Member_isOfficial ()
 
 DROP FUNCTION IF EXISTS gpUpdate_Object_Member_isOfficial (Integer, Boolean, TVarChar);
 

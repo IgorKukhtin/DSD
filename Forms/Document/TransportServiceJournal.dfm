@@ -3,7 +3,7 @@ inherited TransportServiceJournalForm: TTransportServiceJournalForm
   ClientHeight = 336
   ClientWidth = 1212
   ExplicitWidth = 1228
-  ExplicitHeight = 371
+  ExplicitHeight = 374
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -56,6 +56,25 @@ inherited TransportServiceJournalForm: TTransportServiceJournalForm
           inherited colOperDate: TcxGridDBColumn
             Options.Editing = False
             Width = 52
+          end
+          object StartRunPlan: TcxGridDBColumn
+            Caption = #1044#1072#1090#1072'/'#1042#1088'.'#1074#1099#1077#1079#1076#1072' '#1087#1083#1072#1085
+            DataBinding.FieldName = 'StartRunPlan'
+            PropertiesClassName = 'TcxDateEditProperties'
+            Properties.DisplayFormat = 'dd.mm.yyyy hh:mm'
+            Properties.EditFormat = 'dd.mm.yyyy hh:mm'
+            Properties.Kind = ckDateTime
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 62
+          end
+          object StartRun: TcxGridDBColumn
+            Caption = #1044#1072#1090#1072'/'#1042#1088'.'#1074#1099#1077#1079#1076#1072' '#1092#1072#1082#1090
+            DataBinding.FieldName = 'StartRun'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 62
           end
           object clAmount: TcxGridDBColumn
             Caption = #1057#1091#1084#1084#1072
@@ -558,6 +577,10 @@ inherited TransportServiceJournalForm: TTransportServiceJournalForm
     Left = 640
     Top = 232
   end
+  inherited spMovementReComplete: TdsdStoredProc
+    Left = 432
+    Top = 120
+  end
   object spInsertUpdate: TdsdStoredProc
     StoredProcName = 'gpInsertUpdate_Movement_TransportService'
     DataSets = <>
@@ -590,6 +613,14 @@ inherited TransportServiceJournalForm: TTransportServiceJournalForm
         Value = Null
         Component = MasterCDS
         ComponentItem = 'OperDate'
+        DataType = ftDateTime
+        ParamType = ptInput
+      end
+      item
+        Name = 'inStartRunPlan'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'StartRunPlan'
         DataType = ftDateTime
         ParamType = ptInput
       end

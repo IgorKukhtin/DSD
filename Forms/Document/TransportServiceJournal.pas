@@ -14,7 +14,7 @@ uses
   cxGridCustomTableView, cxGridTableView, cxGridDBTableView, cxGrid, cxPC,
   cxCheckBox, cxImageComboBox, dxSkinsCore, dxSkinsDefaultPainters,
   dxSkinscxPCPainter, dxSkinsdxBarPainter, Vcl.Menus, cxCurrencyEdit,
-  cxButtonEdit;
+  cxButtonEdit, cxBlobEdit;
 
 type
   TTransportServiceJournalForm = class(TAncestorJournalForm)
@@ -38,6 +38,8 @@ type
     clInfoMoneyGroupName: TcxGridDBColumn;
     clInfoMoneyDestinationName: TcxGridDBColumn;
     clUnitForwardingName: TcxGridDBColumn;
+    StartRun: TcxGridDBColumn;
+    StartRunPlan: TcxGridDBColumn;
   private
     { Private declarations }
   public

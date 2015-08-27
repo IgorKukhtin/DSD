@@ -159,6 +159,21 @@ object PersonalForm: TPersonalForm
         Options.Editing = False
         Width = 80
       end
+      object PersonalServiceListOfficialName: TcxGridDBColumn
+        Caption = #1042#1077#1076#1086#1084#1086#1089#1090#1100' '#1085#1072#1095#1080#1089#1083#1077#1085#1080#1103'('#1041#1053')'
+        DataBinding.FieldName = 'PersonalServiceListOfficialName'
+        PropertiesClassName = 'TcxButtonEditProperties'
+        Properties.Buttons = <
+          item
+            Action = PersonalServiceListOfficialChoice
+            Default = True
+            Kind = bkEllipsis
+          end>
+        Properties.ReadOnly = True
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 80
+      end
       object clErased: TcxGridDBColumn
         Caption = #1059#1076#1072#1083#1077#1085
         DataBinding.FieldName = 'isErased'
@@ -735,6 +750,30 @@ object PersonalForm: TPersonalForm
         end>
       isShowModal = True
     end
+    object PersonalServiceListOfficialChoice: TOpenChoiceForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = 'TPositionForm'
+      FormName = 'TPersonalServiceListForm'
+      FormNameParam.Value = 'TPersonalServiceListForm'
+      FormNameParam.DataType = ftString
+      GuiParams = <
+        item
+          Name = 'Key'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'PersonalServiceListOfficialId'
+        end
+        item
+          Name = 'TextValue'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'PersonalServiceListOfficialName'
+          DataType = ftString
+        end>
+      isShowModal = True
+    end
     object actPositionChoice: TOpenChoiceForm
       Category = 'DSDLib'
       MoveParams = <>
@@ -924,6 +963,13 @@ object PersonalForm: TPersonalForm
         Value = Null
         Component = ClientDataSet
         ComponentItem = 'UnitId'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inPersonalServiceListOfficialId'
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'PersonalServiceListOfficialId'
         ParamType = ptInput
       end
       item

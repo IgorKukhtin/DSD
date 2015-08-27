@@ -50,21 +50,9 @@ BEGIN
         (
             SELECT
                 MovementItem_Reserve.GoodsId,
-                SUM(CASE 
-                      WHEN MovementLinkObject_CheckMember.MovementId is null 
-                        THEN MovementItem_Reserve.Amount
-                    ELSE 0
-                    END)::TFloat as Amount_Reserve,
-                SUM(CASE 
-                      WHEN MovementLinkObject_CheckMember.MovementId is not null 
-                        THEN MovementItem_Reserve.Amount
-                    ELSE 0
-                    END)::TFloat as Amount_VIP
+                SUM(MovementItem_Reserve.Amount)::TFloat as Amount
             FROM
                 gpSelect_MovementItem_CheckDeferred(inSession) as MovementItem_Reserve
-                LEFT JOIN MovementLinkObject AS MovementLinkObject_CheckMember
-                                             ON MovementLinkObject_CheckMember.MovementId = MovementItem_Reserve.MovementId
-                                            AND MovementLinkObject_CheckMember.DescId = zc_MovementLinkObject_CheckMember()
             WHERE
                 MovementItem_Reserve.MovementId <> inMovementId
             Group By
@@ -91,9 +79,9 @@ BEGIN
               Goods.ObjectCode,
               (GoodsRemains.Remains 
                 - COALESCE(CurrentMovement.Amount,0) 
-                - COALESCE(Reserve.Amount_VIP,0))::TFloat,
+                - COALESCE(Reserve.Amount,0))::TFloat,
               object_Price_view.price,
-              Reserve.Amount_Reserve::TFloat,
+              Reserve.Amount::TFloat,
               object_Price_view.mcsvalue,
               Link_Goods_AlternativeGroup.ChildObjectId as AlternativeGroupId
        FROM GoodsRemains
