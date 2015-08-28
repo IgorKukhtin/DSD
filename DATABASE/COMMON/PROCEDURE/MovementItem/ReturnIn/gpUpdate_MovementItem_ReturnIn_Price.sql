@@ -25,7 +25,6 @@ BEGIN
      SELECT Movement.StatusId
           , Movement.InvNumber
           , Movement.OperDate
-                  
             INTO vbStatusId, vbInvNumber, vbOperDate
      FROM Movement
      WHERE Movement.Id = inMovementId;

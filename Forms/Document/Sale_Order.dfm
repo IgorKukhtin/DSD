@@ -3,7 +3,7 @@ inherited Sale_OrderForm: TSale_OrderForm
   ClientHeight = 668
   ClientWidth = 1356
   ExplicitWidth = 1372
-  ExplicitHeight = 706
+  ExplicitHeight = 703
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -1640,7 +1640,7 @@ inherited Sale_OrderForm: TSale_OrderForm
         end
         item
           Visible = True
-          ItemName = 'bbMovementItemContainer'
+          ItemName = 'bbRefresh'
         end
         item
           Visible = True
@@ -1648,7 +1648,7 @@ inherited Sale_OrderForm: TSale_OrderForm
         end
         item
           Visible = True
-          ItemName = 'bbRefresh'
+          ItemName = 'bbMovementItemContainer'
         end
         item
           Visible = True

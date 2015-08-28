@@ -4,7 +4,7 @@
   ClientWidth = 1382
   AddOnFormData.OnLoadAction = actSetDefaults
   ExplicitWidth = 1398
-  ExplicitHeight = 706
+  ExplicitHeight = 703
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -2012,7 +2012,7 @@
   inherited spChangeStatus: TdsdStoredProc
     StoredProcName = 'gpUpdate_Status_Sale'
     Left = 224
-    Top = 128
+    Top = 64
   end
   inherited spGet: TdsdStoredProc
     StoredProcName = 'gpGet_Movement_Sale'

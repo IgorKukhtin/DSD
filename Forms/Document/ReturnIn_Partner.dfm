@@ -3,7 +3,7 @@ inherited ReturnIn_PartnerForm: TReturnIn_PartnerForm
   ClientHeight = 637
   ClientWidth = 1139
   ExplicitWidth = 1155
-  ExplicitHeight = 675
+  ExplicitHeight = 672
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -1230,6 +1230,9 @@ inherited ReturnIn_PartnerForm: TReturnIn_PartnerForm
         end>
       isShowModal = True
     end
+    inherited MovementItemProtocolOpenForm: TdsdOpenForm
+      TabSheet = tsMain
+    end
     object actGoodsChoice: TOpenChoiceForm [24]
       Category = 'DSDLib'
       MoveParams = <>
@@ -1572,22 +1575,6 @@ inherited ReturnIn_PartnerForm: TReturnIn_PartnerForm
         end
         item
           Visible = True
-          ItemName = 'bbTaxCorrective'
-        end
-        item
-          Visible = True
-          ItemName = 'bbStatic'
-        end
-        item
-          Visible = True
-          ItemName = 'bbCorrective'
-        end
-        item
-          Visible = True
-          ItemName = 'bbStatic'
-        end
-        item
-          Visible = True
           ItemName = 'bbAddMask'
         end
         item
@@ -1608,6 +1595,26 @@ inherited ReturnIn_PartnerForm: TReturnIn_PartnerForm
         end
         item
           Visible = True
+          ItemName = 'bbTaxCorrective'
+        end
+        item
+          Visible = True
+          ItemName = 'bbStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbCorrective'
+        end
+        item
+          Visible = True
+          ItemName = 'bbStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbUpdatePrice'
+        end
+        item
+          Visible = True
           ItemName = 'bbCompleteTaxCorrective'
         end
         item
@@ -1624,14 +1631,6 @@ inherited ReturnIn_PartnerForm: TReturnIn_PartnerForm
         end
         item
           Visible = True
-          ItemName = 'bbRefresh'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarStatic'
-        end
-        item
-          Visible = True
           ItemName = 'bbOpenTaxCorrective'
         end
         item
@@ -1640,7 +1639,7 @@ inherited ReturnIn_PartnerForm: TReturnIn_PartnerForm
         end
         item
           Visible = True
-          ItemName = 'bbUpdatePrice'
+          ItemName = 'bbMovementItemContainer'
         end
         item
           Visible = True
@@ -1648,7 +1647,7 @@ inherited ReturnIn_PartnerForm: TReturnIn_PartnerForm
         end
         item
           Visible = True
-          ItemName = 'bbMovementItemContainer'
+          ItemName = 'bbRefresh'
         end
         item
           Visible = True

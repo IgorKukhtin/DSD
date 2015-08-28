@@ -3,7 +3,7 @@ inherited ReturnInForm: TReturnInForm
   ClientHeight = 650
   ClientWidth = 1104
   ExplicitWidth = 1120
-  ExplicitHeight = 688
+  ExplicitHeight = 685
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -1321,6 +1321,9 @@ inherited ReturnInForm: TReturnInForm
         end>
       isShowModal = True
     end
+    inherited MovementItemProtocolOpenForm: TdsdOpenForm
+      TabSheet = tsMain
+    end
     inherited actAddMask: TdsdExecStoredProc
       TabSheet = tsMain
     end
@@ -1629,22 +1632,6 @@ inherited ReturnInForm: TReturnInForm
         end
         item
           Visible = True
-          ItemName = 'bbTaxCorrective'
-        end
-        item
-          Visible = True
-          ItemName = 'bbStatic'
-        end
-        item
-          Visible = True
-          ItemName = 'bbCorrective'
-        end
-        item
-          Visible = True
-          ItemName = 'bbStatic'
-        end
-        item
-          Visible = True
           ItemName = 'bbAddMask'
         end
         item
@@ -1665,6 +1652,26 @@ inherited ReturnInForm: TReturnInForm
         end
         item
           Visible = True
+          ItemName = 'bbTaxCorrective'
+        end
+        item
+          Visible = True
+          ItemName = 'bbStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbCorrective'
+        end
+        item
+          Visible = True
+          ItemName = 'bbStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbUpdatePrice'
+        end
+        item
+          Visible = True
           ItemName = 'bbCompleteTaxCorrective'
         end
         item
@@ -1681,14 +1688,6 @@ inherited ReturnInForm: TReturnInForm
         end
         item
           Visible = True
-          ItemName = 'bbRefresh'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarStatic'
-        end
-        item
-          Visible = True
           ItemName = 'bbOpenTaxCorrective'
         end
         item
@@ -1697,7 +1696,7 @@ inherited ReturnInForm: TReturnInForm
         end
         item
           Visible = True
-          ItemName = 'bbUpdatePrice'
+          ItemName = 'bbRefresh'
         end
         item
           Visible = True
@@ -3334,7 +3333,7 @@ inherited ReturnInForm: TReturnInForm
         DataType = ftString
       end>
     Left = 420
-    Top = 128
+    Top = 48
   end
   object ParentChoiceGuides: TdsdGuides
     KeyField = 'Id'
@@ -3412,7 +3411,7 @@ inherited ReturnInForm: TReturnInForm
         DataType = ftString
       end>
     Left = 124
-    Top = 104
+    Top = 88
   end
   object spUpdate_MI_ReturnIn_Price: TdsdStoredProc
     StoredProcName = 'gpUpdate_MovementItem_ReturnIn_Price'
