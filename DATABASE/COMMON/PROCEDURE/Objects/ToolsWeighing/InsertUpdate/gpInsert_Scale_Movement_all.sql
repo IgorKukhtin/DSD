@@ -29,6 +29,7 @@ $BODY$
 
    DECLARE vbOperDate_scale TDateTime;
    DECLARE vbOperDatePartner_order TDateTime;
+   DECLARE vbOperDate_order TDateTime;
    DECLARE vbId_tmp Integer;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
@@ -97,6 +98,9 @@ BEGIN
 
      -- !!!запомнили!!
      vbOperDate_scale:= inOperDate;
+     -- !!!определяется OperDate заявки, !!!иначе inOperDate!!!
+     vbOperDate_order:= COALESCE ((SELECT Movement.OperDate FROM Movement WHERE Movement.Id = (SELECT MLM_Order.MovementChildId FROM MovementLinkMovement AS MLM_Order WHERE MLM_Order.MovementId = inMovementId AND MLM_Order.DescId = zc_MovementLinkMovement_Order()))
+                                , inOperDate);
      -- !!!определяется OperDatePartner заявки, !!!иначе inOperDate!!!
      vbOperDatePartner_order:= COALESCE ((SELECT MovementDate.ValueData FROM MovementDate WHERE MovementDate.DescId = zc_MovementDate_OperDatePartner() AND MovementDate.MovementId = (SELECT MLM_Order.MovementChildId FROM MovementLinkMovement AS MLM_Order WHERE MLM_Order.MovementId = inMovementId AND MLM_Order.DescId = zc_MovementLinkMovement_Order()))
                                        , inOperDate);
@@ -283,7 +287,8 @@ BEGIN
                                                   , inInvNumberOrder        := InvNumberOrder
                                                   , inOperDate              := inOperDate
                                                   , inOperDatePartner       := -- !!!если по заявке, тогда расчет OperDatePartner от OperDate заявки - надо только для inBranchCode = 201, 
-                                                                              (CASE WHEN inBranchCode = 201 THEN vbOperDatePartner_order ELSE inOperDate END
+                                                                              (CASE WHEN inBranchCode = 201 THEN vbOperDate_order ELSE inOperDate END
+                                                                             + (CASE WHEN inBranchCode = 201 THEN COALESCE (ObjectFloat_PrepareDayCount.ValueData, 0) ELSE 0 END :: TVarChar || ' DAY') :: INTERVAL
                                                                              + (COALESCE (ObjectFloat_Partner_DocumentDayCount.ValueData, 0) :: TVarChar || ' DAY') :: INTERVAL) :: TDateTime
                                                   , inChecked               := NULL
                                                   , inChangePercent         := ChangePercent
@@ -392,9 +397,13 @@ BEGIN
                                           END AS MovementId_begin
 
                                     FROM gpGet_Movement_WeighingPartner (inMovementId:= inMovementId, inSession:= inSession) AS tmp
+                                         LEFT JOIN ObjectFloat AS ObjectFloat_PrepareDayCount
+                                                               ON ObjectFloat_PrepareDayCount.ObjectId = tmp.ToId
+                                                              AND ObjectFloat_PrepareDayCount.DescId = zc_ObjectFloat_Partner_PrepareDayCount()
                                          LEFT JOIN ObjectFloat AS ObjectFloat_Partner_DocumentDayCount
                                                                ON ObjectFloat_Partner_DocumentDayCount.ObjectId = tmp.ToId
                                                               AND ObjectFloat_Partner_DocumentDayCount.DescId = zc_ObjectFloat_Partner_DocumentDayCount()
+
                                  );
          -- Проверка
          IF COALESCE (vbMovementId_begin, 0) = 0

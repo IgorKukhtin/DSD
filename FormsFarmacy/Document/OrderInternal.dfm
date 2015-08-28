@@ -2,6 +2,7 @@ inherited OrderInternalForm: TOrderInternalForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1047#1072#1103#1074#1082#1072' '#1074#1085#1091#1090#1088#1077#1085#1085#1103#1103'>'
   ClientHeight = 532
   ClientWidth = 1229
+  ExplicitLeft = -93
   ExplicitWidth = 1237
   ExplicitHeight = 559
   PixelsPerInch = 96
@@ -21,8 +22,6 @@ inherited OrderInternalForm: TOrderInternalForm
       inherited cxGrid: TcxGrid
         Width = 1229
         Height = 205
-        ExplicitLeft = -3
-        ExplicitTop = -3
         ExplicitWidth = 1229
         ExplicitHeight = 205
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -293,11 +292,12 @@ inherited OrderInternalForm: TOrderInternalForm
             DataBinding.FieldName = 'CalcAmountAll'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DisplayFormat = ',0.####'
-            Options.Editing = False
+            Options.IncSearch = False
           end
           object colSummAll: TcxGridDBColumn
             Caption = #1042#1089#1077#1075#1086' '#1079#1091#1084#1084#1072' '#1079#1072#1082#1072#1079#1072
             DataBinding.FieldName = 'SummAll'
+            Options.Editing = False
           end
         end
       end
@@ -1241,6 +1241,14 @@ inherited OrderInternalForm: TOrderInternalForm
         Value = Null
         Component = MasterCDS
         ComponentItem = 'Amount'
+        DataType = ftFloat
+        ParamType = ptInput
+      end
+      item
+        Name = 'inAmountManual'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'CalcAmountAll'
         DataType = ftFloat
         ParamType = ptInput
       end

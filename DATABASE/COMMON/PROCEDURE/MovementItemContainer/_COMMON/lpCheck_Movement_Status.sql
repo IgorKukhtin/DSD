@@ -356,7 +356,8 @@ BEGIN
   ELSE
 
   -- !!!временно если не НАЛ!!!
-  IF NOT EXISTS (SELECT MovementId FROM MovementLinkObject WHERE MovementId = inMovementId AND DescId = zc_MovementLinkObject_PaidKind() AND ObjectId = zc_Enum_PaidKind_SecondForm())
+  IF inUserId NOT IN (zc_Enum_Process_Auto_PrimeCost()) -- !!!Админу временно можно!!!
+     AND NOT EXISTS (SELECT MovementId FROM MovementLinkObject WHERE MovementId = inMovementId AND DescId = zc_MovementLinkObject_PaidKind() AND ObjectId = zc_Enum_PaidKind_SecondForm())
   THEN
       -- 3.1. определяется дата для <Закрытие периода>
       SELECT CASE WHEN tmp.CloseDate > tmp.ClosePeriod THEN tmp.CloseDate ELSE tmp.ClosePeriod END AS CloseDate

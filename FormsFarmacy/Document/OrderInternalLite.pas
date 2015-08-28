@@ -50,6 +50,7 @@ type
     colGoodsGroupName: TcxGridDBColumn;
     colAmountSecond: TcxGridDBColumn;
     colAmountAll: TcxGridDBColumn;
+    colCalcAmountAll: TcxGridDBColumn;
   private
     { Private declarations }
   public

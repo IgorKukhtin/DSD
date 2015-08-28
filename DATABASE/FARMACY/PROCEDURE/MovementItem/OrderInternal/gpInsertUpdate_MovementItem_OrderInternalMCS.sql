@@ -61,9 +61,19 @@ BEGIN
                                                                                                           ,inMovementId := vbMovementId
                                                                                                           ,inGoodsId    := Object_Price.GoodsId
                                                                                                           ,inAmount     := COALESCE(MovementItemSaved.Amount,0)
+                                                                                                          ,inAmountManual:= NULL
                                                                                                           ,inPrice      := Object_Price.Price
                                                                                                           ,inUserId     := vbUserId)
-                                           ,inValueData       := floor(Object_Price.MCSValue - SUM(COALESCE(Container.Amount,0)))::TFloat)                                                                                                          
+                                           ,inValueData       := floor(Object_Price.MCSValue - SUM(COALESCE(Container.Amount,0)))::TFloat),
+            lpInsertUpdate_MovementItemFloat(inDescId         := zc_MIFloat_AmountManual()
+                                            ,inMovementItemId := lpInsertUpdate_MovementItem_OrderInternal(ioId         := COALESCE(MovementItemSaved.Id,0)
+                                                                                                          ,inMovementId := vbMovementId
+                                                                                                          ,inGoodsId    := Object_Price.GoodsId
+                                                                                                          ,inAmount     := COALESCE(MovementItemSaved.Amount,0)
+                                                                                                          ,inAmountManual:= NULL
+                                                                                                          ,inPrice      := Object_Price.Price
+                                                                                                          ,inUserId     := vbUserId)
+                                           ,inValueData       := (CEIL((COALESCE(MovementItemSaved.Amount,0) + floor(Object_Price.MCSValue - SUM(COALESCE(Container.Amount,0)))::TFloat)) / COALESCE(Object_Goods_View.MinimumLot, 1)) * COALESCE(Object_Goods_View.MinimumLot, 1))
         from Object_Price_View AS Object_Price
             LEFT OUTER JOIN ContainerLinkObject AS ContainerLinkObject_Unit
                                                 ON ContainerLinkObject_Unit.DescId = zc_ContainerLinkObject_Unit()
@@ -75,6 +85,7 @@ BEGIN
             LEFT OUTER JOIN MovementItem AS MovementItemSaved
                                          ON MovementItemSaved.MovementId = vbMovementId
                                         AND MovementItemSaved.ObjectId = Object_Price.GoodsId
+            LEFT OUTER JOIN Object_Goods_View ON Container.ObjectId = Object_Goods_View.Id                            
         WHERE
             Object_Price.MCSValue > 0
             AND
@@ -85,7 +96,9 @@ BEGIN
             Object_Price.MCSValue,
             Object_Price.Price,
             MovementItemSaved.Id,
-            MovementItemSaved.Amount
+            MovementItemSaved.Amount,
+            Object_Price.MCSValue,
+            Object_Goods_View.MinimumLot
         HAVING
             floor(Object_Price.MCSValue - SUM(COALESCE(Container.Amount,0)))::TFloat > 0;
         

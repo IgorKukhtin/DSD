@@ -538,7 +538,7 @@ BEGIN
                             , tmp.LocationName                AS LocationName
                             , CASE WHEN inIsPartner = TRUE THEN tmp.JuridicalCode /*tmp.PartnerCode*/ ELSE 0  END AS ObjectByCode
                             , CASE WHEN inIsPartner = TRUE THEN tmp.JuridicalName /*tmp.PartnerName*/ ELSE '' END AS ObjectByName
-                            , tmp.PaidKindId                 AS PaidKindId
+                            , tmp.PaidKindId :: Integer                AS PaidKindId
 
                             , SUM (tmp.OperCount_Partner)     AS AmountOut
                             , CASE WHEN vbIsBranch = TRUE THEN SUM (tmp.SummIn_Partner_branch) ELSE SUM (tmp.SummIn_Partner_zavod) END AS SummOut
@@ -583,7 +583,7 @@ BEGIN
                             , tmp.LocationName                AS LocationName
                             , CASE WHEN inIsPartner = TRUE THEN tmp.JuridicalCode /*tmp.PartnerCode*/ ELSE 0  END AS ObjectByCode
                             , CASE WHEN inIsPartner = TRUE THEN tmp.JuridicalName /*tmp.PartnerName*/ ELSE '' END AS ObjectByName
-                            , tmp.PaidKindId                 AS PaidKindId
+                            , tmp.PaidKindId  :: Integer               AS PaidKindId
 
                             , 0                               AS AmountOut
                             , 0                               AS SummOut

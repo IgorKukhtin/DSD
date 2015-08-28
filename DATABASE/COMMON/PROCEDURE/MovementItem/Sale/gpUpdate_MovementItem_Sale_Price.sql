@@ -28,7 +28,7 @@ BEGIN
           , MovementLinkObject_PriceList.ObjectId AS PriceListId
           , MLM_Order.MovementChildId             AS MovementId_order
 
-            INTO vbStatusId, vbInvNumber, vbOperDate, vbPriceListId
+            INTO vbStatusId, vbInvNumber, vbOperDate, vbPriceListId, vbMovementId_order
      FROM Movement
           LEFT JOIN MovementLinkObject AS MovementLinkObject_PriceList
                                        ON MovementLinkObject_PriceList.MovementId = Movement.Id
