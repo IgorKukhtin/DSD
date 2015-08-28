@@ -1,6 +1,7 @@
 inherited ReportMovementCheckForm: TReportMovementCheckForm
   Caption = #1054#1090#1095#1077#1090' '#1087#1086' '#1087#1088#1086#1076#1072#1078#1072#1084' '#1085#1072' '#1082#1072#1089#1089#1072#1093
   ClientWidth = 702
+  AddOnFormData.RefreshAction = actRefreshStart
   ExplicitWidth = 710
   ExplicitHeight = 335
   PixelsPerInch = 96
@@ -155,6 +156,34 @@ inherited ReportMovementCheckForm: TReportMovementCheckForm
       Properties.UseNullString = True
       TabOrder = 5
       Width = 188
+    end
+  end
+  inherited ActionList: TActionList
+    object actGet_UserUnit: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spGet_UserUnit
+      StoredProcList = <
+        item
+          StoredProc = spGet_UserUnit
+        end>
+      Caption = 'actGet_UserUnit'
+    end
+    object actRefreshStart: TdsdDataSetRefresh
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spGet_UserUnit
+      StoredProcList = <
+        item
+          StoredProc = spGet_UserUnit
+        end
+        item
+          StoredProc = spSelect
+        end>
+      Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
+      Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
+      RefreshOnTabSetChanges = False
     end
   end
   inherited MasterDS: TDataSource
@@ -338,5 +367,27 @@ inherited ReportMovementCheckForm: TReportMovementCheckForm
       end>
     Left = 336
     Top = 24
+  end
+  object spGet_UserUnit: TdsdStoredProc
+    StoredProcName = 'gpGet_UserUnit'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'UnitId'
+        Value = ''
+        Component = UnitGuides
+        ComponentItem = 'Key'
+      end
+      item
+        Name = 'UnitName'
+        Value = ''
+        Component = UnitGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+      end>
+    PackSize = 1
+    Left = 432
+    Top = 96
   end
 end

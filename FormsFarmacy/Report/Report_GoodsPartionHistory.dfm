@@ -2,6 +2,7 @@ inherited Report_GoodsPartionHistoryForm: TReport_GoodsPartionHistoryForm
   Caption = #1054#1090#1095#1077#1090' '#1087#1086' '#1076#1074#1080#1078#1077#1085#1080#1102' '#1087#1072#1088#1090#1080#1080' '#1090#1086#1074#1072#1088#1072
   ClientHeight = 359
   ClientWidth = 763
+  AddOnFormData.RefreshAction = actRefreshStart
   ExplicitWidth = 771
   ExplicitHeight = 386
   PixelsPerInch = 96
@@ -182,6 +183,34 @@ inherited Report_GoodsPartionHistoryForm: TReport_GoodsPartionHistoryForm
       Width = 184
     end
   end
+  inherited ActionList: TActionList
+    object actGet_UserUnit: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spGet_UserUnit
+      StoredProcList = <
+        item
+          StoredProc = spGet_UserUnit
+        end>
+      Caption = 'actGet_UserUnit'
+    end
+    object actRefreshStart: TdsdDataSetRefresh
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spGet_UserUnit
+      StoredProcList = <
+        item
+          StoredProc = spGet_UserUnit
+        end
+        item
+          StoredProc = spSelect
+        end>
+      Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
+      Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
+      RefreshOnTabSetChanges = False
+    end
+  end
   inherited MasterDS: TDataSource
     Top = 136
   end
@@ -344,5 +373,27 @@ inherited Report_GoodsPartionHistoryForm: TReport_GoodsPartionHistoryForm
       end>
     Left = 632
     Top = 24
+  end
+  object spGet_UserUnit: TdsdStoredProc
+    StoredProcName = 'gpGet_UserUnit'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'UnitId'
+        Value = ''
+        Component = GuidesUnit
+        ComponentItem = 'Key'
+      end
+      item
+        Name = 'UnitName'
+        Value = ''
+        Component = GuidesUnit
+        ComponentItem = 'TextValue'
+        DataType = ftString
+      end>
+    PackSize = 1
+    Left = 432
+    Top = 96
   end
 end
