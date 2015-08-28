@@ -2364,8 +2364,8 @@ inherited Report_PersonalForm: TReport_PersonalForm
         DataType = ftString
       end>
     PackSize = 1
-    Left = 296
-    Top = 232
+    Left = 328
+    Top = 208
   end
   object FormParams: TdsdFormParams
     Params = <

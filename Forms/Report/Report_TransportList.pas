@@ -65,6 +65,8 @@ type
     dxBarStatic1: TdxBarStatic;
     UnitForwardingName: TcxGridDBColumn;
     IdBarCode: TcxGridDBColumn;
+    actPrint: TdsdPrintAction;
+    bbPrint: TdxBarButton;
   private
   public
   end;
