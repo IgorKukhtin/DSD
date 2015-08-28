@@ -27,9 +27,13 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_MI_Transport_Child(
 RETURNS RECORD AS
 $BODY$
    DECLARE vbUserId Integer;
+   DECLARE vbIsInsert Boolean;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MI_TransportChild());
+
+     -- определяется признак Создание/Корректировка
+     vbIsInsert:= COALESCE (ioId, 0) = 0;
 
      -- сохранили <Элемент документа> и вернули параметры
      SELECT tmp.ioId, tmp.ioAmount, tmp.outAmount_calc, tmp.outAmount_Distance_calc, tmp.outAmount_ColdHour_calc, tmp.outAmount_ColdDistance_calc
@@ -51,6 +55,10 @@ BEGIN
                                            , inRateFuelKindId     := inRateFuelKindId
                                            , inUserId             := vbUserId
                                             ) AS tmp;
+
+   -- сохранили протокол
+   PERFORM lpInsert_MovementItemProtocol (ioId, vbUserId,vbIsInsert);
+
 
 END;
 $BODY$
