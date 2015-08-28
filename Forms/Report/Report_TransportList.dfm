@@ -480,6 +480,14 @@ object Report_TransportListForm: TReport_TransportListForm
         item
           BeginGroup = True
           Visible = True
+          ItemName = 'bbPrint'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic1'
+        end
+        item
+          Visible = True
           ItemName = 'bbToExcel'
         end>
       OneOnRow = True
@@ -504,6 +512,10 @@ object Report_TransportListForm: TReport_TransportListForm
     end
     object bbDialogForm: TdxBarButton
       Action = ExecuteDialog
+      Category = 0
+    end
+    object bbPrint: TdxBarButton
+      Action = actPrint
       Category = 0
     end
   end
@@ -576,6 +588,36 @@ object Report_TransportListForm: TReport_TransportListForm
       isShowModal = True
       RefreshDispatcher = RefreshDispatcher
       OpenBeforeShow = True
+    end
+    object actPrint: TdsdPrintAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProcList = <>
+      Caption = #1055#1077#1095#1072#1090#1100' '#1088#1077#1077#1089#1090#1088#1072
+      Hint = #1055#1077#1095#1072#1090#1100' '#1088#1077#1077#1089#1090#1088#1072
+      ImageIndex = 3
+      ShortCut = 16464
+      DataSets = <
+        item
+          DataSet = ClientDataSet
+          UserName = 'frxDBDataset'
+        end>
+      Params = <
+        item
+          Name = 'StartDate'
+          Value = 42217d
+          Component = deStart
+          DataType = ftDateTime
+        end
+        item
+          Name = 'EndDate'
+          Value = 42217d
+          Component = deEnd
+          DataType = ftDateTime
+        end>
+      ReportName = #1056#1077#1077#1089#1090#1088' '#1087#1091#1090#1077#1074#1099#1093' '#1080' '#1085#1072#1077#1084#1085#1086#1075#1086' '#1090#1088#1072#1085#1089#1087#1086#1088#1090#1072
+      ReportNameParam.Value = #1056#1077#1077#1089#1090#1088' '#1087#1091#1090#1077#1074#1099#1093' '#1080' '#1085#1072#1077#1084#1085#1086#1075#1086' '#1090#1088#1072#1085#1089#1087#1086#1088#1090#1072
+      ReportNameParam.DataType = ftString
     end
   end
   object dsdStoredProc: TdsdStoredProc

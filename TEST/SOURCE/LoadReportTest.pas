@@ -68,6 +68,7 @@ begin
   // Транспорт
   LoadReportFromFile('Путевой лист - Сбыт', ReportPath + '\Транспорт\Путевой лист - Сбыт.fr3');
   LoadReportFromFile('Ведомость расхода топлива', ReportPath + '\Транспорт\Ведомость расхода топлива.fr3');
+  LoadReportFromFile('Реестр путевых и наемного транспорта', ReportPath + '\Транспорт\Реестр путевых и наемного транспорта.fr3');
 end;
 
 procedure TLoadReportTest.LoadAllReportFormTest;
