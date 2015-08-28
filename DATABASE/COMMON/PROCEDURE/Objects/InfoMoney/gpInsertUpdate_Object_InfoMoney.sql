@@ -1,6 +1,6 @@
 -- Function: gpInsertUpdate_Object_InfoMoney()
-
--- DROP FUNCTION gpInsertUpdate_Object_InfoMoney();
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_InfoMoney(Integer, Integer, TVarChar, Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_InfoMoney(Integer, Integer, TVarChar, Integer, Integer, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_InfoMoney(
  INOUT ioId                     Integer   ,    -- ключ объекта <Статья назначения>
@@ -8,6 +8,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_InfoMoney(
     IN inName                   TVarChar  ,    -- Название объекта <Статья назначения>
     IN inInfoMoneyGroupId       Integer   ,    -- ссылка на <Группы управленческих назначений>
     IN inInfoMoneyDestinationId Integer   ,    -- ссылка на <Управленческие назначения>
+    IN inisProfitLoss           Boolean  ,     -- затраты по оплате
     IN inSession                TVarChar       -- сессия пользователя
 )
   RETURNS integer AS
@@ -38,17 +39,21 @@ BEGIN
    -- сохранили связь с <Управленческие назначения>
    PERFORM lpInsertUpdate_ObjectLink( zc_ObjectLink_InfoMoney_InfoMoneyDestination(), ioId, inInfoMoneyDestinationId);
    
+   -- сохранили свойство <>
+   PERFORM lpInsertUpdate_ObjectBoolean (zc_ObjectBoolean_InfoMoney_ProfitLoss(), ioId, inisProfitLoss);
+
    -- сохранили протокол
    PERFORM lpInsert_ObjectProtocol (ioId, UserId);
 
 END;$BODY$
   LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpInsertUpdate_Object_InfoMoney (Integer, Integer, TVarChar, Integer, Integer, TVarChar) OWNER TO postgres;
+--ALTER FUNCTION gpInsertUpdate_Object_InfoMoney (Integer, Integer, TVarChar, Integer, Integer, TVarChar) OWNER TO postgres;
 
 /*-------------------------------------------------------------------------------*/
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 28.08.15         * add inisProfitLoss
  18.04.14                                        * rem !!! это временно !!!
  21.09.13                                        * !!! это временно !!!
  21.06.13          *  Code_calc:=lfGet_ObjectCode (inCode, zc_Object_InfoMoney());               

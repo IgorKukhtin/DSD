@@ -1,6 +1,6 @@
-﻿-- Function: gpGet_Object_InfoMoney(integer, TVarChar)
+-- Function: gpGet_Object_InfoMoney(integer, TVarChar)
 
---DROP FUNCTION gpGet_Object_InfoMoney (integer, TVarChar);
+DROP FUNCTION IF EXISTS gpGet_Object_InfoMoney (integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpGet_Object_InfoMoney(
     IN inId          Integer,       -- Группы управленческих аналитик
@@ -9,6 +9,7 @@ CREATE OR REPLACE FUNCTION gpGet_Object_InfoMoney(
 RETURNS TABLE (Id Integer, Code Integer, Name TVarChar,
                InfoMoneyGroupId Integer, InfoMoneyGroupCode Integer, InfoMoneyGroupName TVarChar,
                InfoMoneyDestinationId Integer, InfoMoneyDestinationCode Integer, InfoMoneyDestinationName TVarChar,
+               isProfitLoss boolean,
                isErased boolean) AS
 $BODY$
 BEGIN
@@ -30,7 +31,7 @@ BEGIN
            , CAST (0 as Integer) AS InfoMoneyDestinationId
            , CAST (0 as Integer)   AS InfoMoneyDestinationCode
            , CAST ('' as TVarChar) AS InfoMoneyDestinationName
-          
+           , FALSE                  AS isProfitLoss
            , CAST (NULL AS Boolean) AS isErased
        FROM Object 
        WHERE Object.DescId = zc_Object_InfoMoney();
@@ -49,6 +50,8 @@ BEGIN
          , Object_InfoMoneyDestination.ObjectCode AS InfoMoneyDestinationCode
          , Object_InfoMoneyDestination.ValueData  AS InfoMoneyDestinationName
          
+         , COALESCE (ObjectBoolean_ProfitLoss.ValueData, False)  AS isProfitLoss
+
          , Object_InfoMoney.isErased             AS isErased
       FROM Object AS Object_InfoMoney
           LEFT JOIN ObjectLink AS ObjectLink_InfoMoney_InfoMoneyDestination
@@ -60,6 +63,11 @@ BEGIN
                                ON ObjectLink_InfoMoney_InfoMoneyGroup.ObjectId = Object_InfoMoney.Id
                               AND ObjectLink_InfoMoney_InfoMoneyGroup.DescId = zc_ObjectLink_InfoMoney_InfoMoneyGroup()
           LEFT JOIN Object AS Object_InfoMoneyGroup ON Object_InfoMoneyGroup.Id = ObjectLink_InfoMoney_InfoMoneyGroup.ChildObjectId
+
+          LEFT JOIN ObjectBoolean AS ObjectBoolean_ProfitLoss
+                                  ON ObjectBoolean_ProfitLoss.ObjectId = Object_InfoMoney.Id
+                                 AND ObjectBoolean_ProfitLoss.DescId = zc_ObjectBoolean_InfoMoney_ProfitLoss()
+
      WHERE Object_InfoMoney.Id = inId;
    END IF;
   
