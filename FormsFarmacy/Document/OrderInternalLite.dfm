@@ -211,6 +211,11 @@ inherited OrderInternalLiteForm: TOrderInternalLiteForm
             Options.Editing = False
             Width = 51
           end
+          object colCalcAmountAll: TcxGridDBColumn
+            Caption = #1042#1089#1077#1075#1086' '#1082' '#1079#1072#1082#1072#1079#1091' '#1089' '#1082#1088#1072#1090#1085#1086#1089#1090#1100#1102
+            DataBinding.FieldName = 'CalcAmountAll'
+            Options.IncSearch = False
+          end
         end
       end
       object cxSplitter1: TcxSplitter
@@ -918,6 +923,14 @@ inherited OrderInternalLiteForm: TOrderInternalLiteForm
         Value = Null
         Component = MasterCDS
         ComponentItem = 'Amount'
+        DataType = ftFloat
+        ParamType = ptInput
+      end
+      item
+        Name = 'inAmountManual'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'CalcAmountAll'
         DataType = ftFloat
         ParamType = ptInput
       end

@@ -3,12 +3,14 @@
 DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_OrderInternal(Integer, Integer, Integer, TFloat, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_OrderInternal(Integer, Integer, Integer, TFloat, TFloat, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_OrderInternal(Integer, Integer, Integer, TFloat, TFloat, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_OrderInternal(Integer, Integer, Integer, TFloat, TFloat, TFloat, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_OrderInternal(
     IN inId                  Integer   , -- Ключ объекта <Элемент документа>
     IN inMovementId          Integer   , -- Ключ объекта <Документ>
     IN inGoodsId             Integer   , -- Товары
     IN inAmount              TFloat    , -- Количество
+    IN inAmountManual        TFloat    , -- Ручное количество Итого
     IN inPrice               TFloat    ,
     IN inComment             TVarChar  ,
     IN inPartnerGoodsCode    TVarChar  ,
@@ -25,6 +27,7 @@ $BODY$
    DECLARE vbUserId Integer;
    DECLARE vbObjectId Integer;
    DECLARE vbId Integer;
+   DECLARE vbAmount TFloat;   
    DECLARE vbSumm TFloat;   
    DECLARE vbCalcAmount TFloat;   
    DECLARE vbSummAll TFloat;   
@@ -63,13 +66,38 @@ BEGIN
     END IF;
   
     inPrice := COALESCE(inPrice, 0);
-    vbId := lpInsertUpdate_MovementItem_OrderInternal(inId, inMovementId, inGoodsId, inAmount, inPrice, vbUserId);
+    --проверить что у нас на самом деле меняется
+    SELECT MinimumLot INTO vbMinimumLot
+    FROM Object_Goods_View WHERE Id = inGoodsId;
+    
+    SELECT
+        (CEIL((Amount + COALESCE(MIFloat_AmountSecond.ValueData,0)) / COALESCE(vbMinimumLot, 1)) * COALESCE(vbMinimumLot, 1)),
+        COALESCE(MIFloat_AmountManual.ValueData,(CEIL((Amount + COALESCE(MIFloat_AmountSecond.ValueData,0)) / COALESCE(vbMinimumLot, 1)) * COALESCE(vbMinimumLot, 1)))::TFloat
+    INTO
+        vbCalcAmount,
+        vbCalcAmountAll
+    FROM
+        MovementItem
+        LEFT OUTER JOIN MovementItemFloat AS MIFloat_AmountSecond
+                                          ON MIFloat_AmountSecond.MovementItemId = MovementItem.Id
+                                         AND MIFloat_AmountSecond.DescId = zc_MIFloat_AmountSecond()
+        LEFT OUTER JOIN MovementItemFloat AS MIFloat_AmountManual
+                                          ON MIFloat_AmountManual.MovementItemId = MovementItem.Id
+                                         AND MIFloat_AmountManual.DescId = zc_MIFloat_AmountManual()
+    WHERE
+        Id = inId;
+    
+    IF (coalesce(vbCalcAmount,0) <> coalesce(inAmountManual,0)) or (COALESCE(vbCalcAmountAll,0) <> COALESCE(inAmountManual,0))
+    THEN
+        vbId := lpInsertUpdate_MovementItem_OrderInternal(inId, inMovementId, inGoodsId, inAmount, inAmountManual, inPrice, vbUserId);
+    ELSE
+        vbId := lpInsertUpdate_MovementItem_OrderInternal(inId, inMovementId, inGoodsId, inAmount, NULL, inPrice, vbUserId);
+    END IF;    
 
           -- сохранили свойство <Примечание>
     PERFORM lpInsertUpdate_MovementItemString (zc_MIString_Comment(), vbId, inComment);
      
-    SELECT MinimumLot INTO vbMinimumLot
-    FROM Object_Goods_View WHERE Id = inGoodsId;
+    
 
     vbCalcAmount := CEIL(inAmount / COALESCE(vbMinimumLot, 1)) * COALESCE(vbMinimumLot, 1);     
     vbSumm := vbCalcAmount * inPrice;
@@ -77,8 +105,8 @@ BEGIN
         (CEIL(inAmount / COALESCE(vbMinimumLot, 1)) * COALESCE(vbMinimumLot, 1))::TFloat
        ,(CEIL(inAmount / COALESCE(vbMinimumLot, 1)) * COALESCE(vbMinimumLot, 1) * inPrice)::TFloat
        ,inAmount + COALESCE(MIFloat_AmountSecond.ValueData,0)
-       ,(CEIL((inAmount + COALESCE(MIFloat_AmountSecond.ValueData,0)) / COALESCE(vbMinimumLot, 1)) * COALESCE(vbMinimumLot, 1))::TFloat
-       ,(CEIL((inAmount + COALESCE(MIFloat_AmountSecond.ValueData,0)) / COALESCE(vbMinimumLot, 1)) * COALESCE(vbMinimumLot, 1) * inPrice)::TFloat
+       ,COALESCE(MIFloat_AmountManual.ValueData,(CEIL((inAmount + COALESCE(MIFloat_AmountSecond.ValueData,0)) / COALESCE(vbMinimumLot, 1)) * COALESCE(vbMinimumLot, 1)))::TFloat
+       ,COALESCE(MIFloat_AmountManual.ValueData,(CEIL((inAmount + COALESCE(MIFloat_AmountSecond.ValueData,0)) / COALESCE(vbMinimumLot, 1)) * COALESCE(vbMinimumLot, 1))) * inPrice::TFloat
     INTO
         vbCalcAmount
        ,vbSumm
@@ -90,6 +118,9 @@ BEGIN
         LEFT OUTER JOIN MovementItemFloat AS MIFloat_AmountSecond
                                           ON MIFloat_AmountSecond.MovementItemId = MovementItem.Id
                                          AND MIFloat_AmountSecond.DescId = zc_MIFloat_AmountSecond()
+        LEFT OUTER JOIN MovementItemFloat AS MIFloat_AmountManual
+                                          ON MIFloat_AmountManual.MovementItemId = MovementItem.Id
+                                         AND MIFloat_AmountManual.DescId = zc_MIFloat_AmountManual()
     WHERE
         Id = vbId;
     -- пересчитали Итоговые суммы

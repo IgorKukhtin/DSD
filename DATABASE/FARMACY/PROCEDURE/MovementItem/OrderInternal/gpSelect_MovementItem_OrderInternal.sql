@@ -72,8 +72,8 @@ BEGIN
            , Income.Income_Amount                                   AS Income_Amount
            , tmpMI.AmountSecond                                     AS AmountSecond
            , tmpMI.AmountAll                                        AS AmountAll
-           , tmpMI.CalcAmountAll                                    AS CalcAmountAll
-           , tmpMI.Price * tmpMI.CalcAmountAll                      AS SummAll
+           , COALESCE(tmpMI.AmountManual,tmpMI.CalcAmountAll)       AS CalcAmountAll
+           , tmpMI.Price * COALESCE(tmpMI.AmountManual,tmpMI.CalcAmountAll)  AS SummAll
            
        FROM (SELECT Object_Goods.Id                              AS GoodsId
                   , Object_Goods.GoodsCodeInt                    AS GoodsCode
@@ -120,6 +120,8 @@ BEGIN
                             , MovementItem.Amount+COALESCE(MIFloat_AmountSecond.ValueData,0)   AS AmountAll
                             , CEIL((MovementItem.Amount+COALESCE(MIFloat_AmountSecond.ValueData,0)) / COALESCE(Object_Goods.MinimumLot, 1)) 
                                * COALESCE(Object_Goods.MinimumLot, 1)                          AS CalcAmountAll
+                            , MIFloat_AmountManual.ValueData                                   AS AmountManual
+                               
                        FROM (SELECT FALSE AS isErased UNION ALL SELECT inIsErased AS isErased WHERE inIsErased = TRUE) AS tmpIsErased
                             JOIN MovementItem ON MovementItem.MovementId = inMovementId
                                              AND MovementItem.DescId     = zc_MI_Master()
@@ -171,6 +173,9 @@ BEGIN
                        LEFT OUTER JOIN MovementItemFloat AS MIFloat_AmountSecond
                                                          ON MIFloat_AmountSecond.MovementItemId = MovementItem.Id
                                                         AND MIFloat_AmountSecond.DescId = zc_MIFloat_AmountSecond()  
+                       LEFT OUTER JOIN MovementItemFloat AS MIFloat_AmountManual
+                                                         ON MIFloat_AmountManual.MovementItemId = MovementItem.Id
+                                                        AND MIFloat_AmountManual.DescId = zc_MIFloat_AmountManual()  
                       ) AS tmpMI ON tmpMI.GoodsId     = tmpGoods.GoodsId
             LEFT JOIN Object_Price_View ON COALESCE(tmpMI.GoodsId,tmpGoods.GoodsId) = Object_Price_View.GoodsId
                                        AND Object_Price_View.UnitId = vbUnitId

@@ -18,7 +18,8 @@ CREATE OR REPLACE FUNCTION gpSelect_MovementItem_ReturnIn(
 RETURNS TABLE (Id Integer, LineNum Integer, GoodsId Integer, GoodsCode Integer, GoodsName TVarChar
              , GoodsGroupNameFull TVarChar             
              , Amount TFloat, AmountPartner TFloat
-             , Price TFloat, CountForPrice TFloat, HeadCount TFloat
+             , Price TFloat, CountForPrice TFloat, Price_Pricelist TFloat, isCheck_Pricelist Boolean
+             , HeadCount TFloat
              , PartionGoods TVarChar, GoodsKindId Integer, GoodsKindName  TVarChar, MeasureName TVarChar
              , AssetId Integer, AssetName TVarChar
              , AmountSumm TFloat
@@ -100,6 +101,9 @@ BEGIN
            , CAST (NULL AS TFloat)      AS AmountPartner
            , tmpPrice.ValuePrice        AS Price
            , CAST (NULL AS TFloat)      AS CountForPrice
+           , CAST (tmpPrice.ValuePrice AS TFloat) AS Price_Pricelist
+           , FALSE                      AS isCheck_PricelistBoolean
+
            , CAST (NULL AS TFloat)      AS HeadCount
            , CAST (NULL AS TVarChar)    AS PartionGoods
            , Object_GoodsKind.Id        AS GoodsKindId
@@ -143,6 +147,9 @@ BEGIN
            , MIFloat_AmountPartner.ValueData    AS AmountPartner
            , MIFloat_Price.ValueData 		AS Price
            , MIFloat_CountForPrice.ValueData 	AS CountForPrice
+           , CAST (tmpPrice.ValuePrice AS TFloat) AS Price_Pricelist
+           , CASE WHEN COALESCE(MIFloat_Price.ValueData,0) = COALESCE(tmpPrice.ValuePrice,0) THEN FALSE ELSE TRUE END AS isCheck_PricelistBoolean
+
            , 0  :: TFloat         		AS HeadCount
            , '' :: TVarChar         		AS PartionGoods
            , Object_GoodsKind.Id        	AS GoodsKindId
@@ -167,6 +174,8 @@ BEGIN
                              AND MovementItem.DescId     = zc_MI_Master()
                              AND MovementItem.isErased   = tmpIsErased.isErased
             LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = MovementItem.ObjectId
+            LEFT JOIN tmpPrice ON tmpPrice.GoodsId = MovementItem.ObjectId
+
             LEFT JOIN ObjectLink AS ObjectLink_Goods_Measure
                                  ON ObjectLink_Goods_Measure.ObjectId = MovementItem.ObjectId
                                 AND ObjectLink_Goods_Measure.DescId = zc_ObjectLink_Goods_Measure()
@@ -260,6 +269,10 @@ BEGIN
                    FROM tmpMI
                         FULL JOIN tmpMI_parent_find ON tmpMI_parent_find.MovementItemId = tmpMI.MovementItemId
                   )
+   , tmpPrice AS (SELECT lfObjectHistory_PriceListItem.*
+                  FROM lfSelect_ObjectHistory_PriceListItem (inPriceListId:= inPriceListId, inOperDate:= inOperDate) AS lfObjectHistory_PriceListItem
+                  )
+
        SELECT
              tmpResult.MovementItemId :: Integer AS Id
            , CASE WHEN tmpResult.MovementItemId <> 0 THEN CAST (row_number() OVER (ORDER BY tmpResult.MovementItemId) AS Integer) ELSE 0 END AS LineNum
@@ -272,6 +285,9 @@ BEGIN
            , MIFloat_AmountPartner.ValueData   	AS AmountPartner
            , tmpResult.Price  :: TFloat         AS Price
            , MIFloat_CountForPrice.ValueData 	AS CountForPrice
+           , CAST (tmpPrice.ValuePrice AS TFloat) AS Price_Pricelist
+           , CASE WHEN COALESCE(tmpResult.Price,0) = COALESCE(tmpPrice.ValuePrice,0) THEN FALSE ELSE TRUE END AS isCheck_PricelistBoolean
+
            , 0  :: TFloat         		AS HeadCount
            , '' :: TVarChar         		AS PartionGoods
            , Object_GoodsKind.Id        	AS GoodsKindId
@@ -291,6 +307,8 @@ BEGIN
 
        FROM tmpResult
             LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = tmpResult.GoodsId
+            LEFT JOIN tmpPrice ON tmpPrice.GoodsId = tmpResult.GoodsId
+
             LEFT JOIN ObjectLink AS ObjectLink_Goods_Measure
                                  ON ObjectLink_Goods_Measure.ObjectId = tmpResult.GoodsId
                                 AND ObjectLink_Goods_Measure.DescId = zc_ObjectLink_Goods_Measure()

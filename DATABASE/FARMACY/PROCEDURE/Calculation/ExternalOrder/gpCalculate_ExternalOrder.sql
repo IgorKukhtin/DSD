@@ -44,8 +44,8 @@ BEGIN
                     inUnitId := vbUnitId,
                inMainGoodsId := MovementItem.ObjectId,
                    inGoodsId := COALESCE(PriceList.GoodsId, MinPrice.GoodsId),
-                    inAmount := CEIL((MovementItem.Amount + COALESCE(MIFloat_AmountSecond.ValueData,0))
-                                      / COALESCE(Object_Goods.MinimumLot, 1)) * COALESCE(Object_Goods.MinimumLot, 1), 
+                    inAmount := COALESCE(MIFloat_AmountManual.ValueData,CEIL((MovementItem.Amount + COALESCE(MIFloat_AmountSecond.ValueData,0))
+                                      / COALESCE(Object_Goods.MinimumLot, 1)) * COALESCE(Object_Goods.MinimumLot, 1)), 
                      inPrice := COALESCE(PriceList.Price, MinPrice.Price), 
           inPartionGoodsDate := COALESCE(PriceList.PartionGoodsDate, MinPrice.PartionGoodsDate),
                    inComment := MIString_Comment.ValueData,
@@ -70,6 +70,9 @@ BEGIN
                        LEFT OUTER JOIN MovementItemFloat AS MIFloat_AmountSecond
                                                          ON MIFloat_AmountSecond.MovementItemId = MovementItem.Id
                                                         AND MIFloat_AmountSecond.DescId = zc_MIFloat_AmountSecond()
+                       LEFT OUTER JOIN MovementItemFloat AS MIFloat_AmountManual
+                                                         ON MIFloat_AmountManual.MovementItemId = MovementItem.Id
+                                                        AND MIFloat_AmountManual.DescId = zc_MIFloat_AmountManual()
                                              
              LEFT JOIN (SELECT * FROM 
                                       (SELECT *, MIN(Id) OVER(PARTITION BY MovementItemId) AS MinId FROM
@@ -88,7 +91,7 @@ BEGIN
             WHERE MovementItem.MovementId = ininternalorder
               AND MovementItem.DescId     = zc_MI_Master()
               AND MovementItem.isErased   = FALSE
-              AND (MovementItem.Amount + COALESCE(MIFloat_AmountSecond.ValueData,0))> 0 
+              AND COALESCE((MovementItem.Amount + COALESCE(MIFloat_AmountSecond.ValueData,0)),0)> 0 
               AND COALESCE(COALESCE(PriceList.Price, MinPrice.Price), 0) <> 0;
                        
 
@@ -102,7 +105,7 @@ BEGIN
                     inUnitId := vbUnitId,
                inMainGoodsId := ddd.ObjectId,
                    inGoodsId := ddd.ObjectId,
-                    inAmount := ddd.Amount + COALESCE(AmountSecond,0), 
+                    inAmount := COALESCE(ddd.AmountManual, ddd.Amount + COALESCE(AmountSecond,0)), 
                      inPrice := 0, 
           inPartionGoodsDate := NULL, 
                    inComment := Comment,
@@ -117,14 +120,17 @@ BEGIN
                     WHERE MovementItem.MovementId = inInternalOrder
                     )
 
-        SELECT MovementItem.*, MIFloat_AmountSecond.ValueData AS AmountSecond, MIString_Comment.ValueData as Comment
+        SELECT MovementItem.*, MIFloat_AmountSecond.ValueData AS AmountSecond, MIFloat_AmountManual.ValueData AS AmountManual, MIString_Comment.ValueData as Comment
         FROM MovementItem 
             LEFT OUTER JOIN MovementItemString AS MIString_Comment
                                                ON MIString_Comment.MovementItemId = MovementItem.Id
                                               AND MIString_Comment.DescId = zc_MIString_Comment()
             LEFT OUTER JOIN MovementItemFloat AS MIFloat_AmountSecond
                                               ON MIFloat_AmountSecond.MovementItemId = MovementItem.Id
-                                             AND MIFloat_AmountSecond.DescId = zc_MIFloat_AmountSecond()                                  
+                                             AND MIFloat_AmountSecond.DescId = zc_MIFloat_AmountSecond()
+            LEFT OUTER JOIN MovementItemFloat AS MIFloat_AmountManual
+                                              ON MIFloat_AmountManual.MovementItemId = MovementItem.Id
+                                             AND MIFloat_AmountManual.DescId = zc_MIFloat_AmountManual()                                  
         WHERE 
             MovementId = inInternalOrder 
             AND 

@@ -727,7 +727,9 @@ uses
   Report_TransportDialog in '..\..\Forms\Report\Report_TransportDialog.pas' {Report_TransportDialogForm: TParentForm},
   Report_TransportHoursWorkDialog in '..\..\Forms\Report\Report_TransportHoursWorkDialog.pas' {Report_TransportHoursWorkDialogForm: TParentForm},
   Report_BankAccountDialog in '..\..\Forms\Report\Report_BankAccountDialog.pas' {Report_BankAccountDialogForm: TParentForm},
-  Report_CashDialog in '..\..\Forms\Report\Report_CashDialog.pas' {Report_CashDialogForm: TParentForm};
+  Report_CashDialog in '..\..\Forms\Report\Report_CashDialog.pas' {Report_CashDialogForm: TParentForm},
+  Report_TransportList in '..\..\Forms\Report\Report_TransportList.pas' {Report_TransportListForm: TParentForm},
+  Report_TransportListDialog in '..\..\Forms\Report\Report_TransportListDialog.pas' {Report_TransportListDialogForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}
