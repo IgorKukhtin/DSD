@@ -32,7 +32,7 @@ BEGIN
                                            , ReceiptChildId integer, GoodsId_out Integer, GoodsKindId_out Integer, Amount_out TFloat, isStart Boolean, isCost Boolean
                                             ) ON COMMIT DROP;
      CREATE TEMP TABLE tmpResult_in  (ReceiptId Integer, PartionGoodsDate TDateTime, GoodsId Integer, GoodsKindId Integer, GoodsKindId_complete Integer, OperCount TFloat, OperSumm TFloat) ON COMMIT DROP;
-     CREATE TEMP TABLE tmpResult_out (ReceiptId Integer, PartionGoodsDate_in TDateTime, GoodsId_in Integer, GoodsKindId_in Integer, GoodsKindId_complete_in Integer, PartionGoodsDate TDateTime, GoodsId Integer, GoodsKindId Integer, GoodsKindId_complete Integer, OperCountPlan TFloat, OperSummPlan1 TFloat, OperSummPlan2 TFloat, OperSummPlan3 TFloat, OperCount TFloat, OperSumm TFloat, CuterCount TFloat, OperCount_ReWork TFloat) ON COMMIT DROP;
+     CREATE TEMP TABLE tmpResult_out (ReceiptId Integer, PartionGoodsDate_in TDateTime, GoodsId_in Integer, GoodsKindId_in Integer, GoodsKindId_complete_in Integer, PartionGoodsDate TDateTime, GoodsId Integer, GoodsKindId Integer, GoodsKindId_complete Integer, OperCountPlan TFloat, OperSummPlan1 TFloat, OperSummPlan2 TFloat, OperSummPlan3 TFloat, PricePlan1 TFloat, PricePlan2 TFloat, PricePlan3 TFloat, OperCount TFloat, OperSumm TFloat, CuterCount TFloat, OperCount_ReWork TFloat) ON COMMIT DROP;
 
 
      -- Ограничения по товару
@@ -136,8 +136,11 @@ BEGIN
 
 
      -- Расходы
-     INSERT INTO tmpResult_out (ReceiptId, PartionGoodsDate_in, GoodsId_in, GoodsKindId_in, GoodsKindId_complete_in, PartionGoodsDate, GoodsId, GoodsKindId, GoodsKindId_complete, OperCountPlan, OperSummPlan1, OperSummPlan2, OperSummPlan3, OperCount, OperSumm, CuterCount, OperCount_ReWork)
-       WITH -- Расходы - Факт
+     INSERT INTO tmpResult_out (ReceiptId, PartionGoodsDate_in, GoodsId_in, GoodsKindId_in, GoodsKindId_complete_in, PartionGoodsDate, GoodsId, GoodsKindId, GoodsKindId_complete, OperCountPlan, OperSummPlan1, OperSummPlan2, OperSummPlan3, PricePlan1, PricePlan2, PricePlan3, OperCount, OperSumm, CuterCount, OperCount_ReWork)
+       WITH tmpPrice1 AS (SELECT * FROM ObjectHistory_PriceListItem_View AS PriceList WHERE PriceList.PriceListId = inPriceListId_1 AND inEndDate >= PriceList.StartDate AND inEndDate < PriceList.EndDate)
+          , tmpPrice2 AS (SELECT * FROM ObjectHistory_PriceListItem_View AS PriceList WHERE PriceList.PriceListId = inPriceListId_2 AND inEndDate >= PriceList.StartDate AND inEndDate < PriceList.EndDate)
+          , tmpPrice3 AS (SELECT * FROM ObjectHistory_PriceListItem_View AS PriceList WHERE PriceList.PriceListId = inPriceListId_3 AND inEndDate >= PriceList.StartDate AND inEndDate < PriceList.EndDate)
+          , -- Расходы - Факт
             tmpMIContainer AS 
            (SELECT COALESCE (MIReceipt.ObjectId, 0)                AS ReceiptId
                  , COALESCE (MIContainer.ObjectId_Analyzer, 0)     AS GoodsId
@@ -257,9 +260,9 @@ BEGIN
                  , tmp.GoodsId
                  , tmp.GoodsKindId
                  , CASE WHEN tmp.GoodsKindId = zc_GoodsKind_WorkProgress() THEN COALESCE (ObjectLink_Receipt_GoodsKindComplete.ChildObjectId, zc_GoodsKind_Basis()) ELSE 0 END AS GoodsKindId_complete
-                 , SUM (tmpChildReceiptTable.Amount_out * COALESCE (PriceList1.Price, 0)) / ObjectFloat_Value.ValueData AS Price1
-                 , SUM (tmpChildReceiptTable.Amount_out * COALESCE (PriceList2.Price, 0)) / ObjectFloat_Value.ValueData AS Price2
-                 , SUM (tmpChildReceiptTable.Amount_out * COALESCE (PriceList3.Price, 0)) / ObjectFloat_Value.ValueData AS Price3
+                 , SUM (tmpChildReceiptTable.Amount_out * COALESCE (tmpPrice1.Price, 0)) / ObjectFloat_Value.ValueData AS Price1
+                 , SUM (tmpChildReceiptTable.Amount_out * COALESCE (tmpPrice2.Price, 0)) / ObjectFloat_Value.ValueData AS Price2
+                 , SUM (tmpChildReceiptTable.Amount_out * COALESCE (tmpPrice3.Price, 0)) / ObjectFloat_Value.ValueData AS Price3
             FROM (SELECT tmpMIContainer.GoodsId, tmpMIContainer.GoodsKindId FROM tmpMIContainer GROUP BY tmpMIContainer.GoodsId, tmpMIContainer.GoodsKindId
                  ) AS tmp
                  INNER JOIN ObjectLink AS ObjectLink_Receipt_Goods
@@ -285,15 +288,10 @@ BEGIN
                  INNER JOIN tmpChildReceiptTable ON tmpChildReceiptTable.ReceiptId = Object_Receipt.Id
                                                 AND tmpChildReceiptTable.ReceiptId_from = 0
                                                 AND tmpChildReceiptTable.isCost = FALSE
-                 LEFT JOIN ObjectHistory_PriceListItem_View AS PriceList1 ON PriceList1.PriceListId = inPriceListId_1
-                                                                         AND PriceList1.GoodsId = tmpChildReceiptTable.GoodsId_out
-                                                                         AND inEndDate >= PriceList1.StartDate AND inEndDate < PriceList1.EndDate
-                 LEFT JOIN ObjectHistory_PriceListItem_View AS PriceList2 ON PriceList2.PriceListId = inPriceListId_2
-                                                                         AND PriceList2.GoodsId = tmpChildReceiptTable.GoodsId_out
-                                                                         AND inEndDate >= PriceList2.StartDate AND inEndDate < PriceList2.EndDate
-                 LEFT JOIN ObjectHistory_PriceListItem_View AS PriceList3 ON PriceList3.PriceListId = inPriceListId_3
-                                                                         AND PriceList3.GoodsId = tmpChildReceiptTable.GoodsId_out
-                                                                         AND inEndDate >= PriceList3.StartDate AND inEndDate < PriceList3.EndDate
+                 LEFT JOIN tmpPrice1 ON tmpPrice1.GoodsId = tmpChildReceiptTable.GoodsId_out
+                 LEFT JOIN tmpPrice2 ON tmpPrice2.GoodsId = tmpChildReceiptTable.GoodsId_out
+                 LEFT JOIN tmpPrice3 ON tmpPrice3.GoodsId = tmpChildReceiptTable.GoodsId_out
+
             GROUP BY Object_Receipt.Id
                    , tmp.GoodsId
                    , tmp.GoodsKindId
@@ -315,11 +313,11 @@ BEGIN
 
                  , CASE WHEN ObjectFloat_Value.ValueData <> 0 THEN tmpResult_in.OperCount * tmpChildReceiptTable.Amount_out / ObjectFloat_Value.ValueData ELSE 0 END AS OperCountPlan
                  , CASE WHEN ObjectFloat_Value.ValueData <> 0 THEN tmpResult_in.OperCount * tmpChildReceiptTable.Amount_out / ObjectFloat_Value.ValueData ELSE 0 END
-                   * COALESCE (tmpMIReceipt_from.Price1, COALESCE (PriceList1.Price, 0)) AS OperSummPlan1
+                   * COALESCE (tmpMIReceipt_from.Price1, COALESCE (tmpPrice1.Price, 0)) AS OperSummPlan1
                  , CASE WHEN ObjectFloat_Value.ValueData <> 0 THEN tmpResult_in.OperCount * tmpChildReceiptTable.Amount_out / ObjectFloat_Value.ValueData ELSE 0 END
-                   * COALESCE (tmpMIReceipt_from.Price2, COALESCE (PriceList2.Price, 0)) AS OperSummPlan2
+                   * COALESCE (tmpMIReceipt_from.Price2, COALESCE (tmpPrice2.Price, 0)) AS OperSummPlan2
                  , CASE WHEN ObjectFloat_Value.ValueData <> 0 THEN tmpResult_in.OperCount * tmpChildReceiptTable.Amount_out / ObjectFloat_Value.ValueData ELSE 0 END
-                   * COALESCE (tmpMIReceipt_from.Price3, COALESCE (PriceList3.Price, 0)) AS OperSummPlan3
+                   * COALESCE (tmpMIReceipt_from.Price3, COALESCE (tmpPrice3.Price, 0)) AS OperSummPlan3
             FROM tmpResult_in
                  LEFT JOIN tmpChildReceiptTable ON tmpChildReceiptTable.ReceiptId = tmpResult_in.ReceiptId
                  LEFT JOIN _tmpGoods ON _tmpGoods.GoodsId = tmpChildReceiptTable.GoodsId_out
@@ -330,15 +328,9 @@ BEGIN
                  LEFT JOIN ObjectFloat AS ObjectFloat_Value
                                        ON ObjectFloat_Value.ObjectId = tmpResult_in.ReceiptId
                                       AND ObjectFloat_Value.DescId = zc_ObjectFloat_Receipt_Value()
-                 LEFT JOIN ObjectHistory_PriceListItem_View AS PriceList1 ON PriceList1.PriceListId = inPriceListId_1
-                                                                         AND PriceList1.GoodsId = tmpChildReceiptTable.GoodsId_out
-                                                                         AND inEndDate >= PriceList1.StartDate AND inEndDate < PriceList1.EndDate
-                 LEFT JOIN ObjectHistory_PriceListItem_View AS PriceList2 ON PriceList2.PriceListId = inPriceListId_2
-                                                                         AND PriceList2.GoodsId = tmpChildReceiptTable.GoodsId_out
-                                                                         AND inEndDate >= PriceList2.StartDate AND inEndDate < PriceList2.EndDate
-                 LEFT JOIN ObjectHistory_PriceListItem_View AS PriceList3 ON PriceList3.PriceListId = inPriceListId_3
-                                                                         AND PriceList3.GoodsId = tmpChildReceiptTable.GoodsId_out
-                                                                         AND inEndDate >= PriceList3.StartDate AND inEndDate < PriceList3.EndDate
+                 LEFT JOIN tmpPrice1 ON tmpPrice1.GoodsId = tmpChildReceiptTable.GoodsId_out
+                 LEFT JOIN tmpPrice2 ON tmpPrice2.GoodsId = tmpChildReceiptTable.GoodsId_out
+                 LEFT JOIN tmpPrice3 ON tmpPrice3.GoodsId = tmpChildReceiptTable.GoodsId_out
             WHERE (_tmpGoods.GoodsId > 0 OR COALESCE (inGoodsGroupId, 0) = 0)
            )
 
@@ -356,6 +348,9 @@ BEGIN
              , SUM (tmp.OperSummPlan1)  AS OperSummPlan1
              , SUM (tmp.OperSummPlan2)  AS OperSummPlan2
              , SUM (tmp.OperSummPlan3)  AS OperSummPlan3
+             , COALESCE (tmpPrice1.Price, 0) AS Price1
+             , COALESCE (tmpPrice2.Price, 0) AS Price2
+             , COALESCE (tmpPrice3.Price, 0) AS Price3
              , SUM (tmp.OperCount)      AS OperCount
              , SUM (tmp.OperSumm)       AS OperSumm
              , SUM (tmp.CuterCount)     AS CuterCount
@@ -438,6 +433,9 @@ BEGIN
                    , 0 AS OperCount_ReWork
               FROM tmpMIReceipt
              ) AS tmp
+                 LEFT JOIN tmpPrice1 ON tmpPrice1.GoodsId = tmp.GoodsId
+                 LEFT JOIN tmpPrice2 ON tmpPrice2.GoodsId = tmp.GoodsId
+                 LEFT JOIN tmpPrice3 ON tmpPrice3.GoodsId = tmp.GoodsId
         GROUP BY tmp.ReceiptId
                , tmp.PartionGoodsDate_in
                , tmp.GoodsId_in
@@ -447,6 +445,9 @@ BEGIN
                , tmp.GoodsId
                , tmp.GoodsKindId
                , tmp.GoodsKindId_complete
+               , tmpPrice1.Price
+               , tmpPrice2.Price
+               , tmpPrice3.Price
                 ;
 
 
@@ -502,16 +503,16 @@ BEGIN
            , tmpResult.OperCountPlan
            , tmpResult.OperCountPlan * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData, 0) ELSE 1 END AS OperCountPlan_Weight
 
-           , tmpResult.OperCount * CASE WHEN tmpResult.OperCountPlan <> 0 THEN tmpResult.OperSummPlan1 / tmpResult.OperCountPlan ELSE 0 END AS OperSummPlan1_real
-           , tmpResult.OperCount * CASE WHEN tmpResult.OperCountPlan <> 0 THEN tmpResult.OperSummPlan2 / tmpResult.OperCountPlan ELSE 0 END AS OperSummPlan2_real
-           , tmpResult.OperCount * CASE WHEN tmpResult.OperCountPlan <> 0 THEN tmpResult.OperSummPlan3 / tmpResult.OperCountPlan ELSE 0 END AS OperSummPlan3_real
+           , tmpResult.OperCount * tmpResult.PricePlan1 AS OperSummPlan1_real -- CASE WHEN tmpResult.OperCountPlan <> 0 THEN tmpResult.OperSummPlan1 / tmpResult.OperCountPlan ELSE 0 END AS OperSummPlan1_real
+           , tmpResult.OperCount * tmpResult.PricePlan2 AS OperSummPlan2_real -- CASE WHEN tmpResult.OperCountPlan <> 0 THEN tmpResult.OperSummPlan2 / tmpResult.OperCountPlan ELSE 0 END AS OperSummPlan2_real
+           , tmpResult.OperCount * tmpResult.PricePlan3 AS OperSummPlan3_real -- CASE WHEN tmpResult.OperCountPlan <> 0 THEN tmpResult.OperSummPlan3 / tmpResult.OperCountPlan ELSE 0 END AS OperSummPlan3_real
 
            , tmpResult.OperSummPlan1
            , tmpResult.OperSummPlan2
            , tmpResult.OperSummPlan3
-           , CAST (CASE WHEN tmpResult.OperCountPlan <> 0 THEN tmpResult.OperSummPlan1 / tmpResult.OperCountPlan ELSE 0 END AS NUMERIC (16, 3)) AS PricePlan1
-           , CAST (CASE WHEN tmpResult.OperCountPlan <> 0 THEN tmpResult.OperSummPlan2 / tmpResult.OperCountPlan ELSE 0 END AS NUMERIC (16, 3)) AS PricePlan2
-           , CAST (CASE WHEN tmpResult.OperCountPlan <> 0 THEN tmpResult.OperSummPlan3 / tmpResult.OperCountPlan ELSE 0 END AS NUMERIC (16, 3)) AS PricePlan3
+           , tmpResult.PricePlan1 AS PricePlan1 -- CAST (CASE WHEN tmpResult.OperCountPlan <> 0 THEN tmpResult.OperSummPlan1 / tmpResult.OperCountPlan ELSE 0 END AS NUMERIC (16, 3)) AS PricePlan1
+           , tmpResult.PricePlan2 AS PricePlan2 -- CAST (CASE WHEN tmpResult.OperCountPlan <> 0 THEN tmpResult.OperSummPlan2 / tmpResult.OperCountPlan ELSE 0 END AS NUMERIC (16, 3)) AS PricePlan2
+           , tmpResult.PricePlan3 AS PricePlan3 -- CAST (CASE WHEN tmpResult.OperCountPlan <> 0 THEN tmpResult.OperSummPlan3 / tmpResult.OperCountPlan ELSE 0 END AS NUMERIC (16, 3)) AS PricePlan3
 
            , tmpTaxSumm.TaxSumm_min
            , tmpTaxSumm.TaxSumm_max
@@ -553,11 +554,17 @@ BEGIN
                   , SUM (tmpResult_out.CuterCount)       AS CuterCount
                   , SUM (tmpResult_out.OperCount_ReWork) AS OperCount_ReWork
                   , SUM (CASE WHEN (1 - COALESCE (ObjectFloat_TaxLoss.ValueData, 0) / 100) <> 0 THEN tmpResult_out.OperCount * (1 - COALESCE (ObjectFloat_TaxLoss.ValueData, 0) / 100) ELSE 0 END) AS OperCount_gp
+                  , tmpResult_out.PricePlan1
+                  , tmpResult_out.PricePlan2
+                  , tmpResult_out.PricePlan3
              FROM tmpResult_out
                   LEFT JOIN ObjectFloat AS ObjectFloat_TaxLoss
                                         ON ObjectFloat_TaxLoss.ObjectId = tmpResult_out.ReceiptId
                                        AND ObjectFloat_TaxLoss.DescId = zc_ObjectFloat_Receipt_TaxLoss()
              GROUP BY tmpResult_out.PartionGoodsDate, tmpResult_out.GoodsId, tmpResult_out.GoodsKindId, tmpResult_out.GoodsKindId_complete
+                    , tmpResult_out.PricePlan1
+                    , tmpResult_out.PricePlan2
+                    , tmpResult_out.PricePlan3
             ) AS tmpResult
             LEFT JOIN tmpTaxSumm ON tmpTaxSumm.GoodsId              = tmpResult.GoodsId
                                 AND tmpTaxSumm.GoodsKindId          = tmpResult.GoodsKindId
@@ -598,20 +605,27 @@ BEGIN
 
      -- Результат
      OPEN Cursor2 FOR
-      WITH tmpPricePlan AS (SELECT tmpResult.GoodsId
+      /*WITH tmpPricePlan AS (SELECT DISTINCT
+                                   tmpResult.GoodsId
                                  , tmpResult.GoodsKindId
                                  , tmpResult.PartionGoodsDate
                                  , tmpResult.GoodsKindId_complete
-                                 , CAST (SUM (tmpResult.OperSummPlan1) / SUM (tmpResult.OperCountPlan) AS NUMERIC (16, 3)) AS PricePlan1
-                                 , CAST (SUM (tmpResult.OperSummPlan2) / SUM (tmpResult.OperCountPlan) AS NUMERIC (16, 3)) AS PricePlan2
-                                 , CAST (SUM (tmpResult.OperSummPlan3) / SUM (tmpResult.OperCountPlan) AS NUMERIC (16, 3)) AS PricePlan3
+                                 -- , CAST (SUM (tmpResult.OperSummPlan1) / SUM (tmpResult.OperCountPlan) AS NUMERIC (16, 3)) AS PricePlan1
+                                 -- , CAST (SUM (tmpResult.OperSummPlan2) / SUM (tmpResult.OperCountPlan) AS NUMERIC (16, 3)) AS PricePlan2
+                                 -- , CAST (SUM (tmpResult.OperSummPlan3) / SUM (tmpResult.OperCountPlan) AS NUMERIC (16, 3)) AS PricePlan3
+                                 , tmpResult_out.PricePlan1
+                                 , tmpResult_out.PricePlan2
+                                 , tmpResult_out.PricePlan3
                             FROM tmpResult_out AS tmpResult
                             WHERE tmpResult.OperCountPlan <> 0
-                            GROUP BY tmpResult.GoodsId
+                           )*/
+                            /*GROUP BY tmpResult.GoodsId
                                    , tmpResult.GoodsKindId
                                    , tmpResult.PartionGoodsDate
                                    , tmpResult.GoodsKindId_complete
-                           )
+                                   , tmpResult_out.PricePlan1
+                                   , tmpResult_out.PricePlan2
+                                   , tmpResult_out.PricePlan3*/
        SELECT tmpResult.GoodsId
             , tmpResult.GoodsKindId
             , (tmpResult.GoodsId :: TVarChar || ';' || tmpResult.GoodsKindId :: TVarChar || ';' || tmpResult.PartionGoodsDate :: TVarChar|| ';' || tmpResult.GoodsKindId_complete :: TVarChar) :: TVarChar AS MasterKey
@@ -650,17 +664,17 @@ BEGIN
            , tmpResult.OperCountPlan
            , tmpResult.OperCountPlan * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData, 0) ELSE 1 END AS OperCountPlan_Weight
 
-           , tmpResult.OperCount * tmpPricePlan.PricePlan1 AS OperSummPlan1_real
-           , tmpResult.OperCount * tmpPricePlan.PricePlan2 AS OperSummPlan2_real
-           , tmpResult.OperCount * tmpPricePlan.PricePlan3 AS OperSummPlan3_real
+           , tmpResult.OperCount * tmpResult.PricePlan1 AS OperSummPlan1_real
+           , tmpResult.OperCount * tmpResult.PricePlan2 AS OperSummPlan2_real
+           , tmpResult.OperCount * tmpResult.PricePlan3 AS OperSummPlan3_real
 
            , tmpResult.OperSummPlan1
            , tmpResult.OperSummPlan2
            , tmpResult.OperSummPlan3
 
-           , tmpPricePlan.PricePlan1
-           , tmpPricePlan.PricePlan2
-           , tmpPricePlan.PricePlan3
+           , tmpResult.PricePlan1 -- tmpPricePlan.PricePlan1
+           , tmpResult.PricePlan2 -- tmpPricePlan.PricePlan2
+           , tmpResult.PricePlan3 -- tmpPricePlan.PricePlan3
 
            , View_InfoMoney.InfoMoneyGroupName              AS InfoMoneyGroupName
            , View_InfoMoney.InfoMoneyDestinationName        AS InfoMoneyDestinationName
@@ -668,10 +682,10 @@ BEGIN
            , View_InfoMoney.InfoMoneyName                   AS InfoMoneyName
 
        FROM tmpResult_out AS tmpResult
-            LEFT JOIN tmpPricePlan ON tmpPricePlan.GoodsId              = tmpResult.GoodsId
+            /*LEFT JOIN tmpPricePlan ON tmpPricePlan.GoodsId              = tmpResult.GoodsId
                                   AND tmpPricePlan.GoodsKindId          = tmpResult.GoodsKindId
                                   AND tmpPricePlan.PartionGoodsDate     = tmpResult.PartionGoodsDate
-                                  AND tmpPricePlan.GoodsKindId_complete = tmpResult.GoodsKindId_complete
+                                  AND tmpPricePlan.GoodsKindId_complete = tmpResult.GoodsKindId_complete*/
 
             LEFT JOIN tmpResult_in ON tmpResult_in.ReceiptId            = tmpResult.ReceiptId
                                   AND tmpResult_in.PartionGoodsDate     = tmpResult.PartionGoodsDate_in

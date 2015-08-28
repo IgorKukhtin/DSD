@@ -349,7 +349,7 @@ BEGIN
                                        , AccountId, AnalyzerId, ObjectId_Analyzer, WhereObjectId_Analyzer, ContainerId_Analyzer, ObjectIntId_Analyzer, ObjectExtId_Analyzer, ContainerIntId_Analyzer
                                        , ParentId, Amount, OperDate, isActive)
        SELECT 0, zc_MIContainer_Summ() AS DescId, vbMovementDescId, inMovementId, MovementItemId
-            , ContainerId_Summ
+            , _tmpItem.ContainerId_Summ
             , _tmpItem.AccountId_Summ                 AS AccountId
             , 0                                       AS AnalyzerId               -- не нужен
             , _tmpItem.GoodsId                        AS ObjectId_Analyzer
@@ -364,7 +364,8 @@ BEGIN
             , FALSE
        FROM _tmpItem
       UNION ALL
-       SELECT 0, zc_MIContainer_Summ() AS DescId, vbMovementDescId, inMovementId, MovementItemId, ContainerId_Summ
+       SELECT 0, zc_MIContainer_Summ() AS DescId, vbMovementDescId, inMovementId, MovementItemId
+            , _tmpItem.ContainerId_Summ
             , _tmpItem.AccountId_Summ                 AS AccountId
             , 0                                       AS AnalyzerId             -- не нужен
             , _tmpItem.GoodsId                        AS ObjectId_Analyzer
@@ -445,12 +446,12 @@ BEGIN
      WHERE _tmpItem.BusinessId_To = tmp.BusinessId
      ;
 
-     -- 3.3. формируются Проводки - долг Покупателя или Физ.лица (недостачи, порча) + !!!добавлен MovementItemId!!! + !!!добавлен GoodsId!!!
+     -- 3.3. формируются Проводки - долг Покупателя или Физ.лица (недостачи, порча) + !!!не добавлен MovementItemId!!! + !!!добавлен GoodsId!!!
      INSERT INTO _tmpMIContainer_insert (Id, DescId, MovementDescId, MovementId, MovementItemId, ContainerId
                                        , AccountId, AnalyzerId, ObjectId_Analyzer, WhereObjectId_Analyzer, ContainerId_Analyzer, ObjectIntId_Analyzer, ObjectExtId_Analyzer, ContainerIntId_Analyzer
                                        , ParentId, Amount, OperDate, IsActive)
        -- это обычная проводка
-       SELECT 0, zc_MIContainer_Summ() AS DescId, vbMovementDescId, inMovementId, 0 AS MovementItemId
+       SELECT 0, zc_MIContainer_Summ() AS DescId, vbMovementDescId, inMovementId, _tmpItem_group.MovementItemId
             , _tmpItem_group.ContainerId_Partner
             , _tmpItem_group.AccountId_Partner        AS AccountId
             , zc_Enum_AnalyzerId_SaleSumm_10300()     AS AnalyzerId              -- !!!Сумма, реализация, Скидка дополнительная!!!
@@ -596,7 +597,7 @@ BEGIN
                   , _tmpItem.GoodsKindId                  AS GoodsKindId
                   , SUM (_tmpItem.OperSumm_Partner)       AS OperSumm
              FROM _tmpItem
-             GROUP BY _tmpItem.ContainerId_ProfitLoss_10300, _tmpItem.GoodsId
+             GROUP BY _tmpItem.ContainerId_ProfitLoss_10300, _tmpItem.ContainerId_Summ, _tmpItem.GoodsId, _tmpItem.GoodsKindId
             ) AS _tmpItem_group
        WHERE _tmpItem_group.OperSumm <> 0
        ;

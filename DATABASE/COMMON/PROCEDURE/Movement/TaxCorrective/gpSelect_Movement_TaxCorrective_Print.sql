@@ -191,7 +191,7 @@ BEGIN
            , Movement.OperDate				                                AS OperDate
            , 'J1201006'::TVarChar                                           AS CHARCODE
            -- , 'Неграш О.В.'::TVarChar                                        AS N10
-           , CASE WHEN MovementString_InvNumberBranch.ValueData = '6' THEN 'Книш В.П.' ELSE 'Рудик Н.В.' END :: TVarChar AS N10
+           , COALESCE (Object_Personal_View.PersonalName, 'Рудик Н.В.') :: TVarChar AS N10
            -- , 'А.В. МАРУХНО'::TVarChar                                        AS N10
            , 'оплата з поточного рахунка'::TVarChar                         AS N9
            , CASE WHEN MovementLinkObject_DocumentTaxKind.ObjectId = zc_Enum_DocumentTaxKind_CorrectivePrice()
@@ -260,7 +260,7 @@ BEGIN
            , OH_JuridicalDetails_To.OKPO                                    AS OKPO_To
            , OH_JuridicalDetails_To.INN                                     AS INN_To
            , OH_JuridicalDetails_To.NumberVAT                               AS NumberVAT_To
-           , CASE WHEN MovementString_InvNumberBranch.ValueData = '6' THEN 'Книш В.П.' ELSE OH_JuridicalDetails_To.AccounterName END :: TVarChar AS AccounterName_To
+           , COALESCE (Object_Personal_View.PersonalName, OH_JuridicalDetails_To.AccounterName) :: TVarChar AS AccounterName_To
            , OH_JuridicalDetails_To.BankAccount                             AS BankAccount_To
            , OH_JuridicalDetails_To.BankName                                AS BankName_To
            , OH_JuridicalDetails_To.MFO                                     AS BankMFO_To
@@ -437,6 +437,14 @@ BEGIN
             LEFT JOIN MovementFloat AS MovementFloat_TotalSummPVAT
                                     ON MovementFloat_TotalSummPVAT.MovementId =  Movement.Id
                                    AND MovementFloat_TotalSummPVAT.DescId = zc_MovementFloat_TotalSummPVAT()
+
+            LEFT JOIN MovementLinkObject AS MovementLinkObject_Branch
+                                         ON MovementLinkObject_Branch.MovementId = Movement.Id
+                                        AND MovementLinkObject_Branch.DescId = zc_MovementLinkObject_Branch()
+            LEFT JOIN ObjectLink AS ObjectLink_Branch_PersonalBookkeeper
+                                 ON ObjectLink_Branch_PersonalBookkeeper.ObjectId = MovementLinkObject_Branch.ObjectId
+                                AND ObjectLink_Branch_PersonalBookkeeper.DescId = zc_ObjectLink_Branch_PersonalBookkeeper()
+            LEFT JOIN Object_Personal_View ON Object_Personal_View.PersonalId = ObjectLink_Branch_PersonalBookkeeper.ChildObjectId
 
             LEFT JOIN MovementLinkObject AS MovementLinkObject_From
                                          ON MovementLinkObject_From.MovementId = Movement.Id

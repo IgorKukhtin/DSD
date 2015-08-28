@@ -1,12 +1,6 @@
 -- Function: gpReport_Goods_Movement ()
 
-DROP FUNCTION IF EXISTS gpReport_GoodsMI_SaleReturnIn (TDateTime, TDateTime, Integer, Integer, Integer, Integer, TVarChar);
-DROP FUNCTION IF EXISTS gpReport_GoodsMI_SaleReturnIn (TDateTime, TDateTime, Integer, Integer, Integer, Integer, Boolean, Boolean, TVarChar);
-DROP FUNCTION IF EXISTS gpReport_GoodsMI_SaleReturnIn (TDateTime, TDateTime, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Boolean, Boolean, TVarChar);
-DROP FUNCTION IF EXISTS gpReport_GoodsMI_SaleReturnIn (TDateTime, TDateTime, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Boolean, Boolean, Boolean, TVarChar);
-DROP FUNCTION IF EXISTS gpReport_GoodsMI_SaleReturnIn (TDateTime, TDateTime, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Boolean, Boolean, Boolean, Boolean, TVarChar);
-
-CREATE OR REPLACE FUNCTION gpReport_GoodsMI_SaleReturnIn (
+CREATE OR REPLACE FUNCTION gpReport_GoodsMI_SaleReturnIn_OLD_TWO (
     IN inStartDate    TDateTime ,
     IN inEndDate      TDateTime ,
     IN inBranchId     Integer   , -- ‘ËÎË‡Î
@@ -73,7 +67,7 @@ BEGIN
 
     IF inEndDate < '01.06.2014' THEN
        RETURN QUERY
-       SELECT * FROM gpReport_GoodsMI_SaleReturnIn_OLD (inStartDate
+       SELECT * FROM gpReport_GoodsMI_SaleReturnIn_OLD_TWO_OLD (inStartDate
                                                       , inEndDate
                                                       , inBranchId
                                                       , inAreaId
@@ -93,7 +87,7 @@ BEGIN
     ELSE
     IF inEndDate < '01.07.2015' OR inStartDate < '01.07.2015' THEN
        RETURN QUERY
-       SELECT * FROM gpReport_GoodsMI_SaleReturnIn_OLD_TWO (inStartDate
+       SELECT * FROM gpReport_GoodsMI_SaleReturnIn_OLD_TWO_OLD_TWO (inStartDate
                                                       , inEndDate
                                                       , inBranchId
                                                       , inAreaId
@@ -331,8 +325,8 @@ BEGIN
 
 , tmpOperationGroup2 AS (SELECT MIContainer.ContainerId_Analyzer
                               , MIContainer.ObjectId_Analyzer                 AS GoodsId
-                              , MIContainer.ObjectIntId_Analyzer              AS GoodsKindId -- COALESCE (MILinkObject_GoodsKind.ObjectId, 0) AS GoodsKindId
-                              , CASE WHEN MIContainer.MovementDescId = zc_Movement_Service() THEN MIContainer.ObjectId_Analyzer ELSE MIContainer.ObjectExtId_Analyzer /*MovementLinkObject_Partner.ObjectId*/ END AS PartnerId
+                              , COALESCE (MILinkObject_GoodsKind.ObjectId, 0) AS GoodsKindId
+                              , CASE WHEN MIContainer.MovementDescId = zc_Movement_Service() THEN MIContainer.ObjectId_Analyzer ELSE MovementLinkObject_Partner.ObjectId END AS PartnerId
                               , COALESCE (MILinkObject_Branch.ObjectId, 0)   AS BranchId
                               , COALESCE (ContainerLO_Juridical.ObjectId, 0) AS JuridicalId
                               , COALESCE (ContainerLO_InfoMoney.ObjectId, 0) AS InfoMoneyId
@@ -377,13 +371,13 @@ BEGIN
                                                              ON ContainerLO_PaidKind.ContainerId = MIContainer.ContainerId_Analyzer
                                                             AND ContainerLO_PaidKind.DescId = zc_ContainerLinkObject_PaidKind()
                                                             AND (ContainerLO_PaidKind.ObjectId = inPaidKindId OR COALESCE (inPaidKindId, 0) = 0)
-                              /*LEFT JOIN MovementLinkObject AS MovementLinkObject_Partner
+                              LEFT JOIN MovementLinkObject AS MovementLinkObject_Partner
                                                            ON MovementLinkObject_Partner.MovementId = MIContainer.MovementId
                                                           AND MovementLinkObject_Partner.DescId = CASE WHEN MIContainer.MovementDescId = zc_Movement_PriceCorrective() THEN zc_MovementLinkObject_Partner() ELSE tmpAnalyzer.MLO_DescId END
 
                               LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
                                                                ON MILinkObject_GoodsKind.MovementItemId = MIContainer.MovementItemId
-                                                              AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()*/
+                                                              AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
                               LEFT JOIN MovementItemLinkObject AS MILinkObject_Branch
                                                                ON MILinkObject_Branch.MovementItemId = MIContainer.MovementItemId
                                                               AND MILinkObject_Branch.DescId = zc_MILinkObject_Branch()
@@ -391,12 +385,13 @@ BEGIN
                               LEFT JOIN _tmpJuridical ON _tmpJuridical.JuridicalId = ContainerLO_Juridical.ObjectId
                               LEFT JOIN _tmpJuridicalBranch ON _tmpJuridicalBranch.JuridicalId = ContainerLO_Juridical.ObjectId
 
+
                          WHERE (_tmpJuridical.JuridicalId > 0 OR vbIsJuridical = FALSE)
                            AND (MILinkObject_Branch.ObjectId = inBranchId OR COALESCE (inBranchId, 0) = 0 OR _tmpJuridicalBranch.JuridicalId IS NOT NULL)
                          GROUP BY MIContainer.ContainerId_Analyzer
-                                , MIContainer.ObjectId_Analyzer
-                                , MIContainer.ObjectIntId_Analyzer -- MILinkObject_GoodsKind.ObjectId
-                                , CASE WHEN MIContainer.MovementDescId = zc_Movement_Service() THEN MIContainer.ObjectId_Analyzer ELSE MIContainer.ObjectExtId_Analyzer /*MovementLinkObject_Partner.ObjectId*/ END
+                                , MIContainer.ObjectId_Analyzer                 
+                                , MILinkObject_GoodsKind.ObjectId
+                                , CASE WHEN MIContainer.MovementDescId = zc_Movement_Service() THEN MIContainer.ObjectId_Analyzer ELSE MovementLinkObject_Partner.ObjectId END
                                 , MILinkObject_Branch.ObjectId
                                 , ContainerLO_Juridical.ObjectId
                                 , ContainerLO_InfoMoney.ObjectId
@@ -655,16 +650,8 @@ $BODY$
 /*-------------------------------------------------------------------------------
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».   Ã‡Ì¸ÍÓ ƒ.¿.
- 22.03.15                                        * add inIsGoodsKind
- 11.01.15                                        * all
- 12.12.14                                        * all
- 27.10.14                                        * add inIsPartner AND inIsGoods
- 13.09.14                                        * add GoodsTagName and GroupStatName and BranchName and JuridicalGroupName
- 11.07.14                                        * add RetailName and OKPO
- 06.05.14                                        * add GoodsGroupNameFull
- 28.03.14                                        * all
- 06.02.14         *
+ 27.08.15                                        *
 */
 
 -- ÚÂÒÚ
--- SELECT * FROM gpReport_GoodsMI_SaleReturnIn (inStartDate:= '01.07.2015', inEndDate:= '31.07.2015', inBranchId:= 0, inAreaId:= 0, inRetailId:= 0, inJuridicalId:= 0, inPaidKindId:= zc_Enum_PaidKind_FirstForm(), inTradeMarkId:= 0, inGoodsGroupId:= 0, inInfoMoneyId:= zc_Enum_InfoMoney_30101(), inIsPartner:= TRUE, inIsTradeMark:= TRUE, inIsGoods:= TRUE, inIsGoodsKind:= TRUE, inSession:= zfCalc_UserAdmin());
+-- SELECT * FROM gpReport_GoodsMI_SaleReturnIn_OLD_TWO (inStartDate:= '01.07.2015', inEndDate:= '31.07.2015', inBranchId:= 0, inAreaId:= 0, inRetailId:= 0, inJuridicalId:= 0, inPaidKindId:= zc_Enum_PaidKind_FirstForm(), inTradeMarkId:= 0, inGoodsGroupId:= 0, inInfoMoneyId:= zc_Enum_InfoMoney_30101(), inIsPartner:= TRUE, inIsTradeMark:= TRUE, inIsGoods:= TRUE, inIsGoodsKind:= TRUE, inSession:= zfCalc_UserAdmin());
