@@ -58,6 +58,7 @@ type
     clInfoMoneyDestination: TcxGridDBColumn;
     dsdChoiceGuides: TdsdChoiceGuides;
     clErased: TcxGridDBColumn;
+    isProfitLoss: TcxGridDBColumn;
   private
     { Private declarations }
   public

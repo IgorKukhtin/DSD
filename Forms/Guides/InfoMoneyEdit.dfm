@@ -2,7 +2,7 @@
   Left = 0
   Top = 0
   Caption = #1059#1087#1088#1072#1074#1083#1077#1085#1095#1077#1089#1082#1072#1103' '#1089#1090#1072#1090#1100#1103
-  ClientHeight = 273
+  ClientHeight = 263
   ClientWidth = 306
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -57,7 +57,7 @@
     Properties.DecimalPlaces = 0
     Properties.DisplayFormat = '0'
     TabOrder = 5
-    Width = 273
+    Width = 129
   end
   object cxLabel3: TcxLabel
     Left = 16
@@ -91,11 +91,19 @@
     TabOrder = 2
     Width = 273
   end
+  object ceisProfitLoss: TcxCheckBox
+    Left = 168
+    Top = 26
+    Caption = #1047#1072#1090#1088#1072#1090#1099' '#1087#1086' '#1086#1087#1083#1072#1090#1077
+    TabOrder = 10
+    Width = 121
+  end
   object ActionList: TActionList
     Left = 232
     Top = 64
     object dsdDataSetRefresh: TdsdDataSetRefresh
       Category = 'DSDLib'
+      MoveParams = <>
       StoredProc = spGet
       StoredProcList = <
         item
@@ -110,6 +118,8 @@
     end
     object dsdInsertUpdateGuides: TdsdInsertUpdateGuides
       Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
       StoredProc = spInsertUpdate
       StoredProcList = <
         item
@@ -119,6 +129,8 @@
     end
     object dsdFormClose: TdsdFormClose
       Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
     end
   end
   object spInsertUpdate: TdsdStoredProc
@@ -157,7 +169,15 @@
         Value = ''
         Component = dsdInfoMoneyDestinationGuides
         ParamType = ptInput
+      end
+      item
+        Name = 'inisProfitLoss'
+        Value = Null
+        Component = ceisProfitLoss
+        DataType = ftBoolean
+        ParamType = ptInput
       end>
+    PackSize = 1
     Left = 32
     Top = 120
   end
@@ -168,8 +188,8 @@
         Value = Null
         ParamType = ptInputOutput
       end>
-    Left = 240
-    Top = 8
+    Left = 144
+    Top = 208
   end
   object spGet: TdsdStoredProc
     StoredProcName = 'gpGet_Object_InfoMoney'
@@ -217,12 +237,21 @@
         Value = ''
         Component = dsdInfoMoneyDestinationGuides
         ComponentItem = 'TextValue'
+      end
+      item
+        Name = 'isProfitLoss'
+        Value = Null
+        Component = ceisProfitLoss
+        DataType = ftBoolean
       end>
+    PackSize = 1
     Top = 120
   end
   object dsdInfoMoneyGroupGuides: TdsdGuides
     KeyField = 'Id'
     LookupControl = ceInfoMoneyGroup
+    FormNameParam.Value = 'TInfoMoneyGroupForm'
+    FormNameParam.DataType = ftString
     FormName = 'TInfoMoneyGroupForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
@@ -248,6 +277,8 @@
   object dsdInfoMoneyDestinationGuides: TdsdGuides
     KeyField = 'Id'
     LookupControl = ceInfoMoneyDestination
+    FormNameParam.Value = 'TInfoMoneyDestinationForm'
+    FormNameParam.DataType = ftString
     FormName = 'TInfoMoneyDestinationForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
@@ -267,8 +298,8 @@
         DataType = ftString
         ParamType = ptInput
       end>
-    Left = 248
-    Top = 173
+    Left = 224
+    Top = 181
   end
   object cxPropertiesStore: TcxPropertiesStore
     Components = <
