@@ -67,7 +67,7 @@ BEGIN
 
     IF inEndDate < '01.06.2014' THEN
        RETURN QUERY
-       SELECT * FROM gpReport_GoodsMI_SaleReturnIn_OLD_TWO_OLD (inStartDate
+       SELECT * FROM gpReport_GoodsMI_SaleReturnIn_OLD (inStartDate
                                                       , inEndDate
                                                       , inBranchId
                                                       , inAreaId
@@ -84,27 +84,6 @@ BEGIN
                                                       , inSession
                                                        );
        RETURN;
-    ELSE
-    IF inEndDate < '01.07.2015' OR inStartDate < '01.07.2015' THEN
-       RETURN QUERY
-       SELECT * FROM gpReport_GoodsMI_SaleReturnIn_OLD_TWO_OLD_TWO (inStartDate
-                                                      , inEndDate
-                                                      , inBranchId
-                                                      , inAreaId
-                                                      , inRetailId
-                                                      , inJuridicalId
-                                                      , inPaidKindId
-                                                      , inTradeMarkId
-                                                      , inGoodsGroupId
-                                                      , inInfoMoneyId
-                                                      , inIsPartner
-                                                      , inIsTradeMark
-                                                      , inIsGoods
-                                                      , inIsGoodsKind
-                                                      , inSession
-                                                       );
-       RETURN;
-    END IF;
     END IF;
 
     vbIsJuridicalBranch:= COALESCE (inBranchId, 0) = 0;

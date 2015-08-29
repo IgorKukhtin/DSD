@@ -478,7 +478,6 @@ object Report_TransportListForm: TReport_TransportListForm
           ItemName = 'dxBarStatic1'
         end
         item
-          BeginGroup = True
           Visible = True
           ItemName = 'bbPrint'
         end
@@ -599,8 +598,11 @@ object Report_TransportListForm: TReport_TransportListForm
       ShortCut = 16464
       DataSets = <
         item
-          DataSet = ClientDataSet
           UserName = 'frxDBDataset'
+          IndexFieldNames = 
+            'BranchName;UnitForwardingName;StartRunPlan;OperDate;RouteName;Ca' +
+            'rName'
+          GridView = cxGridDBTableView
         end>
       Params = <
         item
