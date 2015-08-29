@@ -132,7 +132,7 @@ inherited OrderInternalLiteForm: TOrderInternalLiteForm
             Width = 206
           end
           object colAmount: TcxGridDBColumn
-            Caption = #1050#1086#1083'-'#1074#1086
+            Caption = #1057#1087#1077#1094#1079#1072#1082#1072#1079
             DataBinding.FieldName = 'Amount'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
@@ -204,17 +204,20 @@ inherited OrderInternalLiteForm: TOrderInternalLiteForm
             Width = 49
           end
           object colAmountAll: TcxGridDBColumn
-            Caption = #1042#1089#1077#1075#1086' '#1082' '#1079#1072#1082#1072#1079#1091
+            Caption = #1042#1089#1077#1075#1086
             DataBinding.FieldName = 'AmountAll'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DisplayFormat = ',0.####'
+            HeaderHint = #1042#1089#1077#1075#1086' = ['#1057#1087#1077#1094#1079#1072#1082#1072#1079'] + ['#1040#1074#1090#1086#1079#1072#1082#1072#1079']'
             Options.Editing = False
             Width = 51
           end
           object colCalcAmountAll: TcxGridDBColumn
-            Caption = #1042#1089#1077#1075#1086' '#1082' '#1079#1072#1082#1072#1079#1091' '#1089' '#1082#1088#1072#1090#1085#1086#1089#1090#1100#1102
+            Caption = #1042#1089#1077#1075#1086' '#1089' '#1084#1080#1085'. '#1086#1082#1088#1091#1075#1083'.'
             DataBinding.FieldName = 'CalcAmountAll'
+            HeaderHint = '(['#1057#1087#1077#1094#1079#1072#1082#1072#1079'] + ['#1072#1074#1090#1086#1079#1072#1082#1072#1079']) '#1089' '#1091#1095#1077#1090#1086#1084' '#1084#1080#1085#1080#1084#1072#1083#1100#1085#1086#1075#1086' '#1086#1082#1088#1091#1075#1083#1077#1085#1080#1103
             Options.IncSearch = False
+            Width = 62
           end
         end
       end

@@ -383,6 +383,8 @@ BEGIN
                                                            , 240687, 250652
                                                             );*/
 
+     IF inBranchId = 0
+     THEN
      -- расходы для Master
      INSERT INTO _tmpChild (MasterContainerId, ContainerId, MasterContainerId_Count, ContainerId_Count, OperCount, isExternal)
         SELECT COALESCE (MIContainer_Summ_In.ContainerId, 0)   AS MasterContainerId
@@ -497,6 +499,7 @@ BEGIN
                , MIContainer_Count_Out.WhereObjectId_Analyzer
                , MIContainer_Count_In.WhereObjectId_Analyzer
         ;
+     END IF; -- if inBranchId = 0
 
 /*
      -- добавляются связи которых нет (т.к. нулевые проводки не формируются)
@@ -1089,5 +1092,4 @@ LANGUAGE PLPGSQL VOLATILE;
 -- SELECT * FROM gpInsertUpdate_HistoryCost (inStartDate:= '01.06.2014', inEndDate:= '30.06.2014', inBranchId:= 0, inItearationCount:= 500, inInsert:= -1, inDiffSumm:= 0, inSession:= '2')  WHERE Price <> PriceNext
 -- SELECT * FROM gpInsertUpdate_HistoryCost (inStartDate:= '01.08.2015', inEndDate:= '31.08.2015', inBranchId:= 0, inItearationCount:= 100, inInsert:= -1, inDiffSumm:= 0.009, inSession:= '2') -- WHERE CalcSummCurrent <> CalcSummNext
 
-SELECT * FROM gpInsertUpdate_HistoryCost (inStartDate:= '01.08.2015', inEndDate:= '17.08.2015', inBranchId:= 301310, 
-inItearationCount:= 10, inInsert:= -1, inDiffSumm:= 0.009, inSession:= '2') WHERE ContainerId in (410621)
+-- SELECT * FROM gpInsertUpdate_HistoryCost (inStartDate:= '01.08.2015', inEndDate:= '17.08.2015', inBranchId:= 301310,  inItearationCount:= 10, inInsert:= -1, inDiffSumm:= 0.009, inSession:= '2') WHERE ContainerId in (410621)

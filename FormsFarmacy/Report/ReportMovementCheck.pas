@@ -36,6 +36,9 @@ type
     dxBarControlContainerItem4: TdxBarControlContainerItem;
     dxBarControlContainerItem5: TdxBarControlContainerItem;
     dxBarControlContainerItem6: TdxBarControlContainerItem;
+    spGet_UserUnit: TdsdStoredProc;
+    actGet_UserUnit: TdsdExecStoredProc;
+    actRefreshStart: TdsdDataSetRefresh;
   private
     { Private declarations }
   public

@@ -29,7 +29,6 @@ object IncomeFuelForm: TIncomeFuelForm
     object edInvNumber: TcxTextEdit
       Left = 8
       Top = 23
-      Enabled = False
       Properties.ReadOnly = True
       TabOrder = 0
       Width = 74
@@ -82,12 +81,13 @@ object IncomeFuelForm: TIncomeFuelForm
     object cxLabel4: TcxLabel
       Left = 455
       Top = 5
-      Caption = #1050#1086#1084#1091' ('#1040#1074#1090#1086#1084#1086#1073#1080#1083#1100')'
+      Caption = #1050#1086#1084#1091' ('#1040#1074#1090#1086#1084#1086#1073#1080#1083#1100', '#1060#1080#1079'.'#1083'.)'
     end
     object edPriceWithVAT: TcxCheckBox
       Left = 274
       Top = 63
       Caption = #1062#1077#1085#1072' '#1089' '#1053#1044#1057' ('#1076#1072'/'#1085#1077#1090')'
+      Properties.ReadOnly = True
       TabOrder = 6
       Width = 130
     end
@@ -98,6 +98,7 @@ object IncomeFuelForm: TIncomeFuelForm
       Properties.Alignment.Vert = taVCenter
       Properties.DecimalPlaces = 0
       Properties.DisplayFormat = ',0'
+      Properties.ReadOnly = True
       TabOrder = 7
       Width = 40
     end
@@ -114,10 +115,10 @@ object IncomeFuelForm: TIncomeFuelForm
     object edContract: TcxButtonEdit
       Left = 738
       Top = 23
-      Enabled = False
       Properties.Buttons = <
         item
           Default = True
+          Enabled = False
           Kind = bkEllipsis
         end>
       TabOrder = 4
@@ -131,10 +132,10 @@ object IncomeFuelForm: TIncomeFuelForm
     object edPaidKind: TcxButtonEdit
       Left = 599
       Top = 23
-      Enabled = False
       Properties.Buttons = <
         item
           Default = True
+          Enabled = False
           Kind = bkEllipsis
         end>
       TabOrder = 5
@@ -196,17 +197,18 @@ object IncomeFuelForm: TIncomeFuelForm
     object edChangePrice: TcxCurrencyEdit
       Left = 455
       Top = 63
-      Enabled = False
       Properties.Alignment.Horz = taRightJustify
       Properties.Alignment.Vert = taVCenter
       Properties.DecimalPlaces = 3
       Properties.DisplayFormat = ',0.###'
+      Properties.ReadOnly = True
       TabOrder = 23
       Width = 135
     end
     object edOperDatePartner: TcxDateEdit
       Left = 177
       Top = 63
+      EditValue = 42244d
       Properties.SaveTime = False
       Properties.ShowTime = False
       TabOrder = 24
@@ -947,9 +949,9 @@ object IncomeFuelForm: TIncomeFuelForm
   object GuidesTo: TdsdGuides
     KeyField = 'Id'
     LookupControl = edTo
-    FormNameParam.Value = 'TCarForm'
+    FormNameParam.Value = 'TStoragePlace_ObjectForm'
     FormNameParam.DataType = ftString
-    FormName = 'TCarForm'
+    FormName = 'TStoragePlace_ObjectForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
       item
@@ -1396,12 +1398,6 @@ object IncomeFuelForm: TIncomeFuelForm
       end
       item
         Guides = GuidesTo
-      end
-      item
-        Guides = GuidesRoute
-      end
-      item
-        Guides = GuidesPaidKind
       end>
     ActionItemList = <
       item

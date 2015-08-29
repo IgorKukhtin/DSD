@@ -230,7 +230,7 @@ BEGIN
      WHERE Movement.OperDate BETWEEN inStartDate AND inEndDate
        AND Movement.StatusId = zc_Enum_Status_Complete()
        AND Movement.DescId IN (zc_Movement_Inventory())
-       AND inIsBefoHistoryCost = FALSE
+       -- AND inIsBefoHistoryCost = FALSE
 
 
      -- !!!BRANCH!!!
