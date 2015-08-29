@@ -691,6 +691,40 @@ object WeighingPartnerItemJournalForm: TWeighingPartnerItemJournalForm
       GridView = cxGridDBTableView
     end
   end
+  object edGoodsGroup: TcxButtonEdit
+    Left = 492
+    Top = 5
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    Properties.ReadOnly = True
+    TabOrder = 6
+    Width = 200
+  end
+  object cxLabel3: TcxLabel
+    Left = 403
+    Top = 6
+    Caption = #1043#1088#1091#1087#1087#1072' '#1090#1086#1074#1072#1088#1086#1074':'
+  end
+  object cxLabel4: TcxLabel
+    Left = 701
+    Top = 6
+    Caption = #1058#1086#1074#1072#1088':'
+  end
+  object edGoods: TcxButtonEdit
+    Left = 741
+    Top = 5
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    Properties.ReadOnly = True
+    TabOrder = 9
+    Width = 200
+  end
   object DataSource: TDataSource
     DataSet = ClientDataSet
     Left = 24
@@ -1213,6 +1247,20 @@ object WeighingPartnerItemJournalForm: TWeighingPartnerItemJournalForm
         ParamType = ptInput
       end
       item
+        Name = 'inGoodsGroupId'
+        Value = Null
+        Component = GuidesGoodsGroup
+        ComponentItem = 'Key'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inGoodsId'
+        Value = Null
+        Component = GuidesGoods
+        ComponentItem = 'Key'
+        ParamType = ptInput
+      end
+      item
         Name = 'inIsErased'
         Value = Null
         Component = actShowErased
@@ -1320,6 +1368,12 @@ object WeighingPartnerItemJournalForm: TWeighingPartnerItemJournalForm
     ComponentList = <
       item
         Component = PeriodChoice
+      end
+      item
+        Component = GuidesGoodsGroup
+      end
+      item
+        Component = GuidesGoods
       end>
     Left = 552
     Top = 24
@@ -1345,5 +1399,58 @@ object WeighingPartnerItemJournalForm: TWeighingPartnerItemJournalForm
     PackSize = 1
     Left = 256
     Top = 288
+  end
+  object GuidesGoodsGroup: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edGoodsGroup
+    FormNameParam.Value = 'TGoodsGroupForm'
+    FormNameParam.DataType = ftString
+    FormName = 'TGoodsGroupForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GuidesGoodsGroup
+        ComponentItem = 'Key'
+        DataType = ftString
+        ParamType = ptInput
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesGoodsGroup
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+      end>
+    Left = 608
+  end
+  object GuidesGoods: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edGoods
+    FormNameParam.Value = 'TGoodsFuel_ObjectForm'
+    FormNameParam.DataType = ftString
+    FormName = 'TGoodsFuel_ObjectForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GuidesGoods
+        ComponentItem = 'Key'
+        DataType = ftString
+        ParamType = ptInput
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesGoods
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+      end>
+    Left = 856
+    Top = 65535
   end
 end
