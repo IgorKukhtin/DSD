@@ -40,6 +40,9 @@ type
     colAmountInvent: TcxGridDBColumn;
     colMCSValue: TcxGridDBColumn;
     colSaldo: TcxGridDBColumn;
+    spGet_UserUnit: TdsdStoredProc;
+    actGet_UserUnit: TdsdExecStoredProc;
+    actRefreshStart: TdsdDataSetRefresh;
   private
     { Private declarations }
   public

@@ -19,7 +19,8 @@ uses
   dxSkinWhiteprint, dxSkinXmas2008Blue, Vcl.Menus, dsdAddOn, cxPropertiesStore,
   dsdDB, dsdAction, Vcl.ActnList, cxCurrencyEdit, cxLabel, Vcl.StdCtrls,
   cxButtons, cxTextEdit, dsdGuides, Data.DB, Datasnap.DBClient, cxMaskEdit,
-  cxDropDownEdit, cxLookupEdit, cxDBLookupEdit, cxDBLookupComboBox, cxButtonEdit;
+  cxDropDownEdit, cxLookupEdit, cxDBLookupEdit, cxDBLookupComboBox, cxButtonEdit,
+  cxCheckBox;
 
 type
   TInfoMoneyEditForm = class(TParentForm)
@@ -44,6 +45,7 @@ type
     ceInfoMoneyDestination: TcxButtonEdit;
     dsdInsertUpdateGuides: TdsdInsertUpdateGuides;
     dsdFormClose: TdsdFormClose;
+    ceisProfitLoss: TcxCheckBox;
   private
     { Private declarations }
   public

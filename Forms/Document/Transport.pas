@@ -238,6 +238,10 @@ type
     UnitChoiceForm: TOpenChoiceForm;
     colchUnitName: TcxGridDBColumn;
     colchBranchName: TcxGridDBColumn;
+    MIProtocolOpenForm: TdsdOpenForm;
+    MIChildProtocolOpenForm: TdsdOpenForm;
+    bbMIProtocol: TdxBarButton;
+    bbMIChildProtocol: TdxBarButton;
   private
   public
   end;

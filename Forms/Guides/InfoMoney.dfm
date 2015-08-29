@@ -69,6 +69,13 @@ object InfoMoneyForm: TInfoMoneyForm
         HeaderAlignmentVert = vaCenter
         Width = 177
       end
+      object isProfitLoss: TcxGridDBColumn
+        Caption = #1047#1072#1090#1088#1072#1090#1099' '#1087#1086' '#1086#1087#1083#1072#1090#1077
+        DataBinding.FieldName = 'isProfitLoss'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 50
+      end
       object clErased: TcxGridDBColumn
         Caption = #1059#1076#1072#1083#1077#1085
         DataBinding.FieldName = 'isErased'
