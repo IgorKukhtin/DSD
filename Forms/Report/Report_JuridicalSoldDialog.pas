@@ -47,6 +47,7 @@ type
     cxLabel2: TcxLabel;
     edCurrency: TcxButtonEdit;
     GuidesCurrency: TdsdGuides;
+    cbisPartionMovementName: TcxCheckBox;
   private
     { Private declarations }
   public

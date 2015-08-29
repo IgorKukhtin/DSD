@@ -3,8 +3,8 @@ object Report_JuridicalSoldDialogForm: TReport_JuridicalSoldDialogForm
   Top = 0
   BorderStyle = bsDialog
   Caption = #1055#1072#1088#1072#1084#1077#1090#1088#1099' '#1086#1090#1095#1077#1090#1072' <'#1054#1073#1086#1088#1086#1090#1099' '#1087#1086' '#1102#1088'.'#1083#1080#1094#1072#1084'>'
-  ClientHeight = 268
-  ClientWidth = 491
+  ClientHeight = 306
+  ClientWidth = 505
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -19,7 +19,7 @@ object Report_JuridicalSoldDialogForm: TReport_JuridicalSoldDialogForm
   TextHeight = 13
   object cxButton1: TcxButton
     Left = 111
-    Top = 227
+    Top = 262
     Width = 75
     Height = 25
     Caption = 'Ok'
@@ -29,7 +29,7 @@ object Report_JuridicalSoldDialogForm: TReport_JuridicalSoldDialogForm
   end
   object cxButton2: TcxButton
     Left = 285
-    Top = 227
+    Top = 262
     Width = 75
     Height = 25
     Caption = #1054#1090#1084#1077#1085#1072
@@ -64,12 +64,12 @@ object Report_JuridicalSoldDialogForm: TReport_JuridicalSoldDialogForm
   end
   object cxLabel8: TcxLabel
     Left = 8
-    Top = 160
+    Top = 195
     Caption = #1060#1080#1083#1080#1072#1083':'
   end
   object edBranch: TcxButtonEdit
     Left = 8
-    Top = 180
+    Top = 215
     Properties.Buttons = <
       item
         Default = True
@@ -81,12 +81,12 @@ object Report_JuridicalSoldDialogForm: TReport_JuridicalSoldDialogForm
   end
   object cxLabel20: TcxLabel
     Left = 8
-    Top = 59
+    Top = 94
     Caption = #1057#1095#1077#1090' '#1085#1072#1079#1074#1072#1085#1080#1077':'
   end
   object edAccount: TcxButtonEdit
     Left = 8
-    Top = 79
+    Top = 114
     Properties.Buttons = <
       item
         Default = True
@@ -98,12 +98,12 @@ object Report_JuridicalSoldDialogForm: TReport_JuridicalSoldDialogForm
   end
   object cxLabel9: TcxLabel
     Left = 8
-    Top = 108
+    Top = 143
     Caption = #1059#1055' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1077':'
   end
   object edInfoMoneyDestination: TcxButtonEdit
     Left = 8
-    Top = 127
+    Top = 162
     Properties.Buttons = <
       item
         Default = True
@@ -115,11 +115,11 @@ object Report_JuridicalSoldDialogForm: TReport_JuridicalSoldDialogForm
   end
   object cxLabel11: TcxLabel
     Left = 250
-    Top = 7
+    Top = 27
     Caption = #1060#1086#1088#1084#1072' '#1086#1087#1083#1072#1090#1099':'
   end
   object edPaidKind: TcxButtonEdit
-    Left = 250
+    Left = 337
     Top = 27
     Properties.Buttons = <
       item
@@ -128,16 +128,16 @@ object Report_JuridicalSoldDialogForm: TReport_JuridicalSoldDialogForm
       end>
     Properties.ReadOnly = True
     TabOrder = 13
-    Width = 95
+    Width = 104
   end
   object cxLabel13: TcxLabel
     Left = 250
-    Top = 59
+    Top = 94
     Caption = #1059#1055' '#1075#1088#1091#1087#1087#1072' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103':'
   end
   object edInfoMoneyGroup: TcxButtonEdit
     Left = 250
-    Top = 78
+    Top = 113
     Properties.Buttons = <
       item
         Default = True
@@ -149,12 +149,12 @@ object Report_JuridicalSoldDialogForm: TReport_JuridicalSoldDialogForm
   end
   object cxLabel5: TcxLabel
     Left = 250
-    Top = 108
+    Top = 143
     Caption = #1059#1055' '#1089#1090#1072#1090#1100#1103' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103':'
   end
   object edInfoMoney: TcxButtonEdit
     Left = 250
-    Top = 127
+    Top = 162
     Properties.Buttons = <
       item
         Default = True
@@ -166,12 +166,12 @@ object Report_JuridicalSoldDialogForm: TReport_JuridicalSoldDialogForm
   end
   object cxLabel1: TcxLabel
     Left = 250
-    Top = 159
+    Top = 194
     Caption = #1043#1088#1091#1087#1087#1072' '#1102#1088'.'#1083#1080#1094':'
   end
   object edJuridicalGroup: TcxButtonEdit
     Left = 250
-    Top = 180
+    Top = 215
     Properties.Buttons = <
       item
         Default = True
@@ -182,13 +182,13 @@ object Report_JuridicalSoldDialogForm: TReport_JuridicalSoldDialogForm
     Width = 220
   end
   object cxLabel2: TcxLabel
-    Left = 353
-    Top = 7
+    Left = 250
+    Top = 62
     Caption = #1042#1072#1083#1102#1090#1072':'
   end
   object edCurrency: TcxButtonEdit
-    Left = 353
-    Top = 27
+    Left = 303
+    Top = 62
     Properties.Buttons = <
       item
         Default = True
@@ -196,7 +196,15 @@ object Report_JuridicalSoldDialogForm: TReport_JuridicalSoldDialogForm
       end>
     Properties.ReadOnly = True
     TabOrder = 21
-    Width = 117
+    Width = 138
+  end
+  object cbisPartionMovementName: TcxCheckBox
+    Left = 8
+    Top = 62
+    Caption = #1043#1088#1091#1087#1087#1080#1088#1086#1074#1072#1090#1100' '#1086#1089#1085#1086#1074#1072#1085#1080#1077
+    Properties.ReadOnly = False
+    TabOrder = 22
+    Width = 153
   end
   object PeriodChoice: TPeriodChoice
     DateStart = deStart
@@ -206,7 +214,7 @@ object Report_JuridicalSoldDialogForm: TReport_JuridicalSoldDialogForm
   end
   object dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 224
-    Top = 223
+    Top = 258
   end
   object cxPropertiesStore: TcxPropertiesStore
     Components = <
@@ -219,7 +227,7 @@ object Report_JuridicalSoldDialogForm: TReport_JuridicalSoldDialogForm
     StorageName = 'cxPropertiesStore'
     StorageType = stStream
     Left = 400
-    Top = 225
+    Top = 260
   end
   object FormParams: TdsdFormParams
     Params = <
@@ -356,9 +364,16 @@ object Report_JuridicalSoldDialogForm: TReport_JuridicalSoldDialogForm
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+      end
+      item
+        Name = 'isPartionMovementName'
+        Value = Null
+        Component = cbisPartionMovementName
+        DataType = ftBoolean
+        ParamType = ptInput
       end>
     Left = 40
-    Top = 208
+    Top = 243
   end
   object GuidesBranch: TdsdGuides
     KeyField = 'Id'
@@ -385,7 +400,7 @@ object Report_JuridicalSoldDialogForm: TReport_JuridicalSoldDialogForm
         ParamType = ptInput
       end>
     Left = 96
-    Top = 159
+    Top = 194
   end
   object GuidesAccount: TdsdGuides
     KeyField = 'Id'
@@ -412,7 +427,7 @@ object Report_JuridicalSoldDialogForm: TReport_JuridicalSoldDialogForm
         ParamType = ptInput
       end>
     Left = 128
-    Top = 69
+    Top = 104
   end
   object GuidesInfoMoneyDestination: TdsdGuides
     KeyField = 'Id'
@@ -439,7 +454,7 @@ object Report_JuridicalSoldDialogForm: TReport_JuridicalSoldDialogForm
         ParamType = ptInput
       end>
     Left = 110
-    Top = 110
+    Top = 145
   end
   object GuidesPaidKind: TdsdGuides
     KeyField = 'Id'
@@ -465,8 +480,8 @@ object Report_JuridicalSoldDialogForm: TReport_JuridicalSoldDialogForm
         DataType = ftString
         ParamType = ptInput
       end>
-    Left = 272
-    Top = 12
+    Left = 456
+    Top = 20
   end
   object GuidesInfoMoneyGroup: TdsdGuides
     KeyField = 'Id'
@@ -498,7 +513,7 @@ object Report_JuridicalSoldDialogForm: TReport_JuridicalSoldDialogForm
         DataType = ftString
       end>
     Left = 336
-    Top = 69
+    Top = 104
   end
   object GuidesInfoMoney: TdsdGuides
     KeyField = 'Id'
@@ -527,7 +542,7 @@ object Report_JuridicalSoldDialogForm: TReport_JuridicalSoldDialogForm
         DataType = ftString
       end>
     Left = 368
-    Top = 117
+    Top = 152
   end
   object GuidesJuridicalGroup: TdsdGuides
     KeyField = 'Id'
@@ -554,7 +569,7 @@ object Report_JuridicalSoldDialogForm: TReport_JuridicalSoldDialogForm
         ParamType = ptInput
       end>
     Left = 368
-    Top = 168
+    Top = 203
   end
   object GuidesCurrency: TdsdGuides
     KeyField = 'Id'
@@ -580,7 +595,7 @@ object Report_JuridicalSoldDialogForm: TReport_JuridicalSoldDialogForm
         DataType = ftString
         ParamType = ptInput
       end>
-    Left = 392
-    Top = 8
+    Left = 456
+    Top = 64
   end
 end
