@@ -26,6 +26,8 @@
     Align = alTop
     BevelOuter = bvNone
     TabOrder = 0
+    ExplicitLeft = -8
+    ExplicitTop = -40
     object edInvNumber: TcxTextEdit
       Left = 8
       Top = 23
@@ -41,6 +43,7 @@
     object edOperDate: TcxDateEdit
       Left = 105
       Top = 23
+      EditValue = 42244d
       Properties.SaveTime = False
       Properties.ShowTime = False
       TabOrder = 1
@@ -140,6 +143,7 @@
     object edStartRunPlan: TcxDateEdit
       Left = 305
       Top = 23
+      EditValue = 42244d
       Properties.DateButtons = [btnClear, btnToday]
       Properties.DisplayFormat = 'dd.mm.yyyy hh:mm'
       Properties.EditFormat = 'dd.mm.yyyy hh:mm'
@@ -156,6 +160,7 @@
     object edEndRunPlan: TcxDateEdit
       Left = 305
       Top = 63
+      EditValue = 42244d
       Properties.DisplayFormat = 'dd.mm.yyyy hh:mm'
       Properties.EditFormat = 'dd.mm.yyyy hh:mm'
       Properties.Kind = ckDateTime
@@ -175,6 +180,7 @@
     object edStartRun: TcxDateEdit
       Left = 455
       Top = 23
+      EditValue = 42244d
       Properties.DisplayFormat = 'dd.mm.yyyy hh:mm'
       Properties.EditFormat = 'dd.mm.yyyy hh:mm'
       Properties.InputKind = ikMask
@@ -190,6 +196,7 @@
     object edEndRun: TcxDateEdit
       Left = 455
       Top = 63
+      EditValue = 42244d
       Properties.DisplayFormat = 'dd.mm.yyyy hh:mm'
       Properties.EditFormat = 'dd.mm.yyyy hh:mm'
       Properties.Kind = ckDateTime
@@ -2732,8 +2739,8 @@
         DataType = ftString
         ParamType = ptInput
       end>
-    Left = 482
-    Top = 83
+    Left = 186
+    Top = 35
   end
   object GuidesPersonalDriverMore: TdsdGuides
     KeyField = 'Id'
@@ -3813,8 +3820,8 @@
         ParamType = ptInput
       end>
     PackSize = 1
-    Left = 466
-    Top = 194
+    Left = 530
+    Top = 210
   end
   object GuidesPersonal: TdsdGuides
     KeyField = 'Id'

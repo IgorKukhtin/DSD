@@ -1,10 +1,12 @@
 -- Function: gpSelect_Movement_Transport()
 
 DROP FUNCTION IF EXISTS gpSelect_Movement_Transport (TDateTime, TDateTime, TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_Movement_Transport (TDateTime, TDateTime, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_Movement_Transport(
     IN inStartDate   TDateTime , --
     IN inEndDate     TDateTime , --
+    IN inIsErased    Boolean ,
     IN inSession     TVarChar    -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, InvNumber Integer, OperDate TDateTime
@@ -29,6 +31,12 @@ BEGIN
 
      -- Результат
      RETURN QUERY 
+     WITH tmpStatus AS (SELECT zc_Enum_Status_Complete() AS StatusId
+                       UNION
+                        SELECT zc_Enum_Status_UnComplete() AS StatusId
+                       UNION
+                        SELECT zc_Enum_Status_Erased() AS StatusId WHERE inIsErased = TRUE
+                       )
        SELECT
              Movement.Id
            , zfConvert_StringToNumber (Movement.InvNumber) AS InvNumber
@@ -58,8 +66,12 @@ BEGIN
 
            , Object_UnitForwarding.ValueData AS UnitForwardingName
    
-       FROM Movement
-            JOIN (SELECT AccessKeyId FROM Object_RoleAccessKey_View WHERE UserId = vbUserId GROUP BY AccessKeyId) AS tmpRoleAccessKey ON tmpRoleAccessKey.AccessKeyId = Movement.AccessKeyId
+       FROM tmpStatus
+            INNER JOIN Movement ON Movement.DescId = zc_Movement_Transport()
+                               AND Movement.OperDate BETWEEN inStartDate AND inEndDate
+                               AND Movement.StatusId = tmpStatus.StatusId
+            JOIN (SELECT AccessKeyId FROM Object_RoleAccessKey_View WHERE UserId = vbUserId GROUP BY AccessKeyId) AS tmpRoleAccessKey 
+                                                                                                                  ON tmpRoleAccessKey.AccessKeyId = Movement.AccessKeyId
 
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
 
@@ -128,20 +140,20 @@ BEGIN
                                         AND MovementLinkObject_UnitForwarding.DescId = zc_MovementLinkObject_UnitForwarding()
             LEFT JOIN Object AS Object_UnitForwarding ON Object_UnitForwarding.Id = MovementLinkObject_UnitForwarding.ObjectId
  
-       WHERE Movement.DescId = zc_Movement_Transport()
-         AND Movement.OperDate BETWEEN inStartDate AND inEndDate
+      
          -- AND tmpRoleAccessKey.AccessKeyId IS NOT NULL
       ;
   
 END;
 $BODY$
   LANGUAGE PLPGSQL VOLATILE;
-ALTER FUNCTION gpSelect_Movement_Transport (TDateTime, TDateTime, TVarChar) OWNER TO postgres;
+--ALTER FUNCTION gpSelect_Movement_Transport (TDateTime, TDateTime, TVarChar) OWNER TO postgres;
 
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 29.08.15         * add inIsErased
  06.02.14                                        * add Branch...
  14.12.13                                        * add lpGetUserBySession
  02.12.13         * add Personal (changes in wiki)

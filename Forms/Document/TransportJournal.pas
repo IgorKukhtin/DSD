@@ -107,6 +107,15 @@ type
     spErased: TdsdExecStoredProc;
     actSimpleErased: TMultiAction;
     actSetErasedList: TMultiAction;
+    MovementProtocolOpenForm: TdsdOpenForm;
+    bbProtocol: TdxBarButton;
+    PrintHeaderCDS: TClientDataSet;
+    actPrintFrom: TdsdPrintAction;
+    actPrintTo: TdsdPrintAction;
+    bbPrintFrom: TdxBarButton;
+    bbPrintTo: TdxBarButton;
+    actShowErased: TBooleanStoredProcAction;
+    bbShowErased: TdxBarButton;
   private
   public
   end;

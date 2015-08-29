@@ -579,7 +579,6 @@ inherited TransferDebtInJournalForm: TTransferDebtInJournalForm
           DataSet = PrintItemsCDS
           UserName = 'frxDBDMaster'
         end>
-      CopiesCount = 1
       Params = <
         item
           Name = 'Id'
@@ -649,7 +648,6 @@ inherited TransferDebtInJournalForm: TTransferDebtInJournalForm
           DataSet = PrintHeaderCDS
           UserName = 'frxDBDHeader'
         end>
-      CopiesCount = 1
       Params = <
         item
           Name = 'Id'
@@ -693,7 +691,6 @@ inherited TransferDebtInJournalForm: TTransferDebtInJournalForm
           DataSet = PrintHeaderCDS
           UserName = 'frxDBDHeader'
         end>
-      CopiesCount = 1
       Params = <
         item
           Name = 'Id'
@@ -729,7 +726,6 @@ inherited TransferDebtInJournalForm: TTransferDebtInJournalForm
           DataSet = PrintHeaderCDS
           UserName = 'frxDBDHeader'
         end>
-      CopiesCount = 1
       Params = <
         item
           Name = 'Id'
