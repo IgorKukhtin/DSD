@@ -3,19 +3,21 @@
 DROP FUNCTION IF EXISTS gpReport_JuridicalSold (TDateTime, TDateTime, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpReport_JuridicalSold (TDateTime, TDateTime, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpReport_JuridicalSold (TDateTime, TDateTime, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpReport_JuridicalSold (TDateTime, TDateTime, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpReport_JuridicalSold(
-    IN inStartDate        TDateTime , -- 
-    IN inEndDate          TDateTime , --
-    IN inAccountId        Integer,    -- Счет  
-    IN inInfoMoneyId      Integer,    -- Управленческая статья  
-    IN inInfoMoneyGroupId Integer,    -- Группа управленческих статей
+    IN inStartDate                TDateTime , -- 
+    IN inEndDate                  TDateTime , --
+    IN inAccountId                Integer,    -- Счет  
+    IN inInfoMoneyId              Integer,    -- Управленческая статья  
+    IN inInfoMoneyGroupId         Integer,    -- Группа управленческих статей
     IN inInfoMoneyDestinationId   Integer,    --
-    IN inPaidKindId       Integer   , --
-    IN inBranchId         Integer   , --
-    IN inJuridicalGroupId Integer   , --
-    IN inCurrencyId       Integer   , -- Валюта
-    IN inSession          TVarChar    -- сессия пользователя
+    IN inPaidKindId               Integer   , --
+    IN inBranchId                 Integer   , --
+    IN inJuridicalGroupId         Integer   , --
+    IN inCurrencyId               Integer   , -- Валюта
+    IN inisPartionMovementName    Boolean   ,
+    IN inSession                  TVarChar    -- сессия пользователя
 )
 RETURNS TABLE (ContainerId Integer, JuridicalCode Integer, JuridicalName TVarChar, OKPO TVarChar, JuridicalGroupName TVarChar
              , RetailName TVarChar, RetailReportName TVarChar
@@ -143,7 +145,7 @@ BEGIN
         Object_ContractConditionKind.ValueData AS ContractConditionKindName,
         tmpContract.Value :: TFloat AS ContractConditionValue,
 
-        Object_PartionMovement.ValueData AS PartionMovementName,
+        CASE WHEN inisPartionMovementName = TRUE THEN Object_PartionMovement.ValueData ELSE '' END :: TVarChar   AS PartionMovementName,
         ObjectDate_PartionMovement_Payment.ValueData AS PaymentDate,
 
         Operation.ObjectId  AS AccountId,
@@ -386,11 +388,12 @@ BEGIN
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpReport_JuridicalSold (TDateTime, TDateTime, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar) OWNER TO postgres;
+ALTER FUNCTION gpReport_JuridicalSold (TDateTime, TDateTime, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer,Boolean, TVarChar) OWNER TO postgres;
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 29.08.15         * add inisPartionMovementName
  14.11.14         * add inCurrencyId
  10.10.14                                        * add tmpContractCondition
  13.09.14                                        * add inJuridicalGroupId

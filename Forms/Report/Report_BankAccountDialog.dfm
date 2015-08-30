@@ -178,7 +178,7 @@ object Report_BankAccountDialogForm: TReport_BankAccountDialogForm
         Name = 'BankAccountName'
         Value = ''
         Component = BankAccountGuides
-        ComponentItem = 'Key'
+        ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
       end

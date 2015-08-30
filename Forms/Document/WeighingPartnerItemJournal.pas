@@ -24,7 +24,8 @@ uses
   dxSkinSilver, dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008,
   dxSkinTheAsphaltWorld, dxSkinsDefaultPainters, dxSkinValentine, dxSkinVS2010,
   dxSkinWhiteprint, dxSkinXmas2008Blue, dxSkinscxPCPainter, dxSkinsdxBarPainter,
-  dxBarExtItems, cxCurrencyEdit, ChoicePeriod, System.Contnrs, cxLabel;
+  dxBarExtItems, cxCurrencyEdit, ChoicePeriod, System.Contnrs, cxLabel,
+  dsdGuides, cxButtonEdit;
 
 type
   TWeighingPartnerItemJournalForm = class(TParentForm)
@@ -99,6 +100,12 @@ type
     RouteGroupName: TcxGridDBColumn;
     RouteName: TcxGridDBColumn;
     RouteSortingName: TcxGridDBColumn;
+    edGoodsGroup: TcxButtonEdit;
+    cxLabel3: TcxLabel;
+    cxLabel4: TcxLabel;
+    edGoods: TcxButtonEdit;
+    GuidesGoodsGroup: TdsdGuides;
+    GuidesGoods: TdsdGuides;
   private
   public
   end;

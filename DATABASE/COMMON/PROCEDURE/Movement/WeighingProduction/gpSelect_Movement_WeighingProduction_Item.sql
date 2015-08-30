@@ -1,12 +1,15 @@
 -- Function: gpSelect_Movement_WeighingProduction_Item()
 
 DROP FUNCTION IF EXISTS gpSelect_Movement_WeighingProduction_Item (TDateTime, TDateTime, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_Movement_WeighingProduction_Item (TDateTime, TDateTime, Integer, Integer, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_Movement_WeighingProduction_Item(
-    IN inStartDate   TDateTime , --
-    IN inEndDate     TDateTime , --
-    IN inIsErased    Boolean ,
-    IN inSession     TVarChar    -- сессия пользователя
+    IN inStartDate          TDateTime , --
+    IN inEndDate            TDateTime , --
+    IN inGoodsGroupId       Integer   ,
+    IN inGoodsId            Integer   ,
+    IN inIsErased           Boolean   , -- 
+    IN inSession            TVarChar    -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, InvNumber Integer, OperDate TDateTime, StatusCode Integer, StatusName TVarChar
              , MovementId_parent Integer, OperDate_parent TDateTime, InvNumber_parent TVarChar
@@ -38,6 +41,24 @@ BEGIN
      -- проверка прав пользователя на вызов процедуры
      -- vbUserId := lpCheckRight (inSession, zc_Enum_Process_Select_Movement_WeighingProduction());
      vbUserId:= lpGetUserBySession (inSession);
+
+    -- таблица -
+    CREATE TEMP TABLE _tmpGoods (GoodsId Integer) ON COMMIT DROP;
+
+    IF inGoodsGroupId <> 0
+    THEN
+        INSERT INTO _tmpGoods (GoodsId)
+           SELECT lfObject_Goods_byGoodsGroup.GoodsId FROM  lfSelect_Object_Goods_byGoodsGroup (inGoodsGroupId) AS lfObject_Goods_byGoodsGroup;
+    ELSE IF inGoodsId <> 0
+         THEN
+             INSERT INTO _tmpGoods (GoodsId)
+              SELECT inGoodsId;
+         ELSE
+             INSERT INTO _tmpGoods (GoodsId)
+              SELECT Object.Id FROM Object WHERE Object.DescId = zc_Object_Goods()
+            ;
+         END IF;
+    END IF;
 
      -- Результат
      RETURN QUERY 
@@ -175,7 +196,8 @@ BEGIN
             LEFT JOIN MovementItem ON MovementItem.MovementId = Movement.Id
                              AND MovementItem.DescId     = zc_MI_Master()
                              AND MovementItem.isErased   = False
-            LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = MovementItem.ObjectId
+            INNER JOIN _tmpGoods ON _tmpGoods.GoodsId = MovementItem.ObjectId
+            LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = _tmpGoods.GoodsId
 
             LEFT JOIN MovementItemBoolean AS MIBoolean_StartWeighing
                                           ON MIBoolean_StartWeighing.MovementItemId = MovementItem.Id
@@ -259,11 +281,12 @@ BEGIN
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpSelect_Movement_WeighingProduction_Item (TDateTime, TDateTime, Boolean, TVarChar) OWNER TO postgres;
+ALTER FUNCTION gpSelect_Movement_WeighingProduction_Item (TDateTime, TDateTime, Integer, Integer, Boolean, TVarChar) OWNER TO postgres;
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
+ 29.08.15         * add inGoodsGroupId, inGoodsId
  12.06.15                                        * all
  13.03.14         *
 */
