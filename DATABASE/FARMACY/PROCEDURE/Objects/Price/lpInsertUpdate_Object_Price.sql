@@ -13,44 +13,51 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_Object_Price(
 RETURNS VOID
 AS
 $BODY$
-  DECLARE vbId Integer;
-  DECLARE vbPrice_Value TFloat;
-  DECLARE vbDateChange TDateTime;
+    DECLARE vbId Integer;
+    DECLARE vbPrice_Value TFloat;
+    DECLARE vbDateChange TDateTime;
 BEGIN
-  -- Если такая запись есть - достаем её ключу подр.-товар
-  SELECT
-    Id, price, DateChange INTO vbId, vbPrice_Value, vbDateChange
-  from Object_Price_View
-  Where
-    GoodsId = inGoodsId
-    AND
-    UnitId = inUnitID;
-  IF COALESCE(vbId,0)=0
-  THEN
-    -- сохранили/получили <Объект> по ИД
-    vbId := lpInsertUpdate_Object (vbId, zc_Object_Price(), 0, '');
+    -- Если такая запись есть - достаем её ключу подр.-товар
+    SELECT
+        Id, 
+        price, 
+        DateChange 
+    INTO 
+        vbId, 
+        vbPrice_Value, 
+        vbDateChange
+    FROM 
+        Object_Price_View
+    WHERE
+        GoodsId = inGoodsId
+        AND
+        UnitId = inUnitID;
+    IF COALESCE(vbId,0)=0
+    THEN
+        -- сохранили/получили <Объект> по ИД
+        vbId := lpInsertUpdate_Object (vbId, zc_Object_Price(), 0, '');
 
-    -- сохранили связь с <товар>
-    PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_Price_Goods(), vbId, inGoodsId);
+        -- сохранили связь с <товар>
+        PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_Price_Goods(), vbId, inGoodsId);
 
-    -- сохранили связь с <подразделение>
-    PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_Price_Unit(), vbId, inUnitId);
-  END IF;
+        -- сохранили связь с <подразделение>
+        PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_Price_Unit(), vbId, inUnitId);
+    END IF;
   
-  IF (vbDateChange is null or inDate >= vbDateChange)
-  THEN
-    IF COALESCE(vbPrice_Value,0) <> inPrice
-	THEN
-      -- сохранили св-во < Цена >
-      PERFORM lpInsertUpdate_objectFloat(zc_ObjectFloat_Price_Value(), vbId, inPrice);
-	END IF;
+    IF (vbDateChange is null or inDate >= vbDateChange)
+    THEN
+        IF COALESCE(vbPrice_Value,0) <> inPrice
+        THEN
+            -- сохранили св-во < Цена >
+            PERFORM lpInsertUpdate_objectFloat(zc_ObjectFloat_Price_Value(), vbId, inPrice);
+        END IF;
 
-    -- сохранили св-во < Дата изменения >
-    PERFORM lpInsertUpdate_objectDate(zc_ObjectDate_Price_DateChange(), vbId, inDate);
+        -- сохранили св-во < Дата изменения >
+        PERFORM lpInsertUpdate_objectDate(zc_ObjectDate_Price_DateChange(), vbId, inDate);
 
-    -- сохранили протокол
-    PERFORM lpInsert_ObjectProtocol (vbId, inUserId);
-  END IF;
+        -- сохранили протокол
+        PERFORM lpInsert_ObjectProtocol (vbId, inUserId);
+    END IF;
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;

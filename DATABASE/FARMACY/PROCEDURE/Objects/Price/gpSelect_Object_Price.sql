@@ -4,19 +4,20 @@ DROP FUNCTION IF EXISTS gpSelect_Object_Price(Integer, Boolean,Boolean,TVarChar)
 
 CREATE OR REPLACE FUNCTION gpSelect_Object_Price(
     IN inUnitId      Integer,       -- подразделение
-    IN inisShowAll   Boolean,	    --True - показать все товары, False - показать только с ценами
+    IN inisShowAll   Boolean,        --True - показать все товары, False - показать только с ценами
     IN inisShowDel   Boolean,       --True - показать так же удаленные, False - показать только рабочие
     IN inSession     TVarChar       -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, Price TFloat, MCSValue Tfloat
              , GoodsId Integer, GoodsCode Integer, GoodsName TVarChar
              , DateChange TDateTime, MCSDateChange TDateTime
-			 , isErased boolean
+             , MCSIsClose Boolean, MCSNotRecalc Boolean
+             , isErased boolean
              ) AS
 $BODY$
 DECLARE
-  vbUserId Integer;
-  vbObjectId Integer;
+    vbUserId Integer;
+    vbObjectId Integer;
 BEGIN
     -- проверка прав пользователя на вызов процедуры
     -- vbUserId:= lpCheckRight(inSession, zc_Enum_Process_Select_Object_Street());
@@ -33,68 +34,74 @@ BEGIN
     THEN
         RETURN QUERY
             SELECT 
-               NULL::Integer                    AS Id
-              ,NULL::TFloat                     AS Price
-              ,NULL::TFloat                     AS MCSValue
-              ,NULL::Integer                    AS GoodsId
-              ,NULL::Integer                    AS GoodsCode
-              ,NULL::TVarChar                   AS GoodsName
-              ,NULL::TDateTime                  AS DateChange
-              ,NULL::TDateTime                  AS MCSDateChange
-              ,NULL::Boolean                    AS isErased
+                NULL::Integer                    AS Id
+               ,NULL::TFloat                     AS Price
+               ,NULL::TFloat                     AS MCSValue
+               ,NULL::Integer                    AS GoodsId
+               ,NULL::Integer                    AS GoodsCode
+               ,NULL::TVarChar                   AS GoodsName
+               ,NULL::TDateTime                  AS DateChange
+               ,NULL::TDateTime                  AS MCSDateChange
+               ,NULL::Boolean                    AS MCSIsClose
+               ,NULL::Boolean                    AS MCSNotRecalc
+               ,NULL::Boolean                    AS isErased
             WHERE 1=0;
     ELSEIF inisShowAll = True
     THEN
         RETURN QUERY
             SELECT
-               Object_Price_View.Id             AS Id
-              ,Object_Price_View.Price          AS Price 
-              ,Object_Price_View.MCSValue       AS MCSValue
-              ,Object_Goods.id                  AS GoodsId
-              ,Object_Goods.ObjectCode          AS GoodsCode
-              ,object_goods.ValueData           AS GoodsName
-              ,Object_Price_View.DateChange     AS DateChange
-              ,Object_Price_View.MCSDateChange  AS MCSDateChange
-              ,Object_Goods.isErased            AS isErased 
-             FROM Object AS Object_Goods
-               INNER JOIN ObjectLink ON Object_Goods.Id = ObjectLink.ObjectId
-                                    AND ObjectLink.ChildObjectId = vbObjectId
-               LEFT OUTER JOIN Object_Price_View ON Object_Goods.id = object_price_view.goodsid
+                Object_Price_View.Id                            AS Id
+               ,Object_Price_View.Price                         AS Price 
+               ,Object_Price_View.MCSValue                      AS MCSValue
+               ,Object_Goods.id                                 AS GoodsId
+               ,Object_Goods.ObjectCode                         AS GoodsCode
+               ,object_goods.ValueData                          AS GoodsName
+               ,Object_Price_View.DateChange                    AS DateChange
+               ,Object_Price_View.MCSDateChange                 AS MCSDateChange
+               ,COALESCE(Object_Price_View.MCSIsClose,False)    AS MCSIsClose
+               ,COALESCE(Object_Price_View.MCSNotRecalc,False)  AS MCSNotRecalc
+               ,Object_Goods.isErased                           AS isErased 
+            FROM Object AS Object_Goods
+                INNER JOIN ObjectLink ON Object_Goods.Id = ObjectLink.ObjectId
+                                     AND ObjectLink.ChildObjectId = vbObjectId
+                LEFT OUTER JOIN Object_Price_View ON Object_Goods.id = object_price_view.goodsid
                                                  AND Object_Price_View.unitid = inUnitId
-             WHERE
-               Object_Goods.DescId = zc_Object_Goods()
-               AND
-               (
-                 inisShowDel = True
-                 or
-                 Object_Goods.isErased = False
-               )
-             ORDER BY
-               GoodsName;
+            WHERE
+                Object_Goods.DescId = zc_Object_Goods()
+                AND
+                (
+                    inisShowDel = True
+                    OR
+                    Object_Goods.isErased = False
+                )
+            ORDER BY
+                GoodsName;
     ELSE
         RETURN QUERY
             SELECT
-               Object_Price_View.Id             AS Id
-              ,Object_Price_View.Price          AS Price 
-              ,Object_Price_View.MCSValue       AS MCSValue
-              ,Object_Goods.id                  AS GoodsId
-              ,Object_Goods.ObjectCode          AS GoodsCode
-              ,object_goods.ValueData           AS GoodsName
-              ,Object_Price_View.DateChange     AS DateChange
-              ,Object_Price_View.MCSDateChange  AS MCSDateChange
-              ,Object_Goods.isErased            AS isErased 
-             FROM Object_Price_View
-               LEFT OUTER JOIN Object AS Object_Goods ON Object_Goods.id = object_price_view.goodsid
-             WHERE
-               Object_Price_View.unitid = inUnitId
-               AND
-               (
-                 inisShowDel = True
-                 or
-                 Object_Goods.isErased = False
-               )
-             ORDER BY
-               GoodsName;
+                Object_Price_View.Id             AS Id
+               ,Object_Price_View.Price          AS Price 
+               ,Object_Price_View.MCSValue       AS MCSValue
+               ,Object_Goods.id                  AS GoodsId
+               ,Object_Goods.ObjectCode          AS GoodsCode
+               ,object_goods.ValueData           AS GoodsName
+               ,Object_Price_View.DateChange     AS DateChange
+               ,Object_Price_View.MCSDateChange  AS MCSDateChange
+               ,Object_Price_View.MCSIsClose     AS MCSIsClose
+               ,Object_Price_View.MCSNotRecalc   AS MCSNotRecalc
+               ,Object_Goods.isErased            AS isErased 
+            FROM Object_Price_View
+                LEFT OUTER JOIN Object AS Object_Goods ON Object_Goods.id = object_price_view.goodsid
+            WHERE
+                Object_Price_View.unitid = inUnitId
+                AND
+                (
+                    inisShowDel = True
+                    OR
+                    Object_Goods.isErased = False
+                )
+            ORDER BY
+                GoodsName;
     END IF;
 END;
 $BODY$
@@ -102,7 +109,8 @@ $BODY$
 ALTER FUNCTION gpSelect_Object_Price(Integer, Boolean,Boolean,TVarChar) OWNER TO postgres;
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.  Воробкало А.А. 
+ 29.08.15                                                         * + MCSIsClose, MCSNotRecalc
  09.06.15                        *
 
 */

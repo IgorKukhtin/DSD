@@ -27,7 +27,7 @@ BEGIN
   SELECT MIN(GoodsId) INTO vbGoodsId
     FROM MovementItem_Income_View 
     JOIN Object_Goods_View ON MovementItem_Income_View.GoodsId = Object_Goods_View.Id
-   WHERE MovementId = inMovementId AND Object_Goods_View.NDSKindId <> vbNDSKindId;
+   WHERE MovementId = inMovementId AND MovementItem_Income_View.isErased = False AND Object_Goods_View.NDSKindId <> vbNDSKindId;
 
   IF COALESCE(vbGoodsId, 0) <> 0 THEN 
      SELECT ValueData INTO vbGoodsName FROM Object WHERE Id = vbGoodsId;

@@ -11,17 +11,17 @@ inherited ReturnOutForm: TReturnOutForm
     Width = 828
     Height = 400
     ExplicitTop = 126
-    ExplicitWidth = 776
+    ExplicitWidth = 828
     ExplicitHeight = 400
     ClientRectBottom = 400
     ClientRectRight = 828
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 776
+      ExplicitWidth = 828
       ExplicitHeight = 376
       inherited cxGrid: TcxGrid
         Width = 828
         Height = 376
-        ExplicitWidth = 776
+        ExplicitWidth = 828
         ExplicitHeight = 376
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
@@ -112,14 +112,12 @@ inherited ReturnOutForm: TReturnOutForm
               end>
             Properties.ReadOnly = True
             HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
             Width = 45
           end
           object colName: TcxGridDBColumn
             Caption = #1058#1086#1074#1072#1088
             DataBinding.FieldName = 'GoodsName'
             HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 222
           end
@@ -130,7 +128,6 @@ inherited ReturnOutForm: TReturnOutForm
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
             Width = 73
           end
           object colPrice: TcxGridDBColumn
@@ -140,7 +137,6 @@ inherited ReturnOutForm: TReturnOutForm
             Properties.DecimalPlaces = 2
             Properties.DisplayFormat = ',0.00;-,0.00'
             HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
             Width = 60
           end
           object colSumm: TcxGridDBColumn
@@ -150,7 +146,6 @@ inherited ReturnOutForm: TReturnOutForm
             Properties.DecimalPlaces = 2
             Properties.DisplayFormat = ',0.00;-,0.00'
             HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
             Width = 60
           end
         end
@@ -161,7 +156,7 @@ inherited ReturnOutForm: TReturnOutForm
     Width = 828
     Height = 100
     TabOrder = 3
-    ExplicitWidth = 776
+    ExplicitWidth = 828
     ExplicitHeight = 100
     inherited edInvNumber: TcxTextEdit
       Left = 8
@@ -262,7 +257,6 @@ inherited ReturnOutForm: TReturnOutForm
       Enabled = False
       ParentFont = False
       Properties.Alignment.Horz = taRightJustify
-      Properties.Alignment.Vert = taVCenter
       Properties.DisplayFormat = ',0.00;-,0.00'
       Style.BorderColor = clBtnFace
       Style.Font.Charset = DEFAULT_CHARSET
@@ -284,7 +278,6 @@ inherited ReturnOutForm: TReturnOutForm
       Enabled = False
       ParentFont = False
       Properties.Alignment.Horz = taRightJustify
-      Properties.Alignment.Vert = taVCenter
       Properties.DisplayFormat = ',0.00;-,0.00'
       Style.BorderColor = clBtnFace
       Style.Font.Charset = DEFAULT_CHARSET
@@ -454,6 +447,7 @@ inherited ReturnOutForm: TReturnOutForm
     object actGoodsKindChoice: TOpenChoiceForm [13]
       Category = 'DSDLib'
       MoveParams = <>
+      PostDataSetBeforeExecute = False
       Caption = 'GoodsKindForm'
       FormName = 'TGoodsKindForm'
       FormNameParam.Value = ''
@@ -477,6 +471,7 @@ inherited ReturnOutForm: TReturnOutForm
     object actChoiceGoods: TOpenChoiceForm
       Category = 'DSDLib'
       MoveParams = <>
+      PostDataSetBeforeExecute = False
       Caption = 'actChoiceGoods'
       FormName = 'TGoodsLiteForm'
       FormNameParam.Value = 'TGoodsLiteForm'
@@ -520,6 +515,7 @@ inherited ReturnOutForm: TReturnOutForm
     object actRefreshGoodsCode: TdsdExecStoredProc
       Category = 'DSDLib'
       MoveParams = <>
+      PostDataSetBeforeExecute = False
       StoredProc = spIncome_GoodsId
       StoredProcList = <
         item
@@ -770,7 +766,7 @@ inherited ReturnOutForm: TReturnOutForm
     Top = 48
   end
   inherited spChangeStatus: TdsdStoredProc
-    StoredProcName = 'gpUpdate_Status_Income'
+    StoredProcName = 'gpUpdate_Status_ReturnOut'
     Left = 128
     Top = 56
   end
@@ -1114,9 +1110,11 @@ inherited ReturnOutForm: TReturnOutForm
         ParamType = ptInput
       end
       item
+        Name = 'outSumm'
         Value = Null
-        DataType = ftString
-        ParamType = ptUnknown
+        Component = MasterCDS
+        ComponentItem = 'Summ'
+        DataType = ftFloat
       end
       item
         Value = Null
@@ -1220,6 +1218,7 @@ inherited ReturnOutForm: TReturnOutForm
     Top = 188
   end
   object RefreshDispatcher: TRefreshDispatcher
+    IdParam.Value = Null
     RefreshAction = actRefreshPrice
     ComponentList = <
       item

@@ -1,8 +1,8 @@
 -- Function: gpSetErased_Movement_Income (Integer, TVarChar)
 
-DROP FUNCTION IF EXISTS gpSetErased_Movement_Income (Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpSetErased_Movement_ReturnOut (Integer, TVarChar);
 
-CREATE OR REPLACE FUNCTION gpSetErased_Movement_Income(
+CREATE OR REPLACE FUNCTION gpSetErased_Movement_ReturnOut(
     IN inMovementId        Integer               , -- ключ Документа
     IN inSession           TVarChar DEFAULT ''     -- сессия пользователя
 )
