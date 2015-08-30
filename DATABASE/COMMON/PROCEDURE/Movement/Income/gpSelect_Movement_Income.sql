@@ -199,6 +199,7 @@ BEGIN
                                      AND MovementBoolean_isIncome.ValueData  = False
 
        WHERE MovementBoolean_isIncome.ValueData is NULL
+         AND COALESCE (Object_To.DescId, 0) NOT IN (zc_Object_Car(), zc_Object_Member()) -- !!!яюлне мейпюяхбне пеьемхе!!!
     ;
   
 END;

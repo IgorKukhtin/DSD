@@ -91,7 +91,6 @@ type
     colOperDatePartner: TcxGridDBColumn;
     actReCompleteAll: TdsdExecStoredProc;
     bbReCompleteAll: TdxBarButton;
-    spMovementReCompleteAll: TdsdStoredProc;
     colGoodsName: TcxGridDBColumn;
     colFuelName: TcxGridDBColumn;
     colGoodsCode: TcxGridDBColumn;
