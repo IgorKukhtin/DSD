@@ -4,22 +4,24 @@
 DROP FUNCTION IF EXISTS gpInsertUpdate_Scale_Movement (Integer, TDateTime, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Scale_Movement (Integer, TDateTime, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TFloat, TVarChar);
 */
-DROP FUNCTION IF EXISTS gpInsertUpdate_Scale_Movement (Integer, TDateTime, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TFloat, Integer, TVarChar);
+-- DROP FUNCTION IF EXISTS gpInsertUpdate_Scale_Movement (Integer, TDateTime, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TFloat, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Scale_Movement (Integer, TDateTime, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TFloat, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Scale_Movement(
-    IN inId                  Integer   , -- Ключ объекта <Документ>
-    IN inOperDate            TDateTime , -- Дата документа
-    IN inMovementDescId      Integer   , -- Вид документа
-    IN inMovementDescNumber  Integer   , -- Вид документа
-    IN inFromId              Integer   , -- От кого (в документе)
-    IN inToId                Integer   , -- Кому (в документе)
-    IN inContractId          Integer   , -- Договора
-    IN inPaidKindId          Integer   , -- Форма оплаты
-    IN inPriceListId         Integer   , -- 
-    IN inMovementId_Order    Integer   , -- ключ Документа заявка
-    IN inChangePercent       TFloat    , -- (-)% Скидки (+)% Наценки
-    IN inBranchCode          Integer   , -- 
-    IN inSession             TVarChar    -- сессия пользователя
+    IN inId                   Integer   , -- Ключ объекта <Документ>
+    IN inOperDate             TDateTime , -- Дата документа
+    IN inMovementDescId       Integer   , -- Вид документа
+    IN inMovementDescNumber   Integer   , -- Вид документа
+    IN inFromId               Integer   , -- От кого (в документе)
+    IN inToId                 Integer   , -- Кому (в документе)
+    IN inContractId           Integer   , -- Договора
+    IN inPaidKindId           Integer   , -- Форма оплаты
+    IN inPriceListId          Integer   , -- 
+    IN inMovementId_Order     Integer   , -- ключ Документа заявка
+    IN inMovementId_Transport Integer   , -- ключ Документа
+    IN inChangePercent        TFloat    , -- (-)% Скидки (+)% Наценки
+    IN inBranchCode           Integer   , -- 
+    IN inSession              TVarChar    -- сессия пользователя
 )                              
 RETURNS TABLE (Id        Integer
              , InvNumber TVarChar
@@ -107,6 +109,7 @@ BEGIN
                                                    , inPriceListId         := CASE WHEN vbPriceListId_Dnepr <> 0 THEN vbPriceListId_Dnepr ELSE inPriceListId END
                                                    , inPaidKindId          := inPaidKindId
                                                    , inMovementId_Order    := inMovementId_Order
+                                                   , inMovementId_Transport:= inMovementId_Transport
                                                    , inPartionGoods        := '' :: TVarChar
                                                    , inChangePercent       := inChangePercent
                                                    , inSession             := inSession

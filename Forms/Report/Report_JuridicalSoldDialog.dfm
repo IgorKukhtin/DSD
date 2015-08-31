@@ -425,6 +425,11 @@ object Report_JuridicalSoldDialogForm: TReport_JuridicalSoldDialogForm
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+      end
+      item
+        Name = 'inDescCode'
+        Value = 'zc_Object_Juridical'
+        DataType = ftString
       end>
     Left = 128
     Top = 104
@@ -452,6 +457,11 @@ object Report_JuridicalSoldDialogForm: TReport_JuridicalSoldDialogForm
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+      end
+      item
+        Name = 'inDescCode'
+        Value = 'zc_Object_Juridical'
+        DataType = ftString
       end>
     Left = 110
     Top = 145

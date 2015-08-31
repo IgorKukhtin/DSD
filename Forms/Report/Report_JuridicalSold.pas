@@ -127,7 +127,7 @@ type
     ReturnInRealSumm_total: TcxGridDBColumn;
     ExecuteDialog: TExecuteDialog;
     bbExecuteDialog: TdxBarButton;
-    cbisPartionMovementName: TcxCheckBox;
+    cbPartionMovement: TcxCheckBox;
   private
     { Private declarations }
   public

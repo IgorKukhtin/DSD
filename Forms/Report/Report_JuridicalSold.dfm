@@ -4,7 +4,7 @@ inherited Report_JuridicalSoldForm: TReport_JuridicalSoldForm
   ClientWidth = 1118
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   ExplicitWidth = 1134
-  ExplicitHeight = 594
+  ExplicitHeight = 591
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -12,19 +12,19 @@ inherited Report_JuridicalSoldForm: TReport_JuridicalSoldForm
     Width = 1118
     Height = 472
     TabOrder = 3
-    ExplicitTop = 83
-    ExplicitWidth = 1107
-    ExplicitHeight = 473
+    ExplicitTop = 84
+    ExplicitWidth = 1118
+    ExplicitHeight = 472
     ClientRectBottom = 472
     ClientRectRight = 1118
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 1107
-      ExplicitHeight = 473
+      ExplicitWidth = 1118
+      ExplicitHeight = 472
       inherited cxGrid: TcxGrid
         Width = 1118
         Height = 472
-        ExplicitWidth = 1107
-        ExplicitHeight = 473
+        ExplicitWidth = 1118
+        ExplicitHeight = 472
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -1158,7 +1158,7 @@ inherited Report_JuridicalSoldForm: TReport_JuridicalSoldForm
       Width = 68
     end
   end
-  object cbisPartionMovementName: TcxCheckBox [2]
+  object cbPartionMovement: TcxCheckBox [2]
     Left = 155
     Top = 33
     Caption = #1043#1088#1091#1087#1087#1080#1088#1086#1074#1072#1090#1100' '#1086#1089#1085#1086#1074#1072#1085#1080#1077
@@ -1168,6 +1168,21 @@ inherited Report_JuridicalSoldForm: TReport_JuridicalSoldForm
   end
   inherited cxPropertiesStore: TcxPropertiesStore
     Components = <
+      item
+        Component = cbPartionMovement
+        Properties.Strings = (
+          'Checked')
+      end
+      item
+        Component = deEnd
+        Properties.Strings = (
+          'Date')
+      end
+      item
+        Component = deStart
+        Properties.Strings = (
+          'Date')
+      end
       item
         Component = GuidesAccount
         Properties.Strings = (
@@ -1181,14 +1196,10 @@ inherited Report_JuridicalSoldForm: TReport_JuridicalSoldForm
           'TextValue')
       end
       item
-        Component = deEnd
+        Component = GuidesInfoMoney
         Properties.Strings = (
-          'Date')
-      end
-      item
-        Component = deStart
-        Properties.Strings = (
-          'Date')
+          'Key'
+          'TextValue')
       end
       item
         Component = GuidesInfoMoneyDestination
@@ -1198,12 +1209,6 @@ inherited Report_JuridicalSoldForm: TReport_JuridicalSoldForm
       end
       item
         Component = GuidesInfoMoneyGroup
-        Properties.Strings = (
-          'Key'
-          'TextValue')
-      end
-      item
-        Component = GuidesInfoMoney
         Properties.Strings = (
           'Key'
           'TextValue')
@@ -2868,7 +2873,7 @@ inherited Report_JuridicalSoldForm: TReport_JuridicalSoldForm
         item
           Name = 'isPartionMovementName'
           Value = Null
-          Component = cbisPartionMovementName
+          Component = cbPartionMovement
           DataType = ftBoolean
           ParamType = ptInput
         end>
@@ -3831,9 +3836,9 @@ inherited Report_JuridicalSoldForm: TReport_JuridicalSoldForm
         ParamType = ptInput
       end
       item
-        Name = 'inisPartionMovementName'
+        Name = 'inIsPartionMovement'
         Value = Null
-        Component = cbisPartionMovementName
+        Component = cbPartionMovement
         DataType = ftBoolean
         ParamType = ptInput
       end>
@@ -4070,7 +4075,7 @@ inherited Report_JuridicalSoldForm: TReport_JuridicalSoldForm
         Component = GuidesCurrency
       end
       item
-        Component = cbisPartionMovementName
+        Component = cbPartionMovement
       end>
     Left = 480
     Top = 220
@@ -4428,6 +4433,7 @@ inherited Report_JuridicalSoldForm: TReport_JuridicalSoldForm
         ParamType = ptInput
       end>
     Left = 256
+    Top = 65527
   end
   object GuidesJuridicalGroup: TdsdGuides
     KeyField = 'Id'

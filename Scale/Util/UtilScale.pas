@@ -170,6 +170,14 @@ begin
      ParamAdd(Params,'ChangePercentAmount',ftFloat);
      ParamAdd(Params,'ChangePercent',ftFloat);
 
+     ParamAdd(Params,'isTransport_link',ftBoolean);
+     ParamAdd(Params,'TransportId',ftInteger);
+     ParamAdd(Params,'Transport_BarCode',ftString);
+     ParamAdd(Params,'Transport_InvNumber',ftString);
+     ParamAdd(Params,'PersonalDriverName',ftString);
+     ParamAdd(Params,'CarName',ftString);
+     ParamAdd(Params,'RouteName',ftString);
+
      ParamAdd(Params,'isEdiOrdspr',ftBoolean); //Подтверждение
      ParamAdd(Params,'isEdiInvoice',ftBoolean);//Счет
      ParamAdd(Params,'isEdiDesadv',ftBoolean); //уведомление

@@ -83,6 +83,7 @@ BEGIN
        UNION SELECT 'isTareWeightEnter'      AS Name WHERE inIsCeh = FALSE
        UNION SELECT 'isPersonalComplete'     AS Name WHERE inIsCeh = FALSE
        UNION SELECT 'isTax'                  AS Name WHERE inIsCeh = FALSE
+       UNION SELECT 'isTransport'            AS Name WHERE inIsCeh = FALSE
 
        UNION SELECT 'DayPrior_PriceReturn' AS Name WHERE inIsCeh = FALSE
 

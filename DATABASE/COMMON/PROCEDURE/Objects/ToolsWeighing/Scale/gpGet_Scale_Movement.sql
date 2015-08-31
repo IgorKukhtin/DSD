@@ -49,6 +49,13 @@ RETURNS TABLE (MovementId       Integer
              , InvNumber_Order  TVarChar
              , OrderExternalName_master TVarChar
 
+             , MovementId_Transport Integer
+             , Transport_BarCode TVarChar
+             , Transport_InvNumber TVarChar
+             , PersonalDriverName TVarChar
+             , CarName TVarChar
+             , RouteName TVarChar
+
              , TotalSumm TFloat
               )
 AS	
@@ -124,7 +131,8 @@ BEGIN
                                       , MovementLinkObject_Contract.ObjectId AS ContractId -- значение - то что сохранилось при создании
                                       , zfCalc_GoodsPropertyId (MovementLinkObject_Contract.ObjectId, ObjectLink_Partner_Juridical.ChildObjectId) AS GoodsPropertyId
 
-                                      , MovementLinkMovement_Order.MovementChildId AS MovementId_Order
+                                      , MovementLinkMovement_Order.MovementChildId     AS MovementId_Order
+                                      , MovementLinkMovement_Transport.MovementChildId AS MovementId_Transport
 
                                  FROM tmpMovement_find
                                       LEFT JOIN Movement ON Movement.Id = tmpMovement_find.Id
@@ -137,6 +145,10 @@ BEGIN
                                       LEFT JOIN MovementLinkObject AS MovementLinkObject_Contract
                                                                    ON MovementLinkObject_Contract.MovementId = Movement.Id
                                                                   AND MovementLinkObject_Contract.DescId = zc_MovementLinkObject_Contract()
+
+                                      LEFT JOIN MovementLinkMovement AS MovementLinkMovement_Transport
+                                                                     ON MovementLinkMovement_Transport.MovementId = Movement.Id
+                                                                    AND MovementLinkMovement_Transport.DescId = zc_MovementLinkMovement_Transport()
 
                                       LEFT JOIN MovementLinkMovement AS MovementLinkMovement_Order
                                                                      ON MovementLinkMovement_Order.MovementId = Movement.Id
@@ -158,6 +170,42 @@ BEGIN
                                                           AND ObjectLink_Partner_Juridical.DescId = zc_ObjectLink_Partner_Juridical()
                                  WHERE tmpMovement_find.Id > 0
                                 )
+           , tmpMovementTransport AS (SELECT tmpMovement.MovementId_Transport
+                                           , Movement.InvNumber
+                                           , Movement.OperDate
+                                           , COALESCE (MILinkObject_Route.ObjectId, MovementItem.ObjectId) AS RouteId
+                                           , COALESCE (MILinkObject_Car.ObjectId, MovementLinkObject_Car.ObjectId) AS CarId
+                                           , COALESCE (MovementLinkObject_PersonalDriver.ObjectId, CASE WHEN Movement.DescId = zc_Movement_Transport() THEN MovementItem.ObjectId END) AS PersonalDriverId
+                                      FROM tmpMovement
+                                           INNER JOIN Movement ON Movement.Id = tmpMovement.MovementId_Transport
+                                                              AND Movement.StatusId <> zc_Enum_Status_Erased()
+                                           LEFT JOIN MovementLinkObject AS MovementLinkObject_Route
+                                                                        ON MovementLinkObject_Route.MovementId = tmpMovement.MovementId_Order
+                                                                       AND MovementLinkObject_Route.DescId = zc_MovementLinkObject_Route()
+
+                                           LEFT JOIN MovementLinkObject AS MovementLinkObject_Car
+                                                                        ON MovementLinkObject_Car.MovementId = tmpMovement.MovementId_Transport
+                                                                       AND MovementLinkObject_Car.DescId = zc_MovementLinkObject_Car()
+                                           LEFT JOIN MovementLinkObject AS MovementLinkObject_PersonalDriver
+                                                                        ON MovementLinkObject_PersonalDriver.MovementId = tmpMovement.MovementId_Transport
+                                                                       AND MovementLinkObject_PersonalDriver.DescId = zc_MovementLinkObject_PersonalDriver()
+
+                                           LEFT JOIN MovementItem ON MovementItem.MovementId = tmpMovement.MovementId_Transport
+                                                                 AND MovementItem.DescId     = zc_MI_Master()
+                                                                 AND MovementItem.isErased   = FALSE
+                                                                 AND (MovementItem.ObjectId  = MovementLinkObject_Route.ObjectId OR Movement.DescId = zc_Movement_TransportService() OR tmpMovement.MovementId_Order IS NULL)
+                                           LEFT JOIN MovementItemLinkObject AS MILinkObject_Route
+                                                                            ON MILinkObject_Route.MovementItemId = MovementItem.Id
+                                                                           AND MILinkObject_Route.DescId = zc_MILinkObject_Route()
+                                                                           AND (MILinkObject_Route.ObjectId = MovementLinkObject_Route.ObjectId OR tmpMovement.MovementId_Order IS NULL)
+                                                                           AND Movement.DescId = zc_Movement_TransportService()
+                                           LEFT JOIN MovementItemLinkObject AS MILinkObject_Car
+                                                                            ON MILinkObject_Car.MovementItemId = MovementItem.Id
+                                                                           AND MILinkObject_Car.DescId = zc_MILinkObject_Car()
+                                                                           AND Movement.DescId = zc_Movement_TransportService()
+                                      LIMIT 1
+                                     )
+                                           
            , tmpJuridicalPrint AS (SELECT tmp.Id AS JuridicalId
                                         , tmp.isMovement
                                         , tmp.isAccount
@@ -229,15 +277,30 @@ BEGIN
             , Movement_Order.InvNumber     AS InvNumber_Order
             , ('№ <' || Movement_Order.InvNumber || '>' || ' от <' || DATE (Movement_Order.OperDate) :: TVarChar || '>' || ' '|| COALESCE (Object_Personal.ValueData, '')) :: TVarChar AS OrderExternalName_master
 
+            , tmpMovement.MovementId_Transport
+            , zfFormat_BarCode (zc_BarCodePref_Movement(), tmpMovement.MovementId_Transport) AS Transport_BarCode
+            , ('№ <' || tmpMovementTransport.InvNumber || '>' || ' от <' || DATE (tmpMovementTransport.OperDate) :: TVarChar || '>') :: TVarChar AS Transport_InvNumber
+            , Object_PersonalDriver.ValueData AS PersonalDriverName
+            , (COALESCE (Object_Car.ValueData, '') || ' ' || COALESCE (Object_CarModel.ValueData, '')) :: TVarChar AS CarName
+            , Object_Route.ValueData          AS RouteName
+
             , MovementFloat_TotalSumm.ValueData AS TotalSumm
 
        FROM tmpMovement
+            LEFT JOIN tmpMovementTransport ON tmpMovementTransport.MovementId_Transport = tmpMovement.MovementId_Transport
             LEFT JOIN tmpJuridicalPrint ON tmpJuridicalPrint.JuridicalId = tmpMovement.JuridicalId
 
             LEFT JOIN Movement AS Movement_Order ON Movement_Order.Id = tmpMovement.MovementId_Order
             LEFT JOIN MovementLinkMovement AS MovementLinkMovement_Order
                                            ON MovementLinkMovement_Order.MovementId = tmpMovement.MovementId_Order
                                           AND MovementLinkMovement_Order.DescId = zc_MovementLinkMovement_Order()
+
+            LEFT JOIN Object AS Object_PersonalDriver ON Object_PersonalDriver.Id = tmpMovementTransport.PersonalDriverId
+            LEFT JOIN Object AS Object_Car ON Object_Car.Id = tmpMovementTransport.CarId
+            LEFT JOIN ObjectLink AS ObjectLink_Car_CarModel ON ObjectLink_Car_CarModel.ObjectId = Object_Car.Id
+                                                           AND ObjectLink_Car_CarModel.DescId = zc_ObjectLink_Car_CarModel()
+            LEFT JOIN Object AS Object_CarModel ON Object_CarModel.Id = ObjectLink_Car_CarModel.ChildObjectId
+            LEFT JOIN Object AS Object_Route ON Object_Route.Id = tmpMovementTransport.RouteId
 
             LEFT JOIN Object AS Object_From ON Object_From.Id = tmpMovement.FromId
             LEFT JOIN Object AS Object_To ON Object_To.Id = tmpMovement.ToId
