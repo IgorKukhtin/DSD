@@ -63,13 +63,12 @@ uses
   SysScalesLib_TLB in '..\Scale\Util\SysScalesLib_TLB.pas',
   FastReportAddOn in '..\SOURCE\COMPONENT\FastReportAddOn.pas',
   dsdDataSetDataLink in '..\SOURCE\COMPONENT\dsdDataSetDataLink.pas',
-  GuideGoodsMovement in '..\Scale\GuideGoodsMovement.pas' {GuideGoodsMovementForm},
   dsdApplication in '..\SOURCE\dsdApplication.pas',
   dsdException in '..\SOURCE\dsdException.pas',
   StatusXML in '..\SOURCE\EDI\StatusXML.pas',
   GuidePartner in '..\Scale\GuidePartner.pas' {GuidePartnerForm},
   DataModul in '..\SOURCE\DataModul.pas' {dmMain: TDataModule},
-  GuideMovement in '..\Scale\GuideMovement.pas' {GuideMovementForm},
+  GuideMovementTransport in '..\Scale\GuideMovementTransport.pas' {GuideMovementTransportForm},
   DialogWeight in '..\Scale\DialogWeight.pas' {DialogWeightForm},
   DialogDateValue in '..\Scale\DialogDateValue.pas' {DialogDateValueForm: TParentForm},
   DialogPersonalComplete in '..\Scale\DialogPersonalComplete.pas' {DialogPersonalCompleteForm},
@@ -78,7 +77,9 @@ uses
   DialogPrint in '..\Scale\DialogPrint.pas' {DialogPrintForm},
   AxLibLib_TLB in '..\Scale\Util\AxLibLib_TLB.pas',
   DialogStringValue in '..\Scale\DialogStringValue.pas' {DialogStringValueForm},
-  DialogNumberValue in '..\Scale\DialogNumberValue.pas' {DialogNumberValueForm};
+  DialogNumberValue in '..\Scale\DialogNumberValue.pas' {DialogNumberValueForm},
+  GuideGoodsMovement in '..\Scale\GuideGoodsMovement.pas' {GuideGoodsMovementForm},
+  GuideMovement in '..\Scale\GuideMovement.pas' {GuideMovementForm};
 
 {$R *.res}
 
@@ -98,7 +99,7 @@ begin
          if gpCheck_BranchCode = FALSE then exit;
          //
          Application.CreateForm(TdmMain, dmMain);
-  Application.CreateForm(TDMMainScaleForm, DMMainScaleForm);
+         Application.CreateForm(TDMMainScaleForm, DMMainScaleForm);
   // !!!важно первым!!!
   Application.CreateForm(TMainForm, MainForm);
          Application.CreateForm(TDialogMovementDescForm, DialogMovementDescForm);
@@ -107,6 +108,7 @@ begin
          Application.CreateForm(TGuidePartnerForm, GuidePartnerForm);
          Application.CreateForm(TUtilPrintForm, UtilPrintForm);
          Application.CreateForm(TGuideMovementForm, GuideMovementForm);
+         Application.CreateForm(TGuideMovementTransportForm, GuideMovementTransportForm);
          Application.CreateForm(TDialogWeightForm, DialogWeightForm);
          Application.CreateForm(TDialogNumberValueForm, DialogNumberValueForm);
          Application.CreateForm(TDialogStringValueForm, DialogStringValueForm);
@@ -137,6 +139,7 @@ begin
          Application.CreateForm(TGuidePartnerForm, GuidePartnerForm);
          Application.CreateForm(TUtilPrintForm, UtilPrintForm);
          Application.CreateForm(TGuideMovementForm, GuideMovementForm);
+         Application.CreateForm(TGuideMovementTransportForm, GuideMovementTransportForm);
          Application.CreateForm(TDialogWeightForm, DialogWeightForm);
          Application.CreateForm(TDialogNumberValueForm, DialogNumberValueForm);
          Application.CreateForm(TDialogStringValueForm, DialogStringValueForm);

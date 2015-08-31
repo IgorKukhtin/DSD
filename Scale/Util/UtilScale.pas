@@ -81,6 +81,7 @@ type
   procedure EmptyValuesParams(var execParams:TParams);
 
   function CheckBarCode(BarCode:String):Boolean;
+  function CalcBarCode(BarCode:String):String;
   function myStrToFloat(Value:String):Double;
   function myReplaceStr(const S, Srch, Replace: string): string;
 
@@ -491,23 +492,41 @@ begin
 end;
 {------------------------------------------------------------------------------}
 function CheckBarCode(BarCode:String):Boolean;
-var Summ:Integer;
+var Summ:String;
     Summ_show:String;
 begin
-     try Summ:=   StrToInt(BarCode[1])+StrToInt(BarCode[3])+StrToInt(BarCode[5])+StrToInt(BarCode[7])+StrToInt(BarCode[9])+StrToInt(BarCode[11])
-              +3*(StrToInt(BarCode[2])+StrToInt(BarCode[4])+StrToInt(BarCode[6])+StrToInt(BarCode[8])+StrToInt(BarCode[10])+StrToInt(BarCode[12]));
-     except Summ:=0;end;
-     Result:=(Summ<>0)and(LengTh(BarCode)=13);
+     Summ:=CalcBarCode(BarCode);
+     Result:=(Summ<>'')and(LengTh(BarCode)=13);
      if not Result then exit;
-     Summ:=Summ mod 10;
-     if Summ<>0 then Summ:=10-Summ;
-     Result:=BarCode[13]=IntToStr(Summ);
+     //
+     Result:=BarCode[13]=Summ;
 
      if UserId_begin = 5
-     then Summ_show:=IntToStr(Summ)
+     then Summ_show:='('+Summ+')'
      else Summ_show:='';
 
-     if not Result then ShowMessage('Ошибка в значении <Штрих код> = <'+BarCode+'>.('+Summ_show+')');
+     if not Result then ShowMessage('Ошибка в значении <Штрих код> = <'+BarCode+'>.'+Summ_show);
+end;
+{------------------------------------------------------------------------------}
+function CalcBarCode(BarCode:String):String;
+var Summ:Integer;
+begin
+     if LengTh(BarCode)>=12
+     then
+     try Summ:=   StrToInt(BarCode[1])+StrToInt(BarCode[3])+StrToInt(BarCode[5])+StrToInt(BarCode[7])+StrToInt(BarCode[9])+StrToInt(BarCode[11])
+              +3*(StrToInt(BarCode[2])+StrToInt(BarCode[4])+StrToInt(BarCode[6])+StrToInt(BarCode[8])+StrToInt(BarCode[10])+StrToInt(BarCode[12]));
+     except Summ:=0;end
+     else Summ:=0;
+     //
+     if Summ<>0 then
+     begin
+          Summ:=Summ mod 10;
+          if Summ<>0 then Summ:=10-Summ;
+     end;
+     //
+     if Summ <> 0
+     then Result:=IntToStr(Summ)
+     else Result:='';
 end;
 {------------------------------------------------------------------------------}
 function myStrToFloat(Value:String):Double;

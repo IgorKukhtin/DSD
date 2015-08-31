@@ -156,7 +156,7 @@ begin
          ParamByName('OrderExternalName_master').asString:= DataSet.FieldByName('OrderExternalName_master').asString;
 
          ParamByName('TransportId').AsInteger        := DataSet.FieldByName('MovementId_Transport').asInteger;
-         ParamByName('Transport_BarCode').asString   := DataSet.FieldByName('Transport_BarCode').asString;
+         ParamByName('Transport_BarCode').asString   := DataSet.FieldByName('Transport_BarCode').asString+CalcBarCode(DataSet.FieldByName('Transport_BarCode').asString);
          ParamByName('Transport_InvNumber').asString := DataSet.FieldByName('Transport_InvNumber').asString;
          ParamByName('PersonalDriverName').asString  := DataSet.FieldByName('PersonalDriverName').asString;
          ParamByName('CarName').asString             := DataSet.FieldByName('CarName').asString;

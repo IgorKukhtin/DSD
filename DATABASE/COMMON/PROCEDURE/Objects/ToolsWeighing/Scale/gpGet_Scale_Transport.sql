@@ -102,4 +102,4 @@ ALTER FUNCTION gpGet_Scale_Transport (TDateTime, Integer, TVarChar, Integer, TVa
 */
 
 -- тест
--- SELECT * FROM gpGet_Scale_Transport (inOperDate:= ('31.08.2015')::TDateTime, inBranchCode:= 1, inBarCode:= '2020021977936', inMovementId_order:= 0, inSession := zfCalc_UserAdmin());
+-- SELECT * FROM gpGet_Scale_Transport (inOperDate:= ('31.08.2015')::TDateTime, inBranchCode:= 1, inBarCode:= '202002197793', inMovementId_order:= 2214230, inSession := zfCalc_UserAdmin());

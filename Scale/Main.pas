@@ -261,11 +261,11 @@ begin
      EditPartionGoods.Text:='';
      EditBoxCode.Text:=GetArrayList_Value_byName(Default_Array,'BoxCode');
      //
-     EditBarCodeTransport.Text:='';
+     {EditBarCodeTransport.Text:='';
      PanelInvNumberTransport.Caption:='';
      PanelPersonalDriver.Caption:='';
      PanelCar.Caption:='';
-     PanelRoute.Caption:='';
+     PanelRoute.Caption:='';}
 end;
 //------------------------------------------------------------------------------------------------
 procedure TMainForm.Initialize_afterSave_MI;
@@ -296,6 +296,15 @@ begin
      if ParamsMovement.ParamByName('MovementId').AsInteger=0
      then begin
          ShowMessage('Ошибка.Продукция не взвешена.');
+         exit;
+     end;
+     //
+     if (ParamsMovement.ParamByName('OrderExternalId').AsInteger > 0)
+         and(ParamsMovement.ParamByName('isTransport_link').AsBoolean = TRUE)
+         and(ParamsMovement.ParamByName('TransportId').AsInteger = 0)
+     then begin
+         ShowMessage('Ошибка.'+#10+#13+'Не определено значение <Штрих код Путевой лист.>.');
+         ActiveControl:=EditBarCodeTransport;
          exit;
      end;
      //
@@ -471,6 +480,10 @@ begin
           else
               if ParamsMovement.ParamByName('MovementId').AsInteger<>0
               then DMMainScaleForm.gpInsertUpdate_Scale_Movement(ParamsMovement);
+          //
+          if MovementId_save <> ParamsMovement.ParamByName('MovementId').AsInteger
+          then DMMainScaleForm.gpGet_Scale_Transport(ParamsMovement,'')
+          else DMMainScaleForm.gpGet_Scale_Transport(ParamsMovement,EditBarCodeTransport.Text);
           //
           WriteParamsMovement;
           //

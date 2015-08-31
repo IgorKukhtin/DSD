@@ -892,8 +892,6 @@ object MainForm: TMainForm
     Font.Style = [fsBold]
     ParentFont = False
     TabOrder = 1
-    ExplicitLeft = -2
-    ExplicitTop = 71
     object BarCodePanel: TPanel
       Left = 0
       Top = 39
@@ -1243,8 +1241,6 @@ object MainForm: TMainForm
           Font.Name = 'Arial'
           Font.Style = []
           ParentFont = False
-          ExplicitLeft = 1
-          ExplicitTop = 1
           ExplicitWidth = 113
         end
         object EditBarCodeTransport: TcxButtonEdit
@@ -1278,7 +1274,6 @@ object MainForm: TMainForm
         Align = alTop
         BevelOuter = bvNone
         TabOrder = 1
-        ExplicitTop = 75
         object CarLabel: TLabel
           Left = 0
           Top = 0
@@ -1293,8 +1288,6 @@ object MainForm: TMainForm
           Font.Name = 'Arial'
           Font.Style = []
           ParentFont = False
-          ExplicitLeft = 1
-          ExplicitTop = 1
           ExplicitWidth = 65
         end
         object PanelCar: TPanel
@@ -1313,8 +1306,6 @@ object MainForm: TMainForm
           Font.Style = [fsBold]
           ParentFont = False
           TabOrder = 0
-          ExplicitLeft = -5
-          ExplicitTop = 8
         end
       end
       object infoPanelPersonalDriver: TPanel
@@ -1325,7 +1316,6 @@ object MainForm: TMainForm
         Align = alTop
         BevelOuter = bvNone
         TabOrder = 2
-        ExplicitTop = 74
         object PersonalDriverLabel: TLabel
           Left = 0
           Top = 0
@@ -1340,8 +1330,7 @@ object MainForm: TMainForm
           Font.Name = 'Arial'
           Font.Style = []
           ParentFont = False
-          ExplicitLeft = -5
-          ExplicitTop = -6
+          ExplicitWidth = 85
         end
         object PanelPersonalDriver: TPanel
           Left = 0
@@ -1359,8 +1348,6 @@ object MainForm: TMainForm
           Font.Style = [fsBold]
           ParentFont = False
           TabOrder = 0
-          ExplicitLeft = -5
-          ExplicitTop = 8
         end
       end
       object infoPanelRoute: TPanel
@@ -1385,8 +1372,7 @@ object MainForm: TMainForm
           Font.Name = 'Arial'
           Font.Style = []
           ParentFont = False
-          ExplicitLeft = -5
-          ExplicitTop = 6
+          ExplicitWidth = 46
         end
         object PanelRoute: TPanel
           Left = 0
@@ -1404,8 +1390,6 @@ object MainForm: TMainForm
           Font.Style = [fsBold]
           ParentFont = False
           TabOrder = 0
-          ExplicitLeft = -5
-          ExplicitTop = 15
         end
       end
       object infoInvNumberTransportPanel: TPanel
@@ -1416,7 +1400,6 @@ object MainForm: TMainForm
         Align = alClient
         BevelOuter = bvNone
         TabOrder = 4
-        ExplicitTop = 108
         object InvNumberTransportLabel: TLabel
           Left = 0
           Top = 0
