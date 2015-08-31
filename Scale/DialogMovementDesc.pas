@@ -247,6 +247,7 @@ begin
           ParamByName('GoodsKindWeighingGroupId').asInteger:= CDS.FieldByName('GoodsKindWeighingGroupId').asInteger;
           ParamByName('isSendOnPriceIn').asBoolean:= CDS.FieldByName('isSendOnPriceIn').asBoolean;
           ParamByName('isPartionGoodsDate').asBoolean:= CDS.FieldByName('isPartionGoodsDate').asBoolean;
+          ParamByName('isTransport_link').asBoolean:= CDS.FieldByName('isTransport_link').asBoolean;
 
           if  (CDS.FieldByName('MovementDescId').asInteger = zc_Movement_ReturnIn)
             or(CDS.FieldByName('MovementDescId').asInteger = zc_Movement_Income)

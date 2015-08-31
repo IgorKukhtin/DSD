@@ -49,7 +49,7 @@ begin
   FParams.AddParam('inName', ftString, ptInput, Name);
   FParams.AddParam('inInfoMoneyGroupId', ftInteger, ptInput, InfoMoneyGroupId);
   FParams.AddParam('inInfoMoneyDestinationId', ftInteger, ptInput, InfoMoneyDestinationId);
-
+  FParams.AddParam('inisProfitLoss', ftBoolean, ptInput, False);
   result := InsertUpdate(FParams);
 end;
 

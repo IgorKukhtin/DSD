@@ -185,7 +185,7 @@ BEGIN
 --            , tmpAll.Amount :: TFloat          AS Amount
 --            , MIFloat_SummToPay.ValueData      AS AmountToPay
             , (COALESCE (MIFloat_SummToPay.ValueData, 0) - COALESCE (MIFloat_SummCard.ValueData, 0) - COALESCE (MIFloat_SummChild.ValueData, 0)) :: TFloat AS AmountCash
-            , MIFloat_SummService.ValueData    AS SummService
+            , (COALESCE (MIFloat_SummService.ValueData, 0) + COALESCE (MIFloat_SummAdd.ValueData, 0)) :: TFloat AS SummService
             , MIFloat_SummCard.ValueData       AS SummCard
 --            , MIFloat_SummCardRecalc.ValueData AS SummCardRecalc        
             , MIFloat_SummMinus.ValueData      AS SummMinus

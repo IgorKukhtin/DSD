@@ -11,11 +11,11 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_MCS_From_Excel(
 RETURNS VOID AS
 $BODY$
     DECLARE
-      vbUserId Integer;
-      vbGoodsId Integer;
-      vbObjectId Integer;
-      vbId Integer;
-      vbMCSValue TFloat;
+        vbUserId Integer;
+        vbGoodsId Integer;
+        vbObjectId Integer;
+        vbId Integer;
+        vbMCSValue TFloat;
 BEGIN
     vbUserId := lpGetUserBySession (inSession);
     vbObjectId := lpGet_DefaultValue('zc_Object_Retail', vbUserId);
@@ -25,7 +25,16 @@ BEGIN
         RAISE EXCEPTION 'Ошибка. Сначала выберите подразделение';
     END IF;
     --поискали товар по коду
-    Select Id INTO vbGoodsId from Object_Goods_View Where ObjectId = vbObjectId AND GoodsCodeInt = inGoodsCode;
+    Select 
+        ID 
+    INTO 
+        vbGoodsId 
+    FROM 
+        Object_Goods_View 
+    WHERE 
+        ObjectId = vbObjectId 
+        AND 
+        GoodsCodeInt = inGoodsCode;
     --проверили, а есть ли такой товар в базе
     IF (COALESCE(vbGoodsId,0) = 0)
     THEN
@@ -38,10 +47,15 @@ BEGIN
     END IF;
    
     -- Если такая запись есть - достаем её
-    SELECT Id, MCSValue
-      INTO vbId, vbMCSValue
-    from Object_Price_View
-    Where
+    SELECT 
+        Id, 
+        MCSValue
+    INTO 
+        vbId, 
+        vbMCSValue
+    FROM 
+        Object_Price_View
+    WHERE
         GoodsId = vbGoodsId
         AND
         UnitId = inUnitID;

@@ -26,6 +26,7 @@ type
     function gpUpdate_Scale_MIString(execParams:TParams): Boolean;
     function gpUpdate_Scale_MIDate(execParams:TParams): Boolean;
     function gpUpdate_Scale_MILinkObject(execParams:TParams): Boolean;
+    function gpUpdate_Scale_MLM(execParams:TParams): Boolean;
     // Scale + ScaleCeh
     function lpGet_BranchName(inBranchCode:Integer): String;
     function gpGet_Scale_Movement_checkId(var execParamsMovement:TParams): Boolean;
@@ -33,6 +34,7 @@ type
     function gpGet_Scale_Partner(var execParams:TParams;inPartnerCode:Integer): Boolean;
     function gpGet_Scale_PartnerParams(var execParams:TParams): Boolean;
     function gpGet_Scale_OrderExternal(var execParams:TParams;inBarCode:String): Boolean;
+    function gpGet_Scale_Transport(var execParams:TParams;inBarCode:String): Boolean;
     // Scale
     function gpGet_Scale_GoodsRetail(var execParamsMovement:TParams;var execParams:TParams;inBarCode:String): Boolean;
     function gpGet_Scale_Personal(var execParams:TParams;inPersonalCode:Integer): Boolean;
@@ -47,6 +49,7 @@ type
     function gpInsert_Movement_all(var execParamsMovement:TParams): Boolean;
     //
     // Scale
+    function gpUpdate_Scale_Movement_Transport(execParamsMovement:TParams): Boolean;
     function gpUpdate_Scale_Movement_PersonalComlete(execParamsPersonalComplete:TParams): Boolean;
 
   end;
@@ -146,11 +149,18 @@ begin
          ParamByName('isSpec').asBoolean:= DataSet.FieldByName('isSpec').asBoolean;
          ParamByName('isTax').asBoolean:= DataSet.FieldByName('isTax').asBoolean;
 
-         ParamByName('OrderExternalId').AsInteger:= DataSet.FieldByName('MovementId_Order').asInteger;
-         ParamByName('OrderExternal_DescId').AsInteger:= DataSet.FieldByName('MovementDescId_Order').asInteger;
-         ParamByName('OrderExternal_BarCode').asString:= DataSet.FieldByName('BarCode').asString;
-         ParamByName('OrderExternal_InvNumber').asString:= DataSet.FieldByName('InvNumber_Order').asString;
+         ParamByName('OrderExternalId').AsInteger        := DataSet.FieldByName('MovementId_Order').asInteger;
+         ParamByName('OrderExternal_DescId').AsInteger   := DataSet.FieldByName('MovementDescId_Order').asInteger;
+         ParamByName('OrderExternal_BarCode').asString   := DataSet.FieldByName('BarCode').asString;
+         ParamByName('OrderExternal_InvNumber').asString := DataSet.FieldByName('InvNumber_Order').asString;
          ParamByName('OrderExternalName_master').asString:= DataSet.FieldByName('OrderExternalName_master').asString;
+
+         ParamByName('TransportId').AsInteger        := DataSet.FieldByName('MovementId_Transport').asInteger;
+         ParamByName('Transport_BarCode').asString   := DataSet.FieldByName('Transport_BarCode').asString;
+         ParamByName('Transport_InvNumber').asString := DataSet.FieldByName('Transport_InvNumber').asString;
+         ParamByName('PersonalDriverName').asString  := DataSet.FieldByName('PersonalDriverName').asString;
+         ParamByName('CarName').asString             := DataSet.FieldByName('CarName').asString;
+         ParamByName('RouteName').asString           := DataSet.FieldByName('RouteName').asString;
 
          ParamByName('ContractId').AsInteger    := DataSet.FieldByName('ContractId').asInteger;
          ParamByName('ContractCode').AsInteger  := DataSet.FieldByName('ContractCode').asInteger;
@@ -308,6 +318,43 @@ begin
     Result:=true;
 end;
 {------------------------------------------------------------------------}
+function TDMMainScaleForm.gpUpdate_Scale_MLM(execParams:TParams): Boolean;
+begin
+    Result:=false;
+
+    with spSelect do begin
+       StoredProcName:= 'gpUpdate_Scale_MLM';
+       OutputType:=otResult;
+       Params.Clear;
+       Params.AddParam('inMovementId', ftInteger, ptInput, execParams.ParamByName('inMovementId').AsInteger);
+       Params.AddParam('inDescCode', ftString, ptInput, execParams.ParamByName('inDescCode').AsString);
+       Params.AddParam('inMovementChildId', ftInteger, ptInput, execParams.ParamByName('inMovementChildId').AsInteger);
+       //try
+         Execute;
+       {except
+         Result := '';
+         ShowMessage('Ошибка получения - gpUpdate_Scale_MLM');
+       end;}
+    end;
+    Result:=true;
+end;
+{------------------------------------------------------------------------}
+function TDMMainScaleForm.gpUpdate_Scale_Movement_Transport(execParamsMovement:TParams): Boolean;
+var execParams:TParams;
+begin
+     if execParamsMovement.ParamByName('isTransport_link').AsBoolean = FALSE then
+     begin
+          Result:=false;
+          exit;
+     end;
+     execParams:=nil;
+     ParamAddValue(execParams,'inMovementId',ftInteger,execParamsMovement.ParamByName('MovementId').AsInteger);
+     ParamAddValue(execParams,'inDescCode',ftString,'zc_MovementLinkMovement_Transport');
+     ParamAddValue(execParams,'inMovementChildId',ftInteger,execParamsMovement.ParamByName('TransportId').AsInteger);
+     Result:=DMMainScaleForm.gpUpdate_Scale_MLM(execParams);
+     execParams.Free;
+end;
+{------------------------------------------------------------------------}
 function TDMMainScaleForm.gpUpdate_Scale_Partner_print(PartnerId : Integer; isMovement,isAccount,isTransport,isQuality,isPack,isSpec,isTax : Boolean): Boolean;
 begin
     Result:=false;
@@ -328,7 +375,7 @@ begin
          Execute;
        {except
          Result := '';
-         ShowMessage('Ошибка получения - gpUpdate_Scale_MILinkObject');
+         ShowMessage('Ошибка получения - gpUpdate_Scale_Partner_print');
        end;}
     end;
     Result:=true;
@@ -372,6 +419,7 @@ begin
        Params.AddParam('inPaidKindId', ftInteger, ptInput, execParamsMovement.ParamByName('PaidKindId').AsInteger);
        Params.AddParam('inPriceListId', ftInteger, ptInput, execParamsMovement.ParamByName('PriceListId').AsInteger);
        Params.AddParam('inMovementId_Order', ftInteger, ptInput, execParamsMovement.ParamByName('OrderExternalId').AsInteger);
+       Params.AddParam('inMovementId_Transport', ftInteger, ptInput, execParamsMovement.ParamByName('TransportId').AsInteger);
        Params.AddParam('inChangePercent', ftFloat, ptInput, execParamsMovement.ParamByName('ChangePercent').AsFloat);
        Params.AddParam('inBranchCode', ftInteger, ptInput, SettingMain.BranchCode);
        //try
@@ -385,6 +433,7 @@ begin
          ShowMessage('Ошибка получения - gpInsertUpdate_Scale_Movement');
        end;}
     end;
+    //
     Result:=true;
 end;
 {------------------------------------------------------------------------}
@@ -893,6 +942,51 @@ begin
     end;
 end;
 {------------------------------------------------------------------------}
+function TDMMainScaleForm.gpGet_Scale_Transport(var execParams:TParams;inBarCode: String): Boolean;
+begin
+    if trim (inBarCode) = ''
+    then with execParams do
+         begin
+               ParamByName('TransportId').AsInteger        := 0;
+               ParamByName('Transport_BarCode').asString   := '';
+               ParamByName('Transport_InvNumber').asString := '';
+               ParamByName('PersonalDriverName').asString  := '';
+               ParamByName('CarName').asString             := '';
+               ParamByName('RouteName').asString           := '';
+         end
+    else
+    with spSelect do
+    begin
+       StoredProcName:='gpGet_Scale_Transport';
+       OutputType:=otDataSet;
+       Params.Clear;
+       Params.AddParam('inOperDate', ftDateTime, ptInput, execParams.ParamByName('OperDate').AsDateTime);
+       Params.AddParam('inBranchCode',ftInteger, ptInput, SettingMain.BranchCode);
+       Params.AddParam('inBarCode', ftString, ptInput, inBarCode);
+       Params.AddParam('inMovementId_order',ftInteger, ptInput, execParams.ParamByName('OrderExternalId').AsInteger);
+       //try
+         Execute;
+         //
+         Result:=DataSet.RecordCount=1;
+
+       with execParams do
+       begin
+         ParamByName('TransportId').AsInteger        := DataSet.FieldByName('MovementId').asInteger;
+         ParamByName('Transport_BarCode').asString   := DataSet.FieldByName('BarCode').asString;
+         ParamByName('Transport_InvNumber').asString := DataSet.FieldByName('InvNumber').asString;
+         ParamByName('PersonalDriverName').asString  := DataSet.FieldByName('PersonalDriverName').asString;
+         ParamByName('CarName').asString             := DataSet.FieldByName('CarName').asString;
+         ParamByName('RouteName').asString           := DataSet.FieldByName('RouteName').asString;
+       end;
+       {except
+         result.Code := Code;
+         result.Id   := 0;
+         result.Name := '';
+         ShowMessage('Ошибка получения - gpGet_Scale_Transport');
+       end;}
+    end;
+end;
+{------------------------------------------------------------------------}
 function TDMMainScaleForm.gpGet_Scale_OperDate(var execParams:TParams):TDateTime;
 begin
     with DMMainScaleForm.spSelect do
@@ -1140,6 +1234,7 @@ begin
                         ParamsMovement.ParamByName('InfoMoneyName').asString := CDS.FieldByName('InfoMoneyName').asString;
                         ParamsMovement.ParamByName('isSendOnPriceIn').asBoolean:= CDS.FieldByName('isSendOnPriceIn').asBoolean;
                         ParamsMovement.ParamByName('isPartionGoodsDate').asBoolean:= CDS.FieldByName('isPartionGoodsDate').asBoolean;
+                        ParamsMovement.ParamByName('isTransport_link').asBoolean:= CDS.FieldByName('isTransport_link').asBoolean;
                         //
                         if CDS.FieldByName('isSendOnPriceIn').asBoolean = TRUE
                         then ParamsMovement.ParamByName('ChangePercentAmount').asFloat := 0;

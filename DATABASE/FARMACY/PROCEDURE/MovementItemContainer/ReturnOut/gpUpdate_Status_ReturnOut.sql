@@ -1,8 +1,8 @@
 -- Function: gpUpdate_Status_Income()
 
-DROP FUNCTION IF EXISTS gpUpdate_Status_Income (Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpUpdate_Status_ReturnOut (Integer, Integer, TVarChar);
 
-CREATE OR REPLACE FUNCTION gpUpdate_Status_Income(
+CREATE OR REPLACE FUNCTION gpUpdate_Status_ReturnOut(
     IN inMovementId          Integer   , -- Ключ объекта <Документ>
     IN inStatusCode          Integer   , -- Статус документа. Возвращается который должен быть
     IN inSession             TVarChar    -- сессия пользователя
@@ -12,11 +12,11 @@ $BODY$
 BEGIN
      CASE inStatusCode
          WHEN zc_Enum_StatusCode_UnComplete() THEN
-            PERFORM gpUnComplete_Movement_Income (inMovementId, inSession);
+            PERFORM gpUnComplete_Movement_ReturnOut (inMovementId, inSession);
          WHEN zc_Enum_StatusCode_Complete() THEN
-            PERFORM gpComplete_Movement_Income (inMovementId, inSession);
+            PERFORM gpComplete_Movement_ReturnOut (inMovementId, inSession);
          WHEN zc_Enum_StatusCode_Erased() THEN
-            PERFORM gpSetErased_Movement_Income (inMovementId, inSession);
+            PERFORM gpSetErased_Movement_ReturnOut (inMovementId, inSession);
          ELSE
             RAISE EXCEPTION 'Нет статуса с кодом <%>', inStatusCode;
      END CASE;
@@ -32,4 +32,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpUpdate_Status_Income (ioId:= 0, inSession:= zfCalc_UserAdmin())
+-- SELECT * FROM gpUpdate_Status_ReturnOut (ioId:= 0, inSession:= zfCalc_UserAdmin())

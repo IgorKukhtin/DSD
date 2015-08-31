@@ -49,6 +49,21 @@ BEGIN
         DELETE FROM MovementItemFloat
         WHERE 
             MovementItemId in (
+                                SELECT MovementItem.Id 
+                                FROM MovementItem
+                                    INNER JOIN MovementItemFloat AS MIFloat_AmountSecond
+                                                                 ON MIFloat_AmountSecond.MovementItemId = MovementItem.Id
+                                                                AND MIFloat_AmountSecond.DescId = zc_MIFloat_AmountSecond() 
+                                WHERE 
+                                    MovementItem.MovementId = vbMovementId
+                              )
+            AND
+            DescId = zc_MIFloat_AmountManual();
+        
+        
+        DELETE FROM MovementItemFloat
+        WHERE 
+            MovementItemId in (
                                 SELECT Id from MovementItem
                                 Where MovementItem.MovementId = vbMovementId
                               )
@@ -64,64 +79,7 @@ BEGIN
                                                                                                           ,inAmountManual:= NULL
                                                                                                           ,inPrice      := Object_Price.Price
                                                                                                           ,inUserId     := vbUserId)
-                                           ,inValueData       := floor(Object_Price.MCSValue - SUM(COALESCE(Container.Amount,0)))::TFloat)/*,
-            lpInsertUpdate_MovementItemFloat(inDescId         := zc_MIFloat_AmountManual()
-                                            ,inMovementItemId := lpInsertUpdate_MovementItem_OrderInternal(ioId         := COALESCE(MovementItemSaved.Id,0)
-                                                                                                          ,inMovementId := vbMovementId
-                                                                                                          ,inGoodsId    := Object_Price.GoodsId
-                                                                                                          ,inAmount     := COALESCE(MovementItemSaved.Amount,0)
-                                                                                                          ,inAmountManual:= NULL
-                                                                                                          ,inPrice      := Object_Price.Price
-                                                                                                          ,inUserId     := vbUserId)
-                                           ,inValueData       := (CEIL((COALESCE(MovementItemSaved.Amount,0) + floor(Object_Price.MCSValue - SUM(COALESCE(Container.Amount,0)))::TFloat)) / COALESCE(Object_Goods_View.MinimumLot, 1)) * COALESCE(Object_Goods_View.MinimumLot, 1))
-        */from Object_Price_View AS Object_Price
-            LEFT OUTER JOIN ContainerLinkObject AS ContainerLinkObject_Unit
-                                                ON ContainerLinkObject_Unit.DescId = zc_ContainerLinkObject_Unit()
-                                               AND ContainerLinkObject_Unit.ObjectId = Object_Price.UnitId
-            LEFT OUTER JOIN Container ON ContainerLinkObject_Unit.ContainerId = Container.Id
-                                     AND Container.ObjectId = Object_Price.GoodsId
-                                     AND Container.DescId = zc_Container_Count() 
-                                     AND Container.Amount > 0
-            LEFT OUTER JOIN MovementItem AS MovementItemSaved
-                                         ON MovementItemSaved.MovementId = vbMovementId
-                                        AND MovementItemSaved.ObjectId = Object_Price.GoodsId
-            LEFT OUTER JOIN Object_Goods_View ON Object_Price.GoodsId = Object_Goods_View.Id                            
-        WHERE
-            Object_Price.MCSValue > 0
-            AND
-            Object_Price.UnitId = inUnitId
-        GROUP BY
-            Object_Price.UnitId,
-            Object_Price.GoodsId,
-            Object_Price.MCSValue,
-            Object_Price.Price,
-            MovementItemSaved.Id,
-            MovementItemSaved.Amount,
-            Object_Price.MCSValue,
-            Object_Goods_View.MinimumLot
-        HAVING
-            floor(Object_Price.MCSValue - SUM(COALESCE(Container.Amount,0)))::TFloat > 0;
-        
-        PERFORM
-/*            lpInsertUpdate_MovementItemFloat(inDescId         := zc_MIFloat_AmountSecond()
-                                            ,inMovementItemId := lpInsertUpdate_MovementItem_OrderInternal(ioId         := COALESCE(MovementItemSaved.Id,0)
-                                                                                                          ,inMovementId := vbMovementId
-                                                                                                          ,inGoodsId    := Object_Price.GoodsId
-                                                                                                          ,inAmount     := COALESCE(MovementItemSaved.Amount,0)
-                                                                                                          ,inAmountManual:= NULL
-                                                                                                          ,inPrice      := Object_Price.Price
-                                                                                                          ,inUserId     := vbUserId)
-                                           ,inValueData       := floor(Object_Price.MCSValue - SUM(COALESCE(Container.Amount,0)))::TFloat),
-  */          lpInsertUpdate_MovementItemFloat(inDescId         := zc_MIFloat_AmountManual()
-                                            ,inMovementItemId := lpInsertUpdate_MovementItem_OrderInternal(ioId         := COALESCE(MovementItemSaved.Id,0)
-                                                                                                          ,inMovementId := vbMovementId
-                                                                                                          ,inGoodsId    := Object_Price.GoodsId
-                                                                                                          ,inAmount     := COALESCE(MovementItemSaved.Amount,0)
-                                                                                                          ,inAmountManual:= NULL
-                                                                                                          ,inPrice      := Object_Price.Price
-                                                                                                          ,inUserId     := vbUserId)
-                                                                                                          -- 
-                                           ,inValueData       := CEIL((COALESCE(MovementItemSaved.Amount,0) + floor(Object_Price.MCSValue - SUM(COALESCE(Container.Amount,0)))) / COALESCE(Object_Goods_View.MinimumLot, 1))* COALESCE(Object_Goods_View.MinimumLot, 1) )  -- 
+                                           ,inValueData       := floor(Object_Price.MCSValue - SUM(COALESCE(Container.Amount,0)))::TFloat)
         from Object_Price_View AS Object_Price
             LEFT OUTER JOIN ContainerLinkObject AS ContainerLinkObject_Unit
                                                 ON ContainerLinkObject_Unit.DescId = zc_ContainerLinkObject_Unit()
@@ -137,6 +95,8 @@ BEGIN
         WHERE
             Object_Price.MCSValue > 0
             AND
+            Object_Price.MCSIsClose = False 
+            AND
             Object_Price.UnitId = inUnitId
         GROUP BY
             Object_Price.UnitId,
@@ -149,6 +109,21 @@ BEGIN
             Object_Goods_View.MinimumLot
         HAVING
             floor(Object_Price.MCSValue - SUM(COALESCE(Container.Amount,0)))::TFloat > 0;
+        --Пересчитываем ручное количество для строк с авторасчетом
+        PERFORM
+            lpInsertUpdate_MovementItemFloat(inDescId         := zc_MIFloat_AmountManual()
+                                            ,inMovementItemId := MovementItemSaved.Id
+                                            ,inValueData      := (CEIL((MovementItemSaved.Amount + COALESCE(MIFloat_AmountSecond.ValueData,0)) / COALESCE(Object_Goods.MinimumLot, 1)) * COALESCE(Object_Goods.MinimumLot, 1))
+                                            )
+        FROM
+            MovementItem AS MovementItemSaved
+            INNER JOIN MovementItemFloat AS MIFloat_AmountSecond
+                                         ON MIFloat_AmountSecond.MovementItemId = MovementId
+                                                                AND MIFloat_AmountSecond.DescId = zc_MIFloat_AmountSecond() 
+            INNER JOIN Object_Goods_View AS Object_Goods
+                                         ON Object_Goods.Id = MovementItemSaved.ObjectId
+        WHERE
+            MovementItemSaved.MovementId = vbMovementId;
     END IF;
     IF EXISTS(  SELECT Movement.Id
                 FROM Movement
@@ -178,6 +153,7 @@ LANGUAGE PLPGSQL VOLATILE;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А.А.
+ 29.08.15                                                                        * ObjectPrice.MCSIsClose = False
  31.07.15                                                                        *
 */
 

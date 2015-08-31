@@ -185,7 +185,8 @@ BEGIN
      FROM (SELECT CASE WHEN vbIsGroup = TRUE THEN 0 ELSE tmpContainer.GoodsId END AS GoodsId
                 , tmpContainer.LocationId
                 , COALESCE (ContainerLO_Juridical.ObjectId,  COALESCE (ContainerLO_Member.ObjectId, 0 )) AS JuridicalId
-                , COALESCE (ContainerLO_Partner.ObjectId, COALESCE (ContainerLO_Member.ObjectId, 0))     AS PartnerId 
+                -- , COALESCE (ContainerLO_Partner.ObjectId, COALESCE (ContainerLO_Member.ObjectId, 0))     AS PartnerId
+                , tmpContainer.PartnerId
                 , CASE WHEN ContainerLO_Member.ObjectId > 0 THEN zc_Enum_PaidKind_SecondForm() ELSE COALESCE (ContainerLO_PaidKind.ObjectId,0) END AS PaidKindId
                 , COALESCE (ContainerLO_InfoMoney.ObjectId, 0) AS InfoMoneyId
                 , 0/*( COALESCE (ContainerLO_FuelKind.ObjectId,0) )*/ AS FuelKindId
@@ -205,6 +206,7 @@ BEGIN
                       , MIContainer.ObjectId_analyzer                  AS GoodsId 
                       , CASE WHEN vbIsGroup = TRUE THEN 0 ELSE COALESCE (MIContainer.ObjectIntId_Analyzer, 0) END AS GoodsKindId 
                       , MIContainer.ContainerId_analyzer               AS ContainerId_analyzer
+                      , MIContainer.ObjectExtId_Analyzer               AS PartnerId
                       , MIContainer.WhereObjectId_analyzer             AS LocationId
                       , SUM (CASE WHEN MIContainer.DescId = zc_MIContainer_Count() AND MIContainer.MovementDescId = zc_Movement_Income() AND MIContainer.isActive = TRUE
                                        THEN MIContainer.Amount
@@ -254,6 +256,7 @@ BEGIN
                         , CASE WHEN vbIsGroup = TRUE THEN 0 ELSE COALESCE (MIContainer.ObjectIntId_Analyzer, 0) END
                         , MIContainer.ContainerId_analyzer
                         , MIContainer.WhereObjectId_analyzer
+                        , MIContainer.ObjectExtId_Analyzer
                 ) AS tmpContainer
                       INNER JOIN _tmpGoods ON _tmpGoods.GoodsId = tmpContainer.GoodsId
 
@@ -275,12 +278,12 @@ BEGIN
                       LEFT JOIN ContainerLinkObject AS ContainerLO_PaidKind
                                                     ON ContainerLO_PaidKind.ContainerId =  tmpContainer.ContainerId_analyzer
                                                    AND ContainerLO_PaidKind.DescId = zc_ContainerLinkObject_PaidKind()
-                      LEFT JOIN ContainerLinkObject AS ContainerLO_Partner
+                      /*LEFT JOIN ContainerLinkObject AS ContainerLO_Partner
                                                     ON ContainerLO_Partner.ContainerId =  tmpContainer.ContainerId_analyzer
-                                                   AND ContainerLO_Partner.DescId = zc_ContainerLinkObject_Partner()      
+                                                   AND ContainerLO_Partner.DescId = zc_ContainerLinkObject_Partner()*/
                       LEFT JOIN ContainerLinkObject AS ContainerLO_Member
                                                     ON ContainerLO_Member.ContainerId =  tmpContainer.ContainerId_analyzer
-                                                   AND ContainerLO_Member.DescId = zc_ContainerLinkObject_Member()      
+                                                   AND ContainerLO_Member.DescId = zc_ContainerLinkObject_Member()
 
                       WHERE (ContainerLO_Juridical.ObjectId = inJuridicalId OR inJuridicalId=0)
                         AND (ContainerLO_PaidKind.ObjectId = inPaidKindId OR inPaidKindId=0 OR (ContainerLO_Member.ObjectId > 0 AND inPaidKindId = zc_Enum_PaidKind_SecondForm()))
@@ -292,7 +295,8 @@ BEGIN
                              , CASE WHEN ContainerLO_Member.ObjectId > 0 THEN zc_Enum_PaidKind_SecondForm() ELSE COALESCE (ContainerLO_PaidKind.ObjectId,0) END
                              --  , COALESCE (ContainerLO_FuelKind.ObjectId, 0) 
                              , CASE WHEN vbIsGroup = TRUE THEN 0 ELSE COALESCE (CLO_PartionGoods.ObjectId, 0) END
-                             , COALESCE (ContainerLO_Partner.ObjectId, COALESCE (ContainerLO_Member.ObjectId, 0))
+                             -- , COALESCE (ContainerLO_Partner.ObjectId, COALESCE (ContainerLO_Member.ObjectId, 0))
+                             , tmpContainer.PartnerId
                              , COALESCE (ContainerLO_Juridical.ObjectId,  COALESCE (ContainerLO_Member.ObjectId, 0 ))
                              , COALESCE (ContainerLO_InfoMoney.ObjectId, 0)
           ) AS tmpOperationGroup

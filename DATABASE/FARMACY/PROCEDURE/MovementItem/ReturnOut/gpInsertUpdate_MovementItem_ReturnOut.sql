@@ -7,11 +7,12 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_ReturnOut(
     IN inMovementId          Integer   , -- Ключ объекта <Документ>
     IN inGoodsId             Integer   , -- Товары
     IN inAmount              TFloat    , -- Количество
-    IN inPrice               TFloat   , -- Цена
+    IN inPrice               TFloat    , -- Цена
     IN inParentId            Integer   , -- ссылка на родителя
+   OUT outSumm               TFloat    , -- Сумма
     IN inSession             TVarChar    -- сессия пользователя
 )
-RETURNS Integer AS
+AS
 $BODY$
    DECLARE vbUserId Integer;
 BEGIN
@@ -19,13 +20,13 @@ BEGIN
      -- проверка прав пользователя на вызов процедуры
      -- PERFORM lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MovementItem_Income());
      vbUserId := inSession;
-
+     
+     outSumm := (inAmount*inPrice)::TFloat;
+     
      ioId := lpInsertUpdate_MovementItem_ReturnOut(ioId, inMovementId, inGoodsId, inAmount, inPrice, inParentId, vbUserId);
 
      -- пересчитали Итоговые суммы
      PERFORM lpInsertUpdate_MovementFloat_TotalSumm (inMovementId);
-
-
 END;
 $BODY$
 LANGUAGE PLPGSQL VOLATILE;

@@ -26,7 +26,7 @@ object IncomeFuelJournalForm: TIncomeFuelJournalForm
     object deStart: TcxDateEdit
       Left = 101
       Top = 5
-      EditValue = 41640d
+      EditValue = 42005d
       Properties.SaveTime = False
       Properties.ShowTime = False
       TabOrder = 0
@@ -35,7 +35,7 @@ object IncomeFuelJournalForm: TIncomeFuelJournalForm
     object deEnd: TcxDateEdit
       Left = 310
       Top = 5
-      EditValue = 41640d
+      EditValue = 42005d
       Properties.SaveTime = False
       Properties.ShowTime = False
       TabOrder = 1
@@ -217,7 +217,7 @@ object IncomeFuelJournalForm: TIncomeFuelJournalForm
         Width = 100
       end
       object colToName: TcxGridDBColumn
-        Caption = #1050#1086#1084#1091' ('#1040#1074#1090#1086#1084#1086#1073#1080#1083#1100')'
+        Caption = #1050#1086#1084#1091' ('#1040#1074#1090#1086#1084#1086#1073#1080#1083#1100', '#1060#1080#1079'.'#1083'.)'
         DataBinding.FieldName = 'ToName'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
@@ -521,10 +521,6 @@ object IncomeFuelJournalForm: TIncomeFuelJournalForm
         item
           BeginGroup = True
           Visible = True
-          ItemName = 'bbReCompleteAll'
-        end
-        item
-          Visible = True
           ItemName = 'bbStatic'
         end
         item
@@ -723,10 +719,8 @@ object IncomeFuelJournalForm: TIncomeFuelJournalForm
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
-      StoredProc = spMovementReCompleteAll
       StoredProcList = <
         item
-          StoredProc = spMovementReCompleteAll
         end>
       Caption = #1055#1077#1088#1077#1087#1088#1086#1074#1077#1089#1090#1080' '#1074#1089#1077' '#1076#1086#1082#1091#1084#1077#1085#1090#1099' '#1079#1072' '#1087#1077#1088#1080#1086#1076
       Hint = #1055#1077#1088#1077#1087#1088#1086#1074#1077#1089#1090#1080' '#1074#1089#1077' '#1076#1086#1082#1091#1084#1077#1085#1090#1099' '#1079#1072' '#1087#1077#1088#1080#1086#1076
@@ -889,28 +883,5 @@ object IncomeFuelJournalForm: TIncomeFuelJournalForm
       end>
     Left = 576
     Top = 24
-  end
-  object spMovementReCompleteAll: TdsdStoredProc
-    StoredProcName = 'gpCompletePeriod_Movement_IncomeFuel'
-    DataSets = <>
-    OutputType = otResult
-    Params = <
-      item
-        Name = 'inStartDate'
-        Value = 41640d
-        Component = deStart
-        DataType = ftDateTime
-        ParamType = ptInput
-      end
-      item
-        Name = 'inEndtDate'
-        Value = 41640d
-        Component = deEnd
-        DataType = ftDateTime
-        ParamType = ptInput
-      end>
-    PackSize = 1
-    Left = 240
-    Top = 288
   end
 end

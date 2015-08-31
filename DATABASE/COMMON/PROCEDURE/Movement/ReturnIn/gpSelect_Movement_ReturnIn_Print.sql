@@ -173,6 +173,11 @@ BEGIN
 
      --
      OPEN Cursor1 FOR
+       WITH tmpCorrective AS (SELECT MLM_TaxCorrective.MovementId, MLM_TaxCorrective.MovementChildId
+                              FROM MovementLinkMovement AS MLM_TaxCorrective
+                              WHERE MLM_TaxCorrective.MovementChildId = inMovementId
+                                AND MLM_TaxCorrective.DescId = zc_MovementLinkMovement_Master()
+                              LIMIT 1)
        SELECT
              Movement.Id                                AS Id
            , Movement.InvNumber                         AS InvNumber
@@ -264,12 +269,11 @@ BEGIN
             LEFT JOIN MovementLinkObject AS MovementLinkObject_DocumentTaxKind
                                          ON MovementLinkObject_DocumentTaxKind.MovementId = Movement.Id
                                         AND MovementLinkObject_DocumentTaxKind.DescId = zc_MovementLinkObject_DocumentTaxKind()
-            LEFT JOIN MovementLinkMovement AS MovementLinkMovement_TaxCorrective
-                                           ON MovementLinkMovement_TaxCorrective.MovementChildId = Movement.Id
-                                          AND MovementLinkMovement_TaxCorrective.DescId = zc_MovementLinkMovement_Master()
-                                          AND MovementLinkObject_DocumentTaxKind.ObjectId = zc_Enum_DocumentTaxKind_CorrectivePrice()
+
+            LEFT JOIN tmpCorrective ON tmpCorrective.MovementChildId = Movement.Id
+
             LEFT JOIN MovementLinkMovement AS MovementLinkMovement_child
-                                           ON MovementLinkMovement_child.MovementId = MovementLinkMovement_TaxCorrective.MovementId
+                                           ON MovementLinkMovement_child.MovementId = tmpCorrective.MovementId
                                           AND MovementLinkMovement_child.DescId = zc_MovementLinkMovement_Child()
             LEFT JOIN MovementLinkObject AS MovementLinkObject_DocumentTaxKind_Child
                                          ON MovementLinkObject_DocumentTaxKind_Child.MovementId = MovementLinkMovement_child.MovementChildId

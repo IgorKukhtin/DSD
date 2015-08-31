@@ -110,7 +110,9 @@ BEGIN
         , Movement_Income_View.BranchDate
         , Movement_Income_View.ToId
      FROM MovementItem_Income_View, Movement_Income_View
-    WHERE MovementItem_Income_View.MovementId = Movement_Income_View.Id AND Movement_Income_View.Id =  inMovementId;
+    WHERE MovementItem_Income_View.MovementId = Movement_Income_View.Id 
+      AND MovementItem_Income_View.IsErased = FALSE
+      AND Movement_Income_View.Id =  inMovementId;
 
     -- А сюда товары
     INSERT INTO _tmpMIContainer_insert(DescId, MovementDescId, MovementId, MovementItemId, ContainerId, AccountId, Amount, OperDate)
