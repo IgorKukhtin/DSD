@@ -1,8 +1,8 @@
 -- Function: gpComplete_Movement_Income()
 
-DROP FUNCTION IF EXISTS lpCheckComplete_Movement_Income (Integer);
+DROP FUNCTION IF EXISTS lpCheckComplete_Movement_ReturnOut (Integer);
 
-CREATE OR REPLACE FUNCTION lpCheckComplete_Movement_Income(
+CREATE OR REPLACE FUNCTION lpCheckComplete_Movement_ReturnOut(
     IN inMovementId        Integer              -- ключ Документа
 )
 RETURNS VOID
@@ -25,8 +25,8 @@ BEGIN
      AND MovementLinkObject_NDSKind.DescId = zc_MovementLinkObject_NDSKind();
 
   SELECT MIN(GoodsId) INTO vbGoodsId
-    FROM MovementItem_Income_View 
-    JOIN Object_Goods_View ON MovementItem_Income_View.GoodsId = Object_Goods_View.Id
+    FROM MovementItem_ReturnOut_View 
+    JOIN Object_Goods_View ON MovementItem_ReturnOut_View.GoodsId = Object_Goods_View.Id
    WHERE MovementId = inMovementId AND Object_Goods_View.NDSKindId <> vbNDSKindId;
 
   IF COALESCE(vbGoodsId, 0) <> 0 THEN 

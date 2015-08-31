@@ -1,25 +1,25 @@
 inherited PriceForm: TPriceForm
   Caption = #1055#1088#1072#1081#1089' - '#1083#1080#1089#1090
   ClientHeight = 385
-  ClientWidth = 727
-  ExplicitWidth = 735
+  ClientWidth = 752
+  ExplicitWidth = 760
   ExplicitHeight = 412
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Width = 727
+    Width = 752
     Height = 359
-    ExplicitWidth = 727
+    ExplicitWidth = 752
     ExplicitHeight = 359
     ClientRectBottom = 359
-    ClientRectRight = 727
+    ClientRectRight = 752
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 727
+      ExplicitWidth = 752
       ExplicitHeight = 359
       inherited cxGrid: TcxGrid
-        Width = 727
+        Width = 752
         Height = 359
-        ExplicitWidth = 727
+        ExplicitWidth = 752
         ExplicitHeight = 359
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.FooterSummaryItems = <
@@ -42,14 +42,14 @@ inherited PriceForm: TPriceForm
             DataBinding.FieldName = 'GoodsCode'
             HeaderAlignmentHorz = taCenter
             Options.Editing = False
-            Width = 78
+            Width = 67
           end
           object clGoodsName: TcxGridDBColumn
             Caption = #1053#1072#1080#1084#1077#1085#1086#1074#1072#1085#1080#1077' '#1090#1086#1074#1072#1088#1072
             DataBinding.FieldName = 'GoodsName'
             HeaderAlignmentHorz = taCenter
             Options.Editing = False
-            Width = 301
+            Width = 255
           end
           object clPrice: TcxGridDBColumn
             Caption = #1062#1077#1085#1072
@@ -59,14 +59,14 @@ inherited PriceForm: TPriceForm
             Properties.DisplayFormat = ',0.00'
             Properties.MinValue = 0.010000000000000000
             HeaderAlignmentHorz = taCenter
-            Width = 72
+            Width = 61
           end
           object clDateChange: TcxGridDBColumn
-            Caption = #1044#1072#1090#1072' '#1087#1086#1089#1083#1077#1076#1085#1077#1075#1086' '#1080#1079#1084#1077#1085#1077#1085#1080#1103
+            Caption = #1044#1072#1090#1072' '#1087#1086#1089#1083'. '#1080#1079#1084'. '#1094#1077#1085#1099
             DataBinding.FieldName = 'DateChange'
             HeaderAlignmentHorz = taCenter
             Options.Editing = False
-            Width = 92
+            Width = 78
           end
           object clMCSValue: TcxGridDBColumn
             AlternateCaption = #1053#1077#1089#1085#1080#1078#1072#1077#1084#1099#1081' '#1090#1086#1074#1072#1088#1085#1099#1081' '#1079#1072#1087#1072#1089
@@ -74,16 +74,16 @@ inherited PriceForm: TPriceForm
             DataBinding.FieldName = 'MCSValue'
             HeaderAlignmentHorz = taCenter
             HeaderHint = #1053#1077#1089#1085#1080#1078#1072#1077#1084#1099#1081' '#1090#1086#1074#1072#1088#1085#1099#1081' '#1079#1072#1087#1072#1089
-            Width = 67
+            Width = 57
           end
           object clMCSDateChange: TcxGridDBColumn
             AlternateCaption = #1044#1072#1090#1072' '#1087#1086#1089#1083#1077#1076#1085#1077#1075#1086' '#1080#1079#1084#1077#1085#1077#1085#1080#1103' '#1085#1077#1089#1085#1080#1078#1072#1077#1084#1086#1075#1086' '#1090#1086#1074#1072#1088#1085#1086#1075#1086' '#1079#1072#1087#1072#1089#1072
-            Caption = #1044#1072#1090#1072' '#1087#1086#1089#1083#1077#1076#1085#1077#1075#1086' '#1080#1079#1084#1077#1085#1077#1085#1080#1103' '#1053#1058#1047
+            Caption = #1044#1072#1090#1072' '#1087#1086#1089#1083'. '#1080#1079#1084'. '#1053#1058#1047
             DataBinding.FieldName = 'MCSDateChange'
             HeaderAlignmentHorz = taCenter
             HeaderHint = #1044#1072#1090#1072' '#1087#1086#1089#1083#1077#1076#1085#1077#1075#1086' '#1080#1079#1084#1077#1085#1077#1085#1080#1103' '#1085#1077#1089#1085#1080#1078#1072#1077#1084#1086#1075#1086' '#1090#1086#1074#1072#1088#1085#1086#1075#1086' '#1079#1072#1087#1072#1089#1072
             Options.Editing = False
-            Width = 103
+            Width = 88
           end
           object clisErased: TcxGridDBColumn
             AlternateCaption = #1058#1086#1074#1072#1088' '#1091#1076#1072#1083#1077#1085
@@ -94,6 +94,20 @@ inherited PriceForm: TPriceForm
             HeaderHint = #1058#1086#1074#1072#1088' '#1091#1076#1072#1083#1077#1085
             Options.Editing = False
             Width = 27
+          end
+          object clMCSIsClose: TcxGridDBColumn
+            Caption = #1053#1058#1047' '#1079#1072#1082#1088'.'
+            DataBinding.FieldName = 'MCSIsClose'
+            HeaderAlignmentHorz = taCenter
+            HeaderHint = #1053#1058#1047' '#1079#1072#1082#1088#1099#1090
+            Width = 39
+          end
+          object clMCSNotRecalc: TcxGridDBColumn
+            Caption = #1053#1077' '#1087#1077#1088#1077#1089#1095'. '#1053#1058#1047
+            DataBinding.FieldName = 'MCSNotRecalc'
+            HeaderAlignmentHorz = taCenter
+            HeaderHint = #1053#1077' '#1087#1077#1088#1077#1089#1095#1080#1090#1099#1074#1072#1090#1100' '#1053#1058#1047
+            Width = 64
           end
         end
       end
@@ -112,6 +126,15 @@ inherited PriceForm: TPriceForm
     Properties.UseNullString = True
     TabOrder = 5
     Width = 299
+  end
+  inherited cxPropertiesStore: TcxPropertiesStore
+    Components = <
+      item
+        Component = UnitGuides
+        Properties.Strings = (
+          'Key'
+          'TextValue')
+      end>
   end
   inherited ActionList: TActionList
     inherited actRefresh: TdsdDataSetRefresh
@@ -253,6 +276,61 @@ inherited PriceForm: TPriceForm
           ComponentItem = 'UnitId'
         end>
     end
+    object actRecalcMCS: TdsdExecStoredProc
+      Category = 'RecalcMCS'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spRecalcMCS
+      StoredProcList = <
+        item
+          StoredProc = spRecalcMCS
+        end>
+      Caption = #1055#1077#1088#1077#1089#1095#1080#1090#1072#1090#1100' '#1053#1058#1047
+      Hint = #1055#1077#1088#1077#1089#1095#1080#1090#1072#1090#1100' '#1053#1058#1047
+    end
+    object actStartRecalcMCS: TMultiAction
+      Category = 'RecalcMCS'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actRecalcMCSDialog
+        end
+        item
+          Action = actRecalcMCS
+        end
+        item
+          Action = actRefresh
+        end>
+      Caption = #1055#1077#1088#1077#1089#1095#1080#1090#1072#1090#1100' '#1053#1058#1047
+      Hint = #1055#1077#1088#1077#1089#1095#1080#1090#1072#1090#1100' '#1053#1058#1047
+      ImageIndex = 38
+    end
+    object actRecalcMCSDialog: TExecuteDialog
+      Category = 'RecalcMCS'
+      MoveParams = <>
+      Caption = 'actRecalcMCSDialog'
+      FormName = 'TRecalcMCS_DialogForm'
+      FormNameParam.Name = 'TRecalcMCS_DialogForm'
+      FormNameParam.Value = 'TRecalcMCS_DialogForm'
+      FormNameParam.DataType = ftString
+      GuiParams = <
+        item
+          Name = 'RecalcMCS_Period'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'RecalcMCS_Period'
+          ParamType = ptInput
+        end
+        item
+          Name = 'RecalcMCS_Day'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'RecalcMCS_Day'
+          ParamType = ptInput
+        end>
+      isShowModal = True
+      OpenBeforeShow = True
+    end
   end
   inherited spSelect: TdsdStoredProc
     StoredProcName = 'gpSelect_Object_Price'
@@ -316,6 +394,10 @@ inherited PriceForm: TPriceForm
           ItemName = 'dxBarButton2'
         end
         item
+          Visible = True
+          ItemName = 'dxBarButton5'
+        end
+        item
           UserDefine = [udPaintStyle]
           UserPaintStyle = psCaptionGlyph
           Visible = True
@@ -356,6 +438,10 @@ inherited PriceForm: TPriceForm
       Action = actStartLoadPrice
       Category = 0
     end
+    object dxBarButton5: TdxBarButton
+      Action = actStartRecalcMCS
+      Category = 0
+    end
   end
   object UnitGuides: TdsdGuides
     KeyField = 'Id'
@@ -370,6 +456,7 @@ inherited PriceForm: TPriceForm
         Value = ''
         Component = UnitGuides
         ComponentItem = 'Key'
+        ParamType = ptInput
       end
       item
         Name = 'TextValue'
@@ -377,6 +464,7 @@ inherited PriceForm: TPriceForm
         Component = UnitGuides
         ComponentItem = 'TextValue'
         DataType = ftString
+        ParamType = ptInput
       end>
     Left = 200
     Top = 48
@@ -405,6 +493,14 @@ inherited PriceForm: TPriceForm
       item
         Name = 'ImportSettingId_Price'
         Value = Null
+      end
+      item
+        Name = 'RecalcMCS_Period'
+        Value = '40'
+      end
+      item
+        Name = 'RecalcMCS_Day'
+        Value = '5'
       end>
     Left = 264
     Top = 48
@@ -449,6 +545,22 @@ inherited PriceForm: TPriceForm
         Value = Null
         Component = FormParams
         ComponentItem = 'UnitId'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inMCSIsClose'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'MCSIsClose'
+        DataType = ftBoolean
+        ParamType = ptInput
+      end
+      item
+        Name = 'inMCSNotRecalc'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'MCSNotRecalc'
+        DataType = ftBoolean
         ParamType = ptInput
       end
       item
@@ -536,5 +648,35 @@ inherited PriceForm: TPriceForm
     PackSize = 1
     Left = 312
     Top = 216
+  end
+  object spRecalcMCS: TdsdStoredProc
+    StoredProcName = 'gpRecalcMCS'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inUnitId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'UnitId'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inPeriod'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'RecalcMCS_Period'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inDay'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'RecalcMCS_Day'
+        ParamType = ptInput
+      end>
+    PackSize = 1
+    Left = 408
+    Top = 136
   end
 end
