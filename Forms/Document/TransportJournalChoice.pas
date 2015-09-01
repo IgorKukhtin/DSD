@@ -1,4 +1,4 @@
-unit IncomeJournal;
+unit TransportJournalChoice;
 
 interface
 
@@ -24,10 +24,10 @@ uses
   dxSkinSilver, dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008,
   dxSkinTheAsphaltWorld, dxSkinsDefaultPainters, dxSkinValentine, dxSkinVS2010,
   dxSkinWhiteprint, dxSkinXmas2008Blue, dxSkinscxPCPainter, dxSkinsdxBarPainter,
-  dxBarExtItems, cxCurrencyEdit, ChoicePeriod, System.Contnrs, cxLabel;
+  dxBarExtItems, ChoicePeriod, cxLabel, cxCurrencyEdit;
 
 type
-  TIncomeJournalForm = class(TParentForm)
+  TTransportJournalChoiceForm = class(TParentForm)
     DataSource: TDataSource;
     ClientDataSet: TClientDataSet;
     cxPropertiesStore: TcxPropertiesStore;
@@ -38,24 +38,23 @@ type
     actRefresh: TdsdDataSetRefresh;
     actInsert: TdsdInsertUpdateAction;
     bbInsert: TdxBarButton;
-    dsdStoredProc: TdsdStoredProc;
+    spSelect: TdsdStoredProc;
     actUpdate: TdsdInsertUpdateAction;
     bbEdit: TdxBarButton;
     cxGridDBTableView: TcxGridDBTableView;
     cxGridLevel: TcxGridLevel;
     cxGrid: TcxGrid;
     colStatus: TcxGridDBColumn;
-    colInvNumber: TcxGridDBColumn;
-    colOperDate: TcxGridDBColumn;
-    colFromName: TcxGridDBColumn;
-    colToName: TcxGridDBColumn;
-    colTotalSummPVAT: TcxGridDBColumn;
+    InvNumber: TcxGridDBColumn;
+    OperDate: TcxGridDBColumn;
+    CarName: TcxGridDBColumn;
     Panel1: TPanel;
     deStart: TcxDateEdit;
     deEnd: TcxDateEdit;
     actComplete: TdsdChangeMovementStatus;
     spMovementComplete: TdsdStoredProc;
     PopupMenu: TPopupMenu;
+    N1: TMenuItem;
     bbComplete: TdxBarButton;
     actUnComplete: TdsdChangeMovementStatus;
     spMovementUnComplete: TdsdStoredProc;
@@ -64,65 +63,54 @@ type
     bbDelete: TdxBarButton;
     actSetErased: TdsdChangeMovementStatus;
     spMovementSetErased: TdsdStoredProc;
-    colPriceWithVAT: TcxGridDBColumn;
-    colVATPercent: TcxGridDBColumn;
-    colChangePercent: TcxGridDBColumn;
-    colTotalCount: TcxGridDBColumn;
-    colTotalSummMVAT: TcxGridDBColumn;
-    colTotalSumm: TcxGridDBColumn;
-    colTotalSummVAT: TcxGridDBColumn;
-    colPaidKindName: TcxGridDBColumn;
-    colContractName: TcxGridDBColumn;
-    colPersonalPackerName: TcxGridDBColumn;
-    colTotalSummPacker: TcxGridDBColumn;
-    colTotalSummSpending: TcxGridDBColumn;
-    bbStatic: TdxBarStatic;
+    bbBarStatic: TdxBarStatic;
     dsdGridToExcel: TdsdGridToExcel;
     bbGridToExcel: TdxBarButton;
     dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn;
     dsdDBViewAddOn: TdsdDBViewAddOn;
+    PersonalDriver: TcxGridDBColumn;
+    StartRunPlan: TcxGridDBColumn;
+    StartRun: TcxGridDBColumn;
+    Comment: TcxGridDBColumn;
+    UnitForwardingName: TcxGridDBColumn;
     PeriodChoice: TPeriodChoice;
-    RefreshDispatcher: TRefreshDispatcher;
     cxLabel1: TcxLabel;
     cxLabel2: TcxLabel;
-    colOperDatePartner: TcxGridDBColumn;
-    colInvNumberPartner: TcxGridDBColumn;
-    actReCompleteAll: TdsdExecStoredProc;
-    bbReCompleteAll: TdxBarButton;
-    spMovementReCompleteAll: TdsdStoredProc;
-    colInfoMoneyCode: TcxGridDBColumn;
-    colInfoMoneyGroupName: TcxGridDBColumn;
-    colInfoMoneyDestinationName: TcxGridDBColumn;
-    colInfoMoneyName: TcxGridDBColumn;
-    colTotalCountPartner: TcxGridDBColumn;
-    colJuridicalName_From: TcxGridDBColumn;
-    colOKPO_From: TcxGridDBColumn;
-    colCurrencyValue: TcxGridDBColumn;
-    colCurrencyDocumentName: TcxGridDBColumn;
-    colCurrencyPartnerName: TcxGridDBColumn;
+    CarModelName: TcxGridDBColumn;
+    RefreshDispatcher: TRefreshDispatcher;
+    BranchCode: TcxGridDBColumn;
+    BranchName: TcxGridDBColumn;
     actMIContainer: TdsdOpenForm;
     bbMIContainer: TdxBarButton;
-    MovementProtocolOpenForm: TdsdOpenForm;
-    bbMovementProtocol: TdxBarButton;
-    colContractCode: TcxGridDBColumn;
-    spSelectPrint: TdsdStoredProc;
-    bbPrint: TdxBarButton;
-    PrintHeaderCDS: TClientDataSet;
-    PrintItemsCDS: TClientDataSet;
-    actPrint: TdsdPrintAction;
-    FormParams: TdsdFormParams;
-    actShowErased: TBooleanStoredProcAction;
-    bbShowErased: TdxBarButton;
-    Comment: TcxGridDBColumn;
-    spMovementReComplete: TdsdStoredProc;
-    ContractId: TcxGridDBColumn;
     spReCompete: TdsdExecStoredProc;
     actSimpleReCompleteList: TMultiAction;
     actReCompleteList: TMultiAction;
-    N1: TMenuItem;
-    colTotalCount_unit: TcxGridDBColumn;
-    colTotalCount_diff: TcxGridDBColumn;
-    InvNumber_Transport_Full: TcxGridDBColumn;
+    spMovementReComplete: TdsdStoredProc;
+    N3: TMenuItem;
+    N4: TMenuItem;
+    N5: TMenuItem;
+    spCompete: TdsdExecStoredProc;
+    actSimpleCompleteList: TMultiAction;
+    actCompleteList: TMultiAction;
+    N6: TMenuItem;
+    spUncomplete: TdsdExecStoredProc;
+    actSimpleUncompleteList: TMultiAction;
+    actUnCompleteList: TMultiAction;
+    N7: TMenuItem;
+    spErased: TdsdExecStoredProc;
+    actSimpleErased: TMultiAction;
+    actSetErasedList: TMultiAction;
+    MovementProtocolOpenForm: TdsdOpenForm;
+    bbProtocol: TdxBarButton;
+    PrintHeaderCDS: TClientDataSet;
+    actPrintFrom: TdsdPrintAction;
+    actPrintTo: TdsdPrintAction;
+    bbPrintFrom: TdxBarButton;
+    bbPrintTo: TdxBarButton;
+    actShowErased: TBooleanStoredProcAction;
+    bbShowErased: TdxBarButton;
+    dsdChoiceGuides: TdsdChoiceGuides;
+    bbChoice: TdxBarButton;
   private
   public
   end;
@@ -132,6 +120,6 @@ implementation
 {$R *.dfm}
 
 initialization
-  RegisterClass(TIncomeJournalForm);
+  RegisterClass(TTransportJournalChoiceForm);
 
 end.

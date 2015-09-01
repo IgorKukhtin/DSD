@@ -161,6 +161,11 @@ type
     edCurrencyValue: TcxCurrencyEdit;
     edParValue: TcxCurrencyEdit;
     isCheck_Pricelist: TcxGridDBColumn;
+    edInvNumberTransport: TcxButtonEdit;
+    cxLabel25: TcxLabel;
+    TransportChoiceGuides: TdsdGuides;
+    spInsertUpdateMovement_Params: TdsdStoredProc;
+    HeaderSaver2: THeaderSaver;
   private
     { Private declarations }
   public

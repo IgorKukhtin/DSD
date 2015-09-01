@@ -731,7 +731,8 @@ uses
   Report_TransportList in '..\..\Forms\Report\Report_TransportList.pas' {Report_TransportListForm: TParentForm},
   Report_TransportListDialog in '..\..\Forms\Report\Report_TransportListDialog.pas' {Report_TransportListDialogForm: TParentForm},
   Report_BankAccount_Cash in '..\..\Forms\Report\Report_BankAccount_Cash.pas' {Report_BankAccount_CashForm: TParentForm},
-  Report_BankAccount_CashDialog in '..\..\Forms\Report\Report_BankAccount_CashDialog.pas' {Report_BankAccount_CashDialogForm: TParentForm};
+  Report_BankAccount_CashDialog in '..\..\Forms\Report\Report_BankAccount_CashDialog.pas' {Report_BankAccount_CashDialogForm: TParentForm},
+  TransportJournalChoice in '..\..\Forms\Document\TransportJournalChoice.pas' {TransportJournalChoiceForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}

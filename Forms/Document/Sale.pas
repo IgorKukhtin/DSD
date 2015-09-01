@@ -184,6 +184,11 @@ type
     edParValue: TcxCurrencyEdit;
     Price_Pricelist: TcxGridDBColumn;
     actSPPrintSaleProcName: TdsdExecStoredProc;
+    spInsertUpdateMovement_Params: TdsdStoredProc;
+    cxLabel25: TcxLabel;
+    edInvNumberTransport: TcxButtonEdit;
+    TransportChoiceGuides: TdsdGuides;
+    HeaderSaver2: THeaderSaver;
   private
     { Private declarations }
   public

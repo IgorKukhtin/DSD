@@ -19,6 +19,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , ContractToId Integer, ContractToName TVarChar
              , ChangePercentTo TFloat
              , Comment TVarChar 
+             , MovementId_Transport Integer, InvNumber_Transport TVarChar
                )
 AS
 $BODY$
@@ -73,6 +74,9 @@ BEGIN
              , CAST (0 as TFloat)                   AS ChangePercentTo
              , CAST ('' as TVarChar) 		    AS Comment
 
+             , 0                                    AS MovementId_Transport
+             , '' :: TVarChar                       AS InvNumber_Transport 
+
           FROM lfGet_Object_Status(zc_Enum_Status_UnComplete()) AS Object_Status
               JOIN Object as ObjectCurrency on ObjectCurrency.descid= zc_Object_Currency()
                                             and ObjectCurrency.id = 14461;	             -- грн
@@ -118,6 +122,9 @@ BEGIN
 
              , MovementFloat_ChangePercentTo.ValueData  AS ChangePercentTo
              , MovementString_Comment.ValueData         AS Comment
+
+             , Movement_Transport.Id                     AS MovementId_Transport
+             , ('№ ' || Movement_Transport.InvNumber || ' от ' || Movement_Transport.OperDate  :: Date :: TVarChar ) :: TVarChar AS InvNumber_Transport
 
        FROM Movement
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
@@ -200,6 +207,11 @@ BEGIN
                                          ON MovementLinkObject_ContractTo.MovementId = Movement.Id
                                         AND MovementLinkObject_ContractTo.DescId = zc_MovementLinkObject_ContractTo()
             LEFT JOIN Object_Contract_InvNumber_View AS View_ContractTo_InvNumber ON View_ContractTo_InvNumber.ContractId = MovementLinkObject_ContractTo.ObjectId
+
+            LEFT JOIN MovementLinkMovement AS MovementLinkMovement_Transport
+                                           ON MovementLinkMovement_Transport.MovementId = Movement.Id
+                                          AND MovementLinkMovement_Transport.DescId = zc_MovementLinkMovement_Transport()
+            LEFT JOIN Movement AS Movement_Transport ON Movement_Transport.Id = MovementLinkMovement_Transport.MovementChildId
 
        WHERE Movement.Id =  inMovementId
          AND Movement.DescId = zc_Movement_Income();

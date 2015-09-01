@@ -2,7 +2,7 @@ object IncomeForm: TIncomeForm
   Left = 0
   Top = 0
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1055#1088#1080#1093#1086#1076' '#1086#1090' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072'>'
-  ClientHeight = 462
+  ClientHeight = 492
   ClientWidth = 956
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -275,12 +275,12 @@ object IncomeForm: TIncomeForm
       Width = 127
     end
     object cxLabel16: TcxLabel
-      Left = 271
+      Left = 451
       Top = 85
       Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
     end
     object ceComment: TcxTextEdit
-      Left = 271
+      Left = 451
       Top = 103
       TabOrder = 32
       Width = 530
@@ -290,24 +290,27 @@ object IncomeForm: TIncomeForm
     Left = 0
     Top = 166
     Width = 956
-    Height = 296
+    Height = 326
     Align = alClient
     TabOrder = 1
     Properties.ActivePage = cxTabSheetMain
     Properties.CustomButtons.Buttons = <>
-    ClientRectBottom = 296
+    ExplicitHeight = 296
+    ClientRectBottom = 326
     ClientRectRight = 956
     ClientRectTop = 24
     object cxTabSheetMain: TcxTabSheet
       Caption = #1057#1090#1088#1086#1095#1085#1072#1103' '#1095#1072#1089#1090#1100
       ImageIndex = 0
+      ExplicitHeight = 272
       object cxGrid: TcxGrid
         Left = 0
         Top = 0
         Width = 956
-        Height = 272
+        Height = 302
         Align = alClient
         TabOrder = 0
+        ExplicitHeight = 272
         object cxGridDBTableView: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = MasterDS
@@ -680,6 +683,23 @@ object IncomeForm: TIncomeForm
     State = cbsChecked
     TabOrder = 6
     Width = 220
+  end
+  object cxLabel25: TcxLabel
+    Left = 271
+    Top = 85
+    Caption = #1055#1091#1090#1077#1074#1086#1081' '#1083#1080#1089#1090
+  end
+  object edInvNumberTransport: TcxButtonEdit
+    Left = 271
+    Top = 103
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    Properties.ReadOnly = True
+    TabOrder = 8
+    Width = 173
   end
   object FormParams: TdsdFormParams
     Params = <
@@ -1607,8 +1627,8 @@ object IncomeForm: TIncomeForm
         ParamType = ptInput
       end>
     PackSize = 1
-    Left = 378
-    Top = 216
+    Left = 402
+    Top = 232
   end
   object HeaderSaver: THeaderSaver
     IdParam.Value = Null
@@ -1841,6 +1861,19 @@ object IncomeForm: TIncomeForm
         Name = 'Comment'
         Value = Null
         Component = ceComment
+        DataType = ftString
+      end
+      item
+        Name = 'MovementId_Transport'
+        Value = Null
+        Component = TransportChoiceGuides
+        ComponentItem = 'Key'
+      end
+      item
+        Name = 'InvNumber_Transport'
+        Value = Null
+        Component = TransportChoiceGuides
+        ComponentItem = 'TextValue'
         DataType = ftString
       end>
     PackSize = 1
@@ -2306,5 +2339,96 @@ object IncomeForm: TIncomeForm
     PackSize = 1
     Left = 150
     Top = 343
+  end
+  object TransportChoiceGuides: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edInvNumberTransport
+    Key = '0'
+    FormNameParam.Value = 'TTransportJournalChoiceForm'
+    FormNameParam.DataType = ftString
+    FormName = 'TTransportJournalChoiceForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = '0'
+        Component = TransportChoiceGuides
+        ComponentItem = 'Key'
+        DataType = ftString
+        ParamType = ptInput
+      end
+      item
+        Name = 'InvNumber_Full'
+        Value = ''
+        Component = TransportChoiceGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+      end
+      item
+        Name = 'PartnerId'
+        Value = ''
+        Component = GuidesFrom
+        ComponentItem = 'Key'
+      end
+      item
+        Name = 'PartnerName'
+        Value = ''
+        Component = GuidesFrom
+        ComponentItem = 'TextValue'
+        DataType = ftString
+      end>
+    Left = 340
+    Top = 88
+  end
+  object HeaderSaver2: THeaderSaver
+    IdParam.Value = Null
+    IdParam.Component = FormParams
+    IdParam.ComponentItem = 'Id'
+    StoredProc = spInsertUpdateMovement_Params
+    ControlList = <
+      item
+        Control = edInvNumberTransport
+      end>
+    GetStoredProc = spGet
+    Left = 328
+    Top = 201
+  end
+  object spInsertUpdateMovement_Params: TdsdStoredProc
+    StoredProcName = 'gpInsertUpdate_Movement_Income_Params'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'ioId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInputOutput
+      end
+      item
+        Name = 'inInvNumber'
+        Value = ''
+        Component = edInvNumber
+        DataType = ftString
+        ParamType = ptInput
+      end
+      item
+        Name = 'inOperDate'
+        Value = 42094d
+        Component = edOperDate
+        DataType = ftDateTime
+        ParamType = ptInput
+      end
+      item
+        Name = 'inMovementId_Transport'
+        Value = '0'
+        Component = TransportChoiceGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+      end>
+    PackSize = 1
+    Left = 153
+    Top = 400
   end
 end

@@ -22,6 +22,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , PersonalPackerName TVarChar
              , CurrencyDocumentName TVarChar, CurrencyPartnerName TVarChar
              , Comment TVarChar
+             , MovementId_Transport Integer, InvNumber_Transport TVarChar, OperDate_Transport TDateTime, InvNumber_Transport_Full TVarChar
               )
 AS
 $BODY$
@@ -91,6 +92,11 @@ BEGIN
            , Object_CurrencyDocument.ValueData AS CurrencyDocumentName
            , Object_CurrencyPartner.ValueData  AS CurrencyPartnerName
            , MovementString_Comment.ValueData  AS Comment
+
+           , Movement_Transport.Id                     AS MovementId_Transport
+           , Movement_Transport.InvNumber              AS InvNumber_Transport
+           , Movement_Transport.OperDate               AS OperDate_Transport
+           , ('π ' || Movement_Transport.InvNumber || ' ÓÚ ' || Movement_Transport.OperDate  :: Date :: TVarChar ) :: TVarChar  AS InvNumber_Transport_Full
 
        FROM (SELECT Movement.id
              FROM tmpStatus
@@ -197,6 +203,11 @@ BEGIN
                                       ON MovementBoolean_isIncome.MovementId =  Movement.Id
                                      AND MovementBoolean_isIncome.DescId = zc_MovementBoolean_isIncome()
                                      AND MovementBoolean_isIncome.ValueData  = False
+
+            LEFT JOIN MovementLinkMovement AS MovementLinkMovement_Transport
+                                           ON MovementLinkMovement_Transport.MovementId = Movement.Id
+                                          AND MovementLinkMovement_Transport.DescId = zc_MovementLinkMovement_Transport()
+            LEFT JOIN Movement AS Movement_Transport ON Movement_Transport.Id = MovementLinkMovement_Transport.MovementChildId
 
        WHERE MovementBoolean_isIncome.ValueData is NULL
          AND COALESCE (Object_To.DescId, 0) NOT IN (zc_Object_Car(), zc_Object_Member()) -- !!!—¿ÃŒ≈ Õ≈ –¿—»¬Œ≈ –≈ÿ≈Õ»≈!!!
