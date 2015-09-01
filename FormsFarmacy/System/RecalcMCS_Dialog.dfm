@@ -26,7 +26,7 @@ inherited RecalcMCS_DialogForm: TRecalcMCS_DialogForm
   object edPeriod: TcxCurrencyEdit [4]
     Left = 218
     Top = 12
-    EditValue = 1
+    EditValue = 30.000000000000000000
     Properties.DecimalPlaces = 0
     Properties.DisplayFormat = '0'
     Properties.MinValue = 1.000000000000000000
@@ -36,7 +36,7 @@ inherited RecalcMCS_DialogForm: TRecalcMCS_DialogForm
   object edDay: TcxCurrencyEdit [5]
     Left = 218
     Top = 39
-    EditValue = 1.000000000000000000
+    EditValue = 12.000000000000000000
     Properties.DecimalPlaces = 0
     Properties.DisplayFormat = '0'
     Properties.MinValue = 1.000000000000000000

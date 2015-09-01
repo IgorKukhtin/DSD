@@ -15,6 +15,8 @@ BEGIN
      -- проверка прав пользователя на вызов процедуры
 --     vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Complete_ReturnOut());
      vbUserId:= inSession;
+     -- Проверили перед проведением на достаточность наличия, НДС и пр.
+     PERFORM lpCheckComplete_Movement_ReturnOut (inMovementId);
      
       -- пересчитали Итоговые суммы
      PERFORM lpInsertUpdate_MovementFloat_TotalSumm (inMovementId);
