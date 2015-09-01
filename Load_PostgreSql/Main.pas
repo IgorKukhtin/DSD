@@ -2654,7 +2654,8 @@ begin
      fExecSqFromQuery(' update dba.GoodsProperty'
                      +'        left outer join dba.Goods on Goods.Id = GoodsProperty.GoodsId'
                      +'        left outer join dba._pgInfoMoney on _pgInfoMoney.ObjectCode'
-                     +' = case when GoodsProperty.Id in (5510) then 30201' // !!!РУЛЬКА ВАРЕНАЯ в пакете для запекания!!! - 30201	Доходы	Мясное сырье
+                     +' = case when GoodsProperty.Id in (5510) then 30101' // !!!РУЛЬКА ВАРЕНАЯ в пакете для запекания!!! - 30211	Доходы	Готовая продукция
+                     //+'        when GoodsProperty.Id in (5510) then 30201' // !!!РУЛЬКА ВАРЕНАЯ в пакете для запекания!!! - 30201	Доходы	Мясное сырье
                      +'        when Goods.Id in (1063) then 30101' // !!!колбаса в ассортименте!!! - 30101	Доходы	Продукция	Готовая продукция
                      +'        when Goods.Id in (3409) then 20201' // !!!Этикет- пистолет!!! - 20201	Общефирменные Прочие ТМЦ Инструменты/Инвентарь
                      +'        when Goods.Id in (538) then 10102' // !!!П/К!!! - 10102		Основное сырье Мясное сырье Свинина

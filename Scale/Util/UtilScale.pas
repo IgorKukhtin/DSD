@@ -515,16 +515,17 @@ begin
      then
      try Summ:=   StrToInt(BarCode[1])+StrToInt(BarCode[3])+StrToInt(BarCode[5])+StrToInt(BarCode[7])+StrToInt(BarCode[9])+StrToInt(BarCode[11])
               +3*(StrToInt(BarCode[2])+StrToInt(BarCode[4])+StrToInt(BarCode[6])+StrToInt(BarCode[8])+StrToInt(BarCode[10])+StrToInt(BarCode[12]));
-     except Summ:=0;end
-     else Summ:=0;
+     except Summ:=-1;end
+     else Summ:=-1;
      //
-     if Summ<>0 then
+     if Summ>0 then
      begin
           Summ:=Summ mod 10;
           if Summ<>0 then Summ:=10-Summ;
-     end;
+     end
+     else Summ:=-1;
      //
-     if Summ <> 0
+     if Summ <> -1
      then Result:=IntToStr(Summ)
      else Result:='';
 end;

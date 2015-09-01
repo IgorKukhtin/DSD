@@ -1253,6 +1253,7 @@ object MainForm: TMainForm
               Kind = bkEllipsis
             end>
           Properties.ReadOnly = False
+          Properties.OnButtonClick = EditBarCodeTransportPropertiesButtonClick
           Properties.OnChange = EditBarCodeTransportPropertiesChange
           Style.Font.Charset = RUSSIAN_CHARSET
           Style.Font.Color = clBlack

@@ -25,8 +25,8 @@ type
     bbChoice: TSpeedButton;
     spSelect: TdsdStoredProc;
     CDS: TClientDataSet;
-    gbInvNumber_parent: TGroupBox;
-    EditInvNumber_parent: TEdit;
+    gbInvNumber: TGroupBox;
+    EditInvNumber: TEdit;
     GroupBox1: TGroupBox;
     GroupBox2: TGroupBox;
     deStart: TcxDateEdit;
@@ -34,66 +34,35 @@ type
     cxDBGrid: TcxGrid;
     cxDBGridDBTableView: TcxGridDBTableView;
     Status: TcxGridDBColumn;
-    MovementDescName: TcxGridDBColumn;
     OperDate: TcxGridDBColumn;
-    WeighingNumber: TcxGridDBColumn;
+    CarModelName: TcxGridDBColumn;
     InvNumber: TcxGridDBColumn;
-    InvNumberOrder: TcxGridDBColumn;
-    InvNumberTransport: TcxGridDBColumn;
-    StartWeighing: TcxGridDBColumn;
-    EndWeighing: TcxGridDBColumn;
-    FromName: TcxGridDBColumn;
-    ToName: TcxGridDBColumn;
-    UserName: TcxGridDBColumn;
-    PaidKindName: TcxGridDBColumn;
-    TotalCount: TcxGridDBColumn;
-    TotalCountTare: TcxGridDBColumn;
-    TotalSumm: TcxGridDBColumn;
-    ChangePercent: TcxGridDBColumn;
-    ContractName: TcxGridDBColumn;
-    ContractTagName: TcxGridDBColumn;
-    InfoMoneyCode: TcxGridDBColumn;
-    InfoMoneyName: TcxGridDBColumn;
+    StartRunPlan: TcxGridDBColumn;
+    CarName: TcxGridDBColumn;
+    PersonalDriverName: TcxGridDBColumn;
+    RouteName: TcxGridDBColumn;
+    UnitForwardingName: TcxGridDBColumn;
     cxDBGridLevel: TcxGridLevel;
     DBViewAddOn: TdsdDBViewAddOn;
     ActionList: TActionList;
     actRefresh: TAction;
     actChoice: TAction;
     actExit: TAction;
-    PersonalName1: TcxGridDBColumn;
-    PersonalName2: TcxGridDBColumn;
-    PersonalName3: TcxGridDBColumn;
-    PersonalName4: TcxGridDBColumn;
-    PersonalCode1: TcxGridDBColumn;
-    PersonalCode2: TcxGridDBColumn;
-    PersonalCode3: TcxGridDBColumn;
-    PersonalCode4: TcxGridDBColumn;
-    PositionName1: TcxGridDBColumn;
-    PositionName2: TcxGridDBColumn;
-    PositionName3: TcxGridDBColumn;
-    PositionName4: TcxGridDBColumn;
-    InvNumber_parent: TcxGridDBColumn;
-    OperDate_parent: TcxGridDBColumn;
-    InvNumber_TransportGoods: TcxGridDBColumn;
-    OperDate_TransportGoods: TcxGridDBColumn;
     FormParams: TdsdFormParams;
-    InvNumberPartner_Tax: TcxGridDBColumn;
-    OperDate_Tax: TcxGridDBColumn;
-    MovementDescNumber: TcxGridDBColumn;
-    EdiOrdspr: TcxGridDBColumn;
-    EdiInvoice: TcxGridDBColumn;
-    EdiDesadv: TcxGridDBColumn;
+    IdBarCode: TcxGridDBColumn;
+    cbAll: TCheckBox;
     procedure FormCreate(Sender: TObject);
     procedure FormKeyDown(Sender: TObject; var Key: Word;
       Shift: TShiftState);
     procedure CDSFilterRecord(DataSet: TDataSet; var Accept: Boolean);
     procedure FormDestroy(Sender: TObject);
-    procedure EditInvNumber_parentChange(Sender: TObject);
+    procedure EditInvNumberChange(Sender: TObject);
     procedure actRefreshExecute(Sender: TObject);
     procedure actChoiceExecute(Sender: TObject);
     procedure actExitExecute(Sender: TObject);
     procedure deStartPropertiesChange(Sender: TObject);
     procedure deEndPropertiesChange(Sender: TObject);
+    procedure cbAllClick(Sender: TObject);
   private
     fStartWrite:Boolean;
 
@@ -123,7 +92,7 @@ begin
           if TRUE = DMMainScaleForm.gpGet_Scale_Movement(ParamsMovement_local,FALSE,TRUE)//isLast=FALSE,isNext=TRUE
           then begin CopyValuesParamsFrom(ParamsMovement_local,execParamsMovement);exit;end;}
 
-     EditInvNumber_parent.Text:='';
+     EditInvNumber.Text:='';
 
      fStartWrite:=true;
      deStart.Text:=DateToStr(ParamsMovement_local.ParamByName('OperDate').AsDateTime);
@@ -137,7 +106,7 @@ begin
      if ParamsMovement_local.ParamByName('TransportId').AsInteger<>0
      then CDS.Locate('Id',ParamsMovement_local.ParamByName('TransportId').AsString,[]);
 
-     ActiveControl:=EditInvNumber_parent;
+     ActiveControl:=EditInvNumber;
 
      Application.ProcessMessages;
      Application.ProcessMessages;
@@ -161,8 +130,17 @@ begin
           ParamByName('inStartDate').Value:=StartDate;
           ParamByName('inEndDate').Value:=EndDate;
           ParamByName('inBranchCode').Value:=SettingMain.BranchCode;
+          if cbAll.Checked
+          then ParamByName('inMovementId_order').Value:=0
+          else ParamByName('inMovementId_order').Value:=ParamsMovement_local.ParamByName('OrderExternalId').AsInteger;
+          ParamByName('inMovementDescId').Value:=ParamsMovement_local.ParamByName('MovementDescId').AsInteger;
           Execute;
      end;
+end;
+{------------------------------------------------------------------------------}
+procedure TGuideMovementTransportForm.cbAllClick(Sender: TObject);
+begin
+     RefreshDataSet;
 end;
 {------------------------------------------------------------------------------}
 procedure TGuideMovementTransportForm.CancelCxFilter;
@@ -173,9 +151,6 @@ end;
 {------------------------------------------------------------------------------}
 procedure TGuideMovementTransportForm.FormKeyDown(Sender: TObject; var Key: Word;Shift: TShiftState);
 begin
-     if Key = VK_F8 then bbSale_Order_allClick(Self);
-     if Key = VK_F9 then bbSale_Order_diffClick(Self);
-
     if Key=13
     then
         if ((ActiveControl=cxDBGrid)and(CDS.RecordCount>0))or(CDS.RecordCount=1)
@@ -189,9 +164,9 @@ end;
 {------------------------------------------------------------------------------}
 procedure TGuideMovementTransportForm.CDSFilterRecord(DataSet: TDataSet;var Accept: Boolean);
 begin
-     if (trim(EditInvNumber_parent.Text)<>'')
+     if (trim(EditInvNumber.Text)<>'')
      then
-       if (pos(AnsiUpperCase(EditInvNumber_parent.Text),AnsiUpperCase(DataSet.FieldByName('InvNumber_parent').AsString))>0)
+       if (pos(AnsiUpperCase(EditInvNumber.Text),AnsiUpperCase(DataSet.FieldByName('InvNumber').AsString))>0)
        then Accept:=true else Accept:=false;
 end;
 {------------------------------------------------------------------------------}
@@ -200,18 +175,18 @@ begin
      Result:=(CDS.RecordCount>0)and(CDS.FieldByName('Id').AsInteger>0);
      if Result then
      begin
-         ParamsMovement_local.ParamByName('TransportId').AsInteger:=CDS.FieldByName('Id').AsInteger;
+         ParamsMovement_local.ParamByName('Transport_BarCode').AsString:=CDS.FieldByName('IdBarCode').AsString+CalcBarCode(CDS.FieldByName('IdBarCode').AsString);
      end;
 end;
 
 {------------------------------------------------------------------------------}
-procedure TGuideMovementTransportForm.EditInvNumber_parentChange(Sender: TObject);
+procedure TGuideMovementTransportForm.EditInvNumberChange(Sender: TObject);
 begin
        with CDS do begin
            //***Filtered:=false;
            //***if trim(EditPartnerName.Text)<>'' then begin Filtered:=false;Filtered:=true;end;
            Filtered:=false;
-           if trim(EditInvNumber_parent.Text)<>'' then Filtered:=true;
+           if trim(EditInvNumber.Text)<>'' then Filtered:=true;
        end;
 end;
 {------------------------------------------------------------------------------}
@@ -264,6 +239,8 @@ begin
        Params.AddParam('inStartDate', ftDateTime, ptInput, 0);
        Params.AddParam('inEndDate', ftDateTime, ptInput,0);
        Params.AddParam('inBranchCode', ftInteger, ptInput,0);
+       Params.AddParam('inMovementId_order', ftInteger, ptInput,0);
+       Params.AddParam('inMovementDescId', ftInteger, ptInput,0);
        OutputType:=otDataSet;
   end;
 

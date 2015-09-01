@@ -224,10 +224,13 @@ type
     procedure bbSale_Order_diffClick(Sender: TObject);
     procedure EditBarCodeTransportPropertiesChange(Sender: TObject);
     procedure EditBarCodeTransportExit(Sender: TObject);
+    procedure EditBarCodeTransportPropertiesButtonClick(Sender: TObject;
+      AButtonIndex: Integer);
   private
     Scale_BI: TCasBI;
     Scale_DB: TCasDB;
     Scale_Zeus: TZeus;
+    err_count: Integer;
 
     function Save_Movement_all:Boolean;
     function Print_Movement_afterSave:Boolean;
@@ -251,8 +254,8 @@ var
 
 implementation
 {$R *.dfm}
-uses UnilWin,DMMainScale, UtilConst, DialogMovementDesc, GuideGoods,GuideGoodsMovement,UtilPrint
-    ,GuideMovement, DialogNumberValue,DialogStringValue,DialogPersonalComplete,DialogPrint;
+uses UnilWin,DMMainScale, UtilConst, DialogMovementDesc, GuideGoods,GuideGoodsMovement,GuideMovement,GuideMovementTransport
+    ,UtilPrint,DialogNumberValue,DialogStringValue,DialogPersonalComplete,DialogPrint;
 //------------------------------------------------------------------------------------------------
 //------------------------------------------------------------------------------------------------
 //------------------------------------------------------------------------------------------------
@@ -302,7 +305,9 @@ begin
      if (ParamsMovement.ParamByName('OrderExternalId').AsInteger > 0)
          and(ParamsMovement.ParamByName('isTransport_link').AsBoolean = TRUE)
          and(ParamsMovement.ParamByName('TransportId').AsInteger = 0)
+         and(err_count < 3)
      then begin
+         err_count:=err_count+1;
          ShowMessage('Ошибка.'+#10+#13+'Не определено значение <Штрих код Путевой лист.>.');
          ActiveControl:=EditBarCodeTransport;
          exit;
@@ -364,6 +369,7 @@ begin
           RefreshDataSet;
           WriteParamsMovement;
      end;
+     err_count:=0;
 end;
 //------------------------------------------------------------------------------------------------
 function TMainForm.Print_Movement_afterSave:Boolean;
@@ -453,6 +459,7 @@ end;
 function TMainForm.GetParams_MovementDesc(BarCode: String):Boolean;
 var MovementId_save:Integer;
 begin
+     err_count:=0;
      MovementId_save:=ParamsMovement.ParamByName('MovementId').AsInteger;
      //
      if ParamsMovement.ParamByName('MovementId').AsInteger=0
@@ -779,6 +786,7 @@ begin
                CDS.First;
           end;
      myActiveControl;
+     err_count:=0;
 end;
 {------------------------------------------------------------------------}
 procedure TMainForm.bbView_allClick(Sender: TObject);
@@ -937,6 +945,15 @@ begin
      WriteParamsMovement;
 end;
 //---------------------------------------------------------------------------------------------
+procedure TMainForm.EditBarCodeTransportPropertiesButtonClick(Sender: TObject;AButtonIndex: Integer);
+begin
+     if GuideMovementTransportForm.Execute(ParamsMovement,TRUE)//isChoice=TRUE
+     then begin
+               ActiveControl:=EditBarCodeTransport;
+               EditBarCodeTransport.Text:=ParamsMovement.ParamByName('Transport_BarCode').AsString;
+          end;
+end;
+//---------------------------------------------------------------------------------------------
 procedure TMainForm.EditPartionGoodsExit(Sender: TObject);
 begin
      //если партия с ошибкой
@@ -1002,6 +1019,7 @@ begin
        OutputType:=otDataSet;
        Params.AddParam('inMovementId', ftInteger, ptInput,0);
   end;
+  err_count:=0;
 end;
 //------------------------------------------------------------------------------------------------
 procedure TMainForm.WriteParamsMovement;

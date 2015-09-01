@@ -36,9 +36,9 @@ BEGIN
        WITH tmpMovement AS (SELECT tmpMovement.Id
                                  , tmpMovement.InvNumber
                                  , tmpMovement.OperDate
-                                 , COALESCE (MILinkObject_Route.ObjectId, MovementItem.ObjectId) AS RouteId
+                                 , COALESCE (MILinkObject_Route.ObjectId, CASE WHEN tmpMovement.DescId = zc_Movement_Transport() THEN MovementItem.ObjectId END) AS RouteId
                                  , COALESCE (MILinkObject_Car.ObjectId, MovementLinkObject_Car.ObjectId) AS CarId
-                                 , COALESCE (MovementLinkObject_PersonalDriver.ObjectId, CASE WHEN tmpMovement.DescId = zc_Movement_Transport() THEN MovementItem.ObjectId END) AS PersonalDriverId
+                                 , COALESCE (MovementLinkObject_PersonalDriver.ObjectId, CASE WHEN tmpMovement.DescId = zc_Movement_TransportService() THEN MovementItem.ObjectId END) AS PersonalDriverId
                             FROM (SELECT Movement.Id
                                        , Movement.DescId
                                        , Movement.InvNumber
@@ -47,7 +47,7 @@ BEGIN
                                        ) AS tmp
                                        INNER JOIN Movement ON Movement.Id = tmp.MovementId
                                                           AND Movement.DescId IN (zc_Movement_Transport(), zc_Movement_TransportService())
-                                                          AND Movement.OperDate BETWEEN inOperDate - INTERVAL '3 DAY' AND inOperDate + INTERVAL '3 DAY'
+                                                          AND Movement.OperDate BETWEEN inOperDate - INTERVAL '5 DAY' AND inOperDate + INTERVAL '5 DAY'
                                                           AND Movement.StatusId <> zc_Enum_Status_Erased()
                                  ) AS tmpMovement
                                            LEFT JOIN MovementLinkObject AS MovementLinkObject_Route
@@ -102,4 +102,6 @@ ALTER FUNCTION gpGet_Scale_Transport (TDateTime, Integer, TVarChar, Integer, TVa
 */
 
 -- тест
--- SELECT * FROM gpGet_Scale_Transport (inOperDate:= ('31.08.2015')::TDateTime, inBranchCode:= 1, inBarCode:= '202002197793', inMovementId_order:= 2214230, inSession := zfCalc_UserAdmin());
+
+-- SELECT * FROM gpGet_Scale_Transport (inOperDate:= ('31.08.2015')::TDateTime, inBranchCode:= 1, inBarCode:= '202002205973', inMovementId_order:= 2214230, inSession := zfCalc_UserAdmin());
+-- SELECT * FROM gpGet_Scale_Transport (inOperDate:= ('31.08.2015')::TDateTime, inBranchCode:= 1, inBarCode:= '2020021977936', inMovementId_order:= 2214230, inSession := zfCalc_UserAdmin());

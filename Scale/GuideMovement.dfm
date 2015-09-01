@@ -352,6 +352,7 @@ object GuideMovementForm: TGuideMovementForm
         object StartWeighing: TcxGridDBColumn
           Caption = #1053#1072#1095'. '#1074#1079#1074#1077#1096'.'
           DataBinding.FieldName = 'StartWeighing'
+          GroupSummaryAlignment = taCenter
           HeaderAlignmentHorz = taCenter
           HeaderAlignmentVert = vaCenter
           Options.Editing = False
@@ -360,9 +361,17 @@ object GuideMovementForm: TGuideMovementForm
         object EndWeighing: TcxGridDBColumn
           Caption = #1054#1082#1086#1085#1095'. '#1074#1079#1074#1077#1096'.'
           DataBinding.FieldName = 'EndWeighing'
+          GroupSummaryAlignment = taCenter
           HeaderAlignmentHorz = taCenter
           HeaderAlignmentVert = vaCenter
           Width = 80
+        end
+        object StartRunPlan: TcxGridDBColumn
+          Caption = #1044#1072#1090#1072'/'#1042#1088#1077#1084#1103' '#1074#1099#1077#1079#1076#1072' '#1087#1083#1072#1085
+          DataBinding.FieldName = 'StartRunPlan'
+          GroupSummaryAlignment = taCenter
+          HeaderAlignmentHorz = taCenter
+          Width = 100
         end
         object Status: TcxGridDBColumn
           Caption = #1057#1090#1072#1090#1091#1089
@@ -385,6 +394,7 @@ object GuideMovementForm: TGuideMovementForm
               ImageIndex = 13
               Value = 3
             end>
+          GroupSummaryAlignment = taCenter
           HeaderAlignmentHorz = taCenter
           HeaderAlignmentVert = vaCenter
           Options.Editing = False
@@ -393,6 +403,7 @@ object GuideMovementForm: TGuideMovementForm
         object MovementDescNumber: TcxGridDBColumn
           Caption = #8470' '#1086#1087#1077#1088'.'
           DataBinding.FieldName = 'MovementDescNumber'
+          GroupSummaryAlignment = taCenter
           HeaderAlignmentHorz = taCenter
           HeaderAlignmentVert = vaCenter
           Width = 45
@@ -400,6 +411,7 @@ object GuideMovementForm: TGuideMovementForm
         object MovementDescName: TcxGridDBColumn
           Caption = #1042#1080#1076' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
           DataBinding.FieldName = 'MovementDescName'
+          GroupSummaryAlignment = taCenter
           HeaderAlignmentHorz = taCenter
           HeaderAlignmentVert = vaCenter
           Options.Editing = False
@@ -409,6 +421,7 @@ object GuideMovementForm: TGuideMovementForm
           Caption = #1044#1072#1090#1072' '#1076#1086#1082'. ('#1075#1083#1072#1074#1085#1099#1081')'
           DataBinding.FieldName = 'OperDate_parent'
           Visible = False
+          GroupSummaryAlignment = taCenter
           HeaderAlignmentHorz = taCenter
           HeaderAlignmentVert = vaCenter
           Width = 70
@@ -416,6 +429,7 @@ object GuideMovementForm: TGuideMovementForm
         object OperDate: TcxGridDBColumn
           Caption = #1044#1072#1090#1072' '#1076#1086#1082'.'
           DataBinding.FieldName = 'OperDate'
+          GroupSummaryAlignment = taCenter
           HeaderAlignmentHorz = taCenter
           HeaderAlignmentVert = vaCenter
           Options.Editing = False
@@ -425,6 +439,7 @@ object GuideMovementForm: TGuideMovementForm
           Caption = #1044#1072#1090#1072' '#1076#1086#1082'. '#1058#1058#1053
           DataBinding.FieldName = 'OperDate_TransportGoods'
           Visible = False
+          GroupSummaryAlignment = taCenter
           HeaderAlignmentHorz = taCenter
           HeaderAlignmentVert = vaCenter
           Width = 70
@@ -432,6 +447,7 @@ object GuideMovementForm: TGuideMovementForm
         object InvNumber: TcxGridDBColumn
           Caption = #8470' '#1076#1086#1082'.'
           DataBinding.FieldName = 'InvNumber'
+          GroupSummaryAlignment = taCenter
           HeaderAlignmentHorz = taCenter
           HeaderAlignmentVert = vaCenter
           Options.Editing = False
@@ -440,6 +456,7 @@ object GuideMovementForm: TGuideMovementForm
         object InvNumber_parent: TcxGridDBColumn
           Caption = #8470' '#1076#1086#1082'. ('#1075#1083#1072#1074#1085#1099#1081')'
           DataBinding.FieldName = 'InvNumber_parent'
+          GroupSummaryAlignment = taCenter
           HeaderAlignmentHorz = taCenter
           HeaderAlignmentVert = vaCenter
           Width = 70
@@ -447,6 +464,7 @@ object GuideMovementForm: TGuideMovementForm
         object InvNumberOrder: TcxGridDBColumn
           Caption = #8470' '#1076#1086#1082'.  '#1086#1089#1085#1086#1074#1072#1085#1080#1077
           DataBinding.FieldName = 'InvNumberOrder'
+          GroupSummaryAlignment = taCenter
           HeaderAlignmentHorz = taCenter
           HeaderAlignmentVert = vaCenter
           Options.Editing = False
@@ -455,6 +473,7 @@ object GuideMovementForm: TGuideMovementForm
         object InvNumberPartner_Tax: TcxGridDBColumn
           Caption = #8470' '#1085#1072#1083#1086#1075'.'
           DataBinding.FieldName = 'InvNumberPartner_Tax'
+          GroupSummaryAlignment = taCenter
           HeaderAlignmentHorz = taCenter
           HeaderAlignmentVert = vaCenter
           Width = 55
@@ -463,22 +482,32 @@ object GuideMovementForm: TGuideMovementForm
           Caption = #1044#1072#1090#1072' '#1085#1072#1083#1086#1075'.'
           DataBinding.FieldName = 'OperDate_Tax'
           Visible = False
+          GroupSummaryAlignment = taCenter
           HeaderAlignmentHorz = taCenter
           HeaderAlignmentVert = vaCenter
           Width = 60
         end
-        object InvNumberTransport: TcxGridDBColumn
+        object InvNumber_Transport: TcxGridDBColumn
           Caption = #8470' '#1076#1086#1082'. '#1087#1091#1090#1077#1074#1086#1081' '#1083'.'
-          DataBinding.FieldName = 'InvNumberTransport'
-          Visible = False
+          DataBinding.FieldName = 'InvNumber_Transport'
+          GroupSummaryAlignment = taCenter
           HeaderAlignmentHorz = taCenter
           HeaderAlignmentVert = vaCenter
-          Options.Editing = False
-          Width = 65
+          Width = 70
+        end
+        object OperDate_Transport: TcxGridDBColumn
+          Caption = #1044#1072#1090#1072' '#1076#1086#1082'. '#1087#1091#1090#1077#1074#1086#1081' '#1083'.'
+          DataBinding.FieldName = 'OperDate_Transport'
+          Visible = False
+          GroupSummaryAlignment = taCenter
+          HeaderAlignmentHorz = taCenter
+          HeaderAlignmentVert = vaCenter
+          Width = 70
         end
         object InvNumber_TransportGoods: TcxGridDBColumn
           Caption = #8470' '#1076#1086#1082'. '#1058#1058#1053
           DataBinding.FieldName = 'InvNumber_TransportGoods'
+          GroupSummaryAlignment = taCenter
           HeaderAlignmentHorz = taCenter
           HeaderAlignmentVert = vaCenter
           Width = 60
@@ -486,6 +515,7 @@ object GuideMovementForm: TGuideMovementForm
         object WeighingNumber: TcxGridDBColumn
           Caption = #8470' '#1074#1079#1074#1077#1096'.'
           DataBinding.FieldName = 'WeighingNumber'
+          GroupSummaryAlignment = taCenter
           HeaderAlignmentHorz = taCenter
           HeaderAlignmentVert = vaCenter
           Width = 50
@@ -493,6 +523,7 @@ object GuideMovementForm: TGuideMovementForm
         object FromName: TcxGridDBColumn
           Caption = #1054#1090' '#1082#1086#1075#1086
           DataBinding.FieldName = 'FromName'
+          GroupSummaryAlignment = taCenter
           HeaderAlignmentHorz = taCenter
           HeaderAlignmentVert = vaCenter
           Options.Editing = False
@@ -501,6 +532,7 @@ object GuideMovementForm: TGuideMovementForm
         object ToName: TcxGridDBColumn
           Caption = #1050#1086#1084#1091
           DataBinding.FieldName = 'ToName'
+          GroupSummaryAlignment = taCenter
           HeaderAlignmentHorz = taCenter
           HeaderAlignmentVert = vaCenter
           Options.Editing = False
@@ -510,6 +542,7 @@ object GuideMovementForm: TGuideMovementForm
           Caption = #1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1100
           DataBinding.FieldName = 'UserName'
           Visible = False
+          GroupSummaryAlignment = taCenter
           HeaderAlignmentHorz = taCenter
           HeaderAlignmentVert = vaCenter
           Options.Editing = False
@@ -518,6 +551,7 @@ object GuideMovementForm: TGuideMovementForm
         object PaidKindName: TcxGridDBColumn
           Caption = #1060#1086#1088#1084#1072' '#1086#1087#1083#1072#1090#1099
           DataBinding.FieldName = 'PaidKindName'
+          GroupSummaryAlignment = taCenter
           HeaderAlignmentHorz = taCenter
           HeaderAlignmentVert = vaCenter
           Width = 50
@@ -528,6 +562,7 @@ object GuideMovementForm: TGuideMovementForm
           PropertiesClassName = 'TcxCurrencyEditProperties'
           Properties.DecimalPlaces = 4
           Properties.DisplayFormat = ',0.####;-,0.####; ;'
+          GroupSummaryAlignment = taCenter
           HeaderAlignmentHorz = taCenter
           HeaderAlignmentVert = vaCenter
           Width = 60
@@ -539,6 +574,7 @@ object GuideMovementForm: TGuideMovementForm
           Properties.DecimalPlaces = 4
           Properties.DisplayFormat = ',0.####;-,0.####; ;'
           Visible = False
+          GroupSummaryAlignment = taCenter
           HeaderAlignmentHorz = taCenter
           HeaderAlignmentVert = vaCenter
           Width = 60
@@ -549,6 +585,7 @@ object GuideMovementForm: TGuideMovementForm
           PropertiesClassName = 'TcxCurrencyEditProperties'
           Properties.DecimalPlaces = 4
           Properties.DisplayFormat = ',0.####;-,0.####; ;'
+          GroupSummaryAlignment = taCenter
           HeaderAlignmentHorz = taCenter
           HeaderAlignmentVert = vaCenter
           Width = 80
@@ -557,6 +594,7 @@ object GuideMovementForm: TGuideMovementForm
           Caption = '(-)% '#1089#1082'. (+)% '#1085#1072#1094
           DataBinding.FieldName = 'ChangePercent'
           Visible = False
+          GroupSummaryAlignment = taCenter
           HeaderAlignmentHorz = taCenter
           HeaderAlignmentVert = vaCenter
           Width = 52
@@ -565,6 +603,7 @@ object GuideMovementForm: TGuideMovementForm
           Caption = #8470' '#1076#1086#1075'.'
           DataBinding.FieldName = 'ContractName'
           Visible = False
+          GroupSummaryAlignment = taCenter
           HeaderAlignmentHorz = taCenter
           HeaderAlignmentVert = vaCenter
           Width = 55
@@ -573,15 +612,41 @@ object GuideMovementForm: TGuideMovementForm
           Caption = #1055#1088#1080#1079#1085#1072#1082' '#1076#1086#1075'.'
           DataBinding.FieldName = 'ContractTagName'
           Visible = False
+          GroupSummaryAlignment = taCenter
           HeaderAlignmentHorz = taCenter
           HeaderAlignmentVert = vaCenter
           Options.Editing = False
           Width = 55
         end
+        object RouteName: TcxGridDBColumn
+          Caption = #1052#1072#1088#1096#1088#1091#1090
+          DataBinding.FieldName = 'RouteName'
+          GroupSummaryAlignment = taCenter
+          HeaderAlignmentHorz = taCenter
+          HeaderAlignmentVert = vaCenter
+          Width = 70
+        end
+        object CarName: TcxGridDBColumn
+          Caption = #1040#1090#1086#1084#1086#1073#1080#1083#1100
+          DataBinding.FieldName = 'CarName'
+          GroupSummaryAlignment = taCenter
+          HeaderAlignmentHorz = taCenter
+          HeaderAlignmentVert = vaCenter
+          Width = 70
+        end
+        object PersonalDriverName: TcxGridDBColumn
+          Caption = #1042#1086#1076#1080#1090#1077#1083#1100
+          DataBinding.FieldName = 'PersonalDriverName'
+          GroupSummaryAlignment = taCenter
+          HeaderAlignmentHorz = taCenter
+          HeaderAlignmentVert = vaCenter
+          Width = 70
+        end
         object InfoMoneyCode: TcxGridDBColumn
           Caption = #1050#1086#1076' '#1059#1055
           DataBinding.FieldName = 'InfoMoneyCode'
           Visible = False
+          GroupSummaryAlignment = taCenter
           HeaderAlignmentHorz = taCenter
           HeaderAlignmentVert = vaCenter
           Width = 50
@@ -590,6 +655,7 @@ object GuideMovementForm: TGuideMovementForm
           Caption = #1059#1055' '#1089#1090#1072#1090#1100#1103' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
           DataBinding.FieldName = 'InfoMoneyName'
           Visible = False
+          GroupSummaryAlignment = taCenter
           HeaderAlignmentHorz = taCenter
           HeaderAlignmentVert = vaCenter
           Width = 80
@@ -598,6 +664,7 @@ object GuideMovementForm: TGuideMovementForm
           Caption = #1050#1086#1076'1 '#1089#1086#1090#1088'. '#1082#1086#1084#1087#1083'.'
           DataBinding.FieldName = 'PersonalCode1'
           Visible = False
+          GroupSummaryAlignment = taCenter
           HeaderAlignmentHorz = taCenter
           HeaderAlignmentVert = vaCenter
           Width = 55
@@ -605,6 +672,7 @@ object GuideMovementForm: TGuideMovementForm
         object PersonalName1: TcxGridDBColumn
           Caption = #1050#1086#1084#1087#1083#1077#1082#1090#1086#1074#1097#1080#1082' 1'
           DataBinding.FieldName = 'PersonalName1'
+          GroupSummaryAlignment = taCenter
           HeaderAlignmentHorz = taCenter
           HeaderAlignmentVert = vaCenter
           Width = 120
@@ -613,6 +681,7 @@ object GuideMovementForm: TGuideMovementForm
           Caption = #1050#1086#1076'2 '#1089#1086#1090#1088'. '#1082#1086#1084#1087#1083'.'
           DataBinding.FieldName = 'PersonalCode2'
           Visible = False
+          GroupSummaryAlignment = taCenter
           HeaderAlignmentHorz = taCenter
           HeaderAlignmentVert = vaCenter
           Width = 55
@@ -620,6 +689,7 @@ object GuideMovementForm: TGuideMovementForm
         object PersonalName2: TcxGridDBColumn
           Caption = #1050#1086#1084#1087#1083#1077#1082#1090#1086#1074#1097#1080#1082' 2'
           DataBinding.FieldName = 'PersonalName2'
+          GroupSummaryAlignment = taCenter
           HeaderAlignmentHorz = taCenter
           HeaderAlignmentVert = vaCenter
           Width = 120
@@ -628,6 +698,7 @@ object GuideMovementForm: TGuideMovementForm
           Caption = #1050#1086#1076'3 '#1089#1086#1090#1088'. '#1082#1086#1084#1087#1083'.'
           DataBinding.FieldName = 'PersonalCode3'
           Visible = False
+          GroupSummaryAlignment = taCenter
           HeaderAlignmentHorz = taCenter
           HeaderAlignmentVert = vaCenter
           Width = 55
@@ -635,6 +706,7 @@ object GuideMovementForm: TGuideMovementForm
         object PersonalName3: TcxGridDBColumn
           Caption = #1050#1086#1084#1087#1083#1077#1082#1090#1086#1074#1097#1080#1082' 3'
           DataBinding.FieldName = 'PersonalName3'
+          GroupSummaryAlignment = taCenter
           HeaderAlignmentHorz = taCenter
           HeaderAlignmentVert = vaCenter
           Width = 120
@@ -643,6 +715,7 @@ object GuideMovementForm: TGuideMovementForm
           Caption = #1050#1086#1076'4 '#1089#1086#1090#1088'. '#1082#1086#1084#1087#1083'.'
           DataBinding.FieldName = 'PersonalCode4'
           Visible = False
+          GroupSummaryAlignment = taCenter
           HeaderAlignmentHorz = taCenter
           HeaderAlignmentVert = vaCenter
           Width = 55
@@ -650,6 +723,7 @@ object GuideMovementForm: TGuideMovementForm
         object PersonalName4: TcxGridDBColumn
           Caption = #1050#1086#1084#1087#1083#1077#1082#1090#1086#1074#1097#1080#1082' 4'
           DataBinding.FieldName = 'PersonalName4'
+          GroupSummaryAlignment = taCenter
           HeaderAlignmentHorz = taCenter
           HeaderAlignmentVert = vaCenter
           Width = 120
@@ -658,6 +732,7 @@ object GuideMovementForm: TGuideMovementForm
           Caption = #1044#1086#1083#1078#1085#1086#1089#1090#1100' '#1082#1086#1084#1087#1083'.1'
           DataBinding.FieldName = 'PositionName1'
           Visible = False
+          GroupSummaryAlignment = taCenter
           HeaderAlignmentHorz = taCenter
           HeaderAlignmentVert = vaCenter
           Width = 70
@@ -666,6 +741,7 @@ object GuideMovementForm: TGuideMovementForm
           Caption = #1044#1086#1083#1078#1085#1086#1089#1090#1100' '#1082#1086#1084#1087#1083'.2'
           DataBinding.FieldName = 'PositionName2'
           Visible = False
+          GroupSummaryAlignment = taCenter
           HeaderAlignmentHorz = taCenter
           HeaderAlignmentVert = vaCenter
           Width = 70
@@ -674,6 +750,7 @@ object GuideMovementForm: TGuideMovementForm
           Caption = #1044#1086#1083#1078#1085#1086#1089#1090#1100' '#1082#1086#1084#1087#1083'.3'
           DataBinding.FieldName = 'PositionName3'
           Visible = False
+          GroupSummaryAlignment = taCenter
           HeaderAlignmentHorz = taCenter
           HeaderAlignmentVert = vaCenter
           Width = 70
@@ -682,6 +759,7 @@ object GuideMovementForm: TGuideMovementForm
           Caption = #1044#1086#1083#1078#1085#1086#1089#1090#1100' '#1082#1086#1084#1087#1083'.4'
           DataBinding.FieldName = 'PositionName4'
           Visible = False
+          GroupSummaryAlignment = taCenter
           HeaderAlignmentHorz = taCenter
           HeaderAlignmentVert = vaCenter
           Width = 70
@@ -689,6 +767,7 @@ object GuideMovementForm: TGuideMovementForm
         object EdiInvoice: TcxGridDBColumn
           Caption = #1057#1095#1077#1090' Edi Invoice'
           DataBinding.FieldName = 'EdiInvoice'
+          GroupSummaryAlignment = taCenter
           HeaderAlignmentHorz = taCenter
           HeaderAlignmentVert = vaCenter
           Width = 70
@@ -696,6 +775,7 @@ object GuideMovementForm: TGuideMovementForm
         object EdiOrdspr: TcxGridDBColumn
           Caption = #1055#1086#1076#1090#1074'. Edi Ordspr'
           DataBinding.FieldName = 'EdiOrdspr'
+          GroupSummaryAlignment = taCenter
           HeaderAlignmentHorz = taCenter
           HeaderAlignmentVert = vaCenter
           Width = 70
@@ -703,6 +783,7 @@ object GuideMovementForm: TGuideMovementForm
         object EdiDesadv: TcxGridDBColumn
           Caption = #1059#1074#1077#1076'. Edi Desadv'
           DataBinding.FieldName = 'EdiDesadv'
+          GroupSummaryAlignment = taCenter
           HeaderAlignmentHorz = taCenter
           HeaderAlignmentVert = vaCenter
           Width = 70
@@ -886,7 +967,7 @@ object GuideMovementForm: TGuideMovementForm
     end
     object cbPrintPreview: TCheckBox
       Left = 433
-      Top = 3
+      Top = 0
       Width = 128
       Height = 17
       Caption = #1055#1088#1086#1089#1084#1086#1090#1088' '#1087#1077#1095#1072#1090#1080

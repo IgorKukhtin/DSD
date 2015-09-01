@@ -39,15 +39,15 @@ BEGIN
                              LEFT JOIN MovementLinkObject AS MovementLinkObject_PersonalDriver
                                                           ON MovementLinkObject_PersonalDriver.MovementId = Movement.Id
                                                          AND MovementLinkObject_PersonalDriver.DescId = zc_MovementLinkObject_PersonalDriver()
+                             LEFT JOIN MovementLinkObject AS MovementLinkObject_Car
+                                                          ON MovementLinkObject_Car.MovementId = Movement.Id
+                                                         AND MovementLinkObject_Car.DescId = zc_MovementLinkObject_Car()
                              LEFT JOIN MovementString AS MovementString_Comment
                                                       ON MovementString_Comment.MovementId =  Movement.Id
                                                      AND MovementString_Comment.DescId = zc_MovementString_Comment()
-                             LEFT JOIN MovementLinkObject AS MovementLinkObject_Car
-                                         ON MovementLinkObject_Car.MovementId = Movement.Id
-                                        AND MovementLinkObject_Car.DescId = zc_MovementLinkObject_Car()
-                             JOIN MovementItem ON MovementItem.MovementId = Movement.Id
-                                              AND MovementItem.DescId     = zc_MI_Master()
-                                              AND MovementItem.isErased = False
+                             LEFT JOIN MovementItem ON MovementItem.MovementId = Movement.Id
+                                                   AND MovementItem.DescId     = zc_MI_Master()
+                                                   AND MovementItem.isErased = FALSE
                            WHERE Movement.DescId = zc_Movement_Transport()
                            AND Movement.OperDate BETWEEN inStartDate AND inEndDate
                            AND Movement.StatusId IN (zc_Enum_Status_Complete(), zc_Enum_Status_UnComplete())
@@ -62,7 +62,7 @@ BEGIN
                              FROM Movement
                                  LEFT JOIN MovementItem ON MovementItem.MovementId = Movement.Id
                                                        AND MovementItem.DescId     = zc_MI_Master()
-                                                       AND MovementItem.isErased = False
+                                                       AND MovementItem.isErased = FALSE
                                  LEFT JOIN MovementItemString AS MIString_Comment
                                          ON MIString_Comment.MovementItemId = MovementItem.Id 
                                         AND MIString_Comment.DescId = zc_MIString_Comment()

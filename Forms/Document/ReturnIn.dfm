@@ -861,9 +861,10 @@ inherited ReturnInForm: TReturnInForm
       TabOrder = 35
       Width = 199
     end
-    object cbisPartner: TcxCheckBox
+    object cbPartner: TcxCheckBox
       Left = 212
       Top = 103
+      Hint = #1040#1082#1090' '#1085#1077#1076#1086#1074#1086#1079#1072
       Caption = #1040#1082#1090' '#1085#1077#1076#1086#1074#1086#1079#1072
       Properties.ReadOnly = False
       TabOrder = 36
@@ -2116,7 +2117,7 @@ inherited ReturnInForm: TReturnInForm
       item
         Name = 'isPartner'
         Value = Null
-        Component = cbisPartner
+        Component = cbPartner
         DataType = ftBoolean
       end>
     Left = 224
@@ -2184,7 +2185,7 @@ inherited ReturnInForm: TReturnInForm
       item
         Name = 'inisPartner'
         Value = Null
-        Component = cbisPartner
+        Component = cbPartner
         DataType = ftBoolean
         ParamType = ptInput
       end
@@ -2327,6 +2328,9 @@ inherited ReturnInForm: TReturnInForm
       end
       item
         Control = edCurrencyValue
+      end
+      item
+        Control = cbPartner
       end
       item
         Control = edInvNumberParent

@@ -146,7 +146,7 @@ type
     actGoodsChoice: TOpenChoiceForm;
     actOpenTaxCorrective: TdsdOpenForm;
     bbOpenTaxCorrective: TdxBarButton;
-    cbisPartner: TcxCheckBox;
+    cbPartner: TcxCheckBox;
     spUpdate_MI_ReturnIn_Price: TdsdStoredProc;
     actUpdatePrice: TdsdExecStoredProc;
     bbUpdatePrice: TdxBarButton;

@@ -39,7 +39,6 @@ type
     WeighingNumber: TcxGridDBColumn;
     InvNumber: TcxGridDBColumn;
     InvNumberOrder: TcxGridDBColumn;
-    InvNumberTransport: TcxGridDBColumn;
     StartWeighing: TcxGridDBColumn;
     EndWeighing: TcxGridDBColumn;
     FromName: TcxGridDBColumn;
@@ -100,6 +99,12 @@ type
     EdiDesadv: TcxGridDBColumn;
     bbSale_Order_all: TSpeedButton;
     bbSale_Order_diff: TSpeedButton;
+    InvNumber_Transport: TcxGridDBColumn;
+    OperDate_Transport: TcxGridDBColumn;
+    CarName: TcxGridDBColumn;
+    RouteName: TcxGridDBColumn;
+    PersonalDriverName: TcxGridDBColumn;
+    StartRunPlan: TcxGridDBColumn;
     procedure FormCreate(Sender: TObject);
     procedure FormKeyDown(Sender: TObject; var Key: Word;
       Shift: TShiftState);

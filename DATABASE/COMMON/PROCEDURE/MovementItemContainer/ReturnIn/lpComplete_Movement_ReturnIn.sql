@@ -590,7 +590,7 @@ BEGIN
 
      -- !!! только НЕ для Админа проверка что ParentId заполнен!!!
      IF inUserId NOT IN (zc_Enum_Process_Auto_PrimeCost()) AND vbMovementId_parent = 0 AND NOT EXISTS (SELECT OperCount FROM _tmpItem WHERE OperCount <> 0 LIMIT 1)
-        AND NOT EXISTS (SELECT OperCount FROM MovementBoolean WHERE MovementBoolean.MovementId = inMovementId AND MovementBoolean.ValueData = TRUE AND MovementBoolean.DescId = zc_MovementBoolean_isPartner())
+        AND NOT EXISTS (SELECT MovementBoolean.MovementId FROM MovementBoolean WHERE MovementBoolean.MovementId = inMovementId AND MovementBoolean.ValueData = TRUE AND MovementBoolean.DescId = zc_MovementBoolean_isPartner())
      THEN
          RAISE EXCEPTION 'Ошибка.%В документе не установлено значение <Основание № (возврат проведен кладовщиком)>.%Проведение невозможно.', CHR(13), CHR(13);
      END IF;
