@@ -74,7 +74,9 @@ BEGIN
         GROUP BY 
             container.objectid
            ,RESERVE.Amount
-           ,CurrentMovement.Amount;
+           ,CurrentMovement.Amount
+        Order By
+            container.objectid;
 END;
 $BODY$
   LANGUAGE PLPGSQL VOLATILE;
