@@ -12,9 +12,9 @@ $BODY$
   DECLARE vbUserId Integer;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
-     vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Complete_Inventory());
+     vbUserId:= inSession; -- lpCheckRight (inSession, zc_Enum_Process_Complete_Inventory());
 
-     IF vbUserId = lpCheckRight(inSession, zc_Enum_Process_UnComplete_Inventory())
+     IF vbUserId = vbUserId -- lpCheckRight(inSession, zc_Enum_Process_UnComplete_Inventory())
      THEN
          -- Распроводим Документ
          PERFORM lpUnComplete_Movement (inMovementId := inMovementId
