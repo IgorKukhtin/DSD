@@ -33,6 +33,7 @@ RETURNS TABLE (Id Integer, InvNumber Integer, OperDate TDateTime, StatusCode Int
              , CountSkewer2 TFloat, WeightSkewer2 TFloat,  WeightOther TFloat
              , PartionGoodsDate TDateTime, PartionGoodsMI TVarChar
              , GoodsKindName TVarChar
+             , isErased Boolean
               )
 AS
 $BODY$
@@ -55,7 +56,7 @@ BEGIN
               SELECT inGoodsId;
          ELSE
              INSERT INTO _tmpGoods (GoodsId)
-              SELECT Object.Id FROM Object WHERE Object.DescId = zc_Object_Goods()
+              SELECT Object.Id FROM Object WHERE Object.DescId = zc_Object_Goods() AND (inStartDate + INTERVAL '3 DAY') >= inEndDate
             ;
          END IF;
     END IF;
@@ -137,6 +138,7 @@ BEGIN
 
            , Object_GoodsKind.ValueData AS GoodsKindName
 
+           , MovementItem.isErased
 
        FROM tmpStatus
             JOIN Movement ON Movement.DescId = zc_Movement_WeighingProduction()
@@ -195,7 +197,7 @@ BEGIN
 
             LEFT JOIN MovementItem ON MovementItem.MovementId = Movement.Id
                              AND MovementItem.DescId     = zc_MI_Master()
-                             AND MovementItem.isErased   = False
+                             -- AND MovementItem.isErased   = FALSE
             INNER JOIN _tmpGoods ON _tmpGoods.GoodsId = MovementItem.ObjectId
             LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = _tmpGoods.GoodsId
 
@@ -292,4 +294,4 @@ ALTER FUNCTION gpSelect_Movement_WeighingProduction_Item (TDateTime, TDateTime, 
 */
 
 -- тест
--- SELECT * FROM gpSelect_Movement_WeighingProduction_Item (inStartDate:= '01.05.2015', inEndDate:= '01.05.2015', inIsErased:= FALSE, inSession:= zfCalc_UserAdmin())
+-- SELECT * FROM gpSelect_Movement_WeighingProduction_Item (inStartDate:= '01.05.2015', inEndDate:= '01.05.2015', inGoodsGroupId:= 0, inGoodsId:= 0, inIsErased:= FALSE, inSession:= zfCalc_UserAdmin())

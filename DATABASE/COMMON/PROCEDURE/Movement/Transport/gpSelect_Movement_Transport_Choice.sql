@@ -163,4 +163,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpSelect_Movement_Transport_Choice (inStartDate:= '30.01.2013', inEndDate:= '01.02.2013', inSession:= zfCalc_UserAdmin())
+-- SELECT * FROM gpSelect_Movement_Transport_Choice (inStartDate:= '01.09.2015', inEndDate:= '01.09.2015', inIsErased:= FALSE, inSession:= zfCalc_UserAdmin())

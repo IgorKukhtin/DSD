@@ -3,7 +3,7 @@ inherited Sale_PartnerForm: TSale_PartnerForm
   ClientHeight = 668
   ClientWidth = 1355
   ExplicitWidth = 1371
-  ExplicitHeight = 706
+  ExplicitHeight = 703
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -316,7 +316,6 @@ inherited Sale_PartnerForm: TSale_PartnerForm
     Width = 1355
     Height = 140
     TabOrder = 3
-    ExplicitLeft = -56
     ExplicitWidth = 1355
     ExplicitHeight = 140
     inherited edInvNumber: TcxTextEdit
@@ -3544,29 +3543,15 @@ inherited Sale_PartnerForm: TSale_PartnerForm
     Top = 88
   end
   object spInsertUpdateMovement_Params: TdsdStoredProc
-    StoredProcName = 'gpInsertUpdate_Movement_Sale_Params'
+    StoredProcName = 'gpUpdate_Movement_Sale_Transport'
     DataSets = <>
     OutputType = otResult
     Params = <
       item
-        Name = 'ioId'
+        Name = 'inId'
         Value = Null
         Component = FormParams
         ComponentItem = 'Id'
-        ParamType = ptInputOutput
-      end
-      item
-        Name = 'inInvNumber'
-        Value = ''
-        Component = edInvNumber
-        DataType = ftString
-        ParamType = ptInput
-      end
-      item
-        Name = 'inOperDate'
-        Value = 42132d
-        Component = edOperDate
-        DataType = ftDateTime
         ParamType = ptInput
       end
       item

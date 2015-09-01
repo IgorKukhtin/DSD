@@ -670,6 +670,13 @@ object WeighingPartnerItemJournalForm: TWeighingPartnerItemJournalForm
         Options.Editing = False
         Width = 46
       end
+      object Price: TcxGridDBColumn
+        Caption = #1062#1077#1085#1072
+        DataBinding.FieldName = 'Price'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 60
+      end
       object colIsErased: TcxGridDBColumn
         Caption = #1059#1076#1072#1083#1077#1085' ('#1076#1072'/'#1085#1077#1090')'
         DataBinding.FieldName = 'isErased'
@@ -678,13 +685,6 @@ object WeighingPartnerItemJournalForm: TWeighingPartnerItemJournalForm
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
         Width = 70
-      end
-      object Price: TcxGridDBColumn
-        Caption = #1062#1077#1085#1072
-        DataBinding.FieldName = 'Price'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Width = 60
       end
     end
     object cxGridLevel: TcxGridLevel
@@ -700,7 +700,7 @@ object WeighingPartnerItemJournalForm: TWeighingPartnerItemJournalForm
         Kind = bkEllipsis
       end>
     Properties.ReadOnly = True
-    TabOrder = 6
+    TabOrder = 5
     Width = 200
   end
   object cxLabel3: TcxLabel

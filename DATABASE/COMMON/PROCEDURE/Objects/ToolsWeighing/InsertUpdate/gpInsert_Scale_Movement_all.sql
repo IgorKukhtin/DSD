@@ -413,6 +413,13 @@ BEGIN
 
         -- дописали св-во <Дата/время создания>
         PERFORM lpInsertUpdate_MovementDate (zc_MovementDate_Insert(), vbMovementId_begin, CURRENT_TIMESTAMP);
+        -- дописали св-во <Путевой лист>
+        PERFORM lpInsertUpdate_MovementLinkMovement (zc_MovementLinkMovement_Transport(), vbMovementId_begin, MovementLinkMovement.MovementChildId)
+        FROM MovementLinkMovement
+        WHERE MovementLinkMovement.MovementChildId > 0
+          AND MovementLinkMovement.MovementId = inMovementId
+          AND MovementLinkMovement.DescId = zc_MovementLinkMovement_Transport()
+       ;
 
 
         -- !!!Налоговая!!!

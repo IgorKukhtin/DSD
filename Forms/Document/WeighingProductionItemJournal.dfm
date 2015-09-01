@@ -554,7 +554,7 @@ object WeighingProductionItemJournalForm: TWeighingProductionItemJournalForm
         Kind = bkEllipsis
       end>
     Properties.ReadOnly = True
-    TabOrder = 7
+    TabOrder = 6
     Width = 200
   end
   object cxLabel4: TcxLabel
@@ -688,6 +688,12 @@ object WeighingProductionItemJournalForm: TWeighingProductionItemJournalForm
           'Touch'
           'Visible'
           'Width')
+      end
+      item
+        Component = GuidesGoods
+        Properties.Strings = (
+          'Key'
+          'TextValue')
       end
       item
         Component = Owner

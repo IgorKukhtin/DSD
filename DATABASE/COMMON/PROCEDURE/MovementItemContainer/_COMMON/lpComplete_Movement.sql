@@ -146,6 +146,32 @@ BEGIN
       END IF;
   ELSE
 
+  -- !!!временно если БН начисления маркетинг!!!
+  IF EXISTS (SELECT 1 FROM ObjectLink_UserRole_View AS View_UserRole WHERE View_UserRole.UserId = inUserId AND View_UserRole.RoleId = 82392) -- Начисления(п.б.)-ввод документов
+     AND inDescId IN (zc_Movement_Service(), zc_Movement_ProfitLossService())
+  THEN
+      -- 3.1. определяется дата для <Закрытие периода>
+      SELECT CASE WHEN tmp.CloseDate > tmp.ClosePeriod THEN tmp.CloseDate ELSE tmp.ClosePeriod END AS CloseDate
+           , tmp.RoleId                                                                            AS RoleId
+             INTO vbCloseDate, vbRoleId
+      FROM (SELECT MAX (CASE WHEN PeriodClose.Period = INTERVAL '0 DAY' THEN DATE_TRUNC ('DAY', PeriodClose.CloseDate) ELSE zc_DateStart() END) AS CloseDate
+                 , MAX (CASE WHEN PeriodClose.Period <> INTERVAL '0 DAY' THEN DATE_TRUNC ('DAY', CURRENT_TIMESTAMP) - INTERVAL '1 day' ELSE zc_DateStart() END) AS ClosePeriod
+                 , MAX (PeriodClose.RoleId) AS RoleId
+            FROM PeriodClose
+            WHERE PeriodClose.Id = 7 -- БН начисления маркетинг
+           ) AS tmp;
+            
+      IF vbRoleId > 0
+      THEN
+          -- 3.2. проверка прав для <Закрытие периода>
+          IF vbOperDate < vbCloseDate
+          THEN 
+              RAISE EXCEPTION 'Ошибка.Изменения в документе № <%> от <%> не возможны. Для роли <%> период закрыт до <%>. (%)', (SELECT InvNumber FROM Movement WHERE Id = inMovementId), DATE (vbOperDate), lfGet_Object_ValueData (vbRoleId), DATE (vbCloseDate), inMovementId;
+          END IF;
+
+     END IF;
+  ELSE
+
   -- !!!временно если не НАЛ!!!
   IF inUserId NOT IN (zc_Enum_Process_Auto_PrimeCost()) -- !!!Админу временно можно!!!
      AND NOT EXISTS (SELECT MovementId FROM MovementLinkObject WHERE MovementId = inMovementId AND DescId = zc_MovementLinkObject_PaidKind() AND ObjectId = zc_Enum_PaidKind_SecondForm())
@@ -199,6 +225,7 @@ BEGIN
 
   END IF; -- !!!временно если ФИЛИАЛ НАЛ + БН!!!
   END IF; -- !!!временно если ВСЕ НАЛ!!!
+  END IF; -- !!!временно если БН начисления маркетинг!!!
   END IF; -- !!!временно если не НАЛ!!!
 
 

@@ -4,7 +4,7 @@
   ClientWidth = 1382
   AddOnFormData.OnLoadAction = actSetDefaults
   ExplicitWidth = 1398
-  ExplicitHeight = 706
+  ExplicitHeight = 703
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -4000,29 +4000,15 @@
     Top = 552
   end
   object spInsertUpdateMovement_Params: TdsdStoredProc
-    StoredProcName = 'gpInsertUpdate_Movement_Sale_Params'
+    StoredProcName = 'gpUpdate_Movement_Sale_Transport'
     DataSets = <>
     OutputType = otResult
     Params = <
       item
-        Name = 'ioId'
+        Name = 'inId'
         Value = Null
         Component = FormParams
         ComponentItem = 'Id'
-        ParamType = ptInputOutput
-      end
-      item
-        Name = 'inInvNumber'
-        Value = ''
-        Component = edInvNumber
-        DataType = ftString
-        ParamType = ptInput
-      end
-      item
-        Name = 'inOperDate'
-        Value = 42132d
-        Component = edOperDate
-        DataType = ftDateTime
         ParamType = ptInput
       end
       item
