@@ -97,6 +97,7 @@ type
     procedure LoadQualityParamsFormTest;
     procedure LoadQualityDocFormTest;
     procedure LoadReportFormTest;
+    procedure LoadReportBankAccountCashFormTest;
     procedure LoadReportProductionAnalyzeFormTest;
     procedure LoadReportSaleAnalyzeFormTest;
     procedure LoadReportProductionOutAnalyzeFormTest;
@@ -1098,11 +1099,11 @@ end;
 
 procedure TLoadFormTest.LoadReportFormTest;
 begin
-{
-  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_CashUserForm'));
-  TdsdFormStorageFactory.GetStorage.Load('TReport_CashUserForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_JuridicalSoldForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_JuridicalSoldForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_JuridicalSoldDialogForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_JuridicalSoldDialogForm');
  exit;
- }
  {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_GoodsMIForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_GoodsMIForm');
@@ -1313,6 +1314,13 @@ begin
 
 end;
 
+procedure TLoadFormTest.LoadReportBankAccountCashFormTest;
+begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_BankAccount_CashForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_BankAccount_CashForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_BankAccount_CashDialogForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_BankAccount_CashDialogForm');
+end;
 procedure TLoadFormTest.LoadReportProductionOrderFormTest;
 begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TProductionOrderReportForm'));

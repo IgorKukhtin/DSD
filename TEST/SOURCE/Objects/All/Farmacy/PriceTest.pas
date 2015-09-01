@@ -15,7 +15,7 @@ type
   procedure SetDataSetParam; override;
   public
     function InsertUpdatePrice(const Id: Integer; const Price, MCS: Double;
-      const GoodsId, UnitId: Integer): integer;
+      const GoodsId, UnitId: Integer; const MCSisClose,MCSNotRecalc: Boolean): integer;
     constructor Create; override;
   end;
 var
@@ -43,12 +43,12 @@ end;
 
 function TPrice.InsertDefault: integer;
 begin
-  result := InsertUpdatePrice(0, Price_Value, MCS_Value, GoodsId, UnitId);
+  result := InsertUpdatePrice(0, Price_Value, MCS_Value, GoodsId, UnitId,False,False);
   inherited;
 end;
 
 function TPrice.InsertUpdatePrice(const Id: Integer; const Price, MCS: Double;
-      const GoodsId, UnitId: Integer): integer;
+      const GoodsId, UnitId: Integer; const MCSisClose,MCSNotRecalc: Boolean): integer;
 begin
   FParams.Clear;
   FParams.AddParam('ioId', ftInteger, ptInputOutput, Id);
@@ -56,6 +56,8 @@ begin
   FParams.AddParam('inMCSValue', ftFloat, ptInput, MCS);
   FParams.AddParam('inGoodsId', ftInteger, ptInput, GoodsId);
   FParams.AddParam('inUnitId', ftInteger, ptInput, UnitId);
+  FParams.AddParam('inMCSisClose', ftBoolean, ptInput, MCSisClose);
+  FParams.AddParam('inMCSNotRecalc', ftBoolean, ptInput, MCSNotRecalc);
   result := InsertUpdate(FParams);
 end;
 

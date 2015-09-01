@@ -94,7 +94,7 @@ BEGIN
        LEFT OUTER JOIN RESERVE ON GoodsRemains.ObjectId = RESERVE.GoodsId
        LEFT OUTER JOIN CurrentMovement ON GoodsRemains.ObjectId = CurrentMovement.ObjectId
      ORDER BY
-       Goods.ValueData;
+       Goods.Id;
 END;
 $BODY$
   LANGUAGE PLPGSQL VOLATILE;

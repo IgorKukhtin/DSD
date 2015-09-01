@@ -93,6 +93,7 @@ BEGIN
                                   , zc_Movement_Sale() AS MovementDescId
                              FROM Object_InfoMoney_View AS View_InfoMoney_find
                              WHERE (View_InfoMoney_find.InfoMoneyId IN (zc_Enum_InfoMoney_30101()) -- Доходы + Продукция + Готовая продукция
+                                 OR View_InfoMoney_find.InfoMoneyId IN (zc_Enum_InfoMoney_30103()) -- Доходы + Продукция + Хлеб
                                  OR View_InfoMoney_find.InfoMoneyDestinationId IN (zc_Enum_InfoMoneyDestination_30300() -- Доходы + Переработка
                                                                                   )
                                    )

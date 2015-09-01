@@ -152,7 +152,8 @@ BEGIN
 
        WHERE Movement.DescId = zc_Movement_Income()
          AND Movement.OperDate BETWEEN inStartDate AND inEndDate
-         -- AND Object_To.DescId = zc_Object_Car() -- !!!яюлне мейпюяхбне пеьемхе!!!
+         -- AND View_InfoMoney.InfoMoneyId = zc_Enum_InfoMoney_20401() -- !!!яюлне мейпюяхбне пеьемхе!!!
+         AND COALESCE (Object_To.DescId, 0) IN (0, zc_Object_Car(), zc_Object_Member()) -- !!!яюлне мейпюяхбне пеьемхе!!!
       ;
   
 END;
@@ -179,4 +180,4 @@ ALTER FUNCTION gpSelect_Movement_IncomeFuel (TDateTime, TDateTime, TVarChar) OWN
 */
 
 -- РЕЯР
--- SELECT * FROM gpSelect_Movement_IncomeFuel (inStartDate:= '01.01.2014', inEndDate:= '31.01.2014', inSession:= zfCalc_UserAdmin())
+-- SELECT * FROM gpSelect_Movement_IncomeFuel (inStartDate:= '01.01.2015', inEndDate:= '31.01.2015', inSession:= zfCalc_UserAdmin())

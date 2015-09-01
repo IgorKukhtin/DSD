@@ -14,7 +14,7 @@ uses
   cxGridCustomTableView, cxGridTableView, cxGridDBTableView, cxGrid, cxPC,
   cxCurrencyEdit, DataModul, frxClass, frxDBSet, dsdGuides, cxButtonEdit,
   dxSkinsCore, dxSkinsDefaultPainters, dxSkinscxPCPainter, dxSkinsdxBarPainter,
-  cxImageComboBox;
+  cxImageComboBox, cxCheckBox;
 
 type
   TReport_JuridicalSoldForm = class(TAncestorReportForm)
@@ -127,6 +127,7 @@ type
     ReturnInRealSumm_total: TcxGridDBColumn;
     ExecuteDialog: TExecuteDialog;
     bbExecuteDialog: TdxBarButton;
+    cbPartionMovement: TcxCheckBox;
   private
     { Private declarations }
   public

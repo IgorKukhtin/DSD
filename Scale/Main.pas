@@ -183,6 +183,22 @@ type
     bbChangePartionGoods: TSpeedButton;
     bbSale_Order_all: TSpeedButton;
     bbSale_Order_diff: TSpeedButton;
+    TransportPanel: TPanel;
+    BarCodeTransportPanel: TPanel;
+    BarCodeTransportLabel: TLabel;
+    EditBarCodeTransport: TcxButtonEdit;
+    infoPanelCar: TPanel;
+    CarLabel: TLabel;
+    PanelCar: TPanel;
+    infoPanelPersonalDriver: TPanel;
+    PersonalDriverLabel: TLabel;
+    PanelPersonalDriver: TPanel;
+    infoPanelRoute: TPanel;
+    RouteLabel: TLabel;
+    PanelRoute: TPanel;
+    infoInvNumberTransportPanel: TPanel;
+    InvNumberTransportLabel: TLabel;
+    PanelInvNumberTransport: TPanel;
     procedure FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
     procedure FormCreate(Sender: TObject);
     procedure PanelWeight_ScaleDblClick(Sender: TObject);
@@ -206,6 +222,8 @@ type
     procedure bbChangePartionGoodsClick(Sender: TObject);
     procedure bbSale_Order_allClick(Sender: TObject);
     procedure bbSale_Order_diffClick(Sender: TObject);
+    procedure EditBarCodeTransportPropertiesChange(Sender: TObject);
+    procedure EditBarCodeTransportExit(Sender: TObject);
   private
     Scale_BI: TCasBI;
     Scale_DB: TCasDB;
@@ -242,6 +260,12 @@ procedure TMainForm.Initialize_afterSave_all;
 begin
      EditPartionGoods.Text:='';
      EditBoxCode.Text:=GetArrayList_Value_byName(Default_Array,'BoxCode');
+     //
+     EditBarCodeTransport.Text:='';
+     PanelInvNumberTransport.Caption:='';
+     PanelPersonalDriver.Caption:='';
+     PanelCar.Caption:='';
+     PanelRoute.Caption:='';
 end;
 //------------------------------------------------------------------------------------------------
 procedure TMainForm.Initialize_afterSave_MI;
@@ -460,7 +484,7 @@ begin
      myActiveControl;
 end;
 {------------------------------------------------------------------------}
-function TMainForm.GetParams_Goods(isRetail:Boolean;BarCode: String):Boolean;
+function TMainForm.GetParams_Goods(isRetail:Boolean;BarCode:String):Boolean;
 begin
      Result:=false;
      //
@@ -854,6 +878,52 @@ begin
      end;
 end;
 //---------------------------------------------------------------------------------------------
+procedure TMainForm.EditBarCodeTransportPropertiesChange(Sender: TObject);
+begin
+     EditBarCodeTransport.Text:=trim(EditBarCodeTransport.Text);
+     if Length(EditBarCodeTransport.Text)>=13
+     then begin
+               ActiveControl:=EditBarCode;
+          end
+     else begin
+     PanelInvNumberTransport.Caption:='';
+     PanelPersonalDriver.Caption:='';
+     PanelCar.Caption:='';
+     PanelRoute.Caption:='';
+     if trim(EditBarCodeTransport.Text) = '' then ActiveControl:=EditBarCode;
+     end;
+end;
+//---------------------------------------------------------------------------------------------
+procedure TMainForm.EditBarCodeTransportExit(Sender: TObject);
+begin
+     if Length(EditBarCodeTransport.Text)>=13
+     then begin
+               //Проверка <Контрольная сумма>
+               if CheckBarCode(trim(EditBarCodeTransport.Text)) = FALSE
+               then begin
+                  EditBarCodeTransport.Text:='';
+                  ActiveControl:=EditBarCodeTransport;
+                  exit;
+               end;
+               if DMMainScaleForm.gpGet_Scale_Transport(ParamsMovement,EditBarCodeTransport.Text)
+               then begin
+                         if not DMMainScaleForm.gpUpdate_Scale_Movement_Transport(ParamsMovement) then
+                         DMMainScaleForm.gpGet_Scale_Transport(ParamsMovement,'');
+                    end
+               else begin
+                         ShowMessage('Ошибка.'+#10+#13+'Значение <Штрих код Путевой лист> не найдено.');
+                         ActiveControl:=EditBarCodeTransport;
+                         exit;
+                    end;
+          end
+     else begin
+         DMMainScaleForm.gpGet_Scale_Transport(ParamsMovement,'');
+         DMMainScaleForm.gpUpdate_Scale_Movement_Transport(ParamsMovement);
+     end;
+     //
+     WriteParamsMovement;
+end;
+//---------------------------------------------------------------------------------------------
 procedure TMainForm.EditPartionGoodsExit(Sender: TObject);
 begin
      //если партия с ошибкой
@@ -906,6 +976,7 @@ begin
   PanelCountPack.Visible:=not PanelPartionGoods.Visible;
   BarCodePanel.Visible:=GetArrayList_Value_byName(Default_Array,'isBarCode') = AnsiUpperCase('TRUE');
   PanelBox.Visible:=GetArrayList_Value_byName(Default_Array,'isBox') = AnsiUpperCase('TRUE');
+  TransportPanel.Visible:=GetArrayList_Value_byName(Default_Array,'isTransport') = AnsiUpperCase('TRUE');
 
   bbChangeHeadCount.Visible:=HeadCountPanel.Visible;
   bbChangePartionGoods.Visible:=HeadCountPanel.Visible;
@@ -964,6 +1035,12 @@ begin
               then PanelOrderExternal.Caption:=' ф.'+ParamByName('OrderExternalName_master').asString
               else PanelOrderExternal.Caption:=' ???'+ParamByName('OrderExternalName_master').asString
     else PanelOrderExternal.Caption:='';
+
+     EditBarCodeTransport.Text:=ParamByName('Transport_BarCode').asString;
+     PanelInvNumberTransport.Caption:=ParamByName('Transport_InvNumber').asString;
+     PanelPersonalDriver.Caption:=ParamByName('PersonalDriverName').asString;
+     PanelCar.Caption:=ParamByName('CarName').asString;
+     PanelRoute.Caption:=ParamByName('RouteName').asString;
 
   end;
 end;

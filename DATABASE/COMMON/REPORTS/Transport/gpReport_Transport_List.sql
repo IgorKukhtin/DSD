@@ -50,7 +50,7 @@ BEGIN
                                               AND MovementItem.isErased = False
                            WHERE Movement.DescId = zc_Movement_Transport()
                            AND Movement.OperDate BETWEEN inStartDate AND inEndDate
-                           AND Movement.StatusId = zc_Enum_Status_Complete()
+                           AND Movement.StatusId IN (zc_Enum_Status_Complete(), zc_Enum_Status_UnComplete())
                          )
    , tmpTransportService AS (SELECT Movement.Id AS MovementId
                                   , zfConvert_StringToNumber (Movement.InvNumber) AS InvNumber
@@ -74,7 +74,7 @@ BEGIN
                                             AND MILinkObject_Route.DescId = zc_MILinkObject_Route()
                              WHERE Movement.DescId = zc_Movement_TransportService()
                                AND Movement.OperDate BETWEEN inStartDate AND inEndDate
-                               AND Movement.StatusId = zc_Enum_Status_Complete()
+                               AND Movement.StatusId IN (zc_Enum_Status_Complete(), zc_Enum_Status_UnComplete())
                          )
      , tmpTransportList AS (SELECT tr1.MovementId, tr1.InvNumber, tr1.OperDate, tr1.PersonalDriverId, tr1.CarId, tr1.RouteId, tr1.Comment 
                                  , zfFormat_BarCode (zc_BarCodePref_Movement(), tr1.MovementId) AS IdBarCode
@@ -142,4 +142,4 @@ $BODY$
 */
 
 -- тест
---SELECT * FROM gpReport_Transport_List (inStartDate:= '01.08.2015', inEndDate:= '10.08.2015', inBranchId:=0 ,inSession:= zfCalc_UserAdmin())
+-- SELECT * FROM gpReport_Transport_List (inStartDate:= '01.08.2015', inEndDate:= '10.08.2015', inBranchId:=0 ,inSession:= zfCalc_UserAdmin())

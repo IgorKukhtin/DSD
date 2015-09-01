@@ -3,19 +3,21 @@
 DROP FUNCTION IF EXISTS gpReport_JuridicalSold (TDateTime, TDateTime, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpReport_JuridicalSold (TDateTime, TDateTime, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpReport_JuridicalSold (TDateTime, TDateTime, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpReport_JuridicalSold (TDateTime, TDateTime, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpReport_JuridicalSold(
-    IN inStartDate        TDateTime , -- 
-    IN inEndDate          TDateTime , --
-    IN inAccountId        Integer,    -- Счет  
-    IN inInfoMoneyId      Integer,    -- Управленческая статья  
-    IN inInfoMoneyGroupId Integer,    -- Группа управленческих статей
+    IN inStartDate                TDateTime , -- 
+    IN inEndDate                  TDateTime , --
+    IN inAccountId                Integer,    -- Счет  
+    IN inInfoMoneyId              Integer,    -- Управленческая статья  
+    IN inInfoMoneyGroupId         Integer,    -- Группа управленческих статей
     IN inInfoMoneyDestinationId   Integer,    --
-    IN inPaidKindId       Integer   , --
-    IN inBranchId         Integer   , --
-    IN inJuridicalGroupId Integer   , --
-    IN inCurrencyId       Integer   , -- Валюта
-    IN inSession          TVarChar    -- сессия пользователя
+    IN inPaidKindId               Integer   , --
+    IN inBranchId                 Integer   , --
+    IN inJuridicalGroupId         Integer   , --
+    IN inCurrencyId               Integer   , -- Валюта
+    IN inIsPartionMovement        Boolean   ,
+    IN inSession                  TVarChar    -- сессия пользователя
 )
 RETURNS TABLE (ContainerId Integer, JuridicalCode Integer, JuridicalName TVarChar, OKPO TVarChar, JuridicalGroupName TVarChar
              , RetailName TVarChar, RetailReportName TVarChar
@@ -143,7 +145,7 @@ BEGIN
         Object_ContractConditionKind.ValueData AS ContractConditionKindName,
         tmpContract.Value :: TFloat AS ContractConditionValue,
 
-        Object_PartionMovement.ValueData AS PartionMovementName,
+        Object_PartionMovement.ValueData             AS PartionMovementName,
         ObjectDate_PartionMovement_Payment.ValueData AS PaymentDate,
 
         Operation.ObjectId  AS AccountId,
@@ -262,7 +264,8 @@ BEGIN
                , tmpContainer.Amount - COALESCE (SUM (CASE WHEN MIContainer.OperDate > inEndDate THEN MIContainer.Amount ELSE 0 END), 0) AS EndAmount
           FROM (SELECT Container.Id AS ContainerId, Container.ObjectId, Container.Amount
                      , CLO_Juridical.ObjectId AS JuridicalId, CLO_InfoMoney.ObjectId AS InfoMoneyId, CLO_PaidKind.ObjectId AS PaidKindId
-                     , CLO_Contract.ObjectId AS ContractId, CLO_Branch.ObjectId AS BranchId, CLO_PartionMovement.ObjectId AS PartionMovementId
+                     , CLO_Contract.ObjectId AS ContractId, CLO_Branch.ObjectId AS BranchId
+                     , CASE WHEN inIsPartionMovement = FALSE THEN CLO_PartionMovement.ObjectId ELSE 0 END AS PartionMovementId
                 FROM ContainerLinkObject AS CLO_Juridical
                      INNER JOIN Container ON Container.Id = CLO_Juridical.ContainerId AND Container.DescId = zc_Container_Summ()
                      LEFT JOIN ContainerLinkObject AS CLO_InfoMoney 
@@ -386,11 +389,12 @@ BEGIN
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpReport_JuridicalSold (TDateTime, TDateTime, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar) OWNER TO postgres;
+ALTER FUNCTION gpReport_JuridicalSold (TDateTime, TDateTime, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer,Boolean, TVarChar) OWNER TO postgres;
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 29.08.15         * add inIsPartionMovement
  14.11.14         * add inCurrencyId
  10.10.14                                        * add tmpContractCondition
  13.09.14                                        * add inJuridicalGroupId
@@ -410,4 +414,4 @@ ALTER FUNCTION gpReport_JuridicalSold (TDateTime, TDateTime, Integer, Integer, I
 */
 
 -- тест
--- SELECT * FROM gpReport_JuridicalSold (inStartDate:= '01.06.2015', inEndDate:= '30.06.2015', inAccountId:= null, inInfoMoneyId:= null, inInfoMoneyGroupId:= null, inInfoMoneyDestinationId:= null, inPaidKindId:= null, inBranchId:= null, inJuridicalGroupId:= null, inCurrencyId:= null, inSession:= zfCalc_UserAdmin()); 
+-- SELECT * FROM gpReport_JuridicalSold (inStartDate:= '01.06.2015', inEndDate:= '30.06.2015', inAccountId:= null, inInfoMoneyId:= null, inInfoMoneyGroupId:= null, inInfoMoneyDestinationId:= null, inPaidKindId:= null, inBranchId:= null, inJuridicalGroupId:= null, inCurrencyId:= null, inIsPartionMovement:= FALSE, inSession:= zfCalc_UserAdmin()); 

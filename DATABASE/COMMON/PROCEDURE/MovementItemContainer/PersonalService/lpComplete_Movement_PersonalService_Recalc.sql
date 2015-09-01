@@ -9,6 +9,7 @@ CREATE OR REPLACE FUNCTION lpComplete_Movement_PersonalService_Recalc(
 RETURNS VOID
 AS
 $BODY$
+   DECLARE vbPersonalServiceListId_to_check Integer;
 BEGIN
      -- таблица
      DELETE FROM _tmpMovement_Recalc;
@@ -244,15 +245,44 @@ BEGIN
 
      -- пересчитали у всех Итоговые суммы
      PERFORM lpInsertUpdate_MovementFloat_TotalSumm (tmp.MovementId)
-     FROM (SELECT _tmpMovement_Recalc.MovementId FROM _tmpMovement_Recalc) AS tmp;
+     FROM (SELECT _tmpMovement_Recalc.MovementId FROM _tmpMovement_Recalc UNION SELECT DISTINCT _tmpMI_Recalc.MovementId_to FROM _tmpMI_Recalc WHERE _tmpMI_Recalc.isMovementInsert = TRUE) AS tmp;
+
+
+     -- !!!ВАЖНО - проверка!!!
+     vbPersonalServiceListId_to_check:= (SELECT tmp.PersonalServiceListId_to
+                                         FROM (SELECT DISTINCT _tmpMI_Recalc.PersonalServiceListId_to FROM _tmpMI_Recalc WHERE _tmpMI_Recalc.MovementItemId_to <> 0 AND _tmpMI_Recalc.PersonalServiceListId_to <> 0) AS tmp
+                                              LEFT JOIN ObjectLink AS ObjectLink_PersonalServiceList_Member
+                                                                   ON ObjectLink_PersonalServiceList_Member.ObjectId = tmp.PersonalServiceListId_to
+                                                                  AND ObjectLink_PersonalServiceList_Member.DescId = zc_ObjectLink_PersonalServiceList_Member()
+                                              LEFT JOIN ObjectLink AS ObjectLink_User_Member
+                                                                   ON ObjectLink_User_Member.ChildObjectId = ObjectLink_PersonalServiceList_Member.ChildObjectId 
+                                                                  AND ObjectLink_User_Member.DescId = zc_ObjectLink_User_Member()
+                                         WHERE ObjectLink_User_Member.ObjectId IS NULL
+                                         LIMIT 1
+                                        );
+     IF vbPersonalServiceListId_to_check <> 0
+     THEN
+         RAISE EXCEPTION 'Ошибка.Для ведомости <%> не установлено <Физ.лицо (пользователь)>.', lfGet_Object_ValueData (vbPersonalServiceListId_to_check);
+     END IF;
+
+     -- !!!ВАЖНО - доступ!!!
+     UPDATE Movement SET AccessKeyId = lpGetAccessKey (ObjectLink_User_Member.ObjectId, zc_Enum_Process_InsertUpdate_Movement_PersonalService())
+     FROM (SELECT DISTINCT _tmpMI_Recalc.MovementId_to, _tmpMI_Recalc.PersonalServiceListId_to FROM _tmpMI_Recalc WHERE _tmpMI_Recalc.MovementItemId_to <> 0 AND _tmpMI_Recalc.PersonalServiceListId_to <> 0) AS tmp
+          LEFT JOIN ObjectLink AS ObjectLink_PersonalServiceList_Member
+                               ON ObjectLink_PersonalServiceList_Member.ObjectId = tmp.PersonalServiceListId_to
+                              AND ObjectLink_PersonalServiceList_Member.DescId = zc_ObjectLink_PersonalServiceList_Member()
+          LEFT JOIN ObjectLink AS ObjectLink_User_Member
+                               ON ObjectLink_User_Member.ChildObjectId = ObjectLink_PersonalServiceList_Member.ChildObjectId 
+                              AND ObjectLink_User_Member.DescId = zc_ObjectLink_User_Member()
+     WHERE Movement.Id = tmp.MovementId_to;
+
 
      -- Проведение Новых док-тов  + сохранили протокол
-     PERFORM lpComplete_Movement (inMovementId := _tmpMI_Recalc.MovementId_to
+     PERFORM lpComplete_Movement (inMovementId := tmp.MovementId_to
                                 , inDescId     := zc_Movement_PersonalService()
                                 , inUserId     := inUserId
                                  )
-     FROM _tmpMI_Recalc
-     WHERE isMovementInsert = TRUE;
+     FROM (SELECT DISTINCT _tmpMI_Recalc.MovementId_to FROM _tmpMI_Recalc WHERE _tmpMI_Recalc.isMovementInsert = TRUE) AS tmp;
 
 
 END;$BODY$

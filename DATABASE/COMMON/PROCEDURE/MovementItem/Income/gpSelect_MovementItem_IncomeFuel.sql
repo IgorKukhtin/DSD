@@ -94,6 +94,7 @@ BEGIN
 
             LEFT JOIN MovementItemContainer AS MIContainer_Count ON MIContainer_Count.MovementItemId = MovementItem.Id
                                                                 AND MIContainer_Count.DescId = zc_MIContainer_Count()
+                                                                AND MIContainer_Count.isActive = TRUE -- Вид топлива есть только в приходной количественной проводке
             LEFT JOIN Container AS Container_Count ON Container_Count.Id = MIContainer_Count.ContainerId
             LEFT JOIN ObjectLink AS ObjectLink_Goods_Fuel ON ObjectLink_Goods_Fuel.ObjectId = MovementItem.ObjectId
                                                          AND ObjectLink_Goods_Fuel.DescId = zc_ObjectLink_Goods_Fuel()
@@ -135,7 +136,7 @@ BEGIN
             LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = MovementItem.ObjectId
             LEFT JOIN ObjectLink AS ObjectLink_Goods_Fuel ON ObjectLink_Goods_Fuel.ObjectId = MovementItem.ObjectId
                                                          AND ObjectLink_Goods_Fuel.DescId = zc_ObjectLink_Goods_Fuel()
-                                                         AND 1=0 -- заблокировал, что ю всегда видеть по какому Виду топлива прошла количественная проводка
+                                                         AND 1=0 -- заблокировал, что б всегда видеть по какому Виду топлива прошла количественная проводка
 
             LEFT JOIN MovementItemContainer AS MIContainer_Count ON MIContainer_Count.MovementItemId = MovementItem.Id
                                                                 AND MIContainer_Count.DescId = zc_MIContainer_Count()

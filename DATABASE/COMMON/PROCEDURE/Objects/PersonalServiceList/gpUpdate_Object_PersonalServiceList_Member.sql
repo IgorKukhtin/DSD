@@ -1,6 +1,6 @@
 -- Function: gpUpdate_Object_PersonalServiceList_Member()
 
-DROP FUNCTION IF EXISTS gpUpdate_Object_PersonalServiceList_Member(Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpUpdate_Object_PersonalServiceList_Member (Integer, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpUpdate_Object_PersonalServiceList_Member(
     IN inId             Integer   ,     -- ключ объекта <> 
@@ -12,10 +12,10 @@ $BODY$
    DECLARE vbUserId Integer;
    DECLARE vbCode_calc Integer;   
 BEGIN
-   
    -- проверка прав пользователя на вызов процедуры
---   vbUserId := lpCheckRight(inSession, zc_Enum_Process_PersonalServiceList());
-   vbUserId := inSession;
+   vbUserId := lpCheckRight (inSession, zc_Enum_Process_Update_Object_PersonalServiceList_Member());
+
+
    -- сохранили св-во 
    PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_PersonalServiceList_Member(), inId, inMemberId);
         

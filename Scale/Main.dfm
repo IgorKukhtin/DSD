@@ -892,6 +892,8 @@ object MainForm: TMainForm
     Font.Style = [fsBold]
     ParentFont = False
     TabOrder = 1
+    ExplicitLeft = -2
+    ExplicitTop = 71
     object BarCodePanel: TPanel
       Left = 0
       Top = 39
@@ -912,11 +914,18 @@ object MainForm: TMainForm
       object EditBarCode: TcxCurrencyEdit
         Left = 5
         Top = 15
+        ParentFont = False
         Properties.Alignment.Horz = taRightJustify
         Properties.Alignment.Vert = taVCenter
         Properties.AssignedValues.DisplayFormat = True
         Properties.DecimalPlaces = 0
         Properties.OnChange = EditBarCodePropertiesChange
+        Style.Font.Charset = RUSSIAN_CHARSET
+        Style.Font.Color = clBlack
+        Style.Font.Height = -11
+        Style.Font.Name = 'Arial'
+        Style.Font.Style = [fsBold]
+        Style.IsFontAssigned = True
         TabOrder = 0
         Width = 120
       end
@@ -1200,6 +1209,247 @@ object MainForm: TMainForm
         Style.IsFontAssigned = True
         TabOrder = 0
         Width = 120
+      end
+    end
+    object TransportPanel: TPanel
+      Left = 0
+      Top = 399
+      Width = 130
+      Height = 177
+      Align = alTop
+      Alignment = taLeftJustify
+      BevelOuter = bvSpace
+      TabOrder = 8
+      object BarCodeTransportPanel: TPanel
+        Left = 1
+        Top = 1
+        Width = 128
+        Height = 39
+        Align = alTop
+        Alignment = taLeftJustify
+        BevelOuter = bvNone
+        TabOrder = 0
+        object BarCodeTransportLabel: TLabel
+          Left = 0
+          Top = 0
+          Width = 128
+          Height = 14
+          Align = alTop
+          Alignment = taCenter
+          Caption = #1064#1090#1088#1080#1093' '#1082#1086#1076' '#1055#1091#1090#1077#1074#1086#1081' '#1083'.'
+          Font.Charset = RUSSIAN_CHARSET
+          Font.Color = clBlue
+          Font.Height = -11
+          Font.Name = 'Arial'
+          Font.Style = []
+          ParentFont = False
+          ExplicitLeft = 1
+          ExplicitTop = 1
+          ExplicitWidth = 113
+        end
+        object EditBarCodeTransport: TcxButtonEdit
+          Left = 4
+          Top = 15
+          ParentFont = False
+          Properties.Buttons = <
+            item
+              Default = True
+              Kind = bkEllipsis
+            end>
+          Properties.ReadOnly = False
+          Properties.OnChange = EditBarCodeTransportPropertiesChange
+          Style.Font.Charset = RUSSIAN_CHARSET
+          Style.Font.Color = clBlack
+          Style.Font.Height = -11
+          Style.Font.Name = 'Arial'
+          Style.Font.Style = [fsBold]
+          Style.IsFontAssigned = True
+          TabOrder = 0
+          Text = 'EditBarCodeTransport'
+          OnExit = EditBarCodeTransportExit
+          Width = 120
+        end
+      end
+      object infoPanelCar: TPanel
+        Left = 1
+        Top = 74
+        Width = 128
+        Height = 34
+        Align = alTop
+        BevelOuter = bvNone
+        TabOrder = 1
+        ExplicitTop = 75
+        object CarLabel: TLabel
+          Left = 0
+          Top = 0
+          Width = 128
+          Height = 14
+          Align = alTop
+          Alignment = taCenter
+          Caption = #1040#1074#1090#1086#1084#1086#1073#1080#1083#1100
+          Font.Charset = RUSSIAN_CHARSET
+          Font.Color = clBlue
+          Font.Height = -11
+          Font.Name = 'Arial'
+          Font.Style = []
+          ParentFont = False
+          ExplicitLeft = 1
+          ExplicitTop = 1
+          ExplicitWidth = 65
+        end
+        object PanelCar: TPanel
+          Left = 0
+          Top = 14
+          Width = 128
+          Height = 20
+          Align = alClient
+          Alignment = taLeftJustify
+          BevelOuter = bvNone
+          Caption = 'PanelCar'
+          Font.Charset = RUSSIAN_CHARSET
+          Font.Color = clBlack
+          Font.Height = -11
+          Font.Name = 'Arial Narrow'
+          Font.Style = [fsBold]
+          ParentFont = False
+          TabOrder = 0
+          ExplicitLeft = -5
+          ExplicitTop = 8
+        end
+      end
+      object infoPanelPersonalDriver: TPanel
+        Left = 1
+        Top = 40
+        Width = 128
+        Height = 34
+        Align = alTop
+        BevelOuter = bvNone
+        TabOrder = 2
+        ExplicitTop = 74
+        object PersonalDriverLabel: TLabel
+          Left = 0
+          Top = 0
+          Width = 128
+          Height = 14
+          Align = alTop
+          Alignment = taCenter
+          Caption = #1060#1048#1054' ('#1074#1086#1076#1080#1090#1077#1083#1100')'
+          Font.Charset = RUSSIAN_CHARSET
+          Font.Color = clBlue
+          Font.Height = -11
+          Font.Name = 'Arial'
+          Font.Style = []
+          ParentFont = False
+          ExplicitLeft = -5
+          ExplicitTop = -6
+        end
+        object PanelPersonalDriver: TPanel
+          Left = 0
+          Top = 14
+          Width = 128
+          Height = 20
+          Align = alClient
+          Alignment = taLeftJustify
+          BevelOuter = bvNone
+          Caption = 'PanelPersonalDriver'
+          Font.Charset = RUSSIAN_CHARSET
+          Font.Color = clBlack
+          Font.Height = -11
+          Font.Name = 'Arial Narrow'
+          Font.Style = [fsBold]
+          ParentFont = False
+          TabOrder = 0
+          ExplicitLeft = -5
+          ExplicitTop = 8
+        end
+      end
+      object infoPanelRoute: TPanel
+        Left = 1
+        Top = 108
+        Width = 128
+        Height = 34
+        Align = alTop
+        BevelOuter = bvNone
+        TabOrder = 3
+        object RouteLabel: TLabel
+          Left = 0
+          Top = 0
+          Width = 128
+          Height = 14
+          Align = alTop
+          Alignment = taCenter
+          Caption = #1052#1072#1088#1096#1088#1091#1090
+          Font.Charset = RUSSIAN_CHARSET
+          Font.Color = clBlue
+          Font.Height = -11
+          Font.Name = 'Arial'
+          Font.Style = []
+          ParentFont = False
+          ExplicitLeft = -5
+          ExplicitTop = 6
+        end
+        object PanelRoute: TPanel
+          Left = 0
+          Top = 14
+          Width = 128
+          Height = 20
+          Align = alClient
+          Alignment = taLeftJustify
+          BevelOuter = bvNone
+          Caption = 'PanelRoute'
+          Font.Charset = RUSSIAN_CHARSET
+          Font.Color = clBlack
+          Font.Height = -11
+          Font.Name = 'Arial Narrow'
+          Font.Style = [fsBold]
+          ParentFont = False
+          TabOrder = 0
+          ExplicitLeft = -5
+          ExplicitTop = 15
+        end
+      end
+      object infoInvNumberTransportPanel: TPanel
+        Left = 1
+        Top = 142
+        Width = 128
+        Height = 34
+        Align = alClient
+        BevelOuter = bvNone
+        TabOrder = 4
+        ExplicitTop = 108
+        object InvNumberTransportLabel: TLabel
+          Left = 0
+          Top = 0
+          Width = 128
+          Height = 14
+          Align = alTop
+          Alignment = taCenter
+          Caption = #1055#1091#1090#1077#1074#1086#1081' '#1083#1080#1089#1090
+          Font.Charset = RUSSIAN_CHARSET
+          Font.Color = clBlue
+          Font.Height = -11
+          Font.Name = 'Arial'
+          Font.Style = []
+          ParentFont = False
+          ExplicitWidth = 71
+        end
+        object PanelInvNumberTransport: TPanel
+          Left = 0
+          Top = 14
+          Width = 128
+          Height = 20
+          Align = alClient
+          Alignment = taLeftJustify
+          BevelOuter = bvNone
+          Caption = 'PanelInvNumberTransport'
+          Font.Charset = RUSSIAN_CHARSET
+          Font.Color = clBlack
+          Font.Height = -11
+          Font.Name = 'Arial Narrow'
+          Font.Style = [fsBold]
+          ParentFont = False
+          TabOrder = 0
+        end
       end
     end
   end

@@ -2709,6 +2709,17 @@ inherited MainForm: TMainForm
       GuiParams = <>
       isShowModal = False
     end
+    object actReport_BankAccountCash: TdsdOpenForm
+      Category = #1054#1090#1095#1077#1090#1099' ('#1092#1080#1085'.)'
+      MoveParams = <>
+      Caption = #1054#1073#1086#1088#1086#1090#1099' '#1087#1086' '#1088'/'#1089#1095#1077#1090#1091' '#1080' '#1082#1072#1089#1089#1077
+      Hint = #1054#1073#1086#1088#1086#1090#1099' '#1087#1086' '#1088'/'#1089#1095#1077#1090#1091' '#1080' '#1082#1072#1089#1089#1077
+      FormName = 'TReport_BankAccount_CashForm'
+      FormNameParam.Value = 'TReport_BankAccount_CashForm'
+      FormNameParam.DataType = ftString
+      GuiParams = <>
+      isShowModal = False
+    end
     object actGoodsKindWeighing: TdsdOpenForm
       Category = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082#1080
       MoveParams = <>
@@ -4047,6 +4058,9 @@ inherited MainForm: TMainForm
       end
       object miReport_BankAccount: TMenuItem
         Action = actReport_BankAccount
+      end
+      object N50: TMenuItem
+        Action = actReport_BankAccountCash
       end
     end
     object miReportMain: TMenuItem [11]

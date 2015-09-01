@@ -43,6 +43,13 @@ type
     actDoLoadPrice: TExecuteImportSettingsAction;
     actStartLoadPrice: TMultiAction;
     dxBarButton4: TdxBarButton;
+    clMCSIsClose: TcxGridDBColumn;
+    clMCSNotRecalc: TcxGridDBColumn;
+    spRecalcMCS: TdsdStoredProc;
+    actRecalcMCS: TdsdExecStoredProc;
+    dxBarButton5: TdxBarButton;
+    actStartRecalcMCS: TMultiAction;
+    actRecalcMCSDialog: TExecuteDialog;
   private
     { Private declarations }
   public
