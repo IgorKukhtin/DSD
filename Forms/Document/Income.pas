@@ -155,6 +155,11 @@ type
     ceComment: TcxTextEdit;
     colAmount_unit: TcxGridDBColumn;
     colAmount_diff: TcxGridDBColumn;
+    cxLabel25: TcxLabel;
+    edInvNumberTransport: TcxButtonEdit;
+    TransportChoiceGuides: TdsdGuides;
+    HeaderSaver2: THeaderSaver;
+    spInsertUpdateMovement_Params: TdsdStoredProc;
   private
   public
   end;

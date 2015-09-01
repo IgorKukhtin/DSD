@@ -3,7 +3,7 @@ inherited TaxForm: TTaxForm
   ClientHeight = 668
   ClientWidth = 1067
   ExplicitWidth = 1083
-  ExplicitHeight = 703
+  ExplicitHeight = 706
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -278,6 +278,7 @@ inherited TaxForm: TTaxForm
     object edDateRegistered: TcxDateEdit
       Left = 164
       Top = 63
+      EditValue = 42247d
       Properties.ReadOnly = True
       Properties.SaveTime = False
       Properties.ShowTime = False
@@ -1766,7 +1767,7 @@ inherited TaxForm: TTaxForm
       end>
     PackSize = 1
     Left = 417
-    Top = 552
+    Top = 480
   end
   object spSelectTax_Us: TdsdStoredProc
     StoredProcName = 'gpSelect_Movement_Tax_Print'

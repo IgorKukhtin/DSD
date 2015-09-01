@@ -908,6 +908,8 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TTransportForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TTransportJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TTransportJournalForm');
+    TdsdFormStorageFactory.GetStorage.Save(GetForm('TTransportJournalChoiceForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TTransportJournalChoiceForm');
 end;
 
 procedure TLoadFormTest.LoadTransportServiceFormTest;

@@ -174,6 +174,11 @@ type
     edCurrencyValue: TcxCurrencyEdit;
     cxLabel24: TcxLabel;
     edParValue: TcxCurrencyEdit;
+    cxLabel25: TcxLabel;
+    edInvNumberTransport: TcxButtonEdit;
+    TransportChoiceGuides: TdsdGuides;
+    spInsertUpdateMovement_Params: TdsdStoredProc;
+    HeaderSaver2: THeaderSaver;
   private
     { Private declarations }
   public

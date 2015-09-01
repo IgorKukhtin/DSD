@@ -3,7 +3,7 @@ inherited ReturnInForm: TReturnInForm
   ClientHeight = 650
   ClientWidth = 1104
   ExplicitWidth = 1120
-  ExplicitHeight = 685
+  ExplicitHeight = 688
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -3336,8 +3336,8 @@ inherited ReturnInForm: TReturnInForm
         ComponentItem = 'TextValue'
         DataType = ftString
       end>
-    Left = 420
-    Top = 48
+    Left = 396
+    Top = 96
   end
   object ParentChoiceGuides: TdsdGuides
     KeyField = 'Id'

@@ -228,6 +228,13 @@ inherited Sale_PartnerJournalForm: TSale_PartnerJournalForm
             Options.Editing = False
             Width = 70
           end
+          object InvNumber_Transport_Full: TcxGridDBColumn
+            Caption = #1055#1091#1090#1077#1074#1086#1081' '#1083#1080#1089#1090
+            DataBinding.FieldName = 'InvNumber_Transport_Full'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 80
+          end
           object colFromName: TcxGridDBColumn
             Caption = #1054#1090' '#1082#1086#1075#1086
             DataBinding.FieldName = 'FromName'
@@ -719,7 +726,6 @@ inherited Sale_PartnerJournalForm: TSale_PartnerJournalForm
           UserName = 'frxDBDMaster'
           IndexFieldNames = 'WeighingNumber;NumOrder'
         end>
-      CopiesCount = 1
       Params = <
         item
           Name = 'Id'
@@ -764,7 +770,6 @@ inherited Sale_PartnerJournalForm: TSale_PartnerJournalForm
           UserName = 'frxDBDMaster'
           IndexFieldNames = 'GroupName_Juridical;GoodsName_Juridical;GoodsName;GoodsKindName'
         end>
-      CopiesCount = 1
       Params = <
         item
           Name = 'Id'
@@ -1003,7 +1008,6 @@ inherited Sale_PartnerJournalForm: TSale_PartnerJournalForm
           DataSet = PrintItemsSverkaCDS
           UserName = 'frxDBDSverka'
         end>
-      CopiesCount = 1
       Params = <
         item
           Name = 'Id'
@@ -1042,7 +1046,6 @@ inherited Sale_PartnerJournalForm: TSale_PartnerJournalForm
           DataSet = PrintItemsSverkaCDS
           UserName = 'frxDBDSverka'
         end>
-      CopiesCount = 1
       Params = <
         item
           Name = 'Id'
@@ -1078,7 +1081,6 @@ inherited Sale_PartnerJournalForm: TSale_PartnerJournalForm
           DataSet = PrintItemsCDS
           UserName = 'frxDBDMaster'
         end>
-      CopiesCount = 1
       Params = <
         item
           Name = 'Id'
@@ -1114,7 +1116,6 @@ inherited Sale_PartnerJournalForm: TSale_PartnerJournalForm
           DataSet = PrintItemsCDS
           UserName = 'frxDBDMaster'
         end>
-      CopiesCount = 1
       Params = <
         item
           Name = 'Id'
@@ -1197,7 +1198,6 @@ inherited Sale_PartnerJournalForm: TSale_PartnerJournalForm
             'goodsgroupname;GroupName_Juridical;GoodsName_Juridical;GoodsName' +
             ';GoodsKindName'
         end>
-      CopiesCount = 1
       Params = <
         item
           Name = 'Id'
@@ -1238,7 +1238,6 @@ inherited Sale_PartnerJournalForm: TSale_PartnerJournalForm
           UserName = 'frxDBDMaster'
           IndexFieldNames = 'GroupName_Juridical;GoodsName_Juridical;GoodsName;GoodsKindName'
         end>
-      CopiesCount = 1
       Params = <
         item
           Name = 'Id'
@@ -1280,7 +1279,6 @@ inherited Sale_PartnerJournalForm: TSale_PartnerJournalForm
           UserName = 'frxDBDMaster'
           IndexFieldNames = 'WeighingNumber;BoxNumber;NumOrder'
         end>
-      CopiesCount = 1
       Params = <
         item
           Name = 'Id'
@@ -1326,7 +1324,6 @@ inherited Sale_PartnerJournalForm: TSale_PartnerJournalForm
           UserName = 'frxDBDMaster2'
           IndexFieldNames = 'QualityCode;GoodsGroupName;GoodsName;GoodsKindName'
         end>
-      CopiesCount = 1
       Params = <
         item
           Name = 'Id'
@@ -1429,7 +1426,6 @@ inherited Sale_PartnerJournalForm: TSale_PartnerJournalForm
           DataSet = PrintItemsCDS
           UserName = 'frxDBDMaster'
         end>
-      CopiesCount = 1
       Params = <
         item
           Name = 'Id'

@@ -36,6 +36,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , InvNumber_TransportGoods TVarChar
              , OperDate_TransportGoods TDateTime
              , OperDate_TransportGoods_calc TDateTime
+             , MovementId_Transport Integer, InvNumber_Transport TVarChar, OperDate_Transport TDateTime, InvNumber_Transport_Full TVarChar
              , isEDI Boolean
              , isElectron Boolean
              , isMedoc Boolean
@@ -155,6 +156,12 @@ BEGIN
            , Movement_TransportGoods.OperDate               AS OperDate_TransportGoods
            , COALESCE (Movement_TransportGoods.OperDate, Movement.OperDate) :: TDateTime AS OperDate_TransportGoods_calc
 
+
+           , Movement_Transport.Id                     AS MovementId_Transport
+           , Movement_Transport.InvNumber              AS InvNumber_Transport
+           , Movement_Transport.OperDate               AS OperDate_Transport
+           , ('№ ' || Movement_Transport.InvNumber || ' от ' || Movement_Transport.OperDate  :: Date :: TVarChar ) :: TVarChar  AS InvNumber_Transport_Full 
+ 
            , COALESCE (MovementLinkMovement_Sale.MovementChildId, 0) <> 0 AS isEDI
            , COALESCE (MovementBoolean_Electron.ValueData, FALSE)         AS isElectron
            , COALESCE (MovementBoolean_Medoc.ValueData, FALSE)            AS isMedoc
@@ -349,8 +356,15 @@ BEGIN
                                            ON MovementLinkMovement_Master.MovementId = Movement.Id
                                           AND MovementLinkMovement_Master.DescId = zc_MovementLinkMovement_Master()
             LEFT JOIN Movement AS Movement_DocumentMaster ON Movement_DocumentMaster.Id = MovementLinkMovement_Master.MovementChildId
+
             LEFT JOIN MovementString AS MS_InvNumberPartner_Master ON MS_InvNumberPartner_Master.MovementId = MovementLinkMovement_Master.MovementChildId -- Movement_DocumentMaster.Id
                                                                   AND MS_InvNumberPartner_Master.DescId = zc_MovementString_InvNumberPartner()
+
+            LEFT JOIN MovementLinkMovement AS MovementLinkMovement_Transport
+                                           ON MovementLinkMovement_Transport.MovementId = Movement.Id
+                                          AND MovementLinkMovement_Transport.DescId = zc_MovementLinkMovement_Transport()
+            LEFT JOIN Movement AS Movement_Transport ON Movement_Transport.Id = MovementLinkMovement_Transport.MovementChildId
+
             LEFT JOIN MovementBoolean AS MovementBoolean_Electron
                                       ON MovementBoolean_Electron.MovementId = MovementLinkMovement_Master.MovementChildId
                                      AND MovementBoolean_Electron.DescId = zc_MovementBoolean_Electron()

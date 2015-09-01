@@ -611,7 +611,6 @@ var
   GoodsId : Integer;
 begin
   if not RemainsCDS.Active or not Remains_LiteCDS.Active  then exit;
-
   RemainsCDS.AfterScroll := Nil;
   RemainsCDS.DisableControls;
   GoodsId := RemainsCDS.FieldByName('Id').asInteger;
@@ -621,9 +620,10 @@ begin
   Remains_LiteCDS.DisableControls;
   try
     RemainsCDS.First;
-    while Not RemainsCDS.eof do
-    Begin
-      if Remains_LiteCDS.locate('Id',RemainsCDS.fieldByName('Id').AsInteger,[]) then
+    Remains_LiteCDS.First;
+    while not RemainsCDS.eof do
+    begin
+      if RemainsCDS.fieldByName('Id').AsInteger = Remains_LiteCDS.fieldByName('Id').AsInteger then
       Begin
         if (RemainsCDS.FieldByName('Remains').AsFloat <> Remains_LiteCDS.FieldByName('Remains').AsFloat) or
            (RemainsCDS.FieldByName('Reserved').AsFloat <> Remains_LiteCDS.FieldByName('Reserve_Amount').AsFloat) then
@@ -633,16 +633,24 @@ begin
           RemainsCDS.FieldByName('Reserved').AsFloat := Remains_LiteCDS.FieldByName('Reserve_Amount').AsFloat;
           RemainsCDS.Post;
         End;
+        RemainsCDS.Next;
+        Remains_LiteCDS.Next;
       End
       else
-      if RemainsCDS.FieldByName('Remains').AsFloat <> 0 then
+      if RemainsCDS.fieldByName('Id').AsInteger > Remains_LiteCDS.fieldByName('Id').AsInteger then
+        Remains_LiteCDS.Next
+      else
+      if RemainsCDS.fieldByName('Id').AsInteger < Remains_LiteCDS.fieldByName('Id').AsInteger then
       Begin
-        RemainsCDS.Edit;
-        RemainsCDS.FieldByName('Remains').AsFloat := 0;
-        RemainsCDS.Post;
+        if (RemainsCDS.FieldByName('Remains').AsFloat <> 0) then
+        Begin
+          RemainsCDS.Edit;
+          RemainsCDS.FieldByName('Remains').AsFloat := 0;
+          RemainsCDS.Post;
+        End;
+        RemainsCDS.Next;
       End;
-      RemainsCDS.Next;
-    End;
+    end;
 
     AlternativeCDS.First;
     while Not AlternativeCDS.eof do
@@ -673,7 +681,7 @@ begin
     AlternativeCDS.Filtered := true;
     RemainsCDSAfterScroll(RemainsCDS);
     AlternativeCDS.EnableControls;
-    Remains_LiteCDS.EnableControls;
+    //Remains_LiteCDS.EnableControls;
   end;
 end;
 

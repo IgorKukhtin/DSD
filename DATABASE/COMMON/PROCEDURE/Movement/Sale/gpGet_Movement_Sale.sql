@@ -29,6 +29,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , MovementId_TransportGoods Integer
              , InvNumber_TransportGoods TVarChar
              , OperDate_TransportGoods TDateTime
+             , MovementId_Transport Integer, InvNumber_Transport TVarChar
              , isCOMDOC Boolean
              , Comment TVarChar
               )
@@ -87,6 +88,8 @@ BEGIN
              , 0                   			    AS MovementId_TransportGoods 
              , '' :: TVarChar                     	    AS InvNumber_TransportGoods 
              , inOperDate                                   AS OperDate_TransportGoods
+             , 0                   			    AS MovementId_Transport
+             , '' :: TVarChar                     	    AS InvNumber_Transport 
              , FALSE                                        AS isCOMDOC
              , CAST ('' as TVarChar) 		            AS Comment
 
@@ -152,6 +155,9 @@ BEGIN
            , Movement_TransportGoods.Id                     AS MovementId_TransportGoods
            , Movement_TransportGoods.InvNumber              AS InvNumber_TransportGoods
            , COALESCE (Movement_TransportGoods.OperDate, Movement.OperDate) AS OperDate_TransportGoods
+
+           , Movement_Transport.Id                     AS MovementId_Transport
+           , ('№ ' || Movement_Transport.InvNumber || ' от ' || Movement_Transport.OperDate  :: Date :: TVarChar ) :: TVarChar AS InvNumber_Transport
 
            , COALESCE (MovementLinkMovement_Sale.MovementChildId, 0) <> 0 AS isCOMDOC
            , MovementString_Comment.ValueData       AS Comment
@@ -252,6 +258,11 @@ BEGIN
                                            ON MovementLinkMovement_TransportGoods.MovementId = Movement.Id
                                           AND MovementLinkMovement_TransportGoods.DescId = zc_MovementLinkMovement_TransportGoods()
             LEFT JOIN Movement AS Movement_TransportGoods ON Movement_TransportGoods.Id = MovementLinkMovement_TransportGoods.MovementChildId
+
+            LEFT JOIN MovementLinkMovement AS MovementLinkMovement_Transport
+                                           ON MovementLinkMovement_Transport.MovementId = Movement.Id
+                                          AND MovementLinkMovement_Transport.DescId = zc_MovementLinkMovement_Transport()
+            LEFT JOIN Movement AS Movement_Transport ON Movement_Transport.Id = MovementLinkMovement_Transport.MovementChildId
 
 --add Tax
             LEFT JOIN MovementLinkMovement AS MovementLinkMovement_Master

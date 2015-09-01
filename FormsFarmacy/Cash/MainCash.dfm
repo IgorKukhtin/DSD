@@ -689,12 +689,8 @@ inherited MainCashForm: TMainCashForm
     Filter = 'Remains > 0 or Reserved <> 0'
     Filtered = True
     FieldDefs = <>
-    IndexDefs = <
-      item
-        Name = 'RemainsCDSIndexId'
-        Fields = 'Id'
-        Options = [ixPrimary, ixUnique]
-      end>
+    IndexDefs = <>
+    IndexFieldNames = 'Id'
     Params = <>
     StoreDefs = True
     AfterScroll = RemainsCDSAfterScroll
@@ -939,7 +935,7 @@ inherited MainCashForm: TMainCashForm
         Name = 'inMovementId'
         Value = Null
         Component = FormParams
-        ComponentItem = 'Id'
+        ComponentItem = 'CheckId'
         ParamType = ptInput
       end>
     PackSize = 1
@@ -1117,6 +1113,7 @@ inherited MainCashForm: TMainCashForm
   end
   object Remains_LiteCDS: TClientDataSet
     Aggregates = <>
+    IndexFieldNames = 'Id'
     Params = <>
     AfterScroll = RemainsCDSAfterScroll
     Left = 304
