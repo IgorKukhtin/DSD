@@ -4,7 +4,7 @@
   ClientWidth = 1382
   AddOnFormData.OnLoadAction = actSetDefaults
   ExplicitWidth = 1398
-  ExplicitHeight = 703
+  ExplicitHeight = 706
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -1017,15 +1017,6 @@
           ComponentItem = 'GoodsCode'
         end>
       isShowModal = True
-    end
-    inherited actInsertUpdateMovement: TdsdExecStoredProc
-      StoredProcList = <
-        item
-          StoredProc = spInsertUpdateMovement
-        end
-        item
-          StoredProc = spInsertUpdateMovement_Params
-        end>
     end
     inherited actPrint: TdsdPrintAction
       StoredProc = spSelectPrint

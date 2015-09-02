@@ -2193,7 +2193,7 @@ object IncomePartnerForm: TIncomePartnerForm
       item
         Name = 'ioId'
         Value = 0
-        ParamType = ptInputOutput
+        ParamType = ptInput
       end
       item
         Name = 'inMovementId'

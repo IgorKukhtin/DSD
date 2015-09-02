@@ -10,19 +10,19 @@ inherited SendOnPrice_BranchForm: TSendOnPrice_BranchForm
     Top = 166
     Width = 944
     Height = 502
-    ExplicitTop = 126
+    ExplicitTop = 166
     ExplicitWidth = 944
-    ExplicitHeight = 542
+    ExplicitHeight = 502
     ClientRectBottom = 502
     ClientRectRight = 944
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 944
-      ExplicitHeight = 518
+      ExplicitHeight = 478
       inherited cxGrid: TcxGrid
         Width = 944
         Height = 478
         ExplicitWidth = 944
-        ExplicitHeight = 518
+        ExplicitHeight = 478
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -1354,7 +1354,7 @@ inherited SendOnPrice_BranchForm: TSendOnPrice_BranchForm
       item
         Name = 'ioId'
         Value = '0'
-        ParamType = ptInputOutput
+        ParamType = ptInput
       end
       item
         Name = 'inMovementId'
