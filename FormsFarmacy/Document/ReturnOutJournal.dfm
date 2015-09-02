@@ -154,14 +154,12 @@ inherited ReturnOutJournalForm: TReturnOutJournalForm
             Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
             DataBinding.FieldName = 'FromName'
             HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
             Width = 187
           end
           object colToName: TcxGridDBColumn
             Caption = #1070#1088' '#1083#1080#1094#1086' '#1087#1086#1089#1090'-'#1082
             DataBinding.FieldName = 'ToName'
             HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
             Width = 200
           end
           object colTotalCount: TcxGridDBColumn
@@ -171,7 +169,6 @@ inherited ReturnOutJournalForm: TReturnOutJournalForm
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
             Width = 60
           end
           object colTotalSummMVAT: TcxGridDBColumn
@@ -179,7 +176,6 @@ inherited ReturnOutJournalForm: TReturnOutJournalForm
             DataBinding.FieldName = 'TotalSummMVAT'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DisplayFormat = ',0.00;-,0.00; ;'
-            HeaderAlignmentVert = vaCenter
             Width = 111
           end
           object colTotalSumm: TcxGridDBColumn
@@ -189,13 +185,11 @@ inherited ReturnOutJournalForm: TReturnOutJournalForm
             Properties.DecimalPlaces = 2
             Properties.DisplayFormat = ',0.00;-,0.00; ;'
             HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
             Width = 109
           end
           object colNDSKindName: TcxGridDBColumn
             Caption = #1053#1044#1057
             DataBinding.FieldName = 'NDSKindName'
-            HeaderAlignmentVert = vaCenter
             Width = 56
           end
         end
@@ -360,6 +354,7 @@ inherited ReturnOutJournalForm: TReturnOutJournalForm
     object actGetDataForSend: TdsdExecStoredProc
       Category = 'dsdImportExport'
       MoveParams = <>
+      PostDataSetBeforeExecute = False
       StoredProc = spGetDataForSend
       StoredProcList = <
         item
@@ -406,6 +401,7 @@ inherited ReturnOutJournalForm: TReturnOutJournalForm
     object actReturnOutMovementInsert: TdsdExecStoredProc
       Category = 'Edit'
       MoveParams = <>
+      PostDataSetBeforeExecute = False
       StoredProc = spInsertMovement
       StoredProcList = <
         item
@@ -416,6 +412,7 @@ inherited ReturnOutJournalForm: TReturnOutJournalForm
     object actChoiceIncomeMovement: TOpenChoiceForm
       Category = 'Edit'
       MoveParams = <>
+      PostDataSetBeforeExecute = False
       Caption = 'actChoiceIncomeMovement'
       FormName = 'TIncomeJournalChoiceForm'
       FormNameParam.Value = 'TIncomeJournalChoiceForm'
@@ -610,6 +607,9 @@ inherited ReturnOutJournalForm: TReturnOutJournalForm
   inherited PopupMenu: TPopupMenu
     Left = 640
     Top = 152
+    inherited N3: TMenuItem
+      Action = mactInsert
+    end
   end
   inherited PeriodChoice: TPeriodChoice
     Left = 288

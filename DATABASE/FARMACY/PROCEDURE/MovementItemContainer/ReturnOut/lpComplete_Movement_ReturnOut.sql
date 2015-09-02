@@ -97,23 +97,33 @@ BEGIN
                                , IsActive Boolean, IsMaster Boolean
                                 ) ON COMMIT DROP;
 */
-   DELETE FROM _tmpItem;
-   INSERT INTO _tmpItem(MovementDescId, MovementItemId, ObjectId, OperSumm, AccountId, JuridicalId_Basis, OperDate, UnitId)   
-   SELECT
-          zc_Movement_ReturnOut()
-        , MovementItem_ReturnOut_View.Id
-        , MovementItem_ReturnOut_View.GoodsId
-        , MovementItem_ReturnOut_View.Amount
-        , lpInsertFind_Object_Account (inAccountGroupId         := zc_Enum_AccountGroup_20000() -- Запасы
-                                     , inAccountDirectionId     := zc_Enum_AccountDirection_20100() -- Cклад 
-                                     , inInfoMoneyDestinationId := zc_Enum_InfoMoneyDestination_10200() -- Медикаменты
-                                     , inInfoMoneyId            := NULL
-                                     , inUserId                 := inUserId)
-        , Movement_ReturnOut_View.JuridicalId
-        , Movement_ReturnOut_View.OperDate
-        , Movement_ReturnOut_View.FromId
-     FROM MovementItem_ReturnOut_View, Movement_ReturnOut_View
-    WHERE MovementItem_ReturnOut_View.MovementId = Movement_ReturnOut_View.Id AND Movement_ReturnOut_View.Id =  inMovementId;
+    DELETE FROM _tmpItem;
+    INSERT INTO _tmpItem(MovementDescId, MovementItemId, ObjectId, OperSumm, AccountId, JuridicalId_Basis, 
+                         OperDate, UnitId, ContainerId)   
+    SELECT
+        zc_Movement_ReturnOut()
+      , MovementItem_ReturnOut_View.Id
+      , MovementItem_ReturnOut_View.GoodsId
+      , MovementItem_ReturnOut_View.Amount
+      , lpInsertFind_Object_Account (inAccountGroupId         := zc_Enum_AccountGroup_20000() -- Запасы
+                                   , inAccountDirectionId     := zc_Enum_AccountDirection_20100() -- Cклад 
+                                   , inInfoMoneyDestinationId := zc_Enum_InfoMoneyDestination_10200() -- Медикаменты
+                                   , inInfoMoneyId            := NULL
+                                   , inUserId                 := inUserId)
+      , Movement_ReturnOut_View.JuridicalId
+      , Movement_ReturnOut_View.OperDate
+      , Movement_ReturnOut_View.FromId
+      , MIContainer_Income.ContainerId
+    FROM 
+        MovementItem_ReturnOut_View
+        INNER JOIN Movement_ReturnOut_View ON MovementItem_ReturnOut_View.MovementId = Movement_ReturnOut_View.Id
+        INNER JOIN MovementItem AS MovementItem_Income
+                                ON MovementItem_ReturnOut_View.ParentId = MovementItem_Income.Id
+        INNER JOIN MovementItemContainer AS MIContainer_Income
+                                         ON MIContainer_Income.MovementItemId = MovementItem_Income.Id
+                                        AND MIContainer_Income.DescId = zc_Container_Count()                                        
+    WHERE  
+        Movement_ReturnOut_View.Id =  inMovementId;
 
     -- А сюда товары
     INSERT INTO _tmpMIContainer_insert(DescId, MovementDescId, MovementId, MovementItemId, ContainerId, AccountId, Amount, OperDate)
@@ -122,16 +132,17 @@ BEGIN
               , zc_Movement_ReturnOut()  
               , inMovementId
               , _tmpItem.MovementItemId
-              , lpInsertFind_Container(
-                          inContainerDescId := zc_Container_Count(), -- DescId Остатка
-                          inParentId        := NULL               , -- Главный Container
-                          inObjectId := ObjectId, -- Объект (Счет или Товар или ...)
-                          inJuridicalId_basis := _tmpItem.JuridicalId_Basis, -- Главное юридическое лицо
-                          inBusinessId := NULL, -- Бизнесы
-                          inObjectCostDescId  := NULL, -- DescId для <элемент с/с>
-                          inObjectCostId       := NULL,
-                          inDescId_1          := zc_ContainerLinkObject_Unit(), -- DescId для 1-ой Аналитики
-                          inObjectId_1        := _tmpItem.UnitId) 
+              , _tmpItem.ContainerId
+              -- , lpInsertFind_Container(
+                          -- inContainerDescId := zc_Container_Count(), -- DescId Остатка
+                          -- inParentId        := NULL               , -- Главный Container
+                          -- inObjectId := ObjectId, -- Объект (Счет или Товар или ...)
+                          -- inJuridicalId_basis := _tmpItem.JuridicalId_Basis, -- Главное юридическое лицо
+                          -- inBusinessId := NULL, -- Бизнесы
+                          -- inObjectCostDescId  := NULL, -- DescId для <элемент с/с>
+                          -- inObjectCostId       := NULL,
+                          -- inDescId_1          := zc_ContainerLinkObject_Unit(), -- DescId для 1-ой Аналитики
+                          -- inObjectId_1        := _tmpItem.UnitId) 
               , AccountId
               , - OperSumm
               , OperDate

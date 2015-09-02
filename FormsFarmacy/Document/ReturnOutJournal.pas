@@ -12,7 +12,8 @@ uses
   dxBarExtItems, dxBar, cxClasses, Datasnap.DBClient, Vcl.ActnList,
   cxPropertiesStore, cxLabel, cxTextEdit, cxMaskEdit, cxDropDownEdit,
   cxCalendar, Vcl.ExtCtrls, cxGridLevel, cxGridCustomTableView, cxGridTableView,
-  cxGridDBTableView, cxGridCustomView, cxGrid, cxPC, ExternalSave;
+  cxGridDBTableView, cxGridCustomView, cxGrid, cxPC, ExternalSave,
+  dxBarBuiltInMenu, cxNavigator;
 
 type
   TReturnOutJournalForm = class(TAncestorJournalForm)
