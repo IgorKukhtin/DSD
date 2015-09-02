@@ -1,27 +1,53 @@
--- Function: gpchecklogin(tvarchar, tvarchar, tvarchar)
+-- Function: gpchecklogin(TVarChar, TVarChar, TVarChar)
 
--- DROP FUNCTION gpchecklogin(tvarchar, tvarchar, tvarchar);
+-- DROP FUNCTION IF EXISTS gpchecklogin(TVarChar, TVarChar, TVarChar);
+ DROP FUNCTION IF EXISTS gpchecklogin (TVarChar, TVarChar, TVarChar, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpCheckLogin(
-IN inUserLogin TVarChar, 
-IN inUserPassword TVarChar, 
-INOUT Session TVarChar)
-  RETURNS tvarchar AS
-$BODY$BEGIN
-   SELECT UserLogin.Id INTO Session 
-     FROM Object AS UserLogin
-     JOIN ObjectString UserPassword
-       ON UserPassword.ValueData = inUserPassword 
-      AND UserPassword.DescId = zc_ObjectString_User_Password()
-      AND UserPassword.ObjectId = UserLogin.Id
-    WHERE UserLogin.ValueData = inUserLogin
-      AND UserLogin.DescId = zc_Object_User();
+    IN inUserLogin    TVarChar, 
+    IN inUserPassword TVarChar, 
+    IN inIP           TVarChar, 
+ INOUT Session TVarChar
+)
+RETURNS TVarChar
+AS
+$BODY$
+  DECLARE vbUserId Integer;
+BEGIN
+
+   SELECT Object_User.Id, Object_User.Id
+          INTO Session, vbUserId
+     FROM Object AS Object_User
+          JOIN ObjectString AS UserPassword
+                            ON UserPassword.ValueData = inUserPassword AND inUserPassword <> ''
+                           AND UserPassword.DescId = zc_ObjectString_User_Password()
+                           AND UserPassword.ObjectId = Object_User.Id
+    WHERE Object_User.ValueData = inUserLogin
+      AND Object_User.isErased = FALSE
+      AND Object_User.DescId = zc_Object_User();
 
     IF NOT found THEN
        RAISE EXCEPTION 'Неправильный логин или пароль';
+    ELSE
+        INSERT INTO LoginProtocol (UserId, OperDate, ProtocolData)
+           SELECT vbUserId, current_timestamp
+                , '<XML>'
+               || '<Field FieldName = "IP" FieldValue = "' || zfStrToXmlStr (inIP) || '"/>'
+               || '<Field FieldName = "Логин" FieldValue = "' || zfStrToXmlStr (inUserLogin) || '"/>'
+               || '</XML>'
+                ;
+        
     END IF;
+
 END;$BODY$
-  LANGUAGE plpgsql VOLATILE
-  COST 100;
-ALTER FUNCTION gpCheckLogin(TVarChar, TVarChar, TVarChar)
-  OWNER TO postgres;
+  LANGUAGE plpgsql VOLATILE;
+
+/*-------------------------------------------------------------------------------
+ ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 02.09.15                                        *
+*/
+
+-- тест
+-- SELECT * FROM LoginProtocol order by 1 desc
+

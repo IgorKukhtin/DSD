@@ -8,7 +8,8 @@ uses
   ZConnection, dsdDB, ZAbstractRODataset, ZAbstractDataset, ZDataset, Data.DB,
   Data.Win.ADODB, Vcl.StdCtrls, cxTextEdit, cxMaskEdit, cxDropDownEdit,
   cxCalendar, Vcl.Controls, Vcl.Samples.Gauges, Vcl.ExtCtrls, System.Classes,
-  Vcl.Grids, Vcl.DBGrids, DBTables, dxSkinsCore, dxSkinsDefaultPainters;
+  Vcl.Grids, Vcl.DBGrids, DBTables, dxSkinsCore, dxSkinsDefaultPainters,
+  IdBaseComponent, IdComponent, IdIPWatch;
 
 type
   TMainForm = class(TForm)
@@ -194,6 +195,7 @@ type
     cbPartion: TCheckBox;
     fromQueryDate_recalc: TADOQuery;
     cbHistoryCost_diff: TCheckBox;
+    IdIPWatch1: TIdIPWatch;
     procedure OKGuideButtonClick(Sender: TObject);
     procedure cbAllGuideClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
