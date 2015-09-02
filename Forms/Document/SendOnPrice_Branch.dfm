@@ -3,26 +3,26 @@ inherited SendOnPrice_BranchForm: TSendOnPrice_BranchForm
   ClientHeight = 668
   ClientWidth = 944
   ExplicitWidth = 960
-  ExplicitHeight = 703
+  ExplicitHeight = 706
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Top = 126
+    Top = 166
     Width = 944
-    Height = 542
-    ExplicitTop = 126
+    Height = 502
+    ExplicitTop = 166
     ExplicitWidth = 944
-    ExplicitHeight = 542
-    ClientRectBottom = 542
+    ExplicitHeight = 502
+    ClientRectBottom = 502
     ClientRectRight = 944
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 944
-      ExplicitHeight = 518
+      ExplicitHeight = 478
       inherited cxGrid: TcxGrid
         Width = 944
-        Height = 518
+        Height = 478
         ExplicitWidth = 944
-        ExplicitHeight = 518
+        ExplicitHeight = 478
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -235,10 +235,10 @@ inherited SendOnPrice_BranchForm: TSendOnPrice_BranchForm
   end
   inherited DataPanel: TPanel
     Width = 944
-    Height = 100
+    Height = 140
     TabOrder = 3
     ExplicitWidth = 944
-    ExplicitHeight = 100
+    ExplicitHeight = 140
     inherited edInvNumber: TcxTextEdit
       Left = 8
       ExplicitLeft = 8
@@ -392,6 +392,34 @@ inherited SendOnPrice_BranchForm: TSendOnPrice_BranchForm
       Properties.ReadOnly = True
       TabOrder = 20
       Width = 89
+    end
+    object cxLabel25: TcxLabel
+      Left = 8
+      Top = 90
+      Caption = #1055#1091#1090#1077#1074#1086#1081' '#1083#1080#1089#1090
+    end
+    object edInvNumberTransport: TcxButtonEdit
+      Left = 8
+      Top = 108
+      Properties.Buttons = <
+        item
+          Default = True
+          Kind = bkEllipsis
+        end>
+      Properties.ReadOnly = True
+      TabOrder = 22
+      Width = 260
+    end
+    object cxLabel22: TcxLabel
+      Left = 274
+      Top = 90
+      Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
+    end
+    object ceComment: TcxTextEdit
+      Left = 274
+      Top = 108
+      TabOrder = 24
+      Width = 550
     end
   end
   object cbCalcAmountPartner: TcxCheckBox [2]
@@ -1011,6 +1039,25 @@ inherited SendOnPrice_BranchForm: TSendOnPrice_BranchForm
         Value = Null
         Component = edChangePercentAmount
         DataType = ftFloat
+      end
+      item
+        Name = 'Comment'
+        Value = Null
+        Component = ceComment
+        DataType = ftString
+      end
+      item
+        Name = 'MovementId_Transport'
+        Value = Null
+        Component = TransportChoiceGuides
+        ComponentItem = 'Key'
+      end
+      item
+        Name = 'InvNumber_Transport'
+        Value = Null
+        Component = TransportChoiceGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
       end>
     Left = 216
     Top = 256
@@ -1101,6 +1148,17 @@ inherited SendOnPrice_BranchForm: TSendOnPrice_BranchForm
         Component = GuidesInvNumberOrder
         ComponentItem = 'Key'
         ParamType = ptInput
+      end
+      item
+        Name = 'inComment'
+        Value = Null
+        Component = ceComment
+        DataType = ftString
+        ParamType = ptInput
+      end
+      item
+        Value = Null
+        ParamType = ptUnknown
       end>
     Left = 162
     Top = 312
@@ -1144,6 +1202,9 @@ inherited SendOnPrice_BranchForm: TSendOnPrice_BranchForm
       end
       item
         Control = edPriceList
+      end
+      item
+        Control = ceComment
       end>
     Left = 232
     Top = 193
@@ -1293,7 +1354,7 @@ inherited SendOnPrice_BranchForm: TSendOnPrice_BranchForm
       item
         Name = 'ioId'
         Value = '0'
-        ParamType = ptInputOutput
+        ParamType = ptInput
       end
       item
         Name = 'inMovementId'
@@ -1749,5 +1810,82 @@ inherited SendOnPrice_BranchForm: TSendOnPrice_BranchForm
         DataType = ftString
       end>
     Left = 116
+  end
+  object TransportChoiceGuides: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edInvNumberTransport
+    Key = '0'
+    FormNameParam.Value = 'TTransportJournalChoiceForm'
+    FormNameParam.DataType = ftString
+    FormName = 'TTransportJournalChoiceForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = '0'
+        Component = TransportChoiceGuides
+        ComponentItem = 'Key'
+        DataType = ftString
+        ParamType = ptInput
+      end
+      item
+        Name = 'InvNumber_Full'
+        Value = ''
+        Component = TransportChoiceGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+      end
+      item
+        Name = 'PartnerId'
+        Value = ''
+        Component = GuidesFrom
+        ComponentItem = 'Key'
+      end
+      item
+        Name = 'PartnerName'
+        Value = ''
+        Component = GuidesFrom
+        ComponentItem = 'TextValue'
+        DataType = ftString
+      end>
+    Left = 116
+    Top = 96
+  end
+  object spInsertUpdateMovement_Params: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Movement_SendOnPrice_Transport'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inMovementId_Transport'
+        Value = '0'
+        Component = TransportChoiceGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+      end>
+    PackSize = 1
+    Left = 161
+    Top = 432
+  end
+  object HeaderSaver2: THeaderSaver
+    IdParam.Value = Null
+    IdParam.Component = FormParams
+    IdParam.ComponentItem = 'Id'
+    StoredProc = spInsertUpdateMovement_Params
+    ControlList = <
+      item
+        Control = edInvNumberTransport
+      end>
+    GetStoredProc = spGet
+    Left = 280
+    Top = 177
   end
 end

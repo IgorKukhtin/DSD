@@ -4,7 +4,7 @@ inherited SendOnPrice_BranchJournalForm: TSendOnPrice_BranchJournalForm
   ClientWidth = 1110
   AddOnFormData.Params = FormParams
   ExplicitWidth = 1126
-  ExplicitHeight = 570
+  ExplicitHeight = 573
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -163,6 +163,46 @@ inherited SendOnPrice_BranchJournalForm: TSendOnPrice_BranchJournalForm
             Options.Editing = False
             Width = 70
           end
+          object InvNumber_Transport: TcxGridDBColumn
+            Caption = #8470' '#1087#1091#1090#1077#1074#1086#1075#1086
+            DataBinding.FieldName = 'InvNumber_Transport'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 61
+          end
+          object OperDate_Transport: TcxGridDBColumn
+            Caption = #1044#1072#1090#1072' '#1087#1091#1090#1077#1074#1086#1075#1086
+            DataBinding.FieldName = 'OperDate_Transport'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
+          end
+          object CarModelName: TcxGridDBColumn
+            Caption = #1052#1072#1088#1082'a '#1072#1074#1090#1086#1084#1086#1073#1080#1083#1103
+            DataBinding.FieldName = 'CarModelName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 89
+          end
+          object CarName: TcxGridDBColumn
+            Caption = #1040#1074#1090#1086#1084#1086#1073#1080#1083#1100
+            DataBinding.FieldName = 'CarName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 80
+          end
+          object PersonalDriverName: TcxGridDBColumn
+            Caption = #1042#1086#1076#1080#1090#1077#1083#1100
+            DataBinding.FieldName = 'PersonalDriverName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
+          end
           object colFromName: TcxGridDBColumn
             Caption = #1054#1090' '#1082#1086#1075#1086
             DataBinding.FieldName = 'FromName'
@@ -302,6 +342,13 @@ inherited SendOnPrice_BranchJournalForm: TSendOnPrice_BranchJournalForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 70
+          end
+          object Comment: TcxGridDBColumn
+            Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
+            DataBinding.FieldName = 'Comment'
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 100
           end
         end
       end

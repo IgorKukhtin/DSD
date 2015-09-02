@@ -78,6 +78,13 @@ type
     GuidesInvNumberOrder: TdsdGuides;
     cbCalcAmountPartner: TcxCheckBox;
     edChangePercentAmount: TcxCurrencyEdit;
+    cxLabel25: TcxLabel;
+    edInvNumberTransport: TcxButtonEdit;
+    ceComment: TcxTextEdit;
+    cxLabel22: TcxLabel;
+    TransportChoiceGuides: TdsdGuides;
+    spInsertUpdateMovement_Params: TdsdStoredProc;
+    HeaderSaver2: THeaderSaver;
   private
     { Private declarations }
   public

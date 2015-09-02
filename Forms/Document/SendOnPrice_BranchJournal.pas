@@ -45,6 +45,7 @@ type
     bbPrintOut: TdxBarButton;
     spSelectPrintOut: TdsdStoredProc;
     InvNumber_Order: TcxGridDBColumn;
+    Comment: TcxGridDBColumn;
   private
     { Private declarations }
   public

@@ -78,6 +78,7 @@ type
     Comment_order: TcxGridDBColumn;
     RouteGroupName: TcxGridDBColumn;
     PersonalName: TcxGridDBColumn;
+    Comment: TcxGridDBColumn;
   private
     { Private declarations }
   public

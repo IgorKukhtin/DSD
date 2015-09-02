@@ -23,6 +23,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , CurrencyDocumentName TVarChar, CurrencyPartnerName TVarChar
              , Comment TVarChar
              , MovementId_Transport Integer, InvNumber_Transport TVarChar, OperDate_Transport TDateTime, InvNumber_Transport_Full TVarChar
+             , CarName TVarChar, CarModelName TVarChar, PersonalDriverName TVarChar
               )
 AS
 $BODY$
@@ -97,6 +98,9 @@ BEGIN
            , Movement_Transport.InvNumber              AS InvNumber_Transport
            , Movement_Transport.OperDate               AS OperDate_Transport
            , ('π ' || Movement_Transport.InvNumber || ' ÓÚ ' || Movement_Transport.OperDate  :: Date :: TVarChar ) :: TVarChar  AS InvNumber_Transport_Full
+           , Object_Car.ValueData                      AS CarName
+           , Object_CarModel.ValueData                 AS CarModelName
+           , View_PersonalDriver.PersonalName          AS PersonalDriverName
 
        FROM (SELECT Movement.id
              FROM tmpStatus
@@ -208,6 +212,20 @@ BEGIN
                                            ON MovementLinkMovement_Transport.MovementId = Movement.Id
                                           AND MovementLinkMovement_Transport.DescId = zc_MovementLinkMovement_Transport()
             LEFT JOIN Movement AS Movement_Transport ON Movement_Transport.Id = MovementLinkMovement_Transport.MovementChildId
+
+            LEFT JOIN MovementLinkObject AS MovementLinkObject_Car
+                                         ON MovementLinkObject_Car.MovementId = Movement_Transport.Id
+                                        AND MovementLinkObject_Car.DescId = zc_MovementLinkObject_Car()
+            LEFT JOIN Object AS Object_Car ON Object_Car.Id = MovementLinkObject_Car.ObjectId
+
+            LEFT JOIN ObjectLink AS ObjectLink_Car_CarModel ON ObjectLink_Car_CarModel.ObjectId = Object_Car.Id
+                                                           AND ObjectLink_Car_CarModel.DescId = zc_ObjectLink_Car_CarModel()
+            LEFT JOIN Object AS Object_CarModel ON Object_CarModel.Id = ObjectLink_Car_CarModel.ChildObjectId
+            
+            LEFT JOIN MovementLinkObject AS MovementLinkObject_PersonalDriver
+                                         ON MovementLinkObject_PersonalDriver.MovementId = Movement_Transport.Id
+                                        AND MovementLinkObject_PersonalDriver.DescId = zc_MovementLinkObject_PersonalDriver()
+            LEFT JOIN Object_Personal_View AS View_PersonalDriver ON View_PersonalDriver.PersonalId = MovementLinkObject_PersonalDriver.ObjectId
 
        WHERE MovementBoolean_isIncome.ValueData is NULL
          AND COALESCE (Object_To.DescId, 0) NOT IN (zc_Object_Car(), zc_Object_Member()) -- !!!—¿ÃŒ≈ Õ≈ –¿—»¬Œ≈ –≈ÿ≈Õ»≈!!!
