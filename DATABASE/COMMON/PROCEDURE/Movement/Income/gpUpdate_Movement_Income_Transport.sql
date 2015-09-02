@@ -7,10 +7,10 @@ CREATE OR REPLACE FUNCTION gpUpdate_Movement_Income_Transport (
     IN inMovementId_Transport          Integer   , -- 
     IN inSession                       TVarChar    -- сессия пользователя
 )
-RETURNS Integer AS
+RETURNS VOID
+AS
 $BODY$
    DECLARE vbUserId Integer;
-   DECLARE vbAccessKeyId Integer;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Update_Movement_Income_Transport());

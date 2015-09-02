@@ -18,13 +18,17 @@ BEGIN
      vbUserId:= lpGetUserBySession (inSession);
 
 
-     -- сформировали связь 
-     PERFORM lpInsertUpdate_MovementLinkMovement (MovementLinkMovementDesc.Id, inMovementId, inMovementChildId)
-     FROM (SELECT inDescCode AS DescCode WHERE TRIM (inDescCode) <> '') AS tmp
-          LEFT JOIN MovementLinkMovementDesc ON MovementLinkMovementDesc.Code = tmp.DescCode;
+     IF inMovementId <> 0
+     THEN
+         -- сформировали связь 
+         PERFORM lpInsertUpdate_MovementLinkMovement (MovementLinkMovementDesc.Id, inMovementId, inMovementChildId)
+         FROM (SELECT inDescCode AS DescCode WHERE TRIM (inDescCode) <> '') AS tmp
+              LEFT JOIN MovementLinkMovementDesc ON MovementLinkMovementDesc.Code = tmp.DescCode;
 
-     -- сохранили протокол
-     PERFORM lpInsert_MovementProtocol (inMovementId, vbUserId, FALSE);
+         -- сохранили протокол
+         PERFORM lpInsert_MovementProtocol (inMovementId, vbUserId, FALSE);
+
+     END IF;
 
 
 END;
