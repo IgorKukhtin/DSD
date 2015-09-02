@@ -3,24 +3,24 @@ inherited SendOnPriceForm: TSendOnPriceForm
   ClientHeight = 668
   ClientWidth = 982
   ExplicitWidth = 998
-  ExplicitHeight = 703
+  ExplicitHeight = 706
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Top = 126
+    Top = 166
     Width = 982
-    Height = 542
+    Height = 502
     ExplicitTop = 126
     ExplicitWidth = 982
     ExplicitHeight = 542
-    ClientRectBottom = 542
+    ClientRectBottom = 502
     ClientRectRight = 982
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 982
       ExplicitHeight = 518
       inherited cxGrid: TcxGrid
         Width = 982
-        Height = 518
+        Height = 478
         ExplicitWidth = 982
         ExplicitHeight = 518
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -235,10 +235,10 @@ inherited SendOnPriceForm: TSendOnPriceForm
   end
   inherited DataPanel: TPanel
     Width = 982
-    Height = 100
+    Height = 140
     TabOrder = 3
     ExplicitWidth = 982
-    ExplicitHeight = 100
+    ExplicitHeight = 140
     inherited edInvNumber: TcxTextEdit
       Left = 8
       ExplicitLeft = 8
@@ -390,6 +390,34 @@ inherited SendOnPriceForm: TSendOnPriceForm
       Properties.ReadOnly = True
       TabOrder = 20
       Width = 89
+    end
+    object cxLabel25: TcxLabel
+      Left = 8
+      Top = 90
+      Caption = #1055#1091#1090#1077#1074#1086#1081' '#1083#1080#1089#1090
+    end
+    object edInvNumberTransport: TcxButtonEdit
+      Left = 8
+      Top = 108
+      Properties.Buttons = <
+        item
+          Default = True
+          Kind = bkEllipsis
+        end>
+      Properties.ReadOnly = True
+      TabOrder = 22
+      Width = 260
+    end
+    object ceComment: TcxTextEdit
+      Left = 274
+      Top = 108
+      TabOrder = 23
+      Width = 550
+    end
+    object cxLabel22: TcxLabel
+      Left = 274
+      Top = 90
+      Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
     end
   end
   object cbCalcAmountPartner: TcxCheckBox [2]
@@ -1025,6 +1053,25 @@ inherited SendOnPriceForm: TSendOnPriceForm
         Value = Null
         Component = edChangePercentAmount
         DataType = ftFloat
+      end
+      item
+        Name = 'MovementId_Transport'
+        Value = Null
+        Component = TransportChoiceGuides
+        ComponentItem = 'Key'
+      end
+      item
+        Name = 'InvNumber_Transport'
+        Value = Null
+        Component = TransportChoiceGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+      end
+      item
+        Name = 'Comment'
+        Value = Null
+        Component = ceComment
+        DataType = ftString
       end>
     Left = 216
     Top = 248
@@ -1129,9 +1176,11 @@ inherited SendOnPriceForm: TSendOnPriceForm
         ParamType = ptUnknown
       end
       item
+        Name = 'inComment'
         Value = ''
+        Component = ceComment
         DataType = ftString
-        ParamType = ptUnknown
+        ParamType = ptInput
       end
       item
         Value = ''
@@ -1184,6 +1233,9 @@ inherited SendOnPriceForm: TSendOnPriceForm
       end
       item
         Control = edInvNumberOrder
+      end
+      item
+        Control = ceComment
       end>
     Left = 232
     Top = 193
@@ -1791,5 +1843,82 @@ inherited SendOnPriceForm: TSendOnPriceForm
       end>
     Left = 108
     Top = 8
+  end
+  object TransportChoiceGuides: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edInvNumberTransport
+    Key = '0'
+    FormNameParam.Value = 'TTransportJournalChoiceForm'
+    FormNameParam.DataType = ftString
+    FormName = 'TTransportJournalChoiceForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = '0'
+        Component = TransportChoiceGuides
+        ComponentItem = 'Key'
+        DataType = ftString
+        ParamType = ptInput
+      end
+      item
+        Name = 'InvNumber_Full'
+        Value = ''
+        Component = TransportChoiceGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+      end
+      item
+        Name = 'PartnerId'
+        Value = ''
+        Component = GuidesFrom
+        ComponentItem = 'Key'
+      end
+      item
+        Name = 'PartnerName'
+        Value = ''
+        Component = GuidesFrom
+        ComponentItem = 'TextValue'
+        DataType = ftString
+      end>
+    Left = 148
+    Top = 104
+  end
+  object spInsertUpdateMovement_Params: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Movement_SendOnPrice_Transport'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inMovementId_Transport'
+        Value = '0'
+        Component = TransportChoiceGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+      end>
+    PackSize = 1
+    Left = 161
+    Top = 432
+  end
+  object HeaderSaver2: THeaderSaver
+    IdParam.Value = Null
+    IdParam.Component = FormParams
+    IdParam.ComponentItem = 'Id'
+    StoredProc = spInsertUpdateMovement_Params
+    ControlList = <
+      item
+        Control = edInvNumberTransport
+      end>
+    GetStoredProc = spGet
+    Left = 280
+    Top = 177
   end
 end

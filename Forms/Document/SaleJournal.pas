@@ -172,7 +172,11 @@ type
     dxBarButton1: TdxBarButton;
     PersonalName: TcxGridDBColumn;
     RouteGroupName: TcxGridDBColumn;
-    InvNumber_Transport_Full: TcxGridDBColumn;
+    InvNumber_Transport: TcxGridDBColumn;
+    OperDate_Transport: TcxGridDBColumn;
+    CarName: TcxGridDBColumn;
+    CarModelName: TcxGridDBColumn;
+    PersonalDriverName: TcxGridDBColumn;
   private
     { Private declarations }
   public
