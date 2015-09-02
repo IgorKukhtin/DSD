@@ -33,7 +33,7 @@ type
 
 implementation
 
-uses Xml.XMLDoc, UtilConst, SysUtils;
+uses Xml.XMLDoc, UtilConst, SysUtils, IdIPWatch;
 
 {------------------------------------------------------------------------------}
 constructor TUser.Create(ASession: String);
@@ -42,6 +42,7 @@ begin
 end;
 {------------------------------------------------------------------------------}
 class function TAuthentication.CheckLogin(pStorage: IStorage; const pUserName, pPassword: string; var pUser: TUser): boolean;
+var IP_str:string;
 const
   {создаем XML вызова процедуры на сервере}
   pXML =
@@ -49,10 +50,19 @@ const
     '<gpCheckLogin OutputType="otResult">' +
       '<inUserLogin    DataType="ftString" Value="%s" />' +
       '<inUserPassword DataType="ftString" Value="%s" />' +
+      '<inIP           DataType="ftString" Value="%s" />' +
     '</gpCheckLogin>' +
   '</xml>';
 begin
-  with LoadXMLData(pStorage.ExecuteProc(Format(pXML, [pUserName, pPassword]))).DocumentElement do
+
+  with TIdIPWatch.Create(nil) do
+  begin
+        Active:=true;
+        IP_str:=LocalIP;
+        Free;
+  end;
+
+  with LoadXMLData(pStorage.ExecuteProc(Format(pXML, [pUserName, pPassword, IP_str]))).DocumentElement do
        pUser := TUser.Create(GetAttribute(AnsiLowerCase(gcSession)));
   result := pUser <> nil
 end;

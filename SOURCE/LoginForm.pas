@@ -7,7 +7,7 @@ uses
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, cxGraphics, cxControls, cxLookAndFeels,
   cxLookAndFeelPainters, cxContainer, cxEdit, Vcl.Menus, cxLabel, Vcl.StdCtrls,
   cxButtons, cxTextEdit, cxMaskEdit, cxDropDownEdit, cxPropertiesStore,
-  dxSkinsCore;
+  dxSkinsCore, dxSkinsDefaultPainters;
 
 type
   TLoginForm = class(TForm)

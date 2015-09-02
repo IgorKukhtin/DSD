@@ -356,8 +356,8 @@ BEGIN
                    , MovementItem.Id AS MovementItemId
 
                    , MovementItem.ObjectId AS GoodsId
-                   , CASE WHEN View_InfoMoney.InfoMoneyId IN (zc_Enum_InfoMoney_20901(), zc_Enum_InfoMoney_30101(), zc_Enum_InfoMoney_30201()) THEN COALESCE (MILinkObject_GoodsKind.ObjectId, 0) ELSE 0 END AS GoodsKindId -- Ирна + Готовая продукция
-                   , _tmpItem.GoodsKindId AS GoodsKindId_complete
+                   , CASE WHEN View_InfoMoney.InfoMoneyId IN (zc_Enum_InfoMoney_20901(), zc_Enum_InfoMoney_30101(), zc_Enum_InfoMoney_30201()) THEN COALESCE (MILinkObject_GoodsKind.ObjectId, 0)         ELSE 0 END AS GoodsKindId          -- Ирна + Готовая продукция
+                   , CASE WHEN View_InfoMoney.InfoMoneyId IN (zc_Enum_InfoMoney_20901(), zc_Enum_InfoMoney_30101(), zc_Enum_InfoMoney_30201()) THEN COALESCE (MILinkObject_GoodsKindComplete.ObjectId, 0) ELSE 0 END AS GoodsKindId_complete -- Ирна + Готовая продукция
                    , COALESCE (MILinkObject_Asset.ObjectId, 0) AS AssetId
                    , COALESCE (MIString_PartionGoods.ValueData, '') AS PartionGoods
                    , COALESCE (MIDate_PartionGoods.ValueData, zc_DateEnd()) AS PartionGoodsDate
@@ -384,6 +384,9 @@ BEGIN
                    LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
                                                     ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
                                                    AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
+                   LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKindComplete
+                                                    ON MILinkObject_GoodsKindComplete.MovementItemId = MovementItem.Id
+                                                   AND MILinkObject_GoodsKindComplete.DescId = zc_MILinkObject_GoodsKindComplete()
                    LEFT JOIN MovementItemLinkObject AS MILinkObject_Asset
                                                     ON MILinkObject_Asset.MovementItemId = MovementItem.Id
                                                    AND MILinkObject_Asset.DescId = zc_MILinkObject_Asset()
