@@ -3,7 +3,7 @@ inherited Report_PersonalForm: TReport_PersonalForm
   ClientHeight = 555
   ClientWidth = 1028
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
-  ExplicitLeft = -193
+  ExplicitLeft = -210
   ExplicitWidth = 1044
   ExplicitHeight = 593
   PixelsPerInch = 96
