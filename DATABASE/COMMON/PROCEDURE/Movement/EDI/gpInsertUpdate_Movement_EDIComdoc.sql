@@ -68,6 +68,8 @@ BEGIN
                               WHERE Movement.DescId = zc_Movement_EDI()
                                 AND Movement.InvNumber = inOrderInvNumber
                                 AND Movement.OperDate BETWEEN (inPartnerOperDate - (INTERVAL '7 DAY')) AND (inPartnerOperDate + (INTERVAL '7 DAY'))
+                              ORDER BY 1
+                              LIMIT 1 -- !!!временно, т.к. пока непонятно почему появился > 1, пример - 4437188100 от '28.08.2015'!!!
                              );
               IF COALESCE (vbMovementId, 0) = 0
               THEN
