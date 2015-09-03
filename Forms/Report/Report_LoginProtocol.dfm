@@ -1,5 +1,5 @@
 inherited Report_LoginProtocolForm: TReport_LoginProtocolForm
-  Caption = #1054#1090#1095#1077#1090' <'#1055#1088#1086#1090#1086#1082#1086#1083' '#1087#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1077#1081'>'
+  Caption = #1054#1090#1095#1077#1090' <'#1055#1086#1076#1082#1083#1102#1095#1077#1085#1080#1103' '#1087#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1077#1081'>'
   ClientHeight = 341
   ClientWidth = 1174
   ExplicitWidth = 1190
@@ -21,8 +21,6 @@ inherited Report_LoginProtocolForm: TReport_LoginProtocolForm
       inherited cxGrid: TcxGrid
         Width = 1174
         Height = 284
-        ExplicitLeft = -208
-        ExplicitTop = 3
         ExplicitWidth = 1174
         ExplicitHeight = 284
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -130,7 +128,7 @@ inherited Report_LoginProtocolForm: TReport_LoginProtocolForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 300
+            Width = 600
           end
         end
       end

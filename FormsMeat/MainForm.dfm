@@ -999,6 +999,17 @@ inherited MainForm: TMainForm
       GuiParams = <>
       isShowModal = False
     end
+    object actReport_LoginProtocol: TdsdOpenForm [85]
+      Category = #1057#1083#1091#1078#1077#1073#1085#1099#1077
+      MoveParams = <>
+      Caption = #1055#1086#1076#1082#1083#1102#1095#1077#1085#1080#1103' '#1087#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1077#1081
+      Hint = #1055#1086#1076#1082#1083#1102#1095#1077#1085#1080#1103' '#1087#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1077#1081
+      FormName = 'TReport_LoginProtocolForm'
+      FormNameParam.Value = 'TReport_LoginProtocolForm'
+      FormNameParam.DataType = ftString
+      GuiParams = <>
+      isShowModal = False
+    end
     object actAssetGroup: TdsdOpenForm
       Category = #1054#1057
       MoveParams = <>
@@ -4404,6 +4415,9 @@ inherited MainForm: TMainForm
       end
       object miImportExportLink: TMenuItem [22]
         Action = actImportExportLink
+      end
+      object N76: TMenuItem [27]
+        Action = actReport_LoginProtocol
       end
     end
   end
