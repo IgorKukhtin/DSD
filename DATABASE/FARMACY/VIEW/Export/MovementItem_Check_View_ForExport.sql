@@ -1,6 +1,6 @@
-DROP VIEW IF EXISTS MovementItem_Check_View_ForImport;
+DROP VIEW IF EXISTS MovementItem_Check_View_ForExport;
 
-CREATE OR REPLACE VIEW MovementItem_Check_View_ForImport AS
+CREATE OR REPLACE VIEW MovementItem_Check_View_ForExport AS
     SELECT
         MLO_Unit.ObjectId                                   AS UnitId
        ,MIC_Check.MovementId                                AS CheckId
@@ -35,7 +35,7 @@ CREATE OR REPLACE VIEW MovementItem_Check_View_ForImport AS
     WHERE 
         MIC_Check.MovementDescId = zc_Movement_Check();
 
-ALTER TABLE MovementItem_Check_View_ForImport
+ALTER TABLE MovementItem_Check_View_ForExport
   OWNER TO postgres;
 
 /*-------------------------------------------------------------------------------*/
@@ -46,4 +46,4 @@ ALTER TABLE MovementItem_Check_View_ForImport
 */
 
 -- тест
--- SELECT * FROM MovementItem_Check_View_ForImport
+-- SELECT * FROM MovementItem_Check_View_ForExport
