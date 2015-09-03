@@ -24,7 +24,7 @@ RETURNS TABLE (PersonalCode Integer, PersonalName TVarChar
              , ServiceDate TDateTime
              , StartAmount TFloat, StartAmountD TFloat, StartAmountK TFloat
              , DebetSumm TFloat, KreditSumm TFloat
-             , MoneySumm TFloat, ServiceSumm TFloat
+             , MoneySumm TFloat, ServiceSumm TFloat, IncomeSumm TFloat
              , EndAmount TFloat, EndAmountD TFloat, EndAmountK TFloat
               )
 AS
@@ -71,6 +71,7 @@ BEGIN
         Operation.KreditSumm :: TFloat                                                              AS KreditSumm,
         Operation.MoneySumm :: TFloat                                                               AS MoneySumm,
         Operation.ServiceSumm :: TFloat                                                             AS ServiceSumm,
+        Operation.IncomeSumm :: TFloat                                                              AS IncomeSumm,
         (- 1 * Operation.EndAmount) :: TFloat                                                       AS EndAmount,
         CASE WHEN Operation.EndAmount > 0 THEN Operation.EndAmount ELSE 0 END :: TFloat             AS EndAmountD,
         CASE WHEN Operation.EndAmount < 0 THEN -1 * Operation.EndAmount ELSE 0 END :: TFloat        AS EndAmountK
@@ -83,6 +84,7 @@ BEGIN
                , SUM (Operation_all.KreditSumm)  AS KreditSumm
                , SUM (Operation_all.MoneySumm)   AS MoneySumm
                , SUM (Operation_all.ServiceSumm) AS ServiceSumm
+               , SUM (Operation_all.IncomeSumm)  AS IncomeSumm
                , SUM (Operation_all.EndAmount)   AS EndAmount
           FROM
           (SELECT tmpContainer.ContainerId
@@ -99,6 +101,8 @@ BEGIN
                 , SUM (CASE WHEN MIContainer.OperDate <= inEndDate THEN CASE WHEN MIContainer.Amount < 0 THEN -1 * MIContainer.Amount ELSE 0 END ELSE 0 END)     AS KreditSumm
                 , SUM (CASE WHEN MIContainer.OperDate <= inEndDate THEN CASE WHEN Movement.DescId IN (zc_Movement_Cash(), zc_Movement_BankAccount()) THEN MIContainer.Amount ELSE 0 END ELSE 0 END) AS MoneySumm
                 , SUM (CASE WHEN MIContainer.OperDate <= inEndDate THEN CASE WHEN Movement.DescId IN (zc_Movement_PersonalService()) THEN -1 * MIContainer.Amount ELSE 0 END ELSE 0 END)     AS ServiceSumm
+                , SUM (CASE WHEN MIContainer.OperDate <= inEndDate THEN CASE WHEN Movement.DescId IN (zc_Movement_Income()) THEN -1 * MIContainer.Amount ELSE 0 END ELSE 0 END)     AS IncomeSumm
+
                 , tmpContainer.Amount - COALESCE (SUM (CASE WHEN MIContainer.OperDate > inEndDate THEN MIContainer.Amount ELSE 0 END), 0)                        AS EndAmount
             FROM (SELECT CLO_Personal.ContainerId         AS ContainerId
                        , Container.ObjectId               AS AccountId

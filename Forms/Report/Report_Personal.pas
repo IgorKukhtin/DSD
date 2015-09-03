@@ -79,6 +79,7 @@ type
     PersonalServiceListName: TcxGridDBColumn;
     ExecuteDialog: TExecuteDialog;
     bbExecuteDialog: TdxBarButton;
+    colIncomeSumm: TcxGridDBColumn;
   private
     { Private declarations }
   public

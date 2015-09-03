@@ -3,6 +3,7 @@ inherited Report_PersonalForm: TReport_PersonalForm
   ClientHeight = 555
   ClientWidth = 1028
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
+  ExplicitLeft = -210
   ExplicitWidth = 1044
   ExplicitHeight = 593
   PixelsPerInch = 96
@@ -316,6 +317,14 @@ inherited Report_PersonalForm: TReport_PersonalForm
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 80
+          end
+          object colIncomeSumm: TcxGridDBColumn
+            Caption = #1059#1076#1077#1088#1078#1072#1085#1080#1077' '#1043#1057#1052
+            DataBinding.FieldName = 'IncomeSumm'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 60
           end
           object colMoneySumm: TcxGridDBColumn
             Caption = #1042#1099#1087#1083#1072#1095#1077#1085#1086
