@@ -1,6 +1,6 @@
 -- Function: gpchecklogin(TVarChar, TVarChar, TVarChar)
 
--- DROP FUNCTION IF EXISTS gpchecklogin(TVarChar, TVarChar, TVarChar);
+ DROP FUNCTION IF EXISTS gpchecklogin(TVarChar, TVarChar, TVarChar);
  DROP FUNCTION IF EXISTS gpchecklogin (TVarChar, TVarChar, TVarChar, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpCheckLogin(

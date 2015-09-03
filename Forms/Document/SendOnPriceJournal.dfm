@@ -4,7 +4,7 @@ inherited SendOnPriceJournalForm: TSendOnPriceJournalForm
   ClientWidth = 1020
   AddOnFormData.Params = FormParams
   ExplicitWidth = 1036
-  ExplicitHeight = 573
+  ExplicitHeight = 570
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -164,7 +164,7 @@ inherited SendOnPriceJournalForm: TSendOnPriceJournalForm
             Width = 70
           end
           object InvNumber_Transport: TcxGridDBColumn
-            Caption = #8470' '#1087#1091#1090#1077#1074#1086#1075#1086
+            Caption = #8470' '#1076#1086#1082'. '#1055'.'#1083'.'
             DataBinding.FieldName = 'InvNumber_Transport'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
@@ -172,8 +172,9 @@ inherited SendOnPriceJournalForm: TSendOnPriceJournalForm
             Width = 61
           end
           object OperDate_Transport: TcxGridDBColumn
-            Caption = #1044#1072#1090#1072' '#1087#1091#1090#1077#1074#1086#1075#1086
+            Caption = #1044#1072#1090#1072' '#1076#1086#1082'. '#1055'.'#1083'.'
             DataBinding.FieldName = 'OperDate_Transport'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
@@ -1255,6 +1256,7 @@ inherited SendOnPriceJournalForm: TSendOnPriceJournalForm
   end
   inherited spMovementReComplete: TdsdStoredProc
     StoredProcName = 'gpReComplete_Movement_SendOnPrice'
+    Top = 144
   end
   object PrintHeaderCDS: TClientDataSet
     Aggregates = <>

@@ -122,7 +122,6 @@ type
     N1: TMenuItem;
     colTotalCount_unit: TcxGridDBColumn;
     colTotalCount_diff: TcxGridDBColumn;
-    InvNumber_Transport_Full: TcxGridDBColumn;
   private
   public
   end;

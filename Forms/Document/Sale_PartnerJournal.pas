@@ -137,7 +137,6 @@ type
     colPaymentDate: TcxGridDBColumn;
     colInsertDate: TcxGridDBColumn;
     Comment: TcxGridDBColumn;
-    InvNumber_Transport_Full: TcxGridDBColumn;
   private
     { Private declarations }
   public
