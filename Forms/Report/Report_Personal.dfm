@@ -3,7 +3,7 @@ inherited Report_PersonalForm: TReport_PersonalForm
   ClientHeight = 555
   ClientWidth = 1028
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
-  ExplicitLeft = -210
+  ExplicitLeft = -193
   ExplicitWidth = 1044
   ExplicitHeight = 593
   PixelsPerInch = 96
@@ -77,6 +77,11 @@ inherited Report_PersonalForm: TReport_PersonalForm
               Format = ',0.00##'
               Kind = skSum
               Column = colEndAmountK
+            end
+            item
+              Format = ',0.00##'
+              Kind = skSum
+              Column = colIncomeSumm
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -128,6 +133,11 @@ inherited Report_PersonalForm: TReport_PersonalForm
               Format = ',0.00##'
               Kind = skSum
               Column = colEndAmountK
+            end
+            item
+              Format = ',0.00##'
+              Kind = skSum
+              Column = colIncomeSumm
             end>
           OptionsData.CancelOnExit = True
           OptionsData.Deleting = False
@@ -321,10 +331,13 @@ inherited Report_PersonalForm: TReport_PersonalForm
           object colIncomeSumm: TcxGridDBColumn
             Caption = #1059#1076#1077#1088#1078#1072#1085#1080#1077' '#1043#1057#1052
             DataBinding.FieldName = 'IncomeSumm'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 60
+            Width = 80
           end
           object colMoneySumm: TcxGridDBColumn
             Caption = #1042#1099#1087#1083#1072#1095#1077#1085#1086
