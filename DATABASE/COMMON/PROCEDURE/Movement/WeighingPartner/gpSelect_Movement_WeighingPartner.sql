@@ -17,7 +17,8 @@ RETURNS TABLE (Id Integer, InvNumber Integer, OperDate TDateTime, StatusCode Int
              , MovementDescNumber Integer, MovementDescName TVarChar
              , WeighingNumber TFloat
              , InvNumberOrder TVarChar
-             , InvNumberTransport Integer
+             , MovementId_Transport Integer, InvNumber_Transport TVarChar, OperDate_Transport TDateTime
+             , CarName TVarChar, CarModelName TVarChar, PersonalDriverName TVarChar
              , PriceWithVAT Boolean
              , VATPercent TFloat, ChangePercent TFloat
              , TotalCount TFloat, TotalCountPartner TFloat, TotalCountTare TFloat
@@ -99,7 +100,13 @@ BEGIN
              , MovementFloat_WeighingNumber.ValueData     AS WeighingNumber
 
              , MovementString_InvNumberOrder.ValueData    AS InvNumberOrder
-             , MovementFloat_InvNumberTransport.ValueData :: Integer AS InvNumberTransport
+            
+             , Movement_Transport.Id                     AS MovementId_Transport
+             , Movement_Transport.InvNumber              AS InvNumber_Transport
+             , Movement_Transport.OperDate               AS OperDate_Transport
+             , Object_Car.ValueData                      AS CarName
+             , Object_CarModel.ValueData                 AS CarModelName
+             , View_PersonalDriver.PersonalName          AS PersonalDriverName
 
              , MovementBoolean_PriceWithVAT.ValueData         AS PriceWithVAT
              , MovementFloat_VATPercent.ValueData             AS VATPercent
@@ -168,9 +175,6 @@ BEGIN
                                    AND MovementFloat_MovementDesc.DescId = zc_MovementFloat_MovementDesc()
             LEFT JOIN MovementDesc ON MovementDesc.Id = MovementFloat_MovementDesc.ValueData -- COALESCE (Movement_Parent.DescId, MovementFloat_MovementDesc.ValueData)
 
-            LEFT JOIN MovementFloat AS MovementFloat_InvNumberTransport
-                                    ON MovementFloat_InvNumberTransport.MovementId =  Movement.Id
-                                   AND MovementFloat_InvNumberTransport.DescId = zc_MovementFloat_InvNumberTransport()
             LEFT JOIN MovementFloat AS MovementFloat_WeighingNumber
                                     ON MovementFloat_WeighingNumber.MovementId =  Movement.Id
                                    AND MovementFloat_WeighingNumber.DescId = zc_MovementFloat_WeighingNumber()
@@ -295,6 +299,26 @@ BEGIN
                                          ON MovementLinkObject_RouteSorting.MovementId = MovementLinkMovement_Order.MovementChildId
                                         AND MovementLinkObject_RouteSorting.DescId = zc_MovementLinkObject_RouteSorting()
             LEFT JOIN Object AS Object_RouteSorting ON Object_RouteSorting.Id = MovementLinkObject_RouteSorting.ObjectId
+
+--
+            LEFT JOIN MovementLinkMovement AS MovementLinkMovement_Transport
+                                           ON MovementLinkMovement_Transport.MovementId = Movement.Id
+                                          AND MovementLinkMovement_Transport.DescId = zc_MovementLinkMovement_Transport()
+            LEFT JOIN Movement AS Movement_Transport ON Movement_Transport.Id = MovementLinkMovement_Transport.MovementChildId
+
+            LEFT JOIN MovementLinkObject AS MovementLinkObject_Car
+                                         ON MovementLinkObject_Car.MovementId = Movement_Transport.Id
+                                        AND MovementLinkObject_Car.DescId = zc_MovementLinkObject_Car()
+            LEFT JOIN Object AS Object_Car ON Object_Car.Id = MovementLinkObject_Car.ObjectId
+
+            LEFT JOIN ObjectLink AS ObjectLink_Car_CarModel ON ObjectLink_Car_CarModel.ObjectId = Object_Car.Id
+                                                           AND ObjectLink_Car_CarModel.DescId = zc_ObjectLink_Car_CarModel()
+            LEFT JOIN Object AS Object_CarModel ON Object_CarModel.Id = ObjectLink_Car_CarModel.ChildObjectId
+            
+            LEFT JOIN MovementLinkObject AS MovementLinkObject_PersonalDriver
+                                         ON MovementLinkObject_PersonalDriver.MovementId = Movement_Transport.Id
+                                        AND MovementLinkObject_PersonalDriver.DescId = zc_MovementLinkObject_PersonalDriver()
+            LEFT JOIN Object_Personal_View AS View_PersonalDriver ON View_PersonalDriver.PersonalId = MovementLinkObject_PersonalDriver.ObjectId
 
       ;
   

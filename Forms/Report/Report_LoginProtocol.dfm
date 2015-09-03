@@ -138,11 +138,11 @@ inherited Report_LoginProtocolForm: TReport_LoginProtocolForm
     Width = 1174
     ExplicitWidth = 1174
     inherited deStart: TcxDateEdit
-      EditValue = 41640d
+      EditValue = 42248d
       Properties.SaveTime = False
     end
     inherited deEnd: TcxDateEdit
-      EditValue = 41640d
+      EditValue = 42248d
       Properties.SaveTime = False
     end
   end
