@@ -4,7 +4,7 @@ inherited Sale_OrderJournalForm: TSale_OrderJournalForm
   ClientWidth = 1177
   AddOnFormData.Params = FormParams
   ExplicitWidth = 1193
-  ExplicitHeight = 573
+  ExplicitHeight = 570
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -220,13 +220,14 @@ inherited Sale_OrderJournalForm: TSale_OrderJournalForm
           object OperDate_TransportGoods: TcxGridDBColumn
             Caption = #1044#1072#1090#1072' '#1076#1086#1082'. '#1058#1058#1053
             DataBinding.FieldName = 'OperDate_TransportGoods'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 70
           end
           object InvNumber_Transport: TcxGridDBColumn
-            Caption = #8470' '#1087#1091#1090#1077#1074#1086#1075#1086
+            Caption = #8470' '#1076#1086#1082'. '#1055'.'#1083'.'
             DataBinding.FieldName = 'InvNumber_Transport'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
@@ -234,8 +235,9 @@ inherited Sale_OrderJournalForm: TSale_OrderJournalForm
             Width = 61
           end
           object OperDate_Transport: TcxGridDBColumn
-            Caption = #1044#1072#1090#1072' '#1087#1091#1090#1077#1074#1086#1075#1086
+            Caption = #1044#1072#1090#1072' '#1076#1086#1082'. '#1055'.'#1083'.'
             DataBinding.FieldName = 'OperDate_Transport'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False

@@ -1,8 +1,8 @@
 -- Function: gpReport_Goods_Movement ()
 
-DROP FUNCTION IF EXISTS gpReport_GoodsMI_SaleReturnIn (TDateTime, TDateTime, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Boolean, Boolean, Boolean, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpReport_GoodsMI_SaleReturnInUnit_NEW (TDateTime, TDateTime, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Boolean, Boolean, Boolean, Boolean, TVarChar);
 
-CREATE OR REPLACE FUNCTION gpReport_GoodsMI_SaleReturnIn (
+CREATE OR REPLACE FUNCTION gpReport_GoodsMI_SaleReturnInUnit_NEW (
     IN inStartDate    TDateTime ,
     IN inEndDate      TDateTime ,
     IN inBranchId     Integer   , -- ***Филиал
@@ -67,47 +67,6 @@ BEGIN
     END IF;
 */
 
-    IF inEndDate < '01.06.2014' THEN
-       RETURN QUERY
-       SELECT * FROM gpReport_GoodsMI_SaleReturnIn_OLD (inStartDate
-                                                      , inEndDate
-                                                      , inBranchId
-                                                      , inAreaId
-                                                      , inRetailId
-                                                      , inJuridicalId
-                                                      , inPaidKindId
-                                                      , inTradeMarkId
-                                                      , inGoodsGroupId
-                                                      , inInfoMoneyId
-                                                      , inIsPartner
-                                                      , inIsTradeMark
-                                                      , inIsGoods
-                                                      , inIsGoodsKind
-                                                      , inSession
-                                                       );
-       RETURN;
-    ELSE
-    IF inEndDate < '01.07.2015' OR inStartDate < '01.07.2015' THEN
-       RETURN QUERY
-       SELECT * FROM gpReport_GoodsMI_SaleReturnIn_OLD_TWO (inStartDate
-                                                      , inEndDate
-                                                      , inBranchId
-                                                      , inAreaId
-                                                      , inRetailId
-                                                      , inJuridicalId
-                                                      , inPaidKindId
-                                                      , inTradeMarkId
-                                                      , inGoodsGroupId
-                                                      , inInfoMoneyId
-                                                      , inIsPartner
-                                                      , inIsTradeMark
-                                                      , inIsGoods
-                                                      , inIsGoodsKind
-                                                      , inSession
-                                                       );
-       RETURN;
-    END IF;
-    END IF;
 
     vbIsJuridicalBranch:= COALESCE (inBranchId, 0) = 0;
 
@@ -318,13 +277,21 @@ BEGIN
 
     -- собираем все данные
     WITH tmpAnalyzer AS (SELECT Constant_ProfitLoss_AnalyzerId_View.*
-                              , CASE WHEN isSale = TRUE THEN zc_MovementLinkObject_To() ELSE zc_MovementLinkObject_From() END AS MLO_DescId
                          FROM Constant_ProfitLoss_AnalyzerId_View
                          WHERE isCost = FALSE OR (isCost = TRUE AND vbIsCost = TRUE)
                         ) 
        , tmpPartnerAddress AS (SELECT * FROM Object_Partner_Address_View)
        -- , tmpPersonal AS (SELECT * FROM Object_Personal_View)
 
+        , tmp_Unit AS  (SELECT 8459 AS UnitId -- Склад Реализации
+                       UNION 
+                        SELECT UnitId FROM lfSelect_Object_Unit_byGroup (8460) AS lfSelect_Object_Unit_byGroup) -- Возвраты общие
+        , tmpAccount AS (SELECT Object_Account_View.AccountGroupId, Object_Account_View.AccountId
+                         FROM Object_Account_View
+                         WHERE Object_Account_View.AccountGroupId IN (zc_Enum_AccountGroup_60000()  -- Прибыль будущих периодов
+                                                                    , zc_Enum_AccountGroup_110000() -- Транзит
+                                                                     )
+                        ) 
 , tmpOperationGroup2 AS (SELECT MIContainer.ContainerId_Analyzer
                               , MIContainer.ObjectId_Analyzer                 AS GoodsId
                               , MIContainer.ObjectIntId_Analyzer              AS GoodsKindId -- COALESCE (MILinkObject_GoodsKind.ObjectId, 0) AS GoodsKindId
@@ -334,6 +301,9 @@ BEGIN
                               , COALESCE (ContainerLO_InfoMoney.ObjectId, 0) AS InfoMoneyId
                               , 0 AS ChildAccountId -- MIContainer.AccountId
 
+                              , SUM (CASE WHEN MIContainer.AnalyzerId = zc_Enum_AnalyzerId_SaleCount_10400()     AND tmpAccount.AccountGroupId IS NULL THEN -1 * MIContainer.Amount ELSE 0 END) AS Sale_Amount
+                              , SUM (CASE WHEN MIContainer.AnalyzerId = zc_Enum_AnalyzerId_ReturnInCount_10800() AND tmpAccount.AccountGroupId IS NULL THEN  1 * MIContainer.Amount ELSE 0 END) AS Return_Amount
+
                               , SUM (CASE WHEN tmpAnalyzer.isSale = TRUE  AND tmpAnalyzer.isSumm = TRUE AND tmpAnalyzer.isCost = FALSE THEN  1 * MIContainer.Amount ELSE 0 END) AS Sale_Summ
                               , SUM (CASE WHEN tmpAnalyzer.isSale = FALSE AND tmpAnalyzer.isSumm = TRUE AND tmpAnalyzer.isCost = FALSE THEN -1 * MIContainer.Amount ELSE 0 END) AS Return_Summ
 
@@ -341,8 +311,6 @@ BEGIN
                               , SUM (CASE WHEN tmpAnalyzer.AnalyzerId = zc_Enum_AnalyzerId_SaleSumm_10300() THEN -1 * MIContainer.Amount ELSE 0 END) AS Sale_Summ_10300
                               , SUM (CASE WHEN tmpAnalyzer.AnalyzerId = zc_Enum_AnalyzerId_ReturnInSumm_10300() THEN 1 * MIContainer.Amount ELSE 0 END) AS Return_Summ_10300
 
-                              , SUM (CASE WHEN tmpAnalyzer.isSale = TRUE  AND tmpAnalyzer.isSumm = FALSE THEN -1 * MIContainer.Amount ELSE 0 END) AS Sale_Amount
-                              , SUM (CASE WHEN tmpAnalyzer.isSale = FALSE AND tmpAnalyzer.isSumm = FALSE THEN  1 * MIContainer.Amount ELSE 0 END) AS Return_Amount
 
                               , SUM (CASE WHEN tmpAnalyzer.AnalyzerId = zc_Enum_AnalyzerId_SaleCount_10400()     THEN -1 * MIContainer.Amount ELSE 0 END) AS Sale_AmountPartner
                               , SUM (CASE WHEN tmpAnalyzer.AnalyzerId = zc_Enum_AnalyzerId_ReturnInCount_10800() THEN  1 * MIContainer.Amount ELSE 0 END) AS Return_AmountPartner
@@ -373,30 +341,18 @@ BEGIN
                                                              ON ContainerLO_PaidKind.ContainerId = MIContainer.ContainerId_Analyzer
                                                             AND ContainerLO_PaidKind.DescId = zc_ContainerLinkObject_PaidKind()
                                                             AND (ContainerLO_PaidKind.ObjectId = inPaidKindId OR COALESCE (inPaidKindId, 0) = 0)
-                              /*LEFT JOIN MovementLinkObject AS MovementLinkObject_Partner
-                                                           ON MovementLinkObject_Partner.MovementId = MIContainer.MovementId
-                                                          AND MovementLinkObject_Partner.DescId = CASE WHEN MIContainer.MovementDescId = zc_Movement_PriceCorrective() THEN zc_MovementLinkObject_Partner() ELSE tmpAnalyzer.MLO_DescId END
-
-                              LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
-                                                               ON MILinkObject_GoodsKind.MovementItemId = MIContainer.MovementItemId
-                                                              AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()*/
-                              LEFT JOIN MovementItemLinkObject AS MILinkObject_Branch
-                                                               ON MILinkObject_Branch.MovementItemId = MIContainer.MovementItemId
-                                                              AND MILinkObject_Branch.DescId = zc_MILinkObject_Branch()
+                              INNER JOIN tmpUnit ON tmpUnit.UnitId = MIContainer.WhereObjectId_analyzer
+                              LEFT JOIN tmpAccount ON tmpAccount.AccountId = MIContainer.AccountId
 
                               LEFT JOIN _tmpJuridical ON _tmpJuridical.JuridicalId = ContainerLO_Juridical.ObjectId
-                              LEFT JOIN _tmpJuridicalBranch ON _tmpJuridicalBranch.JuridicalId = ContainerLO_Juridical.ObjectId
 
                          WHERE (_tmpJuridical.JuridicalId > 0 OR vbIsJuridical = FALSE)
-                           AND (MILinkObject_Branch.ObjectId = inBranchId OR COALESCE (inBranchId, 0) = 0 OR _tmpJuridicalBranch.JuridicalId IS NOT NULL)
                          GROUP BY MIContainer.ContainerId_Analyzer
                                 , MIContainer.ObjectId_Analyzer
-                                , MIContainer.ObjectIntId_Analyzer -- MILinkObject_GoodsKind.ObjectId
-                                , CASE WHEN MIContainer.MovementDescId = zc_Movement_Service() THEN MIContainer.ObjectId_Analyzer ELSE MIContainer.ObjectExtId_Analyzer /*MovementLinkObject_Partner.ObjectId*/ END
-                                , MILinkObject_Branch.ObjectId
+                                , MIContainer.ObjectIntId_Analyzer
+                                , CASE WHEN MIContainer.MovementDescId = zc_Movement_Service() THEN MIContainer.ObjectId_Analyzer ELSE MIContainer.ObjectExtId_Analyzer END
                                 , ContainerLO_Juridical.ObjectId
                                 , ContainerLO_InfoMoney.ObjectId
-                                -- , MIContainer.AccountId
                         )
 
  , tmpOperationGroup AS (SELECT CASE WHEN inIsPartner = TRUE THEN tmpOperationGroup2.JuridicalId ELSE 0 END AS JuridicalId
@@ -663,4 +619,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpReport_GoodsMI_SaleReturnIn (inStartDate:= '01.07.2015', inEndDate:= '31.07.2015', inBranchId:= 0, inAreaId:= 0, inRetailId:= 0, inJuridicalId:= 0, inPaidKindId:= zc_Enum_PaidKind_FirstForm(), inTradeMarkId:= 0, inGoodsGroupId:= 0, inInfoMoneyId:= zc_Enum_InfoMoney_30101(), inIsPartner:= TRUE, inIsTradeMark:= TRUE, inIsGoods:= TRUE, inIsGoodsKind:= TRUE, inSession:= zfCalc_UserAdmin());
+-- SELECT * FROM gpReport_GoodsMI_SaleReturnInUnit_NEW (inStartDate:= '01.07.2015', inEndDate:= '31.07.2015', inBranchId:= 0, inAreaId:= 0, inRetailId:= 0, inJuridicalId:= 0, inPaidKindId:= zc_Enum_PaidKind_FirstForm(), inTradeMarkId:= 0, inGoodsGroupId:= 0, inInfoMoneyId:= zc_Enum_InfoMoney_30101(), inIsPartner:= TRUE, inIsTradeMark:= TRUE, inIsGoods:= TRUE, inIsGoodsKind:= TRUE, inSession:= zfCalc_UserAdmin());

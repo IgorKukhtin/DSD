@@ -141,6 +141,23 @@ BEGIN
                                        , MILinkObject_GoodsKind.ObjectId
                                        , MILinkObject_GoodsKind_complete.ObjectId
                                )
+                , tmpOut_PF AS (-- "другие" расходы ПФ(ГП)
+                                SELECT tmp.ContainerId
+                                     , -1 * SUM (MIContainer.Amount) AS Amount
+                                FROM (SELECT _tmpItem_PF.ContainerId FROM _tmpItem_PF GROUP BY _tmpItem_PF.ContainerId) AS tmp
+                                     INNER JOIN MovementItemContainer AS MIContainer
+                                                                      ON MIContainer.ContainerId = tmp.ContainerId
+                                                                     AND MIContainer.OperDate BETWEEN inStartDate AND inEndDate
+                                                                     AND MIContainer.MovementDescId IN (zc_Movement_ProductionUnion(), zc_Movement_Loss())
+                                                                     AND MIContainer.DescId      = zc_MIContainer_Count()
+                                                                     AND MIContainer.isActive    = FALSE
+                                     LEFT JOIN MovementItemBoolean AS MIBoolean_isAuto
+                                                                   ON MIBoolean_isAuto.MovementItemId = MIContainer.MovementItemId
+                                                                  AND MIBoolean_isAuto.DescId     = zc_MIBoolean_isAuto()
+                                                                  AND MIBoolean_isAuto.ValueData = TRUE
+                                WHERE MIBoolean_isAuto.MovementItemId IS NULL
+                                GROUP BY tmp.ContainerId
+                               )
           , tmpContainer_PF AS (-- Партии ПФ(ГП)
                                 SELECT tmp.ContainerId
                                      , tmp.GoodsId
@@ -166,51 +183,67 @@ BEGIN
                                                            ON ObjectDate_PartionGoods_Value.ObjectId = tmp.PartionGoodsId
                                                           AND ObjectDate_PartionGoods_Value.DescId = zc_ObjectDate_PartionGoods_Value()
                                )
+        , tmpMIContainer_PF AS (-- Движение ПФ(ГП)
+                                SELECT tmpContainer_PF.ContainerId
+                                     , tmpContainer_PF.GoodsId
+                                     , tmpContainer_PF.PartionGoodsId
+                                     , CASE WHEN MIContainer.OperDate BETWEEN inStartDate AND inEndDate AND MIContainer.isActive = TRUE AND MIContainer.MovementDescId = zc_Movement_ProductionUnion()
+                                                 THEN MIContainer.MovementItemId -- нужен только для zc_Movement_ProductionUnion, т.к. надо закрыть по нему партию
+                                            ELSE 0
+                                       END AS MovementItemId_In
+                                     , SUM (CASE WHEN tmpContainer_PF.isPartionClose = FALSE
+                                                      THEN 0
+                                                 WHEN MIContainer.OperDate BETWEEN inStartDate AND inEndDate AND MIContainer.isActive = TRUE AND MIContainer.MovementDescId = zc_Movement_ProductionUnion()
+                                                      THEN MIContainer.Amount
+                                                 WHEN MIContainer.OperDate < inStartDate
+                                                      THEN MIContainer.Amount
+                                                 ELSE 0
+                                            END) AS Amount
+                                     , tmpContainer_PF.isPartionClose
+                                     , tmpContainer_PF.PartionGoodsDate      -- информативно
+                                     , tmpContainer_PF.PartionGoodsDateClose -- информативно
+                                FROM tmpContainer_PF
+                                     INNER JOIN MovementItemContainer AS MIContainer ON MIContainer.ContainerId = tmpContainer_PF.ContainerId
+                                GROUP BY tmpContainer_PF.ContainerId
+                                       , tmpContainer_PF.GoodsId
+                                       , tmpContainer_PF.PartionGoodsId
+                                       , CASE WHEN MIContainer.OperDate BETWEEN inStartDate AND inEndDate AND MIContainer.isActive = TRUE AND MIContainer.MovementDescId = zc_Movement_ProductionUnion()
+                                                   THEN MIContainer.MovementItemId
+                                              ELSE 0
+                                         END
+                                       , tmpContainer_PF.isPartionClose
+                                       , tmpContainer_PF.PartionGoodsDate
+                                       , tmpContainer_PF.PartionGoodsDateClose
+                                HAVING SUM (CASE WHEN MIContainer.OperDate BETWEEN inStartDate AND inEndDate AND MIContainer.isActive = TRUE AND MIContainer.MovementDescId = zc_Movement_ProductionUnion()
+                                                      THEN MIContainer.Amount
+                                                 WHEN MIContainer.OperDate < inStartDate
+                                                      THEN MIContainer.Amount
+                                                 ELSE 0
+                                            END) <> 0
+       
+                               )
         -- результат - ВСЕ партии которые надо закрыть/открыть
         SELECT tmp.ContainerId
-             , tmp.MovementItemId_In
-             , tmp.Amount - COALESCE (tmpInventory_PF.Amount, 0)
+             , 0 AS MovementItemId_In
+             , tmp.Amount - COALESCE (tmpInventory_PF.Amount, 0) - COALESCE (tmpOut_PF.Amount, 0) AS Amount
              , tmp.isPartionClose
              , tmp.PartionGoodsDate
              , tmp.PartionGoodsDateClose
-        FROM
-       (SELECT tmpContainer_PF.ContainerId
-             , tmpContainer_PF.GoodsId
-             , tmpContainer_PF.PartionGoodsId
-             , CASE WHEN MIContainer.OperDate BETWEEN inStartDate AND inEndDate AND MIContainer.isActive = TRUE AND MIContainer.MovementDescId = zc_Movement_ProductionUnion()
-                         THEN MIContainer.MovementItemId -- нужен только для zc_Movement_ProductionUnion, т.к. надо закрыть по нему партию
-                    ELSE 0
-               END AS MovementItemId_In
-             , SUM (CASE WHEN tmpContainer_PF.isPartionClose = FALSE
-                              THEN 0
-                         WHEN MIContainer.OperDate BETWEEN inStartDate AND inEndDate AND MIContainer.isActive = TRUE AND MIContainer.MovementDescId = zc_Movement_ProductionUnion()
-                              THEN MIContainer.Amount
-                         WHEN MIContainer.OperDate < inStartDate
-                              THEN MIContainer.Amount
-                         ELSE 0
-                    END) AS Amount
-             , tmpContainer_PF.isPartionClose
-             , tmpContainer_PF.PartionGoodsDate      -- информативно
-             , tmpContainer_PF.PartionGoodsDateClose -- информативно
-        FROM tmpContainer_PF
-             INNER JOIN MovementItemContainer AS MIContainer ON MIContainer.ContainerId = tmpContainer_PF.ContainerId
-        GROUP BY tmpContainer_PF.ContainerId
-               , tmpContainer_PF.GoodsId
-               , tmpContainer_PF.PartionGoodsId
-               , CASE WHEN MIContainer.OperDate BETWEEN inStartDate AND inEndDate AND MIContainer.isActive = TRUE AND MIContainer.MovementDescId = zc_Movement_ProductionUnion()
-                           THEN MIContainer.MovementItemId
-                      ELSE 0
-                 END
-               , tmpContainer_PF.isPartionClose
-               , tmpContainer_PF.PartionGoodsDate
-               , tmpContainer_PF.PartionGoodsDateClose
-        HAVING SUM (CASE WHEN MIContainer.OperDate BETWEEN inStartDate AND inEndDate AND MIContainer.isActive = TRUE AND MIContainer.MovementDescId = zc_Movement_ProductionUnion()
-                              THEN MIContainer.Amount
-                         WHEN MIContainer.OperDate < inStartDate
-                              THEN MIContainer.Amount
-                         ELSE 0
-                    END) <> 0
-       ) AS tmp
+        FROM (SELECT tmpMIContainer_PF.ContainerId
+                   , tmpMIContainer_PF.GoodsId
+                   , SUM (tmpMIContainer_PF.Amount) AS Amount
+                   , tmpMIContainer_PF.isPartionClose
+                   , tmpMIContainer_PF.PartionGoodsId
+                   , tmpMIContainer_PF.PartionGoodsDate
+                   , tmpMIContainer_PF.PartionGoodsDateClose
+              FROM tmpMIContainer_PF
+              GROUP BY tmpMIContainer_PF.ContainerId
+                     , tmpMIContainer_PF.GoodsId
+                     , tmpMIContainer_PF.isPartionClose
+                     , tmpMIContainer_PF.PartionGoodsId
+                     , tmpMIContainer_PF.PartionGoodsDate
+                     , tmpMIContainer_PF.PartionGoodsDateClose
+             ) AS tmp
                   LEFT JOIN ContainerLinkObject AS CLO_GoodsKind ON CLO_GoodsKind.ContainerId = tmp.ContainerId
                                                                 AND CLO_GoodsKind.DescId      = zc_ContainerLinkObject_GoodsKind()
                   LEFT JOIN ObjectLink AS ObjectLink_GoodsKindComplete
@@ -220,8 +253,21 @@ BEGIN
                                            AND tmpInventory_PF.PartionGoodsDate     = tmp.PartionGoodsDate
                                            AND tmpInventory_PF.GoodsKindId          = CLO_GoodsKind.ObjectId
                                            AND tmpInventory_PF.GoodsKindId_complete = COALESCE (ObjectLink_GoodsKindComplete.ChildObjectId, zc_GoodsKind_Basis())
-        WHERE tmp.Amount - COALESCE (tmpInventory_PF.Amount, 0) > 0
+                  LEFT JOIN tmpOut_PF ON tmpOut_PF.ContainerId = tmp.ContainerId
+        WHERE tmp.Amount - COALESCE (tmpInventory_PF.Amount, 0) - COALESCE (tmpOut_PF.Amount, 0) > 0
+       UNION ALL
+        SELECT tmpMIContainer_PF.ContainerId
+             , tmpMIContainer_PF.MovementItemId_In
+             , 0 AS Amount
+             , tmpMIContainer_PF.isPartionClose
+             , tmpMIContainer_PF.PartionGoodsDate
+             , tmpMIContainer_PF.PartionGoodsDateClose
+        FROM tmpMIContainer_PF
+        WHERE tmpMIContainer_PF.MovementItemId_In > 0
        ;
+
+     -- удалили "ненужные" партии
+     DELETE FROM _tmpItem_PF_find WHERE _tmpItem_PF_find.MovementItemId_In > 0 AND _tmpItem_PF_find.ContainerId NOT IN (SELECT tmp.ContainerId FROM _tmpItem_PF_find AS tmp WHERE tmp.MovementItemId_In = 0);
 
 
      -- распределение Производство + Остатки партий ИТОГ ПФ(ГП) -> _tmpItem_PF
@@ -352,6 +398,7 @@ BEGIN
          LEFT JOIN _tmpItem_PF on _tmpItem_PF.MovementItemId_out = _tmpItem_Result.MovementItemId_out
          LEFT JOIN _tmpItem_GP on _tmpItem_GP.MovementItemId_gp = _tmpItem_Result.MovementItemId_gp
          LEFT JOIN _tmpItem_PF_find on _tmpItem_PF_find.ContainerId = _tmpItem_PF.ContainerId
+                                   AND _tmpItem_PF_find.MovementItemId_In = 0
     ;
     END IF;
 
