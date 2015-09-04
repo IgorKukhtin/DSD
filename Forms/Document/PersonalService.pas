@@ -69,6 +69,7 @@ type
     InfoMoneyName_all: TcxGridDBColumn;
     colPersonalServiceListName: TcxGridDBColumn;
     actPersonalServiceListChoice: TOpenChoiceForm;
+    SummIncome: TcxGridDBColumn;
   private
     { Private declarations }
   public

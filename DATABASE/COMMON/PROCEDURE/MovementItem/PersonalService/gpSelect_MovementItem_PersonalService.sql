@@ -16,6 +16,7 @@ RETURNS TABLE (Id Integer, PersonalId Integer, PersonalCode Integer, PersonalNam
              , PersonalServiceListId Integer, PersonalServiceListName  TVarChar
              , Amount TFloat, AmountToPay TFloat, AmountCash TFloat, SummService TFloat, SummCard TFloat, SummCardRecalc TFloat, SummMinus TFloat, SummAdd TFloat
              , SummSocialIn TFloat, SummSocialAdd TFloat, SummChild TFloat
+             , SummIncome TFloat
              , Comment TVarChar
              , isErased Boolean
               )
@@ -27,6 +28,8 @@ $BODY$
    DECLARE vbInfoMoneyName TVarChar;
    DECLARE vbInfoMoneyName_all TVarChar;
    DECLARE vbIsSummCardRecalc Boolean;
+   DECLARE vbOperDateId Integer;
+
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      -- vbUserId := lpCheckRight (inSession, zc_Enum_Process_Select_MI_PersonalService());
@@ -46,6 +49,8 @@ BEGIN
                                   WHERE MovementLinkObject_PersonalServiceList.MovementId = inMovementId
                                     AND MovementLinkObject_PersonalServiceList.DescId = zc_MovementLinkObject_PersonalServiceList()
                                  );
+     
+     vbServiceDateId:= lpInsertFind_Object_ServiceDate (inOperDate:= (SELECT MovementDate.ValueData FROM MovementDate WHERE MovementDate.MovementId = inMovementId AND MovementDate.DescId = zc_MIDate_ServiceDate()));
 
      -- Результат
      RETURN QUERY
@@ -117,6 +122,55 @@ BEGIN
                       UNION ALL
                        SELECT tmpPersonal.MovementItemId, tmpPersonal.Amount, tmpPersonal.PersonalId, tmpPersonal.UnitId, tmpPersonal.PositionId, tmpPersonal.InfoMoneyId, tmpPersonal.Memberid_Personal, tmpPersonal.MemberId, tmpPersonal.PersonalServiceListId, tmpPersonal.isErased FROM tmpPersonal
                       )
+
+          , tmpIncome  AS ( SELECT tmpContainer.PersonalId
+                                 , tmpContainer.UnitId
+                                 , tmpContainer.PositionId
+                                 , tmpContainer.PersonalServiceListId
+                                -- , tmpContainer.BranchId
+                                 , SUM(MIContainer.Amount) AS SummIncome 
+                            FROM ( SELECT  CLO_Personal.ContainerId        AS ContainerId
+                                         , CLO_Personal.ObjectId            AS PersonalId
+                                         , CLO_Unit.ObjectId                AS UnitId
+                                         , CLO_Position.ObjectId            AS PositionId
+                                         , CLO_PersonalServiceList.ObjectId AS PersonalServiceListId
+                                   --      , CLO_Branch.ObjectId              AS BranchId
+                                    FROM Container 
+                                        INNER JOIN ContainerLinkObject AS CLO_PersonalServiceList
+                                                     ON CLO_PersonalServiceList.ContainerId = Container.Id 
+                                                    AND CLO_PersonalServiceList.DescId = zc_ContainerLinkObject_PersonalServiceList()
+                                                    AND CLO_PersonalServiceList.ObjectId = 298694 -- inPersonalServiceListId --:=  бойня
+                                        INNER JOIN ContainerLinkObject AS CLO_ServiceDate
+                                                     ON CLO_ServiceDate.ContainerId = Container.Id 
+                                                    AND CLO_ServiceDate.DescId = zc_ContainerLinkObject_ServiceDate()
+                                                    AND CLO_ServiceDate.ObjectId = vbOperDateId
+
+                                        LEFT JOIN ContainerLinkObject AS CLO_Personal          
+                                                     ON CLO_Personal.ContainerId = Container.Id 
+                                                    AND CLO_Personal.DescId = zc_ContainerLinkObject_Personal()
+          
+                                        LEFT JOIN ContainerLinkObject AS CLO_Unit
+                                                     ON CLO_Unit.ContainerId = Container.Id
+                                                    AND CLO_Unit.DescId = zc_ContainerLinkObject_Unit()
+                                        LEFT JOIN ContainerLinkObject AS CLO_Position
+                                                     ON CLO_Position.ContainerId = Container.Id 
+                                                    AND CLO_Position.DescId = zc_ContainerLinkObject_Position()
+                                     /*   LEFT JOIN ContainerLinkObject AS CLO_Branch
+                                                     ON CLO_Branch.ContainerId = Container.Id 
+                                                    AND CLO_Branch.DescId = zc_ContainerLinkObject_Branch()*/
+                                    WHERE Container.DescId = zc_Container_Summ() 
+                                  ) AS tmpContainer
+                                INNER JOIN MovementItemContainer AS MIContainer
+                                                                 ON MIContainer.Containerid = tmpContainer.ContainerId
+                                                                AND MIContainer.MovementDescId = zc_Movement_Income()
+                             GROUP BY tmpContainer.PersonalId
+                                    , tmpContainer.UnitId
+                                    , tmpContainer.PositionId
+                                    , tmpContainer.PersonalServiceListId
+                                   -- , tmpContainer.BranchId
+                            )
+
+
        SELECT tmpAll.MovementItemId                   AS Id
             , Object_Personal.Id                      AS PersonalId
             , Object_Personal.ObjectCode              AS PersonalCode
@@ -152,6 +206,7 @@ BEGIN
             , MIFloat_SummSocialIn.ValueData   AS SummSocialIn
             , MIFloat_SummSocialAdd.ValueData  AS SummSocialAdd
             , MIFloat_SummChild.ValueData      AS SummChild
+            , tmpIncome.SummIncome ::TFloat
 
             , MIString_Comment.ValueData       AS Comment
             , tmpAll.isErased
@@ -211,6 +266,11 @@ BEGIN
             LEFT JOIN ObjectBoolean AS ObjectBoolean_Member_Official
                                     ON ObjectBoolean_Member_Official.ObjectId = tmpAll.MemberId_Personal
                                    AND ObjectBoolean_Member_Official.DescId = zc_ObjectBoolean_Member_Official()
+            LEFT JOIN tmpIncome ON tmpIncome.PersonalId = Object_Personal.Id  
+                               AND tmpIncome.UnitId = Object_Unit.Id    
+                               AND tmpIncome.PositionId = Object_Position.Id
+                               AND (tmpIncome.PersonalServiceListId = tmpAll.PersonalServiceListId OR COALESCE (Object_PersonalServiceList.Id, 0) = 0)
+
       ;
 
 END;

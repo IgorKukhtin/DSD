@@ -240,19 +240,19 @@ end;
 
 procedure TLoadFormTest.LoadCashFormTest;
 begin
-  TdsdFormStorageFactory.GetStorage.Save(GetForm('TCashForm'));
-  TdsdFormStorageFactory.GetStorage.Load('TCashForm');
-  TdsdFormStorageFactory.GetStorage.Save(GetForm('TCash_ObjectForm'));
-  TdsdFormStorageFactory.GetStorage.Load('TCash_ObjectForm');
-  TdsdFormStorageFactory.GetStorage.Save(GetForm('TCashEditForm'));
-  TdsdFormStorageFactory.GetStorage.Load('TCashEditForm');
+ // TdsdFormStorageFactory.GetStorage.Save(GetForm('TCashForm'));
+ // TdsdFormStorageFactory.GetStorage.Load('TCashForm');
+ // TdsdFormStorageFactory.GetStorage.Save(GetForm('TCash_ObjectForm'));
+ // TdsdFormStorageFactory.GetStorage.Load('TCash_ObjectForm');
+ // TdsdFormStorageFactory.GetStorage.Save(GetForm('TCashEditForm'));
+ // TdsdFormStorageFactory.GetStorage.Load('TCashEditForm');
 
-  TdsdFormStorageFactory.GetStorage.Save(GetForm('TCashJournalForm'));
-  TdsdFormStorageFactory.GetStorage.Load('TCashJournalForm');
-  TdsdFormStorageFactory.GetStorage.Save(GetForm('TCashJournalUserForm'));
-  TdsdFormStorageFactory.GetStorage.Load('TCashJournalUserForm');
-  TdsdFormStorageFactory.GetStorage.Save(GetForm('TCashOperationForm'));
-  TdsdFormStorageFactory.GetStorage.Load('TCashOperationForm');
+ // TdsdFormStorageFactory.GetStorage.Save(GetForm('TCashJournalForm'));
+ // TdsdFormStorageFactory.GetStorage.Load('TCashJournalForm');
+ // TdsdFormStorageFactory.GetStorage.Save(GetForm('TCashJournalUserForm'));
+ // TdsdFormStorageFactory.GetStorage.Load('TCashJournalUserForm');
+ // TdsdFormStorageFactory.GetStorage.Save(GetForm('TCashOperationForm'));
+ // TdsdFormStorageFactory.GetStorage.Load('TCashOperationForm');
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TCash_PersonalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TCash_PersonalForm');
