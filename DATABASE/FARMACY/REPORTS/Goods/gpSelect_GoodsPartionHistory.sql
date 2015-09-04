@@ -145,7 +145,7 @@ BEGIN
             WHERE
                 date_trunc('day', MovementItemContainer.OperDate) BETWEEN inStartDate AND inEndDate
                 AND
-                MovementItemContainer.DescId = zc_Container_Count()
+                MovementItemContainer.DescId = zc_MIContainer_Count()
                 AND
                 Container.ObjectId = inGoodsId
                 AND

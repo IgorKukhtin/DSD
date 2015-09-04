@@ -74,9 +74,9 @@ BEGIN
                                 HAVING SUM(T0.Amount) <> 0
                             ),
                  CurrPRICE AS(
-                                SELECT GoodsId, Price
+                                SELECT Object_Price_View.GoodsId, Object_Price_View.Price
                                 FROM Object_Price_View
-                                WHERE UnitId = vbUnitId
+                                WHERE Object_Price_View.UnitId = vbUnitId
                             )
             SELECT
                     COALESCE(MovementItem.Id,0)           AS Id
@@ -92,7 +92,7 @@ BEGIN
                                        AND MovementItem.MovementId = inMovementId
                                        AND MovementItem.DescId = zc_MI_Master()
                                        AND (MovementItem.isErased = FALSE or inIsErased = TRUE)
-                LEFT OUTER JOIN CurrPRICE ON object_Goods_View.Id = PRICE.GoodsId
+                LEFT OUTER JOIN CurrPRICE ON object_Goods_View.Id = CurrPRICE.GoodsId
                 LEFT OUTER JOIN REMAINS ON object_Goods_View.Id = REMAINS.ObjectId 
             WHERE 
                 Object_Goods_View.ObjectId = vbObjectId
@@ -136,9 +136,9 @@ BEGIN
                                 HAVING SUM(T0.Amount) <> 0
                             ),
                  CurrPRICE AS(
-                                SELECT GoodsId, Price
+                                SELECT Object_Price_View.GoodsId, Object_Price_View.Price
                                 FROM Object_Price_View
-                                WHERE UnitId = vbUnitId
+                                WHERE Object_Price_View.UnitId = vbUnitId
                             )
         SELECT
             MovementItem.Id                       AS Id
