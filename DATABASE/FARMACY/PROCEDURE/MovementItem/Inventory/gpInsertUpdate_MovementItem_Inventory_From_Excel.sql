@@ -46,6 +46,7 @@ BEGIN
                                                  , inAmount             := inAmount
                                                  , inPrice              := inPrice
                                                  , inSumm               := (inAmount * inPrice)::TFloat
+                                                 , inComment            := NULL::TVarChar
                                                  , inUserId             := vbUserId);
     -- пересчитали Итоговые суммы по накладной
     PERFORM lpInsertUpdate_MovementFloat_TotalSummInventory (inMovementId);

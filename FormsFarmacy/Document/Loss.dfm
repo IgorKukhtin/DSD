@@ -76,6 +76,20 @@ inherited LossForm: TLossForm
             HeaderAlignmentHorz = taCenter
             Width = 93
           end
+          object colPrice: TcxGridDBColumn
+            Caption = #1062#1077#1085#1072
+            DataBinding.FieldName = 'Price'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.00;-,0.00'
+            Options.Editing = False
+            Width = 42
+          end
+          object colRemains_Amount: TcxGridDBColumn
+            Caption = #1054#1089#1090#1072#1090#1086#1082
+            DataBinding.FieldName = 'Remains_Amount'
+            Options.Editing = False
+            Width = 57
+          end
         end
       end
     end

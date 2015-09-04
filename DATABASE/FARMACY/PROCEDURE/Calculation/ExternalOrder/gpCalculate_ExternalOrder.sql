@@ -44,8 +44,8 @@ BEGIN
                     inUnitId := vbUnitId,
                inMainGoodsId := MovementItem.ObjectId,
                    inGoodsId := COALESCE(PriceList.GoodsId, MinPrice.GoodsId),
-                    inAmount := COALESCE(MIFloat_AmountManual.ValueData,CEIL((MovementItem.Amount + COALESCE(MIFloat_AmountSecond.ValueData,0))
-                                      / COALESCE(Object_Goods.MinimumLot, 1)) * COALESCE(Object_Goods.MinimumLot, 1)), 
+                    inAmount := (COALESCE(MIFloat_AmountManual.ValueData,CEIL((MovementItem.Amount + COALESCE(MIFloat_AmountSecond.ValueData,0))
+                                      / COALESCE(Object_Goods.MinimumLot, 1)) * COALESCE(Object_Goods.MinimumLot, 1)))::TFloat, 
                      inPrice := COALESCE(PriceList.Price, MinPrice.Price), 
           inPartionGoodsDate := COALESCE(PriceList.PartionGoodsDate, MinPrice.PartionGoodsDate),
                    inComment := MIString_Comment.ValueData,
@@ -91,7 +91,7 @@ BEGIN
             WHERE MovementItem.MovementId = ininternalorder
               AND MovementItem.DescId     = zc_MI_Master()
               AND MovementItem.isErased   = FALSE
-              AND COALESCE((MovementItem.Amount + COALESCE(MIFloat_AmountSecond.ValueData,0)),0)> 0 
+              AND COALESCE(MIFloat_AmountManual.ValueData,(MovementItem.Amount + COALESCE(MIFloat_AmountSecond.ValueData,0))) > 0
               AND COALESCE(COALESCE(PriceList.Price, MinPrice.Price), 0) <> 0;
                        
 
@@ -134,7 +134,9 @@ BEGIN
         WHERE 
             MovementId = inInternalOrder 
             AND 
-            Id NOT IN(SELECT Id FROM ddd)) AS DDD;
+            Id NOT IN(SELECT Id FROM ddd)) AS DDD
+    WHERE
+        COALESCE(ddd.AmountManual, ddd.Amount + COALESCE(AmountSecond,0)) > 0;
 
 END;
 $BODY$

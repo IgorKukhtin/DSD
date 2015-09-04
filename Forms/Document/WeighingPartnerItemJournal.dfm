@@ -366,6 +366,54 @@ object WeighingPartnerItemJournalForm: TWeighingPartnerItemJournalForm
         Options.Editing = False
         Width = 70
       end
+      object colInvNumber_TransportGoods: TcxGridDBColumn
+        Caption = #8470' '#1076#1086#1082'. '#1058#1058#1053
+        DataBinding.FieldName = 'InvNumber_TransportGoods'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 70
+      end
+      object InvNumber_Transport: TcxGridDBColumn
+        Caption = #8470' '#1076#1086#1082'. '#1055'.'#1083'.'
+        DataBinding.FieldName = 'InvNumber_Transport'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 61
+      end
+      object OperDate_Transport: TcxGridDBColumn
+        Caption = #1044#1072#1090#1072' '#1076#1086#1082'. '#1055'.'#1083'.'
+        DataBinding.FieldName = 'OperDate_Transport'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 70
+      end
+      object CarModelName: TcxGridDBColumn
+        Caption = #1052#1072#1088#1082'a '#1072#1074#1090#1086#1084#1086#1073#1080#1083#1103
+        DataBinding.FieldName = 'CarModelName'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 89
+      end
+      object CarName: TcxGridDBColumn
+        Caption = #1040#1074#1090#1086#1084#1086#1073#1080#1083#1100
+        DataBinding.FieldName = 'CarName'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 80
+      end
+      object PersonalDriverName: TcxGridDBColumn
+        Caption = #1042#1086#1076#1080#1090#1077#1083#1100
+        DataBinding.FieldName = 'PersonalDriverName'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 70
+      end
       object RouteGroupName: TcxGridDBColumn
         Caption = #1043#1088#1091#1087#1087#1072' '#1084'. / '#1052#1072#1088#1096#1088#1091#1090
         DataBinding.FieldName = 'RouteGroupName'
@@ -700,7 +748,7 @@ object WeighingPartnerItemJournalForm: TWeighingPartnerItemJournalForm
         Kind = bkEllipsis
       end>
     Properties.ReadOnly = True
-    TabOrder = 5
+    TabOrder = 4
     Width = 200
   end
   object cxLabel3: TcxLabel

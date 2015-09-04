@@ -36,6 +36,8 @@ type
     cxLabel5: TcxLabel;
     edArticleLoss: TcxButtonEdit;
     GuidesArticleLoss: TdsdGuides;
+    colPrice: TcxGridDBColumn;
+    colRemains_Amount: TcxGridDBColumn;
   private
     { Private declarations }
   public

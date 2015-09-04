@@ -1,6 +1,7 @@
 -- Function: lpInsertUpdate_MovementItem_Inventory()
 
 DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_Inventory (Integer, Integer, Integer, TFloat, TFloat, TFloat, Integer);
+DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_Inventory (Integer, Integer, Integer, TFloat, TFloat, TFloat, TVarChar, Integer);
 
 CREATE OR REPLACE FUNCTION lpInsertUpdate_MovementItem_Inventory(
  INOUT ioId                  Integer   , -- Ключ объекта <Элемент документа>
@@ -9,6 +10,7 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_MovementItem_Inventory(
     IN inAmount              TFloat    , -- Количество
     IN inPrice               TFloat    , -- Цена
     IN inSumm                TFloat    , -- Сумма
+    IN inComment             TVarChar  , -- Примечание
     IN inUserId              Integer     -- пользователь
 )
 RETURNS Integer AS
@@ -25,6 +27,12 @@ BEGIN
      PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_Price(), ioId, inPrice);
      -- сохранили свойство <Сумма>
      PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_Summ(), ioId, inSumm);
+
+     -- сохранили свойство <Примечание>
+     IF COALESCE(inComment,'') <> COALESCE((SELECT ValueData FROM MovementItemString Where MovementItemId = ioId AND DescId = zc_MIString_Comment()),'')
+     THEN
+         PERFORM lpInsertUpdate_MovementItemString (zc_MIString_Comment(), ioId, inComment);
+     END IF;
 
      -- сохранили протокол
      PERFORM lpInsert_MovementItemProtocol (ioId, inUserId, vbIsInsert);

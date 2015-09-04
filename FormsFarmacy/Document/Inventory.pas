@@ -5,16 +5,15 @@ interface
 uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, AncestorDocument, cxGraphics,
-  cxControls, cxLookAndFeels, cxLookAndFeelPainters, cxPCdxBarPopupMenu, cxStyles,
-  cxCustomData, cxFilter, cxData, cxDataStorage, cxEdit, Data.DB, cxDBData,
-  cxContainer, Vcl.ComCtrls, dxCore, cxDateUtils, dxSkinsdxBarPainter, dsdAddOn,
+  cxControls, cxLookAndFeels, cxLookAndFeelPainters, cxPCdxBarPopupMenu,
+  dxBarBuiltInMenu, cxStyles, cxCustomData, cxFilter, cxData, cxDataStorage,
+  cxEdit, cxNavigator, Data.DB, cxDBData, cxCurrencyEdit, cxContainer,
+  Vcl.ComCtrls, dxCore, cxDateUtils, dsdAddOn, ExternalLoad, dsdAction,
   dsdGuides, dsdDB, Vcl.Menus, dxBarExtItems, dxBar, cxClasses,
-  Datasnap.DBClient, dsdAction, Vcl.ActnList, cxPropertiesStore, cxButtonEdit,
-  cxMaskEdit, cxDropDownEdit, cxCalendar, cxLabel, cxTextEdit, Vcl.ExtCtrls,
-  cxGridLevel, cxGridCustomTableView, cxGridTableView, cxGridDBTableView,
-  cxGridCustomView, cxGrid, cxPC, cxCurrencyEdit, cxCheckBox, frxClass, frxDBSet,
-  dxSkinsCore, dxSkinsDefaultPainters, dxSkinscxPCPainter, dxBarBuiltInMenu,
-  cxNavigator, ExternalLoad;
+  Datasnap.DBClient, Vcl.ActnList, cxPropertiesStore, cxButtonEdit, cxMaskEdit,
+  cxDropDownEdit, cxCalendar, cxLabel, cxTextEdit, Vcl.ExtCtrls, cxGridLevel,
+  cxGridCustomTableView, cxGridTableView, cxGridDBTableView, cxGridCustomView,
+  cxGrid, cxPC;
 
 type
   TInventoryForm = class(TAncestorDocumentForm)
@@ -48,6 +47,14 @@ type
     dxBarButton1: TdxBarButton;
     spInsertUpdate_MovementItem_Inventory_Set_Zero: TdsdStoredProc;
     actInsertUpdate_MovementItem_Inventory_Set_Zero: TdsdExecStoredProc;
+    colRemains_Amount: TcxGridDBColumn;
+    colDeficit: TcxGridDBColumn;
+    colDeficitSumm: TcxGridDBColumn;
+    colProicit: TcxGridDBColumn;
+    colProicitSumm: TcxGridDBColumn;
+    colDiff: TcxGridDBColumn;
+    colDiffSumm: TcxGridDBColumn;
+    colMIComment: TcxGridDBColumn;
   private
     { Private declarations }
   public
