@@ -296,6 +296,7 @@ BEGIN
                                ON ObjectLink_PartnerFrom_Branch.ObjectId = MovementLinkObject_From.ObjectId
                               AND ObjectLink_PartnerFrom_Branch.DescId = zc_ObjectLink_Unit_Branch() -- !!!не ошибка!!!
                               AND Object_From.DescId = zc_Object_Partner()
+                              AND 1 = 0 -- вроде это как наш филиал
 
           LEFT JOIN MovementLinkObject AS MovementLinkObject_To
                                        ON MovementLinkObject_To.MovementId = Movement.Id
@@ -2834,6 +2835,7 @@ BEGIN
      -- 6.3. ФИНИШ - перепроводим Налоговую
      IF inUserId <> zc_Enum_Process_Auto_PrimeCost()
         AND inUserId <> 343013 -- Нагорная Я.Г.
+        AND inUserId <> 9459   -- Малахова Т.Н.
         AND vbPaidKindId = zc_Enum_PaidKind_FirstForm()
         AND vbCurrencyDocumentId = zc_Enum_Currency_Basis()
         AND vbCurrencyPartnerId = zc_Enum_Currency_Basis()

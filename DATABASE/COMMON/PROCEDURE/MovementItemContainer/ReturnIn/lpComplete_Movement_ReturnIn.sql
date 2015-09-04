@@ -269,6 +269,7 @@ BEGIN
                                ON ObjectLink_PartnerTo_Branch.ObjectId = MovementLinkObject_To.ObjectId
                               AND ObjectLink_PartnerTo_Branch.DescId = zc_ObjectLink_Unit_Branch() -- !!!не ошибка!!!
                               AND Object_To.DescId = zc_Object_Partner()
+                              AND 1 = 0 -- вроде это как наш филиал
 
           LEFT JOIN MovementLinkObject AS MovementLinkObject_From
                                        ON MovementLinkObject_From.MovementId = Movement.Id

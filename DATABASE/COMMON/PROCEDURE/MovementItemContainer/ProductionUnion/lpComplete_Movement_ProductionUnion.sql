@@ -1,4 +1,4 @@
--- Function: lpComplete_Movement_ProductionUnion()
+ -- Function: lpComplete_Movement_ProductionUnion()
 
 DROP FUNCTION IF EXISTS lpComplete_Movement_ProductionUnion (Integer, Boolean, Integer);
 
@@ -357,7 +357,7 @@ BEGIN
 
                    , MovementItem.ObjectId AS GoodsId
                    , CASE WHEN View_InfoMoney.InfoMoneyId IN (zc_Enum_InfoMoney_20901(), zc_Enum_InfoMoney_30101(), zc_Enum_InfoMoney_30201()) THEN COALESCE (MILinkObject_GoodsKind.ObjectId, 0)         ELSE 0 END AS GoodsKindId          -- Ирна + Готовая продукция
-                   , CASE WHEN View_InfoMoney.InfoMoneyId IN (zc_Enum_InfoMoney_20901(), zc_Enum_InfoMoney_30101(), zc_Enum_InfoMoney_30201()) THEN COALESCE (MILinkObject_GoodsKindComplete.ObjectId, 0) ELSE 0 END AS GoodsKindId_complete -- Ирна + Готовая продукция
+                   , CASE WHEN View_InfoMoney.InfoMoneyId IN (zc_Enum_InfoMoney_20901(), zc_Enum_InfoMoney_30101(), zc_Enum_InfoMoney_30201()) THEN COALESCE (MILinkObject_GoodsKindComplete.ObjectId, CASE WHEN _tmpItem.GoodsKindId <> zc_GoodsKind_WorkProgress() THEN _tmpItem.GoodsKindId ELSE 0 END) ELSE 0 END AS GoodsKindId_complete -- Ирна + Готовая продукция
                    , COALESCE (MILinkObject_Asset.ObjectId, 0) AS AssetId
                    , COALESCE (MIString_PartionGoods.ValueData, '') AS PartionGoods
                    , COALESCE (MIDate_PartionGoods.ValueData, zc_DateEnd()) AS PartionGoodsDate

@@ -383,10 +383,24 @@ BEGIN
                                                            , 240687, 250652
                                                             );*/
 
-     IF inBranchId = 0
+     IF inBranchId = 0 OR 1 = 1
      THEN
      -- расходы для Master
      INSERT INTO _tmpChild (MasterContainerId, ContainerId, MasterContainerId_Count, ContainerId_Count, OperCount, isExternal)
+        WITH MIContainer_Count_Out AS (SELECT Movement.Id AS MovementId, Movement.DescId AS MovementDescId, Movement.OperDate, MIContainer_Count_Out.MovementItemId, MIContainer_Count_Out.ContainerId, MIContainer_Count_Out.WhereObjectId_Analyzer, SUM (MIContainer_Count_Out.Amount) AS Amount
+                                       FROM _tmpMaster
+                                            JOIN MovementItemContainer AS MIContainer_Summ_Out
+                                                                       ON MIContainer_Summ_Out.OperDate BETWEEN vbStartDate_zavod AND vbEndDate_zavod
+                                                                      AND MIContainer_Summ_Out.ContainerId = _tmpMaster.ContainerId
+                                                                      AND MIContainer_Summ_Out.DescId     = zc_MIContainer_Summ()
+                                                                      AND MIContainer_Summ_Out.isActive   = TRUE
+                                                                      AND MIContainer_Summ_Out.ParentId > 0
+                                       WHERE Movement.
+                                         -- AND Movement.DescId IN (zc_Movement_Send(), zc_Movement_ProductionUnion(), zc_Movement_ProductionSeparate())
+                                         AND Movement.StatusId = zc_Enum_Status_Complete()
+                                       GROUP BY Movement.Id, Movement.DescId, Movement.OperDate, MIContainer_Count_Out.MovementItemId, MIContainer_Count_Out.ContainerId, MIContainer_Count_Out.WhereObjectId_Analyzer
+                                     )
+
         SELECT COALESCE (MIContainer_Summ_In.ContainerId, 0)   AS MasterContainerId
              , COALESCE (MIContainer_Summ_Out.ContainerId, 0)  AS ContainerId
              , COALESCE (MIContainer_Count_In.ContainerId, 0)  AS MasterContainerId_Count
@@ -453,52 +467,8 @@ BEGIN
                , MIContainer_Count_Out.ContainerId
                , MIContainer_Count_Out.WhereObjectId_Analyzer
                , MIContainer_Count_In.WhereObjectId_Analyzer
-       UNION ALL
-        SELECT COALESCE (MIContainer_Summ_In.ContainerId, 0)   AS MasterContainerId
-             , COALESCE (MIContainer_Summ_Out.ContainerId, 0)  AS ContainerId
-             , COALESCE (MIContainer_Count_In.ContainerId, 0)  AS MasterContainerId_Count
-             , COALESCE (MIContainer_Count_Out.ContainerId, 0) AS ContainerId_Count
-             , SUM (CASE WHEN Movement.DescId IN (zc_Movement_Send(), zc_Movement_SendOnPrice())
-                             THEN COALESCE (1 * MIContainer_Count_In.Amount, 0)
-                         WHEN Movement.DescId IN (zc_Movement_ProductionUnion())
-                             THEN COALESCE (-1 * MIContainer_Count_Out.Amount, 0)
-                         ELSE 0
-                    END) AS OperCount
-             , CASE WHEN MIContainer_Count_Out.WhereObjectId_Analyzer = MIContainer_Count_In.WhereObjectId_Analyzer THEN FALSE ELSE TRUE END AS isExternal
-        FROM Movement
-             JOIN MovementItemContainer AS MIContainer_Count_Out
-                                        ON MIContainer_Count_Out.MovementId = Movement.Id
-                                       AND MIContainer_Count_Out.DescId     = zc_MIContainer_Count()
-                                       AND MIContainer_Count_Out.isActive   = FALSE
-             JOIN MovementItemContainer AS MIContainer_Summ_Out
-                                        ON MIContainer_Summ_Out.MovementId     = MIContainer_Count_Out.MovementId
-                                       AND MIContainer_Summ_Out.MovementItemId = MIContainer_Count_Out.MovementItemId
-                                       AND MIContainer_Summ_Out.DescId         = zc_MIContainer_Summ()
+                ;
 
-             JOIN MovementItemContainer AS MIContainer_Summ_In ON MIContainer_Summ_In.Id = MIContainer_Summ_Out.ParentId
-             INNER JOIN _tmpContainer_branch ON _tmpContainer_branch.ContainerId = MIContainer_Summ_In.ContainerId
-             JOIN MovementItemContainer AS MIContainer_Count_In
-                                        ON MIContainer_Count_In.MovementId     = MIContainer_Summ_In.MovementId
-                                       AND MIContainer_Count_In.MovementItemId = MIContainer_Summ_In.MovementItemId
-                                       AND MIContainer_Count_In.DescId         = zc_MIContainer_Count()
-                                       AND MIContainer_Count_In.isActive       = TRUE
-
-             /*LEFT JOIN ContainerObjectCost AS ContainerObjectCost_Out
-                                           ON ContainerObjectCost_Out.ContainerId = MIContainer_Summ_Out.ContainerId
-                                          AND ContainerObjectCost_Out.ObjectCostDescId = zc_ObjectCost_Basis()
-             LEFT JOIN ContainerObjectCost AS ContainerObjectCost_In
-                                           ON ContainerObjectCost_In.ContainerId = MIContainer_Summ_In.ContainerId
-                                          AND ContainerObjectCost_In.ObjectCostDescId = zc_ObjectCost_Basis()*/
-        WHERE Movement.OperDate BETWEEN inStartDate AND inEndDate
-          -- AND Movement.DescId IN (zc_Movement_Send(), zc_Movement_ProductionUnion(), zc_Movement_ProductionSeparate())
-          AND Movement.StatusId = zc_Enum_Status_Complete()
-        GROUP BY MIContainer_Summ_In.ContainerId
-               , MIContainer_Summ_Out.ContainerId
-               , MIContainer_Count_In.ContainerId
-               , MIContainer_Count_Out.ContainerId
-               , MIContainer_Count_Out.WhereObjectId_Analyzer
-               , MIContainer_Count_In.WhereObjectId_Analyzer
-        ;
      END IF; -- if inBranchId = 0
 
 /*

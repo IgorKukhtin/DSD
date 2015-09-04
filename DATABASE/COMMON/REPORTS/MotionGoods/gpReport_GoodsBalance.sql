@@ -535,7 +535,7 @@ BEGIN
                                  , tmpContainer_Count.PartionGoodsId
                                  , CASE WHEN MIContainer.OperDate BETWEEN inStartDate AND inEndDate AND MIContainer.isActive = FALSE THEN MIContainer.MovementItemId ELSE NULL END AS MovementItemId
                                  , CASE WHEN MIContainer.OperDate BETWEEN inStartDate AND inEndDate AND MIContainer.isActive = FALSE THEN MIContainer.MovementId     ELSE NULL END AS MovementId
-                                 , -1 * SUM (CASE WHEN MIContainer.OperDate BETWEEN inStartDate AND inEndDate AND MIContainer.isActive = FALSE THEN MIContainer.Amount ELSE 0 END) AS CountOut_byPF
+                                 , -1 * SUM (CASE WHEN MIContainer.OperDate BETWEEN inStartDate AND inEndDate AND MIContainer.isActive = FALSE AND MIContainer.WhereObjectId_Analyzer <> MIContainer.ObjectExtId_Analyzer THEN MIContainer.Amount ELSE 0 END) AS CountOut_byPF
 
                                  , -1 * SUM (CASE WHEN MIContainer.isActive = FALSE THEN MIContainer.Amount                    ELSE 0 END) AS CountOut_byCount
                                  ,      SUM (CASE WHEN MIContainer.isActive = FALSE THEN COALESCE (MIFloat_Count.ValueData, 0) ELSE 0 END) AS Count_onCount
@@ -574,6 +574,7 @@ BEGIN
                                   INNER JOIN MovementItemContainer AS MIContainer ON MIContainer.MovementId     = tmpMIContainer_Count_all.MovementId
                                                                                  AND MIContainer.MovementItemId = MovementItem.ParentId
                                                                                  AND MIContainer.DescId       = zc_MIContainer_Count()
+                                                                                 AND MIContainer.ObjectIntId_Analyzer <> zc_GoodsKind_WorkProgress() -- !!!захардкодил, т.е. нужны только если расход на ГП!!!
                             GROUP BY tmpMIContainer_Count_all.LocationId
                                    , tmpMIContainer_Count_all.GoodsId
                                    , tmpMIContainer_Count_all.GoodsKindId
