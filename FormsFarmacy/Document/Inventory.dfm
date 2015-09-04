@@ -1,28 +1,28 @@
 inherited InventoryForm: TInventoryForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1048#1085#1074#1077#1085#1090#1072#1088#1080#1079#1072#1094#1080#1103'>'
-  ClientHeight = 561
-  ClientWidth = 705
-  ExplicitWidth = 713
-  ExplicitHeight = 588
+  ClientHeight = 658
+  ClientWidth = 898
+  ExplicitWidth = 906
+  ExplicitHeight = 685
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 77
-    Width = 705
-    Height = 484
+    Width = 898
+    Height = 581
     ExplicitTop = 77
-    ExplicitWidth = 705
-    ExplicitHeight = 484
-    ClientRectBottom = 484
-    ClientRectRight = 705
+    ExplicitWidth = 898
+    ExplicitHeight = 581
+    ClientRectBottom = 581
+    ClientRectRight = 898
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 705
-      ExplicitHeight = 460
+      ExplicitWidth = 898
+      ExplicitHeight = 557
       inherited cxGrid: TcxGrid
-        Width = 705
-        Height = 460
-        ExplicitWidth = 705
-        ExplicitHeight = 460
+        Width = 898
+        Height = 557
+        ExplicitWidth = 898
+        ExplicitHeight = 557
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -96,6 +96,41 @@ inherited InventoryForm: TInventoryForm
               Format = ',0.####'
               Kind = skSum
               Column = colSumm
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = colRemains_Amount
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = colDeficit
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = colDeficitSumm
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = colProicit
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = colProicitSumm
+            end
+            item
+              Format = '+ ,0.####;- ,0.####; '
+              Kind = skSum
+              Column = colDiff
+            end
+            item
+              Format = '+ ,0.00;- ,0.00; '
+              Kind = skSum
+              Column = colDiffSumm
             end>
           OptionsBehavior.FocusCellOnCycle = False
           OptionsCustomize.DataRowSizing = False
@@ -113,53 +148,126 @@ inherited InventoryForm: TInventoryForm
             DataBinding.FieldName = 'GoodsCode'
             HeaderAlignmentHorz = taCenter
             Options.Editing = False
-            Width = 68
+            Width = 49
           end
           object colName: TcxGridDBColumn [1]
             Caption = #1058#1086#1074#1072#1088
             DataBinding.FieldName = 'GoodsName'
             HeaderAlignmentHorz = taCenter
             Options.Editing = False
-            Width = 306
+            Width = 259
           end
-          object colAmount: TcxGridDBColumn [2]
-            Caption = #1050#1086#1083'-'#1074#1086
+          object colRemains_Amount: TcxGridDBColumn [2]
+            AlternateCaption = #1056#1072#1089#1095#1077#1090#1085#1099#1081' '#1086#1089#1090#1072#1090#1086#1082
+            Caption = #1056#1072#1089#1095'. '#1054#1089#1090#1072#1090#1086#1082
+            DataBinding.FieldName = 'Remains_Amount'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; '
+            HeaderHint = #1056#1072#1089#1095#1077#1090#1085#1099#1081' '#1086#1089#1090#1072#1090#1086#1082
+            Options.Editing = False
+            Width = 56
+          end
+          object colAmount: TcxGridDBColumn [3]
+            AlternateCaption = #1060#1072#1082#1090#1080#1095#1077#1089#1082#1080#1081' '#1086#1089#1090#1072#1090#1086#1082
+            Caption = #1060#1072#1082#1090'. '#1086#1089#1090#1072#1090#1086#1082
             DataBinding.FieldName = 'Amount'
             PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.AssignedValues.MinValue = True
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
-            Width = 65
+            HeaderHint = #1060#1072#1082#1090#1080#1095#1077#1089#1082#1080#1081' '#1086#1089#1090#1072#1090#1086#1082
+            Width = 43
           end
-          object colPrice: TcxGridDBColumn [3]
+          object colPrice: TcxGridDBColumn [4]
             Caption = #1062#1077#1085#1072
             DataBinding.FieldName = 'Price'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.####;-,0.####; ; '
+            Properties.DisplayFormat = ',0.####;-,0.####; '
             HeaderAlignmentHorz = taCenter
             Options.Editing = False
-            Width = 101
+            Width = 56
           end
-          object colSumm: TcxGridDBColumn [4]
+          object colSumm: TcxGridDBColumn [5]
             Caption = #1057#1091#1084#1084#1072
             DataBinding.FieldName = 'Summ'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.####;-,0.####; ; '
+            Properties.DisplayFormat = ',0.00;-,0.00; '
             HeaderAlignmentHorz = taCenter
             Options.Editing = False
-            Width = 94
+            Width = 50
+          end
+          object colDeficit: TcxGridDBColumn
+            Caption = #1053#1077#1076#1086#1089#1090#1072#1095#1072
+            DataBinding.FieldName = 'Deficit'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; '
+            Options.Editing = False
+            Width = 57
+          end
+          object colDeficitSumm: TcxGridDBColumn
+            Caption = #1057#1091#1084#1084#1072' '#1085#1077#1076#1086#1089#1090#1072#1095#1080
+            DataBinding.FieldName = 'DeficitSumm'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.00;-,0.00; '
+            Options.Editing = False
+            Width = 58
+          end
+          object colProicit: TcxGridDBColumn
+            Caption = #1048#1079#1083#1080#1096#1077#1082
+            DataBinding.FieldName = 'Proficit'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; '
+            Options.Editing = False
+            Width = 57
+          end
+          object colProicitSumm: TcxGridDBColumn
+            Caption = #1057#1091#1084#1084#1072' '#1080#1079#1083#1080#1096#1082#1072
+            DataBinding.FieldName = 'ProficitSumm'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.00;-,0.00; '
+            Options.Editing = False
+            Width = 61
+          end
+          object colDiff: TcxGridDBColumn
+            Caption = #1056#1072#1079#1085#1080#1094#1072
+            DataBinding.FieldName = 'Diff'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = '+ ,0.####;- ,0.####; ;'
+            Options.Editing = False
+            Width = 60
+          end
+          object colDiffSumm: TcxGridDBColumn
+            Caption = #1057#1091#1084#1084#1072' '#1088#1072#1079#1085#1080#1094#1099
+            DataBinding.FieldName = 'DiffSumm'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = '+ ,0.00;- ,0.00; ;'
+            Options.Editing = False
+            Width = 69
+          end
+          object colMIComment: TcxGridDBColumn
+            Caption = #1050#1086#1084#1084#1077#1085#1090#1072#1088#1080#1081
+            DataBinding.FieldName = 'MIComment'
+            Width = 150
           end
         end
       end
     end
   end
   inherited DataPanel: TPanel
-    Width = 705
+    Width = 898
     Height = 51
     TabOrder = 3
-    ExplicitWidth = 705
+    ExplicitWidth = 898
     ExplicitHeight = 51
     inherited edInvNumber: TcxTextEdit
       Left = 8
@@ -1032,12 +1140,12 @@ inherited InventoryForm: TInventoryForm
         ParamType = ptInput
       end
       item
-        Name = 'inAmount'
+        Name = 'ioAmount'
         Value = Null
         Component = MasterCDS
         ComponentItem = 'Amount'
         DataType = ftFloat
-        ParamType = ptInput
+        ParamType = ptInputOutput
       end
       item
         Name = 'inPrice'
@@ -1048,47 +1156,68 @@ inherited InventoryForm: TInventoryForm
         ParamType = ptInput
       end
       item
-        Name = 'inSumma'
+        Name = 'inComment'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'MIComment'
+        DataType = ftString
+        ParamType = ptInput
+      end
+      item
+        Name = 'outSumma'
         Value = Null
         Component = MasterCDS
         ComponentItem = 'Summ'
         DataType = ftFloat
       end
       item
+        Name = 'outRemains'
         Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Remains_Amount'
         DataType = ftFloat
-        ParamType = ptUnknown
       end
       item
+        Name = 'outDeficit'
         Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Deficit'
         DataType = ftFloat
-        ParamType = ptUnknown
       end
       item
+        Name = 'outDeficitSumm'
         Value = Null
+        Component = MasterCDS
+        ComponentItem = 'DeficitSumm'
         DataType = ftFloat
-        ParamType = ptUnknown
       end
       item
+        Name = 'outProficit'
         Value = Null
-        DataType = ftString
-        ParamType = ptUnknown
+        Component = MasterCDS
+        ComponentItem = 'Proficit'
+        DataType = ftFloat
       end
       item
+        Name = 'outProficitSumm'
         Value = Null
-        ParamType = ptUnknown
+        Component = MasterCDS
+        ComponentItem = 'ProficitSumm'
+        DataType = ftFloat
       end
       item
+        Name = 'outDiff'
         Value = Null
-        ParamType = ptUnknown
+        Component = MasterCDS
+        ComponentItem = 'Diff'
+        DataType = ftFloat
       end
       item
+        Name = 'outDiffSumm'
         Value = Null
-        ParamType = ptUnknown
-      end
-      item
-        Value = Null
-        ParamType = ptUnknown
+        Component = MasterCDS
+        ComponentItem = 'DiffSumm'
+        DataType = ftFloat
       end>
     Left = 160
     Top = 368

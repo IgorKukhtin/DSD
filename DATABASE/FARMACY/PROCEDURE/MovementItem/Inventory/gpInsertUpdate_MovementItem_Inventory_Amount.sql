@@ -29,6 +29,7 @@ BEGIN
                                                   , inAmount             := COALESCE(tmp.Amount_End,0)
                                                   , inPrice              := COALESCE(tmp.Price,0)
                                                   , inSumm               := COALESCE(tmp.Amount_End,0)*COALESCE(tmp.Price,0)::TFloat
+                                                  , inComment            := NULL::TVarChar
                                                   , inUserId             := vbUserId
                                                    )
      FROM (SELECT tmpMI.MovementItemId                                   AS MovementItemId

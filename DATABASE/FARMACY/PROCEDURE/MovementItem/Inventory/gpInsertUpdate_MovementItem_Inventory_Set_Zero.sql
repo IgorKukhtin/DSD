@@ -20,6 +20,7 @@ BEGIN
                                                  , inAmount             := 0::TFloat
                                                  , inPrice              := COALESCE(MovementItemFloat_Price.ValueData,0)
                                                  , inSumm               := 0::TFloat
+                                                 , inComment            := NULL::TVarChar
                                                  , inUserId             := vbUserId)
     FROM MovementItem
         LEFT OUTER JOIN MovementItemFloat AS MovementItemFloat_Price
