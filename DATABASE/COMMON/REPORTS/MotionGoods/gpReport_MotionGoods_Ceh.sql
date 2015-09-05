@@ -236,7 +236,7 @@ BEGIN
 
     -- Результат
     RETURN QUERY
-    WITH tmpReport AS (SELECT * FROM lpReport_MotionGoods (inStartDate:= inStartDate, inEndDate:= inEndDate, inAccountGroupId:= inAccountGroupId, inUnitGroupId:= inUnitGroupId, inLocationId:= inLocationId, inGoodsGroupId:= inGoodsGroupId, inGoodsId:= inGoodsId, inIsInfoMoney:= TRUE, inUserId:= vbUserId))
+    WITH tmpReport AS (SELECT * FROM lpReport_MotionGoods (inStartDate:= inStartDate, inEndDate:= inEndDate, inAccountGroupId:= inAccountGroupId, inUnitGroupId:= inUnitGroupId, inLocationId:= inLocationId, inGoodsGroupId:= inGoodsGroupId, inGoodsId:= inGoodsId, inIsInfoMoney:= FALSE, inUserId:= vbUserId))
 
     , tmpLocation AS (SELECT _tmpLocation.LocationId FROM _tmpLocation GROUP BY _tmpLocation.LocationId)
 

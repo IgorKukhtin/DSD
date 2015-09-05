@@ -2272,10 +2272,4 @@ object MainForm: TMainForm
     Left = 168
     Top = 512
   end
-  object IdIPWatch1: TIdIPWatch
-    Active = False
-    HistoryFilename = 'iphist.dat'
-    Left = 512
-    Top = 472
-  end
 end

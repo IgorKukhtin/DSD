@@ -195,7 +195,6 @@ type
     cbPartion: TCheckBox;
     fromQueryDate_recalc: TADOQuery;
     cbHistoryCost_diff: TCheckBox;
-    IdIPWatch1: TIdIPWatch;
     procedure OKGuideButtonClick(Sender: TObject);
     procedure cbAllGuideClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
