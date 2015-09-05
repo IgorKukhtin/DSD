@@ -62,14 +62,14 @@ BEGIN
      INSERT INTO _tmpUnit_branch (UnitId)
         SELECT ObjectLink_Unit_Branch.ObjectId AS UnitId
         FROM ObjectLink AS ObjectLink_Unit_Branch
-        WHERE COALESCE (inBranchId, 0) = 0
+        WHERE COALESCE (inBranchId, 0) <= 0
           -- AND ObjectLink_Unit_Branch.ChildObjectId <> zc_Branch_Basis()
           AND ObjectLink_Unit_Branch.DescId = zc_ObjectLink_Unit_Branch()
           AND ObjectLink_Unit_Branch.ChildObjectId IN (8374, 301310) -- филиал Одесса + филиал Запорожье
       UNION
        SELECT ObjectLink_Unit_Branch.ObjectId AS UnitId
         FROM ObjectLink AS ObjectLink_Unit_Branch
-        WHERE inBranchId <> 0
+        WHERE inBranchId > 0
           AND ObjectLink_Unit_Branch.ChildObjectId = inBranchId
           AND ObjectLink_Unit_Branch.DescId = zc_ObjectLink_Unit_Branch()
        ;     
@@ -383,7 +383,7 @@ BEGIN
                                                            , 240687, 250652
                                                             );*/
 
-     IF inBranchId = 0 -- OR 1 = 1
+     IF inBranchId >= 0 -- OR 1 = 1
      THEN
      -- расходы для Master
      INSERT INTO _tmpChild (MasterContainerId, ContainerId, MasterContainerId_Count, ContainerId_Count, OperCount, isExternal)
@@ -485,7 +485,7 @@ BEGIN
                , MIContainer_Summ_In.WhereObjectId_Analyzer
         ;
 
-     END IF; -- if inBranchId = 0
+     END IF; -- if inBranchId >= 0
 
 
 /*     -- добавляются связи которых нет (т.к. нулевые проводки не формируются)
@@ -668,7 +668,7 @@ BEGIN
      /*INSERT INTO _tmpDiff (ContainerId, MovementItemId_diff, Summ_diff)
         SELECT HistoryCost.ContainerId, MAX (HistoryCost.MovementItemId_diff), SUM (HistoryCost.Summ_diff) FROM HistoryCost WHERE HistoryCost.Summ_diff <> 0 AND ((inStartDate BETWEEN StartDate AND EndDate) OR (inEndDate BETWEEN StartDate AND EndDate)) GROUP BY HistoryCost.ContainerId;
      */
-     IF inBranchId <> 0
+     IF inBranchId > 0
      THEN
          -- Удаляем предыдущую с/с - !!!для 1-ого Филиала!!!
          DELETE FROM HistoryCost WHERE ((inStartDate BETWEEN StartDate AND EndDate) OR (inEndDate BETWEEN StartDate AND EndDate))

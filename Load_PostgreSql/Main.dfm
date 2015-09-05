@@ -19,7 +19,7 @@ object MainForm: TMainForm
   object DBGrid: TDBGrid
     Left = 0
     Top = 0
-    Width = 249
+    Width = 295
     Height = 664
     Align = alClient
     DataSource = DataSource
@@ -119,13 +119,14 @@ object MainForm: TMainForm
     end
   end
   object GuidePanel: TPanel
-    Left = 249
+    Left = 295
     Top = 0
-    Width = 321
+    Width = 265
     Height = 664
     Align = alRight
     BevelOuter = bvNone
     TabOrder = 2
+    ExplicitLeft = 304
     object cbGoodsGroup: TCheckBox
       Tag = 10
       Left = 15
@@ -633,6 +634,7 @@ object MainForm: TMainForm
       Width = 289
       Height = 17
       Caption = '11.2. '#1055#1072#1088#1072#1084#1077#1090#1088#1099' '#1082#1072#1095#1077#1089#1090#1074'.'
+      Enabled = False
       TabOrder = 45
     end
     object cbQuality: TCheckBox
@@ -720,13 +722,14 @@ object MainForm: TMainForm
     end
   end
   object DocumentPanel: TPanel
-    Left = 570
+    Left = 560
     Top = 0
-    Width = 238
+    Width = 224
     Height = 664
     Align = alRight
     BevelOuter = bvNone
     TabOrder = 3
+    ExplicitLeft = 583
     object Label1: TLabel
       Left = 6
       Top = 22
@@ -1451,13 +1454,14 @@ object MainForm: TMainForm
     end
   end
   object CompleteDocumentPanel: TPanel
-    Left = 808
+    Left = 784
     Top = 0
-    Width = 212
+    Width = 236
     Height = 664
     Align = alRight
     BevelOuter = bvNone
     TabOrder = 4
+    ExplicitLeft = 785
     object Label3: TLabel
       Left = 6
       Top = 22
@@ -2010,9 +2014,9 @@ object MainForm: TMainForm
     end
     object cbComplete_List: TCheckBox
       Tag = 30
-      Left = 9
+      Left = 6
       Top = 482
-      Width = 184
+      Width = 176
       Height = 17
       Caption = '!!! C'#1087#1080#1089#1086#1082' '#1085#1072#1082#1083#1072#1076#1085#1099#1093' !!!'
       Font.Charset = DEFAULT_CHARSET
@@ -2108,7 +2112,7 @@ object MainForm: TMainForm
       Tag = 30
       Left = 16
       Top = 459
-      Width = 184
+      Width = 132
       Height = 17
       Caption = #1055#1072#1088#1090#1080#1080' '#1055#1060'-'#1043#1055
       Font.Charset = DEFAULT_CHARSET
@@ -2135,6 +2139,34 @@ object MainForm: TMainForm
       ParentFont = False
       TabOrder = 42
       OnClick = cbCompleteIncomeBNClick
+    end
+    object cbLastCost: TCheckBox
+      Left = 154
+      Top = 459
+      Width = 72
+      Height = 17
+      Caption = '!!!LAST!!!'
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -11
+      Font.Name = 'MS Sans Serif'
+      Font.Style = [fsBold]
+      ParentFont = False
+      TabOrder = 43
+    end
+    object cb100MSec: TCheckBox
+      Left = 154
+      Top = 440
+      Width = 76
+      Height = 17
+      Caption = '100MSec'
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -11
+      Font.Name = 'MS Sans Serif'
+      Font.Style = [fsBold]
+      ParentFont = False
+      TabOrder = 44
     end
   end
   object DataSource: TDataSource
