@@ -1,26 +1,26 @@
 inherited Cash_PersonalForm: TCash_PersonalForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1050#1072#1089#1089#1072', '#1074#1099#1087#1083#1072#1090#1072' '#1087#1086' '#1074#1077#1076#1086#1084#1086#1089#1090#1080'>'
-  ClientHeight = 623
+  ClientHeight = 613
   ClientWidth = 982
   ExplicitWidth = 998
-  ExplicitHeight = 658
+  ExplicitHeight = 651
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 115
     Width = 982
-    Height = 508
+    Height = 498
     ExplicitTop = 115
     ExplicitWidth = 982
     ExplicitHeight = 508
-    ClientRectBottom = 508
+    ClientRectBottom = 498
     ClientRectRight = 982
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 982
       ExplicitHeight = 484
       inherited cxGrid: TcxGrid
         Width = 982
-        Height = 484
+        Height = 474
         ExplicitWidth = 982
         ExplicitHeight = 484
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -89,6 +89,11 @@ inherited Cash_PersonalForm: TCash_PersonalForm
               Format = ',0.00'
               Kind = skSum
               Column = SummChild
+            end
+            item
+              Format = ',0.00'
+              Kind = skSum
+              Column = Amount_income
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -155,6 +160,11 @@ inherited Cash_PersonalForm: TCash_PersonalForm
               Format = ',0.00'
               Kind = skSum
               Column = SummChild
+            end
+            item
+              Format = ',0.00'
+              Kind = skSum
+              Column = Amount_income
             end>
           OptionsBehavior.FocusCellOnCycle = False
           OptionsCustomize.DataRowSizing = False
@@ -360,19 +370,20 @@ inherited Cash_PersonalForm: TCash_PersonalForm
             Options.Editing = False
             Width = 70
           end
-          object SummSocialAdd: TcxGridDBColumn [19]
-            Caption = #1057#1086#1094'.'#1074#1099#1087#1083'. ('#1076#1086#1087'. '#1082' '#1079#1087')'
-            DataBinding.FieldName = 'SummSocialAdd'
+          object Amount_income: TcxGridDBColumn [19]
+            Caption = #1059#1076#1077#1088#1078#1072#1085#1080#1103' '#1043#1057#1052
+            DataBinding.FieldName = 'Amount_income'
             PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Properties.ReadOnly = True
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 70
+            Width = 75
           end
-          object SummChild: TcxGridDBColumn [20]
-            Caption = #1040#1083#1080#1084#1077#1085#1090#1099
-            DataBinding.FieldName = 'SummChild'
+          object SummSocialAdd: TcxGridDBColumn [20]
+            Caption = #1057#1086#1094'.'#1074#1099#1087#1083'. ('#1076#1086#1087'. '#1082' '#1079#1087')'
+            DataBinding.FieldName = 'SummSocialAdd'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
             HeaderAlignmentHorz = taCenter
@@ -413,6 +424,16 @@ inherited Cash_PersonalForm: TCash_PersonalForm
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 80
+          end
+          object SummChild: TcxGridDBColumn [25]
+            Caption = #1040#1083#1080#1084#1077#1085#1090#1099
+            DataBinding.FieldName = 'SummChild'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
           end
         end
       end
@@ -1354,8 +1375,8 @@ inherited Cash_PersonalForm: TCash_PersonalForm
         Name = 'TopPersonalServiceListName'
         Value = ''
       end>
-    Left = 384
-    Top = 65533
+    Left = 336
+    Top = 5
   end
   object GuidesPersonalServiceJournal: TdsdGuides
     KeyField = 'Id'

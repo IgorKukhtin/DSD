@@ -16,7 +16,7 @@ RETURNS TABLE (Id Integer, PersonalId Integer, PersonalCode Integer, PersonalNam
              , InfoMoneyId Integer, InfoMoneyCode Integer, InfoMoneyName TVarChar, InfoMoneyName_all TVarChar
              , Amount TFloat
              , SummService TFloat, SummToPay_cash TFloat, SummToPay TFloat, SummCard TFloat, SummMinus TFloat, SummAdd TFloat, SummSocialIn TFloat, SummSocialAdd TFloat, SummChild TFloat
-             , Amount_current TFloat, Amount_avance TFloat, Amount_service TFloat
+             , Amount_current TFloat, Amount_avance TFloat, Amount_service TFloat, Amount_income TFloat
              , SummRemains TFloat
              , Comment TVarChar
              , isErased Boolean
@@ -179,9 +179,11 @@ BEGIN
                                                                  AND CLO_PersonalServiceList.DescId = zc_ContainerLinkObject_PersonalServiceList()
                                                                  AND CLO_PersonalServiceList.ContainerId = CLO_ServiceDate.ContainerId
                              )
-                , tmpCash AS (SELECT SUM (CASE WHEN MIContainer.MovementId =  inMovementId THEN MIContainer.Amount ELSE 0 END) AS Amount_current
-                                   , SUM (CASE WHEN MIContainer.MovementId <> inMovementId AND MIContainer.AnalyzerId = zc_Enum_AnalyzerId_Cash_PersonalAvance()  THEN MIContainer.Amount ELSE 0 END) AS Amount_avance
-                                   , SUM (CASE WHEN MIContainer.MovementId <> inMovementId AND MIContainer.AnalyzerId = zc_Enum_AnalyzerId_Cash_PersonalService() THEN MIContainer.Amount ELSE 0 END) AS Amount_service
+          /*tmpCash*/
+         , tmpMIContainer AS (SELECT SUM (CASE WHEN MIContainer.MovementId = inMovementId AND MIContainer.MovementDescId = zc_Movement_Cash() THEN MIContainer.Amount ELSE 0 END) AS Amount_current
+                                   , SUM (CASE WHEN MIContainer.MovementId <> inMovementId AND MIContainer.MovementDescId = zc_Movement_Cash() AND MIContainer.AnalyzerId = zc_Enum_AnalyzerId_Cash_PersonalAvance()  THEN MIContainer.Amount ELSE 0 END) AS Amount_avance
+                                   , SUM (CASE WHEN MIContainer.MovementId <> inMovementId AND MIContainer.MovementDescId = zc_Movement_Cash() AND MIContainer.AnalyzerId = zc_Enum_AnalyzerId_Cash_PersonalService() THEN MIContainer.Amount ELSE 0 END) AS Amount_service
+                                   , SUM (CASE WHEN MIContainer.MovementId <> inMovementId AND MIContainer.MovementDescId = zc_Movement_Income() THEN MIContainer.Amount ELSE 0 END) AS Amount_income
                                    , tmpContainer.PersonalId
                                    , tmpContainer.UnitId
                                    , tmpContainer.PositionId
@@ -190,11 +192,12 @@ BEGIN
                                    INNER JOIN MovementItemContainer AS MIContainer
                                                                     ON MIContainer.ContainerId = tmpContainer.ContainerId
                                                                    AND MIContainer.DescId = zc_MIContainer_Summ()
-                                                                   AND MIContainer.MovementDescId = zc_Movement_Cash()
+                                                                   AND MIContainer.MovementDescId IN (zc_Movement_Cash(), zc_Movement_Income())
                               GROUP BY tmpContainer.PersonalId
                                      , tmpContainer.UnitId
                                      , tmpContainer.PositionId
                                      , tmpContainer.InfoMoneyId
+                                     , MIContainer.MovementDescId
                              )
              , tmpService AS (SELECT tmpParent.PersonalId
                                    , tmpParent.UnitId
@@ -209,14 +212,15 @@ BEGIN
                                    , tmpParent.SummSocialIn
                                    , tmpParent.SummSocialAdd
                                    , tmpParent.SummChild
-                                   , tmpCash.Amount_current
-                                   , tmpCash.Amount_avance
-                                   , tmpCash.Amount_service
+                                   , tmpMIContainer.Amount_current
+                                   , tmpMIContainer.Amount_avance
+                                   , tmpMIContainer.Amount_service
+                                   , tmpMIContainer.Amount_income
                               FROM tmpParent
-                                   LEFT JOIN tmpCash ON tmpCash.PersonalId  = tmpParent.PersonalId
-                                                    AND tmpCash.UnitId      = tmpParent.UnitId
-                                                    AND tmpCash.PositionId  = tmpParent.PositionId
-                                                    AND tmpCash.InfoMoneyId = tmpParent.InfoMoneyId
+                                   LEFT JOIN tmpMIContainer ON tmpMIContainer.PersonalId  = tmpParent.PersonalId
+                                                           AND tmpMIContainer.UnitId      = tmpParent.UnitId
+                                                           AND tmpMIContainer.PositionId  = tmpParent.PositionId
+                                                           AND tmpMIContainer.InfoMoneyId = tmpParent.InfoMoneyId
                              )
                 , tmpData AS (SELECT tmpMI.MovementItemId
                                    , tmpMI.Amount
@@ -232,6 +236,7 @@ BEGIN
                                    , tmpService.Amount_current
                                    , tmpService.Amount_avance
                                    , tmpService.Amount_service
+                                   , tmpService.Amount_income
                                    , COALESCE (tmpMI.PersonalId, tmpService.PersonalId)   AS PersonalId
                                    , COALESCE (tmpMI.UnitId, tmpService.UnitId)           AS UnitId
                                    , COALESCE (tmpMI.PositionId, tmpService.PositionId)   AS PositionId
@@ -276,6 +281,7 @@ BEGIN
             , tmpData.Amount_current :: TFloat AS Amount_current
             , tmpData.Amount_avance  :: TFloat AS Amount_avance
             , tmpData.Amount_service :: TFloat AS Amount_service
+            , tmpData.Amount_income  :: TFloat AS Amount_income
             , (COALESCE (tmpData.SummToPay_cash, 0) - COALESCE (tmpData.Amount, 0) - COALESCE (tmpData.Amount_avance, 0) - COALESCE (tmpData.Amount_service, 0)) :: TFloat AS SummRemains
 
             , MIString_Comment.ValueData       AS Comment
