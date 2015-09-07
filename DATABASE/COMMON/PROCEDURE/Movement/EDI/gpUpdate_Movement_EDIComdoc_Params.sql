@@ -87,7 +87,7 @@ BEGIN
          -- так для налоговой
          IF NOT EXISTS (SELECT MLM.MovementChildId FROM MovementLinkMovement AS MLM WHERE MLM.MovementChildId = inMovementId AND MLM.DescId = zc_MovementLinkMovement_Tax())
          THEN 
-             RAISE EXCEPTION 'Ошибка.Связь с существующим документом <%> не установлена.<%><%>', (SELECT MovementDesc.ItemName FROM MovementDesc.MovementDesc WHERE Id = zc_Movement_Tax()), (SELECT COUNT(*) FROM MovementLinkMovement AS MLM WHERE MLM.MovementChildId = inMovementId AND MLM.DescId = zc_MovementLinkMovement_Tax()), inMovementId;
+             RAISE EXCEPTION 'Ошибка.Связь с существующим документом <%> не установлена.<%><%>', (SELECT MovementDesc.ItemName FROM MovementDesc WHERE MovementDesc.Id = zc_Movement_Tax()), (SELECT COUNT(*) FROM MovementLinkMovement AS MLM WHERE MLM.MovementChildId = inMovementId AND MLM.DescId = zc_MovementLinkMovement_Tax()), inMovementId;
          END IF;
      ELSE
          IF EXISTS (SELECT MovementString.MovementId FROM MovementString INNER JOIN MovementDesc ON MovementDesc.Code = MovementString.ValueData AND MovementDesc.Id = zc_Movement_ReturnIn() WHERE MovementString.MovementId = inMovementId AND MovementString.DescId = zc_MovementString_Desc())
