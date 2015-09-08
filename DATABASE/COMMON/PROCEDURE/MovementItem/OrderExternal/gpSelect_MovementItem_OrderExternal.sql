@@ -282,6 +282,10 @@ BEGIN
                   JOIN Object AS Object_Goods ON Object_Goods.Id = ObjectLink_Goods_InfoMoney.ObjectId
                                              AND Object_Goods.isErased = FALSE
                   LEFT JOIN tmpGoodsByGoodsKind ON tmpGoodsByGoodsKind.GoodsId = Object_Goods.Id
+                                               AND tmpInfoMoney.InfoMoneyId IN (zc_Enum_InfoMoney_20901() -- Ирна
+                                                                              , zc_Enum_InfoMoney_30101() -- Готовая продукция
+                                                                              , zc_Enum_InfoMoney_30201() -- Мясное сырье
+                                                                               )
                                                /*AND vbIsOrderDnepr = TRUE
                   LEFT JOIN Object_GoodsByGoodsKind_View ON Object_GoodsByGoodsKind_View.GoodsId = Object_Goods.Id
                                                         AND tmpInfoMoney.InfoMoneyId IN (zc_Enum_InfoMoney_20901(), zc_Enum_InfoMoney_30101(), zc_Enum_InfoMoney_30201()) -- Ирна + Готовая продукция + Доходы Мясное сырье
@@ -291,6 +295,10 @@ BEGIN
                                          ON ObjectString_Goods_GoodsGroupFull.ObjectId = Object_Goods.Id
                                         AND ObjectString_Goods_GoodsGroupFull.DescId = zc_ObjectString_Goods_GroupNameFull()
              WHERE tmpGoodsByGoodsKind.GoodsId > 0 -- OR vbIsOrderDnepr = FALSE
+                OR tmpInfoMoney.InfoMoneyId NOT IN (zc_Enum_InfoMoney_20901() -- Ирна
+                                                  , zc_Enum_InfoMoney_30101() -- Готовая продукция
+                                                  , zc_Enum_InfoMoney_30201() -- Мясное сырье
+                                                   )
             ) AS tmpGoods
 
             LEFT JOIN tmpRemains ON tmpRemains.GoodsId     = tmpGoods.GoodsId

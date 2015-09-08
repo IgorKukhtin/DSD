@@ -45,58 +45,64 @@ BEGIN
                                   GROUP BY Container.Id, Container.Amount
                                   HAVING Container.Amount - COALESCE (SUM (MIContainer.Amount), 0) = 0
                                  )
-           , tmpContainer AS (-- остатки по сумме <> 0 AND Кол-ву = 0, т.е. "зависшие" копейки
-                              SELECT tmpContainerSumm.ContainerId, tmpContainerSumm.Amount_end AS Amount_diff
+       , tmpContainer_all AS (-- остатки по сумме <> 0 AND Кол-ву = 0, т.е. "зависшие" копейки
+                              SELECT tmpContainerCount.ContainerId AS ContainerId_count, tmpContainerSumm.ContainerId, tmpContainerSumm.Amount_end AS Amount_diff
                               FROM tmpContainerCount
                                    INNER JOIN tmpContainerSumm ON tmpContainerSumm.ParentId = tmpContainerCount.ContainerId
                              )
+           , tmpContainer AS (SELECT DISTINCT tmpContainer_all.ContainerId_count FROM tmpContainer_all
+                             )
              , tmpListAll AS (-- 
-                              SELECT tmpContainer.ContainerId, MIContainer.Id, MIContainer.MovementDescId, MIContainer.Amount, tmpContainer.Amount_diff
+                              SELECT tmpContainer.ContainerId_count, MIContainer.Id, MIContainer.MovementDescId, MIContainer.Amount
                               FROM tmpContainer
                                    INNER JOIN MovementItemContainer AS MIContainer
-                                                                    ON MIContainer.ContainerId = tmpContainer.ContainerId
+                                                                    ON MIContainer.ContainerId = tmpContainer.ContainerId_count
                                                                    AND MIContainer.OperDate BETWEEN inStartDate AND inEndDate
                                                                    AND (MIContainer.isActive = FALSE OR MIContainer.MovementDescId = zc_Movement_Inventory())
-                                                                   AND ABS (MIContainer.Amount) >= tmpContainer.Amount_diff
+                                                                   -- AND ABS (MIContainer.Amount) >= tmpContainer.Amount_diff
                              )
       , tmpList_Summ_sale AS (-- 
-                              SELECT tmpListAll.ContainerId
+                              SELECT tmpListAll.ContainerId_count
                                    , MAX (ABS (tmpListAll.Amount)) AS Amount
                               FROM tmpListAll
                               WHERE tmpListAll.MovementDescId IN (zc_Movement_Sale(), zc_Movement_Loss(), zc_Movement_Inventory(), zc_Movement_ReturnOut())
-                              GROUP BY tmpListAll.ContainerId
+                              GROUP BY tmpListAll.ContainerId_count
                              )
          , tmpListMI_sale AS (-- 
-                              SELECT tmpListAll.ContainerId, MAX (tmpListAll.Id) AS Id
+                              SELECT tmpListAll.ContainerId_count, MAX (tmpListAll.Id) AS Id
                               FROM tmpList_Summ_sale
-                                   INNER JOIN tmpListAll ON tmpListAll.ContainerId  = tmpList_Summ_sale.ContainerId
+                                   INNER JOIN tmpListAll ON tmpListAll.ContainerId_count  = tmpList_Summ_sale.ContainerId_count
                                                         AND ABS (tmpListAll.Amount) = ABS (tmpList_Summ_sale.Amount)
                                                         AND tmpListAll.MovementDescId IN (zc_Movement_Sale(), zc_Movement_Loss(), zc_Movement_Inventory(), zc_Movement_ReturnOut())
-                              GROUP BY tmpListAll.ContainerId
+                              GROUP BY tmpListAll.ContainerId_count
                              )
        , tmpList_Summ_all AS (-- 
-                              SELECT tmpListAll.ContainerId
+                              SELECT tmpListAll.ContainerId_count
                                    , MAX (ABS (tmpListAll.Amount)) AS Amount
                               FROM tmpListAll
                               WHERE tmpListAll.MovementDescId NOT IN (zc_Movement_Sale(), zc_Movement_Loss(), zc_Movement_Inventory(), zc_Movement_ReturnOut())
-                              GROUP BY tmpListAll.ContainerId
+                              GROUP BY tmpListAll.ContainerId_count
                              )
           , tmpListMI_all AS (-- 
-                              SELECT tmpListAll.ContainerId, MAX (tmpListAll.Id) AS Id
+                              SELECT tmpListAll.ContainerId_count, MAX (tmpListAll.Id) AS Id
                               FROM tmpList_Summ_all
-                                   INNER JOIN tmpListAll ON tmpListAll.ContainerId  = tmpList_Summ_all.ContainerId
+                                   INNER JOIN tmpListAll ON tmpListAll.ContainerId_count  = tmpList_Summ_all.ContainerId_count
                                                         AND ABS (tmpListAll.Amount) = ABS (tmpList_Summ_all.Amount)
                                                         AND tmpListAll.MovementDescId NOT IN (zc_Movement_Sale(), zc_Movement_Loss(), zc_Movement_Inventory(), zc_Movement_ReturnOut())
-                              GROUP BY tmpListAll.ContainerId
+                              GROUP BY tmpListAll.ContainerId_count
                              )
 
      -- Результат
-     INSERT INTO _tmpDiff (OperDate, ContainerId, MovementItemId, Amount, Amount_diff)
-        SELECT MIContainer.OperDate, tmpContainer.ContainerId, MIContainer.MovementItemId, MIContainer.Amount, tmpContainer.Amount_diff
-        FROM tmpContainer
-             LEFT JOIN tmpListMI_sale ON tmpListMI_sale.ContainerId = tmpContainer.ContainerId
-             LEFT JOIN tmpListMI_all ON tmpListMI_all.ContainerId = tmpContainer.ContainerId
-             LEFT JOIN MovementItemContainer AS MIContainer ON MIContainer.Id = COALESCE (tmpListMI_sale.Id, tmpListMI_all.Id)
+         INSERT INTO _tmpDiff (OperDate, ContainerId, MovementItemId, Amount, Amount_diff)
+            SELECT MIContainer.OperDate, tmpContainer_all.ContainerId, MIContainer.MovementItemId, MIContainer_summ.Amount, tmpContainer_all.Amount_diff
+            FROM tmpContainer_all
+                 LEFT JOIN tmpListMI_sale ON tmpListMI_sale.ContainerId_count = tmpContainer_all.ContainerId_count
+                 LEFT JOIN tmpListMI_all ON tmpListMI_all.ContainerId_count = tmpContainer_all.ContainerId_count
+                 LEFT JOIN MovementItemContainer AS MIContainer ON MIContainer.Id = COALESCE (tmpListMI_sale.Id, tmpListMI_all.Id)
+                 LEFT JOIN MovementItemContainer AS MIContainer_summ ON MIContainer_summ.MovementItemId = MIContainer.MovementItemId
+                                                                    AND MIContainer_summ.MovementId = MIContainer.MovementId
+                                                                    AND MIContainer_summ.ContainerId = tmpContainer_all.ContainerId
+                                                                    AND inIsUpdate = FALSE
        ;
 
      IF inIsUpdate = TRUE

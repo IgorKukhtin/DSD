@@ -184,7 +184,7 @@ BEGIN
      WHERE Movement.OperDate BETWEEN inStartDate AND inEndDate
        AND Movement.StatusId = zc_Enum_Status_Complete()
        AND Movement.DescId IN (zc_Movement_Send(), zc_Movement_ProductionUnion(), zc_Movement_ProductionSeparate())
-       -- AND inIsBefoHistoryCost = TRUE
+       AND inIsBefoHistoryCost = TRUE -- !!!
 
     UNION
      -- 2.2. !!!Internal - SendOnPrice!!!
