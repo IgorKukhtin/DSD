@@ -158,7 +158,8 @@ BEGIN
          IF zc_IsLockTable() = TRUE
          THEN
              -- так блокируем что б не было ОШИБКИ: обнаружена взаимоблокировка
-             LOCK TABLE Container IN SHARE UPDATE EXCLUSIVE MODE;
+             -- LOCK TABLE Container IN SHARE UPDATE EXCLUSIVE MODE;
+             LOCK TABLE LockProtocol IN SHARE UPDATE EXCLUSIVE MODE;
          END IF;
 
          -- добавили Остаток
@@ -195,7 +196,8 @@ BEGIN
          IF zc_IsLockTable() = TRUE
          THEN
              -- так блокируем что б не было ОШИБКИ: обнаружена взаимоблокировка
-             LOCK TABLE Container IN SHARE UPDATE EXCLUSIVE MODE;
+             -- LOCK TABLE Container IN SHARE UPDATE EXCLUSIVE MODE;
+             LOCK TABLE LockProtocol IN SHARE UPDATE EXCLUSIVE MODE;
          ELSE
              PERFORM Container.* FROM Container WHERE Container.Id = vbContainerId FOR UPDATE;
          END IF;

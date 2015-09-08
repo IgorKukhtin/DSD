@@ -12,7 +12,8 @@ BEGIN
     IF zc_IsLockTable() = TRUE
     THEN
         -- так блокируем что б не было ОШИБКИ: обнаружена взаимоблокировка
-        LOCK TABLE Container IN SHARE UPDATE EXCLUSIVE MODE;
+        -- LOCK TABLE Container IN SHARE UPDATE EXCLUSIVE MODE;
+        LOCK TABLE LockProtocol IN SHARE UPDATE EXCLUSIVE MODE;
         -- так блокируем что б не было ОШИБКИ: обнаружена взаимоблокировка
         /*vbLock := FALSE;
         WHILE NOT vbLock LOOP
