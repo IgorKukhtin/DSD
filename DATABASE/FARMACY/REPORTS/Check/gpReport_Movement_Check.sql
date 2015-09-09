@@ -57,7 +57,7 @@ BEGIN
                                              AND MIFloat_Price.DescId = zc_MIFloat_Price()
             LEFT OUTER JOIN MovementItemContainer AS MIContainer
                                                   ON MIContainer.MovementItemId = MI_Check.Id
-                                                 AND MIContainer.DescId = zc_Container_Count() 
+                                                 AND MIContainer.DescId = zc_MIContainer_Count() 
             LEFT OUTER JOIN Container ON MIContainer.ContainerId = Container.Id
                                      AND Container.DescId = zc_Container_Count()
             LEFT OUTER JOIN containerlinkobject AS ContainerLinkObject_MovementItem 

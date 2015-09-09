@@ -170,7 +170,7 @@ BEGIN
     INSERT INTO _tmpMIContainer_insert(DescId, MovementDescId, MovementId, MovementItemId, ContainerId, AccountId, Amount, OperDate)
     SELECT 
         zc_Container_Count()
-      , zc_Movement_Income()  
+      , zc_Movement_Check()  
       , inMovementId
       , tmpItem.MovementItemId
       , tmpItem.Id

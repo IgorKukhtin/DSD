@@ -51,6 +51,10 @@ BEGIN
              , 0                     			  AS MovementId_Order
              , CAST ('' AS TVarChar) 			  AS InvNumber_Order
 
+             , 0                     			  AS MovementId_Transport
+             , '' :: TVarChar                             AS InvNumber_Transport
+             , '' :: TVarChar                             AS Comment
+
           FROM lfGet_Object_Status(zc_Enum_Status_UnComplete()) AS Object_Status
                LEFT JOIN Object AS Object_PriceList ON Object_PriceList.Id = zc_PriceList_Basis()
                LEFT JOIN ObjectBoolean AS ObjectBoolean_PriceWithVAT

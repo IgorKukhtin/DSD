@@ -195,7 +195,8 @@ type
     cbPartion: TCheckBox;
     fromQueryDate_recalc: TADOQuery;
     cbHistoryCost_diff: TCheckBox;
-    IdIPWatch1: TIdIPWatch;
+    cbLastCost: TCheckBox;
+    cb100MSec: TCheckBox;
     procedure OKGuideButtonClick(Sender: TObject);
     procedure cbAllGuideClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
@@ -248,6 +249,7 @@ type
     procedure pSetNullDocument_Id_Postgres;
 
     procedure pInsertHistoryCost;
+    procedure pInsertHistoryCost_Period(StartDate,EndDate:TDateTime;isPeriodTwo:Boolean);
     procedure pSelectData_afterLoad;
     // DocumentsCompelete :
     procedure pCompleteDocument_Cash;
@@ -1744,6 +1746,31 @@ procedure TMainForm.StartProcess;
                OKGuideButtonClick(Self);
     end;
 
+    procedure autoALL (isOneDay: Boolean);
+    var Day_ReComplete:Integer;
+    begin
+               try Day_ReComplete:=StrToInt(ParamStr(3));
+               except Day_ReComplete:=10
+               end;
+               fOpenSqFromQuery ('select zf_CalcDate_onMonthStart('+FormatToDateServer_notNULL(Date-Day_ReComplete)+') as RetV');
+               StartDateCompleteEdit.Text:=DateToStr(fromSqlQuery.FieldByName('RetV').AsDateTime);
+               EndDateCompleteEdit.Text:=DateToStr(Date-1);
+
+               UnitCodeSendOnPriceEdit.Text:='autoALL('+IntToStr(Day_ReComplete)+'Day)';
+               //Проводим+Распроводим
+               cbComplete.Checked:=true;
+               cbUnComplete.Checked:=true;
+               cbLastComplete.Checked:=false;
+               //с/с
+               cbInsertHistoryCost.Checked:=true;
+               //по списку
+               cbComplete_List.Checked:=true;
+               //с задержкой
+               cb100MSec.Checked:=true;
+
+               OKCompleteDocumentButtonClick(Self);
+end;
+
 var Day_ReComplete:Integer;
 begin
 
@@ -1826,6 +1853,17 @@ begin
      if ParamStr(2)='autoDayBN'
      then begin
                autoBN(true);
+     end;
+
+     if ParamStr(2)='autoALL'
+     then begin
+               autoALL(true);
+     end;
+     if ParamStr(2)='autoALLLAST'
+     then begin
+               cbLastCost.Checked:=TRUE;
+               cbHistoryCost_diff.Checked:=TRUE;
+               autoALL(true);
      end;
 
      if ParamStr(2)='auto'
@@ -2299,9 +2337,12 @@ begin
 end;
 //----------------------------------------------------------------------------------------------------------------------------------------------------
 procedure TMainForm.OKCompleteDocumentButtonClick(Sender: TObject);
-var tmpDate1,tmpDate2:TDateTime;
-    Year, Month, Day, Hour, Min, Sec, MSec: Word;
+var tmpDate1,tmpDate2,tmpDate3:TDateTime;
+    Year, Month, saveMonth, Day, Hour, Min, Sec, MSec: Word;
+    Year2, Month2, Day2: Word;
     StrTime:String;
+    saveStartDate,saveEndDate:TDateTime;
+    calcStartDate,calcEndDate:TDateTime;
 begin
      if (cbSelectData_afterLoad.Checked)
      then begin
@@ -2342,6 +2383,7 @@ begin
                end;
      end;
      //
+     //
      fStop:=false;
      DBGrid.Enabled:=false;
      OKGuideButton.Enabled:=false;
@@ -2353,25 +2395,81 @@ begin
      //
      tmpDate1:=NOw;
      //
-     //!!!FLOAT!!!
-     DataSource.DataSet:=fromFlQuery;
+     saveStartDate:=StrToDate(StartDateCompleteEdit.Text);
+     saveEndDate:=StrToDate(EndDateCompleteEdit.Text);
+     DecodeDate(saveStartDate, Year, Month, Day);
+     DecodeDate(saveEndDate, Year2, Month2, Day2);
+     saveMonth:=Month;
+     //
+     //
+     calcStartDate:=saveStartDate;
+     if saveMonth <> Month2
+     then begin
+               if Month=12 then begin Year:=Year+1;Month:=0;end;
+               calcEndDate:=EncodeDate(Year, Month+1, 1)-1;
+          end
+     else calcEndDate:= saveEndDate;
+     pInsertHistoryCost_Period(calcStartDate,calcEndDate,FALSE);
+     //
+     //
+     tmpDate2:=NOw;
+     if (tmpDate2-tmpDate1)>=1
+     then StrTime:=DateTimeToStr(tmpDate2-tmpDate1)
+     else begin
+               DecodeTime(tmpDate2-tmpDate1, Hour, Min, Sec, MSec);
+               StrTime:=IntToStr(Hour)+':'+IntToStr(Min)+':'+IntToStr(Sec);
+     end;
+     //
+     //
+     if saveMonth <> Month2 then begin
+       pInsertHistoryCost_Period(calcEndDate+1,saveEndDate,TRUE);
+       //
+       tmpDate3:=NOw;
+       if (tmpDate3-tmpDate2)>=1
+       then StrTime:='(1):'+StrTime + '   (2):' + DateTimeToStr(tmpDate3-tmpDate2)
+       else begin
+                 DecodeTime(tmpDate3-tmpDate2, Hour, Min, Sec, MSec);
+                 StrTime:='(1):'+StrTime + '   (2):' + IntToStr(Hour)+':'+IntToStr(Min)+':'+IntToStr(Sec);
+       end;
+     end;
+     //
+     //
+     Gauge.Visible:=false;
+     DBGrid.Enabled:=true;
+     OKGuideButton.Enabled:=true;
+     OKDocumentButton.Enabled:=true;
+     OKCompleteDocumentButton.Enabled:=true;
+     //
+     toZConnection.Connected:=false;
+     if not cbOnlyOpen.Checked then fromADOConnection.Connected:=false;
 
-     if not fStop then pCompleteDocument_Sale_Fl(True);
-     if not fStop then pCompleteDocument_ReturnIn_Fl(True);
-
-     if not fStop then pCompleteDocument_TaxFl(cbLastComplete.Checked);
-     if not fStop then pCompleteDocument_TaxCorrective(cbLastComplete.Checked);
-
-     if not fStop then DataSource.DataSet:=fromQuery;
-     //!!!end FLOAT!!!
-
+     if System.Pos('auto',ParamStr(2))<=0
+     then begin
+               if (fStop)and(cbInsertHistoryCost.Checked) then ShowMessage('СЕБЕСТОИМОСТЬ по МЕСЯЦАМ расчитана НЕ полностью. Time=('+StrTime+').')
+               else if fStop then ShowMessage('Документы НЕ Распроведены и(или) НЕ Проведены. Time=('+StrTime+').')
+               else if cbInsertHistoryCost.Checked then ShowMessage('СЕБЕСТОИМОСТЬ по МЕСЯЦАМ расчитана полностью. Time=('+StrTime+').')
+                    else ShowMessage('Документы Распроведены и(или) Проведены. Time=('+StrTime+').');
+     end
+     else OKPOEdit.Text:=OKPOEdit.Text + ' Complete:'+StrTime;
+     //
+     fStop:=true;
+end;
+//----------------------------------------------------------------------------------------------------------------------------------------------------
+procedure TMainForm.pInsertHistoryCost_Period(StartDate,EndDate:TDateTime;isPeriodTwo:Boolean);
+var cbLastCost_save:Boolean;
+begin
+     StartDateCompleteEdit.Text:=DateToStr(StartDate);
+     EndDateCompleteEdit.Text:=DateToStr(EndDate);
+     cbLastCost_save:=cbLastCost.Checked;
+     if isPeriodTwo = TRUE then cbLastCost.Checked:=false;
+     //
      //!!!Integer!!!
 
-     if not fStop then pCompleteDocument_Cash;
+     //if not fStop then pCompleteDocument_Cash;
 
      if (cbInsertHistoryCost.Checked)and(cbInsertHistoryCost.Enabled) then
      begin
-          if not fStop then pCompleteDocument_Income(cbLastComplete.Checked);
+          {if not fStop then pCompleteDocument_Income(cbLastComplete.Checked);
           if not fStop then pCompleteDocument_IncomeNal(cbLastComplete.Checked);
           if not fStop then pCompleteDocument_ReturnOut(cbLastComplete.Checked);
           if not fStop then pCompleteDocument_ReturnOutNal(cbLastComplete.Checked);
@@ -2383,29 +2481,28 @@ begin
           if not fStop then pCompleteDocument_ReturnIn_IntNal(cbLastComplete.Checked);
           if not fStop then pCompleteDocument_ProductionUnion(cbLastComplete.Checked);
           if not fStop then pCompleteDocument_ProductionSeparate(cbLastComplete.Checked);
-          if not fStop then pCompleteDocument_Inventory(cbLastComplete.Checked);
+          if not fStop then pCompleteDocument_Inventory(cbLastComplete.Checked);}
           if not fStop then pCompleteDocument_List(TRUE, FALSE, FALSE);
 
-          if not fStop then pCompleteDocument_Defroster;
-          if not fStop then pCompleteDocument_Pack;
-          if not fStop then pCompleteDocument_Partion;
-          if not fStop then pCompleteDocument_Kopchenie;
-
-     end else begin
-          if not fStop then pCompleteDocument_Defroster;
-          if not fStop then pCompleteDocument_Pack;
-          if not fStop then pCompleteDocument_Partion;
-          if not fStop then pCompleteDocument_Kopchenie;
      end;
-
-
+     //
+     //
+     if (not fStop) and (isPeriodTwo = FALSE) then pCompleteDocument_Defroster;
+     if (not fStop) and (isPeriodTwo = FALSE) then pCompleteDocument_Pack;
+     if (not fStop) and (isPeriodTwo = FALSE) then pCompleteDocument_Partion;
+     if (not fStop) and (isPeriodTwo = FALSE) then pCompleteDocument_Kopchenie;
+     //
+     //
      if not fStop then pInsertHistoryCost;
      //
-     if (cbInsertHistoryCost.Checked)and(cbInsertHistoryCost.Enabled)
-     then pCompleteDocument_List(FALSE, FALSE, FALSE) //
-     else pCompleteDocument_List(FALSE, FALSE, FALSE);
      //
-     if(not fStop)and(not ((cbInsertHistoryCost.Checked)and(cbInsertHistoryCost.Enabled)))then begin pCompleteDocument_Income(cbLastComplete.Checked);pCompleteDocument_IncomeNal(cbLastComplete.Checked);end;
+     if not fStop then pCompleteDocument_List(FALSE, FALSE, FALSE);
+     //
+     if (not fStop) and (isPeriodTwo = FALSE) then pCompleteDocument_Diff;
+     //
+     if isPeriodTwo = TRUE then cbLastCost.Checked:=cbLastCost_save;
+     //
+     {if(not fStop)and(not ((cbInsertHistoryCost.Checked)and(cbInsertHistoryCost.Enabled)))then begin pCompleteDocument_Income(cbLastComplete.Checked);pCompleteDocument_IncomeNal(cbLastComplete.Checked);end;
      if not fStop then pCompleteDocument_UpdateConrtact;
      if not fStop then pCompleteDocument_ReturnOut(cbLastComplete.Checked);
      if not fStop then pCompleteDocument_ReturnOutNal(cbLastComplete.Checked);
@@ -2424,38 +2521,8 @@ begin
      if not fStop then pCompleteDocument_TaxInt(cbLastComplete.Checked);
 
      if not fStop then pCompleteDocument_OrderExternal;
-     if not fStop then pCompleteDocument_OrderInternal;
+     if not fStop then pCompleteDocument_OrderInternal;}
 
-     if not fStop then pCompleteDocument_Diff;
-
-     //
-     Gauge.Visible:=false;
-     DBGrid.Enabled:=true;
-     OKGuideButton.Enabled:=true;
-     OKDocumentButton.Enabled:=true;
-     OKCompleteDocumentButton.Enabled:=true;
-     //
-     toZConnection.Connected:=false;
-     if not cbOnlyOpen.Checked then fromADOConnection.Connected:=false;
-     //
-     tmpDate2:=NOw;
-     if (tmpDate2-tmpDate1)>=1
-     then StrTime:=DateTimeToStr(tmpDate2-tmpDate1)
-     else begin
-               DecodeTime(tmpDate2-tmpDate1, Hour, Min, Sec, MSec);
-               StrTime:=IntToStr(Hour)+':'+IntToStr(Min)+':'+IntToStr(Sec);
-     end;
-
-     if System.Pos('auto',ParamStr(2))<=0
-     then begin
-               if (fStop)and(cbInsertHistoryCost.Checked) then ShowMessage('СЕБЕСТОИМОСТЬ по МЕСЯЦАМ расчитана НЕ полностью. Time=('+StrTime+').')
-               else if fStop then ShowMessage('Документы НЕ Распроведены и(или) НЕ Проведены. Time=('+StrTime+').')
-               else if cbInsertHistoryCost.Checked then ShowMessage('СЕБЕСТОИМОСТЬ по МЕСЯЦАМ расчитана полностью. Time=('+StrTime+').')
-                    else ShowMessage('Документы Распроведены и(или) Проведены. Time=('+StrTime+').');
-     end
-     else OKPOEdit.Text:=OKPOEdit.Text + ' Complete:'+StrTime;
-     //
-     fStop:=true;
 end;
 //----------------------------------------------------------------------------------------------------------------------------------------------------
 //----------------------------------------------------------------------------------------------------------------------------------------------------
@@ -10118,8 +10185,12 @@ begin
         while calcStartDate <= StrToDate(EndDateCompleteEdit.Text) do
         begin
              if calcStartDate=StrToDate(StartDateCompleteEdit.Text)
-             then Add('          select cast('+FormatToDateServer_notNULL(calcStartDate)+' as date) as StartDate, cast('+FormatToDateServer_notNULL(calcEndDate)+' as date) as EndDate, 0 as BranchId, 0 as BranchCode, null as BranchName')
-             else Add('union all select cast('+FormatToDateServer_notNULL(calcStartDate)+' as date) as StartDate, cast('+FormatToDateServer_notNULL(calcEndDate)+' as date) as EndDate, 0 as BranchId, 0 as BranchCode, null as BranchName');
+             then if (cbLastCost.Checked)
+                  then Add('          select cast('+FormatToDateServer_notNULL(calcStartDate)+' as date) as StartDate, cast('+FormatToDateServer_notNULL(calcEndDate)+' as date) as EndDate, -1 as BranchId, 0 as BranchCode, null as BranchName')
+                  else Add('          select cast('+FormatToDateServer_notNULL(calcStartDate)+' as date) as StartDate, cast('+FormatToDateServer_notNULL(calcEndDate)+' as date) as EndDate, 0 as BranchId, 0 as BranchCode, null as BranchName')
+             else if (cbLastCost.Checked)
+                  then Add('union all select cast('+FormatToDateServer_notNULL(calcStartDate)+' as date) as StartDate, cast('+FormatToDateServer_notNULL(calcEndDate)+' as date) as EndDate, -1 as BranchId, 0 as BranchCode, null as BranchName')
+                  else Add('union all select cast('+FormatToDateServer_notNULL(calcStartDate)+' as date) as StartDate, cast('+FormatToDateServer_notNULL(calcEndDate)+' as date) as EndDate, 0 as BranchId, 0 as BranchCode, null as BranchName');
              //
              //
              fOpenSqToQuery (' select *'
@@ -20612,6 +20683,7 @@ procedure TMainForm.pCompleteDocument_List(isBefoHistoryCost,isPartion,isDiff:Bo
   end;
 var ExecStr1,ExecStr2,ExecStr3,ExecStr4,addStr:String;
     i,SaveRecord:Integer;
+    MSec_complete:Integer;
 begin
      if (isPartion = FALSE) and (isDiff = FALSE) then if (not cbComplete_List.Checked)or(not cbComplete_List.Enabled) then exit;
      //
@@ -20729,6 +20801,9 @@ begin
                        if not myExecToStoredProc_two then ;//exit;
                   end;
              end;
+             //
+             try MSec_complete:=StrToInt(SessionIdEdit.Text);if MSec_complete<=0 then MSec_complete:=100;except MSec_complete:=100;end;
+             if cb100MSec.Checked then begin SessionIdEdit.Text:=IntToStr(MSec_complete); MyDelay(MSec_complete);end;
              //
              Next;
              Application.ProcessMessages;

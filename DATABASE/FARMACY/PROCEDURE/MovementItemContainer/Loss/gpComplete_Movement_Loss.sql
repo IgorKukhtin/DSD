@@ -26,6 +26,7 @@ BEGIN
         INNER JOIN MovementItem AS MovementItem_Loss
                                 ON MovementItem_Loss.MovementId = Movement_Loss.Id
                                AND MovementItem_Loss.DescId = zc_MI_Master()
+                               AND MovementItem_Loss.isErased = FALSE
         INNER JOIN Object AS Object_Goods
                           ON Object_Goods.Id = MovementItem_Loss.ObjectId  
         LEFT OUTER JOIN ContainerLinkObject AS CLO_Unit
@@ -36,9 +37,7 @@ BEGIN
                                  AND Container.DescId = zc_Container_Count()
                                  AND Container.Amount > 0
     WHERE
-        Movement_Loss.Id = inMovementId AND
-        MovementItem_Loss.DescId = zc_MI_Master() AND
-        MovementItem_Loss.isErased = FALSE
+        Movement_Loss.Id = inMovementId
     GROUP BY MovementItem_Loss.ObjectId, Object_Goods.ValueData, MovementItem_Loss.Amount
     HAVING COALESCE(MovementItem_Loss.Amount,0) > COALESCE(SUM(Container.Amount),0);
     

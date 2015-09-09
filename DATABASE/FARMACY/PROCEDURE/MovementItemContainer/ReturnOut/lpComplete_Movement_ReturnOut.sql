@@ -121,7 +121,7 @@ BEGIN
                                 ON MovementItem_ReturnOut_View.ParentId = MovementItem_Income.Id
         INNER JOIN MovementItemContainer AS MIContainer_Income
                                          ON MIContainer_Income.MovementItemId = MovementItem_Income.Id
-                                        AND MIContainer_Income.DescId = zc_Container_Count()                                        
+                                        AND MIContainer_Income.DescId = zc_MIContainer_Count()                                        
     WHERE  
         Movement_ReturnOut_View.Id =  inMovementId;
 

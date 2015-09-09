@@ -484,6 +484,31 @@ BEGIN
                                   ON ObjectLink_GoodsPropertyValue_GoodsKind.ObjectId = ObjectLink_GoodsPropertyValue_GoodsProperty.ObjectId
                                  AND ObjectLink_GoodsPropertyValue_GoodsKind.DescId = zc_ObjectLink_GoodsPropertyValue_GoodsKind()
        )
+      , tmpMIPartionMovement AS (SELECT MovementItem.Id                               AS MovementItemId
+                                      , MIPartionMovement.ObjectId                    AS GoodsId
+                                      , COALESCE (MILinkObject_GoodsKind.ObjectId, 0) AS GoodsKindId
+                                      , MIFloat_AmountPartner.ValueData               AS AmountPartner
+                                 FROM MovementItem
+                                     LEFT JOIN MovementItemFloat AS MIFloat_MovementId
+                                                                 ON MIFloat_MovementId.MovementItemId = MovementItem.Id
+                                                                AND MIFloat_MovementId.DescId = zc_MIFloat_MovementId()
+                                       
+                                     LEFT JOIN MovementItem AS MIPartionMovement 
+                                                            ON MIPartionMovement.MovementId = MIFloat_MovementId.ValueData :: Integer
+                                                           AND MIPartionMovement.ObjectId = MovementItem.ObjectId
+       
+                                     LEFT JOIN MovementItemFloat AS MIFloat_AmountPartner
+                                                                 ON MIFloat_AmountPartner.MovementItemId = MIPartionMovement.Id
+                                                                AND MIFloat_AmountPartner.DescId = zc_MIFloat_AmountPartner()
+                                     LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
+                                                                      ON MILinkObject_GoodsKind.MovementItemId = MIPartionMovement.Id
+                                                                     AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
+                                                                
+                                 WHERE MovementItem.MovementId = inMovementId
+                                   AND MovementItem.DescId     = zc_MI_Master()
+                                   AND MovementItem.isErased   = FALSE
+                                 )
+           
        SELECT
              Object_Goods.ObjectCode  			AS GoodsCode
            , (CASE WHEN tmpObject_GoodsPropertyValue.Name <> '' THEN tmpObject_GoodsPropertyValue.Name WHEN tmpObject_GoodsPropertyValue_basis.Name <> '' THEN tmpObject_GoodsPropertyValue_basis.Name ELSE Object_Goods.ValueData || CASE WHEN COALESCE (Object_GoodsKind.Id, zc_Enum_GoodsKind_Main()) = zc_Enum_GoodsKind_Main() THEN '' ELSE ' ' || Object_GoodsKind.ValueData END END) :: TVarChar AS GoodsName
@@ -494,6 +519,8 @@ BEGIN
            , tmpMI.Amount                    AS Amount
            , tmpMI.AmountPartner             AS AmountPartner_abs
            , CASE WHEN Movement.DescId <> zc_Movement_PriceCorrective() THEN 1 ELSE -1 END * tmpMI.AmountPartner              AS AmountPartner
+           , tmpMI.AmountPartner_PartionMovement
+           
            , CASE WHEN Movement.DescId = zc_Movement_PriceCorrective() THEN -1 ELSE 1 END * tmpMI.Price / tmpMI.CountForPrice AS Price
            , tmpMI.CountForPrice             AS CountForPrice
            , CASE WHEN Movement.DescId = zc_Movement_PriceCorrective() THEN -1 ELSE 0 END * tmpMI.AmountPartner              AS AmountPartner_ashan
@@ -556,6 +583,7 @@ BEGIN
                                    THEN COALESCE (MIFloat_AmountPartner.ValueData, 0)
                                    ELSE MovementItem.Amount
                          END) AS AmountPartner
+                  , SUM (tmpMIPartionMovement.AmountPartner) AS AmountPartner_PartionMovement
              FROM MovementItem
                   LEFT JOIN MovementItemFloat AS MIFloat_Price
                                                ON MIFloat_Price.MovementItemId = MovementItem.Id
@@ -573,6 +601,11 @@ BEGIN
                   LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
                                                    ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
                                                   AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
+
+                  LEFT JOIN tmpMIPartionMovement ON tmpMIPartionMovement.MovementItemId = MovementItem.Id
+                                                AND tmpMIPartionMovement.GoodsId = MovementItem.ObjectId
+                                                AND tmpMIPartionMovement.GoodsKindId = COALESCE (MILinkObject_GoodsKind.ObjectId, 0)
+                                                  
              WHERE MovementItem.MovementId = inMovementId
                AND MovementItem.DescId     = zc_MI_Master()
                AND MovementItem.isErased   = FALSE
@@ -598,7 +631,7 @@ BEGIN
                                                        AND tmpObject_GoodsPropertyValue.GoodsId IS NULL
             LEFT JOIN tmpObject_GoodsPropertyValue_basis ON tmpObject_GoodsPropertyValue_basis.GoodsId = tmpMI.GoodsId
                                                         AND tmpObject_GoodsPropertyValue_basis.GoodsKindId = tmpMI.GoodsKindId
-
+          
        WHERE tmpMI.AmountPartner <> 0
        ORDER BY Object_Goods.ValueData, Object_GoodsKind.ValueData
        ;
@@ -616,6 +649,7 @@ ALTER FUNCTION gpSelect_Movement_ReturnIn_Print (Integer,TVarChar) OWNER TO post
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».   Ã‡Ì¸ÍÓ ƒ.¿.
+ 09.09.15         * add tmpMIPartionMovement
  28.01.15                                                       *
  16.07.14                                        * add tmpObject_GoodsPropertyValueGroup
  20.06.14                                                       * change InvNumberPartner

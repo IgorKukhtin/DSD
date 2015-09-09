@@ -106,6 +106,16 @@ BEGIN
                                                      , inGoodsKindId        := inGoodsKindId
                                                      , inUserId             := vbUserId
                                                       );
+   -- Прочее сырье Оболочка + Упаковка
+   IF EXISTS (SELECT 1 FROM ObjectLink AS ObjectLink_Goods_InfoMoney WHERE ObjectLink_Goods_InfoMoney.ChildObjectId IN (zc_Enum_InfoMoney_10202(), zc_Enum_InfoMoney_10203())
+                                                                       AND ObjectLink_Goods_InfoMoney.ObjectId = inGoodsId
+                                                                       AND ObjectLink_Goods_InfoMoney.DescId = zc_ObjectLink_Goods_InfoMoney()
+                                                                          )
+   THEN 
+       PERFORM lpInsertUpdate_MovementItemBoolean (zc_MIBoolean_TaxExit(), ioId, TRUE);
+   END IF;
+
+
 
    -- пересчет кол-во для zc_MI_Master + пересчет св-ва <Количество> для тех у кого isTaxExit=TRUE
    SELECT tmp.ioAmount, tmp.outAmount_master

@@ -62,14 +62,14 @@ BEGIN
      INSERT INTO _tmpUnit_branch (UnitId)
         SELECT ObjectLink_Unit_Branch.ObjectId AS UnitId
         FROM ObjectLink AS ObjectLink_Unit_Branch
-        WHERE COALESCE (inBranchId, 0) = 0
+        WHERE COALESCE (inBranchId, 0) <= 0
           -- AND ObjectLink_Unit_Branch.ChildObjectId <> zc_Branch_Basis()
           AND ObjectLink_Unit_Branch.DescId = zc_ObjectLink_Unit_Branch()
           AND ObjectLink_Unit_Branch.ChildObjectId IN (8374, 301310) -- филиал Одесса + филиал Запорожье
       UNION
        SELECT ObjectLink_Unit_Branch.ObjectId AS UnitId
         FROM ObjectLink AS ObjectLink_Unit_Branch
-        WHERE inBranchId <> 0
+        WHERE inBranchId > 0
           AND ObjectLink_Unit_Branch.ChildObjectId = inBranchId
           AND ObjectLink_Unit_Branch.DescId = zc_ObjectLink_Unit_Branch()
        ;     
@@ -383,6 +383,8 @@ BEGIN
                                                            , 240687, 250652
                                                             );*/
 
+     IF inBranchId >= 0 -- OR 1 = 1
+     THEN
      -- расходы для Master
      INSERT INTO _tmpChild (MasterContainerId, ContainerId, MasterContainerId_Count, ContainerId_Count, OperCount, isExternal)
         WITH MIContainer_Count_Out AS (SELECT Movement.Id AS MovementId, Movement.DescId AS MovementDescId, Movement.OperDate, MIContainer_Count_Out.MovementItemId, MIContainer_Count_Out.ContainerId, MIContainer_Count_Out.WhereObjectId_Analyzer, SUM (MIContainer_Count_Out.Amount) AS Amount
@@ -392,6 +394,7 @@ BEGIN
                                                                       AND MIContainer_Count_Out.DescId     = zc_MIContainer_Count()
                                                                       AND MIContainer_Count_Out.isActive   = FALSE
                                                                       AND MIContainer_Count_Out.ParentId > 0
+                                            JOIN _tmpMaster ON _tmpMaster.ContainerId = MIContainer_Count_Out.ContainerId
                                        WHERE Movement.OperDate BETWEEN vbStartDate_zavod AND vbEndDate_zavod
                                          -- AND Movement.DescId IN (zc_Movement_Send(), zc_Movement_ProductionUnion(), zc_Movement_ProductionSeparate())
                                          AND Movement.StatusId = zc_Enum_Status_Complete()
@@ -404,27 +407,28 @@ BEGIN
                                                                      AND MIContainer_Summ_Out.DescId     = zc_MIContainer_Summ()
                                                                      AND MIContainer_Summ_Out.isActive   = FALSE
                                                                      AND MIContainer_Summ_Out.ParentId > 0
+                                           JOIN _tmpMaster ON _tmpMaster.ContainerId = MIContainer_Summ_Out.ContainerId
                                       WHERE Movement.OperDate BETWEEN inStartDate AND inEndDate
                                         -- AND Movement.DescId IN (zc_Movement_Send(), zc_Movement_ProductionUnion(), zc_Movement_ProductionSeparate())
                                         AND Movement.StatusId = zc_Enum_Status_Complete()
                                       -- GROUP BY Movement.Id, MIContainer_Summ_Out.MovementItemId, MIContainer_Summ_Out.ParentId, MIContainer_Summ_Out.ContainerId
                                      )
             , MIContainer_Summ_In AS (SELECT MIContainer_Summ_Out.MovementId, MIContainer_Summ_Out.ParentId, MIContainer_Summ_In.ContainerId, MIContainer_Summ_In.MovementItemId, MIContainer_Summ_In.WhereObjectId_Analyzer, SUM (MIContainer_Summ_In.Amount) AS Amount
-                                           , CASE WHEN _tmpContainer_branch.ContainerId > 0 THEN TRUE ELSE FALSE END AS isBranch
                                       FROM MIContainer_Summ_Out
                                            INNER JOIN MovementItemContainer AS MIContainer_Summ_In ON MIContainer_Summ_In.Id = MIContainer_Summ_Out.ParentId
+                                           INNER JOIN _tmpMaster ON _tmpMaster.ContainerId = MIContainer_Summ_In.ContainerId
                                            LEFT JOIN _tmpContainer_branch ON _tmpContainer_branch.ContainerId = MIContainer_Summ_In.ContainerId
+                                      WHERE _tmpContainer_branch.ContainerId IS NULL
                                       GROUP BY MIContainer_Summ_Out.MovementId, MIContainer_Summ_Out.ParentId, MIContainer_Summ_In.ContainerId, MIContainer_Summ_In.MovementItemId, MIContainer_Summ_In.WhereObjectId_Analyzer
-                                             , CASE WHEN _tmpContainer_branch.ContainerId > 0 THEN TRUE ELSE FALSE END
                                      )
-           , MIContainer_Count_In AS (SELECT tmp.MovementItemId, tmp.isBranch, MIContainer_Count_In.ContainerId, SUM (MIContainer_Count_In.Amount) AS Amount
-                                      FROM (SELECT DISTINCT MIContainer_Summ_In.MovementId, MIContainer_Summ_In.MovementItemId, MIContainer_Summ_In.isBranch FROM MIContainer_Summ_In) AS tmp
+           , MIContainer_Count_In AS (SELECT tmp.MovementItemId, MIContainer_Count_In.ContainerId, SUM (MIContainer_Count_In.Amount) AS Amount
+                                      FROM (SELECT DISTINCT MIContainer_Summ_In.MovementId, MIContainer_Summ_In.MovementItemId FROM MIContainer_Summ_In) AS tmp
                                            JOIN MovementItemContainer AS MIContainer_Count_In
                                                                       ON MIContainer_Count_In.MovementId     = tmp.MovementId
                                                                      AND MIContainer_Count_In.MovementItemId = tmp.MovementItemId
                                                                      AND MIContainer_Count_In.DescId         = zc_MIContainer_Count()
                                                                      AND MIContainer_Count_In.isActive       = TRUE
-                                      GROUP BY tmp.MovementItemId, tmp.isBranch, MIContainer_Count_In.ContainerId
+                                      GROUP BY tmp.MovementItemId, MIContainer_Count_In.ContainerId
                                      )
         SELECT COALESCE (MIContainer_Summ_In.ContainerId, 0)   AS MasterContainerId
              , COALESCE (MIContainer_Summ_Out.ContainerId, 0)  AS ContainerId
@@ -442,8 +446,9 @@ BEGIN
         FROM MIContainer_Count_Out
              JOIN MIContainer_Summ_Out ON MIContainer_Summ_Out.MovementId     = MIContainer_Count_Out.MovementId
                                       AND MIContainer_Summ_Out.MovementItemId = MIContainer_Count_Out.MovementItemId
+
              JOIN MIContainer_Summ_In ON MIContainer_Summ_In.ParentId = MIContainer_Summ_Out.ParentId
-                                     AND MIContainer_Summ_In.isBranch = FALSE
+
              JOIN MIContainer_Count_In ON MIContainer_Count_In.MovementItemId = MIContainer_Summ_In.MovementItemId
 
 
@@ -478,146 +483,18 @@ BEGIN
                , MIContainer_Count_Out.ContainerId
                , MIContainer_Count_Out.WhereObjectId_Analyzer
                , MIContainer_Summ_In.WhereObjectId_Analyzer
-       UNION ALL
-        SELECT COALESCE (MIContainer_Summ_In.ContainerId, 0)   AS MasterContainerId
-             , COALESCE (MIContainer_Summ_Out.ContainerId, 0)  AS ContainerId
-             , COALESCE (MIContainer_Count_In.ContainerId, 0)  AS MasterContainerId_Count
-             , COALESCE (MIContainer_Count_Out.ContainerId, 0) AS ContainerId_Count
-             , SUM (CASE WHEN MIContainer_Count_Out.MovementDescId IN (zc_Movement_Send(), zc_Movement_SendOnPrice())
-                             THEN COALESCE (1 * MIContainer_Count_In.Amount, 0)
-                         WHEN MIContainer_Count_Out.MovementDescId IN (zc_Movement_ProductionUnion())
-                             THEN COALESCE (-1 * MIContainer_Count_Out.Amount, 0)
-                         ELSE 0
-                    END) AS OperCount
-             , CASE WHEN MIContainer_Count_Out.WhereObjectId_Analyzer = MIContainer_Summ_In.WhereObjectId_Analyzer THEN FALSE ELSE TRUE END AS isExternal
-        FROM MIContainer_Count_Out
-             JOIN MIContainer_Summ_Out ON MIContainer_Summ_Out.MovementId     = MIContainer_Count_Out.MovementId
-                                      AND MIContainer_Summ_Out.MovementItemId = MIContainer_Count_Out.MovementItemId
-             JOIN MIContainer_Summ_In ON MIContainer_Summ_In.ParentId = MIContainer_Summ_Out.ParentId
-                                     AND MIContainer_Summ_In.isBranch = TRUE
-             JOIN MIContainer_Count_In ON MIContainer_Count_In.MovementItemId = MIContainer_Summ_In.MovementItemId
-
-
-             /*LEFT JOIN ContainerObjectCost AS ContainerObjectCost_Out
-                                           ON ContainerObjectCost_Out.ContainerId = MIContainer_Summ_Out.ContainerId
-                                          AND ContainerObjectCost_Out.ObjectCostDescId = zc_ObjectCost_Basis()
-             LEFT JOIN ContainerObjectCost AS ContainerObjectCost_In
-                                           ON ContainerObjectCost_In.ContainerId = MIContainer_Summ_In.ContainerId
-                                          AND ContainerObjectCost_In.ObjectCostDescId = zc_ObjectCost_Basis()*/
-        WHERE MIContainer_Count_Out.OperDate BETWEEN inStartDate AND inEndDate
-        GROUP BY MIContainer_Summ_In.ContainerId
-               , MIContainer_Summ_Out.ContainerId
-               , MIContainer_Count_In.ContainerId
-               , MIContainer_Count_Out.ContainerId
-               , MIContainer_Count_Out.WhereObjectId_Analyzer
-               , MIContainer_Summ_In.WhereObjectId_Analyzer
         ;
 
-/*
-     -- добавляются связи которых нет (т.к. нулевые проводки не формируются)
-     INSERT INTO _tmpChild (MasterContainerId, ContainerId, MasterContainerId_Count, ContainerId_Count, OperCount)
-        SELECT HistoryCostContainerLink.MasterContainerId_Summ
-             , HistoryCostContainerLink.ChildContainerId_Summ
-             , HistoryCostContainerLink.MasterContainerId_Count
-             , HistoryCostContainerLink.ChildContainerId_Count
-             , SUM (_tmpChild_group.OperCount) AS OperCount
-        FROM (SELECT MasterContainerId_Count, ContainerId_Count, OperCount FROM _tmpChild GROUP BY MasterContainerId_Count, ContainerId_Count, OperCount) AS _tmpChild_group
-             INNER JOIN HistoryCostContainerLink ON HistoryCostContainerLink.MasterContainerId_Count = _tmpChild_group.MasterContainerId_Count
-                                                AND HistoryCostContainerLink.ChildContainerId_Count = _tmpChild_group.ContainerId_Count
-             INNER JOIN _tmpMaster ON _tmpMaster.ContainerId = HistoryCostContainerLink.ChildContainerId_Summ -- условие что б отбросить "нулевые"
-                                  AND (_tmpMaster.StartSumm <> 0 OR _tmpMaster.IncomeSumm <> 0 OR _tmpMaster.calcSumm <> 0)
-             LEFT JOIN _tmpChild ON _tmpChild.MasterContainerId_Count = HistoryCostContainerLink.MasterContainerId_Count
-                                AND _tmpChild.ContainerId_Count       = HistoryCostContainerLink.ChildContainerId_Count
-                                AND _tmpChild.MasterContainerId       = HistoryCostContainerLink.MasterContainerId_Summ
-                                AND _tmpChild.ContainerId             = HistoryCostContainerLink.ChildContainerId_Summ
-        WHERE _tmpChild.MasterContainerId_Count IS NULL
-        GROUP BY HistoryCostContainerLink.MasterContainerId_Summ
-               , HistoryCostContainerLink.ChildContainerId_Summ
-               , HistoryCostContainerLink.MasterContainerId_Count
-               , HistoryCostContainerLink.ChildContainerId_Count;
+     END IF; -- if inBranchId >= 0
 
-     -- сохраняем связи, что б не формировать нулевые проводки
-     INSERT INTO HistoryCostContainerLink (MasterContainerId_Count, ChildContainerId_Count, MasterContainerId_Summ, ChildContainerId_Summ)
-        SELECT _tmpChild.MasterContainerId_Count, _tmpChild.ContainerId_Count, _tmpChild.MasterContainerId, _tmpChild.ContainerId
-        FROM _tmpChild
-             LEFT JOIN HistoryCostContainerLink ON HistoryCostContainerLink.MasterContainerId_Count = _tmpChild.MasterContainerId_Count
-                                               AND HistoryCostContainerLink.ChildContainerId_Count  = _tmpChild.ContainerId_Count
-                                               AND HistoryCostContainerLink.MasterContainerId_Summ  = _tmpChild.MasterContainerId
-                                               AND HistoryCostContainerLink.ChildContainerId_Summ   = _tmpChild.ContainerId
-        WHERE HistoryCostContainerLink.MasterContainerId_Count IS NULL
-        GROUP BY _tmpChild.MasterContainerId_Count, _tmpChild.ContainerId_Count, _tmpChild.MasterContainerId, _tmpChild.ContainerId;
-*/
-/*
-     -- добавляются связи которых нет (т.к. нулевые проводки не формируются) !!!по прошлому периоду если он > 01.06.2014!!!
-     WITH tmpList_oldPeriod AS
-       (SELECT COALESCE (MIContainer_Summ_In.ContainerId, 0)   AS MasterContainerId_Summ
-             , COALESCE (MIContainer_Summ_Out.ContainerId, 0)  AS ChildContainerId_Summ
-             , COALESCE (MIContainer_Count_In.ContainerId, 0)  AS MasterContainerId_Count
-             , COALESCE (MIContainer_Count_Out.ContainerId, 0) AS ChildContainerId_Count
-        FROM Movement
-             JOIN MovementItemContainer AS MIContainer_Count_Out
-                                        ON MIContainer_Count_Out.MovementId = Movement.Id
-                                       AND MIContainer_Count_Out.DescId = zc_MIContainer_Count()
-                                       AND MIContainer_Count_Out.isActive = FALSE
-             JOIN MovementItemContainer AS MIContainer_Summ_Out
-                                        ON MIContainer_Summ_Out.MovementItemId = MIContainer_Count_Out.MovementItemId
-                                       AND MIContainer_Summ_Out.DescId = zc_MIContainer_Summ()
 
-             JOIN MovementItemContainer AS MIContainer_Summ_In ON MIContainer_Summ_In.Id = MIContainer_Summ_Out.ParentId
-             JOIN MovementItemContainer AS MIContainer_Count_In
-                                        ON MIContainer_Count_In.MovementItemId = MIContainer_Summ_In.MovementItemId
-                                       AND MIContainer_Count_In.DescId = zc_MIContainer_Count()
-                                       AND MIContainer_Count_In.isActive = TRUE
-             LEFT JOIN (SELECT Movement.Id AS  MovementId
-                             , MIContainer_Summ_Out.MovementItemId
-                             , MIContainer_Summ_Out.ContainerId
-                             , COALESCE (SUM (-1 * MIContainer_Summ_Out.Amount), 0) AS Summ
-                        FROM Movement
-                             LEFT JOIN MovementItemContainer AS MIContainer_Summ_Out
-                                                             ON MIContainer_Summ_Out.MovementId = Movement.Id
-                                                            AND MIContainer_Summ_Out.DescId = zc_MIContainer_Summ()
-                                                            AND MIContainer_Summ_Out.isActive = FALSE
-                        WHERE Movement.OperDate BETWEEN (inStartDate - INTERVAL '1 MONTH') AND (inStartDate - INTERVAL '1 DAY')
-                          AND inStartDate >= '01.07.2014' :: TDateTime
-                          AND Movement.DescId = zc_Movement_ProductionSeparate()
-                          AND Movement.StatusId = zc_Enum_Status_Complete()
-                        GROUP BY Movement.Id
-                               , MIContainer_Summ_Out.MovementItemId
-                               , MIContainer_Summ_Out.ContainerId
-                       ) AS _tmp ON _tmp.MovementId = Movement.Id
-                                AND _tmp.ContainerId = MIContainer_Summ_Out.ContainerId
-                                AND _tmp.MovementItemId = MIContainer_Summ_Out.MovementItemId
-                                AND Movement.DescId = zc_Movement_ProductionSeparate()
-        WHERE Movement.OperDate BETWEEN (inStartDate - INTERVAL '1 MONTH') AND (inStartDate - INTERVAL '1 DAY')
-          AND inStartDate >= '01.07.2014' :: TDateTime
-          AND Movement.StatusId = zc_Enum_Status_Complete()
-        GROUP BY MIContainer_Summ_In.ContainerId
-               , MIContainer_Summ_Out.ContainerId
-               , MIContainer_Count_In.ContainerId
-               , MIContainer_Count_Out.ContainerId
-       )
-     INSERT INTO _tmpChild (MasterContainerId, ContainerId, MasterContainerId_Count, ContainerId_Count, OperCount)
-        SELECT HistoryCostContainerLink.MasterContainerId_Summ
-             , HistoryCostContainerLink.ChildContainerId_Summ
-             , HistoryCostContainerLink.MasterContainerId_Count
-             , HistoryCostContainerLink.ChildContainerId_Count
-             , SUM (_tmpChild_group.OperCount) AS OperCount
-        FROM (SELECT MasterContainerId_Count, ContainerId_Count, OperCount FROM _tmpChild GROUP BY MasterContainerId_Count, ContainerId_Count, OperCount) AS _tmpChild_group
-             INNER JOIN tmpList_oldPeriod AS HistoryCostContainerLink ON HistoryCostContainerLink.MasterContainerId_Count = _tmpChild_group.MasterContainerId_Count
-                                                                     AND HistoryCostContainerLink.ChildContainerId_Count = _tmpChild_group.ContainerId_Count
-             INNER JOIN _tmpMaster ON _tmpMaster.ContainerId = HistoryCostContainerLink.ChildContainerId_Summ -- условие что б отбросить "нулевые"
-                                  AND (_tmpMaster.StartSumm <> 0 OR _tmpMaster.IncomeSumm <> 0 OR _tmpMaster.calcSumm <> 0)
-             LEFT JOIN _tmpChild ON _tmpChild.MasterContainerId_Count = HistoryCostContainerLink.MasterContainerId_Count
-                                AND _tmpChild.ContainerId_Count       = HistoryCostContainerLink.ChildContainerId_Count
-                                AND _tmpChild.MasterContainerId       = HistoryCostContainerLink.MasterContainerId_Summ
-                                AND _tmpChild.ContainerId             = HistoryCostContainerLink.ChildContainerId_Summ
-        WHERE _tmpChild.MasterContainerId_Count IS NULL
-        GROUP BY HistoryCostContainerLink.MasterContainerId_Summ
-               , HistoryCostContainerLink.ChildContainerId_Summ
-               , HistoryCostContainerLink.MasterContainerId_Count
-               , HistoryCostContainerLink.ChildContainerId_Count
-       ;
-*/
+/*     -- добавляются связи которых нет (т.к. нулевые проводки не формируются)
+       -- добавляются связи которых нет (т.к. нулевые проводки не формируются) !!!по прошлому периоду если он > 01.06.2014!!!*/
+
+
+     -- !!!временно, пока ошибка!!!
+     -- delete from _tmpChild where _tmpChild.MasterContainerId IN ( SELECT _tmpChild.MasterContainerId FROM _tmpChild GROUP BY _tmpChild.MasterContainerId, _tmpChild.ContainerId HAVING COUNT(*) > 1);
+
 
      -- проверка1
      IF EXISTS (SELECT _tmpMaster.ContainerId FROM _tmpMaster GROUP BY _tmpMaster.ContainerId HAVING COUNT(*) > 1)
@@ -791,7 +668,7 @@ BEGIN
      /*INSERT INTO _tmpDiff (ContainerId, MovementItemId_diff, Summ_diff)
         SELECT HistoryCost.ContainerId, MAX (HistoryCost.MovementItemId_diff), SUM (HistoryCost.Summ_diff) FROM HistoryCost WHERE HistoryCost.Summ_diff <> 0 AND ((inStartDate BETWEEN StartDate AND EndDate) OR (inEndDate BETWEEN StartDate AND EndDate)) GROUP BY HistoryCost.ContainerId;
      */
-     IF inBranchId <> 0
+     IF inBranchId > 0
      THEN
          -- Удаляем предыдущую с/с - !!!для 1-ого Филиала!!!
          DELETE FROM HistoryCost WHERE ((inStartDate BETWEEN StartDate AND EndDate) OR (inEndDate BETWEEN StartDate AND EndDate))

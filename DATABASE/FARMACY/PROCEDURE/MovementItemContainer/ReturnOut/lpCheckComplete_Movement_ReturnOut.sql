@@ -48,7 +48,7 @@ BEGIN
         LEFT OUTER JOIN MovementItem AS MovementItem_Income
                                      ON MovementItem_ReturnOut.ParentId = MovementItem_Income.Id
         LEFT OUTER JOIN MovementItemContainer ON MovementItemContainer.MovementItemId = MovementItem_Income.Id
-                                        AND MovementItemContainer.DescId = zc_Container_Count()
+                                        AND MovementItemContainer.DescId = zc_MIContainer_Count()
         LEFT OUTER JOIN Container ON Container.Id = MovementItemContainer.ContainerId
                                  AND Container.DescId = zc_Container_Count() 
     WHERE 
