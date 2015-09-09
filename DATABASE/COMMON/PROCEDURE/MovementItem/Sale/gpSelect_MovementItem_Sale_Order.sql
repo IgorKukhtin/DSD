@@ -58,7 +58,7 @@ BEGIN
                                                                                THEN (SELECT Movement.OperDate FROM Movement WHERE Movement.Id = vbMovementId_order)
                                                                           ELSE NULL
                                                                      END
-                                               , inOperDatePartner:= CASE WHEN vbMovementId_order <> 0
+                                               , inOperDatePartner:= CASE WHEN vbMovementId_order <> 0 AND inOperDate + INTERVAL '1 DAY' >= (SELECT Movement.OperDate FROM Movement WHERE Movement.Id = vbMovementId_order)
                                                                                THEN NULL
                                                                           ELSE inOperDate
                                                                      END

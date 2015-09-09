@@ -4,7 +4,7 @@ inherited Report_ReceiptProductionAnalyzeForm: TReport_ReceiptProductionAnalyzeF
   ClientWidth = 1130
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   ExplicitWidth = 1146
-  ExplicitHeight = 468
+  ExplicitHeight = 465
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -23,8 +23,6 @@ inherited Report_ReceiptProductionAnalyzeForm: TReport_ReceiptProductionAnalyzeF
       inherited cxGrid: TcxGrid
         Width = 1130
         Height = 347
-        ExplicitLeft = 136
-        ExplicitTop = -20
         ExplicitWidth = 1130
         ExplicitHeight = 347
         inherited cxGridDBTableView: TcxGridDBTableView
