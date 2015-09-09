@@ -1,26 +1,26 @@
 inherited CheckJournalForm: TCheckJournalForm
   Caption = #1050#1072#1089#1089#1086#1074#1099#1077' '#1095#1077#1082#1080
-  ClientWidth = 697
+  ClientWidth = 726
   AddOnFormData.RefreshAction = actRefreshStart
-  ExplicitWidth = 705
-  ExplicitHeight = 702
+  ExplicitWidth = 742
+  ExplicitHeight = 713
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 77
-    Width = 697
+    Width = 726
     Height = 598
     TabOrder = 3
     ExplicitTop = 77
     ExplicitWidth = 697
     ExplicitHeight = 598
     ClientRectBottom = 598
-    ClientRectRight = 697
+    ClientRectRight = 726
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 697
       ExplicitHeight = 598
       inherited cxGrid: TcxGrid
-        Width = 697
+        Width = 726
         Height = 598
         ExplicitWidth = 697
         ExplicitHeight = 598
@@ -31,6 +31,7 @@ inherited CheckJournalForm: TCheckJournalForm
               Kind = skSum
               Column = colTotalSumm
             end>
+          OptionsView.GroupByBox = True
           Styles.Content = nil
           Styles.Inactive = nil
           Styles.Selection = nil
@@ -77,12 +78,19 @@ inherited CheckJournalForm: TCheckJournalForm
             DataBinding.FieldName = 'PaidTypeName'
             Width = 70
           end
+          object colBayer: TcxGridDBColumn
+            Caption = #1052#1077#1085#1077#1076#1078#1077#1088
+            DataBinding.FieldName = 'Bayer'
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 79
+          end
         end
       end
     end
   end
   inherited Panel: TPanel
-    Width = 697
+    Width = 726
     Height = 51
     ExplicitWidth = 697
     ExplicitHeight = 51
@@ -98,6 +106,7 @@ inherited CheckJournalForm: TCheckJournalForm
       Properties.ReadOnly = True
       Properties.UseNullString = True
       TabOrder = 4
+      Text = '<'#1042#1099#1073#1077#1088#1080#1090#1077' '#1087#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077'>'
       Width = 288
     end
     object cxLabel3: TcxLabel

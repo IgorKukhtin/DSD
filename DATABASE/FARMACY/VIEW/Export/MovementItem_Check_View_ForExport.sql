@@ -17,7 +17,7 @@ CREATE OR REPLACE VIEW MovementItem_Check_View_ForExport AS
                                       ON MLO_Unit.MovementId = MIC_Check.MovementId
                                      AND MLO_Unit.DescId = zc_MovementLinkObject_Unit()
         INNER JOIN MovementItem AS MI_Check
-                                ON MI_Check.MovementId = MIC_Check.MovementItemId
+                                ON MI_Check.MovementId = MIC_Check.MovementId
         LEFT JOIN MovementItemFloat AS MIFloat_Price
                                     ON MIFloat_Price.MovementItemId = MI_Check.Id
                                    AND MIFloat_Price.DescId = zc_MIFloat_Price()

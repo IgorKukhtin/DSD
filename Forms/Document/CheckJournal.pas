@@ -13,7 +13,8 @@ uses
   cxTextEdit, cxMaskEdit, cxDropDownEdit, cxCalendar, Vcl.ExtCtrls, cxGridLevel,
   cxGridCustomTableView, cxGridTableView, cxGridDBTableView, cxGridCustomView,
   cxGrid, cxPC, dxBarBuiltInMenu, cxNavigator, cxCurrencyEdit, dsdGuides,
-  cxButtonEdit;
+  cxButtonEdit, dxSkinsCore, dxSkinsDefaultPainters, dxSkinscxPCPainter,
+  dxSkinsdxBarPainter;
 
 type
   TCheckJournalForm = class(TAncestorJournalForm)
@@ -31,6 +32,7 @@ type
     actRefreshStart: TdsdDataSetRefresh;
     dsdStoredProc1: TdsdStoredProc;
     N13: TMenuItem;
+    colBayer: TcxGridDBColumn;
   private
     { Private declarations }
   public
