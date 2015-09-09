@@ -2484,7 +2484,7 @@ inherited ReturnInForm: TReturnInForm
         DataType = ftString
       end>
     Left = 160
-    Top = 368
+    Top = 392
   end
   inherited spInsertMaskMIMaster: TdsdStoredProc
     StoredProcName = 'gpInsertUpdate_MovementItem_ReturnIn'

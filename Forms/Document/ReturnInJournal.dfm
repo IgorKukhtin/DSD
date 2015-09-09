@@ -930,6 +930,7 @@ inherited ReturnInJournalForm: TReturnInJournalForm
         DataType = ftBoolean
         ParamType = ptInput
       end>
+    Left = 88
     Top = 155
   end
   inherited BarManager: TdxBarManager
