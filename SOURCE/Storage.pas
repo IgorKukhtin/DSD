@@ -270,7 +270,7 @@ begin
              end;
           end;
           on E: Exception do
-                raise Exception.Create('Ошибка соединения с Web сервером.');
+                raise Exception.Create('Ошибка соединения с Web сервером.('+IntToStr(E.LastError)+')');
         end;
     finally
       if IdHTTPWork.FExecOnServer then

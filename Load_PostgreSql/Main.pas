@@ -2403,8 +2403,12 @@ begin
      //
      //
      calcStartDate:=saveStartDate;
-     if Month=12 then begin Year:=Year+1;Month:=0;end;
-     calcEndDate:=EncodeDate(Year, Month+1, 1)-1;
+     if saveMonth <> Month2
+     then begin
+               if Month=12 then begin Year:=Year+1;Month:=0;end;
+               calcEndDate:=EncodeDate(Year, Month+1, 1)-1;
+          end
+     else calcEndDate:= saveEndDate;
      pInsertHistoryCost_Period(calcStartDate,calcEndDate,FALSE);
      //
      //

@@ -159,8 +159,17 @@ BEGIN
                            , COALESCE (tmpMI_Goods.CountForPrice, 1)                    AS CountForPrice
                            , COALESCE (tmpMI_Goods.isErased, FALSE)                     AS isErased
                        FROM tmpMI_Goods
+                            LEFT JOIN ObjectLink AS ObjectLink_Goods_InfoMoney
+                                                 ON ObjectLink_Goods_InfoMoney.ObjectId = tmpMI_Goods.GoodsId
+                                                AND ObjectLink_Goods_InfoMoney.DescId = zc_ObjectLink_Goods_InfoMoney()
                             LEFT JOIN tmpRemains ON tmpRemains.GoodsId = tmpMI_Goods.GoodsId
-                                                AND tmpRemains.GoodsKindId = tmpMI_Goods.GoodsKindId
+                                                AND tmpRemains.GoodsKindId = CASE WHEN ObjectLink_Goods_InfoMoney.ChildObjectId IN (zc_Enum_InfoMoney_20901() -- Ирна
+                                                                                                                                  , zc_Enum_InfoMoney_30101() -- Готовая продукция
+                                                                                                                                  , zc_Enum_InfoMoney_30201() -- Мясное сырье
+                                                                                                                                   )
+                                                                                       THEN tmpMI_Goods.GoodsKindId
+                                                                                  ELSE 0
+                                                                             END
                      )
           , tmpMI_EDI AS (SELECT MovementItem.ObjectId                         AS GoodsId
                                , SUM (MovementItem.Amount)                     AS Amount
@@ -275,6 +284,7 @@ BEGIN
                   -- , COALESCE (tmpGoodsByGoodsKind.GoodsKindId, COALESCE (Object_GoodsByGoodsKind_View.GoodsKindId, 0)) AS GoodsKindId
                   , COALESCE (tmpGoodsByGoodsKind.GoodsKindId, 0)          AS GoodsKindId
                   , ObjectString_Goods_GoodsGroupFull.ValueData            AS GoodsGroupNameFull
+                  , tmpInfoMoney.InfoMoneyId
              FROM tmpInfoMoney
                   JOIN ObjectLink AS ObjectLink_Goods_InfoMoney
                                   ON ObjectLink_Goods_InfoMoney.ChildObjectId = tmpInfoMoney.InfoMoneyId
@@ -282,10 +292,13 @@ BEGIN
                   JOIN Object AS Object_Goods ON Object_Goods.Id = ObjectLink_Goods_InfoMoney.ObjectId
                                              AND Object_Goods.isErased = FALSE
                   LEFT JOIN tmpGoodsByGoodsKind ON tmpGoodsByGoodsKind.GoodsId = Object_Goods.Id
-                                               AND tmpInfoMoney.InfoMoneyId IN (zc_Enum_InfoMoney_20901() -- Ирна
+                                               /*AND (tmpInfoMoney.InfoMoneyId IN (zc_Enum_InfoMoney_20901() -- Ирна
                                                                               , zc_Enum_InfoMoney_30101() -- Готовая продукция
                                                                               , zc_Enum_InfoMoney_30201() -- Мясное сырье
                                                                                )
+                                                 OR tmpInfoMoney.InfoMoneyDestinationId IN (zc_Enum_InfoMoneyDestination_10100() -- Мясное сырье + Основное сырье
+                                                                                           )
+                                                   )*/
                                                /*AND vbIsOrderDnepr = TRUE
                   LEFT JOIN Object_GoodsByGoodsKind_View ON Object_GoodsByGoodsKind_View.GoodsId = Object_Goods.Id
                                                         AND tmpInfoMoney.InfoMoneyId IN (zc_Enum_InfoMoney_20901(), zc_Enum_InfoMoney_30101(), zc_Enum_InfoMoney_30201()) -- Ирна + Готовая продукция + Доходы Мясное сырье
@@ -295,14 +308,23 @@ BEGIN
                                          ON ObjectString_Goods_GoodsGroupFull.ObjectId = Object_Goods.Id
                                         AND ObjectString_Goods_GoodsGroupFull.DescId = zc_ObjectString_Goods_GroupNameFull()
              WHERE tmpGoodsByGoodsKind.GoodsId > 0 -- OR vbIsOrderDnepr = FALSE
-                OR tmpInfoMoney.InfoMoneyId NOT IN (zc_Enum_InfoMoney_20901() -- Ирна
-                                                  , zc_Enum_InfoMoney_30101() -- Готовая продукция
-                                                  , zc_Enum_InfoMoney_30201() -- Мясное сырье
-                                                   )
+                /*OR (tmpInfoMoney.InfoMoneyId NOT IN (zc_Enum_InfoMoney_20901() -- Ирна
+                                                   , zc_Enum_InfoMoney_30101() -- Готовая продукция
+                                                   , zc_Enum_InfoMoney_30201() -- Мясное сырье
+                                                    )
+                AND tmpInfoMoney.InfoMoneyDestinationId NOT IN (zc_Enum_InfoMoneyDestination_10100() -- Мясное сырье + Основное сырье
+                                                               )
+                   )*/
             ) AS tmpGoods
 
             LEFT JOIN tmpRemains ON tmpRemains.GoodsId     = tmpGoods.GoodsId
-                                AND tmpRemains.GoodsKindId = tmpGoods.GoodsKindId
+                                AND tmpRemains.GoodsKindId = CASE WHEN tmpGoods.InfoMoneyId IN (zc_Enum_InfoMoney_20901() -- Ирна
+                                                                                              , zc_Enum_InfoMoney_30101() -- Готовая продукция
+                                                                                              , zc_Enum_InfoMoney_30201() -- Мясное сырье
+                                                                                               )
+                                                                                       THEN tmpGoods.GoodsKindId
+                                                                                  ELSE 0
+                                                                             END
             LEFT JOIN tmpMI_all AS tmpMI ON tmpMI.GoodsId     = tmpGoods.GoodsId
                                         AND tmpMI.GoodsKindId = tmpGoods.GoodsKindId
 
