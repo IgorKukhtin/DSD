@@ -5,26 +5,41 @@
 CREATE OR REPLACE FUNCTION lpDelete_MovementItemContainer (IN inMovementId Integer)
   RETURNS void AS
 $BODY$
-  DECLARE vbLock Boolean;
+   DECLARE vbLock Integer;
 BEGIN
+    -- так блокируем что б не было ОШИБКИ: обнаружена взаимоблокировка
     IF zc_IsLockTable() = TRUE
     THEN
-        -- так блокируем что б не было ОШИБКИ: обнаружена взаимоблокировка
         -- LOCK TABLE Container IN SHARE UPDATE EXCLUSIVE MODE;
         LOCK TABLE LockProtocol IN SHARE UPDATE EXCLUSIVE MODE;
+    ELSE
+    IF zc_IsLockTableCycle() = TRUE
+    THEN
         -- так блокируем что б не было ОШИБКИ: обнаружена взаимоблокировка
-        /*vbLock := FALSE;
-        WHILE NOT vbLock LOOP
-            BEGIN
-               LOCK TABLE Container IN SHARE UPDATE EXCLUSIVE MODE;
-               vbLock := TRUE;
-            EXCEPTION 
-                WHEN OTHERS THEN
+        vbLock := 1;
+        WHILE vbLock <> 0 LOOP
+           BEGIN
+               PERFORM Container.* FROM Container WHERE Container.Id IN (SELECT MovementItemContainer.ContainerId FROM MovementItemContainer WHERE MovementItemContainer.MovementId = inMovementId) FOR UPDATE;
+               PERFORM MovementItemContainer.* FROM MovementItemContainer WHERE MovementItemContainer.MovementId = inMovementId FOR UPDATE;
+               vbLock := 0;
+           EXCEPTION 
+                     WHEN OTHERS THEN vbLock := vbLock + 1;
+                                      IF vbLock <= 5
+                                      THEN PERFORM pg_sleep (zc_IsLockTableSecond());
+                                      ELSE IF vbLock <= 10
+                                      THEN PERFORM pg_sleep (vbLock + SUBSTR (inMovementId :: TVarChar, LENGTH (inMovementId :: TVarChar)) :: Integer);
+                                      ELSE IF vbLock <= 15
+                                      THEN PERFORM pg_sleep (vbLock + SUBSTR (inMovementId :: TVarChar, -1 + LENGTH (inMovementId :: TVarChar)) :: Integer);
+                                      ELSE RAISE EXCEPTION 'Deadlock <%>', inMovementId;
+                                      END IF;
+                                      END IF;
+                                      END IF;
             END;
-        END LOOP;*/
+        END LOOP;
     ELSE
         PERFORM Container.* FROM Container WHERE Container.Id IN (SELECT MovementItemContainer.ContainerId FROM MovementItemContainer WHERE MovementItemContainer.MovementId = inMovementId) FOR UPDATE;
         PERFORM MovementItemContainer.* FROM MovementItemContainer WHERE MovementItemContainer.MovementId = inMovementId FOR UPDATE;
+    END IF;
     END IF;
 
 

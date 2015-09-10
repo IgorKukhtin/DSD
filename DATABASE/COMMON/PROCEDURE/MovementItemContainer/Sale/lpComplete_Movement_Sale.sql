@@ -81,8 +81,6 @@ $BODY$
   DECLARE vbPaymentDate TDateTime;
 BEGIN
 
-     -- LOCK TABLE ChildReportContainerLink IN SHARE ROW EXCLUSIVE MODE;
-
      -- !!!временно!!!
      PERFORM lpInsertUpdate_MovementFloat_TotalSumm (inMovementId:= inMovementId);
 

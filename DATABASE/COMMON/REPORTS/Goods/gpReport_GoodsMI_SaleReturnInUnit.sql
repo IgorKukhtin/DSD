@@ -56,6 +56,27 @@ BEGIN
 
 
 
+    IF vbUserId = 5 THEN
+       RETURN QUERY
+       SELECT * FROM gpReport_GoodsMI_SaleReturnInUnit_NEW (inStartDate
+                                                      , inEndDate
+                                                      , inBranchId
+                                                      , inAreaId
+                                                      , inRetailId
+                                                      , inJuridicalId
+                                                      , inPaidKindId
+                                                      , inTradeMarkId
+                                                      , inGoodsGroupId
+                                                      , inInfoMoneyId
+                                                      , inIsPartner
+                                                      , inIsTradeMark
+                                                      , inIsGoods
+                                                      , inIsGoodsKind
+                                                      , inSession
+                                                       );
+       RETURN;
+    END IF;
+
     -- Ограничения по товару
     CREATE TEMP TABLE _tmpGoods_report (GoodsId Integer, TradeMarkId Integer) ON COMMIT DROP;
     IF inGoodsGroupId <> 0
@@ -439,4 +460,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpReport_GoodsMI_SaleReturnInUnit (inStartDate:= '01.07.2015', inEndDate:= '01.07.2015', inBranchId:= 0, inAreaId:= 1, inRetailId:= 0, inJuridicalId:= 0, inPaidKindId:= zc_Enum_PaidKind_FirstForm(), inTradeMarkId:= 0, inGoodsGroupId:= 0, inInfoMoneyId:= zc_Enum_InfoMoney_30101(), inIsPartner:= TRUE, inIsTradeMark:= FALSE, inIsGoods:= FALSE, inIsGoodsKind:= FALSE, inSession:= zfCalc_UserAdmin());
+-- SELECT * FROM gpReport_GoodsMI_SaleReturnInUnit (inStartDate:= '31.08.2015', inEndDate:= '31.08.2015', inBranchId:= 0, inAreaId:= 1, inRetailId:= 0, inJuridicalId:= 0, inPaidKindId:= zc_Enum_PaidKind_FirstForm(), inTradeMarkId:= 0, inGoodsGroupId:= 0, inInfoMoneyId:= zc_Enum_InfoMoney_30101(), inIsPartner:= TRUE, inIsTradeMark:= FALSE, inIsGoods:= FALSE, inIsGoodsKind:= FALSE, inSession:= zfCalc_UserAdmin());

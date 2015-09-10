@@ -4,7 +4,7 @@ inherited Report_BankAccount_CashForm: TReport_BankAccount_CashForm
   ClientWidth = 982
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   ExplicitWidth = 998
-  ExplicitHeight = 593
+  ExplicitHeight = 590
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -66,42 +66,6 @@ inherited Report_BankAccount_CashForm: TReport_BankAccount_CashForm
               Format = ',0.00##'
               Kind = skSum
               Column = EndAmountK
-            end
-            item
-              Format = ',0.00##'
-              Kind = skSum
-            end
-            item
-              Format = ',0.00##'
-              Kind = skSum
-            end
-            item
-              Format = ',0.00##'
-              Kind = skSum
-            end
-            item
-              Format = ',0.00##'
-              Kind = skSum
-            end
-            item
-              Format = ',0.00##'
-              Kind = skSum
-            end
-            item
-              Format = ',0.00##'
-              Kind = skSum
-            end
-            item
-              Format = ',0.00##'
-              Kind = skSum
-            end
-            item
-              Format = ',0.00##'
-              Kind = skSum
-            end
-            item
-              Format = ',0.00##'
-              Kind = skSum
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -143,42 +107,6 @@ inherited Report_BankAccount_CashForm: TReport_BankAccount_CashForm
               Format = ',0.00##'
               Kind = skSum
               Column = EndAmountK
-            end
-            item
-              Format = ',0.00##'
-              Kind = skSum
-            end
-            item
-              Format = ',0.00##'
-              Kind = skSum
-            end
-            item
-              Format = ',0.00##'
-              Kind = skSum
-            end
-            item
-              Format = ',0.00##'
-              Kind = skSum
-            end
-            item
-              Format = ',0.00##'
-              Kind = skSum
-            end
-            item
-              Format = ',0.00##'
-              Kind = skSum
-            end
-            item
-              Format = ',0.00##'
-              Kind = skSum
-            end
-            item
-              Format = ',0.00##'
-              Kind = skSum
-            end
-            item
-              Format = ',0.00##'
-              Kind = skSum
             end>
           OptionsData.CancelOnExit = True
           OptionsData.Deleting = False
