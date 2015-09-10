@@ -12,7 +12,7 @@ CREATE OR REPLACE FUNCTION gpSelect_Movement_Check(
 )
 RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode Integer
              , TotalCount TFloat, TotalSumm TFloat
-             , UnitName TVarChar, CashRegisterName TVarChar, PaidTypeName TVarChar)
+             , UnitName TVarChar, CashRegisterName TVarChar, PaidTypeName TVarChar, Bayer TVarChar)
 
 AS
 $BODY$
@@ -43,6 +43,7 @@ BEGIN
            , Movement_Check.UnitName
            , Movement_Check.CashRegisterName
            , Movement_Check.PaidTypeName
+           , Movement_Check.CashMember
         FROM Movement_Check_View AS Movement_Check 
                             JOIN tmpStatus ON tmpStatus.StatusId = Movement_Check.StatusId
        WHERE Movement_Check.OperDate BETWEEN inStartDate AND inEndDate
