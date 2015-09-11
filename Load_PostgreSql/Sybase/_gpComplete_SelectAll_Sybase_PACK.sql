@@ -15,6 +15,7 @@ BEGIN
 
      RETURN QUERY 
      WITH tmpUnit_pack AS (SELECT 8451 AS UnitId, NULL AS isMain  -- Цех Упаковки
+     -- WITH tmpUnit_pack AS (SELECT 8440 AS UnitId, NULL AS isMain  -- Дефростер
                        )
      -- !!!Internal - PACK!!!
      -- 1.5. Send + ProductionUnion

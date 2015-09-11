@@ -387,7 +387,7 @@ BEGIN
      THEN
      -- расходы для Master
      INSERT INTO _tmpChild (MasterContainerId, ContainerId, MasterContainerId_Count, ContainerId_Count, OperCount, isExternal)
-        WITH MIContainer_Count_Out AS (SELECT Movement.Id AS MovementId, Movement.DescId AS MovementDescId, Movement.OperDate, MIContainer_Count_Out.MovementItemId, MIContainer_Count_Out.ContainerId, MIContainer_Count_Out.WhereObjectId_Analyzer, SUM (MIContainer_Count_Out.Amount) AS Amount
+        /*WITH MIContainer_Count_Out AS (SELECT Movement.Id AS MovementId, Movement.DescId AS MovementDescId, Movement.OperDate, MIContainer_Count_Out.MovementItemId, MIContainer_Count_Out.ContainerId, MIContainer_Count_Out.WhereObjectId_Analyzer, SUM (MIContainer_Count_Out.Amount) AS Amount
                                        FROM _tmpMaster
                                             JOIN MovementItemContainer AS MIContainer_Summ_Out
                                                                        ON MIContainer_Summ_Out.OperDate BETWEEN vbStartDate_zavod AND vbEndDate_zavod
@@ -399,8 +399,7 @@ BEGIN
                                          -- AND Movement.DescId IN (zc_Movement_Send(), zc_Movement_ProductionUnion(), zc_Movement_ProductionSeparate())
                                          AND Movement.StatusId = zc_Enum_Status_Complete()
                                        GROUP BY Movement.Id, Movement.DescId, Movement.OperDate, MIContainer_Count_Out.MovementItemId, MIContainer_Count_Out.ContainerId, MIContainer_Count_Out.WhereObjectId_Analyzer
-                                     )
-
+                                     )*/
         SELECT COALESCE (MIContainer_Summ_In.ContainerId, 0)   AS MasterContainerId
              , COALESCE (MIContainer_Summ_Out.ContainerId, 0)  AS ContainerId
              , COALESCE (MIContainer_Count_In.ContainerId, 0)  AS MasterContainerId_Count

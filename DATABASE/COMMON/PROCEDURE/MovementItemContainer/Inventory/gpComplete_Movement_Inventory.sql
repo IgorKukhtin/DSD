@@ -179,18 +179,18 @@ BEGIN
                          , UnitId_Item, StorageId_Item, UnitId_Partion, Price_Partion
                          , isPartionCount, isPartionSumm
                          , PartionGoodsId)
-        SELECT _tmp.MovementItemId
+        SELECT (_tmp.MovementItemId) AS MovementItemId
 
-             , 0 AS ContainerId_Goods
+             , (_tmp.ContainerId) AS ContainerId_Goods -- !!!
              , _tmp.GoodsId
              , _tmp.GoodsKindId
-             , _tmp.GoodsKindId_complete
+             , CASE WHEN _tmp.GoodsKindId <> zc_GoodsKind_WorkProgress() THEN NULL ELSE _tmp.GoodsKindId_complete END
              , _tmp.AssetId
              , _tmp.PartionGoods
              , _tmp.PartionGoodsDate
 
-             , _tmp.OperCount
-             , _tmp.OperSumm
+             , (_tmp.OperCount)
+             , (_tmp.OperSumm)
 
                -- Управленческие назначения
              , _tmp.InfoMoneyDestinationId
@@ -204,7 +204,7 @@ BEGIN
              , _tmp.StorageId_Item
                -- !!!временно для первого раза!!!
              , CASE WHEN vbMemberId <> 0 THEN vbMemberId ELSE 0 END AS UnitId_Partion
-             , _tmp.Price_Partion
+             , (_tmp.Price_Partion)
 
              , _tmp.isPartionCount
              , _tmp.isPartionSumm 
@@ -222,6 +222,8 @@ BEGIN
                    , COALESCE (MILinkObject_Storage.ObjectId, 0) AS StorageId_Item
                    , COALESCE (MIString_PartionGoods.ValueData, '') AS PartionGoods
                    , COALESCE (MIDate_PartionGoods.ValueData, zc_DateEnd()) AS PartionGoodsDate
+
+                   , COALESCE (MIFloat_ContainerId.ValueData, 0) AS ContainerId
 
                    , MovementItem.Amount AS OperCount
                    , CASE WHEN vbOperDate = '30.06.2015' AND MovementItem.Amount <> 0 THEN CAST (COALESCE (MIFloat_Summ.ValueData, 0) / MovementItem.Amount AS NUMERIC (16, 4)) ELSE COALESCE (MIFloat_Price.ValueData, 0) END AS Price_Partion
@@ -277,6 +279,10 @@ BEGIN
                                                ON MIFloat_Summ.MovementItemId = MovementItem.Id
                                               AND MIFloat_Summ.DescId = zc_MIFloat_Summ()
 
+                   LEFT JOIN MovementItemFloat AS MIFloat_ContainerId
+                                               ON MIFloat_ContainerId.MovementItemId = MovementItem.Id
+                                              AND MIFloat_ContainerId.DescId = zc_MIFloat_ContainerId()
+
                    LEFT JOIN MovementItemString AS MIString_PartionGoods
                                                 ON MIString_PartionGoods.MovementItemId = MovementItem.Id
                                                AND MIString_PartionGoods.DescId = zc_MIString_PartionGoods()
@@ -305,8 +311,8 @@ BEGIN
                 AND Movement.DescId = zc_Movement_Inventory()
                 AND Movement.StatusId IN (zc_Enum_Status_UnComplete(), zc_Enum_Status_Erased())
                 AND (_tmpGoods_Complete_Inventory.GoodsId > 0 OR vbIsGoodsGroup = FALSE)
-             ) AS _tmp;
-
+             ) AS _tmp
+              ;
 
      -- формируются Партии товара, ЕСЛИ надо ...
      UPDATE _tmpItem SET PartionGoodsId = CASE WHEN vbOperDate >= zc_DateStart_PartionGoods()
@@ -338,12 +344,14 @@ BEGIN
                                                                                          )
                                                ELSE lpInsertFind_Object_PartionGoods ('')
                                           END
-     WHERE _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_10100() -- Основное сырье + Мясное сырье
+     WHERE _tmpItem.ContainerId_Goods = 0 -- !!!
+      AND (_tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_10100() -- Основное сырье + Мясное сырье
         OR _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_20200() -- Общефирменные + Прочие ТМЦ
         OR _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_20300() -- Общефирменные + МНМА
         OR _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_30100() -- Доходы + Продукция
         OR _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_30200() -- Доходы + Мясное сырье
         OR _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_70100() -- Капитальные инвестиции
+          )
      ;
 
      -- определили
@@ -368,7 +376,8 @@ BEGIN
                                                                                 , inAssetId                := _tmpItem.AssetId
                                                                                 , inBranchId               := vbBranchId
                                                                                 , inAccountId              := NULL -- эта аналитика нужна для "товар в пути"
-                                                                                 );
+                                                                                 )
+     WHERE _tmpItem.ContainerId_Goods = 0;
                                              
      -- заполняем таблицу - количественный расчетный остаток на конец vbOperDate, и пробуем найти MovementItemId (что бы расчетный остаток связать с фактическим), т.к. один и тот же товар может быть введен несколько раз то привязываемся к MAX (_tmpItem.MovementItemId)
      INSERT INTO _tmpRemainsCount (MovementItemId, ContainerId_Goods, GoodsId, OperCount)
@@ -531,6 +540,16 @@ BEGIN
 
         WHERE _tmpItem.ContainerId_Goods IS NULL;
 
+     -- Проверка
+     IF 1 = 0 AND EXISTS (SELECT 1 FROM _tmpItem GROUP BY ContainerId_Goods HAVING COUNT(*) > 1)
+     THEN
+         RAISE EXCEPTION 'Ошибка.Остаток для партии товара <%> <%> <%> <%> не уникален.<%>', lfGet_Object_ValueData ((SELECT GoodsId FROM _tmpItem WHERE ContainerId_Goods = (SELECT ContainerId_Goods FROM _tmpItem GROUP BY ContainerId_Goods HAVING COUNT(*) > 1 ORDER BY 1 LIMIT 1) LIMIT 1))
+                                                                                           , lfGet_Object_ValueData ((SELECT GoodsKindId FROM _tmpItem WHERE ContainerId_Goods = (SELECT ContainerId_Goods FROM _tmpItem GROUP BY ContainerId_Goods HAVING COUNT(*) > 1 ORDER BY 1 LIMIT 1) LIMIT 1))
+                                                                                           , lfGet_Object_ValueData ((SELECT GoodsKindId_complete FROM _tmpItem WHERE ContainerId_Goods = (SELECT ContainerId_Goods FROM _tmpItem GROUP BY ContainerId_Goods HAVING COUNT(*) > 1 ORDER BY 1 LIMIT 1) LIMIT 1))
+                                                                                           , lfGet_Object_ValueData ((SELECT PartionGoodsId FROM _tmpItem WHERE ContainerId_Goods = (SELECT ContainerId_Goods FROM _tmpItem GROUP BY ContainerId_Goods HAVING COUNT(*) > 1 ORDER BY 1 LIMIT 1) LIMIT 1))
+                                                                                           , (SELECT ContainerId_Goods FROM _tmpItem GROUP BY ContainerId_Goods HAVING COUNT(*) > 1 ORDER BY 1 LIMIT 1)
+                                                                                            ;
+     END IF;
 
      -- формируются Проводки для количественного учета !!!только!!! если есть разница по остатку
      INSERT INTO _tmpMIContainer_insert (Id, DescId, MovementDescId, MovementId, MovementItemId, ContainerId
@@ -1258,6 +1277,10 @@ BEGIN
 
 
 
+     -- !!!формируется свойство <ContainerId>!!!
+     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_ContainerId(), _tmpItem.MovementItemId, _tmpItem.ContainerId_Goods)
+     FROM _tmpItem;
+
      -- !!!формируется свойство <Цена>!!!
      PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_PartionGoods_Price(), _tmpItem.PartionGoodsId, Price_Partion)
      FROM _tmpItem
@@ -1299,8 +1322,19 @@ LANGUAGE PLPGSQL VOLATILE;
  26.08.13                                        * add zc_InfoMoneyDestination_WorkProgress
  23.08.13                                        *
 */
-
+/*
+UPDATE MovementItem SET isErased = TRUE
+from Movement
+WHERE Movement.Id = MovementId
+  AND Movement.OperDate BETWEEN '01.07.2015' AND '31.07.2015'
+  AND Movement.DescId = zc_Movement_Inventory()
+  AND Movement.StatusId = zc_Enum_Status_Complete()
+  AND isErased = FALSE
+  AND MovementItem.Amount = 0
+  AND Movement.Id = 1902144
+*/
 -- тест
 -- SELECT * FROM gpUnComplete_Movement (inMovementId:= 29207, inSession:= '2')
--- SELECT * FROM gpComplete_Movement_Inventory (inMovementId:= 29207, inIsLastComplete:= FALSE, inSession:= '2')
+-- SELECT * FROM gpComplete_Movement_Inventory (inMovementId:= 1902144, inIsLastComplete:= FALSE, inSession:= zc_Enum_Process_Auto_PrimeCost() :: TVarChar)
 -- SELECT * FROM gpSelect_MovementItemContainer_Movement (inMovementId:= 29207, inSession:= '2')
+

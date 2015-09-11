@@ -94,15 +94,15 @@ BEGIN
                                             , COALESCE (MILinkObject_GoodsKind.ObjectId, 0)       AS GoodsKindId
                                             , 0                                                   AS AmountOrder
                                             , SUM (COALESCE (MIFloat_AmountPartner.ValueData, 0)) AS AmountSale
-                                       FROM MovementDate AS MovementDate_OperDatePartner
+                                       -- FROM MovementDate AS MovementDate_OperDatePartner
+                                       FROM Movement
                                             INNER JOIN MovementLinkObject AS MovementLinkObject_From
-                                                                          ON MovementLinkObject_From.MovementId = MovementDate_OperDatePartner.MovementId
+                                                                          ON MovementLinkObject_From.MovementId = Movement.Id -- MovementDate_OperDatePartner.MovementId
                                                                          AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
                                             INNER JOIN tmpUnit ON tmpUnit.UnitId = MovementLinkObject_From.ObjectId
-                                            INNER JOIN Movement ON Movement.Id = MovementDate_OperDatePartner.MovementId
+                                            /*INNER JOIN Movement ON Movement.Id = MovementDate_OperDatePartner.MovementId
                                                                AND Movement.DescId = zc_Movement_Sale()
-                                                               AND Movement.StatusId = zc_Enum_Status_Complete()
-
+                                                               AND Movement.StatusId = zc_Enum_Status_Complete()*/
                                             INNER JOIN MovementItem ON MovementItem.MovementId = Movement.Id
                                                                    AND MovementItem.DescId     = zc_MI_Master()
                                                                    AND MovementItem.isErased   = FALSE
@@ -115,8 +115,11 @@ BEGIN
                                             LEFT JOIN MovementItemFloat AS MIFloat_AmountPartner
                                                                         ON MIFloat_AmountPartner.MovementItemId = MovementItem.Id
                                                                        AND MIFloat_AmountPartner.DescId = zc_MIFloat_AmountPartner()
-                                       WHERE MovementDate_OperDatePartner.ValueData BETWEEN inStartDate AND inEndDate
-                                         AND MovementDate_OperDatePartner.DescId = zc_MovementDate_OperDatePartner()
+                                       WHERE Movement.OperDate BETWEEN inStartDate AND inEndDate
+                                         AND Movement.DescId = zc_Movement_OrderExternal()
+                                         AND Movement.StatusId = zc_Enum_Status_Complete()
+                                       -- WHERE MovementDate_OperDatePartner.ValueData BETWEEN inStartDate AND inEndDate
+                                       --   AND MovementDate_OperDatePartner.DescId = zc_MovementDate_OperDatePartner()
                                          AND vbIsBasis = FALSE
                                        GROUP BY MovementItem.ObjectId
                                               , MILinkObject_GoodsKind.ObjectId
@@ -258,4 +261,3 @@ $BODY$
 
 -- тест
 -- SELECT * FROM gpUpdateMI_OrderInternal_AmountForecast (ioId:= 0, inMovementId:= 10, inGoodsId:= 1, inAmount:= 0, inHeadCount:= 0, inPartionGoods:= '', inGoodsKindId:= 0, inSession:= '2')
- 

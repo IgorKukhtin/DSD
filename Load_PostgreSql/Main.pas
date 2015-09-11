@@ -20844,6 +20844,7 @@ end;
 //----------------------------------------------------------------------------------------------------------------------------------------------------
 procedure TMainForm.pCompleteDocument_Pack;
 var calcStartDate:TDateTime;
+    MSec_complete:Integer;
 begin
      if (not cbPack.Checked)or(not cbPack.Enabled) then exit;
      //
@@ -20888,7 +20889,12 @@ begin
              toStoredProc_two.Params.ParamByName('inUnitId').Value:=8451;//÷ех ”паковки
              if not myExecToStoredProc_two then ;//exit;
              //
-             MyDelay(15 * 1000);
+             if cb100MSec.Checked
+             then begin
+                  try MSec_complete:=StrToInt(SessionIdEdit.Text);if MSec_complete<=0 then MSec_complete:=100;except MSec_complete:=100;end;
+                  if cb100MSec.Checked then begin SessionIdEdit.Text:=IntToStr(MSec_complete); MyDelay(MSec_complete);end;
+             end
+             else MyDelay(15 * 1000);
              //
              Next;
              Application.ProcessMessages;
