@@ -291,7 +291,27 @@ BEGIN
                          WHERE Object_Account_View.AccountGroupId IN (zc_Enum_AccountGroup_60000()  -- Прибыль будущих периодов
                                                                     , zc_Enum_AccountGroup_110000() -- Транзит
                                                                      )
-                        ) 
+                        )
+           , tmpSendOnPrice AS (SELECT TRUE AS isSale, gpReport.*
+                                         FROM gpReport_GoodsMI_Internal (inStartDate    := inStartDate
+                                                                       , inEndDate      := inEndDate
+                                                                       , inDescId       := zc_Movement_SendOnPrice()
+                                                                       , inFromId       := -123
+                                                                       , inToId         := 0
+                                                                       , inGoodsGroupId := inGoodsGroupId
+                                                                       , inIsMO_all     := FALSE
+                                                                       , inSession      := inSession
+                                                                        ) AS gpReport
+                      UNION ALL SELECT FALSE AS isSale, gpReport.*
+                                         FROM gpReport_GoodsMI_Internal (inStartDate    := inStartDate
+                                                                       , inEndDate      := inEndDate
+                                                                       , inDescId       := zc_Movement_SendOnPrice()
+                                                                       , inFromId       := 0
+                                                                       , inToId         := -123
+                                                                       , inGoodsGroupId := inGoodsGroupId
+                                                                       , inIsMO_all     := FALSE
+                                                                       , inSession      := inSession
+                                                                        ) AS gpReport)
 , tmpOperationGroup2 AS (SELECT MIContainer.ContainerId_Analyzer
                               , MIContainer.ObjectId_Analyzer                 AS GoodsId
                               , MIContainer.ObjectIntId_Analyzer              AS GoodsKindId -- COALESCE (MILinkObject_GoodsKind.ObjectId, 0) AS GoodsKindId
@@ -440,6 +460,54 @@ BEGIN
                                 , CASE WHEN inIsGoods = TRUE THEN tmpOperationGroup2.GoodsId ELSE 0 END    
                                 , CASE WHEN inIsGoodsKind = TRUE THEN tmpOperationGroup2.GoodsKindId ELSE 0 END
                         )
+ , tmpSendOnPrice_group AS (SELECT GoodsGroupName, GoodsGroupNameFull
+                                 , GoodsId, GoodsCode, GoodsName
+                                 , GoodsKindName, MeasureName
+                                 , TradeMarkName
+                                 , PartionGoods
+                                 , LocationId, LocationCode, LocationName
+                                 , LocationId_by, LocationCode_by, LocationName_by
+
+                                 , SUM (CASE WHEN isSale = TRUE THEN SummIn_branch             ELSE 0 END) AS Sale_Summ
+                                 , SUM (CASE WHEN isSale = TRUE THEN SummIn_branch - Summ_calc ELSE 0 END) AS Sale_Summ_10200
+                                 , 0                                                                 AS Sale_Summ_10300
+
+                                 , SUM (CASE WHEN isSale = TRUE THEN SummOut_zavod                ELSE 0 END) AS Sale_SummCost
+                                 , SUM (CASE WHEN isSale = TRUE THEN SummOut_zavod - SummIn_zavod ELSE 0 END) AS Sale_SummCost_10500
+                                 , 0                                                                    AS Sale_SummCost_40200
+
+                                 , SUM (CASE WHEN isSale = TRUE THEN AmountOut_Weight ELSE 0 END) AS Sale_Amount_Weight
+                                 , SUM (CASE WHEN isSale = TRUE THEN AmountOut_Sh     ELSE 0 END) AS Sale_Amount_Sh
+
+                                 , SUM (CASE WHEN isSale = TRUE THEN AmountIn_Weight  ELSE 0 END) AS Sale_AmountPartner_Weight
+                                 , SUM (CASE WHEN isSale = TRUE THEN AmountIn_Sh      ELSE 0 END) AS Sale_AmountPartner_Sh
+
+
+                                 , SUM (CASE WHEN isSale = FALSE THEN SummOut_branch ELSE 0 END) AS Return_Summ
+                                 , 0                                                       AS Return_Summ_10300
+
+                                 , SUM (CASE WHEN isSale = FALSE THEN SummOut_zavod ELSE 0 END) AS Return_SummCost
+                                 , 0                                                      AS Return_SummCost_40200
+
+                                 , SUM (CASE WHEN isSale = FALSE THEN AmountIn_Weight ELSE 0 END) AS Return_Amount_Weight
+                                 , SUM (CASE WHEN isSale = FALSE THEN AmountIn_Sh     ELSE 0 END) AS Return_Amount_Sh
+
+                                 , SUM (CASE WHEN isSale = FALSE THEN AmountOut_Weight ELSE 0 END) AS Return_AmountPartner_Weight
+                                 , SUM (CASE WHEN isSale = FALSE THEN AmountOut_Sh     ELSE 0 END) AS Return_AmountPartner_Sh
+
+                                 , SUM (CASE WHEN isSale = TRUE  THEN AmountOut_Weight - AmountIn_Weight ELSE 0 END) AS Sale_Amount_10500_Weight
+                                 , 0                                                                                 AS Sale_Amount_40200_Weight
+                                 , SUM (CASE WHEN isSale = FALSE THEN AmountIn_Weight - AmountOut_Weight ELSE 0 END) AS Return_Amount_40200_Weight
+
+                            FROM tmpSendOnPrice
+                            GROUP BY GoodsGroupName, GoodsGroupNameFull
+                                   , GoodsId, GoodsCode, GoodsName
+                                   , GoodsKindName, MeasureName
+                                   , TradeMarkName
+                                   , PartionGoods
+                                   , LocationId, LocationCode, LocationName
+                                   , LocationId_by, LocationCode_by, LocationName_by
+                           )
 
      SELECT Object_GoodsGroup.ValueData        AS GoodsGroupName
           , ObjectString_Goods_GroupNameFull.ValueData AS GoodsGroupNameFull
@@ -616,6 +684,132 @@ BEGIN
           LEFT JOIN Object_Personal_View AS View_PersonalTrade ON View_PersonalTrade.PersonalId = ObjectLink_Partner_PersonalTrade.ChildObjectId
 
           LEFT JOIN Object_Account_View ON Object_Account_View.AccountId = tmpOperationGroup.ChildAccountId
+      UNION ALL
+
+     SELECT tmpSendOnPrice_group.GoodsGroupName
+          , tmpSendOnPrice_group.GoodsGroupNameFull
+          , tmpSendOnPrice_group.GoodsCode
+          , tmpSendOnPrice_group.GoodsName
+          , tmpSendOnPrice_group.GoodsKindName
+          , tmpSendOnPrice_group.MeasureName
+          , tmpSendOnPrice_group.TradeMarkName
+          , Object_GoodsGroupAnalyst.ValueData AS GoodsGroupAnalystName
+          , Object_GoodsTag.ValueData          AS GoodsTagName
+          , Object_GoodsGroupStat.ValueData    AS GoodsGroupStatName
+          , Object_GoodsPlatform.ValueData     AS GoodsPlatformName
+
+          , '' :: TVarChar AS JuridicalGroupName
+          , Object_Branch.ObjectCode    AS BranchCode
+          , Object_Branch.ValueData     AS BranchName
+          , Object_Unit_Parent.ObjectCode    AS JuridicalCode
+          , Object_Unit_Parent.ValueData     AS JuridicalName
+          , '' :: TVarChar AS OKPO
+
+          , '' :: TVarChar AS RetailName
+          , '' :: TVarChar AS RetailReportName
+
+          , Object_Area.ValueData :: TVarChar AS AreaName
+          , '' :: TVarChar AS PartnerTagName
+          , '' :: TVarChar AS Address
+          , '' :: TVarChar AS RegionName
+          , '' :: TVarChar AS ProvinceName
+          , '' :: TVarChar AS CityKindName
+          , '' :: TVarChar AS CityName
+          , '' :: TVarChar AS ProvinceCityName
+          , '' :: TVarChar AS StreetKindName
+          , '' :: TVarChar AS StreetName
+
+          , tmpSendOnPrice_group.LocationId_by   AS PartnerId
+          , tmpSendOnPrice_group.LocationCode_by AS PartnerCode
+          , tmpSendOnPrice_group.LocationName_by AS PartnerName
+
+          , 0 :: Integer   ContractCode
+          , '' :: TVarChar AS ContractNumber
+          , '' :: TVarChar ContractTagName
+          , '' :: TVarChar ContractTagGroupName
+
+          , '' :: TVarChar AS PersonalName
+          , '' :: TVarChar AS UnitName_Personal
+          , '' :: TVarChar AS BranchName_Personal
+
+          , '' :: TVarChar AS PersonalTradeName
+          , '' :: TVarChar AS UnitName_PersonalTrade
+
+          , View_InfoMoney.InfoMoneyGroupName              AS InfoMoneyGroupName
+          , View_InfoMoney.InfoMoneyDestinationName        AS InfoMoneyDestinationName
+          , View_InfoMoney.InfoMoneyCode                   AS InfoMoneyCode
+          , View_InfoMoney.InfoMoneyName                   AS InfoMoneyName
+          , View_InfoMoney.InfoMoneyName_all               AS InfoMoneyName_all
+
+          , '' :: TVarChar AS AccountName
+
+         , tmpOperationGroup.Sale_Summ          :: TFloat  AS Sale_Summ
+         , tmpOperationGroup.Sale_Summ_10200    :: TFloat  AS Sale_Summ_10200
+         , tmpOperationGroup.Sale_Summ_10300    :: TFloat  AS Sale_Summ_10300
+         , tmpOperationGroup.Sale_SummCost      :: TFloat  AS Sale_SummCost
+         , tmpOperationGroup.Sale_SummCost_10500:: TFloat  AS Sale_SummCost_10500
+         , tmpOperationGroup.Sale_SummCost_40200:: TFloat  AS Sale_SummCost_40200
+
+         , (tmpOperationGroup.Sale_AmountPartner_Weight + tmpOperationGroup.Sale_Amount_10500_Weight + tmpOperationGroup.Sale_Amount_40200_Weight) :: TFloat  AS Sale_Amount_Weight
+         , (tmpOperationGroup.Sale_AmountPartner_Sh     + tmpOperationGroup.Sale_Amount_10500_Sh     + tmpOperationGroup.Sale_Amount_40200_Sh    ) :: TFloat  AS Sale_Amount_Sh
+
+         , tmpOperationGroup.Sale_AmountPartner_Weight :: TFloat AS Sale_AmountPartner_Weight
+         , tmpOperationGroup.Sale_AmountPartner_Sh     :: TFloat AS Sale_AmountPartner_Sh
+
+         , tmpOperationGroup.Return_Summ          :: TFloat AS Return_Summ
+         , tmpOperationGroup.Return_Summ_10300    :: TFloat AS Return_Summ_10300
+         , tmpOperationGroup.Return_SummCost      :: TFloat AS Return_SummCost
+         , tmpOperationGroup.Return_SummCost_40200:: TFloat AS Return_SummCost_40200
+
+         , (tmpOperationGroup.Return_AmountPartner_Weight + tmpOperationGroup.Return_Amount_40200_Weight) :: TFloat AS Return_Amount_Weight
+         , (tmpOperationGroup.Return_AmountPartner_Sh     + tmpOperationGroup.Return_Amount_40200_Sh)     :: TFloat AS Return_Amount_Sh
+
+         , tmpOperationGroup.Return_AmountPartner_Weight :: TFloat AS Return_AmountPartner_Weight
+         , tmpOperationGroup.Return_AmountPartner_Sh     :: TFloat AS Return_AmountPartner_Sh
+
+         , tmpOperationGroup.Sale_Amount_10500_Weight    :: TFloat AS Sale_Amount_10500_Weight
+         , tmpOperationGroup.Sale_Amount_40200_Weight    :: TFloat AS Sale_Amount_40200_Weight
+         , tmpOperationGroup.Return_Amount_40200_Weight  :: TFloat AS Return_Amount_40200_Weight
+
+         , CAST (CASE WHEN tmpOperationGroup.Sale_AmountPartner_Weight > 0 THEN 100 * tmpOperationGroup.Return_AmountPartner_Weight / tmpOperationGroup.Sale_AmountPartner_Weight ELSE 0 END AS NUMERIC (16, 1)) :: TFloat AS ReturnPercent
+
+     FROM tmpSendOnPrice_group
+          LEFT JOIN ObjectLink AS ObjectLink_Goods_GoodsGroupAnalyst
+                               ON ObjectLink_Goods_GoodsGroupAnalyst.ObjectId = tmpSendOnPrice_group.GoodsId
+                              AND ObjectLink_Goods_GoodsGroupAnalyst.DescId = zc_ObjectLink_Goods_GoodsGroupAnalyst()
+          LEFT JOIN Object AS Object_GoodsGroupAnalyst ON Object_GoodsGroupAnalyst.Id = ObjectLink_Goods_GoodsGroupAnalyst.ChildObjectId
+
+          LEFT JOIN ObjectLink AS ObjectLink_Goods_GoodsTag
+                               ON ObjectLink_Goods_GoodsTag.ObjectId = tmpSendOnPrice_group.GoodsId
+                              AND ObjectLink_Goods_GoodsTag.DescId = zc_ObjectLink_Goods_GoodsTag()
+          LEFT JOIN Object AS Object_GoodsTag ON Object_GoodsTag.Id = ObjectLink_Goods_GoodsTag.ChildObjectId
+
+          LEFT JOIN ObjectLink AS ObjectLink_Goods_GoodsGroupStat
+                               ON ObjectLink_Goods_GoodsGroupStat.ObjectId = tmpSendOnPrice_group.GoodsId
+                              AND ObjectLink_Goods_GoodsGroupStat.DescId = zc_ObjectLink_Goods_GoodsGroupStat()
+          LEFT JOIN Object AS Object_GoodsGroupStat ON Object_GoodsGroupStat.Id = ObjectLink_Goods_GoodsGroupStat.ChildObjectId
+
+          LEFT JOIN ObjectLink AS ObjectLink_Goods_GoodsPlatform
+                               ON ObjectLink_Goods_GoodsPlatform.ObjectId = tmpSendOnPrice_group.GoodsId
+                              AND ObjectLink_Goods_GoodsPlatform.DescId = zc_ObjectLink_Goods_GoodsPlatform()
+          LEFT JOIN Object AS Object_GoodsPlatform ON Object_GoodsPlatform.Id = ObjectLink_Goods_GoodsPlatform.ChildObjectId
+
+          LEFT JOIN ObjectLink AS ObjectLink_Goods_InfoMoney
+                               ON ObjectLink_Goods_InfoMoney.ObjectId = tmpSendOnPrice_group.GoodsId
+                              AND ObjectLink_Goods_InfoMoney.DescId = zc_ObjectLink_Goods_InfoMoney()
+          LEFT JOIN Object_InfoMoney_View AS View_InfoMoney ON View_InfoMoney.InfoMoneyId = ObjectLink_Goods_InfoMoney.ChildObjectId
+
+          LEFT JOIN Object AS Object_Branch ON Object_Branch.Id = zc_Branch_Basis()
+
+          LEFT JOIN ObjectLink AS ObjectLink_Unit_Parent
+                               ON ObjectLink_Unit_Parent.ObjectId = tmpSendOnPrice_group.LocationId_by
+                              AND ObjectLink_Unit_Parent.DescId = zc_ObjectLink_Unit_Parent()
+          LEFT JOIN Object AS Object_Unit_Parent ON Object_Unit_Parent.Id = ObjectLink_Unit_Parent.ChildObjectId
+
+          LEFT JOIN ObjectLink AS ObjectLink_Unit_Area
+                               ON ObjectLink_Unit_Area.ObjectId = tmpSendOnPrice_group.LocationId_by
+                              AND ObjectLink_Unit_Area.DescId = zc_ObjectLink_Unit_Area()
+          LEFT JOIN Object AS Object_Area ON Object_Area.Id = ObjectLink_Unit_Area.ChildObjectId
     ;
 
 END;

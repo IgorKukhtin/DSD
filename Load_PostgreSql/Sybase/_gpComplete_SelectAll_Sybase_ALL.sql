@@ -40,12 +40,18 @@ BEGIN
                     UNION SELECT 346093  AS UnitId, NULL AS isMain  -- Склад ГП ф.Одесса
                     UNION SELECT 346094  AS UnitId, NULL AS isMain  -- Склад возвратов ф.Одесса
                    )
+     SELECT tmp.MovementId
+          , tmp.OperDate
+          , tmp.InvNumber
+          , tmp.Code
+          , tmp.ItemName
+     FROM (
      -- 1.1. From: Sale + !!!NOT SendOnPrice!!!
      SELECT Movement.Id AS MovementId
           , Movement.OperDate
           , Movement.InvNumber
           , MovementDesc.Code
-          , (MovementDesc.ItemName || ' ' || COALESCE (Object_From.ValueData, '') || ' ' || COALESCE (Object_To.ValueData, '')) ::TVarChar
+          , (MovementDesc.ItemName || ' ' || COALESCE (Object_From.ValueData, '') || ' ' || COALESCE (Object_To.ValueData, '')) ::TVarChar AS ItemName
      FROM Movement
           LEFT JOIN MovementLinkObject AS MLO_From ON MLO_From.MovementId = Movement.Id
                                                   AND MLO_From.DescId = zc_MovementLinkObject_From()
@@ -314,6 +320,8 @@ BEGIN
        AND Movement.DescId IN (zc_Movement_ProductionUnion())
        AND Movement.StatusId = zc_Enum_Status_Complete()
        AND inIsBefoHistoryCost = TRUE
+    ) AS tmp
+    -- WHERE tmp.MovementId >= 2212722 OR tmp.Code = 'zc_Movement_Inventory'
     ;
 
 END;$BODY$

@@ -20760,7 +20760,7 @@ begin
            +'       end as Order_master'
            +'    , _pgMovementReComlete.*');
         Add('from dba._pgMovementReComlete');
-        Add('order by Order_master,OperDate,InvNumber,MovementId');
+        Add('order by Order_master,OperDate,MovementId,InvNumber');
         Open;
 
         cbComplete_List.Caption:='('+IntToStr(SaveRecord)+')('+IntToStr(RecordCount)+') !!!Cписок накладных!!!';

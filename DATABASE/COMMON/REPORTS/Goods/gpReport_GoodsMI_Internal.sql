@@ -13,12 +13,12 @@ CREATE OR REPLACE FUNCTION gpReport_GoodsMI_Internal (
     IN inSession      TVarChar    -- сессия пользователя
 )
 RETURNS TABLE (GoodsGroupName TVarChar, GoodsGroupNameFull TVarChar
-             , GoodsCode Integer, GoodsName TVarChar
+             , GoodsId Integer, GoodsCode Integer, GoodsName TVarChar
              , GoodsKindName TVarChar, MeasureName TVarChar
              , TradeMarkName TVarChar
              , PartionGoods TVarChar
-             , LocationCode Integer, LocationName TVarChar
-             , LocationCode_by Integer, LocationName_by TVarChar
+             , LocationId Integer, LocationCode Integer, LocationName TVarChar
+             , LocationId_by Integer, LocationCode_by Integer, LocationName_by TVarChar
              , ArticleLossCode Integer, ArticleLossName TVarChar
              , AmountOut TFloat, AmountOut_Weight TFloat, AmountOut_Sh TFloat, SummOut_zavod TFloat, SummOut_branch TFloat, SummOut_60000 TFloat 
              , AmountIn TFloat, AmountIn_Weight TFloat, AmountIn_Sh TFloat,  SummIn_zavod TFloat, SummIn_branch TFloat, SummIn_60000 TFloat
@@ -75,21 +75,33 @@ BEGIN
 
 
     -- группа подразделений или подразделение или место учета (МО, Авто)
-    WITH tmpFrom AS (SELECT lfSelect.UnitId FROM lfSelect_Object_Unit_byGroup (inFromId) AS lfSelect WHERE inFromId <> 0
+    WITH tmpFrom AS (SELECT lfSelect.UnitId FROM lfSelect_Object_Unit_byGroup (inFromId) AS lfSelect WHERE inFromId > 0
                     UNION
                      SELECT Id AS UnitId FROM Object WHERE DescId = zc_Object_Unit() AND inFromId = 0 -- AND vbIsGroup = TRUE
                     UNION
                      SELECT Id AS UnitId FROM Object WHERE DescId = zc_Object_Member() AND (inIsMO_all = TRUE OR Id = inFromId) AND inDescId IN (zc_Movement_Loss(), zc_Movement_Send())
                     UNION
                      SELECT Id AS UnitId FROM Object  WHERE DescId = zc_Object_Car() AND (inIsMO_all = TRUE OR Id = inFromId) AND inDescId IN (zc_Movement_Loss(), zc_Movement_Send())
+                    UNION
+                     SELECT tmp.UnitId FROM (SELECT 8459 AS UnitId -- Склад Реализации
+                                            UNION 
+                                             SELECT UnitId FROM lfSelect_Object_Unit_byGroup (8460) AS lfSelect_Object_Unit_byGroup -- Возвраты общие
+                                            ) AS tmp
+                     WHERE inFromId = -123
                     )
-         , tmpTo AS (SELECT lfSelect.UnitId FROM lfSelect_Object_Unit_byGroup (inToId) AS lfSelect WHERE inToId <> 0
+         , tmpTo AS (SELECT lfSelect.UnitId FROM lfSelect_Object_Unit_byGroup (inToId) AS lfSelect WHERE inToId > 0
                     UNION
                      SELECT Id AS UnitId FROM Object WHERE DescId = zc_Object_Unit() AND inToId = 0 AND inDescId <> zc_Movement_Loss() -- AND (vbIsGroup = TRUE OR inDescId = zc_Movement_Loss())
                     UNION
                      SELECT Id AS UnitId FROM Object WHERE DescId = zc_Object_Member() AND (inIsMO_all = TRUE OR Id = inToId) AND inDescId IN (zc_Movement_Loss(), zc_Movement_Send())
                     UNION
                      SELECT Id AS UnitId FROM Object  WHERE DescId = zc_Object_Car() AND (inIsMO_all = TRUE OR Id = inToId) AND inDescId IN (zc_Movement_Loss(), zc_Movement_Send())
+                    UNION
+                     SELECT tmp.UnitId FROM (SELECT 8459 AS UnitId -- Склад Реализации
+                                            UNION 
+                                             SELECT UnitId FROM lfSelect_Object_Unit_byGroup (8460) AS lfSelect_Object_Unit_byGroup -- Возвраты общие
+                                            ) AS tmp
+                     WHERE inToId = -123
                    )
     INSERT INTO _tmpUnit (UnitId, UnitId_by, isActive)
        SELECT tmpFrom.UnitId, COALESCE (tmpTo.UnitId, 0), FALSE FROM tmpFrom LEFT JOIN tmpTo ON tmpTo.UnitId > 0
@@ -103,6 +115,7 @@ BEGIN
     
     SELECT Object_GoodsGroup.ValueData                AS GoodsGroupName 
          , ObjectString_Goods_GroupNameFull.ValueData AS GoodsGroupNameFull
+         , Object_Goods.Id                            AS GoodsId
          , Object_Goods.ObjectCode                    AS GoodsCode
          , Object_Goods.ValueData                     AS GoodsName
          , Object_GoodsKind.ValueData                 AS GoodsKindName
@@ -110,8 +123,10 @@ BEGIN
          , Object_TradeMark.ValueData                 AS TradeMarkName
          , Object_PartionGoods.ValueData              AS PartionGoods
 
+         , Object_Location.Id         AS LocationId
          , Object_Location.ObjectCode AS LocationCode
          , Object_Location.ValueData  AS LocationName
+         , Object_Location_by.Id         AS LocationId_by
          , Object_Location_by.ObjectCode AS LocationCode_by
          , Object_Location_by.ValueData  AS LocationName_by
          , Object_ArticleLoss.ObjectCode AS ArticleLossCode
