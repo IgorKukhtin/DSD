@@ -80,7 +80,7 @@ BEGIN
               (GoodsRemains.Remains 
                 - COALESCE(CurrentMovement.Amount,0) 
                 - COALESCE(Reserve.Amount,0))::TFloat,
-              object_Price_view.price,
+              round(object_Price_view.price, 2)::TFloat,
               Reserve.Amount::TFloat,
               object_Price_view.mcsvalue,
               Link_Goods_AlternativeGroup.ChildObjectId as AlternativeGroupId
@@ -103,11 +103,11 @@ ALTER FUNCTION gpSelect_CashRemains (Integer, TVarChar) OWNER TO postgres;
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А.А.
- 22.08.15                                                                       *разделение вип и отложеных
- 19.08.15                                                                       *CurrentMovement
- 05.05.15                        *
-
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Воробкало А.А.
+ 10.09.15                        * округление цены
+ 22.08.15                                                         * разделение вип и отложеных
+ 19.08.15                                                         * CurrentMovement
+ 05.05.15                        *                            
 */
 
 -- тест
