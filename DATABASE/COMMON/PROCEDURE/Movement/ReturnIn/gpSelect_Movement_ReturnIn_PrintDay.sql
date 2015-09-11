@@ -38,23 +38,10 @@ BEGIN
      -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Select_Movement_ReturnIn());
      vbUserId:= inSession;
 
-
-     -- параметры из Взвешивания
-     vbStoreKeeperName:= (SELECT Object_User.ValueData
-                          FROM Movement
-                               LEFT JOIN MovementLinkObject AS MovementLinkObject_User
-                                                            ON MovementLinkObject_User.MovementId = Movement.Id
-                                                           AND MovementLinkObject_User.DescId = zc_MovementLinkObject_User()
-                               LEFT JOIN Object AS Object_User ON Object_User.Id = MovementLinkObject_User.ObjectId
-                          WHERE Movement.ParentId = inMovementId AND Movement.DescId IN (zc_Movement_WeighingPartner(), zc_Movement_WeighingProduction())
-                            AND Movement.StatusId = zc_Enum_Status_Complete()
-                          LIMIT 1
-                         );
-
-     -- параметры из документа продажи
+   -- параметры из документа продажи
    SELECT Movement.DescId
           , Movement.StatusId
-, Movement.OperDate
+          , Movement.OperDate
           , MovementLinkObject_From.ObjectId                    AS FromId
           , MovementLinkObject_To.ObjectId                      AS ToId 
           , COALESCE (MovementBoolean_PriceWithVAT.ValueData, TRUE) AS PriceWithVAT
@@ -208,6 +195,7 @@ BEGIN
                                , Movement.OperDate
                                , Object_Status.ObjectCode    AS StatusCode
                                , Object_Status.ValueData     AS StatusName 
+                               , tmp.StoreKeeperName
                           FROM Movement
                             LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
                             INNER JOIN MovementLinkObject AS MovementLinkObject_From
@@ -218,6 +206,17 @@ BEGIN
                                        ON MovementLinkObject_Contract.MovementId = Movement.Id
                                       AND MovementLinkObject_Contract.DescId IN (zc_MovementLinkObject_Contract(), zc_MovementLinkObject_ContractFrom())      
                                       AND MovementLinkObject_Contract.ObjectId = vbContractId
+                            LEFT JOIN (SELECT Movement.ParentId AS MovementParentId
+                                            , Object_User.ValueData AS StoreKeeperName
+                                       FROM Movement
+                                           LEFT JOIN MovementLinkObject AS MovementLinkObject_User
+                                                            ON MovementLinkObject_User.MovementId = Movement.Id
+                                                           AND MovementLinkObject_User.DescId = zc_MovementLinkObject_User()
+                                           LEFT JOIN Object AS Object_User ON Object_User.Id = MovementLinkObject_User.ObjectId
+                                       WHERE Movement.DescId IN (zc_Movement_WeighingPartner(), zc_Movement_WeighingProduction())
+                                         AND Movement.StatusId = zc_Enum_Status_Complete()
+                                      ) AS tmp ON tmp.MovementParentId = Movement.Id
+                         
                           WHERE Movement.OperDate = vbOperDate
                             AND Movement.DescId = zc_Movement_ReturnIn()
                             AND Movement.StatusId = zc_Enum_Status_Complete()
@@ -359,15 +358,7 @@ BEGIN
                                                                   AND MS_InvNumberPartner.DescId = zc_MovementString_InvNumberPartner()
                LIMIT 1) AS InvNumberPartner_TaxCorrective
 
-           /*, Movement_Sale.InvNumber                        AS InvNumber_Sale
-           , MovementString_InvNumberPartner_Sale.ValueData AS InvNumberPartner_Sale
-           , CASE WHEN zfConvert_StringToNumber (MovementString_InvNumberOrder_Sale.ValueData) <> 0
-                       THEN zfConvert_StringToNumber (MovementString_InvNumberOrder_Sale.ValueData) :: TVarChar
-                  ELSE MovementString_InvNumberOrder_Sale.ValueData
-             END AS InvNumberOrder_Sale
-           , MovementDate_OperDatePartner_Sale.ValueData    AS OperDatePartner_Sale
-*/
-           , vbStoreKeeperName AS StoreKeeper
+           , tmpMovement.StoreKeeperName AS StoreKeeper
            , Object_BankAccount.Name                            AS BankAccount_ByContract
            , Object_BankAccount.MFO                             AS BankMFO_ByContract
            , Object_BankAccount.BankName                        AS BankName_ByContract
@@ -387,13 +378,6 @@ BEGIN
            , CASE WHEN tmpMovement.DescId = zc_Movement_PriceCorrective() THEN -1 ELSE 1 END * tmpMI.Price / tmpMI.CountForPrice AS Price
            , tmpMI.CountForPrice             AS CountForPrice
            , CASE WHEN tmpMovement.DescId = zc_Movement_PriceCorrective() THEN -1 ELSE 0 END * tmpMI.AmountPartner              AS AmountPartner_ashan
-
-           , COALESCE (tmpObject_GoodsPropertyValue.Name, '')       AS GoodsName_Juridical
-           , COALESCE (tmpObject_GoodsPropertyValue.Amount, 0)      AS AmountInPack_Juridical
-           , COALESCE (tmpObject_GoodsPropertyValueGroup.Article, COALESCE (tmpObject_GoodsPropertyValue.Article, '')) AS Article_Juridical
-           , COALESCE (tmpObject_GoodsPropertyValueGroup.BarCode, COALESCE (tmpObject_GoodsPropertyValue.BarCode, '')) AS BarCode_Juridical
-           , COALESCE (tmpObject_GoodsPropertyValue.ArticleGLN, '') AS ArticleGLN_Juridical
-           , COALESCE (tmpObject_GoodsPropertyValue.BarCodeGLN, '') AS BarCodeGLN_Juridical
 
              -- сумма по ценам док-та
            , CASE WHEN tmpMovement.DescId = zc_Movement_PriceCorrective() THEN -1 ELSE 1 END
@@ -574,14 +558,3 @@ ALTER FUNCTION gpSelect_Movement_ReturnIn_PrintDay (Integer,TVarChar) OWNER TO p
 
 -- тест
 --SELECT * FROM gpSelect_Movement_ReturnIn_PrintDay (inMovementId := 2098581, inSession:= '2')
-
-
---select * from gpSelect_Movement_ReturnIn_PrintDay(inMovementId := 2098581 ,  inSession := '5');
-
-/*
-№ продажи 23074
-
-SELECT * FROM
-Movement
-where id= 2098581
-*/
