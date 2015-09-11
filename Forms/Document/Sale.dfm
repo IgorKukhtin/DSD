@@ -1575,6 +1575,17 @@
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
     end
+    object actSPPrintSaleProcName: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spGetReportName
+      StoredProcList = <
+        item
+          StoredProc = spGetReportName
+        end>
+      Caption = 'actSPPrintSaleProcName'
+    end
     object actPrintSaleOrder: TdsdPrintAction
       Category = 'DSDLib'
       MoveParams = <>
@@ -1608,16 +1619,38 @@
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
     end
-    object actSPPrintSaleProcName: TdsdExecStoredProc
+    object actPrintReturnInDay: TdsdPrintAction
       Category = 'DSDLib'
       MoveParams = <>
-      PostDataSetBeforeExecute = False
-      StoredProc = spGetReportName
+      StoredProc = spSelectPrintReturnInDay
       StoredProcList = <
         item
-          StoredProc = spGetReportName
+          StoredProc = spSelectPrintReturnInDay
         end>
-      Caption = 'actSPPrintSaleProcName'
+      Caption = #1042#1086#1079#1074#1088#1072#1090' '#1079#1072' '#1076#1072#1090#1091
+      Hint = #1042#1086#1079#1074#1088#1072#1090' '#1079#1072' '#1076#1072#1090#1091
+      ImageIndex = 19
+      DataSets = <
+        item
+          DataSet = PrintHeaderCDS
+          UserName = 'frxDBDHeader'
+        end
+        item
+          DataSet = PrintItemsCDS
+          UserName = 'frxDBDMaster'
+          IndexFieldNames = 'Id;GoodsName'
+        end>
+      Params = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'Id'
+        end>
+      ReportName = 'PrintMovement_ReturnInDay'
+      ReportNameParam.Value = 'PrintMovement_ReturnInDay'
+      ReportNameParam.DataType = ftString
+      ReportNameParam.ParamType = ptInput
     end
   end
   inherited MasterDS: TDataSource
@@ -1838,6 +1871,14 @@
         end
         item
           Visible = True
+          ItemName = 'bbPrintReturnInDay'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbMovementItemProtocol'
         end
         item
@@ -1937,6 +1978,10 @@
     end
     object bbUpdatePrice: TdxBarButton
       Action = actUpdatePrice
+      Category = 0
+    end
+    object bbPrintReturnInDay: TdxBarButton
+      Action = actPrintReturnInDay
       Category = 0
     end
   end
@@ -4066,5 +4111,28 @@
     GetStoredProc = spGet
     Left = 280
     Top = 177
+  end
+  object spSelectPrintReturnInDay: TdsdStoredProc
+    StoredProcName = 'gpSelect_Movement_ReturnIn_PrintDay'
+    DataSet = PrintHeaderCDS
+    DataSets = <
+      item
+        DataSet = PrintHeaderCDS
+      end
+      item
+        DataSet = PrintItemsCDS
+      end>
+    OutputType = otMultiDataSet
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+      end>
+    PackSize = 1
+    Left = 287
+    Top = 264
   end
 end

@@ -473,10 +473,10 @@ inherited ReturnInJournalForm: TReturnInJournalForm
     Width = 1106
     ExplicitWidth = 1106
     inherited deStart: TcxDateEdit
-      EditValue = 42005d
+      EditValue = 42233d
     end
     inherited deEnd: TcxDateEdit
-      EditValue = 42005d
+      EditValue = 42233d
     end
     object edIsPartnerDate: TcxCheckBox
       Left = 427
