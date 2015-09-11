@@ -179,6 +179,9 @@ type
     TransportChoiceGuides: TdsdGuides;
     spInsertUpdateMovement_Params: TdsdStoredProc;
     HeaderSaver2: THeaderSaver;
+    spSelectPrintReturnInDay: TdsdStoredProc;
+    actPrintReturnInDay: TdsdPrintAction;
+    bbPrintReturnInDay: TdxBarButton;
   private
     { Private declarations }
   public

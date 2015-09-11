@@ -1534,6 +1534,39 @@ inherited Sale_OrderForm: TSale_OrderForm
       QuestionBeforeExecute = #1044#1077#1081#1089#1090#1074#1080#1090#1077#1083#1100#1085#1086' '#1080#1089#1087#1088#1072#1074#1080#1090#1100' '#1094#1077#1085#1099' '#1085#1072' '#1086#1089#1085#1086#1074#1072#1085#1080#1080' '#1087#1088#1072#1081#1089#1072'?'
       InfoAfterExecute = #1047#1072#1074#1077#1088#1096#1077#1085#1086' '#1080#1089#1087#1088#1072#1074#1083#1077#1085#1080#1077' '#1094#1077#1085' '#1085#1072' '#1086#1089#1085#1086#1074#1072#1085#1080#1080' '#1087#1088#1072#1081#1089#1072'.'
     end
+    object actPrintReturnInDay: TdsdPrintAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spSelectPrintReturnInDay
+      StoredProcList = <
+        item
+          StoredProc = spSelectPrintReturnInDay
+        end>
+      Caption = #1042#1086#1079#1074#1088#1072#1090' '#1079#1072' '#1076#1072#1090#1091
+      Hint = #1042#1086#1079#1074#1088#1072#1090' '#1079#1072' '#1076#1072#1090#1091
+      ImageIndex = 19
+      DataSets = <
+        item
+          DataSet = PrintHeaderCDS
+          UserName = 'frxDBDHeader'
+        end
+        item
+          DataSet = PrintItemsCDS
+          UserName = 'frxDBDMaster'
+          IndexFieldNames = 'Id;GoodsName'
+        end>
+      Params = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'Id'
+        end>
+      ReportName = 'PrintMovement_ReturnInDay'
+      ReportNameParam.Value = 'PrintMovement_ReturnInDay'
+      ReportNameParam.DataType = ftString
+      ReportNameParam.ParamType = ptInput
+    end
   end
   inherited MasterDS: TDataSource
     Left = 32
@@ -1753,6 +1786,14 @@ inherited Sale_OrderForm: TSale_OrderForm
         end
         item
           Visible = True
+          ItemName = 'bbPrintReturnInDay'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbMovementItemProtocol'
         end
         item
@@ -1844,6 +1885,10 @@ inherited Sale_OrderForm: TSale_OrderForm
     end
     object bbUpdatePrice: TdxBarButton
       Action = actUpdatePrice
+      Category = 0
+    end
+    object bbPrintReturnInDay: TdxBarButton
+      Action = actPrintReturnInDay
       Category = 0
     end
   end
@@ -3901,5 +3946,28 @@ inherited Sale_OrderForm: TSale_OrderForm
     GetStoredProc = spGet
     Left = 272
     Top = 169
+  end
+  object spSelectPrintReturnInDay: TdsdStoredProc
+    StoredProcName = 'gpSelect_Movement_ReturnIn_PrintDay'
+    DataSet = PrintHeaderCDS
+    DataSets = <
+      item
+        DataSet = PrintHeaderCDS
+      end
+      item
+        DataSet = PrintItemsCDS
+      end>
+    OutputType = otMultiDataSet
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+      end>
+    PackSize = 1
+    Left = 375
+    Top = 240
   end
 end

@@ -177,6 +177,9 @@ type
     CarName: TcxGridDBColumn;
     CarModelName: TcxGridDBColumn;
     PersonalDriverName: TcxGridDBColumn;
+    spSelectPrintReturnInDay: TdsdStoredProc;
+    actPrintReturnInDay: TdsdPrintAction;
+    bbPrintReturnInDay: TdxBarButton;
   private
     { Private declarations }
   public
