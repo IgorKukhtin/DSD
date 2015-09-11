@@ -4,7 +4,7 @@ inherited SaleJournalForm: TSaleJournalForm
   ClientWidth = 1242
   AddOnFormData.Params = FormParams
   ExplicitWidth = 1258
-  ExplicitHeight = 676
+  ExplicitHeight = 679
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -1926,6 +1926,49 @@ inherited SaleJournalForm: TSaleJournalForm
         end>
       Caption = 'actUpdateMovementDesc'
     end
+    object actPrintReturnInDay: TdsdPrintAction
+      Category = 'DSDLib'
+      MoveParams = <
+        item
+          FromParam.Name = 'id'
+          FromParam.Value = Null
+          FromParam.Component = MasterCDS
+          FromParam.ComponentItem = 'id'
+          ToParam.Value = Null
+          ToParam.Component = FormParams
+          ToParam.ComponentItem = 'id'
+          ToParam.ParamType = ptInputOutput
+        end>
+      StoredProc = spSelectPrintReturnInDay
+      StoredProcList = <
+        item
+          StoredProc = spSelectPrintReturnInDay
+        end>
+      Caption = #1042#1086#1079#1074#1088#1072#1090' '#1079#1072' '#1076#1072#1090#1091
+      Hint = #1042#1086#1079#1074#1088#1072#1090' '#1079#1072' '#1076#1072#1090#1091
+      ImageIndex = 19
+      DataSets = <
+        item
+          DataSet = PrintHeaderCDS
+          UserName = 'frxDBDHeader'
+        end
+        item
+          DataSet = PrintItemsCDS
+          UserName = 'frxDBDMaster'
+          IndexFieldNames = 'Id;GoodsName'
+        end>
+      Params = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'Id'
+        end>
+      ReportName = 'PrintMovement_ReturnInDay'
+      ReportNameParam.Value = 'PrintMovement_ReturnInDay'
+      ReportNameParam.DataType = ftString
+      ReportNameParam.ParamType = ptInput
+    end
   end
   inherited MasterDS: TDataSource
     Left = 64
@@ -2142,6 +2185,14 @@ inherited SaleJournalForm: TSaleJournalForm
         end
         item
           Visible = True
+          ItemName = 'bbPrintReturnInDay'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbMovementProtocol'
         end
         item
@@ -2255,6 +2306,10 @@ inherited SaleJournalForm: TSaleJournalForm
     end
     object dxBarButton1: TdxBarButton
       Action = mactUpdateMovementDesc
+      Category = 0
+    end
+    object bbPrintReturnInDay: TdxBarButton
+      Action = actPrintReturnInDay
       Category = 0
     end
   end
@@ -3093,5 +3148,28 @@ inherited SaleJournalForm: TSaleJournalForm
       end>
     Left = 1184
     Top = 40
+  end
+  object spSelectPrintReturnInDay: TdsdStoredProc
+    StoredProcName = 'gpSelect_Movement_ReturnIn_PrintDay'
+    DataSet = PrintHeaderCDS
+    DataSets = <
+      item
+        DataSet = PrintHeaderCDS
+      end
+      item
+        DataSet = PrintItemsCDS
+      end>
+    OutputType = otMultiDataSet
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+      end>
+    PackSize = 1
+    Left = 535
+    Top = 216
   end
 end

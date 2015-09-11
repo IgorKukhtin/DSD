@@ -171,9 +171,12 @@ type
     spSelectPrint_SaleOrder: TdsdStoredProc;
     MovementId_Order: TcxGridDBColumn;
     actPrintSaleOrder: TdsdPrintAction;
-    bb: TdxBarButton;
+    bbPrintSaleOrder: TdxBarButton;
     spSelectSale_EDI: TdsdStoredProc;
     RouteGroupName: TcxGridDBColumn;
+    spSelectPrintReturnInDay: TdsdStoredProc;
+    actPrintReturnInDay: TdsdPrintAction;
+    bbPrintReturnInDay: TdxBarButton;
   private
     { Private declarations }
   public
