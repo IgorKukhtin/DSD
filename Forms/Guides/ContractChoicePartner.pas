@@ -59,6 +59,13 @@ type
     actChoiceRoute_30201: TOpenChoiceForm;
     clRouteName: TcxGridDBColumn;
     ChangePercentPartner: TcxGridDBColumn;
+    actChoiceMemberTake1: TOpenChoiceForm;
+    actChoiceMemberTake2: TOpenChoiceForm;
+    actChoiceMemberTake3: TOpenChoiceForm;
+    actChoiceMemberTake4: TOpenChoiceForm;
+    actChoiceMemberTake5: TOpenChoiceForm;
+    actChoiceMemberTake6: TOpenChoiceForm;
+    actChoiceMemberTake7: TOpenChoiceForm;
   private
     { Private declarations }
   public
