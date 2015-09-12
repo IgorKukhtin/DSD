@@ -189,6 +189,9 @@ type
     edInvNumberTransport: TcxButtonEdit;
     TransportChoiceGuides: TdsdGuides;
     HeaderSaver2: THeaderSaver;
+    spSelectPrintReturnInDay: TdsdStoredProc;
+    actPrintReturnInDay: TdsdPrintAction;
+    bbPrintReturnInDay: TdxBarButton;
   private
     { Private declarations }
   public

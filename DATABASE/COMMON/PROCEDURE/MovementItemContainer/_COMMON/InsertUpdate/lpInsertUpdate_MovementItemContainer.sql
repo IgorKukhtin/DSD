@@ -28,25 +28,38 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_MovementItemContainer(
 )
 AS
 $BODY$
-  DECLARE vbLock Boolean;
+   DECLARE vbLock Integer;
 BEGIN
+    -- так блокируем что б не было ОШИБКИ: обнаружена взаимоблокировка
     IF zc_IsLockTable() = TRUE
     THEN
-        -- так блокируем что б не было ОШИБКИ: обнаружена взаимоблокировка
         -- LOCK TABLE Container IN SHARE UPDATE EXCLUSIVE MODE;
         LOCK TABLE LockProtocol IN SHARE UPDATE EXCLUSIVE MODE;
-        -- так блокируем что б не было ОШИБКИ: обнаружена взаимоблокировка
-        /*vbLock := FALSE;
-        WHILE NOT vbLock LOOP
+    ELSE
+    IF zc_IsLockTableCycle() = TRUE
+    THEN
+        vbLock := 1;
+        WHILE vbLock <> 0 LOOP
             BEGIN
-               LOCK TABLE Container IN SHARE UPDATE EXCLUSIVE MODE;
-               vbLock := TRUE;
+               PERFORM Container.* FROM Container WHERE Container.Id = inContainerId FOR UPDATE;
+               vbLock := 0;
             EXCEPTION 
-                WHEN OTHERS THEN
+                     WHEN OTHERS THEN vbLock := vbLock + 1;
+                                      IF vbLock <= 5
+                                      THEN PERFORM pg_sleep (zc_IsLockTableSecond());
+                                      ELSE IF vbLock <= 10
+                                      THEN PERFORM pg_sleep (vbLock + SUBSTR (inContainerId :: TVarChar, LENGTH (inContainerId :: TVarChar)) :: Integer);
+                                      ELSE IF vbLock <= 15
+                                      THEN PERFORM pg_sleep (vbLock + SUBSTR (inContainerId :: TVarChar, -1 + LENGTH (inContainerId :: TVarChar)) :: Integer);
+                                      ELSE RAISE EXCEPTION 'Deadlock <%>', inContainerId;
+                                      END IF;
+                                      END IF;
+                                      END IF;
             END;
-        END LOOP;*/
+        END LOOP;
     ELSE
         PERFORM Container.* FROM Container WHERE Container.Id = inContainerId FOR UPDATE;
+    END IF;
     END IF;
 
 

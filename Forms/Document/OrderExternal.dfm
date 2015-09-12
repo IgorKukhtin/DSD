@@ -3,7 +3,7 @@ inherited OrderExternalForm: TOrderExternalForm
   ClientHeight = 647
   ClientWidth = 1391
   ExplicitWidth = 1407
-  ExplicitHeight = 682
+  ExplicitHeight = 685
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -613,8 +613,8 @@ inherited OrderExternalForm: TOrderExternalForm
     Top = 552
   end
   inherited cxPropertiesStore: TcxPropertiesStore
-    Left = 40
-    Top = 640
+    Left = 72
+    Top = 584
   end
   inherited ActionList: TActionList
     Left = 55
@@ -1317,11 +1317,19 @@ inherited OrderExternalForm: TOrderExternalForm
         ParamType = ptInput
       end
       item
-        Name = 'inPersonalId'
+        Name = 'ioPersonalId'
         Value = ''
         Component = GuidesPersonal
         ComponentItem = 'Key'
-        ParamType = ptInput
+        ParamType = ptInputOutput
+      end
+      item
+        Name = 'ioPersonalName'
+        Value = Null
+        Component = GuidesPersonal
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInputOutput
       end
       item
         Name = 'ioPriceListId'
@@ -1863,8 +1871,8 @@ inherited OrderExternalForm: TOrderExternalForm
         DataType = ftFloat
         ParamType = ptInput
       end>
-    Left = 456
-    Top = 8
+    Left = 416
+    Top = 16
   end
   object GuidesRoute: TdsdGuides
     KeyField = 'Id'

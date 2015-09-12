@@ -1,16 +1,11 @@
--- Function: gpComplete_Movement_Income()
+-- Function: gpSelect_Movement_Income()
 
-DROP FUNCTION IF EXISTS gpComplete_Movement_Check (Integer, TVarChar);
-DROP FUNCTION IF EXISTS gpComplete_Movement_Check (Integer,Integer, TVarChar);
-DROP FUNCTION IF EXISTS gpComplete_Movement_Check (Integer,Integer, Integer, TVarChar);
-DROP FUNCTION IF EXISTS gpComplete_Movement_Check (Integer,Integer, Integer, TVarChar, TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_CashRemains_Diff (Integer, TVarChar, TVarChar);
 
-CREATE OR REPLACE FUNCTION gpComplete_Movement_Check(
-    IN inMovementId        Integer              , -- ключ Документа
-    IN inPaidType          Integer              , --Тип оплаты 0-деньги, 1-карта
-    IN inCashRegisterId    Integer              , --№ кассового аппарата
-    IN inCashSessionId     TVarChar             , --Сессия программы
-    IN inSession           TVarChar DEFAULT ''     -- сессия пользователя
+CREATE OR REPLACE FUNCTION gpSelect_CashRemains_Diff(
+    IN inMovementId    Integer,    -- Текущая накладная
+    IN inCashSessionId TVarChar,   -- Сессия кассового места
+    IN inSession       TVarChar    -- сессия пользователя
 )
 RETURNS TABLE (
     Id Integer,
@@ -21,61 +16,27 @@ RETURNS TABLE (
     MCSValue TFloat,
     Reserved TFloat,
     NewRow Boolean)
+
 AS
 $BODY$
-  DECLARE vbUserId Integer;
-  DECLARE vbPaidTypeId Integer;
-  DECLARE vbUnitId Integer;
+   DECLARE vbUserId Integer;
+   DECLARE vbUnitId Integer;
+   DECLARE vbUnitKey TVarChar;
 BEGIN
+
     -- проверка прав пользователя на вызов процедуры
-    -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Complete_Income());
-    vbUserId:= inSession;
-
-    --Перебили дату документа
-    UPDATE Movement SET OperDate = CURRENT_TIMESTAMP WHERE Movement.Id = inMovementId;
-
-    SELECT MLO_Unit.ObjectId
-    INTO vbUnitId
-    FROM MovementLinkObject AS MLO_Unit 
-    WHERE MLO_Unit.MovementId = inMovementId
-      AND MLO_Unit.DescId = zc_MovementLinkObject_Unit();
+    -- PERFORM lpCheckRight (inSession, zc_Enum_Process_Select_Movement_Income());
+    vbUserId:= lpGetUserBySession (inSession);
+    vbUnitKey := COALESCE(lpGet_DefaultValue('zc_Object_Unit', vbUserId), '');
+    IF vbUnitKey = '' THEN
+       vbUnitKey := '0';
+    END IF;
+    vbUnitId := vbUnitKey::Integer;
     
-    --прописали тип оплаты
-    if inPaidType = 0 then
-        PERFORM lpInsertUpdate_MovementLinkObject(zc_MovementLinkObject_PaidType(),inMovementId,zc_Enum_PaidType_Cash());
-    ELSEIF inPaidType = 1 THEN
-        PERFORM lpInsertUpdate_MovementLinkObject(zc_MovementLinkObject_PaidType(),inMovementId,zc_Enum_PaidType_Card());
-    ELSE
-        RAISE EXCEPTION 'Ошибка.Не определен тип оплаты';
-    END IF;
-    --Сохранили связь с кассовым аппаратом
-    IF inCashRegisterId <> 0 THEN
-        PERFORM lpInsertUpdate_MovementLinkObject(zc_MovementLinkObject_CashRegister(),inMovementId,inCashRegisterId);
-    END IF;
-    -- пересчитали Итоговые суммы
-    PERFORM lpInsertUpdate_MovementFloat_TotalSumm (inMovementId);
-
-    -- собственно проводки
-    PERFORM lpComplete_Movement_Check(inMovementId, -- ключ Документа
-                                      vbUserId);    -- Пользователь
-    --доводим снапшет до текущего состояния на клиенте
-    UPDATE CashSessionSnapShot SET
-        Remains = CashSessionSnapShot.Remains - MovementItem.Amount
-    FROM
-        MovementItem
-    WHERE
-        CashSessionSnapShot.CashSessionId = inCashSessionId
-        AND
-        CashSessionSnapShot.ObjectId = MovementItem.ObjectId
-        AND
-        MovementItem.MovementId = inMovementId
-        AND
-        MovementItem.DescId = zc_MI_Master()
-        AND
-        MovementItem.isErased = FALSE
-        AND
-        MovementItem.Amount > 0;
-        
+    --Обновили дату последнего обращения по сессии
+    PERFORM lpInsertUpdate_CashSession(inCashSessionId := inCashSessionId,
+                                        inDateConnect := CURRENT_TIMESTAMP::TDateTime);
+    
     --определяем разницу в остатках реальных и сессионных
     CREATE TEMP TABLE _DIFF (ObjectId  Integer
                            , GoodsCode Integer
@@ -84,9 +45,8 @@ BEGIN
                            , Remains   TFloat
                            , MCSValue  TFloat
                            , Reserved  TFloat
-                           , NewRow    Boolean) ON COMMIT DROP;
-    
-    WITH GoodsRemains --Текущий остаток
+                           , NewRow    Boolean) ON COMMIT DROP;    
+    WITH GoodsRemains
     AS
     (
         SELECT 
@@ -104,7 +64,7 @@ BEGIN
         GROUP BY 
             container.objectid
     ),
-    RESERVE --резерв
+    RESERVE
     AS
     (
         SELECT
@@ -112,6 +72,8 @@ BEGIN
             SUM(MovementItem_Reserve.Amount)::TFloat as Amount
         FROM
             gpSelect_MovementItem_CheckDeferred(inSession) as MovementItem_Reserve
+        WHERE
+            MovementItem_Reserve.MovementId <> inMovementId
         Group By
             MovementItem_Reserve.GoodsId
     ),
@@ -206,27 +168,34 @@ BEGIN
             _DIFF.GoodsCode,
             _DIFF.GoodsName,
             _DIFF.Price,
-            _DIFF.Remains,
+            (_DIFF.Remains - COALESCE(CurrentMovement.Amount,0))::TFloat AS Remains,
             _DIFF.MCSValue,
             _DIFF.Reserved,
             _DIFF.NewRow
         FROM
-            _DIFF;
-    
+            _DIFF
+            LEFT OUTER JOIN (
+                                SELECT
+                                    ObjectId,
+                                    SUM(Amount)::TFloat as Amount
+                                FROM
+                                    MovementItem
+                                WHERE
+                                    MovementId = inMovementId
+                                    AND
+                                    Amount <> 0
+                                Group By
+                                    ObjectId
+                            ) AS CurrentMovement
+                              ON CurrentMovement.ObjectId = _DIFF.ObjectId;
 END;
 $BODY$
-  LANGUAGE plpgsql VOLATILE;
+  LANGUAGE PLPGSQL VOLATILE;
+ALTER FUNCTION gpSelect_CashRemains_Diff (Integer, TVarChar, TVarChar) OWNER TO postgres;
+
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.  Воробкало А.А.
- 10.09.15                                                                       *  CashSession
- 06.07.15                                                                       *  Добавлен тип оплаты
- 05.02.15                         *
-
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А.А.
+ 12.09.15                                                                       *CashSessionSnapShot
 */
-
--- тест
--- SELECT * FROM gpUnComplete_Movement (inMovementId:= 579, inSession:= '2')
--- SELECT * FROM gpComplete_Movement_Income (inMovementId:= 579, inIsLastComplete:= FALSE, inSession:= '2')
--- SELECT * FROM gpSelect_MovementItemContainer_Movement (inMovementId:= 579, inSession:= '2')

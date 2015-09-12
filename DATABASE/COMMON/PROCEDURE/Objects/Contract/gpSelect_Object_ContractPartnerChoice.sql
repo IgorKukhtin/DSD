@@ -18,6 +18,13 @@ RETURNS TABLE (Id Integer, Code Integer
              , RouteId Integer, RouteName TVarChar
              , RouteSortingId Integer, RouteSortingName TVarChar
              , MemberTakeId Integer, MemberTakeName TVarChar
+             , MemberTakeId1 Integer, MemberTakeName1 TVarChar,
+               MemberTakeId2 Integer, MemberTakeName2 TVarChar,
+               MemberTakeId3 Integer, MemberTakeName3 TVarChar,
+               MemberTakeId4 Integer, MemberTakeName4 TVarChar,
+               MemberTakeId5 Integer, MemberTakeName5 TVarChar,
+               MemberTakeId6 Integer, MemberTakeName6 TVarChar,
+               MemberTakeId7 Integer, MemberTakeName7 TVarChar
              , personalTakeId Integer, personalTakeName TVarChar
              , InfoMoneyId Integer, InfoMoneyGroupName TVarChar, InfoMoneyDestinationName TVarChar, InfoMoneyCode Integer, InfoMoneyName TVarChar, InfoMoneyName_all TVarChar
              , OKPO TVarChar
@@ -87,8 +94,23 @@ BEGIN
        , Object_Route.ValueData        AS RouteName
        , Object_RouteSorting.Id        AS RouteSortingId
        , Object_RouteSorting.ValueData AS RouteSortingName
-       , Object_MemberTake.Id        AS PersonalTakeId
-       , Object_MemberTake.ValueData AS PersonalTakeName
+       , Object_MemberTake.Id          AS MemberTakeId
+       , Object_MemberTake.ValueData   AS MemberTakeName
+
+       , Object_MemberTake1.Id             AS MemberTakeId1
+       , Object_MemberTake1.ValueData      AS MemberTakeName1
+       , Object_MemberTake2.Id             AS MemberTakeId2
+       , Object_MemberTake2.ValueData      AS MemberTakeName2
+       , Object_MemberTake3.Id             AS MemberTakeId3
+       , Object_MemberTake3.ValueData      AS MemberTakeName3
+       , Object_MemberTake4.Id             AS MemberTakeId4
+       , Object_MemberTake4.ValueData      AS MemberTakeName4
+       , Object_MemberTake5.Id             AS MemberTakeId5
+       , Object_MemberTake5.ValueData      AS MemberTakeName5
+       , Object_MemberTake6.Id             AS MemberTakeId6
+       , Object_MemberTake6.ValueData      AS MemberTakeName6
+       , Object_MemberTake7.Id             AS MemberTakeId7
+       , Object_MemberTake7.ValueData      AS MemberTakeName7 
 
        , Object_MemberTake.Id        AS personalTakeId
        , Object_MemberTake.ValueData AS personalTakeName
@@ -147,6 +169,34 @@ BEGIN
                               ON ObjectLink_Partner_MemberTake.ObjectId = Object_Partner.Id 
                              AND ObjectLink_Partner_MemberTake.DescId = zc_ObjectLink_Partner_MemberTake()
          LEFT JOIN Object AS Object_MemberTake ON Object_MemberTake.Id = ObjectLink_Partner_MemberTake.ChildObjectId
+         LEFT JOIN ObjectLink AS ObjectLink_Partner_MemberTake1
+                              ON ObjectLink_Partner_MemberTake1.ObjectId = Object_Partner.Id 
+                             AND ObjectLink_Partner_MemberTake1.DescId = zc_ObjectLink_Partner_MemberTake1()
+         LEFT JOIN Object AS Object_MemberTake1 ON Object_MemberTake1.Id = ObjectLink_Partner_MemberTake1.ChildObjectId
+         LEFT JOIN ObjectLink AS ObjectLink_Partner_MemberTake2
+                              ON ObjectLink_Partner_MemberTake2.ObjectId = Object_Partner.Id 
+                             AND ObjectLink_Partner_MemberTake2.DescId = zc_ObjectLink_Partner_MemberTake2()
+         LEFT JOIN Object AS Object_MemberTake2 ON Object_MemberTake2.Id = ObjectLink_Partner_MemberTake2.ChildObjectId
+         LEFT JOIN ObjectLink AS ObjectLink_Partner_MemberTake3
+                              ON ObjectLink_Partner_MemberTake3.ObjectId = Object_Partner.Id 
+                             AND ObjectLink_Partner_MemberTake3.DescId = zc_ObjectLink_Partner_MemberTake3()
+         LEFT JOIN Object AS Object_MemberTake3 ON Object_MemberTake3.Id = ObjectLink_Partner_MemberTake3.ChildObjectId
+         LEFT JOIN ObjectLink AS ObjectLink_Partner_MemberTake4
+                              ON ObjectLink_Partner_MemberTake4.ObjectId = Object_Partner.Id 
+                             AND ObjectLink_Partner_MemberTake4.DescId = zc_ObjectLink_Partner_MemberTake4()
+         LEFT JOIN Object AS Object_MemberTake4 ON Object_MemberTake4.Id = ObjectLink_Partner_MemberTake4.ChildObjectId
+         LEFT JOIN ObjectLink AS ObjectLink_Partner_MemberTake5
+                              ON ObjectLink_Partner_MemberTake5.ObjectId = Object_Partner.Id 
+                             AND ObjectLink_Partner_MemberTake5.DescId = zc_ObjectLink_Partner_MemberTake5()
+         LEFT JOIN Object AS Object_MemberTake5 ON Object_MemberTake5.Id = ObjectLink_Partner_MemberTake5.ChildObjectId
+         LEFT JOIN ObjectLink AS ObjectLink_Partner_MemberTake6
+                              ON ObjectLink_Partner_MemberTake6.ObjectId = Object_Partner.Id 
+                             AND ObjectLink_Partner_MemberTake6.DescId = zc_ObjectLink_Partner_MemberTake6()
+         LEFT JOIN Object AS Object_MemberTake6 ON Object_MemberTake6.Id = ObjectLink_Partner_MemberTake6.ChildObjectId
+         LEFT JOIN ObjectLink AS ObjectLink_Partner_MemberTake7
+                              ON ObjectLink_Partner_MemberTake7.ObjectId = Object_Partner.Id 
+                             AND ObjectLink_Partner_MemberTake7.DescId = zc_ObjectLink_Partner_MemberTake7()
+         LEFT JOIN Object AS Object_MemberTake7 ON Object_MemberTake7.Id = ObjectLink_Partner_MemberTake7.ChildObjectId
 
          LEFT JOIN ObjectLink AS ObjectLink_ContractPartner_Partner
                               ON ObjectLink_ContractPartner_Partner.ChildObjectId = Object_Partner.Id
@@ -277,9 +327,23 @@ BEGIN
        , Object_Route.ValueData        AS RouteName
        , Object_RouteSorting.Id        AS RouteSortingId
        , Object_RouteSorting.ValueData AS RouteSortingName
-       , Object_MemberTake.Id        AS PersonalTakeId
-       , Object_MemberTake.ValueData AS PersonalTakeName
+       , Object_MemberTake.Id          AS MemberTakeId
+       , Object_MemberTake.ValueData   AS MemberTakeName
 
+       , Object_MemberTake1.Id             AS MemberTakeId1
+       , Object_MemberTake1.ValueData      AS MemberTakeName1
+       , Object_MemberTake2.Id             AS MemberTakeId2
+       , Object_MemberTake2.ValueData      AS MemberTakeName2
+       , Object_MemberTake3.Id             AS MemberTakeId3
+       , Object_MemberTake3.ValueData      AS MemberTakeName3
+       , Object_MemberTake4.Id             AS MemberTakeId4
+       , Object_MemberTake4.ValueData      AS MemberTakeName4
+       , Object_MemberTake5.Id             AS MemberTakeId5
+       , Object_MemberTake5.ValueData      AS MemberTakeName5
+       , Object_MemberTake6.Id             AS MemberTakeId6
+       , Object_MemberTake6.ValueData      AS MemberTakeName6
+       , Object_MemberTake7.Id             AS MemberTakeId7
+       , Object_MemberTake7.ValueData      AS MemberTakeName7 
 
        , Object_MemberTake.Id        AS personalTakeId
        , Object_MemberTake.ValueData AS personalTakeName
@@ -338,7 +402,35 @@ BEGIN
                               ON ObjectLink_Partner_MemberTake.ObjectId = Object_Partner.Id 
                              AND ObjectLink_Partner_MemberTake.DescId = zc_ObjectLink_Partner_MemberTake()
          LEFT JOIN Object AS Object_MemberTake ON Object_MemberTake.Id = ObjectLink_Partner_MemberTake.ChildObjectId
-
+         LEFT JOIN ObjectLink AS ObjectLink_Partner_MemberTake1
+                              ON ObjectLink_Partner_MemberTake1.ObjectId = Object_Partner.Id 
+                             AND ObjectLink_Partner_MemberTake1.DescId = zc_ObjectLink_Partner_MemberTake1()
+         LEFT JOIN Object AS Object_MemberTake1 ON Object_MemberTake1.Id = ObjectLink_Partner_MemberTake1.ChildObjectId
+         LEFT JOIN ObjectLink AS ObjectLink_Partner_MemberTake2
+                              ON ObjectLink_Partner_MemberTake2.ObjectId = Object_Partner.Id 
+                             AND ObjectLink_Partner_MemberTake2.DescId = zc_ObjectLink_Partner_MemberTake2()
+         LEFT JOIN Object AS Object_MemberTake2 ON Object_MemberTake2.Id = ObjectLink_Partner_MemberTake2.ChildObjectId
+         LEFT JOIN ObjectLink AS ObjectLink_Partner_MemberTake3
+                              ON ObjectLink_Partner_MemberTake3.ObjectId = Object_Partner.Id 
+                             AND ObjectLink_Partner_MemberTake3.DescId = zc_ObjectLink_Partner_MemberTake3()
+         LEFT JOIN Object AS Object_MemberTake3 ON Object_MemberTake3.Id = ObjectLink_Partner_MemberTake3.ChildObjectId
+         LEFT JOIN ObjectLink AS ObjectLink_Partner_MemberTake4
+                              ON ObjectLink_Partner_MemberTake4.ObjectId = Object_Partner.Id 
+                             AND ObjectLink_Partner_MemberTake4.DescId = zc_ObjectLink_Partner_MemberTake4()
+         LEFT JOIN Object AS Object_MemberTake4 ON Object_MemberTake4.Id = ObjectLink_Partner_MemberTake4.ChildObjectId
+         LEFT JOIN ObjectLink AS ObjectLink_Partner_MemberTake5
+                              ON ObjectLink_Partner_MemberTake5.ObjectId = Object_Partner.Id 
+                             AND ObjectLink_Partner_MemberTake5.DescId = zc_ObjectLink_Partner_MemberTake5()
+         LEFT JOIN Object AS Object_MemberTake5 ON Object_MemberTake5.Id = ObjectLink_Partner_MemberTake5.ChildObjectId
+         LEFT JOIN ObjectLink AS ObjectLink_Partner_MemberTake6
+                              ON ObjectLink_Partner_MemberTake6.ObjectId = Object_Partner.Id 
+                             AND ObjectLink_Partner_MemberTake6.DescId = zc_ObjectLink_Partner_MemberTake6()
+         LEFT JOIN Object AS Object_MemberTake6 ON Object_MemberTake6.Id = ObjectLink_Partner_MemberTake6.ChildObjectId
+         LEFT JOIN ObjectLink AS ObjectLink_Partner_MemberTake7
+                              ON ObjectLink_Partner_MemberTake7.ObjectId = Object_Partner.Id 
+                             AND ObjectLink_Partner_MemberTake7.DescId = zc_ObjectLink_Partner_MemberTake7()
+         LEFT JOIN Object AS Object_MemberTake7 ON Object_MemberTake7.Id = ObjectLink_Partner_MemberTake7.ChildObjectId
+         
          LEFT JOIN ObjectLink AS ObjectLink_ContractPartner_Partner
                               ON ObjectLink_ContractPartner_Partner.ChildObjectId = Object_Partner.Id
                              AND ObjectLink_ContractPartner_Partner.DescId = zc_ObjectLink_ContractPartner_Partner()
@@ -443,6 +535,7 @@ ALTER FUNCTION gpSelect_Object_ContractPartnerChoice (Boolean, TVarChar) OWNER T
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».   Ã‡Ì¸ÍÓ ƒ.
+ 12.09.15         * add MemberTake1...7
  08.09.14                                        * add Object_RoleAccessKeyGuide_View
  21.08.14                                        * add ContractComment
  25.04.14                                        * add ContractTagName
@@ -452,4 +545,4 @@ ALTER FUNCTION gpSelect_Object_ContractPartnerChoice (Boolean, TVarChar) OWNER T
 */
 
 -- ÚÂÒÚ
--- SELECT * FROM gpSelect_Object_ContractPartnerChoice (inShowAll:= FALSE, inSession := zfCalc_UserAdmin())
+ SELECT * FROM gpSelect_Object_ContractPartnerChoice (inShowAll:= FALSE, inSession := zfCalc_UserAdmin())

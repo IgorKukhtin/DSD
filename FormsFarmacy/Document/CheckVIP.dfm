@@ -3,8 +3,8 @@ inherited CheckVIPForm: TCheckVIPForm
   ClientHeight = 382
   ClientWidth = 668
   AddOnFormData.ChoiceAction = dsdChoiceGuides
-  ExplicitWidth = 676
-  ExplicitHeight = 409
+  ExplicitWidth = 684
+  ExplicitHeight = 420
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -32,6 +32,31 @@ inherited CheckVIPForm: TCheckVIPForm
           Styles.Selection = nil
           Styles.Footer = nil
           Styles.Header = nil
+          object colStatusCode: TcxGridDBColumn
+            AlternateCaption = #1059#1076#1072#1083#1077#1085
+            Caption = 'X'
+            DataBinding.FieldName = 'StatusCode'
+            PropertiesClassName = 'TcxImageComboBoxProperties'
+            Properties.Images = dmMain.ImageList
+            Properties.Items = <
+              item
+                Description = #1053#1077' '#1087#1088#1086#1074#1077#1076#1077#1085
+                ImageIndex = 11
+                Value = 1
+              end
+              item
+                Description = #1055#1088#1086#1074#1077#1076#1077#1085
+                ImageIndex = 12
+                Value = 2
+              end
+              item
+                Description = #1059#1076#1072#1083#1077#1085
+                ImageIndex = 13
+                Value = 3
+              end>
+            HeaderHint = #1059#1076#1072#1083#1077#1085
+            Width = 20
+          end
           object colCashMember: TcxGridDBColumn
             Caption = #1052#1077#1085#1077#1076#1078#1077#1088
             DataBinding.FieldName = 'CashMember'

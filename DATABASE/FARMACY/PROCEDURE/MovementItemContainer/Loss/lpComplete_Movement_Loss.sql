@@ -15,6 +15,7 @@ $BODY$
    DECLARE vbUnitId Integer;
    DECLARE vbJuridicalId Integer;
    DECLARE vbLossDate TDateTime;
+   DECLARE vbOperDate TDateTime;
 BEGIN
 
      -- создаются временные таблицы - для формирование данных для проводок
@@ -32,11 +33,12 @@ BEGIN
                                      , inInfoMoneyId            := NULL
                                      , inUserId                 := inUserId);
 
-    SELECT MovementLinkObject.ObjectId, ObjectLink_Unit_Juridical.ChildObjectId INTO vbUnitId, vbJuridicalId
+    SELECT MovementLinkObject.ObjectId, ObjectLink_Unit_Juridical.ChildObjectId, Movement.OperDate INTO vbUnitId, vbJuridicalId, vbOperDate
     FROM MovementLinkObject
         LEFT OUTER JOIN ObjectLink AS ObjectLink_Unit_Juridical
                                    ON MovementLinkObject.ObjectId = ObjectLink_Unit_Juridical.ObjectId
                                   AND ObjectLink_Unit_Juridical.DescId = zc_ObjectLink_Unit_Juridical()
+        JOIN Movement ON Movement.Id = MovementLinkObject.MovementId                          
     WHERE MovementLinkObject.MovementId = inMovementId 
       AND MovementLinkObject.DescId = zc_MovementLinkObject_Unit();
       
@@ -144,27 +146,47 @@ WITH LOSS AS ( SELECT
                 AND MovementItem.IsErased = FALSE
                 AND COALESCE(MovementItem.Amount,0) > 0
              ),
-
+    REMAINS AS ( --остатки на дату документа
+                        SELECT 
+                            Container.Id 
+                           ,Container.ObjectId --Товар
+                           ,(Container.Amount - COALESCE(SUM(MovementItemContainer.amount),0.0))::TFloat as Amount  --Тек. остаток - Движение после даты переучета
+                        FROM Container
+                            LEFT OUTER JOIN MovementItemContainer ON Container.Id = MovementItemContainer.ContainerId
+                                                                 AND 
+                                                                 (
+                                                                    date_trunc('day', MovementItemContainer.Operdate) > vbOperDate
+                                                                 )
+                            JOIN ContainerLinkObject AS CLI_Unit 
+                                                     ON CLI_Unit.containerid = Container.Id
+                                                    AND CLI_Unit.descid = zc_ContainerLinkObject_Unit()
+                                                    AND CLI_Unit.ObjectId = vbUnitId                                   
+                        WHERE 
+                            Container.DescID = zc_Container_Count()
+                        GROUP BY 
+                            Container.Id 
+                           ,Container.ObjectId
+                    ),
   DD AS (SELECT 
             LOSS.MovementItemId 
           , LOSS.Amount 
-          , Container.Amount AS ContainerAmount 
-          , OperDate 
-          , Container.Id
-          , SUM(Container.Amount) OVER (PARTITION BY Container.objectid ORDER BY OPERDATE, Container.Id)
-        FROM Container 
-            JOIN LOSS ON LOSS.objectid = Container.objectid 
+          , REMAINS.Amount AS ContainerAmount 
+          , Movement.OperDate 
+          , REMAINS.Id
+          , SUM(REMAINS.Amount) OVER (PARTITION BY REMAINS.objectid ORDER BY Movement.OPERDATE, REMAINS.Id)
+        FROM REMAINS 
+            JOIN LOSS ON LOSS.objectid = REMAINS.objectid 
             JOIN containerlinkobject AS CLI_MI 
-                                     ON CLI_MI.containerid = Container.Id
+                                     ON CLI_MI.containerid = REMAINS.Id
                                     AND CLI_MI.descid = zc_ContainerLinkObject_PartionMovementItem()
             JOIN containerlinkobject AS CLI_Unit 
-			                         ON CLI_Unit.containerid = Container.Id
+			                         ON CLI_Unit.containerid = REMAINS.Id
                                     AND CLI_Unit.descid = zc_ContainerLinkObject_Unit()
                                     AND CLI_Unit.ObjectId = vbUnitId
             JOIN OBJECT AS Object_PartionMovementItem ON Object_PartionMovementItem.Id = CLI_MI.ObjectId
             JOIN movementitem ON movementitem.Id = Object_PartionMovementItem.ObjectCode
             JOIN Movement ON Movement.Id = movementitem.movementid
-        WHERE Container.Amount > 0), 
+        WHERE REMAINS.Amount > 0), 
   
   tmpItem AS (SELECT 
                 Id

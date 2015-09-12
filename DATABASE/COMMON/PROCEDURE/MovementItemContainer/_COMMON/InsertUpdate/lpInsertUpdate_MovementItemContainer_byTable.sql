@@ -1,4 +1,4 @@
- -- Function: lpInsertUpdate_MovementItemContainer_byTable ()
+-- Function: lpInsertUpdate_MovementItemContainer_byTable ()
 
 DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItemContainer_byTable ();
 
@@ -6,28 +6,42 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_MovementItemContainer_byTable ()
 RETURNS VOID
 AS
 $BODY$
-   DECLARE vbCount Integer;
-   DECLARE vbLock Boolean;
+   DECLARE vbLock Integer;
+   DECLARE vbTmp Integer;
 BEGIN
+    -- так блокируем что б не было ОШИБКИ: обнаружена взаимоблокировка
     IF zc_IsLockTable() = TRUE
     THEN
-        -- так блокируем что б не было ОШИБКИ: обнаружена взаимоблокировка
         -- LOCK TABLE Container IN SHARE UPDATE EXCLUSIVE MODE;
         LOCK TABLE LockProtocol IN SHARE UPDATE EXCLUSIVE MODE;
-        -- так блокируем что б не было ОШИБКИ: обнаружена взаимоблокировка
-        /*vbLock := FALSE;
-        WHILE NOT vbLock LOOP
+    ELSE
+    IF zc_IsLockTableCycle() = TRUE
+    THEN
+        vbLock := 1;
+        WHILE vbLock <> 0 LOOP
             BEGIN
-               LOCK TABLE Container IN SHARE UPDATE EXCLUSIVE MODE;
-               vbLock := TRUE;
+               PERFORM Container.* FROM Container WHERE Container.Id IN (SELECT _tmpMIContainer_insert.ContainerId FROM _tmpMIContainer_insert) FOR UPDATE;
+               vbLock := 0;
             EXCEPTION 
-                WHEN OTHERS THEN
+                     WHEN OTHERS THEN vbLock := vbLock + 1;
+                                      vbTmp:= (SELECT _tmpMIContainer_insert.MovementId FROM _tmpMIContainer_insert LIMIT 1);
+                                      IF vbLock <= 5
+                                      THEN PERFORM pg_sleep (zc_IsLockTableSecond());
+                                      ELSE IF vbLock <= 10
+                                      THEN PERFORM pg_sleep (vbLock + SUBSTR (vbTmp :: TVarChar, LENGTH (vbTmp :: TVarChar)) :: Integer);
+                                      ELSE IF vbLock <= 15
+                                      THEN PERFORM pg_sleep (vbLock + SUBSTR (vbTmp :: TVarChar, -1 + LENGTH (vbTmp :: TVarChar)) :: Integer);
+                                      ELSE RAISE EXCEPTION 'Deadlock <%>', vbTmp;
+                                      END IF;
+                                      END IF;
+                                      END IF;
             END;
-        END LOOP;*/
+        END LOOP;
     ELSE
         PERFORM Container.* FROM Container WHERE Container.Id IN (SELECT _tmpMIContainer_insert.ContainerId FROM _tmpMIContainer_insert) FOR UPDATE;
     END IF;
-
+    END IF;
+    
      -- изменить значение остатка
      UPDATE Container SET Amount = Container.Amount + _tmpMIContainer.Amount
      FROM (SELECT ContainerId, SUM (COALESCE (_tmpMIContainer_insert.Amount, 0)) AS Amount FROM _tmpMIContainer_insert GROUP BY ContainerId) AS _tmpMIContainer

@@ -3,7 +3,7 @@ inherited ContractChoicePartnerOrderForm: TContractChoicePartnerOrderForm
   ClientHeight = 496
   ClientWidth = 982
   ExplicitWidth = 998
-  ExplicitHeight = 531
+  ExplicitHeight = 534
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -251,10 +251,114 @@ inherited ContractChoicePartnerOrderForm: TContractChoicePartnerOrderForm
                 Kind = bkEllipsis
               end>
             Properties.ReadOnly = True
-            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 90
+          end
+          object MemberTakeName1: TcxGridDBColumn
+            Caption = #1060#1048#1054' ('#1101#1082#1089#1087#1077#1076#1080#1090#1086#1088') '#1087#1085'.'
+            DataBinding.FieldName = 'MemberTakeName1'
+            PropertiesClassName = 'TcxButtonEditProperties'
+            Properties.Buttons = <
+              item
+                Action = actChoiceMemberTake1
+                Default = True
+                Kind = bkEllipsis
+              end>
+            Properties.ReadOnly = True
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 103
+          end
+          object MemberTakeName2: TcxGridDBColumn
+            Caption = #1060#1048#1054' ('#1101#1082#1089#1087#1077#1076#1080#1090#1086#1088') '#1074#1090'.'
+            DataBinding.FieldName = 'MemberTakeName2'
+            PropertiesClassName = 'TcxButtonEditProperties'
+            Properties.Buttons = <
+              item
+                Action = actChoiceMemberTake2
+                Default = True
+                Kind = bkEllipsis
+              end>
+            Properties.ReadOnly = True
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 103
+          end
+          object MemberTakeName3: TcxGridDBColumn
+            Caption = #1060#1048#1054' ('#1101#1082#1089#1087#1077#1076#1080#1090#1086#1088') '#1089#1088'.'
+            DataBinding.FieldName = 'MemberTakeName3'
+            PropertiesClassName = 'TcxButtonEditProperties'
+            Properties.Buttons = <
+              item
+                Action = actChoiceMemberTake3
+                Default = True
+                Kind = bkEllipsis
+              end>
+            Properties.ReadOnly = True
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 103
+          end
+          object MemberTakeName4: TcxGridDBColumn
+            Caption = #1060#1048#1054' ('#1101#1082#1089#1087#1077#1076#1080#1090#1086#1088') '#1095#1090'.'
+            DataBinding.FieldName = 'MemberTakeName4'
+            PropertiesClassName = 'TcxButtonEditProperties'
+            Properties.Buttons = <
+              item
+                Action = actChoiceMemberTake4
+                Default = True
+                Kind = bkEllipsis
+              end>
+            Properties.ReadOnly = True
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 103
+          end
+          object MemberTakeName5: TcxGridDBColumn
+            Caption = #1060#1048#1054' ('#1101#1082#1089#1087#1077#1076#1080#1090#1086#1088') '#1087#1090'.'
+            DataBinding.FieldName = 'MemberTakeName5'
+            PropertiesClassName = 'TcxButtonEditProperties'
+            Properties.Buttons = <
+              item
+                Action = actChoiceMemberTake5
+                Default = True
+                Kind = bkEllipsis
+              end>
+            Properties.ReadOnly = True
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 103
+          end
+          object MemberTakeName6: TcxGridDBColumn
+            Caption = #1060#1048#1054' ('#1101#1082#1089#1087#1077#1076#1080#1090#1086#1088') '#1089#1073'.'
+            DataBinding.FieldName = 'MemberTakeName6'
+            PropertiesClassName = 'TcxButtonEditProperties'
+            Properties.Buttons = <
+              item
+                Action = actChoiceMemberTake6
+                Default = True
+                Kind = bkEllipsis
+              end>
+            Properties.ReadOnly = True
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 103
+          end
+          object MemberTakeName7: TcxGridDBColumn
+            Caption = #1060#1048#1054' ('#1101#1082#1089#1087#1077#1076#1080#1090#1086#1088') '#1074#1089'.'
+            DataBinding.FieldName = 'MemberTakeName7'
+            PropertiesClassName = 'TcxButtonEditProperties'
+            Properties.Buttons = <
+              item
+                Action = actChoiceMemberTake7
+                Default = True
+                Kind = bkEllipsis
+              end>
+            Properties.ReadOnly = True
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 103
           end
           object clRouteName: TcxGridDBColumn
             Caption = #1052#1072#1088#1096#1088#1091#1090
@@ -642,6 +746,174 @@ inherited ContractChoicePartnerOrderForm: TContractChoicePartnerOrderForm
         end>
       isShowModal = True
     end
+    object actChoiceMemberTake1: TOpenChoiceForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = 'Member_ObjectForm'
+      FormName = 'TMember_ObjectForm'
+      FormNameParam.Value = 'TMember_ObjectForm'
+      FormNameParam.DataType = ftString
+      GuiParams = <
+        item
+          Name = 'Key'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'MemberTakeId1'
+        end
+        item
+          Name = 'TextValue'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'MemberTakeName1'
+          DataType = ftString
+        end>
+      isShowModal = True
+    end
+    object actChoiceMemberTake2: TOpenChoiceForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = 'Member_ObjectForm'
+      FormName = 'TMember_ObjectForm'
+      FormNameParam.Value = 'TMember_ObjectForm'
+      FormNameParam.DataType = ftString
+      GuiParams = <
+        item
+          Name = 'Key'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'MemberTakeId2'
+        end
+        item
+          Name = 'TextValue'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'MemberTakeName2'
+          DataType = ftString
+        end>
+      isShowModal = True
+    end
+    object actChoiceMemberTake3: TOpenChoiceForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = 'Member_ObjectForm'
+      FormName = 'TMember_ObjectForm'
+      FormNameParam.Value = 'TMember_ObjectForm'
+      FormNameParam.DataType = ftString
+      GuiParams = <
+        item
+          Name = 'Key'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'MemberTakeId3'
+        end
+        item
+          Name = 'TextValue'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'MemberTakeName3'
+          DataType = ftString
+        end>
+      isShowModal = True
+    end
+    object actChoiceMemberTake4: TOpenChoiceForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = 'Member_ObjectForm'
+      FormName = 'TMember_ObjectForm'
+      FormNameParam.Value = 'TMember_ObjectForm'
+      FormNameParam.DataType = ftString
+      GuiParams = <
+        item
+          Name = 'Key'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'MemberTakeId4'
+        end
+        item
+          Name = 'TextValue'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'MemberTakeName4'
+          DataType = ftString
+        end>
+      isShowModal = True
+    end
+    object actChoiceMemberTake5: TOpenChoiceForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = 'Member_ObjectForm'
+      FormName = 'TMember_ObjectForm'
+      FormNameParam.Value = 'TMember_ObjectForm'
+      FormNameParam.DataType = ftString
+      GuiParams = <
+        item
+          Name = 'Key'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'MemberTakeId5'
+        end
+        item
+          Name = 'TextValue'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'MemberTakeName5'
+          DataType = ftString
+        end>
+      isShowModal = True
+    end
+    object actChoiceMemberTake6: TOpenChoiceForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = 'Member_ObjectForm'
+      FormName = 'TMember_ObjectForm'
+      FormNameParam.Value = 'TMember_ObjectForm'
+      FormNameParam.DataType = ftString
+      GuiParams = <
+        item
+          Name = 'Key'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'MemberTakeId6'
+        end
+        item
+          Name = 'TextValue'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'MemberTakeName6'
+          DataType = ftString
+        end>
+      isShowModal = True
+    end
+    object actChoiceMemberTake7: TOpenChoiceForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = 'Member_ObjectForm'
+      FormName = 'TMember_ObjectForm'
+      FormNameParam.Value = 'TMember_ObjectForm'
+      FormNameParam.DataType = ftString
+      GuiParams = <
+        item
+          Name = 'Key'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'MemberTakeId7'
+        end
+        item
+          Name = 'TextValue'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'MemberTakeName7'
+          DataType = ftString
+        end>
+      isShowModal = True
+    end
   end
   inherited MasterDS: TDataSource
     Left = 72
@@ -756,6 +1028,55 @@ inherited ContractChoicePartnerOrderForm: TContractChoicePartnerOrderForm
         Value = Null
         Component = MasterCDS
         ComponentItem = 'MemberTakeId'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inMemberId1'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'MemberTakeId1'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inMemberId2'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'MemberTakeId2'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inMemberId3'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'MemberTakeId3'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inMemberId4'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'MemberTakeId4'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inMemberId5'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'MemberTakeId5'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inMemberId6'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'MemberTakeId6'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inMemberId7'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'MemberTakeId7'
         ParamType = ptInput
       end
       item

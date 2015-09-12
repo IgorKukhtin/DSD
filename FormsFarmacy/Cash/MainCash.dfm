@@ -8,8 +8,8 @@ inherited MainCashForm: TMainCashForm
   OnCreate = FormCreate
   OnKeyDown = ParentFormKeyDown
   AddOnFormData.Params = FormParams
-  ExplicitWidth = 780
-  ExplicitHeight = 442
+  ExplicitWidth = 788
+  ExplicitHeight = 453
   PixelsPerInch = 96
   TextHeight = 13
   object BottomPanel: TPanel [0]
@@ -346,7 +346,7 @@ inherited MainCashForm: TMainCashForm
         Top = 6
         Width = 34
         Height = 20
-        Action = actLoadVIP
+        Action = actExecuteLoadVIP
         LookAndFeel.Kind = lfStandard
         TabOrder = 7
       end
@@ -358,6 +358,7 @@ inherited MainCashForm: TMainCashForm
         Action = actLoadDeferred
         LookAndFeel.Kind = lfStandard
         TabOrder = 8
+        Visible = False
       end
       object lblMoneyInCash: TcxLabel
         Left = 476
@@ -469,6 +470,7 @@ inherited MainCashForm: TMainCashForm
       Caption = #1055#1086#1089#1090#1072#1074#1080#1090#1100' '#1095#1077#1082' '#1086#1090#1083#1086#1078#1077#1085#1085#1099#1084
       Hint = #1055#1086#1089#1090#1072#1074#1080#1090#1100' '#1095#1077#1082' '#1086#1090#1083#1086#1078#1077#1085#1085#1099#1084
       ShortCut = 119
+      Visible = False
       OnExecute = actDeferrentExecute
     end
     object actOpenCheckVIP: TOpenChoiceForm
@@ -607,11 +609,11 @@ inherited MainCashForm: TMainCashForm
           StoredProc = spSelectCheck
         end
         item
-          StoredProc = spSelectRemains_Lite
+          StoredProc = spSelect_CashRemains_Diff
         end>
       Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100' '#1090#1086#1083#1100#1082#1086' '#1086#1089#1090#1072#1090#1086#1082
       Hint = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100' '#1090#1086#1083#1100#1082#1086' '#1086#1089#1090#1072#1090#1086#1082
-      ShortCut = 115
+      ShortCut = 116
       RefreshOnTabSetChanges = False
     end
     object actOpenMCSForm: TdsdOpenForm
@@ -635,6 +637,11 @@ inherited MainCashForm: TMainCashForm
       Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1090#1086#1083#1100#1082#1086' '#1086#1089#1090#1072#1090#1086#1082
       ShortCut = 115
       OnExecute = actRefreshRemainsExecute
+    end
+    object actExecuteLoadVIP: TAction
+      Category = #1044#1086#1082#1091#1084#1077#1085#1090#1099
+      Caption = 'VIP'
+      OnExecute = actExecuteLoadVIPExecute
     end
   end
   object dsdDBViewAddOnMain: TdsdDBViewAddOn
@@ -672,6 +679,14 @@ inherited MainCashForm: TMainCashForm
         Value = Null
         Component = FormParams
         ComponentItem = 'CheckId'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inCashSessionId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'CashSessionId'
+        DataType = ftString
         ParamType = ptInput
       end>
     PackSize = 1
@@ -761,6 +776,12 @@ inherited MainCashForm: TMainCashForm
       end
       item
         Name = 'Id'
+        Value = Null
+        DataType = ftString
+        ParamType = ptInput
+      end
+      item
+        Name = 'CashSessionId'
         Value = Null
         DataType = ftString
         ParamType = ptInput
@@ -971,8 +992,11 @@ inherited MainCashForm: TMainCashForm
   end
   object spComplete_Movement_Check: TdsdStoredProc
     StoredProcName = 'gpComplete_Movement_Check'
-    DataSets = <>
-    OutputType = otResult
+    DataSet = DiffCDS
+    DataSets = <
+      item
+        DataSet = DiffCDS
+      end>
     Params = <
       item
         Name = 'inMovementId'
@@ -989,6 +1013,14 @@ inherited MainCashForm: TMainCashForm
       item
         Name = 'inCashRegisterId'
         Value = Null
+        ParamType = ptInput
+      end
+      item
+        Name = 'inCashSessionId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'CashSessionId'
+        DataType = ftString
         ParamType = ptInput
       end>
     PackSize = 1
@@ -1132,5 +1164,66 @@ inherited MainCashForm: TMainCashForm
     PackSize = 1
     Left = 440
     Top = 256
+  end
+  object spDelete_CashSession: TdsdStoredProc
+    StoredProcName = 'gpDelete_CashSession'
+    DataSet = RemainsCDS
+    DataSets = <
+      item
+        DataSet = RemainsCDS
+      end>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inCashSessionId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'CashSessionId'
+        DataType = ftString
+        ParamType = ptInput
+      end>
+    PackSize = 1
+    AutoWidth = True
+    Left = 128
+    Top = 96
+  end
+  object DiffCDS: TClientDataSet
+    Aggregates = <>
+    FieldDefs = <>
+    IndexDefs = <>
+    IndexFieldNames = 'Id'
+    Params = <>
+    StoreDefs = True
+    AfterScroll = RemainsCDSAfterScroll
+    Left = 336
+    Top = 304
+  end
+  object spSelect_CashRemains_Diff: TdsdStoredProc
+    StoredProcName = 'gpSelect_CashRemains_Diff'
+    DataSet = DiffCDS
+    DataSets = <
+      item
+        DataSet = DiffCDS
+      end>
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'CheckId'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inCashSesionId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'CashSessionId'
+        DataType = ftString
+        ParamType = ptInput
+      end>
+    PackSize = 1
+    AutoWidth = True
+    Left = 200
+    Top = 48
   end
 end

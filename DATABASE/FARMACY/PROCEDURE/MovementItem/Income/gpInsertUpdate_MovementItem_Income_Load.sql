@@ -73,22 +73,22 @@ DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_Income_Load
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_Income_Load(
     IN inJuridicalId         Integer   , -- Юридические лица
-    IN inInvNumber           TVarChar  , 
+    IN inInvNumber           TVarChar  , -- Номер документа
     IN inOperDate            TDateTime , -- Дата документа
     
-    IN inCommonCode          Integer   , 
+    IN inCommonCode          Integer   , -- ID внешний (например Морион)
     IN inBarCode             TVarChar  , 
-    IN inGoodsCode           TVarChar  , 
-    IN inGoodsName           TVarChar  , 
-    IN inAmount              TFloat    ,  
-    IN inPrice               TFloat    ,  
+    IN inGoodsCode           TVarChar  , -- ID товара
+    IN inGoodsName           TVarChar  , -- Наименование товара
+    IN inAmount              TFloat    , -- Количество 
+    IN inPrice               TFloat    , -- Цена Отпускная (для аптеки это закупочная) 
     IN inExpirationDate      TDateTime , -- Срок годности
-    IN inPartitionGoods      TVarChar  ,   
+    IN inPartitionGoods      TVarChar  , -- Номер серии   
     IN inPaymentDate         TDateTime , -- Дата оплаты
-    IN inPriceWithVAT        Boolean   ,
-    IN inVAT                 TFloat    ,
-    IN inUnitName            TVarChar  ,
-    IN inMakerName           TVarChar  ,
+    IN inPriceWithVAT        Boolean   , -- Признак: цена включает НДС или не вкл.НДС
+    IN inVAT                 TFloat    , -- Процент НДС
+    IN inUnitName            TVarChar  , 
+    IN inMakerName           TVarChar  , -- Наименование производителя
     IN inFEA                 TVarChar  , -- УК ВЭД
     IN inMeasure             TVarChar  , -- Ед. измерения
     IN inisLastRecord        Boolean   ,

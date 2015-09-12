@@ -3,7 +3,6 @@
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_GoodsProperty (Integer, Integer, TVarChar, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_GoodsProperty (Integer, Integer, TVarChar, TFloat, TFloat, TFloat, TFloat, TVarChar);
 
-
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_GoodsProperty(
  INOUT ioId                  Integer   ,   	-- ключ объекта <Классификатор свойств товаров> 
     IN inCode                Integer   ,    -- Код объекта <Классификатор свойств товаров> 

@@ -321,7 +321,26 @@ BEGIN
       END IF;
 
   ELSE
+  -- !!!временно если НАЛОГОВЫЕ!!!
+  IF vbDescId IN (zc_Movement_Tax(), zc_Movement_TaxCorrective())
+  THEN
+      -- 3.1. определяется дата для <Закрытие периода>
+      SELECT CASE WHEN tmp.CloseDate > tmp.ClosePeriod THEN tmp.CloseDate ELSE tmp.ClosePeriod END AS CloseDate
+           , tmp.RoleId                                                                            AS RoleId
+             INTO vbCloseDate, vbRoleId
+      FROM (SELECT MAX (CASE WHEN PeriodClose.Period = INTERVAL '0 DAY' THEN DATE_TRUNC ('DAY', PeriodClose.CloseDate) ELSE zc_DateStart() END) AS CloseDate
+                 , MAX (CASE WHEN PeriodClose.Period <> INTERVAL '0 DAY' THEN DATE_TRUNC ('DAY', CURRENT_TIMESTAMP) - INTERVAL '1 day' ELSE zc_DateStart() END) AS ClosePeriod
+                 , MAX (PeriodClose.RoleId) AS RoleId
+            FROM PeriodClose
+            WHERE PeriodClose.Id = 3 -- Налоговые + корректировки
+           ) AS tmp;
 
+      IF vbOperDate < vbCloseDate
+      THEN 
+          RAISE EXCEPTION 'Ошибка.Изменения в документе <%> № <%> от <%> не возможны. Для пользователя <%> период закрыт до <%>. (% - %)', (SELECT ItemName FROM MovementDesc WHERE Id = vbDescId), (SELECT InvNumber FROM Movement WHERE Id = inMovementId), DATE (vbOperDate), lfGet_Object_ValueData (inUserId), DATE (vbCloseDate), lfGet_Object_ValueData (vbRoleId), inMovementId;
+      END IF;
+
+  ELSE
   -- !!!временно если ВСЕ НАЛ!!!
   IF inUserId NOT IN (zc_Enum_Process_Auto_PrimeCost()) -- !!!Админу временно можно!!!
      AND (EXISTS (SELECT MovementId FROM MovementLinkObject WHERE MovementId = inMovementId AND DescId IN (zc_MovementLinkObject_PaidKind(), zc_MovementLinkObject_PaidKindFrom(), zc_MovementLinkObject_PaidKindTo()) AND ObjectId = zc_Enum_PaidKind_SecondForm())
@@ -353,8 +372,8 @@ BEGIN
       THEN 
           RAISE EXCEPTION 'Ошибка.Изменения в документе <%> № <%> от <%> не возможны. Для пользователя <%> период закрыт до <%>. (% - %)', (SELECT ItemName FROM MovementDesc WHERE Id = vbDescId), (SELECT InvNumber FROM Movement WHERE Id = inMovementId), DATE (vbOperDate), lfGet_Object_ValueData (inUserId), DATE (vbCloseDate), lfGet_Object_ValueData (vbRoleId), inMovementId;
       END IF;
-  ELSE
 
+  ELSE
   -- !!!временно если БН начисления маркетинг!!!
   IF EXISTS (SELECT 1 FROM ObjectLink_UserRole_View AS View_UserRole WHERE View_UserRole.UserId = inUserId AND View_UserRole.RoleId = 82392) -- Начисления(п.б.)-ввод документов
      AND vbDescId IN (zc_Movement_Service(), zc_Movement_ProfitLossService())
@@ -369,47 +388,44 @@ BEGIN
             FROM PeriodClose
             WHERE PeriodClose.Id = 7 -- БН начисления маркетинг
            ) AS tmp;
-            
-      IF vbRoleId > 0
-      THEN
-          -- 3.2. проверка прав для <Закрытие периода>
-          IF vbOperDate < vbCloseDate
-          THEN 
-              RAISE EXCEPTION 'Ошибка.Изменения в документе № <%> от <%> не возможны. Для роли <%> период закрыт до <%>. (%)', (SELECT InvNumber FROM Movement WHERE Id = inMovementId), DATE (vbOperDate), lfGet_Object_ValueData (vbRoleId), DATE (vbCloseDate), inMovementId;
-          END IF;
+      -- 3.2. проверка <Закрытие периода>
+      IF vbOperDate < vbCloseDate
+      THEN 
+          RAISE EXCEPTION 'Ошибка.Изменения в документе № <%> от <%> не возможны. Для роли <%> период закрыт до <%>. (%)', (SELECT InvNumber FROM Movement WHERE Id = inMovementId), DATE (vbOperDate), lfGet_Object_ValueData (vbRoleId), DATE (vbCloseDate), inMovementId;
+      END IF;
 
-     END IF;
   ELSE
-
   -- !!!временно если не НАЛ!!!
   IF inUserId NOT IN (zc_Enum_Process_Auto_PrimeCost()) -- !!!Админу временно можно!!!
      AND NOT EXISTS (SELECT MovementId FROM MovementLinkObject WHERE MovementId = inMovementId AND DescId = zc_MovementLinkObject_PaidKind() AND ObjectId = zc_Enum_PaidKind_SecondForm())
+     AND EXISTS (SELECT 1 FROM PeriodClose JOIN ObjectLink_UserRole_View AS View_UserRole ON View_UserRole.RoleId = PeriodClose.RoleId AND View_UserRole.UserId = inUserId
+                 -- WHERE PeriodClose.RoleId IN (SELECT RoleId FROM Object_Role_MovementDesc_View WHERE MovementDescId = vbDescId)
+                )
   THEN
       -- 3.1. определяется дата для <Закрытие периода>
       SELECT CASE WHEN tmp.CloseDate > tmp.ClosePeriod THEN tmp.CloseDate ELSE tmp.ClosePeriod END AS CloseDate
            , tmp.RoleId                                                                            AS RoleId
              INTO vbCloseDate, vbRoleId
-      FROM (SELECT MAX (CASE WHEN PeriodClose.Period = INTERVAL '0 DAY' THEN DATE_TRUNC ('DAY', PeriodClose.CloseDate) ELSE zc_DateStart() END) AS CloseDate
-                 , MAX (CASE WHEN PeriodClose.Period <> INTERVAL '0 DAY' THEN DATE_TRUNC ('DAY', CURRENT_TIMESTAMP) - INTERVAL '1 day' ELSE zc_DateStart() END) AS ClosePeriod
-                 , MAX (PeriodClose.RoleId) AS RoleId
+      FROM (SELECT (CASE WHEN PeriodClose.Period  = INTERVAL '0 DAY' THEN DATE_TRUNC ('DAY', PeriodClose.CloseDate)                ELSE zc_DateStart() END) AS CloseDate
+                 , (CASE WHEN PeriodClose.Period <> INTERVAL '0 DAY' THEN DATE_TRUNC ('DAY', CURRENT_TIMESTAMP) - INTERVAL '1 day' ELSE zc_DateStart() END) AS ClosePeriod
+                 , (PeriodClose.RoleId) AS RoleId
             FROM PeriodClose
-                 LEFT JOIN ObjectLink_UserRole_View AS View_UserRole
-                                                    ON View_UserRole.RoleId = PeriodClose.RoleId
-                                                   AND View_UserRole.UserId = inUserId
+                 INNER JOIN ObjectLink_UserRole_View AS View_UserRole
+                                                     ON View_UserRole.RoleId = PeriodClose.RoleId
+                                                    AND View_UserRole.UserId = inUserId
                                                    -- AND vbDescId NOT IN (zc_Movement_PersonalService(), zc_Movement_Service(), zc_Movement_SendDebt())
-            WHERE /*View_UserRole.UserId = inUserId -- OR PeriodClose.RoleId IS NULL
-              AND */PeriodClose.RoleId IN (SELECT RoleId FROM Object_Role_MovementDesc_View WHERE MovementDescId = vbDescId)
+            -- WHERE PeriodClose.RoleId IN (SELECT RoleId FROM Object_Role_MovementDesc_View WHERE MovementDescId = vbDescId)
+            ORDER BY 1 DESC, 2 DESC
+            LIMIT 1
            ) AS tmp;
-            
-      IF vbRoleId > 0
-      THEN
-          -- 3.2. проверка прав для <Закрытие периода>
-          IF vbOperDate < vbCloseDate
-          THEN 
-              -- RAISE EXCEPTION 'Ошибка.Изменения в документе № <%> от <%> не возможны.Для роли <%> период закрыт до <%>.(%)', (SELECT InvNumber FROM Movement WHERE Id = inMovementId), TO_CHAR (vbOperDate, 'DD.MM.YYYY'), lfGet_Object_ValueData (vbRoleId), TO_CHAR (vbCloseDate, 'DD.MM.YYYY'), inMovementId;
-              RAISE EXCEPTION 'Ошибка.Изменения в документе № <%> от <%> не возможны. Для роли <%> период закрыт до <%>. (%)(%)', (SELECT InvNumber FROM Movement WHERE Id = inMovementId), DATE (vbOperDate), lfGet_Object_ValueData (vbRoleId), DATE (vbCloseDate), inMovementId, vbDescId;
-          END IF;
-     ELSE
+      -- 3.2. проверка прав для <Закрытие периода>
+      IF vbOperDate < vbCloseDate
+      THEN 
+          -- RAISE EXCEPTION 'Ошибка.Изменения в документе № <%> от <%> не возможны.Для роли <%> период закрыт до <%>.(%)', (SELECT InvNumber FROM Movement WHERE Id = inMovementId), TO_CHAR (vbOperDate, 'DD.MM.YYYY'), lfGet_Object_ValueData (vbRoleId), TO_CHAR (vbCloseDate, 'DD.MM.YYYY'), inMovementId;
+          RAISE EXCEPTION 'Ошибка.Изменения в документе № <%> от <%> не возможны. Для роли <%> период закрыт до <%>. (%)(%)', (SELECT InvNumber FROM Movement WHERE Id = inMovementId), DATE (vbOperDate), lfGet_Object_ValueData (vbRoleId), DATE (vbCloseDate), inMovementId, vbDescId;
+      END IF;
+
+  ELSE
          IF inUserId NOT IN (zc_Enum_Process_Auto_PrimeCost()) -- !!!Админу временно можно!!!
          THEN
              -- !!!временно если ВСЕ НЕ НАЛ!!!
@@ -423,20 +439,18 @@ BEGIN
                    FROM PeriodClose
                    WHERE PeriodClose.Id = 6 -- Закрытие периода ВСЕМ БН
                   ) AS tmp;
-
+             -- 3.2. проверка прав для <Закрытие периода>
              IF vbOperDate < vbCloseDate
              THEN 
                  RAISE EXCEPTION 'Ошибка.Изменения в документе <%> № <%> от <%> не возможны. Для пользователя <%> период закрыт до <%>. (% - %)', (SELECT ItemName FROM MovementDesc WHERE Id = vbDescId), (SELECT InvNumber FROM Movement WHERE Id = inMovementId), DATE (vbOperDate), lfGet_Object_ValueData (inUserId), DATE (vbCloseDate), lfGet_Object_ValueData (vbRoleId), inMovementId;
              END IF;
          END IF;
 
-     END IF;
-
   END IF; -- !!!временно если ФИЛИАЛ НАЛ + БН!!!
+  END IF; -- !!!временно если НАЛОГОВЫЕ!!!
   END IF; -- !!!временно если ВСЕ НАЛ!!!
   END IF; -- !!!временно если БН начисления маркетинг!!!
-  END IF; -- !!!временно если не НАЛ!!!
-
+  END IF; -- !!!временно если не НАЛ!!! ELSE !!!временно если ВСЕ НЕ НАЛ!!!
 
 END;
 $BODY$

@@ -20,7 +20,7 @@ $BODY$BEGIN
        RETURN QUERY 
        SELECT
              CAST (0 as Integer)    AS Id
-           , COALESCE (MAX (Object_GoodsProperty.ObjectCode), 0) + 1 AS Code
+           , MAX (COALESCE (Object_GoodsProperty.ObjectCode, 0)) + 1 AS Code
            , CAST ('' as TVarChar)  AS Name
 
            , CAST (0 as TFloat)   AS StartPosInt
@@ -29,6 +29,8 @@ $BODY$BEGIN
            , CAST (0 as TFloat)   AS EndPosFrac
 
            , CAST (NULL AS Boolean) AS isErased;
+       FROM Object AS Object_GoodsProperty
+       WHERE Object_GoodsProperty.DescId = zc_Object_GoodsProperty();
 
    ELSE
        RETURN QUERY 

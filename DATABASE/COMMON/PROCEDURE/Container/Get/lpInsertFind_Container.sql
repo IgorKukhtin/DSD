@@ -40,10 +40,11 @@ $BODY$
    DECLARE vbKeyValue TVarChar;
    DECLARE vbMasterKeyValue BigInt;
    DECLARE vbChildKeyValue BigInt;
+
+   DECLARE vbLock Integer;
 BEGIN
      -- так блокируем что б не было ОШИБКИ: обнаружена взаимоблокировка
      -- LOCK TABLE Container IN SHARE UPDATE EXCLUSIVE MODE;
-
 
      --
      -- !!!добавляется аналитика юр лицам (долги)!!!
@@ -155,9 +156,9 @@ BEGIN
      -- Если не нашли, добавляем
      IF COALESCE (vbContainerId, 0) = 0
      THEN
+         -- так блокируем что б не было ОШИБКИ: обнаружена взаимоблокировка
          IF zc_IsLockTable() = TRUE
          THEN
-             -- так блокируем что б не было ОШИБКИ: обнаружена взаимоблокировка
              -- LOCK TABLE Container IN SHARE UPDATE EXCLUSIVE MODE;
              LOCK TABLE LockProtocol IN SHARE UPDATE EXCLUSIVE MODE;
          END IF;
@@ -193,18 +194,43 @@ BEGIN
            UNION ALL
             SELECT inDescId_10, vbContainerId, inObjectId_10 WHERE inDescId_10 <> 0;
      ELSE
+         -- так блокируем что б не было ОШИБКИ: обнаружена взаимоблокировка
          IF zc_IsLockTable() = TRUE
          THEN
-             -- так блокируем что б не было ОШИБКИ: обнаружена взаимоблокировка
              -- LOCK TABLE Container IN SHARE UPDATE EXCLUSIVE MODE;
              LOCK TABLE LockProtocol IN SHARE UPDATE EXCLUSIVE MODE;
          ELSE
+         IF zc_IsLockTableCycle() = TRUE
+         THEN
+             vbLock := 1;
+             WHILE vbLock <> 0 LOOP
+                 BEGIN
+                    PERFORM Container.* FROM Container WHERE Container.Id = vbContainerId FOR UPDATE;
+                    vbLock := 0;
+                 EXCEPTION 
+                     WHEN OTHERS THEN vbLock := vbLock + 1;
+                                      IF vbLock <= 5
+                                      THEN PERFORM pg_sleep (zc_IsLockTableSecond());
+                                      ELSE IF vbLock <= 10
+                                      THEN PERFORM pg_sleep (vbLock + SUBSTR (vbContainerId :: TVarChar, LENGTH (vbContainerId :: TVarChar)) :: Integer);
+                                      ELSE IF vbLock <= 15
+                                      THEN PERFORM pg_sleep (vbLock + SUBSTR (vbContainerId :: TVarChar, -1 + LENGTH (vbContainerId :: TVarChar)) :: Integer);
+                                      ELSE RAISE EXCEPTION 'Deadlock <%>', vbContainerId;
+                                      END IF;
+                                      END IF;
+                                      END IF;
+                 END;
+             END LOOP;
+
+         ELSE
              PERFORM Container.* FROM Container WHERE Container.Id = vbContainerId FOR UPDATE;
+         END IF;
          END IF;
 
          -- update !!!only!! Parent
          UPDATE Container SET ParentId = CASE WHEN COALESCE (inParentId, 0) = 0 THEN NULL ELSE inParentId END
          WHERE Id = vbContainerId AND COALESCE (ParentId, 0) <> COALESCE (inParentId, 0);
+
      END IF;  
 
 
