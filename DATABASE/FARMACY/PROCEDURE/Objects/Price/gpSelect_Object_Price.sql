@@ -12,7 +12,7 @@ RETURNS TABLE (Id Integer, Price TFloat, MCSValue Tfloat
              , GoodsId Integer, GoodsCode Integer, GoodsName TVarChar
              , DateChange TDateTime, MCSDateChange TDateTime
              , MCSIsClose Boolean, MCSNotRecalc Boolean
-             , isErased boolean
+             , Remains TFloat, isErased boolean
              ) AS
 $BODY$
 DECLARE
@@ -44,6 +44,7 @@ BEGIN
                ,NULL::TDateTime                  AS MCSDateChange
                ,NULL::Boolean                    AS MCSIsClose
                ,NULL::Boolean                    AS MCSNotRecalc
+               ,NULL::TFloat                     AS Remains
                ,NULL::Boolean                    AS isErased
             WHERE 1=0;
     ELSEIF inisShowAll = True
@@ -60,12 +61,30 @@ BEGIN
                ,Object_Price_View.MCSDateChange                 AS MCSDateChange
                ,COALESCE(Object_Price_View.MCSIsClose,False)    AS MCSIsClose
                ,COALESCE(Object_Price_View.MCSNotRecalc,False)  AS MCSNotRecalc
+               ,Object_Remains.Remains                          AS Remains
                ,Object_Goods.isErased                           AS isErased 
             FROM Object AS Object_Goods
                 INNER JOIN ObjectLink ON Object_Goods.Id = ObjectLink.ObjectId
                                      AND ObjectLink.ChildObjectId = vbObjectId
                 LEFT OUTER JOIN Object_Price_View ON Object_Goods.id = object_price_view.goodsid
                                                  AND Object_Price_View.unitid = inUnitId
+                LEFT OUTER JOIN (
+                                    SELECT 
+                                        container.objectid,
+                                        SUM(Amount)::TFloat AS Remains
+                                    FROM container
+                                        INNER JOIN containerlinkobject AS CLO_Unit
+                                                                       ON CLO_Unit.containerid = container.id 
+                                                                      AND CLO_Unit.descid = zc_ContainerLinkObject_Unit()
+                                                                      AND CLO_Unit.objectid = inUnitId
+                                    WHERE 
+                                        container.descid = zc_container_count() 
+                                        AND 
+                                        Amount<>0
+                                    GROUP BY 
+                                        container.objectid
+                                ) AS Object_Remains
+                                  ON Object_Remains.ObjectId = Object_Goods.Id
             WHERE
                 Object_Goods.DescId = zc_Object_Goods()
                 AND
@@ -89,9 +108,27 @@ BEGIN
                ,Object_Price_View.MCSDateChange  AS MCSDateChange
                ,Object_Price_View.MCSIsClose     AS MCSIsClose
                ,Object_Price_View.MCSNotRecalc   AS MCSNotRecalc
+               ,Object_Remains.Remains           AS Remains
                ,Object_Goods.isErased            AS isErased 
             FROM Object_Price_View
                 LEFT OUTER JOIN Object AS Object_Goods ON Object_Goods.id = object_price_view.goodsid
+                LEFT OUTER JOIN (
+                                    SELECT 
+                                        container.objectid,
+                                        SUM(Amount)::TFloat AS Remains
+                                    FROM container
+                                        INNER JOIN containerlinkobject AS CLO_Unit
+                                                                       ON CLO_Unit.containerid = container.id 
+                                                                      AND CLO_Unit.descid = zc_ContainerLinkObject_Unit()
+                                                                      AND CLO_Unit.objectid = inUnitId
+                                    WHERE 
+                                        container.descid = zc_container_count() 
+                                        AND 
+                                        Amount<>0
+                                    GROUP BY 
+                                        container.objectid
+                                ) AS Object_Remains
+                                  ON Object_Remains.ObjectId = Object_Price_View.GoodsId
             WHERE
                 Object_Price_View.unitid = inUnitId
                 AND
