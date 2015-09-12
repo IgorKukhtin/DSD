@@ -1,6 +1,6 @@
--- View: Object_Goods_View
+-- View: Object_MCS_View
 
-DROP VIEW IF EXISTS Object_Price_View;
+DROP VIEW IF EXISTS Object_MCS_View;
 
 CREATE OR REPLACE VIEW Object_MCS_View 
 AS

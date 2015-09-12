@@ -79,7 +79,7 @@ BEGIN
                                                                                                           ,inAmountManual:= NULL
                                                                                                           ,inPrice      := Object_Price.Price
                                                                                                           ,inUserId     := vbUserId)
-                                           ,inValueData       := floor(Object_Price.MCSValue - SUM(COALESCE(Container.Amount,0)  + COALESCE(Income.Amount_Income,0)) ))::TFloat)
+                                           ,inValueData       := floor(Object_Price.MCSValue - SUM(COALESCE(Container.Amount,0)) - COALESCE(Income.Amount_Income,0))::TFloat)
         from Object_Price_View AS Object_Price
             LEFT OUTER JOIN ContainerLinkObject AS ContainerLinkObject_Unit
                                                 ON ContainerLinkObject_Unit.DescId = zc_ContainerLinkObject_Unit()
@@ -112,7 +112,7 @@ BEGIN
                                 WHERE
                                     Movement_Income.DescId = zc_Movement_Income()
                                     AND
-                                    Movement_Income.StatusId = (Select Id from Object Where DescId = zc_Object_Status() AND ObjectCode = zc_Enum_StatusCode_UnComplete())
+                                    Movement_Income.StatusId = zc_Enum_Status_UnComplete()
                                     AND
                                     MovementDate_Branch.ValueData >= CURRENT_DATE
                                 GROUP BY
@@ -135,9 +135,10 @@ BEGIN
             MovementItemSaved.Id,
             MovementItemSaved.Amount,
             Object_Price.MCSValue,
-            Object_Goods_View.MinimumLot
+            Object_Goods_View.MinimumLot,
+            Income.Amount_Income
         HAVING
-            floor(Object_Price.MCSValue - SUM(COALESCE(Container.Amount,0)))::TFloat > 0;
+            floor(Object_Price.MCSValue - SUM(COALESCE(Container.Amount,0)) - COALESCE(Income.Amount_Income,0)) > 0;
         --Пересчитываем ручное количество для строк с авторасчетом
         PERFORM
             lpInsertUpdate_MovementItemFloat(inDescId         := zc_MIFloat_AmountManual()
@@ -147,7 +148,7 @@ BEGIN
         FROM
             MovementItem AS MovementItemSaved
             INNER JOIN MovementItemFloat AS MIFloat_AmountSecond
-                                         ON MIFloat_AmountSecond.MovementItemId = MovementId
+                                         ON MIFloat_AmountSecond.MovementItemId = MovementItemSaved.Id
                                                                 AND MIFloat_AmountSecond.DescId = zc_MIFloat_AmountSecond() 
             INNER JOIN Object_Goods_View AS Object_Goods
                                          ON Object_Goods.Id = MovementItemSaved.ObjectId

@@ -10,7 +10,7 @@ uses
   cxDBData, Vcl.Menus, dsdAddOn, dxBarExtItems, dxBar, cxClasses, dsdDB,
   Datasnap.DBClient, dsdAction, Vcl.ActnList, cxPropertiesStore, cxGridLevel,
   cxGridCustomView, cxGridCustomTableView, cxGridTableView, cxGridDBTableView,
-  cxGrid, cxPC;
+  cxGrid, cxPC, cxPCdxBarPopupMenu, cxImageComboBox;
 
 type
   TCheckVIPForm = class(TAncestorDBGridForm)
@@ -38,6 +38,7 @@ type
     dxBarButton3: TdxBarButton;
     actDeleteCheck: TdsdChangeMovementStatus;
     spMovementSetErased: TdsdStoredProc;
+    colStatusCode: TcxGridDBColumn;
   private
     { Private declarations }
   public
@@ -50,6 +51,8 @@ var
 implementation
 
 {$R *.dfm}
+
+uses DataModul;
 
 initialization
   RegisterClass(TCheckVIPForm)

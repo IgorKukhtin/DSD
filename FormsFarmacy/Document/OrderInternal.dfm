@@ -2,9 +2,8 @@ inherited OrderInternalForm: TOrderInternalForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1047#1072#1103#1074#1082#1072' '#1074#1085#1091#1090#1088#1077#1085#1085#1103#1103'>'
   ClientHeight = 532
   ClientWidth = 1229
-  ExplicitLeft = -93
-  ExplicitWidth = 1237
-  ExplicitHeight = 559
+  ExplicitWidth = 1245
+  ExplicitHeight = 570
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -668,10 +667,9 @@ inherited OrderInternalForm: TOrderInternalForm
           StoredProc = spInsertUpdateMIMaster
         end
         item
-          StoredProc = spInsertUpdateMIMaster
+          StoredProc = spGetTotalSumm
         end
         item
-          StoredProc = spGetTotalSumm
         end>
     end
     inherited actPrint: TdsdPrintAction
