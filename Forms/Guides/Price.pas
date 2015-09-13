@@ -11,7 +11,7 @@ uses
   Datasnap.DBClient, dsdAction, Vcl.ActnList, cxPropertiesStore, cxGridLevel,
   cxGridCustomView, cxGridCustomTableView, cxGridTableView, cxGridDBTableView,
   cxGrid, cxPC, Vcl.ExtCtrls, cxContainer, dsdGuides, cxTextEdit, cxMaskEdit,
-  cxButtonEdit, cxCurrencyEdit, ExternalLoad;
+  cxButtonEdit, cxCurrencyEdit, ExternalLoad, cxPCdxBarPopupMenu;
 
 type
   TPriceForm = class(TAncestorEnumForm)
@@ -50,6 +50,7 @@ type
     dxBarButton5: TdxBarButton;
     actStartRecalcMCS: TMultiAction;
     actRecalcMCSDialog: TExecuteDialog;
+    colRemains: TcxGridDBColumn;
   private
     { Private declarations }
   public

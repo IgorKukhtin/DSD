@@ -64,7 +64,8 @@ inherited MainForm: TMainForm
     end
   end
   inherited ActionList: TActionList
-    Top = 48
+    Left = 136
+    Top = 32
     object actReport_GoodsMI_SendonPrice: TdsdOpenForm [0]
       Category = #1054#1090#1095#1077#1090#1099' ('#1090#1086#1074'.)'
       MoveParams = <>

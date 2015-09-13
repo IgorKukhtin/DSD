@@ -6,7 +6,7 @@ CREATE OR REPLACE VIEW Object_Price_View
 AS
     SELECT
         Object_Price.Id                         AS Id
-      , Price_Value.ValueData                   AS Price
+      , ROUND(Price_Value.ValueData,2)::TFloat AS Price
       , MCS_Value.ValueData                     AS MCSValue
 
       , Object_Goods.Id                         AS GoodsId

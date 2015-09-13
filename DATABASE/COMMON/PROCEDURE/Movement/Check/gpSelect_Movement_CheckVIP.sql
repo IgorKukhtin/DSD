@@ -54,8 +54,8 @@ BEGIN
           INNER JOIN tmpStatus ON tmpStatus.StatusId = Movement_Check.StatusId
        WHERE 
 		 Movement_Check.IsDeferred = True
-		 AND
-		 Movement_Check.CashMember is not null
+		 --AND
+		 --Movement_Check.CashMember is not null
 		 AND
 		 (
 		   Movement_Check.UnitId = vbUnitId 
@@ -72,6 +72,7 @@ ALTER FUNCTION gpSelect_Movement_CheckVIP (Boolean, TVarChar) OWNER TO postgres;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.  Воробкало А.А.
+ 12.09.2015                                                                   *[17:23] Кухтин Игорь: вторую кнопку закрыть и перекинуть их в запрос ВИП
  04.07.15                                                                     * 
 
 */

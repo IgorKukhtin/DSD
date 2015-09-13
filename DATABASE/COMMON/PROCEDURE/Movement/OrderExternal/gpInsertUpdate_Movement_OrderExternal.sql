@@ -3,6 +3,7 @@
 DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_OrderExternal (Integer, TVarChar, TVarChar, TDateTime, TDateTime, TFloat, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_OrderExternal (Integer, TVarChar, TVarChar, TDateTime, TDateTime, TFloat, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_OrderExternal (Integer, TVarChar, TVarChar, TDateTime, TDateTime, TFloat, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_OrderExternal (Integer, TVarChar, TVarChar, TDateTime, TDateTime, TFloat, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar, Integer, Integer, TVarChar, TVarChar);
 
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_OrderExternal(
@@ -22,7 +23,8 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_OrderExternal(
     IN inContractId          Integer   , -- Договора
     IN inRouteId             Integer   , -- Маршрут
     IN inRouteSortingId      Integer   , -- Сортировки маршрутов
-    IN inPersonalId          Integer   , -- Сотрудник (экспедитор)
+ INOUT ioPersonalId          Integer   , -- Сотрудник (экспедитор)
+ INOUT ioPersonalName        TVarChar  , -- Сотрудник (экспедитор)
  INOUT ioPriceListId         Integer   , -- Прайс лист
    OUT outPriceListName      TVarChar  , -- Прайс лист
     IN inPartnerId           Integer   , -- Контрагент
@@ -32,6 +34,8 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_OrderExternal(
 RETURNS RECORD AS
 $BODY$
    DECLARE vbUserId Integer;
+   DECLARE vbPersonalId Integer;
+   DECLARE vbPersonalName TVarChar;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      vbUserId:= lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Movement_OrderExternal());
@@ -87,6 +91,28 @@ BEGIN
          WHERE Object_PriceList.Id = ioPriceListId;
      END IF;
 
+     -- определение Экспедитора по дню недели
+     SELECT  Object_MemberTake.Id, Object_MemberTake.ValueDAta
+      INTO vbPersonalId, vbPersonalName
+     FROM ObjectLink AS ObjectLink_Partner_MemberTake
+         LEFT JOIN Object AS Object_MemberTake 
+                          ON Object_MemberTake.Id = ObjectLink_Partner_MemberTake.ChildObjectId
+     WHERE ObjectLink_Partner_MemberTake.ObjectId = inFromId -- 346882 --Object_Partner.Id 
+       AND ObjectLink_Partner_MemberTake.DescId =  CASE EXTRACT (DOW FROM inOperDate)
+                                                       WHEN 1 THEN zc_ObjectLink_Partner_MemberTake1()
+                                                       WHEN 2 THEN zc_ObjectLink_Partner_MemberTake2()
+                                                       WHEN 3 THEN zc_ObjectLink_Partner_MemberTake3()
+                                                       WHEN 4 THEN zc_ObjectLink_Partner_MemberTake4()
+                                                       WHEN 5 THEN zc_ObjectLink_Partner_MemberTake5()
+                                                       WHEN 6 THEN zc_ObjectLink_Partner_MemberTake6()
+                                                       WHEN 0 THEN zc_ObjectLink_Partner_MemberTake7()
+                                                    END;
+
+      IF COALESCE (vbPersonalId, 0) <> 0           -- если экспедитор по дню недели найден заменяем
+        THEN ioPersonalId:= vbPersonalId;
+             ioPersonalName:= vbPersonalName;
+       END IF;       
+                                                    
 
      -- Сохранение
      ioId:= lpInsertUpdate_Movement_OrderExternal (ioId                  := ioId
@@ -104,7 +130,7 @@ BEGIN
                                                  , inContractId          := inContractId
                                                  , inRouteId             := inRouteId
                                                  , inRouteSortingId      := inRouteSortingId
-                                                 , inPersonalId          := inPersonalId
+                                                 , inPersonalId          := ioPersonalId
                                                  , inPriceListId         := ioPriceListId
                                                  , inPartnerId           := inPartnerId
                                                  , inUserId              := vbUserId
@@ -122,6 +148,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 13.09.15         * add ioPersonalId, ioPersonalName
  26.05.15         * add inPartnerId
  18.08.14                                        * add lpInsertUpdate_Movement_OrderExternal
  26.08.14                                                        *

@@ -65,7 +65,9 @@ BEGIN
         AND
         Object_Goods.ObjectId = vbObjectId
         AND
-        COALESCE(Object_Price.MCSNotRecalc,FALSE) = FALSE;
+        COALESCE(Object_Price.MCSNotRecalc,FALSE) = FALSE
+        AND
+        COALESCE(Object_Price.MCSIsClose,FALSE) = FALSE;
 
     --Таблица для продаж
     CREATE TEMP TABLE tmp_OneDaySold(
@@ -149,6 +151,8 @@ BEGIN
                                          AND Object_Price.UnitId = inUnitId 
     WHERE 
         COALESCE(Object_Price.MCSNotRecalc,FALSE) = FALSE
+        AND
+        COALESCE(Object_Price.MCSIsClose,FALSE) = FALSE
     GROUP BY
         tmp_ResultSet.GoodsId,
         Object_Price.MCSValue
