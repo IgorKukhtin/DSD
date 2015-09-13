@@ -65,16 +65,18 @@ BEGIN
              - COALESCE(CurrentMovement.Amount,0) 
              - COALESCE(Reserve.Amount,0))::TFloat as Remains
         from Container
-            Inner Join containerlinkobject AS CLO_Unit
-                                           ON CLO_Unit.containerid = container.id
-                                          AND CLO_Unit.descid = zc_ContainerLinkObject_Unit()
-                                          AND CLO_Unit.objectid = vbUnitId
+            -- Inner Join containerlinkobject AS CLO_Unit
+                                           -- ON CLO_Unit.containerid = container.id
+                                          -- AND CLO_Unit.descid = zc_ContainerLinkObject_Unit()
+                                          -- AND CLO_Unit.objectid = vbUnitId
             Inner Join object_Goods_View ON Container.ObjectId = object_Goods_View.Id
                                         AND object_Goods_View.ObjectId = vbObjectId                             
             LEFT OUTER JOIN RESERVE ON container.objectid = RESERVE.GoodsId
             LEFT OUTER JOIN CurrentMovement ON container.objectid = CurrentMovement.ObjectId                            
         WHERE
             container.descid = zc_container_count()
+            AND
+            Container.WhereObjectId = vbUnitId
         GROUP BY
             Container.ObjectId
            ,CurrentMovement.Amount
