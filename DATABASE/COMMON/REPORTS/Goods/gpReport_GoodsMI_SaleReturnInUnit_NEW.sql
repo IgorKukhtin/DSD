@@ -85,7 +85,8 @@ BEGIN
 
 
     -- Ограничения по товару
-    CREATE TEMP TABLE _tmpGoods (GoodsId Integer, TradeMarkId Integer) ON COMMIT DROP;
+    CREATE TEMP TABLE _tmpGoods (GoodsId Integer, InfoMoneyId Integer, TradeMarkId Integer, MeasureId Integer, Weight TFloat) ON COMMIT DROP;
+    CREATE TEMP TABLE _tmpUnit (UnitId Integer, UnitId_by Integer, isActive Boolean) ON COMMIT DROP;
 
     IF inGoodsGroupId <> 0
     THEN
@@ -362,7 +363,7 @@ BEGIN
 
                          FROM tmpAnalyzer
                               INNER JOIN MovementItemContainer AS MIContainer
-                                                               ON MIContainer.AnalyzerId = tmpAnalyzer.AnalyzerId
+                                                               ON MIContainer.AnalyzerId = NULL -- tmpAnalyzer.AnalyzerId
                                                               AND MIContainer.OperDate BETWEEN inStartDate AND inEndDate
                               INNER JOIN ContainerLinkObject AS ContainerLO_Juridical
                                                              ON ContainerLO_Juridical.ContainerId = MIContainer.ContainerId_Analyzer
@@ -460,13 +461,23 @@ BEGIN
                                 , CASE WHEN inIsGoods = TRUE THEN tmpOperationGroup2.GoodsId ELSE 0 END    
                                 , CASE WHEN inIsGoodsKind = TRUE THEN tmpOperationGroup2.GoodsKindId ELSE 0 END
                         )
- , tmpSendOnPrice_group AS (SELECT GoodsGroupName, GoodsGroupNameFull
-                                 , GoodsId, GoodsCode, GoodsName
-                                 , GoodsKindName, MeasureName
-                                 , TradeMarkName
-                                 , PartionGoods
-                                 , LocationId, LocationCode, LocationName
-                                 , LocationId_by, LocationCode_by, LocationName_by
+ , tmpSendOnPrice_group AS (SELECT tmpSendOnPrice.GoodsGroupName, tmpSendOnPrice.GoodsGroupNameFull
+                                 , tmpSendOnPrice.GoodsId, tmpSendOnPrice.GoodsCode, tmpSendOnPrice.GoodsName
+                                 , tmpSendOnPrice.GoodsKindName, tmpSendOnPrice.MeasureName
+                                 , tmpSendOnPrice.TradeMarkName
+                                 , tmpSendOnPrice.PartionGoods
+
+                                 -- , CASE WHEN isSale = TRUE THEN tmpSendOnPrice.LocationId   ELSE tmpSendOnPrice.LocationId_by END AS LocationId
+                                 -- , CASE WHEN isSale = TRUE THEN tmpSendOnPrice.LocationCode ELSE tmpSendOnPrice.LocationCode_by END AS LocationCode
+                                 -- , CASE WHEN isSale = TRUE THEN tmpSendOnPrice.LocationName ELSE tmpSendOnPrice.LocationName_by END AS LocationName
+
+                                 , 0  AS LocationId
+                                 , 0  AS LocationCode
+                                 , '' AS LocationName
+
+                                 , CASE WHEN isSale = TRUE THEN tmpSendOnPrice.LocationId_by ELSE tmpSendOnPrice.LocationId END AS LocationId_by
+                                 , CASE WHEN isSale = TRUE THEN tmpSendOnPrice.LocationCode_by ELSE tmpSendOnPrice.LocationCode END AS LocationCode_by
+                                 , CASE WHEN isSale = TRUE THEN tmpSendOnPrice.LocationName_by ELSE tmpSendOnPrice.LocationName END AS LocationName_by
 
                                  , SUM (CASE WHEN isSale = TRUE THEN SummIn_branch             ELSE 0 END) AS Sale_Summ
                                  , SUM (CASE WHEN isSale = TRUE THEN SummIn_branch - Summ_calc ELSE 0 END) AS Sale_Summ_10200
@@ -500,13 +511,18 @@ BEGIN
                                  , SUM (CASE WHEN isSale = FALSE THEN AmountIn_Weight - AmountOut_Weight ELSE 0 END) AS Return_Amount_40200_Weight
 
                             FROM tmpSendOnPrice
-                            GROUP BY GoodsGroupName, GoodsGroupNameFull
-                                   , GoodsId, GoodsCode, GoodsName
-                                   , GoodsKindName, MeasureName
-                                   , TradeMarkName
-                                   , PartionGoods
-                                   , LocationId, LocationCode, LocationName
-                                   , LocationId_by, LocationCode_by, LocationName_by
+                            GROUP BY tmpSendOnPrice.GoodsGroupName, tmpSendOnPrice.GoodsGroupNameFull
+                                   , tmpSendOnPrice.GoodsId, tmpSendOnPrice.GoodsCode, tmpSendOnPrice.GoodsName
+                                   , tmpSendOnPrice.GoodsKindName, tmpSendOnPrice.MeasureName
+                                   , tmpSendOnPrice.TradeMarkName
+                                   , tmpSendOnPrice.PartionGoods
+                                   -- , CASE WHEN isSale = TRUE THEN tmpSendOnPrice.LocationId ELSE tmpSendOnPrice.LocationId_by END
+                                   -- , CASE WHEN isSale = TRUE THEN tmpSendOnPrice.LocationCode ELSE tmpSendOnPrice.LocationCode_by END
+                                   -- , CASE WHEN isSale = TRUE THEN tmpSendOnPrice.LocationName ELSE tmpSendOnPrice.LocationName_by END
+
+                                   , CASE WHEN isSale = TRUE THEN tmpSendOnPrice.LocationId_by ELSE tmpSendOnPrice.LocationId END
+                                   , CASE WHEN isSale = TRUE THEN tmpSendOnPrice.LocationCode_by ELSE tmpSendOnPrice.LocationCode END
+                                   , CASE WHEN isSale = TRUE THEN tmpSendOnPrice.LocationName_by ELSE tmpSendOnPrice.LocationName END
                            )
 
      SELECT Object_GoodsGroup.ValueData        AS GoodsGroupName
@@ -719,9 +735,9 @@ BEGIN
           , '' :: TVarChar AS StreetKindName
           , '' :: TVarChar AS StreetName
 
-          , tmpSendOnPrice_group.LocationId_by   AS PartnerId
-          , tmpSendOnPrice_group.LocationCode_by AS PartnerCode
-          , tmpSendOnPrice_group.LocationName_by AS PartnerName
+          , tmpSendOnPrice_group.LocationId_by   :: Integer  AS PartnerId
+          , tmpSendOnPrice_group.LocationCode_by :: Integer  AS PartnerCode
+          , tmpSendOnPrice_group.LocationName_by :: TVarChar AS PartnerName
 
           , 0 :: Integer   ContractCode
           , '' :: TVarChar AS ContractNumber
@@ -743,35 +759,35 @@ BEGIN
 
           , '' :: TVarChar AS AccountName
 
-         , tmpOperationGroup.Sale_Summ          :: TFloat  AS Sale_Summ
-         , tmpOperationGroup.Sale_Summ_10200    :: TFloat  AS Sale_Summ_10200
-         , tmpOperationGroup.Sale_Summ_10300    :: TFloat  AS Sale_Summ_10300
-         , tmpOperationGroup.Sale_SummCost      :: TFloat  AS Sale_SummCost
-         , tmpOperationGroup.Sale_SummCost_10500:: TFloat  AS Sale_SummCost_10500
-         , tmpOperationGroup.Sale_SummCost_40200:: TFloat  AS Sale_SummCost_40200
+         , tmpSendOnPrice_group.Sale_Summ          :: TFloat  AS Sale_Summ
+         , tmpSendOnPrice_group.Sale_Summ_10200    :: TFloat  AS Sale_Summ_10200
+         , tmpSendOnPrice_group.Sale_Summ_10300    :: TFloat  AS Sale_Summ_10300
+         , tmpSendOnPrice_group.Sale_SummCost      :: TFloat  AS Sale_SummCost
+         , tmpSendOnPrice_group.Sale_SummCost_10500:: TFloat  AS Sale_SummCost_10500
+         , tmpSendOnPrice_group.Sale_SummCost_40200:: TFloat  AS Sale_SummCost_40200
 
-         , (tmpOperationGroup.Sale_AmountPartner_Weight + tmpOperationGroup.Sale_Amount_10500_Weight + tmpOperationGroup.Sale_Amount_40200_Weight) :: TFloat  AS Sale_Amount_Weight
-         , (tmpOperationGroup.Sale_AmountPartner_Sh     + tmpOperationGroup.Sale_Amount_10500_Sh     + tmpOperationGroup.Sale_Amount_40200_Sh    ) :: TFloat  AS Sale_Amount_Sh
+         , (tmpSendOnPrice_group.Sale_Amount_Weight) :: TFloat  AS Sale_Amount_Weight
+         , (tmpSendOnPrice_group.Sale_Amount_Sh)     :: TFloat  AS Sale_Amount_Sh
 
-         , tmpOperationGroup.Sale_AmountPartner_Weight :: TFloat AS Sale_AmountPartner_Weight
-         , tmpOperationGroup.Sale_AmountPartner_Sh     :: TFloat AS Sale_AmountPartner_Sh
+         , tmpSendOnPrice_group.Sale_AmountPartner_Weight :: TFloat AS Sale_AmountPartner_Weight
+         , tmpSendOnPrice_group.Sale_AmountPartner_Sh     :: TFloat AS Sale_AmountPartner_Sh
 
-         , tmpOperationGroup.Return_Summ          :: TFloat AS Return_Summ
-         , tmpOperationGroup.Return_Summ_10300    :: TFloat AS Return_Summ_10300
-         , tmpOperationGroup.Return_SummCost      :: TFloat AS Return_SummCost
-         , tmpOperationGroup.Return_SummCost_40200:: TFloat AS Return_SummCost_40200
+         , tmpSendOnPrice_group.Return_Summ          :: TFloat AS Return_Summ
+         , tmpSendOnPrice_group.Return_Summ_10300    :: TFloat AS Return_Summ_10300
+         , tmpSendOnPrice_group.Return_SummCost      :: TFloat AS Return_SummCost
+         , tmpSendOnPrice_group.Return_SummCost_40200:: TFloat AS Return_SummCost_40200
 
-         , (tmpOperationGroup.Return_AmountPartner_Weight + tmpOperationGroup.Return_Amount_40200_Weight) :: TFloat AS Return_Amount_Weight
-         , (tmpOperationGroup.Return_AmountPartner_Sh     + tmpOperationGroup.Return_Amount_40200_Sh)     :: TFloat AS Return_Amount_Sh
+         , (tmpSendOnPrice_group.Return_Amount_Weight) :: TFloat AS Return_Amount_Weight
+         , (tmpSendOnPrice_group.Return_Amount_Sh)     :: TFloat AS Return_Amount_Sh
 
-         , tmpOperationGroup.Return_AmountPartner_Weight :: TFloat AS Return_AmountPartner_Weight
-         , tmpOperationGroup.Return_AmountPartner_Sh     :: TFloat AS Return_AmountPartner_Sh
+         , tmpSendOnPrice_group.Return_AmountPartner_Weight :: TFloat AS Return_AmountPartner_Weight
+         , tmpSendOnPrice_group.Return_AmountPartner_Sh     :: TFloat AS Return_AmountPartner_Sh
 
-         , tmpOperationGroup.Sale_Amount_10500_Weight    :: TFloat AS Sale_Amount_10500_Weight
-         , tmpOperationGroup.Sale_Amount_40200_Weight    :: TFloat AS Sale_Amount_40200_Weight
-         , tmpOperationGroup.Return_Amount_40200_Weight  :: TFloat AS Return_Amount_40200_Weight
+         , tmpSendOnPrice_group.Sale_Amount_10500_Weight    :: TFloat AS Sale_Amount_10500_Weight
+         , tmpSendOnPrice_group.Sale_Amount_40200_Weight    :: TFloat AS Sale_Amount_40200_Weight
+         , tmpSendOnPrice_group.Return_Amount_40200_Weight  :: TFloat AS Return_Amount_40200_Weight
 
-         , CAST (CASE WHEN tmpOperationGroup.Sale_AmountPartner_Weight > 0 THEN 100 * tmpOperationGroup.Return_AmountPartner_Weight / tmpOperationGroup.Sale_AmountPartner_Weight ELSE 0 END AS NUMERIC (16, 1)) :: TFloat AS ReturnPercent
+         , CAST (CASE WHEN tmpSendOnPrice_group.Sale_AmountPartner_Weight > 0 THEN 100 * tmpSendOnPrice_group.Return_AmountPartner_Weight / tmpSendOnPrice_group.Sale_AmountPartner_Weight ELSE 0 END AS NUMERIC (16, 1)) :: TFloat AS ReturnPercent
 
      FROM tmpSendOnPrice_group
           LEFT JOIN ObjectLink AS ObjectLink_Goods_GoodsGroupAnalyst
