@@ -33,9 +33,9 @@ CREATE OR REPLACE FUNCTION lpInsertFind_Container(
 )
 RETURNS Integer AS
 $BODY$
-   DECLARE vbContainerId Integer;
-   DECLARE vbRecordCount Integer;
-   DECLARE vbIs_tmp1 Boolean;
+   DECLARE vbContainerId   Integer;
+
+   DECLARE vbWhereObjectId Integer;
 
    DECLARE vbKeyValue TVarChar;
    DECLARE vbMasterKeyValue BigInt;
@@ -156,6 +156,19 @@ BEGIN
      -- Если не нашли, добавляем
      IF COALESCE (vbContainerId, 0) = 0
      THEN
+         -- так определяется дополнительное поле (для оптимизации)
+         vbWhereObjectId:= SELECT CASE WHEN inDescId_1 = zc_ContainerLinkObject_Unit() THEN inObjectId_1
+                                       WHEN inDescId_2 = zc_ContainerLinkObject_Unit() THEN inObjectId_2
+                                       WHEN inDescId_3 = zc_ContainerLinkObject_Unit() THEN inObjectId_3
+                                       WHEN inDescId_4 = zc_ContainerLinkObject_Unit() THEN inObjectId_4
+                                       WHEN inDescId_5 = zc_ContainerLinkObject_Unit() THEN inObjectId_5
+                                       WHEN inDescId_6 = zc_ContainerLinkObject_Unit() THEN inObjectId_6
+                                       WHEN inDescId_7 = zc_ContainerLinkObject_Unit() THEN inObjectId_7
+                                       WHEN inDescId_8 = zc_ContainerLinkObject_Unit() THEN inObjectId_8
+                                       WHEN inDescId_9 = zc_ContainerLinkObject_Unit() THEN inObjectId_9
+                                       WHEN inDescId_10 = zc_ContainerLinkObject_Unit() THEN inObjectId_10
+                                  END;
+
          -- так блокируем что б не было ОШИБКИ: обнаружена взаимоблокировка
          IF zc_IsLockTable() = TRUE
          THEN
@@ -164,8 +177,8 @@ BEGIN
          END IF;
 
          -- добавили Остаток
-         INSERT INTO Container (DescId, ObjectId, ParentId, Amount, KeyValue, MasterKeyValue, ChildKeyValue)
-                        VALUES (inContainerDescId, inObjectId, CASE WHEN inParentId = 0 THEN NULL ELSE inParentId END, 0, vbKeyValue, vbMasterKeyValue, vbChildKeyValue)
+         INSERT INTO Container (DescId, ObjectId, ParentId, Amount, KeyValue, MasterKeyValue, ChildKeyValue, WhereObjectId)
+                        VALUES (inContainerDescId, inObjectId, CASE WHEN inParentId = 0 THEN NULL ELSE inParentId END, 0, vbKeyValue, vbMasterKeyValue, vbChildKeyValue, vbWhereObjectId)
             RETURNING Id INTO vbContainerId;
 
          -- добавили Аналитики
