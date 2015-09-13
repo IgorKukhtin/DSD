@@ -34,6 +34,7 @@ CREATE OR REPLACE FUNCTION lpInsertFind_Container(
 RETURNS Integer AS
 $BODY$
    DECLARE vbContainerId   Integer;
+
    DECLARE vbWhereObjectId Integer;
 
    DECLARE vbKeyValue TVarChar;
