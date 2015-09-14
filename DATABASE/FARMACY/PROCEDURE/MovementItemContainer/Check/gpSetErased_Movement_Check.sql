@@ -9,12 +9,21 @@ AS
 $BODY$
   DECLARE vbUserId Integer;
 BEGIN
-     -- -- проверка прав пользователя на вызов процедуры
-     -- vbUserId:= lpCheckRight(inSession, zc_Enum_Process_SetErased_Income());
+    --Если документ уже проведен то проверим права
+    -- проверка прав пользователя на вызов процедуры
+    IF EXISTS(SELECT 1
+              FROM Movement
+              WHERE
+                  ID = inMovementId
+                  AND
+                  StatusId = zc_Enum_Status_Complete())
+    THEN
+        vbUserId:= lpCheckRight(inSession, zc_Enum_Process_SetErased_Income());
+    END IF;
 
-     -- Удаляем Документ
-     PERFORM lpSetErased_Movement (inMovementId := inMovementId
-                                 , inUserId     := vbUserId);
+    -- Удаляем Документ
+    PERFORM lpSetErased_Movement (inMovementId := inMovementId
+                                , inUserId     := vbUserId);
 
 END;
 $BODY$

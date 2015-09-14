@@ -16,28 +16,40 @@ $BODY$
   DECLARE vbUserId Integer;
   DECLARE vbPaidTypeId Integer;
 BEGIN
-  -- проверка прав пользователя на вызов процедуры
-   vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Complete_Income());
-  --vbUserId:= inSession;
+    -- проверка прав пользователя на вызов процедуры
+    --vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Complete_Income());
+    vbUserId:= inSession;
+    IF NOT EXISTS(SELECT 1 
+                  FROM 
+                      Movement
+                  WHERE
+                      ID = inMovementId
+                      AND
+                      DescId = zc_Movement_Check()
+                      AND
+                      StatusId = zc_Enum_Status_Uncomplete()
+                 )
+    THEN
+        RAISE EXCEPTION 'Ошибка. Документ не сохранен, либо не находится в состоянии "не проведен"!';
+    END IF;
+    --прописали тип оплаты
+    if inPaidType = 0 then
+        PERFORM lpInsertUpdate_MovementLinkObject(zc_MovementLinkObject_PaidType(),inMovementId,zc_Enum_PaidType_Cash());
+    ELSEIF inPaidType = 1 THEN
+        PERFORM lpInsertUpdate_MovementLinkObject(zc_MovementLinkObject_PaidType(),inMovementId,zc_Enum_PaidType_Card());
+    ELSE
+        RAISE EXCEPTION 'Ошибка.Не определен тип оплаты';
+    END IF;
+    --Сохранили связь с кассовым аппаратом
+    IF inCashRegisterId <> 0 THEN
+        PERFORM lpInsertUpdate_MovementLinkObject(zc_MovementLinkObject_CashRegister(),inMovementId,inCashRegisterId);
+    END IF;
+    -- пересчитали Итоговые суммы
+    PERFORM lpInsertUpdate_MovementFloat_TotalSumm (inMovementId);
 
-  --прописали тип оплаты
-  if inPaidType = 0 then
-    PERFORM lpInsertUpdate_MovementLinkObject(zc_MovementLinkObject_PaidType(),inMovementId,zc_Enum_PaidType_Cash());
-  ELSEIF inPaidType = 1 THEN
-    PERFORM lpInsertUpdate_MovementLinkObject(zc_MovementLinkObject_PaidType(),inMovementId,zc_Enum_PaidType_Card());
-  ELSE
-    RAISE EXCEPTION 'Ошибка.Не определен тип оплаты';
-  END IF;
-  --Сохранили связь с кассовым аппаратом
-  IF inCashRegisterId <> 0 THEN
-    PERFORM lpInsertUpdate_MovementLinkObject(zc_MovementLinkObject_CashRegister(),inMovementId,inCashRegisterId);
-  END IF;
-  -- пересчитали Итоговые суммы
-  PERFORM lpInsertUpdate_MovementFloat_TotalSumm (inMovementId);
-
-  -- собственно проводки
-  PERFORM lpComplete_Movement_Check(inMovementId, -- ключ Документа
-                                    vbUserId);    -- Пользователь                          
+    -- собственно проводки
+    PERFORM lpComplete_Movement_Check(inMovementId, -- ключ Документа
+                                      vbUserId);    -- Пользователь                          
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;

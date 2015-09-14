@@ -2,8 +2,8 @@ inherited PaidTypeForm: TPaidTypeForm
   Caption = #1058#1080#1087#1099' '#1086#1087#1083#1072#1090#1099
   ClientHeight = 310
   ClientWidth = 451
-  ExplicitWidth = 459
-  ExplicitHeight = 337
+  ExplicitWidth = 467
+  ExplicitHeight = 348
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -74,6 +74,12 @@ inherited PaidTypeForm: TPaidTypeForm
           Component = MasterCDS
           ComponentItem = 'PaidTypeName'
           DataType = ftString
+        end
+        item
+          Name = 'Code'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'PaidTypeCode'
         end>
     end
   end
