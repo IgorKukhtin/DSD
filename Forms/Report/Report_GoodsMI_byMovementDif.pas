@@ -52,6 +52,8 @@ type
     clUnitCode: TcxGridDBColumn;
     clPartnerCode: TcxGridDBColumn;
     clJuridicalCode: TcxGridDBColumn;
+    ExecuteDialog: TExecuteDialog;
+    bbExecuteDialog: TdxBarButton;
   private
     { Private declarations }
   public

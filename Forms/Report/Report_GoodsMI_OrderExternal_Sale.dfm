@@ -2,27 +2,28 @@ inherited Report_GoodsMI_OrderExternal_SaleForm: TReport_GoodsMI_OrderExternal_S
   Caption = #1054#1090#1095#1077#1090' <'#1047#1072#1103#1074#1082#1072' / '#1055#1088#1086#1076#1072#1078#1072' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1103#1084'>'
   ClientHeight = 387
   ClientWidth = 1055
+  AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
   ExplicitWidth = 1071
-  ExplicitHeight = 422
+  ExplicitHeight = 425
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Top = 149
+    Top = 91
     Width = 1055
-    Height = 238
+    Height = 296
     TabOrder = 3
     ExplicitTop = 149
     ExplicitWidth = 1055
     ExplicitHeight = 238
-    ClientRectBottom = 238
+    ClientRectBottom = 296
     ClientRectRight = 1055
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 1055
       ExplicitHeight = 238
       inherited cxGrid: TcxGrid
         Width = 1055
-        Height = 238
+        Height = 296
         ExplicitWidth = 1055
         ExplicitHeight = 238
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -474,9 +475,9 @@ inherited Report_GoodsMI_OrderExternal_SaleForm: TReport_GoodsMI_OrderExternal_S
   end
   inherited Panel: TPanel
     Width = 1055
-    Height = 123
+    Height = 65
     ExplicitWidth = 1055
-    ExplicitHeight = 123
+    ExplicitHeight = 65
     inherited deStart: TcxDateEdit
       Left = 118
       EditValue = 42005d
@@ -502,45 +503,45 @@ inherited Report_GoodsMI_OrderExternal_SaleForm: TReport_GoodsMI_OrderExternal_S
       ExplicitTop = 31
     end
     object cxLabel4: TcxLabel
-      Left = 457
-      Top = 12
+      Left = 713
+      Top = 6
       Caption = #1043#1088#1091#1087#1087#1072' '#1090#1086#1074#1072#1088#1086#1074':'
     end
     object edGoodsGroup: TcxButtonEdit
-      Left = 457
-      Top = 30
+      Left = 804
+      Top = 5
       Properties.Buttons = <
         item
           Default = True
           Kind = bkEllipsis
         end>
       TabOrder = 5
-      Width = 240
+      Width = 164
     end
     object cxLabel13: TcxLabel
-      Left = 215
-      Top = 53
-      Caption = #1057#1086#1088#1090#1080#1088#1086#1074#1082#1072' '#1084#1072#1088#1096#1088#1091#1090#1072
+      Left = 209
+      Top = 31
+      Caption = #1057#1086#1088#1090#1080#1088#1086#1074#1082#1072' '#1084#1072#1088#1096#1088#1091#1090#1072':'
     end
     object edRouteSorting: TcxButtonEdit
-      Left = 215
-      Top = 72
+      Left = 330
+      Top = 30
       Properties.Buttons = <
         item
           Default = True
           Kind = bkEllipsis
         end>
       TabOrder = 7
-      Width = 224
+      Width = 171
     end
     object cxLabel7: TcxLabel
-      Left = 457
-      Top = 54
-      Caption = #1052#1072#1088#1096#1088#1091#1090
+      Left = 508
+      Top = 31
+      Caption = #1052#1072#1088#1096#1088#1091#1090':'
     end
     object edRoute: TcxButtonEdit
-      Left = 457
-      Top = 72
+      Left = 561
+      Top = 30
       Properties.Buttons = <
         item
           Default = True
@@ -550,24 +551,24 @@ inherited Report_GoodsMI_OrderExternal_SaleForm: TReport_GoodsMI_OrderExternal_S
       Width = 146
     end
     object cxLabel3: TcxLabel
-      Left = 215
-      Top = 12
-      Caption = #1050#1086#1085#1090#1088#1072#1075#1077#1085#1090
+      Left = 209
+      Top = 6
+      Caption = #1050#1086#1085#1090#1088#1072#1075#1077#1085#1090':'
     end
     object edPartner: TcxButtonEdit
-      Left = 215
-      Top = 30
+      Left = 278
+      Top = 5
       Properties.Buttons = <
         item
           Default = True
           Kind = bkEllipsis
         end>
       TabOrder = 11
-      Width = 224
+      Width = 223
     end
     object edByDoc: TcxCheckBox
-      Left = 615
-      Top = 72
+      Left = 713
+      Top = 30
       Caption = #1056#1072#1079#1074#1077#1088#1085#1091#1090#1100' '#1087#1086' '#1076#1086#1082#1091#1084#1077#1085#1090#1072#1084'  ('#1076#1072'/'#1085#1077#1090')'
       TabOrder = 12
       Visible = False
@@ -575,19 +576,19 @@ inherited Report_GoodsMI_OrderExternal_SaleForm: TReport_GoodsMI_OrderExternal_S
     end
   end
   object edTo: TcxButtonEdit [2]
-    Left = 714
-    Top = 30
+    Left = 551
+    Top = 5
     Properties.Buttons = <
       item
         Default = True
         Kind = bkEllipsis
       end>
     TabOrder = 6
-    Width = 132
+    Width = 156
   end
   object cxLabel8: TcxLabel [3]
-    Left = 714
-    Top = 12
+    Left = 508
+    Top = 6
     Caption = #1057#1082#1083#1072#1076':'
   end
   inherited cxPropertiesStore: TcxPropertiesStore
@@ -827,6 +828,116 @@ inherited Report_GoodsMI_OrderExternal_SaleForm: TReport_GoodsMI_OrderExternal_S
       ReportNameParam.Value = #1054#1090#1095#1077#1090' - '#1079#1072#1103#1074#1082#1080' ('#1087#1086' '#1055#1086#1082#1091#1087#1072#1090#1077#1083#1103#1084'-'#1074#1089#1077')'
       ReportNameParam.DataType = ftString
     end
+    object ExecuteDialog: TExecuteDialog
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1072#1088#1072#1084#1077#1090#1088#1099' '#1086#1090#1095#1077#1090#1072
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1072#1088#1072#1084#1077#1090#1088#1099' '#1086#1090#1095#1077#1090#1072
+      ImageIndex = 35
+      FormName = 'TReport_GoodsMI_OrderExternal_SaleDialogForm'
+      FormNameParam.Value = 'TReport_GoodsMI_OrderExternal_SaleDialogForm'
+      FormNameParam.DataType = ftString
+      GuiParams = <
+        item
+          Name = 'StartDate'
+          Value = 42005d
+          Component = deStart
+          DataType = ftDateTime
+          ParamType = ptInput
+        end
+        item
+          Name = 'EndDate'
+          Value = 42005d
+          Component = deEnd
+          DataType = ftDateTime
+          ParamType = ptInput
+        end
+        item
+          Name = 'PartnerId'
+          Value = ''
+          Component = GuidesPartner
+          ComponentItem = 'Key'
+          DataType = ftString
+          ParamType = ptInput
+        end
+        item
+          Name = 'PartnerName'
+          Value = ''
+          Component = GuidesPartner
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          ParamType = ptInput
+        end
+        item
+          Name = 'GoodsGroupId'
+          Value = ''
+          Component = GoodsGroupGuides
+          ComponentItem = 'Key'
+          ParamType = ptInput
+        end
+        item
+          Name = 'GoodsGroupName'
+          Value = ''
+          Component = GoodsGroupGuides
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          ParamType = ptInput
+        end
+        item
+          Name = 'RouteSortingId'
+          Value = ''
+          Component = GuidesRouteSorting
+          ComponentItem = 'Key'
+          ParamType = ptInput
+        end
+        item
+          Name = 'RouteSortingName'
+          Value = ''
+          Component = GuidesRouteSorting
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          ParamType = ptInput
+        end
+        item
+          Name = 'RouteId'
+          Value = ''
+          Component = GuidesRoute
+          ComponentItem = 'Key'
+          ParamType = ptInput
+        end
+        item
+          Name = 'RouteName'
+          Value = ''
+          Component = GuidesRoute
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          ParamType = ptInput
+        end
+        item
+          Name = 'ToId'
+          Value = ''
+          Component = GuidesTo
+          ComponentItem = 'Key'
+          ParamType = ptInput
+        end
+        item
+          Name = 'ToName'
+          Value = ''
+          Component = GuidesTo
+          ComponentItem = 'TextValue'
+          ParamType = ptInput
+        end
+        item
+          Name = 'inIsByDoc'
+          Value = 'False'
+          Component = edByDoc
+          DataType = ftBoolean
+          ParamType = ptInput
+        end>
+      isShowModal = True
+      RefreshDispatcher = RefreshDispatcher
+      OpenBeforeShow = True
+    end
   end
   inherited MasterDS: TDataSource
     Left = 112
@@ -921,6 +1032,14 @@ inherited Report_GoodsMI_OrderExternal_SaleForm: TReport_GoodsMI_OrderExternal_S
         end
         item
           Visible = True
+          ItemName = 'bbExecuteDialog'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbRefresh'
         end
         item
@@ -994,6 +1113,10 @@ inherited Report_GoodsMI_OrderExternal_SaleForm: TReport_GoodsMI_OrderExternal_S
       Category = 0
       Visible = ivNever
     end
+    object bbExecuteDialog: TdxBarButton
+      Action = ExecuteDialog
+      Category = 0
+    end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
     Left = 696
@@ -1061,7 +1184,7 @@ inherited Report_GoodsMI_OrderExternal_SaleForm: TReport_GoodsMI_OrderExternal_S
         DataType = ftString
         ParamType = ptInput
       end>
-    Left = 560
+    Left = 872
     Top = 8
   end
   object FormParams: TdsdFormParams
@@ -1093,8 +1216,8 @@ inherited Report_GoodsMI_OrderExternal_SaleForm: TReport_GoodsMI_OrderExternal_S
         DataType = ftString
         ParamType = ptInput
       end>
-    Left = 352
-    Top = 72
+    Left = 424
+    Top = 16
   end
   object GuidesRoute: TdsdGuides
     KeyField = 'Id'
@@ -1120,8 +1243,8 @@ inherited Report_GoodsMI_OrderExternal_SaleForm: TReport_GoodsMI_OrderExternal_S
         DataType = ftString
         ParamType = ptInput
       end>
-    Left = 488
-    Top = 72
+    Left = 560
+    Top = 16
   end
   object GuidesPartner: TdsdGuides
     KeyField = 'Id'
@@ -1144,8 +1267,8 @@ inherited Report_GoodsMI_OrderExternal_SaleForm: TReport_GoodsMI_OrderExternal_S
         ComponentItem = 'TextValue'
         DataType = ftString
       end>
-    Left = 312
-    Top = 8
+    Left = 360
+    Top = 65528
   end
   object GuidesTo: TdsdGuides
     KeyField = 'Id'
@@ -1171,7 +1294,7 @@ inherited Report_GoodsMI_OrderExternal_SaleForm: TReport_GoodsMI_OrderExternal_S
         DataType = ftString
         ParamType = ptInput
       end>
-    Left = 760
-    Top = 4
+    Left = 616
+    Top = 65532
   end
 end

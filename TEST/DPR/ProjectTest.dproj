@@ -2285,6 +2285,26 @@
 				<Form>Report_LoginProtocolForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
+			<DCCReference Include="..\..\Forms\Report\Report_GoodsTaxDialog.pas">
+				<Form>Report_GoodsTaxDialogForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Report\Report_GoodsMI_OrderExternal_SaleDialog.pas">
+				<Form>Report_GoodsMI_OrderExternal_SaleDialogForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Report\Report_GoodsMI_byMovementDialog.pas">
+				<Form>Report_GoodsMI_byMovementDialogForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Report\Report_GoodsMI_byMovementDifDialog.pas">
+				<Form>Report_GoodsMI_byMovementDifDialogForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Report\Report_GoodsMI_byPriceDifDialog.pas">
+				<Form>Report_GoodsMI_byPriceDifDialogForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
 			<BuildConfiguration Include="Release">
 				<Key>Cfg_2</Key>
 				<CfgParent>Base</CfgParent>

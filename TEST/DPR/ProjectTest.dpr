@@ -733,7 +733,12 @@ uses
   Report_BankAccount_Cash in '..\..\Forms\Report\Report_BankAccount_Cash.pas' {Report_BankAccount_CashForm: TParentForm},
   Report_BankAccount_CashDialog in '..\..\Forms\Report\Report_BankAccount_CashDialog.pas' {Report_BankAccount_CashDialogForm: TParentForm},
   TransportJournalChoice in '..\..\Forms\Document\TransportJournalChoice.pas' {TransportJournalChoiceForm: TParentForm},
-  Report_LoginProtocol in '..\..\Forms\Report\Report_LoginProtocol.pas' {Report_LoginProtocolForm: TParentForm};
+  Report_LoginProtocol in '..\..\Forms\Report\Report_LoginProtocol.pas' {Report_LoginProtocolForm: TParentForm},
+  Report_GoodsTaxDialog in '..\..\Forms\Report\Report_GoodsTaxDialog.pas' {Report_GoodsTaxDialogForm: TParentForm},
+  Report_GoodsMI_OrderExternal_SaleDialog in '..\..\Forms\Report\Report_GoodsMI_OrderExternal_SaleDialog.pas' {Report_GoodsMI_OrderExternal_SaleDialogForm: TParentForm},
+  Report_GoodsMI_byMovementDialog in '..\..\Forms\Report\Report_GoodsMI_byMovementDialog.pas' {Report_GoodsMI_byMovementDialogForm: TParentForm},
+  Report_GoodsMI_byMovementDifDialog in '..\..\Forms\Report\Report_GoodsMI_byMovementDifDialog.pas' {Report_GoodsMI_byMovementDifDialogForm: TParentForm},
+  Report_GoodsMI_byPriceDifDialog in '..\..\Forms\Report\Report_GoodsMI_byPriceDifDialog.pas' {Report_GoodsMI_byPriceDifDialogForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}

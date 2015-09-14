@@ -31,6 +31,8 @@ type
     clAmount: TcxGridDBColumn;
     clOperPrice: TcxGridDBColumn;
     clStatusName: TcxGridDBColumn;
+    ExecuteDialog: TExecuteDialog;
+    bbExecuteDialog: TdxBarButton;
   private
     { Private declarations }
   public
