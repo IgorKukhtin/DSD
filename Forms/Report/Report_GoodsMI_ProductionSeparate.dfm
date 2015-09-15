@@ -486,8 +486,8 @@ inherited Report_GoodsMI_ProductionSeparateForm: TReport_GoodsMI_ProductionSepar
       Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1072#1088#1072#1084#1077#1090#1088#1099' '#1086#1090#1095#1077#1090#1072
       Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1072#1088#1072#1084#1077#1090#1088#1099' '#1086#1090#1095#1077#1090#1072
       ImageIndex = 35
-      FormName = 'TReport_GoodsMI_ProductionSeparateDialogForm'
-      FormNameParam.Value = 'TReport_GoodsMI_ProductionSeparateDialogForm'
+      FormName = 'TReport_GoodsMI_ProductionSeparateUnionDialogForm'
+      FormNameParam.Value = 'TReport_GoodsMI_ProductionSeparateUnionDialogForm'
       FormNameParam.DataType = ftString
       GuiParams = <
         item

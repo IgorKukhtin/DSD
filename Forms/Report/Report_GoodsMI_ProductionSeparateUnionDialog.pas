@@ -1,4 +1,4 @@
-unit Report_GoodsMI_ProductionSeparateDialog;
+unit Report_GoodsMI_ProductionSeparateUnionDialog;
 
 interface
 
@@ -12,7 +12,7 @@ uses
   dxSkinsDefaultPainters, cxCheckBox;
 
 type
-  TReport_GoodsMI_ProductionSeparateDialogForm = class(TParentForm)
+  TReport_GoodsMI_ProductionSeparateUnionDialogForm = class(TParentForm)
     cxButton1: TcxButton;
     cxButton2: TcxButton;
     deEnd: TcxDateEdit;
@@ -43,6 +43,7 @@ type
     cxLabel3: TcxLabel;
     GoodsGuides: TdsdGuides;
     ChildGoodsGuides: TdsdGuides;
+    cbGroupInfoMoney: TcxCheckBox;
   private
     { Private declarations }
   public
@@ -54,6 +55,6 @@ implementation
 {$R *.dfm}
 
 initialization
-  RegisterClass(TReport_GoodsMI_ProductionSeparateDialogForm);
+  RegisterClass(TReport_GoodsMI_ProductionSeparateUnionDialogForm);
 
 end.

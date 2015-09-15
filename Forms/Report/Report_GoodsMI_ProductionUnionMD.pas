@@ -68,6 +68,8 @@ type
     ReceiptName: TcxGridDBColumn;
     InfoMoneyDetailChildName: TcxGridDBColumn;
     cbGroupInfoMoney: TcxCheckBox;
+    ExecuteDialog: TExecuteDialog;
+    bbExecuteDialog: TdxBarButton;
   private
     { Private declarations }
   public

@@ -741,7 +741,7 @@ uses
   Report_GoodsMI_byPriceDifDialog in '..\..\Forms\Report\Report_GoodsMI_byPriceDifDialog.pas' {Report_GoodsMI_byPriceDifDialogForm: TParentForm},
   Report_CheckBonusDialog in '..\..\Forms\Report\Report_CheckBonusDialog.pas' {Report_CheckBonusDialogForm: TParentForm},
   Report_GoodsMI_TransferDebtDialog in '..\..\Forms\Report\Report_GoodsMI_TransferDebtDialog.pas' {Report_GoodsMI_TransferDebtDialogForm: TParentForm},
-  Report_GoodsMI_ProductionSeparateDialog in '..\..\Forms\Report\Report_GoodsMI_ProductionSeparateDialog.pas' {Report_GoodsMI_ProductionSeparateDialogForm: TParentForm};
+  Report_GoodsMI_ProductionSeparateUnionDialog in '..\..\Forms\Report\Report_GoodsMI_ProductionSeparateUnionDialog.pas' {Report_GoodsMI_ProductionSeparateUnionDialogForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}

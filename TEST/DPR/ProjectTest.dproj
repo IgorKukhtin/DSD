@@ -2313,8 +2313,8 @@
 				<Form>Report_GoodsMI_TransferDebtDialogForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
-			<DCCReference Include="..\..\Forms\Report\Report_GoodsMI_ProductionSeparateDialog.pas">
-				<Form>Report_GoodsMI_ProductionSeparateDialogForm</Form>
+			<DCCReference Include="..\..\Forms\Report\Report_GoodsMI_ProductionSeparateUnionDialog.pas">
+				<Form>Report_GoodsMI_ProductionSeparateUnionDialogForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<BuildConfiguration Include="Release">
