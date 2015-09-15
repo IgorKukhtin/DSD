@@ -1180,6 +1180,8 @@ begin
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_GoodsMI_TransferDebtForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_GoodsMI_TransferDebtForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_GoodsMI_TransferDebtDialogForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_GoodsMI_TransferDebtDialogForm');
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_GoodsMIForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_GoodsMIForm');
@@ -1245,6 +1247,8 @@ begin
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_CheckBonusForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_CheckBonusForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_CheckBonusDialogForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_CheckBonusDialogForm');
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_CheckContractInMovementForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_CheckContractInMovementForm');
@@ -1266,6 +1270,8 @@ begin
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_GoodsMI_ProductionSeparateForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_GoodsMI_ProductionSeparateForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_GoodsMI_ProductionSeparateDialogForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_GoodsMI_ProductionSeparateDialogForm');
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_GoodsMI_ProductionUnionForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_GoodsMI_ProductionUnionForm');

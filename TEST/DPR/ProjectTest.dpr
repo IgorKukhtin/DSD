@@ -738,7 +738,10 @@ uses
   Report_GoodsMI_OrderExternal_SaleDialog in '..\..\Forms\Report\Report_GoodsMI_OrderExternal_SaleDialog.pas' {Report_GoodsMI_OrderExternal_SaleDialogForm: TParentForm},
   Report_GoodsMI_byMovementDialog in '..\..\Forms\Report\Report_GoodsMI_byMovementDialog.pas' {Report_GoodsMI_byMovementDialogForm: TParentForm},
   Report_GoodsMI_byMovementDifDialog in '..\..\Forms\Report\Report_GoodsMI_byMovementDifDialog.pas' {Report_GoodsMI_byMovementDifDialogForm: TParentForm},
-  Report_GoodsMI_byPriceDifDialog in '..\..\Forms\Report\Report_GoodsMI_byPriceDifDialog.pas' {Report_GoodsMI_byPriceDifDialogForm: TParentForm};
+  Report_GoodsMI_byPriceDifDialog in '..\..\Forms\Report\Report_GoodsMI_byPriceDifDialog.pas' {Report_GoodsMI_byPriceDifDialogForm: TParentForm},
+  Report_CheckBonusDialog in '..\..\Forms\Report\Report_CheckBonusDialog.pas' {Report_CheckBonusDialogForm: TParentForm},
+  Report_GoodsMI_TransferDebtDialog in '..\..\Forms\Report\Report_GoodsMI_TransferDebtDialog.pas' {Report_GoodsMI_TransferDebtDialogForm: TParentForm},
+  Report_GoodsMI_ProductionSeparateDialog in '..\..\Forms\Report\Report_GoodsMI_ProductionSeparateDialog.pas' {Report_GoodsMI_ProductionSeparateDialogForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}

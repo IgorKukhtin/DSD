@@ -3,9 +3,10 @@ inherited Report_GoodsMI_ProductionSeparateForm: TReport_GoodsMI_ProductionSepar
   ClientHeight = 427
   ClientWidth = 1098
   AddOnFormData.isSingle = False
+  AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
-  ExplicitWidth = 1106
-  ExplicitHeight = 461
+  ExplicitWidth = 1114
+  ExplicitHeight = 465
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -479,6 +480,138 @@ inherited Report_GoodsMI_ProductionSeparateForm: TReport_GoodsMI_ProductionSepar
       ReportNameParam.Value = #1054#1090#1095#1077#1090'_'#1055#1088#1080#1093#1086#1076'_'#1056#1072#1089#1093#1086#1076'_'#1087#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1086'_'#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077'_'#1087#1086'_'#1076#1086#1082#1091#1084#1077#1085#1090#1072#1084'_1'
       ReportNameParam.DataType = ftString
     end
+    object ExecuteDialog: TExecuteDialog
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1072#1088#1072#1084#1077#1090#1088#1099' '#1086#1090#1095#1077#1090#1072
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1072#1088#1072#1084#1077#1090#1088#1099' '#1086#1090#1095#1077#1090#1072
+      ImageIndex = 35
+      FormName = 'TReport_GoodsMI_ProductionSeparateDialogForm'
+      FormNameParam.Value = 'TReport_GoodsMI_ProductionSeparateDialogForm'
+      FormNameParam.DataType = ftString
+      GuiParams = <
+        item
+          Name = 'StartDate'
+          Value = 41640d
+          Component = deStart
+          DataType = ftDateTime
+          ParamType = ptInput
+        end
+        item
+          Name = 'EndDate'
+          Value = 41640d
+          Component = deEnd
+          DataType = ftDateTime
+          ParamType = ptInput
+        end
+        item
+          Name = 'FromGroupId'
+          Value = ''
+          Component = FromGroupGuides
+          ComponentItem = 'Key'
+          ParamType = ptInput
+        end
+        item
+          Name = 'FromGroupName'
+          Value = ''
+          Component = FromGroupGuides
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          ParamType = ptInput
+        end
+        item
+          Name = 'ToGroupId'
+          Value = ''
+          Component = ToGroupGuides
+          ComponentItem = 'Key'
+          ParamType = ptInput
+        end
+        item
+          Name = 'ToGroupName'
+          Value = ''
+          Component = ToGroupGuides
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          ParamType = ptInput
+        end
+        item
+          Name = 'GoodsGroupId'
+          Value = ''
+          Component = GoodsGroupGuides
+          ComponentItem = 'Key'
+          ParamType = ptInput
+        end
+        item
+          Name = 'GoodsGroupName'
+          Value = ''
+          Component = GoodsGroupGuides
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          ParamType = ptInput
+        end
+        item
+          Name = 'ChildGoodsGroupId'
+          Value = ''
+          Component = ChildGoodsGroupGuides
+          ComponentItem = 'Key'
+          ParamType = ptInput
+        end
+        item
+          Name = 'ChildGoodsGroupName'
+          Value = ''
+          Component = ChildGoodsGroupGuides
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          ParamType = ptInput
+        end
+        item
+          Name = 'GoodsId'
+          Value = ''
+          Component = GoodsGuides
+          ComponentItem = 'Key'
+          ParamType = ptInput
+        end
+        item
+          Name = 'GoodsName'
+          Value = ''
+          Component = GoodsGuides
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          ParamType = ptInput
+        end
+        item
+          Name = 'ChildGoodsId'
+          Value = ''
+          Component = ChildGoodsGuides
+          ComponentItem = 'Key'
+          ParamType = ptInput
+        end
+        item
+          Name = 'ChildGoodsName'
+          Value = ''
+          Component = ChildGoodsGuides
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          ParamType = ptInput
+        end
+        item
+          Name = 'isGroupMovement'
+          Value = 'False'
+          Component = cbGroupMovement
+          DataType = ftBoolean
+          ParamType = ptInputOutput
+        end
+        item
+          Name = 'isGroupPartion'
+          Value = 'False'
+          Component = cbGroupPartion
+          DataType = ftBoolean
+          ParamType = ptInputOutput
+        end>
+      isShowModal = True
+      RefreshDispatcher = RefreshDispatcher
+      OpenBeforeShow = True
+    end
   end
   inherited MasterDS: TDataSource
     Left = 72
@@ -580,11 +713,15 @@ inherited Report_GoodsMI_ProductionSeparateForm: TReport_GoodsMI_ProductionSepar
         end
         item
           Visible = True
-          ItemName = 'bbRefresh'
+          ItemName = 'bbExecuteDialog'
         end
         item
           Visible = True
           ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbRefresh'
         end
         item
           Visible = True
@@ -605,6 +742,10 @@ inherited Report_GoodsMI_ProductionSeparateForm: TReport_GoodsMI_ProductionSepar
     end
     object bbPrint: TdxBarButton
       Action = actPrint
+      Category = 0
+    end
+    object bbExecuteDialog: TdxBarButton
+      Action = ExecuteDialog
       Category = 0
     end
   end

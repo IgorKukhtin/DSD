@@ -2305,6 +2305,18 @@
 				<Form>Report_GoodsMI_byPriceDifDialogForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
+			<DCCReference Include="..\..\Forms\Report\Report_CheckBonusDialog.pas">
+				<Form>Report_CheckBonusDialogForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Report\Report_GoodsMI_TransferDebtDialog.pas">
+				<Form>Report_GoodsMI_TransferDebtDialogForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Report\Report_GoodsMI_ProductionSeparateDialog.pas">
+				<Form>Report_GoodsMI_ProductionSeparateDialogForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
 			<BuildConfiguration Include="Release">
 				<Key>Cfg_2</Key>
 				<CfgParent>Base</CfgParent>
