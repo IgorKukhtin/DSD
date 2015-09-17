@@ -24,7 +24,6 @@ object GoodsPropertyValueForm: TGoodsPropertyValueForm
     Height = 438
     Align = alClient
     TabOrder = 1
-    ExplicitLeft = 8
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
