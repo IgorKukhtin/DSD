@@ -82,6 +82,7 @@ type
     ProtocolOpenForm: TdsdOpenForm;
     bbProtocolOpenForm: TdxBarButton;
     BarCodeShort: TcxGridDBColumn;
+    BoxCount: TcxGridDBColumn;
   private
     { Private declarations }
   public

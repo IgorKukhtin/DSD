@@ -24,6 +24,7 @@ object GoodsPropertyValueForm: TGoodsPropertyValueForm
     Height = 438
     Align = alClient
     TabOrder = 1
+    ExplicitLeft = 8
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -114,6 +115,11 @@ object GoodsPropertyValueForm: TGoodsPropertyValueForm
         DataBinding.FieldName = 'Amount'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        Width = 70
+      end
+      object BoxCount: TcxGridDBColumn
+        Caption = #1050#1086#1083'-'#1074#1086' '#1096#1090'. '#1074' '#1103#1097'.'
+        DataBinding.FieldName = 'BoxCount'
         Width = 70
       end
       object BarCodeShort: TcxGridDBColumn
@@ -738,6 +744,14 @@ object GoodsPropertyValueForm: TGoodsPropertyValueForm
         Value = Null
         Component = ClientDataSet
         ComponentItem = 'Amount'
+        DataType = ftFloat
+        ParamType = ptInput
+      end
+      item
+        Name = 'inBoxCount'
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'BoxCount'
         DataType = ftFloat
         ParamType = ptInput
       end

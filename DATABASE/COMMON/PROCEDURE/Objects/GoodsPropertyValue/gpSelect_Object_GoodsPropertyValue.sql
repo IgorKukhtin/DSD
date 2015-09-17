@@ -9,7 +9,7 @@ CREATE OR REPLACE FUNCTION gpSelect_Object_GoodsPropertyValue(
     IN inSession           TVarChar       -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
-             , Amount TFloat
+             , Amount TFloat, BoxCount TFloat
              , BarCodeShort TVarChar, BarCode TVarChar, Article TVarChar, BarCodeGLN TVarChar, ArticleGLN TVarChar, GroupName TVarChar
              , GoodsPropertyId Integer, GoodsPropertyName TVarChar
              , GoodsKindId Integer, GoodsKindName TVarChar
@@ -30,6 +30,7 @@ BEGIN
        , Object_GoodsPropertyValue.ValueData  AS Name
 
        , ObjectFloat_Amount.ValueData         AS Amount
+       , ObjectFloat_BoxCount.ValueData       AS BoxCount
        , ObjectString_BarCodeShort.ValueData  AS BarCodeShort
        , ObjectString_BarCode.ValueData       AS BarCode
        , ObjectString_Article.ValueData       AS Article
@@ -59,6 +60,10 @@ BEGIN
         LEFT JOIN ObjectFloat AS ObjectFloat_Amount
                                ON ObjectFloat_Amount.ObjectId = Object_GoodsPropertyValue.Id
                               AND ObjectFloat_Amount.DescId = zc_ObjectFloat_GoodsPropertyValue_Amount()
+
+        LEFT JOIN ObjectFloat AS ObjectFloat_BoxCount
+                              ON ObjectFloat_BoxCount.ObjectId = Object_GoodsPropertyValue.Id
+                             AND ObjectFloat_BoxCount.DescId = zc_ObjectFloat_GoodsPropertyValue_BoxCount()
 
         LEFT JOIN ObjectString AS ObjectString_BarCodeShort
                                ON ObjectString_BarCodeShort.ObjectId = Object_GoodsPropertyValue.Id
@@ -128,6 +133,7 @@ BEGIN
        , tmpObjectLink.GoodsPropertyValueName       AS Name
 
        , tmpObjectLink.Amount
+       , tmpObjectLink.BoxCount
        , tmpObjectLink.BarCodeShort
        , tmpObjectLink.BarCode
        , tmpObjectLink.Article
@@ -158,6 +164,7 @@ BEGIN
                         , ObjectLink_GoodsPropertyValue_Goods.ChildObjectId         as GoodsId
 
                         , ObjectFloat_Amount.ValueData         AS Amount
+                        , ObjectFloat_BoxCount.ValueData       AS BoxCount
                         , ObjectString_BarCodeShort.ValueData  AS BarCodeShort
                         , ObjectString_BarCode.ValueData       AS BarCode
                         , ObjectString_Article.ValueData       AS Article
@@ -185,6 +192,9 @@ BEGIN
                       LEFT JOIN ObjectFloat AS ObjectFloat_Amount
                                ON ObjectFloat_Amount.ObjectId = Object_GoodsPropertyValue.Id 
                               AND ObjectFloat_Amount.DescId = zc_ObjectFloat_GoodsPropertyValue_Amount()
+                      LEFT JOIN ObjectFloat AS ObjectFloat_BoxCount
+                                            ON ObjectFloat_BoxCount.ObjectId = Object_GoodsPropertyValue.Id
+                                           AND ObjectFloat_BoxCount.DescId = zc_ObjectFloat_GoodsPropertyValue_BoxCount()
 
                       LEFT JOIN ObjectString AS ObjectString_BarCodeShort
                                              ON ObjectString_BarCodeShort.ObjectId = Object_GoodsPropertyValue.Id
@@ -225,6 +235,7 @@ END;$BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 17.09.15         * add BoxCount
  13.02.15         * add inGoodsPropertyId
  10.10.14                                                       *
  28.04.14                                        * add GoodsCode and MeasureName
@@ -239,3 +250,4 @@ having Count(*)  > 1
 */
 -- тест
 -- SELECT * FROM gpSelect_Object_GoodsPropertyValue (351299 , TRUE, '2')
+

@@ -57,6 +57,8 @@ type
     GoodsGuides: TdsdGuides;
     cxLabel10: TcxLabel;
     ceGroupName: TcxTextEdit;
+    cxLabel11: TcxLabel;
+    ceBoxCount: TcxCurrencyEdit;
   private
     { Private declarations }
   public
