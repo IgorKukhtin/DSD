@@ -9,7 +9,7 @@ CREATE OR REPLACE FUNCTION gpGet_Movement_Inventory(
 )
 RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode Integer, StatusName TVarChar
              , TotalCount TFloat, TotalSumm TFloat
-             , UnitId Integer, UnitName TVarChar
+             , UnitId Integer, UnitName TVarChar, FullInvent Boolean
              )
 AS
 $BODY$
@@ -31,6 +31,7 @@ BEGIN
              , 0 :: TFloat                      AS TotalSumm
              , 0                                AS UnitId
              , CAST ('' as TVarChar)            AS UnitName
+             ,False                             AS FullInvent
           FROM lfGet_Object_Status(zc_Enum_Status_UnComplete()) AS Object_Status;
      ELSE
        RETURN QUERY
@@ -38,12 +39,13 @@ BEGIN
              Movement.Id
            , Movement.InvNumber
            , Movement.OperDate
-           , Object_Status.ObjectCode   AS StatusCode
-           , Object_Status.ValueData    AS StatusName
-           , MovementFloat_TotalCount.ValueData  AS TotalCount
-           , MovementFloat_TotalSumm.ValueData   AS TotalSumm
-           , Object_Unit.Id                    AS UnitId
-           , Object_Unit.ValueData             AS UnitName
+           , Object_Status.ObjectCode                             AS StatusCode
+           , Object_Status.ValueData                              AS StatusName
+           , MovementFloat_TotalCount.ValueData                   AS TotalCount
+           , MovementFloat_TotalSumm.ValueData                    AS TotalSumm
+           , Object_Unit.Id                                       AS UnitId
+           , Object_Unit.ValueData                                AS UnitName
+           , COALESCE(MovementBoolean_FullInvent.ValueData,False) AS FullInvent
        FROM Movement
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
 
@@ -59,6 +61,9 @@ BEGIN
                                          ON MovementLinkObject_Unit.MovementId = Movement.Id
                                         AND MovementLinkObject_Unit.DescId = zc_MovementLinkObject_Unit()
             LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = MovementLinkObject_Unit.ObjectId
+            LEFT OUTER JOIN MovementBoolean AS MovementBoolean_FullInvent
+                                            ON MovementBoolean_FullInvent.MovementId = Movement.Id
+                                           AND MovementBoolean_FullInvent.DescId = zc_MovementBoolean_FullInvent()
          WHERE Movement.Id =  inMovementId
          AND Movement.DescId = zc_Movement_Inventory();
 
@@ -72,6 +77,7 @@ ALTER FUNCTION gpGet_Movement_Inventory (Integer, TDateTime, TVarChar) OWNER TO 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.   Воробкало А.А.
+ 16.09.15                                                                     * + FullInvent
  11.07.15                                                                     *
  */
 

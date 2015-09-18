@@ -58,6 +58,7 @@ begin
   FParams.AddParam('inInvNumber', ftString, ptInput, InvNumber);
   FParams.AddParam('inOperDate', ftDateTime, ptInput, OperDate);
   FParams.AddParam('inUnitId', ftInteger, ptInput, UnitId);
+  FParams.AddParam('inFullInvent', ftBoolean, ptInput, False);
   result := InsertUpdate(FParams);
 end;
 

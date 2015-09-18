@@ -1,8 +1,8 @@
--- Function: gpReComplete_Movement_Loss (Integer, TVarChar)
+-- Function: gpReComplete_Movement_Send(integer, tvarchar)
 
-DROP FUNCTION IF EXISTS gpReComplete_Movement_Loss (Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpReComplete_Movement_Send (Integer, TVarChar);
 
-CREATE OR REPLACE FUNCTION gpReComplete_Movement_Loss(
+CREATE OR REPLACE FUNCTION gpReComplete_Movement_Send(
     IN inMovementId        Integer               , -- ключ Документа
     IN inSession           TVarChar DEFAULT ''     -- сессия пользователя
 )
@@ -12,7 +12,7 @@ $BODY$
   DECLARE vbUserId Integer;
 BEGIN
     -- проверка прав пользователя на вызов процедуры
-    vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Complete_Loss());
+    vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Complete_Send());
 
     -- только если документ проведен
     IF EXISTS(
@@ -25,26 +25,20 @@ BEGIN
              )
     THEN
         --распроводим документ
-        PERFORM gpUpdate_Status_Loss(inMovementId := inMovementId,
+        PERFORM gpUpdate_Status_Send(inMovementId := inMovementId,
                                      inStatusCode := zc_Enum_StatusCode_UnComplete(),
                                      inSession    := inSession);
         --Проводим документ
-        PERFORM gpUpdate_Status_Loss(inMovementId := inMovementId,
+        PERFORM gpUpdate_Status_Send(inMovementId := inMovementId,
                                      inStatusCode := zc_Enum_StatusCode_Complete(),
                                      inSession    := inSession);
     END IF;
-
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А.А.
- 21.07.15                                                                        *
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.  ВОробкало А.А.
+ 18.09.15                                                         *
 */
-
--- тест
--- SELECT * FROM gpUnComplete_Movement (inMovementId:= 122175 , inSession:= zfCalc_UserAdmin())
--- SELECT * FROM gpReComplete_Movement_Loss (inMovementId:= 122175, inSession:= zfCalc_UserAdmin())
--- SELECT * FROM gpSelect_MovementItemContainer_Movement (inMovementId:= 122175 , inSession:= zfCalc_UserAdmin())

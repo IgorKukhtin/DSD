@@ -21,13 +21,24 @@ BEGIN
      PERFORM lpUnComplete_Movement (inMovementId := inMovementId
                                   , inUserId     := vbUserId);
 
+     --Удалить все строки, залитые автоматом при проведении
+     PERFORM lpDelete_MovementItem(MovementItem.Id,inSession)
+     FROM
+         MovementItem
+         INNER JOIN MovementItemBoolean AS MIBoolean_IsAuto
+                                        ON MIBoolean_IsAuto.MovementItemId = MovementItem.Id
+                                       AND MIBoolean_IsAuto.DescId = zc_MIBoolean_isAuto()
+     WHERE
+         MovementItem.MovementId = inMovementId;
+
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.  Воробкало А.А.
+ 16.09.2015                                                                   *  + Удалить все строки, залитые автоматом при проведении
  01.09.14                                                       *
 */
 
