@@ -138,7 +138,8 @@ BEGIN
                       , Container.Amount AS ContainerAmount
                       , vbOperDate       AS OperDate
                       , Container.Id
-                      , SUM(Container.Amount) OVER (PARTITION BY Container.objectid ORDER BY OPERDATE, Container.Id) 
+                      , SUM(Container.Amount) OVER (PARTITION BY Container.objectid ORDER BY OPERDATE, Container.Id)
+                      , Row_Number() OVER(PARTITION BY MI_Sale.Id ORDER BY OPERDATE DESC, Container.Id DESC) AS DOrd
                     FROM Container 
                         JOIN MovementItem AS MI_Sale ON MI_Sale.objectid = Container.objectid 
                         JOIN containerlinkobject AS CLI_MI 
@@ -160,8 +161,8 @@ BEGIN
                             Id
                           , MovementItemId
                           , OperDate 
-                          , CASE  
-                                WHEN SaleAmount - SUM > 0 THEN ContainerAmount 
+                          , CASE
+                                WHEN SaleAmount - SUM > 0 AND DOrd <> 1 THEN ContainerAmount 
                                 ELSE SaleAmount - SUM + ContainerAmount
                             END AS Amount
                         FROM DD
