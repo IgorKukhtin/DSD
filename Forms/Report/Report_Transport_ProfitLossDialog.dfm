@@ -332,7 +332,7 @@ object Report_Transport_ProfitLossDialogForm: TReport_Transport_ProfitLossDialog
     FormNameParam.Value = 'TCarForm'
     FormNameParam.DataType = ftString
     FormName = 'TCarForm'
-    PositionDataSet = 'MasterCDS'
+    PositionDataSet = 'ClientDataSet'
     Params = <
       item
         Name = 'Key'

@@ -24,10 +24,6 @@ object Report_Transport_ProfitLossForm: TReport_Transport_ProfitLossForm
     Height = 280
     Align = alClient
     TabOrder = 0
-    ExplicitLeft = 24
-    ExplicitTop = 57
-    ExplicitWidth = 1109
-    ExplicitHeight = 338
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -279,6 +275,13 @@ object Report_Transport_ProfitLossForm: TReport_Transport_ProfitLossForm
         Options.Editing = False
         Width = 107
       end
+      object BusinessName: TcxGridDBColumn
+        Caption = #1041#1080#1079#1085#1077#1089
+        DataBinding.FieldName = 'BusinessName'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 70
+      end
       object colBranchName: TcxGridDBColumn
         Caption = #1060#1080#1083#1080#1072#1083
         DataBinding.FieldName = 'BranchName'
@@ -360,8 +363,7 @@ object Report_Transport_ProfitLossForm: TReport_Transport_ProfitLossForm
     Width = 1038
     Height = 89
     Align = alTop
-    TabOrder = 5
-    ExplicitLeft = 32
+    TabOrder = 2
     object deStart: TcxDateEdit
       Left = 122
       Top = 7
@@ -422,7 +424,7 @@ object Report_Transport_ProfitLossForm: TReport_Transport_ProfitLossForm
         Kind = bkEllipsis
       end>
     Properties.ReadOnly = True
-    TabOrder = 7
+    TabOrder = 4
     Width = 195
   end
   object cxLabel4: TcxLabel
@@ -439,7 +441,7 @@ object Report_Transport_ProfitLossForm: TReport_Transport_ProfitLossForm
         Kind = bkEllipsis
       end>
     Properties.ReadOnly = True
-    TabOrder = 9
+    TabOrder = 6
     Width = 220
   end
   object cxLabel6: TcxLabel
@@ -456,7 +458,7 @@ object Report_Transport_ProfitLossForm: TReport_Transport_ProfitLossForm
         Kind = bkEllipsis
       end>
     Properties.ReadOnly = True
-    TabOrder = 11
+    TabOrder = 9
     Width = 235
   end
   object cbMovement: TcxCheckBox
@@ -746,6 +748,8 @@ object Report_Transport_ProfitLossForm: TReport_Transport_ProfitLossForm
       item
         Name = 'inCarId'
         Value = 0
+        Component = CarGuides
+        ComponentItem = 'Key'
         ParamType = ptInput
       end
       item
@@ -800,6 +804,16 @@ object Report_Transport_ProfitLossForm: TReport_Transport_ProfitLossForm
         Component = BranchGuides
       end
       item
+        Component = BusinessGuides
+      end
+      item
+        Component = UnitGuides
+      end
+      item
+        Component = CarGuides
+      end
+      item
+        Component = cbMovement
       end>
     Left = 168
     Top = 200
@@ -864,7 +878,7 @@ object Report_Transport_ProfitLossForm: TReport_Transport_ProfitLossForm
     FormNameParam.Value = 'TCarForm'
     FormNameParam.DataType = ftString
     FormName = 'TCarForm'
-    PositionDataSet = 'MasterCDS'
+    PositionDataSet = 'ClientDataSet'
     Params = <
       item
         Name = 'Key'

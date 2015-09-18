@@ -103,6 +103,7 @@ type
     procedure LoadReportSaleAnalyzeFormTest;
     procedure LoadReportProductionOutAnalyzeFormTest;
     procedure LoadReportProductionOrderFormTest;
+    procedure LoadReportTransportFormTest;
     procedure LoadReturnInFormTest;
     procedure LoadReturnOutFormTest;
     procedure LoadRetailFormTest;
@@ -1142,22 +1143,6 @@ begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_GoodsBalanceDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_GoodsBalanceDialogForm');
 
-
-  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_FuelForm'));
-  TdsdFormStorageFactory.GetStorage.Load('TReport_FuelForm');
-  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_FuelDialogForm'));
-  TdsdFormStorageFactory.GetStorage.Load('TReport_FuelDialogForm');
-
-  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_TransportForm'));
-  TdsdFormStorageFactory.GetStorage.Load('TReport_TransportForm');
-  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_TransportDialogForm'));
-  TdsdFormStorageFactory.GetStorage.Load('TReport_TransportDialogForm');
-
-  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_TransportListForm'));
-  TdsdFormStorageFactory.GetStorage.Load('TReport_TransportListForm');
-  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_TransportListDialogForm'));
-  TdsdFormStorageFactory.GetStorage.Load('TReport_TransportListDialogForm');
-
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_AccountForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_AccountForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_AccountDialogForm'));
@@ -1329,6 +1314,30 @@ begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_GoodsMI_InternalDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_GoodsMI_InternalDialogForm')
 
+end;
+
+
+procedure TLoadFormTest.LoadReportTransportFormTest;
+begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_FuelForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_FuelForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_FuelDialogForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_FuelDialogForm');
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_TransportForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_TransportForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_TransportDialogForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_TransportDialogForm');
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_TransportListForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_TransportListForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_TransportListDialogForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_TransportListDialogForm');
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Transport_ProfitLossForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_Transport_ProfitLossForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Transport_ProfitLossDialogForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_Transport_ProfitLossDialogForm');
 end;
 
 procedure TLoadFormTest.LoadReportBankAccountCashFormTest;

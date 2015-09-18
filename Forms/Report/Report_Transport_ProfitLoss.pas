@@ -78,6 +78,7 @@ type
     CarGuides: TdsdGuides;
     UnitGuides: TdsdGuides;
     cbMovement: TcxCheckBox;
+    BusinessName: TcxGridDBColumn;
   private
   public
   end;
