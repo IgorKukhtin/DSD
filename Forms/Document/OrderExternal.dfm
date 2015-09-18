@@ -1,27 +1,27 @@
 inherited OrderExternalForm: TOrderExternalForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1047#1072#1103#1074#1082#1072' '#1089#1090#1086#1088#1086#1085#1085#1103#1103' ('#1086#1090' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1103')>'
   ClientHeight = 647
-  ClientWidth = 1391
-  ExplicitWidth = 1407
-  ExplicitHeight = 685
+  ClientWidth = 1366
+  ExplicitWidth = 1382
+  ExplicitHeight = 682
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 166
-    Width = 1391
+    Width = 1366
     Height = 481
     ExplicitTop = 166
-    ExplicitWidth = 1391
+    ExplicitWidth = 1366
     ExplicitHeight = 481
     ClientRectBottom = 481
-    ClientRectRight = 1391
+    ClientRectRight = 1366
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 1391
+      ExplicitWidth = 1366
       ExplicitHeight = 457
       inherited cxGrid: TcxGrid
-        Width = 1391
+        Width = 1366
         Height = 457
-        ExplicitWidth = 1391
+        ExplicitWidth = 1366
         ExplicitHeight = 457
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
@@ -280,10 +280,10 @@ inherited OrderExternalForm: TOrderExternalForm
     end
   end
   inherited DataPanel: TPanel
-    Width = 1391
+    Width = 1366
     Height = 140
     TabOrder = 3
-    ExplicitWidth = 1391
+    ExplicitWidth = 1366
     ExplicitHeight = 140
     inherited edInvNumber: TcxTextEdit
       Left = 8
@@ -1324,12 +1324,11 @@ inherited OrderExternalForm: TOrderExternalForm
         ParamType = ptInputOutput
       end
       item
-        Name = 'ioPersonalName'
+        Name = 'outPersonalName'
         Value = Null
         Component = GuidesPersonal
         ComponentItem = 'TextValue'
         DataType = ftString
-        ParamType = ptInputOutput
       end
       item
         Name = 'ioPriceListId'

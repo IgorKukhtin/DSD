@@ -531,6 +531,32 @@ BEGIN
                                                                                    );
 
      -- самое интересное: заполняем таблицу - суммовые Child(расход)-элементы документа, со всеми свойствами для формирования Аналитик в проводках
+     IF inMovementId IN (2296516, 2296563) -- !!!захардкодил исправление ошибки - 31.07.2015!!!
+     THEN
+     INSERT INTO _tmpItemSummChild (MovementItemId_Parent, MovementItemId, ContainerId_From, AccountId_From, InfoMoneyId_Detail_From, OperSumm)
+        WITH tmpRemains AS (SELECT _tmpItemChild.ContainerId_GoodsFrom, Container.Id AS ContainerId, Container.Amount - COALESCE (SUM (MIContainer.Amount), 0) AS OperSumm
+                            FROM _tmpItemChild
+                                 INNER JOIN Container ON Container.ParentId = _tmpItemChild.ContainerId_GoodsFrom
+                                 LEFT JOIN MovementItemContainer AS MIContainer ON MIContainer.ContainerId = Container.Id
+                                                                               AND MIContainer.OperDate >= '01.08.2015'
+                            GROUP BY _tmpItemChild.ContainerId_GoodsFrom, Container.Id, Container.Amount
+                            HAVING Container.Amount - COALESCE (SUM (MIContainer.Amount), 0) <> 0
+                           )
+        SELECT
+              _tmpItemChild.MovementItemId_Parent
+            , _tmpItemChild.MovementItemId
+            , Container.Id       AS ContainerId_From
+            , Container.ObjectId AS AccountId_From
+            , ContainerLinkObject_InfoMoneyDetail.ObjectId AS InfoMoneyId_Detail_From
+            , 1 * tmpRemains.OperSumm
+        FROM _tmpItemChild
+             INNER JOIN tmpRemains ON tmpRemains.ContainerId_GoodsFrom = _tmpItemChild.ContainerId_GoodsFrom
+             INNER JOIN Container ON Container.Id = tmpRemains.ContainerId
+             LEFT JOIN ContainerLinkObject AS ContainerLinkObject_InfoMoneyDetail
+                                           ON ContainerLinkObject_InfoMoneyDetail.ContainerId = tmpRemains.ContainerId
+                                          AND ContainerLinkObject_InfoMoneyDetail.DescId = zc_ContainerLinkObject_InfoMoneyDetail()
+       ;
+     ELSE
      INSERT INTO _tmpItemSummChild (MovementItemId_Parent, MovementItemId, ContainerId_From, AccountId_From, InfoMoneyId_Detail_From, OperSumm)
         SELECT
               _tmpItemChild.MovementItemId_Parent
@@ -578,6 +604,8 @@ BEGIN
                , lfContainerSumm_20901.AccountId
                , ContainerLinkObject_InfoMoneyDetail.ObjectId
         ;
+     END IF;
+
      -- !!!ПРОВЕРКА!!! - уникальность в Child(расход)-элементы документа
      IF EXISTS (SELECT _tmpItemSummChild.MovementItemId, _tmpItemSummChild.ContainerId_From FROM _tmpItemSummChild GROUP BY _tmpItemSummChild.MovementItemId, _tmpItemSummChild.ContainerId_From HAVING COUNT(*) > 1)
      THEN
@@ -586,6 +614,29 @@ BEGIN
 
 
      -- группируем и получаем таблицу - суммовые Master(приход)-элементы документа, со всеми свойствами для формирования Аналитик в проводках
+     IF inMovementId IN (2296516, 2296563) -- !!!захардкодил исправление ошибки - 01.08.2015!!!
+     THEN
+     INSERT INTO _tmpItemSumm (MovementItemId, AccountGroupId_From, AccountDirectionId_From, AccountId_From, ContainerId_From, MIContainerId_To, ContainerId_To, AccountId_To, InfoMoneyId_Detail_To, OperSumm)
+        SELECT _tmpItemSummChild.MovementItemId_Parent, ObjectLink_Account_AccountGroup.ChildObjectId, ObjectLink_Account_AccountDirection.ChildObjectId, _tmpItemSummChild.AccountId_From, _tmpItemSummChild.ContainerId_From
+             , 0 AS MIContainerId_To
+             , 0 AS ContainerId_To
+             , 0 AS AccountId_To -- !!!почему было _tmpItemSummChild.AccountId_From!!!, теперь понятно почему
+             , zc_Enum_InfoMoney_10203() AS InfoMoneyId_Detail_From
+             , SUM (_tmpItemSummChild.OperSumm)
+        FROM _tmpItemSummChild
+             LEFT JOIN ObjectLink AS ObjectLink_Account_AccountGroup
+                                  ON ObjectLink_Account_AccountGroup.ObjectId = _tmpItemSummChild.AccountId_From
+                                 AND ObjectLink_Account_AccountGroup.DescId = zc_ObjectLink_Account_AccountGroup()
+             LEFT JOIN ObjectLink AS ObjectLink_Account_AccountDirection
+                                  ON ObjectLink_Account_AccountDirection.ObjectId = _tmpItemSummChild.AccountId_From
+                                 AND ObjectLink_Account_AccountDirection.DescId = zc_ObjectLink_Account_AccountDirection()
+        GROUP BY _tmpItemSummChild.MovementItemId_Parent
+               , ObjectLink_Account_AccountGroup.ChildObjectId
+               , ObjectLink_Account_AccountDirection.ChildObjectId
+               , _tmpItemSummChild.AccountId_From
+               , _tmpItemSummChild.ContainerId_From
+                ;
+     ELSE
      INSERT INTO _tmpItemSumm (MovementItemId, AccountGroupId_From, AccountDirectionId_From, AccountId_From, ContainerId_From, MIContainerId_To, ContainerId_To, AccountId_To, InfoMoneyId_Detail_To, OperSumm)
         SELECT _tmpItemSummChild.MovementItemId_Parent, ObjectLink_Account_AccountGroup.ChildObjectId, ObjectLink_Account_AccountDirection.ChildObjectId, _tmpItemSummChild.AccountId_From, _tmpItemSummChild.ContainerId_From
              , 0 AS MIContainerId_To
@@ -607,6 +658,7 @@ BEGIN
                , _tmpItemSummChild.ContainerId_From
                -- , CASE WHEN vbIsPeresort = TRUE THEN 0 ELSE 0 END -- !!!почему было _tmpItemSummChild.AccountId_From!!!, теперь понятно почему
                , _tmpItemSummChild.InfoMoneyId_Detail_From;
+     END IF;
 
 
      -- для теста - Master - Summ

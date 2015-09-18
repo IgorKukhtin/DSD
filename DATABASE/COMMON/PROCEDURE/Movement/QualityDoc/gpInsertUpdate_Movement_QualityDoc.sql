@@ -57,7 +57,7 @@ BEGIN
             -- получили список Goods
           , tmpMIGoods AS (SELECT DISTINCT tmpMI.ObjectId AS GoodsId FROM tmpMI)
             -- получили список Quality
-          , tmpQuality AS (SELECT ObjectLink_GoodsQuality_Quality.ChildObjectId AS QualityId
+          , tmpQuality AS (SELECT DISTINCT ObjectLink_GoodsQuality_Quality.ChildObjectId AS QualityId
                            FROM tmpMIGoods
                                 INNER JOIN ObjectLink AS ObjectLink_GoodsQuality_Goods
                                                       ON ObjectLink_GoodsQuality_Goods.ChildObjectId = tmpMIGoods.GoodsId
@@ -68,8 +68,7 @@ BEGIN
                                 INNER JOIN ObjectFloat AS ObjectFloat_Quality_NumberPrint
                                                        ON ObjectFloat_Quality_NumberPrint.ObjectId = ObjectLink_GoodsQuality_Quality.ChildObjectId
                                                       AND ObjectFloat_Quality_NumberPrint.DescId = zc_ObjectFloat_Quality_NumberPrint()
-                                                      AND ObjectFloat_Quality_NumberPrint.ValueData = 1 -- !!!так захардкодил!!!, вообще их пока 2: вторая для консервов, первая все остальное
-                           GROUP BY ObjectLink_GoodsQuality_Quality.ChildObjectId
+                                                      AND ObjectFloat_Quality_NumberPrint.ValueData IN (1, 2) -- !!!так захардкодил!!!, вообще их пока 2: вторая для консервов, первая все остальное
                           )
              -- получили список Retail для inMovementId_Sale
            , tmpRetail AS (SELECT ObjectLink_Juridical_Retail.ChildObjectId AS RetailId

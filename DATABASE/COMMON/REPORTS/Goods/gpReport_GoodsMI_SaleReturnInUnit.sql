@@ -58,7 +58,7 @@ BEGIN
 
     IF vbUserId = 5 THEN
        RETURN QUERY
-       SELECT * FROM gpReport_GoodsMI_SaleReturnInUnit_NEW (inStartDate
+       SELECT * FROM gpReport_GoodsMI_SaleReturnInUnitNEW (inStartDate
                                                       , inEndDate
                                                       , inBranchId
                                                       , inAreaId

@@ -1,24 +1,26 @@
 inherited ContractChoicePartnerForm: TContractChoicePartnerForm
   Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1050#1086#1085#1090#1088#1072#1075#1077#1085#1090' + '#1044#1086#1075#1086#1074#1086#1088'>'
-  ClientHeight = 496
+  ClientHeight = 460
   ClientWidth = 1000
+  ExplicitLeft = -227
+  ExplicitTop = -38
   ExplicitWidth = 1016
-  ExplicitHeight = 534
+  ExplicitHeight = 495
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Width = 1000
-    Height = 470
+    Height = 434
     ExplicitWidth = 1000
     ExplicitHeight = 470
-    ClientRectBottom = 470
+    ClientRectBottom = 434
     ClientRectRight = 1000
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 1000
       ExplicitHeight = 470
       inherited cxGrid: TcxGrid
         Width = 1000
-        Height = 470
+        Height = 434
         ExplicitWidth = 1000
         ExplicitHeight = 470
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -281,7 +283,7 @@ inherited ContractChoicePartnerForm: TContractChoicePartnerForm
             Width = 80
           end
           object MemberTakeName: TcxGridDBColumn
-            Caption = #1057#1086#1090#1088#1091#1076#1085#1080#1082' ('#1101#1082#1089#1087#1077#1076#1080#1090#1086#1088')'
+            Caption = #1060#1048#1054' ('#1101#1082#1089#1087#1077#1076#1080#1090#1086#1088') '#1085#1072' '#1074#1089#1077' '#1076#1085#1080
             DataBinding.FieldName = 'MemberTakeName'
             PropertiesClassName = 'TcxButtonEditProperties'
             Properties.Buttons = <

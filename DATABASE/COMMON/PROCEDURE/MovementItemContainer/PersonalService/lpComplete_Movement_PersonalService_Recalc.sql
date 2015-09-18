@@ -130,7 +130,7 @@ BEGIN
                                                         AND tmpMI_to_all.PersonalServiceListId = tmpMI_from.PersonalServiceListId_to
                             )
      -- данные что куда переносим
-     INSERT INTO _tmpMI_Recalc (MovementId_from, MovementItemId_from, PersonalServiceListId_from, MovementId_to, MovementItemId_to, PersonalServiceListId_to, ServiceDate, UnitId, PersonalId, PositionId, InfoMoneyId, SummCardRecalc, isMovementInsert)
+     INSERT INTO _tmpMI_Recalc (MovementId_from, MovementItemId_from, PersonalServiceListId_from, MovementId_to, MovementItemId_to, PersonalServiceListId_to, ServiceDate, UnitId, PersonalId, PositionId, InfoMoneyId, SummCardRecalc, isMovementComplete)
        SELECT tmpMI_from.MovementId            AS MovementId_from
             , tmpMI_from.MovementItemId        AS MovementItemId_from
             , tmpMI_from.PersonalServiceListId AS PersonalServiceListId_from
@@ -143,7 +143,7 @@ BEGIN
             , tmpMI_from.PositionId
             , tmpMI_from.InfoMoneyId
             , tmpMI_from.SummCardRecalc
-            , FALSE AS isMovementInsert
+            , CASE WHEN tmpMI_to.MovementItemId_to IS NULL AND tmpMovement_to.StatusId = zc_Enum_Status_Complete() THEN TRUE ELSE FALSE END AS isMovementComplete
        FROM tmpMI_from
             -- из списка берется только один
             LEFT JOIN (SELECT tmpMI_to.MovementItemId_from, MAX (tmpMI_to.MovementItemId_to) AS MovementItemId_to FROM tmpMI_to WHERE tmpMI_to.MovementItemId_to <> 0 GROUP BY tmpMI_to.MovementItemId_from) AS tmp ON tmp.MovementItemId_from = tmpMI_from.MovementItemId
@@ -153,14 +153,21 @@ BEGIN
             -- если не нашли MovementItemId_to, тогда нужен MovementId_to
             LEFT JOIN tmpMI_to AS tmpMI_to_Movement ON tmpMI_to_Movement.MovementItemId_from = tmpMI_from.MovementItemId
                                                    AND tmpMI_to_Movement.MovementItemId_to = 0
+            LEFT JOIN tmpMovement_to ON tmpMovement_to.MovementId = COALESCE (tmpMI_to.MovementId_to, tmpMI_to_Movement.MovementId_to)
       ;
      -- !!!!!!!!!!!!!!!!!!!!!!!
      ANALYZE _tmpMI_Recalc;
 
 
+     -- распроводятся документы
+     PERFORM lpUnComplete_Movement (inMovementId := tmp.MovementId_to
+                                  , inUserId     := inUserId)
+     FROM (SELECT DISTINCT _tmpMI_Recalc.MovementId_to FROM _tmpMI_Recalc WHERE _tmpMI_Recalc.isMovementComplete = TRUE) AS tmp;
+
+
      -- создаются новые документы (!!!потом их надо провести!!!)
-     UPDATE _tmpMI_Recalc SET MovementId_to    = tmp.MovementId_to
-                            , isMovementInsert = TRUE
+     UPDATE _tmpMI_Recalc SET MovementId_to      = tmp.MovementId_to
+                            , isMovementComplete = TRUE
      FROM (SELECT lpInsertUpdate_Movement_PersonalService (ioId                      := 0
                                                          , inInvNumber               := CAST (NEXTVAL ('movement_personalservice_seq') AS TVarChar)
                                                          , inOperDate                := DATE_TRUNC ('MONTH', tmp.ServiceDate + INTERVAL '1 MONTH')
@@ -245,7 +252,7 @@ BEGIN
 
      -- пересчитали у всех Итоговые суммы
      PERFORM lpInsertUpdate_MovementFloat_TotalSumm (tmp.MovementId)
-     FROM (SELECT _tmpMovement_Recalc.MovementId FROM _tmpMovement_Recalc UNION SELECT DISTINCT _tmpMI_Recalc.MovementId_to FROM _tmpMI_Recalc WHERE _tmpMI_Recalc.isMovementInsert = TRUE) AS tmp;
+     FROM (SELECT _tmpMovement_Recalc.MovementId FROM _tmpMovement_Recalc UNION SELECT DISTINCT _tmpMI_Recalc.MovementId_to FROM _tmpMI_Recalc WHERE _tmpMI_Recalc.isMovementComplete = TRUE) AS tmp;
 
 
      -- !!!ВАЖНО - проверка!!!
@@ -282,7 +289,7 @@ BEGIN
                                 , inDescId     := zc_Movement_PersonalService()
                                 , inUserId     := inUserId
                                  )
-     FROM (SELECT DISTINCT _tmpMI_Recalc.MovementId_to FROM _tmpMI_Recalc WHERE _tmpMI_Recalc.isMovementInsert = TRUE) AS tmp;
+     FROM (SELECT DISTINCT _tmpMI_Recalc.MovementId_to FROM _tmpMI_Recalc WHERE _tmpMI_Recalc.isMovementComplete = TRUE) AS tmp;
 
 
 END;$BODY$

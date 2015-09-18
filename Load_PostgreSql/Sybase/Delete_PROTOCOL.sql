@@ -15,4 +15,9 @@ with tmp_MI as (select MovementItemId from MovementItemProtocol where UserId = 5
 --select count(*), MovementItemId from tmp1 group by MovementItemId order by 1 desc
 
 
+-- select count(*), Max (Id) from MovementItemProtocol -- select count(*), UserId, Max (Id) from MovementItemProtocol group by UserId order by 1 desc
+
+-- select count (*) from MovementProtocol join Movement on Movement.Id = MovementProtocol.MovementId and Movement.StatusId = zc_Enum_Status_Erased() and Movement.AccessKeeId <> zc_Enum_Process_AccessKey_DocumentDnepr()
+where MovementProtocol.Id between 1 and 10000000
+
 

@@ -2129,8 +2129,8 @@
 				<Form>ReturnOutJournalForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
-			<DCCReference Include="..\..\Forms\Report\Report_GoodsMI_SaleReturnInUnit.pas">
-				<Form>Report_GoodsMI_SaleReturnInUnitForm</Form>
+			<DCCReference Include="..\..\Forms\Report\Report_GoodsMI_SaleReturnInUnitNew.pas">
+				<Form>Report_GoodsMI_SaleReturnInUnitNewForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<DCCReference Include="..\..\Forms\Report\Report_GoodsMI_SaleReturnIn.pas">
@@ -2283,6 +2283,10 @@
 			</DCCReference>
 			<DCCReference Include="..\..\Forms\Report\Report_LoginProtocol.pas">
 				<Form>Report_LoginProtocolForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Report\Report_GoodsMI_SaleReturnInUnit.pas">
+				<Form>Report_GoodsMI_SaleReturnInUnitForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<BuildConfiguration Include="Release">

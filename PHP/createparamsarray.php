@@ -33,7 +33,7 @@
 foreach($ParamNodes as $node) {
        $ParamType = GetParamType($node->getAttribute('DataType'));
 
-       if (($ParamType == 'TDateTime'))  and  ($node->getAttribute('Value') == 'NULL')) 
+       if (($ParamType == 'TDateTime')  and  ($node->getAttribute('Value') == 'NULL')) 
        {
           $ParamArray[$i] = NULL;
        }

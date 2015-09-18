@@ -31,7 +31,7 @@ RETURNS TABLE (GoodsGroupName TVarChar, GoodsGroupNameFull TVarChar
              , PartnerId Integer, PartnerCode Integer, PartnerName TVarChar
              , RetailName TVarChar
              , AreaName TVarChar, PartnerTagName TVarChar
-             , PaidKindId Integer, PaidKindName TVarChar
+             , PaidKindId TVarChar, PaidKindName TVarChar
              , BusinessName TVarChar
              , BranchName TVarChar
 
@@ -249,18 +249,18 @@ BEGIN
          , Object_Juridical.ObjectCode AS JuridicalCode
          , Object_Juridical.ValueData  AS JuridicalName
 
-         , Object_Partner.Id           AS PartnerId
-         , Object_Partner.ObjectCode   AS PartnerCode
-         , Object_Partner.ValueData    AS PartnerName
+         , Object_Partner.Id            AS PartnerId
+         , Object_Partner.ObjectCode    AS PartnerCode
+         , Object_Partner.ValueData     AS PartnerName
 
           , Object_Retail.ValueData     AS RetailName
           , Object_Area.ValueData       AS AreaName
           , Object_PartnerTag.ValueData AS PartnerTagName
 
-         , Object_PaidKind.Id          AS PaidKindId
-         , Object_PaidKind.ValueData   AS PaidKindName
-         , Object_Business.ValueData   AS BusinessName
-         , Object_Branch.ValueData     AS BranchName
+         , Object_PaidKind.Id :: TVarChar AS PaidKindId
+         , Object_PaidKind.ValueData      AS PaidKindName
+         , Object_Business.ValueData      AS BusinessName
+         , Object_Branch.ValueData        AS BranchName
 
            -- 1.1. вес, без AnalyzerId, т.е. это со склада, на транзит, с транзита
          , (tmpOperationGroup.OperCount_real) :: TFloat AS OperCount_total

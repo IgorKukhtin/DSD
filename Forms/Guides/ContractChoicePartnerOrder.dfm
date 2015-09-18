@@ -2,8 +2,9 @@ inherited ContractChoicePartnerOrderForm: TContractChoicePartnerOrderForm
   Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1050#1086#1085#1090#1088#1072#1075#1077#1085#1090' + '#1044#1086#1075#1086#1074#1086#1088' + '#1052#1072#1088#1096#1088#1091#1090'>'
   ClientHeight = 496
   ClientWidth = 982
+  ExplicitLeft = -209
   ExplicitWidth = 998
-  ExplicitHeight = 534
+  ExplicitHeight = 531
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -241,7 +242,7 @@ inherited ContractChoicePartnerOrderForm: TContractChoicePartnerOrderForm
             Width = 55
           end
           object MemberTakeName: TcxGridDBColumn
-            Caption = #1057#1086#1090#1088#1091#1076#1085#1080#1082' ('#1101#1082#1089#1087#1077#1076#1080#1090#1086#1088')'
+            Caption = #1060#1048#1054' ('#1101#1082#1089#1087#1077#1076#1080#1090#1086#1088') '#1085#1072' '#1074#1089#1077' '#1076#1085#1080
             DataBinding.FieldName = 'MemberTakeName'
             PropertiesClassName = 'TcxButtonEditProperties'
             Properties.Buttons = <
@@ -268,7 +269,7 @@ inherited ContractChoicePartnerOrderForm: TContractChoicePartnerOrderForm
             Properties.ReadOnly = True
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 103
+            Width = 70
           end
           object MemberTakeName2: TcxGridDBColumn
             Caption = #1060#1048#1054' ('#1101#1082#1089#1087#1077#1076#1080#1090#1086#1088') '#1074#1090'.'
@@ -283,7 +284,7 @@ inherited ContractChoicePartnerOrderForm: TContractChoicePartnerOrderForm
             Properties.ReadOnly = True
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 103
+            Width = 70
           end
           object MemberTakeName3: TcxGridDBColumn
             Caption = #1060#1048#1054' ('#1101#1082#1089#1087#1077#1076#1080#1090#1086#1088') '#1089#1088'.'
@@ -298,7 +299,7 @@ inherited ContractChoicePartnerOrderForm: TContractChoicePartnerOrderForm
             Properties.ReadOnly = True
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 103
+            Width = 70
           end
           object MemberTakeName4: TcxGridDBColumn
             Caption = #1060#1048#1054' ('#1101#1082#1089#1087#1077#1076#1080#1090#1086#1088') '#1095#1090'.'
@@ -313,7 +314,7 @@ inherited ContractChoicePartnerOrderForm: TContractChoicePartnerOrderForm
             Properties.ReadOnly = True
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 103
+            Width = 70
           end
           object MemberTakeName5: TcxGridDBColumn
             Caption = #1060#1048#1054' ('#1101#1082#1089#1087#1077#1076#1080#1090#1086#1088') '#1087#1090'.'
@@ -328,7 +329,7 @@ inherited ContractChoicePartnerOrderForm: TContractChoicePartnerOrderForm
             Properties.ReadOnly = True
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 103
+            Width = 70
           end
           object MemberTakeName6: TcxGridDBColumn
             Caption = #1060#1048#1054' ('#1101#1082#1089#1087#1077#1076#1080#1090#1086#1088') '#1089#1073'.'
@@ -343,7 +344,7 @@ inherited ContractChoicePartnerOrderForm: TContractChoicePartnerOrderForm
             Properties.ReadOnly = True
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 103
+            Width = 70
           end
           object MemberTakeName7: TcxGridDBColumn
             Caption = #1060#1048#1054' ('#1101#1082#1089#1087#1077#1076#1080#1090#1086#1088') '#1074#1089'.'
@@ -358,7 +359,7 @@ inherited ContractChoicePartnerOrderForm: TContractChoicePartnerOrderForm
             Properties.ReadOnly = True
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 103
+            Width = 70
           end
           object clRouteName: TcxGridDBColumn
             Caption = #1052#1072#1088#1096#1088#1091#1090

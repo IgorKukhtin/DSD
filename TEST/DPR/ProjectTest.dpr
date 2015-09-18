@@ -695,7 +695,7 @@ uses
   OrderInternalPackJournal in '..\..\Forms\Document\OrderInternalPackJournal.pas' {OrderInternalPackJournalForm: TParentForm},
   ReturnOut in '..\..\Forms\Document\ReturnOut.pas' {ReturnOutForm: TParentForm},
   ReturnOutJournal in '..\..\Forms\Document\ReturnOutJournal.pas' {ReturnOutJournalForm: TParentForm},
-  Report_GoodsMI_SaleReturnInUnit in '..\..\Forms\Report\Report_GoodsMI_SaleReturnInUnit.pas' {Report_GoodsMI_SaleReturnInUnitForm: TParentForm},
+  Report_GoodsMI_SaleReturnInUnitNew in '..\..\Forms\Report\Report_GoodsMI_SaleReturnInUnitNew.pas' {Report_GoodsMI_SaleReturnInUnitNewForm: TParentForm},
   Report_GoodsMI_SaleReturnIn in '..\..\Forms\Report\Report_GoodsMI_SaleReturnIn.pas' {Report_GoodsMI_SaleReturnInForm: TParentForm},
   Report_GoodsBalanceDialog in '..\..\Forms\Report\Report_GoodsBalanceDialog.pas' {Report_GoodsBalanceDialogForm: TParentForm},
   Report_GoodsMI_IncomeDialog in '..\..\Forms\Report\Report_GoodsMI_IncomeDialog.pas' {Report_GoodsMI_IncomeDialogForm: TParentForm},
@@ -733,7 +733,8 @@ uses
   Report_BankAccount_Cash in '..\..\Forms\Report\Report_BankAccount_Cash.pas' {Report_BankAccount_CashForm: TParentForm},
   Report_BankAccount_CashDialog in '..\..\Forms\Report\Report_BankAccount_CashDialog.pas' {Report_BankAccount_CashDialogForm: TParentForm},
   TransportJournalChoice in '..\..\Forms\Document\TransportJournalChoice.pas' {TransportJournalChoiceForm: TParentForm},
-  Report_LoginProtocol in '..\..\Forms\Report\Report_LoginProtocol.pas' {Report_LoginProtocolForm: TParentForm};
+  Report_LoginProtocol in '..\..\Forms\Report\Report_LoginProtocol.pas' {Report_LoginProtocolForm: TParentForm},
+  Report_GoodsMI_SaleReturnInUnit in '..\..\Forms\Report\Report_GoodsMI_SaleReturnInUnit.pas' {Report_GoodsMI_SaleReturnInUnitForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}
