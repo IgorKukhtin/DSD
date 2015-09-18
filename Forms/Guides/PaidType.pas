@@ -10,7 +10,7 @@ uses
   cxDBData, cxRadioGroup, cxGridCustomTableView, cxGridTableView,
   cxGridDBTableView, Vcl.Menus, dsdAddOn, dxBarExtItems, dxBar, cxClasses,
   dsdDB, Datasnap.DBClient, dsdAction, Vcl.ActnList, cxPropertiesStore,
-  cxGridLevel, cxGridCustomView, cxGrid, cxPC;
+  cxGridLevel, cxGridCustomView, cxGrid, cxPC, cxPCdxBarPopupMenu;
 
 type
   TPaidTypeForm = class(TAncestorEnumForm)

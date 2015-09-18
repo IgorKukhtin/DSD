@@ -53,12 +53,14 @@ BEGIN
             SUM(Amount) AS Remains, 
             container.objectid 
         FROM container
-            INNER JOIN containerlinkobject AS CLO_Unit
-                                           ON CLO_Unit.containerid = container.id 
-                                          AND CLO_Unit.descid = zc_ContainerLinkObject_Unit()
-                                          AND CLO_Unit.objectid = vbUnitId
+            -- INNER JOIN containerlinkobject AS CLO_Unit
+                                           -- ON CLO_Unit.containerid = container.id 
+                                          -- AND CLO_Unit.descid = zc_ContainerLinkObject_Unit()
+                                          -- AND CLO_Unit.objectid = vbUnitId
         WHERE 
             container.descid = zc_container_count() 
+            AND
+            container.WhereObjectId = vbUnitId
             AND 
             Amount<>0
         GROUP BY 

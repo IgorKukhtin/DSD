@@ -60,6 +60,8 @@ type
     Amount_40200_Sh: TcxGridDBColumn;
     SummPartner_10200: TcxGridDBColumn;
     SummPartner_10300: TcxGridDBColumn;
+    ExecuteDialog: TExecuteDialog;
+    bbExecuteDialog: TdxBarButton;
   private
     { Private declarations }
   public

@@ -40,6 +40,8 @@ type
     clSum_CheckBonusFact: TcxGridDBColumn;
     clSum_SaleFact: TcxGridDBColumn;
     clComment: TcxGridDBColumn;
+    ExecuteDialog: TExecuteDialog;
+    bbExecuteDialog: TdxBarButton;
   private
     { Private declarations }
   public

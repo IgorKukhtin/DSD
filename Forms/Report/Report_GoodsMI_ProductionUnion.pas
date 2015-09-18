@@ -56,6 +56,8 @@ type
     ChildGoodsGroupGuides: TdsdGuides;
     ChildGoodsGuides: TdsdGuides;
     clChildPartionGoods: TcxGridDBColumn;
+    ExecuteDialog: TExecuteDialog;
+    bbExecuteDialog: TdxBarButton;
   private
     { Private declarations }
   public

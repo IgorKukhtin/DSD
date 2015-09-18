@@ -11,21 +11,28 @@ AS
 $BODY$
   DECLARE vbUserId Integer;
 BEGIN
-     -- проверка прав пользователя на вызов процедуры
-     vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Complete_Loss());
+    -- проверка прав пользователя на вызов процедуры
+    vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Complete_Loss());
 
-     IF vbUserId = lpCheckRight(inSession, zc_Enum_Process_UnComplete_Loss())
-     THEN
-         -- Распроводим Документ
-         PERFORM lpUnComplete_Movement (inMovementId := inMovementId
-                                      , inUserId     := vbUserId);
-     END IF;
-
-
-     -- Проводим Документ
-     PERFORM gpComplete_Movement_Loss (inMovementId     := inMovementId
-                                          , inIsLastComplete := NULL
-                                          , inSession        := inSession);
+    -- только если документ проведен
+    IF EXISTS(
+                SELECT 1
+                FROM Movement
+                WHERE
+                    Id = inMovementId
+                    AND
+                    StatusId = zc_Enum_Status_Complete()
+             )
+    THEN
+        --распроводим документ
+        PERFORM gpUpdate_Status_Loss(inMovementId := inMovementId,
+                                     inStatusCode := zc_Enum_StatusCode_UnComplete(),
+                                     inSession    := inSession);
+        --Проводим документ
+        PERFORM gpUpdate_Status_Loss(inMovementId := inMovementId,
+                                     inStatusCode := zc_Enum_StatusCode_Complete(),
+                                     inSession    := inSession);
+    END IF;
 
 END;
 $BODY$

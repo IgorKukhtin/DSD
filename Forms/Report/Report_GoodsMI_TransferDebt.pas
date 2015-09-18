@@ -40,6 +40,8 @@ type
     InfoMoneyGuides: TdsdGuides;
     PaidKindGuides: TdsdGuides;
     JuridicalGuides: TdsdGuides;
+    ExecuteDialog: TExecuteDialog;
+    bbExecuteDialog: TdxBarButton;
   private
     { Private declarations }
   public

@@ -2,9 +2,9 @@ inherited Report_CheckBonusForm: TReport_CheckBonusForm
   Caption = #1054#1090#1095#1077#1090' <'#1055#1088#1086#1074#1077#1088#1082#1072' '#1085#1072#1095#1080#1089#1083#1077#1085#1080#1081' '#1087#1086' '#1073#1086#1085#1091#1089#1072#1084'>'
   ClientHeight = 324
   ClientWidth = 1020
-  ExplicitLeft = -38
+  AddOnFormData.ExecuteDialogAction = ExecuteDialog
   ExplicitWidth = 1036
-  ExplicitHeight = 359
+  ExplicitHeight = 362
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -277,13 +277,13 @@ inherited Report_CheckBonusForm: TReport_CheckBonusForm
       Properties.SaveTime = False
     end
     object cxLabel4: TcxLabel
-      Left = 441
+      Left = 438
       Top = 6
       Caption = #1042#1080#1076' '#1041#1086#1085#1091#1089#1072':'
       Visible = False
     end
     object edBonusKind: TcxButtonEdit
-      Left = 561
+      Left = 509
       Top = 5
       Properties.Buttons = <
         item
@@ -293,13 +293,14 @@ inherited Report_CheckBonusForm: TReport_CheckBonusForm
       Properties.ReadOnly = True
       TabOrder = 5
       Visible = False
-      Width = 200
+      Width = 208
     end
   end
   inherited ActionList: TActionList
     object actDocBonus: TdsdExecStoredProc
       Category = 'DSDLib'
       MoveParams = <>
+      PostDataSetBeforeExecute = False
       StoredProc = spInsertUpdate
       StoredProcList = <
         item
@@ -320,6 +321,48 @@ inherited Report_CheckBonusForm: TReport_CheckBonusForm
       InfoAfterExecute = 
         #1047#1072#1074#1077#1088#1096#1077#1085#1086' '#1092#1086#1088#1084#1080#1088#1086#1074#1072#1085#1080#1077' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' <'#1053#1072#1095#1080#1089#1083#1077#1085#1080#1103' '#1087#1086' '#1073#1086#1085#1091#1089#1072#1084' ('#1088#1072#1089#1093#1086#1076 +
         #1099' '#1073#1091#1076#1091#1097#1080#1093' '#1087#1077#1088#1080#1086#1076#1086#1074')> '#1087#1086' '#1076#1072#1085#1085#1099#1084' '#1086#1090#1095#1077#1090#1072'.'
+    end
+    object ExecuteDialog: TExecuteDialog
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1072#1088#1072#1084#1077#1090#1088#1099' '#1086#1090#1095#1077#1090#1072
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1072#1088#1072#1084#1077#1090#1088#1099' '#1086#1090#1095#1077#1090#1072
+      ImageIndex = 35
+      FormName = 'TReport_DefrosterDialogForm'
+      FormNameParam.Value = 'TReport_DefrosterDialogForm'
+      FormNameParam.DataType = ftString
+      GuiParams = <
+        item
+          Name = 'StartDate'
+          Value = 42005d
+          Component = deStart
+          DataType = ftDateTime
+          ParamType = ptInput
+        end
+        item
+          Name = 'EndDate'
+          Value = 42005d
+          Component = deEnd
+          DataType = ftDateTime
+          ParamType = ptInput
+        end
+        item
+          Name = 'BonusKindId'
+          Value = ''
+          Component = DocumentTaxKindGuides
+          ComponentItem = 'Key'
+          ParamType = ptInput
+        end
+        item
+          Name = 'BonusKindName'
+          Value = ''
+          Component = DocumentTaxKindGuides
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          ParamType = ptInput
+        end>
+      isShowModal = True
+      OpenBeforeShow = True
     end
   end
   inherited MasterDS: TDataSource
@@ -366,6 +409,14 @@ inherited Report_CheckBonusForm: TReport_CheckBonusForm
         end
         item
           Visible = True
+          ItemName = 'bbExecuteDialog'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbRefresh'
         end
         item
@@ -393,6 +444,10 @@ inherited Report_CheckBonusForm: TReport_CheckBonusForm
       Action = actDocBonus
       Category = 0
       ImageIndex = 28
+    end
+    object bbExecuteDialog: TdxBarButton
+      Action = ExecuteDialog
+      Category = 0
     end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn

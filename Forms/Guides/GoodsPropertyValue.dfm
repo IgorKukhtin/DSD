@@ -116,6 +116,11 @@ object GoodsPropertyValueForm: TGoodsPropertyValueForm
         HeaderAlignmentVert = vaCenter
         Width = 70
       end
+      object BoxCount: TcxGridDBColumn
+        Caption = #1050#1086#1083'-'#1074#1086' '#1096#1090'. '#1074' '#1103#1097'.'
+        DataBinding.FieldName = 'BoxCount'
+        Width = 70
+      end
       object BarCodeShort: TcxGridDBColumn
         Caption = #1064#1090#1088#1080#1093' '#1082#1086#1076' ('#1087#1086#1080#1089#1082')'
         DataBinding.FieldName = 'BarCodeShort'
@@ -738,6 +743,14 @@ object GoodsPropertyValueForm: TGoodsPropertyValueForm
         Value = Null
         Component = ClientDataSet
         ComponentItem = 'Amount'
+        DataType = ftFloat
+        ParamType = ptInput
+      end
+      item
+        Name = 'inBoxCount'
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'BoxCount'
         DataType = ftFloat
         ParamType = ptInput
       end

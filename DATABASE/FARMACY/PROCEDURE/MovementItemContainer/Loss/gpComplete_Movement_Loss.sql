@@ -1,6 +1,7 @@
 -- Function: gpComplete_Movement_Loss()
 
 DROP FUNCTION IF EXISTS gpComplete_Movement_Loss  (Integer, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpComplete_Movement_Loss  (Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpComplete_Movement_Loss(
     IN inMovementId        Integer               , -- ключ Документа

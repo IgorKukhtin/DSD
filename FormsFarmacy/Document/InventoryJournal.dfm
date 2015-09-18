@@ -2,8 +2,8 @@ inherited InventoryJournalForm: TInventoryJournalForm
   Caption = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' <'#1048#1085#1074#1077#1085#1090#1072#1088#1080#1079#1072#1094#1080#1103'>'
   ClientHeight = 535
   ClientWidth = 786
-  ExplicitWidth = 794
-  ExplicitHeight = 562
+  ExplicitWidth = 802
+  ExplicitHeight = 573
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -163,6 +163,13 @@ inherited InventoryJournalForm: TInventoryJournalForm
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             Width = 91
+          end
+          object colFullInvent: TcxGridDBColumn
+            Caption = #1055#1086#1083#1085#1072#1103
+            DataBinding.FieldName = 'FullInvent'
+            HeaderHint = #1055#1086#1083#1085#1072#1103' '#1080#1085#1074#1077#1085#1090#1072#1088#1080#1079#1072#1094#1080#1103
+            Options.Editing = False
+            Width = 52
           end
         end
       end
