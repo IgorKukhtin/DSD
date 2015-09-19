@@ -99,12 +99,10 @@ object Report_Transport_ProfitLossForm: TReport_Transport_ProfitLossForm
         item
           Format = ',0.##'
           Kind = skSum
-          Column = SumCount
         end
         item
           Format = ',0.##'
           Kind = skSum
-          Column = SumAmount
         end
         item
           Format = ',0.##'
@@ -188,12 +186,10 @@ object Report_Transport_ProfitLossForm: TReport_Transport_ProfitLossForm
         item
           Format = ',0.##'
           Kind = skSum
-          Column = SumCount
         end
         item
           Format = ',0.##'
           Kind = skSum
-          Column = SumAmount
         end
         item
           Format = ',0.##'
@@ -236,6 +232,14 @@ object Report_Transport_ProfitLossForm: TReport_Transport_ProfitLossForm
       OptionsView.GroupSummaryLayout = gslAlignWithColumns
       OptionsView.HeaderAutoHeight = True
       Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
+      object MovementDescName: TcxGridDBColumn
+        Caption = #1042#1080#1076' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
+        DataBinding.FieldName = 'MovementDescName'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 90
+      end
       object clOperDate: TcxGridDBColumn
         Caption = #1044#1072#1090#1072
         DataBinding.FieldName = 'OperDate'
@@ -311,17 +315,41 @@ object Report_Transport_ProfitLossForm: TReport_Transport_ProfitLossForm
         Options.Editing = False
         Width = 91
       end
-      object clRouteKindName: TcxGridDBColumn
-        Caption = #1058#1080#1087' '#1084#1072#1088#1096#1088#1091#1090#1072
-        DataBinding.FieldName = 'RouteKindName'
+      object clProfitLossGroupName: TcxGridDBColumn
+        Caption = #1054#1055#1080#1059' '#1075#1088#1091#1087#1087#1072
+        DataBinding.FieldName = 'ProfitLossGroupName'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
         Width = 98
       end
-      object SumCount: TcxGridDBColumn
-        Caption = #1056#1072#1089#1093#1086#1076', '#1083'.'
-        DataBinding.FieldName = 'SumCount'
+      object ProfitLossDirectionName: TcxGridDBColumn
+        Caption = #1054#1055#1080#1059' '#1085#1072#1087#1088#1072#1074#1083#1077#1085#1080#1077
+        DataBinding.FieldName = 'ProfitLossDirectionName'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 98
+      end
+      object ProfitLossName: TcxGridDBColumn
+        Caption = #1054#1055#1080#1059' '#1089#1090#1072#1090#1100#1103
+        DataBinding.FieldName = 'ProfitLossName'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 98
+      end
+      object ProfitLossName_all: TcxGridDBColumn
+        Caption = #1087#1088#1080#1084'. '#1054#1055#1080#1059' '#1085#1072#1079#1074#1072#1085#1080#1077
+        DataBinding.FieldName = 'ProfitLossName_all'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 98
+      end
+      object SumCount_Transport: TcxGridDBColumn
+        Caption = #1056#1072#1089#1093#1086#1076', '#1083'. ('#1087'.'#1083'.)'
+        DataBinding.FieldName = 'SumCount_Transport'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DecimalPlaces = 4
         Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
@@ -330,9 +358,9 @@ object Report_Transport_ProfitLossForm: TReport_Transport_ProfitLossForm
         Options.Editing = False
         Width = 75
       end
-      object SumAmount: TcxGridDBColumn
-        Caption = #1056#1072#1089#1093#1086#1076', '#1075#1088#1085'.'
-        DataBinding.FieldName = 'SumAmount'
+      object SumAmount_Transport: TcxGridDBColumn
+        Caption = #1056#1072#1089#1093#1086#1076', '#1075#1088#1085'. ('#1087'.'#1083'.)'
+        DataBinding.FieldName = 'SumAmount_Transport'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DecimalPlaces = 4
         Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
@@ -342,7 +370,7 @@ object Report_Transport_ProfitLossForm: TReport_Transport_ProfitLossForm
         Width = 90
       end
       object PriceFuel: TcxGridDBColumn
-        Caption = #1062#1077#1085#1072
+        Caption = #1062#1077#1085#1072'('#1087'.'#1083'.)'
         DataBinding.FieldName = 'PriceFuel'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DecimalPlaces = 4
@@ -351,6 +379,39 @@ object Report_Transport_ProfitLossForm: TReport_Transport_ProfitLossForm
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
         Width = 70
+      end
+      object SumAmount_TransportService: TcxGridDBColumn
+        Caption = #1056#1072#1089#1093#1086#1076', '#1075#1088#1085'. ('#1085'.'#1090#1088'.)'
+        DataBinding.FieldName = 'SumAmount_TransportService'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 90
+      end
+      object SumAmount_PersonalSendCash: TcxGridDBColumn
+        Caption = #1056#1072#1089#1093#1086#1076', '#1075#1088#1085'. ('#1087#1086#1076#1086#1090#1095#1077#1090')'
+        DataBinding.FieldName = 'SumAmount_PersonalSendCash'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 90
+      end
+      object SumTotal: TcxGridDBColumn
+        Caption = #1048#1090#1086#1075#1086', '#1075#1088#1085'.'
+        DataBinding.FieldName = 'SumTotal'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 90
       end
     end
     object cxGridLevel: TcxGridLevel
@@ -458,7 +519,7 @@ object Report_Transport_ProfitLossForm: TReport_Transport_ProfitLossForm
         Kind = bkEllipsis
       end>
     Properties.ReadOnly = True
-    TabOrder = 9
+    TabOrder = 7
     Width = 235
   end
   object cbMovement: TcxCheckBox
@@ -549,11 +610,23 @@ object Report_Transport_ProfitLossForm: TReport_Transport_ProfitLossForm
       ItemLinks = <
         item
           Visible = True
+          ItemName = 'dxBarStatic1'
+        end
+        item
+          Visible = True
           ItemName = 'bbDialogForm'
         end
         item
           Visible = True
+          ItemName = 'dxBarStatic1'
+        end
+        item
+          Visible = True
           ItemName = 'bbRefresh'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic1'
         end
         item
           BeginGroup = True
@@ -569,6 +642,12 @@ object Report_Transport_ProfitLossForm: TReport_Transport_ProfitLossForm
     object bbRefresh: TdxBarButton
       Action = actRefresh
       Category = 0
+    end
+    object dxBarStatic1: TdxBarStatic
+      Caption = '     '
+      Category = 0
+      Hint = '     '
+      Visible = ivAlways
     end
     object bbToExcel: TdxBarButton
       Action = actExportToExcel
