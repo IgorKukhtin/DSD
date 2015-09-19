@@ -586,7 +586,7 @@ BEGIN
 
      -- 3. формируются Проводки + !!!есть MovementItemId!!!
      INSERT INTO _tmpMIContainer_insert (Id, DescId, MovementDescId, MovementId, MovementItemId, ContainerId
-                                       , AccountId, AnalyzerId, ObjectId_Analyzer, WhereObjectId_Analyzer, ContainerId_Analyzer
+                                       , AccountId, AnalyzerId, ObjectId_Analyzer, WhereObjectId_Analyzer, ContainerId_Analyzer, ObjectIntId_Analyzer, ObjectExtId_Analyzer
                                        , ParentId, Amount, OperDate, IsActive)
        -- это "обычные" проводки
        SELECT 0, zc_MIContainer_Summ() AS DescId, _tmpItem.MovementDescId, inMovementId, _tmpItem.MovementItemId
@@ -594,13 +594,24 @@ BEGIN
             , _tmpItem.AccountId                  AS AccountId
             , _tmpItem.AnalyzerId                 AS AnalyzerId
             , _tmpItem.ObjectId                   AS ObjectId_Analyzer
-            , _tmpItem.UnitId                     AS WhereObjectId_Analyzer
-            , _tmpItem.ContainerId                AS ContainerId_Analyzer
-            , 0 AS ParentId
+            , CASE WHEN _tmpItem.MovementDescId = zc_Movement_TransportService()
+                       THEN _tmpItem.ObjectIntId_Analyzer
+                   ELSE _tmpItem.UnitId
+              END AS WhereObjectId_Analyzer -- !!!замена!!!
+            , COALESCE (tmpProfitLoss.ContainerId, _tmpItem.ContainerId) AS ContainerId_Analyzer -- статья ОПиУ или сам в себя
+            , CASE WHEN _tmpItem.MovementDescId = zc_Movement_TransportService()
+                       THEN _tmpItem.UnitId
+                   ELSE _tmpItem.ObjectIntId_Analyzer
+              END AS ObjectIntId_Analyzer -- !!!замена!!!
+            , _tmpItem.ObjectExtId_Analyzer       AS ObjectExtId_Analyzer
+            , 0                                   AS ParentId
             , _tmpItem.OperSumm
             , _tmpItem.OperDate
             , _tmpItem.IsActive
        FROM _tmpItem
+            LEFT JOIN (SELECT _tmpItem.MovementItemId, MAX (_tmpItem.ContainerId) AS ContainerId FROM _tmpItem WHERE _tmpItem.AccountId = zc_Enum_Account_100301() GROUP BY _tmpItem.MovementItemId
+                     ) AS tmpProfitLoss ON tmpProfitLoss.MovementItemId = _tmpItem.MovementItemId
+                                       AND _tmpItem.AccountId <> zc_Enum_Account_100301()
       UNION ALL
        -- это !!!одна!!! проводка для "курсовой разницы"
        SELECT 0, zc_MIContainer_Summ() AS DescId, _tmpItem.MovementDescId, inMovementId, _tmpItem.MovementItemId
@@ -610,7 +621,9 @@ BEGIN
             , _tmpItem.ObjectId                   AS ObjectId_Analyzer
             , _tmpItem.UnitId                     AS WhereObjectId_Analyzer
             , _tmpItem.ContainerId_Diff           AS ContainerId_Analyzer
-            , 0 AS ParentId
+            , _tmpItem.ObjectIntId_Analyzer       AS ObjectIntId_Analyzer
+            , _tmpItem.ObjectExtId_Analyzer       AS ObjectExtId_Analyzer
+            , 0                                   AS ParentId
             , _tmpItem.OperSumm_Diff
             , _tmpItem.OperDate
             , FALSE AS IsActive -- !!!всегда по Кредиту!!!
@@ -625,7 +638,9 @@ BEGIN
             , 0                                   AS ObjectId_Analyzer
             , 0                                   AS WhereObjectId_Analyzer
             , _tmpItem.ContainerId_Currency       AS ContainerId_Analyzer
-            , 0 AS ParentId
+            , _tmpItem.ObjectIntId_Analyzer       AS ObjectIntId_Analyzer
+            , _tmpItem.ObjectExtId_Analyzer       AS ObjectExtId_Analyzer
+            , 0                                   AS ParentId
             , _tmpItem.OperSumm_Currency
             , _tmpItem.OperDate
             , _tmpItem.IsActive
@@ -764,3 +779,14 @@ END;$BODY$
 -- SELECT * FROM lpUnComplete_Movement (inMovementId:= 3581, inUserId:= zfCalc_UserAdmin() :: Integer)
 -- SELECT * FROM gpComplete_Movement_Cash (inMovementId:= 3581, inSession:= zfCalc_UserAdmin())
 -- SELECT * FROM gpSelect_MovementItemContainer_Movement (inMovementId:= 3581, inSession:= zfCalc_UserAdmin())
+
+/*
+  Report_GoodsTaxDialog in '..\..\Forms\Report\Report_GoodsTaxDialog.pas' {Report_GoodsTaxDialogForm: TParentForm},
+  Report_GoodsMI_OrderExternal_SaleDialog in '..\..\Forms\Report\Report_GoodsMI_OrderExternal_SaleDialog.pas' {Report_GoodsMI_OrderExternal_SaleDialogForm: TParentForm},
+  Report_GoodsMI_byMovementDialog in '..\..\Forms\Report\Report_GoodsMI_byMovementDialog.pas' {Report_GoodsMI_byMovementDialogForm: TParentForm},
+  Report_GoodsMI_byMovementDifDialog in '..\..\Forms\Report\Report_GoodsMI_byMovementDifDialog.pas' {Report_GoodsMI_byMovementDifDialogForm: TParentForm},
+  Report_GoodsMI_byPriceDifDialog in '..\..\Forms\Report\Report_GoodsMI_byPriceDifDialog.pas' {Report_GoodsMI_byPriceDifDialogForm: TParentForm},
+  Report_CheckBonusDialog in '..\..\Forms\Report\Report_CheckBonusDialog.pas' {Report_CheckBonusDialogForm: TParentForm},
+  Report_GoodsMI_TransferDebtDialog in '..\..\Forms\Report\Report_GoodsMI_TransferDebtDialog.pas' {Report_GoodsMI_TransferDebtDialogForm: TParentForm},
+  Report_GoodsMI_ProductionSeparateUnionDialog in '..\..\Forms\Report\Report_GoodsMI_ProductionSeparateUnionDialog.pas' {Report_GoodsMI_ProductionSeparateUnionDialogForm: TParentForm};
+*/

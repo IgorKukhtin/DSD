@@ -34,7 +34,7 @@ $BODY$
     DECLARE vbIsProcess_BranchIn Boolean;
 
     DECLARE vbStoreKeeperName TVarChar;
-    DECLARE vbInfoMoney_30201 Boolean;
+    DECLARE vbIsInfoMoney_30201 Boolean;
 
 BEGIN
      -- проверка прав пользователя на вызов процедуры
@@ -219,20 +219,16 @@ BEGIN
     END IF;
 
 
-    IF EXISTS (SELECT MovementItem.ObjectId AS GoodsId
-               FROM MovementItem
-                  INNER JOIN ObjectLink AS ObjectLink_Goods_InfoMoney
-                                        ON ObjectLink_Goods_InfoMoney.ObjectId = MovementItem.ObjectId 
-                                       AND ObjectLink_Goods_InfoMoney.DescId = zc_ObjectLink_Goods_InfoMoney()
-                                       AND ObjectLink_Goods_InfoMoney.ChildObjectId = zc_Enum_InfoMoney_30201()
-               WHERE MovementItem.MovementId = inMovementId
-                 AND MovementItem.DescId     = zc_MI_Master()
-                 AND MovementItem.isErased   = FALSE)
-     THEN
-         vbInfoMoney_30201 := TRUE;
-     ELSE
-         vbInfoMoney_30201 := FALSE;
-     END IF;
+    -- Параметр для Доходы + Продукция + Тушенка
+    vbIsInfoMoney_30201:= EXISTS (SELECT 1
+                                  FROM MovementItem
+                                       INNER JOIN ObjectLink AS ObjectLink_Goods_InfoMoney
+                                                             ON ObjectLink_Goods_InfoMoney.ObjectId = MovementItem.ObjectId 
+                                                            AND ObjectLink_Goods_InfoMoney.DescId = zc_ObjectLink_Goods_InfoMoney()
+                                                            AND ObjectLink_Goods_InfoMoney.ChildObjectId = zc_Enum_InfoMoney_30102()
+                                  WHERE MovementItem.MovementId = inMovementId
+                                    AND MovementItem.DescId     = zc_MI_Master()
+                                    AND MovementItem.isErased   = FALSE);
 
 
      --
@@ -403,7 +399,7 @@ BEGIN
                   ELSE ''
              END AS Price_info
 
-           , vbInfoMoney_30201 AS isInfoMoney_30201
+           , vbIsInfoMoney_30201 AS isInfoMoney_30201
        FROM Movement
             LEFT JOIN MovementLinkMovement AS MovementLinkMovement_Sale
                                            ON MovementLinkMovement_Sale.MovementId = Movement.Id
@@ -694,6 +690,7 @@ BEGIN
              , tmpObject_GoodsPropertyValue.ArticleGLN
              , tmpObject_GoodsPropertyValue.BarCode
              , tmpObject_GoodsPropertyValue.BarCodeGLN
+             , tmpObject_GoodsPropertyValue.BoxCount             
         FROM (SELECT MAX (tmpObject_GoodsPropertyValue.ObjectId) AS ObjectId, GoodsId FROM tmpObject_GoodsPropertyValue WHERE Article <> '' OR ArticleGLN <> '' OR BarCodeGLN <> '' GROUP BY GoodsId
              ) AS tmpGoodsProperty_find
              LEFT JOIN tmpObject_GoodsPropertyValue ON tmpObject_GoodsPropertyValue.ObjectId =  tmpGoodsProperty_find.ObjectId
@@ -763,10 +760,13 @@ BEGIN
            , tmpMI.Price                     AS Price
            , tmpMI.CountForPrice             AS CountForPrice
 
-           , CASE WHEN COALESCE (tmpObject_GoodsPropertyValue.BoxCount, 0)>0 THEN CAST (tmpMI.AmountPartner/tmpObject_GoodsPropertyValue.BoxCount AS NUMERIC (16, 4))  ELSE 0 END AS AmountBox
+           , CASE WHEN COALESCE (tmpObject_GoodsPropertyValue.BoxCount, COALESCE (tmpObject_GoodsPropertyValueGroup.BoxCount, 0)) > 0
+                       THEN CAST (tmpMI.AmountPartner / COALESCE (tmpObject_GoodsPropertyValue.BoxCount, COALESCE (tmpObject_GoodsPropertyValueGroup.BoxCount, 0)) AS NUMERIC (16, 4))
+                  ELSE 0
+             END AS AmountBox
            , COALESCE (tmpObject_GoodsPropertyValue.Name, '')       AS GoodsName_Juridical
            , COALESCE (tmpObject_GoodsPropertyValue.Amount, 0)      AS AmountInPack_Juridical
-           , COALESCE (tmpObject_GoodsPropertyValue.BoxCount, 0)    AS BoxCount_Juridical
+           , COALESCE (tmpObject_GoodsPropertyValue.BoxCount, COALESCE (tmpObject_GoodsPropertyValueGroup.BoxCount, 0))       AS BoxCount_Juridical
            , COALESCE (tmpObject_GoodsPropertyValueGroup.Article,    COALESCE (tmpObject_GoodsPropertyValue.Article, ''))    AS Article_Juridical
            , COALESCE (tmpObject_GoodsPropertyValueGroup.BarCode,    COALESCE (tmpObject_GoodsPropertyValue.BarCode, ''))    AS BarCode_Juridical
            , COALESCE (tmpObject_GoodsPropertyValueGroup.ArticleGLN, COALESCE (tmpObject_GoodsPropertyValue.ArticleGLN, '')) AS ArticleGLN_Juridical

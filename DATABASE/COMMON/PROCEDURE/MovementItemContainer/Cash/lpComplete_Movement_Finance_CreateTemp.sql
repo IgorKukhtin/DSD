@@ -19,7 +19,7 @@ BEGIN
                                , BusinessId_Balance Integer, BusinessId_ProfitLoss Integer, JuridicalId_Basis Integer
                                , UnitId Integer, PositionId Integer, PersonalServiceListId Integer, BranchId_Balance Integer, BranchId_ProfitLoss Integer, ServiceDateId Integer, ContractId Integer, PaidKindId Integer
                                , PartionMovementId Integer
-                               , AnalyzerId Integer
+                               , AnalyzerId Integer, ObjectIntId_Analyzer Integer, ObjectExtId_Analyzer Integer
                                , CurrencyId Integer
                                , IsActive Boolean, IsMaster Boolean
                                 ) ON COMMIT DROP;

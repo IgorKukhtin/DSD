@@ -23,7 +23,7 @@ uses
   dxSkinTheAsphaltWorld, dxSkinsDefaultPainters, dxSkinValentine, dxSkinVS2010,
   dxSkinWhiteprint, dxSkinXmas2008Blue, dxSkinsdxBarPainter, dxBarExtItems,
   dsdAddOn, cxCheckBox, dxSkinscxPCPainter, cxButtonEdit, cxContainer,
-  dsdGuides, cxTextEdit, cxLabel;
+  dsdGuides, cxTextEdit, cxLabel, cxCurrencyEdit;
 
 type
   TGoodsPropertyValueForm = class(TParentForm)

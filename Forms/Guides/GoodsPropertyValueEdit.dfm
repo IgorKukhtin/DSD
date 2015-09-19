@@ -74,9 +74,9 @@ object GoodsPropertyValueEditForm: TGoodsPropertyValueEditForm
     Caption = #1040#1088#1090#1080#1082#1091#1083' GLN'
   end
   object cxLabel9: TcxLabel
-    Left = 392
+    Left = 389
     Top = 15
-    Caption = #1064#1090#1091#1082' '#1074' '#1091#1087#1072#1082#1086#1074#1082#1077
+    Caption = #1050#1086#1083'-'#1074#1086' '#1096#1090#1091#1082' '#1087#1088#1080' '#1089#1082#1072#1085#1080#1088#1086#1074#1072#1085#1080#1080
   end
   object ceGoodsProperty: TcxButtonEdit
     Left = 17
@@ -90,12 +90,12 @@ object GoodsPropertyValueEditForm: TGoodsPropertyValueEditForm
     Width = 267
   end
   object ceAmount: TcxCurrencyEdit
-    Left = 392
+    Left = 389
     Top = 31
     Properties.DecimalPlaces = 4
     Properties.DisplayFormat = ',0.####'
     TabOrder = 11
-    Width = 160
+    Width = 163
   end
   object ceBarCode: TcxTextEdit
     Left = 17
@@ -165,17 +165,17 @@ object GoodsPropertyValueEditForm: TGoodsPropertyValueEditForm
     Width = 267
   end
   object cxLabel11: TcxLabel
-    Left = 392
+    Left = 389
     Top = 58
-    Caption = #1064#1090#1091#1082' '#1074' '#1103#1097#1080#1082#1077
+    Caption = #1050#1086#1083'-'#1074#1086' '#1077#1076#1080#1085#1080#1094' '#1074' '#1103#1097#1080#1082#1077
   end
   object ceBoxCount: TcxCurrencyEdit
-    Left = 392
+    Left = 389
     Top = 77
     Properties.DecimalPlaces = 4
     Properties.DisplayFormat = ',0.####'
     TabOrder = 23
-    Width = 160
+    Width = 163
   end
   object ActionList: TActionList
     Left = 432

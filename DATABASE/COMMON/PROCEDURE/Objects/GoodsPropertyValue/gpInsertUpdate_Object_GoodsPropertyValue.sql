@@ -6,8 +6,8 @@ DROP FUNCTION IF EXISTS gpInsertUpdate_Object_GoodsPropertyValue(Integer, TVarCh
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_GoodsPropertyValue(
  INOUT ioId                  Integer   ,    -- ключ объекта <Значения свойств товаров для классификатора>
     IN inName                TVarChar  ,    -- Название товара(покупателя)
-    IN inAmount              TFloat    ,    -- Количество штук в упаковке
-    IN inBoxCount            TFloat    ,    -- Количество штук в ящике
+    IN inAmount              TFloat    ,    -- Кол-во штук при сканировании
+    IN inBoxCount            TFloat    ,    -- Кол-во единиц в ящике
     IN inBarCode             TVarChar  ,    -- Штрих-код
     IN inArticle             TVarChar  ,    -- Артикул
     IN inBarCodeGLN          TVarChar  ,    -- Штрих-код GLN
