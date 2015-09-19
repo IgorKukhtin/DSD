@@ -623,6 +623,8 @@ type
     N76: TMenuItem;
     actReport_GoodsMI_SaleReturnInUnitNew: TdsdOpenForm;
     N77: TMenuItem;
+    actReport_Transport_ProfitLoss: TdsdOpenForm;
+    N78: TMenuItem;
     procedure actReport_OLAPSoldExecute(Sender: TObject);
     procedure FormShow(Sender: TObject);
   private
