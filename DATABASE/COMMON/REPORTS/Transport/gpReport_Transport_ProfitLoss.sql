@@ -50,7 +50,7 @@ BEGIN
                                                               ON CLO_ProfitLoss.ContainerId = MIContainer.ContainerId_Analyzer
                                                              AND CLO_ProfitLoss.DescId = zc_ContainerLinkObject_ProfitLoss()   
                                 LEFT JOIN ContainerLinkObject AS CLO_Business
-                                                              ON CLO_Business.ContainerId = MIContainer.ContainerId
+                                                              ON CLO_Business.ContainerId = MIContainer.ContainerId_Analyzer
                                                              AND CLO_Business.DescId = zc_ContainerLinkObject_Business()
                                                            
                                 LEFT JOIN MovementLinkObject AS MovementLinkObject_PersonalDriver
