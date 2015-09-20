@@ -37,7 +37,7 @@ uses
   Storage, Authentication, CommonData, MessagesUnit, StrUtils;
 
 procedure TLoginForm.btnOkClick(Sender: TObject);
-var TextMessage: String;
+var TextMessage,EMessage: String;
 begin
   try
     TAuthentication.CheckLogin(TStorageFactory.GetStorage, edUserName.Text, edPassword.Text, gc_User);
@@ -52,7 +52,8 @@ begin
            // Выбрасываем все что после Context
            TextMessage := Copy(E.Message, 1, pos('context', AnsilowerCase(E.Message)) - 1);
         TextMessage := ReplaceStr(TextMessage, 'ERROR:', 'ОШИБКА:');
-        TMessagesForm.Create(nil).Execute(TextMessage, E.Message);
+        EMessage := E.Message;
+        TMessagesForm.Create(nil).Execute(TextMessage, EMessage);
     end;
   end;
 end;

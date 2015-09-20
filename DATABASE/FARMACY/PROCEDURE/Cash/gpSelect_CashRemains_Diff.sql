@@ -84,7 +84,7 @@ BEGIN
     (
         SELECT 
             GoodsRemains.ObjectId                             AS ObjectId
-           ,COALESCE(Object_Price_View.Price,0)               AS Price
+           ,ROUND(COALESCE(Object_Price_View.Price,0),2)      AS Price
            ,(GoodsRemains.Remains 
                 - COALESCE(RESERVE.Amount,0))::TFloat         AS Remains
            ,Object_Price_View.MCSValue                        AS MCSValue
