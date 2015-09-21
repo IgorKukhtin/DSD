@@ -57,7 +57,7 @@ begin
     BaseVersionInfo := TdsdFormStorageFactory.GetStorage.LoadFileVersion(ExtractFileName(ParamStr(0)));
     LocalVersionInfo := UnilWin.GetFileVersion(ParamStr(0));
     if (BaseVersionInfo.VerHigh > LocalVersionInfo.VerHigh) or
-       ((BaseVersionInfo.VerHigh = LocalVersionInfo.VerHigh) and (BaseVersionInfo.VerLow > LocalVersionInfo.VerLow))  then
+       ((BaseVersionInfo.VerHigh = LocalVersionInfo.VerHigh) and (BaseVersionInfo.VerLow > LocalVersionInfo.VerLow)) then
         if MessageDlg('Обнаружена новая версия программы! Обновить', mtInformation, mbOKCancel, 0) = mrOk then
            UpdateProgram;
   except
