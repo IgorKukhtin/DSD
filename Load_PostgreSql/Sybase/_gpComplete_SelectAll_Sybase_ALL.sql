@@ -33,6 +33,8 @@ BEGIN
 
                 UNION */SELECT tmp.UnitId, NULL AS isMain FROM lfSelect_Object_Unit_byGroup (8432) AS tmp -- 30000 - Общепроизводственные
                )
+       -- tmpUnit AS (SELECT tmp.UnitId, NULL AS isMain FROM lfSelect_Object_Unit_byGroup (8439) AS tmp) -- 31050 - Участок мясного сырья
+       -- tmpUnit AS (SELECT tmp.UnitId, NULL AS isMain FROM lfSelect_Object_Unit_byGroup (8459) AS tmp) -- 32022 - Склад Реализации
      , tmpUnit_pack AS (SELECT 8451 AS UnitId, NULL AS isMain  -- Цех Упаковки
                        )
      , tmpUnit_branch AS (SELECT 301309 AS UnitId, NULL AS isMain  -- Склад ГП ф.Запорожье

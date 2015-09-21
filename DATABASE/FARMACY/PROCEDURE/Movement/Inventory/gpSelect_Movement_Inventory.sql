@@ -10,7 +10,7 @@ CREATE OR REPLACE FUNCTION gpSelect_Movement_Inventory(
 )
 RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode Integer, StatusName TVarChar
              , TotalCount TFloat, TotalSumm TFloat
-             , UnitId Integer, UnitName TVarChar
+             , UnitId Integer, UnitName TVarChar, FullInvent Boolean
              )
 AS
 $BODY$
@@ -36,16 +36,16 @@ BEGIN
                               -- )
 
        SELECT
-             Movement.Id                                AS Id
-           , Movement.InvNumber                         AS InvNumber
-           , Movement.OperDate                          AS OperDate
-           , Object_Status.ObjectCode                   AS StatusCode
-           , Object_Status.ValueData                    AS StatusName
-           , MovementFloat_TotalCount.ValueData         AS TotalCount
-           , MovementFloat_TotalSumm.ValueData          AS TotalSumm
-           , Object_Unit.Id                             AS UnitId
-           , Object_Unit.ValueData                      AS UnitName
-
+             Movement.Id                                          AS Id
+           , Movement.InvNumber                                   AS InvNumber
+           , Movement.OperDate                                    AS OperDate
+           , Object_Status.ObjectCode                             AS StatusCode
+           , Object_Status.ValueData                              AS StatusName
+           , MovementFloat_TotalCount.ValueData                   AS TotalCount
+           , MovementFloat_TotalSumm.ValueData                    AS TotalSumm
+           , Object_Unit.Id                                       AS UnitId
+           , Object_Unit.ValueData                                AS UnitName
+           , COALESCE(MovementBoolean_FullInvent.ValueData,False) AS FullInvent
        FROM (SELECT Movement.id
              FROM tmpStatus
                   JOIN Movement ON Movement.OperDate BETWEEN inStartDate AND inEndDate AND Movement.DescId = zc_Movement_Inventory() AND Movement.StatusId = tmpStatus.StatusId
@@ -66,6 +66,9 @@ BEGIN
                                          ON MovementLinkObject_Unit.MovementId = Movement.Id
                                         AND MovementLinkObject_Unit.DescId = zc_MovementLinkObject_Unit()
             LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = MovementLinkObject_Unit.ObjectId
+            LEFT OUTER JOIN MovementBoolean AS MovementBoolean_FullInvent
+                                            ON MovementBoolean_FullInvent.MovementId = Movement.Id
+                                           AND MovementBoolean_FullInvent.DescId = zc_MovementBoolean_FullInvent()
     ;
 
 END;
@@ -76,6 +79,7 @@ ALTER FUNCTION gpSelect_Movement_Inventory (TDateTime, TDateTime, Boolean, TVarC
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.A.   Воробкало А.А.
+ 16.09.15                                                                       * + FullInvent
  11.07.15                                                                       *
 */
 

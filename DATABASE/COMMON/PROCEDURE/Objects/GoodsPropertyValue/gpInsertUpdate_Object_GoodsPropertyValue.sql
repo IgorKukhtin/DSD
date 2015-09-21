@@ -1,11 +1,13 @@
 -- Function: gpInsertUpdate_Object_GoodsPropertyValue()
 
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_GoodsPropertyValue(Integer, TVarChar, TFloat, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, Integer, Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_GoodsPropertyValue(Integer, TVarChar, TFloat, TFloat, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, Integer, Integer, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_GoodsPropertyValue(
  INOUT ioId                  Integer   ,    -- ключ объекта <Значения свойств товаров для классификатора>
     IN inName                TVarChar  ,    -- Название товара(покупателя)
-    IN inAmount              TFloat    ,    -- Количество штук в упаковке
+    IN inAmount              TFloat    ,    -- Кол-во штук при сканировании
+    IN inBoxCount            TFloat    ,    -- Кол-во единиц в ящике
     IN inBarCode             TVarChar  ,    -- Штрих-код
     IN inArticle             TVarChar  ,    -- Артикул
     IN inBarCodeGLN          TVarChar  ,    -- Штрих-код GLN
@@ -116,6 +118,8 @@ $BODY$
    -- сохранили 
    PERFORM lpInsertUpdate_ObjectFloat(zc_objectFloat_GoodsPropertyValue_Amount(), ioId, inAmount);
    -- сохранили 
+   PERFORM lpInsertUpdate_ObjectFloat(zc_objectFloat_GoodsPropertyValue_BoxCount(), ioId, inBoxCount);
+   -- сохранили 
    PERFORM lpInsertUpdate_ObjectString(zc_objectString_GoodsPropertyValue_BarCode(), ioId, inBarCode);
    -- сохранили 
    PERFORM lpInsertUpdate_ObjectString(zc_objectString_GoodsPropertyValue_Article(), ioId, inArticle);
@@ -144,6 +148,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 17.09.15         * add BoxCount
  12.02.15                                        *
  10.10.14                                                       *
  12.06.13          *

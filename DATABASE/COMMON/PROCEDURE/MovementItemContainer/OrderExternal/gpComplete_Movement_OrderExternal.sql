@@ -20,6 +20,7 @@ $BODY$
   DECLARE vbDiscountPercent TFloat;
   DECLARE vbExtraChargesPercent TFloat;
 
+  DECLARE vbPartnerId Integer;
   DECLARE vbUnitId_From Integer;
   DECLARE vbArticleLoss_From Integer;
   DECLARE vbContractId  Integer;
@@ -42,12 +43,13 @@ BEGIN
           , CASE WHEN COALESCE (MovementFloat_ChangePercent.ValueData, 0) < 0 THEN -MovementFloat_ChangePercent.ValueData ELSE 0 END AS DiscountPercent
           , CASE WHEN COALESCE (MovementFloat_ChangePercent.ValueData, 0) > 0 THEN MovementFloat_ChangePercent.ValueData ELSE 0 END AS ExtraChargesPercent
 
+          , COALESCE (CASE WHEN Object_From.DescId = zc_Object_Partner() THEN Object_From.Id ELSE 0 END, 0) AS PartnerId
           , COALESCE (CASE WHEN Object_From.DescId = zc_Object_Unit() THEN Object_From.Id ELSE 0 END, 0) AS UnitId_From
           , COALESCE (CASE WHEN Object_From.DescId = zc_Object_ArticleLoss() THEN Object_From.Id ELSE 0 END, 0) AS ArticleLoss_From
           , COALESCE (MovementLinkObject_Contract.ObjectId, 0) AS ContractId
 
             INTO vbPriceWithVAT, vbVATPercent, vbDiscountPercent, vbExtraChargesPercent
-               , vbUnitId_From, vbArticleLoss_From, vbContractId
+               , vbPartnerId, vbUnitId_From, vbArticleLoss_From, vbContractId
      FROM Movement
           LEFT JOIN MovementBoolean AS MovementBoolean_PriceWithVAT
                                     ON MovementBoolean_PriceWithVAT.MovementId = Movement.Id
@@ -223,10 +225,15 @@ BEGIN
      END IF;
 
      -- кроме Админа
-     IF EXISTS (SELECT _tmpItem.Price FROM _tmpItem WHERE _tmpItem.Price = 0) AND vbUserId <> 5
+     IF EXISTS (SELECT _tmpItem.Price FROM _tmpItem WHERE _tmpItem.Price = 0) -- AND vbUserId <> 5
      THEN
-         RAISE EXCEPTION 'Ошибка. У товара <%> <%> с количеством <%> установлена цена = 0.', (SELECT lfGet_Object_ValueData (_tmpItem.GoodsId) FROM _tmpItem WHERE _tmpItem.Price = 0 ORDER BY MovementItemId LIMIT 1)
+         RAISE EXCEPTION 'Ошибка.%В документе покупателя <%>%для товара <%> <%>%с количеством <%> установлена цена = 0.'
+                                                                                           , CHR(13)
+                                                                                           , lfGet_Object_ValueData (vbPartnerId)
+                                                                                           , CHR(13)
+                                                                                           , (SELECT lfGet_Object_ValueData (_tmpItem.GoodsId) FROM _tmpItem WHERE _tmpItem.Price = 0 ORDER BY MovementItemId LIMIT 1)
                                                                                            , (SELECT lfGet_Object_ValueData (_tmpItem.GoodsKindId) FROM _tmpItem WHERE _tmpItem.Price = 0 ORDER BY MovementItemId LIMIT 1)
+                                                                                           , CHR(13)
                                                                                            , (SELECT _tmpItem.OperCount FROM _tmpItem WHERE _tmpItem.Price = 0 ORDER BY MovementItemId LIMIT 1)
                                                                                             ;
      END IF;

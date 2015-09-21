@@ -545,4 +545,4 @@ ALTER FUNCTION gpSelect_Object_ContractPartnerChoice (Boolean, TVarChar) OWNER T
 */
 
 -- тест
- SELECT * FROM gpSelect_Object_ContractPartnerChoice (inShowAll:= FALSE, inSession := zfCalc_UserAdmin())
+-- SELECT * FROM gpSelect_Object_ContractPartnerChoice (inShowAll:= FALSE, inSession := zfCalc_UserAdmin())

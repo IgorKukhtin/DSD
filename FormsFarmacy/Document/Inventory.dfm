@@ -2,8 +2,8 @@ inherited InventoryForm: TInventoryForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1048#1085#1074#1077#1085#1090#1072#1088#1080#1079#1072#1094#1080#1103'>'
   ClientHeight = 658
   ClientWidth = 898
-  ExplicitWidth = 906
-  ExplicitHeight = 685
+  ExplicitWidth = 914
+  ExplicitHeight = 696
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -292,15 +292,15 @@ inherited InventoryForm: TInventoryForm
       ExplicitLeft = 89
     end
     inherited cxLabel15: TcxLabel
-      Left = 455
-      ExplicitLeft = 455
+      Left = 607
+      ExplicitLeft = 607
     end
     inherited ceStatus: TcxButtonEdit
-      Left = 455
-      ExplicitLeft = 455
-      ExplicitWidth = 218
+      Left = 607
+      ExplicitLeft = 607
+      ExplicitWidth = 154
       ExplicitHeight = 22
-      Width = 218
+      Width = 154
     end
     object cxLabel3: TcxLabel
       Left = 179
@@ -317,6 +317,15 @@ inherited InventoryForm: TInventoryForm
         end>
       TabOrder = 7
       Width = 270
+    end
+    object chbFullInvent: TcxCheckBox
+      Left = 455
+      Top = 23
+      Caption = #1055#1086#1083#1085#1072#1103' '#1080#1085#1074#1077#1085#1090#1072#1088#1080#1079#1072#1094#1080#1103
+      ParentShowHint = False
+      ShowHint = True
+      TabOrder = 8
+      Width = 146
     end
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
@@ -560,6 +569,17 @@ inherited InventoryForm: TInventoryForm
           ComponentItem = 'Id'
         end>
     end
+    object actSelect: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spSelect
+      StoredProcList = <
+        item
+          StoredProc = spSelect
+        end>
+      Caption = 'actSelect'
+    end
   end
   inherited MasterDS: TDataSource
     Left = 32
@@ -790,6 +810,13 @@ inherited InventoryForm: TInventoryForm
       item
         Name = 'ImportSettingId'
         Value = Null
+      end
+      item
+        Name = 'FullInvent'
+        Value = Null
+        Component = chbFullInvent
+        DataType = ftBoolean
+        ParamType = ptInput
       end>
     Left = 120
     Top = 144
@@ -860,8 +887,11 @@ inherited InventoryForm: TInventoryForm
         DataType = ftString
       end
       item
+        Name = 'FullInvent'
         Value = ''
-        ParamType = ptUnknown
+        Component = FormParams
+        ComponentItem = 'FullInvent'
+        DataType = ftBoolean
       end
       item
         Value = ''
@@ -988,8 +1018,12 @@ inherited InventoryForm: TInventoryForm
         ParamType = ptInput
       end
       item
+        Name = 'inFullInvent'
         Value = ''
-        ParamType = ptUnknown
+        Component = FormParams
+        ComponentItem = 'FullInvent'
+        DataType = ftBoolean
+        ParamType = ptInput
       end
       item
         Value = 0d
@@ -1057,6 +1091,13 @@ inherited InventoryForm: TInventoryForm
       end
       item
       end>
+    ActionItemList = <
+      item
+        Action = actInsertUpdateMovement
+      end
+      item
+        Action = actSelect
+      end>
     Left = 160
     Top = 192
   end
@@ -1078,6 +1119,7 @@ inherited InventoryForm: TInventoryForm
         Control = edUnit
       end
       item
+        Control = chbFullInvent
       end
       item
       end

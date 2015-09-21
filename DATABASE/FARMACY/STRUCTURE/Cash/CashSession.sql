@@ -45,6 +45,8 @@ CREATE TABLE CashSessionSnapShot
 ALTER TABLE CashSessionSnapShot
   OWNER TO postgres;
 
+CREATE INDEX idx_CashSessionSnapShot ON CashSessionSnapShot(CashSessionId);
+CREATE INDEX idx_CashSessionSnapShot_ObjectId ON CashSessionSnapShot(ObjectId);
 /*-------------------------------------------------------------------------------*/
 
 

@@ -52,6 +52,8 @@ type
     cxLabel8: TcxLabel;
     PriceListGuides: TdsdGuides;
     clPrice_calc: TcxGridDBColumn;
+    ExecuteDialog: TExecuteDialog;
+    bbExecuteDialog: TdxBarButton;
   private
     { Private declarations }
   public

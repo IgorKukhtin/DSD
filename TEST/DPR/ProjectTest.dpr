@@ -695,7 +695,7 @@ uses
   OrderInternalPackJournal in '..\..\Forms\Document\OrderInternalPackJournal.pas' {OrderInternalPackJournalForm: TParentForm},
   ReturnOut in '..\..\Forms\Document\ReturnOut.pas' {ReturnOutForm: TParentForm},
   ReturnOutJournal in '..\..\Forms\Document\ReturnOutJournal.pas' {ReturnOutJournalForm: TParentForm},
-  Report_GoodsMI_SaleReturnInUnit in '..\..\Forms\Report\Report_GoodsMI_SaleReturnInUnit.pas' {Report_GoodsMI_SaleReturnInUnitForm: TParentForm},
+  Report_GoodsMI_SaleReturnInUnitNew in '..\..\Forms\Report\Report_GoodsMI_SaleReturnInUnitNew.pas' {Report_GoodsMI_SaleReturnInUnitNewForm: TParentForm},
   Report_GoodsMI_SaleReturnIn in '..\..\Forms\Report\Report_GoodsMI_SaleReturnIn.pas' {Report_GoodsMI_SaleReturnInForm: TParentForm},
   Report_GoodsBalanceDialog in '..\..\Forms\Report\Report_GoodsBalanceDialog.pas' {Report_GoodsBalanceDialogForm: TParentForm},
   Report_GoodsMI_IncomeDialog in '..\..\Forms\Report\Report_GoodsMI_IncomeDialog.pas' {Report_GoodsMI_IncomeDialogForm: TParentForm},
@@ -733,7 +733,18 @@ uses
   Report_BankAccount_Cash in '..\..\Forms\Report\Report_BankAccount_Cash.pas' {Report_BankAccount_CashForm: TParentForm},
   Report_BankAccount_CashDialog in '..\..\Forms\Report\Report_BankAccount_CashDialog.pas' {Report_BankAccount_CashDialogForm: TParentForm},
   TransportJournalChoice in '..\..\Forms\Document\TransportJournalChoice.pas' {TransportJournalChoiceForm: TParentForm},
-  Report_LoginProtocol in '..\..\Forms\Report\Report_LoginProtocol.pas' {Report_LoginProtocolForm: TParentForm};
+  Report_LoginProtocol in '..\..\Forms\Report\Report_LoginProtocol.pas' {Report_LoginProtocolForm: TParentForm},
+  Report_GoodsMI_SaleReturnInUnit in '..\..\Forms\Report\Report_GoodsMI_SaleReturnInUnit.pas' {Report_GoodsMI_SaleReturnInUnitForm: TParentForm},
+  Report_GoodsTaxDialog in '..\..\Forms\Report\Report_GoodsTaxDialog.pas' {Report_GoodsTaxDialogForm: TParentForm},
+  Report_GoodsMI_OrderExternal_SaleDialog in '..\..\Forms\Report\Report_GoodsMI_OrderExternal_SaleDialog.pas' {Report_GoodsMI_OrderExternal_SaleDialogForm: TParentForm},
+  Report_GoodsMI_byMovementDialog in '..\..\Forms\Report\Report_GoodsMI_byMovementDialog.pas' {Report_GoodsMI_byMovementDialogForm: TParentForm},
+  Report_GoodsMI_byMovementDifDialog in '..\..\Forms\Report\Report_GoodsMI_byMovementDifDialog.pas' {Report_GoodsMI_byMovementDifDialogForm: TParentForm},
+  Report_GoodsMI_byPriceDifDialog in '..\..\Forms\Report\Report_GoodsMI_byPriceDifDialog.pas' {Report_GoodsMI_byPriceDifDialogForm: TParentForm},
+  Report_CheckBonusDialog in '..\..\Forms\Report\Report_CheckBonusDialog.pas' {Report_CheckBonusDialogForm: TParentForm},
+  Report_GoodsMI_TransferDebtDialog in '..\..\Forms\Report\Report_GoodsMI_TransferDebtDialog.pas' {Report_GoodsMI_TransferDebtDialogForm: TParentForm},
+  Report_GoodsMI_ProductionSeparateUnionDialog in '..\..\Forms\Report\Report_GoodsMI_ProductionSeparateUnionDialog.pas' {Report_GoodsMI_ProductionSeparateUnionDialogForm: TParentForm},
+  Report_Transport_ProfitLossDialog in '..\..\Forms\Report\Report_Transport_ProfitLossDialog.pas' {Report_Transport_ProfitLossDialogForm: TParentForm},
+  Report_Transport_ProfitLoss in '..\..\Forms\Report\Report_Transport_ProfitLoss.pas' {Report_Transport_ProfitLossForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}

@@ -74,6 +74,8 @@ type
     edByDoc: TcxCheckBox;
     AmountSale_Weight: TcxGridDBColumn;
     AmountSale_Sh: TcxGridDBColumn;
+    ExecuteDialog: TExecuteDialog;
+    bbExecuteDialog: TdxBarButton;
   private
     { Private declarations }
   public

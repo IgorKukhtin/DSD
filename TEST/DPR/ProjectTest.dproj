@@ -2129,8 +2129,8 @@
 				<Form>ReturnOutJournalForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
-			<DCCReference Include="..\..\Forms\Report\Report_GoodsMI_SaleReturnInUnit.pas">
-				<Form>Report_GoodsMI_SaleReturnInUnitForm</Form>
+			<DCCReference Include="..\..\Forms\Report\Report_GoodsMI_SaleReturnInUnitNew.pas">
+				<Form>Report_GoodsMI_SaleReturnInUnitNewForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<DCCReference Include="..\..\Forms\Report\Report_GoodsMI_SaleReturnIn.pas">
@@ -2283,6 +2283,50 @@
 			</DCCReference>
 			<DCCReference Include="..\..\Forms\Report\Report_LoginProtocol.pas">
 				<Form>Report_LoginProtocolForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Report\Report_GoodsMI_SaleReturnInUnit.pas">
+				<Form>Report_GoodsMI_SaleReturnInUnitForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Report\Report_GoodsTaxDialog.pas">
+				<Form>Report_GoodsTaxDialogForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Report\Report_GoodsMI_OrderExternal_SaleDialog.pas">
+				<Form>Report_GoodsMI_OrderExternal_SaleDialogForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Report\Report_GoodsMI_byMovementDialog.pas">
+				<Form>Report_GoodsMI_byMovementDialogForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Report\Report_GoodsMI_byMovementDifDialog.pas">
+				<Form>Report_GoodsMI_byMovementDifDialogForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Report\Report_GoodsMI_byPriceDifDialog.pas">
+				<Form>Report_GoodsMI_byPriceDifDialogForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Report\Report_CheckBonusDialog.pas">
+				<Form>Report_CheckBonusDialogForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Report\Report_GoodsMI_TransferDebtDialog.pas">
+				<Form>Report_GoodsMI_TransferDebtDialogForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Report\Report_GoodsMI_ProductionSeparateUnionDialog.pas">
+				<Form>Report_GoodsMI_ProductionSeparateUnionDialogForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Report\Report_Transport_ProfitLossDialog.pas">
+				<Form>Report_Transport_ProfitLossDialogForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Report\Report_Transport_ProfitLoss.pas">
+				<Form>Report_Transport_ProfitLossForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<BuildConfiguration Include="Release">

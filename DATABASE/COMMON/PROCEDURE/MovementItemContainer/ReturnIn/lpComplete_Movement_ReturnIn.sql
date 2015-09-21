@@ -594,6 +594,22 @@ BEGIN
         AND NOT EXISTS (SELECT MovementBoolean.MovementId FROM MovementBoolean WHERE MovementBoolean.MovementId = inMovementId AND MovementBoolean.ValueData = TRUE AND MovementBoolean.DescId = zc_MovementBoolean_isPartner())
      THEN
          RAISE EXCEPTION 'Ошибка.%В документе не установлено значение <Основание № (возврат проведен кладовщиком)>.%Проведение невозможно.', CHR(13), CHR(13);
+     ELSE 
+         IF inUserId NOT IN (zc_Enum_Process_Auto_PrimeCost()) AND vbMovementId_parent = 0 AND NOT EXISTS (SELECT 1
+                                                                                                           FROM MovementItem
+                                                                                                                INNER JOIN MovementItemFloat AS MIFloat_MovementId
+                                                                                                                                             ON MIFloat_MovementId.MovementItemId = MovementItem.Id
+                                                                                                                                            AND MIFloat_MovementId.DescId = zc_MIFloat_MovementId()
+                                                                                                                                            AND MIFloat_MovementId.ValueData > 0
+                                                                                                           WHERE MovementItem.MovementId = inMovementId
+                                                                                                             AND MovementItem.DescId     = zc_MI_Master()
+                                                                                                             AND MovementItem.isErased   = FALSE
+                                                                                                          )
+
+            AND EXISTS (SELECT MovementBoolean.MovementId FROM MovementBoolean WHERE MovementBoolean.MovementId = inMovementId AND MovementBoolean.ValueData = TRUE AND MovementBoolean.DescId = zc_MovementBoolean_isPartner())
+         THEN
+             RAISE EXCEPTION 'Ошибка.%В документе с признаком "Акт недовоза" не установлено значение <Основание № (продажа)>.%Проведение невозможно.', CHR(13), CHR(13);
+     END IF;
      END IF;
      IF vbMovementId_parent = inMovementId
      THEN

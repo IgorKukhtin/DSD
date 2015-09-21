@@ -49,6 +49,12 @@ BEGIN
                             -- AND Movement.StatusId = zc_Enum_Status_Complete()
                             AND (Movement.Id = inMovementId_by OR COALESCE (inMovementId_by, 0) = 0)
                          )
+        , tmpMovementCount AS (SELECT Count(*) AS WeighingCount
+                               FROM Movement
+                               WHERE Movement.ParentId = inMovementId
+                                 AND Movement.DescId = zc_Movement_WeighingPartner()
+                                 AND Movement.StatusId = zc_Enum_Status_Complete()
+                              )
        -- список Артикулы покупателя для товаров + GoodsKindId
      , tmpObject_GoodsPropertyValue AS (SELECT ObjectLink_GoodsPropertyValue_GoodsProperty.ObjectId
                                              , ObjectLink_GoodsPropertyValue_Goods.ChildObjectId                   AS GoodsId
@@ -117,6 +123,7 @@ BEGIN
            , Movement_Sale.OperDate				                    AS OperDate
            , COALESCE (MovementDate_OperDatePartner.ValueData, Movement_Sale.OperDate)  AS OperDatePartner
            , MovementFloat_WeighingNumber.ValueData                                 AS WeighingNumber
+           , (SELECT WeighingCount FROM tmpMovementCount) :: Integer                AS WeighingCount
            , Movement_Sale.InvNumber		                                    AS InvNumber
            , MovementString_InvNumberPartner.ValueData                              AS InvNumberPartner
            , MovementString_InvNumberOrder.ValueData                                AS InvNumberOrder
@@ -156,6 +163,11 @@ BEGIN
                       THEN FALSE
                   ELSE TRUE
              END AS isBranch
+
+           , CASE WHEN ObjectLink_Juridical_Retail.ChildObjectId = 310853 -- Ашан
+                      THEN TRUE
+                  ELSE FALSE
+             END AS isAshan
 
        FROM tmpMovement
             INNER JOIN tmpMovementItem ON tmpMovementItem.MovementId = tmpMovement.Id AND tmpMovementItem.AmountPartner <> 0
@@ -223,6 +235,9 @@ BEGIN
             LEFT JOIN ObjectLink AS ObjectLink_Partner_Juridical
                                  ON ObjectLink_Partner_Juridical.ObjectId = MovementLinkObject_To.ObjectId
                                 AND ObjectLink_Partner_Juridical.DescId = zc_ObjectLink_Partner_Juridical()
+            LEFT JOIN ObjectLink AS ObjectLink_Juridical_Retail
+                                 ON ObjectLink_Juridical_Retail.ObjectId = ObjectLink_Partner_Juridical.ChildObjectId
+                                AND ObjectLink_Juridical_Retail.DescId = zc_ObjectLink_Juridical_Retail()
 
             LEFT JOIN MovementLinkObject AS MovementLinkObject_Contract
                                          ON MovementLinkObject_Contract.MovementId = Movement_Sale.Id

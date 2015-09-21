@@ -3,8 +3,6 @@
 DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_OrderExternal (Integer, TVarChar, TVarChar, TDateTime, TDateTime, TFloat, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_OrderExternal (Integer, TVarChar, TVarChar, TDateTime, TDateTime, TFloat, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_OrderExternal (Integer, TVarChar, TVarChar, TDateTime, TDateTime, TFloat, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar, TVarChar);
-DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_OrderExternal (Integer, TVarChar, TVarChar, TDateTime, TDateTime, TFloat, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar, Integer, Integer, TVarChar, TVarChar);
-
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_OrderExternal(
  INOUT ioId                  Integer   , -- Ключ объекта <Документ Перемещение>
@@ -24,7 +22,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_OrderExternal(
     IN inRouteId             Integer   , -- Маршрут
     IN inRouteSortingId      Integer   , -- Сортировки маршрутов
  INOUT ioPersonalId          Integer   , -- Сотрудник (экспедитор)
- INOUT ioPersonalName        TVarChar  , -- Сотрудник (экспедитор)
+   OUT outPersonalName       TVarChar  , -- Сотрудник (экспедитор)
  INOUT ioPriceListId         Integer   , -- Прайс лист
    OUT outPriceListName      TVarChar  , -- Прайс лист
     IN inPartnerId           Integer   , -- Контрагент
@@ -34,8 +32,6 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_OrderExternal(
 RETURNS RECORD AS
 $BODY$
    DECLARE vbUserId Integer;
-   DECLARE vbPersonalId Integer;
-   DECLARE vbPersonalName TVarChar;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      vbUserId:= lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Movement_OrderExternal());
@@ -91,14 +87,16 @@ BEGIN
          WHERE Object_PriceList.Id = ioPriceListId;
      END IF;
 
-     -- определение Экспедитора по дню недели
-     SELECT  Object_MemberTake.Id, Object_MemberTake.ValueDAta
-      INTO vbPersonalId, vbPersonalName
-     FROM ObjectLink AS ObjectLink_Partner_MemberTake
-         LEFT JOIN Object AS Object_MemberTake 
-                          ON Object_MemberTake.Id = ObjectLink_Partner_MemberTake.ChildObjectId
-     WHERE ObjectLink_Partner_MemberTake.ObjectId = inFromId -- 346882 --Object_Partner.Id 
-       AND ObjectLink_Partner_MemberTake.DescId =  CASE EXTRACT (DOW FROM inOperDate)
+
+     -- определение Экспедитора по дню недели или тот же самый
+     ioPersonalId:= COALESCE ((SELECT ObjectLink_Partner_MemberTake.ChildObjectId
+                               FROM ObjectLink AS ObjectLink_Partner_MemberTake
+                               WHERE ObjectLink_Partner_MemberTake.ObjectId = inFromId
+                                 AND ObjectLink_Partner_MemberTake.DescId = CASE EXTRACT (DOW FROM inOperDate
+                                                                                                 + (((COALESCE ((SELECT ObjectFloat.ValueData FROM ObjectFloat WHERE ObjectFloat.ObjectId = inFromId AND ObjectFloat.DescId = zc_ObjectFloat_Partner_PrepareDayCount()),  0)
+                                                                                                    + COALESCE ((SELECT ObjectFloat.ValueData FROM ObjectFloat WHERE ObjectFloat.ObjectId = inFromId AND ObjectFloat.DescId = zc_ObjectFloat_Partner_DocumentDayCount()), 0)
+                                                                                                     ) :: TVarChar || ' DAY') :: INTERVAL)
+                                                                                          )
                                                        WHEN 1 THEN zc_ObjectLink_Partner_MemberTake1()
                                                        WHEN 2 THEN zc_ObjectLink_Partner_MemberTake2()
                                                        WHEN 3 THEN zc_ObjectLink_Partner_MemberTake3()
@@ -106,13 +104,11 @@ BEGIN
                                                        WHEN 5 THEN zc_ObjectLink_Partner_MemberTake5()
                                                        WHEN 6 THEN zc_ObjectLink_Partner_MemberTake6()
                                                        WHEN 0 THEN zc_ObjectLink_Partner_MemberTake7()
-                                                    END;
+                                                    END
+                              ), ioPersonalId);
+     -- название всегда по ioPersonalId
+     outPersonalName:= (SELECT Object.ValueData FROM Object WHERE Object.Id = ioPersonalId);
 
-      IF COALESCE (vbPersonalId, 0) <> 0           -- если экспедитор по дню недели найден заменяем
-        THEN ioPersonalId:= vbPersonalId;
-             ioPersonalName:= vbPersonalName;
-       END IF;       
-                                                    
 
      -- Сохранение
      ioId:= lpInsertUpdate_Movement_OrderExternal (ioId                  := ioId

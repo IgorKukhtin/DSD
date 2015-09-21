@@ -75,11 +75,13 @@ BEGIN
     ELSE
 
     RETURN QUERY
-    WITH tmpWhere AS (SELECT lfSelect.UnitId AS LocationId, zc_ContainerLinkObject_Unit() AS DescId, inGoodsId AS GoodsId FROM lfSelect_Object_Unit_byGroup (inLocationId) AS lfSelect
+    WITH tmpWhere AS (SELECT lfSelect.UnitId AS LocationId, zc_ContainerLinkObject_Unit() AS DescId, inGoodsId AS GoodsId FROM lfSelect_Object_Unit_byGroup (inUnitGroupId) AS lfSelect WHERE inLocationId = 0
                      UNION
-                      SELECT Object.Id AS LocationId, zc_ContainerLinkObject_Car() AS DescId, inGoodsId AS GoodsId FROM Object WHERE Object.DescId = zc_Object_Car() AND (Object.Id = inLocationId OR COALESCE(inLocationId, 0) = 0)
+                      SELECT lfSelect.UnitId AS LocationId, zc_ContainerLinkObject_Unit() AS DescId, inGoodsId AS GoodsId FROM lfSelect_Object_Unit_byGroup (inLocationId) AS lfSelect WHERE inLocationId <> 0
                      UNION
-                      SELECT Object.Id AS LocationId, zc_ContainerLinkObject_Member() AS DescId, inGoodsId AS GoodsId FROM Object WHERE Object.DescId = zc_Object_Member() AND (Object.Id = inLocationId OR COALESCE(inLocationId, 0) = 0)
+                      SELECT Object.Id AS LocationId, zc_ContainerLinkObject_Car() AS DescId, inGoodsId AS GoodsId FROM Object WHERE Object.DescId = zc_Object_Car() AND (Object.Id = inLocationId OR (COALESCE(inLocationId, 0) = 0 AND COALESCE(inUnitGroupId, 0) = 0))
+                     UNION
+                      SELECT Object.Id AS LocationId, zc_ContainerLinkObject_Member() AS DescId, inGoodsId AS GoodsId FROM Object WHERE Object.DescId = zc_Object_Member() AND (Object.Id = inLocationId OR (COALESCE(inLocationId, 0) = 0 AND COALESCE(inUnitGroupId, 0) = 0))
                     )
        , tmpContainer_Count AS (SELECT Container.Id          AS ContainerId
                                      , CLO_Location.ObjectId AS LocationId

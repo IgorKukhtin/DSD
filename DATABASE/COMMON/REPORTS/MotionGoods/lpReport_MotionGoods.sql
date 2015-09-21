@@ -304,6 +304,9 @@ BEGIN
                                                         AND CLO_AssetTo.DescId = zc_ContainerLinkObject_AssetTo()
        ;
 
+    -- !!!!!!!!!!!!!!!!!!!!!!!
+    ANALYZE _tmpContainer;
+
     -- Результат
     RETURN QUERY
           WITH tmpMIContainer AS (SELECT _tmpContainer.ContainerDescId
@@ -1245,6 +1248,6 @@ ALTER FUNCTION lpReport_MotionGoods (TDateTime, TDateTime, Integer, Integer, Int
 */
 
 -- тест
--- SELECT * FROM lpReport_MotionGoods (inStartDate:= '01.01.2015', inEndDate:= '01.01.2015', inAccountGroupId:= 0, inUnitGroupId:= 0, inLocationId:= 0, inGoodsGroupId:= 0, inGoodsId:= 0, inIsInfoMoney:= FALSE, inUserId:= zfCalc_UserAdmin() :: Integer);
+-- SELECT * FROM lpReport_MotionGoods (inStartDate:= '01.01.2015', inEndDate:= '01.01.2015', inAccountGroupId:= 0, inUnitGroupId:= 0, inLocationId:= 0, inGoodsGroupId:= 1832, inGoodsId:= 0, inIsInfoMoney:= FALSE, inUserId:= zfCalc_UserAdmin() :: Integer);
 -- CREATE TEMP TABLE _tmpLocation (LocationId Integer, DescId Integer, ContainerDescId Integer) ON COMMIT DROP;
--- SELECT * from lpReport_MotionGoods (inStartDate:= '01.06.2015', inEndDate:= '30.06.2015', inAccountGroupId:= 0, inUnitGroupId := 8459 , inLocationId := 0 , inGoodsGroupId := 1860 , inGoodsId := 0 ,  inIsInfoMoney:= TRUE, inUserId := zfCalc_UserAdmin() :: Integer);
+-- SELECT * from lpReport_MotionGoods (inStartDate:= '01.06.2015', inEndDate:= '30.06.2015', inAccountGroupId:= 0, inUnitGroupId := 8459 , inLocationId := 0 , inGoodsGroupId := 1832 , inGoodsId := 0 ,  inIsInfoMoney:= TRUE, inUserId := zfCalc_UserAdmin() :: Integer);

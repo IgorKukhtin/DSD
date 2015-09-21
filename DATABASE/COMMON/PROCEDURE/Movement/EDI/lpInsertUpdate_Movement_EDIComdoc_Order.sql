@@ -35,6 +35,27 @@ $BODY$
    DECLARE vbGoodsPropertyId  Integer;
    DECLARE vbOKPO             TVarChar;
 BEGIN
+
+     -- ќпредел€ютс€ параметры (отдельно)
+     vbContractId:= (SELECT MovementLinkObject_Contract.ObjectId
+                     FROM MovementLinkObject AS MovementLinkObject_Contract
+                     WHERE MovementLinkObject_Contract.MovementId = inMovementId
+                       AND MovementLinkObject_Contract.DescId = zc_MovementLinkObject_Contract()
+                    );
+     -- ќпредел€ютс€ параметры (отдельно)
+     vbIsFindPartnerContract:= EXISTS (SELECT 1
+                                     FROM ObjectLink AS ObjectLink_ContractPartner_Contract
+                                          INNER JOIN ObjectLink AS ObjectLink_ContractPartner_Partner
+                                                                ON ObjectLink_ContractPartner_Partner.ObjectId = ObjectLink_ContractPartner_Contract.ObjectId
+                                                               AND ObjectLink_ContractPartner_Partner.DescId = zc_ObjectLink_ContractPartner_Partner()
+                                                               AND ObjectLink_ContractPartner_Contract.ChildObjectId > 0
+                                          INNER JOIN Object AS Object_ContractPartner ON Object_ContractPartner.Id = ObjectLink_ContractPartner_Contract.ObjectId
+                                                                                     AND Object_ContractPartner.isErased = FALSE
+                                     WHERE ObjectLink_ContractPartner_Contract.ChildObjectId = vbContractId
+                                       AND ObjectLink_ContractPartner_Contract.DescId = zc_ObjectLink_ContractPartner_Contract()
+                                    );
+
+
      -- ќпредел€ютс€ параметры
      SELECT TRIM (Movement.InvNumber)             AS InvNumber
           , Movement.OperDate                     AS OperDate
@@ -51,25 +72,21 @@ BEGIN
                  ELSE 0 -- ошибка
             END JuridicalId
           , MovementLinkObject_Unit.ObjectId           AS UnitId
-          , MovementLinkObject_Contract.ObjectId       AS ContractId
           , ObjectLink_Contract_PaidKind.ChildObjectId AS PaidKindId
           , tmpChangePercent.ChangePercent             AS ChangePercent
           , ObjectLink_Partner_Route.ChildObjectId           AS RouteId
           , ObjectLink_Partner_RouteSorting.ChildObjectId    AS RouteSortingId
           , ObjectLink_Partner_MemberTake.ChildObjectId      AS MemberTakeId
           -- , ObjectLink_Juridical_GoodsProperty.ChildObjectId AS GoodsPropertyId
-          , zfCalc_GoodsPropertyId (MovementLinkObject_Contract.ObjectId, ObjectLink_Partner_Juridical.ChildObjectId) AS GoodsPropertyId
+          , zfCalc_GoodsPropertyId (vbContractId, ObjectLink_Partner_Juridical.ChildObjectId) AS GoodsPropertyId
           , ObjectHistory_JuridicalDetails_View.OKPO         AS OKPO
-            INTO vbInvNumber, vbOperDate, vbOperDatePartner, vbPartnerId, vbJuridicalId, vbUnitId, vbContractId, vbPaidKindId, vbChangePercent
+            INTO vbInvNumber, vbOperDate, vbOperDatePartner, vbPartnerId, vbJuridicalId, vbUnitId, vbPaidKindId, vbChangePercent
                , vbRouteId, vbRouteSortingId, vbMemberTakeId
                , vbGoodsPropertyId, vbOKPO
      FROM Movement
           LEFT JOIN MovementLinkObject AS MovementLinkObject_Unit
                                        ON MovementLinkObject_Unit.MovementId = Movement.Id
                                       AND MovementLinkObject_Unit.DescId = zc_MovementLinkObject_Unit()
-          LEFT JOIN MovementLinkObject AS MovementLinkObject_Contract
-                                       ON MovementLinkObject_Contract.MovementId = Movement.Id
-                                      AND MovementLinkObject_Contract.DescId = zc_MovementLinkObject_Contract()
 
           LEFT JOIN MovementString AS MovementString_GLNCode
                                    ON MovementString_GLNCode.MovementId =  Movement.Id
@@ -92,17 +109,28 @@ BEGIN
                                               AND ObjectLink_ContractCondition_Contract.DescId = zc_ObjectLink_ContractCondition_Contract()
                      WHERE ObjectLink_ContractCondition_ContractConditionKind.ChildObjectId = zc_Enum_ContractConditionKind_ChangePercent()
                        AND ObjectLink_ContractCondition_ContractConditionKind.DescId = zc_ObjectLink_ContractCondition_ContractConditionKind()
-                    ) AS tmpChangePercent ON tmpChangePercent.ContractId = MovementLinkObject_Contract.ObjectId
+                    ) AS tmpChangePercent ON tmpChangePercent.ContractId = vbContractId
           LEFT JOIN ObjectLink AS ObjectLink_Contract_PaidKind
-                               ON ObjectLink_Contract_PaidKind.ObjectId = MovementLinkObject_Contract.ObjectId
+                               ON ObjectLink_Contract_PaidKind.ObjectId = vbContractId
                               AND ObjectLink_Contract_PaidKind.DescId = zc_ObjectLink_Contract_PaidKind()
                               
-          LEFT JOIN Object_Contract_View ON Object_Contract_View.ContractId = MovementLinkObject_Contract.ObjectId
+          LEFT JOIN Object_Contract_View ON Object_Contract_View.ContractId = vbContractId
           LEFT JOIN Object_InfoMoney_View ON Object_InfoMoney_View.InfoMoneyId = Object_Contract_View.InfoMoneyId
 
           LEFT JOIN ObjectString AS ObjectString_Partner_GLNCode
                                  ON ObjectString_Partner_GLNCode.ValueData = MovementString_GLNPlaceCode.ValueData
                                 AND ObjectString_Partner_GLNCode.DescId = zc_ObjectString_Partner_GLNCode()
+                                AND (ObjectString_Partner_GLNCode.ObjectId IN (SELECT ObjectLink_ContractPartner_Partner.ChildObjectId
+                                                                              FROM ObjectLink AS ObjectLink_ContractPartner_Contract
+                                                                                   INNER JOIN Object AS Object_ContractPartner ON Object_ContractPartner.Id = ObjectLink_ContractPartner_Contract.ObjectId
+                                                                                                                              AND Object_ContractPartner.isErased = FALSE
+                                                                                   INNER JOIN ObjectLink AS ObjectLink_ContractPartner_Partner
+                                                                                                         ON ObjectLink_ContractPartner_Partner.ObjectId = ObjectLink_ContractPartner_Contract.ObjectId
+                                                                                                        AND ObjectLink_ContractPartner_Partner.DescId = zc_ObjectLink_ContractPartner_Partner()
+                                                                              WHERE ObjectLink_ContractPartner_Contract.ChildObjectId = vbContractId
+                                                                                AND ObjectLink_ContractPartner_Contract.DescId = zc_ObjectLink_ContractPartner_Contract()
+                                                                             )
+                                 OR vbIsFindPartnerContract = FALSE)
 --          LEFT JOIN ObjectString AS ObjectString_Partner_GLNCodeJuridical
 --                                 ON ObjectString_Partner_GLNCodeJuridical.ValueData = MovementString_GLNPlaceCode.ValueData
 --                                AND ObjectString_Partner_GLNCodeJuridical.DescId = zc_ObjectString_Partner_GLNCodeJuridical()

@@ -124,7 +124,7 @@ BEGIN
                   INNER JOIN MovementLinkObject AS MovementLinkObject_To
                                                 ON MovementLinkObject_To.MovementId = Movement.Id
                                                AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
-                                               AND MovementLinkObject_To.ObjectId = vbPartnerId
+                                               AND MovementLinkObject_To.ObjectId IN (SELECT ObjectString.ObjectId FROM ObjectString WHERE ObjectString.DescId = zc_ObjectString_Partner_GLNCode() AND ObjectString.ValueData = vbGLNPlace) -- vbPartnerId
                   INNER JOIN ObjectLink AS ObjectLink_Partner_Juridical
                                         ON ObjectLink_Partner_Juridical.ObjectId = MovementLinkObject_To.ObjectId
                                        AND ObjectLink_Partner_Juridical.DescId = zc_ObjectLink_Partner_Juridical()
@@ -172,7 +172,8 @@ BEGIN
                   INNER JOIN MovementLinkObject AS MovementLinkObject_To
                                                 ON MovementLinkObject_To.MovementId = Movement.Id
                                                AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
-                                               AND (MovementLinkObject_To.ObjectId = vbPartnerId OR COALESCE (vbPartnerId, 0) = 0)
+                                               AND (MovementLinkObject_To.ObjectId IN (SELECT ObjectString.ObjectId FROM ObjectString WHERE ObjectString.DescId = zc_ObjectString_Partner_GLNCode() AND ObjectString.ValueData = vbGLNPlace) -- vbPartnerId
+                                                 OR COALESCE (vbPartnerId, 0) = 0)
                   INNER JOIN ObjectLink AS ObjectLink_Partner_Juridical
                                         ON ObjectLink_Partner_Juridical.ObjectId = MovementLinkObject_To.ObjectId
                                        AND ObjectLink_Partner_Juridical.DescId = zc_ObjectLink_Partner_Juridical()
@@ -204,7 +205,8 @@ BEGIN
                              INNER JOIN MovementLinkObject AS MovementLinkObject_To
                                                            ON MovementLinkObject_To.MovementId = Movement.Id
                                                           AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
-                                                          AND (MovementLinkObject_To.ObjectId = vbPartnerId OR COALESCE (vbPartnerId, 0) = 0)
+                                                          AND (MovementLinkObject_To.ObjectId IN (SELECT ObjectString.ObjectId FROM ObjectString WHERE ObjectString.DescId = zc_ObjectString_Partner_GLNCode() AND ObjectString.ValueData = vbGLNPlace) -- vbPartnerId
+                                                            OR COALESCE (vbPartnerId, 0) = 0)
                         WHERE MovementString_InvNumberOrder.ValueData = inOrderInvNumber
                           AND MovementString_InvNumberOrder.DescId = zc_MovementString_InvNumberOrder())
              THEN

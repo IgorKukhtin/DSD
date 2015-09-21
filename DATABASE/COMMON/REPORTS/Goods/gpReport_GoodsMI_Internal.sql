@@ -93,9 +93,9 @@ BEGIN
                     UNION
                      SELECT Id AS UnitId FROM Object WHERE DescId = zc_Object_Unit() AND inToId = 0 AND inDescId <> zc_Movement_Loss() -- AND (vbIsGroup = TRUE OR inDescId = zc_Movement_Loss())
                     UNION
-                     SELECT Id AS UnitId FROM Object WHERE DescId = zc_Object_Member() AND (inIsMO_all = TRUE OR Id = inToId) AND inDescId IN (zc_Movement_Loss(), zc_Movement_Send())
+                     SELECT Id AS UnitId FROM Object WHERE DescId = zc_Object_Member() AND (inIsMO_all = TRUE OR Id = inToId) AND inDescId IN (/*zc_Movement_Loss(),*/ zc_Movement_Send())
                     UNION
-                     SELECT Id AS UnitId FROM Object  WHERE DescId = zc_Object_Car() AND (inIsMO_all = TRUE OR Id = inToId) AND inDescId IN (zc_Movement_Loss(), zc_Movement_Send())
+                     SELECT Id AS UnitId FROM Object  WHERE DescId = zc_Object_Car() AND (inIsMO_all = TRUE OR Id = inToId) AND inDescId IN (/*zc_Movement_Loss(),*/ zc_Movement_Send())
                     UNION
                      SELECT tmp.UnitId FROM (SELECT 8459 AS UnitId -- Склад Реализации
                                             UNION 
@@ -109,10 +109,13 @@ BEGIN
        SELECT tmpTo.UnitId, COALESCE (tmpFrom.UnitId, 0), TRUE FROM tmpTo LEFT JOIN tmpFrom ON tmpFrom.UnitId > 0
       ;
 
+    -- !!!!!!!!!!!!!!!!!!!!!!!
+    ANALYZE _tmpGoods;
+    ANALYZE _tmpUnit;
+
 
     -- Результат
     RETURN QUERY
-    
     SELECT Object_GoodsGroup.ValueData                AS GoodsGroupName 
          , ObjectString_Goods_GroupNameFull.ValueData AS GoodsGroupNameFull
          , Object_Goods.Id                            AS GoodsId

@@ -6,7 +6,7 @@ CREATE OR REPLACE FUNCTION gpGet_Object_GoodsPropertyValue(
     IN inId          Integer,       -- Классификатор свойств товаров
     IN inSession     TVarChar       -- сессия пользователя
 )
-RETURNS TABLE (Id Integer, Name TVarChar, isErased Boolean, Amount TFloat, BarCode TVarChar, Article TVarChar,
+RETURNS TABLE (Id Integer, Name TVarChar, isErased Boolean, Amount TFloat, BoxCount TFloat, BarCode TVarChar, Article TVarChar,
                BarCodeGLN TVarChar, ArticleGLN TVarChar, GroupName TVarChar,GoodsPropertyId Integer, GoodsPropertyName TVarChar,
                GoodsId Integer, GoodsName TVarChar, GoodsKindId Integer, GoodsKindName  TVarChar) AS
 $BODY$
@@ -23,6 +23,7 @@ BEGIN
            , '' :: TVarChar   AS Name
            , NULL :: Boolean  AS isErased
            , NULL :: TFloat   AS Amount
+           , NULL :: TFloat   AS BoxCount
            , '' :: TVarChar   AS BarCode
            , '' :: TVarChar   AS Article
            , '' :: TVarChar   AS BarCodeGLN
@@ -45,6 +46,7 @@ BEGIN
            , Object.ValueData        AS NAME
            , Object.isErased         AS isErased
            , Amount.ValueData        AS Amount
+           , ObjectFloat_BoxCount.ValueData       AS BoxCount
            , BarCode.ValueData       AS BarCode
            , Article.ValueData       AS Article
            , BarCodeGLN.ValueData    AS BarCodeGLN
@@ -59,6 +61,9 @@ BEGIN
        FROM Object
            LEFT JOIN ObjectFloat AS Amount ON Amount.ObjectId = Object.Id
                                           AND Amount.DescId = zc_ObjectFloat_GoodsPropertyValue_Amount()
+           LEFT JOIN ObjectFloat AS ObjectFloat_BoxCount
+                                 ON ObjectFloat_BoxCount.ObjectId = Object.Id
+                                AND ObjectFloat_BoxCount.DescId = zc_ObjectFloat_GoodsPropertyValue_BoxCount()                                          
 
            LEFT JOIN ObjectString AS BarCode ON BarCode.ObjectId = Object.Id
                                             AND BarCode.DescId = zc_ObjectString_GoodsPropertyValue_BarCode()
@@ -100,8 +105,9 @@ ALTER FUNCTION gpGet_Object_GoodsPropertyValue(integer, TVarChar) OWNER TO postg
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 17.09.15         * add BoxCount
  10.10.14                                                       *
- 12.06.13          *
+ 12.06.13         *
 */
 
 -- тест

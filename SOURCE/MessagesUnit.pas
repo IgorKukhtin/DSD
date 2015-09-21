@@ -40,7 +40,7 @@ type
     m_stMessagePassword: string;
   public
     { Public declarations }
-    procedure Execute(inMessage, inFullMessage: string; ShowFullInfo: boolean = false);
+    procedure Execute(const inMessage, inFullMessage: string; ShowFullInfo: boolean = false);
   end;
 
 
@@ -67,11 +67,14 @@ begin
   end;
 end;
 {--------------------------------------------------------------------------------------------------}
-procedure TMessagesForm.Execute(inMessage, inFullMessage: string; ShowFullInfo: boolean = false);
+procedure TMessagesForm.Execute(const inMessage, inFullMessage: string; ShowFullInfo: boolean = false);
 begin
   m_stMessagePassword:='';
   fFullMessage:=inFullMessage;
-  meFullMessage.Lines.Text := inFullMessage;
+  try
+    meFullMessage.Lines.Text := inFullMessage;
+  except
+  end;
   if trim(inMessage)<>'' then
      rlError.Caption := inMessage
   else begin

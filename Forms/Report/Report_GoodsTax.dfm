@@ -2,8 +2,9 @@ inherited Report_GoodsTaxForm: TReport_GoodsTaxForm
   Caption = #1054#1090#1095#1077#1090' <'#1087#1086' '#1090#1086#1074#1072#1088#1091' ('#1085#1072#1083#1086#1075#1086#1074#1099#1077' '#1076#1086#1082#1091#1084#1077#1085#1090#1099')>'
   ClientHeight = 341
   ClientWidth = 1174
+  AddOnFormData.ExecuteDialogAction = ExecuteDialog
   ExplicitWidth = 1190
-  ExplicitHeight = 376
+  ExplicitHeight = 379
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -294,6 +295,52 @@ inherited Report_GoodsTaxForm: TReport_GoodsTaxForm
           'TextValue')
       end>
   end
+  inherited ActionList: TActionList
+    object ExecuteDialog: TExecuteDialog
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1072#1088#1072#1084#1077#1090#1088#1099' '#1086#1090#1095#1077#1090#1072
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1072#1088#1072#1084#1077#1090#1088#1099' '#1086#1090#1095#1077#1090#1072
+      ImageIndex = 35
+      FormName = 'TReport_GoodsTaxDialogForm'
+      FormNameParam.Value = 'TReport_GoodsTaxDialogForm'
+      FormNameParam.DataType = ftString
+      GuiParams = <
+        item
+          Name = 'StartDate'
+          Value = 41640d
+          Component = deStart
+          DataType = ftDateTime
+          ParamType = ptInput
+        end
+        item
+          Name = 'EndDate'
+          Value = 41640d
+          Component = deEnd
+          DataType = ftDateTime
+          ParamType = ptInput
+        end
+        item
+          Name = 'GoodsId'
+          Value = ''
+          Component = GoodsGuides
+          ComponentItem = 'Key'
+          DataType = ftString
+          ParamType = ptInput
+        end
+        item
+          Name = 'GoodsName'
+          Value = ''
+          Component = GoodsGuides
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          ParamType = ptInput
+        end>
+      isShowModal = True
+      RefreshDispatcher = RefreshDispatcher
+      OpenBeforeShow = True
+    end
+  end
   inherited MasterDS: TDataSource
     Left = 72
     Top = 208
@@ -337,6 +384,41 @@ inherited Report_GoodsTaxForm: TReport_GoodsTaxForm
       0
       26
       0)
+    inherited Bar: TdxBar
+      ItemLinks = <
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbExecuteDialog'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbRefresh'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbGridToExcel'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end>
+    end
+    object bbExecuteDialog: TdxBarButton
+      Action = ExecuteDialog
+      Category = 0
+    end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
     Left = 368

@@ -573,7 +573,7 @@ inherited ContractEditForm: TContractEditForm
   object cxLabel22: TcxLabel [51]
     Left = 185
     Top = 394
-    Caption = #1050#1086#1076' GLN'
+    Caption = #1050#1086#1076' GLN - '#1087#1086#1089#1090#1072#1074#1097#1080#1082
   end
   object edGLNCode: TcxTextEdit [52]
     Left = 183
@@ -659,7 +659,7 @@ inherited ContractEditForm: TContractEditForm
     Properties.SaveTime = False
     Properties.ShowTime = False
     Properties.ValidateOnEnter = False
-    TabOrder = 65
+    TabOrder = 64
     Width = 100
   end
   object cxLabel28: TcxLabel [63]

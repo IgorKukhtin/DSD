@@ -487,15 +487,16 @@ BEGIN
       , tmpMIPartionMovement AS (SELECT MovementItem.Id                               AS MovementItemId
                                       , MIPartionMovement.ObjectId                    AS GoodsId
                                       , COALESCE (MILinkObject_GoodsKind.ObjectId, 0) AS GoodsKindId
-                                      , MIFloat_AmountPartner.ValueData               AS AmountPartner
+                                      , SUM (COALESCE (MIFloat_AmountPartner.ValueData, 0)) AS AmountPartner
                                  FROM MovementItem
                                      LEFT JOIN MovementItemFloat AS MIFloat_MovementId
                                                                  ON MIFloat_MovementId.MovementItemId = MovementItem.Id
                                                                 AND MIFloat_MovementId.DescId = zc_MIFloat_MovementId()
                                        
-                                     LEFT JOIN MovementItem AS MIPartionMovement 
+                                     LEFT JOIN MovementItem AS MIPartionMovement
                                                             ON MIPartionMovement.MovementId = MIFloat_MovementId.ValueData :: Integer
-                                                           AND MIPartionMovement.ObjectId = MovementItem.ObjectId
+                                                           AND MIPartionMovement.ObjectId   = MovementItem.ObjectId
+                                                           AND MIPartionMovement.isErased   = FALSE
        
                                      LEFT JOIN MovementItemFloat AS MIFloat_AmountPartner
                                                                  ON MIFloat_AmountPartner.MovementItemId = MIPartionMovement.Id
@@ -507,6 +508,9 @@ BEGIN
                                  WHERE MovementItem.MovementId = inMovementId
                                    AND MovementItem.DescId     = zc_MI_Master()
                                    AND MovementItem.isErased   = FALSE
+                                 GROUP BY MovementItem.Id
+                                        , MIPartionMovement.ObjectId
+                                        , COALESCE (MILinkObject_GoodsKind.ObjectId, 0)
                                  )
            
        SELECT
@@ -578,16 +582,16 @@ BEGIN
                          ELSE COALESCE (MIFloat_Price.ValueData, 0)
                     END AS Price
                   , CASE WHEN MIFloat_CountForPrice.ValueData <> 0 THEN MIFloat_CountForPrice.ValueData ELSE 1 END AS CountForPrice
-                  , SUM (MovementItem.Amount) AS Amount
-                  , SUM (CASE WHEN Movement.DescId IN (zc_Movement_ReturnIn(), zc_Movement_SendOnPrice())
+                  , (MovementItem.Amount) AS Amount
+                  , (CASE WHEN Movement.DescId IN (zc_Movement_ReturnIn(), zc_Movement_SendOnPrice())
                                    THEN COALESCE (MIFloat_AmountPartner.ValueData, 0)
                                    ELSE MovementItem.Amount
-                         END) AS AmountPartner
-                  , SUM (tmpMIPartionMovement.AmountPartner) AS AmountPartner_PartionMovement
+                     END) AS AmountPartner
+                  , (tmpMIPartionMovement.AmountPartner) AS AmountPartner_PartionMovement
              FROM MovementItem
                   LEFT JOIN MovementItemFloat AS MIFloat_Price
-                                               ON MIFloat_Price.MovementItemId = MovementItem.Id
-                                              AND MIFloat_Price.DescId = zc_MIFloat_Price()
+                                              ON MIFloat_Price.MovementItemId = MovementItem.Id
+                                             AND MIFloat_Price.DescId = zc_MIFloat_Price()
                                               -- AND MIFloat_Price.ValueData <> 0
                   LEFT JOIN MovementItemFloat AS MIFloat_AmountPartner
                                               ON MIFloat_AmountPartner.MovementItemId = MovementItem.Id
@@ -609,11 +613,6 @@ BEGIN
              WHERE MovementItem.MovementId = inMovementId
                AND MovementItem.DescId     = zc_MI_Master()
                AND MovementItem.isErased   = FALSE
-             GROUP BY MovementItem.ObjectId
-                    , MovementItem.MovementId
-                    , MILinkObject_GoodsKind.ObjectId
-                    , MIFloat_Price.ValueData
-                    , CASE WHEN MIFloat_CountForPrice.ValueData <> 0 THEN MIFloat_CountForPrice.ValueData ELSE 1 END
             ) AS tmpMI
 
             LEFT JOIN Movement ON Movement.Id = tmpMI.MovementId

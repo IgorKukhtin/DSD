@@ -305,7 +305,7 @@ BEGIN
 
      -- 1.3. формируются Проводки суммового учета
      INSERT INTO _tmpMIContainer_insert (Id, DescId, MovementDescId, MovementId, MovementItemId, ContainerId
-                                       , AccountId, AnalyzerId, ObjectId_Analyzer, WhereObjectId_Analyzer, ContainerId_Analyzer
+                                       , AccountId, AnalyzerId, ObjectId_Analyzer, WhereObjectId_Analyzer, ContainerId_Analyzer, ObjectIntId_Analyzer, ObjectExtId_Analyzer
                                        , ParentId, Amount, OperDate, IsActive)
        -- по счету долг Физ.лица (Водитель)
        SELECT 0, zc_MIContainer_Summ() AS DescId, vbMovementDescId, inMovementId, _tmpItem.MovementItemId
@@ -313,8 +313,10 @@ BEGIN
             , AccountId_To                            AS AccountId              -- счет есть всегда
             , 0                                       AS AnalyzerId             -- нет аналитики
             , MemberId_To                             AS ObjectId_Analyzer      -- Физ лицо
-            , UnitId_ProfitLoss                       AS WhereObjectId_Analyzer -- !!!Подразделение!!!, а можно было б и Автомобиль
+            , CarId_To                                AS WhereObjectId_Analyzer -- !!!Автомобиль!!! а можно было б и Подразделение
             , ContainerId_From                        AS ContainerId_Analyzer   -- Контейнер-Корреспондент
+            , UnitId_ProfitLoss                       AS ObjectIntId_Analyzer   -- Подраделение (ОПиУ), а могло быть UnitId_Route
+            , 0                                       AS ObjectExtId_Analyzer   -- !!!нет!!!
             , 0                                       AS ParentId
             , OperSumm
             , OperDate
@@ -327,8 +329,10 @@ BEGIN
             , AccountId_To                            AS AccountId              -- счет есть всегда
             , zc_Enum_AnalyzerId_ProfitLoss()         AS AnalyzerId             -- относится к ОПиУ
             , MemberId_To                             AS ObjectId_Analyzer      -- Физ лицо
-            , UnitId_ProfitLoss                       AS WhereObjectId_Analyzer -- !!!Подразделение!!!, а можно было б и Автомобиль
-            , 0                                       AS ContainerId_Analyzer   -- !!!нет!!!
+            , CarId_To                                AS WhereObjectId_Analyzer -- !!!Автомобиль!!! а можно было б и Подразделение
+            , ContainerId_ProfitLoss                  AS ContainerId_Analyzer   -- статья ОПиУ
+            , UnitId_ProfitLoss                       AS ObjectIntId_Analyzer   -- Подраделение (ОПиУ), а могло быть UnitId_Route
+            , BranchId_ProfitLoss                     AS ObjectExtId_Analyzer   -- Филиал (ОПиУ), а могло быть BranchId_Route
             , 0                                       AS ParentId
             , -1 * OperSumm
             , OperDate
@@ -340,14 +344,16 @@ BEGIN
        SELECT 0, zc_MIContainer_Summ() AS DescId, vbMovementDescId, inMovementId, _tmpItem.MovementItemId
             , ContainerId_ProfitLoss
             , zc_Enum_Account_100301()                AS AccountId              -- прибыль текущего периода
-            , 0                                       AS AnalyzerId             -- нет аналитики
+            , 0                                       AS AnalyzerId             -- в ОПиУ не нужена аналитика, т.к. большинство отчетов строится на AnalyzerId <> 0
             , MemberId_To                             AS ObjectId_Analyzer      -- Физ лицо
-            , UnitId_ProfitLoss                       AS WhereObjectId_Analyzer -- !!!Подразделение!!!
+            , CarId_To                                AS WhereObjectId_Analyzer -- !!!Автомобиль!!! а можно было б и Подразделение
             , 0                                       AS ContainerId_Analyzer   -- в ОПиУ не нужен
+            , UnitId_ProfitLoss                       AS ObjectIntId_Analyzer   -- Подраделение (ОПиУ), а могло быть UnitId_Route
+            , BranchId_ProfitLoss                     AS ObjectExtId_Analyzer   -- Филиал (ОПиУ), а могло быть BranchId_Route
             , 0                                       AS ParentId
             , OperSumm
             , OperDate
-            , FALSE AS IsActive
+            , FALSE                                   AS IsActive               -- !!!ОПиУ всегда по Кредиту!!!
        FROM _tmpItem
        WHERE AccountId_ProfitLoss = zc_Enum_Account_100301() -- 100301; "прибыль текущего периода"
      ;

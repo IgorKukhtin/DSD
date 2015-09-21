@@ -23,6 +23,12 @@ type
     cxLabel4: TcxLabel;
     cxLabel5: TcxLabel;
     cxTextEdit4: TcxTextEdit;
+    ChoiceCashRegister: TOpenChoiceForm;
+    ChoicePaidType: TOpenChoiceForm;
+    spUpdate_Movement_Check: TdsdStoredProc;
+    actEditDocument: TMultiAction;
+    dxBarButton1: TdxBarButton;
+    actUpdate_Movement_Check: TdsdExecStoredProc;
   private
     { Private declarations }
   public

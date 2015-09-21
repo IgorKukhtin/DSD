@@ -239,9 +239,11 @@ BEGIN
                      -- Calc
                    , CASE WHEN Container.DescId = zc_Container_Count() THEN COALESCE (SUM (CASE WHEN MIContainer.MovementDescId IN (zc_Movement_Send(), zc_Movement_ProductionUnion(), zc_Movement_ProductionSeparate()) AND MIContainer.OperDate BETWEEN vbStartDate_zavod AND vbEndDate_zavod AND MIContainer.Amount > 0 THEN  MIContainer.Amount ELSE 0 END), 0) ELSE 0 END
                    + CASE WHEN Container.DescId = zc_Container_CountSupplier() THEN Container.Amount - COALESCE (SUM (MIContainer.Amount), 0) + COALESCE (SUM (CASE WHEN MIContainer.MovementDescId = zc_Movement_Income() AND MIContainer.OperDate BETWEEN vbStartDate_zavod AND vbEndDate_zavod THEN  MIContainer.Amount ELSE 0 END), 0) ELSE 0 END
+                   + CASE WHEN Container.DescId = zc_Container_Count() THEN COALESCE (SUM (CASE WHEN MIContainer.MovementDescId IN (zc_Movement_ProductionUnion()) AND MIContainer.OperDate BETWEEN vbStartDate_zavod AND vbEndDate_zavod AND MIContainer.Amount < 0 AND MovementLinkObject_User.ObjectId = zc_Enum_Process_Auto_Defroster() THEN MIContainer.Amount ELSE 0 END), 0) ELSE 0 END
                      AS CalcCount
                    , CASE WHEN Container.DescId = zc_Container_Summ()  THEN COALESCE (SUM (CASE WHEN MIContainer.MovementDescId IN (zc_Movement_Send(), zc_Movement_ProductionSeparate()) AND MIContainer.OperDate BETWEEN vbStartDate_zavod AND vbEndDate_zavod AND MIContainer.Amount > 0 THEN  MIContainer.Amount ELSE 0 END), 0) ELSE 0 END
                    + CASE WHEN Container.DescId = zc_Container_Summ()  THEN COALESCE (SUM (CASE WHEN MIContainer.MovementDescId IN (zc_Movement_ProductionUnion()) AND MIContainer.OperDate BETWEEN vbStartDate_zavod AND vbEndDate_zavod AND MIContainer.ParentId IS NULL THEN MIContainer.Amount ELSE 0 END), 0) ELSE 0 END
+                   - CASE WHEN Container.DescId = zc_Container_Summ()  THEN COALESCE (SUM (CASE WHEN MIContainer.MovementDescId IN (zc_Movement_ProductionUnion()) AND MIContainer.OperDate BETWEEN vbStartDate_zavod AND vbEndDate_zavod AND MIContainer.ParentId IS NULL AND MovementLinkObject_User.ObjectId = zc_Enum_Process_Auto_Defroster() THEN MIContainer.Amount ELSE 0 END), 0) ELSE 0 END
                      AS CalcSumm
                      -- Calc_external, т.е. AnalyzerId <> UnitId
                    , CASE WHEN Container.DescId = zc_Container_Count() THEN COALESCE (SUM (CASE WHEN MIContainer.MovementDescId IN (zc_Movement_Send(), zc_Movement_ProductionUnion(), zc_Movement_ProductionSeparate()) AND COALESCE (MIContainer.AnalyzerId, 0) <> Container.UnitId AND MIContainer.OperDate BETWEEN vbStartDate_zavod AND vbEndDate_zavod AND MIContainer.Amount > 0 THEN  MIContainer.Amount ELSE 0 END), 0) ELSE 0 END
@@ -266,6 +268,9 @@ BEGIN
                    LEFT JOIN MovementBoolean AS MovementBoolean_HistoryCost
                                              ON MovementBoolean_HistoryCost.MovementId = MIContainer.MovementId
                                             AND MovementBoolean_HistoryCost.DescId = zc_MovementBoolean_HistoryCost()
+                   LEFT JOIN MovementLinkObject AS MovementLinkObject_User
+                                                ON MovementLinkObject_User.MovementId = MIContainer.MovementId
+                                               AND MovementLinkObject_User.DescId = zc_MovementLinkObject_User()
               GROUP BY Container.Id
                      , Container.UnitId
                      , Container.isHistoryCost_ReturnIn
@@ -460,6 +465,11 @@ BEGIN
 
              JOIN MIContainer_Count_In ON MIContainer_Count_In.MovementItemId = MIContainer_Summ_In.MovementItemId
 
+             LEFT JOIN MovementLinkObject AS MovementLinkObject_User
+                                          ON MovementLinkObject_User.MovementId = MIContainer_Count_Out.MovementId
+                                         AND MovementLinkObject_User.DescId = zc_MovementLinkObject_User()
+                                         AND MovementLinkObject_User.ObjectId = zc_Enum_Process_Auto_Defroster()
+
              LEFT JOIN (SELECT Movement.Id AS  MovementId
                              , MIContainer_Summ_Out.MovementItemId
                              , MIContainer_Summ_Out.ContainerId
@@ -479,6 +489,7 @@ BEGIN
                                 AND _tmp.ContainerId = MIContainer_Summ_Out.ContainerId
                                 AND _tmp.MovementItemId = MIContainer_Summ_Out.MovementItemId
                                 AND MIContainer_Count_Out.MovementDescId = zc_Movement_ProductionSeparate()
+        WHERE MovementLinkObject_User.MovementId IS NULL
         GROUP BY MIContainer_Summ_In.ContainerId
                , MIContainer_Summ_Out.ContainerId
                , MIContainer_Count_In.ContainerId
@@ -612,6 +623,7 @@ BEGIN
               ) AS _tmpSumm 
          WHERE _tmpMaster.ContainerId = _tmpSumm.ContainerId
            AND COALESCE (_tmpMaster.UnitId, 0) <> CASE WHEN vbItearation < 2 THEN -1 ELSE 8451 END -- Цех Упаковки
+           -- AND COALESCE (_tmpMaster.UnitId, 0) <> CASE WHEN vbItearation < 2 THEN -1 ELSE 8440 END -- Дефростер
         ;
 
          -- тест***
@@ -651,6 +663,7 @@ BEGIN
          WHERE _tmpMaster.ContainerId = _tmpSumm.ContainerId
            AND ABS (_tmpMaster.CalcSumm - _tmpSumm.CalcSumm) > inDiffSumm
            AND COALESCE (_tmpMaster.UnitId, 0) <> CASE WHEN vbItearation < 2 THEN -1 ELSE 8451 END -- Цех Упаковки
+           -- AND COALESCE (_tmpMaster.UnitId, 0) <> CASE WHEN vbItearation < 2 THEN -1 ELSE 8440 END -- Дефростер
         ;
 
          -- увеличивам итерации
@@ -981,4 +994,4 @@ LANGUAGE PLPGSQL VOLATILE;
 -- UPDATE HistoryCost SET Price = 100 WHERE Price > 100 AND StartDate = '01.06.2014' AND EndDate = '30.06.2014'
 -- тест
 -- SELECT * FROM gpInsertUpdate_HistoryCost (inStartDate:= '01.06.2014', inEndDate:= '30.06.2014', inBranchId:= 0, inItearationCount:= 500, inInsert:= -1, inDiffSumm:= 0, inSession:= '2')  WHERE Price <> PriceNext
--- SELECT * FROM gpInsertUpdate_HistoryCost (inStartDate:= '01.08.2015', inEndDate:= '31.08.2015', inBranchId:= 0, inItearationCount:= 100, inInsert:= -1, inDiffSumm:= 0.009, inSession:= '2') -- WHERE CalcSummCurrent <> CalcSummNext
+-- SELECT * FROM gpInsertUpdate_HistoryCost (inStartDate:= '01.08.2015', inEndDate:= '31.08.2015', inBranchId:= 0, inItearationCount:= 30, inInsert:= -1, inDiffSumm:= 0.009, inSession:= '2') -- WHERE CalcSummCurrent <> CalcSummNext

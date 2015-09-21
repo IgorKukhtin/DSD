@@ -68,12 +68,13 @@ procedure TdsdApplication.OnException(Sender: TObject; E: Exception);
     end;
     Result := E.Message;
   end;
-var TextMessage: String;
+var TextMessage, EMessage: String;
     isMessage: boolean;
 begin
   if E is ESortException then
      exit;
-  TMessagesForm.Create(nil).Execute(GetTextMessage(E, isMessage), E.Message);
+  EMessage := E.Message;
+  TMessagesForm.Create(nil).Execute(GetTextMessage(E, isMessage), EMessage);
   if not isMessage then begin
     // Сохраняем протокол в базе
     try

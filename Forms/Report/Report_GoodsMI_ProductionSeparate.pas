@@ -57,6 +57,8 @@ type
     edChildGoodsGroup: TcxButtonEdit;
     ChildGoodsGroupGuides: TdsdGuides;
     ChildGoodsGuides: TdsdGuides;
+    ExecuteDialog: TExecuteDialog;
+    bbExecuteDialog: TdxBarButton;
   private
     { Private declarations }
   public

@@ -109,12 +109,25 @@ object GoodsPropertyValueForm: TGoodsPropertyValueForm
         HeaderAlignmentVert = vaCenter
         Width = 100
       end
-      object ceAmount: TcxGridDBColumn
-        Caption = #1050#1086#1083'-'#1074#1086' '#1096#1090'. '#1074' '#1091#1087#1072#1082'.'
-        DataBinding.FieldName = 'Amount'
+      object BoxCount: TcxGridDBColumn
+        Caption = #1050#1086#1083'-'#1074#1086' '#1077#1076'. '#1074' '#1103#1097'.'
+        DataBinding.FieldName = 'BoxCount'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.####;-,0.####; ;'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 70
+        Width = 80
+      end
+      object ceAmount: TcxGridDBColumn
+        Caption = #1050#1086#1083'-'#1074#1086' '#1096#1090'. '#1087#1088#1080' '#1089#1082#1072#1085'.'
+        DataBinding.FieldName = 'Amount'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.####;-,0.####; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 80
       end
       object BarCodeShort: TcxGridDBColumn
         Caption = #1064#1090#1088#1080#1093' '#1082#1086#1076' ('#1087#1086#1080#1089#1082')'
@@ -738,6 +751,14 @@ object GoodsPropertyValueForm: TGoodsPropertyValueForm
         Value = Null
         Component = ClientDataSet
         ComponentItem = 'Amount'
+        DataType = ftFloat
+        ParamType = ptInput
+      end
+      item
+        Name = 'inBoxCount'
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'BoxCount'
         DataType = ftFloat
         ParamType = ptInput
       end
