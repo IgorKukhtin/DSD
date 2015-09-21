@@ -33,7 +33,7 @@ BEGIN
     -- Результат
     RETURN QUERY
     WITH tmpContainer AS  (SELECT MIContainer.MovementId AS MovementId
-                                , MIContainer.ObjectId_Analyzer AS FuelId
+                                , CASE WHEN MIContainer.MovementDescId = zc_Movement_Transport() THEN MIContainer.ObjectId_Analyzer ELSE 0 END AS FuelId
                                 , SUM (CASE WHEN (MIContainer.DescId = zc_MIContainer_Count() AND MIContainer.MovementDescId = zc_Movement_Transport()) THEN -1 * MIContainer.Amount ELSE 0 END) AS SumCount_Transport
                                 , SUM (CASE WHEN (MIContainer.DescId = zc_MIContainer_Summ() AND MIContainer.MovementDescId = zc_Movement_Transport()) THEN -1 * MIContainer.Amount ELSE 0 END) AS SumAmount_Transport
                                 , SUM (CASE WHEN (MIContainer.DescId = zc_MIContainer_Summ() AND MIContainer.MovementDescId = zc_Movement_TransportService()) THEN -1 * MIContainer.Amount ELSE 0 END) AS SumAmount_TransportService
@@ -41,7 +41,7 @@ BEGIN
                                 , MIContainer.WhereObjectId_Analyzer          AS CarId
                                 , MIContainer.ObjectIntId_Analyzer            AS UnitId
                                 , MIContainer.ObjectExtId_Analyzer            AS BranchId
-                                , MovementLinkObject_PersonalDriver.ObjectId  AS PersonalDriverId
+                                , CASE WHEN MIContainer.MovementDescId = zc_Movement_Transport() THEN MovementLinkObject_PersonalDriver.ObjectId ELSE MIContainer.ObjectId_Analyzer END AS PersonalDriverId
                                 , MILinkObject_Route.ObjectId                 AS RouteId
                                 , CLO_ProfitLoss.ObjectId                     AS ProfitLossId
                                 , CLO_Business.ObjectId                       AS BusinessId
@@ -69,7 +69,7 @@ BEGIN
                              AND (MIContainer.WhereObjectId_Analyzer = inCarId OR inCarId = 0)      -- Автомобиль
                              AND (CLO_Business.ObjectId = inBusinessId OR inBusinessId= 0)          -- Бизнес  
                              
-                           GROUP BY  MIContainer.MovementId 
+                           GROUP BY  MIContainer.MovementId, MIContainer.MovementDescId
                                    , MIContainer.ObjectId_Analyzer
                                    , MIContainer.WhereObjectId_Analyzer 
                                    , MIContainer.ObjectIntId_Analyzer 
@@ -155,4 +155,4 @@ $BODY$
 */
 
 -- тест
---SELECT * FROM gpReport_Transport_ProfitLoss (inStartDate:= '13.08.2015', inEndDate:= '13.08.2015', inBusinessId:= 0, inBranchId:= 0, inUnitId:= 0, inCarId:= 0, inIsMovement:= true, inSession := zfCalc_UserAdmin()); -- Склад Реализации
+--SELECT * FROM gpReport_Transport_ProfitLoss (inStartDate:= '31.07.2015', inEndDate:= '13.08.2015', inBusinessId:= 0, inBranchId:= 0, inUnitId:= 0, inCarId:= 0, inIsMovement:= true, inSession := zfCalc_UserAdmin()); -- Склад Реализации
