@@ -117,22 +117,6 @@ BEGIN
         Group By
             MovementItem_Reserve.GoodsId
     ),
-    REALDATA --реальное состояние товара
-    AS
-    (
-        SELECT 
-            GoodsRemains.ObjectId                             AS ObjectId
-           ,ROUND(COALESCE(Object_Price_View.Price,0),2)      AS Price
-           ,(GoodsRemains.Remains 
-                - COALESCE(RESERVE.Amount,0))::TFloat         AS Remains
-           ,Object_Price_View.MCSValue                        AS MCSValue
-           ,Reserve.Amount::TFloat                            AS Reserved
-        FROM
-            GoodsRemains
-            LEFT OUTER JOIN Object_Price_View ON GoodsRemains.ObjectId = Object_Price_View.GoodsId
-                                             AND Object_Price_View.UnitId = vbUnitId
-            LEFT OUTER JOIN RESERVE ON GoodsRemains.ObjectId = RESERVE.GoodsId
-    ),
     SESSIONDATA --состояние в сессии
     AS
     (
@@ -150,31 +134,34 @@ BEGIN
     --заливаем разницу
     INSERT INTO _DIFF (ObjectId, GoodsCode, GoodsName, Price, Remains, MCSValue, Reserved, NewRow)
     SELECT
-        COALESCE(REALDATA.ObjectId,SESSIONDATA.ObjectId) AS ObjectId
-       ,Object_Goods.ObjectCode::Integer                 AS GoodsCode
-       ,Object_Goods.ValueData                           AS GoodsName
-       ,COALESCE(REALDATA.Price,0)                       AS Price
-       ,COALESCE(REALDATA.Remains,0)                     AS Remains
-       ,REALDATA.MCSValue                                AS MCSValue
-       ,REALDATA.Reserved                                AS Reserved
+        COALESCE(GoodsRemains.ObjectId,SESSIONDATA.ObjectId)        AS ObjectId
+       ,Object_Goods.ObjectCode::Integer                            AS GoodsCode
+       ,Object_Goods.ValueData                                      AS GoodsName
+       ,ROUND(COALESCE(Object_Price_View.Price,0),2)                AS Price
+       ,COALESCE(GoodsRemains.Remains,0)-COALESCE(Reserve.Amount,0) AS Remains
+       ,Object_Price_View.MCSValue                                  AS MCSValue
+       ,Reserve.Amount::TFloat                                      AS Reserved
        ,CASE 
           WHEN SESSIONDATA.ObjectId Is Null 
             THEN TRUE 
         ELSE FALSE 
-        END                                              AS NewRow
+        END                                                         AS NewRow
     FROM
-        REALDATA
-        FULL OUTER JOIN SESSIONDATA ON REALDATA.ObjectId = SESSIONDATA.ObjectId
+        GoodsRemains
+        FULL OUTER JOIN SESSIONDATA ON GoodsRemains.ObjectId = SESSIONDATA.ObjectId
         INNER JOIN Object AS Object_Goods
-                          ON COALESCE(REALDATA.ObjectId,SESSIONDATA.ObjectId) = Object_Goods.Id
+                          ON COALESCE(GoodsRemains.ObjectId,SESSIONDATA.ObjectId) = Object_Goods.Id
+        LEFT OUTER JOIN Object_Price_View ON Object_Goods.Id = Object_Price_View.GoodsId
+                                         AND Object_Price_View.UnitId = vbUnitId
+        LEFT OUTER JOIN RESERVE ON Object_Goods.Id = RESERVE.GoodsId                  
     WHERE
-        COALESCE(REALDATA.Price,0) <> COALESCE(SESSIONDATA.Price,0)
+        ROUND(COALESCE(Object_Price_View.Price,0),2) <> COALESCE(SESSIONDATA.Price,0)
         OR
-        COALESCE(REALDATA.Remains,0) <> COALESCE(SESSIONDATA.Remains,0)
+        COALESCE(GoodsRemains.Remains,0)-COALESCE(Reserve.Amount,0) <> COALESCE(SESSIONDATA.Remains,0)
         OR
-        COALESCE(REALDATA.MCSValue,0) <> COALESCE(SESSIONDATA.MCSValue,0)
+        COALESCE(Object_Price_View.MCSValue,0) <> COALESCE(SESSIONDATA.MCSValue,0)
         OR
-        COALESCE(REALDATA.Reserved,0) <> COALESCE(SESSIONDATA.Reserved,0);
+        COALESCE(Reserve.Amount,0) <> COALESCE(SESSIONDATA.Reserved,0);
     --Обновляем данные в сессии
     UPDATE CashSessionSnapShot SET
         Price = _DIFF.Price,

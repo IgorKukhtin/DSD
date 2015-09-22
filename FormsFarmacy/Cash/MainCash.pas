@@ -171,7 +171,7 @@ type
     SoldParallel: Boolean;
     SourceClientDataSet: TClientDataSet;
     ThreadErrorMessage:String;
-
+    NewCheckStart,NewCheckEnd:TDateTime;
 
     procedure SetSoldRegim(const Value: boolean);
     // возвращает остаток
@@ -375,8 +375,10 @@ begin
     // Проводим чек
       spComplete_Movement_Check.ParamByName('inPaidType').Value := Integer(PaidType);
       FormParams.ParamByName('ClosedCheckId').Value := FormParams.ParamByName('CheckId').Value;
-      TRefreshRemainsThread.Create(False);
+      NewCheckStart :=Now;
       NewCheck(False);// процедура обновляет параметры для введения нового чека
+      NewCheckEnd :=Now;
+      TRefreshRemainsThread.Create(False);
     end;
   end;
 end;
@@ -754,6 +756,14 @@ var
   GoodsId, cntUpd,cntIns: Integer;
   Str:String;
   St,Fin:TDateTime;
+  procedure SetCaption;
+  Begin
+    Caption := 'Продажа. (Обн. '+IntToStr(cntUpd)+'. Доб. '+IntToStr(CntIns)+
+               '. Новый чек '+FormatDateTime('ss.zzz сек',NewCheckStart-NewCheckEnd)+
+               '. Закрытие чека '+FormatDateTime('ss.zzz сек',St-NewCheckEnd)+
+               '. Обн. ост. '+FormatDateTime('ss.zzz сек',Fin-St);
+
+  End;
 begin
   //Если нет расхождений - ничего не делаем
   St := Now;
@@ -762,7 +772,7 @@ begin
   if DiffCDS.IsEmpty then
   Begin
     Fin := Now;
-    Caption := 'Продажа. (Обновлено 0 товаров. Добавлено 0 товаров. Время обновления '+FormatDateTime('ss сек zzz мс',Fin-St)+')';
+    SetCaption;
     exit;
   End;
   //открючаем реакции
@@ -831,7 +841,7 @@ begin
     AlternativeCDS.EnableControls;
   end;
   Fin := Now;
-  Caption := 'Продажа. (Обновлено '+IntToStr(cntUpd)+' товаров. Добавлено '+IntToStr(CntIns)+' товаров. Время обновления '+FormatDateTime('hh:mm:ss.zzz',Fin-St);
+  SetCaption;
 end;
 
 procedure TMainCashForm.CalcTotalSumm;
