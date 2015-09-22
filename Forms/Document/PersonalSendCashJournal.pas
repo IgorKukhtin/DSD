@@ -79,6 +79,13 @@ type
     colUnitForwardingName: TcxGridDBColumn;
     actMIContainer: TdsdOpenForm;
     bbMIContainer: TdxBarButton;
+    actShowErased: TBooleanStoredProcAction;
+    bbShowErased: TdxBarButton;
+    spCompete: TdsdExecStoredProc;
+    actSimpleCompleteList: TMultiAction;
+    actCompleteList: TMultiAction;
+    N3: TMenuItem;
+    N4: TMenuItem;
   private
   public
   end;
