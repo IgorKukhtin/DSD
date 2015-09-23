@@ -85,6 +85,11 @@ type
     TransportChoiceGuides: TdsdGuides;
     spInsertUpdateMovement_Params: TdsdStoredProc;
     HeaderSaver2: THeaderSaver;
+    actIncomeJournalChoice: TOpenChoiceForm;
+    mactUpdateMask: TMultiAction;
+    spUpdateMask: TdsdStoredProc;
+    actUpdateMask: TdsdExecStoredProc;
+    bb: TdxBarButton;
   private
     { Private declarations }
   public

@@ -672,6 +672,70 @@ inherited SendOnPriceForm: TSendOnPriceForm
       ShortCut = 116
       RefreshOnTabSetChanges = False
     end
+    object actIncomeJournalChoice: TOpenChoiceForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = 'actIncomeJournalChoice'
+      FormName = 'TIncomeJournalChoiceForm'
+      FormNameParam.Value = 'TIncomeJournalChoiceForm'
+      FormNameParam.DataType = ftString
+      GuiParams = <
+        item
+          Name = 'MaskId'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'Id'
+          ParamType = ptInput
+        end
+        item
+          Name = 'TopPersonalServiceListId'
+          Value = ''
+          ComponentItem = 'Key'
+        end
+        item
+          Name = 'TopPersonalServiceListName'
+          Value = ''
+          ComponentItem = 'TextValue'
+          DataType = ftString
+        end
+        item
+          Name = 'Key'
+          Value = '0'
+          Component = FormParams
+          ComponentItem = 'MaskId'
+          ParamType = ptInput
+        end>
+      isShowModal = True
+    end
+    object actUpdateMask: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdateMask
+      StoredProcList = <
+        item
+          StoredProc = spUpdateMask
+        end>
+      Caption = 'actUpdateMask'
+    end
+    object mactUpdateMask: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actIncomeJournalChoice
+        end
+        item
+          Action = actUpdateMask
+        end
+        item
+          Action = actRefresh
+        end>
+      Caption = #1050#1086#1087#1080#1088#1086#1074#1072#1090#1100' '#1076#1072#1085#1085#1099#1077' '#1087#1086' '#1076#1086#1082#1091#1084#1077#1085#1090#1091' '#1087#1088#1080#1093#1086#1076' '#1086#1090' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072
+      Hint = #1050#1086#1087#1080#1088#1086#1074#1072#1090#1100' '#1076#1072#1085#1085#1099#1077' '#1087#1086' '#1076#1086#1082#1091#1084#1077#1085#1090#1091' '#1087#1088#1080#1093#1086#1076' '#1086#1090' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072
+      ImageIndex = 59
+    end
   end
   inherited MasterDS: TDataSource
     Left = 32
@@ -767,7 +831,7 @@ inherited SendOnPriceForm: TSendOnPriceForm
         end
         item
           Visible = True
-          ItemName = 'bbStatic'
+          ItemName = 'dxBarStatic'
         end
         item
           Visible = True
@@ -775,7 +839,15 @@ inherited SendOnPriceForm: TSendOnPriceForm
         end
         item
           Visible = True
-          ItemName = 'bbStatic'
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bb'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
         end
         item
           Visible = True
@@ -832,6 +904,10 @@ inherited SendOnPriceForm: TSendOnPriceForm
     end
     object bbPrintUnit: TdxBarButton
       Action = actPrintUnit
+      Category = 0
+    end
+    object bb: TdxBarButton
+      Action = mactUpdateMask
       Category = 0
     end
   end
@@ -908,6 +984,10 @@ inherited SendOnPriceForm: TSendOnPriceForm
         Value = Null
         DataType = ftFloat
         ParamType = ptInputOutput
+      end
+      item
+        Name = 'MaskId'
+        Value = Null
       end>
     Left = 280
     Top = 552
@@ -1237,8 +1317,8 @@ inherited SendOnPriceForm: TSendOnPriceForm
       item
         Control = ceComment
       end>
-    Left = 232
-    Top = 193
+    Left = 256
+    Top = 217
   end
   inherited RefreshAddOn: TRefreshAddOn
     DataSet = ''
@@ -1499,7 +1579,7 @@ inherited SendOnPriceForm: TSendOnPriceForm
   end
   inherited spGetTotalSumm: TdsdStoredProc
     Left = 420
-    Top = 188
+    Top = 164
   end
   object RefreshDispatcher: TRefreshDispatcher
     IdParam.Value = Null
@@ -1918,7 +1998,30 @@ inherited SendOnPriceForm: TSendOnPriceForm
         Control = edInvNumberTransport
       end>
     GetStoredProc = spGet
-    Left = 280
+    Left = 320
     Top = 177
+  end
+  object spUpdateMask: TdsdStoredProc
+    StoredProcName = 'gpUpdate_MI_SendOnPrice_isMask'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementId '
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inMovementMaskId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'MaskId'
+        ParamType = ptInput
+      end>
+    PackSize = 1
+    Left = 464
+    Top = 515
   end
 end

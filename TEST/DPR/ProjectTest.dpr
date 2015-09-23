@@ -744,7 +744,8 @@ uses
   Report_GoodsMI_TransferDebtDialog in '..\..\Forms\Report\Report_GoodsMI_TransferDebtDialog.pas' {Report_GoodsMI_TransferDebtDialogForm: TParentForm},
   Report_GoodsMI_ProductionSeparateUnionDialog in '..\..\Forms\Report\Report_GoodsMI_ProductionSeparateUnionDialog.pas' {Report_GoodsMI_ProductionSeparateUnionDialogForm: TParentForm},
   Report_Transport_ProfitLossDialog in '..\..\Forms\Report\Report_Transport_ProfitLossDialog.pas' {Report_Transport_ProfitLossDialogForm: TParentForm},
-  Report_Transport_ProfitLoss in '..\..\Forms\Report\Report_Transport_ProfitLoss.pas' {Report_Transport_ProfitLossForm: TParentForm};
+  Report_Transport_ProfitLoss in '..\..\Forms\Report\Report_Transport_ProfitLoss.pas' {Report_Transport_ProfitLossForm: TParentForm},
+  IncomeJournalChoice in '..\..\Forms\Document\IncomeJournalChoice.pas' {IncomeJournalChoiceForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}
