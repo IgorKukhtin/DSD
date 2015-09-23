@@ -13,7 +13,7 @@ uses
   cxGrid, Vcl.ExtCtrls, cxSplitter, dsdDB, Datasnap.DBClient, cxContainer,
   cxTextEdit, cxCurrencyEdit, cxLabel, cxMaskEdit, cxDropDownEdit, cxLookupEdit,
   cxDBLookupEdit, cxDBLookupComboBox, Vcl.Menus, cxCheckBox, Vcl.StdCtrls,
-  cxButtons, cxNavigator, CashInterface, IniFIles, cxImageComboBox;
+  cxButtons, cxNavigator, CashInterface, IniFIles, cxImageComboBox, dxmdaset;
 
 CONST
   UM_THREAD_EXCEPTION = WM_USER+101;
@@ -22,6 +22,8 @@ type
   private
     { Private declarations }
     procedure FillData;
+    procedure RollBack;
+    procedure ShowTime;
   protected
     procedure Execute; override;
   end;
@@ -133,6 +135,7 @@ type
     spSelect_CashRemains_Diff: TdsdStoredProc;
     actExecuteLoadVIP: TAction;
     actRefreshAll: TAction;
+    mdClosedCheck: TdxMemData;
     procedure WM_KEYDOWN(var Msg: TWMKEYDOWN);
     procedure FormCreate(Sender: TObject);
     procedure actChoiceGoodsInRemainsGridExecute(Sender: TObject);
@@ -172,6 +175,9 @@ type
     SourceClientDataSet: TClientDataSet;
     ThreadErrorMessage:String;
     NewCheckStart,NewCheckEnd:TDateTime;
+    CloseCheckStart,CloseCheckEnd: TDateTime;
+    ASalerCash{,ASdacha}: real;
+    PaidType: TPaidType;
 
     procedure SetSoldRegim(const Value: boolean);
     // возвращает остаток
@@ -335,8 +341,6 @@ begin
 end;
 
 procedure TMainCashForm.actPutCheckToCashExecute(Sender: TObject);
-var ASalerCash{,ASdacha}: real;
-    PaidType: TPaidType;
 begin
   PaidType:=ptMoney;
   if (CheckCDS.RecordCount>0) then
@@ -351,35 +355,21 @@ begin
       End;
     end
     else
-    begin
       ASalerCash:=FTotalSumm;
-//      ASdacha:=0;
-    end;
+
+    // Присвоить "Закрываемому чеку" № текущего
+    MainCashForm.FormParams.ParamByName('ClosedCheckId').Value := MainCashForm.FormParams.ParamByName('CheckId').Value;
+    // Перелить CheckCDS в в запасной CDS
+    mdClosedCheck.Close;
+    mdClosedCheck.Open;
+    mdClosedCheck.CopyFromDataSet(CheckCDS);
+    // запустить в потоке печать чека
+    TRefreshRemainsThread.Create;
+    //Создать новый чек
+    NewCheckStart := Now;
+    NewCheck;
+    NewCheckEnd := Now;
     // Отбиваем чек через ЭККА
-    if PutCheckToCash(ASalerCash, PaidType) then
-    begin
-      //Достаем серийник кассового аппарата
-      if Assigned(Cash) AND not Cash.AlwaysSold then
-      Begin
-        spGet_Object_CashRegister_By_Serial.ParamByName('inSerial').Value :=
-          Cash.FiscalNumber;
-        spGet_Object_CashRegister_By_Serial.Execute;
-        if spGet_Object_CashRegister_By_Serial.ParamByName('outId').AsString <> '' then
-          spComplete_Movement_Check.ParamByName('inCashRegisterId').Value :=
-            spGet_Object_CashRegister_By_Serial.ParamByName('outId').Value
-        ELSE
-          spComplete_Movement_Check.ParamByName('inCashRegisterId').Value := 0;
-      End
-      else
-        spComplete_Movement_Check.ParamByName('inCashRegisterId').Value := 0;
-    // Проводим чек
-      spComplete_Movement_Check.ParamByName('inPaidType').Value := Integer(PaidType);
-      FormParams.ParamByName('ClosedCheckId').Value := FormParams.ParamByName('CheckId').Value;
-      NewCheckStart :=Now;
-      NewCheck(False);// процедура обновляет параметры для введения нового чека
-      NewCheckEnd :=Now;
-      TRefreshRemainsThread.Create(False);
-    end;
   end;
 end;
 
@@ -755,26 +745,12 @@ procedure TMainCashForm.UpdateRemainsFromDiff;
 var
   GoodsId, cntUpd,cntIns: Integer;
   Str:String;
-  St,Fin:TDateTime;
-  procedure SetCaption;
-  Begin
-    Caption := 'Продажа. (Обн. '+IntToStr(cntUpd)+'. Доб. '+IntToStr(CntIns)+
-               '. Новый чек '+FormatDateTime('ss.zzz сек',NewCheckStart-NewCheckEnd)+
-               '. Закрытие чека '+FormatDateTime('ss.zzz сек',St-NewCheckEnd)+
-               '. Обн. ост. '+FormatDateTime('ss.zzz сек',Fin-St);
-
-  End;
 begin
   //Если нет расхождений - ничего не делаем
-  St := Now;
   cntUpd := 0;
   cntIns := 0;
   if DiffCDS.IsEmpty then
-  Begin
-    Fin := Now;
-    SetCaption;
     exit;
-  End;
   //открючаем реакции
 
   RemainsCDS.AfterScroll := Nil;
@@ -840,8 +816,6 @@ begin
     RemainsCDSAfterScroll(RemainsCDS);
     AlternativeCDS.EnableControls;
   end;
-  Fin := Now;
-  SetCaption;
 end;
 
 procedure TMainCashForm.CalcTotalSumm;
@@ -962,6 +936,9 @@ begin
   ceAmount.Value := 0;
   ceAmount.Enabled := true;
   ActiveControl := lcName;
+
+//  Caption := '. Новый чек '+FormatDateTime('ss.zzz сек',NewCheckEnd-NewCheckStart)+
+//             '. Закрытие чека '+FormatDateTime('ss.zzz сек',CloseCheckEnd-CloseCheckStart);
 end;
 
 procedure TMainCashForm.ParentFormCloseQuery(Sender: TObject;
@@ -1009,7 +986,7 @@ function TMainCashForm.PutCheckToCash(SalerCash: real;
         result := true
      else
        if not SoldParallel then
-         with CheckCDS do begin
+         with mdClosedCheck do begin
             result := Cash.SoldFromPC(FieldByName('GoodsCode').asInteger,
                                       AnsiUpperCase(FieldByName('GoodsName').Text),
                                       FieldByName('Amount').asFloat,
@@ -1022,14 +999,14 @@ function TMainCashForm.PutCheckToCash(SalerCash: real;
 begin
   try
     result := not Assigned(Cash) or Cash.AlwaysSold or Cash.OpenReceipt;
-    with CheckCDS do
+    with mdClosedCheck do
     begin
       First;
       while not EOF do
       begin
         if result then
            begin
-             if CheckCDS.FieldByName('Amount').asFloat >= 0.001 then
+             if mdClosedCheck.FieldByName('Amount').asFloat >= 0.001 then
                 result := PutOneRecordToCash;//послали строку в кассу
            end;
         Next;
@@ -1135,20 +1112,51 @@ procedure TRefreshRemainsThread.Execute;
 var
   ARS: Integer;
 begin
+  MainCashForm.CloseCheckStart := Now;
+
   try
     InterlockedIncrement(CountRRT); //Добавляем к счетчику потоков 1
-    ARS := InterlockedIncrement(ActualRemainSession); //Фиксируем сессию остатков
-    MainCashForm.DiffCDS.Close;
-    MainCashForm.spComplete_Movement_Check.Execute;
-    if ARS = ActualRemainSession then //если за время проведения чека сессия остатка не ушла вперед то обновляем остаток на морде
-      Synchronize(FillData);
+
+{*****************************************************************}
+
+    if MainCashForm.PutCheckToCash(MainCashForm.ASalerCash, MainCashForm.PaidType) then
+    begin
+      //Достаем серийник кассового аппарата
+      if Assigned(MainCashForm.Cash) AND not MainCashForm.Cash.AlwaysSold then
+      Begin
+        MainCashForm.spGet_Object_CashRegister_By_Serial.ParamByName('inSerial').Value := MainCashForm.Cash.FiscalNumber;
+        MainCashForm.spGet_Object_CashRegister_By_Serial.Execute;
+        if MainCashForm.spGet_Object_CashRegister_By_Serial.ParamByName('outId').AsString <> '' then
+          MainCashForm.spComplete_Movement_Check.ParamByName('inCashRegisterId').Value :=
+            MainCashForm.spGet_Object_CashRegister_By_Serial.ParamByName('outId').Value
+        ELSE
+          MainCashForm.spComplete_Movement_Check.ParamByName('inCashRegisterId').Value := 0;
+      End
+      else
+        MainCashForm.spComplete_Movement_Check.ParamByName('inCashRegisterId').Value := 0;
+      MainCashForm.spComplete_Movement_Check.ParamByName('inPaidType').Value := Integer(MainCashForm.PaidType);
+{*****************************************************************}
+      ARS := InterlockedIncrement(ActualRemainSession); //Фиксируем сессию остатков
+      MainCashForm.DiffCDS.Close;
+      MainCashForm.spComplete_Movement_Check.Execute;
+      if ARS = ActualRemainSession then //если за время проведения чека сессия остатка не ушла вперед то обновляем остаток на морде
+        Synchronize(FillData);
+    end
+    else
+    Begin
+      //если не смогли напечатать - откатываем до предыдущего чека
+      Synchronize(RollBack);
+    End;
   Except ON E:Exception do
   Begin
+    Synchronize(RollBack);
     MainCashForm.ThreadErrorMessage:=E.Message;
     PostMessage(MainCashForm.Handle,UM_THREAD_EXCEPTION,0,0);
   End;
   end;
   InterlockedDecrement(CountRRT);
+  MainCashForm.CloseCheckEnd := Now;
+//  Synchronize(ShowTime);
 end;
 
 procedure TRefreshRemainsThread.FillData;
@@ -1161,6 +1169,19 @@ begin
     PostMessage(MainCashForm.Handle,UM_THREAD_EXCEPTION,0,0);
   End;
   end;
+end;
+
+procedure TRefreshRemainsThread.RollBack;
+begin
+  MainCashForm.FormParams.ParamByName('CheckId').Value := MainCashForm.FormParams.ParamByName('ClosedCheckId').Value;
+  MainCashForm.spSelectCheck.Execute;
+end;
+
+procedure TRefreshRemainsThread.ShowTime;
+begin
+  WITH MainCashForm DO
+    Caption := '. Новый чек '+FormatDateTime('ss.zzz сек',NewCheckEnd-NewCheckStart)+
+               '. Закрытие чека '+FormatDateTime('ss.zzz сек',CloseCheckEnd-CloseCheckStart);
 end;
 
 initialization

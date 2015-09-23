@@ -701,6 +701,7 @@ inherited MainCashForm: TMainCashForm
       end>
     PackSize = 1
     AutoWidth = True
+    NeedResetData = False
     Left = 232
     Top = 96
   end
@@ -775,6 +776,7 @@ inherited MainCashForm: TMainCashForm
         ComponentItem = 'CheckId'
       end>
     PackSize = 1
+    NeedResetData = False
     Left = 384
     Top = 128
   end
@@ -819,6 +821,7 @@ inherited MainCashForm: TMainCashForm
         DataType = ftFloat
       end>
     PackSize = 1
+    NeedResetData = False
     Left = 400
     Top = 80
   end
@@ -839,6 +842,7 @@ inherited MainCashForm: TMainCashForm
       end>
     PackSize = 1
     AutoWidth = True
+    NeedResetData = False
     Left = 176
     Top = 256
   end
@@ -914,6 +918,7 @@ inherited MainCashForm: TMainCashForm
         DataType = ftFloat
       end>
     PackSize = 1
+    NeedResetData = False
     Left = 240
     Top = 256
   end
@@ -975,6 +980,7 @@ inherited MainCashForm: TMainCashForm
       end>
     PackSize = 1
     AutoWidth = True
+    NeedResetData = False
     Left = 704
     Top = 264
   end
@@ -1038,6 +1044,7 @@ inherited MainCashForm: TMainCashForm
         ParamType = ptInput
       end>
     PackSize = 1
+    NeedResetData = False
     Left = 376
     Top = 256
   end
@@ -1065,6 +1072,7 @@ inherited MainCashForm: TMainCashForm
         ParamType = ptInput
       end>
     PackSize = 1
+    NeedResetData = False
     Left = 376
     Top = 304
   end
@@ -1081,6 +1089,7 @@ inherited MainCashForm: TMainCashForm
         ParamType = ptInput
       end>
     PackSize = 1
+    NeedResetData = False
     Left = 40
     Top = 320
   end
@@ -1100,6 +1109,7 @@ inherited MainCashForm: TMainCashForm
         Value = Null
       end>
     PackSize = 1
+    NeedResetData = False
     Left = 488
     Top = 80
   end
@@ -1120,6 +1130,7 @@ inherited MainCashForm: TMainCashForm
         ParamType = ptInput
       end>
     PackSize = 1
+    NeedResetData = False
     Left = 608
     Top = 80
   end
@@ -1134,6 +1145,7 @@ inherited MainCashForm: TMainCashForm
         DataType = ftString
       end>
     PackSize = 1
+    NeedResetData = False
     Left = 696
     Top = 56
   end
@@ -1154,6 +1166,7 @@ inherited MainCashForm: TMainCashForm
       end>
     PackSize = 1
     AutoWidth = True
+    NeedResetData = False
     Left = 232
     Top = 48
   end
@@ -1176,6 +1189,7 @@ inherited MainCashForm: TMainCashForm
         DataType = ftBoolean
       end>
     PackSize = 1
+    NeedResetData = False
     Left = 440
     Top = 256
   end
@@ -1198,6 +1212,7 @@ inherited MainCashForm: TMainCashForm
       end>
     PackSize = 1
     AutoWidth = True
+    NeedResetData = False
     Left = 128
     Top = 96
   end
@@ -1237,7 +1252,14 @@ inherited MainCashForm: TMainCashForm
       end>
     PackSize = 1
     AutoWidth = True
+    NeedResetData = False
     Left = 200
     Top = 48
+  end
+  object mdClosedCheck: TdxMemData
+    Indexes = <>
+    SortOptions = []
+    Left = 200
+    Top = 344
   end
 end
