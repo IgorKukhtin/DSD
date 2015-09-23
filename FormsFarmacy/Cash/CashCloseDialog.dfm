@@ -7,8 +7,12 @@ inherited CashCloseDialogForm: TCashCloseDialogForm
   GlassFrame.Bottom = 60
   Position = poDesktopCenter
   OnKeyDown = ParentFormKeyDown
+  AddOnFormData.isAlwaysRefresh = False
+  AddOnFormData.RefreshAction = nil
+  AddOnFormData.isSingle = False
+  AddOnFormData.Params = nil
   ExplicitWidth = 661
-  ExplicitHeight = 175
+  ExplicitHeight = 178
   PixelsPerInch = 96
   TextHeight = 13
   inherited bbOk: TcxButton
@@ -128,6 +132,7 @@ inherited CashCloseDialogForm: TCashCloseDialogForm
     Width = 217
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
+    Active = False
     Left = 59
     Top = 80
   end

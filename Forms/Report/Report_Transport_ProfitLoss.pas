@@ -23,7 +23,7 @@ uses
   dxSkinXmas2008Blue, dxSkinscxPCPainter, dxSkinsdxBarPainter, dsdAddOn,
   cxContainer, Vcl.ComCtrls, dxCore, cxDateUtils, cxTextEdit, cxMaskEdit,
   cxDropDownEdit, cxCalendar, Vcl.ExtCtrls, cxCurrencyEdit, dsdGuides,
-  cxButtonEdit, ChoicePeriod, cxLabel, cxCheckBox;
+  cxButtonEdit, ChoicePeriod, cxLabel, cxCheckBox, dxBarExtItems;
 
 type
   TReport_Transport_ProfitLossForm = class(TParentForm)
@@ -47,8 +47,6 @@ type
     clRouteName: TcxGridDBColumn;
     clCarName: TcxGridDBColumn;
     PersonalDriverName: TcxGridDBColumn;
-    SumCount: TcxGridDBColumn;
-    SumAmount: TcxGridDBColumn;
     PeriodChoice: TPeriodChoice;
     bbDialogForm: TdxBarButton;
     RefreshDispatcher: TRefreshDispatcher;
@@ -57,7 +55,6 @@ type
     clOperDate: TcxGridDBColumn;
     clCarModelName: TcxGridDBColumn;
     clInvNumberTransport: TcxGridDBColumn;
-    clRouteKindName: TcxGridDBColumn;
     clFuelName: TcxGridDBColumn;
     cxLabel1: TcxLabel;
     cxLabel2: TcxLabel;
@@ -79,6 +76,8 @@ type
     UnitGuides: TdsdGuides;
     cbMovement: TcxCheckBox;
     BusinessName: TcxGridDBColumn;
+    MovementDescName: TcxGridDBColumn;
+    dxBarStatic1: TdxBarStatic;
   private
   public
   end;

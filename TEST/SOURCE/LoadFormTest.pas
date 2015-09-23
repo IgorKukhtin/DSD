@@ -558,6 +558,9 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TIncomePartnerForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TIncomePartnerJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TIncomePartnerJournalForm');
+  //
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TIncomeJournalChoiceForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TIncomeJournalChoiceForm');
 end;
 
 procedure TLoadFormTest.LoadSendFormTest;

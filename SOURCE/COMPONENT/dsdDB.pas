@@ -212,7 +212,8 @@ begin
      if Assigned(B) then
      begin
         try
-          DataSets[0].DataSet.GotoBookmark(B);
+          if DataSets[0].DataSet.BookmarkValid(B) then
+            DataSets[0].DataSet.GotoBookmark(B);
         except
         end;
         DataSets[0].DataSet.FreeBookmark(B);

@@ -530,6 +530,13 @@ inherited TransportServiceJournalForm: TTransportServiceJournalForm
         Component = deEnd
         DataType = ftDateTime
         ParamType = ptInput
+      end
+      item
+        Name = 'inIsErased'
+        Value = Null
+        Component = actShowErased
+        DataType = ftBoolean
+        ParamType = ptInput
       end>
     Left = 120
     Top = 120
@@ -578,6 +585,21 @@ inherited TransportServiceJournalForm: TTransportServiceJournalForm
     Top = 232
   end
   inherited spMovementReComplete: TdsdStoredProc
+    StoredProcName = 'gpReComplete_Movement_TransportService'
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inislastcomplete'
+        Value = 'False'
+        DataType = ftBoolean
+        ParamType = ptUnknown
+      end>
     Left = 432
     Top = 120
   end

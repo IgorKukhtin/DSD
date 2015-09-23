@@ -419,7 +419,39 @@ inherited MainCashForm: TMainCashForm
   end
   inherited ActionList: TActionList
     Images = dmMain.ImageList
+    object actChoiceGoodsInRemainsGrid: TAction [0]
+      Caption = 'actChoiceGoodsInRemainsGrid'
+      OnExecute = actChoiceGoodsInRemainsGridExecute
+    end
+    object actRefreshAll: TAction [1]
+      Category = 'DSDLib'
+      Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
+      Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
+      ImageIndex = 4
+      ShortCut = 116
+      OnExecute = actRefreshAllExecute
+    end
+    object actSold: TAction [2]
+      Caption = #1055#1088#1086#1076#1072#1078#1072
+      ShortCut = 113
+      OnExecute = actSoldExecute
+    end
+    object actCheck: TdsdOpenForm [3]
+      Category = #1044#1086#1082#1091#1084#1077#1085#1090#1099
+      MoveParams = <>
+      Caption = #1063#1077#1082#1080
+      FormName = 'TCheckJournalForm'
+      FormNameParam.Value = 'TCheckJournalForm'
+      FormNameParam.DataType = ftString
+      GuiParams = <>
+      isShowModal = False
+    end
+    object actInsertUpdateCheckItems: TAction [4]
+      Caption = 'actInsertUpdateCheckItems'
+      OnExecute = actInsertUpdateCheckItemsExecute
+    end
     inherited actRefresh: TdsdDataSetRefresh
+      Enabled = False
       StoredProc = spSelectCheck
       StoredProcList = <
         item
@@ -431,29 +463,7 @@ inherited MainCashForm: TMainCashForm
         item
           StoredProc = spSelect_Alternative
         end>
-    end
-    object actChoiceGoodsInRemainsGrid: TAction
-      Caption = 'actChoiceGoodsInRemainsGrid'
-      OnExecute = actChoiceGoodsInRemainsGridExecute
-    end
-    object actSold: TAction
-      Caption = #1055#1088#1086#1076#1072#1078#1072
-      ShortCut = 113
-      OnExecute = actSoldExecute
-    end
-    object actCheck: TdsdOpenForm
-      Category = #1044#1086#1082#1091#1084#1077#1085#1090#1099
-      MoveParams = <>
-      Caption = #1063#1077#1082#1080
-      FormName = 'TCheckJournalForm'
-      FormNameParam.Value = 'TCheckJournalForm'
-      FormNameParam.DataType = ftString
-      GuiParams = <>
-      isShowModal = False
-    end
-    object actInsertUpdateCheckItems: TAction
-      Caption = 'actInsertUpdateCheckItems'
-      OnExecute = actInsertUpdateCheckItemsExecute
+      ShortCut = 0
     end
     object actPutCheckToCash: TAction
       Caption = #1055#1086#1089#1083#1072#1090#1100' '#1095#1077#1082
@@ -716,7 +726,7 @@ inherited MainCashForm: TMainCashForm
     Left = 176
     Top = 96
     object N1: TMenuItem
-      Action = actRefresh
+      Action = actRefreshAll
     end
     object N4: TMenuItem
       Action = actClearAll
@@ -785,6 +795,10 @@ inherited MainCashForm: TMainCashForm
         Value = Null
         DataType = ftString
         ParamType = ptInput
+      end
+      item
+        Name = 'ClosedCheckId'
+        Value = Null
       end>
     Left = 48
     Top = 104
@@ -1002,7 +1016,7 @@ inherited MainCashForm: TMainCashForm
         Name = 'inMovementId'
         Value = Null
         Component = FormParams
-        ComponentItem = 'CheckId'
+        ComponentItem = 'ClosedCheckId'
         ParamType = ptInput
       end
       item
@@ -1067,8 +1081,8 @@ inherited MainCashForm: TMainCashForm
         ParamType = ptInput
       end>
     PackSize = 1
-    Left = 64
-    Top = 328
+    Left = 40
+    Top = 320
   end
   object spGet_Object_CashRegister_By_Serial: TdsdStoredProc
     StoredProcName = 'gpGet_Object_CashRegister_By_Serial'

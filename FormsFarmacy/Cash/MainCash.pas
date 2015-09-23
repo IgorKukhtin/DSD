@@ -13,20 +13,18 @@ uses
   cxGrid, Vcl.ExtCtrls, cxSplitter, dsdDB, Datasnap.DBClient, cxContainer,
   cxTextEdit, cxCurrencyEdit, cxLabel, cxMaskEdit, cxDropDownEdit, cxLookupEdit,
   cxDBLookupEdit, cxDBLookupComboBox, Vcl.Menus, cxCheckBox, Vcl.StdCtrls,
-  cxButtons, cxNavigator, CashInterface, IniFIles, cxImageComboBox, dxSkinsCore,
-  dxSkinsDefaultPainters, dxSkinscxPCPainter, dxSkinBlack, dxSkinBlue,
-  dxSkinBlueprint, dxSkinCaramel, dxSkinCoffee, dxSkinDarkRoom, dxSkinDarkSide,
-  dxSkinDevExpressDarkStyle, dxSkinDevExpressStyle, dxSkinFoggy,
-  dxSkinGlassOceans, dxSkinHighContrast, dxSkiniMaginary, dxSkinLilian,
-  dxSkinLiquidSky, dxSkinLondonLiquidSky, dxSkinMcSkin, dxSkinMoneyTwins,
-  dxSkinOffice2007Black, dxSkinOffice2007Blue, dxSkinOffice2007Green,
-  dxSkinOffice2007Pink, dxSkinOffice2007Silver, dxSkinOffice2010Black,
-  dxSkinOffice2010Blue, dxSkinOffice2010Silver, dxSkinPumpkin, dxSkinSeven,
-  dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus, dxSkinSilver,
-  dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008, dxSkinTheAsphaltWorld,
-  dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue;
+  cxButtons, cxNavigator, CashInterface, IniFIles, cxImageComboBox;
 
+CONST
+  UM_THREAD_EXCEPTION = WM_USER+101;
 type
+  TRefreshRemainsThread = class(TThread)
+  private
+    { Private declarations }
+    procedure FillData;
+  protected
+    procedure Execute; override;
+  end;
   TMainCashForm = class(TAncestorBaseForm)
     MainGridDBTableView: TcxGridDBTableView;
     MainGridLevel: TcxGridLevel;
@@ -134,6 +132,7 @@ type
     DiffCDS: TClientDataSet;
     spSelect_CashRemains_Diff: TdsdStoredProc;
     actExecuteLoadVIP: TAction;
+    actRefreshAll: TAction;
     procedure WM_KEYDOWN(var Msg: TWMKEYDOWN);
     procedure FormCreate(Sender: TObject);
     procedure actChoiceGoodsInRemainsGridExecute(Sender: TObject);
@@ -143,7 +142,7 @@ type
     procedure ceAmountKeyDown(Sender: TObject; var Key: Word;
       Shift: TShiftState);
     procedure ceAmountExit(Sender: TObject);
-    procedure actPutCheckToCashExecute(Sender: TObject);
+    procedure actPutCheckToCashExecute(Sender: TObject);           {********************}
     procedure ParentFormKeyDown(Sender: TObject; var Key: Word;
       Shift: TShiftState);
     procedure actSetVIPExecute(Sender: TObject);
@@ -163,6 +162,7 @@ type
     procedure actSetFocusExecute(Sender: TObject);
     procedure actRefreshRemainsExecute(Sender: TObject);
     procedure actExecuteLoadVIPExecute(Sender: TObject);
+    procedure actRefreshAllExecute(Sender: TObject);
   private
     FSoldRegim: boolean;
     fShift: Boolean;
@@ -170,6 +170,9 @@ type
     Cash: ICash;
     SoldParallel: Boolean;
     SourceClientDataSet: TClientDataSet;
+    ThreadErrorMessage:String;
+    NewCheckStart,NewCheckEnd:TDateTime;
+
     procedure SetSoldRegim(const Value: boolean);
     // возвращает остаток
     function GetGoodsPropertyRemains(GoodsId: integer): real;
@@ -195,12 +198,15 @@ type
     procedure UpdateRemains;
 
     property SoldRegim: boolean read FSoldRegim write SetSoldRegim;
+    procedure Thread_Exception(var Msg: TMessage); message UM_THREAD_EXCEPTION;
   public
     { Public declarations }
   end;
 
 var
   MainCashForm: TMainCashForm;
+  CountRRT: Integer = 0;
+  ActualRemainSession: Integer = 0;
 
 implementation
 
@@ -349,8 +355,6 @@ begin
       ASalerCash:=FTotalSumm;
 //      ASdacha:=0;
     end;
-//    rlGiveSaler.Caption:=FormatFloat(_fmtBookKeeper,ASalerCash);
-//    rlSdacha.Caption:=FormatFloat(_fmtBookKeeper,ASdacha);
     // Отбиваем чек через ЭККА
     if PutCheckToCash(ASalerCash, PaidType) then
     begin
@@ -370,19 +374,36 @@ begin
         spComplete_Movement_Check.ParamByName('inCashRegisterId').Value := 0;
     // Проводим чек
       spComplete_Movement_Check.ParamByName('inPaidType').Value := Integer(PaidType);
-      DiffCDS.Close;
-      spComplete_Movement_Check.Execute;
-      //Обновить остаток согласно пришедшей разнице
-      UpdateRemainsFromDiff;
+      FormParams.ParamByName('ClosedCheckId').Value := FormParams.ParamByName('CheckId').Value;
+      NewCheckStart :=Now;
       NewCheck(False);// процедура обновляет параметры для введения нового чека
+      NewCheckEnd :=Now;
+      TRefreshRemainsThread.Create(False);
     end;
   end;
 end;
 
-procedure TMainCashForm.actRefreshRemainsExecute(Sender: TObject);
+procedure TMainCashForm.actRefreshAllExecute(Sender: TObject);
 begin
+  InterlockedIncrement(ActualRemainSession); //Фиксируем сессию остатков
+  RemainsCDS.DisableControls;
+  AlternativeCDS.DisableControls;
+  try
+    actRefresh.Execute;
+  finally
+    RemainsCDS.EnableControls;
+    AlternativeCDS.EnableControls;
+  end;
+end;
+
+procedure TMainCashForm.actRefreshRemainsExecute(Sender: TObject);
+var
+  ARS: Integer;
+begin
+  ARS := InterlockedIncrement(ActualRemainSession); //Фиксируем сессию остатков
   actRefreshLite.Execute;
-  UpdateRemainsFromDiff;
+  if ARS = ActualRemainSession then //если за время проведения чека сессия остатка не ушла вперед то обновляем остаток на морде
+    UpdateRemainsFromDiff;
 end;
 
 procedure TMainCashForm.actSetFocusExecute(Sender: TObject);
@@ -457,7 +478,7 @@ begin
     Cash:=TCashFactory.GetCash(iniCashType);
   except
     Begin
-      ShowMessage('Внимание! Программа не может подключится к фискальному аппарату.'+#13+
+      ShowMessage('Внимание! Программа не может подключиться к фискальному аппарату.'+#13+
                   'Дальнейшая работа программы возможна только в нефискальном режиме!');
     End;
   end;
@@ -732,11 +753,30 @@ end;
 
 procedure TMainCashForm.UpdateRemainsFromDiff;
 var
-  GoodsId: Integer;
+  GoodsId, cntUpd,cntIns: Integer;
+  Str:String;
+  St,Fin:TDateTime;
+  procedure SetCaption;
+  Begin
+    Caption := 'Продажа. (Обн. '+IntToStr(cntUpd)+'. Доб. '+IntToStr(CntIns)+
+               '. Новый чек '+FormatDateTime('ss.zzz сек',NewCheckStart-NewCheckEnd)+
+               '. Закрытие чека '+FormatDateTime('ss.zzz сек',St-NewCheckEnd)+
+               '. Обн. ост. '+FormatDateTime('ss.zzz сек',Fin-St);
+
+  End;
 begin
   //Если нет расхождений - ничего не делаем
-  if DiffCDS.IsEmpty then exit;
+  St := Now;
+  cntUpd := 0;
+  cntIns := 0;
+  if DiffCDS.IsEmpty then
+  Begin
+    Fin := Now;
+    SetCaption;
+    exit;
+  End;
   //открючаем реакции
+
   RemainsCDS.AfterScroll := Nil;
   RemainsCDS.DisableControls;
   GoodsId := RemainsCDS.FieldByName('Id').asInteger;
@@ -759,6 +799,7 @@ begin
         RemainsCDS.FieldByName('MCSValue').AsFloat := DiffCDS.FieldByName('MCSValue').AsFloat;
         RemainsCDS.FieldByName('Reserved').AsFloat := DiffCDS.FieldByName('Reserved').AsFloat;
         RemainsCDS.Post;
+        inc(cntIns);
       End
       else
       Begin
@@ -770,6 +811,7 @@ begin
           RemainsCDS.FieldByName('MCSValue').AsFloat := DiffCDS.FieldByName('MCSValue').AsFloat;
           RemainsCDS.FieldByName('Reserved').AsFloat := DiffCDS.FieldByName('Reserved').AsFloat;
           RemainsCDS.Post;
+          inc(cntUpd);
         End;
       End;
       DiffCDS.Next;
@@ -798,7 +840,8 @@ begin
     RemainsCDSAfterScroll(RemainsCDS);
     AlternativeCDS.EnableControls;
   end;
-
+  Fin := Now;
+  SetCaption;
 end;
 
 procedure TMainCashForm.CalcTotalSumm;
@@ -888,7 +931,14 @@ begin
   actSpec.Checked := false;
   if Assigned(Cash) then
     Cash.AlwaysSold := False;
-  spNewCheck.Execute;
+  try
+    spNewCheck.Execute;
+  Except ON E:Exception DO
+  Begin
+    ShowMessage('Не удалось создать новый чек. Текс ошибки: '+#13+E.Message);
+    exit;
+  End;
+  end;
   if Self.Visible then
   Begin
     if ANeedRemainsRefresh then
@@ -900,7 +950,14 @@ begin
       spSelectCheck.Execute;
   End
   else
-    actRefresh.Execute;
+  Begin
+    MainGridDBTableView.BeginUpdate;
+    try
+      actRefresh.Execute;
+    finally
+      MainGridDBTableView.EndUpdate;
+    end;
+  End;
   CalcTotalSumm;
   ceAmount.Value := 0;
   ceAmount.Enabled := true;
@@ -918,10 +975,15 @@ begin
   End
   else
     CanClose := MessageDlg('Вы действительно хотите выйти?',mtConfirmation,[mbYes,mbCancel], 0) = mrYes;
+  while CountRRT>0 do //Ждем пока закроются все потоки
+    Application.ProcessMessages;
   if CanClose then
   Begin
-    spMovementSetErased.Execute;
-    spDelete_CashSession.Execute;
+    try
+      spMovementSetErased.Execute;
+      spDelete_CashSession.Execute;
+    Except
+    end;
   End;
 end;
 
@@ -1057,6 +1119,47 @@ begin
   else begin
      actSold.Caption := 'Возврат';
      ceAmount.Value := -1;
+  end;
+end;
+
+procedure TMainCashForm.Thread_Exception(var Msg: TMessage);
+begin
+  ShowMessage('Во время проведения чека возникла ошибка:'+#13+
+              ThreadErrorMessage+#13#13+
+              'Проверьте состояние чека и, при необходимости, проведите чек вручную.');
+end;
+
+{ TRefreshRemainsThread }
+
+procedure TRefreshRemainsThread.Execute;
+var
+  ARS: Integer;
+begin
+  try
+    InterlockedIncrement(CountRRT); //Добавляем к счетчику потоков 1
+    ARS := InterlockedIncrement(ActualRemainSession); //Фиксируем сессию остатков
+    MainCashForm.DiffCDS.Close;
+    MainCashForm.spComplete_Movement_Check.Execute;
+    if ARS = ActualRemainSession then //если за время проведения чека сессия остатка не ушла вперед то обновляем остаток на морде
+      Synchronize(FillData);
+  Except ON E:Exception do
+  Begin
+    MainCashForm.ThreadErrorMessage:=E.Message;
+    PostMessage(MainCashForm.Handle,UM_THREAD_EXCEPTION,0,0);
+  End;
+  end;
+  InterlockedDecrement(CountRRT);
+end;
+
+procedure TRefreshRemainsThread.FillData;
+begin
+  try
+    MainCashForm.UpdateRemainsFromDiff;
+  Except ON E: Exception do
+  Begin
+    MainCashForm.ThreadErrorMessage:=E.Message;
+    PostMessage(MainCashForm.Handle,UM_THREAD_EXCEPTION,0,0);
+  End;
   end;
 end;
 
