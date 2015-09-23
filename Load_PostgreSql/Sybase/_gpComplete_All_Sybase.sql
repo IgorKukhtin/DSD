@@ -22,6 +22,11 @@ BEGIN
      END IF;
 
 
+     IF vbMovementDescId = zc_Movement_Inventory() AND EXTRACT ('HOUR' FROM CURRENT_TIMESTAMP) BETWEEN 7 AND 17
+     THEN RETURN; END IF;
+
+
+
      -- !!! распроведение!!!
      PERFORM lpUnComplete_Movement (inMovementId:= inMovementId, inUserId:= zc_Enum_Process_Auto_PrimeCost() :: Integer);
 

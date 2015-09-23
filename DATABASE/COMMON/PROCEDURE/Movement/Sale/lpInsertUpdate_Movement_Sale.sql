@@ -44,6 +44,12 @@ BEGIN
          RAISE EXCEPTION 'Ошибка.Неверный формат даты.';
      END IF;
      -- проверка
+     IF (COALESCE (ioId, 0) = 0 AND COALESCE (inOperDatePartner, zc_DateStart()) < (inOperDate - INTERVAL '1 DAY'))
+        OR inOperDatePartner IS NULL
+     THEN
+         RAISE EXCEPTION 'Ошибка.Неверно значение дата у покупателя <%>.', inOperDatePartner;
+     END IF;
+     -- проверка
      IF COALESCE (inContractId, 0) = 0 AND NOT EXISTS (SELECT UserId FROM ObjectLink_UserRole_View WHERE UserId = inUserId AND RoleId = zc_Enum_Role_Admin())
      THEN
          RAISE EXCEPTION 'Ошибка.Не установлено значение <Договор>.';

@@ -42,7 +42,7 @@ BEGIN
                                   , Object.ObjectCode AS GoodsCode
                                   , Object.ValueData  AS GoodsName
                                   , 0                 AS GoodsKindId
-                             FROM (SELECT inBarCode :: Integer AS ObjectCode WHERE CHAR_LENGTH (inBarCode) BETWEEN 1 AND 12) AS tmp
+                             FROM (SELECT inBarCode :: BigInt AS ObjectCode WHERE CHAR_LENGTH (inBarCode) BETWEEN 1 AND 12) AS tmp
                                   LEFT JOIN Object ON Object.ObjectCode = tmp.ObjectCode
                                                   AND Object.DescId = zc_Object_Goods()
                                   LEFT JOIN ObjectLink AS ObjectLink_Goods_InfoMoney

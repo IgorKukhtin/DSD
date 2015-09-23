@@ -54,6 +54,23 @@ BEGIN
                           LIMIT 1
                          );
 
+
+     -- Проверка
+     IF EXISTS (SELECT 1
+                FROM Movement
+                     LEFT JOIN MovementDate AS MovementDate_OperDatePartner
+                                            ON MovementDate_OperDatePartner.MovementId = Movement.Id
+                                           AND MovementDate_OperDatePartner.DescId = zc_MovementDate_OperDatePartner()
+                WHERE Movement.Id = inMovementId AND Movement.DescId = zc_Movement_Sale()
+                  AND COALESCE (MovementDate_OperDatePartner.ValueData, zc_DateStart()) < (Movement.OperDate - INTERVAL '1 DAY')
+               )
+     THEN
+         RAISE EXCEPTION 'Ошибка.В документе от <%> неверное значение дата у покупателя <%>.', (SELECT Movement.OperDate FROM Movement WHERE Movement.Id = inMovementId)
+                                                                                             , (SELECT MovementDate.ValueData FROM MovementDate WHERE MovementDate.MovementId = inMovementId AND MovementDate.DescId = zc_MovementDate_OperDatePartner());
+     END IF;
+     
+
+
      -- параметры из документа
      SELECT Movement.DescId
           , Movement.StatusId
@@ -98,6 +115,8 @@ BEGIN
      WHERE Movement.Id = inMovementId AND Movement.DescId <> zc_Movement_SendOnPrice()
        -- AND Movement.StatusId = zc_Enum_Status_Complete()
     ;
+
+
 
      -- Важный параметр - Прихрд на филиала или расход с филиала (в первом слчае вводится только "Дата (приход)")
      vbIsProcess_BranchIn:= EXISTS (SELECT Id FROM Object_Unit_View WHERE Id = (SELECT ObjectId FROM MovementLinkObject WHERE MovementId = inMovementId AND DescId = zc_MovementLinkObject_To()) AND BranchId = (SELECT Object_RoleAccessKeyGuide_View.BranchId FROM Object_RoleAccessKeyGuide_View WHERE Object_RoleAccessKeyGuide_View.UserId = vbUserId AND Object_RoleAccessKeyGuide_View.BranchId <> 0 GROUP BY Object_RoleAccessKeyGuide_View.BranchId))
