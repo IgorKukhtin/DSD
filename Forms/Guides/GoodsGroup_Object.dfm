@@ -3,7 +3,7 @@ object GoodsGroup_ObjectForm: TGoodsGroup_ObjectForm
   Top = 0
   Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1043#1088#1091#1087#1087#1099' '#1090#1086#1074#1072#1088#1086#1074'>'
   ClientHeight = 376
-  ClientWidth = 390
+  ClientWidth = 600
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -20,7 +20,7 @@ object GoodsGroup_ObjectForm: TGoodsGroup_ObjectForm
   object cxDBTreeList: TcxDBTreeList
     Left = 0
     Top = 26
-    Width = 390
+    Width = 600
     Height = 350
     Align = alClient
     Bands = <
@@ -42,7 +42,10 @@ object GoodsGroup_ObjectForm: TGoodsGroup_ObjectForm
     RootValue = -1
     Styles.StyleSheet = dmMain.cxTreeListStyleSheet
     TabOrder = 4
-    object cxDBTreeList1cxDBTreeListColumn2: TcxDBTreeListColumn
+    ExplicitLeft = -24
+    ExplicitTop = -38
+    ExplicitWidth = 390
+    object Name: TcxDBTreeListColumn
       Caption.Text = #1053#1072#1079#1074#1072#1085#1080#1077
       DataBinding.FieldName = 'Name'
       Width = 226
@@ -52,7 +55,7 @@ object GoodsGroup_ObjectForm: TGoodsGroup_ObjectForm
       Summary.FooterSummaryItems = <>
       Summary.GroupFooterSummaryItems = <>
     end
-    object cxDBTreeListcxDBTreeListColumn1: TcxDBTreeListColumn
+    object Code: TcxDBTreeListColumn
       Caption.Text = #1050#1086#1076
       DataBinding.FieldName = 'Code'
       Position.ColIndex = 1
@@ -61,11 +64,51 @@ object GoodsGroup_ObjectForm: TGoodsGroup_ObjectForm
       Summary.FooterSummaryItems = <>
       Summary.GroupFooterSummaryItems = <>
     end
-    object cxDBTreeListcxDBTreeListColumn2: TcxDBTreeListColumn
+    object TradeMarkName: TcxDBTreeListColumn
+      Caption.Text = #1058#1086#1088#1075#1086#1074#1072#1103' '#1084#1072#1088#1082#1072
+      DataBinding.FieldName = 'TradeMarkName'
+      Width = 200
+      Position.ColIndex = 2
+      Position.RowIndex = 0
+      Position.BandIndex = 0
+      Summary.FooterSummaryItems = <>
+      Summary.GroupFooterSummaryItems = <>
+    end
+    object GoodsTagName: TcxDBTreeListColumn
+      Caption.Text = #1055#1088#1080#1079#1085#1072#1082' '#1090#1086#1074#1072#1088#1072
+      DataBinding.FieldName = 'GoodsTagName'
+      Position.ColIndex = 3
+      Position.RowIndex = 0
+      Position.BandIndex = 0
+      Summary.FooterSummaryItems = <>
+      Summary.GroupFooterSummaryItems = <>
+    end
+    object GoodsGroupAnalystName: TcxDBTreeListColumn
+      Caption.Text = #1043#1088#1091#1087#1087#1072' '#1090#1086#1074#1072#1088#1086#1074' ('#1072#1085#1072#1083#1080#1090#1080#1082#1072')'
+      DataBinding.FieldName = 'GoodsGroupAnalystName'
+      Width = 150
+      Position.ColIndex = 4
+      Position.RowIndex = 0
+      Position.BandIndex = 0
+      Summary.FooterSummaryItems = <>
+      Summary.GroupFooterSummaryItems = <>
+    end
+    object GoodsPlatformName: TcxDBTreeListColumn
+      Caption.Text = #1055#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1077#1085#1085#1072#1103' '#1087#1083#1086#1097#1072#1076#1082#1072
+      DataBinding.FieldName = 'GoodsPlatformName'
+      Width = 150
+      Position.ColIndex = 5
+      Position.RowIndex = 0
+      Position.BandIndex = 0
+      Summary.FooterSummaryItems = <>
+      Summary.GroupFooterSummaryItems = <>
+    end
+    object isErased: TcxDBTreeListColumn
       PropertiesClassName = 'TcxCheckBoxProperties'
       Caption.Text = #1059#1076#1072#1083#1077#1085
       DataBinding.FieldName = 'isErased'
-      Position.ColIndex = 2
+      Width = 60
+      Position.ColIndex = 6
       Position.RowIndex = 0
       Position.BandIndex = 0
       Summary.FooterSummaryItems = <>
@@ -74,14 +117,14 @@ object GoodsGroup_ObjectForm: TGoodsGroup_ObjectForm
   end
   object DataSource: TDataSource
     DataSet = ClientDataSet
-    Left = 96
+    Left = 64
     Top = 96
   end
   object ClientDataSet: TClientDataSet
     Aggregates = <>
     Params = <>
-    Left = 96
-    Top = 144
+    Left = 144
+    Top = 176
   end
   object cxPropertiesStore: TcxPropertiesStore
     Components = <
@@ -178,8 +221,8 @@ object GoodsGroup_ObjectForm: TGoodsGroup_ObjectForm
   end
   object ActionList: TActionList
     Images = dmMain.ImageList
-    Left = 232
-    Top = 144
+    Left = 280
+    Top = 208
     object actRefresh: TdsdDataSetRefresh
       Category = 'DSDLib'
       MoveParams = <>
@@ -199,12 +242,14 @@ object GoodsGroup_ObjectForm: TGoodsGroup_ObjectForm
       Params = <
         item
           Name = 'Key'
+          Value = Null
           Component = ClientDataSet
           ComponentItem = 'Id'
           DataType = ftString
         end
         item
           Name = 'TextValue'
+          Value = Null
           Component = ClientDataSet
           ComponentItem = 'Name'
           DataType = ftString
@@ -223,8 +268,9 @@ object GoodsGroup_ObjectForm: TGoodsGroup_ObjectForm
         DataSet = ClientDataSet
       end>
     Params = <>
-    Left = 152
-    Top = 152
+    PackSize = 1
+    Left = 200
+    Top = 232
   end
   object dsdDBTreeAddOn: TdsdDBTreeAddOn
     ErasedFieldName = 'isErased'
@@ -244,11 +290,11 @@ object GoodsGroup_ObjectForm: TGoodsGroup_ObjectForm
       end>
     SortImages = dmMain.SortImageList
     DBTreeList = cxDBTreeList
-    Left = 48
-    Top = 160
+    Left = 72
+    Top = 240
   end
   object dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
-    Left = 288
-    Top = 112
+    Left = 304
+    Top = 152
   end
 end
