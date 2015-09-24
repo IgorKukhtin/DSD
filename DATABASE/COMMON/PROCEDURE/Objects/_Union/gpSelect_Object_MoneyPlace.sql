@@ -167,13 +167,17 @@ BEGIN
           , ''::TVarChar AS ContractKindName
           , ''::TVarChar AS OKPO
      FROM Object AS Object_PersonalServiceList
+          INNER JOIN ObjectLink AS ObjectLink_PersonalServiceList_PaidKind
+                                ON ObjectLink_PersonalServiceList_PaidKind.ObjectId = Object_PersonalServiceList.Id 
+                               AND ObjectLink_PersonalServiceList_PaidKind.DescId = zc_ObjectLink_PersonalServiceList_PaidKind()
+                               AND ObjectLink_PersonalServiceList_PaidKind.ChildObjectId = zc_Enum_PaidKind_FirstForm()
           LEFT JOIN ObjectDesc ON ObjectDesc.Id = Object_PersonalServiceList.DescId
           LEFT JOIN Object_InfoMoney_View ON Object_InfoMoney_View.InfoMoneyId = zc_Enum_InfoMoney_60101() -- Заработная плата
     WHERE Object_PersonalServiceList.DescId = zc_Object_PersonalServiceList()
       AND Object_PersonalServiceList.isErased = FALSE
-      AND Object_PersonalServiceList.Id IN (293716 -- Ведомость карточки БН Фидо
+      /*AND Object_PersonalServiceList.Id IN (293716 -- Ведомость карточки БН Фидо
                                           , 413454 -- Ведомость карточки БН Пиреус
-                                           )
+                                           )*/
     ;
 
 END;
