@@ -29,7 +29,7 @@ type
     dsdStoredProc: TdsdStoredProc;
     actUpdate: TdsdInsertUpdateAction;
     bbEdit: TdxBarButton;
-    cxDBTreeList1cxDBTreeListColumn2: TcxDBTreeListColumn;
+    Name: TcxDBTreeListColumn;
     dsdSetErased: TdsdUpdateErased;
     dsdSetUnErased: TdsdUpdateErased;
     bbSetErased: TdxBarButton;
@@ -38,13 +38,17 @@ type
     dsdChoiceGuides: TdsdChoiceGuides;
     bbChoiceGuides: TdxBarButton;
     dxBarStatic1: TdxBarStatic;
-    cxDBTreeListcxDBTreeListColumn1: TcxDBTreeListColumn;
-    cxDBTreeListcxDBTreeListColumn2: TcxDBTreeListColumn;
+    Code: TcxDBTreeListColumn;
+    isErased: TcxDBTreeListColumn;
     spErasedUnErased: TdsdStoredProc;
     dsdDBTreeAddOn: TdsdDBTreeAddOn;
     dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn;
     ProtocolOpenForm: TdsdOpenForm;
     bbProtocolOpenForm: TdxBarButton;
+    TradeMarkName: TcxDBTreeListColumn;
+    GoodsTagName: TcxDBTreeListColumn;
+    GoodsGroupAnalystName: TcxDBTreeListColumn;
+    GoodsPlatformName: TcxDBTreeListColumn;
   private
     { Private declarations }
   public

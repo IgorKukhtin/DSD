@@ -35,15 +35,19 @@ type
     bbRefresh: TdxBarButton;
     actRefresh: TdsdDataSetRefresh;
     dsdStoredProc: TdsdStoredProc;
-    cxDBTreeList1cxDBTreeListColumn2: TcxDBTreeListColumn;
+    Name: TcxDBTreeListColumn;
     cxDBTreeList: TcxDBTreeList;
     dsdChoiceGuides: TdsdChoiceGuides;
     bbChoiceGuides: TdxBarButton;
     dxBarStatic1: TdxBarStatic;
-    cxDBTreeListcxDBTreeListColumn1: TcxDBTreeListColumn;
-    cxDBTreeListcxDBTreeListColumn2: TcxDBTreeListColumn;
+    Code: TcxDBTreeListColumn;
+    isErased: TcxDBTreeListColumn;
     dsdDBTreeAddOn: TdsdDBTreeAddOn;
     dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn;
+    TradeMarkName: TcxDBTreeListColumn;
+    GoodsTagName: TcxDBTreeListColumn;
+    GoodsGroupAnalystName: TcxDBTreeListColumn;
+    GoodsPlatformName: TcxDBTreeListColumn;
   private
     { Private declarations }
   public
