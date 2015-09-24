@@ -1240,4 +1240,10 @@ inherited MainCashForm: TMainCashForm
     Left = 200
     Top = 48
   end
+  object mdClosedCheck: TdxMemData
+    Indexes = <>
+    SortOptions = []
+    Left = 200
+    Top = 344
+  end
 end
