@@ -263,19 +263,11 @@ object GoodsForm: TGoodsForm
       ItemLinks = <
         item
           Visible = True
-          ItemName = 'dxBarStatic1'
-        end
-        item
-          Visible = True
           ItemName = 'bbInsert'
         end
         item
           Visible = True
           ItemName = 'bbEdit'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarStatic1'
         end
         item
           Visible = True
@@ -286,11 +278,11 @@ object GoodsForm: TGoodsForm
           ItemName = 'bbSetUnErased'
         end
         item
+          BeginGroup = True
           Visible = True
           ItemName = 'dxBarStatic1'
         end
         item
-          BeginGroup = True
           Visible = True
           ItemName = 'bbShowAll'
         end
