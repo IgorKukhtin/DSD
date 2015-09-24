@@ -27,7 +27,6 @@ object GoodsPropertyForm: TGoodsPropertyForm
     LookAndFeel.Kind = lfStandard
     LookAndFeel.NativeStyle = False
     LookAndFeel.SkinName = ''
-    ExplicitWidth = 667
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -53,69 +52,90 @@ object GoodsPropertyForm: TGoodsPropertyForm
       object clCode: TcxGridDBColumn
         Caption = #1050#1086#1076
         DataBinding.FieldName = 'Code'
+        HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 53
       end
       object clName: TcxGridDBColumn
         Caption = #1053#1072#1079#1074#1072#1085#1080#1077
         DataBinding.FieldName = 'Name'
+        HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 225
+      end
+      object clStartPosInt: TcxGridDBColumn
+        Caption = #1085#1072#1095'. '#1087#1086#1079'. '#1074' '#1096'/'#1082' '#1082#1075' '
+        DataBinding.FieldName = 'StartPosInt'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 0
+        Properties.DisplayFormat = ',0.;-,0.; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 70
+      end
+      object clEndPosInt: TcxGridDBColumn
+        Caption = #1082#1086#1085'. '#1087#1086#1079'. '#1074' '#1096'/'#1082' '#1082#1075
+        DataBinding.FieldName = 'EndPosInt'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 0
+        Properties.DisplayFormat = ',0.;-,0.; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 70
+      end
+      object clStartPosFrac: TcxGridDBColumn
+        Caption = #1085#1072#1095'. '#1087#1086#1079'. '#1074' '#1096'/'#1082' '#1075#1088'.'
+        DataBinding.FieldName = 'StartPosFrac'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 0
+        Properties.DisplayFormat = ',0.;-,0.; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 70
+      end
+      object clEndPosFrac: TcxGridDBColumn
+        Caption = #1082#1086#1085'. '#1087#1086#1079'. '#1074' '#1096'/'#1082' '#1075#1088'.'
+        DataBinding.FieldName = 'EndPosFrac'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 0
+        Properties.DisplayFormat = ',0.;-,0.; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 70
+      end
+      object StartPosIdent: TcxGridDBColumn
+        Caption = #1085#1072#1095'. '#1087#1086#1079'. '#1090#1086#1074'.'
+        DataBinding.FieldName = 'StartPosIdent'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 0
+        Properties.DisplayFormat = ',0.;-,0.; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 70
+      end
+      object EndPosIdent: TcxGridDBColumn
+        Caption = #1082#1086#1085'. '#1087#1086#1079'. '#1090#1086#1074'.'
+        DataBinding.FieldName = 'EndPosIdent'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 0
+        Properties.DisplayFormat = ',0.;-,0.; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 70
       end
       object clErased: TcxGridDBColumn
         Caption = #1059#1076#1072#1083#1077#1085
         DataBinding.FieldName = 'isErased'
         Visible = False
+        HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 60
-      end
-      object clStartPosInt: TcxGridDBColumn
-        Caption = #1085#1072#1095'. '#1087#1086#1079'. '#1074' '#1096'/'#1082' '#1082#1075' '
-        DataBinding.FieldName = 'StartPosInt'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Options.Editing = False
-        Width = 63
-      end
-      object clEndPosInt: TcxGridDBColumn
-        Caption = #1082#1086#1085'. '#1087#1086#1079'. '#1074' '#1096'/'#1082' '#1082#1075
-        DataBinding.FieldName = 'EndPosInt'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Options.Editing = False
-        Width = 62
-      end
-      object clStartPosFrac: TcxGridDBColumn
-        Caption = #1085#1072#1095'. '#1087#1086#1079'. '#1074' '#1096'/'#1082' '#1075#1088'.'
-        DataBinding.FieldName = 'StartPosFrac'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Options.Editing = False
-        Width = 62
-      end
-      object clEndPosFrac: TcxGridDBColumn
-        Caption = #1082#1086#1085'. '#1087#1086#1079'. '#1074' '#1096'/'#1082' '#1075#1088'.'
-        DataBinding.FieldName = 'EndPosFrac'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Options.Editing = False
-        Width = 63
-      end
-      object StartPosIdent: TcxGridDBColumn
-        Caption = #1085#1072#1095'. '#1087#1086#1079'. '#1074' '#1080#1076#1077#1085#1090#1080#1092'. '#1090#1086#1074'.'
-        DataBinding.FieldName = 'StartPosIdent'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Options.Editing = False
-        Width = 94
-      end
-      object EndPosIdent: TcxGridDBColumn
-        Caption = #1082#1086#1085'. '#1087#1086#1079'. '#1074' '#1080#1076#1077#1085#1090#1080#1092'. '#1090#1086#1074'.'
-        DataBinding.FieldName = 'EndPosIdent'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Options.Editing = False
-        Width = 94
       end
     end
     object cxGridLevel: TcxGridLevel

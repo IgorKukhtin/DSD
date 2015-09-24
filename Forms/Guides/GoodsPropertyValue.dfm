@@ -2,7 +2,7 @@ object GoodsPropertyValueForm: TGoodsPropertyValueForm
   Left = 0
   Top = 0
   Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1047#1085#1072#1095#1077#1085#1080#1103' '#1076#1083#1103' '#1089#1074#1086#1081#1089#1090#1074' '#1090#1086#1074#1072#1088#1086#1074'>'
-  ClientHeight = 464
+  ClientHeight = 430
   ClientWidth = 986
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -21,9 +21,10 @@ object GoodsPropertyValueForm: TGoodsPropertyValueForm
     Left = 0
     Top = 26
     Width = 986
-    Height = 438
+    Height = 404
     Align = alClient
     TabOrder = 1
+    ExplicitHeight = 438
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource

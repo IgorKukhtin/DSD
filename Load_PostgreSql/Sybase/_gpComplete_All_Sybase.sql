@@ -166,7 +166,7 @@ BEGIN
              PERFORM gpComplete_Movement_PersonalAccount (inMovementId     := inMovementId
                                                         , inSession        := zfCalc_UserAdmin());
      ELSE
-     -- !!!14. - ProfitLossService!!!
+     -- !!!14.1. - ProfitLossService!!!
      IF vbMovementDescId = zc_Movement_ProfitLossService() AND 1=0
      THEN
              -- создаются временные таблицы - для формирование данных для проводок
@@ -174,6 +174,24 @@ BEGIN
              -- !!! проводим - ProfitLossService !!!
              PERFORM gpComplete_Movement_ProfitLossService (inMovementId     := inMovementId
                                                           , inSession        := zfCalc_UserAdmin());
+     ELSE
+     -- !!!14.2. - zc_Movement_PersonalSendCash!!!
+     IF vbMovementDescId = zc_Movement_PersonalSendCash() AND 1=0
+     THEN
+             -- создаются временные таблицы - для формирование данных для проводок
+             PERFORM lpComplete_Movement_PersonalSendCash_CreateTemp();
+             -- проводим Документ
+             PERFORM lpComplete_Movement_PersonalSendCash (inMovementId := inMovementId
+                                                         , inUserId     := zc_Enum_Process_Auto_PrimeCost());
+     ELSE
+     -- !!!14.3. - zc_Movement_TransportService!!!
+     IF vbMovementDescId = zc_Movement_TransportService() AND 1=0
+     THEN
+             -- создаются временные таблицы - для формирование данных для проводок
+             PERFORM lpComplete_Movement_Finance_CreateTemp();
+             -- проводим Документ
+             PERFORM lpComplete_Movement_TransportService (inMovementId := inMovementId
+                                                         , inUserId     := zc_Enum_Process_Auto_PrimeCost());
      ELSE
 
 
@@ -212,6 +230,8 @@ BEGIN
                                                   , inSession        := zc_Enum_Process_Auto_PrimeCost() :: TVarChar);
      ELSE
          RAISE EXCEPTION 'NOT FIND inMovementId = %, MovementDescId = %(%)', inMovementId, vbMovementDescId, (SELECT ItemName FROM MovementDesc WHERE Id = vbMovementDescId);
+     END IF;
+     END IF;
      END IF;
      END IF;
      END IF;

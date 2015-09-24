@@ -280,7 +280,7 @@ BEGIN
              END AS InvNumberOrder
 
            , Movement.OperDate                          AS OperDate
-           , COALESCE (MovementDate_OperDatePartner.ValueData, Movement.OperDate)     AS OperDatePartner
+           , MovementDate_OperDatePartner.ValueData     AS OperDatePartner
            , MovementDate_Payment.ValueData             AS PaymentDate
            , CASE WHEN MovementDate_Payment.ValueData IS NOT NULL THEN TRUE ELSE FALSE END AS isPaymentDate
            , COALESCE (Movement_order.OperDate, Movement.OperDate) AS OperDateOrder
