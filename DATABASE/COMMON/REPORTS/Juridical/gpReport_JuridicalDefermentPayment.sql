@@ -211,8 +211,8 @@ from (
              , SUM (RESULT_all.SaleSumm4) AS SaleSumm4
              , RESULT_all.ContractConditionKindId
              , RESULT_all.DayCount
-             , RESULT_all.DelayCreditLimit
              , RESULT_all.ContractDate
+             , COALESCE (ContractCondition_CreditLimit.DelayCreditLimit, 0) AS DelayCreditLimit
              , CLO_InfoMoney.ObjectId AS InfoMoneyId
              , CLO_PaidKind.ObjectId  AS PaidKindId
              , CLO_Partner.ObjectId   AS PartnerId
@@ -231,7 +231,6 @@ from (
              , SUM (CASE WHEN (MIContainer.OperDate < ContractDate - 3 * vbLenght AND MIContainer.OperDate >= ContractDate - 4 * vbLenght) AND Movement.DescId IN (zc_Movement_Sale(), zc_Movement_TransferDebtOut()) THEN MIContainer.Amount ELSE 0 END) AS SaleSumm4
              , ContractCondition_DefermentPayment.ContractConditionKindId
              , COALESCE (ContractCondition_DefermentPayment.DayCount, 0) AS DayCount
-             , COALESCE (ContractCondition_CreditLimit.DelayCreditLimit, 0) AS DelayCreditLimit
              , COALESCE (ContractCondition_DefermentPayment.ContractDate, inOperDate) AS ContractDate
          FROM ContainerLinkObject AS CLO_Juridical
               INNER JOIN Container ON Container.Id = CLO_Juridical.ContainerId AND Container.DescId = zc_Container_Summ()
@@ -254,13 +253,6 @@ from (
                         ) AS ContractCondition_DefermentPayment
                           ON ContractCondition_DefermentPayment.ContractId = View_Contract_ContractKey.ContractId_Key -- CLO_Contract.ObjectId
 
-              LEFT JOIN (SELECT Object_ContractCondition_View.ContractId
-                              , Value AS DelayCreditLimit
-                         FROM Object_ContractCondition_View
-                         WHERE Object_ContractCondition_View.ContractConditionKindId = zc_Enum_ContractConditionKind_DelayCreditLimit()
-                        ) AS ContractCondition_CreditLimit
-                          ON ContractCondition_CreditLimit.ContractId = View_Contract_ContractKey.ContractId_Key -- CLO_Contract.ObjectId
-                              
               LEFT JOIN MovementItemContainer AS MIContainer 
                                               ON MIContainer.Containerid = Container.Id
                                              AND MIContainer.OperDate >= COALESCE (ContractCondition_DefermentPayment.ContractDate :: Date - 4 * vbLenght, inOperDate)
@@ -275,7 +267,6 @@ from (
                 , CLO_Juridical.ObjectId  
                 , ContractConditionKindId
                 , DayCount
-                , DelayCreditLimit
                 , ContractDate
        ) AS RESULT_all
 
@@ -298,6 +289,15 @@ from (
            LEFT JOIN tmpJuridical ON tmpJuridical.JuridicalId = RESULT_all.JuridicalId
            LEFT JOIN tmpListBranch_Constraint ON tmpListBranch_Constraint.ContractId = RESULT_all.ContractId
 
+              LEFT JOIN (SELECT Object_ContractCondition_View.ContractId
+                              , Object_ContractCondition_View.PaidKindId
+                              , Value AS DelayCreditLimit
+                         FROM Object_ContractCondition_View
+                         WHERE Object_ContractCondition_View.ContractConditionKindId = zc_Enum_ContractConditionKind_DelayCreditLimit()
+                        ) AS ContractCondition_CreditLimit
+                          ON ContractCondition_CreditLimit.ContractId = RESULT_all.ContractId
+                         AND ContractCondition_CreditLimit.PaidKindId = CLO_PaidKind.ObjectId
+
          WHERE (CLO_PaidKind.ObjectId = inPaidKindId OR inPaidKindId = 0)
            AND (CLO_Branch.ObjectId = inBranchId OR COALESCE (inBranchId, 0) = 0
                 -- OR ((ObjectLink_Juridical_JuridicalGroup.ChildObjectId = inJuridicalGroupId OR tmpListBranch_Constraint.ContractId > 0) AND vbIsBranch = FALSE)) -- !!!пересорт!!
@@ -312,8 +312,8 @@ from (
                 , RESULT_all.JuridicalId 
                 , RESULT_all.ContractConditionKindId
                 , RESULT_all.DayCount
-                , RESULT_all.DelayCreditLimit
                 , RESULT_all.ContractDate
+                , COALESCE (ContractCondition_CreditLimit.DelayCreditLimit, 0)
                 , CLO_InfoMoney.ObjectId
                 , CLO_PaidKind.ObjectId
                 , CLO_Partner.ObjectId

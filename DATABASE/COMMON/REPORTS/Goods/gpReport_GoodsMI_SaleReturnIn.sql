@@ -325,7 +325,7 @@ BEGIN
        , tmpPartnerAddress AS (SELECT * FROM Object_Partner_Address_View)
        -- , tmpPersonal AS (SELECT * FROM Object_Personal_View)
 
-, tmpOperationGroup2 AS (SELECT MIContainer.ContainerId_Analyzer
+, tmpOperationGroup2 AS (SELECT CASE WHEN MIContainer.MovementDescId IN (zc_Movement_Service(), zc_Movement_PriceCorrective()) THEN MIContainer.ContainerId ELSE MIContainer.ContainerId_Analyzer END AS ContainerId_Analyzer
                               , MIContainer.ObjectId_Analyzer                 AS GoodsId
                               , MIContainer.ObjectIntId_Analyzer              AS GoodsKindId -- COALESCE (MILinkObject_GoodsKind.ObjectId, 0) AS GoodsKindId
                               , CASE WHEN MIContainer.MovementDescId = zc_Movement_Service() THEN MIContainer.ObjectId_Analyzer ELSE MIContainer.ObjectExtId_Analyzer /*MovementLinkObject_Partner.ObjectId*/ END AS PartnerId
@@ -362,15 +362,15 @@ BEGIN
                                                                ON MIContainer.AnalyzerId = tmpAnalyzer.AnalyzerId
                                                               AND MIContainer.OperDate BETWEEN inStartDate AND inEndDate
                               INNER JOIN ContainerLinkObject AS ContainerLO_Juridical
-                                                             ON ContainerLO_Juridical.ContainerId = MIContainer.ContainerId_Analyzer
+                                                             ON ContainerLO_Juridical.ContainerId = CASE WHEN MIContainer.MovementDescId IN (zc_Movement_Service(), zc_Movement_PriceCorrective()) THEN MIContainer.ContainerId ELSE MIContainer.ContainerId_Analyzer END
                                                             AND ContainerLO_Juridical.DescId = zc_ContainerLinkObject_Juridical()
                                                             AND (ContainerLO_Juridical.ObjectId = inJuridicalId OR COALESCE (inJuridicalId, 0) = 0)
                               INNER JOIN ContainerLinkObject AS ContainerLO_InfoMoney
-                                                             ON ContainerLO_InfoMoney.ContainerId = MIContainer.ContainerId_Analyzer
+                                                             ON ContainerLO_InfoMoney.ContainerId = CASE WHEN MIContainer.MovementDescId IN (zc_Movement_Service(), zc_Movement_PriceCorrective()) THEN MIContainer.ContainerId ELSE MIContainer.ContainerId_Analyzer END
                                                             AND ContainerLO_InfoMoney.DescId = zc_ContainerLinkObject_InfoMoney()
                                                             AND (ContainerLO_InfoMoney.ObjectId = inInfoMoneyId OR COALESCE (inInfoMoneyId, 0) = 0)
                               INNER JOIN ContainerLinkObject AS ContainerLO_PaidKind
-                                                             ON ContainerLO_PaidKind.ContainerId = MIContainer.ContainerId_Analyzer
+                                                             ON ContainerLO_PaidKind.ContainerId = CASE WHEN MIContainer.MovementDescId IN (zc_Movement_Service(), zc_Movement_PriceCorrective()) THEN MIContainer.ContainerId ELSE MIContainer.ContainerId_Analyzer END
                                                             AND ContainerLO_PaidKind.DescId = zc_ContainerLinkObject_PaidKind()
                                                             AND (ContainerLO_PaidKind.ObjectId = inPaidKindId OR COALESCE (inPaidKindId, 0) = 0)
                               /*LEFT JOIN MovementLinkObject AS MovementLinkObject_Partner
@@ -389,7 +389,7 @@ BEGIN
 
                          WHERE (_tmpJuridical.JuridicalId > 0 OR vbIsJuridical = FALSE)
                            AND (MILinkObject_Branch.ObjectId = inBranchId OR COALESCE (inBranchId, 0) = 0 OR _tmpJuridicalBranch.JuridicalId IS NOT NULL)
-                         GROUP BY MIContainer.ContainerId_Analyzer
+                         GROUP BY CASE WHEN MIContainer.MovementDescId IN (zc_Movement_Service(), zc_Movement_PriceCorrective()) THEN MIContainer.ContainerId ELSE MIContainer.ContainerId_Analyzer END
                                 , MIContainer.ObjectId_Analyzer
                                 , MIContainer.ObjectIntId_Analyzer -- MILinkObject_GoodsKind.ObjectId
                                 , CASE WHEN MIContainer.MovementDescId = zc_Movement_Service() THEN MIContainer.ObjectId_Analyzer ELSE MIContainer.ObjectExtId_Analyzer /*MovementLinkObject_Partner.ObjectId*/ END
