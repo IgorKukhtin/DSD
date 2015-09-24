@@ -41,6 +41,36 @@ BEGIN
    -- проверка уникальности <Код>
    PERFORM lpCheckUnique_Object_ObjectCode (ioId, zc_Object_Goods(), vbCode);
 
+   -- проверка <inName>
+   IF TRIM (COALESCE (inName, '')) = ''
+   THEN
+       RAISE EXCEPTION 'Ошибка.Значение <Название> должно быть установлено.';
+   END IF;
+
+   -- проверка <GoodsGroupId>
+   IF COALESCE (inGoodsGroupId, 0) = 0
+   THEN
+       RAISE EXCEPTION 'Ошибка.Значение <Группа товаров> должно быть установлено.';
+   END IF;
+
+   -- проверка <InfoMoney>
+   IF COALESCE (inInfoMoneyId, 0) = 0
+   THEN
+       RAISE EXCEPTION 'Ошибка.Значение <УП статья назначения> должно быть установлено.';
+   END IF;
+
+   -- проверка <Measure>
+   IF COALESCE (inMeasureId, 0) = 0
+   THEN
+       RAISE EXCEPTION 'Ошибка.Значение <Единица измерения> должно быть установлено.';
+   END IF;
+
+   -- проверка <Measure>
+   IF inMeasureId = zc_Measure_Sh() AND COALESCE (inWeight, 0) <= 0
+   THEN
+       RAISE EXCEPTION 'Ошибка.Для единицы измерения <%> должно быть установлено значение <Вес>.', lfGet_Object_ValueData (inMeasureId);
+   END IF;
+
 
    -- расчетно свойство <Полное название группы>
    vbGroupNameFull:= lfGet_Object_TreeNameFull (inGoodsGroupId, zc_ObjectLink_GoodsGroup_Parent());
