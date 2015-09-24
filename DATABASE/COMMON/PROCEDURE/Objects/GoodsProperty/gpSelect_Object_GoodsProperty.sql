@@ -7,6 +7,7 @@ CREATE OR REPLACE FUNCTION gpSelect_Object_GoodsProperty(
 )
 RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , StartPosInt TFloat, EndPosInt TFloat, StartPosFrac TFloat, EndPosFrac TFloat
+             , StartPosIdent TFloat, EndPosIdent TFloat
              , isErased boolean) AS
 $BODY$BEGIN
    
@@ -23,6 +24,9 @@ $BODY$BEGIN
        , ObjectFloat_EndPosInt.ValueData     AS EndPosInt
        , ObjectFloat_StartPosFrac.ValueData  AS StartPosFrac
        , ObjectFloat_EndPosFrac.ValueData    AS EndPosFrac
+
+       , ObjectFloat_StartPosIdent.ValueData AS StartPosIdent
+       , ObjectFloat_EndPosIdent.ValueData   AS EndPosIdent
 
        , Object_GoodsProperty.isErased   AS isErased
 
@@ -43,6 +47,14 @@ $BODY$BEGIN
                               ON ObjectFloat_EndPosFrac.ObjectId = Object_GoodsProperty.Id 
                              AND ObjectFloat_EndPosFrac.DescId = zc_ObjectFloat_GoodsProperty_EndPosFrac()
 
+        LEFT JOIN ObjectFloat AS ObjectFloat_StartPosIdent 
+                              ON ObjectFloat_StartPosIdent.ObjectId = Object_GoodsProperty.Id 
+                             AND ObjectFloat_StartPosIdent.DescId = zc_ObjectFloat_GoodsProperty_StartPosIdent()
+
+        LEFT JOIN ObjectFloat AS ObjectFloat_EndPosIdent 
+                              ON ObjectFloat_EndPosIdent.ObjectId = Object_GoodsProperty.Id 
+                             AND ObjectFloat_EndPosIdent.DescId = zc_ObjectFloat_GoodsProperty_EndPosIdent()
+
    WHERE Object_GoodsProperty.DescId = zc_Object_GoodsProperty();
   
 END;$BODY$
@@ -54,6 +66,7 @@ ALTER FUNCTION gpSelect_Object_GoodsProperty(TVarChar) OWNER TO postgres;
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 24.09.15          *
  26.05.15          * ADD StartPosInt, EndPosInt, StartPosFrac, EndPosFrac
  12.06.13          *
  00.06.13

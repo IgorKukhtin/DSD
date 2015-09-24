@@ -50,6 +50,8 @@ type
     clEndPosInt: TcxGridDBColumn;
     clStartPosInt: TcxGridDBColumn;
     clStartPosFrac: TcxGridDBColumn;
+    StartPosIdent: TcxGridDBColumn;
+    EndPosIdent: TcxGridDBColumn;
   private
     { Private declarations }
   public

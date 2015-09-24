@@ -36,6 +36,11 @@ type
     edEndPosInt: TcxCurrencyEdit;
     edStartPosFrac: TcxCurrencyEdit;
     edEndPosFrac: TcxCurrencyEdit;
+    cxLabel5: TcxLabel;
+    cxLabel9: TcxLabel;
+    cxLabel10: TcxLabel;
+    edStartPosIdent: TcxCurrencyEdit;
+    edEndPosIdent: TcxCurrencyEdit;
   private
     { Private declarations }
   public

@@ -2,6 +2,8 @@
 
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_GoodsProperty (Integer, Integer, TVarChar, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_GoodsProperty (Integer, Integer, TVarChar, TFloat, TFloat, TFloat, TFloat, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_GoodsProperty (Integer, Integer, TVarChar, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TVarChar);
+
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_GoodsProperty(
  INOUT ioId                  Integer   ,   	-- ключ объекта <Классификатор свойств товаров> 
@@ -11,6 +13,8 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_GoodsProperty(
     IN inEndPosInt           TFloat    ,    -- Целая часть веса в штрих коде(последняя позиция)
     IN inStartPosFrac        TFloat    ,    -- Дробная часть веса в штрих коде(начальная позиция)
     IN inEndPosFrac          TFloat    ,    -- Дробная часть веса в штрих коде(последняя позиция)
+    IN inStartPosIdent       TFloat    ,    -- Идентификатор товара(начальная позиция)
+    IN inEndPosIdent         TFloat    ,    -- Идентификатор товара(последняя позиция)
     IN inSession             TVarChar       -- сессия пользователя
 )
   RETURNS integer AS
@@ -42,6 +46,11 @@ BEGIN
    -- сохранили свойство <>
    PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_GoodsProperty_EndPosFrac(), ioId, inEndPosFrac);
 
+   -- сохранили свойство <>
+   PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_GoodsProperty_StartPosIdent(), ioId, inStartPosIdent);
+   -- сохранили свойство <>
+   PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_GoodsProperty_EndPosIdent(), ioId, inEndPosIdent);
+
    -- сохранили протокол
    PERFORM lpInsert_ObjectProtocol (ioId, vbUserId);
     
@@ -55,6 +64,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 24,09,15         *
  26.05.15         * add Float
  12.02.15                                        *
  12.06.13         *

@@ -2,8 +2,8 @@
   Left = 0
   Top = 0
   Caption = #1050#1083#1072#1089#1089#1080#1092#1080#1082#1072#1090#1086#1088' '#1089#1074#1086#1081#1089#1090#1074' '#1090#1086#1074#1072#1088#1072
-  ClientHeight = 220
-  ClientWidth = 370
+  ClientHeight = 270
+  ClientWidth = 378
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -28,8 +28,8 @@
     Caption = #1053#1072#1080#1084#1077#1085#1086#1074#1072#1085#1080#1077
   end
   object cxButton1: TcxButton
-    Left = 92
-    Top = 190
+    Left = 191
+    Top = 227
     Width = 75
     Height = 25
     Action = InsertUpdateGuides
@@ -38,8 +38,8 @@
     TabOrder = 1
   end
   object cxButton2: TcxButton
-    Left = 236
-    Top = 190
+    Left = 295
+    Top = 227
     Width = 75
     Height = 25
     Action = dsdFormClose
@@ -121,6 +121,37 @@
     Properties.DecimalPlaces = 4
     Properties.DisplayFormat = ',0.####'
     TabOrder = 15
+    Width = 95
+  end
+  object cxLabel5: TcxLabel
+    Left = 8
+    Top = 181
+    Caption = #1055#1086#1079#1080#1094#1080#1103' '#1074' '#1080#1076#1077#1085#1090#1080#1092#1080#1082#1072#1090#1086#1088#1077' '#1090#1086#1074#1072#1088#1072
+  end
+  object cxLabel9: TcxLabel
+    Left = 8
+    Top = 204
+    Caption = #1085#1072#1095#1072#1083#1100#1085#1072#1103
+  end
+  object cxLabel10: TcxLabel
+    Left = 8
+    Top = 231
+    Caption = #1082#1086#1085#1077#1095#1085#1072#1103
+  end
+  object edStartPosIdent: TcxCurrencyEdit
+    Left = 72
+    Top = 204
+    Properties.DecimalPlaces = 4
+    Properties.DisplayFormat = ',0.####'
+    TabOrder = 19
+    Width = 95
+  end
+  object edEndPosIdent: TcxCurrencyEdit
+    Left = 72
+    Top = 231
+    Properties.DecimalPlaces = 4
+    Properties.DisplayFormat = ',0.####'
+    TabOrder = 20
     Width = 95
   end
   object ActionList: TActionList
@@ -208,6 +239,20 @@
         Component = edEndPosFrac
         DataType = ftFloat
         ParamType = ptInput
+      end
+      item
+        Name = 'inStartPosIdent'
+        Value = Null
+        Component = edStartPosIdent
+        DataType = ftFloat
+        ParamType = ptInput
+      end
+      item
+        Name = 'inEndPosIdent'
+        Value = Null
+        Component = edEndPosIdent
+        DataType = ftFloat
+        ParamType = ptInput
       end>
     PackSize = 1
     Left = 240
@@ -269,6 +314,18 @@
         Value = Null
         Component = edEndPosFrac
         DataType = ftFloat
+      end
+      item
+        Name = 'StartPosIdent'
+        Value = Null
+        Component = edStartPosIdent
+        DataType = ftFloat
+      end
+      item
+        Name = 'EndPosIdent'
+        Value = Null
+        Component = edEndPosIdent
+        DataType = ftFloat
       end>
     PackSize = 1
     Left = 8
@@ -289,7 +346,7 @@
           'Width')
       end>
     StorageName = 'cxPropertiesStore'
-    Left = 16
-    Top = 184
+    Left = 216
+    Top = 177
   end
 end

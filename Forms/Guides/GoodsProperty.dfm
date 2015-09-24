@@ -3,7 +3,7 @@ object GoodsPropertyForm: TGoodsPropertyForm
   Top = 0
   Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1050#1083#1072#1089#1089#1080#1092#1080#1082#1072#1090#1086#1088' '#1089#1074#1086#1081#1089#1090#1074' '#1090#1086#1074#1072#1088#1086#1074'>'
   ClientHeight = 372
-  ClientWidth = 667
+  ClientWidth = 763
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -20,13 +20,14 @@ object GoodsPropertyForm: TGoodsPropertyForm
   object cxGrid: TcxGrid
     Left = 0
     Top = 26
-    Width = 667
+    Width = 763
     Height = 346
     Align = alClient
     TabOrder = 0
     LookAndFeel.Kind = lfStandard
     LookAndFeel.NativeStyle = False
     LookAndFeel.SkinName = ''
+    ExplicitWidth = 667
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -53,13 +54,13 @@ object GoodsPropertyForm: TGoodsPropertyForm
         Caption = #1050#1086#1076
         DataBinding.FieldName = 'Code'
         HeaderAlignmentVert = vaCenter
-        Width = 60
+        Width = 53
       end
       object clName: TcxGridDBColumn
         Caption = #1053#1072#1079#1074#1072#1085#1080#1077
         DataBinding.FieldName = 'Name'
         HeaderAlignmentVert = vaCenter
-        Width = 252
+        Width = 225
       end
       object clErased: TcxGridDBColumn
         Caption = #1059#1076#1072#1083#1077#1085
@@ -74,7 +75,7 @@ object GoodsPropertyForm: TGoodsPropertyForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 70
+        Width = 63
       end
       object clEndPosInt: TcxGridDBColumn
         Caption = #1082#1086#1085'. '#1087#1086#1079'. '#1074' '#1096'/'#1082' '#1082#1075
@@ -82,7 +83,7 @@ object GoodsPropertyForm: TGoodsPropertyForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 70
+        Width = 62
       end
       object clStartPosFrac: TcxGridDBColumn
         Caption = #1085#1072#1095'. '#1087#1086#1079'. '#1074' '#1096'/'#1082' '#1075#1088'.'
@@ -90,7 +91,7 @@ object GoodsPropertyForm: TGoodsPropertyForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 70
+        Width = 62
       end
       object clEndPosFrac: TcxGridDBColumn
         Caption = #1082#1086#1085'. '#1087#1086#1079'. '#1074' '#1096'/'#1082' '#1075#1088'.'
@@ -98,7 +99,23 @@ object GoodsPropertyForm: TGoodsPropertyForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 70
+        Width = 63
+      end
+      object StartPosIdent: TcxGridDBColumn
+        Caption = #1085#1072#1095'. '#1087#1086#1079'. '#1074' '#1080#1076#1077#1085#1090#1080#1092'. '#1090#1086#1074'.'
+        DataBinding.FieldName = 'StartPosIdent'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 94
+      end
+      object EndPosIdent: TcxGridDBColumn
+        Caption = #1082#1086#1085'. '#1087#1086#1079'. '#1074' '#1080#1076#1077#1085#1090#1080#1092'. '#1090#1086#1074'.'
+        DataBinding.FieldName = 'EndPosIdent'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 94
       end
     end
     object cxGridLevel: TcxGridLevel
