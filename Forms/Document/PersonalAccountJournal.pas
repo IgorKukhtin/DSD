@@ -78,6 +78,30 @@ type
     actReCompleteAll: TdsdExecStoredProc;
     actMIContainer: TdsdOpenForm;
     bbMIContainer: TdxBarButton;
+    actShowErased: TBooleanStoredProcAction;
+    bbShowErased: TdxBarButton;
+    N3: TMenuItem;
+    N4: TMenuItem;
+    N5: TMenuItem;
+    N6: TMenuItem;
+    N7: TMenuItem;
+    spErased: TdsdExecStoredProc;
+    spReCompete: TdsdExecStoredProc;
+    spMovementReComplete: TdsdStoredProc;
+    spUncomplete: TdsdExecStoredProc;
+    actSimpleErased: TMultiAction;
+    actSimpleCompleteList: TMultiAction;
+    actSimpleUncompleteList: TMultiAction;
+    actSetErasedList: TMultiAction;
+    actUnCompleteList: TMultiAction;
+    actReCompleteList: TMultiAction;
+    actCompleteList: TMultiAction;
+    actSimpleReCompleteList: TMultiAction;
+    spCompete: TdsdExecStoredProc;
+    N8: TMenuItem;
+    N9: TMenuItem;
+    N10: TMenuItem;
+    N11: TMenuItem;
   private
   public
   end;
