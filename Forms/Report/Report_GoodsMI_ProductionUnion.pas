@@ -58,6 +58,8 @@ type
     clChildPartionGoods: TcxGridDBColumn;
     ExecuteDialog: TExecuteDialog;
     bbExecuteDialog: TdxBarButton;
+    GoodsKindName: TcxGridDBColumn;
+    ChildGoodsKindName: TcxGridDBColumn;
   private
     { Private declarations }
   public
