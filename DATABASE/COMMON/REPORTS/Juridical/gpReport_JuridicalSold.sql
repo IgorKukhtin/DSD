@@ -108,6 +108,7 @@ BEGIN
                                          AND ObjectLink_Unit_Branch.DescId = zc_ObjectLink_Unit_Branch()
                                        GROUP BY ObjectLink_Contract_Personal.ObjectId
                                       )
+        , View_InfoMoney AS (SELECT * FROM Object_InfoMoney_View)
      SELECT 
         Operation.ContainerId,
         Object_Juridical.ObjectCode AS JuridicalCode,   
@@ -270,7 +271,7 @@ BEGIN
                      INNER JOIN Container ON Container.Id = CLO_Juridical.ContainerId AND Container.DescId = zc_Container_Summ()
                      LEFT JOIN ContainerLinkObject AS CLO_InfoMoney 
                                                    ON CLO_InfoMoney.ContainerId = Container.Id AND CLO_InfoMoney.DescId = zc_ContainerLinkObject_InfoMoney()
-                     LEFT JOIN Object_InfoMoney_View ON Object_InfoMoney_View.InfoMoneyId = CLO_InfoMoney.ObjectId
+                     LEFT JOIN View_InfoMoney AS Object_InfoMoney_View ON Object_InfoMoney_View.InfoMoneyId = CLO_InfoMoney.ObjectId
                      LEFT JOIN ContainerLinkObject AS CLO_Branch
                                                    ON CLO_Branch.ContainerId = Container.Id
                                                   AND CLO_Branch.DescId = zc_ContainerLinkObject_Branch()
@@ -351,7 +352,7 @@ BEGIN
 
            LEFT JOIN Object_Account_View ON Object_Account_View.AccountId = Operation.ObjectId
            LEFT JOIN Object AS Object_Juridical ON Object_Juridical.Id = Operation.JuridicalId
-           LEFT JOIN Object_InfoMoney_View ON Object_InfoMoney_View.InfoMoneyId = Operation.InfoMoneyId         
+           LEFT JOIN View_InfoMoney AS Object_InfoMoney_View ON Object_InfoMoney_View.InfoMoneyId = Operation.InfoMoneyId         
            
            LEFT JOIN ObjectHistory_JuridicalDetails_View ON ObjectHistory_JuridicalDetails_View.JuridicalId = Object_Juridical.Id
 
