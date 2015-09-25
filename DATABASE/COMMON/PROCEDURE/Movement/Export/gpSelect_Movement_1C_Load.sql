@@ -371,5 +371,5 @@ ALTER FUNCTION gpSelect_Movement_1C_Load (TDateTime, TDateTime, Integer, Integer
 */
 
 -- тест
--- SELECT * FROM gpSelect_Movement_1C_Load (inStartDate:= '06.06.2015', inEndDate:= '06.06.2015', inInfoMoneyId:= zc_Enum_InfoMoney_30201(), inPaidKindId:= 3, inSession:= zfCalc_UserAdmin())
--- SELECT * FROM gpSelect_Movement_1C_Load (inStartDate:= '06.06.2015', inEndDate:= '06.06.2015', inInfoMoneyId:= zc_Enum_InfoMoney_30101(), inPaidKindId:= 3, inSession:= zfCalc_UserAdmin()) AS a WHERE InvNumber = '233695'
+-- SELECT * FROM gpSelect_Movement_1C_Load (inStartDate:= '06.06.2015', inEndDate:= '06.06.2015', inInfoMoneyId:= zc_Enum_InfoMoney_30101(), inPaidKindId:= zc_Enum_PaidKind_FirstForm(), inSession:= zfCalc_UserAdmin())
+-- SELECT * FROM gpSelect_Movement_1C_Load (inStartDate:= '01.09.2015', inEndDate:= '30.09.2015', inInfoMoneyId:= 8911, inPaidKindId:= zc_Enum_PaidKind_FirstForm(), inSession:= zfCalc_UserAdmin()) AS a WHERE InvNumber = '233695'

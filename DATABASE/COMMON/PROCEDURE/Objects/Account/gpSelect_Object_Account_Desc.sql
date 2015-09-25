@@ -41,7 +41,7 @@ BEGIN
                         FROM ObjectDesc
                         WHERE ObjectDesc.Code = inDescCode
                        )
-          , tmpContainer AS (SELECT Container.ObjectId AS AccountId
+          , tmpContainer AS (SELECT DISTINCT Container.ObjectId AS AccountId
                              FROM tmpDesc
                                   INNER JOIN Object ON Object.DescId = tmpDesc.Id
                                   INNER JOIN ContainerLinkObject ON ContainerLinkObject.ObjectId = Object.Id
@@ -49,7 +49,6 @@ BEGIN
                                                                   OR tmpDesc.DescId = 0)
                                   INNER JOIN Container ON Container.Id = ContainerLinkObject.ContainerId
                                                       AND Container.DescId = zc_Container_Summ()
-                             GROUP BY Container.ObjectId
                             )
           , tmpLevel AS (SELECT AccountId FROM lfSelect_Object_Account_Level (vbUserId))
           , tmpAccount AS (SELECT * FROM gpSelect_Object_Account (inSession))
@@ -59,6 +58,9 @@ BEGIN
        FROM tmpContainer
             INNER JOIN tmpLevel ON tmpLevel.AccountId = tmpContainer.AccountId
             INNER JOIN tmpAccount ON tmpAccount.Id = tmpContainer.AccountId
+      UNION
+       SELECT tmpAccount.*
+       FROM tmpAccount WHERE inDescCode = ''
        ;
 
 END;
