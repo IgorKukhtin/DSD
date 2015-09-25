@@ -2,8 +2,8 @@ object PersonalSendCashJournalForm: TPersonalSendCashJournalForm
   Left = 0
   Top = 0
   Caption = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' <'#1056#1072#1089#1093#1086#1076' '#1076#1077#1085#1077#1075' '#1089' '#1087#1086#1076#1086#1090#1095#1077#1090#1072' '#1085#1072' '#1087#1086#1076#1086#1090#1095#1077#1090'>'
-  ClientHeight = 445
-  ClientWidth = 711
+  ClientHeight = 417
+  ClientWidth = 768
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -12,7 +12,6 @@ object PersonalSendCashJournalForm: TPersonalSendCashJournalForm
   Font.Style = []
   KeyPreview = True
   OldCreateOrder = False
-  PopupMenu = PopupMenu
   AddOnFormData.RefreshAction = actRefresh
   AddOnFormData.isSingle = False
   PixelsPerInch = 96
@@ -20,10 +19,11 @@ object PersonalSendCashJournalForm: TPersonalSendCashJournalForm
   object Panel1: TPanel
     Left = 0
     Top = 26
-    Width = 711
+    Width = 768
     Height = 31
     Align = alTop
     TabOrder = 1
+    ExplicitWidth = 711
     object deStart: TcxDateEdit
       Left = 101
       Top = 5
@@ -56,12 +56,14 @@ object PersonalSendCashJournalForm: TPersonalSendCashJournalForm
   object cxGrid: TcxGrid
     Left = 0
     Top = 57
-    Width = 711
-    Height = 388
+    Width = 768
+    Height = 360
     Align = alClient
+    PopupMenu = PopupMenu
     TabOrder = 0
     LookAndFeel.NativeStyle = False
-    ExplicitHeight = 370
+    ExplicitWidth = 711
+    ExplicitHeight = 388
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -609,6 +611,28 @@ object PersonalSendCashJournalForm: TPersonalSendCashJournalForm
       Hint = #1055#1088#1086#1074#1077#1089#1090#1080' '#1042#1089#1077' '#1076#1086#1082#1091#1084#1077#1085#1090#1099
       ImageIndex = 12
     end
+    object spUncomplete: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spMovementUnComplete
+      StoredProcList = <
+        item
+          StoredProc = spMovementUnComplete
+        end>
+      Caption = 'spUncomplete'
+    end
+    object actSimpleUncompleteList: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = spUncomplete
+        end>
+      View = cxGridDBTableView
+      Caption = #1056#1072#1089#1087#1088#1086#1074#1077#1089#1090#1080' '#1076#1086#1082#1091#1084#1077#1085#1090#1099
+      Hint = #1056#1072#1089#1087#1088#1086#1074#1077#1089#1090#1080' '#1076#1086#1082#1091#1084#1077#1085#1090#1099
+    end
     object actSimpleCompleteList: TMultiAction
       Category = 'DSDLib'
       MoveParams = <>
@@ -619,6 +643,98 @@ object PersonalSendCashJournalForm: TPersonalSendCashJournalForm
       View = cxGridDBTableView
       Caption = #1055#1088#1086#1074#1077#1076#1077#1085#1080#1077' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074
       Hint = #1055#1088#1086#1074#1077#1076#1077#1085#1080#1077' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074
+    end
+    object actSimpleErased: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = spErased
+        end>
+      View = cxGridDBTableView
+      Caption = #1059#1076#1072#1083#1080#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090#1099
+      Hint = #1059#1076#1072#1083#1080#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090#1099
+    end
+    object actSetErasedList: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actSimpleErased
+        end
+        item
+          Action = actRefresh
+        end>
+      QuestionBeforeExecute = #1042#1099' '#1091#1074#1077#1088#1077#1085#1099' '#1074' '#1091#1076#1072#1083#1077#1085#1080#1080' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074'? '
+      InfoAfterExecute = #1044#1086#1082#1091#1084#1077#1085#1090#1099' '#1091#1076#1072#1083#1077#1085#1099
+      Caption = #1059#1076#1072#1083#1080#1090#1100' '#1042#1089#1077' '#1076#1086#1082#1091#1084#1077#1085#1090#1099
+      Hint = #1059#1076#1072#1083#1080#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090#1099
+      ImageIndex = 13
+    end
+    object actUnCompleteList: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actSimpleUncompleteList
+        end
+        item
+          Action = actRefresh
+        end>
+      QuestionBeforeExecute = #1042#1099' '#1091#1074#1077#1088#1077#1085#1099' '#1074' '#1088#1072#1089#1087#1088#1086#1074#1077#1076#1077#1085#1080#1080' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074'? '
+      InfoAfterExecute = #1044#1086#1082#1091#1084#1077#1085#1090#1099' '#1088#1072#1089#1087#1088#1086#1074#1077#1076#1077#1085#1099
+      Caption = #1056#1072#1089#1087#1088#1086#1074#1077#1089#1090#1080' '#1042#1089#1077' '#1076#1086#1082#1091#1084#1077#1085#1090#1099
+      Hint = #1056#1072#1089#1087#1088#1086#1074#1077#1089#1090#1080' '#1042#1089#1077' '#1076#1086#1082#1091#1084#1077#1085#1090#1099
+      ImageIndex = 11
+    end
+    object actReCompleteList: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actSimpleReCompleteList
+        end
+        item
+          Action = actRefresh
+        end>
+      QuestionBeforeExecute = #1042#1099' '#1091#1074#1077#1088#1077#1085#1099' '#1074' '#1087#1077#1088#1077#1087#1088#1086#1074#1077#1076#1077#1085#1080#1080' '#1042#1089#1077#1093' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074'? '
+      InfoAfterExecute = #1042#1089#1077' '#1076#1086#1082#1091#1084#1077#1085#1090#1099' '#1087#1077#1088#1077#1087#1088#1086#1074#1077#1076#1077#1085#1099
+      Caption = #1055#1077#1088#1077#1087#1088#1086#1074#1077#1089#1090#1080' '#1042#1089#1077' '#1076#1086#1082#1091#1084#1077#1085#1090#1099
+      Hint = #1055#1077#1088#1077#1087#1088#1086#1074#1077#1089#1090#1080' '#1042#1089#1077' '#1076#1086#1082#1091#1084#1077#1085#1090#1099
+      ImageIndex = 12
+    end
+    object actSimpleReCompleteList: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = spReCompete
+        end>
+      View = cxGridDBTableView
+      Caption = #1055#1077#1088#1077#1087#1088#1086#1074#1077#1076#1077#1085#1080#1077' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074
+      Hint = #1055#1077#1088#1077#1087#1088#1086#1074#1077#1076#1077#1085#1080#1077' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074
+    end
+    object spReCompete: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spMovementReComplete
+      StoredProcList = <
+        item
+          StoredProc = spMovementReComplete
+        end>
+      Caption = 'spReCompete'
+    end
+    object spErased: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spMovementSetErased
+      StoredProcList = <
+        item
+          StoredProc = spMovementSetErased
+        end>
+      Caption = 'spErased'
     end
   end
   object dsdStoredProc: TdsdStoredProc
@@ -651,8 +767,8 @@ object PersonalSendCashJournalForm: TPersonalSendCashJournalForm
         ParamType = ptInput
       end>
     PackSize = 1
-    Left = 24
-    Top = 176
+    Left = 288
+    Top = 96
   end
   object spMovementComplete: TdsdStoredProc
     StoredProcName = 'gpComplete_Movement_PersonalSendCash'
@@ -672,19 +788,42 @@ object PersonalSendCashJournalForm: TPersonalSendCashJournalForm
   end
   object PopupMenu: TPopupMenu
     Images = dmMain.ImageList
-    Left = 112
-    Top = 64
+    Left = 152
+    Top = 72
+    object N5: TMenuItem
+      Action = actInsert
+    end
+    object N6: TMenuItem
+      Action = actUpdate
+    end
+    object N7: TMenuItem
+      Caption = '-'
+    end
     object N1: TMenuItem
       Action = actComplete
+      AutoHotkeys = maManual
     end
     object N2: TMenuItem
       Action = actUnComplete
     end
+    object N8: TMenuItem
+      Action = actSetErased
+      Caption = #1059#1076#1072#1083#1080#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090
+    end
     object N4: TMenuItem
       Caption = '-'
     end
+    object N11: TMenuItem
+      Action = actReCompleteList
+    end
     object N3: TMenuItem
       Action = actCompleteList
+    end
+    object N10: TMenuItem
+      Action = actUnCompleteList
+    end
+    object N9: TMenuItem
+      Action = actSetErasedList
     end
   end
   object spMovementUnComplete: TdsdStoredProc
@@ -786,5 +925,21 @@ object PersonalSendCashJournalForm: TPersonalSendCashJournalForm
     PackSize = 1
     Left = 240
     Top = 288
+  end
+  object spMovementReComplete: TdsdStoredProc
+    StoredProcName = 'gpReComplete_Movement_PersonalSendCash'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'Id'
+        ParamType = ptInput
+      end>
+    PackSize = 1
+    Left = 233
+    Top = 338
   end
 end
