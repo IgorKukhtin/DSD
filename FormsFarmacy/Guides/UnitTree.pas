@@ -46,7 +46,6 @@ type
     ceBranchName: TcxGridDBColumn;
     ceisErased: TcxGridDBColumn;
     dsdDBTreeAddOn: TdsdDBTreeAddOn;
-    dsdFormParams: TdsdFormParams;
     bbChoice: TdxBarButton;
     dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn;
     dxBarStatic: TdxBarStatic;
