@@ -4,7 +4,7 @@ inherited SendOnPriceJournalForm: TSendOnPriceJournalForm
   ClientWidth = 1020
   AddOnFormData.Params = FormParams
   ExplicitWidth = 1036
-  ExplicitHeight = 570
+  ExplicitHeight = 573
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl

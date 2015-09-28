@@ -298,6 +298,20 @@ object Report_Transport_ProfitLossForm: TReport_Transport_ProfitLossForm
         Options.Editing = False
         Width = 70
       end
+      object One_KM: TcxGridDBColumn
+        Caption = #1062#1077#1085#1072' 1 '#1082#1084
+        DataBinding.FieldName = 'One_KM'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 30
+      end
+      object One_KG: TcxGridDBColumn
+        Caption = #1062#1077#1085#1072' 1 '#1082#1075
+        DataBinding.FieldName = 'One_KG'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 30
+      end
     end
     object cxGridLevel: TcxGridLevel
       GridView = cxGridDBTableView
