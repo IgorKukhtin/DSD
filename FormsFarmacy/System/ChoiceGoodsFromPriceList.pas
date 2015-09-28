@@ -12,7 +12,7 @@ uses
   cxPropertiesStore, cxGridLevel, cxGridCustomView, cxGridCustomTableView,
   cxGridTableView, cxGridDBTableView, cxGrid, cxPC, cxContainer, cxTextEdit,
   cxLabel, cxCurrencyEdit, cxButtonEdit, Vcl.DBActns, cxMaskEdit, Vcl.ExtCtrls,
-  dxBarBuiltInMenu, cxNavigator;
+  dxBarBuiltInMenu, cxNavigator, Vcl.StdCtrls, cxButtons;
 
 type
   TChoiceGoodsFromPriceListForm = class(TAncestorEnumForm)
@@ -50,6 +50,8 @@ type
     actRefreshSearch2: TdsdExecStoredProc;
     cxLabel3: TcxLabel;
     cxLabel4: TcxLabel;
+    actClearFilter: TMultiAction;
+    btnClearFilter: TcxButton;
   private
     { Private declarations }
   public
