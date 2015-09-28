@@ -13,13 +13,15 @@ CREATE OR REPLACE FUNCTION gpReport_Transport_ProfitLoss (
     IN inSession      TVarChar    -- сессия пользователя
 )
 RETURNS TABLE (Invnumber TVarChar, OperDate TDateTime, MovementDescName TVarChar
-             , FuelName TVarChar, CarModelName TVarChar, CarName TVarChar
+             , FuelName TVarChar, CarModelName TVarChar, CarName TVarChar--, FuelMasterName TVarChar
              , RouteName TVarChar, PersonalDriverName TVarChar
              , UnitName TVarChar, BranchName TVarChar,  BusinessName TVarChar
              , ProfitLossGroupName TVarChar, ProfitLossDirectionName TVarChar, ProfitLossName TVarChar, ProfitLossName_all TVarChar
              , SumCount_Transport TFloat, SumAmount_Transport TFloat, PriceFuel TFloat
              , SumAmount_TransportService TFloat, SumAmount_PersonalSendCash TFloat
              , SumTotal TFloat
+             , Distance TFloat
+             , WeightTransport TFloat
              )   
 AS
 $BODY$
@@ -32,7 +34,8 @@ BEGIN
 
     -- Результат
     RETURN QUERY
-    WITH tmpContainer AS  (SELECT MIContainer.MovementId AS MovementId
+    WITH tmpContainer AS  (SELECT MIContainer.MovementId               AS MovementId
+                                , MIContainer.MovementDescId           AS MovementDescId
                                 , CASE WHEN MIContainer.MovementDescId = zc_Movement_Transport() THEN MIContainer.ObjectId_Analyzer ELSE 0 END AS FuelId
                                 , SUM (CASE WHEN (MIContainer.DescId = zc_MIContainer_Count() AND MIContainer.MovementDescId = zc_Movement_Transport()) THEN -1 * MIContainer.Amount ELSE 0 END) AS SumCount_Transport
                                 , SUM (CASE WHEN (MIContainer.DescId = zc_MIContainer_Summ() AND MIContainer.MovementDescId = zc_Movement_Transport()) THEN -1 * MIContainer.Amount ELSE 0 END) AS SumAmount_Transport
@@ -45,6 +48,11 @@ BEGIN
                                 , MILinkObject_Route.ObjectId                 AS RouteId
                                 , CLO_ProfitLoss.ObjectId                     AS ProfitLossId
                                 , CLO_Business.ObjectId                       AS BusinessId
+                                , SUM (CASE WHEN MIContainer.MovementDescId = zc_Movement_TransportService() THEN MIFloat_Distance.ValueData
+                                       WHEN MIContainer.MovementDescId = zc_Movement_Transport() THEN (MovementItem.Amount + MIFloat_Distance.ValueData)
+                                       ELSE 0 END)   AS Distance
+                                , SUM (CASE WHEN MIContainer.MovementDescId = zc_Movement_Transport() THEN MIFloat_WeightTransport.ValueData ELSE 0 END)  AS WeightTransport
+                                
                            FROM MovementItemContainer AS MIContainer
                                 LEFT JOIN ContainerLinkObject AS CLO_ProfitLoss
                                                               ON CLO_ProfitLoss.ContainerId = MIContainer.ContainerId_Analyzer
@@ -60,7 +68,18 @@ BEGIN
                                 LEFT JOIN MovementItemLinkObject AS MILinkObject_Route
                                                                  ON MILinkObject_Route.MovementItemId = MIContainer.MovementItemId
                                                                 AND MILinkObject_Route.DescId = zc_MILinkObject_Route()
-                                                                                
+
+                                LEFT JOIN MovementItemFloat AS MIFloat_Distance
+                                                            ON MIFloat_Distance.MovementItemId = MIContainer.MovementItemId
+                                                           AND MIFloat_Distance.DescId = CASE WHEN MIContainer.MovementDescId = zc_Movement_Transport() THEN zc_MIFloat_DistanceFuelChild()
+                                                                                              WHEN MIContainer.MovementDescId = zc_Movement_TransportService() THEN zc_MIFloat_Distance() END
+
+                                LEFT JOIN MovementItemFloat AS MIFloat_WeightTransport
+                                                            ON MIFloat_WeightTransport.MovementItemId = MIContainer.MovementItemId
+                                                           AND MIFloat_WeightTransport.DescId = zc_MIFloat_WeightTransport()
+
+                                LEFT JOIN MovementItem ON MovementItem.Id = MIContainer.MovementItemId
+                                              
                            WHERE MIContainer.OperDate BETWEEN inStartDate AND inEndDate  
                              AND MIContainer.MovementDescId in (zc_Movement_Transport(), zc_Movement_TransportService(),zc_Movement_PersonalSendCash())
                              AND MIContainer.AnalyzerId = zc_Enum_AnalyzerId_ProfitLoss()
@@ -78,11 +97,23 @@ BEGIN
                                    , CLO_ProfitLoss.ObjectId , CLO_Business.ObjectId 
                                    , MovementLinkObject_PersonalDriver.ObjectId      
                           )
+    /* , tmpWeightTransport AS (SELECT * 
+                                FROM MovementLinkMovement AS MLM_Transport
 
+                               INNER JOIN Movement AS Movement_TR ON Movement_TR.Id  = COALESCE (MLM_Transport.MovementId)
+                                                    AND Movement_find.StatusId = zc_Enum_Status_Complete()
+      WHERE MLM_Transport.DescId = zc_MovementLinkMovement_Transport() 
+        AND MLM_Transport.MovementChildId = tmpContainer.MovementId 
+                                                              AND MLM_Transport.DescId = zc_MovementLinkMovement_Transport()
+                                
+   
+                         )*/
+
+   
        SELECT COALESCE (Movement.Invnumber, '') :: TVarChar          AS Invnumber
             , COALESCE (Movement.OperDate, CAST (NULL as TDateTime)) AS OperDate
             , COALESCE (MovementDesc.ItemName, '') :: TVarChar       AS MovementDescName
-            , Object_Fuel.ValueData            AS FuelName
+            , COALESCE (Object_Fuel.ValueData, Object_FuelMaster.ValueData)    :: TVarChar         AS FuelName
             , Object_CarModel.ValueData        AS CarModelName
             , Object_Car.ValueData             AS CarName
             , Object_Route.ValueData           AS RouteName
@@ -101,14 +132,25 @@ BEGIN
             , SUM (tmpContainer.SumAmount_TransportService):: Tfloat  AS SumAmount_TransportService
             , SUM (tmpContainer.SumAmount_PersonalSendCash):: Tfloat  AS SumAmount_PersonalSendCash
             , SUM (tmpContainer.SumAmount_Transport + tmpContainer.SumAmount_TransportService + tmpContainer.SumAmount_PersonalSendCash) :: Tfloat  AS SumTotal
+
+            , SUM (tmpContainer.Distance):: Tfloat         AS Distance
+            , SUM (tmpContainer.WeightTransport):: Tfloat  AS WeightTransport
        FROM tmpContainer
                  LEFT JOIN Object AS Object_Route on Object_Route.Id = tmpContainer.RouteId
                  LEFT JOIN Object_Unit_View  on Object_Unit_View.Id = tmpContainer.UnitId
                  LEFT JOIN Object AS Object_PersonalDriver on Object_PersonalDriver.Id = tmpContainer.PersonalDriverId
                  LEFT JOIN Object AS Object_Fuel ON Object_Fuel.Id = tmpContainer.FuelId
+
                  LEFT JOIN Object AS Object_Car ON Object_Car.Id = tmpContainer.CarId
+
+                 LEFT JOIN ObjectLink AS ObjectLink_Car_FuelMaster 
+                                      ON ObjectLink_Car_FuelMaster.ObjectId = Object_Car.Id
+                                     AND ObjectLink_Car_FuelMaster.DescId = zc_ObjectLink_Car_FuelMaster()
+                 LEFT JOIN Object AS Object_FuelMaster ON Object_FuelMaster.Id = ObjectLink_Car_FuelMaster.ChildObjectId
+ 
                  LEFT JOIN Movement ON Movement.Id = tmpContainer.MovementId
                                    AND inisMovement = TRUE 
+                                   
                  LEFT JOIN MovementDesc ON MovementDesc.Id = Movement.DescId                
                  LEFT JOIN ObjectLink AS ObjectLink_Car_CarModel ON ObjectLink_Car_CarModel.ObjectId = Object_Car.Id
                                                             AND ObjectLink_Car_CarModel.DescId = zc_ObjectLink_Car_CarModel()
@@ -119,6 +161,7 @@ BEGIN
        GROUP BY COALESCE (Movement.Invnumber, '') , COALESCE (MovementDesc.ItemName, '')
               , COALESCE (Movement.OperDate, CAST (NULL as TDateTime))
               , Object_Fuel.ValueData 
+              , Object_FuelMaster.ValueData
               , Object_Car.ValueData 
               , Object_Unit_View.Name
               , Object_Unit_View.BusinessName 
@@ -131,7 +174,7 @@ BEGIN
               , View_ProfitLoss.ProfitLossDirectionName
               , View_ProfitLoss.ProfitLossName
               , View_ProfitLoss.ProfitLossName_all
-            
+                       
        ORDER BY Object_Unit_View.BusinessName
               , Object_Unit_View.BranchName
               , Object_Unit_View.Name
@@ -140,6 +183,7 @@ BEGIN
               , Object_Car.ValueData 
               , Object_Fuel.ValueData 
               , Object_Route.ValueData 
+              
               
   ;
          

@@ -78,6 +78,8 @@ type
     BusinessName: TcxGridDBColumn;
     MovementDescName: TcxGridDBColumn;
     dxBarStatic1: TdxBarStatic;
+    Distance: TcxGridDBColumn;
+    WeightTransport: TcxGridDBColumn;
   private
   public
   end;

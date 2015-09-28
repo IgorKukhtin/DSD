@@ -282,6 +282,22 @@ object Report_Transport_ProfitLossForm: TReport_Transport_ProfitLossForm
         Options.Editing = False
         Width = 98
       end
+      object Distance: TcxGridDBColumn
+        Caption = #1050'-'#1074#1086', '#1082#1084
+        DataBinding.FieldName = 'Distance'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 70
+      end
+      object WeightTransport: TcxGridDBColumn
+        Caption = #1042#1077#1089
+        DataBinding.FieldName = 'WeightTransport'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 70
+      end
     end
     object cxGridLevel: TcxGridLevel
       GridView = cxGridDBTableView
