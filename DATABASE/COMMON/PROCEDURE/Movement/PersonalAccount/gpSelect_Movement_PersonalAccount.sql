@@ -1,10 +1,12 @@
 -- Function: gpSelect_Movement_PersonalAccount()
 
 DROP FUNCTION IF EXISTS gpSelect_Movement_PersonalAccount (TDateTime, TDateTime, TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_Movement_PersonalAccount (TDateTime, TDateTime, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_Movement_PersonalAccount(
     IN inStartDate   TDateTime , --
     IN inEndDate     TDateTime , --
+    IN inIsErased    Boolean ,
     IN inSession     TVarChar    -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, InvNumber Integer, OperDate TDateTime
@@ -21,7 +23,14 @@ BEGIN
      vbUserId:= lpGetUserBySession (inSession);
 
      -- Результат
-     RETURN QUERY 
+     RETURN QUERY
+       WITH tmpStatus AS (SELECT zc_Enum_Status_Complete() AS StatusId
+                         UNION
+                          SELECT zc_Enum_Status_UnComplete() AS StatusId
+                         UNION
+                          SELECT zc_Enum_Status_Erased() AS StatusId WHERE inIsErased = TRUE
+                         )
+ 
        SELECT
              Movement.Id
            , zfConvert_StringToNumber (Movement.InvNumber) AS InvNumber
@@ -33,7 +42,11 @@ BEGIN
                       
            , Object_Personal.ValueData AS PersonalName
 
-       FROM Movement
+       FROM tmpStatus
+            INNER JOIN Movement ON Movement.DescId = zc_Movement_PersonalAccount()
+                               AND Movement.OperDate BETWEEN inStartDate AND inEndDate
+                               AND Movement.StatusId = tmpStatus.StatusId
+ 
             JOIN (SELECT AccessKeyId FROM Object_RoleAccessKey_View WHERE UserId = vbUserId GROUP BY AccessKeyId) AS tmpRoleAccessKey ON tmpRoleAccessKey.AccessKeyId = Movement.AccessKeyId
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
 
@@ -46,18 +59,18 @@ BEGIN
                                         AND MovementLinkObject_Personal.DescId = zc_MovementLinkObject_Personal()
             LEFT JOIN Object AS Object_Personal ON Object_Personal.Id = MovementLinkObject_Personal.ObjectId
 
-      WHERE Movement.DescId = zc_Movement_PersonalAccount()
-        AND Movement.OperDate BETWEEN inStartDate AND inEndDate;
+ ;
   
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpSelect_Movement_PersonalAccount (TDateTime, TDateTime, TVarChar) OWNER TO postgres;
+ALTER FUNCTION gpSelect_Movement_PersonalAccount (TDateTime, TDateTime, Boolean, TVarChar) OWNER TO postgres;
 
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 25.09.15         *
  18.12.13         *
 */
 

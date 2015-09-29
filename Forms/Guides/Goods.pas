@@ -74,6 +74,8 @@ type
     ProtocolOpenForm: TdsdOpenForm;
     bbProtocolOpenForm: TdxBarButton;
     clGoodsPlatformName: TcxGridDBColumn;
+    actInsert: TdsdInsertUpdateAction;
+    actUpdate: TdsdInsertUpdateAction;
   private
     { Private declarations }
   public

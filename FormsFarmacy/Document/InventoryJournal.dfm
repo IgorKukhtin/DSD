@@ -1,24 +1,24 @@
 inherited InventoryJournalForm: TInventoryJournalForm
   Caption = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' <'#1048#1085#1074#1077#1085#1090#1072#1088#1080#1079#1072#1094#1080#1103'>'
   ClientHeight = 535
-  ClientWidth = 786
-  ExplicitWidth = 802
+  ClientWidth = 819
+  ExplicitWidth = 835
   ExplicitHeight = 573
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Width = 786
+    Width = 819
     Height = 478
     TabOrder = 3
     ExplicitWidth = 786
     ExplicitHeight = 478
     ClientRectBottom = 478
-    ClientRectRight = 786
+    ClientRectRight = 819
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 786
       ExplicitHeight = 478
       inherited cxGrid: TcxGrid
-        Width = 786
+        Width = 819
         Height = 478
         ExplicitWidth = 786
         ExplicitHeight = 478
@@ -29,89 +29,45 @@ inherited InventoryJournalForm: TInventoryJournalForm
           DataController.Filter.TranslateLike = True
           DataController.Summary.DefaultGroupSummaryItems = <
             item
-              Format = ',0.####'
+              Format = ',0.00'
               Kind = skSum
-              Column = colTotalCount
+              Column = colDeficitSumm
             end
             item
-              Format = ',0.####'
+              Format = ',0.00'
               Kind = skSum
+              Column = colProficitSumm
             end
             item
-              Format = ',0.####'
+              Format = '+,0.00; -,0.00;0.00;'
               Kind = skSum
+              Column = colDiffSumm
             end
             item
-              Format = ',0.####'
+              Format = '+,0.0000;-,0.0000;0,0000;'
               Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-              Column = colTotalSum
+              Column = colDiff
             end>
           DataController.Summary.FooterSummaryItems = <
             item
-              Format = ',0.####'
+              Format = ',0.00'
               Kind = skSum
-              Column = colTotalCount
+              Column = colDeficitSumm
             end
             item
-              Format = ',0.####'
+              Format = ',0.00'
               Kind = skSum
+              Column = colProficitSumm
             end
             item
-              Format = ',0.####'
+              Format = '+,0.00; -,0.00;0.00;'
               Kind = skSum
+              Column = colDiffSumm
             end
             item
-              Format = ',0.####'
+              Format = '+,0.0000;-,0.0000;0,0000;'
               Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-              Column = colTotalSum
+              Column = colDiff
             end>
           OptionsBehavior.GoToNextCellOnEnter = False
           OptionsBehavior.FocusCellOnCycle = False
@@ -144,25 +100,35 @@ inherited InventoryJournalForm: TInventoryJournalForm
             Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
             DataBinding.FieldName = 'UnitName'
             HeaderAlignmentHorz = taCenter
-            Width = 282
+            Width = 252
           end
-          object colTotalCount: TcxGridDBColumn
-            Caption = #1050#1086#1083'-'#1074#1086
-            DataBinding.FieldName = 'TotalCount'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+          object colDeficitSumm: TcxGridDBColumn
+            Caption = #1057#1091#1084#1084#1072' '#1085#1077#1076#1086#1089#1090#1072#1095#1080
+            DataBinding.FieldName = 'DeficitSumm'
+            PropertiesClassName = 'TcxCalcEditProperties'
+            Properties.DisplayFormat = ',0.00'
             HeaderAlignmentHorz = taCenter
-            Width = 84
+            Width = 64
           end
-          object colTotalSum: TcxGridDBColumn
-            Caption = #1057#1091#1084#1084#1072
-            DataBinding.FieldName = 'TotalSumm'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+          object colProficitSumm: TcxGridDBColumn
+            Caption = #1057#1091#1084#1084#1072' '#1080#1079#1083#1080#1096#1082#1072
+            DataBinding.FieldName = 'ProficitSumm'
+            PropertiesClassName = 'TcxCalcEditProperties'
+            Properties.DisplayFormat = ',0.00'
             HeaderAlignmentHorz = taCenter
-            Width = 91
+            Width = 64
+          end
+          object colDiff: TcxGridDBColumn
+            Caption = #1056#1072#1079#1085#1080#1094#1072' '#1074' '#1082#1086#1083'-'#1074#1077
+            DataBinding.FieldName = 'Diff'
+            PropertiesClassName = 'TcxCalcEditProperties'
+            Properties.DisplayFormat = '+,0.0000;-,0.0000;;'
+          end
+          object colDiffSumm: TcxGridDBColumn
+            Caption = #1056#1072#1079#1085#1080#1094#1072' '#1074' '#1089#1091#1084#1084#1077
+            DataBinding.FieldName = 'DiffSumm'
+            PropertiesClassName = 'TcxCalcEditProperties'
+            Properties.DisplayFormat = '+,0.00; -,0.00;;'
           end
           object colFullInvent: TcxGridDBColumn
             Caption = #1055#1086#1083#1085#1072#1103
@@ -176,7 +142,7 @@ inherited InventoryJournalForm: TInventoryJournalForm
     end
   end
   inherited Panel: TPanel
-    Width = 786
+    Width = 819
     ExplicitWidth = 786
     inherited deStart: TcxDateEdit
       EditValue = 42005d

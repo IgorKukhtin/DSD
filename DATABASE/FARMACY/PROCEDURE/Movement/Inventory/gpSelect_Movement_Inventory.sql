@@ -9,7 +9,7 @@ CREATE OR REPLACE FUNCTION gpSelect_Movement_Inventory(
     IN inSession     TVarChar    --сессия пользователя
 )
 RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode Integer, StatusName TVarChar
-             , TotalCount TFloat, TotalSumm TFloat
+             , DeficitSumm TFloat, ProficitSumm TFloat, Diff TFloat, DiffSumm TFloat
              , UnitId Integer, UnitName TVarChar, FullInvent Boolean
              )
 AS
@@ -25,51 +25,48 @@ BEGIN
                   UNION SELECT zc_Enum_Status_UnComplete() AS StatusId
                   UNION SELECT zc_Enum_Status_Erased()     AS StatusId WHERE inIsErased = TRUE
                        )
-        -- , tmpRoleAccessKey_all AS (SELECT AccessKeyId, UserId FROM Object_RoleAccessKey_View)
-        -- , tmpRoleAccessKey_user AS (SELECT AccessKeyId FROM tmpRoleAccessKey_all WHERE UserId = vbUserId GROUP BY AccessKeyId)
-        -- , tmpAccessKey_IsDocumentAll AS (SELECT 1 AS Id FROM ObjectLink_UserRole_View WHERE RoleId = zc_Enum_Role_Admin() AND UserId = vbUserId
-                                   -- UNION SELECT 1 AS Id FROM tmpRoleAccessKey_user WHERE AccessKeyId = zc_Enum_Process_AccessKey_DocumentAll()
-                                        -- )
-        -- , tmpRoleAccessKey AS (SELECT tmpRoleAccessKey_user.AccessKeyId FROM tmpRoleAccessKey_user WHERE NOT EXISTS (SELECT tmpAccessKey_IsDocumentAll.Id FROM tmpAccessKey_IsDocumentAll)
-                         -- UNION SELECT tmpRoleAccessKey_all.AccessKeyId FROM tmpRoleAccessKey_all WHERE EXISTS (SELECT tmpAccessKey_IsDocumentAll.Id FROM tmpAccessKey_IsDocumentAll) GROUP BY tmpRoleAccessKey_all.AccessKeyId
-                         -- UNION SELECT 0 AS AccessKeyId WHERE EXISTS (SELECT tmpAccessKey_IsDocumentAll.Id FROM tmpAccessKey_IsDocumentAll)
-                              -- )
-
        SELECT
              Movement.Id                                          AS Id
            , Movement.InvNumber                                   AS InvNumber
            , Movement.OperDate                                    AS OperDate
            , Object_Status.ObjectCode                             AS StatusCode
            , Object_Status.ValueData                              AS StatusName
-           , MovementFloat_TotalCount.ValueData                   AS TotalCount
-           , MovementFloat_TotalSumm.ValueData                    AS TotalSumm
+           , MovementFloat_DeficitSumm.ValueData                  AS DeficitSumm
+           , MovementFloat_ProficitSumm.ValueData                 AS ProficitSumm
+           , MovementFloat_Diff.ValueData                         AS Diff
+           , MovementFloat_DiffSumm.ValueData                     AS DiffSumm
            , Object_Unit.Id                                       AS UnitId
            , Object_Unit.ValueData                                AS UnitName
            , COALESCE(MovementBoolean_FullInvent.ValueData,False) AS FullInvent
        FROM (SELECT Movement.id
              FROM tmpStatus
                   JOIN Movement ON Movement.OperDate BETWEEN inStartDate AND inEndDate AND Movement.DescId = zc_Movement_Inventory() AND Movement.StatusId = tmpStatus.StatusId
-                  --JOIN tmpRoleAccessKey ON tmpRoleAccessKey.AccessKeyId = Movement.AccessKeyId
             ) AS tmpMovement
             LEFT JOIN Movement ON Movement.id = tmpMovement.id
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
-
-            LEFT JOIN MovementFloat AS MovementFloat_TotalCount
-                                    ON MovementFloat_TotalCount.MovementId =  Movement.Id
-                                   AND MovementFloat_TotalCount.DescId = zc_MovementFloat_TotalCount()
-
-            LEFT JOIN MovementFloat AS MovementFloat_TotalSumm
-                                    ON MovementFloat_TotalSumm.MovementId =  Movement.Id
-                                   AND MovementFloat_TotalSumm.DescId = zc_MovementFloat_TotalSumm()
 
             LEFT JOIN MovementLinkObject AS MovementLinkObject_Unit
                                          ON MovementLinkObject_Unit.MovementId = Movement.Id
                                         AND MovementLinkObject_Unit.DescId = zc_MovementLinkObject_Unit()
             LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = MovementLinkObject_Unit.ObjectId
+
             LEFT OUTER JOIN MovementBoolean AS MovementBoolean_FullInvent
                                             ON MovementBoolean_FullInvent.MovementId = Movement.Id
                                            AND MovementBoolean_FullInvent.DescId = zc_MovementBoolean_FullInvent()
-    ;
+
+            LEFT OUTER JOIN MovementFloat AS MovementFloat_DeficitSumm
+                                          ON MovementFloat_DeficitSumm.MovementId = Movement.Id
+                                         AND MovementFloat_DeficitSumm.DescId = zc_MovementFloat_TotalDeficitSumm()
+            LEFT OUTER JOIN MovementFloat AS MovementFloat_ProficitSumm
+                                          ON MovementFloat_ProficitSumm.MovementId = Movement.Id
+                                         AND MovementFloat_ProficitSumm.DescId = zc_MovementFloat_TotalProficitSumm()
+            LEFT OUTER JOIN MovementFloat AS MovementFloat_Diff
+                                          ON MovementFloat_Diff.MovementId = Movement.Id
+                                         AND MovementFloat_Diff.DescId = zc_MovementFloat_TotalDiff()
+            LEFT OUTER JOIN MovementFloat AS MovementFloat_DiffSumm
+                                          ON MovementFloat_DiffSumm.MovementId = Movement.Id
+                                         AND MovementFloat_DiffSumm.DescId = zc_MovementFloat_TotalDiffSumm()
+            ;
 
 END;
 $BODY$

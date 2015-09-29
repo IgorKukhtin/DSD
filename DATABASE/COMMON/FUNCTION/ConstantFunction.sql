@@ -15,6 +15,9 @@ CREATE OR REPLACE FUNCTION zc_BarCodePref_Object() RETURNS TVarChar AS $BODY$BEG
 CREATE OR REPLACE FUNCTION zc_BarCodePref_Movement() RETURNS TVarChar AS $BODY$BEGIN RETURN ('20200'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 CREATE OR REPLACE FUNCTION zc_BarCodePref_MI() RETURNS TVarChar AS $BODY$BEGIN RETURN ('20300'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 
+CREATE OR REPLACE FUNCTION zc_Color_Goods_Additional() RETURNS Integer AS $BODY$BEGIN RETURN (14941410); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+CREATE OR REPLACE FUNCTION zc_Color_Goods_Alternative() RETURNS Integer AS $BODY$BEGIN RETURN (16380671); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+
 /*
 -- Значения для эти ф-ций будут сформированы в Load_PostgreSql, или !!!руками значения =0!!!
 CREATE OR REPLACE FUNCTION zc_Measure_Sh() RETURNS Integer AS $BODY$BEGIN RETURN (0); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
@@ -51,7 +54,8 @@ CREATE OR REPLACE FUNCTION zc_IsLockTableSecond() RETURNS Integer AS $BODY$BEGIN
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Воробкало А.А.
+ 29.09.15                                                        *zc_Color_Goods_Additional,zc_Color_Goods_Alternative 
  07.05.14                                        * add rem zc_PriceList_Bread
  20.10.13                                        * add rem zc_Juridical_Basis
  22.09.13                                        * add rem zc_Branch_Basis

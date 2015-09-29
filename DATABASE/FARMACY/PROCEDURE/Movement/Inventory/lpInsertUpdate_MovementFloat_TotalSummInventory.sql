@@ -7,30 +7,47 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_MovementFloat_TotalSummInventory(
 )
   RETURNS VOID AS
 $BODY$
-  DECLARE vbMovementDescId Integer;
-
-  DECLARE vbTotalSummInventory     TFloat;
-  DECLARE vbTotalCountInventory   TFloat;
+    
+    DECLARE 
+        vbDeficitSumm   TFloat; --недостача сумма
+        vbProficitSumm  TFloat; --излишек сумма
+        vbDiff          TFloat; --разница кол-во
+        vbDiffSumm      TFloat; --разница сумма
 
 BEGIN
-     IF COALESCE (inMovementId, 0) = 0
-     THEN
-         RAISE EXCEPTION 'Ошибка.Элемент документа не сохранен.';
-     END IF;
+    IF COALESCE (inMovementId, 0) = 0
+    THEN
+        RAISE EXCEPTION 'Ошибка.Элемент документа не сохранен.';
+    END IF;
 
-     SELECT COUNT(MovementItem.Id), SUM(COALESCE(MovementItemFloat_Summ.ValueData,0)) INTO vbTotalCountInventory, vbTotalSummInventory
-       FROM MovementItem
-            LEFT OUTER JOIN MovementItemFloat AS MovementItemFloat_Summ
-                                              ON MovementItemFloat_Summ.MovementItemId = MovementItem.Id
-                                             AND MovementItemFloat_Summ.DescId = zc_MIFloat_Summ()
-      WHERE MovementItem.MovementId = inMovementId AND MovementItem.isErased = false;
+    
+    SELECT
+        SUM(MovementItem_Inventory.DeficitSumm)::TFloat,
+        SUM(MovementItem_Inventory.ProficitSumm)::TFloat,
+        SUM(MovementItem_Inventory.Diff)::TFloat,
+        SUM(MovementItem_Inventory.DiffSumm)::TFloat
+    INTO
+        vbDeficitSumm,  --недостача сумма
+        vbProficitSumm, --излишек сумма
+        vbDiff,         --разница кол-во
+        vbDiffSumm      --разница сумма
+    FROM gpSelect_MovementItem_Inventory(inMovementId := inMovementId, -- ключ Документа
+                                         inShowAll    := FALSE, --
+                                         inIsErased   := FALSE, --
+                                         inSession    := '') AS MovementItem_Inventory;-- сессия пользователя
+    
 
-
-      -- Сохранили свойство <Итого Сумма инвентаризации>
-      PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_TotalSumm(), inMovementId, vbTotalSummInventory);
+    -- Сохранили свойство <Итого сумма недостачи>
+    PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_TotalDeficitSumm(), inMovementId, vbDeficitSumm);
       
-      -- Сохранили свойство <Итого кол-во инвентаризации>
-      PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_TotalCount(), inMovementId, vbTotalCountInventory);
+    -- Сохранили свойство <Итого сумма излишка>
+    PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_TotalProficitSumm(), inMovementId, vbProficitSumm);
+    
+    -- Сохранили свойство <Итого разница в количестве>
+    PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_TotalDiff(), inMovementId, vbDiff);
+    
+    -- Сохранили свойство <Итого разница в сумме>
+    PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_TotalDiffSumm(), inMovementId, vbDiffSumm);
 
 
 END;

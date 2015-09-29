@@ -8,7 +8,8 @@ CREATE OR REPLACE FUNCTION gpGet_Object_GoodsProperty(
     IN inSession     TVarChar       -- 
 )
 RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
-             , StartPosInt TFloat, EndPosInt TFloat, StartPosFrac TFloat, EndPosFrac TFloat             
+             , StartPosInt TFloat, EndPosInt TFloat, StartPosFrac TFloat, EndPosFrac TFloat  
+             , StartPosIdent TFloat, EndPosIdent TFloat           
              , isErased boolean) AS
 $BODY$BEGIN
 
@@ -28,9 +29,10 @@ $BODY$BEGIN
            , CAST (0 as TFloat)   AS StartPosFrac
            , CAST (0 as TFloat)   AS EndPosFrac
 
+           , CAST (0 as TFloat)   AS StartPosIdent
+           , CAST (0 as TFloat)   AS EndPosIdent
+
            , CAST (NULL AS Boolean) AS isErased;
-       FROM Object AS Object_GoodsProperty
-       WHERE Object_GoodsProperty.DescId = zc_Object_GoodsProperty();
 
    ELSE
        RETURN QUERY 
@@ -44,7 +46,11 @@ $BODY$BEGIN
            , ObjectFloat_StartPosFrac.ValueData  AS StartPosFrac
            , ObjectFloat_EndPosFrac.ValueData    AS EndPosFrac
 
+           , ObjectFloat_StartPosIdent.ValueData AS StartPosIdent
+           , ObjectFloat_EndPosIdent.ValueData   AS EndPosIdent
+
            , Object_GoodsProperty.isErased   AS isErased
+
        FROM Object AS Object_GoodsProperty
         LEFT JOIN ObjectFloat AS ObjectFloat_StartPosInt 
                               ON ObjectFloat_StartPosInt.ObjectId = Object_GoodsProperty.Id 
@@ -62,6 +68,14 @@ $BODY$BEGIN
                               ON ObjectFloat_EndPosFrac.ObjectId = Object_GoodsProperty.Id 
                              AND ObjectFloat_EndPosFrac.DescId = zc_ObjectFloat_GoodsProperty_EndPosFrac()
 
+        LEFT JOIN ObjectFloat AS ObjectFloat_StartPosIdent 
+                              ON ObjectFloat_StartPosIdent.ObjectId = Object_GoodsProperty.Id 
+                             AND ObjectFloat_StartPosIdent.DescId = zc_ObjectFloat_GoodsProperty_StartPosIdent()
+
+        LEFT JOIN ObjectFloat AS ObjectFloat_EndPosIdent 
+                              ON ObjectFloat_EndPosIdent.ObjectId = Object_GoodsProperty.Id 
+                             AND ObjectFloat_EndPosIdent.DescId = zc_ObjectFloat_GoodsProperty_EndPosIdent()
+
        WHERE Object_GoodsProperty.Id = inId;
    END IF;
     
@@ -76,8 +90,9 @@ ALTER FUNCTION gpGet_Object_GoodsProperty(integer, TVarChar) OWNER TO postgres;
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
- 26.05.15          * ADD StartPosInt, EndPosInt, StartPosFrac, EndPosFrac
- 12.06.13          *
+ 24.09.15         *
+ 26.05.15         * ADD StartPosInt, EndPosInt, StartPosFrac, EndPosFrac
+ 12.06.13         *
  00.06.13
 
 */

@@ -61,7 +61,7 @@ BEGIN
                                       , tmp.StartPosFrac
                                       , tmp.EndPosFrac
                                       , zfFormat_BarCodeShort (inBarCode)  AS BarCodeShort_sht
-                                      , zfFormat_BarCodeShort (SUBSTRING (inBarCode FROM 1 FOR (tmp.StartPosInt - 1) :: Integer)) AS BarCodeShort
+                                      , zfFormat_BarCodeShort (SUBSTRING (inBarCode FROM tmp.StartPosIdent :: Integer FOR (1 + tmp.EndPosIdent - tmp.StartPosIdent) :: Integer)) AS BarCodeShort
                                  FROM (SELECT Object_GoodsProperty.Id            AS GoodsPropertyId
                                             , CASE WHEN inGoodsPropertyId = 83955 -- Алан
                                                     AND SUBSTRING (inBarCode FROM 1 FOR 3) = '220'
@@ -71,7 +71,26 @@ BEGIN
                                             , ObjectFloat_EndPosInt.ValueData    AS EndPosInt
                                             , ObjectFloat_StartPosFrac.ValueData AS StartPosFrac
                                             , ObjectFloat_EndPosFrac.ValueData   AS EndPosFrac
+                                            , CASE WHEN ObjectFloat_StartPosIdent.ValueData > 0
+                                                        THEN ObjectFloat_StartPosIdent.ValueData
+                                                   ELSE 1
+                                              END AS StartPosIdent
+                                            , CASE WHEN ObjectFloat_EndPosIdent.ValueData > 0
+                                                        THEN ObjectFloat_EndPosIdent.ValueData
+                                                   ELSE CASE WHEN inGoodsPropertyId = 83955 -- Алан
+                                                              AND SUBSTRING (inBarCode FROM 1 FOR 3) = '220'
+                                                                  THEN ObjectFloat_StartPosInt.ValueData + 0
+                                                             ELSE ObjectFloat_StartPosInt.ValueData - 1
+                                                        END
+                                              END AS EndPosIdent
                                        FROM Object AS Object_GoodsProperty
+                                            LEFT JOIN ObjectFloat AS ObjectFloat_StartPosIdent 
+                                                                  ON ObjectFloat_StartPosIdent.ObjectId = Object_GoodsProperty.Id 
+                                                                 AND ObjectFloat_StartPosIdent.DescId = zc_ObjectFloat_GoodsProperty_StartPosIdent()
+                                            LEFT JOIN ObjectFloat AS ObjectFloat_EndPosIdent 
+                                                                  ON ObjectFloat_EndPosIdent.ObjectId = Object_GoodsProperty.Id 
+                                                                 AND ObjectFloat_EndPosIdent.DescId = zc_ObjectFloat_GoodsProperty_EndPosIdent()
+
                                             LEFT JOIN ObjectFloat AS ObjectFloat_StartPosInt
                                                                   ON ObjectFloat_StartPosInt.ObjectId = Object_GoodsProperty.Id
                                                                  AND ObjectFloat_StartPosInt.DescId = zc_ObjectFloat_GoodsProperty_StartPosInt()

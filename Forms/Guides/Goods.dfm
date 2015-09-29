@@ -263,7 +263,11 @@ object GoodsForm: TGoodsForm
       ItemLinks = <
         item
           Visible = True
-          ItemName = 'dxBarStatic1'
+          ItemName = 'bbInsert'
+        end
+        item
+          Visible = True
+          ItemName = 'bbEdit'
         end
         item
           Visible = True
@@ -274,11 +278,11 @@ object GoodsForm: TGoodsForm
           ItemName = 'bbSetUnErased'
         end
         item
+          BeginGroup = True
           Visible = True
           ItemName = 'dxBarStatic1'
         end
         item
-          BeginGroup = True
           Visible = True
           ItemName = 'bbShowAll'
         end
@@ -329,18 +333,12 @@ object GoodsForm: TGoodsForm
       Category = 0
     end
     object bbInsert: TdxBarButton
-      Caption = #1044#1086#1073#1072#1074#1080#1090#1100
+      Action = actInsert
       Category = 0
-      Visible = ivAlways
-      ImageIndex = 0
-      ShortCut = 45
     end
     object bbEdit: TdxBarButton
-      Caption = #1048#1079#1084#1077#1085#1080#1090#1100
+      Action = actUpdate
       Category = 0
-      Visible = ivAlways
-      ImageIndex = 1
-      ShortCut = 115
     end
     object bbSetErased: TdxBarButton
       Action = dsdSetErased
@@ -511,6 +509,49 @@ object GoodsForm: TGoodsForm
         end>
       isShowModal = False
     end
+    object actUpdate: TdsdInsertUpdateAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100
+      ShortCut = 115
+      ImageIndex = 1
+      FormName = 'TGoodsEditForm'
+      FormNameParam.Value = 'TGoodsEditForm'
+      FormNameParam.DataType = ftString
+      GuiParams = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'Id'
+          ParamType = ptInput
+        end>
+      isShowModal = False
+      ActionType = acUpdate
+      DataSource = DataSource
+      DataSetRefresh = actRefresh
+      IdFieldName = 'Id'
+    end
+    object actInsert: TdsdInsertUpdateAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = #1044#1086#1073#1072#1074#1080#1090#1100
+      ShortCut = 45
+      ImageIndex = 0
+      FormName = 'TGoodsEditForm'
+      FormNameParam.Value = 'TGoodsEditForm'
+      FormNameParam.DataType = ftString
+      GuiParams = <
+        item
+          Name = 'Id'
+          Value = Null
+        end>
+      isShowModal = True
+      DataSource = DataSource
+      DataSetRefresh = actRefresh
+      IdFieldName = 'Id'
+    end
   end
   object dsdStoredProc: TdsdStoredProc
     StoredProcName = 'gpSelect_Object_Goods'
@@ -559,6 +600,7 @@ object GoodsForm: TGoodsForm
         Action = dsdChoiceGuides
       end
       item
+        Action = actUpdate
       end>
     ActionItemList = <
       item
@@ -566,6 +608,7 @@ object GoodsForm: TGoodsForm
         ShortCut = 13
       end
       item
+        Action = actUpdate
         ShortCut = 13
       end>
     OnlyEditingCellOnEnter = False

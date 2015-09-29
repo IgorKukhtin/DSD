@@ -3,8 +3,8 @@ inherited ChoiceGoodsFromPriceListForm: TChoiceGoodsFromPriceListForm
   Caption = #1055#1086#1080#1089#1082' '#1090#1086#1074#1072#1088#1086#1074' '#1074' '#1087#1088#1072#1081#1089'-'#1083#1080#1089#1090#1072#1093
   ClientWidth = 832
   ShowHint = True
-  ExplicitWidth = 840
-  ExplicitHeight = 335
+  ExplicitWidth = 848
+  ExplicitHeight = 346
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -159,7 +159,6 @@ inherited ChoiceGoodsFromPriceListForm: TChoiceGoodsFromPriceListForm
         Align = alTop
         BevelOuter = bvNone
         TabOrder = 1
-        ExplicitTop = -6
         object edGoodsSearch: TcxTextEdit
           Left = 83
           Top = 3
@@ -195,6 +194,14 @@ inherited ChoiceGoodsFromPriceListForm: TChoiceGoodsFromPriceListForm
           Top = 4
           Caption = 'Ctrl+Enter'
           Style.TextColor = 6118749
+        end
+        object btnClearFilter: TcxButton
+          Left = 656
+          Top = 0
+          Width = 153
+          Height = 25
+          Action = actClearFilter
+          TabOrder = 6
         end
       end
     end
@@ -350,6 +357,33 @@ inherited ChoiceGoodsFromPriceListForm: TChoiceGoodsFromPriceListForm
         end>
       Caption = 'actRefreshSearch'
       ShortCut = 16397
+    end
+    object actClearFilter: TMultiAction
+      Category = 'ClearFilter'
+      MoveParams = <
+        item
+          FromParam.Value = ''
+          FromParam.DataType = ftString
+          ToParam.Value = Null
+          ToParam.Component = edGoodsSearch
+          ToParam.DataType = ftString
+          ToParam.ParamType = ptInput
+        end
+        item
+          FromParam.Value = ''
+          FromParam.DataType = ftString
+          ToParam.Value = Null
+          ToParam.Component = edProducerSearch
+          ToParam.DataType = ftString
+          ToParam.ParamType = ptInput
+        end>
+      ActionList = <
+        item
+          Action = actRefresh
+        end>
+      Caption = #1054#1095#1080#1089#1090#1080#1090#1100' '#1092#1080#1083#1100#1090#1088#1099' [Esc]'
+      ImageIndex = 58
+      ShortCut = 27
     end
   end
   inherited MasterDS: TDataSource

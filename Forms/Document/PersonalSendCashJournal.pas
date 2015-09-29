@@ -86,6 +86,23 @@ type
     actCompleteList: TMultiAction;
     N3: TMenuItem;
     N4: TMenuItem;
+    N5: TMenuItem;
+    N6: TMenuItem;
+    N7: TMenuItem;
+    N8: TMenuItem;
+    spUncomplete: TdsdExecStoredProc;
+    actSimpleUncompleteList: TMultiAction;
+    actUnCompleteList: TMultiAction;
+    spErased: TdsdExecStoredProc;
+    actSimpleErased: TMultiAction;
+    actSetErasedList: TMultiAction;
+    N9: TMenuItem;
+    N10: TMenuItem;
+    spMovementReComplete: TdsdStoredProc;
+    spReCompete: TdsdExecStoredProc;
+    actSimpleReCompleteList: TMultiAction;
+    actReCompleteList: TMultiAction;
+    N11: TMenuItem;
   private
   public
   end;

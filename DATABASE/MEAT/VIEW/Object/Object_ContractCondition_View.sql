@@ -6,6 +6,7 @@ CREATE OR REPLACE VIEW Object_ContractCondition_View
 AS
         SELECT ObjectLink_ContractCondition_Contract.ChildObjectId AS ContractId
              , ObjectLink_ContractCondition_ContractConditionKind.ChildObjectId AS ContractConditionKindId
+             , ObjectLink_Contract_PaidKind.ChildObjectId AS PaidKindId
              , ObjectFloat_Value.ValueData AS Value
          FROM ObjectLink AS ObjectLink_ContractCondition_Contract
               INNER JOIN ObjectLink AS ObjectLink_ContractCondition_ContractConditionKind
@@ -16,6 +17,9 @@ AS
                                     AND ObjectFloat_Value.DescId = zc_ObjectFloat_ContractCondition_Value()
                                     AND ObjectFloat_Value.ValueData <> 0
               LEFT JOIN Object AS ContractCondition ON  ContractCondition.Id = ObjectLink_ContractCondition_ContractConditionKind.objectid 
+              LEFT JOIN ObjectLink AS ObjectLink_Contract_PaidKind
+                                   ON ObjectLink_Contract_PaidKind.ObjectId = ObjectLink_ContractCondition_Contract.ChildObjectId
+                                  AND ObjectLink_Contract_PaidKind.DescId = zc_ObjectLink_Contract_PaidKind()
          WHERE ObjectLink_ContractCondition_Contract.DescId = zc_ObjectLink_ContractCondition_Contract()
            AND ContractCondition.isErased = FALSE;
 
