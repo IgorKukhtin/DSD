@@ -61,13 +61,16 @@ type
     procedure INVOICESave(HeaderDataSet, ItemsDataSet: TDataSet);
     procedure COMDOCSave(HeaderDataSet, ItemsDataSet: TDataSet;
       Directory: String);
+    // квитанция
     procedure ReceiptLoad(spProtocol: TdsdStoredProc; Directory: String);
     procedure DeclarSave(HeaderDataSet, ItemsDataSet: TDataSet; StoredProc: TdsdStoredProc;
       Directory: String);
     procedure DeclarReturnSave(HeaderDataSet, ItemsDataSet: TDataSet;  StoredProc: TdsdStoredProc;
       Directory: String);
+    // 
     procedure ComdocLoad(spHeader, spList: TdsdStoredProc; Directory: String;
       StartDate, EndDate: TDateTime);
+    // заказ
     procedure OrderLoad(spHeader, spList: TdsdStoredProc; Directory: String;
       StartDate, EndDate: TDateTime);
     procedure ReturnSave(MovementDataSet: TDataSet;
