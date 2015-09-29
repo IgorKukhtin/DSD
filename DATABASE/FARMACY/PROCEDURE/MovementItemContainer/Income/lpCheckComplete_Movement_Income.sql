@@ -34,6 +34,10 @@ BEGIN
      RAISE EXCEPTION 'У "%" не совпадает тип НДС с документом', vbGoodsName;
   END IF;
 
+  --проверяем, выставили ли дату прихода на аптеке
+  IF EXISTS(SELECT 1 FROM Movement_Income_View WHERE Id = inMovementId AND BranchDate is null) THEN
+      RAISE EXCEPTION 'У документа не установлена дата прихода на аптеке';
+  END IF;
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;

@@ -68,7 +68,8 @@ BEGIN
                   COALESCE(inPartyId,0) = 0
                 )
             GROUP BY
-                Container.Amount
+                Container.Amount,
+                Container.Id
         ) AS Remains;
     -- –ÂÁÛÎ¸Ú‡Ú
     RETURN QUERY
@@ -106,10 +107,10 @@ BEGIN
                 Object_Price_View.MCSValue                            AS MCSValue,     --Õ“«
                 ROW_NUMBER() OVER(ORDER BY MovementItemContainer.OperDate, 
                                            CASE WHEN MovementDesc.Id = zc_Movement_Inventory() THEN 1 else 0 end, 
-                                           MovementItemContainer.MovementId) AS OrdNum,
+                                           MovementItemContainer.MovementId,MovementItemContainer.MovementItemId) AS OrdNum,
                 (SUM(MovementItemContainer.Amount)OVER(ORDER BY MovementItemContainer.OperDate, 
                                                                 CASE WHEN MovementDesc.Id = zc_Movement_Inventory() THEN 1 else 0 end, 
-                                                                MovementItemContainer.MovementId))+vbRemainsStart AS Saldo
+                                                                MovementItemContainer.MovementId,MovementItemContainer.MovementItemId))+vbRemainsStart AS Saldo
             FROM
                 MovementItemContainer
                 INNER JOIN Movement ON MovementItemContainer.MovementId = Movement.Id

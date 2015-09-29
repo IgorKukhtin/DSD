@@ -23,6 +23,7 @@ RETURNS TABLE (Id Integer, GoodsId Integer, GoodsCode Integer, GoodsName TVarCha
              , MakerName TVarChar
              , FEA TVarChar
              , Measure TVarChar
+             , DublePriceColour Integer
               )
 AS
 $BODY$
@@ -65,6 +66,7 @@ BEGIN
            , NULL::TVarChar             AS MakerName
            , NULL::TVarChar             AS FEA
            , NULL::TVarChar             AS Measure
+           , NULL::Integer              AS DublePriceColour  
 
        FROM (SELECT Object_Goods.Id                                                   AS GoodsId
                   , Object_Goods.GoodsCodeInt                                         AS GoodsCode
@@ -103,11 +105,21 @@ BEGIN
            , MovementItem.MakerName
            , MovementItem.FEA
            , MovementItem.Measure
+           , DublePrice.DublePriceColour
 
        FROM (SELECT FALSE AS isErased UNION ALL SELECT inIsErased AS isErased WHERE inIsErased = TRUE) AS tmpIsErased
 
             JOIN MovementItem_Income_View AS MovementItem ON MovementItem.MovementId = inMovementId
-                                                         AND MovementItem.isErased   = tmpIsErased.isErased;
+                                                         AND MovementItem.isErased   = tmpIsErased.isErased
+            LEFT OUTER JOIN (
+                                SELECT  MovementItem_Income_View.GoodsId, zc_Color_Goods_Additional() AS DublePriceColour
+                                FROM MovementItem_Income_View
+                                WHERE MovementItem_Income_View.MovementId = inMovementId 
+                                  AND MovementItem_Income_View.isErased   = FALSE
+                                GROUP BY MovementItem_Income_View.GoodsId
+                                HAVING COUNT(DISTINCT MovementItem_Income_View.Price) > 1
+                            ) AS DublePrice 
+                              ON MovementItem.GoodsId = DublePrice.GoodsId;
 
      ELSE
 
@@ -132,11 +144,21 @@ BEGIN
            , MovementItem.MakerName
            , MovementItem.FEA
            , MovementItem.Measure
+           , DublePrice.DublePriceColour
 
        FROM (SELECT FALSE AS isErased UNION ALL SELECT inIsErased AS isErased WHERE inIsErased = TRUE) AS tmpIsErased
 
             JOIN MovementItem_Income_View AS MovementItem ON MovementItem.MovementId = inMovementId
-                                                         AND MovementItem.isErased   = tmpIsErased.isErased;
+                                                         AND MovementItem.isErased   = tmpIsErased.isErased
+            LEFT OUTER JOIN (
+                                SELECT  MovementItem_Income_View.GoodsId, zc_Color_Goods_Additional() AS DublePriceColour
+                                FROM MovementItem_Income_View
+                                WHERE MovementItem_Income_View.MovementId = inMovementId 
+                                  AND MovementItem_Income_View.isErased   = FALSE
+                                GROUP BY MovementItem_Income_View.GoodsId
+                                HAVING COUNT(DISTINCT MovementItem_Income_View.Price) > 1
+                            ) AS DublePrice 
+                              ON MovementItem.GoodsId = DublePrice.GoodsId;
      END IF;
 
 END;
