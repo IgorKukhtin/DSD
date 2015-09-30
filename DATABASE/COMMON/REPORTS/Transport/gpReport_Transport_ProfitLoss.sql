@@ -21,7 +21,7 @@ RETURNS TABLE (Invnumber TVarChar, OperDate TDateTime, MovementDescName TVarChar
              , SumAmount_TransportService TFloat, SumAmount_PersonalSendCash TFloat
              , SumTotal TFloat
              , Distance TFloat
-             , WeightTransport TFloat
+             , WeightTransport TFloat, WeightSale TFloat
              ,One_KM TFloat, One_KG TFloat
              )   
 AS
@@ -133,7 +133,22 @@ BEGIN
                                 , tmpContainer.BusinessId
                          )
 
-   
+   , tmpWeight       AS ( SELECT MLM_Transport.MovementChildId                  AS MovementTransportId
+                               , SUM (MovementFloat_TotalCountKg.ValueData)     AS TotalCountKg
+                          FROM MovementLinkMovement AS MLM_Transport
+                               JOIN Movement ON Movement.Id = MLM_Transport.MovementId 
+                                            AND Movement.DescId in (zc_Movement_Sale(), zc_Movement_SendOnPrice())
+                                            AND Movement.StatusId = zc_Enum_Status_Complete()
+
+                               LEFT JOIN MovementFloat AS MovementFloat_TotalCountKg
+                                                       ON MovementFloat_TotalCountKg.MovementId =  Movement.Id
+                                                      AND MovementFloat_TotalCountKg.DescId = zc_MovementFloat_TotalCountKg()
+
+                          WHERE MLM_Transport.DescId = zc_MovementLinkMovement_Transport()
+                            AND MLM_Transport.MovementChildId in (SELECT tmpContainer.MovementId FROM tmpContainer)
+                          GROUP BY MLM_Transport.MovementChildId
+                         )
+                         
        SELECT COALESCE (Movement.Invnumber, '') :: TVarChar          AS Invnumber
             , COALESCE (Movement.OperDate, CAST (NULL as TDateTime)) AS OperDate
             , COALESCE (MovementDesc.ItemName, '') :: TVarChar       AS MovementDescName
@@ -160,6 +175,7 @@ BEGIN
 
             , SUM (tmpContainer.Distance):: Tfloat         AS Distance
             , SUM (tmpContainer.WeightTransport):: Tfloat  AS WeightTransport
+            , SUM (tmpWeight.TotalCountKg):: Tfloat        AS WeightSale
             , CAST (CASE WHEN SUM (tmpContainer.Distance) <> 0 THEN  SUM (tmpContainer.SumAmount_Transport + tmpContainer.SumAmount_TransportService + tmpContainer.SumAmount_PersonalSendCash)/SUM (tmpContainer.Distance) 
 
                          ELSE 0 END  AS Tfloat)  AS One_KM
@@ -187,7 +203,8 @@ BEGIN
                  LEFT JOIN Object AS Object_CarModel ON Object_CarModel.Id = ObjectLink_Car_CarModel.ChildObjectId
                  LEFT JOIN Object_ProfitLoss_View AS View_ProfitLoss ON View_ProfitLoss.ProfitLossId = tmpContainer.ProfitLossId
                  LEFT JOIN Object AS Object_Business ON Object_Business.Id = tmpContainer.BusinessId                               
-                 
+                 LEFT JOIN tmpWeight ON tmpWeight.MovementTransportId = tmpContainer.MovementId
+
        GROUP BY COALESCE (Movement.Invnumber, '') , COALESCE (MovementDesc.ItemName, '')
               , COALESCE (Movement.OperDate, CAST (NULL as TDateTime))
               , Object_Fuel.ValueData 
