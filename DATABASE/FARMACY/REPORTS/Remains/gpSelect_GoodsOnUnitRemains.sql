@@ -77,7 +77,7 @@ BEGIN
                 GROUP BY DD.ObjectID
                 ) AS DD
             GROUP BY DD.ObjectID
-            HAVING (SUM(DD.OperAmount) <> 0) OR (SUM(DD.OperSum) <> 0)
+            HAVING (SUM(DD.OperAmount) <> 0)-- OR (SUM(DD.OperSum) <> 0)
             ) AS DD
             LEFT JOIN OBJECT AS Object_Goods ON Object_Goods.Id = DD.ObjectId
             LEFT OUTER JOIN Object_Price_View AS Object_Price

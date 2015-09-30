@@ -1,25 +1,25 @@
 inherited ReturnOutForm: TReturnOutForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1042#1086#1079#1074#1088#1072#1090' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1091'>'
   ClientHeight = 526
-  ClientWidth = 828
-  ExplicitWidth = 836
-  ExplicitHeight = 553
+  ClientWidth = 827
+  ExplicitWidth = 843
+  ExplicitHeight = 564
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 126
-    Width = 828
+    Width = 827
     Height = 400
     ExplicitTop = 126
     ExplicitWidth = 828
     ExplicitHeight = 400
     ClientRectBottom = 400
-    ClientRectRight = 828
+    ClientRectRight = 827
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 828
       ExplicitHeight = 376
       inherited cxGrid: TcxGrid
-        Width = 828
+        Width = 827
         Height = 376
         ExplicitWidth = 828
         ExplicitHeight = 376
@@ -153,7 +153,7 @@ inherited ReturnOutForm: TReturnOutForm
     end
   end
   inherited DataPanel: TPanel
-    Width = 828
+    Width = 827
     Height = 100
     TabOrder = 3
     ExplicitWidth = 828
@@ -1053,12 +1053,12 @@ inherited ReturnOutForm: TReturnOutForm
     Top = 320
   end
   inherited spErasedMIMaster: TdsdStoredProc
-    StoredProcName = 'gpMovementItem_Income_SetErased'
+    StoredProcName = 'gpMovementItem_ReturnOut_SetErased'
     Left = 710
     Top = 376
   end
   inherited spUnErasedMIMaster: TdsdStoredProc
-    StoredProcName = 'gpMovementItem_Income_SetUnErased'
+    StoredProcName = 'gpMovementItem_ReturnOut_SetUnErased'
     Left = 710
     Top = 328
   end

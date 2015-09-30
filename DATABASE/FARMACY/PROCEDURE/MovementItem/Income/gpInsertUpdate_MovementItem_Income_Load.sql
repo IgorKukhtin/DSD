@@ -214,7 +214,7 @@ BEGIN
         
       WHERE MovementItem.MovementId = vbMovementId
         AND MovementItem.PartnerGoodsId = vbPartnerGoodsId
-        AND MovementItem.Price = MovementItem.Price
+        AND MovementItem.Price = inPrice--MovementItem.Price
         AND MovementItem.PartionGoods = inPartitionGoods
         AND MovementItem.ExpirationDate = inExpirationDate;
   

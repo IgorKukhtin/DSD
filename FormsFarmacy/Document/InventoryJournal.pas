@@ -25,21 +25,23 @@ uses
   dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus, dxSkinSilver,
   dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008, dxSkinTheAsphaltWorld,
   dxSkinsDefaultPainters, dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint,
-  dxSkinXmas2008Blue, dxSkinscxPCPainter;
+  dxSkinXmas2008Blue, dxSkinscxPCPainter, cxCalc;
 
 type
   TInventoryJournalForm = class(TAncestorJournalForm)
     colUnitName: TcxGridDBColumn;
-    colTotalCount: TcxGridDBColumn;
+    colDeficitSumm: TcxGridDBColumn;
     PrintHeaderCDS: TClientDataSet;
     PrintItemsCDS: TClientDataSet;
     spSelectPrint: TdsdStoredProc;
     actPrint: TdsdPrintAction;
     bbPrint: TdxBarButton;
-    colTotalSum: TcxGridDBColumn;
+    colProficitSumm: TcxGridDBColumn;
     bbPrint1: TdxBarButton;
     dxBarButton1: TdxBarButton;
     colFullInvent: TcxGridDBColumn;
+    colDiff: TcxGridDBColumn;
+    colDiffSumm: TcxGridDBColumn;
   private
     { Private declarations }
   public

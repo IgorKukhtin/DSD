@@ -282,6 +282,43 @@ object Report_Transport_ProfitLossForm: TReport_Transport_ProfitLossForm
         Options.Editing = False
         Width = 98
       end
+      object Distance: TcxGridDBColumn
+        Caption = #1050'-'#1074#1086', '#1082#1084
+        DataBinding.FieldName = 'Distance'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 70
+      end
+      object WeightTransport: TcxGridDBColumn
+        Caption = #1042#1077#1089' ('#1087#1091#1090#1077#1074#1086#1081' '#1083#1080#1089#1090')'
+        DataBinding.FieldName = 'WeightTransport'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 70
+      end
+      object WeightSale: TcxGridDBColumn
+        Caption = #1042#1077#1089' ('#1087#1088#1086#1076#1072#1078#1072'/'#1087#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077')'
+        DataBinding.FieldName = 'WeightSale'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 70
+      end
+      object One_KM: TcxGridDBColumn
+        Caption = #1062#1077#1085#1072' 1 '#1082#1084
+        DataBinding.FieldName = 'One_KM'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 30
+      end
+      object One_KG: TcxGridDBColumn
+        Caption = #1062#1077#1085#1072' 1 '#1082#1075
+        DataBinding.FieldName = 'One_KG'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 30
+      end
     end
     object cxGridLevel: TcxGridLevel
       GridView = cxGridDBTableView

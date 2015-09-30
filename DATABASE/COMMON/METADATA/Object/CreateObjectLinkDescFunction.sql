@@ -1161,6 +1161,10 @@ CREATE OR REPLACE FUNCTION zc_ObjectLink_Goods_AlternativeGroup() RETURNS Intege
 INSERT INTO ObjectLinkDesc(Code, ItemName, DescId, ChildObjectDescId)
 SELECT 'zc_ObjectLink_Goods_AlternativeGroup', 'Группа альтернативных товаров', zc_Object_Goods(), zc_Object_AlternativeGroup() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_Goods_AlternativeGroup');
 
+CREATE OR REPLACE FUNCTION zc_ObjectLink_ReportSoldParams_Unit() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_ReportSoldParams_Unit'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectLinkDesc(Code, ItemName, DescId, ChildObjectDescId)
+SELECT 'zc_ObjectLink_ReportSoldParams_Unit', 'Подразделение плана продаж', zc_Object_ReportSoldParams(), zc_Object_Unit() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_ReportSoldParams_Unit');
+
 --------------------------- !!!!!!!!!!!!!!!!!!!!!!!!!
 --------------------------- !!! ВРЕМЕННЫЕ ОБЪЕКТЫ !!!
 --------------------------- !!!!!!!!!!!!!!!!!!!!!!!!!
@@ -1201,7 +1205,8 @@ SELECT 'zc_ObjectLink_PriceList_Currency', 'Валюта', zc_Object_PriceList(), zc_O
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А.А.
+ 27.09.15                                                                       *zc_ObjectLink_PriceList_Currency               
  12.09.15         * add zc_ObjectLink_Partner_MemberTake1...7
  20.04.15         * add zc_ObjectLink_Route_RouteGroup
  14.04.15         * add zc_ObjectLink_GoodsGroup_GoodsPlatform

@@ -438,6 +438,45 @@ type
     property OpenBeforeShow: boolean read FOpenBeforeShow write FOpenBeforeShow;
   end;
 
+  TAddOnFormRefresh = Class(TPersistent)
+  private
+    FParentList: String;
+    FSelfList: String;
+    FDataSet: TDataSet;
+    FKeyField: String;
+    FKeyParam: String;
+    FNeedRefresh: Boolean;
+    FRefreshID: Variant;
+    FGetStoredProc: TdsdStoredProc;
+
+    function GetDataSet: TDataSet;
+    procedure SetDatSet(Value: TDataSet);
+
+    function GetGetStoredProc: TdsdStoredProc;
+    procedure SetGetStoredProc(Value: TdsdStoredProc);
+  public
+    constructor Create;
+    destructor Destroy; override;
+    //процедура обновления записи
+    procedure RefreshRecord;
+
+    property NeedRefresh: Boolean read FNeedRefresh write FNeedRefresh;
+    property RefreshID: Variant read FRefreshID write FRefreshID;
+  published
+    // Идентификатор списка родительской формы
+    property ParentList: String read FParentList write FParentList;
+    // Идентификатор списка собственной формы
+    property SelfList: String read FSelfList write FSelfList;
+    // Рабочий ДатаСет
+    property DataSet: TDataSet read GetDataSet write SetDatSet;
+    //Имя ключевого поля
+    property KeyField: String read FKeyField write FKeyField;
+    //Имя ключевого параметра
+    property KeyParam: String read FKeyParam write FKeyParam;
+    //Процедура получения рекорда
+    property GetStoredProc: TdsdStoredProc read GetGetStoredProc write SetGetStoredProc;
+  End;
+
   TAddOnFormData = class(TPersistent)
   private
     FChoiceAction: TdsdChoiceGuides;
@@ -447,8 +486,10 @@ type
     FisSingle: boolean;
     FisAlwaysRefresh: boolean;
     FOnLoadAction: TdsdCustomAction;
+    FAddOnFormRefresh: TAddOnFormRefresh;
   public
     constructor Create;
+    destructor Destroy; override;
   published
     // Всегда перечитываем форму
     property isAlwaysRefresh: boolean read FisAlwaysRefresh write FisAlwaysRefresh default true;
@@ -464,6 +505,8 @@ type
     property ExecuteDialogAction: TExecuteDialog read FExecuteDialogAction write FExecuteDialogAction;
     // Параметры формы
     property Params: TdsdFormParams read FParams write FParams;
+    // Параметры для перечитывания формы
+    property AddOnFormRefresh: TAddOnFormRefresh Read FAddOnFormRefresh Write FAddOnFormRefresh;
   end;
 
   procedure Register;
@@ -1899,6 +1942,13 @@ constructor TAddOnFormData.Create;
 begin
   FisAlwaysRefresh := true;
   FisSingle := true;
+  FAddOnFormRefresh := TAddOnFormRefresh.Create;
+end;
+
+destructor TAddOnFormData.Destroy;
+begin
+  FAddOnFormRefresh.Free;
+  inherited;
 end;
 
 { TColorRule }
@@ -2087,6 +2137,164 @@ begin
     end
   else
     inherited Assign(Source);
+end;
+
+{ TAddOnFormRefresh }
+
+constructor TAddOnFormRefresh.Create;
+begin
+  FParentList := '';
+  FSelfList := '';
+  FKeyField := '';
+  FNeedRefresh := False;
+  FRefreshID := 0;
+  FGetStoredProc := nil;
+  FDataSet := nil;
+end;
+
+destructor TAddOnFormRefresh.Destroy;
+begin
+
+  inherited;
+end;
+
+function TAddOnFormRefresh.GetDataSet: TDataSet;
+begin
+  Result := FDataSet;
+end;
+
+function TAddOnFormRefresh.GetGetStoredProc: TdsdStoredProc;
+begin
+  Result := FGetStoredProc;
+end;
+
+procedure TAddOnFormRefresh.RefreshRecord;
+var
+  i: Integer;
+  procedure AssignValue(AField: TField; AParam: TdsdParam);
+  var
+    F: TFormatSettings;
+    S: String;
+  Begin
+    case AField.DataType of
+      ftDate,ftTime,ftDateTime:
+        Begin
+          S:=Copy(AParam.asString,1,10)+' '+Copy(AParam.asString,12,8);
+          F.DateSeparator := '-';
+          F.TimeSeparator := ':';
+          F.ShortDateFormat := 'YYYY-MM-DD';
+          F.LongDateFormat := 'hh:mm:ss';
+          AField.AsDateTime := StrToDateTime(S,F);
+        End
+    ELSE
+      AField.Value := AParam.Value;
+//      ftUnknown: ;
+//      ftString: ;
+//      ftSmallint: ;
+//      ftInteger: ;
+//      ftWord: ;
+//      ftBoolean: ;
+//      ftFloat: ;
+//      ftCurrency: ;
+//      ftBCD: ;
+//      ftBytes: ;
+//      ftVarBytes: ;
+//      ftAutoInc: ;
+//      ftBlob: ;
+//      ftMemo: ;
+//      ftGraphic: ;
+//      ftFmtMemo: ;
+//      ftParadoxOle: ;
+//      ftDBaseOle: ;
+//      ftTypedBinary: ;
+//      ftCursor: ;
+//      ftFixedChar: ;
+//      ftWideString: ;
+//      ftLargeint: ;
+//      ftADT: ;
+//      ftArray: ;
+//      ftReference: ;
+//      ftDataSet: ;
+//      ftOraBlob: ;
+//      ftOraClob: ;
+//      ftVariant: ;
+//      ftInterface: ;
+//      ftIDispatch: ;
+//      ftGuid: ;
+//      ftTimeStamp: ;
+//      ftFMTBcd: ;
+//      ftFixedWideChar: ;
+//      ftWideMemo: ;
+//      ftOraTimeStamp: ;
+//      ftOraInterval: ;
+//      ftLongWord: ;
+//      ftShortint: ;
+//      ftByte: ;
+//      ftExtended: ;
+//      ftConnection: ;
+//      ftParams: ;
+//      ftStream: ;
+//      ftTimeStampOffset: ;
+//      ftObject: ;
+//      ftSingle: ;
+    end;
+
+  end;
+begin
+  //Если не определена процедура рефреша  то выходим
+  if not Assigned(FGetStoredProc) then exit;
+  //Если не определ рабочий датасет то выходим
+  if not Assigned(FDataSet) then exit;
+  //Если ДатаСет не имеет полей - выходим
+  if FDataSet.FieldCount = 0 then exit;
+  //Если кодер не заполнил ключевое поле, то считаем что 1-я колонка в датасете ключевая
+  if (FKeyField = '') then
+    FKeyField := FDataSet.Fields[0].FieldName;
+  //Если ДатаСет не имеет поля FKeyField - выходим
+  if FDataSet.FindField(FKeyField) = nil then exit;
+  //Пытаемся найти параметр
+  if not Assigned(FGetStoredProc.Params.ParamByName(FKeyParam)) then exit;
+  //Приписываем ему значение присланого ИД
+  FGetStoredProc.Params.ParamByName(FKeyParam).Value := FRefreshID;
+  //пробуем выполнить процедуру
+  FGetStoredProc.Execute;
+  //Если в датасете найдена запись ко ключевому полю - переводим датасет в режим редактирования
+  if FDataSet.Locate(FKeyField,FRefreshID,[]) then
+    FDataSet.Edit
+  else
+  //Если запись не найдена - добавляем её в датасет
+  Begin
+    FDataSet.Append;
+    FDataSet.FieldByName(FKeyField).Value := FRefreshID;
+  End;
+  //Перебрать все поля и заполнить их значениями параметров с такими же именами
+  for I := 0 to FDataSet.FieldCount-1 do
+  Begin
+    //Если это ключевое поле - то перебивать его не нужно
+    if CompareText(FDataSet.Fields[i].FieldName, FKeyField) = 0 then Continue;
+    //Пробуем прописать значения полю из параметров с таким же именем
+    if Assigned(FGetStoredProc.Params.ParamByName(FDataSet.Fields[i].FieldName)) then
+      AssignValue(FDataSet.Fields[i],FGetStoredProc.Params.ParamByName(FDataSet.Fields[i].FieldName))
+    else
+    //Если полного совпадения нет - то пробуем со стандартной приставкой out
+    if Assigned(FGetStoredProc.Params.ParamByName('out'+FDataSet.Fields[i].FieldName)) then
+      AssignValue(FDataSet.Fields[i],FGetStoredProc.Params.ParamByName('out'+FDataSet.Fields[i].FieldName));
+  End;
+  FDataSet.Post;
+  //Отключаем необходимось перечитывать данные при следующей активизации
+  FNeedRefresh := False;
+end;
+
+procedure TAddOnFormRefresh.SetDatSet(Value: TDataSet);
+begin
+  if Value = FDataSet then exit;
+  FDataSet := Value;
+end;
+
+procedure TAddOnFormRefresh.SetGetStoredProc(Value: TdsdStoredProc);
+begin
+  if Value = FGetStoredProc then exit;
+  FGetStoredProc := Value;
 end;
 
 end.

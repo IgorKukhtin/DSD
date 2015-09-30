@@ -328,7 +328,10 @@ uses
   MCS in '..\..\Forms\Guides\MCS.pas' {MCSForm: TParentForm},
   PartionGoodsChoice in '..\..\Forms\Guides\PartionGoodsChoice.pas' {PartionGoodsChoiceForm: TParentForm},
   Report_GoodsPartionHistory in '..\..\FormsFarmacy\Report\Report_GoodsPartionHistory.pas' {Report_GoodsPartionHistoryForm: TParentForm},
-  RecalcMCS_Dialog in '..\..\FormsFarmacy\System\RecalcMCS_Dialog.pas' {RecalcMCS_DialogForm: TParentForm};
+  RecalcMCS_Dialog in '..\..\FormsFarmacy\System\RecalcMCS_Dialog.pas' {RecalcMCS_DialogForm: TParentForm},
+  ReportSoldParams in '..\..\FormsFarmacy\Object\ReportSoldParams.pas' {ReportSoldParamsForm: TParentForm},
+  ReportSoldParamsTest in '..\SOURCE\Objects\All\Farmacy\ReportSoldParamsTest.pas',
+  Report_Sold in '..\..\FormsFarmacy\Report\Report_Sold.pas' {Report_SoldForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}

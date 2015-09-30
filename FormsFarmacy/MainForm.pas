@@ -169,6 +169,10 @@ type
     N60: TMenuItem;
     actReport_GoodsPartionHistoryForm: TdsdOpenForm;
     N61: TMenuItem;
+    actReportSoldParamsFormOpen: TdsdOpenForm;
+    N62: TMenuItem;
+    actReport_SoldForm: TdsdOpenForm;
+    N63: TMenuItem;
     procedure actSaveDataExecute(Sender: TObject);
     procedure miRepriceClick(Sender: TObject);
   private

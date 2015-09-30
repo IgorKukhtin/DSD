@@ -2,8 +2,13 @@ inherited LossJournalForm: TLossJournalForm
   Caption = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' <'#1057#1087#1080#1089#1072#1085#1080#1077'>'
   ClientHeight = 535
   ClientWidth = 1020
-  ExplicitWidth = 1028
-  ExplicitHeight = 562
+  AddOnFormData.AddOnFormRefresh.SelfList = 'Loss'
+  AddOnFormData.AddOnFormRefresh.DataSet = MasterCDS
+  AddOnFormData.AddOnFormRefresh.KeyField = 'Id'
+  AddOnFormData.AddOnFormRefresh.KeyParam = 'inMovementId'
+  AddOnFormData.AddOnFormRefresh.GetStoredProc = spGet
+  ExplicitWidth = 1036
+  ExplicitHeight = 573
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -441,5 +446,155 @@ inherited LossJournalForm: TLossJournalForm
     PackSize = 1
     Left = 535
     Top = 248
+  end
+  object spGet: TdsdStoredProc
+    StoredProcName = 'gpGet_Movement_Loss'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+      end
+      item
+        Name = 'InvNumber'
+        Value = ''
+      end
+      item
+        Name = 'inOperDate'
+        Value = Null
+        Component = deEnd
+        DataType = ftDateTime
+        ParamType = ptInput
+      end
+      item
+        Name = 'OperDate'
+        Value = 42132d
+        DataType = ftDateTime
+      end
+      item
+        Name = 'StatusCode'
+        Value = ''
+        ComponentItem = 'Key'
+        DataType = ftString
+      end
+      item
+        Name = 'StatusName'
+        Value = ''
+        ComponentItem = 'TextValue'
+        DataType = ftString
+      end
+      item
+        Name = 'UnitId'
+        Value = ''
+        ComponentItem = 'Key'
+      end
+      item
+        Name = 'UnitName'
+        Value = ''
+        ComponentItem = 'TextValue'
+        DataType = ftString
+      end
+      item
+        Name = 'ArticleLossId'
+        Value = ''
+        ComponentItem = 'Key'
+      end
+      item
+        Name = 'ToName'
+        Value = ''
+        DataType = ftString
+      end
+      item
+        Name = 'ArticleLossName'
+        Value = ''
+        ComponentItem = 'TextValue'
+        DataType = ftString
+      end
+      item
+        Value = ''
+        ParamType = ptUnknown
+      end
+      item
+        Value = 0.000000000000000000
+        DataType = ftFloat
+        ParamType = ptUnknown
+      end
+      item
+        Value = 0.000000000000000000
+        DataType = ftFloat
+        ParamType = ptUnknown
+      end
+      item
+        Value = ''
+        ParamType = ptUnknown
+      end
+      item
+        Value = ''
+        DataType = ftString
+        ParamType = ptUnknown
+      end
+      item
+        Value = ''
+        ParamType = ptUnknown
+      end
+      item
+        Value = ''
+        DataType = ftString
+        ParamType = ptUnknown
+      end
+      item
+        Value = ''
+        ParamType = ptUnknown
+      end
+      item
+        Value = ''
+        DataType = ftString
+        ParamType = ptUnknown
+      end
+      item
+        Value = 'False'
+        DataType = ftBoolean
+        ParamType = ptUnknown
+      end
+      item
+        Value = ''
+        DataType = ftString
+        ParamType = ptUnknown
+      end
+      item
+        Value = ''
+        ParamType = ptUnknown
+      end
+      item
+        Value = ''
+        DataType = ftString
+        ParamType = ptUnknown
+      end
+      item
+        Value = ''
+        DataType = ftString
+        ParamType = ptUnknown
+      end
+      item
+        Value = ''
+        ParamType = ptUnknown
+      end
+      item
+        Value = ''
+        DataType = ftString
+        ParamType = ptUnknown
+      end
+      item
+        Value = ''
+        DataType = ftString
+        ParamType = ptUnknown
+      end>
+    PackSize = 1
+    Left = 136
+    Top = 208
   end
 end
