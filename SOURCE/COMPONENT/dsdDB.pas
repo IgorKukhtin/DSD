@@ -100,6 +100,8 @@ type
     FCurrentPackSize: integer;
     FDataXML: string;
     FAutoWidth: boolean;
+    FNeedResetData: Boolean;
+    FParamKeyField: String;
     // Возвращает XML строку заполненных параметров
     function FillParams: String;
     procedure FillOutputParams(XML: String);
@@ -111,6 +113,7 @@ type
     function GetDataSetType: string;
     property CurrentPackSize: integer read FCurrentPackSize write FCurrentPackSize;
     procedure MultiExecute(ExecPack: boolean);
+    procedure ResetData;
   protected
     procedure Notification(AComponent: TComponent; Operation: TOperation); override;
   public
@@ -136,6 +139,10 @@ type
     property PackSize: integer read FPackSize write FPackSize;
     // автоматический расчет ширины колонок
     property AutoWidth: boolean read FAutoWidth write FAutoWidth default false;
+    // посылать команду перечитывания формам после экзекюта
+    property NeedResetData: Boolean read FNeedResetData write FNeedResetData Default False;
+    //Имя параметра, в котором ИД записи (нужно для перечитывания форм)
+    property ParamKeyField: String read FParamKeyField write FParamKeyField;
   end;
 
   procedure Register;
@@ -148,7 +155,7 @@ uses Storage, CommonData, TypInfo, UtilConvert, SysUtils, cxTextEdit, VCL.Forms,
      Variants, UITypes, dsdAction, Defaults, UtilConst, Windows, Dialogs,
      dsdAddOn, cxDBData, cxGridDBTableView, Authentication, Document, Controls,
      cxButtonEdit, EDI, ExternalSave, Medoc,
-     cxMemo, dsdInternetAction;
+     cxMemo, dsdInternetAction, ParentForm;
 
 procedure Register;
 begin
@@ -186,6 +193,8 @@ begin
   PackSize := 1;
   FDataXML := '';
   FAutoWidth := false;
+  FNeedResetData := False;
+  FParamKeyField := '';
 end;
 
 procedure TdsdStoredProc.DataSetRefresh;
@@ -250,6 +259,8 @@ begin
   end;
   if gc_isShowTimeMode then
      ShowMessage('Время выполнения ' + StoredProcName + ' - ' + FloatToStr((GetTickCount - TickCount)/1000) + ' сек ' ); ;
+  if NeedResetData then
+    ResetData;
 end;
 
 procedure TdsdStoredProc.FillOutputParams(XML: String);
@@ -504,6 +515,31 @@ begin
   result := FParams.ParamByName(Value);
   if not Assigned(Result) then
      raise Exception.Create('Параметр ' + Value + ' не найден в компоненте ' + Self.Name);
+end;
+
+procedure TdsdStoredProc.ResetData;
+var
+  I: Integer;
+begin
+  for I := 0 to Application.ComponentCount - 1 do
+  Begin
+    if (Application.Components[I] is TParentForm) AND
+       (Self.Owner is TParentForm) AND
+       (Application.Components[I] <> Self.Owner) AND
+       (ParamKeyField <> '') AND
+       (Params.ParamByName(ParamKeyField) <> nil) then
+    Begin
+      if TParentForm(Application.Components[I]).AddOnFormData.AddOnFormRefresh.SelfList =
+         TParentForm(Self.Owner).AddOnFormData.AddOnFormRefresh.ParentList then
+      Begin
+        with TParentForm(Application.Components[I]).AddOnFormData.AddOnFormRefresh do
+        Begin
+          NeedRefresh := True;
+          RefreshID := Self.ParamByName(ParamKeyField).Value;
+        End;
+      End;
+    End;
+  End;
 end;
 
 { TdsdParmas }

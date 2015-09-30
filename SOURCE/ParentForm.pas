@@ -30,6 +30,7 @@ type
   protected
     procedure Loaded; override;
     procedure Notification(AComponent: TComponent; Operation: TOperation); override;
+    procedure Activate; override;
   public
     { Public declarations }
     constructor Create(AOwner: TComponent); override;
@@ -54,9 +55,16 @@ uses
   cxButtonEdit, cxSplitter, Vcl.Menus, cxPC, frxDBSet, dxBarExtItems,
   cxDBPivotGrid, ChoicePeriod, cxGridDBBandedTableView,
   cxDBEdit, dsdAction, dsdGuides, cxDBVGrid,
-  Vcl.DBActns, cxMemo;
+  Vcl.DBActns, cxMemo, cxGridDBChartView;
 
 {$R *.dfm}
+
+procedure TParentForm.Activate;
+begin
+  inherited;
+  if AddOnFormData.AddOnFormRefresh.NeedRefresh then
+    AddOnFormData.AddOnFormRefresh.RefreshRecord;
+end;
 
 procedure TParentForm.AfterShow(var a : TWMSHOWWINDOW);
 begin
@@ -248,6 +256,8 @@ initialization
   RegisterClass (TdxBarStatic);
   RegisterClass (TdxBevel);
 
+  RegisterClass (TcxGridDBChartView);
+
   // Собственнтые компоненты
   RegisterClass (TBooleanStoredProcAction);
   RegisterClass (TChangeStatus);
@@ -285,6 +295,7 @@ initialization
   RegisterClass (TRefreshAddOn);
   RegisterClass (TRefreshDispatcher);
   RegisterClass (TUpdateRecord);
+  RegisterClass (TAddOnFormRefresh);
 
 // ДЛЯ ТЕСТА
 

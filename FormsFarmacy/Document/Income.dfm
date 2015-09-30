@@ -2,8 +2,8 @@ inherited IncomeForm: TIncomeForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1055#1088#1080#1093#1086#1076'>'
   ClientHeight = 526
   ClientWidth = 904
-  ExplicitWidth = 912
-  ExplicitHeight = 553
+  ExplicitWidth = 920
+  ExplicitHeight = 564
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -216,6 +216,12 @@ inherited IncomeForm: TIncomeForm
             Caption = #1045#1076'. '#1080#1079#1084
             DataBinding.FieldName = 'Measure'
             Width = 53
+          end
+          object colDublePriceColour: TcxGridDBColumn
+            Caption = #1056#1072#1079#1085#1099#1077' '#1094#1077#1085#1099
+            DataBinding.FieldName = 'DublePriceColour'
+            Visible = False
+            VisibleForCustomization = False
           end
         end
       end
@@ -828,6 +834,11 @@ inherited IncomeForm: TIncomeForm
     end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
+    ColorRuleList = <
+      item
+        BackGroundValueColumn = colDublePriceColour
+        ColorValueList = <>
+      end>
     SummaryItemList = <
       item
         Param.Value = Null

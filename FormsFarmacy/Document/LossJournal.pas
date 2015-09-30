@@ -26,6 +26,7 @@ type
     actPrint: TdsdPrintAction;
     bbPrint: TdxBarButton;
     ArticleLossName: TcxGridDBColumn;
+    spGet: TdsdStoredProc;
   private
     { Private declarations }
   public

@@ -76,6 +76,7 @@ type
     edPointDate: TcxDateEdit;
     cbFarmacyShow: TcxCheckBox;
     cxLabel12: TcxLabel;
+    colDublePriceColour: TcxGridDBColumn;
   private
     { Private declarations }
   public

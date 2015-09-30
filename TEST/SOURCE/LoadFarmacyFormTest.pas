@@ -71,6 +71,7 @@ type
     procedure LoadSendJournalFormTest;
     procedure LoadSendFormTest;
     procedure LoadCreateOrderFromMCSFormTest;
+    procedure LoadReportSoldParamsFormTest;
     procedure FormTest;
   end;
 
@@ -336,6 +337,14 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TReportMovementCheckForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_GoodsPartionHistoryForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_GoodsPartionHistoryForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_SoldForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_SoldForm');
+end;
+
+procedure TLoadFormTest.LoadReportSoldParamsFormTest;
+begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReportSoldParamsForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReportSoldParamsForm');
 end;
 
 procedure TLoadFormTest.LoadRetailFormTest;

@@ -2,8 +2,9 @@ inherited LossForm: TLossForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1057#1087#1080#1089#1072#1085#1080#1077'>'
   ClientHeight = 668
   ClientWidth = 800
-  ExplicitWidth = 808
-  ExplicitHeight = 695
+  AddOnFormData.AddOnFormRefresh.ParentList = 'Loss'
+  ExplicitWidth = 816
+  ExplicitHeight = 706
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -457,6 +458,8 @@ inherited LossForm: TLossForm
   end
   inherited spChangeStatus: TdsdStoredProc
     StoredProcName = 'gpUpdate_Status_Loss'
+    NeedResetData = True
+    ParamKeyField = 'inMovementId'
     Left = 120
     Top = 16
   end
@@ -709,6 +712,8 @@ inherited LossForm: TLossForm
         DataType = ftString
         ParamType = ptUnknown
       end>
+    NeedResetData = True
+    ParamKeyField = 'ioId'
     Left = 162
     Top = 312
   end

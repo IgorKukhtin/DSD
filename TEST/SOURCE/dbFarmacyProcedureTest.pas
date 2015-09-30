@@ -253,6 +253,8 @@ begin
   ProcedureLoad;
   ScriptDirectory := FarmacyReportsPath + 'Check\';
   ProcedureLoad;
+  ScriptDirectory := FarmacyReportsPath + 'Sold\';
+  ProcedureLoad;
   {ZQuery.SQL.LoadFromFile(ReportsPath + 'gpReport_Balance.sql');
   ZQuery.ExecSQL;}
 end;
