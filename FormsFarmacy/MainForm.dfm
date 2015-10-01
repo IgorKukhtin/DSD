@@ -783,6 +783,28 @@ inherited MainForm: TMainForm
       GuiParams = <>
       isShowModal = False
     end
+    object actReport_Sold_DayForm: TdsdOpenForm
+      Category = #1054#1090#1095#1077#1090#1099
+      MoveParams = <>
+      Caption = #1054#1090#1095#1077#1090' '#1087#1086' '#1087#1083#1072#1085#1091' '#1087#1088#1086#1076#1072#1078' ('#1076#1085#1077#1074#1085#1086#1081')'
+      Hint = #1054#1090#1095#1077#1090' '#1087#1086' '#1087#1083#1072#1085#1091' '#1087#1088#1086#1076#1072#1078' ('#1076#1085#1077#1074#1085#1086#1081')'
+      FormName = 'TReport_Sold_DayForm'
+      FormNameParam.Value = 'TReport_Sold_DayForm'
+      FormNameParam.DataType = ftString
+      GuiParams = <>
+      isShowModal = False
+    end
+    object actReport_Sold_DayUserForm: TdsdOpenForm
+      Category = #1054#1090#1095#1077#1090#1099
+      MoveParams = <>
+      Caption = #1054#1090#1095#1077#1090' '#1087#1086' '#1087#1083#1072#1085#1091' '#1087#1088#1086#1076#1072#1078' ('#1076#1085#1077#1074#1085#1086#1081')'
+      Hint = #1054#1090#1095#1077#1090' '#1087#1086' '#1087#1083#1072#1085#1091' '#1087#1088#1086#1076#1072#1078' ('#1076#1085#1077#1074#1085#1086#1081')'
+      FormName = 'TReport_Sold_DayUserForm'
+      FormNameParam.Value = 'TReport_Sold_DayUserForm'
+      FormNameParam.DataType = ftString
+      GuiParams = <>
+      isShowModal = False
+    end
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 496
@@ -1013,6 +1035,12 @@ inherited MainForm: TMainForm
       end
       object N63: TMenuItem
         Action = actReport_SoldForm
+      end
+      object N64: TMenuItem
+        Action = actReport_Sold_DayForm
+      end
+      object N65: TMenuItem
+        Action = actReport_Sold_DayUserForm
       end
     end
     inherited miService: TMenuItem

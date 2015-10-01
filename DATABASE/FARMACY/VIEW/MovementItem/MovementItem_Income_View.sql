@@ -28,6 +28,9 @@ CREATE OR REPLACE VIEW MovementItem_Income_View AS
            , MIString_Measure.ValueData         AS Measure
            , Object_PartnerGoods.MakerName      AS MakerName
 
+           ,MIString_SertificatNumber.ValueData AS SertificatNumber
+           ,MIDate_SertificatStart.ValueData    AS SertificatStart
+           ,MIDate_SertificatEnd.ValueData      AS SertificatEnd
        FROM  MovementItem 
             LEFT JOIN MovementItemFloat AS MIFloat_Price
                                         ON MIFloat_Price.MovementItemId = MovementItem.Id
@@ -62,6 +65,17 @@ CREATE OR REPLACE VIEW MovementItem_Income_View AS
             LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = MovementItem.ObjectId
 
             LEFT JOIN Movement_Income_View AS Movement_Income ON Movement_Income.Id = MovementItem.MovementId
+            
+            LEFT JOIN MovementItemString AS MIString_SertificatNumber
+                                         ON MIString_SertificatNumber.MovementItemId = MovementItem.Id
+                                        AND MIString_SertificatNumber.DescId = zc_MIString_SertificatNumber()                                         
+
+            LEFT JOIN MovementItemDate  AS MIDate_SertificatStart
+                                        ON MIDate_SertificatStart.MovementItemId = MovementItem.Id
+                                       AND MIDate_SertificatStart.DescId = zc_MIDate_SertificatStart()                                         
+            LEFT JOIN MovementItemDate  AS MIDate_SertificatEnd
+                                        ON MIDate_SertificatEnd.MovementItemId = MovementItem.Id
+                                       AND MIDate_SertificatEnd.DescId = zc_MIDate_SertificatEnd()                                         
 
    WHERE MovementItem.DescId     = zc_MI_Master();
 
@@ -72,7 +86,8 @@ ALTER TABLE MovementItem_Income_View
 /*-------------------------------------------------------------------------------*/
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.  Воробкало А.А.
+ 01.10.15                                                       *RegNumber,Series,SertificatStart,SertificatEnd
  09.04.15                        * 
  06.03.15                        * 
  11.12.14                        * 

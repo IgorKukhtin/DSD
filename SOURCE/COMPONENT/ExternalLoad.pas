@@ -286,6 +286,10 @@ begin
   FDataSet.FieldDefs.Add('FEA', ftString, 255); //
   FDataSet.FieldDefs.Add('MeasureName', ftString, 255); //
 
+  FDataSet.FieldDefs.Add('SertificatNumber', ftString, 255); //
+  FDataSet.FieldDefs.Add('SertificatStart', ftDateTime);    // Срок годности
+  FDataSet.FieldDefs.Add('SertificatEnd', ftDateTime);    // Срок годности
+
   FDataSet.FieldDefs.Add('Amount', ftFloat);    // Количество
   FDataSet.FieldDefs.Add('Price', ftFloat);     // Цена Отпускная (для аптеки это закупочная)
 
@@ -356,6 +360,16 @@ begin
             FieldByName('MakerCode').AsString := ElementList[2];
             FieldByName('MakerName').AsString := ElementList[3];
             FieldByName('CommonCode').AsString := ElementList[4];
+            FieldByName('SertificatNumber').AsString := ElementList[5]; // Номер регистрации
+            if (ElementList[6] = '') or (ElementList[6] = '  .  .  ') then
+              FieldByName('SertificatStart').Clear
+            else
+              FieldByName('SertificatStart').asDateTime := VarToDateTime(ElementList[6]);
+            if (ElementList[7] = '') or (ElementList[7] = '  .  .  ') then
+              FieldByName('SertificatEnd').Clear
+            else
+              FieldByName('SertificatEnd').AsDateTime := VarToDateTime(ElementList[7]);
+
             FieldByName('VAT').AsInteger := round(gfStrToFloat(ElementList[8]));
             FieldByName('PartitionGoods').AsString := ElementList[10]; // Номер серии
             FieldByName('ExpirationDate').AsDateTime := ExpirationDate;    // Срок годности
@@ -520,13 +534,13 @@ begin
   if (AImportSettings.FileType = dtXLS) and (not AImportSettings.HDR) then begin
      if (length(AFieldName) = 1) then begin
         c := lowercase(AFieldName)[1];
-        if c in ['a'..'z'] then
+        if CharInSet(c,['a'..'z']) then
            result := 'F' + IntToStr(byte(c) - byte('a') + 1);
      end;
      if (length(AFieldName) = 2) then begin
         c  := lowercase(AFieldName)[1];
         c1 := lowercase(AFieldName)[2];
-        if (c in ['a'..'z']) and (c1 in ['a'..'z']) then
+        if CharInSet(c,['a'..'z']) and CharInSet(c,['a'..'z']) then
            result := 'F' + IntToStr((byte(c) - byte('a') + 1) *26 + byte(c1) - byte('a') + 1);
      end;
   end;
