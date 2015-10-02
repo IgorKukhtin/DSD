@@ -36,7 +36,10 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_Income_MMOLoad(
     IN inPrice               TFloat    , -- Цена Отпускная (для аптеки это закупочная)
     IN inFEA                 TVarChar  , -- УК ВЭД
     IN inMeasure             TVarChar  , -- Ед. измерения
-
+    IN inSertificatNumber    TVarChar  , -- Номер регистрации
+    IN inSertificatStart     TDateTime , -- Дата начала регистрации
+    IN inSertificatEnd       TDateTime , -- Дата окончания регистрации
+    
     IN inisLastRecord        Boolean   ,
     IN inSession             TVarChar    -- сессия пользователя
 )
@@ -65,15 +68,19 @@ BEGIN
                                                     inGoodsName := inGoodsName  , 
                                                     inAmount    := inAmount     ,  
                                                     inPrice     := inPrice      ,  
-                                                    inExpirationDate := inExpirationDate, -- Срок годности
-                                                    inPartitionGoods := inPartitionGoods,   
-                                                    inPaymentDate    := inPaymentDate   , -- Дата оплаты
-                                                    inPriceWithVAT   := inPriceWithVAT  ,
-                                                    inVAT            := inVAT           ,
-                                                    inUnitName       := inRemark        ,
-                                                    inMakerName      := inMakerName     ,
-                                                    inFEA            := inFEA           , -- УК ВЭД
-                                                    inMeasure        := inMeasure       , -- Ед. измерения
+                                                    inExpirationDate := inExpirationDate , -- Срок годности
+                                                    inPartitionGoods := inPartitionGoods ,   
+                                                    inPaymentDate    := inPaymentDate    , -- Дата оплаты
+                                                    inPriceWithVAT   := inPriceWithVAT   ,
+                                                    inVAT            := inVAT            ,
+                                                    inUnitName       := inRemark         ,
+                                                    inMakerName      := inMakerName      ,
+                                                    inFEA            := inFEA            , -- УК ВЭД
+                                                    inMeasure        := inMeasure        , -- Ед. измерения
+                                                    inSertificatNumber := inSertificatNumber, -- Номер регистрации
+                                                    inSertificatStart  := inSertificatStart , -- Дата начала регистрации
+                                                    inSertificatEnd    := inSertificatEnd   , -- Дата окончания регистрации
+
                                                     inisLastRecord   := inisLastRecord  ,
                                                     inSession        := inSession);
 
@@ -84,7 +91,8 @@ LANGUAGE PLPGSQL VOLATILE;
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.   Воробкало А.А.
+ 01.10.15                                                                      * inSertificatNumber, inSertificatStart, inSertificatEnd
  06.03.15                        *   
  05.01.15                        *   
 */

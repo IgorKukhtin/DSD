@@ -58,6 +58,9 @@ type
     cbFarmacyShow: TcxCheckBox;
     actPrintForManager: TdsdPrintAction;
     dxBarButton1: TdxBarButton;
+    colSertificatNumber: TcxGridDBColumn;
+    colSertificatStart: TcxGridDBColumn;
+    colSertificatEnd: TcxGridDBColumn;
   private
     { Private declarations }
   public

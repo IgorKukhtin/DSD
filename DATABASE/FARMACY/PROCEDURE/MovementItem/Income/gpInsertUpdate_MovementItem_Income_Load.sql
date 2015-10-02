@@ -71,6 +71,24 @@ DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_Income_Load
            Boolean,
            TVarChar);
 
+DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_Income_Load 
+          (Integer, TVarChar, TDateTime,
+           Integer, TVarChar, TVarChar, TVarChar, 
+           TFloat, TFloat,
+           TDateTime, 
+           TVarChar,
+           TDateTime, 
+           Boolean,
+           TFloat, 
+           TVarChar,
+           TVarChar,
+           TVarChar,
+           TVarChar,
+           TVarChar,
+           TDateTime, 
+           TDateTime, 
+           Boolean,
+           TVarChar);
 CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_Income_Load(
     IN inJuridicalId         Integer   , -- Юридические лица
     IN inInvNumber           TVarChar  , -- Номер документа
@@ -91,6 +109,10 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_Income_Load(
     IN inMakerName           TVarChar  , -- Наименование производителя
     IN inFEA                 TVarChar  , -- УК ВЭД
     IN inMeasure             TVarChar  , -- Ед. измерения
+    IN inSertificatNumber    TVarChar  , -- Номер регистрации
+    IN inSertificatStart     TDateTime , -- Дата начала регистрации
+    IN inSertificatEnd       TDateTime , -- Дата окончания регистрации
+    
     IN inisLastRecord        Boolean   ,
     IN inSession             TVarChar    -- сессия пользователя
 )
@@ -233,6 +255,21 @@ BEGIN
         PERFORM lpInsertUpdate_MovementItemString (zc_MIString_PartionGoods(), vbMovementItemId, inPartitionGoods);
      END IF;
      
+    -- Если есть то рег номер
+     IF COALESCE(inSertificatNumber, '') <> '' THEN 
+        -- сохранили свойство <Номер регистрации>
+        PERFORM lpInsertUpdate_MovementItemString (zc_MIString_SertificatNumber(), vbMovementItemId, inSertificatNumber);
+     END IF;
+    -- Если есть до дату начала регистрации
+     IF inSertificatStart is not null THEN 
+        -- сохранили свойство <Дата начала регистрации>
+        PERFORM lpInsertUpdate_MovementItemDate (zc_MIDate_SertificatStart(), vbMovementItemId, inSertificatStart);
+     END IF;
+    -- Если есть до дату окончания регистрации
+     IF inSertificatEnd is not null THEN 
+        -- сохранили свойство <Дата окончания регистрации>
+        PERFORM lpInsertUpdate_MovementItemDate (zc_MIDate_SertificatEnd(), vbMovementItemId, inSertificatEnd);
+     END IF;
 
      IF inisLastRecord THEN
         -- пересчитали Итоговые суммы
@@ -248,7 +285,8 @@ LANGUAGE PLPGSQL VOLATILE;
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.   Воробкало А.А.
+ 01.10.15                                                                      * inSertificatNumber, inSertificatStart, inSertificatEnd
  14.01.15                        *   
  08.01.15                        *   
  29.12.14                        *   

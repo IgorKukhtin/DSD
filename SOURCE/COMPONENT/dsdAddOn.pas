@@ -2254,35 +2254,45 @@ begin
   if FDataSet.FindField(FKeyField) = nil then exit;
   //Пытаемся найти параметр
   if not Assigned(FGetStoredProc.Params.ParamByName(FKeyParam)) then exit;
-  //Приписываем ему значение присланого ИД
-  FGetStoredProc.Params.ParamByName(FKeyParam).Value := FRefreshID;
-  //пробуем выполнить процедуру
-  FGetStoredProc.Execute;
-  //Если в датасете найдена запись ко ключевому полю - переводим датасет в режим редактирования
-  if FDataSet.Locate(FKeyField,FRefreshID,[]) then
-    FDataSet.Edit
-  else
-  //Если запись не найдена - добавляем её в датасет
-  Begin
-    FDataSet.Append;
-    FDataSet.FieldByName(FKeyField).Value := FRefreshID;
-  End;
-  //Перебрать все поля и заполнить их значениями параметров с такими же именами
-  for I := 0 to FDataSet.FieldCount-1 do
-  Begin
-    //Если это ключевое поле - то перебивать его не нужно
-    if CompareText(FDataSet.Fields[i].FieldName, FKeyField) = 0 then Continue;
-    //Пробуем прописать значения полю из параметров с таким же именем
-    if Assigned(FGetStoredProc.Params.ParamByName(FDataSet.Fields[i].FieldName)) then
-      AssignValue(FDataSet.Fields[i],FGetStoredProc.Params.ParamByName(FDataSet.Fields[i].FieldName))
+
+  try
+    //задизеблить, что бы не вызвался повторно gpInsertUpdate...
+    FDataSet.DisableControls;
+
+    //Приписываем ему значение присланого ИД
+    FGetStoredProc.Params.ParamByName(FKeyParam).Value := FRefreshID;
+    //пробуем выполнить процедуру
+    FGetStoredProc.Execute;
+
+    //Если в датасете найдена запись ко ключевому полю - переводим датасет в режим редактирования
+    if FDataSet.Locate(FKeyField,FRefreshID,[]) then
+      FDataSet.Edit
     else
-    //Если полного совпадения нет - то пробуем со стандартной приставкой out
-    if Assigned(FGetStoredProc.Params.ParamByName('out'+FDataSet.Fields[i].FieldName)) then
-      AssignValue(FDataSet.Fields[i],FGetStoredProc.Params.ParamByName('out'+FDataSet.Fields[i].FieldName));
-  End;
-  FDataSet.Post;
-  //Отключаем необходимось перечитывать данные при следующей активизации
-  FNeedRefresh := False;
+    //Если запись не найдена - добавляем её в датасет
+    Begin
+      FDataSet.Append;
+      FDataSet.FieldByName(FKeyField).Value := FRefreshID;
+    End;
+    //Перебрать все поля и заполнить их значениями параметров с такими же именами
+    for I := 0 to FDataSet.FieldCount-1 do
+    Begin
+      //Если это ключевое поле - то перебивать его не нужно
+      if CompareText(FDataSet.Fields[i].FieldName, FKeyField) = 0 then Continue;
+      //Пробуем прописать значения полю из параметров с таким же именем
+      if Assigned(FGetStoredProc.Params.ParamByName(FDataSet.Fields[i].FieldName)) then
+        AssignValue(FDataSet.Fields[i],FGetStoredProc.Params.ParamByName(FDataSet.Fields[i].FieldName))
+      else
+      //Если полного совпадения нет - то пробуем со стандартной приставкой out
+      if Assigned(FGetStoredProc.Params.ParamByName('out'+FDataSet.Fields[i].FieldName)) then
+        AssignValue(FDataSet.Fields[i],FGetStoredProc.Params.ParamByName('out'+FDataSet.Fields[i].FieldName));
+    End;
+    FDataSet.Post;
+  finally
+    //Отключаем необходимось перечитывать данные при следующей активизации
+    FNeedRefresh := False;
+    //вернуть на место, что бы вызвался повторно gpInsertUpdate...
+    FDataSet.EnableControls;
+  end;
 end;
 
 procedure TAddOnFormRefresh.SetDatSet(Value: TDataSet);

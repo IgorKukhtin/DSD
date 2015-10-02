@@ -339,6 +339,10 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TReport_GoodsPartionHistoryForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_SoldForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_SoldForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Sold_DayForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_Sold_DayForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Sold_DayUserForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_Sold_DayUserForm');
 end;
 
 procedure TLoadFormTest.LoadReportSoldParamsFormTest;
