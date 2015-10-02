@@ -317,6 +317,7 @@ BEGIN
       AND (tmpMovement.PartnerId > 0 OR inIsPeriod = FALSE)
       AND (ObjectLink_Juridical_JuridicalGroup.ChildObjectId = vbObjectId_Constraint
            OR View_PersonalTrade.BranchId = vbObjectId_Branch_Constraint
+           OR tmpMovement.PartnerId > 0
            OR vbIsConstraint = FALSE)
    ;
 

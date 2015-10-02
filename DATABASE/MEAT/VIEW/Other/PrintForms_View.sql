@@ -33,6 +33,15 @@ AS
            , CAST ('PrintMovement_Bill' AS TVarChar)   AS PrintFormName
       UNION
       SELECT
+             zc_movement_sale()                         AS DescId
+           , CAST ('Bill' AS TVarChar)                  AS ReportType
+           , CAST ('01.01.2000' AS TDateTime)           AS StartDate
+           , CAST ('01.01.2200' AS TDateTime)           AS EndDate
+           , CAST (0 AS INTEGER)                        AS JuridicalId
+           , zc_Enum_PaidKind_SecondForm()              AS PaidKindId --í
+           , CAST ('PrintMovement_Bill' AS TVarChar)   AS PrintFormName
+      UNION
+      SELECT
              zc_movement_sale()
            , CAST ('Bill' AS TVarChar)
            , CAST ('01.01.2000' AS TDateTime)

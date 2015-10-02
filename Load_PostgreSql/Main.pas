@@ -2734,6 +2734,7 @@ begin
                      +'        when fCheckGoodsParentID(7574,Goods.ParentId) =zc_rvYes() then 20401' // ГСМ  - 20401	Общефирменные ГСМ ГСМ
 
                      +'        when fCheckGoodsParentID(9323,Goods.ParentId) =zc_rvYes() then 20701' // ТОВАРЫ ПАВИЛЬОНЫ  - 20701	Общефирменные Товары Прочие товары
+                     +'        when fCheckGoodsParentID(13465,Goods.ParentId) =zc_rvYes() then 20701' // ТОВАРЫ ДЛЯ ПРОДАЖИ  - 20701	Общефирменные Товары Прочие товары
 
                      +'        when fCheckGoodsParentID(7580,Goods.ParentId) =zc_rvYes() then 20101' // 1)Запчасти автомобили  - 20101	Общефирменные Запчасти и Ремонты Запчасти и Ремонты
                      +'        when fCheckGoodsParentID(7581,Goods.ParentId) =zc_rvYes() then 20101' // 1)РЕЗИНА  - 20101	Общефирменные Запчасти и Ремонты Запчасти и Ремонты
