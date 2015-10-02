@@ -5,7 +5,7 @@ inherited IncomeJournalChoiceForm: TIncomeJournalChoiceForm
   AddOnFormData.ChoiceAction = dsdChoiceGuides
   AddOnFormData.Params = FormParams
   ExplicitWidth = 1126
-  ExplicitHeight = 573
+  ExplicitHeight = 570
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -578,37 +578,6 @@ inherited IncomeJournalChoiceForm: TIncomeJournalChoiceForm
           Component = MasterCDS
           ComponentItem = 'OperDate'
           DataType = ftDateTime
-        end
-        item
-          Name = 'FromId'
-          Value = Null
-          Component = MasterCDS
-          ComponentItem = 'FromId'
-        end
-        item
-          Name = 'FromName'
-          Value = Null
-          Component = MasterCDS
-          ComponentItem = 'FromName'
-        end
-        item
-          Name = 'ToId'
-          Value = Null
-          Component = MasterCDS
-          ComponentItem = 'ToId'
-        end
-        item
-          Name = 'ToName'
-          Value = Null
-          Component = MasterCDS
-          ComponentItem = 'ToName'
-        end
-        item
-          Name = 'InvNumber'
-          Value = Null
-          Component = MasterCDS
-          ComponentItem = 'InvNumber'
-          DataType = ftString
         end>
       Caption = #1042#1099#1073#1086#1088' '#1080#1079' '#1078#1091#1088#1085#1072#1083#1072
       Hint = #1042#1099#1073#1086#1088' '#1080#1079' '#1078#1091#1088#1085#1072#1083#1072

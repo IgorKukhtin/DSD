@@ -73,7 +73,7 @@
 			<Icon_MainIcon>0203.ico</Icon_MainIcon>
 			<VerInfo_Release>3</VerInfo_Release>
 			<VerInfo_MinorVer>1</VerInfo_MinorVer>
-			<Debugger_RunParams>/autologin ves=12.345</Debugger_RunParams>
+			<Debugger_RunParams>Scale_OBV.ini ves=1</Debugger_RunParams>
 			<VerInfo_Keys>CompanyName=;FileDescription=;FileVersion=1.1.3.8;InternalName=;LegalCopyright=;LegalTrademarks=;OriginalFilename=;ProductName=;ProductVersion=1.0.0.0;Comments=</VerInfo_Keys>
 			<VerInfo_Build>8</VerInfo_Build>
 			<DCC_ExeOutput>..\BIN\</DCC_ExeOutput>

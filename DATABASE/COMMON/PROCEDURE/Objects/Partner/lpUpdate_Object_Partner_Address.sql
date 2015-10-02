@@ -202,5 +202,28 @@ $BODY$
  11.11.14         *
 */
 
+/*
+-- check !!!
+SELECT 
+  ObjectLink_Street_StreetKind.ChildObjectId
+, ObjectLink_Street_City.ChildObjectId 
+, Object_Street.ValueData
+, ObjectLink_Street_ProvinceCity.ChildObjectId
+                    FROM Object AS Object_Street
+                       JOIN ObjectLink AS ObjectLink_Street_StreetKind ON ObjectLink_Street_StreetKind.ObjectId = Object_Street.Id
+                                                                      AND ObjectLink_Street_StreetKind.DescId = zc_ObjectLink_Street_StreetKind()
+                       INNER JOIN ObjectLink AS ObjectLink_Street_City ON ObjectLink_Street_City.ObjectId = Object_Street.Id
+                                                                      AND ObjectLink_Street_City.DescId = zc_ObjectLink_Street_City()
+                       LEFT JOIN ObjectLink AS ObjectLink_Street_ProvinceCity ON ObjectLink_Street_ProvinceCity.ObjectId = Object_Street.Id
+                                                                             AND ObjectLink_Street_ProvinceCity.DescId = zc_ObjectLink_Street_ProvinceCity()
+WHERE Object_Street.DescId = zc_Object_Street() 
+GROUP BY ObjectLink_Street_StreetKind.ChildObjectId
+       , ObjectLink_Street_City.ChildObjectId 
+       , Object_Street.ValueData
+       , ObjectLink_Street_ProvinceCity.ChildObjectId
+having count (*) > 1
+-- select * from gpGet_Object_Street(inId := 414427 ,  inSession := '5');
+-- select * from ObjectLink where ChildObjectId = 419843
+*/
 -- тест
 -- SELECT * FROM lpUpdate_Object_Partner_Address()
