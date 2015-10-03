@@ -12,7 +12,8 @@ uses
   cxButtonEdit, dsdAddOn, ChoicePeriod, Vcl.Menus, dxBarExtItems, dxBar,
   cxClasses, dsdDB, Datasnap.DBClient, dsdAction, Vcl.ActnList,
   cxPropertiesStore, cxLabel, cxTextEdit, cxMaskEdit, cxDropDownEdit,
-  cxCalendar, Vcl.ExtCtrls, cxGridLevel, cxGridCustomView, cxGrid, cxPC;
+  cxCalendar, Vcl.ExtCtrls, cxGridLevel, cxGridCustomView, cxGrid, cxPC,
+  cxPCdxBarPopupMenu, cxCurrencyEdit;
 
 type
   TReport_GoodsPartionHistoryForm = class(TAncestorReportForm)
@@ -43,6 +44,19 @@ type
     spGet_UserUnit: TdsdStoredProc;
     actGet_UserUnit: TdsdExecStoredProc;
     actRefreshStart: TdsdDataSetRefresh;
+    colCheckMember: TcxGridDBColumn;
+    colBayer: TcxGridDBColumn;
+    actOpenDocument: TdsdOpenForm;
+    N2: TMenuItem;
+    N3: TMenuItem;
+    FormParams: TdsdFormParams;
+    spGet_MovementFormClass: TdsdStoredProc;
+    actGet_MovementFormClass: TdsdExecStoredProc;
+    mactOpenDocument: TMultiAction;
+    rgUnit: TRefreshDispatcher;
+    rdGoods: TRefreshDispatcher;
+    rdParty: TRefreshDispatcher;
+    colSumma: TcxGridDBColumn;
   private
     { Private declarations }
   public

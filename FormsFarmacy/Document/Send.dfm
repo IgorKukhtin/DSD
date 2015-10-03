@@ -2,8 +2,8 @@ inherited SendForm: TSendForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1055#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077'>'
   ClientHeight = 617
   ClientWidth = 780
-  ExplicitWidth = 788
-  ExplicitHeight = 644
+  ExplicitWidth = 796
+  ExplicitHeight = 655
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -147,6 +147,27 @@ inherited SendForm: TSendForm
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             Width = 70
+          end
+          object colMaxPriceIn: TcxGridDBColumn
+            Caption = #1052#1072#1082#1089'. '#1079#1072#1082#1091#1087'. '#1094#1077#1085#1072
+            DataBinding.FieldName = 'MaxPriceIn'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.00'
+            Options.Editing = False
+          end
+          object colPriceUnitFrom: TcxGridDBColumn
+            Caption = #1062#1077#1085#1072' '#1086#1090#1087#1088#1072#1074#1080#1090#1077#1083#1103
+            DataBinding.FieldName = 'PriceUnitFrom'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.00'
+            Options.Editing = False
+          end
+          object colPriceUnitTo: TcxGridDBColumn
+            Caption = #1062#1077#1085#1072' '#1087#1086#1083#1091#1095#1072#1090#1077#1083#1103
+            DataBinding.FieldName = 'PriceUnitTo'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.00'
+            Options.Editing = False
           end
         end
       end
