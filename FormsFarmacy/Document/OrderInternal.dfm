@@ -2,7 +2,6 @@ inherited OrderInternalForm: TOrderInternalForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1047#1072#1103#1074#1082#1072' '#1074#1085#1091#1090#1088#1077#1085#1085#1103#1103'>'
   ClientHeight = 532
   ClientWidth = 1229
-  ExplicitLeft = -101
   ExplicitWidth = 1245
   ExplicitHeight = 570
   PixelsPerInch = 96
@@ -54,7 +53,6 @@ inherited OrderInternalForm: TOrderInternalForm
             item
               Format = ',0.####'
               Kind = skSum
-              Column = colSumm
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -88,12 +86,10 @@ inherited OrderInternalForm: TOrderInternalForm
             item
               Format = ',0.####'
               Kind = skSum
-              Column = colSumm
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = colAmountSecond
             end
             item
               Format = ',0.####'
@@ -124,28 +120,45 @@ inherited OrderInternalForm: TOrderInternalForm
           Styles.Selection = nil
           Styles.Footer = nil
           Styles.Header = nil
-          object colCode: TcxGridDBColumn
+          object colComment: TcxGridDBColumn [0]
+            Caption = #1050#1086#1084#1084#1077#1085#1090#1072#1088#1080#1081
+            DataBinding.FieldName = 'Comment'
+            Options.Editing = False
+            Width = 91
+          end
+          object colCode: TcxGridDBColumn [1]
             Caption = #1050#1086#1076
             DataBinding.FieldName = 'GoodsCode'
             HeaderAlignmentHorz = taCenter
             Options.Editing = False
             Width = 43
           end
-          object colName: TcxGridDBColumn
+          object colName: TcxGridDBColumn [2]
             Caption = #1058#1086#1074#1072#1088
             DataBinding.FieldName = 'GoodsName'
             HeaderAlignmentHorz = taCenter
             Options.Editing = False
             Width = 206
           end
-          object clCalcAmount: TcxGridDBColumn
-            Caption = #1057#1087#1077#1094#1079#1072#1082#1072#1079' '#1089' '#1084#1080#1085'. '#1086#1082#1088#1091#1075#1083'.'
-            DataBinding.FieldName = 'CalcAmount'
-            HeaderHint = #1057#1087#1077#1094#1079#1072#1082#1072#1079' '#1089' '#1091#1095#1077#1090#1086#1084' '#1084#1080#1085#1080#1084#1072#1083#1100#1085#1086#1075#1086' '#1086#1082#1088#1091#1075#1083#1077#1085#1080#1103
+          object colRemainsInUnit: TcxGridDBColumn [3]
+            Caption = #1054#1089#1090#1072#1090#1086#1082
+            DataBinding.FieldName = 'RemainsInUnit'
+            HeaderHint = #1058#1077#1082#1091#1097#1080#1081' '#1086#1089#1090#1072#1090#1086#1082' '#1085#1072' '#1087#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1080
             Options.Editing = False
-            Width = 87
+            Width = 47
           end
-          object colAmount: TcxGridDBColumn
+          object colMCS: TcxGridDBColumn [4]
+            Caption = #1053#1058#1047
+            DataBinding.FieldName = 'MCS'
+            Options.Editing = False
+            Width = 37
+          end
+          object colIncome_Amount: TcxGridDBColumn [5]
+            Caption = #1055#1088#1080#1093#1086#1076#1099' '#1089#1077#1075#1086#1076#1085#1103
+            DataBinding.FieldName = 'Income_Amount'
+            Options.Editing = False
+          end
+          object colAmount: TcxGridDBColumn [6]
             Caption = #1057#1087#1077#1094#1079#1072#1082#1072#1079
             DataBinding.FieldName = 'Amount'
             PropertiesClassName = 'TcxCalcEditProperties'
@@ -155,16 +168,7 @@ inherited OrderInternalForm: TOrderInternalForm
             Options.IncSearch = False
             Width = 48
           end
-          object colAmountSecond: TcxGridDBColumn
-            Caption = #1040#1074#1090#1086#1079#1072#1082#1072#1079
-            DataBinding.FieldName = 'AmountSecond'
-            PropertiesClassName = 'TcxCalcEditProperties'
-            Properties.DisplayFormat = ',0.####'
-            Properties.Precision = 4
-            Options.Editing = False
-            Width = 54
-          end
-          object colAmountAll: TcxGridDBColumn
+          object colAmountAll: TcxGridDBColumn [7]
             Caption = #1057#1087#1077#1094' + '#1040#1074#1090#1086
             DataBinding.FieldName = 'AmountAll'
             PropertiesClassName = 'TcxCalcEditProperties'
@@ -174,128 +178,20 @@ inherited OrderInternalForm: TOrderInternalForm
             Options.Editing = False
             Width = 62
           end
-          object colSumm: TcxGridDBColumn
-            Caption = #1057#1091#1084#1084#1072' '#1089#1087#1077#1094#1079#1072#1082#1072#1079#1072
-            DataBinding.FieldName = 'Summ'
-            PropertiesClassName = 'TcxCalcEditProperties'
-            Properties.DisplayFormat = ',0.00;-,0.00'
-            Properties.Precision = 2
-            HeaderAlignmentHorz = taCenter
-            HeaderHint = '['#1057#1087#1077#1094#1079#1072#1082#1072#1079' '#1089' '#1084#1080#1085'. '#1086#1082#1088#1091#1075#1083'.] X ['#1062#1077#1085#1072']'
-            Options.Editing = False
-            Width = 60
-          end
-          object colPartnerGoodsCode: TcxGridDBColumn
-            Caption = #1050#1086#1076' '#1091' '#1087#1088#1086#1076#1072#1074#1094#1072
-            DataBinding.FieldName = 'PartnerGoodsCode'
-            Width = 65
-          end
-          object colPartnerGoodsName: TcxGridDBColumn
-            Caption = #1053#1072#1079#1074#1072#1085#1080#1077' '#1091' '#1087#1088#1086#1076#1072#1074#1094#1072
-            DataBinding.FieldName = 'PartnerGoodsName'
-            Options.Editing = False
-            Width = 80
-          end
-          object clMakerName: TcxGridDBColumn
-            Caption = #1055#1088#1086#1080#1079#1074#1086#1076#1080#1090#1077#1083#1100
-            DataBinding.FieldName = 'MakerName'
-            Width = 65
-          end
-          object coJuridicalName: TcxGridDBColumn
-            Caption = #1070#1088' '#1083#1080#1094#1086' '#1087#1086#1089#1090'-'#1082
-            DataBinding.FieldName = 'JuridicalName'
-            Options.Editing = False
-            Width = 77
-          end
-          object coPrice: TcxGridDBColumn
-            Caption = #1062#1077#1085#1072
-            DataBinding.FieldName = 'Price'
-            Options.Editing = False
-            Width = 40
-          end
-          object coContractName: TcxGridDBColumn
-            Caption = #1059#1089#1083#1086#1074#1080#1103' '#1076#1086#1075#1086#1074#1086#1088#1072' '#1087#1086#1089#1090'-'#1082#1072
-            DataBinding.FieldName = 'ContractName'
-            Visible = False
-            Options.Editing = False
-            Width = 60
-          end
-          object coSuperFinalPrice: TcxGridDBColumn
-            Caption = #1062#1077#1085#1072' '#1089#1088#1072#1074#1085#1077#1085#1080#1103
-            DataBinding.FieldName = 'SuperFinalPrice'
-            Visible = False
-            Options.Editing = False
-            Width = 60
-          end
-          object colisCalculated: TcxGridDBColumn
-            Caption = #1040#1074#1090#1086
-            DataBinding.FieldName = 'isCalculated'
-            HeaderAlignmentHorz = taCenter
-            Width = 43
-          end
-          object clPartionGoodsDate: TcxGridDBColumn
-            Caption = #1057#1088#1086#1082' '#1075#1086#1076#1085#1086#1089#1090#1080
-            DataBinding.FieldName = 'PartionGoodsDate'
-            Width = 75
-          end
-          object clPartionGoodsDateColor: TcxGridDBColumn
-            DataBinding.FieldName = 'PartionGoodsDateColor'
-            Visible = False
-            VisibleForCustomization = False
-          end
-          object colMultiplicity: TcxGridDBColumn
-            Caption = #1050#1088#1072#1090#1085#1086#1089#1090#1100
-            DataBinding.FieldName = 'Multiplicity'
-            Options.Editing = False
-            Width = 78
-          end
-          object clMinimumLot: TcxGridDBColumn
+          object clMinimumLot: TcxGridDBColumn [8]
             Caption = #1052#1080#1085'. '#1086#1082#1088#1091#1075#1083'.'
             DataBinding.FieldName = 'MinimumLot'
             Options.Editing = False
-            Width = 88
+            Width = 53
           end
-          object colComment: TcxGridDBColumn
-            Caption = #1050#1086#1084#1084#1077#1085#1090#1072#1088#1080#1081
-            DataBinding.FieldName = 'Comment'
-            Width = 94
-          end
-          object colisTopColor: TcxGridDBColumn
-            DataBinding.FieldName = 'isTopColor'
-            Visible = False
-            VisibleForCustomization = False
-          end
-          object colTop: TcxGridDBColumn
-            Caption = #1058#1054#1055
-            DataBinding.FieldName = 'IsTop'
+          object colMultiplicity: TcxGridDBColumn [9]
+            Caption = #1050#1088#1072#1090#1085#1086#1089#1090#1100
+            DataBinding.FieldName = 'Multiplicity'
             Options.Editing = False
-            Width = 48
+            Width = 62
           end
-          object colRemainsInUnit: TcxGridDBColumn
-            Caption = #1054#1089#1090#1072#1090#1086#1082
-            DataBinding.FieldName = 'RemainsInUnit'
-            HeaderHint = #1058#1077#1082#1091#1097#1080#1081' '#1086#1089#1090#1072#1090#1086#1082' '#1085#1072' '#1087#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1080
-            Width = 47
-          end
-          object colMCS: TcxGridDBColumn
-            Caption = #1053#1058#1047
-            DataBinding.FieldName = 'MCS'
-            Width = 37
-          end
-          object colGoodsGroupName: TcxGridDBColumn
-            Caption = #1043#1088#1091#1087#1087#1072' '#1090#1086#1074#1072#1088#1086#1074
-            DataBinding.FieldName = 'GoodsGroupName'
-            Options.Editing = False
-            Width = 104
-          end
-          object colNDSKindName: TcxGridDBColumn
-            Caption = #1057#1090#1072#1074#1082#1072' '#1053#1044#1057
-            DataBinding.FieldName = 'NDSKindName'
-            Options.Editing = False
-            Width = 71
-          end
-          object colCalcAmountAll: TcxGridDBColumn
-            Caption = #1042#1089#1077#1075#1086' '#1089' '#1084#1080#1085'. '#1086#1082#1088'.'
+          object colCalcAmountAll: TcxGridDBColumn [10]
+            Caption = #1042#1089#1077#1075#1086' '#1089' '#1086#1082#1088#1091#1075#1083'.'
             DataBinding.FieldName = 'CalcAmountAll'
             PropertiesClassName = 'TcxCalcEditProperties'
             Properties.DisplayFormat = ',0.####'
@@ -303,16 +199,81 @@ inherited OrderInternalForm: TOrderInternalForm
             HeaderHint = '(['#1057#1087#1077#1094#1079#1072#1082#1072#1079'] + ['#1040#1074#1086#1079#1072#1082#1072#1079']) '#1089' '#1091#1095#1077#1090#1086#1084' '#1084#1080#1085#1080#1084#1072#1083#1100#1085#1086#1075#1086' '#1086#1082#1088#1091#1075#1083#1077#1085#1080#1103
             Options.IncSearch = False
           end
-          object colSummAll: TcxGridDBColumn
+          object coPrice: TcxGridDBColumn [11]
+            Caption = #1062#1077#1085#1072
+            DataBinding.FieldName = 'Price'
+            Options.Editing = False
+            Width = 40
+          end
+          object colSummAll: TcxGridDBColumn [12]
             Caption = #1048#1090#1086#1075#1086' '#1089#1091#1084#1084#1072
             DataBinding.FieldName = 'SummAll'
             HeaderHint = #1057#1091#1084#1084#1072' '#1079#1072#1082#1072#1079#1072' = ['#1042#1089#1077#1075#1086' '#1089' '#1084#1080#1085'. '#1086#1082#1088'.] '#1061' ['#1062#1077#1085#1072']'
             Options.Editing = False
             Width = 56
           end
-          object colIncome_Amount: TcxGridDBColumn
-            Caption = #1055#1088#1080#1093#1086#1076#1099' '#1089#1077#1075#1086#1076#1085#1103
-            DataBinding.FieldName = 'Income_Amount'
+          object colPartnerGoodsCode: TcxGridDBColumn [13]
+            Caption = #1050#1086#1076' '#1091' '#1087#1088#1086#1076#1072#1074#1094#1072
+            DataBinding.FieldName = 'PartnerGoodsCode'
+            Options.Editing = False
+            Width = 65
+          end
+          object colPartnerGoodsName: TcxGridDBColumn [14]
+            Caption = #1053#1072#1079#1074#1072#1085#1080#1077' '#1091' '#1087#1088#1086#1076#1072#1074#1094#1072
+            DataBinding.FieldName = 'PartnerGoodsName'
+            Options.Editing = False
+            Width = 80
+          end
+          object clMakerName: TcxGridDBColumn [15]
+            Caption = #1055#1088#1086#1080#1079#1074#1086#1076#1080#1090#1077#1083#1100
+            DataBinding.FieldName = 'MakerName'
+            Options.Editing = False
+            Width = 65
+          end
+          object coJuridicalName: TcxGridDBColumn [16]
+            Caption = #1070#1088' '#1083#1080#1094#1086' '#1087#1086#1089#1090'-'#1082
+            DataBinding.FieldName = 'JuridicalName'
+            Options.Editing = False
+            Width = 77
+          end
+          object coContractName: TcxGridDBColumn [17]
+            Caption = #1059#1089#1083#1086#1074#1080#1103' '#1076#1086#1075#1086#1074#1086#1088#1072' '#1087#1086#1089#1090'-'#1082#1072
+            DataBinding.FieldName = 'ContractName'
+            Options.Editing = False
+            Width = 60
+          end
+          object clPartionGoodsDate: TcxGridDBColumn [18]
+            Caption = #1057#1088#1086#1082' '#1075#1086#1076#1085#1086#1089#1090#1080
+            DataBinding.FieldName = 'PartionGoodsDate'
+            Options.Editing = False
+            Width = 75
+          end
+          object colNDSKindName: TcxGridDBColumn [19]
+            Caption = #1057#1090#1072#1074#1082#1072' '#1053#1044#1057
+            DataBinding.FieldName = 'NDSKindName'
+            Options.Editing = False
+            Width = 71
+          end
+          object colGoodsGroupName: TcxGridDBColumn [20]
+            Caption = #1043#1088#1091#1087#1087#1072' '#1090#1086#1074#1072#1088#1086#1074
+            DataBinding.FieldName = 'GoodsGroupName'
+            Options.Editing = False
+            Width = 104
+          end
+          object clPartionGoodsDateColor: TcxGridDBColumn [21]
+            DataBinding.FieldName = 'PartionGoodsDateColor'
+            Visible = False
+            Options.Editing = False
+            VisibleForCustomization = False
+          end
+          object colisTopColor: TcxGridDBColumn [22]
+            DataBinding.FieldName = 'isTopColor'
+            Visible = False
+            Options.Editing = False
+            VisibleForCustomization = False
+          end
+          inherited colIsErased: TcxGridDBColumn
+            VisibleForCustomization = False
           end
         end
       end
@@ -409,12 +370,12 @@ inherited OrderInternalForm: TOrderInternalForm
             DataBinding.FieldName = 'JuridicalName'
             HeaderAlignmentHorz = taCenter
             Options.Editing = False
-            Width = 189
+            Width = 190
           end
           object colMakerName: TcxGridDBColumn
             Caption = #1055#1088#1086#1080#1079#1074#1086#1076#1080#1090#1077#1083#1100
             DataBinding.FieldName = 'MakerName'
-            Width = 105
+            Width = 106
           end
           object colBonus: TcxGridDBColumn
             Caption = #1041#1086#1085#1091#1089
@@ -428,7 +389,7 @@ inherited OrderInternalForm: TOrderInternalForm
             Caption = #1059#1089#1083#1086#1074#1080#1103' '#1076#1086#1075#1086#1074#1086#1088#1072' '#1087#1086#1089#1090'-'#1082#1072
             DataBinding.FieldName = 'ContractName'
             Options.Editing = False
-            Width = 109
+            Width = 110
           end
           object colDeferment: TcxGridDBColumn
             Caption = #1054#1090#1089#1088'.'
@@ -450,13 +411,13 @@ inherited OrderInternalForm: TOrderInternalForm
             DataBinding.FieldName = 'GoodsName'
             HeaderAlignmentHorz = taCenter
             Options.Editing = False
-            Width = 132
+            Width = 133
           end
           object colPrice: TcxGridDBColumn
             Caption = #1062#1077#1085#1072
             DataBinding.FieldName = 'Price'
             Options.Editing = False
-            Width = 69
+            Width = 70
           end
           object colPercent: TcxGridDBColumn
             Caption = '% '#1079#1072' '#1086#1090#1089#1088'.'
@@ -472,12 +433,12 @@ inherited OrderInternalForm: TOrderInternalForm
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DisplayFormat = ',0.00'
             Options.Editing = False
-            Width = 145
+            Width = 99
           end
           object colPartionGoodsDate: TcxGridDBColumn
             Caption = #1057#1088#1086#1082' '#1075#1086#1076#1085#1086#1089#1090#1080
             DataBinding.FieldName = 'PartionGoodsDate'
-            Width = 80
+            Width = 98
           end
           object colPartionGoodsDateColor: TcxGridDBColumn
             DataBinding.FieldName = 'PartionGoodsDateColor'
@@ -488,12 +449,12 @@ inherited OrderInternalForm: TOrderInternalForm
           object colMinimumLot: TcxGridDBColumn
             Caption = #1052#1080#1085'. '#1086#1082#1088#1091#1075#1083#1077#1085#1080#1077
             DataBinding.FieldName = 'MinimumLot'
-            Width = 83
+            Width = 103
           end
           object colRemains: TcxGridDBColumn
             Caption = #1054#1089#1090#1072#1090#1086#1082
             DataBinding.FieldName = 'Remains'
-            Width = 43
+            Width = 53
           end
         end
         object cxGridLevel1: TcxGridLevel
@@ -627,8 +588,8 @@ inherited OrderInternalForm: TOrderInternalForm
           'Top'
           'Width')
       end>
-    Left = 48
-    Top = 120
+    Left = 24
+    Top = 160
   end
   inherited ActionList: TActionList
     Left = 55
@@ -1019,8 +980,8 @@ inherited OrderInternalForm: TOrderInternalForm
     Top = 161
   end
   inherited PopupMenu: TPopupMenu
-    Left = 40
-    Top = 168
+    Left = 24
+    Top = 208
     object N3: TMenuItem [0]
       Action = mactDeleteLinkGroup
     end
@@ -1070,13 +1031,13 @@ inherited OrderInternalForm: TOrderInternalForm
     Top = 416
   end
   inherited StatusGuides: TdsdGuides
-    Left = 80
-    Top = 80
+    Left = 64
+    Top = 160
   end
   inherited spChangeStatus: TdsdStoredProc
     StoredProcName = 'gpUpdate_Status_OrderInternal'
-    Left = 128
-    Top = 88
+    Left = 152
+    Top = 160
   end
   inherited spGet: TdsdStoredProc
     StoredProcName = 'gpGet_Movement_OrderInternal'
@@ -1213,8 +1174,8 @@ inherited OrderInternalForm: TOrderInternalForm
   inherited RefreshAddOn: TRefreshAddOn
     FormName = 'OrderInternalJournalForm'
     DataSet = 'MasterCDS'
-    Left = 121
-    Top = 137
+    Left = 113
+    Top = 161
   end
   inherited spErasedMIMaster: TdsdStoredProc
     StoredProcName = 'gpMovementItem_OrderInternal_SetErased'

@@ -1195,7 +1195,7 @@ begin
         if ChildNodes[i].NodeName = 'cxGridView' then begin
            GridView := Owner.FindComponent(ChildNodes[i].GetAttribute('name')) as TcxCustomGridView;
            if Assigned(GridView) then
-              GridView.RestoreFromStream(TStringStream.Create(ReConvertConvert(ChildNodes[i].GetAttribute('data'))));
+              GridView.RestoreFromStream(TStringStream.Create(ReConvertConvert(ChildNodes[i].GetAttribute('data'))),False);
         end;
         if ChildNodes[i].NodeName = 'cxTreeList' then begin
            TreeList := Owner.FindComponent(ChildNodes[i].GetAttribute('name')) as TcxDBTreeList;
@@ -1754,6 +1754,10 @@ begin
      if FComponent is TdsdGuides then begin
         FOnChange := TdsdGuides(FComponent).onChange;
         TdsdGuides(FComponent).onChange := OnChange;
+     end;
+     if FComponent is TcxDateEdit then begin
+        FOnChange := TcxDateEdit(FComponent).Properties.OnChange;
+        TcxDateEdit(FComponent).Properties.OnChange := OnChange;
      end;
   end;
 end;

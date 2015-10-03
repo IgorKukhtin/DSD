@@ -47,6 +47,29 @@ type
     mactDeleteLink: TMultiAction;
     DataSetDelete: TDataSetDelete;
     spDeleteLink: TdsdStoredProc;
+    PopupMenu1: TPopupMenu;
+    MenuItem1: TMenuItem;
+    MenuItem2: TMenuItem;
+    MenuItem3: TMenuItem;
+    MenuItem5: TMenuItem;
+    MenuItem6: TMenuItem;
+    MenuItem7: TMenuItem;
+    MenuItem8: TMenuItem;
+    GridAll: TcxGrid;
+    GridAllDBTableView: TcxGridDBTableView;
+    colId: TcxGridDBColumn;
+    GridAllLevel1: TcxGridLevel;
+    cxSplitter3: TcxSplitter;
+    dsdDBViewAddOn1: TdsdDBViewAddOn;
+    cdsAll: TClientDataSet;
+    spAll: TdsdStoredProc;
+    dsAll: TDataSource;
+    colGoodsMainId: TcxGridDBColumn;
+    colGoodsMainCode: TcxGridDBColumn;
+    colGoodsMainName: TcxGridDBColumn;
+    colGoodsId: TcxGridDBColumn;
+    colGoodsCode: TcxGridDBColumn;
+    colGoodsName: TcxGridDBColumn;
   private
     { Private declarations }
   public
