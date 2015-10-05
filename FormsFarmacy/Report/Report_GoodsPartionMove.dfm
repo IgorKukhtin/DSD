@@ -3,8 +3,8 @@ inherited Report_GoodsPartionMoveForm: TReport_GoodsPartionMoveForm
   ClientHeight = 375
   ClientWidth = 753
   AddOnFormData.Params = FormParams
-  ExplicitWidth = 761
-  ExplicitHeight = 402
+  ExplicitWidth = 769
+  ExplicitHeight = 413
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -193,6 +193,13 @@ inherited Report_GoodsPartionMoveForm: TReport_GoodsPartionMoveForm
       0)
   end
   inherited PeriodChoice: TPeriodChoice
+    Top = 104
+  end
+  inherited RefreshDispatcher: TRefreshDispatcher
+    ComponentList = <
+      item
+        Component = PeriodChoice
+      end>
     Top = 104
   end
   object GuidesUnit: TdsdGuides

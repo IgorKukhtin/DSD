@@ -19,11 +19,14 @@ RETURNS TABLE (
     ToId             Integer,   -- Кому
     ToName           TVarChar,  -- Кому (Название)
     Price            TFloat,    --Цена в документе
+    Summa            TFloat,    --Сумма в документе
     AmountIn         TFloat,    --Кол-во приход
     AmountOut        TFloat,    --Кол-во расход
     AmountInvent     TFloat,    --Кол-во переучет
     Saldo            TFloat,    --Остаток после операции
-    MCSValue         TFloat     --НТЗ
+    MCSValue         TFloat,     --НТЗ
+    CheckMember      TVarChar,  --Менеджер
+	Bayer            TVarChar  --Покупатель
   )
 AS
 $BODY$
@@ -85,7 +88,8 @@ BEGIN
                 COALESCE(Object_From.ValueData,Object_Unit.ValueData) AS FromName,  --От кого (Название)
                 COALESCE(Object_To.Id,Object_Unit.ID)                 AS ToId,   -- Кому
                 COALESCE(Object_To.ValueData,Object_Unit.ValueData)   AS ToName,  -- Кому (Название)
-                NULL::TFloat                                          AS Price,    --Цена в документе
+                MIFloat_Price.ValueData                               AS Price,    --Цена в документе
+                ABS(MIFloat_Price.ValueData * MovementItemContainer.Amount) AS Summa, -- Сумма в документе
                 CASE 
                   WHEN MovementItemContainer.Amount > 0 
                        AND 
@@ -103,13 +107,18 @@ BEGIN
                   WHEN Movement.DescId = zc_Movement_Inventory() 
                     THEN MovementItemContainer.Amount 
                 ELSE 0.0 
-                END::TFloat                                           AS AmountInvent,    --Кол-во переучет
+                END::TFloat                                           AS AmountInvent, --Кол-во переучет
                 Object_Price_View.MCSValue                            AS MCSValue,     --НТЗ
+                Object_CheckMember.ValueData                          AS CheckMember,  --Менеджер
+		        MovementString_Bayer.ValueData                        AS Bayer,        --Покупатель
+		   
                 ROW_NUMBER() OVER(ORDER BY MovementItemContainer.OperDate, 
                                            CASE WHEN MovementDesc.Id = zc_Movement_Inventory() THEN 1 else 0 end, 
+                                           CASE WHEN MovementItemContainer.Amount > 0 THEN 0 ELSE 0 END,
                                            MovementItemContainer.MovementId,MovementItemContainer.MovementItemId) AS OrdNum,
                 (SUM(MovementItemContainer.Amount)OVER(ORDER BY MovementItemContainer.OperDate, 
                                                                 CASE WHEN MovementDesc.Id = zc_Movement_Inventory() THEN 1 else 0 end, 
+                                                                CASE WHEN MovementItemContainer.Amount > 0 THEN 0 ELSE 0 END,
                                                                 MovementItemContainer.MovementId,MovementItemContainer.MovementItemId))+vbRemainsStart AS Saldo
             FROM
                 MovementItemContainer
@@ -142,7 +151,19 @@ BEGIN
                                        ON MovementLinkObject_Unit.ObjectId = Object_Unit.Id
                 
                 LEFT OUTER JOIN Object_Price_View ON Object_Price_View.UnitId = inUnitId
-                                                 AND Object_Price_View.GoodsId = inGoodsId 
+                                                 AND Object_Price_View.GoodsId = inGoodsId
+                
+                LEFT OUTER JOIN MovementItemFloat AS MIFloat_Price 
+                                                  ON MIFloat_Price.MovementItemId = MovementItemContainer.MovementItemId
+                                                 AND MIFloat_Price.DescId = zc_MIFloat_Price()
+                                                 
+                LEFT JOIN MovementLinkObject AS MovementLinkObject_CheckMember
+                                             ON MovementLinkObject_CheckMember.MovementId = MovementItemContainer.MovementId
+                                            AND MovementLinkObject_CheckMember.DescId = zc_MovementLinkObject_CheckMember()
+                LEFT JOIN Object AS Object_CheckMember ON Object_CheckMember.Id = MovementLinkObject_CheckMember.ObjectId
+                LEFT JOIN MovementString AS MovementString_Bayer
+                                         ON MovementString_Bayer.MovementId = Movement.Id
+                                        AND MovementString_Bayer.DescId = zc_MovementString_Bayer()
             WHERE
                 date_trunc('day', MovementItemContainer.OperDate) BETWEEN inStartDate AND inEndDate
                 AND
@@ -167,10 +188,13 @@ BEGIN
                 NULL                       AS ToId,   -- Кому
                 NULL                       AS ToName,  -- Кому (Название)
                 NULL::TFloat               AS Price,    --Цена в документе
+                NULL::TFloat               AS Summa, --Сума в документе
                 NULL                       AS AmountIn,    --Кол-во приход
                 NULL                       AS AmountOut,    --Кол-во расход
                 NULL                       AS AmountInvent,    --Кол-во переучет
                 Object_Price_View.MCSValue AS MCSValue,     --НТЗ
+                NULL                       AS CheckMember,  --Менеджер
+		        NULL                       AS Bayer,        --Покупатель
                 0                          AS OrdNum,
                 vbRemainsStart             AS Saldo
             FROM
@@ -191,10 +215,13 @@ BEGIN
                 NULL                       AS ToId,   -- Кому
                 NULL                       AS ToName,  -- Кому (Название)
                 NULL::TFloat               AS Price,    --Цена в документе
+                NULL::TFloat               AS Summa, --Сума в документе
                 NULL                       AS AmountIn,    --Кол-во приход
                 NULL                       AS AmountOut,    --Кол-во расход
                 NULL                       AS AmountInvent,    --Кол-во переучет
                 Object_Price_View.MCSValue AS MCSValue,     --НТЗ
+                NULL                       AS CheckMember,  --Менеджер
+		        NULL                       AS Bayer,        --Покупатель
                 999999999                  AS OrdNum,
                 vbRemainsEnd               AS Saldo 
             FROM
@@ -215,11 +242,14 @@ BEGIN
             Res.ToId::Integer,   -- Кому
             Res.ToName::TVarChar,  -- Кому (Название)
             Res.Price::TFloat,    --Цена в документе
+            Res.Summa::TFloat,    --Сумма в документе
             NULLIF(Res.AmountIn,0)::TFloat,    --Кол-во приход
             NULLIF(Res.AmountOut,0)::TFloat,    --Кол-во расход
             NULLIF(Res.AmountInvent,0)::TFloat,    --Кол-во переучет
             Res.Saldo::TFloat, --Остаток после операции
-            Res.MCSValue::TFloat     --НТЗ
+            Res.MCSValue::TFloat,     --НТЗ
+            Res.CheckMember::TVarChar,  --Менеджер
+		    Res.Bayer::TVarChar        --Покупатель
         FROM Res 
         ORDER BY 
             Res.OrdNum;

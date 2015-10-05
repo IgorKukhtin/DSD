@@ -3,8 +3,8 @@ inherited Report_GoodsPartionHistoryForm: TReport_GoodsPartionHistoryForm
   ClientHeight = 359
   ClientWidth = 763
   AddOnFormData.RefreshAction = actRefreshStart
-  ExplicitWidth = 771
-  ExplicitHeight = 386
+  ExplicitWidth = 779
+  ExplicitHeight = 397
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -90,8 +90,16 @@ inherited Report_GoodsPartionHistoryForm: TReport_GoodsPartionHistoryForm
           object colPrice: TcxGridDBColumn
             Caption = #1062#1077#1085#1072
             DataBinding.FieldName = 'Price'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.00##'
             HeaderAlignmentHorz = taCenter
             Width = 52
+          end
+          object colSumma: TcxGridDBColumn
+            Caption = #1057#1091#1084#1084#1072' '#1074' '#1076#1086#1082#1091#1084#1077#1085#1090#1077
+            DataBinding.FieldName = 'Summa'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.00;-,0.00'
           end
           object colAmountIn: TcxGridDBColumn
             Caption = #1055#1088#1080#1093#1086#1076
@@ -121,6 +129,16 @@ inherited Report_GoodsPartionHistoryForm: TReport_GoodsPartionHistoryForm
             DataBinding.FieldName = 'MCSValue'
             HeaderAlignmentHorz = taCenter
             Width = 54
+          end
+          object colCheckMember: TcxGridDBColumn
+            Caption = #1052#1077#1085#1077#1076#1078#1077#1088
+            DataBinding.FieldName = 'CheckMember'
+            Width = 80
+          end
+          object colBayer: TcxGridDBColumn
+            Caption = #1055#1086#1082#1091#1087#1072#1090#1077#1083#1100' (VIP)'
+            DataBinding.FieldName = 'Bayer'
+            Width = 95
           end
         end
       end
@@ -208,7 +226,52 @@ inherited Report_GoodsPartionHistoryForm: TReport_GoodsPartionHistoryForm
         end>
       Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
       Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
+      ShortCut = 116
       RefreshOnTabSetChanges = False
+    end
+    object actOpenDocument: TdsdOpenForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = #1054#1090#1082#1088#1099#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090
+      FormNameParam.Name = 'FormClass'
+      FormNameParam.Value = ''
+      FormNameParam.Component = FormParams
+      FormNameParam.ComponentItem = 'FormClass'
+      FormNameParam.DataType = ftString
+      FormNameParam.ParamType = ptInput
+      GuiParams = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'MovementId'
+          ParamType = ptInput
+        end>
+      isShowModal = False
+    end
+    object actGet_MovementFormClass: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spGet_MovementFormClass
+      StoredProcList = <
+        item
+          StoredProc = spGet_MovementFormClass
+        end>
+      Caption = 'actGet_MovementFormClass'
+    end
+    object mactOpenDocument: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actGet_MovementFormClass
+        end
+        item
+          Action = actOpenDocument
+        end>
+      Caption = #1054#1090#1082#1088#1099#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090
+      ImageIndex = 1
     end
   end
   inherited MasterDS: TDataSource
@@ -223,22 +286,22 @@ inherited Report_GoodsPartionHistoryForm: TReport_GoodsPartionHistoryForm
       item
         Name = 'inPartyId'
         Value = Null
-        Component = GuidesParty
-        ComponentItem = 'Key'
+        Component = FormParams
+        ComponentItem = 'PartyId'
         ParamType = ptInput
       end
       item
         Name = 'inGoodsId'
         Value = Null
-        Component = GuidesGoods
-        ComponentItem = 'Key'
+        Component = FormParams
+        ComponentItem = 'GoodsId'
         ParamType = ptInput
       end
       item
         Name = 'inUnitId'
         Value = Null
-        Component = GuidesUnit
-        ComponentItem = 'Key'
+        Component = FormParams
+        ComponentItem = 'UnitId'
         ParamType = ptInput
       end
       item
@@ -265,23 +328,26 @@ inherited Report_GoodsPartionHistoryForm: TReport_GoodsPartionHistoryForm
       26
       0)
   end
+  inherited DBViewAddOn: TdsdDBViewAddOn
+    OnDblClickActionList = <
+      item
+        Action = mactOpenDocument
+      end
+      item
+      end>
+  end
+  inherited PopupMenu: TPopupMenu
+    object N2: TMenuItem
+      Caption = '-'
+    end
+    object N3: TMenuItem
+      Action = actOpenDocument
+    end
+  end
   inherited PeriodChoice: TPeriodChoice
     Top = 168
   end
   inherited RefreshDispatcher: TRefreshDispatcher
-    ComponentList = <
-      item
-        Component = PeriodChoice
-      end
-      item
-        Component = GuidesUnit
-      end
-      item
-        Component = GuidesGoods
-      end
-      item
-        Component = GuidesParty
-      end>
     Top = 176
   end
   object GuidesUnit: TdsdGuides
@@ -395,5 +461,89 @@ inherited Report_GoodsPartionHistoryForm: TReport_GoodsPartionHistoryForm
     PackSize = 1
     Left = 432
     Top = 96
+  end
+  object FormParams: TdsdFormParams
+    Params = <
+      item
+        Name = 'FormClass'
+        Value = Null
+        DataType = ftString
+      end
+      item
+        Name = 'UnitId'
+        Value = Null
+        Component = GuidesUnit
+        ComponentItem = 'Key'
+        ParamType = ptInput
+      end
+      item
+        Name = 'GoodsId'
+        Value = Null
+        Component = GuidesGoods
+        ComponentItem = 'Key'
+        ParamType = ptInput
+      end
+      item
+        Name = 'PartyId'
+        Value = Null
+        Component = GuidesParty
+        ComponentItem = 'Key'
+        ParamType = ptInput
+      end>
+    Left = 232
+    Top = 240
+  end
+  object spGet_MovementFormClass: TdsdStoredProc
+    StoredProcName = 'gpGet_MovementFormClass'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = ''
+        Component = MasterCDS
+        ComponentItem = 'MovementId'
+        ParamType = ptInput
+      end
+      item
+        Name = 'outFormClass'
+        Value = ''
+        Component = FormParams
+        ComponentItem = 'FormClass'
+        DataType = ftString
+      end>
+    PackSize = 1
+    Left = 272
+    Top = 160
+  end
+  object rgUnit: TRefreshDispatcher
+    IdParam.Value = Null
+    RefreshAction = actRefresh
+    ComponentList = <
+      item
+        Component = GuidesUnit
+      end>
+    Left = 232
+    Top = 104
+  end
+  object rdGoods: TRefreshDispatcher
+    IdParam.Value = Null
+    RefreshAction = actRefresh
+    ComponentList = <
+      item
+        Component = GuidesGoods
+      end>
+    Left = 424
+    Top = 136
+  end
+  object rdParty: TRefreshDispatcher
+    IdParam.Value = Null
+    RefreshAction = actRefresh
+    ComponentList = <
+      item
+        Component = GuidesParty
+      end>
+    Left = 624
+    Top = 112
   end
 end

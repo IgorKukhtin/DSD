@@ -16,19 +16,22 @@ uses
 
 type
   TCheckForm = class(TAncestorDocumentForm)
-    cxTextEdit1: TcxTextEdit;
-    cxTextEdit2: TcxTextEdit;
-    cxTextEdit3: TcxTextEdit;
+    edUnitName: TcxTextEdit;
+    edCashRegisterName: TcxTextEdit;
     cxLabel3: TcxLabel;
     cxLabel4: TcxLabel;
     cxLabel5: TcxLabel;
-    cxTextEdit4: TcxTextEdit;
+    edPaidTypeName: TcxTextEdit;
     ChoiceCashRegister: TOpenChoiceForm;
     ChoicePaidType: TOpenChoiceForm;
     spUpdate_Movement_Check: TdsdStoredProc;
     actEditDocument: TMultiAction;
     dxBarButton1: TdxBarButton;
     actUpdate_Movement_Check: TdsdExecStoredProc;
+    lblCashMember: TcxLabel;
+    edCashMember: TcxTextEdit;
+    lblBayer: TcxLabel;
+    edBayer: TcxTextEdit;
   private
     { Private declarations }
   public

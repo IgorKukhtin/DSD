@@ -62,8 +62,10 @@ uses
 procedure TParentForm.Activate;
 begin
   inherited;
-  if AddOnFormData.AddOnFormRefresh.NeedRefresh then
-    AddOnFormData.AddOnFormRefresh.RefreshRecord;
+  if Assigned(AddOnFormData) then
+    if Assigned(AddOnFormData.AddOnFormRefresh) then
+      if AddOnFormData.AddOnFormRefresh.NeedRefresh then
+        AddOnFormData.AddOnFormRefresh.RefreshRecord;
 end;
 
 procedure TParentForm.AfterShow(var a : TWMSHOWWINDOW);

@@ -41,6 +41,9 @@ type
     actPartionGoodsChoiceForm: TOpenChoiceForm;
     actGoodsChoiceForm: TOpenChoiceForm;
     colAmountRemains: TcxGridDBColumn;
+    colMaxPriceIn: TcxGridDBColumn;
+    colPriceUnitFrom: TcxGridDBColumn;
+    colPriceUnitTo: TcxGridDBColumn;
   private
     { Private declarations }
   public

@@ -54,6 +54,21 @@ object Report_Transport_ProfitLossForm: TReport_Transport_ProfitLossForm
           Format = ',0.####'
           Kind = skSum
           Column = SumTotal
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = Distance
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = WeightTransport
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = WeightSale
         end>
       DataController.Summary.FooterSummaryItems = <
         item
@@ -80,6 +95,21 @@ object Report_Transport_ProfitLossForm: TReport_Transport_ProfitLossForm
           Format = ',0.####'
           Kind = skSum
           Column = SumTotal
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = Distance
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = WeightTransport
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = WeightSale
         end>
       DataController.Summary.SummaryGroups = <>
       Images = dmMain.SortImageList

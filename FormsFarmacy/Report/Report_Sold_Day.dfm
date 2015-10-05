@@ -195,9 +195,6 @@ inherited Report_Sold_DayForm: TReport_Sold_DayForm
     object tsPivot: TcxTabSheet
       Caption = #1057#1074#1086#1076#1085#1072#1103' '#1090#1072#1073#1083#1080#1094#1072
       ImageIndex = 1
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object cxDBPivotGrid1: TcxDBPivotGrid
         Left = 0
         Top = 0
@@ -208,7 +205,6 @@ inherited Report_Sold_DayForm: TReport_Sold_DayForm
         Groups = <>
         OptionsView.RowGrandTotalWidth = 118
         TabOrder = 0
-        ExplicitHeight = 276
         object pcolPlanDate: TcxDBPivotGridField
           AreaIndex = 2
           AllowedAreas = [faColumn, faRow, faFilter]
@@ -373,18 +369,20 @@ inherited Report_Sold_DayForm: TReport_Sold_DayForm
         item
           StoredProc = spSelect
         end>
-      Caption = #1056#1072#1074#1085#1086#1084#1077#1088#1085#1099#1081
-      Hint = #1055#1083#1072#1085' '#1076#1077#1083#1080#1090#1089#1103' '#1088#1072#1074#1085#1086#1084#1077#1088#1085#1086' '#1085#1072' '#1082#1086#1083'-'#1074#1086' '#1076#1085#1077#1081' '#1074' '#1084#1077#1089#1103#1094#1077
-      ImageIndex = 35
-      Value = False
-      HintTrue = 
+      Caption = #1069#1084#1087#1080#1088#1080#1095#1077#1089#1082#1080#1081
+      Hint = 
         #1055#1083#1072#1085' '#1088#1072#1087#1088#1077#1076#1077#1083#1103#1077#1090#1089#1103' '#1087#1086' '#1076#1085#1103#1084' '#1085#1077#1076#1077#1083#1080' '#1089#1086#1075#1083#1072#1089#1085#1086' '#1076#1086#1083#1080' '#1087#1088#1086#1076#1072#1078' '#1076#1085#1103' '#1079#1072' '#1087#1086 +
         #1089#1083#1077#1076#1085#1080#1077' 8 '#1085#1077#1076#1077#1083#1100
-      HintFalse = #1055#1083#1072#1085' '#1076#1077#1083#1080#1090#1089#1103' '#1088#1072#1074#1085#1086#1084#1077#1088#1085#1086' '#1085#1072' '#1082#1086#1083'-'#1074#1086' '#1076#1085#1077#1081' '#1074' '#1084#1077#1089#1103#1094#1077
-      CaptionTrue = #1069#1084#1087#1080#1088#1080#1095#1077#1089#1082#1080#1081
-      CaptionFalse = #1056#1072#1074#1085#1086#1084#1077#1088#1085#1099#1081
-      ImageIndexTrue = 40
-      ImageIndexFalse = 35
+      ImageIndex = 40
+      Value = False
+      HintTrue = #1055#1083#1072#1085' '#1076#1077#1083#1080#1090#1089#1103' '#1088#1072#1074#1085#1086#1084#1077#1088#1085#1086' '#1085#1072' '#1082#1086#1083'-'#1074#1086' '#1076#1085#1077#1081' '#1074' '#1084#1077#1089#1103#1094#1077
+      HintFalse = 
+        #1055#1083#1072#1085' '#1088#1072#1087#1088#1077#1076#1077#1083#1103#1077#1090#1089#1103' '#1087#1086' '#1076#1085#1103#1084' '#1085#1077#1076#1077#1083#1080' '#1089#1086#1075#1083#1072#1089#1085#1086' '#1076#1086#1083#1080' '#1087#1088#1086#1076#1072#1078' '#1076#1085#1103' '#1079#1072' '#1087#1086 +
+        #1089#1083#1077#1076#1085#1080#1077' 8 '#1085#1077#1076#1077#1083#1100
+      CaptionTrue = #1056#1072#1074#1085#1086#1084#1077#1088#1085#1099#1081
+      CaptionFalse = #1069#1084#1087#1080#1088#1080#1095#1077#1089#1082#1080#1081
+      ImageIndexTrue = 35
+      ImageIndexFalse = 40
     end
   end
   inherited MasterDS: TDataSource
@@ -505,10 +503,16 @@ inherited Report_Sold_DayForm: TReport_Sold_DayForm
     end
   end
   inherited PeriodChoice: TPeriodChoice
+    DateStart = nil
+    DateEnd = nil
     Left = 24
     Top = 176
   end
   inherited RefreshDispatcher: TRefreshDispatcher
+    ComponentList = <
+      item
+        Component = deStart
+      end>
     Left = 88
     Top = 176
   end

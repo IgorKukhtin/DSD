@@ -1,24 +1,31 @@
 inherited AdditionalGoodsForm: TAdditionalGoodsForm
   Caption = #1044#1086#1087#1086#1083#1085#1103#1102#1097#1080#1077' '#1090#1086#1074#1072#1088#1099
+  ClientHeight = 587
   ClientWidth = 798
   AddOnFormData.ChoiceAction = dsdChoiceGuides
-  ExplicitWidth = 806
-  ExplicitHeight = 335
+  ExplicitWidth = 814
+  ExplicitHeight = 625
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Width = 798
+    Height = 561
     ExplicitWidth = 798
+    ExplicitHeight = 561
+    ClientRectBottom = 561
     ClientRectRight = 798
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 798
-      ExplicitHeight = 282
+      ExplicitHeight = 561
       inherited cxGrid: TcxGrid
         Width = 310
+        Height = 321
         Align = alLeft
         ExplicitWidth = 310
+        ExplicitHeight = 321
         inherited cxGridDBTableView: TcxGridDBTableView
           OptionsBehavior.IncSearch = True
+          Styles.Content = nil
           Styles.Inactive = nil
           Styles.Selection = nil
           Styles.Footer = nil
@@ -41,9 +48,9 @@ inherited AdditionalGoodsForm: TAdditionalGoodsForm
         Left = 313
         Top = 0
         Width = 250
-        Height = 282
+        Height = 321
         Align = alClient
-        PopupMenu = PopupMenu
+        PopupMenu = PopupMenu1
         TabOrder = 2
         object cxGridDBTableView2: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
@@ -88,16 +95,15 @@ inherited AdditionalGoodsForm: TAdditionalGoodsForm
         Left = 310
         Top = 0
         Width = 3
-        Height = 282
+        Height = 321
         Control = cxGrid
       end
       object cxGrid2: TcxGrid
         Left = 566
         Top = 0
         Width = 232
-        Height = 282
+        Height = 321
         Align = alRight
-        PopupMenu = PopupMenu
         TabOrder = 4
         object cxGridDBTableView3: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
@@ -136,9 +142,99 @@ inherited AdditionalGoodsForm: TAdditionalGoodsForm
         Left = 563
         Top = 0
         Width = 3
-        Height = 282
+        Height = 321
         AlignSplitter = salRight
         Control = cxGrid2
+      end
+      object GridAll: TcxGrid
+        Left = 0
+        Top = 329
+        Width = 798
+        Height = 232
+        Align = alBottom
+        TabOrder = 5
+        object GridAllDBTableView: TcxGridDBTableView
+          Navigator.Buttons.CustomButtons = <>
+          DataController.DataSource = dsAll
+          DataController.Filter.Options = [fcoCaseInsensitive]
+          DataController.Summary.DefaultGroupSummaryItems = <>
+          DataController.Summary.FooterSummaryItems = <>
+          DataController.Summary.SummaryGroups = <>
+          Images = dmMain.SortImageList
+          OptionsBehavior.GoToNextCellOnEnter = True
+          OptionsBehavior.FocusCellOnCycle = True
+          OptionsCustomize.ColumnHiding = True
+          OptionsCustomize.ColumnsQuickCustomization = True
+          OptionsCustomize.DataRowSizing = True
+          OptionsData.CancelOnExit = False
+          OptionsData.Deleting = False
+          OptionsData.DeletingConfirmation = False
+          OptionsData.Editing = False
+          OptionsData.Inserting = False
+          OptionsView.ColumnAutoWidth = True
+          OptionsView.Footer = True
+          OptionsView.GroupByBox = False
+          OptionsView.GroupSummaryLayout = gslAlignWithColumns
+          OptionsView.HeaderAutoHeight = True
+          OptionsView.Indicator = True
+          Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
+          object colId: TcxGridDBColumn
+            Caption = #1048#1044
+            DataBinding.FieldName = 'Id'
+            Visible = False
+            Options.Editing = False
+            VisibleForCustomization = False
+            Width = 38
+          end
+          object colGoodsMainId: TcxGridDBColumn
+            Caption = #1048#1044' '#1075#1083'. '#1090#1086#1074#1072#1088#1072
+            DataBinding.FieldName = 'GoodsMainId'
+            Visible = False
+            VisibleForCustomization = False
+            Width = 72
+          end
+          object colGoodsMainCode: TcxGridDBColumn
+            Caption = #1050#1086#1076' '#1075#1083'. '#1090#1086#1074#1072#1088#1072
+            DataBinding.FieldName = 'GoodsMainCode'
+            Options.CellMerging = True
+            Width = 56
+          end
+          object colGoodsMainName: TcxGridDBColumn
+            Caption = #1043#1083#1072#1074#1085#1099#1081' '#1090#1086#1074#1072#1088
+            DataBinding.FieldName = 'GoodsMainName'
+            Options.CellMerging = True
+            Width = 322
+          end
+          object colGoodsId: TcxGridDBColumn
+            Caption = #1048#1044' '#1076#1086#1087'. '#1090#1086#1074#1072#1088#1072
+            DataBinding.FieldName = 'GoodsId'
+            Visible = False
+            VisibleForCustomization = False
+            Width = 51
+          end
+          object colGoodsCode: TcxGridDBColumn
+            Caption = #1050#1086#1076' '#1076#1086#1087'. '#1090#1086#1074#1072#1088#1072
+            DataBinding.FieldName = 'GoodsCode'
+            Width = 64
+          end
+          object colGoodsName: TcxGridDBColumn
+            Caption = #1044#1086#1087#1086#1083#1085#1103#1102#1097#1080#1081' '#1090#1086#1074#1072#1088
+            DataBinding.FieldName = 'GoodsName'
+            Width = 342
+          end
+        end
+        object GridAllLevel1: TcxGridLevel
+          GridView = GridAllDBTableView
+        end
+      end
+      object cxSplitter3: TcxSplitter
+        Left = 0
+        Top = 321
+        Width = 798
+        Height = 8
+        HotZoneClassName = 'TcxMediaPlayer8Style'
+        AlignSplitter = salBottom
+        Control = GridAll
       end
     end
   end
@@ -177,9 +273,15 @@ inherited AdditionalGoodsForm: TAdditionalGoodsForm
         end
         item
           StoredProc = spAdditioanlGoodsClient
+        end
+        item
+          StoredProc = spAll
         end>
     end
-    inherited actInsert: TdsdInsertUpdateAction
+    inherited actGridToExcel: TdsdGridToExcel
+      Grid = GridAll
+    end
+    inherited actInsert: TInsertUpdateChoiceAction
       ShortCut = 0
       DataSource = ClientDS
     end
@@ -197,6 +299,7 @@ inherited AdditionalGoodsForm: TAdditionalGoodsForm
       Category = 'DSDLib'
       MoveParams = <>
       CancelAction = DataSetCancel
+      PostDataSetBeforeExecute = False
       Caption = 'actGoodsChoice'
       FormName = 'TGoodsLiteForm'
       FormNameParam.Value = 'TGoodsLiteForm'
@@ -204,11 +307,13 @@ inherited AdditionalGoodsForm: TAdditionalGoodsForm
       GuiParams = <
         item
           Name = 'Key'
+          Value = Null
           Component = ClientCDS
           ComponentItem = 'GoodsId'
         end
         item
           Name = 'TextValue'
+          Value = Null
           Component = ClientCDS
           ComponentItem = 'GoodsName'
           DataType = ftString
@@ -235,6 +340,7 @@ inherited AdditionalGoodsForm: TAdditionalGoodsForm
     object actInsertUpdateLink: TdsdUpdateDataSet
       Category = 'DSDLib'
       MoveParams = <>
+      PostDataSetBeforeExecute = False
       StoredProc = spInsertUpdateGoodsLink
       StoredProcList = <
         item
@@ -246,6 +352,7 @@ inherited AdditionalGoodsForm: TAdditionalGoodsForm
     object InsertRecord: TInsertRecord
       Category = 'DSDLib'
       MoveParams = <>
+      PostDataSetBeforeExecute = False
       View = cxGridDBTableView2
       Params = <>
       Caption = 'InsertRecord'
@@ -265,6 +372,7 @@ inherited AdditionalGoodsForm: TAdditionalGoodsForm
     object actDeleteLink: TdsdExecStoredProc
       Category = 'DSDLib'
       MoveParams = <>
+      PostDataSetBeforeExecute = False
       StoredProc = spDeleteLink
       StoredProcList = <
         item
@@ -375,6 +483,20 @@ inherited AdditionalGoodsForm: TAdditionalGoodsForm
     Left = 248
     Top = 144
   end
+  inherited PopupMenu: TPopupMenu
+    inherited N3: TMenuItem
+      Visible = False
+    end
+    inherited N4: TMenuItem
+      Visible = False
+    end
+    inherited N5: TMenuItem
+      Visible = False
+    end
+    inherited N7: TMenuItem
+      Visible = False
+    end
+  end
   inherited spErasedUnErased: TdsdStoredProc
     Left = 24
   end
@@ -391,6 +513,7 @@ inherited AdditionalGoodsForm: TAdditionalGoodsForm
         DataSet = ClientCDS
       end>
     Params = <>
+    PackSize = 1
     Left = 408
     Top = 144
   end
@@ -418,6 +541,7 @@ inherited AdditionalGoodsForm: TAdditionalGoodsForm
         DataSet = ClientMasterCDS
       end>
     Params = <>
+    PackSize = 1
     Left = 640
     Top = 104
   end
@@ -490,22 +614,26 @@ inherited AdditionalGoodsForm: TAdditionalGoodsForm
     Params = <
       item
         Name = 'ioId'
+        Value = Null
         Component = ClientCDS
         ComponentItem = 'Id'
         ParamType = ptInput
       end
       item
         Name = 'inGoodsMainId'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'Id'
         ParamType = ptInput
       end
       item
         Name = 'inGoodsId'
+        Value = Null
         Component = ClientCDS
         ComponentItem = 'GoodsId'
         ParamType = ptInput
       end>
+    PackSize = 1
     Left = 408
     Top = 184
   end
@@ -516,11 +644,78 @@ inherited AdditionalGoodsForm: TAdditionalGoodsForm
     Params = <
       item
         Name = 'inId'
+        Value = Null
         Component = ClientCDS
-        ComponentItem = 'GoodsId'
+        ComponentItem = 'Id'
         ParamType = ptInput
       end>
+    PackSize = 1
     Left = 472
     Top = 64
+  end
+  object PopupMenu1: TPopupMenu
+    Images = dmMain.ImageList
+    Left = 328
+    Top = 168
+    object MenuItem1: TMenuItem
+      Action = actInsert
+    end
+    object MenuItem2: TMenuItem
+      Action = actUpdate
+    end
+    object MenuItem3: TMenuItem
+      Action = mactDeleteLink
+    end
+    object MenuItem5: TMenuItem
+      Caption = '-'
+    end
+    object MenuItem6: TMenuItem
+      Action = dsdChoiceGuides
+    end
+    object MenuItem7: TMenuItem
+      Action = actRefresh
+    end
+    object MenuItem8: TMenuItem
+      Action = actGridToExcel
+    end
+  end
+  object dsdDBViewAddOn1: TdsdDBViewAddOn
+    ErasedFieldName = 'isErased'
+    View = GridAllDBTableView
+    OnDblClickActionList = <>
+    ActionItemList = <>
+    SortImages = dmMain.SortImageList
+    OnlyEditingCellOnEnter = False
+    ColorRuleList = <>
+    ColumnAddOnList = <>
+    ColumnEnterList = <>
+    SummaryItemList = <>
+    SearchAsFilter = False
+    Left = 304
+    Top = 472
+  end
+  object cdsAll: TClientDataSet
+    Aggregates = <>
+    FilterOptions = [foCaseInsensitive]
+    Params = <>
+    Left = 168
+    Top = 416
+  end
+  object spAll: TdsdStoredProc
+    StoredProcName = 'gpSelect_Object_Additional'
+    DataSet = cdsAll
+    DataSets = <
+      item
+        DataSet = cdsAll
+      end>
+    Params = <>
+    PackSize = 1
+    Left = 248
+    Top = 416
+  end
+  object dsAll: TDataSource
+    DataSet = cdsAll
+    Left = 200
+    Top = 416
   end
 end

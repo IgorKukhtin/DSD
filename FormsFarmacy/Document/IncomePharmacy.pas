@@ -61,6 +61,8 @@ type
     colSertificatNumber: TcxGridDBColumn;
     colSertificatStart: TcxGridDBColumn;
     colSertificatEnd: TcxGridDBColumn;
+    colDublePriceColour: TcxGridDBColumn;
+    colWarningColor: TcxGridDBColumn;
   private
     { Private declarations }
   public
