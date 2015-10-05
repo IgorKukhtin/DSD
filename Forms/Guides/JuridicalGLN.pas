@@ -78,6 +78,8 @@ type
     ProtocolOpenForm: TdsdOpenForm;
     bbProtocolOpen: TdxBarButton;
     actChoiceGoodsProperty: TOpenChoiceForm;
+    actShowAll: TBooleanStoredProcAction;
+    bbShowAll: TdxBarButton;
   private
     { Private declarations }
   public
