@@ -1,27 +1,27 @@
 inherited ReturnOutForm: TReturnOutForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1042#1086#1079#1074#1088#1072#1090' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1091'>'
   ClientHeight = 526
-  ClientWidth = 827
-  ExplicitWidth = 843
+  ClientWidth = 851
+  ExplicitWidth = 867
   ExplicitHeight = 564
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 126
-    Width = 827
+    Width = 851
     Height = 400
     ExplicitTop = 126
-    ExplicitWidth = 828
+    ExplicitWidth = 827
     ExplicitHeight = 400
     ClientRectBottom = 400
-    ClientRectRight = 827
+    ClientRectRight = 851
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 828
+      ExplicitWidth = 827
       ExplicitHeight = 376
       inherited cxGrid: TcxGrid
-        Width = 827
+        Width = 851
         Height = 376
-        ExplicitWidth = 828
+        ExplicitWidth = 827
         ExplicitHeight = 376
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
@@ -112,6 +112,7 @@ inherited ReturnOutForm: TReturnOutForm
               end>
             Properties.ReadOnly = True
             HeaderAlignmentHorz = taCenter
+            Options.Editing = False
             Width = 45
           end
           object colName: TcxGridDBColumn
@@ -137,6 +138,7 @@ inherited ReturnOutForm: TReturnOutForm
             Properties.DecimalPlaces = 2
             Properties.DisplayFormat = ',0.00;-,0.00'
             HeaderAlignmentHorz = taCenter
+            Options.Editing = False
             Width = 60
           end
           object colSumm: TcxGridDBColumn
@@ -146,17 +148,51 @@ inherited ReturnOutForm: TReturnOutForm
             Properties.DecimalPlaces = 2
             Properties.DisplayFormat = ',0.00;-,0.00'
             HeaderAlignmentHorz = taCenter
+            Options.Editing = False
             Width = 60
+          end
+          object colAmountInIncome: TcxGridDBColumn
+            AlternateCaption = #1042' '#1087#1088#1080#1093#1086#1076#1077
+            Caption = #1042' '#1087#1088#1080#1093#1086#1076#1077
+            DataBinding.FieldName = 'AmountInIncome'
+            Options.Editing = False
+            Width = 76
+          end
+          object colRemains: TcxGridDBColumn
+            AlternateCaption = #1054#1089#1090#1072#1090#1086#1082' '#1087#1072#1088#1090#1080#1080
+            Caption = #1054#1089#1090#1072#1090#1086#1082' '#1087#1072#1088#1090#1080#1080
+            DataBinding.FieldName = 'Remains'
+            Options.Editing = False
+            Width = 74
+          end
+          object colWarningColor: TcxGridDBColumn
+            AlternateCaption = #1055#1088#1077#1074#1099#1096#1077#1085#1080#1077' '#1086#1089#1090#1072#1090#1082#1072
+            Caption = '!'
+            DataBinding.FieldName = 'WarningColor'
+            PropertiesClassName = 'TcxImageComboBoxProperties'
+            Properties.Images = dmMain.ImageList
+            Properties.Items = <
+              item
+                Description = #1042#1086#1079#1074#1088#1072#1090' > '#1086#1089#1090#1072#1090#1082#1072
+                ImageIndex = 59
+                Value = 255
+              end>
+            Properties.ShowDescriptions = False
+            Visible = False
+            HeaderHint = #1055#1088#1077#1074#1099#1096#1077#1085#1080#1077' '#1086#1089#1090#1072#1090#1082#1072
+            Options.Editing = False
+            VisibleForCustomization = False
+            Width = 20
           end
         end
       end
     end
   end
   inherited DataPanel: TPanel
-    Width = 827
+    Width = 851
     Height = 100
     TabOrder = 3
-    ExplicitWidth = 828
+    ExplicitWidth = 827
     ExplicitHeight = 100
     inherited edInvNumber: TcxTextEdit
       Left = 8
@@ -699,6 +735,11 @@ inherited ReturnOutForm: TReturnOutForm
     end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
+    ColorRuleList = <
+      item
+        ValueColumn = colWarningColor
+        ColorValueList = <>
+      end>
     SummaryItemList = <
       item
         Param.Value = Null
@@ -707,8 +748,8 @@ inherited ReturnOutForm: TReturnOutForm
         Param.DataType = ftString
         DataSummaryItemIndex = 5
       end>
-    Left = 830
-    Top = 265
+    Left = 782
+    Top = 217
   end
   inherited PopupMenu: TPopupMenu
     Left = 800
@@ -1049,8 +1090,8 @@ inherited ReturnOutForm: TReturnOutForm
   end
   inherited RefreshAddOn: TRefreshAddOn
     DataSet = ''
-    Left = 912
-    Top = 320
+    Left = 784
+    Top = 264
   end
   inherited spErasedMIMaster: TdsdStoredProc
     StoredProcName = 'gpMovementItem_ReturnOut_SetErased'
@@ -1117,18 +1158,24 @@ inherited ReturnOutForm: TReturnOutForm
         DataType = ftFloat
       end
       item
+        Name = 'outAmountInIncome'
         Value = Null
-        ParamType = ptUnknown
+        Component = MasterCDS
+        ComponentItem = 'AmountInIncome'
+        DataType = ftFloat
       end
       item
+        Name = 'outRemains'
         Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Remains'
         DataType = ftFloat
-        ParamType = ptUnknown
       end
       item
+        Name = 'outWarningColor'
         Value = Null
-        DataType = ftFloat
-        ParamType = ptUnknown
+        Component = MasterCDS
+        ComponentItem = 'WarningColor'
       end
       item
         Value = Null

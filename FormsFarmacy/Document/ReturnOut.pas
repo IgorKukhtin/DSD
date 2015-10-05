@@ -12,7 +12,7 @@ uses
   cxClasses, Datasnap.DBClient, Vcl.ActnList, cxPropertiesStore, cxButtonEdit,
   cxMaskEdit, cxDropDownEdit, cxCalendar, cxLabel, cxTextEdit, Vcl.ExtCtrls,
   cxGridLevel, cxGridCustomTableView, cxGridTableView, cxGridDBTableView,
-  cxGridCustomView, cxGrid, cxPC, dxBarBuiltInMenu, cxNavigator;
+  cxGridCustomView, cxGrid, cxPC, dxBarBuiltInMenu, cxNavigator, cxImageComboBox;
 
 type
   TReturnOutForm = class(TAncestorDocumentForm)
@@ -62,6 +62,9 @@ type
     edInvNumberPartner: TcxTextEdit;
     cxLabel11: TcxLabel;
     edOperDatePartner: TcxDateEdit;
+    colAmountInIncome: TcxGridDBColumn;
+    colRemains: TcxGridDBColumn;
+    colWarningColor: TcxGridDBColumn;
   private
     { Private declarations }
   public
@@ -71,6 +74,8 @@ type
 implementation
 
 {$R *.dfm}
+
+uses DataModul;
 
 initialization
   RegisterClass(TReturnOutForm);

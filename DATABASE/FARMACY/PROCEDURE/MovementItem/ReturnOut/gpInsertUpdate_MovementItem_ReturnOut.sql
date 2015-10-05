@@ -10,6 +10,9 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_ReturnOut(
     IN inPrice               TFloat    , -- Цена
     IN inParentId            Integer   , -- ссылка на родителя
    OUT outSumm               TFloat    , -- Сумма
+   OUT outAmountInIncome     TFloat    , -- кол-во в приходе
+   OUT outRemains            TFloat    , -- Остаток по приходу
+   OUT outWarningColor       Integer   , -- Выделение крассным, если кол-во > остатка 
     IN inSession             TVarChar    -- сессия пользователя
 )
 AS
@@ -25,6 +28,26 @@ BEGIN
      
      ioId := lpInsertUpdate_MovementItem_ReturnOut(ioId, inMovementId, inGoodsId, inAmount, inPrice, inParentId, vbUserId);
 
+    SELECT
+        MovementItem.Amount
+       ,Container.Amount
+       ,CASE 
+          WHEN inAmount > COALESCE(MovementItem.Amount,0) or
+               inAmount > COALESCE(Container.Amount,0)
+            THEN zc_Color_Warning_Red()
+        END       
+    INTO
+        outAmountInIncome
+       ,outRemains
+       ,outWarningColor
+    FROM 
+        MovementItem
+        LEFT OUTER JOIN MovementItemContainer ON MovementItemContainer.MovementItemId = MovementItem.Id
+                                             AND MovementItemContainer.DescId = zc_MIContainer_Count()
+        LEFT OUTER JOIN Container ON Container.Id = MovementItemContainer.ContainerId
+                                 AND Container.DescId = zc_Container_Count() 
+    WHERE 
+        MovementItem.Id = inParentId;
      -- пересчитали Итоговые суммы
      PERFORM lpInsertUpdate_MovementFloat_TotalSumm (inMovementId);
 END;

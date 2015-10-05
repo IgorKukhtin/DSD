@@ -1,13 +1,37 @@
 inherited CheckForm: TCheckForm
   Caption = #1050#1072#1089#1089#1086#1074#1099#1081' '#1095#1077#1082
-  ExplicitWidth = 845
-  ExplicitHeight = 454
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
+    Top = 90
+    Height = 326
+    ExplicitTop = 90
+    ExplicitHeight = 326
+    ClientRectBottom = 326
     inherited tsMain: TcxTabSheet
+      ExplicitHeight = 302
       inherited cxGrid: TcxGrid
+        Height = 302
+        ExplicitHeight = 302
         inherited cxGridDBTableView: TcxGridDBTableView
+          DataController.Summary.FooterSummaryItems = <
+            item
+            end
+            item
+              Format = #1057#1090#1088#1086#1082': ,0'
+              Kind = skCount
+              Column = colName
+            end
+            item
+              Format = ',0.000'
+              Kind = skSum
+              Column = colAmount
+            end
+            item
+              Format = ',0.00'
+              Kind = skSum
+              Column = colSumm
+            end>
           Styles.Content = nil
           Styles.Inactive = nil
           Styles.Selection = nil
@@ -24,6 +48,7 @@ inherited CheckForm: TCheckForm
               end>
             Properties.ReadOnly = True
             HeaderAlignmentHorz = taCenter
+            Options.Editing = False
             Width = 45
           end
           object colName: TcxGridDBColumn
@@ -40,6 +65,7 @@ inherited CheckForm: TCheckForm
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
+            Options.Editing = False
             Width = 73
           end
           object colPrice: TcxGridDBColumn
@@ -49,6 +75,7 @@ inherited CheckForm: TCheckForm
             Properties.DecimalPlaces = 2
             Properties.DisplayFormat = ',0.00;-,0.00'
             HeaderAlignmentHorz = taCenter
+            Options.Editing = False
             Width = 60
           end
           object colSumm: TcxGridDBColumn
@@ -58,6 +85,7 @@ inherited CheckForm: TCheckForm
             Properties.DecimalPlaces = 2
             Properties.DisplayFormat = ',0.00;-,0.00'
             HeaderAlignmentHorz = taCenter
+            Options.Editing = False
             Width = 60
           end
         end
@@ -65,63 +93,99 @@ inherited CheckForm: TCheckForm
     end
   end
   inherited DataPanel: TPanel
+    Height = 64
+    ExplicitHeight = 64
     inherited edInvNumber: TcxTextEdit
-      Enabled = False
+      Top = 14
+      Text = 'edInvNumber'
+      ExplicitTop = 14
+    end
+    inherited cxLabel1: TcxLabel
+      Top = -1
+      ExplicitTop = -1
     end
     inherited edOperDate: TcxDateEdit
+      Top = 14
       EditValue = 42261d
-      Enabled = False
+      Properties.ReadOnly = True
+      ExplicitTop = 14
+    end
+    inherited cxLabel2: TcxLabel
+      Top = -1
+      ExplicitTop = -1
+    end
+    inherited cxLabel15: TcxLabel
+      Top = -1
+      ExplicitTop = -1
     end
     inherited ceStatus: TcxButtonEdit
+      Top = 14
       PopupMenu = nil
+      ExplicitTop = 14
       ExplicitHeight = 22
     end
-    object cxTextEdit1: TcxTextEdit
+    object edUnitName: TcxTextEdit
       Left = 384
-      Top = 23
-      Enabled = False
+      Top = 14
+      Properties.ReadOnly = True
       TabOrder = 6
-      Text = 'cxTextEdit1'
+      Text = 'edUnitName'
       Width = 121
     end
-    object cxTextEdit2: TcxTextEdit
-      Left = 520
-      Top = 23
-      Enabled = False
-      TabOrder = 7
-      Text = 'cxTextEdit2'
-      Visible = False
-      Width = 121
-    end
-    object cxTextEdit3: TcxTextEdit
+    object edCashRegisterName: TcxTextEdit
       Left = 656
-      Top = 23
-      Enabled = False
-      TabOrder = 8
-      Text = 'cxTextEdit3'
+      Top = 14
+      Properties.ReadOnly = True
+      TabOrder = 7
+      Text = 'edCashRegisterName'
       Width = 121
     end
     object cxLabel3: TcxLabel
       Left = 385
-      Top = 5
+      Top = -1
       Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
     end
     object cxLabel4: TcxLabel
       Left = 520
-      Top = 5
+      Top = -1
       Caption = #1058#1080#1087' '#1086#1087#1083#1072#1090#1099
     end
     object cxLabel5: TcxLabel
       Left = 656
-      Top = 5
+      Top = -1
       Caption = #1050#1072#1089#1089#1072
     end
-    object cxTextEdit4: TcxTextEdit
+    object edPaidTypeName: TcxTextEdit
       Left = 520
-      Top = 23
-      Enabled = False
-      TabOrder = 12
+      Top = 14
+      Properties.ReadOnly = True
+      TabOrder = 11
+      Text = 'edPaidTypeName'
       Width = 121
+    end
+    object lblCashMember: TcxLabel
+      Left = 8
+      Top = 43
+      Caption = #1052#1077#1085#1077#1076#1078#1077#1088
+    end
+    object edCashMember: TcxTextEdit
+      Left = 72
+      Top = 42
+      Properties.ReadOnly = True
+      TabOrder = 13
+      Width = 298
+    end
+    object lblBayer: TcxLabel
+      Left = 384
+      Top = 43
+      Caption = #1055#1086#1082#1091#1087#1072#1090#1077#1083#1100
+    end
+    object edBayer: TcxTextEdit
+      Left = 448
+      Top = 42
+      Properties.ReadOnly = True
+      TabOrder = 15
+      Width = 329
     end
   end
   inherited ActionList: TActionList
@@ -176,7 +240,7 @@ inherited CheckForm: TCheckForm
         item
           Name = 'TextValue'
           Value = Null
-          Component = cxTextEdit3
+          Component = edCashRegisterName
         end>
       isShowModal = True
     end
@@ -199,7 +263,7 @@ inherited CheckForm: TCheckForm
         item
           Name = 'TextValue'
           Value = 'cxTextEdit3'
-          Component = cxTextEdit4
+          Component = edPaidTypeName
           ParamType = ptInput
         end
         item
@@ -397,22 +461,33 @@ inherited CheckForm: TCheckForm
       item
         Name = 'UnitName'
         Value = Null
-        Component = cxTextEdit1
+        Component = edUnitName
       end
       item
         Name = 'CashRegisterName'
         Value = Null
-        Component = cxTextEdit3
+        Component = edCashRegisterName
       end
       item
         Name = 'PaidKindName'
         Value = Null
-        Component = cxTextEdit2
       end
       item
         Name = 'PaidTypeName'
         Value = 'cxTextEdit3'
-        Component = cxTextEdit4
+        Component = edPaidTypeName
+        DataType = ftString
+      end
+      item
+        Name = 'CashMember'
+        Value = Null
+        Component = edCashMember
+        DataType = ftString
+      end
+      item
+        Name = 'Bayer'
+        Value = Null
+        Component = edBayer
         DataType = ftString
       end>
   end
@@ -435,6 +510,7 @@ inherited CheckForm: TCheckForm
       end
       item
         Name = 'inPaidTypeId'
+        Value = Null
         Component = edOperDate
         ParamType = ptInput
       end>

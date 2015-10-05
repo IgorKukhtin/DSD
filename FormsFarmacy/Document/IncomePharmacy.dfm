@@ -1,25 +1,25 @@
 inherited IncomePharmacyForm: TIncomePharmacyForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1055#1088#1080#1093#1086#1076'>'
   ClientHeight = 526
-  ClientWidth = 806
-  ExplicitWidth = 822
+  ClientWidth = 985
+  ExplicitWidth = 1001
   ExplicitHeight = 564
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 126
-    Width = 806
+    Width = 985
     Height = 400
     ExplicitTop = 126
     ExplicitWidth = 806
     ExplicitHeight = 400
     ClientRectBottom = 400
-    ClientRectRight = 806
+    ClientRectRight = 985
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 806
       ExplicitHeight = 376
       inherited cxGrid: TcxGrid
-        Width = 806
+        Width = 985
         Height = 376
         ExplicitWidth = 806
         ExplicitHeight = 376
@@ -206,12 +206,22 @@ inherited IncomePharmacyForm: TIncomePharmacyForm
             HeaderHint = #1044#1072#1090#1072' '#1086#1082#1086#1085#1095#1072#1085#1080#1103' '#1088#1077#1075#1080#1089#1090#1088#1072#1094#1080#1080
             Width = 58
           end
+          object colDublePriceColour: TcxGridDBColumn
+            DataBinding.FieldName = 'DublePriceColour'
+            Visible = False
+            VisibleForCustomization = False
+          end
+          object colWarningColor: TcxGridDBColumn
+            DataBinding.FieldName = 'WarningColor'
+            Visible = False
+            VisibleForCustomization = False
+          end
         end
       end
     end
   end
   inherited DataPanel: TPanel
-    Width = 806
+    Width = 985
     Height = 100
     TabOrder = 3
     ExplicitWidth = 806
@@ -637,6 +647,15 @@ inherited IncomePharmacyForm: TIncomePharmacyForm
     end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
+    ColorRuleList = <
+      item
+        BackGroundValueColumn = colDublePriceColour
+        ColorValueList = <>
+      end
+      item
+        ValueColumn = colWarningColor
+        ColorValueList = <>
+      end>
     SummaryItemList = <
       item
         Param.Value = Null

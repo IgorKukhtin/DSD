@@ -80,6 +80,7 @@ type
     colSertificatNumber: TcxGridDBColumn;
     colSertificatStart: TcxGridDBColumn;
     colSertificatEnd: TcxGridDBColumn;
+    colWarningColor: TcxGridDBColumn;
   private
     { Private declarations }
   public

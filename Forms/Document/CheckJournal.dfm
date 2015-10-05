@@ -1,28 +1,29 @@
 inherited CheckJournalForm: TCheckJournalForm
   Caption = #1050#1072#1089#1089#1086#1074#1099#1077' '#1095#1077#1082#1080
-  ClientWidth = 726
+  ClientHeight = 554
+  ClientWidth = 831
   AddOnFormData.RefreshAction = actRefreshStart
-  ExplicitWidth = 742
-  ExplicitHeight = 713
+  ExplicitWidth = 847
+  ExplicitHeight = 592
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 77
-    Width = 726
-    Height = 598
+    Width = 831
+    Height = 477
     TabOrder = 3
     ExplicitTop = 77
-    ExplicitWidth = 697
+    ExplicitWidth = 726
     ExplicitHeight = 598
-    ClientRectBottom = 598
-    ClientRectRight = 726
+    ClientRectBottom = 477
+    ClientRectRight = 831
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 697
+      ExplicitWidth = 726
       ExplicitHeight = 598
       inherited cxGrid: TcxGrid
-        Width = 726
-        Height = 598
-        ExplicitWidth = 697
+        Width = 831
+        Height = 477
+        ExplicitWidth = 726
         ExplicitHeight = 598
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.FooterSummaryItems = <
@@ -76,23 +77,30 @@ inherited CheckJournalForm: TCheckJournalForm
           object coPaidTypeName: TcxGridDBColumn
             Caption = #1058#1080#1087' '#1086#1087#1083#1072#1090#1099
             DataBinding.FieldName = 'PaidTypeName'
+            Options.Editing = False
             Width = 70
           end
           object colBayer: TcxGridDBColumn
-            Caption = #1052#1077#1085#1077#1076#1078#1077#1088
+            Caption = #1055#1086#1082#1091#1087#1072#1090#1077#1083#1100
             DataBinding.FieldName = 'Bayer'
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 79
+            Width = 87
+          end
+          object colCashMember: TcxGridDBColumn
+            Caption = #1052#1077#1085#1077#1076#1078#1077#1088
+            DataBinding.FieldName = 'CashMember'
+            Options.Editing = False
+            Width = 91
           end
         end
       end
     end
   end
   inherited Panel: TPanel
-    Width = 726
+    Width = 831
     Height = 51
-    ExplicitWidth = 697
+    ExplicitWidth = 726
     ExplicitHeight = 51
     object ceUnit: TcxButtonEdit
       Left = 107

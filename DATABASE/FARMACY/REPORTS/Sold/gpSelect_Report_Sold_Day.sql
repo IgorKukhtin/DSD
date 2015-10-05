@@ -210,7 +210,9 @@ BEGIN
            ,CASE
                 WHEN COALESCE((SUM(T0.PlanAmount)OVER(PARTITION BY T0.UnitId 
                                                       ORDER BY T0.PlanDate)),0)<>0
-                    THEN 100.0*COALESCE(T0.FactAmount,0)
+                    THEN 100.0
+                        *(SUM(T0.DiffAmount)OVER(PARTITION BY T0.UnitId 
+                                                 ORDER BY T0.PlanDate))
                          /(SUM(T0.PlanAmount)OVER(PARTITION BY T0.UnitId 
                                                   ORDER BY T0.PlanDate))
             END::TFloat                                                         AS PercentMakeAccum

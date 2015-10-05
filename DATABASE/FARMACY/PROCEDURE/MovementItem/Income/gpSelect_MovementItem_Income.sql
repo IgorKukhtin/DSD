@@ -27,6 +27,7 @@ RETURNS TABLE (Id Integer, GoodsId Integer, GoodsCode Integer, GoodsName TVarCha
              , SertificatNumber TVarChar
              , SertificatStart TDateTime
              , SertificatEnd TDateTime
+             , WarningColor Integer
               )
 AS
 $BODY$
@@ -73,7 +74,7 @@ BEGIN
            , NULL::TVarChar             AS SertificatNumber
            , NULL::TDateTime            AS SertificatStart
            , NULL::TDateTime            AS SertificatEnd
-           
+           , NULL::INteger              AS WarningColor
 
        FROM (SELECT Object_Goods.Id                                                   AS GoodsId
                   , Object_Goods.GoodsCodeInt                                         AS GoodsCode
@@ -116,6 +117,10 @@ BEGIN
            , MovementItem.SertificatNumber
            , MovementItem.SertificatStart
            , MovementItem.SertificatEnd
+           , CASE 
+               WHEN MovementItem.GoodsId Is Null THEN zc_Color_Warning_Red()
+               WHEN MovementItem.PartnerGoodsCode IS NULL THEN zc_Color_Warning_Navy()
+             END AS WarningColor
 
        FROM (SELECT FALSE AS isErased UNION ALL SELECT inIsErased AS isErased WHERE inIsErased = TRUE) AS tmpIsErased
 
@@ -158,6 +163,10 @@ BEGIN
            , MovementItem.SertificatNumber
            , MovementItem.SertificatStart
            , MovementItem.SertificatEnd
+           , CASE 
+               WHEN MovementItem.GoodsId Is Null THEN zc_Color_Warning_Red()
+               WHEN MovementItem.PartnerGoodsCode IS NULL THEN zc_Color_Warning_Navy()
+             END AS WarningColor
 
        FROM (SELECT FALSE AS isErased UNION ALL SELECT inIsErased AS isErased WHERE inIsErased = TRUE) AS tmpIsErased
 
