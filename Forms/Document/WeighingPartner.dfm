@@ -269,7 +269,7 @@ object WeighingPartnerForm: TWeighingPartnerForm
       Properties.Alignment.Vert = taVCenter
       Properties.DecimalPlaces = 0
       Properties.DisplayFormat = ',0'
-      Properties.ReadOnly = True
+      Properties.ReadOnly = False
       TabOrder = 30
       Width = 54
     end
@@ -1725,5 +1725,40 @@ object WeighingPartnerForm: TWeighingPartnerForm
       end>
     Left = 795
     Top = 60
+  end
+  object spUpdateMovement: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Movement_WeighingPartner'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inWeighingNumber'
+        Value = '0'
+        Component = edWeighingNumber
+        ParamType = ptInput
+      end>
+    PackSize = 1
+    Left = 465
+    Top = 224
+  end
+  object HeaderSaver2: THeaderSaver
+    IdParam.Value = Null
+    IdParam.Component = FormParams
+    IdParam.ComponentItem = 'Id'
+    StoredProc = spUpdateMovement
+    ControlList = <
+      item
+        Control = edWeighingNumber
+      end>
+    GetStoredProc = spGet
+    Left = 368
+    Top = 217
   end
 end

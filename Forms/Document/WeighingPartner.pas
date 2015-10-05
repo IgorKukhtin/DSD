@@ -145,6 +145,8 @@ type
     edVATPercent: TcxCurrencyEdit;
     MeasureName: TcxGridDBColumn;
     clGoodsGroupNameFull: TcxGridDBColumn;
+    spUpdateMovement: TdsdStoredProc;
+    HeaderSaver2: THeaderSaver;
   private
   public
   end;
