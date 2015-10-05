@@ -33,6 +33,7 @@ type
     dsdStoredProc1: TdsdStoredProc;
     N13: TMenuItem;
     colBayer: TcxGridDBColumn;
+    colCashMember: TcxGridDBColumn;
   private
     { Private declarations }
   public

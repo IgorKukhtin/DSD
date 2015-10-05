@@ -1,3 +1,13 @@
+change pchar -> pAnsiChar
+change array[0..1024] of char -> pAnsiChar
+change WideStringReplace -> StringReplace
+change TWIN32FindDataA -> TWIN32FindData
+change lStrLen -> lStrLenA
+change Alphabet[value+1] -> Char(Alphabet[value+1])
+add convert to AnsiString
+change Tnt
+
+
 -- Function: gpComplete_All_Sybase()
 
 DROP FUNCTION IF EXISTS gpComplete_All_Sybase (Integer, Boolean, TVarChar);
@@ -22,7 +32,7 @@ BEGIN
      END IF;
 
 
-     IF vbMovementDescId = zc_Movement_Inventory() AND EXTRACT ('HOUR' FROM CURRENT_TIMESTAMP) BETWEEN 7 AND 17
+     IF vbMovementDescId = zc_Movement_Inventory() AND EXTRACT ('HOUR' FROM CURRENT_TIMESTAMP) BETWEEN 8 AND 10
      THEN RETURN; END IF;
 
 

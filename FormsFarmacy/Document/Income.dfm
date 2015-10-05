@@ -223,6 +223,33 @@ inherited IncomeForm: TIncomeForm
             Visible = False
             VisibleForCustomization = False
           end
+          object colSertificatNumber: TcxGridDBColumn
+            AlternateCaption = #1053#1086#1084#1077#1088' '#1088#1077#1075#1080#1089#1090#1088#1072#1094#1080#1080
+            Caption = #8470' '#1088#1077#1075
+            DataBinding.FieldName = 'SertificatNumber'
+            HeaderHint = #1053#1086#1084#1077#1088' '#1088#1077#1075#1080#1089#1090#1088#1072#1094#1080#1080
+            Width = 64
+          end
+          object colSertificatStart: TcxGridDBColumn
+            AlternateCaption = #1044#1072#1090#1072' '#1085#1072#1095#1072#1083#1072' '#1088#1077#1075#1080#1089#1090#1088#1072#1094#1080#1080
+            Caption = #1053#1072#1095'. '#1088#1077#1075'.'
+            DataBinding.FieldName = 'SertificatStart'
+            HeaderHint = #1044#1072#1090#1072' '#1085#1072#1095#1072#1083#1072' '#1088#1077#1075#1080#1089#1090#1088#1072#1094#1080#1080
+            Width = 65
+          end
+          object colSertificatEnd: TcxGridDBColumn
+            AlternateCaption = #1044#1072#1090#1072' '#1086#1082#1086#1085#1095#1072#1085#1080#1103' '#1088#1077#1075#1080#1089#1090#1088#1072#1094#1080#1080
+            Caption = #1054#1082#1086#1085#1095'. '#1088#1077#1075'.'
+            DataBinding.FieldName = 'SertificatEnd'
+            HeaderHint = #1044#1072#1090#1072' '#1086#1082#1086#1085#1095#1072#1085#1080#1103' '#1088#1077#1075#1080#1089#1090#1088#1072#1094#1080#1080
+            Width = 58
+          end
+          object colWarningColor: TcxGridDBColumn
+            Caption = '!'
+            DataBinding.FieldName = 'WarningColor'
+            Visible = False
+            VisibleForCustomization = False
+          end
         end
       end
     end
@@ -837,6 +864,10 @@ inherited IncomeForm: TIncomeForm
     ColorRuleList = <
       item
         BackGroundValueColumn = colDublePriceColour
+        ColorValueList = <>
+      end
+      item
+        ValueColumn = colWarningColor
         ColorValueList = <>
       end>
     SummaryItemList = <
@@ -1522,8 +1553,8 @@ inherited IncomeForm: TIncomeForm
         DataType = ftString
         ParamType = ptInput
       end>
-    Left = 687
-    Top = 144
+    Left = 631
+    Top = 192
   end
   object spIncome_GoodsId: TdsdStoredProc
     StoredProcName = 'gpUpdate_MovementItem_Income_GoodsId'

@@ -3,7 +3,7 @@ inherited SendOnPriceForm: TSendOnPriceForm
   ClientHeight = 668
   ClientWidth = 982
   ExplicitWidth = 998
-  ExplicitHeight = 706
+  ExplicitHeight = 703
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -682,24 +682,6 @@ inherited SendOnPriceForm: TSendOnPriceForm
       FormNameParam.DataType = ftString
       GuiParams = <
         item
-          Name = 'MaskId'
-          Value = Null
-          Component = FormParams
-          ComponentItem = 'Id'
-          ParamType = ptInput
-        end
-        item
-          Name = 'TopPersonalServiceListId'
-          Value = ''
-          ComponentItem = 'Key'
-        end
-        item
-          Name = 'TopPersonalServiceListName'
-          Value = ''
-          ComponentItem = 'TextValue'
-          DataType = ftString
-        end
-        item
           Name = 'Key'
           Value = '0'
           Component = FormParams
@@ -732,8 +714,8 @@ inherited SendOnPriceForm: TSendOnPriceForm
         item
           Action = actRefresh
         end>
-      Caption = #1050#1086#1087#1080#1088#1086#1074#1072#1090#1100' '#1076#1072#1085#1085#1099#1077' '#1087#1086' '#1076#1086#1082#1091#1084#1077#1085#1090#1091' '#1087#1088#1080#1093#1086#1076' '#1086#1090' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072
-      Hint = #1050#1086#1087#1080#1088#1086#1074#1072#1090#1100' '#1076#1072#1085#1085#1099#1077' '#1087#1086' '#1076#1086#1082#1091#1084#1077#1085#1090#1091' '#1087#1088#1080#1093#1086#1076' '#1086#1090' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072
+      Caption = #1055#1077#1088#1077#1085#1077#1089#1090#1080' '#1076#1072#1085#1085#1099#1077' '#1080#1079' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' <'#1055#1088#1080#1093#1086#1076' '#1086#1090' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072'>'
+      Hint = #1055#1077#1088#1077#1085#1077#1089#1090#1080' '#1076#1072#1085#1085#1099#1077' '#1080#1079' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' <'#1055#1088#1080#1093#1086#1076' '#1086#1090' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072'>'
       ImageIndex = 59
     end
   end

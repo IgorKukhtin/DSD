@@ -280,7 +280,7 @@ BEGIN
              END AS InvNumberOrder
 
            , Movement.OperDate                          AS OperDate
-           , MovementDate_OperDatePartner.ValueData     AS OperDatePartner
+           , COALESCE (MovementDate_OperDatePartner.ValueData, CASE WHEN Movement.DescId <> zc_Movement_Sale() THEN Movement.OperDate END) AS OperDatePartner
            , MovementDate_Payment.ValueData             AS PaymentDate
            , CASE WHEN MovementDate_Payment.ValueData IS NOT NULL THEN TRUE ELSE FALSE END AS isPaymentDate
            , COALESCE (Movement_order.OperDate, Movement.OperDate) AS OperDateOrder
@@ -934,9 +934,9 @@ BEGIN
        ORDER BY CASE WHEN vbGoodsPropertyId IN (83954 -- Метро
                                               , 83963 -- Ашан
                                                )
-                          THEN COALESCE (tmpObject_GoodsPropertyValueGroup.Article, COALESCE (tmpObject_GoodsPropertyValue.Article, ''))
-                     ELSE ''
-                END
+                          THEN zfConvert_StringToNumber (COALESCE (tmpObject_GoodsPropertyValueGroup.Article, COALESCE (tmpObject_GoodsPropertyValue.Article, '0')))
+                     ELSE '0'
+                END :: Integer
               , Object_Goods.ValueData, Object_GoodsKind.ValueData
        ;
 

@@ -134,7 +134,7 @@ procedure TdbProcedureTest.CreateMovementItemProcedure;
 begin
   ScriptDirectory := FarmacyProcedurePath + 'MovementItem\Income\';
   ProcedureLoad;
-  ScriptDirectory := CommonProcedurePath + 'MovementItem\Check\';
+  ScriptDirectory := FarmacyProcedurePath + 'MovementItem\Check\';
   ProcedureLoad;
   ScriptDirectory := FarmacyProcedurePath + 'MovementItem\Inventory\';
   ProcedureLoad;
@@ -177,7 +177,7 @@ procedure TdbProcedureTest.CreateMovementProcedure;
 begin
   ScriptDirectory := FarmacyProcedurePath + 'Movement\Income\';
   ProcedureLoad;
-  ScriptDirectory := CommonProcedurePath + 'Movement\Check\';
+  ScriptDirectory := FarmacyProcedurePath + 'Movement\Check\';
   ProcedureLoad;
   ScriptDirectory := FarmacyProcedurePath + 'Movement\Inventory\';
   ProcedureLoad;

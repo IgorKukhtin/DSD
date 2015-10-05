@@ -24,6 +24,10 @@ RETURNS TABLE (Id Integer, GoodsId Integer, GoodsCode Integer, GoodsName TVarCha
              , FEA TVarChar
              , Measure TVarChar
              , DublePriceColour Integer
+             , SertificatNumber TVarChar
+             , SertificatStart TDateTime
+             , SertificatEnd TDateTime
+             , WarningColor Integer
               )
 AS
 $BODY$
@@ -66,7 +70,11 @@ BEGIN
            , NULL::TVarChar             AS MakerName
            , NULL::TVarChar             AS FEA
            , NULL::TVarChar             AS Measure
-           , NULL::Integer              AS DublePriceColour  
+           , NULL::Integer              AS DublePriceColour
+           , NULL::TVarChar             AS SertificatNumber
+           , NULL::TDateTime            AS SertificatStart
+           , NULL::TDateTime            AS SertificatEnd
+           , NULL::INteger              AS WarningColor
 
        FROM (SELECT Object_Goods.Id                                                   AS GoodsId
                   , Object_Goods.GoodsCodeInt                                         AS GoodsCode
@@ -106,6 +114,13 @@ BEGIN
            , MovementItem.FEA
            , MovementItem.Measure
            , DublePrice.DublePriceColour
+           , MovementItem.SertificatNumber
+           , MovementItem.SertificatStart
+           , MovementItem.SertificatEnd
+           , CASE 
+               WHEN MovementItem.GoodsId Is Null THEN zc_Color_Warning_Red()
+               WHEN MovementItem.PartnerGoodsCode IS NULL THEN zc_Color_Warning_Navy()
+             END AS WarningColor
 
        FROM (SELECT FALSE AS isErased UNION ALL SELECT inIsErased AS isErased WHERE inIsErased = TRUE) AS tmpIsErased
 
@@ -145,6 +160,13 @@ BEGIN
            , MovementItem.FEA
            , MovementItem.Measure
            , DublePrice.DublePriceColour
+           , MovementItem.SertificatNumber
+           , MovementItem.SertificatStart
+           , MovementItem.SertificatEnd
+           , CASE 
+               WHEN MovementItem.GoodsId Is Null THEN zc_Color_Warning_Red()
+               WHEN MovementItem.PartnerGoodsCode IS NULL THEN zc_Color_Warning_Navy()
+             END AS WarningColor
 
        FROM (SELECT FALSE AS isErased UNION ALL SELECT inIsErased AS isErased WHERE inIsErased = TRUE) AS tmpIsErased
 
@@ -169,7 +191,8 @@ ALTER FUNCTION gpSelect_MovementItem_Income (Integer, Boolean, Boolean, TVarChar
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А.А.
+ 01.10.15                                                                        *SertificatNumber,SertificatStart,SertificatEnd               
  09.04.15                         *
  06.03.15                         *
  26.12.14                         *

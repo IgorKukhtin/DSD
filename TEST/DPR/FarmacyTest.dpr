@@ -331,7 +331,9 @@ uses
   RecalcMCS_Dialog in '..\..\FormsFarmacy\System\RecalcMCS_Dialog.pas' {RecalcMCS_DialogForm: TParentForm},
   ReportSoldParams in '..\..\FormsFarmacy\Object\ReportSoldParams.pas' {ReportSoldParamsForm: TParentForm},
   ReportSoldParamsTest in '..\SOURCE\Objects\All\Farmacy\ReportSoldParamsTest.pas',
-  Report_Sold in '..\..\FormsFarmacy\Report\Report_Sold.pas' {Report_SoldForm: TParentForm};
+  Report_Sold in '..\..\FormsFarmacy\Report\Report_Sold.pas' {Report_SoldForm: TParentForm},
+  Report_Sold_Day in '..\..\FormsFarmacy\Report\Report_Sold_Day.pas' {Report_Sold_DayForm: TParentForm},
+  Report_Sold_DayUser in '..\..\FormsFarmacy\Report\Report_Sold_DayUser.pas' {Report_Sold_DayUserForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}

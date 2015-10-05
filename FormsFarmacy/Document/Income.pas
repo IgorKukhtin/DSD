@@ -77,6 +77,10 @@ type
     cbFarmacyShow: TcxCheckBox;
     cxLabel12: TcxLabel;
     colDublePriceColour: TcxGridDBColumn;
+    colSertificatNumber: TcxGridDBColumn;
+    colSertificatStart: TcxGridDBColumn;
+    colSertificatEnd: TcxGridDBColumn;
+    colWarningColor: TcxGridDBColumn;
   private
     { Private declarations }
   public

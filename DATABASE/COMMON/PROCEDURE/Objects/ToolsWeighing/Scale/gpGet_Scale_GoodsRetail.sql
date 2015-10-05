@@ -48,8 +48,8 @@ BEGIN
     -- !!!меняется параметр!!!
     IF COALESCE (inGoodsPropertyId, 0) = 0
     THEN
-        -- inGoodsPropertyId:= 83956; -- Фоззи
-        inGoodsPropertyId:= 83963; -- Ашан
+        inGoodsPropertyId:= 83956; -- Фоззи
+        -- inGoodsPropertyId:= 83963; -- Ашан
     END IF;
 
 

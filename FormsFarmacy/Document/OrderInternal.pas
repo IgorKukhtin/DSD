@@ -36,7 +36,6 @@ type
     bbPrintTax_Client: TdxBarButton;
     bbPrint_Bill: TdxBarButton;
     PrintItemsSverkaCDS: TClientDataSet;
-    colSumm: TcxGridDBColumn;
     cxGrid1: TcxGrid;
     cxGridDBTableView1: TcxGridDBTableView;
     colPrice: TcxGridDBColumn;
@@ -57,12 +56,10 @@ type
     coJuridicalName: TcxGridDBColumn;
     coPrice: TcxGridDBColumn;
     coContractName: TcxGridDBColumn;
-    coSuperFinalPrice: TcxGridDBColumn;
     spUpdatePrioritetPartner: TdsdStoredProc;
     actUpdatePrioritetPartner: TdsdExecStoredProc;
     bbPrioritetPartner: TdxBarButton;
     colMakerName: TcxGridDBColumn;
-    colisCalculated: TcxGridDBColumn;
     actSetLinkGoodsForm: TdsdOpenForm;
     bbSetGoodsLink: TdxBarButton;
     colPartnerGoodsCode: TcxGridDBColumn;
@@ -77,7 +74,6 @@ type
     clPartionGoodsDateColor: TcxGridDBColumn;
     clMinimumLot: TcxGridDBColumn;
     colMinimumLot: TcxGridDBColumn;
-    clCalcAmount: TcxGridDBColumn;
     colMultiplicity: TcxGridDBColumn;
     mactDeleteLinkGroup: TMultiAction;
     mactDeleteLinkDS: TMultiAction;
@@ -88,12 +84,10 @@ type
     colRemains: TcxGridDBColumn;
     colComment: TcxGridDBColumn;
     colisTopColor: TcxGridDBColumn;
-    colTop: TcxGridDBColumn;
     colRemainsInUnit: TcxGridDBColumn;
     colMCS: TcxGridDBColumn;
     colGoodsGroupName: TcxGridDBColumn;
     colNDSKindName: TcxGridDBColumn;
-    colAmountSecond: TcxGridDBColumn;
     colAmountAll: TcxGridDBColumn;
     colCalcAmountAll: TcxGridDBColumn;
     colSummAll: TcxGridDBColumn;

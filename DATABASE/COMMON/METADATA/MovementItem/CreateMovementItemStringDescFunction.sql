@@ -26,9 +26,15 @@ CREATE OR REPLACE FUNCTION zc_MIString_Measure() RETURNS Integer AS $BODY$BEGIN 
 INSERT INTO MovementItemStringDesc (Code, ItemName)
   SELECT 'zc_MIString_Measure', 'Единица измерения' WHERE NOT EXISTS (SELECT * FROM MovementItemStringDesc WHERE Code = 'zc_MIString_Measure');
 
+----!!!!!!Farmacy
+CREATE OR REPLACE FUNCTION zc_MIString_SertificatNumber() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementItemStringDesc WHERE Code = 'zc_MIString_SertificatNumber'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementItemStringDesc (Code, ItemName)
+  SELECT 'zc_MIString_SertificatNumber', 'Номер регистрации медикомента' WHERE NOT EXISTS (SELECT * FROM MovementItemStringDesc WHERE Code = 'zc_MIString_SertificatNumber');
+
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.  Воробкало А.А.
+ 01.10.15                                                          * zc_MIString_RegNumber
  12.07.13                                        * НОВАЯ СХЕМА2
  29.06.13                                        * НОВАЯ СХЕМА
  29.06.13                                        * zc_MIString_PartionGoods

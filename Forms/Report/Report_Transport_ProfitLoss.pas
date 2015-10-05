@@ -82,6 +82,7 @@ type
     WeightTransport: TcxGridDBColumn;
     One_KM: TcxGridDBColumn;
     One_KG: TcxGridDBColumn;
+    WeightSale: TcxGridDBColumn;
   private
   public
   end;
