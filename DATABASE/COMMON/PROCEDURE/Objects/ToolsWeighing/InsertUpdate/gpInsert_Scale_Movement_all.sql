@@ -115,8 +115,6 @@ BEGIN
      INSERT INTO _tmpUnit_check (UnitId)
         SELECT 301309 -- 22121	Склад ГП ф.Запорожье
        UNION
-        SELECT 301309 -- 22121	Склад ГП ф.Запорожье
-       UNION
         SELECT 309599 -- 22122	Склад возвратов ф.Запорожье
        UNION
         SELECT 346093 -- 22081	Склад ГП ф.Одесса
@@ -144,6 +142,8 @@ BEGIN
                                )
                     -- если БН
                 AND EXISTS (SELECT ObjectId FROM MovementLinkObject WHERE MovementId = inMovementId AND DescId = zc_MovementLinkObject_PaidKind() AND ObjectId = zc_Enum_PaidKind_FirstForm())
+                    -- если НЕ гофротара и т.п.
+                AND EXISTS (SELECT MovementItem.ObjectId FROM MovementItem INNER JOIN MovementItemFloat AS MIFloat_Price ON MIFloat_Price.MovementItemId = MovementItem.Id AND MIFloat_Price.DescId = zc_MIFloat_Price() AND MIFloat_Price.ValueData <> 0 WHERE MovementItem.MovementId = inMovementId AND MovementItem.DescId = zc_MI_Master() AND MovementItem.isErased = FALSE)
                ;
      ELSE vbIsTax:= FALSE;
      END IF;

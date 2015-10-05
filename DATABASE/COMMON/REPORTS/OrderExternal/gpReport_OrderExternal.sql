@@ -89,6 +89,7 @@ BEGIN
            , COALESCE (MovementFloat_ChangePercent.ValueData, 0)      AS ChangePercent
            , MovementItem.ObjectId                                    AS GoodsId
            , MILinkObject_GoodsKind.ObjectId                          AS GoodsKindId
+           , ObjectLink_Goods_InfoMoney.ChildObjectId                 AS InfoMoneyId
 
            , SUM (CASE WHEN Movement.OperDate =  COALESCE (MovementDate_OperDatePartner.ValueData, Movement.OperDate) THEN MovementItem.Amount ELSE 0 END) AS Amount1
            , SUM (CASE WHEN Movement.OperDate <> COALESCE (MovementDate_OperDatePartner.ValueData, Movement.OperDate) THEN MovementItem.Amount ELSE 0 END) AS Amount2
@@ -151,18 +152,25 @@ BEGIN
                                   AND MovementItem.isErased   = FALSE
            INNER JOIN _tmpGoods ON _tmpGoods.GoodsId = MovementItem.ObjectId
 
+           LEFT JOIN ObjectLink AS ObjectLink_Goods_InfoMoney
+                                ON ObjectLink_Goods_InfoMoney.ObjectId = MovementItem.ObjectId
+                               AND ObjectLink_Goods_InfoMoney.DescId = zc_ObjectLink_Goods_InfoMoney()
+
            LEFT JOIN MovementItemFloat AS MIFloat_AmountSecond
                                        ON MIFloat_AmountSecond.MovementItemId = MovementItem.Id
                                       AND MIFloat_AmountSecond.DescId = zc_MIFloat_AmountSecond()
            LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
                                             ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
                                            AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
+                                           AND ObjectLink_Goods_InfoMoney.ChildObjectId IN (zc_Enum_InfoMoney_20901(), zc_Enum_InfoMoney_30101(), zc_Enum_InfoMoney_30201()) -- Ирна + Готовая продукция + Доходы Мясное сырье
            LEFT JOIN MovementItemFloat AS MIFloat_Price
                                        ON MIFloat_Price.MovementItemId = MovementItem.Id
                                       AND MIFloat_Price.DescId = zc_MIFloat_Price()
            LEFT JOIN MovementItemFloat AS MIFloat_CountForPrice
                                        ON MIFloat_CountForPrice.MovementItemId = MovementItem.Id
                                       AND MIFloat_CountForPrice.DescId = zc_MIFloat_CountForPrice()
+
+
        WHERE Movement.OperDate BETWEEN inStartDate AND inEndDate
          AND Movement.StatusId = zc_Enum_Status_Complete()
          AND Movement.DescId = zc_Movement_OrderExternal()
@@ -184,6 +192,7 @@ BEGIN
            , MovementFloat_ChangePercent.ValueData
            , MovementItem.ObjectId
            , MILinkObject_GoodsKind.ObjectId
+           , ObjectLink_Goods_InfoMoney.ChildObjectId
            , MIFloat_CountForPrice.ValueData
            , MIFloat_Price.ValueData
          )
@@ -199,6 +208,7 @@ BEGIN
             , tmpMovement2.PaidKindId
             , tmpMovement2.GoodsKindId
             , tmpMovement2.GoodsId
+            , tmpMovement2.InfoMoneyId
 
            , SUM (Amount1 + Amount2 + AmountSecond1 + AmountSecond2) AS Amount
            , SUM (CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN Amount1 ELSE 0 END)                                 AS Amount_Sh1
@@ -232,6 +242,7 @@ BEGIN
               , tmpMovement2.PaidKindId
               , tmpMovement2.GoodsKindId
               , tmpMovement2.GoodsId
+              , tmpMovement2.InfoMoneyId
       )
        -- Результат
        SELECT
@@ -349,11 +360,7 @@ BEGIN
           LEFT JOIN Object_Contract_InvNumber_View AS View_Contract_InvNumber ON View_Contract_InvNumber.ContractId = tmpMovement.ContractId
           LEFT JOIN Object_InfoMoney_View AS View_InfoMoney ON View_InfoMoney.InfoMoneyId = View_Contract_InvNumber.InfoMoneyId
 
-          LEFT JOIN ObjectLink AS ObjectLink_Goods_InfoMoney
-                               ON ObjectLink_Goods_InfoMoney.ObjectId = tmpMovement.GoodsId
-                              AND ObjectLink_Goods_InfoMoney.DescId = zc_ObjectLink_Goods_InfoMoney()
-          LEFT JOIN Object_InfoMoney_View AS View_InfoMoney_goods ON View_InfoMoney_goods.InfoMoneyId = ObjectLink_Goods_InfoMoney.ChildObjectId
-
+          LEFT JOIN Object_InfoMoney_View AS View_InfoMoney_goods ON View_InfoMoney_goods.InfoMoneyId = tmpMovement.InfoMoneyId
          ;
 
 END;
@@ -372,4 +379,4 @@ ALTER FUNCTION gpReport_OrderExternal (TDateTime, TDateTime, Integer, Integer, I
 */
 
 -- тест
--- SELECT * FROM gpReport_OrderExternal (inStartDate:= '01.06.2015', inEndDate:= '01.06.2015', inFromId := 0, inToId := 0, inRouteId := 0, inRouteSortingId := 0, inGoodsGroupId := 0, inIsByDoc := False, inSession:= zfCalc_UserAdmin())
+-- SELECT * FROM gpReport_OrderExternal (inStartDate:= '01.10.2015', inEndDate:= '01.10.2015', inFromId := 0, inToId := 0, inRouteId := 0, inRouteSortingId := 0, inGoodsGroupId := 0, inIsByDoc := False, inSession:= zfCalc_UserAdmin())

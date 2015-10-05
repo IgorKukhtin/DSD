@@ -1110,7 +1110,6 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TReport_Transport_ProfitLossForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Transport_ProfitLossDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_Transport_ProfitLossDialogForm');
-
  exit;
  {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_GoodsMIForm'));
