@@ -170,7 +170,11 @@ BEGIN
 
            , Object_Partner.isErased          AS isErased
 
-     FROM Object AS Object_Partner
+     FROM tmpIsErased
+          INNER JOIN Object AS Object_Partner
+                            ON Object_Partner.isErased = tmpIsErased.isErased 
+                           AND Object_Partner.DescId = zc_Object_Partner()
+       
           LEFT JOIN (SELECT Object.Id AS PartnerId
                           , MAX (CASE WHEN Movement.DescId IN (zc_Movement_Sale(), zc_Movement_ReturnIn()) THEN 3000
                                       ELSE 0
@@ -316,8 +320,7 @@ BEGIN
 
          LEFT JOIN ObjectHistory_JuridicalDetails_View ON ObjectHistory_JuridicalDetails_View.JuridicalId = Object_Juridical.Id
 
-    WHERE Object_Partner.DescId = zc_Object_Partner()
-      AND (ObjectLink_Partner_Juridical.ChildObjectId = inJuridicalId OR inJuridicalId = 0)
+    WHERE (ObjectLink_Partner_Juridical.ChildObjectId = inJuridicalId OR inJuridicalId = 0)
       AND (tmpMovement.PartnerId > 0 OR inIsPeriod = FALSE)
       AND (ObjectLink_Juridical_JuridicalGroup.ChildObjectId = vbObjectId_Constraint
            OR View_PersonalTrade.BranchId = vbObjectId_Branch_Constraint

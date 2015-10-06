@@ -614,7 +614,7 @@ object PartnerAddressForm: TPartnerAddressForm
     AutoSize = False
     Caption = #1059#1055' '#1089#1090#1072#1090#1100#1103':'
     Height = 17
-    Width = 65
+    Width = 60
   end
   object ceInfoMoney: TcxButtonEdit
     Left = 880
@@ -626,7 +626,7 @@ object PartnerAddressForm: TPartnerAddressForm
       end>
     Properties.ReadOnly = True
     TabOrder = 7
-    Width = 305
+    Width = 290
   end
   object cbPeriod: TcxCheckBox
     Left = 394
