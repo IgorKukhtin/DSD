@@ -1,9 +1,11 @@
 -- Function: gpSelect_Object_Partner()
 
 DROP FUNCTION IF EXISTS gpSelect_Object_Partner (Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_Object_Partner (Integer, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_Object_Partner(
     IN inJuridicalId       Integer  , 
+    IN inShowAll           Boolean  ,
     IN inSession           TVarChar   -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, 
@@ -62,6 +64,9 @@ BEGIN
 
    -- Результат
    RETURN QUERY 
+  
+     WITH tmpIsErased AS (SELECT FALSE AS isErased UNION ALL SELECT inShowAll AS isErased WHERE inShowAll = TRUE)
+
      SELECT 
            Object_Partner.Id               AS Id
          , Object_Partner.ObjectCode       AS Code
@@ -170,7 +175,11 @@ BEGIN
 
          , Object_Partner.isErased   AS isErased
          
-     FROM Object AS Object_Partner
+     FROM tmpIsErased
+         INNER JOIN Object AS Object_Partner 
+                           ON Object_Partner.isErased = tmpIsErased.isErased 
+                          AND Object_Partner.DescId = zc_Object_Partner()
+
          LEFT JOIN ObjectString AS ObjectString_GLNCode 
                                 ON ObjectString_GLNCode.ObjectId = Object_Partner.Id 
                                AND ObjectString_GLNCode.DescId = zc_ObjectString_Partner_GLNCode()
@@ -332,7 +341,7 @@ BEGIN
                              AND ObjectLink_Partner_Unit.DescId = zc_ObjectLink_Partner_Unit()
          LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = ObjectLink_Partner_Unit.ChildObjectId
 
-    WHERE Object_Partner.DescId = zc_Object_Partner() AND (inJuridicalId = 0 OR inJuridicalId = ObjectLink_Partner_Juridical.ChildObjectId)
+    WHERE (inJuridicalId = 0 OR inJuridicalId = ObjectLink_Partner_Juridical.ChildObjectId)
       AND (ObjectLink_Juridical_JuridicalGroup.ChildObjectId = vbObjectId_Constraint
            OR Object_PersonalTrade.BranchId = vbBranchId_Constraint
            OR vbIsConstraint = FALSE)
@@ -341,11 +350,12 @@ BEGIN
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpSelect_Object_Partner (integer, TVarChar) OWNER TO postgres;
+ALTER FUNCTION gpSelect_Object_Partner (integer, Boolean, TVarChar) OWNER TO postgres;
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 06.10.15         * add inShowAll
  06.02.15         * add redmine 
  20.11.14         * add redmine 
  10.11.14         * add redmine

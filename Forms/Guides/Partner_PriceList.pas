@@ -118,6 +118,8 @@ type
     actChoicePriceList_30201: TOpenChoiceForm;
     clRouteName: TcxGridDBColumn;
     clRouteName_30201: TcxGridDBColumn;
+    actShowAll: TBooleanStoredProcAction;
+    bbShowAll: TdxBarButton;
   private
     { Private declarations }
   public

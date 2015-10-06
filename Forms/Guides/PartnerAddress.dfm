@@ -3,7 +3,7 @@ object PartnerAddressForm: TPartnerAddressForm
   Top = 0
   Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1050#1086#1085#1090#1088#1072#1075#1077#1085#1090#1099' ('#1076#1077#1090#1072#1083#1100#1085#1086')>'
   ClientHeight = 464
-  ClientWidth = 1484
+  ClientWidth = 1444
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -21,7 +21,7 @@ object PartnerAddressForm: TPartnerAddressForm
   object cxGrid: TcxGrid
     Left = 0
     Top = 26
-    Width = 1484
+    Width = 1444
     Height = 438
     Align = alClient
     TabOrder = 1
@@ -741,6 +741,14 @@ object PartnerAddressForm: TPartnerAddressForm
         end
         item
           Visible = True
+          ItemName = 'bbShowAll'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic1'
+        end
+        item
+          Visible = True
           ItemName = 'bbRefresh'
         end
         item
@@ -922,6 +930,10 @@ object PartnerAddressForm: TPartnerAddressForm
       Hint = 'New Item'
       Visible = ivAlways
       Control = ceInfoMoney
+    end
+    object bbShowAll: TdxBarButton
+      Action = actShowAll
+      Category = 0
     end
   end
   object ActionList: TActionList
@@ -1504,6 +1516,25 @@ object PartnerAddressForm: TPartnerAddressForm
       ShortCut = 116
       RefreshOnTabSetChanges = False
     end
+    object actShowAll: TBooleanStoredProcAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = dsdStoredProc
+      StoredProcList = <
+        item
+          StoredProc = dsdStoredProc
+        end>
+      Caption = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1077#1089#1100' '#1089#1087#1080#1089#1086#1082
+      Hint = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1077#1089#1100' '#1089#1087#1080#1089#1086#1082
+      ImageIndex = 63
+      Value = False
+      HintTrue = #1055#1086#1082#1072#1079#1072#1090#1100' '#1085#1077' '#1091#1076#1072#1083#1077#1085#1085#1099#1077
+      HintFalse = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1077#1089#1100' '#1089#1087#1080#1089#1086#1082
+      CaptionTrue = #1055#1086#1082#1072#1079#1072#1090#1100' '#1085#1077' '#1091#1076#1072#1083#1077#1085#1085#1099#1077
+      CaptionFalse = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1077#1089#1100' '#1089#1087#1080#1089#1086#1082
+      ImageIndexTrue = 62
+      ImageIndexFalse = 63
+    end
   end
   object dsdStoredProc: TdsdStoredProc
     StoredProcName = 'gpSelect_Object_Partner_Address'
@@ -1531,6 +1562,13 @@ object PartnerAddressForm: TPartnerAddressForm
         Name = 'inIsPeriod'
         Value = Null
         Component = cbPeriod
+        DataType = ftBoolean
+        ParamType = ptInput
+      end
+      item
+        Name = 'inShowAll'
+        Value = 'False'
+        Component = actShowAll
         DataType = ftBoolean
         ParamType = ptInput
       end

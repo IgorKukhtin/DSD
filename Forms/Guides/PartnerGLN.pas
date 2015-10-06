@@ -98,6 +98,8 @@ type
     clGLNCodeJuridical_property: TcxGridDBColumn;
     clGLNCodeRetail_property: TcxGridDBColumn;
     clGLNCodeCorporate_property: TcxGridDBColumn;
+    actShowAll: TBooleanStoredProcAction;
+    bbShowAll: TdxBarButton;
   private
     { Private declarations }
   public

@@ -3,7 +3,7 @@ inherited Partner_PriceList_viewForm: TPartner_PriceList_viewForm
   ClientHeight = 496
   ClientWidth = 1054
   ExplicitWidth = 1070
-  ExplicitHeight = 531
+  ExplicitHeight = 534
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -819,9 +819,16 @@ inherited Partner_PriceList_viewForm: TPartner_PriceList_viewForm
         Component = GuidesJuridical
         ComponentItem = 'Key'
         ParamType = ptInput
+      end
+      item
+        Name = 'inShowAll'
+        Value = Null
+        Component = actShowAll
+        DataType = ftBoolean
+        ParamType = ptInput
       end>
-    Left = 112
-    Top = 90
+    Left = 128
+    Top = 130
   end
   inherited BarManager: TdxBarManager
     Left = 168

@@ -3,11 +3,14 @@
 DROP FUNCTION IF EXISTS gpSelect_Object_Partner_PriceList (Boolean, TVarChar);
 DROP FUNCTION IF EXISTS gpSelect_Object_Partner_PriceList (TDateTime, TVarChar);
 DROP FUNCTION IF EXISTS gpSelect_Object_Partner_PriceList (TDateTime, Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_Object_Partner_PriceList (TDateTime, Integer, Integer, Boolean, TVarChar);
+
 
 CREATE OR REPLACE FUNCTION gpSelect_Object_Partner_PriceList(
     IN inOperDate       TDateTime,     --
     IN inRetailId       Integer, 
     IN inJuridicalId    Integer, 
+    IN inShowAll        Boolean,   
     IN inSession        TVarChar       -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, Code Integer
@@ -56,13 +59,15 @@ BEGIN
 
    -- Результат
    RETURN QUERY
-   WITH tmpContractPartner_Juridical AS (SELECT ObjectLink_Partner_Juridical.ChildObjectId AS JuridicalId
+   WITH tmpIsErased AS (SELECT FALSE AS isErased UNION ALL SELECT inShowAll AS isErased WHERE inShowAll = TRUE)
+ 
+      , tmpContractPartner_Juridical AS (SELECT ObjectLink_Partner_Juridical.ChildObjectId AS JuridicalId
                                          FROM ObjectLink AS ObjectLink_ContractPartner_Partner
                                               INNER JOIN ObjectLink AS ObjectLink_Partner_Juridical
                                                                     ON ObjectLink_Partner_Juridical.ObjectId = ObjectLink_ContractPartner_Partner.ChildObjectId
                                                                    AND ObjectLink_Partner_Juridical.DescId = zc_ObjectLink_Partner_Juridical()
                                               INNER JOIN Object AS Object_ContractPartner ON Object_ContractPartner.Id = ObjectLink_ContractPartner_Partner.ObjectId
-                                                                                         AND Object_ContractPartner.isErased = FALSE
+                                                                                         AND Object_ContractPartner.isErased in (SELECT tmpIsErased.isErased FROM tmpIsErased)-- FALSE
                                          WHERE ObjectLink_ContractPartner_Partner.DescId = zc_ObjectLink_ContractPartner_Partner()
                                          GROUP BY ObjectLink_Partner_Juridical.ChildObjectId
                                         )
@@ -80,10 +85,12 @@ BEGIN
                             OR Object_InfoMoney_View.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_30300() -- Доходы + Переработка
                         )
        , tmpContract AS (SELECT Object_Contract_View.*
-                         FROM Object_Contract_View
+                         FROM tmpIsErased
+                              INNER JOIN Object_Contract_View ON Object_Contract_View.isErased = tmpIsErased.isErased
+                                                             AND Object_Contract_View.ContractStateKindId <> zc_Enum_ContractStateKind_Close()
                               INNER JOIN tmpInfoMoney AS Object_InfoMoney_View ON Object_InfoMoney_View.InfoMoneyId = Object_Contract_View.InfoMoneyId
-                         WHERE Object_Contract_View.ContractStateKindId <> zc_Enum_ContractStateKind_Close()
-                           AND Object_Contract_View.isErased = FALSE
+                       --  WHERE Object_Contract_View.ContractStateKindId <> zc_Enum_ContractStateKind_Close()
+                       --    AND Object_Contract_View.isErased = FALSE
                         )
        , tmpPartner AS (SELECT * FROM 
         (SELECT Object_Partner.Id
@@ -188,7 +195,10 @@ BEGIN
                                                           , inInfoMoneyId            := Object_InfoMoney_View.InfoMoneyId
                                                            )).*
 
-         FROM Object AS Object_Partner
+         FROM tmpIsErased
+              INNER JOIN Object AS Object_Partner 
+                                ON Object_Partner.isErased = tmpIsErased.isErased --FALSE
+                               AND Object_Partner.DescId = zc_Object_Partner()
               LEFT JOIN ObjectLink AS ObjectLink_Partner_Juridical
                                    ON ObjectLink_Partner_Juridical.ObjectId = Object_Partner.Id
                                   AND ObjectLink_Partner_Juridical.DescId = zc_ObjectLink_Partner_Juridical()
@@ -201,7 +211,7 @@ BEGIN
                                    ON ObjectLink_ContractPartner_Partner.ChildObjectId = Object_Partner.Id
                                   AND ObjectLink_ContractPartner_Partner.DescId = zc_ObjectLink_ContractPartner_Partner()
               LEFT JOIN Object AS Object_ContractPartner ON Object_ContractPartner.Id = ObjectLink_ContractPartner_Partner.ObjectId
-                                                        AND Object_ContractPartner.isErased = FALSE
+                                                        AND Object_ContractPartner.isErased in (SELECT tmpIsErased.isErased FROM tmpIsErased)-- FALSE
               LEFT JOIN ObjectLink AS ObjectLink_ContractPartner_Contract
                                    ON ObjectLink_ContractPartner_Contract.ObjectId = Object_ContractPartner.Id
                                   AND ObjectLink_ContractPartner_Contract.DescId = zc_ObjectLink_ContractPartner_Contract()
@@ -211,9 +221,7 @@ BEGIN
                                             AND (Object_Contract_View.ContractId = ObjectLink_ContractPartner_Contract.ChildObjectId OR tmpContractPartner_Juridical.JuridicalId IS NULL)
               LEFT JOIN tmpInfoMoney AS Object_InfoMoney_View ON Object_InfoMoney_View.InfoMoneyId = Object_Contract_View.InfoMoneyId
 
-         WHERE Object_Partner.DescId = zc_Object_Partner()
-           AND Object_Partner.isErased = FALSE
-           AND (ObjectLink_ContractPartner_Contract.ObjectId > 0 OR Object_ContractPartner.Id IS NULL)
+         WHERE (ObjectLink_ContractPartner_Contract.ObjectId > 0 OR Object_ContractPartner.Id IS NULL)
            AND (ObjectLink_Partner_Juridical.ChildObjectId = inJuridicalId OR COALESCE (inJuridicalId, 0) = 0)
            AND (ObjectLink_Juridical_Retail.ChildObjectId = inRetailId OR COALESCE (inRetailId, 0) = 0)
 
@@ -553,7 +561,7 @@ BEGIN
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpSelect_Object_Partner_PriceList (TDateTime, Integer, Integer, TVarChar) OWNER TO postgres;
+ALTER FUNCTION gpSelect_Object_Partner_PriceList (TDateTime, Integer, Integer, Boolean, TVarChar) OWNER TO postgres;
 
 /*-------------------------------------------------------------------------------*/
 /*
@@ -563,5 +571,7 @@ ALTER FUNCTION gpSelect_Object_Partner_PriceList (TDateTime, Integer, Integer, T
 */
 
 -- тест
--- SELECT * FROM gpSelect_Object_Partner_PriceList (inOperDate:= '01.06.2015', inRetailId:= 0,  inJuridicalId:= 78893, inSession := zfCalc_UserAdmin())
+-- SELECT * FROM gpSelect_Object_Partner_PriceList (inOperDate:= '01.06.2015', inRetailId:= 0,  inJuridicalId:= 78893, inShowAll:= False, inSession := zfCalc_UserAdmin())
+ --select * from gpSelect_Object_Partner_PriceList(inOperDate := ('01.06.2015')::TDateTime , inRetailId := 0 , inJuridicalId := 78893 , inShowAll := 'true' ,  inSession := '5');
+ --select * from gpSelect_Object_Partner_PriceList(inOperDate := ('01.06.2015')::TDateTime , inRetailId := 0 , inJuridicalId := 78893 , inShowAll := 'false' ,  inSession := '5');
 -- SELECT * FROM gpSelect_Object_Partner_PriceList (inOperDate:= '01.01.2015', inRetailId:= 0,  inJuridicalId:= 0, inSession := zfCalc_UserAdmin())
