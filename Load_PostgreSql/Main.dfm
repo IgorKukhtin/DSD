@@ -38,7 +38,6 @@ object MainForm: TMainForm
     Align = alBottom
     BevelOuter = bvNone
     TabOrder = 1
-    ExplicitWidth = 1020
     object Gauge: TGauge
       Left = 0
       Top = 0
@@ -127,7 +126,6 @@ object MainForm: TMainForm
     Align = alRight
     BevelOuter = bvNone
     TabOrder = 2
-    ExplicitLeft = 295
     object cbGoodsGroup: TCheckBox
       Tag = 10
       Left = 15
@@ -730,7 +728,6 @@ object MainForm: TMainForm
     Align = alRight
     BevelOuter = bvNone
     TabOrder = 3
-    ExplicitLeft = 560
     object Label1: TLabel
       Left = 6
       Top = 22
@@ -1462,7 +1459,6 @@ object MainForm: TMainForm
     Align = alRight
     BevelOuter = bvNone
     TabOrder = 4
-    ExplicitLeft = 784
     object Label3: TLabel
       Left = 6
       Top = 22
@@ -2261,14 +2257,14 @@ object MainForm: TMainForm
     Parameters = <>
     SQL.Strings = (
       'select * from Goods where HasChildren<>-1 order by 1 desc')
-    Left = 176
-    Top = 80
+    Left = 216
+    Top = 24
   end
   object fromFlSqlQuery: TADOQuery
     Connection = fromFlADOConnection
     Parameters = <>
-    Left = 176
-    Top = 134
+    Left = 264
+    Top = 14
   end
   object toStoredProc_three: TdsdStoredProc
     DataSets = <>

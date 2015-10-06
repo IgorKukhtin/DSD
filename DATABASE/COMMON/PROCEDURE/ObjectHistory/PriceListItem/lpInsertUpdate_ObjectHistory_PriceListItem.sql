@@ -14,8 +14,6 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_ObjectHistory_PriceListItem(
 $BODY$
 DECLARE
    DECLARE vbPriceListItemId Integer;
-   DECLARE vbStartDate TDateTime;
-   DECLARE vbEndDate TDateTime;
 BEGIN
 
 
@@ -27,10 +25,9 @@ BEGIN
    -- Устанавливаем цену
    PERFORM lpInsertUpdate_ObjectHistoryFloat (zc_ObjectHistoryFloat_PriceListItem_Value(), ioId, inValue);
 
-
-   SELECT StartDate, EndDate INTO vbStartDate, vbEndDate FROM ObjectHistory WHERE Id = ioId;
    -- сохранили протокол
-   PERFORM lpInsert_ObjectHistoryProtocol (vbPriceListItemId, inUserId, vbStartDate ,vbEndDate, inValue);
+   PERFORM lpInsert_ObjectHistoryProtocol (vbPriceListItemId, inUserId, StartDate, EndDate, inValue)
+   FROM ObjectHistory WHERE Id = ioId;
 
 
 END;$BODY$

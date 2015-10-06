@@ -1,8 +1,12 @@
 -- Function: gpSelect_Object_Juridical()
 
 DROP FUNCTION IF EXISTS gpSelect_Object_Juridical (TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_Object_Juridical (Boolean, TVarChar);
+
+
 
 CREATE OR REPLACE FUNCTION gpSelect_Object_Juridical(
+    IN inShowAll        Boolean,   
     IN inSession        TVarChar       -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, Code Integer, Name TVarChar,
@@ -75,6 +79,8 @@ BEGIN
                                        AND ObjectLink_Unit_Branch.DescId = zc_ObjectLink_Unit_Branch()
                                      GROUP BY ObjectLink_Contract_Juridical.ChildObjectId
                                     )
+,  tmpIsErased AS (SELECT FALSE AS isErased UNION ALL SELECT inShowAll AS isErased WHERE inShowAll = TRUE)
+
    SELECT 
          Object_Juridical.Id             AS Id 
        , Object_Juridical.ObjectCode     AS Code
@@ -130,7 +136,11 @@ BEGIN
 
        , Object_Juridical.isErased AS isErased
        
-   FROM Object AS Object_Juridical
+   FROM tmpIsErased
+        INNER JOIN Object AS Object_Juridical 
+                          ON Object_Juridical.isErased = tmpIsErased.isErased
+                         AND Object_Juridical.DescId = zc_Object_Juridical()
+                         
         LEFT JOIN tmpListBranch_Constraint ON tmpListBranch_Constraint.JuridicalId = Object_Juridical.Id
         LEFT JOIN ObjectString AS ObjectString_GLNCode 
                                ON ObjectString_GLNCode.ObjectId = Object_Juridical.Id 
@@ -206,8 +216,7 @@ BEGIN
                             AND ObjectLink_Juridical_PriceList_30201.DescId = zc_ObjectLink_Juridical_PriceList30201()
         LEFT JOIN Object AS Object_PriceList_30201 ON Object_PriceList_30201.Id = ObjectLink_Juridical_PriceList_30201.ChildObjectId
 
-    WHERE Object_Juridical.DescId = zc_Object_Juridical()
-      AND (ObjectLink_Juridical_JuridicalGroup.ChildObjectId = vbObjectId_Constraint
+   WHERE (ObjectLink_Juridical_JuridicalGroup.ChildObjectId = vbObjectId_Constraint
            OR tmpListBranch_Constraint.JuridicalId > 0
            OR vbIsConstraint = FALSE)
    ;
@@ -215,12 +224,13 @@ BEGIN
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpSelect_Object_Juridical (TVarChar) OWNER TO postgres;
+ALTER FUNCTION gpSelect_Object_Juridical (Boolean, TVarChar) OWNER TO postgres;
 
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 05.10.15         * add inShowAll
  21.05.15         * add isTaxSummary
  02.02.15                                        * add tmpListBranch_Constraint
  20.11.14         *

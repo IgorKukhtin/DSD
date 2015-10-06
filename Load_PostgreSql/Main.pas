@@ -1206,6 +1206,8 @@ begin Result:='1005'; end;
 //----------------------------------------------------------------------------------------------------------------------------------------------------
 function TMainForm.fOpenSqFromQuery(mySql:String):Boolean;
 begin
+     //fromADOConnection.Connected:=false;
+     //
      with fromSqlQuery,Sql do begin
         Clear;
         Add(mySql);
@@ -1216,6 +1218,8 @@ end;
 //----------------------------------------------------------------------------------------------------------------------------------------------------
 function TMainForm.fExecSqFromQuery(mySql:String):Boolean;
 begin
+     //fromADOConnection.Connected:=false;
+     //
      with fromSqlQuery,Sql do begin
         Clear;
         Add(mySql);
@@ -10175,6 +10179,7 @@ begin
      then myComponent:=fromQueryDate
      else myComponent:=fromQuery;
      //
+     fromADOConnection.Connected:=false;
      with myComponent,Sql do begin
         Close;
         Clear;
@@ -20716,6 +20721,7 @@ begin
                   else fOpenSqToQuery ('select * from gpComplete_SelectAll_Sybase('+FormatToVarCharServer_isSpace(StartDateCompleteEdit.Text)+','+FormatToVarCharServer_isSpace(EndDateCompleteEdit.Text)+',FALSE)');
 
      // delete Data on Sybase
+     fromADOConnection.Connected:=false;
      fExecSqFromQuery('delete dba._pgMovementReComlete');
 
      SaveRecord:=toSqlQuery.RecordCount;
@@ -20748,10 +20754,12 @@ begin
                   Application.ProcessMessages;
                   Application.ProcessMessages;
              end;
+             fromADOConnection.Connected:=false;
              fExecSqFromQuery(ExecStr1+ExecStr2+ExecStr3+ExecStr4);
              Next;
         end;
      //
+     fromADOConnection.Connected:=false;
      with fromQuery,Sql do begin
         Close;
         Clear;
@@ -20854,6 +20862,7 @@ begin
      //
      DBGrid.DataSource.DataSet:=fromQueryDate_recalc;
      //
+     fromADOConnection.Connected:=false;
      with fromQueryDate_recalc,Sql do begin
         Close;
         Clear;
@@ -20923,6 +20932,7 @@ begin
      //
      DBGrid.DataSource.DataSet:=fromQueryDate_recalc;
      //
+     fromADOConnection.Connected:=false;
      with fromQueryDate_recalc,Sql do begin
         Close;
         Clear;
