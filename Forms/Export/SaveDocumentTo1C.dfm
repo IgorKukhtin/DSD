@@ -322,12 +322,14 @@ inherited SaveDocumentTo1CForm: TSaveDocumentTo1CForm
     object actClose: TdsdFormClose
       Category = 'DSDLib'
       MoveParams = <>
+      PostDataSetBeforeExecute = False
       Caption = #1054#1090#1084#1077#1085#1072
       Hint = #1054#1090#1084#1077#1085#1072
     end
     object actPeriodOpen: TdsdExecStoredProc
       Category = 'DSDLib'
       MoveParams = <>
+      PostDataSetBeforeExecute = False
       StoredProc = spBillPeriod
       StoredProcList = <
         item
@@ -355,6 +357,7 @@ inherited SaveDocumentTo1CForm: TSaveDocumentTo1CForm
     Params = <
       item
         Name = 'inStartDate'
+        Value = Null
         Component = cdsBillPeriod
         ComponentItem = 'StartDate'
         DataType = ftDateTime
@@ -362,6 +365,7 @@ inherited SaveDocumentTo1CForm: TSaveDocumentTo1CForm
       end
       item
         Name = 'inEndDate'
+        Value = Null
         Component = cdsBillPeriod
         ComponentItem = 'EndDate'
         DataType = ftDateTime
@@ -381,6 +385,7 @@ inherited SaveDocumentTo1CForm: TSaveDocumentTo1CForm
         ComponentItem = 'Key'
         ParamType = ptInput
       end>
+    PackSize = 1
     Left = 280
     Top = 24
   end
@@ -474,6 +479,7 @@ inherited SaveDocumentTo1CForm: TSaveDocumentTo1CForm
         DataType = ftString
         ParamType = ptInput
       end>
+    PackSize = 1
     Left = 24
     Top = 40
   end

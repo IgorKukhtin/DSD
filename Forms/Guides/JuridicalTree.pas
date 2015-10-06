@@ -67,6 +67,8 @@ type
     dsdDBViewAddOn: TdsdDBViewAddOn;
     dsdDBTreeAddOn: TdsdDBTreeAddOn;
     clOKPO: TcxGridDBColumn;
+    actShowAll: TBooleanStoredProcAction;
+    bbShowAll: TdxBarButton;
   private
     { Private declarations }
   public

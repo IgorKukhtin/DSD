@@ -92,6 +92,8 @@ type
     actChoicePriceList_30103: TOpenChoiceForm;
     actChoicePriceList_30201: TOpenChoiceForm;
     DayTaxSummary: TcxGridDBColumn;
+    actShowAll: TBooleanStoredProcAction;
+    bbShowAll: TdxBarButton;
   private
     { Private declarations }
   public

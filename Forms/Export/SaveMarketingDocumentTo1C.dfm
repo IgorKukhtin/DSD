@@ -185,6 +185,7 @@ inherited SaveMarketingDocumentTo1CForm: TSaveMarketingDocumentTo1CForm
     object actClose: TdsdFormClose
       Category = 'DSDLib'
       MoveParams = <>
+      PostDataSetBeforeExecute = False
       Caption = #1054#1090#1084#1077#1085#1072
       Hint = #1054#1090#1084#1077#1085#1072
     end
