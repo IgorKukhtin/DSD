@@ -301,6 +301,10 @@ BEGIN
   -- 3.0.2. определяется 
   vbDescId:= (SELECT DescId FROM Movement WHERE Id = inMovementId);
 
+  -- по этим док-там !!!нет закрытия периода!!!
+  IF vbDescId NOT IN (zc_Movement_TransportGoods(), zc_Movement_QualityDoc())
+  THEN
+
   -- !!!временно если ФИЛИАЛ НАЛ + БН!!!
   IF EXISTS (SELECT Object_RoleAccessKeyGuide_View.BranchId FROM Object_RoleAccessKeyGuide_View WHERE Object_RoleAccessKeyGuide_View.UserId = inUserId AND Object_RoleAccessKeyGuide_View.BranchId <> 0)
   THEN
@@ -451,6 +455,8 @@ BEGIN
   END IF; -- !!!временно если ВСЕ НАЛ!!!
   END IF; -- !!!временно если БН начисления маркетинг!!!
   END IF; -- !!!временно если не НАЛ!!! ELSE !!!временно если ВСЕ НЕ НАЛ!!!
+
+  END IF; -- по этим док-там !!!нет закрытия периода!!!
 
 END;
 $BODY$

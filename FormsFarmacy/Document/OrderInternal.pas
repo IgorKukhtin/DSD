@@ -14,7 +14,7 @@ uses
   cxGridLevel, cxGridCustomTableView, cxGridTableView, cxGridDBTableView,
   cxGridCustomView, cxGrid, cxPC, cxCurrencyEdit, cxCheckBox, frxClass, frxDBSet,
   dxSkinsCore, dxSkinsDefaultPainters, cxSplitter, dxBarBuiltInMenu, cxNavigator,
-  cxCalc;
+  cxCalc, dxSkinscxPCPainter, dxSkinsdxBarPainter;
 
 type
   TOrderInternalForm = class(TAncestorDocumentForm)

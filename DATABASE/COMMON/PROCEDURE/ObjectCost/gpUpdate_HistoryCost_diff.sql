@@ -16,7 +16,7 @@ BEGIN
      -- проверка прав пользователя на вызов процедуры
      -- PERFORM lpCheckRight (inSession, zc_Enum_InsertUpdate_HistoryCost());
 
-     IF inIsUpdate = TRUE THEN RETURN; END IF;
+     -- IF inIsUpdate = TRUE THEN RETURN; END IF;
 
      -- таблица - Список
      CREATE TEMP TABLE _tmpDiff (OperDate TDateTime, ContainerId Integer, MovementItemId Integer, Amount TFloat, Amount_diff TFloat) ON COMMIT DROP;

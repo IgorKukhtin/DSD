@@ -171,6 +171,10 @@ type
     mactDeclarSilent: TMultiAction;
     clGoodsPropertyName: TcxGridDBColumn;
     ClientRefresh: TdsdDataSetRefresh;
+    maEDIRecadvLoad: TMultiAction;
+    EDIActionRecadvLoad: TEDIAction;
+    dxBarButton1: TdxBarButton;
+    spInsertRecadv: TdsdStoredProc;
   private
     { Private declarations }
   public

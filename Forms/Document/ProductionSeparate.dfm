@@ -2,8 +2,9 @@ inherited ProductionSeparateForm: TProductionSeparateForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1055#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1086' - '#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077'>'
   ClientHeight = 678
   ClientWidth = 903
+  ExplicitTop = -230
   ExplicitWidth = 919
-  ExplicitHeight = 716
+  ExplicitHeight = 713
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -201,7 +202,6 @@ inherited ProductionSeparateForm: TProductionSeparateForm
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Options.Editing = False
             Width = 55
           end
           object colChildHeadCount: TcxGridDBColumn [6]
@@ -210,10 +210,8 @@ inherited ProductionSeparateForm: TProductionSeparateForm
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
-            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Options.Editing = False
             Width = 60
           end
           object colChildPartionGoods: TcxGridDBColumn [7]
