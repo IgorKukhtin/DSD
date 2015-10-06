@@ -8,7 +8,7 @@ CREATE OR REPLACE FUNCTION gpSelect_Movement_EDI(
     IN inSession     TVarChar    -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode Integer, StatusName TVarChar
-             , OperDatePartner TDateTime, InvNumberPartner TVarChar, OperDateTax TDateTime, InvNumberTax TVarChar
+             , OperDatePartner TDateTime, InvNumberPartner TVarChar, InvNumberRecadv TVarChar, OperDateTax TDateTime, InvNumberTax TVarChar
              , TotalCountPartner TFloat
              , TotalSumm TFloat
              , OKPO TVarChar, JuridicalName TVarChar
@@ -56,6 +56,7 @@ BEGIN
 
            , MovementDate_OperDatePartner.ValueData         AS OperDatePartner
            , MovementString_InvNumberPartner.ValueData      AS InvNumberPartner
+           , MovementString_InvNumberRecadv.ValueData       AS InvNumberRecadv
 
            , MovementDate_OperDateTax.ValueData             AS OperDateTax
            , MovementString_InvNumberTax.ValueData          AS InvNumberTax
@@ -160,6 +161,9 @@ BEGIN
             LEFT JOIN MovementString AS MovementString_InvNumberPartner
                                      ON MovementString_InvNumberPartner.MovementId =  Movement.Id
                                     AND MovementString_InvNumberPartner.DescId = zc_MovementString_InvNumberPartner()
+            LEFT JOIN MovementString AS MovementString_InvNumberRecadv
+                                     ON MovementString_InvNumberRecadv.MovementId =  Movement.Id
+                                    AND MovementString_InvNumberRecadv.DescId = zc_MovementString_InvNumberMark()
 
             LEFT JOIN MovementDate AS MovementDate_OperDateTax
                                    ON MovementDate_OperDateTax.MovementId =  Movement.Id

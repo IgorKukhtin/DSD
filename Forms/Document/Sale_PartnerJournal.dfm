@@ -3,6 +3,7 @@ inherited Sale_PartnerJournalForm: TSale_PartnerJournalForm
   ClientHeight = 535
   ClientWidth = 1020
   AddOnFormData.Params = FormParams
+  ExplicitLeft = -230
   ExplicitWidth = 1036
   ExplicitHeight = 570
   PixelsPerInch = 96
@@ -2303,6 +2304,14 @@ inherited Sale_PartnerJournalForm: TSale_PartnerJournalForm
         Component = MasterCDS
         ComponentItem = 'OperDate'
         DataType = ftDateTime
+        ParamType = ptInput
+      end
+      item
+        Name = 'inChangePercentAmount'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'inChangePercentAmount'
+        DataType = ftFloat
         ParamType = ptInput
       end
       item

@@ -2,7 +2,7 @@
 
 DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_EDIOrder (TVarChar, TDateTime, TVarChar, TVarChar, TVarChar);
 
-CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_EDIOrder(
+REATE OR REPLACE FUNCTION gpInsertUpdate_Movement_EDIOrder(
     IN inOrderInvNumber      TVarChar  , -- Номер документа
     IN inOrderOperDate       TDateTime , -- Дата документа
     IN inGLN                 TVarChar  , -- Код GLN - Покупатель

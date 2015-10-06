@@ -33,6 +33,10 @@ BEGIN
   RETURNING OperDate, AccessKeyId INTO vbOperDate, vbAccessKeyId;
 
 
+  -- по этим док-там !!!нет закрытия периода!!!
+  IF inDescId NOT IN (zc_Movement_TransportGoods(), zc_Movement_QualityDoc())
+  THEN
+
   -- для Админа  - Все Права
   IF NOT EXISTS (SELECT 1 FROM ObjectLink_UserRole_View WHERE RoleId = zc_Enum_Role_Admin() AND UserId = inUserId)
   THEN 
@@ -241,6 +245,7 @@ BEGIN
   END IF; -- !!!временно если БН начисления маркетинг!!!
   END IF; -- !!!временно если не НАЛ!!! ELSE !!!временно если ВСЕ НЕ НАЛ!!!
 
+  END IF; -- по этим док-там !!!нет закрытия периода!!!
 
 
   -- сохранили протокол
