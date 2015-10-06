@@ -851,6 +851,7 @@ inherited EDIJournalForm: TEDIJournalForm
       EndDateParam.DataType = ftDateTime
       EDI = EDI
       EDIDocType = ediRecadv
+      spHeader = spInsertRecadv
       Directory = '/inbox'
     end
     object maEDIRecadvLoad: TMultiAction [5]
