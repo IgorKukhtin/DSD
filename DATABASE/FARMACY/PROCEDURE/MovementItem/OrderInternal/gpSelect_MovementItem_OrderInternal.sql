@@ -50,7 +50,7 @@ BEGIN
              END                                                    AS isTopColor
            , COALESCE(tmpMI.Multiplicity, tmpGoods.Multiplicity)    AS Multiplicity
            , tmpMI.CalcAmount
-           , tmpMI.Amount                                           AS Amount
+           , NULLIF(tmpMI.Amount,0)                                 AS Amount
            , tmpMI.Price * tmpMI.CalcAmount                         AS Summ
            , FALSE                                                  AS isErased
            , tmpMI.Price
@@ -71,8 +71,8 @@ BEGIN
            , Object_Price_View.MCSValue                             AS MCS
            , Income.Income_Amount                                   AS Income_Amount
            , tmpMI.AmountSecond                                     AS AmountSecond
-           , tmpMI.AmountAll                                        AS AmountAll
-           , COALESCE(tmpMI.AmountManual,tmpMI.CalcAmountAll)       AS CalcAmountAll
+           , NULLIF(tmpMI.AmountAll,0)                              AS AmountAll
+           , NULLIF(COALESCE(tmpMI.AmountManual,tmpMI.CalcAmountAll),0)      AS CalcAmountAll
            , tmpMI.Price * COALESCE(tmpMI.AmountManual,tmpMI.CalcAmountAll)  AS SummAll
            
        FROM (SELECT Object_Goods.Id                              AS GoodsId
@@ -117,7 +117,7 @@ BEGIN
                             , COALESCE(PriceList.SuperFinalPrice, MinPrice.SuperFinalPrice)    AS SuperFinalPrice
                             , Object_Goods.isTOP                                               AS isTOP
                             , MIFloat_AmountSecond.ValueData                                   AS AmountSecond
-                            , MovementItem.Amount+COALESCE(MIFloat_AmountSecond.ValueData,0)   AS AmountAll
+                            , MovementItem.Amount+COALESCE(MIFloat_AmountSecond.ValueData,0) AS AmountAll
                             , CEIL((MovementItem.Amount+COALESCE(MIFloat_AmountSecond.ValueData,0)) / COALESCE(Object_Goods.MinimumLot, 1)) 
                                * COALESCE(Object_Goods.MinimumLot, 1)                          AS CalcAmountAll
                             , MIFloat_AmountManual.ValueData                                   AS AmountManual

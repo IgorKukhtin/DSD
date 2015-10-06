@@ -274,6 +274,11 @@ inherited OrderInternalForm: TOrderInternalForm
           inherited colIsErased: TcxGridDBColumn
             VisibleForCustomization = False
           end
+          object colisCalculated: TcxGridDBColumn
+            Caption = #1040#1074#1090#1086
+            DataBinding.FieldName = 'isCalculated'
+            Width = 33
+          end
         end
       end
       object cxGrid1: TcxGrid

@@ -49,7 +49,8 @@ BEGIN
     RETURN QUERY
       SELECT Movement.Id                              AS MovementId
             ,MovementDesc.ItemName                    AS ItemName
-            ,MovementItem.Amount                      AS Amount
+            ,COALESCE(MIFloat_AmountManual.ValueData,
+                      MovementItem.Amount)            AS Amount
             ,Object.ObjectCode                        AS Code
             ,Object.ValueData                         AS Name
             ,Movement.OperDate                        AS OperDate
@@ -123,6 +124,9 @@ BEGIN
         LEFT JOIN MovementDate AS MovementDate_Branch
                                ON MovementDate_Branch.MovementId = Movement.Id
                               AND MovementDate_Branch.DescId = zc_MovementDate_Branch()
+        LEFT JOIN MovementItemFloat AS MIFloat_AmountManual
+                                    ON MIFloat_AmountManual.MovementItemId = MovementItem.Id
+                                   AND MIFloat_AmountManual.DescId = zc_MIFloat_AmountManual()
     WHERE 
         Movement.DescId in (zc_Movement_OrderInternal(), zc_Movement_OrderExternal(), zc_Movement_Income())
         AND 
@@ -140,7 +144,8 @@ ALTER FUNCTION gpReport_OrderGoodsSearch (Integer, TDateTime, TDateTime, TVarCha
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.  Воробкало А.А.
+ 06.10.15                                                                      *MIFloat_AmountManual
  24.04.15                        *
  18.03.15                        *
  27.01.15                        *

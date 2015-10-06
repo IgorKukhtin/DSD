@@ -92,6 +92,7 @@ type
     colCalcAmountAll: TcxGridDBColumn;
     colSummAll: TcxGridDBColumn;
     colIncome_Amount: TcxGridDBColumn;
+    colisCalculated: TcxGridDBColumn;
   private
     { Private declarations }
   public

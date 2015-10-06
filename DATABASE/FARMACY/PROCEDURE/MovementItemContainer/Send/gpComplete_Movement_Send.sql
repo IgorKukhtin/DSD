@@ -100,7 +100,29 @@ BEGIN
   PERFORM lpInsertUpdate_MovementFloat_TotalSummSend (inMovementId);
   -- собственно проводки
   PERFORM lpComplete_Movement_Send(inMovementId, -- ключ Документа
-                                   vbUserId);    -- Пользователь                          
+                                   vbUserId);    -- Пользователь  
+
+    --Записали сумму по закупочным ценам после проведения
+    PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_TotalSumm(), inMovementId, SUM(ABS(MIContainer_Count.Amount*MIFloat_Price.ValueData)))
+    FROM 
+        MovementItemContainer AS MIContainer_Count
+        INNER JOIN ContainerLinkObject AS CLI_MI 
+                                       ON CLI_MI.ContainerId = MIContainer_Count.ContainerId
+                                      AND CLI_MI.DescId = zc_ContainerLinkObject_PartionMovementItem()
+        INNER JOIN OBJECT AS Object_PartionMovementItem 
+                          ON Object_PartionMovementItem.Id = CLI_MI.ObjectId
+        INNER JOIN MovementItem ON MovementItem.Id = Object_PartionMovementItem.ObjectCode
+        INNER JOIN MovementItemFloat AS MIFloat_Price
+                                     ON MIFloat_Price.MovementItemId = MovementItem.ID
+                                    AND MIFloat_Price.DescId = zc_MIFloat_Price()
+    WHERE 
+        MIContainer_Count. MovementId = inMovementId
+        AND
+        MIContainer_Count.DescId = zc_Container_Count()
+        AND
+        MIContainer_Count.IsActive = True;
+    
+                                   
   UPDATE Movement SET StatusId = zc_Enum_Status_Complete() 
   WHERE Id = inMovementId AND StatusId IN (zc_Enum_Status_UnComplete(), zc_Enum_Status_Erased());
 END;
