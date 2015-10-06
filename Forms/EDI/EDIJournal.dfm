@@ -3,8 +3,8 @@ inherited EDIJournalForm: TEDIJournalForm
   ClientHeight = 453
   ClientWidth = 1284
   AddOnFormData.OnLoadAction = actSetDefaults
-  ExplicitWidth = 1292
-  ExplicitHeight = 480
+  ExplicitWidth = 1300
+  ExplicitHeight = 491
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -840,7 +840,36 @@ inherited EDIJournalForm: TEDIJournalForm
       HeaderDataSet = PrintHeaderCDS
       ListDataSet = PrintItemsCDS
     end
-    object mactInvoice: TMultiAction [4]
+    object EDIActionRecadvLoad: TEDIAction [4]
+      Category = 'EDI Load'
+      MoveParams = <>
+      StartDateParam.Value = 42125d
+      StartDateParam.Component = deStart
+      StartDateParam.DataType = ftDateTime
+      EndDateParam.Value = 42125d
+      EndDateParam.Component = deEnd
+      EndDateParam.DataType = ftDateTime
+      EDI = EDI
+      EDIDocType = ediRecadv
+      Directory = '/inbox'
+    end
+    object maEDIRecadvLoad: TMultiAction [5]
+      Category = 'EDI Load'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = EDIActionRecadvLoad
+        end
+        item
+          Action = actRefresh
+        end>
+      QuestionBeforeExecute = #1044#1077#1081#1089#1090#1074#1080#1090#1077#1083#1100#1085#1086' '#1079#1072#1075#1088#1091#1079#1080#1090#1100' Recadv '#1080#1079' EXITE?'
+      InfoAfterExecute = 'Recadv '#1079#1072#1075#1088#1091#1078#1077#1085#1099' '#1091#1089#1087#1077#1096#1085#1086
+      Caption = #1047#1072#1075#1088#1091#1079#1080#1090#1100' Recadv '#1080#1079' EXITE'
+      Hint = #1047#1072#1075#1088#1091#1079#1080#1090#1100' Recadv '#1080#1079' EXITE'
+      ImageIndex = 74
+    end
+    object mactInvoice: TMultiAction [6]
       Category = 'EDI'
       MoveParams = <>
       ActionList = <
@@ -857,7 +886,7 @@ inherited EDIJournalForm: TEDIJournalForm
       Caption = #1057#1095#1077#1090
       Hint = #1054#1090#1087#1088#1072#1074#1080#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090' <'#1057#1095#1077#1090'> '#1074' EXITE'
     end
-    object mactErrorEDI: TMultiAction [5]
+    object mactErrorEDI: TMultiAction [7]
       Category = 'EDI Load'
       MoveParams = <>
       ActionList = <
@@ -872,7 +901,7 @@ inherited EDIJournalForm: TEDIJournalForm
       Caption = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1086#1096#1080#1073#1082#1080
       Hint = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1086#1096#1080#1073#1082#1080
     end
-    object EDIError: TEDIAction [6]
+    object EDIError: TEDIAction [8]
       Category = 'EDI Load'
       MoveParams = <>
       StartDateParam.Value = 42005d
@@ -885,7 +914,7 @@ inherited EDIJournalForm: TEDIJournalForm
       EDIDocType = ediError
       Directory = '/error'
     end
-    object mactDeclarSilent: TMultiAction [7]
+    object mactDeclarSilent: TMultiAction [9]
       Category = 'EDI COMDOC DataSet'
       MoveParams = <>
       ActionList = <
@@ -896,7 +925,7 @@ inherited EDIJournalForm: TEDIJournalForm
           Action = EDIDeclar
         end>
     end
-    object mactOrdSpr: TMultiAction [8]
+    object mactOrdSpr: TMultiAction [10]
       Category = 'EDI'
       MoveParams = <>
       ActionList = <
@@ -913,7 +942,7 @@ inherited EDIJournalForm: TEDIJournalForm
       Caption = #1055#1086#1076#1090#1074#1077#1088#1078#1076#1077#1085#1080#1077
       Hint = #1054#1090#1087#1088#1072#1074#1080#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090' <'#1055#1086#1076#1090#1074#1077#1088#1078#1076#1077#1085#1080#1077' '#1086#1090#1075#1088#1091#1079#1082#1080'> '#1074' EXITE'
     end
-    object actDesadv: TEDIAction [9]
+    object actDesadv: TEDIAction [11]
       Category = 'EDI'
       MoveParams = <>
       StartDateParam.Value = Null
@@ -923,7 +952,7 @@ inherited EDIJournalForm: TEDIJournalForm
       HeaderDataSet = PrintHeaderCDS
       ListDataSet = PrintItemsCDS
     end
-    object mactDesadv: TMultiAction [10]
+    object mactDesadv: TMultiAction [12]
       Category = 'EDI'
       MoveParams = <>
       ActionList = <
@@ -1471,6 +1500,10 @@ inherited EDIJournalForm: TEDIJournalForm
         end
         item
           Visible = True
+          ItemName = 'dxBarButton1'
+        end
+        item
+          Visible = True
           ItemName = 'dxBarStatic'
         end
         item
@@ -1622,6 +1655,10 @@ inherited EDIJournalForm: TEDIJournalForm
     end
     object bbEDIError: TdxBarButton
       Action = mactErrorEDI
+      Category = 0
+    end
+    object dxBarButton1: TdxBarButton
+      Action = maEDIRecadvLoad
       Category = 0
     end
   end
@@ -2646,5 +2683,38 @@ inherited EDIJournalForm: TEDIJournalForm
     PackSize = 1
     Left = 968
     Top = 136
+  end
+  object spInsertRecadv: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Movement_EDIRecadv'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inOrderInvNumber'
+        Value = Null
+        DataType = ftString
+        ParamType = ptInput
+      end
+      item
+        Name = 'inOperDate'
+        Value = Null
+        DataType = ftDateTime
+        ParamType = ptInput
+      end
+      item
+        Name = 'inGLNPlace'
+        Value = Null
+        DataType = ftString
+        ParamType = ptInput
+      end
+      item
+        Name = 'inDesadvNumber'
+        Value = Null
+        DataType = ftString
+        ParamType = ptInput
+      end>
+    PackSize = 1
+    Left = 240
+    Top = 192
   end
 end

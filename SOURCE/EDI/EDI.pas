@@ -7,7 +7,8 @@ uses DBClient, Classes, DB, dsdAction, IdFTP, ComDocXML, dsdDb, OrderXML;
 type
 
   TEDIDocType = (ediOrder, ediComDoc, ediDesadv, ediDeclar, ediComDocSave,
-    ediReceipt, ediReturnComDoc, ediDeclarReturn, ediOrdrsp, ediInvoice, ediError);
+    ediReceipt, ediReturnComDoc, ediDeclarReturn, ediOrdrsp, ediInvoice, ediError,
+    ediRecadv);
   TSignType = (stDeclar, stComDoc);
 
   TConnectionParams = class(TPersistent)
@@ -63,11 +64,12 @@ type
       Directory: String);
     // квитанция
     procedure ReceiptLoad(spProtocol: TdsdStoredProc; Directory: String);
+    procedure RecadvLoad(spHeader: TdsdStoredProc; Directory: String);
     procedure DeclarSave(HeaderDataSet, ItemsDataSet: TDataSet; StoredProc: TdsdStoredProc;
       Directory: String);
     procedure DeclarReturnSave(HeaderDataSet, ItemsDataSet: TDataSet;  StoredProc: TdsdStoredProc;
       Directory: String);
-    // 
+    //
     procedure ComdocLoad(spHeader, spList: TdsdStoredProc; Directory: String;
       StartDate, EndDate: TDateTime);
     // заказ
@@ -126,7 +128,7 @@ implementation
 
 uses Windows, VCL.ActnList, DesadvXML, SysUtils, Dialogs, SimpleGauge,
   Variants, UtilConvert, ComObj, DeclarXML, InvoiceXML, DateUtils,
-  FormStorage, UnilWin, OrdrspXML, StrUtils, StatusXML;
+  FormStorage, UnilWin, OrdrspXML, StrUtils, StatusXML, RecadvXML;
 
 procedure Register;
 begin
@@ -1836,6 +1838,67 @@ begin
   end;
 end;
 
+procedure TEDI.RecadvLoad(spHeader: TdsdStoredProc; Directory: String);
+var
+  List: TStrings;
+  i: integer;
+  Stream: TStringStream;
+  RECADV: IXMLRECADVType;
+begin
+  FTPSetConnection;
+  // загружаем файлы с FTP
+  FIdFTP.Connect;
+  if FIdFTP.Connected then
+  begin
+    FIdFTP.ChangeDir(Directory);
+    List := TStringList.Create;
+    Stream := TStringStream.Create;
+    try
+      FIdFTP.List(List, '', false);
+      with TGaugeFactory.GetGauge('Загрузка данных', 1, List.Count) do
+        try
+          Start;
+          for i := 0 to List.Count - 1 do
+          begin
+            if (AnsiLowerCase(copy(List[i], Length(List[i]) - 3, 4)) = '.xml')
+               and (AnsiLowerCase(copy(List[i], 1, 6)) = 'recadv') then
+            begin
+              // тянем файл к нам
+              Stream.Clear;
+              try
+                FIdFTP.Get(List[i], Stream);
+                RECADV := LoadRECADV(Stream.DataString);
+                spHeader.ParamByName('inOrderInvNumber').Value := RECADV.ORDERNUMBER;
+                spHeader.ParamByName('inOperDate').Value := RECADV.DATE;
+                spHeader.ParamByName('inGLNPlace').Value := RECADV.HEAD.DELIVERYPLACE;
+                spHeader.ParamByName('inDesadvNumber').Value := RECADV.NUMBER;
+                spHeader.Execute;
+              except
+                break;
+              end;
+              {}
+              // теперь перенесли файл в директроию Archive
+              try
+                FIdFTP.ChangeDir('/archive');
+                FIdFTP.Put(Stream, List[i]);
+              finally
+                FIdFTP.ChangeDir(Directory);
+                FIdFTP.Delete(List[i]);
+              end;
+            end;
+            IncProgress;
+          end;
+        finally
+          Finish;
+        end;
+    finally
+      FIdFTP.Quit;
+      List.Free;
+      Stream.Free;
+    end;
+  end;
+end;
+
 procedure TEDI.ReceiptLoad(spProtocol: TdsdStoredProc; Directory: String);
   procedure FillReceipt(s: string; Receipt: TStrings);
   var g: string;
@@ -2090,6 +2153,8 @@ begin
       EDI.ORDRSPSave(HeaderDataSet, ListDataSet);
     ediInvoice:
       EDI.INVOICESave(HeaderDataSet, ListDataSet);
+    ediRecadv:
+      EDI.RecadvLoad(spHeader, Directory);
     ediError:
       EDI.ErrorLoad(Directory);
   end;

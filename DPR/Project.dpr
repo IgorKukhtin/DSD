@@ -78,7 +78,8 @@ uses
   dsdException in '..\SOURCE\dsdException.pas',
   dsdApplication in '..\SOURCE\dsdApplication.pas',
   RunScript in '..\SOURCE\AutoMode\RunScript.pas',
-  ScriptXML in '..\SOURCE\AutoMode\ScriptXML.pas';
+  ScriptXML in '..\SOURCE\AutoMode\ScriptXML.pas',
+  RecadvXML in '..\SOURCE\EDI\RecadvXML.pas';
 
 {$R *.res}
 {$R DevExpressRus.res}
@@ -104,7 +105,7 @@ begin
      TAuthentication.CheckLogin(TStorageFactory.GetStorage, 'Админ', 'qsxqsxw1', gc_User);
      TUpdater.AutomaticUpdateProgram;
      Application.CreateForm(TdmMain, dmMain);
-     Application.CreateForm(TMainForm, MainFormInstance);
+  Application.CreateForm(TMainForm, MainFormInstance);
   end
   else
     with TLoginForm.Create(Application) do

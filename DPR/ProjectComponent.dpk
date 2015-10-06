@@ -63,8 +63,7 @@ requires
   cxVerticalGridRS16,
   fs16,
   frx16,
-  frxDB16,
-  ZLibEx;
+  frxDB16;
 
 contains
   dsdDB in '..\SOURCE\COMPONENT\dsdDB.pas',
@@ -121,6 +120,7 @@ contains
   StatusXML in '..\SOURCE\EDI\StatusXML.pas',
   MEDOC_TLB in '..\SOURCE\MeDOC\MEDOC_TLB.pas',
   MeDocCOM in '..\SOURCE\MeDOC\MeDocCOM.pas',
-  dsdException in '..\SOURCE\dsdException.pas';
+  dsdException in '..\SOURCE\dsdException.pas',
+  RecadvXML in '..\SOURCE\EDI\RecadvXML.pas';
 
 end.
