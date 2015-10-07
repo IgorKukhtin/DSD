@@ -104,6 +104,7 @@ begin
   if FindCmdLineSwitch('autologin', true) then begin
      TAuthentication.CheckLogin(TStorageFactory.GetStorage, 'Админ', 'qsxqsxw1', gc_User);
      TUpdater.AutomaticUpdateProgram;
+     TUpdater.AutomaticCheckConnect;
      Application.CreateForm(TdmMain, dmMain);
   Application.CreateForm(TMainForm, MainFormInstance);
   end
@@ -113,6 +114,7 @@ begin
       if ShowModal = mrOk then
       begin
          TUpdater.AutomaticUpdateProgram;
+         TUpdater.AutomaticCheckConnect;
          Application.ProcessMessages;
          Application.CreateForm(TMainForm, MainFormInstance);
          Application.CreateForm(TdmMain, dmMain);
