@@ -1,28 +1,28 @@
 inherited AdditionalGoodsForm: TAdditionalGoodsForm
   Caption = #1044#1086#1087#1086#1083#1085#1103#1102#1097#1080#1077' '#1090#1086#1074#1072#1088#1099
-  ClientHeight = 587
-  ClientWidth = 798
+  ClientHeight = 636
+  ClientWidth = 919
   AddOnFormData.ChoiceAction = dsdChoiceGuides
-  ExplicitWidth = 814
-  ExplicitHeight = 625
+  ExplicitWidth = 935
+  ExplicitHeight = 674
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Width = 798
-    Height = 561
+    Width = 919
+    Height = 610
     ExplicitWidth = 798
     ExplicitHeight = 561
-    ClientRectBottom = 561
-    ClientRectRight = 798
+    ClientRectBottom = 610
+    ClientRectRight = 919
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 798
       ExplicitHeight = 561
       inherited cxGrid: TcxGrid
-        Width = 310
-        Height = 321
+        Width = 385
+        Height = 370
         Align = alLeft
-        ExplicitWidth = 310
-        ExplicitHeight = 321
+        ExplicitWidth = 385
+        ExplicitHeight = 370
         inherited cxGridDBTableView: TcxGridDBTableView
           OptionsBehavior.IncSearch = True
           Styles.Content = nil
@@ -34,24 +34,36 @@ inherited AdditionalGoodsForm: TAdditionalGoodsForm
             Caption = #1050#1086#1076
             DataBinding.FieldName = 'CodeInt'
             Options.Editing = False
-            Width = 52
+            Width = 39
           end
           object clValueData: TcxGridDBColumn
             Caption = #1053#1072#1079#1074#1072#1085#1080#1077
             DataBinding.FieldName = 'Name'
             Options.Editing = False
-            Width = 244
+            Width = 150
+          end
+          object colGoodsGroupName: TcxGridDBColumn
+            Caption = #1043#1088#1091#1087#1087#1072
+            DataBinding.FieldName = 'GoodsGroupName'
+            Width = 104
+          end
+          object colNDSKindName: TcxGridDBColumn
+            Caption = #1053#1044#1057
+            DataBinding.FieldName = 'NDSKindName'
+            Width = 42
           end
         end
       end
       object cxGrid1: TcxGrid
-        Left = 313
+        Left = 396
         Top = 0
-        Width = 250
-        Height = 321
+        Width = 280
+        Height = 370
         Align = alClient
         PopupMenu = PopupMenu1
         TabOrder = 2
+        ExplicitLeft = 313
+        ExplicitWidth = 200
         object cxGridDBTableView2: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = ClientDS
@@ -92,19 +104,23 @@ inherited AdditionalGoodsForm: TAdditionalGoodsForm
         end
       end
       object cxSplitter1: TcxSplitter
-        Left = 310
+        Left = 393
         Top = 0
         Width = 3
-        Height = 321
+        Height = 370
         Control = cxGrid
+        ExplicitLeft = 398
+        ExplicitTop = 2
       end
       object cxGrid2: TcxGrid
-        Left = 566
+        Left = 687
         Top = 0
         Width = 232
-        Height = 321
+        Height = 370
         Align = alRight
         TabOrder = 4
+        ExplicitLeft = 566
+        ExplicitHeight = 321
         object cxGridDBTableView3: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = ClientMasterDS
@@ -139,20 +155,24 @@ inherited AdditionalGoodsForm: TAdditionalGoodsForm
         end
       end
       object cxSplitter2: TcxSplitter
-        Left = 563
+        Left = 684
         Top = 0
         Width = 3
-        Height = 321
+        Height = 370
         AlignSplitter = salRight
         Control = cxGrid2
+        ExplicitLeft = 563
+        ExplicitHeight = 321
       end
       object GridAll: TcxGrid
         Left = 0
-        Top = 329
-        Width = 798
+        Top = 378
+        Width = 919
         Height = 232
         Align = alBottom
         TabOrder = 5
+        ExplicitTop = 329
+        ExplicitWidth = 798
         object GridAllDBTableView: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = dsAll
@@ -229,12 +249,32 @@ inherited AdditionalGoodsForm: TAdditionalGoodsForm
       end
       object cxSplitter3: TcxSplitter
         Left = 0
-        Top = 321
-        Width = 798
+        Top = 370
+        Width = 919
         Height = 8
         HotZoneClassName = 'TcxMediaPlayer8Style'
         AlignSplitter = salBottom
         Control = GridAll
+        ExplicitTop = 321
+        ExplicitWidth = 798
+      end
+      object cxSplitter4: TcxSplitter
+        Left = 385
+        Top = 0
+        Width = 8
+        Height = 370
+        HotZoneClassName = 'TcxMediaPlayer8Style'
+        Control = cxGrid
+      end
+      object cxSplitter5: TcxSplitter
+        Left = 676
+        Top = 0
+        Width = 8
+        Height = 370
+        HotZoneClassName = 'TcxMediaPlayer8Style'
+        AlignSplitter = salRight
+        Control = cxGrid2
+        ExplicitLeft = 679
       end
     end
   end

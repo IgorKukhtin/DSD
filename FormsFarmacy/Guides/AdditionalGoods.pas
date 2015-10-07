@@ -70,6 +70,10 @@ type
     colGoodsId: TcxGridDBColumn;
     colGoodsCode: TcxGridDBColumn;
     colGoodsName: TcxGridDBColumn;
+    colGoodsGroupName: TcxGridDBColumn;
+    colNDSKindName: TcxGridDBColumn;
+    cxSplitter4: TcxSplitter;
+    cxSplitter5: TcxSplitter;
   private
     { Private declarations }
   public
