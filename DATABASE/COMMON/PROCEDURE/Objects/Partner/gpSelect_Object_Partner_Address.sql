@@ -3,11 +3,13 @@
 DROP FUNCTION IF EXISTS gpSelect_Object_Partner_Address (Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpSelect_Object_Partner_Address (TDateTime, TDateTime, Boolean, Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpSelect_Object_Partner_Address (TDateTime, TDateTime, Boolean, Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_Object_Partner_Address (TDateTime, TDateTime, Boolean, Boolean, Integer, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_Object_Partner_Address(
-    IN inStartDate   TDateTime , --
-    IN inEndDate     TDateTime , --
-    IN inIsPeriod    Boolean   , --
+    IN inStartDate         TDateTime , --
+    IN inEndDate           TDateTime , --
+    IN inIsPeriod          Boolean   , --
+    IN inShowAll           Boolean,
     IN inJuridicalId       Integer  ,
     IN inInfoMoneyId       Integer  ,
     IN inSession           TVarChar   -- сессия пользователя
@@ -53,7 +55,9 @@ BEGIN
    vbIsConstraint:= COALESCE (vbObjectId_Constraint, 0) > 0 OR COALESCE (vbObjectId_Branch_Constraint, 0) > 0;
 
    RETURN QUERY
-    WITH tmpContactPerson AS (SELECT Object_ContactPerson.ValueData   AS Name
+    WITH tmpIsErased AS (SELECT FALSE AS isErased UNION ALL SELECT inShowAll AS isErased WHERE inShowAll = TRUE)
+
+       , tmpContactPerson AS (SELECT Object_ContactPerson.ValueData   AS Name
                                    , ObjectString_Phone.ValueData     AS Phone
                                    , ObjectString_Mail.ValueData      AS Mail
 
@@ -166,7 +170,11 @@ BEGIN
 
            , Object_Partner.isErased          AS isErased
 
-     FROM Object AS Object_Partner
+     FROM tmpIsErased
+          INNER JOIN Object AS Object_Partner
+                            ON Object_Partner.isErased = tmpIsErased.isErased 
+                           AND Object_Partner.DescId = zc_Object_Partner()
+       
           LEFT JOIN (SELECT Object.Id AS PartnerId
                           , MAX (CASE WHEN Movement.DescId IN (zc_Movement_Sale(), zc_Movement_ReturnIn()) THEN 3000
                                       ELSE 0
@@ -312,8 +320,7 @@ BEGIN
 
          LEFT JOIN ObjectHistory_JuridicalDetails_View ON ObjectHistory_JuridicalDetails_View.JuridicalId = Object_Juridical.Id
 
-    WHERE Object_Partner.DescId = zc_Object_Partner()
-      AND (ObjectLink_Partner_Juridical.ChildObjectId = inJuridicalId OR inJuridicalId = 0)
+    WHERE (ObjectLink_Partner_Juridical.ChildObjectId = inJuridicalId OR inJuridicalId = 0)
       AND (tmpMovement.PartnerId > 0 OR inIsPeriod = FALSE)
       AND (ObjectLink_Juridical_JuridicalGroup.ChildObjectId = vbObjectId_Constraint
            OR View_PersonalTrade.BranchId = vbObjectId_Branch_Constraint
@@ -324,12 +331,13 @@ BEGIN
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpSelect_Object_Partner_Address (TDateTime, TDateTime, Boolean, Integer, Integer, TVarChar) OWNER TO postgres;
+ALTER FUNCTION gpSelect_Object_Partner_Address (TDateTime, TDateTime, Boolean, Boolean, Integer, Integer, TVarChar) OWNER TO postgres;
 
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 06.10.15         * add inShowAll
  09.12.14                                        * add inInfoMoneyId
  03.12.14                                        * all
  01.12.14                                                       *

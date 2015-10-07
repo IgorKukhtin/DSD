@@ -119,6 +119,8 @@ type
     clRouteName: TcxGridDBColumn;
     clRouteName_30201: TcxGridDBColumn;
     actChoiceRoute_30201: TOpenChoiceForm;
+    actShowAll: TBooleanStoredProcAction;
+    bbShowAll: TdxBarButton;
   private
     { Private declarations }
   public

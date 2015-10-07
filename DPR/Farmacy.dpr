@@ -65,7 +65,8 @@ uses
   dsdApplication in '..\SOURCE\dsdApplication.pas',
   dsdException in '..\SOURCE\dsdException.pas',
   dsdXMLTransform in '..\SOURCE\COMPONENT\dsdXMLTransform.pas',
-  RepriceUnit in '..\FormsFarmacy\ConnectWithOld\RepriceUnit.pas' {RepriceUnitForm};
+  RepriceUnit in '..\FormsFarmacy\ConnectWithOld\RepriceUnit.pas' {RepriceUnitForm},
+  RecadvXML in '..\SOURCE\EDI\RecadvXML.pas';
 
 {$R *.res}
 
@@ -83,7 +84,7 @@ begin
      TUpdater.AutomaticUpdateProgram;
      TUpdater.AutomaticCheckConnect;
      Application.CreateForm(TdmMain, dmMain);
-     Application.CreateForm(TMainForm, MainFormInstance);
+  Application.CreateForm(TMainForm, MainFormInstance);
   end;
   Application.Run;
 end.

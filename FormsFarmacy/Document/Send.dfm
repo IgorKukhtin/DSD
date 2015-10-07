@@ -148,9 +148,9 @@ inherited SendForm: TSendForm
             HeaderAlignmentHorz = taCenter
             Width = 70
           end
-          object colMaxPriceIn: TcxGridDBColumn
-            Caption = #1052#1072#1082#1089'. '#1079#1072#1082#1091#1087'. '#1094#1077#1085#1072
-            DataBinding.FieldName = 'MaxPriceIn'
+          object colPriceIn: TcxGridDBColumn
+            Caption = #1057#1088#1077#1076#1085#1103#1103' '#1079#1072#1082#1091#1087'. '#1094#1077#1085#1072
+            DataBinding.FieldName = 'PriceIn'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DisplayFormat = ',0.00'
             Options.Editing = False
@@ -165,6 +165,13 @@ inherited SendForm: TSendForm
           object colPriceUnitTo: TcxGridDBColumn
             Caption = #1062#1077#1085#1072' '#1087#1086#1083#1091#1095#1072#1090#1077#1083#1103
             DataBinding.FieldName = 'PriceUnitTo'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.00'
+            Options.Editing = False
+          end
+          object colSumPriceIn: TcxGridDBColumn
+            Caption = #1057#1091#1084#1084#1072' '#1087#1086' '#1079#1072#1082'. '#1094#1077#1085#1072#1084
+            DataBinding.FieldName = 'SumPriceIn'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DisplayFormat = ',0.00'
             Options.Editing = False
@@ -1048,12 +1055,19 @@ inherited SendForm: TSendForm
         ParamType = ptInput
       end
       item
+        Name = 'inPrice'
         Value = Null
-        ParamType = ptUnknown
+        Component = MasterCDS
+        ComponentItem = 'PriceIn'
+        DataType = ftFloat
+        ParamType = ptInput
       end
       item
+        Name = 'outSumma'
         Value = Null
-        ParamType = ptUnknown
+        Component = MasterCDS
+        ComponentItem = 'SumPriceIn'
+        DataType = ftFloat
       end
       item
         Value = Null

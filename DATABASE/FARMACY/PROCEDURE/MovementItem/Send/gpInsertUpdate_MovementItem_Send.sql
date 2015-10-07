@@ -1,15 +1,17 @@
 -- Function: gpInsertUpdate_MovementItem_Send()
 
 DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_Send (Integer, Integer, Integer, TFloat, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_Send (Integer, Integer, Integer, TFloat, TFloat, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_Send(
  INOUT ioId                  Integer   , -- Ключ объекта <Элемент документа>
     IN inMovementId          Integer   , -- Ключ объекта <Документ>
     IN inGoodsId             Integer   , -- Товары
     IN inAmount              TFloat    , -- Количество
+    IN inPrice               TFloat    , -- Цена
+   OUT outSumma              TFloat    , -- Сумма
     IN inSession             TVarChar    -- сессия пользователя
 )
-RETURNS Integer
 AS
 $BODY$
    DECLARE vbUserId Integer;
@@ -18,7 +20,8 @@ BEGIN
     -- проверка прав пользователя на вызов процедуры
     --vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MI_Send());
     vbUserId := inSession;
-     
+    --Посчитали сумму
+    outSumma := ROUND(inAmount * inPrice,2); 
      -- сохранили
     ioId := lpInsertUpdate_MovementItem_Send (ioId                 := ioId
                                             , inMovementId         := inMovementId
@@ -30,7 +33,7 @@ BEGIN
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpInsertUpdate_MovementItem_Send (Integer, Integer, Integer, TFloat, TVarChar) OWNER TO postgres;
+ALTER FUNCTION gpInsertUpdate_MovementItem_Send (Integer, Integer, Integer, TFloat, TFloat, TVarChar) OWNER TO postgres;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.

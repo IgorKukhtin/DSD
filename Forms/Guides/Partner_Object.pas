@@ -73,6 +73,8 @@ type
     DocumentDayCount: TcxGridDBColumn;
     PrepareDayCount: TcxGridDBColumn;
     clRetailName: TcxGridDBColumn;
+    actShowAll: TBooleanStoredProcAction;
+    bbShowAll: TdxBarButton;
   private
     { Private declarations }
   public

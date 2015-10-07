@@ -9,7 +9,8 @@ CREATE OR REPLACE FUNCTION gpSelect_MovementItem_Send(
     IN inSession     TVarChar       -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, GoodsId Integer, GoodsCode Integer, GoodsName TVarChar
-             , Amount TFloat, AmountRemains TFloat, MaxPriceIn TFloat, PriceUnitFrom TFloat, PriceUnitTo TFloat
+             , Amount TFloat, AmountRemains TFloat, PriceIn TFloat, SumPriceIn TFloat
+             , PriceUnitFrom TFloat, PriceUnitTo TFloat
              , isErased Boolean
               )
 AS
@@ -50,7 +51,7 @@ BEGIN
                                 SELECT 
                                     Container.ObjectId                  AS GoodsId
                                   , SUM(Container.Amount)::TFloat       AS Amount
-                                  , MAX(MIFloat_Price.ValueData)::TFloat AS MaxPriceIn
+                                  , AVG(MIFloat_Price.ValueData)::TFloat AS PriceIn
                                 FROM Container
                                     INNER JOIN ContainerLinkObject AS ContainerLinkObject_Unit
                                                                    ON Container.Id = ContainerLinkObject_Unit.ContainerId 
@@ -82,16 +83,20 @@ BEGIN
                                           AND (MovementItem.isErased = FALSE or inIsErased = TRUE)
                                      )
             SELECT
-                COALESCE(MovementItem_Send.Id,0)           AS Id
-              , Object_Goods.Id                            AS GoodsId
-              , Object_Goods.GoodsCodeInt                  AS GoodsCode
-              , Object_Goods.GoodsName                     AS GoodsName
-              , MovementItem_Send.Amount                   AS Amount
-              , tmpRemains.Amount::TFloat                  AS AmountRemains
-              , tmpRemains.MaxPriceIn::TFloat              AS MaxPriceIn
-              , Object_Price_From.Price                    AS PriceUnitFrom
-              , Object_Price_To.Price                      AS PriceUnitTo
-              , COALESCE(MovementItem_Send.IsErased,FALSE) AS isErased
+                COALESCE(MovementItem_Send.Id,0)                  AS Id
+              , Object_Goods.Id                                   AS GoodsId
+              , Object_Goods.GoodsCodeInt                         AS GoodsCode
+              , Object_Goods.GoodsName                            AS GoodsName
+              , MovementItem_Send.Amount                          AS Amount
+              , tmpRemains.Amount::TFloat                         AS AmountRemains
+              , COALESCE(SUM(MIContainer_Count.Amount * MIFloat_Price.ValueData)/SUM(MIContainer_Count.Amount)
+                        ,tmpRemains.PriceIn)::TFloat           AS PriceIn
+              , COALESCE(ABS(SUM(MIContainer_Count.Amount * MIFloat_Price.ValueData))
+                        ,(MovementItem_Send.Amount
+                         *tmpRemains.PriceIn))::TFloat         AS SumPriceIn
+              , Object_Price_From.Price                           AS PriceUnitFrom
+              , Object_Price_To.Price                             AS PriceUnitTo
+              , COALESCE(MovementItem_Send.IsErased,FALSE)        AS isErased
             FROM tmpRemains
                 FULL OUTER JOIN MovementItem_Send ON tmpRemains.GoodsId = MovementItem_Send.ObjectId
                 LEFT JOIN Object_Goods_View AS Object_Goods ON Object_Goods.Id = COALESCE(MovementItem_Send.ObjectId,tmpRemains.GoodsId)
@@ -101,19 +106,41 @@ BEGIN
                 LEFT OUTER JOIN Object_Price_View AS Object_Price_To
                                                   ON Object_Price_To.GoodsId = COALESCE(MovementItem_Send.ObjectId,tmpRemains.GoodsId)
                                                  AND Object_Price_To.UnitId = vbUnitToId
+                LEFT OUTER JOIN MovementItemContainer AS MIContainer_Count
+                                                      ON MIContainer_Count.MovementItemId = MovementItem_Send.Id 
+                                                     AND MIContainer_Count.DescId = zc_Container_Count()
+                                                     AND MIContainer_Count.isActive = True
+                LEFT OUTER  JOIN ContainerLinkObject AS CLI_MI 
+                                                    ON CLI_MI.ContainerId = MIContainer_Count.ContainerId
+                                                   AND CLI_MI.DescId = zc_ContainerLinkObject_PartionMovementItem()
+                LEFT OUTER  JOIN OBJECT AS Object_PartionMovementItem 
+                                        ON Object_PartionMovementItem.Id = CLI_MI.ObjectId
+                LEFT OUTER  JOIN MovementItem ON MovementItem.Id = Object_PartionMovementItem.ObjectCode
+                LEFT OUTER JOIN MovementItemFloat AS MIFloat_Price
+                                                  ON MIFloat_Price.MovementItemId = MovementItem.ID
+                                                 AND MIFloat_Price.DescId = zc_MIFloat_Price()
             WHERE 
                 Object_Goods.isErased = FALSE 
-             or MovementItem_Send.id is not null;
-
+             or MovementItem_Send.id is not null
+            GROUP BY
+                MovementItem_Send.Id
+              , Object_Goods.Id
+              , Object_Goods.GoodsCodeInt
+              , Object_Goods.GoodsName
+              , MovementItem_Send.Amount
+              , tmpRemains.Amount
+              , tmpRemains.PriceIn
+              , Object_Price_From.Price
+              , Object_Price_To.Price
+              , MovementItem_Send.IsErased;
     ELSE
-
         -- Результат другой
         RETURN QUERY
             WITH tmpRemains AS (
                                 SELECT 
                                     Container.ObjectId    AS GoodsId
                                   , SUM(Container.Amount) AS Amount
-                                  , MAX(MIFloat_Price.ValueData)::TFloat AS MaxPriceIn
+                                  , AVG(MIFloat_Price.ValueData)::TFloat AS PriceIn
                                 FROM Container
                                     INNER JOIN ContainerLinkObject AS ContainerLinkObject_Unit
                                                                    ON Container.Id = ContainerLinkObject_Unit.ContainerId 
@@ -142,16 +169,20 @@ BEGIN
                                     AND (MovementItem.isErased = FALSE or inIsErased = TRUE)
                                  )
        SELECT
-             MovementItem_Send.Id             AS Id
-           , Object_Goods.Id                  AS GoodsId
-           , Object_Goods.GoodsCodeInt        AS GoodsCode
-           , Object_Goods.GoodsName           AS GoodsName
-           , MovementItem_Send.Amount         AS Amount
-           , tmpRemains.Amount::TFloat        AS AmountRemains
-           , tmpRemains.MaxPriceIn::TFloat    AS MaxPriceIn
-           , Object_Price_From.Price          AS PriceUnitFrom
-           , Object_Price_To.Price            AS PriceUnitTo
-           , MovementItem_Send.IsErased       AS isErased
+             MovementItem_Send.Id                              AS Id
+           , Object_Goods.Id                                   AS GoodsId
+           , Object_Goods.GoodsCodeInt                         AS GoodsCode
+           , Object_Goods.GoodsName                            AS GoodsName
+           , MovementItem_Send.Amount                          AS Amount
+           , tmpRemains.Amount::TFloat                         AS AmountRemains
+           , COALESCE(SUM(MIContainer_Count.Amount * MIFloat_Price.ValueData)/SUM(MIContainer_Count.Amount)
+                        ,tmpRemains.PriceIn)::TFloat           AS PriceIn
+           , COALESCE(ABS(SUM(MIContainer_Count.Amount * MIFloat_Price.ValueData))
+                        ,(MovementItem_Send.Amount
+                         *tmpRemains.PriceIn))::TFloat         AS SumPriceIn
+           , Object_Price_From.Price                           AS PriceUnitFrom
+           , Object_Price_To.Price                             AS PriceUnitTo
+           , MovementItem_Send.IsErased                        AS isErased
        FROM MovementItem_Send
             LEFT OUTER JOIN tmpRemains ON tmpRemains.GoodsId = MovementItem_Send.ObjectId
             LEFT JOIN Object_Goods_View AS Object_Goods ON Object_Goods.Id = MovementItem_Send.ObjectId
@@ -161,7 +192,30 @@ BEGIN
             LEFT OUTER JOIN Object_Price_View AS Object_Price_To
                                               ON Object_Price_To.GoodsId = COALESCE(MovementItem_Send.ObjectId,tmpRemains.GoodsId)
                                              AND Object_Price_To.UnitId = vbUnitToId
-            ;
+            LEFT OUTER JOIN MovementItemContainer AS MIContainer_Count
+                                                  ON MIContainer_Count.MovementItemId = MovementItem_Send.Id 
+                                                 AND MIContainer_Count.DescId = zc_Container_Count()
+                                                 AND MIContainer_Count.isActive = True
+            LEFT OUTER  JOIN ContainerLinkObject AS CLI_MI 
+                                                 ON CLI_MI.ContainerId = MIContainer_Count.ContainerId
+                                                AND CLI_MI.DescId = zc_ContainerLinkObject_PartionMovementItem()
+            LEFT OUTER  JOIN OBJECT AS Object_PartionMovementItem 
+                                    ON Object_PartionMovementItem.Id = CLI_MI.ObjectId
+            LEFT OUTER  JOIN MovementItem ON MovementItem.Id = Object_PartionMovementItem.ObjectCode
+            LEFT OUTER JOIN MovementItemFloat AS MIFloat_Price
+                                              ON MIFloat_Price.MovementItemId = MovementItem.ID
+                                             AND MIFloat_Price.DescId = zc_MIFloat_Price()
+       GROUP BY
+              MovementItem_Send.Id
+           , Object_Goods.Id
+           , Object_Goods.GoodsCodeInt
+           , Object_Goods.GoodsName
+           , MovementItem_Send.Amount
+           , tmpRemains.Amount
+           , tmpRemains.PriceIn
+           , Object_Price_From.Price
+           , Object_Price_To.Price
+           , MovementItem_Send.IsErased;
 
      END IF;
 

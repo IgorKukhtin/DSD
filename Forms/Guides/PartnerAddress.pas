@@ -139,6 +139,8 @@ type
     actRefreshPeriod: TdsdDataSetRefresh;
     cbPeriod: TcxCheckBox;
     clNameInteger: TcxGridDBColumn;
+    actShowAll: TBooleanStoredProcAction;
+    bbShowAll: TdxBarButton;
   private
     { Private declarations }
   public

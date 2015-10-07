@@ -9,7 +9,7 @@ CREATE OR REPLACE FUNCTION gpSelect_Movement_Send(
     IN inSession       TVarChar    -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode Integer, StatusName TVarChar
-             , TotalCount TFloat
+             , TotalCount TFloat, TotalSumm TFloat
              , FromId Integer, FromName TVarChar, ToId Integer, ToName TVarChar
               )
 
@@ -42,6 +42,7 @@ BEGIN
            , Object_Status.ObjectCode           AS StatusCode
            , Object_Status.ValueData            AS StatusName
            , MovementFloat_TotalCount.ValueData AS TotalCount
+           , MovementFloat_TotalSumm.ValueData  AS TotalSumm
            , Object_From.Id                     AS FromId
            , Object_From.ValueData              AS FromName
            , Object_To.Id                       AS ToId
@@ -61,6 +62,9 @@ BEGIN
             LEFT JOIN MovementFloat AS MovementFloat_TotalCount
                                     ON MovementFloat_TotalCount.MovementId =  Movement.Id
                                    AND MovementFloat_TotalCount.DescId = zc_MovementFloat_TotalCount()
+            LEFT JOIN MovementFloat AS MovementFloat_TotalSumm
+                                    ON MovementFloat_TotalSumm.MovementId =  Movement.Id
+                                   AND MovementFloat_TotalSumm.DescId = zc_MovementFloat_TotalSumm()
 
             LEFT JOIN MovementLinkObject AS MovementLinkObject_From
                                          ON MovementLinkObject_From.MovementId = Movement.Id

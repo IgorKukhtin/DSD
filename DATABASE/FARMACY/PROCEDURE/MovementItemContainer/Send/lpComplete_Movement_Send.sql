@@ -114,7 +114,7 @@ BEGIN
                             LEFT OUTER JOIN Container AS Container_Summ
                                                       ON Container_Summ.ParentId = DD.Id
                                                      AND Container_Summ.DescId = zc_Container_Summ() 
-                        WHERE (DD.Amount - (DD.SUM - DD.ContainerAmount) >= 0)
+                        WHERE (DD.Amount - (DD.SUM - DD.ContainerAmount) > 0)
                     ),
         tmpAll AS  ( --Контейнеры и количество которое будет списано с подразделения "From"
                         SELECT
