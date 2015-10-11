@@ -334,7 +334,8 @@ uses
   Report_Sold in '..\..\FormsFarmacy\Report\Report_Sold.pas' {Report_SoldForm: TParentForm},
   Report_Sold_Day in '..\..\FormsFarmacy\Report\Report_Sold_Day.pas' {Report_Sold_DayForm: TParentForm},
   Report_Sold_DayUser in '..\..\FormsFarmacy\Report\Report_Sold_DayUser.pas' {Report_Sold_DayUserForm: TParentForm},
-  RecadvXML in '..\..\SOURCE\EDI\RecadvXML.pas';
+  RecadvXML in '..\..\SOURCE\EDI\RecadvXML.pas',
+  AdditionalGoodsTest in '..\SOURCE\Objects\All\Farmacy\AdditionalGoodsTest.pas';
 
 {$R *.res}
 {$R DevExpressRus.res}
