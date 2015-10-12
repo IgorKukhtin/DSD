@@ -88,9 +88,25 @@ BEGIN
                                      AND Container.ObjectId = Object_Price.GoodsId
                                      AND Container.DescId = zc_Container_Count() 
                                      AND Container.Amount > 0
-            LEFT OUTER JOIN MovementItem AS MovementItemSaved
-                                         ON MovementItemSaved.MovementId = vbMovementId
-                                        AND MovementItemSaved.ObjectId = Object_Price.GoodsId
+            LEFT OUTER JOIN (
+                                SELECT 
+                                    T1.Id,
+                                    T1.Amount, 
+                                    T1.ObjectId  
+                                FROM (
+                                        SELECT MovementItem.Id,
+                                            MovementItem.Amount,
+                                            MovementItem.ObjectId,
+                                            ROW_NUMBER() OVER(PARTITION BY MovementItem.ObjectId Order By MovementItem.Id) as Ord
+                                        FROM
+                                            MovementItem
+                                        WHERE
+                                            MovementItem.MovementId = vbMovementId
+                                      ) AS T1
+                                WHERE
+                                    T1.Ord = 1
+                            )AS MovementItemSaved
+                             ON MovementItemSaved.ObjectId = Object_Price.GoodsId
             LEFT OUTER JOIN Object_Goods_View ON Object_Price.GoodsId = Object_Goods_View.Id                            
             LEFT OUTER JOIN (
                                 SELECT

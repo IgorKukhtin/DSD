@@ -367,7 +367,7 @@ begin
     TRefreshRemainsThread.Create;
     //Создать новый чек
     NewCheckStart := Now;
-    NewCheck;
+    NewCheck(False);
     NewCheckEnd := Now;
     // Отбиваем чек через ЭККА
   end;
