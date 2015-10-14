@@ -199,7 +199,7 @@ type
     // Обновляет сумму по чеку
     procedure CalcTotalSumm;
     // Пробивает чек через ЭККА
-    function PutCheckToCash(SalerCash: real; PaidType: TPaidType): boolean;
+    function PutCheckToCash(SalerCash: real; PaidType: TPaidType; out AFiscalNumber: String): boolean;
     //  обновляет остаток на рабочем датасете
     procedure UpdateRemains;
 
@@ -367,7 +367,7 @@ begin
     TRefreshRemainsThread.Create;
     //Создать новый чек
     NewCheckStart := Now;
-    NewCheck;
+    NewCheck(False);
     NewCheckEnd := Now;
     // Отбиваем чек через ЭККА
   end;
@@ -903,7 +903,7 @@ procedure TMainCashForm.NewCheck(ANeedRemainsRefresh: Boolean = True);
 begin
   SoldRegim := true;
   actSpec.Checked := false;
-  if Assigned(Cash) then
+  if Assigned(Cash) AND Cash.AlwaysSold then
     Cash.AlwaysSold := False;
   try
     spNewCheck.Execute;
@@ -977,7 +977,7 @@ begin
 end;
 
 function TMainCashForm.PutCheckToCash(SalerCash: real;
-  PaidType: TPaidType): boolean;
+  PaidType: TPaidType; out AFiscalNumber: String): boolean;
 {------------------------------------------------------------------------------}
   function PutOneRecordToCash: boolean; //Продажа одного наименования
   begin
@@ -998,6 +998,10 @@ function TMainCashForm.PutCheckToCash(SalerCash: real;
 {------------------------------------------------------------------------------}
 begin
   try
+    if Assigned(Cash) AND NOT Cash.AlwaysSold then
+      AFiscalNumber := Cash.FiscalNumber
+    else
+      AFiscalNumber := '';
     result := not Assigned(Cash) or Cash.AlwaysSold or Cash.OpenReceipt;
     with mdClosedCheck do
     begin
@@ -1111,6 +1115,7 @@ end;
 procedure TRefreshRemainsThread.Execute;
 var
   ARS: Integer;
+  FiscalNumber: string;
 begin
   MainCashForm.CloseCheckStart := Now;
 
@@ -1119,12 +1124,12 @@ begin
 
 {*****************************************************************}
 
-    if MainCashForm.PutCheckToCash(MainCashForm.ASalerCash, MainCashForm.PaidType) then
+    if MainCashForm.PutCheckToCash(MainCashForm.ASalerCash, MainCashForm.PaidType, FiscalNumber) then
     begin
       //Достаем серийник кассового аппарата
-      if Assigned(MainCashForm.Cash) AND not MainCashForm.Cash.AlwaysSold then
+      if FiscalNumber <> '' then
       Begin
-        MainCashForm.spGet_Object_CashRegister_By_Serial.ParamByName('inSerial').Value := MainCashForm.Cash.FiscalNumber;
+        MainCashForm.spGet_Object_CashRegister_By_Serial.ParamByName('inSerial').Value := FiscalNumber;
         MainCashForm.spGet_Object_CashRegister_By_Serial.Execute;
         if MainCashForm.spGet_Object_CashRegister_By_Serial.ParamByName('outId').AsString <> '' then
           MainCashForm.spComplete_Movement_Check.ParamByName('inCashRegisterId').Value :=

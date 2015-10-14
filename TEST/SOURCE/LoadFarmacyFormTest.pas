@@ -17,15 +17,22 @@ type
     procedure MainFormTest;
     //procedure LoadCashFormTest;
     procedure LoadAccountFormTest;
+    procedure LoadAdditionalGoodsFormTest;
+    procedure LoadAlternativeGroupFormTest;
+    procedure LoadArticleLossEditFormTest;
+    procedure LoadArticleLossFormTest;
     procedure LoadBankFormTest;
     procedure LoadBankAccountFormTest;
     procedure LoadBankAccountDocumentFormTest;
     procedure LoadBankStatementFormTest;
     procedure LoadCashRegisterFormTest;
     procedure LoadCheckFormTest;
+    procedure LoadCheckDeferredFormTest;
+    procedure LoadCheckVIPFormTest;
     procedure LoadContactPersonFormTest;
     procedure LoadContractFormTest;
     procedure LoadCurrencyFormTest;
+    procedure LoadCreateOrderFromMCSFormTest;
     procedure LoadDefaultFormTest;
     procedure LoadEnumFormTest;
     procedure LoadGoodsGroupFormTest;
@@ -36,42 +43,34 @@ type
     procedure LoadInfoMoneyGroupFormTest;
     procedure LoadInfoMoneyDestinationFormTest;
     procedure LoadInfoMoneyFormTest;
+    procedure LoadInventoryFormTest;
     procedure LoadJuridicalFormTest;
     procedure LoadLoadFormTest;
     procedure LoadLossDebtFormTest;
+    procedure LoadLossFormTest;
     procedure LoadMargineCategory;
     procedure LoadMeasureFormTest;
     procedure LoadMemberFormTest;
     procedure LoadOrderInternalFormTest;
     procedure LoadOrderExternalFormTest;
     procedure LoadObjectUnionFormTest;
+    procedure LoadPaidKindFormTest;
+    procedure LoadPaidTypeFormTest;
     procedure LoadPriceListFormTest;
+    procedure LoadPriceFormTest;
     procedure LoadProfitLossFormTest;
     procedure LoadProfitLossGroupFormTest;
     procedure LoadProfitLossDirectionFormTest;
+    procedure LoadReportSoldParamsFormTest;
     procedure LoadReportFormTest;
     procedure LoadRetailFormTest;
     procedure LoadReturnTypeFormTest;
     procedure LoadReturnOutFormTest;
+    procedure LoadSaleFormTest;
     procedure LoadServiceFormTest;
+    procedure LoadSendFormTest;
     procedure LoadSendOnPriceFormTest;
     procedure LoadUnitFormTest;
-    procedure LoadAdditionalGoodsFormTest;
-    procedure LoadPriceFormTest;
-    procedure LoadAlternativeGroupFormTest;
-    procedure LoadCheckVIPFormTest;
-    procedure LoadCheckDeferredFormTest;
-    procedure LoadPaidTypeFormTest;
-    procedure LoadInventoryJournalFormTest;
-    procedure LoadInventoryFormTest;
-    procedure LoadLossJournalFormTest;
-    procedure LoadLossFormTest;
-    procedure LoadArticleLossEditFormTest;
-    procedure LoadArticleLossFormTest;
-    procedure LoadSendJournalFormTest;
-    procedure LoadSendFormTest;
-    procedure LoadCreateOrderFromMCSFormTest;
-    procedure LoadReportSoldParamsFormTest;
     procedure FormTest;
   end;
 
@@ -531,26 +530,20 @@ end;
 
 procedure TLoadFormTest.LoadInventoryFormTest;
 begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TInventoryJournalForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TInventoryJournalForm');
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TInventoryForm'));
   TdsdFormStorageFactory.GetStorage.Load('TInventoryForm');
 end;
 
-procedure TLoadFormTest.LoadInventoryJournalFormTest;
-begin
-  TdsdFormStorageFactory.GetStorage.Save(GetForm('TInventoryJournalForm'));
-  TdsdFormStorageFactory.GetStorage.Load('TInventoryJournalForm');
-end;
-
 procedure TLoadFormTest.LoadLossFormTest;
-begin
-  TdsdFormStorageFactory.GetStorage.Save(GetForm('TLossForm'));
-  TdsdFormStorageFactory.GetStorage.Load('TLossForm');
-end;
-
-procedure TLoadFormTest.LoadLossJournalFormTest;
 begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TLossJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TLossJournalForm');
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TLossForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TLossForm');
 end;
 
 procedure TLoadFormTest.LoadArticleLossFormTest;
@@ -627,6 +620,12 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TCheckVIPForm');
 end;
 
+procedure TLoadFormTest.LoadPaidKindFormTest;
+begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TPaidKindForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TPaidKindForm');
+end;
+
 procedure TLoadFormTest.LoadPaidTypeFormTest;
 begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TPaidTypeForm'));
@@ -647,16 +646,20 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TPriceListJournalForm');
 end;
 
-procedure TLoadFormTest.LoadSendFormTest;
+procedure TLoadFormTest.LoadSaleFormTest;
 begin
-  TdsdFormStorageFactory.GetStorage.Save(GetForm('TSendForm'));
-  TdsdFormStorageFactory.GetStorage.Load('TSendForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TSaleJournalForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TSaleJournalForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TSaleForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TSaleForm');
 end;
 
-procedure TLoadFormTest.LoadSendJournalFormTest;
+procedure TLoadFormTest.LoadSendFormTest;
 begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TSendJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TSendJournalForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TSendForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TSendForm');
 end;
 
 procedure TLoadFormTest.LoadSendOnPriceFormTest;

@@ -2184,14 +2184,25 @@ var
       ftDate,ftTime,ftDateTime:
         Begin
           S:=Copy(AParam.asString,1,10)+' '+Copy(AParam.asString,12,8);
-          F.DateSeparator := '-';
           F.TimeSeparator := ':';
-          F.ShortDateFormat := 'YYYY-MM-DD';
+          if pos('.',S)>0 then
+          Begin
+            F.ShortDateFormat := 'DD.MM.YYYY';
+            F.DateSeparator := '.';
+          End
+          else if pos('-',S)>0 then
+          Begin
+            F.DateSeparator := '-';
+            F.ShortDateFormat := 'YYYY-MM-DD';
+          End;
           F.LongDateFormat := 'hh:mm:ss';
           AField.AsDateTime := StrToDateTime(S,F);
         End
     ELSE
-      AField.Value := AParam.Value;
+      if VarToStr(AParam.Value) = '' then
+        AField.Clear
+      else
+        AField.Value := AParam.Value;
 //      ftUnknown: ;
 //      ftString: ;
 //      ftSmallint: ;
@@ -2292,6 +2303,8 @@ begin
     End;
     FDataSet.Post;
   finally
+    if FDataSet.State in [dsInsert,dsEdit] then
+      FDataSet.Cancel;
     //Отключаем необходимось перечитывать данные при следующей активизации
     FNeedRefresh := False;
     //вернуть на место, что бы вызвался повторно gpInsertUpdate...

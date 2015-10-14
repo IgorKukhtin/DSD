@@ -7,7 +7,7 @@ DROP FUNCTION IF EXISTS gpSelect_Object_Goods_Lite(TVarChar);
 CREATE OR REPLACE FUNCTION gpSelect_Object_Goods_Lite(
     IN inSession     TVarChar       -- сессия пользователя
 )
-RETURNS TABLE (Id Integer, CodeInt Integer, Code TVarChar, Name TVarChar, isErased boolean) AS
+RETURNS TABLE (Id Integer, CodeInt Integer, Code TVarChar, Name TVarChar, GoodsGroupName TVarChar, NDSKindName TVarChar, isErased boolean) AS
 $BODY$
    DECLARE vbUserId   Integer;
    DECLARE vbObjectId Integer;
@@ -20,10 +20,12 @@ BEGIN
 
 
    RETURN QUERY 
-   SELECT Object_Goods.Id           AS Id 
-        , Object_Goods.GoodsCodeInt AS CodeInt
-        , Object_Goods.GoodsCode    AS Code
-        , Object_Goods.GoodsName    AS Name
+   SELECT Object_Goods.Id             AS Id 
+        , Object_Goods.GoodsCodeInt   AS CodeInt
+        , Object_Goods.GoodsCode      AS Code
+        , Object_Goods.GoodsName      AS Name
+        , Object_Goods.GoodsGroupName AS GoodsGroupName
+        , Object_Goods.NDSKindName    AS NDSKindName
         , Object_Goods.isErased
   
     FROM Object_Goods_View AS Object_Goods

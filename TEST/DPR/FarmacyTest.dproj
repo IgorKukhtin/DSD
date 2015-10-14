@@ -1007,6 +1007,23 @@
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<DCCReference Include="..\..\SOURCE\EDI\RecadvXML.pas"/>
+			<DCCReference Include="..\SOURCE\Objects\All\Farmacy\AdditionalGoodsTest.pas"/>
+			<DCCReference Include="..\SOURCE\Movement\All\Farmacy\SaleTest.pas"/>
+			<DCCReference Include="..\SOURCE\MovementItem\All\Farmacy\SaleMovementItemTest.pas"/>
+			<DCCReference Include="..\..\FormsFarmacy\Document\SaleJournal.pas">
+				<Form>SaleJournalForm</Form>
+				<FormType>dfm</FormType>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Document\Sale.pas">
+				<Form>SaleForm</Form>
+				<FormType>dfm</FormType>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Kind\PaidKind.pas">
+				<Form>PaidKindForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
 			<BuildConfiguration Include="Release">
 				<Key>Cfg_2</Key>
 				<CfgParent>Base</CfgParent>

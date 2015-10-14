@@ -17,15 +17,15 @@ type
   TAdditionalGoodsForm = class(TAncestorGuidesForm)
     clObjectCode: TcxGridDBColumn;
     clValueData: TcxGridDBColumn;
-    cxGrid1: TcxGrid;
-    cxGridDBTableView2: TcxGridDBTableView;
-    clValueData1: TcxGridDBColumn;
-    cxGridLevel2: TcxGridLevel;
+    grSecondGoods: TcxGrid;
+    tvSecondGoods: TcxGridDBTableView;
+    colGoodsSecondName: TcxGridDBColumn;
+    glSecondGoods: TcxGridLevel;
     cxSplitter1: TcxSplitter;
-    cxGrid2: TcxGrid;
-    cxGridDBTableView3: TcxGridDBTableView;
-    clValueData2: TcxGridDBColumn;
-    cxGridLevel3: TcxGridLevel;
+    grClientGoods: TcxGrid;
+    tvClientGoods: TcxGridDBTableView;
+    colGoodsClientName: TcxGridDBColumn;
+    glClientGoods: TcxGridLevel;
     cxSplitter2: TcxSplitter;
     ClientDS: TDataSource;
     spAdditionalGoods: TdsdStoredProc;
@@ -38,7 +38,7 @@ type
     AdditionalGoodsClientDBViewAddOn: TdsdDBViewAddOn;
     actGoodsChoice: TOpenChoiceForm;
     actInsertUpdateLink: TdsdUpdateDataSet;
-    spInsertUpdateGoodsLink: TdsdStoredProc;
+    spInsertUpdate_Object_AdditionalGoods: TdsdStoredProc;
     mactInsert: TMultiAction;
     InsertRecord: TInsertRecord;
     DataSetPost: TDataSetPost;
@@ -46,7 +46,7 @@ type
     actDeleteLink: TdsdExecStoredProc;
     mactDeleteLink: TMultiAction;
     DataSetDelete: TDataSetDelete;
-    spDeleteLink: TdsdStoredProc;
+    spDelete_Object_AdditionalGoods: TdsdStoredProc;
     PopupMenu1: TPopupMenu;
     MenuItem1: TMenuItem;
     MenuItem2: TMenuItem;
@@ -70,6 +70,13 @@ type
     colGoodsId: TcxGridDBColumn;
     colGoodsCode: TcxGridDBColumn;
     colGoodsName: TcxGridDBColumn;
+    colGoodsGroupName: TcxGridDBColumn;
+    colNDSKindName: TcxGridDBColumn;
+    cxSplitter4: TcxSplitter;
+    cxSplitter5: TcxSplitter;
+    colGoodsSecondCode: TcxGridDBColumn;
+    colGoodsCodeInt: TcxGridDBColumn;
+    colMakerName: TcxGridDBColumn;
   private
     { Private declarations }
   public
