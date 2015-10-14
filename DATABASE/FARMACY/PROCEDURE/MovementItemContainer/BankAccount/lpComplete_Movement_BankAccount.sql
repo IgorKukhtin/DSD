@@ -29,6 +29,7 @@ BEGIN
                                      , inAccountDirectionId     := zc_Enum_AccountDirection_70100()
                                      , inInfoMoneyDestinationId := zc_Enum_InfoMoneyDestination_10200()
                                      , inInfoMoneyId            := NULL
+                                     --, inInsert                 := TRUE
                                      , inUserId                 := inUserId)
         , Movement_BankAccount_View.JuridicalId_Basis
         , Movement_BankAccount_View.OperDate
@@ -63,6 +64,7 @@ BEGIN
                                      , inAccountDirectionId     := zc_Enum_AccountDirection_40300()
                                      , inInfoMoneyDestinationId := zc_Enum_InfoMoneyDestination_10200()
                                      , inInfoMoneyId            := NULL
+                                     --, inInsert                 := TRUE
                                      , inUserId                 := inUserId)
         , Movement_BankAccount_View.JuridicalId_Basis
         , Movement_BankAccount_View.OperDate

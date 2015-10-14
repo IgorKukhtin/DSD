@@ -3,8 +3,8 @@ inherited IncomeJournalChoiceForm: TIncomeJournalChoiceForm
   ClientHeight = 338
   ClientWidth = 802
   AddOnFormData.isAlwaysRefresh = True
-  ExplicitWidth = 810
-  ExplicitHeight = 365
+  ExplicitWidth = 818
+  ExplicitHeight = 376
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -25,6 +25,9 @@ inherited IncomeJournalChoiceForm: TIncomeJournalChoiceForm
         ExplicitWidth = 802
         ExplicitHeight = 281
         inherited cxGridDBTableView: TcxGridDBTableView
+          OptionsData.Deleting = False
+          OptionsData.DeletingConfirmation = False
+          OptionsData.Editing = False
           Styles.Content = nil
           Styles.Inactive = nil
           Styles.Selection = nil
@@ -214,6 +217,18 @@ inherited IncomeJournalChoiceForm: TIncomeJournalChoiceForm
           Component = MasterCDS
           ComponentItem = 'FromName'
           DataType = ftString
+        end
+        item
+          Name = 'UnitId'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'ToId'
+        end
+        item
+          Name = 'UNitName'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'ToName'
         end>
     end
   end
@@ -262,6 +277,7 @@ inherited IncomeJournalChoiceForm: TIncomeJournalChoiceForm
     Top = 144
   end
   object RefreshDispatcher: TRefreshDispatcher
+    IdParam.Value = Null
     RefreshAction = actRefresh
     ComponentList = <
       item

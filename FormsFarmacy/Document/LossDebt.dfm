@@ -3,8 +3,7 @@ inherited LossDebtForm: TLossDebtForm
   ClientHeight = 405
   ClientWidth = 1049
   PopupMenu = PopupMenu
-  ExplicitWidth = 1057
-  ExplicitHeight = 432
+  ExplicitWidth = 1065
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -26,18 +25,11 @@ inherited LossDebtForm: TLossDebtForm
         ExplicitWidth = 1049
         ExplicitHeight = 298
         inherited cxGridDBTableView: TcxGridDBTableView
-          OnDblClick = nil
-          OnKeyDown = nil
-          OnKeyPress = nil
-          OnCustomDrawCell = nil
-          DataController.Filter.OnChanged = nil
           Styles.Content = nil
           Styles.Inactive = nil
           Styles.Selection = nil
           Styles.Footer = nil
           Styles.Header = nil
-          OnColumnHeaderClick = nil
-          OnCustomDrawColumnHeader = nil
           object clJuridicalCode: TcxGridDBColumn
             Caption = #1050#1086#1076
             DataBinding.FieldName = 'JuridicalCode'
@@ -192,6 +184,7 @@ inherited LossDebtForm: TLossDebtForm
     object InsertRecord: TInsertRecord
       Category = 'DSDLib'
       MoveParams = <>
+      PostDataSetBeforeExecute = False
       View = cxGridDBTableView
       Action = JuridicalChoiceForm
       Params = <>
@@ -203,6 +196,7 @@ inherited LossDebtForm: TLossDebtForm
     object JuridicalChoiceForm: TOpenChoiceForm
       Category = 'DSDLib'
       MoveParams = <>
+      PostDataSetBeforeExecute = False
       FormName = 'TJuridical_ObjectForm'
       FormNameParam.Value = ''
       FormNameParam.DataType = ftString
@@ -224,9 +218,6 @@ inherited LossDebtForm: TLossDebtForm
         end>
       isShowModal = True
     end
-  end
-  inherited MasterCDS: TClientDataSet
-    AfterInsert = nil
   end
   inherited spSelect: TdsdStoredProc
     StoredProcName = 'gpSelect_MovementItem_LossDebt'
@@ -348,6 +339,9 @@ inherited LossDebtForm: TLossDebtForm
       end>
     Left = 240
     Top = 304
+  end
+  inherited spChangeStatus: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Status_LossDebt'
   end
   inherited spGet: TdsdStoredProc
     StoredProcName = 'gpGet_Movement_LossDebt'

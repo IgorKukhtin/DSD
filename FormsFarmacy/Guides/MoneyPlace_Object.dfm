@@ -2,24 +2,23 @@ inherited MoneyPlace_ObjectForm: TMoneyPlace_ObjectForm
   Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082
   ClientHeight = 411
   ClientWidth = 304
-  ExplicitWidth = 312
-  ExplicitHeight = 438
+  ExplicitHeight = 449
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Width = 304
     Height = 385
-    ExplicitWidth = 693
+    ExplicitWidth = 304
     ExplicitHeight = 385
     ClientRectBottom = 385
     ClientRectRight = 304
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 693
+      ExplicitWidth = 304
       ExplicitHeight = 385
       inherited cxGrid: TcxGrid
         Width = 304
         Height = 385
-        ExplicitWidth = 693
+        ExplicitWidth = 304
         ExplicitHeight = 385
         inherited cxGridDBTableView: TcxGridDBTableView
           OptionsData.CancelOnExit = True
@@ -78,52 +77,28 @@ inherited MoneyPlace_ObjectForm: TMoneyPlace_ObjectForm
           DataType = ftString
         end
         item
-          Name = 'ContractId'
           Value = Null
-          Component = MasterCDS
-          ComponentItem = 'ContractId'
         end
         item
-          Name = 'ContractName'
           Value = Null
-          Component = MasterCDS
-          ComponentItem = 'ContractNumber'
-          DataType = ftString
         end
         item
-          Name = 'InfoMoneyId'
           Value = Null
-          Component = MasterCDS
-          ComponentItem = 'InfoMoneyId'
         end
         item
-          Name = 'InfoMoneyCode'
           Value = Null
-          Component = MasterCDS
-          ComponentItem = 'InfoMoneyCode'
         end
         item
-          Name = 'InfoMoneyName'
           Value = Null
-          Component = MasterCDS
-          ComponentItem = 'InfoMoneyName'
-          DataType = ftString
         end
         item
-          Name = 'InfoMoneyName_all'
           Value = Null
-          Component = MasterCDS
-          ComponentItem = 'InfoMoneyName_all'
-          DataType = ftString
         end
         item
-          Name = 'PositionId'
           Value = 0
         end
         item
-          Name = 'PositionName'
           Value = ''
-          DataType = ftString
         end>
     end
   end
