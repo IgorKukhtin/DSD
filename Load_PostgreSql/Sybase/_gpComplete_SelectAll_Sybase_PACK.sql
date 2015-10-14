@@ -14,7 +14,8 @@ $BODY$
 BEGIN
 
      RETURN QUERY 
-     WITH tmpUnit_pack AS (SELECT 8451 AS UnitId, NULL AS isMain  -- Цех Упаковки
+     -- WITH tmpUnit_pack AS (SELECT 8451 AS UnitId, NULL AS isMain  -- Цех Упаковки
+     WITH tmpUnit_pack AS (SELECT 8450 AS UnitId, NULL AS isMain  -- ЦЕХ копчения
      -- WITH tmpUnit_pack AS (SELECT 8440 AS UnitId, NULL AS isMain  -- Дефростер
                        )
      -- !!!Internal - PACK!!!
@@ -38,9 +39,10 @@ BEGIN
           LEFT JOIN MovementDesc ON MovementDesc.Id = Movement.DescId
      WHERE Movement.OperDate BETWEEN inStartDate AND inEndDate
        AND Movement.StatusId = zc_Enum_Status_Complete()
-       AND Movement.DescId IN (zc_Movement_ProductionUnion())
+       AND Movement.DescId IN (zc_Movement_Send(), zc_Movement_ProductionUnion())
        AND inIsBefoHistoryCost = TRUE
        AND (tmpUnit_from.UnitId > 0 AND tmpUnit_To.UnitId > 0)
+       -- AND tmpUnit_To.UnitId > 0
     UNION
      SELECT Movement.Id AS MovementId
           , Movement.OperDate

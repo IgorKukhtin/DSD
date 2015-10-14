@@ -353,6 +353,7 @@ BEGIN
                            THEN COALESCE (MIFloat_AmountPartner.ValueData, 0)
                       ELSE MIMaster.Amount
                  END
+      ORDER BY Movement.Id
      ;
 
 END;

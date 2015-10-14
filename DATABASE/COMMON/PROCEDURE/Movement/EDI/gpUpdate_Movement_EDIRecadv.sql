@@ -61,7 +61,7 @@ BEGIN
 
 
      -- сохранили протокол
-     PERFORM lpInsert_Movement_EDIEvents (vbMovementId, 'Загрузка <Уведомление о приемке> из EDI', vbUserId);
+     PERFORM lpInsert_Movement_EDIEvents (vbMovementId, 'Загрузка "Уведомление о приемке" из EDI', vbUserId);
 
 END;
 $BODY$

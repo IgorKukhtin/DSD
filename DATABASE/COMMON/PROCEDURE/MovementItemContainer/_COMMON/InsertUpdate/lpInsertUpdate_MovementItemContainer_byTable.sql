@@ -8,6 +8,7 @@ AS
 $BODY$
    DECLARE vbLock Integer;
    DECLARE vbTmp Integer;
+   DECLARE vbSec Integer;
 BEGIN
     -- так блокируем что б не было ОШИБКИ: обнаружена взаимоблокировка
     IF zc_IsLockTable() = TRUE
@@ -25,12 +26,26 @@ BEGIN
             EXCEPTION 
                      WHEN OTHERS THEN vbLock := vbLock + 1;
                                       vbTmp:= (SELECT _tmpMIContainer_insert.MovementId FROM _tmpMIContainer_insert LIMIT 1);
+                                      vbSec:= CASE WHEN 0 <> SUBSTR (vbTmp :: TVarChar,  0 + LENGTH (vbTmp :: TVarChar), 1) :: Integer
+                                                        THEN SUBSTR (vbTmp :: TVarChar,  0 + LENGTH (vbTmp :: TVarChar), 1) :: Integer
+                                                   WHEN 0 <> SUBSTR (vbTmp :: TVarChar, -1 + LENGTH (vbTmp :: TVarChar), 1) :: Integer
+                                                        THEN SUBSTR (vbTmp :: TVarChar, -1 + LENGTH (vbTmp :: TVarChar), 1) :: Integer
+                                                   WHEN 0 <> SUBSTR (vbTmp :: TVarChar, -2 + LENGTH (vbTmp :: TVarChar), 1) :: Integer
+                                                        THEN SUBSTR (vbTmp :: TVarChar, -2 + LENGTH (vbTmp :: TVarChar), 1) :: Integer
+                                                   WHEN 0 <> SUBSTR (vbTmp :: TVarChar, -3 + LENGTH (vbTmp :: TVarChar), 1) :: Integer
+                                                        THEN SUBSTR (vbTmp :: TVarChar, -3 + LENGTH (vbTmp :: TVarChar), 1) :: Integer
+                                                   ELSE SUBSTR (vbTmp :: TVarChar, 1, 1) :: Integer
+                                               END;
+                                      --
                                       IF vbLock <= 5
                                       THEN PERFORM pg_sleep (zc_IsLockTableSecond());
+
                                       ELSE IF vbLock <= 10
-                                      THEN PERFORM pg_sleep (vbLock + SUBSTR (vbTmp :: TVarChar, LENGTH (vbTmp :: TVarChar)) :: Integer);
+                                      THEN PERFORM pg_sleep (vbLock - 5 + vbSec);
+
                                       ELSE IF vbLock <= 15
-                                      THEN PERFORM pg_sleep (vbLock + SUBSTR (vbTmp :: TVarChar, -1 + LENGTH (vbTmp :: TVarChar)) :: Integer);
+                                      THEN PERFORM pg_sleep (vbLock - 5 + vbSec);
+
                                       ELSE RAISE EXCEPTION 'Deadlock <%>', vbTmp;
                                       END IF;
                                       END IF;

@@ -142,8 +142,8 @@ BEGIN
                                                                        , inJuridicalId       := 0
                                                                        , inPaidKindId        := 0
                                                                        , inInfoMoneyId       := 0
-                                                                       , inUnitGroupId       := 0
-                                                                       , inUnitId            := CASE WHEN inLocationId <> 0 THEN inLocationId ELSE inUnitGroupId END
+                                                                       , inUnitGroupId       := CASE WHEN inLocationId <> 0 THEN inLocationId ELSE inUnitGroupId END
+                                                                       , inUnitId            := 0
                                                                        , inGoodsGroupId      := inGoodsGroupId
                                                                        , inSession           := ''
                                                                         ) AS gpReport)

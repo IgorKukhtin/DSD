@@ -3,9 +3,10 @@
 -- DROP FUNCTION lpDelete_MovementItemContainer (Integer);
 
 CREATE OR REPLACE FUNCTION lpDelete_MovementItemContainer (IN inMovementId Integer)
-  RETURNS void AS
+  RETURNS VOID AS
 $BODY$
    DECLARE vbLock Integer;
+   DECLARE vbSec Integer;
 BEGIN
     -- так блокируем что б не было ОШИБКИ: обнаружена взаимоблокировка
     IF zc_IsLockTable() = TRUE
@@ -24,12 +25,26 @@ BEGIN
                vbLock := 0;
            EXCEPTION 
                      WHEN OTHERS THEN vbLock := vbLock + 1;
+                                      vbSec:= CASE WHEN 0 <> SUBSTR (inMovementId :: TVarChar,  0 + LENGTH (inMovementId :: TVarChar), 1) :: Integer
+                                                        THEN SUBSTR (inMovementId :: TVarChar,  0 + LENGTH (inMovementId :: TVarChar), 1) :: Integer
+                                                   WHEN 0 <> SUBSTR (inMovementId :: TVarChar, -1 + LENGTH (inMovementId :: TVarChar), 1) :: Integer
+                                                        THEN SUBSTR (inMovementId :: TVarChar, -1 + LENGTH (inMovementId :: TVarChar), 1) :: Integer
+                                                   WHEN 0 <> SUBSTR (inMovementId :: TVarChar, -2 + LENGTH (inMovementId :: TVarChar), 1) :: Integer
+                                                        THEN SUBSTR (inMovementId :: TVarChar, -2 + LENGTH (inMovementId :: TVarChar), 1) :: Integer
+                                                   WHEN 0 <> SUBSTR (inMovementId :: TVarChar, -3 + LENGTH (inMovementId :: TVarChar), 1) :: Integer
+                                                        THEN SUBSTR (inMovementId :: TVarChar, -3 + LENGTH (inMovementId :: TVarChar), 1) :: Integer
+                                                   ELSE SUBSTR (inMovementId :: TVarChar, 1, 1) :: Integer
+                                               END;
+                                      --
                                       IF vbLock <= 5
                                       THEN PERFORM pg_sleep (zc_IsLockTableSecond());
+
                                       ELSE IF vbLock <= 10
-                                      THEN PERFORM pg_sleep (vbLock + SUBSTR (inMovementId :: TVarChar, LENGTH (inMovementId :: TVarChar)) :: Integer);
+                                      THEN PERFORM pg_sleep (vbLock - 5 + vbSec);
+
                                       ELSE IF vbLock <= 15
-                                      THEN PERFORM pg_sleep (vbLock + SUBSTR (inMovementId :: TVarChar, -1 + LENGTH (inMovementId :: TVarChar)) :: Integer);
+                                      THEN PERFORM pg_sleep (vbLock - 5 + vbSec);
+
                                       ELSE RAISE EXCEPTION 'Deadlock <%>', inMovementId;
                                       END IF;
                                       END IF;

@@ -36,6 +36,7 @@ BEGIN
        -- tmpUnit AS (SELECT tmp.UnitId, NULL AS isMain FROM lfSelect_Object_Unit_byGroup (8439) AS tmp) -- 31050 - Участок мясного сырья
        -- tmpUnit AS (SELECT tmp.UnitId, NULL AS isMain FROM lfSelect_Object_Unit_byGroup (8459) AS tmp) -- 32022 - Склад Реализации
      , tmpUnit_pack AS (SELECT 8451 AS UnitId, NULL AS isMain  -- Цех Упаковки
+                  UNION SELECT 8450 AS UnitId, NULL AS isMain  -- ЦЕХ копчения
                        )
      , tmpUnit_branch AS (SELECT 301309 AS UnitId, NULL AS isMain  -- Склад ГП ф.Запорожье
                     UNION SELECT 309599 AS UnitId, NULL AS isMain  -- Склад возвратов ф.Запорожье
@@ -165,9 +166,10 @@ BEGIN
        AND Movement.StatusId = zc_Enum_Status_Complete()
        AND Movement.DescId IN (zc_Movement_Send(), zc_Movement_ProductionUnion())
        AND inIsBefoHistoryCost = FALSE
-       AND ((tmpUnit_from.UnitId > 0 AND tmpUnit_To.UnitId IS NULL AND Movement.DescId = zc_Movement_Send())
+       AND (tmpUnit_from.UnitId > 0 AND tmpUnit_To.UnitId IS NULL)
+       /*AND ((tmpUnit_from.UnitId > 0 AND tmpUnit_To.UnitId IS NULL AND Movement.DescId = zc_Movement_Send())
          OR (tmpUnit_from.UnitId > 0 AND Movement.DescId = zc_Movement_ProductionUnion())
-           )
+           )*/
 
      -- !!!Internal!!!
     UNION
@@ -187,12 +189,15 @@ BEGIN
 
           LEFT JOIN tmpUnit AS tmpUnit_from ON tmpUnit_from.UnitId = MLO_From.ObjectId
           LEFT JOIN tmpUnit AS tmpUnit_To ON tmpUnit_To.UnitId = MLO_To.ObjectId
+          LEFT JOIN tmpUnit_pack AS tmpUnit_pack_from ON tmpUnit_pack_from.UnitId = MLO_From.ObjectId
+          LEFT JOIN tmpUnit_pack As tmpUnit_pack_To ON tmpUnit_pack_To.UnitId = MLO_To.ObjectId
 
           LEFT JOIN MovementDesc ON MovementDesc.Id = Movement.DescId
      WHERE Movement.OperDate BETWEEN inStartDate AND inEndDate
        AND Movement.StatusId = zc_Enum_Status_Complete()
        AND Movement.DescId IN (zc_Movement_Send(), zc_Movement_ProductionUnion(), zc_Movement_ProductionSeparate())
        -- AND inIsBefoHistoryCost = TRUE -- !!!***
+       -- AND tmpUnit_pack_from.UnitId IS NULL AND tmpUnit_pack_To.UnitId IS NULL -- !!!***
 
     UNION
      -- 2.2. !!!Internal - SendOnPrice!!!

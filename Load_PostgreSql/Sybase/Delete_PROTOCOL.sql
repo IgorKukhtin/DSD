@@ -1,4 +1,4 @@
-with tmp_MI as (select MovementItemId from MovementItemProtocol where UserId = 5 and Id between 2000001 and 5000000 group by MovementItemId)
+with tmp_MI as (select distinct MovementItemId from MovementItemProtocol where UserId = 5 and Id between 2000001 and 5000000)
    , tmp1 as (select MovementItemProtocol.* from MovementItemProtocol join tmp_MI on tmp_MI.MovementItemId = MovementItemProtocol.MovementItemId)
    , tmp2 as (select min (Id) as Id, MovementItemId from tmp1 group by MovementItemId)
    , tmp3 as (select max (Id) as Id, MovementItemId from tmp1 group by MovementItemId)

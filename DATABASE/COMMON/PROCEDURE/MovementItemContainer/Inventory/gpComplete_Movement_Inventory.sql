@@ -344,8 +344,8 @@ BEGIN
                                                                                          )
                                                ELSE lpInsertFind_Object_PartionGoods ('')
                                           END
-     WHERE _tmpItem.ContainerId_Goods = 0 -- !!!
-      AND (_tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_10100() -- Основное сырье + Мясное сырье
+     WHERE /*_tmpItem.ContainerId_Goods = 0 -- !!!
+      AND*/ (_tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_10100() -- Основное сырье + Мясное сырье
         OR _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_20200() -- Общефирменные + Прочие ТМЦ
         OR _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_20300() -- Общефирменные + МНМА
         OR _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_30100() -- Доходы + Продукция
@@ -362,6 +362,27 @@ BEGIN
      -- !!! Ну а теперь - ПРОВОДКИ !!!
      -- !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
+     UPDATE _tmpItem SET ContainerId_Goods = 0
+     FROM Container
+          LEFT JOIN ContainerLinkObject AS ContainerLinkObject_GoodsKind
+                                        ON ContainerLinkObject_GoodsKind.ContainerId = Container.Id
+                                       AND ContainerLinkObject_GoodsKind.DescId = zc_ContainerLinkObject_GoodsKind()
+          LEFT JOIN ContainerLinkObject AS ContainerLinkObject_PartionGoods
+                                        ON ContainerLinkObject_PartionGoods.ContainerId = Container.Id
+                                       AND ContainerLinkObject_PartionGoods.DescId = zc_ContainerLinkObject_PartionGoods()
+          LEFT JOIN ContainerLinkObject AS ContainerLinkObject_AssetTo
+                                        ON ContainerLinkObject_AssetTo.ContainerId = Container.Id
+                                       AND ContainerLinkObject_AssetTo.DescId = zc_ContainerLinkObject_AssetTo()
+          LEFT JOIN ContainerLinkObject AS ContainerLinkObject_Unit
+                                        ON ContainerLinkObject_Unit.ContainerId = Container.Id
+                                       AND ContainerLinkObject_Unit.DescId = zc_ContainerLinkObject_Unit()
+     WHERE Container.Id = _tmpItem.ContainerId_Goods
+       AND (Container.ObjectId <> _tmpItem.GoodsId
+         OR COALESCE (ContainerLinkObject_GoodsKind.ObjectId, 0)    <> _tmpItem.GoodsKindId
+         OR COALESCE (ContainerLinkObject_PartionGoods.ObjectId, 0) <> _tmpItem.PartionGoodsId
+         OR COALESCE (ContainerLinkObject_AssetTo.ObjectId, 0)      <> _tmpItem.AssetId
+         OR COALESCE (ContainerLinkObject_Unit.ObjectId, 0)         <> CASE WHEN vbMemberId <> 0 THEN _tmpItem.UnitId_Item ELSE vbUnitId END
+           );
 
      -- определяется ContainerId_Goods для количественного учета
      UPDATE _tmpItem SET ContainerId_Goods = lpInsertUpdate_ContainerCount_Goods (inOperDate               := vbOperDate

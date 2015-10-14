@@ -23,6 +23,8 @@ $BODY$
    DECLARE vbContractId Integer;
    DECLARE vbStartDate  TDateTime;
    DECLARE vbEndDate  TDateTime;
+
+   DECLARE vbAccessKeyId Integer;
 BEGIN
 
   -- 1.1. проверка <Зарегестрирован>
@@ -300,6 +302,9 @@ BEGIN
   vbOperDate:= (SELECT OperDate FROM Movement WHERE Id = inMovementId);
   -- 3.0.2. определяется 
   vbDescId:= (SELECT DescId FROM Movement WHERE Id = inMovementId);
+  -- 3.0.3. определяется 
+  vbAccessKeyId:= (SELECT AccessKeyId FROM Movement WHERE Id = inMovementId);
+
 
   -- по этим док-там !!!нет закрытия периода!!!
   IF vbDescId NOT IN (zc_Movement_TransportGoods(), zc_Movement_QualityDoc())
@@ -307,6 +312,7 @@ BEGIN
 
   -- !!!временно если ФИЛИАЛ НАЛ + БН!!!
   IF EXISTS (SELECT Object_RoleAccessKeyGuide_View.BranchId FROM Object_RoleAccessKeyGuide_View WHERE Object_RoleAccessKeyGuide_View.UserId = inUserId AND Object_RoleAccessKeyGuide_View.BranchId <> 0)
+     OR vbAccessKeyId <> zc_Enum_Process_AccessKey_DocumentDnepr()
   THEN
       -- 3.1. определяется дата для <Закрытие периода>
       SELECT CASE WHEN tmp.CloseDate > tmp.ClosePeriod THEN tmp.CloseDate ELSE tmp.ClosePeriod END AS CloseDate

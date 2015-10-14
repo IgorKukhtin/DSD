@@ -175,6 +175,7 @@ type
     EDIActionRecadvLoad: TEDIAction;
     dxBarButton1: TdxBarButton;
     spInsertRecadv: TdsdStoredProc;
+    InvNumberRecadv: TcxGridDBColumn;
   private
     { Private declarations }
   public

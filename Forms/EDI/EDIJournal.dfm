@@ -4,7 +4,7 @@ inherited EDIJournalForm: TEDIJournalForm
   ClientWidth = 1284
   AddOnFormData.OnLoadAction = actSetDefaults
   ExplicitWidth = 1300
-  ExplicitHeight = 491
+  ExplicitHeight = 488
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -116,6 +116,14 @@ inherited EDIJournalForm: TEDIJournalForm
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 65
+          end
+          object InvNumberRecadv: TcxGridDBColumn
+            Caption = #8470' '#1091#1074#1077#1076#1086#1084#1083'. (EDI)'
+            DataBinding.FieldName = 'InvNumberRecadv'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
           end
           object clOperDatePartner: TcxGridDBColumn
             Caption = #1044#1072#1090#1072' '#1076#1086#1082'. (EDI)'
@@ -864,10 +872,10 @@ inherited EDIJournalForm: TEDIJournalForm
         item
           Action = actRefresh
         end>
-      QuestionBeforeExecute = #1044#1077#1081#1089#1090#1074#1080#1090#1077#1083#1100#1085#1086' '#1079#1072#1075#1088#1091#1079#1080#1090#1100' Recadv '#1080#1079' EXITE?'
-      InfoAfterExecute = 'Recadv '#1079#1072#1075#1088#1091#1078#1077#1085#1099' '#1091#1089#1087#1077#1096#1085#1086
-      Caption = #1047#1072#1075#1088#1091#1079#1080#1090#1100' Recadv '#1080#1079' EXITE'
-      Hint = #1047#1072#1075#1088#1091#1079#1080#1090#1100' Recadv '#1080#1079' EXITE'
+      QuestionBeforeExecute = #1044#1077#1081#1089#1090#1074#1080#1090#1077#1083#1100#1085#1086' '#1079#1072#1075#1088#1091#1079#1080#1090#1100' '#1059#1074#1077#1076#1086#1084#1083#1077#1085#1080#1103' '#1086' '#1087#1088#1080#1077#1084#1082#1077' '#1080#1079' EXITE?'
+      InfoAfterExecute = #1059#1074#1077#1076#1086#1084#1083#1077#1085#1080#1103' '#1086' '#1087#1088#1080#1077#1084#1082#1077' '#1079#1072#1075#1088#1091#1078#1077#1085#1099' '#1091#1089#1087#1077#1096#1085#1086
+      Caption = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1059#1074#1077#1076#1086#1084#1083#1077#1085#1080#1103' '#1086' '#1087#1088#1080#1077#1084#1082#1077' '#1080#1079' EXITE'
+      Hint = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1059#1074#1077#1076#1086#1084#1083#1077#1085#1080#1103' '#1086' '#1087#1088#1080#1077#1084#1082#1077' '#1080#1079' EXITE'
       ImageIndex = 74
     end
     object mactInvoice: TMultiAction [6]
@@ -1498,6 +1506,10 @@ inherited EDIJournalForm: TEDIJournalForm
         item
           Visible = True
           ItemName = 'bbLoadComDoc'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
         end
         item
           Visible = True

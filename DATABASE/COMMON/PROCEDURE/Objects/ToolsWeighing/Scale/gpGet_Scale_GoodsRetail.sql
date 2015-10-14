@@ -135,6 +135,7 @@ BEGIN
                                                                   ON ObjectLink_GoodsPropertyValue_GoodsProperty.ObjectId = ObjectString_BarCodeShort.ObjectId
                                                                  AND ObjectLink_GoodsPropertyValue_GoodsProperty.ChildObjectId = tmpGoodsProperty.GoodsPropertyId
                                                                  AND ObjectLink_GoodsPropertyValue_GoodsProperty.DescId = zc_ObjectLink_GoodsPropertyValue_GoodsProperty()
+                                       WHERE NOT EXISTS (SELECT 1 FROM tmpGoodsPropertyValue_sht)
                                        LIMIT 1
                                       )
            , tmpGoodsPropertyValue AS (SELECT tmpGoodsPropertyValue_sht.StartPosInt
@@ -255,5 +256,6 @@ ALTER FUNCTION gpGet_Scale_GoodsRetail (TVarChar, Integer, TDateTime, Integer, I
 
 -- тест
 -- 2852923001644
--- SELECT * FROM gpGet_Scale_GoodsRetail (inBarCode:= '4823036501886', inGoodsPropertyId:=83956, inOperDate:= '01.01.2015', inOrderExternalId:=0, inPriceListId:= zc_PriceList_Basis(), inSession:=zfCalc_UserAdmin())
--- SELECT * FROM gpGet_Scale_GoodsRetail (inBarCode:= '2201818000000', inGoodsPropertyId:=83955, inOperDate:= '01.01.2015', inOrderExternalId:=0, inPriceListId:= zc_PriceList_Basis(), inSession:=zfCalc_UserAdmin())
+-- SELECT * FROM gpGet_Scale_GoodsRetail (inBarCode:= '4823036501978', inGoodsPropertyId:=83956 , inOperDate:= '01.01.2015', inOrderExternalId:=0, inPriceListId:= zc_PriceList_Basis(), inSession:=zfCalc_UserAdmin())
+-- SELECT * FROM gpGet_Scale_GoodsRetail (inBarCode:= '4823036502289', inGoodsPropertyId:=83956 , inOperDate:= '01.01.2015', inOrderExternalId:=0, inPriceListId:= zc_PriceList_Basis(), inSession:=zfCalc_UserAdmin())
+

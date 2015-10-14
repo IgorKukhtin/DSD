@@ -1,13 +1,3 @@
-change pchar -> pAnsiChar
-change array[0..1024] of char -> pAnsiChar
-change WideStringReplace -> StringReplace
-change TWIN32FindDataA -> TWIN32FindData
-change lStrLen -> lStrLenA
-change Alphabet[value+1] -> Char(Alphabet[value+1])
-add convert to AnsiString
-change Tnt
-
-
 -- Function: gpComplete_All_Sybase()
 
 DROP FUNCTION IF EXISTS gpComplete_All_Sybase (Integer, Boolean, TVarChar);

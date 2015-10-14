@@ -42,6 +42,7 @@ $BODY$
    DECLARE vbChildKeyValue BigInt;
 
    DECLARE vbLock Integer;
+   DECLARE vbSec Integer;
 BEGIN
      -- так блокируем что б не было ОШИБКИ: обнаружена взаимоблокировка
      -- LOCK TABLE Container IN SHARE UPDATE EXCLUSIVE MODE;
@@ -222,12 +223,26 @@ BEGIN
                     vbLock := 0;
                  EXCEPTION 
                      WHEN OTHERS THEN vbLock := vbLock + 1;
+                                      vbSec:= CASE WHEN 0 <> SUBSTR (vbContainerId :: TVarChar,  0 + LENGTH (vbContainerId :: TVarChar), 1) :: Integer
+                                                        THEN SUBSTR (vbContainerId :: TVarChar,  0 + LENGTH (vbContainerId :: TVarChar), 1) :: Integer
+                                                   WHEN 0 <> SUBSTR (vbContainerId :: TVarChar, -1 + LENGTH (vbContainerId :: TVarChar), 1) :: Integer
+                                                        THEN SUBSTR (vbContainerId :: TVarChar, -1 + LENGTH (vbContainerId :: TVarChar), 1) :: Integer
+                                                   WHEN 0 <> SUBSTR (vbContainerId :: TVarChar, -2 + LENGTH (vbContainerId :: TVarChar), 1) :: Integer
+                                                        THEN SUBSTR (vbContainerId :: TVarChar, -2 + LENGTH (vbContainerId :: TVarChar), 1) :: Integer
+                                                   WHEN 0 <> SUBSTR (vbContainerId :: TVarChar, -3 + LENGTH (vbContainerId :: TVarChar), 1) :: Integer
+                                                        THEN SUBSTR (vbContainerId :: TVarChar, -3 + LENGTH (vbContainerId :: TVarChar), 1) :: Integer
+                                                   ELSE SUBSTR (vbContainerId :: TVarChar, 1, 1) :: Integer
+                                               END;
+                                      --
                                       IF vbLock <= 5
                                       THEN PERFORM pg_sleep (zc_IsLockTableSecond());
+
                                       ELSE IF vbLock <= 10
-                                      THEN PERFORM pg_sleep (vbLock + SUBSTR (vbContainerId :: TVarChar, LENGTH (vbContainerId :: TVarChar)) :: Integer);
+                                      THEN PERFORM pg_sleep (vbLock - 5 + vbSec);
+
                                       ELSE IF vbLock <= 15
-                                      THEN PERFORM pg_sleep (vbLock + SUBSTR (vbContainerId :: TVarChar, -1 + LENGTH (vbContainerId :: TVarChar)) :: Integer);
+                                      THEN PERFORM pg_sleep (vbLock - 5 + vbSec);
+
                                       ELSE RAISE EXCEPTION 'Deadlock <%>', vbContainerId;
                                       END IF;
                                       END IF;
