@@ -335,7 +335,12 @@ uses
   Report_Sold_Day in '..\..\FormsFarmacy\Report\Report_Sold_Day.pas' {Report_Sold_DayForm: TParentForm},
   Report_Sold_DayUser in '..\..\FormsFarmacy\Report\Report_Sold_DayUser.pas' {Report_Sold_DayUserForm: TParentForm},
   RecadvXML in '..\..\SOURCE\EDI\RecadvXML.pas',
-  AdditionalGoodsTest in '..\SOURCE\Objects\All\Farmacy\AdditionalGoodsTest.pas';
+  AdditionalGoodsTest in '..\SOURCE\Objects\All\Farmacy\AdditionalGoodsTest.pas',
+  SaleTest in '..\SOURCE\Movement\All\Farmacy\SaleTest.pas',
+  SaleMovementItemTest in '..\SOURCE\MovementItem\All\Farmacy\SaleMovementItemTest.pas',
+  SaleJournal in '..\..\FormsFarmacy\Document\SaleJournal.pas' {SaleJournalForm: TParentForm},
+  Sale in '..\..\FormsFarmacy\Document\Sale.pas' {SaleForm: TParentForm},
+  PaidKind in '..\..\Forms\Kind\PaidKind.pas' {PaidKindForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}

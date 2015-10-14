@@ -17,6 +17,7 @@ BEGIN
             WHEN zc_Movement_Send() THEN zc_FormClass_Send()
             WHEN zc_Movement_Loss() THEN zc_FormClass_Loss()
             WHEN zc_Movement_Check() THEN zc_FormClass_Check()
+            WHEN zc_Movement_Sale() THEN zc_FormClass_Sale()
         END
     INTO
         outFormClass

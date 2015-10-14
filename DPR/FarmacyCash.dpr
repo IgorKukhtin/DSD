@@ -67,7 +67,8 @@ uses
   CashWork in '..\FormsFarmacy\Cash\CashWork.pas' {CashWorkForm},
   AncestorDialog in '..\Forms\Ancestor\AncestorDialog.pas' {AncestorDialogForm: TParentForm},
   dsdApplication in '..\SOURCE\dsdApplication.pas',
-  ExternalLoad in '..\SOURCE\COMPONENT\ExternalLoad.pas';
+  ExternalLoad in '..\SOURCE\COMPONENT\ExternalLoad.pas',
+  RecadvXML in '..\SOURCE\EDI\RecadvXML.pas';
 
 {$R *.res}
 

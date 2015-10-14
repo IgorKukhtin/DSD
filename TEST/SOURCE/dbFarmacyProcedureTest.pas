@@ -12,8 +12,8 @@ type
     procedure CreateHistoryProcedure;
     procedure CreateMovementProcedure;
     procedure CreateMovementItemProcedure;
-    procedure CreateCheckProcedure;
     procedure CreateMovementItemContainerProcedure;
+    procedure CreateCheckProcedure;
     procedure CreateObjectProcedure;
     procedure CreateProtocolProcedure;
     procedure CreatePeriodCloseProcedure;
@@ -112,6 +112,9 @@ begin
 
   ScriptDirectory := FarmacyProcedurePath + 'MovementItemContainer\ReturnOut\';
   ProcedureLoad;
+
+  ScriptDirectory := FarmacyProcedurePath + 'MovementItemContainer\Sale\';
+  ProcedureLoad;
             {
   ZQuery.SQL.LoadFromFile(ProcedurePath + 'MovementItemContainer\InsertUpdate\lpInsertUpdate_MovementItemContainer.sql');
   ZQuery.ExecSQL;
@@ -143,6 +146,8 @@ begin
   ScriptDirectory := FarmacyProcedurePath + 'MovementItem\Send\';
   ProcedureLoad;
   ScriptDirectory := FarmacyProcedurePath + 'MovementItem\ReturnOut\';
+  ProcedureLoad;
+  ScriptDirectory := FarmacyProcedurePath + 'MovementItem\Sale\';
   ProcedureLoad;
   {
   ZQuery.SQL.LoadFromFile(ProcedurePath + 'MovementItem\InsertUpdate\lpInsertUpdate_MovementItem.sql');
@@ -186,6 +191,8 @@ begin
   ScriptDirectory := FarmacyProcedurePath + 'Movement\Send\';
   ProcedureLoad;
   ScriptDirectory := FarmacyProcedurePath + 'Movement\ReturnOut\';
+  ProcedureLoad;
+  ScriptDirectory := FarmacyProcedurePath + 'Movement\Sale\';
   ProcedureLoad;
 {
   ZQuery.SQL.LoadFromFile(ProcedurePath + 'Movement\InsertUpdate\lpInsertUpdate_Movement.sql');
