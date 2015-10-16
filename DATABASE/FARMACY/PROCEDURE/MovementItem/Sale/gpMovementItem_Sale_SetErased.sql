@@ -35,7 +35,7 @@ BEGIN
     END IF;
 
     -- пересчитали Итоговые суммы по накладной
-    PERFORM lpInsertUpdate_MovementFloat_TotalSummSale (vbMovementId);
+    PERFORM lpInsertUpdate_MovementFloat_TotalSummSaleExactly (vbMovementId);
 
     -- !!! НЕ ПОНЯТНО - ПОЧЕМУ НАДО ВОЗВРАЩАТЬ НАОБОРОТ!!!
     -- outIsErased := FALSE;

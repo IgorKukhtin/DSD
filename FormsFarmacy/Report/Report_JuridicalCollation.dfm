@@ -3,7 +3,7 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
   ClientHeight = 389
   ClientWidth = 1112
   ExplicitWidth = 1128
-  ExplicitHeight = 424
+  ExplicitHeight = 427
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -708,6 +708,7 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
     object actGetForm: TdsdExecStoredProc
       Category = 'DSDLib'
       MoveParams = <>
+      PostDataSetBeforeExecute = False
       StoredProc = getMovementForm
       StoredProcList = <
         item

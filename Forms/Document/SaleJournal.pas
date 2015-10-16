@@ -180,6 +180,8 @@ type
     spSelectPrintReturnInDay: TdsdStoredProc;
     actPrintReturnInDay: TdsdPrintAction;
     bbPrintReturnInDay: TdxBarButton;
+    actDialog_QualityDoc: TdsdOpenForm;
+    mactPrint_QualityDoc: TMultiAction;
   private
     { Private declarations }
   public

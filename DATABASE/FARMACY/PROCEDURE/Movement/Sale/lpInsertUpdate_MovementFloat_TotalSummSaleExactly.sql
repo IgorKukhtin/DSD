@@ -1,8 +1,8 @@
--- Function: lpInsertUpdate_MovementFloat_TotalSummSale (Integer)
+-- Function: lpInsertUpdate_MovementFloat_TotalSummSaleExactly (Integer)
 
-DROP FUNCTION IF EXISTS lpInsertUpdate_MovementFloat_TotalSummSale (Integer);
+DROP FUNCTION IF EXISTS lpInsertUpdate_MovementFloat_TotalSummSaleExactly (Integer);
 
-CREATE OR REPLACE FUNCTION lpInsertUpdate_MovementFloat_TotalSummSale(
+CREATE OR REPLACE FUNCTION lpInsertUpdate_MovementFloat_TotalSummSaleExactly(
     IN inMovementId Integer -- Ключ объекта <Документ>
 )
   RETURNS VOID AS
@@ -59,7 +59,7 @@ BEGIN
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION lpInsertUpdate_MovementFloat_TotalSummSale (Integer) OWNER TO postgres;
+ALTER FUNCTION lpInsertUpdate_MovementFloat_TotalSummSaleExactly (Integer) OWNER TO postgres;
 
 /*-------------------------------------------------------------------------------*/
 /*

@@ -54,9 +54,11 @@ end;
 
 procedure TLossDebtMovementItemTest.ProcedureLoad;
 begin
+  ScriptDirectory := LocalProcedurePath + 'Movement\LossDebt\';
+  inherited;
   ScriptDirectory := LocalProcedurePath + 'MovementItem\LossDebt\';
   inherited;
-  ScriptDirectory := LocalProcedurePath + 'Movement\LossDebt\';
+  ScriptDirectory := LocalProcedurePath + 'MovementItemContainer\LossDebt\';
   inherited;
 end;
 

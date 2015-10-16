@@ -94,27 +94,25 @@ procedure TdbProcedureTest.CreateMovementItemContainerProcedure;
 begin
   ScriptDirectory := FarmacyProcedurePath + 'MovementItemContainer\_COMMON\';
   ProcedureLoad;
-
   ScriptDirectory := FarmacyProcedurePath + 'MovementItemContainer\Income\';
   ProcedureLoad;
-
   ScriptDirectory := FarmacyProcedurePath + 'MovementItemContainer\Check\';
   ProcedureLoad;
-
   ScriptDirectory := FarmacyProcedurePath + 'MovementItemContainer\Inventory\';
   ProcedureLoad;
-
   ScriptDirectory := FarmacyProcedurePath + 'MovementItemContainer\Loss\';
   ProcedureLoad;
-
   ScriptDirectory := FarmacyProcedurePath + 'MovementItemContainer\Send\';
   ProcedureLoad;
-
   ScriptDirectory := FarmacyProcedurePath + 'MovementItemContainer\ReturnOut\';
   ProcedureLoad;
-
   ScriptDirectory := FarmacyProcedurePath + 'MovementItemContainer\Sale\';
   ProcedureLoad;
+  ScriptDirectory := FarmacyProcedurePath + 'MovementItemContainer\LossDebt\';
+  ProcedureLoad;
+  ScriptDirectory := FarmacyProcedurePath + 'MovementItemContainer\BankAccount\';
+  ProcedureLoad;
+
             {
   ZQuery.SQL.LoadFromFile(ProcedurePath + 'MovementItemContainer\InsertUpdate\lpInsertUpdate_MovementItemContainer.sql');
   ZQuery.ExecSQL;
@@ -149,6 +147,12 @@ begin
   ProcedureLoad;
   ScriptDirectory := FarmacyProcedurePath + 'MovementItem\Sale\';
   ProcedureLoad;
+  ScriptDirectory := FarmacyProcedurePath + 'MovementItem\LossDebt\';
+  ProcedureLoad;
+  ScriptDirectory := FarmacyProcedurePath + 'MovementItem\BankAccount\';
+  ProcedureLoad;
+
+
   {
   ZQuery.SQL.LoadFromFile(ProcedurePath + 'MovementItem\InsertUpdate\lpInsertUpdate_MovementItem.sql');
   ZQuery.ExecSQL;
@@ -194,6 +198,11 @@ begin
   ProcedureLoad;
   ScriptDirectory := FarmacyProcedurePath + 'Movement\Sale\';
   ProcedureLoad;
+  ScriptDirectory := FarmacyProcedurePath + 'Movement\LossDebt\';
+  ProcedureLoad;
+  ScriptDirectory := FarmacyProcedurePath + 'Movement\BankAccount\';
+  ProcedureLoad;
+
 {
   ZQuery.SQL.LoadFromFile(ProcedurePath + 'Movement\InsertUpdate\lpInsertUpdate_Movement.sql');
   ZQuery.ExecSQL;
@@ -236,6 +245,8 @@ begin
   DirectoryLoad(CommonProcedurePath + 'OBJECTS\NDSKind\');
   DirectoryLoad(CommonProcedurePath + 'OBJECTS\Role\');
 
+  DirectoryLoad(FarmacyProcedurePath + 'OBJECTS\Union\');
+
   ZQuery.SQL.LoadFromFile(FarmacyProcedurePath + 'OBJECTS\PartionGoods\gpSelect_Object_PartionGoods.sql');
   ZQuery.ExecSQL;
 end;
@@ -262,8 +273,10 @@ begin
   ProcedureLoad;
   ScriptDirectory := FarmacyReportsPath + 'Sold\';
   ProcedureLoad;
-  {ZQuery.SQL.LoadFromFile(ReportsPath + 'gpReport_Balance.sql');
-  ZQuery.ExecSQL;}
+  ScriptDirectory := FarmacyReportsPath + 'Juridical\';
+  ProcedureLoad;
+  ZQuery.SQL.LoadFromFile(CommonReportsPath + 'Balance\gpReport_Balance.sql');
+  ZQuery.ExecSQL;
 end;
 
 procedure TdbProcedureTest.CreateSystemProcedure;

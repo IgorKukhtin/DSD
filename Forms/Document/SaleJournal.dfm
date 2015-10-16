@@ -1453,7 +1453,6 @@ inherited SaleJournalForm: TSaleJournalForm
         end>
       Caption = #1055#1077#1095#1072#1090#1100' '#1050#1072#1095#1077#1089#1090#1074#1077#1085#1085#1086#1077' '#1091#1076#1086#1089#1090#1086#1074#1077#1088#1077#1085#1080#1077
       Hint = #1055#1077#1095#1072#1090#1100' '#1050#1072#1095#1077#1089#1090#1074#1077#1085#1085#1086#1077' '#1091#1076#1086#1089#1090#1086#1074#1077#1088#1077#1085#1080#1077
-      ImageIndex = 16
       ShortCut = 16464
       DataSets = <
         item
@@ -1969,6 +1968,51 @@ inherited SaleJournalForm: TSaleJournalForm
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
     end
+    object actDialog_QualityDoc: TdsdOpenForm
+      Category = 'Print_QualityDoc'
+      MoveParams = <>
+      Caption = 'actDialog_QualityDoc'
+      Hint = 'actDialog_QualityDoc'
+      FormName = 'TQualityDocForm'
+      FormNameParam.Value = 'TQualityDocForm'
+      FormNameParam.DataType = ftString
+      GuiParams = <
+        item
+          Name = 'Id'
+          Value = 0
+        end
+        item
+          Name = 'MovementId_Sale'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'Id'
+        end>
+      isShowModal = True
+    end
+    object mactPrint_QualityDoc: TMultiAction
+      Category = 'Print_QualityDoc'
+      MoveParams = <
+        item
+          FromParam.Name = 'id'
+          FromParam.Value = Null
+          FromParam.Component = MasterCDS
+          FromParam.ComponentItem = 'id'
+          ToParam.Value = Null
+          ToParam.Component = FormParams
+          ToParam.ComponentItem = 'Id'
+          ToParam.ParamType = ptInputOutput
+        end>
+      ActionList = <
+        item
+          Action = actDialog_QualityDoc
+        end
+        item
+          Action = actPrint_QualityDoc
+        end>
+      Caption = #1055#1077#1095#1072#1090#1100' '#1050#1072#1095#1077#1089#1090#1074#1077#1085#1085#1086#1077' '#1091#1076#1086#1089#1090#1086#1074#1077#1088#1077#1085#1080#1077
+      Hint = #1055#1077#1095#1072#1090#1100' '#1050#1072#1095#1077#1089#1090#1074#1077#1085#1085#1086#1077' '#1091#1076#1086#1089#1090#1086#1074#1077#1088#1077#1085#1080#1077
+      ImageIndex = 16
+    end
   end
   inherited MasterDS: TDataSource
     Left = 64
@@ -2285,7 +2329,7 @@ inherited SaleJournalForm: TSaleJournalForm
       Category = 0
     end
     object bbPrint_Quality: TdxBarButton
-      Action = actPrint_QualityDoc
+      Action = mactPrint_QualityDoc
       Category = 0
     end
     object bbInvoice: TdxBarButton

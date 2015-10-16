@@ -251,6 +251,7 @@ BEGIN
      -- PERFORM lpUpdate_Object_Enum_byCode (inCode:= 1,  inDescId:= zc_Object_GoodsKind(), inEnumName:= 'zc_Enum_GoodsKind_Main');
 
 
+
 END $$;
 
 DO $$
@@ -346,6 +347,22 @@ BEGIN
 -- 0. Наличка
   PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_PaidType_Cash(),  inDescId:= zc_Object_PaidType(), inCode:= 1, inName:= 'Наличка', inEnumName:= 'zc_Enum_PaidType_Cash');
   PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_PaidType_Card(), inDescId:= zc_Object_PaidType(), inCode:= 2, inName:= 'Карточка', inEnumName:= 'zc_Enum_PaidType_Card');
+
+-- !!! Типы аналитик для проводок
+     -- PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_AnalyzerId_SaleCount_10400(),  inDescId:= zc_Object_AnalyzerId(), inCode:= 101, inName:= 'Кол-во, реализация, у покупателя', inEnumName:= 'zc_Enum_AnalyzerId_SaleCount_10400');
+     -- PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_AnalyzerId_SaleCount_10500(),  inDescId:= zc_Object_AnalyzerId(), inCode:= 102, inName:= 'Кол-во, реализация, Скидка за вес', inEnumName:= 'zc_Enum_AnalyzerId_SaleCount_10500');
+     -- PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_AnalyzerId_SaleCount_40200(),  inDescId:= zc_Object_AnalyzerId(), inCode:= 103, inName:= 'Кол-во, реализация, Разница в весе', inEnumName:= 'zc_Enum_AnalyzerId_SaleCount_40200');
+
+     -- PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_AnalyzerId_SaleSumm_10400(),  inDescId:= zc_Object_AnalyzerId(), inCode:= 111, inName:= 'Сумма с/с, реализация, у покупателя', inEnumName:= 'zc_Enum_AnalyzerId_SaleSumm_10400');
+     -- PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_AnalyzerId_SaleSumm_10500(),  inDescId:= zc_Object_AnalyzerId(), inCode:= 112, inName:= 'Сумма с/с, реализация, Скидка за вес', inEnumName:= 'zc_Enum_AnalyzerId_SaleSumm_10500');
+     -- PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_AnalyzerId_SaleSumm_40200(),  inDescId:= zc_Object_AnalyzerId(), inCode:= 113, inName:= 'Сумма с/с, реализация, Разница в весе', inEnumName:= 'zc_Enum_AnalyzerId_SaleSumm_40200');
+
+     -- PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_AnalyzerId_SaleSumm_10100(),  inDescId:= zc_Object_AnalyzerId(), inCode:= 121, inName:= 'Сумма, реализация, у покупателя (по оптовым ценам)', inEnumName:= 'zc_Enum_AnalyzerId_SaleSumm_10100');
+     -- PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_AnalyzerId_SaleSumm_10200(),  inDescId:= zc_Object_AnalyzerId(), inCode:= 122, inName:= 'Сумма, реализация, Разница с оптовыми ценами', inEnumName:= 'zc_Enum_AnalyzerId_SaleSumm_10200');
+     PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_AnalyzerId_SaleSumm_10300(),  inDescId:= zc_Object_AnalyzerId(), inCode:= 123, inName:= 'Сумма, реализация, Скидка дополнительная', inEnumName:= 'zc_Enum_AnalyzerId_SaleSumm_10300');
+     
+     PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_AnalyzerId_ReturnInSumm_10300(),  inDescId:= zc_Object_AnalyzerId(), inCode:= 223, inName:= 'Сумма, возврат, Скидка дополнительная', inEnumName:= 'zc_Enum_AnalyzerId_ReturnInSumm_10300');
+
   
 END $$;
 

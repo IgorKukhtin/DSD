@@ -137,6 +137,8 @@ type
     colPaymentDate: TcxGridDBColumn;
     colInsertDate: TcxGridDBColumn;
     Comment: TcxGridDBColumn;
+    actDialog_QualityDoc: TdsdOpenForm;
+    mactPrint_QualityDoc: TMultiAction;
   private
     { Private declarations }
   public

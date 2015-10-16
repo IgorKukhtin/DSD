@@ -1,8 +1,8 @@
--- Function: gpSelect_Movement_Sale_Print()
+-- Function: gpSelect_Movement_SaleExactly_Print()
 
-DROP FUNCTION IF EXISTS gpSelect_Movement_Sale_Print (Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_Movement_SaleExactly_Print (Integer, TVarChar);
 
-CREATE OR REPLACE FUNCTION gpSelect_Movement_Sale_Print(
+CREATE OR REPLACE FUNCTION gpSelect_Movement_SaleExactly_Print(
     IN inMovementId        Integer  , -- ключ Документа
     IN inSession       TVarChar    -- сессия пользователя
 )
@@ -56,7 +56,7 @@ BEGIN
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpSelect_Movement_Sale_Print (Integer,TVarChar) OWNER TO postgres;
+ALTER FUNCTION gpSelect_Movement_SaleExactly_Print (Integer,TVarChar) OWNER TO postgres;
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР

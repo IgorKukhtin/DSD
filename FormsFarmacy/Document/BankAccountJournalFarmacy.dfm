@@ -1,4 +1,5 @@
 inherited BankAccountJournalFarmacyForm: TBankAccountJournalFarmacyForm
+  ExplicitHeight = 394
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -139,6 +140,12 @@ inherited BankAccountJournalFarmacyForm: TBankAccountJournalFarmacyForm
       0
       26
       0)
+    inherited bbPrint: TdxBarButton
+      Visible = ivNever
+    end
+    inherited bbPrint1: TdxBarButton
+      Visible = ivNever
+    end
   end
   inherited FormParams: TdsdFormParams
     Top = 224

@@ -49,11 +49,14 @@ begin
 end;
 
 procedure TcxViewToMemTable.LoadAllRecords;
-var i, j: integer;
+var i, j, c: integer;
 begin
   MemData.Open;
   with GridView do
-    for I := 0 to DataController.FilteredRecordCount - 1 do
+  Begin
+    if CloneCount = 0 then
+    Begin
+      for I := 0 to DataController.FilteredRecordCount - 1 do
       begin
         MemData.Append;
         for j := 0 to ColumnCount - 1 do
@@ -63,6 +66,27 @@ begin
                     DataController.Values[DataController.FilteredRecordIndex[i], columns[j].Index];
         MemData.post;
       end;//for I := 0 to fGrid.DataController.FilteredRecordCount - 1 do
+    End
+    else
+    Begin
+      FOR C := 0 to CloneCount -1 do
+      Begin
+        with Clones[C] DO
+        Begin
+          for I := 0 to DataController.FilteredRecordCount - 1 do
+            begin
+              MemData.Append;
+              for j := 0 to ColumnCount - 1 do
+                if Assigned(TcxGridDBColumn(columns[j]).DataBinding.Field) then
+                   if MemData.FindField(TcxGridDBColumn(columns[j]).DataBinding.Field.FieldName) <> nil then
+                      MemData.FieldByName(TcxGridDBColumn(columns[j]).DataBinding.Field.FieldName).Value :=
+                          DataController.Values[DataController.FilteredRecordIndex[i], columns[j].Index];
+              MemData.post;
+            end;//for I := 0 to fGrid.DataController.FilteredRecordCount - 1 do
+        end;
+      end;
+    End;
+  End;
 end;
 
 function TcxViewToMemTable.LoadData(

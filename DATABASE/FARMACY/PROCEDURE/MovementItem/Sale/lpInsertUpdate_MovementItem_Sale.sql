@@ -29,7 +29,7 @@ BEGIN
     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_Summ(), ioId, inSumm);
 
     -- пересчитали Итоговые суммы по накладной
-    PERFORM lpInsertUpdate_MovementFloat_TotalSummSale (inMovementId);
+    PERFORM lpInsertUpdate_MovementFloat_TotalSummSaleExactly (inMovementId);
     
     -- сохранили протокол
     PERFORM lpInsert_MovementItemProtocol (ioId, inUserId, vbIsInsert);
