@@ -91,7 +91,7 @@ BEGIN
     END IF;
   
     -- пересчитали Итоговые суммы
-    PERFORM lpInsertUpdate_MovementFloat_TotalSummSale (inMovementId);
+    PERFORM lpInsertUpdate_MovementFloat_TotalSummSaleExactly (inMovementId);
     -- собственно проводки
     PERFORM lpComplete_Movement_Sale(inMovementId, -- ключ Документа
                                      vbUserId);    -- Пользователь  

@@ -639,7 +639,7 @@ inherited SaleForm: TSaleForm
     Top = 48
   end
   object spSelectPrint: TdsdStoredProc
-    StoredProcName = 'gpSelect_Movement_Sale_Print'
+    StoredProcName = 'gpSelect_Movement_SaleExactly_Print'
     DataSet = PrintHeaderCDS
     DataSets = <
       item

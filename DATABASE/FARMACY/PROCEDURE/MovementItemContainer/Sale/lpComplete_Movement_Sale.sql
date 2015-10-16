@@ -134,7 +134,7 @@ BEGIN
                                 );
 
     --пересчитали суммы по документу (для суммы закупки, которая считается после проведения документа)
-    PERFORM lpInsertUpdate_MovementFloat_TotalSummSale (inMovementId);
+    PERFORM lpInsertUpdate_MovementFloat_TotalSummSaleExactly (inMovementId);
     
 END;
 $BODY$

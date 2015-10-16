@@ -87,9 +87,9 @@ BEGIN
     THEN
         OPEN Cursor1 FOR
             SELECT 
-                'CommonCode'::TVarChar AS FieldName, 
-                'Код Мориона'::TVarChar AS DisplayName, 
-                100 AS Width
+                'PartnerCode'::TVarChar AS FieldName, 
+                'Код пост-ка Item ID'::TVarChar AS DisplayName, 
+                130 AS Width
             UNION
             SELECT 
                 'Code'::TVarChar AS FieldName, 
@@ -120,38 +120,48 @@ BEGIN
                 'PartionGoodsDate'::TVarChar AS FieldName, 
                 'Cрок годности'::TVarChar AS DisplayName, 
                 100 AS Width
-            UNION 
-            SELECT 
-                'PartnerCode'::TVarChar AS FieldName, 
-                'Код пост-ка Item ID'::TVarChar AS DisplayName, 
-                130 AS Width;
+            -- UNION 
+            -- SELECT 
+                -- 'CommonCode'::TVarChar AS FieldName, 
+                -- 'Код Мориона'::TVarChar AS DisplayName, 
+                -- 100 AS Width
+                ;
 
         RETURN NEXT Cursor1;
 
         OPEN Cursor2 FOR
             SELECT            
-                Object_LinkGoods_View.GoodsCodeInt      AS CommonCode
+                MovementItem.PartnerGoodsCode::TVarChar AS PartnerCode
               , MovementItem.GoodsCode::TVarChar        AS Code
               , MovementItem.GoodsName                  AS GoodsName
               , MovementItem.Amount                     AS Amount
               , MovementItem.Price
               , MovementItem.Summ
               , MovementItem.PartionGoodsDate
-              , MovementItem.PartnerGoodsCode::TVarChar AS PartnerCode
+--              , MAX(Object_LinkGoods_View.GoodsCodeInt)      AS CommonCode
             FROM 
                 MovementItem_OrderExternal_View AS MovementItem
-                LEFT JOIN ObjectLink AS ObjectLink_LinkGoods_Goods
-                                     ON ObjectLink_LinkGoods_Goods.DescId = zc_ObjectLink_LinkGoods_Goods()
-                                    AND ObjectLink_LinkGoods_Goods.ChildObjectId = MovementItem.GoodsId
-                LEFT JOIN ObjectLink AS ObjectLink_LinkGoods_GoodsMain
-                                     ON ObjectLink_LinkGoods_GoodsMain.ObjectId = ObjectLink_LinkGoods_Goods.ObjectId
-                                    AND ObjectLink_LinkGoods_GoodsMain.DescId = zc_ObjectLink_LinkGoods_GoodsMain()
-                LEFT JOIN Object_LinkGoods_View ON Object_LinkGoods_View.GoodsMainId = ObjectLink_LinkGoods_GoodsMain.ChildObjectId
-                                               AND Object_LinkGoods_View.ObjectId = zc_Enum_GlobalConst_Marion()
+                -- LEFT JOIN ObjectLink AS ObjectLink_LinkGoods_Goods
+                                     -- ON ObjectLink_LinkGoods_Goods.DescId = zc_ObjectLink_LinkGoods_Goods()
+                                    -- AND ObjectLink_LinkGoods_Goods.ChildObjectId = MovementItem.GoodsId
+                -- LEFT JOIN ObjectLink AS ObjectLink_LinkGoods_GoodsMain
+                                     -- ON ObjectLink_LinkGoods_GoodsMain.ObjectId = ObjectLink_LinkGoods_Goods.ObjectId
+                                    -- AND ObjectLink_LinkGoods_GoodsMain.DescId = zc_ObjectLink_LinkGoods_GoodsMain()
+                -- LEFT JOIN Object_LinkGoods_View ON Object_LinkGoods_View.GoodsMainId = ObjectLink_LinkGoods_GoodsMain.ChildObjectId
+                                               -- AND Object_LinkGoods_View.ObjectId = zc_Enum_GlobalConst_Marion()
             WHERE 
                 MovementItem.MovementId = inMovementId 
                 AND 
-                MovementItem.isErased = FALSE;
+                MovementItem.isErased = FALSE
+            -- GROUP BY
+                -- MovementItem.PartnerGoodsCode
+              -- , MovementItem.GoodsCode
+              -- , MovementItem.GoodsName
+              -- , MovementItem.Amount
+              -- , MovementItem.Price
+              -- , MovementItem.Summ
+              -- , MovementItem.PartionGoodsDate
+              ;
         RETURN NEXT Cursor2;
         RETURN;
     END IF;
