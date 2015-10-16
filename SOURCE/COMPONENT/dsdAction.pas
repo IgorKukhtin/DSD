@@ -2468,12 +2468,15 @@ var
   Stream: TStringStream;
   SortIdx,SI: Integer;
   OldSort, NewSort: String;
+  ExpandedStr: String;
+  ExpandedIdx: Integer;
 begin
   DataSetList := TList.Create;
   MemTableList := TList.Create;
   ViewToMemTable := TcxViewToMemTable.Create;
   Stream := TStringStream.Create;
   OldFieldIndexList := TStringList.Create;
+  ExpandedStr := '';
   try //mainTry
     FReport.PreviewOptions.Maximized := APreviewWindowMaximized;
     for i := 0 to ADataSets.Count - 1 do //залить источники данных
@@ -2500,21 +2503,27 @@ begin
         begin
           TcxGrid(TcxGridLevel(TAddOnDataSet(ADataSets[i]).GridView.Level).Control).BeginUpdate;
           try
+            //сохранили состояние разворотов до сортировки
+            for ExpandedIdx := 0 to TAddOnDataSet(ADataSets[i]).GridView.ViewData.RowCount - 1 do
+              if TAddOnDataSet(ADataSets[i]).GridView.ViewData.Rows[ExpandedIdx].Expanded then
+                ExpandedStr := ExpandedStr + INtToStr(ExpandedIdx)+';';
+            ExpandedStr := ExpandedStr + '|';
+
             if TAddOnDataSet(ADataSets[i]).IndexFieldNames <> '' then //если есть сортировка
             begin
               with TAddOnDataSet(ADataSets[i]).GridView do
               begin
                 OldSort := '';
-                for SortIdx := 0 to SortedItemCount-1 do             //сохраняем старую сортировку
+                for SortIdx := 0 to PatternGridView.SortedItemCount-1 do             //сохраняем старую сортировку
                 Begin
-                  if SortedItems[SortIdx].SortOrder = soAscending then
-                    OldSort := OldSort + IntToStr(SortedItems[SortIdx].Index)+';'
+                  if PatternGridView.SortedItems[SortIdx].SortOrder = soAscending then
+                    OldSort := OldSort + IntToStr(PatternGridView.SortedItems[SortIdx].Index)+';'
                   else
-                  if SortedItems[SortIdx].SortOrder = soDescending then
-                    OldSort := OldSort + IntToStr(1000+SortedItems[SortIdx].Index)+';';
+                  if PatternGridView.SortedItems[SortIdx].SortOrder = soDescending then
+                    OldSort := OldSort + IntToStr(1000+PatternGridView.SortedItems[SortIdx].Index)+';';
                 End;
                 OldFieldIndexList.Values[Name] := OldSort;
-                DataController.ClearSorting(false); //очистили сортировку
+                PatternGridView.DataController.ClearSorting(false); //очистили сортировку
                 NewSort := TAddOnDataSet(ADataSets[i]).IndexFieldNames;
                 if NewSort[Length(NewSort)] <> ';' then
                   NewSort := NewSort + ';';
@@ -2526,17 +2535,20 @@ begin
                         (CompareText(TcxGridDBColumn(Columns[SortIdx]).DataBinding.FieldName,
                                      Copy(NewSort,1,pos(';',NewSort)-1))=0)) then
                     Begin
-                      DataController.ChangeSorting(SortIdx,soAscending);
+                      PatternGridView.DataController.ChangeSorting(SortIdx,soAscending);
                       break;
                     End;
                   Delete(NewSort,1,pos(';',NewSort));
                 End;
               end;
             end;
+            //развернули все строки, что бы ChildTableView загрузил все данные в клоны
+
+            TAddOnDataSet(ADataSets[i]).GridView.ViewData.Expand(True);
+
             //перегрузили отсортированные данные в dxMemData
-            (TcxGridLevel(TAddOnDataSet(ADataSets[i]).GridView.Level).Control as TcxGrid).EndUpdate;
             MemTableList.Add(ViewToMemTable.LoadData(TAddOnDataSet(ADataSets[i]).GridView));
-            (TcxGridLevel(TAddOnDataSet(ADataSets[i]).GridView.Level).Control as TcxGrid).BeginUpdate;
+
             //вернули сортировку наместо
             if TAddOnDataSet(ADataSets[i]).IndexFieldNames <> '' then
               TAddOnDataSet(ADataSets[i]).GridView.DataController.ClearSorting(false);
@@ -2547,15 +2559,15 @@ begin
                 SI := StrToInt(Copy(OldSort,1,pos(';',OldSort)-1));
                 Delete(OldSort,1,pos(';',OldSort));
                 if SI >= 1000 then
-                  TAddOnDataSet(ADataSets[i]).GridView.DataController.ChangeSorting(
+                  TAddOnDataSet(ADataSets[i]).GridView.PatternGridView.DataController.ChangeSorting(
                     SI-1000,soDescending)
                 else
-                  TAddOnDataSet(ADataSets[i]).GridView.DataController.ChangeSorting(
+                  TAddOnDataSet(ADataSets[i]).GridView.PatternGridView.DataController.ChangeSorting(
                     SI,soAscending);
               End;
             End;
           finally
-            (TcxGridLevel(TAddOnDataSet(ADataSets[i]).GridView.Level).Control as TcxGrid).EndUpdate;
+            //(TcxGridLevel(TAddOnDataSet(ADataSets[i]).GridView.Level).Control as TcxGrid).EndUpdate;
           end;
           DataSet := MemTableList[MemTableList.Count - 1];
         end;
@@ -2635,6 +2647,26 @@ begin
               OldFieldIndexList.Values[ADataSets[i].DataSet.Name];
         end;
       end;
+    //********************************************************
+    for i := 0 to ADataSets.Count - 1 do //залить источники данных
+    begin
+      if Assigned(TAddOnDataSet(ADataSets[i]).GridView) then
+      begin
+        //TcxGrid(TcxGridLevel(TAddOnDataSet(ADataSets[i]).GridView.Level).Control).BeginUpdate;
+        //развернули все строки, что бы ChildTableView загрузил все данные в клоны
+        TAddOnDataSet(ADataSets[i]).GridView.ViewData.Collapse(True);
+        While Copy(ExpandedStr,1,pos('|',ExpandedStr)-1) <> '' do
+        Begin
+          ExpandedIdx := StrToInt(Copy(ExpandedStr,1,pos(';',ExpandedStr)-1));
+          TAddOnDataSet(ADataSets[i]).GridView.ViewData.Rows[ExpandedIdx].Expand(false);
+          Delete(ExpandedStr,1,pos(';',ExpandedStr));
+        End;
+        Delete(ExpandedStr,1,pos('|',ExpandedStr));
+
+        TcxGrid(TcxGridLevel(TAddOnDataSet(ADataSets[i]).GridView.Level).Control).EndUpdate;
+      end;
+    end;
+    //*******************************************************
     for i := 0 to DataSetList.Count - 1 do
       TObject(DataSetList.Items[i]).Free;
     for i := 0 to MemTableList.Count - 1 do
