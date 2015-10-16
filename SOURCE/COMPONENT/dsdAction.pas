@@ -2576,6 +2576,27 @@ begin
       end;
     end;
 
+    //********************************************************
+    for i := 0 to ADataSets.Count - 1 do //залить источники данных
+    begin
+      if Assigned(TAddOnDataSet(ADataSets[i]).GridView) then
+      begin
+        //развернули все строки, что бы ChildTableView загрузил все данные в клоны
+        TAddOnDataSet(ADataSets[i]).GridView.ViewData.Collapse(True);
+        While Copy(ExpandedStr,1,pos('|',ExpandedStr)-1) <> '' do
+        Begin
+          ExpandedIdx := StrToInt(Copy(ExpandedStr,1,pos(';',ExpandedStr)-1));
+          TAddOnDataSet(ADataSets[i]).GridView.ViewData.Rows[ExpandedIdx].Expand(false);
+          Delete(ExpandedStr,1,pos(';',ExpandedStr));
+        End;
+        Delete(ExpandedStr,1,pos('|',ExpandedStr));
+
+        TcxGrid(TcxGridLevel(TAddOnDataSet(ADataSets[i]).GridView.Level).Control).EndUpdate;
+      end;
+    end;
+    //*******************************************************
+
+
     with FReport do
     Begin
       LoadFromStream(TdsdFormStorageFactory.GetStorage.LoadReport(AReportName));
@@ -2647,26 +2668,6 @@ begin
               OldFieldIndexList.Values[ADataSets[i].DataSet.Name];
         end;
       end;
-    //********************************************************
-    for i := 0 to ADataSets.Count - 1 do //залить источники данных
-    begin
-      if Assigned(TAddOnDataSet(ADataSets[i]).GridView) then
-      begin
-        //TcxGrid(TcxGridLevel(TAddOnDataSet(ADataSets[i]).GridView.Level).Control).BeginUpdate;
-        //развернули все строки, что бы ChildTableView загрузил все данные в клоны
-        TAddOnDataSet(ADataSets[i]).GridView.ViewData.Collapse(True);
-        While Copy(ExpandedStr,1,pos('|',ExpandedStr)-1) <> '' do
-        Begin
-          ExpandedIdx := StrToInt(Copy(ExpandedStr,1,pos(';',ExpandedStr)-1));
-          TAddOnDataSet(ADataSets[i]).GridView.ViewData.Rows[ExpandedIdx].Expand(false);
-          Delete(ExpandedStr,1,pos(';',ExpandedStr));
-        End;
-        Delete(ExpandedStr,1,pos('|',ExpandedStr));
-
-        TcxGrid(TcxGridLevel(TAddOnDataSet(ADataSets[i]).GridView.Level).Control).EndUpdate;
-      end;
-    end;
-    //*******************************************************
     for i := 0 to DataSetList.Count - 1 do
       TObject(DataSetList.Items[i]).Free;
     for i := 0 to MemTableList.Count - 1 do
