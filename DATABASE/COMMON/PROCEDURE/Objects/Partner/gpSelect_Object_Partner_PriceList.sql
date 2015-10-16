@@ -1,10 +1,9 @@
 -- Function: gpSelect_Object_Partner_PriceList()
 
-DROP FUNCTION IF EXISTS gpSelect_Object_Partner_PriceList (Boolean, TVarChar);
-DROP FUNCTION IF EXISTS gpSelect_Object_Partner_PriceList (TDateTime, TVarChar);
-DROP FUNCTION IF EXISTS gpSelect_Object_Partner_PriceList (TDateTime, Integer, Integer, TVarChar);
+-- DROP FUNCTION IF EXISTS gpSelect_Object_Partner_PriceList (Boolean, TVarChar);
+-- DROP FUNCTION IF EXISTS gpSelect_Object_Partner_PriceList (TDateTime, TVarChar);
+-- DROP FUNCTION IF EXISTS gpSelect_Object_Partner_PriceList (TDateTime, Integer, Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpSelect_Object_Partner_PriceList (TDateTime, Integer, Integer, Boolean, TVarChar);
-
 
 CREATE OR REPLACE FUNCTION gpSelect_Object_Partner_PriceList(
     IN inOperDate       TDateTime,     --
@@ -572,6 +571,4 @@ ALTER FUNCTION gpSelect_Object_Partner_PriceList (TDateTime, Integer, Integer, B
 
 -- тест
 -- SELECT * FROM gpSelect_Object_Partner_PriceList (inOperDate:= '01.06.2015', inRetailId:= 0,  inJuridicalId:= 78893, inShowAll:= False, inSession := zfCalc_UserAdmin())
- --select * from gpSelect_Object_Partner_PriceList(inOperDate := ('01.06.2015')::TDateTime , inRetailId := 0 , inJuridicalId := 78893 , inShowAll := 'true' ,  inSession := '5');
- --select * from gpSelect_Object_Partner_PriceList(inOperDate := ('01.06.2015')::TDateTime , inRetailId := 0 , inJuridicalId := 78893 , inShowAll := 'false' ,  inSession := '5');
--- SELECT * FROM gpSelect_Object_Partner_PriceList (inOperDate:= '01.01.2015', inRetailId:= 0,  inJuridicalId:= 0, inSession := zfCalc_UserAdmin())
+-- SELECT * FROM gpSelect_Object_Partner_PriceList (inOperDate:= '01.01.2015', inRetailId:= 0,  inJuridicalId:= 0, inShowAll:= FALSE, inSession := zfCalc_UserAdmin())

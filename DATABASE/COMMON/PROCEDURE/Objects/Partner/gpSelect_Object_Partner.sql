@@ -1,6 +1,6 @@
 -- Function: gpSelect_Object_Partner()
 
-DROP FUNCTION IF EXISTS gpSelect_Object_Partner (Integer, TVarChar);
+-- DROP FUNCTION IF EXISTS gpSelect_Object_Partner (Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpSelect_Object_Partner (Integer, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_Object_Partner(
@@ -426,4 +426,4 @@ order by  coalesce (Object_Retail.ValueData, '€€€€€€€')
 where aaa.Id = Object.Id
 */
 -- тест
--- SELECT * FROM gpSelect_Object_Partner (0, zfCalc_UserAdmin())
+-- SELECT * FROM gpSelect_Object_Partner (0, FALSE, zfCalc_UserAdmin())
