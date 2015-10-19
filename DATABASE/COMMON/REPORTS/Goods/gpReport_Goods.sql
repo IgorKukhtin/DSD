@@ -229,7 +229,7 @@ BEGIN
 
          , tmpMI_Summ_group AS (SELECT tmpMI_Summ.MovementId, tmpMI_Summ.MovementItemId, tmpMI_Summ.ContainerId_Analyzer, tmpMI_Summ.isActive FROM tmpMI_Summ WHERE tmpMI_Summ.MovementItemId > 0 GROUP BY tmpMI_Summ.MovementId, tmpMI_Summ.MovementItemId, tmpMI_Summ.ContainerId_Analyzer, tmpMI_Summ.isActive)
          , tmpMI_SummPartner AS (SELECT tmpMI_Summ_group.MovementItemId
-                                      , SUM (MIContainer.Amount * CASE WHEN MIContainer.MovementDescId IN (zc_Movement_ReturnOut(), zc_Movement_Sale()) THEN 1 ELSE -1 END) AS Amount
+                                      , SUM (CASE WHEN MIContainer.AccountId IN (zc_Enum_AnalyzerId_SummIn_110101(), zc_Enum_AnalyzerId_SummOut_110101()) THEN 0 ELSE MIContainer.Amount END * CASE WHEN MIContainer.MovementDescId IN (zc_Movement_ReturnOut(), zc_Movement_Sale()) THEN 1 ELSE -1 END) AS Amount
                                  FROM tmpMI_Summ_group
                                       INNER JOIN MovementItemContainer AS MIContainer ON MIContainer.MovementId     = tmpMI_Summ_group.MovementId
                                                                                      AND MIContainer.DescId         = zc_MIContainer_Summ()

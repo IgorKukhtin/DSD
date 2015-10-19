@@ -1,4 +1,4 @@
-п»ї-- Function: lpDelete_ObjectHistory(integer, tvarchar)
+-- Function: lpDelete_ObjectHistory(integer, tvarchar)
 
 -- DROP FUNCTION lpDelete_ObjectHistory(integer, tvarchar);
 
@@ -17,8 +17,8 @@ BEGIN
    DELETE FROM ObjectHistoryString WHERE ObjectHistoryId = inId;
    DELETE FROM ObjectHistoryFloat WHERE ObjectHistoryId = inId;
   
-   -- РР·РјРµРЅРёР»Рё РїРµСЂРµРґ СѓРґР°Р»РµРЅРёРµРј РґРёР°РїР°Р·РѕРЅ
-   -- Р”Р»СЏ СЌС‚РѕРіРѕ Сѓ СЂР°РЅРЅРµРіРѕ СЌР»РµРјРµРЅС‚Р° РїРѕСЃС‚Р°РІРёР»Рё EndDate = EndDate СѓРґР°Р»СЏРµРјРѕРіРѕ СЌР»РµРјРµРЅС‚Р°
+   -- Изменили перед удалением диапазон
+   -- Для этого у раннего элемента поставили EndDate = EndDate удаляемого элемента
 
    SELECT EndDate, StartDate, DescId, ObjectId 
           INTO lEndDate, lStartDate, lDescId, lObjectId
