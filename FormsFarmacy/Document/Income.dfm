@@ -146,8 +146,8 @@ inherited IncomeForm: TIncomeForm
             Caption = #1062#1077#1085#1072
             DataBinding.FieldName = 'Price'
             PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 2
-            Properties.DisplayFormat = ',0.00;-,0.00'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.00##;-,0.00##'
             HeaderAlignmentHorz = taCenter
             Width = 60
           end

@@ -1,16 +1,16 @@
-п»ї-- Function: gpDelete_ObjectHistory()
+-- Function: gpDelete_ObjectHistory()
 
 DROP FUNCTION IF EXISTS gpDelete_ObjectHistory (Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpDelete_ObjectHistory(
-    IN inId                  Integer   ,  -- РєР»СЋС‡ РѕР±СЉРµРєС‚Р° 
-    IN inSession             TVarChar     -- СЃРµСЃСЃРёСЏ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ
+    IN inId                  Integer   ,  -- ключ объекта 
+    IN inSession             TVarChar     -- сессия пользователя
 )
   RETURNS VOID AS
 $BODY$
    DECLARE vbUserId Integer;
 BEGIN
-   -- РїСЂРѕРІРµСЂРєР° РїСЂР°РІ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ РЅР° РІС‹Р·РѕРІ РїСЂРѕС†РµРґСѓСЂС‹
+   -- проверка прав пользователя на вызов процедуры
    vbUserId := lpCheckRight(inSession, zc_Enum_Process_InsertUpdate_ObjectHistory_PriceListItem());
 
     
@@ -18,7 +18,7 @@ BEGIN
                                  , inSession   := inSession
                                    );
 
-   -- СЃРѕС…СЂР°РЅРёР»Рё РїСЂРѕС‚РѕРєРѕР»
+   -- сохранили протокол
   -- PERFORM lpInsert_ObjectProtocol (inId, vbUserId);
    
 END;$BODY$
@@ -27,8 +27,8 @@ END;$BODY$
 
 /*-------------------------------------------------------------------------------*/
 /*
- РРЎРўРћР РРЇ Р РђР—Р РђР‘РћРўРљР: Р”РђРўРђ, РђР’РўРћР 
-               Р¤РµР»РѕРЅСЋРє Р.Р’.   РљСѓС…С‚РёРЅ Р.Р’.   РљР»РёРјРµРЅС‚СЊРµРІ Рљ.Р.
+ ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
  21.08.15         *
 */
 

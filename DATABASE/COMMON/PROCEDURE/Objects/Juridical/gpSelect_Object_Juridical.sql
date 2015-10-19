@@ -1,9 +1,7 @@
 -- Function: gpSelect_Object_Juridical()
 
-DROP FUNCTION IF EXISTS gpSelect_Object_Juridical (TVarChar);
+-- DROP FUNCTION IF EXISTS gpSelect_Object_Juridical (TVarChar);
 DROP FUNCTION IF EXISTS gpSelect_Object_Juridical (Boolean, TVarChar);
-
-
 
 CREATE OR REPLACE FUNCTION gpSelect_Object_Juridical(
     IN inShowAll        Boolean,   
@@ -249,4 +247,4 @@ ALTER FUNCTION gpSelect_Object_Juridical (Boolean, TVarChar) OWNER TO postgres;
 */
 
 -- тест
--- SELECT * FROM gpSelect_Object_Juridical ('2')
+-- SELECT * FROM gpSelect_Object_Juridical (FALSE, zfCalc_UserAdmin())

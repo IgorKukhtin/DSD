@@ -474,12 +474,12 @@ BEGIN
                    , tmpOperation.GoodsKindId
            ) AS tmpResult
 
-           LEFT JOIN _tmp_noDELETE_Partner ON _tmp_noDELETE_Partner.FromId = tmpResult.PartnerId
+           LEFT JOIN _tmp_noDELETE_Partner ON _tmp_noDELETE_Partner.FromId = tmpResult.PartnerId AND 1 = 0
 
            LEFT JOIN Object_Partner_Address_View AS View_Partner_Address ON View_Partner_Address.PartnerId = COALESCE (_tmp_noDELETE_Partner.ToId, tmpResult.PartnerId)
-           LEFT JOIN ObjectString AS ObjectString_Address
+           /*LEFT JOIN ObjectString AS ObjectString_Address
                                   ON ObjectString_Address.ObjectId = COALESCE (_tmp_noDELETE_Partner.ToId, tmpResult.PartnerId)
-                                 AND ObjectString_Address.DescId = zc_ObjectString_Partner_Address()
+                                 AND ObjectString_Address.DescId = zc_ObjectString_Partner_Address()*/
 
            LEFT JOIN ObjectLink AS ObjectLink_Goods_TradeMark
                                 ON ObjectLink_Goods_TradeMark.ObjectId = tmpResult.GoodsId
@@ -621,6 +621,6 @@ group by object_p.ValueData, object_g.ValueData , object_gk.ValueData
 , DATE_TRUNC ('month', OperDate)
 */
 -- тест
--- SELECT * FROM SoldTable
+-- SELECT * FROM SoldTable where OperDate = '03.09.2015'
 -- SELECT * FROM FillSoldTable ('01.11.2014', '31.12.2014', zfCalc_UserAdmin()) 
 -- SELECT * FROM FillSoldTable ('01.07.2015', '31.07.2015', zfCalc_UserAdmin()) 

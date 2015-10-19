@@ -424,7 +424,6 @@ inherited Report_ReceiptProductionAnalyzeForm: TReport_ReceiptProductionAnalyzeF
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = ChildDS
           DataController.DetailKeyFieldNames = 'Receiptid'
-          DataController.KeyFieldNames = 'Receiptid'
           DataController.MasterKeyFieldNames = 'Receiptid'
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -1316,13 +1315,12 @@ inherited Report_ReceiptProductionAnalyzeForm: TReport_ReceiptProductionAnalyzeF
       DataSets = <
         item
           UserName = 'frxDBDMaster'
-          IndexFieldNames = 'GoodsGroupNameFull;GoodsName;GoodsKindName'
           GridView = cxGridDBTableView
         end
         item
-          DataSet = ChildCDS
           UserName = 'frxDBDChild'
-          IndexFieldNames = 'Receiptid;GoodsGroupNameFull;GoodsName;GoodsKindName'
+          IndexFieldNames = 'Receiptid;GroupNumber;GoodsGroupNameFull;GoodsName;GoodsKindName'
+          GridView = ChildView
         end>
       Params = <
         item

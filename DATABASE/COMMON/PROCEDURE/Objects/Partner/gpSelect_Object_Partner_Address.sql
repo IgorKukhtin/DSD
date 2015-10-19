@@ -1,8 +1,8 @@
 -- Function: gpSelect_Object_Partner_Address()
 
-DROP FUNCTION IF EXISTS gpSelect_Object_Partner_Address (Integer, TVarChar);
-DROP FUNCTION IF EXISTS gpSelect_Object_Partner_Address (TDateTime, TDateTime, Boolean, Integer, TVarChar);
-DROP FUNCTION IF EXISTS gpSelect_Object_Partner_Address (TDateTime, TDateTime, Boolean, Integer, Integer, TVarChar);
+-- DROP FUNCTION IF EXISTS gpSelect_Object_Partner_Address (Integer, TVarChar);
+-- DROP FUNCTION IF EXISTS gpSelect_Object_Partner_Address (TDateTime, TDateTime, Boolean, Integer, TVarChar);
+-- DROP FUNCTION IF EXISTS gpSelect_Object_Partner_Address (TDateTime, TDateTime, Boolean, Integer, Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpSelect_Object_Partner_Address (TDateTime, TDateTime, Boolean, Boolean, Integer, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_Object_Partner_Address(
@@ -346,4 +346,4 @@ ALTER FUNCTION gpSelect_Object_Partner_Address (TDateTime, TDateTime, Boolean, B
 */
 
 -- тест
--- SELECT * FROM gpSelect_Object_Partner_Address (null, null, true, 0, 0, '2')
+-- SELECT * FROM gpSelect_Object_Partner_Address (null, null, true, FALSE, 0, 0, zfCalc_UserAdmin())
