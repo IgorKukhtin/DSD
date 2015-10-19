@@ -80,6 +80,10 @@ type
     bbExecuteDialog: TdxBarButton;
     actPrint: TdsdPrintAction;
     bbPrint: TdxBarButton;
+    bbPrintPrice2: TdxBarButton;
+    actPrint2: TdsdPrintAction;
+    actPrint3: TdsdPrintAction;
+    bbPrint3: TdxBarButton;
   private
     { Private declarations }
   public
