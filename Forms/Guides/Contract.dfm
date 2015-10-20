@@ -25,6 +25,8 @@ object ContractForm: TContractForm
     Align = alTop
     TabOrder = 0
     LookAndFeel.NativeStyle = False
+    ExplicitLeft = -8
+    ExplicitTop = 25
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -1529,7 +1531,7 @@ object ContractForm: TContractForm
         item
           Name = 'TextValue'
           Value = Null
-          Component = CDSContractCondition
+          Component = CDSContractPartner
           ComponentItem = 'PartnerName'
           DataType = ftString
           ParamType = ptInput
