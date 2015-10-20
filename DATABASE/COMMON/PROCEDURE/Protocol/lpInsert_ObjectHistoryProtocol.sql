@@ -28,7 +28,7 @@ BEGIN
                 , Object.DescId
            FROM Object
            WHERE Object.Id = inObjectId 
-          UNION
+          /*UNION
            SELECT '<Field FieldName = "' || zfStrToXmlStr(ObjectFloatDesc.ItemName) || '" FieldValue = "' || COALESCE (ObjectFloat.ValueData :: TVarChar, 'NULL') || '"/>' AS FieldXML 
                 , 2 AS GroupId
                 , ObjectFloat.DescId
@@ -68,7 +68,7 @@ BEGIN
            FROM ObjectBoolean
                 JOIN ObjectBooleanDesc ON ObjectBooleanDesc.Id = ObjectBoolean.DescId
            WHERE ObjectBoolean.ObjectId = inObjectId
-             AND inIsErased IS NULL
+             AND inIsErased IS NULL*/
           ) AS D
            ORDER BY D.GroupId, D.DescId
           ) AS D
@@ -76,18 +76,18 @@ BEGIN
 
      -- сохранили "стандартный" протокол
      INSERT INTO ObjectProtocol (ObjectId, OperDate, UserId, ProtocolData, isInsert)
-          SELECT inObjectId, CURRENT_TIMESTAMP, inUserId, ProtocolXML, COALESCE ((SELECT 1 FROM ObjectProtocol WHERE ObjectId = inObjectId LIMIT 1), 0) = 0;
+          SELECT inObjectId, CURRENT_TIMESTAMP, inUserId, ProtocolXML, CASE WHEN inIsErased = TRUE THEN NULL ELSE COALESCE ((SELECT 1 FROM ObjectProtocol WHERE ObjectId = inObjectId LIMIT 1), 0) = 0 END;
 
 
      -- !!!протокол через свойства конкретного объекта!!!
-     IF inIsUpdate = TRUE
+     IF inIsUpdate = TRUE AND COALESCE (inIsErased, FALSE) = FALSE
      THEN
          -- сохранили свойство <Дата корректировки>
          PERFORM lpInsertUpdate_ObjectDate (zc_ObjectDate_Protocol_Update(), inObjectId, CURRENT_TIMESTAMP);
          -- сохранили свойство <Пользователь (корректировка)>
          PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Protocol_Update(), inObjectId, inUserId);
      ELSE
-         IF inIsUpdate = FALSE
+         IF inIsUpdate = FALSE AND COALESCE (inIsErased, FALSE) = FALSE
          THEN
              -- сохранили свойство <Дата создания>
              PERFORM lpInsertUpdate_ObjectDate (zc_ObjectDate_Protocol_Insert(), inObjectId, CURRENT_TIMESTAMP);

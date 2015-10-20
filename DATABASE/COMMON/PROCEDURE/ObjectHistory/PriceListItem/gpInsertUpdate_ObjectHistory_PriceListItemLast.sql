@@ -31,13 +31,21 @@ BEGIN
    vbPriceListItemId := lpGetInsert_Object_PriceListItem (inPriceListId, inGoodsId);
  
    -- Вставляем или меняем объект историю цен
-   ioId := lpInsertUpdate_ObjectHistory (ioId, zc_ObjectHistory_PriceListItem(), vbPriceListItemId, inOperDate);
+   ioId := lpInsertUpdate_ObjectHistory (ioId, zc_ObjectHistory_PriceListItem(), vbPriceListItemId, inOperDate, vbUserId);
    -- Устанавливаем цену
    PERFORM lpInsertUpdate_ObjectHistoryFloat (zc_ObjectHistoryFloat_PriceListItem_Value(), ioId, inValue);
 
    --
    IF inIsLast = TRUE AND EXISTS (SELECT Id FROM ObjectHistory WHERE DescId = zc_ObjectHistory_PriceListItem() AND ObjectId = vbPriceListItemId AND StartDate > inOperDate)
    THEN
+         -- сохранили протокол - "удаление"
+         PERFORM lpInsert_ObjectHistoryProtocol (ObjectHistory.ObjectId, vbUserId, ObjectHistory.StartDate, ObjectHistory.EndDate, ObjectHistoryFloat_Value.ValueData, TRUE, TRUE)
+         FROM ObjectHistory
+              LEFT JOIN ObjectHistoryFloat AS ObjectHistoryFloat_Value
+                                           ON ObjectHistoryFloat_Value.ObjectHistoryId = ObjectHistory.Id
+                                          AND ObjectHistoryFloat_Value.DescId = zc_ObjectHistoryFloat_PriceListItem_Value()
+         WHERE ObjectHistory.DescId = zc_ObjectHistory_PriceListItem() AND ObjectHistory.ObjectId = vbPriceListItemId AND ObjectHistory.StartDate > inOperDate;
+
          -- удалили
          DELETE FROM ObjectHistoryDate WHERE ObjectHistoryId IN (SELECT Id FROM ObjectHistory WHERE DescId = zc_ObjectHistory_PriceListItem() AND ObjectId = vbPriceListItemId AND StartDate > inOperDate);
          DELETE FROM ObjectHistoryFloat WHERE ObjectHistoryId IN (SELECT Id FROM ObjectHistory WHERE DescId = zc_ObjectHistory_PriceListItem() AND ObjectId = vbPriceListItemId AND StartDate > inOperDate);
@@ -52,7 +60,8 @@ BEGIN
    SELECT StartDate, EndDate INTO outStartDate, outEndDate FROM ObjectHistory WHERE Id = ioId;
 
    -- сохранили протокол
-   PERFORM lpInsert_ObjectHistoryProtocol (vbPriceListItemId, vbUserId, outStartDate ,outEndDate,inValue);
+   PERFORM lpInsert_ObjectHistoryProtocol (vbPriceListItemId, vbUserId, outStartDate ,outEndDate, inValue);
+
 
 END;$BODY$
   LANGUAGE plpgsql VOLATILE;

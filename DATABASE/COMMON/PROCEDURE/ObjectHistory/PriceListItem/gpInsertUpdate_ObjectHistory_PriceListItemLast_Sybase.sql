@@ -19,13 +19,13 @@ DECLARE
    DECLARE vbPriceListItemId Integer;
 BEGIN
    -- проверка прав пользователя на вызов процедуры
-   vbUserId:= lpCheckRight(inSession, zc_Enum_Process_InsertUpdate_ObjectHistory_PriceListItem());
+   vbUserId:= lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_ObjectHistory_PriceListItem());
 
    -- Получаем ссылку на объект цен
    vbPriceListItemId := lpGetInsert_Object_PriceListItem (inPriceListId, inGoodsId);
  
    -- Вставляем или меняем объект историю цен
-   ioId := lpInsertUpdate_ObjectHistory (ioId, zc_ObjectHistory_PriceListItem(), vbPriceListItemId, inOperDate);
+   ioId := lpInsertUpdate_ObjectHistory (ioId, zc_ObjectHistory_PriceListItem(), vbPriceListItemId, inOperDate, vbUserId);
 
 
    -- Check
@@ -38,9 +38,18 @@ BEGIN
    -- Устанавливаем цену
    PERFORM lpInsertUpdate_ObjectHistoryFloat (zc_ObjectHistoryFloat_PriceListItem_Value(), ioId, inValue);
 
+
    -- !!!делаем его последним!!!!
    IF inIsLast = FALSE AND NOT EXISTS (SELECT Id FROM ObjectHistory WHERE Id = ioId AND EndDate = (inEndDate + INTERVAL '1 DAY'))
    THEN
+         -- сохранили протокол - "удаление"
+         PERFORM lpInsert_ObjectHistoryProtocol (ObjectHistory.ObjectId, vbUserId, ObjectHistory.StartDate, ObjectHistory.EndDate, ObjectHistoryFloat_Value.ValueData, TRUE, TRUE)
+         FROM ObjectHistory
+              LEFT JOIN ObjectHistoryFloat AS ObjectHistoryFloat_Value
+                                           ON ObjectHistoryFloat_Value.ObjectHistoryId = ObjectHistory.Id
+                                          AND ObjectHistoryFloat_Value.DescId = zc_ObjectHistoryFloat_PriceListItem_Value()
+         WHERE ObjectHistory.DescId = zc_ObjectHistory_PriceListItem() AND ObjectHistory.ObjectId = vbPriceListItemId AND ObjectHistory.StartDate > inOperDate;
+
          -- удалили
          DELETE FROM ObjectHistoryDate WHERE ObjectHistoryId IN (SELECT Id FROM ObjectHistory WHERE DescId = zc_ObjectHistory_PriceListItem() AND ObjectId = vbPriceListItemId AND StartDate > inOperDate);
          DELETE FROM ObjectHistoryFloat WHERE ObjectHistoryId IN (SELECT Id FROM ObjectHistory WHERE DescId = zc_ObjectHistory_PriceListItem() AND ObjectId = vbPriceListItemId AND StartDate > inOperDate);
@@ -53,6 +62,14 @@ BEGIN
    --
    IF inIsLast = TRUE AND EXISTS (SELECT Id FROM ObjectHistory WHERE DescId = zc_ObjectHistory_PriceListItem() AND ObjectId = vbPriceListItemId AND StartDate > inOperDate)
    THEN
+         -- сохранили протокол - "удаление"
+         PERFORM lpInsert_ObjectHistoryProtocol (ObjectHistory.ObjectId, vbUserId, ObjectHistory.StartDate, ObjectHistory.EndDate, ObjectHistoryFloat_Value.ValueData, TRUE, TRUE)
+         FROM ObjectHistory
+              LEFT JOIN ObjectHistoryFloat AS ObjectHistoryFloat_Value
+                                           ON ObjectHistoryFloat_Value.ObjectHistoryId = ObjectHistory.Id
+                                          AND ObjectHistoryFloat_Value.DescId = zc_ObjectHistoryFloat_PriceListItem_Value()
+         WHERE ObjectHistory.DescId = zc_ObjectHistory_PriceListItem() AND ObjectHistory.ObjectId = vbPriceListItemId AND ObjectHistory.StartDate > inOperDate;
+
          -- удалили
          DELETE FROM ObjectHistoryDate WHERE ObjectHistoryId IN (SELECT Id FROM ObjectHistory WHERE DescId = zc_ObjectHistory_PriceListItem() AND ObjectId = vbPriceListItemId AND StartDate > inOperDate);
          DELETE FROM ObjectHistoryFloat WHERE ObjectHistoryId IN (SELECT Id FROM ObjectHistory WHERE DescId = zc_ObjectHistory_PriceListItem() AND ObjectId = vbPriceListItemId AND StartDate > inOperDate);
@@ -62,6 +79,13 @@ BEGIN
          -- Здесь надо изменить св-во EndDate
          UPDATE ObjectHistory SET EndDate = zc_DateEnd() WHERE Id = ioId;
    END IF;
+
+
+   -- сохранили протокол
+   PERFORM lpInsert_ObjectHistoryProtocol (ObjectHistory.ObjectId, vbUserId, StartDate, EndDate, inValue)
+   FROM ObjectHistory WHERE Id = ioId;
+
+
 
 END;$BODY$
   LANGUAGE plpgsql VOLATILE;
