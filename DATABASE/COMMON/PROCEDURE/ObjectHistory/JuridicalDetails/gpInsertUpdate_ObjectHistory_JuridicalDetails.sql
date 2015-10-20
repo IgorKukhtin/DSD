@@ -19,12 +19,12 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_ObjectHistory_JuridicalDetails(
 )
   RETURNS Integer AS
 $BODY$
-DECLARE
-  vbJuridicalId_find Integer;
+ DECLARE vbUserId Integer;
+ DECLARE vbJuridicalId_find Integer;
 BEGIN
    -- проверка прав пользователя на вызов процедуры
-   -- PERFORM lpCheckRight(inSession, zc_Enum_Process_Account());
-
+   -- PERFORM lpCheckRight(inSession, zc_Enum_Process_...());
+   vbUserId:= lpGetUserBySession (inSession);
 
 
    -- проверка уникальность <ОКПО>, кроме "виртуальных"
@@ -71,7 +71,7 @@ BEGIN
 
 
    -- Вставляем или меняем объект историю
-   ioId := lpInsertUpdate_ObjectHistory(ioId, zc_ObjectHistory_JuridicalDetails(), inJuridicalId, inOperDate);
+   ioId := lpInsertUpdate_ObjectHistory(ioId, zc_ObjectHistory_JuridicalDetails(), inJuridicalId, inOperDate, vbUserId);
 
    -- Банк
    PERFORM lpInsertUpdate_ObjectHistoryLink(zc_ObjectHistoryLink_JuridicalDetails_Bank(), ioId, inBankId);
@@ -93,6 +93,10 @@ BEGIN
    -- телефон
    PERFORM lpInsertUpdate_ObjectHistoryString(zc_ObjectHistoryString_JuridicalDetails_Phone(), ioId, inPhone);
 
+   -- сохранили протокол
+   PERFORM lpInsert_ObjectHistoryProtocol (ObjectHistory.ObjectId, vbUserId, ObjectHistory.StartDate, ObjectHistory.EndDate, 0)
+   FROM ObjectHistory WHERE Id = ioId;
+   
 END;$BODY$
   LANGUAGE plpgsql VOLATILE;
 

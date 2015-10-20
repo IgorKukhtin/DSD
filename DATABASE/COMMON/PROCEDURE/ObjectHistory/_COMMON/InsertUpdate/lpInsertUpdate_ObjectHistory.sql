@@ -1,18 +1,23 @@
--- DROP FUNCTION lpInsertUpdate_ObjectHistory (integer, integer, integer, TDateTime);
+-- DROP FUNCTION lpInsertUpdate_ObjectHistory (Integer, Integer, Integer, TDateTime);
+
+DROP FUNCTION IF EXISTS lpInsertUpdate_ObjectHistory (Integer, Integer, Integer, TDateTime);
+DROP FUNCTION IF EXISTS lpInsertUpdate_ObjectHistory (Integer, Integer, Integer, TDateTime, Integer);
 
 CREATE OR REPLACE FUNCTION lpInsertUpdate_ObjectHistory(
-INOUT ioId integer, 
-   IN inDescId integer, 
-   IN inObjectId integer, 
-   IN inOperDate TDateTime
+ INOUT ioId         Integer, 
+    IN inDescId     Integer, 
+    IN inObjectId   Integer, 
+    IN inOperDate   TDateTime,
+    IN inUserId     Integer
 )
 AS
 $BODY$
 DECLARE
-  lEndDate TDateTime;
+  lEndDate   TDateTime;
   lStartDate TDateTime;
-  PriorId Integer;
-  findId Integer;
+  PriorId    Integer;
+  findId     Integer;
+  tmpId      Integer;
 BEGIN
 
    IF COALESCE (inObjectId, 0) = 0 
@@ -41,6 +46,14 @@ BEGIN
      -- если это "другой" элемент
      IF findId > 0 AND findId <> ioId
      THEN
+         -- сохранили протокол - "удаление"
+         PERFORM lpInsert_ObjectHistoryProtocol (ObjectHistory.ObjectId, inUserId, ObjectHistory.StartDate, ObjectHistory.EndDate, ObjectHistoryFloat_Value.ValueData, TRUE, TRUE)
+         FROM ObjectHistory
+              LEFT JOIN ObjectHistoryFloat AS ObjectHistoryFloat_Value
+                                           ON ObjectHistoryFloat_Value.ObjectHistoryId = ObjectHistory.Id
+                                          AND ObjectHistoryFloat_Value.DescId = zc_ObjectHistoryFloat_PriceListItem_Value()
+         WHERE ObjectHistory.Id = findId;
+
          -- удалили "другой" элемент т.к. у него такие же параметры
          DELETE FROM ObjectHistoryDate WHERE ObjectHistoryId = findId;
          DELETE FROM ObjectHistoryFloat WHERE ObjectHistoryId = findId;
@@ -51,14 +64,23 @@ BEGIN
   END IF;
 
 
-  -- Здесь надо изменить св-во EndDate у предыдущего элемента относительно inOperDate
-  UPDATE ObjectHistory SET EndDate = inOperDate
-  WHERE Id = (SELECT Id FROM ObjectHistory 
-              WHERE ObjectHistory.DescId = inDescId 
-                AND ObjectHistory.ObjectId = inObjectId
-                AND ObjectHistory.StartDate < inOperDate
-              ORDER BY ObjectHistory.StartDate DESC
-              LIMIT 1);
+   -- поиск предыдущего элемента относительно inOperDate
+   tmpId:= (SELECT Id FROM ObjectHistory 
+            WHERE ObjectHistory.DescId = inDescId 
+              AND ObjectHistory.ObjectId = inObjectId
+              AND ObjectHistory.StartDate < inOperDate
+            ORDER BY ObjectHistory.StartDate DESC
+            LIMIT 1);
+   -- Здесь надо изменить св-во EndDate у предыдущего элемента относительно inOperDate
+   UPDATE ObjectHistory SET EndDate = inOperDate WHERE Id = tmpId;
+
+   -- сохранили протокол - "изменение EndDate"
+   PERFORM lpInsert_ObjectHistoryProtocol (ObjectHistory.ObjectId, inUserId, StartDate, EndDate, ObjectHistoryFloat_Value.ValueData)
+   FROM ObjectHistory
+        LEFT JOIN ObjectHistoryFloat AS ObjectHistoryFloat_Value
+                                     ON ObjectHistoryFloat_Value.ObjectHistoryId = ObjectHistory.Id
+                                    AND ObjectHistoryFloat_Value.DescId = zc_ObjectHistoryFloat_PriceListItem_Value()
+   WHERE ObjectHistory.Id = tmpId;
 
 
   -- Если меняется запись, то надо запомнить предыдущий ИД
@@ -86,9 +108,10 @@ BEGIN
     AND ObjectHistory.Id <> ioId;
 
   -- расчет EndDate для текущего элемента: или начальная дата следующего элемента относительно inOperDate или максимальная дату
-  lEndDate := COALESCE(lEndDate, zc_DateEnd());
+  lEndDate := COALESCE (lEndDate, zc_DateEnd());
 
-  IF COALESCE(ioId, 0) = 0 THEN
+  IF COALESCE(ioId, 0) = 0
+  THEN
      -- дабавили текущий элемент: <ключ класса объекта> , <код объекта> , <данные> и вернули значение <ключа>
      INSERT INTO ObjectHistory (DescId, ObjectId, StartDate, EndDate)
             VALUES (inDescId, inObjectId, inOperDate, lEndDate) RETURNING Id INTO ioId;
@@ -114,6 +137,13 @@ BEGIN
                                                     AND ObjectHistory.StartDate > lStartDate
                                                  ), zc_DateEnd())  
      WHERE Id = PriorId;
+     -- сохранили протокол - "изменение EndDate"
+     PERFORM lpInsert_ObjectHistoryProtocol (ObjectHistory.ObjectId, inUserId, StartDate, EndDate, ObjectHistoryFloat_Value.ValueData)
+     FROM ObjectHistory
+          LEFT JOIN ObjectHistoryFloat AS ObjectHistoryFloat_Value
+                                       ON ObjectHistoryFloat_Value.ObjectHistoryId = ObjectHistory.Id
+                                      AND ObjectHistoryFloat_Value.DescId = zc_ObjectHistoryFloat_PriceListItem_Value()
+      WHERE ObjectHistory.Id = PriorId;
   END IF;
 
 END;           
@@ -123,6 +153,8 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
+ 19.10.15                                        * add сохранили протокол
+ 19.10.15                                        * add inUserId
  07.12.14                                        * add удалили "другой" элемент т.к. у него такие же параметры
  01.01.13                        *
 */

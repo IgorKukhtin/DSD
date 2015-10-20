@@ -21,12 +21,12 @@ BEGIN
    vbPriceListItemId := lpGetInsert_Object_PriceListItem (inPriceListId, inGoodsId);
  
    -- Вставляем или меняем объект историю цен
-   ioId := lpInsertUpdate_ObjectHistory (ioId, zc_ObjectHistory_PriceListItem(), vbPriceListItemId, inOperDate);
+   ioId := lpInsertUpdate_ObjectHistory (ioId, zc_ObjectHistory_PriceListItem(), vbPriceListItemId, inOperDate, inUserId);
    -- Устанавливаем цену
    PERFORM lpInsertUpdate_ObjectHistoryFloat (zc_ObjectHistoryFloat_PriceListItem_Value(), ioId, inValue);
 
    -- сохранили протокол
-   PERFORM lpInsert_ObjectHistoryProtocol (vbPriceListItemId, inUserId, StartDate, EndDate, inValue)
+   PERFORM lpInsert_ObjectHistoryProtocol (ObjectHistory.ObjectId, inUserId, StartDate, EndDate, inValue)
    FROM ObjectHistory WHERE Id = ioId;
 
 
