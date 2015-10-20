@@ -63,6 +63,9 @@ BEGIN
                                            AND MovementDate_OperDatePartner.DescId = zc_MovementDate_OperDatePartner()
                 WHERE Movement.Id = inMovementId AND Movement.DescId = zc_Movement_Sale()
                   AND COALESCE (MovementDate_OperDatePartner.ValueData, zc_DateStart()) < (Movement.OperDate - INTERVAL '1 DAY')
+                  AND (EXTRACT (MONTH FROM Movement.OperDate) = EXTRACT (MONTH FROM CURRENT_DATE)
+                    OR EXTRACT (MONTH FROM Movement.OperDate) = EXTRACT (MONTH FROM CURRENT_DATE - INTERVAL '7 DAY')
+                      )
                )
      THEN
          RAISE EXCEPTION 'Ошибка.В документе от <%> неверное значение дата у покупателя <%>.', (SELECT Movement.OperDate FROM Movement WHERE Movement.Id = inMovementId)

@@ -1,11 +1,14 @@
--- Function: lpDelete_ObjectHistory(integer, tvarchar)
+-- Function: lpDelete_ObjectHistory(Integer, tvarchar)
 
--- DROP FUNCTION lpDelete_ObjectHistory(integer, tvarchar);
+DROP FUNCTION IF EXISTS lpDelete_ObjectHistory (Integer, tvarchar);
+DROP FUNCTION IF EXISTS lpDelete_ObjectHistory (Integer, Integer);
 
 CREATE OR REPLACE FUNCTION lpDelete_ObjectHistory(
-IN inId integer, 
-IN Session tvarchar)
-  RETURNS void AS
+    IN inId         Integer, 
+    IN inUserId     Integer
+)
+RETURNS VOID
+AS
 $BODY$
 DECLARE
   lEndDate TDateTime;
@@ -57,7 +60,12 @@ BEGIN
 
 
 END;$BODY$
-  LANGUAGE plpgsql VOLATILE
-  COST 100;
-ALTER FUNCTION lpDelete_ObjectHistory(integer, tvarchar)
-  OWNER TO postgres;
+  LANGUAGE plpgsql VOLATILE;
+
+/*-------------------------------------------------------------------------------*/
+/*
+ ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 21.08.15         *
+*/
+

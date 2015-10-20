@@ -14,12 +14,10 @@ BEGIN
    vbUserId := lpCheckRight(inSession, zc_Enum_Process_InsertUpdate_ObjectHistory_PriceListItem());
 
     
-   PERFORM lpDelete_ObjectHistory (inId	       := inId
-                                 , inSession   := inSession
-                                   );
+   PERFORM lpDelete_ObjectHistory (inId	      := inId
+                                 , inUserId   := vbUserId
+                                  );
 
-   -- сохранили протокол
-  -- PERFORM lpInsert_ObjectProtocol (inId, vbUserId);
    
 END;$BODY$
   LANGUAGE plpgsql VOLATILE;

@@ -25,7 +25,6 @@ object PriceListGoodsItemForm: TPriceListGoodsItemForm
     TabOrder = 0
     LookAndFeel.NativeStyle = True
     LookAndFeel.SkinName = 'UserSkin'
-    ExplicitTop = 62
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -181,10 +180,6 @@ object PriceListGoodsItemForm: TPriceListGoodsItemForm
       FloatClientWidth = 51
       FloatClientHeight = 59
       ItemLinks = <
-        item
-          Visible = True
-          ItemName = 'dxBarStatic'
-        end
         item
           Visible = True
           ItemName = 'bbInsert'
