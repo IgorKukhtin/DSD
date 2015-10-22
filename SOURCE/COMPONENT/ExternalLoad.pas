@@ -361,11 +361,11 @@ begin
             FieldByName('MakerName').AsString := ElementList[3];
             FieldByName('CommonCode').AsString := ElementList[4];
             FieldByName('SertificatNumber').AsString := ElementList[5]; // Номер регистрации
-            if (ElementList[6] = '') or (ElementList[6] = '  .  .  ') then
+            if (TRIM(ElementList[6]) = '') or (ElementList[6] = '  .  .  ') then
               FieldByName('SertificatStart').Clear
             else
               FieldByName('SertificatStart').asDateTime := VarToDateTime(ElementList[6]);
-            if (ElementList[7] = '') or (ElementList[7] = '  .  .  ') then
+            if (TRIM(ElementList[7]) = '') or (ElementList[7] = '  .  .  ') then
               FieldByName('SertificatEnd').Clear
             else
               FieldByName('SertificatEnd').AsDateTime := VarToDateTime(ElementList[7]);
