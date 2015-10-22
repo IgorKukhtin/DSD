@@ -250,6 +250,30 @@ inherited IncomeForm: TIncomeForm
             Visible = False
             VisibleForCustomization = False
           end
+          object colAVGIncomePrice: TcxGridDBColumn
+            Caption = #1057#1088'. '#1094#1077#1085#1072' '#1079#1072' '#1084#1077#1089#1103#1094
+            DataBinding.FieldName = 'AVGIncomePrice'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.00'
+            Options.Editing = False
+            Width = 81
+          end
+          object colAVGIncomePriceWarning: TcxGridDBColumn
+            AlternateCaption = #1054#1090#1082#1083#1086#1085#1077#1085#1080#1077' '#1073#1086#1083#1077#1077' 25 %'
+            Caption = '>25%'
+            DataBinding.FieldName = 'AVGIncomePriceWarning'
+            PropertiesClassName = 'TcxImageComboBoxProperties'
+            Properties.Images = dmMain.ImageList
+            Properties.Items = <
+              item
+                Description = '> 25%'
+                ImageIndex = 10
+                Value = True
+              end>
+            HeaderHint = #1054#1090#1082#1083#1086#1085#1077#1085#1080#1077' '#1073#1086#1083#1077#1077' 25 %'
+            Options.Editing = False
+            Width = 47
+          end
         end
       end
     end

@@ -12,7 +12,7 @@ uses
   cxClasses, Datasnap.DBClient, Vcl.ActnList, cxPropertiesStore, cxButtonEdit,
   cxMaskEdit, cxDropDownEdit, cxCalendar, cxLabel, cxTextEdit, Vcl.ExtCtrls,
   cxGridLevel, cxGridCustomTableView, cxGridTableView, cxGridDBTableView,
-  cxGridCustomView, cxGrid, cxPC, dxBarBuiltInMenu, cxNavigator;
+  cxGridCustomView, cxGrid, cxPC, dxBarBuiltInMenu, cxNavigator, cxImageComboBox;
 
 type
   TIncomeForm = class(TAncestorDocumentForm)
@@ -81,6 +81,8 @@ type
     colSertificatStart: TcxGridDBColumn;
     colSertificatEnd: TcxGridDBColumn;
     colWarningColor: TcxGridDBColumn;
+    colAVGIncomePrice: TcxGridDBColumn;
+    colAVGIncomePriceWarning: TcxGridDBColumn;
   private
     { Private declarations }
   public
@@ -90,6 +92,8 @@ type
 implementation
 
 {$R *.dfm}
+
+uses DataModul;
 
 initialization
   RegisterClass(TIncomeForm);

@@ -340,7 +340,8 @@ uses
   SaleMovementItemTest in '..\SOURCE\MovementItem\All\Farmacy\SaleMovementItemTest.pas',
   SaleJournal in '..\..\FormsFarmacy\Document\SaleJournal.pas' {SaleJournalForm: TParentForm},
   Sale in '..\..\FormsFarmacy\Document\Sale.pas' {SaleForm: TParentForm},
-  PaidKind in '..\..\Forms\Kind\PaidKind.pas' {PaidKindForm: TParentForm};
+  PaidKind in '..\..\Forms\Kind\PaidKind.pas' {PaidKindForm: TParentForm},
+  Report_Movement_ByPartionGoods in '..\..\FormsFarmacy\Report\Report_Movement_ByPartionGoods.pas' {Report_Movement_ByPartionGoodsForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}

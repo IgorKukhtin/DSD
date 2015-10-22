@@ -179,6 +179,8 @@ type
     N65: TMenuItem;
     actSaleJournal: TdsdOpenForm;
     N66: TMenuItem;
+    actReport_Movement_ByPartionGoodsForm: TdsdOpenForm;
+    mniReport_Movement_ByPartionGoodsForm: TMenuItem;
     procedure actSaveDataExecute(Sender: TObject);
     procedure miRepriceClick(Sender: TObject);
   private
