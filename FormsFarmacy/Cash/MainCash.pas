@@ -363,12 +363,12 @@ begin
     mdClosedCheck.Close;
     mdClosedCheck.Open;
     mdClosedCheck.CopyFromDataSet(CheckCDS);
-    // запустить в потоке печать чека
-    TRefreshRemainsThread.Create;
     //Создать новый чек
     NewCheckStart := Now;
     NewCheck(False);
     NewCheckEnd := Now;
+    // запустить в потоке печать чека
+    TRefreshRemainsThread.Create;
     // Отбиваем чек через ЭККА
   end;
 end;
@@ -901,10 +901,6 @@ end;
 // процедура обновляет параметры для введения нового чека
 procedure TMainCashForm.NewCheck(ANeedRemainsRefresh: Boolean = True);
 begin
-  SoldRegim := true;
-  actSpec.Checked := false;
-  if Assigned(Cash) AND Cash.AlwaysSold then
-    Cash.AlwaysSold := False;
   try
     spNewCheck.Execute;
   Except ON E:Exception DO
@@ -925,6 +921,10 @@ begin
   End
   else
   Begin
+    SoldRegim := true;
+    actSpec.Checked := false;
+    if Assigned(Cash) AND Cash.AlwaysSold then
+    Cash.AlwaysSold := False;
     MainGridDBTableView.BeginUpdate;
     try
       actRefresh.Execute;
@@ -1161,6 +1161,12 @@ begin
   end;
   InterlockedDecrement(CountRRT);
   MainCashForm.CloseCheckEnd := Now;
+  //после отработки возвращаем галки в исходное состояние
+  MainCashForm.SoldRegim := true;
+  MainCashForm.actSpec.Checked := false;
+  if Assigned(MainCashForm.Cash) AND MainCashForm.Cash.AlwaysSold then
+    MainCashForm.Cash.AlwaysSold := False;
+
 //  Synchronize(ShowTime);
 end;
 

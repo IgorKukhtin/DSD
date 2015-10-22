@@ -80,6 +80,7 @@ BEGIN
                       , OperDate 
                       , Container.Id
                       , SUM(Container.Amount) OVER (PARTITION BY Container.objectid ORDER BY OPERDATE,Container.Id) 
+                      , movementitem.Id AS PartionMovementItemId
                     FROM Container 
                         JOIN Send ON Send.objectid = Container.objectid 
                         JOIN containerlinkobject AS CLI_MI 
@@ -98,7 +99,8 @@ BEGIN
         tmpItem AS ( -- контейнеры и кол-во(Сумма), которое с них будет списано (с подразделения "From")
                         SELECT 
                             DD.Id             AS Container_AmountId
-                          , Container_Summ.Id AS Container_SummId  
+                          , Container_Summ.Id AS Container_SummId 
+                          , DD.PartionMovementItemId
 			              , DD.MovementItemId
                           , DD.ObjectId
 			              , DD.OperDate
@@ -138,7 +140,7 @@ BEGIN
                                                     inDescId_1          := zc_ContainerLinkObject_Unit(), -- DescId для 1-ой Аналитики
                                                     inObjectId_1        := vbUnitToId,
                                                     inDescId_2          := zc_ContainerLinkObject_PartionMovementItem(), -- DescId для 2-ой Аналитики
-                                                    inObjectId_2        := lpInsertFind_Object_PartionMovementItem(tmpItem.MovementItemId)) as Id
+                                                    inObjectId_2        := lpInsertFind_Object_PartionMovementItem(tmpItem.PartionMovementItemId)) as Id
                            ,tmpItem.MovementItemId  AS MovementItemId 
                            ,tmpItem.ObjectId        AS ObjectId 
                            ,vbSendDate              AS OperDate
@@ -170,7 +172,7 @@ BEGIN
                                                                                                     inDescId_1          := zc_ContainerLinkObject_Unit(), -- DescId для 1-ой Аналитики
                                                                                                     inObjectId_1        := vbUnitToId,
                                                                                                     inDescId_2          := zc_ContainerLinkObject_PartionMovementItem(), -- DescId для 2-ой Аналитики
-                                                                                                    inObjectId_2        := lpInsertFind_Object_PartionMovementItem(tmpItem.MovementItemId))               , -- Главный Container
+                                                                                                    inObjectId_2        := lpInsertFind_Object_PartionMovementItem(tmpItem.PartionMovementItemId))               , -- Главный Container
                                                     inObjectId          := tmpItem.ObjectId, -- Объект (Счет или Товар или ...)
                                                     inJuridicalId_basis := vbJuridicalToId, -- Главное юридическое лицо
                                                     inBusinessId        := NULL, -- Бизнесы

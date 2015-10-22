@@ -81,10 +81,10 @@ BEGIN
                                                                                                           ,inUserId     := vbUserId)
                                            ,inValueData       := floor(Object_Price.MCSValue - SUM(COALESCE(Container.Amount,0)) - COALESCE(Income.Amount_Income,0))::TFloat)
         from Object_Price_View AS Object_Price
-            LEFT OUTER JOIN ContainerLinkObject AS ContainerLinkObject_Unit
-                                                ON ContainerLinkObject_Unit.DescId = zc_ContainerLinkObject_Unit()
-                                               AND ContainerLinkObject_Unit.ObjectId = Object_Price.UnitId
-            LEFT OUTER JOIN Container ON ContainerLinkObject_Unit.ContainerId = Container.Id
+            -- LEFT OUTER JOIN ContainerLinkObject AS ContainerLinkObject_Unit
+                                                -- ON ContainerLinkObject_Unit.DescId = zc_ContainerLinkObject_Unit()
+                                               -- AND ContainerLinkObject_Unit.ObjectId = Object_Price.UnitId
+            LEFT OUTER JOIN Container ON Container.WhereObjectId = Object_Price.UnitId
                                      AND Container.ObjectId = Object_Price.GoodsId
                                      AND Container.DescId = zc_Container_Count() 
                                      AND Container.Amount > 0
