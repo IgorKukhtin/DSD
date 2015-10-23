@@ -242,6 +242,7 @@ BEGIN
       SELECT tmpMovement.InvNumber
            , tmpMovement.OperDate
            , tmpMovement.PartionGoods
+           , tmpMovement.OperDate_partion
            , Object_Goods.ValueData   AS GoodsNameMaster
            , tmpMI_group.Amount_count AS CountMaster
            , tmpMI_group.Amount_summ  AS SummMaster

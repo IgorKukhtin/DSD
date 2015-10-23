@@ -2,8 +2,8 @@ inherited IncomePharmacyJournalForm: TIncomePharmacyJournalForm
   Caption = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' <'#1055#1088#1080#1093#1086#1076'>'
   ClientHeight = 469
   ClientWidth = 807
-  ExplicitWidth = 815
-  ExplicitHeight = 496
+  ExplicitWidth = 823
+  ExplicitHeight = 507
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -130,7 +130,6 @@ inherited IncomePharmacyJournalForm: TIncomePharmacyJournalForm
           OptionsData.CancelOnExit = True
           OptionsData.Deleting = False
           OptionsData.DeletingConfirmation = False
-          OptionsData.Editing = False
           OptionsView.GroupByBox = True
           Styles.Content = nil
           Styles.Inactive = nil
@@ -139,27 +138,32 @@ inherited IncomePharmacyJournalForm: TIncomePharmacyJournalForm
           Styles.Header = nil
           inherited colStatus: TcxGridDBColumn
             HeaderAlignmentHorz = taCenter
+            Options.Editing = False
             Width = 55
           end
           inherited colOperDate: TcxGridDBColumn [1]
             HeaderAlignmentHorz = taCenter
+            Options.Editing = False
             Width = 74
           end
           inherited colInvNumber: TcxGridDBColumn [2]
             Caption = #8470' '#1076#1086#1082'.'
             HeaderAlignmentHorz = taCenter
+            Options.Editing = False
             Width = 88
           end
           object colFromName: TcxGridDBColumn
             Caption = #1054#1090' '#1082#1086#1075#1086' '#1087#1088#1080#1093#1086#1076
             DataBinding.FieldName = 'FromName'
             HeaderAlignmentHorz = taCenter
+            Options.Editing = False
             Width = 187
           end
           object colToName: TcxGridDBColumn
             Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
             DataBinding.FieldName = 'ToName'
             HeaderAlignmentHorz = taCenter
+            Options.Editing = False
             Width = 200
           end
           object colTotalCount: TcxGridDBColumn
@@ -169,6 +173,7 @@ inherited IncomePharmacyJournalForm: TIncomePharmacyJournalForm
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
+            Options.Editing = False
             Width = 60
           end
           object colSaleSumm: TcxGridDBColumn
@@ -182,6 +187,7 @@ inherited IncomePharmacyJournalForm: TIncomePharmacyJournalForm
           object colNDSKindName: TcxGridDBColumn
             Caption = #1053#1044#1057
             DataBinding.FieldName = 'NDSKindName'
+            Options.Editing = False
             Width = 50
           end
           object colInvNumberBranch: TcxGridDBColumn
@@ -199,13 +205,14 @@ inherited IncomePharmacyJournalForm: TIncomePharmacyJournalForm
           object colChecked: TcxGridDBColumn
             Caption = #1055#1088#1086#1074#1077#1088#1077#1085#1086' '#1092#1072#1088#1084#1072#1094#1077#1074#1090#1086#1084
             DataBinding.FieldName = 'Checked'
-            Options.Editing = False
+            PropertiesClassName = 'TcxCheckBoxProperties'
             Width = 95
           end
           object colJuridicalName: TcxGridDBColumn
             Caption = #1063#1055
             DataBinding.FieldName = 'JuridicalName'
             HeaderAlignmentHorz = taCenter
+            Options.Editing = False
             Width = 126
           end
         end
@@ -324,6 +331,18 @@ inherited IncomePharmacyJournalForm: TIncomePharmacyJournalForm
       ReportNameParam.Name = #1056#1072#1089#1093#1086#1076#1085#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103' '#1076#1083#1103' '#1084#1077#1085#1077#1076#1078#1077#1088#1072
       ReportNameParam.Value = #1056#1072#1089#1093#1086#1076#1085#1072#1103'_'#1085#1072#1082#1083#1072#1076#1085#1072#1103'_'#1076#1083#1103'_'#1084#1077#1085#1077#1076#1078#1077#1088#1072
       ReportNameParam.DataType = ftString
+    end
+    object actUpdateDataSet: TdsdUpdateDataSet
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spInsertUpdateMovement
+      StoredProcList = <
+        item
+          StoredProc = spInsertUpdateMovement
+        end>
+      Caption = 'actUpdateDataSet'
+      DataSource = MasterDS
     end
   end
   inherited MasterDS: TDataSource
@@ -673,5 +692,29 @@ inherited IncomePharmacyJournalForm: TIncomePharmacyJournalForm
     PackSize = 1
     Left = 440
     Top = 88
+  end
+  object spInsertUpdateMovement: TdsdStoredProc
+    StoredProcName = 'gpInsertUpdate_Movement_IncomeSale'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInputOutput
+      end
+      item
+        Name = 'inChecked'
+        Value = 'False'
+        Component = MasterCDS
+        ComponentItem = 'Checked'
+        DataType = ftBoolean
+        ParamType = ptInput
+      end>
+    PackSize = 1
+    Left = 594
+    Top = 104
   end
 end

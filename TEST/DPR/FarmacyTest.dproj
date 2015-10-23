@@ -422,7 +422,6 @@
 			<DCCReference Include="..\SOURCE\Component\ExternalLoadTest.pas"/>
 			<DCCReference Include="..\..\FormsFarmacy\Guides\LoadObjectUnit.pas">
 				<Form>LoadObjectForm</Form>
-				<FormType>dfm</FormType>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<DCCReference Include="..\SOURCE\Movement\All\OrderExternalTest.pas"/>
@@ -443,13 +442,11 @@
 			<DCCReference Include="..\SOURCE\Objects\All\Farmacy\PriceGroupSettingsTest.pas"/>
 			<DCCReference Include="..\..\FormsFarmacy\Guides\PriceGroupSettingsUnit.pas">
 				<Form>PriceGroupSettingsForm</Form>
-				<FormType>dfm</FormType>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<DCCReference Include="..\SOURCE\Objects\All\JuridicalSettingsTest.pas"/>
 			<DCCReference Include="..\..\FormsFarmacy\Guides\JuridicalSettings.pas">
 				<Form>JuridicalSettingsForm</Form>
-				<FormType>dfm</FormType>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<DCCReference Include="..\SOURCE\Protocol\CommonProtocolProcedureTest.pas"/>
@@ -491,7 +488,6 @@
 			<DCCReference Include="..\SOURCE\Objects\All\ContactPersonTest.pas"/>
 			<DCCReference Include="..\..\FormsFarmacy\Guides\PartnerCode.pas">
 				<Form>PartnerCodeForm</Form>
-				<FormType>dfm</FormType>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<DCCReference Include="..\..\FormsFarmacy\Guides\GoodsLite.pas">
@@ -551,7 +547,6 @@
 			</DCCReference>
 			<DCCReference Include="..\..\Forms\Kind\OrderKindEdit.pas">
 				<Form>OrderKindEditForm</Form>
-				<FormType>dfm</FormType>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<DCCReference Include="..\SOURCE\Objects\All\ImportExportLinkTest.pas"/>
@@ -769,7 +764,6 @@
 			<DCCReference Include="..\SOURCE\Movement\All\Farmacy\ReturnOutTest.pas"/>
 			<DCCReference Include="..\..\FormsFarmacy\Document\IncomeJournalChoice.pas">
 				<Form>IncomeJournalChoiceForm</Form>
-				<FormType>dfm</FormType>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<DCCReference Include="..\..\Forms\Document\BankAccountJournal.pas">
@@ -785,7 +779,6 @@
 			</DCCReference>
 			<DCCReference Include="..\..\FormsFarmacy\Document\BankAccountMovementFarmacy.pas">
 				<Form>BankAccountMovementFarmacyForm</Form>
-				<FormType>dfm</FormType>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<DCCReference Include="..\SOURCE\Movement\All\Farmacy\BankAccountMovementTest.pas"/>
@@ -826,7 +819,6 @@
 			</DCCReference>
 			<DCCReference Include="..\..\Forms\Guides\MarginCategory.pas">
 				<Form>MarginCategoryForm</Form>
-				<FormType>dfm</FormType>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<DCCReference Include="..\..\Forms\Guides\MarginCategoryItem.pas">
@@ -853,12 +845,10 @@
 			<DCCReference Include="..\SOURCE\LoadFarmacyReportTest.pas"/>
 			<DCCReference Include="..\..\Forms\Document\CheckJournal.pas">
 				<Form>CheckJournalForm</Form>
-				<FormType>dfm</FormType>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<DCCReference Include="..\..\Forms\Document\Check.pas">
 				<Form>CheckForm</Form>
-				<FormType>dfm</FormType>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<DCCReference Include="..\..\Forms\Kind\CashRegisterKind.pas">
@@ -879,12 +869,10 @@
 			</DCCReference>
 			<DCCReference Include="..\..\FormsFarmacy\Report\Report_RemainGoods.pas">
 				<Form>Report_GoodsRemainsForm</Form>
-				<FormType>dfm</FormType>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<DCCReference Include="..\..\FormsFarmacy\Report\Report_GoodsPartionMove.pas">
 				<Form>Report_GoodsPartionMoveForm</Form>
-				<FormType>dfm</FormType>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<DCCReference Include="..\..\Forms\Guides\Price.pas">
@@ -963,12 +951,10 @@
 			</DCCReference>
 			<DCCReference Include="..\..\FormsFarmacy\Report\ReportMovementCheck.pas">
 				<Form>ReportMovementCheckForm</Form>
-				<FormType>dfm</FormType>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<DCCReference Include="..\..\Forms\Guides\MCS.pas">
 				<Form>MCSForm</Form>
-				<FormType>dfm</FormType>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<DCCReference Include="..\..\Forms\Guides\PartionGoodsChoice.pas">
@@ -977,33 +963,27 @@
 			</DCCReference>
 			<DCCReference Include="..\..\FormsFarmacy\Report\Report_GoodsPartionHistory.pas">
 				<Form>Report_GoodsPartionHistoryForm</Form>
-				<FormType>dfm</FormType>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<DCCReference Include="..\..\FormsFarmacy\System\RecalcMCS_Dialog.pas">
 				<Form>RecalcMCS_DialogForm</Form>
-				<FormType>dfm</FormType>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<DCCReference Include="..\..\FormsFarmacy\Object\ReportSoldParams.pas">
 				<Form>ReportSoldParamsForm</Form>
-				<FormType>dfm</FormType>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<DCCReference Include="..\SOURCE\Objects\All\Farmacy\ReportSoldParamsTest.pas"/>
 			<DCCReference Include="..\..\FormsFarmacy\Report\Report_Sold.pas">
 				<Form>Report_SoldForm</Form>
-				<FormType>dfm</FormType>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<DCCReference Include="..\..\FormsFarmacy\Report\Report_Sold_Day.pas">
 				<Form>Report_Sold_DayForm</Form>
-				<FormType>dfm</FormType>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<DCCReference Include="..\..\FormsFarmacy\Report\Report_Sold_DayUser.pas">
 				<Form>Report_Sold_DayUserForm</Form>
-				<FormType>dfm</FormType>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<DCCReference Include="..\..\SOURCE\EDI\RecadvXML.pas"/>
@@ -1012,16 +992,18 @@
 			<DCCReference Include="..\SOURCE\MovementItem\All\Farmacy\SaleMovementItemTest.pas"/>
 			<DCCReference Include="..\..\FormsFarmacy\Document\SaleJournal.pas">
 				<Form>SaleJournalForm</Form>
-				<FormType>dfm</FormType>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<DCCReference Include="..\..\FormsFarmacy\Document\Sale.pas">
 				<Form>SaleForm</Form>
-				<FormType>dfm</FormType>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<DCCReference Include="..\..\Forms\Kind\PaidKind.pas">
 				<Form>PaidKindForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Report\Report_Movement_ByPartionGoods.pas">
+				<Form>Report_Movement_ByPartionGoodsForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<BuildConfiguration Include="Release">

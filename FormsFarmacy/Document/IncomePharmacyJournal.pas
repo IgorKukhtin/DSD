@@ -13,7 +13,7 @@ uses
   cxPropertiesStore, cxLabel, cxTextEdit, cxMaskEdit, cxDropDownEdit,
   cxCalendar, Vcl.ExtCtrls, cxGridLevel, cxGridCustomTableView, cxGridTableView,
   cxGridDBTableView, cxGridCustomView, cxGrid, cxPC, ExternalSave,
-  dxBarBuiltInMenu, cxNavigator;
+  dxBarBuiltInMenu, cxNavigator, cxCheckBox;
 
 type
   TIncomePharmacyJournalForm = class(TAncestorJournalForm)
@@ -37,6 +37,8 @@ type
     actPrintForManager: TdsdPrintAction;
     dxBarButton1: TdxBarButton;
     colJuridicalName: TcxGridDBColumn;
+    spInsertUpdateMovement: TdsdStoredProc;
+    actUpdateDataSet: TdsdUpdateDataSet;
   private
     { Private declarations }
   public
