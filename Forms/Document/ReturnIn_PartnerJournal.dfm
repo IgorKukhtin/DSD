@@ -626,53 +626,7 @@ inherited ReturnIn_PartnerJournalForm: TReturnIn_PartnerJournalForm
     end
     inherited actShowErased: TBooleanStoredProcAction [13]
     end
-    object actPrintPriceCorr: TdsdPrintAction [14]
-      Category = 'DSDLib'
-      MoveParams = <
-        item
-          FromParam.Name = 'id'
-          FromParam.Value = Null
-          FromParam.Component = MasterCDS
-          FromParam.ComponentItem = 'id'
-          ToParam.Value = Null
-          ToParam.Component = FormParams
-          ToParam.ComponentItem = 'Id'
-          ToParam.ParamType = ptInputOutput
-        end>
-      StoredProc = spSelectPrint
-      StoredProcList = <
-        item
-          StoredProc = spSelectPrint
-        end>
-      Caption = #1050#1054#1056#1045#1043#1059#1070#1063#1040' '#1058#1054#1042#1040#1056#1053#1040' '#1053#1040#1050#1051#1040#1044#1053#1040
-      Hint = #1050#1054#1056#1045#1043#1059#1070#1063#1040' '#1058#1054#1042#1040#1056#1053#1040' '#1053#1040#1050#1051#1040#1044#1053#1040
-      ImageIndex = 16
-      ShortCut = 16464
-      DataSets = <
-        item
-          DataSet = PrintHeaderCDS
-          UserName = 'frxDBDHeader'
-        end
-        item
-          DataSet = PrintItemsCDS
-          UserName = 'frxDBDMaster'
-        end>
-      Params = <
-        item
-          Name = 'Id'
-          Value = Null
-          Component = FormParams
-          ComponentItem = 'Id'
-        end>
-      ReportName = 'NULL'
-      ReportNameParam.Name = #1042#1086#1079#1074#1088#1072#1090#1085#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103
-      ReportNameParam.Value = Null
-      ReportNameParam.Component = FormParams
-      ReportNameParam.ComponentItem = 'ReportName'
-      ReportNameParam.DataType = ftString
-      ReportNameParam.ParamType = ptInput
-    end
-    object actPrint: TdsdPrintAction [15]
+    object actPrint: TdsdPrintAction [14]
       Category = 'DSDLib'
       MoveParams = <
         item
@@ -718,15 +672,15 @@ inherited ReturnIn_PartnerJournalForm: TReturnIn_PartnerJournalForm
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
     end
-    inherited actGridToExcel: TdsdGridToExcel [16]
+    inherited actGridToExcel: TdsdGridToExcel [15]
     end
-    inherited actInsertMask: TdsdInsertUpdateAction [17]
+    inherited actInsertMask: TdsdInsertUpdateAction [16]
     end
-    inherited actReCompleteList: TMultiAction [18]
+    inherited actReCompleteList: TMultiAction [17]
     end
-    inherited spReCompete: TdsdExecStoredProc [19]
+    inherited spReCompete: TdsdExecStoredProc [18]
     end
-    inherited MovementProtocolOpenForm: TdsdOpenForm [20]
+    inherited MovementProtocolOpenForm: TdsdOpenForm [19]
     end
     object actSPPrintProcNamePriceCorr: TdsdExecStoredProc
       Category = 'DSDLib'
@@ -768,12 +722,11 @@ inherited ReturnIn_PartnerJournalForm: TReturnIn_PartnerJournalForm
           Action = actSPPrintProcNamePriceCorr
         end
         item
-          Action = actPrintPriceCorr
+          Action = actPrint
         end>
       Caption = #1050#1054#1056#1045#1043#1059#1070#1063#1040' '#1058#1054#1042#1040#1056#1053#1040' '#1053#1040#1050#1051#1040#1044#1053#1040
       Hint = #1050#1054#1056#1045#1043#1059#1070#1063#1040' '#1058#1054#1042#1040#1056#1053#1040' '#1053#1040#1050#1051#1040#1044#1053#1040
       ImageIndex = 16
-      ShortCut = 16464
     end
     object mactPrint: TMultiAction
       Category = 'DSDLib'

@@ -152,6 +152,10 @@ type
     bbUpdatePrice: TdxBarButton;
     Price_Pricelist: TcxGridDBColumn;
     isCheck_Pricelist: TcxGridDBColumn;
+    mactPrintPriceCorr: TMultiAction;
+    bb: TdxBarButton;
+    spGetReportNamePriceCorr: TdsdStoredProc;
+    actSPPrintProcNamePriceCorr: TdsdExecStoredProc;
   private
     { Private declarations }
   public
