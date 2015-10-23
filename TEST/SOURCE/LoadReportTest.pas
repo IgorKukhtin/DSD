@@ -190,6 +190,7 @@ begin
   LoadReportFromFile('PrintMovement_ReturnIn35442481', ReportPath + '\Товарный Учет\PrintMovement_ReturnIn35442481.fr3');
   LoadReportFromFile('PrintMovement_ReturnInDay', ReportPath + '\Товарный Учет\PrintMovement_ReturnInDay.fr3');
   LoadReportFromFile('PrintMovement_PriceCorrective35442481', ReportPath + '\Товарный Учет\PrintMovement_PriceCorrective35442481.fr3');
+  LoadReportFromFile('PrintMovement_PriceCorrective32049199', ReportPath + '\Товарный Учет\PrintMovement_PriceCorrective32049199.fr3');
   LoadReportFromFile('PrintMovement_Tax', ReportPath + '\Товарный Учет\PrintMovement_Tax.fr3');
   LoadReportFromFile('PrintMovement_Tax1214', ReportPath + '\Товарный Учет\PrintMovement_Tax1214.fr3');
   LoadReportFromFile('PrintMovement_Tax0115', ReportPath + '\Товарный Учет\PrintMovement_Tax0115.fr3');

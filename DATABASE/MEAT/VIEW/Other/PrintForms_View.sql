@@ -301,6 +301,20 @@ AS
       JOIN ObjectHistory_JuridicalDetails_View AS OH_JuridicalDetails ON OH_JuridicalDetails.JuridicalId = Object_Juridical.Id
        AND OH_JuridicalDetails.OKPO IN ('35442481', '34431547')
       WHERE Object_Juridical.DescId = zc_Object_Juridical()
+      UNION
+-- Metro - PriceCorrective
+      SELECT
+             zc_Movement_PriceCorrective()
+           , CAST ('PriceCorrective' AS TVarChar)
+           , CAST ('01.01.2000' AS TDateTime)
+           , CAST ('01.01.2200' AS TDateTime)
+           , CAST (Object_Juridical.Id AS INTEGER)
+           , zc_Enum_PaidKind_FirstForm()
+           , CAST ('PrintMovement_PriceCorrective32049199' AS TVarChar)
+      FROM Object AS Object_Juridical
+      JOIN ObjectHistory_JuridicalDetails_View AS OH_JuridicalDetails ON OH_JuridicalDetails.JuridicalId = Object_Juridical.Id
+       AND OH_JuridicalDetails.OKPO IN ('32049199')
+      WHERE Object_Juridical.DescId = zc_Object_Juridical()
 
 
 -- возвраты от пок стандарт
@@ -313,8 +327,9 @@ AS
            , CAST (0 AS INTEGER)
            , CAST (0 AS INTEGER)
            , CAST ('PrintMovement_ReturnIn' AS TVarChar)
-      UNION
--- Metro
+
+      /*UNION
+-- Metro - ReturnIn
       SELECT
              zc_movement_returnin()
            , CAST ('ReturnIn' AS TVarChar)
@@ -326,7 +341,7 @@ AS
       FROM Object AS Object_Juridical
       JOIN ObjectHistory_JuridicalDetails_View AS OH_JuridicalDetails ON OH_JuridicalDetails.JuridicalId = Object_Juridical.Id
        AND OH_JuridicalDetails.OKPO IN ('32049199')
-      WHERE Object_Juridical.DescId = zc_Object_Juridical()
+      WHERE Object_Juridical.DescId = zc_Object_Juridical()*/
 
       UNION
 -- Ashan

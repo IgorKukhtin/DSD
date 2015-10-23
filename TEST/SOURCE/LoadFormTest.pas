@@ -1106,27 +1106,7 @@ end;
 
 procedure TLoadFormTest.LoadReportFormTest;
 begin
-  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Transport_ProfitLossForm'));
-  TdsdFormStorageFactory.GetStorage.Load('TReport_Transport_ProfitLossForm');
-  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Transport_ProfitLossDialogForm'));
-  TdsdFormStorageFactory.GetStorage.Load('TReport_Transport_ProfitLossDialogForm');
- exit;
- {
-  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_GoodsMIForm'));
-  TdsdFormStorageFactory.GetStorage.Load('TReport_GoodsMIForm');
-
-  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_GoodsMI_InternalForm'));
-  TdsdFormStorageFactory.GetStorage.Load('TReport_GoodsMI_InternalForm');
-
-  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_GoodsMI_ProductionForm'));
-  TdsdFormStorageFactory.GetStorage.Load('TReport_GoodsMI_ProductionForm');
-
-  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_GoodsMI_IncomeByPartnerForm'));
-  TdsdFormStorageFactory.GetStorage.Load('TReport_GoodsMI_IncomeByPartnerForm');
-
- exit;
-}
-
+// exit;
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_BalanceForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_BalanceForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_ProfitLossForm'));
