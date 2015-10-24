@@ -90,6 +90,8 @@ BEGIN
               , NULL::TDateTime            AS SertificatEnd
               , NULL::Integer              AS WarningColor
               , NULL::TFloat               AS AVGIncomePrice
+              , FALSE                      AS AVGIncomePriceWarning
+              
             FROM (
                     SELECT 
                         Object_Goods.Id           AS GoodsId
