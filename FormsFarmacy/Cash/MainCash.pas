@@ -13,7 +13,8 @@ uses
   cxGrid, Vcl.ExtCtrls, cxSplitter, dsdDB, Datasnap.DBClient, cxContainer,
   cxTextEdit, cxCurrencyEdit, cxLabel, cxMaskEdit, cxDropDownEdit, cxLookupEdit,
   cxDBLookupEdit, cxDBLookupComboBox, Vcl.Menus, cxCheckBox, Vcl.StdCtrls,
-  cxButtons, cxNavigator, CashInterface, IniFIles, cxImageComboBox, dxmdaset;
+  cxButtons, cxNavigator, CashInterface, IniFIles, cxImageComboBox, dxmdaset,
+  ActiveX;
 
 CONST
   UM_THREAD_EXCEPTION = WM_USER+101;
@@ -1117,55 +1118,60 @@ var
   ARS: Integer;
   FiscalNumber: string;
 begin
-  MainCashForm.CloseCheckStart := Now;
-
+  CoInitialize(nil);
   try
-    InterlockedIncrement(CountRRT); //ƒобавл€ем к счетчику потоков 1
+    MainCashForm.CloseCheckStart := Now;
 
-{*****************************************************************}
+    try
+      InterlockedIncrement(CountRRT); //ƒобавл€ем к счетчику потоков 1
 
-    if MainCashForm.PutCheckToCash(MainCashForm.ASalerCash, MainCashForm.PaidType, FiscalNumber) then
-    begin
-      //ƒостаем серийник кассового аппарата
-      if FiscalNumber <> '' then
-      Begin
-        MainCashForm.spGet_Object_CashRegister_By_Serial.ParamByName('inSerial').Value := FiscalNumber;
-        MainCashForm.spGet_Object_CashRegister_By_Serial.Execute;
-        if MainCashForm.spGet_Object_CashRegister_By_Serial.ParamByName('outId').AsString <> '' then
-          MainCashForm.spComplete_Movement_Check.ParamByName('inCashRegisterId').Value :=
-            MainCashForm.spGet_Object_CashRegister_By_Serial.ParamByName('outId').Value
-        ELSE
+  {*****************************************************************}
+
+      if MainCashForm.PutCheckToCash(MainCashForm.ASalerCash, MainCashForm.PaidType, FiscalNumber) then
+      begin
+        //ƒостаем серийник кассового аппарата
+        if FiscalNumber <> '' then
+        Begin
+          MainCashForm.spGet_Object_CashRegister_By_Serial.ParamByName('inSerial').Value := FiscalNumber;
+          MainCashForm.spGet_Object_CashRegister_By_Serial.Execute;
+          if MainCashForm.spGet_Object_CashRegister_By_Serial.ParamByName('outId').AsString <> '' then
+            MainCashForm.spComplete_Movement_Check.ParamByName('inCashRegisterId').Value :=
+              MainCashForm.spGet_Object_CashRegister_By_Serial.ParamByName('outId').Value
+          ELSE
+            MainCashForm.spComplete_Movement_Check.ParamByName('inCashRegisterId').Value := 0;
+        End
+        else
           MainCashForm.spComplete_Movement_Check.ParamByName('inCashRegisterId').Value := 0;
-      End
+        MainCashForm.spComplete_Movement_Check.ParamByName('inPaidType').Value := Integer(MainCashForm.PaidType);
+  {*****************************************************************}
+        ARS := InterlockedIncrement(ActualRemainSession); //‘иксируем сессию остатков
+        MainCashForm.DiffCDS.Close;
+        MainCashForm.spComplete_Movement_Check.Execute;
+        if ARS = ActualRemainSession then //если за врем€ проведени€ чека сесси€ остатка не ушла вперед то обновл€ем остаток на морде
+          Synchronize(FillData);
+      end
       else
-        MainCashForm.spComplete_Movement_Check.ParamByName('inCashRegisterId').Value := 0;
-      MainCashForm.spComplete_Movement_Check.ParamByName('inPaidType').Value := Integer(MainCashForm.PaidType);
-{*****************************************************************}
-      ARS := InterlockedIncrement(ActualRemainSession); //‘иксируем сессию остатков
-      MainCashForm.DiffCDS.Close;
-      MainCashForm.spComplete_Movement_Check.Execute;
-      if ARS = ActualRemainSession then //если за врем€ проведени€ чека сесси€ остатка не ушла вперед то обновл€ем остаток на морде
-        Synchronize(FillData);
-    end
-    else
+      Begin
+        //если не смогли напечатать - откатываем до предыдущего чека
+        Synchronize(RollBack);
+      End;
+    Except ON E:Exception do
     Begin
-      //если не смогли напечатать - откатываем до предыдущего чека
       Synchronize(RollBack);
+      MainCashForm.ThreadErrorMessage:=E.Message;
+      PostMessage(MainCashForm.Handle,UM_THREAD_EXCEPTION,0,0);
     End;
-  Except ON E:Exception do
-  Begin
-    Synchronize(RollBack);
-    MainCashForm.ThreadErrorMessage:=E.Message;
-    PostMessage(MainCashForm.Handle,UM_THREAD_EXCEPTION,0,0);
-  End;
+    end;
+    InterlockedDecrement(CountRRT);
+    MainCashForm.CloseCheckEnd := Now;
+    //после отработки возвращаем галки в исходное состо€ние
+    MainCashForm.SoldRegim := true;
+    MainCashForm.actSpec.Checked := false;
+    if Assigned(MainCashForm.Cash) AND MainCashForm.Cash.AlwaysSold then
+      MainCashForm.Cash.AlwaysSold := False;
+  finally
+    CoUninitialize;
   end;
-  InterlockedDecrement(CountRRT);
-  MainCashForm.CloseCheckEnd := Now;
-  //после отработки возвращаем галки в исходное состо€ние
-  MainCashForm.SoldRegim := true;
-  MainCashForm.actSpec.Checked := false;
-  if Assigned(MainCashForm.Cash) AND MainCashForm.Cash.AlwaysSold then
-    MainCashForm.Cash.AlwaysSold := False;
 
 //  Synchronize(ShowTime);
 end;
