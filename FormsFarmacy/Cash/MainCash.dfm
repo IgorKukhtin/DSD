@@ -178,6 +178,7 @@ inherited MainCashForm: TMainCashForm
       TabOrder = 0
       object MainGridDBTableView: TcxGridDBTableView
         Navigator.Buttons.CustomButtons = <>
+        OnFocusedRecordChanged = MainGridDBTableViewFocusedRecordChanged
         DataController.DataSource = RemainsDS
         DataController.Filter.Options = [fcoCaseInsensitive]
         DataController.KeyFieldNames = 'Id'
@@ -249,6 +250,14 @@ inherited MainCashForm: TMainCashForm
       Height = 33
       Align = alBottom
       TabOrder = 1
+      object ShapeState: TShape
+        Left = 744
+        Top = 12
+        Width = 10
+        Height = 10
+        Brush.Color = clGreen
+        Pen.Color = clWhite
+      end
       object ceAmount: TcxCurrencyEdit
         Left = 282
         Top = 7

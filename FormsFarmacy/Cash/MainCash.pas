@@ -22,9 +22,12 @@ type
   TRefreshRemainsThread = class(TThread)
   private
     { Private declarations }
+    FShapeColor: TColor;
     procedure FillData;
     procedure RollBack;
     procedure ShowTime;
+    procedure SetShapeState(AColor: TColor);
+    procedure SyncShapeState;
   protected
     procedure Execute; override;
   end;
@@ -137,6 +140,7 @@ type
     actExecuteLoadVIP: TAction;
     actRefreshAll: TAction;
     mdClosedCheck: TdxMemData;
+    ShapeState: TShape;
     procedure WM_KEYDOWN(var Msg: TWMKEYDOWN);
     procedure FormCreate(Sender: TObject);
     procedure actChoiceGoodsInRemainsGridExecute(Sender: TObject);
@@ -167,6 +171,10 @@ type
     procedure actRefreshRemainsExecute(Sender: TObject);
     procedure actExecuteLoadVIPExecute(Sender: TObject);
     procedure actRefreshAllExecute(Sender: TObject);
+    procedure MainGridDBTableViewFocusedRecordChanged(
+      Sender: TcxCustomGridTableView; APrevFocusedRecord,
+      AFocusedRecord: TcxCustomGridRecord;
+      ANewItemRecordFocusingChanged: Boolean);
   private
     FSoldRegim: boolean;
     fShift: Boolean;
@@ -343,6 +351,12 @@ end;
 
 procedure TMainCashForm.actPutCheckToCashExecute(Sender: TObject);
 begin
+  if MainCashForm.FormParams.ParamByName('ClosedCheckId').Value <> 0 then
+  Begin
+    Showmessage('В этот момент программа закрывает предыдущий чек. Повторите попытку через несколько секунд.');
+    exit;
+  End;
+
   PaidType:=ptMoney;
   if (CheckCDS.RecordCount>0) then
   begin
@@ -361,6 +375,8 @@ begin
     // Присвоить "Закрываемому чеку" № текущего
     MainCashForm.FormParams.ParamByName('ClosedCheckId').Value := MainCashForm.FormParams.ParamByName('CheckId').Value;
     // Перелить CheckCDS в в запасной CDS
+    ShapeState.Brush.Color := clYellow;
+    ShapeState.Repaint;
     mdClosedCheck.Close;
     mdClosedCheck.Open;
     mdClosedCheck.CopyFromDataSet(CheckCDS);
@@ -368,6 +384,7 @@ begin
     NewCheckStart := Now;
     NewCheck(False);
     NewCheckEnd := Now;
+    lcName.Text := '';
     // запустить в потоке печать чека
     TRefreshRemainsThread.Create;
     // Отбиваем чек через ЭККА
@@ -458,7 +475,8 @@ begin
   //сгенерили гуид для определения сессии
   CreateGUID(CashSessionId);
   FormParams.ParamByName('CashSessionId').Value := GUIDToString(CashSessionId);
-
+  FormParams.ParamByName('ClosedCheckId').Value := 0;
+  ShapeState.Brush.Color := clGreen;
   if NOT GetIniFile(F) then
   Begin
     Application.Terminate;
@@ -899,6 +917,18 @@ begin
     AText := '';
 end;
 
+procedure TMainCashForm.MainGridDBTableViewFocusedRecordChanged(
+  Sender: TcxCustomGridTableView; APrevFocusedRecord,
+  AFocusedRecord: TcxCustomGridRecord; ANewItemRecordFocusingChanged: Boolean);
+var
+ Cnt: integer;
+begin
+  if MainGrid.IsFocused then exit;
+
+  Cnt := Sender.ViewInfo.RecordsViewInfo.VisibleCount;
+  Sender.Controller.TopRecordIndex := Sender.Controller.FocusedRecordIndex - Round((Cnt+1)/2);
+end;
+
 // процедура обновляет параметры для введения нового чека
 procedure TMainCashForm.NewCheck(ANeedRemainsRefresh: Boolean = True);
 begin
@@ -971,9 +1001,9 @@ begin
   if (Key=VK_Tab) and (CheckGrid.IsFocused) then ActiveControl:=lcName;
   if (Key = VK_ADD) or ((Key = VK_Return) AND (ssShift in Shift)) then
   Begin
+    Key := 0;
     fShift := ssShift in Shift;
     actPutCheckToCashExecute(nil);
-    Key := 0;
   End;
 end;
 
@@ -1119,6 +1149,7 @@ var
   FiscalNumber: string;
 begin
   CoInitialize(nil);
+  SetShapeState(clBlue);
   try
     MainCashForm.CloseCheckStart := Now;
 
@@ -1146,6 +1177,7 @@ begin
   {*****************************************************************}
         ARS := InterlockedIncrement(ActualRemainSession); //Фиксируем сессию остатков
         MainCashForm.DiffCDS.Close;
+        SetShapeState(clRed);
         MainCashForm.spComplete_Movement_Check.Execute;
         if ARS = ActualRemainSession then //если за время проведения чека сессия остатка не ушла вперед то обновляем остаток на морде
           Synchronize(FillData);
@@ -1171,6 +1203,8 @@ begin
       MainCashForm.Cash.AlwaysSold := False;
   finally
     CoUninitialize;
+    MainCashForm.FormParams.ParamByName('ClosedCheckId').Value := 0;
+    SetShapeState(clGreen);
   end;
 
 //  Synchronize(ShowTime);
@@ -1194,11 +1228,22 @@ begin
   MainCashForm.spSelectCheck.Execute;
 end;
 
+procedure TRefreshRemainsThread.SetShapeState(AColor: TColor);
+begin
+  FShapeColor := AColor;
+  Synchronize(SyncShapeState);
+end;
+
 procedure TRefreshRemainsThread.ShowTime;
 begin
   WITH MainCashForm DO
     Caption := '. Новый чек '+FormatDateTime('ss.zzz сек',NewCheckEnd-NewCheckStart)+
                '. Закрытие чека '+FormatDateTime('ss.zzz сек',CloseCheckEnd-CloseCheckStart);
+end;
+
+procedure TRefreshRemainsThread.SyncShapeState;
+begin
+  MainCashForm.ShapeState.Brush.Color := FShapeColor;
 end;
 
 initialization
