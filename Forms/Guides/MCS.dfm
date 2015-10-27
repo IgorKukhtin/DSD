@@ -97,6 +97,9 @@ inherited MCSForm: TMCSForm
       Enabled = False
       Visible = ivNever
     end
+    inherited dxBarButton6: TdxBarButton
+      Enabled = False
+    end
   end
   object spGet_UserUnit: TdsdStoredProc [13]
     StoredProcName = 'gpGet_UserUnit'
