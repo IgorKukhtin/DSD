@@ -11,7 +11,8 @@ uses
   dxBarExtItems, dxBar, cxClasses, Datasnap.DBClient, ExternalLoad, dsdAction,
   Vcl.ActnList, cxPropertiesStore, cxTextEdit, cxMaskEdit, cxButtonEdit,
   cxGridLevel, cxGridCustomTableView, cxGridTableView, cxGridDBTableView,
-  cxGridCustomView, cxGrid, cxPC;
+  cxGridCustomView, cxGrid, cxPC, dxSkinsCore, dxSkinsDefaultPainters,
+  dxSkinscxPCPainter, cxPCdxBarPopupMenu, dxSkinsdxBarPainter;
 
 type
   TMCSForm = class(TPriceForm)
