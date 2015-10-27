@@ -337,6 +337,23 @@ inherited PriceForm: TPriceForm
       isShowModal = True
       OpenBeforeShow = True
     end
+    object actDelete_Object_MCS: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spDelete_Object_MCS
+      StoredProcList = <
+        item
+          StoredProc = spDelete_Object_MCS
+        end
+        item
+          StoredProc = spSelect
+        end>
+      Caption = #1054#1095#1080#1089#1090#1080#1090#1100' '#1053#1058#1047
+      Hint = #1054#1095#1080#1089#1090#1080#1090#1100' '#1053#1058#1047
+      ImageIndex = 52
+      QuestionBeforeExecute = #1059#1076#1072#1083#1080#1090#1100' '#1074#1089#1077' '#1076#1072#1085#1085#1099#1077' '#1087#1086' '#1053#1058#1047' '#1076#1083#1103' '#1074#1099#1073#1088#1072#1085#1085#1086#1075#1086' '#1087#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1103'?'
+      InfoAfterExecute = #1044#1072#1085#1085#1099#1077' '#1087#1086' '#1053#1058#1047' '#1076#1083#1103' '#1074#1099#1073#1088#1072#1085#1085#1086#1075#1086' '#1087#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1103' '#1073#1099#1083#1080' '#1091#1089#1087#1077#1096#1085#1086' '#1086#1095#1080#1097#1077#1085#1099'.'
+    end
   end
   inherited spSelect: TdsdStoredProc
     StoredProcName = 'gpSelect_Object_Price'
@@ -410,6 +427,10 @@ inherited PriceForm: TPriceForm
           ItemName = 'dxBarButton3'
         end
         item
+          Visible = True
+          ItemName = 'dxBarButton6'
+        end
+        item
           UserDefine = [udPaintStyle]
           UserPaintStyle = psCaptionGlyph
           Visible = True
@@ -446,6 +467,10 @@ inherited PriceForm: TPriceForm
     end
     object dxBarButton5: TdxBarButton
       Action = actStartRecalcMCS
+      Category = 0
+    end
+    object dxBarButton6: TdxBarButton
+      Action = actDelete_Object_MCS
       Category = 0
     end
   end
@@ -683,6 +708,22 @@ inherited PriceForm: TPriceForm
       end>
     PackSize = 1
     Left = 408
+    Top = 136
+  end
+  object spDelete_Object_MCS: TdsdStoredProc
+    StoredProcName = 'gpDelete_Object_MCS'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inUnitId'
+        Value = ''
+        Component = FormParams
+        ComponentItem = 'UnitId'
+        ParamType = ptInput
+      end>
+    PackSize = 1
+    Left = 504
     Top = 136
   end
 end
