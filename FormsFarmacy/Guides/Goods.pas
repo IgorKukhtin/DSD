@@ -10,7 +10,8 @@ uses
   dxBar, cxClasses, cxPropertiesStore, Datasnap.DBClient, cxGridLevel,
   cxGridCustomTableView, cxGridTableView, cxGridDBTableView, cxGridCustomView,
   Vcl.Controls, cxGrid, AncestorGuides, cxPCdxBarPopupMenu, Vcl.Menus, cxPC,
-  dxSkinsCore, dxSkinsDefaultPainters, Vcl.DBActns;
+  dxSkinsCore, dxSkinsDefaultPainters, Vcl.DBActns, dxSkinscxPCPainter,
+  dxSkinsdxBarPainter;
 
 type
   TGoodsForm = class(TAncestorGuidesForm)
@@ -35,6 +36,7 @@ type
     clIsClose: TcxGridDBColumn;
     cbIsTop: TcxGridDBColumn;
     cbPercentMarkup: TcxGridDBColumn;
+    colPrice: TcxGridDBColumn;
   private
     { Private declarations }
   public

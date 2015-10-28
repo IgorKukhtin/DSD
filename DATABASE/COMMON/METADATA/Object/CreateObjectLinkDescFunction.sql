@@ -1173,6 +1173,11 @@ CREATE OR REPLACE FUNCTION zc_ObjectLink_AdditionalGoods_GoodsSecond() RETURNS I
 INSERT INTO ObjectLinkDesc(Code, ItemName, DescId, ChildObjectDescId)
 SELECT 'zc_ObjectLink_AdditionalGoods_GoodsSecond', 'Второстепенный товар в дополнительных товарах', zc_Object_AdditionalGoods(), zc_Object_Goods() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_AdditionalGoods_GoodsSecond');
 
+CREATE OR REPLACE FUNCTION zc_ObjectLink_Goods_Appointment() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_Goods_Appointment'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectLinkDesc(Code, ItemName, DescId, ChildObjectDescId)
+SELECT 'zc_ObjectLink_Goods_Appointment', 'Назначение товара', zc_Object_Goods(), zc_Object_Appointment() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_Goods_Appointment');
+
+
 --------------------------- !!!!!!!!!!!!!!!!!!!!!!!!!
 --------------------------- !!! ВРЕМЕННЫЕ ОБЪЕКТЫ !!!
 --------------------------- !!!!!!!!!!!!!!!!!!!!!!!!!
@@ -1214,6 +1219,7 @@ SELECT 'zc_ObjectLink_PriceList_Currency', 'Валюта', zc_Object_PriceList(), zc_O
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А.А.
+ 27.10.15                                                                       *zc_ObjectLink_Goods_Appointment
  27.09.15                                                                       *zc_ObjectLink_PriceList_Currency               
  12.09.15         * add zc_ObjectLink_Partner_MemberTake1...7
  20.04.15         * add zc_ObjectLink_Route_RouteGroup
