@@ -64,7 +64,7 @@ BEGIN
            , MovementFloat_ChangePercent.ValueData       AS ChangePercent
 
            , MovementFloat_TotalCount.ValueData          AS TotalCount
-           , (COALESCE (MovementFloat_TotalCount.ValueData, 0) + COALESCE (MovementFloat_TotalSummPacker.ValueData, 0)) :: TFloat AS TotalCount_unit
+           , (COALESCE (MovementFloat_TotalCount.ValueData, 0) /*+ COALESCE (MovementFloat_TotalSummPacker.ValueData, 0)*/) :: TFloat AS TotalCount_unit
            , (COALESCE (MovementFloat_TotalCount.ValueData, 0) - COALESCE (MovementFloat_TotalCountPartner.ValueData, 0)) :: TFloat AS TotalCount_diff
            , MovementFloat_TotalCountPartner.ValueData   AS TotalCountPartner
            , MovementFloat_TotalSummMVAT.ValueData       AS TotalSummMVAT

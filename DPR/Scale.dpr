@@ -79,7 +79,8 @@ uses
   DialogStringValue in '..\Scale\DialogStringValue.pas' {DialogStringValueForm},
   DialogNumberValue in '..\Scale\DialogNumberValue.pas' {DialogNumberValueForm},
   GuideGoodsMovement in '..\Scale\GuideGoodsMovement.pas' {GuideGoodsMovementForm},
-  GuideMovement in '..\Scale\GuideMovement.pas' {GuideMovementForm};
+  GuideMovement in '..\Scale\GuideMovement.pas' {GuideMovementForm},
+  RecadvXML in '..\SOURCE\EDI\RecadvXML.pas';
 
 {$R *.res}
 
@@ -99,7 +100,7 @@ begin
          if gpCheck_BranchCode = FALSE then exit;
          //
          Application.CreateForm(TdmMain, dmMain);
-         Application.CreateForm(TDMMainScaleForm, DMMainScaleForm);
+  Application.CreateForm(TDMMainScaleForm, DMMainScaleForm);
   // !!!важно первым!!!
   Application.CreateForm(TMainForm, MainForm);
          Application.CreateForm(TDialogMovementDescForm, DialogMovementDescForm);

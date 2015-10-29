@@ -282,6 +282,9 @@ BEGIN
                   ELSE COALESCE (Movement_order.InvNumber, '')
              END AS InvNumberOrder
 
+           , EXTRACT (DAY FROM Movement.OperDate) :: Integer AS OperDate_day
+           , COALESCE (EXTRACT (DAY FROM MovementDate_OperDatePartner.ValueData), 0) :: Integer AS OperDatePartner_day
+
            , Movement.OperDate                          AS OperDate
            , COALESCE (MovementDate_OperDatePartner.ValueData, CASE WHEN Movement.DescId <> zc_Movement_Sale() THEN Movement.OperDate END) AS OperDatePartner
            , MovementDate_Payment.ValueData             AS PaymentDate

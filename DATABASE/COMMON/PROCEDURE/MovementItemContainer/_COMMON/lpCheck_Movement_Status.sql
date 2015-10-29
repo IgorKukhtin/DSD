@@ -60,7 +60,7 @@ BEGIN
      FROM MovementLinkMovement AS MovementLinkMovement_Master
           INNER JOIN Movement AS Movement_DocumentMaster ON Movement_DocumentMaster.Id = MovementLinkMovement_Master.MovementChildId
                                                         AND Movement_DocumentMaster.StatusId <> zc_Enum_Status_Erased()
-                                                        AND Movement_DocumentMaster.DescId IN (zc_Movement_Sale(), zc_Movement_ReturnIn(), zc_Movement_Tax(), zc_Movement_TaxCorrective())
+                                                        AND Movement_DocumentMaster.DescId IN (zc_Movement_Sale(), zc_Movement_ReturnIn(), zc_Movement_Tax(), zc_Movement_TaxCorrective(), zc_Movement_PriceCorrective())
           LEFT JOIN MovementDesc ON MovementDesc.Id = Movement_DocumentMaster.DescId
           LEFT JOIN MovementString AS MS_InvNumberPartner
                                    ON MS_InvNumberPartner.MovementId = Movement_DocumentMaster.Id
@@ -88,7 +88,7 @@ BEGIN
                              AND Movement.StatusId = zc_Enum_Status_Complete()
           INNER JOIN Movement AS Movement_Document ON Movement_Document.Id = MovementLinkMovement_Child.MovementId
                                                   AND Movement_Document.StatusId = zc_Enum_Status_Complete()
-                                                  AND Movement_Document.DescId IN (zc_Movement_Sale(), zc_Movement_ReturnIn(), zc_Movement_Tax(), zc_Movement_TaxCorrective())
+                                                  AND Movement_Document.DescId IN (zc_Movement_Sale(), zc_Movement_ReturnIn(), zc_Movement_Tax(), zc_Movement_TaxCorrective(), zc_Movement_PriceCorrective())
           LEFT JOIN MovementDesc ON MovementDesc.Id = Movement_Document.DescId
           LEFT JOIN MovementString AS MS_InvNumberPartner
                                    ON MS_InvNumberPartner.MovementId = Movement_Document.Id

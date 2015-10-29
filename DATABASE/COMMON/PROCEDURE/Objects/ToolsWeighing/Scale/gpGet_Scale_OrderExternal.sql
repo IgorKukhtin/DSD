@@ -159,6 +159,7 @@ BEGIN
                                                          THEN zc_Movement_SendOnPrice()
                                                     ELSE tmpMovement.DescId
                                                END AS MovementDescId
+                                             , tmpMovement.DescId AS MovementDescId_original
                                              , tmpMovement.FromId
                                              , tmpMovement.ToId
                                              , tmpMovement.isSendOnPriceIn
@@ -173,7 +174,7 @@ BEGIN
                                                                                              ) AS tmpSelect ON tmpSelect.MovementDescId = tmp.MovementDescId
                                                                                                            AND tmpSelect.FromId = CASE WHEN tmp.MovementDescId = zc_Movement_Loss()
                                                                                                                                             THEN tmp.ToId -- для списания
-                                                                                                                                       WHEN tmp.MovementDescId = zc_Movement_SendOnPrice()
+                                                                                                                                       WHEN tmp.MovementDescId = zc_Movement_SendOnPrice() AND tmp.MovementDescId_original = zc_Movement_OrderExternal()
                                                                                                                                             THEN tmp.ToId -- для SendOnPrice по заявке
 
                                                                                                                                        WHEN vbBranchId = zc_Branch_Basis() AND tmp.isSendOnPriceIn = FALSE
@@ -187,7 +188,7 @@ BEGIN
                                                                                                                                   END
                                                                                                            AND tmpSelect.ToId   = CASE WHEN tmp.MovementDescId = zc_Movement_Loss()
                                                                                                                                             THEN 0 -- для списания здесь 0 т.к. он выбирается из справочника
-                                                                                                                                       WHEN tmp.MovementDescId = zc_Movement_SendOnPrice()
+                                                                                                                                       WHEN tmp.MovementDescId = zc_Movement_SendOnPrice() AND tmp.MovementDescId_original = zc_Movement_OrderExternal()
                                                                                                                                             THEN 0 -- для SendOnPrice по заявке
 
                                                                                                                                        WHEN vbBranchId = zc_Branch_Basis() AND tmp.isSendOnPriceIn = FALSE
