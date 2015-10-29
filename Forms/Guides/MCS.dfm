@@ -1,24 +1,28 @@
 inherited MCSForm: TMCSForm
   Caption = #1053#1077#1089#1085#1080#1078#1072#1077#1084#1099#1081' '#1090#1086#1074#1072#1088#1085#1099#1081' '#1079#1072#1087#1072#1089
   ClientHeight = 419
-  ClientWidth = 722
+  ClientWidth = 758
   AddOnFormData.RefreshAction = actRefreshStart
-  ExplicitWidth = 730
-  ExplicitHeight = 446
+  ExplicitWidth = 774
+  ExplicitHeight = 457
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Width = 722
+    Width = 758
     Height = 393
     TabOrder = 3
-    ExplicitWidth = 698
+    ExplicitWidth = 722
+    ExplicitHeight = 393
     ClientRectBottom = 393
-    ClientRectRight = 722
+    ClientRectRight = 758
     inherited tsMain: TcxTabSheet
+      ExplicitWidth = 722
+      ExplicitHeight = 393
       inherited cxGrid: TcxGrid
-        Width = 722
+        Width = 758
         Height = 393
-        ExplicitWidth = 698
+        ExplicitWidth = 722
+        ExplicitHeight = 393
         inherited cxGridDBTableView: TcxGridDBTableView
           Styles.Content = nil
           Styles.Inactive = nil
@@ -78,6 +82,9 @@ inherited MCSForm: TMCSForm
       FormName = ''
       FormNameParam.Value = ''
     end
+    inherited actDelete_Object_MCS: TdsdExecStoredProc
+      PostDataSetBeforeExecute = False
+    end
   end
   inherited BarManager: TdxBarManager
     DockControlHeights = (
@@ -90,8 +97,11 @@ inherited MCSForm: TMCSForm
       Enabled = False
       Visible = ivNever
     end
+    inherited dxBarButton6: TdxBarButton
+      Enabled = False
+    end
   end
-  object spGet_UserUnit: TdsdStoredProc [17]
+  object spGet_UserUnit: TdsdStoredProc [13]
     StoredProcName = 'gpGet_UserUnit'
     DataSets = <>
     OutputType = otResult

@@ -1095,6 +1095,11 @@ inherited TransferDebtInJournalForm: TTransferDebtInJournalForm
         ParamType = ptInput
       end
       item
+        Name = 'inDescName'
+        DataType = ftString
+        ParamType = ptInput
+      end
+      item
         Name = 'gpGet_Movement_ReturnIn_ReportName'
         Value = Null
         Component = FormParams
@@ -1102,8 +1107,8 @@ inherited TransferDebtInJournalForm: TTransferDebtInJournalForm
         DataType = ftString
       end>
     PackSize = 1
-    Left = 496
-    Top = 288
+    Left = 448
+    Top = 264
   end
   object spSelectPrint: TdsdStoredProc
     StoredProcName = 'gpSelect_Movement_ReturnIn_Print'

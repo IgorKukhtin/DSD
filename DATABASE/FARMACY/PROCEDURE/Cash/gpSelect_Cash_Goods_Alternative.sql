@@ -65,8 +65,7 @@ BEGIN
              - COALESCE(CurrentMovement.Amount,0) 
              - COALESCE(Reserve.Amount,0))::TFloat as Remains
         from Container
-            Inner Join object_Goods_View ON Container.ObjectId = object_Goods_View.Id
-                                        AND object_Goods_View.ObjectId = vbObjectId                             
+            Inner Join object ON Container.ObjectId = object.Id
             LEFT OUTER JOIN RESERVE ON container.objectid = RESERVE.GoodsId
             LEFT OUTER JOIN CurrentMovement ON container.objectid = CurrentMovement.ObjectId                            
         WHERE

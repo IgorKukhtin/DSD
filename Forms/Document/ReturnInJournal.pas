@@ -96,6 +96,10 @@ type
     colComment: TcxGridDBColumn;
     colInvNumber_Parent: TcxGridDBColumn;
     isPartner: TcxGridDBColumn;
+    mactPrintPriceCorr: TMultiAction;
+    bbPrintPriceCorr: TdxBarButton;
+    spGetReportNamePriceCorr: TdsdStoredProc;
+    actSPPrintProcNamePriceCorr: TdsdExecStoredProc;
   private
     { Private declarations }
   public

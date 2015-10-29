@@ -1,12 +1,12 @@
 -- Function: gpSelect_Movement_SendOnPrice_Print()
 
-DROP FUNCTION IF EXISTS gpSelect_Movement_SendOnPrice_Print (Integer, TVarChar);
-DROP FUNCTION IF EXISTS gpSelect_Movement_SendOnPrice_Print (Integer, Integer, TVarChar);
+--DROP FUNCTION IF EXISTS gpSelect_Movement_SendOnPrice_Print (Integer, TVarChar);
+--DROP FUNCTION IF EXISTS gpSelect_Movement_SendOnPrice_Print (Integer, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_Movement_SendOnPrice_Print(
     IN inMovementId        Integer  , -- ключ Документа
-    IN inReportType        Integer  , -- 0=out 1=in
-    IN inSession       TVarChar    -- сессия пользователя
+    --IN inReportType        Integer  , -- 0=out 1=in
+    IN inSession           TVarChar    -- сессия пользователя
 )
 RETURNS SETOF refcursor
 AS
@@ -78,10 +78,10 @@ BEGIN
     ;
 
      -- !!!МЕНЯЕТСЯ параметр!!!
-     IF vbBranchId IN (0, zc_Branch_Basis())
-     THEN inReportType :=  1; -- !!!т.е. количество пришло!!!
-     ELSE inReportType :=  COALESCE (inReportType, 0);
-     END IF;
+ --    IF vbBranchId IN (0, zc_Branch_Basis())
+ --    THEN inReportType :=  1; -- !!!т.е. количество пришло!!!
+ --    ELSE inReportType :=  COALESCE (inReportType, 0);
+ --    END IF;
 
 
     -- очень важная проверка
@@ -250,46 +250,32 @@ BEGIN
            , vbVATPercent                               AS VATPercent
            , vbExtraChargesPercent - vbDiscountPercent  AS ChangePercent
 
-           , CASE inReportType WHEN 0
-             THEN MovementFloat_TotalCount.ValueData
-             ELSE MovementFloat_TotalCountPartner.ValueData
-             END                                        AS TotalCount
+           , MovementFloat_TotalCount.ValueData         AS TotalCountOut
+           , MovementFloat_TotalCountPartner.ValueData  AS TotalCountIn
 
-           , CASE inReportType WHEN 0
-             THEN vbTotalCountKgOut
-             ELSE vbTotalCountKgIn
-             END                                        AS TotalCountKg
+           , vbTotalCountKgOut                          AS TotalCountKgOut
+           , vbTotalCountKgIn                           AS TotalCountKgIn
 
-           , CASE inReportType WHEN 0
-             THEN vbTotalCountShOut
-             ELSE vbTotalCountShIn
-             END                                        AS TotalCountSh
+           , vbTotalCountShOut                          AS TotalCountShOut
+           , vbTotalCountShIn                           AS TotalCountShIn
 
-           , CASE inReportType WHEN 0
-             THEN vbOperSumm_MVATOut
-             ELSE vbOperSumm_MVATIn
-             END                                        AS TotalSummMVAT
+           , vbOperSumm_MVATOut                         AS TotalSummMVATOut
+           , vbOperSumm_MVATIn                          AS TotalSummMVATIn
 
-           , CASE inReportType WHEN 0
-             THEN vbOperSumm_PVATOut
-             ELSE vbOperSumm_PVATIn
-             END                                        AS TotalSummPVAT
+           , vbOperSumm_PVATOut                         AS TotalSummPVATOut
+           , vbOperSumm_PVATIn                          AS TotalSummPVATIn
 
-           , CASE inReportType WHEN 0
-             THEN vbOperSumm_PVATOut - vbOperSumm_MVATOut
-             ELSE vbOperSumm_PVATIn  - vbOperSumm_MVATIn
-             END                                        AS SummVAT
+           , vbOperSumm_PVATOut - vbOperSumm_MVATOut    AS SummVATOut
+           , vbOperSumm_PVATIn  - vbOperSumm_MVATIn     AS SummVATIn
 
-           , CASE inReportType WHEN 0
-             THEN vbOperSumm_PVATOut
-             ELSE vbOperSumm_PVATIn
-             END                                        AS TotalSumm
+           , vbOperSumm_PVATOut                         AS TotalSummOut
+           , vbOperSumm_PVATIn                          AS TotalSummIn
 
-           , Object_From.ValueData             		    AS FromName
-           , Object_To.ValueData                            AS ToName
-           , Object_PaidKind.ValueData         		    AS PaidKindName
+           , Object_From.ValueData             	        AS FromName
+           , Object_To.ValueData                        AS ToName
+           , Object_PaidKind.ValueData         	        AS PaidKindName
 
-           , Object_RouteSorting.ValueData 		        AS RouteSortingName
+           , Object_RouteSorting.ValueData 	        AS RouteSortingName
 
            , '' :: TVarChar                             AS StoreKeeper -- кладовщик
            , '' :: TVarChar                             AS Through     -- через кого
@@ -300,7 +286,7 @@ BEGIN
            , Object_Partner_order.ValueData                AS PartnerName_order
            , TRIM (COALESCE (MovementString_Comment_order.ValueData, '')) :: TVarChar AS Comment_order
 
-           , inReportType AS ReportType
+           --, inReportType AS ReportType
 
        FROM Movement
 
@@ -394,29 +380,32 @@ BEGIN
            , Object_Unit.ValueData           AS UnitName
            , Object_Unit.ObjectCode          AS UnitCode
 
-           , CASE inReportType
-                  WHEN 0 THEN tmpMI.AmountOut
-                  ELSE tmpMI.AmountIn
-             END                             AS Amount
-
+           , tmpMI.AmountOut
+           , tmpMI.AmountIn
+             
+           , (tmpMI.AmountOut - tmpMI.AmountIn) AS AmountDiff
+           
            , tmpMI.Price                     AS Price
            , tmpMI.CountForPrice             AS CountForPrice
 
-           , CASE inReportType
-             WHEN 0
-             THEN
-                  CASE WHEN tmpMI.CountForPrice <> 0
+           , CASE WHEN tmpMI.CountForPrice <> 0
                        THEN CAST (tmpMI.AmountOut * (tmpMI.Price / tmpMI.CountForPrice) AS NUMERIC (16, 2))
                   ELSE CAST (tmpMI.AmountOut * tmpMI.Price AS NUMERIC (16, 2))
-                  END
-             ELSE
-                  CASE WHEN tmpMI.CountForPrice <> 0
+                  END                       AS AmountOutSumm
+                  
+           , CASE WHEN tmpMI.CountForPrice <> 0
                        THEN CAST (tmpMI.AmountIn * (tmpMI.Price / tmpMI.CountForPrice) AS NUMERIC (16, 2))
                   ELSE CAST (tmpMI.AmountIn * tmpMI.Price AS NUMERIC (16, 2))
-                  END
-             END                             AS AmountSumm
+                  END                       AS AmountInSumm
 
-
+           , (CASE WHEN tmpMI.CountForPrice <> 0
+                       THEN CAST (tmpMI.AmountOut * (tmpMI.Price / tmpMI.CountForPrice) AS NUMERIC (16, 2))
+                  ELSE CAST (tmpMI.AmountOut * tmpMI.Price AS NUMERIC (16, 2))
+                  END ) -
+             (CASE WHEN tmpMI.CountForPrice <> 0
+                       THEN CAST (tmpMI.AmountIn * (tmpMI.Price / tmpMI.CountForPrice) AS NUMERIC (16, 2))
+                  ELSE CAST (tmpMI.AmountIn * tmpMI.Price AS NUMERIC (16, 2))
+                  END)                       AS AmountSummDiff
 
              -- расчет цены без НДС, до 4 знаков
            , CASE WHEN vbPriceWithVAT = TRUE
@@ -432,52 +421,36 @@ BEGIN
              END / CASE WHEN tmpMI.CountForPrice <> 0 THEN tmpMI.CountForPrice ELSE 1 END
              AS PriceWVAT
 
-           , CASE inReportType
-             WHEN 0
-             THEN
-                   CAST (tmpMI.AmountIn * CASE WHEN vbPriceWithVAT = TRUE
+           , CAST (tmpMI.AmountIn * CASE WHEN vbPriceWithVAT = TRUE
                                               THEN (tmpMI.Price - tmpMI.Price * (vbVATPercent / 100))
                                               ELSE tmpMI.Price
                                          END / CASE WHEN tmpMI.CountForPrice <> 0 THEN tmpMI.CountForPrice ELSE 1 END
-                   AS NUMERIC (16, 2))
+                   AS NUMERIC (16, 2))       AS AmountInSummNoVAT
 
-             ELSE
-                   CAST (tmpMI.AmountOut * CASE WHEN vbPriceWithVAT = TRUE
+           , CAST (tmpMI.AmountOut * CASE WHEN vbPriceWithVAT = TRUE
                                               THEN (tmpMI.Price - tmpMI.Price * (vbVATPercent / 100))
                                               ELSE tmpMI.Price
                                          END / CASE WHEN tmpMI.CountForPrice <> 0 THEN tmpMI.CountForPrice ELSE 1 END
-                   AS NUMERIC (16, 2))
-
-             END                             AS AmountSummNoVAT
+                   AS NUMERIC (16, 2))       AS AmountOutSummNoVAT
 
 
-           , CASE inReportType
-             WHEN 0
-             THEN
-                   CAST (tmpMI.AmountIn * CASE WHEN vbPriceWithVAT <> TRUE
+           , CAST (tmpMI.AmountIn * CASE WHEN vbPriceWithVAT <> TRUE
                                               THEN tmpMI.Price + tmpMI.Price * (vbVATPercent / 100)
                                               ELSE tmpMI.Price
                                          END / CASE WHEN tmpMI.CountForPrice <> 0 THEN tmpMI.CountForPrice ELSE 1 END
-                   AS NUMERIC (16, 3))
+                   AS NUMERIC (16, 3))       AS AmountInSummWVAT
 
-             ELSE
-                   CAST (tmpMI.AmountOut * CASE WHEN vbPriceWithVAT <> TRUE
+           , CAST (tmpMI.AmountOut * CASE WHEN vbPriceWithVAT <> TRUE
                                               THEN tmpMI.Price + tmpMI.Price * (vbVATPercent / 100)
                                               ELSE tmpMI.Price
                                          END / CASE WHEN tmpMI.CountForPrice <> 0 THEN tmpMI.CountForPrice ELSE 1 END
-                   AS NUMERIC (16, 3))
+                   AS NUMERIC (16, 3))       AS AmountOutSummWVAT
 
-             END                             AS AmountSummWVAT
+           , CAST ((tmpMI.AmountIn * (CASE WHEN Object_Measure.Id = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData, 0) ELSE 1 END )) AS TFloat)     AS AmountIn_Weight
+           , CAST ((tmpMI.AmountOut * (CASE WHEN Object_Measure.Id = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData, 0) ELSE 1 END )) AS TFloat)    AS AmountOut_Weight
 
-           , CASE inReportType
-             WHEN 0
-             THEN
-                   CAST ((tmpMI.AmountIn * (CASE WHEN Object_Measure.Id = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData, 0) ELSE 1 END )) AS TFloat)
-             ELSE
-                   CAST ((tmpMI.AmountOut * (CASE WHEN Object_Measure.Id = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData, 0) ELSE 1 END )) AS TFloat)
-             END                             AS Amount_Weight
-
-
+           , CAST ((tmpMI.AmountOut * (CASE WHEN Object_Measure.Id = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData, 0) ELSE 1 END )) AS TFloat) - 
+             CAST ((tmpMI.AmountIn * (CASE WHEN Object_Measure.Id = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData, 0) ELSE 1 END )) AS TFloat)     AS Amount_WeightDiff
 
        FROM (SELECT MovementItem.ObjectId AS GoodsId
                   , COALESCE (MILinkObject_GoodsKind.ObjectId, 0) AS GoodsKindId
@@ -548,11 +521,12 @@ BEGIN
                                                                            AND View_GoodsByGoodsKind.GoodsKindId = Object_GoodsKind.Id
             
             LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = tmpMI.UnitId
+       WHERE (tmpMI.AmountOut <> 0 ) OR (tmpMI.AmountIn <> 0)
+       
+       --WHERE (tmpMI.AmountOut <> 0 AND inReportType = 0)
+       --   OR (tmpMI.AmountIn <> 0 AND inReportType = 1)
 
-       WHERE (tmpMI.AmountOut <> 0 AND inReportType = 0)
-          OR (tmpMI.AmountIn <> 0 AND inReportType = 1)
-
-       ORDER BY Object_Goods.ValueData, Object_GoodsKind.ValueData
+       ORDER BY  Object_Unit.ValueData , Object_Goods.ValueData, Object_GoodsKind.ValueData
        ;
 
     RETURN NEXT Cursor2;
@@ -560,11 +534,12 @@ BEGIN
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpSelect_Movement_SendOnPrice_Print (Integer, Integer, TVarChar) OWNER TO postgres;
+--ALTER FUNCTION gpSelect_Movement_SendOnPrice_Print (Integer, Integer, TVarChar) OWNER TO postgres;
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 29.10.15         * del inReportType
  04.06.15         * add unitId
  05.03.15                                        * all
  10.02.15                                                       *

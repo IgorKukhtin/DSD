@@ -3,7 +3,7 @@ inherited SendOnPriceForm: TSendOnPriceForm
   ClientHeight = 668
   ClientWidth = 982
   ExplicitWidth = 998
-  ExplicitHeight = 703
+  ExplicitHeight = 706
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -506,6 +506,10 @@ inherited SendOnPriceForm: TSendOnPriceForm
           Value = Null
           Component = FormParams
           ComponentItem = 'Id'
+        end
+        item
+          Name = 'PrintParam'
+          Value = '2'
         end>
       ReportName = 'PrintMovement_SendOnPrice'
       ReportNameParam.Value = 'PrintMovement_SendOnPrice'
@@ -545,7 +549,7 @@ inherited SendOnPriceForm: TSendOnPriceForm
         end
         item
           Name = 'PrintParam'
-          Value = '1'
+          Value = '4'
           DataType = ftFloat
         end>
       ReportName = 'PrintMovement_SendOnPrice'
@@ -553,7 +557,49 @@ inherited SendOnPriceForm: TSendOnPriceForm
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
     end
-    object actPrintOut: TdsdPrintAction [11]
+    object actPrinDiff: TdsdPrintAction [11]
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spSelectPrintOut
+      StoredProcList = <
+        item
+          StoredProc = spSelectPrintOut
+        end>
+      Caption = #1055#1077#1095#1072#1090#1100' ('#1072#1082#1090' '#1088#1072#1079#1085#1086#1075#1083#1072#1089#1080#1081')'
+      Hint = #1055#1077#1095#1072#1090#1100' ('#1072#1082#1090' '#1088#1072#1079#1085#1086#1075#1083#1072#1089#1080#1081')'
+      ImageIndex = 22
+      ShortCut = 16464
+      DataSets = <
+        item
+          DataSet = PrintHeaderCDS
+          UserName = 'frxDBDHeader'
+        end
+        item
+          DataSet = PrintItemsCDS
+          UserName = 'frxDBDMaster'
+        end>
+      Params = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'Id'
+        end
+        item
+          Name = 'inReportType'
+          Value = '0'
+        end
+        item
+          Name = 'PrintParam'
+          Value = '3'
+          DataType = ftFloat
+        end>
+      ReportName = 'PrintMovement_SendOnPrice'
+      ReportNameParam.Value = 'PrintMovement_SendOnPrice'
+      ReportNameParam.DataType = ftString
+      ReportNameParam.ParamType = ptInput
+    end
+    object actPrintOut: TdsdPrintAction [12]
       Category = 'DSDLib'
       MoveParams = <>
       StoredProc = spSelectPrintOut
@@ -587,7 +633,7 @@ inherited SendOnPriceForm: TSendOnPriceForm
         end
         item
           Name = 'PrintParam'
-          Value = '0'
+          Value = '1'
           DataType = ftFloat
         end>
       ReportName = 'PrintMovement_SendOnPrice'
@@ -611,7 +657,7 @@ inherited SendOnPriceForm: TSendOnPriceForm
         item
         end>
     end
-    object actGoodsKindChoice: TOpenChoiceForm [16]
+    object actGoodsKindChoice: TOpenChoiceForm [17]
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -635,7 +681,7 @@ inherited SendOnPriceForm: TSendOnPriceForm
         end>
       isShowModal = True
     end
-    object UnitChoiceForm: TOpenChoiceForm [20]
+    object UnitChoiceForm: TOpenChoiceForm [21]
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -793,7 +839,7 @@ inherited SendOnPriceForm: TSendOnPriceForm
         item
           BeginGroup = True
           Visible = True
-          ItemName = 'bbStatic'
+          ItemName = 'dxBarStatic'
         end
         item
           Visible = True
@@ -825,7 +871,7 @@ inherited SendOnPriceForm: TSendOnPriceForm
         end
         item
           Visible = True
-          ItemName = 'bb'
+          ItemName = 'bbUpdateMask'
         end
         item
           Visible = True
@@ -865,6 +911,14 @@ inherited SendOnPriceForm: TSendOnPriceForm
         end
         item
           Visible = True
+          ItemName = 'bbPrinDiff'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbMovementItemProtocol'
         end
         item
@@ -888,8 +942,12 @@ inherited SendOnPriceForm: TSendOnPriceForm
       Action = actPrintUnit
       Category = 0
     end
-    object bb: TdxBarButton
+    object bbUpdateMask: TdxBarButton
       Action = mactUpdateMask
+      Category = 0
+    end
+    object bbPrinDiff: TdxBarButton
+      Action = actPrinDiff
       Category = 0
     end
   end
@@ -1648,11 +1706,6 @@ inherited SendOnPriceForm: TSendOnPriceForm
         Component = FormParams
         ComponentItem = 'Id'
         ParamType = ptInput
-      end
-      item
-        Name = 'inReportType'
-        Value = '1'
-        ParamType = ptInput
       end>
     PackSize = 1
     Left = 319
@@ -1727,11 +1780,6 @@ inherited SendOnPriceForm: TSendOnPriceForm
         Value = Null
         Component = FormParams
         ComponentItem = 'Id'
-        ParamType = ptInput
-      end
-      item
-        Name = 'inReportType'
-        Value = '0'
         ParamType = ptInput
       end>
     PackSize = 1

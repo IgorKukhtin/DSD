@@ -26,9 +26,14 @@ CREATE OR REPLACE FUNCTION zc_objectBlob_UserFormSettings_Data() RETURNS integer
 INSERT INTO ObjectBLOBDesc (DescId, Code ,itemname)
    SELECT zc_object_UserFormSettings(), 'zc_objectBlob_UserFormSettings_Data','Пользовательские данные формы' WHERE NOT EXISTS (SELECT * FROM ObjectBlobDesc WHERE Code = 'zc_objectBlob_UserFormSettings_Data');
 
+CREATE OR REPLACE FUNCTION zc_objectBlob_Goods_Description() RETURNS integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectBlobDesc WHERE Code = 'zc_objectBlob_Goods_Description'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectBLOBDesc (DescId, Code ,itemname)
+   SELECT zc_object_Goods(), 'zc_objectBlob_Goods_Description','Описание товара' WHERE NOT EXISTS (SELECT * FROM ObjectBlobDesc WHERE Code = 'zc_objectBlob_Goods_Description');
+
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.  Воробкало А.А.
+ 27.10.15                                                         * + zc_objectBlob_Goods_Description
  10.07.13         * НОВАЯ СХЕМА              
  28.06.13                                        * НОВАЯ СХЕМА
 */

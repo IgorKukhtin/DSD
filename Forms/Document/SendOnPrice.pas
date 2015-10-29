@@ -89,7 +89,9 @@ type
     mactUpdateMask: TMultiAction;
     spUpdateMask: TdsdStoredProc;
     actUpdateMask: TdsdExecStoredProc;
-    bb: TdxBarButton;
+    bbUpdateMask: TdxBarButton;
+    actPrinDiff: TdsdPrintAction;
+    bbPrinDiff: TdxBarButton;
   private
     { Private declarations }
   public

@@ -1,10 +1,11 @@
 -- Function: gpGet_Movement_ReturnIn_ReportName()
 
 DROP FUNCTION IF EXISTS gpGet_Movement_ReturnIn_ReportName (Integer, TVarChar);
-
+DROP FUNCTION IF EXISTS gpGet_Movement_ReturnIn_ReportName (Integer, TVarChar, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpGet_Movement_ReturnIn_ReportName (
     IN inMovementId         Integer  , -- ключ Документа
+    IN inDescName           TVarChar , --
     IN inSession            TVarChar   -- сессия пользователя
 )
 RETURNS TVarChar
@@ -54,12 +55,13 @@ BEGIN
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpGet_Movement_ReturnIn_ReportName (Integer, TVarChar) OWNER TO postgres;
+ALTER FUNCTION gpGet_Movement_ReturnIn_ReportName (Integer, TVarChar, TVarChar) OWNER TO postgres;
 
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.A.
+ 23.10.15         * add inDescName
  12.06.14                                        * add COALESCE (ObjectLink_Partner_Juridical.ChildObjectId, MovementLinkObject_From.ObjectId)
  23.04.14                                                        * + PrintMovement_ReturnIn32049199
  06.02.14                                                        *

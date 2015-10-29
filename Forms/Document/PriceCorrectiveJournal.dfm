@@ -2,9 +2,8 @@ inherited PriceCorrectiveJournalForm: TPriceCorrectiveJournalForm
   Caption = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' <'#1050#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1082#1072' '#1094#1077#1085#1099'>'
   ClientHeight = 535
   ClientWidth = 1020
-  ExplicitLeft = -38
   ExplicitWidth = 1036
-  ExplicitHeight = 570
+  ExplicitHeight = 573
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -371,6 +370,25 @@ inherited PriceCorrectiveJournalForm: TPriceCorrectiveJournalForm
     inherited actUpdate: TdsdInsertUpdateAction
       FormName = 'TPriceCorrectiveForm'
       FormNameParam.Value = 'TPriceCorrectiveForm'
+      GuiParams = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'Id'
+          ParamType = ptInput
+        end
+        item
+          Name = 'ShowAll'
+          Value = False
+          DataType = ftBoolean
+        end
+        item
+          Name = 'inOperDate'
+          Value = 41640d
+          Component = deEnd
+          DataType = ftDateTime
+        end>
     end
     object actCorrective: TdsdExecStoredProc [9]
       Category = 'DSDLib'
@@ -393,6 +411,17 @@ inherited PriceCorrectiveJournalForm: TPriceCorrectiveJournalForm
     end
     inherited MovementProtocolOpenForm: TdsdOpenForm
       FormNameParam.Value = ''
+    end
+    object actSPPrintProcNameReturnIn: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spGetReportNameReturnIn
+      StoredProcList = <
+        item
+          StoredProc = spGetReportNameReturnIn
+        end>
+      Caption = 'actSPPrintProcName'
     end
     object actSPPrintProcName: TdsdExecStoredProc
       Category = 'DSDLib'
@@ -447,6 +476,30 @@ inherited PriceCorrectiveJournalForm: TPriceCorrectiveJournalForm
       ReportNameParam.ComponentItem = 'ReportName'
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
+    end
+    object mactPrintReturnIn: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <
+        item
+          FromParam.Name = 'id'
+          FromParam.Value = Null
+          FromParam.Component = MasterCDS
+          FromParam.ComponentItem = 'id'
+          ToParam.Value = Null
+          ToParam.Component = FormParams
+          ToParam.ComponentItem = 'Id'
+          ToParam.ParamType = ptInputOutput
+        end>
+      ActionList = <
+        item
+          Action = actSPPrintProcNameReturnIn
+        end
+        item
+          Action = actPrint
+        end>
+      Caption = #1042#1054#1047#1042#1056#1040#1058#1053#1040' '#1058#1054#1042#1040#1056#1053#1040' '#1053#1040#1050#1051#1040#1044#1053#1040
+      Hint = #1042#1054#1047#1042#1056#1040#1058#1053#1040' '#1058#1054#1042#1040#1056#1053#1040' '#1053#1040#1050#1051#1040#1044#1053#1040
+      ImageIndex = 16
     end
     object mactPrint: TMultiAction
       Category = 'DSDLib'
@@ -714,6 +767,14 @@ inherited PriceCorrectiveJournalForm: TPriceCorrectiveJournalForm
         end
         item
           Visible = True
+          ItemName = 'bbPrintReturnIn'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbPrintTaxCorrective_Client'
         end
         item
@@ -755,6 +816,10 @@ inherited PriceCorrectiveJournalForm: TPriceCorrectiveJournalForm
     end
     object bbPrintTaxCorrective_Us: TdxBarButton
       Action = mactPrint_TaxCorrective_Us
+      Category = 0
+    end
+    object bbPrintReturnIn: TdxBarButton
+      Action = mactPrintReturnIn
       Category = 0
     end
   end
@@ -863,6 +928,12 @@ inherited PriceCorrectiveJournalForm: TPriceCorrectiveJournalForm
         Value = Null
         Component = FormParams
         ComponentItem = 'Id'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inDescName'
+        Value = 'zc_Movement_PriceCorrective'
+        DataType = ftString
         ParamType = ptInput
       end
       item
@@ -1075,5 +1146,34 @@ inherited PriceCorrectiveJournalForm: TPriceCorrectiveJournalForm
     PackSize = 1
     Left = 424
     Top = 416
+  end
+  object spGetReportNameReturnIn: TdsdStoredProc
+    StoredProcName = 'gpGet_Movement_ReturnIn_ReportName'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inDescName'
+        Value = 'zc_Movement_ReturnIn'
+        DataType = ftString
+        ParamType = ptInput
+      end
+      item
+        Name = 'gpGet_Movement_ReturnIn_ReportName'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'ReportName'
+        DataType = ftString
+      end>
+    PackSize = 1
+    Left = 400
+    Top = 280
   end
 end

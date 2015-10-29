@@ -3,7 +3,7 @@ inherited PriceCorrectiveForm: TPriceCorrectiveForm
   ClientHeight = 542
   ClientWidth = 1042
   ExplicitWidth = 1058
-  ExplicitHeight = 577
+  ExplicitHeight = 580
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -782,7 +782,21 @@ inherited PriceCorrectiveForm: TPriceCorrectiveForm
       ReportNameParam.ComponentItem = 'ReportName'
       ReportNameParam.ParamType = ptInput
     end
-    object mactPrint: TMultiAction [10]
+    object mactPrintReturnIn: TMultiAction [10]
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actSPPrintProcNameReturnIn
+        end
+        item
+          Action = actPrint
+        end>
+      Caption = #1042#1054#1047#1042#1056#1040#1058#1053#1040' '#1058#1054#1042#1040#1056#1053#1040' '#1053#1040#1050#1051#1040#1044#1053#1040
+      Hint = #1042#1054#1047#1042#1056#1040#1058#1053#1040' '#1058#1054#1042#1040#1056#1053#1040' '#1053#1040#1050#1051#1040#1044#1053#1040
+      ImageIndex = 16
+    end
+    object mactPrint: TMultiAction [11]
       Category = 'DSDLib'
       MoveParams = <>
       ActionList = <
@@ -796,7 +810,7 @@ inherited PriceCorrectiveForm: TPriceCorrectiveForm
       Hint = #1053#1072#1082#1083#1072#1076#1085#1072#1103
       ImageIndex = 3
     end
-    object actTaxJournalChoice: TOpenChoiceForm [11]
+    object actTaxJournalChoice: TOpenChoiceForm [12]
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -857,7 +871,7 @@ inherited PriceCorrectiveForm: TPriceCorrectiveForm
         item
         end>
     end
-    object actGoodsKindChoice: TOpenChoiceForm [14]
+    object actGoodsKindChoice: TOpenChoiceForm [15]
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -881,7 +895,7 @@ inherited PriceCorrectiveForm: TPriceCorrectiveForm
         end>
       isShowModal = True
     end
-    object actOpenTaxCorrective: TdsdOpenForm [16]
+    object actOpenTaxCorrective: TdsdOpenForm [17]
       Category = 'DSDLib'
       TabSheet = cxTabSheetTaxCorrective
       MoveParams = <>
@@ -947,6 +961,17 @@ inherited PriceCorrectiveForm: TPriceCorrectiveForm
       Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
       ShortCut = 116
       RefreshOnTabSetChanges = False
+    end
+    object actSPPrintProcNameReturnIn: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spGetReportNameReturnIn
+      StoredProcList = <
+        item
+          StoredProc = spGetReportNameReturnIn
+        end>
+      Caption = 'actSPPrintProcNameReturnIn'
     end
     object actSPPrintProcName: TdsdExecStoredProc
       Category = 'DSDLib'
@@ -1270,6 +1295,14 @@ inherited PriceCorrectiveForm: TPriceCorrectiveForm
         end
         item
           Visible = True
+          ItemName = 'bbStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbPrintReturnIn'
+        end
+        item
+          Visible = True
           ItemName = 'dxBarStatic'
         end
         item
@@ -1330,6 +1363,10 @@ inherited PriceCorrectiveForm: TPriceCorrectiveForm
     end
     object bbSetErasedTaxCorrective: TdxBarButton
       Action = actSetErasedTaxCorrective
+      Category = 0
+    end
+    object bbPrintReturnIn: TdxBarButton
+      Action = mactPrintReturnIn
       Category = 0
     end
   end
@@ -1922,6 +1959,12 @@ inherited PriceCorrectiveForm: TPriceCorrectiveForm
         ParamType = ptInput
       end
       item
+        Name = 'inDescName'
+        Value = 'zc_Movement_PriceCorrective'
+        DataType = ftString
+        ParamType = ptInput
+      end
+      item
         Name = 'gpGet_Movement_ReturnIn_ReportName'
         Value = 'PrintMovement_TaxCorrective'
         Component = FormParams
@@ -1929,8 +1972,8 @@ inherited PriceCorrectiveForm: TPriceCorrectiveForm
         DataType = ftString
       end>
     PackSize = 1
-    Left = 496
-    Top = 272
+    Left = 488
+    Top = 256
   end
   object GuidesFrom: TdsdGuides
     KeyField = 'Id'
@@ -2440,5 +2483,34 @@ inherited PriceCorrectiveForm: TPriceCorrectiveForm
     SummaryItemList = <>
     Left = 751
     Top = 332
+  end
+  object spGetReportNameReturnIn: TdsdStoredProc
+    StoredProcName = 'gpGet_Movement_ReturnIn_ReportName'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inDescName'
+        Value = 'zc_Movement_ReturnIn'
+        DataType = ftString
+        ParamType = ptInput
+      end
+      item
+        Name = 'gpGet_Movement_ReturnIn_ReportName'
+        Value = 'PrintMovement_TaxCorrective'
+        Component = FormParams
+        ComponentItem = 'ReportName'
+        DataType = ftString
+      end>
+    PackSize = 1
+    Left = 424
+    Top = 272
   end
 end

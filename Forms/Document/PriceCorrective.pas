@@ -96,6 +96,10 @@ type
     bbSetErasedTaxCorrective: TdxBarButton;
     actTaxJournalChoice: TOpenChoiceForm;
     actUpdateTaxCorrectiveDS: TdsdUpdateDataSet;
+    spGetReportNameReturnIn: TdsdStoredProc;
+    mactPrintReturnIn: TMultiAction;
+    actSPPrintProcNameReturnIn: TdsdExecStoredProc;
+    bbPrintReturnIn: TdxBarButton;
   private
     { Private declarations }
   public

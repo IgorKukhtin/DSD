@@ -3,24 +3,24 @@ inherited GoodsForm: TGoodsForm
   ClientHeight = 423
   ClientWidth = 962
   AddOnFormData.ChoiceAction = dsdChoiceGuides
-  ExplicitWidth = 970
-  ExplicitHeight = 450
+  ExplicitWidth = 978
+  ExplicitHeight = 461
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Width = 962
     Height = 397
-    ExplicitWidth = 852
+    ExplicitWidth = 962
     ExplicitHeight = 397
     ClientRectBottom = 397
     ClientRectRight = 962
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 852
+      ExplicitWidth = 962
       ExplicitHeight = 397
       inherited cxGrid: TcxGrid
         Width = 962
         Height = 397
-        ExplicitWidth = 852
+        ExplicitWidth = 962
         ExplicitHeight = 397
         inherited cxGridDBTableView: TcxGridDBTableView
           OptionsBehavior.IncSearch = True
@@ -106,6 +106,18 @@ inherited GoodsForm: TGoodsForm
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 51
+          end
+          object colPrice: TcxGridDBColumn
+            AlternateCaption = #1062#1077#1085#1072' '#1088#1077#1072#1083#1080#1079#1072#1094#1080#1080
+            Caption = #1062#1077#1085#1072' '#1088#1077#1072#1083#1080#1079'.'
+            DataBinding.FieldName = 'Price'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.00'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1062#1077#1085#1072' '#1088#1077#1072#1083#1080#1079#1072#1094#1080#1080
+            Options.Editing = False
+            Width = 70
           end
         end
       end
@@ -217,6 +229,7 @@ inherited GoodsForm: TGoodsForm
     object spRefreshOnInsert: TdsdExecStoredProc
       Category = 'Refresh'
       MoveParams = <>
+      PostDataSetBeforeExecute = False
       StoredProc = spGetOnInsert
       StoredProcList = <
         item
@@ -227,6 +240,7 @@ inherited GoodsForm: TGoodsForm
     object InsertRecord1: TInsertRecord
       Category = 'DSDLib'
       MoveParams = <>
+      PostDataSetBeforeExecute = False
       View = cxGridDBTableView
       Params = <>
       Caption = 'InsertRecord1'
@@ -234,6 +248,7 @@ inherited GoodsForm: TGoodsForm
     object UpdateDataSet: TdsdUpdateDataSet
       Category = 'DSDLib'
       MoveParams = <>
+      PostDataSetBeforeExecute = False
       StoredProcList = <>
       Caption = 'UpdateDataSet'
       DataSource = MasterDS

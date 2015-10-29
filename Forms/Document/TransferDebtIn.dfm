@@ -2270,6 +2270,12 @@ inherited TransferDebtInForm: TTransferDebtInForm
         ParamType = ptInput
       end
       item
+        Name = 'inDescName'
+        Value = Null
+        DataType = ftString
+        ParamType = ptInput
+      end
+      item
         Name = 'gpGet_Movement_ReturnIn_ReportName'
         Value = 'PrintMovement_TaxCorrective'
         Component = FormParams

@@ -46,6 +46,10 @@ type
     actSPPrintTaxCorrectiveProcName: TdsdExecStoredProc;
     Comment: TcxGridDBColumn;
     ContractCode: TcxGridDBColumn;
+    mactPrintReturnIn: TMultiAction;
+    actSPPrintProcNameReturnIn: TdsdExecStoredProc;
+    spGetReportNameReturnIn: TdsdStoredProc;
+    bbPrintReturnIn: TdxBarButton;
   private
     { Private declarations }
   public

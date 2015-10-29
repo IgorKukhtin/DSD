@@ -1222,7 +1222,21 @@ inherited ReturnInForm: TReturnInForm
         item
         end>
     end
-    object mactPrint: TMultiAction [17]
+    object mactPrintPriceCorr: TMultiAction [17]
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actSPPrintProcNamePriceCorr
+        end
+        item
+          Action = actPrint
+        end>
+      Caption = #1050#1054#1056#1045#1043#1059#1070#1063#1040' '#1058#1054#1042#1040#1056#1053#1040' '#1053#1040#1050#1051#1040#1044#1053#1040
+      Hint = #1050#1054#1056#1045#1043#1059#1070#1063#1040' '#1058#1054#1042#1040#1056#1053#1040' '#1053#1040#1050#1051#1040#1044#1053#1040
+      ImageIndex = 16
+    end
+    object mactPrint: TMultiAction [18]
       Category = 'DSDLib'
       MoveParams = <>
       ActionList = <
@@ -1237,7 +1251,7 @@ inherited ReturnInForm: TReturnInForm
       ImageIndex = 3
       ShortCut = 16464
     end
-    object actPrint_ReturnIn_by_TaxCorrective: TdsdPrintAction [18]
+    object actPrint_ReturnIn_by_TaxCorrective: TdsdPrintAction [19]
       Category = 'DSDLib'
       MoveParams = <>
       StoredProc = spSelectPrintTaxCorrective_Client
@@ -1277,7 +1291,7 @@ inherited ReturnInForm: TReturnInForm
         item
         end>
     end
-    object actTaxJournalChoice: TOpenChoiceForm [22]
+    object actTaxJournalChoice: TOpenChoiceForm [23]
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -1327,6 +1341,17 @@ inherited ReturnInForm: TReturnInForm
     end
     inherited actAddMask: TdsdExecStoredProc
       TabSheet = tsMain
+    end
+    object actSPPrintProcNamePriceCorr: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spGetReportNamePriceCorr
+      StoredProcList = <
+        item
+          StoredProc = spGetReportNamePriceCorr
+        end>
+      Caption = 'actSPPrintProcName'
     end
     object actSPPrintProcName: TdsdExecStoredProc
       Category = 'DSDLib'
@@ -1721,6 +1746,14 @@ inherited ReturnInForm: TReturnInForm
         end
         item
           Visible = True
+          ItemName = 'bb'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbPrint_Return_By_TaxCorrective'
         end
         item
@@ -1805,6 +1838,10 @@ inherited ReturnInForm: TReturnInForm
     end
     object bbUpdatePrice: TdxBarButton
       Action = actUpdatePrice
+      Category = 0
+    end
+    object bb: TdxBarButton
+      Action = mactPrintPriceCorr
       Category = 0
     end
   end
@@ -2925,6 +2962,12 @@ inherited ReturnInForm: TReturnInForm
         ParamType = ptInput
       end
       item
+        Name = 'inDescName'
+        Value = 'zc_Movement_ReturnIn'
+        DataType = ftString
+        ParamType = ptInput
+      end
+      item
         Name = 'gpGet_Movement_ReturnIn_ReportName'
         Value = 'PrintMovement_TaxCorrective'
         Component = FormParams
@@ -3439,5 +3482,34 @@ inherited ReturnInForm: TReturnInForm
     PackSize = 1
     Left = 584
     Top = 552
+  end
+  object spGetReportNamePriceCorr: TdsdStoredProc
+    StoredProcName = 'gpGet_Movement_ReturnIn_ReportName'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inDescName'
+        Value = 'zc_Movement_PriceCorrective'
+        DataType = ftString
+        ParamType = ptInput
+      end
+      item
+        Name = 'gpGet_Movement_ReturnIn_ReportName'
+        Value = 'PrintMovement_TaxCorrective'
+        Component = FormParams
+        ComponentItem = 'ReportName'
+        DataType = ftString
+      end>
+    PackSize = 1
+    Left = 376
+    Top = 392
   end
 end

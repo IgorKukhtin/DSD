@@ -144,6 +144,10 @@ type
     spUpdate_MI_ReturnIn_Price: TdsdStoredProc;
     actUpdatePrice: TdsdExecStoredProc;
     bbUpdatePrice: TdxBarButton;
+    spGetReportNamePriceCorr: TdsdStoredProc;
+    mactPrintPriceCorr: TMultiAction;
+    actSPPrintProcNamePriceCorr: TdsdExecStoredProc;
+    bbPrintPriceCorr: TdxBarButton;
   private
     { Private declarations }
   public
