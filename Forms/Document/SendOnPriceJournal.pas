@@ -79,6 +79,8 @@ type
     RouteGroupName: TcxGridDBColumn;
     PersonalName: TcxGridDBColumn;
     Comment: TcxGridDBColumn;
+    actPrinDiff: TdsdPrintAction;
+    bbPrinDiff: TdxBarButton;
   private
     { Private declarations }
   public
