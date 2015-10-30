@@ -4,7 +4,7 @@ inherited SendOnPrice_BranchJournalForm: TSendOnPrice_BranchJournalForm
   ClientWidth = 1110
   AddOnFormData.Params = FormParams
   ExplicitWidth = 1126
-  ExplicitHeight = 570
+  ExplicitHeight = 573
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -440,6 +440,54 @@ inherited SendOnPrice_BranchJournalForm: TSendOnPrice_BranchJournalForm
           ParamType = ptInput
         end>
     end
+    object actPrintDiff: TdsdPrintAction
+      Category = 'DSDLib'
+      MoveParams = <
+        item
+          FromParam.Name = 'id'
+          FromParam.Value = Null
+          FromParam.Component = MasterCDS
+          FromParam.ComponentItem = 'id'
+          ToParam.Value = Null
+          ToParam.Component = FormParams
+          ToParam.ComponentItem = 'Id'
+          ToParam.ParamType = ptInputOutput
+        end>
+      StoredProc = spSelectPrintOut
+      StoredProcList = <
+        item
+          StoredProc = spSelectPrintOut
+        end>
+      Caption = #1055#1077#1095#1072#1090#1100' ('#1072#1082#1090' '#1088#1072#1079#1085#1086#1075#1083#1072#1089#1080#1081')'
+      Hint = #1055#1077#1095#1072#1090#1100' ('#1072#1082#1090' '#1088#1072#1079#1085#1086#1075#1083#1072#1089#1080#1081')'
+      ImageIndex = 22
+      ShortCut = 16464
+      DataSets = <
+        item
+          DataSet = PrintHeaderCDS
+          UserName = 'frxDBDHeader'
+        end
+        item
+          DataSet = PrintItemsCDS
+          UserName = 'frxDBDMaster'
+        end>
+      Params = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'Id'
+        end
+        item
+          Name = 'PrintParam'
+          Value = '3'
+          DataType = ftFloat
+        end>
+      ReportName = 'PrintMovement_SendOnPrice'
+      ReportNameParam.Value = 'PrintMovement_SendOnPrice'
+      ReportNameParam.DataType = ftString
+      ReportNameParam.ParamType = ptInput
+    end
     object actPrintOut: TdsdPrintAction
       Category = 'DSDLib'
       MoveParams = <
@@ -477,6 +525,11 @@ inherited SendOnPrice_BranchJournalForm: TSendOnPrice_BranchJournalForm
           Value = Null
           Component = FormParams
           ComponentItem = 'Id'
+        end
+        item
+          Name = 'PrintParam'
+          Value = '1'
+          DataType = ftFloat
         end>
       ReportName = 'PrintMovement_SendOnPrice'
       ReportNameParam.Value = 'PrintMovement_SendOnPrice'
@@ -520,6 +573,11 @@ inherited SendOnPrice_BranchJournalForm: TSendOnPrice_BranchJournalForm
           Value = Null
           Component = FormParams
           ComponentItem = 'Id'
+        end
+        item
+          Name = 'PrintParam'
+          Value = '2'
+          DataType = ftFloat
         end>
       ReportName = 'PrintMovement_SendOnPrice'
       ReportNameParam.Name = #1055#1088#1080#1093#1086#1076
@@ -647,6 +705,14 @@ inherited SendOnPrice_BranchJournalForm: TSendOnPrice_BranchJournalForm
         end
         item
           Visible = True
+          ItemName = 'bbPrintDiff'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbMovementProtocol'
         end
         item
@@ -668,6 +734,10 @@ inherited SendOnPrice_BranchJournalForm: TSendOnPrice_BranchJournalForm
     end
     object bbPrintOut: TdxBarButton
       Action = actPrintOut
+      Category = 0
+    end
+    object bbPrintDiff: TdxBarButton
+      Action = actPrintDiff
       Category = 0
     end
   end
@@ -816,7 +886,7 @@ inherited SendOnPrice_BranchJournalForm: TSendOnPrice_BranchJournalForm
       item
         Name = 'inReportType'
         Value = '1'
-        ParamType = ptInput
+        ParamType = ptUnknown
       end>
     PackSize = 1
     Left = 535
@@ -850,7 +920,7 @@ inherited SendOnPrice_BranchJournalForm: TSendOnPrice_BranchJournalForm
       item
         Name = 'inReportType'
         Value = '0'
-        ParamType = ptInput
+        ParamType = ptUnknown
       end>
     PackSize = 1
     Left = 359

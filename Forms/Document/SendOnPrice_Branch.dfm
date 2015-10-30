@@ -508,6 +508,11 @@ inherited SendOnPrice_BranchForm: TSendOnPrice_BranchForm
           Value = Null
           Component = FormParams
           ComponentItem = 'Id'
+        end
+        item
+          Name = 'PrintParam'
+          Value = '2'
+          DataType = ftFloat
         end>
       ReportName = 'PrintMovement_SendOnPrice'
       ReportNameParam.Value = 'PrintMovement_SendOnPrice'
@@ -543,7 +548,7 @@ inherited SendOnPrice_BranchForm: TSendOnPrice_BranchForm
         end
         item
           Name = 'PrintParam'
-          Value = '1'
+          Value = '4'
           DataType = ftFloat
         end>
       ReportName = 'PrintMovement_SendOnPrice'
@@ -551,7 +556,45 @@ inherited SendOnPrice_BranchForm: TSendOnPrice_BranchForm
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
     end
-    object actPrintOut: TdsdPrintAction [11]
+    object actPrintDiff: TdsdPrintAction [11]
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spSelectPrintOut
+      StoredProcList = <
+        item
+          StoredProc = spSelectPrintOut
+        end>
+      Caption = #1055#1077#1095#1072#1090#1100' ('#1072#1082#1090' '#1088#1072#1079#1085#1086#1075#1083#1072#1089#1080#1081')'
+      Hint = #1055#1077#1095#1072#1090#1100' ('#1072#1082#1090' '#1088#1072#1079#1085#1086#1075#1083#1072#1089#1080#1081')'
+      ImageIndex = 22
+      ShortCut = 16464
+      DataSets = <
+        item
+          DataSet = PrintHeaderCDS
+          UserName = 'frxDBDHeader'
+        end
+        item
+          DataSet = PrintItemsCDS
+          UserName = 'frxDBDMaster'
+        end>
+      Params = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'Id'
+        end
+        item
+          Name = 'PrintParam'
+          Value = '3'
+          DataType = ftFloat
+        end>
+      ReportName = 'PrintMovement_SendOnPrice'
+      ReportNameParam.Value = 'PrintMovement_SendOnPrice'
+      ReportNameParam.DataType = ftString
+      ReportNameParam.ParamType = ptInput
+    end
+    object actPrintOut: TdsdPrintAction [12]
       Category = 'DSDLib'
       MoveParams = <>
       StoredProc = spSelectPrintOut
@@ -581,7 +624,7 @@ inherited SendOnPrice_BranchForm: TSendOnPrice_BranchForm
         end
         item
           Name = 'PrintParam'
-          Value = '0'
+          Value = '1'
           DataType = ftFloat
         end>
       ReportName = 'PrintMovement_SendOnPrice'
@@ -605,7 +648,7 @@ inherited SendOnPrice_BranchForm: TSendOnPrice_BranchForm
         item
         end>
     end
-    object actGoodsKindChoice: TOpenChoiceForm [16]
+    object actGoodsKindChoice: TOpenChoiceForm [17]
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -629,7 +672,7 @@ inherited SendOnPrice_BranchForm: TSendOnPrice_BranchForm
         end>
       isShowModal = True
     end
-    object UnitChoiceForm: TOpenChoiceForm [20]
+    object UnitChoiceForm: TOpenChoiceForm [21]
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -805,6 +848,14 @@ inherited SendOnPrice_BranchForm: TSendOnPrice_BranchForm
         end
         item
           Visible = True
+          ItemName = 'bbPrintDiff'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbMovementItemProtocol'
         end
         item
@@ -826,6 +877,10 @@ inherited SendOnPrice_BranchForm: TSendOnPrice_BranchForm
     end
     object bbPrintUnit: TdxBarButton
       Action = actPrintUnit
+      Category = 0
+    end
+    object bbPrintDiff: TdxBarButton
+      Action = actPrintDiff
       Category = 0
     end
   end
@@ -1559,7 +1614,7 @@ inherited SendOnPrice_BranchForm: TSendOnPrice_BranchForm
       item
         Name = 'inReportType'
         Value = '1'
-        ParamType = ptInput
+        ParamType = ptUnknown
       end>
     PackSize = 1
     Left = 319
@@ -1638,7 +1693,7 @@ inherited SendOnPrice_BranchForm: TSendOnPrice_BranchForm
       item
         Name = 'inReportType'
         Value = '0'
-        ParamType = ptInput
+        ParamType = ptUnknown
       end>
     PackSize = 1
     Left = 359
