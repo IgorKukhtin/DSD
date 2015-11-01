@@ -94,8 +94,24 @@ BEGIN
           FROM lfGet_Object_Status(zc_Enum_Status_UnComplete()) AS Object_Status
                LEFT JOIN Object AS Object_To ON Object_To.Id = CASE WHEN (SELECT Object.ObjectCode FROM Object WHERE Object.Id = vbObjectId_Branch_Constraint) = 11 -- филиал Запорожье
                                                                          THEN 301309 -- Склад ГП ф.Запорожье
-                                                                    WHEN (SELECT Object.ObjectCode FROM Object WHERE Object.Id = vbObjectId_Branch_Constraint) = 4 --
+                                                                    WHEN (SELECT Object.ObjectCode FROM Object WHERE Object.Id = vbObjectId_Branch_Constraint) = 4  -- филиал Одесса
                                                                          THEN 346093 -- Склад ГП ф.Одесса
+
+                                                                    WHEN (SELECT Object.ObjectCode FROM Object WHERE Object.Id = vbObjectId_Branch_Constraint) = 3  -- филиал Николаев (Херсон)
+                                                                         THEN 8417 -- Склад ГП ф.Николаев (Херсон)
+
+                                                                    WHEN (SELECT Object.ObjectCode FROM Object WHERE Object.Id = vbObjectId_Branch_Constraint) = 2  -- филиал Киев
+                                                                         THEN 8411 -- Склад ГП ф Киев
+
+                                                                    WHEN (SELECT Object.ObjectCode FROM Object WHERE Object.Id = vbObjectId_Branch_Constraint) = 5  -- филиал Черкассы (Кировоград)
+                                                                         THEN 8415 -- Склад ГП ф.Черкассы (Кировоград)
+
+                                                                    WHEN (SELECT Object.ObjectCode FROM Object WHERE Object.Id = vbObjectId_Branch_Constraint) = 7  -- филиал Кр.Рог
+                                                                         THEN 8413 -- Склад ГП ф.Кривой Рог
+
+                                                                    WHEN (SELECT Object.ObjectCode FROM Object WHERE Object.Id = vbObjectId_Branch_Constraint) = 9  -- филиал Харьков
+                                                                         THEN 8425 -- Склад ГП ф.Харьков
+
                                                                     ELSE 8459 -- Склад Реализации
                                                                END
                LEFT JOIN Object AS Object_StoreMain ON Object_StoreMain.Id = 8459 -- Склад Реализации

@@ -84,6 +84,13 @@ type
     actPrint2: TdsdPrintAction;
     actPrint3: TdsdPrintAction;
     bbPrint3: TdxBarButton;
+    Amount_in: TcxGridDBColumn;
+    ReceiptId_from: TcxGridDBColumn;
+    isCost: TcxGridDBColumn;
+    InfoMoneyName_print: TcxGridDBColumn;
+    GroupNumber_print: TcxGridDBColumn;
+    isInfoMoney_10203: TcxGridDBColumn;
+    isCostValue: TcxGridDBColumn;
   private
     { Private declarations }
   public

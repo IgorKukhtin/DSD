@@ -74,7 +74,7 @@ BEGIN
            , Object_Status.ObjectCode    		    AS StatusCode
            , Object_Status.ValueData     		    AS StatusName
            , MovementDate_OperDatePartner.ValueData         AS OperDatePartner
-           , MovementBoolean_PriceWithVAT.ValueData         AS PriceWithVAT
+           , COALESCE (MovementBoolean_PriceWithVAT.ValueData, FALSE) :: Boolean         AS PriceWithVAT
            , MovementFloat_VATPercent.ValueData             AS VATPercent
            , MovementFloat_ChangePercent.ValueData          AS ChangePercent
            , inChangePercentAmount                          AS ChangePercentAmount

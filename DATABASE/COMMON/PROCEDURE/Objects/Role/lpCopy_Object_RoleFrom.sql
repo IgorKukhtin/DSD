@@ -1,11 +1,13 @@
 -- Function: lpCopy_Object_RoleMask()
 
 DROP FUNCTION IF EXISTS lpCopy_Object_RoleFrom (Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS lpCopy_Object_RoleFrom (Integer, Integer, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION lpCopy_Object_RoleFrom(
-    IN inRoleId_from    Integer   ,     -- Код объекта <Действия> 
-    IN inRoleId_to      Integer   ,     -- Код объекта <Действия> 
-    IN inSession        TVarChar        -- сессия пользователя
+    IN inRoleId_from     Integer   ,     -- Код объекта 
+    IN inRoleId_to       Integer   ,     -- Код объекта 
+    IN inIsProcessAccess Boolean   ,     -- 
+    IN inSession         TVarChar        -- сессия пользователя
 )
 RETURNS VOID
 AS
@@ -17,11 +19,11 @@ BEGIN
                                            , inActionId := tmp.id
                                            , inSession := inSession) 
    FROM gpSelect_Object_RoleAction(inSession) AS tmp
-        left join  gpSelect_Object_RoleAction (inSession) AS tmp_to
-                  on tmp_to.roleId = inRoleId_to
-                 and tmp_to.Id = tmp.Id
+        LEFT JOIN  gpSelect_Object_RoleAction (inSession) AS tmp_to
+                  ON tmp_to.roleId = inRoleId_to
+                 AND tmp_to.Id = tmp.Id
    WHERE tmp.roleId = inRoleId_from
-     and tmp_to.roleId IS NULL
+     AND tmp_to.roleId IS NULL
   ;
    
    -- 2 - RoleProcess
@@ -30,25 +32,28 @@ BEGIN
                                            , inProcessId := tmp.id 
                                            , inSession := inSession)
    FROM gpSelect_Object_RoleProcess (inSession) AS tmp
-        left join  gpSelect_Object_RoleProcess (inSession) AS tmp_to
-                  on tmp_to.roleId = inRoleId_to
-                 and tmp_to.Id = tmp.Id
+        LEFT JOIN  gpSelect_Object_RoleProcess (inSession) AS tmp_to
+                  ON tmp_to.roleId = inRoleId_to
+                 AND tmp_to.Id = tmp.Id
    WHERE tmp.roleId = inRoleId_from
-     and tmp_to.roleId IS NULL
+     AND tmp_to.roleId IS NULL
   ;
 
    -- 3 - RoleProcessAccess
-   PERFORM gpInsertUpdate_Object_RoleProcessAccess (ioid := 0 
-                                                 , inroleid := inRoleId_to
-                                                 , inprocessid := tmp.id 
-                                                 , inSession := inSession)
-   FROM gpSelect_Object_RoleProcessAccess (inSession) AS tmp
-        left join gpSelect_Object_RoleProcessAccess (inSession) AS tmp_to
-                  on tmp_to.roleId = inRoleId_to
-                 and tmp_to.Id = tmp.Id
-   WHERE tmp.roleId = inRoleId_from
-     and tmp_to.roleId IS NULL
-  ;
+   IF inIsProcessAccess = TRUE
+   THEN
+       PERFORM gpInsertUpdate_Object_RoleProcessAccess (ioid := 0 
+                                                     , inroleid := inRoleId_to
+                                                     , inprocessid := tmp.id 
+                                                     , inSession := inSession)
+       FROM gpSelect_Object_RoleProcessAccess (inSession) AS tmp
+            LEFT JOIN gpSelect_Object_RoleProcessAccess (inSession) AS tmp_to
+                      ON tmp_to.roleId = inRoleId_to
+                     AND tmp_to.Id = tmp.Id
+       WHERE tmp.roleId = inRoleId_from
+         AND tmp_to.roleId IS NULL
+      ;
+   END IF;
 
    
 END;
@@ -78,6 +83,13 @@ $BODY$
  where tmp.UserId = 80830 -- Кисличная Т.А.
 
 
+   -- !!!!Слияние!!!
+   select tmp.*
+        , lpCopy_Object_RoleFrom (inRoleId_from:= tmp.Id, inRoleId_to:= (SELECT Id FROM Object WHERE ObjectCode = 2100 AND DescId = zc_Object_Role()), inIsProcessAccess:= FALSE, inSession:= zfCalc_UserAdmin())
+   from gpSelect_Object_Role (zfCalc_UserAdmin()) as tmp
+   WHERE tmp.Code IN (3001, 4001, 5001, 6001, 7001, 8001, 8011)
+
+
    -- !!!!DELETE ROLE!!! у ПОЛЬЗОВАТЕЛЯ
    select tmp.*
         , lpDelete_Object (userroleid, '5') 
@@ -90,7 +102,7 @@ $BODY$
         , lpDelete_Object (RoleActionId, '5') 
    FROM gpSelect_Object_RoleAction ('') AS tmp
    WHERE tmp.roleId = 442930 -- Накладные полный доступ ГП - Вергуленко В.И.
-     and tmp.Id = 257508     -- это "Action1"
+     AND tmp.Id = 257508     -- это "Action1"
 
    -- !!!!DELETE "задвоенные" ACTION!!! у РОЛИ
    select lpDelete_Object (Id_del, '5') 
@@ -107,7 +119,7 @@ $BODY$
         , lpDelete_Object (RoleProcessId, '5') 
    FROM gpSelect_Object_RoleProcess ('') AS tmp
    WHERE tmp.roleId = 442930 -- Накладные полный доступ ГП - Вергуленко В.И.
-     and tmp.Id = zc_Enum_Process_Null() -- это "zc_Enum_Process_Null"
+     AND tmp.Id = zc_Enum_Process_Null() -- это "zc_Enum_Process_Null"
 
    -- !!!!DELETE "задвоенные" Process!!! у РОЛИ
    select lpDelete_Object (Id_del, '5') 

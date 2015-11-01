@@ -1,48 +1,70 @@
-п»ї-- Function: gpInsertUpdate_Object_RoleProcess()
+-- Function: gpInsertUpdate_Object_RoleProcess()
 
 -- DROP FUNCTION gpInsertUpdate_Object_RoleProcess();
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_RoleProcess(
- INOUT ioId	        Integer   ,     -- РєР»СЋС‡ РѕР±СЉРµРєС‚Р° СЃРІСЏР·Рё 
-    IN inRoleId         Integer   ,     -- Р РѕР»СЊ
-    IN inProcessId      Integer   ,     -- РџСЂРѕС†РµСЃСЃ
-    IN inSession        TVarChar        -- СЃРµСЃСЃРёСЏ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ
+ INOUT ioId	        Integer   ,     -- ключ объекта связи 
+    IN inRoleId         Integer   ,     -- Роль
+    IN inProcessId      Integer   ,     -- Процесс
+    IN inSession        TVarChar        -- сессия пользователя
 )
-  RETURNS integer AS
+RETURNS Integer
+AS
 $BODY$
-   DECLARE UserId Integer;
+   DECLARE vbUserId Integer;
 BEGIN
-   
-   -- РїСЂРѕРІРµСЂРєР° РїСЂР°РІ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ РЅР° РІС‹Р·РѕРІ РїСЂРѕС†РµРґСѓСЂС‹
-   -- PERFORM lpCheckRight(inSession, zc_Enum_Process_RoleProcess());
+   -- проверка прав пользователя на вызов процедуры
+   vbUserId:= lpGetUserBySession (inSession);
 
-   UserId := inSession;
+   -- проверка
+   IF COALESCE (inRoleId, 0) = 0
+   THEN
+       RAISE EXCEPTION 'Ошибка.Не установлено значение <Role>.';
+   END IF;
+   -- проверка
+   IF COALESCE (inProcessId, 0) = 0
+   THEN
+       RAISE EXCEPTION 'Ошибка.Не установлено значение <Process>.';
+   END IF;
 
-   -- СЃРѕС…СЂР°РЅРёР»Рё <РћР±СЉРµРєС‚>
+
+   -- пытаемся найти
+   IF COALESCE (ioId, 0) = 0
+   THEN
+       ioId:= (SELECT ObjectLink_RoleRight_Role.ObjectId
+               FROM ObjectLink AS ObjectLink_RoleRight_Role
+                    INNER JOIN ObjectLink AS ObjectLink_RoleRight_Process
+                                          ON ObjectLink_RoleRight_Process.ObjectId = ObjectLink_RoleRight_Role.ObjectId
+                                         AND ObjectLink_RoleRight_Process.ChildObjectId = inProcessId
+                                         AND ObjectLink_RoleRight_Process.DescId = zc_ObjectLink_RoleRight_Process()
+               WHERE ObjectLink_RoleRight_Role.ChildObjectId = inRoleId
+                 AND ObjectLink_RoleRight_Role.DescId = zc_ObjectLink_RoleRight_Role()
+               LIMIT 1
+              );
+   END IF;
+
+
+   -- сохранили <Объект>
    ioId := lpInsertUpdate_Object(ioId, zc_Object_RoleRight(), 0, '');
 
-   -- СЃРѕС…СЂР°РЅРёР»Рё СЃРІСЏР·СЊ СЃ <Р РѕР»СЊСЋ>
+   -- сохранили связь с <Ролью>
    PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_RoleRight_Role(), ioId, inRoleId);
-   -- СЃРѕС…СЂР°РЅРёР»Рё СЃРІСЏР·СЊ СЃ <Р”РµР№СЃС‚РІРёРµРј>
+   -- сохранили связь с <Действием>
    PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_RoleRight_Process(), ioId, inProcessId);
 
    
-   -- СЃРѕС…СЂР°РЅРёР»Рё РїСЂРѕС‚РѕРєРѕР»
-   PERFORM lpInsert_ObjectProtocol (ioId, UserId);
+   -- сохранили протокол
+   PERFORM lpInsert_ObjectProtocol (ioId, vbUserId);
    
 END;$BODY$
-
-LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpInsertUpdate_Object_RoleProcess (Integer, Integer, Integer, TVarChar) OWNER TO postgres;
-
+  LANGUAGE plpgsql VOLATILE;
 
 /*-------------------------------------------------------------------------------*/
 /*
- РРЎРўРћР РРЇ Р РђР—Р РђР‘РћРўРљР: Р”РђРўРђ, РђР’РўРћР 
-               Р¤РµР»РѕРЅСЋРє Р.Р’.   РљСѓС…С‚РёРЅ Р.Р’.   РљР»РёРјРµРЅС‚СЊРµРІ Рљ.Р.
+ ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
  23.09.13                         *
-
 */
 
--- С‚РµСЃС‚
+-- тест
 -- SELECT * FROM gpInsertUpdate_Object_RoleProcess()

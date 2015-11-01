@@ -4,7 +4,7 @@ inherited Report_ReceiptProductionAnalyzeForm: TReport_ReceiptProductionAnalyzeF
   ClientWidth = 1130
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   ExplicitWidth = 1146
-  ExplicitHeight = 468
+  ExplicitHeight = 465
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -759,21 +759,77 @@ inherited Report_ReceiptProductionAnalyzeForm: TReport_ReceiptProductionAnalyzeF
             Options.Editing = False
             Width = 100
           end
-          object clReceiptid: TcxGridDBColumn
-            DataBinding.FieldName = 'Receiptid'
-            Visible = False
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            VisibleForCustomization = False
-            Width = 55
-          end
           object Color_calc: TcxGridDBColumn
             DataBinding.FieldName = 'Color_calc'
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             VisibleForCustomization = False
+            Width = 55
+          end
+          object Amount_in: TcxGridDBColumn
+            Caption = #1050#1086#1083'-'#1074#1086' ('#1075#1083#1072#1074#1085'.)'
+            DataBinding.FieldName = 'Amount_in'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 55
+          end
+          object isCost: TcxGridDBColumn
+            Caption = #1047#1072#1090#1088#1072#1090#1099
+            DataBinding.FieldName = 'isCost'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 55
+          end
+          object InfoMoneyName_print: TcxGridDBColumn
+            Caption = #1059#1055' ('#1087#1077#1095#1072#1090#1100')'
+            DataBinding.FieldName = 'InfoMoneyName_print'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 55
+          end
+          object GroupNumber_print: TcxGridDBColumn
+            Caption = #1043#1088#1091#1087#1087#1072' '#8470' ('#1087#1077#1095#1072#1090#1100')'
+            DataBinding.FieldName = 'GroupNumber_print'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 55
+          end
+          object isInfoMoney_10203: TcxGridDBColumn
+            Caption = #1059#1087#1072#1082#1086#1074#1082#1072' ('#1076#1072', '#1085#1077#1090')'
+            DataBinding.FieldName = 'isInfoMoney_10203'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 55
+          end
+          object clReceiptid: TcxGridDBColumn
+            Caption = #1056#1077#1094#1077#1087#1090' ('#1082#1083#1102#1095')'
+            DataBinding.FieldName = 'Receiptid'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 55
+          end
+          object ReceiptId_from: TcxGridDBColumn
+            Caption = #1056#1077#1094#1077#1087#1090' '#1075#1083#1072#1074#1085'. ('#1082#1083#1102#1095')'
+            DataBinding.FieldName = 'ReceiptId_from'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 55
+          end
+          object isCostValue: TcxGridDBColumn
+            Caption = #1047#1072#1090#1088#1072#1090#1099' ('#1089#1086#1088#1090#1080#1088#1086#1074#1082#1072')'
+            DataBinding.FieldName = 'isCostValue'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
             Width = 55
           end
         end
@@ -1160,13 +1216,14 @@ inherited Report_ReceiptProductionAnalyzeForm: TReport_ReceiptProductionAnalyzeF
       DataSets = <
         item
           UserName = 'frxDBDMaster'
-          IndexFieldNames = 'GoodsGroupNameFull;GoodsName;GoodsKindName'
           GridView = cxGridDBTableView
         end
         item
-          DataSet = ChildCDS
           UserName = 'frxDBDChild'
-          IndexFieldNames = 'Receiptid;GoodsGroupNameFull;GoodsName;GoodsKindName'
+          IndexFieldNames = 
+            'ReceiptId;isCostValue;GroupNumber_print;InfoMoneyName_print;Good' +
+            'sGroupNameFull;GoodsName;GoodsKindName'
+          GridView = ChildView
         end>
       Params = <
         item
@@ -1238,13 +1295,14 @@ inherited Report_ReceiptProductionAnalyzeForm: TReport_ReceiptProductionAnalyzeF
       DataSets = <
         item
           UserName = 'frxDBDMaster'
-          IndexFieldNames = 'GoodsGroupNameFull;GoodsName;GoodsKindName'
           GridView = cxGridDBTableView
         end
         item
-          DataSet = ChildCDS
           UserName = 'frxDBDChild'
-          IndexFieldNames = 'Receiptid;GoodsGroupNameFull;GoodsName;GoodsKindName'
+          IndexFieldNames = 
+            'ReceiptId;isCostValue;GroupNumber_print;InfoMoneyName_print;Good' +
+            'sGroupNameFull;GoodsName;GoodsKindName'
+          GridView = ChildView
         end>
       Params = <
         item
@@ -1319,7 +1377,9 @@ inherited Report_ReceiptProductionAnalyzeForm: TReport_ReceiptProductionAnalyzeF
         end
         item
           UserName = 'frxDBDChild'
-          IndexFieldNames = 'Receiptid;GroupNumber;GoodsGroupNameFull;GoodsName;GoodsKindName'
+          IndexFieldNames = 
+            'ReceiptId;isCostValue;GroupNumber_print;InfoMoneyName_print;Good' +
+            'sGroupNameFull;GoodsName;GoodsKindName'
           GridView = ChildView
         end>
       Params = <
@@ -1439,7 +1499,7 @@ inherited Report_ReceiptProductionAnalyzeForm: TReport_ReceiptProductionAnalyzeF
     Top = 232
   end
   inherited BarManager: TdxBarManager
-    Left = 296
+    Left = 288
     Top = 144
     DockControlHeights = (
       0

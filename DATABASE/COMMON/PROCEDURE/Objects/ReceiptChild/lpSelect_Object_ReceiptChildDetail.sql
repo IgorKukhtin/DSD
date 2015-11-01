@@ -36,7 +36,8 @@ BEGIN
 
       RETURN QUERY
       WITH RECURSIVE temp1 (ReceiptId_from, ReceiptId, GoodsId_in, GoodsKindId_in, Amount_in, ReceiptChildId, GoodsId_out, GoodsKindId_out, Amount_out, isStart, isCost)
-        AS (SELECT CASE WHEN ObjectLink_ReceiptChild_Goods.ChildObjectId = ObjectLink_Receipt_Goods_parent.ChildObjectId
+        AS (-- первый уровень
+            SELECT CASE WHEN ObjectLink_ReceiptChild_Goods.ChildObjectId = ObjectLink_Receipt_Goods_parent.ChildObjectId
                              THEN ObjectLink_Receipt_Goods_parent.ObjectId
                         ELSE tmpReceipt_basis.ReceiptId
                    END AS ReceiptId_from
@@ -90,7 +91,8 @@ BEGIN
               AND ObjectFloat_Value.ValueData <> 0
               AND ObjectFloatReceipt_Value.ValueData <> 0
 
-           UNION 
+           UNION
+            -- затраты
             SELECT 0                                                                     AS ReceiptId_from
                  , Object_Receipt.Id                                                     AS ReceiptId
                  , 0                                                                     AS GoodsId_in
@@ -117,6 +119,7 @@ BEGIN
               AND ObjectFloat_ValueCost.ValueData <> 0
 
            UNION 
+            -- рекурсия - нашли и разложили по составляющим
             SELECT CASE WHEN ObjectLink_ReceiptChild_Goods.ChildObjectId = ObjectLink_Receipt_Goods_parent.ChildObjectId
                              THEN ObjectLink_Receipt_Goods_parent.ObjectId
                         ELSE tmpReceipt_basis.ReceiptId

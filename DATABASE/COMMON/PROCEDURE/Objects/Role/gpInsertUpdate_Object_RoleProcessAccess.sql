@@ -1,33 +1,33 @@
-п»ї-- Function: gpInsertUpdate_Object_RoleProcessAccess()
+-- Function: gpInsertUpdate_Object_RoleProcessAccess()
 
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_RoleProcessAccess(Integer, Integer, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_RoleProcessAccess(
- INOUT ioId	        Integer   ,     -- РєР»СЋС‡ РѕР±СЉРµРєС‚Р° СЃРІСЏР·Рё 
-    IN inRoleId         Integer   ,     -- Р РѕР»СЊ
-    IN inProcessId      Integer   ,     -- РџСЂРѕС†РµСЃСЃ
-    IN inSession        TVarChar        -- СЃРµСЃСЃРёСЏ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ
+ INOUT ioId	        Integer   ,     -- ключ объекта связи 
+    IN inRoleId         Integer   ,     -- Роль
+    IN inProcessId      Integer   ,     -- Процесс
+    IN inSession        TVarChar        -- сессия пользователя
 )
   RETURNS integer AS
 $BODY$
    DECLARE UserId Integer;
 BEGIN
    
-   -- РїСЂРѕРІРµСЂРєР° РїСЂР°РІ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ РЅР° РІС‹Р·РѕРІ РїСЂРѕС†РµРґСѓСЂС‹
+   -- проверка прав пользователя на вызов процедуры
    -- PERFORM lpCheckRight(inSession, zc_Enum_Process_RoleProcess());
 
    UserId := inSession;
 
-   -- СЃРѕС…СЂР°РЅРёР»Рё <РћР±СЉРµРєС‚>
+   -- сохранили <Объект>
    ioId := lpInsertUpdate_Object(ioId, zc_Object_RoleProcessAccess(), 0, '');
 
-   -- СЃРѕС…СЂР°РЅРёР»Рё СЃРІСЏР·СЊ СЃ <Р РѕР»СЊСЋ>
+   -- сохранили связь с <Ролью>
    PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_RoleProcessAccess_Role(), ioId, inRoleId);
-   -- СЃРѕС…СЂР°РЅРёР»Рё СЃРІСЏР·СЊ СЃ <Р”РµР№СЃС‚РІРёРµРј>
+   -- сохранили связь с <Действием>
    PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_RoleProcessAccess_Process(), ioId, inProcessId);
 
    
-   -- СЃРѕС…СЂР°РЅРёР»Рё РїСЂРѕС‚РѕРєРѕР»
+   -- сохранили протокол
    PERFORM lpInsert_ObjectProtocol (ioId, UserId);
    
 END;$BODY$
@@ -38,11 +38,11 @@ ALTER FUNCTION gpInsertUpdate_Object_RoleProcessAccess (Integer, Integer, Intege
 
 /*-------------------------------------------------------------------------------*/
 /*
- РРЎРўРћР РРЇ Р РђР—Р РђР‘РћРўРљР: Р”РђРўРђ, РђР’РўРћР 
-               Р¤РµР»РѕРЅСЋРє Р.Р’.   РљСѓС…С‚РёРЅ Р.Р’.   РљР»РёРјРµРЅС‚СЊРµРІ Рљ.Р.
+ ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
  09.12.13                         *
 
 */
 
--- С‚РµСЃС‚
+-- тест
 -- SELECT * FROM gpInsertUpdate_Object_RoleProcessAccess()

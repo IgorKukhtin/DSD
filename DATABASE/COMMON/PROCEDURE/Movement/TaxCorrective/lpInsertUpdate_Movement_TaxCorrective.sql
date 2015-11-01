@@ -57,6 +57,15 @@ BEGIN
 
                        WHEN vbAccessKeyId = zc_Enum_Process_AccessKey_DocumentKharkov()
                             THEN (SELECT Id FROM Object WHERE DescId = zc_Object_Branch() AND AccessKeyId = zc_Enum_Process_AccessKey_TrasportKharkov())
+
+                       WHEN vbAccessKeyId = zc_Enum_Process_AccessKey_DocumentKrRog()
+                            THEN (SELECT Id FROM Object WHERE DescId = zc_Object_Branch() AND AccessKeyId = zc_Enum_Process_AccessKey_TrasportKrRog())
+
+                       WHEN vbAccessKeyId = zc_Enum_Process_AccessKey_DocumentNikolaev()
+                            THEN (SELECT Id FROM Object WHERE DescId = zc_Object_Branch() AND AccessKeyId = zc_Enum_Process_AccessKey_TrasportNikolaev())
+
+                       WHEN vbAccessKeyId = zc_Enum_Process_AccessKey_DocumentCherkassi()
+                            THEN (SELECT Id FROM Object WHERE DescId = zc_Object_Branch() AND AccessKeyId = zc_Enum_Process_AccessKey_TrasportCherkassi())
                   END;
      -- проверка
      IF COALESCE (vbBranchId, 0) = 0
