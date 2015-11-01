@@ -75,6 +75,8 @@ type
     TransportChoiceGuides: TdsdGuides;
     spInsertUpdateMovement_Params: TdsdStoredProc;
     HeaderSaver2: THeaderSaver;
+    actPrintDiff: TdsdPrintAction;
+    bbPrintDiff: TdxBarButton;
   private
     { Private declarations }
   public
