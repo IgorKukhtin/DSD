@@ -1,6 +1,7 @@
 -- Function: gpReport_GoodsMI_ProductionUnion_Tax ()
 
 DROP FUNCTION IF EXISTS gpReport_ReceiptProductionAnalyze (TDateTime, TDateTime, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpReport_ReceiptProductionAnalyze (TDateTime, TDateTime, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpReport_ReceiptProductionAnalyze (
     IN inStartDate        TDateTime ,  
@@ -8,6 +9,7 @@ CREATE OR REPLACE FUNCTION gpReport_ReceiptProductionAnalyze (
     IN inUnitFromId       Integer   , 
     IN inUnitToId         Integer   , 
     IN inGoodsGroupId     Integer   ,
+    IN inGoodsId          Integer   ,
     IN inPriceListId_1    Integer, 
     IN inPriceListId_2    Integer, 
     IN inPriceListId_3    Integer, 
@@ -26,27 +28,38 @@ BEGIN
      CREATE TEMP TABLE tmpChildReceiptTable (ReceiptId_from Integer, ReceiptId Integer, GoodsId_in Integer, GoodsKindId_in Integer, Amount_in TFloat
                                            , ReceiptChildId integer, GoodsId_out Integer, GoodsKindId_out Integer, Amount_out TFloat, Amount_out_start TFloat, isStart Integer, isCost Boolean
                                            , Price1 TFloat, Price2 TFloat, Price3 TFloat) ON COMMIT DROP;
-
-     -- Ограничения по товару
-     WITH RECURSIVE tmpGroup (GoodsGroupId, GoodsGroupParentId)
-       AS (SELECT Object.Id, NULL :: Integer
-           FROM Object 
-           WHERE Object.Id = inGoodsGroupId
-          UNION 
-           SELECT ObjectLink_GoodsGroup.ObjectId, tmpGroup.GoodsGroupId
-           FROM tmpGroup
-                INNER JOIN ObjectLink AS ObjectLink_GoodsGroup
-                                      ON ObjectLink_GoodsGroup.ChildObjectId = tmpGroup.GoodsGroupId
-                                     AND ObjectLink_GoodsGroup.DescId = zc_ObjectLink_GoodsGroup_Parent()
-          )
-     INSERT INTO _tmpGoods (GoodsId)
-        SELECT ObjectLink_Goods_GoodsGroup.ObjectId
-        FROM tmpGroup
-             INNER JOIN ObjectLink AS ObjectLink_Goods_GoodsGroup
-                                   ON ObjectLink_Goods_GoodsGroup.ChildObjectId = tmpGroup.GoodsGroupId
-                                  AND ObjectLink_Goods_GoodsGroup.DescId = zc_ObjectLink_Goods_GoodsGroup()
+   -- Ограничения по товару
+   IF inGoodsId <> 0
+    THEN
+        -- заполнение
+        INSERT INTO _tmpGoods (GoodsId)
+           SELECT Object_Goods.Id AS GoodsId
+           FROM Object AS Object_Goods
+           WHERE Object_Goods.Id= inGoodsId;
+    ELSE 
+     IF inGoodsGroupId <> 0
+     THEN
+         WITH RECURSIVE tmpGroup (GoodsGroupId, GoodsGroupParentId)
+           AS (SELECT Object.Id, NULL :: Integer
+               FROM Object 
+               WHERE Object.Id = inGoodsGroupId
+              UNION 
+               SELECT ObjectLink_GoodsGroup.ObjectId, tmpGroup.GoodsGroupId
+               FROM tmpGroup
+                   INNER JOIN ObjectLink AS ObjectLink_GoodsGroup
+                                         ON ObjectLink_GoodsGroup.ChildObjectId = tmpGroup.GoodsGroupId
+                                        AND ObjectLink_GoodsGroup.DescId = zc_ObjectLink_GoodsGroup_Parent()
+              )
+    
+         INSERT INTO _tmpGoods (GoodsId)
+            SELECT ObjectLink_Goods_GoodsGroup.ObjectId
+            FROM tmpGroup
+                 INNER JOIN ObjectLink AS ObjectLink_Goods_GoodsGroup
+                                       ON ObjectLink_Goods_GoodsGroup.ChildObjectId = tmpGroup.GoodsGroupId
+                                      AND ObjectLink_Goods_GoodsGroup.DescId = zc_ObjectLink_Goods_GoodsGroup()
        ;
-
+    END IF;
+   END IF;
                                
      -- ВСЕ рецептуры
      INSERT INTO tmpChildReceiptTable (ReceiptId_from, ReceiptId, GoodsId_in, GoodsKindId_in, Amount_in

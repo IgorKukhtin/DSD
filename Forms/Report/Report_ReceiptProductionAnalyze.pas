@@ -91,6 +91,9 @@ type
     GroupNumber_print: TcxGridDBColumn;
     isInfoMoney_10203: TcxGridDBColumn;
     isCostValue: TcxGridDBColumn;
+    GuidesGoods: TdsdGuides;
+    cxLabel9: TcxLabel;
+    edGoods: TcxButtonEdit;
   private
     { Private declarations }
   public
