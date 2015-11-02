@@ -586,10 +586,13 @@ end;
 
 destructor TCustomGuides.Destroy;
 begin
-  // ”нижтожаем ссылку на себ€ в другом компоненте!
-  if Assigned(FChoiceAction) then
-     if FChoiceAction is TdsdChoiceGuides then
-        TdsdChoiceGuides(FChoiceAction).ChoiceCaller := nil;
+  try
+    // ”нижтожаем ссылку на себ€ в другом компоненте!
+    if Assigned(FChoiceAction) then
+       if FChoiceAction is TdsdChoiceGuides then
+          TdsdChoiceGuides(FChoiceAction).ChoiceCaller := nil;
+  except end;
+  //
   inherited;
 end;
 

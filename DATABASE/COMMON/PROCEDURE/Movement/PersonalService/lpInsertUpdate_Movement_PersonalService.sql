@@ -56,8 +56,15 @@ BEGIN
      END IF;
 
 
-     -- определяем ключ доступа
-     vbAccessKeyId:= lpGetAccessKey (inUserId, zc_Enum_Process_InsertUpdate_Movement_PersonalService());
+     IF EXISTS (SELECT 1 AS Id FROM ObjectLink_UserRole_View WHERE RoleId = zc_Enum_Role_Admin() AND UserId = inUserId)
+     THEN IF COALESCE (ioId, 0) = 0 
+          THEN
+              RAISE EXCEPTION 'Ошибка.Для <Админ> нет прав создания документа.'
+          END IF;
+     ELSE
+         -- определяем ключ доступа
+         vbAccessKeyId:= lpGetAccessKey (inUserId, zc_Enum_Process_InsertUpdate_Movement_PersonalService());
+     END IF;
 
 
      -- определяется признак Создание/Корректировка
