@@ -2197,7 +2197,9 @@ var
           End;
           F.LongDateFormat := 'hh:mm:ss';
           AField.AsDateTime := StrToDateTime(S,F);
-        End
+        End;
+      ftFloat,ftCurrency,ftBCD,ftExtended:
+        AField.Value := AParam.AsFloat;
     ELSE
       if VarToStr(AParam.Value) = '' then
         AField.Clear
