@@ -2509,65 +2509,73 @@ begin
                 ExpandedStr := ExpandedStr + INtToStr(ExpandedIdx)+';';
             ExpandedStr := ExpandedStr + '|';
 
-            if TAddOnDataSet(ADataSets[i]).IndexFieldNames <> '' then //если есть сортировка
-            begin
-              with TAddOnDataSet(ADataSets[i]).GridView do
-              begin
-                OldSort := '';
-                for SortIdx := 0 to PatternGridView.SortedItemCount-1 do             //сохраняем старую сортировку
-                Begin
-                  if PatternGridView.SortedItems[SortIdx].SortOrder = soAscending then
-                    OldSort := OldSort + IntToStr(PatternGridView.SortedItems[SortIdx].Index)+';'
-                  else
-                  if PatternGridView.SortedItems[SortIdx].SortOrder = soDescending then
-                    OldSort := OldSort + IntToStr(1000+PatternGridView.SortedItems[SortIdx].Index)+';';
-                End;
-                OldFieldIndexList.Values[Name] := OldSort;
-                PatternGridView.DataController.ClearSorting(false); //очистили сортировку
-                NewSort := TAddOnDataSet(ADataSets[i]).IndexFieldNames;
-                if NewSort[Length(NewSort)] <> ';' then
-                  NewSort := NewSort + ';';
-                while NewSort <> '' do
-                Begin
-                  for SortIdx := 0 to ColumnCount - 1 do
-                    if ((Columns[SortIdx] is TcxGridDBColumn)
-                        AND
-                        (CompareText(TcxGridDBColumn(Columns[SortIdx]).DataBinding.FieldName,
-                                     Copy(NewSort,1,pos(';',NewSort)-1))=0)) then
-                    Begin
-                      PatternGridView.DataController.ChangeSorting(SortIdx,soAscending);
-                      break;
-                    End;
-                  Delete(NewSort,1,pos(';',NewSort));
-                End;
-              end;
-            end;
+//            if TAddOnDataSet(ADataSets[i]).IndexFieldNames <> '' then //если есть сортировка
+//            begin
+//              with TAddOnDataSet(ADataSets[i]).GridView do
+//              begin
+//                BeginSortingUpdate;
+//                OldSort := '';
+//                for SortIdx := 0 to PatternGridView.SortedItemCount-1 do             //сохраняем старую сортировку
+//                Begin
+//                  if PatternGridView.SortedItems[SortIdx].SortOrder = soAscending then
+//                    OldSort := OldSort + IntToStr(PatternGridView.SortedItems[SortIdx].Index)+';'
+//                  else
+//                  if PatternGridView.SortedItems[SortIdx].SortOrder = soDescending then
+//                    OldSort := OldSort + IntToStr(1000+PatternGridView.SortedItems[SortIdx].Index)+';';
+//                End;
+//                OldFieldIndexList.Values[Name] := OldSort;
+//                PatternGridView.DataController.ClearSorting(false); //очистили сортировку
+//                NewSort := TAddOnDataSet(ADataSets[i]).IndexFieldNames;
+//                if NewSort[Length(NewSort)] <> ';' then
+//                  NewSort := NewSort + ';';
+//                while NewSort <> '' do
+//                Begin
+//                  for SortIdx := 0 to ColumnCount - 1 do
+//                    if ((Columns[SortIdx] is TcxGridDBColumn)
+//                        AND
+//                        (CompareText(TcxGridDBColumn(Columns[SortIdx]).DataBinding.FieldName,
+//                                     Copy(NewSort,1,pos(';',NewSort)-1))=0)) then
+//                    Begin
+//                      PatternGridView.DataController.ChangeSorting(SortIdx,soAscending);
+//                      break;
+//                    End;
+//                  Delete(NewSort,1,pos(';',NewSort));
+//                End;
+//                EndSortingUpdate;
+//              end;
+//            end;
+
             //развернули все строки, что бы ChildTableView загрузил все данные в клоны
 
             TAddOnDataSet(ADataSets[i]).GridView.ViewData.Expand(True);
 
             //перегрузили отсортированные данные в dxMemData
-            MemTableList.Add(ViewToMemTable.LoadData(TAddOnDataSet(ADataSets[i]).GridView));
+            //MemTableList.Add(ViewToMemTable.LoadData(TAddOnDataSet(ADataSets[i]).GridView));
+            MemTableList.Add(ViewToMemTable.LoadData2(TAddOnDataSet(ADataSets[i]).GridView));
+            TClientDataSet(MemTableList.Items[MemTableList.Count-1]).IndexFieldNames :=
+                TAddOnDataSet(ADataSets[i]).IndexFieldNames
 
             //вернули сортировку наместо
-            if TAddOnDataSet(ADataSets[i]).IndexFieldNames <> '' then
-              TAddOnDataSet(ADataSets[i]).GridView.DataController.ClearSorting(false);
-            if OldSort <> '' then
-            Begin
-              while OldSort <> '' do
-              Begin
-                SI := StrToInt(Copy(OldSort,1,pos(';',OldSort)-1));
-                Delete(OldSort,1,pos(';',OldSort));
-                if SI >= 1000 then
-                  TAddOnDataSet(ADataSets[i]).GridView.PatternGridView.DataController.ChangeSorting(
-                    SI-1000,soDescending)
-                else
-                  TAddOnDataSet(ADataSets[i]).GridView.PatternGridView.DataController.ChangeSorting(
-                    SI,soAscending);
-              End;
-            End;
+//            if TAddOnDataSet(ADataSets[i]).IndexFieldNames <> '' then
+//              TAddOnDataSet(ADataSets[i]).GridView.DataController.ClearSorting(false);
+//            if OldSort <> '' then
+//            Begin
+//              TAddOnDataSet(ADataSets[i]).GridView.BeginSortingUpdate;
+//              while OldSort <> '' do
+//              Begin
+//                SI := StrToInt(Copy(OldSort,1,pos(';',OldSort)-1));
+//                Delete(OldSort,1,pos(';',OldSort));
+//                if SI >= 1000 then
+//                  TAddOnDataSet(ADataSets[i]).GridView.PatternGridView.DataController.ChangeSorting(
+//                    SI-1000,soDescending)
+//                else
+//                  TAddOnDataSet(ADataSets[i]).GridView.PatternGridView.DataController.ChangeSorting(
+//                    SI,soAscending);
+//              End;
+//              TAddOnDataSet(ADataSets[i]).GridView.EndSortingUpdate;
+//            End;
           finally
-            //(TcxGridLevel(TAddOnDataSet(ADataSets[i]).GridView.Level).Control as TcxGrid).EndUpdate;
+            (TcxGridLevel(TAddOnDataSet(ADataSets[i]).GridView.Level).Control as TcxGrid).EndUpdate;
           end;
           DataSet := MemTableList[MemTableList.Count - 1];
         end;
