@@ -2,6 +2,7 @@
 
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Price (Integer, TFloat, TFloat, Integer, Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Price (Integer, TFloat, TFloat, Integer, Integer, Boolean, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Price (Integer, TFloat, TFloat, Integer, Integer, Boolean, Boolean, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Price(
  INOUT ioId                       Integer   ,    -- ключ объекта < Цена >
@@ -11,6 +12,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Price(
     IN inUnitId                   Integer   ,    -- подразделение
     IN inMCSIsClose               Boolean   ,    -- НТЗ закрыт
     IN inMCSNotRecalc             Boolean   ,    -- НТЗ не пересчитывается
+    IN inFix                      Boolean   ,    -- Фиксированная цена
    OUT outDateChange              TDateTime ,    -- Дата изменения цены
    OUT outMCSDateChange           TDateTime ,    -- Дата изменения неснижаемого товарного запаса
     IN inSession                  TVarChar       -- сессия пользователя
@@ -74,6 +76,10 @@ BEGIN
         -- сохранили связь с <подразделение>
         PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_Price_Unit(), ioId, inUnitId);
     END IF;
+    
+    -- сохранили свойство <фиксированная цена>
+    PERFORM lpInsertUpdate_objectBoolean(zc_ObjectBoolean_Price_Fix(), ioId, inFix);
+
     -- сохранили св-во < Цена >
     IF (inPrice is not null) AND (inPrice <> COALESCE(vbPrice,0))
     THEN
@@ -105,7 +111,7 @@ BEGIN
 END;
 $BODY$
 LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpInsertUpdate_Object_Price (Integer, TFloat, TFloat, Integer, Integer, Boolean, Boolean, TVarChar) OWNER TO postgres;
+ALTER FUNCTION gpInsertUpdate_Object_Price (Integer, TFloat, TFloat, Integer, Integer, Boolean, Boolean, Boolean, TVarChar) OWNER TO postgres;
 
 /*-------------------------------------------------------------------------------*/
 /*

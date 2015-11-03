@@ -11,7 +11,7 @@ CREATE OR REPLACE FUNCTION gpSelect_Object_Price(
 RETURNS TABLE (Id Integer, Price TFloat, MCSValue Tfloat
              , GoodsId Integer, GoodsCode Integer, GoodsName TVarChar
              , DateChange TDateTime, MCSDateChange TDateTime
-             , MCSIsClose Boolean, MCSNotRecalc Boolean
+             , MCSIsClose Boolean, MCSNotRecalc Boolean, Fix Boolean
              , Remains TFloat, isErased boolean
              ) AS
 $BODY$
@@ -44,6 +44,7 @@ BEGIN
                ,NULL::TDateTime                  AS MCSDateChange
                ,NULL::Boolean                    AS MCSIsClose
                ,NULL::Boolean                    AS MCSNotRecalc
+               ,NULL::Boolean                    AS Fix
                ,NULL::TFloat                     AS Remains
                ,NULL::Boolean                    AS isErased
             WHERE 1=0;
@@ -61,6 +62,7 @@ BEGIN
                ,Object_Price_View.MCSDateChange                 AS MCSDateChange
                ,COALESCE(Object_Price_View.MCSIsClose,False)    AS MCSIsClose
                ,COALESCE(Object_Price_View.MCSNotRecalc,False)  AS MCSNotRecalc
+               ,COALESCE(Object_Price_View.Fix,False)           AS Fix
                ,Object_Remains.Remains                          AS Remains
                ,Object_Goods.isErased                           AS isErased 
             FROM Object AS Object_Goods
@@ -108,6 +110,7 @@ BEGIN
                ,Object_Price_View.MCSDateChange  AS MCSDateChange
                ,Object_Price_View.MCSIsClose     AS MCSIsClose
                ,Object_Price_View.MCSNotRecalc   AS MCSNotRecalc
+               ,Object_Price_View.Fix            AS Fix
                ,Object_Remains.Remains           AS Remains
                ,Object_Goods.isErased            AS isErased 
             FROM Object_Price_View

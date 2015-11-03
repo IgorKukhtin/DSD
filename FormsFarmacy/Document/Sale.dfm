@@ -518,6 +518,8 @@ inherited SaleForm: TSaleForm
         ComponentItem = 'Summ'
         DataType = ftFloat
       end>
+    NeedResetData = True
+    ParamKeyField = 'inMovementId'
     Left = 400
     Top = 272
   end
@@ -556,8 +558,6 @@ inherited SaleForm: TSaleForm
         ComponentItem = 'TotalSummPrimeCost'
         DataType = ftString
       end>
-    NeedResetData = True
-    ParamKeyField = 'inMovementId'
     Left = 628
     Top = 172
   end

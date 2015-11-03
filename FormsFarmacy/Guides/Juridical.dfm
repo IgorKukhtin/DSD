@@ -1,14 +1,10 @@
 inherited JuridicalForm: TJuridicalForm
   Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1070#1088#1080#1076#1080#1095#1077#1089#1082#1080#1077' '#1083#1080#1094#1072'>'
   AddOnFormData.ChoiceAction = dsdChoiceGuides
-  ExplicitWidth = 583
-  ExplicitHeight = 335
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 575
-      ExplicitHeight = 282
       inherited cxGrid: TcxGrid
         inherited cxGridDBTableView: TcxGridDBTableView
           OptionsBehavior.IncSearch = True
@@ -16,6 +12,7 @@ inherited JuridicalForm: TJuridicalForm
           OptionsData.Deleting = False
           OptionsData.DeletingConfirmation = False
           OptionsData.Editing = False
+          Styles.Content = nil
           Styles.Inactive = nil
           Styles.Selection = nil
           Styles.Footer = nil
@@ -60,7 +57,7 @@ inherited JuridicalForm: TJuridicalForm
   inherited ActionList: TActionList
     Left = 87
     Top = 215
-    inherited actInsert: TdsdInsertUpdateAction
+    inherited actInsert: TInsertUpdateChoiceAction
       FormName = 'TJuridicalEditForm'
       FormNameParam.Value = 'TJuridicalEditForm'
     end

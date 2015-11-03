@@ -1006,6 +1006,21 @@
 				<Form>Report_Movement_ByPartionGoodsForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
+			<DCCReference Include="..\SOURCE\Movement\All\Farmacy\PaymentTest.pas"/>
+			<DCCReference Include="..\SOURCE\MovementItem\All\Farmacy\PaymentMovementItemTest.pas"/>
+			<DCCReference Include="..\..\FormsFarmacy\Document\Payment.pas">
+				<Form>PaymentForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Document\PaymentJournal.pas">
+				<Form>PaymentJournalForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Guides\JuridicalCorporate.pas">
+				<Form>JuridicalCorporateForm</Form>
+				<FormType>dfm</FormType>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
 			<BuildConfiguration Include="Release">
 				<Key>Cfg_2</Key>
 				<CfgParent>Base</CfgParent>

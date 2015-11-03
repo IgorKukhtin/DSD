@@ -145,10 +145,15 @@ BEGIN
                                           inUserId := inUserId)
       FROM Movement_Income_View AS M
         INNER JOIN MovementItem_Income_View AS MI ON MI.MovementId = M.Id
+        LEFT OUTER JOIN Object_Price_View AS Object_Price
+                                          ON Object_Price.UnitId = M.ToId
+                                         AND Object_Price.GoodsId = MI.GoodsId 
       WHERE
         M.Id =  inMovementId
         AND
-        COALESCE(MI.PriceSale,0)>0;
+        COALESCE(MI.PriceSale,0)>0
+        AND
+        COALESCE(Object_Price.Fix,FALSE) = FALSE;
       -- пересчитали Итоговые суммы
      PERFORM lpInsertUpdate_MovementFloat_TotalSumm (inMovementId);
     

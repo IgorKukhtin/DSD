@@ -341,7 +341,12 @@ uses
   SaleJournal in '..\..\FormsFarmacy\Document\SaleJournal.pas' {SaleJournalForm: TParentForm},
   Sale in '..\..\FormsFarmacy\Document\Sale.pas' {SaleForm: TParentForm},
   PaidKind in '..\..\Forms\Kind\PaidKind.pas' {PaidKindForm: TParentForm},
-  Report_Movement_ByPartionGoods in '..\..\FormsFarmacy\Report\Report_Movement_ByPartionGoods.pas' {Report_Movement_ByPartionGoodsForm: TParentForm};
+  Report_Movement_ByPartionGoods in '..\..\FormsFarmacy\Report\Report_Movement_ByPartionGoods.pas' {Report_Movement_ByPartionGoodsForm: TParentForm},
+  PaymentTest in '..\SOURCE\Movement\All\Farmacy\PaymentTest.pas',
+  PaymentMovementItemTest in '..\SOURCE\MovementItem\All\Farmacy\PaymentMovementItemTest.pas',
+  Payment in '..\..\FormsFarmacy\Document\Payment.pas' {PaymentForm: TParentForm},
+  PaymentJournal in '..\..\FormsFarmacy\Document\PaymentJournal.pas' {PaymentJournalForm: TParentForm},
+  JuridicalCorporate in '..\..\FormsFarmacy\Guides\JuridicalCorporate.pas' {JuridicalCorporateForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}

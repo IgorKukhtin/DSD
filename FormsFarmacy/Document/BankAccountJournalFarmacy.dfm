@@ -1,4 +1,5 @@
 inherited BankAccountJournalFarmacyForm: TBankAccountJournalFarmacyForm
+  Caption = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' <'#1056#1072#1089#1093#1086#1076' '#1087#1086' '#1088#1072#1089#1095#1077#1090#1085#1086#1084#1091' '#1089#1095#1077#1090#1091'>'
   ExplicitHeight = 394
   PixelsPerInch = 96
   TextHeight = 13
@@ -140,10 +141,16 @@ inherited BankAccountJournalFarmacyForm: TBankAccountJournalFarmacyForm
       0
       26
       0)
+    inherited bbAddBonus: TdxBarButton
+      Visible = ivNever
+    end
     inherited bbPrint: TdxBarButton
       Visible = ivNever
     end
     inherited bbPrint1: TdxBarButton
+      Visible = ivNever
+    end
+    inherited bbisCopy: TdxBarButton
       Visible = ivNever
     end
   end

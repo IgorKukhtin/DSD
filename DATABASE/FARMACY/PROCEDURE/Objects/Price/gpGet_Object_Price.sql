@@ -8,7 +8,7 @@ RETURNS TABLE (Id Integer, Price TFloat, MCSValue TFloat
              , GoodsId Integer, GoodsCode Integer, GoodsName TVarChar
              , UnitId Integer, UnitCode Integer, UnitName TVarChar
              , DateChange tdatetime, MCSDateChange TDateTime
-             , MCSIsClose Boolean, MCSNotRecalc Boolean
+             , MCSIsClose Boolean, MCSNotRecalc Boolean, Fix Boolean
              , isErased boolean
              ) AS
 $BODY$
@@ -39,6 +39,8 @@ BEGIN
           , CAST (False as Boolean)  AS MCSIsClose
           , CAST (False as Boolean)  AS MCSNotRecalc
            
+          , CAST (False as Boolean)  AS Fix
+
           , CAST (NULL AS Boolean)   AS isErased;
     ELSE
         RETURN QUERY
@@ -60,6 +62,8 @@ BEGIN
 
            ,object_price_view.MCSIsClose
            ,object_price_view.MCSNotRecalc
+           
+           ,object_price_view.Fix
            
            ,Object_Price_View.isErased
 
