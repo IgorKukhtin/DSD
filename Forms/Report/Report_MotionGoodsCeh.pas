@@ -206,6 +206,7 @@ type
     SummProductionOut_Norm: TcxGridDBColumn;
     actPrint_Inventory: TdsdPrintAction;
     bbPrint_Inventory: TdxBarButton;
+    AssetToName: TcxGridDBColumn;
   private
   public
   end;

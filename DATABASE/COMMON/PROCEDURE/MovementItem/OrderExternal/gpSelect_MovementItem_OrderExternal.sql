@@ -102,6 +102,9 @@ BEGIN
                                                                                         AND View_InfoMoney.InfoMoneyId <> zc_Enum_InfoMoney_30103() -- Доходы + Продукция + Хлеб
                                                                                         AND tmpContract.InfoMoneyId = zc_Enum_InfoMoney_30101() -- Доходы + Продукция + Готовая продукция
                                                                                        )
+                                                                                    OR (View_InfoMoney.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_20700() -- Общефирменные + Товары
+                                                                                        AND tmpContract.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_30500() -- Доходы + Прочие доходы
+                                                                                       )
 
                            )
           , tmpMI_Goods AS (SELECT MovementItem.Id                               AS MovementItemId

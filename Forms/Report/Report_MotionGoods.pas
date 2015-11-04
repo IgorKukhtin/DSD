@@ -208,6 +208,7 @@ type
     bbPrint_Loss: TdxBarButton;
     actPrint_Inventory: TdsdPrintAction;
     bbPrint_Inventory: TdxBarButton;
+    AssetToName: TcxGridDBColumn;
   private
   public
   end;

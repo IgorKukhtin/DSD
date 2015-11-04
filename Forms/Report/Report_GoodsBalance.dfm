@@ -1438,6 +1438,30 @@ object Report_GoodsBalanceForm: TReport_GoodsBalanceForm
         VisibleForCustomization = False
         Width = 55
       end
+      object AssetToName: TcxGridDBColumn
+        DataBinding.FieldName = 'AssetToName'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        VisibleForCustomization = False
+        Width = 55
+      end
+      object InfoMoneyName_all: TcxGridDBColumn
+        DataBinding.FieldName = 'InfoMoneyName_all'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        VisibleForCustomization = False
+        Width = 55
+      end
+      object InfoMoneyName_all_Detail: TcxGridDBColumn
+        DataBinding.FieldName = 'InfoMoneyName_all_Detail'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        VisibleForCustomization = False
+        Width = 55
+      end
     end
     object cxGridLevel: TcxGridLevel
       GridView = cxGridDBTableView

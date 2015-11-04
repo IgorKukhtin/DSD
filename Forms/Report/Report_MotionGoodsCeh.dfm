@@ -1963,6 +1963,14 @@ object Report_MotionGoodsCehForm: TReport_MotionGoodsCehForm
         VisibleForCustomization = False
         Width = 55
       end
+      object AssetToName: TcxGridDBColumn
+        DataBinding.FieldName = 'AssetToName'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        VisibleForCustomization = False
+        Width = 55
+      end
     end
     object cxGridLevel: TcxGridLevel
       GridView = cxGridDBTableView

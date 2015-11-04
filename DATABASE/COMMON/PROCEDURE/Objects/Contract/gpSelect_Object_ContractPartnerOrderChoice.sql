@@ -262,8 +262,11 @@ BEGIN
          LEFT JOIN Object AS Object_Route ON Object_Route.Id = ObjectLink_Partner_Route.ChildObjectId
 
    WHERE Object_Partner.DescId = zc_Object_Partner()
-     AND ((Object_InfoMoney_View.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_30100() -- Доходы + Продукция
-           AND vbBranchId_Constraint > 0)
+     AND ((Object_InfoMoney_View.InfoMoneyDestinationId IN (zc_Enum_InfoMoneyDestination_30100() -- Доходы + Продукция
+                                                          , zc_Enum_InfoMoneyDestination_30500() -- Доходы + Прочие доходы
+                                                           )
+           AND vbBranchId_Constraint > 0
+          )
        OR (COALESCE (Object_InfoMoney_View.InfoMoneyDestinationId, 0) NOT IN (zc_Enum_InfoMoneyDestination_21400() -- услуги полученные
                                                                             , zc_Enum_InfoMoneyDestination_21500() -- Маркетинг
                                                                             , zc_Enum_InfoMoneyDestination_30400() -- услуги предоставленные
@@ -272,6 +275,8 @@ BEGIN
            AND vbIsUserOrder = FALSE)
        OR (Object_InfoMoney_View.InfoMoneyDestinationId IN (zc_Enum_InfoMoneyDestination_30100() -- Доходы + Продукция
                                                           , zc_Enum_InfoMoneyDestination_30200() -- Доходы + Мясное сырье
+                                                          , zc_Enum_InfoMoneyDestination_30300() -- Доходы + Переработка
+                                                          , zc_Enum_InfoMoneyDestination_30500() -- Доходы + Прочие доходы
                                                            )
            AND vbIsUserOrder = TRUE)
          )
@@ -573,8 +578,12 @@ BEGIN
 
    WHERE Object_Partner.DescId = zc_Object_Partner()
      AND Object_Partner.isErased = FALSE
-     AND ((Object_InfoMoney_View.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_30100() -- Доходы + Продукция
-           AND vbBranchId_Constraint > 0)
+     AND ((Object_InfoMoney_View.InfoMoneyDestinationId IN (zc_Enum_InfoMoneyDestination_30100() -- Доходы + Продукция
+                                                          , zc_Enum_InfoMoneyDestination_30500() -- Доходы + Прочие доходы
+                                                           )
+           AND vbBranchId_Constraint > 0
+          )
+
        OR (COALESCE (Object_InfoMoney_View.InfoMoneyDestinationId, 0) NOT IN (zc_Enum_InfoMoneyDestination_21400() -- услуги полученные
                                                                             , zc_Enum_InfoMoneyDestination_21500() -- Маркетинг
                                                                             , zc_Enum_InfoMoneyDestination_30400() -- услуги предоставленные
@@ -583,6 +592,8 @@ BEGIN
            AND vbIsUserOrder = FALSE)
        OR (Object_InfoMoney_View.InfoMoneyDestinationId IN (zc_Enum_InfoMoneyDestination_30100() -- Доходы + Продукция
                                                           , zc_Enum_InfoMoneyDestination_30200() -- Доходы + Мясное сырье
+                                                          , zc_Enum_InfoMoneyDestination_30300() -- Доходы + Переработка
+                                                          , zc_Enum_InfoMoneyDestination_30500() -- Доходы + Прочие доходы
                                                            )
            AND vbIsUserOrder = TRUE)
          )

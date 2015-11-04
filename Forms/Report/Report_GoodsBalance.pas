@@ -174,6 +174,9 @@ type
     bbPrint_Inventory: TdxBarButton;
     CountTotalIn_Weight: TcxGridDBColumn;
     SummTotalIn: TcxGridDBColumn;
+    AssetToName: TcxGridDBColumn;
+    InfoMoneyName_all: TcxGridDBColumn;
+    InfoMoneyName_all_Detail: TcxGridDBColumn;
   private
   public
   end;

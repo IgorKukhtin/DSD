@@ -122,7 +122,18 @@ BEGIN
                                                                                                                        , 8376   -- !!!+ филиал Крым!!!      select * from Object where ObjectCode=6 and DescId = zc_Object_Branch()
                                                                                                                        , 18342  -- !!!+ филиал Никополь!!!  select * from Object where ObjectCode=10 and DescId = zc_Object_Branch()
                                                                                                                        , 301310 -- !!!+ филиал Запорожье!!! select * from Object where ObjectCode=11 and DescId = zc_Object_Branch()
-                                                                                                                        ) THEN inGoodsKindId ELSE 0 END
+                                                                                                                        )
+                                                                                            THEN inGoodsKindId
+                                                                                       WHEN inOperDate >= '01.11.2015' AND inBranchId IN (
+                                                                                                                         8381 -- филиал Харьков
+                                                                                                                       , 8377 -- филиал Кр.Рог
+                                                                                                                       , 8375 -- филиал Черкассы (Кировоград)
+                                                                                                                       , 8373 -- филиал Николаев (Херсон)
+                                                                                                                       , 8379 -- филиал Киев
+                                                                                                                        )
+                                                                                            THEN inGoodsKindId
+                                                                                       ELSE 0
+                                                                                  END 
                                                                 , inDescId_5   := zc_ContainerLinkObject_InfoMoney()
                                                                 , inObjectId_5 := inInfoMoneyId
                                                                 , inDescId_6   := CASE WHEN inPartionGoodsId <> 0 THEN zc_ContainerLinkObject_PartionGoods() ELSE NULL END

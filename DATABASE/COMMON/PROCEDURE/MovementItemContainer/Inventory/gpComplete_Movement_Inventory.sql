@@ -385,7 +385,7 @@ BEGIN
            );
 
      -- определяется ContainerId_Goods для количественного учета
-     UPDATE _tmpItem SET ContainerId_Goods = lpInsertUpdate_ContainerCount_Goods (inOperDate               := vbOperDate
+     UPDATE _tmpItem SET ContainerId_Goods = lpInsertUpdate_ContainerCount_Goods (inOperDate               := CASE WHEN vbOperDate = '31.10.2015' THEN '01.11.2015' ELSE vbOperDate END -- !!!только для филиалов 1 раз!!!
                                                                                 , inUnitId                 := CASE WHEN vbMemberId <> 0 THEN _tmpItem.UnitId_Item ELSE vbUnitId END
                                                                                 , inCarId                  := vbCarId
                                                                                 , inMemberId               := vbMemberId
@@ -620,28 +620,51 @@ BEGIN
                    , CASE WHEN vbPriceListId <> 0 AND View_Account.AccountDirectionId <> zc_Enum_AccountDirection_60200() /*AND vbOperDate = '30.06.2015'*/ -- Прибыль будущих периодов + на филиалах
                                THEN 0 -- !!!один раз выравниваем филиал!!
                           ELSE COALESCE (Container_Summ.ObjectId, 0)
-                     END  AS AccountId
-                     -- остатки по сумме должны быть загружены один раз, а потом расчитываться из HistoryCost
-                   -- , CASE WHEN vbOperDate <= '01.06.2014' THEN _tmpItem.OperSumm ELSE _tmpItem.OperCount * COALESCE (HistoryCost.Price, 0) END AS OperSumm
+                     END AS AccountId
+
                    , CASE WHEN vbPriceListId <> 0 AND View_Account.AccountDirectionId = zc_Enum_AccountDirection_60200() /*AND vbOperDate = '30.06.2015'*/ -- Прибыль будущих периодов + на филиалах
                                THEN 0 -- !!!один раз выравниваем филиал!!
+
+                               -- !!!только в 1-ый раз выставили остатки по этим филиалам!!!
+                          WHEN vbOperDate IN ('31.10.2015') AND vbUnitId IN (8413   -- Склад ГП ф.Кривой Рог
+                                                                           , 8417   -- Склад ГП ф.Николаев (Херсон)
+                                                                           , 8425   -- Склад ГП ф.Харьков
+                                                                           , 8415   -- Склад ГП ф.Черкассы (Кировоград)
+                                                                            )
+                               THEN CAST (_tmpItem.OperCount * COALESCE (lfObjectHistory_PriceListItem.ValuePrice, 0) * 1.2 AS NUMERIC (16,4)) -- это введенные остатки по прайсу !!!плюс НДС!!!
+
                           WHEN vbOperDate IN ('31.05.2014', '31.05.2015', '30.06.2015') AND vbPriceListId = 0 
                                THEN _tmpItem.OperSumm
                           WHEN inMovementId = 2184096 -- Кротон хранение - 31.07.2015
                                THEN _tmpItem.OperSumm
                           ELSE CAST (_tmpItem.OperCount * COALESCE (HistoryCost.Price, 0) AS NUMERIC (16,4))
                      END AS OperSumm
+                     -- остатки по сумме должны быть загружены один раз, а потом расчитываться из HistoryCost
+                     -- , CASE WHEN vbOperDate <= '01.06.2014' THEN _tmpItem.OperSumm ELSE _tmpItem.OperCount * COALESCE (HistoryCost.Price, 0) END AS OperSumm
+
               FROM _tmpItem
+                   LEFT JOIN lfSelect_ObjectHistory_PriceListItem (inPriceListId:= vbPriceListId, inOperDate:= vbOperDate + INTERVAL '1 DAY')
+                          AS lfObjectHistory_PriceListItem ON lfObjectHistory_PriceListItem.GoodsId = _tmpItem.GoodsId
+                                                          AND vbOperDate = '31.10.2015'
+
                    LEFT JOIN _tmpRemainsCount ON _tmpRemainsCount.ContainerId_Goods = _tmpItem.ContainerId_Goods
                    LEFT JOIN Container AS Container_Summ ON Container_Summ.ParentId = _tmpItem.ContainerId_Goods
                                                         AND Container_Summ.DescId = zc_Container_Summ()
                                                         AND (vbOperDate >= '01.07.2015' OR vbPriceListId <> 0) 
                                                         AND inMovementId <> 2184096 -- Кротон хранение - 31.07.2015
+                                                        AND (vbUnitId NOT IN (8413   -- Склад ГП ф.Кривой Рог
+                                                                            , 8417   -- Склад ГП ф.Николаев (Херсон)
+                                                                            , 8425   -- Склад ГП ф.Харьков
+                                                                            , 8415   -- Склад ГП ф.Черкассы (Кировоград)
+                                                                             )
+                                                          OR vbOperDate <> '31.10.2015'
+                                                            )
                    LEFT JOIN HistoryCost ON HistoryCost.ContainerId = Container_Summ.Id
                                         AND vbOperDate BETWEEN HistoryCost.StartDate AND HistoryCost.EndDate
                    LEFT JOIN Object_Account_View AS View_Account ON View_Account.AccountId = Container_Summ.ObjectId
+
              UNION ALL
-              -- 1.2. это расчетные остатки (их надо вычесть) - !!!для филиала + "наши" подр после '01.07.2015'!!!
+              -- 1.2. это расчетные остатки (их надо вычесть) - !!!для "наши" подр после '01.07.2015'!!!
               SELECT _tmpRemainsCount.MovementItemId
                    , COALESCE (Container_Summ.Id, 0) AS ContainerId
                    , COALESCE (Container_Summ.ObjectId, 0) AS AccountId
@@ -673,7 +696,7 @@ BEGIN
                                     , 428363 -- Склад возвратов ф.Черкассы (Кировоград)
                                      )
              UNION ALL
-              -- 2.2. это расчетные остатки (их надо вычесть) -- !!!для "наших" подр до '01.07.2015'!!!!
+              -- 2.2. это расчетные остатки (их надо вычесть) -- !!!для "наши" подр до '01.07.2015'!!!!
                SELECT _tmpRemainsCount.MovementItemId
                    , _tmpRemainsSumm.ContainerId
                    , _tmpRemainsSumm.AccountId
@@ -689,6 +712,13 @@ BEGIN
                                         , 346094 -- Склад возвратов ф.Одесса
                                          )*/
 
+                 OR (vbUnitId IN (8413   -- Склад ГП ф.Кривой Рог
+                                , 8417   -- Склад ГП ф.Николаев (Херсон)
+                                , 8425   -- Склад ГП ф.Харьков
+                                , 8415   -- Склад ГП ф.Черкассы (Кировоград)
+                                 )
+                     AND vbOperDate = '31.10.2015'
+                    )
              UNION ALL
               -- это расчетные остатки (их надо вычесть) - !!!
               SELECT _tmpRemainsCount.MovementItemId
@@ -710,19 +740,21 @@ BEGIN
 
                                , 346093 -- Склад ГП ф.Одесса
                                , 346094 -- Склад возвратов ф.Одесса
-
-                                    , 8413   -- Склад ГП ф.Кривой Рог
-                                    , 428366 -- Склад возвратов ф.Кривой Рог
-
-                                    , 8417   -- Склад ГП ф.Николаев (Херсон)
-                                    , 428364 -- Склад возвратов ф.Николаев (Херсон)
-
-                                    , 8425   -- Склад ГП ф.Харьков
-                                    , 409007 -- Склад возвратов ф.Харьков
-
-                                    , 8415   -- Склад ГП ф.Черкассы (Кировоград)
-                                    , 428363 -- Склад возвратов ф.Черкассы (Кировоград)
                                 )
+                 OR (vbUnitId IN (8413   -- Склад ГП ф.Кривой Рог
+                                , 428366 -- Склад возвратов ф.Кривой Рог
+
+                                , 8417   -- Склад ГП ф.Николаев (Херсон)
+                                , 428364 -- Склад возвратов ф.Николаев (Херсон)
+
+                                , 8425   -- Склад ГП ф.Харьков
+                                , 409007 -- Склад возвратов ф.Харьков
+
+                                , 8415   -- Склад ГП ф.Черкассы (Кировоград)
+                                , 428363 -- Склад возвратов ф.Черкассы (Кировоград)
+                                 )
+                     AND vbOperDate <> '31.10.2015'
+                    )
              UNION ALL
               -- это расчетные остатки (их надо вычесть) -- !!!
                SELECT _tmpRemainsCount.MovementItemId
@@ -740,7 +772,7 @@ BEGIN
 
                                , 346093 -- Склад ГП ф.Одесса
                                , 346094 -- Склад возвратов ф.Одесса
-
+/*
                                     , 8413   -- Склад ГП ф.Кривой Рог
                                     , 428366 -- Склад возвратов ф.Кривой Рог
 
@@ -752,6 +784,7 @@ BEGIN
 
                                     , 8415   -- Склад ГП ф.Черкассы (Кировоград)
                                     , 428363 -- Склад возвратов ф.Черкассы (Кировоград)
+*/
                                 )
              ) AS _tmp
         WHERE  zc_isHistoryCost() = TRUE
@@ -858,7 +891,7 @@ BEGIN
        AND _tmpItemSumm.ContainerId = 0;
 
      -- 3.3. создаем контейнеры для суммового учета + Аналитика <элемент с/с>, причем !!!только!!! когда ContainerId=0 и !!!есть!!! разница по остатку
-     UPDATE _tmpItemSumm SET ContainerId = lpInsertUpdate_ContainerSumm_Goods (inOperDate               := vbOperDate
+     UPDATE _tmpItemSumm SET ContainerId = lpInsertUpdate_ContainerSumm_Goods (inOperDate               := CASE WHEN vbOperDate = '31.10.2015' THEN '01.11.2015' ELSE vbOperDate END -- !!!только для филиалов 1 раз!!!
                                                                              , inUnitId                 := CASE WHEN vbMemberId <> 0 THEN _tmpItem.UnitId_Item ELSE vbUnitId END
                                                                              , inCarId                  := vbCarId
                                                                              , inMemberId               := vbMemberId
@@ -1093,25 +1126,28 @@ BEGIN
 
 
      -- 4. Start Переоценка
-     IF vbOperDate >= '01.06.2014' AND vbPriceListId <> 0
+     IF (vbOperDate >= '01.06.2014' AND vbPriceListId <> 0
         AND vbUnitId IN (301309 -- Склад ГП ф.Запорожье
                        , 309599 -- Склад возвратов ф.Запорожье
 
                        , 346093 -- Склад ГП ф.Одесса
                        , 346094 -- Склад возвратов ф.Одесса
-
-                                    , 8413   -- Склад ГП ф.Кривой Рог
-                                    , 428366 -- Склад возвратов ф.Кривой Рог
-
-                                    , 8417   -- Склад ГП ф.Николаев (Херсон)
-                                    , 428364 -- Склад возвратов ф.Николаев (Херсон)
-
-                                    , 8425   -- Склад ГП ф.Харьков
-                                    , 409007 -- Склад возвратов ф.Харьков
-
-                                    , 8415   -- Склад ГП ф.Черкассы (Кировоград)
-                                    , 428363 -- Склад возвратов ф.Черкассы (Кировоград)
                         )
+       )
+     OR (vbOperDate >= '01.11.2015' AND vbPriceListId <> 0
+        AND vbUnitId IN (8413   -- Склад ГП ф.Кривой Рог
+                       , 428366 -- Склад возвратов ф.Кривой Рог
+
+                       , 8417   -- Склад ГП ф.Николаев (Херсон)
+                       , 428364 -- Склад возвратов ф.Николаев (Херсон)
+
+                       , 8425   -- Склад ГП ф.Харьков
+                       , 409007 -- Склад возвратов ф.Харьков
+
+                       , 8415   -- Склад ГП ф.Черкассы (Кировоград)
+                       , 428363 -- Склад возвратов ф.Черкассы (Кировоград)
+                        )
+       )
      THEN
 
      -- 4.1. заполняем таблицу - суммовые элементы документа, для переоценки
@@ -1216,7 +1252,7 @@ BEGIN
 
      -- 4.3. создаем контейнеры для суммового учета + Аналитика <элемент с/с>, причем !!!только!!! когда ContainerId=0 и !!!есть!!! разница по остатку
      UPDATE _tmpItemSummRePrice SET ContainerId_Active =
-                                           lpInsertUpdate_ContainerSumm_Goods (inOperDate               := vbOperDate
+                                           lpInsertUpdate_ContainerSumm_Goods (inOperDate               := CASE WHEN vbOperDate = '31.10.2015' THEN '01.11.2015' ELSE vbOperDate END -- !!!только для филиалов 1 раз!!!
                                                                              , inUnitId                 := CASE WHEN vbMemberId <> 0 THEN _tmpItem.UnitId_Item ELSE vbUnitId END
                                                                              , inCarId                  := vbCarId
                                                                              , inMemberId               := vbMemberId
@@ -1235,7 +1271,7 @@ BEGIN
                                                                              , inAssetId                := _tmpItem.AssetId
                                                                               )
                                   , ContainerId_Passive =
-                                           lpInsertUpdate_ContainerSumm_Goods (inOperDate               := vbOperDate
+                                           lpInsertUpdate_ContainerSumm_Goods (inOperDate               := CASE WHEN vbOperDate = '31.10.2015' THEN '01.11.2015' ELSE vbOperDate END -- !!!только для филиалов 1 раз!!!
                                                                              , inUnitId                 := CASE WHEN vbMemberId <> 0 THEN _tmpItem.UnitId_Item ELSE vbUnitId END
                                                                              , inCarId                  := vbCarId
                                                                              , inMemberId               := vbMemberId
@@ -1417,4 +1453,3 @@ WHERE Movement.Id = MovementId
 -- SELECT * FROM gpUnComplete_Movement (inMovementId:= 29207, inSession:= '2')
 -- SELECT * FROM gpComplete_Movement_Inventory (inMovementId:= 1902144, inIsLastComplete:= FALSE, inSession:= zc_Enum_Process_Auto_PrimeCost() :: TVarChar)
 -- SELECT * FROM gpSelect_MovementItemContainer_Movement (inMovementId:= 29207, inSession:= '2')
-

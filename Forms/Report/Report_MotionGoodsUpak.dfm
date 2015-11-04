@@ -1961,6 +1961,14 @@ object Report_MotionGoodsUpakForm: TReport_MotionGoodsUpakForm
         VisibleForCustomization = False
         Width = 55
       end
+      object AssetToName: TcxGridDBColumn
+        DataBinding.FieldName = 'AssetToName'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        VisibleForCustomization = False
+        Width = 55
+      end
     end
     object cxGridLevel: TcxGridLevel
       GridView = cxGridDBTableView
@@ -2572,6 +2580,7 @@ object Report_MotionGoodsUpakForm: TReport_MotionGoodsUpakForm
           ParamType = ptInput
         end>
       isShowModal = True
+      RefreshDispatcher = RefreshDispatcher
       OpenBeforeShow = True
     end
     object actPrint: TdsdPrintAction
@@ -2591,7 +2600,6 @@ object Report_MotionGoodsUpakForm: TReport_MotionGoodsUpakForm
             'l'
           GridView = cxGridDBTableView
         end>
-      CopiesCount = 1
       Params = <
         item
           Name = 'StartDate'
@@ -2810,7 +2818,6 @@ object Report_MotionGoodsUpakForm: TReport_MotionGoodsUpakForm
             'l'
           GridView = cxGridDBTableView
         end>
-      CopiesCount = 1
       Params = <
         item
           Name = 'StartDate'
@@ -2910,7 +2917,6 @@ object Report_MotionGoodsUpakForm: TReport_MotionGoodsUpakForm
             'l'
           GridView = cxGridDBTableView
         end>
-      CopiesCount = 1
       Params = <
         item
           Name = 'StartDate'
