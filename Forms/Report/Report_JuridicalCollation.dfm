@@ -23,6 +23,8 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
       inherited cxGrid: TcxGrid
         Width = 1020
         Height = 330
+        ExplicitLeft = 3
+        ExplicitTop = 32
         ExplicitWidth = 1020
         ExplicitHeight = 330
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -933,6 +935,14 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
           ComponentItem = 'AccounterName_Basis'
           DataType = ftString
           ParamType = ptInput
+        end
+        item
+          Name = 'InfoMoneyName'
+          Value = Null
+          Component = InfoMoneyGuides
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          ParamType = ptInput
         end>
       ReportName = #1054#1090#1095#1077#1090' '#1048#1090#1086#1075' '#1087#1086' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1102' ('#1040#1082#1090' '#1089#1074#1077#1088#1082#1080')'
       ReportNameParam.Value = #1054#1090#1095#1077#1090' '#1048#1090#1086#1075' '#1087#1086' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1102' ('#1040#1082#1090' '#1089#1074#1077#1088#1082#1080')'
@@ -1474,12 +1484,14 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
         item
           Name = 'InfoMoneyId'
           Value = ''
+          Component = InfoMoneyGuides
           ComponentItem = 'Key'
           ParamType = ptInput
         end
         item
           Name = 'InfoMoneyName'
           Value = ''
+          Component = InfoMoneyGuides
           ComponentItem = 'TextValue'
           DataType = ftString
           ParamType = ptInput
