@@ -30,6 +30,7 @@ AS
 $BODY$
    DECLARE vbUserId Integer;
    DECLARE vbIsOd Boolean;
+   DECLARE vbIsKh Boolean;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Select_Movement_TransportGoods());
@@ -44,6 +45,8 @@ BEGIN
 
      -- !!! для Одесса, понятно что временно!!!
      vbIsOd:= 8374 = (SELECT Object_RoleAccessKeyGuide_View.BranchId FROM Object_RoleAccessKeyGuide_View WHERE Object_RoleAccessKeyGuide_View.UserId = vbUserId AND Object_RoleAccessKeyGuide_View.BranchId <> 0 GROUP BY Object_RoleAccessKeyGuide_View.BranchId);
+     -- !!! для Харькова, понятно что временно!!! )))      
+     vbIsKh:= 8381 = (SELECT Object_RoleAccessKeyGuide_View.BranchId FROM Object_RoleAccessKeyGuide_View WHERE Object_RoleAccessKeyGuide_View.UserId = vbUserId AND Object_RoleAccessKeyGuide_View.BranchId <> 0 GROUP BY Object_RoleAccessKeyGuide_View.BranchId);
 
      -- если надо - создаем
      IF COALESCE (inMovementId, 0) = 0
@@ -98,7 +101,10 @@ BEGIN
                                                                                                 THEN 418699 -- Бирдіна Оксана Євгенівна
                                                                                            ELSE NULL
                                                                                       END
-                                                               , inMemberId4       := NULL
+                                                               , inMemberId4       := CASE WHEN vbIsKh = TRUE
+                                                                                                THEN 301480 -- Самохін Володимир Іванович кладовщик
+                                                                                           ELSE NULL
+                                                                                      END
                                                                , inMemberId5       := NULL
                                                                , inMemberId6       := NULL
                                                                , inMemberId7       := NULL
@@ -208,7 +214,7 @@ BEGIN
                                          ON MovementLinkObject_Member4.MovementId = Movement.Id
                                         AND MovementLinkObject_Member4.DescId = zc_MovementLinkObject_Member4()
             LEFT JOIN Object AS Object_Member4 ON Object_Member4.Id = MovementLinkObject_Member4.ObjectId
-
+                                                                      
             LEFT JOIN MovementLinkObject AS MovementLinkObject_Member5
                                          ON MovementLinkObject_Member5.MovementId = Movement.Id
                                         AND MovementLinkObject_Member5.DescId = zc_MovementLinkObject_Member5()
@@ -252,6 +258,7 @@ ALTER FUNCTION gpGet_Movement_TransportGoods (Integer, Integer, TDateTime, TVarC
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
+ 02.11.15         * add vbIsKh, Самохін Володимир Іванович кладовщик
  28.03.15                                        *
 */
 

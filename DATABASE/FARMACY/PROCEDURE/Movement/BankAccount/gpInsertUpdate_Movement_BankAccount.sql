@@ -77,11 +77,11 @@ BEGIN
 
 
      -- 1. Распроводим Документ
-     IF ioId > 0 AND vbUserId = lpCheckRight (inSession, zc_Enum_Process_UnComplete_BankAccount())
-     THEN
-         PERFORM lpUnComplete_Movement (inMovementId := ioId
-                                      , inUserId     := vbUserId);
-     END IF;
+     -- IF ioId > 0 AND vbUserId = lpCheckRight (inSession, zc_Enum_Process_UnComplete_BankAccount())
+     -- THEN
+         -- PERFORM lpUnComplete_Movement (inMovementId := ioId
+                                      -- , inUserId     := vbUserId);
+     -- END IF;
 
      -- сохранили <Документ>
      ioId:= lpInsertUpdate_Movement_BankAccount (ioId                   := ioId
@@ -109,7 +109,7 @@ BEGIN
                                                 
 
      -- создаются временные таблицы - для формирование данных для проводок
-     PERFORM lpComplete_Movement_Finance_CreateTemp();
+     --PERFORM lpComplete_Movement_Finance_CreateTemp();
 
      -- 5.3. проводим Документ
 --     IF vbUserId = lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Movement_BankAccount())

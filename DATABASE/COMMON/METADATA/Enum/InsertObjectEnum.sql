@@ -48,9 +48,9 @@ BEGIN
 
    PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_GlobalConst_IntegerDate(),  inDescId:= zc_Object_GlobalConst(), inCode:= 2, inName:= 'актуальность данных Integer', inEnumName:= 'zc_Enum_GlobalConst_IntegerDate');
 
-   PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_GlobalConst_CashDate(),  inDescId:= zc_Object_GlobalConst(), inCode:= 3, inName:= 'актуальность данных по кассе', inEnumName:= 'zc_Enum_GlobalConst_CashDate');
+   PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_GlobalConst_CashDate(),  inDescId:= zc_Object_GlobalConst(), inCode:= 1, inName:= 'актуальность данных по кассе', inEnumName:= 'zc_Enum_GlobalConst_CashDate');
 
-   PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_GlobalConst_MedocTaxDate(),  inDescId:= zc_Object_GlobalConst(), inCode:= 101, inName:= 'актуальность данных Медок', inEnumName:= 'zc_Enum_GlobalConst_MedocTaxDate');
+   PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_GlobalConst_MedocTaxDate(),  inDescId:= zc_Object_GlobalConst(), inCode:= 2, inName:= 'актуальность данных Медок', inEnumName:= 'zc_Enum_GlobalConst_MedocTaxDate');
 
 END $$;
 
@@ -722,11 +722,26 @@ BEGIN
 
 END $$;
 
+DO $$
+BEGIN
+--Виды акций
+   PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_PromoKind_Custom(),  inDescId:= zc_Object_PromoKind(), inCode:= 1, inName:= 'Обычная', inEnumName:= 'zc_Enum_PromoKind_Custom');
+
+   PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_PromoKind_Compensation(),  inDescId:= zc_Object_PromoKind(), inCode:= 2, inName:= 'В счет маркетингового бюджета', inEnumName:= 'zc_Enum_PromoKind_Compensation');
+
+--Условия участия   
+   PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_ConditionPromo_Discount(),  inDescId:= zc_Object_ConditionPromo(), inCode:= 3, inName:= 'Скидка', inEnumName:= 'zc_Enum_ConditionPromo_Discount');
+
+   PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_ConditionPromo_Compensation(),  inDescId:= zc_Object_ConditionPromo(), inCode:= 3, inName:= 'Компенсация по итогу продаж', inEnumName:= 'zc_Enum_ConditionPromo_Compensation');
+
+END $$;
+
 
 /*-------------------------------------------------------------------------------*/
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
+                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.   Воробкало А.А.
+ 31.10.15                                                                       *zc_Enum_PromoKind_Custom, zc_Enum_PromoKind_Compensation, zc_Enum_ConditionPromo_Discount, zc_Enum_ConditionPromo_Compensation
  13.11.14                                        * add zc_Enum_Currency_Basis
  30.08.14                                        * add zc_Enum_InfoMoney_60101
  23.08.14                                        * add ОС

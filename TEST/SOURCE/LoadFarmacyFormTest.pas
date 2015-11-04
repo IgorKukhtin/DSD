@@ -56,6 +56,7 @@ type
     procedure LoadObjectUnionFormTest;
     procedure LoadPaidKindFormTest;
     procedure LoadPaidTypeFormTest;
+    procedure LoadPaymentFormTest;
     procedure LoadPriceListFormTest;
     procedure LoadPriceFormTest;
     procedure LoadProfitLossFormTest;
@@ -380,6 +381,8 @@ procedure TLoadFormTest.LoadJuridicalFormTest;
 begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TJuridicalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TJuridicalForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TJuridicalCorporateForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TJuridicalCorporateForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TJuridicalEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TJuridicalEditForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TJuridical_ObjectForm'));
@@ -632,6 +635,14 @@ procedure TLoadFormTest.LoadPaidTypeFormTest;
 begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TPaidTypeForm'));
   TdsdFormStorageFactory.GetStorage.Load('TPaidTypeForm');
+end;
+
+procedure TLoadFormTest.LoadPaymentFormTest;
+begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TPaymentJournalForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TPaymentJournalForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TPaymentForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TPaymentForm');
 end;
 
 procedure TLoadFormTest.LoadCheckDeferredFormTest;

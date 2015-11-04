@@ -55,6 +55,8 @@ end;
 
 procedure TIncomeMovementItemTest.ProcedureLoad;
 begin
+  ScriptDirectory := LocalProcedurePath + 'MovementItemContainer\Income\';
+  inherited;
   ScriptDirectory := LocalProcedurePath + 'MovementItem\Income\';
   inherited;
   ScriptDirectory := LocalProcedurePath + 'Movement\Income\';

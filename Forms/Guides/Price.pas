@@ -55,6 +55,7 @@ type
     spDelete_Object_MCS: TdsdStoredProc;
     actDelete_Object_MCS: TdsdExecStoredProc;
     dxBarButton6: TdxBarButton;
+    colFix: TcxGridDBColumn;
   private
     { Private declarations }
   public

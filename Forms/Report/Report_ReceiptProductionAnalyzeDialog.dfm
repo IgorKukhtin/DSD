@@ -3,7 +3,7 @@ object Report_ReceiptProductionAnalyzeDialogForm: TReport_ReceiptProductionAnaly
   Top = 0
   BorderStyle = bsDialog
   Caption = #1055#1072#1088#1072#1084#1077#1090#1088#1099' '#1086#1090#1095#1077#1090#1072' <'#1040#1085#1072#1083#1080#1079' '#1088#1077#1094#1077#1087#1090#1091#1088' '#1080' '#1087#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1072'>'
-  ClientHeight = 264
+  ClientHeight = 322
   ClientWidth = 475
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -18,8 +18,8 @@ object Report_ReceiptProductionAnalyzeDialogForm: TReport_ReceiptProductionAnaly
   PixelsPerInch = 96
   TextHeight = 13
   object cxButton1: TcxButton
-    Left = 111
-    Top = 219
+    Left = 112
+    Top = 267
     Width = 75
     Height = 25
     Caption = 'Ok'
@@ -28,8 +28,8 @@ object Report_ReceiptProductionAnalyzeDialogForm: TReport_ReceiptProductionAnaly
     TabOrder = 0
   end
   object cxButton2: TcxButton
-    Left = 285
-    Top = 219
+    Left = 286
+    Top = 267
     Width = 75
     Height = 25
     Caption = #1054#1090#1084#1077#1085#1072
@@ -98,12 +98,12 @@ object Report_ReceiptProductionAnalyzeDialogForm: TReport_ReceiptProductionAnaly
   end
   object cxLabel11: TcxLabel
     Left = 8
-    Top = 101
+    Top = 149
     Caption = #1055#1088#1072#1081#1089'-'#1083#1080#1089#1090' 1'
   end
   object edPriceList_1: TcxButtonEdit
     Left = 8
-    Top = 121
+    Top = 169
     Properties.Buttons = <
       item
         Default = True
@@ -115,12 +115,12 @@ object Report_ReceiptProductionAnalyzeDialogForm: TReport_ReceiptProductionAnaly
   end
   object cxLabel1: TcxLabel
     Left = 237
-    Top = 101
+    Top = 149
     Caption = #1055#1088#1072#1081#1089'-'#1083#1080#1089#1090' 2'
   end
   object edPriceList_2: TcxButtonEdit
     Left = 237
-    Top = 121
+    Top = 169
     Properties.Buttons = <
       item
         Default = True
@@ -132,17 +132,17 @@ object Report_ReceiptProductionAnalyzeDialogForm: TReport_ReceiptProductionAnaly
   end
   object cxLabel2: TcxLabel
     Left = 8
-    Top = 149
+    Top = 197
     Caption = #1055#1088#1072#1081#1089'-'#1083#1080#1089#1090' 3'
   end
   object cxLabel8: TcxLabel
     Left = 237
-    Top = 149
+    Top = 197
     Caption = #1055#1088#1072#1081#1089'-'#1083#1080#1089#1090' '#1087#1088#1086#1076#1072#1078#1072
   end
   object edPriceList_3: TcxButtonEdit
     Left = 8
-    Top = 168
+    Top = 216
     Properties.Buttons = <
       item
         Default = True
@@ -154,7 +154,7 @@ object Report_ReceiptProductionAnalyzeDialogForm: TReport_ReceiptProductionAnaly
   end
   object edPriceList_sale: TcxButtonEdit
     Left = 237
-    Top = 168
+    Top = 216
     Properties.Buttons = <
       item
         Default = True
@@ -165,13 +165,13 @@ object Report_ReceiptProductionAnalyzeDialogForm: TReport_ReceiptProductionAnaly
     Width = 220
   end
   object cxLabel4: TcxLabel
-    Left = 237
-    Top = 7
+    Left = 8
+    Top = 101
     Caption = #1043#1088#1091#1087#1087#1072' '#1090#1086#1074#1072#1088#1086#1074':'
   end
   object edGoodsGroup: TcxButtonEdit
-    Left = 237
-    Top = 27
+    Left = 8
+    Top = 121
     Properties.Buttons = <
       item
         Default = True
@@ -180,6 +180,23 @@ object Report_ReceiptProductionAnalyzeDialogForm: TReport_ReceiptProductionAnaly
     TabOrder = 19
     Width = 220
   end
+  object edGoods: TcxButtonEdit
+    Left = 237
+    Top = 121
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    Properties.ReadOnly = True
+    TabOrder = 20
+    Width = 220
+  end
+  object cxLabel9: TcxLabel
+    Left = 237
+    Top = 101
+    Caption = #1058#1086#1074#1072#1088':'
+  end
   object PeriodChoice: TPeriodChoice
     DateStart = deStart
     DateEnd = deEnd
@@ -187,8 +204,8 @@ object Report_ReceiptProductionAnalyzeDialogForm: TReport_ReceiptProductionAnaly
     Top = 16
   end
   object dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
-    Left = 224
-    Top = 215
+    Left = 225
+    Top = 263
   end
   object cxPropertiesStore: TcxPropertiesStore
     Components = <
@@ -200,8 +217,8 @@ object Report_ReceiptProductionAnalyzeDialogForm: TReport_ReceiptProductionAnaly
       end>
     StorageName = 'cxPropertiesStore'
     StorageType = stStream
-    Left = 400
-    Top = 217
+    Left = 401
+    Top = 241
   end
   object FormParams: TdsdFormParams
     Params = <
@@ -323,9 +340,24 @@ object Report_ReceiptProductionAnalyzeDialogForm: TReport_ReceiptProductionAnaly
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+      end
+      item
+        Name = 'GoodsId'
+        Value = Null
+        Component = GuidesGoods
+        ComponentItem = 'Key'
+        ParamType = ptInput
+      end
+      item
+        Name = 'GoodsName'
+        Value = Null
+        Component = GuidesGoods
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
       end>
-    Left = 40
-    Top = 200
+    Left = 49
+    Top = 272
   end
   object FromUnitGuides: TdsdGuides
     KeyField = 'Id'
@@ -430,8 +462,8 @@ object Report_ReceiptProductionAnalyzeDialogForm: TReport_ReceiptProductionAnaly
         DataType = ftString
         ParamType = ptInput
       end>
-    Left = 132
-    Top = 112
+    Left = 133
+    Top = 160
   end
   object PriceList_2_Guides: TdsdGuides
     KeyField = 'Id'
@@ -482,8 +514,8 @@ object Report_ReceiptProductionAnalyzeDialogForm: TReport_ReceiptProductionAnaly
         DataType = ftString
         ParamType = ptInput
       end>
-    Left = 332
-    Top = 112
+    Left = 333
+    Top = 160
   end
   object PriceList_3_Guides: TdsdGuides
     KeyField = 'Id'
@@ -535,7 +567,7 @@ object Report_ReceiptProductionAnalyzeDialogForm: TReport_ReceiptProductionAnaly
         ParamType = ptInput
       end>
     Left = 92
-    Top = 160
+    Top = 208
   end
   object PriceList_sale_Guides: TdsdGuides
     KeyField = 'Id'
@@ -586,8 +618,8 @@ object Report_ReceiptProductionAnalyzeDialogForm: TReport_ReceiptProductionAnaly
         DataType = ftString
         ParamType = ptInput
       end>
-    Left = 316
-    Top = 160
+    Left = 317
+    Top = 208
   end
   object GoodsGroupGuides: TdsdGuides
     KeyField = 'Id'
@@ -613,7 +645,34 @@ object Report_ReceiptProductionAnalyzeDialogForm: TReport_ReceiptProductionAnaly
         DataType = ftString
         ParamType = ptInput
       end>
-    Left = 376
-    Top = 16
+    Left = 104
+    Top = 104
+  end
+  object GuidesGoods: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edGoods
+    FormNameParam.Value = 'TGoodsFuel_ObjectForm'
+    FormNameParam.DataType = ftString
+    FormName = 'TGoodsFuel_ObjectForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GuidesGoods
+        ComponentItem = 'Key'
+        DataType = ftString
+        ParamType = ptInput
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesGoods
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+      end>
+    Left = 344
+    Top = 103
   end
 end

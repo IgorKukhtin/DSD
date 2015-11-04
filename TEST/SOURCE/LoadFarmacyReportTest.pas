@@ -68,6 +68,7 @@ begin
   LoadReportFromFile('Списание', ReportPath + '\Списание.fr3');
   LoadReportFromFile('Перемещение', ReportPath + '\Перемещение.fr3');
   LoadReportFromFile('Продажа', ReportPath + '\Продажа.fr3');
+  LoadReportFromFile('Оплаты', ReportPath + '\Оплаты.fr3');
 end;
 
 procedure TLoadReportTest.SetUp;

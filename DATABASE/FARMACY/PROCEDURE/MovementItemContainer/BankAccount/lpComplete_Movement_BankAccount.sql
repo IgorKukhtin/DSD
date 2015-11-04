@@ -12,7 +12,6 @@ AS
 $BODY$
 BEGIN
 
-
      -- !!!обязательно!!! очистили таблицу проводок
      DELETE FROM _tmpMIContainer_insert;
   --   DELETE FROM _tmpMIReport_insert;

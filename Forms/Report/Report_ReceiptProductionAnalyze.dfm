@@ -1,27 +1,27 @@
 inherited Report_ReceiptProductionAnalyzeForm: TReport_ReceiptProductionAnalyzeForm
   Caption = #1054#1090#1095#1077#1090' <'#1040#1085#1072#1083#1080#1079' '#1088#1077#1094#1077#1087#1090#1091#1088' '#1080' '#1087#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1072'>'
   ClientHeight = 430
-  ClientWidth = 1130
+  ClientWidth = 1171
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
-  ExplicitWidth = 1146
-  ExplicitHeight = 465
+  ExplicitWidth = 1187
+  ExplicitHeight = 468
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 83
-    Width = 1130
+    Width = 1171
     Height = 347
     TabOrder = 3
     ExplicitTop = 83
     ExplicitWidth = 1130
     ExplicitHeight = 347
     ClientRectBottom = 347
-    ClientRectRight = 1130
+    ClientRectRight = 1171
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 1130
       ExplicitHeight = 347
       inherited cxGrid: TcxGrid
-        Width = 1130
+        Width = 1171
         Height = 347
         ExplicitWidth = 1130
         ExplicitHeight = 347
@@ -842,7 +842,7 @@ inherited Report_ReceiptProductionAnalyzeForm: TReport_ReceiptProductionAnalyzeF
     end
   end
   inherited Panel: TPanel
-    Width = 1130
+    Width = 1171
     Height = 57
     ExplicitWidth = 1130
     ExplicitHeight = 57
@@ -854,11 +854,11 @@ inherited Report_ReceiptProductionAnalyzeForm: TReport_ReceiptProductionAnalyzeF
       ExplicitTop = 6
     end
     inherited deEnd: TcxDateEdit
-      Left = 118
-      Top = 32
+      Left = 115
+      Top = 30
       EditValue = 42216d
-      ExplicitLeft = 118
-      ExplicitTop = 32
+      ExplicitLeft = 115
+      ExplicitTop = 30
     end
     inherited cxLabel1: TcxLabel
       Left = 27
@@ -868,33 +868,33 @@ inherited Report_ReceiptProductionAnalyzeForm: TReport_ReceiptProductionAnalyzeF
     end
     inherited cxLabel2: TcxLabel
       Left = 8
-      Top = 33
+      Top = 31
       ExplicitLeft = 8
-      ExplicitTop = 33
+      ExplicitTop = 31
     end
     object cxLabel4: TcxLabel
-      Left = 951
+      Left = 930
       Top = 5
-      Caption = #1043#1088#1091#1087#1087#1072' '#1090#1086#1074#1072#1088#1086#1074':'
+      Caption = #1043#1088'. '#1090#1086#1074#1072#1088#1086#1074':'
     end
     object edGoodsGroup: TcxButtonEdit
-      Left = 951
-      Top = 29
+      Left = 998
+      Top = 5
       Properties.Buttons = <
         item
           Default = True
           Kind = bkEllipsis
         end>
       TabOrder = 5
-      Width = 171
+      Width = 163
     end
     object cxLabel3: TcxLabel
-      Left = 206
+      Left = 201
       Top = 6
       Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077' ('#1086#1090' '#1082#1086#1075#1086'):'
     end
     object edFromUnit: TcxButtonEdit
-      Left = 347
+      Left = 335
       Top = 5
       Properties.Buttons = <
         item
@@ -906,13 +906,13 @@ inherited Report_ReceiptProductionAnalyzeForm: TReport_ReceiptProductionAnalyzeF
       Width = 169
     end
     object cxLabel5: TcxLabel
-      Left = 220
+      Left = 215
       Top = 29
       Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077' ('#1082#1086#1084#1091'):'
     end
     object edToUnit: TcxButtonEdit
-      Left = 347
-      Top = 29
+      Left = 335
+      Top = 30
       Properties.Buttons = <
         item
           Default = True
@@ -923,12 +923,12 @@ inherited Report_ReceiptProductionAnalyzeForm: TReport_ReceiptProductionAnalyzeF
       Width = 169
     end
     object cxLabel11: TcxLabel
-      Left = 519
+      Left = 504
       Top = 6
       Caption = #1055#1088#1072#1081#1089'-'#1083#1080#1089#1090' 1'
     end
     object edPriceList_1: TcxButtonEdit
-      Left = 588
+      Left = 573
       Top = 5
       Properties.Buttons = <
         item
@@ -940,13 +940,13 @@ inherited Report_ReceiptProductionAnalyzeForm: TReport_ReceiptProductionAnalyzeF
       Width = 125
     end
     object cxLabel6: TcxLabel
-      Left = 520
+      Left = 505
       Top = 32
       Caption = #1055#1088#1072#1081#1089'-'#1083#1080#1089#1090' 2'
     end
     object edPriceList_2: TcxButtonEdit
-      Left = 588
-      Top = 31
+      Left = 573
+      Top = 30
       Properties.Buttons = <
         item
           Default = True
@@ -957,12 +957,12 @@ inherited Report_ReceiptProductionAnalyzeForm: TReport_ReceiptProductionAnalyzeF
       Width = 125
     end
     object cxLabel7: TcxLabel
-      Left = 713
+      Left = 700
       Top = 6
       Caption = #1055#1088#1072#1081#1089'-'#1083#1080#1089#1090' 3'
     end
     object edPriceList_3: TcxButtonEdit
-      Left = 821
+      Left = 805
       Top = 5
       Properties.Buttons = <
         item
@@ -974,12 +974,12 @@ inherited Report_ReceiptProductionAnalyzeForm: TReport_ReceiptProductionAnalyzeF
       Width = 125
     end
     object cxLabel8: TcxLabel
-      Left = 712
+      Left = 699
       Top = 31
       Caption = #1055#1088#1072#1081#1089'-'#1083#1080#1089#1090' '#1087#1088#1086#1076#1072#1078#1072
     end
     object edPriceList_sale: TcxButtonEdit
-      Left = 822
+      Left = 806
       Top = 30
       Properties.Buttons = <
         item
@@ -989,6 +989,23 @@ inherited Report_ReceiptProductionAnalyzeForm: TReport_ReceiptProductionAnalyzeF
       Properties.ReadOnly = True
       TabOrder = 17
       Width = 125
+    end
+    object cxLabel9: TcxLabel
+      Left = 930
+      Top = 31
+      Caption = #1058#1086#1074#1072#1088':'
+    end
+    object edGoods: TcxButtonEdit
+      Left = 969
+      Top = 30
+      Properties.Buttons = <
+        item
+          Default = True
+          Kind = bkEllipsis
+        end>
+      Properties.ReadOnly = True
+      TabOrder = 19
+      Width = 192
     end
   end
   inherited cxPropertiesStore: TcxPropertiesStore
@@ -1171,6 +1188,21 @@ inherited Report_ReceiptProductionAnalyzeForm: TReport_ReceiptProductionAnalyzeF
           Name = 'GoodsGroupName'
           Value = ''
           Component = GoodsGroupGuides
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          ParamType = ptInput
+        end
+        item
+          Name = 'GoodsId'
+          Value = Null
+          Component = GuidesGoods
+          ComponentItem = 'Key'
+          ParamType = ptInput
+        end
+        item
+          Name = 'GoodsName'
+          Value = Null
+          Component = GuidesGoods
           ComponentItem = 'TextValue'
           DataType = ftString
           ParamType = ptInput
@@ -1468,6 +1500,13 @@ inherited Report_ReceiptProductionAnalyzeForm: TReport_ReceiptProductionAnalyzeF
         ParamType = ptInput
       end
       item
+        Name = 'inGoodsId'
+        Value = Null
+        Component = GuidesGoods
+        ComponentItem = 'Key'
+        ParamType = ptInput
+      end
+      item
         Name = 'inPriceListId_1'
         Value = Null
         Component = PriceList_1_Guides
@@ -1590,6 +1629,9 @@ inherited Report_ReceiptProductionAnalyzeForm: TReport_ReceiptProductionAnalyzeF
       end
       item
         Component = edGoodsGroup
+      end
+      item
+        Component = edGoods
       end>
     Left = 96
     Top = 120
@@ -1618,8 +1660,8 @@ inherited Report_ReceiptProductionAnalyzeForm: TReport_ReceiptProductionAnalyzeF
         DataType = ftString
         ParamType = ptInput
       end>
-    Left = 976
-    Top = 32
+    Left = 1072
+    Top = 65528
   end
   object FromUnitGuides: TdsdGuides
     KeyField = 'Id'
@@ -1993,5 +2035,32 @@ inherited Report_ReceiptProductionAnalyzeForm: TReport_ReceiptProductionAnalyzeF
     SummaryItemList = <>
     Left = 544
     Top = 320
+  end
+  object GuidesGoods: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edGoods
+    FormNameParam.Value = 'TGoodsFuel_ObjectForm'
+    FormNameParam.DataType = ftString
+    FormName = 'TGoodsFuel_ObjectForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GuidesGoods
+        ComponentItem = 'Key'
+        DataType = ftString
+        ParamType = ptInput
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesGoods
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+      end>
+    Left = 1000
+    Top = 23
   end
 end

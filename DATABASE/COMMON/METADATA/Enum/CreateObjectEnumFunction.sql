@@ -932,11 +932,22 @@ CREATE OR REPLACE FUNCTION zc_Enum_ProfitLoss_80105() RETURNS Integer AS $BODY$B
 -- 80000; Расходы с прибыли  80300; Списание дебиторской задолженности 80301; Продукция
 CREATE OR REPLACE FUNCTION zc_Enum_ProfitLoss_80301() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_ProfitLoss_80301' AND DescId = zc_ObjectString_Enum()); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 
+-- Виды акций: Обычная
+CREATE OR REPLACE FUNCTION zc_Enum_PromoKind_Custom() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_PromoKind_Discount' AND DescId = zc_ObjectString_Enum()); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+-- Виды акций: В счет маркетинговго бюджета
+CREATE OR REPLACE FUNCTION zc_Enum_PromoKind_Compensation() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_PromoKind_Compensation' AND DescId = zc_ObjectString_Enum()); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+
+-- Условия участия в акции: Скидка
+CREATE OR REPLACE FUNCTION zc_Enum_ConditionPromo_Discount() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_ConditionPromo_Discount' AND DescId = zc_ObjectString_Enum()); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+-- Условия участия в акции: Компенсация по итогу продаж
+CREATE OR REPLACE FUNCTION zc_Enum_ConditionPromo_Compensation() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_ConditionPromo_Compensation' AND DescId = zc_ObjectString_Enum()); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+
 
 /*-------------------------------------------------------------------------------*/
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.   Воробкало А.А.
+ 31.10.15                                                                      *zc_Enum_PromoKind_Custom, zc_Enum_PromoKind_Compensation, zc_Enum_ConditionPromo_Discount, zc_Enum_ConditionPromo_Compensation
  13.11.14                                        * add zc_Enum_Currency_Basis
  30.08.14                                        * add zc_Enum_InfoMoney_60101
  23.08.14                                        * add ОС

@@ -592,7 +592,7 @@ inherited MainForm: TMainForm
     object actBankAccountDocument: TdsdOpenForm
       Category = #1060#1080#1085#1072#1085#1089#1086#1074#1099#1081' '#1091#1095#1077#1090
       MoveParams = <>
-      Caption = #1056#1072#1089#1095#1077#1090#1085#1099#1081' '#1089#1095#1077#1090', '#1087#1088#1080#1093#1086#1076'/'#1088#1072#1089#1093#1086#1076
+      Caption = #1056#1072#1089#1093#1086#1076' '#1087#1086' '#1088#1072#1089#1095#1077#1090#1085#1086#1084#1091' '#1089#1095#1077#1090#1091
       FormName = 'TBankAccountJournalFarmacyForm'
       FormNameParam.Value = 'TBankAccountJournalFarmacyForm'
       FormNameParam.DataType = ftString
@@ -826,6 +826,16 @@ inherited MainForm: TMainForm
       GuiParams = <>
       isShowModal = False
     end
+    object actPaymentJournal: TdsdOpenForm
+      Category = #1060#1080#1085#1072#1085#1089#1086#1074#1099#1081' '#1091#1095#1077#1090
+      MoveParams = <>
+      Caption = #1054#1087#1083#1072#1090#1099' '#1087#1088#1080#1093#1086#1076#1086#1074
+      FormName = 'TPaymentJournalForm'
+      FormNameParam.Value = 'TPaymentJournalForm'
+      FormNameParam.DataType = ftString
+      GuiParams = <>
+      isShowModal = False
+    end
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 496
@@ -1017,6 +1027,9 @@ inherited MainForm: TMainForm
       end
       object N37: TMenuItem
         Action = actBankLoad
+      end
+      object N67: TMenuItem
+        Action = actPaymentJournal
       end
       object N38: TMenuItem
         Caption = '-'

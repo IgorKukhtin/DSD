@@ -19,10 +19,12 @@ AS
 
       , price_datechange.valuedata              AS DateChange
       , MCS_datechange.valuedata                AS MCSDateChange
+      
       , Object_Goods.isErased                   AS isErased
 
       , COALESCE(MCS_isClose.ValueData,False)   AS MCSIsClose
       , COALESCE(MCS_NotRecalc.ValueData,False) AS MCSNotRecalc
+      , COALESCE(Price_Fix.ValueData,False)     AS Fix
     FROM Object AS Object_Price
         LEFT JOIN ObjectFloat       AS Price_Value
                                     ON Price_Value.ObjectId = Object_Price.Id
@@ -53,6 +55,9 @@ AS
         LEFT JOIN ObjectBoolean      AS MCS_NotRecalc
                                     ON MCS_NotRecalc.ObjectId = Object_Price.Id
                                    AND MCS_NotRecalc.DescId = zc_ObjectBoolean_Price_MCSNotRecalc()
+        LEFT JOIN ObjectBoolean      AS Price_Fix
+                                    ON Price_Fix.ObjectId = Object_Price.Id
+                                   AND Price_Fix.DescId = zc_ObjectBoolean_Price_Fix()
 
     WHERE 
         Object_Price.DescId = zc_Object_Price();

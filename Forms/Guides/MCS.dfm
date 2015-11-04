@@ -11,17 +11,17 @@ inherited MCSForm: TMCSForm
     Width = 758
     Height = 393
     TabOrder = 3
-    ExplicitWidth = 722
+    ExplicitWidth = 758
     ExplicitHeight = 393
     ClientRectBottom = 393
     ClientRectRight = 758
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 722
+      ExplicitWidth = 758
       ExplicitHeight = 393
       inherited cxGrid: TcxGrid
         Width = 758
         Height = 393
-        ExplicitWidth = 722
+        ExplicitWidth = 758
         ExplicitHeight = 393
         inherited cxGridDBTableView: TcxGridDBTableView
           Styles.Content = nil
@@ -35,6 +35,9 @@ inherited MCSForm: TMCSForm
           end
           inherited clDateChange: TcxGridDBColumn
             Visible = False
+          end
+          inherited colFix: TcxGridDBColumn
+            Options.Editing = False
           end
         end
       end
@@ -82,9 +85,6 @@ inherited MCSForm: TMCSForm
       FormName = ''
       FormNameParam.Value = ''
     end
-    inherited actDelete_Object_MCS: TdsdExecStoredProc
-      PostDataSetBeforeExecute = False
-    end
   end
   inherited BarManager: TdxBarManager
     DockControlHeights = (
@@ -101,7 +101,7 @@ inherited MCSForm: TMCSForm
       Enabled = False
     end
   end
-  object spGet_UserUnit: TdsdStoredProc [13]
+  object spGet_UserUnit: TdsdStoredProc [9]
     StoredProcName = 'gpGet_UserUnit'
     DataSets = <>
     OutputType = otResult

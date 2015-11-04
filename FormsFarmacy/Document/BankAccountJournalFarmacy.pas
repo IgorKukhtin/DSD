@@ -12,7 +12,8 @@ uses
   cxClasses, Datasnap.DBClient, dsdAction, Vcl.ActnList, cxPropertiesStore,
   cxLabel, cxTextEdit, cxMaskEdit, cxDropDownEdit, cxCalendar, Vcl.ExtCtrls,
   cxGridLevel, cxGridCustomTableView, cxGridTableView, cxGridDBTableView,
-  cxGridCustomView, cxGrid, cxPC, dxBarBuiltInMenu, cxNavigator, Vcl.DBActns;
+  cxGridCustomView, cxGrid, cxPC, dxBarBuiltInMenu, cxNavigator, Vcl.DBActns,
+  dxSkinsCore, dxSkinsDefaultPainters, dxSkinscxPCPainter, dxSkinsdxBarPainter;
 
 type
   TBankAccountJournalFarmacyForm = class(TBankAccountJournalForm)
