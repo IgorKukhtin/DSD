@@ -563,29 +563,16 @@ inherited ReturnInJournalForm: TReturnInJournalForm
     end
     inherited actSetErased: TdsdChangeMovementStatus [5]
     end
-    object actChecked: TdsdExecStoredProc [6]
-      Category = 'DSDLib'
-      MoveParams = <>
-      PostDataSetBeforeExecute = False
-      StoredProc = spChecked
-      StoredProcList = <
-        item
-          StoredProc = spChecked
-        end>
-      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' "'#1055#1088#1086#1074#1077#1088#1077#1085' '#1044#1072'/'#1053#1077#1090'"'
-      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' "'#1055#1088#1086#1074#1077#1088#1077#1085' '#1044#1072'/'#1053#1077#1090'"'
-      ImageIndex = 58
-    end
-    inherited actCompleteList: TMultiAction [7]
+    inherited actCompleteList: TMultiAction [6]
       View = cxGridDBTableView
     end
-    inherited actUnCompleteList: TMultiAction [8]
+    inherited actUnCompleteList: TMultiAction [7]
       View = cxGridDBTableView
     end
-    inherited actSetErasedList: TMultiAction [9]
+    inherited actSetErasedList: TMultiAction [8]
       View = cxGridDBTableView
     end
-    object actTaxCorrective: TdsdExecStoredProc [10]
+    object actTaxCorrective: TdsdExecStoredProc [9]
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -604,7 +591,7 @@ inherited ReturnInJournalForm: TReturnInJournalForm
         #1047#1072#1074#1077#1088#1096#1077#1085#1086' '#1092#1086#1088#1084#1080#1088#1086#1074#1072#1085#1080#1077' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' <'#1050#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1082#1072' '#1082' '#1085#1072#1083#1086#1075#1086#1074#1086#1081'('#1089' '#1087#1088 +
         #1080#1074#1103#1079#1082#1086#1081')>.'
     end
-    object actCorrective: TdsdExecStoredProc [11]
+    object actCorrective: TdsdExecStoredProc [10]
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -623,11 +610,11 @@ inherited ReturnInJournalForm: TReturnInJournalForm
         #1047#1072#1074#1077#1088#1096#1077#1085#1086' '#1092#1086#1088#1084#1080#1088#1086#1074#1072#1085#1080#1077' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' <'#1050#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1082#1072' '#1082' '#1085#1072#1083#1086#1075#1086#1074#1086#1081'('#1073#1077#1079' ' +
         #1087#1088#1080#1074#1103#1079#1082#1080')>.'
     end
-    inherited actMovementItemContainer: TdsdOpenForm [12]
+    inherited actMovementItemContainer: TdsdOpenForm [11]
     end
-    inherited actShowErased: TBooleanStoredProcAction [13]
+    inherited actShowErased: TBooleanStoredProcAction [12]
     end
-    object actPrint: TdsdPrintAction [14]
+    object actPrint: TdsdPrintAction [13]
       Category = 'DSDLib'
       MoveParams = <
         item
@@ -673,31 +660,15 @@ inherited ReturnInJournalForm: TReturnInJournalForm
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
     end
-    inherited actGridToExcel: TdsdGridToExcel [15]
+    inherited actGridToExcel: TdsdGridToExcel [14]
     end
-    inherited actInsertMask: TdsdInsertUpdateAction [16]
+    inherited actInsertMask: TdsdInsertUpdateAction [15]
     end
-    inherited actReCompleteList: TMultiAction [17]
+    inherited actReCompleteList: TMultiAction [16]
     end
-    object actCheckedList: TMultiAction [18]
-      Category = 'DSDLib'
-      MoveParams = <>
-      ActionList = <
-        item
-          Action = actSimpleCheckedList
-        end
-        item
-          Action = actRefresh
-        end>
-      QuestionBeforeExecute = #1042#1089#1077' '#1076#1086#1082#1091#1084#1077#1085#1090#1099' '#1087#1086#1083#1091#1095#1072#1090' '#1086#1090#1084#1077#1090#1082#1091' "'#1055#1088#1086#1074#1077#1088#1077#1085'". '#1055#1088#1086#1076#1086#1083#1078#1080#1090#1100'? '
-      InfoAfterExecute = #1054#1090#1084#1077#1090#1082#1072' "'#1055#1088#1086#1074#1077#1088#1077#1085'" '#1087#1088#1086#1089#1090#1072#1074#1083#1077#1085#1072
-      Caption = #1054#1090#1084#1077#1090#1080#1090#1100' '#1042#1089#1077' '#1076#1086#1082#1091#1084#1077#1085#1090#1099' '#1082#1072#1082' "'#1055#1088#1086#1074#1077#1088#1077#1085#1085#1099#1077'"'
-      Hint = #1054#1090#1084#1077#1090#1080#1090#1100' '#1042#1089#1077' '#1076#1086#1082#1091#1084#1077#1085#1090#1099' '#1082#1072#1082' "'#1055#1088#1086#1074#1077#1088#1077#1085#1085#1099#1077'"'
-      ImageIndex = 58
+    inherited spReCompete: TdsdExecStoredProc [17]
     end
-    inherited spReCompete: TdsdExecStoredProc [19]
-    end
-    inherited MovementProtocolOpenForm: TdsdOpenForm [20]
+    inherited MovementProtocolOpenForm: TdsdOpenForm [18]
     end
     object actSPPrintProcNamePriceCorr: TdsdExecStoredProc
       Category = 'DSDLib'
@@ -963,6 +934,35 @@ inherited ReturnInJournalForm: TReturnInJournalForm
           StoredProc = spCheckedTrue
         end>
       Caption = 'spChecked'
+    end
+    object actCheckedList: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actSimpleCheckedList
+        end
+        item
+          Action = actRefresh
+        end>
+      QuestionBeforeExecute = #1042#1089#1077' '#1076#1086#1082#1091#1084#1077#1085#1090#1099' '#1087#1086#1083#1091#1095#1072#1090' '#1086#1090#1084#1077#1090#1082#1091' "'#1055#1088#1086#1074#1077#1088#1077#1085'". '#1055#1088#1086#1076#1086#1083#1078#1080#1090#1100'? '
+      InfoAfterExecute = #1054#1090#1084#1077#1090#1082#1072' "'#1055#1088#1086#1074#1077#1088#1077#1085'" '#1087#1088#1086#1089#1090#1072#1074#1083#1077#1085#1072
+      Caption = #1054#1090#1084#1077#1090#1080#1090#1100' '#1042#1089#1077' '#1076#1086#1082#1091#1084#1077#1085#1090#1099' '#1082#1072#1082' "'#1055#1088#1086#1074#1077#1088#1077#1085#1085#1099#1077'"'
+      Hint = #1054#1090#1084#1077#1090#1080#1090#1100' '#1042#1089#1077' '#1076#1086#1082#1091#1084#1077#1085#1090#1099' '#1082#1072#1082' "'#1055#1088#1086#1074#1077#1088#1077#1085#1085#1099#1077'"'
+      ImageIndex = 58
+    end
+    object actChecked: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spChecked
+      StoredProcList = <
+        item
+          StoredProc = spChecked
+        end>
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' "'#1055#1088#1086#1074#1077#1088#1077#1085' '#1044#1072'/'#1053#1077#1090'"'
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' "'#1055#1088#1086#1074#1077#1088#1077#1085' '#1044#1072'/'#1053#1077#1090'"'
+      ImageIndex = 58
     end
   end
   inherited MasterDS: TDataSource

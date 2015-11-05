@@ -924,6 +924,45 @@ inherited ReturnIn_PartnerJournalForm: TReturnIn_PartnerJournalForm
       Hint = #1050#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1082#1072' '#1082' '#1085#1072#1083#1086#1075#1086#1074#1086#1081' ('#1087#1088#1086#1076#1072#1074#1077#1094')'
       ImageIndex = 19
     end
+    object actSimpleCheckedList: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actspChecked
+        end>
+      View = cxGridDBTableView
+      Caption = #1055#1086#1084#1077#1090#1082#1072' '#1087#1088#1086#1074#1077#1088#1077#1085
+      Hint = #1055#1086#1084#1077#1090#1082#1072' '#1087#1088#1086#1074#1077#1088#1077#1085
+      ImageIndex = 58
+    end
+    object actCheckedList: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actSimpleCheckedList
+        end
+        item
+          Action = actRefresh
+        end>
+      QuestionBeforeExecute = #1042#1089#1077' '#1076#1086#1082#1091#1084#1077#1085#1090#1099' '#1087#1086#1083#1091#1095#1072#1090' '#1086#1090#1084#1077#1090#1082#1091' "'#1055#1088#1086#1074#1077#1088#1077#1085'". '#1055#1088#1086#1076#1086#1083#1078#1080#1090#1100'? '
+      InfoAfterExecute = #1054#1090#1084#1077#1090#1082#1072' "'#1055#1088#1086#1074#1077#1088#1077#1085'" '#1087#1088#1086#1089#1090#1072#1074#1083#1077#1085#1072
+      Caption = #1054#1090#1084#1077#1090#1080#1090#1100' '#1042#1089#1077' '#1076#1086#1082#1091#1084#1077#1085#1090#1099' '#1082#1072#1082' "'#1055#1088#1086#1074#1077#1088#1077#1085#1085#1099#1077'"'
+      Hint = #1054#1090#1084#1077#1090#1080#1090#1100' '#1042#1089#1077' '#1076#1086#1082#1091#1084#1077#1085#1090#1099' '#1082#1072#1082' "'#1055#1088#1086#1074#1077#1088#1077#1085#1085#1099#1077'"'
+      ImageIndex = 58
+    end
+    object actspChecked: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spCheckedTrue
+      StoredProcList = <
+        item
+          StoredProc = spCheckedTrue
+        end>
+      Caption = 'spChecked'
+    end
   end
   inherited MasterDS: TDataSource
     Left = 80
@@ -1143,6 +1182,12 @@ inherited ReturnIn_PartnerJournalForm: TReturnIn_PartnerJournalForm
   inherited PopupMenu: TPopupMenu
     Left = 640
     Top = 152
+    object N13: TMenuItem [12]
+      Action = actCheckedList
+    end
+    object N14: TMenuItem [13]
+      Caption = '-'
+    end
   end
   inherited PeriodChoice: TPeriodChoice
     Left = 328
@@ -1254,6 +1299,7 @@ inherited ReturnIn_PartnerJournalForm: TReturnIn_PartnerJournalForm
         DataType = ftBoolean
         ParamType = ptInput
       end>
+    Top = 80
   end
   object DocumentTaxKindGuides: TdsdGuides
     KeyField = 'Id'
@@ -1576,5 +1622,27 @@ inherited ReturnIn_PartnerJournalForm: TReturnIn_PartnerJournalForm
     PackSize = 1
     Left = 584
     Top = 424
+  end
+  object spCheckedTrue: TdsdStoredProc
+    StoredProcName = 'gpUpdateMovement_Checked'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'ioId '
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inChecked'
+        Value = False
+        DataType = ftBoolean
+        ParamType = ptInput
+      end>
+    PackSize = 1
+    Left = 272
+    Top = 435
   end
 end
