@@ -679,9 +679,25 @@ inherited ReturnInJournalForm: TReturnInJournalForm
     end
     inherited actReCompleteList: TMultiAction [17]
     end
-    inherited spReCompete: TdsdExecStoredProc [18]
+    object actCheckedList: TMultiAction [18]
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actSimpleCheckedList
+        end
+        item
+          Action = actRefresh
+        end>
+      QuestionBeforeExecute = #1042#1089#1077' '#1076#1086#1082#1091#1084#1077#1085#1090#1099' '#1087#1086#1083#1091#1095#1072#1090' '#1086#1090#1084#1077#1090#1082#1091' "'#1055#1088#1086#1074#1077#1088#1077#1085'". '#1055#1088#1086#1076#1086#1083#1078#1080#1090#1100'? '
+      InfoAfterExecute = #1054#1090#1084#1077#1090#1082#1072' "'#1055#1088#1086#1074#1077#1088#1077#1085'" '#1087#1088#1086#1089#1090#1072#1074#1083#1077#1085#1072
+      Caption = #1054#1090#1084#1077#1090#1080#1090#1100' '#1042#1089#1077' '#1076#1086#1082#1091#1084#1077#1085#1090#1099' '#1082#1072#1082' "'#1055#1088#1086#1074#1077#1088#1077#1085#1085#1099#1077'"'
+      Hint = #1054#1090#1084#1077#1090#1080#1090#1100' '#1042#1089#1077' '#1076#1086#1082#1091#1084#1077#1085#1090#1099' '#1082#1072#1082' "'#1055#1088#1086#1074#1077#1088#1077#1085#1085#1099#1077'"'
+      ImageIndex = 58
     end
-    inherited MovementProtocolOpenForm: TdsdOpenForm [19]
+    inherited spReCompete: TdsdExecStoredProc [19]
+    end
+    inherited MovementProtocolOpenForm: TdsdOpenForm [20]
     end
     object actSPPrintProcNamePriceCorr: TdsdExecStoredProc
       Category = 'DSDLib'
@@ -925,6 +941,29 @@ inherited ReturnInJournalForm: TReturnInJournalForm
         end>
       Caption = 'actSPPrintTaxCorrectiveProcName'
     end
+    object actSimpleCheckedList: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actspChecked
+        end>
+      View = cxGridDBTableView
+      Caption = #1055#1086#1084#1077#1090#1082#1072' '#1087#1088#1086#1074#1077#1088#1077#1085
+      Hint = #1055#1086#1084#1077#1090#1082#1072' '#1087#1088#1086#1074#1077#1088#1077#1085
+      ImageIndex = 58
+    end
+    object actspChecked: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spCheckedTrue
+      StoredProcList = <
+        item
+          StoredProc = spCheckedTrue
+        end>
+      Caption = 'spChecked'
+    end
   end
   inherited MasterDS: TDataSource
     Left = 80
@@ -965,8 +1004,8 @@ inherited ReturnInJournalForm: TReturnInJournalForm
         DataType = ftBoolean
         ParamType = ptInput
       end>
-    Left = 88
-    Top = 155
+    Left = 128
+    Top = 179
   end
   inherited BarManager: TdxBarManager
     Left = 152
@@ -1145,6 +1184,12 @@ inherited ReturnInJournalForm: TReturnInJournalForm
   inherited PopupMenu: TPopupMenu
     Left = 640
     Top = 152
+    object N13: TMenuItem [12]
+      Action = actCheckedList
+    end
+    object N14: TMenuItem [13]
+      Caption = '-'
+    end
   end
   inherited PeriodChoice: TPeriodChoice
     Left = 328
@@ -1580,5 +1625,27 @@ inherited ReturnInJournalForm: TReturnInJournalForm
     PackSize = 1
     Left = 584
     Top = 424
+  end
+  object spCheckedTrue: TdsdStoredProc
+    StoredProcName = 'gpUpdateMovement_Checked'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'ioId '
+        Value = 0
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inChecked'
+        Value = False
+        DataType = ftBoolean
+        ParamType = ptInput
+      end>
+    PackSize = 1
+    Left = 272
+    Top = 435
   end
 end
