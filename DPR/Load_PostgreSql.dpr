@@ -52,7 +52,8 @@ uses
   dsdInternetAction in '..\SOURCE\COMPONENT\dsdInternetAction.pas',
   dsdDataSetDataLink in '..\SOURCE\COMPONENT\dsdDataSetDataLink.pas',
   StatusXML in '..\SOURCE\EDI\StatusXML.pas',
-  dsdException in '..\SOURCE\dsdException.pas';
+  dsdException in '..\SOURCE\dsdException.pas',
+  RecadvXML in '..\SOURCE\EDI\RecadvXML.pas';
 
 {$R *.res}
 
