@@ -205,7 +205,7 @@ BEGIN
            , OH_JuridicalDetails_From.OKPO              AS OKPO_From
            , OH_JuridicalDetails_From.INN               AS INN_From
            , OH_JuridicalDetails_From.NumberVAT         AS NumberVAT_From
-           , COALESCE (Object_Personal_View.PersonalName, OH_JuridicalDetails_From.AccounterName) :: TVarChar AS AccounterName_From
+           , COALESCE (zfConvert_FIO(Object_Personal_View.PersonalName,1), OH_JuridicalDetails_From.AccounterName) :: TVarChar AS AccounterName_From
            , OH_JuridicalDetails_From.BankAccount       AS BankAccount_From
            , OH_JuridicalDetails_From.BankName          AS BankName_From
            , OH_JuridicalDetails_From.MFO               AS BankMFO_From
