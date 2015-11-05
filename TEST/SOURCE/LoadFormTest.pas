@@ -21,6 +21,7 @@ type
     procedure Load1CLinkFormTest;
     procedure LoadAccountFormTest;
     procedure LoadAddressFormTest;
+    procedure LoadAdvertisingFormTest;
     procedure LoadAssetFormTest;
     procedure LoadArticleLossFormTest;
     procedure LoadBankFormTest;
@@ -1580,6 +1581,14 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TArticleLossForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TArticleLossEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TArticleLossEditForm');
+end;
+
+procedure TLoadFormTest.LoadAdvertisingFormTest;
+begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TAdvertisingForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TAdvertisingForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TAdvertisingEditForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TAdvertisingEditForm');
 end;
 
 procedure TLoadFormTest.LoadAddressFormTest;

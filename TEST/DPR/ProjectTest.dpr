@@ -746,7 +746,9 @@ uses
   Report_Transport_ProfitLossDialog in '..\..\Forms\Report\Report_Transport_ProfitLossDialog.pas' {Report_Transport_ProfitLossDialogForm: TParentForm},
   Report_Transport_ProfitLoss in '..\..\Forms\Report\Report_Transport_ProfitLoss.pas' {Report_Transport_ProfitLossForm: TParentForm},
   IncomeJournalChoice in '..\..\Forms\Document\IncomeJournalChoice.pas' {IncomeJournalChoiceForm: TParentForm},
-  RecadvXML in '..\..\SOURCE\EDI\RecadvXML.pas';
+  RecadvXML in '..\..\SOURCE\EDI\RecadvXML.pas',
+  Advertising in '..\..\Forms\Guides\Advertising.pas' {AdvertisingForm: TParentForm},
+  AdvertisingEdit in '..\..\Forms\Guides\AdvertisingEdit.pas' {AdvertisingEditForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}

@@ -1,7 +1,7 @@
-object AreaContractForm: TAreaContractForm
+object AdvertisingForm: TAdvertisingForm
   Left = 0
   Top = 0
-  Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1056#1077#1075#1080#1086#1085#1099'('#1076#1086#1075#1086#1074#1086#1088#1072')>'
+  Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1056#1077#1082#1083#1072#1084#1085#1072#1103' '#1087#1086#1076#1076#1077#1088#1078#1082#1072'>'
   ClientHeight = 376
   ClientWidth = 390
   Color = clBtnFace
@@ -64,7 +64,6 @@ object AreaContractForm: TAreaContractForm
         Caption = #1059#1076#1072#1083#1077#1085
         DataBinding.FieldName = 'isErased'
         PropertiesClassName = 'TcxCheckBoxProperties'
-        Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
@@ -182,6 +181,14 @@ object AreaContractForm: TAreaContractForm
           BeginGroup = True
           Visible = True
           ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbProtocolOpenForm'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
         end>
       OneOnRow = True
       Row = 0
@@ -204,12 +211,10 @@ object AreaContractForm: TAreaContractForm
     object bbSetErased: TdxBarButton
       Action = dsdSetErased
       Category = 0
-      ImageIndex = 2
     end
     object bbSetUnErased: TdxBarButton
       Action = dsdSetUnErased
       Category = 0
-      ImageIndex = 8
     end
     object bbToExcel: TdxBarButton
       Action = dsdGridToExcel
@@ -225,6 +230,10 @@ object AreaContractForm: TAreaContractForm
       Action = dsdChoiceGuides
       Category = 0
     end
+    object bbProtocolOpenForm: TdxBarButton
+      Action = ProtocolOpenForm
+      Category = 0
+    end
   end
   object ActionList: TActionList
     Images = dmMain.ImageList
@@ -236,8 +245,8 @@ object AreaContractForm: TAreaContractForm
       Caption = #1044#1086#1073#1072#1074#1080#1090#1100
       ShortCut = 45
       ImageIndex = 0
-      FormName = 'TAreaContractEditForm'
-      FormNameParam.Value = 'TAreaContractEditForm'
+      FormName = 'TAdvertisingEditForm'
+      FormNameParam.Value = 'TAdvertisingEditForm'
       FormNameParam.DataType = ftString
       GuiParams = <
         item
@@ -270,8 +279,8 @@ object AreaContractForm: TAreaContractForm
       Hint = #1048#1079#1084#1077#1085#1080#1090#1100
       ShortCut = 115
       ImageIndex = 1
-      FormName = 'TAreaContractEditForm'
-      FormNameParam.Value = 'TAreaContractEditForm'
+      FormName = 'TAdvertisingEditForm'
+      FormNameParam.Value = 'TAdvertisingEditForm'
       FormNameParam.DataType = ftString
       GuiParams = <
         item
@@ -319,6 +328,33 @@ object AreaContractForm: TAreaContractForm
       ImageIndex = 6
       ShortCut = 16472
     end
+    object ProtocolOpenForm: TdsdOpenForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = #1055#1088#1086#1089#1084#1086#1090#1088' '#1087#1088#1086#1090#1086#1082#1086#1083#1072
+      Hint = #1055#1088#1086#1089#1084#1086#1090#1088' '#1087#1088#1086#1090#1086#1082#1086#1083#1072
+      ImageIndex = 34
+      FormName = 'TProtocolForm'
+      FormNameParam.Value = 'TProtocolForm'
+      FormNameParam.DataType = ftString
+      GuiParams = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'Id'
+          ParamType = ptInput
+        end
+        item
+          Name = 'TextValue'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'Name'
+          DataType = ftString
+          ParamType = ptInput
+        end>
+      isShowModal = False
+    end
     object dsdSetErased: TdsdUpdateErased
       Category = 'DSDLib'
       MoveParams = <>
@@ -329,6 +365,7 @@ object AreaContractForm: TAreaContractForm
         end>
       Caption = #1059#1076#1072#1083#1080#1090#1100
       Hint = #1059#1076#1072#1083#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
+      ImageIndex = 2
       ShortCut = 46
       ErasedFieldName = 'isErased'
       DataSource = DataSource
@@ -343,6 +380,7 @@ object AreaContractForm: TAreaContractForm
         end>
       Caption = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100
       Hint = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
+      ImageIndex = 8
       ShortCut = 32776
       ErasedFieldName = 'isErased'
       isSetErased = False
@@ -350,7 +388,7 @@ object AreaContractForm: TAreaContractForm
     end
   end
   object dsdStoredProc: TdsdStoredProc
-    StoredProcName = 'gpSelect_Object_AreaContract'
+    StoredProcName = 'gpSelect_Object_Advertising'
     DataSet = ClientDataSet
     DataSets = <
       item
@@ -374,12 +412,12 @@ object AreaContractForm: TAreaContractForm
         ParamType = ptInput
       end>
     PackSize = 1
-    Left = 304
-    Top = 216
+    Left = 328
+    Top = 168
   end
   object dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
-    Left = 176
-    Top = 216
+    Left = 208
+    Top = 224
   end
   object dsdDBViewAddOn: TdsdDBViewAddOn
     ErasedFieldName = 'isErased'
@@ -403,7 +441,13 @@ object AreaContractForm: TAreaContractForm
     SortImages = dmMain.SortImageList
     OnlyEditingCellOnEnter = False
     ColorRuleList = <>
-    ColumnAddOnList = <>
+    ColumnAddOnList = <
+      item
+        Column = clCode
+        FindByFullValue = True
+        onExitColumn.Active = False
+        onExitColumn.AfterEmptyValue = False
+      end>
     ColumnEnterList = <>
     SummaryItemList = <>
     Left = 48
