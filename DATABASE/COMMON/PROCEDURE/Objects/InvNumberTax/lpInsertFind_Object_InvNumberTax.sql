@@ -21,9 +21,9 @@ BEGIN
 
      -- всегда 
      inInvNumberBranch:= TRIM (COALESCE (inInvNumberBranch, ''));
-     IF inInvNumberBranch <> '6' -- !!!Одесса!!!
+     /*IF inInvNumberBranch <> '6' -- !!!Одесса!!!
      THEN inInvNumberBranch:= '';
-     END IF;
+     END IF;*/
      
 
      -- поиск
