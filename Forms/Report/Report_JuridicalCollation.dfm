@@ -23,8 +23,6 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
       inherited cxGrid: TcxGrid
         Width = 1020
         Height = 330
-        ExplicitLeft = 3
-        ExplicitTop = 32
         ExplicitWidth = 1020
         ExplicitHeight = 330
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -906,7 +904,7 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
         end
         item
           Name = 'ContractSigningDate'
-          Value = Null
+          Value = 42005d
           Component = FormParams
           ComponentItem = 'ContractSigningDate'
           DataType = ftDateTime
@@ -1881,7 +1879,7 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
       end
       item
         Name = 'ContractSigningDate'
-        Value = Null
+        Value = 42005d
         DataType = ftDateTime
         ParamType = ptInputOutput
       end>
