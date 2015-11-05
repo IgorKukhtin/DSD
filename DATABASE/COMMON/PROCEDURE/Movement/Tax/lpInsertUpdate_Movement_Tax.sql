@@ -45,23 +45,23 @@ BEGIN
                             THEN (SELECT Id FROM Object WHERE DescId = zc_Object_Branch() AND AccessKeyId = zc_Enum_Process_AccessKey_TrasportDnepr())
                        WHEN vbAccessKeyId = zc_Enum_Process_AccessKey_DocumentDnepr()
                             THEN (SELECT Id FROM Object WHERE DescId = zc_Object_Branch() AND AccessKeyId = zc_Enum_Process_AccessKey_TrasportDnepr())
+
                        WHEN vbAccessKeyId = zc_Enum_Process_AccessKey_DocumentKiev()
                             THEN (SELECT Id FROM Object WHERE DescId = zc_Object_Branch() AND AccessKeyId = zc_Enum_Process_AccessKey_TrasportKiev())
 
                        WHEN vbAccessKeyId = zc_Enum_Process_AccessKey_DocumentOdessa()
                             THEN (SELECT Id FROM Object WHERE DescId = zc_Object_Branch() AND AccessKeyId = zc_Enum_Process_AccessKey_TrasportOdessa())
-
                        WHEN vbAccessKeyId = zc_Enum_Process_AccessKey_DocumentZaporozhye()
                             THEN (SELECT Id FROM Object WHERE DescId = zc_Object_Branch() AND AccessKeyId = zc_Enum_Process_AccessKey_TrasportZaporozhye())
-
-                       WHEN vbAccessKeyId = zc_Enum_Process_AccessKey_DocumentKharkov()
-                            THEN (SELECT Id FROM Object WHERE DescId = zc_Object_Branch() AND AccessKeyId = zc_Enum_Process_AccessKey_TrasportKharkov())
 
                        WHEN vbAccessKeyId = zc_Enum_Process_AccessKey_DocumentKrRog()
                             THEN (SELECT Id FROM Object WHERE DescId = zc_Object_Branch() AND AccessKeyId = zc_Enum_Process_AccessKey_TrasportKrRog())
 
                        WHEN vbAccessKeyId = zc_Enum_Process_AccessKey_DocumentNikolaev()
                             THEN (SELECT Id FROM Object WHERE DescId = zc_Object_Branch() AND AccessKeyId = zc_Enum_Process_AccessKey_TrasportNikolaev())
+
+                       WHEN vbAccessKeyId = zc_Enum_Process_AccessKey_DocumentKharkov()
+                            THEN (SELECT Id FROM Object WHERE DescId = zc_Object_Branch() AND AccessKeyId = zc_Enum_Process_AccessKey_TrasportKharkov())
 
                        WHEN vbAccessKeyId = zc_Enum_Process_AccessKey_DocumentCherkassi()
                             THEN (SELECT Id FROM Object WHERE DescId = zc_Object_Branch() AND AccessKeyId = zc_Enum_Process_AccessKey_TrasportCherkassi())
@@ -74,23 +74,8 @@ BEGIN
 
      -- определяется  Номер филиала
      IF COALESCE (ioId, 0) = 0
-        
      THEN
-         inInvNumberBranch:= (SELECT CASE WHEN vbAccessKeyId = zc_Enum_Process_AccessKey_DocumentKiev()
-                                               THEN (SELECT ObjectString.ValueData FROM Object JOIN ObjectString ON ObjectString.DescId = zc_objectString_Branch_InvNumber() AND ObjectString.ObjectId = Object.Id WHERE Object.DescId = zc_object_Branch() AND Object.AccessKeyId = zc_Enum_Process_AccessKey_TrasportKiev())
-                                          WHEN vbAccessKeyId = zc_Enum_Process_AccessKey_DocumentOdessa()
-                                               THEN (SELECT ObjectString.ValueData FROM Object JOIN ObjectString ON ObjectString.DescId = zc_objectString_Branch_InvNumber() AND ObjectString.ObjectId = Object.Id WHERE Object.DescId = zc_object_Branch() AND Object.AccessKeyId = zc_Enum_Process_AccessKey_TrasportOdessa())
-                                          WHEN vbAccessKeyId = zc_Enum_Process_AccessKey_DocumentKrRog()
-                                               THEN (SELECT ObjectString.ValueData FROM Object JOIN ObjectString ON ObjectString.DescId = zc_objectString_Branch_InvNumber() AND ObjectString.ObjectId = Object.Id WHERE Object.DescId = zc_object_Branch() AND Object.AccessKeyId = zc_Enum_Process_AccessKey_TrasportKrRog())
-                                          WHEN vbAccessKeyId = zc_Enum_Process_AccessKey_DocumentNikolaev()
-                                               THEN (SELECT ObjectString.ValueData FROM Object JOIN ObjectString ON ObjectString.DescId = zc_objectString_Branch_InvNumber() AND ObjectString.ObjectId = Object.Id WHERE Object.DescId = zc_object_Branch() AND Object.AccessKeyId = zc_Enum_Process_AccessKey_TrasportNikolaev())
-                                          WHEN vbAccessKeyId = zc_Enum_Process_AccessKey_DocumentKharkov()
-                                               THEN (SELECT ObjectString.ValueData FROM Object JOIN ObjectString ON ObjectString.DescId = zc_objectString_Branch_InvNumber() AND ObjectString.ObjectId = Object.Id WHERE Object.DescId = zc_object_Branch() AND Object.AccessKeyId = zc_Enum_Process_AccessKey_TrasportKharkov())
-                                          WHEN vbAccessKeyId = zc_Enum_Process_AccessKey_DocumentCherkassi()
-                                               THEN (SELECT ObjectString.ValueData FROM Object JOIN ObjectString ON ObjectString.DescId = zc_objectString_Branch_InvNumber() AND ObjectString.ObjectId = Object.Id WHERE Object.DescId = zc_object_Branch() AND Object.AccessKeyId = zc_Enum_Process_AccessKey_TrasportCherkassi())
-                                          ELSE ''
-                                     END
-                             );
+         inInvNumberBranch:= (SELECT ObjectString.ValueData FROM ObjectString WHERE ObjectString.DescId = zc_objectString_Branch_InvNumber() AND ObjectString.ObjectId = vbBranchId);
      END IF;
 
      -- если надо, создаем <Номер документа>
