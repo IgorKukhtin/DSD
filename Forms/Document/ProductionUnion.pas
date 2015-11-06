@@ -57,6 +57,8 @@ type
     cxLabel5: TcxLabel;
     isAuto: TcxGridDBColumn;
     edInsert: TcxDateEdit;
+    colChildGoodsKindCompleteName: TcxGridDBColumn;
+    actGoodsKindCompleteChoiceChild: TOpenChoiceForm;
   private
     { Private declarations }
   public

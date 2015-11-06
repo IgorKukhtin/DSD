@@ -532,10 +532,22 @@ object PriceListItemForm: TPriceListItemForm
     OnDblClickActionList = <>
     ActionItemList = <>
     SortImages = dmMain.SortImageList
-    OnlyEditingCellOnEnter = False
+    OnlyEditingCellOnEnter = True
     ColorRuleList = <>
-    ColumnAddOnList = <>
-    ColumnEnterList = <>
+    ColumnAddOnList = <
+      item
+        Column = clGoodsCode
+        FindByFullValue = True
+        onExitColumn.Active = False
+        onExitColumn.AfterEmptyValue = False
+      end>
+    ColumnEnterList = <
+      item
+        Column = clGoodsCode
+      end
+      item
+        Column = clPrice
+      end>
     SummaryItemList = <>
     Left = 168
     Top = 240
@@ -568,8 +580,8 @@ object PriceListItemForm: TPriceListItemForm
         DataType = ftString
         ParamType = ptInput
       end>
-    Left = 200
-    Top = 56
+    Left = 248
+    Top = 72
   end
   object spInsertUpdate: TdsdStoredProc
     StoredProcName = 'gpInsertUpdate_ObjectHistory_PriceListItemLast'
