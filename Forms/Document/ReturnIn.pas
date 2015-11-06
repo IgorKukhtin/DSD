@@ -158,7 +158,7 @@ type
     actSPPrintProcNamePriceCorr: TdsdExecStoredProc;
     spUpdate_MI_ReturnIn_AmountPartner: TdsdStoredProc;
     actUpdateAmountPartner: TdsdExecStoredProc;
-    bb: TdxBarButton;
+    bbUpdateAmountPartner: TdxBarButton;
   private
     { Private declarations }
   public
