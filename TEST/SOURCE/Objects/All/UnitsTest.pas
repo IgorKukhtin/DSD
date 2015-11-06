@@ -2,7 +2,7 @@ unit UnitsTest;
 
 interface
 
-uses dbTest, dbObjectTest, dbObjectMeatTest, ObjectTest, BranchTest;
+uses dbTest, dbObjectTest, dbObjectMeatTest, ObjectTest, BranchTest, Variants;
 
 type
 
@@ -150,9 +150,12 @@ begin
 
   FParams.AddParam('inBusinessId', ftInteger, ptInput, BusinessId);
   FParams.AddParam('inJuridicalId', ftInteger, ptInput, JuridicalId);
+  FParams.AddParam('inContractId', ftInteger, ptInput, null);
   FParams.AddParam('inAccountDirectionId', ftInteger, ptInput, AccountDirectionId);
   FParams.AddParam('inProfitLossDirectionId', ftInteger, ptInput, ProfitLossDirectionId);
-
+  FParams.AddParam('inRouteId', ftInteger, ptInput, Null);
+  FParams.AddParam('inRouteSortingId', ftInteger, ptInput, Null);
+  FParams.AddParam('inAreaId', ftInteger, ptInput, Null);
   result := InsertUpdate(FParams);
   if Id = 0 then
      InsertedIdObjectList.Add(IntToStr(result));

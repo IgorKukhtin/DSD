@@ -1,8 +1,8 @@
--- Function: gpMovementItem_PromoGoods_SetErased (Integer, Integer, TVarChar)
+-- Function: gpMovementItem_Promo_SetUnErased (Integer, TVarChar)
 
-DROP FUNCTION IF EXISTS gpMovementItem_PromoGoods_SetErased (Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpMovementItem_Promo_SetUnErased (Integer, TVarChar);
 
-CREATE OR REPLACE FUNCTION gpMovementItem_PromoGoods_SetErased(
+CREATE OR REPLACE FUNCTION gpMovementItem_Promo_SetUnErased(
     IN inMovementItemId      Integer              , -- ключ объекта <Элемент документа>
    OUT outIsErased           Boolean              , -- новое значение
     IN inSession             TVarChar               -- текущий пользователь
@@ -14,13 +14,13 @@ $BODY$
    DECLARE vbStatusId Integer;
    DECLARE vbUserId Integer;
 BEGIN
-    --vbUserId:= lpCheckRight(inSession, zc_Enum_Process_SetErased_MI_PromoGoods());
+    --vbUserId := lpCheckRight(inSession, zc_Enum_Process_SetUnErased_MI_PromoGoods());
     vbUserId := inSession;
     -- устанавливаем новое значение
-    outIsErased := TRUE;
+    outIsErased := FALSE;
 
     -- Обязательно меняем
-    UPDATE MovementItem SET isErased = TRUE WHERE Id = inMovementItemId
+    UPDATE MovementItem SET isErased = FALSE WHERE Id = inMovementItemId
     RETURNING MovementId INTO vbMovementId;
 
     -- проверка - связанные документы Изменять нельзя
@@ -29,20 +29,15 @@ BEGIN
     -- определяем <Статус>
     vbStatusId := (SELECT StatusId FROM Movement WHERE Id = vbMovementId);
     -- проверка - проведенные/удаленные документы Изменять нельзя
-    IF vbStatusId <> zc_Enum_Status_UnComplete() AND NOT EXISTS (SELECT UserId FROM ObjectLink_UserRole_View WHERE UserId = vbUserId AND RoleId = zc_Enum_Role_Admin())
+    IF vbStatusId <> zc_Enum_Status_UnComplete()
     THEN
         RAISE EXCEPTION 'Ошибка.Изменение документа в статусе <%> не возможно.', lfGet_Object_ValueData (vbStatusId);
     END IF;
 
-    -- пересчитали Итоговые суммы по накладной
-    PERFORM lpInsertUpdate_MovementFloat_TotalSummPromoGoodsExactly (vbMovementId);
-
-    -- !!! НЕ ПОНЯТНО - ПОЧЕМУ НАДО ВОЗВРАЩАТЬ НАОБОРОТ!!!
-    -- outIsErased := FALSE;
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpMovementItem_PromoGoods_SetErased (Integer, TVarChar) OWNER TO postgres;
+ALTER FUNCTION gpMovementItem_Promo_SetUnErased (Integer, TVarChar) OWNER TO postgres;
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР

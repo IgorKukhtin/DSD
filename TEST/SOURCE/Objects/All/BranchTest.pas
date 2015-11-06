@@ -15,13 +15,14 @@ type
      function InsertDefault: integer; override;
   public
    function InsertUpdateBranch(const Id: integer; Code: Integer;
-        Name: string): integer;
+        Name, InvNumber: string; PersonalBookkeeper: Integer;
+        IsMedoc, IsPartionDoc: Boolean): integer;
     constructor Create; override;
   end;
 implementation
 
 uses ZDbcIntfs, SysUtils, Storage, DBClient, XMLDoc, CommonData, Forms,
-     UtilConvert, UtilConst, ZLibEx, zLibUtil, JuridicalTest, Data.DB;
+     UtilConvert, UtilConst, ZLibEx, zLibUtil, PersonalTest, Data.DB, Variants;
 
 
 constructor TBranch.Create;
@@ -33,8 +34,12 @@ begin
 end;
 
 function TBranch.InsertDefault: integer;
+var
+  PersonalBookkeeper: Integer;
 begin
-  result := InsertUpdateBranch(0, -4, 'TEST Филиал');
+//  PersonalBookkeeper := TPersonal.Create.GetDefault;
+  PersonalBookkeeper := 0;
+  result := InsertUpdateBranch(0, -4, 'TEST Филиал', '-99',PersonalBookkeeper, False, False);
   inherited;
 end;
 
@@ -44,6 +49,10 @@ begin
   FParams.AddParam('ioId', ftInteger, ptInputOutput, Id);
   FParams.AddParam('inCode', ftInteger, ptInput, Code);
   FParams.AddParam('inName', ftString, ptInput, Name);
+  FParams.AddParam('inInvNumber', ftString, ptInput, InvNumber);
+  FParams.AddParam('inPersonalBookkeeperId', ftInteger, ptInput, null (*PersonalBookkeeper*));
+  FParams.AddParam('inIsMedoc', ftBoolean, ptInput, IsMedoc);
+  FParams.AddParam('inIsPartionDoc', ftBoolean, ptInput, IsPartionDoc);
   result := InsertUpdate(FParams);
 end;
 

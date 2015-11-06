@@ -117,7 +117,7 @@ type
   protected
     procedure Notification(AComponent: TComponent; Operation: TOperation); override;
   public
-    function Execute(ExecPack: boolean = false): string;
+    function Execute(ExecPack: boolean = false; ACursorHourGlass: Boolean = True): string;
     function ParamByName(const Value: string): TdsdParam;
     // XML для вызова на сервере
     function GetXML: String;
@@ -237,14 +237,15 @@ begin
   inherited;
 end;
 
-function TdsdStoredProc.Execute(ExecPack: boolean = false): string;
+function TdsdStoredProc.Execute(ExecPack: boolean = false; ACursorHourGlass: Boolean = True): string;
 var TickCount: cardinal;
 begin
   result := '';
   TickCount := 0;
   if gc_isShowTimeMode then
      TickCount := GetTickCount;
-  Screen.Cursor := crHourGlass;
+  if ACursorHourGlass then
+    Screen.Cursor := crHourGlass;
   try
     if (OutputType = otDataSet) then DataSetRefresh;
     if (OutputType = otMultiDataSet) then MultiDataSetRefresh;
@@ -255,7 +256,8 @@ begin
     if (OutputType = otMultiExecute) then
         MultiExecute(ExecPack);
   finally
-    Screen.Cursor := crDefault;
+    if ACursorHourGlass then
+      Screen.Cursor := crDefault;
   end;
   if gc_isShowTimeMode then
      ShowMessage('Время выполнения ' + StoredProcName + ' - ' + FloatToStr((GetTickCount - TickCount)/1000) + ' сек ' ); ;

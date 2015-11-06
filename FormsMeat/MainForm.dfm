@@ -661,7 +661,7 @@ inherited MainForm: TMainForm
       isShowModal = False
     end
     object actAdvertising: TdsdOpenForm [41]
-      Category = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082#1080
+      Category = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082#1080'\'#1040#1082#1094#1080#1080
       MoveParams = <>
       Caption = #1056#1077#1082#1083#1072#1084#1085#1072#1103' '#1087#1086#1076#1076#1077#1088#1078#1082#1072
       Hint = #1056#1077#1082#1083#1072#1084#1085#1072#1103' '#1087#1086#1076#1076#1077#1088#1078#1082#1072
@@ -3431,6 +3431,39 @@ inherited MainForm: TMainForm
       GuiParams = <>
       isShowModal = False
     end
+    object actPromoKind: TdsdOpenForm
+      Category = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082#1080'\'#1040#1082#1094#1080#1080
+      MoveParams = <>
+      Caption = #1042#1080#1076#1099' '#1072#1082#1094#1080#1081
+      Hint = #1042#1080#1076#1099' '#1072#1082#1094#1080#1081
+      FormName = 'TPromoKindForm'
+      FormNameParam.Value = 'TPromoKindForm'
+      FormNameParam.DataType = ftString
+      GuiParams = <>
+      isShowModal = False
+    end
+    object actConditionPromo: TdsdOpenForm
+      Category = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082#1080'\'#1040#1082#1094#1080#1080
+      MoveParams = <>
+      Caption = #1059#1089#1083#1086#1074#1080#1103' '#1091#1095#1072#1089#1090#1080#1103' '#1074' '#1072#1082#1094#1080#1080
+      Hint = #1059#1089#1083#1086#1074#1080#1103' '#1091#1095#1072#1089#1090#1080#1103' '#1074' '#1072#1082#1094#1080#1080
+      FormName = 'TConditionPromoForm'
+      FormNameParam.Value = 'TConditionPromoForm'
+      FormNameParam.DataType = ftString
+      GuiParams = <>
+      isShowModal = False
+    end
+    object actPromoJournal: TdsdOpenForm
+      Category = #1058#1086#1074#1072#1088#1085#1099#1081' '#1091#1095#1077#1090
+      MoveParams = <>
+      Caption = #1040#1082#1094#1080#1080
+      Hint = #1040#1082#1094#1080#1080
+      FormName = 'TPromoJournalForm'
+      FormNameParam.Value = 'TPromoJournalForm'
+      FormNameParam.DataType = ftString
+      GuiParams = <>
+      isShowModal = False
+    end
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Active = False
@@ -3550,6 +3583,9 @@ inherited MainForm: TMainForm
       end
       object miTransportGoods: TMenuItem
         Action = actTransportGoods
+      end
+      object N83: TMenuItem
+        Action = actPromoJournal
       end
     end
     object N42: TMenuItem [1]
@@ -4175,8 +4211,17 @@ inherited MainForm: TMainForm
       object miPriceList: TMenuItem
         Action = actPriceList
       end
-      object N79: TMenuItem
-        Action = actAdvertising
+      object N80: TMenuItem
+        Caption = #1040#1082#1094#1080#1080
+        object N79: TMenuItem
+          Action = actAdvertising
+        end
+        object N81: TMenuItem
+          Action = actPromoKind
+        end
+        object N82: TMenuItem
+          Action = actConditionPromo
+        end
       end
       object N55: TMenuItem
         Action = actGoodsPlatform

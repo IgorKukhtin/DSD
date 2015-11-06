@@ -8,16 +8,16 @@ DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_PromoPartner (
 
 );
 
-CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_Promo(
+CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_PromoPartner(
  INOUT ioId                    Integer    , -- Ключ объекта <партнер для документа акции>
     IN inParentId              Integer    , -- Ключ родительского объекта <Документ акции>
-    IN inPartnerId             Integer    , -- Дата документа
-    IN inPromoKindId           Integer    , -- партнер
-    IN inSession               TVarChar   , -- сессия пользователя
+    IN inPartnerId             Integer    , -- Ключ объекта <Контрагент / Юр лицо / Торговая Сеть>
+    IN inSession               TVarChar    -- сессия пользователя
 )
 RETURNS Integer AS
 $BODY$
    DECLARE vbUserId Integer;
+   DECLARE vbIsInsert Boolean;
 BEGIN
     -- проверка прав пользователя на вызов процедуры
     --vbUserId:= lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Movement_Promo());
@@ -42,13 +42,13 @@ BEGIN
     FROM
         Movement AS Movement_Promo
     WHERE
-        Movement_Promo.Id = inParentId
+        Movement_Promo.Id = inParentId;
     
-    -- сохранили связь с <От кого (подразделение)>
-    PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_Unit(), ioId, inUnitId);
+    -- сохранили связь с <Контрагент / Юр лицо / Торговая Сеть>
+    PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_Partner(), ioId, inPartnerId);
     
     -- сохранили протокол
-    PERFORM lpInsert_MovementProtocol (ioId, inUserId, vbIsInsert);
+    PERFORM lpInsert_MovementProtocol (ioId, vbUserId, vbIsInsert);
 
 END;
 $BODY$

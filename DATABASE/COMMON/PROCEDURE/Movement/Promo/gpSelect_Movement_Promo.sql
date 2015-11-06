@@ -15,6 +15,8 @@ RETURNS TABLE (Id               Integer     --Идентификатор
              , StatusName       TVarChar    --Статус
              , PromoKindId      Integer     --Вид акции
              , PromoKindName    TVarChar    --Вид акции
+             , PriceListId      Integer     --Прайс лист
+             , PriceListName    TVarChar    --Прайс лист
              , StartPromo       TDateTime   --Дата начала акции
              , EndPromo         TDateTime   --Дата окончания акции
              , StartSale        TDateTime   --Дата начала отгрузки по акционной цене
@@ -50,6 +52,8 @@ BEGIN
           , Movement_Promo.StatusName         --Статус
           , Movement_Promo.PromoKindId        --Вид акции
           , Movement_Promo.PromoKindName      --Вид акции
+          , Movement_Promo.PriceListId        --Прай слист
+          , Movement_Promo.PriceListName      --Прай слист
           , Movement_Promo.StartPromo         --Дата начала акции
           , Movement_Promo.EndPromo           --Дата окончания акции
           , Movement_Promo.StartSale          --Дата начала отгрузки по акционной цене

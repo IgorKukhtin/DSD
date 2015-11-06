@@ -1,25 +1,31 @@
-DROP VIEW IF EXISTS Movement_Promo_View;
+DROP VIEW IF EXISTS Movement_PromoPartner_View;
 
-CREATE OR REPLACE VIEW Movement_Promo_View AS 
+CREATE OR REPLACE VIEW Movement_PromoPartner_View AS 
     SELECT       
         Movement_Promo.Id                                                 --Идентификатор
       , Movement_Promo.ParentId                                           --Ссылка на основной документ <Акции> (zc_Movement_Promo)
-      , zc_MovementLinkObject_Partner.ObjectId AS PartnerId               --Покупатель для акции
+      , MovementLinkObject_Partner.ObjectId    AS PartnerId               --Покупатель для акции
+      , Object_Partner.ObjectCode              AS PartnerCode             --Покупатель для акции
       , Object_Partner.ValueData               AS PartnerName             --Покупатель для акции
       , Object_Partner.DescId                  AS PartnerDescId           --Тип Покупатель для акции
-      , ObjectDesc_Partner.DescName            AS PartnerDescName         --Тип Покупатель для акции
+      , ObjectDesc_Partner.ItemName            AS PartnerDescName         --Тип Покупатель для акции
+      , CASE 
+            WHEN Movement_Promo.StatusId = zc_Enum_Status_Erased()
+                THEN TRUE
+        ELSE FALSE
+        END                                    AS isErased                --Удален
+            
     FROM Movement AS Movement_Promo 
-        LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
 
-        LEFT JOIN MovementLinkObject AS zc_MovementLinkObject_Partner
-                                     ON zc_MovementLinkObject_Partner.MovementId = Movement.Id
-                                    AND zc_MovementLinkObject_Partner.DescId = zc_zc_MovementLinkObject_Partner()
+        LEFT JOIN MovementLinkObject AS MovementLinkObject_Partner
+                                     ON MovementLinkObject_Partner.MovementId = Movement_Promo.Id
+                                    AND MovementLinkObject_Partner.DescId = zc_MovementLinkObject_Partner()
         LEFT JOIN Object AS Object_Partner 
                          ON Object_Partner.Id = MovementLinkObject_Partner.ObjectId
         LEFT OUTER JOIN ObjectDesc AS ObjectDesc_Partner
                                    ON ObjectDesc_Partner.Id = Object_Partner.DescId
-    WHERE Movement.DescId = zc_Movement_Promo()
-      AND Movement.ParentId is not null;
+    WHERE Movement_Promo.DescId = zc_Movement_Promo()
+      AND Movement_Promo.ParentId is not null;
 
 ALTER TABLE Movement_Promo_View
   OWNER TO postgres;

@@ -5,3 +5,5 @@ DROP VIEW IF EXISTS Object_RoleAccessKey_View CASCADE;
 DROP VIEW IF EXISTS Object_Contract_InvNumber_View CASCADE;
 DROP VIEW IF EXISTS Object_Personal_View CASCADE;
 DROP VIEW IF EXISTS Object_Contract_View CASCADE;
+DROP VIEW IF EXISTS Object_Account_View CASCADE;
+DROP VIEW IF EXISTS Object_ProfitLoss_View CASCADE;

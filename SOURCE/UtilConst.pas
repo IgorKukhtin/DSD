@@ -5,9 +5,10 @@ uses Classes, SysUtils;
 Type
 
   TdsdMovementStatus = (mtUncomplete, mtComplete, mtDelete);
+  TdsdProject = (prProject, prFarmacy);
 
 var
-
+  dsdProject: TdsdProject;
   MovementStatus: Array[TdsdMovementStatus] of string = ('Не проведен', 'Проведен', 'Удален');
 
   ConnectionPath: string = '..\init\init.php';
