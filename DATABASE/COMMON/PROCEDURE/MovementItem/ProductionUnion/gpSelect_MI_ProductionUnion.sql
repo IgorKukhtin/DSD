@@ -347,6 +347,8 @@ BEGIN
             , Object_GoodsKindComplete.ObjectCode AS GoodsKindCompleteCode
             , Object_GoodsKindComplete.ValueData  AS GoodsKindCompleteName
 
+            , MIFloat_Count.ValueData           AS Count_onCount
+
             , Object_Receipt.Id                 AS ReceiptId
             , Object_Receipt.ObjectCode         AS ReceiptCode
             , Object_Receipt.ValueData          AS ReceiptName
@@ -372,9 +374,9 @@ BEGIN
                                              AND MILinkObject_Receipt.DescId = zc_MILinkObject_Receipt()
              LEFT JOIN Object AS Object_Receipt ON Object_Receipt.Id = MILinkObject_Receipt.ObjectId
 
-            LEFT JOIN MovementItemBoolean AS MIBoolean_TaxExit
-                                          ON MIBoolean_TaxExit.MovementItemId =  MovementItem.Id
-                                         AND MIBoolean_TaxExit.DescId = zc_MIBoolean_TaxExit()
+             LEFT JOIN MovementItemBoolean AS MIBoolean_TaxExit
+                                           ON MIBoolean_TaxExit.MovementItemId =  MovementItem.Id
+                                          AND MIBoolean_TaxExit.DescId = zc_MIBoolean_TaxExit()
              LEFT JOIN MovementItemBoolean AS MIBoolean_WeightMain
                                            ON MIBoolean_WeightMain.MovementItemId =  MovementItem.Id
                                           AND MIBoolean_WeightMain.DescId = zc_MIBoolean_WeightMain()
@@ -394,6 +396,10 @@ BEGIN
              LEFT JOIN MovementItemFloat AS MIFloat_CuterCount
                                          ON MIFloat_CuterCount.MovementItemId = MovementItem.ParentId
                                         AND MIFloat_CuterCount.DescId = zc_MIFloat_CuterCount()
+
+             LEFT JOIN MovementItemFloat AS MIFloat_Count
+                                         ON MIFloat_Count.MovementItemId = MovementItem.Id
+                                        AND MIFloat_Count.DescId = zc_MIFloat_Count()
 
              LEFT JOIN MovementItemString AS MIString_Comment
                                           ON MIString_Comment.MovementItemId = MovementItem.Id

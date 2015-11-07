@@ -59,6 +59,7 @@ type
     edInsert: TcxDateEdit;
     colChildGoodsKindCompleteName: TcxGridDBColumn;
     actGoodsKindCompleteChoiceChild: TOpenChoiceForm;
+    colchildCount_onCount: TcxGridDBColumn;
   private
     { Private declarations }
   public

@@ -406,6 +406,7 @@ BEGIN
                                LEFT JOIN MovementItemLinkObject AS MILO_GoodsKind
                                                                 ON MILO_GoodsKind.MovementItemId = tmpMI_Child_two.MovementItemId_Child
                                                                AND MILO_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
+                               
                          )
     , tmpReceiptChild AS (SELECT _tmpListMaster.MovementItemId                                  AS MovementItemId
                                , COALESCE (ObjectLink_ReceiptChild_Goods.ChildObjectId, 0)      AS GoodsId
@@ -460,6 +461,7 @@ BEGIN
                                LEFT JOIN tmpMI_Child ON tmpMI_Child.MovementItemId = tmpReceiptChild.MovementItemId
                                                     AND tmpMI_Child.GoodsId = tmpReceiptChild.GoodsId
                                                     AND tmpMI_Child.GoodsKindId = tmpReceiptChild.GoodsKindId
+                                                    
                                                     AND tmpMI_Child.isErased = FALSE
                           GROUP BY tmpReceiptChild.MovementItemId
                                  , tmpReceiptChild.GoodsId
@@ -547,6 +549,11 @@ BEGIN
             , Object_GoodsKind.Id               AS GoodsKindId
             , Object_GoodsKind.ObjectCode       AS GoodsKindCode
             , Object_GoodsKind.ValueData        AS GoodsKindName
+
+            , Object_GoodsKindComplete.Id               AS GoodsKindCompleteId
+            , Object_GoodsKindComplete.ObjectCode       AS GoodsKindCompleteCode
+            , Object_GoodsKindComplete.ValueData        AS GoodsKindCompleteName
+
             , Object_Measure.ValueData          AS MeasureName
 
             , zfCalc_ReceiptChild_GroupNumber (inGoodsId                := Object_Goods.Id
@@ -588,6 +595,11 @@ BEGIN
 
             LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = COALESCE (tmpMI_ReceiptChild.GoodsId, tmpMI_Child.GoodsId)
             LEFT JOIN Object AS Object_GoodsKind ON Object_GoodsKind.Id = COALESCE (tmpMI_ReceiptChild.GoodsKindId, tmpMI_Child.GoodsKindId)
+
+            LEFT JOIN MovementItemLinkObject AS MILO_GoodsKindComplete
+                                            ON MILO_GoodsKindComplete.MovementItemId = tmpMI_Child.MovementItemId_Child
+                                           AND MILO_GoodsKindComplete.DescId = zc_MILinkObject_GoodsKindComplete()
+            LEFT JOIN Object AS Object_GoodsKindComplete ON Object_GoodsKindComplete.Id = MILO_GoodsKindComplete.ObjectId
 
             LEFT JOIN MovementItemBoolean AS MIBoolean_TaxExit
                                           ON MIBoolean_TaxExit.MovementItemId =  tmpMI_Child.MovementItemId_Child
@@ -654,6 +666,7 @@ ALTER FUNCTION gpSelect_Movement_ProductionUnionTech (TDateTime, TDateTime, Inte
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
 
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».   Ã‡Ì¸ÍÓ ƒ.¿.
+ 07.11.15        * GoodsKindComplete
  15.03.15                                        * all
  19.12.14                                                        *
 */

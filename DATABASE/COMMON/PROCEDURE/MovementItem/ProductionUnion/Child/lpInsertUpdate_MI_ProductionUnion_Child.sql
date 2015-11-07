@@ -2,6 +2,7 @@
 
 -- DROP FUNCTION IF EXISTS lpInsertUpdate_MI_ProductionUnion_Child (Integer, Integer, Integer, TFloat, Integer, TDateTime, TVarChar, Integer, Integer);
 DROP FUNCTION IF EXISTS lpInsertUpdate_MI_ProductionUnion_Child (Integer, Integer, Integer, TFloat, Integer, TDateTime, TVarChar, Integer, TFloat, Integer);
+DROP FUNCTION IF EXISTS lpInsertUpdate_MI_ProductionUnion_Child (Integer, Integer, Integer, TFloat, Integer, TDateTime, TVarChar, Integer, Integer, TFloat, Integer);
 
 CREATE OR REPLACE FUNCTION lpInsertUpdate_MI_ProductionUnion_Child(
  INOUT ioId                  Integer   , -- Ключ объекта <Элемент документа>
@@ -11,7 +12,8 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_MI_ProductionUnion_Child(
     IN inParentId            Integer   , -- Главный элемент документа
     IN inPartionGoodsDate    TDateTime , -- Партия товара	
     IN inPartionGoods        TVarChar  , -- Партия товара        
-    IN inGoodsKindId         Integer   , -- Виды товаров            
+    IN inGoodsKindId         Integer   , -- Виды товаров  
+    IN inGoodsKindCompleteId Integer   , -- Виды товаров ГП          
     IN inCount_onCount       TFloat    , -- Количество батонов
     IN inUserId              Integer     -- пользователь
 )                              
@@ -50,6 +52,9 @@ BEGIN
    -- сохранили связь с <Виды товаров>
    PERFORM lpInsertUpdate_MovementItemLinkObject(zc_MILinkObject_GoodsKind(), ioId, inGoodsKindId);
 
+   -- сохранили связь с <Виды товаров ГП>
+   PERFORM lpInsertUpdate_MovementItemLinkObject(zc_MILinkObject_GoodsKindComplete(), ioId, inGoodsKindCompleteId);
+
    -- сохранили свойство <Количество батонов>
    PERFORM lpInsertUpdate_MovementItemFloat(zc_MIFloat_Count(), ioId, inCount_onCount);
 
@@ -73,6 +78,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 07.11.15         * add inGoodsKindCompleteId
  11.07.15                                        * add inUserId:=
  05.07.15                                        * add inCount_onCount
  21.03.15                                        * all
