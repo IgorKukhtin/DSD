@@ -5,6 +5,7 @@ Integer    , -- Ключ объекта <Документ продажи>
     TVarChar   , -- Номер документа
     TDateTime  , -- Дата документа
     Integer    , -- Вид акции
+    Integer    , -- Прайс лист
     TDateTime  , -- Дата начала акции
     TDateTime  , -- Дата окончания акции
     TDateTime  , -- Дата начала отгрузки по акционной цене
@@ -18,12 +19,13 @@ Integer    , -- Ключ объекта <Документ продажи>
     Integer    , -- Ответственный представитель коммерческого отдела
     Integer    , -- Ответственный представитель маркетингового отдела	
     Integer );  -- пользователь
-
+    
 CREATE OR REPLACE FUNCTION lpInsertUpdate_Movement_Promo(
  INOUT ioId                    Integer    , -- Ключ объекта <Документ продажи>
     IN inInvNumber             TVarChar   , -- Номер документа
     IN inOperDate              TDateTime  , -- Дата документа
     IN inPromoKindId           Integer    , -- Вид акции
+    IN inPriceListId           Integer    , -- Прайс лист
     IN inStartPromo            TDateTime  , -- Дата начала акции
     IN inEndPromo              TDateTime  , -- Дата окончания акции
     IN inStartSale             TDateTime  , -- Дата начала отгрузки по акционной цене
@@ -58,7 +60,9 @@ BEGIN
     PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_Unit(), ioId, inUnitId);
     
     -- Вид акции
-    PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_PromoKindId(), ioId, inPromoKindId);
+    PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_PromoKind(), ioId, inPromoKindId);
+    -- Прайс лист
+    PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_PriceList(), ioId, inPriceListId);
     -- Дата начала акции
     PERFORM lpInsertUpdate_MovementDate (zc_MovementDate_StartPromo(), ioId, inStartPromo);
     -- Дата окончания акции
@@ -72,9 +76,9 @@ BEGIN
     -- Дата окончания расч. продаж до акции
     PERFORM lpInsertUpdate_MovementDate (zc_MovementDate_OperDateEnd(), ioId, inOperDateEnd);
     -- Стоимость участия в акции
-    PERFORM lpInsertUpdate_MovementFloat (zc_MovementDate_CostPromo(), ioId, inCostPromo);
+    PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_CostPromo(), ioId, inCostPromo);
     -- Примечание
-    PERFORM lpInsertUpdate_MovementString (zc_MovementDate_Comment(), ioId, inComment);
+    PERFORM lpInsertUpdate_MovementString (zc_MovementString_Comment(), ioId, inComment);
     -- Рекламная поддержка
     PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_Advertising(), ioId, inAdvertisingId);
     -- Подразделение

@@ -132,6 +132,8 @@ type
     actSimpleErased: TMultiAction;
     actSetErasedList: TMultiAction;
     N16: TMenuItem;
+    colChildGoodsKindCompleteName: TcxGridDBColumn;
+    actGoodsKindCompleteChoiceChild: TOpenChoiceForm;
   private
     { Private declarations }
   public

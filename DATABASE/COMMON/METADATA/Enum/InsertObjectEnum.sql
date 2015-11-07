@@ -48,9 +48,9 @@ BEGIN
 
    PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_GlobalConst_IntegerDate(),  inDescId:= zc_Object_GlobalConst(), inCode:= 2, inName:= 'актуальность данных Integer', inEnumName:= 'zc_Enum_GlobalConst_IntegerDate');
 
-   PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_GlobalConst_CashDate(),  inDescId:= zc_Object_GlobalConst(), inCode:= 1, inName:= 'актуальность данных по кассе', inEnumName:= 'zc_Enum_GlobalConst_CashDate');
+   PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_GlobalConst_CashDate(),  inDescId:= zc_Object_GlobalConst(), inCode:= 3, inName:= 'актуальность данных по кассе', inEnumName:= 'zc_Enum_GlobalConst_CashDate');
 
-   PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_GlobalConst_MedocTaxDate(),  inDescId:= zc_Object_GlobalConst(), inCode:= 2, inName:= 'актуальность данных Медок', inEnumName:= 'zc_Enum_GlobalConst_MedocTaxDate');
+   PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_GlobalConst_MedocTaxDate(),  inDescId:= zc_Object_GlobalConst(), inCode:= 101, inName:= 'актуальность данных Медок', inEnumName:= 'zc_Enum_GlobalConst_MedocTaxDate');
 
 END $$;
 
@@ -730,9 +730,9 @@ BEGIN
    PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_PromoKind_Compensation(),  inDescId:= zc_Object_PromoKind(), inCode:= 2, inName:= 'В счет маркетингового бюджета', inEnumName:= 'zc_Enum_PromoKind_Compensation');
 
 --Условия участия   
-   PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_ConditionPromo_Discount(),  inDescId:= zc_Object_ConditionPromo(), inCode:= 3, inName:= 'Скидка', inEnumName:= 'zc_Enum_ConditionPromo_Discount');
+   PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_ConditionPromo_Discount(),  inDescId:= zc_Object_ConditionPromo(), inCode:= 1, inName:= 'Скидка', inEnumName:= 'zc_Enum_ConditionPromo_Discount');
 
-   PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_ConditionPromo_Compensation(),  inDescId:= zc_Object_ConditionPromo(), inCode:= 3, inName:= 'Компенсация по итогу продаж', inEnumName:= 'zc_Enum_ConditionPromo_Compensation');
+   PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_ConditionPromo_Compensation(),  inDescId:= zc_Object_ConditionPromo(), inCode:= 2, inName:= 'Компенсация по итогу продаж', inEnumName:= 'zc_Enum_ConditionPromo_Compensation');
 
 END $$;
 

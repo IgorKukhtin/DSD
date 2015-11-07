@@ -3,7 +3,7 @@ inherited OrderExternalForm: TOrderExternalForm
   ClientHeight = 647
   ClientWidth = 1366
   ExplicitWidth = 1382
-  ExplicitHeight = 682
+  ExplicitHeight = 685
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl

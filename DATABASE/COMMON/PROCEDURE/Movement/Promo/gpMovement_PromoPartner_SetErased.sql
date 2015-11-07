@@ -1,9 +1,9 @@
--- Function: gpMovementItem_PromoGoods_SetUnErased (Integer, TVarChar)
+-- Function: gpMovement_PromoPartner_SetErased (Integer, Integer, TVarChar)
 
-DROP FUNCTION IF EXISTS gpMovementItem_PromoGoods_SetUnErased (Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpMovement_PromoPartner_SetErased (Integer, TVarChar);
 
-CREATE OR REPLACE FUNCTION gpMovementItem_PromoGoods_SetUnErased(
-    IN inMovementItemId      Integer              , -- ключ объекта <Элемент документа>
+CREATE OR REPLACE FUNCTION gpMovement_PromoPartner_SetErased(
+    IN inMovementId      Integer              , -- ключ объекта <Элемент документа>
    OUT outIsErased           Boolean              , -- новое значение
     IN inSession             TVarChar               -- текущий пользователь
 )
@@ -14,14 +14,14 @@ $BODY$
    DECLARE vbStatusId Integer;
    DECLARE vbUserId Integer;
 BEGIN
-    --vbUserId := lpCheckRight(inSession, zc_Enum_Process_SetUnErased_MI_PromoGoods());
+    --vbUserId:= lpCheckRight(inSession, zc_Enum_Process_SetErased_MI_PromoGoods());
     vbUserId := inSession;
     -- устанавливаем новое значение
-    outIsErased := FALSE;
+    outIsErased := TRUE;
 
     -- Обязательно меняем
-    UPDATE MovementItem SET isErased = FALSE WHERE Id = inMovementItemId
-    RETURNING MovementId INTO vbMovementId;
+    UPDATE Movement SET StatusId = zc_Enum_Status_Erased() WHERE Id = inMovementId
+    RETURNING ParentId INTO vbMovementId;
 
     -- проверка - связанные документы Изменять нельзя
     -- PERFORM lfCheck_Movement_Parent (inMovementId:= vbMovementId, inComment:= 'изменение');
@@ -29,21 +29,20 @@ BEGIN
     -- определяем <Статус>
     vbStatusId := (SELECT StatusId FROM Movement WHERE Id = vbMovementId);
     -- проверка - проведенные/удаленные документы Изменять нельзя
-    IF vbStatusId <> zc_Enum_Status_UnComplete()
+    IF vbStatusId <> zc_Enum_Status_UnComplete() AND NOT EXISTS (SELECT UserId FROM ObjectLink_UserRole_View WHERE UserId = vbUserId AND RoleId = zc_Enum_Role_Admin())
     THEN
         RAISE EXCEPTION 'Ошибка.Изменение документа в статусе <%> не возможно.', lfGet_Object_ValueData (vbStatusId);
     END IF;
 
-    -- пересчитали Итоговые суммы по накладной
-    PERFORM lpInsertUpdate_MovementFloat_TotalSummPromoGoodsExactly (vbMovementId);
-
+    -- !!! НЕ ПОНЯТНО - ПОЧЕМУ НАДО ВОЗВРАЩАТЬ НАОБОРОТ!!!
+    -- outIsErased := FALSE;
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpMovementItem_PromoGoods_SetUnErased (Integer, TVarChar) OWNER TO postgres;
+ALTER FUNCTION gpMovement_PromoPartner_SetErased (Integer, TVarChar) OWNER TO postgres;
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.A.  Воробкало А.А.
- 13.10.15                                                                      *
+ 05.11.15                                                                      *
 */

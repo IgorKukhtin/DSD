@@ -1557,6 +1557,25 @@ inherited ReturnInForm: TReturnInForm
       Hint = #1050#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1082#1072' '#1082' '#1085#1072#1083#1086#1075#1086#1074#1086#1081' ('#1087#1088#1086#1076#1072#1074#1077#1094')'
       ImageIndex = 19
     end
+    object actUpdateAmountPartner: TdsdExecStoredProc
+      Category = 'DSDLib'
+      TabSheet = tsMain
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdate_MI_ReturnIn_AmountPartner
+      StoredProcList = <
+        item
+          StoredProc = spUpdate_MI_ReturnIn_AmountPartner
+        end
+        item
+          StoredProc = spSelect
+        end>
+      Caption = #1054#1073#1085#1091#1083#1080#1090#1100' '#1042#1089#1077' '#1079#1085#1072#1095#1077#1085#1080#1103' "'#1050#1086#1083'-'#1074#1086' ('#1091' '#1087#1086#1082#1091#1087'.)"'
+      Hint = #1054#1073#1085#1091#1083#1080#1090#1100' '#1042#1089#1077' '#1079#1085#1072#1095#1077#1085#1080#1103' "'#1050#1086#1083'-'#1074#1086' ('#1091' '#1087#1086#1082#1091#1087'.)"'
+      ImageIndex = 39
+      QuestionBeforeExecute = #1050#1086#1083#1080#1095#1077#1089#1090#1074#1086' '#1091' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1103' '#1073#1091#1076#1077#1090' '#1086#1073#1085#1091#1083#1077#1085#1086'. '#1055#1088#1086#1076#1086#1083#1078#1080#1090#1100'?'
+      InfoAfterExecute = #1047#1072#1074#1077#1088#1096#1077#1085#1086' '#1054#1073#1085#1091#1083#1077#1085#1080#1077' '#1079#1085#1072#1095#1077#1085#1080#1081' "'#1050#1086#1083'-'#1074#1086' ('#1091' '#1087#1086#1082#1091#1087'.)"'
+    end
     object actUpdatePrice: TdsdExecStoredProc
       Category = 'DSDLib'
       TabSheet = tsMain
@@ -1698,6 +1717,14 @@ inherited ReturnInForm: TReturnInForm
         end
         item
           Visible = True
+          ItemName = 'bbStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbUpdateAmountPartner'
+        end
+        item
+          Visible = True
           ItemName = 'bbCompleteTaxCorrective'
         end
         item
@@ -1746,7 +1773,7 @@ inherited ReturnInForm: TReturnInForm
         end
         item
           Visible = True
-          ItemName = 'bb'
+          ItemName = 'bbPrintPriceCorr'
         end
         item
           Visible = True
@@ -1840,8 +1867,12 @@ inherited ReturnInForm: TReturnInForm
       Action = actUpdatePrice
       Category = 0
     end
-    object bb: TdxBarButton
+    object bbPrintPriceCorr: TdxBarButton
       Action = mactPrintPriceCorr
+      Category = 0
+    end
+    object bbUpdateAmountPartner: TdxBarButton
+      Action = actUpdateAmountPartner
       Category = 0
     end
   end
@@ -3481,7 +3512,7 @@ inherited ReturnInForm: TReturnInForm
       end>
     PackSize = 1
     Left = 584
-    Top = 552
+    Top = 512
   end
   object spGetReportNamePriceCorr: TdsdStoredProc
     StoredProcName = 'gpGet_Movement_ReturnIn_ReportName'
@@ -3511,5 +3542,21 @@ inherited ReturnInForm: TReturnInForm
     PackSize = 1
     Left = 376
     Top = 392
+  end
+  object spUpdate_MI_ReturnIn_AmountPartner: TdsdStoredProc
+    StoredProcName = 'gpUpdate_MovementItem_ReturnIn_AmountPartner'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+      end>
+    PackSize = 1
+    Left = 584
+    Top = 464
   end
 end

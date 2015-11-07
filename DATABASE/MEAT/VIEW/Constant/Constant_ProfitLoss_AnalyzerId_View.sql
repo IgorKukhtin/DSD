@@ -15,7 +15,7 @@ AS
    FROM Object
    WHERE Object.DescId = zc_Object_AnalyzerId()
      AND Object.Id NOT IN (zc_Enum_AnalyzerId_LossCount_20200(), zc_Enum_AnalyzerId_LossSumm_20200()) -- !!!списание!!!
-     AND Object.ObjecCode < 1000
+     AND Object.ObjectCode < 1000
   UNION ALL
    -- Сумма реализации + Разница с оптовыми ценами + Скидка дополнительная
    SELECT Object.DescId

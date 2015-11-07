@@ -100,6 +100,12 @@ type
     bbPrintPriceCorr: TdxBarButton;
     spGetReportNamePriceCorr: TdsdStoredProc;
     actSPPrintProcNamePriceCorr: TdsdExecStoredProc;
+    actSimpleCheckedList: TMultiAction;
+    actCheckedList: TMultiAction;
+    spCheckedTrue: TdsdStoredProc;
+    N13: TMenuItem;
+    N14: TMenuItem;
+    actspChecked: TdsdExecStoredProc;
   private
     { Private declarations }
   public

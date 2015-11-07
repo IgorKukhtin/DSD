@@ -14,6 +14,8 @@ RETURNS TABLE (Id               Integer     --Идентификатор
              , StatusName       TVarChar    --Статус
              , PromoKindId      Integer     --Вид акции
              , PromoKindName    TVarChar    --Вид акции
+             , PriceListId      Integer     --прайс лист
+             , PriceListName    TVarChar    --Прайс лист
              , StartPromo       TDateTime   --Дата начала акции
              , EndPromo         TDateTime   --Дата окончания акции
              , StartSale        TDateTime   --Дата начала отгрузки по акционной цене
@@ -47,6 +49,8 @@ BEGIN
           , Object_Status.Name              		          AS StatusName
           , NULL::Integer                                     AS PromoKindId         --Вид акции
           , NULL::TVarChar                                    AS PromoKindName       --Вид акции
+          , Object_PriceList.Id                               AS PriceListId         --Прайс лист
+          , Object_PriceList.ValueData                        AS PriceListName       --Прайс лист
           , NULL::TDateTime                                   AS StartPromo          --Дата начала акции
           , NULL::TDateTime                                   AS EndPromo            --Дата окончания акции
           , NULL::TDateTime                                   AS StartSale           --Дата начала отгрузки по акционной цене
@@ -63,7 +67,8 @@ BEGIN
           , NULL::TVarChar                                    AS PersonalTradeName   --Ответственный представитель коммерческого отдела
           , NULL::Integer                                     AS PersonalId          --Ответственный представитель маркетингового отдела	
           , NULL::TVarChar                                    AS PersonalName        --Ответственный представитель маркетингового отдела	
-        FROM lfGet_Object_Status(zc_Enum_Status_UnComplete()) AS Object_Status;
+        FROM lfGet_Object_Status(zc_Enum_Status_UnComplete()) AS Object_Status
+            LEFT OUTER JOIN Object AS Object_PriceList ON Object_PriceList.Id = zc_PriceList_Basis();
     ELSE
         RETURN QUERY
         SELECT
@@ -74,6 +79,8 @@ BEGIN
           , Movement_Promo.StatusName         --Статус
           , Movement_Promo.PromoKindId        --Вид акции
           , Movement_Promo.PromoKindName      --Вид акции
+          , Movement_Promo.PriceListId        --Вид акции
+          , Movement_Promo.PriceListName      --Вид акции
           , Movement_Promo.StartPromo         --Дата начала акции
           , Movement_Promo.EndPromo           --Дата окончания акции
           , Movement_Promo.StartSale          --Дата начала отгрузки по акционной цене

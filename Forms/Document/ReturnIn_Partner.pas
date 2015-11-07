@@ -148,6 +148,9 @@ type
     mactPrintPriceCorr: TMultiAction;
     actSPPrintProcNamePriceCorr: TdsdExecStoredProc;
     bbPrintPriceCorr: TdxBarButton;
+    spUpdate_MI_ReturnIn_AmountPartner: TdsdStoredProc;
+    actUpdateAmountPartner: TdsdExecStoredProc;
+    bbUpdateAmountPartner: TdxBarButton;
   private
     { Private declarations }
   public

@@ -15,7 +15,8 @@ type
   private
     function InsertDefault: integer; override;
   public
-    function InsertUpdatePriceList(const Id, Code: Integer; Name: string;PriceWithVAT:Boolean;VATPercent:Double): integer;
+    function InsertUpdatePriceList(const Id, Code: Integer; Name: string;
+      PriceWithVAT:Boolean;VATPercent:Double; CurrencyId: Integer): integer;
     constructor Create; override;
   end;
 
@@ -23,7 +24,7 @@ type
 implementation
 
 uses ZDbcIntfs, SysUtils, Storage, DBClient, XMLDoc, CommonData, Forms,
-     UtilConvert, UtilConst, ZLibEx, zLibUtil, JuridicalTest, DB;
+     UtilConvert, UtilConst, ZLibEx, zLibUtil, JuridicalTest, DB, CurrencyTest;
 
 constructor TPriceList.Create;
 begin
@@ -34,12 +35,22 @@ begin
 end;
 
 function TPriceList.InsertDefault: integer;
+var
+  CurrencyId: Integer;
 begin
-  result := InsertUpdatePriceList(0, -1, 'Прайс-лист',false,20);
+  With TCurrency.Create do
+  Begin
+    if not GetDataSet.isEmpty then
+      CurrencyId := GetDataSet.FieldByName('Id').AsInteger
+    else
+      CurrencyId := GetDefault;
+  End;
+  result := InsertUpdatePriceList(0, -1, 'Прайс-лист',false,20,CurrencyId);
   inherited;
 end;
 
-function TPriceList.InsertUpdatePriceList(const Id, Code: Integer;Name: string;PriceWithVAT:Boolean;VATPercent:Double): integer;
+function TPriceList.InsertUpdatePriceList(const Id, Code: Integer;Name: string;
+  PriceWithVAT:Boolean;VATPercent:Double; CurrencyId: Integer): integer;
 begin
   FParams.Clear;
   FParams.AddParam('ioId', ftInteger, ptInputOutput, Id);
@@ -47,6 +58,7 @@ begin
   FParams.AddParam('inName', ftString, ptInput, Name);
   FParams.AddParam('inPriceWithVAT', ftBoolean, ptInput, PriceWithVAT);
   FParams.AddParam('inVATPercent', ftFloat, ptInput, VATPercent);
+  FParams.AddParam('inCurrencyId', ftInteger, ptInput, CurrencyId);
   result := InsertUpdate(FParams);
 end;
 

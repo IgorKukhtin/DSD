@@ -627,6 +627,13 @@ type
     N78: TMenuItem;
     actAdvertising: TdsdOpenForm;
     N79: TMenuItem;
+    actPromoKind: TdsdOpenForm;
+    actConditionPromo: TdsdOpenForm;
+    N80: TMenuItem;
+    N81: TMenuItem;
+    N82: TMenuItem;
+    actPromoJournal: TdsdOpenForm;
+    N83: TMenuItem;
     procedure actReport_OLAPSoldExecute(Sender: TObject);
     procedure FormShow(Sender: TObject);
   private

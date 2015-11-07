@@ -36,6 +36,7 @@ type
     procedure LoadCashFormTest;
     procedure LoadCarFormTest;
     procedure LoadCarModelFormTest;
+    procedure LoadConditionPromoFormTest;
     procedure LoadContractKindFormTest;
     procedure LoadContractFormTest;
     procedure LoadContractPartnerFormTest;
@@ -94,6 +95,8 @@ type
     procedure LoadPersonalFormTest;
     procedure LoadPersonalServiceFormTest;
     procedure LoadPersonalServiceListFormTest;
+    procedure LoadPromoKindFormTest;
+    procedure LoadPromoFormTest;
     procedure LoadQualityFormTest;
     procedure LoadQualityParamsFormTest;
     procedure LoadQualityDocFormTest;
@@ -989,6 +992,12 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TBoxEditForm');
 end;
 
+procedure TLoadFormTest.LoadConditionPromoFormTest;
+begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TConditionPromoForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TConditionPromoForm');
+end;
+
 procedure TLoadFormTest.LoadContactPersonFormTest;
 begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TContactPersonForm'));
@@ -1544,6 +1553,22 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TProfitLossServiceJournalForm');
 end;
 
+
+procedure TLoadFormTest.LoadPromoFormTest;
+begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TPromoJournalForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TPromoJournalForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TPromoForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TPromoForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TPromoPartnerForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TPromoPartnerForm');
+end;
+
+procedure TLoadFormTest.LoadPromoKindFormTest;
+begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TPromoKindForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TPromoKindForm');
+end;
 
 procedure TLoadFormTest.LoadTradeMarkFormTest;
 begin

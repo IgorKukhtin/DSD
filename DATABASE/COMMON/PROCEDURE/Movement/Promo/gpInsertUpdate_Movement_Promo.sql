@@ -21,11 +21,35 @@ DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_Promo (
 
 );
 
+DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_Promo (
+    Integer    , -- Ключ объекта <Документ продажи>
+    TVarChar   , -- Номер документа
+    TDateTime  , -- Дата документа
+    Integer    , -- Вид акции
+    Integer    , -- Прайс Лист
+    TDateTime  , -- Дата начала акции
+    TDateTime  , -- Дата окончания акции
+    TDateTime  , -- Дата начала отгрузки по акционной цене
+    TDateTime  , -- Дата окончания отгрузки по акционной цене
+    TDateTime  , -- Дата начала расч. продаж до акции
+    TDateTime  , -- Дата окончания расч. продаж до акции
+    TFloat     , -- Стоимость участия в акции
+    TVarChar   , -- Примечание
+    Integer    , -- Рекламная поддержка
+    Integer    , -- Подразделение
+    Integer    , -- Ответственный представитель коммерческого отдела
+    Integer    , -- Ответственный представитель маркетингового отдела	
+    TVarChar     -- сессия пользователя
+
+);
+
+
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_Promo(
  INOUT ioId                    Integer    , -- Ключ объекта <Документ продажи>
     IN inInvNumber             TVarChar   , -- Номер документа
     IN inOperDate              TDateTime  , -- Дата документа
     IN inPromoKindId           Integer    , -- Вид акции
+    IN inPriceListId           Integer    , -- Прайс лист
     IN inStartPromo            TDateTime  , -- Дата начала акции
     IN inEndPromo              TDateTime  , -- Дата окончания акции
     IN inStartSale             TDateTime  , -- Дата начала отгрузки по акционной цене
@@ -38,7 +62,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_Promo(
     IN inUnitId                Integer    , -- Подразделение
     IN inPersonalTradeId       Integer    , -- Ответственный представитель коммерческого отдела
     IN inPersonalId            Integer    , -- Ответственный представитель маркетингового отдела	
-    IN inSession               TVarChar   , -- сессия пользователя
+    IN inSession               TVarChar     -- сессия пользователя
 )
 RETURNS Integer AS
 $BODY$
@@ -52,6 +76,7 @@ BEGIN
                                         , inInvNumber      := inInvNumber
                                         , inOperDate       := inOperDate
                                         , inPromoKindId    := inPromoKindId     --Вид акции
+                                        , inPriceListId    := inPriceListId     --Прайс лист
                                         , inStartPromo     := inStartPromo      --Дата начала акции
                                         , inEndPromo       := inEndPromo        --Дата окончания акции
                                         , inStartSale      := inStartSale       --Дата начала отгрузки по акционной цене
@@ -64,6 +89,7 @@ BEGIN
                                         , inUnitId         := inUnitId          --Подразделение
                                         , inPersonalTradeId:= inPersonalTradeId --Ответственный представитель коммерческого отдела
                                         , inPersonalId     := inPersonalId      --Ответственный представитель маркетингового отдела	
+                                        , inUserId         := vbUserId
                                         );
 
 END;

@@ -27,15 +27,17 @@ implementation
 
 { TdbEnumTest }
 
-uses zLibUtil;
+uses zLibUtil, UtilConst;
 
 procedure TdbEnumTest.InsertObjectEnum;
 begin
   ExecFile(EnumPath + 'CreateObjectEnumFunction.sql', ZQuery);
   ExecFile(EnumPath + 'InsertObjectEnum.sql', ZQuery);
-
-  ExecFile(FarmacyEnumPath + 'CreateObjectEnumFunction.sql', ZQuery);
-  ExecFile(FarmacyEnumPath + 'InsertObjectEnum.sql', ZQuery);
+  if dsdProject = prFarmacy then
+  Begin
+    ExecFile(FarmacyEnumPath + 'CreateObjectEnumFunction.sql', ZQuery);
+    ExecFile(FarmacyEnumPath + 'InsertObjectEnum.sql', ZQuery);
+  End;
 
 end;
 

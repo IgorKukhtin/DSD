@@ -748,7 +748,16 @@ uses
   IncomeJournalChoice in '..\..\Forms\Document\IncomeJournalChoice.pas' {IncomeJournalChoiceForm: TParentForm},
   RecadvXML in '..\..\SOURCE\EDI\RecadvXML.pas',
   Advertising in '..\..\Forms\Guides\Advertising.pas' {AdvertisingForm: TParentForm},
-  AdvertisingEdit in '..\..\Forms\Guides\AdvertisingEdit.pas' {AdvertisingEditForm: TParentForm};
+  AdvertisingEdit in '..\..\Forms\Guides\AdvertisingEdit.pas' {AdvertisingEditForm: TParentForm},
+  AdvertisingTest in '..\SOURCE\Objects\All\AdvertisingTest.pas',
+  ConditionPromoTest in '..\SOURCE\Objects\All\ConditionPromoTest.pas',
+  PromoKindTest in '..\SOURCE\Objects\All\PromoKindTest.pas',
+  PromoKind in '..\..\Forms\Guides\PromoKind.pas' {PromoKindForm: TParentForm},
+  ConditionPromo in '..\..\Forms\Guides\ConditionPromo.pas' {ConditionPromoForm: TParentForm},
+  PromoTest in '..\SOURCE\Movement\All\PromoTest.pas',
+  PromoJournal in '..\..\Forms\Document\PromoJournal.pas' {PromoJournalForm: TParentForm},
+  Promo in '..\..\Forms\Document\Promo.pas' {PromoForm: TParentForm},
+  PromoPartner in '..\..\Forms\Guides\PromoPartner.pas' {PromoPartnerForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}
@@ -757,6 +766,7 @@ begin
   gc_AdminPassword := 'qsxqsxw1';
   Application.Initialize;
   gc_isSetDefault := true;
+  dsdProject := prProject;
   Application.CreateForm(TdmMain, dmMain);
   Application.Run;
   DUnitTestRunner.RunRegisteredTests;

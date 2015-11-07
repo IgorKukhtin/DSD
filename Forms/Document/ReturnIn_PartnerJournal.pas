@@ -100,6 +100,12 @@ type
     spGetReportNamePriceCorr: TdsdStoredProc;
     actSPPrintProcNamePriceCorr: TdsdExecStoredProc;
     mactPrintPriceCorr: TMultiAction;
+    spCheckedTrue: TdsdStoredProc;
+    actspChecked: TdsdExecStoredProc;
+    actSimpleCheckedList: TMultiAction;
+    actCheckedList: TMultiAction;
+    N13: TMenuItem;
+    N14: TMenuItem;
   private
     { Private declarations }
   public

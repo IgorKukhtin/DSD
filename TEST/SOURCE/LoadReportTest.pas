@@ -23,6 +23,7 @@ type
     procedure LoadAllReportFormTest;
     procedure LoadTransportReportFormTest;
     procedure LoadReceiptFormTest;
+    procedure LoadPromoFormTest;
   end;
 
 implementation
@@ -40,6 +41,11 @@ begin
   SetLength(OKPO, Length(a));
   for i := Low(A) to High(A) do
     OKPO[i] := A[i];
+end;
+
+procedure TLoadReportTest.LoadPromoFormTest;
+begin
+  LoadReportFromFile('Акция', ReportPath + '\Товарный Учет\PrintMovement_Promo.fr3');
 end;
 
 procedure TLoadReportTest.LoadReceiptFormTest;

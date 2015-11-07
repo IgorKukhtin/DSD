@@ -2342,6 +2342,32 @@
 				<Form>AdvertisingEditForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
+			<DCCReference Include="..\SOURCE\Objects\All\AdvertisingTest.pas"/>
+			<DCCReference Include="..\SOURCE\Objects\All\ConditionPromoTest.pas"/>
+			<DCCReference Include="..\SOURCE\Objects\All\PromoKindTest.pas"/>
+			<DCCReference Include="..\..\Forms\Guides\PromoKind.pas">
+				<Form>PromoKindForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Guides\ConditionPromo.pas">
+				<Form>ConditionPromoForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\SOURCE\Movement\All\PromoTest.pas"/>
+			<DCCReference Include="..\..\Forms\Document\PromoJournal.pas">
+				<Form>PromoJournalForm</Form>
+				<FormType>dfm</FormType>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Document\Promo.pas">
+				<Form>PromoForm</Form>
+				<FormType>dfm</FormType>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Guides\PromoPartner.pas">
+				<Form>PromoPartnerForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
 			<BuildConfiguration Include="Release">
 				<Key>Cfg_2</Key>
 				<CfgParent>Base</CfgParent>
