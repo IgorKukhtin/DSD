@@ -20,6 +20,13 @@ AS
 $BODY$
    DECLARE vbIsInsert Boolean;
 BEGIN
+   -- !!!временно!!!
+   IF ioId = 38052130 THEN
+   -- сохранили связь с <Виды товаров ГП>
+   PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_GoodsKindComplete(), ioId, 8340); -- натурин
+   END IF;
+
+
    -- проверка
    IF COALESCE (inParentId, 0) = 0
    THEN
@@ -49,6 +56,7 @@ BEGIN
    
    -- сохранили связь с <Виды товаров>
    PERFORM lpInsertUpdate_MovementItemLinkObject(zc_MILinkObject_GoodsKind(), ioId, inGoodsKindId);
+
 
    -- сохранили свойство <Количество батонов>
    PERFORM lpInsertUpdate_MovementItemFloat(zc_MIFloat_Count(), ioId, inCount_onCount);

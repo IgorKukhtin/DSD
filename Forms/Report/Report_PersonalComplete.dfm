@@ -1162,7 +1162,7 @@ object Report_PersonalCompleteForm: TReport_PersonalCompleteForm
       DataSets = <
         item
           UserName = 'frxDBDMaster'
-          IndexFieldNames = 'operDate,PersonalName'
+          IndexFieldNames = 'operDate;PersonalName'
           GridView = cxGridDBTableView
         end>
       Params = <
@@ -1218,7 +1218,7 @@ object Report_PersonalCompleteForm: TReport_PersonalCompleteForm
       DataSets = <
         item
           UserName = 'frxDBDMaster'
-          IndexFieldNames = 'operDate,PersonalName'
+          IndexFieldNames = 'operDate;PersonalName'
           GridView = cxGridDBTableView
         end>
       Params = <

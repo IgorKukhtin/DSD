@@ -299,11 +299,9 @@ BEGIN
 */
 
   -- 3.0.1. определяется дата
-  vbOperDate:= (SELECT OperDate FROM Movement WHERE Id = inMovementId);
-  -- 3.0.2. определяется 
-  vbDescId:= (SELECT DescId FROM Movement WHERE Id = inMovementId);
-  -- 3.0.3. определяется 
-  vbAccessKeyId:= (SELECT AccessKeyId FROM Movement WHERE Id = inMovementId);
+  SELECT OperDate, DescId, AccessKeyId
+         INTO vbOperDate, vbDescId, vbAccessKeyId
+  FROM Movement WHERE Id = inMovementId;
 
 
   -- по этим док-там !!!нет закрытия периода!!!
@@ -332,8 +330,10 @@ BEGIN
 
   ELSE
   -- !!!временно если ФИЛИАЛ НАЛ + БН!!!
-  IF EXISTS (SELECT Object_RoleAccessKeyGuide_View.BranchId FROM Object_RoleAccessKeyGuide_View WHERE Object_RoleAccessKeyGuide_View.UserId = inUserId AND Object_RoleAccessKeyGuide_View.BranchId <> 0)
-     OR vbAccessKeyId <> zc_Enum_Process_AccessKey_DocumentDnepr()
+  IF inUserId NOT IN (zc_Enum_Process_Auto_PrimeCost()) -- !!!Админу временно можно!!!
+     AND (EXISTS (SELECT Object_RoleAccessKeyGuide_View.BranchId FROM Object_RoleAccessKeyGuide_View WHERE Object_RoleAccessKeyGuide_View.UserId = inUserId AND Object_RoleAccessKeyGuide_View.BranchId <> 0)
+       OR vbAccessKeyId <> zc_Enum_Process_AccessKey_DocumentDnepr()
+         )
   THEN
       -- 3.1. определяется дата для <Закрытие периода>
       SELECT CASE WHEN tmp.CloseDate > tmp.ClosePeriod THEN tmp.CloseDate ELSE tmp.ClosePeriod END AS CloseDate
