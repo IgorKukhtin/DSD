@@ -142,7 +142,8 @@ BEGIN
                                         inGoodsId      := tmp_ResultSet.GoodsId,-- Товар
                                         inUnitId       := inUnitId,             -- подразделение
                                         inMCSIsClose   := NULL::Boolean,        -- НТЗ закрыт
-                                        inMCSNotRecalc := NULL::Boolean,         -- НТЗ не пересчитывается
+                                        inMCSNotRecalc := NULL::Boolean,        -- НТЗ не пересчитывается
+                                        inFix          := Object_Price.Fix,     -- фиксированная цена
                                         inSession      := inSession)
     FROM 
         tmp_ResultSet
@@ -155,7 +156,8 @@ BEGIN
         COALESCE(Object_Price.MCSIsClose,FALSE) = FALSE
     GROUP BY
         tmp_ResultSet.GoodsId,
-        Object_Price.MCSValue
+        Object_Price.MCSValue,
+        Object_Price.Fix
     HAVING
         COALESCE(MAX(Sold),0)::TFloat <> COALESCE(Object_Price.MCSValue,0);
 END;
