@@ -2,7 +2,6 @@
 
 -- DROP FUNCTION IF EXISTS lpInsertUpdate_MI_ProductionUnion_Child (Integer, Integer, Integer, TFloat, Integer, TDateTime, TVarChar, Integer, Integer);
 DROP FUNCTION IF EXISTS lpInsertUpdate_MI_ProductionUnion_Child (Integer, Integer, Integer, TFloat, Integer, TDateTime, TVarChar, Integer, TFloat, Integer);
-DROP FUNCTION IF EXISTS lpInsertUpdate_MI_ProductionUnion_Child (Integer, Integer, Integer, TFloat, Integer, TDateTime, TVarChar, Integer, Integer, TFloat, Integer);
 
 CREATE OR REPLACE FUNCTION lpInsertUpdate_MI_ProductionUnion_Child(
  INOUT ioId                  Integer   , -- Ключ объекта <Элемент документа>
@@ -12,8 +11,7 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_MI_ProductionUnion_Child(
     IN inParentId            Integer   , -- Главный элемент документа
     IN inPartionGoodsDate    TDateTime , -- Партия товара	
     IN inPartionGoods        TVarChar  , -- Партия товара        
-    IN inGoodsKindId         Integer   , -- Виды товаров  
-    IN inGoodsKindCompleteId Integer   , -- Виды товаров ГП          
+    IN inGoodsKindId         Integer   , -- Виды товаров            
     IN inCount_onCount       TFloat    , -- Количество батонов
     IN inUserId              Integer     -- пользователь
 )                              
@@ -22,6 +20,13 @@ AS
 $BODY$
    DECLARE vbIsInsert Boolean;
 BEGIN
+   -- !!!временно!!!
+   IF ioId = 38052130 THEN
+   -- сохранили связь с <Виды товаров ГП>
+   PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_GoodsKindComplete(), ioId, 8340); -- натурин
+   END IF;
+
+
    -- проверка
    IF COALESCE (inParentId, 0) = 0
    THEN
@@ -52,9 +57,7 @@ BEGIN
    -- сохранили связь с <Виды товаров>
    PERFORM lpInsertUpdate_MovementItemLinkObject(zc_MILinkObject_GoodsKind(), ioId, inGoodsKindId);
 
-   -- сохранили связь с <Виды товаров ГП>
-   PERFORM lpInsertUpdate_MovementItemLinkObject(zc_MILinkObject_GoodsKindComplete(), ioId, inGoodsKindCompleteId);
-
+   
    -- сохранили свойство <Количество батонов>
    PERFORM lpInsertUpdate_MovementItemFloat(zc_MIFloat_Count(), ioId, inCount_onCount);
 

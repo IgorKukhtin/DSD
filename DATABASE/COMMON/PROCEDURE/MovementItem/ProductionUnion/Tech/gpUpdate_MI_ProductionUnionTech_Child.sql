@@ -206,8 +206,8 @@ $BODY$
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
  07.11.15         * inGoodsKindCompleteId
  21.03.15                                        *all
- 19.12.14                                                       * add zc_MILinkObject_GoodsKindComplete
- 12.12.14                                                        *
+ 19.12.14                                                       * add zc_MILinkObject_???GoodsKindComplete
+ 12.12.14                                                       *
 */
 
 -- тест

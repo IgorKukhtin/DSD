@@ -1286,6 +1286,10 @@ begin
         UNITPRICE := StringReplace(FormatFloat('0.00',
           ItemsDataSet.FieldByName('PriceNoVAT').AsFloat),
           FormatSettings.DecimalSeparator, cMainDecimalSeparator, []);
+        PRICEWITHVAT :=
+          StringReplace(FormatFloat('0.00',
+          ItemsDataSet.FieldByName('PriceWVAT').AsFloat),
+          FormatSettings.DecimalSeparator, cMainDecimalSeparator, []);
         AMOUNT := StringReplace(FormatFloat('0.00',
           ItemsDataSet.FieldByName('AmountSummNoVAT').AsFloat),
           FormatSettings.DecimalSeparator, cMainDecimalSeparator, []);

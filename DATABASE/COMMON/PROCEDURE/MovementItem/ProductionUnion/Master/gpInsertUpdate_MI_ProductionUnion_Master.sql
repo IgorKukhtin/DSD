@@ -43,7 +43,7 @@ $BODY$
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
  12.06.15                                        * add inPartionGoodsDate
  21.03.15                                        * all
- 19.12.14                                                       * add zc_MILinkObject_GoodsKindComplete
+ 19.12.14                                                       * add zc_MILinkObject_???GoodsKindComplete
  11.12.14         * add lpInsertUpdate_MI_ProductionUnion_Master
 
  24.07.13                                        * Важен порядок полей
