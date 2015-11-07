@@ -20,6 +20,7 @@ SELECT
            , MovementLinkObject_CashRegister.ObjectId   AS CashRegisterId
            , Object_CashRegister.ValueData              AS CashRegisterName
            , COALESCE(MovementBoolean_Deferred.ValueData,False) AS IsDeferred
+           , MovementLinkObject_CheckMember.ObjectId    AS CashMemberId
 		   , Object_CashMember.ValueData                AS CashMember
 		   , MovementString_Bayer.ValueData             AS Bayer
 		   , MovementLinkObject_PaidType.ObjectId       AS PaidTypeId  
