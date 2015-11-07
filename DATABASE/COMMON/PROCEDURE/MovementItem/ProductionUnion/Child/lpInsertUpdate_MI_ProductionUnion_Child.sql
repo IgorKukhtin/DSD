@@ -11,7 +11,8 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_MI_ProductionUnion_Child(
     IN inParentId            Integer   , -- Главный элемент документа
     IN inPartionGoodsDate    TDateTime , -- Партия товара	
     IN inPartionGoods        TVarChar  , -- Партия товара        
-    IN inGoodsKindId         Integer   , -- Виды товаров            
+    IN inGoodsKindId         Integer   , -- Виды товаров 
+    IN inGoodsKindCompleteId Integer   , -- Виды товаров ГП              
     IN inCount_onCount       TFloat    , -- Количество батонов
     IN inUserId              Integer     -- пользователь
 )                              
@@ -57,6 +58,8 @@ BEGIN
    -- сохранили связь с <Виды товаров>
    PERFORM lpInsertUpdate_MovementItemLinkObject(zc_MILinkObject_GoodsKind(), ioId, inGoodsKindId);
 
+   -- сохранили связь с <Виды товаров ГП>
+   PERFORM lpInsertUpdate_MovementItemLinkObject(zc_MILinkObject_GoodsKindComplete(), ioId, inGoodsKindCompleteId);
    
    -- сохранили свойство <Количество батонов>
    PERFORM lpInsertUpdate_MovementItemFloat(zc_MIFloat_Count(), ioId, inCount_onCount);
