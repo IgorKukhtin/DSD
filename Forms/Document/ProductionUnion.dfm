@@ -2,7 +2,6 @@ inherited ProductionUnionForm: TProductionUnionForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1055#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1086' - '#1089#1084#1077#1096#1080#1074#1072#1085#1080#1077'>'
   ClientWidth = 1020
   ExplicitWidth = 1036
-  ExplicitHeight = 712
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -374,7 +373,15 @@ inherited ProductionUnionForm: TProductionUnionForm
             Options.Editing = False
             Width = 70
           end
-          object colChildAmount: TcxGridDBColumn [8]
+          object colchildCount_onCount: TcxGridDBColumn [8]
+            Caption = #1050#1086#1083'-'#1074#1086' '#1073#1072#1090#1086#1085#1086#1074
+            DataBinding.FieldName = 'Count_onCount'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 59
+          end
+          object colChildAmount: TcxGridDBColumn [9]
             Caption = #1050#1086#1083'-'#1074#1086' '#1092#1072#1082#1090
             DataBinding.FieldName = 'Amount'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -384,21 +391,21 @@ inherited ProductionUnionForm: TProductionUnionForm
             HeaderAlignmentVert = vaCenter
             Width = 70
           end
-          object colChildPartionGoods: TcxGridDBColumn [9]
+          object colChildPartionGoods: TcxGridDBColumn [10]
             Caption = #1055#1072#1088#1090#1080#1103' '#1089#1099#1088#1100#1103
             DataBinding.FieldName = 'PartionGoods'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 100
           end
-          object colChildPartionGoodsDate: TcxGridDBColumn [10]
+          object colChildPartionGoodsDate: TcxGridDBColumn [11]
             Caption = #1055#1072#1088#1090#1080#1103' ('#1076#1072#1090#1072')'
             DataBinding.FieldName = 'PartionGoodsDate'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 80
           end
-          object colChildComment: TcxGridDBColumn [11]
+          object colChildComment: TcxGridDBColumn [12]
             Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
             DataBinding.FieldName = 'Comment'
             Visible = False
@@ -1144,6 +1151,13 @@ inherited ProductionUnionForm: TProductionUnionForm
         Value = Null
         Component = ChildCDS
         ComponentItem = 'GoodsKindId'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inGoodsKindCompleteId'
+        Value = Null
+        Component = ChildCDS
+        ComponentItem = 'GoodsKindCompleteId'
         ParamType = ptInput
       end>
     Left = 520

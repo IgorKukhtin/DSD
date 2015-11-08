@@ -2,7 +2,7 @@ inherited ProductionUnionTechJournalForm: TProductionUnionTechJournalForm
   Caption = #1055#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1086' - '#1058#1077#1093#1085#1086#1083#1086#1075
   ClientHeight = 685
   ClientWidth = 1020
-  ExplicitLeft = -3
+  ExplicitLeft = -14
   ExplicitTop = -46
   ExplicitWidth = 1036
   ExplicitHeight = 723
@@ -2176,6 +2176,13 @@ inherited ProductionUnionTechJournalForm: TProductionUnionTechJournalForm
         Value = Null
         Component = ChildCDS
         ComponentItem = 'GoodsKindId'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inGoodsKindCompleteId'
+        Value = Null
+        Component = ChildCDS
+        ComponentItem = 'GoodsKindCompleteId'
         ParamType = ptInput
       end
       item

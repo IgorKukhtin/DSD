@@ -26,7 +26,8 @@ RETURNS TABLE (
     Saldo            TFloat,    --Остаток после операции
     MCSValue         TFloat,     --НТЗ
     CheckMember      TVarChar,  --Менеджер
-	Bayer            TVarChar  --Покупатель
+    Bayer            TVarChar,  --Покупатель
+    PartyId          Integer
   )
 AS
 $BODY$
@@ -110,16 +111,16 @@ BEGIN
                 END::TFloat                                           AS AmountInvent, --Кол-во переучет
                 Object_Price_View.MCSValue                            AS MCSValue,     --НТЗ
                 Object_CheckMember.ValueData                          AS CheckMember,  --Менеджер
-		        MovementString_Bayer.ValueData                        AS Bayer,        --Покупатель
-		   
+                MovementString_Bayer.ValueData                        AS Bayer,        --Покупатель
+                CLO_Party.ObjectID                                    AS PartyId,      --# партии
                 ROW_NUMBER() OVER(ORDER BY MovementItemContainer.OperDate, 
                                            CASE WHEN MovementDesc.Id = zc_Movement_Inventory() THEN 1 else 0 end, 
                                            CASE WHEN MovementItemContainer.Amount > 0 THEN 0 ELSE 0 END,
-                                           MovementItemContainer.MovementId,MovementItemContainer.MovementItemId) AS OrdNum,
+                                           MovementItemContainer.MovementId,MovementItemContainer.MovementItemId,CLO_Party.ObjectID) AS OrdNum,
                 (SUM(MovementItemContainer.Amount)OVER(ORDER BY MovementItemContainer.OperDate, 
                                                                 CASE WHEN MovementDesc.Id = zc_Movement_Inventory() THEN 1 else 0 end, 
                                                                 CASE WHEN MovementItemContainer.Amount > 0 THEN 0 ELSE 0 END,
-                                                                MovementItemContainer.MovementId,MovementItemContainer.MovementItemId))+vbRemainsStart AS Saldo
+                                                                MovementItemContainer.MovementId,MovementItemContainer.MovementItemId,CLO_Party.ObjectID))+vbRemainsStart AS Saldo
             FROM
                 MovementItemContainer
                 INNER JOIN Movement ON MovementItemContainer.MovementId = Movement.Id
@@ -194,7 +195,8 @@ BEGIN
                 NULL                       AS AmountInvent,    --Кол-во переучет
                 Object_Price_View.MCSValue AS MCSValue,     --НТЗ
                 NULL                       AS CheckMember,  --Менеджер
-		        NULL                       AS Bayer,        --Покупатель
+                NULL                       AS Bayer,        --Покупатель
+                NULL                       AS PartyId,      --# партии 
                 0                          AS OrdNum,
                 vbRemainsStart             AS Saldo
             FROM
@@ -221,7 +223,8 @@ BEGIN
                 NULL                       AS AmountInvent,    --Кол-во переучет
                 Object_Price_View.MCSValue AS MCSValue,     --НТЗ
                 NULL                       AS CheckMember,  --Менеджер
-		        NULL                       AS Bayer,        --Покупатель
+                NULL                       AS Bayer,        --Покупатель
+                NULL                       AS PartyId,      --# партии 
                 999999999                  AS OrdNum,
                 vbRemainsEnd               AS Saldo 
             FROM
@@ -249,7 +252,8 @@ BEGIN
             Res.Saldo::TFloat, --Остаток после операции
             Res.MCSValue::TFloat,     --НТЗ
             Res.CheckMember::TVarChar,  --Менеджер
-		    Res.Bayer::TVarChar        --Покупатель
+            Res.Bayer::TVarChar,        --Покупатель
+            Res.PartyId                 --# партии
         FROM Res 
         ORDER BY 
             Res.OrdNum;

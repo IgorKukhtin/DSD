@@ -1,6 +1,7 @@
 -- Function: gpInsertUpdate_MI_ProductionUnion_Child()
 
 DROP FUNCTION IF EXISTS gpInsertUpdate_MI_ProductionUnion_Child (Integer, Integer, Integer, TFloat, Integer, TDateTime, TVarChar, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_MI_ProductionUnion_Child (Integer, Integer, Integer, TFloat, Integer, TDateTime, TVarChar, Integer, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_MI_ProductionUnion_Child(
  INOUT ioId                  Integer   , -- Ключ объекта <Элемент документа>
@@ -10,7 +11,8 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_MI_ProductionUnion_Child(
     IN inParentId            Integer   , -- Главный элемент документа
     IN inPartionGoodsDate    TDateTime , -- Партия товара	
     IN inPartionGoods        TVarChar  , -- Партия товара        
-    IN inGoodsKindId         Integer   , -- Виды товаров            
+    IN inGoodsKindId         Integer   , -- Виды товаров 
+    IN inGoodsKindCompleteId Integer   , -- Виды товаров ГП           
     IN inSession             TVarChar    -- сессия пользователя
 )                              
 RETURNS Integer AS
@@ -29,6 +31,8 @@ BEGIN
                                                  , inPartionGoodsDate := inPartionGoodsDate
                                                  , inPartionGoods     := inPartionGoods
                                                  , inGoodsKindId      := inGoodsKindId
+                                                 , inGoodsKindCompleteId := inGoodsKindCompleteId
+                                                 , inCount_onCount    : =  COALESCE ((SELECT ValueData FROM MovementItemFloat WHERE MovementItemId = ioId AND DescId = zc_MIFloat_Count()), 0)
                                                  , inUserId           := vbUserId
                                                  );
    
@@ -39,6 +43,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 07.11.15         * add inGoodsKindCompleteId
  21.03.15                                        * all
  11.12.14         * add lpInsertUpdate_MI_ProductionUnion_Child
  24.07.13                                        * Важен порядок полей

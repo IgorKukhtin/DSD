@@ -1,6 +1,7 @@
 -- Function: lpInsertUpdate_MI_ProductionUnionTech_Child()
 
 DROP FUNCTION IF EXISTS lpInsertUpdate_MI_ProductionUnionTech_Child (Integer, Integer, Integer, TFloat, Integer, TFloat, TDateTime, TVarChar, Integer, Integer);
+DROP FUNCTION IF EXISTS lpInsertUpdate_MI_ProductionUnionTech_Child (Integer, Integer, Integer, TFloat, Integer, TFloat, TDateTime, TVarChar, Integer, Integer, Integer);
 
 CREATE OR REPLACE FUNCTION lpInsertUpdate_MI_ProductionUnionTech_Child(
  INOUT ioId                  Integer   , -- Ключ объекта <Элемент документа>
@@ -11,7 +12,8 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_MI_ProductionUnionTech_Child(
     IN inAmountReceipt       TFloat    , -- Количество по рецептуре на 1 кутер 
     IN inPartionGoodsDate    TDateTime , -- Партия товара
     IN inComment             TVarChar  , -- Примечание
-    IN inGoodsKindId         Integer   , -- Виды товаров            
+    IN inGoodsKindId         Integer   , -- Виды товаров  
+    IN inGoodsKindCompleteId Integer   , -- Виды товаров ГП           
     IN inUserId              Integer     -- пользователь
 )                              
 RETURNS Integer AS
@@ -44,6 +46,9 @@ BEGIN
    
    -- сохранили связь с <Виды товаров>
    PERFORM lpInsertUpdate_MovementItemLinkObject(zc_MILinkObject_GoodsKind(), ioId, inGoodsKindId);
+
+   -- сохранили связь с <Виды товаров ГП>
+   PERFORM lpInsertUpdate_MovementItemLinkObject(zc_MILinkObject_GoodsKindComplete(), ioId, inGoodsKindCompleteId);
 
    IF vbIsInsert = TRUE
    THEN

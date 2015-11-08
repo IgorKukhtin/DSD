@@ -152,7 +152,8 @@ BEGIN
                         JOIN OBJECT AS Object_PartionMovementItem ON Object_PartionMovementItem.Id = CLI_MI.ObjectId
                         JOIN movementitem ON movementitem.Id = Object_PartionMovementItem.ObjectCode
                         JOIN Movement ON Movement.Id = movementitem.movementid
-                    WHERE MI_Sale.MovementId = inMovementId  
+                    WHERE Container.DescId = zc_Container_Count()
+                      AND MI_Sale.MovementId = inMovementId  
                       AND Container.Amount > 0
                       AND MI_Sale.Amount > 0), 
   
