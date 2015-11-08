@@ -1,37 +1,40 @@
 inherited PromoForm: TPromoForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1040#1082#1094#1080#1103'>'
-  ClientHeight = 631
-  ClientWidth = 995
-  ExplicitWidth = 1011
-  ExplicitHeight = 669
+  ClientHeight = 481
+  ClientWidth = 928
+  ExplicitLeft = -155
+  ExplicitWidth = 944
+  ExplicitHeight = 516
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 166
-    Width = 995
-    Height = 465
+    Width = 928
+    Height = 315
     ExplicitTop = 166
     ExplicitWidth = 995
     ExplicitHeight = 465
-    ClientRectBottom = 465
-    ClientRectRight = 995
+    ClientRectBottom = 315
+    ClientRectRight = 928
     inherited tsMain: TcxTabSheet
       Caption = '&1. '#1058#1086#1074#1072#1088#1099
       ExplicitWidth = 995
       ExplicitHeight = 441
       inherited cxGrid: TcxGrid
-        Width = 995
-        Height = 224
-        ExplicitWidth = 995
-        ExplicitHeight = 224
+        Width = 928
+        Height = 110
+        ExplicitLeft = 13
+        ExplicitTop = 3
+        ExplicitWidth = 928
+        ExplicitHeight = 110
         inherited cxGridDBTableView: TcxGridDBTableView
           Styles.Content = nil
           Styles.Inactive = nil
           Styles.Selection = nil
           Styles.Footer = nil
           Styles.Header = nil
-          object colGoodsCode: TcxGridDBColumn
-            Caption = #1050#1086#1076' '#1090#1086#1074#1072#1088#1072
+          object colGoodsCode: TcxGridDBColumn [0]
+            Caption = #1050#1086#1076
             DataBinding.FieldName = 'GoodsCode'
             PropertiesClassName = 'TcxButtonEditProperties'
             Properties.Buttons = <
@@ -41,16 +44,20 @@ inherited PromoForm: TPromoForm
                 Kind = bkEllipsis
               end>
             Properties.ReadOnly = True
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
             Width = 47
           end
-          object colGoodsName: TcxGridDBColumn
-            Caption = #1053#1072#1080#1084#1077#1085#1086#1074#1072#1085#1080#1077' '#1090#1086#1074#1072#1088#1072
+          object colGoodsName: TcxGridDBColumn [1]
+            Caption = #1053#1072#1079#1074#1072#1085#1080#1077
             DataBinding.FieldName = 'GoodsName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 168
           end
-          object colGoodsKindName: TcxGridDBColumn
-            Caption = #1042#1080#1076' '#1090#1086#1074#1072#1088#1072
+          object colGoodsKindName: TcxGridDBColumn [2]
+            Caption = #1042#1080#1076
             DataBinding.FieldName = 'GoodsKindName'
             PropertiesClassName = 'TcxButtonEditProperties'
             Properties.Buttons = <
@@ -60,96 +67,115 @@ inherited PromoForm: TPromoForm
                 Kind = bkEllipsis
               end>
             Properties.ReadOnly = True
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
             Width = 113
           end
-          object colAmount: TcxGridDBColumn
+          object colAmount: TcxGridDBColumn [3]
             Caption = '% '#1089#1082#1080#1076#1082#1080
             DataBinding.FieldName = 'Amount'
-            Width = 70
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 60
           end
-          object colPrice: TcxGridDBColumn
-            Caption = #1062#1077#1085#1072' '#1074' '#1087#1088#1072#1081#1089#1077
+          object colPrice: TcxGridDBColumn [4]
+            Caption = #1073#1077#1079' '#1053#1044#1057' '#1074' '#1087#1088#1072#1081#1089#1077
             DataBinding.FieldName = 'Price'
-            Width = 70
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 80
           end
-          object colPriceWithOutVAT: TcxGridDBColumn
-            Caption = #1073'/'#1053#1044#1057' '#1089#1086' '#1089#1082#1080#1076#1082#1086#1081
+          object colPriceWithOutVAT: TcxGridDBColumn [5]
+            Caption = #1073#1077#1079' '#1053#1044#1057' '#1089#1086' '#1089#1082#1080#1076#1082#1086#1081
             DataBinding.FieldName = 'PriceWithOutVAT'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
             HeaderHint = #1062#1077#1085#1072' '#1086#1090#1075#1088#1091#1079#1082#1080' '#1073#1077#1079' '#1091#1095#1077#1090#1072' '#1053#1044#1057', '#1089' '#1091#1095#1077#1090#1086#1084' '#1089#1082#1080#1076#1082#1080', '#1075#1088#1085
             Options.Editing = False
-            Width = 70
+            Width = 80
           end
-          object colPriceWithVAT: TcxGridDBColumn
-            Caption = #1089'/'#1053#1044#1057' '#1089#1086' '#1089#1082#1080#1076#1082#1086#1081
+          object colPriceWithVAT: TcxGridDBColumn [6]
+            Caption = #1089' '#1053#1044#1057' '#1089#1086' '#1089#1082#1080#1076#1082#1086#1081
             DataBinding.FieldName = 'PriceWithVAT'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
             HeaderHint = #1062#1077#1085#1072' '#1086#1090#1075#1088#1091#1079#1082#1080' '#1089' '#1091#1095#1077#1090#1086#1084' '#1053#1044#1057', '#1089' '#1091#1095#1077#1090#1086#1084' '#1089#1082#1080#1076#1082#1080', '#1075#1088#1085
             Options.Editing = False
-            Width = 70
+            Width = 80
           end
-          object colAmountReal: TcxGridDBColumn
+          object colAmountReal: TcxGridDBColumn [7]
             Caption = #1055#1088#1086#1076#1072#1085#1086' '#1074' '#1072#1085#1072#1083#1086#1075'. '#1087#1077#1088#1080#1086#1076
             DataBinding.FieldName = 'AmountReal'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
             HeaderHint = #1054#1073#1098#1077#1084' '#1087#1088#1086#1076#1072#1078' '#1074' '#1072#1085#1072#1083#1086#1075#1080#1095#1085#1099#1081' '#1087#1077#1088#1080#1086#1076', '#1082#1075
-            Width = 70
+            Width = 120
           end
-          object colAmountPlanMin: TcxGridDBColumn
+          object colAmountPlanMin: TcxGridDBColumn [8]
             Caption = #1055#1083#1072#1085' '#1084#1080#1085'.'
             DataBinding.FieldName = 'AmountPlanMin'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
             HeaderHint = #1052#1080#1085#1080#1084#1091#1084' '#1087#1083#1072#1085#1080#1088#1091#1077#1084#1086#1075#1086' '#1086#1073#1098#1077#1084#1072' '#1087#1088#1086#1076#1072#1078' '#1085#1072' '#1072#1082#1094#1080#1086#1085#1085#1099#1081' '#1087#1077#1088#1080#1086#1076' ('#1074' '#1082#1075')'
             Width = 70
           end
-          object colAmountPlanMax: TcxGridDBColumn
+          object colAmountPlanMax: TcxGridDBColumn [9]
             Caption = #1055#1083#1072#1085' '#1084#1072#1082#1089'.'
             DataBinding.FieldName = 'AmountPlanMax'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
             HeaderHint = #1052#1072#1082#1089#1080#1084#1091#1084' '#1087#1083#1072#1085#1080#1088#1091#1077#1084#1086#1075#1086' '#1086#1073#1098#1077#1084#1072' '#1087#1088#1086#1076#1072#1078' '#1085#1072' '#1072#1082#1094#1080#1086#1085#1085#1099#1081' '#1087#1077#1088#1080#1086#1076' ('#1074' '#1082#1075')'
             Width = 70
+          end
+          inherited colIsErased: TcxGridDBColumn
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
           end
         end
       end
       object Panel1: TPanel
         Left = 0
-        Top = 232
-        Width = 995
-        Height = 209
+        Top = 118
+        Width = 928
+        Height = 173
         Align = alBottom
         TabOrder = 1
+        ExplicitWidth = 995
         object cxSplitter1: TcxSplitter
           Left = 569
           Top = 1
           Width = 8
-          Height = 207
+          Height = 171
           HotZoneClassName = 'TcxMediaPlayer8Style'
           Control = cxGridPartner
-          ExplicitLeft = 454
-          ExplicitTop = -2
+          ExplicitHeight = 207
         end
         object cxPageControl1: TcxPageControl
           Left = 1
           Top = 1
           Width = 568
-          Height = 207
+          Height = 171
           Align = alLeft
           TabOrder = 1
           Properties.ActivePage = tsPartner
           Properties.CustomButtons.Buttons = <>
-          ClientRectBottom = 207
+          ExplicitHeight = 207
+          ClientRectBottom = 171
           ClientRectRight = 568
           ClientRectTop = 24
           object tsPartner: TcxTabSheet
             Caption = '&2. '#1055#1072#1088#1090#1085#1077#1088#1099
-            ExplicitTop = 3
-            ExplicitWidth = 289
-            ExplicitHeight = 151
+            ExplicitHeight = 183
             object cxGridPartner: TcxGrid
               Left = 0
               Top = 0
               Width = 568
-              Height = 183
+              Height = 147
               Align = alClient
               PopupMenu = pmPartner
               TabOrder = 0
-              ExplicitLeft = -184
-              ExplicitWidth = 473
+              ExplicitLeft = 2
+              ExplicitHeight = 183
               object cxGridDBTableViewPartner: TcxGridDBTableView
                 Navigator.Buttons.CustomButtons = <>
                 DataController.DataSource = PartnerDS
@@ -165,19 +191,13 @@ inherited PromoForm: TPromoForm
                 OptionsCustomize.DataRowSizing = True
                 OptionsData.CancelOnExit = False
                 OptionsData.Inserting = False
+                OptionsView.ColumnAutoWidth = True
                 OptionsView.Footer = True
                 OptionsView.GroupByBox = False
                 OptionsView.GroupSummaryLayout = gslAlignWithColumns
                 OptionsView.HeaderAutoHeight = True
                 OptionsView.Indicator = True
                 Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
-                object colp_isErased: TcxGridDBColumn
-                  Caption = #1059#1076#1072#1083#1077#1085' ('#1076#1072'/'#1085#1077#1090')'
-                  DataBinding.FieldName = 'isErased'
-                  Visible = False
-                  Options.Editing = False
-                  Width = 50
-                end
                 object colp_PartnerCode: TcxGridDBColumn
                   Caption = #1050#1086#1076
                   DataBinding.FieldName = 'PartnerCode'
@@ -189,19 +209,34 @@ inherited PromoForm: TPromoForm
                       Kind = bkEllipsis
                     end>
                   Properties.ReadOnly = True
+                  HeaderAlignmentHorz = taCenter
+                  HeaderAlignmentVert = vaCenter
                   Width = 57
                 end
                 object colp_PartnerName: TcxGridDBColumn
-                  Caption = #1053#1072#1080#1084#1077#1085#1086#1074#1072#1085#1080#1077' '#1087#1072#1088#1090#1085#1077#1088#1072
+                  Caption = #1053#1072#1079#1074#1072#1085#1080#1077
                   DataBinding.FieldName = 'PartnerName'
+                  HeaderAlignmentHorz = taCenter
+                  HeaderAlignmentVert = vaCenter
                   Options.Editing = False
                   Width = 331
                 end
                 object colp_PartnerDescName: TcxGridDBColumn
-                  Caption = #1058#1080#1087
+                  Caption = #1069#1083#1077#1084#1077#1085#1090
                   DataBinding.FieldName = 'PartnerDescName'
+                  HeaderAlignmentHorz = taCenter
+                  HeaderAlignmentVert = vaCenter
                   Options.Editing = False
                   Width = 124
+                end
+                object colp_isErased: TcxGridDBColumn
+                  Caption = #1059#1076#1072#1083#1077#1085' ('#1076#1072'/'#1085#1077#1090')'
+                  DataBinding.FieldName = 'isErased'
+                  Visible = False
+                  HeaderAlignmentHorz = taCenter
+                  HeaderAlignmentVert = vaCenter
+                  Options.Editing = False
+                  Width = 50
                 end
               end
               object cxGridLevelPartner: TcxGridLevel
@@ -213,29 +248,30 @@ inherited PromoForm: TPromoForm
         object cxPageControl2: TcxPageControl
           Left = 577
           Top = 1
-          Width = 417
-          Height = 207
+          Width = 350
+          Height = 171
           Align = alClient
           TabOrder = 2
           Properties.ActivePage = tsConditionPromo
           Properties.CustomButtons.Buttons = <>
-          ExplicitLeft = 1
-          ExplicitWidth = 502
-          ClientRectBottom = 207
-          ClientRectRight = 417
+          ExplicitWidth = 417
+          ExplicitHeight = 207
+          ClientRectBottom = 171
+          ClientRectRight = 350
           ClientRectTop = 24
           object tsConditionPromo: TcxTabSheet
             Caption = '&3. '#1059#1089#1083#1086#1074#1080#1103' '#1091#1095#1072#1089#1090#1080#1103
-            ExplicitWidth = 502
+            ExplicitWidth = 417
+            ExplicitHeight = 183
             object cxGridConditionPromo: TcxGrid
               Left = 0
               Top = 0
-              Width = 417
-              Height = 183
+              Width = 350
+              Height = 147
               Align = alClient
               PopupMenu = pmCondition
               TabOrder = 0
-              ExplicitWidth = 502
+              ExplicitLeft = -2
               object cxGridDBTableViewConditionPromo: TcxGridDBTableView
                 Navigator.Buttons.CustomButtons = <>
                 DataController.DataSource = ConditionPromoDS
@@ -251,21 +287,22 @@ inherited PromoForm: TPromoForm
                 OptionsCustomize.DataRowSizing = True
                 OptionsData.CancelOnExit = False
                 OptionsData.Inserting = False
+                OptionsView.ColumnAutoWidth = True
                 OptionsView.Footer = True
                 OptionsView.GroupByBox = False
                 OptionsView.GroupSummaryLayout = gslAlignWithColumns
                 OptionsView.HeaderAutoHeight = True
                 OptionsView.Indicator = True
                 Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
-                object colcp_isErased: TcxGridDBColumn
-                  Caption = #1059#1076#1072#1083#1077#1085' ('#1076#1072'/'#1085#1077#1090')'
-                  DataBinding.FieldName = 'isErased'
-                  Visible = False
-                  Options.Editing = False
-                  Width = 50
+                object colcp_Amount: TcxGridDBColumn
+                  Caption = #1047#1085#1072#1095#1077#1085#1080#1077
+                  DataBinding.FieldName = 'Amount'
+                  HeaderAlignmentHorz = taCenter
+                  HeaderAlignmentVert = vaCenter
+                  Width = 71
                 end
                 object colcp_ConditionPromoName: TcxGridDBColumn
-                  Caption = #1059#1089#1083#1086#1074#1080#1077
+                  Caption = #1053#1072#1079#1074#1072#1085#1080#1077
                   DataBinding.FieldName = 'ConditionPromoName'
                   PropertiesClassName = 'TcxButtonEditProperties'
                   Properties.Buttons = <
@@ -275,12 +312,18 @@ inherited PromoForm: TPromoForm
                       Kind = bkEllipsis
                     end>
                   Properties.ReadOnly = True
+                  HeaderAlignmentHorz = taCenter
+                  HeaderAlignmentVert = vaCenter
                   Width = 289
                 end
-                object colcp_Amount: TcxGridDBColumn
-                  Caption = #1047#1085#1072#1095#1077#1085#1080#1077
-                  DataBinding.FieldName = 'Amount'
-                  Width = 71
+                object colcp_isErased: TcxGridDBColumn
+                  Caption = #1059#1076#1072#1083#1077#1085' ('#1076#1072'/'#1085#1077#1090')'
+                  DataBinding.FieldName = 'isErased'
+                  Visible = False
+                  HeaderAlignmentHorz = taCenter
+                  HeaderAlignmentVert = vaCenter
+                  Options.Editing = False
+                  Width = 50
                 end
               end
               object cxGridLevelConditionPromo: TcxGridLevel
@@ -292,32 +335,66 @@ inherited PromoForm: TPromoForm
       end
       object cxSplitter2: TcxSplitter
         Left = 0
-        Top = 224
-        Width = 995
+        Top = 110
+        Width = 928
         Height = 8
         HotZoneClassName = 'TcxMediaPlayer8Style'
         AlignSplitter = salBottom
         Control = Panel1
+        ExplicitTop = 224
+        ExplicitWidth = 995
       end
     end
   end
   inherited DataPanel: TPanel
-    Width = 995
+    Width = 928
     Height = 140
     TabOrder = 3
+    ExplicitLeft = -8
+    ExplicitTop = -80
     ExplicitWidth = 995
     ExplicitHeight = 140
+    inherited edInvNumber: TcxTextEdit
+      Left = 8
+      ExplicitLeft = 8
+      ExplicitWidth = 75
+      Width = 75
+    end
+    inherited cxLabel1: TcxLabel
+      Left = 8
+      ExplicitLeft = 8
+    end
+    inherited edOperDate: TcxDateEdit
+      Left = 89
+      ExplicitLeft = 89
+      ExplicitWidth = 88
+      Width = 88
+    end
+    inherited cxLabel2: TcxLabel
+      Left = 89
+      ExplicitLeft = 89
+    end
+    inherited cxLabel15: TcxLabel
+      Top = 38
+      ExplicitTop = 38
+    end
     inherited ceStatus: TcxButtonEdit
+      Left = 7
+      Top = 55
+      ExplicitLeft = 7
+      ExplicitTop = 55
+      ExplicitWidth = 170
       ExplicitHeight = 22
+      Width = 170
     end
     object cxLabel3: TcxLabel
-      Left = 8
-      Top = 100
+      Left = 574
+      Top = 51
       Caption = #1056#1077#1082#1083#1072#1084#1085#1072#1103' '#1087#1086#1076#1076#1077#1088#1078#1082#1072
     end
     object edAdvertising: TcxButtonEdit
-      Left = 8
-      Top = 118
+      Left = 575
+      Top = 69
       Properties.Buttons = <
         item
           Default = True
@@ -325,7 +402,7 @@ inherited PromoForm: TPromoForm
         end>
       Properties.ReadOnly = True
       TabOrder = 7
-      Width = 226
+      Width = 193
     end
     object cxLabel4: TcxLabel
       Left = 380
@@ -342,16 +419,16 @@ inherited PromoForm: TPromoForm
         end>
       Properties.ReadOnly = True
       TabOrder = 9
-      Width = 205
+      Width = 193
     end
     object cxLabel11: TcxLabel
-      Left = 642
-      Top = 44
+      Left = 788
+      Top = 10
       Caption = #1055#1088#1072#1081#1089'-'#1083#1080#1089#1090
     end
     object edPriceList: TcxButtonEdit
-      Left = 642
-      Top = 62
+      Left = 788
+      Top = 28
       Properties.Buttons = <
         item
           Default = True
@@ -359,114 +436,114 @@ inherited PromoForm: TPromoForm
         end>
       Properties.ReadOnly = True
       TabOrder = 11
-      Width = 138
+      Width = 125
     end
     object cxLabel5: TcxLabel
-      Left = 8
-      Top = 44
-      Caption = #1044#1072#1090#1072' '#1085#1072#1095#1072#1083#1072' '#1072#1082#1094#1080#1080
+      Left = 195
+      Top = 5
+      Caption = #1040#1082#1094#1080#1103' '#1089
     end
     object deStartPromo: TcxDateEdit
-      Left = 128
-      Top = 43
+      Left = 195
+      Top = 23
       EditValue = 42132d
       TabOrder = 13
       Width = 81
     end
     object cxLabel6: TcxLabel
-      Left = 8
-      Top = 63
-      Caption = #1044#1072#1090#1072' '#1086#1082#1086#1085#1095#1072#1085#1080#1103' '#1072#1082#1094#1080#1080
+      Left = 300
+      Top = 5
+      Caption = #1040#1082#1094#1080#1103' '#1087#1086
     end
     object deEndPromo: TcxDateEdit
-      Left = 128
-      Top = 62
+      Left = 293
+      Top = 28
       EditValue = 42132d
       TabOrder = 15
       Width = 81
     end
     object cxLabel7: TcxLabel
-      Left = 224
-      Top = 45
-      Caption = #1044#1072#1090#1072' '#1085#1072#1095#1072#1083#1072' '#1086#1090#1075#1088#1091#1079#1086#1082
+      Left = 195
+      Top = 42
+      Caption = #1054#1090#1075#1088#1091#1079#1082#1072' '#1089
     end
     object deStartSale: TcxDateEdit
-      Left = 364
-      Top = 44
+      Left = 201
+      Top = 56
       EditValue = 42132d
       TabOrder = 17
       Width = 83
     end
     object cxLabel8: TcxLabel
-      Left = 224
-      Top = 64
-      Caption = #1044#1072#1090#1072' '#1086#1082#1086#1085#1095#1072#1085#1080#1103' '#1086#1090#1075#1088#1091#1079#1086#1082
+      Left = 300
+      Top = 42
+      Caption = #1054#1090#1075#1088#1091#1079#1082#1072' '#1087#1086
     end
     object deEndSale: TcxDateEdit
-      Left = 364
+      Left = 305
       Top = 63
       EditValue = 42132d
       TabOrder = 19
       Width = 83
     end
     object cxLabel9: TcxLabel
-      Left = 454
-      Top = 44
-      Caption = #1040#1085#1072#1083#1086#1075'. '#1087#1077#1088#1080#1086#1076' '#1089
+      Left = 394
+      Top = 41
+      Caption = #1040#1085#1072#1083#1086#1075#1080#1095#1085#1099#1081' '#1089
     end
     object deOperDateStart: TcxDateEdit
-      Left = 554
-      Top = 43
+      Left = 394
+      Top = 64
       EditValue = 42132d
       TabOrder = 21
-      Width = 82
+      Width = 87
     end
     object cxLabel10: TcxLabel
-      Left = 454
-      Top = 63
-      Caption = #1040#1085#1072#1083#1086#1075'. '#1087#1077#1088#1080#1086#1076' '#1087#1086
+      Left = 482
+      Top = 44
+      Caption = #1040#1085#1072#1083#1086#1075#1080#1095#1085#1099#1081' '#1087#1086
     end
     object deOperDateEnd: TcxDateEdit
-      Left = 554
+      Left = 482
       Top = 62
       EditValue = 42132d
       TabOrder = 23
-      Width = 82
+      Width = 87
     end
     object edCostPromo: TcxCurrencyEdit
-      Left = 151
-      Top = 82
+      Left = 788
+      Top = 69
       Properties.DecimalPlaces = 0
       Properties.DisplayFormat = ',0'
       Properties.ReadOnly = False
       Properties.UseThousandSeparator = True
       TabOrder = 24
-      Width = 58
+      Width = 125
     end
     object cxLabel12: TcxLabel
-      Left = 8
-      Top = 83
-      Caption = #1057#1090#1086#1080#1084#1086#1089#1090#1100' '#1091#1095#1072#1089#1090#1080#1103' '#1074' '#1072#1082#1094#1080#1080
+      Left = 788
+      Top = 50
+      Caption = #1057#1090#1086#1080#1084#1086#1089#1090#1100' '#1091#1095#1072#1089#1090#1080#1103
     end
     object cxLabel13: TcxLabel
-      Left = 234
-      Top = 83
+      Left = 575
+      Top = 86
       Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
     end
     object edComment: TcxTextEdit
-      Left = 300
-      Top = 82
+      Left = 575
+      Top = 109
       TabOrder = 27
-      Width = 480
+      Width = 338
     end
     object cxLabel14: TcxLabel
-      Left = 240
-      Top = 100
-      Caption = #1055#1088#1077#1076#1089#1090#1072#1074#1080#1090#1077#1083#1100' '#1082#1086#1084#1084#1077#1088#1095#1077#1089#1082#1086#1075#1086' '#1086#1090#1076#1077#1083#1072
+      Left = 13
+      Top = 80
+      Caption = #1060#1048#1054' '#1082#1086#1084#1084#1077#1088#1095#1077#1089#1082#1086#1075#1086' '#1086#1090#1076#1077#1083#1072
     end
     object edPersonalTrade: TcxButtonEdit
-      Left = 240
-      Top = 118
+      Left = 13
+      Top = 98
       Properties.Buttons = <
         item
           Default = True
@@ -477,13 +554,13 @@ inherited PromoForm: TPromoForm
       Width = 263
     end
     object cxLabel16: TcxLabel
-      Left = 511
-      Top = 100
-      Caption = #1055#1088#1077#1076#1089#1090#1072#1074#1080#1090#1077#1083#1100' '#1084#1072#1088#1082#1077#1090#1080#1085#1075#1086#1074#1086#1075#1086' '#1086#1090#1076#1077#1083#1072
+      Left = 303
+      Top = 83
+      Caption = #1060#1048#1054' '#1084#1072#1088#1082#1077#1090#1080#1085#1075#1086#1074#1086#1075#1086' '#1086#1090#1076#1077#1083#1072
     end
     object edPersonal: TcxButtonEdit
-      Left = 511
-      Top = 118
+      Left = 305
+      Top = 106
       Properties.Buttons = <
         item
           Default = True
@@ -491,11 +568,11 @@ inherited PromoForm: TPromoForm
         end>
       Properties.ReadOnly = True
       TabOrder = 31
-      Width = 269
+      Width = 264
     end
     object edUnit: TcxButtonEdit
-      Left = 591
-      Top = 23
+      Left = 579
+      Top = 28
       Properties.Buttons = <
         item
           Default = True
@@ -506,8 +583,8 @@ inherited PromoForm: TPromoForm
       Width = 189
     end
     object cxLabel17: TcxLabel
-      Left = 591
-      Top = 5
+      Left = 579
+      Top = 10
       Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
     end
   end
@@ -906,13 +983,9 @@ inherited PromoForm: TPromoForm
           ItemName = 'bbShowErased'
         end
         item
-          Visible = True
-          ItemName = 'bbShowAll'
-        end
-        item
           BeginGroup = True
           Visible = True
-          ItemName = 'bbAddMask'
+          ItemName = 'dxBarStatic'
         end
         item
           Visible = True
@@ -965,14 +1038,6 @@ inherited PromoForm: TPromoForm
         item
           Visible = True
           ItemName = 'bbRefresh'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarStatic'
-        end
-        item
-          Visible = True
-          ItemName = 'bbMovementItemContainer'
         end
         item
           Visible = True
@@ -1524,8 +1589,8 @@ inherited PromoForm: TPromoForm
   end
   inherited spGetTotalSumm: TdsdStoredProc
     StoredProcName = ''
-    Left = 844
-    Top = 28
+    Left = 876
+    Top = 196
   end
   object PriceListGuides: TdsdGuides
     KeyField = 'Id'
@@ -1578,8 +1643,8 @@ inherited PromoForm: TPromoForm
         DataType = ftString
         ParamType = ptInput
       end>
-    Left = 460
-    Top = 8
+    Left = 452
+    Top = 65520
   end
   object AdvertisingGuides: TdsdGuides
     KeyField = 'Id'
@@ -2024,8 +2089,8 @@ inherited PromoForm: TPromoForm
     Aggregates = <>
     FilterOptions = [foCaseInsensitive]
     Params = <>
-    Left = 864
-    Top = 104
+    Left = 728
+    Top = 128
   end
   object spSelect_Movement_Promo_Print: TdsdStoredProc
     StoredProcName = 'gpSelect_Movement_Promo_Print'
@@ -2043,7 +2108,7 @@ inherited PromoForm: TPromoForm
         ParamType = ptInput
       end>
     PackSize = 1
-    Left = 912
-    Top = 104
+    Left = 776
+    Top = 128
   end
 end

@@ -61,7 +61,7 @@ object PromoPartnerForm: TPromoPartnerForm
         Width = 372
       end
       object clDescName: TcxGridDBColumn
-        Caption = #1058#1080#1087
+        Caption = #1069#1083#1077#1084#1077#1085#1090
         DataBinding.FieldName = 'DescName'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
@@ -71,10 +71,11 @@ object PromoPartnerForm: TPromoPartnerForm
         Caption = #1059#1076#1072#1083#1077#1085
         DataBinding.FieldName = 'isErased'
         PropertiesClassName = 'TcxCheckBoxProperties'
+        Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 64
+        Width = 55
       end
     end
     object cxGridLevel: TcxGridLevel

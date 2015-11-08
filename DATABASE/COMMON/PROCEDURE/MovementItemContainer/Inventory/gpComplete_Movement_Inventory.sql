@@ -440,7 +440,7 @@ BEGIN
      ;
 
      -- заполн€ем таблицу - суммовой расчетный остаток на конец vbOperDate (ContainerId_Goods - значит в разрезе товарных остатков)
-     INSERT INTO _tmpRemainsSumm (ContainerId_Goods, ContainerId, AccountId, GoodsId, OperSumm)
+     INSERT INTO _tmpRemainsSumm (ContainerId_Goods, ContainerId, AccountId, GoodsId, InfoMoneyGroupId, InfoMoneyDestinationId, OperSumm)
         WITH tmpAccount AS (SELECT View_Account.AccountId FROM Object_Account_View AS View_Account WHERE View_Account.AccountGroupId <> zc_Enum_AccountGroup_110000() -- !!!т.е. без счета “ранзит!!!
                            )
            , tmpContainerList AS (SELECT Container.*
@@ -465,6 +465,8 @@ BEGIN
              , tmpContainer.ContainerId
              , tmpContainer.AccountId
              , Container_Count.ObjectId
+             , COALESCE (ObjectLink_InfoMoneyGroup.ChildObjectId, 0)
+             , COALESCE (ObjectLink_InfoMoneyDestination.ChildObjectId, 0)
              , tmpContainer.OperSumm
         FROM (SELECT tmpContainerList.Id AS ContainerId
                    , tmpContainerList.ObjectId  AS AccountId
@@ -481,6 +483,9 @@ BEGIN
               HAVING (tmpContainerList.Amount - COALESCE (SUM (MIContainer.Amount), 0) <> 0)
              ) AS tmpContainer
              LEFT JOIN Container AS Container_Count ON Container_Count.Id = tmpContainer.ContainerId_Goods
+             LEFT JOIN ContainerLinkObject AS CLO_InfoMoney ON CLO_InfoMoney.ContainerId = tmpContainer.ContainerId AND CLO_InfoMoney.DescId = zc_ContainerLinkObject_InfoMoney()
+             LEFT JOIN ObjectLink AS ObjectLink_InfoMoneyGroup ON ObjectLink_InfoMoneyGroup.ObjectId = CLO_InfoMoney.ObjectId AND ObjectLink_InfoMoneyGroup.DescId = zc_ObjectLink_InfoMoney_InfoMoneyGroup()
+             LEFT JOIN ObjectLink AS ObjectLink_InfoMoneyDestination ON ObjectLink_InfoMoneyDestination.ObjectId = CLO_InfoMoney.ObjectId AND ObjectLink_InfoMoneyDestination.DescId = zc_ObjectLink_InfoMoney_InfoMoneyDestination()
      ;
 
      -- добавл€ем из суммовой расчетный остаток в количественный расчетный остаток те товары которых нет, и пробуем найти MovementItemId (что бы расчетный остаток св€зать с фактическим)
@@ -668,7 +673,12 @@ BEGIN
               SELECT _tmpRemainsCount.MovementItemId
                    , COALESCE (Container_Summ.Id, 0) AS ContainerId
                    , COALESCE (Container_Summ.ObjectId, 0) AS AccountId
-                   , -1 * CASE WHEN vbOperDate <= '01.06.2014' THEN 0 ELSE CAST (_tmpRemainsCount.OperCount * COALESCE (HistoryCost.Price, 0) AS NUMERIC (16,4)) END AS OperSumm
+                   , -1 * CASE WHEN vbOperDate <= '01.06.2014' THEN 0
+                               WHEN _tmpRemainsCount.OperCount = 0
+                                AND (_tmpRemainsSumm.InfoMoneyGroupId IN (zc_Enum_InfoMoneyGroup_10000(), zc_Enum_InfoMoneyGroup_10000()) -- ќсновное сырье + ƒоходы
+                                     OR _tmpRemainsSumm.InfoMoneyDestinationId IN (zc_Enum_InfoMoneyDestination_20600(), zc_Enum_InfoMoneyDestination_20700(), zc_Enum_InfoMoneyDestination_20800(), zc_Enum_InfoMoneyDestination_20900(), zc_Enum_InfoMoneyDestination_21000(), zc_Enum_InfoMoneyDestination_21100(), zc_Enum_InfoMoneyDestination_21300()) -- ѕрочие материалы + “овары + »рна + „апли + ƒворкин + Ќезавершенное производство
+                                    )
+                                    THEN -1 * _tmpRemainsSumm.OperSumm ELSE CAST (_tmpRemainsCount.OperCount * COALESCE (HistoryCost.Price, 0) AS NUMERIC (16,4)) END AS OperSumm
               FROM _tmpRemainsCount
                    LEFT JOIN Container AS Container_Summ ON Container_Summ.ParentId = _tmpRemainsCount.ContainerId_Goods
                                                         AND Container_Summ.DescId = zc_Container_Summ()
@@ -696,7 +706,7 @@ BEGIN
                                     , 428363 -- —клад возвратов ф.„еркассы ( ировоград)
                                      )
              UNION ALL
-              -- 2.2. это расчетные остатки (их надо вычесть) -- !!!дл€ "наши" подр до '01.07.2015'!!!!
+              -- 2.2. это расчетные остатки (их надо вычесть) -- !!!дл€ "филиалы" + "наши" подр до 01.07.2015 + "филиалы" за 31.10.2015!!!!
                SELECT _tmpRemainsCount.MovementItemId
                    , _tmpRemainsSumm.ContainerId
                    , _tmpRemainsSumm.AccountId
@@ -720,7 +730,7 @@ BEGIN
                      AND vbOperDate = '31.10.2015'
                     )
              UNION ALL
-              -- это расчетные остатки (их надо вычесть) - !!!
+              -- это расчетные остатки (их надо вычесть) - !!!дл€ "филиалы"!!!!
               SELECT _tmpRemainsCount.MovementItemId
                    , 0 AS ContainerId
                    , 0 AS AccountId
@@ -756,7 +766,7 @@ BEGIN
                      AND vbOperDate <> '31.10.2015'
                     )
              UNION ALL
-              -- это расчетные остатки (их надо вычесть) -- !!!
+              -- это расчетные остатки (их надо вычесть) -- !!!дл€ "филиалы"!!!!
                SELECT _tmpRemainsCount.MovementItemId
                    , 0 AS ContainerId
                    , 0 AS AccountId
