@@ -1,7 +1,7 @@
 inherited PromoJournalForm: TPromoJournalForm
   Caption = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' <'#1040#1082#1094#1080#1080'>'
   ClientHeight = 430
-  ExplicitHeight = 468
+  ExplicitHeight = 465
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -94,7 +94,7 @@ inherited PromoJournalForm: TPromoJournalForm
             Width = 101
           end
           object colPersonalTradeName: TcxGridDBColumn
-            Caption = #1060#1048#1054' '#1082#1086#1084#1084#1077#1088#1095#1077#1089#1082#1086#1075#1086' '#1086#1090#1076#1077#1083#1072
+            Caption = #1060#1048#1054' ('#1082#1086#1084#1084#1077#1088#1095#1077#1089#1082#1080#1081' '#1086#1090#1076#1077#1083')'
             DataBinding.FieldName = 'PersonalTradeName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
@@ -102,7 +102,7 @@ inherited PromoJournalForm: TPromoJournalForm
             Width = 103
           end
           object colPersonalName: TcxGridDBColumn
-            Caption = #1060#1048#1054' '#1084#1072#1088#1082#1077#1090#1080#1085#1075#1086#1074#1086#1075#1086' '#1086#1090#1076#1077#1083#1072
+            Caption = #1060#1048#1054' ('#1084#1072#1088#1082#1077#1090#1080#1085#1075#1086#1074#1099#1081' '#1086#1090#1076#1077#1083')'
             DataBinding.FieldName = 'PersonalName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter

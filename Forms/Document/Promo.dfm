@@ -3,27 +3,27 @@ inherited PromoForm: TPromoForm
   ClientHeight = 481
   ClientWidth = 928
   ExplicitWidth = 944
-  ExplicitHeight = 519
+  ExplicitHeight = 516
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 141
     Width = 928
     Height = 340
-    ExplicitTop = 166
+    ExplicitTop = 141
     ExplicitWidth = 928
-    ExplicitHeight = 315
+    ExplicitHeight = 340
     ClientRectBottom = 340
     ClientRectRight = 928
     inherited tsMain: TcxTabSheet
       Caption = '&1. '#1058#1086#1074#1072#1088#1099
       ExplicitWidth = 928
-      ExplicitHeight = 291
+      ExplicitHeight = 316
       inherited cxGrid: TcxGrid
         Width = 928
         Height = 135
         ExplicitWidth = 928
-        ExplicitHeight = 110
+        ExplicitHeight = 135
         inherited cxGridDBTableView: TcxGridDBTableView
           Styles.Content = nil
           Styles.Inactive = nil
@@ -137,7 +137,6 @@ inherited PromoForm: TPromoForm
         Height = 173
         Align = alBottom
         TabOrder = 1
-        ExplicitTop = 118
         object cxSplitter1: TcxSplitter
           Left = 569
           Top = 1
@@ -344,7 +343,6 @@ inherited PromoForm: TPromoForm
         HotZoneClassName = 'TcxMediaPlayer8Style'
         AlignSplitter = salBottom
         Control = Panel1
-        ExplicitTop = 110
       end
     end
   end
@@ -545,7 +543,7 @@ inherited PromoForm: TPromoForm
     object cxLabel14: TcxLabel
       Left = 8
       Top = 75
-      Caption = #1060#1048#1054' '#1082#1086#1084#1084#1077#1088#1095#1077#1089#1082#1086#1075#1086' '#1086#1090#1076#1077#1083#1072
+      Caption = #1060#1048#1054' ('#1082#1086#1084#1084#1077#1088#1095#1077#1089#1082#1080#1081' '#1086#1090#1076#1077#1083')'
     end
     object edPersonalTrade: TcxButtonEdit
       Left = 8
@@ -562,7 +560,7 @@ inherited PromoForm: TPromoForm
     object cxLabel16: TcxLabel
       Left = 278
       Top = 75
-      Caption = #1060#1048#1054' '#1084#1072#1088#1082#1077#1090#1080#1085#1075#1086#1074#1086#1075#1086' '#1086#1090#1076#1077#1083#1072
+      Caption = #1060#1048#1054' ('#1084#1072#1088#1082#1077#1090#1080#1085#1075#1086#1074#1099#1081' '#1086#1090#1076#1077#1083')'
     end
     object edPersonal: TcxButtonEdit
       Left = 278
@@ -1453,12 +1451,6 @@ inherited PromoForm: TPromoForm
   end
   inherited GuidesFiller: TGuidesFiller
     GuidesList = <
-      item
-        Guides = PromoKindGuides
-      end
-      item
-        Guides = UnitGuides
-      end
       item
         Guides = AdvertisingGuides
       end
