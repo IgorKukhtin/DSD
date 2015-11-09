@@ -178,6 +178,14 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
             Options.Editing = False
             Width = 70
           end
+          object MovementComment: TcxGridDBColumn
+            Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077' '#1080#1079' '#1076#1086#1082'.'
+            DataBinding.FieldName = 'MovementComment'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 70
+          end
           object colOperDate: TcxGridDBColumn
             Caption = #1044#1072#1090#1072
             DataBinding.FieldName = 'OperDate'
