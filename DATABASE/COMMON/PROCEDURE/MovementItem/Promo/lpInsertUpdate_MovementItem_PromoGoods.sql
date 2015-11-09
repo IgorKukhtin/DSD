@@ -29,46 +29,25 @@ BEGIN
     ioId := lpInsertUpdate_MovementItem (ioId, zc_MI_Master(), inGoodsId, inMovementId, inAmount, NULL);
     
     -- сохранили <цена в прайсе>
-    IF inPrice is not null
-    THEN
-        PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_Price(), ioId, inPrice);
-    END IF;
-
+    PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_Price(), ioId, COALESCE(inPrice,0));
+    
     -- сохранили <Цена отгрузки без учета НДС, с учетом скидки, грн>
-    IF inPriceWithOutVAT is not null
-    THEN
-        PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_PriceWithOutVAT(), ioId, inPriceWithOutVAT);
-    END IF;
-
+    PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_PriceWithOutVAT(), ioId, COALESCE(inPriceWithOutVAT,0));
+    
     -- сохранили <Цена отгрузки с учетом НДС, с учетом скидки, грн>
-    IF inPriceWithOutVAT is not null
-    THEN
-        PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_PriceWithVAT(), ioId, inPriceWithVAT);
-    END IF;
-
+    PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_PriceWithVAT(), ioId, COALESCE(inPriceWithVAT,0));
+    
     -- сохранили <Объем продаж в аналогичный период, кг>
-    IF inPriceWithOutVAT is not null
-    THEN
-        PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_AmountReal(), ioId, inAmountReal);
-    END IF;
-
+    PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_AmountReal(), ioId, COALESCE(inAmountReal,0));
+    
     -- сохранили <Минимум планируемого объема продаж на акционный период (в кг)>
-    IF inPriceWithOutVAT is not null
-    THEN
-        PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_AmountPlanMin(), ioId, inAmountPlanMin);
-    END IF;
-
+    PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_AmountPlanMin(), ioId, COALESCE(inAmountPlanMin,0));
+    
     -- сохранили <Максимум планируемого объема продаж на акционный период (в кг)>
-    IF inPriceWithOutVAT is not null
-    THEN
-        PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_AmountPlanMax(), ioId, inAmountPlanMax);
-    END IF;
-
+    PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_AmountPlanMax(), ioId, COALESCE(inAmountPlanMax,0));
+    
     -- сохранили связь с <Вид товара>
-    IF inPriceWithOutVAT is not null
-    THEN
-        PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_GoodsKind(), ioId, inGoodsKindId);
-    END IF;
+    PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_GoodsKind(), ioId, inGoodsKindId);
 
     -- сохранили протокол
     PERFORM lpInsert_MovementItemProtocol (ioId, inUserId, vbIsInsert);

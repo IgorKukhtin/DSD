@@ -42,6 +42,8 @@ type
     clDescName: TcxGridDBColumn;
     dxBarButton1: TdxBarButton;
     ShowErased: TBooleanStoredProcAction;
+    colJuridical_Name: TcxGridDBColumn;
+    colRetail_Name: TcxGridDBColumn;
   private
     { Private declarations }
   public

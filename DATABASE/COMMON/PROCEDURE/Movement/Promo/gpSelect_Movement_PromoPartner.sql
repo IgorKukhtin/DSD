@@ -13,6 +13,8 @@ RETURNS TABLE (Id               Integer     --Идентификатор
              , PartnerName      TVarChar    --Покупатель для акции
              , PartnerDescId    Integer     --Тип Покупатель для акции
              , PartnerDescName  TVarChar    --Тип Покупатель для акции
+             , Juridical_Name   TVarChar    --Юрлицо
+             , Retail_Name      TVarChar    --Сеть
              , isErased         Boolean     --Удален
       )
 
@@ -28,6 +30,8 @@ BEGIN
           , Movement_PromoPartner.PartnerName         --Покупатель для акции
           , Movement_PromoPartner.PartnerDescId       --Тип Покупатель для акции
           , Movement_PromoPartner.PartnerDescName     --Тип Покупатель для акции
+          , Movement_PromoPartner.Juridical_Name      --Юрлицо
+          , Movement_PromoPartner.Retail_Name         --Сеть
           , Movement_PromoPartner.isErased            --Удален
         FROM
             Movement_PromoPartner_View AS Movement_PromoPartner
