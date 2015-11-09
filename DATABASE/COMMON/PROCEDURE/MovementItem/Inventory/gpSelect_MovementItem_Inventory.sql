@@ -20,6 +20,7 @@ RETURNS TABLE (Id Integer, GoodsId Integer, GoodsCode Integer, GoodsName TVarCha
              , InfoMoneyCode Integer, InfoMoneyGroupName TVarChar, InfoMoneyDestinationName TVarChar, InfoMoneyName TVarChar
              , UnitId Integer, UnitName TVarChar
              , StorageId Integer, StorageName TVarChar
+             , ContainerId Integer
              , isErased Boolean
              )
 AS
@@ -70,6 +71,7 @@ BEGIN
            , CAST (0 AS Integer)                AS StorageId
            , CAST (NULL AS TVarChar)            AS StorageName
 
+           , 0 :: Integer AS ContainerId
 
            , FALSE AS isErased
 
@@ -144,6 +146,8 @@ BEGIN
            , Object_Unit.ValueData              AS UnitName
            , Object_Storage.Id                  AS StorageId
            , Object_Storage.ValueData           AS StorageName
+
+           , MIFloat_ContainerId.ValueData :: Integer AS ContainerId
            , MovementItem.isErased              AS isErased
 
        FROM (SELECT FALSE AS isErased UNION ALL SELECT inIsErased AS isErased WHERE inIsErased = TRUE) AS tmpIsErased
@@ -151,6 +155,10 @@ BEGIN
                              AND MovementItem.DescId     = zc_MI_Master()
                              AND MovementItem.isErased   = tmpIsErased.isErased
             LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = MovementItem.ObjectId
+
+            LEFT JOIN MovementItemFloat AS MIFloat_ContainerId
+                                        ON MIFloat_ContainerId.MovementItemId = MovementItem.Id
+                                       AND MIFloat_ContainerId.DescId = zc_MIFloat_ContainerId()
 
             LEFT JOIN MovementItemFloat AS MIFloat_HeadCount
                                         ON MIFloat_HeadCount.MovementItemId = MovementItem.Id
@@ -256,6 +264,9 @@ BEGIN
            , Object_Unit.ValueData              AS UnitName
            , Object_Storage.Id                  AS StorageId
            , Object_Storage.ValueData           AS StorageName
+
+           , MIFloat_ContainerId.ValueData :: Integer AS ContainerId
+
            , MovementItem.isErased              AS isErased
 
        FROM (SELECT FALSE AS isErased UNION ALL SELECT inIsErased AS isErased WHERE inIsErased = TRUE) AS tmpIsErased
@@ -263,6 +274,10 @@ BEGIN
                              AND MovementItem.DescId     = zc_MI_Master()
                              AND MovementItem.isErased   = tmpIsErased.isErased
             LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = MovementItem.ObjectId
+
+            LEFT JOIN MovementItemFloat AS MIFloat_ContainerId
+                                        ON MIFloat_ContainerId.MovementItemId = MovementItem.Id
+                                       AND MIFloat_ContainerId.DescId = zc_MIFloat_ContainerId()
 
             LEFT JOIN MovementItemFloat AS MIFloat_HeadCount
                                         ON MIFloat_HeadCount.MovementItemId = MovementItem.Id

@@ -16,6 +16,7 @@ BEGIN
      -- проверка прав пользователя на вызов процедуры
      -- PERFORM lpCheckRight (inSession, zc_Enum_InsertUpdate_HistoryCost());
 
+     RETURN; 
      -- IF inIsUpdate = TRUE THEN RETURN; END IF;
 
      -- таблица - Список

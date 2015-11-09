@@ -2,6 +2,8 @@ inherited InventoryForm: TInventoryForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1048#1085#1074#1077#1085#1090#1072#1088#1080#1079#1072#1094#1080#1103'>'
   ClientHeight = 668
   ClientWidth = 1020
+  ExplicitLeft = -247
+  ExplicitTop = -246
   ExplicitWidth = 1036
   ExplicitHeight = 703
   PixelsPerInch = 96
@@ -315,6 +317,17 @@ inherited InventoryForm: TInventoryForm
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 100
+          end
+          object ContainerId: TcxGridDBColumn [20]
+            DataBinding.FieldName = 'ContainerId'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.AssignedValues.DisplayFormat = True
+            Properties.DecimalPlaces = 0
+            Properties.ReadOnly = True
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 55
           end
         end
       end

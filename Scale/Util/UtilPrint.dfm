@@ -458,7 +458,6 @@ object UtilPrintForm: TUtilPrintForm
           UserName = 'frxDBDMaster'
           IndexFieldNames = 'GroupName_Juridical;GoodsName_Juridical;GoodsName;GoodsKindName'
         end>
-      CopiesCount = 1
       Params = <
         item
           Name = 'Id'
@@ -507,7 +506,6 @@ object UtilPrintForm: TUtilPrintForm
             'goodsgroupname;GroupName_Juridical;GoodsName_Juridical;GoodsName' +
             ';GoodsKindName'
         end>
-      CopiesCount = 1
       Params = <
         item
           Name = 'Id'
@@ -538,7 +536,6 @@ object UtilPrintForm: TUtilPrintForm
           UserName = 'frxDBDMaster'
           IndexFieldNames = 'GroupName_Juridical;GoodsName_Juridical;GoodsName;GoodsKindName'
         end>
-      CopiesCount = 1
       Params = <
         item
           Name = 'Id'
@@ -597,7 +594,6 @@ object UtilPrintForm: TUtilPrintForm
           DataSet = PrintItemsCDS
           UserName = 'frxDBDMaster'
         end>
-      CopiesCount = 1
       Params = <
         item
           Name = 'Id'
@@ -659,7 +655,6 @@ object UtilPrintForm: TUtilPrintForm
           DataSet = PrintItemsCDS
           UserName = 'frxDBDMaster'
         end>
-      CopiesCount = 1
       Params = <
         item
           Name = 'Id'
@@ -720,7 +715,6 @@ object UtilPrintForm: TUtilPrintForm
           DataSet = PrintItemsCDS
           UserName = 'frxDBDMaster'
         end>
-      CopiesCount = 1
       Params = <
         item
           Name = 'Id'
@@ -773,7 +767,6 @@ object UtilPrintForm: TUtilPrintForm
           DataSet = PrintItemsSverkaCDS
           UserName = 'frxDBDSverka'
         end>
-      CopiesCount = 1
       Params = <
         item
           Name = 'Id'
@@ -826,7 +819,6 @@ object UtilPrintForm: TUtilPrintForm
           DataSet = PrintItemsSverkaCDS
           UserName = 'frxDBDSverka'
         end>
-      CopiesCount = 1
       Params = <
         item
           Name = 'Id'
@@ -862,7 +854,6 @@ object UtilPrintForm: TUtilPrintForm
             'WeighingNumber;GoodsGroupNameFull;GoodsName_two;GoodsKindName;Nu' +
             'mOrder'
         end>
-      CopiesCount = 1
       Params = <
         item
           Name = 'Id'
@@ -893,7 +884,6 @@ object UtilPrintForm: TUtilPrintForm
           UserName = 'frxDBDMaster'
           IndexFieldNames = 'WeighingNumber;BoxNumber;NumOrder'
         end>
-      CopiesCount = 1
       Params = <
         item
           Name = 'Id'
@@ -936,7 +926,6 @@ object UtilPrintForm: TUtilPrintForm
           DataSet = PrintItemsCDS
           UserName = 'frxDBDMaster'
         end>
-      CopiesCount = 1
       Params = <
         item
           Name = 'Id'
@@ -1153,7 +1142,6 @@ object UtilPrintForm: TUtilPrintForm
           UserName = 'frxDBDMaster2'
           IndexFieldNames = 'QualityCode;GoodsGroupName;GoodsName;GoodsKindName'
         end>
-      CopiesCount = 1
       Params = <
         item
           Name = 'Id'
@@ -1195,13 +1183,17 @@ object UtilPrintForm: TUtilPrintForm
           DataSet = PrintItemsCDS
           UserName = 'frxDBDMaster'
         end>
-      CopiesCount = 1
       Params = <
         item
           Name = 'Id'
           Value = Null
           Component = FormParams
           ComponentItem = 'Id'
+        end
+        item
+          Name = 'PrintParam'
+          Value = '1'
+          DataType = ftFloat
         end>
       ReportName = 'PrintMovement_SendOnPrice'
       ReportNameParam.Value = 'PrintMovement_SendOnPrice'
@@ -1237,13 +1229,17 @@ object UtilPrintForm: TUtilPrintForm
           DataSet = PrintItemsCDS
           UserName = 'frxDBDMaster'
         end>
-      CopiesCount = 1
       Params = <
         item
           Name = 'Id'
           Value = Null
           Component = FormParams
           ComponentItem = 'Id'
+        end
+        item
+          Name = 'PrintParam'
+          Value = '2'
+          DataType = ftFloat
         end>
       ReportName = 'PrintMovement_SendOnPrice'
       ReportNameParam.Name = #1055#1088#1080#1093#1086#1076
@@ -1272,7 +1268,6 @@ object UtilPrintForm: TUtilPrintForm
           DataSet = PrintItemsCDS
           UserName = 'frxDBDMaster'
         end>
-      CopiesCount = 1
       Params = <
         item
           Name = 'Id'
@@ -1306,7 +1301,6 @@ object UtilPrintForm: TUtilPrintForm
           DataSet = PrintItemsCDS
           UserName = 'frxDBDMaster'
         end>
-      CopiesCount = 1
       Params = <
         item
           Name = 'Id'
@@ -1340,7 +1334,6 @@ object UtilPrintForm: TUtilPrintForm
           DataSet = PrintItemsCDS
           UserName = 'frxDBDMaster'
         end>
-      CopiesCount = 1
       Params = <
         item
           Name = 'Id'
@@ -1374,7 +1367,6 @@ object UtilPrintForm: TUtilPrintForm
           DataSet = PrintItemsCDS
           UserName = 'frxDBDMaster'
         end>
-      CopiesCount = 1
       Params = <
         item
           Name = 'Id'
@@ -1409,7 +1401,6 @@ object UtilPrintForm: TUtilPrintForm
           UserName = 'frxDBDMaster'
           IndexFieldNames = 'GoodsGroupNameFull;GoodsName'
         end>
-      CopiesCount = 1
       Params = <
         item
           Name = 'Id'
@@ -1444,7 +1435,6 @@ object UtilPrintForm: TUtilPrintForm
           UserName = 'frxDBDMaster'
           IndexFieldNames = 'GoodsGroupNameFull;GoodsName;GoodsKindName;PartionGoods'
         end>
-      CopiesCount = 1
       Params = <
         item
           Name = 'Id'
@@ -1479,7 +1469,6 @@ object UtilPrintForm: TUtilPrintForm
           UserName = 'frxDBDMaster'
           IndexFieldNames = 'GoodsGroupNameFull;GoodsName;GoodsKindName;PartionGoods'
         end>
-      CopiesCount = 1
       Params = <
         item
           Name = 'Id'
@@ -1691,13 +1680,6 @@ object UtilPrintForm: TUtilPrintForm
         Value = Null
         Component = FormParams
         ComponentItem = 'Id'
-        ParamType = ptInput
-      end
-      item
-        Name = 'inReportType'
-        Value = '0'
-        Component = FormParams
-        ComponentItem = 'ReportType'
         ParamType = ptInput
       end>
     PackSize = 1

@@ -60,6 +60,7 @@ type
     mactUpdate_SummAll: TMultiAction;
     GoodsKindName_Complete: TcxGridDBColumn;
     actGoodsKindCompleteChoiceMaster: TOpenChoiceForm;
+    ContainerId: TcxGridDBColumn;
   private
     { Private declarations }
   public

@@ -1,7 +1,7 @@
 -- Function: gpSelect_Movement_SendOnPrice_Print()
 
---DROP FUNCTION IF EXISTS gpSelect_Movement_SendOnPrice_Print (Integer, TVarChar);
---DROP FUNCTION IF EXISTS gpSelect_Movement_SendOnPrice_Print (Integer, Integer, TVarChar);
+-- DROP FUNCTION IF EXISTS gpSelect_Movement_SendOnPrice_Print (Integer, TVarChar);
+-- DROP FUNCTION IF EXISTS gpSelect_Movement_SendOnPrice_Print (Integer, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_Movement_SendOnPrice_Print(
     IN inMovementId        Integer  , -- ключ Документа
