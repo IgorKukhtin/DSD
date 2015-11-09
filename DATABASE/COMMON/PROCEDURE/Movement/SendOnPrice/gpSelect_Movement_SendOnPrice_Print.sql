@@ -451,6 +451,13 @@ BEGIN
 
            , CAST ((tmpMI.AmountOut * (CASE WHEN Object_Measure.Id = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData, 0) ELSE 1 END )) AS TFloat) - 
              CAST ((tmpMI.AmountIn * (CASE WHEN Object_Measure.Id = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData, 0) ELSE 1 END )) AS TFloat)     AS Amount_WeightDiff
+           
+           , CAST ((tmpMI.AmountIn * (CASE WHEN Object_Measure.Id = zc_Measure_Sh() THEN 1 ELSE 0 END )) AS TFloat)     AS AmountIn_sh
+           , CAST ((tmpMI.AmountOut * (CASE WHEN Object_Measure.Id = zc_Measure_Sh() THEN 1 ELSE 0 END )) AS TFloat)    AS AmountOut_sh
+           
+           , CAST ((tmpMI.AmountIn * (CASE WHEN Object_Measure.Id = zc_Measure_Sh() THEN 1 ELSE 0 END )) AS TFloat)  -
+             CAST ((tmpMI.AmountOut * (CASE WHEN Object_Measure.Id = zc_Measure_Sh() THEN 1 ELSE 0 END )) AS TFloat)    AS AmountDiffsh
+
 
        FROM (SELECT MovementItem.ObjectId AS GoodsId
                   , COALESCE (MILinkObject_GoodsKind.ObjectId, 0) AS GoodsKindId
