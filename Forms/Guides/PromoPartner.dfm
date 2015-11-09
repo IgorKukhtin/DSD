@@ -44,13 +44,27 @@ object PromoPartnerForm: TPromoPartnerForm
       OptionsView.GroupByBox = False
       OptionsView.Indicator = True
       Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
+      object colRetail_Name: TcxGridDBColumn
+        Caption = #1057#1077#1090#1100
+        DataBinding.FieldName = 'Retail_Name'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 103
+      end
+      object colJuridical_Name: TcxGridDBColumn
+        Caption = #1070#1088#1083#1080#1094#1086
+        DataBinding.FieldName = 'Juridical_Name'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 100
+      end
       object clCode: TcxGridDBColumn
         Caption = #1050#1086#1076
         DataBinding.FieldName = 'Code'
         HeaderAlignmentHorz = taRightJustify
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 62
+        Width = 57
       end
       object clName: TcxGridDBColumn
         Caption = #1053#1072#1079#1074#1072#1085#1080#1077
@@ -58,14 +72,14 @@ object PromoPartnerForm: TPromoPartnerForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 372
+        Width = 269
       end
       object clDescName: TcxGridDBColumn
         Caption = #1069#1083#1077#1084#1077#1085#1090
         DataBinding.FieldName = 'DescName'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 203
+        Width = 172
       end
       object clErased: TcxGridDBColumn
         Caption = #1059#1076#1072#1083#1077#1085
@@ -257,6 +271,20 @@ object PromoPartnerForm: TPromoPartnerForm
           Value = Null
           Component = ClientDataSet
           ComponentItem = 'DescName'
+        end
+        item
+          Name = 'Juridical_Name'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'Juridical_Name'
+          DataType = ftString
+        end
+        item
+          Name = 'Retail_Name'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'Retail_Name'
+          DataType = ftString
         end>
       Caption = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
       Hint = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
