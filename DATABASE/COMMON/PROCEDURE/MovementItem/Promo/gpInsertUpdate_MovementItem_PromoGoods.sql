@@ -77,18 +77,19 @@ BEGIN
         WHERE
             Price.GoodsId = inGoodsId;
     
-        --Если необходимо - привести цену к цене с НДС
-        IF vbPriceWithWAT = FALSE
+         --Если необходимо - привести цену к цене с НДС
+        IF vbPriceWithWAT = TRUE
         THEN
-            ioPrice := ROUND(ioPrice*(vbVAT/100.0+1),2);
+            ioPrice := ROUND(ioPrice/(vbVAT/100.0+1),2);
         END IF;
     END IF;
     
-    --расчитать <Цена отгрузки с учетом НДС, с учетом скидки, грн>
-    outPriceWithVAT := ROUND(ioPrice - COALESCE(ioPrice * inAmount/100.0),2);
-    
     --расчитать <Цена отгрузки без учета НДС, с учетом скидки, грн>
-    outPriceWithOutVAT := ROUND(outPriceWithVAT /((vbVAT/100.0)+1));
+    outPriceWithOutVAT := ROUND(ioPrice - COALESCE(ioPrice * inAmount/100.0),2);
+    
+    --расчитать <Цена отгрузки с учетом НДС, с учетом скидки, грн>
+    outPriceWithVAT := ROUND(outPriceWithOutVAT * ((vbVAT/100.0)+1),2);
+    
     
     -- сохранили
     ioId := lpInsertUpdate_MovementItem_PromoGoods (ioId                 := ioId

@@ -135,6 +135,8 @@ type
     MenuItem12: TMenuItem;
     PrintHead: TClientDataSet;
     spSelect_Movement_Promo_Print: TdsdStoredProc;
+    colJuridical_Name: TcxGridDBColumn;
+    colRetail_Name: TcxGridDBColumn;
   private
     { Private declarations }
   public

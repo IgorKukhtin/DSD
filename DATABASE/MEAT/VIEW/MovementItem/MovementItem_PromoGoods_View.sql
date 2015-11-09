@@ -40,7 +40,7 @@ CREATE OR REPLACE VIEW MovementItem_PromoGoods_View AS
         LEFT JOIN Object AS Object_Goods 
                          ON Object_Goods.Id = MovementItem.ObjectId
         LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind 
-                                         ON MILinkObject_GoodsKind.MovementItemId = MovementItem.ObjectId
+                                         ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
                                         AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
         LEFT JOIN Object AS Object_GoodsKind
                          ON Object_GoodsKind.Id = MILinkObject_GoodsKind.ObjectId
