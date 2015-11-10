@@ -34,7 +34,7 @@ BEGIN
             ''::TVarChar as GroupName,
             'Период акции (На полке)'::TVarChar as LineName,
             (SELECT 
-                CAST(Movement_Promo.StartPromo as TVarChar)||' - '||CAST(Movement_Promo.EndPromo as TVarChar)
+                TO_CHAR(Movement_Promo.StartPromo , 'DD.MM.YYYY')||' - '||TO_CHAR(Movement_Promo.EndPromo, 'DD.MM.YYYY')
              FROM Movement_Promo_View AS Movement_Promo
              WHERE Movement_Promo.Id = inMovementId)::TEXT AS LineValue
         UNION ALL
@@ -43,7 +43,7 @@ BEGIN
             ''::TVarChar as GroupName,
             'Период отгрузки по акционной цене в сети'::TVarChar as LineName,
             (SELECT 
-                CAST(Movement_Promo.StartSale as TVarChar)||' - '||CAST(Movement_Promo.EndSale as TVarChar)
+                TO_CHAR(Movement_Promo.StartSale, 'DD.MM.YYYY')||' - '||TO_CHAR(Movement_Promo.EndSale, 'DD.MM.YYYY')
              FROM Movement_Promo_View AS Movement_Promo
              WHERE Movement_Promo.Id = inMovementId)::TEXT AS LineValue
         UNION ALL
@@ -52,7 +52,7 @@ BEGIN
             ''::TVarChar as GroupName,
             'Стоимость участия, грн'::TVarChar as LineName,
             (SELECT 
-                CAST(Movement_Promo.CostPromo as TVarChar)
+                replace(TO_CHAR(Movement_Promo.CostPromo, 'FM9990D09')||' ','.0 ','')
              FROM Movement_Promo_View AS Movement_Promo
              WHERE Movement_Promo.Id = inMovementId)::TEXT AS LineValue
         UNION ALL
@@ -60,7 +60,7 @@ BEGIN
             5 as LineNo,
             ''::TVarChar as GroupName,
             'Условия участия (в счет маркетингового бюджета или по выставленному счету)'::TVarChar as LineName,
-            (SELECT STRING_AGG(MovementItem_PromoCondition.ConditionPromoName||chr(9)||CAST(MovementItem_PromoCondition.Amount as TVarChar), chr(13)||chr(10)) 
+            (SELECT STRING_AGG(MovementItem_PromoCondition.ConditionPromoName||': '||replace(TO_CHAR(MovementItem_PromoCondition.Amount,'FM9990D09')||' ','.0 ',''), chr(13)||chr(10)) 
              FROM MovementItem_PromoCondition_View AS MovementItem_PromoCondition 
              WHERE MovementItem_PromoCondition.MovementId = inMovementId)::TEXT AS LineValue
         UNION ALL
@@ -76,7 +76,7 @@ BEGIN
             7 as LineNo,
             ''::TVarChar as GroupName,
             '% дополнительной скидки'::TVarChar as LineName,
-            (SELECT STRING_AGG(CAST(MI_PromoGoods.Amount AS TVarChar)||'%'||chr(9)||MI_PromoGoods.GoodsName, chr(13)||chr(10)) 
+            (SELECT STRING_AGG(replace(TO_CHAR(MI_PromoGoods.Amount,'FM9990D09')||' ','.0 ','')||'% '||chr(9)||MI_PromoGoods.GoodsName, chr(13)||chr(10)) 
              FROM MovementItem_PromoGoods_View AS MI_PromoGoods
              WHERE MI_PromoGoods.MovementId = inMovementId)::TEXT AS LineValue
         UNION ALL
@@ -84,7 +84,7 @@ BEGIN
             8 as LineNo,
             ''::TVarChar as GroupName,
             'Цена отгрузки без учета НДС, с учетом скидки, грн'::TVarChar as LineName,
-            (SELECT STRING_AGG(CAST(MI_PromoGoods.PriceWithOutVAT AS TVarChar)||'грн.'||chr(9)||MI_PromoGoods.GoodsName, chr(13)||chr(10)) 
+            (SELECT STRING_AGG(replace(TO_CHAR(MI_PromoGoods.PriceWithOutVAT,'FM9990D09')||' ','.0 ','')||' '||chr(9)||MI_PromoGoods.GoodsName, chr(13)||chr(10)) 
              FROM MovementItem_PromoGoods_View AS MI_PromoGoods
              WHERE MI_PromoGoods.MovementId = inMovementId)::TEXT AS LineValue
         UNION ALL
@@ -92,7 +92,7 @@ BEGIN
             9 as LineNo,
             ''::TVarChar as GroupName,
             'Цена отгрузки с учетом НДС, с учетом скидки, грн'::TVarChar as LineName,
-            (SELECT STRING_AGG(CAST(MI_PromoGoods.PriceWithVAT AS TVarChar)||'грн.'||chr(9)||MI_PromoGoods.GoodsName, chr(13)||chr(10)) 
+            (SELECT STRING_AGG(replace(TO_CHAR(MI_PromoGoods.PriceWithVAT,'FM9990D09')||' ','.0 ','')||' '||chr(9)||MI_PromoGoods.GoodsName, chr(13)||chr(10)) 
              FROM MovementItem_PromoGoods_View AS MI_PromoGoods
              WHERE MI_PromoGoods.MovementId = inMovementId)::TEXT AS LineValue
         UNION ALL
@@ -100,7 +100,7 @@ BEGIN
             10 as LineNo,
             ''::TVarChar as GroupName,
             'Объем продаж в аналогичный период, кг'::TVarChar as LineName,
-            (SELECT STRING_AGG(CAST(MI_PromoGoods.AmountReal AS TVarChar)||'кг'||chr(9)||MI_PromoGoods.GoodsName, chr(13)||chr(10)) 
+            (SELECT STRING_AGG(replace(TO_CHAR(MI_PromoGoods.AmountReal,'FM9990D09')||' ','.0 ','')||' '||chr(9)||MI_PromoGoods.GoodsName, chr(13)||chr(10)) 
              FROM MovementItem_PromoGoods_View AS MI_PromoGoods
              WHERE MI_PromoGoods.MovementId = inMovementId)::TEXT AS LineValue
         UNION ALL
@@ -108,7 +108,7 @@ BEGIN
             11 as LineNo,
             ''::TVarChar as GroupName,
             'Планируемый объем продаж на акционный период (в кг)'::TVarChar as LineName,
-            (SELECT STRING_AGG(CAST(MI_PromoGoods.AmountPlanMin AS TVarChar)||' - '||CAST(MI_PromoGoods.AmountPlanMax AS TVarChar)||chr(9)||MI_PromoGoods.GoodsName, chr(13)||chr(10)) 
+            (SELECT STRING_AGG(replace(TO_CHAR(MI_PromoGoods.AmountPlanMin,'FM9990D09')||' ','.0 ','')||' - '||replace(TO_CHAR(MI_PromoGoods.AmountPlanMax,'FM9990D09')||' ','.0 ','')||' '||chr(9)||MI_PromoGoods.GoodsName, chr(13)||chr(10)) 
              FROM MovementItem_PromoGoods_View AS MI_PromoGoods
              WHERE MI_PromoGoods.MovementId = inMovementId)::TEXT AS LineValue
         UNION ALL
@@ -124,7 +124,7 @@ BEGIN
             13 as LineNo,
             ''::TVarChar as GroupName,
             'Количество товара поставляемого в период акции в данном виде упаковки, кг'::TVarChar as LineName,
-            (SELECT STRING_AGG('_______'||Chr(9)||MI_PromoGoods.GoodsName, chr(13)||chr(10)) 
+            (SELECT STRING_AGG('_______ '||Chr(9)||MI_PromoGoods.GoodsName, chr(13)||chr(10)) 
              FROM MovementItem_PromoGoods_View AS MI_PromoGoods
              WHERE MI_PromoGoods.MovementId = inMovementId)::TEXT AS LineValue
         UNION ALL
@@ -140,7 +140,7 @@ BEGIN
             NULL as LineNo,
             'Дополнительная информация'::TVarChar as GroupName,
             'Цена в прайс-листе (грн)'::TVarChar as LineName,
-            (SELECT STRING_AGG(CAST(MI_PromoGoods.Price AS TVarChar)||'грн.'||chr(9)||MI_PromoGoods.GoodsName, chr(13)||chr(10)) 
+            (SELECT STRING_AGG(replace(TO_CHAR(MI_PromoGoods.Price,'FM9990D09')||' ','.0 ','')||' '||chr(9)||MI_PromoGoods.GoodsName, chr(13)||chr(10)) 
              FROM MovementItem_PromoGoods_View AS MI_PromoGoods
              WHERE MI_PromoGoods.MovementId = inMovementId)::TEXT AS LineValue
         UNION ALL
