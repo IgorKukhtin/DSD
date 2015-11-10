@@ -101,6 +101,7 @@ type
     procedure LoadQualityParamsFormTest;
     procedure LoadQualityDocFormTest;
     procedure LoadReportFormTest;
+    procedure LoadReportBranchFormTest;
     procedure LoadReportSystemFormTest;
     procedure LoadReportBankAccountCashFormTest;
     procedure LoadReportProductionAnalyzeFormTest;
@@ -1344,6 +1345,14 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TReport_BankAccount_CashForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_BankAccount_CashDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_BankAccount_CashDialogForm');
+end;
+
+procedure TLoadFormTest.LoadReportBranchFormTest;
+begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Branch_App7Form'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_Branch_App7Form');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Branch_App7DialogForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_Branch_App7DialogForm');
 end;
 
 procedure TLoadFormTest.LoadReportSystemFormTest;
