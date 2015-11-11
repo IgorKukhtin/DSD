@@ -434,6 +434,7 @@ object ReceiptForm: TReceiptForm
         DataBinding.FieldName = 'UpdateName'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        Options.Editing = False
         Width = 100
       end
     end
