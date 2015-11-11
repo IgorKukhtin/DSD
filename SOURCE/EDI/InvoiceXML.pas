@@ -114,6 +114,7 @@ type
     function Get_INVOICEDQUANTITY: UnicodeString;
     function Get_UNITPRICE: UnicodeString;
     function Get_PRICEWITHVAT: UnicodeString;
+    function Get_GROSSPRICE: UnicodeString;
     function Get_AMOUNT: UnicodeString;
     function Get_DESCRIPTION: UnicodeString;
     function Get_AMOUNTTYPE: UnicodeString;
@@ -123,6 +124,7 @@ type
     procedure Set_PRODUCTIDBUYER(Value: UnicodeString);
     procedure Set_INVOICEDQUANTITY(Value: UnicodeString);
     procedure Set_PRICEWITHVAT(Value: UnicodeString);
+    procedure Set_GROSSPRICE(Value: UnicodeString);
     procedure Set_UNITPRICE(Value: UnicodeString);
     procedure Set_AMOUNT(Value: UnicodeString);
     procedure Set_DESCRIPTION(Value: UnicodeString);
@@ -134,6 +136,7 @@ type
     property INVOICEDQUANTITY: UnicodeString read Get_INVOICEDQUANTITY write Set_INVOICEDQUANTITY;
     property UNITPRICE: UnicodeString read Get_UNITPRICE write Set_UNITPRICE;
     property PRICEWITHVAT: UnicodeString read Get_PRICEWITHVAT write Set_PRICEWITHVAT;
+    property GROSSPRICE: UnicodeString read Get_GROSSPRICE write Set_GROSSPRICE;
     property AMOUNT: UnicodeString read Get_AMOUNT write Set_AMOUNT;
     property DESCRIPTION: UnicodeString read Get_DESCRIPTION write Set_DESCRIPTION;
     property AMOUNTTYPE: UnicodeString read Get_AMOUNTTYPE write Set_AMOUNTTYPE;
@@ -262,6 +265,7 @@ type
     function Get_INVOICEDQUANTITY: UnicodeString;
     function Get_UNITPRICE: UnicodeString;
     function Get_PRICEWITHVAT: UnicodeString;
+    function Get_GROSSPRICE: UnicodeString;
     function Get_AMOUNT: UnicodeString;
     function Get_DESCRIPTION: UnicodeString;
     function Get_AMOUNTTYPE: UnicodeString;
@@ -272,6 +276,7 @@ type
     procedure Set_INVOICEDQUANTITY(Value: UnicodeString);
     procedure Set_UNITPRICE(Value: UnicodeString);
     procedure Set_PRICEWITHVAT(Value: UnicodeString);
+    procedure Set_GROSSPRICE(Value: UnicodeString);
     procedure Set_AMOUNT(Value: UnicodeString);
     procedure Set_DESCRIPTION(Value: UnicodeString);
     procedure Set_AMOUNTTYPE(Value: UnicodeString);
@@ -662,6 +667,17 @@ procedure TXMLPOSITIONType.Set_PRICEWITHVAT(Value: UnicodeString);
 begin
   ChildNodes['PRICEWITHVAT'].NodeValue := Value;
 end;
+
+function TXMLPOSITIONType.Get_GROSSPRICE: UnicodeString;
+begin
+  Result := ChildNodes['GROSSPRICE'].Text;
+end;
+
+procedure TXMLPOSITIONType.Set_GROSSPRICE(Value: UnicodeString);
+begin
+  ChildNodes['GROSSPRICE'].NodeValue := Value;
+end;
+
 
 function TXMLPOSITIONType.Get_AMOUNT: UnicodeString;
 begin
