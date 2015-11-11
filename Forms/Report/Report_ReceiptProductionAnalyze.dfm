@@ -4,7 +4,7 @@ inherited Report_ReceiptProductionAnalyzeForm: TReport_ReceiptProductionAnalyzeF
   ClientWidth = 1171
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   ExplicitWidth = 1187
-  ExplicitHeight = 468
+  ExplicitHeight = 465
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -13,17 +13,17 @@ inherited Report_ReceiptProductionAnalyzeForm: TReport_ReceiptProductionAnalyzeF
     Height = 347
     TabOrder = 3
     ExplicitTop = 83
-    ExplicitWidth = 1130
+    ExplicitWidth = 1171
     ExplicitHeight = 347
     ClientRectBottom = 347
     ClientRectRight = 1171
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 1130
+      ExplicitWidth = 1171
       ExplicitHeight = 347
       inherited cxGrid: TcxGrid
         Width = 1171
         Height = 347
-        ExplicitWidth = 1130
+        ExplicitWidth = 1171
         ExplicitHeight = 347
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
@@ -844,7 +844,7 @@ inherited Report_ReceiptProductionAnalyzeForm: TReport_ReceiptProductionAnalyzeF
   inherited Panel: TPanel
     Width = 1171
     Height = 57
-    ExplicitWidth = 1130
+    ExplicitWidth = 1171
     ExplicitHeight = 57
     inherited deStart: TcxDateEdit
       Left = 115
@@ -873,12 +873,12 @@ inherited Report_ReceiptProductionAnalyzeForm: TReport_ReceiptProductionAnalyzeF
       ExplicitTop = 31
     end
     object cxLabel4: TcxLabel
-      Left = 930
+      Left = 936
       Top = 5
       Caption = #1043#1088'. '#1090#1086#1074#1072#1088#1086#1074':'
     end
     object edGoodsGroup: TcxButtonEdit
-      Left = 998
+      Left = 1004
       Top = 5
       Properties.Buttons = <
         item
@@ -991,12 +991,12 @@ inherited Report_ReceiptProductionAnalyzeForm: TReport_ReceiptProductionAnalyzeF
       Width = 125
     end
     object cxLabel9: TcxLabel
-      Left = 930
+      Left = 936
       Top = 31
       Caption = #1058#1086#1074#1072#1088':'
     end
     object edGoods: TcxButtonEdit
-      Left = 969
+      Left = 1004
       Top = 30
       Properties.Buttons = <
         item
@@ -1005,7 +1005,7 @@ inherited Report_ReceiptProductionAnalyzeForm: TReport_ReceiptProductionAnalyzeF
         end>
       Properties.ReadOnly = True
       TabOrder = 19
-      Width = 192
+      Width = 163
     end
   end
   inherited cxPropertiesStore: TcxPropertiesStore
@@ -1241,8 +1241,8 @@ inherited Report_ReceiptProductionAnalyzeForm: TReport_ReceiptProductionAnalyzeF
           ToParam.ParamType = ptInputOutput
         end>
       StoredProcList = <>
-      Caption = #1056#1077#1094#1077#1087#1090#1091#1088#1099' '#1073#1077#1079' '#1088#1072#1079#1074#1086#1088#1086#1090#1072' '#1074#1089#1077#1093' '#1089#1086#1089#1090#1072#1074#1083#1103#1102#1097#1080#1093' '#1087#1086' '#1094#1077#1085#1072#1084'_1'
-      Hint = #1056#1077#1094#1077#1087#1090#1091#1088#1099' '#1089' '#1088#1072#1079#1074#1086#1088#1086#1090#1086#1084' '#1074#1089#1077#1093' '#1089#1086#1089#1090#1072#1074#1083#1103#1102#1097#1080#1093' '#1087#1086' '#1094#1077#1085#1072#1084'_1'
+      Caption = #1050#1072#1083#1100#1082#1091#1083#1103#1094#1080#1103' '#1089' '#1091#1087#1072#1082'. '#1087#1086' '#1087#1088#1072#1081#1089#1091'1'
+      Hint = #1050#1072#1083#1100#1082#1091#1083#1103#1094#1080#1103' '#1089' '#1091#1087#1072#1082'. '#1087#1086' '#1087#1088#1072#1081#1089#1091'1'
       ImageIndex = 16
       ShortCut = 16464
       DataSets = <
@@ -1320,8 +1320,8 @@ inherited Report_ReceiptProductionAnalyzeForm: TReport_ReceiptProductionAnalyzeF
           ToParam.ParamType = ptInputOutput
         end>
       StoredProcList = <>
-      Caption = #1056#1077#1094#1077#1087#1090#1091#1088#1099' '#1089' '#1088#1072#1079#1074#1086#1088#1086#1090#1086#1084' '#1074#1089#1077#1093' '#1089#1086#1089#1090#1072#1074#1083#1103#1102#1097#1080#1093' '#1087#1086' '#1094#1077#1085#1072#1084'_1'
-      Hint = #1056#1077#1094#1077#1087#1090#1091#1088#1099' '#1089' '#1088#1072#1079#1074#1086#1088#1086#1090#1086#1084' '#1074#1089#1077#1093' '#1089#1086#1089#1090#1072#1074#1083#1103#1102#1097#1080#1093' '#1087#1086' '#1094#1077#1085#1072#1084'_1'
+      Caption = #1050#1072#1083#1100#1082#1091#1083#1103#1094#1080#1103' '#1087#1088#1086#1076#1091#1082#1094#1080#1080' '#1087#1086' '#1087#1088#1072#1081#1089#1091'2'
+      Hint = #1050#1072#1083#1100#1082#1091#1083#1103#1094#1080#1103' '#1087#1088#1086#1076#1091#1082#1094#1080#1080' '#1087#1086' '#1087#1088#1072#1081#1089#1091'2'
       ImageIndex = 18
       ShortCut = 16464
       DataSets = <
@@ -1398,8 +1398,8 @@ inherited Report_ReceiptProductionAnalyzeForm: TReport_ReceiptProductionAnalyzeF
           ToParam.ParamType = ptInputOutput
         end>
       StoredProcList = <>
-      Caption = #1056#1077#1094#1077#1087#1090#1091#1088#1099' '#1089' '#1088#1072#1079#1074#1086#1088#1086#1090#1086#1084' '#1074#1089#1077#1093' '#1089#1086#1089#1090#1072#1074#1083#1103#1102#1097#1080#1093' '#1087#1086' '#1094#1077#1085#1072#1084'_1'
-      Hint = #1056#1077#1094#1077#1087#1090#1091#1088#1099' '#1089' '#1088#1072#1079#1074#1086#1088#1086#1090#1086#1084' '#1074#1089#1077#1093' '#1089#1086#1089#1090#1072#1074#1083#1103#1102#1097#1080#1093' '#1087#1086' '#1094#1077#1085#1072#1084'_1'
+      Caption = #1050#1072#1083#1100#1082#1091#1083#1103#1094#1080#1103' '#1087#1088#1086#1076#1091#1082#1094#1080#1080' '#1087#1086' '#1087#1088#1072#1081#1089#1091'1'
+      Hint = #1050#1072#1083#1100#1082#1091#1083#1103#1094#1080#1103' '#1087#1088#1086#1076#1091#1082#1094#1080#1080' '#1087#1086' '#1087#1088#1072#1081#1089#1091'1'
       ImageIndex = 3
       ShortCut = 16464
       DataSets = <

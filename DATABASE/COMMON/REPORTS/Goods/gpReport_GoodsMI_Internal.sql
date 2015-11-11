@@ -223,7 +223,7 @@ BEGIN
                                                AND _tmpUnit.isActive  = MIContainer.isActive
                        WHERE MIContainer.OperDate BETWEEN inStartDate AND inEndDate  
                          AND MIContainer.MovementDescId = inDescId
-                         AND COALESCE (MIContainer.AccountId,0) <> zc_Enum_Account_100301 () -- Прибыль текущего периода
+                         AND COALESCE (MIContainer.AccountId,0) NOT IN (12102, zc_Enum_Account_100301 ()) -- Прибыль текущего периода
                        GROUP BY CASE WHEN vbIsGroup = TRUE THEN 0 ELSE MIContainer.ContainerId END
                               , CASE WHEN MIContainer.isActive = FALSE THEN MIContainer.WhereObjectId_analyzer ELSE MIContainer.ObjectExtId_Analyzer END
                               , CASE WHEN MIContainer.isActive = TRUE  THEN MIContainer.WhereObjectId_analyzer ELSE MIContainer.ObjectExtId_Analyzer END

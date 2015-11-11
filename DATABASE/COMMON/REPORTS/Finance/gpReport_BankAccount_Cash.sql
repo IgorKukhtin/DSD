@@ -27,6 +27,7 @@ RETURNS TABLE (ContainerId Integer, BankName TVarChar, BankAccountName TVarChar
              , EndAmount TFloat, EndAmountD TFloat, EndAmountK TFloat
 
              , GroupId Integer, GroupName TVarChar
+             , CashName TVarChar
              , Comment TVarChar
               )
 AS
@@ -68,6 +69,7 @@ BEGIN
                              , tmpReport_BankAccount.DebetSumm , tmpReport_BankAccount.KreditSumm 
                              , tmpReport_BankAccount.EndAmount , tmpReport_BankAccount.EndAmountD , tmpReport_BankAccount.EndAmountK 
                              , tmpReport_BankAccount.GroupId , tmpReport_BankAccount.GroupName 
+                             , tmpReport_BankAccount.CashName
                              , tmpReport_BankAccount.Comment 
                         FROM tmpReport_BankAccount 
                        UNION ALL
@@ -86,6 +88,7 @@ BEGIN
                              , tmpReport_Cash.DebetSumm , tmpReport_Cash.KreditSumm 
                              , tmpReport_Cash.EndAmount , tmpReport_Cash.EndAmountD , tmpReport_Cash.EndAmountK 
                             , tmpReport_Cash.GroupId , tmpReport_Cash.GroupName 
+                             , tmpReport_Cash.CashName
                             , tmpReport_Cash.Comment 
                         FROM tmpReport_Cash
          )
@@ -121,6 +124,7 @@ BEGIN
                              , tmpResult.EndAmountK 
                              , tmpResult.GroupId
                              , tmpResult.GroupName 
+                             , tmpResult.CashName
                              , tmpResult.Comment 
                         FROM tmpResult
 
