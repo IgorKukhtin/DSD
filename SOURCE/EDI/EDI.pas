@@ -1290,6 +1290,10 @@ begin
           StringReplace(FormatFloat('0.00',
           ItemsDataSet.FieldByName('PriceWVAT').AsFloat),
           FormatSettings.DecimalSeparator, cMainDecimalSeparator, []);
+        GROSSPRICE :=
+          StringReplace(FormatFloat('0.00',
+          ItemsDataSet.FieldByName('PriceWVAT').AsFloat),
+          FormatSettings.DecimalSeparator, cMainDecimalSeparator, []);
         AMOUNT := StringReplace(FormatFloat('0.00',
           ItemsDataSet.FieldByName('AmountSummNoVAT').AsFloat),
           FormatSettings.DecimalSeparator, cMainDecimalSeparator, []);
