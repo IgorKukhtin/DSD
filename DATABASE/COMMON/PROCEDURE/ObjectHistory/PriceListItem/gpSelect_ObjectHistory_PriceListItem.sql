@@ -13,6 +13,7 @@ CREATE OR REPLACE FUNCTION gpSelect_ObjectHistory_PriceListItem(
 RETURNS TABLE (Id Integer , ObjectId Integer
                 , GoodsId Integer, GoodsCode Integer, GoodsName TVarChar, isErased Boolean, GoodsGroupNameFull TVarChar
                 , MeasureName TVarChar, StartDate TDateTime, EndDate TDateTime, ValuePrice TFloat
+                , UpdateName TVarChar
                )
 AS
 $BODY$
@@ -37,6 +38,8 @@ BEGIN
            , tmpPrice.StartDate
            , tmpPrice.EndDate
            , COALESCE(tmpPrice.ValuePrice, NULL) ::TFloat  AS ValuePrice
+
+           , Object_Update.ValueData   AS UpdateName
 
        FROM Object AS Object_Goods
           
@@ -76,6 +79,11 @@ BEGIN
                                 AND ObjectLink_Goods_Measure.DescId = zc_ObjectLink_Goods_Measure()
             LEFT JOIN Object AS Object_Measure ON Object_Measure.Id = ObjectLink_Goods_Measure.ChildObjectId
 
+            LEFT JOIN ObjectLink AS ObjectLink_Update
+                                 ON ObjectLink_Update.ObjectId = tmpPrice.PriceListItemObjectId
+                                AND ObjectLink_Update.DescId = zc_ObjectLink_Protocol_Update()
+            LEFT JOIN Object AS Object_Update ON Object_Update.Id = ObjectLink_Update.ChildObjectId
+
        where  Object_Goods.DescId = zc_Object_Goods()
       
        ;
@@ -100,6 +108,8 @@ BEGIN
            , ObjectHistory_PriceListItem.EndDate
            , ObjectHistoryFloat_PriceListItem_Value.ValueData AS ValuePrice
 
+           , Object_Update.ValueData   AS UpdateName
+
        FROM ObjectLink AS ObjectLink_PriceListItem_PriceList
             LEFT JOIN ObjectLink AS ObjectLink_PriceListItem_Goods
                                  ON ObjectLink_PriceListItem_Goods.ObjectId = ObjectLink_PriceListItem_PriceList.ObjectId
@@ -123,6 +133,11 @@ BEGIN
                                  ON ObjectLink_Goods_Measure.ObjectId = Object_Goods.Id
                                 AND ObjectLink_Goods_Measure.DescId = zc_ObjectLink_Goods_Measure()
             LEFT JOIN Object AS Object_Measure ON Object_Measure.Id = ObjectLink_Goods_Measure.ChildObjectId
+
+            LEFT JOIN ObjectLink AS ObjectLink_Update
+                                 ON ObjectLink_Update.ObjectId = ObjectHistory_PriceListItem.ObjectId
+                                AND ObjectLink_Update.DescId = zc_ObjectLink_Protocol_Update()
+            LEFT JOIN Object AS Object_Update ON Object_Update.Id = ObjectLink_Update.ChildObjectId
 
        WHERE ObjectLink_PriceListItem_PriceList.DescId = zc_ObjectLink_PriceListItem_PriceList()
          AND ObjectLink_PriceListItem_PriceList.ChildObjectId = inPriceListId
