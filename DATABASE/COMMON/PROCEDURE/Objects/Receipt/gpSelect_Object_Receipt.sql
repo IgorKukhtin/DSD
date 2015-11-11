@@ -25,6 +25,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, ReceiptCode TVarChar, Co
              , GoodsKindName_Parent TVarChar, GoodsKindCompleteName_Parent TVarChar
              , GoodsGroupNameFull TVarChar, GoodsGroupAnalystName TVarChar, GoodsTagName TVarChar, TradeMarkName TVarChar
              , InfoMoneyCode Integer, InfoMoneyGroupName TVarChar, InfoMoneyDestinationName TVarChar, InfoMoneyName TVarChar
+             , UpdateName TVarChar
              , isCheck_Parent Boolean
              , isErased Boolean
               )
@@ -104,7 +105,9 @@ BEGIN
          , Object_InfoMoney_View.InfoMoneyGroupName
          , Object_InfoMoney_View.InfoMoneyDestinationName
          , Object_InfoMoney_View.InfoMoneyName
-
+       
+         , Object_Update.ValueData   AS UpdateName
+         
          , CASE WHEN Object_Goods.Id <> Object_Goods_Parent.Id THEN TRUE ELSE FALSE END AS isCheck_Parent
          , Object_Receipt.isErased AS isErased
 
@@ -256,6 +259,11 @@ BEGIN
                                ON ObjectLink_Goods_TradeMark.ObjectId = Object_Goods.Id
                               AND ObjectLink_Goods_TradeMark.DescId = zc_ObjectLink_Goods_TradeMark()
           LEFT JOIN Object AS Object_TradeMark ON Object_TradeMark.Id = ObjectLink_Goods_TradeMark.ChildObjectId
+
+          LEFT JOIN ObjectLink AS ObjectLink_Update
+                               ON ObjectLink_Update.ObjectId = Object_Receipt.Id
+                              AND ObjectLink_Update.DescId = zc_ObjectLink_Protocol_Update()
+          LEFT JOIN Object AS Object_Update ON Object_Update.Id = ObjectLink_Update.ChildObjectId
 
      WHERE Object_Receipt.DescId = zc_Object_Receipt()
        AND (Object_Receipt.Id = inReceiptId OR inReceiptId = 0)

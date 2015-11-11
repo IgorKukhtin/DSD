@@ -29,7 +29,8 @@ $BODY$
    DECLARE vbUserId Integer;
 
    DECLARE vbName TVarChar;
-   DECLARE vbCode_calc Integer;   
+   DECLARE vbCode_calc Integer; 
+   DECLARE vbIsUpdate Boolean;   
 BEGIN
    -- проверка прав пользователя на вызов процедуры
    vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Object_Receipt());
@@ -41,6 +42,8 @@ BEGIN
        RAISE EXCEPTION 'Ошибка.Значение <Товар> должно быть установлено.';
    END IF;
 
+   -- определили <Признак>
+   vbIsUpdate:= COALESCE (ioId, 0) > 0;
 
    -- пытаемся найти код
    IF ioId <> 0 AND COALESCE (inCode, 0) = 0 THEN inCode := (SELECT ObjectCode FROM Object WHERE Id = ioId); END IF;
@@ -126,7 +129,8 @@ BEGIN
    PERFORM lpUpdate_Object_Receipt_Total (ioId, vbUserId);
 
    -- сохранили протокол
-   PERFORM lpInsert_ObjectProtocol (ioId, vbUserId);
+   --PERFORM lpInsert_ObjectProtocol (ioId, vbUserId);
+   PERFORM lpInsert_ObjectProtocol (inObjectId:= ioId, inUserId:= vbUserId, inIsUpdate:= vbIsUpdate, inIsErased:= NULL);
 
 END;
 $BODY$
