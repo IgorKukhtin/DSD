@@ -1,6 +1,6 @@
 -- Function: gpUpdate_MovementItem_ReturnIn_AmountPartner()
 
-DROP FUNCTION IF EXISTS gpUpdate_MovementItem_ReturnIn_AmountPartner (Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpUpdate_MovementItem_ReturnIn_AmountPartner (Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpUpdate_MovementItem_ReturnIn_AmountPartner(
     IN inMovementId              Integer   , -- Ключ объекта <Документ>
@@ -17,7 +17,7 @@ $BODY$
      
 BEGIN
      -- проверка прав пользователя на вызов процедуры
-     vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MI_ReturnIn());
+     vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MI_ReturnIn_Partner());
 
 
      -- определяются параметры документа
@@ -35,16 +35,17 @@ BEGIN
          RAISE EXCEPTION 'Ошибка.Изменение документа № <%> в статусе <%> не возможно.', vbInvNumber, lfGet_Object_ValueData (vbStatusId);
      END IF;
     
-     -- сохранили
+     -- сохранили + протокол
      PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_AmountPartner(), MovementItem.Id, 0)
+           , lpInsert_MovementItemProtocol (MovementItem.Id, vbUserId, FALSE)
      FROM MovementItem
-     WHERE MovementId = inMovementId;
+          INNER JOIN MovementItemFloat AS MIFloat_AmountPartner
+                                       ON MIFloat_AmountPartner.MovementItemId = MovementItem.Id
+                                      AND MIFloat_AmountPartner.DescId = zc_MIFloat_AmountPartner()
+                                      AND MIFloat_AmountPartner.ValueData <> 0
+     WHERE MovementId = inMovementId
+       AND isErased = FALSE;
 
-
-     -- сохранили протокол
-     PERFORM lpInsert_MovementItemProtocol (MovementItem.Id, vbUserId, FALSE)
-     FROM MovementItem
-     WHERE MovementId = inMovementId;
 
      -- пересчитали Итоговые суммы по накладной
      PERFORM lpInsertUpdate_MovementFloat_TotalSumm (inMovementId);
@@ -58,5 +59,4 @@ $BODY$
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
  05.11.15         *  
-
 */
