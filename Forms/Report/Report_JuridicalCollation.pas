@@ -90,6 +90,7 @@ type
     clPaymentDate: TcxGridDBColumn;
     ExecuteDialog: TExecuteDialog;
     bbExecuteDialog: TdxBarButton;
+    MovementComment: TcxGridDBColumn;
   private
     { Private declarations }
   public

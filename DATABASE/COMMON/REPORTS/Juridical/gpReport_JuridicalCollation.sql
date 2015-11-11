@@ -30,6 +30,7 @@ RETURNS TABLE (MovementSumm TFloat,
                Kredit_Currency TFloat, 
                OperDate TDateTime, 
                InvNumber TVarChar, InvNumberPartner TVarChar,
+               MovementComment TVarChar,
                AccountCode Integer,
                AccountName TVarChar,
                ContractCode Integer, 
@@ -155,6 +156,7 @@ BEGIN
           Operation.OperDate,
           Movement.InvNumber,
           MovementString_InvNumberPartner.ValueData AS InvNumberPartner,
+          MIString_Comment.ValueData          AS MovementComment,
           Object_Account_View.AccountCode,
           Object_Account_View.AccountName_all AS AccountName,
 
@@ -328,6 +330,10 @@ BEGIN
                                ON MovementString_InvNumberPartner.MovementId =  Operation.MovementId
                               AND MovementString_InvNumberPartner.DescId = zc_MovementString_InvNumberPartner()
 
+      LEFT JOIN MovementItemString AS MIString_Comment
+                                   ON MIString_Comment.MovementItemId = Operation.MovementItemId
+                                  AND MIString_Comment.DescId = zc_MIString_Comment()
+
       LEFT JOIN MovementItem AS MovementItem_by ON MovementItem_by.Id = Operation.MovementItemId
                                                AND MovementItem_by.DescId IN (zc_MI_Master())
                                                AND Movement.DescId IN (zc_Movement_BankAccount(), zc_Movement_Cash())
@@ -390,6 +396,7 @@ ALTER FUNCTION gpReport_JuridicalCollation (TDateTime, TDateTime, Integer, Integ
 /*-------------------------------------------------------------------------------
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 09.11.15         * add MovementComment
  14.11.14         * add inCurrencyId
  21.08.14                                        * add ContractComment
  03.07.14                                        * add InvNumberPartner
