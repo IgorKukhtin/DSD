@@ -3,8 +3,9 @@ inherited Report_ReceiptProductionAnalyzeForm: TReport_ReceiptProductionAnalyzeF
   ClientHeight = 430
   ClientWidth = 1171
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
+  ExplicitLeft = -173
   ExplicitWidth = 1187
-  ExplicitHeight = 465
+  ExplicitHeight = 468
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -885,6 +886,7 @@ inherited Report_ReceiptProductionAnalyzeForm: TReport_ReceiptProductionAnalyzeF
           Default = True
           Kind = bkEllipsis
         end>
+      Properties.ReadOnly = True
       TabOrder = 5
       Width = 163
     end
@@ -997,7 +999,7 @@ inherited Report_ReceiptProductionAnalyzeForm: TReport_ReceiptProductionAnalyzeF
     end
     object edGoods: TcxButtonEdit
       Left = 1004
-      Top = 30
+      Top = 32
       Properties.Buttons = <
         item
           Default = True
@@ -1061,6 +1063,9 @@ inherited Report_ReceiptProductionAnalyzeForm: TReport_ReceiptProductionAnalyzeF
         Properties.Strings = (
           'Key'
           'TextValue')
+      end
+      item
+        Component = GuidesGoods
       end>
   end
   inherited ActionList: TActionList
@@ -2060,7 +2065,7 @@ inherited Report_ReceiptProductionAnalyzeForm: TReport_ReceiptProductionAnalyzeF
         DataType = ftString
         ParamType = ptInput
       end>
-    Left = 1000
+    Left = 1032
     Top = 23
   end
 end

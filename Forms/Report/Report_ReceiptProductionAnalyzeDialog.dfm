@@ -177,6 +177,7 @@ object Report_ReceiptProductionAnalyzeDialogForm: TReport_ReceiptProductionAnaly
         Default = True
         Kind = bkEllipsis
       end>
+    Properties.ReadOnly = False
     TabOrder = 19
     Width = 220
   end
