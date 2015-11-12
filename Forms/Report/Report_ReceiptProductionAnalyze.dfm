@@ -3,7 +3,6 @@ inherited Report_ReceiptProductionAnalyzeForm: TReport_ReceiptProductionAnalyzeF
   ClientHeight = 430
   ClientWidth = 1171
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
-  ExplicitLeft = -173
   ExplicitWidth = 1187
   ExplicitHeight = 468
   PixelsPerInch = 96
@@ -1010,6 +1009,10 @@ inherited Report_ReceiptProductionAnalyzeForm: TReport_ReceiptProductionAnalyzeF
       Width = 163
     end
   end
+  inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
+    Left = 99
+    Top = 328
+  end
   inherited cxPropertiesStore: TcxPropertiesStore
     Components = <
       item
@@ -1066,9 +1069,14 @@ inherited Report_ReceiptProductionAnalyzeForm: TReport_ReceiptProductionAnalyzeF
       end
       item
         Component = GuidesGoods
+        Properties.Strings = (
+          'Key'
+          'TextValue')
       end>
   end
   inherited ActionList: TActionList
+    Left = 103
+    Top = 247
     object ExecuteDialog: TExecuteDialog
       Category = 'DSDLib'
       MoveParams = <>
@@ -1289,6 +1297,14 @@ inherited Report_ReceiptProductionAnalyzeForm: TReport_ReceiptProductionAnalyzeF
           Name = 'PrintParam'
           Value = '3'
           ParamType = ptInput
+        end
+        item
+          Name = 'PriceListName'
+          Value = Null
+          Component = PriceList_1_Guides
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          ParamType = ptInput
         end>
       ReportName = #1056#1077#1094#1077#1087#1090#1091#1088#1099' '#1089' '#1088#1072#1079#1074#1086#1088#1086#1090#1086#1084' '#1074#1089#1077#1093' '#1089#1086#1089#1090#1072#1074#1083#1103#1102#1097#1080#1093' '#1087#1086' '#1094#1077#1085#1072#1084'_1'
       ReportNameParam.Value = #1056#1077#1094#1077#1087#1090#1091#1088#1099' '#1089' '#1088#1072#1079#1074#1086#1088#1086#1090#1086#1084' '#1074#1089#1077#1093' '#1089#1086#1089#1090#1072#1074#1083#1103#1102#1097#1080#1093' '#1087#1086' '#1094#1077#1085#1072#1084'_1'
@@ -1367,6 +1383,14 @@ inherited Report_ReceiptProductionAnalyzeForm: TReport_ReceiptProductionAnalyzeF
         item
           Name = 'PrintParam'
           Value = '2'
+        end
+        item
+          Name = 'PriceListName'
+          Value = Null
+          Component = PriceList_2_Guides
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          ParamType = ptInput
         end>
       ReportName = #1056#1077#1094#1077#1087#1090#1091#1088#1099' '#1089' '#1088#1072#1079#1074#1086#1088#1086#1090#1086#1084' '#1074#1089#1077#1093' '#1089#1086#1089#1090#1072#1074#1083#1103#1102#1097#1080#1093' '#1087#1086' '#1094#1077#1085#1072#1084'_1'
       ReportNameParam.Value = #1056#1077#1094#1077#1087#1090#1091#1088#1099' '#1089' '#1088#1072#1079#1074#1086#1088#1086#1090#1086#1084' '#1074#1089#1077#1093' '#1089#1086#1089#1090#1072#1074#1083#1103#1102#1097#1080#1093' '#1087#1086' '#1094#1077#1085#1072#1084'_1'
@@ -1445,6 +1469,14 @@ inherited Report_ReceiptProductionAnalyzeForm: TReport_ReceiptProductionAnalyzeF
         item
           Name = 'PrintParam'
           Value = '1'
+        end
+        item
+          Name = 'PriceListName'
+          Value = Null
+          Component = PriceList_1_Guides
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          ParamType = ptInput
         end>
       ReportName = #1056#1077#1094#1077#1087#1090#1091#1088#1099' '#1089' '#1088#1072#1079#1074#1086#1088#1086#1090#1086#1084' '#1074#1089#1077#1093' '#1089#1086#1089#1090#1072#1074#1083#1103#1102#1097#1080#1093' '#1087#1086' '#1094#1077#1085#1072#1084'_1'
       ReportNameParam.Value = #1056#1077#1094#1077#1087#1090#1091#1088#1099' '#1089' '#1088#1072#1079#1074#1086#1088#1086#1090#1086#1084' '#1074#1089#1077#1093' '#1089#1086#1089#1090#1072#1074#1083#1103#1102#1097#1080#1093' '#1087#1086' '#1094#1077#1085#1072#1084'_1'
@@ -1624,8 +1656,12 @@ inherited Report_ReceiptProductionAnalyzeForm: TReport_ReceiptProductionAnalyzeF
       Category = 0
     end
   end
+  inherited PopupMenu: TPopupMenu
+    Left = 160
+    Top = 272
+  end
   inherited PeriodChoice: TPeriodChoice
-    Top = 128
+    Top = 168
   end
   inherited RefreshDispatcher: TRefreshDispatcher
     ComponentList = <
@@ -1638,8 +1674,8 @@ inherited Report_ReceiptProductionAnalyzeForm: TReport_ReceiptProductionAnalyzeF
       item
         Component = edGoods
       end>
-    Left = 96
-    Top = 120
+    Left = 472
+    Top = 184
   end
   object GoodsGroupGuides: TdsdGuides
     KeyField = 'Id'
@@ -2066,6 +2102,6 @@ inherited Report_ReceiptProductionAnalyzeForm: TReport_ReceiptProductionAnalyzeF
         ParamType = ptInput
       end>
     Left = 1032
-    Top = 23
+    Top = 31
   end
 end
