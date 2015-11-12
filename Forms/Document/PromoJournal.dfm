@@ -1,7 +1,7 @@
 inherited PromoJournalForm: TPromoJournalForm
   Caption = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' <'#1040#1082#1094#1080#1080'>'
   ClientHeight = 430
-  ExplicitHeight = 465
+  ExplicitHeight = 468
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -170,6 +170,28 @@ inherited PromoJournalForm: TPromoJournalForm
           DataType = ftDateTime
         end>
     end
+    object actPrint: TdsdPrintAction [22]
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spSelect_Movement_Promo_Print
+      StoredProcList = <
+        item
+          StoredProc = spSelect_Movement_Promo_Print
+        end>
+      Caption = #1055#1077#1095#1072#1090#1100
+      Hint = #1055#1077#1095#1072#1090#1100
+      ImageIndex = 3
+      ShortCut = 16464
+      DataSets = <
+        item
+          DataSet = PrintHead
+          UserName = 'frxHead'
+        end>
+      Params = <>
+      ReportName = #1040#1082#1094#1080#1103
+      ReportNameParam.Value = #1040#1082#1094#1080#1103
+      ReportNameParam.DataType = ftString
+    end
   end
   inherited spSelect: TdsdStoredProc
     StoredProcName = 'gpSelect_Movement_Promo'
@@ -180,6 +202,83 @@ inherited PromoJournalForm: TPromoJournalForm
       0
       26
       0)
+    inherited Bar: TdxBar
+      ItemLinks = <
+        item
+          Visible = True
+          ItemName = 'bbInsert'
+        end
+        item
+          Visible = True
+          ItemName = 'bbEdit'
+        end
+        item
+          BeginGroup = True
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbComplete'
+        end
+        item
+          Visible = True
+          ItemName = 'bbUnComplete'
+        end
+        item
+          Visible = True
+          ItemName = 'bbDelete'
+        end
+        item
+          BeginGroup = True
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbShowErased'
+        end
+        item
+          Visible = True
+          ItemName = 'bbRefresh'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbMovementItemContainer'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbMovementProtocol'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbGridToExcel'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarButton1'
+        end>
+    end
+    object dxBarButton1: TdxBarButton
+      Action = actPrint
+      Category = 0
+    end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
     Left = 208
@@ -211,5 +310,31 @@ inherited PromoJournalForm: TPromoJournalForm
     StoredProcName = 'gpReComplete_Movement_Promo'
     Left = 200
     Top = 264
+  end
+  object spSelect_Movement_Promo_Print: TdsdStoredProc
+    StoredProcName = 'gpSelect_Movement_Promo_Print'
+    DataSet = PrintHead
+    DataSets = <
+      item
+        DataSet = PrintHead
+      end>
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+      end>
+    PackSize = 1
+    Left = 504
+    Top = 136
+  end
+  object PrintHead: TClientDataSet
+    Aggregates = <>
+    FilterOptions = [foCaseInsensitive]
+    Params = <>
+    Left = 456
+    Top = 136
   end
 end
