@@ -1,7 +1,7 @@
 -- Function: gpGet_Movement_ReturnIn_ReportName()
 
-DROP FUNCTION IF EXISTS gpGet_Movement_ReturnIn_ReportName (Integer, TVarChar);
-DROP FUNCTION IF EXISTS gpGet_Movement_ReturnIn_ReportName (Integer, TVarChar, TVarChar);
+-- DROP FUNCTION IF EXISTS gpGet_Movement_ReturnIn_ReportName (Integer, TVarChar);
+-- DROP FUNCTION IF EXISTS gpGet_Movement_ReturnIn_ReportName (Integer, TVarChar, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpGet_Movement_ReturnIn_ReportName (
     IN inMovementId         Integer  , -- ключ Документа
