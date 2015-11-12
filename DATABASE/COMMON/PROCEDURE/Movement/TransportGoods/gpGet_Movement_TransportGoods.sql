@@ -31,6 +31,7 @@ $BODY$
    DECLARE vbUserId Integer;
    DECLARE vbIsOd Boolean;
    DECLARE vbIsKh Boolean;
+   DECLARE vbIsNik Boolean;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Select_Movement_TransportGoods());
@@ -47,6 +48,10 @@ BEGIN
      vbIsOd:= 8374 = (SELECT Object_RoleAccessKeyGuide_View.BranchId FROM Object_RoleAccessKeyGuide_View WHERE Object_RoleAccessKeyGuide_View.UserId = vbUserId AND Object_RoleAccessKeyGuide_View.BranchId <> 0 GROUP BY Object_RoleAccessKeyGuide_View.BranchId);
      -- !!! для Харькова, понятно что временно!!! )))      
      vbIsKh:= 8381 = (SELECT Object_RoleAccessKeyGuide_View.BranchId FROM Object_RoleAccessKeyGuide_View WHERE Object_RoleAccessKeyGuide_View.UserId = vbUserId AND Object_RoleAccessKeyGuide_View.BranchId <> 0 GROUP BY Object_RoleAccessKeyGuide_View.BranchId);
+
+     -- !!! для Николаева, понятно что временно!!! )))      
+     vbIsNik:= 8373 = (SELECT Object_RoleAccessKeyGuide_View.BranchId FROM Object_RoleAccessKeyGuide_View WHERE Object_RoleAccessKeyGuide_View.UserId = vbUserId AND Object_RoleAccessKeyGuide_View.BranchId <> 0 GROUP BY Object_RoleAccessKeyGuide_View.BranchId);
+
 
      -- если надо - создаем
      IF COALESCE (inMovementId, 0) = 0
@@ -65,6 +70,8 @@ BEGIN
                                                                                                 THEN 148689 -- АЕ 12-54 СА
                                                                                            WHEN vbIsOd = TRUE
                                                                                                 THEN 8682   -- 850-51 АВ
+                                                                                           WHEN vbIsNik = TRUE
+                                                                                                THEN 518529 -- BE 59-17 AO   
                                                                                            ELSE NULL
                                                                                       END
                                                                , inCarTrailerId    := NULL
@@ -78,6 +85,8 @@ BEGIN
                                                                                                 THEN 343903 -- Шульгін Олексій Валерійович
                                                                                            WHEN vbIsOd = TRUE
                                                                                                 THEN 427054 -- Строкун Артем Миколайович
+                                                                                           WHEN vbIsNik = TRUE
+                                                                                                THEN 518520  -- Флера Сергей Владимирович
                                                                                            ELSE NULL
                                                                                       END
                                                                , inRouteId         := (SELECT MLO.ObjectId FROM MovementLinkObject AS MLO WHERE MLO.MovementId = inMovementId_Sale AND MLO.DescId = zc_MovementLinkObject_Route())
@@ -91,18 +100,26 @@ BEGIN
                                                                                                 THEN 343903 -- Шульгін Олексій Валерійович
                                                                                            WHEN vbIsOd = TRUE
                                                                                                 THEN 427054 -- Строкун Артем Миколайович
+                                                                                           WHEN vbIsNik = TRUE
+                                                                                                THEN 149822  -- Бойченко Денис Анатолійович
                                                                                            ELSE NULL
                                                                                       END
                                                                , inMemberId2       := CASE WHEN vbIsOd = TRUE
                                                                                                 THEN 418699 -- Бирдіна Оксана Євгенівна
+                                                                                           WHEN vbIsNik = TRUE
+                                                                                                THEN 419066 -- Глушкова Нина Николаевна
                                                                                            ELSE NULL
                                                                                       END
                                                                , inMemberId3       := CASE WHEN vbIsOd = TRUE
                                                                                                 THEN 418699 -- Бирдіна Оксана Євгенівна
+                                                                                           WHEN vbIsNik = TRUE
+                                                                                                THEN 419066 -- Глушкова Нина Николаевна
                                                                                            ELSE NULL
                                                                                       END
                                                                , inMemberId4       := CASE WHEN vbIsKh = TRUE
                                                                                                 THEN 301480 -- Самохін Володимир Іванович кладовщик
+                                                                                           WHEN vbIsNik = TRUE
+                                                                                                THEN 419066 -- Глушкова Нина Николаевна
                                                                                            ELSE NULL
                                                                                       END
                                                                , inMemberId5       := NULL
