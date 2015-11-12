@@ -29,6 +29,10 @@ type
     colComment: TcxGridDBColumn;
     colPersonalTradeName: TcxGridDBColumn;
     colPersonalName: TcxGridDBColumn;
+    dxBarButton1: TdxBarButton;
+    spSelect_Movement_Promo_Print: TdsdStoredProc;
+    PrintHead: TClientDataSet;
+    actPrint: TdsdPrintAction;
   private
     { Private declarations }
   public
