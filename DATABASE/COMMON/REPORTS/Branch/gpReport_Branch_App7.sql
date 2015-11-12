@@ -1,4 +1,4 @@
-﻿ -- Function: gpReport_Branch_App7()
+-- Function: gpReport_Branch_App7()
 
 DROP FUNCTION IF EXISTS gpReport_Branch_App7 (TDateTime, TDateTime,  Integer, TVarChar);
 
