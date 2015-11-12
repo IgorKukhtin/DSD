@@ -17,31 +17,21 @@ uses
 
 type
   TReport_Branch_App7Form = class(TAncestorReportForm)
-    clTradeMarkName: TcxGridDBColumn;
-    clGoodsGroupName: TcxGridDBColumn;
-    clGoodsCode: TcxGridDBColumn;
-    clGoodsName: TcxGridDBColumn;
-    Summ_zavod: TcxGridDBColumn;
-    Amount_Weight: TcxGridDBColumn;
+    CashSummEnd: TcxGridDBColumn;
+    JuridicalSummStart: TcxGridDBColumn;
+    JuridicalSummEnd: TcxGridDBColumn;
     FormParams: TdsdFormParams;
-    Amount_Sh: TcxGridDBColumn;
-    clGoodsKindName: TcxGridDBColumn;
-    OperDate: TcxGridDBColumn;
+    JuridicalSummKredit: TcxGridDBColumn;
+    BranchName: TcxGridDBColumn;
     cxLabel3: TcxLabel;
     edBranch: TcxButtonEdit;
     BranchUnit: TdsdGuides;
-    Price_branch: TcxGridDBColumn;
-    GoodsGroupNameFull: TcxGridDBColumn;
-    MeasureName: TcxGridDBColumn;
-    PartionGoods: TcxGridDBColumn;
-    LocationCode: TcxGridDBColumn;
-    LocationName: TcxGridDBColumn;
-    LocationCode_by: TcxGridDBColumn;
-    LocationName_by: TcxGridDBColumn;
-    Price_zavod: TcxGridDBColumn;
-    Amount: TcxGridDBColumn;
-    Summ_branch: TcxGridDBColumn;
-    Summ_60000: TcxGridDBColumn;
+    CashSummStart: TcxGridDBColumn;
+    JuridicalSummDebet: TcxGridDBColumn;
+    SummStart: TcxGridDBColumn;
+    SummEnd: TcxGridDBColumn;
+    SummIn: TcxGridDBColumn;
+    SummOut: TcxGridDBColumn;
     ExecuteDialog: TExecuteDialog;
     bbExecuteDialog: TdxBarButton;
   private

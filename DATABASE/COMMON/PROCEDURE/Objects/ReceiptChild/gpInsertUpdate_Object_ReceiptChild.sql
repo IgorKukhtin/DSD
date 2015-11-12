@@ -20,10 +20,13 @@ RETURNS RECORD
 AS
 $BODY$
    DECLARE vbUserId Integer;
+   DECLARE vbIsUpdate Boolean; 
 BEGIN
    -- проверка прав пользователя на вызов процедуры
    vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Object_ReceiptChild());
 
+   -- определили <Признак>
+   vbIsUpdate:= COALESCE (ioId, 0) > 0;
 
    -- расчет
    outValueWeight:= (SELECT inValue * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData, 0) ELSE 1 END
@@ -63,7 +66,8 @@ BEGIN
    PERFORM lpUpdate_Object_Receipt_Total (inReceiptId, vbUserId);
 
    -- сохранили протокол
-   PERFORM lpInsert_ObjectProtocol (ioId, vbUserId);
+   --PERFORM lpInsert_ObjectProtocol (ioId, vbUserId);
+   PERFORM lpInsert_ObjectProtocol (inObjectId:= ioId, inUserId:= vbUserId, inIsUpdate:= vbIsUpdate, inIsErased:= NULL);
 
 END;
 $BODY$
@@ -73,6 +77,7 @@ ALTER FUNCTION gpInsertUpdate_Object_ReceiptChild (Integer, TFloat, Boolean, Boo
 /*---------------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
+ 12.11.15         * 
  14.02.15                                        *all
  19.07.13         * rename zc_ObjectDate_              
  09.07.13         * 

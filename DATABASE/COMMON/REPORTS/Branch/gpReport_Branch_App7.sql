@@ -1,12 +1,12 @@
- -- Function: gpReport_Branch_App7()
+п»ї -- Function: gpReport_Branch_App7()
 
 DROP FUNCTION IF EXISTS gpReport_Branch_App7 (TDateTime, TDateTime,  Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpReport_Branch_App7(
     IN inStartDate          TDateTime , --
     IN inEndDate            TDateTime , --
-    IN inBranchId           Integer,    -- Филиал
-    IN inSession            TVarChar    -- сессия пользователя
+    IN inBranchId           Integer,    -- Р¤РёР»РёР°Р»
+    IN inSession            TVarChar    -- СЃРµСЃСЃРёСЏ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ
 )
 RETURNS TABLE (BranchName TVarChar
              , SummStart TFloat, SummEnd TFloat, SummIn TFloat, SummOut TFloat
@@ -21,15 +21,15 @@ BEGIN
           vbUserId:= lpGetUserBySession (inSession);
 
     
-    -- Результат
+    -- Р РµР·СѓР»СЊС‚Р°С‚
      RETURN QUERY
-   WITH tmpUnit AS (SELECT * From Object_Unit_View WHERE Object_Unit_View.BranchId = inBranchId )       --зап  301310,, одесса
+   WITH tmpUnit AS (SELECT * From Object_Unit_View WHERE Object_Unit_View.BranchId = inBranchId )       --Р·Р°Рї  301310,, РѕРґРµСЃСЃР°
        ,tmpCash AS (SELECT Object.Id  AS CashId 
                     FROM Object
                      INNER JOIN ObjectLink AS Cash_Branch
                                            ON Cash_Branch.ObjectId = Object.Id
                                           AND Cash_Branch.DescId = zc_ObjectLink_Cash_Branch()
-                                          AND Cash_Branch.ChildObjectId = inBranchId                              --зап  301310, , одесса
+                                          AND Cash_Branch.ChildObjectId = inBranchId                              --Р·Р°Рї  301310, , РѕРґРµСЃСЃР°
                     ) 
                 
   , tmpContainer AS (SELECT ListContainer.Amount - COALESCE (SUM (COALESCE (MIContainer.Amount, 0)), 0) AS AmountStart 
@@ -70,12 +70,12 @@ BEGIN
 ,sum(SummIn)
 ,sum(SummOut)
 
- From tmpContainer*/  --итого 
+ From tmpContainer*/  --РёС‚РѕРіРѕ 
 
 --select * From Object_Account_View where  Object_Account_View.AccountDirectionId = zc_Enum_AccountDirection_20700()               
--- нач. кон. сальдо касса 
+-- РЅР°С‡. РєРѕРЅ. СЃР°Р»СЊРґРѕ РєР°СЃСЃР° 
 , tmpCashContainer AS (SELECT CLO_Cash.ContainerId
-                            , Container.Amount - COALESCE (SUM (MIContainer.Amount), 0) AS AmountStart      -- остаток денег на начало периода
+                            , Container.Amount - COALESCE (SUM (MIContainer.Amount), 0) AS AmountStart      -- РѕСЃС‚Р°С‚РѕРє РґРµРЅРµРі РЅР° РЅР°С‡Р°Р»Рѕ РїРµСЂРёРѕРґР°
                             , Container.Amount - COALESCE (SUM (CASE WHEN MIContainer.OperDate > inEndDate THEN MIContainer.Amount ELSE 0 END), 0) AS AmountEnd
                        FROM ContainerLinkObject AS CLO_Cash
                            INNER JOIN Container ON Container.Id = CLO_Cash.ContainerId
@@ -90,7 +90,7 @@ BEGIN
 
 , tmpCashJuridical AS (SELECT SUM (CASE WHEN (MIContainer.OperDate  BETWEEN  inStartDate AND inEndDate  AND MIContainer.Amount>0)THEN MIContainer.Amount ELSE 0 END) as AmountDebet
                              , SUM (CASE WHEN (MIContainer.OperDate  BETWEEN  inStartDate AND inEndDate  AND MIContainer.Amount<0)THEN MIContainer.Amount ELSE 0 END) as AmountKredit
-                             , Container.Amount - COALESCE (SUM (MIContainer.Amount), 0) AS AmountStart      -- остаток денег на начало периода
+                             , Container.Amount - COALESCE (SUM (MIContainer.Amount), 0) AS AmountStart      -- РѕСЃС‚Р°С‚РѕРє РґРµРЅРµРі РЅР° РЅР°С‡Р°Р»Рѕ РїРµСЂРёРѕРґР°
                              , Container.Amount - COALESCE (SUM (CASE WHEN MIContainer.OperDate > inEndDate THEN MIContainer.Amount ELSE 0 END), 0) AS AmountEnd
                         FROM ContainerLinkObject AS CLO_Branch
                               INNER JOIN ContainerLinkObject AS CLO_Juridical
@@ -149,11 +149,11 @@ $BODY$
 
 
 /*-------------------------------------------------------------------------------
- ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ РРЎРўРћР РРЇ Р РђР—Р РђР‘РћРўРљР: Р”РђРўРђ, РђР’РўРћР 
+               Р¤РµР»РѕРЅСЋРє Р.Р’.   РљСѓС…С‚РёРЅ Р.Р’.   РљР»РёРјРµРЅС‚СЊРµРІ Рљ.Р.   РњР°РЅСЊРєРѕ Р”.Рђ.
  10.11.15         * 
 
 */
 
--- тест
+-- С‚РµСЃС‚
 --SELECT * FROM gpReport_Branch_App7 (inStartDate:= '01.08.2015'::TDateTime, inEndDate:= '03.08.2015'::TDateTime, inBranchId:= 8374, inSession:= zfCalc_UserAdmin())  --

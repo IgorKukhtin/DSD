@@ -25,7 +25,8 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, ReceiptCode TVarChar, Co
              , GoodsKindName_Parent TVarChar, GoodsKindCompleteName_Parent TVarChar
              , GoodsGroupNameFull TVarChar, GoodsGroupAnalystName TVarChar, GoodsTagName TVarChar, TradeMarkName TVarChar
              , InfoMoneyCode Integer, InfoMoneyGroupName TVarChar, InfoMoneyDestinationName TVarChar, InfoMoneyName TVarChar
-             , UpdateName TVarChar
+             , InsertName TVarChar, UpdateName TVarChar
+             , InsertDate TDateTime, UpdateDate TDateTime
              , isCheck_Parent Boolean
              , isErased Boolean
               )
@@ -106,7 +107,10 @@ BEGIN
          , Object_InfoMoney_View.InfoMoneyDestinationName
          , Object_InfoMoney_View.InfoMoneyName
        
+         , Object_Insert.ValueData   AS InsertName
          , Object_Update.ValueData   AS UpdateName
+         , ObjectDate_Protocol_Insert.ValueData AS InsertDate
+         , ObjectDate_Protocol_Update.ValueData AS UpdateDate
          
          , CASE WHEN Object_Goods.Id <> Object_Goods_Parent.Id THEN TRUE ELSE FALSE END AS isCheck_Parent
          , Object_Receipt.isErased AS isErased
@@ -260,10 +264,22 @@ BEGIN
                               AND ObjectLink_Goods_TradeMark.DescId = zc_ObjectLink_Goods_TradeMark()
           LEFT JOIN Object AS Object_TradeMark ON Object_TradeMark.Id = ObjectLink_Goods_TradeMark.ChildObjectId
 
+          LEFT JOIN ObjectDate AS ObjectDate_Protocol_Insert
+                             ON ObjectDate_Protocol_Insert.ObjectId = Object_Receipt.Id
+                            AND ObjectDate_Protocol_Insert.DescId = zc_ObjectDate_Protocol_Insert()
+          LEFT JOIN ObjectDate AS ObjectDate_Protocol_Update
+                             ON ObjectDate_Protocol_Update.ObjectId = Object_Receipt.Id
+                            AND ObjectDate_Protocol_Update.DescId = zc_ObjectDate_Protocol_Update()
+
+          LEFT JOIN ObjectLink AS ObjectLink_Insert
+                             ON ObjectLink_Insert.ObjectId = Object_Receipt.Id 
+                            AND ObjectLink_Insert.DescId = zc_ObjectLink_Protocol_Insert()
+          LEFT JOIN Object AS Object_Insert ON Object_Insert.Id = ObjectLink_Insert.ChildObjectId   
+
           LEFT JOIN ObjectLink AS ObjectLink_Update
-                               ON ObjectLink_Update.ObjectId = Object_Receipt.Id
-                              AND ObjectLink_Update.DescId = zc_ObjectLink_Protocol_Update()
-          LEFT JOIN Object AS Object_Update ON Object_Update.Id = ObjectLink_Update.ChildObjectId
+                             ON ObjectLink_Update.ObjectId = Object_Receipt.Id 
+                            AND ObjectLink_Update.DescId = zc_ObjectLink_Protocol_Update()
+          LEFT JOIN Object AS Object_Update ON Object_Update.Id = ObjectLink_Update.ChildObjectId   
 
      WHERE Object_Receipt.DescId = zc_Object_Receipt()
        AND (Object_Receipt.Id = inReceiptId OR inReceiptId = 0)

@@ -138,8 +138,17 @@ type
     PrintMasterCDS: TClientDataSet;
     spPrintReceipt: TdsdStoredProc;
     ProtocolOpenForm: TdsdOpenForm;
-    bb: TdxBarButton;
+    bbProtocol: TdxBarButton;
     UpdateName: TcxGridDBColumn;
+    InsertName: TcxGridDBColumn;
+    InsertDate: TcxGridDBColumn;
+    UpdateDate: TcxGridDBColumn;
+    clInsertName: TcxGridDBColumn;
+    clUpdateName: TcxGridDBColumn;
+    clInsertDate: TcxGridDBColumn;
+    clUpdateDate: TcxGridDBColumn;
+    ProtocolOpenFormChild: TdsdOpenForm;
+    bbProtocolChild: TdxBarButton;
   private
     { Private declarations }
   public

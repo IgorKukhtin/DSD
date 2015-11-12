@@ -16,6 +16,8 @@ RETURNS TABLE (Id Integer, Value TFloat, ValueWeight TFloat, ValueWeight_calc TF
                GroupNumber Integer,
                InfoMoneyCode Integer, InfoMoneyGroupName TVarChar, InfoMoneyDestinationName TVarChar, InfoMoneyName TVarChar,
                Color_calc Integer,
+               InsertName TVarChar, UpdateName TVarChar,
+               InsertDate TDateTime, UpdateDate TDateTime,
                isErased Boolean) AS
 $BODY$
 BEGIN
@@ -71,6 +73,11 @@ BEGIN
                    WHEN 8 THEN 10965163 -- _colorRecord_KindPackage_Composition_Y     - inInfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_10200() -- Основное сырье + Прочее сырье (осталось Оболочка + Упаковка + Прочее сырье)
                    ELSE 0 -- clBlack
              END :: Integer AS Color_calc
+
+         , Object_Insert.ValueData   AS InsertName
+         , Object_Update.ValueData   AS UpdateName
+         , ObjectDate_Protocol_Insert.ValueData AS InsertDate
+         , ObjectDate_Protocol_Update.ValueData AS UpdateDate
 
          , tmpReceiptChild.isErased
          
@@ -162,6 +169,24 @@ BEGIN
           LEFT JOIN ObjectString AS ObjectString_Comment
                                  ON ObjectString_Comment.ObjectId = tmpReceiptChild.Id
                                 AND ObjectString_Comment.DescId = zc_ObjectString_ReceiptChild_Comment()
+
+          LEFT JOIN ObjectDate AS ObjectDate_Protocol_Insert
+                             ON ObjectDate_Protocol_Insert.ObjectId = tmpReceiptChild.Id
+                            AND ObjectDate_Protocol_Insert.DescId = zc_ObjectDate_Protocol_Insert()
+          LEFT JOIN ObjectDate AS ObjectDate_Protocol_Update
+                             ON ObjectDate_Protocol_Update.ObjectId = tmpReceiptChild.Id
+                            AND ObjectDate_Protocol_Update.DescId = zc_ObjectDate_Protocol_Update()
+
+          LEFT JOIN ObjectLink AS ObjectLink_Insert
+                             ON ObjectLink_Insert.ObjectId = tmpReceiptChild.Id 
+                            AND ObjectLink_Insert.DescId = zc_ObjectLink_Protocol_Insert()
+          LEFT JOIN Object AS Object_Insert ON Object_Insert.Id = ObjectLink_Insert.ChildObjectId   
+
+          LEFT JOIN ObjectLink AS ObjectLink_Update
+                             ON ObjectLink_Update.ObjectId = tmpReceiptChild.Id 
+                            AND ObjectLink_Update.DescId = zc_ObjectLink_Protocol_Update()
+          LEFT JOIN Object AS Object_Update ON Object_Update.Id = ObjectLink_Update.ChildObjectId   
+
     ;
   
 END;
@@ -172,6 +197,7 @@ ALTER FUNCTION gpSelect_Object_ReceiptChild (Integer, Boolean, TVarChar) OWNER T
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
+ 12.11.15         * add протокол 
  21.03.15                                       * add inReceiptId
  18.03.15                        * InfoMoneyName
  14.02.15                                        *all
