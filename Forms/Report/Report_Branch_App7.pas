@@ -21,19 +21,26 @@ type
     JuridicalSummStart: TcxGridDBColumn;
     JuridicalSummEnd: TcxGridDBColumn;
     FormParams: TdsdFormParams;
-    JuridicalSummKredit: TcxGridDBColumn;
+    JuridicalSummOut: TcxGridDBColumn;
     BranchName: TcxGridDBColumn;
     cxLabel3: TcxLabel;
     edBranch: TcxButtonEdit;
-    BranchUnit: TdsdGuides;
+    BranchGuides: TdsdGuides;
     CashSummStart: TcxGridDBColumn;
-    JuridicalSummDebet: TcxGridDBColumn;
-    SummStart: TcxGridDBColumn;
-    SummEnd: TcxGridDBColumn;
-    SummIn: TcxGridDBColumn;
-    SummOut: TcxGridDBColumn;
+    JuridicalSummIn: TcxGridDBColumn;
+    GoodsSummStart: TcxGridDBColumn;
+    GoodsSummEnd: TcxGridDBColumn;
+    GoodsSummIn: TcxGridDBColumn;
+    GoodsSummOut: TcxGridDBColumn;
     ExecuteDialog: TExecuteDialog;
     bbExecuteDialog: TdxBarButton;
+    actPrint: TdsdPrintAction;
+    bbPrint: TdxBarButton;
+    CashSummIn: TcxGridDBColumn;
+    CashSummOut: TcxGridDBColumn;
+    CashAmount: TcxGridDBColumn;
+    GoodsSummSale_SF: TcxGridDBColumn;
+    GoodsSummReturnIn_SF: TcxGridDBColumn;
   private
     { Private declarations }
   public
