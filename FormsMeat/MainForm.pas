@@ -637,6 +637,9 @@ type
     N84: TMenuItem;
     actReport_Branch_App7: TdsdOpenForm;
     N710: TMenuItem;
+    actReport_Wage: TdsdOpenForm;
+    N85: TMenuItem;
+    mniReport_Wage: TMenuItem;
     procedure actReport_OLAPSoldExecute(Sender: TObject);
     procedure FormShow(Sender: TObject);
   private

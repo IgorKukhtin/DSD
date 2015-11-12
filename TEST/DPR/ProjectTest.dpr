@@ -759,7 +759,8 @@ uses
   Promo in '..\..\Forms\Document\Promo.pas' {PromoForm: TParentForm},
   PromoPartner in '..\..\Forms\Guides\PromoPartner.pas' {PromoPartnerForm: TParentForm},
   Report_Branch_App7Dialog in '..\..\Forms\Report\Report_Branch_App7Dialog.pas' {Report_Branch_App7DialogForm: TParentForm},
-  Report_Branch_App7 in '..\..\Forms\Report\Report_Branch_App7.pas' {Report_Branch_App7Form: TParentForm};
+  Report_Branch_App7 in '..\..\Forms\Report\Report_Branch_App7.pas' {Report_Branch_App7Form: TParentForm},
+  Report_Wage in '..\..\Forms\Report\Report_Wage.pas' {Report_WageForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}

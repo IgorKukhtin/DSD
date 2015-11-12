@@ -132,8 +132,8 @@ BEGIN
                                           AND Object_Data.PositionId = Movement_Data.PositionId
                                           AND Object_Data.PositionLevelId = Movement_Data.PositionLevelId
                                           AND Object_Data.PersonalGroupId = Movement_Data.PersonalGroupId
-                                  ''
-                                , ''SELECT OperDate FROM tmpOperDate
+                                  order by 1,2''
+                                , ''SELECT OperDate FROM tmpOperDate order by 1
                                   '') AS CT (' || vbCrossString || ')
          ) AS D
          LEFT JOIN Object AS Object_Member ON Object_Member.Id = D.Key[1]

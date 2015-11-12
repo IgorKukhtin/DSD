@@ -24,6 +24,7 @@ type
     procedure LoadTransportReportFormTest;
     procedure LoadReceiptFormTest;
     procedure LoadPromoFormTest;
+    procedure LoadWageFormTest;
   end;
 
 implementation
@@ -75,6 +76,11 @@ begin
   LoadReportFromFile('Путевой лист - Сбыт', ReportPath + '\Транспорт\Путевой лист - Сбыт.fr3');
   LoadReportFromFile('Ведомость расхода топлива', ReportPath + '\Транспорт\Ведомость расхода топлива.fr3');
   LoadReportFromFile('Реестр путевых и наемного транспорта', ReportPath + '\Транспорт\Реестр путевых и наемного транспорта.fr3');
+end;
+
+procedure TLoadReportTest.LoadWageFormTest;
+begin
+  LoadReportFromFile('Ведомость_по_зарплате_1', ReportPath + '\Персонал\Ведомость_по_зарплате_1.fr3');
 end;
 
 procedure TLoadReportTest.LoadAllReportFormTest;
