@@ -120,6 +120,7 @@ BEGIN
             OR Object_Personal_View.BranchId = vbObjectId_Constraint
             OR Object_Personal_View.PositionId = 12436 -- бухгалтер
             OR Object_Personal_View.UnitId     = 8386  -- Бухгалтерия
+            OR Object_Personal_View.UnitId     = 8408  -- Отдел коммерции ф.Днепр
            )
        AND (Object_Personal_View.isErased = FALSE
             OR (Object_Personal_View.isErased = TRUE AND inIsShowAll = TRUE OR inIsPeriod = TRUE)

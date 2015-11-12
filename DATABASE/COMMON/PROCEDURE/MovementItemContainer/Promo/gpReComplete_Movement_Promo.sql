@@ -11,29 +11,22 @@ AS
 $BODY$
   DECLARE vbUserId Integer;
 BEGIN
-    -- проверка прав пользователя на вызов процедуры
-    --vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Complete_Promo());
-    vbUserId := inSession;
-    
-    -- только если документ проведен
-    IF EXISTS(
-                SELECT 1
-                FROM Movement
-                WHERE
-                    Id = inMovementId
-                    AND
-                    StatusId = zc_Enum_Status_Complete()
-             )
-    THEN
-        --распроводим документ
-        PERFORM gpUpdate_Status_Promo(inMovementId := inMovementId,
-                                     inStatusCode := zc_Enum_StatusCode_UnComplete(),
-                                     inSession    := inSession);
-        --Проводим документ
-        PERFORM gpUpdate_Status_Promo(inMovementId := inMovementId,
-                                     inStatusCode := zc_Enum_StatusCode_Complete(),
-                                     inSession    := inSession);
-    END IF;
+     -- проверка прав пользователя на вызов процедуры
+     vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Complete_Promo());
+
+     IF vbUserId = lpCheckRight(inSession, zc_Enum_Process_UnComplete_Promo())
+     THEN
+         -- Распроводим Документ
+         PERFORM lpUnComplete_Movement (inMovementId := inMovementId
+                                      , inUserId     := vbUserId);
+     END IF;
+
+     -- проводим Документ + сохранили протокол
+     PERFORM lpComplete_Movement (inMovementId := inMovementId
+                                , inDescId     := zc_Movement_Promo()
+                                , inUserId     := vbUserId
+                                 );
+
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;

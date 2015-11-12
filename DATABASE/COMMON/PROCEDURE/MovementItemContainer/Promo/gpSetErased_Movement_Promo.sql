@@ -11,14 +11,13 @@ AS
 $BODY$
   DECLARE vbUserId Integer;
 BEGIN
-    -- проверка прав пользователя на вызов процедуры
-    --vbUserId:= lpCheckRight(inSession, zc_Enum_Process_SetErased_Promo());
-    vbUserId := inSession::Integer; 
+     -- проверка прав пользователя на вызов процедуры
+     vbUserId:= lpCheckRight(inSession, zc_Enum_Process_SetErased_Promo());
 
-    -- Удаляем Документ
-    PERFORM lpSetErased_Movement (inMovementId := inMovementId
+
+     -- Удаляем Документ
+     PERFORM lpSetErased_Movement (inMovementId := inMovementId
                                  , inUserId     := vbUserId);
-
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;

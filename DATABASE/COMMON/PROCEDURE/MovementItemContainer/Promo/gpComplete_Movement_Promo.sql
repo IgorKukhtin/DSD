@@ -10,17 +10,16 @@ RETURNS VOID
 AS
 $BODY$
   DECLARE vbUserId    Integer;
-  
 BEGIN
-    vbUserId:= inSession;
+     -- проверка прав пользовател€ на вызов процедуры
+     vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Complete_Promo());
 
-    --мен€ем статус документа
-    
-    UPDATE Movement SET StatusId = zc_Enum_Status_Complete() 
-    WHERE Id = inMovementId AND StatusId IN (zc_Enum_Status_UnComplete(), zc_Enum_Status_Erased());
-    
-    -- сохранили протокол
-    PERFORM lpInsert_MovementProtocol (inMovementId, vbUserId, FALSE);
+     -- проводим ƒокумент + сохранили протокол
+     PERFORM lpComplete_Movement (inMovementId := inMovementId
+                                , inDescId     := zc_Movement_Promo()
+                                , inUserId     := vbUserId
+                                 );
+
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;

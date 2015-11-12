@@ -69,8 +69,9 @@ $BODY$
    DECLARE vbUserId Integer;
 BEGIN
     -- проверка прав пользователя на вызов процедуры
-    --vbUserId:= lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Movement_Promo());
-    vbUserId := inSession;
+    vbUserId:= lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Movement_Promo());
+
+
     -- сохранили <Документ>
     ioId := lpInsertUpdate_Movement_Promo (ioId            := ioId
                                         , inInvNumber      := inInvNumber
