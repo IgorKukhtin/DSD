@@ -137,6 +137,9 @@ type
     clColor_calc: TcxGridDBColumn;
     PrintMasterCDS: TClientDataSet;
     spPrintReceipt: TdsdStoredProc;
+    ProtocolOpenForm: TdsdOpenForm;
+    bb: TdxBarButton;
+    UpdateName: TcxGridDBColumn;
   private
     { Private declarations }
   public

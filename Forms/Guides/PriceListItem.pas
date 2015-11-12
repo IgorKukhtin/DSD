@@ -73,6 +73,7 @@ type
     ObjectId: TcxGridDBColumn;
     PriceListTaxDialoglOpenForm: TdsdOpenForm;
     bbPriceListTaxDialog: TdxBarButton;
+    UpdateName: TcxGridDBColumn;
   private
     { Private declarations }
   public

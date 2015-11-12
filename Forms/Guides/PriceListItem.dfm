@@ -112,6 +112,13 @@ object PriceListItemForm: TPriceListItemForm
         VisibleForCustomization = False
         Width = 20
       end
+      object UpdateName: TcxGridDBColumn
+        Caption = #1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1100' ('#1082#1086#1088#1088'.)'
+        DataBinding.FieldName = 'UpdateName'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 120
+      end
     end
     object cxGridLevel: TcxGridLevel
       GridView = cxGridDBTableView
@@ -580,8 +587,8 @@ object PriceListItemForm: TPriceListItemForm
         DataType = ftString
         ParamType = ptInput
       end>
-    Left = 248
-    Top = 72
+    Left = 232
+    Top = 16
   end
   object spInsertUpdate: TdsdStoredProc
     StoredProcName = 'gpInsertUpdate_ObjectHistory_PriceListItemLast'
