@@ -38,32 +38,36 @@ BEGIN
                                 AND MovementLinkObject_Unit.ObjectId = inUnitId 
                            WHERE Movement_SheetWorkTime.DescId = zc_Movement_SheetWorkTime() AND Movement_SheetWorkTime.OperDate::Date = inOperDate::Date);
  
-     IF COALESCE(vbMovementId, 0) = 0 THEN
-        -- сохранили <Документ>
+    IF COALESCE(vbMovementId, 0) = 0 THEN
+       -- сохранили <Документ>
         vbMovementId := lpInsertUpdate_Movement_SheetWorkTime(vbMovementId, '', inOperDate::DATE, inUnitId);
-     END IF;
+    END IF;
 
      -- Теперь ищем MovementItemId
-     vbMovementItemId := (SELECT MI_SheetWorkTime.Id 
-                            FROM MovementItem AS MI_SheetWorkTime
-                            JOIN MovementItemLinkObject AS MIObject_Position
-                              ON MIObject_Position.MovementItemId = MI_SheetWorkTime.Id 
-                             AND ((MIObject_Position.ObjectId IS NULL) OR (MIObject_Position.ObjectId = inPositionId))
-                             AND MIObject_Position.DescId = zc_MILinkObject_Position() 
-                            JOIN MovementItemLinkObject AS MIObject_PositionLevel
-                              ON MIObject_PositionLevel.MovementItemId = MI_SheetWorkTime.Id 
-                             AND ((MIObject_PositionLevel.ObjectId IS NULL) OR (MIObject_PositionLevel.ObjectId = inPositionLevelId))
-                             AND MIObject_PositionLevel.DescId = zc_MILinkObject_PositionLevel() 
-                            JOIN MovementItemLinkObject AS MIObject_PersonalGroup
-                              ON MIObject_PersonalGroup.MovementItemId = MI_SheetWorkTime.Id 
-                             AND ((MIObject_PersonalGroup.ObjectId IS NULL) OR (MIObject_PersonalGroup.ObjectId = inPersonalGroupId))
-                             AND MIObject_PersonalGroup.DescId = zc_MILinkObject_PersonalGroup() 
-                           WHERE MI_SheetWorkTime.ObjectId = inMemberId AND MI_SheetWorkTime.MovementId = vbMovementId);
+    vbMovementItemId := (SELECT
+                             MI_SheetWorkTime.Id 
+                         FROM 
+                             MovementItem AS MI_SheetWorkTime
+                             LEFT OUTER JOIN MovementItemLinkObject AS MIObject_Position
+                                                                    ON MIObject_Position.MovementItemId = MI_SheetWorkTime.Id 
+                                                                   AND COALESCE(MIObject_Position.ObjectId,0) = COALESCE(inPositionId,0)
+                                                                   AND MIObject_Position.DescId = zc_MILinkObject_Position() 
+                             LEFT OUTER JOIN MovementItemLinkObject AS MIObject_PositionLevel
+                                                                    ON MIObject_PositionLevel.MovementItemId = MI_SheetWorkTime.Id 
+                                                                   AND COALESCE(MIObject_PositionLevel.ObjectId,0) = COALESCE(inPositionLevelId,0)
+                                                                   AND MIObject_PositionLevel.DescId = zc_MILinkObject_PositionLevel() 
+                             LEFT OUTER JOIN MovementItemLinkObject AS MIObject_PersonalGroup
+                                                                    ON MIObject_PersonalGroup.MovementItemId = MI_SheetWorkTime.Id 
+                                                                   AND COALESCE(MIObject_PersonalGroup.ObjectId,0) = COALESCE(inPersonalGroupId,0)
+                                                                   AND MIObject_PersonalGroup.DescId = zc_MILinkObject_PersonalGroup() 
+                          WHERE 
+                              MI_SheetWorkTime.MovementId = vbMovementId AND
+                              MI_SheetWorkTime.ObjectId = inMemberId);
     IF ioValue = '0' THEN
-       inTypeId := 0;
-       ioValue := '0';
+         inTypeId := 0;
+         ioValue := '0';
     ELSE
-      ioValue := zfConvert_ViewWorkHourToHour(ioValue);
+        ioValue := zfConvert_ViewWorkHourToHour(ioValue);
     END IF;
 
     PERFORM lpInsertUpdate_MovementItem_SheetWorkTime(

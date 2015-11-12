@@ -53,7 +53,7 @@ object MovementDescForm: TMovementDescForm
       end
       object clMovementDescName: TcxGridDBColumn
         Caption = #1053#1072#1080#1084#1077#1085#1086#1074#1072#1085#1080#1077
-        DataBinding.FieldName = 'MovementDescName'
+        DataBinding.FieldName = 'Name'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 252
@@ -89,8 +89,8 @@ object MovementDescForm: TMovementDescForm
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
-    Font.Height = -11
-    Font.Name = 'Tahoma'
+    Font.Height = -12
+    Font.Name = 'Segoe UI'
     Font.Style = []
     Categories.Strings = (
       'Default')
@@ -161,6 +161,7 @@ object MovementDescForm: TMovementDescForm
     Top = 64
     object actRefresh: TdsdDataSetRefresh
       Category = 'DSDLib'
+      MoveParams = <>
       StoredProc = dsdStoredProc
       StoredProcList = <
         item
@@ -173,17 +174,20 @@ object MovementDescForm: TMovementDescForm
     end
     object dsdChoiceGuides: TdsdChoiceGuides
       Category = 'DSDLib'
+      MoveParams = <>
       Params = <
         item
           Name = 'Key'
+          Value = Null
           Component = ClientDataSet
-          ComponentItem = 'MovementDescId'
+          ComponentItem = 'Id'
           DataType = ftString
         end
         item
           Name = 'TextValue'
+          Value = Null
           Component = ClientDataSet
-          ComponentItem = 'MovementDescName'
+          ComponentItem = 'Name'
           DataType = ftString
         end>
       Caption = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
@@ -198,6 +202,7 @@ object MovementDescForm: TMovementDescForm
         DataSet = ClientDataSet
       end>
     Params = <>
+    PackSize = 1
     Left = 152
     Top = 128
   end
@@ -219,6 +224,10 @@ object MovementDescForm: TMovementDescForm
       end>
     SortImages = dmMain.SortImageList
     OnlyEditingCellOnEnter = False
+    ColorRuleList = <>
+    ColumnAddOnList = <>
+    ColumnEnterList = <>
+    SummaryItemList = <>
     Left = 120
     Top = 200
   end

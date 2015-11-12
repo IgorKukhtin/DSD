@@ -3474,6 +3474,25 @@ inherited MainForm: TMainForm
       GuiParams = <>
       isShowModal = False
     end
+    object actReport_Wage: TdsdOpenForm
+      Category = #1055#1077#1088#1089#1086#1085#1072#1083
+      MoveParams = <>
+      Caption = #1054#1090#1095#1077#1090' '#1087#1086' '#1088#1072#1089#1095#1077#1090#1091' '#1079#1072#1088#1072#1073#1086#1090#1085#1086#1081' '#1087#1083#1072#1090#1099
+      FormName = 'TReport_WageForm'
+      FormNameParam.Value = 'TReport_WageForm'
+      FormNameParam.DataType = ftString
+      GuiParams = <
+        item
+          Name = 'CashId_top'
+          Value = '280296'
+        end
+        item
+          Name = 'CashName_top'
+          Value = #1050#1072#1089#1089#1072' '#1054#1076#1077#1089#1089#1072
+          DataType = ftString
+        end>
+      isShowModal = False
+    end
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Active = False
@@ -3960,6 +3979,12 @@ inherited MainForm: TMainForm
       end
       object miPersonalCashOdessa: TMenuItem
         Action = actPersonalCashOdessa
+      end
+      object N85: TMenuItem
+        Caption = '-'
+      end
+      object mniReport_Wage: TMenuItem
+        Action = actReport_Wage
       end
     end
     object miReportsProduction: TMenuItem [8]

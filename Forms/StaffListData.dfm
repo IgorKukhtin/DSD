@@ -2,7 +2,7 @@ object StaffListDataForm: TStaffListDataForm
   Left = 0
   Top = 0
   Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1064#1090#1072#1090#1085#1086#1077' '#1088#1072#1089#1087#1080#1089#1072#1085#1080#1077' ('#1076#1072#1085#1085#1099#1077')>'
-  ClientHeight = 545
+  ClientHeight = 599
   ClientWidth = 937
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -21,12 +21,13 @@ object StaffListDataForm: TStaffListDataForm
     Left = 0
     Top = 49
     Width = 937
-    Height = 208
+    Height = 262
     Align = alClient
     TabOrder = 0
     LookAndFeel.Kind = lfStandard
     LookAndFeel.NativeStyle = False
     LookAndFeel.SkinName = ''
+    ExplicitHeight = 208
     object cxGridDBTableViewStaffLis: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = StaffListDS
@@ -132,7 +133,7 @@ object StaffListDataForm: TStaffListDataForm
   end
   object cxGridStaffListCost: TcxGrid
     Left = 0
-    Top = 257
+    Top = 311
     Width = 937
     Height = 144
     Align = alBottom
@@ -140,6 +141,7 @@ object StaffListDataForm: TStaffListDataForm
     LookAndFeel.Kind = lfStandard
     LookAndFeel.NativeStyle = False
     LookAndFeel.SkinName = ''
+    ExplicitTop = 257
     object cxGridDBTableViewStaffListCost: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = StaffListCostDS
@@ -199,7 +201,7 @@ object StaffListDataForm: TStaffListDataForm
   end
   object cxGridStaffListSumm: TcxGrid
     Left = 0
-    Top = 401
+    Top = 455
     Width = 937
     Height = 144
     Align = alBottom
@@ -207,6 +209,7 @@ object StaffListDataForm: TStaffListDataForm
     LookAndFeel.Kind = lfStandard
     LookAndFeel.NativeStyle = False
     LookAndFeel.SkinName = ''
+    ExplicitTop = 401
     object cxGridDBTableStaffListSumm: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = StaffListSummDS
@@ -328,8 +331,8 @@ object StaffListDataForm: TStaffListDataForm
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
-    Font.Height = -11
-    Font.Name = 'Tahoma'
+    Font.Height = -12
+    Font.Name = 'Segoe UI'
     Font.Style = []
     Categories.Strings = (
       'Default')
@@ -502,6 +505,7 @@ object StaffListDataForm: TStaffListDataForm
     Top = 160
     object actRefresh: TdsdDataSetRefresh
       Category = 'DSDLib'
+      MoveParams = <>
       StoredProc = spSelectStaffList
       StoredProcList = <
         item
@@ -521,6 +525,7 @@ object StaffListDataForm: TStaffListDataForm
     end
     object dsdSetErased: TdsdUpdateErased
       Category = 'DSDLib'
+      MoveParams = <>
       StoredProc = spErasedUnErased
       StoredProcList = <
         item
@@ -535,6 +540,7 @@ object StaffListDataForm: TStaffListDataForm
     end
     object dsdSetErasedCost: TdsdUpdateErased
       Category = 'DSDLib'
+      MoveParams = <>
       StoredProc = spErasedUnErasedCost
       StoredProcList = <
         item
@@ -549,6 +555,7 @@ object StaffListDataForm: TStaffListDataForm
     end
     object dsdSetErasedSumm: TdsdUpdateErased
       Category = 'DSDLib'
+      MoveParams = <>
       StoredProc = spErasedUnErasedSumm
       StoredProcList = <
         item
@@ -563,6 +570,7 @@ object StaffListDataForm: TStaffListDataForm
     end
     object dsdSetUnErased: TdsdUpdateErased
       Category = 'DSDLib'
+      MoveParams = <>
       StoredProc = spErasedUnErased
       StoredProcList = <
         item
@@ -578,6 +586,7 @@ object StaffListDataForm: TStaffListDataForm
     end
     object dsdSetUnErasedCost: TdsdUpdateErased
       Category = 'DSDLib'
+      MoveParams = <>
       StoredProc = spErasedUnErasedCost
       StoredProcList = <
         item
@@ -593,6 +602,7 @@ object StaffListDataForm: TStaffListDataForm
     end
     object dsdSetUnErasedSumm: TdsdUpdateErased
       Category = 'DSDLib'
+      MoveParams = <>
       StoredProc = spErasedUnErasedSumm
       StoredProcList = <
         item
@@ -608,6 +618,7 @@ object StaffListDataForm: TStaffListDataForm
     end
     object dsdChoiceGuides: TdsdChoiceGuides
       Category = 'DSDLib'
+      MoveParams = <>
       Params = <
         item
           Name = 'Key'
@@ -625,6 +636,7 @@ object StaffListDataForm: TStaffListDataForm
     end
     object dsdGridToExcel: TdsdGridToExcel
       Category = 'DSDLib'
+      MoveParams = <>
       Caption = #1042#1099#1075#1088#1091#1079#1082#1072' '#1074' Excel'
       Hint = #1042#1099#1075#1088#1091#1079#1082#1072' '#1074' Excel'
       ImageIndex = 6
@@ -632,7 +644,10 @@ object StaffListDataForm: TStaffListDataForm
     end
     object InsertRecord: TInsertRecord
       Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
       View = cxGridDBTableViewStaffLis
+      Params = <>
       Caption = #1044#1086#1073#1072#1074#1080#1090#1100' '#1096#1090'.'#1077#1076'.'
       Hint = #1044#1086#1073#1072#1074#1080#1090#1100' '#1096#1090'.'#1077#1076'.'
       ShortCut = 45
@@ -640,16 +655,22 @@ object StaffListDataForm: TStaffListDataForm
     end
     object PositionChoiceForm: TOpenChoiceForm
       Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
       Caption = 'PositionChoiceForm'
       FormName = 'TPositionForm'
+      FormNameParam.Value = ''
+      FormNameParam.DataType = ftString
       GuiParams = <
         item
           Name = 'key'
+          Value = Null
           Component = StaffListCDS
           ComponentItem = 'Positionid'
         end
         item
           Name = 'TextValue'
+          Value = Null
           Component = StaffListCDS
           ComponentItem = 'PositionName'
           DataType = ftString
@@ -658,6 +679,8 @@ object StaffListDataForm: TStaffListDataForm
     end
     object actUpdateStaffList: TdsdUpdateDataSet
       Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
       StoredProc = spInsertUpdateObject
       StoredProcList = <
         item
@@ -668,16 +691,22 @@ object StaffListDataForm: TStaffListDataForm
     end
     object PositionLevelChoiceForm: TOpenChoiceForm
       Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
       Caption = 'PositionLevelChoiceForm'
       FormName = 'TPositionLevelForm'
+      FormNameParam.Value = ''
+      FormNameParam.DataType = ftString
       GuiParams = <
         item
           Name = 'Key'
+          Value = Null
           Component = StaffListCDS
           ComponentItem = 'PositionLevelId'
         end
         item
           Name = 'TextValue'
+          Value = Null
           Component = StaffListCDS
           ComponentItem = 'PositionLevelName'
           DataType = ftString
@@ -686,24 +715,33 @@ object StaffListDataForm: TStaffListDataForm
     end
     object InsertRecordSLC: TInsertRecord
       Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
       View = cxGridDBTableViewStaffListCost
       Action = ModelServiceChoiceForm
+      Params = <>
       Caption = #1044#1086#1073#1072#1074#1080#1090#1100' '#1084#1086#1076#1077#1083#1100
       Hint = #1044#1086#1073#1072#1074#1080#1090#1100' '#1084#1086#1076#1077#1083#1100
       ImageIndex = 0
     end
     object ModelServiceChoiceForm: TOpenChoiceForm
       Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
       Caption = 'ModelServiceChoiceForm'
       FormName = 'TModelServiceForm'
+      FormNameParam.Value = ''
+      FormNameParam.DataType = ftString
       GuiParams = <
         item
           Name = 'key'
+          Value = Null
           Component = StaffListCostCDS
           ComponentItem = 'ModelServiceId'
         end
         item
           Name = 'TextValue'
+          Value = Null
           Component = StaffListCostCDS
           ComponentItem = 'ModelServiceName'
           DataType = ftString
@@ -712,6 +750,8 @@ object StaffListDataForm: TStaffListDataForm
     end
     object actUpdateStaffListCost: TdsdUpdateDataSet
       Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
       StoredProc = spInsertUpdateObjectSLCost
       StoredProcList = <
         item
@@ -722,16 +762,22 @@ object StaffListDataForm: TStaffListDataForm
     end
     object StaffListChoiceForm: TOpenChoiceForm
       Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
       Caption = 'StaffListChoiceForm'
       FormName = 'TStaffListForm'
+      FormNameParam.Value = ''
+      FormNameParam.DataType = ftString
       GuiParams = <
         item
           Name = 'key'
+          Value = Null
           Component = StaffListSummCDS
           ComponentItem = 'StaffListMasterId'
         end
         item
           Name = 'Code'
+          Value = Null
           Component = StaffListSummCDS
           ComponentItem = 'StaffListMasterCode'
         end>
@@ -739,16 +785,22 @@ object StaffListDataForm: TStaffListDataForm
     end
     object StaffListSummKindChoiceForm: TOpenChoiceForm
       Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
       Caption = 'StaffListSummKindChoiceForm'
       FormName = 'TStaffListSummKindForm'
+      FormNameParam.Value = ''
+      FormNameParam.DataType = ftString
       GuiParams = <
         item
           Name = 'key'
+          Value = Null
           Component = StaffListSummCDS
           ComponentItem = 'StaffListSummKindId'
         end
         item
           Name = 'TextValue'
+          Value = Null
           Component = StaffListSummCDS
           ComponentItem = 'StaffListSummKindName'
           DataType = ftString
@@ -757,14 +809,19 @@ object StaffListDataForm: TStaffListDataForm
     end
     object InsertRecordSLS: TInsertRecord
       Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
       View = cxGridDBTableStaffListSumm
       Action = StaffListSummKindChoiceForm
+      Params = <>
       Caption = #1044#1086#1073#1072#1074#1080#1090#1100' '#1090#1080#1087' '#1089#1091#1084#1084#1099
       Hint = #1044#1086#1073#1072#1074#1080#1090#1100' '#1090#1080#1087' '#1089#1091#1084#1084#1099
       ImageIndex = 0
     end
     object actStaffListSumm: TdsdUpdateDataSet
       Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
       StoredProc = spInsertUpdateObjectSLSumm
       StoredProcList = <
         item
@@ -775,23 +832,31 @@ object StaffListDataForm: TStaffListDataForm
     end
     object actInsert: TdsdInsertUpdateAction
       Category = 'DSDLib'
+      MoveParams = <>
       Caption = #1044#1086#1073#1072#1074#1080#1090#1100
       ShortCut = 45
       ImageIndex = 0
       FormName = 'TStaffListEditForm'
+      FormNameParam.Value = ''
+      FormNameParam.DataType = ftString
       GuiParams = <>
       isShowModal = False
       DataSource = StaffListDS
       DataSetRefresh = actRefresh
+      IdFieldName = 'Id'
     end
     object actUpdate: TdsdInsertUpdateAction
       Category = 'DSDLib'
+      MoveParams = <>
       Caption = 'actUpdate'
       ImageIndex = 1
       FormName = 'TStaffListEditForm'
+      FormNameParam.Value = ''
+      FormNameParam.DataType = ftString
       GuiParams = <
         item
           Name = 'Id'
+          Value = Null
           Component = StaffListCDS
           ComponentItem = 'Id'
           ParamType = ptInput
@@ -799,6 +864,7 @@ object StaffListDataForm: TStaffListDataForm
       isShowModal = False
       DataSource = StaffListDS
       DataSetRefresh = actRefresh
+      IdFieldName = 'Id'
     end
   end
   object dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
@@ -824,6 +890,10 @@ object StaffListDataForm: TStaffListDataForm
       end>
     SortImages = dmMain.SortImageList
     OnlyEditingCellOnEnter = False
+    ColorRuleList = <>
+    ColumnAddOnList = <>
+    ColumnEnterList = <>
+    SummaryItemList = <>
     Left = 456
     Top = 192
   end
@@ -837,6 +907,7 @@ object StaffListDataForm: TStaffListDataForm
         Value = Null
         ParamType = ptInput
       end>
+    PackSize = 1
     Left = 288
     Top = 208
   end
@@ -866,6 +937,7 @@ object StaffListDataForm: TStaffListDataForm
         ComponentItem = 'inUnitId'
         ParamType = ptInput
       end>
+    PackSize = 1
     Left = 578
     Top = 125
   end
@@ -876,18 +948,21 @@ object StaffListDataForm: TStaffListDataForm
     Params = <
       item
         Name = 'ioId'
+        Value = Null
         Component = StaffListCDS
         ComponentItem = 'Id'
         ParamType = ptInputOutput
       end
       item
         Name = 'ioCode'
+        Value = Null
         Component = StaffListCDS
         ComponentItem = 'Code'
         ParamType = ptInputOutput
       end
       item
         Name = 'inHoursPlan'
+        Value = Null
         Component = StaffListCDS
         ComponentItem = 'HoursPlan'
         DataType = ftFloat
@@ -895,6 +970,7 @@ object StaffListDataForm: TStaffListDataForm
       end
       item
         Name = 'inHoursDay'
+        Value = Null
         Component = StaffListCDS
         ComponentItem = 'HoursDay'
         DataType = ftFloat
@@ -902,6 +978,7 @@ object StaffListDataForm: TStaffListDataForm
       end
       item
         Name = 'inPersonalCount'
+        Value = Null
         Component = StaffListCDS
         ComponentItem = 'PersonalCount'
         DataType = ftFloat
@@ -909,6 +986,7 @@ object StaffListDataForm: TStaffListDataForm
       end
       item
         Name = 'inComment'
+        Value = Null
         Component = StaffListCDS
         ComponentItem = 'Comment'
         DataType = ftString
@@ -916,22 +994,26 @@ object StaffListDataForm: TStaffListDataForm
       end
       item
         Name = 'inUnitId'
+        Value = Null
         Component = StaffListCDS
         ComponentItem = 'UnitId'
         ParamType = ptInput
       end
       item
         Name = 'inPositionId'
+        Value = Null
         Component = StaffListCDS
         ComponentItem = 'PositionId'
         ParamType = ptInput
       end
       item
         Name = 'inPositionLevelId'
+        Value = Null
         Component = StaffListCDS
         ComponentItem = 'PositionLevelId'
         ParamType = ptInput
       end>
+    PackSize = 1
     Left = 672
     Top = 128
   end
@@ -958,6 +1040,7 @@ object StaffListDataForm: TStaffListDataForm
         DataSet = StaffListCostCDS
       end>
     Params = <>
+    PackSize = 1
     Left = 514
     Top = 397
   end
@@ -968,12 +1051,14 @@ object StaffListDataForm: TStaffListDataForm
     Params = <
       item
         Name = 'ioId'
+        Value = Null
         Component = StaffListCostCDS
         ComponentItem = 'Id'
         ParamType = ptInputOutput
       end
       item
         Name = 'inPrice'
+        Value = Null
         Component = StaffListCostCDS
         ComponentItem = 'Price'
         DataType = ftFloat
@@ -981,6 +1066,7 @@ object StaffListDataForm: TStaffListDataForm
       end
       item
         Name = 'inComment'
+        Value = Null
         Component = StaffListCostCDS
         ComponentItem = 'Comment'
         DataType = ftString
@@ -988,16 +1074,19 @@ object StaffListDataForm: TStaffListDataForm
       end
       item
         Name = 'inStaffListId'
+        Value = Null
         Component = StaffListCDS
         ComponentItem = 'Id'
         ParamType = ptInput
       end
       item
         Name = 'inModelServiceId'
+        Value = Null
         Component = StaffListCostCDS
         ComponentItem = 'ModelServiceId'
         ParamType = ptInput
       end>
+    PackSize = 1
     Left = 376
     Top = 392
   end
@@ -1023,12 +1112,14 @@ object StaffListDataForm: TStaffListDataForm
     Params = <
       item
         Name = 'ioId'
+        Value = Null
         Component = StaffListSummCDS
         ComponentItem = 'Id'
         ParamType = ptInputOutput
       end
       item
         Name = 'inValue'
+        Value = Null
         Component = StaffListSummCDS
         ComponentItem = 'Value'
         DataType = ftFloat
@@ -1036,6 +1127,7 @@ object StaffListDataForm: TStaffListDataForm
       end
       item
         Name = 'inComment'
+        Value = Null
         Component = StaffListSummCDS
         ComponentItem = 'Comment'
         DataType = ftString
@@ -1043,22 +1135,26 @@ object StaffListDataForm: TStaffListDataForm
       end
       item
         Name = 'inStaffListId'
+        Value = Null
         Component = StaffListCDS
         ComponentItem = 'Id'
         ParamType = ptInput
       end
       item
         Name = 'inStaffListMasterId'
+        Value = Null
         Component = StaffListSummCDS
         ComponentItem = 'StaffListMasterId'
         ParamType = ptInput
       end
       item
         Name = 'inStaffListSummKindId'
+        Value = Null
         Component = StaffListSummCDS
         ComponentItem = 'StaffListSummKindId'
         ParamType = ptInput
       end>
+    PackSize = 1
     Left = 336
     Top = 544
   end
@@ -1070,12 +1166,15 @@ object StaffListDataForm: TStaffListDataForm
         DataSet = StaffListSummCDS
       end>
     Params = <>
+    PackSize = 1
     Left = 506
     Top = 541
   end
   object UnitGuides: TdsdGuides
     KeyField = 'Id'
     LookupControl = ceUnit
+    FormNameParam.Value = 'TUnit_ObjectForm'
+    FormNameParam.DataType = ftString
     FormName = 'TUnit_ObjectForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
@@ -1117,6 +1216,10 @@ object StaffListDataForm: TStaffListDataForm
       end>
     SortImages = dmMain.SortImageList
     OnlyEditingCellOnEnter = False
+    ColorRuleList = <>
+    ColumnAddOnList = <>
+    ColumnEnterList = <>
+    SummaryItemList = <>
     Left = 560
     Top = 336
   end
@@ -1139,6 +1242,10 @@ object StaffListDataForm: TStaffListDataForm
       end>
     SortImages = dmMain.SortImageList
     OnlyEditingCellOnEnter = False
+    ColorRuleList = <>
+    ColumnAddOnList = <>
+    ColumnEnterList = <>
+    SummaryItemList = <>
     Left = 560
     Top = 488
   end
@@ -1149,10 +1256,12 @@ object StaffListDataForm: TStaffListDataForm
     Params = <
       item
         Name = 'inObjectId'
+        Value = Null
         Component = StaffListCostCDS
         ComponentItem = 'Id'
         ParamType = ptInput
       end>
+    PackSize = 1
     Left = 296
     Top = 344
   end
@@ -1163,14 +1272,17 @@ object StaffListDataForm: TStaffListDataForm
     Params = <
       item
         Name = 'inObjectId'
+        Value = Null
         Component = StaffListSummCDS
         ComponentItem = 'Id'
         ParamType = ptInput
       end>
+    PackSize = 1
     Left = 304
     Top = 472
   end
   object RefreshDispatcher: TRefreshDispatcher
+    IdParam.Value = Null
     RefreshAction = actRefresh
     ComponentList = <
       item

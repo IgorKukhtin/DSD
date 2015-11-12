@@ -169,6 +169,7 @@ object SheetWorkTimeForm: TSheetWorkTimeForm
             Default = True
             Kind = bkEllipsis
           end>
+        Visible = False
         MinWidth = 40
         Width = 40
         Position.BandIndex = 1
@@ -230,14 +231,15 @@ object SheetWorkTimeForm: TSheetWorkTimeForm
         ComponentItem = 'Key'
         ParamType = ptInput
       end>
+    PackSize = 1
     Left = 408
     Top = 191
   end
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
-    Font.Height = -11
-    Font.Name = 'Tahoma'
+    Font.Height = -12
+    Font.Name = 'Segoe UI'
     Font.Style = []
     Categories.Strings = (
       'Default')
@@ -360,6 +362,7 @@ object SheetWorkTimeForm: TSheetWorkTimeForm
     object actUpdateMasterDS: TdsdUpdateDataSet
       Category = 'DSDLib'
       MoveParams = <>
+      PostDataSetBeforeExecute = False
       StoredProc = spInsertUpdateMI
       StoredProcList = <
         item
@@ -417,12 +420,14 @@ object SheetWorkTimeForm: TSheetWorkTimeForm
     object OpenWorkTimeKindForm: TOpenChoiceForm
       Category = 'DSDLib'
       MoveParams = <>
+      PostDataSetBeforeExecute = False
       FormName = 'TWorkTimeKind_ObjectForm'
       FormNameParam.Value = ''
       FormNameParam.DataType = ftString
       GuiParams = <
         item
           Name = 'Key'
+          Value = Null
           Component = CrossDBViewAddOn
           ComponentItem = 'TypeId'
         end>
@@ -507,21 +512,25 @@ object SheetWorkTimeForm: TSheetWorkTimeForm
       GuiParams = <
         item
           Name = 'MemberId'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'MemberId'
         end
         item
           Name = 'PositionId'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'PositionId'
         end
         item
           Name = 'PositionLevelId'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'PositionLevelId'
         end
         item
           Name = 'PersonalGroupId'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'PersonalGroupId'
         end
@@ -545,6 +554,7 @@ object SheetWorkTimeForm: TSheetWorkTimeForm
     object actInsertUpdate_SheetWorkTime_FromTransport: TdsdExecStoredProc
       Category = 'DSDLib'
       MoveParams = <>
+      PostDataSetBeforeExecute = False
       StoredProc = spInsertUpdate_SheetWorkTime_FromTransport
       StoredProcList = <
         item
@@ -604,18 +614,21 @@ object SheetWorkTimeForm: TSheetWorkTimeForm
     Params = <
       item
         Name = 'inMemberId'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'MemberId'
         ParamType = ptInput
       end
       item
         Name = 'inPositionId'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'PositionId'
         ParamType = ptInput
       end
       item
         Name = 'inPositionLevelId'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'PositionLevelId'
         ParamType = ptInput
@@ -629,12 +642,14 @@ object SheetWorkTimeForm: TSheetWorkTimeForm
       end
       item
         Name = 'inPersonalGroupId'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'PersonalGroupId'
         ParamType = ptInput
       end
       item
         Name = 'inStartDate'
+        Value = Null
         Component = HeaderCDS
         ComponentItem = 'OperDate'
         DataType = ftDateTime
@@ -642,6 +657,7 @@ object SheetWorkTimeForm: TSheetWorkTimeForm
       end
       item
         Name = 'ioValue'
+        Value = Null
         Component = CrossDBViewAddOn
         ComponentItem = 'Value'
         DataType = ftString
@@ -649,10 +665,12 @@ object SheetWorkTimeForm: TSheetWorkTimeForm
       end
       item
         Name = 'inTypeId'
+        Value = Null
         Component = CrossDBViewAddOn
         ComponentItem = 'TypeId'
         ParamType = ptInput
       end>
+    PackSize = 1
     Left = 374
     Top = 183
   end
@@ -680,6 +698,7 @@ object SheetWorkTimeForm: TSheetWorkTimeForm
     Top = 240
   end
   object RefreshDispatcher: TRefreshDispatcher
+    IdParam.Value = Null
     RefreshAction = actRefresh
     ComponentList = <
       item
@@ -710,6 +729,7 @@ object SheetWorkTimeForm: TSheetWorkTimeForm
         DataType = ftDateTime
         ParamType = ptInput
       end>
+    PackSize = 1
     Left = 80
     Top = 296
   end

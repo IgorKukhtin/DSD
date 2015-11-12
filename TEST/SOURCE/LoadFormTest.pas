@@ -109,6 +109,7 @@ type
     procedure LoadReportProductionOutAnalyzeFormTest;
     procedure LoadReportProductionOrderFormTest;
     procedure LoadReportTransportFormTest;
+    procedure LoadReportWageFormTest;
     procedure LoadReturnInFormTest;
     procedure LoadReturnOutFormTest;
     procedure LoadRetailFormTest;
@@ -1337,6 +1338,12 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TReport_Transport_ProfitLossForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Transport_ProfitLossDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_Transport_ProfitLossDialogForm');
+end;
+
+procedure TLoadFormTest.LoadReportWageFormTest;
+begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_WageForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_WageForm');
 end;
 
 procedure TLoadFormTest.LoadReportBankAccountCashFormTest;

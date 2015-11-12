@@ -118,8 +118,6 @@ object ModelServiceForm: TModelServiceForm
     LookAndFeel.Kind = lfStandard
     LookAndFeel.NativeStyle = False
     LookAndFeel.SkinName = ''
-    ExplicitLeft = 467
-    ExplicitTop = 20
     object cxGridDBTableViewModelServiceItemMaster: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = ModelServiceItemMasterDS
@@ -654,6 +652,7 @@ object ModelServiceForm: TModelServiceForm
     object actUpdateModelServiceItemMaster: TdsdUpdateDataSet
       Category = 'DSDLib'
       MoveParams = <>
+      PostDataSetBeforeExecute = False
       StoredProc = spInsertUpdateObjectModelServiceItemMaster
       StoredProcList = <
         item
@@ -665,6 +664,7 @@ object ModelServiceForm: TModelServiceForm
     object UnitFromChoiceForm: TOpenChoiceForm
       Category = 'DSDLib'
       MoveParams = <>
+      PostDataSetBeforeExecute = False
       Caption = 'UnitFromChoiceForm'
       FormName = 'TUnit_ObjectForm'
       FormNameParam.Value = ''
@@ -688,6 +688,7 @@ object ModelServiceForm: TModelServiceForm
     object actUpdateModelServiceItemChild: TdsdUpdateDataSet
       Category = 'DSDLib'
       MoveParams = <>
+      PostDataSetBeforeExecute = False
       StoredProc = spInsertUpdateObjectModelServiceItemChild
       StoredProcList = <
         item
@@ -699,6 +700,7 @@ object ModelServiceForm: TModelServiceForm
     object actUpdateModelService: TdsdUpdateDataSet
       Category = 'DSDLib'
       MoveParams = <>
+      PostDataSetBeforeExecute = False
       StoredProcList = <
         item
         end>
@@ -708,6 +710,7 @@ object ModelServiceForm: TModelServiceForm
     object ModelServiceKindChoiceForm: TOpenChoiceForm
       Category = 'DSDLib'
       MoveParams = <>
+      PostDataSetBeforeExecute = False
       Caption = 'ModelServiceKindChoiceForm'
       FormName = 'TModelServiceKindForm'
       FormNameParam.Value = ''
@@ -744,6 +747,7 @@ object ModelServiceForm: TModelServiceForm
     object UnitFromChoiceFormMaster: TOpenChoiceForm
       Category = 'DSDLib'
       MoveParams = <>
+      PostDataSetBeforeExecute = False
       Caption = 'UnitFromChoiceFormMaster'
       FormName = 'TUnit_ObjectForm'
       FormNameParam.Value = ''
@@ -767,6 +771,7 @@ object ModelServiceForm: TModelServiceForm
     object UnitFromChoiceFormChild: TOpenChoiceForm
       Category = 'DSDLib'
       MoveParams = <>
+      PostDataSetBeforeExecute = False
       Caption = 'UnitFromChoiceFormMasterTo'
       FormName = 'TUnit_ObjectForm'
       FormNameParam.Value = ''
@@ -790,6 +795,7 @@ object ModelServiceForm: TModelServiceForm
     object SelectKindChoiceForm: TOpenChoiceForm
       Category = 'DSDLib'
       MoveParams = <>
+      PostDataSetBeforeExecute = False
       Caption = 'SelectKindChoiceForm'
       FormName = 'TSelectKindForm'
       FormNameParam.Value = ''
@@ -813,6 +819,7 @@ object ModelServiceForm: TModelServiceForm
     object InsertModelService: TInsertRecord
       Category = 'DSDLib'
       MoveParams = <>
+      PostDataSetBeforeExecute = False
       View = cxGridDBTableView
       Action = ModelServiceChoiceForm
       Params = <>
@@ -822,6 +829,7 @@ object ModelServiceForm: TModelServiceForm
     object ModelServiceChoiceForm: TOpenChoiceForm
       Category = 'DSDLib'
       MoveParams = <>
+      PostDataSetBeforeExecute = False
       Caption = 'ModelServiceChoiceForm'
       FormName = 'TModelServiceEditForm'
       FormNameParam.Value = ''
@@ -845,6 +853,7 @@ object ModelServiceForm: TModelServiceForm
     object GoodsFromChoiceForm: TOpenChoiceForm
       Category = 'DSDLib'
       MoveParams = <>
+      PostDataSetBeforeExecute = False
       Caption = 'GoodsFromChoiceForm'
       FormName = 'TGoodsTree_ObjectForm'
       FormNameParam.Value = ''
@@ -868,6 +877,7 @@ object ModelServiceForm: TModelServiceForm
     object GoodsToChoiceForm: TOpenChoiceForm
       Category = 'DSDLib'
       MoveParams = <>
+      PostDataSetBeforeExecute = False
       Caption = 'GoodsToChoiceForm'
       FormName = 'TGoodsTree_ObjectForm'
       FormNameParam.Value = ''
@@ -891,6 +901,7 @@ object ModelServiceForm: TModelServiceForm
     object MovementDescChoiceForm: TOpenChoiceForm
       Category = 'DSDLib'
       MoveParams = <>
+      PostDataSetBeforeExecute = False
       Caption = 'MovementDescChoiceForm'
       FormName = 'TMovementDescForm'
       FormNameParam.Value = ''
@@ -1115,7 +1126,7 @@ object ModelServiceForm: TModelServiceForm
       item
         Name = 'inFromId'
         Value = Null
-        Component = ModelServiceItemMasterCDS
+        Component = ModelServiceItemChildCDS
         ComponentItem = 'FromId'
         ParamType = ptInput
       end
