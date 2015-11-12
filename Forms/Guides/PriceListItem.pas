@@ -74,6 +74,9 @@ type
     PriceListTaxDialoglOpenForm: TdsdOpenForm;
     bbPriceListTaxDialog: TdxBarButton;
     UpdateName: TcxGridDBColumn;
+    UpdateDate: TcxGridDBColumn;
+    InsertDate: TcxGridDBColumn;
+    InsertName: TcxGridDBColumn;
   private
     { Private declarations }
   public

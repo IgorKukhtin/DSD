@@ -13,7 +13,8 @@ CREATE OR REPLACE FUNCTION gpSelect_ObjectHistory_PriceListItem(
 RETURNS TABLE (Id Integer , ObjectId Integer
                 , GoodsId Integer, GoodsCode Integer, GoodsName TVarChar, isErased Boolean, GoodsGroupNameFull TVarChar
                 , MeasureName TVarChar, StartDate TDateTime, EndDate TDateTime, ValuePrice TFloat
-                , UpdateName TVarChar
+                , InsertName TVarChar, UpdateName TVarChar
+                , InsertDate TDateTime, UpdateDate TDateTime
                )
 AS
 $BODY$
@@ -39,7 +40,10 @@ BEGIN
            , tmpPrice.EndDate
            , COALESCE(tmpPrice.ValuePrice, NULL) ::TFloat  AS ValuePrice
 
-           , Object_Update.ValueData   AS UpdateName
+         , Object_Insert.ValueData   AS InsertName
+         , Object_Update.ValueData   AS UpdateName
+         , ObjectDate_Protocol_Insert.ValueData AS InsertDate
+         , ObjectDate_Protocol_Update.ValueData AS UpdateDate
 
        FROM Object AS Object_Goods
           
@@ -79,10 +83,23 @@ BEGIN
                                 AND ObjectLink_Goods_Measure.DescId = zc_ObjectLink_Goods_Measure()
             LEFT JOIN Object AS Object_Measure ON Object_Measure.Id = ObjectLink_Goods_Measure.ChildObjectId
 
-            LEFT JOIN ObjectLink AS ObjectLink_Update
-                                 ON ObjectLink_Update.ObjectId = tmpPrice.PriceListItemObjectId
-                                AND ObjectLink_Update.DescId = zc_ObjectLink_Protocol_Update()
-            LEFT JOIN Object AS Object_Update ON Object_Update.Id = ObjectLink_Update.ChildObjectId
+
+          LEFT JOIN ObjectDate AS ObjectDate_Protocol_Insert
+                             ON ObjectDate_Protocol_Insert.ObjectId = tmpPrice.PriceListItemObjectId
+                            AND ObjectDate_Protocol_Insert.DescId = zc_ObjectDate_Protocol_Insert()
+          LEFT JOIN ObjectDate AS ObjectDate_Protocol_Update
+                             ON ObjectDate_Protocol_Update.ObjectId = tmpPrice.PriceListItemObjectId
+                            AND ObjectDate_Protocol_Update.DescId = zc_ObjectDate_Protocol_Update()
+
+          LEFT JOIN ObjectLink AS ObjectLink_Insert
+                             ON ObjectLink_Insert.ObjectId = tmpPrice.PriceListItemObjectId
+                            AND ObjectLink_Insert.DescId = zc_ObjectLink_Protocol_Insert()
+          LEFT JOIN Object AS Object_Insert ON Object_Insert.Id = ObjectLink_Insert.ChildObjectId   
+
+          LEFT JOIN ObjectLink AS ObjectLink_Update
+                             ON ObjectLink_Update.ObjectId = tmpPrice.PriceListItemObjectId
+                            AND ObjectLink_Update.DescId = zc_ObjectLink_Protocol_Update()
+          LEFT JOIN Object AS Object_Update ON Object_Update.Id = ObjectLink_Update.ChildObjectId              
 
        where  Object_Goods.DescId = zc_Object_Goods()
       
@@ -108,7 +125,10 @@ BEGIN
            , ObjectHistory_PriceListItem.EndDate
            , ObjectHistoryFloat_PriceListItem_Value.ValueData AS ValuePrice
 
-           , Object_Update.ValueData   AS UpdateName
+         , Object_Insert.ValueData   AS InsertName
+         , Object_Update.ValueData   AS UpdateName
+         , ObjectDate_Protocol_Insert.ValueData AS InsertDate
+         , ObjectDate_Protocol_Update.ValueData AS UpdateDate
 
        FROM ObjectLink AS ObjectLink_PriceListItem_PriceList
             LEFT JOIN ObjectLink AS ObjectLink_PriceListItem_Goods
@@ -134,10 +154,22 @@ BEGIN
                                 AND ObjectLink_Goods_Measure.DescId = zc_ObjectLink_Goods_Measure()
             LEFT JOIN Object AS Object_Measure ON Object_Measure.Id = ObjectLink_Goods_Measure.ChildObjectId
 
-            LEFT JOIN ObjectLink AS ObjectLink_Update
-                                 ON ObjectLink_Update.ObjectId = ObjectHistory_PriceListItem.ObjectId
-                                AND ObjectLink_Update.DescId = zc_ObjectLink_Protocol_Update()
-            LEFT JOIN Object AS Object_Update ON Object_Update.Id = ObjectLink_Update.ChildObjectId
+          LEFT JOIN ObjectDate AS ObjectDate_Protocol_Insert
+                             ON ObjectDate_Protocol_Insert.ObjectId = ObjectHistory_PriceListItem.ObjectId
+                            AND ObjectDate_Protocol_Insert.DescId = zc_ObjectDate_Protocol_Insert()
+          LEFT JOIN ObjectDate AS ObjectDate_Protocol_Update
+                             ON ObjectDate_Protocol_Update.ObjectId = ObjectHistory_PriceListItem.ObjectId
+                            AND ObjectDate_Protocol_Update.DescId = zc_ObjectDate_Protocol_Update()
+
+          LEFT JOIN ObjectLink AS ObjectLink_Insert
+                             ON ObjectLink_Insert.ObjectId = ObjectHistory_PriceListItem.ObjectId
+                            AND ObjectLink_Insert.DescId = zc_ObjectLink_Protocol_Insert()
+          LEFT JOIN Object AS Object_Insert ON Object_Insert.Id = ObjectLink_Insert.ChildObjectId   
+
+          LEFT JOIN ObjectLink AS ObjectLink_Update
+                             ON ObjectLink_Update.ObjectId = ObjectHistory_PriceListItem.ObjectId
+                            AND ObjectLink_Update.DescId = zc_ObjectLink_Protocol_Update()
+          LEFT JOIN Object AS Object_Update ON Object_Update.Id = ObjectLink_Update.ChildObjectId             
 
        WHERE ObjectLink_PriceListItem_PriceList.DescId = zc_ObjectLink_PriceListItem_PriceList()
          AND ObjectLink_PriceListItem_PriceList.ChildObjectId = inPriceListId
@@ -163,3 +195,5 @@ ALTER FUNCTION gpSelect_ObjectHistory_PriceListItem (Integer, TDateTime, Boolean
 -- тест
 -- SELECT * FROM gpSelect_ObjectHistory_PriceListItem (zc_PriceList_ProductionSeparate(), CURRENT_TIMESTAMP, inSession:= zfCalc_UserAdmin())
 -- SELECT * FROM gpSelect_ObjectHistory_PriceListItem (zc_PriceList_Basis(), CURRENT_TIMESTAMP, inSession:= zfCalc_UserAdmin())
+
+--select * from gpSelect_ObjectHistory_PriceListItem(inPriceListId := 18879 , inOperDate := ('11.11.2015')::TDateTime , inShowAll := 'False' ,  inSession := '5');
