@@ -21,16 +21,34 @@ $BODY$
 BEGIN
           vbUserId:= lpGetUserBySession (inSession);
 
+    CREATE TEMP TABLE _tmpBranch (BranchId Integer) ON COMMIT DROP; 
     
+    -- Филиал
+    IF COALESCE(inBranchId,0) = 0
+    THEN
+     RAISE EXCEPTION 'Ошибка. Не выбран Филиал.';
+       -- INSERT INTO _tmpBranch (BranchId)
+         --  SELECT Object.Id AS BranchId FROM Object WHERE Object.DescId = zc_Object_Branch();
+    ELSE
+       INSERT INTO _tmpBranch (BranchId)
+           SELECT inBranchId;
+    END IF;
+
+
+
     -- Результат
      RETURN QUERY
-   WITH tmpUnitList AS (SELECT * From Object_Unit_View WHERE Object_Unit_View.BranchId = inBranchId )                
-       ,tmpCashList AS (SELECT Object.Id  AS CashId 
-                       FROM Object
+   WITH tmpUnitList AS (SELECT Object_Unit_View.* 
+                        From _tmpBranch
+                            INNER JOIN Object_Unit_View ON Object_Unit_View.BranchId = _tmpBranch.BranchId
+                        )
+                                        
+       ,tmpCashList AS (SELECT Cash_Branch.ObjectId AS CashId 
+                       FROM _tmpBranch
                             INNER JOIN ObjectLink AS Cash_Branch
-                                                  ON Cash_Branch.ObjectId = Object.Id
+                                                  ON Cash_Branch.ChildObjectId = _tmpBranch.BranchId
                                                  AND Cash_Branch.DescId = zc_ObjectLink_Cash_Branch()
-                                                 AND Cash_Branch.ChildObjectId = inBranchId                                              ) 
+                       ) 
 
   , tmpContainerList AS (SELECT * 
                          FROM tmpUnitList 
@@ -98,7 +116,11 @@ BEGIN
                              , Container.Amount - COALESCE (SUM (CASE WHEN MIContainer.OperDate > inEndDate THEN MIContainer.Amount ELSE 0 END), 0)  AS AmountEnd
                              , SUM (CASE WHEN (MIContainer.MovementDescId = zc_Movement_Cash() AND MIContainer.OperDate BETWEEN inStartDate AND inEndDate ) THEN MIContainer.Amount
                                            ELSE 0 END)       AS AmountCash  -- оплаты
-                        FROM ContainerLinkObject AS CLO_Branch
+                        FROM _tmpBranch
+                              INNER JOIN ContainerLinkObject AS CLO_Branch
+                                                             ON CLO_Branch.ObjectId = _tmpBranch.BranchId 
+                                                            AND CLO_Branch.DescId = zc_ContainerLinkObject_Branch() 
+                          
                               INNER JOIN ContainerLinkObject AS CLO_Juridical
                                                              ON CLO_Juridical.ContainerId = CLO_Branch.ContainerId
                                                             AND CLO_Juridical.DescId = zc_ContainerLinkObject_Juridical()
@@ -112,8 +134,6 @@ BEGIN
                                                         ON CLO_PaidKind.ContainerId = CLO_Juridical.ContainerId
                                                        AND CLO_PaidKind.DescId = zc_ContainerLinkObject_PaidKind()   
                                                        AND CLO_PaidKind.ObjectId = zc_Enum_PaidKind_SecondForm()                  
-                        WHERE CLO_Branch.DescId = zc_ContainerLinkObject_Branch() 
-                          AND CLO_Branch.ObjectId =inBranchId  
                         GROUP BY CLO_Juridical.ContainerId, Container.Amount   
                        )
 
@@ -159,9 +179,10 @@ BEGIN
                             , SUM (tmpJuridical.AmountEnd)     AS AmountEnd
                             , -1* SUM (tmpJuridical.AmountKredit)  AS AmountKredit
                             , SUM (tmpJuridical.AmountDebet)   AS AmountDebet
-                            , SUM (tmpJuridical.AmountCash)    AS CashAmount
+                            , -1* SUM (tmpJuridical.AmountCash)    AS CashAmount
                        FROM tmpJuridical) AS tmpJuridical  ON 1=1
-            LEFT JOIN Object AS Object_Branch ON Object_Branch.Id = inBranchId    
+            LEFT JOIN Object AS Object_Branch ON Object_Branch.Id = CASE WHEN COALESCE(inBranchId,0) <> 0 THEN inBranchId END
+ 
       ;
 
 
@@ -178,4 +199,5 @@ $BODY$
 */
 
 -- тест
---SELECT * FROM gpReport_Branch_App7 (inStartDate:= '01.08.2015'::TDateTime, inEndDate:= '05.08.2015'::TDateTime, inBranchId:= 8374, inSession:= zfCalc_UserAdmin())  --
+--SELECT * FROM gpReport_Branch_App7 (inStartDate:= '01.08.2015'::TDateTime, inEndDate:= '01.08.2015'::TDateTime, inBranchId:= 8374, inSession:= zfCalc_UserAdmin())  --8374
+--
