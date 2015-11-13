@@ -36,11 +36,11 @@ BEGIN
    vbUserId := lpGetUserBySession(inSession);
 
    CASE inInvNumberBranch 
-        WHEN '1' THEN vbAccessKey := zc_Enum_Process_AccessKey_DocumentKharkov();
+        WHEN '1' AND inOperDate < '01.11.2015' THEN vbAccessKey := zc_Enum_Process_AccessKey_DocumentKharkov();
         WHEN '2' THEN vbAccessKey := zc_Enum_Process_AccessKey_DocumentKiev();
-        WHEN '5' THEN vbAccessKey := zc_Enum_Process_AccessKey_DocumentNikolaev();
-        WHEN '8' THEN vbAccessKey := zc_Enum_Process_AccessKey_DocumentKrRog();
-        WHEN '9' THEN vbAccessKey := zc_Enum_Process_AccessKey_DocumentCherkassi();
+        WHEN '5' AND inOperDate < '01.11.2015' THEN vbAccessKey := zc_Enum_Process_AccessKey_DocumentNikolaev();
+        WHEN '8' AND inOperDate < '01.11.2015' THEN vbAccessKey := zc_Enum_Process_AccessKey_DocumentKrRog();
+        WHEN '9' AND inOperDate < '01.11.2015' THEN vbAccessKey := zc_Enum_Process_AccessKey_DocumentCherkassi();
         ELSE  vbAccessKey := 0;
    END CASE;
 

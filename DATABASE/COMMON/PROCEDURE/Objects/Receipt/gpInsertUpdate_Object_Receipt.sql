@@ -120,7 +120,7 @@ BEGIN
                                              , inGoodsKindId        := tmp.GoodsKindId
                                              , inSession            := inSession
                                           ) 
-   FROM gpSelect_Object_ReceiptChild (inSession)  AS tmp
+   FROM gpSelect_Object_ReceiptChild (0, FALSE, inSession)  AS tmp
    WHERE tmp.ReceiptId = inMaskId;
       
    END IF;
