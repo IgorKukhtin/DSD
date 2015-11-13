@@ -94,9 +94,9 @@ BEGIN
          , tmpCash AS (SELECT CLO_Cash.ContainerId
                             , Container.Amount - COALESCE (SUM (MIContainer.Amount), 0) AS AmountStart      -- остаток денег на начало периода
                             , Container.Amount - COALESCE (SUM (CASE WHEN MIContainer.OperDate > inEndDate THEN MIContainer.Amount ELSE 0 END), 0) AS AmountEnd
-                            , SUM (CASE WHEN MIContainer.isActive = TRUE THEN MIContainer.Amount 
+                            , SUM (CASE WHEN MIContainer.OperDate BETWEEN inStartDate AND inEndDate AND MIContainer.isActive = TRUE THEN MIContainer.Amount 
                                       ELSE 0 END) AS SummIn
-                            , SUM (CASE WHEN MIContainer.isActive = FALSE THEN -1 * MIContainer.Amount
+                            , SUM (CASE WHEN MIContainer.OperDate BETWEEN inStartDate AND inEndDate AND MIContainer.isActive = FALSE THEN -1 * MIContainer.Amount
                                       ELSE 0 END) AS SummOut
                        FROM tmpCashList
                            INNER JOIN ContainerLinkObject AS CLO_Cash
@@ -159,29 +159,31 @@ BEGIN
         , CAST (tmpJuridical.AmountKredit        AS TFloat) AS JuridicalSummOut
         , CAST (tmpJuridical.AmountDebet         AS TFloat) AS JuridicalSummIn
 
-   FROM (SELECT SUM (tmpGoods.AmountStart) AS AmountStart
-              , SUM (tmpGoods.AmountEnd)   AS AmountEnd
-              , SUM (tmpGoods.SummIn)      AS SummIn
-              , SUM (tmpGoods.SummOut)     AS SummOut
-          FROM tmpGoods
-         ) AS tmpGoods
-            LEFT JOIN (SELECT SUM (tmpGoodsSaleReturn.SummSale)       AS SummSale
-                            , SUM (tmpGoodsSaleReturn.SummReturnIn)   AS SummReturnIn
-                       FROM tmpGoodsSaleReturn) AS tmpGoodsSaleReturn ON 1=1
+   FROM (SELECT 1) AS tmp
+        LEFT JOIN (SELECT SUM (tmpGoods.AmountStart) AS AmountStart
+                        , SUM (tmpGoods.AmountEnd)   AS AmountEnd
+                        , SUM (tmpGoods.SummIn)      AS SummIn
+                        , SUM (tmpGoods.SummOut)     AS SummOut
+                   FROM tmpGoods) AS tmpGoods  ON 1=1
 
-            LEFT JOIN (SELECT SUM (tmpCash.AmountStart) AS AmountStart
-                            , SUM (tmpCash.AmountEnd)   AS AmountEnd
-                            , SUM (tmpCash.SummIn)      AS SummIn
-                            , SUM (tmpCash.SummOut)     AS SummOut
-                       FROM tmpCash) AS tmpCash ON 1=1
+        LEFT JOIN (SELECT SUM (tmpGoodsSaleReturn.SummSale)       AS SummSale
+                        , SUM (tmpGoodsSaleReturn.SummReturnIn)   AS SummReturnIn
+                   FROM tmpGoodsSaleReturn) AS tmpGoodsSaleReturn ON 1=1
 
-            LEFT JOIN (SELECT SUM (tmpJuridical.AmountStart)   AS AmountStart
-                            , SUM (tmpJuridical.AmountEnd)     AS AmountEnd
-                            , -1* SUM (tmpJuridical.AmountKredit)  AS AmountKredit
-                            , SUM (tmpJuridical.AmountDebet)   AS AmountDebet
-                            , -1* SUM (tmpJuridical.AmountCash)    AS CashAmount
-                       FROM tmpJuridical) AS tmpJuridical  ON 1=1
-            LEFT JOIN Object AS Object_Branch ON Object_Branch.Id = CASE WHEN COALESCE(inBranchId,0) <> 0 THEN inBranchId END
+        LEFT JOIN (SELECT SUM (tmpCash.AmountStart) AS AmountStart
+                        , SUM (tmpCash.AmountEnd)   AS AmountEnd
+                        , SUM (tmpCash.SummIn)      AS SummIn
+                        , SUM (tmpCash.SummOut)     AS SummOut
+                   FROM tmpCash) AS tmpCash ON 1=1
+
+        LEFT JOIN (SELECT SUM (tmpJuridical.AmountStart)   AS AmountStart
+                        , SUM (tmpJuridical.AmountEnd)     AS AmountEnd
+                        , -1* SUM (tmpJuridical.AmountKredit)  AS AmountKredit
+                        , SUM (tmpJuridical.AmountDebet)   AS AmountDebet
+                        , -1* SUM (tmpJuridical.AmountCash)    AS CashAmount
+                   FROM tmpJuridical) AS tmpJuridical  ON 1=1
+
+        LEFT JOIN Object AS Object_Branch ON Object_Branch.Id = CASE WHEN COALESCE(inBranchId,0) <> 0 THEN inBranchId END
  
       ;
 
@@ -199,5 +201,5 @@ $BODY$
 */
 
 -- тест
---SELECT * FROM gpReport_Branch_App7 (inStartDate:= '01.08.2015'::TDateTime, inEndDate:= '01.08.2015'::TDateTime, inBranchId:= 8374, inSession:= zfCalc_UserAdmin())  --8374
+--SELECT * FROM gpReport_Branch_App7 (inStartDate:= '01.08.2015'::TDateTime, inEndDate:= '12.08.2015'::TDateTime, inBranchId:= 8374, inSession:= zfCalc_UserAdmin())  --8374
 --
