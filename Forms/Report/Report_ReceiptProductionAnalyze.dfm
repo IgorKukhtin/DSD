@@ -1975,7 +1975,7 @@ inherited Report_ReceiptProductionAnalyzeForm: TReport_ReceiptProductionAnalyzeF
   end
   object ChildDS: TDataSource
     DataSet = ChildCDS
-    Left = 136
+    Left = 168
     Top = 168
   end
   object ChildViewAddOn: TdsdDBViewAddOn

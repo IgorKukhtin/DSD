@@ -108,78 +108,128 @@ inherited Report_Branch_App7Form: TReport_Branch_App7Form
             DataBinding.FieldName = 'BranchName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 180
+            Width = 148
           end
-          object SummStart: TcxGridDBColumn
-            Caption = #1057#1091#1084#1084#1072' '#1053#1072#1095'.'#1086#1089#1090'. '
-            DataBinding.FieldName = 'SummStart'
+          object GoodsSummStart: TcxGridDBColumn
+            Caption = #1057#1091#1084#1084#1072' '#1053#1072#1095'.'#1086#1089#1090'. '#1085#1072' '#1089#1082#1083#1072#1076#1077' '
+            DataBinding.FieldName = 'GoodsSummStart'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 100
+            Options.Editing = False
+            Width = 87
           end
-          object SummEnd: TcxGridDBColumn
-            Caption = #1057#1091#1084#1084#1072' '#1050#1086#1085'.'#1086#1089#1090'. '
-            DataBinding.FieldName = 'SummEnd'
+          object GoodsSummEnd: TcxGridDBColumn
+            Caption = #1057#1091#1084#1084#1072' '#1050#1086#1085'.'#1086#1089#1090'. '#1085#1072' '#1089#1082#1083#1072#1076#1077
+            DataBinding.FieldName = 'GoodsSummEnd'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 100
+            Options.Editing = False
+            Width = 70
           end
-          object SummIn: TcxGridDBColumn
-            Caption = #1057#1091#1084#1084#1072' '#1087#1088#1080#1093#1086#1076
-            DataBinding.FieldName = 'SummIn'
+          object GoodsSummIn: TcxGridDBColumn
+            Caption = #1057#1091#1084#1084#1072' '#1087#1088#1080#1093#1086#1076' '#1085#1072' '#1089#1082#1083#1072#1076
+            DataBinding.FieldName = 'GoodsSummIn'
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 45
+            Options.Editing = False
+            Width = 60
           end
-          object SummOut: TcxGridDBColumn
-            Caption = #1057#1091#1084#1084#1072' '#1088#1072#1089#1093#1086#1076
-            DataBinding.FieldName = 'SummOut'
+          object GoodsSummOut: TcxGridDBColumn
+            Caption = #1057#1091#1084#1084#1072' '#1088#1072#1089#1093#1086#1076' '#1089#1086' '#1089#1082#1083#1072#1076#1072
+            DataBinding.FieldName = 'GoodsSummOut'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 100
+            Options.Editing = False
+            Width = 76
+          end
+          object GoodsSummSale_SF: TcxGridDBColumn
+            Caption = #1057#1091#1084#1084#1072' '#1087#1088#1086#1076#1072#1078#1080' '#1060'2'
+            DataBinding.FieldName = 'GoodsSummSale_SF'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 60
+          end
+          object GoodsSummReturnIn_SF: TcxGridDBColumn
+            Caption = #1057#1091#1084#1084#1072' '#1074#1086#1079#1074#1088#1072#1090#1072' '#1060'2'
+            DataBinding.FieldName = 'GoodsSummReturnIn_SF'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 60
           end
           object CashSummStart: TcxGridDBColumn
             Caption = #1050#1072#1089#1089#1072' '#1085#1072#1095'.'#1086#1089#1090'.'
             DataBinding.FieldName = 'CashSummStart'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 100
+            Options.Editing = False
+            Width = 60
+          end
+          object CashSummOut: TcxGridDBColumn
+            Caption = #1050#1072#1089#1089#1072' '#1087#1088#1080#1093#1086#1076
+            DataBinding.FieldName = 'CashSummOut'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 60
+          end
+          object CashSummIn: TcxGridDBColumn
+            Caption = #1050#1072#1089#1089#1072' '#1088#1072#1089#1093#1086#1076
+            DataBinding.FieldName = 'CashSummIn'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 60
           end
           object CashSummEnd: TcxGridDBColumn
             Caption = #1050#1072#1089#1089#1072' '#1082#1086#1085'.'#1086#1089#1090'.'
             DataBinding.FieldName = 'CashSummEnd'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 100
+            Options.Editing = False
+            Width = 60
+          end
+          object CashAmount: TcxGridDBColumn
+            Caption = #1050#1072#1089#1089#1072' ('#1086#1087#1083#1072#1090#1072')'
+            DataBinding.FieldName = 'CashAmount'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 60
           end
           object JuridicalSummStart: TcxGridDBColumn
             Caption = #1044#1086#1083#1075#1080' ('#1085#1072#1095'.)'
             DataBinding.FieldName = 'JuridicalSummStart'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 100
+            Options.Editing = False
+            Width = 60
+          end
+          object JuridicalSummOut: TcxGridDBColumn
+            Caption = #1050#1088#1077#1076#1080#1090
+            DataBinding.FieldName = 'JuridicalSummOut'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 60
+          end
+          object JuridicalSummIn: TcxGridDBColumn
+            Caption = #1044#1077#1073#1077#1090
+            DataBinding.FieldName = 'JuridicalSummIn'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 60
           end
           object JuridicalSummEnd: TcxGridDBColumn
             Caption = #1044#1086#1083#1075#1080' ('#1082#1086#1085')'
             DataBinding.FieldName = 'JuridicalSummEnd'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 100
-          end
-          object JuridicalSummKredit: TcxGridDBColumn
-            Caption = #1050#1088#1077#1076#1080#1090
-            DataBinding.FieldName = 'JuridicalSummKredit'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 100
-          end
-          object JuridicalSummDebet: TcxGridDBColumn
-            Caption = #1044#1077#1073#1077#1090
-            DataBinding.FieldName = 'JuridicalSummDebet'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 100
+            Options.Editing = False
+            Width = 60
           end
         end
       end
@@ -190,13 +240,13 @@ inherited Report_Branch_App7Form: TReport_Branch_App7Form
     ExplicitWidth = 1020
     inherited deStart: TcxDateEdit
       Left = 97
-      EditValue = 42005d
+      EditValue = 42309d
       Properties.SaveTime = False
       ExplicitLeft = 97
     end
     inherited deEnd: TcxDateEdit
       Left = 300
-      EditValue = 42005d
+      EditValue = 42309d
       Properties.SaveTime = False
       ExplicitLeft = 300
     end
@@ -226,6 +276,25 @@ inherited Report_Branch_App7Form: TReport_Branch_App7Form
       Width = 251
     end
   end
+  inherited cxPropertiesStore: TcxPropertiesStore
+    Components = <
+      item
+        Component = deEnd
+        Properties.Strings = (
+          'Date')
+      end
+      item
+        Component = deStart
+        Properties.Strings = (
+          'Date')
+      end
+      item
+        Component = BranchGuides
+        Properties.Strings = (
+          'Key'
+          'TextValue')
+      end>
+  end
   inherited ActionList: TActionList
     object ExecuteDialog: TExecuteDialog
       Category = 'DSDLib'
@@ -254,14 +323,14 @@ inherited Report_Branch_App7Form: TReport_Branch_App7Form
         item
           Name = 'BranchId'
           Value = ''
-          Component = BranchUnit
+          Component = BranchGuides
           ComponentItem = 'Key'
           ParamType = ptInput
         end
         item
           Name = 'BranchName'
           Value = ''
-          Component = BranchUnit
+          Component = BranchGuides
           ComponentItem = 'TextValue'
           DataType = ftString
           ParamType = ptInput
@@ -269,6 +338,44 @@ inherited Report_Branch_App7Form: TReport_Branch_App7Form
       isShowModal = True
       RefreshDispatcher = RefreshDispatcher
       OpenBeforeShow = True
+    end
+    object actPrint: TdsdPrintAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProcList = <>
+      Caption = #1055#1077#1095#1072#1090#1100' <'#1055#1088#1080#1083#1086#1078#1077#1085#1080#1077' 7>'
+      Hint = #1055#1077#1095#1072#1090#1100' <'#1055#1088#1080#1083#1086#1078#1077#1085#1080#1077' 7>'
+      ImageIndex = 3
+      ShortCut = 16464
+      DataSets = <
+        item
+          UserName = 'frxDBDMaster'
+          GridView = cxGridDBTableView
+        end>
+      Params = <
+        item
+          Name = 'StartDate'
+          Value = 42005d
+          Component = deStart
+          DataType = ftDateTime
+        end
+        item
+          Name = 'EndDate'
+          Value = 42005d
+          Component = deEnd
+          DataType = ftDateTime
+        end
+        item
+          Name = 'BranchName'
+          Value = ''
+          Component = BranchGuides
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          ParamType = ptInput
+        end>
+      ReportName = #1055#1088#1080#1083#1086#1078#1077#1085#1080#1077'7'
+      ReportNameParam.Value = #1055#1088#1080#1083#1086#1078#1077#1085#1080#1077'7'
+      ReportNameParam.DataType = ftString
     end
   end
   inherited MasterDS: TDataSource
@@ -299,7 +406,7 @@ inherited Report_Branch_App7Form: TReport_Branch_App7Form
       item
         Name = 'inBranchId'
         Value = Null
-        Component = BranchUnit
+        Component = BranchGuides
         ComponentItem = 'Key'
         ParamType = ptInput
       end>
@@ -338,6 +445,14 @@ inherited Report_Branch_App7Form: TReport_Branch_App7Form
         end
         item
           Visible = True
+          ItemName = 'bbPrint'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbGridToExcel'
         end
         item
@@ -347,6 +462,10 @@ inherited Report_Branch_App7Form: TReport_Branch_App7Form
     end
     object bbExecuteDialog: TdxBarButton
       Action = ExecuteDialog
+      Category = 0
+    end
+    object bbPrint: TdxBarButton
+      Action = actPrint
       Category = 0
     end
   end
@@ -366,7 +485,7 @@ inherited Report_Branch_App7Form: TReport_Branch_App7Form
       item
       end
       item
-        Component = BranchUnit
+        Component = BranchGuides
       end>
     Left = 224
     Top = 136
@@ -376,7 +495,7 @@ inherited Report_Branch_App7Form: TReport_Branch_App7Form
     Left = 328
     Top = 170
   end
-  object BranchUnit: TdsdGuides
+  object BranchGuides: TdsdGuides
     KeyField = 'Id'
     LookupControl = edBranch
     FormNameParam.Value = 'TBranch_ObjectForm'
@@ -387,7 +506,7 @@ inherited Report_Branch_App7Form: TReport_Branch_App7Form
       item
         Name = 'Key'
         Value = ''
-        Component = BranchUnit
+        Component = BranchGuides
         ComponentItem = 'Key'
         DataType = ftString
         ParamType = ptInput
@@ -395,7 +514,7 @@ inherited Report_Branch_App7Form: TReport_Branch_App7Form
       item
         Name = 'TextValue'
         Value = ''
-        Component = BranchUnit
+        Component = BranchGuides
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
