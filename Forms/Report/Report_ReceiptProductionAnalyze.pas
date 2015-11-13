@@ -94,6 +94,8 @@ type
     GuidesGoods: TdsdGuides;
     cxLabel9: TcxLabel;
     edGoods: TcxButtonEdit;
+    actPrint4: TdsdPrintAction;
+    bb: TdxBarButton;
   private
     { Private declarations }
   public
