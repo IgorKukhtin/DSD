@@ -67,7 +67,7 @@ BEGIN
                                     ELSE 0 END) AS SummIn
                           , SUM (CASE WHEN MIContainer.isActive = FALSE THEN -1 * MIContainer.Amount
                                     ELSE 0 END) AS SummOut
-                     FROM tmpContainerList 
+                     FROM tmpContainerList
                           LEFT JOIN MovementItemContainer AS MIContainer 
                                                           ON MIContainer.ContainerId = tmpContainerList.ContainerId 
                                                           AND MIContainer.OperDate >= inStartDate 
