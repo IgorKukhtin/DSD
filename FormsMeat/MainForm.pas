@@ -640,6 +640,8 @@ type
     actReport_Wage: TdsdOpenForm;
     N85: TMenuItem;
     mniReport_Wage: TMenuItem;
+    actReport_Weighing: TdsdOpenForm;
+    C1: TMenuItem;
     procedure actReport_OLAPSoldExecute(Sender: TObject);
     procedure FormShow(Sender: TObject);
   private

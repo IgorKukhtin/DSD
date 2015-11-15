@@ -1118,7 +1118,11 @@ end;
 
 procedure TLoadFormTest.LoadReportFormTest;
 begin
-// exit;
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_WeighingForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_WeighingForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_WeighingDialogForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_WeighingDialogForm');
+ // exit;
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_BalanceForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_BalanceForm');
