@@ -106,6 +106,7 @@ type
     edGoods: TcxButtonEdit;
     GuidesGoodsGroup: TdsdGuides;
     GuidesGoods: TdsdGuides;
+    isBarCode: TcxGridDBColumn;
   private
   public
   end;

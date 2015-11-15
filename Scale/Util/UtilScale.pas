@@ -249,6 +249,7 @@ begin
      ParamAdd(Params,'BoxCount',ftFloat);            //
      ParamAdd(Params,'BoxCode',ftInteger);           //
      ParamAdd(Params,'PartionGoods',ftString);       //
+     ParamAdd(Params,'isBarCode',ftBoolean);         //
      end
      else
      begin

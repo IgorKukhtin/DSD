@@ -1,8 +1,8 @@
 -- Function: gpInsertUpdate_MovementItem_SendOnPrice()
 
-DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_SendOnPrice(Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TVarChar, Integer, integer);
-DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_SendOnPrice(Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TVarChar, Integer, Integer, integer);
-
+-- DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_SendOnPrice(Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TVarChar, Integer, Integer);
+-- DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_SendOnPrice(Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TVarChar, Integer, Integer, Integer);
+DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_SendOnPrice(Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TVarChar, Integer, Integer, Boolean, Integer);
 
 CREATE OR REPLACE FUNCTION lpInsertUpdate_MovementItem_SendOnPrice(
  INOUT ioId                  Integer   , -- Ключ объекта <Элемент документа>
@@ -18,13 +18,16 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_MovementItem_SendOnPrice(
     IN inPartionGoods        TVarChar  , -- Партия товара
     IN inGoodsKindId         Integer   , -- Виды товаров
     IN inUnitId              Integer   , -- Подразделение
+    IN inCountPack           TFloat    , -- Количество упаковок (расчет)
+    IN inWeightTotal         TFloat    , -- Вес 1 ед. продукции + упаковка
+    IN inWeightPack          TFloat    , -- Вес упаковки для 1-ой ед. продукции
+    IN inIsBarCode           Boolean   , -- 
     IN inUserId              Integer     -- пользователь
 )
 RETURNS RECORD
 AS
 $BODY$
 BEGIN
-
      -- сохранили <Элемент документа>
      ioId := lpInsertUpdate_MovementItem (ioId, zc_MI_Master(), inGoodsId, inMovementId, inAmount, NULL);
 
@@ -44,6 +47,18 @@ BEGIN
 
      -- сохранили свойство <Партия товара>
      PERFORM lpInsertUpdate_MovementItemString (zc_MIString_PartionGoods(), ioId, inPartionGoods);
+
+
+     -- сохранили свойство <Количество упаковок (расчет)>
+     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_CountPack(), ioId, inCountPack);
+     -- сохранили свойство <Вес 1 ед. продукции + упаковка>
+     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_WeightTotal(), ioId, inWeightTotal);
+     -- сохранили свойство <Вес упаковки для 1-ой ед. продукции>
+     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_WeightPack(), ioId, inWeightPack);
+
+     -- сохранили свойство <По сканеру>
+     PERFORM lpInsertUpdate_MovementItemBoolean (zc_MIBoolean_BarCode(), ioId, inIsBarCode);
+
 
      -- сохранили связь с <Виды товаров>
      PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_GoodsKind(), ioId, inGoodsKindId);
@@ -77,6 +92,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 13.11.15                                        *
  04.06.15         * add inUnitId
  05.05.14                                                        *
  08.02.14                                        *

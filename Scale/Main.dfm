@@ -674,6 +674,14 @@ object MainForm: TMainForm
           Options.Editing = False
           Width = 40
         end
+        object isBarCode: TcxGridDBColumn
+          Caption = #1057#1082#1072#1085
+          DataBinding.FieldName = 'isBarCode'
+          Visible = False
+          HeaderAlignmentHorz = taCenter
+          HeaderAlignmentVert = vaCenter
+          Width = 35
+        end
         object PartionGoods: TcxGridDBColumn
           Caption = #1055#1072#1088#1090#1080#1103' '#1057#1067#1056#1068#1071
           DataBinding.FieldName = 'PartionGoods'

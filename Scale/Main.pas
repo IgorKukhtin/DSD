@@ -199,6 +199,7 @@ type
     infoInvNumberTransportPanel: TPanel;
     InvNumberTransportLabel: TLabel;
     PanelInvNumberTransport: TPanel;
+    isBarCode: TcxGridDBColumn;
     procedure FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
     procedure FormCreate(Sender: TObject);
     procedure PanelWeight_ScaleDblClick(Sender: TObject);
@@ -519,6 +520,9 @@ begin
           exit;
      end
      else WriteParamsMovement;
+     //
+     //т.е. изначально будем считать что это НЕ сканирование
+     ParamsMI.ParamByName('isBarCode').AsBoolean:= FALSE;
      //
      //если есть ШК - параметры товара определяются из него
      if trim(BarCode) <> ''

@@ -7,7 +7,8 @@ DROP FUNCTION IF EXISTS gpInsert_Scale_MI (Integer, Integer, Integer, Integer, T
 */
 -- DROP FUNCTION IF EXISTS gpInsert_Scale_MI (Integer, Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, Integer, TFloat, TFloat, TVarChar, Integer, TVarChar);
 -- DROP FUNCTION IF EXISTS gpInsert_Scale_MI (Integer, Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, Integer, TFloat, TFloat, TFloat, Integer, TVarChar, Integer, TVarChar);
-DROP FUNCTION IF EXISTS gpInsert_Scale_MI (Integer, Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, Integer, TFloat, TFloat, TFloat, Integer, TVarChar, Integer, Integer, TVarChar);
+-- DROP FUNCTION IF EXISTS gpInsert_Scale_MI (Integer, Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, Integer, TFloat, TFloat, TFloat, Integer, TVarChar, Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpInsert_Scale_MI (Integer, Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, Integer, TFloat, TFloat, TFloat, Integer, TVarChar, Integer, Integer, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsert_Scale_MI(
     IN inId                    Integer   , -- Ключ объекта <Элемент документа>
@@ -30,6 +31,7 @@ CREATE OR REPLACE FUNCTION gpInsert_Scale_MI(
     IN inPartionGoods          TVarChar  , -- Партия
     IN inPriceListId           Integer   , --
     IN inBranchCode            Integer   , -- 
+    IN inIsBarCode             Boolean   , -- 
     IN inSession               TVarChar    -- сессия пользователя
 )                              
 RETURNS TABLE (Id        Integer
@@ -46,6 +48,10 @@ $BODY$
    DECLARE vbBoxId Integer;
    DECLARE vbTotalSumm TFloat;
    DECLARE vbRetailId Integer;
+
+   DECLARE vbWeightTotal   TFloat;
+   DECLARE vbWeightPack    TFloat;
+   DECLARE vbAmount_byPack TFloat;
 
    DECLARE vbPriceListId_Dnepr Integer;
    DECLARE vbOperDate_Dnepr TDateTime;
@@ -108,24 +114,51 @@ BEGIN
 
      -- определили
      vbBoxId:= CASE WHEN inBoxCode > 0 THEN (SELECT Object.Id FROM Object WHERE Object.ObjectCode = inBoxCode AND Object.DescId = zc_Object_Box()) ELSE 0 END;
-
+     -- определили Вес 1 ед. продукции + упаковка AND Вес упаковки для 1-ой ед. продукции
+     SELECT ObjectFloat_WeightPackage.ValueData, ObjectFloat_WeightTotal.ValueData
+          , CASE WHEN ObjectFloat_WeightTotal.ValueData <> 0 AND (1 - ObjectFloat_WeightPackage.ValueData / ObjectFloat_WeightTotal.ValueData) <> 0
+                      THEN (inRealWeight - inCountTare * inWeightTare) / (1 - ObjectFloat_WeightPackage.ValueData / ObjectFloat_WeightTotal.ValueData)
+                 ELSE (inRealWeight - inCountTare * inWeightTare)
+            END
+            INTO vbWeightPack, vbWeightTotal, vbAmount_byPack
+     FROM Object_GoodsByGoodsKind_View
+          LEFT JOIN ObjectFloat AS ObjectFloat_WeightPackage
+                                ON ObjectFloat_WeightPackage.ObjectId = Object_GoodsByGoodsKind_View.Id 
+                               AND ObjectFloat_WeightPackage.DescId = zc_ObjectFloat_GoodsByGoodsKind_WeightPackage()
+          LEFT JOIN ObjectFloat AS ObjectFloat_WeightTotal
+                                ON ObjectFloat_WeightTotal.ObjectId = Object_GoodsByGoodsKind_View.Id 
+                               AND ObjectFloat_WeightTotal.DescId = zc_ObjectFloat_GoodsByGoodsKind_WeightTotal()
+     WHERE Object_GoodsByGoodsKind_View.GoodsId = inGoodsId
+       AND Object_GoodsByGoodsKind_View.GoodsKindId = inGoodsKindId;
 
      -- сохранили
      vbId:= gpInsertUpdate_MovementItem_WeighingPartner (ioId                  := 0
                                                        , inMovementId          := inMovementId
                                                        , inGoodsId             := inGoodsId
-                                                       , inAmount              := inRealWeight - inCountTare * inWeightTare
-                                                       , inAmountPartner       := CASE WHEN inChangePercentAmount = 0
+                                                       , inAmount              := CASE WHEN inIsBarCode = TRUE AND zc_Measure_Kg() = (SELECT ChildObjectId FROM ObjectLink WHERE ObjectId = inGoodsId AND DescId = zc_ObjectLink_Goods_Measure())
+                                                                                        AND vbAmount_byPack <> 0
+                                                                                            THEN vbAmount_byPack
+                                                                                       ELSE inRealWeight - inCountTare * inWeightTare
+                                                                                  END
+                                                       , inAmountPartner       := CASE WHEN inIsBarCode = TRUE
+                                                                                            THEN (inRealWeight - inCountTare * inWeightTare)
+                                                                                       WHEN inChangePercentAmount = 0
                                                                                             THEN (inRealWeight - inCountTare * inWeightTare)
                                                                                        WHEN vbRetailId IN (341640, 310854) -- Фоззі + Фозі
                                                                                             THEN CAST ((inRealWeight - inCountTare * inWeightTare) * (1 - inChangePercentAmount/100) AS NUMERIC (16, 3))
                                                                                        ELSE CAST ((inRealWeight - inCountTare * inWeightTare) * (1 - inChangePercentAmount/100) AS NUMERIC (16, 2))
                                                                                   END
                                                        , inRealWeight          := inRealWeight
-                                                       , inChangePercentAmount := inChangePercentAmount
+                                                       , inChangePercentAmount := CASE WHEN inIsBarCode = TRUE
+                                                                                            THEN 0
+                                                                                       ELSE inChangePercentAmount
+                                                                                  END
                                                        , inCountTare           := inCountTare
                                                        , inWeightTare          := inWeightTare
-                                                       , inCountPack           := inCount
+                                                       , inCountPack           := CASE WHEN inIsBarCode = TRUE AND vbWeightTotal <> 0
+                                                                                            THEN vbAmount_byPack / vbWeightTotal
+                                                                                       ELSE inCount
+                                                                                  END
                                                        , inHeadCount           := inHeadCount
                                                        , inBoxCount            := inBoxCount
                                                        , inBoxNumber           := CASE WHEN vbMovementDescId <> zc_Movement_Sale() THEN 0 ELSE  1 + COALESCE ((SELECT MAX (MovementItemFloat.ValueData) FROM MovementItem INNER JOIN MovementItemFloat ON MovementItemFloat.MovementItemId = MovementItem.Id AND MovementItemFloat.DescId = zc_MIFloat_BoxNumber() WHERE MovementItem.MovementId = inMovementId AND MovementItem.isErased = FALSE), 0) END
@@ -168,6 +201,7 @@ BEGIN
                                                                                   END
                                                        , inPriceListId         := CASE WHEN vbPriceListId_Dnepr <> 0 THEN vbPriceListId_Dnepr ELSE inPriceListId END
                                                        , inBoxId               := vbBoxId
+                                                       , inIsBarCode           := inIsBarCode
                                                        , inSession             := inSession
                                                         );
 
@@ -185,6 +219,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 13.11.15                                        *
  10.05.15                                        * all
  13.10.14                                        * all
  13.03.14         *

@@ -1,7 +1,8 @@
 -- Function: gpInsertUpdate_MovementItem_SendOnPrice()
 
-DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_SendOnPrice_Value (Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TVarChar, Integer, Integer);
-DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_SendOnPrice_scale (Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TVarChar, Integer, Integer, Integer);
+-- DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_SendOnPrice_Value (Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TVarChar, Integer, Integer);
+-- DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_SendOnPrice_scale (Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TVarChar, Integer, Integer, Integer);
+DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_SendOnPrice_scale (Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TVarChar, Integer, Integer, TFloat, TFloat, TFloat, Boolean, Integer);
 
 CREATE OR REPLACE FUNCTION lpInsertUpdate_MovementItem_SendOnPrice_scale(
  INOUT ioId                  Integer   , -- Ключ объекта <Элемент документа>
@@ -16,6 +17,10 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_MovementItem_SendOnPrice_scale(
     IN inPartionGoods        TVarChar  , -- Партия товара
     IN inGoodsKindId         Integer   , -- Виды товаров
     IN inUnitId              Integer   , -- 
+    IN inCountPack           TFloat    , -- Количество упаковок (расчет)
+    IN inWeightTotal         TFloat    , -- Вес 1 ед. продукции + упаковка
+    IN inWeightPack          TFloat    , -- Вес упаковки для 1-ой ед. продукции
+    IN inIsBarCode           Boolean   , -- 
     IN inUserId              Integer     -- пользователь
 )
 RETURNS Integer
@@ -39,12 +44,15 @@ BEGIN
                                           , inPartionGoods       := inPartionGoods
                                           , inGoodsKindId        := inGoodsKindId
                                           , inUnitId             := inUnitId
+                                          , inCountPack          := inCountPack
+                                          , inWeightTotal        := inWeightTotal
+                                          , inWeightPack         := inWeightPack
+                                          , inIsBarCode          := inIsBarCode
                                           , inUserId             := inUserId
                                            ) AS tmp);
 
      -- сохранили связь с <Unit>
      -- PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_Unit(), ioId, inUnitId);
-
 
 END;
 $BODY$
@@ -53,6 +61,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 13.11.15                                        *
  04.02.15                                        *
 */
 

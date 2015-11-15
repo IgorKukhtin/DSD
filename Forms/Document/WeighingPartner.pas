@@ -147,6 +147,7 @@ type
     clGoodsGroupNameFull: TcxGridDBColumn;
     spUpdateMovement: TdsdStoredProc;
     HeaderSaver2: THeaderSaver;
+    isBarCode: TcxGridDBColumn;
   private
   public
   end;

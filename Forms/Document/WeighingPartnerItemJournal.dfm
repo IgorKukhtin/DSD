@@ -560,6 +560,13 @@ object WeighingPartnerItemJournalForm: TWeighingPartnerItemJournalForm
         HeaderAlignmentVert = vaCenter
         Width = 36
       end
+      object isBarCode: TcxGridDBColumn
+        Caption = #1057#1082#1072#1085
+        DataBinding.FieldName = 'isBarCode'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 35
+      end
       object coInsertDate: TcxGridDBColumn
         Caption = #1044#1072#1090#1072'/'#1074#1088#1077#1084#1103' '#1089#1086#1079#1076#1072#1085#1080#1103
         DataBinding.FieldName = 'InsertDate'

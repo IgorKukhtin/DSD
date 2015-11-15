@@ -52,6 +52,7 @@ RETURNS TABLE (Id Integer, InvNumber Integer, OperDate TDateTime, StatusCode Int
              , GoodsKindName TVarChar
              , MeasureName TVarChar, BoxName TVarChar
              , PriceListName TVarChar
+             , isBarCode Boolean
              , isErased Boolean
               )
 AS
@@ -213,6 +214,8 @@ BEGIN
                   , Object_Measure.ValueData        AS MeasureName
                   , COALESCE (Object_Box.ValueData, '')::TVarChar              AS BoxName
                   , COALESCE (Object_PriceList.ValueData , '')::TVarChar       AS PriceListName
+
+                  , COALESCE (MIBoolean_BarCode.ValueData, FALSE) :: Boolean AS isBarCode
 
                   , MovementItem.isErased
 
@@ -469,6 +472,9 @@ BEGIN
                                    ON ObjectString_Goods_GoodsGroupFull.ObjectId = MovementItem.ObjectId
                                   AND ObjectString_Goods_GoodsGroupFull.DescId = zc_ObjectString_Goods_GroupNameFull()
 
+            LEFT JOIN MovementItemBoolean AS MIBoolean_BarCode
+                                          ON MIBoolean_BarCode.MovementItemId =  MovementItem.Id
+                                         AND MIBoolean_BarCode.DescId = zc_MIBoolean_BarCode()
       ;
   
 END;

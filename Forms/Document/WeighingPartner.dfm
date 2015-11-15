@@ -3,7 +3,7 @@ object WeighingPartnerForm: TWeighingPartnerForm
   Top = 0
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1042#1079#1074#1077#1096#1080#1074#1072#1085#1080#1077' ('#1082#1086#1085#1090#1088#1072#1075#1077#1085#1090')>'
   ClientHeight = 462
-  ClientWidth = 1373
+  ClientWidth = 1366
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -21,7 +21,7 @@ object WeighingPartnerForm: TWeighingPartnerForm
   object DataPanel: TPanel
     Left = 0
     Top = 0
-    Width = 1373
+    Width = 1366
     Height = 100
     Align = alTop
     BevelOuter = bvNone
@@ -321,14 +321,14 @@ object WeighingPartnerForm: TWeighingPartnerForm
   object cxPageControl: TcxPageControl
     Left = 0
     Top = 126
-    Width = 1373
+    Width = 1366
     Height = 336
     Align = alClient
     TabOrder = 2
     Properties.ActivePage = cxTabSheetMain
     Properties.CustomButtons.Buttons = <>
     ClientRectBottom = 336
-    ClientRectRight = 1373
+    ClientRectRight = 1366
     ClientRectTop = 24
     object cxTabSheetMain: TcxTabSheet
       Caption = #1057#1090#1088#1086#1095#1085#1072#1103' '#1095#1072#1089#1090#1100
@@ -336,7 +336,7 @@ object WeighingPartnerForm: TWeighingPartnerForm
       object cxGrid: TcxGrid
         Left = 0
         Top = 0
-        Width = 1373
+        Width = 1366
         Height = 312
         Align = alClient
         TabOrder = 0
@@ -546,6 +546,13 @@ object WeighingPartnerForm: TWeighingPartnerForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
+            Width = 45
+          end
+          object isBarCode: TcxGridDBColumn
+            Caption = #1057#1082#1072#1085
+            DataBinding.FieldName = 'isBarCode'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
             Width = 45
           end
           object colRealWeight: TcxGridDBColumn

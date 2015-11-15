@@ -548,6 +548,7 @@ BEGIN
                                                         , inGoodsKindId         := tmp.GoodsKindId
                                                         , inAssetId             := NULL
                                                         , inBoxId               := tmp.BoxId
+                                                        , inIsBarCode           := CASE WHEN tmp.isBarCode_value = 1 THEN TRUE ELSE FALSE END
                                                         , inUserId              := vbUserId
                                                          )
                        WHEN vbMovementDescId = zc_Movement_ReturnIn()
@@ -581,6 +582,7 @@ BEGIN
                                                         , inPartionGoods        := '' -- !!!не ошибка, здесь не формируется!!!
                                                         , inGoodsKindId         := tmp.GoodsKindId
                                                         , inUnitId              := CASE WHEN vbIsUnitCheck = FALSE OR vbIsSendOnPriceIn = FALSE THEN 0 ELSE tmp.UnitId_to END -- !!!формируется только когда приход + на "некоторые филиалы"!!!
+                                                        , inIsBarCode           := CASE WHEN tmp.isBarCode_value = 1 THEN TRUE ELSE FALSE END
                                                         , inUserId              := vbUserId
                                                          )
                        WHEN vbMovementDescId = zc_Movement_Loss()
@@ -669,6 +671,7 @@ BEGIN
                      , SUM (tmp.HeadCount)    AS HeadCount
                      , SUM (tmp.LiveWeight)   AS LiveWeight
                      , SUM (tmp.AmountPacker) AS AmountPacker
+                     , MAX (tmp.isBarCode_value) AS isBarCode_value
                      , tmp.UnitId_to
                 FROM (SELECT 0                                                   AS MovementItemId
                            , CASE WHEN vbMovementDescId = zc_Movement_ProductionUnion() AND vbIsProductionIn = FALSE THEN zc_Goods_ReWork() ELSE MovementItem.ObjectId             END AS GoodsId
@@ -716,6 +719,8 @@ BEGIN
                            , 0                                                   AS AmountPacker
                            , 0                                                   AS LiveWeight
 
+                           , CASE WHEN MIBoolean_BarCode.ValueData = TRUE THEN 1 ELSE 0 END AS isBarCode_value
+
                            , MovementItem.Amount                                 AS Amount_mi
                            , CASE WHEN vbMovementDescId = zc_Movement_ProductionUnion() AND vbIsProductionIn = FALSE THEN NULL ELSE COALESCE (MLO_To.ObjectId, 0) END AS UnitId_to
                            , CASE WHEN vbMovementDescId = zc_Movement_Inventory()
@@ -756,6 +761,10 @@ BEGIN
                                                        ON MIFloat_CountForPrice.MovementItemId = MovementItem.Id
                                                       AND MIFloat_CountForPrice.DescId = zc_MIFloat_CountForPrice()
                                                       AND vbMovementDescId NOT IN (zc_Movement_Inventory())
+
+                           LEFT JOIN MovementItemBoolean AS MIBoolean_BarCode
+                                                         ON MIBoolean_BarCode.MovementItemId =  MovementItem.Id
+                                                        AND MIBoolean_BarCode.DescId = zc_MIBoolean_BarCode()
 
                            LEFT JOIN MovementItemDate AS MIDate_PartionGoods
                                                       ON MIDate_PartionGoods.MovementItemId =  MovementItem.Id
@@ -810,6 +819,8 @@ BEGIN
                            , COALESCE (MIFloat_AmountPacker.ValueData, 0)        AS AmountPacker
                            , COALESCE (MIFloat_LiveWeight.ValueData, 0)          AS LiveWeight
 
+                           , CASE WHEN MIBoolean_BarCode.ValueData = TRUE THEN 1 ELSE 0 END AS isBarCode_value
+
                            , 0                                                   AS Amount_mi
                            , COALESCE (MILinkObject_To.ObjectId, COALESCE (MLO_To.ObjectId, 0)) AS UnitId_to
                            , 0                                                   AS myId
@@ -858,6 +869,10 @@ BEGIN
                                                        ON MIFloat_CountForPrice.MovementItemId = MovementItem.Id
                                                       AND MIFloat_CountForPrice.DescId = zc_MIFloat_CountForPrice()
                                                       AND vbMovementDescId NOT IN (zc_Movement_Inventory())
+
+                           LEFT JOIN MovementItemBoolean AS MIBoolean_BarCode
+                                                         ON MIBoolean_BarCode.MovementItemId =  MovementItem.Id
+                                                        AND MIBoolean_BarCode.DescId = zc_MIBoolean_BarCode()
 
                            LEFT JOIN MovementItemDate AS MIDate_PartionGoods
                                                       ON MIDate_PartionGoods.MovementItemId =  MovementItem.Id
@@ -1093,6 +1108,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
+ 13.11.15                                        *
  04.07.15                                        * !!!Проверка что документ один!!!
  27.05.15                                        * add vbIsTax
  03.02.15                                        *
