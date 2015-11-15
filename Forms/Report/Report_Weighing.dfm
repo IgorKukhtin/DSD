@@ -84,6 +84,16 @@ inherited Report_WeighingForm: TReport_WeighingForm
               Format = ',0.####'
               Kind = skSum
               Column = AmountPartner_mi
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Amount_mi
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = AmountDiff
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -142,6 +152,16 @@ inherited Report_WeighingForm: TReport_WeighingForm
               Format = ',0.####'
               Kind = skSum
               Column = AmountPartner_mi
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Amount_mi
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = AmountDiff
             end>
           OptionsData.CancelOnExit = True
           OptionsData.Deleting = False
@@ -153,12 +173,19 @@ inherited Report_WeighingForm: TReport_WeighingForm
           Styles.Selection = nil
           Styles.Footer = nil
           Styles.Header = nil
+          object MovementDescName: TcxGridDBColumn
+            Caption = #1042#1080#1076' '#1076#1086#1082'.'
+            DataBinding.FieldName = 'MovementDescName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 69
+          end
           object OperDate_parent: TcxGridDBColumn
             Caption = #1044#1072#1090#1072' '#1076#1086#1082'.'
             DataBinding.FieldName = 'OperDate_parent'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 59
+            Width = 48
           end
           object InvNumber_parent: TcxGridDBColumn
             Caption = #8470' '#1076#1086#1082'.'
@@ -172,35 +199,35 @@ inherited Report_WeighingForm: TReport_WeighingForm
             DataBinding.FieldName = 'FromName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 200
+            Width = 107
           end
           object ToName: TcxGridDBColumn
             Caption = #1050#1086#1084#1091
             DataBinding.FieldName = 'ToName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 200
+            Width = 137
           end
           object GoodsGroupNameFull: TcxGridDBColumn
             Caption = #1043#1088#1091#1087#1087#1072' ('#1074#1089#1077')'
             DataBinding.FieldName = 'GoodsGroupNameFull'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 148
+            Width = 111
           end
           object GoodsCode: TcxGridDBColumn
             Caption = #1050#1086#1076
             DataBinding.FieldName = 'GoodsCode'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 60
+            Width = 42
           end
           object GoodsName: TcxGridDBColumn
             Caption = #1058#1086#1074#1072#1088
             DataBinding.FieldName = 'GoodsName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 172
+            Width = 157
           end
           object GoodsKindName: TcxGridDBColumn
             Caption = #1042#1080#1076' '#1090#1086#1074#1072#1088#1072
@@ -217,7 +244,7 @@ inherited Report_WeighingForm: TReport_WeighingForm
             Width = 33
           end
           object RealWeight: TcxGridDBColumn
-            Caption = #1050#1086#1083'-'#1074#1086' '#1087#1088#1080' '#1074#1079#1074#1077#1096'.'
+            Caption = #1050#1086#1083'-'#1074#1086' '#1087#1088#1080' '#1074#1079#1074#1077#1096'. ('#1088#1077#1072#1083'.'#1074#1077#1089')'
             DataBinding.FieldName = 'RealWeight'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
@@ -225,7 +252,7 @@ inherited Report_WeighingForm: TReport_WeighingForm
             Width = 87
           end
           object Amount: TcxGridDBColumn
-            Caption = #1050#1086#1083'-'#1074#1086' ('#1089#1082#1083#1072#1076')'
+            Caption = #1050#1086#1083'-'#1074#1086' '#1074#1079#1074#1077#1096'.('#1089#1082#1083#1072#1076')'
             DataBinding.FieldName = 'Amount'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
@@ -235,6 +262,39 @@ inherited Report_WeighingForm: TReport_WeighingForm
           object Amount_mi: TcxGridDBColumn
             Caption = #1050#1086#1083'-'#1074#1086' ('#1089#1082#1083#1072#1076' '#1076#1086#1082'.)'
             DataBinding.FieldName = 'Amount_mi'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 60
+          end
+          object AmountDiff: TcxGridDBColumn
+            Caption = #1056#1072#1079#1085#1080#1094#1072' '#1074' '#1082#1086#1083'-'#1074#1077
+            DataBinding.FieldName = 'AmountDiff'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 60
+          end
+          object AmountPartner: TcxGridDBColumn
+            Caption = #1050#1086#1083'-'#1074#1086' '#1089#1086' '#1089#1082#1080#1076#1082#1086#1081
+            DataBinding.FieldName = 'AmountPartner'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 60
+          end
+          object AmountPartner_mi: TcxGridDBColumn
+            Caption = #1050#1086#1083'-'#1074#1086' '#1091' '#1087#1086#1082#1091#1087'. ('#1076#1086#1082'.)'
+            DataBinding.FieldName = 'AmountPartner_mi'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 60
+          end
+          object AmountChangePercent: TcxGridDBColumn
+            Caption = #1050#1086#1083'-'#1074#1086' '#1089#1086' '#1089#1082#1080#1076#1082#1086#1081' ('#1076#1086#1082'.)'
+            DataBinding.FieldName = 'AmountChangePercent'
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
@@ -247,31 +307,7 @@ inherited Report_WeighingForm: TReport_WeighingForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 76
-          end
-          object AmountPartner: TcxGridDBColumn
-            Caption = #1050#1086#1083'-'#1074#1086' '#1089#1086' '#1089#1082#1080#1076#1082#1086#1081
-            DataBinding.FieldName = 'AmountPartner'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 60
-          end
-          object AmountChangePercent: TcxGridDBColumn
-            Caption = #1050#1086#1083'-'#1074#1086' '#1089#1086' '#1089#1082#1080#1076#1082#1086#1081' ('#1076#1086#1082'.)'
-            DataBinding.FieldName = 'AmountChangePercent'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 60
-          end
-          object AmountPartner_mi: TcxGridDBColumn
-            Caption = #1050#1086#1083'-'#1074#1086' '#1091' '#1087#1086#1082#1091#1087'. ('#1076#1086#1082'.)'
-            DataBinding.FieldName = 'AmountPartner_mi'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 60
+            Width = 63
           end
           object Price: TcxGridDBColumn
             Caption = #1062#1077#1085#1072
@@ -321,6 +357,7 @@ inherited Report_WeighingForm: TReport_WeighingForm
       Left = 394
       Top = 6
       Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077':'
+      Visible = False
     end
     object edUnit: TcxButtonEdit
       Left = 488
@@ -332,6 +369,7 @@ inherited Report_WeighingForm: TReport_WeighingForm
         end>
       Properties.ReadOnly = True
       TabOrder = 5
+      Visible = False
       Width = 281
     end
   end
@@ -523,9 +561,12 @@ inherited Report_WeighingForm: TReport_WeighingForm
       Category = 0
     end
     object bbPrint: TdxBarButton
-      Action = actPrint
       Caption = #1055#1077#1095#1072#1090#1100
       Category = 0
+      Hint = #1055#1077#1095#1072#1090#1100
+      Visible = ivAlways
+      ImageIndex = 3
+      ShortCut = 16464
     end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn

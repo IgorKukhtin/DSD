@@ -43,6 +43,8 @@ type
     OperDate_parent: TcxGridDBColumn;
     FromName: TcxGridDBColumn;
     ToName: TcxGridDBColumn;
+    MovementDescName: TcxGridDBColumn;
+    AmountDiff: TcxGridDBColumn;
   private
     { Private declarations }
   public

@@ -1,4 +1,4 @@
--- Function: gpSelect_MovementItem_WeighingPartner()
+ -- Function: gpSelect_MovementItem_WeighingPartner()
 
 DROP FUNCTION IF EXISTS gpReport_WeighingPartner (TDateTime, TDateTime, TVarChar);
 
@@ -7,10 +7,11 @@ CREATE OR REPLACE FUNCTION gpReport_WeighingPartner(
     IN inEndDate            TDateTime , --
     IN inSession     TVarChar       -- сессия пользователя
 )
-RETURNS TABLE (InvNumber_parent TVarChar, OperDate_parent TDateTime , FromName TVarChar, ToName TVarChar
+RETURNS TABLE (InvNumber_parent TVarChar, OperDate_parent TDateTime, MovementDescName TVarChar, FromName TVarChar, ToName TVarChar
              , GoodsCode Integer, GoodsName TVarChar
              , GoodsGroupNameFull TVarChar
-             , Amount TFloat, Amount_mi TFloat, AmountPartner TFloat, AmountPartner_mi TFloat
+             , Amount TFloat, Amount_mi TFloat, AmountDiff TFloat
+             , AmountPartner TFloat, AmountPartner_mi TFloat
              , RealWeight TFloat
              , ChangePercentAmount TFloat, AmountChangePercent TFloat
              , Price TFloat, CountForPrice TFloat
@@ -32,7 +33,7 @@ BEGIN
                                 , Movement.OperDate
                                 , Movement_Parent.Id                AS MovementId_parent
                                 , Movement_Parent.OperDate          AS OperDate_parent 
-
+                                , MovementDesc.ItemName             AS MovementDescName 
                                 , CASE WHEN Movement_Parent.StatusId = zc_Enum_Status_Complete()
                                             THEN Movement_Parent.InvNumber
                                        WHEN Movement_Parent.StatusId = zc_Enum_Status_UnComplete()
@@ -53,6 +54,8 @@ BEGIN
                                LEFT JOIN MovementLinkObject AS MovementLinkObject_To
                                          ON MovementLinkObject_To.MovementId = Movement.Id
                                         AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
+
+                               LEFT JOIN MovementDesc ON MovementDesc.Id = Movement_Parent.DescId 
             
                            WHERE Movement.DescId IN ( zc_Movement_WeighingPartner(),zc_Movement_WeighingProduction())
                              AND Movement.OperDate BETWEEN inStartDate AND inEndDate
@@ -64,6 +67,7 @@ BEGIN
        SELECT
              tmpMI.InvNumber_parent :: TVarChar
            , tmpMI.OperDate_parent  
+           , tmpMI.MovementDescName
            , Object_From.ValueData            AS FromName
            , Object_To.ValueData              AS ToName
            , Object_Goods.ObjectCode          AS GoodsCode
@@ -72,6 +76,7 @@ BEGIN
 
            , tmpMI.Amount :: TFloat           AS Amount
            , tmpMI.Amount_mi :: TFloat        AS Amount_mi
+           , (tmpMI.Amount-tmpMI.Amount_mi)  :: TFloat    AS AmountDiff
 
            , CASE WHEN tmpMI.AmountPartner = 0 THEN NULL ELSE tmpMI.AmountPartner END :: TFloat       AS AmountPartner
            , CASE WHEN tmpMI.AmountPartner_mi = 0 THEN NULL ELSE tmpMI.AmountPartner_mi END :: TFloat AS AmountPartner_mi
@@ -91,15 +96,17 @@ BEGIN
        FROM (SELECT 
                     tmpMI.InvNumber_parent 
                   , tmpMI.OperDate_parent
+                  , tmpMI.MovementDescName
                   , tmpMI.FromId
                   , tmpMI.ToId
                   , tmpMI.GoodsId
                   , SUM (tmpMI.Amount)           AS Amount
                   , SUM (tmpMI.Amount_mi)        AS Amount_mi
+                 
                   , SUM (tmpMI.AmountPartner)    AS AmountPartner
                   , SUM (tmpMI.AmountPartner_mi) AS AmountPartner_mi
 
-                  , SUM (tmpMI.RealWeight)     AS RealWeight
+                  , SUM (tmpMI.RealWeight)       AS RealWeight
 
                   , tmpMI.ChangePercentAmount
                   , SUM (tmpMI.AmountChangePercent) AS AmountChangePercent
@@ -128,6 +135,7 @@ BEGIN
                                              
                   , tmpMovement.InvNumber_parent
                   , tmpMovement.OperDate_parent
+                  , tmpMovement.MovementDescName
                   , tmpMovement.FromId
                   , tmpMovement.ToId
                   
@@ -179,18 +187,21 @@ BEGIN
                  
                   , tmpMovement.InvNumber_parent 
                   , tmpMovement.OperDate_parent
+                  , tmpMovement.MovementDescName
                   , tmpMovement.FromId
                   , tmpMovement.ToId            
 
              FROM (SELECT tmpMovement.MovementId_parent
                         , tmpMovement.InvNumber_parent
                         , tmpMovement.OperDate_parent
+                        , tmpMovement.MovementDescName
                         , tmpMovement.FromId
                         , tmpMovement.ToId  
                    FROM tmpMovement 
                    GROUP BY tmpMovement.MovementId_parent
                           , tmpMovement.InvNumber_parent
                           , tmpMovement.OperDate_parent
+                          , tmpMovement.MovementDescName
                           , tmpMovement.FromId
                           , tmpMovement.ToId 
                  ) AS tmpMovement
@@ -226,6 +237,7 @@ BEGIN
                    , tmpMI.CountForPrice
                    , tmpMI.GoodsKindId
                    , tmpMI.InvNumber_parent
+                   , tmpMI.MovementDescName
                    , tmpMI.OperDate_parent
                    , tmpMI.FromId
                    , tmpMI.ToId
@@ -257,4 +269,4 @@ $BODY$
 */
 
 -- тест
- --SELECT * FROM gpReport_WeighingPartner (inStartDate:= '01.08.2015', inEndDate:= '06.08.2015', inSession:= zfCalc_UserAdmin())
+--SELECT * FROM gpReport_WeighingPartner (inStartDate:= '01.08.2015', inEndDate:= '01.08.2015', inSession:= zfCalc_UserAdmin())

@@ -62,12 +62,14 @@ object Report_WeighingDialogForm: TReport_WeighingDialogForm
       end>
     Properties.ReadOnly = True
     TabOrder = 4
+    Visible = False
     Width = 305
   end
   object cxLabel3: TcxLabel
     Left = 11
     Top = 57
     Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077':'
+    Visible = False
   end
   object cxLabel6: TcxLabel
     Left = 11
