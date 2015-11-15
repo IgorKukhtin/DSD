@@ -1469,10 +1469,97 @@ inherited Report_ReceiptProductionAnalyzeForm: TReport_ReceiptProductionAnalyzeF
         item
           Name = 'PrintParam'
           Value = '1'
+          DataType = ftFloat
         end
         item
           Name = 'PriceListName'
           Value = Null
+          Component = PriceList_1_Guides
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          ParamType = ptInput
+        end>
+      ReportName = #1056#1077#1094#1077#1087#1090#1091#1088#1099' '#1089' '#1088#1072#1079#1074#1086#1088#1086#1090#1086#1084' '#1074#1089#1077#1093' '#1089#1086#1089#1090#1072#1074#1083#1103#1102#1097#1080#1093' '#1087#1086' '#1094#1077#1085#1072#1084'_1'
+      ReportNameParam.Value = #1056#1077#1094#1077#1087#1090#1091#1088#1099' '#1089' '#1088#1072#1079#1074#1086#1088#1086#1090#1086#1084' '#1074#1089#1077#1093' '#1089#1086#1089#1090#1072#1074#1083#1103#1102#1097#1080#1093' '#1087#1086' '#1094#1077#1085#1072#1084'_1'
+      ReportNameParam.DataType = ftString
+      ReportNameParam.ParamType = ptInput
+    end
+    object actPrint4: TdsdPrintAction
+      Category = 'DSDLib'
+      MoveParams = <
+        item
+          FromParam.Name = 'id'
+          FromParam.Value = Null
+          FromParam.ComponentItem = 'id'
+          ToParam.Value = '0'
+          ToParam.ComponentItem = 'Id'
+          ToParam.ParamType = ptInputOutput
+        end
+        item
+          FromParam.Value = 42216d
+          FromParam.Component = deStart
+          FromParam.DataType = ftDateTime
+          ToParam.Name = 'StartDate'
+          ToParam.Value = Null
+          ToParam.DataType = ftDateTime
+          ToParam.ParamType = ptInputOutput
+        end
+        item
+          FromParam.Value = 42216d
+          FromParam.Component = deEnd
+          FromParam.DataType = ftDateTime
+          ToParam.Name = 'EndDate'
+          ToParam.Value = Null
+          ToParam.DataType = ftDateTime
+          ToParam.ParamType = ptInputOutput
+        end>
+      StoredProcList = <>
+      Caption = #1050#1072#1083#1100#1082#1091#1083#1103#1094#1080#1103' '#1087#1088#1086#1076#1091#1082#1094#1080#1080' '#1073#1077#1079' '#1101#1084#1091#1083#1100#1089#1080#1081
+      Hint = #1050#1072#1083#1100#1082#1091#1083#1103#1094#1080#1103' '#1087#1088#1086#1076#1091#1082#1094#1080#1080'  '#1073#1077#1079' '#1101#1084#1091#1083#1100#1089#1080#1081
+      ImageIndex = 3
+      ShortCut = 16464
+      DataSets = <
+        item
+          UserName = 'frxDBDMaster'
+          GridView = cxGridDBTableView
+        end
+        item
+          UserName = 'frxDBDChild'
+          IndexFieldNames = 
+            'ReceiptId;isCostValue;GroupNumber_print;InfoMoneyName_print;Good' +
+            'sGroupNameFull;GoodsName;GoodsKindName'
+          GridView = ChildView
+        end>
+      Params = <
+        item
+          Name = 'StartDate'
+          Value = 42216d
+          Component = deStart
+          DataType = ftDateTime
+          ParamType = ptInput
+        end
+        item
+          Name = 'EndDate'
+          Value = 42216d
+          Component = deEnd
+          DataType = ftDateTime
+          ParamType = ptInput
+        end
+        item
+          Name = 'GoodsGroupName'
+          Value = ''
+          Component = GoodsGroupGuides
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          ParamType = ptInput
+        end
+        item
+          Name = 'PrintParam'
+          Value = '4'
+        end
+        item
+          Name = 'PriceListName'
+          Value = ''
           Component = PriceList_1_Guides
           ComponentItem = 'TextValue'
           DataType = ftString
@@ -1630,6 +1717,14 @@ inherited Report_ReceiptProductionAnalyzeForm: TReport_ReceiptProductionAnalyzeF
         end
         item
           Visible = True
+          ItemName = 'bb'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbGridToExcel'
         end
         item
@@ -1654,6 +1749,11 @@ inherited Report_ReceiptProductionAnalyzeForm: TReport_ReceiptProductionAnalyzeF
       Action = actPrint3
       Caption = #1056#1077#1094#1077#1087#1090#1091#1088#1099' '#1073#1077#1079' '#1088#1072#1079#1074#1086#1088#1086#1090#1072' '#1074#1089#1077' '#1089#1086#1089#1090#1072#1074#1083#1103#1102#1097#1080#1093' '#1087#1086' '#1094#1077#1085#1072#1084'_1'
       Category = 0
+    end
+    object bb: TdxBarButton
+      Action = actPrint4
+      Category = 0
+      ImageIndex = 21
     end
   end
   inherited PopupMenu: TPopupMenu
