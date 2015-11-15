@@ -57,7 +57,7 @@ BEGIN
                            WHERE Movement.DescId IN ( zc_Movement_WeighingPartner(),zc_Movement_WeighingProduction())
                              AND Movement.OperDate BETWEEN inStartDate AND inEndDate
                              AND Movement.StatusId = zc_Enum_Status_Complete()
-                             AND Movement.parentid = 2054974
+                           --  AND Movement.parentid = 2054974
                          )
                          
 
@@ -257,4 +257,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpReport_WeighingPartner (inStartDate:= '06.08.2015', inEndDate:= '06.08.2015', inSession:= zfCalc_UserAdmin())
+ --SELECT * FROM gpReport_WeighingPartner (inStartDate:= '01.08.2015', inEndDate:= '06.08.2015', inSession:= zfCalc_UserAdmin())
