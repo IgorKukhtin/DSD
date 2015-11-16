@@ -21,6 +21,7 @@ RETURNS TABLE (Id Integer, GoodsCode Integer, GoodsName TVarChar
              , BoxName TVarChar
              , PriceListName  TVarChar
              , InsertDate TDateTime, UpdateDate TDateTime
+             , isBarCode Boolean
              , isErased Boolean
               )
 AS
@@ -74,6 +75,8 @@ BEGIN
            , CASE WHEN tmpMI.InsertDate = zc_DateStart() THEN NULL ELSE tmpMI.InsertDate END :: TDateTime AS InsertDate
            , CASE WHEN tmpMI.UpdateDate = zc_DateStart() THEN NULL ELSE tmpMI.UpdateDate END :: TDateTime AS UpdateDate
 
+           , tmpMI.isBarCode
+
            , tmpMI.isErased
 
        FROM (SELECT tmpMI.MovementItemId
@@ -109,6 +112,8 @@ BEGIN
 
                   , tmpMI.InsertDate
                   , tmpMI.UpdateDate
+
+                  , tmpMI.isBarCode
 
                   , tmpMI.isErased
              FROM
@@ -149,12 +154,18 @@ BEGIN
                   , CASE WHEN inShowAll = TRUE THEN MIDate_Insert.ValueData ELSE zc_DateStart() END AS InsertDate
                   , CASE WHEN inShowAll = TRUE THEN MIDate_Update.ValueData ELSE zc_DateStart() END AS UpdateDate
 
+                  , COALESCE (MIBoolean_BarCode.ValueData, FALSE) :: Boolean AS isBarCode
+
                   , MovementItem.isErased
 
              FROM (SELECT FALSE AS isErased UNION ALL SELECT inIsErased AS isErased WHERE inIsErased = TRUE) AS tmpIsErased
                   INNER JOIN MovementItem ON MovementItem.MovementId = inMovementId
                                          AND MovementItem.DescId     = zc_MI_Master()
                                          AND MovementItem.isErased   = tmpIsErased.isErased
+
+                  LEFT JOIN MovementItemBoolean AS MIBoolean_BarCode
+                                                ON MIBoolean_BarCode.MovementItemId =  MovementItem.Id
+                                               AND MIBoolean_BarCode.DescId = zc_MIBoolean_BarCode()
 
                   LEFT JOIN MovementItemDate AS MIDate_Insert
                                              ON MIDate_Insert.MovementItemId = MovementItem.Id
@@ -257,6 +268,8 @@ BEGIN
                   , zc_DateStart() AS InsertDate
                   , zc_DateStart() AS UpdateDate
 
+                  , COALESCE (MIBoolean_BarCode.ValueData, FALSE) :: Boolean AS isBarCode
+
                   , MovementItem.isErased
 
              FROM (SELECT FALSE AS isErased UNION ALL SELECT inIsErased AS isErased WHERE inIsErased = TRUE) AS tmpIsErased
@@ -265,6 +278,10 @@ BEGIN
                   INNER JOIN MovementItem ON MovementItem.MovementId = Movement.ParentId
                                          AND MovementItem.DescId     = zc_MI_Master()
                                          AND MovementItem.isErased   = tmpIsErased.isErased
+
+                  LEFT JOIN MovementItemBoolean AS MIBoolean_BarCode
+                                                ON MIBoolean_BarCode.MovementItemId =  MovementItem.Id
+                                               AND MIBoolean_BarCode.DescId = zc_MIBoolean_BarCode()
 
                   LEFT JOIN MovementItemDate AS MIDate_PartionGoods
                                              ON MIDate_PartionGoods.MovementItemId = MovementItem.Id
@@ -324,6 +341,7 @@ BEGIN
                    , tmpMI.PriceListId
                    , tmpMI.InsertDate
                    , tmpMI.UpdateDate
+                   , tmpMI.isBarCode
                    , tmpMI.isErased
             ) AS tmpMI
             LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = tmpMI.GoodsId

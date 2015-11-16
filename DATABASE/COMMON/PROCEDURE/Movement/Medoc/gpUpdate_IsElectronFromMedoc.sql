@@ -35,12 +35,11 @@ BEGIN
      -- PERFORM lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Movement_EDI());
    vbUserId := lpGetUserBySession(inSession);
 
-   CASE inInvNumberBranch 
-        WHEN '1' AND inOperDate < '01.11.2015' THEN vbAccessKey := zc_Enum_Process_AccessKey_DocumentKharkov();
-        WHEN '2' THEN vbAccessKey := zc_Enum_Process_AccessKey_DocumentKiev();
-        WHEN '5' AND inOperDate < '01.11.2015' THEN vbAccessKey := zc_Enum_Process_AccessKey_DocumentNikolaev();
-        WHEN '8' AND inOperDate < '01.11.2015' THEN vbAccessKey := zc_Enum_Process_AccessKey_DocumentKrRog();
-        WHEN '9' AND inOperDate < '01.11.2015' THEN vbAccessKey := zc_Enum_Process_AccessKey_DocumentCherkassi();
+   CASE WHEN inInvNumberBranch  = '1' AND inOperDate < '01.11.2015' THEN vbAccessKey := zc_Enum_Process_AccessKey_DocumentKharkov();
+        WHEN inInvNumberBranch  = '2' THEN vbAccessKey := zc_Enum_Process_AccessKey_DocumentKiev();
+        WHEN inInvNumberBranch  = '5' AND inOperDate < '01.11.2015' THEN vbAccessKey := zc_Enum_Process_AccessKey_DocumentNikolaev();
+        WHEN inInvNumberBranch  = '8' AND inOperDate < '01.11.2015' THEN vbAccessKey := zc_Enum_Process_AccessKey_DocumentKrRog();
+        WHEN inInvNumberBranch  = '9' AND inOperDate < '01.11.2015' THEN vbAccessKey := zc_Enum_Process_AccessKey_DocumentCherkassi();
         ELSE  vbAccessKey := 0;
    END CASE;
 

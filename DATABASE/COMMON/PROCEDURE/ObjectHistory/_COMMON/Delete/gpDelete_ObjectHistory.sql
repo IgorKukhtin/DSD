@@ -14,6 +14,14 @@ BEGIN
    vbUserId := lpCheckRight(inSession, zc_Enum_Process_InsertUpdate_ObjectHistory_PriceListItem());
 
     
+           -- сохранили свойство <Дата корректировки>
+   PERFORM lpInsertUpdate_ObjectDate (zc_ObjectDate_Protocol_Update(), ObjectHistory.ObjectId, CURRENT_TIMESTAMP)
+           -- сохранили свойство <Пользователь (корректировка)>
+         , lpInsertUpdate_ObjectLink (zc_ObjectLink_Protocol_Update(), ObjectHistory.ObjectId, vbUserId)
+   FROM ObjectHistory
+   WHERE ObjectHistory.Id = inId;
+
+   -- 
    PERFORM lpDelete_ObjectHistory (inId	      := inId
                                  , inUserId   := vbUserId
                                   );

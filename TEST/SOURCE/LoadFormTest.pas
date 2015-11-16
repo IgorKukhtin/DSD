@@ -1118,11 +1118,7 @@ end;
 
 procedure TLoadFormTest.LoadReportFormTest;
 begin
-  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_WeighingForm'));
-  TdsdFormStorageFactory.GetStorage.Load('TReport_WeighingForm');
-  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_WeighingDialogForm'));
-  TdsdFormStorageFactory.GetStorage.Load('TReport_WeighingDialogForm');
- // exit;
+//  exit;
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_BalanceForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_BalanceForm');
@@ -1270,6 +1266,11 @@ begin
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_GoodsMI_ProductionUnionMDForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_GoodsMI_ProductionUnionMDForm');
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_WeighingForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_WeighingForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_WeighingDialogForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_WeighingDialogForm');
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_PersonalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_PersonalForm');
