@@ -28,7 +28,7 @@ BEGIN
    IF inIsLast = TRUE THEN ioId:= 0; END IF;
 
    -- Получаем ссылку на объект цен
-   vbPriceListItemId := lpGetInsert_Object_PriceListItem (inPriceListId, inGoodsId);
+   vbPriceListItemId := lpGetInsert_Object_PriceListItem (inPriceListId, inGoodsId, vbUserId);
  
    -- Вставляем или меняем объект историю цен
    ioId := lpInsertUpdate_ObjectHistory (ioId, zc_ObjectHistory_PriceListItem(), vbPriceListItemId, inOperDate, vbUserId);
@@ -56,11 +56,12 @@ BEGIN
          UPDATE ObjectHistory SET EndDate = zc_DateEnd() WHERE Id = ioId;
    END IF;
 
-   --
+
+   -- вернули значения
    SELECT StartDate, EndDate INTO outStartDate, outEndDate FROM ObjectHistory WHERE Id = ioId;
 
    -- сохранили протокол
-   PERFORM lpInsert_ObjectHistoryProtocol (vbPriceListItemId, vbUserId, outStartDate ,outEndDate, inValue);
+   PERFORM lpInsert_ObjectHistoryProtocol (inObjectId:= vbPriceListItemId, inUserId:= vbUserId, inStartDate:= outStartDate, inEndDate:= outEndDate, inPrice:= inValue, inIsUpdate:= TRUE, inIsErased:= FALSE);
 
 
 END;$BODY$

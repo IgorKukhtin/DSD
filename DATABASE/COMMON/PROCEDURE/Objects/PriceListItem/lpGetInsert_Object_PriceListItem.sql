@@ -1,18 +1,21 @@
-п»ї-- Function: lpGetInsert_Object_PriceListItem(Integer,Integer,TVarChar,Integer,Integer,Integer,TVarChar)
+-- Function: lpGetInsert_Object_PriceListItem(Integer,Integer,TVarChar,Integer,Integer,Integer,TVarChar)
 
--- DROP FUNCTION lpGetInsert_Object_PriceListItem(Integer, Integer);
+DROP FUNCTION IF EXISTS lpGetInsert_Object_PriceListItem (Integer, Integer);
+DROP FUNCTION IF EXISTS lpGetInsert_Object_PriceListItem (Integer, Integer, Integer);
 
 CREATE OR REPLACE FUNCTION lpGetInsert_Object_PriceListItem(
-    IN inPriceListId         Integer,      -- РџСЂР°Р№СЃ-Р»РёСЃС‚
-    IN inGoodsId             Integer       -- РўРѕРІР°СЂ
+    IN inPriceListId         Integer,      -- Прайс-лист
+    IN inGoodsId             Integer,      -- Товар
+    IN inUserId              Integer
 )
-RETURNS integer AS
+RETURNS Integer
+AS
 $BODY$
-DECLARE
-  Id Integer;
+DECLARE vbId Integer;
 BEGIN
 
-   SELECT ObjectLink_PriceListItem_Goods.ObjectId INTO Id
+   -- поиск
+   SELECT ObjectLink_PriceListItem_Goods.ObjectId INTO vbId
    FROM ObjectLink AS ObjectLink_PriceListItem_Goods
    JOIN ObjectLink AS ObjectLink_PriceListItem_PriceList
      ON ObjectLink_PriceListItem_PriceList.ObjectId = ObjectLink_PriceListItem_Goods.ObjectId
@@ -21,30 +24,35 @@ BEGIN
   WHERE ObjectLink_PriceListItem_Goods.DescId = zc_ObjectLink_PriceListItem_Goods()
     AND ObjectLink_PriceListItem_Goods.ChildObjectId = inGoodsId;
 
-  IF COALESCE(Id, 0) = 0 THEN
 
-     -- СЃРѕС…СЂР°РЅРёР»Рё <РћР±СЉРµРєС‚>
-     Id := lpInsertUpdate_Object(0, zc_Object_PriceListItem(), 0, '');
+  IF COALESCE (vbId, 0) = 0 THEN
+     -- сохранили <Объект>
+     vbId := lpInsertUpdate_Object(0, zc_Object_PriceListItem(), 0, '');
+     --
+     PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_PriceListItem_PriceList(), vbId, inPriceListId);
+     PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_PriceListItem_Goods(), vbId, inGoodsId);
+     -- сохранили свойство <Дата создания>
+     PERFORM lpInsertUpdate_ObjectDate (zc_ObjectDate_Protocol_Insert(), vbId, CURRENT_TIMESTAMP);
+     -- сохранили свойство <Пользователь (создание)>
+     PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Protocol_Insert(), vbId, inUserId);
 
-     PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_PriceListItem_PriceList(), Id, inPriceListId);
-     PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_PriceListItem_Goods(), Id, inGoodsId);
   END IF;
 
-  RETURN Id;
+  -- вернули значение
+  RETURN vbId;
 
 END;$BODY$
-
-LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION lpGetInsert_Object_PriceListItem (Integer, Integer) OWNER TO postgres;  
+ LANGUAGE plpgsql VOLATILE;
+ALTER FUNCTION lpGetInsert_Object_PriceListItem (Integer, Integer, Integer) OWNER TO postgres;  
 
 
 /*-------------------------------------------------------------------------------*/
 /*
- РРЎРўРћР РРЇ Р РђР—Р РђР‘РћРўРљР: Р”РђРўРђ, РђР’РўРћР 
-               Р¤РµР»РѕРЅСЋРє Р.Р’.   РљСѓС…С‚РёРЅ Р.Р’.   РљР»РёРјРµРЅС‚СЊРµРІ Рљ.Р.
+ ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
  06.06.13                        *
 
 */
 
--- С‚РµСЃС‚
+-- тест
 -- SELECT * FROM lpGetInsert_Object_PriceListItem()
