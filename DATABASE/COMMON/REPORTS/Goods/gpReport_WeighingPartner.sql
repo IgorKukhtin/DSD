@@ -1,16 +1,19 @@
  -- Function: gpSelect_MovementItem_WeighingPartner()
 
 DROP FUNCTION IF EXISTS gpReport_WeighingPartner (TDateTime, TDateTime, TVarChar);
+DROP FUNCTION IF EXISTS gpReport_WeighingPartner (TDateTime, TDateTime, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpReport_WeighingPartner(
     IN inStartDate          TDateTime , --
     IN inEndDate            TDateTime , --
-    IN inSession     TVarChar       -- сессия пользователя
+    IN inMovementDescId     Integer   , --
+    IN inSession            TVarChar       -- сессия пользователя
 )
 RETURNS TABLE (InvNumber_parent TVarChar, OperDate_parent TDateTime, MovementDescName TVarChar, FromName TVarChar, ToName TVarChar
              , GoodsCode Integer, GoodsName TVarChar
              , GoodsGroupNameFull TVarChar
-             , Amount TFloat, Amount_mi TFloat, AmountDiff TFloat
+             , Amount TFloat, Amount_sh TFloat, Amount_Weight TFloat, Amount_mi TFloat, Amount_mi_sh TFloat, Amount_mi_Weight TFloat
+             , AmountDiff_sh TFloat, AmountDiff_Weight TFloat
              , AmountPartner TFloat, AmountPartner_mi TFloat
              , RealWeight TFloat
              , ChangePercentAmount TFloat, AmountChangePercent TFloat
@@ -28,7 +31,6 @@ BEGIN
      -- inShowAll:= TRUE;
      RETURN QUERY 
      WITH tmpMovement AS ( SELECT Movement.Id as MovementId
-                                
                                 , Movement.InvNumber  AS InvNumber
                                 , Movement.OperDate
                                 , Movement_Parent.Id                AS MovementId_parent
@@ -60,6 +62,7 @@ BEGIN
                            WHERE Movement.DescId IN ( zc_Movement_WeighingPartner(),zc_Movement_WeighingProduction())
                              AND Movement.OperDate BETWEEN inStartDate AND inEndDate
                              AND Movement.StatusId = zc_Enum_Status_Complete()
+                             AND (Movement_Parent.DescId = inMovementDescId OR COALESCE(inMovementDescId,0)=0)
                            --  AND Movement.parentid = 2054974
                          )
                          
@@ -75,8 +78,17 @@ BEGIN
            , ObjectString_Goods_GoodsGroupFull.ValueData AS GoodsGroupNameFull
 
            , tmpMI.Amount :: TFloat           AS Amount
+           , CAST ((tmpMI.Amount * (CASE WHEN Object_Measure.Id = zc_Measure_Sh() THEN 1 ELSE 0 END )) AS TFloat)    AS Amount_sh
+           , CAST ((tmpMI.Amount * (CASE WHEN Object_Measure.Id = zc_Measure_kg() THEN 1 ELSE 0 END )) AS TFloat)    AS Amount_Weight
+
            , tmpMI.Amount_mi :: TFloat        AS Amount_mi
-           , (tmpMI.Amount-tmpMI.Amount_mi)  :: TFloat    AS AmountDiff
+           , CAST ((tmpMI.Amount_mi * (CASE WHEN Object_Measure.Id = zc_Measure_Sh() THEN 1 ELSE 0 END )) AS TFloat)    AS Amount_mi_sh 
+           , CAST ((tmpMI.Amount_mi * (CASE WHEN Object_Measure.Id = zc_Measure_kg() THEN 1 ELSE 0 END )) AS TFloat)    AS Amount_mi_Weight
+                      
+           , CAST (((tmpMI.Amount-tmpMI.Amount_mi) * (CASE WHEN Object_Measure.Id = zc_Measure_Sh() THEN 1 ELSE 0 END ))  AS TFloat)   ::TFloat     AS AmountDiff_sh
+             
+           , CAST (((tmpMI.Amount-tmpMI.Amount_mi ) * (CASE WHEN Object_Measure.Id = zc_Measure_Kg() THEN 1 ELSE 0 END )) AS TFloat)   :: TFloat     AS AmountDiff_Weight
+
 
            , CASE WHEN tmpMI.AmountPartner = 0 THEN NULL ELSE tmpMI.AmountPartner END :: TFloat       AS AmountPartner
            , CASE WHEN tmpMI.AmountPartner_mi = 0 THEN NULL ELSE tmpMI.AmountPartner_mi END :: TFloat AS AmountPartner_mi
@@ -102,7 +114,7 @@ BEGIN
                   , tmpMI.GoodsId
                   , SUM (tmpMI.Amount)           AS Amount
                   , SUM (tmpMI.Amount_mi)        AS Amount_mi
-                 
+
                   , SUM (tmpMI.AmountPartner)    AS AmountPartner
                   , SUM (tmpMI.AmountPartner_mi) AS AmountPartner_mi
 
@@ -251,6 +263,10 @@ BEGIN
                                 AND ObjectLink_Goods_Measure.DescId = zc_ObjectLink_Goods_Measure()
             LEFT JOIN Object AS Object_Measure ON Object_Measure.Id = ObjectLink_Goods_Measure.ChildObjectId
 
+            LEFT JOIN ObjectFloat AS ObjectFloat_Weight
+                                  ON ObjectFloat_Weight.ObjectId = tmpMI.GoodsId
+                                 AND ObjectFloat_Weight.DescId = zc_ObjectFloat_Goods_Weight()
+                                 
             LEFT JOIN ObjectString AS ObjectString_Goods_GoodsGroupFull
                                    ON ObjectString_Goods_GoodsGroupFull.ObjectId = tmpMI.GoodsId
                                   AND ObjectString_Goods_GoodsGroupFull.DescId = zc_ObjectString_Goods_GroupNameFull()
@@ -270,3 +286,4 @@ $BODY$
 
 -- тест
 --SELECT * FROM gpReport_WeighingPartner (inStartDate:= '01.08.2015', inEndDate:= '01.08.2015', inSession:= zfCalc_UserAdmin())
+--select * from gpReport_WeighingPartner(inStartDate := ('01.08.2015')::TDateTime , inEndDate := ('01.08.2015')::TDateTime , MovementDescId := 8 ,  inSession := '5');

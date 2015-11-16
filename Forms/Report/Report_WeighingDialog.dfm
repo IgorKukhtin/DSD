@@ -52,7 +52,7 @@ object Report_WeighingDialogForm: TReport_WeighingDialogForm
     TabOrder = 3
     Width = 90
   end
-  object edUnit: TcxButtonEdit
+  object edMovementDesc: TcxButtonEdit
     Left = 11
     Top = 77
     Properties.Buttons = <
@@ -62,14 +62,12 @@ object Report_WeighingDialogForm: TReport_WeighingDialogForm
       end>
     Properties.ReadOnly = True
     TabOrder = 4
-    Visible = False
     Width = 305
   end
   object cxLabel3: TcxLabel
     Left = 11
     Top = 57
-    Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077':'
-    Visible = False
+    Caption = #1058#1080#1087' '#1076#1086#1082#1091#1084#1077#1085#1090#1072':'
   end
   object cxLabel6: TcxLabel
     Left = 11
@@ -121,16 +119,16 @@ object Report_WeighingDialogForm: TReport_WeighingDialogForm
         ParamType = ptInput
       end
       item
-        Name = 'UnitId'
+        Name = 'MovementDescId'
         Value = ''
-        Component = UnitGuides
+        Component = MovementDescGuides
         ComponentItem = 'Key'
         ParamType = ptInput
       end
       item
-        Name = 'UnitName'
+        Name = 'MovementDescName'
         Value = ''
-        Component = UnitGuides
+        Component = MovementDescGuides
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
@@ -138,18 +136,18 @@ object Report_WeighingDialogForm: TReport_WeighingDialogForm
     Left = 23
     Top = 102
   end
-  object UnitGuides: TdsdGuides
+  object MovementDescGuides: TdsdGuides
     KeyField = 'Id'
-    LookupControl = edUnit
-    FormNameParam.Value = 'TBranch_ObjectForm'
+    LookupControl = edMovementDesc
+    FormNameParam.Value = 'TMovementDescForm'
     FormNameParam.DataType = ftString
-    FormName = 'TBranch_ObjectForm'
+    FormName = 'TMovementDescForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
       item
         Name = 'Key'
         Value = ''
-        Component = UnitGuides
+        Component = MovementDescGuides
         ComponentItem = 'Key'
         DataType = ftString
         ParamType = ptInput
@@ -157,7 +155,7 @@ object Report_WeighingDialogForm: TReport_WeighingDialogForm
       item
         Name = 'TextValue'
         Value = ''
-        Component = UnitGuides
+        Component = MovementDescGuides
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput

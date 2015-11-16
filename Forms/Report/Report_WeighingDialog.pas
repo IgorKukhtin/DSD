@@ -21,11 +21,11 @@ type
     dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn;
     cxPropertiesStore: TcxPropertiesStore;
     FormParams: TdsdFormParams;
-    edUnit: TcxButtonEdit;
+    edMovementDesc: TcxButtonEdit;
     cxLabel3: TcxLabel;
     cxLabel6: TcxLabel;
     cxLabel7: TcxLabel;
-    UnitGuides: TdsdGuides;
+    MovementDescGuides: TdsdGuides;
   private
     { Private declarations }
   public

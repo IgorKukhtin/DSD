@@ -68,7 +68,7 @@ inherited Report_WeighingForm: TReport_WeighingForm
             item
               Format = ',0.####'
               Kind = skSum
-              Column = Amount
+              Column = Amount_sh
             end
             item
               Format = ',0.####'
@@ -88,12 +88,37 @@ inherited Report_WeighingForm: TReport_WeighingForm
             item
               Format = ',0.####'
               Kind = skSum
-              Column = Amount_mi
+              Column = Amount_mi_sh
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = AmountDiff
+              Column = AmountDiff_sh
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Amount_Weight
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Amount_mi_Weight
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = AmountDiff_Weight
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Amount
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Amount_mi
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -136,7 +161,7 @@ inherited Report_WeighingForm: TReport_WeighingForm
             item
               Format = ',0.####'
               Kind = skSum
-              Column = Amount
+              Column = Amount_sh
             end
             item
               Format = ',0.####'
@@ -156,12 +181,37 @@ inherited Report_WeighingForm: TReport_WeighingForm
             item
               Format = ',0.####'
               Kind = skSum
-              Column = Amount_mi
+              Column = Amount_mi_sh
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = AmountDiff
+              Column = AmountDiff_sh
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Amount_Weight
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Amount_mi_Weight
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = AmountDiff_Weight
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Amount
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Amount_mi
             end>
           OptionsData.CancelOnExit = True
           OptionsData.Deleting = False
@@ -174,8 +224,9 @@ inherited Report_WeighingForm: TReport_WeighingForm
           Styles.Footer = nil
           Styles.Header = nil
           object MovementDescName: TcxGridDBColumn
-            Caption = #1042#1080#1076' '#1076#1086#1082'.'
+            Caption = #1058#1080#1087' '#1076#1086#1082'.'
             DataBinding.FieldName = 'MovementDescName'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 69
@@ -246,32 +297,79 @@ inherited Report_WeighingForm: TReport_WeighingForm
           object RealWeight: TcxGridDBColumn
             Caption = #1050#1086#1083'-'#1074#1086' '#1087#1088#1080' '#1074#1079#1074#1077#1096'. ('#1088#1077#1072#1083'.'#1074#1077#1089')'
             DataBinding.FieldName = 'RealWeight'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
+            VisibleForCustomization = False
             Width = 87
           end
           object Amount: TcxGridDBColumn
             Caption = #1050#1086#1083'-'#1074#1086' '#1074#1079#1074#1077#1096'.('#1089#1082#1083#1072#1076')'
             DataBinding.FieldName = 'Amount'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 70
+            VisibleForCustomization = False
+            Width = 60
           end
           object Amount_mi: TcxGridDBColumn
             Caption = #1050#1086#1083'-'#1074#1086' ('#1089#1082#1083#1072#1076' '#1076#1086#1082'.)'
             DataBinding.FieldName = 'Amount_mi'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            VisibleForCustomization = False
+            Width = 60
+          end
+          object Amount_sh: TcxGridDBColumn
+            Caption = #1050#1086#1083'-'#1074#1086' '#1096#1090' '#1074#1079#1074#1077#1096'.('#1089#1082#1083#1072#1076')'
+            DataBinding.FieldName = 'Amount_sh'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 60
           end
-          object AmountDiff: TcxGridDBColumn
-            Caption = #1056#1072#1079#1085#1080#1094#1072' '#1074' '#1082#1086#1083'-'#1074#1077
-            DataBinding.FieldName = 'AmountDiff'
+          object Amount_mi_sh: TcxGridDBColumn
+            Caption = #1050#1086#1083'-'#1074#1086' '#1096#1090' ('#1089#1082#1083#1072#1076' '#1076#1086#1082'.)'
+            DataBinding.FieldName = 'Amount_mi_sh'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 60
+          end
+          object AmountDiff_sh: TcxGridDBColumn
+            Caption = #1056#1072#1079#1085#1080#1094#1072' '#1074' '#1082#1086#1083'-'#1074#1077' '#1096#1090
+            DataBinding.FieldName = 'AmountDiff_sh'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 60
+          end
+          object Amount_Weight: TcxGridDBColumn
+            Caption = #1050#1086#1083'-'#1074#1086' '#1074#1077#1089' '#1074#1079#1074#1077#1096'.('#1089#1082#1083#1072#1076')'
+            DataBinding.FieldName = 'Amount_Weight'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 60
+          end
+          object Amount_mi_Weight: TcxGridDBColumn
+            Caption = #1050#1086#1083'-'#1074#1086' '#1074#1077#1089' ('#1089#1082#1083#1072#1076' '#1076#1086#1082'.)'
+            DataBinding.FieldName = 'Amount_mi_Weight'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 60
+          end
+          object AmountDiff_Weight: TcxGridDBColumn
+            Caption = #1056#1072#1079#1085#1080#1094#1072' '#1074' '#1082#1086#1083'-'#1074#1077' '#1074#1077#1089
+            DataBinding.FieldName = 'AmountDiff_Weight'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 60
           end
           object AmountPartner: TcxGridDBColumn
@@ -281,6 +379,7 @@ inherited Report_WeighingForm: TReport_WeighingForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
+            VisibleForCustomization = False
             Width = 60
           end
           object AmountPartner_mi: TcxGridDBColumn
@@ -290,6 +389,7 @@ inherited Report_WeighingForm: TReport_WeighingForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
+            VisibleForCustomization = False
             Width = 60
           end
           object AmountChangePercent: TcxGridDBColumn
@@ -299,6 +399,7 @@ inherited Report_WeighingForm: TReport_WeighingForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
+            VisibleForCustomization = False
             Width = 60
           end
           object ChangePercentAmount: TcxGridDBColumn
@@ -307,6 +408,7 @@ inherited Report_WeighingForm: TReport_WeighingForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
+            VisibleForCustomization = False
             Width = 63
           end
           object Price: TcxGridDBColumn
@@ -356,11 +458,10 @@ inherited Report_WeighingForm: TReport_WeighingForm
     object cxLabel3: TcxLabel
       Left = 394
       Top = 6
-      Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077':'
-      Visible = False
+      Caption = #1058#1080#1087' '#1076#1086#1082#1091#1084#1077#1085#1090#1072':'
     end
-    object edUnit: TcxButtonEdit
-      Left = 488
+    object edMovementDesc: TcxButtonEdit
+      Left = 480
       Top = 5
       Properties.Buttons = <
         item
@@ -369,7 +470,6 @@ inherited Report_WeighingForm: TReport_WeighingForm
         end>
       Properties.ReadOnly = True
       TabOrder = 5
-      Visible = False
       Width = 281
     end
   end
@@ -386,7 +486,7 @@ inherited Report_WeighingForm: TReport_WeighingForm
           'Date')
       end
       item
-        Component = UnitGuides
+        Component = MovementDescGuides
         Properties.Strings = (
           'Key'
           'TextValue')
@@ -418,16 +518,16 @@ inherited Report_WeighingForm: TReport_WeighingForm
           ParamType = ptInput
         end
         item
-          Name = 'UnitId'
+          Name = 'MovementDescId'
           Value = ''
-          Component = UnitGuides
+          Component = MovementDescGuides
           ComponentItem = 'Key'
           ParamType = ptInput
         end
         item
-          Name = 'UnitName'
+          Name = 'MovementDescName'
           Value = ''
-          Component = UnitGuides
+          Component = MovementDescGuides
           ComponentItem = 'TextValue'
           DataType = ftString
           ParamType = ptInput
@@ -465,7 +565,7 @@ inherited Report_WeighingForm: TReport_WeighingForm
         item
           Name = 'BranchName'
           Value = ''
-          Component = UnitGuides
+          Component = MovementDescGuides
           ComponentItem = 'TextValue'
           DataType = ftString
           ParamType = ptInput
@@ -501,10 +601,11 @@ inherited Report_WeighingForm: TReport_WeighingForm
         ParamType = ptInput
       end
       item
+        Name = 'MovementDescId'
         Value = Null
-        Component = UnitGuides
+        Component = MovementDescGuides
         ComponentItem = 'Key'
-        ParamType = ptUnknown
+        ParamType = ptInput
       end>
     Left = 112
     Top = 208
@@ -585,7 +686,7 @@ inherited Report_WeighingForm: TReport_WeighingForm
       item
       end
       item
-        Component = UnitGuides
+        Component = MovementDescGuides
       end>
     Left = 224
     Top = 136
@@ -595,18 +696,18 @@ inherited Report_WeighingForm: TReport_WeighingForm
     Left = 328
     Top = 170
   end
-  object UnitGuides: TdsdGuides
+  object MovementDescGuides: TdsdGuides
     KeyField = 'Id'
-    LookupControl = edUnit
-    FormNameParam.Value = 'TUnit_ObjectForm'
+    LookupControl = edMovementDesc
+    FormNameParam.Value = 'TMovementDescForm'
     FormNameParam.DataType = ftString
-    FormName = 'TUnit_ObjectForm'
+    FormName = 'TMovementDescForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
       item
         Name = 'Key'
         Value = ''
-        Component = UnitGuides
+        Component = MovementDescGuides
         ComponentItem = 'Key'
         DataType = ftString
         ParamType = ptInput
@@ -614,7 +715,7 @@ inherited Report_WeighingForm: TReport_WeighingForm
       item
         Name = 'TextValue'
         Value = ''
-        Component = UnitGuides
+        Component = MovementDescGuides
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput

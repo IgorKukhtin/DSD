@@ -20,12 +20,12 @@ type
     FormParams: TdsdFormParams;
     GoodsGroupNameFull: TcxGridDBColumn;
     cxLabel3: TcxLabel;
-    edUnit: TcxButtonEdit;
-    UnitGuides: TdsdGuides;
+    edMovementDesc: TcxButtonEdit;
+    MovementDescGuides: TdsdGuides;
     AmountPartner_mi: TcxGridDBColumn;
     RealWeight: TcxGridDBColumn;
-    Amount: TcxGridDBColumn;
-    Amount_mi: TcxGridDBColumn;
+    Amount_sh: TcxGridDBColumn;
+    Amount_mi_sh: TcxGridDBColumn;
     ChangePercentAmount: TcxGridDBColumn;
     ExecuteDialog: TExecuteDialog;
     bbExecuteDialog: TdxBarButton;
@@ -44,7 +44,10 @@ type
     FromName: TcxGridDBColumn;
     ToName: TcxGridDBColumn;
     MovementDescName: TcxGridDBColumn;
-    AmountDiff: TcxGridDBColumn;
+    AmountDiff_sh: TcxGridDBColumn;
+    Amount_Weight: TcxGridDBColumn;
+    Amount_mi_Weight: TcxGridDBColumn;
+    AmountDiff_Weight: TcxGridDBColumn;
   private
     { Private declarations }
   public
