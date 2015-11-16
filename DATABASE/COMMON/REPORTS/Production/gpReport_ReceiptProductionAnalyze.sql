@@ -29,15 +29,13 @@ BEGIN
                                            , ReceiptChildId integer, GoodsId_out Integer, GoodsKindId_out Integer, Amount_out TFloat, Amount_out_start TFloat, isStart Integer, isCost Boolean
                                            , Price1 TFloat, Price2 TFloat, Price3 TFloat) ON COMMIT DROP;
    -- Ограничения по товару
-   IF inGoodsId <> 0
+   IF COALESCE( inGoodsId,0) <> 0 
     THEN
         -- заполнение
         INSERT INTO _tmpGoods (GoodsId)
-           SELECT Object_Goods.Id AS GoodsId
-           FROM Object AS Object_Goods
-           WHERE Object_Goods.Id= inGoodsId;
+           SELECT inGoodsId;
     ELSE 
-     IF inGoodsGroupId <> 0
+     IF COALESCE( inGoodsGroupId,0) <> 0 and COALESCE( inGoodsId,0) = 0
      THEN
          WITH RECURSIVE tmpGroup (GoodsGroupId, GoodsGroupParentId)
            AS (SELECT Object.Id, NULL :: Integer
@@ -56,9 +54,14 @@ BEGIN
             FROM tmpGroup
                  INNER JOIN ObjectLink AS ObjectLink_Goods_GoodsGroup
                                        ON ObjectLink_Goods_GoodsGroup.ChildObjectId = tmpGroup.GoodsGroupId
-                                      AND ObjectLink_Goods_GoodsGroup.DescId = zc_ObjectLink_Goods_GoodsGroup()
-       ;
-    END IF;
+                                      AND ObjectLink_Goods_GoodsGroup.DescId = zc_ObjectLink_Goods_GoodsGroup();
+      ELSE  
+            INSERT INTO _tmpGoods (GoodsId)
+                 SELECT Object_Goods.Id AS GoodsId
+                 FROM Object AS Object_Goods
+                 WHERE Object_Goods.DescId = zc_Object_Goods();
+       
+      END IF;
    END IF;
                                
      -- ВСЕ рецептуры
@@ -106,13 +109,13 @@ BEGIN
                  LEFT JOIN MovementItemLinkObject AS MIReceipt 
                                                   ON MIReceipt.MovementItemId = MIContainer.MovementItemId
                                                  AND MIReceipt.DescId = zc_MILinkObject_Receipt()
-                 LEFT JOIN _tmpGoods ON _tmpGoods.GoodsId = MIContainer.ObjectId_Analyzer
+                 INNER JOIN _tmpGoods ON _tmpGoods.GoodsId = MIContainer.ObjectId_Analyzer
             WHERE MIContainer.OperDate BETWEEN inStartDate AND inEndDate 
               AND MIContainer.WhereObjectId_Analyzer = inUnitToId
               AND MIContainer.MovementDescId = zc_Movement_ProductionUnion()
               AND MIContainer.IsActive = TRUE
               AND MIContainer.Amount <> 0
-              AND (_tmpGoods.GoodsId > 0 OR COALESCE (inGoodsGroupId, 0) = 0)
+              --AND (_tmpGoods.GoodsId > 0 OR COALESCE (inGoodsGroupId, 0) = 0)
             GROUP BY MIContainer.ObjectId_Analyzer
                    , MIContainer.ContainerId
                    , MIReceipt.ObjectId
@@ -207,8 +210,8 @@ BEGIN
                  LEFT JOIN ObjectLink AS ObjectLink_Receipt_GoodsKind_complete
                                       ON ObjectLink_Receipt_GoodsKind_complete.ObjectId = tmp.ReceiptId
                                      AND ObjectLink_Receipt_GoodsKind_complete.DescId = zc_ObjectLink_Receipt_GoodsKindComplete()
-                 LEFT JOIN _tmpGoods ON _tmpGoods.GoodsId = ObjectLink_Receipt_Goods.ChildObjectId
-            WHERE _tmpGoods.GoodsId > 0 OR COALESCE (inGoodsGroupId, 0) = 0
+                 INNER JOIN _tmpGoods ON _tmpGoods.GoodsId = ObjectLink_Receipt_Goods.ChildObjectId
+           -- WHERE _tmpGoods.GoodsId > 0 OR COALESCE (inGoodsGroupId, 0) = 0
             GROUP BY tmp.ReceiptId
                    , COALESCE (ObjectLink_Receipt_Goods.ChildObjectId, 0)
                    , COALESCE (ObjectLink_Receipt_GoodsKind.ChildObjectId, 0)
@@ -498,7 +501,7 @@ BEGIN
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpReport_ReceiptProductionAnalyze (TDateTime, TDateTime, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar) OWNER TO postgres;
+ALTER FUNCTION gpReport_ReceiptProductionAnalyze (TDateTime, TDateTime, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar) OWNER TO postgres;
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
