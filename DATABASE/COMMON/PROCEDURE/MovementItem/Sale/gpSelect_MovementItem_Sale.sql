@@ -19,6 +19,7 @@ RETURNS TABLE (Id Integer, LineNum Integer, GoodsId Integer, GoodsCode Integer, 
              , AssetId Integer, AssetName TVarChar
              , BoxId Integer, BoxName TVarChar
              , AmountSumm TFloat
+             , CountPack TFloat, WeightTotal TFloat, WeightPack TFloat, isBarCode Boolean 
              , isCheck_Pricelist Boolean
              , isErased Boolean
               )
@@ -112,6 +113,12 @@ BEGIN
            , 0 ::Integer                AS BoxId
            , '' ::TVarChar              AS BoxName
            , CAST (NULL AS TFloat)      AS AmountSumm
+           
+           , CAST (NULL AS TFloat)      AS CountPack
+           , CAST (NULL AS TFloat)      AS WeightTotal
+           , CAST (NULL AS TFloat)      AS WeightPack
+           , FALSE                      AS isBarCode
+                      
            , FALSE                      AS isCheck_PricelistBoolean
            , FALSE                      AS isErased
 
@@ -196,7 +203,14 @@ BEGIN
                            THEN CAST ( (COALESCE (MIFloat_AmountPartner.ValueData, 0)) * MIFloat_Price.ValueData / MIFloat_CountForPrice.ValueData AS NUMERIC (16, 2))
                            ELSE CAST ( (COALESCE (MIFloat_AmountPartner.ValueData, 0)) * MIFloat_Price.ValueData AS NUMERIC (16, 2))
                    END AS TFloat)                   AS AmountSumm
+                   
+           , MIFloat_CountPack.ValueData        AS CountPack
+           , MIFloat_WeightTotal.ValueData      AS WeightTotal
+           , MIFloat_WeightPack.ValueData       AS WeightPack
+           , MIBoolean_BarCode.ValueData        AS isBarCode
+
            , CASE WHEN COALESCE(MIFloat_Price.ValueData,0) = COALESCE(tmpPriceList.Price_Pricelist,0) THEN FALSE ELSE TRUE END AS isCheck_PricelistBoolean
+
            , MovementItem.isErased                  AS isErased
 
        FROM (SELECT FALSE AS isErased UNION ALL SELECT inIsErased AS isErased WHERE inIsErased = TRUE) AS tmpIsErased
@@ -232,6 +246,19 @@ BEGIN
                                         ON MIFloat_BoxCount.MovementItemId = MovementItem.Id
                                        AND MIFloat_BoxCount.DescId = zc_MIFloat_BoxCount()
 
+            LEFT JOIN MovementItemFloat AS MIFloat_CountPack
+                                        ON MIFloat_CountPack.MovementItemId = MovementItem.Id
+                                       AND MIFloat_CountPack.DescId = zc_MIFloat_CountPack()
+            LEFT JOIN MovementItemFloat AS MIFloat_WeightTotal
+                                        ON MIFloat_WeightTotal.MovementItemId = MovementItem.Id
+                                       AND MIFloat_WeightTotal.DescId = zc_MIFloat_WeightTotal()
+            LEFT JOIN MovementItemFloat AS MIFloat_WeightPack
+                                        ON MIFloat_WeightPack.MovementItemId = MovementItem.Id
+                                       AND MIFloat_WeightPack.DescId = zc_MIFloat_WeightPack()
+            LEFT JOIN MovementItemBoolean AS MIBoolean_BarCode 
+                                          ON MIBoolean_BarCode.MovementItemId = MovementItem.Id
+                                         AND MIBoolean_BarCode.DescId = zc_MIBoolean_BarCode()
+                                       
             LEFT JOIN MovementItemString AS MIString_PartionGoods
                                          ON MIString_PartionGoods.MovementItemId =  MovementItem.Id
                                         AND MIString_PartionGoods.DescId = zc_MIString_PartionGoods()
@@ -310,6 +337,12 @@ BEGIN
                            THEN CAST ( (COALESCE (MIFloat_AmountPartner.ValueData, 0)) * MIFloat_Price.ValueData / MIFloat_CountForPrice.ValueData AS NUMERIC (16, 2))
                         ELSE CAST ( (COALESCE (MIFloat_AmountPartner.ValueData, 0)) * MIFloat_Price.ValueData AS NUMERIC (16, 2))
                    END AS TFloat) AS AmountSumm
+                   
+           , MIFloat_CountPack.ValueData        AS CountPack
+           , MIFloat_WeightTotal.ValueData      AS WeightTotal
+           , MIFloat_WeightPack.ValueData       AS WeightPack
+           , MIBoolean_BarCode.ValueData        AS isBarCode
+
            , CASE WHEN COALESCE(MIFloat_Price.ValueData,0) = COALESCE(lfObjectHistory_PriceListItem.ValuePrice,0) THEN FALSE ELSE TRUE END AS isCheck_PricelistBoolean
            , MovementItem.isErased
 
@@ -345,6 +378,19 @@ BEGIN
                                         ON MIFloat_BoxCount.MovementItemId = MovementItem.Id
                                        AND MIFloat_BoxCount.DescId = zc_MIFloat_BoxCount()
 
+            LEFT JOIN MovementItemFloat AS MIFloat_CountPack
+                                        ON MIFloat_CountPack.MovementItemId = MovementItem.Id
+                                       AND MIFloat_CountPack.DescId = zc_MIFloat_CountPack()
+            LEFT JOIN MovementItemFloat AS MIFloat_WeightTotal
+                                        ON MIFloat_WeightTotal.MovementItemId = MovementItem.Id
+                                       AND MIFloat_WeightTotal.DescId = zc_MIFloat_WeightTotal()
+            LEFT JOIN MovementItemFloat AS MIFloat_WeightPack
+                                        ON MIFloat_WeightPack.MovementItemId = MovementItem.Id
+                                       AND MIFloat_WeightPack.DescId = zc_MIFloat_WeightPack()
+            LEFT JOIN MovementItemBoolean AS MIBoolean_BarCode 
+                                          ON MIBoolean_BarCode.MovementItemId = MovementItem.Id
+                                         AND MIBoolean_BarCode.DescId = zc_MIBoolean_BarCode()
+                                         
             LEFT JOIN MovementItemString AS MIString_PartionGoods
                                          ON MIString_PartionGoods.MovementItemId =  MovementItem.Id
                                         AND MIString_PartionGoods.DescId = zc_MIString_PartionGoods()

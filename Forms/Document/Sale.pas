@@ -192,6 +192,10 @@ type
     spSelectPrintReturnInDay: TdsdStoredProc;
     actPrintReturnInDay: TdsdPrintAction;
     bbPrintReturnInDay: TdxBarButton;
+    isBarCode: TcxGridDBColumn;
+    CountPack: TcxGridDBColumn;
+    WeightTotal: TcxGridDBColumn;
+    WeightPack: TcxGridDBColumn;
   private
     { Private declarations }
   public

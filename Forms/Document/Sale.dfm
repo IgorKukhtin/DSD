@@ -3,8 +3,9 @@
   ClientHeight = 668
   ClientWidth = 1366
   AddOnFormData.OnLoadAction = actSetDefaults
+  ExplicitLeft = -280
   ExplicitWidth = 1382
-  ExplicitHeight = 703
+  ExplicitHeight = 706
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -60,6 +61,11 @@
               Format = ',0.####'
               Kind = skSum
               Column = SumCost
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = CountPack
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -99,6 +105,10 @@
               Format = ',0.####'
               Kind = skSum
               Column = SumCost
+            end
+            item
+              Kind = skSum
+              Column = CountPack
             end>
           OptionsBehavior.FocusCellOnCycle = False
           OptionsCustomize.DataRowSizing = False
@@ -334,7 +344,7 @@
             Properties.ReadOnly = True
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 70
+            Width = 58
           end
           object clInfoMoneyCode: TcxGridDBColumn [22]
             Caption = #1050#1086#1076' '#1059#1055
@@ -363,6 +373,47 @@
             Visible = False
             HeaderAlignmentVert = vaCenter
             Width = 100
+          end
+          object CountPack: TcxGridDBColumn [26]
+            Caption = #1050#1086#1083'-'#1074#1086' '#1091#1087#1072#1082'.'
+            DataBinding.FieldName = 'CountPack'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
+          end
+          object WeightTotal: TcxGridDBColumn [27]
+            Caption = #1042#1077#1089' 1'#1077#1076'. '#1090#1086#1074#1072#1088#1072' + '#1091#1087#1072#1082'.'
+            DataBinding.FieldName = 'WeightTotal'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
+          end
+          object WeightPack: TcxGridDBColumn [28]
+            Caption = #1042#1077#1089' '#1091#1087#1072#1082'. '#1076#1083#1103' 1'#1077#1076'. '#1090#1086#1074'.'
+            DataBinding.FieldName = 'WeightPack'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
+          end
+          object isBarCode: TcxGridDBColumn [29]
+            Caption = #1055#1086' '#1089#1082#1072#1085#1077#1088#1091
+            DataBinding.FieldName = 'isBarCode'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
           end
           inherited colIsErased: TcxGridDBColumn
             Width = 25
