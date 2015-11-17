@@ -45,7 +45,7 @@ RETURNS TABLE (InvNumber TVarChar
              , Amount_Weight2 TFloat, Amount_Sh2 TFloat
              , Amount_Weight_Dozakaz1 TFloat, Amount_Sh_Dozakaz1 TFloat
              , Amount_Weight_Dozakaz2 TFloat, Amount_Sh_Dozakaz2 TFloat
-             , Amount TFloat, Amount_Weight TFloat, Amount_Sh TFloat
+             , Amount TFloat, AmountZakaz TFloat, Amount_Weight TFloat, AmountZakaz_Weight TFloat, Amount_Sh TFloat, AmountZakaz_Sh TFloat
 
              , Amount_WeightSK TFloat
              , InfoMoneyCode Integer, InfoMoneyName TVarChar, InfoMoneyName_all TVarChar
@@ -211,6 +211,7 @@ BEGIN
             , tmpMovement2.InfoMoneyId
 
            , SUM (Amount1 + Amount2 + AmountSecond1 + AmountSecond2) AS Amount
+           , SUM (Amount1 + Amount2 )                                AS AmountZakaz
            , SUM (CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN Amount1 ELSE 0 END)                                 AS Amount_Sh1
            , SUM (Amount1 * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END)  AS Amount_Weight1
            , SUM (CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN Amount2 ELSE 0 END)                                 AS Amount_Sh2
@@ -296,9 +297,12 @@ BEGIN
            , (tmpMovement.AmountSecond_Weight2) :: TFloat AS Amount_Weight_Dozakaz2
            , (tmpMovement.AmountSecond_Sh2)     :: TFloat AS Amount_Sh_Dozakaz2
 
-           , (tmpMovement.Amount) :: TFloat AS Amount
+           , (tmpMovement.Amount) :: TFloat      AS Amount
+           , (tmpMovement.AmountZakaz) :: TFloat AS AmountZakaz                       -- количество без дозаказа
            , (tmpMovement.Amount_Weight1 + tmpMovement.Amount_Weight2 + tmpMovement.AmountSecond_Weight1 + tmpMovement.AmountSecond_Weight2) :: TFloat AS Amount_Weight
+           , (tmpMovement.Amount_Weight1 + tmpMovement.Amount_Weight2) :: TFloat AS AmountZakaz_Weight                       -- вес без дозаказа
            , (tmpMovement.Amount_Sh1 + tmpMovement.Amount_Sh2 + tmpMovement.AmountSecond_Sh1 + tmpMovement.AmountSecond_Sh2)         :: TFloat AS Amount_Sh
+           , (tmpMovement.Amount_Sh1 + tmpMovement.Amount_Sh2) :: TFloat AS AmountZakaz_Sh                                    -- шт без дозаказа
 
            , 0 :: TFloat AS Amount_WeightSK
 
