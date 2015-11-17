@@ -13,7 +13,7 @@ uses
   Datasnap.DBClient, dsdAction, Vcl.ActnList, cxPropertiesStore, cxLabel,
   cxTextEdit, cxMaskEdit, cxDropDownEdit, cxCalendar, Vcl.ExtCtrls, cxGridLevel,
   cxGridCustomTableView, cxGridTableView, cxGridDBTableView, cxGridCustomView,
-  cxGrid, cxPC;
+  cxGrid, cxPC, cxCurrencyEdit;
 
 type
   TPromoJournalForm = class(TAncestorJournalForm)

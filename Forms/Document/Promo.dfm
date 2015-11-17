@@ -2,8 +2,9 @@ inherited PromoForm: TPromoForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1040#1082#1094#1080#1103'>'
   ClientHeight = 481
   ClientWidth = 928
+  ExplicitTop = -59
   ExplicitWidth = 944
-  ExplicitHeight = 519
+  ExplicitHeight = 516
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -192,6 +193,9 @@ inherited PromoForm: TPromoForm
                 object colp_PartnerCode: TcxGridDBColumn
                   Caption = #1050#1086#1076
                   DataBinding.FieldName = 'PartnerCode'
+                  PropertiesClassName = 'TcxCurrencyEditProperties'
+                  Properties.DecimalPlaces = 0
+                  Properties.DisplayFormat = '0.####;-0.####; ;'
                   HeaderAlignmentHorz = taCenter
                   HeaderAlignmentVert = vaCenter
                   Options.Editing = False
@@ -220,15 +224,6 @@ inherited PromoForm: TPromoForm
                   Options.Editing = False
                   Width = 88
                 end
-                object colp_isErased: TcxGridDBColumn
-                  Caption = #1059#1076#1072#1083#1077#1085' ('#1076#1072'/'#1085#1077#1090')'
-                  DataBinding.FieldName = 'isErased'
-                  Visible = False
-                  HeaderAlignmentHorz = taCenter
-                  HeaderAlignmentVert = vaCenter
-                  Options.Editing = False
-                  Width = 50
-                end
                 object colJuridical_Name: TcxGridDBColumn
                   Caption = #1070#1088'. '#1083#1080#1094#1086
                   DataBinding.FieldName = 'Juridical_Name'
@@ -246,8 +241,15 @@ inherited PromoForm: TPromoForm
                   Width = 102
                 end
                 object colContractCode: TcxGridDBColumn
-                  Caption = #1050#1086#1076' '#1076#1086#1075#1086#1074#1086#1088#1072
+                  Caption = #1050#1086#1076' '#1076#1086#1075'.'
                   DataBinding.FieldName = 'ContractCode'
+                  PropertiesClassName = 'TcxCurrencyEditProperties'
+                  Properties.DecimalPlaces = 0
+                  Properties.DisplayFormat = '0.####;-0.####; ;'
+                  Visible = False
+                  HeaderAlignmentHorz = taCenter
+                  HeaderAlignmentVert = vaCenter
+                  Options.Editing = False
                   Width = 70
                 end
                 object colContractName: TcxGridDBColumn
@@ -260,12 +262,27 @@ inherited PromoForm: TPromoForm
                       Default = True
                       Kind = bkEllipsis
                     end>
+                  Properties.ReadOnly = True
+                  HeaderAlignmentHorz = taCenter
+                  HeaderAlignmentVert = vaCenter
                   Width = 70
                 end
                 object colContractTagName: TcxGridDBColumn
                   Caption = #1055#1088#1080#1079#1085#1072#1082' '#1076#1086#1075'.'
                   DataBinding.FieldName = 'ContractTagName'
+                  HeaderAlignmentHorz = taCenter
+                  HeaderAlignmentVert = vaCenter
+                  Options.Editing = False
                   Width = 70
+                end
+                object colp_isErased: TcxGridDBColumn
+                  Caption = #1059#1076#1072#1083#1077#1085' ('#1076#1072'/'#1085#1077#1090')'
+                  DataBinding.FieldName = 'isErased'
+                  Visible = False
+                  HeaderAlignmentHorz = taCenter
+                  HeaderAlignmentVert = vaCenter
+                  Options.Editing = False
+                  Width = 50
                 end
               end
               object cxGridLevelPartner: TcxGridLevel
@@ -1859,6 +1876,7 @@ inherited PromoForm: TPromoForm
         ParamType = ptInput
       end
       item
+        Value = Null
         ParamType = ptUnknown
       end>
     PackSize = 1

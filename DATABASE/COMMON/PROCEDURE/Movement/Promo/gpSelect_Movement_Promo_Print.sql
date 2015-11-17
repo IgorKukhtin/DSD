@@ -177,7 +177,7 @@ BEGIN
         SELECT
             NULL as LineNo,
             'Дополнительная информация'::TVarChar as GroupName,
-            'Цена в прайс-листе (грн)'::TVarChar as LineName,
+            'Цена в прайс-листе с НДС (грн)'::TVarChar as LineName,
             (SELECT STRING_AGG(replace(TO_CHAR(ROUND(MI_PromoGoods.Price*((100+vbVAT)/100),2),'FM9990D09')||' ','.0 ','')||'   '||CASE WHEN vbCountGoods > 1 THEN MI_PromoGoods.GoodsName ELSE '' END, chr(13))
              FROM MovementItem_PromoGoods_View AS MI_PromoGoods
              WHERE MI_PromoGoods.MovementId = inMovementId
