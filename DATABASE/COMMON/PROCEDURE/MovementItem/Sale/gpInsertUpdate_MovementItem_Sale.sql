@@ -22,6 +22,9 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_Sale(
     IN inGoodsKindId             Integer   , -- ¬иды товаров
     IN inAssetId                 Integer   , -- ќсновные средства (дл€ которых закупаетс€ “ћ÷)
     IN inBoxId                   Integer   , -- ящики
+   OUT outWeightPack             TFloat    ,
+   OUT outWeightTotal            TFloat    , 
+   OUT outCountPack              TFloat    , 
     IN inSession                 TVarChar    -- сесси€ пользовател€
 )
 RETURNS RECORD
@@ -50,6 +53,30 @@ BEGIN
          ioAmountPartner:= outAmountChangePercent;
      END IF;
 
+     -- расчет упаковки
+     SELECT COALESCE (ObjectFloat_WeightPackage.ValueData,0)::TFloat  AS WeightPack
+          , COALESCE (ObjectFloat_WeightTotal.ValueData,0)  ::TFloat  AS WeightTotal
+         into outWeightPack, outWeightTotal
+     FROM Object_GoodsByGoodsKind_View
+           LEFT JOIN ObjectFloat AS ObjectFloat_WeightPackage
+                                 ON ObjectFloat_WeightPackage.ObjectId = Object_GoodsByGoodsKind_View.Id 
+                                AND ObjectFloat_WeightPackage.DescId = zc_ObjectFloat_GoodsByGoodsKind_WeightPackage()
+
+           LEFT JOIN ObjectFloat AS ObjectFloat_WeightTotal
+                                 ON ObjectFloat_WeightTotal.ObjectId = Object_GoodsByGoodsKind_View.Id 
+                                AND ObjectFloat_WeightTotal.DescId = zc_ObjectFloat_GoodsByGoodsKind_WeightTotal()
+      WHERE Object_GoodsByGoodsKind_View.GoodsId = inGoodsId 
+        AND Object_GoodsByGoodsKind_View.GoodsKindId = inGoodsKindId;
+
+      IF COALESCE (outWeightPack,0) <> 0 AND 
+         COALESCE (outWeightTotal,0) <> 0 AND 
+         COALESCE ((1-outWeightPack/outWeightTotal), 0) <> 0
+      THEN 
+          outCountPack:= CAST (((ioAmountPartner/(1-outWeightPack/outWeightTotal))/ outWeightTotal) AS NUMERIC (16, 4));
+      ELSE
+          outCountPack:= 0;
+      END IF;
+      
 
      -- сохранили
      SELECT tmp.ioId, tmp.ioCountForPrice, tmp.outAmountSumm
@@ -69,8 +96,15 @@ BEGIN
                                           , inGoodsKindId        := inGoodsKindId
                                           , inAssetId            := inAssetId
                                           , inBoxId              := inBoxId
+                                          
+                                          , inCountPack          := COALESCE (outCountPack, 0) ::TFloat
+                                          , inWeightTotal        := COALESCE (outWeightTotal,0) ::TFloat
+                                          , inWeightPack         := COALESCE (outWeightPack,0) ::TFloat
+                                          , inIsBarCode          := COALESCE ((SELECT ValueData FROM MovementItemBoolean WHERE MovementItemId = ioId AND DescId = zc_MIBoolean_BarCode()), FALSE) 
+                                                                                                                              
                                           , inUserId             := vbUserId
                                            ) AS tmp;
+
 
 END;
 $BODY$

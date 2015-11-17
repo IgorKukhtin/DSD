@@ -3,7 +3,6 @@
   ClientHeight = 668
   ClientWidth = 1366
   AddOnFormData.OnLoadAction = actSetDefaults
-  ExplicitLeft = -280
   ExplicitWidth = 1382
   ExplicitHeight = 706
   PixelsPerInch = 96
@@ -2851,6 +2850,27 @@
         Component = MasterCDS
         ComponentItem = 'BoxId'
         ParamType = ptInput
+      end
+      item
+        Name = 'outWeightPack'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'WeightPack'
+        DataType = ftFloat
+      end
+      item
+        Name = 'outWeightTotal'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'WeightTotal'
+        DataType = ftFloat
+      end
+      item
+        Name = 'outCountPack'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'CountPack'
+        DataType = ftFloat
       end>
     Left = 160
     Top = 368
