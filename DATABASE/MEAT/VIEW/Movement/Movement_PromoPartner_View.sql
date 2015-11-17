@@ -16,7 +16,10 @@ CREATE OR REPLACE VIEW Movement_PromoPartner_View AS
                 THEN TRUE
         ELSE FALSE
         END                                    AS isErased                --Удален
-            
+      , Object_Contract.ContractId                                        -- ИД контракта
+      , Object_Contract.ContractCode                                      -- код контракта
+      , Object_Contract.InvNumber              AS ContractName            --наименование контракта
+      , Object_Contract.ContractTagName                                   --признак контракта
     FROM Movement AS Movement_Promo 
 
         LEFT JOIN MovementLinkObject AS MovementLinkObject_Partner
@@ -43,6 +46,12 @@ CREATE OR REPLACE VIEW Movement_PromoPartner_View AS
         LEFT OUTER JOIN Object AS Object_Retail
                                ON Object_Retail.id = ObjectLink_Juridical_Retail.ChildObjectId
                               AND Object_Retail.DescId = zc_Object_Retail() 
+        LEFT JOIN MovementLinkObject AS MovementLinkObject_Contract
+                                     ON MovementLinkObject_Contract.MovementId = Movement_Promo.Id
+                                    AND MovementLinkObject_Contract.DescId = zc_MovementLinkObject_Contract()
+        LEFT JOIN Object_Contract_InvNumber_View AS Object_Contract 
+                                                 ON Object_Contract.ContractId = MovementLinkObject_Contract.ObjectId
+        
     WHERE Movement_Promo.DescId = zc_Movement_Promo()
       AND Movement_Promo.ParentId is not null;
 

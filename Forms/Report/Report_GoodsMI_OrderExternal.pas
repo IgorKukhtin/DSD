@@ -83,6 +83,8 @@ type
     Amount: TcxGridDBColumn;
     ExecuteDialog: TExecuteDialog;
     bbExecuteDialog: TdxBarButton;
+    actPrint_byProductionDozakaz: TdsdPrintAction;
+    bbPrint_Dozakaz: TdxBarButton;
   private
     { Private declarations }
   public

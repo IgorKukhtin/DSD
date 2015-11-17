@@ -51,6 +51,7 @@ RETURNS TABLE(
     ,GrossOnOneMember               TFloat
     ,Amount                         TFloat
     ,AmountOnOneMember              TFloat
+    ,isPrint                        Boolean
 )
 AS
 $BODY$
@@ -97,17 +98,19 @@ BEGIN
         ,GrossOnOneMember               TFloat
         ,Amount                         TFloat
         ,AmountOnOneMember              TFloat
+        ,isPrint                        Boolean
+        
     ) ON COMMIT DROP;
     Insert Into Res(StaffList,UnitId,UnitName,PositionId,PositionName,PositionLevelId,PositionLevelName,PersonalCount,MemberId,MemberName,SheetWorkTime_Date,SheetWorkTime_Amount
                    ,ServiceModelId,ServiceModelCode,ServiceModelName,Price,FromId,FromName,ToId,ToName,MovementDescId,MovementDescName,SelectKindId,SelectKindName,Ratio
                    ,ModelServiceItemChild_FromId,ModelServiceItemChild_FromDescId,ModelServiceItemChild_FromName,ModelServiceItemChild_ToId,ModelServiceItemChild_ToDescId,ModelServiceItemChild_ToName
-                   ,OperDate,Count_MemberInDay,Gross,GrossOnOneMember,Amount,AmountOnOneMember)
+                   ,OperDate,Count_MemberInDay,Gross,GrossOnOneMember,Amount,AmountOnOneMember,isPrint)
     Select Report_1.StaffList,Report_1.UnitId,Report_1.UnitName,Report_1.PositionId,Report_1.PositionName,Report_1.PositionLevelId,Report_1.PositionLevelName,Report_1.PersonalCount,
            Report_1.MemberId,Report_1.MemberName,Report_1.SheetWorkTime_Date,Report_1.SheetWorkTime_Amount,Report_1.ServiceModelId,Report_1.ServiceModelCode,Report_1.ServiceModelName,Report_1.Price,
            Report_1.FromId,Report_1.FromName,Report_1.ToId,Report_1.ToName,Report_1.MovementDescId,Report_1.MovementDescName,Report_1.SelectKindId,Report_1.SelectKindName,Report_1.Ratio,
            Report_1.ModelServiceItemChild_FromId,Report_1.ModelServiceItemChild_FromDescId,Report_1.ModelServiceItemChild_FromName,Report_1.ModelServiceItemChild_ToId,
            Report_1.ModelServiceItemChild_ToDescId,Report_1.ModelServiceItemChild_ToName,Report_1.OperDate,Report_1.Count_MemberInDay,Report_1.Gross,Report_1.GrossOnOneMember,
-           Report_1.Amount,Report_1.AmountOnOneMember
+           Report_1.Amount,Report_1.AmountOnOneMember,True
     from gpSelect_Report_Wage_1(inDateStart      := inDateStart,
                                 inDateFinal      := inDateFinal, --дата окончания периода
                                 inUnitId         := inUnitId,   --подразделение 
@@ -116,7 +119,7 @@ BEGIN
                                 inPositionId     := inPositionId,   --должность
                                 inSession        := inSession) as Report_1;
     INSERT INTO Res(StaffList,UnitId,UnitName,PositionId,PositionName,PositionLevelId,PositionLevelName,PersonalCount,MemberId,MemberName
-                   ,SheetWorkTime_Amount,ServiceModelId,ServiceModelCode,ServiceModelName,Price,AmountOnOneMember)
+                   ,SheetWorkTime_Amount,ServiceModelId,ServiceModelCode,ServiceModelName,Price,AmountOnOneMember,isPrint)
     Select 
         Report_2.StaffList
        ,Report_2.UnitId
@@ -133,7 +136,8 @@ BEGIN
        ,-1
        ,Report_2.StaffListSummKindName
        ,Report_2.StaffListSumm_Value
-       ,Report_2.Summ 
+       ,Report_2.Summ
+       ,False
     FROM 
         gpSelect_Report_Wage_2(inDateStart      := inDateStart,
                                 inDateFinal      := inDateFinal, --дата окончания периода
@@ -194,6 +198,7 @@ BEGIN
              THEN Res.Amount
         ELSE NULL::TFloat END                     AS Amount
        ,SUM(Res.AmountOnOneMember)::TFloat        AS AmountOnOneMember
+       ,Res.isPrint                               AS isPrint
     FROM Res
     WHERE
         Res.MemberId is not null
@@ -246,7 +251,8 @@ BEGIN
         ELSE NULL::TFloat END
        ,CASE WHEN inDetailDay = TRUE 
              THEN Res.Amount
-        ELSE NULL::TFloat END;
+        ELSE NULL::TFloat END
+       ,Res.isPrint ;
        
 END;
 $BODY$
