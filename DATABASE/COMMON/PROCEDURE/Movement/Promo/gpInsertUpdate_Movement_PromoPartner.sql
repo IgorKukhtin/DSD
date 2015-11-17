@@ -64,7 +64,7 @@ BEGIN
                           Where Object_Contract_View.ContractId = inContractId 
                             AND Object_Contract_View.JuridicalId = inPartnerId)
             THEN
-                RAISE EXCEPTION 'Ошибка. Несоответствие контракта и партнера.';
+                RAISE EXCEPTION 'Ошибка. <Договор> несоответствует <Партнеру>.';
             END IF;
         END IF;
         IF vbPartnerDescId = zc_Object_Partner()
