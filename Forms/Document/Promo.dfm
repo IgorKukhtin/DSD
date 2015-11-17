@@ -3,7 +3,7 @@ inherited PromoForm: TPromoForm
   ClientHeight = 481
   ClientWidth = 928
   ExplicitWidth = 944
-  ExplicitHeight = 516
+  ExplicitHeight = 519
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -244,6 +244,28 @@ inherited PromoForm: TPromoForm
                   HeaderAlignmentVert = vaCenter
                   Options.Editing = False
                   Width = 102
+                end
+                object colContractCode: TcxGridDBColumn
+                  Caption = #1050#1086#1076' '#1076#1086#1075#1086#1074#1086#1088#1072
+                  DataBinding.FieldName = 'ContractCode'
+                  Width = 70
+                end
+                object colContractName: TcxGridDBColumn
+                  Caption = #8470' '#1076#1086#1075'.'
+                  DataBinding.FieldName = 'ContractName'
+                  PropertiesClassName = 'TcxButtonEditProperties'
+                  Properties.Buttons = <
+                    item
+                      Action = ContractChoiceForm
+                      Default = True
+                      Kind = bkEllipsis
+                    end>
+                  Width = 70
+                end
+                object colContractTagName: TcxGridDBColumn
+                  Caption = #1055#1088#1080#1079#1085#1072#1082' '#1076#1086#1075'.'
+                  DataBinding.FieldName = 'ContractTagName'
+                  Width = 70
                 end
               end
               object cxGridLevelPartner: TcxGridLevel
@@ -947,6 +969,59 @@ inherited PromoForm: TPromoForm
           DataType = ftString
         end>
       isShowModal = True
+    end
+    object ContractChoiceForm: TOpenChoiceForm
+      Category = 'Partner'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = 'ContractChoiceForm'
+      FormName = 'TContractChoiceForm'
+      FormNameParam.Value = 'TContractChoiceForm'
+      FormNameParam.DataType = ftString
+      GuiParams = <
+        item
+          Name = 'Key'
+          Value = Null
+          Component = PartnerCDS
+          ComponentItem = 'ContractId'
+          ParamType = ptInput
+        end
+        item
+          Name = 'Code'
+          Value = Null
+          Component = PartnerCDS
+          ComponentItem = 'ContractCode'
+        end
+        item
+          Name = 'TextValue'
+          Value = Null
+          Component = PartnerCDS
+          ComponentItem = 'ContractName'
+          DataType = ftString
+          ParamType = ptInput
+        end
+        item
+          Name = 'ContractTagName'
+          Value = Null
+          Component = PartnerCDS
+          ComponentItem = 'ContractTagName'
+          DataType = ftString
+          ParamType = ptInput
+        end
+        item
+          Name = 'MasterJuridicalId'
+          Value = Null
+          Component = PartnerCDS
+          ComponentItem = 'PartnerId'
+        end
+        item
+          Name = 'MasterJuridicalName'
+          Value = Null
+          Component = PartnerCDS
+          ComponentItem = 'PartnerName'
+          DataType = ftString
+        end>
+      isShowModal = False
     end
   end
   inherited MasterDS: TDataSource
@@ -1784,8 +1859,6 @@ inherited PromoForm: TPromoForm
         ParamType = ptInput
       end
       item
-        Value = False
-        DataType = ftBoolean
         ParamType = ptUnknown
       end>
     PackSize = 1
@@ -1874,6 +1947,13 @@ inherited PromoForm: TPromoForm
         Value = Null
         Component = PartnerCDS
         ComponentItem = 'PartnerId'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inContractId'
+        Value = Null
+        Component = PartnerCDS
+        ComponentItem = 'ContractId'
         ParamType = ptInput
       end>
     PackSize = 1
