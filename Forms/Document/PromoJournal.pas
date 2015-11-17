@@ -33,6 +33,10 @@ type
     spSelect_Movement_Promo_Print: TdsdStoredProc;
     PrintHead: TClientDataSet;
     actPrint: TdsdPrintAction;
+    colPartnerName: TcxGridDBColumn;
+    colPartnerDescName: TcxGridDBColumn;
+    colContractName: TcxGridDBColumn;
+    colContractTagName: TcxGridDBColumn;
   private
     { Private declarations }
   public

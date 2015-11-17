@@ -137,6 +137,10 @@ type
     spSelect_Movement_Promo_Print: TdsdStoredProc;
     colJuridical_Name: TcxGridDBColumn;
     colRetail_Name: TcxGridDBColumn;
+    colContractCode: TcxGridDBColumn;
+    colContractName: TcxGridDBColumn;
+    colContractTagName: TcxGridDBColumn;
+    ContractChoiceForm: TOpenChoiceForm;
   private
     { Private declarations }
   public
