@@ -1,7 +1,7 @@
 object MovementDescForm: TMovementDescForm
   Left = 0
   Top = 0
-  Caption = #1058#1080#1087#1099' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074
+  Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1042#1080#1076#1099' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074'>'
   ClientHeight = 265
   ClientWidth = 533
   Color = clBtnFace
@@ -27,6 +27,7 @@ object MovementDescForm: TMovementDescForm
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
+      DataController.Filter.Options = [fcoCaseInsensitive]
       DataController.Filter.Active = True
       DataController.Summary.DefaultGroupSummaryItems = <>
       DataController.Summary.FooterSummaryItems = <>
@@ -52,7 +53,7 @@ object MovementDescForm: TMovementDescForm
         Width = 45
       end
       object clMovementDescName: TcxGridDBColumn
-        Caption = #1053#1072#1080#1084#1077#1085#1086#1074#1072#1085#1080#1077
+        Caption = #1053#1072#1079#1074#1072#1085#1080#1077
         DataBinding.FieldName = 'Name'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
