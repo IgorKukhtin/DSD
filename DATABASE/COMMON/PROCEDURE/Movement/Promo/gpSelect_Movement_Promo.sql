@@ -33,6 +33,10 @@ RETURNS TABLE (Id               Integer     --Идентификатор
              , PersonalTradeName TVarChar   --Ответственный представитель коммерческого отдела
              , PersonalId       INTEGER     --Ответственный представитель маркетингового отдела	
              , PersonalName     TVarChar    --Ответственный представитель маркетингового отдела	
+             , PartnerName      TVarChar     --Партнер
+             , PartnerDescName  TVarChar     --тип Партнера
+             , ContractName     TVarChar     --№ договора
+             , ContractTagName  TVarChar     --признак договора
               )
 
 AS
@@ -70,9 +74,15 @@ BEGIN
           , Movement_Promo.PersonalTradeName  --Ответственный представитель коммерческого отдела
           , Movement_Promo.PersonalId         --Ответственный представитель маркетингового отдела	
           , Movement_Promo.PersonalName       --Ответственный представитель маркетингового отдела	
+          , Movement_PromoPartner.PartnerName     --Партнер
+          , Movement_PromoPartner.PartnerDescName --Тип партнера
+          , Movement_PromoPartner.ContractName --Название контракта
+          , Movement_PromoPartner.ContractTagName --признак договора 
         FROM
             Movement_Promo_View AS Movement_Promo
             INNER JOIN tmpStatus ON Movement_Promo.StatusId = tmpStatus.StatusId
+            Left Outer Join Movement_PromoPartner_View AS Movement_PromoPartner
+                                                       ON Movement_PromoPartner.ParentId = Movement_Promo.ID
         WHERE
             Movement_Promo.OperDate BETWEEN inStartDate AND inEndDate
         ORDER BY InvNumber;
@@ -86,5 +96,6 @@ ALTER FUNCTION gpSelect_Movement_Promo (TDateTime, TDateTime, Boolean, TVarChar)
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А.А.
+ 17.11.15                                                                        *Movement_PromoPartner_View
  13.10.15                                                                        *
 */

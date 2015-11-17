@@ -15,6 +15,10 @@ RETURNS TABLE (Id               Integer     --Идентификатор
              , PartnerDescName  TVarChar    --Тип Покупатель для акции
              , Juridical_Name   TVarChar    --Юрлицо
              , Retail_Name      TVarChar    --Сеть
+             , ContractId       Integer     --ИД контракта
+             , ContractCode     Integer     --Код контракта
+             , ContractName     TVarChar    --Название контракта
+             , ContractTagName  TVarChar    --Признак договора
              , isErased         Boolean     --Удален
       )
 
@@ -32,6 +36,10 @@ BEGIN
           , Movement_PromoPartner.PartnerDescName     --Тип Покупатель для акции
           , Movement_PromoPartner.Juridical_Name      --Юрлицо
           , Movement_PromoPartner.Retail_Name         --Сеть
+          , Movement_PromoPartner.ContractId          --ИД контракта
+          , Movement_PromoPartner.ContractCode        --Код контракта
+          , Movement_PromoPartner.ContractName        --Название контракта
+          , Movement_PromoPartner.ContractTagName     --признак договора 
           , Movement_PromoPartner.isErased            --Удален
         FROM
             Movement_PromoPartner_View AS Movement_PromoPartner
@@ -52,5 +60,6 @@ ALTER FUNCTION gpSelect_Movement_PromoPartner (Integer, Boolean, TVarChar) OWNER
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А.А.
+ 17.11.15                                                                        *Contract
  05.11.15                                                                        *
 */
