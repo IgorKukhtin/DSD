@@ -12,7 +12,8 @@ uses
   cxClasses, Datasnap.DBClient, Vcl.ActnList, cxPropertiesStore, cxButtonEdit,
   cxMaskEdit, cxDropDownEdit, cxCalendar, cxLabel, cxTextEdit, Vcl.ExtCtrls,
   cxGridLevel, cxGridCustomTableView, cxGridTableView, cxGridDBTableView,
-  cxGridCustomView, cxGrid, cxPC, dxBarBuiltInMenu, cxNavigator;
+  cxGridCustomView, cxGrid, cxPC, dxBarBuiltInMenu, cxNavigator, dxSkinsCore,
+  dxSkinsDefaultPainters, dxSkinscxPCPainter, dxSkinsdxBarPainter, cxCalc;
 
 type
   TIncomePharmacyForm = class(TAncestorDocumentForm)
@@ -63,6 +64,12 @@ type
     colSertificatEnd: TcxGridDBColumn;
     colDublePriceColour: TcxGridDBColumn;
     colWarningColor: TcxGridDBColumn;
+    colAmountManual: TcxGridDBColumn;
+    colReasonDifferencesName: TcxGridDBColumn;
+    spUpdate_MovementItem_Income_AmountManual: TdsdStoredProc;
+    ChoiceReasonDifferences: TOpenChoiceForm;
+    actSetAmountEqual: TdsdExecStoredProc;
+    colAmountDiff: TcxGridDBColumn;
   private
     { Private declarations }
   public

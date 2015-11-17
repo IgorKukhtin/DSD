@@ -79,6 +79,7 @@ begin
   FParams.AddParam('inPaymentDate', ftDateTime, ptInput, PayDate);
   FParams.AddParam('inInvNumberBranch', ftString, ptInput, InvNumberBranch);
   FParams.AddParam('inOperDateBranch', ftDateTime, ptInput, OperDateBranch);
+  FParams.AddParam('inJuridicalId', ftInteger, ptInput, 0);
   result := InsertUpdate(FParams);
 end;
 

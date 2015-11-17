@@ -148,6 +148,21 @@ inherited BankAccountMovementFarmacyForm: TBankAccountMovementFarmacyForm
     Top = 191
   end
   inherited FormParams: TdsdFormParams
+    Params = <
+      item
+        Name = 'Id'
+        Value = '0'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inMovementId_Value'
+        Value = Null
+        ParamType = ptInput
+      end
+      item
+        Name = 'JuridicalId'
+        Value = Null
+      end>
     Left = 50
     Top = 187
   end
@@ -425,6 +440,81 @@ inherited BankAccountMovementFarmacyForm: TBankAccountMovementFarmacyForm
     Left = 464
     Top = 268
   end
+  inherited BankAccountGuides: TdsdGuides
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = BankAccountGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = BankAccountGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+      end
+      item
+        Name = 'CurrencyId'
+        Value = ''
+        Component = CurrencyGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+      end
+      item
+        Name = 'CurrencyName'
+        Value = ''
+        Component = CurrencyGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+      end
+      item
+        Name = 'BankId'
+        Value = Null
+        Component = BankGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+      end
+      item
+        Name = 'BankName'
+        Value = Null
+        Component = BankGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+      end
+      item
+        Name = 'CurrencyValue'
+        Value = Null
+        Component = ceCurrencyPartnerValue
+        DataType = ftFloat
+        ParamType = ptInput
+      end
+      item
+        Name = 'ParValue'
+        Value = Null
+        Component = ceParPartnerValue
+        DataType = ftFloat
+        ParamType = ptInput
+      end
+      item
+        Name = 'inOperDate'
+        Value = Null
+        Component = ceOperDate
+        DataType = ftDateTime
+      end
+      item
+        Name = 'JuridicalId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'JuridicalId'
+        ParamType = ptInput
+      end>
+  end
   inherited ObjectlGuides: TdsdGuides
     Params = <
       item
@@ -487,6 +577,7 @@ inherited BankAccountMovementFarmacyForm: TBankAccountMovementFarmacyForm
         Value = Null
         Component = ObjectlGuides
         ComponentItem = 'Key'
+        ParamType = ptInput
       end
       item
         Name = 'JuridicalName'
@@ -494,12 +585,14 @@ inherited BankAccountMovementFarmacyForm: TBankAccountMovementFarmacyForm
         Component = ObjectlGuides
         ComponentItem = 'TextValue'
         DataType = ftString
+        ParamType = ptInput
       end
       item
         Name = 'UnitId'
         Value = Null
         Component = UnitGuides
         ComponentItem = 'Key'
+        ParamType = ptInput
       end
       item
         Name = 'UnitName'
@@ -507,6 +600,7 @@ inherited BankAccountMovementFarmacyForm: TBankAccountMovementFarmacyForm
         Component = UnitGuides
         ComponentItem = 'TextValue'
         DataType = ftString
+        ParamType = ptInput
       end>
     Left = 216
     Top = 129

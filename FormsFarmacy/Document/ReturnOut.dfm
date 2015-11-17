@@ -7,21 +7,21 @@ inherited ReturnOutForm: TReturnOutForm
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Top = 126
+    Top = 123
     Width = 851
-    Height = 400
+    Height = 403
     ExplicitTop = 126
-    ExplicitWidth = 827
+    ExplicitWidth = 851
     ExplicitHeight = 400
-    ClientRectBottom = 400
+    ClientRectBottom = 403
     ClientRectRight = 851
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 827
+      ExplicitWidth = 851
       ExplicitHeight = 376
       inherited cxGrid: TcxGrid
         Width = 851
-        Height = 376
-        ExplicitWidth = 827
+        Height = 379
+        ExplicitWidth = 851
         ExplicitHeight = 376
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
@@ -190,10 +190,10 @@ inherited ReturnOutForm: TReturnOutForm
   end
   inherited DataPanel: TPanel
     Width = 851
-    Height = 100
+    Height = 97
     TabOrder = 3
-    ExplicitWidth = 827
-    ExplicitHeight = 100
+    ExplicitWidth = 851
+    ExplicitHeight = 97
     inherited edInvNumber: TcxTextEdit
       Left = 8
       Properties.ReadOnly = False
@@ -223,9 +223,9 @@ inherited ReturnOutForm: TReturnOutForm
       Top = 63
       TabOrder = 7
       ExplicitTop = 63
-      ExplicitWidth = 206
+      ExplicitWidth = 136
       ExplicitHeight = 22
-      Width = 206
+      Width = 136
     end
     object cxLabel3: TcxLabel
       Left = 458
@@ -264,19 +264,19 @@ inherited ReturnOutForm: TReturnOutForm
       Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
     end
     object edPriceWithVAT: TcxCheckBox
-      Left = 325
+      Left = 261
       Top = 63
       Caption = #1062#1077#1085#1072' '#1089' '#1053#1044#1057' ('#1076#1072'/'#1085#1077#1090')'
       TabOrder = 10
       Width = 130
     end
     object cxLabel10: TcxLabel
-      Left = 458
+      Left = 394
       Top = 44
       Caption = #1058#1080#1087' '#1053#1044#1057
     end
     object edNDSKind: TcxButtonEdit
-      Left = 458
+      Left = 394
       Top = 62
       Properties.Buttons = <
         item
@@ -287,8 +287,8 @@ inherited ReturnOutForm: TReturnOutForm
       Width = 86
     end
     object ceTotalSummMVAT: TcxCurrencyEdit
-      Left = 730
-      Top = 43
+      Left = 530
+      Top = 83
       EditValue = 1111111.000000000000000000
       Enabled = False
       ParentFont = False
@@ -309,7 +309,7 @@ inherited ReturnOutForm: TReturnOutForm
     end
     object ceTotalSummPVAT: TcxCurrencyEdit
       Left = 730
-      Top = 62
+      Top = 83
       EditValue = 1111111.000000000000000000
       Enabled = False
       ParentFont = False
@@ -329,8 +329,8 @@ inherited ReturnOutForm: TReturnOutForm
       Width = 94
     end
     object cxLabel7: TcxLabel
-      Left = 642
-      Top = 44
+      Left = 442
+      Top = 84
       Caption = #1057#1091#1084#1084#1072' '#1073#1077#1079' '#1053#1044#1057':'
       ParentFont = False
       Style.Font.Charset = DEFAULT_CHARSET
@@ -342,7 +342,7 @@ inherited ReturnOutForm: TReturnOutForm
     end
     object cxLabel8: TcxLabel
       Left = 656
-      Top = 63
+      Top = 84
       Caption = #1057#1091#1084#1084#1072' c '#1053#1044#1057':'
       ParentFont = False
       Style.Font.Charset = DEFAULT_CHARSET
@@ -353,13 +353,13 @@ inherited ReturnOutForm: TReturnOutForm
       Style.IsFontAssigned = True
     end
     object cxLabel5: TcxLabel
-      Left = 220
-      Top = 46
+      Left = 150
+      Top = 45
       Caption = #8470' '#1087#1088#1080#1093#1086#1076#1072
     end
     object edIncome: TcxButtonEdit
-      Left = 220
-      Top = 64
+      Left = 150
+      Top = 63
       Enabled = False
       Properties.Buttons = <
         item
@@ -371,12 +371,12 @@ inherited ReturnOutForm: TReturnOutForm
       Width = 109
     end
     object cxLabel6: TcxLabel
-      Left = 550
+      Left = 486
       Top = 43
       Caption = #1058#1080#1087' '#1074#1086#1079#1074#1088#1072#1090#1072
     end
     object edReturnType: TcxButtonEdit
-      Left = 550
+      Left = 486
       Top = 61
       Properties.Buttons = <
         item
@@ -410,6 +410,24 @@ inherited ReturnOutForm: TReturnOutForm
       Properties.ShowTime = False
       TabOrder = 24
       Width = 100
+    end
+    object cxLabel12: TcxLabel
+      Left = 640
+      Top = 41
+      Caption = #1070#1088#1083#1080#1094#1086' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1100
+    end
+    object edJuridical: TcxButtonEdit
+      Left = 640
+      Top = 59
+      Enabled = False
+      Properties.Buttons = <
+        item
+          Default = True
+          Kind = bkEllipsis
+        end>
+      Properties.ReadOnly = True
+      TabOrder = 26
+      Width = 184
     end
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
@@ -803,12 +821,12 @@ inherited ReturnOutForm: TReturnOutForm
     Top = 416
   end
   inherited StatusGuides: TdsdGuides
-    Left = 80
-    Top = 48
+    Left = 48
+    Top = 56
   end
   inherited spChangeStatus: TdsdStoredProc
     StoredProcName = 'gpUpdate_Status_ReturnOut'
-    Left = 128
+    Left = 16
     Top = 56
   end
   inherited spGet: TdsdStoredProc
@@ -926,6 +944,19 @@ inherited ReturnOutForm: TReturnOutForm
         Value = Null
         Component = edOperDatePartner
         DataType = ftDateTime
+      end
+      item
+        Name = 'JuridicalId'
+        Value = Null
+        Component = GuidesJuridical
+        ComponentItem = 'Key'
+      end
+      item
+        Name = 'JuridicalName'
+        Value = Null
+        Component = GuidesJuridical
+        ComponentItem = 'TextValue'
+        DataType = ftString
       end>
     Left = 216
     Top = 248
@@ -1337,8 +1368,8 @@ inherited ReturnOutForm: TReturnOutForm
         DataType = ftString
         ParamType = ptInput
       end>
-    Left = 400
-    Top = 16
+    Left = 560
+    Top = 8
   end
   object GuidesTo: TdsdGuides
     KeyField = 'Id'
@@ -1363,8 +1394,7 @@ inherited ReturnOutForm: TReturnOutForm
         DataType = ftString
         ParamType = ptInput
       end>
-    Left = 592
-    Top = 16
+    Left = 768
   end
   object NDSKindGuides: TdsdGuides
     KeyField = 'Id'
@@ -1487,5 +1517,31 @@ inherited ReturnOutForm: TReturnOutForm
       end>
     Left = 472
     Top = 72
+  end
+  object GuidesJuridical: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edJuridical
+    FormNameParam.Value = 'TJuridicalCorporateForm'
+    FormNameParam.DataType = ftString
+    FormName = 'TJuridicalCorporateForm'
+    PositionDataSet = 'MasterCDS'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GuidesJuridical
+        ComponentItem = 'Key'
+        ParamType = ptInput
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesJuridical
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+      end>
+    Left = 696
+    Top = 56
   end
 end

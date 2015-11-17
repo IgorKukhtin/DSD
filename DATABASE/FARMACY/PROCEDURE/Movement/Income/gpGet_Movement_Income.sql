@@ -14,7 +14,8 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , NDSKindId Integer, NDSKindName TVarChar
              , ContractId Integer, ContractName TVarChar
              , PaymentDate TDateTime
-             , InvNumberBranch TVarChar, BranchDate TDateTime, Checked Boolean 
+             , InvNumberBranch TVarChar, BranchDate TDateTime, Checked Boolean
+             ,JuridicalId Integer, JuridicalName TVarChar
               )
 AS
 $BODY$
@@ -35,18 +36,20 @@ BEGIN
              , Object_Status.Code                               AS StatusCode
              , Object_Status.Name                               AS StatusName
              , CAST (False as Boolean)                          AS PriceWithVAT
-             , 0                     				AS FromId
-             , CAST ('' AS TVarChar) 			        AS FromName
-             , 0                     				AS ToId
-             , CAST ('' AS TVarChar) 				AS ToName
-             , 0                     			        AS NDSKindId
-             , CAST ('' AS TVarChar) 				AS NDSKindName
-             , 0                     			        AS ContractId
-             , CAST ('' AS TVarChar) 				AS ContractName
+             , 0                                                AS FromId
+             , CAST ('' AS TVarChar)                            AS FromName
+             , 0                                                AS ToId
+             , CAST ('' AS TVarChar)                            AS ToName
+             , 0                                                AS NDSKindId
+             , CAST ('' AS TVarChar)                            AS NDSKindName
+             , 0                                                AS ContractId
+             , CAST ('' AS TVarChar)                            AS ContractName
              , CURRENT_DATE::TDateTime                          AS PaymentDate
              , ''::TVarChar                                     AS InvNumberBranch
              , CURRENT_DATE::TDateTime                          AS BranchDate
              , false                                            AS Checked
+             , 0                                                AS JuridicalId
+             , CAST('' as TVarChar)                             AS JuridicalName
           FROM lfGet_Object_Status(zc_Enum_Status_UnComplete()) AS Object_Status;
 
      ELSE
@@ -71,7 +74,8 @@ BEGIN
            , Movement_Income_View.InvNumberBranch
            , Movement_Income_View.BranchDate
            , COALESCE(Movement_Income_View.Checked, false)
-
+           , Movement_Income_View.JuridicalId
+           , Movement_Income_View.JuridicalName
        FROM Movement_Income_View       
       WHERE Movement_Income_View.Id = inMovementId;
 

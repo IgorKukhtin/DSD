@@ -22,6 +22,7 @@ RETURNS TABLE (Id Integer
              , JuridicalName TVarChar
              , PaidKindId Integer
              , PaidKindName TVarChar
+             , Comment TVarChar
               )
 
 AS
@@ -48,6 +49,7 @@ BEGIN
           , Movement_Sale.JuridicalName
           , Movement_Sale.PaidKindId
           , Movement_Sale.PaidKindName
+          , Movement_Sale.Comment
         FROM
             Movement_Sale_View AS Movement_Sale
             INNER JOIN tmpStatus ON Movement_Sale.StatusId = tmpStatus.StatusId

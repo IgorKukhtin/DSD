@@ -183,6 +183,8 @@ type
     mniReport_Movement_ByPartionGoodsForm: TMenuItem;
     actPaymentJournal: TdsdOpenForm;
     N67: TMenuItem;
+    actReasonDifferences: TdsdOpenForm;
+    N68: TMenuItem;
     procedure actSaveDataExecute(Sender: TObject);
     procedure miRepriceClick(Sender: TObject);
   private

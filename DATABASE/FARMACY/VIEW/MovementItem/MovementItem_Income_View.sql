@@ -31,6 +31,9 @@ CREATE OR REPLACE VIEW MovementItem_Income_View AS
            ,MIString_SertificatNumber.ValueData AS SertificatNumber
            ,MIDate_SertificatStart.ValueData    AS SertificatStart
            ,MIDate_SertificatEnd.ValueData      AS SertificatEnd
+           ,MIFloat_AmountManual.ValueData      AS AmountManual
+           ,MILinkObject_ReasonDifferences.ObjectId AS ReasonDifferencesId
+           ,Object_ReasonDifferences.ValueData      AS ReasonDifferencesName
        FROM  MovementItem 
             LEFT JOIN MovementItemFloat AS MIFloat_Price
                                         ON MIFloat_Price.MovementItemId = MovementItem.Id
@@ -77,6 +80,16 @@ CREATE OR REPLACE VIEW MovementItem_Income_View AS
                                         ON MIDate_SertificatEnd.MovementItemId = MovementItem.Id
                                        AND MIDate_SertificatEnd.DescId = zc_MIDate_SertificatEnd()                                         
 
+            LEFT JOIN MovementItemFloat AS MIFloat_AmountManual
+                                        ON MIFloat_AmountManual.MovementItemId = MovementItem.Id
+                                       AND MIFloat_AmountManual.DescId = zc_MIFloat_AmountManual()
+
+            LEFT JOIN MovementItemLinkObject AS MILinkObject_ReasonDifferences
+                                             ON MILinkObject_ReasonDifferences.MovementItemId = MovementItem.Id
+                                            AND MILinkObject_ReasonDifferences.DescId = zc_MILinkObject_ReasonDifferences()
+            LEFT JOIN Object AS Object_ReasonDifferences 
+                             ON Object_ReasonDifferences.Id = MILinkObject_ReasonDifferences.ObjectId
+                                     
    WHERE MovementItem.DescId     = zc_MI_Master();
 
 

@@ -2,6 +2,7 @@
 
 DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_Income(Integer, TVarChar, TDateTime, Boolean, Integer, Integer, Integer, Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_Income(Integer, TVarChar, TDateTime, Boolean, Integer, Integer, Integer, Integer, TDateTime, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_Income(Integer, TVarChar, TDateTime, Boolean, Integer, Integer, Integer, Integer, TDateTime, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_Income(
  INOUT ioId                  Integer   , -- Ключ объекта <Документ Перемещение>
@@ -15,35 +16,58 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_Income(
     IN inPaymentDate         TDateTime , -- Дата платежа
     IN inInvNumberBranch     TVarChar  , -- Номер документа
     IN inOperDateBranch      TDateTime , -- Дата документа
+ INOUT ioJuridicalId         Integer   , -- Юрлицо покупатель
+   OUT outJuridicalName      TVarChar  , -- Юрлицо покупатель
     IN inSession             TVarChar    -- сессия пользователя
 )
-RETURNS INTEGER AS
+AS
 $BODY$
    DECLARE vbUserId Integer;
    DECLARE vbOldContractId Integer;
    DECLARE vbDeferment Integer;
 BEGIN
 
-     -- проверка прав пользователя на вызов процедуры
-     -- PERFORM lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Movement_Income());
-     vbUserId := inSession;
-     -- Получаем старый договор. Если он отличается от текущего, то берем новую дату платежа
+    -- проверка прав пользователя на вызов процедуры
+    -- PERFORM lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Movement_Income());
+    vbUserId := inSession;
+    -- Получаем старый договор. Если он отличается от текущего, то берем новую дату платежа
 
-     SELECT ContractId INTO vbOldContractId FROM Movement_Income_View WHERE Movement_Income_View.Id = ioId;
+    SELECT ContractId INTO vbOldContractId FROM Movement_Income_View WHERE Movement_Income_View.Id = ioId;
 
-     IF COALESCE(vbOldContractId, 0) <> inContractId THEN 
-        SELECT Deferment INTO vbDeferment 
-          FROM Object_Contract_View WHERE Object_Contract_View.Id = inContractId;
-        inPaymentDate := inOperDate + vbDeferment * interval '1 day';  
-     END IF;
+    IF COALESCE(vbOldContractId, 0) <> inContractId THEN 
+       SELECT Deferment INTO vbDeferment 
+         FROM Object_Contract_View WHERE Object_Contract_View.Id = inContractId;
+       inPaymentDate := inOperDate + vbDeferment * interval '1 day';  
+    END IF;
 
-     ioId := lpInsertUpdate_Movement_Income(ioId, inInvNumber, inOperDate, inPriceWithVAT
-                                          , inFromId, inToId, inNDSKindId, inContractId, inPaymentDate, vbUserId);
+    --определить юрлицо
+    IF COALESCE(ioJuridicalId,0) = 0
+    THEN
+        SELECT
+            Object.Id,
+            Object.ValueData
+        INTO
+            ioJuridicalId,
+            outJuridicalName
+        FROM
+            ObjectLink
+            Inner Join object ON ObjectLink.ChildObjectId = Object.Id
+        WHERE
+            ObjectLink.ObjectId = inToId
+            AND
+            ObjectLink.DescId = zc_ObjectLink_Unit_Juridical();
+    ELSE
+        outJuridicalName = (Select ValueData from Object Where Id = ioJuridicalId);
+    END IF;
+    
+    ioId := lpInsertUpdate_Movement_Income(ioId, inInvNumber, inOperDate, inPriceWithVAT
+                                         , inFromId, inToId, inNDSKindId, inContractId, inPaymentDate
+                                         , ioJuridicalId, vbUserId);
 
-     PERFORM lpInsertUpdate_MovementString (zc_MovementString_InvNumberBranch(), ioId, inInvNumberBranch);
+    PERFORM lpInsertUpdate_MovementString (zc_MovementString_InvNumberBranch(), ioId, inInvNumberBranch);
 
-     -- 
-     PERFORM lpInsertUpdate_MovementDate (zc_MovementDate_Branch(), ioId, inOperDateBranch);
+    -- 
+    PERFORM lpInsertUpdate_MovementDate (zc_MovementDate_Branch(), ioId, inOperDateBranch);
 
 END;
 $BODY$

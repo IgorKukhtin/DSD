@@ -88,6 +88,16 @@ inherited IncomeForm: TIncomeForm
               Format = ',0.00'
               Kind = skSum
               Column = colSumm
+            end
+            item
+              Format = '+,0.###;-,0.###; ;'
+              Kind = skSum
+              Column = colAmountDiff
+            end
+            item
+              Format = ',0.###'
+              Kind = skSum
+              Column = colAmountManual
             end>
           OptionsBehavior.FocusCellOnCycle = False
           OptionsCustomize.DataRowSizing = False
@@ -274,6 +284,25 @@ inherited IncomeForm: TIncomeForm
             Options.Editing = False
             Width = 47
           end
+          object colAmountManual: TcxGridDBColumn
+            Caption = #1060#1072#1082#1090'. '#1082#1086#1083'-'#1074#1086
+            DataBinding.FieldName = 'AmountManual'
+            Options.Editing = False
+            Width = 54
+          end
+          object colAmountDiff: TcxGridDBColumn
+            Caption = #1056#1072#1079#1085#1080#1094#1072' '#1082#1086#1083'-'#1074#1086
+            DataBinding.FieldName = 'AmountDiff'
+            PropertiesClassName = 'TcxCalcEditProperties'
+            Properties.DisplayFormat = '+,0.###;-,0.###; ;'
+            Options.Editing = False
+          end
+          object colReasonDifferencesName: TcxGridDBColumn
+            Caption = #1055#1088#1080#1095#1080#1085#1072' '#1088#1072#1079#1085#1086#1075#1083#1072#1089#1080#1103
+            DataBinding.FieldName = 'ReasonDifferencesName'
+            Options.Editing = False
+            Width = 123
+          end
         end
       end
     end
@@ -288,22 +317,26 @@ inherited IncomeForm: TIncomeForm
       Left = 8
       Properties.ReadOnly = False
       ExplicitLeft = 8
-      ExplicitWidth = 105
-      Width = 105
+      ExplicitWidth = 75
+      Width = 75
     end
     inherited cxLabel1: TcxLabel
       Left = 8
       ExplicitLeft = 8
     end
     inherited edOperDate: TcxDateEdit
-      Left = 116
+      Left = 84
       Properties.SaveTime = False
       Properties.ShowTime = False
-      ExplicitLeft = 116
+      ExplicitLeft = 84
+      ExplicitWidth = 85
+      Width = 85
     end
     inherited cxLabel2: TcxLabel
-      Left = 116
-      ExplicitLeft = 116
+      Left = 84
+      Top = 0
+      ExplicitLeft = 84
+      ExplicitTop = 0
     end
     inherited cxLabel15: TcxLabel
       Top = 45
@@ -318,12 +351,12 @@ inherited IncomeForm: TIncomeForm
       Width = 169
     end
     object cxLabel3: TcxLabel
-      Left = 327
+      Left = 259
       Top = 5
       Caption = #1070#1088'. '#1083#1080#1094#1086' '#1087#1086#1089#1090#1072#1074#1097#1080#1082
     end
     object edFrom: TcxButtonEdit
-      Left = 327
+      Left = 259
       Top = 23
       Properties.Buttons = <
         item
@@ -334,7 +367,7 @@ inherited IncomeForm: TIncomeForm
       Width = 174
     end
     object edTo: TcxButtonEdit
-      Left = 509
+      Left = 434
       Top = 23
       Properties.Buttons = <
         item
@@ -342,10 +375,10 @@ inherited IncomeForm: TIncomeForm
           Kind = bkEllipsis
         end>
       TabOrder = 6
-      Width = 184
+      Width = 179
     end
     object cxLabel4: TcxLabel
-      Left = 509
+      Left = 434
       Top = 5
       Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
     end
@@ -373,12 +406,12 @@ inherited IncomeForm: TIncomeForm
       Width = 86
     end
     object cxLabel5: TcxLabel
-      Left = 699
+      Left = 755
       Top = 5
       Caption = #1059#1089#1083#1086#1074#1080#1103' '#1076#1086#1075#1086#1074#1086#1088#1072' '#1087#1086#1089#1090'-'#1082#1072' '
     end
     object edContract: TcxButtonEdit
-      Left = 701
+      Left = 757
       Top = 23
       Properties.Buttons = <
         item
@@ -481,18 +514,18 @@ inherited IncomeForm: TIncomeForm
       Width = 99
     end
     object cxLabel11: TcxLabel
-      Left = 219
+      Left = 171
       Top = 5
       Caption = #1044#1072#1090#1072' '#1072#1087#1090#1077#1082#1080
     end
     object edPointDate: TcxDateEdit
-      Left = 219
+      Left = 171
       Top = 23
       EditValue = 42132d
       Properties.SaveTime = False
       Properties.ShowTime = False
       TabOrder = 3
-      Width = 100
+      Width = 86
     end
     object cbFarmacyShow: TcxCheckBox
       Left = 187
@@ -513,6 +546,22 @@ inherited IncomeForm: TIncomeForm
       Left = 159
       Top = 46
       Caption = #1055#1088#1086#1074#1077#1088#1077#1085':'
+    end
+    object cxLabel13: TcxLabel
+      Left = 613
+      Top = 5
+      Caption = #1070#1088#1083#1080#1094#1086' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1100
+    end
+    object edJuridical: TcxButtonEdit
+      Left = 615
+      Top = 23
+      Properties.Buttons = <
+        item
+          Default = True
+          Kind = bkEllipsis
+        end>
+      TabOrder = 28
+      Width = 140
     end
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
@@ -1078,6 +1127,19 @@ inherited IncomeForm: TIncomeForm
         Name = 'Checked'
         Value = Null
         Component = cbFarmacyShow
+      end
+      item
+        Name = 'JuridicalId'
+        Value = Null
+        Component = GuidesJuridical
+        ComponentItem = 'Key'
+      end
+      item
+        Name = 'JuridicalName'
+        Value = Null
+        Component = GuidesJuridical
+        ComponentItem = 'TextValue'
+        DataType = ftString
       end>
     Left = 216
     Top = 248
@@ -1163,13 +1225,18 @@ inherited IncomeForm: TIncomeForm
         ParamType = ptInput
       end
       item
+        Name = 'ioJuridicalId'
         Value = ''
-        DataType = ftString
-        ParamType = ptUnknown
+        Component = GuidesJuridical
+        ComponentItem = 'Key'
+        ParamType = ptInputOutput
       end
       item
+        Name = 'outJuridicalName'
         Value = ''
-        ParamType = ptUnknown
+        Component = GuidesJuridical
+        ComponentItem = 'TextValue'
+        DataType = ftString
       end
       item
         Value = 'False'
@@ -1231,6 +1298,7 @@ inherited IncomeForm: TIncomeForm
         Control = edPriceWithVAT
       end
       item
+        Control = edJuridical
       end
       item
       end
@@ -1611,5 +1679,31 @@ inherited IncomeForm: TIncomeForm
     PackSize = 1
     Left = 320
     Top = 160
+  end
+  object GuidesJuridical: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edJuridical
+    FormNameParam.Value = 'TJuridicalCorporateForm'
+    FormNameParam.DataType = ftString
+    FormName = 'TJuridicalCorporateForm'
+    PositionDataSet = 'MasterCDS'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GuidesJuridical
+        ComponentItem = 'Key'
+        ParamType = ptInput
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesJuridical
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+      end>
+    Left = 656
+    Top = 8
   end
 end

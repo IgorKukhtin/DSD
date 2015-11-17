@@ -12,7 +12,8 @@ uses
   cxGridCustomView, cxGridCustomTableView, cxGridTableView, cxGridDBTableView,
   cxGrid, cxPC, cxContainer, Vcl.ComCtrls, dxCore, cxDateUtils, cxLabel,
   cxTextEdit, cxMaskEdit, cxDropDownEdit, cxCalendar, Vcl.ExtCtrls,
-  cxCurrencyEdit, cxImageComboBox, ChoicePeriod;
+  cxCurrencyEdit, cxImageComboBox, ChoicePeriod, dxSkinsCore,
+  dxSkinsDefaultPainters, dxSkinscxPCPainter, dxSkinsdxBarPainter;
 
 type
   TIncomeJournalChoiceForm = class(TAncestorEnumForm)
@@ -23,6 +24,7 @@ type
     cxLabel2: TcxLabel;
     PeriodChoice: TPeriodChoice;
     RefreshDispatcher: TRefreshDispatcher;
+    colJuridicalName: TcxGridDBColumn;
   private
     { Private declarations }
   public

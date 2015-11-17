@@ -8,20 +8,20 @@ inherited SaleForm: TSaleForm
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Top = 123
+    Top = 141
     Width = 733
-    Height = 356
+    Height = 338
     ExplicitTop = 123
     ExplicitWidth = 733
     ExplicitHeight = 356
-    ClientRectBottom = 356
+    ClientRectBottom = 338
     ClientRectRight = 733
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 733
       ExplicitHeight = 332
       inherited cxGrid: TcxGrid
         Width = 733
-        Height = 332
+        Height = 314
         ExplicitWidth = 733
         ExplicitHeight = 332
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -104,10 +104,10 @@ inherited SaleForm: TSaleForm
   end
   inherited DataPanel: TPanel
     Width = 733
-    Height = 97
+    Height = 115
     TabOrder = 3
     ExplicitWidth = 733
-    ExplicitHeight = 97
+    ExplicitHeight = 115
     inherited ceStatus: TcxButtonEdit
       ExplicitHeight = 22
     end
@@ -129,12 +129,12 @@ inherited SaleForm: TSaleForm
     end
     object lblJuridical: TcxLabel
       Left = 8
-      Top = 51
+      Top = 41
       Caption = #1055#1086#1082#1091#1087#1072#1090#1077#1083#1100
     end
     object edJuridical: TcxButtonEdit
       Left = 8
-      Top = 69
+      Top = 57
       Properties.Buttons = <
         item
           Default = True
@@ -145,12 +145,12 @@ inherited SaleForm: TSaleForm
     end
     object cxLabel3: TcxLabel
       Left = 284
-      Top = 52
+      Top = 42
       Caption = #1060#1086#1088#1084#1072' '#1086#1087#1083#1072#1090#1099
     end
     object edPaidKind: TcxButtonEdit
       Left = 284
-      Top = 69
+      Top = 57
       Properties.Buttons = <
         item
           Default = True
@@ -161,12 +161,12 @@ inherited SaleForm: TSaleForm
     end
     object cxLabel4: TcxLabel
       Left = 505
-      Top = 51
+      Top = 41
       Caption = #1048#1090#1086#1075#1086' '#1089#1091#1084#1084#1072
     end
     object edTotalSumm: TcxCurrencyEdit
       Left = 506
-      Top = 69
+      Top = 57
       Properties.DisplayFormat = ',0.00'
       Properties.ReadOnly = True
       TabOrder = 13
@@ -174,12 +174,12 @@ inherited SaleForm: TSaleForm
     end
     object cxLabel5: TcxLabel
       Left = 418
-      Top = 51
+      Top = 41
       Caption = #1048#1090#1086#1075#1086' '#1082#1086#1083'-'#1074#1086
     end
     object edTotalCount: TcxCurrencyEdit
       Left = 418
-      Top = 69
+      Top = 57
       Properties.DisplayFormat = ',0.00'
       Properties.ReadOnly = True
       TabOrder = 15
@@ -187,16 +187,28 @@ inherited SaleForm: TSaleForm
     end
     object cxLabel6: TcxLabel
       Left = 586
-      Top = 51
+      Top = 41
       Caption = #1048#1090#1086#1075#1086' '#1089#1091#1084#1084#1072' ('#1079#1072#1082'.)'
     end
     object edTotalSummPrimeCost: TcxCurrencyEdit
       Left = 586
-      Top = 69
+      Top = 57
       Properties.DisplayFormat = ',0.00'
       Properties.ReadOnly = True
       TabOrder = 17
       Width = 66
+    end
+    object cxLabel7: TcxLabel
+      Left = 8
+      Top = 77
+      Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
+    end
+    object edComment: TcxTextEdit
+      Left = 8
+      Top = 92
+      Properties.ReadOnly = False
+      TabOrder = 19
+      Width = 644
     end
   end
   inherited ActionList: TActionList
@@ -372,6 +384,12 @@ inherited SaleForm: TSaleForm
         Component = GuidesPaidKind
         ComponentItem = 'TextValue'
         DataType = ftString
+      end
+      item
+        Name = 'Comment'
+        Value = Null
+        Component = edComment
+        DataType = ftString
       end>
     Left = 72
     Top = 224
@@ -420,6 +438,13 @@ inherited SaleForm: TSaleForm
         Component = GuidesPaidKind
         ComponentItem = 'Key'
         ParamType = ptInput
+      end
+      item
+        Name = 'inComment'
+        Value = Null
+        Component = edComment
+        DataType = ftString
+        ParamType = ptInput
       end>
     NeedResetData = True
     ParamKeyField = 'ioId'
@@ -455,6 +480,9 @@ inherited SaleForm: TSaleForm
       end
       item
         Control = edPaidKind
+      end
+      item
+        Control = edComment
       end>
     Left = 200
     Top = 177

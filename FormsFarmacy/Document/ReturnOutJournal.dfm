@@ -3,8 +3,8 @@ inherited ReturnOutJournalForm: TReturnOutJournalForm
   ClientHeight = 469
   ClientWidth = 807
   AddOnFormData.Params = FormParams
-  ExplicitWidth = 815
-  ExplicitHeight = 496
+  ExplicitWidth = 823
+  ExplicitHeight = 507
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -191,6 +191,11 @@ inherited ReturnOutJournalForm: TReturnOutJournalForm
             Caption = #1053#1044#1057
             DataBinding.FieldName = 'NDSKindName'
             Width = 56
+          end
+          object colJuridicalName: TcxGridDBColumn
+            Caption = #1070#1088'.'#1083#1080#1094#1086' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1100
+            DataBinding.FieldName = 'JuridicalName'
+            Width = 159
           end
         end
       end

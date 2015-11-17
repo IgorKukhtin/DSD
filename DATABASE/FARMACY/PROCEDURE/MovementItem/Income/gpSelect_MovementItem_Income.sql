@@ -30,6 +30,10 @@ RETURNS TABLE (Id Integer, GoodsId Integer, GoodsCode Integer, GoodsName TVarCha
              , WarningColor Integer
              , AVGIncomePrice TFloat
              , AVGIncomePriceWarning Boolean
+             , AmountManual TFloat
+             , AmountDiff TFloat
+             , ReasonDifferencesId Integer
+             , ReasonDifferencesName TVarChar
               )
 AS
 $BODY$
@@ -91,7 +95,10 @@ BEGIN
               , NULL::Integer              AS WarningColor
               , NULL::TFloat               AS AVGIncomePrice
               , FALSE                      AS AVGIncomePriceWarning
-              
+              , NULL::TFloat               AS AmountManual
+              , NULL::TFloat               AS AmountDiff
+              , NULL::Integer              AS ReasonDifferencesId
+              , NULL::TVarChar             AS ReasonDifferencesName
             FROM (
                     SELECT 
                         Object_Goods.Id           AS GoodsId
@@ -155,6 +162,10 @@ BEGIN
                         THEN TRUE
                     ELSE FALSE
                 END AS AVGIncomePriceWarning
+              , MovementItem.AmountManual
+              , (COALESCE(MovementItem.AmountManual,0) - COALESCE(MovementItem.Amount,0))::TFloat as AmountDiff
+              , MovementItem.ReasonDifferencesId
+              , MovementItem.ReasonDifferencesName
             FROM (
                     SELECT FALSE AS isErased 
                     UNION ALL 
@@ -259,7 +270,10 @@ BEGIN
                         THEN TRUE
                     ELSE FALSE
                 END AS AVGIncomePriceWarning
-                    
+              , MovementItem.AmountManual
+              , (COALESCE(MovementItem.AmountManual,0) - COALESCE(MovementItem.Amount,0))::TFloat as AmountDiff
+              , MovementItem.ReasonDifferencesId
+              , MovementItem.ReasonDifferencesName      
                 
             FROM (
                     SELECT FALSE AS isErased 

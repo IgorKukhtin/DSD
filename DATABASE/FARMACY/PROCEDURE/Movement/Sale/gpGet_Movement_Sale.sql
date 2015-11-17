@@ -20,7 +20,8 @@ RETURNS TABLE (Id Integer
              , JuridicalId Integer
              , JuridicalName TVarChar
              , PaidKindId Integer
-             , PaidKindName TVarChar)
+             , PaidKindName TVarChar
+             , Comment TVarChar)
 AS
 $BODY$
 BEGIN
@@ -46,6 +47,7 @@ BEGIN
           , NULL::TVarChar                                   AS JuridicalName
           , NULL::Integer                                    AS PaidKindId
           , NULL::TVarChar                                   AS PaidKindName
+          , NULL::TVarChar                                   AS Comment
         FROM lfGet_Object_Status(zc_Enum_Status_UnComplete()) AS Object_Status;
     ELSE
         RETURN QUERY
@@ -64,6 +66,7 @@ BEGIN
           , Movement_Sale.JuridicalName
           , Movement_Sale.PaidKindId
           , Movement_Sale.PaidKindName
+          , Movement_Sale.Comment
         FROM
             Movement_Sale_View AS Movement_Sale
         WHERE Movement_Sale.Id =  inMovementId;

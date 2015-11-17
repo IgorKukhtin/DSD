@@ -12,7 +12,9 @@ uses
   cxClasses, Datasnap.DBClient, Vcl.ActnList, cxPropertiesStore, cxButtonEdit,
   cxMaskEdit, cxDropDownEdit, cxCalendar, cxLabel, cxTextEdit, Vcl.ExtCtrls,
   cxGridLevel, cxGridCustomTableView, cxGridTableView, cxGridDBTableView,
-  cxGridCustomView, cxGrid, cxPC, dxBarBuiltInMenu, cxNavigator, cxImageComboBox;
+  cxGridCustomView, cxGrid, cxPC, dxBarBuiltInMenu, cxNavigator, cxImageComboBox,
+  dxSkinsCore, dxSkinsDefaultPainters, dxSkinscxPCPainter, dxSkinsdxBarPainter,
+  cxCalc;
 
 type
   TIncomeForm = class(TAncestorDocumentForm)
@@ -83,6 +85,12 @@ type
     colWarningColor: TcxGridDBColumn;
     colAVGIncomePrice: TcxGridDBColumn;
     colAVGIncomePriceWarning: TcxGridDBColumn;
+    cxLabel13: TcxLabel;
+    edJuridical: TcxButtonEdit;
+    GuidesJuridical: TdsdGuides;
+    colAmountManual: TcxGridDBColumn;
+    colReasonDifferencesName: TcxGridDBColumn;
+    colAmountDiff: TcxGridDBColumn;
   private
     { Private declarations }
   public

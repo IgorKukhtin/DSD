@@ -20,7 +20,8 @@ RETURNS TABLE (Id Integer
              , IncomeMovementId Integer 
              , IncomeOperDate TDateTime, IncomeInvNumber TVarChar
              , ReturnTypeId Integer
-             , ReturnTypeName TVarChar )
+             , ReturnTypeName TVarChar
+             , JuridicalId Integer, JuridicalName TVarChar )
 AS
 $BODY$
   DECLARE vbUserId Integer;
@@ -42,17 +43,19 @@ BEGIN
              , Object_Status.Code                               AS StatusCode
              , Object_Status.Name                               AS StatusName
              , CAST (False as Boolean)                          AS PriceWithVAT
-             , 0                     				AS FromId
-             , CAST ('' AS TVarChar) 			        AS FromName
-             , 0                     				AS ToId
-             , CAST ('' AS TVarChar) 				AS ToName
-             , 0                     			        AS NDSKindId
-             , CAST ('' AS TVarChar) 				AS NDSKindName
+             , 0                                                AS FromId
+             , CAST ('' AS TVarChar)                            AS FromName
+             , 0                                                AS ToId
+             , CAST ('' AS TVarChar)                            AS ToName
+             , 0                                                AS NDSKindId
+             , CAST ('' AS TVarChar)                            AS NDSKindName
              , 0                                                AS IncomeMovementId
              , CURRENT_DATE::TDateTime                          AS IncomeOperDate
              , ''::TVarChar                                     AS IncomeInvNumber
-             , 0                     			        AS ReturnTypeId
-             , CAST ('' AS TVarChar) 				AS ReturnTypeName
+             , 0                                                AS ReturnTypeId
+             , CAST ('' AS TVarChar)                            AS ReturnTypeName
+             , 0                                                AS JuridicalId
+             , CAST('' as TVarChar)                             AS JuridicalName
           FROM lfGet_Object_Status(zc_Enum_Status_UnComplete()) AS Object_Status;
 
      ELSE
@@ -78,6 +81,8 @@ BEGIN
            , Movement_ReturnOut_View.IncomeInvNumber
            , Movement_ReturnOut_View.ReturnTypeId
            , Movement_ReturnOut_View.ReturnTypeName
+           , Movement_ReturnOut_View.JuridicalId
+           , Movement_ReturnOut_View.JuridicalName
 
        FROM Movement_ReturnOut_View       
       WHERE Movement_ReturnOut_View.Id = inMovementId;

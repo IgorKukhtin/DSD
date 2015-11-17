@@ -56,16 +56,7 @@ BEGIN
         
         -- Результат такой
         RETURN QUERY
-            WITH UNITS AS (
-                            SELECT
-                                Object_Unit.ID
-                            FROM
-                                Object_Unit_View AS Object_Unit
-                            WHERE
-                                Object_Unit.JuridicalId = vbJuridicalId
-                                
-                          ),
-                 Income AS (
+            WITH Income AS (
                                 SELECT
                                     Movement_Income.id
                                   , Movement_Income.InvNumber
@@ -81,10 +72,10 @@ BEGIN
                                   , Movement_Income.TotalSumm
                                   , Movement_Income.PaySumm
                                 FROM
-                                    UNITS
-                                    LEFT OUTER JOIN Movement_Income_View AS Movement_Income
-                                                                         ON Movement_Income.ToId = UNITS.Id
+                                    Movement_Income_View AS Movement_Income
                                 WHERE
+                                    Movement_Income.JuridicalId = vbJuridicalId
+                                    AND
                                     Movement_Income.PaySumm > 0
                                     AND
                                     COALESCE(Movement_Income.PaymentDate,Movement_Income.OperDate) between inDateStart AND inDateEnd

@@ -9,6 +9,7 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_Movement_Sale(
     IN inUnitId                Integer    , -- От кого (подразделение)
     IN inJuridicalId           Integer    , -- Кому (покупатель)
     IN inPaidKindId            Integer    , -- Виды форм оплаты
+    IN inComment               TVarChar   , -- Примечание
     IN inUserId                Integer     -- сессия пользователя
 )
 RETURNS Integer AS
@@ -49,6 +50,9 @@ BEGIN
 
     -- сохранили связь с <Виды форм оплаты>
     PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_PaidKind(), ioId, inPaidKindId);
+    
+    -- сохранили <Примечание>
+    PERFORM lpInsertUpdate_MovementString (zc_MovementString_Comment(), ioId, inComment);
     
     -- сохранили протокол
     PERFORM lpInsert_MovementProtocol (ioId, inUserId, vbIsInsert);

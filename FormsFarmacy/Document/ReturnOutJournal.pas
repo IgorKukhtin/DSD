@@ -13,7 +13,8 @@ uses
   cxPropertiesStore, cxLabel, cxTextEdit, cxMaskEdit, cxDropDownEdit,
   cxCalendar, Vcl.ExtCtrls, cxGridLevel, cxGridCustomTableView, cxGridTableView,
   cxGridDBTableView, cxGridCustomView, cxGrid, cxPC, ExternalSave,
-  dxBarBuiltInMenu, cxNavigator;
+  dxBarBuiltInMenu, cxNavigator, dxSkinsCore, dxSkinsDefaultPainters,
+  dxSkinscxPCPainter, dxSkinsdxBarPainter;
 
 type
   TReturnOutJournalForm = class(TAncestorJournalForm)
@@ -43,6 +44,7 @@ type
     actReturnOutMovementInsert: TdsdExecStoredProc;
     spInsertMovement: TdsdStoredProc;
     actChoiceIncomeMovement: TOpenChoiceForm;
+    colJuridicalName: TcxGridDBColumn;
   private
     { Private declarations }
   public

@@ -22,6 +22,7 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_Movement_Income(
     IN inNDSKindId           Integer   , -- Типы НДС
     IN inContractId          Integer   , -- Договор
     IN inPaymentDate         TDateTime , -- Дата платежа
+    IN inJuridicalId         Integer   , -- Юрлицо покупатель
     IN inUserId              Integer     -- сессия пользователя
 )
 RETURNS Integer AS
@@ -52,6 +53,9 @@ BEGIN
      -- 
      PERFORM lpInsertUpdate_MovementDate (zc_MovementDate_Payment(), ioId, inPaymentDate);
 
+     -- сохранили связь с <Юрлицо покупатель>
+     PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_Juridical(), ioId, inJuridicalId);
+     
      -- пересчитали Итоговые суммы по накладной
      PERFORM lpInsertUpdate_MovementFloat_TotalSumm (ioId);
 
