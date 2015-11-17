@@ -204,8 +204,14 @@ BEGIN
        END IF;
 
        vbMovementId := lpInsertUpdate_Movement_Income(vbMovementId, inInvNumber, inOperDate, inPriceWithVAT, 
-                                                      inJuridicalId, vbUnitId, vbNDSKindId, 
-                                                      inContractId := vbContractId , inPaymentDate := inPaymentDate, inUserId := vbUserId);
+                                                      inJuridicalId, vbUnitId, vbNDSKindId
+                                                     ,inContractId := vbContractId 
+                                                     ,inPaymentDate := inPaymentDate
+                                                     ,inJuridicalId := (Select ObjectLink.ChildObjectId 
+                                                                        from ObjectLink 
+                                                                        Where ObjectLink.ObjectId = vbUnitId
+                                                                          AND ObjectLink.DescId = zc_ObjectLink_Unit_Juridical())
+                                                     ,inUserId := vbUserId);
      END IF;
 
 

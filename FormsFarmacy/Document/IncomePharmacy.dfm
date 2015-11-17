@@ -1,27 +1,29 @@
 inherited IncomePharmacyForm: TIncomePharmacyForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1055#1088#1080#1093#1086#1076'>'
-  ClientHeight = 526
+  ClientHeight = 524
   ClientWidth = 985
   ExplicitWidth = 1001
-  ExplicitHeight = 564
+  ExplicitHeight = 562
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 126
     Width = 985
-    Height = 400
+    Height = 398
     ExplicitTop = 126
-    ExplicitWidth = 806
+    ExplicitWidth = 985
     ExplicitHeight = 400
-    ClientRectBottom = 400
+    ClientRectBottom = 398
     ClientRectRight = 985
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 806
+      ExplicitWidth = 985
       ExplicitHeight = 376
       inherited cxGrid: TcxGrid
         Width = 985
-        Height = 376
-        ExplicitWidth = 806
+        Height = 374
+        ExplicitLeft = 56
+        ExplicitTop = -3
+        ExplicitWidth = 985
         ExplicitHeight = 376
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
@@ -102,6 +104,16 @@ inherited IncomePharmacyForm: TIncomePharmacyForm
               Format = ',0.00'
               Kind = skSum
               Column = colSaleSumm
+            end
+            item
+              Format = ',0.###'
+              Kind = skSum
+              Column = colAmountManual
+            end
+            item
+              Format = '+,0.###;-0.###; ;'
+              Kind = skSum
+              Column = colAmountDiff
             end>
           OptionsBehavior.FocusCellOnCycle = False
           OptionsCustomize.DataRowSizing = False
@@ -209,12 +221,39 @@ inherited IncomePharmacyForm: TIncomePharmacyForm
           object colDublePriceColour: TcxGridDBColumn
             DataBinding.FieldName = 'DublePriceColour'
             Visible = False
+            Options.Editing = False
             VisibleForCustomization = False
           end
           object colWarningColor: TcxGridDBColumn
             DataBinding.FieldName = 'WarningColor'
             Visible = False
+            Options.Editing = False
             VisibleForCustomization = False
+          end
+          object colAmountManual: TcxGridDBColumn
+            Caption = #1060#1072#1082#1090'. '#1082#1086#1083'-'#1074#1086
+            DataBinding.FieldName = 'AmountManual'
+            Width = 59
+          end
+          object colAmountDiff: TcxGridDBColumn
+            Caption = #1056#1072#1079#1085#1080#1094#1072' '#1082#1086#1083'-'#1074#1086
+            DataBinding.FieldName = 'AmountDiff'
+            PropertiesClassName = 'TcxCalcEditProperties'
+            Properties.DisplayFormat = '+0.###;-0.###; ;'
+            Options.Editing = False
+          end
+          object colReasonDifferencesName: TcxGridDBColumn
+            Caption = #1055#1088#1080#1095#1080#1085#1072' '#1088#1072#1079#1085#1086#1075#1083#1072#1089#1080#1103
+            DataBinding.FieldName = 'ReasonDifferencesName'
+            PropertiesClassName = 'TcxButtonEditProperties'
+            Properties.Buttons = <
+              item
+                Action = ChoiceReasonDifferences
+                Default = True
+                Kind = bkEllipsis
+              end>
+            Properties.ReadOnly = True
+            Width = 131
           end
         end
       end
@@ -224,7 +263,7 @@ inherited IncomePharmacyForm: TIncomePharmacyForm
     Width = 985
     Height = 100
     TabOrder = 3
-    ExplicitWidth = 806
+    ExplicitWidth = 985
     ExplicitHeight = 100
     inherited edInvNumber: TcxTextEdit
       Left = 8
@@ -378,6 +417,18 @@ inherited IncomePharmacyForm: TIncomePharmacyForm
     inherited actInsertUpdateMovement: TdsdExecStoredProc
       Enabled = False
     end
+    inherited actUpdateMainDS: TdsdUpdateDataSet
+      StoredProcList = <
+        item
+          StoredProc = spInsertUpdateMIMaster
+        end
+        item
+          StoredProc = spUpdate_MovementItem_Income_AmountManual
+        end
+        item
+          StoredProc = spGetTotalSumm
+        end>
+    end
     inherited actPrint: TdsdPrintAction
       StoredProc = spSelectPrint
       StoredProcList = <
@@ -483,6 +534,69 @@ inherited IncomePharmacyForm: TIncomePharmacyForm
       ReportName = #1056#1072#1089#1093#1086#1076#1085#1072#1103'_'#1085#1072#1082#1083#1072#1076#1085#1072#1103'_'#1076#1083#1103'_'#1084#1077#1085#1077#1076#1078#1077#1088#1072
       ReportNameParam.Value = #1056#1072#1089#1093#1086#1076#1085#1072#1103'_'#1085#1072#1082#1083#1072#1076#1085#1072#1103'_'#1076#1083#1103'_'#1084#1077#1085#1077#1076#1078#1077#1088#1072
       ReportNameParam.DataType = ftString
+    end
+    object ChoiceReasonDifferences: TOpenChoiceForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = #1042#1099#1073#1086#1088' '#1087#1088#1080#1095#1080#1085#1099' '#1088#1072#1079#1085#1086#1075#1083#1072#1089#1080#1103
+      FormName = 'TReasonDifferencesForm'
+      FormNameParam.Value = 'TReasonDifferencesForm'
+      FormNameParam.DataType = ftString
+      GuiParams = <
+        item
+          Name = 'Key'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'ReasonDifferencesId'
+          ParamType = ptInput
+        end
+        item
+          Name = 'TextValue'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'ReasonDifferencesName'
+          DataType = ftString
+          ParamType = ptInput
+        end>
+      isShowModal = False
+    end
+    object actSetAmountEqual: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <
+        item
+          FromParam.Value = Null
+          FromParam.Component = MasterCDS
+          FromParam.ComponentItem = 'Amount'
+          FromParam.DataType = ftFloat
+          ToParam.Value = Null
+          ToParam.Component = MasterCDS
+          ToParam.ComponentItem = 'AmountManual'
+          ToParam.DataType = ftFloat
+        end
+        item
+          FromParam.Value = 0
+          ToParam.Value = Null
+          ToParam.Component = MasterCDS
+          ToParam.ComponentItem = 'ReasonDifferencesId'
+        end
+        item
+          FromParam.Value = ' '
+          FromParam.DataType = ftString
+          ToParam.Value = Null
+          ToParam.Component = MasterCDS
+          ToParam.ComponentItem = 'ReasonDifferencesName'
+          ToParam.DataType = ftString
+        end>
+      PostDataSetBeforeExecute = False
+      PostDataSetAfterExecute = True
+      StoredProc = spUpdate_MovementItem_Income_AmountManual
+      StoredProcList = <
+        item
+          StoredProc = spUpdate_MovementItem_Income_AmountManual
+        end>
+      Caption = #1060#1072#1082#1090' = '#1076#1086#1082#1091#1084#1077#1085#1090
+      ShortCut = 32
     end
   end
   inherited MasterDS: TDataSource
@@ -668,7 +782,7 @@ inherited IncomePharmacyForm: TIncomePharmacyForm
     Top = 265
   end
   inherited PopupMenu: TPopupMenu
-    Left = 800
+    Left = 744
     Top = 464
     object N2: TMenuItem
       Action = actMISetErased
@@ -1206,8 +1320,8 @@ inherited IncomePharmacyForm: TIncomePharmacyForm
         DataType = ftString
         ParamType = ptInput
       end>
-    Left = 687
-    Top = 144
+    Left = 671
+    Top = 200
   end
   object spIncome_GoodsId: TdsdStoredProc
     StoredProcName = 'gpUpdate_MovementItem_Income_GoodsId'
@@ -1240,5 +1354,86 @@ inherited IncomePharmacyForm: TIncomePharmacyForm
     PackSize = 1
     Left = 320
     Top = 160
+  end
+  object spUpdate_MovementItem_Income_AmountManual: TdsdStoredProc
+    StoredProcName = 'gpUpdate_MovementItem_Income_AmountManual'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'ioMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inMovementItemId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inAmountManual'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'AmountManual'
+        DataType = ftFloat
+        ParamType = ptInput
+      end
+      item
+        Name = 'inReasonDifferences'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'ReasonDifferencesId'
+        ParamType = ptInput
+      end
+      item
+        Name = 'outAmountDiff'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'AmountDiff'
+        DataType = ftFloat
+      end
+      item
+        Value = Null
+        ParamType = ptUnknown
+      end
+      item
+        Value = Null
+        ParamType = ptUnknown
+      end
+      item
+        Value = Null
+        ParamType = ptUnknown
+      end
+      item
+        Value = Null
+        ParamType = ptUnknown
+      end
+      item
+        Value = Null
+        ParamType = ptUnknown
+      end
+      item
+        Value = Null
+        ParamType = ptUnknown
+      end
+      item
+        Value = Null
+        ParamType = ptUnknown
+      end
+      item
+        Value = Null
+        ParamType = ptUnknown
+      end
+      item
+        Value = Null
+        ParamType = ptUnknown
+      end>
+    PackSize = 1
+    Left = 336
+    Top = 368
   end
 end

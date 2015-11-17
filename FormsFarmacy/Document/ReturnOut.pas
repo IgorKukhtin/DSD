@@ -12,7 +12,8 @@ uses
   cxClasses, Datasnap.DBClient, Vcl.ActnList, cxPropertiesStore, cxButtonEdit,
   cxMaskEdit, cxDropDownEdit, cxCalendar, cxLabel, cxTextEdit, Vcl.ExtCtrls,
   cxGridLevel, cxGridCustomTableView, cxGridTableView, cxGridDBTableView,
-  cxGridCustomView, cxGrid, cxPC, dxBarBuiltInMenu, cxNavigator, cxImageComboBox;
+  cxGridCustomView, cxGrid, cxPC, dxBarBuiltInMenu, cxNavigator, cxImageComboBox,
+  dxSkinsCore, dxSkinsDefaultPainters, dxSkinscxPCPainter, dxSkinsdxBarPainter;
 
 type
   TReturnOutForm = class(TAncestorDocumentForm)
@@ -65,6 +66,9 @@ type
     colAmountInIncome: TcxGridDBColumn;
     colRemains: TcxGridDBColumn;
     colWarningColor: TcxGridDBColumn;
+    cxLabel12: TcxLabel;
+    edJuridical: TcxButtonEdit;
+    GuidesJuridical: TdsdGuides;
   private
     { Private declarations }
   public

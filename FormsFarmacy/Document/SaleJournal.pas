@@ -12,7 +12,8 @@ uses
   Datasnap.DBClient, dsdAction, Vcl.ActnList, cxPropertiesStore, cxLabel,
   cxTextEdit, cxMaskEdit, cxDropDownEdit, cxCalendar, Vcl.ExtCtrls, cxGridLevel,
   cxGridCustomTableView, cxGridTableView, cxGridDBTableView, cxGridCustomView,
-  cxGrid, cxPC, cxCalc, cxCurrencyEdit;
+  cxGrid, cxPC, cxCalc, cxCurrencyEdit, dxSkinsCore, dxSkinsDefaultPainters,
+  dxSkinscxPCPainter, dxSkinsdxBarPainter;
 
 type
   TSaleJournalForm = class(TAncestorJournalForm)
@@ -24,6 +25,7 @@ type
     colTotalSumm: TcxGridDBColumn;
     colTotalSummPrimeCost: TcxGridDBColumn;
     cxGridDBTableViewColumn1: TcxGridDBColumn;
+    colComment: TcxGridDBColumn;
   private
     { Private declarations }
   public

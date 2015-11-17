@@ -171,7 +171,7 @@ WITH LOSS AS ( SELECT
             LOSS.MovementItemId 
           , LOSS.Amount 
           , REMAINS.Amount AS ContainerAmount 
-          , Movement.OperDate 
+          , vbLossDate AS OperDate 
           , REMAINS.Id
           , SUM(REMAINS.Amount) OVER (PARTITION BY REMAINS.objectid ORDER BY Movement.OPERDATE, REMAINS.Id)
         FROM REMAINS 

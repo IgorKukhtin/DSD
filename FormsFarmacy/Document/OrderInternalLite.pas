@@ -13,7 +13,8 @@ uses
   cxMaskEdit, cxDropDownEdit, cxCalendar, cxLabel, cxTextEdit, Vcl.ExtCtrls,
   cxGridLevel, cxGridCustomTableView, cxGridTableView, cxGridDBTableView,
   cxGridCustomView, cxGrid, cxPC, cxCurrencyEdit, cxCheckBox, frxClass, frxDBSet,
-  dxSkinsCore, dxSkinsDefaultPainters, cxSplitter, dxBarBuiltInMenu, cxNavigator;
+  dxSkinsCore, dxSkinsDefaultPainters, cxSplitter, dxBarBuiltInMenu, cxNavigator,
+  dxSkinscxPCPainter, dxSkinsdxBarPainter;
 
 type
   TOrderInternalLiteForm = class(TAncestorDocumentForm)
@@ -51,6 +52,9 @@ type
     colAmountSecond: TcxGridDBColumn;
     colAmountAll: TcxGridDBColumn;
     colCalcAmountAll: TcxGridDBColumn;
+    colPartnerGoodsName: TcxGridDBColumn;
+    colMakerName: TcxGridDBColumn;
+    colPrice: TcxGridDBColumn;
   private
     { Private declarations }
   public

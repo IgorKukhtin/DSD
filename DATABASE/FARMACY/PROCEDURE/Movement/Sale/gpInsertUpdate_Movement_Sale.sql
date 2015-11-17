@@ -9,6 +9,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_Sale(
     IN inUnitId                Integer    , -- От кого (подразделение)
     IN inJuridicalId           Integer    , -- Кому (покупатель)
     IN inPaidKindId            Integer    , -- Виды форм оплаты
+    IN inComment               TVarChar   , -- Примечание
     IN inSession               TVarChar     -- сессия пользователя
 )
 RETURNS Integer AS
@@ -25,6 +26,7 @@ BEGIN
                                         , inUnitId      := inUnitId
                                         , inJuridicalId := inJuridicalId
                                         , inPaidKindId  := inPaidKindId
+                                        , inComment     := inComment
                                         , inUserId      := vbUserId
                                         );
 

@@ -17,7 +17,6 @@ SELECT       Movement.Id                                AS Id
            , MovementBoolean_PriceWithVAT.ValueData     AS PriceWithVAT
            , MovementLinkObject_From.ObjectId           AS FromId
            , Object_From.Name                           AS FromName
-           , Object_From.JuridicalId                    AS JuridicalId
            , MovementLinkObject_To.ObjectId             AS ToId
            , Object_To.ValueData                        AS ToName
            , MovementLinkObject_NDSKind.ObjectId        AS NDSKindId
@@ -28,7 +27,8 @@ SELECT       Movement.Id                                AS Id
            , MovementIncome.InvNumber                   AS IncomeInvNumber
            , MovementLinkObject_ReturnType.ObjectId     AS ReturnTypeId
            , Object_ReturnType.ValueData                AS ReturnTypeName
-
+           , MovementIncome.JuridicalId                 AS JuridicalId
+           , MovementIncome.JuridicalName               AS JuridicalName
        FROM Movement 
             LEFT JOIN Movement_Income_View AS MovementIncome ON MovementIncome.Id = Movement.ParentId
 

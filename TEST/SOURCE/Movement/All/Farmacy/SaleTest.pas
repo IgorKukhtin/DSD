@@ -18,7 +18,7 @@ type
     function InsertDefault: integer; override;
   public
     function InsertUpdateMovementSale(Id: Integer; InvNumber: String; OperDate: TDateTime;
-                         UnitId, JuridicalId, PaidKindId: Integer): integer;
+                         UnitId, JuridicalId, PaidKindId: Integer; Comment: String): integer;
     constructor Create; override;
   end;
 
@@ -49,11 +49,11 @@ begin
   UnitId := TUnit.Create.GetDefault;
   JuridicalId := TJuridical.Create.GetDefault;
   PaidKindId := TPaidKind.Create.GetDefault;
-  result := InsertUpdateMovementSale(Id, InvNumber, OperDate, UnitId, JuridicalId, PaidKindId);
+  result := InsertUpdateMovementSale(Id, InvNumber, OperDate, UnitId, JuridicalId, PaidKindId, 'Test Comment');
 end;
 
 function TSale.InsertUpdateMovementSale(Id: Integer; InvNumber: String; OperDate: TDateTime;
-                         UnitId, JuridicalId, PaidKindId: Integer):Integer;
+                         UnitId, JuridicalId, PaidKindId: Integer; Comment: String):Integer;
 begin
   FParams.Clear;
   FParams.AddParam('ioId', ftInteger, ptInputOutput, Id);
@@ -62,6 +62,7 @@ begin
   FParams.AddParam('inUnitId', ftInteger, ptInput, UnitId);
   FParams.AddParam('inJuridicalId', ftInteger, ptInput, JuridicalId);
   FParams.AddParam('inPaidKindId', ftInteger, ptInput, PaidKindId);
+  FParams.AddParam('inComment', ftString, ptInput, Comment);
   result := InsertUpdate(FParams);
 end;
 

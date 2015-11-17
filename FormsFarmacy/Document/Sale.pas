@@ -41,6 +41,8 @@ type
     spSelectPrint: TdsdStoredProc;
     PrintItemsCDS: TClientDataSet;
     PrintHeaderCDS: TClientDataSet;
+    cxLabel7: TcxLabel;
+    edComment: TcxTextEdit;
   private
     { Private declarations }
   public

@@ -1,7 +1,9 @@
 DROP FUNCTION IF EXISTS gpRecomplete_Movement_All (TDateTime, TVarChar);
+DROP FUNCTION IF EXISTS gpRecomplete_Movement_All (TDateTime, TDateTime, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpRecomplete_Movement_All(
     IN inStartDate          TDateTime,     -- Документы перепроводить с даты
+    IN inStartEnd           TDateTime,     -- Документы перепроводить до даты
     IN inSession            TVarChar       -- сессия пользователя
 )
 RETURNS TABLE(
@@ -60,12 +62,16 @@ BEGIN
                         UNION
                         SELECT 4 AS DescOrder, zc_Movement_ReturnOut() AS DescId, 'Возвраты поставщику' AS DescName
                         UNION
-                        SELECT 5 AS DescOrder, zc_Movement_Check() AS DescId, 'Продажы на кассах' AS DescName
+                        SELECT 5 AS DescOrder, zc_Movement_Sale() AS DescId, 'продажи' AS DescName
                         UNION
-                        SELECT 6 AS DescOrder, zc_Movement_Inventory() AS DescId, 'Переучеты' AS DescName
+                        SELECT 6 AS DescOrder, zc_Movement_Check() AS DescId, 'Продажы на кассах' AS DescName
+                        UNION
+                        SELECT 7 AS DescOrder, zc_Movement_Inventory() AS DescId, 'Переучеты' AS DescName
                    ) AS Movement_Desc ON Movement.DescId = Movement_Desc.DescId
     WHERE
         Movement.OperDate >= inStartDate
+        AND
+        Movement.OperDate <= inStartEnd
         AND
         Movement.StatusId = zc_Enum_Status_Complete();
 
@@ -96,6 +102,10 @@ BEGIN
             THEN
                 PERFORM gpReComplete_Movement_ReturnOut(inMovementId := vbId,
                                                         inSession := inSession);
+            ELSEIF vbDescId = zc_Movement_Sale()
+            THEN
+                PERFORM gpReComplete_Movement_Sale(inMovementId := vbId,
+                                                   inSession := inSession);
             ELSEIF vbDescId = zc_Movement_Check()
             THEN
                 PERFORM gpReComplete_Movement_Check(inMovementId := vbId,
@@ -114,7 +124,6 @@ BEGIN
             DROP TABLE IF EXISTS _tmpMIContainer_insert;
             DROP TABLE IF EXISTS _tmpMIReport_insert;
             DROP TABLE IF EXISTS _tmpItem;
-            
         EXCEPTION
             WHEN OTHERS THEN
                 UPDATE _Movement SET

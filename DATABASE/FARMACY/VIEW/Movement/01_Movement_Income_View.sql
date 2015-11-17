@@ -18,8 +18,8 @@ CREATE OR REPLACE VIEW Movement_Income_View AS
        , Object_From.ValueData                      AS FromName
        , MovementLinkObject_To.ObjectId             AS ToId
        , Object_To.Name                             AS ToName
-       , Object_To.JuridicalName                    AS JuridicalName
-       , Object_To.JuridicalId                      AS JuridicalId
+       , COALESCE(MovementLinkObject_Juridical.ObjectId, Object_To.JuridicalId) AS JuridicalId
+       , COALESCE(Object_Juridical.ValueData, Object_To.JuridicalName)          AS JuridicalName
        , MovementLinkObject_NDSKind.ObjectId        AS NDSKindId
        , Object_NDSKind.ValueData                   AS NDSKindName
        , ObjectFloat_NDSKind_NDS.ValueData          AS NDS
@@ -63,6 +63,11 @@ CREATE OR REPLACE VIEW Movement_Income_View AS
 
         LEFT JOIN Object_Unit_View AS Object_To ON Object_To.Id = MovementLinkObject_To.ObjectId
         
+        LEFT JOIN MovementLinkObject AS MovementLinkObject_Juridical
+                                     ON MovementLinkObject_Juridical.MovementId = Movement.Id
+                                    AND MovementLinkObject_Juridical.DescId = zc_MovementLinkObject_Juridical()
+        LEFT JOIN Object AS Object_Juridical ON Object_Juridical.Id = MovementLinkObject_Juridical.ObjectId
+        
         LEFT JOIN MovementLinkObject AS MovementLinkObject_NDSKind
                                      ON MovementLinkObject_NDSKind.MovementId = Movement.Id
                                     AND MovementLinkObject_NDSKind.DescId = zc_MovementLinkObject_NDSKind()
@@ -105,7 +110,7 @@ CREATE OR REPLACE VIEW Movement_Income_View AS
                         AND Object_Movement.DescId = zc_Object_PartionMovement()
         LEFT JOIN Container ON Container.DescId = zc_Container_SummIncomeMovementPayment()
                            AND Container.ObjectId = Object_Movement.Id
-                           AND Container.KeyValue like '%,'||Object_To.JuridicalId::TVarChar||';%'
+                           AND Container.KeyValue like '%,'||COALESCE(MovementLinkObject_Juridical.ObjectId, Object_To.JuridicalId)||';%'
     WHERE 
         Movement.DescId = zc_Movement_Income();
 

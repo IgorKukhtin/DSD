@@ -34,7 +34,7 @@ BEGIN
                                      AND Movement_Unit.DescId = zc_MovementLinkObject_Unit()
     WHERE Movement.Id = inMovementId;
 
-    IF EXISTS(SELECT 1
+    /*IF EXISTS(SELECT 1
               FROM Movement AS Movement_Inventory
                   INNER JOIN MovementItem AS MI_Inventory
                                           ON MI_Inventory.MovementId = Movement_Inventory.Id
@@ -60,7 +60,7 @@ BEGIN
               )
     THEN
         RAISE EXCEPTION 'Ошибка. По одному или более товарам есть документ переучета позже даты текущего прихода. Проведение документа запрещено!';
-    END IF;
+    END IF;*/
 
      SELECT ObjectId INTO vbJuridicalId
        FROM MovementLinkObject WHERE MovementId = inMovementId AND DescId = zc_MovementLinkObject_From();

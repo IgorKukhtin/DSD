@@ -17,6 +17,7 @@ CREATE OR REPLACE VIEW Movement_Sale_View AS
       , Object_Juridical.ValueData                                     AS JuridicalName
       , MovementLinkObject_PaidKind.ObjectId                           AS PaidKindId  
       , Object_PaidKind.ValueData                                      AS PaidKindName 
+      , MovementString_Comment.ValueData                               AS Comment
     FROM Movement 
         LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
 
@@ -49,6 +50,9 @@ CREATE OR REPLACE VIEW Movement_Sale_View AS
                                     AND MovementLinkObject_PaidKind.DescId = zc_MovementLinkObject_PaidKind()
         LEFT JOIN Object AS Object_PaidKind 
                          ON Object_PaidKind.Id = MovementLinkObject_PaidKind.ObjectId
+        LEFT JOIN MovementString AS MovementString_Comment
+                                 ON MovementString_Comment.MovementId = Movement.Id
+                                AND MovementString_Comment.DescId = zc_MovementString_Comment()
     WHERE Movement.DescId = zc_Movement_Sale();
 
 ALTER TABLE Movement_Sale_View
