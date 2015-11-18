@@ -116,7 +116,7 @@ BEGIN
      vbBoxId:= CASE WHEN inBoxCode > 0 THEN (SELECT Object.Id FROM Object WHERE Object.ObjectCode = inBoxCode AND Object.DescId = zc_Object_Box()) ELSE 0 END;
      -- определили Вес 1 ед. продукции + упаковка AND Вес упаковки для 1-ой ед. продукции
      SELECT ObjectFloat_WeightPackage.ValueData, ObjectFloat_WeightTotal.ValueData
-          , CASE WHEN ObjectFloat_WeightTotal.ValueData <> 0 AND (1 - ObjectFloat_WeightPackage.ValueData / ObjectFloat_WeightTotal.ValueData) <> 0
+          , CASE WHEN ObjectFloat_WeightTotal.ValueData <> 0 AND ObjectFloat_WeightPackage.ValueData <> 0 AND ObjectFloat_WeightTotal.ValueData > ObjectFloat_WeightPackage.ValueData
                       THEN (inRealWeight - inCountTare * inWeightTare) / (1 - ObjectFloat_WeightPackage.ValueData / ObjectFloat_WeightTotal.ValueData)
                  ELSE (inRealWeight - inCountTare * inWeightTare)
             END

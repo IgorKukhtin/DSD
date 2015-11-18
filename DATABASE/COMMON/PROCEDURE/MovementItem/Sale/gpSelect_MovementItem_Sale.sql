@@ -12,7 +12,7 @@ CREATE OR REPLACE FUNCTION gpSelect_MovementItem_Sale(
 )
 RETURNS TABLE (Id Integer, LineNum Integer, GoodsId Integer, GoodsCode Integer, GoodsName TVarChar
              , GoodsGroupNameFull TVarChar
-             , Amount TFloat, AmountChangePercent TFloat, AmountPartner TFloat, ChangePercentAmount TFloat
+             , Amount TFloat, AmountChangePercent TFloat, AmountPartner TFloat, ChangePercentAmount TFloat, TotalPercentAmount TFloat
              , Price TFloat, CountForPrice TFloat , PriceCost TFloat, SumCost TFloat, Price_Pricelist TFloat
              , HeadCount TFloat, BoxCount TFloat
              , PartionGoods TVarChar, GoodsKindId Integer, GoodsKindName  TVarChar, MeasureName TVarChar
@@ -96,6 +96,7 @@ BEGIN
            , CAST (NULL AS TFloat)      AS AmountChangePercent
            , CAST (NULL AS TFloat)      AS AmountPartner
            , CAST (NULL AS TFloat)      AS ChangePercentAmount
+           , CAST (NULL AS TFloat)      AS TotalPercentAmount
            , CAST (tmpPriceList.Price_Pricelist AS TFloat) AS Price
            , CAST (1 AS TFloat)         AS CountForPrice
            , CAST (0 AS TFloat)         AS PriceCost
@@ -176,6 +177,7 @@ BEGIN
            , MIFloat_AmountChangePercent.ValueData  AS AmountChangePercent
            , MIFloat_AmountPartner.ValueData        AS AmountPartner
            , MIFloat_ChangePercentAmount.ValueData  AS ChangePercentAmount
+           , (MovementItem.Amount - COALESCE (MIFloat_AmountChangePercent.ValueData, 0)) :: TFloat AS TotalPercentAmount
 
            , MIFloat_Price.ValueData                AS Price
            , MIFloat_CountForPrice.ValueData        AS CountForPrice
@@ -311,6 +313,7 @@ BEGIN
            , MIFloat_AmountChangePercent.ValueData  AS AmountChangePercent
            , MIFloat_AmountPartner.ValueData        AS AmountPartner
            , MIFloat_ChangePercentAmount.ValueData  AS ChangePercentAmount
+           , (MovementItem.Amount - COALESCE (MIFloat_AmountChangePercent.ValueData, 0)) :: TFloat AS TotalPercentAmount
 
            , MIFloat_Price.ValueData                AS Price
            , MIFloat_CountForPrice.ValueData        AS CountForPrice

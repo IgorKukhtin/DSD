@@ -20,16 +20,42 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_MovementItem_Sale_Value(
     IN inGoodsKindId         Integer   , -- Виды товаров
     IN inAssetId             Integer   , -- Основные средства (для которых закупается ТМЦ)
     IN inBoxId               Integer   , -- Ящики
-    IN inCountPack           TFloat    , -- Количество упаковок (расчет)
-    IN inWeightTotal         TFloat    , -- Вес 1 ед. продукции + упаковка
-    IN inWeightPack          TFloat    , -- Вес упаковки для 1-ой ед. продукции
+--    IN inCountPack           TFloat    , -- Количество упаковок (расчет)
+--    IN inWeightTotal         TFloat    , -- Вес 1 ед. продукции + упаковка
+--    IN inWeightPack          TFloat    , -- Вес упаковки для 1-ой ед. продукции
     IN inIsBarCode           Boolean   , -- 
     IN inUserId              Integer     -- пользователь
 )
 RETURNS Integer
 AS
 $BODY$
+   DECLARE vbCountPack TFloat;
+   DECLARE vbWeightTotal TFloat;
+   DECLARE vbWeightPack TFloat;
 BEGIN
+
+     -- !!!скидка - вес упаковки!!!
+     IF inIsBarCode = TRUE
+     THEN
+         -- получили значения для упаковки
+         SELECT ObjectFloat_WeightPackage.ValueData, ObjectFloat_WeightTotal.ValueData
+                INTO vbWeightPack, vbWeightTotal
+         FROM Object_GoodsByGoodsKind_View
+              LEFT JOIN ObjectFloat AS ObjectFloat_WeightPackage
+                                    ON ObjectFloat_WeightPackage.ObjectId = Object_GoodsByGoodsKind_View.Id 
+                                   AND ObjectFloat_WeightPackage.DescId = zc_ObjectFloat_GoodsByGoodsKind_WeightPackage()
+              LEFT JOIN ObjectFloat AS ObjectFloat_WeightTotal
+                                    ON ObjectFloat_WeightTotal.ObjectId = Object_GoodsByGoodsKind_View.Id 
+                                   AND ObjectFloat_WeightTotal.DescId = zc_ObjectFloat_GoodsByGoodsKind_WeightTotal()
+         WHERE Object_GoodsByGoodsKind_View.GoodsId = inGoodsId 
+           AND Object_GoodsByGoodsKind_View.GoodsKindId = inGoodsKindId;
+         -- расчет кол-во шт. упаковки (пока округление до 4-х знаков)
+         vbCountPack:= CASE WHEN vbWeightTotal <> 0
+                                 THEN CAST (inAmount / vbWeightTotal AS NUMERIC (16, 4))
+                            ELSE 0
+                       END;
+     END IF;
+
      -- сохранили
      SELECT tmp.ioId INTO ioId
      FROM lpInsertUpdate_MovementItem_Sale (ioId                 := ioId
@@ -47,10 +73,12 @@ BEGIN
                                           , inGoodsKindId        := inGoodsKindId
                                           , inAssetId            := inAssetId
                                           , inBoxId              := inBoxId
-                                          , inCountPack          := inCountPack
-                                          , inWeightTotal        := inWeightTotal
-                                          , inWeightPack         := inWeightPack
+
+                                          , inCountPack          := COALESCE (vbCountPack, 0)
+                                          , inWeightTotal        := COALESCE (vbWeightTotal,0)
+                                          , inWeightPack         := COALESCE (vbWeightPack,0)
                                           , inIsBarCode          := inIsBarCode
+
                                           , inUserId             := inUserId
                                            ) AS tmp;
 

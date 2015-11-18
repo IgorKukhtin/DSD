@@ -67,6 +67,10 @@ BEGIN
                                           , inGoodsKindId        := inGoodsKindId
                                           , inAssetId            := inAssetId
                                           , inBoxId              := inBoxId
+                                          , inCountPack          := COALESCE ((SELECT ValueData FROM MovementItemFloat WHERE MovementItemId = ioId AND DescId = zc_MIFloat_CountPack()), 0)
+                                          , inWeightTotal        := COALESCE ((SELECT ValueData FROM MovementItemFloat WHERE MovementItemId = ioId AND DescId = zc_MIFloat_WeightTotal()), 0)
+                                          , inWeightPack         := COALESCE ((SELECT ValueData FROM MovementItemFloat WHERE MovementItemId = ioId AND DescId = zc_MIFloat_WeightPack()), 0)
+                                          , inIsBarCode          := COALESCE ((SELECT ValueData FROM MovementItemBoolean WHERE MovementItemId = ioId AND DescId = zc_MIBoolean_BarCode()), FALSE)
                                           , inUserId             := vbUserId
                                            ) AS tmp;
 

@@ -6,7 +6,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_Sale(
  INOUT ioId                      Integer   , -- Ключ объекта <Элемент документа>
     IN inMovementId              Integer   , -- Ключ объекта <Документ>
     IN inGoodsId                 Integer   , -- Товары
-    IN inAmount                  TFloat    , -- Количество
+ INOUT ioAmount                  TFloat    , -- Количество
  INOUT ioAmountPartner           TFloat    , -- Количество у контрагента
    OUT outAmountChangePercent    TFloat    , -- Количество c учетом % скидки (!!!расчет!!!)
     IN inChangePercentAmount     TFloat    , -- % скидки для кол-ва (!!!из контрола!!!)
@@ -31,52 +31,74 @@ RETURNS RECORD
 AS
 $BODY$
    DECLARE vbUserId Integer;
+   DECLARE vbMeasureId Integer;
+   DECLARE vbIsBarCode Boolean;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MI_Sale());
 
+     -- получили значение
+     vbMeasureId:= (SELECT ObjectLink.ObjectId FROM ObjectLink WHERE ObjectLink.ObjectId = inGoodsId AND ObjectLink.DescId = zc_ObjectLink_Goods_Measure());
+     -- получили значение
+     vbIsBarCode:= COALESCE ((SELECT MIBoolean.ValueData FROM MovementItemBoolean AS MIBoolean WHERE MIBoolean.MovementItemId = ioId AND MIBoolean.DescId = zc_MIBoolean_BarCode()), FALSE);
 
+     -- !!!скидка - вес упаковки!!!
+     IF vbIsBarCode = TRUE
+     THEN
+         -- проверка: если вводится кол склад надо сообщить что оно расчетное, вводить нельзя
+         IF ioId <> 0 AND EXISTS (SELECT 1 FROM MovementItemFloat AS MIFloat WHERE MIFloat.MovementItemId = ioId AND MIFloat.DescId = zc_MIFloat_AmountPartner() AND MIFloat.ValueData = ioAmountPartner)
+                      AND NOT EXISTS (SELECT 1 FROM MovementItem AS MI WHERE MI.Id = ioId AND MI.DescId = zc_MI_Master() AND MI.Amount = ioAmount)
+         THEN
+             RAISE EXCEPTION 'Ошибка.Ввод запрещен, т.к. <Кол-во склад> является расчетным если установлен признак <Скидка скан. упак.>.';
+         END IF;
+
+         -- получили значения для упаковки
+         SELECT ObjectFloat_WeightPackage.ValueData, ObjectFloat_WeightTotal.ValueData
+                INTO outWeightPack, outWeightTotal
+         FROM Object_GoodsByGoodsKind_View
+              LEFT JOIN ObjectFloat AS ObjectFloat_WeightPackage
+                                    ON ObjectFloat_WeightPackage.ObjectId = Object_GoodsByGoodsKind_View.Id 
+                                   AND ObjectFloat_WeightPackage.DescId = zc_ObjectFloat_GoodsByGoodsKind_WeightPackage()
+              LEFT JOIN ObjectFloat AS ObjectFloat_WeightTotal
+                                    ON ObjectFloat_WeightTotal.ObjectId = Object_GoodsByGoodsKind_View.Id 
+                                   AND ObjectFloat_WeightTotal.DescId = zc_ObjectFloat_GoodsByGoodsKind_WeightTotal()
+         WHERE Object_GoodsByGoodsKind_View.GoodsId = inGoodsId 
+           AND Object_GoodsByGoodsKind_View.GoodsKindId = inGoodsKindId;
+         -- расчет кол-во шт. упаковки (пока округление до 4-х знаков)
+         outCountPack:= CASE WHEN outWeightTotal <> 0 AND outWeightPack <> 0 AND outWeightTotal > outWeightPack
+                                  THEN CAST (CAST (ioAmountPartner / (1 - outWeightPack / outWeightTotal) AS NUMERIC (16, 4)) / outWeightTotal AS NUMERIC (16, 4))
+                             ELSE 0
+                        END;
+
+         -- !!!только в этом слуаче расчет "кол-во склад"!!!
+         ioAmount:= ioAmountPartner + CAST (outCountPack * COALESCE (outWeightPack, 0) AS NUMERIC (16, 4));
+         -- !!!обнуление "других" скидок!!!
+         ioChangePercentAmount:= 0;
+         inIsChangePercentAmount:= FALSE;
+         -- !!!расчет!!! - Количество c учетом % скидки
+         outAmountChangePercent:= ioAmountPartner;
+
+     ELSE
      -- !!!из контрола!!! - % скидки для кол-ва
      IF inIsChangePercentAmount = TRUE
      THEN
-         IF EXISTS (SELECT ObjectId FROM ObjectLink WHERE ObjectId = inGoodsId AND ChildObjectId = zc_Measure_Kg())
+         IF vbMeasureId = zc_Measure_Kg()
          THEN ioChangePercentAmount:= inChangePercentAmount; -- !!!из контрола!!!
          ELSE ioChangePercentAmount:= 0;
          END IF;
      END IF;
-
      -- !!!расчет!!! - Количество c учетом % скидки
-     outAmountChangePercent:= CAST (inAmount * (1 - COALESCE (ioChangePercentAmount, 0) / 100) AS NUMERIC (16, 3));
+     outAmountChangePercent:= CAST (ioAmount * (1 - COALESCE (ioChangePercentAmount, 0) / 100) AS NUMERIC (16, 3));
+
+     END IF;
+
 
      IF inIsCalcAmountPartner = TRUE
      THEN
+         -- !!!расчет!!! - Количество c у покупателя
          ioAmountPartner:= outAmountChangePercent;
      END IF;
 
-     -- расчет упаковки
-     SELECT COALESCE (ObjectFloat_WeightPackage.ValueData,0)::TFloat  AS WeightPack
-          , COALESCE (ObjectFloat_WeightTotal.ValueData,0)  ::TFloat  AS WeightTotal
-         into outWeightPack, outWeightTotal
-     FROM Object_GoodsByGoodsKind_View
-           LEFT JOIN ObjectFloat AS ObjectFloat_WeightPackage
-                                 ON ObjectFloat_WeightPackage.ObjectId = Object_GoodsByGoodsKind_View.Id 
-                                AND ObjectFloat_WeightPackage.DescId = zc_ObjectFloat_GoodsByGoodsKind_WeightPackage()
-
-           LEFT JOIN ObjectFloat AS ObjectFloat_WeightTotal
-                                 ON ObjectFloat_WeightTotal.ObjectId = Object_GoodsByGoodsKind_View.Id 
-                                AND ObjectFloat_WeightTotal.DescId = zc_ObjectFloat_GoodsByGoodsKind_WeightTotal()
-      WHERE Object_GoodsByGoodsKind_View.GoodsId = inGoodsId 
-        AND Object_GoodsByGoodsKind_View.GoodsKindId = inGoodsKindId;
-
-      IF COALESCE (outWeightPack,0) <> 0 AND 
-         COALESCE (outWeightTotal,0) <> 0 AND 
-         COALESCE ((1-outWeightPack/outWeightTotal), 0) <> 0
-      THEN 
-          outCountPack:= CAST (((ioAmountPartner/(1-outWeightPack/outWeightTotal))/ outWeightTotal) AS NUMERIC (16, 4));
-      ELSE
-          outCountPack:= 0;
-      END IF;
-      
 
      -- сохранили
      SELECT tmp.ioId, tmp.ioCountForPrice, tmp.outAmountSumm
@@ -84,7 +106,7 @@ BEGIN
      FROM lpInsertUpdate_MovementItem_Sale (ioId                 := ioId
                                           , inMovementId         := inMovementId
                                           , inGoodsId            := inGoodsId
-                                          , inAmount             := inAmount
+                                          , inAmount             := ioAmount
                                           , inAmountPartner      := ioAmountPartner
                                           , inAmountChangePercent:= outAmountChangePercent
                                           , inChangePercentAmount:= ioChangePercentAmount
@@ -97,10 +119,10 @@ BEGIN
                                           , inAssetId            := inAssetId
                                           , inBoxId              := inBoxId
                                           
-                                          , inCountPack          := COALESCE (outCountPack, 0) ::TFloat
-                                          , inWeightTotal        := COALESCE (outWeightTotal,0) ::TFloat
-                                          , inWeightPack         := COALESCE (outWeightPack,0) ::TFloat
-                                          , inIsBarCode          := COALESCE ((SELECT ValueData FROM MovementItemBoolean WHERE MovementItemId = ioId AND DescId = zc_MIBoolean_BarCode()), FALSE) 
+                                          , inCountPack          := COALESCE (outCountPack, 0)
+                                          , inWeightTotal        := COALESCE (outWeightTotal, 0)
+                                          , inWeightPack         := COALESCE (outWeightPack, 0)
+                                          , inIsBarCode          := vbIsBarCode
                                                                                                                               
                                           , inUserId             := vbUserId
                                            ) AS tmp;
@@ -125,4 +147,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpInsertUpdate_MovementItem_Sale (ioId:= 0, inMovementId:= 10, inGoodsId:= 1, inAmount:= 0, inAmountPartner:= 0, inAmountPacker:= 0, inPrice:= 1, inCountForPrice:= 1, inLiveWeight:= 0, inHeadCount:= 0, inPartionGoods:= '', inGoodsKindId:= 0, inAssetId:= 0, inSession:= '2')
+-- SELECT * FROM gpInsertUpdate_MovementItem_Sale (ioId:= 0, inMovementId:= 10, inGoodsId:= 1, ioAmount:= 0, inAmountPartner:= 0, inAmountPacker:= 0, inPrice:= 1, inCountForPrice:= 1, inLiveWeight:= 0, inHeadCount:= 0, inPartionGoods:= '', inGoodsKindId:= 0, inAssetId:= 0, inSession:= '2')

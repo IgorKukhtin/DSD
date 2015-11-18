@@ -15,17 +15,17 @@ inherited Report_GoodsMI_InternalForm: TReport_GoodsMI_InternalForm
     Height = 253
     TabOrder = 3
     ExplicitTop = 99
-    ExplicitWidth = 1143
+    ExplicitWidth = 1020
     ExplicitHeight = 253
     ClientRectBottom = 253
     ClientRectRight = 1020
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 1143
+      ExplicitWidth = 1020
       ExplicitHeight = 253
       inherited cxGrid: TcxGrid
         Width = 1020
         Height = 253
-        ExplicitWidth = 1143
+        ExplicitWidth = 1020
         ExplicitHeight = 253
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
@@ -513,7 +513,7 @@ inherited Report_GoodsMI_InternalForm: TReport_GoodsMI_InternalForm
   inherited Panel: TPanel
     Width = 1020
     Height = 73
-    ExplicitWidth = 1143
+    ExplicitWidth = 1020
     ExplicitHeight = 73
     inherited deStart: TcxDateEdit
       Left = 121
@@ -790,9 +790,7 @@ inherited Report_GoodsMI_InternalForm: TReport_GoodsMI_InternalForm
       DataSets = <
         item
           UserName = 'frxDBDItems'
-          IndexFieldNames = 
-            'JuridicalName;PartnerName;GoodsGroupNameFull;GoodsName;GoodsKind' +
-            'Name;PartionGoods'
+          IndexFieldNames = 'GoodsGroupNameFull;GoodsName;GoodsKindName;PartionGoods'
           GridView = cxGridDBTableView
         end>
       Params = <

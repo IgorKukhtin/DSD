@@ -196,6 +196,7 @@ type
     CountPack: TcxGridDBColumn;
     WeightTotal: TcxGridDBColumn;
     WeightPack: TcxGridDBColumn;
+    TotalPercentAmount: TcxGridDBColumn;
   private
     { Private declarations }
   public
