@@ -1,4 +1,4 @@
--- Function: gpInsertUpdate_Object_Car(Integer,Integer,TVarChar,TVarChar,TDateTime,TDateTime,Integer,Integer,Integer,Integer,Integer,Integer,TVarChar)
+-- Function: gpInsertUpdate_Object_(Integer,Integer,TVarChar,TVarChar,TDateTime,TDateTime,Integer,Integer,Integer,Integer,Integer,Integer,TVarChar)
 
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_BranchLink (Integer, Integer, TVarChar, Integer, Integer, TVarChar);
 

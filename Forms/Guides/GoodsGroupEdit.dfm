@@ -2,8 +2,8 @@
   Left = 0
   Top = 0
   Caption = #1044#1086#1073#1072#1074#1080#1090#1100'/'#1048#1079#1084#1077#1085#1080#1090#1100' <'#1043#1088#1091#1087#1087#1091' '#1090#1086#1074#1072#1088#1086#1074'>'
-  ClientHeight = 417
-  ClientWidth = 302
+  ClientHeight = 464
+  ClientWidth = 310
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -29,7 +29,7 @@
   end
   object cxButton1: TcxButton
     Left = 50
-    Top = 386
+    Top = 431
     Width = 75
     Height = 25
     Action = dsdInsertUpdateGuides
@@ -38,7 +38,7 @@
   end
   object cxButton2: TcxButton
     Left = 194
-    Top = 386
+    Top = 431
     Width = 75
     Height = 25
     Action = dsdFormClose
@@ -95,12 +95,12 @@
   end
   object cxLabel4: TcxLabel
     Left = 8
-    Top = 232
+    Top = 277
     Caption = #1058#1086#1088#1075#1086#1074#1072#1103' '#1084#1072#1088#1082#1072
   end
   object ceTradeMark: TcxButtonEdit
     Left = 8
-    Top = 250
+    Top = 295
     Properties.Buttons = <
       item
         Default = True
@@ -112,12 +112,12 @@
   end
   object cxLabel5: TcxLabel
     Left = 8
-    Top = 278
+    Top = 323
     Caption = #1055#1088#1080#1079#1085#1072#1082' '#1090#1086#1074#1072#1088#1072
   end
   object ceGoodsTag: TcxButtonEdit
     Left = 8
-    Top = 297
+    Top = 342
     Properties.Buttons = <
       item
         Default = True
@@ -147,12 +147,12 @@
   end
   object cxLabel7: TcxLabel
     Left = 8
-    Top = 324
+    Top = 369
     Caption = #1055#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1077#1085#1085#1072#1103' '#1087#1083#1086#1097#1072#1076#1082#1072
   end
   object ceGoodsPlatform: TcxButtonEdit
     Left = 8
-    Top = 345
+    Top = 390
     Properties.Buttons = <
       item
         Default = True
@@ -160,6 +160,22 @@
       end>
     Properties.ReadOnly = True
     TabOrder = 17
+    Width = 273
+  end
+  object cxLabel8: TcxLabel
+    Left = 8
+    Top = 234
+    Caption = #1059#1055' '#1089#1090#1072#1090#1100#1103' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
+  end
+  object ceInfoMoney: TcxButtonEdit
+    Left = 8
+    Top = 253
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    TabOrder = 19
     Width = 273
   end
   object ActionList: TActionList
@@ -260,6 +276,13 @@
         Name = 'inGoodsPlatformId'
         Value = Null
         Component = GoodsPlatformGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inInfoMoneyId'
+        Value = Null
+        Component = InfoMoneyGuides
         ComponentItem = 'Key'
         ParamType = ptInput
       end>
@@ -377,6 +400,19 @@
         Component = GoodsPlatformGuides
         ComponentItem = 'TextValue'
         DataType = ftString
+      end
+      item
+        Name = 'InfoMoneyId'
+        Value = Null
+        Component = InfoMoneyGuides
+        ComponentItem = 'Key'
+      end
+      item
+        Name = 'InfoMoneyName'
+        Value = Null
+        Component = InfoMoneyGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
       end>
     PackSize = 1
     Left = 160
@@ -471,7 +507,7 @@
         DataType = ftString
       end>
     Left = 176
-    Top = 241
+    Top = 286
   end
   object GoodsTagGuides: TdsdGuides
     KeyField = 'Id'
@@ -508,7 +544,7 @@
         DataType = ftString
       end>
     Left = 128
-    Top = 281
+    Top = 326
   end
   object GoodsGroupAnalystGuides: TdsdGuides
     KeyField = 'Id'
@@ -556,6 +592,30 @@
         DataType = ftString
       end>
     Left = 160
-    Top = 345
+    Top = 390
+  end
+  object InfoMoneyGuides: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = ceInfoMoney
+    FormNameParam.Value = 'TInfoMoney_ObjectForm'
+    FormNameParam.DataType = ftString
+    FormName = 'TInfoMoney_ObjectForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = InfoMoneyGuides
+        ComponentItem = 'Key'
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = InfoMoneyGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+      end>
+    Left = 80
+    Top = 235
   end
 end

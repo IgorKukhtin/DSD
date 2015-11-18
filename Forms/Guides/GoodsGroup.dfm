@@ -3,7 +3,7 @@ object GoodsGroupForm: TGoodsGroupForm
   Top = 0
   Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1043#1088#1091#1087#1087#1099' '#1090#1086#1074#1072#1088#1086#1074'>'
   ClientHeight = 376
-  ClientWidth = 600
+  ClientWidth = 661
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -20,7 +20,7 @@ object GoodsGroupForm: TGoodsGroupForm
   object cxDBTreeList: TcxDBTreeList
     Left = 0
     Top = 26
-    Width = 600
+    Width = 661
     Height = 350
     Align = alClient
     Bands = <
@@ -42,7 +42,7 @@ object GoodsGroupForm: TGoodsGroupForm
     RootValue = -1
     Styles.StyleSheet = dmMain.cxTreeListStyleSheet
     TabOrder = 4
-    ExplicitWidth = 390
+    ExplicitWidth = 600
     object Name: TcxDBTreeListColumn
       Caption.Text = #1053#1072#1079#1074#1072#1085#1080#1077
       DataBinding.FieldName = 'Name'
@@ -99,12 +99,22 @@ object GoodsGroupForm: TGoodsGroupForm
       Summary.FooterSummaryItems = <>
       Summary.GroupFooterSummaryItems = <>
     end
+    object InfoMoneyName: TcxDBTreeListColumn
+      Caption.Text = #1059#1055' '#1089#1090#1072#1090#1100#1103
+      DataBinding.FieldName = 'InfoMoneyName'
+      Width = 150
+      Position.ColIndex = 6
+      Position.RowIndex = 0
+      Position.BandIndex = 0
+      Summary.FooterSummaryItems = <>
+      Summary.GroupFooterSummaryItems = <>
+    end
     object isErased: TcxDBTreeListColumn
       PropertiesClassName = 'TcxCheckBoxProperties'
       Caption.Text = #1059#1076#1072#1083#1077#1085
       DataBinding.FieldName = 'isErased'
       Width = 60
-      Position.ColIndex = 6
+      Position.ColIndex = 7
       Position.RowIndex = 0
       Position.BandIndex = 0
       Summary.FooterSummaryItems = <>

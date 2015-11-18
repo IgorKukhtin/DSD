@@ -12,6 +12,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, isErased boolean
              , GoodsTagId Integer, GoodsTagName TVarChar
              , GoodsGroupAnalystId Integer, GoodsGroupAnalystName TVarChar
              , GoodsPlatformId Integer, GoodsPlatformName TVarChar
+             , InfoMoneyCode Integer, InfoMoneyGroupName TVarChar, InfoMoneyDestinationName TVarChar, InfoMoneyName TVarChar, InfoMoneyId Integer
              ) AS
 $BODY$BEGIN
 
@@ -40,7 +41,13 @@ $BODY$BEGIN
          , Object_GoodsGroupAnalyst.ValueData     AS GoodsGroupAnalystName   
 
          , Object_GoodsPlatform.Id            AS GoodsPlatformId
-         , Object_GoodsPlatform.ValueData     AS GoodsPlatformName            
+         , Object_GoodsPlatform.ValueData     AS GoodsPlatformName       
+
+         , Object_InfoMoney_View.InfoMoneyCode
+         , Object_InfoMoney_View.InfoMoneyGroupName
+         , Object_InfoMoney_View.InfoMoneyDestinationName
+         , Object_InfoMoney_View.InfoMoneyName
+         , Object_InfoMoney_View.InfoMoneyId    
          
      FROM Object AS Object_GoodsGroup
            LEFT JOIN ObjectLink AS ObjectLink_GoodsGroup
@@ -72,6 +79,11 @@ $BODY$BEGIN
                                 ON ObjectLink_GoodsPlatform.ObjectId = Object_GoodsGroup.Id
                                AND ObjectLink_GoodsPlatform.DescId = zc_ObjectLink_GoodsGroup_GoodsPlatform()
            LEFT JOIN Object AS Object_GoodsPlatform ON Object_GoodsPlatform.Id = ObjectLink_GoodsPlatform.ChildObjectId  
+
+           LEFT JOIN ObjectLink AS ObjectLink_GoodsGroup_InfoMoney
+                                ON ObjectLink_GoodsGroup_InfoMoney.ObjectId = Object_GoodsGroup.Id 
+                               AND ObjectLink_GoodsGroup_InfoMoney.DescId = zc_ObjectLink_GoodsGroup_InfoMoney()
+           LEFT JOIN Object_InfoMoney_View ON Object_InfoMoney_View.InfoMoneyId = ObjectLink_GoodsGroup_InfoMoney.ChildObjectId
        
     WHERE Object_GoodsGroup.DescId = zc_Object_GoodsGroup();
   
