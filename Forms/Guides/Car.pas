@@ -65,6 +65,7 @@ type
     clJuridicalName: TcxGridDBColumn;
     ProtocolOpenForm: TdsdOpenForm;
     bbProtocolOpenForm: TdxBarButton;
+    Comment: TcxGridDBColumn;
   private
     { Private declarations }
   public

@@ -2,8 +2,8 @@
   Left = 0
   Top = 0
   Caption = #1044#1086#1073#1072#1074#1080#1090#1100'/'#1048#1079#1084#1077#1085#1080#1090#1100' <'#1040#1074#1090#1086#1084#1086#1073#1080#1083#1100'>'
-  ClientHeight = 424
-  ClientWidth = 354
+  ClientHeight = 455
+  ClientWidth = 357
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -29,7 +29,7 @@
   end
   object cxButton1: TcxButton
     Left = 56
-    Top = 380
+    Top = 422
     Width = 75
     Height = 25
     Action = InsertUpdateGuides
@@ -39,7 +39,7 @@
   end
   object cxButton2: TcxButton
     Left = 230
-    Top = 380
+    Top = 422
     Width = 75
     Height = 25
     Action = dsdFormClose
@@ -174,6 +174,17 @@
     TabOrder = 19
     Width = 273
   end
+  object cxLabel9: TcxLabel
+    Left = 32
+    Top = 362
+    Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
+  end
+  object ceComment: TcxTextEdit
+    Left = 32
+    Top = 379
+    TabOrder = 21
+    Width = 273
+  end
   object ActionList: TActionList
     Left = 240
     Top = 80
@@ -193,6 +204,7 @@
     object InsertUpdateGuides: TdsdInsertUpdateGuides
       Category = 'DSDLib'
       MoveParams = <>
+      PostDataSetBeforeExecute = False
       StoredProc = spInsertUpdate
       StoredProcList = <
         item
@@ -202,6 +214,7 @@
     end
     object dsdFormClose: TdsdFormClose
       MoveParams = <>
+      PostDataSetBeforeExecute = False
     end
   end
   object spInsertUpdate: TdsdStoredProc
@@ -233,6 +246,13 @@
         Name = 'inRegistrationCertificate'
         Value = ''
         Component = ceRegistrationCertificate
+        DataType = ftString
+        ParamType = ptInput
+      end
+      item
+        Name = 'inComment'
+        Value = Null
+        Component = ceComment
         DataType = ftString
         ParamType = ptInput
       end
@@ -327,6 +347,12 @@
         Name = 'RegistrationCertificate'
         Value = ''
         Component = ceRegistrationCertificate
+        DataType = ftString
+      end
+      item
+        Name = 'Comment'
+        Value = Null
+        Component = ceComment
         DataType = ftString
       end
       item

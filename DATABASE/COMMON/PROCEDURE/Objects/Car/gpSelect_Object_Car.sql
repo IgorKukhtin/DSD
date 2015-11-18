@@ -6,7 +6,7 @@ CREATE OR REPLACE FUNCTION gpSelect_Object_Car(
     IN inSession     TVarChar       -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, NameAll TVarChar 
-             , RegistrationCertificate TVarChar
+             , RegistrationCertificate TVarChar, Comment TVarChar
              , CarModelId Integer, CarModelCode Integer, CarModelName TVarChar
              , UnitId Integer, UnitCode Integer, UnitName TVarChar
              , PersonalDriverId Integer, PersonalDriverCode Integer, PersonalDriverName TVarChar
@@ -34,6 +34,7 @@ BEGIN
            , (COALESCE (Object_CarModel.ValueData, '') || ' ' || COALESCE (Object_Car.ValueData, '')) :: TVarChar AS NameAll
            
            , RegistrationCertificate.ValueData  AS RegistrationCertificate
+           , ObjectString_Comment.ValueData        AS Comment
            
            , Object_CarModel.Id         AS CarModelId
            , Object_CarModel.ObjectCode AS CarModelCode
@@ -64,8 +65,12 @@ BEGIN
        FROM Object AS Object_Car
             LEFT JOIN (SELECT AccessKeyId FROM Object_RoleAccessKey_View WHERE UserId = vbUserId GROUP BY AccessKeyId) AS tmpRoleAccessKey ON NOT vbAccessKeyAll AND tmpRoleAccessKey.AccessKeyId = Object_Car.AccessKeyId
        
-            LEFT JOIN ObjectString AS RegistrationCertificate ON RegistrationCertificate.ObjectId = Object_Car.Id 
-                                                             AND RegistrationCertificate.DescId = zc_ObjectString_Car_RegistrationCertificate()
+            LEFT JOIN ObjectString AS RegistrationCertificate 
+                                   ON RegistrationCertificate.ObjectId = Object_Car.Id 
+                                  AND RegistrationCertificate.DescId = zc_ObjectString_Car_RegistrationCertificate()
+            LEFT JOIN ObjectString AS ObjectString_Comment
+                                   ON ObjectString_Comment.ObjectId = Object_Car.Id
+                                  AND ObjectString_Comment.DescId = zc_ObjectString_Car_Comment()
                                                              
             LEFT JOIN ObjectLink AS Car_CarModel ON Car_CarModel.ObjectId = Object_Car.Id
                                                 AND Car_CarModel.DescId = zc_ObjectLink_Car_CarModel()

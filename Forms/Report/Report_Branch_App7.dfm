@@ -59,6 +59,81 @@ inherited Report_Branch_App7Form: TReport_Branch_App7Form
             item
               Format = ',0.####'
               Kind = skSum
+            end
+            item
+              Format = ',0.##'
+              Kind = skSum
+              Column = GoodsSummStart
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = JuridicalSummStart
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = GoodsSummEnd
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = GoodsSummIn
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = GoodsSummOut
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = GoodsSummSale_SF
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = GoodsSummReturnIn_SF
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = CashSummStart
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = CashSummOut
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = CashSummIn
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = CashSummEnd
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = CashAmount
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = JuridicalSummOut
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = JuridicalSummIn
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = JuridicalSummEnd
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -92,6 +167,81 @@ inherited Report_Branch_App7Form: TReport_Branch_App7Form
             item
               Format = ',0.####'
               Kind = skSum
+            end
+            item
+              Format = ',0.##'
+              Kind = skSum
+              Column = GoodsSummStart
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = JuridicalSummStart
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = GoodsSummEnd
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = GoodsSummIn
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = GoodsSummOut
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = GoodsSummSale_SF
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = GoodsSummReturnIn_SF
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = CashSummStart
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = CashSummOut
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = CashSummIn
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = CashSummEnd
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = CashAmount
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = JuridicalSummOut
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = JuridicalSummIn
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = JuridicalSummEnd
             end>
           OptionsData.CancelOnExit = True
           OptionsData.Deleting = False
