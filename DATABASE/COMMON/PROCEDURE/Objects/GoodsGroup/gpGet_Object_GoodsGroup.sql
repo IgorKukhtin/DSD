@@ -13,6 +13,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , GoodsTagId Integer, GoodsTagName TVarChar
              , GoodsGroupAnalystId Integer, GoodsGroupAnalystName TVarChar
              , GoodsPlatformId Integer, GoodsPlatformName TVarChar
+             , InfoMoneyId Integer, InfoMoneyName TVarChar
              )
 AS
 $BODY$
@@ -42,6 +43,9 @@ BEGIN
 
            , CAST (0 as Integer)    AS GoodsPlatformId
            , CAST ('' as TVarChar)  AS GoodsPlatformName
+
+           , CAST (0 as Integer)   AS InfoMoneyId
+           , CAST ('' as TVarChar) AS InfoMoneyName
            ;
    ELSE
        RETURN QUERY 
@@ -61,10 +65,13 @@ BEGIN
            , Object_GoodsTag.ValueData     AS GoodsTagName 
            
            , Object_GoodsGroupAnalyst.Id             AS GoodsGroupAnalystId
-           , Object_GoodsGroupAnalyst.ValueData     AS GoodsGroupAnalystName    
+           , Object_GoodsGroupAnalyst.ValueData      AS GoodsGroupAnalystName    
 
            , Object_GoodsPlatform.Id            AS GoodsPlatformId
-           , Object_GoodsPlatform.ValueData     AS GoodsPlatformName      
+           , Object_GoodsPlatform.ValueData     AS GoodsPlatformName   
+
+           , Object_InfoMoney.Id          AS InfoMoneyId
+           , Object_InfoMoney.ValueData   AS InfoMoneyName
 
        FROM OBJECT AS Object_GoodsGroup
            LEFT JOIN ObjectLink AS ObjectLink_GoodsGroup
@@ -96,6 +103,11 @@ BEGIN
                                 ON ObjectLink_GoodsPlatform.ObjectId = Object_GoodsGroup.Id
                                AND ObjectLink_GoodsPlatform.DescId = zc_ObjectLink_GoodsGroup_GoodsPlatform()
            LEFT JOIN Object AS Object_GoodsPlatform ON Object_GoodsPlatform.Id = ObjectLink_GoodsPlatform.ChildObjectId  
+
+           LEFT JOIN ObjectLink AS ObjectLink_GoodsGroup_InfoMoney
+                                ON ObjectLink_GoodsGroup_InfoMoney.ObjectId = Object_GoodsGroup.Id 
+                               AND ObjectLink_GoodsGroup_InfoMoney.DescId = zc_ObjectLink_GoodsGroup_InfoMoney()
+           LEFT JOIN Object AS Object_InfoMoney ON Object_InfoMoney.Id = ObjectLink_GoodsGroup_InfoMoney.ChildObjectId
            
        WHERE Object_GoodsGroup.Id = inId;
    END IF;

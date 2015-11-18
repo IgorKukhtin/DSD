@@ -49,6 +49,7 @@ type
     GoodsTagName: TcxDBTreeListColumn;
     GoodsGroupAnalystName: TcxDBTreeListColumn;
     GoodsPlatformName: TcxDBTreeListColumn;
+    InfoMoneyName: TcxDBTreeListColumn;
   private
     { Private declarations }
   public

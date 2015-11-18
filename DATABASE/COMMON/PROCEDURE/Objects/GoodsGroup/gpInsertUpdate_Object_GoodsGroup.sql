@@ -4,6 +4,8 @@ DROP FUNCTION IF EXISTS gpInsertUpdate_Object_GoodsGroup (Integer, Integer, TVar
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_GoodsGroup (Integer, Integer, TVarChar, Integer, Integer, Integer, Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_GoodsGroup (Integer, Integer, TVarChar, Integer, Integer, Integer, Integer, Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_GoodsGroup (Integer, Integer, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_GoodsGroup (Integer, Integer, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar);
+
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_GoodsGroup(
  INOUT ioId                  Integer   ,    -- ключ объекта <Группа товаров>
@@ -15,6 +17,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_GoodsGroup(
     IN inTradeMarkId         Integer   ,    -- ссылка на Торговую марку
     IN inGoodsTagId          Integer   ,    -- ссылка на Признак товара
     IN inGoodsPlatformId     Integer   ,    -- ссылка на Производственную площадку
+    IN inInfoMoneyId         Integer   ,    -- Управленческие аналитики
     IN inSession             TVarChar       -- сессия пользователя
 )
   RETURNS integer AS
@@ -61,6 +64,9 @@ BEGIN
 
    -- сохранили связь с <>
    PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_GoodsGroup_GoodsPlatform(), ioId, inGoodsPlatformId);
+
+   -- сохранили связь с <Управленческие аналитики>
+   PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_GoodsGroup_InfoMoney(), ioId, inInfoMoneyId);
 
 
    -- изменили свойство <Полное название группы> у всех товаров этой группы
@@ -497,19 +503,95 @@ BEGIN
    END IF; -- inGoodsPlatformId <> 0
 
 
+   IF inInfoMoneyId <> 0
+   THEN
+   -- изменили свойство <УП статью> у всех товаров этой группы
+   PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Goods_InfoMoney(), ObjectLink.ObjectId, inInfoMoneyId)
+   FROM ObjectLink
+   WHERE DescId = zc_ObjectLink_Goods_GoodsGroup()
+     AND ChildObjectId IN -- !!! опускаемся на все уровни вниз !!!!
+                     (SELECT ioId
+                     UNION ALL
+                      SELECT ObjectLink.ObjectId
+                      FROM ObjectLink
+                      WHERE ObjectLink.DescId = zc_ObjectLink_GoodsGroup_Parent()
+                        AND ObjectLink.ChildObjectId = ioId
+                     UNION ALL
+                      SELECT ObjectLink_Child1.ObjectId
+                      FROM ObjectLink
+                           JOIN ObjectLink AS ObjectLink_Child1 ON ObjectLink_Child1.ChildObjectId = ObjectLink.ObjectId
+                                                               AND ObjectLink_Child1.DescId = zc_ObjectLink_GoodsGroup_Parent()
+                      WHERE ObjectLink.DescId = zc_ObjectLink_GoodsGroup_Parent()
+                        AND ObjectLink.ChildObjectId = ioId
+                     UNION ALL
+                      SELECT ObjectLink_Child2.ObjectId
+                      FROM ObjectLink
+                           JOIN ObjectLink AS ObjectLink_Child1 ON ObjectLink_Child1.ChildObjectId = ObjectLink.ObjectId
+                                                               AND ObjectLink_Child1.DescId = zc_ObjectLink_GoodsGroup_Parent()
+                           JOIN ObjectLink AS ObjectLink_Child2 ON ObjectLink_Child2.ChildObjectId = ObjectLink_Child1.ObjectId
+                                                               AND ObjectLink_Child2.DescId = zc_ObjectLink_GoodsGroup_Parent()
+                      WHERE ObjectLink.DescId = zc_ObjectLink_GoodsGroup_Parent()
+                        AND ObjectLink.ChildObjectId = ioId
+                     UNION ALL
+                      SELECT ObjectLink_Child3.ObjectId
+                      FROM ObjectLink
+                           JOIN ObjectLink AS ObjectLink_Child1 ON ObjectLink_Child1.ChildObjectId = ObjectLink.ObjectId
+                                                               AND ObjectLink_Child1.DescId = zc_ObjectLink_GoodsGroup_Parent()
+                           JOIN ObjectLink AS ObjectLink_Child2 ON ObjectLink_Child2.ChildObjectId = ObjectLink_Child1.ObjectId
+                                                               AND ObjectLink_Child2.DescId = zc_ObjectLink_GoodsGroup_Parent()
+                           JOIN ObjectLink AS ObjectLink_Child3 ON ObjectLink_Child3.ChildObjectId = ObjectLink_Child2.ObjectId
+                                                               AND ObjectLink_Child3.DescId = zc_ObjectLink_GoodsGroup_Parent()
+                      WHERE ObjectLink.DescId = zc_ObjectLink_GoodsGroup_Parent()
+                        AND ObjectLink.ChildObjectId = ioId
+                     UNION ALL
+                      SELECT ObjectLink_Child4.ObjectId
+                      FROM ObjectLink
+                           JOIN ObjectLink AS ObjectLink_Child1 ON ObjectLink_Child1.ChildObjectId = ObjectLink.ObjectId
+                                                               AND ObjectLink_Child1.DescId = zc_ObjectLink_GoodsGroup_Parent()
+                           JOIN ObjectLink AS ObjectLink_Child2 ON ObjectLink_Child2.ChildObjectId = ObjectLink_Child1.ObjectId
+                                                               AND ObjectLink_Child2.DescId = zc_ObjectLink_GoodsGroup_Parent()
+                           JOIN ObjectLink AS ObjectLink_Child3 ON ObjectLink_Child3.ChildObjectId = ObjectLink_Child2.ObjectId
+                                                               AND ObjectLink_Child3.DescId = zc_ObjectLink_GoodsGroup_Parent()
+                           JOIN ObjectLink AS ObjectLink_Child4 ON ObjectLink_Child4.ChildObjectId = ObjectLink_Child3.ObjectId
+                                                               AND ObjectLink_Child4.DescId = zc_ObjectLink_GoodsGroup_Parent()
+                      WHERE ObjectLink.DescId = zc_ObjectLink_GoodsGroup_Parent()
+                        AND ObjectLink.ChildObjectId = ioId
+                     UNION ALL
+                      SELECT ObjectLink_Child5.ObjectId
+                      FROM ObjectLink
+                           JOIN ObjectLink AS ObjectLink_Child1 ON ObjectLink_Child1.ChildObjectId = ObjectLink.ObjectId
+                                                               AND ObjectLink_Child1.DescId = zc_ObjectLink_GoodsGroup_Parent()
+                           JOIN ObjectLink AS ObjectLink_Child2 ON ObjectLink_Child2.ChildObjectId = ObjectLink_Child1.ObjectId
+                                                               AND ObjectLink_Child2.DescId = zc_ObjectLink_GoodsGroup_Parent()
+                           JOIN ObjectLink AS ObjectLink_Child3 ON ObjectLink_Child3.ChildObjectId = ObjectLink_Child2.ObjectId
+                                                               AND ObjectLink_Child3.DescId = zc_ObjectLink_GoodsGroup_Parent()
+                           JOIN ObjectLink AS ObjectLink_Child4 ON ObjectLink_Child4.ChildObjectId = ObjectLink_Child3.ObjectId
+                                                               AND ObjectLink_Child4.DescId = zc_ObjectLink_GoodsGroup_Parent()
+                           JOIN ObjectLink AS ObjectLink_Child5 ON ObjectLink_Child5.ChildObjectId = ObjectLink_Child4.ObjectId
+                                                               AND ObjectLink_Child5.DescId = zc_ObjectLink_GoodsGroup_Parent()
+                      WHERE ObjectLink.DescId = zc_ObjectLink_GoodsGroup_Parent()
+                        AND ObjectLink.ChildObjectId = ioId
+                     )
+  ;
+   END IF; -- inInfoMoneyId <> 0
+
+
+
+
    -- сохранили протокол
    PERFORM lpInsert_ObjectProtocol (ioId, vbUserId);
 
 END;$BODY$
 
 LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpInsertUpdate_Object_GoodsGroup (Integer, Integer, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer, tvarchar) OWNER TO postgres;
+--ALTER FUNCTION gpInsertUpdate_Object_GoodsGroup (Integer, Integer, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer, tvarchar) OWNER TO postgres;
 
 
 /*-------------------------------------------------------------------------------*/
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 18.11.15         * add zc_ObjectLink_GoodsGroup_InfoMoney
  14.04.15         * add GoodsPlatform
  24.11.14         * add GoodsGroupAnalyst             
  15.09.14         * add GoodsTag

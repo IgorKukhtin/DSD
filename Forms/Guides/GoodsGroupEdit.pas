@@ -49,6 +49,9 @@ type
     cxLabel7: TcxLabel;
     ceGoodsPlatform: TcxButtonEdit;
     GoodsPlatformGuides: TdsdGuides;
+    cxLabel8: TcxLabel;
+    ceInfoMoney: TcxButtonEdit;
+    InfoMoneyGuides: TdsdGuides;
   private
     { Private declarations }
   public
