@@ -59,6 +59,8 @@ type
     cxLabel8: TcxLabel;
     ceJuridical: TcxButtonEdit;
     JuridicalGuides: TdsdGuides;
+    cxLabel9: TcxLabel;
+    ceComment: TcxTextEdit;
   private
     { Private declarations }
   public
