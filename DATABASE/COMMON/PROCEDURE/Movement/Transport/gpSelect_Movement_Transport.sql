@@ -24,10 +24,19 @@ RETURNS TABLE (Id Integer, InvNumber Integer, OperDate TDateTime
 AS
 $BODY$
    DECLARE vbUserId Integer;
+   DECLARE vbAccessKeyId Integer;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Select_Movement_Transport());
      vbUserId:= lpGetUserBySession (inSession);
+
+
+     -- определяется - может ли пользовать видеть все документы
+     IF zfCalc_AccessKey_TransportAll (vbUserId) = TRUE
+     THEN vbAccessKeyId:= 0;
+     ELSE vbAccessKeyId:= lpGetAccessKey (vbUserId, zc_Enum_Process_InsertUpdate_Movement_Transport());
+     END IF;
+
 
      -- Результат
      RETURN QUERY 
@@ -70,8 +79,9 @@ BEGIN
             INNER JOIN Movement ON Movement.DescId = zc_Movement_Transport()
                                AND Movement.OperDate BETWEEN inStartDate AND inEndDate
                                AND Movement.StatusId = tmpStatus.StatusId
-            JOIN (SELECT AccessKeyId FROM Object_RoleAccessKey_View WHERE UserId = vbUserId GROUP BY AccessKeyId) AS tmpRoleAccessKey 
-                                                                                                                  ON tmpRoleAccessKey.AccessKeyId = Movement.AccessKeyId
+                               AND (Movement.AccessKeyId = vbAccessKeyId OR vbAccessKeyId = 0)
+            -- JOIN (SELECT AccessKeyId FROM Object_RoleAccessKey_View WHERE UserId = vbUserId GROUP BY AccessKeyId) AS tmpRoleAccessKey
+            --                                                                                                       ON tmpRoleAccessKey.AccessKeyId = Movement.AccessKeyId
 
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
 

@@ -2,7 +2,7 @@ inherited PromoForm: TPromoForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1040#1082#1094#1080#1103'>'
   ClientHeight = 481
   ClientWidth = 928
-  ExplicitTop = -59
+  ExplicitLeft = -138
   ExplicitWidth = 944
   ExplicitHeight = 516
   PixelsPerInch = 96
@@ -1561,6 +1561,24 @@ inherited PromoForm: TPromoForm
         Control = edOperDate
       end
       item
+        Control = deStartPromo
+      end
+      item
+        Control = deEndPromo
+      end
+      item
+        Control = deStartSale
+      end
+      item
+        Control = deEndSale
+      end
+      item
+        Control = deOperDateStart
+      end
+      item
+        Control = deOperDateEnd
+      end
+      item
         Control = edPromoKind
       end
       item
@@ -1570,13 +1588,19 @@ inherited PromoForm: TPromoForm
         Control = edAdvertising
       end
       item
+        Control = edPriceList
+      end
+      item
+        Control = edCostPromo
+      end
+      item
         Control = edPersonalTrade
       end
       item
         Control = edPersonal
       end
       item
-        Control = edPriceList
+        Control = edComment
       end>
     Left = 256
     Top = 265

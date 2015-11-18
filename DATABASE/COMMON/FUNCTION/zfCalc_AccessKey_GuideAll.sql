@@ -11,7 +11,7 @@ BEGIN
      THEN
          RETURN (TRUE);
      ELSE
-         RETURN COALESCE ((SELECT TRUE WHERE EXISTS (SELECT AccessKeyId FROM Object_RoleAccessKey_View WHERE UserId = inUserId AND AccessKeyId IN (zc_Enum_Process_AccessKey_GuideAll(), zc_Enum_Process_AccessKey_CashDnepr()))), FALSE);
+         RETURN COALESCE ((SELECT TRUE WHERE EXISTS (SELECT AccessKeyId FROM Object_RoleAccessKey_View WHERE UserId = inUserId AND AccessKeyId IN (zc_Enum_Process_AccessKey_GuideAll(), zc_Enum_Process_AccessKey_TrasportAll(), zc_Enum_Process_AccessKey_CashDnepr()))), FALSE);
      END IF;  
 END;
 $BODY$
