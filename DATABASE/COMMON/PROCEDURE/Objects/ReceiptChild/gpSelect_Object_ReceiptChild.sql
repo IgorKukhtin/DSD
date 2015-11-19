@@ -33,9 +33,9 @@ BEGIN
          , tmpReceiptChild.ValueWeight
          , CASE WHEN tmpReceiptChild.isWeightTotal = TRUE THEN tmpReceiptChild.ValueWeight ELSE 0 END :: TFloat AS ValueWeight_calc
 
-         , tmpReceiptChild.isWeightMain
-         , tmpReceiptChild.isTaxExit
-         , tmpReceiptChild.isWeightTotal
+         , COALESCE (tmpReceiptChild.isWeightMain , FALSE) :: Boolean AS isWeightMain
+         , COALESCE (tmpReceiptChild.isTaxExit,     FALSE) :: Boolean AS isTaxExit
+         , COALESCE (tmpReceiptChild.isWeightTotal, FALSE) :: Boolean AS isWeightTotal
 
          , ObjectDate_StartDate.ValueData     AS StartDate
          , ObjectDate_EndDate.ValueData       AS EndDate
