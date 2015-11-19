@@ -34,6 +34,8 @@ RETURNS TABLE(
     ,PositionLevelId                Integer
     ,PositionLevelName              TVarChar
     ,PersonalCount                  Integer
+    ,HoursPlan                      TFloat
+    ,HoursDay                       TFloat
     ,MemberId                       Integer
     ,MemberName                     TVarChar
     ,SheetWorkTime_Amount           TFloat
@@ -51,7 +53,8 @@ RETURNS TABLE(
     ,GrossOnOneMember               TFloat
     ,Amount                         TFloat
     ,AmountOnOneMember              TFloat
-    ,isPrint                        Boolean
+    ,PersonalServiceListId          Integer
+    ,PersonalServiceListName        TVarChar
 )
 AS
 $BODY$
@@ -69,6 +72,8 @@ BEGIN
         ,PositionLevelId                Integer
         ,PositionLevelName              TVarChar
         ,PersonalCount                  Integer
+        ,HoursPlan                      TFloat
+        ,HoursDay                       TFloat
         ,MemberId                       Integer
         ,MemberName                     TVarChar
         ,SheetWorkTime_Date             TDateTime
@@ -98,19 +103,19 @@ BEGIN
         ,GrossOnOneMember               TFloat
         ,Amount                         TFloat
         ,AmountOnOneMember              TFloat
-        ,isPrint                        Boolean
-        
+        ,PersonalServiceListId          Integer
+        ,PersonalServiceListName        TVarChar
     ) ON COMMIT DROP;
-    Insert Into Res(StaffList,UnitId,UnitName,PositionId,PositionName,PositionLevelId,PositionLevelName,PersonalCount,MemberId,MemberName,SheetWorkTime_Date,SheetWorkTime_Amount
+    Insert Into Res(StaffList,UnitId,UnitName,PositionId,PositionName,PositionLevelId,PositionLevelName,PersonalCount,HoursPlan,HoursDay,MemberId,MemberName,SheetWorkTime_Date,SheetWorkTime_Amount
                    ,ServiceModelId,ServiceModelCode,ServiceModelName,Price,FromId,FromName,ToId,ToName,MovementDescId,MovementDescName,SelectKindId,SelectKindName,Ratio
                    ,ModelServiceItemChild_FromId,ModelServiceItemChild_FromDescId,ModelServiceItemChild_FromName,ModelServiceItemChild_ToId,ModelServiceItemChild_ToDescId,ModelServiceItemChild_ToName
-                   ,OperDate,Count_MemberInDay,Gross,GrossOnOneMember,Amount,AmountOnOneMember,isPrint)
-    Select Report_1.StaffList,Report_1.UnitId,Report_1.UnitName,Report_1.PositionId,Report_1.PositionName,Report_1.PositionLevelId,Report_1.PositionLevelName,Report_1.PersonalCount,
+                   ,OperDate,Count_MemberInDay,Gross,GrossOnOneMember,Amount,AmountOnOneMember)
+    Select Report_1.StaffList,Report_1.UnitId,Report_1.UnitName,Report_1.PositionId,Report_1.PositionName,Report_1.PositionLevelId,Report_1.PositionLevelName,Report_1.PersonalCount,Report_1.HoursPlan,Report_1.HoursDay,
            Report_1.MemberId,Report_1.MemberName,Report_1.SheetWorkTime_Date,Report_1.SheetWorkTime_Amount,Report_1.ServiceModelId,Report_1.ServiceModelCode,Report_1.ServiceModelName,Report_1.Price,
            Report_1.FromId,Report_1.FromName,Report_1.ToId,Report_1.ToName,Report_1.MovementDescId,Report_1.MovementDescName,Report_1.SelectKindId,Report_1.SelectKindName,Report_1.Ratio,
            Report_1.ModelServiceItemChild_FromId,Report_1.ModelServiceItemChild_FromDescId,Report_1.ModelServiceItemChild_FromName,Report_1.ModelServiceItemChild_ToId,
            Report_1.ModelServiceItemChild_ToDescId,Report_1.ModelServiceItemChild_ToName,Report_1.OperDate,Report_1.Count_MemberInDay,Report_1.Gross,Report_1.GrossOnOneMember,
-           Report_1.Amount,Report_1.AmountOnOneMember,True
+           Report_1.Amount,Report_1.AmountOnOneMember
     from gpSelect_Report_Wage_1(inDateStart      := inDateStart,
                                 inDateFinal      := inDateFinal, --дата окончания периода
                                 inUnitId         := inUnitId,   --подразделение 
@@ -118,8 +123,8 @@ BEGIN
                                 inMemberId       := inMemberId,   --сотрудник
                                 inPositionId     := inPositionId,   --должность
                                 inSession        := inSession) as Report_1;
-    INSERT INTO Res(StaffList,UnitId,UnitName,PositionId,PositionName,PositionLevelId,PositionLevelName,PersonalCount,MemberId,MemberName
-                   ,SheetWorkTime_Amount,ServiceModelId,ServiceModelCode,ServiceModelName,Price,AmountOnOneMember,isPrint)
+    INSERT INTO Res(StaffList,UnitId,UnitName,PositionId,PositionName,PositionLevelId,PositionLevelName,PersonalCount,HoursPlan,HoursDay,MemberId,MemberName
+                   ,SheetWorkTime_Amount,ServiceModelId,ServiceModelCode,ServiceModelName,Price,AmountOnOneMember)
     Select 
         Report_2.StaffList
        ,Report_2.UnitId
@@ -129,6 +134,8 @@ BEGIN
        ,Report_2.PositionLevelId
        ,Report_2.PositionLevelName
        ,Report_2.PersonalCount
+       ,Report_2.HoursPlan
+       ,Report_2.HoursDay
        ,Report_2.MemberId
        ,Report_2.MemberName
        ,Report_2.SheetWorkTime_Amount
@@ -137,7 +144,6 @@ BEGIN
        ,Report_2.StaffListSummKindName
        ,Report_2.StaffListSumm_Value
        ,Report_2.Summ
-       ,False
     FROM 
         gpSelect_Report_Wage_2(inDateStart      := inDateStart,
                                 inDateFinal      := inDateFinal, --дата окончания периода
@@ -146,113 +152,160 @@ BEGIN
                                 inPositionId     := inPositionId,   --должность
                                 inSession        := inSession) as Report_2;
     RETURN QUERY
-    SELECT
-        Res.StaffList
-       ,Res.UnitId
-       ,Res.UnitName
-       ,Res.PositionId
-       ,Res.PositionName
-       ,Res.PositionLevelId
-       ,Res.PositionLevelName
-       ,Res.PersonalCount
-       ,Res.MemberId
-       ,Res.MemberName
-       ,CASE WHEN inDetailDay = TRUE
-             THEN Res.SheetWorkTime_Amount
-        ELSE NULL::TFloat END                          AS SheetWorkTime_Amount
-       ,CASE WHEN inDetailModelService = TRUE
-             THEN Res.ServiceModelCode
-        ELSE NULL::Integer END                        AS ServiceModelCode
-       ,CASE WHEN inDetailModelService = TRUE
-             THEN Res.ServiceModelName
-        ELSE NULL::TVarChar END                        AS ServiceModelName
-       ,CASE WHEN inDetailModelService = TRUE
-             THEN Res.Price
-        ELSE NULL::TFloat END                          AS Price
-       ,CASE WHEN inDetailModelServiceItemMaster = TRUE
-             THEN Res.FromName
-        ELSE NULL::TVarChar END                         AS FromName
-       ,CASE WHEN inDetailModelServiceItemMaster = TRUE
-             THEN Res.ToName
-        ELSE NULL::TVarChar END                         AS ToName
-       ,CASE WHEN inDetailModelServiceItemMaster = TRUE
-             THEN Res.MovementDescName
-        ELSE NULL::TVarCHar END                         AS MovementDescName
-       ,CASE WHEN inDetailModelServiceItemChild = TRUE
-             THEN Res.ModelServiceItemChild_FromName
-        ELSE NULL::TVarChar END                         AS ModelServiceItemChild_FromName
-       ,CASE WHEN inDetailModelServiceItemChild = TRUE
-             THEN Res.ModelServiceItemChild_ToName
-        ELSE NULL::TVarChar END                         AS ModelServiceItemChild_ToName
-       ,CASE WHEN inDetailDay = TRUE 
-             THEN Res.OperDate 
-        ELSE NULL::TDateTime END                  AS OperDate
-       ,CASE WHEN inDetailDay = TRUE 
-             THEN Res.Count_MemberInDay
-        ELSE NULL::Integer END                    AS Count_MemberInDay
-       ,CASE WHEN inDetailDay = TRUE 
-             THEN Res.Gross
-        ELSE NULL::TFloat END                     AS Gross
-       ,SUM(Res.GrossOnOneMember)::TFloat         AS GrossOnOneMember
-       ,CASE WHEN inDetailDay = TRUE 
-             THEN Res.Amount
-        ELSE NULL::TFloat END                     AS Amount
-       ,SUM(Res.AmountOnOneMember)::TFloat        AS AmountOnOneMember
-       ,Res.isPrint                               AS isPrint
-    FROM Res
-    WHERE
-        Res.MemberId is not null
-    GROUP BY
-        Res.StaffList
-       ,Res.UnitId
-       ,Res.UnitName
-       ,Res.PositionId
-       ,Res.PositionName
-       ,Res.PositionLevelId
-       ,Res.PositionLevelName
-       ,Res.PersonalCount
-       ,Res.MemberId
-       ,Res.MemberName
-       ,CASE WHEN inDetailDay = TRUE
-             THEN Res.SheetWorkTime_Amount
-        ELSE NULL::TFloat END
-       ,CASE WHEN inDetailModelService = TRUE
-             THEN Res.ServiceModelCode
-        ELSE NULL::Integer END
-       ,CASE WHEN inDetailModelService = TRUE
-             THEN Res.ServiceModelName
-        ELSE NULL::TVarChar END
-       ,CASE WHEN inDetailModelService = TRUE
-             THEN Res.Price
-        ELSE NULL::TFloat END
-       ,CASE WHEN inDetailModelServiceItemMaster = TRUE
-             THEN Res.FromName
-        ELSE NULL::TVarChar END
-       ,CASE WHEN inDetailModelServiceItemMaster = TRUE
-             THEN Res.ToName
-        ELSE NULL::TVarChar END
-       ,CASE WHEN inDetailModelServiceItemMaster = TRUE
-             THEN Res.MovementDescName
-        ELSE NULL::TVarCHar END
-       ,CASE WHEN inDetailModelServiceItemChild = TRUE
-             THEN Res.ModelServiceItemChild_FromName
-        ELSE NULL::TVarChar END
-       ,CASE WHEN inDetailModelServiceItemChild = TRUE
-             THEN Res.ModelServiceItemChild_ToName
-        ELSE NULL::TVarChar END
-       ,CASE WHEN inDetailDay = TRUE 
-             THEN Res.OperDate 
-        ELSE NULL::TDateTime END
-       ,CASE WHEN inDetailDay = TRUE 
-             THEN Res.Count_MemberInDay
-        ELSE NULL::Integer END
-       ,CASE WHEN inDetailDay = TRUE 
-             THEN Res.Gross
-        ELSE NULL::TFloat END
-       ,CASE WHEN inDetailDay = TRUE 
-             THEN Res.Amount
-        ELSE NULL::TFloat END
-       ,Res.isPrint ;
+        WITH tmpRes AS (
+            SELECT
+                Res.StaffList
+               ,Res.UnitId
+               ,Res.UnitName
+               ,Res.PositionId
+               ,Res.PositionName
+               ,Res.PositionLevelId
+               ,Res.PositionLevelName
+               ,Res.PersonalCount
+               ,Res.HoursPlan
+               ,Res.HoursDay
+               ,Res.MemberId
+               ,Res.MemberName
+               ,CASE WHEN inDetailDay = TRUE
+                     THEN Res.SheetWorkTime_Amount
+                ELSE NULL::TFloat END                          AS SheetWorkTime_Amount
+               ,CASE WHEN inDetailModelService = TRUE
+                     THEN Res.ServiceModelCode
+                ELSE NULL::Integer END                        AS ServiceModelCode
+               ,CASE WHEN inDetailModelService = TRUE
+                     THEN Res.ServiceModelName
+                ELSE NULL::TVarChar END                        AS ServiceModelName
+               ,CASE WHEN inDetailModelService = TRUE
+                     THEN Res.Price
+                ELSE NULL::TFloat END                          AS Price
+               ,CASE WHEN inDetailModelServiceItemMaster = TRUE
+                     THEN Res.FromName
+                ELSE NULL::TVarChar END                         AS FromName
+               ,CASE WHEN inDetailModelServiceItemMaster = TRUE
+                     THEN Res.ToName
+                ELSE NULL::TVarChar END                         AS ToName
+               ,CASE WHEN inDetailModelServiceItemMaster = TRUE
+                     THEN Res.MovementDescName
+                ELSE NULL::TVarCHar END                         AS MovementDescName
+               ,CASE WHEN inDetailModelServiceItemChild = TRUE
+                     THEN Res.ModelServiceItemChild_FromName
+                ELSE NULL::TVarChar END                         AS ModelServiceItemChild_FromName
+               ,CASE WHEN inDetailModelServiceItemChild = TRUE
+                     THEN Res.ModelServiceItemChild_ToName
+                ELSE NULL::TVarChar END                         AS ModelServiceItemChild_ToName
+               ,CASE WHEN inDetailDay = TRUE 
+                     THEN Res.OperDate 
+                ELSE NULL::TDateTime END                  AS OperDate
+               ,CASE WHEN inDetailDay = TRUE 
+                     THEN Res.Count_MemberInDay
+                ELSE NULL::Integer END                    AS Count_MemberInDay
+               ,CASE WHEN inDetailDay = TRUE 
+                     THEN Res.Gross
+                ELSE NULL::TFloat END                     AS Gross
+               ,SUM(Res.GrossOnOneMember)::TFloat         AS GrossOnOneMember
+               ,CASE WHEN inDetailDay = TRUE 
+                     THEN Res.Amount
+                ELSE NULL::TFloat END                     AS Amount
+               ,SUM(Res.AmountOnOneMember)::TFloat        AS AmountOnOneMember
+            FROM Res
+            WHERE
+                Res.MemberId is not null
+            GROUP BY
+                Res.StaffList
+               ,Res.UnitId
+               ,Res.UnitName
+               ,Res.PositionId
+               ,Res.PositionName
+               ,Res.PositionLevelId
+               ,Res.PositionLevelName
+               ,Res.PersonalCount
+               ,Res.HoursPlan
+               ,Res.HoursDay
+               ,Res.MemberId
+               ,Res.MemberName
+               ,CASE WHEN inDetailDay = TRUE
+                     THEN Res.SheetWorkTime_Amount
+                ELSE NULL::TFloat END
+               ,CASE WHEN inDetailModelService = TRUE
+                     THEN Res.ServiceModelCode
+                ELSE NULL::Integer END
+               ,CASE WHEN inDetailModelService = TRUE
+                     THEN Res.ServiceModelName
+                ELSE NULL::TVarChar END
+               ,CASE WHEN inDetailModelService = TRUE
+                     THEN Res.Price
+                ELSE NULL::TFloat END
+               ,CASE WHEN inDetailModelServiceItemMaster = TRUE
+                     THEN Res.FromName
+                ELSE NULL::TVarChar END
+               ,CASE WHEN inDetailModelServiceItemMaster = TRUE
+                     THEN Res.ToName
+                ELSE NULL::TVarChar END
+               ,CASE WHEN inDetailModelServiceItemMaster = TRUE
+                     THEN Res.MovementDescName
+                ELSE NULL::TVarCHar END
+               ,CASE WHEN inDetailModelServiceItemChild = TRUE
+                     THEN Res.ModelServiceItemChild_FromName
+                ELSE NULL::TVarChar END
+               ,CASE WHEN inDetailModelServiceItemChild = TRUE
+                     THEN Res.ModelServiceItemChild_ToName
+                ELSE NULL::TVarChar END
+               ,CASE WHEN inDetailDay = TRUE 
+                     THEN Res.OperDate 
+                ELSE NULL::TDateTime END
+               ,CASE WHEN inDetailDay = TRUE 
+                     THEN Res.Count_MemberInDay
+                ELSE NULL::Integer END
+               ,CASE WHEN inDetailDay = TRUE 
+                     THEN Res.Gross
+                ELSE NULL::TFloat END
+               ,CASE WHEN inDetailDay = TRUE 
+                     THEN Res.Amount
+                ELSE NULL::TFloat END
+        )
+        SELECT
+            tmpRes.StaffList
+           ,tmpRes.UnitId
+           ,tmpRes.UnitName
+           ,tmpRes.PositionId
+           ,tmpRes.PositionName
+           ,tmpRes.PositionLevelId
+           ,tmpRes.PositionLevelName
+           ,tmpRes.PersonalCount
+           ,tmpRes.HoursPlan
+           ,tmpRes.HoursDay
+           ,tmpRes.MemberId
+           ,tmpRes.MemberName
+           ,tmpRes.SheetWorkTime_Amount
+           ,tmpRes.ServiceModelCode
+           ,tmpRes.ServiceModelName
+           ,tmpRes.Price
+           ,tmpRes.FromName
+           ,tmpRes.ToName
+           ,tmpRes.MovementDescName
+           ,tmpRes.ModelServiceItemChild_FromName
+           ,tmpRes.ModelServiceItemChild_ToName
+           ,tmpRes.OperDate
+           ,tmpRes.Count_MemberInDay
+           ,tmpRes.Gross
+           ,tmpRes.GrossOnOneMember
+           ,ROUND(tmpRes.Amount,2)::TFloat            AS Amount
+           ,ROUND(tmpRes.AmountOnOneMember,2)::TFloat AS AmountOnOneMember
+           ,Object_PersonalServiceList.Id             AS PersonalServiceListId
+           ,Object_PersonalServiceList.ValueData      AS PersonalServiceListName
+        FROM
+            tmpRes
+            LEFT OUTER JOIN Object_Personal_View AS Object_Personal
+                                                 ON COALESCE(Object_Personal.MemberId,0) = COALESCE(tmpRes.MemberId,0)
+                                                AND COALESCE(Object_Personal.PositionId,0) = COALESCE(tmpRes.PositionId,0)
+                                                AND COALESCE(Object_Personal.PositionLevelId,0) = COALESCE(tmpRes.PositionLevelId,0)
+                                                AND COALESCE(Object_Personal.UnitId,0) = COALESCE(tmpRes.UnitId,0)
+            LEFT OUTER JOIN ObjectLink AS ObjectLink_Personal_PersonalServiceList
+                                       ON ObjectLink_Personal_PersonalServiceList.ObjectId = Object_Personal.PersonalId
+                                      AND ObjectLink_Personal_PersonalServiceList.DescId = zc_ObjectLink_Personal_PersonalServiceList()
+            LEFT OUTER JOIN Object AS Object_PersonalServiceList
+                                   ON Object_PersonalServiceList.Id = ObjectLink_Personal_PersonalServiceList.ChildObjectId
+       ;
        
 END;
 $BODY$
