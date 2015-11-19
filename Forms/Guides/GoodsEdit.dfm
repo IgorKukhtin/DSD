@@ -2,8 +2,8 @@
   Left = 0
   Top = 0
   Caption = #1044#1086#1073#1072#1074#1080#1090#1100'/'#1048#1079#1084#1077#1085#1080#1090#1100' <'#1058#1086#1074#1072#1088'>'
-  ClientHeight = 404
-  ClientWidth = 345
+  ClientHeight = 484
+  ClientWidth = 350
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -28,8 +28,8 @@
     Caption = #1053#1072#1079#1074#1072#1085#1080#1077
   end
   object cxButton1: TcxButton
-    Left = 64
-    Top = 371
+    Left = 74
+    Top = 446
     Width = 75
     Height = 25
     Action = dsdInsertUpdateGuides
@@ -38,8 +38,8 @@
     TabOrder = 2
   end
   object cxButton2: TcxButton
-    Left = 192
-    Top = 371
+    Left = 210
+    Top = 446
     Width = 75
     Height = 25
     Action = dsdFormClose
@@ -164,7 +164,7 @@
     Caption = #1042#1080#1076' '#1090#1086#1087#1083#1080#1074#1072
   end
   object edFuel: TcxButtonEdit
-    Left = 39
+    Left = 40
     Top = 292
     Properties.Buttons = <
       item
@@ -173,7 +173,7 @@
       end>
     Properties.ReadOnly = True
     TabOrder = 19
-    Width = 210
+    Width = 219
   end
   object cxLabel9: TcxLabel
     Left = 40
@@ -227,6 +227,51 @@
     Top = 136
     Caption = #1043#1088#1091#1087#1087#1072' '#1072#1085#1072#1083#1080#1090#1080#1082#1080
   end
+  object cxLabel12: TcxLabel
+    Left = 40
+    Top = 410
+    Caption = #1044#1072#1090#1072' '#1089' :'
+  end
+  object edStartDate: TcxDateEdit
+    Left = 87
+    Top = 409
+    EditValue = 42005d
+    Properties.SaveTime = False
+    Properties.ShowTime = False
+    TabOrder = 27
+    Width = 92
+  end
+  object cxLabel13: TcxLabel
+    Left = 40
+    Top = 364
+    Caption = #1055#1088#1072#1081#1089'-'#1083#1080#1089#1090':'
+  end
+  object edPriceList: TcxButtonEdit
+    Left = 40
+    Top = 382
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    TabOrder = 29
+    Width = 273
+  end
+  object cePrice: TcxCurrencyEdit
+    Left = 230
+    Top = 409
+    EditValue = 0.000000000000000000
+    Properties.DecimalPlaces = 4
+    Properties.DisplayFormat = ',0.####'
+    Properties.UseDisplayFormatWhenEditing = True
+    TabOrder = 30
+    Width = 83
+  end
+  object cxLabel14: TcxLabel
+    Left = 189
+    Top = 410
+    Caption = #1062#1077#1085#1072' :'
+  end
   object ActionList: TActionList
     Left = 304
     Top = 80
@@ -250,10 +295,12 @@
     object dsdFormClose: TdsdFormClose
       Category = 'DSDLib'
       MoveParams = <>
+      PostDataSetBeforeExecute = False
     end
     object dsdInsertUpdateGuides: TdsdInsertUpdateGuides
       Category = 'DSDLib'
       MoveParams = <>
+      PostDataSetBeforeExecute = False
       StoredProc = spInsertUpdate
       StoredProcList = <
         item
@@ -352,6 +399,27 @@
         Value = Null
         Component = GoodsGroupAnalystGuides
         ComponentItem = 'Key'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inPriceListId'
+        Value = '0'
+        Component = PriceListGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inStartDate'
+        Value = Null
+        Component = edStartDate
+        DataType = ftDateTime
+        ParamType = ptInput
+      end
+      item
+        Name = 'inValuePrice'
+        Value = Null
+        Component = cePrice
+        DataType = ftFloat
         ParamType = ptInput
       end>
     PackSize = 1
@@ -512,10 +580,35 @@
         Component = GoodsGroupAnalystGuides
         ComponentItem = 'TextValue'
         DataType = ftString
+      end
+      item
+        Name = 'PriceListId'
+        Value = Null
+        Component = PriceListGuides
+        ComponentItem = 'Key'
+      end
+      item
+        Name = 'PriceListName'
+        Value = Null
+        Component = PriceListGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+      end
+      item
+        Name = 'StartDate'
+        Value = 42005d
+        Component = edStartDate
+        DataType = ftDateTime
+      end
+      item
+        Name = 'ValuePrice'
+        Value = 0
+        Component = cePrice
+        DataType = ftFloat
       end>
     PackSize = 1
-    Left = 8
-    Top = 64
+    Left = 16
+    Top = 96
   end
   object dsdMeasureGuides: TdsdGuides
     KeyField = 'Id'
@@ -605,7 +698,8 @@
     Top = 323
   end
   object dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
-    Left = 8
+    Left = 16
+    Top = 8
   end
   object BusinessGuides: TdsdGuides
     KeyField = 'Id'
@@ -741,8 +835,8 @@
         Value = Null
         ParamType = ptUnknown
       end>
-    Left = 152
-    Top = 330
+    Left = 176
+    Top = 314
   end
   object GoodsGroupAnalystGuides: TdsdGuides
     KeyField = 'Id'
@@ -767,5 +861,32 @@
       end>
     Left = 224
     Top = 144
+  end
+  object PriceListGuides: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edPriceList
+    Key = '0'
+    FormNameParam.Value = 'TPriceListForm'
+    FormNameParam.DataType = ftString
+    FormName = 'TPriceListForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = '0'
+        Component = PriceListGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = PriceListGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+      end>
+    Left = 144
+    Top = 368
   end
 end

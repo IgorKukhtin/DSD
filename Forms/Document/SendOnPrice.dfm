@@ -3,7 +3,7 @@ inherited SendOnPriceForm: TSendOnPriceForm
   ClientHeight = 668
   ClientWidth = 982
   ExplicitWidth = 998
-  ExplicitHeight = 703
+  ExplicitHeight = 706
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -1478,12 +1478,12 @@ inherited SendOnPriceForm: TSendOnPriceForm
         ParamType = ptInput
       end
       item
-        Name = 'inAmount'
+        Name = 'ioAmount'
         Value = Null
         Component = MasterCDS
         ComponentItem = 'Amount'
         DataType = ftFloat
-        ParamType = ptInput
+        ParamType = ptInputOutput
       end
       item
         Name = 'ioAmountPartner'
@@ -1573,6 +1573,27 @@ inherited SendOnPriceForm: TSendOnPriceForm
         Component = MasterCDS
         ComponentItem = 'UnitId'
         ParamType = ptInput
+      end
+      item
+        Name = 'outWeightPack'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'WeightPack'
+        DataType = ftFloat
+      end
+      item
+        Name = 'outWeightTotal'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'WeightTotal'
+        DataType = ftFloat
+      end
+      item
+        Name = 'outCountPack'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'CountPack'
+        DataType = ftFloat
       end>
     Left = 160
     Top = 368

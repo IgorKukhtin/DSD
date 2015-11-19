@@ -74,6 +74,9 @@ type
     spGet_Movement_ManualAmountTrouble: TdsdStoredProc;
     actGet_Movement_ManualAmountTrouble: TdsdExecStoredProc;
     actaOpen_Income_AmountTroubleForm: TdsdOpenForm;
+    actUpdate_MovementItem_Income_SetEqualAmount: TdsdExecStoredProc;
+    spUpdate_MovementItem_Income_SetEqualAmount: TdsdStoredProc;
+    dxBarButton2: TdxBarButton;
   private
     { Private declarations }
   public

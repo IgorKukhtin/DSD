@@ -3,6 +3,7 @@
 -- DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_SendOnPrice(Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TVarChar, Integer, Integer);
 -- DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_SendOnPrice(Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TVarChar, Integer, Integer, Integer);
 DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_SendOnPrice(Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TVarChar, Integer, Integer, Boolean, Integer);
+DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_SendOnPrice(Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TVarChar, Integer, Integer, TFloat, TFloat, TFloat, Boolean, Integer);
 
 CREATE OR REPLACE FUNCTION lpInsertUpdate_MovementItem_SendOnPrice(
  INOUT ioId                  Integer   , -- Ключ объекта <Элемент документа>

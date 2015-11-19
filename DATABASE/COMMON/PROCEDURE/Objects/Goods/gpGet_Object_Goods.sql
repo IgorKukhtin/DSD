@@ -17,14 +17,23 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , BusinessId Integer, BusinessName TVarChar
              , FuelId Integer, FuelName TVarChar
              , GoodsGroupAnalystId Integer, GoodsGroupAnalystName TVarChar
+             , PriceListId Integer, PriceListName TVarChar, StartDate TDateTime, ValuePrice TFloat
               )
 AS
 $BODY$
+   DECLARE vbPriceListId Integer;
+   DECLARE vbPriceListName TVarChar;
 BEGIN
 
      -- проверка прав пользовател€ на вызов процедуры
      -- PERFORM lpCheckRight(inSession, zc_Enum_Process_Get_Object_Goods());
-  
+    
+    --ѕ–ј…— по умолчанию - код 47  прайс-план калькул€ции(сырье) 
+   SELECT Object.Id, Object.ValueData 
+  into vbPriceListId, vbPriceListName 
+   FROM Object WHERE Object.DescId = zc_Object_PriceList() 
+    and Object.ObjectCode = 47;  --код 47 прайс-план калькул€ции(сырье) 
+
    IF COALESCE (inId, 0) = 0
    THEN
        RETURN QUERY 
@@ -59,7 +68,13 @@ BEGIN
            , CAST ('' as TVarChar) AS FuelName
            
            , CAST (0 as Integer)   AS GoodsGroupAnalystId
-           , CAST ('' as TVarChar) AS GoodsGroupAnalystName           
+           , CAST ('' as TVarChar) AS GoodsGroupAnalystName    
+
+           , vbPriceListId                 AS PriceListId 
+           , vbPriceListName               AS PriceListName
+           , zc_DateStart()                AS StartDate 
+           , CAST (0 as TFloat)            AS ValuePrice
+      
        ;
    ELSE
        RETURN QUERY 
@@ -95,6 +110,11 @@ BEGIN
            
            , Object_GoodsGroupAnalyst.Id           AS GoodsGroupAnalystId
            , Object_GoodsGroupAnalyst.ValueData    AS GoodsGroupAnalystName           
+
+           , vbPriceListId                 AS PriceListId 
+           , vbPriceListName               AS PriceListName
+           , COALESCE (tmp.StartDate, zc_DateStart())    AS StartDate 
+           , COALESCE (tmp.ValuePrice, 0) ::  TFloat     AS ValuePrice
 
        FROM Object AS Object_Goods
           LEFT JOIN ObjectLink AS ObjectLink_Goods_GoodsGroup
@@ -145,7 +165,9 @@ BEGIN
                                ON ObjectLink_Goods_GoodsGroupAnalyst.ObjectId = Object_Goods.Id 
                               AND ObjectLink_Goods_GoodsGroupAnalyst.DescId = zc_ObjectLink_Goods_GoodsGroupAnalyst()
           LEFT JOIN Object AS Object_GoodsGroupAnalyst ON Object_GoodsGroupAnalyst.Id = ObjectLink_Goods_GoodsGroupAnalyst.ChildObjectId  
-          
+
+          LEFT JOIN gpSelect_ObjectHistory_PriceListGoodsItem(inPriceListId := vbPriceListId , inGoodsId :=  inId,  inSession := inSession) as tmp ON tmp.EndDate  =  zc_DateEnd()
+
        WHERE Object_Goods.Id = inId;
 
    END IF;

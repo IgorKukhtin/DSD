@@ -81,6 +81,7 @@ end;
 procedure TLoadReportTest.LoadWageFormTest;
 begin
   LoadReportFromFile('Ведомость_по_зарплате_1', ReportPath + '\Персонал\Ведомость_по_зарплате_1.fr3');
+  LoadReportFromFile('Ведомость_по_зарплате_2', ReportPath + '\Персонал\Ведомость_по_зарплате_2.fr3');
 end;
 
 procedure TLoadReportTest.LoadAllReportFormTest;
