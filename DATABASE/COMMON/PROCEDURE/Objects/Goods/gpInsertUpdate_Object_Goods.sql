@@ -4,6 +4,7 @@ DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Goods(Integer, Integer, TVarChar, 
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Goods(Integer, Integer, TVarChar, TFloat, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Goods(Integer, Integer, TVarChar, TFloat, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Goods(Integer, Integer, TVarChar, TFloat, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Goods(Integer, Integer, TVarChar, TFloat, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TDateTime, TFloat, TVarChar);
 
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Goods(
@@ -19,7 +20,10 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Goods(
     IN inBusinessId          Integer   , -- Бизнесы
     IN inFuelId              Integer   , -- Вид топлива
     IN inGoodsTagId          Integer   , -- ссылка на признак товара 
-    IN inGoodsGroupAnalystId Integer   , -- ссылка на группу Товаров (аналитика) 
+    IN inGoodsGroupAnalystId Integer   , -- ссылка на группу Товаров (аналитика)
+    IN inPriceListId         Integer   , -- прайс
+    IN inStartDate           TDateTime , -- дата прайса
+    IN inValuePrice          TFloat    , -- значение цены
     IN inSession             TVarChar    -- сессия пользователя
 )
 RETURNS Integer AS
@@ -27,6 +31,7 @@ $BODY$
    DECLARE vbUserId Integer;
    DECLARE vbCode Integer;   
    DECLARE vbGroupNameFull TVarChar;   
+   DECLARE vbIsUpdate Boolean;  
 BEGIN
    -- проверка прав пользователя на вызов процедуры
    vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Object_Goods());
@@ -71,10 +76,13 @@ BEGIN
        RAISE EXCEPTION 'Ошибка.Для единицы измерения <%> должно быть установлено значение <Вес>.', lfGet_Object_ValueData (inMeasureId);
    END IF;
 
-
+  
    -- расчетно свойство <Полное название группы>
    vbGroupNameFull:= lfGet_Object_TreeNameFull (inGoodsGroupId, zc_ObjectLink_GoodsGroup_Parent());
 
+   -- определили <Признак>
+   vbIsUpdate:= COALESCE (ioId, 0) > 0;
+   
    -- сохранили <Объект>
    ioId := lpInsertUpdate_Object (ioId, zc_Object_Goods(), vbCode, inName
                                 , inAccessKeyId:= CASE WHEN inFuelId <> 0 AND NOT EXISTS (SELECT 1 FROM ObjectLink WHERE DescId = zc_ObjectLink_TicketFuel_Goods() AND ChildObjectId = ioId)
@@ -104,13 +112,29 @@ BEGIN
    -- сохранили связь с <>
    PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Goods_GoodsGroupAnalyst(), ioId, inGoodsGroupAnalystId);  
 
+ IF COALESCE (inValuePrice, 0) <> 0 
+   AND ((vbIsUpdate = False) OR NOT EXISTS (SELECT * 
+                                        FROM gpSelect_ObjectHistory_PriceListGoodsItem(inPriceListId := inPriceListId, inGoodsId :=ioId, inSession := inSession) as tmp LIMIT 1))
+   THEN
+       PERFORM lpInsertUpdate_ObjectHistory_PriceListItem (ioId := 0
+                                                         , inPriceListId := inPriceListId
+                                                         , inGoodsId     := ioId
+                                                         , inOperDate    := inStartDate
+                                                         , inValue       := inValuePrice
+                                                         , inUserId      := vbUserId
+                                                           );
+ 
+   END IF;
+  
+
+
    -- сохранили протокол
    PERFORM lpInsert_ObjectProtocol (ioId, vbUserId);
 
 END;
 $BODY$
   LANGUAGE PLPGSQL VOLATILE;
-ALTER FUNCTION gpInsertUpdate_Object_Goods (Integer, Integer, TVarChar, TFloat, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar) OWNER TO postgres;
+--ALTER FUNCTION gpInsertUpdate_Object_Goods (Integer, Integer, TVarChar, TFloat, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar) OWNER TO postgres;
  
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
