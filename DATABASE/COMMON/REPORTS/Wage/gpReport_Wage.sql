@@ -55,7 +55,12 @@ RETURNS TABLE(
     ,AmountOnOneMember              TFloat
     ,PersonalServiceListId          Integer
     ,PersonalServiceListName        TVarChar
-)
+    ,ServiceModelOrd                Integer
+    ,ServiceModelName_1             TVarChar
+    ,ServiceModelName_2             TVarChar
+    ,ServiceModelName_3             TVarChar
+    ,ServiceModelName_4             TVarChar
+    )
 AS
 $BODY$
     DECLARE vbUserId Integer;
@@ -106,6 +111,12 @@ BEGIN
         ,PersonalServiceListId          Integer
         ,PersonalServiceListName        TVarChar
     ) ON COMMIT DROP;
+    CREATE TEMP TABLE SMOrd (
+        ServiceModelCode Integer
+       ,ServiceModelName  TVarChar
+       ,ServiceModelOrd Integer
+    ) ON COMMIT DROP;
+    
     Insert Into Res(StaffList,UnitId,UnitName,PositionId,PositionName,PositionLevelId,PositionLevelName,PersonalCount,HoursPlan,HoursDay,MemberId,MemberName,SheetWorkTime_Date,SheetWorkTime_Amount
                    ,ServiceModelId,ServiceModelCode,ServiceModelName,Price,FromId,FromName,ToId,ToName,MovementDescId,MovementDescName,SelectKindId,SelectKindName,Ratio
                    ,ModelServiceItemChild_FromId,ModelServiceItemChild_FromDescId,ModelServiceItemChild_FromName,ModelServiceItemChild_ToId,ModelServiceItemChild_ToDescId,ModelServiceItemChild_ToName
@@ -116,7 +127,7 @@ BEGIN
            Report_1.ModelServiceItemChild_FromId,Report_1.ModelServiceItemChild_FromDescId,Report_1.ModelServiceItemChild_FromName,Report_1.ModelServiceItemChild_ToId,
            Report_1.ModelServiceItemChild_ToDescId,Report_1.ModelServiceItemChild_ToName,Report_1.OperDate,Report_1.Count_MemberInDay,Report_1.Gross,Report_1.GrossOnOneMember,
            Report_1.Amount,Report_1.AmountOnOneMember
-    from gpSelect_Report_Wage_1(inDateStart      := inDateStart,
+    from gpSelect_Report_Wage_Model(inDateStart      := inDateStart,
                                 inDateFinal      := inDateFinal, --дата окончания периода
                                 inUnitId         := inUnitId,   --подразделение 
                                 inModelServiceId := inModelServiceId,   --модель начисления
@@ -145,12 +156,30 @@ BEGIN
        ,Report_2.StaffListSumm_Value
        ,Report_2.Summ
     FROM 
-        gpSelect_Report_Wage_2(inDateStart      := inDateStart,
+        gpSelect_Report_Wage_Sum(inDateStart      := inDateStart,
                                 inDateFinal      := inDateFinal, --дата окончания периода
                                 inUnitId         := inUnitId,   --подразделение 
                                 inMemberId       := inMemberId,   --сотрудник
                                 inPositionId     := inPositionId,   --должность
                                 inSession        := inSession) as Report_2;
+    WITH ResDistinct AS (
+        SELECT DISTINCT
+            Res.ServiceModelCode
+           ,Res.ServiceModelName
+        FROM
+            Res
+        WHERE
+            Res.ServiceModelCode IS NOT NULL
+    )
+    
+    INSERT INTO SMOrd (ServiceModelCode, ServiceModelName, ServiceModelOrd)
+    SELECT 
+        ResDistinct.ServiceModelCode
+       ,ResDistinct.ServiceModelName
+       ,(ROW_NUMBER()OVER(ORDER BY ResDistinct.ServiceModelCode))::Integer AS ServiceModelOrd
+    FROM
+        ResDistinct;
+        
     RETURN QUERY
         WITH tmpRes AS (
             SELECT
@@ -293,6 +322,11 @@ BEGIN
            ,ROUND(tmpRes.AmountOnOneMember,2)::TFloat AS AmountOnOneMember
            ,Object_PersonalServiceList.Id             AS PersonalServiceListId
            ,Object_PersonalServiceList.ValueData      AS PersonalServiceListName
+           ,SMOrd.ServiceModelOrd
+           ,SMOrd_1.ServiceModelName as ServiceModelName_1
+           ,SMOrd_2.ServiceModelName as ServiceModelName_2
+           ,SMOrd_3.ServiceModelName as ServiceModelName_3
+           ,SMOrd_4.ServiceModelName as ServiceModelName_4
         FROM
             tmpRes
             LEFT OUTER JOIN Object_Personal_View AS Object_Personal
@@ -305,6 +339,12 @@ BEGIN
                                       AND ObjectLink_Personal_PersonalServiceList.DescId = zc_ObjectLink_Personal_PersonalServiceList()
             LEFT OUTER JOIN Object AS Object_PersonalServiceList
                                    ON Object_PersonalServiceList.Id = ObjectLink_Personal_PersonalServiceList.ChildObjectId
+            LEFT OUTER JOIN SMOrd ON tmpRes.ServiceModelCode = SMOrd.ServiceModelCode
+            LEFT OUTER JOIN SMOrd AS SMOrd ON tmpRes.ServiceModelCode = SMOrd.ServiceModelCode
+            LEFT OUTER JOIN SMOrd AS SMOrd_1 ON SMOrd_1.ServiceModelOrd = 1
+            LEFT OUTER JOIN SMOrd AS SMOrd_2 ON SMOrd_2.ServiceModelOrd = 2
+            LEFT OUTER JOIN SMOrd AS SMOrd_3 ON SMOrd_3.ServiceModelOrd = 3
+            LEFT OUTER JOIN SMOrd AS SMOrd_4 ON SMOrd_4.ServiceModelOrd = 4
        ;
        
 END;
