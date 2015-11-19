@@ -9,7 +9,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_SendOnPrice(
  INOUT ioId                  Integer   , -- Ключ объекта <Элемент документа>
     IN inMovementId          Integer   , -- Ключ объекта <Документ>
     IN inGoodsId             Integer   , -- Товары
-    IN inAmount              TFloat    , -- Количество
+ INOUT ioAmount              TFloat    , -- Количество
 
  INOUT ioAmountPartner           TFloat    , -- Количество у контрагента
    OUT outAmountChangePercent    TFloat    , -- Количество c учетом % скидки (!!!расчет!!!)
@@ -24,16 +24,62 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_SendOnPrice(
     IN inPartionGoods        TVarChar  , -- Партия товара
     IN inGoodsKindId         Integer   , -- Виды товаров
     IN inUnitId              Integer   , -- Подразделение
+
+   OUT outWeightPack             TFloat    ,
+   OUT outWeightTotal            TFloat    , 
+   OUT outCountPack              TFloat    , 
+
     IN inSession             TVarChar    -- сессия пользователя
 )
 RETURNS RECORD
 AS
 $BODY$
    DECLARE vbUserId Integer;
+   DECLARE vbIsBarCode Boolean;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MI_SendOnPrice());
 
+     -- получили значение
+     vbIsBarCode:= COALESCE ((SELECT MIBoolean.ValueData FROM MovementItemBoolean AS MIBoolean WHERE MIBoolean.MovementItemId = ioId AND MIBoolean.DescId = zc_MIBoolean_BarCode()), FALSE);
+
+     -- !!!скидка - вес упаковки!!!
+     IF vbIsBarCode = TRUE
+     THEN
+         -- проверка: если вводится кол склад надо сообщить что оно расчетное, вводить нельзя
+         IF ioId <> 0 AND EXISTS (SELECT 1 FROM MovementItemFloat AS MIFloat WHERE MIFloat.MovementItemId = ioId AND MIFloat.DescId = zc_MIFloat_AmountPartner() AND MIFloat.ValueData = ioAmountPartner)
+                      AND NOT EXISTS (SELECT 1 FROM MovementItem AS MI WHERE MI.Id = ioId AND MI.DescId = zc_MI_Master() AND MI.Amount = ioAmount)
+         THEN
+             RAISE EXCEPTION 'Ошибка.Ввод запрещен, т.к. <Кол-во склад> является расчетным если установлен признак <Скидка скан. упак.>.';
+         END IF;
+
+         -- получили значения для упаковки
+         SELECT ObjectFloat_WeightPackage.ValueData, ObjectFloat_WeightTotal.ValueData
+                INTO outWeightPack, outWeightTotal
+         FROM Object_GoodsByGoodsKind_View
+              LEFT JOIN ObjectFloat AS ObjectFloat_WeightPackage
+                                    ON ObjectFloat_WeightPackage.ObjectId = Object_GoodsByGoodsKind_View.Id 
+                                   AND ObjectFloat_WeightPackage.DescId = zc_ObjectFloat_GoodsByGoodsKind_WeightPackage()
+              LEFT JOIN ObjectFloat AS ObjectFloat_WeightTotal
+                                    ON ObjectFloat_WeightTotal.ObjectId = Object_GoodsByGoodsKind_View.Id 
+                                   AND ObjectFloat_WeightTotal.DescId = zc_ObjectFloat_GoodsByGoodsKind_WeightTotal()
+         WHERE Object_GoodsByGoodsKind_View.GoodsId = inGoodsId 
+           AND Object_GoodsByGoodsKind_View.GoodsKindId = inGoodsKindId;
+         -- расчет кол-во шт. упаковки (пока округление до 4-х знаков)
+         outCountPack:= CASE WHEN outWeightTotal <> 0 AND outWeightPack <> 0 AND outWeightTotal > outWeightPack
+                                  THEN CAST (CAST (ioAmountPartner / (1 - outWeightPack / outWeightTotal) AS NUMERIC (16, 4)) / outWeightTotal AS NUMERIC (16, 4))
+                             ELSE 0
+                        END;
+
+         -- !!!только в этом слуаче расчет "кол-во склад"!!!
+         ioAmount:= ioAmountPartner + CAST (outCountPack * COALESCE (outWeightPack, 0) AS NUMERIC (16, 4));
+         -- !!!обнуление "других" скидок!!!
+         ioChangePercentAmount:= 0;
+         inIsChangePercentAmount:= FALSE;
+         -- !!!расчет!!! - Количество c учетом % скидки
+         outAmountChangePercent:= ioAmountPartner;
+
+     ELSE
      -- !!!из контрола!!! - % скидки для кол-ва
      IF inIsChangePercentAmount = TRUE
      THEN
@@ -42,9 +88,9 @@ BEGIN
          ELSE ioChangePercentAmount:= 0;
          END IF;
      END IF;
-
      -- !!!расчет!!! - Количество c учетом % скидки
-     outAmountChangePercent:= CAST (inAmount * (1 - COALESCE (ioChangePercentAmount, 0) / 100) AS NUMERIC (16, 3));
+     outAmountChangePercent:= CAST (ioAmount * (1 - COALESCE (ioChangePercentAmount, 0) / 100) AS NUMERIC (16, 3));
+     END IF;
 
      IF inIsCalcAmountPartner = TRUE
      THEN
@@ -59,7 +105,7 @@ BEGIN
                                             (ioId                := ioId
                                           , inMovementId         := inMovementId
                                           , inGoodsId            := inGoodsId
-                                          , inAmount             := inAmount
+                                          , inAmount             := ioAmount
                                           , inAmountPartner      := ioAmountPartner
                                           , inAmountChangePercent:= outAmountChangePercent
                                           , inChangePercentAmount:= inChangePercentAmount
@@ -68,6 +114,12 @@ BEGIN
                                           , inPartionGoods       := inPartionGoods
                                           , inGoodsKindId        := inGoodsKindId
                                           , inUnitId             := inUnitId
+
+                                          , inCountPack          := COALESCE (outCountPack, 0)
+                                          , inWeightTotal        := COALESCE (outWeightTotal, 0)
+                                          , inWeightPack         := COALESCE (outWeightPack, 0)
+                                          , inIsBarCode          := vbIsBarCode
+
                                           , inUserId             := vbUserId
                                            ) AS tmp;
 
@@ -79,6 +131,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 19.11.15         * 
  04.06.15         * add inUnitId
  05.05.14                                                        * надо раскоментить права после отладки
  08.09.13                                        * add zc_MIFloat_AmountChangePercent
