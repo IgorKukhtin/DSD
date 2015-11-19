@@ -1,4 +1,4 @@
-DROP FUNCTION IF EXISTS gpSelect_Report_Wage_1(
+DROP FUNCTION IF EXISTS gpSelect_Report_Wage_Model(
     TDateTime, --дата начала периода
     TDateTime, --дата окончания периода
     Integer,   --подразделение 
@@ -8,7 +8,7 @@ DROP FUNCTION IF EXISTS gpSelect_Report_Wage_1(
     TVarChar   --сессия пользователя
 );
 
-CREATE OR REPLACE FUNCTION gpSelect_Report_Wage_1(
+CREATE OR REPLACE FUNCTION gpSelect_Report_Wage_Model(
     IN inDateStart      TDateTime, --дата начала периода
     IN inDateFinal      TDateTime, --дата окончания периода
     IN inUnitId         Integer,   --подразделение 
@@ -553,10 +553,10 @@ BEGIN
 END;
 $BODY$
   LANGUAGE PLPGSQL VOLATILE;
-ALTER FUNCTION gpSelect_Report_Wage_1 (TDateTime,TDateTime,Integer,Integer,Integer,Integer,TVarChar) OWNER TO postgres;
+ALTER FUNCTION gpSelect_Report_Wage_Model (TDateTime,TDateTime,Integer,Integer,Integer,Integer,TVarChar) OWNER TO postgres;
 
 /*
-Select * from gpSelect_Report_Wage_1(
+Select * from gpSelect_Report_Wage_Model(
     inDateStart      := '20150701'::TDateTime, --дата начала периода
     inDateFinal      := '20150731'::TDateTime, --дата окончания периода
     inUnitId         := 8448::Integer,   --подразделение 
