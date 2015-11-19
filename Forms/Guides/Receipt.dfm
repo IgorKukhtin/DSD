@@ -1384,7 +1384,7 @@ object ReceiptForm: TReceiptForm
     Top = 208
   end
   object spErasedUnErased: TdsdStoredProc
-    StoredProcName = 'gpUpdate_Object_isErased_Contract'
+    StoredProcName = 'gpUpdateObjectIsErased'
     DataSets = <>
     OutputType = otResult
     Params = <
