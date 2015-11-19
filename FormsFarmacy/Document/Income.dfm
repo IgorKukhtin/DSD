@@ -287,7 +287,6 @@ inherited IncomeForm: TIncomeForm
           object colAmountManual: TcxGridDBColumn
             Caption = #1060#1072#1082#1090'. '#1082#1086#1083'-'#1074#1086
             DataBinding.FieldName = 'AmountManual'
-            Options.Editing = False
             Width = 54
           end
           object colAmountDiff: TcxGridDBColumn
@@ -605,6 +604,18 @@ inherited IncomeForm: TIncomeForm
           StoredProc = spInsertUpdateMovement
         end
         item
+        end>
+    end
+    inherited actUpdateMainDS: TdsdUpdateDataSet
+      StoredProcList = <
+        item
+          StoredProc = spInsertUpdateMIMaster
+        end
+        item
+          StoredProc = spGetTotalSumm
+        end
+        item
+          StoredProc = spUpdate_MovementItem_Income_AmountManual
         end>
     end
     inherited actPrint: TdsdPrintAction
@@ -1705,5 +1716,86 @@ inherited IncomeForm: TIncomeForm
       end>
     Left = 656
     Top = 8
+  end
+  object spUpdate_MovementItem_Income_AmountManual: TdsdStoredProc
+    StoredProcName = 'gpUpdate_MovementItem_Income_AmountManual'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'ioMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inMovementItemId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inAmountManual'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'AmountManual'
+        DataType = ftFloat
+        ParamType = ptInput
+      end
+      item
+        Name = 'inReasonDifferences'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'ReasonDifferencesId'
+        ParamType = ptInput
+      end
+      item
+        Name = 'outAmountDiff'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'AmountDiff'
+        DataType = ftFloat
+      end
+      item
+        Value = Null
+        ParamType = ptUnknown
+      end
+      item
+        Value = Null
+        ParamType = ptUnknown
+      end
+      item
+        Value = Null
+        ParamType = ptUnknown
+      end
+      item
+        Value = Null
+        ParamType = ptUnknown
+      end
+      item
+        Value = Null
+        ParamType = ptUnknown
+      end
+      item
+        Value = Null
+        ParamType = ptUnknown
+      end
+      item
+        Value = Null
+        ParamType = ptUnknown
+      end
+      item
+        Value = Null
+        ParamType = ptUnknown
+      end
+      item
+        Value = Null
+        ParamType = ptUnknown
+      end>
+    PackSize = 1
+    Left = 512
+    Top = 384
   end
 end

@@ -91,6 +91,7 @@ type
     colAmountManual: TcxGridDBColumn;
     colReasonDifferencesName: TcxGridDBColumn;
     colAmountDiff: TcxGridDBColumn;
+    spUpdate_MovementItem_Income_AmountManual: TdsdStoredProc;
   private
     { Private declarations }
   public
