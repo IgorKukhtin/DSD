@@ -937,39 +937,37 @@ begin
         if LowerCase(ComponentItem) = LowerCase('ExportType') then
            (Component as TExportGrid).ExportType := FValue;
      end;
-     if (Component is TCustomAction) then
+     if Component is TBooleanStoredProcAction then
+        (Component as TBooleanStoredProcAction).Value := FValue
+     else
+     if Component is TADOQueryAction then begin
+       if LowerCase(ComponentItem) = 'connectionstring' then begin
+          (Component as TADOQueryAction).ConnectionString := FValue;
+       end else
+         if LowerCase(ComponentItem) = 'querytext' then
+           (Component as TADOQueryAction).QueryText := FValue;
+     end
+     else
+     if Component is TMedocAction then
+        (Component as TMedocAction).Directory := FValue
+     else
+     if Component is TdsdSMTPFileAction then
+       (Component as TdsdSMTPFileAction).FileName := FValue
+     else
+     if (Component is TCustomAction) AND (ComponentItem <> '') then
      Begin
-       if  (ComponentItem <> '') then
+       FRttiProperty := FRttiContext.GetType(Component.ClassType).GetProperty(ComponentItem);
+       if FRttiProperty <> nil then
        Begin
-          FRttiProperty := FRttiContext.GetType(TCustomAction).GetProperty(ComponentItem);
-          if FRttiProperty <> nil then
-          Begin
-            case FRttiProperty.PropertyType.TypeKind of
-              tkInteger: RttiValue := StrToInt(VarToStr(FValue));
-              tkFloat: RttiValue := StrToFloat(VarToStr(FValue));
-              tkString: RttiValue := VarToStr(FValue);
-              tkEnumeration: RttiValue := (FValue = True);
-              else RttiValue := VarToStr(FValue);
-            end;
-            FRttiProperty.SetValue(Component,RttiValue);
-            FRttiProperty.Free;
-          End;
-       End
-       else
-       Begin
-         if Component is TBooleanStoredProcAction then
-            (Component as TBooleanStoredProcAction).Value := FValue;
-         if Component is TADOQueryAction then begin
-            if LowerCase(ComponentItem) = 'connectionstring' then begin
-               (Component as TADOQueryAction).ConnectionString := FValue;
-            end else
-               if LowerCase(ComponentItem) = 'querytext' then
-                  (Component as TADOQueryAction).QueryText := FValue;
+         case FRttiProperty.PropertyType.TypeKind of
+           tkInteger: RttiValue := StrToInt(VarToStr(FValue));
+           tkFloat: RttiValue := StrToFloat(VarToStr(FValue));
+           tkString: RttiValue := VarToStr(FValue);
+           tkEnumeration: RttiValue := (FValue = True);
+           else RttiValue := VarToStr(FValue);
          end;
-         if Component is TMedocAction then
-            (Component as TMedocAction).Directory := FValue;
-         if Component is TdsdSMTPFileAction then
-            (Component as TdsdSMTPFileAction).FileName := FValue;
+         FRttiProperty.SetValue(Component,RttiValue);
+         FRttiProperty.Free;
        End;
      End;
      if Component is TCustomGuides then
