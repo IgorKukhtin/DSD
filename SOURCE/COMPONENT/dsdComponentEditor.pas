@@ -43,7 +43,7 @@ implementation
 
 uses dsdDB, TypInfo, Db, dsdGuides, cxTextEdit, cxMemo, cxCurrencyEdit, cxCheckBox,
      cxCalendar, cxButtonEdit, dsdAction, ChoicePeriod, ParentForm, Document, Defaults,
-     cxGrid, cxCustomPivotGrid, cxControls, VCLEditors, EDI, ExternalSave, Medoc;
+     cxGrid, cxCustomPivotGrid, cxControls, VCLEditors, EDI, ExternalSave, Medoc, Vcl.ActnList;
 
 procedure Register;
 begin
@@ -86,6 +86,7 @@ begin
   Designer.GetComponentNames(GetTypeData(TypeInfo(TCrossDBViewAddOn)), Proc);
   // и примерно такой же для Pivot
   Designer.GetComponentNames(GetTypeData(TypeInfo(TPivotAddOn)), Proc);
+  Designer.GetComponentNames(GetTypeData(TypeInfo(TCustomAction)), Proc);
 end;
 
 { TComponentItemTextProperty }
@@ -98,7 +99,8 @@ begin
          if Component <> nil then
             if (Component is TDataSet) or (Component is TdsdFormParams)
                or (Component is TDocument) or (Component is TdsdGuides)
-               or (Component is TDefaultKey) or (Component is TCrossDBViewAddOn) then
+               or (Component is TDefaultKey) or (Component is TCrossDBViewAddOn)
+               or (Component is TCustomAction) then
                Result := Result + [paValueList] - [paReadOnly];
 end;
 
@@ -148,6 +150,10 @@ begin
               Proc('Key');
               Proc('JSONKey');
             end;
+            if (Component is TCustomAction) then
+            Begin
+              Proc('Enabled');
+            End;
          end
 end;
 

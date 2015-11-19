@@ -13,7 +13,8 @@ uses
   cxPropertiesStore, cxLabel, cxTextEdit, cxMaskEdit, cxDropDownEdit,
   cxCalendar, Vcl.ExtCtrls, cxGridLevel, cxGridCustomTableView, cxGridTableView,
   cxGridDBTableView, cxGridCustomView, cxGrid, cxPC, ExternalSave,
-  dxBarBuiltInMenu, cxNavigator, cxCheckBox;
+  dxBarBuiltInMenu, cxNavigator, cxCheckBox, dxSkinsCore,
+  dxSkinsDefaultPainters, dxSkinscxPCPainter, cxButtonEdit, dxSkinsdxBarPainter;
 
 type
   TIncomePharmacyJournalForm = class(TAncestorJournalForm)
@@ -39,6 +40,11 @@ type
     colJuridicalName: TcxGridDBColumn;
     spInsertUpdateMovement: TdsdStoredProc;
     actUpdateDataSet: TdsdUpdateDataSet;
+    mactFarmacyShow: TMultiAction;
+    actGet_Movement_ManualAmountTrouble: TdsdExecStoredProc;
+    actaOpen_Income_AmountTroubleForm: TdsdOpenForm;
+    spGet_Movement_ManualAmountTrouble: TdsdStoredProc;
+    colButton: TcxGridDBColumn;
   private
     { Private declarations }
   public

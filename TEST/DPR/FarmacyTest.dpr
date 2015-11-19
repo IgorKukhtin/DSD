@@ -346,13 +346,16 @@ uses
   PaymentMovementItemTest in '..\SOURCE\MovementItem\All\Farmacy\PaymentMovementItemTest.pas',
   Payment in '..\..\FormsFarmacy\Document\Payment.pas' {PaymentForm: TParentForm},
   PaymentJournal in '..\..\FormsFarmacy\Document\PaymentJournal.pas' {PaymentJournalForm: TParentForm},
-  JuridicalCorporate in '..\..\FormsFarmacy\Guides\JuridicalCorporate.pas' {JuridicalCorporateForm: TParentForm};
+  JuridicalCorporate in '..\..\FormsFarmacy\Guides\JuridicalCorporate.pas' {JuridicalCorporateForm: TParentForm},
+  ReasonDifferences in '..\..\FormsFarmacy\Guides\ReasonDifferences.pas' {ReasonDifferencesForm: TParentForm},
+  ReasonDifferencesTest in '..\SOURCE\Objects\All\Farmacy\ReasonDifferencesTest.pas',
+  Income_AmountTrouble in '..\..\FormsFarmacy\Document\Income_AmountTrouble.pas' {Income_AmountTroubleForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}
 
 begin
-  ConnectionPath := '..\INIT\testfarmacy_init.php';
+  ConnectionPath := '..\INIT\realfarmacy_init.php';
   EnumPath := '..\DATABASE\FARMACY\METADATA\Enum\';
   CreateStructurePath := '..\DATABASE\FARMACY\STRUCTURE\';
   LocalViewPath := '..\DATABASE\FARMACY\View\';
@@ -360,7 +363,7 @@ begin
   LocalProcessPath := '..\DATABASE\COMMON\PROCESS\';
   dsdProject := prFarmacy;
 
-  gc_AdminPassword := 'Админ1111';
+  gc_AdminPassword := 'Админ1234';
   gc_ProgramName := 'Farmacy.exe';
 
   Application.Initialize;

@@ -2162,6 +2162,8 @@ begin
   for i := 0 to ActionList.Count - 1 do
     if Assigned(TActionItem(ActionList.Items[i]).Action) then
     begin
+      //если экшин не активен - не выполняем его
+      if not TActionItem(ActionList.Items[i]).Action.Enabled then continue;
       State := TActionItem(ActionList.Items[i]).Action.Execute;
       if (TActionItem(ActionList.Items[i]).Action is TdsdCustomAction) and
         (not State) then

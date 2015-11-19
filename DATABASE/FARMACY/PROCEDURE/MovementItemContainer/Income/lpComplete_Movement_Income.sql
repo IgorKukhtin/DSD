@@ -12,6 +12,8 @@ $BODY$
    DECLARE vbAccountId Integer;
    DECLARE vbOperSumm_Partner TFloat;
    DECLARE vbOperSumm_Partner_byItem TFloat;
+   DECLARE vbPriceWithVAT Boolean;
+   DECLARE vbNDS TFloat;
 BEGIN
 
      -- создаются временные таблицы - для формирование данных для проводок
@@ -162,6 +164,17 @@ BEGIN
     --                                         , Amount TFloat, OperDate TDateTime, IsActive Boolean) ON COMMIT DROP;
 
     -- ну и наконец-то суммы
+    SELECT
+        Movement.PriceWithVAT
+       ,Movement.NDS
+    INTO
+        vbPriceWithVAT
+       ,vbNDS
+    FROM
+        Movement_Income_View AS Movement
+    WHERE
+        Movement.Id = inMovementId;
+        
     INSERT INTO _tmpMIContainer_insert(AnalyzerId, DescId, MovementDescId, MovementId, MovementItemId, ContainerId, ParentId, AccountId, Amount, OperDate)
          SELECT 
                 0
@@ -181,16 +194,25 @@ BEGIN
                           inObjectId_1        := _tmpItem.ObjectId,
                           inDescId_2          := zc_ContainerLinkObject_Unit(), -- DescId для 1-ой Аналитики
                           inObjectId_2        := _tmpItem.UnitId) 
-              , nULL
+              , NULL
               , _tmpItem.AccountId
-              ,  CASE WHEN Movement_Income_View.PriceWithVAT THEN MovementItem_Income_View.AmountSumm
-                      ELSE MovementItem_Income_View.AmountSumm * (1 + Movement_Income_View.NDS/100)
-                 END::NUMERIC(16, 2)     
+              , CASE WHEN vbPriceWithVAT 
+                       THEN (((COALESCE (MovementItem.Amount, 0)) * MIFloat_Price.ValueData)::NUMERIC (16, 2))::TFloat
+                ELSE (((COALESCE (MovementItem.Amount, 0)) * MIFloat_Price.ValueData)::NUMERIC (16, 2))::TFloat * (1 + vbNDS/100)
+                END::NUMERIC(16, 2)     
+              
+              -- ,  CASE WHEN Movement_Income_View.PriceWithVAT THEN MovementItem_Income_View.AmountSumm
+                       -- ELSE MovementItem_Income_View.AmountSumm * (1 + Movement_Income_View.NDS/100)
+                  -- END::NUMERIC(16, 2)     
               , _tmpItem.OperDate
            FROM _tmpItem 
                 JOIN _tmpMIContainer_insert ON _tmpMIContainer_insert.MovementItemId = _tmpItem.MovementItemId
-                LEFT JOIN MovementItem_Income_View ON MovementItem_Income_View.Id = _tmpItem.MovementItemId
-                LEFT JOIN Movement_Income_View ON Movement_Income_View.Id = MovementItem_Income_View.MovementId;
+                LEFT OUTER JOIN MovementItem ON MovementItem.Id = _tmpItem.MovementItemId
+                LEFT OUTER JOIN MovementItemFloat AS MIFloat_Price
+                                                  ON MIFloat_Price.MovementItemId = MovementItem.ID
+                                                 AND MIFloat_Price.DescId = zc_MIFloat_Price();
+                --LEFT JOIN MovementItem_Income_View ON MovementItem_Income_View.Id = _tmpItem.MovementItemId;
+                --LEFT JOIN Movement_Income_View ON Movement_Income_View.Id = MovementItem_Income_View.MovementId;
 
      
      SELECT SUM(Amount) INTO vbOperSumm_Partner_byItem FROM _tmpMIContainer_insert WHERE AnalyzerId = 0;
@@ -215,6 +237,7 @@ BEGIN
                                 , inDescId     := zc_Movement_LossDebt()
                                 , inUserId     := inUserId
                                  );
+                                 
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;

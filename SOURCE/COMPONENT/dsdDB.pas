@@ -155,7 +155,7 @@ uses Storage, CommonData, TypInfo, UtilConvert, SysUtils, cxTextEdit, VCL.Forms,
      Variants, UITypes, dsdAction, Defaults, UtilConst, Windows, Dialogs,
      dsdAddOn, cxDBData, cxGridDBTableView, Authentication, Document, Controls,
      cxButtonEdit, EDI, ExternalSave, Medoc,
-     cxMemo, dsdInternetAction, ParentForm;
+     cxMemo, dsdInternetAction, ParentForm, Vcl.ActnList, System.Rtti;
 
 procedure Register;
 begin
@@ -891,6 +891,10 @@ begin
 end;
 
 procedure TdsdParam.SetValue(const Value: Variant);
+var
+  FRttiContext: TRttiContext;
+  FRttiProperty: TRttiProperty;
+  RttiValue : TValue;
 begin
   FValue := Value;
   // передаем значение параметра дальше по цепочке
@@ -927,25 +931,47 @@ begin
         end;
      if Component is TEDI then
         (Component as TEDI).Directory := FValue;
-     if Component is TMedocAction then
-        (Component as TMedocAction).Directory := FValue;
-     if Component is TdsdSMTPFileAction then
-        (Component as TdsdSMTPFileAction).FileName := FValue;
      if Component is TExportGrid then begin
         if LowerCase(ComponentItem) = LowerCase('DefaultFileName') then
            (Component as TExportGrid).DefaultFileName := FValue;
         if LowerCase(ComponentItem) = LowerCase('ExportType') then
            (Component as TExportGrid).ExportType := FValue;
      end;
-     if Component is TBooleanStoredProcAction then
-        (Component as TBooleanStoredProcAction).Value := FValue;
-     if Component is TADOQueryAction then begin
-        if LowerCase(ComponentItem) = 'connectionstring' then begin
-           (Component as TADOQueryAction).ConnectionString := FValue;
-        end else
-           if LowerCase(ComponentItem) = 'querytext' then
-              (Component as TADOQueryAction).QueryText := FValue;
-     end;
+     if (Component is TCustomAction) then
+     Begin
+       if  (ComponentItem <> '') then
+       Begin
+          FRttiProperty := FRttiContext.GetType(TCustomAction).GetProperty(ComponentItem);
+          if FRttiProperty <> nil then
+          Begin
+            case FRttiProperty.PropertyType.TypeKind of
+              tkInteger: RttiValue := StrToInt(VarToStr(FValue));
+              tkFloat: RttiValue := StrToFloat(VarToStr(FValue));
+              tkString: RttiValue := VarToStr(FValue);
+              tkEnumeration: RttiValue := (FValue = True);
+              else RttiValue := VarToStr(FValue);
+            end;
+            FRttiProperty.SetValue(Component,RttiValue);
+            FRttiProperty.Free;
+          End;
+       End
+       else
+       Begin
+         if Component is TBooleanStoredProcAction then
+            (Component as TBooleanStoredProcAction).Value := FValue;
+         if Component is TADOQueryAction then begin
+            if LowerCase(ComponentItem) = 'connectionstring' then begin
+               (Component as TADOQueryAction).ConnectionString := FValue;
+            end else
+               if LowerCase(ComponentItem) = 'querytext' then
+                  (Component as TADOQueryAction).QueryText := FValue;
+         end;
+         if Component is TMedocAction then
+            (Component as TMedocAction).Directory := FValue;
+         if Component is TdsdSMTPFileAction then
+            (Component as TdsdSMTPFileAction).FileName := FValue;
+       End;
+     End;
      if Component is TCustomGuides then
         if LowerCase(ComponentItem) = 'textvalue' then begin
            if VarIsNull(FValue) then
@@ -959,6 +985,7 @@ begin
                 FValue := 0;
              (Component as TCustomGuides).Key := FValue;
           end;
+
   end;
   if Assigned(FonChange) then
      FonChange(Self);
