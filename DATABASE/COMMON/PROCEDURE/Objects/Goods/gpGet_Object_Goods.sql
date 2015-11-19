@@ -28,10 +28,11 @@ BEGIN
      -- проверка прав пользовател€ на вызов процедуры
      -- PERFORM lpCheckRight(inSession, zc_Enum_Process_Get_Object_Goods());
     
+    --ѕ–ј…— по умолчанию - код 47  прайс-план калькул€ции(сырье) 
    SELECT Object.Id, Object.ValueData 
   into vbPriceListId, vbPriceListName 
    FROM Object WHERE Object.DescId = zc_Object_PriceList() 
-    and Object.Id = 18840;
+    and Object.ObjectCode = 47;  --код 47 прайс-план калькул€ции(сырье) 
 
    IF COALESCE (inId, 0) = 0
    THEN
