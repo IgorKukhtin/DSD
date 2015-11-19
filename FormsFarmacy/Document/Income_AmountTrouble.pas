@@ -1,0 +1,43 @@
+unit Income_AmountTrouble;
+
+interface
+
+uses
+  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, AncestorEnum, cxGraphics, cxControls,
+  cxLookAndFeels, cxLookAndFeelPainters, dxSkinsCore, dxSkinsDefaultPainters,
+  dxSkinscxPCPainter, cxPCdxBarPopupMenu, cxStyles, cxCustomData, cxFilter,
+  cxData, cxDataStorage, cxEdit, Data.DB, cxDBData, dxSkinsdxBarPainter, cxCalc,
+  cxButtonEdit, dsdAction, cxGridCustomTableView, cxGridTableView,
+  cxGridDBTableView, dsdDB, Vcl.Menus, dsdAddOn, dxBarExtItems, dxBar,
+  cxClasses, Datasnap.DBClient, Vcl.ActnList, cxPropertiesStore, cxGridLevel,
+  cxGridCustomView, cxGrid, cxPC;
+
+type
+  TIncome_AmountTroubleForm = class(TAncestorEnumForm)
+    FormParams: TdsdFormParams;
+    colGoodsCode: TcxGridDBColumn;
+    colGoodsName: TcxGridDBColumn;
+    colPartnerGoodsCode: TcxGridDBColumn;
+    colPartnerGoodsName: TcxGridDBColumn;
+    colAmount: TcxGridDBColumn;
+    colAmountManual: TcxGridDBColumn;
+    colAmountDiff: TcxGridDBColumn;
+    colReasonDifferencesName: TcxGridDBColumn;
+    actReasonDifferences: TOpenChoiceForm;
+    actSetEqual: TdsdExecStoredProc;
+    spUpdate_MovementItem_Income_AmountManual: TdsdStoredProc;
+    dsdUpdateDataSet1: TdsdUpdateDataSet;
+  private
+    { Private declarations }
+  public
+    { Public declarations }
+  end;
+
+implementation
+
+{$R *.dfm}
+
+initialization
+  Registerclass(TIncome_AmountTroubleForm)
+end.

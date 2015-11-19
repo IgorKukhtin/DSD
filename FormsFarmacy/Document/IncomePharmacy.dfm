@@ -12,19 +12,17 @@ inherited IncomePharmacyForm: TIncomePharmacyForm
     Height = 398
     ExplicitTop = 126
     ExplicitWidth = 985
-    ExplicitHeight = 400
+    ExplicitHeight = 398
     ClientRectBottom = 398
     ClientRectRight = 985
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 985
-      ExplicitHeight = 376
+      ExplicitHeight = 374
       inherited cxGrid: TcxGrid
         Width = 985
         Height = 374
-        ExplicitLeft = 56
-        ExplicitTop = -3
         ExplicitWidth = 985
-        ExplicitHeight = 376
+        ExplicitHeight = 374
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -387,6 +385,7 @@ inherited IncomePharmacyForm: TIncomePharmacyForm
     object cbFarmacyShow: TcxCheckBox
       Left = 189
       Top = 64
+      Action = mactFarmacyShow
       TabOrder = 17
       Width = 30
     end
@@ -597,6 +596,43 @@ inherited IncomePharmacyForm: TIncomePharmacyForm
         end>
       Caption = #1060#1072#1082#1090' = '#1076#1086#1082#1091#1084#1077#1085#1090
       ShortCut = 32
+    end
+    object mactFarmacyShow: TMultiAction
+      Category = 'AmountManual'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actGet_Movement_ManualAmountTrouble
+        end
+        item
+          Action = actaOpen_Income_AmountTroubleForm
+        end>
+    end
+    object actGet_Movement_ManualAmountTrouble: TdsdExecStoredProc
+      Category = 'AmountManual'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spGet_Movement_ManualAmountTrouble
+      StoredProcList = <
+        item
+          StoredProc = spGet_Movement_ManualAmountTrouble
+        end>
+      Caption = 'actGet_Movement_ManualAmountTrouble'
+    end
+    object actaOpen_Income_AmountTroubleForm: TdsdOpenForm
+      Category = 'AmountManual'
+      MoveParams = <>
+      FormName = 'TIncome_AmountTroubleForm'
+      FormNameParam.Value = 'TIncome_AmountTroubleForm'
+      FormNameParam.DataType = ftString
+      GuiParams = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'Id'
+        end>
+      isShowModal = False
     end
   end
   inherited MasterDS: TDataSource
@@ -990,7 +1026,6 @@ inherited IncomePharmacyForm: TIncomePharmacyForm
   inherited HeaderSaver: THeaderSaver
     ControlList = <
       item
-        Control = cbFarmacyShow
       end>
     Left = 232
     Top = 193
@@ -1435,5 +1470,41 @@ inherited IncomePharmacyForm: TIncomePharmacyForm
     PackSize = 1
     Left = 336
     Top = 368
+  end
+  object spGet_Movement_ManualAmountTrouble: TdsdStoredProc
+    StoredProcName = 'gpGet_Movement_ManualAmountTrouble'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inReverce'
+        Value = False
+        DataType = ftBoolean
+        ParamType = ptInput
+      end
+      item
+        Name = 'ioChecked'
+        Value = Null
+        Component = cbFarmacyShow
+        DataType = ftBoolean
+        ParamType = ptInputOutput
+      end
+      item
+        Name = 'outTrouble'
+        Value = Null
+        Component = actaOpen_Income_AmountTroubleForm
+        ComponentItem = 'Enabled'
+        DataType = ftBoolean
+      end>
+    PackSize = 1
+    Left = 544
+    Top = 432
   end
 end

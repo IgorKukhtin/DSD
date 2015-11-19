@@ -70,6 +70,10 @@ type
     ChoiceReasonDifferences: TOpenChoiceForm;
     actSetAmountEqual: TdsdExecStoredProc;
     colAmountDiff: TcxGridDBColumn;
+    mactFarmacyShow: TMultiAction;
+    spGet_Movement_ManualAmountTrouble: TdsdStoredProc;
+    actGet_Movement_ManualAmountTrouble: TdsdExecStoredProc;
+    actaOpen_Income_AmountTroubleForm: TdsdOpenForm;
   private
     { Private declarations }
   public

@@ -206,7 +206,23 @@ inherited IncomePharmacyJournalForm: TIncomePharmacyJournalForm
             Caption = #1055#1088#1086#1074#1077#1088#1077#1085#1086' '#1092#1072#1088#1084#1072#1094#1077#1074#1090#1086#1084
             DataBinding.FieldName = 'Checked'
             PropertiesClassName = 'TcxCheckBoxProperties'
+            Options.Editing = False
             Width = 95
+          end
+          object colButton: TcxGridDBColumn
+            AlternateCaption = #1048#1079#1084#1077#1085#1080#1090#1100' "'#1055#1088#1086#1074#1077#1088#1077#1085#1086' '#1092#1072#1088#1084#1072#1094#1077#1092#1090#1086#1084'"'
+            Caption = #1048#1079#1084'.'
+            PropertiesClassName = 'TcxButtonEditProperties'
+            Properties.Buttons = <
+              item
+                Action = mactFarmacyShow
+                Default = True
+                Kind = bkEllipsis
+              end>
+            Properties.ViewStyle = vsButtonsOnly
+            HeaderHint = #1048#1079#1084#1077#1085#1080#1090#1100' "'#1055#1088#1086#1074#1077#1088#1077#1085#1086' '#1092#1072#1088#1084#1072#1094#1077#1092#1090#1086#1084'"'
+            Options.ShowEditButtons = isebAlways
+            Width = 25
           end
           object colJuridicalName: TcxGridDBColumn
             Caption = #1063#1055
@@ -336,13 +352,53 @@ inherited IncomePharmacyJournalForm: TIncomePharmacyJournalForm
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
-      StoredProc = spInsertUpdateMovement
-      StoredProcList = <
-        item
-          StoredProc = spInsertUpdateMovement
-        end>
+      StoredProcList = <>
       Caption = 'actUpdateDataSet'
       DataSource = MasterDS
+    end
+    object mactFarmacyShow: TMultiAction
+      Category = 'AmountManual'
+      MoveParams = <
+        item
+          FromParam.Value = Null
+          ToParam.Value = Null
+        end>
+      ActionList = <
+        item
+          Action = actGet_Movement_ManualAmountTrouble
+        end
+        item
+          Action = actaOpen_Income_AmountTroubleForm
+        end>
+      Caption = 'mactFarmacyShow'
+    end
+    object actGet_Movement_ManualAmountTrouble: TdsdExecStoredProc
+      Category = 'AmountManual'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      PostDataSetAfterExecute = True
+      StoredProc = spGet_Movement_ManualAmountTrouble
+      StoredProcList = <
+        item
+          StoredProc = spGet_Movement_ManualAmountTrouble
+        end>
+      Caption = 'actGet_Movement_ManualAmountTrouble'
+    end
+    object actaOpen_Income_AmountTroubleForm: TdsdOpenForm
+      Category = 'AmountManual'
+      MoveParams = <>
+      Caption = 'actaOpen_Income_AmountTroubleForm'
+      FormName = 'TIncome_AmountTroubleForm'
+      FormNameParam.Value = 'TIncome_AmountTroubleForm'
+      FormNameParam.DataType = ftString
+      GuiParams = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'Id'
+        end>
+      isShowModal = False
     end
   end
   inherited MasterDS: TDataSource
@@ -716,5 +772,42 @@ inherited IncomePharmacyJournalForm: TIncomePharmacyJournalForm
     PackSize = 1
     Left = 594
     Top = 104
+  end
+  object spGet_Movement_ManualAmountTrouble: TdsdStoredProc
+    StoredProcName = 'gpGet_Movement_ManualAmountTrouble'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inReverce'
+        Value = True
+        DataType = ftBoolean
+        ParamType = ptInput
+      end
+      item
+        Name = 'ioChecked'
+        Value = 'False'
+        Component = MasterCDS
+        ComponentItem = 'Checked'
+        DataType = ftBoolean
+        ParamType = ptInputOutput
+      end
+      item
+        Name = 'outTrouble'
+        Value = Null
+        Component = actaOpen_Income_AmountTroubleForm
+        ComponentItem = 'Enabled'
+        DataType = ftBoolean
+      end>
+    PackSize = 1
+    Left = 408
+    Top = 392
   end
 end
