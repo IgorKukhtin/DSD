@@ -634,6 +634,22 @@ inherited IncomePharmacyForm: TIncomePharmacyForm
         end>
       isShowModal = False
     end
+    object actUpdate_MovementItem_Income_SetEqualAmount: TdsdExecStoredProc
+      Category = 'AmountManual'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdate_MovementItem_Income_SetEqualAmount
+      StoredProcList = <
+        item
+          StoredProc = spUpdate_MovementItem_Income_SetEqualAmount
+        end
+        item
+          StoredProc = spSelect
+        end>
+      Caption = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' <'#1060#1072#1082#1090'. '#1082#1086#1083'-'#1074#1086'> = <'#1082#1086#1083'-'#1074#1086'>'
+      Hint = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' <'#1060#1072#1082#1090'. '#1082#1086#1083'-'#1074#1086'> = <'#1082#1086#1083'-'#1074#1086'>'
+      ImageIndex = 30
+    end
   end
   inherited MasterDS: TDataSource
     Top = 448
@@ -748,6 +764,10 @@ inherited IncomePharmacyForm: TIncomePharmacyForm
         end
         item
           Visible = True
+          ItemName = 'dxBarButton2'
+        end
+        item
+          Visible = True
           ItemName = 'dxBarStatic'
         end
         item
@@ -794,6 +814,10 @@ inherited IncomePharmacyForm: TIncomePharmacyForm
       Action = actPrintForManager
       Category = 0
       Visible = ivNever
+    end
+    object dxBarButton2: TdxBarButton
+      Action = actUpdate_MovementItem_Income_SetEqualAmount
+      Category = 0
     end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
@@ -1505,6 +1529,22 @@ inherited IncomePharmacyForm: TIncomePharmacyForm
       end>
     PackSize = 1
     Left = 544
+    Top = 432
+  end
+  object spUpdate_MovementItem_Income_SetEqualAmount: TdsdStoredProc
+    StoredProcName = 'gpUpdate_MovementItem_Income_SetEqualAmount'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+      end>
+    PackSize = 1
+    Left = 368
     Top = 432
   end
 end
