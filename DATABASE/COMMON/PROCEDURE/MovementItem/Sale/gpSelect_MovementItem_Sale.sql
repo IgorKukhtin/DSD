@@ -102,7 +102,7 @@ BEGIN
            , CAST (0 AS TFloat)         AS PriceCost
            , CAST (0 AS TFloat)         AS SumCost
            , CAST (tmpPriceList.Price_Pricelist AS TFloat) AS Price_Pricelist
-            
+
            , CAST (NULL AS TFloat)      AS HeadCount
            , CAST (NULL AS TFloat)      AS BoxCount
            , CAST (NULL AS TVarChar)    AS PartionGoods
