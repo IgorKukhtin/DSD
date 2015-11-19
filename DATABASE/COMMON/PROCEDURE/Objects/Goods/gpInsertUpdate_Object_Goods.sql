@@ -58,10 +58,11 @@ BEGIN
        RAISE EXCEPTION 'Ошибка.Значение <Группа товаров> должно быть установлено.';
    END IF;
 
-   -- проверка <InfoMoney>
+   -- проверка <InfoMoney>   не вводится , берется из ближайшей группы где установлено
    IF COALESCE (inInfoMoneyId, 0) = 0
    THEN
-       RAISE EXCEPTION 'Ошибка.Значение <УП статья назначения> должно быть установлено.';
+       vbInfomoneyId := (SELECT lfGet_Object_GoodsGroup_InfomoneyId (inGoodsGroupId));
+       --RAISE EXCEPTION 'Ошибка.Значение <УП статья назначения> должно быть установлено.';
    END IF;
 
    -- проверка <Measure>
@@ -102,7 +103,7 @@ BEGIN
    -- сохранили связь с <Торговые марки>
    PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Goods_TradeMark(), ioId, inTradeMarkId);   
    -- сохранили связь с <Управленческие аналитики>
-   PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Goods_InfoMoney(), ioId, inInfoMoneyId);
+   PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Goods_InfoMoney(), ioId, vbInfomoneyId);
    -- сохранили связь с <Бизнесы>
    PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Goods_Business(), ioId, inBusinessId);
    -- сохранили связь с <Вид топлива>

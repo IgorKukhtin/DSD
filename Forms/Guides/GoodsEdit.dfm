@@ -133,6 +133,7 @@
         Default = True
         Kind = bkEllipsis
       end>
+    Properties.ReadOnly = False
     TabOrder = 14
     Width = 154
   end
