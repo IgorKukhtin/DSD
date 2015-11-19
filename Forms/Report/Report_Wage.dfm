@@ -136,6 +136,11 @@ inherited Report_WageForm: TReport_WageForm
             Caption = #1057#1091#1084#1084#1072' '#1085#1072' 1 '#1095#1077#1083
             DataBinding.FieldName = 'AmountOnOneMember'
           end
+          object colPersonalServiceListName: TcxGridDBColumn
+            Caption = #1042#1077#1076#1086#1084#1086#1089#1090#1100' '#1085#1072#1095#1080#1089#1083#1077#1085#1080#1103
+            DataBinding.FieldName = 'PersonalServiceListName'
+            Width = 164
+          end
         end
       end
     end
@@ -324,14 +329,14 @@ inherited Report_WageForm: TReport_WageForm
       Category = 'DSDLib'
       MoveParams = <>
       StoredProcList = <>
-      Caption = #1055#1077#1095#1072#1090#1100' '#1074#1077#1076#1086#1084#1086#1089#1090#1080
-      Hint = #1055#1077#1095#1072#1090#1100' '#1074#1077#1076#1086#1084#1086#1089#1090#1080
+      Caption = #1062#1077#1093' '#1076#1077#1083#1080#1082'.'
+      Hint = #1055#1077#1095#1072#1090#1100' '#1074#1077#1076#1086#1084#1086#1089#1090#1080' ('#1062#1077#1093' '#1076#1077#1083#1080#1082#1072#1090#1077#1089#1086#1074')'
       ImageIndex = 3
       DataSets = <
         item
           DataSet = MasterCDS
           UserName = 'frxMasterCDS'
-          IndexFieldNames = 'MemberName'
+          IndexFieldNames = 'UnitId;PersonalServiceListId;MemberName'
         end>
       Params = <
         item
@@ -355,6 +360,45 @@ inherited Report_WageForm: TReport_WageForm
         end>
       ReportName = #1042#1077#1076#1086#1084#1086#1089#1090#1100'_'#1087#1086'_'#1079#1072#1088#1087#1083#1072#1090#1077'_1'
       ReportNameParam.Value = #1042#1077#1076#1086#1084#1086#1089#1090#1100'_'#1087#1086'_'#1079#1072#1088#1087#1083#1072#1090#1077'_1'
+      ReportNameParam.DataType = ftString
+    end
+    object actPrint2: TdsdPrintAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProcList = <>
+      Caption = #1062#1077#1093' '#1089'/'#1082
+      Hint = #1055#1077#1095#1072#1090#1100' '#1074#1077#1076#1086#1084#1086#1089#1090#1080' ('#1062#1077#1093' '#1089'/'#1082')'
+      ImageIndex = 3
+      DataSets = <
+        item
+          DataSet = MasterCDS
+          UserName = 'frxMasterCDS'
+          IndexFieldNames = 
+            'UnitId;PersonalServiceListId;PositionName;PositionLevelName;Memb' +
+            'erName'
+        end>
+      Params = <
+        item
+          Name = 'DateStart'
+          Value = 41395d
+          Component = deStart
+          DataType = ftDateTime
+        end
+        item
+          Name = 'dateEnd'
+          Value = 41395d
+          Component = deEnd
+          DataType = ftDateTime
+        end
+        item
+          Name = 'UnitName'
+          Value = ''
+          Component = UnitGuides
+          ComponentItem = 'TextValue'
+          DataType = ftString
+        end>
+      ReportName = #1042#1077#1076#1086#1084#1086#1089#1090#1100'_'#1087#1086'_'#1079#1072#1088#1087#1083#1072#1090#1077'_2'
+      ReportNameParam.Value = #1042#1077#1076#1086#1084#1086#1089#1090#1100'_'#1087#1086'_'#1079#1072#1088#1087#1083#1072#1090#1077'_2'
       ReportNameParam.DataType = ftString
     end
   end
@@ -473,12 +517,24 @@ inherited Report_WageForm: TReport_WageForm
           ItemName = 'dxBarStatic'
         end
         item
+          UserDefine = [udPaintStyle]
+          UserPaintStyle = psCaptionGlyph
           Visible = True
           ItemName = 'dxBarButton1'
+        end
+        item
+          UserDefine = [udPaintStyle]
+          UserPaintStyle = psCaptionGlyph
+          Visible = True
+          ItemName = 'dxBarButton2'
         end>
     end
     object dxBarButton1: TdxBarButton
       Action = actPrint1
+      Category = 0
+    end
+    object dxBarButton2: TdxBarButton
+      Action = actPrint2
       Category = 0
     end
   end

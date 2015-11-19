@@ -26,6 +26,8 @@ RETURNS TABLE(
     ,PositionLevelId                Integer
     ,PositionLevelName              TVarChar
     ,PersonalCount                  Integer
+    ,HoursPlan                      TFloat
+    ,HoursDay                       TFloat
     ,MemberId                       Integer
     ,MemberName                     TVarChar
     ,SheetWorkTime_Date             TDateTime
@@ -75,6 +77,8 @@ BEGIN
        ,PositionLevelId Integer
        ,PositionLevelName TVarChar
        ,PersonalCount Integer
+       ,HoursPlan TFloat
+       ,HoursDay TFloat
        ,ServiceModelId Integer
        ,ServiceModelCode Integer
        ,ServiceModelName TVarChar
@@ -107,7 +111,7 @@ BEGIN
        -- ,GoodsTo Integer
        -- ,Amount TFloat) ON COMMIT DROP;
 
-    INSERT INTO Setting_Wage_1(StaffList,UnitId,UnitName,PositionId,PositionName,PositionLevelId ,PositionLevelName,PersonalCount,ServiceModelId,ServiceModelCode
+    INSERT INTO Setting_Wage_1(StaffList,UnitId,UnitName,PositionId,PositionName,PositionLevelId ,PositionLevelName,PersonalCount,HoursPlan,HoursDay,ServiceModelId,ServiceModelCode
                         ,ServiceModelName,Price,FromId,FromName,ToId,ToName,MovementDescId,MovementDescName,SelectKindId,SelectKindCode,isActive,SelectKindName
                         ,Ratio,ModelServiceItemChild_FromId,ModelServiceItemChild_FromDescId,ModelServiceItemChild_FromName,ModelServiceItemChild_ToId,ModelServiceItemChild_ToDescId,ModelServiceItemChild_ToName)
 --Настройки
@@ -120,6 +124,8 @@ BEGIN
        ,ObjectLink_StaffList_PositionLevel.ChildObjectId    AS PositionLevelId
        ,Object_PositionLevel.ValueData                      AS PositionLevelName
        ,ObjectFloat_PersonalCount.ValueData::Integer        AS PersonalCount
+       ,ObjectFloat_HoursPlan.ValueData                     AS HoursPlan
+       ,ObjectFloat_HoursDay.ValueData                      AS HoursDay
        ,ObjectLink_StaffListCost_ModelService.ChildObjectId AS ServiceModelId
        ,Object_ModelService.ObjectCode::Integer             AS ServiceModelCode
        ,Object_ModelService.ValueData                       AS ServiceModelName
@@ -170,6 +176,14 @@ BEGIN
         LEFT JOIN ObjectFloat AS ObjectFloat_PersonalCount 
                               ON ObjectFloat_PersonalCount.ObjectId = Object_StaffList.Id 
                              AND ObjectFloat_PersonalCount.DescId = zc_ObjectFloat_StaffList_PersonalCount()
+        --HoursPlan  1.Общ.пл.ч.в мес. на человека
+        LEFT JOIN ObjectFloat AS ObjectFloat_HoursPlan 
+                              ON ObjectFloat_HoursPlan.ObjectId = Object_StaffList.Id 
+                             AND ObjectFloat_HoursPlan.DescId = zc_ObjectFloat_StaffList_HoursPlan()
+        --HoursDay  2.Дневной пл.ч. на человека
+        LEFT JOIN ObjectFloat AS ObjectFloat_HoursDay 
+                              ON ObjectFloat_HoursDay.ObjectId = Object_StaffList.Id 
+                             AND ObjectFloat_HoursDay.DescId = zc_ObjectFloat_StaffList_HoursDay()
         --StaffListCost
         INNER JOIN ObjectLink AS ObjectLink_StaffListCost_StaffList
                               ON ObjectLink_StaffListCost_StaffList.ChildObjectId = Object_StaffList.ID
@@ -343,7 +357,6 @@ BEGIN
            ,Setting.UnitId
            ,Setting.PositionId
            ,Setting.PositionLevelId
-           ,Setting.PersonalCount
            ,Setting.ServiceModelId
            ,Setting.Price
            ,Setting.FromId
@@ -409,7 +422,6 @@ BEGIN
            ,Setting.UnitId
            ,Setting.PositionId
            ,Setting.PositionLevelId
-           ,Setting.PersonalCount
            ,Setting.ServiceModelId
            ,Setting.Price
            ,Setting.FromId
@@ -487,6 +499,8 @@ BEGIN
        ,Setting.PositionLevelId
        ,Setting.PositionLevelName
        ,Setting.PersonalCount
+       ,Setting.HoursPlan
+       ,Setting.HoursDay
        ,Movement_SheetWorkTime.MemberId
        ,Movement_SheetWorkTime.MemberName
        ,Movement_SheetWorkTime.SheetWorkTime_Date
@@ -525,7 +539,6 @@ BEGIN
                                             AND COALESCE(Setting.UnitId,0) = COALESCE(ServiceModelMovement.UnitId,0)
                                             AND COALESCE(Setting.PositionId,0) = COALESCE(ServiceModelMovement.PositionId,0)
                                             AND COALESCE(Setting.PositionLevelId,0) = COALESCE(ServiceModelMovement.PositionLevelId,0)
-                                            AND COALESCE(Setting.PersonalCount,0) = COALESCE(ServiceModelMovement.PersonalCount,0)
                                             AND COALESCE(Setting.ServiceModelId,0) = COALESCE(ServiceModelMovement.ServiceModelId,0)
                                             AND COALESCE(Setting.Price,0) = COALESCE(ServiceModelMovement.Price,0)
                                             AND COALESCE(Setting.FromId,0) = COALESCE(ServiceModelMovement.FromId,0)

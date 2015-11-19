@@ -54,6 +54,9 @@ type
     colAmountOnOneMember: TcxGridDBColumn;
     actPrint1: TdsdPrintAction;
     dxBarButton1: TdxBarButton;
+    colPersonalServiceListName: TcxGridDBColumn;
+    actPrint2: TdsdPrintAction;
+    dxBarButton2: TdxBarButton;
   private
     { Private declarations }
   public

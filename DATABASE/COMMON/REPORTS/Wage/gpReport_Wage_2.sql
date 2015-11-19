@@ -24,6 +24,8 @@ RETURNS TABLE(
     ,PositionLevelId                Integer
     ,PositionLevelName              TVarChar
     ,PersonalCount                  Integer
+    ,HoursPlan                      TFloat
+    ,HoursDay                       TFloat
     ,StaffListSummId                Integer
     ,StaffListSumm_Value            TFloat
     ,StaffListSummKindId            Integer
@@ -33,6 +35,7 @@ RETURNS TABLE(
     ,SheetWorkTime_Amount           TFloat
     ,Count_Day                      Integer
     ,Count_MemberDay                Integer
+    ,SUM_MemberHours                TFloat
     ,Summ                           TFloat
 )
 AS
@@ -52,13 +55,15 @@ BEGIN
        ,PositionLevelId       Integer
        ,PositionLevelName     TVarChar
        ,PersonalCount         Integer
+       ,HoursPlan             TFloat
+       ,HoursDay              TFloat
        ,StaffListSummId       Integer
        ,StaffListSumm_Value   TFloat
        ,StaffListSummKindId   Integer
        ,StaffListSummKindName TVarChar) ON COMMIT DROP;
 
     INSERT INTO Setting_Wage_2(StaffList,UnitId,UnitName,PositionId,PositionName,PositionLevelId,PositionLevelName
-       ,PersonalCount,StaffListSummId,StaffListSumm_Value,StaffListSummKindId,StaffListSummKindName)
+       ,PersonalCount,HoursPlan,HoursDay,StaffListSummId,StaffListSumm_Value,StaffListSummKindId,StaffListSummKindName)
 --Настройки
     SELECT
         Object_StaffList.Id                                      AS StaffList
@@ -69,6 +74,8 @@ BEGIN
        ,ObjectLink_StaffList_PositionLevel.ChildObjectId         AS PositionLevelId
        ,Object_PositionLevel.ValueData                           AS PositionLevelName
        ,ObjectFloat_PersonalCount.ValueData::Integer             AS PersonalCount
+       ,ObjectFloat_HoursPlan.ValueData                          AS HoursPlan
+       ,ObjectFloat_HoursDay.ValueData                           AS HoursDay
        ,ObjectLink_StaffListSumm_StaffList.ChildObjectId         AS StaffListSummId
        ,ObjectFloat_StaffListSumm_Value.ValueData                AS StaffListSumm_Value
        ,ObjectLink_StaffListSumm_StaffListSummKind.ChildObjectId AS StaffListSummKindId
@@ -97,6 +104,14 @@ BEGIN
         LEFT JOIN ObjectFloat AS ObjectFloat_PersonalCount 
                               ON ObjectFloat_PersonalCount.ObjectId = Object_StaffList.Id 
                              AND ObjectFloat_PersonalCount.DescId = zc_ObjectFloat_StaffList_PersonalCount()
+        --HoursPlan  1.Общ.пл.ч.в мес. на человека
+        LEFT JOIN ObjectFloat AS ObjectFloat_HoursPlan 
+                              ON ObjectFloat_HoursPlan.ObjectId = Object_StaffList.Id 
+                             AND ObjectFloat_HoursPlan.DescId = zc_ObjectFloat_StaffList_HoursPlan()
+        --HoursDay  2.Дневной пл.ч. на человека
+        LEFT JOIN ObjectFloat AS ObjectFloat_HoursDay 
+                              ON ObjectFloat_HoursDay.ObjectId = Object_StaffList.Id 
+                             AND ObjectFloat_HoursDay.DescId = zc_ObjectFloat_StaffList_HoursDay()
         --StaffListCost
         INNER JOIN ObjectLink AS ObjectLink_StaffListSumm_StaffList
                               ON ObjectLink_StaffListSumm_StaffList.ChildObjectId = Object_StaffList.ID
@@ -141,7 +156,8 @@ BEGIN
            ,SheetWorkTime.PositionLevelId
            ,SUM(SheetWorkTime.SheetWorkTime_Amount) AS SheetWorkTime_Amount
            ,SUM(SheetWorkTime.Count_Day)            AS Count_Day
-           ,SheetWorkTime.Count_MemberDay
+           ,SheetWorkTime.Count_MemberDay::Integer  AS Count_MemberDay
+           ,SheetWorkTime.SUM_MemberHours::TFloat   AS SUM_MemberHours
         FROM(
             SELECT
                 MI_SheetWorkTime.ObjectId                      AS MemberId
@@ -151,6 +167,7 @@ BEGIN
                ,MI_SheetWorkTime.Amount                        AS SheetWorkTime_Amount
                ,1                                              as Count_Day
                ,COUNT(*) OVER(PARTITION BY MIObject_Position.ObjectId,MIObject_PositionLevel.ObjectId) as Count_MemberDay
+               ,SUM(MI_SheetWorkTime.Amount) OVER(PARTITION BY MIObject_Position.ObjectId,MIObject_PositionLevel.ObjectId) AS SUM_MemberHours
             FROM
                 Movement
                 INNER JOIN MovementLinkObject AS MovementLinkObject_Unit
@@ -201,6 +218,7 @@ BEGIN
            ,SheetWorkTime.PositionId
            ,SheetWorkTime.PositionLevelId
            ,SheetWorkTime.Count_MemberDay
+           ,SheetWorkTime.SUM_MemberHours
     )
     SELECT 
         Setting.StaffList
@@ -211,6 +229,8 @@ BEGIN
        ,Setting.PositionLevelId
        ,Setting.PositionLevelName
        ,Setting.PersonalCount
+       ,Setting.HoursPlan
+       ,Setting.HoursDay
        ,Setting.StaffListSummId
        ,Setting.StaffListSumm_Value
        ,Setting.StaffListSummKindId
@@ -220,7 +240,15 @@ BEGIN
        ,Movement_SheetWorkTime.SheetWorkTime_Amount::TFloat
        ,Movement_SheetWorkTime.Count_Day::Integer
        ,Movement_SheetWorkTime.Count_MemberDay::Integer
-       ,(Setting.StaffListSumm_Value / Movement_SheetWorkTime.Count_MemberDay * Movement_SheetWorkTime.Count_MemberDay)::TFloat AS Summ
+       ,Movement_SheetWorkTime.SUM_MemberHours::TFloat
+       ,CASE 
+            WHEN Setting.StaffListSummKindId = zc_Enum_StaffListSummKind_Month()
+                THEN (Setting.StaffListSumm_Value / NULLIF(Movement_SheetWorkTime.Count_MemberDay,0) * Movement_SheetWorkTime.Count_Day)
+            WHEN Setting.StaffListSummKindId = zc_Enum_StaffListSummKind_HoursPlan()
+                THEN (Setting.StaffListSumm_Value / NULLIF(Setting.HoursPlan,0) * Movement_SheetWorkTime.SheetWorkTime_Amount)
+            WHEN Setting.StaffListSummKindId = zc_Enum_StaffListSummKind_HoursPlanConst()
+                THEN (Setting.StaffListSumm_Value / NULLIF(Movement_SheetWorkTime.SUM_MemberHours,0) * Movement_SheetWorkTime.SheetWorkTime_Amount)
+        END::TFloat AS Summ
     FROM Setting_Wage_2 AS Setting
         LEFT OUTER JOIN Movement_SheetWorkTime ON COALESCE(Movement_SheetWorkTime.PositionId,0) = COALESCE(Setting.PositionId,0)
                                               AND COALESCE(Movement_SheetWorkTime.PositionLevelId,0) = COALESCE(Setting.PositionLevelId,0)
