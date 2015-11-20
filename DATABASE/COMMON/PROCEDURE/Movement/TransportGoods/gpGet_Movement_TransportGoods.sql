@@ -86,7 +86,8 @@ BEGIN
                                                                                            WHEN vbIsOd = TRUE
                                                                                                 THEN 427054 -- Строкун Артем Миколайович
                                                                                            WHEN vbIsNik = TRUE
-                                                                                                THEN 518520  -- Флера Сергей Владимирович
+                                                                                                THEN 149822  -- Бойченко Денис Анатолійович
+                                                                                                --THEN 518520  -- Флера Сергей Владимирович
                                                                                            ELSE NULL
                                                                                       END
                                                                , inRouteId         := (SELECT MLO.ObjectId FROM MovementLinkObject AS MLO WHERE MLO.MovementId = inMovementId_Sale AND MLO.DescId = zc_MovementLinkObject_Route())
@@ -107,19 +108,22 @@ BEGIN
                                                                , inMemberId2       := CASE WHEN vbIsOd = TRUE
                                                                                                 THEN 418699 -- Бирдіна Оксана Євгенівна
                                                                                            WHEN vbIsNik = TRUE
-                                                                                                THEN 419066 -- Глушкова Нина Николаевна
+                                                                                                THEN 453450 -- Тимків Тетяна Василівна
+                                                                                                --THEN 419066 -- Глушкова Нина Николаевна  453450  
                                                                                            ELSE NULL
                                                                                       END
                                                                , inMemberId3       := CASE WHEN vbIsOd = TRUE
                                                                                                 THEN 418699 -- Бирдіна Оксана Євгенівна
                                                                                            WHEN vbIsNik = TRUE
-                                                                                                THEN 419066 -- Глушкова Нина Николаевна
+                                                                                                THEN 453450 -- Тимків Тетяна Василівна
+                                                                                                --THEN 419066 -- Глушкова Нина Николаевна
                                                                                            ELSE NULL
                                                                                       END
                                                                , inMemberId4       := CASE WHEN vbIsKh = TRUE
                                                                                                 THEN 301480 -- Самохін Володимир Іванович кладовщик
                                                                                            WHEN vbIsNik = TRUE
-                                                                                                THEN 419066 -- Глушкова Нина Николаевна
+                                                                                                THEN 453450 -- Тимків Тетяна Василівна
+                                                                                                --THEN 419066 -- Глушкова Нина Николаевна
                                                                                            ELSE NULL
                                                                                       END
                                                                , inMemberId5       := NULL
@@ -225,6 +229,8 @@ BEGIN
                                         AND MovementLinkObject_Member3.DescId = zc_MovementLinkObject_Member3()
             LEFT JOIN Object AS Object_Member3 ON Object_Member3.Id = CASE WHEN vbIsOd = TRUE AND MovementLinkObject_Member3.ObjectId IS NULL
                                                                                 THEN 418699 -- Бирдіна Оксана Євгенівна
+                                                                           WHEN vbIsNik = TRUE AND MovementLinkObject_Member3.ObjectId IS NULL
+                                                                                THEN 453450 -- Тимків Тетяна Василівна
                                                                            ELSE MovementLinkObject_Member3.ObjectId
                                                                       END
             LEFT JOIN MovementLinkObject AS MovementLinkObject_Member4
