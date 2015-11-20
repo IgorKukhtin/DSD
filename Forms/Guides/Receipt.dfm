@@ -825,6 +825,14 @@ object ReceiptForm: TReceiptForm
         end
         item
           Visible = True
+          ItemName = 'bbUpdateTaxExit'
+        end
+        item
+          Visible = True
+          ItemName = 'bbUpdateWeightMain'
+        end
+        item
+          Visible = True
           ItemName = 'bbProtocolChild'
         end
         item
@@ -967,6 +975,14 @@ object ReceiptForm: TReceiptForm
     end
     object bbProtocolChild: TdxBarButton
       Action = ProtocolOpenFormChild
+      Category = 0
+    end
+    object bbUpdateTaxExit: TdxBarButton
+      Action = actUpdateTaxExit
+      Category = 0
+    end
+    object bbUpdateWeightMain: TdxBarButton
+      Action = actUpdateWeightMain
       Category = 0
     end
   end
@@ -1296,6 +1312,19 @@ object ReceiptForm: TReceiptForm
       Caption = 'actUpdateDataSet'
       DataSource = MasterDS
     end
+    object actUpdateWeightMain: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdateWeightMain
+      StoredProcList = <
+        item
+          StoredProc = spUpdateWeightMain
+        end>
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' "'#1042#1093#1086#1076#1080#1090' '#1074' '#1086#1089#1085'. '#1089#1099#1088#1100#1077' (100 '#1082#1075'.)  '#1044#1072'/'#1053#1077#1090'"'
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' "'#1042#1093#1086#1076#1080#1090' '#1074' '#1086#1089#1085'. '#1089#1099#1088#1100#1077' (100 '#1082#1075'.)  '#1044#1072'/'#1053#1077#1090'"'
+      ImageIndex = 58
+    end
     object actPrint: TdsdPrintAction
       Category = 'Print'
       MoveParams = <>
@@ -1343,6 +1372,19 @@ object ReceiptForm: TReceiptForm
       ReportName = #1055#1077#1095#1072#1090#1100'_'#1088#1077#1094#1077#1087#1090#1086#1074
       ReportNameParam.Value = #1055#1077#1095#1072#1090#1100'_'#1088#1077#1094#1077#1087#1090#1086#1074
       ReportNameParam.DataType = ftString
+    end
+    object actUpdateTaxExit: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdateTaxExit
+      StoredProcList = <
+        item
+          StoredProc = spUpdateTaxExit
+        end>
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' "'#1047#1072#1074#1080#1089#1080#1090' '#1086#1090' % '#1074#1099#1093'.  '#1044#1072'/'#1053#1077#1090'"'
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' "'#1047#1072#1074#1080#1089#1080#1090' '#1086#1090' % '#1074#1099#1093'.  '#1044#1072'/'#1053#1077#1090'"'
+      ImageIndex = 52
     end
   end
   object spSelect: TdsdStoredProc
@@ -1772,5 +1814,73 @@ object ReceiptForm: TReceiptForm
     PackSize = 1
     Left = 496
     Top = 249
+  end
+  object spUpdateTaxExit: TdsdStoredProc
+    StoredProcName = 'gpUpdateObject_isBoolean'
+    DataSet = ChildCDS
+    DataSets = <
+      item
+        DataSet = ChildCDS
+      end>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inId'
+        Value = 0
+        Component = ChildCDS
+        ComponentItem = 'id'
+        ParamType = ptInput
+      end
+      item
+        Name = 'ioParam'
+        Value = False
+        Component = ChildCDS
+        ComponentItem = 'isTaxExit'
+        DataType = ftBoolean
+        ParamType = ptInputOutput
+      end
+      item
+        Name = 'inDesc'
+        Value = 'zc_ObjectBoolean_ReceiptChild_TaxExit'
+        DataType = ftString
+        ParamType = ptInput
+      end>
+    PackSize = 1
+    Left = 770
+    Top = 405
+  end
+  object spUpdateWeightMain: TdsdStoredProc
+    StoredProcName = 'gpUpdateObject_isBoolean'
+    DataSet = ChildCDS
+    DataSets = <
+      item
+        DataSet = ChildCDS
+      end>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inId'
+        Value = Null
+        Component = ChildCDS
+        ComponentItem = 'id'
+        ParamType = ptInput
+      end
+      item
+        Name = 'ioParam'
+        Value = Null
+        Component = ChildCDS
+        ComponentItem = 'isWeightMain'
+        DataType = ftBoolean
+        ParamType = ptInputOutput
+      end
+      item
+        Name = 'inDesc'
+        Value = 'zc_ObjectBoolean_ReceiptChild_WeightMain'
+        DataType = ftString
+        ParamType = ptInput
+      end>
+    PackSize = 1
+    Left = 858
+    Top = 397
   end
 end

@@ -149,6 +149,12 @@ type
     clUpdateDate: TcxGridDBColumn;
     ProtocolOpenFormChild: TdsdOpenForm;
     bbProtocolChild: TdxBarButton;
+    spUpdateTaxExit: TdsdStoredProc;
+    actUpdateTaxExit: TdsdExecStoredProc;
+    actUpdateWeightMain: TdsdExecStoredProc;
+    spUpdateWeightMain: TdsdStoredProc;
+    bbUpdateTaxExit: TdxBarButton;
+    bbUpdateWeightMain: TdxBarButton;
   private
     { Private declarations }
   public
