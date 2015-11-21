@@ -42,7 +42,6 @@ type
     dsdGridToExcel: TdsdGridToExcel;
     spSelect: TdsdStoredProc;
     dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn;
-    spErasedUnErased: TdsdStoredProc;
     dsdDBViewAddOn: TdsdDBViewAddOn;
     clStartDate: TcxGridDBColumn;
     clEndDate: TcxGridDBColumn;
@@ -58,7 +57,7 @@ type
     clReceiptCostName: TcxGridDBColumn;
     clReceiptKindName: TcxGridDBColumn;
     clIsErased: TcxGridDBColumn;
-    cxGridContractCondition: TcxGrid;
+    cxGridReceiptChild: TcxGrid;
     cxGridDBTableViewReceiptChild: TcxGridDBTableView;
     clGoodsKindNameclChild: TcxGridDBColumn;
     clValueChild: TcxGridDBColumn;
@@ -155,6 +154,12 @@ type
     spUpdateWeightMain: TdsdStoredProc;
     bbUpdateTaxExit: TdxBarButton;
     bbUpdateWeightMain: TdxBarButton;
+    spErasedUnErasedReceiptChild: TdsdStoredProc;
+    dsdSetErasedReceiptChild: TdsdUpdateErased;
+    bbSetErasedReceiptChild: TdxBarButton;
+    dsdSetUnErasedReceiptChild: TdsdUpdateErased;
+    bb: TdxBarButton;
+    spErasedUnErasedReceipt: TdsdStoredProc;
   private
     { Private declarations }
   public
