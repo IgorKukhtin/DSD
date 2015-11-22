@@ -642,6 +642,8 @@ type
     mniReport_Wage: TMenuItem;
     actReport_Weighing: TdsdOpenForm;
     C1: TMenuItem;
+    actReport_Branch_App1: TdsdOpenForm;
+    N110: TMenuItem;
     procedure actReport_OLAPSoldExecute(Sender: TObject);
     procedure FormShow(Sender: TObject);
   private
