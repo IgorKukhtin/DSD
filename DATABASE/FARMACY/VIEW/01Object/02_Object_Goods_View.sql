@@ -23,7 +23,7 @@ CREATE OR REPLACE VIEW Object_Goods_View AS
            , COALESCE(ObjectBoolean_Goods_TOP.ValueData, false)     AS isTOP
            , ObjectFloat_Goods_PercentMarkup.ValueData        AS PercentMarkup
            , ObjectFloat_Goods_Price.ValueData                AS Price
-
+           , COALESCE(ObjectBoolean_Goods_IsUpload.ValueData,FALSE) AS IsUpload 
        FROM ObjectLink AS ObjectLink_Goods_Object
 
             LEFT JOIN Object AS Object_Goods 
@@ -76,7 +76,11 @@ CREATE OR REPLACE VIEW Object_Goods_View AS
                                ON ObjectFloat_Goods_MinimumLot.ObjectId = ObjectLink_Goods_Object.ObjectId 
                               AND ObjectFloat_Goods_MinimumLot.DescId = zc_ObjectFloat_Goods_MinimumLot()   
 
-       WHERE ObjectLink_Goods_Object.DescId = zc_ObjectLink_Goods_Object();
+        LEFT JOIN ObjectBoolean AS ObjectBoolean_Goods_IsUpload
+                                ON ObjectBoolean_Goods_IsUpload.ObjectId = ObjectLink_Goods_Object.ObjectId 
+                               AND ObjectBoolean_Goods_IsUpload.DescId = zc_ObjectBoolean_Goods_IsUpload()   
+
+    WHERE ObjectLink_Goods_Object.DescId = zc_ObjectLink_Goods_Object();
 
 
 ALTER TABLE Object_Goods_View  OWNER TO postgres;

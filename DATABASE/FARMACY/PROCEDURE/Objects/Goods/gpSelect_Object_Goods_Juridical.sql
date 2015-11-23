@@ -9,7 +9,7 @@ CREATE OR REPLACE FUNCTION gpSelect_Object_Goods_Juridical(
 RETURNS TABLE (Id Integer
              , GoodsMainId Integer, GoodsMainCode Integer, GoodsMainName TVarChar
              , GoodsId Integer, GoodsCodeInt Integer, GoodsCode TVarChar, GoodsName TVarChar
-             , MakerName TVarChar, MinimumLot TFloat
+             , MakerName TVarChar, MinimumLot TFloat, IsUpload Boolean
 
 ) AS
 $BODY$
@@ -30,7 +30,7 @@ BEGIN
          , Object_Goods_View.GoodsName
          , Object_Goods_View.MakerName
          , Object_Goods_View.MinimumLot
-
+         , Object_Goods_View.IsUpload
    FROM Object_Goods_View 
      LEFT JOIN ObjectLink AS ObjectLink_LinkGoods_Goods
                           ON ObjectLink_LinkGoods_Goods.DescId = zc_ObjectLink_LinkGoods_Goods()

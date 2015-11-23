@@ -12,7 +12,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar,
                NDSKindId Integer, NDSKindName TVarChar,
                MinimumLot TFloat, ReferCode TFloat, ReferPrice TFloat, Price TFloat, 
                isClose boolean, 
-               isTOP boolean, PercentMarkup TFloat,  
+               isTOP boolean, PercentMarkup TFloat,  isUpload Boolean,
                isErased boolean
                ) AS
 $BODY$
@@ -48,7 +48,7 @@ BEGIN
            , false         AS isClose
            , false         AS isTOP
            , 0::TFloat     AS PercentMarkup
-
+           , false         AS isUpload
            , CAST (NULL AS Boolean) AS isErased
 
        FROM (SELECT MAX (Object_Goods.GoodsCodeInt) AS GoodsCodeIntMax
@@ -84,6 +84,8 @@ BEGIN
           , Object_Goods_View.isTOP          AS isTOP
           , Object_Goods_View.PercentMarkup  AS PercentMarkup
 
+          , Object_Goods_View.IsUpload       AS isUpload
+          
           , Object_Goods_View.isErased       AS isErased
           
      FROM Object_Goods_View

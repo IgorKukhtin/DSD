@@ -8,7 +8,7 @@ uses
   cxGraphics, cxControls, cxLookAndFeels, cxLookAndFeelPainters, cxContainer,
   cxEdit, Vcl.Menus, Vcl.StdCtrls, cxButtons, cxLabel, cxTextEdit, Vcl.ActnList,
   Vcl.StdActns, cxCurrencyEdit, cxCheckBox, ParentForm, dsdGuides, dsdDB,
-  dsdAction, cxMaskEdit, cxButtonEdit;
+  dsdAction, cxMaskEdit, cxButtonEdit, dxSkinsCore, dxSkinsDefaultPainters;
 
 type
   TUnitEditForm = class(TParentForm)
@@ -31,6 +31,9 @@ type
     cxLabel5: TcxLabel;
     ceJuridical: TcxButtonEdit;
     JuridicalGuides: TdsdGuides;
+    cxLabel2: TcxLabel;
+    edMarginCategory: TcxButtonEdit;
+    MarginCategoryGuides: TdsdGuides;
   private
     { Private declarations }
   public

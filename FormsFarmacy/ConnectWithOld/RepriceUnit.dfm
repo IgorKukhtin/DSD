@@ -3,7 +3,7 @@ object RepriceUnitForm: TRepriceUnitForm
   Top = 0
   Caption = #1055#1077#1088#1077#1086#1094#1077#1085#1082#1072' '#1087#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1081
   ClientHeight = 594
-  ClientWidth = 670
+  ClientWidth = 864
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -17,16 +17,13 @@ object RepriceUnitForm: TRepriceUnitForm
   object AllGoodsPriceGrid: TcxGrid
     Left = 0
     Top = 249
-    Width = 670
+    Width = 864
     Height = 345
     Align = alClient
     TabOrder = 0
-    ExplicitLeft = 32
-    ExplicitTop = 279
-    ExplicitHeight = 307
     object AllGoodsPriceGridTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
-      DataController.DataSource = QueryDS
+      DataController.DataSource = dsResult
       DataController.Summary.DefaultGroupSummaryItems = <>
       DataController.Summary.FooterSummaryItems = <>
       DataController.Summary.SummaryGroups = <>
@@ -35,27 +32,48 @@ object RepriceUnitForm: TRepriceUnitForm
       OptionsData.CancelOnExit = False
       OptionsData.Deleting = False
       OptionsData.DeletingConfirmation = False
-      OptionsData.Editing = False
       OptionsData.Inserting = False
-      OptionsView.GroupByBox = False
+      object colUnitName: TcxGridDBColumn
+        Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
+        DataBinding.FieldName = 'UnitName'
+        Visible = False
+        GroupIndex = 0
+        Options.Editing = False
+        Width = 154
+      end
+      object colReprice: TcxGridDBColumn
+        AlternateCaption = #1055#1077#1088#1077#1086#1094#1077#1085#1080#1090#1100
+        Caption = #1055#1077#1088#1077#1086#1094#1077#1085#1080#1090#1100
+        DataBinding.FieldName = 'Reprice'
+        PropertiesClassName = 'TcxCheckBoxProperties'
+        HeaderHint = #1055#1077#1088#1077#1086#1094#1077#1085#1080#1090#1100
+        Width = 22
+      end
       object colGoodsCode: TcxGridDBColumn
         Caption = #1050#1086#1076
         DataBinding.FieldName = 'Code'
+        Options.Editing = False
+        Width = 54
       end
       object colGoodsName: TcxGridDBColumn
         Caption = #1058#1086#1074#1072#1088
         DataBinding.FieldName = 'GoodsName'
+        Options.Editing = False
         Width = 289
       end
       object colRemainsCount: TcxGridDBColumn
         Caption = #1054#1089#1090#1072#1090#1086#1082
         DataBinding.FieldName = 'RemainsCount'
+        PropertiesClassName = 'TcxCalcEditProperties'
+        Properties.DisplayFormat = ',0.000;-0.000; ;'
+        Options.Editing = False
       end
       object colOldPrice: TcxGridDBColumn
         Caption = #1058#1077#1082#1091#1097#1072#1103' '#1094#1077#1085#1072
         DataBinding.FieldName = 'LastPrice'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DisplayFormat = ',0.00'
+        Options.Editing = False
         Width = 82
       end
       object colNewPrice: TcxGridDBColumn
@@ -63,51 +81,39 @@ object RepriceUnitForm: TRepriceUnitForm
         DataBinding.FieldName = 'NewPrice'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DisplayFormat = ',0.00'
+        Options.Editing = False
         Width = 74
       end
       object colPercent: TcxGridDBColumn
         Caption = '% '#1080#1079#1084#1077#1085#1077#1085#1080#1103
-        DataBinding.FieldName = 'Percent'
+        DataBinding.FieldName = 'PriceDiff'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DecimalPlaces = 0
-        Properties.DisplayFormat = '0'
-        Width = 62
+        Properties.DisplayFormat = '+0.0%;-0.0%; ;'
+        Options.Editing = False
+        Width = 78
+      end
+      object colMarginPercent: TcxGridDBColumn
+        Caption = #1052#1080#1085'. % '#1088#1072#1079#1085#1080#1094#1099
+        DataBinding.FieldName = 'MarginPercent'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DisplayFormat = ',0.### %'
+        Options.Editing = False
+        Width = 92
       end
       object colNDS: TcxGridDBColumn
         Caption = #1053#1044#1057
         DataBinding.FieldName = 'NDS'
-        Width = 48
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DisplayFormat = '0.## %'
+        Options.Editing = False
+        Width = 43
       end
       object colExpirationDate: TcxGridDBColumn
         Caption = #1057#1088#1086#1082' '#1075#1086#1076#1085#1086#1089#1090#1080
         DataBinding.FieldName = 'ExpirationDate'
+        Options.Editing = False
         Width = 77
-      end
-      object colNotReprice: TcxGridDBColumn
-        AlternateCaption = #1053#1077' '#1087#1077#1088#1077#1086#1094#1077#1085#1080#1074#1072#1077#1090#1089#1103
-        Caption = #1061
-        DataBinding.FieldName = 'NotReprice'
-        PropertiesClassName = 'TcxImageComboBoxProperties'
-        Properties.Images = dmMain.ImageList
-        Properties.Items = <
-          item
-            Description = #1053#1077' '#1087#1077#1088#1077#1086#1094#1077#1085#1080#1074#1072#1077#1090#1089#1103
-            ImageIndex = 72
-            Value = True
-          end
-          item
-            Description = #1055#1077#1088#1077#1086#1094#1077#1085#1080#1074#1072#1077#1090#1089#1103
-            ImageIndex = 7
-            Value = False
-          end>
-        Properties.ShowDescriptions = False
-        HeaderHint = #1053#1077' '#1087#1077#1088#1077#1086#1094#1077#1085#1080#1074#1072#1077#1090#1089#1103
-        Width = 22
-      end
-      object colNotRepriceNote: TcxGridDBColumn
-        Caption = #1055#1088#1080#1095#1080#1085#1072
-        DataBinding.FieldName = 'NotRepriceNote'
-        Width = 207
       end
     end
     object AllGoodsPriceGridLevel: TcxGridLevel
@@ -117,117 +123,105 @@ object RepriceUnitForm: TRepriceUnitForm
   object Panel1: TPanel
     Left = 0
     Top = 0
-    Width = 670
+    Width = 864
     Height = 241
     Align = alTop
     TabOrder = 1
-    ExplicitLeft = 8
-    ExplicitTop = 40
-    ExplicitWidth = 641
-    object Panel2: TPanel
-      Left = 298
-      Top = 1
-      Width = 371
-      Height = 239
-      Align = alRight
-      TabOrder = 0
-      ExplicitLeft = 312
-      ExplicitTop = 64
-      ExplicitWidth = 358
-      ExplicitHeight = 171
-      object Panel3: TPanel
-        Left = 1
-        Top = 1
-        Width = 369
-        Height = 32
-        Align = alTop
-        TabOrder = 0
-        ExplicitWidth = 356
-        object Button1: TButton
-          Left = 224
-          Top = 3
-          Width = 116
-          Height = 25
-          Caption = #1055#1077#1088#1077#1086#1094#1077#1085#1080#1090#1100'  >>>'
-          TabOrder = 0
-          OnClick = Button1Click
-        end
-        object cePercentDifference: TcxCurrencyEdit
-          Left = 104
-          Top = 5
-          EditValue = 30.000000000000000000
-          Properties.DecimalPlaces = 0
-          Properties.DisplayFormat = ',0.'
-          TabOrder = 1
-          Width = 52
-        end
-        object cxLabel1: TcxLabel
-          Left = 8
-          Top = 6
-          Caption = '% '#1088#1072#1079#1085#1080#1094#1099' '#1094#1077#1085#1099
-        end
-      end
-      object Memo1: TMemo
-        Left = 1
-        Top = 33
-        Width = 369
-        Height = 205
-        Align = alClient
-        ReadOnly = True
-        TabOrder = 1
-        ExplicitLeft = 40
-        ExplicitTop = -54
-        ExplicitWidth = 318
-        ExplicitHeight = 225
-      end
-    end
-    object cxSplitter2: TcxSplitter
-      Left = 292
-      Top = 1
-      Width = 6
-      Height = 239
-      AlignSplitter = salRight
-      ExplicitLeft = 361
-      ExplicitTop = -4
-    end
     object Panel4: TPanel
       Left = 1
       Top = 1
-      Width = 291
+      Width = 862
       Height = 239
       Align = alClient
       Caption = 'Panel4'
-      TabOrder = 2
-      ExplicitTop = 7
-      ExplicitWidth = 224
-      ExplicitHeight = 228
+      TabOrder = 0
+      ExplicitWidth = 485
       object CheckListBox: TCheckListBox
         Left = 1
         Top = 1
-        Width = 289
-        Height = 210
+        Width = 860
+        Height = 211
         Align = alClient
         ItemHeight = 13
         TabOrder = 0
-        ExplicitWidth = 291
-        ExplicitHeight = 239
+        ExplicitWidth = 483
       end
       object Panel5: TPanel
         Left = 1
-        Top = 211
-        Width = 289
-        Height = 27
+        Top = 212
+        Width = 860
+        Height = 26
         Align = alBottom
         TabOrder = 1
-        ExplicitTop = 210
-        object Button2: TButton
-          Left = 103
-          Top = 2
-          Width = 75
+        ExplicitWidth = 483
+        object lblProggres1: TLabel
+          Left = 514
+          Top = 0
+          Width = 22
+          Height = 13
+          Alignment = taCenter
+          Caption = '0 / 0'
+        end
+        object lblProggres2: TLabel
+          Left = 608
+          Top = 0
+          Width = 22
+          Height = 13
+          Alignment = taCenter
+          Caption = '0 / 0'
+        end
+        object btnSelectNewPrice: TButton
+          Left = 345
+          Top = 0
+          Width = 91
           Height = 25
           Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
           TabOrder = 0
-          OnClick = Button2Click
+          OnClick = btnSelectNewPriceClick
+        end
+        object ProgressBar1: TProgressBar
+          Left = 480
+          Top = 13
+          Width = 81
+          Height = 10
+          TabOrder = 1
+        end
+        object ProgressBar2: TProgressBar
+          Left = 568
+          Top = 13
+          Width = 93
+          Height = 10
+          TabOrder = 2
+        end
+        object cePercentDifference: TcxCurrencyEdit
+          Left = 92
+          Top = 3
+          EditValue = 30.000000000000000000
+          Properties.DecimalPlaces = 0
+          Properties.DisplayFormat = ',0.'
+          TabOrder = 3
+          Width = 29
+        end
+        object cxLabel1: TcxLabel
+          Left = 0
+          Top = 4
+          Caption = '% '#1088#1072#1079#1085#1080#1094#1099' '#1094#1077#1085#1099
+        end
+        object btnReprice: TButton
+          Left = 704
+          Top = 0
+          Width = 116
+          Height = 25
+          Caption = #1055#1077#1088#1077#1086#1094#1077#1085#1080#1090#1100'  >>>'
+          TabOrder = 5
+          OnClick = btnRepriceClick
+        end
+        object chbVAT20: TcxCheckBox
+          Left = 127
+          Top = 3
+          Caption = #1053#1044#1057' 20%'
+          TabOrder = 6
+          Width = 82
         end
       end
     end
@@ -235,9 +229,10 @@ object RepriceUnitForm: TRepriceUnitForm
   object cxSplitter1: TcxSplitter
     Left = 0
     Top = 241
-    Width = 670
+    Width = 864
     Height = 8
     AlignSplitter = salTop
+    Control = Panel1
   end
   object GetUnitsList: TdsdStoredProc
     StoredProcName = 'gpSelect_Object_UnitForReprice'
@@ -248,162 +243,8 @@ object RepriceUnitForm: TRepriceUnitForm
       end>
     Params = <>
     PackSize = 1
-    Left = 184
-    Top = 64
-  end
-  object UnitsCDS: TClientDataSet
-    Aggregates = <>
-    Params = <>
-    Left = 112
-    Top = 56
-  end
-  object UnitsDS: TDataSource
-    DataSet = UnitsCDS
-    Left = 112
-    Top = 128
-  end
-  object ADOQuery: TADOQuery
-    Connection = ADOConnection
-    OnCalcFields = ADOQueryCalcFields
-    Parameters = <>
-    Left = 120
-    Top = 16
-    object ADOQueryId: TIntegerField
-      FieldName = 'Id'
-    end
-    object ADOQueryCode: TIntegerField
-      FieldName = 'Code'
-    end
-    object ADOQueryGoodsName: TStringField
-      FieldName = 'GoodsName'
-      Size = 255
-    end
-    object ADOQueryLastPrice: TFloatField
-      FieldName = 'LastPrice'
-    end
-    object ADOQueryRemainsCount: TFloatField
-      FieldName = 'RemainsCount'
-    end
-    object ADOQueryNewPrice: TFloatField
-      FieldKind = fkCalculated
-      FieldName = 'NewPrice'
-      Calculated = True
-    end
-    object ADOQueryPercent: TCurrencyField
-      FieldKind = fkCalculated
-      FieldName = 'Percent'
-      Calculated = True
-    end
-    object ADOQueryNDS: TFloatField
-      FieldKind = fkCalculated
-      FieldName = 'NDS'
-      Calculated = True
-    end
-    object ADOQueryExpirationDate: TDateField
-      FieldKind = fkCalculated
-      FieldName = 'ExpirationDate'
-      Calculated = True
-    end
-    object ADOQueryNotReprice: TBooleanField
-      FieldKind = fkCalculated
-      FieldName = 'NotReprice'
-      Calculated = True
-    end
-    object ADOQueryNotRepriceNote: TStringField
-      FieldKind = fkCalculated
-      FieldName = 'NotRepriceNote'
-      Size = 500
-      Calculated = True
-    end
-    object ADOQueryCategoriesId: TIntegerField
-      FieldName = 'CategoriesId'
-    end
-  end
-  object ADOConnection: TADOConnection
-    ConnectionString = 
-      'Provider=MSDASQL.1;Password=sql;Persist Security Info=True;User ' +
-      'ID=dba;Data Source=Kassa6DS'
-    KeepConnection = False
-    LoginPrompt = False
-    Provider = 'MSDASQL.1'
-    Left = 184
-    Top = 32
-  end
-  object spSelectPrice: TdsdStoredProc
-    StoredProcName = 'gpSelect_GoodsPrice'
-    DataSets = <>
-    OutputType = otResult
-    Params = <
-      item
-        Name = 'inGoodsCode'
-        Value = Null
-        ParamType = ptInput
-      end
-      item
-        Name = 'inUnitId'
-        Value = Null
-        ParamType = ptInput
-      end
-      item
-        Name = 'GoodsCode'
-        Value = Null
-      end
-      item
-        Name = 'GoodsName'
-        Value = Null
-        DataType = ftString
-      end
-      item
-        Name = 'NDS'
-        Value = Null
-        DataType = ftFloat
-      end
-      item
-        Name = 'NewPrice'
-        Value = Null
-        DataType = ftFloat
-      end
-      item
-        Name = 'ExpirationDate'
-        Value = Null
-        DataType = ftDateTime
-      end>
-    PackSize = 1
-    Left = 192
-    Top = 120
-  end
-  object ClientDataSet: TClientDataSet
-    Aggregates = <>
-    Params = <>
-    Left = 176
-    Top = 184
-  end
-  object spInsertUpdate: TADOStoredProc
-    Connection = ADOConnection
-    ProcedureName = 'dba.InsertUpdateLastPriceList'
-    Parameters = <
-      item
-        Name = '@CategoriesId'
-        DataType = ftInteger
-        Value = Null
-      end
-      item
-        Name = '@LastPrice'
-        DataType = ftFloat
-        Value = Null
-      end
-      item
-        Name = '@GoodsPropertyID'
-        DataType = ftInteger
-        Value = Null
-      end
-      item
-        Name = '@StartDate'
-        DataType = ftDateTime
-        Value = Null
-      end>
-    Left = 280
-    Top = 200
+    Left = 24
+    Top = 8
   end
   object dsdDBViewAddOn1: TdsdDBViewAddOn
     ErasedFieldName = 'isErased'
@@ -415,8 +256,8 @@ object RepriceUnitForm: TRepriceUnitForm
     ColumnAddOnList = <>
     ColumnEnterList = <>
     SummaryItemList = <>
-    Left = 432
-    Top = 400
+    Left = 600
+    Top = 520
   end
   object spSelect_AllGoodsPrice: TdsdStoredProc
     StoredProcName = 'gpSelect_AllGoodsPrice'
@@ -430,29 +271,34 @@ object RepriceUnitForm: TRepriceUnitForm
         Name = 'inUnitId'
         Value = Null
         ParamType = ptInput
+      end
+      item
+        Name = 'inMinPercent'
+        Value = Null
+        Component = cePercentDifference
+        DataType = ftFloat
+        ParamType = ptInput
+      end
+      item
+        Name = 'inVAT20'
+        Value = Null
+        Component = chbVAT20
+        DataType = ftBoolean
+        ParamType = ptInput
       end>
     PackSize = 1
-    Left = 312
+    Left = 48
     Top = 408
   end
   object AllGoodsPriceCDS: TClientDataSet
     Aggregates = <>
     Params = <>
-    Left = 200
-    Top = 432
+    Left = 48
+    Top = 360
   end
-  object AllGoodPriceDS: TDataSource
-    DataSet = AllGoodsPriceCDS
-    Left = 120
-    Top = 432
-  end
-  object rdUnit: TRefreshDispatcher
-    IdParam.Value = Null
-    RefreshAction = actRefresh
-    ComponentList = <
-      item
-      end>
-    Left = 192
+  object dsResult: TDataSource
+    DataSet = cdsResult
+    Left = 216
     Top = 360
   end
   object FormParams: TdsdFormParams
@@ -460,47 +306,20 @@ object RepriceUnitForm: TRepriceUnitForm
       item
         Name = 'UnitId'
         Value = ''
-        Component = UnitGuides
-        ComponentItem = 'Key'
         ParamType = ptInput
       end
       item
         Name = 'UnitName'
         Value = ''
-        Component = UnitGuides
-        ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
       end>
-    Left = 256
-    Top = 312
-  end
-  object UnitGuides: TdsdGuides
-    KeyField = 'Id'
-    FormNameParam.Value = 'TUnitTreeForm'
-    FormNameParam.DataType = ftString
-    FormName = 'TUnitTreeForm'
-    PositionDataSet = 'ClientDataSet'
-    Params = <
-      item
-        Name = 'Key'
-        Value = ''
-        Component = UnitGuides
-        ComponentItem = 'Key'
-      end
-      item
-        Name = 'TextValue'
-        Value = ''
-        Component = UnitGuides
-        ComponentItem = 'TextValue'
-        DataType = ftString
-      end>
-    Left = 192
-    Top = 312
+    Left = 24
+    Top = 520
   end
   object ActionList1: TActionList
-    Left = 120
-    Top = 376
+    Left = 88
+    Top = 520
     object actRefresh: TdsdDataSetRefresh
       Category = 'DSDLib'
       MoveParams = <>
@@ -516,20 +335,113 @@ object RepriceUnitForm: TRepriceUnitForm
       RefreshOnTabSetChanges = False
     end
   end
-  object QueryDS: TDataSource
-    DataSet = ResultCDS
-    Left = 488
-    Top = 176
+  object cdsResult: TClientDataSet
+    Active = True
+    Aggregates = <>
+    FieldDefs = <
+      item
+        Name = 'Id'
+        DataType = ftInteger
+      end
+      item
+        Name = 'Code'
+        DataType = ftInteger
+      end
+      item
+        Name = 'GoodsName'
+        DataType = ftString
+        Size = 255
+      end
+      item
+        Name = 'LastPrice'
+        DataType = ftCurrency
+      end
+      item
+        Name = 'RemainsCount'
+        DataType = ftCurrency
+      end
+      item
+        Name = 'NDS'
+        DataType = ftCurrency
+      end
+      item
+        Name = 'ExpirationDate'
+        DataType = ftDate
+      end
+      item
+        Name = 'NewPrice'
+        DataType = ftCurrency
+      end
+      item
+        Name = 'MarginPercent'
+        DataType = ftCurrency
+      end
+      item
+        Name = 'PriceDiff'
+        DataType = ftCurrency
+      end
+      item
+        Name = 'Reprice'
+        DataType = ftBoolean
+      end
+      item
+        Name = 'UnitId'
+        DataType = ftInteger
+      end
+      item
+        Name = 'UnitName'
+        DataType = ftString
+        Size = 255
+      end>
+    IndexDefs = <>
+    Params = <>
+    StoreDefs = True
+    Left = 168
+    Top = 360
+    Data = {
+      870100009619E0BD01000000180000000D000000000003000000870102496404
+      0001000000000004436F6465040001000000000009476F6F64734E616D650200
+      49000000010005574944544802000200FF00094C617374507269636508000400
+      0000010007535542545950450200490006004D6F6E6579000C52656D61696E73
+      436F756E74080004000000010007535542545950450200490006004D6F6E6579
+      00034E4453080004000000010007535542545950450200490006004D6F6E6579
+      000E45787069726174696F6E446174650400060000000000084E657750726963
+      65080004000000010007535542545950450200490006004D6F6E6579000D4D61
+      7267696E50657263656E74080004000000010007535542545950450200490006
+      004D6F6E65790009507269636544696666080004000000010007535542545950
+      450200490006004D6F6E6579000752657072696365020003000000000006556E
+      69744964040001000000000008556E69744E616D650200490000000100055749
+      44544802000200FF000000}
   end
-  object ResultCDS: TClientDataSet
+  object UnitsCDS: TClientDataSet
     Aggregates = <>
     Params = <>
-    Left = 392
-    Top = 128
+    Left = 72
+    Top = 8
   end
-  object DataSetProvider: TDataSetProvider
-    DataSet = ADOQuery
-    Left = 488
-    Top = 128
+  object spInsertUpdate_Object_Price: TdsdStoredProc
+    StoredProcName = 'gpInsertUpdate_Object_Price_From_Excel'
+    DataSets = <>
+    OutputType = otMultiExecute
+    Params = <
+      item
+        Name = 'inUnitId'
+        Value = Null
+        ParamType = ptInput
+      end
+      item
+        Name = 'inGoodsCode'
+        Value = Null
+        ParamType = ptInput
+      end
+      item
+        Name = 'inPriceValue'
+        Value = Null
+        DataType = ftFloat
+        ParamType = ptInput
+      end>
+    PackSize = 100
+    Left = 664
+    Top = 96
   end
 end

@@ -6,7 +6,7 @@ CREATE OR REPLACE FUNCTION gpSelect_Object_Unit(
     IN inSession     TVarChar       -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, ParentId Integer
-             , JuridicalName TVarChar, isLeaf boolean, isErased boolean
+             , JuridicalName TVarChar, MarginCategoryName TVarChar, isLeaf boolean, isErased boolean
              , RouteId integer, RouteName TVarChar
              , RouteSortingId integer, RouteSortingName TVarChar) AS
 $BODY$
@@ -23,6 +23,7 @@ BEGIN
            , Object_Unit_View.Name
            , Object_Unit_View.ParentId
            , Object_Unit_View.JuridicalName
+           , Object_Unit_View.MarginCategoryName
            , Object_Unit_View.isLeaf
            , Object_Unit_View.isErased
            , 0 as RouteId

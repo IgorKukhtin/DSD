@@ -5,21 +5,22 @@ DROP FUNCTION IF EXISTS gpSelect_Object_UnitForReprice(TVarChar);
 CREATE OR REPLACE FUNCTION gpSelect_Object_UnitForReprice(
     IN inSession     TVarChar       -- сессия пользователя
 )
-RETURNS TABLE (Id Integer, UnitName TVarChar, IntegerKey Integer, StringKey TVarChar) AS
+RETURNS TABLE (Id Integer, UnitName TVarChar) AS
 $BODY$
 BEGIN
 
-   -- проверка прав пользователя на вызов процедуры
-   -- PERFORM lpCheckRight(inSession, zc_Enum_Process_Unit());
+    -- проверка прав пользователя на вызов процедуры
+    -- PERFORM lpCheckRight(inSession, zc_Enum_Process_Unit());
 
-   RETURN QUERY 
+    RETURN QUERY 
      
-    SELECT Object_Unit_View.Id, Object_Unit_View.Name, Object_ImportExportLink_View.IntegerKey, Object_ImportExportLink_View.StringKey 
-      FROM Object_Unit_View
-
-       LEFT JOIN Object_ImportExportLink_View ON Object_ImportExportLink_View.MainId = Object_Unit_View.id
-           WHERE Object_ImportExportLink_View.LinkTypeId =  zc_Enum_ImportExportLinkType_UnitUnitId() ;         
-            
+        SELECT 
+            Object_Unit_View.Id
+           ,Object_Unit_View.Name
+        FROM 
+            Object_Unit_View
+        WHERE
+            Object_Unit_View.isLeaf = TRUE;
 END;
 $BODY$
 

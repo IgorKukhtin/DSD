@@ -2,7 +2,7 @@
   Left = 0
   Top = 0
   Caption = #1056#1077#1076#1072#1082#1090#1080#1088#1086#1074#1072#1085#1080#1077' '#1087#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1103
-  ClientHeight = 173
+  ClientHeight = 201
   ClientWidth = 477
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -29,7 +29,7 @@
   end
   object cxButton1: TcxButton
     Left = 100
-    Top = 123
+    Top = 163
     Width = 75
     Height = 25
     Action = InsertUpdateGuides
@@ -38,7 +38,7 @@
   end
   object cxButton2: TcxButton
     Left = 294
-    Top = 123
+    Top = 163
     Width = 75
     Height = 25
     Action = FormClose
@@ -91,9 +91,25 @@
     TabOrder = 9
     Width = 209
   end
+  object cxLabel2: TcxLabel
+    Left = 15
+    Top = 98
+    Caption = #1050#1072#1090#1077#1075#1086#1088#1080#1103' '#1076#1083#1103' '#1087#1077#1088#1077#1086#1094#1077#1085#1082#1080
+  end
+  object edMarginCategory: TcxButtonEdit
+    Left = 15
+    Top = 121
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    TabOrder = 11
+    Width = 209
+  end
   object ActionList: TActionList
-    Left = 88
-    Top = 144
+    Left = 320
+    Top = 112
     object DataSetRefresh: TdsdDataSetRefresh
       Category = 'DSDLib'
       MoveParams = <>
@@ -114,6 +130,7 @@
     object InsertUpdateGuides: TdsdInsertUpdateGuides
       Category = 'DSDLib'
       MoveParams = <>
+      PostDataSetBeforeExecute = False
       StoredProc = spInsertUpdate
       StoredProcList = <
         item
@@ -124,6 +141,7 @@
     object FormClose: TdsdFormClose
       Category = 'DSDLib'
       MoveParams = <>
+      PostDataSetBeforeExecute = False
     end
   end
   object spInsertUpdate: TdsdStoredProc
@@ -164,10 +182,17 @@
         Component = JuridicalGuides
         ComponentItem = 'Key'
         ParamType = ptInput
+      end
+      item
+        Name = 'inMarginCategoryId'
+        Value = Null
+        Component = MarginCategoryGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
       end>
     PackSize = 1
-    Left = 96
-    Top = 120
+    Left = 432
+    Top = 112
   end
   object dsdFormParams: TdsdFormParams
     Params = <
@@ -176,7 +201,7 @@
         Value = Null
         ParamType = ptInputOutput
       end>
-    Left = 24
+    Left = 376
     Top = 112
   end
   object spGet: TdsdStoredProc
@@ -227,10 +252,23 @@
         Component = JuridicalGuides
         ComponentItem = 'TextValue'
         DataType = ftString
+      end
+      item
+        Name = 'MarginCategoryId'
+        Value = Null
+        Component = MarginCategoryGuides
+        ComponentItem = 'Key'
+      end
+      item
+        Name = 'MarginCategoryName'
+        Value = Null
+        Component = MarginCategoryGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
       end>
     PackSize = 1
-    Left = 24
-    Top = 152
+    Left = 256
+    Top = 112
   end
   object ParentGuides: TdsdGuides
     KeyField = 'Id'
@@ -283,5 +321,31 @@
       end>
     Left = 384
     Top = 48
+  end
+  object MarginCategoryGuides: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edMarginCategory
+    FormNameParam.Value = 'TMarginCategoryForm'
+    FormNameParam.DataType = ftString
+    FormName = 'TMarginCategoryForm'
+    PositionDataSet = 'MasterCDS'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = MarginCategoryGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = MarginCategoryGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+      end>
+    Left = 152
+    Top = 104
   end
 end
