@@ -1,3 +1,11 @@
+DROP FUNCTION IF EXISTS gpSelect_Report_Wage_2(
+    TDateTime, --дата начала периода
+    TDateTime, --дата окончания периода
+    Integer,   --подразделение 
+    Integer,   --сотрудник
+    Integer,   --должность
+    TVarChar   --сессия пользователя
+);
 DROP FUNCTION IF EXISTS gpSelect_Report_Wage_Sum(
     TDateTime, --дата начала периода
     TDateTime, --дата окончания периода
@@ -158,6 +166,7 @@ BEGIN
            ,SUM(SheetWorkTime.Count_Day)            AS Count_Day
            ,SheetWorkTime.Count_MemberDay::Integer  AS Count_MemberDay
            ,SheetWorkTime.SUM_MemberHours::TFloat   AS SUM_MemberHours
+           ,SUM(SummaAdd)::TFloat                   AS SummaADD
         FROM(
             SELECT
                 MI_SheetWorkTime.ObjectId                      AS MemberId
@@ -168,6 +177,12 @@ BEGIN
                ,1                                              as Count_Day
                ,COUNT(*) OVER(PARTITION BY MIObject_Position.ObjectId,MIObject_PositionLevel.ObjectId) as Count_MemberDay
                ,SUM(MI_SheetWorkTime.Amount) OVER(PARTITION BY MIObject_Position.ObjectId,MIObject_PositionLevel.ObjectId) AS SUM_MemberHours
+               ,CASE 
+                    WHEN Setting.StaffListSummKindId = zc_Enum_StaffListSummKind_Day()
+                        THEN Setting.StaffListSumm_Value / (SUM(MI_SheetWorkTime.Amount) OVER(PARTITION BY Movement.OperDate,MIObject_Position.ObjectId,MIObject_PositionLevel.ObjectId))*MI_SheetWorkTime.Amount
+                    WHEN Setting.StaffListSummKindId = zc_Enum_StaffListSummKind_Personal()
+                        THEN Setting.StaffListSumm_Value
+                END::TFloat AS SummaAdd
             FROM
                 Movement
                 INNER JOIN MovementLinkObject AS MovementLinkObject_Unit
@@ -188,6 +203,8 @@ BEGIN
                                                  AND MIObject_WorkTimeKind.DescId = zc_MILinkObject_WorkTimeKind()
                 INNER JOIN Object_WorkTimeKind_Wages_View AS Object_WorkTimeKind
                                                           ON Object_WorkTimeKind.Id = MIObject_WorkTimeKind.ObjectId
+                LEFT OUTER JOIN Setting_Wage_2 AS Setting ON COALESCE(MIObject_Position.ObjectId,0) = COALESCE(Setting.PositionId,0)
+                                                         AND COALESCE(MIObject_PositionLevel.ObjectId,0) = COALESCE(Setting.PositionLevelId,0)                                          
                 
             WHERE 
                 Movement.DescId = zc_Movement_SheetWorkTime()
@@ -211,6 +228,8 @@ BEGIN
                     OR
                     inMemberId = 0
                 )
+                AND
+                COALESCE(MI_SheetWorkTime.Amount,0)>0
             ) AS SheetWorkTime
         GROUP BY
             SheetWorkTime.MemberId
@@ -244,8 +263,14 @@ BEGIN
        ,CASE 
             WHEN Setting.StaffListSummKindId = zc_Enum_StaffListSummKind_Month()
                 THEN (Setting.StaffListSumm_Value / NULLIF(Movement_SheetWorkTime.Count_MemberDay,0) * Movement_SheetWorkTime.Count_Day)
+            WHEN Setting.StaffListSummKindId = zc_Enum_StaffListSummKind_Day()
+                THEN Movement_SheetWorkTime.SummaADD
+            WHEN Setting.StaffListSummKindId = zc_Enum_StaffListSummKind_Personal()
+                THEN Movement_SheetWorkTime.SummaADD
             WHEN Setting.StaffListSummKindId = zc_Enum_StaffListSummKind_HoursPlan()
                 THEN (Setting.StaffListSumm_Value / NULLIF(Setting.HoursPlan,0) * Movement_SheetWorkTime.SheetWorkTime_Amount)
+            WHEN Setting.StaffListSummKindId = zc_Enum_StaffListSummKind_HoursDay()
+                THEN (Setting.StaffListSumm_Value / NULLIF(Setting.HoursDay,0) * Movement_SheetWorkTime.SheetWorkTime_Amount)
             WHEN Setting.StaffListSummKindId = zc_Enum_StaffListSummKind_HoursPlanConst()
                 THEN (Setting.StaffListSumm_Value / NULLIF(Movement_SheetWorkTime.SUM_MemberHours,0) * Movement_SheetWorkTime.SheetWorkTime_Amount)
         END::TFloat AS Summ
@@ -260,7 +285,7 @@ $BODY$
 ALTER FUNCTION gpSelect_Report_Wage_Sum (TDateTime,TDateTime,Integer,Integer,Integer,TVarChar) OWNER TO postgres;
 
 /*
-Select * from gpSelect_Report_Wage_2(
+Select * from gpSelect_Report_Wage_Sum(
     inDateStart      := '20150701'::TDateTime, --дата начала периода
     inDateFinal      := '20150731'::TDateTime, --дата окончания периода
     inUnitId         := 8448::Integer,   --подразделение 
