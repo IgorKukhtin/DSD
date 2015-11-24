@@ -1,8 +1,7 @@
 inherited PromoJournalForm: TPromoJournalForm
   Caption = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' <'#1040#1082#1094#1080#1080'>'
   ClientHeight = 430
-  ExplicitLeft = -77
-  ExplicitHeight = 465
+  ExplicitHeight = 468
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -219,7 +218,14 @@ inherited PromoJournalForm: TPromoJournalForm
           DataSet = PrintHead
           UserName = 'frxHead'
         end>
-      Params = <>
+      Params = <
+        item
+          Name = 'InvNumber'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'InvNumber'
+          DataType = ftString
+        end>
       ReportName = #1040#1082#1094#1080#1103
       ReportNameParam.Value = #1040#1082#1094#1080#1103
       ReportNameParam.DataType = ftString

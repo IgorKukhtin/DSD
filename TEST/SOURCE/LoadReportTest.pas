@@ -112,6 +112,7 @@ begin
   LoadReportFromFile('Обороты по кассе', ReportPath + '\Отчеты (финансы)\Обороты по кассе.fr3');
   LoadReportFromFile('Обороты по кассе (по элементам)', ReportPath + '\Отчеты (финансы)\Обороты по кассе (по элементам).fr3');
   LoadReportFromFile('Обороты по кассе (с комментариями)', ReportPath + '\Отчеты (финансы)\Обороты по кассе (с комментариями).fr3');
+  LoadReportFromFile('Обороты по учредителям', ReportPath + '\Отчеты (финансы)\Обороты по учредителям.fr3');
 
   //  Финансовый учет
   LoadReportFromFile('Платежка Банк', ReportPath + '\Финансовый Учет\Платежка Банк.fr3');
@@ -233,6 +234,7 @@ begin
   LoadReportFromFile('PrintMovement_PersonalService', ReportPath + '\Персонал\PrintMovement_PersonalService.fr3');
 
   LoadReportFromFile('Приложение7', ReportPath + '\Отчеты(филиалы)\Приложение7.fr3');
+  LoadReportFromFile('Приложение1', ReportPath + '\Отчеты(филиалы)\Приложение1.fr3');
 
 
   TStrArrAdd(['35275230','30982361','30487219','37910513','32294926','01074874','32516492','35442481','36387249','32049199', '31929492', '22447463']);

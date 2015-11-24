@@ -12,7 +12,7 @@ uses
   Vcl.Controls, cxGrid, AncestorGuides, cxPCdxBarPopupMenu, Vcl.Menus, cxPC,
   dxSkinsCore, dxSkinsDefaultPainters, cxContainer, cxTextEdit, cxMaskEdit,
   cxButtonEdit, cxLabel, dsdGuides, cxSplitter, Vcl.DBActns, dxBarBuiltInMenu,
-  cxNavigator, ExternalLoad;
+  cxNavigator, ExternalLoad, dxSkinscxPCPainter, dxSkinsdxBarPainter;
 
 type
   TGoodsPartnerCodeForm = class(TAncestorGuidesForm)
@@ -49,6 +49,15 @@ type
     actGetImportSetting_Goods_MinimumLot: TdsdExecStoredProc;
     dxBarButton1: TdxBarButton;
     FormParams: TdsdFormParams;
+    colIsUpload: TcxGridDBColumn;
+    spUpdate_Goods_IsUpload: TdsdStoredProc;
+    spGetImportSetting_Goods_IsUpload: TdsdStoredProc;
+    spDelete_ObjectBoolean_Goods_IsUpload: TdsdStoredProc;
+    actStartLoadIsUpload: TMultiAction;
+    actGetImportSetting_Goods_IsUpload: TdsdExecStoredProc;
+    actDelete_ObjectFloat_Goods_IsUpload: TdsdExecStoredProc;
+    actDoLoadIsUpload: TExecuteImportSettingsAction;
+    dxBarButton2: TdxBarButton;
   private
     { Private declarations }
   public

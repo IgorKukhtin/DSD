@@ -936,7 +936,8 @@ begin
            (Component as TExportGrid).DefaultFileName := FValue;
         if LowerCase(ComponentItem) = LowerCase('ExportType') then
            (Component as TExportGrid).ExportType := FValue;
-     end;
+     end
+     else
      if Component is TBooleanStoredProcAction then
         (Component as TBooleanStoredProcAction).Value := FValue
      else

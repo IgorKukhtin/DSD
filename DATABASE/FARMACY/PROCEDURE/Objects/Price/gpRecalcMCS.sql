@@ -108,6 +108,8 @@ BEGIN
         DATE_TRUNC('day', Movement_Check.OperDate) >= DATE_TRUNC('day', CURRENT_DATE - inPeriod - 1)
         AND
         DATE_TRUNC('day', Movement_Check.OperDate) <= DATE_TRUNC('day', CURRENT_DATE - 1)
+        AND
+        COALESCE(Movement_Check.NotMCS,FALSE) = FALSE
     GROUP BY 
         MovementItem_Check.GoodsId, 
         DATE_PART('day', CURRENT_DATE - Movement_Check.OperDate);

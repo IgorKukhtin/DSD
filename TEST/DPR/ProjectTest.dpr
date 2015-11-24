@@ -762,7 +762,9 @@ uses
   Report_Branch_App7 in '..\..\Forms\Report\Report_Branch_App7.pas' {Report_Branch_App7Form: TParentForm},
   Report_Wage in '..\..\Forms\Report\Report_Wage.pas' {Report_WageForm: TParentForm},
   Report_Weighing in '..\..\Forms\Report\Report_Weighing.pas' {Report_WeighingForm: TParentForm},
-  Report_WeighingDialog in '..\..\Forms\Report\Report_WeighingDialog.pas' {Report_WeighingDialogForm: TParentForm};
+  Report_WeighingDialog in '..\..\Forms\Report\Report_WeighingDialog.pas' {Report_WeighingDialogForm: TParentForm},
+  Report_Branch_App1 in '..\..\Forms\Report\Report_Branch_App1.pas' {Report_Branch_App1Form: TParentForm},
+  Report_Branch_App1Dialog in '..\..\Forms\Report\Report_Branch_App1Dialog.pas' {Report_Branch_App1DialogForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}

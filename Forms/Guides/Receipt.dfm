@@ -468,7 +468,7 @@ object ReceiptForm: TReceiptForm
       GridView = cxGridDBTableView
     end
   end
-  object cxGridContractCondition: TcxGrid
+  object cxGridReceiptChild: TcxGrid
     Left = 0
     Top = 344
     Width = 1152
@@ -721,7 +721,7 @@ object ReceiptForm: TReceiptForm
     Width = 1152
     Height = 5
     AlignSplitter = salBottom
-    Control = cxGridContractCondition
+    Control = cxGridReceiptChild
   end
   object MasterDS: TDataSource
     DataSet = MasterCDS
@@ -822,6 +822,22 @@ object ReceiptForm: TReceiptForm
         item
           Visible = True
           ItemName = 'bbInsertRecCCK'
+        end
+        item
+          Visible = True
+          ItemName = 'bbSetErasedReceiptChild'
+        end
+        item
+          Visible = True
+          ItemName = 'bb'
+        end
+        item
+          Visible = True
+          ItemName = 'bbUpdateTaxExit'
+        end
+        item
+          Visible = True
+          ItemName = 'bbUpdateWeightMain'
         end
         item
           Visible = True
@@ -969,6 +985,22 @@ object ReceiptForm: TReceiptForm
       Action = ProtocolOpenFormChild
       Category = 0
     end
+    object bbUpdateTaxExit: TdxBarButton
+      Action = actUpdateTaxExit
+      Category = 0
+    end
+    object bbUpdateWeightMain: TdxBarButton
+      Action = actUpdateWeightMain
+      Category = 0
+    end
+    object bbSetErasedReceiptChild: TdxBarButton
+      Action = dsdSetErasedReceiptChild
+      Category = 0
+    end
+    object bb: TdxBarButton
+      Action = dsdSetUnErasedReceiptChild
+      Category = 0
+    end
   end
   object ActionList: TActionList
     Images = dmMain.ImageList
@@ -1079,10 +1111,10 @@ object ReceiptForm: TReceiptForm
     object dsdSetErased: TdsdUpdateErased
       Category = 'DSDLib'
       MoveParams = <>
-      StoredProc = spErasedUnErased
+      StoredProc = spErasedUnErasedReceipt
       StoredProcList = <
         item
-          StoredProc = spErasedUnErased
+          StoredProc = spErasedUnErasedReceipt
         end>
       Caption = #1059#1076#1072#1083#1080#1090#1100
       Hint = #1059#1076#1072#1083#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
@@ -1094,10 +1126,10 @@ object ReceiptForm: TReceiptForm
     object dsdSetUnErased: TdsdUpdateErased
       Category = 'DSDLib'
       MoveParams = <>
-      StoredProc = spErasedUnErased
+      StoredProc = spErasedUnErasedReceipt
       StoredProcList = <
         item
-          StoredProc = spErasedUnErased
+          StoredProc = spErasedUnErasedReceipt
         end>
       Caption = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100
       Hint = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
@@ -1296,6 +1328,19 @@ object ReceiptForm: TReceiptForm
       Caption = 'actUpdateDataSet'
       DataSource = MasterDS
     end
+    object actUpdateWeightMain: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdateWeightMain
+      StoredProcList = <
+        item
+          StoredProc = spUpdateWeightMain
+        end>
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' "'#1042#1093#1086#1076#1080#1090' '#1074' '#1086#1089#1085'. '#1089#1099#1088#1100#1077' (100 '#1082#1075'.)  '#1044#1072'/'#1053#1077#1090'"'
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' "'#1042#1093#1086#1076#1080#1090' '#1074' '#1086#1089#1085'. '#1089#1099#1088#1100#1077' (100 '#1082#1075'.)  '#1044#1072'/'#1053#1077#1090'"'
+      ImageIndex = 58
+    end
     object actPrint: TdsdPrintAction
       Category = 'Print'
       MoveParams = <>
@@ -1344,6 +1389,49 @@ object ReceiptForm: TReceiptForm
       ReportNameParam.Value = #1055#1077#1095#1072#1090#1100'_'#1088#1077#1094#1077#1087#1090#1086#1074
       ReportNameParam.DataType = ftString
     end
+    object actUpdateTaxExit: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdateTaxExit
+      StoredProcList = <
+        item
+          StoredProc = spUpdateTaxExit
+        end>
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' "'#1047#1072#1074#1080#1089#1080#1090' '#1086#1090' % '#1074#1099#1093'.  '#1044#1072'/'#1053#1077#1090'"'
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' "'#1047#1072#1074#1080#1089#1080#1090' '#1086#1090' % '#1074#1099#1093'.  '#1044#1072'/'#1053#1077#1090'"'
+      ImageIndex = 52
+    end
+    object dsdSetErasedReceiptChild: TdsdUpdateErased
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spErasedUnErasedReceiptChild
+      StoredProcList = <
+        item
+          StoredProc = spErasedUnErasedReceiptChild
+        end>
+      Caption = #1059#1076#1072#1083#1080#1090#1100' <'#1057#1086#1089#1090#1072#1074#1083#1103#1102#1097#1080#1077' '#1088#1077#1094#1077#1087#1090#1091#1088#1099'>'
+      Hint = #1059#1076#1072#1083#1080#1090#1100' <'#1057#1086#1089#1090#1072#1074#1083#1103#1102#1097#1080#1077' '#1088#1077#1094#1077#1087#1090#1091#1088#1099'>'
+      ImageIndex = 2
+      ShortCut = 46
+      ErasedFieldName = 'isErased'
+      DataSource = ChildDS
+    end
+    object dsdSetUnErasedReceiptChild: TdsdUpdateErased
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spErasedUnErasedReceiptChild
+      StoredProcList = <
+        item
+          StoredProc = spErasedUnErasedReceiptChild
+        end>
+      Caption = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100
+      Hint = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
+      ImageIndex = 8
+      ErasedFieldName = 'isErased'
+      isSetErased = False
+      DataSource = ChildDS
+    end
   end
   object spSelect: TdsdStoredProc
     StoredProcName = 'gpSelect_Object_Receipt'
@@ -1382,22 +1470,6 @@ object ReceiptForm: TReceiptForm
   object dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 104
     Top = 208
-  end
-  object spErasedUnErased: TdsdStoredProc
-    StoredProcName = 'gpUpdateObjectIsErased'
-    DataSets = <>
-    OutputType = otResult
-    Params = <
-      item
-        Name = 'inObjectId'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'Id'
-        ParamType = ptInput
-      end>
-    PackSize = 1
-    Left = 160
-    Top = 160
   end
   object dsdDBViewAddOn: TdsdDBViewAddOn
     ErasedFieldName = 'isErased'
@@ -1721,8 +1793,8 @@ object ReceiptForm: TReceiptForm
         ParamType = ptInput
       end>
     PackSize = 1
-    Left = 280
-    Top = 232
+    Left = 304
+    Top = 240
   end
   object PrintReceiptChildDetailCDS: TClientDataSet
     Aggregates = <>
@@ -1772,5 +1844,105 @@ object ReceiptForm: TReceiptForm
     PackSize = 1
     Left = 496
     Top = 249
+  end
+  object spUpdateTaxExit: TdsdStoredProc
+    StoredProcName = 'gpUpdateObject_isBoolean'
+    DataSet = ChildCDS
+    DataSets = <
+      item
+        DataSet = ChildCDS
+      end>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inId'
+        Value = 0
+        Component = ChildCDS
+        ComponentItem = 'id'
+        ParamType = ptInput
+      end
+      item
+        Name = 'ioParam'
+        Value = False
+        Component = ChildCDS
+        ComponentItem = 'isTaxExit'
+        DataType = ftBoolean
+        ParamType = ptInputOutput
+      end
+      item
+        Name = 'inDesc'
+        Value = 'zc_ObjectBoolean_ReceiptChild_TaxExit'
+        DataType = ftString
+        ParamType = ptInput
+      end>
+    PackSize = 1
+    Left = 770
+    Top = 405
+  end
+  object spUpdateWeightMain: TdsdStoredProc
+    StoredProcName = 'gpUpdateObject_isBoolean'
+    DataSet = ChildCDS
+    DataSets = <
+      item
+        DataSet = ChildCDS
+      end>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inId'
+        Value = Null
+        Component = ChildCDS
+        ComponentItem = 'id'
+        ParamType = ptInput
+      end
+      item
+        Name = 'ioParam'
+        Value = Null
+        Component = ChildCDS
+        ComponentItem = 'isWeightMain'
+        DataType = ftBoolean
+        ParamType = ptInputOutput
+      end
+      item
+        Name = 'inDesc'
+        Value = 'zc_ObjectBoolean_ReceiptChild_WeightMain'
+        DataType = ftString
+        ParamType = ptInput
+      end>
+    PackSize = 1
+    Left = 858
+    Top = 397
+  end
+  object spErasedUnErasedReceiptChild: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Object_isErased_ReceiptChild'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inObjectId'
+        Value = Null
+        Component = ChildCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+      end>
+    PackSize = 1
+    Left = 240
+    Top = 480
+  end
+  object spErasedUnErasedReceipt: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Object_isErased_Receipt'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inObjectId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+      end>
+    PackSize = 1
+    Left = 112
+    Top = 272
   end
 end

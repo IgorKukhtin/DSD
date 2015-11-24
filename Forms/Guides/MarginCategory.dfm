@@ -1,16 +1,18 @@
 inherited MarginCategoryForm: TMarginCategoryForm
   Caption = #1050#1072#1090#1077#1075#1086#1088#1080#1103' '#1085#1072#1094#1077#1085#1086#1082
   ClientWidth = 360
-  ExplicitWidth = 368
-  ExplicitHeight = 335
+  ExplicitWidth = 376
+  ExplicitHeight = 346
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Width = 360
+    ExplicitWidth = 360
     ClientRectRight = 360
     inherited tsMain: TcxTabSheet
       inherited cxGrid: TcxGrid
         Width = 360
+        ExplicitWidth = 360
         inherited cxGridDBTableView: TcxGridDBTableView
           OptionsData.Appending = True
           OptionsData.Inserting = True

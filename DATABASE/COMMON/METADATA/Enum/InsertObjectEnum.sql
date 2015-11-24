@@ -719,7 +719,8 @@ BEGIN
      PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_ImportExportLinkType_UnitEmailSign(),  inDescId:= zc_Object_ImportExportLinkType(), inCode:= 4, inName:= 'Подпись для подразделения', inEnumName:= 'zc_Enum_ImportExportLinkType_UnitEmailSign');
      PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_ImportExportLinkType_ClientEmailSubject(),  inDescId:= zc_Object_ImportExportLinkType(), inCode:= 5, inName:= 'Тема письма', inEnumName:= 'zc_Enum_ImportExportLinkType_ClientEmailSubject');
      PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_ImportExportLinkType_OldClientLink(),  inDescId:= zc_Object_ImportExportLinkType(), inCode:= 6, inName:= 'Связь поставщиков со старым складом', inEnumName:= 'zc_Enum_ImportExportLinkType_OldClientLink');
-
+     PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_ImportExportLinkType_UploadCompliance(),  inDescId:= zc_Object_ImportExportLinkType(), inCode:= 7, inName:= 'Связи объектов с кодами в учетной системе поставщика для выгрузок', inEnumName:= 'zc_Enum_ImportExportLinkType_UploadCompliance');
+ 
 END $$;
 
 DO $$
@@ -746,6 +747,7 @@ END $$;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                 Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.   Воробкало А.А.
+ 23.11.15                                                                       *zc_Enum_ImportExportLinkType_UploadCompliance
  31.10.15                                                                       *zc_Enum_PromoKind_Custom, zc_Enum_PromoKind_Compensation, zc_Enum_ConditionPromo_Discount, zc_Enum_ConditionPromo_Compensation
  13.11.14                                        * add zc_Enum_Currency_Basis
  30.08.14                                        * add zc_Enum_InfoMoney_60101

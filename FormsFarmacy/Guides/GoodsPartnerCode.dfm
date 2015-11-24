@@ -1,24 +1,24 @@
 inherited GoodsPartnerCodeForm: TGoodsPartnerCodeForm
   Caption = #1050#1086#1076#1099' '#1087#1088#1086#1076#1072#1074#1094#1086#1074
   ClientHeight = 423
-  ClientWidth = 900
+  ClientWidth = 919
   AddOnFormData.ChoiceAction = dsdChoiceGuides
-  ExplicitWidth = 908
-  ExplicitHeight = 450
+  ExplicitWidth = 935
+  ExplicitHeight = 461
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Width = 900
+    Width = 919
     Height = 397
     ExplicitWidth = 900
     ExplicitHeight = 397
     ClientRectBottom = 397
-    ClientRectRight = 900
+    ClientRectRight = 919
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 900
       ExplicitHeight = 397
       inherited cxGrid: TcxGrid
-        Width = 900
+        Width = 919
         Height = 397
         ExplicitWidth = 900
         ExplicitHeight = 397
@@ -79,6 +79,12 @@ inherited GoodsPartnerCodeForm: TGoodsPartnerCodeForm
             Properties.DecimalPlaces = 0
             Properties.DisplayFormat = '0'
             Width = 134
+          end
+          object colIsUpload: TcxGridDBColumn
+            Caption = #1042#1099#1075#1088'.'
+            DataBinding.FieldName = 'IsUpload'
+            HeaderHint = #1042#1099#1075#1088#1091#1078#1072#1077#1090#1089#1103' '#1074' '#1086#1090#1095#1077#1090#1077' '#1076#1083#1103' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072
+            Width = 41
           end
         end
       end
@@ -260,6 +266,9 @@ inherited GoodsPartnerCodeForm: TGoodsPartnerCodeForm
         end
         item
           StoredProc = spUpdate_Goods_MinimumLot
+        end
+        item
+          StoredProc = spUpdate_Goods_IsUpload
         end>
       Caption = 'dsdUpdateDataSet'
       DataSource = MasterDS
@@ -316,6 +325,65 @@ inherited GoodsPartnerCodeForm: TGoodsPartnerCodeForm
       ExternalParams = <
         item
           Name = 'inObjectId'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'ObjectId'
+          ParamType = ptInput
+        end>
+    end
+    object actStartLoadIsUpload: TMultiAction
+      Category = #1047#1072#1075#1088#1091#1079#1082#1072' isUpload'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actGetImportSetting_Goods_IsUpload
+        end
+        item
+          Action = actDelete_ObjectFloat_Goods_IsUpload
+        end
+        item
+          Action = actDoLoadIsUpload
+        end
+        item
+          Action = actRefresh
+        end>
+      QuestionBeforeExecute = #1053#1072#1095#1072#1090#1100' '#1079#1072#1075#1088#1091#1079#1082#1091' '#1087#1088#1080#1079#1085#1072#1082#1072' <'#1042#1099#1075#1088#1091#1078#1072#1077#1090#1089#1103' '#1074' '#1086#1090#1095#1077#1090#1077' '#1076#1083#1103' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072'>?'
+      Caption = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1087#1088#1080#1079#1085#1072#1082' <'#1042#1099#1075#1088'.>'
+      Hint = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1087#1088#1080#1079#1085#1072#1082' <'#1042#1099#1075#1088#1091#1078#1072#1077#1090#1089#1103' '#1074' '#1086#1090#1095#1077#1090#1077' '#1076#1083#1103' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072'>'
+      ImageIndex = 43
+    end
+    object actGetImportSetting_Goods_IsUpload: TdsdExecStoredProc
+      Category = #1047#1072#1075#1088#1091#1079#1082#1072' isUpload'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spGetImportSetting_Goods_IsUpload
+      StoredProcList = <
+        item
+          StoredProc = spGetImportSetting_Goods_IsUpload
+        end>
+      Caption = 'actGetImportSetting_Goods_MinimumLot'
+    end
+    object actDelete_ObjectFloat_Goods_IsUpload: TdsdExecStoredProc
+      Category = #1047#1072#1075#1088#1091#1079#1082#1072' isUpload'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spDelete_ObjectBoolean_Goods_IsUpload
+      StoredProcList = <
+        item
+          StoredProc = spDelete_ObjectBoolean_Goods_IsUpload
+        end>
+      Caption = 'actDelete_ObjectFloat_Goods_MinimumLot'
+    end
+    object actDoLoadIsUpload: TExecuteImportSettingsAction
+      Category = #1047#1072#1075#1088#1091#1079#1082#1072' isUpload'
+      MoveParams = <>
+      ImportSettingsId.Value = Null
+      ImportSettingsId.Component = FormParams
+      ImportSettingsId.ComponentItem = 'ImportSettingIsUploadId'
+      ExternalParams = <
+        item
+          Name = 'inObjectId'
+          Value = '0'
           Component = FormParams
           ComponentItem = 'ObjectId'
           ParamType = ptInput
@@ -398,6 +466,12 @@ inherited GoodsPartnerCodeForm: TGoodsPartnerCodeForm
           UserPaintStyle = psCaptionGlyph
           Visible = True
           ItemName = 'dxBarButton1'
+        end
+        item
+          UserDefine = [udPaintStyle]
+          UserPaintStyle = psCaptionGlyph
+          Visible = True
+          ItemName = 'dxBarButton2'
         end>
     end
     inherited bbInsert: TdxBarButton
@@ -429,6 +503,10 @@ inherited GoodsPartnerCodeForm: TGoodsPartnerCodeForm
     end
     object dxBarButton1: TdxBarButton
       Action = actStartLoad
+      Category = 0
+    end
+    object dxBarButton2: TdxBarButton
+      Action = actStartLoadIsUpload
       Category = 0
     end
   end
@@ -589,6 +667,7 @@ inherited GoodsPartnerCodeForm: TGoodsPartnerCodeForm
     Params = <
       item
         Name = 'inObjectId'
+        Value = Null
         Component = FormParams
         ComponentItem = 'ObjectId'
         ParamType = ptInput
@@ -630,14 +709,88 @@ inherited GoodsPartnerCodeForm: TGoodsPartnerCodeForm
     Params = <
       item
         Name = 'ObjectId'
+        Value = Null
         Component = PartnerCodeGuides
         ComponentItem = 'Key'
       end
       item
         Name = 'ImportSettingId'
         Value = Null
+      end
+      item
+        Name = 'ImportSettingIsUploadId'
+        Value = Null
       end>
     Left = 472
     Top = 104
+  end
+  object spUpdate_Goods_IsUpload: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Goods_IsUpload'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'GoodsId'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inIsUpload'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'IsUpload'
+        DataType = ftBoolean
+        ParamType = ptInput
+      end>
+    PackSize = 1
+    Left = 344
+    Top = 336
+  end
+  object spGetImportSetting_Goods_IsUpload: TdsdStoredProc
+    StoredProcName = 'gpGet_DefaultValue'
+    DataSets = <
+      item
+      end>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inDefaultKey'
+        Value = 'TGoodsPartnerCodeForm;zc_Object_ImportSetting_Goods_IsUpload'
+        DataType = ftString
+        ParamType = ptInput
+      end
+      item
+        Name = 'inUserKeyId'
+        Value = '0'
+        ParamType = ptInput
+      end
+      item
+        Name = 'gpGet_DefaultValue'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'ImportSettingIsUploadId'
+        DataType = ftString
+      end>
+    PackSize = 1
+    Left = 672
+    Top = 264
+  end
+  object spDelete_ObjectBoolean_Goods_IsUpload: TdsdStoredProc
+    StoredProcName = 'gpDelete_ObjectBoolean_Goods_IsUpload'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inObjectId'
+        Value = '0'
+        Component = FormParams
+        ComponentItem = 'ObjectId'
+        ParamType = ptInput
+      end>
+    PackSize = 1
+    Left = 672
+    Top = 312
   end
 end

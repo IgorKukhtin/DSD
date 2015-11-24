@@ -8,7 +8,9 @@ CREATE OR REPLACE FUNCTION gpGet_Object_Unit(
 )
 RETURNS TABLE (Id Integer, Code Integer, Name TVarChar,  
                ParentId Integer, ParentName TVarChar,
-               JuridicalId Integer, JuridicalName TVarChar, isLeaf boolean) AS
+               JuridicalId Integer, JuridicalName TVarChar, 
+               MarginCategoryId Integer, MarginCategoryName TVarChar,
+               isLeaf boolean) AS
 $BODY$
 BEGIN
 
@@ -27,6 +29,9 @@ BEGIN
 
            , CAST (0 as Integer)   AS JuridicalId
            , CAST ('' as TVarChar) AS JuridicalName
+           
+           , CAST (0 as Integer)   AS MarginCategoryId
+           , CAST ('' as TVarChar) AS MarginCategoryName
            , false AS isLeaf;
    ELSE
        RETURN QUERY 
@@ -38,6 +43,8 @@ BEGIN
            , Object_Unit_View.ParentName
            , Object_Unit_View.JuridicalId
            , Object_Unit_View.JuridicalName
+           , Object_Unit_View.MarginCategoryId
+           , Object_Unit_View.MarginCategoryName
            , Object_Unit_View.isLeaf 
        FROM Object_Unit_View
       WHERE Object_Unit_View.Id = inId;
