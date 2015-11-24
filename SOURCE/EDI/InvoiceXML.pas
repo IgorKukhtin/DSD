@@ -111,6 +111,7 @@ type
     function Get_POSITIONNUMBER: UnicodeString;
     function Get_PRODUCT: UnicodeString;
     function Get_PRODUCTIDBUYER: UnicodeString;
+    function Get_INVOICEUNIT: UnicodeString;
     function Get_INVOICEDQUANTITY: UnicodeString;
     function Get_UNITPRICE: UnicodeString;
     function Get_PRICEWITHVAT: UnicodeString;
@@ -122,6 +123,7 @@ type
     procedure Set_POSITIONNUMBER(Value: UnicodeString);
     procedure Set_PRODUCT(Value: UnicodeString);
     procedure Set_PRODUCTIDBUYER(Value: UnicodeString);
+    procedure Set_INVOICEUNIT(Value: UnicodeString);
     procedure Set_INVOICEDQUANTITY(Value: UnicodeString);
     procedure Set_PRICEWITHVAT(Value: UnicodeString);
     procedure Set_GROSSPRICE(Value: UnicodeString);
@@ -133,6 +135,7 @@ type
     property POSITIONNUMBER: UnicodeString read Get_POSITIONNUMBER write Set_POSITIONNUMBER;
     property PRODUCT: UnicodeString read Get_PRODUCT write Set_PRODUCT;
     property PRODUCTIDBUYER: UnicodeString read Get_PRODUCTIDBUYER write Set_PRODUCTIDBUYER;
+    property INVOICEUNIT: UnicodeString read Get_INVOICEUNIT write Set_INVOICEUNIT;
     property INVOICEDQUANTITY: UnicodeString read Get_INVOICEDQUANTITY write Set_INVOICEDQUANTITY;
     property UNITPRICE: UnicodeString read Get_UNITPRICE write Set_UNITPRICE;
     property PRICEWITHVAT: UnicodeString read Get_PRICEWITHVAT write Set_PRICEWITHVAT;
@@ -262,6 +265,7 @@ type
     function Get_POSITIONNUMBER: UnicodeString;
     function Get_PRODUCT: UnicodeString;
     function Get_PRODUCTIDBUYER: UnicodeString;
+    function Get_INVOICEUNIT: UnicodeString;
     function Get_INVOICEDQUANTITY: UnicodeString;
     function Get_UNITPRICE: UnicodeString;
     function Get_PRICEWITHVAT: UnicodeString;
@@ -273,6 +277,7 @@ type
     procedure Set_POSITIONNUMBER(Value: UnicodeString);
     procedure Set_PRODUCT(Value: UnicodeString);
     procedure Set_PRODUCTIDBUYER(Value: UnicodeString);
+    procedure Set_INVOICEUNIT(Value: UnicodeString);
     procedure Set_INVOICEDQUANTITY(Value: UnicodeString);
     procedure Set_UNITPRICE(Value: UnicodeString);
     procedure Set_PRICEWITHVAT(Value: UnicodeString);
@@ -626,6 +631,16 @@ end;
 procedure TXMLPOSITIONType.Set_PRODUCT(Value: UnicodeString);
 begin
   ChildNodes['PRODUCT'].NodeValue := Value;
+end;
+
+function TXMLPOSITIONType.Get_INVOICEUNIT: UnicodeString;
+begin
+  Result := ChildNodes['INVOICEUNIT'].Text;
+end;
+
+procedure TXMLPOSITIONType.Set_INVOICEUNIT(Value: UnicodeString);
+begin
+  ChildNodes['INVOICEUNIT'].NodeValue := Value;
 end;
 
 function TXMLPOSITIONType.Get_PRODUCTIDBUYER: UnicodeString;

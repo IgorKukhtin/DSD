@@ -45,7 +45,8 @@ RETURNS TABLE (InvNumber TVarChar
              , Amount_Weight2 TFloat, Amount_Sh2 TFloat
              , Amount_Weight_Dozakaz1 TFloat, Amount_Sh_Dozakaz1 TFloat
              , Amount_Weight_Dozakaz2 TFloat, Amount_Sh_Dozakaz2 TFloat
-             , Amount TFloat, AmountZakaz TFloat, Amount_Weight TFloat, AmountZakaz_Weight TFloat, Amount_Sh TFloat, AmountZakaz_Sh TFloat
+             , Amount TFloat, AmountZakaz TFloat, AmountSecond1 TFloat, AmountSecond2 TFloat
+             , Amount_Weight TFloat, AmountZakaz_Weight TFloat, Amount_Sh TFloat, AmountZakaz_Sh TFloat
 
              , Amount_WeightSK TFloat
              , InfoMoneyCode Integer, InfoMoneyName TVarChar, InfoMoneyName_all TVarChar
@@ -210,22 +211,24 @@ BEGIN
             , tmpMovement2.GoodsId
             , tmpMovement2.InfoMoneyId
 
-           , SUM (Amount1 + Amount2 + AmountSecond1 + AmountSecond2) AS Amount
+           , SUM (Amount1 + Amount2 + tmpMovement2.AmountSecond1 + tmpMovement2.AmountSecond2) AS Amount
            , SUM (Amount1 + Amount2 )                                AS AmountZakaz
+           , SUM (tmpMovement2.AmountSecond1)                        AS AmountSecond1
+           , SUM (tmpMovement2.AmountSecond2)                        AS AmountSecond2
            , SUM (CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN Amount1 ELSE 0 END)                                 AS Amount_Sh1
            , SUM (Amount1 * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END)  AS Amount_Weight1
            , SUM (CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN Amount2 ELSE 0 END)                                 AS Amount_Sh2
            , SUM (Amount2 * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END)  AS Amount_Weight2
 
-           , SUM (CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN AmountSecond1 ELSE 0 END)                                 AS AmountSecond_Sh1
-           , SUM (AmountSecond1 * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END)  AS AmountSecond_Weight1
-           , SUM (CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN AmountSecond2 ELSE 0 END)                                 AS AmountSecond_Sh2
-           , SUM (AmountSecond2 * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END)  AS AmountSecond_Weight2
+           , SUM (CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN tmpMovement2.AmountSecond1 ELSE 0 END)                    AS AmountSecond_Sh1
+           , SUM (tmpMovement2.AmountSecond1 * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END)  AS AmountSecond_Weight1
+           , SUM (CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN tmpMovement2.AmountSecond2 ELSE 0 END)                    AS AmountSecond_Sh2
+           , SUM (tmpMovement2.AmountSecond2 * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END)  AS AmountSecond_Weight2
 
            , SUM (Amount1 * Price) AS Summ1
            , SUM (Amount2 * Price) AS Summ2
-           , SUM (AmountSecond1 * Price) AS SummSecond1
-           , SUM (AmountSecond2 * Price) AS SummSecond2
+           , SUM (tmpMovement2.AmountSecond1 * Price) AS SummSecond1
+           , SUM (tmpMovement2.AmountSecond2 * Price) AS SummSecond2
 
        FROM tmpMovement2
            LEFT JOIN ObjectLink AS ObjectLink_Goods_Measure ON ObjectLink_Goods_Measure.ObjectId = tmpMovement2.GoodsId
@@ -282,8 +285,9 @@ BEGIN
            , ObjectString_Goods_GroupNameFull.ValueData AS GoodsGroupNameFull
            , Object_TradeMark.ValueData                 AS TradeMarkName
 
-           ,  tmpMovement.Summ1                            :: TFloat AS AmountSumm1
-           ,  tmpMovement.Summ2                            :: TFloat AS AmountSumm2
+           , tmpMovement.Summ1                            :: TFloat AS AmountSumm1
+           , tmpMovement.Summ2                            :: TFloat AS AmountSumm2
+
            , (tmpMovement.SummSecond1)       :: TFloat AS AmountSumm_Dozakaz1
            , (tmpMovement.SummSecond2)       :: TFloat AS AmountSumm_Dozakaz2
            , (tmpMovement.Summ1 + tmpMovement.Summ2 + tmpMovement.SummSecond1 + tmpMovement.SummSecond2) :: TFloat AS AmountSumm
@@ -297,8 +301,11 @@ BEGIN
            , (tmpMovement.AmountSecond_Weight2) :: TFloat AS Amount_Weight_Dozakaz2
            , (tmpMovement.AmountSecond_Sh2)     :: TFloat AS Amount_Sh_Dozakaz2
 
-           , (tmpMovement.Amount) :: TFloat      AS Amount
+           , (tmpMovement.Amount)      :: TFloat AS Amount
            , (tmpMovement.AmountZakaz) :: TFloat AS AmountZakaz                       -- количество без дозаказа
+           , tmpMovement.AmountSecond1 :: TFloat AS AmountSecond1
+           , tmpMovement.AmountSecond2 :: TFloat AS AmountSecond2
+
            , (tmpMovement.Amount_Weight1 + tmpMovement.Amount_Weight2 + tmpMovement.AmountSecond_Weight1 + tmpMovement.AmountSecond_Weight2) :: TFloat AS Amount_Weight
            , (tmpMovement.Amount_Weight1 + tmpMovement.Amount_Weight2) :: TFloat AS AmountZakaz_Weight                       -- вес без дозаказа
            , (tmpMovement.Amount_Sh1 + tmpMovement.Amount_Sh2 + tmpMovement.AmountSecond_Sh1 + tmpMovement.AmountSecond_Sh2)         :: TFloat AS Amount_Sh

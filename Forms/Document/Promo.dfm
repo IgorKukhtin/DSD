@@ -2,7 +2,6 @@ inherited PromoForm: TPromoForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1040#1082#1094#1080#1103'>'
   ClientHeight = 481
   ClientWidth = 928
-  ExplicitLeft = -138
   ExplicitWidth = 944
   ExplicitHeight = 516
   PixelsPerInch = 96
@@ -304,7 +303,7 @@ inherited PromoForm: TPromoForm
           ClientRectRight = 350
           ClientRectTop = 24
           object tsConditionPromo: TcxTabSheet
-            Caption = '&3. '#1059#1089#1083#1086#1074#1080#1103' '#1091#1095#1072#1089#1090#1080#1103
+            Caption = '&3. % '#1076#1086#1087#1086#1083#1085#1080#1090#1077#1083#1100#1085#1086#1081' '#1089#1082#1080#1076#1082#1080
             object cxGridConditionPromo: TcxGrid
               Left = 0
               Top = 0
@@ -450,7 +449,7 @@ inherited PromoForm: TPromoForm
     object cxLabel4: TcxLabel
       Left = 380
       Top = 4
-      Caption = #1042#1080#1076' '#1072#1082#1094#1080#1080
+      Caption = #1059#1089#1083#1086#1074#1080#1103' '#1091#1095#1072#1089#1090#1080#1103' '
     end
     object edPromoKind: TcxButtonEdit
       Left = 380
@@ -1544,6 +1543,9 @@ inherited PromoForm: TPromoForm
   inherited GuidesFiller: TGuidesFiller
     GuidesList = <
       item
+        Guides = PromoKindGuides
+      end
+      item
         Guides = AdvertisingGuides
       end
       item
@@ -1704,8 +1706,8 @@ inherited PromoForm: TPromoForm
         ComponentItem = 'GoodsKindId'
         ParamType = ptInput
       end>
-    Left = 456
-    Top = 280
+    Left = 448
+    Top = 272
   end
   inherited spInsertMaskMIMaster: TdsdStoredProc
     Left = 456
@@ -1999,8 +2001,8 @@ inherited PromoForm: TPromoForm
         ParamType = ptInput
       end>
     PackSize = 1
-    Left = 544
-    Top = 280
+    Left = 536
+    Top = 272
   end
   object dsdDBViewAddOnPartner: TdsdDBViewAddOn
     ErasedFieldName = 'isErased'

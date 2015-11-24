@@ -34,7 +34,7 @@ inherited PromoJournalForm: TPromoJournalForm
             HeaderAlignmentHorz = taCenter
           end
           object colPromoKindName: TcxGridDBColumn
-            Caption = #1042#1080#1076' '#1072#1082#1094#1080#1080
+            Caption = #1059#1089#1083#1086#1074#1080#1103' '#1091#1095#1072#1089#1090#1080#1103
             DataBinding.FieldName = 'PromoKindName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter

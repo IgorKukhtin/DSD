@@ -12,6 +12,7 @@ $BODY$
   DECLARE vbOperDate TDateTime;
   DECLARE vbDescId Integer;
   DECLARE vbAccessKeyId Integer;
+  DECLARE vbStatusId_old Integer;
 BEGIN
 
   -- 0. Проверка
@@ -20,12 +21,16 @@ BEGIN
       RAISE EXCEPTION 'Ошибка.Документ не сохранен.';
   END IF;
 
-  -- 1. Проверки на "распроведение" / "удаление"
-  PERFORM lpCheck_Movement_Status (inMovementId, inUserId);
+  -- 1.0.
+  vbStatusId_old:= (SELECT StatusId from Movement where id = inMovementId);
 
-  -- 2. Обязательно меняем статус документа
+  -- 1.2. Проверки на "распроведение" / "удаление"
+  IF vbStatusId_old = zc_Enum_Status_Complete() THEN PERFORM lpCheck_Movement_Status (inMovementId, inUserId); END IF;
+
+  -- 1.1. Обязательно меняем статус документа
   UPDATE Movement SET StatusId = zc_Enum_Status_Erased() WHERE Id = inMovementId
   RETURNING OperDate, DescId, AccessKeyId INTO vbOperDate, vbDescId, vbAccessKeyId;
+
 
 
   -- для Админа  - Все Права
@@ -77,7 +82,7 @@ BEGIN
   ELSE 
       -- !!!для Админа!!!
       -- 1. Проверки на "распроведение" / "удаление"
-      PERFORM lpCheck_Movement_Status (inMovementId, inUserId);
+      IF vbStatusId_old = zc_Enum_Status_Complete() THEN PERFORM lpCheck_Movement_Status (inMovementId, inUserId); END IF;
   END IF;
 
 

@@ -41,6 +41,35 @@ BEGIN
          RAISE EXCEPTION 'Ошибка.Нет данных для документа.';
      END IF;
 
+
+     IF EXISTS (SELECT 1
+                FROM MovementLinkMovement AS MovementLinkMovement_Order
+                     LEFT JOIN MovementLinkObject AS MovementLinkObject_Contract
+                                                  ON MovementLinkObject_Contract.MovementId = inMovementId
+                                                 AND MovementLinkObject_Contract.DescId = zc_MovementLinkObject_Contract()
+                     LEFT JOIN MovementLinkObject AS MovementLinkObject_Contract_find
+                                                  ON MovementLinkObject_Contract_find.MovementId = MovementLinkMovement_Order.MovementChildId
+                                                 AND MovementLinkObject_Contract_find.DescId = zc_MovementLinkObject_Contract()
+                WHERE MovementLinkMovement_Order.MovementId = inMovementId
+                  AND MovementLinkMovement_Order.DescId = zc_MovementLinkMovement_Order()
+                  AND MovementLinkObject_Contract.ObjectId <> MovementLinkObject_Contract_find.ObjectId)
+     THEN 
+         -- сохранили связь с <Договора>
+         PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_Contract(), inMovementId, MovementLinkObject_Contract.ObjectId)
+         FROM MovementLinkMovement AS MovementLinkMovement_Order
+                     LEFT JOIN MovementLinkObject AS MovementLinkObject_Contract
+                                                  ON MovementLinkObject_Contract.MovementId = inMovementId
+                                                 AND MovementLinkObject_Contract.DescId = zc_MovementLinkObject_Contract()
+                     LEFT JOIN MovementLinkObject AS MovementLinkObject_Contract_find
+                                                  ON MovementLinkObject_Contract_find.MovementId = MovementLinkMovement_Order.MovementChildId
+                                                 AND MovementLinkObject_Contract_find.DescId = zc_MovementLinkObject_Contract()
+                WHERE MovementLinkMovement_Order.MovementId = inMovementId
+                  AND MovementLinkMovement_Order.DescId = zc_MovementLinkMovement_Order()
+                  AND MovementLinkObject_Contract.ObjectId <> MovementLinkObject_Contract_find.ObjectId;
+     END IF;
+
+
+
      -- определили 
      vbBranchId:= CASE WHEN inBranchCode > 100 THEN zc_Branch_Basis()
                        ELSE (SELECT Object.Id FROM Object WHERE Object.ObjectCode = inBranchCode and Object.DescId = zc_Object_Branch())
