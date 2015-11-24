@@ -220,6 +220,14 @@ object UnitForm: TUnitForm
         Options.Editing = False
         Width = 100
       end
+      object PersonalSheetWorkTimeName: TcxGridDBColumn
+        Caption = #1057#1086#1090#1088#1091#1076#1085#1080#1082' ('#1076#1086#1089#1090#1091#1087' '#1082' '#1090#1072#1073#1077#1083#1102' '#1088'.'#1074#1088#1077#1084#1077#1085#1080')'
+        DataBinding.FieldName = 'PersonalSheetWorkTimeName'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 120
+      end
       object isPartionDate: TcxGridDBColumn
         Caption = #1055#1072#1088#1090#1080#1080' '#1076#1072#1090#1099' '#1074' '#1091#1095#1077#1090#1077
         DataBinding.FieldName = 'isPartionDate'

@@ -213,7 +213,7 @@
       end>
     Properties.ReadOnly = True
     TabOrder = 24
-    Width = 449
+    Width = 209
   end
   object cxLabel11: TcxLabel
     Left = 40
@@ -264,6 +264,23 @@
       end>
     Properties.ReadOnly = True
     TabOrder = 30
+    Width = 209
+  end
+  object cxLabel14: TcxLabel
+    Left = 280
+    Top = 291
+    Caption = #1057#1086#1090#1088#1091#1076#1085#1080#1082' ('#1090#1072#1073#1077#1083#1100' '#1088'.'#1074#1088#1077#1084#1077#1085#1080')'
+  end
+  object cePersonalSheetWorkTime: TcxButtonEdit
+    Left = 280
+    Top = 312
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    Properties.ReadOnly = True
+    TabOrder = 32
     Width = 209
   end
   object ActionList: TActionList
@@ -401,6 +418,13 @@
         Name = 'inAreaId'
         Value = Null
         Component = AreaGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inPersonalSheetWorkTimeId'
+        Value = Null
+        Component = PersonalSheetWorkTimeGuides
         ComponentItem = 'Key'
         ParamType = ptInput
       end>
@@ -581,6 +605,19 @@
         Name = 'AreaName'
         Value = Null
         Component = AreaGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+      end
+      item
+        Name = 'PersonalSheetWorkTimeId'
+        Value = Null
+        Component = PersonalSheetWorkTimeGuides
+        ComponentItem = 'Key'
+      end
+      item
+        Name = 'PersonalSheetWorkTimeName'
+        Value = Null
+        Component = PersonalSheetWorkTimeGuides
         ComponentItem = 'TextValue'
         DataType = ftString
       end
@@ -862,7 +899,7 @@
         DataType = ftString
         ParamType = ptInput
       end>
-    Left = 352
+    Left = 144
     Top = 296
   end
   object RouteGuides: TdsdGuides
@@ -944,5 +981,32 @@
       end>
     Left = 336
     Top = 216
+  end
+  object PersonalSheetWorkTimeGuides: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = cePersonalSheetWorkTime
+    FormNameParam.Value = 'TPersonal_ObjectForm'
+    FormNameParam.DataType = ftString
+    FormName = 'TPersonal_ObjectForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = PersonalSheetWorkTimeGuides
+        ComponentItem = 'Key'
+        DataType = ftString
+        ParamType = ptInput
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = PersonalSheetWorkTimeGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+      end>
+    Left = 351
+    Top = 295
   end
 end

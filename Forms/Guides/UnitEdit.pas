@@ -75,6 +75,9 @@ type
     cxLabel13: TcxLabel;
     ceArea: TcxButtonEdit;
     AreaGuides: TdsdGuides;
+    cxLabel14: TcxLabel;
+    cePersonalSheetWorkTime: TcxButtonEdit;
+    PersonalSheetWorkTimeGuides: TdsdGuides;
   private
     { Private declarations }
   public

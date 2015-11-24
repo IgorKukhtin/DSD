@@ -4,6 +4,7 @@ DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Unit (Integer, Integer, TVarChar, 
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Unit (Integer, Integer, TVarChar, Boolean, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Unit (Integer, Integer, TVarChar, Boolean, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Unit (Integer, Integer, TVarChar, Boolean, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Unit (Integer, Integer, TVarChar, Boolean, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar);
 
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Unit(
@@ -21,6 +22,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Unit(
     IN inRouteId                 Integer   , -- Маршрут
     IN inRouteSortingId          Integer   , -- Сортировка маршрутов
     IN inAreaId                  Integer   , -- регион
+    IN inPersonalSheetWorkTimeId Integer   , -- Сотрудник (доступ к табелю р.времени)
     IN inSession                 TVarChar    -- сессия пользователя
 )
   RETURNS Integer AS
@@ -77,6 +79,8 @@ BEGIN
    PERFORM lpInsertUpdate_ObjectLink( zc_ObjectLink_Unit_RouteSorting(), ioId, inRouteSortingId);
    -- сохранили связь с <Регион>
    PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_Unit_Area(), ioId, inAreaId);
+   -- сохранили связь с <Сотрудник (доступ к табелю р.времени)>
+   PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_Unit_PersonalSheetWorkTime(), ioId, inPersonalSheetWorkTimeId);
 
 
    -- Если добавляли подразделение
@@ -100,12 +104,13 @@ BEGIN
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpInsertUpdate_Object_Unit (Integer, Integer, TVarChar, Boolean, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar) OWNER TO postgres;
+ALTER FUNCTION gpInsertUpdate_Object_Unit (Integer, Integer, TVarChar, Boolean, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar) OWNER TO postgres;
 
 /*-------------------------------------------------------------------------------*/
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 24.11.15         * add PersonalSheetWorkTime
  19.07.15         * add area
  03.07.15         * add ObjectLink_Unit_Route, ObjectLink_Unit_RouteSorting
  15.04.15         * add Contract

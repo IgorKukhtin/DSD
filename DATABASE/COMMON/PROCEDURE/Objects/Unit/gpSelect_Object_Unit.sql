@@ -20,6 +20,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar,
                RouteId Integer, RouteName TVarChar,
                RouteSortingId Integer, RouteSortingName TVarChar,
                AreaId Integer, AreaName TVarChar,
+               PersonalSheetWorkTimeId Integer, PersonalSheetWorkTimeName TVarChar,
                PartnerCode Integer, PartnerName TVarChar,
                isLeaf Boolean, isPartionDate Boolean,
                isErased Boolean
@@ -88,6 +89,9 @@ BEGIN
 
            , Object_Area.Id            AS AreaId
            , Object_Area.ValueData     AS AreaName
+
+           , Object_PersonalSheetWorkTime.Id            AS PersonalSheetWorkTimeId
+           , Object_PersonalSheetWorkTime.ValueData     AS PersonalSheetWorkTimeName
          
            , Object_Partner.ObjectCode    AS PartnerCode
            , Object_Partner.ValueData     AS PartnerName
@@ -121,6 +125,11 @@ BEGIN
                                  ON ObjectLink_Unit_Area.ObjectId = Object_Unit_View.Id 
                                 AND ObjectLink_Unit_Area.DescId = zc_ObjectLink_Unit_Area()
             LEFT JOIN Object AS Object_Area ON Object_Area.Id = ObjectLink_Unit_Area.ChildObjectId
+
+            LEFT JOIN ObjectLink AS ObjectLink_Unit_PersonalSheetWorkTime
+                                 ON ObjectLink_Unit_PersonalSheetWorkTime.ObjectId = Object_Unit_View.Id 
+                                AND ObjectLink_Unit_PersonalSheetWorkTime.DescId = zc_ObjectLink_Unit_PersonalSheetWorkTime()
+            LEFT JOIN Object AS Object_PersonalSheetWorkTime ON Object_PersonalSheetWorkTime.Id = ObjectLink_Unit_PersonalSheetWorkTime.ChildObjectId
         
             LEFT JOIN ObjectBoolean AS ObjectBoolean_PartionDate
                                     ON ObjectBoolean_PartionDate.ObjectId = Object_Unit_View.Id
@@ -185,6 +194,9 @@ BEGIN
 
            , CAST (0 as Integer)    AS AreaId
            , CAST ('' as TVarChar)  AS AreaName
+
+           , CAST (0 as Integer)    AS PersonalSheetWorkTimeId
+           , CAST ('' as TVarChar)  AS PersonalSheetWorkTimeName
 
            , CAST (0 as Integer)    AS PartnerCode
            , CAST ('' as TVarChar)  AS PartnerName

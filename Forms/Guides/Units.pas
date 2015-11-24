@@ -77,6 +77,7 @@ type
     AreaName: TcxGridDBColumn;
     PartnerCode: TcxGridDBColumn;
     PartnerName: TcxGridDBColumn;
+    PersonalSheetWorkTimeName: TcxGridDBColumn;
   private
     { Private declarations }
   public
