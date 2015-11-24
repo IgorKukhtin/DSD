@@ -44,9 +44,10 @@ BEGIN
    END CASE;
 
    -- Нашли ключ Медок 
-   SELECT Movement_Medoc_View.Id INTO vbMedocId 
-     FROM Movement_Medoc_View 
-    WHERE zfConvert_StringToNumber(InvNumber) = inMedocCode; 
+   SELECT Movement_Medoc_View.Id
+          INTO vbMedocId 
+   FROM Movement_Medoc_View 
+   WHERE zfConvert_StringToNumber(InvNumber) = inMedocCode; 
 
 
 -- IF TRIM (inInvNumberRegistered) = '9159204066'
@@ -153,6 +154,7 @@ BEGIN
               WHERE MovementString_InvNumberPartner.ValueData = inInvNumber AND JuridicalFrom.INN = inToINN  
                 AND JuridicalTo.INN = inFromINN AND Movement.StatusId <> zc_Enum_Status_Erased()
                 AND abs(inTotalSumm) = abs(MovementFloat_TotalSumm.ValueData)
+                AND Movement.StatusId <> zc_Enum_Status_Erased()
                 AND Movement.OperDate = inOperDate AND Movement.DescId = zc_Movement_TaxCorrective();
   --              AND (inInvNumberRegistered = '' OR COALESCE(MovementString_InvNumberRegistered.ValueData, '') = '');         
       END IF;

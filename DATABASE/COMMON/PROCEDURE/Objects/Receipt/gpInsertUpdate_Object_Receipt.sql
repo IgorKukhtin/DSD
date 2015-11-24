@@ -128,6 +128,9 @@ BEGIN
    -- !!!пересчитали итоговые кол-ва по рецепту!!!
    PERFORM lpUpdate_Object_Receipt_Total (ioId, vbUserId);
 
+   -- !!!пересчитали связь с рецепт "поиск"!!!
+   PERFORM lpUpdate_Object_Receipt_Parent (0, 0, vbUserId);
+
    -- сохранили протокол
    --PERFORM lpInsert_ObjectProtocol (ioId, vbUserId);
    PERFORM lpInsert_ObjectProtocol (inObjectId:= ioId, inUserId:= vbUserId, inIsUpdate:= vbIsUpdate, inIsErased:= NULL);

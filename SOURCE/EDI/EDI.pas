@@ -1279,6 +1279,7 @@ begin
         PRODUCT := ItemsDataSet.FieldByName('BarCodeGLN_Juridical').asString;
         PRODUCTIDBUYER := ItemsDataSet.FieldByName
           ('ArticleGLN_Juridical').asString;
+        INVOICEUNIT := ItemsDataSet.FieldByName('DELIVEREDUNIT').asString;
         INVOICEDQUANTITY :=
           StringReplace(FormatFloat('0.000',
           ItemsDataSet.FieldByName('AmountPartner').AsFloat),
@@ -1725,6 +1726,7 @@ begin
         PRODUCTIDSUPPLIER := ItemsDataSet.FieldByName('Id').asString;
         PRODUCTIDBUYER := ItemsDataSet.FieldByName
           ('ArticleGLN_Juridical').asString;
+        ORDRSPUNIT := ItemsDataSet.FieldByName('DELIVEREDUNIT').asString;
         if ItemsDataSet.FieldByName('AmountOrder')
           .AsFloat = ItemsDataSet.FieldByName('AmountPartner').AsFloat then
           PRODUCTTYPE := '1';

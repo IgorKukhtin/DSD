@@ -1,3 +1,13 @@
+DROP FUNCTION IF EXISTS gpSelect_Report_Wage_1(
+    TDateTime, --дата начала периода
+    TDateTime, --дата окончания периода
+    Integer,   --подразделение 
+    Integer,   --модель начисления
+    Integer,   --сотрудник
+    Integer,   --должность
+    TVarChar   --сессия пользователя
+);
+
 DROP FUNCTION IF EXISTS gpSelect_Report_Wage_Model(
     TDateTime, --дата начала периода
     TDateTime, --дата окончания периода

@@ -88,6 +88,7 @@ type
     function Get_PRODUCTIDBUYER: UnicodeString;
     function Get_PRODUCTIDSUPPLIER: UnicodeString;
     function Get_DESCRIPTION: UnicodeString;
+    function Get_ORDRSPUNIT: UnicodeString;
     function Get_VAT: UnicodeString;
     function Get_PRICE: UnicodeString;
     function Get_PRICEWITHVAT: UnicodeString;
@@ -100,6 +101,7 @@ type
     procedure Set_PRODUCTIDBUYER(Value: UnicodeString);
     procedure Set_PRODUCTIDSUPPLIER(Value: UnicodeString);
     procedure Set_DESCRIPTION(Value: UnicodeString);
+    procedure Set_ORDRSPUNIT(Value: UnicodeString);
     procedure Set_VAT(Value: UnicodeString);
     procedure Set_PRICE(Value: UnicodeString);
     procedure Set_PRICEWITHVAT(Value: UnicodeString);
@@ -113,6 +115,7 @@ type
     property PRODUCTIDBUYER: UnicodeString read Get_PRODUCTIDBUYER write Set_PRODUCTIDBUYER;
     property PRODUCTIDSUPPLIER: UnicodeString read Get_PRODUCTIDSUPPLIER write Set_PRODUCTIDSUPPLIER;
     property DESCRIPTION: UnicodeString read Get_DESCRIPTION write Set_DESCRIPTION;
+    property ORDRSPUNIT: UnicodeString read Get_ORDRSPUNIT write Set_ORDRSPUNIT;
     property VAT: UnicodeString read Get_VAT write Set_VAT;
     property PRICE: UnicodeString read Get_PRICE write Set_PRICE;
     property PRICEWITHVAT: UnicodeString read Get_PRICEWITHVAT write Set_PRICEWITHVAT;
@@ -203,6 +206,7 @@ type
     function Get_PRODUCTIDBUYER: UnicodeString;
     function Get_PRODUCTIDSUPPLIER: UnicodeString;
     function Get_DESCRIPTION: UnicodeString;
+    function Get_ORDRSPUNIT: UnicodeString;
     function Get_VAT: UnicodeString;
     function Get_PRICE: UnicodeString;
     function Get_PRICEWITHVAT: UnicodeString;
@@ -215,6 +219,7 @@ type
     procedure Set_PRODUCTIDBUYER(Value: UnicodeString);
     procedure Set_PRODUCTIDSUPPLIER(Value: UnicodeString);
     procedure Set_DESCRIPTION(Value: UnicodeString);
+    procedure Set_ORDRSPUNIT(Value: UnicodeString);
     procedure Set_VAT(Value: UnicodeString);
     procedure Set_PRICE(Value: UnicodeString);
     procedure Set_PRICEWITHVAT(Value: UnicodeString);
@@ -460,6 +465,16 @@ end;
 procedure TXMLPOSITIONType.Set_PRODUCT(Value: UnicodeString);
 begin
   ChildNodes['PRODUCT'].NodeValue := Value;
+end;
+
+function TXMLPOSITIONType.Get_ORDRSPUNIT: UnicodeString;
+begin
+  Result := ChildNodes['ORDRSPUNIT'].Text;
+end;
+
+procedure TXMLPOSITIONType.Set_ORDRSPUNIT(Value: UnicodeString);
+begin
+  ChildNodes['ORDRSPUNIT'].NodeValue := Value;
 end;
 
 function TXMLPOSITIONType.Get_PRODUCTIDBUYER: UnicodeString;
