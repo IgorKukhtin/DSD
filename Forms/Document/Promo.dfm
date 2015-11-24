@@ -2,9 +2,8 @@ inherited PromoForm: TPromoForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1040#1082#1094#1080#1103'>'
   ClientHeight = 481
   ClientWidth = 928
-  ExplicitLeft = -138
   ExplicitWidth = 944
-  ExplicitHeight = 516
+  ExplicitHeight = 519
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -734,6 +733,13 @@ inherited PromoForm: TPromoForm
         item
           DataSet = PrintHead
           UserName = 'frxHead'
+        end>
+      Params = <
+        item
+          Name = 'InvNumber'
+          Value = Null
+          Component = edInvNumber
+          DataType = ftString
         end>
       ReportName = #1040#1082#1094#1080#1103
       ReportNameParam.Value = #1040#1082#1094#1080#1103
