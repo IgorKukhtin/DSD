@@ -9,6 +9,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , OperDateOrder Boolean
              , GLNCode TVarChar, GLNCodeCorporate TVarChar
              , GoodsPropertyId Integer, GoodsPropertyName TVarChar
+             , PersonalMarketingId Integer, PersonalMarketingName TVarChar
              , isErased boolean) AS
 $BODY$
 BEGIN
@@ -26,7 +27,9 @@ BEGIN
            , GLNCode.ValueData               AS GLNCode
            , GLNCodeCorporate.ValueData      AS GLNCodeCorporate
            , Object_GoodsProperty.Id         AS GoodsPropertyId
-           , Object_GoodsProperty.ValueData  AS GoodsPropertyName           
+           , Object_GoodsProperty.ValueData  AS GoodsPropertyName     
+           , Object_PersonalMarketing.Id         AS PersonalMarketingId
+           , Object_PersonalMarketing.ValueData  AS PersonalMarketingName       
            , Object_Retail.isErased   AS isErased
        FROM OBJECT AS Object_Retail
         LEFT JOIN ObjectString AS GLNCode
@@ -44,6 +47,11 @@ BEGIN
                              ON ObjectLink_Retail_GoodsProperty.ObjectId = Object_Retail.Id 
                             AND ObjectLink_Retail_GoodsProperty.DescId = zc_ObjectLink_Retail_GoodsProperty()
         LEFT JOIN Object AS Object_GoodsProperty ON Object_GoodsProperty.Id = ObjectLink_Retail_GoodsProperty.ChildObjectId
+
+        LEFT JOIN ObjectLink AS ObjectLink_Retail_PersonalMarketing
+                             ON ObjectLink_Retail_PersonalMarketing.ObjectId = Object_Retail.Id 
+                            AND ObjectLink_Retail_PersonalMarketing.DescId = zc_ObjectLink_Retail_PersonalMarketing()
+        LEFT JOIN Object AS Object_PersonalMarketing ON Object_PersonalMarketing.Id = ObjectLink_Retail_PersonalMarketing.ChildObjectId
                               
        WHERE Object_Retail.DescId = zc_Object_Retail();
    
@@ -54,6 +62,7 @@ $BODY$
 /*-------------------------------------------------------------------------------
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 24.11.15         * add PersonalMarketing
  20.05.15         *
  02.04.15         * add OperDateOrder
  19.02.15         * add GoodsProperty               

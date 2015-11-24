@@ -19,6 +19,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar,
                RouteId Integer, RouteName TVarChar,
                RouteSortingId Integer, RouteSortingName TVarChar,
                AreaId Integer, AreaName TVarChar,
+               PersonalSheetWorkTimeId Integer, PersonalSheetWorkTimeName TVarChar,
                isErased boolean, isLeaf boolean,
                isPartionDate boolean
 ) AS
@@ -70,6 +71,9 @@ BEGIN
            , CAST (0 as Integer)    AS AreaId
            , CAST ('' as TVarChar)  AS AreaName
 
+           , CAST (0 as Integer)    AS PersonalSheetWorkTimeId
+           , CAST ('' as TVarChar)  AS PersonalSheetWorkTimeName
+
            , CAST (NULL AS Boolean) AS isErased
            , CAST (NULL AS Boolean) AS isLeaf
            , CAST (NULL AS Boolean) AS isPartionDate
@@ -115,6 +119,9 @@ BEGIN
            , Object_Area.Id            AS AreaId
            , Object_Area.ValueData     AS AreaName
 
+           , Object_PersonalSheetWorkTime.Id            AS PersonalSheetWorkTimeId
+           , Object_PersonalSheetWorkTime.ValueData     AS PersonalSheetWorkTimeName
+
            , Object_Unit_View.isErased
            , Object_Unit_View.isLeaf
 
@@ -148,6 +155,11 @@ BEGIN
                                  ON ObjectLink_Unit_Area.ObjectId = Object_Unit_View.Id 
                                 AND ObjectLink_Unit_Area.DescId = zc_ObjectLink_Unit_Area()
             LEFT JOIN Object AS Object_Area ON Object_Area.Id = ObjectLink_Unit_Area.ChildObjectId
+
+            LEFT JOIN ObjectLink AS ObjectLink_Unit_PersonalSheetWorkTime
+                                 ON ObjectLink_Unit_PersonalSheetWorkTime.ObjectId = Object_Unit_View.Id 
+                                AND ObjectLink_Unit_PersonalSheetWorkTime.DescId = zc_ObjectLink_Unit_PersonalSheetWorkTime()
+            LEFT JOIN Object AS Object_PersonalSheetWorkTime ON Object_PersonalSheetWorkTime.Id = ObjectLink_Unit_PersonalSheetWorkTime.ChildObjectId
         
             LEFT JOIN ObjectBoolean AS ObjectBoolean_PartionDate
                                     ON ObjectBoolean_PartionDate.ObjectId = Object_Unit_View.Id
@@ -166,6 +178,7 @@ ALTER FUNCTION gpGet_Object_Unit(integer, TVarChar) OWNER TO postgres;
 /*-------------------------------------------------------------------------------
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 24.11.15         * add PersonalSheetWorkTime
  19.07.15         * add Area
  03.07.15         * add ObjectLink_Unit_Route, ObjectLink_Unit_RouteSorting
  15.04.15         * add Contract

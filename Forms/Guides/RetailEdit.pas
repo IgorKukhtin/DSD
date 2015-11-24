@@ -36,6 +36,9 @@ type
     cxLabel5: TcxLabel;
     edGLNCodeCorporate: TcxTextEdit;
     cbOperDateOrder: TcxCheckBox;
+    cxLabel6: TcxLabel;
+    cePersonalMarketing: TcxButtonEdit;
+    PersonalMarketingGuides: TdsdGuides;
   private
     { Private declarations }
   public

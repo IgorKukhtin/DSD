@@ -2,8 +2,8 @@ object RetailEditForm: TRetailEditForm
   Left = 0
   Top = 0
   Caption = #1044#1086#1073#1072#1074#1080#1090#1100'/'#1048#1079#1084#1077#1085#1080#1090#1100' <'#1058#1086#1088#1075#1086#1074#1072#1103' '#1089#1077#1090#1100'>'
-  ClientHeight = 287
-  ClientWidth = 342
+  ClientHeight = 336
+  ClientWidth = 352
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -29,7 +29,7 @@ object RetailEditForm: TRetailEditForm
   end
   object cxButton1: TcxButton
     Left = 55
-    Top = 249
+    Top = 303
     Width = 75
     Height = 25
     Action = dsdInsertUpdateGuides
@@ -38,7 +38,7 @@ object RetailEditForm: TRetailEditForm
   end
   object cxButton2: TcxButton
     Left = 207
-    Top = 249
+    Top = 303
     Width = 75
     Height = 25
     Action = dsdFormClose
@@ -104,6 +104,23 @@ object RetailEditForm: TRetailEditForm
     Caption = #1094#1077#1085#1072' '#1087#1086' '#1076#1072#1090#1077' '#1079#1072#1103#1074#1082#1080
     TabOrder = 12
     Width = 129
+  end
+  object cxLabel6: TcxLabel
+    Left = 10
+    Top = 244
+    Caption = #1054#1090#1074'. '#1089#1086#1090#1088#1091#1076#1085#1080#1082' '#1084#1072#1088#1082#1077#1090#1080#1085#1075#1086#1074#1086#1075#1086' '#1086#1090#1076#1077#1083#1072
+  end
+  object cePersonalMarketing: TcxButtonEdit
+    Left = 8
+    Top = 267
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    Properties.ReadOnly = True
+    TabOrder = 14
+    Width = 311
   end
   object ActionList: TActionList
     Left = 152
@@ -189,6 +206,13 @@ object RetailEditForm: TRetailEditForm
         Component = GoodsPropertyGuides
         ComponentItem = 'Key'
         ParamType = ptInput
+      end
+      item
+        Name = 'inPersonalMarketingId'
+        Value = Null
+        Component = PersonalMarketingGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
       end>
     PackSize = 1
     Left = 104
@@ -257,6 +281,19 @@ object RetailEditForm: TRetailEditForm
         Component = GoodsPropertyGuides
         ComponentItem = 'TextValue'
         DataType = ftString
+      end
+      item
+        Name = 'PersonalMarketingId'
+        Value = Null
+        Component = PersonalMarketingGuides
+        ComponentItem = 'Key'
+      end
+      item
+        Name = 'PersonalMarketingName'
+        Value = Null
+        Component = PersonalMarketingGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
       end>
     PackSize = 1
     Left = 224
@@ -307,5 +344,32 @@ object RetailEditForm: TRetailEditForm
       end>
     Left = 128
     Top = 192
+  end
+  object PersonalMarketingGuides: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = cePersonalMarketing
+    FormNameParam.Value = 'TPersonal_ObjectForm'
+    FormNameParam.DataType = ftString
+    FormName = 'TPersonal_ObjectForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = PersonalMarketingGuides
+        ComponentItem = 'Key'
+        DataType = ftString
+        ParamType = ptInput
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = PersonalMarketingGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+      end>
+    Left = 151
+    Top = 247
   end
 end
