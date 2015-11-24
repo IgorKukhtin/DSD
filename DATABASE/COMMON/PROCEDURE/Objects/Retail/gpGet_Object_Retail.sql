@@ -10,6 +10,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , OperDateOrder Boolean
              , GLNCode TVarChar, GLNCodeCorporate TVarChar
              , GoodsPropertyId Integer, GoodsPropertyName TVarChar
+             , PersonalMarketingId Integer, PersonalMarketingName TVarChar
              , isErased boolean) AS
 $BODY$
 BEGIN
@@ -28,7 +29,10 @@ BEGIN
            , CAST ('' as TVarChar)   AS GLNCode
            , CAST ('' as TVarChar)   AS GLNCodeCorporate
            , CAST (0 as Integer)     AS GoodsPropertyId 
-           , CAST ('' as TVarChar)   AS GoodsPropertyName           
+           , CAST ('' as TVarChar)   AS GoodsPropertyName      
+
+           , CAST (0 as Integer)     AS PersonalMarketingId 
+           , CAST ('' as TVarChar)   AS PersonalMarketingName    
            , CAST (NULL AS Boolean)  AS isErased;
    ELSE
        RETURN QUERY 
@@ -42,8 +46,11 @@ BEGIN
            , GLNCode.ValueData               AS GLNCode
            , GLNCodeCorporate.ValueData      AS GLNCodeCorporate
            , Object_GoodsProperty.Id         AS GoodsPropertyId
-           , Object_GoodsProperty.ValueData  AS GoodsPropertyName           
+           , Object_GoodsProperty.ValueData  AS GoodsPropertyName    
+           , Object_PersonalMarketing.Id         AS PersonalMarketingId
+           , Object_PersonalMarketing.ValueData  AS PersonalMarketingName         
            , Object_Retail.isErased   AS isErased
+
        FROM OBJECT AS Object_Retail
         LEFT JOIN ObjectString AS GLNCode
                                ON GLNCode.ObjectId = Object_Retail.Id 
@@ -60,6 +67,11 @@ BEGIN
                              ON ObjectLink_Retail_GoodsProperty.ObjectId = Object_Retail.Id 
                             AND ObjectLink_Retail_GoodsProperty.DescId = zc_ObjectLink_Retail_GoodsProperty()
         LEFT JOIN Object AS Object_GoodsProperty ON Object_GoodsProperty.Id = ObjectLink_Retail_GoodsProperty.ChildObjectId
+
+        LEFT JOIN ObjectLink AS ObjectLink_Retail_PersonalMarketing
+                             ON ObjectLink_Retail_PersonalMarketing.ObjectId = Object_Retail.Id 
+                            AND ObjectLink_Retail_PersonalMarketing.DescId = zc_ObjectLink_Retail_PersonalMarketing()
+        LEFT JOIN Object AS Object_PersonalMarketing ON Object_PersonalMarketing.Id = ObjectLink_Retail_PersonalMarketing.ChildObjectId
                               
        WHERE Object_Retail.Id = inId;
    END IF; 

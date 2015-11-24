@@ -53,6 +53,7 @@ type
     GLNCodeCorporate: TcxGridDBColumn;
     actChoiceGoodsProperty: TOpenChoiceForm;
     clOperDateOrder: TcxGridDBColumn;
+    PersonalMarketingName: TcxGridDBColumn;
   private
     { Private declarations }
   public

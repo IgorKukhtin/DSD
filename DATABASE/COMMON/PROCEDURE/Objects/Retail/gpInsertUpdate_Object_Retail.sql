@@ -1,16 +1,18 @@
 -- Function: gpInsertUpdate_Object_Retail()
 
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Retail(Integer, Integer, TVarChar, Boolean, TVarChar, TVarChar, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Retail(Integer, Integer, TVarChar, Boolean, TVarChar, TVarChar, Integer, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Retail(
- INOUT ioId                Integer   ,     -- ключ объекта <Торговая сеть> 
-    IN inCode              Integer   ,     -- Код объекта  
-    IN inName              TVarChar  ,     -- Название объекта 
-    IN inOperDateOrder     Boolean   ,     --
-    IN inGLNCode           TVarChar  ,     -- Код GLN - Получатель
-    IN inGLNCodeCorporate  TVarChar  ,     -- Код GLN - Поставщик 
-    IN inGoodsPropertyId   Integer   ,     -- Классификаторы свойств товаров
-    IN inSession           TVarChar        -- сессия пользователя
+ INOUT ioId                    Integer   ,     -- ключ объекта <Торговая сеть> 
+    IN inCode                  Integer   ,     -- Код объекта  
+    IN inName                  TVarChar  ,     -- Название объекта 
+    IN inOperDateOrder         Boolean   ,     --
+    IN inGLNCode               TVarChar  ,     -- Код GLN - Получатель
+    IN inGLNCodeCorporate      TVarChar  ,     -- Код GLN - Поставщик 
+    IN inGoodsPropertyId       Integer   ,     -- Классификаторы свойств товаров
+    IN inPersonalMarketingId   Integer   ,     -- Сотрудник (Ответственный представитель маркетингового отдела)
+    IN inSession               TVarChar        -- сессия пользователя
 )
   RETURNS integer AS
 $BODY$
@@ -45,6 +47,9 @@ BEGIN
    
    -- сохранили связь с <Классификаторы свойств товаров>
    PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Retail_GoodsProperty(), ioId, inGoodsPropertyId);   
+   -- сохранили связь с <Сотрудник (Ответственный представитель маркетингового отдела)>
+   PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Retail_PersonalMarketing(), ioId, inPersonalMarketingId);  
+
 
    -- сохранили протокол
    PERFORM lpInsert_ObjectProtocol (ioId, vbUserId);
@@ -58,6 +63,7 @@ END;$BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 24.11.15         * add inPersonalMarketingId
  02.04.15         * add inOperDateOrder
  19.02.15         * add inGoodsPropertyId
  10.11.14         * add GLNCode
