@@ -846,6 +846,28 @@ inherited MainForm: TMainForm
       GuiParams = <>
       isShowModal = False
     end
+    object actReport_UploadBaDMForm: TdsdOpenForm
+      Category = #1054#1090#1095#1077#1090#1099
+      MoveParams = <>
+      Caption = #1042#1099#1075#1088#1091#1079#1082#1072' '#1076#1083#1103' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072' ('#1041#1072#1044#1052')'
+      Hint = #1042#1099#1075#1088#1091#1079#1082#1072' '#1076#1083#1103' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072' ('#1041#1072#1044#1052')'
+      FormName = 'TReport_UploadBaDMForm'
+      FormNameParam.Value = 'TReport_UploadBaDMForm'
+      FormNameParam.DataType = ftString
+      GuiParams = <>
+      isShowModal = False
+    end
+    object actReport_UploadOptimaForm: TdsdOpenForm
+      Category = #1054#1090#1095#1077#1090#1099
+      MoveParams = <>
+      Caption = #1042#1099#1075#1088#1091#1079#1082#1072' '#1076#1083#1103' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072' ('#1054#1087#1090#1080#1084#1072')'
+      Hint = #1042#1099#1075#1088#1091#1079#1082#1072' '#1076#1083#1103' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072' ('#1054#1087#1090#1080#1084#1072')'
+      FormName = 'TReport_UploadOptimaForm'
+      FormNameParam.Value = 'TReport_UploadOptimaForm'
+      FormNameParam.DataType = ftString
+      GuiParams = <>
+      isShowModal = False
+    end
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 496
@@ -1094,6 +1116,15 @@ inherited MainForm: TMainForm
       end
       object N65: TMenuItem
         Action = actReport_Sold_DayUserForm
+      end
+      object N69: TMenuItem
+        Caption = '-'
+      end
+      object N70: TMenuItem
+        Action = actReport_UploadBaDMForm
+      end
+      object N71: TMenuItem
+        Action = actReport_UploadOptimaForm
       end
     end
     inherited miService: TMenuItem

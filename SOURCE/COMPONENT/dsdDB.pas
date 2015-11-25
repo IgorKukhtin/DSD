@@ -931,7 +931,11 @@ begin
         end;
      if Component is TEDI then
         (Component as TEDI).Directory := FValue;
-     if Component is TExportGrid then begin
+     if (Component is TExportGrid)
+        AND
+        ((LowerCase(ComponentItem) = LowerCase('DefaultFileName'))
+         or
+         (LowerCase(ComponentItem) = LowerCase('ExportType'))) then begin
         if LowerCase(ComponentItem) = LowerCase('DefaultFileName') then
            (Component as TExportGrid).DefaultFileName := FValue;
         if LowerCase(ComponentItem) = LowerCase('ExportType') then
@@ -941,7 +945,13 @@ begin
      if Component is TBooleanStoredProcAction then
         (Component as TBooleanStoredProcAction).Value := FValue
      else
-     if Component is TADOQueryAction then begin
+     if (Component is TADOQueryAction)
+        AND
+        (
+           (LowerCase(ComponentItem) = 'connectionstring')
+           or
+           (LowerCase(ComponentItem) = 'querytext')
+        ) then begin
        if LowerCase(ComponentItem) = 'connectionstring' then begin
           (Component as TADOQueryAction).ConnectionString := FValue;
        end else

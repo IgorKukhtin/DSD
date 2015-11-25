@@ -516,8 +516,12 @@ type
     FGrid: TcxControl;
     FExportType: TcxExport;
     FDefaultFileName: string;
+    FDefaultFileExt: string;
     FColumnNameDataSet: TDataSet;
     FOpenAfterCreate: Boolean;
+    FHideHeader: Boolean;
+    FSeparator: String;
+    FEncodingANSI: Boolean;
     procedure SetGrid(const Value: TcxControl);
   protected
     procedure Notification(AComponent: TComponent;
@@ -539,6 +543,10 @@ type
       write FOpenAfterCreate default true;
     property DefaultFileName: string read FDefaultFileName
       write FDefaultFileName;
+    property HideHeader: Boolean read FHideHeader write FHideHeader Default False;
+    property Separator: String read FSeparator write FSeparator;
+    property DefaultFileExt: String read FDefaultFileExt write FDefaultFileExt;
+    property EncodingANSI: Boolean read FEncodingANSI write FEncodingANSI default false;
   end;
 
   TdsdGridToExcel = class(TExportGrid)
@@ -1398,7 +1406,9 @@ begin
   inherited;
   PostDataSetBeforeExecute := true;
   ExportType := cxegExportToExcel;
-  FOpenAfterCreate := true
+  HideHeader := False;
+  EncodingANSI := False;
+  FOpenAfterCreate := true;
 end;
 
 function TExportGrid.LocalExecute: Boolean;
@@ -1409,6 +1419,9 @@ const
 var
   FileName: string;
   i: Integer;
+  HeaderVisible: Boolean;
+  Ext:String;
+  sl: TStringList;
 begin
   result := true;
   if not Assigned(FGrid) then
@@ -1420,20 +1433,31 @@ begin
     FileName := ConstFileName
   else
     FileName := DefaultFileName;
-  case ExportType of
-    cxegExportToHtml:
-      FileName := FileName + '.html';
-    cxegExportToXml:
-      FileName := FileName + '.xml';
-    cxegExportToText:
-      FileName := FileName + '.txt';
-    cxegExportToExcel:
-      FileName := FileName + '.xls';
-    cxegExportToXlsx:
-      FileName := FileName + '.xlsx';
-    cxegExportToDbf:
-      FileName := FileName + '.dbf';
-  end;
+  if DefaultFileExt = '' then
+  Begin
+    case ExportType of
+      cxegExportToHtml:
+        FileName := FileName + '.html';
+      cxegExportToXml:
+        FileName := FileName + '.xml';
+      cxegExportToText:
+        FileName := FileName + '.txt';
+      cxegExportToExcel:
+        FileName := FileName + '.xls';
+      cxegExportToXlsx:
+        FileName := FileName + '.xlsx';
+      cxegExportToDbf:
+        FileName := FileName + '.dbf';
+    end;
+  end
+  else
+  Begin
+    if DefaultFileExt[1] <> '.' then
+      ext := DefaultFileExt
+    else
+      ext := Copy(DefaultFileExt,2,length(DefaultFileExt));
+    FileName := FileName + '.' + Ext;
+  End;
   if FGrid is TcxGrid then
   begin
     // грид скрыт и нужен только для выгрузки, то добавим колонки во View
@@ -1467,13 +1491,24 @@ begin
         end;
       end;
     end;
+    if HideHeader then
+    Begin
+      if TcxGrid(FGrid).ViewCount > 0 then
+      begin
+        if TcxGrid(FGrid).Views[0] is TcxGridDBTableView then
+        begin
+          HeaderVisible := (TcxGrid(FGrid).Views[0] as TcxGridDBTableView).OptionsView.Header;
+          (TcxGrid(FGrid).Views[0] as TcxGridDBTableView).OptionsView.Header := False;
+        end;
+      end;
+    end;
     case ExportType of
       cxegExportToHtml:
         ExportGridToHTML(FileName, TcxGrid(FGrid), IsCtrlPressed);
       cxegExportToXml:
         ExportGridToXML(FileName, TcxGrid(FGrid), IsCtrlPressed);
       cxegExportToText:
-        ExportGridToText(FileName, TcxGrid(FGrid), IsCtrlPressed);
+        ExportGridToText(FileName, TcxGrid(FGrid), IsCtrlPressed,true,Separator,'','',ext);
       cxegExportToExcel:
         ExportGridToExcel(FileName, TcxGrid(FGrid), IsCtrlPressed);
       cxegExportToXlsx:
@@ -1489,6 +1524,10 @@ begin
               Free
             end;
     end;
+    if HideHeader AND HeaderVisible then
+      if TcxGrid(FGrid).ViewCount > 0 then
+        if TcxGrid(FGrid).Views[0] is TcxGridDBTableView then
+          (TcxGrid(FGrid).Views[0] as TcxGridDBTableView).OptionsView.Header := true;
   end;
   if FGrid is TcxCustomPivotGrid then
   begin
@@ -1507,6 +1546,16 @@ begin
           IsCtrlPressed);
     end;
   end;
+  if EncodingANSI then
+  Begin
+    sl := TStringList.Create;
+    try
+      sl.LoadFromFile(FileName);
+      sl.SaveToFile(FileName,TEncoding.ANSI);
+    finally
+      sl.Free;
+    end;
+  End;
   if OpenAfterCreate then
     ShellExecute(Application.Handle, 'open', PWideChar(FileName), nil, nil,
       SW_SHOWNORMAL);

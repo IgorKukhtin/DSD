@@ -349,7 +349,9 @@ uses
   JuridicalCorporate in '..\..\FormsFarmacy\Guides\JuridicalCorporate.pas' {JuridicalCorporateForm: TParentForm},
   ReasonDifferences in '..\..\FormsFarmacy\Guides\ReasonDifferences.pas' {ReasonDifferencesForm: TParentForm},
   ReasonDifferencesTest in '..\SOURCE\Objects\All\Farmacy\ReasonDifferencesTest.pas',
-  Income_AmountTrouble in '..\..\FormsFarmacy\Document\Income_AmountTrouble.pas' {Income_AmountTroubleForm: TParentForm};
+  Income_AmountTrouble in '..\..\FormsFarmacy\Document\Income_AmountTrouble.pas' {Income_AmountTroubleForm: TParentForm},
+  Report_UploadBaDM in '..\..\FormsFarmacy\Report\Report_UploadBaDM.pas' {Report_UploadBaDMForm: TParentForm},
+  Report_UploadOptima in '..\..\FormsFarmacy\Report\Report_UploadOptima.pas' {Report_UploadOptimaForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}

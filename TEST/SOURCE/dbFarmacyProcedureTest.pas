@@ -277,6 +277,8 @@ begin
   ProcedureLoad;
   ZQuery.SQL.LoadFromFile(CommonReportsPath + 'Balance\gpReport_Balance.sql');
   ZQuery.ExecSQL;
+  ScriptDirectory := FarmacyReportsPath + 'Upload\';
+  ProcedureLoad;
 end;
 
 procedure TdbProcedureTest.CreateSystemProcedure;
