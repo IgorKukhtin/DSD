@@ -177,6 +177,7 @@ type
     spSelectPrintReturnInDay: TdsdStoredProc;
     actPrintReturnInDay: TdsdPrintAction;
     bbPrintReturnInDay: TdxBarButton;
+    isPromo: TcxGridDBColumn;
   private
     { Private declarations }
   public

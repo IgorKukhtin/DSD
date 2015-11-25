@@ -24,6 +24,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, InvNumberPartner TVarChar, InvNum
              , DocumentTaxKindId Integer, DocumentTaxKindName TVarChar
              , MovementId_Partion Integer, PartionMovementName TVarChar
              , Comment TVarChar
+             , isPromo Boolean
              )
 AS
 $BODY$
@@ -79,6 +80,7 @@ BEGIN
              , 0                     		        AS MovementId_Partion
              , CAST ('' as TVarChar) 		        AS PartionMovementName
              , CAST ('' as TVarChar) 		        AS Comment
+             , CAST (FALSE AS Boolean)                  AS isPromo 
 
           FROM lfGet_Object_Status (zc_Enum_Status_UnComplete()) AS Object_Status
                LEFT JOIN TaxPercent_View ON inOperDate BETWEEN TaxPercent_View.StartDate AND TaxPercent_View.EndDate
@@ -154,6 +156,8 @@ BEGIN
            , zfCalc_PartionMovementName (Movement_PartionMovement.DescId, MovementDesc_PartionMovement.ItemName, Movement_PartionMovement.InvNumber, MovementDate_OperDatePartner_PartionMovement.ValueData) AS PartionMovementName
            , MovementString_Comment.ValueData       AS Comment
 
+           , COALESCE (MovementBoolean_Promo.ValueData, FALSE) AS isPromo
+
        FROM Movement
             LEFT JOIN tmpMI ON 1 = 1
             LEFT JOIN Movement AS Movement_PartionMovement ON Movement_PartionMovement.Id = tmpMI.MovementId
@@ -182,6 +186,10 @@ BEGIN
             LEFT JOIN MovementBoolean AS MovementBoolean_isPartner
                                       ON MovementBoolean_isPartner.MovementId =  Movement.Id
                                      AND MovementBoolean_isPartner.DescId = zc_MovementBoolean_isPartner()
+
+            LEFT JOIN MovementBoolean AS MovementBoolean_Promo
+                                      ON MovementBoolean_Promo.MovementId =  Movement.Id
+                                     AND MovementBoolean_Promo.DescId = zc_MovementBoolean_Promo()
 
             LEFT JOIN MovementDate AS MovementDate_OperDatePartner
                                    ON MovementDate_OperDatePartner.MovementId =  Movement.Id

@@ -159,6 +159,8 @@ type
     spUpdate_MI_ReturnIn_AmountPartner: TdsdStoredProc;
     actUpdateAmountPartner: TdsdExecStoredProc;
     bbUpdateAmountPartner: TdxBarButton;
+    cbPromo: TcxCheckBox;
+    MovementPromo: TcxGridDBColumn;
   private
     { Private declarations }
   public

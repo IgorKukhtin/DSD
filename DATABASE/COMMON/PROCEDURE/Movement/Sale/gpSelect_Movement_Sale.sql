@@ -44,6 +44,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , EdiOrdspr Boolean, EdiInvoice Boolean, EdiDesadv Boolean
              , isEdiOrdspr_partner Boolean, isEdiInvoice_partner Boolean, isEdiDesadv_partner Boolean
              , isError Boolean
+             , isPromo Boolean
              , InsertDate TDateTime
              , Comment TVarChar
               )
@@ -193,6 +194,8 @@ BEGIN
                         ELSE FALSE
                    END AS Boolean) AS isError
 
+           , COALESCE(MovementBoolean_Promo.ValueData, False) AS isPromo
+
            , MovementDate_Insert.ValueData AS InsertDate
            , MovementString_Comment.ValueData       AS Comment
 
@@ -234,6 +237,10 @@ BEGIN
             LEFT JOIN MovementBoolean AS MovementBoolean_EdiDesadv
                                       ON MovementBoolean_EdiDesadv.MovementId =  Movement.Id
                                      AND MovementBoolean_EdiDesadv.DescId = zc_MovementBoolean_EdiDesadv()
+
+            LEFT JOIN MovementBoolean AS MovementBoolean_Promo
+                                      ON MovementBoolean_Promo.MovementId =  Movement.Id
+                                     AND MovementBoolean_Promo.DescId = zc_MovementBoolean_Promo()
 
             LEFT JOIN MovementDate AS MovementDate_Insert
                                    ON MovementDate_Insert.MovementId =  Movement.Id
@@ -463,6 +470,7 @@ ALTER FUNCTION gpSelect_Movement_Sale (TDateTime, TDateTime, Boolean, Boolean, T
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 25.11.15         * add Promo
  13.11.14                                        * add zc_Enum_Process_AccessKey_DocumentAll
  21.08.14                                        * add RouteName
  12.08.14                                        * add isEDI

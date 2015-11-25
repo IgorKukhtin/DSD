@@ -197,6 +197,8 @@ type
     WeightTotal: TcxGridDBColumn;
     WeightPack: TcxGridDBColumn;
     TotalPercentAmount: TcxGridDBColumn;
+    cbPromo: TcxCheckBox;
+    MovementPromo: TcxGridDBColumn;
   private
     { Private declarations }
   public

@@ -29,6 +29,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, ParentId Inte
              , DocumentTaxKindId Integer, DocumentTaxKindName TVarChar
              , Comment TVarChar
              , isEDI Boolean
+             , isPromo Boolean
               )
 AS
 $BODY$
@@ -119,6 +120,7 @@ BEGIN
            , Object_TaxKind.ValueData        	        AS DocumentTaxKindName
            , MovementString_Comment.ValueData           AS Comment
            , COALESCE (MovementLinkMovement_MasterEDI.MovementChildId, 0) <> 0 AS isEDI
+           , COALESCE(MovementBoolean_Promo.ValueData, False) AS isPromo
 
        FROM (SELECT Movement.id
              FROM tmpStatus
@@ -150,6 +152,10 @@ BEGIN
             LEFT JOIN MovementBoolean AS MovementBoolean_isPartner
                                       ON MovementBoolean_isPartner.MovementId =  Movement.Id
                                      AND MovementBoolean_isPartner.DescId = zc_MovementBoolean_isPartner()
+
+            LEFT JOIN MovementBoolean AS MovementBoolean_Promo
+                                      ON MovementBoolean_Promo.MovementId =  Movement.Id
+                                     AND MovementBoolean_Promo.DescId = zc_MovementBoolean_Promo()
 
             LEFT JOIN MovementDate AS MovementDate_OperDatePartner
                                    ON MovementDate_OperDatePartner.MovementId =  Movement.Id

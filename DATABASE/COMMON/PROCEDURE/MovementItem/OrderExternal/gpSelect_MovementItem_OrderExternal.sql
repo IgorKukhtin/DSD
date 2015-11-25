@@ -379,7 +379,7 @@ BEGIN
 
            , tmpGoodsPropertyValue.ArticleGLN
            
-           , Movement_Promo.InvNumber           AS MovementPromo
+           , ('№ ' ||Movement_Promo_View.InvNumber|| ' от ' ||Movement_Promo_View.OperDate :: Date :: TVarChar|| ' акц. цена с ' ||Movement_Promo_View.StartSale  :: Date :: TVarChar|| ' по ' ||Movement_Promo_View.EndSale :: Date :: TVarChar) :: TVarChar       AS MovementPromo
            , tmpMI.isErased                     AS isErased
 
        FROM tmpMI_all AS tmpMI
@@ -412,8 +412,8 @@ BEGIN
             LEFT JOIN MovementItemFloat AS MIFloat_PromoMovementId
                                         ON MIFloat_PromoMovementId.MovementItemId = tmpMI.MovementItemId
                                        AND MIFloat_PromoMovementId.DescId = zc_MIFloat_PromoMovementId()
-            LEFT JOIN Movement AS Movement_Promo 
-                               ON Movement_Promo.Id = MIFloat_PromoMovementId.ValueData  
+            LEFT JOIN Movement_Promo_View ON Movement_Promo_View.Id = MIFloat_PromoMovementId.ValueData  
+ 
        ;
 
      ELSE
