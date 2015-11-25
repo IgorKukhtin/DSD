@@ -88,12 +88,12 @@ inherited Report_Branch_App1Form: TReport_Branch_App1Form
             item
               Format = ',0.####'
               Kind = skSum
-              Column = IncomeSumm
+              Column = SendOnPriceInSumm
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = IncomeWeight
+              Column = SendOnPriceInWeight
             end
             item
               Format = ',0.####'
@@ -123,12 +123,12 @@ inherited Report_Branch_App1Form: TReport_Branch_App1Form
             item
               Format = ',0.####'
               Kind = skSum
-              Column = SendSumm
+              Column = SendOnPriceOutSumm
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = SendWeight
+              Column = SendOnPriceOutWeight
             end
             item
               Format = ',0.####'
@@ -226,12 +226,12 @@ inherited Report_Branch_App1Form: TReport_Branch_App1Form
             item
               Format = ',0.####'
               Kind = skSum
-              Column = IncomeSumm
+              Column = SendOnPriceInSumm
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = IncomeWeight
+              Column = SendOnPriceInWeight
             end
             item
               Format = ',0.####'
@@ -261,12 +261,12 @@ inherited Report_Branch_App1Form: TReport_Branch_App1Form
             item
               Format = ',0.####'
               Kind = skSum
-              Column = SendSumm
+              Column = SendOnPriceOutSumm
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = SendWeight
+              Column = SendOnPriceOutWeight
             end
             item
               Format = ',0.####'
@@ -353,17 +353,17 @@ inherited Report_Branch_App1Form: TReport_Branch_App1Form
             Options.Editing = False
             Width = 76
           end
-          object IncomeSumm: TcxGridDBColumn
+          object SendOnPriceInSumm: TcxGridDBColumn
             Caption = #1055#1088#1080#1093#1086#1076' ('#1075#1088#1085')'
-            DataBinding.FieldName = 'IncomeSumm'
+            DataBinding.FieldName = 'SendOnPriceInSumm'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 60
           end
-          object IncomeWeight: TcxGridDBColumn
+          object SendOnPriceInWeight: TcxGridDBColumn
             Caption = #1055#1088#1080#1093#1086#1076' ('#1082#1075')'
-            DataBinding.FieldName = 'IncomeWeight'
+            DataBinding.FieldName = 'SendOnPriceInWeight'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
@@ -417,17 +417,17 @@ inherited Report_Branch_App1Form: TReport_Branch_App1Form
             Options.Editing = False
             Width = 60
           end
-          object SendSumm: TcxGridDBColumn
+          object SendOnPriceOutSumm: TcxGridDBColumn
             Caption = #1056#1072#1089#1093#1086#1076' '#1087#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077' ('#1075#1088#1085')'
-            DataBinding.FieldName = 'SendSumm'
+            DataBinding.FieldName = 'SendOnPriceOutSumm'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 60
           end
-          object SendWeight: TcxGridDBColumn
+          object SendOnPriceOutWeight: TcxGridDBColumn
             Caption = #1056#1072#1089#1093#1086#1076' '#1087#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077' ('#1082#1075')'
-            DataBinding.FieldName = 'SendWeight'
+            DataBinding.FieldName = 'SendOnPriceOutWeight'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False

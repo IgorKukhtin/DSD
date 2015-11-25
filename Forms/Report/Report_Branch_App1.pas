@@ -21,13 +21,13 @@ type
     SaleWeight: TcxGridDBColumn;
     ChangeAmountSumm: TcxGridDBColumn;
     FormParams: TdsdFormParams;
-    SendSumm: TcxGridDBColumn;
+    SendOnPriceOutSumm: TcxGridDBColumn;
     BranchName: TcxGridDBColumn;
     cxLabel3: TcxLabel;
     edBranch: TcxButtonEdit;
     BranchGuides: TdsdGuides;
     ReturnInSumm: TcxGridDBColumn;
-    SendWeight: TcxGridDBColumn;
+    SendOnPriceOutWeight: TcxGridDBColumn;
     SummStart: TcxGridDBColumn;
     SummEnd: TcxGridDBColumn;
     WeightStart: TcxGridDBColumn;
@@ -39,8 +39,8 @@ type
     ChangeSumm: TcxGridDBColumn;
     ReturnInWeight: TcxGridDBColumn;
     SaleSumm: TcxGridDBColumn;
-    IncomeSumm: TcxGridDBColumn;
-    IncomeWeight: TcxGridDBColumn;
+    SendOnPriceInSumm: TcxGridDBColumn;
+    SendOnPriceInWeight: TcxGridDBColumn;
     ChangeAmountWeight: TcxGridDBColumn;
     LossSumm: TcxGridDBColumn;
     LossWeight: TcxGridDBColumn;
