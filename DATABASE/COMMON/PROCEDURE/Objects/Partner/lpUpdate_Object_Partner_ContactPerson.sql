@@ -80,6 +80,9 @@ BEGIN
         AND ObjectLink_ContactPerson_Object.DescId = zc_ObjectLink_ContactPerson_Object()
         AND ObjectLink_ContactPerson_Object.ObjectId <> vbContactPersonId;
 
+   ELSE IF TRIM (inOrderPhone) <> '' OR TRIM (inOrderMail) <> ''
+        THEN RAISE EXCEPTION 'Ошибка. не заполнена ячейка <Заказ ФИО>';
+        END IF;
    END IF;
 
  -- Первичка
@@ -127,6 +130,9 @@ BEGIN
         AND ObjectLink_ContactPerson_Object.DescId = zc_ObjectLink_ContactPerson_Object()
         AND ObjectLink_ContactPerson_Object.ObjectId <> vbContactPersonId;
 
+   ELSE IF TRIM (inDocPhone) <> '' OR TRIM (inDocMail) <> ''
+        THEN RAISE EXCEPTION 'Ошибка. не заполнена ячейка <Первичка ФИО>';
+        END IF;
    END IF;
 
    -- Акты сверки
@@ -174,6 +180,9 @@ BEGIN
         AND ObjectLink_ContactPerson_Object.DescId = zc_ObjectLink_ContactPerson_Object()
         AND ObjectLink_ContactPerson_Object.ObjectId <> vbContactPersonId;
 
+   ELSE IF TRIM (inDocPhone) <> '' OR TRIM (inDocMail) <> ''
+        THEN RAISE EXCEPTION 'Ошибка. не заполнена ячейка <Акт сверки ФИО>';
+        END IF;
    END IF;
 
 END;

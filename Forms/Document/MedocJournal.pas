@@ -12,7 +12,8 @@ uses
   Datasnap.DBClient, dsdAction, Vcl.ActnList, cxPropertiesStore, cxLabel,
   cxTextEdit, cxMaskEdit, cxDropDownEdit, cxCalendar, Vcl.ExtCtrls, cxGridLevel,
   cxGridCustomTableView, cxGridTableView, cxGridDBTableView, cxGridCustomView,
-  cxGrid, cxPC;
+  cxGrid, cxPC, dxSkinsCore, dxSkinsDefaultPainters, dxSkinscxPCPainter,
+  dxSkinsdxBarPainter;
 
 type
   TMedocJournalForm = class(TAncestorJournalForm)
@@ -27,6 +28,8 @@ type
     cxGridDBTableViewColumn9: TcxGridDBColumn;
     cxGridDBTableViewColumn10: TcxGridDBColumn;
     cxGridDBTableViewColumn11: TcxGridDBColumn;
+    UserName: TcxGridDBColumn;
+    UpdateDate: TcxGridDBColumn;
   private
     { Private declarations }
   public

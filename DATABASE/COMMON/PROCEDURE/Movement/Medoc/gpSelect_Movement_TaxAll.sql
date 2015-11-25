@@ -23,6 +23,7 @@ BEGIN
            , CASE 
                WHEN Movement_Medoc.isIncome THEN 'income'::TVarChar
                ELSE MovementString_InvNumberRegistered.ValueData   
+               -- ELSE '' :: TVarChar
              END AS InvNumberRegistered
            , Movement_Medoc.InvNumber::Integer     AS MedocCode
 
