@@ -445,6 +445,7 @@
             DataBinding.FieldName = 'MovementPromo'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 200
           end
           inherited colIsErased: TcxGridDBColumn
