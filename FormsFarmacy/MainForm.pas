@@ -185,6 +185,11 @@ type
     N67: TMenuItem;
     actReasonDifferences: TdsdOpenForm;
     N68: TMenuItem;
+    actReport_UploadBaDMForm: TdsdOpenForm;
+    N69: TMenuItem;
+    N70: TMenuItem;
+    actReport_UploadOptimaForm: TdsdOpenForm;
+    N71: TMenuItem;
     procedure actSaveDataExecute(Sender: TObject);
     procedure miRepriceClick(Sender: TObject);
   private
