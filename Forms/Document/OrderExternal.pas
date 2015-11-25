@@ -93,6 +93,8 @@ type
     ceComment: TcxTextEdit;
     cxLabel19: TcxLabel;
     edOperDatePartner_sale: TcxDateEdit;
+    cbPromo: TcxCheckBox;
+    MovementPromo: TcxGridDBColumn;
   private
     { Private declarations }
   public

@@ -24,7 +24,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , PriceWithVAT Boolean, isPrinted Boolean,VATPercent TFloat, ChangePercent TFloat
              , TotalSummVAT TFloat, TotalSummMVAT TFloat, TotalSummPVAT TFloat, TotalSumm TFloat
              , TotalCountKg TFloat, TotalCountSh TFloat, TotalCount TFloat, TotalCountSecond TFloat
-             , isEDI Boolean
+             , isEDI Boolean, isPromo Boolean
              , Comment TVarChar
               )
 AS
@@ -104,9 +104,11 @@ BEGIN
            , MovementFloat_TotalCountSh.ValueData           AS TotalCountSh
            , MovementFloat_TotalCount.ValueData             AS TotalCount
            , MovementFloat_TotalCountSecond.ValueData       AS TotalCountSecond
-
+          
            , COALESCE(MovementLinkMovement_Order.MovementId, 0) <> 0 AS isEDI
+           , COALESCE(MovementBoolean_Promo.ValueData, False) AS isPromo
            , MovementString_Comment.ValueData       AS Comment
+
        FROM (SELECT Movement.id
              FROM tmpStatus
                   JOIN Movement ON Movement.OperDate BETWEEN inStartDate AND inEndDate  AND Movement.DescId = zc_Movement_OrderExternal() AND Movement.StatusId = tmpStatus.StatusId
@@ -193,6 +195,10 @@ BEGIN
                                       ON MovementBoolean_Print.MovementId =  Movement.Id
                                      AND MovementBoolean_Print.DescId = zc_MovementBoolean_Print()
 
+            LEFT JOIN MovementBoolean AS MovementBoolean_Promo
+                                      ON MovementBoolean_Promo.MovementId =  Movement.Id
+                                     AND MovementBoolean_Promo.DescId = zc_MovementBoolean_Promo()
+
             LEFT JOIN MovementFloat AS MovementFloat_VATPercent
                                     ON MovementFloat_VATPercent.MovementId =  Movement.Id
                                    AND MovementFloat_VATPercent.DescId = zc_MovementFloat_VATPercent()
@@ -228,6 +234,8 @@ BEGIN
                                         AND MovementLinkObject_Partner.DescId = zc_MovementLinkObject_Partner()
             LEFT JOIN Object AS Object_Partner ON Object_Partner.Id = MovementLinkObject_Partner.ObjectId
 
+
+
        WHERE COALESCE (Object_From.DescId, 0) <> zc_Object_Unit();
 
 END;
@@ -238,6 +246,7 @@ ALTER FUNCTION gpSelect_Movement_OrderExternal (TDateTime, TDateTime, Boolean, T
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».   Ã‡Ì¸ÍÓ ƒ.¿.
+ 25.11.15         * add isPromo
  26.05.15         * add Partner
  20.10.14                                        * add isEDI
  26.08.14                                                        *

@@ -17,6 +17,7 @@ RETURNS TABLE (Id Integer, GoodsId Integer, GoodsCode Integer, GoodsName TVarCha
              , Price TFloat, CountForPrice TFloat, AmountSumm TFloat, AmountSumm_Partner TFloat
              , InfoMoneyCode Integer, InfoMoneyGroupName TVarChar, InfoMoneyDestinationName TVarChar, InfoMoneyName TVarChar
              , ArticleGLN TVarChar
+             , MovementPromo TVarChar
              , isErased Boolean
               )
 AS
@@ -278,6 +279,8 @@ BEGIN
 
            , tmpGoodsPropertyValue.ArticleGLN
 
+           , CAST ('' AS TVarChar)      AS MovementPromo
+
            , FALSE                      AS isErased
 
        FROM (SELECT Object_Goods.Id                                        AS GoodsId
@@ -375,7 +378,8 @@ BEGIN
            , Object_InfoMoney_View.InfoMoneyName
 
            , tmpGoodsPropertyValue.ArticleGLN
-
+           
+           , Movement_Promo.InvNumber           AS MovementPromo
            , tmpMI.isErased                     AS isErased
 
        FROM tmpMI_all AS tmpMI
@@ -404,6 +408,12 @@ BEGIN
             LEFT JOIN Object_InfoMoney_View ON Object_InfoMoney_View.InfoMoneyId = ObjectLink_Goods_InfoMoney.ChildObjectId
             LEFT JOIN tmpGoodsPropertyValue ON tmpGoodsPropertyValue.GoodsId     = tmpMI.GoodsId
                                            AND tmpGoodsPropertyValue.GoodsKindId = tmpMI.GoodsKindId
+
+            LEFT JOIN MovementItemFloat AS MIFloat_PromoMovementId
+                                        ON MIFloat_PromoMovementId.MovementItemId = tmpMI.MovementItemId
+                                       AND MIFloat_PromoMovementId.DescId = zc_MIFloat_PromoMovementId()
+            LEFT JOIN Movement AS Movement_Promo 
+                               ON Movement_Promo.Id = MIFloat_PromoMovementId.ValueData  
        ;
 
      ELSE
@@ -565,7 +575,7 @@ BEGIN
            , Object_InfoMoney_View.InfoMoneyName
 
            , tmpGoodsPropertyValue.ArticleGLN
-
+           , ('№ ' ||Movement_Promo_View.InvNumber|| ' от ' ||Movement_Promo_View.OperDate :: Date :: TVarChar|| ' акц. цена с ' ||Movement_Promo_View.StartSale  :: Date :: TVarChar|| ' по ' ||Movement_Promo_View.EndSale :: Date :: TVarChar) :: TVarChar           AS MovementPromo
            , tmpMI.isErased                     AS isErased
 
        FROM tmpMI_all AS tmpMI
@@ -595,6 +605,11 @@ BEGIN
 
             LEFT JOIN tmpGoodsPropertyValue ON tmpGoodsPropertyValue.GoodsId     = tmpMI.GoodsId
                                            AND tmpGoodsPropertyValue.GoodsKindId = tmpMI.GoodsKindId
+
+            LEFT JOIN MovementItemFloat AS MIFloat_PromoMovementId
+                                        ON MIFloat_PromoMovementId.MovementItemId = tmpMI.MovementItemId
+                                       AND MIFloat_PromoMovementId.DescId = zc_MIFloat_PromoMovementId()
+            LEFT JOIN Movement_Promo_View ON Movement_Promo_View.Id = MIFloat_PromoMovementId.ValueData  
        ;
 
      END IF;

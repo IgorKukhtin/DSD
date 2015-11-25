@@ -26,6 +26,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , PriceWithVAT Boolean, VATPercent TFloat, ChangePercent TFloat
              , DayCount TFloat
              , isPrinted Boolean
+             , isPromo Boolean
              , Comment TVarChar
               )
 AS
@@ -88,7 +89,7 @@ BEGIN
              , CAST (0 AS TFloat)                               AS ChangePercent
              , (1 + EXTRACT (DAY FROM ((inOperDate - INTERVAL '1 DAY') - (inOperDate - INTERVAL '7 DAY')))) :: TFloat AS DayCount
              , CAST (FALSE AS Boolean)                          AS isPrinted
-
+             , CAST (FALSE AS Boolean)                          AS isPromo 
              , CAST ('' as TVarChar) 		        AS Comment
 
           FROM lfGet_Object_Status(zc_Enum_Status_UnComplete()) AS Object_Status
@@ -166,6 +167,7 @@ BEGIN
                                    - COALESCE (MovementDate_OperDateStart.ValueData, Movement.OperDate - (INTERVAL '7 DAY')) :: TDateTime)
                           )) :: TFloat AS DayCount
            , COALESCE (MovementBoolean_Print.ValueData, FALSE) AS isPrinted
+           , COALESCE (MovementBoolean_Promo.ValueData, FALSE) AS isPromo 
            , MovementString_Comment.ValueData       AS Comment
 
        FROM Movement
@@ -189,6 +191,13 @@ BEGIN
             LEFT JOIN MovementBoolean AS MovementBoolean_PriceWithVAT
                                       ON MovementBoolean_PriceWithVAT.MovementId =  Movement.Id
                                      AND MovementBoolean_PriceWithVAT.DescId = zc_MovementBoolean_PriceWithVAT()
+            LEFT JOIN MovementBoolean AS MovementBoolean_Print
+                                      ON MovementBoolean_Print.MovementId =  Movement.Id
+                                     AND MovementBoolean_Print.DescId = zc_MovementBoolean_Print()
+
+            LEFT JOIN MovementBoolean AS MovementBoolean_Promo
+                                      ON MovementBoolean_Promo.MovementId =  Movement.Id
+                                     AND MovementBoolean_Promo.DescId = zc_MovementBoolean_Promo()
 
             LEFT JOIN MovementFloat AS MovementFloat_VATPercent
                                     ON MovementFloat_VATPercent.MovementId =  Movement.Id
@@ -257,9 +266,6 @@ BEGIN
                                         AND MovementLinkObject_PriceList.DescId = zc_MovementLinkObject_PriceList()
            LEFT JOIN Object AS Object_PriceList ON Object_PriceList.Id = MovementLinkObject_PriceList.ObjectId
 
-           LEFT JOIN MovementBoolean AS MovementBoolean_Print
-                                     ON MovementBoolean_Print.MovementId =  Movement.Id
-                                    AND MovementBoolean_Print.DescId = zc_MovementBoolean_Print()
            LEFT JOIN MovementLinkObject AS MovementLinkObject_Retail
                                         ON MovementLinkObject_Retail.MovementId = Movement.Id
                                        AND MovementLinkObject_Retail.DescId = zc_MovementLinkObject_Retail()
@@ -284,6 +290,7 @@ ALTER FUNCTION gpGet_Movement_OrderExternal (Integer, TDateTime, TVarChar) OWNER
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».   Ã‡Ì¸ÍÓ ƒ.¿.
+ 25.11.15         * add Promo
  21.05.15         * add Retail, Partner
  09.02.15         * add DayCount
  06.02.15                                                        *
