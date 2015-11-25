@@ -6,6 +6,9 @@ DROP FUNCTION IF EXISTS gpUpdate_IsElectronFromMedoc(Integer, TVarChar, TVarChar
 DROP FUNCTION IF EXISTS gpUpdate_IsElectronFromMedoc
        (Integer, TVarChar, TVarChar, TVarChar, TDateTime, TVarChar, TVarChar, TDateTime, TVarChar, TVarChar, TFloat, TVarChar);
 
+
+
+
 CREATE OR REPLACE FUNCTION gpUpdate_IsElectronFromMedoc(
    OUT outId                 Integer    ,
     IN inMedocCode           Integer    ,
@@ -42,6 +45,7 @@ BEGIN
         WHEN inInvNumberBranch  = '9' AND inOperDate < '01.11.2015' THEN vbAccessKey := zc_Enum_Process_AccessKey_DocumentCherkassi();
         ELSE  vbAccessKey := 0;
    END CASE;
+
 
    -- Нашли ключ Медок 
    SELECT Movement_Medoc_View.Id
@@ -99,69 +103,82 @@ BEGIN
    -- Если это Днепр или Запорожье (вносят сами)
    IF vbAccessKey = 0 THEN 
       IF inDocKind = 'Tax' THEN
-             SELECT Movement.Id INTO vbMovementId 
-                    FROM Movement 
-
-                         LEFT JOIN MovementFloat AS MovementFloat_TotalSumm
-                                                 ON MovementFloat_TotalSumm.MovementId =  Movement.Id
-                                                AND MovementFloat_TotalSumm.DescId = zc_MovementFloat_TotalSumm()
-
-                         LEFT JOIN MovementLinkObject AS MovementLinkObject_From
-                                                      ON MovementLinkObject_From.MovementId = Movement.Id
-                                                     AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
-                         LEFT JOIN ObjectHistory_JuridicalDetails_View AS JuridicalFrom ON JuridicalFrom.JuridicalId = MovementLinkObject_From.ObjectId
-
-                         LEFT JOIN MovementLinkObject AS MovementLinkObject_To
-                                                      ON MovementLinkObject_To.MovementId = Movement.Id
-                                                     AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
-                         LEFT JOIN ObjectHistory_JuridicalDetails_View AS JuridicalTo ON JuridicalTo.JuridicalId = MovementLinkObject_To.ObjectId
-
-                         LEFT JOIN MovementString AS MovementString_InvNumberPartner
-                                                  ON MovementString_InvNumberPartner.MovementId =  Movement.Id
-                                                 AND MovementString_InvNumberPartner.DescId = zc_MovementString_InvNumberPartner()
-                         LEFT JOIN MovementString AS MovementString_InvNumberRegistered
-                                                  ON MovementString_InvNumberRegistered.MovementId = Movement.Id
-                                                 AND MovementString_InvNumberRegistered.DescId = zc_MovementString_InvNumberRegistered()
-              WHERE MovementString_InvNumberPartner.ValueData = inInvNumber 
-                AND JuridicalFrom.INN = inFromINN AND JuridicalTo.INN = inToINN
-                AND Movement.OperDate = inOperDate AND Movement.DescId = zc_Movement_Tax()
-                AND Movement.StatusId <> zc_Enum_Status_Erased()
-                AND abs(inTotalSumm) = abs(MovementFloat_TotalSumm.ValueData);
---              AND (inInvNumberRegistered = '' OR COALESCE(MovementString_InvNumberRegistered.ValueData, '') = '');         
+             vbMovementId:= (WITH tmp AS (SELECT Movement.Id
+                                          FROM Movement 
+                                               LEFT JOIN MovementString AS MovementString_InvNumberPartner
+                                                                        ON MovementString_InvNumberPartner.MovementId =  Movement.Id
+                                                                       AND MovementString_InvNumberPartner.DescId = zc_MovementString_InvNumberPartner()
+                                          WHERE MovementString_InvNumberPartner.ValueData = inInvNumber 
+                                            AND Movement.OperDate = inOperDate AND Movement.DescId = zc_Movement_TaxCorrective()
+                                            AND Movement.StatusId <> zc_Enum_Status_Erased()
+                                         )
+                             SELECT Movement.Id
+                             FROM tmp AS Movement
+                                  LEFT JOIN MovementFloat AS MovementFloat_TotalSumm
+                                                          ON MovementFloat_TotalSumm.MovementId =  Movement.Id
+                                                         AND MovementFloat_TotalSumm.DescId = zc_MovementFloat_TotalSumm()
+                                  LEFT JOIN MovementLinkObject AS MovementLinkObject_From
+                                                               ON MovementLinkObject_From.MovementId = Movement.Id
+                                                              AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
+                                  LEFT JOIN ObjectHistory_JuridicalDetails_View AS JuridicalFrom ON JuridicalFrom.JuridicalId = MovementLinkObject_From.ObjectId
+                                  LEFT JOIN MovementLinkObject AS MovementLinkObject_To
+                                                               ON MovementLinkObject_To.MovementId = Movement.Id
+                                                              AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
+                                  LEFT JOIN ObjectHistory_JuridicalDetails_View AS JuridicalTo ON JuridicalTo.JuridicalId = MovementLinkObject_To.ObjectId
+                                  LEFT JOIN MovementString AS MovementString_InvNumberBranch
+                                                           ON MovementString_InvNumberBranch.MovementId =  Movement.Id
+                                                          AND MovementString_InvNumberBranch.DescId = zc_MovementString_InvNumberBranch()
+                                  /*LEFT JOIN MovementString AS MovementString_InvNumberRegistered
+                                                           ON MovementString_InvNumberRegistered.MovementId = Movement.Id
+                                                          AND MovementString_InvNumberRegistered.DescId = zc_MovementString_InvNumberRegistered()*/
+                             WHERE JuridicalFrom.INN = inFromINN AND JuridicalTo.INN = inToINN
+                               AND ABS (inTotalSumm) = ABS (MovementFloat_TotalSumm.ValueData)
+                               AND COALESCE (MovementString_InvNumberBranch.ValueData, '') = COALESCE (inInvNumberBranch, '')
+--                             AND (inInvNumberRegistered = '' OR COALESCE(MovementString_InvNumberRegistered.ValueData, '') = '')
+                             LIMIT 1
+                            ) ;
         ELSE
-             SELECT Movement.Id INTO vbMovementId 
-                    FROM Movement 
-
-                         LEFT JOIN MovementFloat AS MovementFloat_TotalSumm
-                                                 ON MovementFloat_TotalSumm.MovementId =  Movement.Id
-                                                AND MovementFloat_TotalSumm.DescId = zc_MovementFloat_TotalSumm()
-
-                         LEFT JOIN MovementLinkObject AS MovementLinkObject_From
-                                                      ON MovementLinkObject_From.MovementId = Movement.Id
-                                                     AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
-                         LEFT JOIN ObjectHistory_JuridicalDetails_View AS JuridicalFrom ON JuridicalFrom.JuridicalId = MovementLinkObject_From.ObjectId
-
-                         LEFT JOIN MovementLinkObject AS MovementLinkObject_To
-                                                      ON MovementLinkObject_To.MovementId = Movement.Id
-                                                     AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
-                         LEFT JOIN ObjectHistory_JuridicalDetails_View AS JuridicalTo ON JuridicalTo.JuridicalId = MovementLinkObject_To.ObjectId
-                         LEFT JOIN MovementString AS MovementString_InvNumberPartner
-                                                  ON MovementString_InvNumberPartner.MovementId =  Movement.Id
-                                                 AND MovementString_InvNumberPartner.DescId = zc_MovementString_InvNumberPartner()
-                         LEFT JOIN MovementString AS MovementString_InvNumberRegistered
-                                                  ON MovementString_InvNumberRegistered.MovementId = Movement.Id
-                                                 AND MovementString_InvNumberRegistered.DescId = zc_MovementString_InvNumberRegistered()
-              WHERE MovementString_InvNumberPartner.ValueData = inInvNumber AND JuridicalFrom.INN = inToINN  
-                AND JuridicalTo.INN = inFromINN AND Movement.StatusId <> zc_Enum_Status_Erased()
-                AND abs(inTotalSumm) = abs(MovementFloat_TotalSumm.ValueData)
-                AND Movement.StatusId <> zc_Enum_Status_Erased()
-                AND Movement.OperDate = inOperDate AND Movement.DescId = zc_Movement_TaxCorrective();
-  --              AND (inInvNumberRegistered = '' OR COALESCE(MovementString_InvNumberRegistered.ValueData, '') = '');         
+             vbMovementId:= (WITH tmp AS (SELECT Movement.Id
+                                          FROM Movement 
+                                               LEFT JOIN MovementString AS MovementString_InvNumberPartner
+                                                                        ON MovementString_InvNumberPartner.MovementId =  Movement.Id
+                                                                       AND MovementString_InvNumberPartner.DescId = zc_MovementString_InvNumberPartner()
+                                          WHERE MovementString_InvNumberPartner.ValueData = inInvNumber 
+                                            AND Movement.OperDate = inOperDate AND Movement.DescId = zc_Movement_TaxCorrective()
+                                            AND Movement.StatusId <> zc_Enum_Status_Erased()
+                                         )
+                             SELECT Movement.Id
+                             FROM tmp AS Movement
+                                  LEFT JOIN MovementFloat AS MovementFloat_TotalSumm
+                                                          ON MovementFloat_TotalSumm.MovementId =  Movement.Id
+                                                         AND MovementFloat_TotalSumm.DescId = zc_MovementFloat_TotalSumm()
+                                  LEFT JOIN MovementLinkObject AS MovementLinkObject_From
+                                                               ON MovementLinkObject_From.MovementId = Movement.Id
+                                                              AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
+                                  LEFT JOIN ObjectHistory_JuridicalDetails_View AS JuridicalFrom ON JuridicalFrom.JuridicalId = MovementLinkObject_From.ObjectId
+                                  LEFT JOIN MovementLinkObject AS MovementLinkObject_To
+                                                               ON MovementLinkObject_To.MovementId = Movement.Id
+                                                              AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
+                                  LEFT JOIN ObjectHistory_JuridicalDetails_View AS JuridicalTo ON JuridicalTo.JuridicalId = MovementLinkObject_To.ObjectId
+                                  LEFT JOIN MovementString AS MovementString_InvNumberBranch
+                                                           ON MovementString_InvNumberBranch.MovementId =  Movement.Id
+                                                          AND MovementString_InvNumberBranch.DescId = zc_MovementString_InvNumberBranch()
+                                  /*LEFT JOIN MovementString AS MovementString_InvNumberRegistered
+                                                           ON MovementString_InvNumberRegistered.MovementId = Movement.Id
+                                                          AND MovementString_InvNumberRegistered.DescId = zc_MovementString_InvNumberRegistered()*/
+                             WHERE JuridicalFrom.INN = inToINN AND JuridicalTo.INN = inFromINN
+                               AND ABS (inTotalSumm) = ABS (MovementFloat_TotalSumm.ValueData)
+                               AND COALESCE (MovementString_InvNumberBranch.ValueData, '') = COALESCE (inInvNumberBranch, '')
+--                             AND (inInvNumberRegistered = '' OR COALESCE(MovementString_InvNumberRegistered.ValueData, '') = '')
+                             LIMIT 1
+                            ) ;
       END IF;
+
       -- Если нашли, то установили связь
-      IF (COALESCE(vbMovementId, 0)) <> 0 THEN
-          UPDATE Movement SET ParentId = vbMovementId WHERE Id = vbMedocId;
+      IF COALESCE (vbMovementId, 0) <> 0 THEN
+        UPDATE Movement SET ParentId = vbMovementId WHERE Id = vbMedocId;
       END IF;
+
    END IF;
 
    -- Установили регистрацию
@@ -171,8 +188,37 @@ BEGIN
       PERFORM lpInsertUpdate_MovementDate(zc_MovementDate_DateRegistered(), vbMovementId, inDateRegistered);
 
       -- сохранили протокол
-      PERFORM lpInsert_MovementProtocol (vbMovementId, vbUserId, FALSE);      
+      PERFORM lpInsert_MovementProtocol (vbMovementId, vbUserId, FALSE);
    END IF;
+
+   -- сохранили протокол
+   PERFORM lpInsert_MovementProtocol (vbMedocId, vbUserId, FALSE);
+   -- сохранили связь
+   PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_User(), vbMedocId, vbUserId);
+   -- сохранили 
+   PERFORM lpInsertUpdate_MovementDate (zc_MovementDate_Update(), vbMedocId, CURRENT_TIMESTAMP);
+
+   -- insert into _tmp111 (Id)  select inMedocCode union select -1 * coalesce (vbMedocId, 0);
+   -- select * from _tmp111
+   -- delete from _tmp111
+   /*
+       INSERT INTO ObjectProtocol (ObjectId, OperDate, UserId, ProtocolData, isInsert)
+          SELECT 5, CURRENT_TIMESTAMP, 5, 
+               , inMedocCode           :: TVarChar
+       || ';' || inFromINN             
+       || ';' || inToINN               
+       || ';' || inInvNumber           
+       || ';' || DATE (inOperDate            ) :: TVarChar
+       || ';' || inInvNumberBranch     
+       || ';' || inInvNumberRegistered 
+       || ';' || DATE (inDateRegistered      ) :: TVarChar
+       || ';' || inDocKind             
+       || ';' || inContract            
+       || ';' || inTotalSumm           :: TVarChar
+       || ';' || inSession             
+       , true;
+*/
+
 
 END;
 $BODY$
@@ -191,9 +237,18 @@ LANGUAGE PLPGSQL VOLATILE;
 */
 
 -- тест
--- select * from gpUpdate_IsElectronFromMedoc('244471804626', '387340110310', '860', '16.03.2015'::TDateTime, 'Tax', '2');
---<inFromINN  DataType="ftString"   Value="244471804626" />
---<inToINN  DataType="ftString"   Value="387340110310" />
---<inInvNumber  DataType="ftString"   Value="860" />
---<inOperDate  DataType="ftDateTime"   Value="16.03.2015" />
---<inDocKind  DataType="ftString"   Value="Tax" />
+/*
+ select * from gpUpdate_IsElectronFromMedoc (inMedocCode           := 536485
+                                           , inFromINN             := '244471804626'
+                                           , inToINN               := '100000000000'
+                                           , inInvNumber           := '2067'
+                                           , inOperDate            := '11.11.2015'
+                                           , inInvNumberBranch     := ''
+                                           , inInvNumberRegistered := '9238740621'
+                                           , inDateRegistered      := '23.11.2015'
+                                           , inDocKind             := 'Tax'
+                                           , inContract            := '500006'
+                                           , inTotalSumm           := 374.27
+                                           , inSession             := '5'
+                                            );
+*/

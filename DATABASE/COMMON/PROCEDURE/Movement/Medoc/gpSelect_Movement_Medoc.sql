@@ -1,4 +1,4 @@
--- Function: gpSelect_Movement_TaxAll()
+-- Function: gpSelect_Movement_Medoc()
 
 DROP FUNCTION IF EXISTS gpSelect_Movement_Medoc (TDateTime, TDateTime, TVarChar);
 
@@ -7,7 +7,8 @@ CREATE OR REPLACE FUNCTION gpSelect_Movement_Medoc(
     IN inEndDate        TDateTime , --
     IN inSession        TVarChar    -- сессия пользователя
 )
-RETURNS TABLE (InvNumber TVarChar 
+RETURNS TABLE (Id Integer
+           , InvNumber TVarChar 
            , OperDate TDateTime
            , InvNumberPartner TVarChar
            , InvNumberBranch TVarChar
@@ -20,6 +21,8 @@ RETURNS TABLE (InvNumber TVarChar
            , isIncome  Boolean
            , MovementInvNumber TVarChar
            , MovementOperDate TDateTime
+           , UserName TVarChar
+           , UpdateDate TDateTime
 )
 AS
 $BODY$
@@ -32,7 +35,8 @@ BEGIN
      --
      RETURN QUERY
      SELECT
-             Movement_Medoc.InvNumber
+             Movement_Medoc.Id
+           , Movement_Medoc.InvNumber
            , Movement_Medoc.OperDate
            , Movement_Medoc.InvNumberPartner
            , Movement_Medoc.InvNumberBranch
@@ -45,6 +49,8 @@ BEGIN
            , Movement_Medoc.isIncome 
            , Movement.InvNumber
            , Movement.OperDate
+           , Object_User.ValueData AS UserName
+           , MovementDate_Update.ValueData AS UpdateDate
 
        FROM  Movement_Medoc_View AS Movement_Medoc
 
@@ -59,6 +65,14 @@ BEGIN
                                      ON MovementString_InvNumberRegistered.MovementId = Movement.Id
                                     AND MovementString_InvNumberRegistered.DescId = zc_MovementString_InvNumberRegistered()
                                     
+            LEFT JOIN MovementLinkObject AS MovementLinkObject_User
+                                         ON MovementLinkObject_User.MovementId = Movement_Medoc.Id
+                                        AND MovementLinkObject_User.DescId = zc_MovementLinkObject_User()
+            LEFT JOIN Object AS Object_User ON Object_User.Id = MovementLinkObject_User.ObjectId
+            LEFT JOIN MovementDate AS MovementDate_Update
+                                   ON MovementDate_Update.MovementId =  Movement_Medoc.Id
+                                  AND MovementDate_Update.DescId = zc_MovementDate_Update()
+
          WHERE Movement_Medoc.OperDate BETWEEN inStartDate AND inEndDate;
           
 END;
@@ -75,4 +89,4 @@ ALTER FUNCTION gpSelect_Movement_Medoc (TDateTime, TDateTime, TVarChar) OWNER TO
 */
 
 -- тест
--- SELECT * FROM gpSelect_Movement_TaxAll (inPeriodDate:= ('01.03.2015')::TDateTime, inSession:= zfCalc_UserAdmin())
+-- SELECT * FROM gpSelect_Movement_Medoc (inStartDate:= ('01.11.2015')::TDateTime, inEndDate:= ('01.11.2015')::TDateTime, inSession:= zfCalc_UserAdmin())

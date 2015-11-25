@@ -59,7 +59,7 @@ BEGIN
      IF EXISTS (SELECT 1 AS Id FROM ObjectLink_UserRole_View WHERE RoleId = zc_Enum_Role_Admin() AND UserId = inUserId)
      THEN IF COALESCE (ioId, 0) = 0 
           THEN
-              RAISE EXCEPTION 'Ошибка.Для <Админ> нет прав создания документа.'
+              RAISE EXCEPTION 'Ошибка.Для <Админ> нет прав создания документа.';
           END IF;
      ELSE
          -- определяем ключ доступа
@@ -72,7 +72,7 @@ BEGIN
 
      -- сохранили <Документ>
      ioId := lpInsertUpdate_Movement (ioId, zc_Movement_PersonalService(), inInvNumber, inOperDate, NULL, vbAccessKeyId);
-     -- !!!ВАЖНО!!!
+     -- !!!теперь /*не*/ ВАЖНО!!!
      UPDATE Movement SET AccessKeyId = vbAccessKeyId WHERE Id = ioId;
 
      -- Комментарий
