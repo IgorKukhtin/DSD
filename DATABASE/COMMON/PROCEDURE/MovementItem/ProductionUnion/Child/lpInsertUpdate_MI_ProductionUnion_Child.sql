@@ -1,6 +1,6 @@
  -- Function: lpInsertUpdate_MI_ProductionUnion_Child()
 
--- DROP FUNCTION IF EXISTS lpInsertUpdate_MI_ProductionUnion_Child (Integer, Integer, Integer, TFloat, Integer, TDateTime, TVarChar, Integer, Integer);
+DROP FUNCTION IF EXISTS lpInsertUpdate_MI_ProductionUnion_Child (Integer, Integer, Integer, TFloat, Integer, TDateTime, TVarChar, Integer, Integer);
 DROP FUNCTION IF EXISTS lpInsertUpdate_MI_ProductionUnion_Child (Integer, Integer, Integer, TFloat, Integer, TDateTime, TVarChar, Integer, TFloat, Integer);
 DROP FUNCTION IF EXISTS lpInsertUpdate_MI_ProductionUnion_Child (Integer, Integer, Integer, TFloat, Integer, TDateTime, TVarChar, Integer, Integer, TFloat, Integer);
 
@@ -30,6 +30,11 @@ BEGIN
    END IF;
 
 
+   -- проверка
+   IF COALESCE (inGoodsId, 0) = 0
+   THEN 
+       RAISE EXCEPTION 'Ошибка.Не определено значение параметра <Товар>.';
+   END IF;
    -- проверка
    IF COALESCE (inParentId, 0) = 0
    THEN

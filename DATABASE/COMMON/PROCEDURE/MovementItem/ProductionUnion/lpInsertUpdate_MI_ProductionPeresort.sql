@@ -50,6 +50,8 @@ BEGIN
                                                   , inPartionGoodsDate := inPartionGoodsDate_child
                                                   , inPartionGoods     := inPartionGoods_child
                                                   , inGoodsKindId      := inGoodsKindId_child
+                                                  , inGoodsKindCompleteId := NULL
+                                                  , inCount_onCount       := 0
                                                   , inUserId           := inUserId
                                                    );
 

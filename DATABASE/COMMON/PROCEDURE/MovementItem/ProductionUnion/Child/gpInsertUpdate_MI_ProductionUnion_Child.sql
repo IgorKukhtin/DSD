@@ -32,7 +32,7 @@ BEGIN
                                                  , inPartionGoods     := inPartionGoods
                                                  , inGoodsKindId      := inGoodsKindId
                                                  , inGoodsKindCompleteId := inGoodsKindCompleteId
-                                                 , inCount_onCount    : =  COALESCE ((SELECT ValueData FROM MovementItemFloat WHERE MovementItemId = ioId AND DescId = zc_MIFloat_Count()), 0)
+                                                 , inCount_onCount    :=  COALESCE ((SELECT ValueData FROM MovementItemFloat WHERE MovementItemId = ioId AND DescId = zc_MIFloat_Count()), 0)
                                                  , inUserId           := vbUserId
                                                  );
    

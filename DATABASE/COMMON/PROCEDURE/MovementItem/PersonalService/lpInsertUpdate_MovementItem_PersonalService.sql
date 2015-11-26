@@ -32,6 +32,7 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_MovementItem_PersonalService(
 RETURNS RECORD AS
 $BODY$
    DECLARE vbIsInsert Boolean;
+   DECLARE vbAccessKeyId Integer;
 BEGIN
      -- проверка
      IF COALESCE (inMovementId, 0) = 0
@@ -59,6 +60,21 @@ BEGIN
          RAISE EXCEPTION 'Ошибка.Не заполнено значение <Должность>.';
      END IF;
 
+
+     -- !!!ВАЖНО!!!
+     -- определяем ключ доступа
+     vbAccessKeyId:= lpGetAccessKey ((SELECT ObjectLink_User_Member.ObjectId
+                                      FROM ObjectLink
+                                           INNER JOIN ObjectLink AS ObjectLink_User_Member ON ObjectLink_User_Member.ChildObjectId = ObjectLink.ChildObjectId
+                                                                                          AND ObjectLink_User_Member.DescId = zc_ObjectLink_User_Member()
+                                       WHERE ObjectLink.DescId = zc_ObjectLink_PersonalServiceList_Member()
+                                         AND ObjectLink.ObjectId = (SELECT MLO.ObjectId FROM MovementLinkObject AS MLO WHERE MLO.MovementId = inMovementId AND MLO.DescId = zc_MovementLinkObject_PersonalServiceList())
+                                       LIMIT 1
+                                     )
+                                   , zc_Enum_Process_InsertUpdate_Movement_PersonalService()
+                                    );
+     -- !!!ВАЖНО!!!
+     UPDATE Movement SET AccessKeyId = vbAccessKeyId WHERE Id = inMovementId;
 
      -- рассчитываем сумму (затраты)
      outAmount:= COALESCE (inSummService, 0) - COALESCE (inSummMinus, 0) + COALESCE (inSummAdd, 0); -- - COALESCE (inSummSocialIn, 0);

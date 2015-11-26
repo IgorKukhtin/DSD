@@ -621,6 +621,8 @@ BEGIN
                                                         , inPartionGoodsDate    := NULL
                                                         , inPartionGoods        := NULL
                                                         , inGoodsKindId         := NULL
+                                                        , inGoodsKindCompleteId := NULL
+                                                        , inCount_onCount       := COALESCE ((SELECT ValueData FROM MovementItemFloat WHERE MovementItemId = tmp.MovementItemId AND DescId = zc_MIFloat_Count()), 0)
                                                         , inUserId              := vbUserId
                                                          )
           FROM (SELECT MAX (tmp.MovementItemId) AS MovementItemId
@@ -674,6 +676,8 @@ BEGIN
                                                         , inPartionGoodsDate    := NULL
                                                         , inPartionGoods        := NULL
                                                         , inGoodsKindId         := tmp.GoodsKindId
+                                                        , inGoodsKindCompleteId := NULL
+                                                        , inCount_onCount       := 0
                                                         , inUserId              := vbUserId
                                                          )
           FROM (SELECT tmp.GoodsId

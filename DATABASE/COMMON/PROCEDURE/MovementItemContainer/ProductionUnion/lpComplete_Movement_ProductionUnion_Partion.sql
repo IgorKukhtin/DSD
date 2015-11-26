@@ -265,6 +265,7 @@ BEGIN
                                                     , inPartionGoodsDate    := _tmpItem_Partion_child.PartionGoodsDate
                                                     , inPartionGoods        := NULL
                                                     , inGoodsKindId         := _tmpItem_Partion_child.GoodsKindId
+                                                    , inGoodsKindCompleteId := NULL
                                                     , inCount_onCount       := _tmpItem_Partion.Count_onCount
                                                     , inUserId              := zc_Enum_Process_Auto_PartionDate()
                                                      )

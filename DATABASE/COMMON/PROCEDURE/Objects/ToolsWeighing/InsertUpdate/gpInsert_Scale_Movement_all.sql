@@ -948,6 +948,8 @@ BEGIN
                                                         , inPartionGoodsDate    := NULL
                                                         , inPartionGoods        := NULL
                                                         , inGoodsKindId         := tmp.GoodsKindId
+                                                        , inGoodsKindCompleteId := NULL
+                                                        , inCount_onCount       := 0
                                                         , inUserId              := vbUserId
                                                          )
           FROM (SELECT tmp.GoodsId
