@@ -19,7 +19,7 @@ type
   TReport_Branch_App1Form = class(TAncestorReportForm)
     PeresortWeight: TcxGridDBColumn;
     SaleWeight: TcxGridDBColumn;
-    ChangeAmountSumm: TcxGridDBColumn;
+    Sale_40208_Summ: TcxGridDBColumn;
     FormParams: TdsdFormParams;
     SendOnPriceOutSumm: TcxGridDBColumn;
     BranchName: TcxGridDBColumn;
@@ -41,12 +41,14 @@ type
     SaleSumm: TcxGridDBColumn;
     SendOnPriceInSumm: TcxGridDBColumn;
     SendOnPriceInWeight: TcxGridDBColumn;
-    ChangeAmountWeight: TcxGridDBColumn;
+    Sale_40208_Weight: TcxGridDBColumn;
     LossSumm: TcxGridDBColumn;
     LossWeight: TcxGridDBColumn;
     InventorySumm: TcxGridDBColumn;
     InventoryWeight: TcxGridDBColumn;
-    PriceSumm: TcxGridDBColumn;
+    SummInventory_RePrice: TcxGridDBColumn;
+    Sale_10500_Summ: TcxGridDBColumn;
+    Sale_10500_Weight: TcxGridDBColumn;
   private
     { Private declarations }
   public
