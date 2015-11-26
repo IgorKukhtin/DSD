@@ -1,10 +1,12 @@
 -- Function: gpSelect_Movement_Send_Print()
 
-DROP FUNCTION IF EXISTS gpSelect_Movement_Send_Print (Integer, TVarChar);
+-- DROP FUNCTION IF EXISTS gpSelect_Movement_Send_Print (Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_Movement_Send_Print (Integer, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_Movement_Send_Print(
-    IN inMovementId        Integer  , -- ключ Документа
-    IN inSession       TVarChar    -- сессия пользователя
+    IN inMovementId                 Integer  , -- ключ Документа
+    IN inMovementId_Weighing        Integer  , -- ключ Документа взвешивания
+    IN inSession                    TVarChar    -- сессия пользователя
 )
 RETURNS SETOF refcursor
 AS
@@ -13,6 +15,7 @@ $BODY$
 
     DECLARE vbIsProductionOut Boolean;
     DECLARE vbIsInventory Boolean;
+    DECLARE vbIsWeighing Boolean;
 
     DECLARE vbStoreKeeperName TVarChar;
 
@@ -24,8 +27,20 @@ BEGIN
      vbUserId:= inSession;
 
 
+     -- расчет, временно захардкодил - только если Обвалка
+     vbIsWeighing:= EXISTS (SELECT 1
+                            FROM Movement
+                                 INNER JOIN MovementLinkObject AS MLO_From ON MLO_From.MovementId = inMovementId AND MLO_From.DescId = zc_MovementLinkObject_From()
+                                 INNER JOIN lfSelect_Object_Unit_byGroup (8439) AS lfSelectFrom ON lfSelectFrom.UnitId = MLO_From.ObjectId -- Участок мясного сырья
+                                 INNER JOIN MovementLinkObject AS MLO_To ON MLO_To.MovementId = inMovementId AND MLO_To.DescId = zc_MovementLinkObject_To()
+                                 INNER JOIN lfSelect_Object_Unit_byGroup (8439) AS lfSelectTo ON lfSelectTo.UnitId = MLO_To.ObjectId -- Участок мясного сырья
+                            WHERE Movement.Id = inMovementId AND Movement.DescId = zc_Movement_ProductionUnion()
+                           );
      -- расчет, временно захардкодил
-     vbIsProductionOut:= EXISTS (SELECT MovementId FROM MovementLinkObject WHERE MovementId = inMovementId AND DescId = zc_MovementLinkObject_To() AND ObjectId IN (8447, 8448)) -- ЦЕХ колбасный + ЦЕХ деликатесов
+     vbIsProductionOut:= (EXISTS (SELECT MovementId FROM MovementLinkObject WHERE MovementId = inMovementId AND DescId = zc_MovementLinkObject_To() AND ObjectId IN (8447, 8448)) -- ЦЕХ колбасный + ЦЕХ деликатесов
+                       OR (EXISTS (SELECT 1 FROM MovementBoolean WHERE MovementId = inMovementId_Weighing AND DescId = zc_MovementBoolean_isIncome() AND ValueData = FALSE)
+                           AND vbIsWeighing = TRUE)
+                         )
                      AND EXISTS (SELECT Id FROM Movement WHERE Id = inMovementId AND DescId = zc_Movement_ProductionUnion());
      -- расчет, временно захардкодил
      vbIsInventory:= EXISTS (SELECT Id FROM Movement WHERE Id = inMovementId AND DescId = zc_Movement_Inventory());
@@ -48,7 +63,7 @@ BEGIN
        WITH tmpUnit AS (SELECT UnitId FROM lfSelect_Object_Unit_byGroup (8446) AS lfSelect_Object_Unit_byGroup) -- ЦЕХ колбаса+дел-сы
        SELECT
              Movement.Id                                        AS Id
-           , Movement.InvNumber                                 AS InvNumber
+           , (Movement.InvNumber || CASE WHEN vbIsWeighing = TRUE THEN '/' || (MFloat_WeighingNumber.ValueData :: Integer) :: TVarChar ELSE '' END) :: TVarChar AS InvNumber
            , Movement.OperDate                                  AS OperDate
            , Object_Status.ObjectCode                           AS StatusCode
            , Object_Status.ValueData                            AS StatusName
@@ -79,6 +94,9 @@ BEGIN
              END :: TVarChar AS StoreKeeperName_to -- кладовщик
 
        FROM Movement
+            LEFT JOIN MovementFloat AS MFloat_WeighingNumber
+                                    ON MFloat_WeighingNumber.MovementId = inMovementId_Weighing
+                                   AND MFloat_WeighingNumber.DescId = zc_MovementFloat_WeighingNumber()
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
 
             LEFT JOIN MovementFloat AS MovementFloat_TotalCount
@@ -169,8 +187,8 @@ BEGIN
                                                    ON MILinkObject_PartionGoods.MovementItemId = MovementItem.Id
                                                   AND MILinkObject_PartionGoods.DescId = zc_MILinkObject_PartionGoods()
 
-             WHERE MovementItem.MovementId = inMovementId
-               AND MovementItem.DescId     = CASE WHEN vbIsProductionOut = TRUE THEN zc_MI_Child() ELSE zc_MI_Master() END
+             WHERE MovementItem.MovementId = CASE WHEN vbIsWeighing = TRUE THEN inMovementId_Weighing ELSE inMovementId END
+               AND MovementItem.DescId     = CASE WHEN vbIsProductionOut = TRUE AND  vbIsWeighing = FALSE THEN zc_MI_Child() ELSE zc_MI_Master() END
                AND MovementItem.isErased   = FALSE
                AND MovementItem.Amount <> 0 
              GROUP BY MovementItem.ObjectId
@@ -225,7 +243,7 @@ BEGIN
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpSelect_Movement_Send_Print (Integer,TVarChar) OWNER TO postgres;
+ALTER FUNCTION gpSelect_Movement_Send_Print (Integer, Integer, TVarChar) OWNER TO postgres;
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР

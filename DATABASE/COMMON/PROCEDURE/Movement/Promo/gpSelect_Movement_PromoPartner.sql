@@ -19,6 +19,8 @@ RETURNS TABLE (Id               Integer     --Идентификатор
              , ContractCode     Integer     --Код контракта
              , ContractName     TVarChar    --Название контракта
              , ContractTagName  TVarChar    --Признак договора
+             , Comment          TVarChar    --Примечание
+             , AreaName         TVarChar    --Регион
              , isErased         Boolean     --Удален
       )
 
@@ -40,6 +42,8 @@ BEGIN
           , Movement_PromoPartner.ContractCode        --Код контракта
           , Movement_PromoPartner.ContractName        --Название контракта
           , Movement_PromoPartner.ContractTagName     --признак договора 
+          , Movement_PromoPartner.Comment             --Примечание
+          , Movement_PromoPartner.AreaName            --Регион
           , Movement_PromoPartner.isErased            --Удален
         FROM
             Movement_PromoPartner_View AS Movement_PromoPartner

@@ -13,21 +13,21 @@ uses
   cxTextEdit, cxMaskEdit, cxDropDownEdit, cxCalendar, Vcl.ExtCtrls, cxGridLevel,
   cxGridCustomTableView, cxGridTableView, cxGridDBTableView, cxGridCustomView,
   cxGrid, cxPC, dxSkinsCore, dxSkinsDefaultPainters, dxSkinscxPCPainter,
-  dxSkinsdxBarPainter;
+  dxSkinsdxBarPainter, cxButtonEdit, cxCurrencyEdit;
 
 type
   TMedocJournalForm = class(TAncestorJournalForm)
-    cxGridDBTableViewColumn1: TcxGridDBColumn;
-    cxGridDBTableViewColumn2: TcxGridDBColumn;
-    cxGridDBTableViewColumn3: TcxGridDBColumn;
-    cxGridDBTableViewColumn4: TcxGridDBColumn;
-    cxGridDBTableViewColumn5: TcxGridDBColumn;
-    cxGridDBTableViewColumn6: TcxGridDBColumn;
-    cxGridDBTableViewColumn7: TcxGridDBColumn;
-    cxGridDBTableViewColumn8: TcxGridDBColumn;
-    cxGridDBTableViewColumn9: TcxGridDBColumn;
-    cxGridDBTableViewColumn10: TcxGridDBColumn;
-    cxGridDBTableViewColumn11: TcxGridDBColumn;
+    InvNumberPartner: TcxGridDBColumn;
+    InvNumberBranch: TcxGridDBColumn;
+    InvNumberRegistered: TcxGridDBColumn;
+    DateRegistered: TcxGridDBColumn;
+    FromINN: TcxGridDBColumn;
+    ToINN: TcxGridDBColumn;
+    DescName: TcxGridDBColumn;
+    TotalSumm: TcxGridDBColumn;
+    isIncome: TcxGridDBColumn;
+    MovementInvNumber: TcxGridDBColumn;
+    MovementOperDate: TcxGridDBColumn;
     UserName: TcxGridDBColumn;
     UpdateDate: TcxGridDBColumn;
   private

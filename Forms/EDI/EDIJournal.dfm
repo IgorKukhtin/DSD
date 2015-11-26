@@ -3,6 +3,8 @@ inherited EDIJournalForm: TEDIJournalForm
   ClientHeight = 453
   ClientWidth = 1284
   AddOnFormData.OnLoadAction = actSetDefaults
+  ExplicitLeft = -511
+  ExplicitTop = -31
   ExplicitWidth = 1300
   ExplicitHeight = 488
   PixelsPerInch = 96
@@ -399,6 +401,42 @@ inherited EDIJournalForm: TEDIJournalForm
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 75
+          end
+          object DateRegistered: TcxGridDBColumn
+            Caption = #1044#1072#1090#1072' '#1088#1077#1075#1080#1089#1090#1088'. ('#1085#1072#1083#1086#1075'.)'
+            DataBinding.FieldName = 'DateRegistered'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
+          end
+          object InvNumberRegistered: TcxGridDBColumn
+            Caption = #8470' '#1088#1077#1075#1080#1089#1090#1088'. ('#1085#1072#1083#1086#1075'.)'
+            DataBinding.FieldName = 'KassaMoveMoney'
+            PropertiesClassName = 'TcxButtonEditProperties'
+            Properties.Buttons = <
+              item
+                Default = True
+                Kind = bkEllipsis
+              end>
+            Properties.ReadOnly = True
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 70
+          end
+          object FileName: TcxGridDBColumn
+            Caption = #1060#1072#1081#1083' DECLAR'
+            DataBinding.FieldName = 'FileName'
+            PropertiesClassName = 'TcxButtonEditProperties'
+            Properties.Buttons = <
+              item
+                Default = True
+                Kind = bkEllipsis
+              end>
+            Properties.ReadOnly = True
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 70
           end
         end
       end

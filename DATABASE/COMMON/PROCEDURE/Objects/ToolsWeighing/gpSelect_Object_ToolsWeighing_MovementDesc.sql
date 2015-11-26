@@ -87,12 +87,12 @@ BEGIN
                         THEN 0 -- можно расчитать здесь, но не хочется его нагромождать, и резервируется 6,7
                    WHEN tmp.MovementDescId = zc_Movement_Loss() :: TVarChar
                         THEN 8
-                   WHEN tmp.MovementDescId = zc_Movement_ProductionUnion() :: TVarChar
-                        THEN 9
                    WHEN tmp.MovementDescId = zc_Movement_ProductionSeparate() :: TVarChar
                         THEN 9
-                   WHEN tmp.MovementDescId = zc_Movement_Inventory() :: TVarChar
+                   WHEN tmp.MovementDescId = zc_Movement_ProductionUnion() :: TVarChar
                         THEN 10
+                   WHEN tmp.MovementDescId = zc_Movement_Inventory() :: TVarChar
+                        THEN 11
                    ELSE 0
               END * 1000 AS OrderById
             , CASE WHEN inIsCeh = TRUE
@@ -109,7 +109,9 @@ BEGIN
             , CASE WHEN tmp.isPartionGoodsDate = 'TRUE' THEN TRUE ELSE FALSE END AS isPartionGoodsDate
             , CASE WHEN tmp.isTransport_link   = 'TRUE' THEN TRUE ELSE FALSE END AS isTransport_link
 
-            , CASE WHEN tmp.MovementDescId IN (zc_Movement_ProductionUnion() :: TVarChar, zc_Movement_ProductionSeparate() :: TVarChar)
+            , CASE WHEN tmp.MovementDescId IN (zc_Movement_ProductionUnion() :: TVarChar) AND inBranchCode = 201 -- если Обвалка
+                        THEN 'Упаковка'
+                   WHEN tmp.MovementDescId IN (zc_Movement_ProductionUnion() :: TVarChar, zc_Movement_ProductionSeparate() :: TVarChar)
                         THEN 'Производство'
                    ELSE MovementDesc.ItemName
               END AS ItemName

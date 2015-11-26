@@ -75,7 +75,8 @@ uses
   GuidePartner in '..\Scale\GuidePartner.pas' {GuidePartnerForm},
   DialogMessage in '..\ScaleCeh\DialogMessage.pas' {DialogMessageForm},
   DialogNumberValue in '..\Scale\DialogNumberValue.pas' {DialogNumberValueForm},
-  DialogStringValue in '..\Scale\DialogStringValue.pas' {DialogStringValueForm};
+  DialogStringValue in '..\Scale\DialogStringValue.pas' {DialogStringValueForm},
+  RecadvXML in '..\SOURCE\EDI\RecadvXML.pas';
 
 {$R *.res}
 
@@ -95,7 +96,7 @@ begin
          if gpCheck_BranchCode = FALSE then exit;
          //
          Application.CreateForm(TdmMain, dmMain);
-         Application.CreateForm(TDMMainScaleCehForm, DMMainScaleCehForm);
+  Application.CreateForm(TDMMainScaleCehForm, DMMainScaleCehForm);
   // !!!важно первым!!!
   Application.CreateForm(TMainCehForm, MainCehForm);
          Application.CreateForm(TDialogMovementDescForm, DialogMovementDescForm);

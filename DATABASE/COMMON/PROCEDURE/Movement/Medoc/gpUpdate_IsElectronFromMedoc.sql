@@ -35,8 +35,8 @@ $BODY$
    DECLARE vbMedocId Integer;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
-     -- PERFORM lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Movement_EDI());
-   vbUserId := lpGetUserBySession(inSession);
+     -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Movement_EDI());
+    vbUserId:= lpGetUserBySession(inSession);
 
    CASE WHEN inInvNumberBranch  = '1' AND inOperDate < '01.11.2015' THEN vbAccessKey := zc_Enum_Process_AccessKey_DocumentKharkov();
         WHEN inInvNumberBranch  = '2' THEN vbAccessKey := zc_Enum_Process_AccessKey_DocumentKiev();
@@ -109,7 +109,7 @@ BEGIN
                                                                         ON MovementString_InvNumberPartner.MovementId =  Movement.Id
                                                                        AND MovementString_InvNumberPartner.DescId = zc_MovementString_InvNumberPartner()
                                           WHERE MovementString_InvNumberPartner.ValueData = inInvNumber 
-                                            AND Movement.OperDate = inOperDate AND Movement.DescId = zc_Movement_TaxCorrective()
+                                            AND Movement.OperDate = inOperDate AND Movement.DescId = zc_Movement_Tax()
                                             AND Movement.StatusId <> zc_Enum_Status_Erased()
                                          )
                              SELECT Movement.Id
@@ -202,21 +202,24 @@ BEGIN
    -- select * from _tmp111
    -- delete from _tmp111
    /*
-       INSERT INTO ObjectProtocol (ObjectId, OperDate, UserId, ProtocolData, isInsert)
-          SELECT 5, CURRENT_TIMESTAMP, 5, 
-               , inMedocCode           :: TVarChar
-       || ';' || inFromINN             
-       || ';' || inToINN               
-       || ';' || inInvNumber           
-       || ';' || DATE (inOperDate            ) :: TVarChar
-       || ';' || inInvNumberBranch     
-       || ';' || inInvNumberRegistered 
-       || ';' || DATE (inDateRegistered      ) :: TVarChar
-       || ';' || inDocKind             
-       || ';' || inContract            
-       || ';' || inTotalSumm           :: TVarChar
-       || ';' || inSession             
+     IF TRIM (inInvNumberRegistered) = '9240071276'
+     THEN
+     INSERT INTO ObjectProtocol (ObjectId, OperDate, UserId, ProtocolData, isInsert)
+          SELECT 5, CURRENT_TIMESTAMP, 5
+               , inMedocCode :: TVarChar
+       || ';' || inFromINN
+       || ';' || inToINN
+       || ';' || inInvNumber
+       || ';' || DATE (inOperDate) :: TVarChar
+       || ';' || inInvNumberBranch
+       || ';' || inInvNumberRegistered
+       || ';' || DATE (inDateRegistered) :: TVarChar
+       || ';' || inDocKind
+       || ';' || inContract
+       || ';' || inTotalSumm :: TVarChar
+       || ';' || inSession
        , true;
+     END IF;
 */
 
 

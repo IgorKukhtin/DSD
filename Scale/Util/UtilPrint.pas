@@ -119,9 +119,10 @@ begin
   UtilPrintForm.actPrint_Inventory.Execute;
 end;
 //------------------------------------------------------------------------------------------------
-procedure Print_Send (MovementId: Integer);
+procedure Print_Send (MovementId,MovementId_by: Integer);
 begin
   UtilPrintForm.FormParams.ParamByName('Id').Value := MovementId;
+  UtilPrintForm.FormParams.ParamByName('MovementId_by').Value := MovementId_by;
   UtilPrintForm.actPrint_Send.Execute;
 end;
 //------------------------------------------------------------------------------------------------
@@ -248,7 +249,7 @@ begin
 
                             else if (MovementDescId = zc_Movement_Send)
                                  or (MovementDescId = zc_Movement_ProductionUnion)
-                                  then Print_Send(MovementId)
+                                  then Print_Send(MovementId,MovementId_by)
                             else if MovementDescId = zc_Movement_Loss
                                   then Print_Loss(MovementId)
 

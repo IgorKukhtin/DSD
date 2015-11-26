@@ -20,6 +20,8 @@ CREATE OR REPLACE VIEW Movement_PromoPartner_View AS
       , Object_Contract.ContractCode                                      -- код контракта
       , Object_Contract.InvNumber              AS ContractName            --наименование контракта
       , Object_Contract.ContractTagName                                   --признак контракта
+      , MovementString_Comment.ValueData       AS Comment                 --Примечание
+      , Object_Area.ValueData                  AS AreaName
     FROM Movement AS Movement_Promo 
 
         LEFT JOIN MovementLinkObject AS MovementLinkObject_Partner
@@ -51,8 +53,15 @@ CREATE OR REPLACE VIEW Movement_PromoPartner_View AS
                                     AND MovementLinkObject_Contract.DescId = zc_MovementLinkObject_Contract()
         LEFT JOIN Object_Contract_InvNumber_View AS Object_Contract 
                                                  ON Object_Contract.ContractId = MovementLinkObject_Contract.ObjectId
-        
-    WHERE Movement_Promo.DescId = zc_Movement_Promo()
+        LEFT OUTER JOIN MovementString AS MovementString_Comment
+                                       ON MovementString_Comment.MovementId = Movement_Promo.Id
+                                      AND MovementString_Comment.DescId = zc_MovementString_Comment()
+        LEFT OUTER JOIN ObjectLink AS ObjectLink_Partner_Area
+                                   ON ObjectLink_Partner_Area.ObjectId = Object_Partner.ID
+                                  AND ObjectLink_Partner_Area.DescId = zc_ObjectLink_Partner_Area()
+        LEFT OUTER JOIN Object AS Object_Area
+                               ON Object_Area.Id = ObjectLink_Partner_Area.ChildObjectId
+    WHERE Movement_Promo.DescId = zc_Movement_PromoPartner()
       AND Movement_Promo.ParentId is not null;
 
 ALTER TABLE Movement_Promo_View
