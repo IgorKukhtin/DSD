@@ -3,7 +3,7 @@ inherited ProductionUnionJournalForm: TProductionUnionJournalForm
   ClientHeight = 535
   ClientWidth = 1073
   ExplicitWidth = 1089
-  ExplicitHeight = 573
+  ExplicitHeight = 570
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -605,6 +605,11 @@ inherited ProductionUnionJournalForm: TProductionUnionJournalForm
         Value = Null
         Component = FormParams
         ComponentItem = 'Id'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inMovementId_Weighing'
+        Value = '0'
         ParamType = ptInput
       end>
     PackSize = 1

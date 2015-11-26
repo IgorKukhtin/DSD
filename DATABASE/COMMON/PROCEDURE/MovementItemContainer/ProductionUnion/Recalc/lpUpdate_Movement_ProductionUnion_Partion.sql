@@ -361,6 +361,7 @@ BEGIN
                                                     , inPartionGoodsDate    := MIDate_PartionGoods.ValueData
                                                     , inPartionGoods        := NULL
                                                     , inGoodsKindId         := zc_GoodsKind_WorkProgress() -- !!!от(цо)!!!
+                                                    , inGoodsKindCompleteId := NULL
                                                     , inCount_onCount       := COALESCE (MIFloat_Count.ValueData, 0)
                                                     , inUserId              := zc_Enum_Process_Auto_PartionClose()
                                                      )

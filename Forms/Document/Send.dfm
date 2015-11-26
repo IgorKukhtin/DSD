@@ -2,7 +2,6 @@ inherited SendForm: TSendForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1055#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077'>'
   ClientHeight = 617
   ClientWidth = 861
-  ExplicitLeft = -8
   ExplicitWidth = 877
   ExplicitHeight = 652
   PixelsPerInch = 96
@@ -12,18 +11,18 @@ inherited SendForm: TSendForm
     Width = 861
     Height = 491
     ExplicitTop = 126
-    ExplicitWidth = 1072
-    ExplicitHeight = 542
+    ExplicitWidth = 861
+    ExplicitHeight = 491
     ClientRectBottom = 491
     ClientRectRight = 861
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 1072
-      ExplicitHeight = 518
+      ExplicitWidth = 861
+      ExplicitHeight = 467
       inherited cxGrid: TcxGrid
         Width = 861
         Height = 467
-        ExplicitWidth = 1072
-        ExplicitHeight = 518
+        ExplicitWidth = 861
+        ExplicitHeight = 467
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -354,7 +353,7 @@ inherited SendForm: TSendForm
     Width = 861
     Height = 100
     TabOrder = 3
-    ExplicitWidth = 1072
+    ExplicitWidth = 861
     ExplicitHeight = 100
     inherited edInvNumber: TcxTextEdit
       Left = 8
@@ -1426,6 +1425,11 @@ inherited SendForm: TSendForm
         Value = Null
         Component = FormParams
         ComponentItem = 'Id'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inMovementId_Weighing'
+        Value = '0'
         ParamType = ptInput
       end>
     PackSize = 1

@@ -56,15 +56,25 @@ BEGIN
      END IF;
 
 
-     IF EXISTS (SELECT 1 AS Id FROM ObjectLink_UserRole_View WHERE RoleId = zc_Enum_Role_Admin() AND UserId = inUserId)
+     /*IF EXISTS (SELECT 1 AS Id FROM ObjectLink_UserRole_View WHERE RoleId = zc_Enum_Role_Admin() AND UserId = inUserId)
      THEN IF COALESCE (ioId, 0) = 0 
           THEN
               RAISE EXCEPTION 'Ошибка.Для <Админ> нет прав создания документа.';
           END IF;
-     ELSE
+     ELSE*/
          -- определяем ключ доступа
-         vbAccessKeyId:= lpGetAccessKey (inUserId, zc_Enum_Process_InsertUpdate_Movement_PersonalService());
-     END IF;
+         -- vbAccessKeyId:= lpGetAccessKey (inUserId, zc_Enum_Process_InsertUpdate_Movement_PersonalService());
+         vbAccessKeyId:= lpGetAccessKey ((SELECT ObjectLink_User_Member.ObjectId
+                                          FROM ObjectLink
+                                               INNER JOIN ObjectLink AS ObjectLink_User_Member ON ObjectLink_User_Member.ChildObjectId = ObjectLink.ChildObjectId
+                                                                                              AND ObjectLink_User_Member.DescId = zc_ObjectLink_User_Member()
+                                          WHERE ObjectLink.DescId = zc_ObjectLink_PersonalServiceList_Member()
+                                            AND ObjectLink.ObjectId = inPersonalServiceListId
+                                          LIMIT 1
+                                         )
+                                       , zc_Enum_Process_InsertUpdate_Movement_PersonalService()
+                                        );
+     -- END IF;
 
 
      -- определяется признак Создание/Корректировка
@@ -72,7 +82,7 @@ BEGIN
 
      -- сохранили <Документ>
      ioId := lpInsertUpdate_Movement (ioId, zc_Movement_PersonalService(), inInvNumber, inOperDate, NULL, vbAccessKeyId);
-     -- !!!теперь /*не*/ ВАЖНО!!!
+     -- !!!ВАЖНО!!!
      UPDATE Movement SET AccessKeyId = vbAccessKeyId WHERE Id = ioId;
 
      -- Комментарий
@@ -105,3 +115,23 @@ $BODY$
 
 -- тест
 -- SELECT * FROM lpInsertUpdate_Movement_PersonalService (ioId:= 0, inInvNumber:= '-1', inOperDate:= '01.01.2013', inOperDatePartner:= '01.01.2013', inInvNumberPartner:= 'xxx', inPriceWithVAT:= true, inVATPercent:= 20, inChangePercent:= 0, inFromId:= 1, inToId:= 2, inPaidKindId:= 1, inContractId:= 0, inCarId:= 0, inPersonalDriverId:= 0, inPersonalPackerId:= 0, inSession:= '2')
+/*
+update Movement set AccessKeyId = newId
+from (
+SELECT Movement.*, lpGetAccessKey (ObjectLink_User_Member.ObjectId , zc_Enum_Process_InsertUpdate_Movement_PersonalService()) as newId
+FROM MovementLinkObject 
+     INNER JOIN Movement ON Movement.Id = MovementLinkObject .MovementId
+                        AND Movement.StatusId <> zc_Enum_Status_Erased()
+                        AND Movement.DescId = zc_Movement_PersonalService()
+                        AND Movement.OperDate > '01.11.2015'
+INNER JOIN ObjectLink on ObjectLink.ObjectId = MovementLinkObject .ObjectId
+                     and ObjectLink.DescId = zc_ObjectLink_PersonalServiceList_Member()
+INNER JOIN ObjectLink AS ObjectLink_User_Member ON ObjectLink_User_Member.ChildObjectId = ObjectLink.ChildObjectId
+                                               AND ObjectLink_User_Member.DescId = zc_ObjectLink_User_Member()
+
+
+where MovementLinkObject.DescId = zc_MovementLinkObject_PersonalServiceList()
+and Movement.AccessKeyId <> lpGetAccessKey (ObjectLink_User_Member.ObjectId , zc_Enum_Process_InsertUpdate_Movement_PersonalService())
+) as aaa 
+where aaa.Id = Movement .Id
+*/

@@ -20,6 +20,12 @@ AS
 $BODY$
   DECLARE vbIsInsert Boolean;
 BEGIN
+   -- проверка
+   IF COALESCE (inGoodsId, 0) = 0
+   THEN 
+       RAISE EXCEPTION 'Ошибка.Не определено значение параметра <Товар>.';
+   END IF;
+
    -- меняем параметр
    IF inPartionGoodsDate <= '01.01.1900' THEN inPartionGoodsDate:= NULL; END IF;
 

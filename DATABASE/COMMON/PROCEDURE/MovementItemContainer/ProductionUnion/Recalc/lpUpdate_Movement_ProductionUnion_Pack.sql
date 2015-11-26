@@ -536,6 +536,7 @@ BEGIN
                                                  , inPartionGoodsDate       := NULL
                                                  , inPartionGoods           := NULL
                                                  , inGoodsKindId            := CLO_GoodsKind.ObjectId
+                                                 , inGoodsKindCompleteId    := NULL
                                                  , inCount_onCount          := 0
                                                  , inUserId                 := zc_Enum_Process_Auto_Pack()
                                                   )
@@ -559,6 +560,7 @@ BEGIN
                                                  , inPartionGoodsDate       := NULL
                                                  , inPartionGoods           := NULL
                                                  , inGoodsKindId            := ObjectLink_ReceiptChild_GoodsKind.ChildObjectId
+                                                 , inGoodsKindCompleteId    := NULL
                                                  , inCount_onCount          := 0
                                                  , inUserId                 := zc_Enum_Process_Auto_Pack()
                                                   )
