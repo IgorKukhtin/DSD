@@ -3,7 +3,7 @@
   ClientHeight = 578
   ClientWidth = 1127
   ExplicitWidth = 1133
-  ExplicitHeight = 603
+  ExplicitHeight = 606
   PixelsPerInch = 96
   TextHeight = 13
   inherited bbOk: TcxButton
@@ -140,6 +140,8 @@
       object JuridicalDetailTS: TcxTabSheet
         Caption = #1056#1077#1082#1074#1080#1079#1080#1090#1099
         ImageIndex = 0
+        ExplicitLeft = 3
+        ExplicitTop = 21
         object edFullName: TcxDBTextEdit
           Left = 16
           Top = 19
@@ -225,7 +227,7 @@
         end
         object edBankAccount: TcxDBTextEdit
           Left = 248
-          Top = 202
+          Top = 249
           DataBinding.DataField = 'BankAccount'
           DataBinding.DataSource = JuridicalDetailsDS
           TabOrder = 7
@@ -283,20 +285,33 @@
         end
         object cxLabel13: TcxLabel
           Left = 248
-          Top = 182
+          Top = 229
           Caption = #1056#1072#1089#1095#1077#1090#1085#1099#1081' '#1089#1095#1077#1090
         end
         object cxLabel18: TcxLabel
           Left = 248
-          Top = 230
+          Top = 277
           Caption = #1058#1077#1083#1077#1092#1086#1085
         end
         object edPhone: TcxDBTextEdit
           Left = 248
-          Top = 250
+          Top = 297
           DataBinding.DataField = 'Phone'
           DataBinding.DataSource = JuridicalDetailsDS
           TabOrder = 18
+          Width = 193
+        end
+        object cxLabel22: TcxLabel
+          Left = 248
+          Top = 182
+          Caption = #1060#1048#1054' '#1076#1080#1088#1077#1082#1090#1086#1088#1072
+        end
+        object edMainName: TcxDBTextEdit
+          Left = 248
+          Top = 202
+          DataBinding.DataField = 'MainName'
+          DataBinding.DataSource = JuridicalDetailsDS
+          TabOrder = 20
           Width = 193
         end
       end
@@ -686,7 +701,7 @@
     Left = 8
     Top = 114
     Caption = #1057#1074#1086#1076#1085#1072#1103' '#1053#1053
-    TabOrder = 31
+    TabOrder = 30
     Width = 90
   end
   object edDayTaxSummary: TcxCurrencyEdit [29]
@@ -1746,6 +1761,14 @@
         ParamType = ptInput
       end
       item
+        Name = 'inMainName'
+        Value = Null
+        Component = JuridicalDetailsCDS
+        ComponentItem = 'MainName'
+        DataType = ftString
+        ParamType = ptInput
+      end
+      item
         Name = 'inbankaccount'
         Value = Null
         Component = JuridicalDetailsCDS
@@ -1762,8 +1785,8 @@
         ParamType = ptInput
       end>
     PackSize = 1
-    Left = 280
-    Top = 216
+    Left = 272
+    Top = 304
   end
   object dsdPriceListGuides: TdsdGuides
     KeyField = 'Id'

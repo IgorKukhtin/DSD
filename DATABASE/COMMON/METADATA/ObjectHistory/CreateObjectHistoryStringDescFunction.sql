@@ -30,9 +30,15 @@ CREATE OR REPLACE FUNCTION zc_ObjectHistoryString_JuridicalDetails_Phone() RETUR
 INSERT INTO ObjectHistoryStringDesc (DescId, Code ,itemname)
 SELECT zc_ObjectHistory_JuridicalDetails(), 'zc_ObjectHistoryString_JuridicalDetails_Phone','телефон' WHERE NOT EXISTS (SELECT * FROM ObjectHistoryStringDesc WHERE Id = zc_ObjectHistoryString_JuridicalDetails_Phone());
 
+CREATE OR REPLACE FUNCTION zc_ObjectHistoryString_JuridicalDetails_MainName() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectHistoryStringDesc WHERE Code = 'zc_ObjectHistoryString_JuridicalDetails_MainName'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectHistoryStringDesc (DescId, Code ,itemname)
+SELECT zc_ObjectHistory_JuridicalDetails(), 'zc_ObjectHistoryString_JuridicalDetails_MainName','ФИО директора' WHERE NOT EXISTS (SELECT * FROM ObjectHistoryStringDesc WHERE Id = zc_ObjectHistoryString_JuridicalDetails_MainName());
+
+
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 26.11.15         * add MainName
  12.02.14                                                       * add phone
  15.12.13                                        * !!!rename!!!
 */

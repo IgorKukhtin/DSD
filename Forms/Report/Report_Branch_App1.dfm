@@ -459,7 +459,7 @@ inherited Report_Branch_App1Form: TReport_Branch_App1Form
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 60
+            Width = 66
           end
           object Sale_40208_Weight: TcxGridDBColumn
             Caption = '(-)'#1055#1086#1090#1077#1088#1080' (+)'#1069#1082#1086#1085#1086#1084' '#1074#1077#1089' ('#1087#1088#1080' '#1087#1088#1086#1076'.)'
@@ -467,7 +467,7 @@ inherited Report_Branch_App1Form: TReport_Branch_App1Form
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 60
+            Width = 73
           end
           object Sale_10500_Summ: TcxGridDBColumn
             Caption = #1056#1077#1072#1083#1080#1079#1072#1094#1080#1103' '#1089#1082#1080#1076#1082#1072' 1% ('#1075#1088#1085')'
