@@ -13,7 +13,15 @@ DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_PromoPartner (
     Integer    , -- партнер
     Integer    , -- Контракт
     TVarChar     -- сессия пользователя
+);
 
+DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_PromoPartner (
+    Integer    , -- Ключ объекта <партнер для документа акции>
+    Integer    , -- Ключ родительского объекта <Документ акции>
+    Integer    , -- партнер
+    Integer    , -- Контракт
+    TVarChar   , -- Примечание
+    TVarChar     -- сессия пользователя
 );
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_PromoPartner(
@@ -21,6 +29,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_PromoPartner(
     IN inParentId              Integer    , -- Ключ родительского объекта <Документ акции>
     IN inPartnerId             Integer    , -- Ключ объекта <Контрагент / Юр лицо / Торговая Сеть>
     IN inContractId            Integer    , -- Ключ объекта <Контракт>
+    IN inComment               TVarChar   , -- Примечание
     IN inSession               TVarChar    -- сессия пользователя
 )
 RETURNS Integer AS
@@ -46,7 +55,7 @@ BEGIN
     
     -- сохранили <Документ>
     SELECT
-        lpInsertUpdate_Movement (ioId, zc_Movement_Promo(), Movement_Promo.InvNumber, Movement_Promo.OperDate, inParentId, 0)
+        lpInsertUpdate_Movement (ioId, zc_Movement_PromoPartner(), Movement_Promo.InvNumber, Movement_Promo.OperDate, inParentId, 0)
     INTO
         ioId
     FROM
@@ -94,6 +103,8 @@ BEGIN
     PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_Partner(), ioId, inPartnerId);
     -- сохранили связь с <Контракт>
     PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_Contract(), ioId, inContractId);
+    -- сохранили <Примечание>
+    PERFORM lpInsertUpdate_MovementString (zc_MovementString_Comment(), ioId, inComment);
     
     -- сохранили протокол
     PERFORM lpInsert_MovementProtocol (ioId, vbUserId, vbIsInsert);

@@ -2,6 +2,8 @@
 
 DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_PromoGoods (Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_PromoGoods (Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_PromoGoods (Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, Integer, TVarChar, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_PromoGoods (Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, Integer, TVarChar, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_PromoGoods(
  INOUT ioId                  Integer   , -- Ключ объекта <Элемент документа>
@@ -9,12 +11,17 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_PromoGoods(
     IN inGoodsId             Integer   , -- Товары
     IN inAmount              TFloat    , -- % скидки на товар
  INOUT ioPrice               TFloat    , --Цена в прайсе
+    IN inPriceSale           TFloat    , --Цена на полке
    OUT outPriceWithOutVAT    TFloat    , --Цена отгрузки без учета НДС, с учетом скидки, грн
    OUT outPriceWithVAT       TFloat    , --Цена отгрузки с учетом НДС, с учетом скидки, грн
     IN inAmountReal          TFloat    , --Объем продаж в аналогичный период, кг
+   OUT outAmountRealWeight   TFloat    , --Объем продаж в аналогичный период, кг Вес
     IN inAmountPlanMin       TFloat    , --Минимум планируемого объема продаж на акционный период (в кг)
+   OUT outAmountPlanMinWeight TFloat   , --Минимум планируемого объема продаж на акционный период (в кг) вес
     IN inAmountPlanMax       TFloat    , --Максимум планируемого объема продаж на акционный период (в кг)
-    IN inGoodsKindId         Integer    , --ИД обьекта <Вид товара>
+   OUT outAmountPlanMaxWeight TFloat   , --Максимум планируемого объема продаж на акционный период (в кг) Вес
+    IN inGoodsKindId         Integer   , --ИД обьекта <Вид товара>
+    IN inComment             TVarChar  , --Комментарий
     IN inSession             TVarChar    -- сессия пользователя
 )
 AS
@@ -24,7 +31,7 @@ $BODY$
    DECLARE vbPriceList Integer;
    DECLARE vbPriceWithWAT Boolean;
    DECLARE vbVAT TFloat;
-   
+   DECLARE vbWeight TFloat;
 BEGIN
     -- проверка прав пользователя на вызов процедуры
     --vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MI_PromoGoods());
@@ -90,6 +97,21 @@ BEGIN
     --расчитать <Цена отгрузки с учетом НДС, с учетом скидки, грн>
     outPriceWithVAT := ROUND(outPriceWithOutVAT * ((vbVAT/100.0)+1),2);
     
+    --Найти вес 1 единицы товара и расчитать весовые показатели
+    SELECT
+        ObjectFloat.ValueData
+    INTO
+        vbWeight
+    FROM
+        ObjectFloat
+    WHERE
+        ObjectFloat.ObjectId = inGoodsId
+        AND
+        ObjectFloat.DescId = zc_ObjectFloat_Goods_Weight();
+    
+    outAmountPlanMinWeight := inAmountPlanMin * vbWeight;
+    outAmountPlanMaxWeight := inAmountPlanMax * vbWeight;
+    outAmountRealWeight := inAmountReal * vbWeight;
     
     -- сохранили
     ioId := lpInsertUpdate_MovementItem_PromoGoods (ioId                 := ioId
@@ -97,21 +119,24 @@ BEGIN
                                             , inGoodsId            := inGoodsId
                                             , inAmount             := inAmount
                                             , inPrice              := ioPrice
+                                            , inPriceSale          := inPriceSale
                                             , inPriceWithOutVAT    := outPriceWithOutVAT
                                             , inPriceWithVAT       := outPriceWithVAT
                                             , inAmountReal         := inAmountReal
                                             , inAmountPlanMin      := inAmountPlanMin
                                             , inAmountPlanMax      := inAmountPlanMax
                                             , inGoodsKindId        := inGoodsKindId
+                                            , inComment            := inComment
                                             , inUserId             := vbUserId
                                              );
 
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpInsertUpdate_MovementItem_PromoGoods (Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, Integer, TVarChar) OWNER TO postgres;
+ALTER FUNCTION gpInsertUpdate_MovementItem_PromoGoods (Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, Integer, TVarChar, TVarChar) OWNER TO postgres;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.    Воробкало А.А.
+ 25.11.15                                                                         * Comment
  13.10.15                                                                         *
 */

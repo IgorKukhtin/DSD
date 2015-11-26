@@ -2,6 +2,7 @@
 
 DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_PromoGoods (Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, Integer);
 DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_PromoGoods (Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, Integer, Integer);
+DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_PromoGoods (Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, Integer, TVarChar, Integer);
 
 CREATE OR REPLACE FUNCTION lpInsertUpdate_MovementItem_PromoGoods(
  INOUT ioId                  Integer   , -- Ключ объекта <Элемент документа>
@@ -9,12 +10,14 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_MovementItem_PromoGoods(
     IN inGoodsId             Integer   , -- Товары
     IN inAmount              TFloat    , -- % скидки на товар
     IN inPrice               TFloat    , --Цена в прайсе
+    IN inPriceSale           TFloat    , --Цена на полке
     IN inPriceWithOutVAT     TFloat    , --Цена отгрузки без учета НДС, с учетом скидки, грн
     IN inPriceWithVAT        TFloat    , --Цена отгрузки с учетом НДС, с учетом скидки, грн
     IN inAmountReal          TFloat    , --Объем продаж в аналогичный период, кг
     IN inAmountPlanMin       TFloat    , --Минимум планируемого объема продаж на акционный период (в кг)
     IN inAmountPlanMax       TFloat    , --Максимум планируемого объема продаж на акционный период (в кг)
-    IN inGoodsKindId         Integer    , --ИД обьекта <Вид товара>
+    IN inGoodsKindId         Integer   , --ИД обьекта <Вид товара>
+    IN inComment             TVarChar  , --Комментарий
     IN inUserId              Integer     -- пользователь
 )
 RETURNS Integer
@@ -30,6 +33,9 @@ BEGIN
     
     -- сохранили <цена в прайсе>
     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_Price(), ioId, COALESCE(inPrice,0));
+    
+    -- сохранили <цена на полке>
+    PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_PriceSale(), ioId, COALESCE(inPriceSale,0));
     
     -- сохранили <Цена отгрузки без учета НДС, с учетом скидки, грн>
     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_PriceWithOutVAT(), ioId, COALESCE(inPriceWithOutVAT,0));
@@ -49,6 +55,9 @@ BEGIN
     -- сохранили связь с <Вид товара>
     PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_GoodsKind(), ioId, inGoodsKindId);
 
+    -- сохранили <Комментарий>
+    PERFORM lpInsertUpdate_MovementItemString (zc_MIString_Comment(), ioId, inComment);
+    
     -- сохранили протокол
     PERFORM lpInsert_MovementItemProtocol (ioId, inUserId, vbIsInsert);
 

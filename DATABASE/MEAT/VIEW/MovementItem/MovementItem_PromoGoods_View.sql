@@ -2,22 +2,40 @@ DROP VIEW IF EXISTS MovementItem_PromoGoods_View;
 
 CREATE OR REPLACE VIEW MovementItem_PromoGoods_View AS
     SELECT
-        MovementItem.Id                    AS Id               --идентификатор
-      , MovementItem.MovementId            AS MovementId       --ИД документа <Акция>
-      , MovementItem.ObjectId              AS GoodsId          --ИД объекта <товар>
-      , Object_Goods.ObjectCode::Integer   AS GoodsCode        --код объекта  <товар>
-      , Object_Goods.ValueData             AS GoodsName        --наименование объекта <товар>
-      , MovementItem.Amount                AS Amount           --% скидки на товар
-      , MIFloat_Price.ValueData            AS Price            --Цена в прайсе
-      , MIFloat_PriceWithOutVAT.ValueData  AS PriceWithOutVAT  --Цена отгрузки без учета НДС, с учетом скидки, грн
-      , MIFloat_PriceWithVAT.ValueData     AS PriceWithVAT     --Цена отгрузки с учетом НДС, с учетом скидки, грн
-      , MIFloat_AmountReal.ValueData       AS AmountReal       --Объем продаж в аналогичный период, кг
-      , MIFloat_AmountPlanMin.ValueData    AS AmountPlanMin    --Минимум планируемого объема продаж на акционный период (в кг)
-      , MIFloat_AmountPlanMax.ValueData    AS AmountPlanMax    --Максимум планируемого объема продаж на акционный период (в кг)
-      , MILinkObject_GoodsKind.ObjectId    AS GoodsKindId      --ИД обьекта <Вид товара>
-      , Object_GoodsKind.ValueData         AS GoodsKindName    --Наименование обьекта <Вид товара>
-      , MovementItem.isErased              AS isErased
-      
+        MovementItem.Id                        AS Id                  --идентификатор
+      , MovementItem.MovementId                AS MovementId          --ИД документа <Акция>
+      , MovementItem.ObjectId                  AS GoodsId             --ИД объекта <товар>
+      , Object_Goods.ObjectCode::Integer       AS GoodsCode           --код объекта  <товар>
+      , Object_Goods.ValueData                 AS GoodsName           --наименование объекта <товар>
+      , Object_Measure.ValueData               AS Measure             --Единица измерения
+      , Object_TradeMark.ValueData             AS TradeMark           --Торговая марка
+      , MovementItem.Amount                    AS Amount              --% скидки на товар
+      , MIFloat_Price.ValueData                AS Price               --Цена в прайсе
+      , MIFloat_PriceWithOutVAT.ValueData      AS PriceWithOutVAT     --Цена отгрузки без учета НДС, с учетом скидки, грн
+      , MIFloat_PriceWithVAT.ValueData         AS PriceWithVAT        --Цена отгрузки с учетом НДС, с учетом скидки, грн
+      , MIFloat_PriceSale.ValueData            AS PriceSale           --Цена на полке
+      , MIFloat_AmountReal.ValueData           AS AmountReal          --Объем продаж в аналогичный период, кг
+      , (MIFloat_AmountReal.ValueData
+          * ObjectFloat_Goods_Weight.ValueData)::TFloat AS AmountRealWeight    --Объем продаж в аналогичный период, кг Вес
+      , MIFloat_AmountPlanMin.ValueData        AS AmountPlanMin       --Минимум планируемого объема продаж на акционный период (в кг)
+      , (MIFloat_AmountPlanMin.ValueData
+          * ObjectFloat_Goods_Weight.ValueData)::TFloat AS AmountPlanMinWeight --Минимум планируемого объема продаж на акционный период (в кг) Вес
+      , MIFloat_AmountPlanMax.ValueData        AS AmountPlanMax       --Максимум планируемого объема продаж на акционный период (в кг)
+      , (MIFloat_AmountPlanMax.ValueData
+          * ObjectFloat_Goods_Weight.ValueData)::TFloat AS AmountPlanMaxWeight --Максимум планируемого объема продаж на акционный период (в кг) Вес
+      , MIFloat_AmountOrder.ValueData          AS AmountOrder         --Кол-во заявка (факт)
+      , (MIFloat_AmountOrder.ValueData
+          * ObjectFloat_Goods_Weight.ValueData)::TFloat AS AmountOrderWeight   --Кол-во заявка (факт) Вес
+      , MIFloat_AmountOut.ValueData            AS AmountOut           --Кол-во реализация (факт)
+      , (MIFloat_AmountOut.ValueData
+          * ObjectFloat_Goods_Weight.ValueData)::TFloat AS AmountOutWeight     --Кол-во реализация (факт) Вес
+      , MIFloat_AmountIn.ValueData             AS AmountIn            --Кол-во возврат (факт)
+      , (MIFloat_AmountIn.ValueData
+          * ObjectFloat_Goods_Weight.ValueData)::TFloat AS AmountInWeight      --Кол-во возврат (факт) Вес
+      , MILinkObject_GoodsKind.ObjectId        AS GoodsKindId         --ИД обьекта <Вид товара>
+      , Object_GoodsKind.ValueData             AS GoodsKindName       --Наименование обьекта <Вид товара>
+      , MIString_Comment.ValueData             AS Comment             -- Примечание
+      , MovementItem.isErased                  AS isErased            -- Удален
     FROM  MovementItem
         LEFT JOIN MovementItemFloat AS MIFloat_Price
                                     ON MIFloat_Price.MovementItemId = MovementItem.Id
@@ -28,6 +46,18 @@ CREATE OR REPLACE VIEW MovementItem_PromoGoods_View AS
         LEFT JOIN MovementItemFloat AS MIFloat_PriceWithVAT
                                     ON MIFloat_PriceWithVAT.MovementItemId = MovementItem.Id
                                    AND MIFloat_PriceWithVAT.DescId = zc_MIFloat_PriceWithVAT()
+        LEFT JOIN MovementItemFloat AS MIFloat_PriceSale
+                                    ON MIFloat_PriceSale.MovementItemId = MovementItem.Id
+                                   AND MIFloat_PriceSale.DescId = zc_MIFloat_PriceSale()
+        LEFT JOIN MovementItemFloat AS MIFloat_AmountOrder
+                                    ON MIFloat_AmountOrder.MovementItemId = MovementItem.Id
+                                   AND MIFloat_AmountOrder.DescId = zc_MIFloat_AmountOrder()
+        LEFT JOIN MovementItemFloat AS MIFloat_AmountOut
+                                    ON MIFloat_AmountOut.MovementItemId = MovementItem.Id
+                                   AND MIFloat_AmountOut.DescId = zc_MIFloat_AmountOut()
+        LEFT JOIN MovementItemFloat AS MIFloat_AmountIn
+                                    ON MIFloat_AmountIn.MovementItemId = MovementItem.Id
+                                   AND MIFloat_AmountIn.DescId = zc_MIFloat_AmountIn()
         LEFT JOIN MovementItemFloat AS MIFloat_AmountReal
                                     ON MIFloat_AmountReal.MovementItemId = MovementItem.Id
                                    AND MIFloat_AmountReal.DescId = zc_MIFloat_AmountReal()
@@ -45,6 +75,23 @@ CREATE OR REPLACE VIEW MovementItem_PromoGoods_View AS
         LEFT JOIN Object AS Object_GoodsKind
                          ON Object_GoodsKind.Id = MILinkObject_GoodsKind.ObjectId
                                         
+        LEFT OUTER JOIN MovementItemString AS MIString_Comment
+                                           ON MIString_Comment.MovementItemId = MovementItem.ID
+                                          AND MIString_Comment.DescId = zc_MIString_Comment()
+        LEFT JOIN ObjectLink AS ObjectLink_Goods_Measure
+                             ON ObjectLink_Goods_Measure.ObjectId = MovementItem.ObjectId
+                              AND ObjectLink_Goods_Measure.DescId = zc_ObjectLink_Goods_Measure()
+        LEFT JOIN Object AS Object_Measure 
+                         ON Object_Measure.Id = ObjectLink_Goods_Measure.ChildObjectId
+        LEFT JOIN ObjectLink AS ObjectLink_Goods_TradeMark
+                             ON ObjectLink_Goods_TradeMark.ObjectId = MovementItem.ObjectId
+                            AND ObjectLink_Goods_TradeMark.DescId = zc_ObjectLink_Goods_TradeMark()
+        LEFT JOIN Object AS Object_TradeMark 
+                         ON Object_TradeMark.Id = ObjectLink_Goods_TradeMark.ChildObjectId
+        LEFT OUTER JOIN ObjectFloat AS ObjectFloat_Goods_Weight
+                                    ON ObjectFloat_Goods_Weight.ObjectId = MovementItem.ObjectId
+                                   AND ObjectFloat_Goods_Weight.DescId = zc_ObjectFloat_Goods_Weight()
+
     WHERE 
         MovementItem.DescId = zc_MI_Master();
 

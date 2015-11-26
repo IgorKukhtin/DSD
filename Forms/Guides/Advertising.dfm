@@ -308,6 +308,12 @@ object AdvertisingForm: TAdvertisingForm
           DataType = ftString
         end
         item
+          Name = 'Code'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'Code'
+        end
+        item
           Name = 'TextValue'
           Value = Null
           Component = ClientDataSet

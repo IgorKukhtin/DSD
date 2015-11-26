@@ -108,12 +108,12 @@ inherited Report_Branch_App1Form: TReport_Branch_App1Form
             item
               Format = ',0.####'
               Kind = skSum
-              Column = ChangeSumm
+              Column = PeresortSumm
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = ChangeWeight
+              Column = PeresortWeight
             end
             item
               Format = ',0.####'
@@ -246,12 +246,12 @@ inherited Report_Branch_App1Form: TReport_Branch_App1Form
             item
               Format = ',0.####'
               Kind = skSum
-              Column = ChangeSumm
+              Column = PeresortSumm
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = ChangeWeight
+              Column = PeresortWeight
             end
             item
               Format = ',0.####'
@@ -385,17 +385,17 @@ inherited Report_Branch_App1Form: TReport_Branch_App1Form
             Options.Editing = False
             Width = 60
           end
-          object ChangeSumm: TcxGridDBColumn
+          object PeresortSumm: TcxGridDBColumn
             Caption = #1055#1077#1088#1077#1089#1086#1088#1090#1080#1094#1072' ('#1075#1088#1085')'
-            DataBinding.FieldName = 'ChangeSumm'
+            DataBinding.FieldName = 'PeresortSumm'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 60
           end
-          object ChangeWeight: TcxGridDBColumn
+          object PeresortWeight: TcxGridDBColumn
             Caption = #1055#1077#1088#1077#1089#1086#1088#1090#1080#1094#1072' ('#1082#1075')'
-            DataBinding.FieldName = 'ChangeWeight'
+            DataBinding.FieldName = 'PeresortWeight'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False

@@ -24,8 +24,7 @@ RETURNS TABLE (Id               Integer     --Идентификатор
              , OperDateEnd      TDateTime   --Дата окончания расч. продаж до акции
              , CostPromo        TFloat      --Стоимость участия в акции
              , Comment          TVarChar    --Примечание
-             , AdvertisingId    INTEGER     --Рекламная поддержка
-             , AdvertisingName  TVarChar    --Рекламная поддержка
+             , CommentMain      TVarChar    --Примечание (Общее)
              , UnitId           INTEGER     --Подразделение
              , UnitName         TVarChar    --Подразделение
              , PersonalTradeId  INTEGER     --Ответственный представитель коммерческого отдела
@@ -59,8 +58,7 @@ BEGIN
           , NULL::TDateTime                                   AS OperDateEnd         --Дата окончания расч. продаж до акции
           , NULL::TFloat                                      AS CostPromo           --Стоимость участия в акции
           , NULL::TVarChar                                    AS Comment             --Примечание
-          , NULL::Integer                                     AS AdvertisingId       --Рекламная поддержка
-          , NULL::TVarChar                                    AS AdvertisingName     --Рекламная поддержка
+          , NULL::TVarChar                                    AS CommentMain         --Примечание (Общее)
           , NULL::Integer                                     AS UnitId              --Подразделение
           , NULL::TVarChar                                    AS UnitName            --Подразделение
           , NULL::Integer                                     AS PersonalTradeId     --Ответственный представитель коммерческого отдела
@@ -89,8 +87,7 @@ BEGIN
           , Movement_Promo.OperDateEnd        --Дата окончания расч. продаж до акции
           , Movement_Promo.CostPromo          --Стоимость участия в акции
           , Movement_Promo.Comment            --Примечание
-          , Movement_Promo.AdvertisingId      --Рекламная поддержка
-          , Movement_Promo.AdvertisingName    --Рекламная поддержка
+          , Movement_Promo.Comment            --Примечание (Общее)
           , Movement_Promo.UnitId             --Подразделение
           , Movement_Promo.UnitName           --Подразделение
           , Movement_Promo.PersonalTradeId    --Ответственный представитель коммерческого отдела

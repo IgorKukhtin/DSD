@@ -43,6 +43,28 @@ DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_Promo (
 
 );
 
+DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_Promo (
+    Integer    , -- Ключ объекта <Документ продажи>
+    TVarChar   , -- Номер документа
+    TDateTime  , -- Дата документа
+    Integer    , -- Вид акции
+    Integer    , -- Прайс Лист
+    TDateTime  , -- Дата начала акции
+    TDateTime  , -- Дата окончания акции
+    TDateTime  , -- Дата начала отгрузки по акционной цене
+    TDateTime  , -- Дата окончания отгрузки по акционной цене
+    TDateTime  , -- Дата начала расч. продаж до акции
+    TDateTime  , -- Дата окончания расч. продаж до акции
+    TFloat     , -- Стоимость участия в акции
+    TVarChar   , -- Примечание
+    TVarChar   , -- Примечание (Общее)
+    Integer    , -- Подразделение
+    Integer    , -- Ответственный представитель коммерческого отдела
+    Integer    , -- Ответственный представитель маркетингового отдела	
+    TVarChar     -- сессия пользователя
+
+);
+
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_Promo(
  INOUT ioId                    Integer    , -- Ключ объекта <Документ продажи>
@@ -58,7 +80,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_Promo(
     IN inOperDateEnd           TDateTime  , -- Дата окончания расч. продаж до акции
     IN inCostPromo             TFloat     , -- Стоимость участия в акции
     IN inComment               TVarChar   , -- Примечание
-    IN inAdvertisingId         Integer    , -- Рекламная поддержка
+    IN inCommentMain           TVarChar   , -- Примечание (Общее)
     IN inUnitId                Integer    , -- Подразделение
     IN inPersonalTradeId       Integer    , -- Ответственный представитель коммерческого отдела
     IN inPersonalId            Integer    , -- Ответственный представитель маркетингового отдела	
@@ -86,7 +108,7 @@ BEGIN
                                         , inOperDateEnd    := inOperDateEnd     --Дата окончания расч. продаж до акции
                                         , inCostPromo      := inCostPromo       --Стоимость участия в акции
                                         , inComment        := inComment         --Примечание
-                                        , inAdvertisingId  := inAdvertisingId   --Рекламная поддержка
+                                        , inCommentMain    := inCommentMain     --Примечание (Общее)
                                         , inUnitId         := inUnitId          --Подразделение
                                         , inPersonalTradeId:= inPersonalTradeId --Ответственный представитель коммерческого отдела
                                         , inPersonalId     := inPersonalId      --Ответственный представитель маркетингового отдела	

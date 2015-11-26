@@ -182,6 +182,7 @@ type
     bbPrintReturnInDay: TdxBarButton;
     actDialog_QualityDoc: TdsdOpenForm;
     mactPrint_QualityDoc: TMultiAction;
+    isPromo: TcxGridDBColumn;
   private
     { Private declarations }
   public

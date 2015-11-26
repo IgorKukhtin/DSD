@@ -77,9 +77,10 @@ BEGIN
             AND
             Object_Goods_View.IsUpload = TRUE
     )
-    INSERT INTO _Cross (UnitId,GoodsId, OperCode)
+    INSERT INTO _Cross (JuridicalCode, UnitId, GoodsId, OperCode)
     SELECT
-        Juridical.UnitId
+        Juridical.JuridicalCode
+      , Juridical.UnitId
       , Goods.GoodsId
       , Oper.OperCode
     FROM 
@@ -96,7 +97,7 @@ BEGIN
                 10                                       AS OperCode
                ,MovementLinkObject_Unit.ObjectId         AS UnitId
                ,MI_Check.ObjectId                        AS GoodsId
-               ,SUM(MI_Check.Amount)::TFloat             AS Amount
+               ,SUM(-MIContainer.Amount)::TFloat         AS Amount
             FROM
                 Movement AS Movement_Check
                 INNER JOIN MovementItem AS MI_Check
@@ -106,6 +107,21 @@ BEGIN
                 INNER JOIN MovementLinkObject AS MovementLinkObject_Unit
                                               ON MovementLinkObject_Unit.MovementId = Movement_Check.Id
                                              AND MovementLinkObject_Unit.DescId = zc_MovementLinkObject_Unit()
+                INNER JOIN MovementItemContainer AS MIContainer
+                                                 ON MIContainer.MovementItemId = MI_Check.Id
+                                                AND MIContainer.DescId = zc_MIContainer_Count() 
+                INNER JOIN containerlinkobject AS ContainerLinkObject_MovementItem 
+                                               ON ContainerLinkObject_MovementItem.containerid = MIContainer.ContainerId
+                                              AND ContainerLinkObject_MovementItem.descid = zc_ContainerLinkObject_PartionMovementItem()
+                INNER JOIN OBJECT AS Object_PartionMovementItem 
+                                  ON Object_PartionMovementItem.Id = ContainerLinkObject_MovementItem.ObjectId
+                INNER JOIN MovementItem AS MI_Income
+                                        ON MI_Income.Id = Object_PartionMovementItem.ObjectCode
+                INNER JOIN MovementLinkObject AS MovementLinkObject_Income_From
+                                              ON MovementLinkObject_Income_From.MovementId = MI_Income.MovementId
+                                             AND MovementLinkObject_Income_From.DescId = zc_MovementLinkObject_From()
+                                             AND MovementLinkObject_Income_From.ObjectId = inObjectId
+                                             
             WHERE
                 Movement_Check.DescId in (zc_Movement_Check(),zc_Movement_Sale())
                 AND
@@ -116,7 +132,7 @@ BEGIN
                 MovementLinkObject_Unit.ObjectId 
                ,MI_Check.ObjectId
             HAVING
-               SUM(MI_Check.Amount) <> 0
+               SUM(MIContainer.Amount) <> 0
             UNION ALL   
             SELECT
                 1::Integer             AS OperCode
@@ -133,6 +149,17 @@ BEGIN
                         Container
                         LEFT OUTER JOIN MovementItemContainer ON MovementItemContainer.ContainerId = Container.ID
                                                              AND date_trunc('day', MovementItemContainer.OperDate) > inDate
+                        INNER JOIN containerlinkobject AS ContainerLinkObject_MovementItem 
+                                                       ON ContainerLinkObject_MovementItem.containerid = Container.Id
+                                                      AND ContainerLinkObject_MovementItem.descid = zc_ContainerLinkObject_PartionMovementItem()
+                        INNER JOIN OBJECT AS Object_PartionMovementItem 
+                                          ON Object_PartionMovementItem.Id = ContainerLinkObject_MovementItem.ObjectId
+                        INNER JOIN MovementItem AS MI_Income
+                                                ON MI_Income.Id = Object_PartionMovementItem.ObjectCode
+                        INNER JOIN MovementLinkObject AS MovementLinkObject_Income_From
+                                                      ON MovementLinkObject_Income_From.MovementId = MI_Income.MovementId
+                                                     AND MovementLinkObject_Income_From.DescId = zc_MovementLinkObject_From()
+                                                     AND MovementLinkObject_Income_From.ObjectId = inObjectId
                     WHERE
                         Container.DescId = zc_Container_Count()
                     GROUP BY

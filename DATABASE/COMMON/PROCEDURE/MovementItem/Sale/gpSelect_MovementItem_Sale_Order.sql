@@ -22,6 +22,7 @@ RETURNS TABLE (Id Integer, LineNum Integer, GoodsId Integer, GoodsCode Integer, 
              , AmountSumm TFloat
              , isCheck_Pricelist Boolean
              , isErased Boolean
+             , MovementPromo TVarChar
               )
 AS
 $BODY$
@@ -187,6 +188,7 @@ BEGIN
            , CAST (NULL AS TFloat)      AS AmountSumm
            , FALSE                      AS isCheck_PricelistBoolean
            , FALSE                      AS isErased
+           , CAST ('' AS TVarChar)      AS MovementPromo
 
        FROM (SELECT Object_Goods.Id                                                   AS GoodsId
                   , Object_Goods.ObjectCode                                           AS GoodsCode
@@ -257,6 +259,7 @@ BEGIN
            , CAST (COALESCE (MIFloat_AmountPartner.ValueData, 0) * tmpMI.Price / tmpMI.CountForPrice AS NUMERIC (16, 2)) :: TFloat AS AmountSumm
            , CASE WHEN COALESCE(tmpMI.Price,0) = COALESCE(tmpPriceList.Price_Pricelist,0) THEN FALSE ELSE TRUE END AS isCheck_PricelistBoolean
            , tmpMI.isErased                     AS isErased
+           , ('№ ' ||Movement_Promo_View.InvNumber|| ' от ' ||Movement_Promo_View.OperDate :: Date :: TVarChar|| ' акц. цена с ' ||Movement_Promo_View.StartSale  :: Date :: TVarChar|| ' по ' ||Movement_Promo_View.EndSale :: Date :: TVarChar) :: TVarChar           AS MovementPromo
 
        FROM tmpMI_all AS tmpMI
             LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = tmpMI.GoodsId
@@ -302,6 +305,12 @@ BEGIN
                                    ON ObjectString_Goods_GoodsGroupFull.ObjectId = tmpMI.GoodsId
                                   AND ObjectString_Goods_GoodsGroupFull.DescId = zc_ObjectString_Goods_GroupNameFull()
             LEFT JOIN tmpPriceList ON tmpPriceList.GoodsId = tmpGoods.GoodsId
+
+            LEFT JOIN MovementItemFloat AS MIFloat_PromoMovementId
+                                        ON MIFloat_PromoMovementId.MovementItemId = tmpMI.MovementItemId
+                                       AND MIFloat_PromoMovementId.DescId = zc_MIFloat_PromoMovementId()
+            LEFT JOIN Movement_Promo_View ON Movement_Promo_View.Id = MIFloat_PromoMovementId.ValueData  
+
             ;
      ELSE
 
@@ -424,6 +433,7 @@ BEGIN
            , CAST (COALESCE (MIFloat_AmountPartner.ValueData, 0) * tmpMI.Price / tmpMI.CountForPrice AS NUMERIC (16, 2)) :: TFloat AS AmountSumm
            , CASE WHEN COALESCE(tmpMI.Price,0) = COALESCE(lfObjectHistory_PriceListItem.ValuePrice,0) THEN FALSE ELSE TRUE END AS isCheck_PricelistBoolean
            , tmpMI.isErased                     AS isErased
+           , ('№ ' ||Movement_Promo_View.InvNumber|| ' от ' ||Movement_Promo_View.OperDate :: Date :: TVarChar|| ' акц. цена с ' ||Movement_Promo_View.StartSale  :: Date :: TVarChar|| ' по ' ||Movement_Promo_View.EndSale :: Date :: TVarChar) :: TVarChar           AS MovementPromo
 
        FROM tmpMI_all AS tmpMI
             LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = tmpMI.GoodsId
@@ -471,6 +481,12 @@ BEGIN
 
             LEFT JOIN lfSelect_ObjectHistory_PriceListItem (inPriceListId:= inPriceListId, inOperDate:= inOperDate)
                    AS lfObjectHistory_PriceListItem ON lfObjectHistory_PriceListItem.GoodsId = tmpMI.GoodsId
+
+            LEFT JOIN MovementItemFloat AS MIFloat_PromoMovementId
+                                        ON MIFloat_PromoMovementId.MovementItemId = tmpMI.MovementItemId
+                                       AND MIFloat_PromoMovementId.DescId = zc_MIFloat_PromoMovementId()
+            LEFT JOIN Movement_Promo_View ON Movement_Promo_View.Id = MIFloat_PromoMovementId.ValueData  
+
 
             ;
 

@@ -3,7 +3,7 @@ inherited ReturnInJournalForm: TReturnInJournalForm
   ClientHeight = 535
   ClientWidth = 1106
   ExplicitWidth = 1122
-  ExplicitHeight = 570
+  ExplicitHeight = 573
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -464,6 +464,14 @@ inherited ReturnInJournalForm: TReturnInJournalForm
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 67
+          end
+          object isPromo: TcxGridDBColumn
+            Caption = #1040#1082#1094#1080#1103
+            DataBinding.FieldName = 'isPromo'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 56
           end
         end
       end

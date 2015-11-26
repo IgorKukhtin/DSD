@@ -3,6 +3,8 @@
   ClientHeight = 668
   ClientWidth = 1366
   AddOnFormData.OnLoadAction = actSetDefaults
+  ExplicitLeft = -108
+  ExplicitTop = -37
   ExplicitWidth = 1382
   ExplicitHeight = 706
   PixelsPerInch = 96
@@ -438,6 +440,14 @@
             HeaderAlignmentVert = vaCenter
             Width = 100
           end
+          object MovementPromo: TcxGridDBColumn [31]
+            Caption = #8470' '#1076#1086#1082'. '#1072#1082#1094#1080#1080
+            DataBinding.FieldName = 'MovementPromo'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 200
+          end
           inherited colIsErased: TcxGridDBColumn
             Width = 25
           end
@@ -630,8 +640,8 @@
       Caption = #1044#1072#1090#1072' '#1076#1086#1082'. '#1091' '#1087#1086#1082#1091#1087'.'
     end
     object edIsChecked: TcxCheckBox
-      Left = 682
-      Top = 63
+      Left = 683
+      Top = 52
       Caption = #1055#1088#1086#1074#1077#1088#1077#1085' ('#1076#1072'/'#1085#1077#1090')'
       TabOrder = 24
       Width = 118
@@ -824,7 +834,7 @@
     Left = 535
     Top = 103
     TabOrder = 13
-    Width = 545
+    Width = 534
   end
   object cxLabel23: TcxLabel [10]
     Left = 1156
@@ -873,6 +883,14 @@
     Properties.ReadOnly = True
     TabOrder = 19
     Width = 275
+  end
+  object cbPromo: TcxCheckBox [16]
+    Left = 683
+    Top = 73
+    Caption = #1040#1082#1094#1080#1103' ('#1076#1072'/'#1085#1077#1090')'
+    Properties.ReadOnly = True
+    TabOrder = 20
+    Width = 100
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 171
@@ -2446,6 +2464,12 @@
         Component = TransportChoiceGuides
         ComponentItem = 'TextValue'
         DataType = ftString
+      end
+      item
+        Name = 'isPromo'
+        Value = Null
+        Component = cbPromo
+        DataType = ftBoolean
       end>
     Left = 216
     Top = 248
@@ -3444,8 +3468,8 @@
         DataType = ftString
         ParamType = ptInput
       end>
-    Left = 912
-    Top = 64
+    Left = 960
+    Top = 48
   end
   object GuidesFrom: TdsdGuides
     KeyField = 'Id'
@@ -3593,8 +3617,8 @@
         ParamType = ptInput
       end>
     PackSize = 1
-    Left = 672
-    Top = 48
+    Left = 632
+    Top = 56
   end
   object EDI: TEDI
     ConnectionParams.Host.Value = Null
@@ -3665,8 +3689,7 @@
         DataType = ftString
         ParamType = ptInput
       end>
-    Left = 1098
-    Top = 80
+    Left = 1114
   end
   object CurrencyPartnerGuides: TdsdGuides
     KeyField = 'Id'

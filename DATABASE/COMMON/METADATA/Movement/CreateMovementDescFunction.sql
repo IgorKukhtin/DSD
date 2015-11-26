@@ -182,6 +182,17 @@ INSERT INTO MovementDesc (Code, ItemName)
 CREATE OR REPLACE FUNCTION zc_Movement_Promo() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementDesc WHERE Code = 'zc_Movement_Promo'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 INSERT INTO MovementDesc (Code, ItemName)
   SELECT 'zc_Movement_Promo', 'Акция' WHERE NOT EXISTS (SELECT * FROM MovementDesc WHERE Code = 'zc_Movement_Promo');
+
+CREATE OR REPLACE FUNCTION zc_Movement_PromoPartner() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementDesc WHERE Code = 'zc_Movement_PromoPartner'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementDesc (Code, ItemName)
+  SELECT 'zc_Movement_PromoPartner', 'Список покупателей для акции' WHERE NOT EXISTS (SELECT * FROM MovementDesc WHERE Code = 'zc_Movement_PromoPartner');
+/*
+Update Movement SET DescId = zc_Movement_PromoPartner()
+Where Movement.DescId = zc_Movement_Promo() AND Movement.ParentId is not null;
+*/
+CREATE OR REPLACE FUNCTION zc_Movement_PromoAdvertising() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementDesc WHERE Code = 'zc_Movement_PromoAdvertising'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementDesc (Code, ItemName)
+  SELECT 'zc_Movement_PromoAdvertising', 'Список Рекламной поддержки' WHERE NOT EXISTS (SELECT * FROM MovementDesc WHERE Code = 'zc_Movement_PromoAdvertising');
   
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР

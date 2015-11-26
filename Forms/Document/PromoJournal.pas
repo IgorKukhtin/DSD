@@ -24,7 +24,6 @@ type
     colStartSale: TcxGridDBColumn;
     colEndSale: TcxGridDBColumn;
     colCostPromo: TcxGridDBColumn;
-    colAdvertisingName: TcxGridDBColumn;
     colUnitName: TcxGridDBColumn;
     colComment: TcxGridDBColumn;
     colPersonalTradeName: TcxGridDBColumn;
@@ -37,6 +36,7 @@ type
     colPartnerDescName: TcxGridDBColumn;
     colContractName: TcxGridDBColumn;
     colContractTagName: TcxGridDBColumn;
+    colCommentMain: TcxGridDBColumn;
   private
     { Private declarations }
   public

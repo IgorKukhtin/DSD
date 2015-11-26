@@ -30,7 +30,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , InvNumber_TransportGoods TVarChar
              , OperDate_TransportGoods TDateTime
              , MovementId_Transport Integer, InvNumber_Transport TVarChar
-             , isCOMDOC Boolean
+             , isCOMDOC Boolean, isPromo Boolean
              , Comment TVarChar
               )
 AS
@@ -91,6 +91,7 @@ BEGIN
              , 0                   			    AS MovementId_Transport
              , '' :: TVarChar                     	    AS InvNumber_Transport 
              , FALSE                                        AS isCOMDOC
+             , CAST (FALSE AS Boolean)                      AS isPromo 
              , CAST ('' as TVarChar) 		            AS Comment
 
           FROM lfGet_Object_Status(zc_Enum_Status_UnComplete()) AS Object_Status
@@ -160,6 +161,7 @@ BEGIN
            , ('№ ' || Movement_Transport.InvNumber || ' от ' || Movement_Transport.OperDate  :: Date :: TVarChar ) :: TVarChar AS InvNumber_Transport
 
            , COALESCE (MovementLinkMovement_Sale.MovementChildId, 0) <> 0 AS isCOMDOC
+           , COALESCE (MovementBoolean_Promo.ValueData, FALSE)            AS isPromo
            , MovementString_Comment.ValueData       AS Comment
 
        FROM Movement
@@ -188,6 +190,10 @@ BEGIN
             LEFT JOIN MovementBoolean AS MovementBoolean_PriceWithVAT
                                       ON MovementBoolean_PriceWithVAT.MovementId =  Movement.Id
                                      AND MovementBoolean_PriceWithVAT.DescId = zc_MovementBoolean_PriceWithVAT()
+
+            LEFT JOIN MovementBoolean AS MovementBoolean_Promo
+                                      ON MovementBoolean_Promo.MovementId =  Movement.Id
+                                     AND MovementBoolean_Promo.DescId = zc_MovementBoolean_Promo()
 
             LEFT JOIN MovementFloat AS MovementFloat_VATPercent
                                     ON MovementFloat_VATPercent.MovementId =  Movement.Id

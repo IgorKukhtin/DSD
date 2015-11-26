@@ -170,9 +170,10 @@ BEGIN
             14 as LineNo,
             ''::TVarChar as GroupName,
             'Рекламная поддержка (газета, сопровождение наружной рекламой (сити-лайтами, билбордами), ТВ, радио, дегустации и прочее)'::TVarChar as LineName,
-            (SELECT Movement_Promo.AdvertisingName 
-             FROM Movement_Promo_View AS Movement_Promo
-             WHERE Movement_Promo.Id = inMovementId)::TEXT AS LineValue
+            (SELECT STRING_AGG(Movement_PromoAdvertising.AdvertisingName, chr(13)) 
+             FROM Movement_PromoAdvertising_View AS Movement_PromoAdvertising
+             WHERE Movement_PromoAdvertising.ParentId = inMovementId
+               AND Movement_PromoAdvertising.IsErased = FALSE)::TEXT AS LineValue
         UNION ALL
         SELECT
             NULL as LineNo,

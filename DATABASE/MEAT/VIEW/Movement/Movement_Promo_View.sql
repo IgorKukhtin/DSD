@@ -12,16 +12,15 @@ CREATE OR REPLACE VIEW Movement_Promo_View AS
       , Object_PromoKind.ValueData                  AS PromoKindName      --Вид акции
       , MovementLinkObject_PriceList.ObjectId       AS PriceListId        --Прайс Лист
       , Object_PriceList.ValueData                  AS PriceListName      --Прайс Лист
-      , MovementDate_StartPromo.ValueData            AS StartPromo         --Дата начала акции
-      , MovementDate_EndPromo.ValueData              AS EndPromo           --Дата окончания акции
+      , MovementDate_StartPromo.ValueData           AS StartPromo         --Дата начала акции
+      , MovementDate_EndPromo.ValueData             AS EndPromo           --Дата окончания акции
       , MovementDate_StartSale.ValueData            AS StartSale          --Дата начала отгрузки по акционной цене
       , MovementDate_EndSale.ValueData              AS EndSale            --Дата окончания отгрузки по акционной цене
       , MovementDate_OperDateStart.ValueData        AS OperDateStart      --Дата начала расч. продаж до акции
       , MovementDate_OperDateEnd.ValueData          AS OperDateEnd        --Дата окончания расч. продаж до акции
       , MovementFloat_CostPromo.ValueData           AS CostPromo          --Стоимость участия в акции
       , MovementString_Comment.ValueData            AS Comment            --Примечание
-      , MovementLinkObject_Advertising.ObjectId     AS AdvertisingId      --Рекламная поддержка
-      , Object_Advertising.ValueData                AS AdvertisingName    --Рекламная поддержка
+      , MovementString_CommentMain.ValueData        AS CommentMain        --Примечание (общее)
       , MovementLinkObject_Unit.ObjectId            AS UnitId             --Подразделение
       , Object_Unit.ValueData                       AS UnitName           --Подразделение
       , MovementLinkObject_PersonalTrade.ObjectId   AS PersonalTradeId    --Ответственный представитель коммерческого отдела
@@ -71,13 +70,11 @@ CREATE OR REPLACE VIEW Movement_Promo_View AS
         LEFT JOIN MovementString AS MovementString_Comment
                                  ON MovementString_Comment.MovementId =  Movement_Promo.Id
                                 AND MovementString_Comment.DescId = zc_MovementString_Comment()
-                               
-        LEFT JOIN MovementLinkObject AS MovementLinkObject_Advertising
-                                     ON MovementLinkObject_Advertising.MovementId = Movement_Promo.Id
-                                    AND MovementLinkObject_Advertising.DescId = zc_MovementLinkObject_Advertising()
-        LEFT JOIN Object AS Object_Advertising 
-                         ON Object_Advertising.Id = MovementLinkObject_Advertising.ObjectId
 
+        LEFT JOIN MovementString AS MovementString_CommentMain
+                                 ON MovementString_CommentMain.MovementId =  Movement_Promo.Id
+                                AND MovementString_CommentMain.DescId = zc_MovementString_CommentMain()
+                               
         LEFT JOIN MovementLinkObject AS MovementLinkObject_Unit
                                      ON MovementLinkObject_Unit.MovementId = Movement_Promo.Id
                                     AND MovementLinkObject_Unit.DescId = zc_MovementLinkObject_Unit()

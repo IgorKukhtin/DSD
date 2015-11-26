@@ -69,6 +69,7 @@ type
     RouteGroupName: TcxGridDBColumn;
     Comment: TcxGridDBColumn;
     OperDatePartner_sale: TcxGridDBColumn;
+    isPromo: TcxGridDBColumn;
   private
     { Private declarations }
   public

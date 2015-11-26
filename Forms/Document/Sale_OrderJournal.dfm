@@ -21,7 +21,6 @@ inherited Sale_OrderJournalForm: TSale_OrderJournalForm
       inherited cxGrid: TcxGrid
         Width = 1177
         Height = 478
-        ExplicitLeft = 3
         ExplicitWidth = 1177
         ExplicitHeight = 478
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -709,6 +708,14 @@ inherited Sale_OrderJournalForm: TSale_OrderJournalForm
             HeaderAlignmentVert = vaCenter
             VisibleForCustomization = False
             Width = 20
+          end
+          object isPromo: TcxGridDBColumn
+            Caption = #1040#1082#1094#1080#1103
+            DataBinding.FieldName = 'isPromo'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 56
           end
         end
       end

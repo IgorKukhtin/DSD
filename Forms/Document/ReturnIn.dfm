@@ -3,7 +3,7 @@ inherited ReturnInForm: TReturnInForm
   ClientHeight = 650
   ClientWidth = 1104
   ExplicitWidth = 1120
-  ExplicitHeight = 685
+  ExplicitHeight = 688
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -231,15 +231,20 @@ inherited ReturnInForm: TReturnInForm
             HeaderAlignmentVert = vaCenter
             Width = 145
           end
+          object MovementPromo: TcxGridDBColumn [15]
+            Caption = #8470' '#1076#1086#1082'. '#1072#1082#1094#1080#1080
+            DataBinding.FieldName = 'MovementPromo'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 200
+          end
         end
       end
     end
     object cxTabSheetTaxCorrective: TcxTabSheet
       Caption = #1050#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1082#1080
       ImageIndex = 2
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object cxGridTaxCorrective: TcxGrid
         Left = 0
         Top = 0
@@ -757,7 +762,7 @@ inherited ReturnInForm: TReturnInForm
     end
     object edIsChecked: TcxCheckBox
       Left = 635
-      Top = 63
+      Top = 56
       Caption = #1055#1088#1086#1074#1077#1088#1077#1085' ('#1076#1072'/'#1085#1077#1090')'
       TabOrder = 22
       Width = 118
@@ -950,6 +955,14 @@ inherited ReturnInForm: TReturnInForm
     State = cbsChecked
     TabOrder = 14
     Width = 215
+  end
+  object cbPromo: TcxCheckBox [11]
+    Left = 635
+    Top = 79
+    Caption = #1040#1082#1094#1080#1103' ('#1076#1072'/'#1085#1077#1090')'
+    Properties.ReadOnly = True
+    TabOrder = 15
+    Width = 102
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 171
@@ -2191,6 +2204,12 @@ inherited ReturnInForm: TReturnInForm
         Name = 'isPartner'
         Value = Null
         Component = cbPartner
+        DataType = ftBoolean
+      end
+      item
+        Name = 'isPromo'
+        Value = Null
+        Component = cbPromo
         DataType = ftBoolean
       end>
     Left = 224

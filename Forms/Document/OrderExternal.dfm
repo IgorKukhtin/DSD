@@ -1,25 +1,26 @@
 inherited OrderExternalForm: TOrderExternalForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1047#1072#1103#1074#1082#1072' '#1089#1090#1086#1088#1086#1085#1085#1103#1103' ('#1086#1090' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1103')>'
   ClientHeight = 647
-  ClientWidth = 1366
-  ExplicitWidth = 1382
+  ClientWidth = 1365
+  ExplicitLeft = -107
+  ExplicitWidth = 1381
   ExplicitHeight = 685
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 166
-    Width = 1366
+    Width = 1365
     Height = 481
     ExplicitTop = 166
     ExplicitWidth = 1366
     ExplicitHeight = 481
     ClientRectBottom = 481
-    ClientRectRight = 1366
+    ClientRectRight = 1365
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 1366
       ExplicitHeight = 457
       inherited cxGrid: TcxGrid
-        Width = 1366
+        Width = 1365
         Height = 457
         ExplicitWidth = 1366
         ExplicitHeight = 457
@@ -278,12 +279,20 @@ inherited OrderExternalForm: TOrderExternalForm
             Options.Editing = False
             Width = 100
           end
+          object MovementPromo: TcxGridDBColumn [18]
+            Caption = #8470' '#1076#1086#1082'. '#1072#1082#1094#1080#1080
+            DataBinding.FieldName = 'MovementPromo'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 210
+          end
         end
       end
     end
   end
   inherited DataPanel: TPanel
-    Width = 1366
+    Width = 1365
     Height = 140
     TabOrder = 3
     ExplicitWidth = 1366
@@ -591,6 +600,14 @@ inherited OrderExternalForm: TOrderExternalForm
       Properties.ShowTime = False
       TabOrder = 39
       Width = 98
+    end
+    object cbPromo: TcxCheckBox
+      Left = 894
+      Top = 87
+      Caption = #1040#1082#1094#1080#1103' ('#1076#1072'/'#1085#1077#1090')'
+      Properties.ReadOnly = True
+      TabOrder = 40
+      Width = 128
     end
   end
   object cxLabel21: TcxLabel [2]
@@ -1204,6 +1221,12 @@ inherited OrderExternalForm: TOrderExternalForm
         Value = Null
         Component = ceComment
         DataType = ftString
+      end
+      item
+        Name = 'isPromo'
+        Value = Null
+        Component = cbPromo
+        DataType = ftBoolean
       end>
     Left = 216
     Top = 248
@@ -1696,8 +1719,8 @@ inherited OrderExternalForm: TOrderExternalForm
         DataType = ftString
         ParamType = ptInput
       end>
-    Left = 720
-    Top = 88
+    Left = 680
+    Top = 48
   end
   object ContractGuides: TdsdGuides
     KeyField = 'Id'
@@ -1723,8 +1746,7 @@ inherited OrderExternalForm: TOrderExternalForm
         DataType = ftString
         ParamType = ptInput
       end>
-    Left = 648
-    Top = 72
+    Left = 712
   end
   object GuidesRouteSorting: TdsdGuides
     KeyField = 'Id'
@@ -2021,8 +2043,8 @@ inherited OrderExternalForm: TOrderExternalForm
         DataType = ftString
         ParamType = ptInput
       end>
-    Left = 811
-    Top = 84
+    Left = 859
+    Top = 4
   end
   object spSavePrintState: TdsdStoredProc
     StoredProcName = 'gpUpdate_Movement_OrderExternal_Print'

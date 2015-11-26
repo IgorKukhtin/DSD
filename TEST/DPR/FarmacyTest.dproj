@@ -1032,6 +1032,16 @@
 				<FormType>dfm</FormType>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Report\Report_UploadBaDM.pas">
+				<Form>Report_UploadBaDMForm</Form>
+				<FormType>dfm</FormType>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Report\Report_UploadOptima.pas">
+				<Form>Report_UploadOptimaForm</Form>
+				<FormType>dfm</FormType>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
 			<BuildConfiguration Include="Release">
 				<Key>Cfg_2</Key>
 				<CfgParent>Base</CfgParent>

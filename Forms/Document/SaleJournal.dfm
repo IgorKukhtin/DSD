@@ -714,6 +714,14 @@ inherited SaleJournalForm: TSaleJournalForm
             VisibleForCustomization = False
             Width = 20
           end
+          object isPromo: TcxGridDBColumn
+            Caption = #1040#1082#1094#1080#1103
+            DataBinding.FieldName = 'isPromo'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 56
+          end
         end
       end
     end

@@ -182,6 +182,8 @@ type
     spSelectPrintReturnInDay: TdsdStoredProc;
     actPrintReturnInDay: TdsdPrintAction;
     bbPrintReturnInDay: TdxBarButton;
+    cbPromo: TcxCheckBox;
+    MovementPromo: TcxGridDBColumn;
   private
     { Private declarations }
   public
