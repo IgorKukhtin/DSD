@@ -1756,6 +1756,13 @@ object UtilPrintForm: TUtilPrintForm
         Component = FormParams
         ComponentItem = 'Id'
         ParamType = ptInput
+      end
+      item
+        Name = 'inMovementId_Weighing'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'MovementId_by'
+        ParamType = ptInput
       end>
     PackSize = 1
     Left = 159

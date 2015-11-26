@@ -13,7 +13,7 @@ CREATE OR REPLACE FUNCTION gpInsert_Protocol_EDIReceipt(
     IN inDateRegistered      TDateTime  , -- Дата
     IN inSession             TVarChar     -- Пользователь
 )                              
-RETURNS VOID AS
+RETURNS VOId AS
 $BODY$
    DECLARE vbUserId Integer;
    DECLARE vbMovementId Integer;
@@ -24,7 +24,7 @@ BEGIN
    vbUserId := lpGetUserBySession(inSession);
 
    -- Задача найти документ EDI по номеру налоговой и дате
-    SELECT Movement.Id, Movement_Tax.Id INTO vbMovementId, vbTaxMovementId
+   /* SELECT Movement.Id, Movement_Tax.Id INTO vbMovementId, vbTaxMovementId
       FROM Movement
             JOIN MovementLinkMovement AS MovementLinkMovement_Tax
                                       ON MovementLinkMovement_Tax.MovementChildId = Movement.Id 
@@ -37,22 +37,22 @@ BEGIN
 
      WHERE Movement.DescId = zc_movement_EDI() 
        AND Movement_Tax.OperDate BETWEEN inOperMonth AND (inOperMonth + (interval '1 MONTH'))
-       AND MovementString_InvNumberPartner_Tax.valuedata = inTaxNumber;
+       AND MovementString_InvNumberPartner_Tax.valuedata = inTaxNumber;*/
 
-   IF COALESCE(vbMovementId, 0) = 0 THEN 
-   	
-      SELECT Movement.id, COALESCE(MovementLinkMovement_Tax.MovementId, MovementLinkMovement_ChildEDI.MovementId) INTO vbMovementId, vbTaxMovementId 
-                    FROM MovementString
-        JOIN Movement ON Movement.id = MovementString.movementid AND Movement.descid = zc_Movement_EDI()
-                      LEFT JOIN MovementLinkMovement AS MovementLinkMovement_Tax
-                                      ON MovementLinkMovement_Tax.MovementChildId = Movement.Id 
-                                     AND MovementLinkMovement_Tax.DescId = zc_MovementLinkMovement_Tax()
-            LEFT JOIN MovementLinkMovement AS MovementLinkMovement_ChildEDI
-                                           ON MovementLinkMovement_ChildEDI.MovementChildId = Movement.Id 
-                                          AND MovementLinkMovement_ChildEDI.DescId = zc_MovementLinkMovement_ChildEDI()
-
+   IF COALESCE (vbMovementId, 0) = 0
+   THEN 
+      SELECT Movement.Id, COALESCE(MovementLinkMovement_Tax.MovementId, MovementLinkMovement_ChildEDI.MovementId) INTO vbMovementId, vbTaxMovementId 
+      FROM MovementString
+           JOIN Movement ON Movement.Id = MovementString.MovementId
+                        AND Movement.descId = zc_Movement_EDI()
+           LEFT JOIN MovementLinkMovement AS MovementLinkMovement_Tax
+                                          ON MovementLinkMovement_Tax.MovementChildId = Movement.Id
+                                         AND MovementLinkMovement_Tax.DescId = zc_MovementLinkMovement_Tax()
+           LEFT JOIN MovementLinkMovement AS MovementLinkMovement_ChildEDI
+                                          ON MovementLinkMovement_ChildEDI.MovementChildId = Movement.Id 
+                                         AND MovementLinkMovement_ChildEDI.DescId = zc_MovementLinkMovement_ChildEDI()
        WHERE MovementString.DescId = zc_MovementString_FileName()
-         AND UPPER(MovementString.ValueData) LIKE UPPER(inFileName);
+         AND UPPER (MovementString.ValueData) LIKE UPPER (inFileName);
    END IF;
 
 
@@ -65,16 +65,17 @@ BEGIN
       PERFORM lpInsert_Movement_EDIEvents(vbMovementId, inEDIEvent, vbUserId);
 
       IF inisOk THEN 
-         PERFORM lpInsertUpdate_MovementString(zc_MovementString_InvNumberRegistered(), vbTaxMovementId, inInvNumberRegistered);
-         PERFORM lpInsertUpdate_MovementDate(zc_MovementDate_DateRegistered(), vbTaxMovementId, inDateRegistered);
-         PERFORM lpInsertUpdate_MovementBoolean(zc_MovementBoolean_Electron(), vbMovementId, inisOk);
-         PERFORM lpInsertUpdate_MovementBoolean(zc_MovementBoolean_Electron(), vbTaxMovementId, inisOk);
+         PERFORM lpInsertUpdate_MovementString (zc_MovementString_InvNumberRegistered(), vbTaxMovementId, inInvNumberRegistered);
+         PERFORM lpInsertUpdate_MovementDate (zc_MovementDate_DateRegistered(), vbTaxMovementId, inDateRegistered);
+         PERFORM lpInsertUpdate_MovementBoolean (zc_MovementBoolean_Electron(), vbTaxMovementId, inisOk);
+
+         PERFORM lpInsertUpdate_MovementString (zc_MovementString_InvNumberRegistered(), vbMovementId, inInvNumberRegistered);
+         PERFORM lpInsertUpdate_MovementDate (zc_MovementDate_DateRegistered(), vbMovementId, inDateRegistered);
+         PERFORM lpInsertUpdate_MovementBoolean (zc_MovementBoolean_Electron(), vbMovementId, inisOk);
          -- сохранили протокол
          PERFORM lpInsert_MovementProtocol (vbTaxMovementId, vbUserId, FALSE);
       END IF;
    END IF;
-
-
 
 END;
 $BODY$
@@ -87,8 +88,7 @@ $BODY$
  05.12.14                         * add сохранили протокол
  14.10.14                         * 
  04.08.14                         * 
-
 */
 
 -- тест
--- SELECT * FROM gpInsertUpdate_MI_EDI (ioId:= 0, inMovementId:= 10, inGoodsId:= 1, inAmount:= 0, inAmountSecond:= 0, inGoodsKindId:= 0, inSession:= '2')
+-- SELECT * FROM gpInsert_Protocol_EDIReceipt (ioId:= 0, inMovementId:= 10, inGoodsId:= 1, inAmount:= 0, inAmountSecond:= 0, inGoodsKindId:= 0, inSession:= '2')

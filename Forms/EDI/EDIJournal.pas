@@ -176,6 +176,9 @@ type
     dxBarButton1: TdxBarButton;
     spInsertRecadv: TdsdStoredProc;
     InvNumberRecadv: TcxGridDBColumn;
+    FileName: TcxGridDBColumn;
+    DateRegistered: TcxGridDBColumn;
+    InvNumberRegistered: TcxGridDBColumn;
   private
     { Private declarations }
   public

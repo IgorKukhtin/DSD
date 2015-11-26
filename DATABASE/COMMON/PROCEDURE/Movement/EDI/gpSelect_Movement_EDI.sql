@@ -36,6 +36,8 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
 
              , DescName TVarChar
              , FileName TVarChar
+             , DateRegistered  TDateTime
+             , InvNumberRegistered TVarChar
              , isCheck Boolean
              , isElectron Boolean
              , isError Boolean
@@ -105,6 +107,8 @@ BEGIN
 
            , MovementDesc.ItemName AS DescName
            , MovementString_FileName.ValueData              AS FileName
+           , MovementDate_DateRegistered.ValueData          AS DateRegistered
+           , MovementString_InvNumberRegistered.ValueData   AS InvNumberRegistered
 
            , CASE WHEN (MovementLinkMovement_Sale.MovementId IS NOT NULL OR MovementLinkMovement_MasterEDI.MovementId IS NOT NULL)
                    AND (COALESCE (MovementFloat_TotalCountPartner.ValueData, 0) <> COALESCE (MovementFloat_TotalCountPartner_Sale.ValueData, 0)
@@ -126,6 +130,12 @@ BEGIN
                                       ON MovementBoolean_Error.MovementId =  Movement.Id
                                      AND MovementBoolean_Error.DescId = zc_MovementBoolean_Error()
 
+            LEFT JOIN MovementDate AS MovementDate_DateRegistered
+                                   ON MovementDate_DateRegistered.MovementId =  Movement.Id
+                                  AND MovementDate_DateRegistered.DescId = zc_MovementDate_DateRegistered()
+            LEFT JOIN MovementString AS MovementString_InvNumberRegistered
+                                     ON MovementString_InvNumberRegistered.MovementId =  Movement.Id
+                                    AND MovementString_InvNumberRegistered.DescId = zc_MovementString_InvNumberRegistered()
             LEFT JOIN MovementString AS MovementString_FileName
                                      ON MovementString_FileName.MovementId =  Movement.Id
                                     AND MovementString_FileName.DescId = zc_MovementString_FileName()
@@ -287,4 +297,4 @@ ALTER FUNCTION gpSelect_Movement_EDI (TDateTime, TDateTime, TVarChar) OWNER TO p
 */
 
 -- тест
--- SELECT * FROM gpSelect_Movement_EDI (inStartDate:= '23.03.2015', inEndDate:= '23.03.2015', inSession:= zfCalc_UserAdmin())
+-- SELECT * FROM gpSelect_Movement_EDI (inStartDate:= '23.11.2015', inEndDate:= '23.11.2015', inSession:= zfCalc_UserAdmin())
