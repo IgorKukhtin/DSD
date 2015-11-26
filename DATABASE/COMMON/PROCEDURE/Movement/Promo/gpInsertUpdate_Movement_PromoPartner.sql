@@ -25,14 +25,18 @@ DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_PromoPartner (
 );
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_PromoPartner(
- INOUT ioId                    Integer    , -- Ключ объекта <партнер для документа акции>
-    IN inParentId              Integer    , -- Ключ родительского объекта <Документ акции>
-    IN inPartnerId             Integer    , -- Ключ объекта <Контрагент / Юр лицо / Торговая Сеть>
-    IN inContractId            Integer    , -- Ключ объекта <Контракт>
-    IN inComment               TVarChar   , -- Примечание
-    IN inSession               TVarChar    -- сессия пользователя
+ INOUT ioId                     Integer    , -- Ключ объекта <партнер для документа акции>
+    IN inParentId               Integer    , -- Ключ родительского объекта <Документ акции>
+    IN inPartnerId              Integer    , -- Ключ объекта <Контрагент / Юр лицо / Торговая Сеть>
+    IN inContractId             Integer    , -- Ключ объекта <Контракт>
+    IN inComment                TVarChar   , -- Примечание
+   OUT outPriceListId           Integer    , -- ИД прайслиста в документе
+   OUT outPriceListName         TVarChar   , -- Название прайслиста в документе
+   OUT outPersonalMarketingId   Integer    , -- ИД сотрудника маркетингового отдела
+   OUT outPersonalMarketingName TVarChar   , -- Имя сотрудника маркетингового отдела
+    IN inSession                TVarChar    -- сессия пользователя
 )
-RETURNS Integer AS
+AS
 $BODY$
    DECLARE vbUserId Integer;
    DECLARE vbIsInsert Boolean;
@@ -99,13 +103,112 @@ BEGIN
             END IF;
         END IF;
     END IF;
+    
     -- сохранили связь с <Контрагент / Юр лицо / Торговая Сеть>
     PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_Partner(), ioId, inPartnerId);
+    
+    --Ищем прайслист клиента
+    SELECT
+        Movement_PromoPriceList.PriceListId
+    INTO
+        outPriceListId
+    FROM
+        lpGet_Movement_PromoPriceList(inMovementId := inParentId, inUserId := vbUserId) AS Movement_PromoPriceList
+    WHERE
+        Movement_PromoPriceList.PartnerId = inPartnerId
+    LIMIT 1;
+    -- если у него не базовый прайс лист - то обновляем прайслист у акции
+    IF outPriceListId <> zc_PriceList_Basis()
+    THEN
+        PERFORM lpInsertUpdate_MovementLinkObject(zc_MovementLinkObject_PriceList(), inParentId, outPriceListId);
+    END IF;
+    --Обновляем сотрудника маркетингового отдела
+    IF (SELECT DescId FROM OBJECT WHERE Id = inPartnerId) = zc_Object_Retail()
+    THEN
+        outPersonalMarketingId := (SELECT ObjectLink_Retail_PersonalMarketing.ChildObjectId 
+                                   FROM ObjectLink AS ObjectLink_Retail_PersonalMarketing
+                                   WHERE ObjectLink_Retail_PersonalMarketing.ObjectId = inPartnerId 
+                                     AND ObjectLink_Retail_PersonalMarketing.DescId = zc_ObjectLink_Retail_PersonalMarketing());
+    ELSIF (SELECT DescId FROM OBJECT WHERE Id = inPartnerId) = zc_Object_Juridical()
+    THEN
+        outPersonalMarketingId := (SELECT ObjectLink_Retail_PersonalMarketing.ChildObjectId 
+                                  FROM ObjectLink AS ObjectLink_Juridical_Retail
+                                      INNER JOIN ObjectLink AS ObjectLink_Retail_PersonalMarketing 
+                                                            ON ObjectLink_Retail_PersonalMarketing.ObjectId = ObjectLink_Juridical_Retail.ChildObjectId
+                                                           AND ObjectLink_Retail_PersonalMarketing.DescId = zc_ObjectLink_Retail_PersonalMarketing() 
+                                   Where ObjectLink_Juridical_Retail.ObjectId = inPartnerId 
+                                     AND ObjectLink_Juridical_Retail.DescId = zc_ObjectLink_Juridical_Retail());
+    ELSIF (SELECT DescId FROM OBJECT WHERE Id = inPartnerId) = zc_Object_Partner()
+    THEN
+        outPersonalMarketingId := (SELECT ObjectLink_Retail_PersonalMarketing.ChildObjectId 
+                                  FROM ObjectLink AS ObjectLink_Partner_Juridical
+                                      INNER JOIN ObjectLink AS ObjectLink_Juridical_Retail
+                                                            ON ObjectLink_Juridical_Retail.ObjectId = ObjectLink_Partner_Juridical.ChildObjectId
+                                                           AND ObjectLink_Juridical_Retail.DescId = zc_ObjectLink_Juridical_Retail()
+                                      INNER JOIN ObjectLink AS ObjectLink_Retail_PersonalMarketing 
+                                                            ON ObjectLink_Retail_PersonalMarketing.ObjectId = ObjectLink_Juridical_Retail.ChildObjectId
+                                                           AND ObjectLink_Retail_PersonalMarketing.DescId = zc_ObjectLink_Retail_PersonalMarketing() 
+                                   Where ObjectLink_Partner_Juridical.ObjectId = inPartnerId 
+                                     AND ObjectLink_Partner_Juridical.DescId = zc_ObjectLink_Partner_Juridical());
+    END IF;
+    if COALESCE(outPersonalMarketingId,0) <> 0
+    THEN
+        PERFORM lpInsertUpdate_MovementLinkObject(zc_MovementLinkObject_Personal(), inParentId, outPersonalMarketingId);
+    END IF;
+    --а теперь контролируем, нет ли партнера, у которого прайслист не базовый и не равен прайслисту в документе
+    SELECT
+        Movement_Promo.PriceListId
+       ,Movement_Promo.PriceListName
+       ,Movement_Promo.PersonalId
+       ,Movement_Promo.PersonalName
+    INTO
+        outPriceListId
+       ,outPriceListName
+       ,outPersonalMarketingId
+       ,outPersonalMarketingName
+    FROM
+        Movement_Promo_View AS Movement_Promo
+    WHERE
+        Movement_Promo.Id = inParentId;
+    
+    IF EXISTS(SELECT 1 
+              FROM
+                  Movement_PromoPartner_View AS Movement_PromoPartner
+                  LEFT OUTER JOIN(
+                                    SELECT
+                                        PartnerId
+                                    FROM 
+                                        lpGet_Movement_PromoPriceList(inMovementId := inParentId, inUserId := vbUserId) AS Movement_PromoPriceList
+                                    WHERE
+                                        Movement_PromoPriceList.PriceListId in (zc_PriceList_Basis(),outPriceListId)
+                                 ) AS Movement_PromoPriceList
+                                   ON Movement_PromoPartner.PartnerId = Movement_PromoPriceList.PartnerId
+              WHERE
+                  Movement_PromoPartner.ParentId = inParentId
+                  AND
+                  Movement_PromoPartner.isErased = FALSE
+                  AND
+                  Movement_PromoPriceList.PartnerId is null
+             )
+    THEN
+        RAISE EXCEPTION 'Ошибка. В документе есть партнер с прайслистом не равным установленному в акции.';
+    END IF;
+    
     -- сохранили связь с <Контракт>
     PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_Contract(), ioId, inContractId);
     -- сохранили <Примечание>
     PERFORM lpInsertUpdate_MovementString (zc_MovementString_Comment(), ioId, inComment);
-    
+    --Вернули установленный прайс 
+    SELECT
+        Movement_Promo.PriceListId
+       ,Movement_Promo.PriceListName
+    INTO
+        outPriceListId
+       ,outPriceListName
+    FROM
+        Movement_Promo_View AS Movement_Promo
+    WHERE
+        Movement_Promo.Id = inParentId;    
     -- сохранили протокол
     PERFORM lpInsert_MovementProtocol (ioId, vbUserId, vbIsInsert);
 

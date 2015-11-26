@@ -231,6 +231,55 @@ inherited PromoJournalForm: TPromoJournalForm
       ReportNameParam.Value = #1040#1082#1094#1080#1103
       ReportNameParam.DataType = ftString
     end
+    object mactUpdate_Movement_Promo_Data: TMultiAction
+      Category = 'Update_Promo_Data'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = dsdDataSetRefresh1
+        end
+        item
+          Action = actUpdate_Movement_Promo_Data
+        end>
+      View = cxGridDBTableView
+      Caption = #1056#1072#1089#1095#1077#1090' '#1076#1072#1085#1085#1099#1093' '#1087#1086' '#1074#1089#1077#1084' '#1072#1082#1094#1080#1103#1084
+      Hint = #1056#1072#1089#1095#1077#1090' '#1076#1072#1085#1085#1099#1093' '#1087#1086' '#1074#1089#1077#1084' '#1072#1082#1094#1080#1103#1084
+      ImageIndex = 45
+    end
+    object actUpdate_Movement_Promo_Data: TdsdExecStoredProc
+      Category = 'Update_Promo_Data'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdate_Movement_Promo_Data
+      StoredProcList = <
+        item
+          StoredProc = spUpdate_Movement_Promo_Data
+        end>
+      Caption = #1056#1072#1089#1095#1077#1090' '#1076#1072#1085#1085#1099#1093' '#1087#1086' '#1072#1082#1094#1080#1080
+      Hint = #1056#1072#1089#1095#1077#1090' '#1076#1072#1085#1085#1099#1093' '#1087#1086' '#1072#1082#1094#1080#1080
+      ImageIndex = 45
+    end
+    object dsdDataSetRefresh1: TdsdDataSetRefresh
+      Category = 'Update_Promo_Data'
+      MoveParams = <
+        item
+          FromParam.Value = Null
+          FromParam.Component = MasterCDS
+          FromParam.ComponentItem = 'isFirst'
+          FromParam.DataType = ftBoolean
+          ToParam.Value = Null
+          ToParam.Component = actUpdate_Movement_Promo_Data
+          ToParam.ComponentItem = 'Enabled'
+          ToParam.DataType = ftBoolean
+        end>
+      PostDataSetBeforeExecute = False
+      StoredProcList = <>
+      Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
+      Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
+      ShortCut = 116
+      RefreshOnTabSetChanges = False
+      DataSet = MasterCDS
+    end
   end
   inherited spSelect: TdsdStoredProc
     StoredProcName = 'gpSelect_Movement_Promo'
@@ -253,6 +302,10 @@ inherited PromoJournalForm: TPromoJournalForm
         end
         item
           BeginGroup = True
+          Visible = True
+          ItemName = 'dxBarButton2'
+        end
+        item
           Visible = True
           ItemName = 'dxBarStatic'
         end
@@ -318,6 +371,10 @@ inherited PromoJournalForm: TPromoJournalForm
       Action = actPrint
       Category = 0
     end
+    object dxBarButton2: TdxBarButton
+      Action = actUpdate_Movement_Promo_Data
+      Category = 0
+    end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
     Left = 208
@@ -325,6 +382,12 @@ inherited PromoJournalForm: TPromoJournalForm
   inherited PopupMenu: TPopupMenu
     Left = 200
     Top = 320
+    object N14: TMenuItem [11]
+      Caption = '-'
+    end
+    object N13: TMenuItem [12]
+      Action = mactUpdate_Movement_Promo_Data
+    end
   end
   inherited spMovementComplete: TdsdStoredProc
     StoredProcName = 'gpComplete_Movement_Promo'
@@ -375,5 +438,21 @@ inherited PromoJournalForm: TPromoJournalForm
     Params = <>
     Left = 456
     Top = 136
+  end
+  object spUpdate_Movement_Promo_Data: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Movement_Promo_Data'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+      end>
+    PackSize = 1
+    Left = 368
+    Top = 192
   end
 end
