@@ -19,6 +19,25 @@ Integer    , -- Ключ объекта <Документ продажи>
     Integer    , -- Ответственный представитель коммерческого отдела
     Integer    , -- Ответственный представитель маркетингового отдела	
     Integer );  -- пользователь
+DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_Promo (
+Integer    , -- Ключ объекта <Документ продажи>
+    TVarChar   , -- Номер документа
+    TDateTime  , -- Дата документа
+    Integer    , -- Вид акции
+    Integer    , -- Прайс лист
+    TDateTime  , -- Дата начала акции
+    TDateTime  , -- Дата окончания акции
+    TDateTime  , -- Дата начала отгрузки по акционной цене
+    TDateTime  , -- Дата окончания отгрузки по акционной цене
+    TDateTime  , -- Дата начала расч. продаж до акции
+    TDateTime  , -- Дата окончания расч. продаж до акции
+    TFloat     , -- Стоимость участия в акции
+    TVarChar   , -- Примечание
+    TVarChar   , -- Примечание (Общее)
+    Integer    , -- Подразделение
+    Integer    , -- Ответственный представитель коммерческого отдела
+    Integer    , -- Ответственный представитель маркетингового отдела	
+    Integer );  -- пользователь
     
 CREATE OR REPLACE FUNCTION lpInsertUpdate_Movement_Promo(
  INOUT ioId                    Integer    , -- Ключ объекта <Документ продажи>
@@ -34,7 +53,7 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_Movement_Promo(
     IN inOperDateEnd           TDateTime  , -- Дата окончания расч. продаж до акции
     IN inCostPromo             TFloat     , -- Стоимость участия в акции
     IN inComment               TVarChar   , -- Примечание
-    IN inAdvertisingId         Integer    , -- Рекламная поддержка
+    IN inCommentMain           TVarChar   , -- Примечание (Общее)
     IN inUnitId                Integer    , -- Подразделение
     IN inPersonalTradeId       Integer    , -- Ответственный представитель коммерческого отдела
     IN inPersonalId            Integer    , -- Ответственный представитель маркетингового отдела
@@ -79,8 +98,8 @@ BEGIN
     PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_CostPromo(), ioId, inCostPromo);
     -- Примечание
     PERFORM lpInsertUpdate_MovementString (zc_MovementString_Comment(), ioId, inComment);
-    -- Рекламная поддержка
-    PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_Advertising(), ioId, inAdvertisingId);
+    -- Примечание (Общее)
+    PERFORM lpInsertUpdate_MovementString (zc_MovementString_CommentMain(), ioId, inCommentMain);
     -- Подразделение
     PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_Unit(), ioId, inUnitId);
     -- Ответственный представитель коммерческого отдела

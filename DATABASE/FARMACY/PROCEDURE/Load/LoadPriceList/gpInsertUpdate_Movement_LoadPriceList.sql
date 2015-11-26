@@ -120,7 +120,8 @@ BEGIN
        WHERE Object_Goods_View.ObjectId = inJuridicalId AND GoodsCode = inGoodsCode;
    END IF;
 
-   IF inExpirationDate = CURRENT_DATE THEN 
+   IF (inExpirationDate is null) or
+      (inExpirationDate = CURRENT_DATE) THEN 
       inExpirationDate := zc_DateEnd();
    END IF;	
 

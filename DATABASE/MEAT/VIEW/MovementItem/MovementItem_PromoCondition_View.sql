@@ -8,10 +8,14 @@ CREATE OR REPLACE VIEW MovementItem_PromoCondition_View AS
       , Object_ConditionPromo.ObjectCode   AS ConditionPromoCode  -- Код объекта <Условие участия в акции>
       , Object_ConditionPromo.ValueData    AS ConditionPromoName  -- Наименование объекта <Условие участия в акции>
       , MovementItem.Amount                AS Amount              -- Значение (% скидки / % компенсации)
+      , MIString_Comment.ValueData         AS Comment             -- Примечание
       , MovementItem.isErased              AS isErased            -- Удален
     FROM  MovementItem
         LEFT JOIN Object AS Object_ConditionPromo
                          ON Object_ConditionPromo.Id = MovementItem.ObjectId
+        LEFT OUTER JOIN MovementItemString AS MIString_Comment
+                                           ON MIString_Comment.MovementItemId = MovementItem.ID
+                                          AND MIString_Comment.DescId = zc_MIString_Comment()
         
     WHERE 
         MovementItem.DescId = zc_MI_Child();

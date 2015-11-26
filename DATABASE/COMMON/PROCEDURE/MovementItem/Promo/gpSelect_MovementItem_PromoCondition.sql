@@ -14,6 +14,7 @@ RETURNS TABLE (
       , ConditionPromoCode Integer  --код объекта  <Условие участия в акции>
       , ConditionPromoName TVarChar --наименование объекта <Условие участия в акции>
       , Amount             TFloat   --Значение
+      , Comment            TVarChar --Комментарий
       , isErased           Boolean  --удален
 )
 AS
@@ -32,6 +33,7 @@ BEGIN
           , MI_PromoCondition.ConditionPromoCode --код объекта  <товар>
           , MI_PromoCondition.ConditionPromoName --наименование объекта <товар>
           , MI_PromoCondition.Amount             --% скидки на товар
+          , MI_PromoCondition.Comment            --Комментарий
           , MI_PromoCondition.isErased           --удален
         FROM
             MovementItem_PromoCondition_View AS MI_PromoCondition
@@ -52,5 +54,6 @@ ALTER FUNCTION gpSelect_MovementItem_PromoCondition (Integer, Boolean, TVarChar)
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.    Воробкало А.А.
+ 25.11.15                                                          * Comment
  05.11.15                                                          *
 */

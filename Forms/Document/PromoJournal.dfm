@@ -75,13 +75,6 @@ inherited PromoJournalForm: TPromoJournalForm
             HeaderAlignmentVert = vaCenter
             Width = 74
           end
-          object colAdvertisingName: TcxGridDBColumn
-            Caption = #1056#1077#1082#1083#1072#1084#1085#1072#1103' '#1087#1086#1076#1076#1077#1088#1078#1082#1072
-            DataBinding.FieldName = 'AdvertisingName'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 110
-          end
           object colUnitName: TcxGridDBColumn
             Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
             DataBinding.FieldName = 'UnitName'
@@ -146,6 +139,14 @@ inherited PromoJournalForm: TPromoJournalForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 97
+          end
+          object colCommentMain: TcxGridDBColumn
+            Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077' ('#1086#1073#1097#1077#1077')'
+            DataBinding.FieldName = 'CommentMain'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 132
           end
         end
       end
