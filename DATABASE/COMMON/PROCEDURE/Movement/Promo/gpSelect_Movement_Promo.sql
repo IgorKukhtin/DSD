@@ -36,6 +36,7 @@ RETURNS TABLE (Id               Integer     --Идентификатор
              , PartnerDescName  TVarChar     --тип Партнера
              , ContractName     TVarChar     --№ договора
              , ContractTagName  TVarChar     --признак договора
+             , isFirst          Boolean      --Первый документ в группе (для автопересчета данных)
               )
 
 AS
@@ -76,6 +77,11 @@ BEGIN
           , Movement_PromoPartner.PartnerDescName --Тип партнера
           , Movement_PromoPartner.ContractName --Название контракта
           , Movement_PromoPartner.ContractTagName --признак договора 
+          , CASE
+                WHEN (ROW_NUMBER() OVER(PARTITION BY Movement_Promo.Id ORDER BY Movement_PromoPartner.Id)) = 1
+                    THEN TRUE
+            ELSE FALSE
+            END as IsFirst
         FROM
             Movement_Promo_View AS Movement_Promo
             INNER JOIN tmpStatus ON Movement_Promo.StatusId = tmpStatus.StatusId

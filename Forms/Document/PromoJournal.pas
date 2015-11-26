@@ -37,6 +37,13 @@ type
     colContractName: TcxGridDBColumn;
     colContractTagName: TcxGridDBColumn;
     colCommentMain: TcxGridDBColumn;
+    spUpdate_Movement_Promo_Data: TdsdStoredProc;
+    mactUpdate_Movement_Promo_Data: TMultiAction;
+    actUpdate_Movement_Promo_Data: TdsdExecStoredProc;
+    dxBarButton2: TdxBarButton;
+    N13: TMenuItem;
+    N14: TMenuItem;
+    dsdDataSetRefresh1: TdsdDataSetRefresh;
   private
     { Private declarations }
   public
