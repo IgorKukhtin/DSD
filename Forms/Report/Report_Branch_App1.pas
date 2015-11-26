@@ -49,6 +49,9 @@ type
     SummInventory_RePrice: TcxGridDBColumn;
     Sale_10500_Summ: TcxGridDBColumn;
     Sale_10500_Weight: TcxGridDBColumn;
+    SaleRealSumm: TcxGridDBColumn;
+    Sale_10200_Summ: TcxGridDBColumn;
+    Sale_10300_Summ: TcxGridDBColumn;
   private
     { Private declarations }
   public
