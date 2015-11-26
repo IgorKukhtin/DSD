@@ -1,6 +1,7 @@
 -- Function: gpInsertUpdate_ObjectHistory_JuridicalDetails ()
 
 DROP FUNCTION IF EXISTS gpInsertUpdate_ObjectHistory_JuridicalDetails (Integer, Integer, TDateTime, Integer, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_ObjectHistory_JuridicalDetails (Integer, Integer, TDateTime, Integer, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_ObjectHistory_JuridicalDetails(
  INOUT ioId                     Integer,    -- ключ объекта <Элемент истории реквизитов юр. лиц>
@@ -13,6 +14,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_ObjectHistory_JuridicalDetails(
     IN inINN	                TVarChar,   -- ИНН
     IN inNumberVAT	        TVarChar,   -- Номер свидетельства плательщика НДС
     IN inAccounterName	        TVarChar,   -- ФИО бухг.
+    IN inMainName	        TVarChar,   -- ФИО директора
     IN inBankAccount	        TVarChar,   -- р.счет
     IN inPhone      	        TVarChar,   -- телефон
     IN inSession                TVarChar    -- сессия пользователя
@@ -88,6 +90,8 @@ BEGIN
    PERFORM lpInsertUpdate_ObjectHistoryString(zc_ObjectHistoryString_JuridicalDetails_NumberVAT(), ioId, inNumberVAT);
    -- ФИО бухг.
    PERFORM lpInsertUpdate_ObjectHistoryString(zc_ObjectHistoryString_JuridicalDetails_AccounterName(), ioId, inAccounterName);
+   -- ФИО директора
+   PERFORM lpInsertUpdate_ObjectHistoryString(zc_ObjectHistoryString_JuridicalDetails_MainName(), ioId, inMainName);
    -- р.счет
    PERFORM lpInsertUpdate_ObjectHistoryString(zc_ObjectHistoryString_JuridicalDetails_BankAccount(), ioId, inBankAccount);
    -- телефон
@@ -104,6 +108,7 @@ END;$BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 26.11.15         * add MainName
  03.08.14                                        * add кроме "виртуальных"
  12.02.14                                                       * add phone
  06.01.14                                        * add проверка уникальность  <Юр. лицо полное наименование>

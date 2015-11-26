@@ -2,7 +2,7 @@ DROP FUNCTION IF EXISTS zfConvert_FIO ( TVarChar, Tfloat);
 
 CREATE OR REPLACE FUNCTION zfConvert_FIO(
      TextFIO      TVarChar,    -- сесси€ пользовател€
-     ParamFIO        Tfloat
+     ParamFIO     Tfloat
 )
 RETURNS  TVarChar AS
 $BODY$
@@ -11,16 +11,22 @@ $BODY$
 BEGIN
      
       vb1 :=  position(' ' in TextFIO);
+
       vb2 :=  vb1 + position(' ' in (substring( TextFIO from vb1+1 for char_length(TextFIO) ) ));
 
- 
-  IF ParamFIO = 1    -- сначала инициалы потом фамили€
+ IF (vb1 = 0 )
+ THEN 
+  RETURN
+      substring( TextFIO from 1 for char_length(TextFIO) ) :: TVarChar ;
+  END IF;
+
+  IF (ParamFIO = 1) and (vb1 <> 0)    -- сначала инициалы потом фамили€
   THEN
    RETURN
       substring( TextFIO from vb1+1 for 1) || '.' || substring( TextFIO from vb2+1 for 1) || '. ' || substring( TextFIO from 1 for vb1-1) :: TVarChar ;
       
   END IF;
-  IF ParamFIO = 2    -- сначала фамили€ потом инициалы 
+  IF (ParamFIO = 2) and (vb1 <> 0)    -- сначала фамили€ потом инициалы 
   THEN
    RETURN
       substring( TextFIO from 1 for vb1-1)|| ' ' || substring( TextFIO from vb1+1 for 1) || '.' || substring( TextFIO from vb2+1 for 1) || '. '   :: TVarChar ;
@@ -39,4 +45,4 @@ $BODY$
  05.11.15         *
 */
 -- “ест
---     SELECT zfConvert_FIO('‘елонюк »нна ¬ладимировна')
+ -- SELECT zfConvert_FIO('‘елонюк»нна¬ладимировна', 2)

@@ -247,7 +247,6 @@ inherited PromoForm: TPromoForm
           HotZoneClassName = 'TcxMediaPlayer8Style'
           AlignSplitter = salRight
           Control = cxPageControl2
-          ExplicitLeft = 667
         end
         object cxPageControl1: TcxPageControl
           Left = 1
@@ -1374,6 +1373,31 @@ inherited PromoForm: TPromoForm
       Caption = 'actUpdateMainDS'
       DataSource = AdvertisingDS
     end
+    object actUpdate_Movement_Promo_Data: TdsdExecStoredProc
+      Category = 'Update_Promo_Data'
+      MoveParams = <>
+      StoredProc = spUpdate_Movement_Promo_Data
+      StoredProcList = <
+        item
+          StoredProc = spUpdate_Movement_Promo_Data
+        end>
+      Caption = #1056#1072#1089#1095#1077#1090' '#1076#1072#1085#1085#1099#1093' '#1087#1086' '#1072#1082#1094#1080#1080
+      Hint = #1056#1072#1089#1095#1077#1090' '#1076#1072#1085#1085#1099#1093' '#1087#1086' '#1072#1082#1094#1080#1080
+    end
+    object mactUpdate_Movement_Promo_Data: TMultiAction
+      Category = 'Update_Promo_Data'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actUpdate_Movement_Promo_Data
+        end
+        item
+          Action = actRefresh
+        end>
+      Caption = #1056#1072#1089#1095#1077#1090' '#1076#1072#1085#1085#1099#1093' '#1087#1086' '#1072#1082#1094#1080#1080
+      Hint = #1056#1072#1089#1095#1077#1090' '#1076#1072#1085#1085#1099#1093' '#1087#1086' '#1072#1082#1094#1080#1080
+      ImageIndex = 45
+    end
   end
   inherited MasterDS: TDataSource
     Top = 272
@@ -1424,6 +1448,10 @@ inherited PromoForm: TPromoForm
         end
         item
           BeginGroup = True
+          Visible = True
+          ItemName = 'dxBarButton11'
+        end
+        item
           Visible = True
           ItemName = 'dxBarStatic'
         end
@@ -1564,6 +1592,10 @@ inherited PromoForm: TPromoForm
     end
     object dxBarButton10: TdxBarButton
       Action = ErasedAdvertising
+      Category = 0
+    end
+    object dxBarButton11: TdxBarButton
+      Action = mactUpdate_Movement_Promo_Data
       Category = 0
     end
   end
@@ -2220,10 +2252,10 @@ inherited PromoForm: TPromoForm
   object UnitGuides: TdsdGuides
     KeyField = 'Id'
     LookupControl = edUnit
-    FormNameParam.Value = 'TUnitForm'
+    FormNameParam.Value = 'TUnit_ObjectForm'
     FormNameParam.DataType = ftString
-    FormName = 'TUnitForm'
-    PositionDataSet = 'ClientDataSet'
+    FormName = 'TUnit_ObjectForm'
+    PositionDataSet = 'MasterCDS'
     Params = <
       item
         Name = 'Key'
@@ -2367,6 +2399,32 @@ inherited PromoForm: TPromoForm
         ComponentItem = 'Comment'
         DataType = ftString
         ParamType = ptInput
+      end
+      item
+        Name = 'outPriceListId'
+        Value = Null
+        Component = PriceListGuides
+        ComponentItem = 'Key'
+      end
+      item
+        Name = 'outPriceListName'
+        Value = Null
+        Component = PriceListGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+      end
+      item
+        Name = 'outPersonalMarketingId'
+        Value = Null
+        Component = PersonalGuides
+        ComponentItem = 'Key'
+      end
+      item
+        Name = 'outPersonalMarketingName'
+        Value = Null
+        Component = PersonalGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
       end>
     PackSize = 1
     Left = 536
@@ -2767,5 +2825,21 @@ inherited PromoForm: TPromoForm
     PackSize = 1
     Left = 504
     Top = 504
+  end
+  object spUpdate_Movement_Promo_Data: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Movement_Promo_Data'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+      end>
+    PackSize = 1
+    Left = 112
+    Top = 168
   end
 end

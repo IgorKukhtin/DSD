@@ -14,6 +14,7 @@ CREATE OR REPLACE VIEW ObjectHistory_JuridicalDetails_ViewByDate AS
        , CAST (REPEAT (' ', 12 - LENGTH (ObjectHistoryString_INN.ValueData)) || ObjectHistoryString_INN.ValueData AS TVarChar) AS INN
        , ObjectHistoryString_NumberVAT.ValueData        AS NumberVAT
        , ObjectHistoryString_AccounterName.ValueData    AS AccounterName
+       , ObjectHistoryString_MainName.ValueData         AS MainName
        , ObjectHistoryString_BankAccount.ValueData      AS BankAccount
        , Object_Bank.Id                                 AS BankId
        , Object_Bank.valuedata                          AS BankName
@@ -40,6 +41,9 @@ CREATE OR REPLACE VIEW ObjectHistory_JuridicalDetails_ViewByDate AS
   LEFT JOIN ObjectHistoryString AS ObjectHistoryString_AccounterName
                                 ON ObjectHistoryString_AccounterName.ObjectHistoryId = ObjectHistory_JuridicalDetails.Id
                                AND ObjectHistoryString_AccounterName.DescId = zc_ObjectHistoryString_JuridicalDetails_AccounterName()
+  LEFT JOIN ObjectHistoryString AS ObjectHistoryString_MainName
+                                ON ObjectHistoryString_MainName.ObjectHistoryId = ObjectHistory_JuridicalDetails.Id
+                               AND ObjectHistoryString_MainName.DescId = zc_ObjectHistoryString_JuridicalDetails_MainName()
   LEFT JOIN ObjectHistoryString AS ObjectHistoryString_BankAccount
                                 ON ObjectHistoryString_BankAccount.ObjectHistoryId = ObjectHistory_JuridicalDetails.Id
                                AND ObjectHistoryString_BankAccount.DescId = zc_ObjectHistoryString_JuridicalDetails_BankAccount()
@@ -66,6 +70,7 @@ ALTER TABLE ObjectHistory_JuridicalDetails_ViewByDate  OWNER TO postgres;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 26.11.15         * add MainName
  14.04.14                                                       *  -- выравнивание пробелами INN для печати
  12.02.14                                                       *  + phone
  07.02.14                                                       *  + bank

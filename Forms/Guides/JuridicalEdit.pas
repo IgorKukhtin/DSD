@@ -131,6 +131,8 @@ type
     cbisTaxSummary: TcxCheckBox;
     edDayTaxSummary: TcxCurrencyEdit;
     cxLabel21: TcxLabel;
+    cxLabel22: TcxLabel;
+    edMainName: TcxDBTextEdit;
   private
     { Private declarations }
   public

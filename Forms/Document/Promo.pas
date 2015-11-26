@@ -187,6 +187,10 @@ type
     colAmountIn: TcxGridDBColumn;
     colAmountInWeight: TcxGridDBColumn;
     colp_Area: TcxGridDBColumn;
+    spUpdate_Movement_Promo_Data: TdsdStoredProc;
+    actUpdate_Movement_Promo_Data: TdsdExecStoredProc;
+    mactUpdate_Movement_Promo_Data: TMultiAction;
+    dxBarButton11: TdxBarButton;
   private
     { Private declarations }
   public

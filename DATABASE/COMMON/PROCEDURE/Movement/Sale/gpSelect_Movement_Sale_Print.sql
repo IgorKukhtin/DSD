@@ -328,10 +328,13 @@ BEGIN
            , OH_JuridicalDetails_To.INN                 AS INN_To
            , OH_JuridicalDetails_To.NumberVAT           AS NumberVAT_To
            , OH_JuridicalDetails_To.AccounterName       AS AccounterName_To
+           , OH_JuridicalDetails_To.MainName            AS MainName_To
            , OH_JuridicalDetails_To.BankAccount         AS BankAccount_To
            , OH_JuridicalDetails_To.BankName            AS BankName_To
            , OH_JuridicalDetails_To.MFO                 AS BankMFO_To
            , OH_JuridicalDetails_To.Phone               AS Phone_To
+
+           , zfConvert_FIO(Object_PersonalCollation.ValueData,2)         AS PersonalCollationName
            --, CASE WHEN ObjectLink_Juridical_Retail.ChildObjectId = 310855 /*¬‡ÛÒ*/ THEN ObjectString_Partner_GLNCode.ValueData ELSE ObjectString_Juridical_GLNCode.ValueData END AS BuyerGLNCode
            --, ObjectString_Partner_GLNCode.ValueData AS DeliveryPlaceGLNCode
            --, ObjectString_Partner_GLNCode.ValueData AS RecipientGLNCode
@@ -373,6 +376,7 @@ BEGIN
            , OH_JuridicalDetails_From.INN               AS INN_From
            , OH_JuridicalDetails_From.NumberVAT         AS NumberVAT_From
            , OH_JuridicalDetails_From.AccounterName     AS AccounterName_From
+           , zfConvert_FIO(OH_JuridicalDetails_From.MainName,2)          AS MainName_From
            , OH_JuridicalDetails_From.BankAccount       AS BankAccount_From
            , OH_JuridicalDetails_From.BankName          AS BankName_From
            , OH_JuridicalDetails_From.MFO               AS BankMFO_From
@@ -514,7 +518,11 @@ BEGIN
                                  ON ObjectLink_Contract_JuridicalDocument.ObjectId = View_Contract.ContractId -- MovementLinkObject_Contract.ObjectId
                                 AND ObjectLink_Contract_JuridicalDocument.DescId = zc_ObjectLink_Contract_JuridicalDocument()
                                 AND vbPaidKindId = zc_Enum_PaidKind_SecondForm()
-
+            LEFT JOIN ObjectLink AS ObjectLink_Contract_PersonalCollation
+                                 ON ObjectLink_Contract_PersonalCollation.ObjectId = View_Contract.ContractId
+                                AND ObjectLink_Contract_PersonalCollation.DescId = zc_ObjectLink_Contract_PersonalCollation()
+            LEFT JOIN Object AS Object_PersonalCollation ON Object_PersonalCollation.Id = ObjectLink_Contract_PersonalCollation.ChildObjectId
+                                
             LEFT JOIN MovementLinkObject AS MovementLinkObject_RouteSorting
                                          ON MovementLinkObject_RouteSorting.MovementId = Movement.Id
                                         AND MovementLinkObject_RouteSorting.DescId = zc_MovementLinkObject_RouteSorting()
@@ -956,6 +964,7 @@ ALTER FUNCTION gpSelect_Movement_Sale_Print (Integer,TVarChar) OWNER TO postgres
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».   Ã‡Ì¸ÍÓ ƒ.¿.
+ 26.11.15         *
  17.09.15         * 
  13.11.14                                                       * fix
  12.11.14                                        * add AmountOrder

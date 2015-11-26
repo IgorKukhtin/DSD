@@ -133,12 +133,12 @@ inherited Report_Branch_App1Form: TReport_Branch_App1Form
             item
               Format = ',0.####'
               Kind = skSum
-              Column = ChangeAmountSumm
+              Column = Sale_40208_Summ
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = ChangeAmountWeight
+              Column = Sale_40208_Weight
             end
             item
               Format = ',0.####'
@@ -163,7 +163,17 @@ inherited Report_Branch_App1Form: TReport_Branch_App1Form
             item
               Format = ',0.####'
               Kind = skSum
-              Column = PriceSumm
+              Column = SummInventory_RePrice
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Sale_10500_Weight
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Sale_10500_Summ
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -271,12 +281,12 @@ inherited Report_Branch_App1Form: TReport_Branch_App1Form
             item
               Format = ',0.####'
               Kind = skSum
-              Column = ChangeAmountSumm
+              Column = Sale_40208_Summ
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = ChangeAmountWeight
+              Column = Sale_40208_Weight
             end
             item
               Format = ',0.####'
@@ -301,7 +311,17 @@ inherited Report_Branch_App1Form: TReport_Branch_App1Form
             item
               Format = ',0.####'
               Kind = skSum
-              Column = PriceSumm
+              Column = SummInventory_RePrice
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Sale_10500_Weight
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Sale_10500_Summ
             end>
           OptionsData.CancelOnExit = True
           OptionsData.Deleting = False
@@ -329,7 +349,7 @@ inherited Report_Branch_App1Form: TReport_Branch_App1Form
             Width = 87
           end
           object WeightStart: TcxGridDBColumn
-            Caption = #1053#1072#1095'.'#1086#1089#1090'. '#1085#1072' '#1089#1082#1083#1072#1076#1077' ('#1082#1075')'
+            Caption = #1053#1072#1095'.'#1086#1089#1090'. '#1085#1072' '#1089#1082#1083#1072#1076#1077' ('#1074#1077#1089')'
             DataBinding.FieldName = 'WeightStart'
             Visible = False
             HeaderAlignmentHorz = taCenter
@@ -346,7 +366,7 @@ inherited Report_Branch_App1Form: TReport_Branch_App1Form
             Width = 70
           end
           object WeightEnd: TcxGridDBColumn
-            Caption = #1050#1086#1085'.'#1086#1089#1090'. '#1085#1072' '#1089#1082#1083#1072#1076#1077' ('#1082#1075')'
+            Caption = #1050#1086#1085'.'#1086#1089#1090'. '#1085#1072' '#1089#1082#1083#1072#1076#1077' ('#1074#1077#1089')'
             DataBinding.FieldName = 'WeightEnd'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
@@ -362,7 +382,7 @@ inherited Report_Branch_App1Form: TReport_Branch_App1Form
             Width = 60
           end
           object SendOnPriceInWeight: TcxGridDBColumn
-            Caption = #1055#1088#1080#1093#1086#1076' ('#1082#1075')'
+            Caption = #1055#1088#1080#1093#1086#1076' ('#1074#1077#1089')'
             DataBinding.FieldName = 'SendOnPriceInWeight'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
@@ -378,7 +398,7 @@ inherited Report_Branch_App1Form: TReport_Branch_App1Form
             Width = 60
           end
           object ReturnInWeight: TcxGridDBColumn
-            Caption = #1042#1086#1079#1074#1088#1072#1090' ('#1082#1075')'
+            Caption = #1042#1086#1079#1074#1088#1072#1090' ('#1074#1077#1089')'
             DataBinding.FieldName = 'ReturnInWeight'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
@@ -394,7 +414,7 @@ inherited Report_Branch_App1Form: TReport_Branch_App1Form
             Width = 60
           end
           object PeresortWeight: TcxGridDBColumn
-            Caption = #1055#1077#1088#1077#1089#1086#1088#1090#1080#1094#1072' ('#1082#1075')'
+            Caption = #1055#1077#1088#1077#1089#1086#1088#1090#1080#1094#1072' ('#1074#1077#1089')'
             DataBinding.FieldName = 'PeresortWeight'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
@@ -410,7 +430,7 @@ inherited Report_Branch_App1Form: TReport_Branch_App1Form
             Width = 60
           end
           object SaleWeight: TcxGridDBColumn
-            Caption = #1055#1088#1086#1076#1072#1078#1072' ('#1082#1075')'
+            Caption = #1055#1088#1086#1076#1072#1078#1072' ('#1074#1077#1089')'
             DataBinding.FieldName = 'SaleWeight'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
@@ -426,24 +446,40 @@ inherited Report_Branch_App1Form: TReport_Branch_App1Form
             Width = 60
           end
           object SendOnPriceOutWeight: TcxGridDBColumn
-            Caption = #1056#1072#1089#1093#1086#1076' '#1087#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077' ('#1082#1075')'
+            Caption = #1056#1072#1089#1093#1086#1076' '#1087#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077' ('#1074#1077#1089')'
             DataBinding.FieldName = 'SendOnPriceOutWeight'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 60
           end
-          object ChangeAmountSumm: TcxGridDBColumn
+          object Sale_40208_Summ: TcxGridDBColumn
+            Caption = '(-)'#1055#1086#1090#1077#1088#1080' (+)'#1069#1082#1086#1085#1086#1084' ('#1087#1088#1080' '#1087#1088#1086#1076'.)'
+            DataBinding.FieldName = 'Sale_40208_Summ'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 66
+          end
+          object Sale_40208_Weight: TcxGridDBColumn
+            Caption = '(-)'#1055#1086#1090#1077#1088#1080' (+)'#1069#1082#1086#1085#1086#1084' '#1074#1077#1089' ('#1087#1088#1080' '#1087#1088#1086#1076'.)'
+            DataBinding.FieldName = 'Sale_40208_Weight'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 73
+          end
+          object Sale_10500_Summ: TcxGridDBColumn
             Caption = #1056#1077#1072#1083#1080#1079#1072#1094#1080#1103' '#1089#1082#1080#1076#1082#1072' 1% ('#1075#1088#1085')'
-            DataBinding.FieldName = 'ChangeAmountSumm'
+            DataBinding.FieldName = 'Sale_10500_Summ'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 60
           end
-          object ChangeAmountWeight: TcxGridDBColumn
-            Caption = #1056#1077#1072#1083#1080#1079#1072#1094#1080#1103' '#1089#1082#1080#1076#1082#1072' 1% ('#1082#1075')'
-            DataBinding.FieldName = 'ChangeAmountWeight'
+          object Sale_10500_Weight: TcxGridDBColumn
+            Caption = #1056#1077#1072#1083#1080#1079#1072#1094#1080#1103' '#1089#1082#1080#1076#1082#1072' 1% ('#1074#1077#1089')'
+            DataBinding.FieldName = 'Sale_10500_Weight'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
@@ -458,7 +494,7 @@ inherited Report_Branch_App1Form: TReport_Branch_App1Form
             Width = 60
           end
           object LossWeight: TcxGridDBColumn
-            Caption = #1057#1087#1080#1089#1072#1085#1080#1077' ('#1082#1075')'
+            Caption = #1057#1087#1080#1089#1072#1085#1080#1077' ('#1074#1077#1089')'
             DataBinding.FieldName = 'LossWeight'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
@@ -474,16 +510,16 @@ inherited Report_Branch_App1Form: TReport_Branch_App1Form
             Width = 60
           end
           object InventoryWeight: TcxGridDBColumn
-            Caption = #1048#1085#1074#1077#1085#1090#1072#1088#1080#1079#1072#1094#1080#1103' ('#1082#1075')'
+            Caption = #1048#1085#1074#1077#1085#1090#1072#1088#1080#1079#1072#1094#1080#1103' ('#1074#1077#1089')'
             DataBinding.FieldName = 'InventoryWeight'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 60
           end
-          object PriceSumm: TcxGridDBColumn
+          object SummInventory_RePrice: TcxGridDBColumn
             Caption = #1055#1077#1088#1077#1086#1094#1077#1085#1082#1072' ('#1075#1088#1085')'
-            DataBinding.FieldName = 'PriceSumm'
+            DataBinding.FieldName = 'SummInventory_RePrice'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
