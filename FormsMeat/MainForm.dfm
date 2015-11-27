@@ -3514,6 +3514,16 @@ inherited MainForm: TMainForm
         end>
       isShowModal = False
     end
+    object actReport_Branch_Cash: TdsdOpenForm
+      Category = #1054#1090#1095#1077#1090#1099' ('#1092#1080#1083#1080#1072#1083#1099')'
+      MoveParams = <>
+      Caption = #1050#1072#1089#1089#1072' ('#1092#1080#1083#1080#1072#1083#1099')'
+      FormName = 'TReport_Branch_CashForm'
+      FormNameParam.Value = 'TReport_Branch_CashForm'
+      FormNameParam.DataType = ftString
+      GuiParams = <>
+      isShowModal = False
+    end
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Active = False
@@ -4228,6 +4238,12 @@ inherited MainForm: TMainForm
       end
       object N710: TMenuItem
         Action = actReport_Branch_App7
+      end
+      object N87: TMenuItem
+        Caption = '-'
+      end
+      object N86: TMenuItem
+        Action = actReport_Branch_Cash
       end
     end
     inherited miGuides: TMenuItem

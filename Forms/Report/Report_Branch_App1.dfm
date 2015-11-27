@@ -14,18 +14,19 @@ inherited Report_Branch_App1Form: TReport_Branch_App1Form
     Height = 428
     TabOrder = 3
     ExplicitTop = 57
-    ExplicitWidth = 1020
-    ExplicitHeight = 287
+    ExplicitWidth = 1073
+    ExplicitHeight = 428
     ClientRectBottom = 428
     ClientRectRight = 1073
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 1020
-      ExplicitHeight = 287
+      ExplicitWidth = 1073
+      ExplicitHeight = 428
       inherited cxGrid: TcxGrid
         Width = 1073
         Height = 428
-        ExplicitWidth = 1020
-        ExplicitHeight = 287
+        ExplicitTop = 3
+        ExplicitWidth = 1073
+        ExplicitHeight = 428
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -584,7 +585,7 @@ inherited Report_Branch_App1Form: TReport_Branch_App1Form
   end
   inherited Panel: TPanel
     Width = 1073
-    ExplicitWidth = 1020
+    ExplicitWidth = 1073
     inherited deStart: TcxDateEdit
       Left = 97
       EditValue = 42309d
