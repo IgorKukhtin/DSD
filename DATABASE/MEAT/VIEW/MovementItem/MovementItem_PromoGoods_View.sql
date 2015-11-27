@@ -1,3 +1,5 @@
+--
+
 DROP VIEW IF EXISTS MovementItem_PromoGoods_View;
 
 CREATE OR REPLACE VIEW MovementItem_PromoGoods_View AS
@@ -16,27 +18,27 @@ CREATE OR REPLACE VIEW MovementItem_PromoGoods_View AS
       , MIFloat_PriceSale.ValueData            AS PriceSale           --Цена на полке
       , MIFloat_AmountReal.ValueData           AS AmountReal          --Объем продаж в аналогичный период, кг
       , (MIFloat_AmountReal.ValueData
-          * ObjectFloat_Goods_Weight.ValueData)::TFloat AS AmountRealWeight    --Объем продаж в аналогичный период, кг Вес
+          * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN ObjectFloat_Goods_Weight.ValueData ELSE 1 END) :: TFloat AS AmountRealWeight    --Объем продаж в аналогичный период, кг Вес
       , MIFloat_AmountPlanMin.ValueData        AS AmountPlanMin       --Минимум планируемого объема продаж на акционный период (в кг)
       , (MIFloat_AmountPlanMin.ValueData
-          * ObjectFloat_Goods_Weight.ValueData)::TFloat AS AmountPlanMinWeight --Минимум планируемого объема продаж на акционный период (в кг) Вес
+          * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN ObjectFloat_Goods_Weight.ValueData ELSE 1 END) :: TFloat AS AmountPlanMinWeight --Минимум планируемого объема продаж на акционный период (в кг) Вес
       , MIFloat_AmountPlanMax.ValueData        AS AmountPlanMax       --Максимум планируемого объема продаж на акционный период (в кг)
       , (MIFloat_AmountPlanMax.ValueData
-          * ObjectFloat_Goods_Weight.ValueData)::TFloat AS AmountPlanMaxWeight --Максимум планируемого объема продаж на акционный период (в кг) Вес
+          * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN ObjectFloat_Goods_Weight.ValueData ELSE 1 END) :: TFloat AS AmountPlanMaxWeight --Максимум планируемого объема продаж на акционный период (в кг) Вес
       , MIFloat_AmountOrder.ValueData          AS AmountOrder         --Кол-во заявка (факт)
       , (MIFloat_AmountOrder.ValueData
-          * ObjectFloat_Goods_Weight.ValueData)::TFloat AS AmountOrderWeight   --Кол-во заявка (факт) Вес
+          * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN ObjectFloat_Goods_Weight.ValueData ELSE 1 END) :: TFloat AS AmountOrderWeight   --Кол-во заявка (факт) Вес
       , MIFloat_AmountOut.ValueData            AS AmountOut           --Кол-во реализация (факт)
       , (MIFloat_AmountOut.ValueData
-          * ObjectFloat_Goods_Weight.ValueData)::TFloat AS AmountOutWeight     --Кол-во реализация (факт) Вес
+          * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN ObjectFloat_Goods_Weight.ValueData ELSE 1 END) :: TFloat AS AmountOutWeight     --Кол-во реализация (факт) Вес
       , MIFloat_AmountIn.ValueData             AS AmountIn            --Кол-во возврат (факт)
       , (MIFloat_AmountIn.ValueData
-          * ObjectFloat_Goods_Weight.ValueData)::TFloat AS AmountInWeight      --Кол-во возврат (факт) Вес
+          * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN ObjectFloat_Goods_Weight.ValueData ELSE 1 END) :: TFloat AS AmountInWeight      --Кол-во возврат (факт) Вес
       , MILinkObject_GoodsKind.ObjectId        AS GoodsKindId         --ИД обьекта <Вид товара>
       , Object_GoodsKind.ValueData             AS GoodsKindName       --Наименование обьекта <Вид товара>
       , MIString_Comment.ValueData             AS Comment             -- Примечание
       , MovementItem.isErased                  AS isErased            -- Удален
-    FROM  MovementItem
+    FROM MovementItem
         LEFT JOIN MovementItemFloat AS MIFloat_Price
                                     ON MIFloat_Price.MovementItemId = MovementItem.Id
                                    AND MIFloat_Price.DescId = zc_MIFloat_Price()
@@ -92,8 +94,7 @@ CREATE OR REPLACE VIEW MovementItem_PromoGoods_View AS
                                     ON ObjectFloat_Goods_Weight.ObjectId = MovementItem.ObjectId
                                    AND ObjectFloat_Goods_Weight.DescId = zc_ObjectFloat_Goods_Weight()
 
-    WHERE 
-        MovementItem.DescId = zc_MI_Master();
+    WHERE MovementItem.DescId = zc_MI_Master();
 
 
 ALTER TABLE MovementItem_PromoGoods_View
@@ -105,3 +106,6 @@ ALTER TABLE MovementItem_PromoGoods_View
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.  Воробкало А.А.
  02.11.15                                                         *
 */
+
+-- тест
+-- SELECT * FROM MovementItem_PromoGoods_View WHERE MovementId = 2641111

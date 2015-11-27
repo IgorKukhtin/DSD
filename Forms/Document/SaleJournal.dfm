@@ -3,8 +3,10 @@ inherited SaleJournalForm: TSaleJournalForm
   ClientHeight = 641
   ClientWidth = 1242
   AddOnFormData.Params = FormParams
+  ExplicitLeft = -458
+  ExplicitTop = -219
   ExplicitWidth = 1258
-  ExplicitHeight = 679
+  ExplicitHeight = 676
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -721,6 +723,13 @@ inherited SaleJournalForm: TSaleJournalForm
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 56
+          end
+          object MovementPromo: TcxGridDBColumn
+            Caption = #8470' '#1076#1086#1082'. '#1072#1082#1094#1080#1103
+            DataBinding.FieldName = 'MovementPromo'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 80
           end
         end
       end

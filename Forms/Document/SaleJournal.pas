@@ -183,6 +183,7 @@ type
     actDialog_QualityDoc: TdsdOpenForm;
     mactPrint_QualityDoc: TMultiAction;
     isPromo: TcxGridDBColumn;
+    MovementPromo: TcxGridDBColumn;
   private
     { Private declarations }
   public

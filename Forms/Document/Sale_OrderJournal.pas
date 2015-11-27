@@ -178,6 +178,7 @@ type
     actPrintReturnInDay: TdsdPrintAction;
     bbPrintReturnInDay: TdxBarButton;
     isPromo: TcxGridDBColumn;
+    MovementPromo: TcxGridDBColumn;
   private
     { Private declarations }
   public

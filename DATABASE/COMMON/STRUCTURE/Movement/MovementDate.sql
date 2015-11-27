@@ -19,6 +19,7 @@ CREATE TABLE MovementDate(
 
 /*                                  Индексы                                      */
 CREATE UNIQUE INDEX idx_MovementDate_MovementId_DescId ON MovementDate (MovementId, DescId); 
+CREATE INDEX idx_MovementDate_ValueData_DescId ON MovementDate (ValueData, DescId); 
 
 /*
  ПРИМЕЧАНИЯ:
@@ -26,6 +27,7 @@ CREATE UNIQUE INDEX idx_MovementDate_MovementId_DescId ON MovementDate (Movement
  ДАТА         АВТОР
  ----------------
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
-22.03.2015                                       * add idx_MovementBoolean_MovementId_DescId
+27.11.2015                                       * add idx_MovementDate_MovementId_DescId
+22.03.2015                                       * add idx_MovementDate_MovementId_DescId
 14.06.2013                                       
 */

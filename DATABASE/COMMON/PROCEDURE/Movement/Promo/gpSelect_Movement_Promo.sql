@@ -9,7 +9,7 @@ CREATE OR REPLACE FUNCTION gpSelect_Movement_Promo(
     IN inSession       TVarChar    -- сессия пользователя
 )
 RETURNS TABLE (Id               Integer     --Идентификатор
-             , InvNumber        TVarChar    --Номер документа
+             , InvNumber        Integer     --Номер документа
              , OperDate         TDateTime   --Дата документа
              , StatusCode       Integer     --код статуса
              , StatusName       TVarChar    --Статус
@@ -26,11 +26,11 @@ RETURNS TABLE (Id               Integer     --Идентификатор
              , CostPromo        TFloat      --Стоимость участия в акции
              , Comment          TVarChar    --Примечание
              , CommentMain      TVarChar    --Примечание (Общее)
-             , UnitId           INTEGER     --Подразделение
+             , UnitId           Integer     --Подразделение
              , UnitName         TVarChar    --Подразделение
-             , PersonalTradeId  INTEGER     --Ответственный представитель коммерческого отдела
+             , PersonalTradeId  Integer     --Ответственный представитель коммерческого отдела
              , PersonalTradeName TVarChar   --Ответственный представитель коммерческого отдела
-             , PersonalId       INTEGER     --Ответственный представитель маркетингового отдела	
+             , PersonalId       Integer     --Ответственный представитель маркетингового отдела	
              , PersonalName     TVarChar    --Ответственный представитель маркетингового отдела	
              , PartnerName      TVarChar     --Партнер
              , PartnerDescName  TVarChar     --тип Партнера
@@ -50,7 +50,7 @@ BEGIN
                        )
         SELECT
             Movement_Promo.Id                 --Идентификатор
-          , Movement_Promo.InvNumber          --Номер документа
+          , Movement_Promo.InvNumber :: Integer AS           --Номер документа
           , Movement_Promo.OperDate           --Дата документа
           , Movement_Promo.StatusCode         --код статуса
           , Movement_Promo.StatusName         --Статус

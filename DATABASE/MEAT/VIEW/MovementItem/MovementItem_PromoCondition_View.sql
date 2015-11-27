@@ -1,3 +1,5 @@
+--
+
 DROP VIEW IF EXISTS MovementItem_PromoCondition_View;
 
 CREATE OR REPLACE VIEW MovementItem_PromoCondition_View AS
@@ -17,8 +19,7 @@ CREATE OR REPLACE VIEW MovementItem_PromoCondition_View AS
                                            ON MIString_Comment.MovementItemId = MovementItem.ID
                                           AND MIString_Comment.DescId = zc_MIString_Comment()
         
-    WHERE 
-        MovementItem.DescId = zc_MI_Child();
+    WHERE MovementItem.DescId = zc_MI_Child();
 
 
 ALTER TABLE MovementItem_PromoCondition_View
@@ -30,3 +31,6 @@ ALTER TABLE MovementItem_PromoCondition_View
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.  Воробкало А.А.
  02.11.15                                                         *
 */
+
+-- тест
+-- SELECT * FROM MovementItem_PromoCondition_View WHERE MovementId = 2641111

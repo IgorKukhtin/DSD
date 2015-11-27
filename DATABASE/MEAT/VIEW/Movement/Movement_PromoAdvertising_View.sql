@@ -1,3 +1,5 @@
+--
+
 DROP VIEW IF EXISTS Movement_PromoAdvertising_View;
 
 CREATE OR REPLACE VIEW Movement_PromoAdvertising_View AS 
@@ -25,7 +27,7 @@ CREATE OR REPLACE VIEW Movement_PromoAdvertising_View AS
                                       AND MovementString_Comment.DescId = zc_MovementString_Comment()
         
     WHERE Movement_Promo.DescId = zc_Movement_PromoAdvertising()
-      AND Movement_Promo.ParentId is not null;
+   ;
 
 ALTER TABLE Movement_PromoAdvertising_View
   OWNER TO postgres;
@@ -38,4 +40,4 @@ ALTER TABLE Movement_PromoAdvertising_View
 */
 
 -- тест
--- SELECT * FROM Movement_PromoAdvertising_View  where id = 805
+-- SELECT * FROM Movement_PromoAdvertising_View WHERE ParentId = 2641111

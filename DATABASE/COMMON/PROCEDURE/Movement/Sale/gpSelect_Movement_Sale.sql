@@ -45,6 +45,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , isEdiOrdspr_partner Boolean, isEdiInvoice_partner Boolean, isEdiDesadv_partner Boolean
              , isError Boolean
              , isPromo Boolean
+             , MovementPromo TVarChar
              , InsertDate TDateTime
              , Comment TVarChar
               )
@@ -195,6 +196,7 @@ BEGIN
                    END AS Boolean) AS isError
 
            , COALESCE(MovementBoolean_Promo.ValueData, False) AS isPromo
+           , ('№ ' || Movement_Promo.InvNumber || ' от ' || DATE (Movement_Promo.OperDate) :: TVarChar || ' акц. цена с ' || DATE (MD_StartSale.ValueData) :: TVarChar|| ' по ' || DATE (MD_EndSale.ValueData) :: TVarChar) :: TVarChar AS MovementPromo
 
            , MovementDate_Insert.ValueData AS InsertDate
            , MovementString_Comment.ValueData       AS Comment
@@ -458,6 +460,18 @@ BEGIN
          LEFT JOIN ObjectBoolean AS ObjectBoolean_EdiDesadv
                                  ON ObjectBoolean_EdiDesadv.ObjectId = Object_To.Id
                                 AND ObjectBoolean_EdiDesadv.DescId = zc_ObjectBoolean_Partner_EdiDesadv()
+
+            LEFT JOIN MovementLinkMovement AS MovementLinkMovement_Promo
+                                           ON MovementLinkMovement_Promo.MovementId = Movement.Id
+                                          AND MovementLinkMovement_Promo.DescId = zc_MovementLinkMovement_Promo()
+            LEFT JOIN Movement AS Movement_Promo ON Movement_Promo.Id = MovementLinkMovement_Promo.MovementChildId
+            LEFT JOIN MovementDate AS MD_StartSale
+                                   ON MD_StartSale.MovementId =  Movement_Promo.Id
+                                  AND MD_StartSale.DescId = zc_MovementDate_StartSale()
+            LEFT JOIN MovementDate AS MD_EndSale
+                                   ON MD_EndSale.MovementId =  Movement_Promo.Id
+                                  AND MD_EndSale.DescId = zc_MovementDate_EndSale()
+
      WHERE vbIsXleb = FALSE OR (View_InfoMoney.InfoMoneyId = zc_Enum_InfoMoney_30103() -- Хлеб
                                 AND vbIsXleb = TRUE)
     ;

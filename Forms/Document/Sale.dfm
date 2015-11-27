@@ -3,10 +3,9 @@
   ClientHeight = 668
   ClientWidth = 1366
   AddOnFormData.OnLoadAction = actSetDefaults
-  ExplicitLeft = -108
-  ExplicitTop = -37
+  ExplicitLeft = -582
   ExplicitWidth = 1382
-  ExplicitHeight = 706
+  ExplicitHeight = 703
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -441,12 +440,12 @@
             Width = 100
           end
           object MovementPromo: TcxGridDBColumn [31]
-            Caption = #8470' '#1076#1086#1082'. '#1072#1082#1094#1080#1080
+            Caption = #8470' '#1076#1086#1082'. '#1072#1082#1094#1080#1103
             DataBinding.FieldName = 'MovementPromo'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 200
+            Width = 100
           end
           inherited colIsErased: TcxGridDBColumn
             Width = 25

@@ -1,9 +1,11 @@
+--
+
 DROP VIEW IF EXISTS Movement_Promo_View;
 
 CREATE OR REPLACE VIEW Movement_Promo_View AS 
     SELECT       
         Movement_Promo.Id                                                 --Идентификатор
-      , Movement_Promo.InvNumber                                          --Номер документа
+      , Movement_Promo.InvNumber :: Integer         AS InvNumber          --Номер документа
       , Movement_Promo.OperDate                                           --Дата документа
       , Object_Status.Id                            AS StatusId           --ид статуса
       , Object_Status.ObjectCode                    AS StatusCode         --код статуса
@@ -48,7 +50,7 @@ CREATE OR REPLACE VIEW Movement_Promo_View AS
         LEFT JOIN MovementDate AS MovementDate_EndPromo
                                 ON MovementDate_EndPromo.MovementId =  Movement_Promo.Id
                                AND MovementDate_EndPromo.DescId = zc_MovementDate_EndPromo()
-
+                               
         LEFT JOIN MovementDate AS MovementDate_StartSale
                                 ON MovementDate_StartSale.MovementId =  Movement_Promo.Id
                                AND MovementDate_StartSale.DescId = zc_MovementDate_StartSale()
@@ -94,7 +96,7 @@ CREATE OR REPLACE VIEW Movement_Promo_View AS
                          ON Object_Personal.Id = MovementLinkObject_Personal.ObjectId
                          
     WHERE Movement_Promo.DescId = zc_Movement_Promo()
-      AND Movement_Promo.ParentId is null;
+   ;
 
 ALTER TABLE Movement_Promo_View
   OWNER TO postgres;
@@ -107,4 +109,4 @@ ALTER TABLE Movement_Promo_View
 */
 
 -- тест
--- SELECT * FROM Movement_Promo_View  where id = 805
+-- SELECT * FROM Movement_Promo_View  where id = 2641111

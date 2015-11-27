@@ -1,3 +1,5 @@
+--
+
 DROP VIEW IF EXISTS Movement_PromoPartner_View;
 
 CREATE OR REPLACE VIEW Movement_PromoPartner_View AS 
@@ -11,10 +13,9 @@ CREATE OR REPLACE VIEW Movement_PromoPartner_View AS
       , ObjectDesc_Partner.ItemName            AS PartnerDescName         --Тип Покупатель для акции
       , Object_Juridical.ValueData             AS Juridical_Name
       , Object_Retail.ValueData                AS Retail_Name
-      , CASE 
-            WHEN Movement_Promo.StatusId = zc_Enum_Status_Erased()
-                THEN TRUE
-        ELSE FALSE
+      , CASE WHEN Movement_Promo.StatusId = zc_Enum_Status_Erased()
+                  THEN TRUE
+             ELSE FALSE
         END                                    AS isErased                --Удален
       , Object_Contract.ContractId                                        -- ИД контракта
       , Object_Contract.ContractCode                                      -- код контракта
@@ -27,42 +28,36 @@ CREATE OR REPLACE VIEW Movement_PromoPartner_View AS
         LEFT JOIN MovementLinkObject AS MovementLinkObject_Partner
                                      ON MovementLinkObject_Partner.MovementId = Movement_Promo.Id
                                     AND MovementLinkObject_Partner.DescId = zc_MovementLinkObject_Partner()
-        LEFT JOIN Object AS Object_Partner 
-                         ON Object_Partner.Id = MovementLinkObject_Partner.ObjectId
-        LEFT OUTER JOIN ObjectDesc AS ObjectDesc_Partner
-                                   ON ObjectDesc_Partner.Id = Object_Partner.DescId
+        LEFT JOIN Object AS Object_Partner ON Object_Partner.Id = MovementLinkObject_Partner.ObjectId
+        LEFT OUTER JOIN ObjectDesc AS ObjectDesc_Partner ON ObjectDesc_Partner.Id = Object_Partner.DescId
+
         LEFT OUTER JOIN ObjectLink AS ObjectLink_Partner_Juridical
                                    ON ObjectLink_Partner_Juridical.ObjectId = Object_Partner.Id
                                   AND ObjectLink_Partner_Juridical.DescId = zc_ObjectLink_Partner_Juridical()
                                   AND Object_Partner.DescId = zc_Object_Partner()
-        LEFT OUTER JOIN Object AS Object_Juridical
-                               ON Object_Juridical.id = ObjectLink_Partner_Juridical.ChildObjectId
-                              AND Object_Juridical.DescId = zc_Object_Juridical()
+        LEFT OUTER JOIN Object AS Object_Juridical ON Object_Juridical.Id = ObjectLink_Partner_Juridical.ChildObjectId
+
         LEFT OUTER JOIN ObjectLink AS ObjectLink_Juridical_Retail
-                                   ON ObjectLink_Juridical_Retail.ObjectId = CASE 
-                                                                                 WHEN Object_Partner.DescId = zc_Object_Partner() THEN Object_Juridical.Id
-                                                                                 WHEN Object_Partner.DescId = zc_Object_Juridical() THEN Object_Partner.Id
-                                                                             END
+                                   ON ObjectLink_Juridical_Retail.ObjectId = COALESCE (ObjectLink_Partner_Juridical.ChildObjectId, Object_Partner.Id)
                                   AND ObjectLink_Juridical_Retail.DescId = zc_ObjectLink_Juridical_Retail()
-                                  AND Object_Partner.DescId in (zc_Object_Partner(),zc_Object_Juridical())
-        LEFT OUTER JOIN Object AS Object_Retail
-                               ON Object_Retail.id = ObjectLink_Juridical_Retail.ChildObjectId
-                              AND Object_Retail.DescId = zc_Object_Retail() 
+        LEFT OUTER JOIN Object AS Object_Retail ON Object_Retail.Id = ObjectLink_Juridical_Retail.ChildObjectId
+
         LEFT JOIN MovementLinkObject AS MovementLinkObject_Contract
                                      ON MovementLinkObject_Contract.MovementId = Movement_Promo.Id
                                     AND MovementLinkObject_Contract.DescId = zc_MovementLinkObject_Contract()
-        LEFT JOIN Object_Contract_InvNumber_View AS Object_Contract 
-                                                 ON Object_Contract.ContractId = MovementLinkObject_Contract.ObjectId
+        LEFT JOIN Object_Contract_InvNumber_View AS Object_Contract ON Object_Contract.ContractId = MovementLinkObject_Contract.ObjectId
+
+        LEFT OUTER JOIN ObjectLink AS ObjectLink_Partner_Area
+                                   ON ObjectLink_Partner_Area.ObjectId = Object_Partner.Id
+                                  AND ObjectLink_Partner_Area.DescId = zc_ObjectLink_Partner_Area()
+        LEFT OUTER JOIN Object AS Object_Area ON Object_Area.Id = ObjectLink_Partner_Area.ChildObjectId
+
         LEFT OUTER JOIN MovementString AS MovementString_Comment
                                        ON MovementString_Comment.MovementId = Movement_Promo.Id
                                       AND MovementString_Comment.DescId = zc_MovementString_Comment()
-        LEFT OUTER JOIN ObjectLink AS ObjectLink_Partner_Area
-                                   ON ObjectLink_Partner_Area.ObjectId = Object_Partner.ID
-                                  AND ObjectLink_Partner_Area.DescId = zc_ObjectLink_Partner_Area()
-        LEFT OUTER JOIN Object AS Object_Area
-                               ON Object_Area.Id = ObjectLink_Partner_Area.ChildObjectId
+
     WHERE Movement_Promo.DescId = zc_Movement_PromoPartner()
-      AND Movement_Promo.ParentId is not null;
+   ;
 
 ALTER TABLE Movement_Promo_View
   OWNER TO postgres;
@@ -75,4 +70,4 @@ ALTER TABLE Movement_Promo_View
 */
 
 -- тест
--- SELECT * FROM Movement_Promo_View  where id = 805
+-- SELECT * FROM Movement_PromoPartner_View WHERE ParentId = 2641111
