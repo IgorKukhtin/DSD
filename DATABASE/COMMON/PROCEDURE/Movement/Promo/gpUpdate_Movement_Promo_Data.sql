@@ -36,6 +36,8 @@ BEGIN
 
      -- данные по продажам, в которых найдена акция
      CREATE TEMP TABLE _tmpMI_sale (MovementId Integer, MovementItemId Integer, GoodsId Integer, GoodsKindId Integer, AmountPartner TFloat, PriceWithOutVAT TFloat) ON COMMIT DROP;
+     -- данные по продажам, в которых найдена акция
+     -- CREATE TEMP TABLE _tmpMI_sale (MovementId Integer, MovementItemId Integer, GoodsId Integer, GoodsKindId Integer, AmountPartner TFloat, PriceWithOutVAT TFloat) ON COMMIT DROP;
 
      WITH tmpGoods AS (SELECT DISTINCT
                               MI_PromoGoods.GoodsId
@@ -84,7 +86,7 @@ BEGIN
                             INNER JOIN MovementLinkObject AS MLO_To ON MLO_To.ObjectId = tmpPartner.PartnerId
                                                                    AND MLO_To.DescId = zc_MovementLinkObject_To()
                             INNER JOIN MovementDate AS MovementDate_OperDatePartner
-                                                    ON MovementDate_OperDatePartner.ValueData BETWEEN vbStartDate - INTERVAL '3 DAY' AND vbEndDate + INTERVAL '3 DAY'
+                                                    ON MovementDate_OperDatePartner.ValueData BETWEEN vbStartDate - INTERVAL '0 DAY' AND vbEndDate + INTERVAL '0 DAY'
                                                    AND MovementDate_OperDatePartner.DescId = zc_MovementDate_OperDatePartner()
                                                    AND MovementDate_OperDatePartner.MovementId = MLO_To.MovementId
                             INNER JOIN Movement ON Movement.Id = MLO_To.MovementId
@@ -92,10 +94,13 @@ BEGIN
                                                AND Movement.StatusId = zc_Enum_Status_Complete()
                             LEFT JOIN MovementLinkObject AS MLO_From ON MLO_From.MovementId = MLO_To.MovementId
                                                                     AND MLO_From.DescId = zc_MovementLinkObject_From()
+                            LEFT JOIN MovementLinkObject AS MLO_Contract ON MLO_Contract.MovementId = MLO_To.MovementId
+                                                                        AND MLO_Contract.DescId = zc_MovementLinkObject_Contract()
                             LEFT JOIN MovementBoolean AS MovementBoolean_PriceWithVAT
                                                       ON MovementBoolean_PriceWithVAT.MovementId =  Movement.Id
                                                      AND MovementBoolean_PriceWithVAT.DescId = zc_MovementBoolean_PriceWithVAT()
                        WHERE (MLO_From.ObjectId = vbUnitId OR vbUnitId = 0)
+                         AND (MLO_Contract.ObjectId = tmpPartner.ContractId OR tmpPartner.ContractId = 0)
                       )
 
       , tmpMI_sale AS (SELECT DISTINCT

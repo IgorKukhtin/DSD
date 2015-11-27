@@ -8,7 +8,7 @@ CREATE OR REPLACE FUNCTION gpGet_Movement_Promo(
     IN inSession           TVarChar   -- сессия пользователя
 )
 RETURNS TABLE (Id               Integer     --Идентификатор
-             , InvNumber        TVarChar    --Номер документа
+             , InvNumber        Integer    --Номер документа
              , OperDate         TDateTime   --Дата документа
              , StatusCode       Integer     --код статуса
              , StatusName       TVarChar    --Статус
@@ -111,3 +111,6 @@ ALTER FUNCTION gpGet_Movement_Promo (Integer, TDateTime, TVarChar) OWNER TO post
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.  Воробкало А.А.
  13.10.15                                                                        *
 */
+
+-- тест
+-- SELECT * FROM gpSelect_Movement_Promo (inMovementId:= 1, inOperDate:= '30.11.2015', inSession:= zfCalc_UserAdmin())

@@ -42,6 +42,18 @@ BEGIN
                     UNION SELECT 309599 AS UnitId, NULL AS isMain  -- Склад возвратов ф.Запорожье
                     UNION SELECT 346093  AS UnitId, NULL AS isMain  -- Склад ГП ф.Одесса
                     UNION SELECT 346094  AS UnitId, NULL AS isMain  -- Склад возвратов ф.Одесса
+
+                    UNION SELECT 8413 AS UnitId, NULL AS isMain  -- Склад ГП ф.Кривой Рог
+                    UNION SELECT 428366 AS UnitId, NULL AS isMain  -- Склад возвратов ф.Кривой Рог
+
+                    UNION SELECT 8415 AS UnitId, NULL AS isMain  -- Склад ГП ф.Черкассы (Кировоград)
+                    UNION SELECT 428363 AS UnitId, NULL AS isMain  -- Склад возвратов ф.Черкассы (Кировоград)
+
+                    UNION SELECT 8417 AS UnitId, NULL AS isMain  -- Склад ГП ф.Николаев (Херсон)
+                    UNION SELECT 428364 AS UnitId, NULL AS isMain  -- Склад возвратов ф.Николаев (Херсон)
+
+                    UNION SELECT 8425 AS UnitId, NULL AS isMain  -- Склад ГП ф.Харьков
+                    UNION SELECT 409007 AS UnitId, NULL AS isMain  -- Склад возвратов ф.Харьков
                    )
      SELECT tmp.MovementId
           , tmp.OperDate
