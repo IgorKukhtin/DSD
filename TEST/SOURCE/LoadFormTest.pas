@@ -1370,6 +1370,12 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TReport_Branch_App1Form');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Branch_App1DialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_Branch_App1DialogForm');
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Branch_CashForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_Branch_CashForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Branch_CashDialogForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_Branch_CashDialogForm');
+
 end;
 
 procedure TLoadFormTest.LoadReportSystemFormTest;
