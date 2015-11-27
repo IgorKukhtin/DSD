@@ -63,7 +63,7 @@ BEGIN
                           WHERE 
                               MI_SheetWorkTime.MovementId = vbMovementId AND
                               MI_SheetWorkTime.ObjectId = inMemberId);
-    IF ioValue = '0' THEN
+    IF ioValue = '0' OR TRIM (ioValue) = '' THEN
          inTypeId := 0;
          ioValue := '0';
     ELSE

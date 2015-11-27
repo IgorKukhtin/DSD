@@ -119,3 +119,5 @@ ALTER FUNCTION gpSelect_Movement_Promo (TDateTime, TDateTime, Boolean, Boolean, 
  17.11.15                                                                        *Movement_PromoPartner_View
  13.10.15                                                                        *
 */
+
+-- SELECT * FROM gpSelect_Movement_Promo (inStartDate:= '01.11.2015', inEndDate:= '30.11.2015', inIsErased:= FALSE, inPeriodForOperDate:=TRUE, inSession:= zfCalc_UserAdmin())

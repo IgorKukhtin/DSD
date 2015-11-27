@@ -48,7 +48,7 @@ BEGIN
                                   AND Object_Retail.DescId = zc_Object_Retail() 
                                    
         WHERE 
-            Object_PromoPartner.DescId in (zc_Object_Partner(),zc_Object_Juridical(),zc_Object_Retail())
+            Object_PromoPartner.DescId in (zc_Object_Partner(),zc_Object_Juridical() /*,zc_Object_Retail()*/)
             AND
             (
                 Object_PromoPartner.isErased = FALSE
@@ -64,6 +64,7 @@ ALTER FUNCTION gpSelect_Object_PromoPartner (Boolean,TVarChar) OWNER TO postgres
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.  Воробкало А.А.
+ 27.11.15                                        * rem zc_Object_Retail
  06.11.15                                                         *
  */
 

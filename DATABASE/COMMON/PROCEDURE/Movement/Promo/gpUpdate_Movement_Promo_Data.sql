@@ -34,22 +34,30 @@ BEGIN
          RAISE EXCEPTION 'Ошибка.Документ не проведен.';
      END IF;
 
-     -- данные по продажам, в которых найдена акция
+     -- данные по акциям
+     CREATE TEMP TABLE _tmpMI_promo (GoodsId Integer, GoodsKindId Integer, PriceWithOutVAT TFloat, PriceWithVAT TFloat) ON COMMIT DROP;
+     -- данные по продажам, в которых будет установлен признак "акция"
      CREATE TEMP TABLE _tmpMI_sale (MovementId Integer, MovementItemId Integer, GoodsId Integer, GoodsKindId Integer, AmountPartner TFloat, PriceWithOutVAT TFloat) ON COMMIT DROP;
-     -- данные по продажам, в которых найдена акция
-     -- CREATE TEMP TABLE _tmpMI_sale (MovementId Integer, MovementItemId Integer, GoodsId Integer, GoodsKindId Integer, AmountPartner TFloat, PriceWithOutVAT TFloat) ON COMMIT DROP;
+     -- данные по заявкам, в которых будет установлен признак "акция"
+     CREATE TEMP TABLE _tmpMI_order (MovementId Integer, MovementItemId Integer, GoodsId Integer, GoodsKindId Integer, AmountPartner TFloat, PriceWithOutVAT TFloat) ON COMMIT DROP;
 
-     WITH tmpGoods AS (SELECT DISTINCT
-                              MI_PromoGoods.GoodsId
-                            , COALESCE (MI_PromoGoods.GoodsKindId, 0) AS GoodsKindId
-                            , MI_PromoGoods.PriceWithOutVAT  -- Цена отгрузки без учета НДС, с учетом скидки
-                            , MI_PromoGoods.PriceWithVAT     -- Цена отгрузки с учетом НДС, с учетом скидки
-                       FROM MovementItem_PromoGoods_View AS MI_PromoGoods
-                       WHERE MI_PromoGoods.MovementId = inMovementId
-                         AND MI_PromoGoods.isErased = FALSE
-                         AND MI_PromoGoods.Amount <> 0 -- % скидки на товар
-                      )
-  , tmpPartner_all AS (SELECT Movement_PromoPartner_View.PartnerId
+
+     -- Данные Promo
+     INSERT INTO _tmpMI_promo (GoodsId, GoodsKindId, PriceWithOutVAT, PriceWithVAT)
+        SELECT DISTINCT
+               MI_PromoGoods.GoodsId
+             , COALESCE (MI_PromoGoods.GoodsKindId, 0) AS GoodsKindId
+             , MI_PromoGoods.PriceWithOutVAT  -- Цена отгрузки без учета НДС, с учетом скидки
+             , MI_PromoGoods.PriceWithVAT     -- Цена отгрузки с учетом НДС, с учетом скидки
+        FROM MovementItem_PromoGoods_View AS MI_PromoGoods
+        WHERE MI_PromoGoods.MovementId = inMovementId
+          AND MI_PromoGoods.isErased = FALSE
+          AND MI_PromoGoods.Amount <> 0 -- % скидки на товар
+       ;
+
+
+     WITH tmpPartner_all AS 
+                      (SELECT Movement_PromoPartner_View.PartnerId
                             , Movement_PromoPartner_View.PartnerDescId
                             , COALESCE (Movement_PromoPartner_View.ContractId, 0) AS ContractId
                        FROM Movement_PromoPartner_View
@@ -106,10 +114,10 @@ BEGIN
       , tmpMI_sale AS (SELECT DISTINCT
                               tmpMovement_sale.MovementId     AS MovementId
                             , MovementItem.Id                 AS MovementItemId
-                            , tmpGoods.GoodsId                AS GoodsId
-                            , tmpGoods.GoodsKindId            AS GoodsKindId
+                            , _tmpMI_promo.GoodsId            AS GoodsId
+                            , _tmpMI_promo.GoodsKindId        AS GoodsKindId
                             , MIFloat_AmountPartner.ValueData AS AmountPartner
-                            , tmpGoods.PriceWithOutVAT        AS PriceWithOutVAT
+                            , _tmpMI_promo.PriceWithOutVAT    AS PriceWithOutVAT
                        FROM tmpMovement_sale
                             INNER JOIN MovementItem ON MovementItem.MovementId = tmpMovement_sale.MovementId
                                                    AND MovementItem.DescId = zc_MI_Master()
@@ -121,18 +129,19 @@ BEGIN
                             LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
                                                              ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
                                                             AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
-                            INNER JOIN tmpGoods ON tmpGoods.GoodsId = MovementItem.ObjectId
-                                               AND (tmpGoods.GoodsKindId = MILinkObject_GoodsKind.ObjectId OR tmpGoods.GoodsKindId = 0)
+                            INNER JOIN _tmpMI_promo ON _tmpMI_promo.GoodsId = MovementItem.ObjectId
+                                               AND (_tmpMI_promo.GoodsKindId = MILinkObject_GoodsKind.ObjectId OR _tmpMI_promo.GoodsKindId = 0)
                             LEFT JOIN MovementItemFloat AS MIFloat_AmountPartner
                                                         ON MIFloat_AmountPartner.MovementItemId = MovementItem.Id
                                                        AND MIFloat_AmountPartner.DescId = zc_MIFloat_AmountPartner()
-                            INNER JOIN MovementItemFloat AS MIFloat_Price
+                            /*INNER JOIN MovementItemFloat AS MIFloat_Price
                                                          ON MIFloat_Price.MovementItemId = MovementItem.Id
                                                         AND MIFloat_Price.DescId = zc_MIFloat_Price()
-                                                        -- AND MIFloat_Price.ValueData = CASE WHEN tmpMovement_sale.PriceWithVAT = TRUE THEN tmpGoods.PriceWithVAT ELSE tmpGoods.PriceWithOutVAT END
+                                                        AND MIFloat_Price.ValueData = CASE WHEN tmpMovement_sale.PriceWithVAT = TRUE THEN _tmpMI_promo.PriceWithVAT ELSE _tmpMI_promo.PriceWithOutVAT END*/
                        WHERE MIFloat_AmountPartner.ValueData > 0
                          AND COALESCE (MIFloat_PromoMovement.ValueData, inMovementId) = inMovementId
                       )
+         -- Данные Sale
         INSERT INTO _tmpMI_sale (MovementId, MovementItemId, GoodsId, GoodsKindId, AmountPartner, PriceWithOutVAT)
            SELECT tmpMovement_sale.MovementId
                 , tmpMI_sale.MovementItemId
@@ -142,28 +151,78 @@ BEGIN
                 , tmpMI_sale.PriceWithOutVAT
            FROM tmpMovement_sale
                 LEFT JOIN tmpMI_sale ON tmpMI_sale.MovementId = tmpMovement_sale.MovementId;
-	
 
-     -- Результат - в Movement Продажа
+
+     -- Данные Order
+     INSERT INTO _tmpMI_order (MovementId, MovementItemId, GoodsId, GoodsKindId, AmountPartner, PriceWithOutVAT)
+        SELECT DISTINCT
+               MovementLinkMovement_Order.MovementChildId AS MovementId
+             , MovementItem.Id                 AS MovementItemId
+             , _tmpMI_promo.GoodsId            AS GoodsId
+             , _tmpMI_promo.GoodsKindId        AS GoodsKindId
+             , MovementItem.Amount + COALESCE (MIFloat_AmountSecond.ValueData, 0) AS AmountPartner
+             , _tmpMI_promo.PriceWithOutVAT    AS PriceWithOutVAT
+        FROM (SELECT DISTINCT _tmpMI_sale.MovementId FROM _tmpMI_sale WHERE _tmpMI_sale.MovementItemId <> 0) AS tmp
+             INNER JOIN MovementLinkMovement AS MovementLinkMovement_Order
+                                             ON MovementLinkMovement_Order.MovementId = tmp.MovementId
+                                            AND MovementLinkMovement_Order.DescId = zc_MovementLinkMovement_Order()
+             INNER JOIN MovementItem ON MovementItem.MovementId = MovementLinkMovement_Order.MovementChildId
+                                    AND MovementItem.DescId = zc_MI_Master()
+                                    AND MovementItem.isErased = FALSE
+             LEFT JOIN MovementItemFloat AS MIFloat_PromoMovement
+                                         ON MIFloat_PromoMovement.MovementItemId = MovementItem.Id
+                                        AND MIFloat_PromoMovement.DescId = zc_MIFloat_PromoMovementId()
+                                        AND MIFloat_PromoMovement.ValueData <> 0
+             LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
+                                              ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
+                                             AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
+             INNER JOIN _tmpMI_promo ON _tmpMI_promo.GoodsId = MovementItem.ObjectId
+                                    AND (_tmpMI_promo.GoodsKindId = MILinkObject_GoodsKind.ObjectId OR _tmpMI_promo.GoodsKindId = 0)
+             LEFT JOIN MovementItemFloat AS MIFloat_AmountSecond
+                                         ON MIFloat_AmountSecond.MovementItemId = MovementItem.Id
+                                        AND MIFloat_AmountSecond.DescId = zc_MIFloat_AmountSecond()
+             /*INNER JOIN MovementItemFloat AS MIFloat_Price
+                                          ON MIFloat_Price.MovementItemId = MovementItem.Id
+                                         AND MIFloat_Price.DescId = zc_MIFloat_Price()
+                                         AND MIFloat_Price.ValueData = CASE WHEN tmpMovement_sale.PriceWithVAT = TRUE THEN _tmpMI_promo.PriceWithVAT ELSE _tmpMI_promo.PriceWithOutVAT END*/
+        WHERE (MovementItem.Amount <> 0 OR MIFloat_AmountSecond.ValueData <> 0)
+          AND COALESCE (MIFloat_PromoMovement.ValueData, inMovementId) = inMovementId
+       ;
+
+     -- Результат - в Movement Продажа + Order
      PERFORM lpInsertUpdate_MovementBoolean (zc_MovementBoolean_Promo(), tmp.MovementId, TRUE)
-     FROM (SELECT DISTINCT _tmpMI_sale.MovementId FROM _tmpMI_sale WHERE _tmpMI_sale.MovementItemId <> 0) AS tmp
+     FROM (SELECT DISTINCT _tmpMI_sale.MovementId FROM _tmpMI_sale WHERE _tmpMI_sale.MovementItemId <> 0
+          UNION
+           SELECT DISTINCT _tmpMI_order.MovementId FROM _tmpMI_order
+          ) AS tmp
      ;
      -- Результат - в MovementItem Продажа
-     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_PromoMovementId(), _tmpMI_sale.MovementItemId, inMovementId)
-     FROM _tmpMI_sale
-     WHERE _tmpMI_sale.MovementItemId <> 0
+     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_PromoMovementId(), tmp.MovementItemId, inMovementId)
+     FROM (SELECT _tmpMI_sale.MovementItemId FROM _tmpMI_sale WHERE _tmpMI_sale.MovementItemId <> 0
+          UNION
+           SELECT _tmpMI_order.MovementItemId FROM _tmpMI_order
+          ) AS tmp
      ;
      -- Результат - в MovementItem Акция
-     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_AmountOut(), MI_PromoGoods.Id, COALESCE (tmp.AmountPartner, 0))
+     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_AmountOut(), MI_PromoGoods.Id, COALESCE (tmp_sale.AmountPartner, 0))
+           , lpInsertUpdate_MovementItemFloat (zc_MIFloat_AmountOrder(), MI_PromoGoods.Id, COALESCE (tmp_order.AmountPartner, 0))
      FROM MovementItem_PromoGoods_View AS MI_PromoGoods
           LEFT JOIN (SELECT _tmpMI_sale.GoodsId, _tmpMI_sale.GoodsKindId, SUM (_tmpMI_sale.AmountPartner) AS AmountPartner, _tmpMI_sale.PriceWithOutVAT
                      FROM _tmpMI_sale
                      GROUP BY _tmpMI_sale.GoodsId, _tmpMI_sale.GoodsKindId, _tmpMI_sale.PriceWithOutVAT
-                    ) AS tmp ON tmp.GoodsId            = MI_PromoGoods.GoodsId
-                            AND tmp.GoodsKindId        = COALESCE (MI_PromoGoods.GoodsKindId, 0)
-                            AND tmp.PriceWithOutVAT    = MI_PromoGoods.PriceWithOutVAT
-                            AND MI_PromoGoods.isErased = FALSE
-                            AND MI_PromoGoods.Amount   <> 0 -- % скидки на товар
+                    ) AS tmp_sale ON tmp_sale.GoodsId            = MI_PromoGoods.GoodsId
+                                 AND tmp_sale.GoodsKindId        = COALESCE (MI_PromoGoods.GoodsKindId, 0)
+                                 AND tmp_sale.PriceWithOutVAT    = MI_PromoGoods.PriceWithOutVAT
+                                 AND MI_PromoGoods.isErased = FALSE
+                                 AND MI_PromoGoods.Amount   <> 0 -- % скидки на товар
+          LEFT JOIN (SELECT _tmpMI_order.GoodsId, _tmpMI_order.GoodsKindId, SUM (_tmpMI_order.AmountPartner) AS AmountPartner, _tmpMI_order.PriceWithOutVAT
+                     FROM _tmpMI_order
+                     GROUP BY _tmpMI_order.GoodsId, _tmpMI_order.GoodsKindId, _tmpMI_order.PriceWithOutVAT
+                    ) AS tmp_order ON tmp_order.GoodsId            = MI_PromoGoods.GoodsId
+                                  AND tmp_order.GoodsKindId        = COALESCE (MI_PromoGoods.GoodsKindId, 0)
+                                  AND tmp_order.PriceWithOutVAT    = MI_PromoGoods.PriceWithOutVAT
+                                  AND MI_PromoGoods.isErased = FALSE
+                                  AND MI_PromoGoods.Amount   <> 0 -- % скидки на товар
      WHERE MI_PromoGoods.MovementId = inMovementId
     ;
      

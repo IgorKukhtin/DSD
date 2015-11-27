@@ -238,6 +238,20 @@ inherited PromoJournalForm: TPromoJournalForm
           Component = MasterCDS
           ComponentItem = 'InvNumber'
           DataType = ftString
+        end
+        item
+          Name = 'Comment'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'Comment'
+          DataType = ftString
+        end
+        item
+          Name = 'CommentMain'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'CommentMain'
+          DataType = ftString
         end>
       ReportName = #1040#1082#1094#1080#1103
       ReportNameParam.Value = #1040#1082#1094#1080#1103
