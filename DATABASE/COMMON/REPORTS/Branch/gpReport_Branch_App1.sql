@@ -29,19 +29,25 @@ $BODY$
    DECLARE vbUserId Integer;
 
 BEGIN
-          vbUserId:= lpGetUserBySession (inSession);
+     vbUserId:= lpGetUserBySession (inSession);
+
 
     CREATE TEMP TABLE _tmpBranch (BranchId Integer) ON COMMIT DROP; 
     
+
     -- Филиал
-    IF COALESCE(inBranchId,0) = 0
+    IF COALESCE (inBranchId,0) = 0 AND 0 < (SELECT BranchId FROM Object_RoleAccessKeyGuide_View WHERE UserId = vbUserId AND BranchId <> 0 GROUP BY BranchId)
     THEN
-     --RAISE EXCEPTION 'Ошибка. Не выбран Филиал.';
+       RAISE EXCEPTION 'Ошибка. Не выбран Филиал.';
+    ELSE
+    IF COALESCE (inBranchId,0) = 0
+    THEN
        INSERT INTO _tmpBranch (BranchId)
            SELECT Object.Id AS BranchId FROM Object WHERE Object.DescId = zc_Object_Branch() and Object.Id <> zc_Branch_Basis();
     ELSE
        INSERT INTO _tmpBranch (BranchId)
            SELECT inBranchId;
+    END IF;
     END IF;
 
 
