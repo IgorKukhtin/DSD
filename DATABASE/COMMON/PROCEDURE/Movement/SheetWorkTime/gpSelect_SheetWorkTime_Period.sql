@@ -25,10 +25,25 @@ BEGIN
      IF EXISTS (SELECT UserId FROM ObjectLink_UserRole_View WHERE UserId = vbUserId AND RoleId IN (zc_Enum_Role_Admin(), 14473)) -- Персонал ввод справочников
      THEN vbMemberId:= 0;
      ELSE
-         vbMemberId:= (SELECT ObjectLink_User_Member.ChildObjectId AS MemberId
+         vbMemberId:= (SELECT ObjectLink_User_Member.ChildObjectId
                        FROM ObjectLink AS ObjectLink_User_Member
                        WHERE ObjectLink_User_Member.DescId = zc_ObjectLink_User_Member()
                          AND ObjectLink_User_Member.ObjectId = vbUserId
+                         AND vbUserId NOT IN (439994 -- Опимах А.М.
+                                            , 300527 -- Пономаренко А.Р.
+                                             )
+                      UNION
+                       SELECT ObjectLink_User_Member.ChildObjectId
+                       FROM ObjectLink AS ObjectLink_User_Member
+                       WHERE ObjectLink_User_Member.DescId = zc_ObjectLink_User_Member()
+                         AND ObjectLink_User_Member.ObjectId = CASE WHEN vbUserId = 439994 -- Опимах А.М.
+                                                                         THEN 439613 -- Шворников Р.И.
+                                                                    WHEN vbUserId = 300527 -- Пономаренко А.Р.
+                                                                         THEN 300523 -- Бабенко В.П.
+                                                               END
+                         AND vbUserId IN (439994 -- Опимах А.М.
+                                        , 300527 -- Пономаренко А.Р.
+                                         )
                       );
      END IF;
 

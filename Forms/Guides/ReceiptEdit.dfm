@@ -300,6 +300,7 @@
     object InsertUpdateGuides: TdsdInsertUpdateGuides
       Category = 'DSDLib'
       MoveParams = <>
+      PostDataSetBeforeExecute = False
       StoredProc = spInsertUpdate
       StoredProcList = <
         item
@@ -309,6 +310,7 @@
     end
     object dsdFormClose: TdsdFormClose
       MoveParams = <>
+      PostDataSetBeforeExecute = False
     end
   end
   object spInsertUpdate: TdsdStoredProc
@@ -649,9 +651,9 @@
   object ReceiptCostGuides: TdsdGuides
     KeyField = 'Id'
     LookupControl = ceReceiptCost
-    FormNameParam.Value = 'TReceiptCostForm'
+    FormNameParam.Value = 'TGoods_ObjectForm'
     FormNameParam.DataType = ftString
-    FormName = 'TReceiptCostForm'
+    FormName = 'TGoods_ObjectForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
       item
@@ -724,7 +726,7 @@
         DataType = ftString
         ParamType = ptInput
       end>
-    Left = 124
+    Left = 132
     Top = 206
   end
   object GoodsKindGuides: TdsdGuides

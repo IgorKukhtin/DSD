@@ -159,13 +159,17 @@ inherited PromoJournalForm: TPromoJournalForm
     inherited deEnd: TcxDateEdit
       EditValue = 42309d
     end
+    inherited cxLabel2: TcxLabel
+      Left = 198
+      ExplicitLeft = 198
+    end
     object chbPeriodForOperDate: TcxCheckBox
       Left = 401
       Top = 5
       Action = actRefresh
-      Caption = #1055#1077#1088#1080#1086#1076' '#1076#1083#1103' <'#1044#1072#1090#1072' '#1076#1086#1082#1091#1084#1077#1085#1090#1072'>'
+      Caption = #1042#1082#1083'. - '#1087#1077#1088#1080#1086#1076' '#1076#1083#1103' <'#1044#1072#1090#1072' '#1076#1086#1082#1091#1084#1077#1085#1090#1072'> ('#1086#1090#1082#1083'. - '#1076#1083#1103' <'#1044#1072#1090#1072' '#1086#1090#1075#1088#1091#1079#1082#1080'>)'
       TabOrder = 4
-      Width = 192
+      Width = 384
     end
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn

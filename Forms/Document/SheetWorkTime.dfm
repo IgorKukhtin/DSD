@@ -49,7 +49,7 @@ object SheetWorkTimeForm: TSheetWorkTimeForm
           Kind = bkEllipsis
         end>
       TabOrder = 0
-      Width = 170
+      Width = 278
     end
     object cxLabel4: TcxLabel
       Left = 115
@@ -299,11 +299,15 @@ object SheetWorkTimeForm: TSheetWorkTimeForm
         end
         item
           Visible = True
-          ItemName = 'bbPrint'
+          ItemName = 'bbStatic'
         end
         item
           Visible = True
           ItemName = 'bbGridToExel'
+        end
+        item
+          Visible = True
+          ItemName = 'bbStatic'
         end>
       OneOnRow = True
       Row = 0
