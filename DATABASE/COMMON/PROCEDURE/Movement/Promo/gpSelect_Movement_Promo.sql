@@ -50,7 +50,7 @@ BEGIN
                        )
         SELECT
             Movement_Promo.Id                 --Идентификатор
-          , Movement_Promo.InvNumber :: Integer AS           --Номер документа
+          , Movement_Promo.InvNumber          --Номер документа
           , Movement_Promo.OperDate           --Дата документа
           , Movement_Promo.StatusCode         --код статуса
           , Movement_Promo.StatusName         --Статус
