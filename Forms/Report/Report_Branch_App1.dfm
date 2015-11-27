@@ -1,29 +1,29 @@
 inherited Report_Branch_App1Form: TReport_Branch_App1Form
   Caption = #1054#1090#1095#1077#1090' <'#1055#1088#1080#1083#1086#1078#1077#1085#1080#1077' 1 '#1044#1074#1080#1078#1077#1085#1080#1077' '#1090#1086#1074#1072#1088#1072' '#1043#1055'>'
-  ClientHeight = 344
-  ClientWidth = 1020
+  ClientHeight = 485
+  ClientWidth = 1073
   AddOnFormData.isSingle = False
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
-  ExplicitWidth = 1036
-  ExplicitHeight = 382
+  ExplicitWidth = 1089
+  ExplicitHeight = 523
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Width = 1020
-    Height = 287
+    Width = 1073
+    Height = 428
     TabOrder = 3
     ExplicitTop = 57
     ExplicitWidth = 1020
     ExplicitHeight = 287
-    ClientRectBottom = 287
-    ClientRectRight = 1020
+    ClientRectBottom = 428
+    ClientRectRight = 1073
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 1020
       ExplicitHeight = 287
       inherited cxGrid: TcxGrid
-        Width = 1020
-        Height = 287
+        Width = 1073
+        Height = 428
         ExplicitWidth = 1020
         ExplicitHeight = 287
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -174,6 +174,21 @@ inherited Report_Branch_App1Form: TReport_Branch_App1Form
               Format = ',0.####'
               Kind = skSum
               Column = Sale_10500_Summ
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = SaleRealSumm
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Sale_10300_Summ
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Sale_10200_Summ
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -322,6 +337,21 @@ inherited Report_Branch_App1Form: TReport_Branch_App1Form
               Format = ',0.####'
               Kind = skSum
               Column = Sale_10500_Summ
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = SaleRealSumm
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Sale_10300_Summ
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Sale_10200_Summ
             end>
           OptionsData.CancelOnExit = True
           OptionsData.Deleting = False
@@ -422,7 +452,7 @@ inherited Report_Branch_App1Form: TReport_Branch_App1Form
             Width = 60
           end
           object SaleSumm: TcxGridDBColumn
-            Caption = #1055#1088#1086#1076#1072#1078#1072' ('#1075#1088#1085')'
+            Caption = #1055#1088#1086#1076#1072#1078#1072' c/c ('#1075#1088#1085')'
             DataBinding.FieldName = 'SaleSumm'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
@@ -435,6 +465,13 @@ inherited Report_Branch_App1Form: TReport_Branch_App1Form
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
+            Width = 60
+          end
+          object SaleRealSumm: TcxGridDBColumn
+            Caption = #1055#1088#1086#1076#1072#1078#1072' '#1089#1091#1084#1084#1072' '#1087#1086#1082'.  ('#1075#1088#1085')'
+            DataBinding.FieldName = 'SaleRealSumm'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
             Width = 60
           end
           object SendOnPriceOutSumm: TcxGridDBColumn
@@ -485,6 +522,22 @@ inherited Report_Branch_App1Form: TReport_Branch_App1Form
             Options.Editing = False
             Width = 60
           end
+          object Sale_10300_Summ: TcxGridDBColumn
+            Caption = #1057#1082#1080#1076#1082#1072' '#1087#1086' '#1085#1072#1082#1083#1072#1076#1085'. ('#1075#1088#1085')'
+            DataBinding.FieldName = 'Sale_10300_Summ'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 60
+          end
+          object Sale_10200_Summ: TcxGridDBColumn
+            Caption = #1057#1091#1084#1084#1072' '#1072#1082#1094#1080#1080
+            DataBinding.FieldName = 'Sale_10200_Summ'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 60
+          end
           object LossSumm: TcxGridDBColumn
             Caption = #1057#1087#1080#1089#1072#1085#1080#1077' ('#1075#1088#1085')'
             DataBinding.FieldName = 'LossSumm'
@@ -530,7 +583,7 @@ inherited Report_Branch_App1Form: TReport_Branch_App1Form
     end
   end
   inherited Panel: TPanel
-    Width = 1020
+    Width = 1073
     ExplicitWidth = 1020
     inherited deStart: TcxDateEdit
       Left = 97

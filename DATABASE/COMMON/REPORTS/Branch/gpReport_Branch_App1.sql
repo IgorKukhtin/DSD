@@ -14,10 +14,12 @@ RETURNS TABLE (BranchName TVarChar
              , ReturnInSumm TFloat, ReturnInWeight TFloat
              , PeresortSumm TFloat, PeresortWeight TFloat
              
-             , SaleSumm TFloat, SaleWeight TFloat
+             , SaleSumm TFloat, SaleWeight TFloat, SaleRealSumm TFloat
              , SendOnPriceOutSumm TFloat, SendOnPriceOutWeight TFloat
              , Sale_40208_Summ TFloat, Sale_40208_Weight TFloat
              , Sale_10500_Summ TFloat, Sale_10500_Weight TFloat
+             , Sale_10200_Summ TFloat
+             , Sale_10300_Summ TFloat
              , LossSumm TFloat, LossWeight TFloat
              , InventorySumm TFloat, InventoryWeight TFloat   
              , SummInventory_RePrice TFloat          
@@ -50,18 +52,18 @@ BEGIN
                             INNER JOIN Object_Unit_View ON Object_Unit_View.BranchId = _tmpBranch.BranchId
                         )
 
-  , tmpContainerList AS (SELECT * 
+  , tmpContainerList AS (SELECT tmpUnitList.BranchId,  Container.Id AS ContainerId, Object_Account_View.AccountDirectionId, Container.*
                          FROM tmpUnitList 
                              INNER JOIN ContainerLinkObject AS CLO_Unit
                                                 ON CLO_Unit.ObjectId = tmpUnitList.Id
                                                AND CLO_Unit.DescId = zc_ContainerLinkObject_Unit() 
                              INNER JOIN Container ON Container.Id = CLO_Unit.ContainerId
-                                                 AND Container.DescId = zc_Container_Summ()    
+                                               ---  AND Container.DescId = zc_Container_Summ()    
                              LEFT JOIN Object_Account_View ON Object_Account_View.AccountId = Container.ObjectId
-                         WHERE Object_Account_View.AccountDirectionId = zc_Enum_AccountDirection_20700() 
+                        -- WHERE Object_Account_View.AccountDirectionId = zc_Enum_AccountDirection_20700() 
                         )
 
-      , tmpGoods AS (SELECT tmpContainerList.BranchId
+      , tmpGoodsSumm AS (SELECT tmpContainerList.BranchId
                           , tmpContainerList.Amount - COALESCE (SUM (COALESCE (MIContainer.Amount, 0)), 0) AS SummStart 
                           , tmpContainerList.Amount - COALESCE (SUM (CASE WHEN MIContainer.OperDate > inEndDate THEN MIContainer.Amount ELSE 0 END), 0) AS SummEnd
                           , SUM (CASE WHEN MIContainer.OperDate BETWEEN inStartDate AND inEndDate AND MIContainer.isActive = TRUE THEN MIContainer.Amount 
@@ -71,6 +73,13 @@ BEGIN
 
                           , SUM (CASE WHEN MIContainer.MovementDescId = zc_Movement_Sale() AND MIContainer.OperDate BETWEEN inStartDate AND inEndDate  THEN -1 * MIContainer.Amount                                        --Sale
                                     ELSE 0 END) AS SummSale
+                          , SUM (CASE WHEN MIContainer.MovementDescId = zc_Movement_Sale() 
+                                       AND MIContainer.OperDate BETWEEN inStartDate AND inEndDate
+                                       AND MIContainer.AnalyzerId = zc_Enum_AnalyzerId_SaleSumm_10400() -- Сумма с/с, реализация, у покупателя
+                                       AND MIContainer.ContainerId_Analyzer <> 0
+                                      THEN -1 * MIContainer.Amount                                        --Sale
+                                      ELSE 0 END) AS SummSaleReal
+                                                   
                           , SUM (CASE WHEN MIContainer.MovementDescId = zc_Movement_Sale() 
                                        AND MIContainer.OperDate BETWEEN inStartDate AND inEndDate  
                                        AND MIContainer.AnalyzerId = zc_Enum_AnalyzerId_SaleSumm_40200() 
@@ -82,7 +91,17 @@ BEGIN
                                        AND MIContainer.AnalyzerId = zc_Enum_AnalyzerId_SaleSumm_10500()  -- Сумма с/с, реализация, Скидка за вес
                                       THEN -1 * MIContainer.Amount                                        
                                       ELSE 0 END) AS SummSale_10500
-                                      
+                          , SUM (CASE WHEN MIContainer.MovementDescId = zc_Movement_Sale() 
+                                       AND MIContainer.OperDate BETWEEN inStartDate AND inEndDate  
+                                       AND MIContainer.AnalyzerId = zc_Enum_AnalyzerId_SaleSumm_10200()  -- Сумма, реализация, Разница с оптовыми ценами т.е. это сумма акции
+                                      THEN -1 * MIContainer.Amount                                        
+                                      ELSE 0 END) AS SummSale_10200
+                          , SUM (CASE WHEN MIContainer.MovementDescId = zc_Movement_Sale() 
+                                       AND MIContainer.OperDate BETWEEN inStartDate AND inEndDate  
+                                       AND MIContainer.AnalyzerId = zc_Enum_AnalyzerId_SaleSumm_10300()  -- скидка по накладной,
+                                      THEN -1 * MIContainer.Amount                                        
+                                      ELSE 0 END) AS SummSale_10300
+                                                                                                                  
                           , SUM (CASE WHEN MIContainer.MovementDescId = zc_Movement_ReturnIn() AND MIContainer.OperDate BETWEEN inStartDate AND inEndDate THEN MIContainer.Amount                                         ---ReturnIn
                                     ELSE 0 END) AS SummReturnIn
                           , SUM (CASE WHEN MIContainer.MovementDescId = zc_Movement_SendOnPrice() AND MIContainer.isActive = TRUE AND MIContainer.OperDate BETWEEN inStartDate AND inEndDate THEN MIContainer.Amount                              ---перемещение по цене
@@ -106,81 +125,203 @@ BEGIN
                           LEFT JOIN MovementItemContainer AS MIContainer 
                                                           ON MIContainer.ContainerId = tmpContainerList.ContainerId 
                                                           AND MIContainer.OperDate >= inStartDate 
+                     WHERE tmpContainerList.DescId = zc_Container_Summ() 
+                       AND tmpContainerList.AccountDirectionId = zc_Enum_AccountDirection_20700() 
                      GROUP BY tmpContainerList.ContainerId, tmpContainerList.Amount, tmpContainerList.BranchId
                     )
 
+, tmpGoodsCount AS  (SELECT tmpContainerList.BranchId, tmpContainerList.ObjectId AS GoodsId
+                          , tmpContainerList.Amount - COALESCE (SUM (COALESCE (MIContainer.Amount, 0)), 0) AS CountStart 
+                          , tmpContainerList.Amount - COALESCE (SUM (CASE WHEN MIContainer.OperDate > inEndDate THEN MIContainer.Amount ELSE 0 END), 0) AS CountEnd
+                          , SUM (CASE WHEN MIContainer.OperDate BETWEEN inStartDate AND inEndDate AND MIContainer.isActive = TRUE THEN MIContainer.Amount 
+                                    ELSE 0 END) AS CountIn
+                          , SUM (CASE WHEN MIContainer.OperDate BETWEEN inStartDate AND inEndDate AND MIContainer.isActive = FALSE THEN -1 * MIContainer.Amount
+                                    ELSE 0 END) AS CountOut
 
-/*, tmpGoodsMovement AS (SELECT  tmpContainerList.BranchId
-                              , SUM (CASE WHEN MIContainer.MovementDescId = zc_Movement_Sale() AND MIContainer.isActive = true  THEN  MIContainer.Amount                                        --Sale
-                                        ELSE 0 END) AS SummSale
-                              , SUM (CASE WHEN MIContainer.MovementDescId = zc_Movement_ReturnIn() THEN  MIContainer.Amount                                         ---ReturnIn
-                                        ELSE 0 END) AS SummReturnIn
-                              , SUM (CASE WHEN MIContainer.MovementDescId = zc_Movement_SendOnPrice() THEN  MIContainer.Amount                              ---перемещение по цене
-                                        ELSE 0 END) AS SummSendOnPrice
-                              , SUM (CASE WHEN MIContainer.MovementDescId = zc_Movement_Loss() THEN  MIContainer.Amount                                     ---Списание
-                                        ELSE 0 END) AS SummLoss  
-                       FROM tmpContainerList
-                              inner JOIN MovementItemContainer AS MIContainer
-                                                       ON MIContainer.ContainerId = tmpContainerList.ContainerId 
-                                                      AND MIContainer.OperDate BETWEEN inStartDate AND inEndDate
-                         GROUP BY tmpContainerList.ContainerId, tmpContainerList.Amount , tmpContainerList.BranchId
-           )
-                
-       */
+                          , SUM (CASE WHEN MIContainer.MovementDescId = zc_Movement_Sale() AND MIContainer.OperDate BETWEEN inStartDate AND inEndDate  THEN -1 * MIContainer.Amount                                        --Sale
+                                    ELSE 0 END) AS CountSale
+                          , SUM (CASE WHEN MIContainer.MovementDescId = zc_Movement_Sale() 
+                                       AND MIContainer.OperDate BETWEEN inStartDate AND inEndDate
+                                       AND MIContainer.AnalyzerId = zc_Enum_AnalyzerId_SaleCount_10400() -- Сумма с/с, реализация, у покупателя
+                                       AND MIContainer.ContainerId_Analyzer <> 0
+                                      THEN -1 * MIContainer.Amount                                        --Sale
+                                      ELSE 0 END) AS CountSaleReal
+                                                   
+                          , SUM (CASE WHEN MIContainer.MovementDescId = zc_Movement_Sale() 
+                                       AND MIContainer.OperDate BETWEEN inStartDate AND inEndDate  
+                                       AND MIContainer.AnalyzerId = zc_Enum_AnalyzerId_SaleCount_40200() 
+                                      THEN -1 * MIContainer.Amount                                        ---- Сумма с/с, реализация, Разница в весе
+                                      ELSE 0 END) AS CountSale_40208
+   
+                          , SUM (CASE WHEN MIContainer.MovementDescId = zc_Movement_Sale() 
+                                       AND MIContainer.OperDate BETWEEN inStartDate AND inEndDate  
+                                       AND MIContainer.AnalyzerId = zc_Enum_AnalyzerId_SaleCount_10500()  -- Сумма с/с, реализация, Скидка за вес
+                                      THEN -1 * MIContainer.Amount                                        
+                                      ELSE 0 END) AS CountSale_10500
+                                                                                                                  
+                          , SUM (CASE WHEN MIContainer.MovementDescId = zc_Movement_ReturnIn() AND MIContainer.OperDate BETWEEN inStartDate AND inEndDate THEN MIContainer.Amount                                         ---ReturnIn
+                                    ELSE 0 END) AS CountReturnIn
+                          , SUM (CASE WHEN MIContainer.MovementDescId = zc_Movement_SendOnPrice() AND MIContainer.isActive = TRUE AND MIContainer.OperDate BETWEEN inStartDate AND inEndDate THEN MIContainer.Amount                              ---перемещение по цене
+                                    ELSE 0 END) AS CountSendOnPriceIn
+                          , SUM (CASE WHEN MIContainer.MovementDescId = zc_Movement_SendOnPrice() AND MIContainer.isActive = FALSE AND MIContainer.OperDate BETWEEN inStartDate AND inEndDate THEN -1 * MIContainer.Amount                              ---перемещение по цене
+                                    ELSE 0 END) AS CountSendOnPriceOut                                        
+                          , SUM (CASE WHEN MIContainer.MovementDescId = zc_Movement_Loss() AND MIContainer.isActive = FALSE AND MIContainer.OperDate BETWEEN inStartDate AND inEndDate THEN -1 * MIContainer.Amount                                     ---Списание
+                                    ELSE 0 END) AS CountLoss 
+                          , SUM (CASE WHEN MIContainer.MovementDescId = zc_Movement_ProductionUnion() AND MIContainer.isActive = True AND MIContainer.OperDate BETWEEN inStartDate AND inEndDate THEN  MIContainer.Amount                                     ---Списание
+                                    ELSE 0 END) AS CountPeresort                                    
+                          , SUM (CASE WHEN MIContainer.MovementDescId = zc_Movement_Inventory() AND MIContainer.OperDate BETWEEN inStartDate AND inEndDate THEN  MIContainer.Amount                                     ---Списание
+                                    ELSE 0 END) AS CountInventory 
+                          , SUM (CASE WHEN MIContainer.MovementDescId = zc_Movement_Inventory() 
+                                       AND MIContainer.OperDate BETWEEN inStartDate AND inEndDate
+                                       AND MIContainer.AnalyzerId = zc_Enum_AccountGroup_60000()
+                                      THEN  MIContainer.Amount                                     
+                                      ELSE 0 END) AS CountInventory_RePrice
+                     FROM tmpContainerList
+                          LEFT JOIN MovementItemContainer AS MIContainer 
+                                                          ON MIContainer.ContainerId = tmpContainerList.ContainerId 
+                                                          AND MIContainer.OperDate >= inStartDate 
+                     WHERE tmpContainerList.DescId = zc_Container_Count() 
+                     GROUP BY tmpContainerList.ContainerId, tmpContainerList.Amount, tmpContainerList.BranchId, tmpContainerList.ObjectId
+                    )
+    , tmpGoodsWeight AS (
+                   SELECT tmpGoodsCount.BranchId 
+                        , CAST (tmpGoodsCount.CountStart * CASE WHEN OL_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END                   AS TFloat) AS CountStart
+                        , CAST (tmpGoodsCount.CountEnd * CASE WHEN OL_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END                     AS TFloat) AS CountEnd
+                        , CAST (tmpGoodsCount.CountIn * CASE WHEN OL_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END                      AS TFloat) AS CountIn
+                        , CAST (tmpGoodsCount.CountOut * CASE WHEN OL_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END                     AS TFloat) AS CountOut
+                        , CAST (tmpGoodsCount.CountSale * CASE WHEN OL_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END                    AS TFloat) AS CountSale
+                        , CAST (tmpGoodsCount.CountSaleReal * CASE WHEN OL_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END                AS TFloat) AS CountSaleReal
+                        , CAST (tmpGoodsCount.CountReturnIn * CASE WHEN OL_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END                AS TFloat) AS CountReturnIn
+                        , CAST (tmpGoodsCount.CountSendOnPriceIn * CASE WHEN OL_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END           AS TFloat) AS CountSendOnPriceIn
+                        , CAST (tmpGoodsCount.CountLoss * CASE WHEN OL_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END           AS TFloat) AS CountLoss    
+                        , CAST (tmpGoodsCount.CountSendOnPriceOut * CASE WHEN OL_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END          AS TFloat) AS CountSendOnPriceOut  
+                        , CAST (tmpGoodsCount.CountPeresort * CASE WHEN OL_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END                AS TFloat) AS CountPeresort    
+                        , CAST (tmpGoodsCount.CountInventory * CASE WHEN OL_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END               AS TFloat) AS CountInventory
+                        , CAST (tmpGoodsCount.CountSale_40208 * CASE WHEN OL_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END              AS TFloat) AS CountSale_40208
+                        , CAST (tmpGoodsCount.CountSale_10500 * CASE WHEN OL_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END              AS TFloat) AS CountSale_10500
+                        , CAST (tmpGoodsCount.CountInventory_RePrice * CASE WHEN OL_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END       AS TFloat) AS CountInventory_RePrice
+                   FROM tmpGoodsCount
+                      LEFT JOIN ObjectLink AS OL_Goods_Measure 
+                                          ON OL_Goods_Measure.ObjectId = tmpGoodsCount.GoodsId
+                                         AND OL_Goods_Measure.DescId = zc_ObjectLink_Goods_Measure()
+                      LEFT JOIN ObjectFloat AS ObjectFloat_Weight
+                                            ON ObjectFloat_Weight.ObjectId = tmpGoodsCount.GoodsId
+                                           AND ObjectFloat_Weight.DescId = zc_ObjectFloat_Goods_Weight()
+                     )
+
  
   SELECT  Object_Branch.ValueData  ::TVarChar   AS BranchName
 
        
         , CAST (SUM (tmpAll.SummStart)         AS TFloat) AS SummStart
-        , CAST (0         AS TFloat) AS WeightStart
+        , CAST (SUM (tmpAll.CountStart)        AS TFloat) AS WeightStart
         , CAST (SUM (tmpAll.SummEnd)           AS TFloat) AS SummEnd
-        , CAST (0         AS TFloat) AS WeightEnd
+        , CAST (SUM (tmpAll.CountEnd)          AS TFloat) AS WeightEnd
 
         , CAST (SUM (tmpAll.SummSendOnPriceIn)            AS TFloat) AS SummSendOnPriceInSumm
-        , CAST (0         AS TFloat) AS IncomeWeight
+        , CAST (SUM (tmpAll.CountSendOnPriceIn)           AS TFloat) AS IncomeWeight
         
         , CAST (SUM (tmpAll.SummReturnIn)                 AS TFloat) AS ReturnInSumm
-        , CAST (0         AS TFloat) AS ReturnInWeight
+        , CAST (SUM (tmpAll.CountReturnIn)                AS TFloat) AS ReturnInWeight
 
-        , CAST (SUM (tmpAll.SummPeresort)      AS TFloat) AS PeresortSumm
-        , CAST (0         AS TFloat) AS PeresortWeight
+        , CAST (SUM (tmpAll.SummPeresort)                 AS TFloat) AS PeresortSumm
+        , CAST (SUM (tmpAll.CountPeresort)                AS TFloat) AS PeresortWeight
         , CAST (SUM (tmpAll.SummSale)                     AS TFloat) AS SaleSumm
-        , CAST (0         AS TFloat) AS SaleWeight
+        , CAST (SUM (tmpAll.CountSale)                    AS TFloat) AS SaleWeight
+        
+        , CAST (SUM (tmpAll.SummSaleReal)                 AS TFloat) AS SaleRealSumm
+        
         , CAST (SUM (tmpAll.SummSendOnPriceOut)           AS TFloat) AS SendOnPriceOutSumm
-        , CAST (0         AS TFloat) AS SendWeight
+        , CAST (SUM (tmpAll.CountSendOnPriceOut)          AS TFloat) AS SendWeight
         
         , CAST (SUM (tmpAll.SummSale_40208)               AS TFloat) AS Sale_40208_Summ
-        , CAST (0         AS TFloat) AS Sale_40208_Weight
+        , CAST (SUM (tmpAll.CountSale_40208)              AS TFloat) AS Sale_40208_Weight
 
         , CAST (SUM (tmpAll.SummSale_10500)               AS TFloat) AS Sale_10500_Summ
-        , CAST (0         AS TFloat) AS Sale_10500_Weight
-                        
+        , CAST (SUM (tmpAll.CountSale_10500)              AS TFloat) AS Sale_10500_Weight
+
+        , CAST (SUM (tmpAll.SummSale_10200)               AS TFloat) AS Sale_10200_Summ
+        , CAST (SUM (tmpAll.SummSale_10300)               AS TFloat) AS Sale_10300_Summ
+        
         , CAST (SUM (tmpAll.SummLoss)                     AS TFloat) AS LossSumm
-        , CAST (0         AS TFloat) AS LossWeight
+        , CAST (SUM (tmpAll.CountLoss)                    AS TFloat) AS LossWeight
         , CAST (SUM (tmpAll.SummInventory)                AS TFloat) AS InventorySumm
-        , CAST (0         AS TFloat) AS InventoryWeight
+        , CAST (SUM (tmpAll.CountInventory)               AS TFloat) AS InventoryWeight
         , CAST (SUM (tmpAll.SummInventory_RePrice)        AS TFloat) AS SummInventory_RePrice
   
       FROM 
-                  (SELECT tmpGoods.BranchId 
-                        , CAST (SUM (tmpGoods.SummStart) AS NUMERIC (16, 2)) AS SummStart
-                        , CAST (SUM (tmpGoods.SummEnd) AS NUMERIC (16, 2))   AS SummEnd
-                        , CAST (SUM (tmpGoods.SummIn) AS NUMERIC (16, 2))      AS SummIn
-                        , CAST (SUM (tmpGoods.SummOut) AS NUMERIC (16, 2))     AS SummOut
-                        
-                        , CAST (SUM (tmpGoods.SummSale) AS NUMERIC (16, 2))           AS SummSale
-                        , CAST (SUM (tmpGoods.SummReturnIn) AS NUMERIC (16, 2))       AS SummReturnIn
-                        , CAST (SUM (tmpGoods.SummSendOnPriceIn) AS NUMERIC (16, 2))  AS SummSendOnPriceIn
-                        , CAST (SUM (tmpGoods.SummLoss) AS NUMERIC (16, 2))           AS SummLoss    
-                        , CAST (SUM (tmpGoods.SummSendOnPriceOut) AS NUMERIC (16, 2)) AS SummSendOnPriceOut  
-                        , CAST (SUM (tmpGoods.SummPeresort) AS NUMERIC (16, 2)) AS SummPeresort    
-                        , CAST (SUM (tmpGoods.SummInventory) AS NUMERIC (16, 2)) AS SummInventory
-                        , CAST (SUM (tmpGoods.SummSale_40208) AS NUMERIC (16, 2)) AS SummSale_40208
-                        , CAST (SUM (tmpGoods.SummSale_10500) AS NUMERIC (16, 2)) AS SummSale_10500
-                        , CAST (SUM (tmpGoods.SummInventory_RePrice) AS NUMERIC (16, 2)) AS SummInventory_RePrice
-                   FROM tmpGoods
-                   GROUP BY tmpGoods.BranchId
-               
+                  (SELECT tmpGoodsSumm.BranchId 
+                        , CAST (SUM (tmpGoodsSumm.SummStart) AS NUMERIC (16, 2))   AS SummStart
+                        , CAST (SUM (tmpGoodsSumm.SummEnd) AS NUMERIC (16, 2))     AS SummEnd
+                        , CAST (SUM (tmpGoodsSumm.SummIn) AS NUMERIC (16, 2))      AS SummIn
+                        , CAST (SUM (tmpGoodsSumm.SummOut) AS NUMERIC (16, 2))     AS SummOut
+                        , CAST (SUM (tmpGoodsSumm.SummSale) AS NUMERIC (16, 2))           AS SummSale
+                        , CAST (SUM (tmpGoodsSumm.SummSaleReal) AS NUMERIC (16, 2))       AS SummSaleReal
+                        , CAST (SUM (tmpGoodsSumm.SummReturnIn) AS NUMERIC (16, 2))       AS SummReturnIn
+                        , CAST (SUM (tmpGoodsSumm.SummSendOnPriceIn) AS NUMERIC (16, 2))  AS SummSendOnPriceIn
+                        , CAST (SUM (tmpGoodsSumm.SummLoss) AS NUMERIC (16, 2))           AS SummLoss    
+                        , CAST (SUM (tmpGoodsSumm.SummSendOnPriceOut) AS NUMERIC (16, 2)) AS SummSendOnPriceOut  
+                        , CAST (SUM (tmpGoodsSumm.SummPeresort) AS NUMERIC (16, 2)) AS SummPeresort    
+                        , CAST (SUM (tmpGoodsSumm.SummInventory) AS NUMERIC (16, 2)) AS SummInventory
+                        , CAST (SUM (tmpGoodsSumm.SummSale_40208) AS NUMERIC (16, 2)) AS SummSale_40208
+                        , CAST (SUM (tmpGoodsSumm.SummSale_10500) AS NUMERIC (16, 2)) AS SummSale_10500
+                        , CAST (SUM (tmpGoodsSumm.SummSale_10200) AS NUMERIC (16, 2)) AS SummSale_10200
+                        , CAST (SUM (tmpGoodsSumm.SummSale_10300) AS NUMERIC (16, 2)) AS SummSale_10300
+                        , CAST (SUM (tmpGoodsSumm.SummInventory_RePrice) AS NUMERIC (16, 2)) AS SummInventory_RePrice
+                        , 0 AS CountStart
+                        , 0 AS CountEnd
+                        , 0 AS CountIn
+                        , 0 AS CountOut
+                        , 0 AS CountSale
+                        , 0 AS CountSaleReal
+                        , 0 AS CountReturnIn
+                        , 0 AS CountSendOnPriceIn
+                        , 0 AS CountLoss    
+                        , 0 AS CountSendOnPriceOut  
+                        , 0 AS CountPeresort    
+                        , 0 AS CountInventory
+                        , 0 AS CountSale_40208
+                        , 0 AS CountSale_10500
+                        , 0 AS CountInventory_RePrice
+
+                   FROM tmpGoodsSumm
+                   GROUP BY tmpGoodsSumm.BranchId
+               UNION ALL
+                   SELECT tmpGoodsWeight.BranchId 
+                        , 0 AS SummStart
+                        , 0 AS SummEnd
+                        , 0 AS SummIn
+                        , 0 AS SummOut
+                        , 0 AS SummSale
+                        , 0 AS SummSaleReal
+                        , 0 AS SummReturnIn
+                        , 0 AS SummSendOnPriceIn
+                        , 0 AS SummLoss    
+                        , 0 AS SummSendOnPriceOut  
+                        , 0 AS SummPeresort    
+                        , 0 AS SummInventory
+                        , 0 AS SummSale_40208
+                        , 0 AS SummSale_10500
+                        , 0 AS SummSale_10200
+                        , 0 AS SummSale_10300
+                        , 0 AS SummInventory_RePrice
+                        , CAST (SUM (tmpGoodsWeight.CountStart) AS NUMERIC (16, 2))   AS CountStart
+                        , CAST (SUM (tmpGoodsWeight.CountEnd) AS NUMERIC (16, 2))     AS CountEnd
+                        , CAST (SUM (tmpGoodsWeight.CountIn) AS NUMERIC (16, 2))      AS CountIn
+                        , CAST (SUM (tmpGoodsWeight.CountOut) AS NUMERIC (16, 2))     AS CountOut
+                        , CAST (SUM (tmpGoodsWeight.CountSale) AS NUMERIC (16, 2))           AS CountSale
+                        , CAST (SUM (tmpGoodsWeight.CountSaleReal) AS NUMERIC (16, 2))       AS CountSaleReal
+                        , CAST (SUM (tmpGoodsWeight.CountReturnIn) AS NUMERIC (16, 2))       AS CountReturnIn
+                        , CAST (SUM (tmpGoodsWeight.CountSendOnPriceIn) AS NUMERIC (16, 2))  AS CountSendOnPriceIn
+                        , CAST (SUM (tmpGoodsWeight.CountLoss) AS NUMERIC (16, 2))           AS CountLoss    
+                        , CAST (SUM (tmpGoodsWeight.CountSendOnPriceOut) AS NUMERIC (16, 2)) AS CountSendOnPriceOut  
+                        , CAST (SUM (tmpGoodsWeight.CountPeresort) AS NUMERIC (16, 2))       AS CountPeresort    
+                        , CAST (SUM (tmpGoodsWeight.CountInventory) AS NUMERIC (16, 2))      AS CountInventory
+                        , CAST (SUM (tmpGoodsWeight.CountSale_40208) AS NUMERIC (16, 2))     AS CountSale_40208
+                        , CAST (SUM (tmpGoodsWeight.CountSale_10500) AS NUMERIC (16, 2))     AS CountSale_10500
+                        , CAST (SUM (tmpGoodsWeight.CountInventory_RePrice) AS NUMERIC (16, 2)) AS CountInventory_RePrice
+                   FROM tmpGoodsWeight
+                   GROUP BY tmpGoodsWeight.BranchId
                 ) AS tmpAll
 
           LEFT JOIN Object AS Object_Branch ON Object_Branch.Id = tmpAll.BranchId   --CASE WHEN COALESCE(inBranchId,0) <> 0 THEN inBranchId END
