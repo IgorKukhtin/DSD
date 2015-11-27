@@ -17,7 +17,7 @@ uses
 
 type
   TReport_Branch_App1Form = class(TAncestorReportForm)
-    PeresortWeight: TcxGridDBColumn;
+    PeresortInWeight: TcxGridDBColumn;
     SaleWeight: TcxGridDBColumn;
     Sale_40208_Summ: TcxGridDBColumn;
     FormParams: TdsdFormParams;
@@ -36,7 +36,7 @@ type
     bbExecuteDialog: TdxBarButton;
     actPrint: TdsdPrintAction;
     bbPrint: TdxBarButton;
-    PeresortSumm: TcxGridDBColumn;
+    PeresortInSumm: TcxGridDBColumn;
     ReturnInWeight: TcxGridDBColumn;
     SaleSumm: TcxGridDBColumn;
     SendOnPriceInSumm: TcxGridDBColumn;

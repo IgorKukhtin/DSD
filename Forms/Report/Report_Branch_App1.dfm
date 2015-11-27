@@ -24,7 +24,6 @@ inherited Report_Branch_App1Form: TReport_Branch_App1Form
       inherited cxGrid: TcxGrid
         Width = 1073
         Height = 428
-        ExplicitTop = 3
         ExplicitWidth = 1073
         ExplicitHeight = 428
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -109,12 +108,22 @@ inherited Report_Branch_App1Form: TReport_Branch_App1Form
             item
               Format = ',0.####'
               Kind = skSum
-              Column = PeresortSumm
+              Column = PeresortInSumm
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = PeresortWeight
+              Column = PeresortInWeight
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = PeresortOutSumm
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = PeresortOutWeight
             end
             item
               Format = ',0.####'
@@ -272,12 +281,22 @@ inherited Report_Branch_App1Form: TReport_Branch_App1Form
             item
               Format = ',0.####'
               Kind = skSum
-              Column = PeresortSumm
+              Column = PeresortInSumm
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = PeresortWeight
+              Column = PeresortInWeight
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = PeresortOutSumm
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = PeresortOutWeight
             end
             item
               Format = ',0.####'
@@ -436,17 +455,33 @@ inherited Report_Branch_App1Form: TReport_Branch_App1Form
             Options.Editing = False
             Width = 60
           end
-          object PeresortSumm: TcxGridDBColumn
-            Caption = #1055#1077#1088#1077#1089#1086#1088#1090#1080#1094#1072' ('#1075#1088#1085')'
-            DataBinding.FieldName = 'PeresortSumm'
+          object PeresortInSumm: TcxGridDBColumn
+            Caption = #1055#1077#1088#1077#1089#1086#1088#1090#1080#1094#1072' '#1087#1088#1080#1093#1086#1076' ('#1075#1088#1085')'
+            DataBinding.FieldName = 'PeresortInSumm'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 60
           end
-          object PeresortWeight: TcxGridDBColumn
-            Caption = #1055#1077#1088#1077#1089#1086#1088#1090#1080#1094#1072' ('#1074#1077#1089')'
-            DataBinding.FieldName = 'PeresortWeight'
+          object PeresortInWeight: TcxGridDBColumn
+            Caption = #1055#1077#1088#1077#1089#1086#1088#1090#1080#1094#1072' '#1087#1088#1080#1093#1086#1076' ('#1074#1077#1089')'
+            DataBinding.FieldName = 'PeresortInWeight'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 60
+          end
+          object PeresortOutSumm: TcxGridDBColumn
+            Caption = #1055#1077#1088#1077#1089#1086#1088#1090#1080#1094#1072' '#1088#1072#1089#1093#1086#1076' ('#1075#1088#1085')'
+            DataBinding.FieldName = 'PeresortOutSumm'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 60
+          end
+          object PeresortOutWeight: TcxGridDBColumn
+            Caption = #1055#1077#1088#1077#1089#1086#1088#1090#1080#1094#1072' '#1088#1072#1089#1093#1086#1076' ('#1074#1077#1089')'
+            DataBinding.FieldName = 'PeresortOutWeight'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False

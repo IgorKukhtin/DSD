@@ -33,7 +33,7 @@ BEGIN
     THEN
      --RAISE EXCEPTION 'Ошибка. Не выбран Филиал.';
        INSERT INTO _tmpBranch (BranchId)
-           SELECT Object.Id AS BranchId FROM Object WHERE Object.DescId = zc_Object_Branch() and Object.Id <> zc_Branch_Basis();
+           SELECT Object.Id AS BranchId FROM Object WHERE Object.DescId = zc_Object_Branch() and Object.Id <> zc_Branch_Basis() and Object.isErased = False AND Object.ObjectCode not in (6,8,10) ;
     ELSE
        INSERT INTO _tmpBranch (BranchId)
            SELECT inBranchId;
