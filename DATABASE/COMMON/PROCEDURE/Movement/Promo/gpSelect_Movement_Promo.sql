@@ -1,12 +1,14 @@
 -- Function: gpSelect_Movement_Promo()
 
 DROP FUNCTION IF EXISTS gpSelect_Movement_Promo (TDateTime, TDateTime, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_Movement_Promo (TDateTime, TDateTime, Boolean, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_Movement_Promo(
-    IN inStartDate     TDateTime , --
-    IN inEndDate       TDateTime , --
-    IN inIsErased      Boolean ,
-    IN inSession       TVarChar    -- сессия пользователя
+    IN inStartDate         TDateTime , --
+    IN inEndDate           TDateTime , --
+    IN inIsErased          Boolean ,
+    IN inPeriodForOperDate Boolean ,
+    IN inSession           TVarChar    -- сессия пользователя
 )
 RETURNS TABLE (Id               Integer     --Идентификатор
              , InvNumber        Integer     --Номер документа
@@ -88,18 +90,32 @@ BEGIN
             Left Outer Join Movement_PromoPartner_View AS Movement_PromoPartner
                                                        ON Movement_PromoPartner.ParentId = Movement_Promo.ID
         WHERE
-            Movement_Promo.OperDate BETWEEN inStartDate AND inEndDate
-        ORDER BY InvNumber;
+            (
+                inPeriodForOperDate = TRUE
+                AND
+                Movement_Promo.OperDate BETWEEN inStartDate AND inEndDate
+            )
+            OR
+            (
+                inPeriodForOperDate = FALSE
+                AND
+                (
+                    Movement_Promo.StartSale BETWEEN inStartDate AND inEndDate
+                    OR
+                    inStartDate BETWEEN Movement_Promo.StartSale AND Movement_Promo.EndSale
+                )
+            );
 
 END;
 $BODY$
   LANGUAGE PLPGSQL VOLATILE;
-ALTER FUNCTION gpSelect_Movement_Promo (TDateTime, TDateTime, Boolean, TVarChar) OWNER TO postgres;
+ALTER FUNCTION gpSelect_Movement_Promo (TDateTime, TDateTime, Boolean, Boolean, TVarChar) OWNER TO postgres;
 
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А.А.
+ 27.11.15                                                                        *inPeriodForOperDate
  17.11.15                                                                        *Movement_PromoPartner_View
  13.10.15                                                                        *
 */
