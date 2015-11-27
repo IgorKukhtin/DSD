@@ -54,7 +54,7 @@ BEGIN
       ;     
 
      -- !!!!!
-     RAISE EXCEPTION '%   %', (select count(*) from _tmpMovement_sale)
+     /*RAISE EXCEPTION '%   %', (select count(*) from _tmpMovement_sale)
                             , (select count(*) from _tmpMovement_sale
           INNER JOIN MovementItem ON MovementItem.MovementId = _tmpMovement_sale.MovementId
           INNER JOIN MovementItemFloat AS MIFloat_PromoMovement
@@ -65,7 +65,7 @@ BEGIN
      -- Результат - в MovementLinkMovement Продажа
      PERFORM lpInsertUpdate_MovementLinkMovement (zc_MovementLinkMovement_Promo(), _tmpMovement_sale.MovementId, NULL)
      FROM _tmpMovement_sale
-     ;
+     ;*/
 
      -- Результат - в Movement Продажа
      PERFORM lpInsertUpdate_MovementBoolean (zc_MovementBoolean_Promo(), _tmpMovement_sale.MovementId, FALSE)

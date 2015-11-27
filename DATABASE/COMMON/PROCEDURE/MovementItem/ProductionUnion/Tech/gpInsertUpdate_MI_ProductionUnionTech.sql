@@ -83,17 +83,21 @@ BEGIN
 
 
    -- таблица элементы Child
-   CREATE TEMP TABLE _tmpChild (MovementItemId Integer, GoodsId Integer, GoodsKindId Integer, Amount TFloat, AmountReceipt TFloat, Amount_master TFloat, isWeightMain Boolean, isTaxExit Boolean, isErased Boolean) ON COMMIT DROP;
+   CREATE TEMP TABLE _tmpChild (MovementItemId Integer, GoodsId Integer, GoodsKindId Integer, GoodsKindCompleteId Integer, Amount TFloat, AmountReceipt TFloat, Amount_master TFloat, isWeightMain Boolean, isTaxExit Boolean, isErased Boolean) ON COMMIT DROP;
    --
    WITH tmpMI_Child AS (SELECT MovementItem.Id                                  AS MovementItemId
                              , MovementItem.ObjectId                            AS GoodsId
                              , COALESCE (MILO_GoodsKind.ObjectId, 0)            AS GoodsKindId
+                             , COALESCE (MILO_GoodsKindComplete.ObjectId, 0)    AS GoodsKindCompleteId
                              , MovementItem.Amount                              AS Amount
                              , COALESCE (MIFloat_AmountReceipt.ValueData, 0)    AS AmountReceipt
                         FROM MovementItem
                              LEFT JOIN MovementItemLinkObject AS MILO_GoodsKind
                                                               ON MILO_GoodsKind.MovementItemId = MovementItem.Id
                                                              AND MILO_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
+                             LEFT JOIN MovementItemLinkObject AS MILO_GoodsKindComplete
+                                                              ON MILO_GoodsKindComplete.MovementItemId = MovementItem.Id
+                                                             AND MILO_GoodsKindComplete.DescId = zc_MILinkObject_GoodsKindComplete()
                              LEFT JOIN MovementItemFloat AS MIFloat_AmountReceipt
                                                          ON MIFloat_AmountReceipt.MovementItemId = MovementItem.Id
                                                         AND MIFloat_AmountReceipt.DescId = zc_MIFloat_AmountReceipt()
@@ -163,6 +167,7 @@ BEGIN
         , tmpResult AS (SELECT COALESCE (tmpMI_Child.MovementItemId, 0)                            AS MovementItemId
                              , COALESCE (tmpMI_Child.GoodsId, tmpReceiptChild.GoodsId)             AS GoodsId
                              , COALESCE (tmpMI_Child.GoodsKindId, tmpReceiptChild.GoodsKindId)     AS GoodsKindId
+                             , COALESCE (tmpMI_Child.GoodsKindCompleteId, 0)                       AS GoodsKindCompleteId
                              , CASE WHEN tmpReceiptChild_old.GoodsId > 0 AND tmpReceiptChild.GoodsId IS NULL -- если менялась рецептура и товара из пред.рецептуры нет в новой рецептуре, тогда будет удаление (!!!но значение не менять!!!)
                                          THEN tmpMI_Child.Amount
                                     WHEN tmpReceipt_old.ReceiptId > 0 -- если менялась рецептура - все кол-ва по новой
@@ -206,10 +211,11 @@ BEGIN
                           )
               
    -- сформировали данные по элементам Child
-   INSERT INTO _tmpChild (MovementItemId, GoodsId, GoodsKindId, Amount, AmountReceipt, Amount_master, isWeightMain, isTaxExit, isErased)
+   INSERT INTO _tmpChild (MovementItemId, GoodsId, GoodsKindId, GoodsKindCompleteId, Amount, AmountReceipt, Amount_master, isWeightMain, isTaxExit, isErased)
       SELECT tmpResult.MovementItemId
            , tmpResult.GoodsId
            , tmpResult.GoodsKindId
+           , tmpResult.GoodsKindCompleteId
            , CASE WHEN tmpResult.isTaxExit = TRUE AND tmpResult.Amount_master_calc > 0
                        THEN tmpIsTaxExit.Amount * tmpResult.AmountReceipt_calc / tmpResult.Amount_master_calc
                   WHEN tmpResult.isTaxExit = TRUE
@@ -270,6 +276,7 @@ BEGIN
                                                                                     , inPartionGoodsDate   := CASE WHEN _tmpChild.MovementItemId > 0 THEN (SELECT MovementItemDate.ValueData FROM MovementItemDate WHERE MovementItemDate.MovementItemId = _tmpChild.MovementItemId AND MovementItemDate.DescId = zc_MIDate_PartionGoods()) ELSE NULL END
                                                                                     , inComment            := CASE WHEN _tmpChild.MovementItemId > 0 THEN (SELECT MovementItemString.ValueData FROM MovementItemString WHERE MovementItemString.MovementItemId = _tmpChild.MovementItemId AND MovementItemString.DescId = zc_MIString_Comment()) ELSE NULL END
                                                                                     , inGoodsKindId        := _tmpChild.GoodsKindId
+                                                                                    , inGoodsKindCompleteId:= _tmpChild.GoodsKindCompleteId
                                                                                     , inUserId             := vbUserId
                                                                                      )
    WHERE _tmpChild.isErased = FALSE;

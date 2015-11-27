@@ -32,7 +32,7 @@ BEGIN
      IF vbStatusId <> zc_Enum_Status_Complete()
      THEN
          RAISE EXCEPTION 'Ошибка.Документ не проведен.';
-     END ID;
+     END IF;
 
      -- данные по продажам, в которых найдена акция
      CREATE TEMP TABLE _tmpMI_sale (MovementId Integer, MovementItemId Integer, GoodsId Integer, GoodsKindId Integer, AmountPartner TFloat, PriceWithOutVAT TFloat) ON COMMIT DROP;
@@ -129,7 +129,7 @@ BEGIN
                             INNER JOIN MovementItemFloat AS MIFloat_Price
                                                          ON MIFloat_Price.MovementItemId = MovementItem.Id
                                                         AND MIFloat_Price.DescId = zc_MIFloat_Price()
-                                                        AND MIFloat_Price.ValueData = CASE WHEN tmpMovement_sale.PriceWithVAT = TRUE THEN tmpGoods.PriceWithVAT ELSE tmpGoods.PriceWithOutVAT END
+                                                        -- AND MIFloat_Price.ValueData = CASE WHEN tmpMovement_sale.PriceWithVAT = TRUE THEN tmpGoods.PriceWithVAT ELSE tmpGoods.PriceWithOutVAT END
                        WHERE MIFloat_AmountPartner.ValueData > 0
                          AND COALESCE (MIFloat_PromoMovement.ValueData, inMovementId) = inMovementId
                       )

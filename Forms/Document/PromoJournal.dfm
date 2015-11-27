@@ -1,7 +1,7 @@
 inherited PromoJournalForm: TPromoJournalForm
   Caption = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' <'#1040#1082#1094#1080#1080'>'
   ClientHeight = 430
-  ExplicitHeight = 468
+  ExplicitHeight = 465
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -15,18 +15,6 @@ inherited PromoJournalForm: TPromoJournalForm
         Height = 373
         ExplicitHeight = 373
         inherited cxGridDBTableView: TcxGridDBTableView
-          DataController.Summary.DefaultGroupSummaryItems = <
-            item
-              Format = ',0.####'
-              Kind = skSum
-              Column = colCostPromo
-            end>
-          DataController.Summary.FooterSummaryItems = <
-            item
-              Format = ',0.####'
-              Kind = skSum
-              Column = colCostPromo
-            end>
           OptionsData.Deleting = False
           OptionsData.DeletingConfirmation = False
           OptionsData.Editing = False
@@ -166,10 +154,10 @@ inherited PromoJournalForm: TPromoJournalForm
   end
   inherited Panel: TPanel
     inherited deStart: TcxDateEdit
-      EditValue = 42005d
+      EditValue = 42309d
     end
     inherited deEnd: TcxDateEdit
-      EditValue = 42005d
+      EditValue = 42309d
     end
     object chbPeriodForOperDate: TcxCheckBox
       Left = 401
@@ -177,7 +165,7 @@ inherited PromoJournalForm: TPromoJournalForm
       Action = actRefresh
       Caption = #1055#1077#1088#1080#1086#1076' '#1076#1083#1103' <'#1044#1072#1090#1072' '#1076#1086#1082#1091#1084#1077#1085#1090#1072'>'
       TabOrder = 4
-      Width = 168
+      Width = 192
     end
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
@@ -264,7 +252,6 @@ inherited PromoJournalForm: TPromoJournalForm
       View = cxGridDBTableView
       Caption = #1056#1072#1089#1095#1077#1090' '#1076#1072#1085#1085#1099#1093' '#1087#1086' '#1074#1089#1077#1084' '#1072#1082#1094#1080#1103#1084
       Hint = #1056#1072#1089#1095#1077#1090' '#1076#1072#1085#1085#1099#1093' '#1087#1086' '#1074#1089#1077#1084' '#1072#1082#1094#1080#1103#1084
-      ImageIndex = 45
     end
     object actUpdate_Movement_Promo_Data: TdsdExecStoredProc
       Category = 'Update_Promo_Data'
@@ -299,6 +286,47 @@ inherited PromoJournalForm: TPromoJournalForm
       ShortCut = 116
       RefreshOnTabSetChanges = False
       DataSet = MasterCDS
+    end
+    object actUpdate_Promo_Data_before: TdsdExecStoredProc
+      Category = 'Update_Promo_Data'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdate_Movement_Promo_Data_before
+      StoredProcList = <
+        item
+          StoredProc = spUpdate_Movement_Promo_Data_before
+        end>
+      Caption = 'actUpdate_Promo_Data_before'
+    end
+    object actUpdate_Promo_Data_after: TdsdExecStoredProc
+      Category = 'Update_Promo_Data'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdate_Movement_Promo_Data_after
+      StoredProcList = <
+        item
+          StoredProc = spUpdate_Movement_Promo_Data_after
+        end>
+      Caption = 'actUpdate_Promo_Data_before'
+    end
+    object mactUpdate_Movement_Promo_Data_all: TMultiAction
+      Category = 'Update_Promo_Data'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actUpdate_Promo_Data_before
+        end
+        item
+          Action = mactUpdate_Movement_Promo_Data
+        end
+        item
+          Action = actUpdate_Promo_Data_after
+        end>
+      QuestionBeforeExecute = #1044#1077#1081#1089#1090#1074#1080#1090#1077#1083#1100#1085#1086' '#1074#1099#1087#1086#1083#1085#1080#1090#1100' '#1088#1072#1089#1095#1077#1090' '#1074#1089#1077#1093' '#1072#1082#1094#1080#1081' ?'
+      InfoAfterExecute = #1056#1072#1089#1095#1077#1090' '#1074#1089#1077#1093' '#1072#1082#1094#1080#1081' '#1074#1099#1087#1086#1083#1085#1077#1085' '#1091#1089#1087#1077#1096#1085#1086
+      Caption = #1056#1072#1089#1095#1077#1090' '#1076#1072#1085#1085#1099#1093' '#1087#1086' '#1074#1089#1077#1084' '#1072#1082#1094#1080#1103#1084
+      Hint = #1056#1072#1089#1095#1077#1090' '#1076#1072#1085#1085#1099#1093' '#1087#1086' '#1074#1089#1077#1084' '#1072#1082#1094#1080#1103#1084
+      ImageIndex = 45
     end
   end
   inherited spSelect: TdsdStoredProc
@@ -352,10 +380,6 @@ inherited PromoJournalForm: TPromoJournalForm
         item
           BeginGroup = True
           Visible = True
-          ItemName = 'dxBarButton2'
-        end
-        item
-          Visible = True
           ItemName = 'dxBarStatic'
         end
         item
@@ -389,7 +413,15 @@ inherited PromoJournalForm: TPromoJournalForm
         end
         item
           Visible = True
-          ItemName = 'bbMovementItemContainer'
+          ItemName = 'dxBarButton2'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarButton1'
         end
         item
           Visible = True
@@ -410,10 +442,6 @@ inherited PromoJournalForm: TPromoJournalForm
         item
           Visible = True
           ItemName = 'dxBarStatic'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarButton1'
         end>
     end
     object dxBarButton1: TdxBarButton
@@ -435,7 +463,7 @@ inherited PromoJournalForm: TPromoJournalForm
       Caption = '-'
     end
     object N13: TMenuItem [12]
-      Action = mactUpdate_Movement_Promo_Data
+      Action = mactUpdate_Movement_Promo_Data_all
     end
   end
   inherited spMovementComplete: TdsdStoredProc
@@ -503,5 +531,74 @@ inherited PromoJournalForm: TPromoJournalForm
     PackSize = 1
     Left = 368
     Top = 192
+  end
+  object spUpdate_Movement_Promo_Data_before: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Movement_Promo_Data_before'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inStartDate'
+        Value = Null
+        Component = deStart
+        DataType = ftDateTime
+        ParamType = ptInput
+      end
+      item
+        Name = 'inEndDate'
+        Value = Null
+        Component = deEnd
+        DataType = ftDateTime
+        ParamType = ptInput
+      end>
+    PackSize = 1
+    Left = 488
+    Top = 216
+  end
+  object dsdStoredProc1: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Movement_Promo_Data_before'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inStartDate'
+        Value = 42309d
+        Component = deStart
+        DataType = ftDateTime
+        ParamType = ptInput
+      end
+      item
+        Name = 'inEndDate'
+        Value = 42309d
+        Component = deEnd
+        DataType = ftDateTime
+        ParamType = ptInput
+      end>
+    PackSize = 1
+    Left = 520
+    Top = 280
+  end
+  object spUpdate_Movement_Promo_Data_after: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Movement_Promo_Data_after'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inStartDate'
+        Value = 42309d
+        Component = deStart
+        DataType = ftDateTime
+        ParamType = ptInput
+      end
+      item
+        Name = 'inEndDate'
+        Value = 42309d
+        Component = deEnd
+        DataType = ftDateTime
+        ParamType = ptInput
+      end>
+    PackSize = 1
+    Left = 488
+    Top = 242
   end
 end
