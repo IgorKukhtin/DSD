@@ -10,16 +10,23 @@ CREATE OR REPLACE FUNCTION gpSelect_AllGoodsPrice(
   , IN inSession       TVarChar    -- сессия пользователя
 )
 RETURNS TABLE (
-    Id             Integer,    --ИД товара
-    Code           Integer,    --Код товара
-    GoodsName      TVarChar,   --Наименование товара
-    LastPrice      TFloat,     --Текущая цена
-    RemainsCount   TFloat,     --Остаток
-    NDS            TFloat,     --ставка НДС
-    ExpirationDate TDateTime,  --Срок годности
-    NewPrice       TFloat,     --Новая цена
-    MarginPercent  TFloat,     --минимальный % отклонения
-    PriceDiff      TFloat      --% отклонения
+    Id                  Integer,    --ИД товара
+    Code                Integer,    --Код товара
+    GoodsName           TVarChar,   --Наименование товара
+    LastPrice           TFloat,     --Текущая цена
+    RemainsCount        TFloat,     --Остаток
+    NDS                 TFloat,     --ставка НДС
+    NewPrice            TFloat,     --Новая цена
+    MinMarginPercent    TFloat,     --минимальный % отклонения
+    PriceDiff           TFloat,     --% отклонения
+    ExpirationDate      TDateTime,  --Срок годности
+    JuridicalName       TVarChar,   --Поставщик
+    Juridical_Price     TFloat,     --Цена у поставщика
+    MarginPercent       TFloat,     --% наценки по точке
+    Juridical_GoodsName TVarChar,   --Наименование у поставщика
+    ProducerName        TVarChar,   --производитель
+    SumReprice          TFloat,     --сумма переоценки
+    MinExpirationDate   TDateTime   --Минимальный срок годности препарата на точке
     )
 
 AS
@@ -67,12 +74,22 @@ BEGIN
     (
         SELECT 
             DD.Id,
+            DD.Juridical_Price,
+            DD.MarginPercent,
             DD.NewPrice,
-            DD.ExpirationDate
+            DD.LoadPriceListItemId
         FROM(
                 SELECT
-                    ObjectGoodsView.Id         AS Id,
-                    LoadPriceListItem.ExpirationDate,
+                    ObjectGoodsView.Id   AS Id,
+                    LoadPriceListItem.Id AS LoadPriceListItemId,
+                    CASE 
+                      WHEN ObjectGoodsView.isTop = TRUE
+                          THEN  COALESCE(ObjectGoodsView.PercentMarkup, 0)
+                                - COALESCE(ObjectFloat_Percent.valuedata, 0)
+                    ELSE COALESCE(MarginCondition.MarginPercent,0)
+                         + COALESCE(ObjectFloat_Percent.valuedata, 0)
+                    END::TFloat AS MarginPercent,
+                    (LoadPriceListItem.Price * (100 + Object_Goods.NDS)/100)::TFloat AS Juridical_Price,
                     zfCalc_SalePrice((LoadPriceListItem.Price * (100 + Object_Goods.NDS)/100), -- Цена С НДС
                                       MarginCondition.MarginPercent + COALESCE(ObjectFloat_Percent.valuedata, 0), -- % наценки
                                       ObjectGoodsView.isTop, -- ТОП позиция
@@ -120,6 +137,20 @@ BEGIN
                                                 ON ObjectGoodsView.Id = LinkGoodsObject.GoodsId
                 WHERE 
                     COALESCE(JuridicalSettings.isPriceClose, FALSE) <> TRUE
+                    AND
+                    (
+                        (
+                            ObjectGoodsView.isTop = FALSE
+                            AND
+                            MarginCondition.MarginCategoryId is not null
+                        )
+                        OR
+                        (
+                            ObjectGoodsView.isTop = TRUE
+                            AND
+                            COALESCE(ObjectGoodsView.PercentMarkup, 0) > 0
+                        )
+                    )
             ) AS DD
         WHERE DD.NewPrice > 0.01
     ),
@@ -127,7 +158,9 @@ BEGIN
     (
         Select 
             DDDD.Id
-           ,DDDD.ExpirationDate
+           ,DDDD.LoadPriceListItemId 
+           ,DDDD.Juridical_Price
+           ,DDDD.MarginPercent
            ,DDDD.NewPrice
         From(
                 SELECT 
@@ -141,15 +174,18 @@ BEGIN
     ResultSet AS 
     (
         SELECT
-            Object_Goods.Id               AS Id,
-            Object_Goods.GoodsCodeInt     AS Code,
-            Object_Goods.GoodsName        AS GoodsName,
-            Object_Price.Price            AS LastPrice,
-            SUM(Container.Amount)::TFloat AS RemainsCount,
-            Object_Goods.NDS              AS NDS,
-            Object_Goods.NDSKindId        AS NDSKindId,
-            PriceResult.ExpirationDate    AS ExpirationDate,
-            PriceResult.NewPrice          AS NewPrice
+            Object_Goods.Id                  AS Id,
+            Object_Goods.GoodsCodeInt        AS Code,
+            Object_Goods.GoodsName           AS GoodsName,
+            Object_Price.Price               AS LastPrice,
+            SUM(Container.Amount)::TFloat    AS RemainsCount,
+            Object_Goods.NDS                 AS NDS,
+            Object_Goods.NDSKindId           AS NDSKindId,
+            PriceResult.NewPrice             AS NewPrice,
+            PriceResult.MarginPercent        AS MarginPercent,
+            PriceResult.Juridical_Price      AS Juridical_Price,
+            PriceResult.LoadPriceListItemId  AS LoadPriceListItemId,
+            MIN(COALESCE(MIDate_ExpirationDate.ValueData,zc_DateEnd()))::TDateTime AS MinExpirationDate
         FROM
             Object_Goods_View AS Object_Goods
             LEFT OUTER JOIN Object_Price_View AS Object_Price
@@ -159,6 +195,14 @@ BEGIN
                                      AND Container.DescId = zc_Container_Count()
                                      AND Container.WhereObjectId = inUnitId
                                      AND Container.Amount <> 0
+            LEFT OUTER JOIN ContainerLinkObject AS CLO_PartionMovementItem
+                                                ON CLO_PartionMovementItem.ContainerId = Container.Id
+                                               AND CLO_PartionMovementItem.DescId = zc_ContainerLinkObject_PartionMovementItem()
+            LEFT OUTER JOIN OBJECT AS Object_PartionMovementItem 
+                                   ON Object_PartionMovementItem.Id = CLO_PartionMovementItem.ObjectId
+            LEFT OUTER JOIN MovementItemDate  AS MIDate_ExpirationDate
+                                              ON MIDate_ExpirationDate.MovementItemId = Object_PartionMovementItem.ObjectCode
+                                             AND MIDate_ExpirationDate.DescId = zc_MIDate_PartionGoods()    
             LEFT OUTER JOIN PriceResult ON PriceResult.Id = Object_Goods.Id
         WHERE
             Object_Goods.ObjectId = vbObjectId
@@ -169,8 +213,10 @@ BEGIN
             Object_Price.Price,
             Object_Goods.NDS,
             Object_Goods.NDSKindId,
-            PriceResult.ExpirationDate,
-            PriceResult.NewPrice
+            PriceResult.NewPrice,
+            PriceResult.MarginPercent,
+            PriceResult.Juridical_Price,
+            PriceResult.LoadPriceListItemId
     )
 
     SELECT
@@ -180,18 +226,29 @@ BEGIN
         ResultSet.LastPrice,
         ResultSet.RemainsCount,
         ResultSet.NDS,
-        ResultSet.ExpirationDate,
         ResultSet.NewPrice,
-        COALESCE(MarginCondition.MarginPercent,inMinPercent)::TFloat AS MarginPercent,
+        COALESCE(MarginCondition.MarginPercent,inMinPercent)::TFloat AS MinMarginPercent,
         CASE 
             WHEN COALESCE(ResultSet.LastPrice,0) = 0 THEN 0.0
             ELSE (ResultSet.NewPrice / ResultSet.LastPrice) * 100 - 100
-        END::TFloat AS PriceDiff
+        END::TFloat AS PriceDiff,
+        LoadPriceListItem.ExpirationDate AS ExpirationDate,
+        Object_Juridical.ValueData       AS JuridicalName,
+        ResultSet.Juridical_Price        AS Juridical_Price,
+        ResultSet.MarginPercent          AS MarginPercent,
+        LoadPriceListItem.GoodsName      AS Juridical_GoodsName,
+        LoadPriceListItem.ProducerName   AS ProducerName,
+        ROUND(((ResultSet.NewPrice - ResultSet.LastPrice)*ResultSet.RemainsCount),2)::TFloat AS SumReprice,
+        ResultSet.MinExpirationDate
     FROM
         ResultSet
         LEFT OUTER JOIN MarginCondition ON MarginCondition.MarginCategoryId = vbMarginCategoryId
                                        AND ResultSet.LastPrice >= MarginCondition.MinPrice 
                                        AND ResultSet.LastPrice < MarginCondition.MaxPrice
+        LEFT OUTER JOIN LoadPriceListItem ON LoadPriceListItem.Id = ResultSet.LoadPriceListItemId
+        LEFT OUTER JOIN LoadPriceList ON LoadPriceList.Id = LoadPriceListItem.LoadPriceListId
+        LEFT OUTER JOIN Object AS Object_Juridical 
+                               ON Object_Juridical.Id = LoadPriceList.JuridicalId
     WHERE
         COALESCE(ResultSet.NewPrice,0) > 0
         AND
@@ -206,11 +263,11 @@ BEGIN
         )
         AND
         (
-            ResultSet.ExpirationDate IS NULL
+            LoadPriceListItem.ExpirationDate IS NULL
             OR
-            ResultSet.ExpirationDate = '1899-12-30'::TDateTime
+            LoadPriceListItem.ExpirationDate = '1899-12-30'::TDateTime
             OR
-            ResultSet.ExpirationDate > (CURRENT_DATE + Interval '6 month')
+            LoadPriceListItem.ExpirationDate > (CURRENT_DATE + Interval '6 month')
         )
         AND
         (
@@ -240,4 +297,4 @@ ALTER FUNCTION gpSelect_AllGoodsPrice (Integer,  TFloat, Boolean, TVarChar) OWNE
 */
 
 -- тест
--- SELECT * FROM gpSelect_AllGoodsPrice (183293, inSession:= '2')
+-- SELECT * FROM gpSelect_AllGoodsPrice (183293, 30, True, '3')

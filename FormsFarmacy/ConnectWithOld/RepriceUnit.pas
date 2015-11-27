@@ -13,7 +13,8 @@ uses
   cxGridLevel, cxClasses, cxGridCustomView, cxGridCustomTableView,
   cxGridTableView, cxGridDBTableView, cxGrid, Vcl.ActnList, dsdAction, dsdGuides,
   Datasnap.Provider, cxImageComboBox, Vcl.ExtCtrls, cxSplitter, dxSkinsCore,
-  dxSkinsDefaultPainters, dxSkinscxPCPainter, Vcl.ComCtrls, cxCheckBox, cxCalc;
+  dxSkinsDefaultPainters, dxSkinscxPCPainter, Vcl.ComCtrls, cxCheckBox, cxCalc,
+  Vcl.Buttons;
 
 type
   TRepriceUnitForm = class(TForm)
@@ -56,9 +57,41 @@ type
     lblProggres1: TLabel;
     lblProggres2: TLabel;
     chbVAT20: TcxCheckBox;
+    SpeedButton1: TSpeedButton;
+    dsdGridToExcel1: TdsdGridToExcel;
+    colJuridicalName: TcxGridDBColumn;
+    colJuridical_Price: TcxGridDBColumn;
+    colJuridical_GoodsName: TcxGridDBColumn;
+    colProducerName: TcxGridDBColumn;
+    colSumReprice: TcxGridDBColumn;
+    colMinExpirationDate: TcxGridDBColumn;
+    cdsResultId: TIntegerField;
+    cdsResultCode: TIntegerField;
+    cdsResultGoodsName: TStringField;
+    cdsResultLastPrice: TCurrencyField;
+    cdsResultRemainsCount: TCurrencyField;
+    cdsResultNDS: TCurrencyField;
+    cdsResultExpirationDate: TDateField;
+    cdsResultNewPrice: TCurrencyField;
+    cdsResultMarginPercent: TCurrencyField;
+    cdsResultPriceDiff: TCurrencyField;
+    cdsResultReprice: TBooleanField;
+    cdsResultUnitId: TIntegerField;
+    cdsResultUnitName: TStringField;
+    cdsResultJuridicalName: TStringField;
+    cdsResultJuridical_Price: TCurrencyField;
+    cdsResultJuridical_GoodsName: TStringField;
+    cdsResultProducerName: TStringField;
+    cdsResultSumReprice: TCurrencyField;
+    cdsResultMinExpirationDate: TDateField;
+    cdsResultRealSummReprice: TCurrencyField;
+    colMinMarginPercent: TcxGridDBColumn;
+    cdsResultMinMarginPercent: TCurrencyField;
+    colUnitId: TcxGridDBColumn;
     procedure FormCreate(Sender: TObject);
     procedure btnRepriceClick(Sender: TObject);
     procedure btnSelectNewPriceClick(Sender: TObject);
+    procedure cdsResultCalcFields(DataSet: TDataSet);
   private
     FStartReprice: Boolean;
     { Private declarations }
@@ -73,7 +106,8 @@ implementation
 uses SimpleGauge, DataModul;
 
 procedure TRepriceUnitForm.btnRepriceClick(Sender: TObject);
-var i, LastRecordNo, CurrentPackNo: integer;
+var i, LastRecordNo, CurrentPackNo, RecIndex: integer;
+
 begin
   if not FStartReprice then
   Begin
@@ -91,39 +125,46 @@ begin
     ProgressBar1.Max := cdsResult.RecordCount;
     Application.ProcessMessages;
     try
-      cdsResult.Last;
-      while not cdsResult.Bof do
-      Begin
-        if cdsResult.FieldByName('Reprice').AsBoolean then
-        Begin
-          LastRecordNo := cdsResult.RecNo;
-          break;
-        End;
-        cdsResult.Prior;
-      end;
-      cdsResult.First;
+//      cdsResult.Last;
+//      while not cdsResult.Bof do
+//      Begin
+//        if cdsResult.FieldByName('Reprice').AsBoolean then
+//        Begin
+//          LastRecordNo := cdsResult.RecNo;
+//          break;
+//        End;
+//        cdsResult.Prior;
+//      end;
+//      cdsResult.First;
       CurrentPackNo := 0;
-      while not cdsResult.eof do
+//      while not cdsResult.eof do
+      for I := 0 to AllGoodsPriceGridTableView.DataController.FilteredRecordCount - 1 do
       Begin
-        lblProggres1.Caption := IntToStr(cdsResult.RecNo)+' / '+IntToStr(cdsResult.RecordCount);
+//        lblProggres1.Caption := IntToStr(cdsResult.RecNo)+' / '+IntToStr(cdsResult.RecordCount);
+        lblProggres1.Caption := IntToStr(I+1)+' / '+IntToStr(AllGoodsPriceGridTableView.DataController.FilteredRecordCount);
         lblProggres1.Repaint;
         ProgressBar1.Position := cdsResult.RecNo;
         ProgressBar1.Repaint;
-        if cdsResult.FieldByName('Reprice').AsBoolean then
+        //if cdsResult.FieldByName('Reprice').AsBoolean then
+        RecIndex := AllGoodsPriceGridTableView.DataController.FilteredRecordIndex[I];
+        if AllGoodsPriceGridTableView.DataController.Values[RecIndex,colReprice.Index] = True then
         Begin
-          spInsertUpdate_Object_Price.ParamByName('inUnitId').Value := cdsResult.FieldByName('UnitId').AsInteger;
-          spInsertUpdate_Object_Price.ParamByName('inGoodsCode').Value := cdsResult.FieldByName('Code').AsInteger;
-          spInsertUpdate_Object_Price.ParamByName('inPriceValue').Value := cdsResult.FieldByName('NewPrice').AsFloat;
+//          spInsertUpdate_Object_Price.ParamByName('inUnitId').Value := cdsResult.FieldByName('UnitId').AsInteger;
+          spInsertUpdate_Object_Price.ParamByName('inUnitId').Value := AllGoodsPriceGridTableView.DataController.Values[RecIndex,colUnitId.Index];
+//          spInsertUpdate_Object_Price.ParamByName('inGoodsCode').Value := cdsResult.FieldByName('Code').AsInteger;
+          spInsertUpdate_Object_Price.ParamByName('inGoodsCode').Value := AllGoodsPriceGridTableView.DataController.Values[RecIndex,colGoodsCode.Index];
+//          spInsertUpdate_Object_Price.ParamByName('inPriceValue').Value := cdsResult.FieldByName('NewPrice').AsFloat;
+          spInsertUpdate_Object_Price.ParamByName('inPriceValue').Value := AllGoodsPriceGridTableView.DataController.Values[RecIndex,colNewPrice.Index];
           spInsertUpdate_Object_Price.Execute;
           inc(CurrentPackNo);
         End;
         Application.ProcessMessages;
         if Not FStartReprice then
           exit;
-        cdsResult.Next;
+//        cdsResult.Next;
       end;
-      if (CurrentPackNo mod spInsertUpdate_Object_Price.PackSize) <> 0 then
-        spInsertUpdate_Object_Price.Execute(True);
+//      if (CurrentPackNo mod spInsertUpdate_Object_Price.PackSize) <> 0 then
+      spInsertUpdate_Object_Price.Execute(True);
     finally
       FStartReprice := False;
       btnSelectNewPrice.Enabled := True;
@@ -181,10 +222,17 @@ begin
             cdsResult.FieldByName('ExpirationDate').AsDateTime := AllGoodsPriceCDS.FieldByName('ExpirationDate').AsDateTime;
           cdsResult.FieldByName('NewPrice').AsCurrency := AllGoodsPriceCDS.FieldByName('NewPrice').AsCurrency;
           cdsResult.FieldByName('MarginPercent').AsCurrency := AllGoodsPriceCDS.FieldByName('MarginPercent').AsCurrency;
+          cdsResult.FieldByName('MinMarginPercent').AsCurrency := AllGoodsPriceCDS.FieldByName('MinMarginPercent').AsCurrency;
           cdsResult.FieldByName('PriceDiff').AsCurrency := AllGoodsPriceCDS.FieldByName('PriceDiff').AsCurrency;
           cdsResult.FieldByName('Reprice').AsBoolean := True;
           cdsResult.FieldByName('UnitId').AsInteger := UnitId;
           cdsResult.FieldByName('UnitName').AsString := CheckListBox.Items[i];
+          cdsResult.FieldByName('JuridicalName').AsString := AllGoodsPriceCDS.FieldByName('JuridicalName').AsString;
+          cdsResult.FieldByName('Juridical_Price').AsCurrency := AllGoodsPriceCDS.FieldByName('Juridical_Price').AsCurrency;
+          cdsResult.FieldByName('Juridical_GoodsName').AsString := AllGoodsPriceCDS.FieldByName('Juridical_GoodsName').AsString;
+          cdsResult.FieldByName('ProducerName').AsString := AllGoodsPriceCDS.FieldByName('ProducerName').AsString;
+          cdsResult.FieldByName('SumReprice').AsCurrency := AllGoodsPriceCDS.FieldByName('SumReprice').AsCurrency;
+          cdsResult.FieldByName('MinExpirationDate').AsString := AllGoodsPriceCDS.FieldByName('MinExpirationDate').AsString;
           cdsResult.Post;
           AllGoodsPriceCDS.Next;
         end;
@@ -193,6 +241,14 @@ begin
   finally
     cdsResult.EnableControls;
   end;
+end;
+
+procedure TRepriceUnitForm.cdsResultCalcFields(DataSet: TDataSet);
+begin
+  if cdsResultReprice.AsBoolean then
+    cdsResultRealSummReprice.AsCurrency := cdsResultSumReprice.AsCurrency
+  else
+    cdsResultRealSummReprice.AsCurrency := 0;
 end;
 
 procedure TRepriceUnitForm.FormCreate(Sender: TObject);

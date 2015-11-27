@@ -64,7 +64,12 @@ BEGIN
          PartnerGoods.MinimumLot,
          Object_Goods.NDS,
          LinkGoods.Id AS LinkGoodsId, 
-         (MarginCondition.MarginPercent + COALESCE(ObjectFloat_Percent.valuedata, 0))::TFloat,
+         CASE 
+             WHEN ObjectGoodsView.isTop = TRUE
+                 THEN  COALESCE(ObjectGoodsView.PercentMarkup, 0) - COALESCE(ObjectFloat_Percent.valuedata, 0)
+         ELSE COALESCE(MarginCondition.MarginPercent,0) + COALESCE(ObjectFloat_Percent.valuedata, 0)
+         END::TFloat AS MarginPercent,
+         --(MarginCondition.MarginPercent + COALESCE(ObjectFloat_Percent.valuedata, 0))::TFloat,
          zfCalc_SalePrice((LoadPriceListItem.Price * (100 + Object_Goods.NDS)/100), -- Цена С НДС
                            MarginCondition.MarginPercent + COALESCE(ObjectFloat_Percent.valuedata, 0), -- % наценки
                            ObjectGoodsView.isTop, -- ТОП позиция
