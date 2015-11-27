@@ -8,14 +8,11 @@ CREATE OR REPLACE FUNCTION gpReport_Branch_Cash(
     IN inBranchId           Integer,    -- Филиал
     IN inSession            TVarChar    -- сессия пользователя
 )
-RETURNS TABLE (BranchCode Integer, BranchName TVarChar
-             , GroupId Integer, GroupName TVarChar
+RETURNS TABLE ( GroupName TVarChar
              --, InfoMoneyCode Integer, InfoMoneyName TVarChar
              , InfoMoneyName_all TVarChar
-             , Amount TFloat
-             --, StartAmount TFloat, StartAmountD TFloat, StartAmountK TFloat
-             --, DebetSumm TFloat, KreditSumm TFloat
-             --, EndAmount TFloat, EndAmountD TFloat, EndAmountK TFloat         
+             , Amount1 TFloat, Amount2 TFloat, Amount3 TFloat, Amount4 TFloat, Amount5 TFloat, Amount6 TFloat
+             , Amount7 TFloat, Amount8 TFloat, Amount9 TFloat, Amount10 TFloat, Amount11 TFloat, Amount TFloat
               )
 AS
 $BODY$
@@ -47,9 +44,6 @@ BEGIN
                                                   ON Cash_Branch.ChildObjectId = _tmpBranch.BranchId
                                                  AND Cash_Branch.DescId = zc_ObjectLink_Cash_Branch()
                        ) 
-
-
-      , tmpUnit_byProfitLoss AS (SELECT * FROM lfSelect_Object_Unit_byProfitLossDirection ())
 
 , tmpAll AS (SELECT 
         CASE WHEN Operation.ContainerId > 0 AND Operation.isSaldo = TRUE THEN 1  
@@ -159,16 +153,77 @@ BEGIN
      WHERE (Operation.StartAmount <> 0 OR Operation.EndAmount <> 0 OR Operation.DebetSumm <> 0 OR Operation.KreditSumm <> 0)
      )
      
-     SELECT tmpAll.BranchCode,tmpAll.BranchName,
-            tmpAll.GroupId, tmpAll.GroupName,
-            tmpAll.InfoMoneyName_all,
-            CASE WHEN tmpAll.GroupId = 1 THEN tmpAll.StartAmount 
-                 WHEN tmpAll.GroupId = 4 THEN tmpAll.EndAmount
-                 Else  tmpAll.DebetSumm + tmpAll.KreditSumm 
-            END ::TFloat  AS Amount 
-
+ SELECT  tmpAllList.GroupName
+       , tmpAllList.InfoMoneyName_all
+       , SUM(tmpAllList.Amount1)  ::TFloat AS Amount1
+       , SUM(tmpAllList.Amount2)  ::TFloat AS Amount2
+       , SUM(tmpAllList.Amount3)  ::TFloat AS Amount3
+       , SUM(tmpAllList.Amount4)  ::TFloat AS Amount4
+       , SUM(tmpAllList.Amount5)  ::TFloat AS Amount5
+       , SUM(tmpAllList.Amount6)  ::TFloat AS Amount6
+       , SUM(tmpAllList.Amount7)  ::TFloat AS Amount7
+       , SUM(tmpAllList.Amount8)  ::TFloat AS Amount8
+       , SUM(tmpAllList.Amount9)  ::TFloat AS Amount9
+       , SUM(tmpAllList.Amount10) ::TFloat AS Amount10
+       , SUM(tmpAllList.Amount11) ::TFloat AS Amount11
+       , SUM(tmpAllList.Amount)   ::TFloat AS Amount
+ 
+ FROM 
+    (SELECT  tmpAll.GroupName
+          , tmpAll.InfoMoneyName_all
+          , CASE WHEN tmpAll.BranchCode = 1 THEN (CASE WHEN tmpAll.GroupId = 1 THEN tmpAll.StartAmount 
+                                                       WHEN tmpAll.GroupId = 4 THEN tmpAll.EndAmount
+                                                       ELSE tmpAll.DebetSumm + tmpAll.KreditSumm  END)
+                 ELSE 0 END   ::TFloat AS Amount1 
+          , CASE WHEN tmpAll.BranchCode = 2 THEN (CASE WHEN tmpAll.GroupId = 1 THEN tmpAll.StartAmount 
+                                                       WHEN tmpAll.GroupId = 4 THEN tmpAll.EndAmount
+                                                       ELSE tmpAll.DebetSumm + tmpAll.KreditSumm  END)
+                 ELSE 0 END   ::TFloat AS Amount2 
+          , CASE WHEN tmpAll.BranchCode = 3 THEN (CASE WHEN tmpAll.GroupId = 1 THEN tmpAll.StartAmount 
+                                                       WHEN tmpAll.GroupId = 4 THEN tmpAll.EndAmount
+                                                       ELSE tmpAll.DebetSumm + tmpAll.KreditSumm  END)
+                 ELSE 0 END   ::TFloat AS Amount3    
+          , CASE WHEN tmpAll.BranchCode = 4 THEN (CASE WHEN tmpAll.GroupId = 1 THEN tmpAll.StartAmount 
+                                                       WHEN tmpAll.GroupId = 4 THEN tmpAll.EndAmount
+                                                       ELSE tmpAll.DebetSumm + tmpAll.KreditSumm  END)
+                 ELSE 0 END   ::TFloat AS Amount4
+          , CASE WHEN tmpAll.BranchCode = 5 THEN (CASE WHEN tmpAll.GroupId = 1 THEN tmpAll.StartAmount 
+                                                       WHEN tmpAll.GroupId = 4 THEN tmpAll.EndAmount
+                                                       ELSE tmpAll.DebetSumm + tmpAll.KreditSumm  END)
+                 ELSE 0 END   ::TFloat AS Amount5
+          , CASE WHEN tmpAll.BranchCode = 6 THEN (CASE WHEN tmpAll.GroupId = 1 THEN tmpAll.StartAmount 
+                                                       WHEN tmpAll.GroupId = 4 THEN tmpAll.EndAmount
+                                                       ELSE tmpAll.DebetSumm + tmpAll.KreditSumm  END)
+                 ELSE 0 END   ::TFloat AS Amount6
+          , CASE WHEN tmpAll.BranchCode = 7 THEN (CASE WHEN tmpAll.GroupId = 1 THEN tmpAll.StartAmount 
+                                                       WHEN tmpAll.GroupId = 4 THEN tmpAll.EndAmount
+                                                       ELSE tmpAll.DebetSumm + tmpAll.KreditSumm  END)
+                 ELSE 0 END   ::TFloat AS Amount7        
+          , CASE WHEN tmpAll.BranchCode = 8 THEN (CASE WHEN tmpAll.GroupId = 1 THEN tmpAll.StartAmount 
+                                                       WHEN tmpAll.GroupId = 4 THEN tmpAll.EndAmount
+                                                       ELSE tmpAll.DebetSumm + tmpAll.KreditSumm  END)
+                 ELSE 0 END   ::TFloat AS Amount8
+          , CASE WHEN tmpAll.BranchCode = 9 THEN (CASE WHEN tmpAll.GroupId = 1 THEN tmpAll.StartAmount 
+                                                       WHEN tmpAll.GroupId = 4 THEN tmpAll.EndAmount
+                                                       ELSE tmpAll.DebetSumm + tmpAll.KreditSumm  END)
+                 ELSE 0 END   ::TFloat AS Amount9                 
+          , CASE WHEN tmpAll.BranchCode = 10 THEN (CASE WHEN tmpAll.GroupId = 1 THEN tmpAll.StartAmount 
+                                                        WHEN tmpAll.GroupId = 4 THEN tmpAll.EndAmount
+                                                        ELSE tmpAll.DebetSumm + tmpAll.KreditSumm  END)
+                 ELSE 0 END   ::TFloat AS Amount10
+          , CASE WHEN tmpAll.BranchCode = 11 THEN (CASE WHEN tmpAll.GroupId = 1 THEN tmpAll.StartAmount 
+                                                        WHEN tmpAll.GroupId = 4 THEN tmpAll.EndAmount
+                                                        ELSE tmpAll.DebetSumm + tmpAll.KreditSumm  END)
+                 ELSE 0 END   ::TFloat AS Amount11
+          , CASE WHEN tmpAll.BranchCode > 11 THEN (CASE WHEN tmpAll.GroupId = 1 THEN tmpAll.StartAmount 
+                                                        WHEN tmpAll.GroupId = 4 THEN tmpAll.EndAmount
+                                                        ELSE tmpAll.DebetSumm + tmpAll.KreditSumm  END)
+                 ELSE 0 END   ::TFloat AS Amount
      FROM tmpAll
-     ORDER BY tmpAll.BranchCode, tmpAll.Groupid
+     ORDER BY tmpAll.Groupid) AS tmpAllList
+     GROUP BY tmpAllList.GroupName, tmpAllList.InfoMoneyName_all
+     ORDER BY tmpAllList.GroupName
+     
      ;
 
 
@@ -185,5 +240,5 @@ $BODY$
 */
 
 -- тест
---SELECT * FROM gpReport_Branch_Cash (inStartDate:= '01.08.2015'::TDateTime, inEndDate:= '03.08.2015'::TDateTime, inBranchId:= 0, inSession:= zfCalc_UserAdmin())  --8374
+--SELECT * FROM gpReport_Branch_Cash (inStartDate:= '20.07.2015'::TDateTime, inEndDate:= '03.08.2015'::TDateTime, inBranchId:= 0, inSession:= zfCalc_UserAdmin())  --8374
 --
