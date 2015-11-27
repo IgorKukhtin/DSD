@@ -22,12 +22,13 @@ AS
 $BODY$
    DECLARE vbUserId Integer;
 BEGIN
-     -- проверка прав пользователя на вызов процедуры
-     -- PERFORM lpCheckRight (inSession, zc_Enum_Process_Get_Movement_Transport());
-     vbUserId:= lpGetUserBySession (inSession);
+    -- проверка прав пользователя на вызов процедуры
+    -- PERFORM lpCheckRight (inSession, zc_Enum_Process_Get_Movement_Transport());
+    vbUserId:= lpGetUserBySession (inSession);
 
-     RETURN QUERY 
-       SELECT
+    
+    RETURN QUERY 
+        SELECT
             Object_Unit.Id                   AS UnitId,
             Object_Unit.ValueData            AS UnitName,
             Object_Member.Id                 AS MemberId,
@@ -39,12 +40,12 @@ BEGIN
             Object_PersonalGroup.Id          AS PersonalGroupId,
             Object_PersonalGroup.ValueData   AS PersonalGroupName,
             OperDate.OperDate
-         FROM (SELECT inOperDate AS OperDate) AS OperDate
-         JOIN Object AS Object_Member ON Object_Member.Id = inMemberId
-         JOIN Object AS Object_Position ON Object_Position.Id = inPositionId
-         JOIN Object AS Object_PositionLevel ON Object_PositionLevel.Id = inPositionLevelId
-         JOIN Object AS Object_PersonalGroup ON Object_PersonalGroup.Id = inPersonalGroupId
-         JOIN Object AS Object_Unit ON Object_Unit.Id = inUnitId;
+        FROM (SELECT inOperDate AS OperDate) AS OperDate
+            LEFT OUTER JOIN Object AS Object_Member ON Object_Member.Id = inMemberId
+            LEFT OUTER JOIN Object AS Object_Position ON Object_Position.Id = inPositionId
+            LEFT OUTER JOIN Object AS Object_PositionLevel ON Object_PositionLevel.Id = inPositionLevelId
+            LEFT OUTER JOIN Object AS Object_PersonalGroup ON Object_PersonalGroup.Id = inPersonalGroupId
+            LEFT OUTER JOIN Object AS Object_Unit ON Object_Unit.Id = inUnitId;
 
 END;
 $BODY$

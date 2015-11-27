@@ -1440,6 +1440,8 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TUnitTreeForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TUnit_ObjectForm'));
   TdsdFormStorageFactory.GetStorage.Load('TUnit_ObjectForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TUnit_SheetWorkTimeForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TUnit_SheetWorkTimeForm');
 end;
 
 

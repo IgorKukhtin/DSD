@@ -764,7 +764,8 @@ uses
   Report_Weighing in '..\..\Forms\Report\Report_Weighing.pas' {Report_WeighingForm: TParentForm},
   Report_WeighingDialog in '..\..\Forms\Report\Report_WeighingDialog.pas' {Report_WeighingDialogForm: TParentForm},
   Report_Branch_App1 in '..\..\Forms\Report\Report_Branch_App1.pas' {Report_Branch_App1Form: TParentForm},
-  Report_Branch_App1Dialog in '..\..\Forms\Report\Report_Branch_App1Dialog.pas' {Report_Branch_App1DialogForm: TParentForm};
+  Report_Branch_App1Dialog in '..\..\Forms\Report\Report_Branch_App1Dialog.pas' {Report_Branch_App1DialogForm: TParentForm},
+  Unit_SheetWorkTime in '..\..\Forms\Guides\Unit_SheetWorkTime.pas' {Unit_SheetWorkTimeForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}
