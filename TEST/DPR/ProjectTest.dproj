@@ -2388,17 +2388,24 @@
 				<Form>Report_WeighingDialogForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
-			<DCCReference Include="..\..\Forms\Report\Report_Branch_App1.pas">
-				<Form>Report_Branch_App1Form</Form>
-				<DesignClass>TParentForm</DesignClass>
-			</DCCReference>
 			<DCCReference Include="..\..\Forms\Report\Report_Branch_App1Dialog.pas">
 				<Form>Report_Branch_App1DialogForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<DCCReference Include="..\..\Forms\Guides\Unit_SheetWorkTime.pas">
 				<Form>Unit_SheetWorkTimeForm</Form>
-				<FormType>dfm</FormType>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Report\Report_Branch_Cash.pas">
+				<Form>Report_Branch_CashForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Report\Report_Branch_CashDialog.pas">
+				<Form>Report_Branch_CashDialogForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Report\Report_Branch_App1.pas">
+				<Form>Report_Branch_App1Form</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<BuildConfiguration Include="Release">

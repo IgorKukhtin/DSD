@@ -1,4 +1,4 @@
-unit Report_Branch_App1;
+unit Report_Branch_Cash;
 
 interface
 
@@ -16,42 +16,25 @@ uses
   dsdGuides, cxButtonEdit, cxCurrencyEdit, Vcl.Menus;
 
 type
-  TReport_Branch_App1Form = class(TAncestorReportForm)
-    PeresortInWeight: TcxGridDBColumn;
-    SaleWeight: TcxGridDBColumn;
-    Sale_40208_Summ: TcxGridDBColumn;
+  TReport_Branch_CashForm = class(TAncestorReportForm)
+    Amount7: TcxGridDBColumn;
+    Amount9: TcxGridDBColumn;
+    Amount: TcxGridDBColumn;
     FormParams: TdsdFormParams;
-    SendOnPriceOutSumm: TcxGridDBColumn;
-    BranchName: TcxGridDBColumn;
+    GroupName: TcxGridDBColumn;
     cxLabel3: TcxLabel;
     edBranch: TcxButtonEdit;
     BranchGuides: TdsdGuides;
-    ReturnInSumm: TcxGridDBColumn;
-    SendOnPriceOutWeight: TcxGridDBColumn;
-    SummStart: TcxGridDBColumn;
-    SummEnd: TcxGridDBColumn;
-    WeightStart: TcxGridDBColumn;
-    WeightEnd: TcxGridDBColumn;
+    Amount4: TcxGridDBColumn;
+    Amount11: TcxGridDBColumn;
     ExecuteDialog: TExecuteDialog;
     bbExecuteDialog: TdxBarButton;
     actPrint: TdsdPrintAction;
     bbPrint: TdxBarButton;
-    PeresortInSumm: TcxGridDBColumn;
-    ReturnInWeight: TcxGridDBColumn;
-    SaleSumm: TcxGridDBColumn;
-    SendOnPriceInSumm: TcxGridDBColumn;
-    SendOnPriceInWeight: TcxGridDBColumn;
-    Sale_40208_Weight: TcxGridDBColumn;
-    LossSumm: TcxGridDBColumn;
-    LossWeight: TcxGridDBColumn;
-    InventorySumm: TcxGridDBColumn;
-    InventoryWeight: TcxGridDBColumn;
-    SummInventory_RePrice: TcxGridDBColumn;
-    Sale_10500_Summ: TcxGridDBColumn;
-    Sale_10500_Weight: TcxGridDBColumn;
-    SaleRealSumm: TcxGridDBColumn;
-    Sale_10200_Summ: TcxGridDBColumn;
-    Sale_10300_Summ: TcxGridDBColumn;
+    Amount5: TcxGridDBColumn;
+    Amount2: TcxGridDBColumn;
+    Amount3: TcxGridDBColumn;
+    InfoMoneyName: TcxGridDBColumn;
   private
     { Private declarations }
   public
@@ -62,6 +45,6 @@ implementation
 
 {$R *.dfm}
 initialization
-  RegisterClass(TReport_Branch_App1Form);
+  RegisterClass(TReport_Branch_CashForm);
 
 end.
