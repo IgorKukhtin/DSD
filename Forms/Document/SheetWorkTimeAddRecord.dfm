@@ -4,7 +4,7 @@ inherited SheetWorkTimeAddRecordForm: TSheetWorkTimeAddRecordForm
   ClientHeight = 219
   ClientWidth = 358
   ExplicitWidth = 364
-  ExplicitHeight = 244
+  ExplicitHeight = 247
   PixelsPerInch = 96
   TextHeight = 13
   inherited bbOk: TcxButton
@@ -354,6 +354,8 @@ inherited SheetWorkTimeAddRecordForm: TSheetWorkTimeAddRecordForm
   object MemberGuides: TdsdGuides
     KeyField = 'Id'
     LookupControl = ceMember
+    FormNameParam.Value = 'TMemberForm'
+    FormNameParam.DataType = ftString
     FormName = 'TMemberForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
@@ -375,6 +377,8 @@ inherited SheetWorkTimeAddRecordForm: TSheetWorkTimeAddRecordForm
   object PositionGuides: TdsdGuides
     KeyField = 'Id'
     LookupControl = cePosition
+    FormNameParam.Value = 'TPositionForm'
+    FormNameParam.DataType = ftString
     FormName = 'TPositionForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
@@ -396,6 +400,8 @@ inherited SheetWorkTimeAddRecordForm: TSheetWorkTimeAddRecordForm
   object PositionLevelGuides: TdsdGuides
     KeyField = 'Id'
     LookupControl = cePositionLevel
+    FormNameParam.Value = 'TPositionLevelForm'
+    FormNameParam.DataType = ftString
     FormName = 'TPositionLevelForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
@@ -418,8 +424,10 @@ inherited SheetWorkTimeAddRecordForm: TSheetWorkTimeAddRecordForm
   object UnitGuides: TdsdGuides
     KeyField = 'Id'
     LookupControl = ceUnit
-    FormName = 'TUnit_ObjectForm'
-    PositionDataSet = 'ClientDataSet'
+    FormNameParam.Value = 'TUnit_SheetWorkTimeForm'
+    FormNameParam.DataType = ftString
+    FormName = 'TUnit_SheetWorkTimeForm'
+    PositionDataSet = 'MasterCDS'
     Params = <
       item
         Name = 'Key'
@@ -440,6 +448,8 @@ inherited SheetWorkTimeAddRecordForm: TSheetWorkTimeAddRecordForm
   object PersonalGroupGuides: TdsdGuides
     KeyField = 'Id'
     LookupControl = cepersonalgroup
+    FormNameParam.Value = 'TPersonalGroupForm'
+    FormNameParam.DataType = ftString
     FormName = 'TPersonalGroupForm'
     PositionDataSet = 'ClientDataSet'
     Params = <

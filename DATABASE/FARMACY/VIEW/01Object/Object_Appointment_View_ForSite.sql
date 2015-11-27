@@ -7,7 +7,7 @@ CREATE OR REPLACE VIEW Object_Appointment_View_ForSite AS
         Object_Appointment.Id                  as id
        ,Object_Appointment.ObjectCode::Integer as code
        ,Object_Appointment.ValueData           as name
-       ,Object_Appointment.isErased                  as deleted
+       ,CASE WHEN Object_Appointment.isErased = TRUE THEN 1::Integer ELSE 0::Integer END as deleted
     FROM Object AS Object_Appointment
     WHERE
         Object_Appointment.DescId = zc_Object_Appointment();

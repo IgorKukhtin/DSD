@@ -8,7 +8,8 @@ uses
   cxLookAndFeels, cxLookAndFeelPainters, Vcl.Menus, dsdDB, dsdAction,
   Vcl.ActnList, cxPropertiesStore, dsdAddOn, Vcl.StdCtrls, cxButtons,
   cxControls, cxContainer, cxEdit, Vcl.ComCtrls, dxCore, cxDateUtils, dsdGuides,
-  cxLabel, cxDropDownEdit, cxCalendar, cxTextEdit, cxMaskEdit, cxButtonEdit;
+  cxLabel, cxDropDownEdit, cxCalendar, cxTextEdit, cxMaskEdit, cxButtonEdit,
+  dxSkinsCore, dxSkinsDefaultPainters;
 
 type
 

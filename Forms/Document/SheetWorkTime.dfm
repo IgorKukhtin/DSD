@@ -28,6 +28,7 @@ object SheetWorkTimeForm: TSheetWorkTimeForm
     object edOperDate: TcxDateEdit
       Left = 1
       Top = 20
+      EditValue = 42335d
       Properties.DisplayFormat = 'mmmm yyyy'
       Properties.SaveTime = False
       Properties.ShowTime = False
@@ -462,6 +463,7 @@ object SheetWorkTimeForm: TSheetWorkTimeForm
       Category = 'DSDLib'
       MoveParams = <>
       Caption = #1044#1086#1073#1072#1074#1080#1090#1100
+      Hint = #1044#1086#1073#1072#1074#1080#1090#1100' '#1089#1086#1090#1088#1091#1076#1085#1080#1082#1072' '#1074' '#1090#1072#1073#1077#1083#1100
       ShortCut = 45
       ImageIndex = 0
       FormName = 'TSheetWorkTimeAddRecordForm'
@@ -504,6 +506,7 @@ object SheetWorkTimeForm: TSheetWorkTimeForm
       Category = 'DSDLib'
       MoveParams = <>
       Caption = #1048#1079#1084#1077#1085#1080#1090#1100
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1076#1072#1085#1085#1099#1077' '#1087#1086' '#1089#1086#1090#1088#1091#1076#1085#1080#1082#1091
       ShortCut = 115
       ImageIndex = 1
       FormName = 'TSheetWorkTimeAddRecordForm'
@@ -564,6 +567,7 @@ object SheetWorkTimeForm: TSheetWorkTimeForm
           StoredProc = spSelectMI
         end>
       Caption = #1047#1072#1075#1088#1091#1079#1082#1072' '#1076#1072#1085#1085#1099#1093' '#1080#1079' '#1087#1091#1090#1077#1074#1099#1093' '#1083#1080#1089#1090#1086#1074
+      Hint = #1047#1072#1075#1088#1091#1079#1082#1072' '#1076#1072#1085#1085#1099#1093' '#1080#1079' '#1087#1091#1090#1077#1074#1099#1093' '#1083#1080#1089#1090#1086#1074
       ImageIndex = 27
       QuestionBeforeExecute = #1042#1099' '#1076#1077#1081#1089#1090#1074#1080#1090#1077#1083#1100#1085#1086' '#1093#1086#1090#1080#1090#1077' '#1079#1072#1075#1088#1091#1079#1080#1090#1100' '#1076#1072#1085#1085#1099#1077' '#1080#1079' '#1087#1091#1090#1077#1074#1099#1093' '#1083#1080#1089#1090#1086#1074'?'
       InfoAfterExecute = #1044#1072#1085#1085#1099#1077' '#1079#1072#1075#1088#1091#1078#1077#1085#1099
@@ -583,9 +587,9 @@ object SheetWorkTimeForm: TSheetWorkTimeForm
   object GuidesUnit: TdsdGuides
     KeyField = 'Id'
     LookupControl = edUnit
-    FormNameParam.Value = 'TUnit_ObjectForm'
+    FormNameParam.Value = 'TUnit_SheetWorkTimeForm'
     FormNameParam.DataType = ftString
-    FormName = 'TUnit_ObjectForm'
+    FormName = 'TUnit_SheetWorkTimeForm'
     PositionDataSet = 'MasterCDS'
     Params = <
       item

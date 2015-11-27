@@ -8,8 +8,8 @@ CREATE OR REPLACE VIEW Object_GoodsAvailability_View_ForSite AS
        ,Object_Price.UnitId                                     as pharmacy_id
        ,SUM(Container.Amount)::TFloat                           as quantity
        ,Object_Price.Price                                      as Price
-       ,Object_Goods.isErased                                   as deleted
-       ,Object_Goods.ObjectId                                   as ObjectId
+       ,CASE WHEN Object_Goods.isErased = TRUE THEN 1::Integer ELSE 0::Integer END as deleted
+       ,Object_Goods.ObjectId as ObjectId
     FROM Object_Goods_View AS Object_Goods
         LEFT OUTER JOIN Object_Price_View AS Object_Price
                                           ON Object_Price.GoodsId = Object_Goods.ID
