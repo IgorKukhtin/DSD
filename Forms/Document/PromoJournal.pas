@@ -13,7 +13,7 @@ uses
   Datasnap.DBClient, dsdAction, Vcl.ActnList, cxPropertiesStore, cxLabel,
   cxTextEdit, cxMaskEdit, cxDropDownEdit, cxCalendar, Vcl.ExtCtrls, cxGridLevel,
   cxGridCustomTableView, cxGridTableView, cxGridDBTableView, cxGridCustomView,
-  cxGrid, cxPC, cxCurrencyEdit;
+  cxGrid, cxPC, cxCurrencyEdit, cxCheckBox;
 
 type
   TPromoJournalForm = class(TAncestorJournalForm)
@@ -44,6 +44,7 @@ type
     N13: TMenuItem;
     N14: TMenuItem;
     dsdDataSetRefresh1: TdsdDataSetRefresh;
+    chbPeriodForOperDate: TcxCheckBox;
   private
     { Private declarations }
   public

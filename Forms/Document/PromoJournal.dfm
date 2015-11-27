@@ -1,7 +1,7 @@
 inherited PromoJournalForm: TPromoJournalForm
   Caption = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' <'#1040#1082#1094#1080#1080'>'
   ClientHeight = 430
-  ExplicitHeight = 465
+  ExplicitHeight = 468
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -171,6 +171,14 @@ inherited PromoJournalForm: TPromoJournalForm
     inherited deEnd: TcxDateEdit
       EditValue = 42005d
     end
+    object chbPeriodForOperDate: TcxCheckBox
+      Left = 401
+      Top = 5
+      Action = actRefresh
+      Caption = #1055#1077#1088#1080#1086#1076' '#1076#1083#1103' <'#1044#1072#1090#1072' '#1076#1086#1082#1091#1084#1077#1085#1090#1072'>'
+      TabOrder = 4
+      Width = 168
+    end
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 99
@@ -295,6 +303,35 @@ inherited PromoJournalForm: TPromoJournalForm
   end
   inherited spSelect: TdsdStoredProc
     StoredProcName = 'gpSelect_Movement_Promo'
+    Params = <
+      item
+        Name = 'inStartDate'
+        Value = 41640d
+        Component = deStart
+        DataType = ftDateTime
+        ParamType = ptInputOutput
+      end
+      item
+        Name = 'inEndDate'
+        Value = 41640d
+        Component = deEnd
+        DataType = ftDateTime
+        ParamType = ptInput
+      end
+      item
+        Name = 'inIsErased'
+        Value = False
+        Component = actShowErased
+        DataType = ftBoolean
+        ParamType = ptInput
+      end
+      item
+        Name = 'inPeriodForOperDate'
+        Value = Null
+        Component = chbPeriodForOperDate
+        DataType = ftBoolean
+        ParamType = ptInput
+      end>
   end
   inherited BarManager: TdxBarManager
     DockControlHeights = (
