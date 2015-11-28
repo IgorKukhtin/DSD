@@ -52,7 +52,7 @@ BEGIN
              ELSE -1 END :: Integer AS GroupId,
              
         CASE WHEN Operation.ContainerId > 0 AND Operation.isSaldo = TRUE THEN '1.Сальдо начальное' 
-             WHEN Operation.ContainerId > 0 AND Operation.isSaldo = FALSE THEN '1.Сальдо конечное'
+             WHEN Operation.ContainerId > 0 AND Operation.isSaldo = FALSE THEN '4.Сальдо конечное'
              WHEN Operation.DebetSumm > 0 THEN '2.Поступления' 
              WHEN Operation.KreditSumm > 0 THEN '3.Платежи' 
              ELSE '' END :: TVarChar AS GroupName,

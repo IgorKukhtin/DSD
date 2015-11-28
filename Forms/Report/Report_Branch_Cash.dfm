@@ -437,6 +437,7 @@ inherited Report_Branch_CashForm: TReport_Branch_CashForm
       DataSets = <
         item
           UserName = 'frxDBDMaster'
+          IndexFieldNames = 'GroupName'
           GridView = cxGridDBTableView
         end>
       Params = <
