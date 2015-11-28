@@ -4,7 +4,7 @@ inherited Report_FoundersForm: TReport_FoundersForm
   ClientWidth = 1103
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   ExplicitWidth = 1119
-  ExplicitHeight = 593
+  ExplicitHeight = 590
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -564,7 +564,7 @@ inherited Report_FoundersForm: TReport_FoundersForm
         item
           DataSet = MasterCDS
           UserName = 'frxDBDItems'
-          IndexFieldNames = 'FounderName'
+          IndexFieldNames = 'FounderName;GroupName;MoneyPlaceName'
         end>
       Params = <
         item
@@ -595,6 +595,7 @@ inherited Report_FoundersForm: TReport_FoundersForm
         item
           DataSet = MasterCDS
           UserName = 'frxDBDataset'
+          IndexFieldNames = 'FounderName;GroupName;MoneyPlaceName'
         end>
       Params = <
         item
@@ -2010,7 +2011,6 @@ inherited Report_FoundersForm: TReport_FoundersForm
     object bbPrintReal: TdxBarButton
       Action = dsdPrintRealAction
       Category = 0
-      Visible = ivNever
     end
     object bbExecuteDialog: TdxBarButton
       Action = ExecuteDialog
