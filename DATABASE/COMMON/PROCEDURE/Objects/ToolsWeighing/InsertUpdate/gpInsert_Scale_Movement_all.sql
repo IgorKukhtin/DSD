@@ -1124,6 +1124,29 @@ BEGIN
                     )
                   , DATE (inOperDate - INTERVAL '1 DAY');
           END IF;
+
+          -- !!!Проверка что элемент один!!!
+          IF EXISTS (SELECT 1
+                     FROM MovementItem
+                          LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
+                                                           ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
+                                                          AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
+                          LEFT JOIN MovementItemDate AS MIDate_PartionGoods
+                                                     ON MIDate_PartionGoods.MovementItemId =  MovementItem.Id
+                                                    AND MIDate_PartionGoods.DescId = zc_MIDate_PartionGoods()
+                          LEFT JOIN MovementItemString AS MIString_PartionGoods
+                                                       ON MIString_PartionGoods.MovementItemId = MovementItem.Id
+                                                      AND MIString_PartionGoods.DescId = zc_MIString_PartionGoods()
+                      WHERE MovementItem.MovementId = vbMovementId_begin
+                        AND MovementItem.isErased = FALSE
+                        AND MovementItem.Amount <> 0
+                      GROUP BY MovementItem.ObjectId, MILinkObject_GoodsKind.ObjectId, COALESCE (MIDate_PartionGoods.ValueData, zc_DateStart()), COALESCE (MIString_PartionGoods.ValueData, '')
+                      HAVING COUNT (*) > 1
+                    )
+          THEN
+              RAISE EXCEPTION 'Ошибка.Документ <Инвентаризация> за <%> заблокирован другим пользователем.Повторите действие через 25 сек.', DATE (inOperDate - INTERVAL '1 DAY');
+          END IF;
+
      END IF;
 
 

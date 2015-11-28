@@ -818,7 +818,7 @@ BEGIN
                           LEFT JOIN MovementItemString AS MIString_PartionGoods
                                                        ON MIString_PartionGoods.MovementItemId = MovementItem.Id
                                                       AND MIString_PartionGoods.DescId = zc_MIString_PartionGoods()
-                      WHERE MovementItem.MovementId <> vbMovementId_begin
+                      WHERE MovementItem.MovementId = vbMovementId_begin
                         AND MovementItem.isErased = FALSE
                         AND MovementItem.Amount <> 0
                       GROUP BY MovementItem.ObjectId, MILinkObject_GoodsKind.ObjectId, COALESCE (MIDate_PartionGoods.ValueData, zc_DateStart()), COALESCE (MIString_PartionGoods.ValueData, '')
