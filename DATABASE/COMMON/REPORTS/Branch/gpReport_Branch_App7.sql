@@ -25,7 +25,7 @@ BEGIN
     CREATE TEMP TABLE _tmpBranch (BranchId Integer) ON COMMIT DROP; 
     
     -- Филиал
-    IF COALESCE (inBranchId,0) = 0 AND 0 < (SELECT BranchId FROM Object_RoleAccessKeyGuide_View WHERE UserId = vbUserId AND BranchId <> 0 GROUP BY BranchId)
+    IF COALESCE (inBranchId, 0) = 0 AND 0 < (SELECT BranchId FROM Object_RoleAccessKeyGuide_View WHERE UserId = vbUserId AND BranchId <> 0 GROUP BY BranchId)
     THEN
        RAISE EXCEPTION 'Ошибка. Не выбран Филиал.';
     ELSE
