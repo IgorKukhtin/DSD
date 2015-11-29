@@ -623,14 +623,14 @@ inherited Report_Branch_App7_NewForm: TReport_Branch_App7_NewForm
       Category = 'DSDLib'
       MoveParams = <>
       StoredProcList = <>
-      Caption = #1055#1077#1095#1072#1090#1100' <'#1050#1072#1089#1089#1072' '#1092#1080#1083#1080#1072#1083#1099'>'
-      Hint = #1055#1077#1095#1072#1090#1100' <'#1050#1072#1089#1089#1072' '#1092#1080#1083#1080#1072#1083#1099'>'
+      Caption = #1055#1077#1095#1072#1090#1100' <'#1055#1088#1080#1083#1086#1078#1077#1085#1080#1077' 7>'
+      Hint = #1055#1077#1095#1072#1090#1100' <'#1055#1088#1080#1083#1086#1078#1077#1085#1080#1077' 7>'
       ImageIndex = 3
       ShortCut = 16464
       DataSets = <
         item
           UserName = 'frxDBDMaster'
-          IndexFieldNames = 'GroupName'
+          IndexFieldNames = 'NomStr'
           GridView = cxGridDBTableView
         end>
       Params = <
@@ -654,8 +654,8 @@ inherited Report_Branch_App7_NewForm: TReport_Branch_App7_NewForm
           DataType = ftString
           ParamType = ptInput
         end>
-      ReportName = #1050#1072#1089#1089#1072' '#1092#1080#1083#1080#1072#1083#1099
-      ReportNameParam.Value = #1050#1072#1089#1089#1072' '#1092#1080#1083#1080#1072#1083#1099
+      ReportName = #1055#1088#1080#1083#1086#1078#1077#1085#1080#1077'7 '#1053#1086#1074#1086#1077
+      ReportNameParam.Value = #1055#1088#1080#1083#1086#1078#1077#1085#1080#1077'7 '#1053#1086#1074#1086#1077
       ReportNameParam.DataType = ftString
     end
   end
@@ -800,6 +800,6 @@ inherited Report_Branch_App7_NewForm: TReport_Branch_App7_NewForm
         DataType = ftString
         ParamType = ptInput
       end>
-    Left = 544
+    Left = 536
   end
 end

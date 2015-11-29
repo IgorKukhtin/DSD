@@ -146,24 +146,19 @@ BEGIN
                           , 0 AS SummPeresortOut                                                                    -- расход пересортица  
                           , 0 AS SummInventory 
                           , 0 AS SummInventory_RePrice   
-                       FROM tmpUnitList
-                              INNER JOIN ContainerLinkObject AS CLO_Branch
-                                                             ON CLO_Branch.ObjectId = tmpUnitList.BranchId 
-                                                            AND CLO_Branch.DescId = zc_ContainerLinkObject_Branch() 
-                          
-                              INNER JOIN ContainerLinkObject AS CLO_Juridical
-                                                             ON CLO_Juridical.ContainerId = CLO_Branch.ContainerId
-                                                            AND CLO_Juridical.DescId = zc_ContainerLinkObject_Juridical()
-                                                            AND CLO_Juridical.ObjectId <> 0
-                              INNER JOIN Container ON Container.Id = CLO_Juridical.ContainerId
-                                                            AND Container.DescId = zc_Container_Summ() 
-                              LEFT JOIN MovementItemContainer AS MIContainer
-                                                       ON MIContainer.Containerid = Container.Id
-                                                      AND MIContainer.OperDate BETWEEN inStartDate AND inEndDate 
-                                                      AND MIContainer.MovementDescId = zc_Movement_Sale()
-                        GROUP BY CLO_Juridical.ContainerId, tmpUnitList.BranchId 
+                        FROM tmpUnitList 
+                           INNER JOIN MovementItemContainer AS MIContainer 
+                                                           ON MIContainer.whereObjectId_analyzer = tmpUnitList.Id
+                                                          AND MIContainer.OperDate BETWEEN inStartDate AND inEndDate 
+                                                          AND MIContainer.MovementDescId = zc_Movement_Sale() 
+                           INNER JOIN  Container ON Container.Id = MIContainer.Containerid 
+                                                AND Container.DescId = zc_Container_Summ()
+                           INNER JOIN ContainerLinkObject AS CLO_Juridical
+                                                          ON CLO_Juridical.ContainerId =Container.Id
+                                                         AND CLO_Juridical.DescId = zc_ContainerLinkObject_Juridical()
+                                                         AND CLO_Juridical.ObjectId <> 0
 
-
+                        GROUP BY CLO_Juridical.ContainerId, tmpUnitList.BranchId
                     )
 
 , tmpGoodsCount AS  (SELECT tmpContainerList.BranchId, tmpContainerList.ObjectId AS GoodsId
