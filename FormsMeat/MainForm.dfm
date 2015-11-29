@@ -4249,6 +4249,9 @@ inherited MainForm: TMainForm
       object N710: TMenuItem
         Action = actReport_Branch_App7
       end
+      object N711: TMenuItem
+        Action = actReport_Branch_App7_New
+      end
       object N87: TMenuItem
         Caption = '-'
       end
