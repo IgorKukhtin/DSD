@@ -127,6 +127,46 @@ inherited Report_Branch_App7_NewForm: TReport_Branch_App7_NewForm
               Format = ',0.####'
               Kind = skSum
               Column = Amount12
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Amount2_Rashod
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Amount3_Rashod
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Amount4_Rashod
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Amount5_Rashod
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Amount7_Rashod
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Amount9_Rashod
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Amount11_Rashod
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Amount12_Rashod
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -228,6 +268,46 @@ inherited Report_Branch_App7_NewForm: TReport_Branch_App7_NewForm
               Format = ',0.####'
               Kind = skSum
               Column = Amount12
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Amount2_Rashod
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Amount3_Rashod
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Amount4_Rashod
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Amount5_Rashod
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Amount7_Rashod
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Amount9_Rashod
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Amount11_Rashod
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Amount12_Rashod
             end>
           OptionsData.CancelOnExit = True
           OptionsData.Deleting = False
@@ -264,7 +344,18 @@ inherited Report_Branch_App7_NewForm: TReport_Branch_App7_NewForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 80
+            Width = 50
+          end
+          object Amount2_Rashod: TcxGridDBColumn
+            Caption = #1050#1080#1077#1074' (-)'
+            DataBinding.FieldName = 'Amount2_Rashod'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 50
           end
           object Amount3: TcxGridDBColumn
             Caption = #1053#1080#1082#1086#1083#1072#1077#1074' ('#1061#1077#1088#1089#1086#1085')'
@@ -275,7 +366,18 @@ inherited Report_Branch_App7_NewForm: TReport_Branch_App7_NewForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 80
+            Width = 50
+          end
+          object Amount3_Rashod: TcxGridDBColumn
+            Caption = #1053#1080#1082#1086#1083#1072#1077#1074' ('#1061#1077#1088#1089#1086#1085') (-)'
+            DataBinding.FieldName = 'Amount3_Rashod'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 50
           end
           object Amount4: TcxGridDBColumn
             Caption = #1054#1076#1077#1089#1089#1072
@@ -286,7 +388,18 @@ inherited Report_Branch_App7_NewForm: TReport_Branch_App7_NewForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 80
+            Width = 50
+          end
+          object Amount4_Rashod: TcxGridDBColumn
+            Caption = #1054#1076#1077#1089#1089#1072'  (-)'
+            DataBinding.FieldName = 'Amount4_Rashod'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 50
           end
           object Amount5: TcxGridDBColumn
             Caption = #1063#1077#1088#1082#1072#1089#1089#1099' ('#1050#1080#1088#1086#1074#1086#1075#1088#1072#1076')'
@@ -297,7 +410,18 @@ inherited Report_Branch_App7_NewForm: TReport_Branch_App7_NewForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 90
+            Width = 50
+          end
+          object Amount5_Rashod: TcxGridDBColumn
+            Caption = #1063#1077#1088#1082#1072#1089#1089#1099' ('#1050#1080#1088#1086#1074#1086#1075#1088#1072#1076')  (-)'
+            DataBinding.FieldName = 'Amount5_Rashod'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 50
           end
           object Amount7: TcxGridDBColumn
             Caption = #1050#1088#1080#1074#1086#1081' '#1056#1086#1075
@@ -308,7 +432,18 @@ inherited Report_Branch_App7_NewForm: TReport_Branch_App7_NewForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 80
+            Width = 50
+          end
+          object Amount7_Rashod: TcxGridDBColumn
+            Caption = #1050#1088#1080#1074#1086#1081' '#1056#1086#1075' (-)'
+            DataBinding.FieldName = 'Amount7_Rashod'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 50
           end
           object Amount9: TcxGridDBColumn
             Caption = #1061#1072#1088#1100#1082#1086#1074
@@ -319,7 +454,18 @@ inherited Report_Branch_App7_NewForm: TReport_Branch_App7_NewForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 80
+            Width = 50
+          end
+          object Amount9_Rashod: TcxGridDBColumn
+            Caption = #1061#1072#1088#1100#1082#1086#1074'  (-)'
+            DataBinding.FieldName = 'Amount9_Rashod'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 50
           end
           object Amount11: TcxGridDBColumn
             Caption = #1047#1072#1087#1086#1088#1086#1078#1100#1077
@@ -330,7 +476,18 @@ inherited Report_Branch_App7_NewForm: TReport_Branch_App7_NewForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 80
+            Width = 50
+          end
+          object Amount11_Rashod: TcxGridDBColumn
+            Caption = #1047#1072#1087#1086#1088#1086#1078#1100#1077'  (-)'
+            DataBinding.FieldName = 'Amount11_Rashod'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 50
           end
           object Amount12: TcxGridDBColumn
             Caption = #1076#1088'.'#1060#1080#1083#1080#1072#1083
@@ -341,7 +498,18 @@ inherited Report_Branch_App7_NewForm: TReport_Branch_App7_NewForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 80
+            Width = 50
+          end
+          object Amount12_Rashod: TcxGridDBColumn
+            Caption = #1076#1088'.'#1060#1080#1083#1080#1072#1083'  (-)'
+            DataBinding.FieldName = 'Amount12_Rashod'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 50
           end
         end
       end

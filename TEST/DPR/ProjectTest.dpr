@@ -767,7 +767,8 @@ uses
   Unit_SheetWorkTime in '..\..\Forms\Guides\Unit_SheetWorkTime.pas' {Unit_SheetWorkTimeForm: TParentForm},
   Report_Branch_Cash in '..\..\Forms\Report\Report_Branch_Cash.pas' {Report_Branch_CashForm: TParentForm},
   Report_Branch_CashDialog in '..\..\Forms\Report\Report_Branch_CashDialog.pas' {Report_Branch_CashDialogForm: TParentForm},
-  Report_Branch_App1 in '..\..\Forms\Report\Report_Branch_App1.pas' {Report_Branch_App1Form: TParentForm};
+  Report_Branch_App1 in '..\..\Forms\Report\Report_Branch_App1.pas' {Report_Branch_App1Form: TParentForm},
+  Report_Branch_App7_New in '..\..\Forms\Report\Report_Branch_App7_New.pas' {Report_Branch_App7_NewForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}
