@@ -4,7 +4,7 @@ inherited Report_ReceiptProductionAnalyzeForm: TReport_ReceiptProductionAnalyzeF
   ClientWidth = 1171
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   ExplicitWidth = 1187
-  ExplicitHeight = 468
+  ExplicitHeight = 465
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -413,8 +413,20 @@ inherited Report_ReceiptProductionAnalyzeForm: TReport_ReceiptProductionAnalyzeF
             Options.Editing = False
             Width = 55
           end
+          object ReceiptId_link: TcxGridDBColumn
+            DataBinding.FieldName = 'ReceiptId_link'
+            Visible = False
+            VisibleForCustomization = False
+            Width = 55
+          end
           object Receiptid: TcxGridDBColumn
             DataBinding.FieldName = 'Receiptid'
+            Visible = False
+            VisibleForCustomization = False
+            Width = 55
+          end
+          object ReceiptId_parent: TcxGridDBColumn
+            DataBinding.FieldName = 'ReceiptId_parent'
             Visible = False
             VisibleForCustomization = False
             Width = 55
@@ -423,8 +435,8 @@ inherited Report_ReceiptProductionAnalyzeForm: TReport_ReceiptProductionAnalyzeF
         object ChildView: TcxGridDBTableView [1]
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = ChildDS
-          DataController.DetailKeyFieldNames = 'Receiptid'
-          DataController.MasterKeyFieldNames = 'Receiptid'
+          DataController.DetailKeyFieldNames = 'ReceiptId_link'
+          DataController.MasterKeyFieldNames = 'ReceiptId_link'
           DataController.Summary.DefaultGroupSummaryItems = <
             item
               Format = ',0.####'
@@ -807,13 +819,28 @@ inherited Report_ReceiptProductionAnalyzeForm: TReport_ReceiptProductionAnalyzeF
             HeaderAlignmentVert = vaCenter
             Width = 55
           end
+          object clReceiptId_link: TcxGridDBColumn
+            Caption = #1056#1077#1094#1077#1087#1090' ('#1089#1074#1103#1079#1100' '#1087#1077#1095#1072#1090#1100')'
+            DataBinding.FieldName = 'ReceiptId_link'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 55
+          end
           object clReceiptid: TcxGridDBColumn
             Caption = #1056#1077#1094#1077#1087#1090' ('#1082#1083#1102#1095')'
             DataBinding.FieldName = 'Receiptid'
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Options.Editing = False
+            Width = 55
+          end
+          object clReceiptId_parent: TcxGridDBColumn
+            Caption = #1056#1077#1094#1077#1087#1090' '#1075#1083#1072#1074#1085'. ('#1089#1074#1103#1079#1100')'
+            DataBinding.FieldName = 'ReceiptId_parent'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
             Width = 55
           end
           object ReceiptId_from: TcxGridDBColumn
@@ -1266,8 +1293,8 @@ inherited Report_ReceiptProductionAnalyzeForm: TReport_ReceiptProductionAnalyzeF
         item
           UserName = 'frxDBDChild'
           IndexFieldNames = 
-            'ReceiptId;isCostValue;GroupNumber_print;InfoMoneyName_print;Good' +
-            'sGroupNameFull;GoodsName;GoodsKindName'
+            'ReceiptId_link;isCostValue;GroupNumber_print;InfoMoneyName_print' +
+            ';GoodsGroupNameFull;GoodsName;GoodsKindName'
           GridView = ChildView
         end>
       Params = <
@@ -1353,8 +1380,8 @@ inherited Report_ReceiptProductionAnalyzeForm: TReport_ReceiptProductionAnalyzeF
         item
           UserName = 'frxDBDChild'
           IndexFieldNames = 
-            'ReceiptId;isCostValue;GroupNumber_print;InfoMoneyName_print;Good' +
-            'sGroupNameFull;GoodsName;GoodsKindName'
+            'ReceiptId_link;isCostValue;GroupNumber_print;InfoMoneyName_print' +
+            ';GoodsGroupNameFull;GoodsName;GoodsKindName'
           GridView = ChildView
         end>
       Params = <
@@ -1439,8 +1466,8 @@ inherited Report_ReceiptProductionAnalyzeForm: TReport_ReceiptProductionAnalyzeF
         item
           UserName = 'frxDBDChild'
           IndexFieldNames = 
-            'ReceiptId;isCostValue;GroupNumber_print;InfoMoneyName_print;Good' +
-            'sGroupNameFull;GoodsName;GoodsKindName'
+            'ReceiptId_link;isCostValue;GroupNumber_print;InfoMoneyName_print' +
+            ';GoodsGroupNameFull;GoodsName;GoodsKindName'
           GridView = ChildView
         end>
       Params = <
@@ -1526,8 +1553,8 @@ inherited Report_ReceiptProductionAnalyzeForm: TReport_ReceiptProductionAnalyzeF
         item
           UserName = 'frxDBDChild'
           IndexFieldNames = 
-            'ReceiptId;isCostValue;GroupNumber_print;InfoMoneyName_print;Good' +
-            'sGroupNameFull;GoodsName;GoodsKindName'
+            'ReceiptId_link;isCostValue;GroupNumber_print;InfoMoneyName_print' +
+            ';GoodsGroupNameFull;GoodsName;GoodsKindName'
           GridView = ChildView
         end>
       Params = <
@@ -2068,7 +2095,7 @@ inherited Report_ReceiptProductionAnalyzeForm: TReport_ReceiptProductionAnalyzeF
   object ChildCDS: TClientDataSet
     Aggregates = <>
     FilterOptions = [foCaseInsensitive]
-    IndexFieldNames = 'ReceiptId'
+    IndexFieldNames = 'ReceiptId_link'
     Params = <>
     Left = 104
     Top = 168

@@ -10,7 +10,7 @@ CREATE OR REPLACE FUNCTION gpSelect_Object_Receipt(
     IN inSession      TVarChar       -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, ReceiptCode TVarChar, Comment TVarChar,
-               Value TFloat, ValueWeight TFloat, ValueCost TFloat, TaxExit TFloat, TaxLoss TFloat, PartionValue TFloat, PartionCount TFloat, WeightPackage TFloat,
+               Value TFloat, ValueWeight TFloat, ValueCost TFloat, TaxExit TFloat, TaxExitCheck TFloat, TaxLoss TFloat, PartionValue TFloat, PartionCount TFloat, WeightPackage TFloat,
                TotalWeightMain TFloat, TotalWeight TFloat,
                StartDate TDateTime, EndDate TDateTime,
                isMain Boolean,
@@ -28,6 +28,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, ReceiptCode TVarChar, Co
              , InsertName TVarChar, UpdateName TVarChar
              , InsertDate TDateTime, UpdateDate TDateTime
              , isCheck_Parent Boolean
+             , Check_Weight TFloat, Check_PartionValue TFloat, Check_TaxExit TFloat
              , isErased Boolean
               )
 AS
@@ -50,6 +51,7 @@ BEGIN
          , (ObjectFloat_Value.ValueData * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData, 0) ELSE 1 END) :: TFloat AS ValueWeight
          , ObjectFloat_ValueCost.ValueData     AS ValueCost
          , ObjectFloat_TaxExit.ValueData       AS TaxExit
+         , ObjectFloat_TaxExitCheck.ValueData  AS TaxExitCheck
          , ObjectFloat_TaxLoss.ValueData       AS TaxLoss
          , ObjectFloat_PartionValue.ValueData  AS PartionValue
          , ObjectFloat_PartionCount.ValueData  AS PartionCount
@@ -113,6 +115,30 @@ BEGIN
          , ObjectDate_Protocol_Update.ValueData AS UpdateDate
          
          , CASE WHEN Object_Goods.Id <> Object_Goods_Parent.Id THEN TRUE ELSE FALSE END AS isCheck_Parent
+
+         , CASE WHEN COALESCE (ObjectLink_Receipt_GoodsKind.ChildObjectId, 0) IN (0, zc_GoodsKind_WorkProgress())
+                     THEN (COALESCE (ObjectFloat_Value.ValueData, 0) * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData, 0) ELSE 1 END)
+                        - COALESCE (ObjectFloat_TotalWeight.ValueData, 0)
+                ELSE 0
+           END :: TFloat AS Check_Weight
+
+         , CASE WHEN COALESCE (ObjectLink_Receipt_GoodsKind.ChildObjectId, 0) IN (0, zc_GoodsKind_WorkProgress())
+                     THEN (COALESCE (ObjectFloat_Value.ValueData, 0) * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData, 0) ELSE 1 END)
+                        - COALESCE (ObjectFloat_PartionValue.ValueData, 0)
+                ELSE ObjectFloat_PartionValue.ValueData
+           END :: TFloat AS Check_PartionValue
+
+         , CASE WHEN ObjectLink_Receipt_GoodsKind.ChildObjectId = zc_GoodsKind_WorkProgress()
+                     THEN COALESCE (ObjectFloat_TaxExit.ValueData, 0) - COALESCE (ObjectFloat_TaxExitCheck.ValueData, 0)
+                WHEN ObjectLink_Receipt_Parent.ChildObjectId > 0 AND ObjectLink_Receipt_GoodsKind_Parent.ChildObjectId = zc_GoodsKind_WorkProgress()
+                 AND COALESCE (ObjectFloat_TaxExit_Parent.ValueData, 0) <> COALESCE (ObjectFloat_TaxExit.ValueData, 0)
+                     THEN COALESCE (ObjectFloat_TaxExit_Parent.ValueData, 0) - COALESCE (ObjectFloat_TaxExit.ValueData, 0)
+                WHEN ObjectLink_Receipt_Parent.ChildObjectId > 0
+                     THEN (COALESCE (ObjectFloat_Value.ValueData, 0) * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData, 0) ELSE 1 END)
+                        - COALESCE (ObjectFloat_TaxExit.ValueData, 0)
+                ELSE COALESCE (ObjectFloat_TaxExit.ValueData, 0) - 100
+           END :: TFloat AS Check_TaxExit
+
          , Object_Receipt.isErased AS isErased
 
      FROM Object AS Object_Receipt
@@ -138,8 +164,8 @@ BEGIN
           LEFT JOIN Object AS Object_Measure_Parent ON Object_Measure_Parent.Id = ObjectLink_Goods_Measure_Parent.ChildObjectId
 
           LEFT JOIN ObjectLink AS ObjectLink_Receipt_GoodsKind_Parent
-                              ON ObjectLink_Receipt_GoodsKind_Parent.ObjectId = Object_Receipt_Parent.Id
-                             AND ObjectLink_Receipt_GoodsKind_Parent.DescId = zc_ObjectLink_Receipt_GoodsKind()
+                               ON ObjectLink_Receipt_GoodsKind_Parent.ObjectId = Object_Receipt_Parent.Id
+                              AND ObjectLink_Receipt_GoodsKind_Parent.DescId = zc_ObjectLink_Receipt_GoodsKind()
           LEFT JOIN Object AS Object_GoodsKind_Parent ON Object_GoodsKind_Parent.Id = ObjectLink_Receipt_GoodsKind_Parent.ChildObjectId
 
           LEFT JOIN ObjectLink AS ObjectLink_Receipt_GoodsKindComplete_Parent
@@ -150,6 +176,9 @@ BEGIN
           LEFT JOIN ObjectBoolean AS ObjectBoolean_Main_Parent
                                   ON ObjectBoolean_Main_Parent.ObjectId = Object_Receipt_Parent.Id
                                  AND ObjectBoolean_Main_Parent.DescId = zc_ObjectBoolean_Receipt_Main()
+          LEFT JOIN ObjectFloat AS ObjectFloat_TaxExit_Parent
+                                ON ObjectFloat_TaxExit_Parent.ObjectId = Object_Receipt_Parent.Id
+                               AND ObjectFloat_TaxExit_Parent.DescId = zc_ObjectFloat_Receipt_TaxExit()
 
 
           LEFT JOIN ObjectLink AS ObjectLink_Receipt_Goods
@@ -219,6 +248,9 @@ BEGIN
                                 ON ObjectFloat_ValueCost.ObjectId = Object_Receipt.Id
                                AND ObjectFloat_ValueCost.DescId = zc_ObjectFloat_Receipt_ValueCost()
 
+          LEFT JOIN ObjectFloat AS ObjectFloat_TaxExitCheck
+                                ON ObjectFloat_TaxExitCheck.ObjectId = Object_Receipt.Id
+                               AND ObjectFloat_TaxExitCheck.DescId = zc_ObjectFloat_Receipt_TaxExitCheck()
           LEFT JOIN ObjectFloat AS ObjectFloat_TaxExit
                                 ON ObjectFloat_TaxExit.ObjectId = Object_Receipt.Id
                                AND ObjectFloat_TaxExit.DescId = zc_ObjectFloat_Receipt_TaxExit()

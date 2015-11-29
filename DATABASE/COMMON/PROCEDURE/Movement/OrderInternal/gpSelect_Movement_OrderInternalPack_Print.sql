@@ -156,7 +156,11 @@ BEGIN
                   , SUM (tmpMI.AmountSend) AS AmountSend
              FROM
             (SELECT MovementItem.ObjectId                                  AS GoodsId
-                  , COALESCE (MILinkObject_Goods.ObjectId, 0)              AS GoodsId_basis
+                  , COALESCE (MILinkObject_Goods.ObjectId
+                            , CASE WHEN ObjectLink_Goods_InfoMoney.ChildObjectId NOT IN (zc_Enum_InfoMoney_30101(), zc_Enum_InfoMoney_30201())
+                                        THEN MovementItem.ObjectId
+                                   ELSE 0
+                              END) AS GoodsId_basis
                   , COALESCE (MILinkObject_GoodsKind.ObjectId, 0)          AS GoodsKindId
                   , SUM (MovementItem.Amount)                              AS Amount
                   , SUM (COALESCE (MIFloat_AmountSecond.ValueData, 0))     AS AmountSecond
@@ -171,12 +175,16 @@ BEGIN
                   LEFT JOIN MovementItemLinkObject AS MILinkObject_Goods
                                                    ON MILinkObject_Goods.MovementItemId = MovementItem.Id
                                                   AND MILinkObject_Goods.DescId = zc_MILinkObject_Goods()
+                  LEFT JOIN ObjectLink AS ObjectLink_Goods_InfoMoney
+                                       ON ObjectLink_Goods_InfoMoney.ObjectId = MovementItem.ObjectId
+                                      AND ObjectLink_Goods_InfoMoney.DescId = zc_ObjectLink_Goods_InfoMoney()
              WHERE MovementItem.MovementId = inMovementId
                AND MovementItem.DescId     = zc_MI_Master()
                AND MovementItem.isErased   = FALSE
              GROUP BY MovementItem.ObjectId
                     , MILinkObject_Goods.ObjectId
                     , MILinkObject_GoodsKind.ObjectId
+                    , ObjectLink_Goods_InfoMoney.ChildObjectId
             UNION ALL
              SELECT tmpMI_Send.GoodsId
                   , COALESCE (tmpReceipt.GoodsId, tmpMI_Send.GoodsId) AS GoodsId_basis

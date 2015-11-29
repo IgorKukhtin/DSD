@@ -34,7 +34,8 @@ BEGIN
                                 , Movement.InvNumber  AS InvNumber
                                 , Movement.OperDate
                                 , Movement_Parent.Id                AS MovementId_parent
-                                , Movement_Parent.OperDate          AS OperDate_parent 
+                                , Movement_Parent.OperDate          AS OperDate_parent
+                                , Movement_Parent.DescId            AS DescId_parent
                                 , MovementDesc.ItemName             AS MovementDescName 
                                 , CASE WHEN Movement_Parent.StatusId = zc_Enum_Status_Complete()
                                             THEN Movement_Parent.InvNumber
@@ -57,9 +58,9 @@ BEGIN
                                          ON MovementLinkObject_To.MovementId = Movement.Id
                                         AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
 
-                               LEFT JOIN MovementDesc ON MovementDesc.Id = Movement_Parent.DescId 
+                               LEFT JOIN MovementDesc ON MovementDesc.Id = Movement_Parent.DescId
             
-                           WHERE Movement.DescId IN ( zc_Movement_WeighingPartner(),zc_Movement_WeighingProduction())
+                           WHERE Movement.DescId IN (zc_Movement_WeighingPartner(),zc_Movement_WeighingProduction())
                              AND Movement.OperDate BETWEEN inStartDate AND inEndDate
                              AND Movement.StatusId = zc_Enum_Status_Complete()
                              AND (Movement_Parent.DescId = inMovementDescId OR COALESCE(inMovementDescId,0)=0)
@@ -170,10 +171,12 @@ BEGIN
                   LEFT JOIN MovementItemFloat AS MIFloat_Price
                                               ON MIFloat_Price.MovementItemId = MovementItem.Id
                                              AND MIFloat_Price.DescId = zc_MIFloat_Price()
+                                             AND tmpMovement.DescId_parent <> zc_Movement_Inventory()
                   LEFT JOIN MovementItemFloat AS MIFloat_CountForPrice
                                               ON MIFloat_CountForPrice.MovementItemId = MovementItem.Id
                                              AND MIFloat_CountForPrice.DescId = zc_MIFloat_CountForPrice()
                                              AND MIFloat_Price.ValueData <> 0 -- !!!временно!!!
+                                             AND tmpMovement.DescId_parent <> zc_Movement_Inventory()
 
                   LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
                                                    ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id

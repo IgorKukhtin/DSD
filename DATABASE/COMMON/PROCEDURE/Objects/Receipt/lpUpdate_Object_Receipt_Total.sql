@@ -10,7 +10,7 @@ RETURNS VOID
 AS
 $BODY$
 BEGIN
-   -- сохранили свойство <Вес упаковки>
+   -- сохранили свойство <Итого вес основного сырья (100 кг.)> + <Итого вес закладки>
    PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_Receipt_TotalWeightMain(), inReceiptId, tmp.TotalWeightMain)
          , lpInsertUpdate_ObjectFloat (zc_ObjectFloat_Receipt_TotalWeight(), inReceiptId, tmp.TotalWeight)
    FROM Object AS Object_Receipt
@@ -67,6 +67,44 @@ BEGIN
                    GROUP BY ObjectLink_ReceiptChild_Receipt.ChildObjectId
                   ) AS tmp ON tmp.ReceiptId = inReceiptId
     WHERE Object_Receipt.Id = inReceiptId;
+
+   -- сохранили свойство <% выхода (проверка ГП)>
+   IF EXISTS (SELECT 1 FROM ObjectLink WHERE ObjectLink.ObjectId = inReceiptId AND ObjectLink.DescId = zc_ObjectLink_Receipt_GoodsKind() AND ObjectLink.ChildObjectId = zc_GoodsKind_WorkProgress())
+   THEN
+       PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_Receipt_TaxExitCheck(), inReceiptId, COALESCE (tmp.TaxExit, ObjectFloat_TaxExit.ValueData))
+       FROM Object AS Object_Receipt
+            LEFT JOIN ObjectFloat AS ObjectFloat_TaxExit
+                                  ON ObjectFloat_TaxExit.ObjectId = Object_Receipt.Id
+                                 AND ObjectFloat_TaxExit.DescId = zc_ObjectFloat_Receipt_TaxExit()
+            LEFT JOIN (SELECT COALESCE (ObjectFloat_TaxExit_find.ValueData, 0)
+                            * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData, 0) ELSE 1 END
+                              AS TaxExit
+                       FROM ObjectLink AS ObjectLink_Receipt_Parent
+                            LEFT JOIN Object AS Object_Receipt_find ON Object_Receipt_find.Id = ObjectLink_Receipt_Parent.ObjectId
+                                                                   AND Object_Receipt_find.isErased = FALSE
+                            LEFT JOIN ObjectFloat AS ObjectFloat_TaxExit_parent
+                                                  ON ObjectFloat_TaxExit_parent.ObjectId = ObjectLink_Receipt_Parent.ChildObjectId
+                                                 AND ObjectFloat_TaxExit_parent.DescId = zc_ObjectFloat_Receipt_TaxExit()
+                            LEFT JOIN ObjectFloat AS ObjectFloat_TaxExit_find
+                                                  ON ObjectFloat_TaxExit_find.ObjectId = Object_Receipt_find.Id
+                                                 AND ObjectFloat_TaxExit_find.DescId = zc_ObjectFloat_Receipt_Value()
+                            LEFT JOIN ObjectLink AS ObjectLink_Receipt_Goods
+                                                 ON ObjectLink_Receipt_Goods.ObjectId = Object_Receipt_find.Id
+                                                AND ObjectLink_Receipt_Goods.DescId = zc_ObjectLink_Receipt_Goods()
+                            LEFT JOIN ObjectFloat AS ObjectFloat_Weight
+                                                  ON ObjectFloat_Weight.ObjectId = ObjectLink_Receipt_Goods.ChildObjectId
+                                                 AND ObjectFloat_Weight.DescId = zc_ObjectFloat_Goods_Weight()
+                            LEFT JOIN ObjectLink AS ObjectLink_Goods_Measure
+                                                 ON ObjectLink_Goods_Measure.ObjectId = ObjectLink_Receipt_Goods.ChildObjectId
+                                                AND ObjectLink_Goods_Measure.DescId = zc_ObjectLink_Goods_Measure()
+                       WHERE ObjectLink_Receipt_Parent.DescId = zc_ObjectLink_Receipt_Parent()
+                         AND ObjectLink_Receipt_Parent.ChildObjectId = inReceiptId
+                         AND COALESCE (ObjectFloat_TaxExit_parent.ValueData, 0)
+                          <> (COALESCE (ObjectFloat_TaxExit_find.ValueData, 0) * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData, 0) ELSE 1 END)
+                       LIMIT 1
+                      ) AS tmp ON tmp.TaxExit <> COALESCE (ObjectFloat_TaxExit.ValueData, 0)
+       WHERE Object_Receipt.Id = inReceiptId;
+   END IF;
 
 END;
 $BODY$

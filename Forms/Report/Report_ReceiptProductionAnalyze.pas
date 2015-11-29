@@ -96,6 +96,10 @@ type
     edGoods: TcxButtonEdit;
     actPrint4: TdsdPrintAction;
     bb: TdxBarButton;
+    ReceiptId_parent: TcxGridDBColumn;
+    clReceiptId_parent: TcxGridDBColumn;
+    clReceiptId_link: TcxGridDBColumn;
+    ReceiptId_link: TcxGridDBColumn;
   private
     { Private declarations }
   public

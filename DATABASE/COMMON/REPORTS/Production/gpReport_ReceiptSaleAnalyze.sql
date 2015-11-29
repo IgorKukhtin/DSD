@@ -24,6 +24,12 @@ $BODY$
   DECLARE Cursor2 refcursor;
 BEGIN
 
+    -- !!!пересчет Рецептур, временно захардкодил!!!
+    PERFORM lpUpdate_Object_Receipt_Total (Object.Id, zfCalc_UserAdmin() :: Integer) FROM Object WHERE DescId = zc_Object_Receipt();
+    -- !!!пересчет Рецептур, временно захардкодил!!!
+    PERFORM lpUpdate_Object_Receipt_Parent (0, 0, 0);
+
+
      CREATE TEMP TABLE _tmpGoods (GoodsId Integer) ON COMMIT DROP;
      CREATE TEMP TABLE _tmpUnit (UnitId Integer) ON COMMIT DROP;
 

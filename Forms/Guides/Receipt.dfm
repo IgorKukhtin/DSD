@@ -287,6 +287,47 @@ object ReceiptForm: TReceiptForm
         Options.Editing = False
         Width = 108
       end
+      object Check_Weight: TcxGridDBColumn
+        Caption = #1055#1088#1086#1074#1077#1088#1082#1072' '#1074#1077#1089
+        DataBinding.FieldName = 'Check_Weight'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.####;-,0.####; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 70
+      end
+      object Check_PartionValue: TcxGridDBColumn
+        Caption = #1055#1088#1086#1074#1077#1088#1082#1072' '#1074' '#1082#1091#1090#1077#1088#1077
+        DataBinding.FieldName = 'Check_PartionValue'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.####;-,0.####; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 70
+      end
+      object Check_TaxExit: TcxGridDBColumn
+        Caption = #1055#1088#1086#1074#1077#1088#1082#1072' % '#1074#1099#1093'.'
+        DataBinding.FieldName = 'Check_TaxExit'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.####;-,0.####; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 70
+      end
+      object TaxExitCheck: TcxGridDBColumn
+        Caption = '% '#1074#1099#1093'. ('#1087#1086#1080#1089#1082' '#1043#1055')'
+        DataBinding.FieldName = 'TaxExitCheck'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.####;-,0.####; ;'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 70
+      end
       object clStartDate: TcxGridDBColumn
         Caption = #1053#1072#1095#1072#1083#1100#1085#1072#1103' '#1076#1072#1090#1072
         DataBinding.FieldName = 'StartDate'
