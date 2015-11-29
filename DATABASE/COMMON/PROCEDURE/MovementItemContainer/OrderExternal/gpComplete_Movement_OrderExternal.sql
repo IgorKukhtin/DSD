@@ -242,6 +242,18 @@ BEGIN
      PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_Summ(), _tmpItem.MovementItemId, _tmpItem.OperSumm_Partner)
      FROM _tmpItem;
 
+     -- в MovementLinkMovement если найдена акция и она 1
+     PERFORM lpInsertUpdate_MovementLinkMovement (zc_MovementLinkMovement_Promo(), inMovementId, CASE WHEN tmp.MovementId_min = tmp.MovementId_max THEN tmp.MovementId_min ELSE NULL END :: Integer)
+           , lpInsertUpdate_MovementBoolean (zc_MovementBoolean_Promo(), inMovementId, CASE WHEN tmp.MovementId_min > 0 AND tmp.MovementId_max > 0 THEN TRUE ELSE FALSE END)
+     FROM (SELECT 1 AS x) AS x1
+           LEFT JOIN
+          (SELECT MIN (MIFloat_PromoMovement.ValueData) AS MovementId_min,  MAX (MIFloat_PromoMovement.ValueData) AS MovementId_max
+           FROM _tmpItem
+                INNER JOIN MovementItemFloat AS MIFloat_PromoMovement
+                                             ON MIFloat_PromoMovement.MovementItemId = _tmpItem.MovementItemId
+                                            AND MIFloat_PromoMovement.DescId = zc_MIFloat_PromoMovementId()
+                                            AND MIFloat_PromoMovement.ValueData <> 0
+          ) AS tmp ON 1 = 1;
 
      -- ФИНИШ - Обязательно меняем статус документа + сохранили протокол
      PERFORM lpComplete_Movement (inMovementId := inMovementId

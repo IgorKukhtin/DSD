@@ -17,7 +17,18 @@ BEGIN
 
 
      RETURN QUERY
-     WITH tmpBranch AS (SELECT Object.Id AS BranchId FROM Object WHERE Object.DescId = zc_Object_Branch() AND Object.Id IN (8374, 301310) AND Object.isErased = FALSE) -- филиал Одесса + филиал Запорожье
+     WITH tmpBranch AS (SELECT Object.Id AS BranchId
+                        FROM Object
+                        WHERE Object.DescId = zc_Object_Branch()
+                          AND Object.Id IN (8374   -- филиал Одесса
+                                          , 301310 -- филиал Запорожье
+                                          , 8373   -- филиал Николаев (Херсон)
+                                          , 8375   -- филиал Черкассы (Кировоград)
+                                          , 8377   -- филиал Кр.Рог
+                                          , 8381   -- филиал Харьков
+                                           )
+                          AND Object.isErased = FALSE
+                       )
         , tmpList AS (SELECT Movement.OperDate, ObjectLink_ObjectFrom_Branch.ChildObjectId AS BranchId
                       FROM Movement
                            INNER JOIN MovementLinkObject AS MovementLinkObject_From

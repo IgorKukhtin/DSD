@@ -2,9 +2,8 @@ inherited OrderExternalForm: TOrderExternalForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1047#1072#1103#1074#1082#1072' '#1089#1090#1086#1088#1086#1085#1085#1103#1103' ('#1086#1090' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1103')>'
   ClientHeight = 647
   ClientWidth = 1365
-  ExplicitLeft = -107
   ExplicitWidth = 1381
-  ExplicitHeight = 685
+  ExplicitHeight = 682
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -12,17 +11,17 @@ inherited OrderExternalForm: TOrderExternalForm
     Width = 1365
     Height = 481
     ExplicitTop = 166
-    ExplicitWidth = 1366
+    ExplicitWidth = 1365
     ExplicitHeight = 481
     ClientRectBottom = 481
     ClientRectRight = 1365
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 1366
+      ExplicitWidth = 1365
       ExplicitHeight = 457
       inherited cxGrid: TcxGrid
         Width = 1365
         Height = 457
-        ExplicitWidth = 1366
+        ExplicitWidth = 1365
         ExplicitHeight = 457
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
@@ -279,7 +278,18 @@ inherited OrderExternalForm: TOrderExternalForm
             Options.Editing = False
             Width = 100
           end
-          object MovementPromo: TcxGridDBColumn [18]
+          object PricePromo: TcxGridDBColumn [18]
+            Caption = #1062#1077#1085#1072' '#1072#1082#1094#1080#1103
+            DataBinding.FieldName = 'PricePromo'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
+          end
+          object MovementPromo: TcxGridDBColumn [19]
             Caption = #8470' '#1076#1086#1082'. '#1072#1082#1094#1080#1080
             DataBinding.FieldName = 'MovementPromo'
             HeaderAlignmentHorz = taCenter
@@ -295,7 +305,7 @@ inherited OrderExternalForm: TOrderExternalForm
     Width = 1365
     Height = 140
     TabOrder = 3
-    ExplicitWidth = 1366
+    ExplicitWidth = 1365
     ExplicitHeight = 140
     inherited edInvNumber: TcxTextEdit
       Left = 8
@@ -1549,28 +1559,18 @@ inherited OrderExternalForm: TOrderExternalForm
         DataType = ftFloat
       end
       item
+        Name = 'outMovementPromo'
         Value = Null
-        DataType = ftFloat
-        ParamType = ptUnknown
+        Component = MasterCDS
+        ComponentItem = 'MovementPromo'
+        DataType = ftString
       end
       item
+        Name = 'outPricePromo'
         Value = Null
+        Component = MasterCDS
+        ComponentItem = 'PricePromo'
         DataType = ftFloat
-        ParamType = ptUnknown
-      end
-      item
-        Value = Null
-        DataType = ftFloat
-        ParamType = ptUnknown
-      end
-      item
-        Value = Null
-        DataType = ftFloat
-        ParamType = ptUnknown
-      end
-      item
-        Value = Null
-        ParamType = ptUnknown
       end>
     Left = 160
     Top = 368

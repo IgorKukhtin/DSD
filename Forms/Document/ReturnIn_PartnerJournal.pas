@@ -106,6 +106,8 @@ type
     actCheckedList: TMultiAction;
     N13: TMenuItem;
     N14: TMenuItem;
+    MovementPromo: TcxGridDBColumn;
+    isPromo: TcxGridDBColumn;
   private
     { Private declarations }
   public

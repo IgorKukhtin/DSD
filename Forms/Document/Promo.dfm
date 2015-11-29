@@ -2,28 +2,28 @@ inherited PromoForm: TPromoForm
   ActiveControl = edOperDate
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1040#1082#1094#1080#1103'>'
   ClientHeight = 599
-  ClientWidth = 1184
-  ExplicitWidth = 1200
+  ClientWidth = 1204
+  ExplicitWidth = 1220
   ExplicitHeight = 634
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 139
-    Width = 1184
+    Width = 1204
     Height = 460
     ExplicitTop = 139
-    ExplicitWidth = 1184
+    ExplicitWidth = 1204
     ExplicitHeight = 460
     ClientRectBottom = 460
-    ClientRectRight = 1184
+    ClientRectRight = 1204
     inherited tsMain: TcxTabSheet
       Caption = '&1. '#1058#1086#1074#1072#1088#1099
-      ExplicitWidth = 1184
+      ExplicitWidth = 1204
       ExplicitHeight = 436
       inherited cxGrid: TcxGrid
-        Width = 1184
+        Width = 1204
         Height = 255
-        ExplicitWidth = 1184
+        ExplicitWidth = 1204
         ExplicitHeight = 255
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
@@ -198,6 +198,7 @@ inherited PromoForm: TPromoForm
             DataBinding.FieldName = 'AmountReal'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 80
           end
           object colAmountRealWeight: TcxGridDBColumn [12]
@@ -298,7 +299,7 @@ inherited PromoForm: TPromoForm
       object Panel1: TPanel
         Left = 0
         Top = 263
-        Width = 1184
+        Width = 1204
         Height = 173
         Align = alBottom
         TabOrder = 1
@@ -472,21 +473,21 @@ inherited PromoForm: TPromoForm
         object cxPageControl2: TcxPageControl
           Left = 668
           Top = 1
-          Width = 246
+          Width = 264
           Height = 171
           Align = alRight
           TabOrder = 2
           Properties.ActivePage = tsConditionPromo
           Properties.CustomButtons.Buttons = <>
           ClientRectBottom = 171
-          ClientRectRight = 246
+          ClientRectRight = 264
           ClientRectTop = 24
           object tsConditionPromo: TcxTabSheet
-            Caption = '&3. % '#1076#1086#1087#1086#1083#1085#1080#1090#1077#1083#1100#1085#1086#1081' '#1089#1082#1080#1076#1082#1080
+            Caption = '&3. '#1076#1086#1087#1086#1083#1085#1080#1090#1077#1083#1100#1085#1072#1103' '#1089#1082#1080#1076#1082#1072
             object cxGridConditionPromo: TcxGrid
               Left = 0
               Top = 0
-              Width = 246
+              Width = 264
               Height = 147
               Align = alClient
               PopupMenu = pmCondition
@@ -513,11 +514,11 @@ inherited PromoForm: TPromoForm
                 OptionsView.Indicator = True
                 Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
                 object colcp_Amount: TcxGridDBColumn
-                  Caption = #1047#1085#1072#1095#1077#1085#1080#1077
+                  Caption = '% '#1089#1082#1080#1076#1082#1080
                   DataBinding.FieldName = 'Amount'
                   HeaderAlignmentHorz = taCenter
                   HeaderAlignmentVert = vaCenter
-                  Width = 33
+                  Width = 50
                 end
                 object colcp_ConditionPromoName: TcxGridDBColumn
                   Caption = #1053#1072#1079#1074#1072#1085#1080#1077
@@ -558,23 +559,23 @@ inherited PromoForm: TPromoForm
           end
         end
         object cxPageControl3: TcxPageControl
-          Left = 922
+          Left = 940
           Top = 1
-          Width = 261
+          Width = 263
           Height = 171
           Align = alRight
           TabOrder = 3
           Properties.ActivePage = tsAdvertising
           Properties.CustomButtons.Buttons = <>
           ClientRectBottom = 171
-          ClientRectRight = 261
+          ClientRectRight = 263
           ClientRectTop = 24
           object tsAdvertising: TcxTabSheet
             Caption = '&4. '#1056#1077#1082#1083#1072#1084#1085#1072#1103' '#1087#1086#1076#1076#1077#1088#1078#1082#1072
             object grAdvertising: TcxGrid
               Left = 0
               Top = 0
-              Width = 261
+              Width = 263
               Height = 147
               Align = alClient
               PopupMenu = pmAdvertising
@@ -647,7 +648,7 @@ inherited PromoForm: TPromoForm
           end
         end
         object cxSplitter3: TcxSplitter
-          Left = 914
+          Left = 932
           Top = 1
           Width = 8
           Height = 171
@@ -659,7 +660,7 @@ inherited PromoForm: TPromoForm
       object cxSplitter2: TcxSplitter
         Left = 0
         Top = 255
-        Width = 1184
+        Width = 1204
         Height = 8
         HotZoneClassName = 'TcxMediaPlayer8Style'
         AlignSplitter = salBottom
@@ -668,10 +669,10 @@ inherited PromoForm: TPromoForm
     end
   end
   inherited DataPanel: TPanel
-    Width = 1184
+    Width = 1204
     Height = 113
     TabOrder = 3
-    ExplicitWidth = 1184
+    ExplicitWidth = 1204
     ExplicitHeight = 113
     inherited edInvNumber: TcxTextEdit
       Left = 8
@@ -947,7 +948,6 @@ inherited PromoForm: TPromoForm
       Params = <>
       Caption = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1058#1086#1074#1072#1088'>'
       Hint = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1058#1086#1074#1072#1088'>'
-      ShortCut = 45
       ImageIndex = 0
     end
     inherited actMISetErased: TdsdUpdateErased
@@ -961,7 +961,8 @@ inherited PromoForm: TPromoForm
         end>
       Caption = #1059#1076#1072#1083#1080#1090#1100' <'#1090#1086#1074#1072#1088'>'
       Hint = #1059#1076#1072#1083#1080#1090#1100' <'#1058#1086#1074#1072#1088'>'
-      QuestionBeforeExecute = #1059#1076#1072#1083#1080#1090#1100' '#1090#1086#1074#1072#1088' '#1080#1079' '#1072#1082#1094#1080#1080'?'
+      ShortCut = 0
+      QuestionBeforeExecute = #1044#1077#1081#1089#1090#1074#1080#1090#1077#1083#1100#1085#1086' '#1091#1076#1072#1083#1080#1090#1100' <'#1058#1086#1074#1072#1088'> ?'
     end
     inherited actMISetUnErased: TdsdUpdateErased
       Category = 'Goods'
@@ -972,6 +973,9 @@ inherited PromoForm: TPromoForm
         end
         item
         end>
+      Caption = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' <'#1058#1086#1074#1072#1088'>'
+      Hint = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' <'#1058#1086#1074#1072#1088'>'
+      ShortCut = 0
     end
     object UpdateConditionDS: TdsdUpdateDataSet [5]
       Category = 'Condition'
@@ -1116,9 +1120,8 @@ inherited PromoForm: TPromoForm
       View = cxGridDBTableViewPartner
       Action = PromoPartnerChoiceForm
       Params = <>
-      Caption = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1055#1086#1082#1091#1087#1072#1090#1077#1083#1103'>'
-      Hint = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1055#1086#1082#1091#1087#1072#1090#1077#1083#1103'>'
-      ShortCut = 45
+      Caption = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1055#1072#1088#1090#1085#1077#1088#1072'>'
+      Hint = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1055#1072#1088#1090#1085#1077#1088#1072'>'
       ImageIndex = 0
     end
     object ErasedPartner: TdsdUpdateErased
@@ -1132,13 +1135,13 @@ inherited PromoForm: TPromoForm
         end
         item
         end>
-      Caption = #1059#1076#1072#1083#1080#1090#1100' <'#1055#1086#1082#1091#1087#1072#1090#1077#1083#1103'>'
-      Hint = #1059#1076#1072#1083#1080#1090#1100' <'#1055#1086#1082#1091#1087#1072#1090#1077#1083#1103'>'
+      Caption = #1059#1076#1072#1083#1080#1090#1100' <'#1055#1072#1088#1090#1085#1077#1088#1072'>'
+      Hint = #1059#1076#1072#1083#1080#1090#1100' <'#1055#1072#1088#1090#1085#1077#1088#1072'>'
       ImageIndex = 2
       ShortCut = 46
       ErasedFieldName = 'isErased'
       DataSource = PartnerDS
-      QuestionBeforeExecute = #1059#1076#1072#1083#1080#1090#1100' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1103' '#1080#1079' '#1072#1082#1094#1080#1080'?'
+      QuestionBeforeExecute = #1044#1077#1081#1089#1090#1074#1080#1090#1077#1083#1100#1085#1086' '#1091#1076#1072#1083#1080#1090#1100' <'#1055#1072#1088#1090#1085#1077#1088#1072'> ?'
     end
     object UnErasedPartner: TdsdUpdateErased
       Category = 'Partner'
@@ -1232,9 +1235,8 @@ inherited PromoForm: TPromoForm
       View = grtvConditionPromo
       Action = ConditionPromoChoiceForm
       Params = <>
-      Caption = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1059#1089#1083#1086#1074#1080#1077' '#1091#1095#1072#1089#1090#1080#1103'>'
-      Hint = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1059#1089#1083#1086#1074#1080#1077' '#1091#1095#1072#1089#1090#1080#1103'>'
-      ShortCut = 45
+      Caption = #1044#1086#1073#1072#1074#1080#1090#1100' <% '#1076#1086#1087#1086#1083#1085#1080#1090#1077#1083#1100#1085#1086#1081' '#1089#1082#1080#1076#1082#1080'>'
+      Hint = #1044#1086#1073#1072#1074#1080#1090#1100' <% '#1076#1086#1087#1086#1083#1085#1080#1090#1077#1083#1100#1085#1086#1081' '#1089#1082#1080#1076#1082#1080'>'
       ImageIndex = 0
     end
     object ErasedCondition: TdsdUpdateErased
@@ -1248,13 +1250,13 @@ inherited PromoForm: TPromoForm
         end
         item
         end>
-      Caption = #1059#1076#1072#1083#1080#1090#1100' <'#1059#1089#1083#1086#1074#1080#1077' '#1091#1095#1072#1089#1090#1080#1103'>'
-      Hint = #1059#1076#1072#1083#1080#1090#1100' <'#1059#1089#1083#1086#1074#1080#1077' '#1091#1095#1072#1089#1090#1080#1103'>'
+      Caption = #1059#1076#1072#1083#1080#1090#1100' <% '#1076#1086#1087#1086#1083#1085#1080#1090#1077#1083#1100#1085#1086#1081' '#1089#1082#1080#1076#1082#1080'>'
+      Hint = #1059#1076#1072#1083#1080#1090#1100' <% '#1076#1086#1087#1086#1083#1085#1080#1090#1077#1083#1100#1085#1086#1081' '#1089#1082#1080#1076#1082#1080'>'
       ImageIndex = 2
       ShortCut = 46
       ErasedFieldName = 'isErased'
       DataSource = ConditionPromoDS
-      QuestionBeforeExecute = #1059#1076#1072#1083#1080#1090#1100' '#1091#1089#1083#1086#1074#1080#1077' '#1091#1095#1072#1089#1090#1080#1103' '#1080#1079' '#1072#1082#1094#1080#1080'?'
+      QuestionBeforeExecute = #1044#1077#1081#1089#1090#1074#1080#1090#1077#1083#1100#1085#1086' '#1091#1076#1072#1083#1080#1090#1100' <% '#1076#1086#1087#1086#1083#1085#1080#1090#1077#1083#1100#1085#1086#1081' '#1089#1082#1080#1076#1082#1080'> ?'
     end
     object UnErasedCondition: TdsdUpdateErased
       Category = 'Condition'
@@ -1366,9 +1368,8 @@ inherited PromoForm: TPromoForm
       View = grtvAdvertising
       Action = AdvertisingChoiceForm
       Params = <>
-      Caption = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1056#1077#1082#1083#1072#1084#1085#1091#1102' '#1087#1086#1076#1076#1077#1088#1078#1082#1091'>'
-      Hint = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1056#1077#1082#1083#1072#1084#1085#1091#1102' '#1087#1086#1076#1076#1077#1088#1078#1082#1091'>'
-      ShortCut = 45
+      Caption = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1056#1077#1082#1083#1072#1084#1085#1072#1103' '#1087#1086#1076#1076#1077#1088#1078#1082#1072'>'
+      Hint = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1056#1077#1082#1083#1072#1084#1085#1072#1103' '#1087#1086#1076#1076#1077#1088#1078#1082#1072'>'
       ImageIndex = 0
     end
     object ErasedAdvertising: TdsdUpdateErased
@@ -1382,13 +1383,13 @@ inherited PromoForm: TPromoForm
         end
         item
         end>
-      Caption = #1059#1076#1072#1083#1080#1090#1100' <'#1056#1077#1082#1083#1072#1084#1085#1091#1102' '#1087#1086#1076#1076#1077#1088#1078#1082#1091'>'
-      Hint = #1059#1076#1072#1083#1080#1090#1100' <'#1056#1077#1082#1083#1072#1084#1085#1091#1102' '#1087#1086#1076#1076#1077#1088#1078#1082#1091'>'
+      Caption = #1059#1076#1072#1083#1080#1090#1100' <'#1056#1077#1082#1083#1072#1084#1085#1072#1103' '#1087#1086#1076#1076#1077#1088#1078#1082#1072'>'
+      Hint = #1059#1076#1072#1083#1080#1090#1100' <'#1056#1077#1082#1083#1072#1084#1085#1072#1103' '#1087#1086#1076#1076#1077#1088#1078#1082#1072'>'
       ImageIndex = 2
       ShortCut = 46
       ErasedFieldName = 'isErased'
       DataSource = AdvertisingDS
-      QuestionBeforeExecute = #1059#1076#1072#1083#1080#1090#1100' '#1056#1077#1082#1083#1072#1084#1085#1091#1102' '#1087#1086#1076#1076#1077#1088#1078#1082#1091' '#1080#1079' '#1072#1082#1094#1080#1080'?'
+      QuestionBeforeExecute = #1044#1077#1081#1089#1090#1074#1080#1090#1077#1083#1100#1085#1086' '#1091#1076#1072#1083#1080#1090#1100' <'#1056#1077#1082#1083#1072#1084#1085#1072#1103' '#1087#1086#1076#1076#1077#1088#1078#1082#1072'> ?'
     end
     object unErasedAdvertising: TdsdUpdateErased
       Category = 'Advertising'
@@ -2297,8 +2298,8 @@ inherited PromoForm: TPromoForm
         DataType = ftString
         ParamType = ptInput
       end>
-    Left = 316
-    Top = 96
+    Left = 172
+    Top = 72
   end
   object PersonalGuides: TdsdGuides
     KeyField = 'Id'
@@ -2324,8 +2325,8 @@ inherited PromoForm: TPromoForm
         DataType = ftString
         ParamType = ptInput
       end>
-    Left = 676
-    Top = 96
+    Left = 476
+    Top = 64
   end
   object UnitGuides: TdsdGuides
     KeyField = 'Id'

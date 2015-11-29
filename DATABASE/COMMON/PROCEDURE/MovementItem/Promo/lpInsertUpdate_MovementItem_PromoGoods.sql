@@ -43,8 +43,8 @@ BEGIN
     -- сохранили <Цена отгрузки с учетом НДС, с учетом скидки, грн>
     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_PriceWithVAT(), ioId, COALESCE(inPriceWithVAT,0));
     
-    -- сохранили <Объем продаж в аналогичный период, кг>
-    PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_AmountReal(), ioId, COALESCE(inAmountReal,0));
+    -- !!теперь будет расчет!!! сохранили <Объем продаж в аналогичный период, кг>
+    -- PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_AmountReal(), ioId, COALESCE(inAmountReal,0));
     
     -- сохранили <Минимум планируемого объема продаж на акционный период (в кг)>
     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_AmountPlanMin(), ioId, COALESCE(inAmountPlanMin,0));

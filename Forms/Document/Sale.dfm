@@ -3,7 +3,7 @@
   ClientHeight = 668
   ClientWidth = 1366
   AddOnFormData.OnLoadAction = actSetDefaults
-  ExplicitLeft = -582
+  ExplicitTop = -246
   ExplicitWidth = 1382
   ExplicitHeight = 703
   PixelsPerInch = 96
@@ -439,7 +439,18 @@
             HeaderAlignmentVert = vaCenter
             Width = 100
           end
-          object MovementPromo: TcxGridDBColumn [31]
+          object PricePromo: TcxGridDBColumn [31]
+            Caption = #1062#1077#1085#1072' '#1072#1082#1094#1080#1103
+            DataBinding.FieldName = 'PricePromo'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
+          end
+          object MovementPromo: TcxGridDBColumn [32]
             Caption = #8470' '#1076#1086#1082'. '#1072#1082#1094#1080#1103
             DataBinding.FieldName = 'MovementPromo'
             HeaderAlignmentHorz = taCenter
@@ -2917,6 +2928,20 @@
         Value = Null
         Component = MasterCDS
         ComponentItem = 'CountPack'
+        DataType = ftFloat
+      end
+      item
+        Name = 'outMovementPromo'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'MovementPromo'
+        DataType = ftString
+      end
+      item
+        Name = 'outPricePromo'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'PricePromo'
         DataType = ftFloat
       end>
     Left = 160

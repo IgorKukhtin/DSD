@@ -12,18 +12,23 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_OrderExternal(
     IN inPrice               TFloat    , -- Цена
  INOUT ioCountForPrice       TFloat    , -- Цена за количество
    OUT outAmountSumm         TFloat    , -- Сумма расчетная
+   OUT outMovementPromo      TVarChar  , -- 
+   OUT outPricePromo         TFloat    , -- 
     IN inSession             TVarChar    -- сессия пользователя
 )
 RETURNS RECORD AS
 $BODY$
    DECLARE vbUserId Integer;
+   DECLARE vbMovementId_Promo Integer;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MI_OrderExternal());
 
      -- сохранили
      SELECT tmp.ioId, tmp.ioCountForPrice, tmp.outAmountSumm
-            INTO ioId, ioCountForPrice, outAmountSumm
+          , zfCalc_PromoMovementName (tmp.outMovementId_Promo, NULL, NULL, NULL, NULL)
+          , tmp.outPricePromo
+            INTO ioId, ioCountForPrice, outAmountSumm, outMovementPromo, outPricePromo
      FROM lpInsertUpdate_MovementItem_OrderExternal (ioId                 := ioId
                                                    , inMovementId         := inMovementId
                                                    , inGoodsId            := inGoodsId
@@ -34,7 +39,6 @@ BEGIN
                                                    , ioCountForPrice      := ioCountForPrice
                                                    , inUserId             := vbUserId
                                                     ) AS tmp;
-
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;

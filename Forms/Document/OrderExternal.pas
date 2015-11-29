@@ -95,6 +95,7 @@ type
     edOperDatePartner_sale: TcxDateEdit;
     cbPromo: TcxCheckBox;
     MovementPromo: TcxGridDBColumn;
+    PricePromo: TcxGridDBColumn;
   private
     { Private declarations }
   public

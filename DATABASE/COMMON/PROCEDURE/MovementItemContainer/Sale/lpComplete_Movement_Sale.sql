@@ -2824,7 +2824,27 @@ BEGIN
      -- 6.1. ФИНИШ - Обязательно сохраняем Проводки
      PERFORM lpInsertUpdate_MovementItemContainer_byTable ();
 
-     -- 6.2. ФИНИШ - Обязательно меняем статус документа + сохранили протокол
+
+     -- 6.2.1. Дата оплаты по накладной (только если парт.учет долгов)
+     IF vbPartionMovementId > 0 OR EXISTS (SELECT MovementId FROM MovementDate WHERE MovementId = inMovementId AND DescId = zc_MovementDate_Payment())
+     THEN
+          PERFORM lpInsertUpdate_MovementDate (zc_MovementDate_Payment(), inMovementId, vbPaymentDate);
+     END IF;
+
+     -- 6.2.2. в MovementLinkMovement если найдена акция и она 1
+     PERFORM lpInsertUpdate_MovementLinkMovement (zc_MovementLinkMovement_Promo(), inMovementId, CASE WHEN tmp.MovementId_min = tmp.MovementId_max THEN tmp.MovementId_min ELSE NULL END :: Integer)
+           , lpInsertUpdate_MovementBoolean (zc_MovementBoolean_Promo(), inMovementId, CASE WHEN tmp.MovementId_min > 0 AND tmp.MovementId_max > 0 THEN TRUE ELSE FALSE END)
+     FROM (SELECT 1 AS x) AS x1
+           LEFT JOIN
+          (SELECT MIN (MIFloat_PromoMovement.ValueData) AS MovementId_min,  MAX (MIFloat_PromoMovement.ValueData) AS MovementId_max
+           FROM _tmpItem
+                INNER JOIN MovementItemFloat AS MIFloat_PromoMovement
+                                             ON MIFloat_PromoMovement.MovementItemId = _tmpItem.MovementItemId
+                                            AND MIFloat_PromoMovement.DescId = zc_MIFloat_PromoMovementId()
+                                            AND MIFloat_PromoMovement.ValueData <> 0
+          ) AS tmp ON 1 = 1;
+
+     -- 6.2.3. ФИНИШ - Обязательно меняем статус документа + сохранили протокол
      PERFORM lpComplete_Movement (inMovementId := inMovementId
                                 , inDescId     := zc_Movement_Sale()
                                 , inUserId     := inUserId
@@ -2870,12 +2890,6 @@ BEGIN
           PERFORM lpInsertUpdate_MovementBoolean (zc_MovementBoolean_Checked(), vbMovementId_Tax, (SELECT ValueData FROM MovementBoolean WHERE MovementId = inMovementId AND DescId = zc_MovementBoolean_Checked()));
      END IF;
 
-
-     -- 6.6. Дата оплаты по накладной (только если парт.учет долгов)
-     IF vbPartionMovementId > 0 OR EXISTS (SELECT MovementId FROM MovementDate WHERE MovementId = inMovementId AND DescId = zc_MovementDate_Payment())
-     THEN
-          PERFORM lpInsertUpdate_MovementDate (zc_MovementDate_Payment(), inMovementId, vbPaymentDate);
-     END IF;
 
 
 END;

@@ -512,4 +512,4 @@ ALTER FUNCTION gpSelect_Movement_Sale (TDateTime, TDateTime, Boolean, Boolean, T
 */
 
 -- тест
--- SELECT * FROM gpSelect_Movement_Sale (inStartDate:= '01.02.2015', inEndDate:= '01.02.2015', inIsPartnerDate:= FALSE, inIsErased:= TRUE, inSession:= zfCalc_UserAdmin())
+-- SELECT * FROM gpSelect_Movement_Sale (inStartDate:= '01.11.2015', inEndDate:= '01.11.2015', inIsPartnerDate:= FALSE, inIsErased:= TRUE, inSession:= zfCalc_UserAdmin())

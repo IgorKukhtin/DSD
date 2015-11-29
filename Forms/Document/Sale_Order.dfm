@@ -2,7 +2,6 @@ inherited Sale_OrderForm: TSale_OrderForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1055#1088#1086#1076#1072#1078#1072' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1102' ('#1087#1086' '#1079#1072#1103#1074#1082#1077')>'
   ClientHeight = 668
   ClientWidth = 1356
-  ExplicitLeft = -572
   ExplicitWidth = 1372
   ExplicitHeight = 703
   PixelsPerInch = 96
@@ -349,7 +348,18 @@ inherited Sale_OrderForm: TSale_OrderForm
             Options.Editing = False
             Width = 70
           end
-          object MovementPromo: TcxGridDBColumn [22]
+          object PricePromo: TcxGridDBColumn [22]
+            Caption = #1062#1077#1085#1072' '#1072#1082#1094#1080#1103
+            DataBinding.FieldName = 'PricePromo'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
+          end
+          object MovementPromo: TcxGridDBColumn [23]
             Caption = #8470' '#1076#1086#1082'. '#1072#1082#1094#1080#1103
             DataBinding.FieldName = 'MovementPromo'
             HeaderAlignmentHorz = taCenter
@@ -2743,6 +2753,20 @@ inherited Sale_OrderForm: TSale_OrderForm
         Component = MasterCDS
         ComponentItem = 'BoxId'
         ParamType = ptInput
+      end
+      item
+        Name = 'outMovementPromo'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'MovementPromo'
+        DataType = ftString
+      end
+      item
+        Name = 'outPricePromo'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'PricePromo'
+        DataType = ftFloat
       end>
     Left = 160
     Top = 368

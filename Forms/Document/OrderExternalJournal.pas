@@ -70,6 +70,7 @@ type
     Comment: TcxGridDBColumn;
     OperDatePartner_sale: TcxGridDBColumn;
     isPromo: TcxGridDBColumn;
+    MovementPromo: TcxGridDBColumn;
   private
     { Private declarations }
   public

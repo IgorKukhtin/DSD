@@ -25,6 +25,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , TotalSummVAT TFloat, TotalSummMVAT TFloat, TotalSummPVAT TFloat, TotalSumm TFloat
              , TotalCountKg TFloat, TotalCountSh TFloat, TotalCount TFloat, TotalCountSecond TFloat
              , isEDI Boolean, isPromo Boolean
+             , MovementPromo TVarChar
              , Comment TVarChar
               )
 AS
@@ -105,8 +106,10 @@ BEGIN
            , MovementFloat_TotalCount.ValueData             AS TotalCount
            , MovementFloat_TotalCountSecond.ValueData       AS TotalCountSecond
           
-           , COALESCE(MovementLinkMovement_Order.MovementId, 0) <> 0 AS isEDI
-           , COALESCE(MovementBoolean_Promo.ValueData, False) AS isPromo
+           , COALESCE (MovementLinkMovement_Order.MovementId, 0) <> 0 AS isEDI
+           , COALESCE (MovementBoolean_Promo.ValueData, FALSE) AS isPromo
+           , ('№ ' || Movement_Promo.InvNumber || ' от ' || DATE (Movement_Promo.OperDate) :: TVarChar || ' акц. цена с ' || DATE (MD_StartSale.ValueData) :: TVarChar|| ' по ' || DATE (MD_EndSale.ValueData) :: TVarChar) :: TVarChar AS MovementPromo
+
            , MovementString_Comment.ValueData       AS Comment
 
        FROM (SELECT Movement.id
@@ -235,6 +238,16 @@ BEGIN
             LEFT JOIN Object AS Object_Partner ON Object_Partner.Id = MovementLinkObject_Partner.ObjectId
 
 
+            LEFT JOIN MovementLinkMovement AS MovementLinkMovement_Promo
+                                           ON MovementLinkMovement_Promo.MovementId = Movement.Id
+                                          AND MovementLinkMovement_Promo.DescId = zc_MovementLinkMovement_Promo()
+            LEFT JOIN Movement AS Movement_Promo ON Movement_Promo.Id = MovementLinkMovement_Promo.MovementChildId
+            LEFT JOIN MovementDate AS MD_StartSale
+                                   ON MD_StartSale.MovementId =  Movement_Promo.Id
+                                  AND MD_StartSale.DescId = zc_MovementDate_StartSale()
+            LEFT JOIN MovementDate AS MD_EndSale
+                                   ON MD_EndSale.MovementId =  Movement_Promo.Id
+                                  AND MD_EndSale.DescId = zc_MovementDate_EndSale()
 
        WHERE COALESCE (Object_From.DescId, 0) <> zc_Object_Unit();
 
@@ -255,4 +268,4 @@ ALTER FUNCTION gpSelect_Movement_OrderExternal (TDateTime, TDateTime, Boolean, T
 */
 
 -- тест
--- SELECT * FROM gpSelect_Movement_OrderExternal (inStartDate:= '01.08.2015', inEndDate:= '01.08.2015', inIsErased := FALSE, inSession:= zfCalc_UserAdmin())
+-- SELECT * FROM gpSelect_Movement_OrderExternal (inStartDate:= '01.11.2015', inEndDate:= '01.11.2015', inIsErased := FALSE, inSession:= zfCalc_UserAdmin())

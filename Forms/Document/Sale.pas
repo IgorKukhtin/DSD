@@ -199,6 +199,7 @@ type
     TotalPercentAmount: TcxGridDBColumn;
     cbPromo: TcxCheckBox;
     MovementPromo: TcxGridDBColumn;
+    PricePromo: TcxGridDBColumn;
   private
     { Private declarations }
   public

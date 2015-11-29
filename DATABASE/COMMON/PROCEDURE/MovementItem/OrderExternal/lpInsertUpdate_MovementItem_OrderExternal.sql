@@ -12,17 +12,44 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_MovementItem_OrderExternal(
     IN inPrice               TFloat    , -- Цена
  INOUT ioCountForPrice       TFloat    , -- Цена за количество
    OUT outAmountSumm         TFloat    , -- Сумма расчетная
+   OUT outMovementId_Promo   Integer   ,
+   OUT outPricePromo         TFloat    ,
     IN inUserId              Integer     -- пользователь
 )
 RETURNS RECORD AS
 $BODY$
    DECLARE vbIsInsert Boolean;
+   DECLARE vbPartnerId Integer;
+   DECLARE vbPriceWithVAT Boolean;
 BEGIN
+
+     -- Контрагент
+     vbPartnerId:= (SELECT MLO.ObjectId FROM MovementLinkObject AS MLO WHERE MLO.MovementId = inMovementId AND MLO.DescId = zc_MovementLinkObject_From());
+     -- Цены с НДС
+     vbPriceWithVAT:= (SELECT MB.ValueData FROM MovementBoolean AS MB WHERE MB.MovementId = inMovementId AND MB.DescId = zc_MovementBoolean_PriceWithVAT());
+     -- параметры акции
+     SELECT tmp.MovementId, CASE WHEN tmp.TaxPromo <> 0 AND vbPriceWithVAT = TRUE THEN tmp.PriceWithVAT
+                                 WHEN tmp.TaxPromo <> 0 THEN tmp.PriceWithOutVAT
+                                 ELSE 0
+                            END
+            INTO outMovementId_Promo, outPricePromo
+     FROM lpGet_Movement_Promo_Data (inOperDate   := (SELECT Movement.OperDate FROM Movement WHERE Movement.Id = inMovementId)
+                                                   + (COALESCE ((SELECT ObjectFloat.ValueData FROM ObjectFloat WHERE ObjectFloat.ObjectId = vbPartnerId AND ObjectFloat.DescId = zc_ObjectFloat_Partner_PrepareDayCount()),  0) :: TVarChar || ' DAY') :: INTERVAL
+                                                   + (COALESCE ((SELECT ObjectFloat.ValueData FROM ObjectFloat WHERE ObjectFloat.ObjectId = vbPartnerId AND ObjectFloat.DescId = zc_ObjectFloat_Partner_DocumentDayCount()), 0) :: TVarChar || ' DAY') :: INTERVAL
+                                   , inPartnerId  := vbPartnerId
+                                   , inContractId := (SELECT MLO.ObjectId FROM MovementLinkObject AS MLO WHERE MLO.MovementId = inMovementId AND MLO.DescId = zc_MovementLinkObject_Contract())
+                                   , inGoodsId    := inGoodsId
+                                   , inGoodsKindId:= inGoodsKindId) AS tmp;
+
      -- определяется признак Создание/Корректировка
      vbIsInsert:= COALESCE (ioId, 0) = 0;
 
      -- сохранили <Элемент документа>
      ioId := lpInsertUpdate_MovementItem (ioId, zc_MI_Master(), inGoodsId, inMovementId, inAmount, NULL);
+
+     -- сохранили свойство <MovementId-Акция>
+     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_PromoMovementId(), ioId, COALESCE (outMovementId_Promo, 0));
+
 
      -- сохранили свойство <Количество дозаказ>
      PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_AmountSecond(), ioId, inAmountSecond);

@@ -25,18 +25,38 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_MovementItem_Sale(
     IN inWeightTotal         TFloat    , -- Вес 1 ед. продукции + упаковка
     IN inWeightPack          TFloat    , -- Вес упаковки для 1-ой ед. продукции
     IN inIsBarCode           Boolean   , -- По сканеру,  т.е. был рассчет скидки вес (на упаковку), при этом Amount - всегда расчетное
-    IN inUserId              Integer     -- пользователь
+   OUT outMovementId_Promo   Integer   ,
+   OUT outPricePromo         TFloat    ,
+   IN inUserId              Integer     -- пользователь
 )
 RETURNS RECORD
 AS
 $BODY$
    DECLARE vbIsInsert Boolean;
+   DECLARE vbPriceWithVAT Boolean;
 BEGIN
+     -- Цены с НДС
+     vbPriceWithVAT:= (SELECT MB.ValueData FROM MovementBoolean AS MB WHERE MB.MovementId = inMovementId AND MB.DescId = zc_MovementBoolean_PriceWithVAT());
+     -- параметры акции
+     SELECT tmp.MovementId, CASE WHEN tmp.TaxPromo <> 0 AND vbPriceWithVAT = TRUE THEN tmp.PriceWithVAT
+                                 WHEN tmp.TaxPromo <> 0 THEN tmp.PriceWithOutVAT
+                                 ELSE 0
+                            END
+            INTO outMovementId_Promo, outPricePromo
+     FROM lpGet_Movement_Promo_Data (inOperDate   := (SELECT MD.ValueData FROM MovementDate AS MD WHERE MD.MovementId = inMovementId AND MD.DescId = zc_MovementDate_OperDatePartner())
+                                   , inPartnerId  := (SELECT MLO.ObjectId FROM MovementLinkObject AS MLO WHERE MLO.MovementId = inMovementId AND MLO.DescId = zc_MovementLinkObject_To())
+                                   , inContractId := (SELECT MLO.ObjectId FROM MovementLinkObject AS MLO WHERE MLO.MovementId = inMovementId AND MLO.DescId = zc_MovementLinkObject_Contract())
+                                   , inGoodsId    := inGoodsId
+                                   , inGoodsKindId:= inGoodsKindId) AS tmp;
+
      -- определяется признак Создание/Корректировка
      vbIsInsert:= COALESCE (ioId, 0) = 0;
 
      -- сохранили <Элемент документа>
      ioId := lpInsertUpdate_MovementItem (ioId, zc_MI_Master(), inGoodsId, inMovementId, inAmount, NULL);
+
+     -- сохранили свойство <MovementId-Акция>
+     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_PromoMovementId(), ioId, COALESCE (outMovementId_Promo, 0));
 
      -- сохранили свойство <Количество у контрагента>
      PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_AmountPartner(), ioId, inAmountPartner);

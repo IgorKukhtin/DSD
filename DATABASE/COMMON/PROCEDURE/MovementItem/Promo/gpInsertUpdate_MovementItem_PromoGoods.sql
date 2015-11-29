@@ -31,12 +31,12 @@ $BODY$
    DECLARE vbPriceList Integer;
    DECLARE vbPriceWithWAT Boolean;
    DECLARE vbVAT TFloat;
-   DECLARE vbWeight TFloat;
 BEGIN
     -- проверка прав пользователя на вызов процедуры
-    --vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MI_PromoGoods());
-    vbUserId := inSession;
-    --Проверили уникальность товар/вид товара
+    vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MI_Promo());
+
+
+    -- Проверили уникальность товар/вид товара
     IF EXISTS(SELECT 1 
               FROM
                   MovementItem_PromoGoods_View AS MI_PromoGoods
@@ -49,69 +49,56 @@ BEGIN
                   AND
                   MI_PromoGoods.Id <> COALESCE(ioId,0))
     THEN
-        RAISE EXCEPTION 'Ошибка. В документе уже указана скидка на выбранный товар <%> и вид товара <%>.', (SELECT ValueData FROM Object WHERE id = inGoodsId),(SELECT ValueData FROM Object WHERE id = inGoodsKindId);
+        RAISE EXCEPTION 'Ошибка. В документе уже указана скидка для товара = <%> и вид = <%>.', (SELECT ValueData FROM Object WHERE Id = inGoodsId), COALESCE ((SELECT ValueData FROM Object WHERE Id = inGoodsKindId), '');
     END IF;
     
-    --узнали прайслист
-    SELECT
-        COALESCE(Movement_Promo.PriceListId,zc_PriceList_Basis())
-    INTO
-        vbPriceList
-    FROM
-        Movement_Promo_View AS Movement_Promo
-    WHERE
-        Movement_Promo.Id = inMovementId;
-    --вытащили значение "с НДС" и "значение НДС"
-    SELECT
-        PriceList.PriceWithVAT
-       ,PriceList.VATPercent
-    INTO
-        vbPriceWithWAT
-       ,vbVAT
-    FROM
-        gpGet_Object_PriceList(vbPriceList,inSession) as PriceList;
+    -- поиск прайс-лист
+    SELECT COALESCE(Movement_Promo.PriceListId,zc_PriceList_Basis())
+           INTO vbPriceList
+    FROM Movement_Promo_View AS Movement_Promo
+    WHERE Movement_Promo.Id = inMovementId;
+
+    -- получение данных прайс-лист "с НДС" и "значение НДС"
+    SELECT PriceList.PriceWithVAT, PriceList.VATPercent
+           INTO vbPriceWithWAT, vbVAT
+    FROM gpGet_Object_PriceList(vbPriceList,inSession) AS PriceList;
     
-    --найти цену по базовому прайсу
-    IF COALESCE(ioPrice,0) = 0
+    -- поиск цены по базовому прайсу
+    IF COALESCE (ioPrice,0) = 0
     THEN
-        SELECT 
-            Price.ValuePrice
-        INTO
-            ioPrice
-        FROM 
-            lfSelect_ObjectHistory_PriceListItem (inPriceListId:= vbPriceList, 
-                                                  inOperDate   := (SELECT OperDate FROM Movement WHERE Id = inMovementId)) AS Price
-        WHERE
-            Price.GoodsId = inGoodsId;
+        SELECT Price.ValuePrice
+               INTO ioPrice
+        FROM lfSelect_ObjectHistory_PriceListItem (inPriceListId:= vbPriceList
+                                                 , inOperDate   := (SELECT OperDate FROM Movement WHERE Id = inMovementId)
+                                                  ) AS Price
+        WHERE Price.GoodsId = inGoodsId;
     
-         --Если необходимо - привести цену к цене с НДС
+        -- Если необходимо - привести цену к цене с НДС
         IF vbPriceWithWAT = TRUE
         THEN
-            ioPrice := ROUND(ioPrice/(vbVAT/100.0+1),2);
+            ioPrice := ROUND (ioPrice / (vbVAT / 100.0 + 1), 2);
         END IF;
     END IF;
     
-    --расчитать <Цена отгрузки без учета НДС, с учетом скидки, грн>
+    -- расчитать <Цена отгрузки без учета НДС, с учетом скидки, грн>
     outPriceWithOutVAT := ROUND(ioPrice - COALESCE(ioPrice * inAmount/100.0),2);
-    
-    --расчитать <Цена отгрузки с учетом НДС, с учетом скидки, грн>
+    -- расчитать <Цена отгрузки с учетом НДС, с учетом скидки, грн>
     outPriceWithVAT := ROUND(outPriceWithOutVAT * ((vbVAT/100.0)+1),2);
     
-    --Найти вес 1 единицы товара и расчитать весовые показатели
-    SELECT
-        ObjectFloat.ValueData
-    INTO
-        vbWeight
-    FROM
-        ObjectFloat
-    WHERE
-        ObjectFloat.ObjectId = inGoodsId
-        AND
-        ObjectFloat.DescId = zc_ObjectFloat_Goods_Weight();
+    -- расчитать весовые показатели
+    SELECT inAmountPlanMin * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN ObjectFloat_Goods_Weight.ValueData ELSE 1 END
+         , inAmountPlanMax * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN ObjectFloat_Goods_Weight.ValueData ELSE 1 END
+         , inAmountReal    * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN ObjectFloat_Goods_Weight.ValueData ELSE 1 END
+           INTO outAmountPlanMinWeight
+              , outAmountPlanMaxWeight
+              , outAmountRealWeight
+    FROM ObjectLink AS ObjectLink_Goods_Measure
+         LEFT OUTER JOIN ObjectFloat AS ObjectFloat_Goods_Weight
+                                     ON ObjectFloat_Goods_Weight.ObjectId = ObjectLink_Goods_Measure.ObjectId
+                                    AND ObjectFloat_Goods_Weight.DescId = zc_ObjectFloat_Goods_Weight()
+    WHERE ObjectLink_Goods_Measure.ObjectId = inGoodsId
+      AND ObjectLink_Goods_Measure.DescId = zc_ObjectLink_Goods_Measure();
     
-    outAmountPlanMinWeight := inAmountPlanMin * vbWeight;
-    outAmountPlanMaxWeight := inAmountPlanMax * vbWeight;
-    outAmountRealWeight := inAmountReal * vbWeight;
     
     -- сохранили
     ioId := lpInsertUpdate_MovementItem_PromoGoods (ioId                 := ioId

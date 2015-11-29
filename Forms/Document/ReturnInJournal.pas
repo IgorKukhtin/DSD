@@ -107,6 +107,7 @@ type
     N14: TMenuItem;
     actspChecked: TdsdExecStoredProc;
     isPromo: TcxGridDBColumn;
+    MovementPromo: TcxGridDBColumn;
   private
     { Private declarations }
   public
