@@ -257,6 +257,9 @@ inherited Report_Branch_CashForm: TReport_Branch_CashForm
           object Amount2: TcxGridDBColumn
             Caption = #1050#1080#1077#1074
             DataBinding.FieldName = 'Amount2'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
@@ -265,6 +268,9 @@ inherited Report_Branch_CashForm: TReport_Branch_CashForm
           object Amount3: TcxGridDBColumn
             Caption = #1053#1080#1082#1086#1083#1072#1077#1074' ('#1061#1077#1088#1089#1086#1085')'
             DataBinding.FieldName = 'Amount3'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
@@ -273,6 +279,9 @@ inherited Report_Branch_CashForm: TReport_Branch_CashForm
           object Amount4: TcxGridDBColumn
             Caption = #1054#1076#1077#1089#1089#1072
             DataBinding.FieldName = 'Amount4'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
@@ -281,6 +290,9 @@ inherited Report_Branch_CashForm: TReport_Branch_CashForm
           object Amount5: TcxGridDBColumn
             Caption = #1063#1077#1088#1082#1072#1089#1089#1099' ('#1050#1080#1088#1086#1074#1086#1075#1088#1072#1076')'
             DataBinding.FieldName = 'Amount5'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
@@ -289,6 +301,9 @@ inherited Report_Branch_CashForm: TReport_Branch_CashForm
           object Amount7: TcxGridDBColumn
             Caption = #1050#1088#1080#1074#1086#1081' '#1056#1086#1075
             DataBinding.FieldName = 'Amount7'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
@@ -297,6 +312,9 @@ inherited Report_Branch_CashForm: TReport_Branch_CashForm
           object Amount9: TcxGridDBColumn
             Caption = #1061#1072#1088#1100#1082#1086#1074
             DataBinding.FieldName = 'Amount9'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
@@ -305,6 +323,9 @@ inherited Report_Branch_CashForm: TReport_Branch_CashForm
           object Amount11: TcxGridDBColumn
             Caption = #1047#1072#1087#1086#1088#1086#1078#1100#1077
             DataBinding.FieldName = 'Amount11'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
@@ -313,6 +334,9 @@ inherited Report_Branch_CashForm: TReport_Branch_CashForm
           object Amount: TcxGridDBColumn
             Caption = #1076#1088'.'#1060#1080#1083#1080#1072#1083
             DataBinding.FieldName = 'Amount'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False

@@ -8,7 +8,7 @@ CREATE OR REPLACE FUNCTION gpReport_Branch_App7(
     IN inBranchId           Integer,    -- Филиал
     IN inSession            TVarChar    -- сессия пользователя
 )
-RETURNS TABLE (BranchName TVarChar
+RETURNS TABLE (BranchCode integer, BranchName TVarChar
              , GoodsSummStart TFloat, GoodsSummEnd TFloat, GoodsSummIn TFloat, GoodsSummOut TFloat
              , GoodsSummSale_SF TFloat, GoodsSummReturnIn_SF TFloat
              , CashSummStart TFloat, CashSummEnd TFloat, CashSummIn TFloat, CashSummOut TFloat, CashAmount TFloat
@@ -153,7 +153,8 @@ BEGIN
                         GROUP BY CLO_Juridical.ContainerId, Container.Amount, _tmpBranch.BranchId    
                        )
 
-   SELECT  Object_Branch.ValueData  ::TVarChar   AS BranchName
+   SELECT Object_Branch.ObjectCode              AS BranchCode 
+        , Object_Branch.ValueData  ::TVarChar   AS BranchName
        
         , CAST (SUM (tmpAll.AmountStart)         AS TFloat) AS GoodsSummStart
         , CAST (SUM (tmpAll.AmountEnd)           AS TFloat) AS GoodsSummEnd
@@ -259,7 +260,7 @@ BEGIN
                ) AS tmpAll
 
         LEFT JOIN Object AS Object_Branch ON Object_Branch.Id = tmpAll.BranchId   --CASE WHEN COALESCE(inBranchId,0) <> 0 THEN inBranchId END
-  GROUP BY  Object_Branch.ValueData  
+  GROUP BY  Object_Branch.ValueData  ,Object_Branch.ObjectCode
   ORDER BY Object_Branch.ValueData 
       ;
 

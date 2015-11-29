@@ -1366,6 +1366,9 @@ begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Branch_App7DialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_Branch_App7DialogForm');
 
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Branch_App7_NewForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_Branch_App7_NewForm');
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Branch_App1Form'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_Branch_App1Form');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Branch_App1DialogForm'));

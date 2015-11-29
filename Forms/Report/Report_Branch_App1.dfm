@@ -393,6 +393,9 @@ inherited Report_Branch_App1Form: TReport_Branch_App1Form
           object SummStart: TcxGridDBColumn
             Caption = #1053#1072#1095'.'#1086#1089#1090'. '#1085#1072' '#1089#1082#1083#1072#1076#1077' ('#1075#1088#1085')'
             DataBinding.FieldName = 'SummStart'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
@@ -401,6 +404,9 @@ inherited Report_Branch_App1Form: TReport_Branch_App1Form
           object WeightStart: TcxGridDBColumn
             Caption = #1053#1072#1095'.'#1086#1089#1090'. '#1085#1072' '#1089#1082#1083#1072#1076#1077' ('#1074#1077#1089')'
             DataBinding.FieldName = 'WeightStart'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
@@ -410,6 +416,9 @@ inherited Report_Branch_App1Form: TReport_Branch_App1Form
           object SummEnd: TcxGridDBColumn
             Caption = #1050#1086#1085'.'#1086#1089#1090'. '#1085#1072' '#1089#1082#1083#1072#1076#1077' ('#1075#1088#1085')'
             DataBinding.FieldName = 'SummEnd'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
@@ -418,6 +427,9 @@ inherited Report_Branch_App1Form: TReport_Branch_App1Form
           object WeightEnd: TcxGridDBColumn
             Caption = #1050#1086#1085'.'#1086#1089#1090'. '#1085#1072' '#1089#1082#1083#1072#1076#1077' ('#1074#1077#1089')'
             DataBinding.FieldName = 'WeightEnd'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
@@ -426,6 +438,9 @@ inherited Report_Branch_App1Form: TReport_Branch_App1Form
           object SendOnPriceInSumm: TcxGridDBColumn
             Caption = #1055#1088#1080#1093#1086#1076' ('#1075#1088#1085')'
             DataBinding.FieldName = 'SendOnPriceInSumm'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
@@ -434,6 +449,9 @@ inherited Report_Branch_App1Form: TReport_Branch_App1Form
           object SendOnPriceInWeight: TcxGridDBColumn
             Caption = #1055#1088#1080#1093#1086#1076' ('#1074#1077#1089')'
             DataBinding.FieldName = 'SendOnPriceInWeight'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
@@ -442,6 +460,9 @@ inherited Report_Branch_App1Form: TReport_Branch_App1Form
           object ReturnInSumm: TcxGridDBColumn
             Caption = #1042#1086#1079#1074#1088#1072#1090' ('#1075#1088#1085')'
             DataBinding.FieldName = 'ReturnInSumm'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
@@ -450,6 +471,9 @@ inherited Report_Branch_App1Form: TReport_Branch_App1Form
           object ReturnInWeight: TcxGridDBColumn
             Caption = #1042#1086#1079#1074#1088#1072#1090' ('#1074#1077#1089')'
             DataBinding.FieldName = 'ReturnInWeight'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
@@ -458,6 +482,9 @@ inherited Report_Branch_App1Form: TReport_Branch_App1Form
           object PeresortInSumm: TcxGridDBColumn
             Caption = #1055#1077#1088#1077#1089#1086#1088#1090#1080#1094#1072' '#1087#1088#1080#1093#1086#1076' ('#1075#1088#1085')'
             DataBinding.FieldName = 'PeresortInSumm'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
@@ -466,6 +493,9 @@ inherited Report_Branch_App1Form: TReport_Branch_App1Form
           object PeresortInWeight: TcxGridDBColumn
             Caption = #1055#1077#1088#1077#1089#1086#1088#1090#1080#1094#1072' '#1087#1088#1080#1093#1086#1076' ('#1074#1077#1089')'
             DataBinding.FieldName = 'PeresortInWeight'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
@@ -474,6 +504,9 @@ inherited Report_Branch_App1Form: TReport_Branch_App1Form
           object PeresortOutSumm: TcxGridDBColumn
             Caption = #1055#1077#1088#1077#1089#1086#1088#1090#1080#1094#1072' '#1088#1072#1089#1093#1086#1076' ('#1075#1088#1085')'
             DataBinding.FieldName = 'PeresortOutSumm'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
@@ -482,6 +515,9 @@ inherited Report_Branch_App1Form: TReport_Branch_App1Form
           object PeresortOutWeight: TcxGridDBColumn
             Caption = #1055#1077#1088#1077#1089#1086#1088#1090#1080#1094#1072' '#1088#1072#1089#1093#1086#1076' ('#1074#1077#1089')'
             DataBinding.FieldName = 'PeresortOutWeight'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
@@ -490,6 +526,9 @@ inherited Report_Branch_App1Form: TReport_Branch_App1Form
           object SaleSumm: TcxGridDBColumn
             Caption = #1055#1088#1086#1076#1072#1078#1072' c/c ('#1075#1088#1085')'
             DataBinding.FieldName = 'SaleSumm'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
@@ -498,6 +537,9 @@ inherited Report_Branch_App1Form: TReport_Branch_App1Form
           object SaleWeight: TcxGridDBColumn
             Caption = #1055#1088#1086#1076#1072#1078#1072' ('#1074#1077#1089')'
             DataBinding.FieldName = 'SaleWeight'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
@@ -506,6 +548,9 @@ inherited Report_Branch_App1Form: TReport_Branch_App1Form
           object SaleRealSumm: TcxGridDBColumn
             Caption = #1055#1088#1086#1076#1072#1078#1072' '#1089#1091#1084#1084#1072' '#1087#1086#1082'.  ('#1075#1088#1085')'
             DataBinding.FieldName = 'SaleRealSumm'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 60
@@ -513,6 +558,9 @@ inherited Report_Branch_App1Form: TReport_Branch_App1Form
           object SendOnPriceOutSumm: TcxGridDBColumn
             Caption = #1056#1072#1089#1093#1086#1076' '#1087#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077' ('#1075#1088#1085')'
             DataBinding.FieldName = 'SendOnPriceOutSumm'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
@@ -521,6 +569,9 @@ inherited Report_Branch_App1Form: TReport_Branch_App1Form
           object SendOnPriceOutWeight: TcxGridDBColumn
             Caption = #1056#1072#1089#1093#1086#1076' '#1087#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077' ('#1074#1077#1089')'
             DataBinding.FieldName = 'SendOnPriceOutWeight'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
@@ -529,6 +580,9 @@ inherited Report_Branch_App1Form: TReport_Branch_App1Form
           object Sale_40208_Summ: TcxGridDBColumn
             Caption = '(-)'#1055#1086#1090#1077#1088#1080' (+)'#1069#1082#1086#1085#1086#1084' ('#1087#1088#1080' '#1087#1088#1086#1076'.)'
             DataBinding.FieldName = 'Sale_40208_Summ'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
@@ -537,6 +591,9 @@ inherited Report_Branch_App1Form: TReport_Branch_App1Form
           object Sale_40208_Weight: TcxGridDBColumn
             Caption = '(-)'#1055#1086#1090#1077#1088#1080' (+)'#1069#1082#1086#1085#1086#1084' '#1074#1077#1089' ('#1087#1088#1080' '#1087#1088#1086#1076'.)'
             DataBinding.FieldName = 'Sale_40208_Weight'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
@@ -545,6 +602,9 @@ inherited Report_Branch_App1Form: TReport_Branch_App1Form
           object Sale_10500_Summ: TcxGridDBColumn
             Caption = #1056#1077#1072#1083#1080#1079#1072#1094#1080#1103' '#1089#1082#1080#1076#1082#1072' 1% ('#1075#1088#1085')'
             DataBinding.FieldName = 'Sale_10500_Summ'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
@@ -553,6 +613,9 @@ inherited Report_Branch_App1Form: TReport_Branch_App1Form
           object Sale_10500_Weight: TcxGridDBColumn
             Caption = #1056#1077#1072#1083#1080#1079#1072#1094#1080#1103' '#1089#1082#1080#1076#1082#1072' 1% ('#1074#1077#1089')'
             DataBinding.FieldName = 'Sale_10500_Weight'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
@@ -561,6 +624,9 @@ inherited Report_Branch_App1Form: TReport_Branch_App1Form
           object Sale_10300_Summ: TcxGridDBColumn
             Caption = #1057#1082#1080#1076#1082#1072' '#1087#1086' '#1085#1072#1082#1083#1072#1076#1085'. ('#1075#1088#1085')'
             DataBinding.FieldName = 'Sale_10300_Summ'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
@@ -569,6 +635,9 @@ inherited Report_Branch_App1Form: TReport_Branch_App1Form
           object Sale_10200_Summ: TcxGridDBColumn
             Caption = #1057#1091#1084#1084#1072' '#1072#1082#1094#1080#1080
             DataBinding.FieldName = 'Sale_10200_Summ'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
@@ -577,6 +646,9 @@ inherited Report_Branch_App1Form: TReport_Branch_App1Form
           object LossSumm: TcxGridDBColumn
             Caption = #1057#1087#1080#1089#1072#1085#1080#1077' ('#1075#1088#1085')'
             DataBinding.FieldName = 'LossSumm'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
@@ -585,6 +657,9 @@ inherited Report_Branch_App1Form: TReport_Branch_App1Form
           object LossWeight: TcxGridDBColumn
             Caption = #1057#1087#1080#1089#1072#1085#1080#1077' ('#1074#1077#1089')'
             DataBinding.FieldName = 'LossWeight'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
@@ -593,6 +668,9 @@ inherited Report_Branch_App1Form: TReport_Branch_App1Form
           object InventorySumm: TcxGridDBColumn
             Caption = #1048#1085#1074#1077#1085#1090#1072#1088#1080#1079#1072#1094#1080#1103' ('#1075#1088#1085')'
             DataBinding.FieldName = 'InventorySumm'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
@@ -601,6 +679,9 @@ inherited Report_Branch_App1Form: TReport_Branch_App1Form
           object InventoryWeight: TcxGridDBColumn
             Caption = #1048#1085#1074#1077#1085#1090#1072#1088#1080#1079#1072#1094#1080#1103' ('#1074#1077#1089')'
             DataBinding.FieldName = 'InventoryWeight'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
@@ -609,6 +690,9 @@ inherited Report_Branch_App1Form: TReport_Branch_App1Form
           object SummInventory_RePrice: TcxGridDBColumn
             Caption = #1055#1077#1088#1077#1086#1094#1077#1085#1082#1072' ('#1075#1088#1085')'
             DataBinding.FieldName = 'SummInventory_RePrice'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
