@@ -263,6 +263,9 @@ inherited Report_Branch_App7Form: TReport_Branch_App7Form
           object GoodsSummStart: TcxGridDBColumn
             Caption = #1057#1091#1084#1084#1072' '#1053#1072#1095'.'#1086#1089#1090'. '#1085#1072' '#1089#1082#1083#1072#1076#1077' '
             DataBinding.FieldName = 'GoodsSummStart'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
@@ -271,6 +274,9 @@ inherited Report_Branch_App7Form: TReport_Branch_App7Form
           object GoodsSummEnd: TcxGridDBColumn
             Caption = #1057#1091#1084#1084#1072' '#1050#1086#1085'.'#1086#1089#1090'. '#1085#1072' '#1089#1082#1083#1072#1076#1077
             DataBinding.FieldName = 'GoodsSummEnd'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
@@ -279,6 +285,9 @@ inherited Report_Branch_App7Form: TReport_Branch_App7Form
           object GoodsSummIn: TcxGridDBColumn
             Caption = #1057#1091#1084#1084#1072' '#1087#1088#1080#1093#1086#1076' '#1085#1072' '#1089#1082#1083#1072#1076
             DataBinding.FieldName = 'GoodsSummIn'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
@@ -288,6 +297,9 @@ inherited Report_Branch_App7Form: TReport_Branch_App7Form
           object GoodsSummOut: TcxGridDBColumn
             Caption = #1057#1091#1084#1084#1072' '#1088#1072#1089#1093#1086#1076' '#1089#1086' '#1089#1082#1083#1072#1076#1072
             DataBinding.FieldName = 'GoodsSummOut'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
@@ -296,6 +308,9 @@ inherited Report_Branch_App7Form: TReport_Branch_App7Form
           object GoodsSummSale_SF: TcxGridDBColumn
             Caption = #1057#1091#1084#1084#1072' '#1087#1088#1086#1076#1072#1078#1080' '#1060'2'
             DataBinding.FieldName = 'GoodsSummSale_SF'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
@@ -304,6 +319,9 @@ inherited Report_Branch_App7Form: TReport_Branch_App7Form
           object GoodsSummReturnIn_SF: TcxGridDBColumn
             Caption = #1057#1091#1084#1084#1072' '#1074#1086#1079#1074#1088#1072#1090#1072' '#1060'2'
             DataBinding.FieldName = 'GoodsSummReturnIn_SF'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
@@ -312,6 +330,9 @@ inherited Report_Branch_App7Form: TReport_Branch_App7Form
           object CashSummStart: TcxGridDBColumn
             Caption = #1050#1072#1089#1089#1072' '#1085#1072#1095'.'#1086#1089#1090'.'
             DataBinding.FieldName = 'CashSummStart'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
@@ -320,6 +341,9 @@ inherited Report_Branch_App7Form: TReport_Branch_App7Form
           object CashSummOut: TcxGridDBColumn
             Caption = #1050#1072#1089#1089#1072' '#1087#1088#1080#1093#1086#1076
             DataBinding.FieldName = 'CashSummOut'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
@@ -328,6 +352,9 @@ inherited Report_Branch_App7Form: TReport_Branch_App7Form
           object CashSummIn: TcxGridDBColumn
             Caption = #1050#1072#1089#1089#1072' '#1088#1072#1089#1093#1086#1076
             DataBinding.FieldName = 'CashSummIn'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
@@ -336,6 +363,9 @@ inherited Report_Branch_App7Form: TReport_Branch_App7Form
           object CashSummEnd: TcxGridDBColumn
             Caption = #1050#1072#1089#1089#1072' '#1082#1086#1085'.'#1086#1089#1090'.'
             DataBinding.FieldName = 'CashSummEnd'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
@@ -344,6 +374,9 @@ inherited Report_Branch_App7Form: TReport_Branch_App7Form
           object CashAmount: TcxGridDBColumn
             Caption = #1050#1072#1089#1089#1072' ('#1086#1087#1083#1072#1090#1072')'
             DataBinding.FieldName = 'CashAmount'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
@@ -352,6 +385,9 @@ inherited Report_Branch_App7Form: TReport_Branch_App7Form
           object JuridicalSummStart: TcxGridDBColumn
             Caption = #1044#1086#1083#1075#1080' ('#1085#1072#1095'.)'
             DataBinding.FieldName = 'JuridicalSummStart'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
@@ -360,6 +396,9 @@ inherited Report_Branch_App7Form: TReport_Branch_App7Form
           object JuridicalSummOut: TcxGridDBColumn
             Caption = #1050#1088#1077#1076#1080#1090
             DataBinding.FieldName = 'JuridicalSummOut'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
@@ -368,6 +407,9 @@ inherited Report_Branch_App7Form: TReport_Branch_App7Form
           object JuridicalSummIn: TcxGridDBColumn
             Caption = #1044#1077#1073#1077#1090
             DataBinding.FieldName = 'JuridicalSummIn'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
@@ -376,6 +418,9 @@ inherited Report_Branch_App7Form: TReport_Branch_App7Form
           object JuridicalSummEnd: TcxGridDBColumn
             Caption = #1044#1086#1083#1075#1080' ('#1082#1086#1085')'
             DataBinding.FieldName = 'JuridicalSummEnd'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
