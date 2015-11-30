@@ -77,6 +77,7 @@ type
     Amount_Order: TcxGridDBColumn;
     Amount_Weighing: TcxGridDBColumn;
     Amount_diff: TcxGridDBColumn;
+    isPromo: TcxGridDBColumn;
     procedure FormCreate(Sender: TObject);
     procedure EditGoodsNameEnter(Sender: TObject);
     procedure FormKeyDown(Sender: TObject; var Key: Word;
@@ -403,6 +404,7 @@ begin
         then ParamByName('GoodsKindId').AsInteger:= GoodsKind_Array[GetArrayList_gpIndex_GoodsKind(GoodsKind_Array,ParamsMovement.ParamByName('GoodsKindWeighingGroupId').AsInteger,rgGoodsKind.ItemIndex)].Id
         else ParamByName('GoodsKindId').AsInteger:= 0;
 
+        ParamByName('MovementId_Promo').AsInteger:=CDS.FieldByName('MovementId_Promo').AsInteger;
 
         ParamByName('Price').AsFloat:=CDS.FieldByName('Price').AsFloat;
         ParamByName('Price_Return').AsFloat:=CDS.FieldByName('Price_Return').AsFloat;

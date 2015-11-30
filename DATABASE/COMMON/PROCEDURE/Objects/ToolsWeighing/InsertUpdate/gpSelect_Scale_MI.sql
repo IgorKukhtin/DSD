@@ -19,6 +19,7 @@ RETURNS TABLE (MovementItemId Integer, GoodsCode Integer, GoodsName TVarChar, Me
              , PriceListName  TVarChar
              , InsertDate TDateTime, UpdateDate TDateTime
              , isBarCode Boolean
+             , isPromo   Boolean
              , isErased Boolean
               )
 AS
@@ -70,6 +71,7 @@ BEGIN
            , tmpMI.UpdateDate :: TDateTime AS UpdateDate
 
            , COALESCE (tmpMI.isBarCode, FALSE) :: Boolean AS isBarCode
+           , CASE WHEN tmpMI.MovementId_Promo > 0 THEN TRUE ELSE FALSE END :: Boolean AS isPromo
 
            , tmpMI.isErased
 
@@ -103,6 +105,8 @@ BEGIN
            
                   , MIDate_Insert.ValueData AS InsertDate
                   , MIDate_Update.ValueData AS UpdateDate
+
+                  , MIFloat_PromoMovement.ValueData AS MovementId_Promo
 
                   , MIBoolean_BarCode.ValueData AS isBarCode
 
@@ -162,6 +166,10 @@ BEGIN
                   LEFT JOIN MovementItemFloat AS MIFloat_CountForPrice
                                               ON MIFloat_CountForPrice.MovementItemId = MovementItem.Id
                                              AND MIFloat_CountForPrice.DescId = zc_MIFloat_CountForPrice()
+
+                  LEFT JOIN MovementItemFloat AS MIFloat_PromoMovement
+                                              ON MIFloat_PromoMovement.MovementItemId = MovementItem.Id
+                                             AND MIFloat_PromoMovement.DescId = zc_MIFloat_PromoMovementId()
 
                   LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
                                                    ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id

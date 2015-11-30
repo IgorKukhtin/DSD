@@ -32,6 +32,8 @@ RETURNS TABLE (GoodsGroupNameFull TVarChar
              , CountForPrice         TFloat
              , CountForPrice_Return  TFloat
              , Color_calc            Integer
+             , MovementId_Promo      Integer
+             , isPromo               Boolean
              , isTare                Boolean
               )
 AS
@@ -110,6 +112,7 @@ BEGIN
                                  , MovementItem.Amount + COALESCE (MIFloat_AmountSecond.ValueData, 0)   AS Amount
                                  , COALESCE (MIFloat_Price.ValueData, 0)                                AS Price
                                  , CASE WHEN MIFloat_CountForPrice.ValueData > 0 THEN MIFloat_CountForPrice.ValueData ELSE 1 END AS CountForPrice
+                                 , COALESCE (MIFloat_PromoMovement.ValueData, 0)                        AS MovementId_Promo
                                  , FALSE AS isTare
                             FROM tmpMovement
                                  INNER JOIN MovementItem ON MovementItem.MovementId = tmpMovement.MovementId
@@ -127,6 +130,9 @@ BEGIN
                                  LEFT JOIN MovementItemFloat AS MIFloat_CountForPrice
                                                              ON MIFloat_CountForPrice.MovementItemId = MovementItem.Id
                                                             AND MIFloat_CountForPrice.DescId = zc_MIFloat_CountForPrice()
+                                 LEFT JOIN MovementItemFloat AS MIFloat_PromoMovement
+                                                             ON MIFloat_PromoMovement.MovementItemId = MovementItem.Id
+                                                            AND MIFloat_PromoMovement.DescId = zc_MIFloat_PromoMovementId()
                             WHERE MovementItem.Amount <> 0 OR COALESCE (MIFloat_AmountSecond.ValueData, 0) <> 0
                            UNION ALL
                             SELECT Object_Goods.Id AS GoodsId
@@ -134,6 +140,7 @@ BEGIN
                                  , 0 AS Amount
                                  , 0 AS Price
                                  , 0 AS CountForPrice
+                                 , 0 AS MovementId_Promo
                                  , TRUE AS isTare
                             FROM Object_InfoMoney_View AS View_InfoMoney
                                  INNER JOIN ObjectLink AS ObjectLink_Goods_InfoMoney
@@ -150,6 +157,7 @@ BEGIN
        , tmpMI_Weighing AS (SELECT MovementItem.ObjectId                         AS GoodsId
                                  , COALESCE (MILinkObject_GoodsKind.ObjectId, 0) AS GoodsKindId
                                  , MovementItem.Amount                           AS Amount
+                                 , COALESCE (MIFloat_PromoMovement.ValueData, 0) AS MovementId_Promo
                                  , COALESCE (MIFloat_Price.ValueData, 0)         AS Price
                                  , CASE WHEN MIFloat_CountForPrice.ValueData > 0 THEN MIFloat_CountForPrice.ValueData ELSE 1 END AS CountForPrice
                             FROM MovementLinkMovement
@@ -168,6 +176,9 @@ BEGIN
                                  LEFT JOIN MovementItemFloat AS MIFloat_CountForPrice
                                                              ON MIFloat_CountForPrice.MovementItemId = MovementItem.Id
                                                             AND MIFloat_CountForPrice.DescId = zc_MIFloat_CountForPrice()
+                                 LEFT JOIN MovementItemFloat AS MIFloat_PromoMovement
+                                                             ON MIFloat_PromoMovement.MovementItemId = MovementItem.Id
+                                                            AND MIFloat_PromoMovement.DescId = zc_MIFloat_PromoMovementId()
                             WHERE MovementLinkMovement.MovementChildId = inOrderExternalId
                               AND MovementLinkMovement.DescId = zc_MovementLinkMovement_Order()
                            )
@@ -175,6 +186,7 @@ BEGIN
                                  , tmpMI.GoodsKindId
                                  , tmpMI.Amount AS Amount_Order
                                  , 0            AS Amount_Weighing
+                                 , tmpMI.MovementId_Promo
                                  , tmpMI.Price
                                  , tmpMI.CountForPrice
                                  , tmpMI.isTare
@@ -184,6 +196,7 @@ BEGIN
                                  , 0            AS GoodsKindId
                                  , 0            AS Amount_Order
                                  , 0            AS Amount_Weighing
+                                 , 0            AS MovementId_Promo
                                  , (SELECT lpGet.ValuePrice FROM lpGet_ObjectHistory_PriceListItem (vbOperDate_price, vbPriceListId, vbGoodsId) AS lpGet) AS Price
                                  , 1 AS CountForPrice -- плохое решение
                                  , FALSE AS isTare
@@ -196,6 +209,7 @@ BEGIN
                                  , tmpMI.GoodsKindId
                                  , 0            AS Amount_Order
                                  , tmpMI.Amount AS Amount_Weighing
+                                 , tmpMI.MovementId_Promo
                                  , tmpMI.Price
                                  , tmpMI.CountForPrice
                                  , FALSE AS isTare
@@ -244,13 +258,17 @@ BEGIN
                    ELSE 0 -- clBlack
               END :: Integer AS Color_calc
 
+
+            , tmpMI.MovementId_Promo :: Integer AS MovementId_Promo
+            , CASE WHEN tmpMI.MovementId_Promo > 0 THEN TRUE ELSE FALSE END :: Boolean AS isPromo
             , tmpMI.isTare
 
        FROM (SELECT tmpMI.GoodsId
                   , tmpMI.GoodsKindId
-                  , SUM (tmpMI.Amount_Order)    AS Amount_Order
-                  , SUM (tmpMI.Amount_Weighing) AS Amount_Weighing
-                  , MAX (tmpMI.Price) AS Price
+                  , SUM (tmpMI.Amount_Order)     AS Amount_Order
+                  , SUM (tmpMI.Amount_Weighing)  AS Amount_Weighing
+                  , MAX (tmpMI.MovementId_Promo) AS MovementId_Promo
+                  , MAX (tmpMI.Price)            AS Price
                   , tmpMI.CountForPrice
                   , tmpMI.isTare
              FROM tmpMI
@@ -334,6 +352,8 @@ BEGIN
             , 1 :: TFloat                 AS CountForPrice
             , 1 :: TFloat                 AS CountForPrice_Return
             , 0                           AS Color_calc -- clBlack
+            , 0                           AS MovementId_Promo
+            , FALSE                       AS isPromo
             , FALSE                       AS isTare
        FROM (SELECT Object_Goods.Id                                                   AS GoodsId
                   , Object_Goods.ObjectCode                                           AS GoodsCode
@@ -381,6 +401,7 @@ ALTER FUNCTION gpSelect_Scale_Goods (Boolean, TDateTime, Integer, Integer, Integ
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 30.11.15                                        *
  18.01.15                                        *
 */
 

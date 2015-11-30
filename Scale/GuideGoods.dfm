@@ -176,6 +176,14 @@ object GuideGoodsForm: TGuideGoodsForm
           HeaderAlignmentVert = vaCenter
           Width = 30
         end
+        object isPromo: TcxGridDBColumn
+          Caption = #1040#1082#1094#1080#1103
+          DataBinding.FieldName = 'isPromo'
+          Visible = False
+          HeaderAlignmentHorz = taCenter
+          HeaderAlignmentVert = vaCenter
+          Width = 40
+        end
         object Price: TcxGridDBColumn
           Caption = #1062#1077#1085#1072
           DataBinding.FieldName = 'Price'

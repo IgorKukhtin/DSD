@@ -250,6 +250,7 @@ begin
      ParamAdd(Params,'BoxCode',ftInteger);           //
      ParamAdd(Params,'PartionGoods',ftString);       //
      ParamAdd(Params,'isBarCode',ftBoolean);         //
+     ParamAdd(Params,'MovementId_Promo',ftInteger);  //
      end
      else
      begin
