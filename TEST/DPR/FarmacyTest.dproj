@@ -1042,6 +1042,18 @@
 				<FormType>dfm</FormType>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
+			<DCCReference Include="..\SOURCE\Movement\All\Farmacy\RepriceTest.pas"/>
+			<DCCReference Include="..\SOURCE\MovementItem\All\Farmacy\RepriceMovementItemTest.pas"/>
+			<DCCReference Include="..\..\FormsFarmacy\Document\RepriceJournal.pas">
+				<Form>RepriceJournalForm</Form>
+				<FormType>dfm</FormType>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Document\Reprice.pas">
+				<Form>RepriceForm</Form>
+				<FormType>dfm</FormType>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
 			<BuildConfiguration Include="Release">
 				<Key>Cfg_2</Key>
 				<CfgParent>Base</CfgParent>

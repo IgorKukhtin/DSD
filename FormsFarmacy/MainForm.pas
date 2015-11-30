@@ -190,6 +190,8 @@ type
     N70: TMenuItem;
     actReport_UploadOptimaForm: TdsdOpenForm;
     N71: TMenuItem;
+    actRepriceJournal: TdsdOpenForm;
+    N72: TMenuItem;
     procedure actSaveDataExecute(Sender: TObject);
     procedure miRepriceClick(Sender: TObject);
   private

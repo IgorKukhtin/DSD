@@ -51,7 +51,7 @@ type
     ProgressBar1: TProgressBar;
     ProgressBar2: TProgressBar;
     UnitsCDS: TClientDataSet;
-    spInsertUpdate_Object_Price: TdsdStoredProc;
+    spInsertUpdate_MovementItem_Reprice: TdsdStoredProc;
     colMarginPercent: TcxGridDBColumn;
     colUnitName: TcxGridDBColumn;
     lblProggres1: TLabel;
@@ -88,6 +88,7 @@ type
     colMinMarginPercent: TcxGridDBColumn;
     cdsResultMinMarginPercent: TCurrencyField;
     colUnitId: TcxGridDBColumn;
+    colGoodsId: TcxGridDBColumn;
     procedure FormCreate(Sender: TObject);
     procedure btnRepriceClick(Sender: TObject);
     procedure btnSelectNewPriceClick(Sender: TObject);
@@ -106,12 +107,15 @@ implementation
 uses SimpleGauge, DataModul;
 
 procedure TRepriceUnitForm.btnRepriceClick(Sender: TObject);
-var i, LastRecordNo, CurrentPackNo, RecIndex: integer;
-
+var i, LastRecordNo, RecIndex: integer;
+  GUID: TGUID;
+  GUID_Str: String;
 begin
   if not FStartReprice then
   Begin
     if MessageDlg('Начать переоценку выбранных товаров?',mtConfirmation,mbYesNo,0) <> mrYes then exit;
+    CreateGUID(GUID);
+    GUID_Str := GUIDToString(GUID);
     FStartReprice := True;
     btnSelectNewPrice.Enabled := False;
     btnReprice.Caption := 'Остановить';
@@ -125,46 +129,36 @@ begin
     ProgressBar1.Max := cdsResult.RecordCount;
     Application.ProcessMessages;
     try
-//      cdsResult.Last;
-//      while not cdsResult.Bof do
-//      Begin
-//        if cdsResult.FieldByName('Reprice').AsBoolean then
-//        Begin
-//          LastRecordNo := cdsResult.RecNo;
-//          break;
-//        End;
-//        cdsResult.Prior;
-//      end;
-//      cdsResult.First;
-      CurrentPackNo := 0;
-//      while not cdsResult.eof do
       for I := 0 to AllGoodsPriceGridTableView.DataController.FilteredRecordCount - 1 do
       Begin
-//        lblProggres1.Caption := IntToStr(cdsResult.RecNo)+' / '+IntToStr(cdsResult.RecordCount);
         lblProggres1.Caption := IntToStr(I+1)+' / '+IntToStr(AllGoodsPriceGridTableView.DataController.FilteredRecordCount);
         lblProggres1.Repaint;
         ProgressBar1.Position := cdsResult.RecNo;
         ProgressBar1.Repaint;
-        //if cdsResult.FieldByName('Reprice').AsBoolean then
         RecIndex := AllGoodsPriceGridTableView.DataController.FilteredRecordIndex[I];
         if AllGoodsPriceGridTableView.DataController.Values[RecIndex,colReprice.Index] = True then
         Begin
-//          spInsertUpdate_Object_Price.ParamByName('inUnitId').Value := cdsResult.FieldByName('UnitId').AsInteger;
-          spInsertUpdate_Object_Price.ParamByName('inUnitId').Value := AllGoodsPriceGridTableView.DataController.Values[RecIndex,colUnitId.Index];
-//          spInsertUpdate_Object_Price.ParamByName('inGoodsCode').Value := cdsResult.FieldByName('Code').AsInteger;
-          spInsertUpdate_Object_Price.ParamByName('inGoodsCode').Value := AllGoodsPriceGridTableView.DataController.Values[RecIndex,colGoodsCode.Index];
-//          spInsertUpdate_Object_Price.ParamByName('inPriceValue').Value := cdsResult.FieldByName('NewPrice').AsFloat;
-          spInsertUpdate_Object_Price.ParamByName('inPriceValue').Value := AllGoodsPriceGridTableView.DataController.Values[RecIndex,colNewPrice.Index];
-          spInsertUpdate_Object_Price.Execute;
-          inc(CurrentPackNo);
+          spInsertUpdate_MovementItem_Reprice.ParamByName('inGoodsId').Value :=
+            AllGoodsPriceGridTableView.DataController.Values[RecIndex,colGoodsId.Index];
+          spInsertUpdate_MovementItem_Reprice.ParamByName('inUnitId').Value :=
+            AllGoodsPriceGridTableView.DataController.Values[RecIndex,colUnitId.Index];
+          spInsertUpdate_MovementItem_Reprice.ParamByName('inAmount').Value :=
+            AllGoodsPriceGridTableView.DataController.Values[RecIndex,colRemainsCount.Index];
+          if AllGoodsPriceGridTableView.DataController.Values[RecIndex,colOldPrice.Index] = null then
+            spInsertUpdate_MovementItem_Reprice.ParamByName('inPriceOld').Value := 0
+          else
+            spInsertUpdate_MovementItem_Reprice.ParamByName('inPriceOld').Value :=
+              AllGoodsPriceGridTableView.DataController.Values[RecIndex,colOldPrice.Index];
+          spInsertUpdate_MovementItem_Reprice.ParamByName('inPriceNew').Value :=
+            AllGoodsPriceGridTableView.DataController.Values[RecIndex,colNewPrice.Index];
+          spInsertUpdate_MovementItem_Reprice.ParamByName('inGUID').Value := GUID_Str;
+          spInsertUpdate_MovementItem_Reprice.Execute;
         End;
         Application.ProcessMessages;
         if Not FStartReprice then
           exit;
-//        cdsResult.Next;
       end;
-//      if (CurrentPackNo mod spInsertUpdate_Object_Price.PackSize) <> 0 then
-      spInsertUpdate_Object_Price.Execute(True);
+      spInsertUpdate_MovementItem_Reprice.Execute(True);
     finally
       FStartReprice := False;
       btnSelectNewPrice.Enabled := True;
