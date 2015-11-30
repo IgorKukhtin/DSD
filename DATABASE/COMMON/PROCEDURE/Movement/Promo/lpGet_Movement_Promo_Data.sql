@@ -1,11 +1,13 @@
 -- Function: lpGet_Movement_Promo_Data()
 
 DROP FUNCTION IF EXISTS lpGet_Movement_Promo_Data (TDateTime, Integer, Integer, Integer, Integer);
+DROP FUNCTION IF EXISTS lpGet_Movement_Promo_Data (TDateTime, Integer, Integer, Integer, Integer, Integer);
 
 CREATE OR REPLACE FUNCTION lpGet_Movement_Promo_Data(
     IN inOperDate     TDateTime , --
     IN inPartnerId    Integer   , --
     IN inContractId   Integer   , --
+    IN inUnitId       Integer   , --
     IN inGoodsId      Integer   , --
     IN inGoodsKindId  Integer     --
 )
@@ -57,7 +59,11 @@ BEGIN
                             LEFT JOIN MovementItemLinkObject AS MILinkObject_Contract
                                                              ON MILinkObject_Contract.MovementItemId = MovementItem.Id
                                                             AND MILinkObject_Contract.DescId = zc_MILinkObject_Contract()
+                            LEFT JOIN MovementLinkObject AS MLO_Unit
+                                                         ON MLO_Unit.MovementId = tmpMovement.MovementId
+                                                        AND MLO_Unit.DescId = zc_MovementLinkObject_Unit()
                        WHERE (MILinkObject_Contract.ObjectId = inContractId OR COALESCE (MILinkObject_Contract.ObjectId, 0) = 0)
+                         AND (MLO_Unit.ObjectId              = inUnitId     OR COALESCE (MLO_Unit.ObjectId, 0) = 0)
                       )
         SELECT tmpResult.MovementId
              , tmpResult.TaxPromo

@@ -162,7 +162,7 @@ BEGIN
                                                    , inAmount             := inAmount
                                                    , inAmountSecond       := COALESCE ((SELECT ValueData FROM MovementItemFloat WHERE MovementItemId = ioMovementItemId AND DescId = zc_MIFloat_AmountSecond()), 0)
                                                    , inGoodsKindId        := vbGoodsKindId
-                                                   , inPrice              := inPrice -- vbPrice
+                                                   , ioPrice              := inPrice -- vbPrice
                                                    , ioCountForPrice      := 1       -- vbCountForPrice
                                                    , inUserId             := vbUserId
                                                     ) AS tmp;

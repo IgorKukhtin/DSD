@@ -107,8 +107,9 @@ BEGIN
            , MovementFloat_TotalCountSecond.ValueData       AS TotalCountSecond
           
            , COALESCE (MovementLinkMovement_Order.MovementId, 0) <> 0 AS isEDI
+
            , COALESCE (MovementBoolean_Promo.ValueData, FALSE) AS isPromo
-           , ('№ ' || Movement_Promo.InvNumber || ' от ' || DATE (Movement_Promo.OperDate) :: TVarChar || ' акц. цена с ' || DATE (MD_StartSale.ValueData) :: TVarChar|| ' по ' || DATE (MD_EndSale.ValueData) :: TVarChar) :: TVarChar AS MovementPromo
+           , zfCalc_PromoMovementName (NULL, Movement_Promo.InvNumber :: TVarChar, Movement_Promo.OperDate, MD_StartSale.ValueData, MD_EndSale.ValueData) AS MovementPromo
 
            , MovementString_Comment.ValueData       AS Comment
 

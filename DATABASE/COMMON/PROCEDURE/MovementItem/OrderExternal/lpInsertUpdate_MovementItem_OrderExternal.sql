@@ -9,7 +9,7 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_MovementItem_OrderExternal(
     IN inAmount              TFloat    , -- Количество
     IN inAmountSecond        TFloat    , -- Количество дозаказ
     IN inGoodsKindId         Integer   , -- Виды товаров
-    IN inPrice               TFloat    , -- Цена
+ INOUT ioPrice               TFloat    , -- Цена
  INOUT ioCountForPrice       TFloat    , -- Цена за количество
    OUT outAmountSumm         TFloat    , -- Сумма расчетная
    OUT outMovementId_Promo   Integer   ,
@@ -38,8 +38,23 @@ BEGIN
                                                    + (COALESCE ((SELECT ObjectFloat.ValueData FROM ObjectFloat WHERE ObjectFloat.ObjectId = vbPartnerId AND ObjectFloat.DescId = zc_ObjectFloat_Partner_DocumentDayCount()), 0) :: TVarChar || ' DAY') :: INTERVAL
                                    , inPartnerId  := vbPartnerId
                                    , inContractId := (SELECT MLO.ObjectId FROM MovementLinkObject AS MLO WHERE MLO.MovementId = inMovementId AND MLO.DescId = zc_MovementLinkObject_Contract())
+                                   , inUnitId     := (SELECT MLO.ObjectId FROM MovementLinkObject AS MLO WHERE MLO.MovementId = inMovementId AND MLO.DescId = zc_MovementLinkObject_To())
                                    , inGoodsId    := inGoodsId
                                    , inGoodsKindId:= inGoodsKindId) AS tmp;
+
+     -- !!!замена для акции!!
+     IF outMovementId_Promo > 0 THEN
+        IF COALESCE (ioId, 0) = 0
+        THEN
+            ioPrice:= outPricePromo;
+        ELSE IF ioPrice <> outPricePromo
+             THEN
+                 RAISE EXCEPTION 'Ошибка.Для товара = <%> <%> необходимо ввести акционную цену = <%>.', lfGet_Object_ValueData (inGoodsId), lfGet_Object_ValueData (inGoodsKindId), outPricePromo;
+             END IF;
+        END IF;
+     -- ELSE !!!обратно из прайса пока не реализовал!!!!
+     END IF;
+
 
      -- определяется признак Создание/Корректировка
      vbIsInsert:= COALESCE (ioId, 0) = 0;
@@ -58,7 +73,7 @@ BEGIN
      PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_GoodsKind(), ioId, inGoodsKindId);
 
      -- сохранили свойство <Цена>
-     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_Price(), ioId, inPrice);
+     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_Price(), ioId, ioPrice);
 
      -- сохранили свойство <Цена за количество>
      IF COALESCE (ioCountForPrice, 0) = 0 THEN ioCountForPrice := 1; END IF;
@@ -66,8 +81,8 @@ BEGIN
 
      -- расчитали сумму по элементу, для грида
      outAmountSumm := CASE WHEN ioCountForPrice > 0
-                                THEN CAST ((COALESCE (inAmount,0) + COALESCE (inAmountSecond,0)) * inPrice / ioCountForPrice AS NUMERIC (16, 2))
-                           ELSE CAST ((COALESCE (inAmount,0) + COALESCE (inAmountSecond,0)) * inPrice AS NUMERIC (16, 2))
+                                THEN CAST ((COALESCE (inAmount,0) + COALESCE (inAmountSecond,0)) * ioPrice / ioCountForPrice AS NUMERIC (16, 2))
+                           ELSE CAST ((COALESCE (inAmount,0) + COALESCE (inAmountSecond,0)) * ioPrice AS NUMERIC (16, 2))
                       END;
 
      IF inGoodsId <> 0

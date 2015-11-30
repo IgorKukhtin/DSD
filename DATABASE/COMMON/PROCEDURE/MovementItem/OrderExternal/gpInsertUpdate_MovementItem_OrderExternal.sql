@@ -9,7 +9,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_OrderExternal(
     IN inAmount              TFloat    , -- Количество
     IN inAmountSecond        TFloat    , -- Количество дозаказ
     IN inGoodsKindId         Integer   , -- Виды товаров
-    IN inPrice               TFloat    , -- Цена
+ INOUT ioPrice               TFloat    , -- Цена
  INOUT ioCountForPrice       TFloat    , -- Цена за количество
    OUT outAmountSumm         TFloat    , -- Сумма расчетная
    OUT outMovementPromo      TVarChar  , -- 
@@ -25,17 +25,17 @@ BEGIN
      vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MI_OrderExternal());
 
      -- сохранили
-     SELECT tmp.ioId, tmp.ioCountForPrice, tmp.outAmountSumm
+     SELECT tmp.ioId, tmp.ioPrice, tmp.ioCountForPrice, tmp.outAmountSumm
           , zfCalc_PromoMovementName (tmp.outMovementId_Promo, NULL, NULL, NULL, NULL)
           , tmp.outPricePromo
-            INTO ioId, ioCountForPrice, outAmountSumm, outMovementPromo, outPricePromo
+            INTO ioId, ioPrice, ioCountForPrice, outAmountSumm, outMovementPromo, outPricePromo
      FROM lpInsertUpdate_MovementItem_OrderExternal (ioId                 := ioId
                                                    , inMovementId         := inMovementId
                                                    , inGoodsId            := inGoodsId
                                                    , inAmount             := inAmount
                                                    , inAmountSecond       := inAmountSecond
                                                    , inGoodsKindId        := inGoodsKindId
-                                                   , inPrice              := inPrice
+                                                   , ioPrice              := ioPrice
                                                    , ioCountForPrice      := ioCountForPrice
                                                    , inUserId             := vbUserId
                                                     ) AS tmp;

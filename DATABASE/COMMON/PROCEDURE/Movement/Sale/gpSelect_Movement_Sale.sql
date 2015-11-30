@@ -195,8 +195,8 @@ BEGIN
                         ELSE FALSE
                    END AS Boolean) AS isError
 
-           , COALESCE(MovementBoolean_Promo.ValueData, False) AS isPromo
-           , ('№ ' || Movement_Promo.InvNumber || ' от ' || DATE (Movement_Promo.OperDate) :: TVarChar || ' акц. цена с ' || DATE (MD_StartSale.ValueData) :: TVarChar|| ' по ' || DATE (MD_EndSale.ValueData) :: TVarChar) :: TVarChar AS MovementPromo
+           , COALESCE (MovementBoolean_Promo.ValueData, False) AS isPromo
+           , zfCalc_PromoMovementName (NULL, Movement_Promo.InvNumber :: TVarChar, Movement_Promo.OperDate, MD_StartSale.ValueData, MD_EndSale.ValueData) AS MovementPromo
 
            , MovementDate_Insert.ValueData AS InsertDate
            , MovementString_Comment.ValueData       AS Comment

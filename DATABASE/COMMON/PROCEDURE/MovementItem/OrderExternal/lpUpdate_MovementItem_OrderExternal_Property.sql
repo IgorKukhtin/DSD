@@ -63,7 +63,3 @@ $BODY$
 
 -- тест
 -- SELECT * FROM lpUpdate_MovementItem_OrderExternal_Property (inId:= 10696633, inMovementId:= 869524, inGoodsId:= 7402,  inGoodsKindId := 8328 , inAmount:= 45::TFloat, inAmountParam:= 777::TFloat, inDescCode:= 'zc_MIFloat_AmountRemains'::TVarChar, inSession:= lpCheckRight ('5', zc_Enum_Process_InsertUpdate_MI_OrderExternal()))
-
---select * from gpInsertUpdate_MovementItem_OrderExternal(ioId := 10696633 , inMovementId := 869524 , inGoodsId := 7402 , inAmount := 45 , inAmountSecond := 0 , inGoodsKindId := 8328 , inPrice := 68.75 , ioCountForPrice := 1 ,  inSession := '5');
-
--- select lpCheckRight ('5', zc_Enum_Process_InsertUpdate_MI_OrderExternal());

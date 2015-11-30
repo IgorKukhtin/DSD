@@ -7,7 +7,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_Sale_Partner(
     IN inMovementId          Integer   , -- Ключ объекта <Документ>
     IN inGoodsId             Integer   , -- Товары
     IN inAmountPartner       TFloat    , -- Количество у контрагента
-    IN inPrice               TFloat    , -- Цена
+ INOUT ioPrice               TFloat    , -- Цена
  INOUT ioCountForPrice       TFloat    , -- Цена за количество
    OUT outAmountSumm         TFloat    , -- Сумма расчетная
     IN inHeadCount           TFloat    , -- Количество голов
@@ -42,7 +42,7 @@ BEGIN
                         WHERE MovementItem.Id = ioId
                           AND MovementItem.ObjectId = inGoodsId
                           AND COALESCE (MILinkObject_GoodsKind.ObjectId, 0) = COALESCE (inGoodsKindId, 0)
-                          AND COALESCE (MIFloat_Price.ValueData, 0) = COALESCE (inPrice, 0)
+                          AND COALESCE (MIFloat_Price.ValueData, 0) = COALESCE (ioPrice, 0)
                        )
          THEN
              RAISE EXCEPTION 'Ошибка.Нет прав корректировать <Элемент>.';
@@ -59,7 +59,7 @@ BEGIN
                                           , inAmountPartner      := inAmountPartner
                                           , inAmountChangePercent:= COALESCE ((SELECT ValueData FROM MovementItemFloat WHERE MovementItemId = ioId AND DescId = zc_MIFloat_AmountChangePercent()), 0)
                                           , inChangePercentAmount:= COALESCE ((SELECT ValueData FROM MovementItemFloat WHERE MovementItemId = ioId AND DescId = zc_MIFloat_ChangePercentAmount()), 0)
-                                          , inPrice              := inPrice
+                                          , ioPrice              := ioPrice
                                           , ioCountForPrice      := ioCountForPrice
                                           , inHeadCount          := inHeadCount
                                           , inBoxCount           := inBoxCount
@@ -95,4 +95,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpInsertUpdate_MovementItem_Sale_Partner (ioId:= 0, inMovementId:= 10, inGoodsId:= 1, inAmount:= 0, inAmountPartner:= 0, inAmountPacker:= 0, inPrice:= 1, inCountForPrice:= 1, inLiveWeight:= 0, inHeadCount:= 0, inPartionGoods:= '', inGoodsKindId:= 0, inAssetId:= 0, inSession:= '2')
+-- SELECT * FROM gpInsertUpdate_MovementItem_Sale_Partner (ioId:= 0, inMovementId:= 10, inGoodsId:= 1, inAmount:= 0, inAmountPartner:= 0, inAmountPacker:= 0, ioPrice:= 1, inCountForPrice:= 1, inLiveWeight:= 0, inHeadCount:= 0, inPartionGoods:= '', inGoodsKindId:= 0, inAssetId:= 0, inSession:= '2')

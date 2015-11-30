@@ -1,6 +1,6 @@
 -- Function: lpInsertUpdate_MovementItem_Sale_Value()
 
--- DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_Sale_Value (Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TVarChar, Integer, Integer, Integer, Integer);
+DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_Sale_Value (Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TVarChar, Integer, Integer, Integer, Integer);
 DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_Sale_Value (Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TVarChar, Integer, Integer, Integer, Boolean, Integer);
 DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_Sale_Value (Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TVarChar, Integer, Integer, Integer, TFloat, TFloat, TFloat, Boolean, Integer);
 
@@ -65,7 +65,7 @@ BEGIN
                                           , inAmountPartner      := inAmountPartner
                                           , inAmountChangePercent:= inAmountChangePercent
                                           , inChangePercentAmount:= inChangePercentAmount
-                                          , inPrice              := inPrice
+                                          , ioPrice              := inPrice
                                           , ioCountForPrice      := ioCountForPrice
                                           , inHeadCount          := inHeadCount
                                           , inBoxCount           := inBoxCount

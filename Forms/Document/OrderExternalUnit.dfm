@@ -1,27 +1,27 @@
 inherited OrderExternalUnitForm: TOrderExternalUnitForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1047#1072#1103#1074#1082#1072' '#1089#1090#1086#1088#1086#1085#1085#1103#1103' ('#1085#1072' '#1075#1083'.'#1089#1082#1083#1072#1076')>'
   ClientHeight = 668
-  ClientWidth = 1416
-  ExplicitWidth = 1432
-  ExplicitHeight = 706
+  ClientWidth = 1366
+  ExplicitWidth = 1382
+  ExplicitHeight = 703
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 166
-    Width = 1416
+    Width = 1366
     Height = 502
     ExplicitTop = 166
-    ExplicitWidth = 1416
+    ExplicitWidth = 1366
     ExplicitHeight = 502
     ClientRectBottom = 502
-    ClientRectRight = 1416
+    ClientRectRight = 1366
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 1416
+      ExplicitWidth = 1366
       ExplicitHeight = 478
       inherited cxGrid: TcxGrid
-        Width = 1416
+        Width = 1366
         Height = 478
-        ExplicitWidth = 1416
+        ExplicitWidth = 1366
         ExplicitHeight = 478
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
@@ -363,10 +363,10 @@ inherited OrderExternalUnitForm: TOrderExternalUnitForm
     end
   end
   inherited DataPanel: TPanel
-    Width = 1416
+    Width = 1366
     Height = 140
     TabOrder = 3
-    ExplicitWidth = 1416
+    ExplicitWidth = 1366
     ExplicitHeight = 140
     inherited edInvNumber: TcxTextEdit
       Left = 8
@@ -1836,12 +1836,12 @@ inherited OrderExternalUnitForm: TOrderExternalUnitForm
         ParamType = ptInput
       end
       item
-        Name = 'inPrice'
+        Name = 'ioPrice'
         Value = Null
         Component = MasterCDS
         ComponentItem = 'Price'
         DataType = ftFloat
-        ParamType = ptInput
+        ParamType = ptInputOutput
       end
       item
         Name = 'ioCountForPrice'
@@ -1857,30 +1857,6 @@ inherited OrderExternalUnitForm: TOrderExternalUnitForm
         Component = MasterCDS
         ComponentItem = 'AmountSumm'
         DataType = ftFloat
-      end
-      item
-        Value = Null
-        DataType = ftFloat
-        ParamType = ptUnknown
-      end
-      item
-        Value = Null
-        DataType = ftFloat
-        ParamType = ptUnknown
-      end
-      item
-        Value = Null
-        DataType = ftFloat
-        ParamType = ptUnknown
-      end
-      item
-        Value = Null
-        DataType = ftFloat
-        ParamType = ptUnknown
-      end
-      item
-        Value = Null
-        ParamType = ptUnknown
       end>
     Left = 160
     Top = 368

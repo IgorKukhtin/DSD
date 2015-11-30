@@ -32,6 +32,7 @@ $BODY$
    DECLARE vbPriceWithVAT     Boolean;
    DECLARE vbVATPercent       TFloat;
 
+   DECLARE vbIsFindPartnerContract Boolean;
    DECLARE vbGoodsPropertyId  Integer;
    DECLARE vbOKPO             TVarChar;
 BEGIN
@@ -44,17 +45,16 @@ BEGIN
                     );
      -- ќпредел€ютс€ параметры (отдельно)
      vbIsFindPartnerContract:= EXISTS (SELECT 1
-                                     FROM ObjectLink AS ObjectLink_ContractPartner_Contract
-                                          INNER JOIN ObjectLink AS ObjectLink_ContractPartner_Partner
-                                                                ON ObjectLink_ContractPartner_Partner.ObjectId = ObjectLink_ContractPartner_Contract.ObjectId
-                                                               AND ObjectLink_ContractPartner_Partner.DescId = zc_ObjectLink_ContractPartner_Partner()
-                                                               AND ObjectLink_ContractPartner_Contract.ChildObjectId > 0
-                                          INNER JOIN Object AS Object_ContractPartner ON Object_ContractPartner.Id = ObjectLink_ContractPartner_Contract.ObjectId
-                                                                                     AND Object_ContractPartner.isErased = FALSE
-                                     WHERE ObjectLink_ContractPartner_Contract.ChildObjectId = vbContractId
-                                       AND ObjectLink_ContractPartner_Contract.DescId = zc_ObjectLink_ContractPartner_Contract()
-                                    );
-
+                                       FROM ObjectLink AS ObjectLink_ContractPartner_Contract
+                                            INNER JOIN ObjectLink AS ObjectLink_ContractPartner_Partner
+                                                                  ON ObjectLink_ContractPartner_Partner.ObjectId = ObjectLink_ContractPartner_Contract.ObjectId
+                                                                 AND ObjectLink_ContractPartner_Partner.DescId = zc_ObjectLink_ContractPartner_Partner()
+                                                                 AND ObjectLink_ContractPartner_Contract.ChildObjectId > 0
+                                            INNER JOIN Object AS Object_ContractPartner ON Object_ContractPartner.Id = ObjectLink_ContractPartner_Contract.ObjectId
+                                                                                       AND Object_ContractPartner.isErased = FALSE
+                                       WHERE ObjectLink_ContractPartner_Contract.ChildObjectId = vbContractId
+                                         AND ObjectLink_ContractPartner_Contract.DescId = zc_ObjectLink_ContractPartner_Contract()
+                                      );
 
      -- ќпредел€ютс€ параметры
      SELECT TRIM (Movement.InvNumber)             AS InvNumber
@@ -345,7 +345,7 @@ BEGIN
                                                       , inAmount             := tmpMI.Amount
                                                       , inAmountSecond       := tmpMI.AmountSecond
                                                       , inGoodsKindId        := tmpMI.GoodsKindId
-                                                      , inPrice              := tmpMI.Price
+                                                      , ioPrice              := tmpMI.Price
                                                       , ioCountForPrice      := 1
                                                       , inUserId             := inUserId
                                                        )

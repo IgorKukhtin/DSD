@@ -290,7 +290,7 @@ BEGIN
                PERFORM lpInsertUpdate_MovementItem_Sale (ioId := 0, inMovementId := vbMovementId, inGoodsId := vbGoodsId
                                                        , inAmount := vbOperCount, inAmountPartner := vbOperCount, inAmountChangePercent := vbOperCount
                                                        , inChangePercentAmount := 0
-                                                       , inPrice := CASE WHEN vbPaidKindId = zc_Enum_PaidKind_SecondForm() AND vbDiscount_min = vbDiscount_max THEN vbOperPrice
+                                                       , ioPrice := CASE WHEN vbPaidKindId = zc_Enum_PaidKind_SecondForm() AND vbDiscount_min = vbDiscount_max THEN vbOperPrice
                                                                          WHEN vbPaidKindId = zc_Enum_PaidKind_FirstForm() THEN vbOperPrice
                                                                          WHEN vbOperCount <> 0 THEN vbSumma / vbOperCount
                                                                          ELSE 0

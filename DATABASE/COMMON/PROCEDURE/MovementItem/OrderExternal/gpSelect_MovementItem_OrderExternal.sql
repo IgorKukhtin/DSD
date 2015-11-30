@@ -22,11 +22,16 @@ RETURNS TABLE (Id Integer, GoodsId Integer, GoodsCode Integer, GoodsName TVarCha
               )
 AS
 $BODY$
-  DECLARE vbUserId Integer;
+   DECLARE vbUserId Integer;
 
-  DECLARE vbUnitId Integer;
-  DECLARE vbGoodsPropertyId Integer;
-  DECLARE vbIsOrderDnepr Boolean;
+   DECLARE vbUnitId Integer;
+   DECLARE vbGoodsPropertyId Integer;
+   DECLARE vbIsOrderDnepr Boolean;
+
+   DECLARE vbPartnerId Integer;
+   DECLARE vbContractId Integer;
+   DECLARE vbPriceWithVAT Boolean;
+   DECLARE vbOperDatePartner_sale TDateTime;
 
 BEGIN
      -- проверка прав пользователя на вызов процедуры
@@ -47,6 +52,18 @@ BEGIN
                                                , inIsPrior        := FALSE -- !!!параметр здесь не важен!!!
                                                 ) AS tmp;
 
+
+     -- Контрагент
+     vbPartnerId:= (SELECT MLO.ObjectId FROM MovementLinkObject AS MLO WHERE MLO.MovementId = inMovementId AND MLO.DescId = zc_MovementLinkObject_From());
+     -- Договор
+     vbContractId:= (SELECT MLO.ObjectId FROM MovementLinkObject AS MLO WHERE MLO.MovementId = inMovementId AND MLO.DescId = zc_MovementLinkObject_Contract());
+     -- Цены с НДС
+     vbPriceWithVAT:= (SELECT MB.ValueData FROM MovementBoolean AS MB WHERE MB.MovementId = inMovementId AND MB.DescId = zc_MovementBoolean_PriceWithVAT());
+     -- Дата покупателя в продаже (для поиска акций)
+     vbOperDatePartner_sale:= (SELECT Movement.OperDate FROM Movement WHERE Movement.Id = inMovementId)
+                            + (COALESCE ((SELECT ObjectFloat.ValueData FROM ObjectFloat WHERE ObjectFloat.ObjectId = vbPartnerId AND ObjectFloat.DescId = zc_ObjectFloat_Partner_PrepareDayCount()),  0) :: TVarChar || ' DAY') :: INTERVAL
+                            + (COALESCE ((SELECT ObjectFloat.ValueData FROM ObjectFloat WHERE ObjectFloat.ObjectId = vbPartnerId AND ObjectFloat.DescId = zc_ObjectFloat_Partner_DocumentDayCount()), 0) :: TVarChar || ' DAY') :: INTERVAL
+                             ;
 
      -- определяется
      vbGoodsPropertyId:= zfCalc_GoodsPropertyId ((SELECT MovementLinkObject.ObjectId FROM MovementLinkObject WHERE MovementLinkObject.MovementId = inMovementId AND MovementLinkObject.DescId = zc_MovementLinkObject_Contract())
@@ -70,7 +87,18 @@ BEGIN
 
      -- Результат такой
      RETURN QUERY
-      WITH tmpInfoMoney AS (SELECT View_InfoMoney.InfoMoneyGroupId
+      WITH tmpPromo AS (SELECT tmp.*
+                        FROM lpSelect_Movement_Promo_Data (inOperDate   := vbOperDatePartner_sale
+                                                         , inPartnerId  := vbPartnerId
+                                                         , inContractId := vbContractId
+                                                         , inUnitId     := vbUnitId
+                                                          ) AS tmp
+                       )
+     , tmpPriceList AS (SELECT lfSelect.GoodsId              AS GoodsId
+                             , lfSelect.ValuePrice :: TFloat AS Price_PriceList
+                        FROM lfSelect_ObjectHistory_PriceListItem (inPriceListId:= inPriceListId, inOperDate:= inOperDate) AS lfSelect 
+                       )
+         , tmpInfoMoney AS (SELECT View_InfoMoney.InfoMoneyGroupId
                                  , View_InfoMoney.InfoMoneyDestinationId
                                  , View_InfoMoney.InfoMoneyId
                             FROM (SELECT View_InfoMoney.InfoMoneyGroupId
@@ -316,7 +344,10 @@ BEGIN
            , Object_GoodsKind.Id        AS GoodsKindId
            , Object_GoodsKind.ValueData AS GoodsKindName
            , Object_Measure.ValueData   AS MeasureName
-           , lfObjectHistory_PriceListItem.ValuePrice :: TFloat AS Price
+           , CASE WHEN tmpPromo.TaxPromo <> 0 AND vbPriceWithVAT = TRUE THEN tmpPromo.PriceWithVAT
+                  WHEN tmpPromo.TaxPromo <> 0 THEN tmpPromo.PriceWithOutVAT
+                  ELSE tmpPriceList.Price_Pricelist
+             END :: TFloat              AS Price
            , 1 :: TFloat                AS CountForPrice
            , NULL :: TFloat             AS AmountSumm
            , NULL :: TFloat             AS AmountSumm_Partner
@@ -328,10 +359,13 @@ BEGIN
 
            , tmpGoodsPropertyValue.ArticleGLN
 
-           , CAST ('' AS TVarChar)      AS MovementPromo
-           , NULL :: TFloat             AS PricePromo
+           , tmpPromo.MovementPromo
+           , CASE WHEN tmpPromo.TaxPromo <> 0 AND vbPriceWithVAT = TRUE THEN tmpPromo.PriceWithVAT
+                  WHEN tmpPromo.TaxPromo <> 0 THEN tmpPromo.PriceWithOutVAT
+                  ELSE 0
+             END :: TFloat AS PricePromo
 
-           , FALSE                      AS isErased
+           , FALSE AS isErased
 
        FROM (SELECT Object_Goods.Id                                        AS GoodsId
                   , Object_Goods.ObjectCode                                AS GoodsCode
@@ -385,8 +419,11 @@ BEGIN
                                         AND tmpMI.GoodsKindId = tmpGoods.GoodsKindId
 
             LEFT JOIN Object AS Object_GoodsKind ON Object_GoodsKind.Id = tmpGoods.GoodsKindId
-            LEFT JOIN lfSelect_ObjectHistory_PriceListItem (inPriceListId:= inPriceListId, inOperDate:= inOperDate)
-                   AS lfObjectHistory_PriceListItem ON lfObjectHistory_PriceListItem.GoodsId = tmpGoods.GoodsId
+
+            LEFT JOIN tmpPriceList ON tmpPriceList.GoodsId = tmpGoods.GoodsId
+            LEFT JOIN tmpPromo ON tmpPromo.GoodsId      = tmpGoods.GoodsId
+                              AND (tmpPromo.GoodsKindId = tmpGoods.GoodsKindId OR tmpPromo.GoodsKindId = 0)
+
             LEFT JOIN ObjectLink AS ObjectLink_Goods_Measure
                                  ON ObjectLink_Goods_Measure.ObjectId = tmpGoods.GoodsId
                                 AND ObjectLink_Goods_Measure.DescId = zc_ObjectLink_Goods_Measure()

@@ -13,7 +13,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_Sale(
  INOUT ioChangePercentAmount     TFloat    , -- % скидки для кол-ва (!!!из грида!!!)
     IN inIsChangePercentAmount   Boolean   , -- Признак - будет ли использоваться из контрола <% скидки для кол-ва>
     IN inIsCalcAmountPartner     Boolean   , -- Признак - будет ли расчитано <Количество у контрагента>
-    IN inPrice                   TFloat    , -- Цена
+ INOUT ioPrice                   TFloat    , -- Цена
  INOUT ioCountForPrice           TFloat    , -- Цена за количество
    OUT outAmountSumm             TFloat    , -- Сумма расчетная
     IN inHeadCount               TFloat    , -- Количество голов
@@ -103,10 +103,10 @@ BEGIN
 
 
      -- сохранили
-     SELECT tmp.ioId, tmp.ioCountForPrice, tmp.outAmountSumm
+     SELECT tmp.ioId, tmp.ioPrice, tmp.ioCountForPrice, tmp.outAmountSumm
           , zfCalc_PromoMovementName (tmp.outMovementId_Promo, NULL, NULL, NULL, NULL)
           , tmp.outPricePromo
-            INTO ioId, ioCountForPrice, outAmountSumm, outMovementPromo, outPricePromo
+            INTO ioId, ioPrice, ioCountForPrice, outAmountSumm, outMovementPromo, outPricePromo
      FROM lpInsertUpdate_MovementItem_Sale (ioId                 := ioId
                                           , inMovementId         := inMovementId
                                           , inGoodsId            := inGoodsId
@@ -114,7 +114,7 @@ BEGIN
                                           , inAmountPartner      := ioAmountPartner
                                           , inAmountChangePercent:= outAmountChangePercent
                                           , inChangePercentAmount:= ioChangePercentAmount
-                                          , inPrice              := inPrice
+                                          , ioPrice              := ioPrice
                                           , ioCountForPrice      := ioCountForPrice
                                           , inHeadCount          := inHeadCount
                                           , inBoxCount           := inBoxCount
@@ -151,4 +151,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpInsertUpdate_MovementItem_Sale (ioId:= 0, inMovementId:= 10, inGoodsId:= 1, ioAmount:= 0, inAmountPartner:= 0, inAmountPacker:= 0, inPrice:= 1, inCountForPrice:= 1, inLiveWeight:= 0, inHeadCount:= 0, inPartionGoods:= '', inGoodsKindId:= 0, inAssetId:= 0, inSession:= '2')
+-- SELECT * FROM gpInsertUpdate_MovementItem_Sale (ioId:= 0, inMovementId:= 10, inGoodsId:= 1, ioAmount:= 0, inAmountPartner:= 0, inAmountPacker:= 0, ioPrice:= 1, inCountForPrice:= 1, inLiveWeight:= 0, inHeadCount:= 0, inPartionGoods:= '', inGoodsKindId:= 0, inAssetId:= 0, inSession:= '2')

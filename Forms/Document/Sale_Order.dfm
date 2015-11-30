@@ -2,6 +2,7 @@ inherited Sale_OrderForm: TSale_OrderForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1055#1088#1086#1076#1072#1078#1072' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1102' ('#1087#1086' '#1079#1072#1103#1074#1082#1077')>'
   ClientHeight = 668
   ClientWidth = 1356
+  ExplicitTop = -246
   ExplicitWidth = 1372
   ExplicitHeight = 703
   PixelsPerInch = 96
@@ -251,6 +252,9 @@ inherited Sale_OrderForm: TSale_OrderForm
           object colAmountOrder: TcxGridDBColumn [12]
             Caption = #1050#1086#1083'-'#1074#1086' ('#1079#1072#1103#1074#1082#1072')'
             DataBinding.FieldName = 'AmountOrder'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
@@ -2687,12 +2691,12 @@ inherited Sale_OrderForm: TSale_OrderForm
         ParamType = ptInput
       end
       item
-        Name = 'inPrice'
+        Name = 'ioPrice'
         Value = Null
         Component = MasterCDS
         ComponentItem = 'Price'
         DataType = ftFloat
-        ParamType = ptInput
+        ParamType = ptInputOutput
       end
       item
         Name = 'ioCountForPrice'

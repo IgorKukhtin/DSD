@@ -1536,12 +1536,12 @@ inherited OrderExternalForm: TOrderExternalForm
         ParamType = ptInput
       end
       item
-        Name = 'inPrice'
+        Name = 'ioPrice'
         Value = Null
         Component = MasterCDS
         ComponentItem = 'Price'
         DataType = ftFloat
-        ParamType = ptInput
+        ParamType = ptInputOutput
       end
       item
         Name = 'ioCountForPrice'

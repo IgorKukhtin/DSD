@@ -18,8 +18,9 @@ BEGIN
                    WHERE Movement_Promo_View.Id = inMovementId));
      ELSE
          -- возвращаем результат
-         RETURN ('№ ' || inInvNumber || ' от ' || DATE (inOperDate) :: TVarChar
-              || ' акц. цена с ' || DATE (inStartSale) :: TVarChar || ' по ' || DATE (inEndSale) :: TVarChar);
+         RETURN (' ' || zfConvert_DateToString (inStartSale) :: TVarChar || ' _ ' || zfConvert_DateToString (inEndSale)
+              || '  № ' || inInvNumber || ' _ ' || zfConvert_DateToString (inOperDate) :: TVarChar
+              :: TVarChar);
      END IF;
 
 END;

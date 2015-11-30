@@ -123,7 +123,7 @@ BEGIN
            , COALESCE (MovementLinkMovement_MasterEDI.MovementChildId, 0) <> 0 AS isEDI
 
            , COALESCE(MovementBoolean_Promo.ValueData, False) AS isPromo
-           , ('№ ' || Movement_Promo.InvNumber || ' от ' || DATE (Movement_Promo.OperDate) :: TVarChar || ' акц. цена с ' || DATE (MD_StartSale.ValueData) :: TVarChar|| ' по ' || DATE (MD_EndSale.ValueData) :: TVarChar) :: TVarChar AS MovementPromo
+           , zfCalc_PromoMovementName (NULL, Movement_Promo.InvNumber :: TVarChar, Movement_Promo.OperDate, MD_StartSale.ValueData, MD_EndSale.ValueData) AS MovementPromo
 
        FROM (SELECT Movement.id
              FROM tmpStatus

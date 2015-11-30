@@ -233,6 +233,7 @@ BEGIN
                                   AND Movement.StatusId IN (zc_Enum_Status_UnComplete(), zc_Enum_Status_Complete()));
      END IF;
 
+     -- это только "главный" филиал формирует на основании Заявки
      IF vbMovementDescId = zc_Movement_SendOnPrice() AND EXISTS (SELECT MLM_Order.MovementChildId
                                                                  FROM MovementLinkMovement AS MLM_Order
                                                                       JOIN Movement ON Movement.Id = MLM_Order.MovementChildId
@@ -240,7 +241,7 @@ BEGIN
                                                                                    AND Movement.OperDate BETWEEN inOperDate - INTERVAL '4 DAY' AND inOperDate
                                                                  WHERE MLM_Order.MovementId = inMovementId AND MLM_Order.DescId = zc_MovementLinkMovement_Order())
      THEN
-         -- поиск существующего документа <Перемещение по цене> !!!сразу получаем ключ!!!
+          -- поиск существующего документа <Перемещение по цене> !!!сразу получаем ключ!!!
           vbMovementId_find:= (SELECT MLM_Order.MovementChildId FROM MovementLinkMovement AS MLM_Order WHERE MLM_Order.MovementId = inMovementId AND MLM_Order.DescId = zc_MovementLinkMovement_Order());
           -- это "некоторые филиалы", иначе приход = расход !!!временно, т.к. должны быть все!!!
           vbIsUnitCheck:= EXISTS (SELECT MLO.ObjectId FROM MovementLinkObject AS MLO JOIN _tmpUnit_check ON _tmpUnit_check.UnitId = MLO.ObjectId WHERE MLO.MovementId = inMovementId AND MLO.DescId IN (zc_MovementLinkObject_From(), zc_MovementLinkObject_To()));
@@ -702,7 +703,8 @@ BEGIN
                      , SUM (tmp.AmountPacker) AS AmountPacker
                      , MAX (tmp.isBarCode_value) AS isBarCode_value
                      , tmp.UnitId_to
-                FROM (SELECT 0                                                   AS MovementItemId
+                FROM (-- элементы взвешивания
+                      SELECT 0 AS MovementItemId
                            , CASE WHEN vbMovementDescId = zc_Movement_ProductionUnion() AND vbIsProductionIn = FALSE THEN zc_Goods_ReWork() ELSE MovementItem.ObjectId             END AS GoodsId
                            , CASE WHEN vbMovementDescId = zc_Movement_ProductionUnion() AND vbIsProductionIn = FALSE THEN NULL ELSE COALESCE (MILinkObject_GoodsKind.ObjectId, 0)  END AS GoodsKindId
                            , CASE WHEN vbMovementDescId = zc_Movement_ProductionUnion() AND vbIsProductionIn = FALSE THEN NULL ELSE COALESCE (MILinkObject_Box.ObjectId, 0)        END AS BoxId
@@ -711,29 +713,41 @@ BEGIN
 
                            , CASE WHEN vbMovementDescId = zc_Movement_SendOnPrice() AND vbIsUnitCheck = FALSE
                                        THEN MovementItem.Amount -- приход = расход = вес без скидки
+
                                   WHEN vbMovementDescId = zc_Movement_SendOnPrice() AND vbIsSendOnPriceIn = FALSE
                                        THEN MovementItem.Amount -- формируется только расход = вес без скидки
+
                                   WHEN vbMovementDescId = zc_Movement_SendOnPrice() AND vbIsSendOnPriceIn = TRUE
                                        THEN 0 -- не заполняется, т.к. сейчас приход
+
                                   ELSE MovementItem.Amount -- обычное значение
+
                              END * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData, 0) ELSE 1 END AS Amount -- !!!* вес только для пересортицы в переработку!!
 
                            , CASE WHEN vbMovementDescId = zc_Movement_SendOnPrice() AND vbIsUnitCheck = FALSE
                                        THEN MovementItem.Amount -- приход = расход = вес без скидки
+
                                   WHEN vbMovementDescId = zc_Movement_SendOnPrice() AND vbIsSendOnPriceIn = FALSE
                                        THEN MovementItem.Amount -- формируется только расход = вес без скидки
+
                                   WHEN vbMovementDescId = zc_Movement_SendOnPrice() AND vbIsSendOnPriceIn = TRUE
                                        THEN 0 -- не заполняется, т.к. сейчас приход
+
                                   ELSE COALESCE (MIFloat_AmountPartner.ValueData, 0) -- обычное значение = вес со скидкой
+
                              END AS AmountChangePercent
 
                            , CASE WHEN vbMovementDescId = zc_Movement_SendOnPrice() AND vbIsUnitCheck = FALSE
                                        THEN MovementItem.Amount -- приход = расход = вес без скидки
+
                                   WHEN vbMovementDescId = zc_Movement_SendOnPrice() AND vbIsSendOnPriceIn = FALSE
                                        THEN 0 -- не заполняется, т.к. сейчас расход
+
                                   WHEN vbMovementDescId = zc_Movement_SendOnPrice() AND vbIsSendOnPriceIn = TRUE
                                        THEN MovementItem.Amount -- формируется только приход = вес без скидки
+
                                   ELSE COALESCE (MIFloat_AmountPartner.ValueData, 0) -- обычное значение = вес со скидкой
+
                              END AS AmountPartner
 
                            , CASE WHEN vbMovementDescId = zc_Movement_ProductionUnion() AND vbIsProductionIn = FALSE THEN NULL ELSE COALESCE (MIFloat_ChangePercentAmount.ValueData, 0) END AS ChangePercentAmount
@@ -823,6 +837,7 @@ BEGIN
                         AND MovementItem.DescId     = zc_MI_Master()
                         AND MovementItem.isErased   = FALSE
                      UNION ALL
+                      -- элементы документа (были сохранены раньше)
                       SELECT MovementItem.Id                                     AS MovementItemId
                            , MovementItem.ObjectId                               AS GoodsId
                            , COALESCE (MILinkObject_GoodsKind.ObjectId, 0)       AS GoodsKindId
