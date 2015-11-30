@@ -35,6 +35,7 @@ type
     Amount2: TcxGridDBColumn;
     Amount3: TcxGridDBColumn;
     InfoMoneyName: TcxGridDBColumn;
+    Color_calc: TcxGridDBColumn;
   private
     { Private declarations }
   public

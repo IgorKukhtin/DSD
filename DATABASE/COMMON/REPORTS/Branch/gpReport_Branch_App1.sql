@@ -22,7 +22,9 @@ RETURNS TABLE (BranchName TVarChar
              , Sale_10300_Summ TFloat
              , LossSumm TFloat, LossWeight TFloat
              , InventorySumm TFloat, InventoryWeight TFloat   
-             , SummInventory_RePrice TFloat          
+             , SummInventory_RePrice TFloat  
+             , ReturnInSumm_Vz TFloat, PeresortInSumm_Vz TFloat, PeresortOutSumm_Vz TFloat, SendOnPriceOutSumm_Vz TFloat, LossSumm_Vz TFloat, InventorySumm_Vz TFloat, SummInventory_RePrice_Vz TFloat
+             , ReturnInWeight_Vz TFloat, PeresortInWeight_Vz TFloat, PeresortOutWeight_Vz TFloat, SendOnPriceOutWeight_Vz TFloat, LossWeight_Vz TFloat, InventoryWeight_Vz TFloat, WeightInventory_RePrice_Vz TFloat
               )
 AS
 $BODY$
@@ -57,8 +59,13 @@ BEGIN
                         From _tmpBranch
                             INNER JOIN Object_Unit_View ON Object_Unit_View.BranchId = _tmpBranch.BranchId
                         )
+     -- выбираем склады возвратов (пока так), чтобы выделить движение                   
+    , tmpUnitVz AS (SELECT Object_Unit_View.Id AS UnitVzId
+                        FROM Object_Unit_View 
+                        WHERE Object_Unit_View.Code in (22022, 22122, 22032, 22052, 22082, 22092, 22042)
+                        )
 
-  , tmpContainerList AS (SELECT tmpUnitList.BranchId,  Container.Id AS ContainerId, Object_Account_View.AccountDirectionId, Container.*
+  , tmpContainerList AS (SELECT tmpUnitList.BranchId, tmpUnitList.Id AS UnitId, Container.Id AS ContainerId, Object_Account_View.AccountDirectionId, Container.*
                          FROM tmpUnitList 
                              INNER JOIN ContainerLinkObject AS CLO_Unit
                                                 ON CLO_Unit.ObjectId = tmpUnitList.Id
@@ -98,21 +105,64 @@ BEGIN
                                     ELSE 0 END) AS SummReturnIn
                           , SUM (CASE WHEN MIContainer.MovementDescId = zc_Movement_SendOnPrice() AND MIContainer.isActive = TRUE AND MIContainer.OperDate BETWEEN inStartDate AND inEndDate THEN MIContainer.Amount                              ---перемещение по цене
                                     ELSE 0 END) AS SummSendOnPriceIn
-                          , SUM (CASE WHEN MIContainer.MovementDescId = zc_Movement_SendOnPrice() AND MIContainer.isActive = FALSE AND MIContainer.OperDate BETWEEN inStartDate AND inEndDate THEN -1 * MIContainer.Amount                              ---перемещение по цене
+                          , SUM (CASE WHEN MIContainer.MovementDescId = zc_Movement_SendOnPrice() AND MIContainer.isActive = FALSE AND MIContainer.OperDate BETWEEN inStartDate AND inEndDate THEN -1 * MIContainer.Amount                        ---перемещение по цене
                                     ELSE 0 END) AS SummSendOnPriceOut                                        
-                          , SUM (CASE WHEN MIContainer.MovementDescId = zc_Movement_Loss() AND MIContainer.isActive = FALSE AND MIContainer.OperDate BETWEEN inStartDate AND inEndDate THEN -1 * MIContainer.Amount                                     ---Списание
+                          , SUM (CASE WHEN MIContainer.MovementDescId = zc_Movement_Loss() AND MIContainer.isActive = FALSE AND MIContainer.OperDate BETWEEN inStartDate AND inEndDate THEN -1 * MIContainer.Amount                               ---Списание
                                     ELSE 0 END) AS SummLoss 
                           , SUM (CASE WHEN MIContainer.MovementDescId = zc_Movement_ProductionUnion() AND MIContainer.isActive = True AND MIContainer.OperDate BETWEEN inStartDate AND inEndDate THEN  MIContainer.Amount                                     ---Списание
                                     ELSE 0 END) AS SummPeresortIn                                                                    -- приход пересортица  
                           , SUM (CASE WHEN MIContainer.MovementDescId = zc_Movement_ProductionUnion() AND MIContainer.isActive = False AND MIContainer.OperDate BETWEEN inStartDate AND inEndDate THEN  MIContainer.Amount                                     ---Списание
-                                    ELSE 0 END) AS SummPeresortOut                                                                    -- расход пересортица  
+                                    ELSE 0 END) AS SummPeresortOut                                                                   -- расход пересортица  
                           , SUM (CASE WHEN MIContainer.MovementDescId = zc_Movement_Inventory() AND MIContainer.OperDate BETWEEN inStartDate AND inEndDate THEN  MIContainer.Amount                                     ---Списание
                                     ELSE 0 END) AS SummInventory 
                           , SUM (CASE WHEN MIContainer.MovementDescId = zc_Movement_Inventory() 
                                        AND MIContainer.OperDate BETWEEN inStartDate AND inEndDate
                                        AND MIContainer.AnalyzerId = zc_Enum_AccountGroup_60000()
-                                      THEN  MIContainer.Amount                                     ---Списание
+                                      THEN  MIContainer.Amount                                               ---Списание
                                       ELSE 0 END) AS SummInventory_RePrice
+                                      
+
+                          , SUM (CASE WHEN MIContainer.MovementDescId = zc_Movement_ReturnIn() 
+                                       AND MIContainer.OperDate BETWEEN inStartDate AND inEndDate 
+                                       AND tmpContainerList.UnitId in (SELECT tmpUnitVz.UnitVzId FROM tmpUnitVz)
+                                      THEN MIContainer.Amount                                        
+                                      ELSE 0 END) AS SummReturnIn_Vz
+                          , SUM (CASE WHEN MIContainer.MovementDescId = zc_Movement_ProductionUnion()
+                                       AND MIContainer.isActive = True 
+                                       AND MIContainer.OperDate BETWEEN inStartDate AND inEndDate 
+                                       AND tmpContainerList.UnitId in (SELECT tmpUnitVz.UnitVzId FROM tmpUnitVz)
+                                      THEN MIContainer.Amount                                    
+                                    ELSE 0 END) AS SummPeresortIn_Vz                                                                    -- приход пересортица  
+                          , SUM (CASE WHEN MIContainer.MovementDescId = zc_Movement_ProductionUnion() 
+                                       AND MIContainer.isActive = False 
+                                       AND MIContainer.OperDate BETWEEN inStartDate AND inEndDate 
+                                       AND tmpContainerList.UnitId in (SELECT tmpUnitVz.UnitVzId FROM tmpUnitVz)
+                                      THEN MIContainer.Amount                                    
+                                    ELSE 0 END) AS SummPeresortOut_Vz                                                                   -- расход пересортица  
+                          , SUM (CASE WHEN MIContainer.MovementDescId = zc_Movement_SendOnPrice()
+                                       AND MIContainer.isActive = FALSE 
+                                       AND MIContainer.OperDate BETWEEN inStartDate AND inEndDate 
+                                       AND tmpContainerList.UnitId in (SELECT tmpUnitVz.UnitVzId FROM tmpUnitVz)
+                                      THEN -1 * MIContainer.Amount                                                                       ---перемещение по цене расход 
+                                    ELSE 0 END) AS SummSendOnPriceOut_Vz 
+                          , SUM (CASE WHEN MIContainer.MovementDescId = zc_Movement_Loss() 
+                                       AND MIContainer.isActive = FALSE 
+                                       AND MIContainer.OperDate BETWEEN inStartDate AND inEndDate 
+                                       AND tmpContainerList.UnitId in (SELECT tmpUnitVz.UnitVzId FROM tmpUnitVz)
+                                      THEN -1 * MIContainer.Amount                               ---Списание
+                                    ELSE 0 END) AS SummLoss_Vz
+                          , SUM (CASE WHEN MIContainer.MovementDescId = zc_Movement_Inventory() 
+                                       AND MIContainer.OperDate BETWEEN inStartDate AND inEndDate 
+                                       AND tmpContainerList.UnitId in (SELECT tmpUnitVz.UnitVzId FROM tmpUnitVz)
+                                      THEN MIContainer.Amount                                     ---Списание
+                                    ELSE 0 END) AS SummInventory_Vz
+                          , SUM (CASE WHEN MIContainer.MovementDescId = zc_Movement_Inventory() 
+                                       AND MIContainer.OperDate BETWEEN inStartDate AND inEndDate
+                                       AND MIContainer.AnalyzerId = zc_Enum_AccountGroup_60000()
+                                       AND tmpContainerList.UnitId in (SELECT tmpUnitVz.UnitVzId FROM tmpUnitVz)
+                                      THEN  MIContainer.Amount                                               ---Списание
+                                      ELSE 0 END) AS SummInventory_RePrice_Vz
+                                    
                      FROM tmpContainerList
                           LEFT JOIN MovementItemContainer AS MIContainer 
                                                           ON MIContainer.ContainerId = tmpContainerList.ContainerId 
@@ -146,6 +196,13 @@ BEGIN
                           , 0 AS SummPeresortOut                                                                    -- расход пересортица  
                           , 0 AS SummInventory 
                           , 0 AS SummInventory_RePrice   
+                          , 0 AS SummReturnIn_Vz
+                          , 0 AS SummPeresortIn_Vz                                                                    -- приход пересортица  
+                          , 0 AS SummPeresortOut_Vz                                                                   -- расход пересортица  
+                          , 0 AS SummSendOnPriceOut_Vz 
+                          , 0 AS SummLoss_Vz
+                          , 0 AS SummInventory_Vz
+                          , 0 AS SummInventory_RePrice_Vz
                         FROM tmpUnitList 
                            INNER JOIN MovementItemContainer AS MIContainer 
                                                            ON MIContainer.whereObjectId_analyzer = tmpUnitList.Id
@@ -209,6 +266,47 @@ BEGIN
                                        AND MIContainer.AnalyzerId = zc_Enum_AccountGroup_60000()
                                       THEN  MIContainer.Amount                                     
                                       ELSE 0 END) AS CountInventory_RePrice
+                                      
+                          , SUM (CASE WHEN MIContainer.MovementDescId = zc_Movement_ReturnIn() 
+                                       AND MIContainer.OperDate BETWEEN inStartDate AND inEndDate
+                                       AND tmpContainerList.UnitId in (SELECT tmpUnitVz.UnitVzId FROM tmpUnitVz)
+                                      THEN MIContainer.Amount                                         ---ReturnIn
+                                    ELSE 0 END) AS CountReturnIn_Vz
+                          , SUM (CASE WHEN MIContainer.MovementDescId = zc_Movement_SendOnPrice()
+                                       AND MIContainer.isActive = FALSE 
+                                       AND MIContainer.OperDate BETWEEN inStartDate AND inEndDate 
+                                       AND tmpContainerList.UnitId in (SELECT tmpUnitVz.UnitVzId FROM tmpUnitVz)
+                                      THEN -1 * MIContainer.Amount                                   ---перемещение по цене
+                                    ELSE 0 END) AS CountSendOnPriceOut_Vz                                        
+                          , SUM (CASE WHEN MIContainer.MovementDescId = zc_Movement_Loss() 
+                                       AND MIContainer.isActive = FALSE 
+                                       AND MIContainer.OperDate BETWEEN inStartDate AND inEndDate 
+                                       AND tmpContainerList.UnitId in (SELECT tmpUnitVz.UnitVzId FROM tmpUnitVz)
+                                      THEN -1 * MIContainer.Amount                                     ---Списание
+                                    ELSE 0 END) AS CountLoss_Vz 
+                          , SUM (CASE WHEN MIContainer.MovementDescId = zc_Movement_ProductionUnion() 
+                                       AND MIContainer.isActive = True 
+                                       AND MIContainer.OperDate BETWEEN inStartDate AND inEndDate
+                                       AND tmpContainerList.UnitId in (SELECT tmpUnitVz.UnitVzId FROM tmpUnitVz)
+                                     THEN  MIContainer.Amount                                        
+                                    ELSE 0 END) AS CountPeresortIn_Vz                                   --приход      
+                          , SUM (CASE WHEN MIContainer.MovementDescId = zc_Movement_ProductionUnion() 
+                                       AND MIContainer.isActive = False 
+                                       AND MIContainer.OperDate BETWEEN inStartDate AND inEndDate 
+                                       AND tmpContainerList.UnitId in (SELECT tmpUnitVz.UnitVzId FROM tmpUnitVz)
+                                     THEN  MIContainer.Amount          
+                                    ELSE 0 END) AS CountPeresortOut_Vz                                   --расход                                  
+                          , SUM (CASE WHEN MIContainer.MovementDescId = zc_Movement_Inventory() 
+                                       AND MIContainer.OperDate BETWEEN inStartDate AND inEndDate 
+                                       AND tmpContainerList.UnitId in (SELECT tmpUnitVz.UnitVzId FROM tmpUnitVz)
+                                     THEN  MIContainer.Amount
+                                    ELSE 0 END) AS CountInventory_Vz
+                          , SUM (CASE WHEN MIContainer.MovementDescId = zc_Movement_Inventory() 
+                                       AND MIContainer.OperDate BETWEEN inStartDate AND inEndDate
+                                       AND MIContainer.AnalyzerId = zc_Enum_AccountGroup_60000()
+                                       AND tmpContainerList.UnitId in (SELECT tmpUnitVz.UnitVzId FROM tmpUnitVz)
+                                      THEN  MIContainer.Amount                                     
+                                      ELSE 0 END) AS CountInventory_RePrice_Vz
                      FROM tmpContainerList
                           LEFT JOIN MovementItemContainer AS MIContainer 
                                                           ON MIContainer.ContainerId = tmpContainerList.ContainerId 
@@ -216,6 +314,7 @@ BEGIN
                      WHERE tmpContainerList.DescId = zc_Container_Count() 
                      GROUP BY tmpContainerList.ContainerId, tmpContainerList.Amount, tmpContainerList.BranchId, tmpContainerList.ObjectId
                     )
+                    
     , tmpGoodsWeight AS (
                    SELECT tmpGoodsCount.BranchId 
                         , CAST (tmpGoodsCount.CountStart * CASE WHEN OL_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END                   AS TFloat) AS CountStart
@@ -226,14 +325,23 @@ BEGIN
                         , CAST (tmpGoodsCount.CountSaleReal * CASE WHEN OL_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END                AS TFloat) AS CountSaleReal
                         , CAST (tmpGoodsCount.CountReturnIn * CASE WHEN OL_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END                AS TFloat) AS CountReturnIn
                         , CAST (tmpGoodsCount.CountSendOnPriceIn * CASE WHEN OL_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END           AS TFloat) AS CountSendOnPriceIn
-                        , CAST (tmpGoodsCount.CountLoss * CASE WHEN OL_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END           AS TFloat) AS CountLoss    
+                        , CAST (tmpGoodsCount.CountLoss * CASE WHEN OL_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END                    AS TFloat) AS CountLoss    
                         , CAST (tmpGoodsCount.CountSendOnPriceOut * CASE WHEN OL_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END          AS TFloat) AS CountSendOnPriceOut  
-                        , CAST (tmpGoodsCount.CountPeresortIn * CASE WHEN OL_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END                AS TFloat) AS CountPeresortIn  
-                        , CAST (tmpGoodsCount.CountPeresortOut * CASE WHEN OL_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END                AS TFloat) AS CountPeresortOut    
+                        , CAST (tmpGoodsCount.CountPeresortIn * CASE WHEN OL_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END              AS TFloat) AS CountPeresortIn  
+                        , CAST (tmpGoodsCount.CountPeresortOut * CASE WHEN OL_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END             AS TFloat) AS CountPeresortOut    
                         , CAST (tmpGoodsCount.CountInventory * CASE WHEN OL_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END               AS TFloat) AS CountInventory
                         , CAST (tmpGoodsCount.CountSale_40208 * CASE WHEN OL_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END              AS TFloat) AS CountSale_40208
                         , CAST (tmpGoodsCount.CountSale_10500 * CASE WHEN OL_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END              AS TFloat) AS CountSale_10500
                         , CAST (tmpGoodsCount.CountInventory_RePrice * CASE WHEN OL_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END       AS TFloat) AS CountInventory_RePrice
+
+                        , CAST (tmpGoodsCount.CountReturnIn_Vz * CASE WHEN OL_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END                AS TFloat) AS CountReturnIn_Vz
+                        , CAST (tmpGoodsCount.CountLoss_Vz * CASE WHEN OL_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END                    AS TFloat) AS CountLoss_Vz    
+                        , CAST (tmpGoodsCount.CountSendOnPriceOut_Vz * CASE WHEN OL_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END          AS TFloat) AS CountSendOnPriceOut_Vz
+                        , CAST (tmpGoodsCount.CountPeresortIn_Vz * CASE WHEN OL_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END              AS TFloat) AS CountPeresortIn_Vz
+                        , CAST (tmpGoodsCount.CountPeresortOut_Vz * CASE WHEN OL_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END             AS TFloat) AS CountPeresortOut_Vz  
+                        , CAST (tmpGoodsCount.CountInventory_Vz * CASE WHEN OL_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END               AS TFloat) AS CountInventory_Vz
+                        , CAST (tmpGoodsCount.CountInventory_RePrice_Vz * CASE WHEN OL_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END       AS TFloat) AS CountInventory_RePrice_Vz
+                        
                    FROM tmpGoodsCount
                       LEFT JOIN ObjectLink AS OL_Goods_Measure 
                                           ON OL_Goods_Measure.ObjectId = tmpGoodsCount.GoodsId
@@ -285,6 +393,22 @@ BEGIN
         , CAST (SUM (tmpAll.SummInventory)                AS TFloat) AS InventorySumm
         , CAST (SUM (tmpAll.CountInventory)               AS TFloat) AS InventoryWeight
         , CAST (SUM (tmpAll.SummInventory_RePrice)        AS TFloat) AS SummInventory_RePrice
+
+        , CAST (SUM (tmpAll.SummReturnIn_Vz)                 AS TFloat) AS ReturnInSumm_Vz
+        , CAST (SUM (tmpAll.SummPeresortIn_Vz)               AS TFloat) AS PeresortInSumm_Vz
+        , CAST (SUM (tmpAll.SummPeresortIn_Vz)               AS TFloat) AS PeresortOutSumm_Vz
+        , CAST (SUM (tmpAll.SummSendOnPriceOut_Vz)           AS TFloat) AS SendOnPriceOutSumm_Vz
+        , CAST (SUM (tmpAll.SummLoss_Vz)                     AS TFloat) AS LossSumm_Vz
+        , CAST (SUM (tmpAll.SummInventory_Vz)                AS TFloat) AS InventorySumm_Vz
+        , CAST (SUM (tmpAll.SummInventory_RePrice_Vz)        AS TFloat) AS SummInventory_RePrice_Vz
+
+        , CAST (SUM (tmpAll.CountReturnIn_Vz)                 AS TFloat) AS ReturnInWeight_Vz
+        , CAST (SUM (tmpAll.CountPeresortIn_Vz)               AS TFloat) AS PeresortInWeight_Vz
+        , CAST (SUM (tmpAll.CountPeresortIn_Vz)               AS TFloat) AS PeresortOutWeight_Vz
+        , CAST (SUM (tmpAll.CountSendOnPriceOut_Vz)           AS TFloat) AS SendOnPriceOutWeight_Vz
+        , CAST (SUM (tmpAll.CountLoss_Vz)                     AS TFloat) AS LossWeight_Vz
+        , CAST (SUM (tmpAll.CountInventory_Vz)                AS TFloat) AS InventoryWeight_Vz
+        , CAST (SUM (tmpAll.CountInventory_RePrice_Vz)        AS TFloat) AS WeightInventory_RePrice_Vz        
   
       FROM 
                   (SELECT tmpGoodsSumm.BranchId 
@@ -306,6 +430,13 @@ BEGIN
                         , CAST (SUM (tmpGoodsSumm.SummSale_10200) AS NUMERIC (16, 2)) AS SummSale_10200
                         , CAST (SUM (tmpGoodsSumm.SummSale_10300) AS NUMERIC (16, 2)) AS SummSale_10300
                         , CAST (SUM (tmpGoodsSumm.SummInventory_RePrice) AS NUMERIC (16, 2)) AS SummInventory_RePrice
+                        , CAST (SUM (tmpGoodsSumm.SummReturnIn_Vz) AS NUMERIC (16, 2))       AS SummReturnIn_Vz
+                        , CAST (SUM (tmpGoodsSumm.SummPeresortIn_Vz) AS NUMERIC (16, 2))     AS SummPeresortIn_Vz    
+                        , CAST (SUM (tmpGoodsSumm.SummPeresortOut_Vz) AS NUMERIC (16, 2))    AS SummPeresortOut_Vz  
+                        , CAST (SUM (tmpGoodsSumm.SummSendOnPriceOut_Vz) AS NUMERIC (16, 2)) AS SummSendOnPriceOut_Vz  
+                        , CAST (SUM (tmpGoodsSumm.SummLoss_Vz) AS NUMERIC (16, 2))           AS SummLoss_Vz
+                        , CAST (SUM (tmpGoodsSumm.SummInventory_Vz) AS NUMERIC (16, 2))      AS SummInventory_Vz
+                        , CAST (SUM (tmpGoodsSumm.SummInventory_RePrice_Vz) AS NUMERIC (16, 2)) AS SummInventory_RePrice_Vz
                         , 0 AS CountStart
                         , 0 AS CountEnd
                         , 0 AS CountIn
@@ -322,6 +453,13 @@ BEGIN
                         , 0 AS CountSale_40208
                         , 0 AS CountSale_10500
                         , 0 AS CountInventory_RePrice
+                        , 0 AS CountReturnIn_Vz
+                        , 0 AS CountPeresortIn_Vz    
+                        , 0 AS CountPeresortOut_Vz  
+                        , 0 AS CountSendOnPriceOut_Vz  
+                        , 0 AS CountLoss_Vz
+                        , 0 AS CountInventory_Vz
+                        , 0 AS CountInventory_RePrice_Vz
 
                    FROM tmpGoodsSumm
                    GROUP BY tmpGoodsSumm.BranchId
@@ -345,6 +483,14 @@ BEGIN
                         , 0 AS SummSale_10200
                         , 0 AS SummSale_10300
                         , 0 AS SummInventory_RePrice
+                        , 0 AS SummReturnIn_Vz
+                        , 0 AS SummPeresortIn_Vz    
+                        , 0 AS SummPeresortOut_Vz  
+                        , 0 AS SummSendOnPriceOut_Vz  
+                        , 0 AS SummLoss_Vz
+                        , 0 AS SummInventory_Vz
+                        , 0 AS SummInventory_RePrice_Vz
+
                         , CAST (SUM (tmpGoodsWeight.CountStart) AS NUMERIC (16, 2))   AS CountStart
                         , CAST (SUM (tmpGoodsWeight.CountEnd) AS NUMERIC (16, 2))     AS CountEnd
                         , CAST (SUM (tmpGoodsWeight.CountIn) AS NUMERIC (16, 2))      AS CountIn
@@ -361,6 +507,14 @@ BEGIN
                         , CAST (SUM (tmpGoodsWeight.CountSale_40208) AS NUMERIC (16, 2))     AS CountSale_40208
                         , CAST (SUM (tmpGoodsWeight.CountSale_10500) AS NUMERIC (16, 2))     AS CountSale_10500
                         , CAST (SUM (tmpGoodsWeight.CountInventory_RePrice) AS NUMERIC (16, 2)) AS CountInventory_RePrice
+
+                        , CAST (SUM (tmpGoodsWeight.CountReturnIn_Vz) AS NUMERIC (16, 2))       AS CountReturnIn_Vz
+                        , CAST (SUM (tmpGoodsWeight.CountPeresortIn_Vz) AS NUMERIC (16, 2))     AS CountPeresortIn_Vz    
+                        , CAST (SUM (tmpGoodsWeight.CountPeresortOut_Vz) AS NUMERIC (16, 2))    AS CountPeresortOut_Vz  
+                        , CAST (SUM (tmpGoodsWeight.CountSendOnPriceOut_Vz) AS NUMERIC (16, 2)) AS CountSendOnPriceOut_Vz  
+                        , CAST (SUM (tmpGoodsWeight.CountLoss_Vz) AS NUMERIC (16, 2))           AS CountLoss_Vz
+                        , CAST (SUM (tmpGoodsWeight.CountInventory_Vz) AS NUMERIC (16, 2))      AS CountInventory_Vz
+                        , CAST (SUM (tmpGoodsWeight.CountInventory_RePrice_Vz) AS NUMERIC (16, 2)) AS CountInventory_RePrice_Vz
                    FROM tmpGoodsWeight
                    GROUP BY tmpGoodsWeight.BranchId
                 ) AS tmpAll
@@ -386,5 +540,4 @@ $BODY$
 
 -- тест
 --SELECT * FROM gpReport_Branch_App1 (inStartDate:= '01.11.2015'::TDateTime, inEndDate:= '03.11.2015'::TDateTime, inBranchId:= 8374, inSession:= zfCalc_UserAdmin())  --8374
---
---select * from gpReport_Branch_App1(inStartDate := ('03.08.2015')::TDateTime , inEndDate := ('03.08.2015')::TDateTime , inBranchId := 0 ,  inSession := '5');
+--select * from gpReport_Branch_App1(inStartDate := ('30.07.2015')::TDateTime , inEndDate := ('03.08.2015')::TDateTime , inBranchId := 0 ,  inSession := '5');

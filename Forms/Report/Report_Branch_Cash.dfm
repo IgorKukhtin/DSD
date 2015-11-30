@@ -342,6 +342,12 @@ inherited Report_Branch_CashForm: TReport_Branch_CashForm
             Options.Editing = False
             Width = 80
           end
+          object Color_calc: TcxGridDBColumn
+            DataBinding.FieldName = 'Color_calc'
+            Visible = False
+            VisibleForCustomization = False
+            Width = 55
+          end
         end
       end
     end
@@ -582,6 +588,52 @@ inherited Report_Branch_CashForm: TReport_Branch_CashForm
     end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
+    ColorRuleList = <
+      item
+        ColorColumn = InfoMoneyName
+        ValueColumn = Color_calc
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = Amount
+        ValueColumn = Color_calc
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = Amount11
+        ValueColumn = Color_calc
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = Amount2
+        ValueColumn = Color_calc
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = Amount3
+        ValueColumn = Color_calc
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = Amount4
+        ValueColumn = Color_calc
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = Amount5
+        ValueColumn = Color_calc
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = Amount7
+        ValueColumn = Color_calc
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = Amount9
+        ValueColumn = Color_calc
+        ColorValueList = <>
+      end>
     Left = 320
     Top = 232
   end
