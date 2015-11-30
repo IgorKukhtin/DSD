@@ -199,6 +199,71 @@ inherited Report_Branch_App1Form: TReport_Branch_App1Form
               Format = ',0.####'
               Kind = skSum
               Column = Sale_10200_Summ
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = ReturnInSumm_Vz
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = ReturnInWeight_Vz
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = PeresortInSumm_Vz
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = PeresortInWeight_Vz
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = PeresortOutSumm_Vz
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = PeresortOutWeight_Vz
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = SendOnPriceOutSumm_Vz
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = SendOnPriceOutWeight_Vz
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = LossSumm_Vz
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = LossWeight_Vz
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = InventorySumm_Vz
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = InventoryWeight_Vz
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = SummInventory_RePrice_Vz
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -372,6 +437,71 @@ inherited Report_Branch_App1Form: TReport_Branch_App1Form
               Format = ',0.####'
               Kind = skSum
               Column = Sale_10200_Summ
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = ReturnInSumm_Vz
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = ReturnInWeight_Vz
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = PeresortInSumm_Vz
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = PeresortInWeight_Vz
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = PeresortOutSumm_Vz
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = PeresortOutWeight_Vz
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = SendOnPriceOutSumm_Vz
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = SendOnPriceOutWeight_Vz
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = LossSumm_Vz
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = LossWeight_Vz
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = InventorySumm_Vz
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = InventoryWeight_Vz
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = SummInventory_RePrice_Vz
             end>
           OptionsData.CancelOnExit = True
           OptionsData.Deleting = False
@@ -479,6 +609,28 @@ inherited Report_Branch_App1Form: TReport_Branch_App1Form
             Options.Editing = False
             Width = 60
           end
+          object ReturnInSumm_Vz: TcxGridDBColumn
+            Caption = #1042#1086#1079#1074#1088#1072#1090' ('#1075#1088#1085') '#1089#1082#1083'.'#1042#1086#1079#1074#1088#1072#1090#1086#1074
+            DataBinding.FieldName = 'ReturnInSumm_Vz'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 60
+          end
+          object ReturnInWeight_Vz: TcxGridDBColumn
+            Caption = #1042#1086#1079#1074#1088#1072#1090' ('#1074#1077#1089') '#1089#1082#1083'.'#1042#1086#1079#1074#1088#1072#1090#1086#1074
+            DataBinding.FieldName = 'ReturnInWeight_Vz'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 60
+          end
           object PeresortInSumm: TcxGridDBColumn
             Caption = #1055#1077#1088#1077#1089#1086#1088#1090#1080#1094#1072' '#1087#1088#1080#1093#1086#1076' ('#1075#1088#1085')'
             DataBinding.FieldName = 'PeresortInSumm'
@@ -515,6 +667,50 @@ inherited Report_Branch_App1Form: TReport_Branch_App1Form
           object PeresortOutWeight: TcxGridDBColumn
             Caption = #1055#1077#1088#1077#1089#1086#1088#1090#1080#1094#1072' '#1088#1072#1089#1093#1086#1076' ('#1074#1077#1089')'
             DataBinding.FieldName = 'PeresortOutWeight'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 60
+          end
+          object PeresortInSumm_Vz: TcxGridDBColumn
+            Caption = #1055#1077#1088#1077#1089#1086#1088#1090#1080#1094#1072' '#1087#1088#1080#1093#1086#1076' ('#1075#1088#1085') '#1089#1082#1083'.'#1042#1086#1079#1074#1088#1072#1090#1086#1074
+            DataBinding.FieldName = 'PeresortInSumm_Vz'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 60
+          end
+          object PeresortInWeight_Vz: TcxGridDBColumn
+            Caption = #1055#1077#1088#1077#1089#1086#1088#1090#1080#1094#1072' '#1087#1088#1080#1093#1086#1076' ('#1074#1077#1089') '#1089#1082#1083'.'#1042#1086#1079#1074#1088#1072#1090#1086#1074
+            DataBinding.FieldName = 'PeresortInWeight_Vz'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 60
+          end
+          object PeresortOutSumm_Vz: TcxGridDBColumn
+            Caption = #1055#1077#1088#1077#1089#1086#1088#1090#1080#1094#1072' '#1088#1072#1089#1093#1086#1076' ('#1075#1088#1085') '#1089#1082#1083'.'#1042#1086#1079#1074#1088#1072#1090#1086#1074
+            DataBinding.FieldName = 'PeresortOutSumm_Vz'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 60
+          end
+          object PeresortOutWeight_Vz: TcxGridDBColumn
+            Caption = #1055#1077#1088#1077#1089#1086#1088#1090#1080#1094#1072' '#1088#1072#1089#1093#1086#1076' ('#1074#1077#1089') '#1089#1082#1083'.'#1042#1086#1079#1074#1088#1072#1090#1086#1074
+            DataBinding.FieldName = 'PeresortOutWeight_Vz'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
@@ -569,6 +765,28 @@ inherited Report_Branch_App1Form: TReport_Branch_App1Form
           object SendOnPriceOutWeight: TcxGridDBColumn
             Caption = #1056#1072#1089#1093#1086#1076' '#1087#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077' ('#1074#1077#1089')'
             DataBinding.FieldName = 'SendOnPriceOutWeight'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 60
+          end
+          object SendOnPriceOutSumm_Vz: TcxGridDBColumn
+            Caption = #1056#1072#1089#1093#1086#1076' '#1087#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077' ('#1075#1088#1085') '#1089#1082#1083'.'#1042#1086#1079#1074#1088#1072#1090#1086#1074
+            DataBinding.FieldName = 'SendOnPriceOutSumm_Vz'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 60
+          end
+          object SendOnPriceOutWeight_Vz: TcxGridDBColumn
+            Caption = #1056#1072#1089#1093#1086#1076' '#1087#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077' ('#1074#1077#1089') '#1089#1082#1083'.'#1042#1086#1079#1074#1088#1072#1090#1086#1074
+            DataBinding.FieldName = 'SendOnPriceOutWeight_Vz'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
@@ -665,6 +883,28 @@ inherited Report_Branch_App1Form: TReport_Branch_App1Form
             Options.Editing = False
             Width = 60
           end
+          object LossSumm_Vz: TcxGridDBColumn
+            Caption = #1057#1087#1080#1089#1072#1085#1080#1077' ('#1075#1088#1085') '#1089#1082#1083'.'#1042#1086#1079#1074#1088#1072#1090#1086#1074
+            DataBinding.FieldName = 'LossSumm_Vz'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 60
+          end
+          object LossWeight_Vz: TcxGridDBColumn
+            Caption = #1057#1087#1080#1089#1072#1085#1080#1077' ('#1074#1077#1089') '#1089#1082#1083'.'#1042#1086#1079#1074#1088#1072#1090#1086#1074
+            DataBinding.FieldName = 'LossWeight_Vz'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 60
+          end
           object InventorySumm: TcxGridDBColumn
             Caption = #1048#1085#1074#1077#1085#1090#1072#1088#1080#1079#1072#1094#1080#1103' ('#1075#1088#1085')'
             DataBinding.FieldName = 'InventorySumm'
@@ -687,9 +927,42 @@ inherited Report_Branch_App1Form: TReport_Branch_App1Form
             Options.Editing = False
             Width = 60
           end
+          object InventorySumm_Vz: TcxGridDBColumn
+            Caption = #1048#1085#1074#1077#1085#1090#1072#1088#1080#1079#1072#1094#1080#1103' ('#1075#1088#1085')'#1089#1082#1083'.'#1042#1086#1079#1074#1088#1072#1090#1086#1074
+            DataBinding.FieldName = 'InventorySumm_Vz'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 60
+          end
+          object InventoryWeight_Vz: TcxGridDBColumn
+            Caption = #1048#1085#1074#1077#1085#1090#1072#1088#1080#1079#1072#1094#1080#1103' ('#1074#1077#1089') '#1089#1082#1083'.'#1042#1086#1079#1074#1088#1072#1090#1086#1074
+            DataBinding.FieldName = 'InventoryWeight_Vz'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 60
+          end
           object SummInventory_RePrice: TcxGridDBColumn
             Caption = #1055#1077#1088#1077#1086#1094#1077#1085#1082#1072' ('#1075#1088#1085')'
             DataBinding.FieldName = 'SummInventory_RePrice'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 60
+          end
+          object SummInventory_RePrice_Vz: TcxGridDBColumn
+            Caption = #1055#1077#1088#1077#1086#1094#1077#1085#1082#1072' ('#1075#1088#1085') '#1089#1082#1083'.'#1042#1086#1079#1074#1088#1072#1090#1086#1074
+            DataBinding.FieldName = 'SummInventory_RePrice_Vz'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.00##;-,0.00##; ;'

@@ -78,7 +78,7 @@ BEGIN
         CASE WHEN Operation.EndAmount > 0 THEN Operation.EndAmount ELSE 0 END :: TFloat             AS EndAmountD,
         CASE WHEN Operation.EndAmount < 0 THEN -1 * Operation.EndAmount ELSE 0 END :: TFloat        AS EndAmountK,
         CASE WHEN Operation.InfoMoneyId = 8981  -- "внутренний оборот"
-                 THEN 15993821
+                 THEN zc_Color_Red() --15993821
                  ELSE 0 -- clBlack
         END :: Integer AS Color_calc
         

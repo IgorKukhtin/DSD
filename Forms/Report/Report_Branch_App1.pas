@@ -52,6 +52,14 @@ type
     SaleRealSumm: TcxGridDBColumn;
     Sale_10200_Summ: TcxGridDBColumn;
     Sale_10300_Summ: TcxGridDBColumn;
+    ReturnInSumm_Vz: TcxGridDBColumn;
+    PeresortInSumm_Vz: TcxGridDBColumn;
+    PeresortOutSumm_Vz: TcxGridDBColumn;
+    SendOnPriceOutSumm_Vz: TcxGridDBColumn;
+    PeresortOutWeight_Vz: TcxGridDBColumn;
+    SendOnPriceOutWeight_Vz: TcxGridDBColumn;
+    PeresortInWeight_Vz: TcxGridDBColumn;
+    ReturnInWeight_Vz: TcxGridDBColumn;
   private
     { Private declarations }
   public
