@@ -43,29 +43,38 @@ BEGIN
             , SUM (CASE WHEN tmpList.BranchCode > 11 THEN tmpList.Amount_Rashod ELSE 0 END) ::TFloat AS Amount12_Rashod
             
        FROM(
-            SELECT 1 AS NomStr, 'Начальный остаток продукции на складах филиалов' AS InfoText, tmp.BranchCode, tmp.GoodsSummStart AS Amount, 0 AS Amount_Rashod  FROM tmp 
+            SELECT 1 AS NomStr, '1.Задолженность филиалов на нач.мес.' AS InfoText, tmp.BranchCode, (tmp.GoodsSummStart+tmp.CashSummStart+ tmp.JuridicalSummstart) AS Amount, 0 AS Amount_Rashod  FROM tmp 
           UNION All
-            SELECT 10 AS NomStr, 'Конечный остаток продукции на складах филиалов' AS InfoText, tmp.BranchCode, tmp.GoodsSummEnd AS Amount, 0 AS Amount_Rashod FROM tmp
+            SELECT 2 AS NomStr, 'Начальный остаток продукции на складах филиалов' AS InfoText, tmp.BranchCode, tmp.GoodsSummStart AS Amount, 0 AS Amount_Rashod  FROM tmp 
           UNION All
-            SELECT 5 AS NomStr, 'Движение продукции за месяц' AS InfoText, tmp.BranchCode, tmp.GoodsSummIn AS Amount, 0 AS Amount_Rashod FROM tmp
+            SELECT 3 AS NomStr, 'Начальный остаток денежных средств в кассах' AS InfoText, tmp.BranchCode, tmp.CashSummStart, 0 AS Amount_Rashod  FROM tmp
           UNION All
-            SELECT 5 AS NomStr, 'Движение продукции за месяц' AS InfoText, tmp.BranchCode, 0 AS Amount , tmp.GoodsSummOut AS Amount_Rashod FROM tmp
+            SELECT 4 AS NomStr, 'Задолженность покупателей ф2 (нач)' AS InfoText, tmp.BranchCode, tmp.JuridicalSummstart AS Amount, 0 AS Amount_Rashod  FROM tmp
           UNION All
-            SELECT 7 AS NomStr, 'Реализация продукции за месяц по ф2 (отгрузка за минусом возвратов)' AS InfoText, tmp.BranchCode, (tmp.GoodsSummSale_sf-tmp.GoodsSummReturnIn_sf) AS Amount, 0 AS Amount_Rashod  FROM tmp
+            SELECT 5 AS NomStr, '2.Движение продукции за месяц' AS InfoText, tmp.BranchCode, tmp.GoodsSummIn AS Amount, 0 AS Amount_Rashod FROM tmp
           UNION All
-            SELECT 2 AS NomStr, 'Начальный остаток денежных средств в кассах' AS InfoText, tmp.BranchCode, tmp.CashSummStart, 0 AS Amount_Rashod  FROM tmp
+            SELECT 5 AS NomStr, '2.Движение продукции за месяц' AS InfoText, tmp.BranchCode, 0 AS Amount , tmp.GoodsSummOut AS Amount_Rashod FROM tmp
           UNION All
-            SELECT 11 AS NomStr, 'Конечный остаток денежных средств в кассах' AS InfoText, tmp.BranchCode, tmp.CashSummEnd, 0 AS Amount_Rashod  FROM tmp
+            SELECT 7 AS NomStr, '3.Движение ден. ср -в за месяц' AS InfoText, tmp.BranchCode, tmp.CashSummIn AS Amount, 0 AS Amount_Rashod FROM tmp
           UNION All
-            SELECT 6 AS NomStr, 'Движение ден. ср -в за месяц' AS InfoText, tmp.BranchCode, tmp.CashSummIn AS Amount, 0 AS Amount_Rashod FROM tmp
+            SELECT 7 AS NomStr, '3.Движение ден. ср -в за месяц' AS InfoText, tmp.BranchCode, 0 AS Amount, tmp.CashSummOut AS Amount_Rashod FROM tmp
           UNION All
-            SELECT 6 AS NomStr, 'Движение ден. ср -в за месяц' AS InfoText, tmp.BranchCode, 0 AS Amount, tmp.CashSummOut AS Amount_Rashod FROM tmp
+            SELECT 9 AS NomStr, '4.Реализация продукции за месяц по ф2 (отгрузка за минусом возвратов)' AS InfoText, tmp.BranchCode, (tmp.GoodsSummSale_sf-tmp.GoodsSummReturnIn_sf) AS Amount, 0 AS Amount_Rashod  FROM tmp
           UNION All
-            SELECT 8 AS NomStr, 'Оплачено' AS InfoText, tmp.BranchCode, 0 AS Amount, tmp.CashAmount AS Amount_Rashod FROM tmp
+            SELECT 10 AS NomStr, '             Оплачено' AS InfoText, tmp.BranchCode, 0 AS Amount, tmp.CashAmount AS Amount_Rashod FROM tmp
           UNION All
-            SELECT 3 AS NomStr, 'Задолженность покупателей ф2 (нач)' AS InfoText, tmp.BranchCode, tmp.JuridicalSummstart AS Amount, 0 AS Amount_Rashod  FROM tmp
+            SELECT 11 AS NomStr, '5.Всего обороты за месяц (2+3+4)' AS InfoText, tmp.BranchCode
+                 , tmp.GoodsSummIn  + tmp.CashSummIn  + (tmp.GoodsSummSale_sf-tmp.GoodsSummReturnIn_sf) AS Amount
+                 , tmp.GoodsSummOut + tmp.CashSummOut + tmp.CashAmount                                  AS Amount_Rashod
+            FROM tmp
           UNION All
-            SELECT 12 AS NomStr,  'Задолженность покупателей ф2 (кон)' AS InfoText, tmp.BranchCode, tmp.JuridicalSummEnd AS Amount , 0 as Amount_Rashod FROM tmp
+            SELECT 12 AS NomStr, '6.Задолженность филиала' AS InfoText, tmp.BranchCode, tmp.GoodsSummEnd + tmp.CashSummEnd + tmp.JuridicalSummEnd AS Amount, 0 AS Amount_Rashod FROM tmp
+          UNION All
+            SELECT 13 AS NomStr, 'Конечный остаток продукции на складах филиалов' AS InfoText, tmp.BranchCode, tmp.GoodsSummEnd AS Amount, 0 AS Amount_Rashod FROM tmp
+          UNION All
+            SELECT 14 AS NomStr, 'Конечный остаток денежных средств в кассах' AS InfoText, tmp.BranchCode, tmp.CashSummEnd, 0 AS Amount_Rashod  FROM tmp
+          UNION All
+            SELECT 15 AS NomStr,  'Задолженность покупателей ф2 (кон)' AS InfoText, tmp.BranchCode, tmp.JuridicalSummEnd AS Amount , 0 as Amount_Rashod FROM tmp
           /*UNION All
             SELECT  8 AS NomStr, 'Продажа' AS InfoText, tmp.BranchCode, tmp.JuridicalSummIn AS Amount, 0 as Amount_Rashod FROM tmp
           UNION All
