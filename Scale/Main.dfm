@@ -709,6 +709,14 @@ object MainForm: TMainForm
           Options.Editing = False
           Width = 50
         end
+        object isPromo: TcxGridDBColumn
+          Caption = #1040#1082#1094#1080#1103
+          DataBinding.FieldName = 'isPromo'
+          HeaderAlignmentHorz = taCenter
+          HeaderAlignmentVert = vaCenter
+          Options.Editing = False
+          Width = 45
+        end
         object ChangePercentAmount: TcxGridDBColumn
           Caption = '% '#1057#1082#1076
           DataBinding.FieldName = 'ChangePercentAmount'

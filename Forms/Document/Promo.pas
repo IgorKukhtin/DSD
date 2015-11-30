@@ -191,6 +191,24 @@ type
     actUpdate_Movement_Promo_Data: TdsdExecStoredProc;
     mactUpdate_Movement_Promo_Data: TMultiAction;
     dxBarButton11: TdxBarButton;
+    tsPromoPartnerList: TcxTabSheet;
+    grPartnerList: TcxGrid;
+    grtvPartnerList: TcxGridDBTableView;
+    colPartnerListRetailName: TcxGridDBColumn;
+    colPartnerListJuridicalName: TcxGridDBColumn;
+    colPartnerListCode: TcxGridDBColumn;
+    colPartnerListName: TcxGridDBColumn;
+    colPartnerListAreaName: TcxGridDBColumn;
+    grlPartnerList: TcxGridLevel;
+    PartnerListCDS: TClientDataSet;
+    PartnerLisrDS: TDataSource;
+    spSelect_MovementItem_PromoPartner: TdsdStoredProc;
+    colPartnerListContractCode: TcxGridDBColumn;
+    colPartnerListContractName: TcxGridDBColumn;
+    colPartnerListContractTagName: TcxGridDBColumn;
+    colPartnerListIsErased: TcxGridDBColumn;
+    dsdDBViewAddOnPartnerList: TdsdDBViewAddOn;
+    actPartnerListRefresh: TdsdDataSetRefresh;
   private
     { Private declarations }
   public

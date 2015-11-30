@@ -200,6 +200,7 @@ type
     InvNumberTransportLabel: TLabel;
     PanelInvNumberTransport: TPanel;
     isBarCode: TcxGridDBColumn;
+    isPromo: TcxGridDBColumn;
     procedure FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
     procedure FormCreate(Sender: TObject);
     procedure PanelWeight_ScaleDblClick(Sender: TObject);

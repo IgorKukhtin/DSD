@@ -1,8 +1,8 @@
 inherited GuideGoodsMovementForm: TGuideGoodsMovementForm
   Caption = #1055#1072#1088#1072#1084#1077#1090#1088#1099' '#1087#1088#1086#1076#1091#1082#1094#1080#1080' '#1076#1083#1103' '#1079#1072#1103#1074#1082#1080
   ClientWidth = 963
+  ExplicitLeft = -190
   ExplicitWidth = 979
-  ExplicitHeight = 681
   PixelsPerInch = 96
   TextHeight = 14
   inherited GridPanel: TPanel
@@ -30,6 +30,10 @@ inherited GuideGoodsMovementForm: TGuideGoodsMovementForm
         inherited GoodsKindName: TcxGridDBColumn
           Visible = True
           Width = 70
+        end
+        inherited isPromo: TcxGridDBColumn
+          Visible = True
+          Width = 35
         end
         inherited Price_Return: TcxGridDBColumn
           Visible = False
@@ -71,13 +75,6 @@ inherited GuideGoodsMovementForm: TGuideGoodsMovementForm
     inherited infoPanelPriceList: TPanel
       Left = 713
       ExplicitLeft = 713
-    end
-    inherited infoPanelGoods: TPanel
-      inherited gbWeightValue: TGroupBox
-        inherited EditWeightValue: TcxCurrencyEdit
-          ExplicitHeight = 22
-        end
-      end
     end
     inherited infoPanelGoodsKind: TPanel
       Width = 348

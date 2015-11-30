@@ -4,7 +4,7 @@ inherited PromoForm: TPromoForm
   ClientHeight = 599
   ClientWidth = 1204
   ExplicitWidth = 1220
-  ExplicitHeight = 634
+  ExplicitHeight = 637
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -466,6 +466,103 @@ inherited PromoForm: TPromoForm
               end
               object cxGridLevelPartner: TcxGridLevel
                 GridView = cxGridDBTableViewPartner
+              end
+            end
+          end
+          object tsPromoPartnerList: TcxTabSheet
+            Caption = '2.1 &'#1050#1086#1085#1090#1088#1072#1075#1077#1085#1090#1099' '#1076#1083#1103' '#1072#1082#1094#1080#1080
+            ImageIndex = 1
+            object grPartnerList: TcxGrid
+              Left = 0
+              Top = 0
+              Width = 659
+              Height = 147
+              Align = alClient
+              TabOrder = 0
+              LookAndFeel.NativeStyle = True
+              LookAndFeel.SkinName = 'UserSkin'
+              ExplicitTop = 26
+              ExplicitWidth = 715
+              ExplicitHeight = 371
+              object grtvPartnerList: TcxGridDBTableView
+                Navigator.Buttons.CustomButtons = <>
+                DataController.DataSource = PartnerLisrDS
+                DataController.Filter.Options = [fcoCaseInsensitive]
+                DataController.Summary.DefaultGroupSummaryItems = <>
+                DataController.Summary.FooterSummaryItems = <>
+                DataController.Summary.SummaryGroups = <>
+                Images = dmMain.SortImageList
+                OptionsCustomize.ColumnHiding = True
+                OptionsCustomize.ColumnsQuickCustomization = True
+                OptionsData.Deleting = False
+                OptionsData.DeletingConfirmation = False
+                OptionsData.Editing = False
+                OptionsData.Inserting = False
+                OptionsView.ColumnAutoWidth = True
+                OptionsView.GroupByBox = False
+                OptionsView.Indicator = True
+                Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
+                object colPartnerListRetailName: TcxGridDBColumn
+                  Caption = #1057#1077#1090#1100
+                  DataBinding.FieldName = 'RetailName'
+                  HeaderAlignmentHorz = taCenter
+                  HeaderAlignmentVert = vaCenter
+                  Width = 69
+                end
+                object colPartnerListJuridicalName: TcxGridDBColumn
+                  Caption = #1070#1088#1083#1080#1094#1086
+                  DataBinding.FieldName = 'JuridicalName'
+                  HeaderAlignmentHorz = taCenter
+                  HeaderAlignmentVert = vaCenter
+                  Width = 68
+                end
+                object colPartnerListCode: TcxGridDBColumn
+                  Caption = #1050#1086#1076
+                  DataBinding.FieldName = 'Code'
+                  HeaderAlignmentHorz = taRightJustify
+                  HeaderAlignmentVert = vaCenter
+                  Options.Editing = False
+                  Width = 38
+                end
+                object colPartnerListName: TcxGridDBColumn
+                  Caption = #1053#1072#1079#1074#1072#1085#1080#1077
+                  DataBinding.FieldName = 'Name'
+                  HeaderAlignmentHorz = taCenter
+                  HeaderAlignmentVert = vaCenter
+                  Options.Editing = False
+                  Width = 182
+                end
+                object colPartnerListAreaName: TcxGridDBColumn
+                  Caption = #1056#1077#1075#1080#1086#1085
+                  DataBinding.FieldName = 'AreaName'
+                  HeaderAlignmentHorz = taCenter
+                  HeaderAlignmentVert = vaCenter
+                  Width = 98
+                end
+                object colPartnerListContractCode: TcxGridDBColumn
+                  Caption = #1050#1086#1076' '#1076#1086#1075'.'
+                  DataBinding.FieldName = 'ContractCode'
+                  Width = 48
+                end
+                object colPartnerListContractName: TcxGridDBColumn
+                  Caption = #8470' '#1076#1086#1075'.'
+                  DataBinding.FieldName = 'ContractName'
+                  Width = 48
+                end
+                object colPartnerListContractTagName: TcxGridDBColumn
+                  Caption = #1055#1088#1080#1079#1085#1072#1082' '#1076#1086#1075'.'
+                  DataBinding.FieldName = 'ContractTagName'
+                  Width = 47
+                end
+                object colPartnerListIsErased: TcxGridDBColumn
+                  Caption = #1059#1076#1072#1083#1077#1085
+                  DataBinding.FieldName = 'IsErased'
+                  Visible = False
+                  Width = 47
+                end
+              end
+              object grlPartnerList: TcxGridLevel
+                GridView = grtvPartnerList
               end
             end
           end
@@ -936,6 +1033,10 @@ inherited PromoForm: TPromoForm
         end
         item
           StoredProc = spSelect_Movement_PromoAdvertising
+        end
+        item
+          TabSheet = tsPromoPartnerList
+          StoredProc = spSelect_MovementItem_PromoPartner
         end>
     end
     object InsertRecord: TInsertRecord [2]
@@ -1229,8 +1330,9 @@ inherited PromoForm: TPromoForm
     end
     object InsertCondition: TInsertRecord
       Category = 'Condition'
-      TabSheet = tsPartner
+      TabSheet = tsConditionPromo
       MoveParams = <>
+      Enabled = False
       PostDataSetBeforeExecute = False
       View = grtvConditionPromo
       Action = ConditionPromoChoiceForm
@@ -1243,6 +1345,7 @@ inherited PromoForm: TPromoForm
       Category = 'Condition'
       TabSheet = tsConditionPromo
       MoveParams = <>
+      Enabled = False
       StoredProc = spErasedMICondition
       StoredProcList = <
         item
@@ -1260,8 +1363,9 @@ inherited PromoForm: TPromoForm
     end
     object UnErasedCondition: TdsdUpdateErased
       Category = 'Condition'
-      TabSheet = tsPartner
+      TabSheet = tsConditionPromo
       MoveParams = <>
+      Enabled = False
       StoredProc = spUnErasedMIPartner
       StoredProcList = <
         item
@@ -1477,6 +1581,20 @@ inherited PromoForm: TPromoForm
       Caption = #1056#1072#1089#1095#1077#1090' '#1076#1072#1085#1085#1099#1093' '#1087#1086' '#1072#1082#1094#1080#1080
       Hint = #1056#1072#1089#1095#1077#1090' '#1076#1072#1085#1085#1099#1093' '#1087#1086' '#1072#1082#1094#1080#1080
       ImageIndex = 45
+    end
+    object actPartnerListRefresh: TdsdDataSetRefresh
+      Category = 'Partner'
+      TabSheet = tsPromoPartnerList
+      MoveParams = <>
+      Enabled = False
+      StoredProc = spSelect_MovementItem_PromoPartner
+      StoredProcList = <
+        item
+          StoredProc = spSelect_MovementItem_PromoPartner
+        end>
+      Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
+      Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
+      RefreshOnTabSetChanges = True
     end
   end
   inherited MasterDS: TDataSource
@@ -2504,6 +2622,19 @@ inherited PromoForm: TPromoForm
         Component = PersonalGuides
         ComponentItem = 'TextValue'
         DataType = ftString
+      end
+      item
+        Name = 'outPersonalTradeId'
+        Value = Null
+        Component = PersonalTradeGuides
+        ComponentItem = 'Key'
+      end
+      item
+        Name = 'outPersonalTradeName'
+        Value = Null
+        Component = PersonalTradeGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
       end>
     PackSize = 1
     Left = 536
@@ -2799,8 +2930,8 @@ inherited PromoForm: TPromoForm
         DataType = ftBoolean
       end>
     PackSize = 1
-    Left = 478
-    Top = 424
+    Left = 470
+    Top = 392
   end
   object spUnErasedAdvertising: TdsdStoredProc
     StoredProcName = 'gpMovement_PromoAdvertising_SetUnErased'
@@ -2823,7 +2954,7 @@ inherited PromoForm: TPromoForm
       end>
     PackSize = 1
     Left = 510
-    Top = 424
+    Top = 400
   end
   object spInsertUpdateMIAdvertising: TdsdStoredProc
     StoredProcName = 'gpInsertUpdate_Movement_PromoAdvertising'
@@ -2908,5 +3039,50 @@ inherited PromoForm: TPromoForm
     PackSize = 1
     Left = 112
     Top = 168
+  end
+  object PartnerListCDS: TClientDataSet
+    Aggregates = <>
+    FilterOptions = [foCaseInsensitive]
+    Params = <>
+    Left = 304
+    Top = 520
+  end
+  object PartnerLisrDS: TDataSource
+    DataSet = PartnerListCDS
+    Left = 344
+    Top = 520
+  end
+  object spSelect_MovementItem_PromoPartner: TdsdStoredProc
+    StoredProcName = 'gpSelect_MovementItem_PromoPartner'
+    DataSet = PartnerListCDS
+    DataSets = <
+      item
+        DataSet = PartnerListCDS
+      end>
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+      end>
+    PackSize = 1
+    Left = 304
+    Top = 472
+  end
+  object dsdDBViewAddOnPartnerList: TdsdDBViewAddOn
+    ErasedFieldName = 'isErased'
+    View = grtvPartnerList
+    OnDblClickActionList = <>
+    ActionItemList = <>
+    SortImages = dmMain.SortImageList
+    OnlyEditingCellOnEnter = False
+    ColorRuleList = <>
+    ColumnAddOnList = <>
+    ColumnEnterList = <>
+    SummaryItemList = <>
+    Left = 422
+    Top = 553
   end
 end
