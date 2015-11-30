@@ -21,8 +21,6 @@ object RepriceUnitForm: TRepriceUnitForm
     Height = 345
     Align = alClient
     TabOrder = 0
-    ExplicitLeft = 2
-    ExplicitTop = 247
     object AllGoodsPriceGridTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = dsResult
@@ -178,6 +176,11 @@ object RepriceUnitForm: TRepriceUnitForm
       end
       object colUnitId: TcxGridDBColumn
         DataBinding.FieldName = 'UnitId'
+        Visible = False
+        VisibleForCustomization = False
+      end
+      object colGoodsId: TcxGridDBColumn
+        DataBinding.FieldName = 'Id'
         Visible = False
         VisibleForCustomization = False
       end
@@ -608,25 +611,48 @@ object RepriceUnitForm: TRepriceUnitForm
     Left = 72
     Top = 8
   end
-  object spInsertUpdate_Object_Price: TdsdStoredProc
-    StoredProcName = 'gpInsertUpdate_Object_Price_From_Excel'
+  object spInsertUpdate_MovementItem_Reprice: TdsdStoredProc
+    StoredProcName = 'gpInsertUpdate_MovementItem_Reprice'
     DataSets = <>
     OutputType = otMultiExecute
     Params = <
+      item
+        Name = 'ioID'
+        Value = '0'
+        ParamType = ptInputOutput
+      end
+      item
+        Name = 'inGoodsId'
+        Value = Null
+        ParamType = ptInput
+      end
       item
         Name = 'inUnitId'
         Value = Null
         ParamType = ptInput
       end
       item
-        Name = 'inGoodsCode'
+        Name = 'inAmount'
         Value = Null
+        DataType = ftFloat
         ParamType = ptInput
       end
       item
-        Name = 'inPriceValue'
+        Name = 'inPriceOld'
         Value = Null
         DataType = ftFloat
+        ParamType = ptInput
+      end
+      item
+        Name = 'inPriceNew'
+        Value = Null
+        DataType = ftFloat
+        ParamType = ptInput
+      end
+      item
+        Name = 'inGUID'
+        Value = Null
+        DataType = ftString
         ParamType = ptInput
       end>
     PackSize = 100

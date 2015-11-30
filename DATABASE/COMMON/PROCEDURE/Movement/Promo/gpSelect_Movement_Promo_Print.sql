@@ -81,7 +81,7 @@ BEGIN
             ''::TVarChar as GroupName,
             'Стоимость участия, грн'::TVarChar as LineName,
             (SELECT 
-                REPLACE(TO_CHAR(Movement_Promo.CostPromo, 'FM9990D09')||' ','.0 ','')
+                REPLACE(TO_CHAR(Movement_Promo.CostPromo, 'FM9999990.99')||' ','. ','')
              FROM Movement_Promo_View AS Movement_Promo
              WHERE Movement_Promo.Id = inMovementId)::TEXT AS LineValue
         UNION ALL

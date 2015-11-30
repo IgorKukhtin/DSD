@@ -351,13 +351,17 @@ uses
   ReasonDifferencesTest in '..\SOURCE\Objects\All\Farmacy\ReasonDifferencesTest.pas',
   Income_AmountTrouble in '..\..\FormsFarmacy\Document\Income_AmountTrouble.pas' {Income_AmountTroubleForm: TParentForm},
   Report_UploadBaDM in '..\..\FormsFarmacy\Report\Report_UploadBaDM.pas' {Report_UploadBaDMForm: TParentForm},
-  Report_UploadOptima in '..\..\FormsFarmacy\Report\Report_UploadOptima.pas' {Report_UploadOptimaForm: TParentForm};
+  Report_UploadOptima in '..\..\FormsFarmacy\Report\Report_UploadOptima.pas' {Report_UploadOptimaForm: TParentForm},
+  RepriceTest in '..\SOURCE\Movement\All\Farmacy\RepriceTest.pas',
+  RepriceMovementItemTest in '..\SOURCE\MovementItem\All\Farmacy\RepriceMovementItemTest.pas',
+  RepriceJournal in '..\..\FormsFarmacy\Document\RepriceJournal.pas' {RepriceJournalForm: TParentForm},
+  Reprice in '..\..\FormsFarmacy\Document\Reprice.pas' {RepriceForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}
 
 begin
-  ConnectionPath := '..\INIT\realfarmacy_init.php';
+  ConnectionPath := '..\INIT\testfarmacy_init.php';
   EnumPath := '..\DATABASE\FARMACY\METADATA\Enum\';
   CreateStructurePath := '..\DATABASE\FARMACY\STRUCTURE\';
   LocalViewPath := '..\DATABASE\FARMACY\View\';
@@ -365,7 +369,7 @@ begin
   LocalProcessPath := '..\DATABASE\COMMON\PROCESS\';
   dsdProject := prFarmacy;
 
-  gc_AdminPassword := 'Админ1234';
+  gc_AdminPassword := 'Админ1111';
   gc_ProgramName := 'Farmacy.exe';
 
   Application.Initialize;
