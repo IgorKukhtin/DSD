@@ -8,7 +8,7 @@ CREATE OR REPLACE FUNCTION gpReport_Branch_Cash(
     IN inBranchId           Integer,    -- ‘илиал
     IN inSession            TVarChar    -- сесси€ пользовател€
 )
-RETURNS TABLE ( GroupName TVarChar
+RETURNS TABLE ( GroupName TVarChar, Color_calc integer
              , InfoMoneyName TVarChar, InfoMoneyName_all TVarChar
              , Amount2 TFloat, Amount3 TFloat, Amount4 TFloat, Amount5 TFloat
              , Amount7 TFloat, Amount9 TFloat, Amount11 TFloat, Amount TFloat
@@ -76,7 +76,12 @@ BEGIN
         Operation.KreditSumm::TFloat                                                                AS KreditSumm,
         Operation.EndAmount ::TFloat                                                                AS EndAmount,
         CASE WHEN Operation.EndAmount > 0 THEN Operation.EndAmount ELSE 0 END :: TFloat             AS EndAmountD,
-        CASE WHEN Operation.EndAmount < 0 THEN -1 * Operation.EndAmount ELSE 0 END :: TFloat        AS EndAmountK
+        CASE WHEN Operation.EndAmount < 0 THEN -1 * Operation.EndAmount ELSE 0 END :: TFloat        AS EndAmountK,
+        CASE WHEN Operation.InfoMoneyId = 8981  -- "внутренний оборот"
+                 THEN 15993821
+                 ELSE 0 -- clBlack
+        END :: Integer AS Color_calc
+        
      FROM
          (SELECT Operation_all.ContainerId, Operation_all.ObjectId, Operation_all.BranchId, Operation_all.InfoMoneyId, Operation_all.isSaldo,
                      SUM (Operation_all.StartAmount) AS StartAmount,
@@ -157,8 +162,10 @@ BEGIN
      LEFT JOIN Object_InfoMoney_View ON Object_InfoMoney_View.InfoMoneyId = Operation.InfoMoneyId
      WHERE (Operation.StartAmount <> 0 OR Operation.EndAmount <> 0 OR Operation.DebetSumm <> 0 OR Operation.KreditSumm <> 0)
      )
+
      
  SELECT  tmpAllList.GroupName
+       , tmpAllList.Color_calc
        , tmpAllList.InfoMoneyName
        , tmpAllList.InfoMoneyName_all
        , SUM(tmpAllList.Amount2)  ::TFloat AS Amount2
@@ -172,6 +179,7 @@ BEGIN
  
  FROM 
     (SELECT  tmpAll.GroupName
+          , tmpAll.Color_calc
           , tmpAll.InfoMoneyName 
           , tmpAll.InfoMoneyName_all
           , CASE WHEN tmpAll.BranchCode = 2 THEN (CASE WHEN tmpAll.GroupId = 1 THEN tmpAll.StartAmount 
@@ -207,9 +215,10 @@ BEGIN
                                                         ELSE tmpAll.DebetSumm + tmpAll.KreditSumm  END)
                  ELSE 0 END   ::TFloat AS Amount
      FROM tmpAll
-     ORDER BY tmpAll.Groupid) AS tmpAllList
-     GROUP BY tmpAllList.GroupName, tmpAllList.InfoMoneyName_all, tmpAllList.InfoMoneyName
-     ORDER BY tmpAllList.GroupName,tmpAllList.InfoMoneyName_all
+     ORDER BY tmpAll.Groupid
+   ) AS tmpAllList
+   GROUP BY tmpAllList.GroupName, tmpAllList.InfoMoneyName_all, tmpAllList.InfoMoneyName, tmpAllList.Color_calc
+   ORDER BY tmpAllList.GroupName,tmpAllList.InfoMoneyName_all
      
      ;
 
