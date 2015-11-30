@@ -34,6 +34,8 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_PromoPartner(
    OUT outPriceListName         TVarChar   , -- Название прайслиста в документе
    OUT outPersonalMarketingId   Integer    , -- ИД сотрудника маркетингового отдела
    OUT outPersonalMarketingName TVarChar   , -- Имя сотрудника маркетингового отдела
+   OUT outPersonalTradeId       Integer    , -- ИД сотрудника коммерческого отдела
+   OUT outPersonalTradeName     TVarChar   , -- Имя сотрудника коммерческого отдела
     IN inSession                TVarChar    -- сессия пользователя
 )
 AS
@@ -155,17 +157,58 @@ BEGIN
     THEN
         PERFORM lpInsertUpdate_MovementLinkObject(zc_MovementLinkObject_Personal(), inParentId, outPersonalMarketingId);
     END IF;
+    
+    --Обновляем сотрудника Коммерческого отдела
+    IF (SELECT DescId FROM OBJECT WHERE Id = inPartnerId) = zc_Object_Partner()
+    THEN
+        outPersonalTradeId := (SELECT ObjectLink_Partner_Personal.ChildObjectId 
+                              FROM ObjectLink AS ObjectLink_Partner_Personal
+                              WHERE ObjectLink_Partner_Personal.ObjectId = inPartnerId 
+                                AND ObjectLink_Partner_Personal.DescId = zc_ObjectLink_Partner_Personal());
+    ELSIF (SELECT DescId FROM OBJECT WHERE Id = inPartnerId) = zc_Object_Juridical()
+    THEN
+        outPersonalTradeId := (SELECT ObjectLink_Partner_Personal.ChildObjectId 
+                              FROM ObjectLink AS ObjectLink_Partner_Juridical
+                                  INNER JOIN ObjectLink AS ObjectLink_Partner_Personal
+                                                        ON ObjectLink_Partner_Personal.ObjectId = ObjectLink_Partner_Juridical.ObjectId
+                                                       AND ObjectLink_Partner_Personal.DescId = zc_ObjectLink_Partner_Personal() 
+                              WHERE ObjectLink_Partner_Juridical.ChildObjectId = inPartnerId 
+                                AND ObjectLink_Partner_Juridical.DescId = zc_ObjectLink_Partner_Juridical()
+                              LIMIT 1);
+    ELSIF (SELECT DescId FROM OBJECT WHERE Id = inPartnerId) = zc_Object_retail()
+    THEN
+        outPersonalTradeId := (SELECT ObjectLink_Partner_Personal.ChildObjectId 
+                              FROM ObjectLink AS ObjectLink_Juridical_Retail
+                                  INNER JOIN ObjectLink AS ObjectLink_Partner_Juridical
+                                                        ON ObjectLink_Partner_Juridical.ChildObjectId = ObjectLink_Juridical_Retail.ObjectId
+                                                       AND ObjectLink_Partner_Juridical.DescId = zc_ObjectLink_Partner_Juridical()
+                                  INNER JOIN ObjectLink AS ObjectLink_Partner_Personal
+                                                        ON ObjectLink_Partner_Personal.ObjectId = ObjectLink_Partner_Juridical.ObjectId
+                                                       AND ObjectLink_Partner_Personal.DescId = zc_ObjectLink_Partner_Personal()
+                              WHERE ObjectLink_Juridical_Retail.ChildObjectId = inPartnerId 
+                                AND ObjectLink_Juridical_Retail.DescId = zc_ObjectLink_Juridical_Retail()
+                              LIMIT 1);
+    END IF;
+    if COALESCE(outPersonalTradeId,0) <> 0
+    THEN
+        PERFORM lpInsertUpdate_MovementLinkObject(zc_MovementLinkObject_PersonalTrade(), inParentId, outPersonalTradeId);
+    END IF;
+    
     --а теперь контролируем, нет ли партнера, у которого прайслист не базовый и не равен прайслисту в документе
     SELECT
         Movement_Promo.PriceListId
        ,Movement_Promo.PriceListName
        ,Movement_Promo.PersonalId
        ,Movement_Promo.PersonalName
+       ,Movement_Promo.PersonalTradeId
+       ,Movement_Promo.PersonaltradeName
     INTO
         outPriceListId
        ,outPriceListName
        ,outPersonalMarketingId
        ,outPersonalMarketingName
+       ,outPersonalTradeId
+       ,outPersonalTradeName
     FROM
         Movement_Promo_View AS Movement_Promo
     WHERE
