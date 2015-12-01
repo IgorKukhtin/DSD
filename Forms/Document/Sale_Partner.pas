@@ -166,6 +166,7 @@ type
     TransportChoiceGuides: TdsdGuides;
     spInsertUpdateMovement_Params: TdsdStoredProc;
     HeaderSaver2: THeaderSaver;
+    cbPromo: TcxCheckBox;
   private
     { Private declarations }
   public

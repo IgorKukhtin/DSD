@@ -787,6 +787,14 @@ object WeighingPartnerForm: TWeighingPartnerForm
             HeaderAlignmentVert = vaCenter
             Width = 75
           end
+          object MovementPromo: TcxGridDBColumn
+            Caption = #8470' '#1076#1086#1082'. '#1072#1082#1094#1080#1103
+            DataBinding.FieldName = 'MovementPromo'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 100
+          end
           object colIsErased: TcxGridDBColumn
             Caption = #1059#1076#1072#1083#1077#1085' ('#1076#1072'/'#1085#1077#1090')'
             DataBinding.FieldName = 'isErased'
@@ -807,6 +815,14 @@ object WeighingPartnerForm: TWeighingPartnerForm
     Left = 1011
     Top = 45
     Caption = '(-)% '#1057#1082#1080#1076#1082#1080' (+)% '#1053#1072#1094#1077#1085#1082#1080
+  end
+  object cbPromo: TcxCheckBox
+    Left = 1160
+    Top = 63
+    Caption = #1040#1082#1094#1080#1103' ('#1076#1072'/'#1085#1077#1090')'
+    Properties.ReadOnly = True
+    TabOrder = 7
+    Width = 100
   end
   object FormParams: TdsdFormParams
     Params = <
@@ -1505,6 +1521,12 @@ object WeighingPartnerForm: TWeighingPartnerForm
         Value = Null
         Component = edChangePercent
         DataType = ftFloat
+      end
+      item
+        Name = 'isPromo'
+        Value = Null
+        Component = cbPromo
+        DataType = ftBoolean
       end>
     PackSize = 1
     Left = 216
@@ -1649,7 +1671,7 @@ object WeighingPartnerForm: TWeighingPartnerForm
         DataType = ftString
         ParamType = ptInput
       end>
-    Left = 928
+    Left = 904
     Top = 8
   end
   object PaidKindGuides: TdsdGuides

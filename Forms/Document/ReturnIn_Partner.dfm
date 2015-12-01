@@ -1,27 +1,27 @@
 inherited ReturnIn_PartnerForm: TReturnIn_PartnerForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1042#1086#1079#1074#1088#1072#1090' '#1086#1090' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1103' ('#1073#1091#1093#1075#1072#1083#1090#1077#1088')>'
   ClientHeight = 637
-  ClientWidth = 1139
-  ExplicitWidth = 1155
-  ExplicitHeight = 672
+  ClientWidth = 1145
+  ExplicitWidth = 1161
+  ExplicitHeight = 675
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 166
-    Width = 1139
+    Width = 1145
     Height = 471
     ExplicitTop = 166
-    ExplicitWidth = 1139
+    ExplicitWidth = 1145
     ExplicitHeight = 471
     ClientRectBottom = 471
-    ClientRectRight = 1139
+    ClientRectRight = 1145
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 1139
+      ExplicitWidth = 1145
       ExplicitHeight = 447
       inherited cxGrid: TcxGrid
-        Width = 1139
+        Width = 1145
         Height = 447
-        ExplicitWidth = 1139
+        ExplicitWidth = 1145
         ExplicitHeight = 447
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
@@ -209,6 +209,14 @@ inherited ReturnIn_PartnerForm: TReturnIn_PartnerForm
             Options.Editing = False
             Width = 59
           end
+          object MovementPromo: TcxGridDBColumn
+            Caption = #8470' '#1076#1086#1082'. '#1072#1082#1094#1080#1103
+            DataBinding.FieldName = 'MovementPromo'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 100
+          end
         end
       end
     end
@@ -221,11 +229,10 @@ inherited ReturnIn_PartnerForm: TReturnIn_PartnerForm
       object cxGridTaxCorrective: TcxGrid
         Left = 0
         Top = 0
-        Width = 1139
+        Width = 1145
         Height = 447
         Align = alClient
         TabOrder = 0
-        ExplicitTop = -3
         object cxGridTaxCorrectiveDBTableView: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = TaxCorrectiveDS
@@ -575,10 +582,10 @@ inherited ReturnIn_PartnerForm: TReturnIn_PartnerForm
     end
   end
   inherited DataPanel: TPanel
-    Width = 1139
+    Width = 1145
     Height = 140
     TabOrder = 3
-    ExplicitWidth = 1139
+    ExplicitWidth = 1145
     ExplicitHeight = 140
     inherited edInvNumber: TcxTextEdit
       Left = 8
@@ -825,6 +832,14 @@ inherited ReturnIn_PartnerForm: TReturnIn_PartnerForm
       TabOrder = 32
       Width = 100
     end
+    object cbPromo: TcxCheckBox
+      Left = 664
+      Top = 103
+      Caption = #1040#1082#1094#1080#1103' ('#1076#1072'/'#1085#1077#1090')'
+      Properties.ReadOnly = True
+      TabOrder = 33
+      Width = 100
+    end
   end
   object edDocumentTaxKind: TcxButtonEdit [2]
     Left = 892
@@ -912,15 +927,15 @@ inherited ReturnIn_PartnerForm: TReturnIn_PartnerForm
     Width = 223
   end
   object cxLabel18: TcxLabel [12]
-    Left = 664
+    Left = 788
     Top = 85
     Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
   end
   object ceComment: TcxTextEdit [13]
-    Left = 664
+    Left = 788
     Top = 103
     TabOrder = 17
-    Width = 460
+    Width = 336
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 171
@@ -2115,6 +2130,12 @@ inherited ReturnIn_PartnerForm: TReturnIn_PartnerForm
         Name = 'isPartner'
         Value = Null
         Component = cbPartner
+        DataType = ftBoolean
+      end
+      item
+        Name = 'isPromo'
+        Value = Null
+        Component = cbPromo
         DataType = ftBoolean
       end>
     Left = 224

@@ -148,6 +148,7 @@ type
     spUpdateMovement: TdsdStoredProc;
     HeaderSaver2: THeaderSaver;
     isBarCode: TcxGridDBColumn;
+    cbPromo: TcxCheckBox;
   private
   public
   end;
