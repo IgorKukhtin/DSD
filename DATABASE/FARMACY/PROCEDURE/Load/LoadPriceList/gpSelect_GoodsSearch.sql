@@ -66,7 +66,7 @@ BEGIN
          LinkGoods.Id AS LinkGoodsId, 
          CASE 
              WHEN ObjectGoodsView.isTop = TRUE
-                 THEN  COALESCE(ObjectGoodsView.PercentMarkup, 0) - COALESCE(ObjectFloat_Percent.valuedata, 0)
+                 THEN  COALESCE(ObjectGoodsView.PercentMarkup, 0) -- - COALESCE(ObjectFloat_Percent.valuedata, 0)
          ELSE COALESCE(MarginCondition.MarginPercent,0) + COALESCE(ObjectFloat_Percent.valuedata, 0)
          END::TFloat AS MarginPercent,
          --(MarginCondition.MarginPercent + COALESCE(ObjectFloat_Percent.valuedata, 0))::TFloat,
@@ -74,7 +74,7 @@ BEGIN
                            MarginCondition.MarginPercent + COALESCE(ObjectFloat_Percent.valuedata, 0), -- % наценки
                            ObjectGoodsView.isTop, -- ТОП позиция
                            ObjectGoodsView.PercentMarkup, -- % наценки у товара
-                           ObjectFloat_Percent.valuedata,
+                           0.0, --ObjectFloat_Percent.valuedata,
                            ObjectGoodsView.Price)::TFloat AS NewPrice
 
        FROM LoadPriceListItem 

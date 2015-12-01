@@ -47,6 +47,7 @@ end;
 procedure TLoadReportTest.LoadPromoFormTest;
 begin
   LoadReportFromFile('Акция', ReportPath + '\Товарный Учет\PrintMovement_Promo.fr3');
+  LoadReportFromFile('Отчет_по_акциям', ReportPath + '\Отчеты (товарные)\Отчет_по_Акциям.fr3');
 end;
 
 procedure TLoadReportTest.LoadReceiptFormTest;
