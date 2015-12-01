@@ -75,6 +75,11 @@ BEGIN
                               ), 0) * COALESCE (inCountPoint, 0)
          ;
      ELSE
+          -- проверка
+          IF COALESCE (inDistance, 0) = 0 THEN
+             RAISE EXCEPTION 'Ошибка.Не введено значение <Пробег факт, км.>';
+          END IF;
+
                     -- Расстояние * Цена
          ioAmount:= COALESCE (inDistance * inPrice, 0)
                     -- по условиям в договоре "Ставка за время..."
