@@ -346,25 +346,45 @@ begin
                   (ЕлектроннийДокумент.Заголовок.КодТипуДокументу = '012') then
                 begin
                   // загружаем в базенку
-                  MovementId := InsertUpdateComDoc(ЕлектроннийДокумент,
-                    spHeader, spList);
-                  FInsertEDIFile.ParamByName('inMovementId').Value :=
-                    MovementId;
-                  FInsertEDIFile.ParamByName('inFileName').Value := List[i];
-                  FInsertEDIFile.ParamByName('inFileText').Value :=
-                    ConvertConvert(Stream.DataString);
-                  FInsertEDIFile.Execute;
+                  try
+                    MovementId := InsertUpdateComDoc(ЕлектроннийДокумент,
+                      spHeader, spList);
+                  Except ON E: Exception DO
+                    Begin
+                      MovementId := -1;
+                      ShowMessage(E.Message);
+                    End;
+                  end;
+                  if MovementId <> -1 then
+                  Begin
+                    FInsertEDIFile.ParamByName('inMovementId').Value :=
+                      MovementId;
+                    FInsertEDIFile.ParamByName('inFileName').Value := List[i];
+                    FInsertEDIFile.ParamByName('inFileText').Value :=
+                      ConvertConvert(Stream.DataString);
+                    try
+                      FInsertEDIFile.Execute;
+                    Except ON E: Exception DO
+                      Begin
+                        ShowMessage(E.Message);
+                        MovementId := -1;
+                      End;
+                    end;
+                  End;
                 end;
                 // теперь перенесли файл в директроию Archive
-                try
-                  if not FIdFTP.Connected then
-                     FIdFTP.Connect;
-                  FIdFTP.ChangeDir('/archive');
-                  FIdFTP.Put(Stream, List[i]);
-                finally
-                  FIdFTP.ChangeDir(Directory);
-                  FIdFTP.Delete(List[i]);
-                end;
+                if MovementId <> -1 then
+                Begin
+                  try
+                    if not FIdFTP.Connected then
+                       FIdFTP.Connect;
+                    FIdFTP.ChangeDir('/archive');
+                    FIdFTP.Put(Stream, List[i]);
+                  finally
+                    FIdFTP.ChangeDir(Directory);
+                    FIdFTP.Delete(List[i]);
+                  end;
+                End;
               end;
             end;
             IncProgress;

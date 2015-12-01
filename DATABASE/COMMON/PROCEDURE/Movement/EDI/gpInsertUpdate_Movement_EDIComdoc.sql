@@ -48,6 +48,10 @@ BEGIN
      -- Поиск документа в журнале EDI
      IF EXISTS (SELECT MovementDesc.Id FROM MovementDesc WHERE MovementDesc.Code = inDesc AND MovementDesc.Id = zc_Movement_Sale())
      THEN
+         IF zfConvert_StringToBigInt (inGLNPlace)  = 0
+         THEN inGLNPlace:= '';
+         END IF;
+
          IF inGLNPlace <> ''
          THEN
               -- !!!так для продажи!!! + !!!по точке доставки!!! + !!!inDesc!!!

@@ -334,7 +334,7 @@ BEGIN
    IF inShowAll= TRUE THEN
    -- 2.1. Результат такой
    RETURN QUERY 
-   WITH tmpListBranch_Constraint AS (SELECT ObjectLink_Partner_Juridical.ChildObjectId AS JuridicalId
+   WITH tmpListBranch_Constraint AS (SELECT DISTINCT ObjectLink_Partner_Juridical.ChildObjectId AS JuridicalId
                                      FROM ObjectLink AS ObjectLink_Unit_Branch
                                           INNER JOIN ObjectLink AS ObjectLink_Personal_Unit
                                                                 ON ObjectLink_Personal_Unit.ChildObjectId = ObjectLink_Unit_Branch.ObjectId
@@ -347,7 +347,20 @@ BEGIN
                                                                AND ObjectLink_Partner_Juridical.DescId = zc_ObjectLink_Partner_Juridical()
                                      WHERE ObjectLink_Unit_Branch.ChildObjectId = vbBranchId_Constraint
                                        AND ObjectLink_Unit_Branch.DescId = zc_ObjectLink_Unit_Branch()
-                                     GROUP BY ObjectLink_Partner_Juridical.ChildObjectId
+                                    UNION
+                                     SELECT DISTINCT ObjectLink_Contract_Juridical.ChildObjectId AS JuridicalId
+                                     FROM ObjectLink AS ObjectLink_Unit_Branch
+                                          INNER JOIN ObjectLink AS ObjectLink_Personal_Unit
+                                                                ON ObjectLink_Personal_Unit.ChildObjectId = ObjectLink_Unit_Branch.ObjectId
+                                                               AND ObjectLink_Personal_Unit.DescId = zc_ObjectLink_Personal_Unit()
+                                          INNER JOIN ObjectLink AS ObjectLink_Contract_Personal
+                                                                ON ObjectLink_Contract_Personal.ChildObjectId = ObjectLink_Personal_Unit.ObjectId
+                                                               AND ObjectLink_Contract_Personal.DescId = zc_ObjectLink_Contract_Personal()
+                                          INNER JOIN ObjectLink AS ObjectLink_Contract_Juridical
+                                                                ON ObjectLink_Contract_Juridical.ObjectId = ObjectLink_Contract_Personal.ObjectId
+                                                               AND ObjectLink_Contract_Juridical.DescId = zc_ObjectLink_Contract_Juridical()
+                                     WHERE ObjectLink_Unit_Branch.ChildObjectId = vbBranchId_Constraint
+                                       AND ObjectLink_Unit_Branch.DescId = zc_ObjectLink_Unit_Branch()
                                     )
    SELECT
          Object_Contract_View.ContractId AS Id
@@ -432,7 +445,7 @@ BEGIN
    ELSE
    -- 2.2. Результат другой
    RETURN QUERY 
-   WITH tmpListBranch_Constraint AS (SELECT ObjectLink_Partner_Juridical.ChildObjectId AS JuridicalId
+   WITH tmpListBranch_Constraint AS (SELECT DISTINCT ObjectLink_Partner_Juridical.ChildObjectId AS JuridicalId
                                      FROM ObjectLink AS ObjectLink_Unit_Branch
                                           INNER JOIN ObjectLink AS ObjectLink_Personal_Unit
                                                                 ON ObjectLink_Personal_Unit.ChildObjectId = ObjectLink_Unit_Branch.ObjectId
@@ -445,7 +458,20 @@ BEGIN
                                                                AND ObjectLink_Partner_Juridical.DescId = zc_ObjectLink_Partner_Juridical()
                                      WHERE ObjectLink_Unit_Branch.ChildObjectId = vbBranchId_Constraint
                                        AND ObjectLink_Unit_Branch.DescId = zc_ObjectLink_Unit_Branch()
-                                     GROUP BY ObjectLink_Partner_Juridical.ChildObjectId
+                                    UNION
+                                     SELECT DISTINCT ObjectLink_Contract_Juridical.ChildObjectId AS JuridicalId
+                                     FROM ObjectLink AS ObjectLink_Unit_Branch
+                                          INNER JOIN ObjectLink AS ObjectLink_Personal_Unit
+                                                                ON ObjectLink_Personal_Unit.ChildObjectId = ObjectLink_Unit_Branch.ObjectId
+                                                               AND ObjectLink_Personal_Unit.DescId = zc_ObjectLink_Personal_Unit()
+                                          INNER JOIN ObjectLink AS ObjectLink_Contract_Personal
+                                                                ON ObjectLink_Contract_Personal.ChildObjectId = ObjectLink_Personal_Unit.ObjectId
+                                                               AND ObjectLink_Contract_Personal.DescId = zc_ObjectLink_Contract_Personal()
+                                          INNER JOIN ObjectLink AS ObjectLink_Contract_Juridical
+                                                                ON ObjectLink_Contract_Juridical.ObjectId = ObjectLink_Contract_Personal.ObjectId
+                                                               AND ObjectLink_Contract_Juridical.DescId = zc_ObjectLink_Contract_Juridical()
+                                     WHERE ObjectLink_Unit_Branch.ChildObjectId = vbBranchId_Constraint
+                                       AND ObjectLink_Unit_Branch.DescId = zc_ObjectLink_Unit_Branch()
                                     )
    SELECT
          Object_Contract_View.ContractId AS Id

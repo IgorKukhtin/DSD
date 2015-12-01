@@ -296,7 +296,12 @@ BEGIN
                                                                          ELSE 0
                                                                     END
                                                        , ioCountForPrice := 1 , inHeadCount := 0, inBoxCount:= 0
-                                                       , inPartionGoods := '', inGoodsKindId := vbGoodsKindId, inAssetId := 0, inBoxId:= 0, inUserId := vbUserId);
+                                                       , inPartionGoods := '', inGoodsKindId := vbGoodsKindId, inAssetId := 0, inBoxId:= 0
+                                                       , inCountPack    := 0
+                                                       , inWeightTotal  := 0
+                                                       , inWeightPack   := 0
+                                                       , inIsBarCode    := FALSE
+                                                       , inUserId := vbUserId);
 
                ELSE
                IF vbMovementDescId = zc_Movement_Loss() AND vbMovementDescId = vbMovementDescId_find
