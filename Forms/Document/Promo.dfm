@@ -3,8 +3,9 @@ inherited PromoForm: TPromoForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1040#1082#1094#1080#1103'>'
   ClientHeight = 599
   ClientWidth = 1204
+  ExplicitTop = -177
   ExplicitWidth = 1220
-  ExplicitHeight = 637
+  ExplicitHeight = 634
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -325,7 +326,7 @@ inherited PromoForm: TPromoForm
           ClientRectRight = 659
           ClientRectTop = 24
           object tsPartner: TcxTabSheet
-            Caption = '&2. '#1055#1072#1088#1090#1085#1077#1088#1099
+            Caption = '2.1. '#1055#1072#1088#1090#1085#1077#1088#1099
             object cxGridPartner: TcxGrid
               Left = 0
               Top = 0
@@ -470,7 +471,7 @@ inherited PromoForm: TPromoForm
             end
           end
           object tsPromoPartnerList: TcxTabSheet
-            Caption = '2.1 &'#1050#1086#1085#1090#1088#1072#1075#1077#1085#1090#1099' '#1076#1083#1103' '#1072#1082#1094#1080#1080
+            Caption = '2.2. '#1050#1086#1085#1090#1088#1072#1075#1077#1085#1090#1099' ('#1076#1077#1090#1072#1083#1100#1085#1086')'
             ImageIndex = 1
             object grPartnerList: TcxGrid
               Left = 0
@@ -481,9 +482,6 @@ inherited PromoForm: TPromoForm
               TabOrder = 0
               LookAndFeel.NativeStyle = True
               LookAndFeel.SkinName = 'UserSkin'
-              ExplicitTop = 26
-              ExplicitWidth = 715
-              ExplicitHeight = 371
               object grtvPartnerList: TcxGridDBTableView
                 Navigator.Buttons.CustomButtons = <>
                 DataController.DataSource = PartnerLisrDS
@@ -498,8 +496,7 @@ inherited PromoForm: TPromoForm
                 OptionsData.DeletingConfirmation = False
                 OptionsData.Editing = False
                 OptionsData.Inserting = False
-                OptionsView.ColumnAutoWidth = True
-                OptionsView.GroupByBox = False
+                OptionsView.HeaderAutoHeight = True
                 OptionsView.Indicator = True
                 Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
                 object colPartnerListRetailName: TcxGridDBColumn
@@ -507,25 +504,25 @@ inherited PromoForm: TPromoForm
                   DataBinding.FieldName = 'RetailName'
                   HeaderAlignmentHorz = taCenter
                   HeaderAlignmentVert = vaCenter
-                  Width = 69
+                  Width = 80
                 end
                 object colPartnerListJuridicalName: TcxGridDBColumn
-                  Caption = #1070#1088#1083#1080#1094#1086
+                  Caption = #1070#1088#1080#1076#1080#1095#1077#1089#1082#1086#1077' '#1083#1080#1094#1086
                   DataBinding.FieldName = 'JuridicalName'
                   HeaderAlignmentHorz = taCenter
                   HeaderAlignmentVert = vaCenter
-                  Width = 68
+                  Width = 100
                 end
                 object colPartnerListCode: TcxGridDBColumn
                   Caption = #1050#1086#1076
                   DataBinding.FieldName = 'Code'
-                  HeaderAlignmentHorz = taRightJustify
+                  HeaderAlignmentHorz = taCenter
                   HeaderAlignmentVert = vaCenter
                   Options.Editing = False
                   Width = 38
                 end
                 object colPartnerListName: TcxGridDBColumn
-                  Caption = #1053#1072#1079#1074#1072#1085#1080#1077
+                  Caption = #1050#1086#1085#1090#1088#1072#1075#1077#1085#1090
                   DataBinding.FieldName = 'Name'
                   HeaderAlignmentHorz = taCenter
                   HeaderAlignmentVert = vaCenter
@@ -542,22 +539,31 @@ inherited PromoForm: TPromoForm
                 object colPartnerListContractCode: TcxGridDBColumn
                   Caption = #1050#1086#1076' '#1076#1086#1075'.'
                   DataBinding.FieldName = 'ContractCode'
+                  Visible = False
+                  HeaderAlignmentHorz = taCenter
+                  HeaderAlignmentVert = vaCenter
                   Width = 48
                 end
                 object colPartnerListContractName: TcxGridDBColumn
                   Caption = #8470' '#1076#1086#1075'.'
                   DataBinding.FieldName = 'ContractName'
+                  HeaderAlignmentHorz = taCenter
+                  HeaderAlignmentVert = vaCenter
                   Width = 48
                 end
                 object colPartnerListContractTagName: TcxGridDBColumn
                   Caption = #1055#1088#1080#1079#1085#1072#1082' '#1076#1086#1075'.'
                   DataBinding.FieldName = 'ContractTagName'
-                  Width = 47
+                  HeaderAlignmentHorz = taCenter
+                  HeaderAlignmentVert = vaCenter
+                  Width = 80
                 end
                 object colPartnerListIsErased: TcxGridDBColumn
                   Caption = #1059#1076#1072#1083#1077#1085
                   DataBinding.FieldName = 'IsErased'
                   Visible = False
+                  HeaderAlignmentHorz = taCenter
+                  HeaderAlignmentVert = vaCenter
                   Width = 47
                 end
               end
@@ -1332,7 +1338,6 @@ inherited PromoForm: TPromoForm
       Category = 'Condition'
       TabSheet = tsConditionPromo
       MoveParams = <>
-      Enabled = False
       PostDataSetBeforeExecute = False
       View = grtvConditionPromo
       Action = ConditionPromoChoiceForm
@@ -1345,7 +1350,6 @@ inherited PromoForm: TPromoForm
       Category = 'Condition'
       TabSheet = tsConditionPromo
       MoveParams = <>
-      Enabled = False
       StoredProc = spErasedMICondition
       StoredProcList = <
         item
@@ -1365,7 +1369,6 @@ inherited PromoForm: TPromoForm
       Category = 'Condition'
       TabSheet = tsConditionPromo
       MoveParams = <>
-      Enabled = False
       StoredProc = spUnErasedMIPartner
       StoredProcList = <
         item
@@ -1594,6 +1597,7 @@ inherited PromoForm: TPromoForm
         end>
       Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
       Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
+      ShortCut = 116
       RefreshOnTabSetChanges = True
     end
   end
@@ -1949,6 +1953,12 @@ inherited PromoForm: TPromoForm
         DataType = ftString
       end
       item
+        Name = 'CommentMain'
+        Value = Null
+        Component = edCommentMain
+        DataType = ftString
+      end
+      item
         Name = 'AdvertisingId'
         Value = Null
       end
@@ -2125,18 +2135,6 @@ inherited PromoForm: TPromoForm
     Top = 312
   end
   inherited GuidesFiller: TGuidesFiller
-    GuidesList = <
-      item
-        Guides = PromoKindGuides
-      end
-      item
-      end
-      item
-        Guides = PersonalTradeGuides
-      end
-      item
-        Guides = PersonalGuides
-      end>
     Left = 216
     Top = 264
   end
@@ -3068,8 +3066,8 @@ inherited PromoForm: TPromoForm
         ParamType = ptInput
       end>
     PackSize = 1
-    Left = 304
-    Top = 472
+    Left = 264
+    Top = 536
   end
   object dsdDBViewAddOnPartnerList: TdsdDBViewAddOn
     ErasedFieldName = 'isErased'

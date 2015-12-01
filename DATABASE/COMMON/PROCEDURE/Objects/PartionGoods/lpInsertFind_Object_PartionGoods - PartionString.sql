@@ -75,6 +75,14 @@ BEGIN
                                  THEN zfConvert_StringToNumber (split_part (inValue, '-', 2))
                             ELSE NULL
                        END;
+         IF EXISTS (SELECT 1 FROM Object WHERE Object.ObjectCode = vbPartnerId AND Object.DescId = zc_Object_Partner() HAVING COUNT (*) > 1)
+         THEN
+             RAISE EXCEPTION 'Ошибка.В партии <%> не установлен код контрагента.', inValue;
+         END IF;
+         IF EXISTS (SELECT 1 FROM Object WHERE Object.ObjectCode = vbPartnerId AND Object.DescId = zc_Object_Partner() HAVING COUNT (*) > 1)
+         THEN
+             RAISE EXCEPTION 'Ошибка. Код покупателя <%> установлен у разных контрагентов.<%>', vbPartnerId, inValue;
+         END IF;
          vbPartnerId:= (SELECT Object.Id FROM Object WHERE Object.ObjectCode = vbPartnerId AND Object.DescId = zc_Object_Partner());
          PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_PartionGoods_Partner(), vbPartionGoodsId, vbPartnerId);
 

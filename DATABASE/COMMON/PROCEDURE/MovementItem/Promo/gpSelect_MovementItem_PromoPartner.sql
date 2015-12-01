@@ -60,6 +60,7 @@ BEGIN
                                    ON Object_Retail.Id = ObjectLink_Juridical_Retail.ChildObjectId
             LEFT OUTER JOIN ObjectLink AS ObjectLink_Partner_Area
                                        ON ObjectLink_Partner_Area.ObjectId = MI_PromoPartner.ObjectId
+                                      AND ObjectLink_Partner_Area.DescId = zc_ObjectLink_Partner_Area()
             LEFT OUTER JOIN Object AS Object_Area
                                    ON Object_Area.Id = ObjectLink_Partner_Area.ChildObjectId
             LEFT JOIN MovementItemLinkObject AS MILinkObject_Contract
