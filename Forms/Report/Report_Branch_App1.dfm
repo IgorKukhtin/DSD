@@ -264,6 +264,26 @@ inherited Report_Branch_App1Form: TReport_Branch_App1Form
               Format = ',0.####'
               Kind = skSum
               Column = SummInventory_RePrice_Vz
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = SummStart_Vz
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = WeightStart_Vz
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = SummEnd_Vz
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = WeightEnd_Vz
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -502,6 +522,26 @@ inherited Report_Branch_App1Form: TReport_Branch_App1Form
               Format = ',0.####'
               Kind = skSum
               Column = SummInventory_RePrice_Vz
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = SummStart_Vz
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = WeightStart_Vz
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = SummEnd_Vz
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = WeightEnd_Vz
             end>
           OptionsData.CancelOnExit = True
           OptionsData.Deleting = False
@@ -531,9 +571,32 @@ inherited Report_Branch_App1Form: TReport_Branch_App1Form
             Options.Editing = False
             Width = 87
           end
+          object SummStart_Vz: TcxGridDBColumn
+            Caption = #1053#1072#1095'.'#1086#1089#1090'. '#1085#1072' '#1089#1082#1083#1072#1076#1077' ('#1075#1088#1085')  '#1089#1082#1083'.'#1042#1086#1079#1074#1088#1072#1090#1086#1074
+            DataBinding.FieldName = 'SummStart_Vz'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 87
+          end
           object WeightStart: TcxGridDBColumn
             Caption = #1053#1072#1095'.'#1086#1089#1090'. '#1085#1072' '#1089#1082#1083#1072#1076#1077' ('#1074#1077#1089')'
             DataBinding.FieldName = 'WeightStart'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 60
+          end
+          object WeightStart_Vz: TcxGridDBColumn
+            Caption = #1053#1072#1095'.'#1086#1089#1090'. '#1085#1072' '#1089#1082#1083#1072#1076#1077' ('#1074#1077#1089') '#1089#1082#1083'.'#1042#1086#1079#1074#1088#1072#1090#1086#1074
+            DataBinding.FieldName = 'WeightStart_Vz'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
@@ -554,9 +617,31 @@ inherited Report_Branch_App1Form: TReport_Branch_App1Form
             Options.Editing = False
             Width = 70
           end
+          object SummEnd_Vz: TcxGridDBColumn
+            Caption = #1050#1086#1085'.'#1086#1089#1090'. '#1085#1072' '#1089#1082#1083#1072#1076#1077' ('#1075#1088#1085')  '#1089#1082#1083'.'#1042#1086#1079#1074#1088#1072#1090#1086#1074
+            DataBinding.FieldName = 'SummEnd_Vz'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
+          end
           object WeightEnd: TcxGridDBColumn
             Caption = #1050#1086#1085'.'#1086#1089#1090'. '#1085#1072' '#1089#1082#1083#1072#1076#1077' ('#1074#1077#1089')'
             DataBinding.FieldName = 'WeightEnd'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 76
+          end
+          object WeightEnd_Vz: TcxGridDBColumn
+            Caption = #1050#1086#1085'.'#1086#1089#1090'. '#1085#1072' '#1089#1082#1083#1072#1076#1077' ('#1074#1077#1089') '#1089#1082#1083'.'#1042#1086#1079#1074#1088#1072#1090#1086#1074
+            DataBinding.FieldName = 'WeightEnd_Vz'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
@@ -631,9 +716,9 @@ inherited Report_Branch_App1Form: TReport_Branch_App1Form
             Options.Editing = False
             Width = 60
           end
-          object PeresortInSumm: TcxGridDBColumn
-            Caption = #1055#1077#1088#1077#1089#1086#1088#1090#1080#1094#1072' '#1087#1088#1080#1093#1086#1076' ('#1075#1088#1085')'
-            DataBinding.FieldName = 'PeresortInSumm'
+          object PeresortInWeight: TcxGridDBColumn
+            Caption = #1055#1077#1088#1077#1089#1086#1088#1090#1080#1094#1072' '#1087#1088#1080#1093#1086#1076' ('#1074#1077#1089')'
+            DataBinding.FieldName = 'PeresortInWeight'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
@@ -642,9 +727,9 @@ inherited Report_Branch_App1Form: TReport_Branch_App1Form
             Options.Editing = False
             Width = 60
           end
-          object PeresortInWeight: TcxGridDBColumn
-            Caption = #1055#1077#1088#1077#1089#1086#1088#1090#1080#1094#1072' '#1087#1088#1080#1093#1086#1076' ('#1074#1077#1089')'
-            DataBinding.FieldName = 'PeresortInWeight'
+          object PeresortInSumm: TcxGridDBColumn
+            Caption = #1055#1077#1088#1077#1089#1086#1088#1090#1080#1094#1072' '#1087#1088#1080#1093#1086#1076' ('#1075#1088#1085')'
+            DataBinding.FieldName = 'PeresortInSumm'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
