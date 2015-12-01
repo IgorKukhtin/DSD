@@ -1,29 +1,29 @@
 inherited Report_WeighingForm: TReport_WeighingForm
   Caption = #1054#1090#1095#1077#1090' <C'#1088#1072#1074#1085#1077#1085#1080#1077' '#1076#1072#1085#1085#1099#1093' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' '#1080' '#1074#1089#1077#1093' '#1074#1079#1074#1077#1096#1080#1074#1072#1085#1080#1081'>'
-  ClientHeight = 344
-  ClientWidth = 1020
+  ClientHeight = 348
+  ClientWidth = 1064
   AddOnFormData.isSingle = False
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
-  ExplicitWidth = 1036
-  ExplicitHeight = 382
+  ExplicitWidth = 1080
+  ExplicitHeight = 386
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Width = 1020
-    Height = 287
+    Width = 1064
+    Height = 291
     TabOrder = 3
     ExplicitTop = 57
     ExplicitWidth = 1020
     ExplicitHeight = 287
-    ClientRectBottom = 287
-    ClientRectRight = 1020
+    ClientRectBottom = 291
+    ClientRectRight = 1064
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 1020
       ExplicitHeight = 287
       inherited cxGrid: TcxGrid
-        Width = 1020
-        Height = 287
+        Width = 1064
+        Height = 291
         ExplicitWidth = 1020
         ExplicitHeight = 287
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -327,6 +327,9 @@ inherited Report_WeighingForm: TReport_WeighingForm
           object Amount_sh: TcxGridDBColumn
             Caption = #1050#1086#1083'-'#1074#1086' '#1096#1090' '#1074#1079#1074#1077#1096'.('#1089#1082#1083#1072#1076')'
             DataBinding.FieldName = 'Amount_sh'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
@@ -335,6 +338,9 @@ inherited Report_WeighingForm: TReport_WeighingForm
           object Amount_mi_sh: TcxGridDBColumn
             Caption = #1050#1086#1083'-'#1074#1086' '#1096#1090' ('#1089#1082#1083#1072#1076' '#1076#1086#1082'.)'
             DataBinding.FieldName = 'Amount_mi_sh'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
@@ -343,6 +349,9 @@ inherited Report_WeighingForm: TReport_WeighingForm
           object AmountDiff_sh: TcxGridDBColumn
             Caption = #1056#1072#1079#1085#1080#1094#1072' '#1074' '#1082#1086#1083'-'#1074#1077' '#1096#1090
             DataBinding.FieldName = 'AmountDiff_sh'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
@@ -351,6 +360,9 @@ inherited Report_WeighingForm: TReport_WeighingForm
           object Amount_Weight: TcxGridDBColumn
             Caption = #1050#1086#1083'-'#1074#1086' '#1074#1077#1089' '#1074#1079#1074#1077#1096'.('#1089#1082#1083#1072#1076')'
             DataBinding.FieldName = 'Amount_Weight'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
@@ -359,6 +371,9 @@ inherited Report_WeighingForm: TReport_WeighingForm
           object Amount_mi_Weight: TcxGridDBColumn
             Caption = #1050#1086#1083'-'#1074#1086' '#1074#1077#1089' ('#1089#1082#1083#1072#1076' '#1076#1086#1082'.)'
             DataBinding.FieldName = 'Amount_mi_Weight'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
@@ -367,6 +382,9 @@ inherited Report_WeighingForm: TReport_WeighingForm
           object AmountDiff_Weight: TcxGridDBColumn
             Caption = #1056#1072#1079#1085#1080#1094#1072' '#1074' '#1082#1086#1083'-'#1074#1077' '#1074#1077#1089
             DataBinding.FieldName = 'AmountDiff_Weight'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
@@ -375,6 +393,9 @@ inherited Report_WeighingForm: TReport_WeighingForm
           object AmountPartner: TcxGridDBColumn
             Caption = #1050#1086#1083'-'#1074#1086' '#1089#1086' '#1089#1082#1080#1076#1082#1086#1081
             DataBinding.FieldName = 'AmountPartner'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
@@ -385,6 +406,9 @@ inherited Report_WeighingForm: TReport_WeighingForm
           object AmountPartner_mi: TcxGridDBColumn
             Caption = #1050#1086#1083'-'#1074#1086' '#1091' '#1087#1086#1082#1091#1087'. ('#1076#1086#1082'.)'
             DataBinding.FieldName = 'AmountPartner_mi'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
@@ -395,6 +419,9 @@ inherited Report_WeighingForm: TReport_WeighingForm
           object AmountChangePercent: TcxGridDBColumn
             Caption = #1050#1086#1083'-'#1074#1086' '#1089#1086' '#1089#1082#1080#1076#1082#1086#1081' ('#1076#1086#1082'.)'
             DataBinding.FieldName = 'AmountChangePercent'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
@@ -405,6 +432,9 @@ inherited Report_WeighingForm: TReport_WeighingForm
           object ChangePercentAmount: TcxGridDBColumn
             Caption = '% '#1089#1082#1080#1076#1082#1080' '#1074#1077#1089
             DataBinding.FieldName = 'ChangePercentAmount'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
@@ -414,6 +444,9 @@ inherited Report_WeighingForm: TReport_WeighingForm
           object Price: TcxGridDBColumn
             Caption = #1062#1077#1085#1072
             DataBinding.FieldName = 'Price'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
@@ -422,6 +455,9 @@ inherited Report_WeighingForm: TReport_WeighingForm
           object CountForPrice: TcxGridDBColumn
             Caption = #1050#1086#1083'. '#1074' '#1094#1077#1085#1077
             DataBinding.FieldName = 'CountForPrice'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
@@ -433,7 +469,7 @@ inherited Report_WeighingForm: TReport_WeighingForm
     end
   end
   inherited Panel: TPanel
-    Width = 1020
+    Width = 1064
     ExplicitWidth = 1020
     inherited deStart: TcxDateEdit
       Left = 97

@@ -4,7 +4,7 @@ inherited Report_FoundersForm: TReport_FoundersForm
   ClientWidth = 1103
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   ExplicitWidth = 1119
-  ExplicitHeight = 590
+  ExplicitHeight = 593
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -230,7 +230,6 @@ inherited Report_FoundersForm: TReport_FoundersForm
             Caption = #1053#1072#1095#1080#1089#1083#1077#1085#1086
             DataBinding.FieldName = 'ServiceSumm'
             PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.AssignedValues.EditFormat = True
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
             HeaderAlignmentHorz = taCenter
@@ -242,7 +241,6 @@ inherited Report_FoundersForm: TReport_FoundersForm
             Caption = #1042#1099#1087#1083#1072#1095#1077#1085#1086
             DataBinding.FieldName = 'MoneySumm'
             PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.AssignedValues.EditFormat = True
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
             HeaderAlignmentHorz = taCenter
@@ -282,7 +280,6 @@ inherited Report_FoundersForm: TReport_FoundersForm
             Caption = #1050#1086#1085'. '#1076#1086#1083#1075' '#1082' '#1074#1099#1087#1083'.'
             DataBinding.FieldName = 'EndAmount'
             PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.AssignedValues.EditFormat = True
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
             Properties.ReadOnly = True
@@ -594,7 +591,7 @@ inherited Report_FoundersForm: TReport_FoundersForm
       DataSets = <
         item
           DataSet = MasterCDS
-          UserName = 'frxDBDataset'
+          UserName = 'frxDBDItems'
           IndexFieldNames = 'FounderName;GroupName;MoneyPlaceName'
         end>
       Params = <
