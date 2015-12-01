@@ -210,8 +210,8 @@ object GoodsTreeForm: TGoodsTreeForm
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
-    Font.Height = -11
-    Font.Name = 'Tahoma'
+    Font.Height = -12
+    Font.Name = 'Segoe UI'
     Font.Style = []
     Categories.Strings = (
       'Default')
@@ -541,7 +541,7 @@ object GoodsTreeForm: TGoodsTreeForm
     Top = 144
   end
   object spErasedUnErased: TdsdStoredProc
-    StoredProcName = 'gpUpdateObjectIsErased'
+    StoredProcName = 'gpUpdate_Object_isErased_Goods'
     DataSets = <>
     OutputType = otResult
     Params = <
@@ -611,6 +611,6 @@ object GoodsTreeForm: TGoodsTreeForm
     SortImages = dmMain.SortImageList
     DBTreeList = cxDBTreeList
     Left = 48
-    Top = 160
+    Top = 192
   end
 end

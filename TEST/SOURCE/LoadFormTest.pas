@@ -108,6 +108,7 @@ type
     procedure LoadReportSaleAnalyzeFormTest;
     procedure LoadReportProductionOutAnalyzeFormTest;
     procedure LoadReportProductionOrderFormTest;
+    procedure LoadReportPromoFormTest;
     procedure LoadReportTransportFormTest;
     procedure LoadReportWageFormTest;
     procedure LoadReturnInFormTest;
@@ -1415,6 +1416,14 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TReport_ReceiptProductionOutAnalyzeForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_ReceiptProductionOutAnalyzeDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_ReceiptProductionOutAnalyzeDialogForm');
+end;
+
+procedure TLoadFormTest.LoadReportPromoFormTest;
+begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_PromoForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_PromoForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_PromoDialogForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_PromoDialogForm');
 end;
 
 procedure TLoadFormTest.LoadUnionFormTest;

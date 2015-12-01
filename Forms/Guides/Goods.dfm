@@ -591,7 +591,7 @@ object GoodsForm: TGoodsForm
     Top = 152
   end
   object spErasedUnErased: TdsdStoredProc
-    StoredProcName = 'gpUpdateObjectIsErased'
+    StoredProcName = 'gpUpdate_Object_isErased_Goods'
     DataSets = <>
     OutputType = otResult
     Params = <

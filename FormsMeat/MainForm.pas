@@ -649,6 +649,8 @@ type
     N87: TMenuItem;
     actReport_Branch_App7_New: TdsdOpenForm;
     N711: TMenuItem;
+    actReport_Promo: TdsdOpenForm;
+    N88: TMenuItem;
     procedure actReport_OLAPSoldExecute(Sender: TObject);
     procedure FormShow(Sender: TObject);
   private

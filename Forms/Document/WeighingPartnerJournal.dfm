@@ -625,6 +625,21 @@ object WeighingPartnerJournalForm: TWeighingPartnerJournalForm
         HeaderAlignmentVert = vaCenter
         Width = 70
       end
+      object isPromo: TcxGridDBColumn
+        Caption = #1040#1082#1094#1080#1103
+        DataBinding.FieldName = 'isPromo'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 56
+      end
+      object MovementPromo: TcxGridDBColumn
+        Caption = #8470' '#1076#1086#1082'. '#1072#1082#1094#1080#1103
+        DataBinding.FieldName = 'MovementPromo'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 80
+      end
     end
     object cxGridLevel: TcxGridLevel
       GridView = cxGridDBTableView

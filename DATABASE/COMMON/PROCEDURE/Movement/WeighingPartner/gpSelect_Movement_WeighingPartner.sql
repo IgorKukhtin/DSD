@@ -37,6 +37,8 @@ RETURNS TABLE (Id Integer, InvNumber Integer, OperDate TDateTime, StatusCode Int
              , PositionCode3 Integer, PositionName3 TVarChar
              , PositionCode4 Integer, PositionName4 TVarChar
              , UserName TVarChar
+             , isPromo Boolean
+             , MovementPromo TVarChar
               )
 AS
 $BODY$
@@ -146,6 +148,9 @@ BEGIN
              , Object_Position4.ObjectCode AS PositionCode4, Object_Position4.ValueData AS PositionName4
 
              , Object_User.ValueData              AS UserName
+
+             , COALESCE (MovementBoolean_Promo.ValueData, False) AS isPromo
+             , zfCalc_PromoMovementName (NULL, Movement_Promo.InvNumber :: TVarChar, Movement_Promo.OperDate, MD_StartSale.ValueData, MD_EndSale.ValueData) AS MovementPromo
 
        FROM tmpStatus
             JOIN Movement ON Movement.DescId = zc_Movement_WeighingPartner()
@@ -319,6 +324,21 @@ BEGIN
                                          ON MovementLinkObject_PersonalDriver.MovementId = Movement_Transport.Id
                                         AND MovementLinkObject_PersonalDriver.DescId = zc_MovementLinkObject_PersonalDriver()
             LEFT JOIN Object_Personal_View AS View_PersonalDriver ON View_PersonalDriver.PersonalId = MovementLinkObject_PersonalDriver.ObjectId
+
+            LEFT JOIN MovementBoolean AS MovementBoolean_Promo
+                                      ON MovementBoolean_Promo.MovementId =  Movement.Id
+                                     AND MovementBoolean_Promo.DescId = zc_MovementBoolean_Promo()
+
+            LEFT JOIN MovementLinkMovement AS MovementLinkMovement_Promo
+                                           ON MovementLinkMovement_Promo.MovementId = Movement.Id
+                                          AND MovementLinkMovement_Promo.DescId = zc_MovementLinkMovement_Promo()
+            LEFT JOIN Movement AS Movement_Promo ON Movement_Promo.Id = MovementLinkMovement_Promo.MovementChildId
+            LEFT JOIN MovementDate AS MD_StartSale
+                                   ON MD_StartSale.MovementId =  Movement_Promo.Id
+                                  AND MD_StartSale.DescId = zc_MovementDate_StartSale()
+            LEFT JOIN MovementDate AS MD_EndSale
+                                   ON MD_EndSale.MovementId =  Movement_Promo.Id
+                                  AND MD_EndSale.DescId = zc_MovementDate_EndSale()
 
       ;
   

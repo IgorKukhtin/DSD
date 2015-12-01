@@ -1,6 +1,7 @@
 -- View: Object_Goods_View
 
-DROP VIEW IF EXISTS Object_Price_View;
+--DROP VIEW IF EXISTS Object_Price_View;
+-- удаление вынесено в каскадное
 
 CREATE OR REPLACE VIEW Object_Price_View 
 AS

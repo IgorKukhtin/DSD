@@ -38,6 +38,7 @@ CREATE OR REPLACE VIEW MovementItem_PromoGoods_View AS
       , Object_GoodsKind.ValueData             AS GoodsKindName       --Наименование обьекта <Вид товара>
       , MIString_Comment.ValueData             AS Comment             -- Примечание
       , MovementItem.isErased                  AS isErased            -- Удален
+      , CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN ObjectFloat_Goods_Weight.ValueData ELSE 1 END::TFloat as GoodsWeight -- Вес
     FROM MovementItem
         LEFT JOIN MovementItemFloat AS MIFloat_Price
                                     ON MIFloat_Price.MovementItemId = MovementItem.Id

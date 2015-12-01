@@ -385,6 +385,25 @@ inherited Sale_PartnerForm: TSale_PartnerForm
             HeaderAlignmentVert = vaCenter
             Width = 70
           end
+          object PricePromo: TcxGridDBColumn
+            Caption = #1062#1077#1085#1072' '#1072#1082#1094#1080#1103
+            DataBinding.FieldName = 'PricePromo'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
+          end
+          object MovementPromo: TcxGridDBColumn
+            Caption = #8470' '#1076#1086#1082'. '#1072#1082#1094#1080#1103
+            DataBinding.FieldName = 'MovementPromo'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 100
+          end
         end
       end
     end
@@ -575,8 +594,8 @@ inherited Sale_PartnerForm: TSale_PartnerForm
       Caption = #1044#1072#1090#1072' '#1076#1086#1082'. '#1091' '#1087#1086#1082#1091#1087'.'
     end
     object edIsChecked: TcxCheckBox
-      Left = 682
-      Top = 63
+      Left = 684
+      Top = 48
       Caption = #1055#1088#1086#1074#1077#1088#1077#1085' ('#1076#1072'/'#1085#1077#1090')'
       TabOrder = 24
       Width = 118
@@ -820,6 +839,14 @@ inherited Sale_PartnerForm: TSale_PartnerForm
       Top = 85
       Caption = #1055#1091#1090#1077#1074#1086#1081' '#1083#1080#1089#1090
     end
+  end
+  object cbPromo: TcxCheckBox [2]
+    Left = 684
+    Top = 75
+    Caption = #1040#1082#1094#1080#1103' ('#1076#1072'/'#1085#1077#1090')'
+    Properties.ReadOnly = True
+    TabOrder = 6
+    Width = 100
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 171
@@ -2127,6 +2154,12 @@ inherited Sale_PartnerForm: TSale_PartnerForm
         Component = TransportChoiceGuides
         ComponentItem = 'TextValue'
         DataType = ftString
+      end
+      item
+        Name = 'isPromo'
+        Value = Null
+        Component = cbPromo
+        DataType = ftBoolean
       end>
     Left = 216
     Top = 248
@@ -2955,7 +2988,7 @@ inherited Sale_PartnerForm: TSale_PartnerForm
         DataType = ftString
         ParamType = ptInput
       end>
-    Left = 804
+    Left = 828
     Top = 64
   end
   object spSelectPrint: TdsdStoredProc
