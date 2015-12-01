@@ -1,26 +1,26 @@
 inherited Report_PromoDialogForm: TReport_PromoDialogForm
-  Caption = 'Report_PromoDialogForm'
+  Caption = #1054#1090#1095#1077#1090' '#1087#1086' '#1072#1082#1094#1080#1103#1084
   ClientHeight = 133
-  ClientWidth = 525
-  ExplicitWidth = 531
-  ExplicitHeight = 161
+  ClientWidth = 446
+  ExplicitWidth = 452
+  ExplicitHeight = 158
   PixelsPerInch = 96
   TextHeight = 13
   inherited bbOk: TcxButton
-    Left = 159
+    Left = 114
     Top = 88
-    ExplicitLeft = 159
+    ExplicitLeft = 114
     ExplicitTop = 88
   end
   inherited bbCancel: TcxButton
-    Left = 303
+    Left = 258
     Top = 88
-    ExplicitLeft = 303
+    ExplicitLeft = 258
     ExplicitTop = 88
   end
   object cxLabel1: TcxLabel [2]
     Left = 26
-    Top = 6
+    Top = 9
     Caption = #1053#1072#1095#1072#1083#1086' '#1087#1077#1088#1080#1086#1076#1072':'
   end
   object deStart: TcxDateEdit [3]
@@ -32,12 +32,12 @@ inherited Report_PromoDialogForm: TReport_PromoDialogForm
     Width = 85
   end
   object cxLabel2: TcxLabel [4]
-    Left = 303
+    Left = 239
     Top = 9
     Caption = #1054#1082#1086#1085#1095#1072#1085#1080#1077' '#1087#1077#1088#1080#1086#1076#1072':'
   end
   object deEnd: TcxDateEdit [5]
-    Left = 419
+    Left = 355
     Top = 8
     EditValue = 41395d
     Properties.ShowTime = False
@@ -59,7 +59,7 @@ inherited Report_PromoDialogForm: TReport_PromoDialogForm
       end>
     Properties.ReadOnly = True
     TabOrder = 7
-    Width = 362
+    Width = 301
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 128
@@ -131,7 +131,13 @@ inherited Report_PromoDialogForm: TReport_PromoDialogForm
         DataType = ftString
         ParamType = ptInput
       end>
-    Left = 457
+    Left = 369
+    Top = 32
+  end
+  object PeriodChoice: TPeriodChoice
+    DateStart = deStart
+    DateEnd = deEnd
+    Left = 232
     Top = 40
   end
 end
