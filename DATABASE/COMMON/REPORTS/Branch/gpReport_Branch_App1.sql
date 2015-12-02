@@ -128,7 +128,10 @@ BEGIN
                                        AND tmpContainerListSum.isUnit_Vz = FALSE
                                        THEN MIContainer.Amount                                         ---ReturnIn
                                     ELSE 0 END) AS SummReturnIn
-                          , SUM (CASE WHEN MIContainer.MovementDescId = zc_Movement_SendOnPrice() AND MIContainer.isActive = TRUE AND MIContainer.OperDate BETWEEN inStartDate AND inEndDate THEN MIContainer.Amount                              ---перемещение по цене
+                          , SUM (CASE WHEN MIContainer.MovementDescId = zc_Movement_SendOnPrice()
+                                       AND MIContainer.isActive = TRUE
+                                       AND tmpContainerListSum.isUnit_Vz = FALSE 
+                                       AND MIContainer.OperDate BETWEEN inStartDate AND inEndDate THEN MIContainer.Amount                              ---перемещение по цене
                                     ELSE 0 END) AS SummSendOnPriceIn
                           , SUM (CASE WHEN MIContainer.MovementDescId = zc_Movement_SendOnPrice() 
                                        AND MIContainer.isActive = FALSE 
@@ -281,10 +284,7 @@ BEGIN
                           , SUM (CASE WHEN MIContainer.OperDate BETWEEN inStartDate AND inEndDate AND MIContainer.isActive = FALSE THEN -1 * MIContainer.Amount
                                     ELSE 0 END) AS CountOut
 
-                          , SUM (CASE WHEN MIContainer.MovementDescId = zc_Movement_Sale()
-                                       AND MIContainer.OperDate BETWEEN inStartDate AND inEndDate
-                                       AND tmpContainerList.isUnit_Vz = FALSE 
-                                      THEN -1 * MIContainer.Amount                                        --Sale
+                          , SUM (CASE WHEN MIContainer.MovementDescId = zc_Movement_Sale() AND MIContainer.OperDate BETWEEN inStartDate AND inEndDate  THEN -1 * MIContainer.Amount                                        --Sale
                                     ELSE 0 END) AS CountSale
                           , SUM (CASE WHEN MIContainer.MovementDescId = zc_Movement_Sale() 
                                        AND MIContainer.OperDate BETWEEN inStartDate AND inEndDate
@@ -401,8 +401,7 @@ BEGIN
                           LEFT JOIN MovementItemContainer AS MIContainer 
                                                           ON MIContainer.ContainerId = tmpContainerList.ContainerId 
                                                           AND MIContainer.OperDate >= inStartDate 
-                     WHERE tmpContainerList.DescId = zc_Container_Count() 
-                     AND CLO_Account.ContainerId IS NULL
+                     WHERE CLO_Account.ContainerId IS NULL
                      GROUP BY tmpContainerList.Amount, tmpContainerList.BranchId, tmpContainerList.ObjectId,tmpContainerList.UnitId ,tmpContainerList.ContainerId, tmpContainerList.isUnit_Vz
                     
                     )
