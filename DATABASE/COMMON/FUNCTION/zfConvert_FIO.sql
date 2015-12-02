@@ -9,7 +9,8 @@ $BODY$
    DECLARE vb1 Integer;
    DECLARE vb2 Integer;
 BEGIN
-     
+      IF TRIM (COALESCE (TextFIO, '')) = '' THEN  RETURN(''); END IF;
+
       vb1 :=  position(' ' in TextFIO);
 
       vb2 :=  vb1 + position(' ' in (substring( TextFIO from vb1+1 for char_length(TextFIO) ) ));

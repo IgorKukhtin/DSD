@@ -9,6 +9,7 @@ CREATE OR REPLACE VIEW MovementItem_PromoGoods_View AS
       , MovementItem.ObjectId                  AS GoodsId             --ИД объекта <товар>
       , Object_Goods.ObjectCode::Integer       AS GoodsCode           --код объекта  <товар>
       , Object_Goods.ValueData                 AS GoodsName           --наименование объекта <товар>
+      , Object_Measure.Id                      AS MeasureId           --Единица измерения
       , Object_Measure.ValueData               AS Measure             --Единица измерения
       , Object_TradeMark.ValueData             AS TradeMark           --Торговая марка
       , MovementItem.Amount                    AS Amount              --% скидки на товар

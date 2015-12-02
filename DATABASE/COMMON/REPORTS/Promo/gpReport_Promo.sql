@@ -1,159 +1,89 @@
 DROP FUNCTION IF EXISTS gpSelect_Report_Promo(
-    TDateTime, --РґР°С‚Р° РЅР°С‡Р°Р»Р° РїРµСЂРёРѕРґР°
-    TDateTime, --РґР°С‚Р° РѕРєРѕРЅС‡Р°РЅРёСЏ РїРµСЂРёРѕРґР°
-    Integer,   --РїРѕРґСЂР°Р·РґРµР»РµРЅРёРµ 
-    TVarChar   --СЃРµСЃСЃРёСЏ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ
+    TDateTime, --дата начала периода
+    TDateTime, --дата окончания периода
+    Integer,   --подразделение 
+    TVarChar   --сессия пользователя
 );
 
 CREATE OR REPLACE FUNCTION gpSelect_Report_Promo(
-    IN inStartDate      TDateTime, --РґР°С‚Р° РЅР°С‡Р°Р»Р° РїРµСЂРёРѕРґР°
-    IN inEndDate        TDateTime, --РґР°С‚Р° РѕРєРѕРЅС‡Р°РЅРёСЏ РїРµСЂРёРѕРґР°
-    IN inUnitId         Integer,   --РїРѕРґСЂР°Р·РґРµР»РµРЅРёРµ 
-    IN inSession        TVarChar   --СЃРµСЃСЃРёСЏ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ
+    IN inStartDate      TDateTime, --дата начала периода
+    IN inEndDate        TDateTime, --дата окончания периода
+    IN inUnitId         Integer,   --подразделение 
+    IN inSession        TVarChar   --сессия пользователя
 )
 RETURNS TABLE(
-     MovementId           Integer   --РР” РґРѕРєСѓРјРµРЅС‚Р° Р°РєС†РёРё
-    ,InvNumber            TVarChar  --в„– РґРѕРєСѓРјРµРЅС‚Р° Р°РєС†РёРё
-    ,UnitName             TVarChar  --РЎРєР»Р°Рґ
-    ,PersonalTradeName    TVarChar  --РћС‚РІРµС‚СЃС‚РІРµРЅРЅС‹Р№ РїСЂРµРґСЃС‚Р°РІРёС‚РµР»СЊ РєРѕРјРјРµСЂС‡РµСЃРєРѕРіРѕ РѕС‚РґРµР»Р°
-    ,PersonalName         TVarChar  --РћС‚РІРµС‚СЃС‚РІРµРЅРЅС‹Р№ РїСЂРµРґСЃС‚Р°РІРёС‚РµР»СЊ РјР°СЂРєРµС‚РёРЅРіРѕРІРѕРіРѕ РѕС‚РґРµР»Р°	
-    ,DateStartSale        TDateTime --Р”Р°С‚Р° РѕС‚РіСЂСѓР·РєРё РїРѕ Р°РєС†РёРѕРЅРЅС‹Рј С†РµРЅР°Рј
-    ,DeteFinalSale        TDateTime --Р”Р°С‚Р° РѕС‚РіСЂСѓР·РєРё РїРѕ Р°РєС†РёРѕРЅРЅС‹Рј С†РµРЅР°Рј
-    ,DateStartPromo       TDateTime --Р”Р°С‚Р° РїСЂРѕРІРµРґРµРЅРёСЏ Р°РєС†РёРё
-    ,DateFinalPromo       TDateTime --Р”Р°С‚Р° РїСЂРѕРІРµРґРµРЅРёСЏ Р°РєС†РёРё
-    ,RetailName           TBlob     --РЎРµС‚СЊ, РІ РєРѕС‚РѕСЂРѕР№ РїСЂРѕС…РѕРґРёС‚ Р°РєС†РёСЏ
-    ,AreaName             TBlob     --Р РµРіРёРѕРЅ
-    ,GoodsName            TVarChar  --РџРѕР·РёС†РёСЏ
-    ,GoodsCode            Integer   --РљРѕРґ РїРѕР·РёС†РёРё
-    ,MeasureName          TVarChar  --РµРґРёРЅРёС†Р° РёР·РјРµСЂРµРЅРёСЏ
-    ,TradeMarkName        TVarChar  --РўРѕСЂРіРѕРІР°СЏ РјР°СЂРєР°
-    ,AmountPlanMin        TFloat    --РџР»Р°РЅРёСЂСѓРµРјС‹Р№ РѕР±СЉРµРј РїСЂРѕРґР°Р¶ РІ Р°РєС†РёРѕРЅРЅС‹Р№ РїРµСЂРёРѕРґ, С€С‚
-    ,AmountPlanMinWeight  TFloat    --РџР»Р°РЅРёСЂСѓРµРјС‹Р№ РѕР±СЉРµРј РїСЂРѕРґР°Р¶ РІ Р°РєС†РёРѕРЅРЅС‹Р№ РїРµСЂРёРѕРґ, РєРі
-    ,AmountPlanMax        TFloat    --РџР»Р°РЅРёСЂСѓРµРјС‹Р№ РѕР±СЉРµРј РїСЂРѕРґР°Р¶ РІ Р°РєС†РёРѕРЅРЅС‹Р№ РїРµСЂРёРѕРґ, С€С‚
-    ,AmountPlanMaxWeight  TFloat    --РџР»Р°РЅРёСЂСѓРµРјС‹Р№ РѕР±СЉРµРј РїСЂРѕРґР°Р¶ РІ Р°РєС†РёРѕРЅРЅС‹Р№ РїРµСЂРёРѕРґ, РєРі
-    ,AmountReal           TFloat    --РћР±СЉРµРј РїСЂРѕРґР°Р¶ РІ Р°РЅР°Р»РѕРіРёС‡РЅС‹Р№ РїРµСЂРёРѕРґ, РєРі
-    ,AmountRealWeight     TFloat    --РћР±СЉРµРј РїСЂРѕРґР°Р¶ РІ Р°РЅР°Р»РѕРіРёС‡РЅС‹Р№ РїРµСЂРёРѕРґ, РєРі Р’РµСЃ
-    ,AmountOrder          TFloat    --РљРѕР»-РІРѕ Р·Р°СЏРІРєР° (С„Р°РєС‚)
-    ,AmountOrderWeight    TFloat    --РљРѕР»-РІРѕ Р·Р°СЏРІРєР° (С„Р°РєС‚) Р’РµСЃ
-    ,AmountOut            TFloat    --РљРѕР»-РІРѕ СЂРµР°Р»РёР·Р°С†РёСЏ (С„Р°РєС‚)
-    ,AmountOutWeight      TFloat    --РљРѕР»-РІРѕ СЂРµР°Р»РёР·Р°С†РёСЏ (С„Р°РєС‚) Р’РµСЃ
-    ,AmountIn             TFloat    --РљРѕР»-РІРѕ РІРѕР·РІСЂР°С‚ (С„Р°РєС‚)
-    ,AmountInWeight       TFloat    --РљРѕР»-РІРѕ РІРѕР·РІСЂР°С‚ (С„Р°РєС‚) Р’РµСЃ
-    ,GoodsKindName        TVarChar  --Р’РёРґ СѓРїР°РєРѕРІРєРё
-    ,GoodsWeight          TFloat    --Р’РµСЃ
-    ,Discount             TBlob     --РЎРєРёРґРєР°, %
-    ,PriceWithOutVAT      TFloat    --РћС‚РіСЂСѓР·РѕС‡РЅР°СЏ Р°РєС†РёРѕРЅРЅР°СЏ С†РµРЅР° Р±РµР· СѓС‡РµС‚Р° РќР”РЎ, РіСЂРЅ
-    ,PriceWithVAT         TFloat    --РћС‚РіСЂСѓР·РѕС‡РЅР°СЏ Р°РєС†РёРѕРЅРЅР°СЏ С†РµРЅР° СЃ СѓС‡РµС‚РѕРј РќР”РЎ, РіСЂРЅ
-    ,Price                TFloat    -- * Р¦РµРЅР° СЃРїРµС†РёС„РёРєР°С†РёРё СЃ РќР”РЎ, РіСЂРЅ
-    ,CostPromo            TFloat    -- * РЎС‚РѕРёРјРѕСЃС‚СЊ СѓС‡Р°СЃС‚РёСЏ
-    ,AdvertisingName      TBlob     -- * СЂРµРєР»Р°РјРЅ.РїРѕРґРґРµСЂР¶РєР°
-    ,OperDate             TDateTime -- * РЎС‚Р°С‚СѓСЃ РІРЅРµСЃРµРЅРёСЏ РІ Р±Р°Р·Сѓ
-    ,PriceSale            TFloat    -- * Р¦РµРЅР° РЅР° РїРѕР»РєРµ/СЃРєРёРґРєР° РґР»СЏ РїРѕРєСѓРїР°С‚РµР»СЏ
-    ,Comment              TVarChar  --РљРѕРјРјРµРЅС‚Р°СЂРёРё
-    ,ShowAll              Boolean   --РџРѕРєР°Р·С‹РІР°С‚СЊ РІСЃРµ РґР°РЅРЅС‹Рµ
+     DateStartSale        TDateTime --Дата отгрузки по акционным ценам
+    ,DeteFinalSale        TDateTime --Дата отгрузки по акционным ценам
+    ,DateStartPromo       TDateTime --Дата проведения акции
+    ,DateFinalPromo       TDateTime --Дата проведения акции
+    ,RetailName           TBlob     --Сеть, в которой проходит акция
+    ,AreaName             TBlob     --Регион
+    ,GoodsName            TVarChar  --Позиция
+    ,GoodsCode            Integer   --Код позиции
+    ,MeasureName          TVarChar  --единица измерения
+    ,TradeMarkName        TVarChar  --Торговая марка
+    ,AmountPlanMin        TFloat    --Планируемый объем продаж в акционный период, шт
+    ,AmountPlanMinWeight  TFloat    --Планируемый объем продаж в акционный период, кг
+    ,AmountPlanMax        TFloat    --Планируемый объем продаж в акционный период, шт
+    ,AmountPlanMaxWeight  TFloat    --Планируемый объем продаж в акционный период, кг
+    ,GoodsKindName        TVarChar  --Вид упаковки
+    ,GoodsWeight          TFloat    --Вес
+    ,Discount             TBlob     --Скидка, %
+    ,PriceWithOutVAT      TFloat    --Отгрузочная акционная цена без учета НДС, грн
+    ,PriceWithVAT         TFloat    --Отгрузочная акционная цена с учетом НДС, грн
+    ,Price                TFloat    -- * Цена спецификации с НДС, грн
+    ,CostPromo            TFloat    -- * Стоимость участия
+    ,AdvertisingName      TBlob     -- * рекламн.поддержка
+    ,OperDate             TDateTime -- * Статус внесения в базу
+    ,PriceSale            TFloat    -- * Цена на полке/скидка для покупателя
+    ,Comment              TVarChar  --Комментарии
+    ,ShowAll              Boolean   --Показывать все данные
     )
 AS
 $BODY$
     DECLARE vbUserId Integer;
     DECLARE vbShowAll Boolean;
 BEGIN
-    -- РїСЂРѕРІРµСЂРєР° РїСЂР°РІ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ РЅР° РІС‹Р·РѕРІ РїСЂРѕС†РµРґСѓСЂС‹
+    -- проверка прав пользователя на вызов процедуры
     -- PERFORM lpCheckRight (inSession, zc_Enum_Process_Select_MI_SheetWorkTime());
-    vbUserId := inSession::Integer;
-    --Р’СЃС‚Р°РІРёС‚СЊ РЅРѕСЂРјР°Р»СЊРЅСѓСЋ РїСЂРѕРІРµСЂРєСѓ РЅР° РїСЂР°РІРѕ РѕС‚РѕР±СЂР°Р¶РµРЅРёСЏ РІСЃРµС… РєРѕР»РѕРЅРѕРє
-    IF vbUserId = 5
-    THEN
-        vbShowAll := TRUE;
-    ELSE
-        vbShowAll := FALSE;
-    END IF;
+     vbUserId:= lpGetUserBySession (inSession);
+
+    -- Вставить нормальную проверку на право отображения всех колонок
+    vbShowAll:= EXISTS (SELECT 1 FROM ObjectLink_UserRole_View WHERE UserId = vbUserId AND RoleId IN (112322, 296580, zc_Enum_Role_Admin())); -- Отдел Маркетинг + Просмотр ВСЕ (управленцы)
+
     
     RETURN QUERY
         SELECT
-            Movement_Promo.Id                --РР” РґРѕРєСѓРјРµРЅС‚Р° Р°РєС†РёРё
-          , Movement_Promo.InvNumber          --в„– РґРѕРєСѓРјРµРЅС‚Р° Р°РєС†РёРё
-          , Movement_Promo.UnitName           --РЎРєР»Р°Рґ
-          , Movement_Promo.PersonalTradeName  --РћС‚РІРµС‚СЃС‚РІРµРЅРЅС‹Р№ РїСЂРµРґСЃС‚Р°РІРёС‚РµР»СЊ РєРѕРјРјРµСЂС‡РµСЃРєРѕРіРѕ РѕС‚РґРµР»Р°
-          , Movement_Promo.PersonalName       --РћС‚РІРµС‚СЃС‚РІРµРЅРЅС‹Р№ РїСЂРµРґСЃС‚Р°РІРёС‚РµР»СЊ РјР°СЂРєРµС‚РёРЅРіРѕРІРѕРіРѕ РѕС‚РґРµР»Р°	
-          , Movement_Promo.StartSale          --Р”Р°С‚Р° РЅР°С‡Р°Р»Р° РѕС‚РіСЂСѓР·РєРё РїРѕ Р°РєС†РёРѕРЅРЅРѕР№ С†РµРЅРµ
-          , Movement_Promo.EndSale            --Р”Р°С‚Р° РѕРєРѕРЅС‡Р°РЅРёСЏ РѕС‚РіСЂСѓР·РєРё РїРѕ Р°РєС†РёРѕРЅРЅРѕР№ С†РµРЅРµ
-          , Movement_Promo.StartPromo         --Р”Р°С‚Р° РЅР°С‡Р°Р»Р° Р°РєС†РёРё
-          , Movement_Promo.EndPromo           --Р”Р°С‚Р° РѕРєРѕРЅС‡Р°РЅРёСЏ Р°РєС†РёРё
-          -- , (SELECT STRING_AGG( DISTINCT Movement_PromoPartner.Retail_Name,'; ')
-             -- FROM (SELECT DISTINCT Movement_PromoPartner_View.Retail_Name
-                   -- FROM Movement_PromoPartner_View
-                   -- WHERE Movement_PromoPartner_View.ParentId = Movement_Promo.Id
-                     -- AND COALESCE(Movement_PromoPartner_View.Retail_Name,'')<>''
-                     -- AND Movement_PromoPartner_View.isErased = FALSE
-                  -- ) AS Movement_PromoPartner
-            -- )::TBlob AS RetailName
-            --------------------------------------
-          , (SELECT STRING_AGG( DISTINCT Object_Retail.ValueData,'; ')
-             FROM
-                Movement AS Movement_PromoPartner
-                INNER JOIN MovementItem AS MI_PromoPartner
-                                        ON MI_PromoPartner.MovementId = Movement_PromoPartner.ID
-                                       AND MI_PromoPartner.DescId = zc_MI_Master()
-                INNER JOIN ObjectLink AS ObjectLink_Partner_Juridical
-                                      ON ObjectLink_Partner_Juridical.ObjectId = MI_PromoPartner.ObjectId
-                                     AND ObjectLink_Partner_Juridical.DescId = zc_ObjectLink_Partner_Juridical()
-                INNER JOIN ObjectLink AS ObjectLink_Juridical_Retail
-                                      ON ObjectLink_Juridical_Retail.ObjectId = ObjectLink_Partner_Juridical.ChildObjectId
-                                     AND ObjectLink_Juridical_Retail.DescId = zc_ObjectLink_Juridical_Retail()
-                INNER JOIN Object AS Object_Retail
-                                  ON Object_Retail.Id = ObjectLink_Juridical_Retail.ChildObjectId
-             WHERE
-                Movement_PromoPartner.ParentId = Movement_Promo.Id
-                AND 
-                Movement_PromoPartner.DescId = zc_Movement_PromoPartner()
-                AND
-                MI_PromoPartner.IsErased = FALSE
+            Movement_Promo.StartSale          --Дата начала отгрузки по акционной цене
+          , Movement_Promo.EndSale            --Дата окончания отгрузки по акционной цене
+          , Movement_Promo.StartPromo         --Дата начала акции
+          , Movement_Promo.EndPromo           --Дата окончания акции
+          , (SELECT STRING_AGG(Movement_PromoPartner.Retail_Name,'; ')
+             FROM (SELECT DISTINCT Movement_PromoPartner_View.Retail_Name
+                   FROM Movement_PromoPartner_View
+                   WHERE Movement_PromoPartner_View.ParentId = Movement_Promo.Id
+                     AND COALESCE(Movement_PromoPartner_View.Retail_Name,'')<>''
+                     AND Movement_PromoPartner_View.isErased = FALSE
+                  ) AS Movement_PromoPartner
             )::TBlob AS RetailName
-            --------------------------------------
-          -- , (SELECT STRING_AGG(Movement_PromoPartner.AreaName,'; ')
-             -- FROM (SELECT DISTINCT Movement_PromoPartner_View.AreaName
-                   -- FROM Movement_PromoPartner_View
-                   -- WHERE Movement_PromoPartner_View.ParentId = Movement_Promo.Id
-                     -- AND COALESCE(Movement_PromoPartner_View.AreaName,'')<>''
-                     -- AND Movement_PromoPartner_View.isErased = FALSE
-                  -- ) AS Movement_PromoPartner
-            -- )::TBlob AS AreaName
-          , (SELECT STRING_AGG( DISTINCT Object_Area.ValueData,'; ')
-             FROM
-                Movement AS Movement_PromoPartner
-                INNER JOIN MovementItem AS MI_PromoPartner
-                                        ON MI_PromoPartner.MovementId = Movement_PromoPartner.ID
-                                       AND MI_PromoPartner.DescId = zc_MI_Master()
-                INNER JOIN ObjectLink AS ObjectLink_Partner_Area
-                                      ON ObjectLink_Partner_Area.ObjectId = MI_PromoPartner.ObjectId
-                                     AND ObjectLink_Partner_Area.DescId = zc_ObjectLink_Partner_Area()
-                INNER JOIN Object AS Object_Area
-                                  ON Object_Area.Id = ObjectLink_Partner_Area.ChildObjectId
-             WHERE
-                Movement_PromoPartner.ParentId = Movement_Promo.Id
-                AND 
-                Movement_PromoPartner.DescId = zc_Movement_PromoPartner()
-                AND
-                MI_PromoPartner.IsErased = FALSE
+          , (SELECT STRING_AGG(Movement_PromoPartner.AreaName,'; ')
+             FROM (SELECT DISTINCT Movement_PromoPartner_View.AreaName
+                   FROM Movement_PromoPartner_View
+                   WHERE Movement_PromoPartner_View.ParentId = Movement_Promo.Id
+                     AND COALESCE(Movement_PromoPartner_View.AreaName,'')<>''
+                     AND Movement_PromoPartner_View.isErased = FALSE
+                  ) AS Movement_PromoPartner
             )::TBlob AS AreaName
           , MI_PromoGoods.GoodsName
           , MI_PromoGoods.GoodsCode
           , MI_PromoGoods.Measure
           , MI_PromoGoods.TradeMark
-          , MI_PromoGoods.AmountPlanMin       --РњРёРЅРёРјСѓРј РїР»Р°РЅРёСЂСѓРµРјРѕРіРѕ РѕР±СЉРµРјР° РїСЂРѕРґР°Р¶ РЅР° Р°РєС†РёРѕРЅРЅС‹Р№ РїРµСЂРёРѕРґ (РІ РєРі)
-          , MI_PromoGoods.AmountPlanMinWeight --РњРёРЅРёРјСѓРј РїР»Р°РЅРёСЂСѓРµРјРѕРіРѕ РѕР±СЉРµРјР° РїСЂРѕРґР°Р¶ РЅР° Р°РєС†РёРѕРЅРЅС‹Р№ РїРµСЂРёРѕРґ (РІ РєРі) Р’РµСЃ
-          , MI_PromoGoods.AmountPlanMax       --РњР°РєСЃРёРјСѓРј РїР»Р°РЅРёСЂСѓРµРјРѕРіРѕ РѕР±СЉРµРјР° РїСЂРѕРґР°Р¶ РЅР° Р°РєС†РёРѕРЅРЅС‹Р№ РїРµСЂРёРѕРґ (РІ РєРі)
-          , MI_PromoGoods.AmountPlanMaxWeight --РњР°РєСЃРёРјСѓРј РїР»Р°РЅРёСЂСѓРµРјРѕРіРѕ РѕР±СЉРµРјР° РїСЂРѕРґР°Р¶ РЅР° Р°РєС†РёРѕРЅРЅС‹Р№ РїРµСЂРёРѕРґ (РІ РєРі) Р’РµСЃ
-          , MI_PromoGoods.AmountReal          --РћР±СЉРµРј РїСЂРѕРґР°Р¶ РІ Р°РЅР°Р»РѕРіРёС‡РЅС‹Р№ РїРµСЂРёРѕРґ, РєРі
-          , MI_PromoGoods.AmountRealWeight    --РћР±СЉРµРј РїСЂРѕРґР°Р¶ РІ Р°РЅР°Р»РѕРіРёС‡РЅС‹Р№ РїРµСЂРёРѕРґ, РєРі Р’РµСЃ
-          , MI_PromoGoods.AmountOrder         --РљРѕР»-РІРѕ Р·Р°СЏРІРєР° (С„Р°РєС‚)
-          , MI_PromoGoods.AmountOrderWeight   --РљРѕР»-РІРѕ Р·Р°СЏРІРєР° (С„Р°РєС‚) Р’РµСЃ
-          , MI_PromoGoods.AmountOut           --РљРѕР»-РІРѕ СЂРµР°Р»РёР·Р°С†РёСЏ (С„Р°РєС‚)
-          , MI_PromoGoods.AmountOutWeight     --РљРѕР»-РІРѕ СЂРµР°Р»РёР·Р°С†РёСЏ (С„Р°РєС‚) Р’РµСЃ
-          , MI_PromoGoods.AmountIn            --РљРѕР»-РІРѕ РІРѕР·РІСЂР°С‚ (С„Р°РєС‚)
-          , MI_PromoGoods.AmountInWeight      --РљРѕР»-РІРѕ РІРѕР·РІСЂР°С‚ (С„Р°РєС‚) Р’РµСЃ
-          , MI_PromoGoods.GoodsKindName       --РќР°РёРјРµРЅРѕРІР°РЅРёРµ РѕР±СЊРµРєС‚Р° <Р’РёРґ С‚РѕРІР°СЂР°>
-          , MI_PromoGoods.GoodsWeight
+          , MI_PromoGoods.AmountPlanMin    --Минимум планируемого объема продаж на акционный период (в кг)
+          , MI_PromoGoods.AmountPlanMinWeight --Минимум планируемого объема продаж на акционный период (в кг) Вес
+          , MI_PromoGoods.AmountPlanMax       --Максимум планируемого объема продаж на акционный период (в кг)
+          , MI_PromoGoods.AmountPlanMaxWeight --Максимум планируемого объема продаж на акционный период (в кг) Вес
+          , MI_PromoGoods.GoodsKindName    --Наименование обьекта <Вид товара>
+          , CASE WHEN MI_PromoGoods.MeasureId = zc_Measure_Sh() THEN MI_PromoGoods.GoodsWeight ELSE NULL END :: TFloat AS GoodsWeight
           , (REPLACE(TO_CHAR(MI_PromoGoods.Amount,'FM99990D99')||' ','. ','')||'  '||chr(13)||
               (SELECT STRING_AGG(MovementItem_PromoCondition.ConditionPromoName||': '||REPLACE(TO_CHAR(MovementItem_PromoCondition.Amount,'FM999990D09')||' ','.0 ',''), chr(13)) 
                FROM MovementItem_PromoCondition_View AS MovementItem_PromoCondition 
@@ -174,7 +104,7 @@ BEGIN
                 ) END::TBlob AS AdvertisingName
           , CASE WHEN vbShowAll THEN Movement_Promo.OperDate END::TDateTime AS OperDate
           , CASE WHEN vbShowAll THEN MI_PromoGoods.PriceSale END::TFloat AS PriceSale
-          , MI_PromoGoods.Comment
+          , Movement_Promo.Comment
           , vbShowAll as ShowAll
         FROM
             Movement_Promo_View AS Movement_Promo
@@ -183,26 +113,25 @@ BEGIN
                                                         AND MI_PromoGoods.IsErased = FALSE
         WHERE
             (
-                Movement_Promo.StartSale BETWEEN inStartDate AND inEndDate
+                Movement_Promo.EndSale BETWEEN inStartDate AND inEndDate
+                /*Movement_Promo.StartSale BETWEEN inStartDate AND inEndDate
                 OR
-                inStartDate BETWEEN Movement_Promo.StartSale AND Movement_Promo.EndSale
+                inStartDate BETWEEN Movement_Promo.StartSale AND Movement_Promo.EndSale*/
             )
             AND
             (
                 Movement_Promo.UnitId = inUnitId
                 OR
-                inUnitId = 0
-            )
-            AND
-            Movement_Promo.StatusId = zc_Enum_Status_Complete();
+                COALESCE (inUnitId, 0) = 0
+            );
 END;
 $BODY$
   LANGUAGE PLPGSQL VOLATILE;
 ALTER FUNCTION gpSelect_Report_Promo (TDateTime,TDateTime,Integer,TVarChar) OWNER TO postgres;
 
 /*
- РРЎРўРћР РРЇ Р РђР—Р РђР‘РћРўРљР: Р”РђРўРђ, РђР’РўРћР 
-               Р¤РµР»РѕРЅСЋРє Р.Р’.   РљСѓС…С‚РёРЅ Р.Р’.   РљР»РёРјРµРЅС‚СЊРµРІ Рљ.Р.    Р’РѕСЂРѕР±РєР°Р»Рѕ Рђ.Рђ.
+ ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.    Воробкало А.А.
  01.12.15                                                          *
 */
 --Select * from gpSelect_Report_Promo('20150101','20160101',0,'5');

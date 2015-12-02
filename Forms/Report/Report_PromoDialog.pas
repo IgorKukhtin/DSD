@@ -9,7 +9,7 @@ uses
   dxSkinsDefaultPainters, cxControls, cxContainer, cxEdit, Vcl.ComCtrls, dxCore,
   cxDateUtils, dsdGuides, cxButtonEdit, cxTextEdit, cxMaskEdit, cxDropDownEdit,
   cxCalendar, cxLabel, dsdDB, Vcl.ActnList, dsdAction, cxPropertiesStore,
-  dsdAddOn, Vcl.StdCtrls, cxButtons;
+  dsdAddOn, Vcl.StdCtrls, cxButtons, ChoicePeriod;
 
 type
   TReport_PromoDialogForm = class(TAncestorDialogForm)
@@ -20,6 +20,7 @@ type
     cxLabel17: TcxLabel;
     edUnit: TcxButtonEdit;
     UnitGuides: TdsdGuides;
+    PeriodChoice: TPeriodChoice;
   private
     { Private declarations }
   public

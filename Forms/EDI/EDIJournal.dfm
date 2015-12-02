@@ -3,7 +3,6 @@ inherited EDIJournalForm: TEDIJournalForm
   ClientHeight = 453
   ClientWidth = 1284
   AddOnFormData.OnLoadAction = actSetDefaults
-  ExplicitLeft = -511
   ExplicitTop = -31
   ExplicitWidth = 1300
   ExplicitHeight = 488
@@ -611,6 +610,9 @@ inherited EDIJournalForm: TEDIJournalForm
             object clPrice: TcxGridDBColumn
               Caption = #1062#1077#1085#1072
               DataBinding.FieldName = 'Price'
+              PropertiesClassName = 'TcxCurrencyEditProperties'
+              Properties.DecimalPlaces = 4
+              Properties.DisplayFormat = ',0.####;-,0.####; ;'
               HeaderAlignmentHorz = taCenter
               HeaderAlignmentVert = vaCenter
               Options.Editing = False
@@ -619,6 +621,9 @@ inherited EDIJournalForm: TEDIJournalForm
             object clAmountOrder: TcxGridDBColumn
               Caption = #1050#1086#1083'-'#1074#1086' '#1079#1072#1103#1074'.'
               DataBinding.FieldName = 'AmountOrder'
+              PropertiesClassName = 'TcxCurrencyEditProperties'
+              Properties.DecimalPlaces = 4
+              Properties.DisplayFormat = ',0.####;-,0.####; ;'
               Visible = False
               HeaderAlignmentHorz = taCenter
               HeaderAlignmentVert = vaCenter
@@ -628,6 +633,9 @@ inherited EDIJournalForm: TEDIJournalForm
             object clAmountOrderEDI: TcxGridDBColumn
               Caption = #1050#1086#1083'-'#1074#1086' '#1079#1072#1103#1074'. (EDI)'
               DataBinding.FieldName = 'AmountOrderEDI'
+              PropertiesClassName = 'TcxCurrencyEditProperties'
+              Properties.DecimalPlaces = 4
+              Properties.DisplayFormat = ',0.####;-,0.####; ;'
               Visible = False
               HeaderAlignmentHorz = taCenter
               HeaderAlignmentVert = vaCenter
@@ -636,6 +644,9 @@ inherited EDIJournalForm: TEDIJournalForm
             object clAmountNotice: TcxGridDBColumn
               Caption = #1050#1086#1083'-'#1074#1086' '#1089#1082#1083'. ('#1091#1074#1077#1076#1086#1084#1083'.)'
               DataBinding.FieldName = 'AmountNotice'
+              PropertiesClassName = 'TcxCurrencyEditProperties'
+              Properties.DecimalPlaces = 4
+              Properties.DisplayFormat = ',0.####;-,0.####; ;'
               Visible = False
               HeaderAlignmentHorz = taCenter
               HeaderAlignmentVert = vaCenter
@@ -644,6 +655,9 @@ inherited EDIJournalForm: TEDIJournalForm
             object clAmountNoticeEDI: TcxGridDBColumn
               Caption = #1050#1086#1083'-'#1074#1086' '#1089#1082#1083'. ('#1091#1074#1077#1076#1086#1084#1083'. EDI)'
               DataBinding.FieldName = 'AmountNoticeEDI'
+              PropertiesClassName = 'TcxCurrencyEditProperties'
+              Properties.DecimalPlaces = 4
+              Properties.DisplayFormat = ',0.####;-,0.####; ;'
               Visible = False
               HeaderAlignmentHorz = taCenter
               HeaderAlignmentVert = vaCenter
@@ -652,6 +666,9 @@ inherited EDIJournalForm: TEDIJournalForm
             object clAmountPartner: TcxGridDBColumn
               Caption = #1050#1086#1083'-'#1074#1086' '#1087#1086#1082#1091#1087'. '
               DataBinding.FieldName = 'AmountPartner'
+              PropertiesClassName = 'TcxCurrencyEditProperties'
+              Properties.DecimalPlaces = 4
+              Properties.DisplayFormat = ',0.####;-,0.####; ;'
               HeaderAlignmentHorz = taCenter
               HeaderAlignmentVert = vaCenter
               Options.Editing = False
@@ -660,6 +677,9 @@ inherited EDIJournalForm: TEDIJournalForm
             object clAmountPartnerEDI: TcxGridDBColumn
               Caption = #1050#1086#1083'-'#1074#1086' '#1087#1086#1082#1091#1087'. (EDI)'
               DataBinding.FieldName = 'AmountPartnerEDI'
+              PropertiesClassName = 'TcxCurrencyEditProperties'
+              Properties.DecimalPlaces = 4
+              Properties.DisplayFormat = ',0.####;-,0.####; ;'
               HeaderAlignmentHorz = taCenter
               HeaderAlignmentVert = vaCenter
               Width = 55
@@ -667,6 +687,9 @@ inherited EDIJournalForm: TEDIJournalForm
             object clSummPartner: TcxGridDBColumn
               Caption = #1057#1091#1084#1084#1072' '#1087#1086#1082#1091#1087'.'
               DataBinding.FieldName = 'SummPartner'
+              PropertiesClassName = 'TcxCurrencyEditProperties'
+              Properties.DecimalPlaces = 4
+              Properties.DisplayFormat = ',0.####;-,0.####; ;'
               HeaderAlignmentHorz = taCenter
               HeaderAlignmentVert = vaCenter
               Options.Editing = False
@@ -675,6 +698,9 @@ inherited EDIJournalForm: TEDIJournalForm
             object clSummPartnerEDI: TcxGridDBColumn
               Caption = #1057#1091#1084#1084#1072' '#1087#1086#1082#1091#1087'. (EDI)'
               DataBinding.FieldName = 'SummPartnerEDI'
+              PropertiesClassName = 'TcxCurrencyEditProperties'
+              Properties.DecimalPlaces = 4
+              Properties.DisplayFormat = ',0.####;-,0.####; ;'
               HeaderAlignmentHorz = taCenter
               HeaderAlignmentVert = vaCenter
               Width = 55

@@ -3,8 +3,9 @@ inherited Report_PromoForm: TReport_PromoForm
   ClientHeight = 434
   ClientWidth = 833
   AddOnFormData.ExecuteDialogAction = actReport_PromoDialog
+  ExplicitLeft = -60
   ExplicitWidth = 849
-  ExplicitHeight = 472
+  ExplicitHeight = 469
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -165,6 +166,9 @@ inherited Report_PromoForm: TReport_PromoForm
           object colAmountPlanMin: TcxGridDBColumn
             Caption = #1052#1080#1085#1080#1084#1091#1084' '#1087#1083#1072#1085#1080#1088#1091#1077#1084#1086#1075#1086' '#1086#1073#1098#1077#1084#1072' '#1087#1088#1086#1076#1072#1078' '#1074' '#1072#1082#1094#1080#1086#1085#1085#1099#1081' '#1087#1077#1088#1080#1086#1076', '#1082#1075','#1096#1090
             DataBinding.FieldName = 'AmountPlanMin'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 117
@@ -172,6 +176,9 @@ inherited Report_PromoForm: TReport_PromoForm
           object colAmountPlanMinWeight: TcxGridDBColumn
             Caption = #1052#1080#1085#1080#1084#1091#1084' '#1087#1083#1072#1085#1080#1088#1091#1077#1084#1086#1075#1086' '#1086#1073#1098#1077#1084#1072' '#1087#1088#1086#1076#1072#1078' '#1074' '#1072#1082#1094#1080#1086#1085#1085#1099#1081' '#1087#1077#1088#1080#1086#1076', ('#1074#1077#1089')'
             DataBinding.FieldName = 'AmountPlanMinWeight'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 111
@@ -179,6 +186,9 @@ inherited Report_PromoForm: TReport_PromoForm
           object colAmountPlanMax: TcxGridDBColumn
             Caption = #1052#1072#1082#1089#1080#1084#1091#1084' '#1087#1083#1072#1085#1080#1088#1091#1077#1084#1086#1075#1086' '#1086#1073#1098#1077#1084#1072' '#1087#1088#1086#1076#1072#1078' '#1074' '#1072#1082#1094#1080#1086#1085#1085#1099#1081' '#1087#1077#1088#1080#1086#1076', '#1082#1075','#1096#1090
             DataBinding.FieldName = 'AmountPlanMax'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 99
@@ -186,6 +196,9 @@ inherited Report_PromoForm: TReport_PromoForm
           object colAmountPlanMaxWeight: TcxGridDBColumn
             Caption = #1052#1072#1082#1089#1080#1084#1091#1084' '#1087#1083#1072#1085#1080#1088#1091#1077#1084#1086#1075#1086' '#1086#1073#1098#1077#1084#1072' '#1087#1088#1086#1076#1072#1078' '#1074' '#1072#1082#1094#1080#1086#1085#1085#1099#1081' '#1087#1077#1088#1080#1086#1076', ('#1074#1077#1089')'
             DataBinding.FieldName = 'AmountPlanMaxWeight'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 104
@@ -200,6 +213,9 @@ inherited Report_PromoForm: TReport_PromoForm
           object colGoodsWeight: TcxGridDBColumn
             Caption = #1042#1077#1089
             DataBinding.FieldName = 'GoodsWeight'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 43
@@ -214,6 +230,9 @@ inherited Report_PromoForm: TReport_PromoForm
           object colPriceWithOutVAT: TcxGridDBColumn
             Caption = #1054#1090#1075#1088#1091#1079#1086#1095#1085#1072#1103' '#1072#1082#1094#1080#1086#1085#1085#1072#1103' '#1094#1077#1085#1072' '#1073#1077#1079' '#1091#1095#1077#1090#1072' '#1053#1044#1057', '#1075#1088#1085
             DataBinding.FieldName = 'PriceWithOutVAT'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 100
@@ -221,6 +240,9 @@ inherited Report_PromoForm: TReport_PromoForm
           object colPriceWithVAT: TcxGridDBColumn
             Caption = #1054#1090#1075#1088#1091#1079#1086#1095#1085#1072#1103' '#1072#1082#1094#1080#1086#1085#1085#1072#1103' '#1094#1077#1085#1072' '#1089' '#1091#1095#1077#1090#1086#1084' '#1053#1044#1057', '#1075#1088#1085
             DataBinding.FieldName = 'PriceWithVAT'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 98
@@ -228,6 +250,9 @@ inherited Report_PromoForm: TReport_PromoForm
           object colPrice: TcxGridDBColumn
             Caption = #1062#1077#1085#1072' '#1089#1087#1077#1094#1080#1092#1080#1082#1072#1094#1080#1080' '#1089' '#1053#1044#1057', '#1075#1088#1085
             DataBinding.FieldName = 'Price'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 76
@@ -235,6 +260,9 @@ inherited Report_PromoForm: TReport_PromoForm
           object colCostPromo: TcxGridDBColumn
             Caption = #1057#1090#1086#1080#1084#1086#1089#1090#1100' '#1091#1095#1072#1089#1090#1080#1103
             DataBinding.FieldName = 'CostPromo'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
           end
@@ -254,6 +282,9 @@ inherited Report_PromoForm: TReport_PromoForm
           object colPriceSale: TcxGridDBColumn
             Caption = #1062#1077#1085#1072' '#1085#1072' '#1087#1086#1083#1082#1077'/'#1089#1082#1080#1076#1082#1072' '#1076#1083#1103' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1103
             DataBinding.FieldName = 'PriceSale'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 88
@@ -335,6 +366,12 @@ inherited Report_PromoForm: TReport_PromoForm
   inherited Panel: TPanel
     Width = 833
     ExplicitWidth = 833
+    inherited deStart: TcxDateEdit
+      EditValue = 42309d
+    end
+    inherited deEnd: TcxDateEdit
+      EditValue = 42309d
+    end
     object cxLabel17: TcxLabel
       Left = 417
       Top = 6
@@ -500,6 +537,10 @@ inherited Report_PromoForm: TReport_PromoForm
       ItemLinks = <
         item
           Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'dxBarButton2'
         end
         item
@@ -520,7 +561,7 @@ inherited Report_PromoForm: TReport_PromoForm
         end
         item
           Visible = True
-          ItemName = 'bbGridToExcel'
+          ItemName = 'dxBarButton1'
         end
         item
           Visible = True
@@ -528,7 +569,11 @@ inherited Report_PromoForm: TReport_PromoForm
         end
         item
           Visible = True
-          ItemName = 'dxBarButton1'
+          ItemName = 'bbGridToExcel'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
         end>
     end
     object dxBarButton1: TdxBarButton
@@ -556,7 +601,8 @@ inherited Report_PromoForm: TReport_PromoForm
       end>
   end
   inherited PeriodChoice: TPeriodChoice
-    Top = 176
+    Left = 136
+    Top = 64
   end
   inherited RefreshDispatcher: TRefreshDispatcher
     Top = 184
