@@ -206,38 +206,47 @@ BEGIN
                       LEFT JOIN ObjectDate AS ObjectDate_PartnerStartPromo
                                            ON ObjectDate_PartnerStartPromo.ObjectId = tmpPartner.PartnerId
                                           AND ObjectDate_PartnerStartPromo.DescId = zc_ObjectDate_Partner_StartPromo()
+                                          AND 1 = 0
                       LEFT JOIN ObjectDate AS ObjectDate_PartnerEndPromo
                                            ON ObjectDate_PartnerEndPromo.ObjectId = tmpPartner.PartnerId
                                           AND ObjectDate_PartnerEndPromo.DescId = zc_ObjectDate_Partner_EndPromo()
+                                          AND 1 = 0
                       LEFT JOIN ObjectLink AS ObjectLink_Partner_PriceListPromo
                                            ON ObjectLink_Partner_PriceListPromo.ObjectId = tmpPartner.PartnerId
                                           AND ObjectLink_Partner_PriceListPromo.DescId = zc_ObjectLink_Partner_PriceListPromo()
                                           AND ObjectLink_Partner_PriceListPromo.ChildObjectId > 0
                                           AND inOperDatePartner BETWEEN ObjectDate_PartnerStartPromo.ValueData AND ObjectDate_PartnerEndPromo.ValueData
+                                          AND 1 = 0
 
                       LEFT JOIN ObjectDate AS ObjectDate_StartPromo
                                            ON ObjectDate_StartPromo.ObjectId = tmpPartner.ContractId
                                           AND ObjectDate_StartPromo.DescId = zc_ObjectDate_Contract_StartPromo()
+                                          AND 1 = 0
                       LEFT JOIN ObjectDate AS ObjectDate_EndPromo
                                            ON ObjectDate_EndPromo.ObjectId = tmpPartner.ContractId
                                           AND ObjectDate_EndPromo.DescId = zc_ObjectDate_Contract_EndPromo()
+                                          AND 1 = 0
                       LEFT JOIN ObjectLink AS ObjectLink_Contract_PriceListPromo
                                            ON ObjectLink_Contract_PriceListPromo.ObjectId = tmpPartner.ContractId
                                           AND ObjectLink_Contract_PriceListPromo.DescId = zc_ObjectLink_Contract_PriceListPromo()
                                           AND ObjectLink_Contract_PriceListPromo.ChildObjectId > 0
                                           AND inOperDatePartner BETWEEN ObjectDate_StartPromo.ValueData AND ObjectDate_EndPromo.ValueData
+                                          AND 1 = 0
 
                       LEFT JOIN ObjectDate AS ObjectDate_JuridicalStartPromo
                                            ON ObjectDate_JuridicalStartPromo.ObjectId = tmpPartner.JuridicalId
                                           AND ObjectDate_JuridicalStartPromo.DescId = zc_ObjectDate_Juridical_StartPromo()
+                                          AND 1 = 0
                       LEFT JOIN ObjectDate AS ObjectDate_JuridicalEndPromo
                                            ON ObjectDate_JuridicalEndPromo.ObjectId = tmpPartner.JuridicalId
                                           AND ObjectDate_JuridicalEndPromo.DescId = zc_ObjectDate_Juridical_EndPromo()
+                                          AND 1 = 0
                       LEFT JOIN ObjectLink AS ObjectLink_Juridical_PriceListPromo
                                            ON ObjectLink_Juridical_PriceListPromo.ObjectId = tmpPartner.JuridicalId
                                           AND ObjectLink_Juridical_PriceListPromo.DescId = zc_ObjectLink_Juridical_PriceListPromo()
                                           AND ObjectLink_Juridical_PriceListPromo.ChildObjectId > 0
                                           AND inOperDatePartner BETWEEN ObjectDate_JuridicalStartPromo.ValueData AND ObjectDate_JuridicalEndPromo.ValueData
+                                          AND 1 = 0
 
                       LEFT JOIN ObjectLink AS ObjectLink_Partner_PriceList
                                            ON ObjectLink_Partner_PriceList.ObjectId = tmpPartner.PartnerId

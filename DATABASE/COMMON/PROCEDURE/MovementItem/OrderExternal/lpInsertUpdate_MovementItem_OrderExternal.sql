@@ -21,6 +21,7 @@ $BODY$
    DECLARE vbIsInsert Boolean;
    DECLARE vbPartnerId Integer;
    DECLARE vbPriceWithVAT Boolean;
+   DECLARE vbTaxPromo TFloat;
 BEGIN
 
      -- Контрагент
@@ -32,7 +33,8 @@ BEGIN
                                  WHEN tmp.TaxPromo <> 0 THEN tmp.PriceWithOutVAT
                                  ELSE 0
                             END
-            INTO outMovementId_Promo, outPricePromo
+          , tmp.TaxPromo
+            INTO outMovementId_Promo, outPricePromo, vbTaxPromo
      FROM lpGet_Movement_Promo_Data (inOperDate   := (SELECT Movement.OperDate FROM Movement WHERE Movement.Id = inMovementId)
                                                    + (COALESCE ((SELECT ObjectFloat.ValueData FROM ObjectFloat WHERE ObjectFloat.ObjectId = vbPartnerId AND ObjectFloat.DescId = zc_ObjectFloat_Partner_PrepareDayCount()),  0) :: TVarChar || ' DAY') :: INTERVAL
                                                    + (COALESCE ((SELECT ObjectFloat.ValueData FROM ObjectFloat WHERE ObjectFloat.ObjectId = vbPartnerId AND ObjectFloat.DescId = zc_ObjectFloat_Partner_DocumentDayCount()), 0) :: TVarChar || ' DAY') :: INTERVAL
@@ -44,12 +46,12 @@ BEGIN
 
      -- !!!замена для акции!!
      IF outMovementId_Promo > 0 THEN
-        IF COALESCE (ioId, 0) = 0
+        IF COALESCE (ioId, 0) = 0 AND vbTaxPromo <> 0
         THEN
             ioPrice:= outPricePromo;
-        ELSE IF ioPrice <> outPricePromo
+        ELSE IF ioId <> 0 AND ioPrice <> outPricePromo AND vbTaxPromo <> 0
              THEN
-                 RAISE EXCEPTION 'Ошибка.Для товара = <%> <%> необходимо ввести акционную цену = <%>.', lfGet_Object_ValueData (inGoodsId), lfGet_Object_ValueData (inGoodsKindId), outPricePromo;
+                 RAISE EXCEPTION 'Ошибка.Для товара = <%> <%> необходимо ввести акционную цену = <%>.', lfGet_Object_ValueData (inGoodsId), lfGet_Object_ValueData (inGoodsKindId), TFloat (outPricePromo);
              END IF;
         END IF;
      -- ELSE !!!обратно из прайса пока не реализовал!!!!

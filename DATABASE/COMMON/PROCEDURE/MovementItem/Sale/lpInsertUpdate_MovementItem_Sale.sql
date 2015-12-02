@@ -34,6 +34,7 @@ AS
 $BODY$
    DECLARE vbIsInsert Boolean;
    DECLARE vbPriceWithVAT Boolean;
+   DECLARE vbTaxPromo TFloat;
 BEGIN
      -- Цены с НДС
      vbPriceWithVAT:= (SELECT MB.ValueData FROM MovementBoolean AS MB WHERE MB.MovementId = inMovementId AND MB.DescId = zc_MovementBoolean_PriceWithVAT());
@@ -42,7 +43,8 @@ BEGIN
                                  WHEN tmp.TaxPromo <> 0 THEN tmp.PriceWithOutVAT
                                  ELSE 0
                             END
-            INTO outMovementId_Promo, outPricePromo
+          , tmp.TaxPromo
+            INTO outMovementId_Promo, outPricePromo, vbTaxPromo
      FROM lpGet_Movement_Promo_Data (inOperDate   := (SELECT MD.ValueData FROM MovementDate AS MD WHERE MD.MovementId = inMovementId AND MD.DescId = zc_MovementDate_OperDatePartner())
                                    , inPartnerId  := (SELECT MLO.ObjectId FROM MovementLinkObject AS MLO WHERE MLO.MovementId = inMovementId AND MLO.DescId = zc_MovementLinkObject_To())
                                    , inContractId := (SELECT MLO.ObjectId FROM MovementLinkObject AS MLO WHERE MLO.MovementId = inMovementId AND MLO.DescId = zc_MovementLinkObject_Contract())
@@ -52,10 +54,10 @@ BEGIN
 
      -- !!!замена для акции!!
      IF outMovementId_Promo > 0 THEN
-        IF COALESCE (ioId, 0) = 0
+        IF COALESCE (ioId, 0) = 0 AND vbTaxPromo <> 0
         THEN
             ioPrice:= outPricePromo;
-        ELSE IF ioPrice <> outPricePromo
+        ELSE IF ioId <> 0 AND ioPrice <> outPricePromo AND vbTaxPromo <> 0
              THEN
                  RAISE EXCEPTION 'Ошибка.Для товара = <%> <%> необходимо ввести акционную цену = <%>.', lfGet_Object_ValueData (inGoodsId), lfGet_Object_ValueData (inGoodsKindId), TFloat (outPricePromo);
              END IF;

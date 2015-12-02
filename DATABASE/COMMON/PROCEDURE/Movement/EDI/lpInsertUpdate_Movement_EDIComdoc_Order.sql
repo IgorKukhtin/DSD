@@ -339,18 +339,19 @@ BEGIN
     ;
 
      -- сохранили строчную часть <«а€вки сторонние>
-     PERFORM lpInsertUpdate_MovementItem_OrderExternal (ioId                 := tmpMI.MovementItemId
-                                                      , inMovementId         := vbMovementId_Order
-                                                      , inGoodsId            := tmpMI.GoodsId
-                                                      , inAmount             := tmpMI.Amount
-                                                      , inAmountSecond       := tmpMI.AmountSecond
-                                                      , inGoodsKindId        := tmpMI.GoodsKindId
-                                                      , ioPrice              := tmpMI.Price
-                                                      , ioCountForPrice      := 1
-                                                      , inUserId             := inUserId
-                                                       )
-           , lpInsertUpdate_MovementItemFloat (zc_MIFloat_Price(), tmpMI.MovementItemId_EDI, tmpMI.Price)
-           , lpInsertUpdate_MovementItemFloat (zc_MIFloat_CountForPrice(), tmpMI.MovementItemId_EDI, 1)
+     PERFORM lpInsertUpdate_MovementItem_OrderExternal_EDI (ioId                 := tmpMI.MovementItemId
+                                                          , inMovementItemId_EDI := tmpMI.MovementItemId_EDI
+                                                          , inMovementId         := vbMovementId_Order
+                                                          , inGoodsId            := tmpMI.GoodsId
+                                                          , inAmount             := tmpMI.Amount
+                                                          , inAmountSecond       := tmpMI.AmountSecond
+                                                          , inGoodsKindId        := tmpMI.GoodsKindId
+                                                          , inPrice              := tmpMI.Price
+                                                          , inCountForPrice      := 1
+                                                          , inUserId             := inUserId
+                                                           )
+           -- , lpInsertUpdate_MovementItemFloat (zc_MIFloat_Price(), tmpMI.MovementItemId_EDI, tmpMI.Price)
+           -- , lpInsertUpdate_MovementItemFloat (zc_MIFloat_CountForPrice(), tmpMI.MovementItemId_EDI, 1)
      FROM (SELECT MAX (tmpMI.MovementItemId) AS MovementItemId
                 , MAX (tmpMI.MovementItemId_EDI) AS MovementItemId_EDI
                 , tmpMI.GoodsId
