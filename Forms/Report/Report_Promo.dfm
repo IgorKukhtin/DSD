@@ -26,6 +26,37 @@ inherited Report_PromoForm: TReport_PromoForm
         ExplicitWidth = 833
         ExplicitHeight = 377
         inherited cxGridDBTableView: TcxGridDBTableView
+          DataController.Summary.FooterSummaryItems = <
+            item
+              Format = ',0.###'
+              Kind = skSum
+              Column = colAmountPlanMinWeight
+            end
+            item
+              Format = ',0.###'
+              Kind = skSum
+              Column = colAmountPlanMaxWeight
+            end
+            item
+              Format = ',0.###'
+              Kind = skSum
+              Column = colAmountRealWeight
+            end
+            item
+              Format = ',0.###'
+              Kind = skSum
+              Column = colAmountOrderWeight
+            end
+            item
+              Format = ',0.###'
+              Kind = skSum
+              Column = colAmountOutWeight
+            end
+            item
+              Format = ',0.###'
+              Kind = skSum
+              Column = colAmountInWeight
+            end>
           OptionsData.Deleting = False
           OptionsData.DeletingConfirmation = False
           OptionsData.Editing = False
@@ -34,6 +65,34 @@ inherited Report_PromoForm: TReport_PromoForm
           Styles.Selection = nil
           Styles.Footer = nil
           Styles.Header = nil
+          object colInvNumber: TcxGridDBColumn
+            Caption = #8470' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
+            DataBinding.FieldName = 'InvNumber'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 41
+          end
+          object colUnitName: TcxGridDBColumn
+            Caption = #1057#1082#1083#1072#1076
+            DataBinding.FieldName = 'UnitName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 95
+          end
+          object colPersonalTradeName: TcxGridDBColumn
+            Caption = #1050#1086#1084'. '#1086#1090#1076#1077#1083
+            DataBinding.FieldName = 'PersonalTradeName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 79
+          end
+          object colPersonalName: TcxGridDBColumn
+            Caption = #1052#1072#1088#1082#1077#1090'. '#1086#1090#1076#1077#1083
+            DataBinding.FieldName = 'PersonalName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 79
+          end
           object colDateStartSale: TcxGridDBColumn
             Caption = #1044#1072#1090#1072' '#1085#1072#1095#1072#1083#1072' '#1086#1090#1075#1088#1091#1079#1082#1080
             DataBinding.FieldName = 'DateStartSale'
@@ -230,6 +289,62 @@ inherited Report_PromoForm: TReport_PromoForm
             HeaderAlignmentVert = vaCenter
             Width = 88
           end
+          object colAmountReal: TcxGridDBColumn
+            Caption = #1055#1088#1086#1076'. '#1072#1085#1072#1083#1086#1075'. '#1087#1077#1088#1080#1086#1076
+            DataBinding.FieldName = 'AmountReal'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 71
+          end
+          object colAmountRealWeight: TcxGridDBColumn
+            Caption = #1055#1088#1086#1076'. '#1072#1085#1072#1083#1086#1075'. '#1087#1077#1088#1080#1086#1076' ('#1074#1077#1089')'
+            DataBinding.FieldName = 'AmountRealWeight'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 69
+          end
+          object colAmountOrder: TcxGridDBColumn
+            Caption = #1050#1086#1083'-'#1074#1086' '#1079#1072#1103#1074#1082#1072' ('#1092#1072#1082#1090')'
+            DataBinding.FieldName = 'AmountOrder'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 63
+          end
+          object colAmountOrderWeight: TcxGridDBColumn
+            Caption = #1050#1086#1083'-'#1074#1086' '#1079#1072#1103#1074#1082#1072' ('#1092#1072#1082#1090') '#1042#1077#1089
+            DataBinding.FieldName = 'AmountOrderWeight'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 64
+          end
+          object colAmountOut: TcxGridDBColumn
+            Caption = #1050#1086#1083'-'#1074#1086' '#1088#1077#1072#1083#1080#1079#1072#1094#1080#1103' ('#1092#1072#1082#1090')'
+            DataBinding.FieldName = 'AmountOut'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 67
+          end
+          object colAmountOutWeight: TcxGridDBColumn
+            Caption = #1050#1086#1083'-'#1074#1086' '#1088#1077#1072#1083#1080#1079#1072#1094#1080#1103' ('#1092#1072#1082#1090') '#1042#1077#1089
+            DataBinding.FieldName = 'AmountOutWeight'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 66
+          end
+          object colAmountIn: TcxGridDBColumn
+            Caption = #1050#1086#1083'-'#1074#1086' '#1074#1086#1079#1074#1088#1072#1090' ('#1092#1072#1082#1090')'
+            DataBinding.FieldName = 'AmountIn'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 62
+          end
+          object colAmountInWeight: TcxGridDBColumn
+            Caption = #1050#1086#1083'-'#1074#1086' '#1074#1086#1079#1074#1088#1072#1090' ('#1092#1072#1082#1090') '#1042#1077#1089
+            DataBinding.FieldName = 'AmountInWeight'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 63
+          end
           object Comment: TcxGridDBColumn
             Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
             DataBinding.FieldName = 'Comment'
@@ -348,6 +463,36 @@ inherited Report_PromoForm: TReport_PromoForm
       RefreshDispatcher = RefreshDispatcher
       OpenBeforeShow = True
     end
+    object actOpenPromo: TdsdOpenForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = #1054#1090#1082#1088#1099#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090' '#1072#1082#1094#1080#1080
+      Hint = #1054#1090#1082#1088#1099#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090' '#1072#1082#1094#1080#1080
+      ImageIndex = 1
+      FormName = 'TPromoForm'
+      FormNameParam.Value = 'TPromoForm'
+      FormNameParam.DataType = ftString
+      GuiParams = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'MovementId'
+        end
+        item
+          Name = 'ShowAll'
+          Value = 'False'
+          DataType = ftBoolean
+        end
+        item
+          Name = 'inOperDate'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'OperDate'
+          DataType = ftDateTime
+        end>
+      isShowModal = False
+    end
   end
   inherited MasterDS: TDataSource
     Top = 144
@@ -408,6 +553,10 @@ inherited Report_PromoForm: TReport_PromoForm
         end
         item
           Visible = True
+          ItemName = 'dxBarButton3'
+        end
+        item
+          Visible = True
           ItemName = 'dxBarStatic'
         end
         item
@@ -435,6 +584,21 @@ inherited Report_PromoForm: TReport_PromoForm
       Action = actReport_PromoDialog
       Category = 0
     end
+    object dxBarButton3: TdxBarButton
+      Action = actOpenPromo
+      Category = 0
+    end
+  end
+  inherited DBViewAddOn: TdsdDBViewAddOn
+    OnDblClickActionList = <
+      item
+        Action = actOpenPromo
+      end>
+    ActionItemList = <
+      item
+        Action = actOpenPromo
+        ShortCut = 13
+      end>
   end
   inherited PeriodChoice: TPeriodChoice
     Left = 136

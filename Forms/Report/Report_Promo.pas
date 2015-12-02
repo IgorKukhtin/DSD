@@ -50,6 +50,20 @@ type
     colMeasureName: TcxGridDBColumn;
     actReport_PromoDialog: TExecuteDialog;
     dxBarButton2: TdxBarButton;
+    colInvNumber: TcxGridDBColumn;
+    colUnitName: TcxGridDBColumn;
+    colPersonalTradeName: TcxGridDBColumn;
+    colPersonalName: TcxGridDBColumn;
+    colAmountReal: TcxGridDBColumn;
+    colAmountRealWeight: TcxGridDBColumn;
+    colAmountOrder: TcxGridDBColumn;
+    colAmountOrderWeight: TcxGridDBColumn;
+    colAmountOut: TcxGridDBColumn;
+    colAmountOutWeight: TcxGridDBColumn;
+    colAmountIn: TcxGridDBColumn;
+    colAmountInWeight: TcxGridDBColumn;
+    actOpenPromo: TdsdOpenForm;
+    dxBarButton3: TdxBarButton;
   private
     { Private declarations }
   public
