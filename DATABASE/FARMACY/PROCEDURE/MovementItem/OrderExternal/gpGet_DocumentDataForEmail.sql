@@ -84,9 +84,14 @@ BEGIN
 
        RETURN QUERY
        SELECT
-         vbSubject, (COALESCE(vbUnitSign, '')||'<br>'||COALESCE(vbUserMailSign, ''))::TBlob, 'zakaz_family-neboley@mail.ru'::TVarChar
-       , vbMail, 'smtp.mail.ru'::TVarChar, 465
-       , 'zakaz_family-neboley@mail.ru'::TVarChar, 'fgntrfyt,jktq'::TVarChar;
+         vbSubject, 
+         (COALESCE(vbUnitSign, '')||'<br>'||COALESCE(vbUserMailSign, ''))::TBlob, 
+         zc_Mail_From(), --'zakaz_family-neboley@mail.ru'::TVarChar, 
+         vbMail, 
+         zc_Mail_Host(), --'smtp.mail.ru'::TVarChar, 
+         zc_Mail_Port(), --465, 
+         zc_Mail_User(), --'zakaz_family-neboley@mail.ru'::TVarChar, 
+         zc_Mail_Password(); --'fgntrfyt,jktq'::TVarChar;
 
 END;
 $BODY$
