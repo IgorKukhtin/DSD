@@ -358,7 +358,7 @@ BEGIN
                 , tmpMI.GoodsKindId
                 , SUM (tmpMI.Amount)         AS Amount
                 , SUM (tmpMI.AmountSecond)   AS AmountSecond
-                , tmpMI.Price
+                , MAX (tmpMI.Price)          AS Price
            FROM (SELECT 0                                                      AS MovementItemId
                       , MovementItem.Id                                        AS MovementItemId_EDI
                       , MovementItem.ObjectId                                  AS GoodsId
@@ -400,7 +400,7 @@ BEGIN
                 ) AS tmpMI
            GROUP BY tmpMI.GoodsId
                   , tmpMI.GoodsKindId
-                  , tmpMI.Price
+                  -- , tmpMI.Price
           ) AS tmpMI
      ;
      ELSE

@@ -87,7 +87,7 @@ BEGIN
           , Movement_Promo.OperDateEnd        --Дата окончания расч. продаж до акции
           , Movement_Promo.CostPromo          --Стоимость участия в акции
           , Movement_Promo.Comment            --Примечание
-          , Movement_Promo.Comment            --Примечание (Общее)
+          , Movement_Promo.CommentMain        --Примечание (Общее)
           , Movement_Promo.UnitId             --Подразделение
           , Movement_Promo.UnitName           --Подразделение
           , Movement_Promo.PersonalTradeId    --Ответственный представитель коммерческого отдела

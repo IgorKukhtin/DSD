@@ -47,7 +47,7 @@ BEGIN
 
    -- Результат
    RETURN QUERY
-   WITH tmpListBranch_Constraint AS (SELECT ObjectLink_Partner_Juridical.ChildObjectId AS JuridicalId
+   WITH tmpListBranch_Constraint AS (SELECT DISTINCT ObjectLink_Partner_Juridical.ChildObjectId AS JuridicalId
                                      FROM ObjectLink AS ObjectLink_Unit_Branch
                                           INNER JOIN ObjectLink AS ObjectLink_Personal_Unit
                                                                 ON ObjectLink_Personal_Unit.ChildObjectId = ObjectLink_Unit_Branch.ObjectId
@@ -60,9 +60,8 @@ BEGIN
                                                                AND ObjectLink_Partner_Juridical.DescId = zc_ObjectLink_Partner_Juridical()
                                      WHERE ObjectLink_Unit_Branch.ChildObjectId = vbObjectId_Branch_Constraint
                                        AND ObjectLink_Unit_Branch.DescId = zc_ObjectLink_Unit_Branch()
-                                     GROUP BY ObjectLink_Partner_Juridical.ChildObjectId
                                     UNION
-                                     SELECT ObjectLink_Contract_Juridical.ChildObjectId AS JuridicalId
+                                     SELECT DISTINCT ObjectLink_Contract_Juridical.ChildObjectId AS JuridicalId
                                      FROM ObjectLink AS ObjectLink_Unit_Branch
                                           INNER JOIN ObjectLink AS ObjectLink_Personal_Unit
                                                                 ON ObjectLink_Personal_Unit.ChildObjectId = ObjectLink_Unit_Branch.ObjectId
@@ -75,7 +74,6 @@ BEGIN
                                                                AND ObjectLink_Contract_Juridical.DescId = zc_ObjectLink_Contract_Juridical()
                                      WHERE ObjectLink_Unit_Branch.ChildObjectId = vbObjectId_Branch_Constraint
                                        AND ObjectLink_Unit_Branch.DescId = zc_ObjectLink_Unit_Branch()
-                                     GROUP BY ObjectLink_Contract_Juridical.ChildObjectId
                                     )
 ,  tmpIsErased AS (SELECT FALSE AS isErased UNION ALL SELECT inShowAll AS isErased WHERE inShowAll = TRUE)
 

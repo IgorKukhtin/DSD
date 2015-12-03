@@ -65,7 +65,13 @@ BEGIN
         WHERE COALESCE (inBranchId, 0) <= 0
           -- AND ObjectLink_Unit_Branch.ChildObjectId <> zc_Branch_Basis()
           AND ObjectLink_Unit_Branch.DescId = zc_ObjectLink_Unit_Branch()
-          AND ObjectLink_Unit_Branch.ChildObjectId IN (8374, 301310) -- филиал Одесса + филиал Запорожье
+          AND ObjectLink_Unit_Branch.ChildObjectId IN (8374   -- филиал Одесса
+                                                     , 301310 -- филиал Запорожье
+                                                     , 8373   -- филиал Николаев (Херсон)
+                                                     , 8375   -- филиал Черкассы (Кировоград)
+                                                     , 8377   -- филиал Кр.Рог
+                                                     , 8381   -- филиал Харьков
+                                                      )
       UNION
        SELECT ObjectLink_Unit_Branch.ObjectId AS UnitId
         FROM ObjectLink AS ObjectLink_Unit_Branch
@@ -983,6 +989,10 @@ LANGUAGE PLPGSQL VOLATILE;
 -- select lpInsertUpdate_ObjectLink (zc_ObjectLink_Unit_HistoryCost(), 8461, 8459); -- Склад Возвратов -> Склад Реализации 
 -- select lpInsertUpdate_ObjectLink (zc_ObjectLink_Unit_HistoryCost(), 256716, 8459); -- Склад УТИЛЬ -> Склад Реализации 
 -- select lpInsertUpdate_ObjectLink (zc_ObjectLink_Unit_HistoryCost(), 309599, 301309); -- Склад возвратов ф.Запорожье -> Склад гп ф.Запорожье
+-- select lpInsertUpdate_ObjectLink (zc_ObjectLink_Unit_HistoryCost(), 428366 , 428366 ); -- Склад возвратов ф.Кривой Рог
+-- select lpInsertUpdate_ObjectLink (zc_ObjectLink_Unit_HistoryCost(), 428364 , 428364 ); -- Склад возвратов ф.Николаев (Херсон)
+-- select lpInsertUpdate_ObjectLink (zc_ObjectLink_Unit_HistoryCost(), 409007 , 409007 ); -- Склад возвратов ф.Харьков
+-- select lpInsertUpdate_ObjectLink (zc_ObjectLink_Unit_HistoryCost(), 428363 ,428363 ); -- Склад возвратов ф.Черкассы (Кировоград)
 
 -- select 'zc_isHistoryCost', zc_isHistoryCost()union all select 'zc_isHistoryCost_byInfoMoneyDetail', zc_isHistoryCost_byInfoMoneyDetail() order by 1;
 -- SELECT MIN (MovementItemContainer.OperDate), MAX (MovementItemContainer.OperDate), Count(*), MovementDesc.Code FROM MovementItemContainer left join Movement on Movement.Id = MovementId left join MovementDesc on MovementDesc.Id = Movement.DescId where MovementItemContainer.OperDate between '01.01.2013' and '31.01.2013' group by MovementDesc.Code;
