@@ -155,18 +155,21 @@ BEGIN
                                        AND MIContainer.isActive = False 
                                        AND tmpContainerListSum.isUnit_Vz = FALSE
                                        AND MIContainer.OperDate BETWEEN inStartDate AND inEndDate 
-                                     THEN  MIContainer.Amount                                     ---Списание
+                                     THEN  MIContainer.Amount                                     
                                     ELSE 0 END) AS SummPeresortOut                                                                   -- расход пересортица  
+                                    
                           , SUM (CASE WHEN MIContainer.MovementDescId = zc_Movement_Inventory() 
                                        AND MIContainer.OperDate BETWEEN inStartDate AND inEndDate 
                                        AND tmpContainerListSum.isUnit_Vz = FALSE
-                                     THEN  MIContainer.Amount                                     ---Списание
+                                       AND COALESCE (MIContainer.AnalyzerId, 0) <> zc_Enum_AccountGroup_60000() -- Прибыль будущих периодов
+                                     THEN  -1 * MIContainer.Amount                                     
                                     ELSE 0 END) AS SummInventory 
+                                    
                           , SUM (CASE WHEN MIContainer.MovementDescId = zc_Movement_Inventory() 
                                        AND MIContainer.OperDate BETWEEN inStartDate AND inEndDate
                                        AND tmpContainerListSum.isUnit_Vz = FALSE
                                        AND MIContainer.AnalyzerId = zc_Enum_AccountGroup_60000()
-                                      THEN  MIContainer.Amount                                               ---Списание
+                                      THEN -1 * MIContainer.Amount                                               ---Списание
                                       ELSE 0 END) AS SummInventory_RePrice
                                       
                           , CASE WHEN tmpContainerListSum.isUnit_Vz = TRUE
@@ -208,13 +211,14 @@ BEGIN
                           , SUM (CASE WHEN MIContainer.MovementDescId = zc_Movement_Inventory() 
                                        AND MIContainer.OperDate BETWEEN inStartDate AND inEndDate 
                                        AND tmpContainerListSum.isUnit_Vz = TRUE
-                                      THEN MIContainer.Amount                                    
+                                       AND COALESCE (MIContainer.AnalyzerId, 0) <> zc_Enum_AccountGroup_60000() -- Прибыль будущих периодов
+                                      THEN -1 * MIContainer.Amount                                    
                                     ELSE 0 END) AS SummInventory_Vz
                           , SUM (CASE WHEN MIContainer.MovementDescId = zc_Movement_Inventory() 
                                        AND MIContainer.OperDate BETWEEN inStartDate AND inEndDate
                                        AND MIContainer.AnalyzerId = zc_Enum_AccountGroup_60000()
                                        AND tmpContainerListSum.isUnit_Vz = TRUE
-                                      THEN  MIContainer.Amount                                              
+                                      THEN  -1 * MIContainer.Amount                                              
                                       ELSE 0 END) AS SummInventory_RePrice_Vz
                                     
                      FROM tmpContainerListSum
