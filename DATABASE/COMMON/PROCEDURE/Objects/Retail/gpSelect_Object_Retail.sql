@@ -10,6 +10,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , GLNCode TVarChar, GLNCodeCorporate TVarChar
              , GoodsPropertyId Integer, GoodsPropertyName TVarChar
              , PersonalMarketingId Integer, PersonalMarketingName TVarChar
+             , PersonalTradeId Integer, PersonalTradeName TVarChar
              , isErased boolean) AS
 $BODY$
 BEGIN
@@ -30,6 +31,8 @@ BEGIN
            , Object_GoodsProperty.ValueData  AS GoodsPropertyName     
            , Object_PersonalMarketing.Id         AS PersonalMarketingId
            , Object_PersonalMarketing.ValueData  AS PersonalMarketingName       
+           , Object_PersonalTrade.Id             AS PersonalTradeId
+           , Object_PersonalTrade.ValueData      AS PersonalTradeName   
            , Object_Retail.isErased   AS isErased
        FROM OBJECT AS Object_Retail
         LEFT JOIN ObjectString AS GLNCode
@@ -52,6 +55,11 @@ BEGIN
                              ON ObjectLink_Retail_PersonalMarketing.ObjectId = Object_Retail.Id 
                             AND ObjectLink_Retail_PersonalMarketing.DescId = zc_ObjectLink_Retail_PersonalMarketing()
         LEFT JOIN Object AS Object_PersonalMarketing ON Object_PersonalMarketing.Id = ObjectLink_Retail_PersonalMarketing.ChildObjectId
+
+        LEFT JOIN ObjectLink AS ObjectLink_Retail_PersonalTrade
+                             ON ObjectLink_Retail_PersonalTrade.ObjectId = Object_Retail.Id 
+                            AND ObjectLink_Retail_PersonalTrade.DescId = zc_ObjectLink_Retail_PersonalTrade()
+        LEFT JOIN Object AS Object_PersonalTrade ON Object_PersonalTrade.Id = ObjectLink_Retail_PersonalTrade.ChildObjectId
                               
        WHERE Object_Retail.DescId = zc_Object_Retail();
    

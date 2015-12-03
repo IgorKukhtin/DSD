@@ -1064,7 +1064,11 @@ CREATE OR REPLACE FUNCTION zc_ObjectLink_Retail_PrintKindItem() RETURNS Integer 
 
 CREATE OR REPLACE FUNCTION zc_ObjectLink_Retail_PersonalMarketing() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_Retail_PersonalMarketing'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
  INSERT INTO ObjectLinkDesc(Code, ItemName, DescId, ChildObjectDescId)
- SELECT 'zc_ObjectLink_Retail_PersonalMarketing', 'Связь торг.сеть с Сотрудником(Отв. представитель маркет.отдела)', zc_Object_Retail(), zc_Object_PrintKindItem() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_Retail_PersonalMarketing');
+ SELECT 'zc_ObjectLink_Retail_PersonalMarketing', 'Связь торг.сеть с Сотрудником(Отв. представитель маркет.отдела)', zc_Object_Retail(), zc_Object_Personal() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_Retail_PersonalMarketing');
+
+CREATE OR REPLACE FUNCTION zc_ObjectLink_Retail_PersonalTrade() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_Retail_PersonalTrade'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+ INSERT INTO ObjectLinkDesc(Code, ItemName, DescId, ChildObjectDescId)
+ SELECT 'zc_ObjectLink_Retail_PersonalTrade', 'Связь торг.сеть с Сотрудником(Отв. представитель коммерч.отдела)', zc_Object_Retail(), zc_Object_Personal() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_Retail_PersonalTrade');
 
 
 

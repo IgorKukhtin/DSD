@@ -48,12 +48,14 @@ type
     GoodsPropertyName: TcxGridDBColumn;
     ProtocolOpenForm: TdsdOpenForm;
     bbProtocolOpenForm: TdxBarButton;
-    spUpdate: TdsdStoredProc;
+    spUpdateGLNCode: TdsdStoredProc;
     actUpdateDataSet: TdsdUpdateDataSet;
     GLNCodeCorporate: TcxGridDBColumn;
     actChoiceGoodsProperty: TOpenChoiceForm;
     clOperDateOrder: TcxGridDBColumn;
     PersonalMarketingName: TcxGridDBColumn;
+    actChoicePersonalMarketing: TOpenChoiceForm;
+    actChoicePersonalTrade: TOpenChoiceForm;
   private
     { Private declarations }
   public

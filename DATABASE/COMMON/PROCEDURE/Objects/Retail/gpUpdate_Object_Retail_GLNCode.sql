@@ -1,13 +1,17 @@
 -- Function: gpUpdate_Object_Retail_GLNCode()
 
 DROP FUNCTION IF EXISTS gpUpdate_Object_Retail_GLNCode (Integer, TVarChar, TVarChar, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpUpdate_Object_Retail_GLNCode (Integer, TVarChar, TVarChar, Integer, Integer, Integer, TVarChar);
+
 
 CREATE OR REPLACE FUNCTION gpUpdate_Object_Retail_GLNCode(
- INOUT ioId                Integer   ,  -- ключ объекта <Торговая сеть> 
-    IN inGLNCode           TVarChar  ,  -- Код GLN - Получатель
-    IN inGLNCodeCorporate  TVarChar  ,  -- Код GLN - Поставщик 
-    IN inGoodsPropertyId   Integer   ,  -- Классификаторы свойств товаров
-    IN inSession           TVarChar     -- сессия пользователя
+ INOUT ioId                    Integer   ,  -- ключ объекта <Торговая сеть> 
+    IN inGLNCode               TVarChar  ,  -- Код GLN - Получатель
+    IN inGLNCodeCorporate      TVarChar  ,  -- Код GLN - Поставщик 
+    IN inGoodsPropertyId       Integer   ,  -- Классификаторы свойств товаров
+    IN inPersonalMarketingId   Integer   ,     -- Сотрудник (Ответственный представитель маркетингового отдела)
+    IN inPersonalTradeId       Integer   ,     -- Сотрудник (Ответственный представитель коммерческого отдела)
+    IN inSession               TVarChar     -- сессия пользователя
 )
   RETURNS Integer AS
 $BODY$
@@ -21,6 +25,12 @@ BEGIN
    -- сохранили св-во <Код GLN - Поставщик>
    PERFORM lpInsertUpdate_ObjectString (zc_ObjectString_Retail_GLNCodeCorporate(), ioId, inGLNCodeCorporate);
 
+   -- сохранили связь с <Сотрудник (Ответственный представитель маркетингового отдела)>
+   PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Retail_PersonalMarketing(), ioId, inPersonalMarketingId);  
+   -- сохранили связь с <Сотрудник (Ответственный представитель коммерческого отдела)>
+   PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Retail_PersonalTrade(), ioId, inPersonalTradeId);  
+
+
    -- сохранили связь с <Классификаторы свойств товаров>
    PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Retail_GoodsProperty(), ioId, inGoodsPropertyId);   
 
@@ -29,7 +39,7 @@ BEGIN
    
 END;$BODY$
   LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpUpdate_Object_Retail_GLNCode (Integer, TVarChar, TVarChar, Integer, TVarChar) OWNER TO postgres;
+--ALTER FUNCTION gpUpdate_Object_Retail_GLNCode (Integer, TVarChar, TVarChar, Integer, TVarChar) OWNER TO postgres;
 
 
 /*-------------------------------------------------------------------------------*/

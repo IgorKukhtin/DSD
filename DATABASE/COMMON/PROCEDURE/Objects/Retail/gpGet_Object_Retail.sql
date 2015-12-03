@@ -11,6 +11,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , GLNCode TVarChar, GLNCodeCorporate TVarChar
              , GoodsPropertyId Integer, GoodsPropertyName TVarChar
              , PersonalMarketingId Integer, PersonalMarketingName TVarChar
+             , PersonalTradeId Integer, PersonalTradeName TVarChar
              , isErased boolean) AS
 $BODY$
 BEGIN
@@ -33,6 +34,9 @@ BEGIN
 
            , CAST (0 as Integer)     AS PersonalMarketingId 
            , CAST ('' as TVarChar)   AS PersonalMarketingName    
+           , CAST (0 as Integer)     AS PersonalTradeId 
+           , CAST ('' as TVarChar)   AS PersonalTradeName 
+
            , CAST (NULL AS Boolean)  AS isErased;
    ELSE
        RETURN QUERY 
@@ -48,7 +52,9 @@ BEGIN
            , Object_GoodsProperty.Id         AS GoodsPropertyId
            , Object_GoodsProperty.ValueData  AS GoodsPropertyName    
            , Object_PersonalMarketing.Id         AS PersonalMarketingId
-           , Object_PersonalMarketing.ValueData  AS PersonalMarketingName         
+           , Object_PersonalMarketing.ValueData  AS PersonalMarketingName    
+           , Object_PersonalTrade.Id             AS PersonalTradeId
+           , Object_PersonalTrade.ValueData      AS PersonalTradeName       
            , Object_Retail.isErased   AS isErased
 
        FROM OBJECT AS Object_Retail
@@ -72,6 +78,11 @@ BEGIN
                              ON ObjectLink_Retail_PersonalMarketing.ObjectId = Object_Retail.Id 
                             AND ObjectLink_Retail_PersonalMarketing.DescId = zc_ObjectLink_Retail_PersonalMarketing()
         LEFT JOIN Object AS Object_PersonalMarketing ON Object_PersonalMarketing.Id = ObjectLink_Retail_PersonalMarketing.ChildObjectId
+
+        LEFT JOIN ObjectLink AS ObjectLink_Retail_PersonalTrade
+                             ON ObjectLink_Retail_PersonalTrade.ObjectId = Object_Retail.Id 
+                            AND ObjectLink_Retail_PersonalTrade.DescId = zc_ObjectLink_Retail_PersonalTrade()
+        LEFT JOIN Object AS Object_PersonalTrade ON Object_PersonalTrade.Id = ObjectLink_Retail_PersonalTrade.ChildObjectId
                               
        WHERE Object_Retail.Id = inId;
    END IF; 
