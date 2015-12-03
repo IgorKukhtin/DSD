@@ -12,6 +12,7 @@ RETURNS TABLE (BranchName TVarChar
              , SummStart TFloat, WeightStart TFloat, SummEnd TFloat, WeightEnd TFloat
              , SendOnPriceInSumm TFloat, SendOnPriceInWeight TFloat
              , ReturnInSumm TFloat, ReturnInWeight TFloat
+             , ReturnInRealSumm TFloat, ReturnIn_10200_Summ TFloat, ReturnIn_10300_Summ TFloat
              , PeresortInSumm TFloat, PeresortInWeight TFloat
              , PeresortOutSumm TFloat, PeresortOutWeight TFloat
              , SaleSumm TFloat, SaleWeight TFloat, SaleRealSumm TFloat
@@ -61,7 +62,7 @@ BEGIN
       -- выбираем склады возвратов (пока так), чтобы выделить движение                   
          tmpUnitVz AS (SELECT Object_Unit_View.Id AS UnitVzId
                         FROM Object_Unit_View 
-                        WHERE Object_Unit_View.Code in (22022, 22122, 22032, 22052, 22082, 22092, 22042)
+                        WHERE Object_Unit_View.Name like '%возврат%'   --.Code in (22022, 22122, 22032, 22052, 22082, 22092, 22042)
                         )
     ,   tmpUnitList AS (SELECT Object_Unit_View.* 
                              , CASE WHEN Object_Unit_View.Id in (SELECT tmpUnitVz.UnitVzId FROM tmpUnitVz) THEN TRUE ELSE FALSE END AS isUnit_Vz
@@ -122,7 +123,10 @@ BEGIN
                                       ELSE 0 END) AS SummSale_10500
                           , 0 AS SummSale_10200
                           , 0 AS SummSale_10300
-                          , 0 AS SummSaleReal                                                                                       
+                          , 0 AS SummSaleReal  
+                          , 0 AS SummReturnIn_10200
+                          , 0 AS SummReturnIn_10300
+                          , 0 AS SummReturnInReal                                                                                     
                           , SUM (CASE WHEN MIContainer.MovementDescId = zc_Movement_ReturnIn() 
                                        AND MIContainer.OperDate BETWEEN inStartDate AND inEndDate 
                                        AND tmpContainerListSum.isUnit_Vz = FALSE
@@ -237,13 +241,26 @@ BEGIN
                           , 0 AS SummSale
                           , 0 AS SummSale_40208
                           , 0 AS SummSale_10500
-                          , SUM (CASE WHEN MIContainer.AnalyzerId = zc_Enum_AnalyzerId_SaleSumm_10200()  -- Сумма, реализация, Разница с оптовыми ценами т.е. это сумма акции
+                          , SUM (CASE WHEN MIContainer.MovementDescId = zc_Movement_Sale() 
+                                       AND MIContainer.AnalyzerId = zc_Enum_AnalyzerId_SaleSumm_10200()  -- Сумма, реализация, Разница с оптовыми ценами т.е. это сумма акции
                                       THEN -1 * MIContainer.Amount                                        
                                       ELSE 0 END) AS SummSale_10200
-                          , SUM (CASE WHEN MIContainer.AnalyzerId = zc_Enum_AnalyzerId_SaleSumm_10300()  -- скидка по накладной,
+                          , SUM (CASE WHEN MIContainer.MovementDescId = zc_Movement_Sale() 
+                                       AND MIContainer.AnalyzerId = zc_Enum_AnalyzerId_SaleSumm_10300()  -- скидка по накладной,
                                       THEN -1 * MIContainer.Amount                                        
                                       ELSE 0 END) AS SummSale_10300
-                          , SUM (MIContainer.Amount) AS SummSaleReal
+                          , SUM (CASE WHEN MIContainer.MovementDescId = zc_Movement_Sale() THEN MIContainer.Amount ELSE 0 END) AS SummSaleReal
+
+                          , SUM (CASE WHEN MIContainer.MovementDescId = zc_Movement_ReturnIn() 
+                                       AND MIContainer.AnalyzerId = zc_Enum_AnalyzerId_ReturnInSumm_10200()  -- Сумма, реализация, Разница с оптовыми ценами т.е. это сумма акции
+                                      THEN MIContainer.Amount                                        
+                                      ELSE 0 END) AS SummReturnIn_10200
+                          , SUM (CASE WHEN MIContainer.MovementDescId = zc_Movement_ReturnIn() 
+                                       AND MIContainer.AnalyzerId = zc_Enum_AnalyzerId_ReturnInSumm_10300()  -- скидка по накладной,
+                                      THEN MIContainer.Amount                                        
+                                      ELSE 0 END) AS SummReturnIn_10300
+                          , SUM (CASE WHEN MIContainer.MovementDescId = zc_Movement_ReturnIn() THEN -1 * MIContainer.Amount ELSE 0 END) AS SummReturnInReal
+                                                    
                           , 0 AS SummReturnIn
                           , 0 AS SummSendOnPriceIn
                           , 0 AS SummSendOnPriceOut                                        
@@ -266,7 +283,7 @@ BEGIN
                            INNER JOIN MovementItemContainer AS MIContainer 
                                                            ON MIContainer.whereObjectId_analyzer = tmpUnitList.Id
                                                           AND MIContainer.OperDate BETWEEN inStartDate AND inEndDate 
-                                                          AND MIContainer.MovementDescId = zc_Movement_Sale() 
+                                                          AND MIContainer.MovementDescId IN (zc_Movement_Sale(),zc_Movement_ReturnIn())
                            INNER JOIN  Container ON Container.Id = MIContainer.Containerid 
                                                 AND Container.DescId = zc_Container_Summ()
                            INNER JOIN ContainerLinkObject AS CLO_Juridical
@@ -463,6 +480,10 @@ BEGIN
         , CAST (SUM (tmpAll.SummReturnIn)                 AS TFloat) AS ReturnInSumm
         , CAST (SUM (tmpAll.CountReturnIn)                AS TFloat) AS ReturnInWeight
 
+        , CAST (SUM (tmpAll.SummReturnInReal)             AS TFloat) AS ReturnInRealSumm
+        , CAST (SUM (tmpAll.SummReturnIn_10200)           AS TFloat) AS ReturnIn_10200_Summ
+        , CAST (SUM (tmpAll.SummReturnIn_10300)           AS TFloat) AS ReturnIn_10300_Summ
+        
         , CAST (SUM (tmpAll.SummPeresortIn)               AS TFloat) AS PeresortInSumm
         , CAST (SUM (tmpAll.CountPeresortOut)             AS TFloat) AS PeresortInWeight
         , CAST (SUM (tmpAll.SummPeresortIn)               AS TFloat) AS PeresortOutSumm
@@ -522,6 +543,11 @@ BEGIN
                         , CAST (SUM (tmpGoodsSumm.SummSale) AS NUMERIC (16, 2))           AS SummSale
                         , CAST (SUM (tmpGoodsSumm.SummSaleReal) AS NUMERIC (16, 2))       AS SummSaleReal
                         , CAST (SUM (tmpGoodsSumm.SummReturnIn) AS NUMERIC (16, 2))       AS SummReturnIn
+                        
+                        , CAST (SUM (tmpGoodsSumm.SummReturnIn_10200) AS NUMERIC (16, 2)) AS SummReturnIn_10200
+                        , CAST (SUM (tmpGoodsSumm.SummReturnIn_10300) AS NUMERIC (16, 2)) AS SummReturnIn_10300
+                        , CAST (SUM (tmpGoodsSumm.SummReturnInReal) AS NUMERIC (16, 2))   AS SummReturnInReal
+                                                
                         , CAST (SUM (tmpGoodsSumm.SummSendOnPriceIn) AS NUMERIC (16, 2))  AS SummSendOnPriceIn
                         , CAST (SUM (tmpGoodsSumm.SummLoss) AS NUMERIC (16, 2))           AS SummLoss    
                         , CAST (SUM (tmpGoodsSumm.SummSendOnPriceOut) AS NUMERIC (16, 2)) AS SummSendOnPriceOut  
@@ -580,6 +606,9 @@ BEGIN
                         , 0 AS SummSale
                         , 0 AS SummSaleReal
                         , 0 AS SummReturnIn
+                        , 0 AS SummReturnIn_10200
+                        , 0 AS SummReturnIn_10300
+                        , 0 AS SummReturnInReal                        
                         , 0 AS SummSendOnPriceIn
                         , 0 AS SummLoss    
                         , 0 AS SummSendOnPriceOut  
