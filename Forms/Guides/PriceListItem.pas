@@ -77,6 +77,10 @@ type
     UpdateDate: TcxGridDBColumn;
     InsertDate: TcxGridDBColumn;
     InsertName: TcxGridDBColumn;
+    dsdStoredProcPrint: TdsdStoredProc;
+    actPrint: TdsdPrintAction;
+    PrintItemsCDS: TClientDataSet;
+    bbPrint: TdxBarButton;
   private
     { Private declarations }
   public
