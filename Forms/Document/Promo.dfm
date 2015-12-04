@@ -3,9 +3,8 @@ inherited PromoForm: TPromoForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1040#1082#1094#1080#1103'>'
   ClientHeight = 599
   ClientWidth = 1204
-  ExplicitTop = -177
   ExplicitWidth = 1220
-  ExplicitHeight = 634
+  ExplicitHeight = 637
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -1600,6 +1599,58 @@ inherited PromoForm: TPromoForm
       ShortCut = 116
       RefreshOnTabSetChanges = True
     end
+    object mactAddAllPartner: TMultiAction
+      Category = 'Partner'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actChoiceRetailForm
+        end
+        item
+          Action = actInsertUpdate_Movement_PromoPartnerFromRetail
+        end
+        item
+          Action = actRefresh
+        end>
+      Caption = #1044#1086#1073#1072#1074#1080#1090#1100' '#1074#1089#1077#1093' '#1087#1072#1088#1090#1085#1077#1088#1086#1074' '#1089#1077#1090#1080
+      Hint = #1044#1086#1073#1072#1074#1080#1090#1100' '#1074#1089#1077#1093' '#1087#1072#1088#1090#1085#1077#1088#1086#1074' '#1089#1077#1090#1080
+      ImageIndex = 74
+    end
+    object actChoiceRetailForm: TOpenChoiceForm
+      Category = 'Partner'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = 'actChoiceRetailForm'
+      FormName = 'TRetailForm'
+      FormNameParam.Value = 'TRetailForm'
+      FormNameParam.DataType = ftString
+      GuiParams = <
+        item
+          Name = 'Key'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'RetailId'
+          ParamType = ptInput
+        end
+        item
+          Name = 'TextValue'
+          Value = Null
+          DataType = ftString
+          ParamType = ptInput
+        end>
+      isShowModal = True
+    end
+    object actInsertUpdate_Movement_PromoPartnerFromRetail: TdsdExecStoredProc
+      Category = 'Partner'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spInsertUpdate_Movement_PromoPartnerFromRetail
+      StoredProcList = <
+        item
+          StoredProc = spInsertUpdate_Movement_PromoPartnerFromRetail
+        end>
+      Caption = 'actInsertUpdate_Movement_PromoPartnerFromRetail'
+    end
   end
   inherited MasterDS: TDataSource
     Top = 272
@@ -1676,6 +1727,10 @@ inherited PromoForm: TPromoForm
         item
           Visible = True
           ItemName = 'dxBarButton2'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarButton12'
         end
         item
           Visible = True
@@ -1800,6 +1855,10 @@ inherited PromoForm: TPromoForm
       Action = mactUpdate_Movement_Promo_Data
       Category = 0
     end
+    object dxBarButton12: TdxBarButton
+      Action = mactAddAllPartner
+      Category = 0
+    end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
     SummaryItemList = <
@@ -1828,6 +1887,34 @@ inherited PromoForm: TPromoForm
     end
   end
   inherited FormParams: TdsdFormParams
+    Params = <
+      item
+        Name = 'Id'
+        Value = Null
+        ParamType = ptInputOutput
+      end
+      item
+        Name = 'Key'
+        Value = Null
+        DataType = ftString
+        ParamType = ptInput
+      end
+      item
+        Name = 'ShowAll'
+        Value = False
+        Component = actShowAll
+        DataType = ftBoolean
+        ParamType = ptInputOutput
+      end
+      item
+        Name = 'TotalSumm'
+        Value = Null
+        DataType = ftString
+      end
+      item
+        Name = 'RetailId'
+        Value = Null
+      end>
     Top = 312
   end
   inherited StatusGuides: TdsdGuides
@@ -3082,5 +3169,28 @@ inherited PromoForm: TPromoForm
     SummaryItemList = <>
     Left = 422
     Top = 553
+  end
+  object spInsertUpdate_Movement_PromoPartnerFromRetail: TdsdStoredProc
+    StoredProcName = 'gpInsertUpdate_Movement_PromoPartnerFromRetail'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inParentId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inRetailId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'RetailId'
+        ParamType = ptInput
+      end>
+    PackSize = 1
+    Left = 902
+    Top = 312
   end
 end
