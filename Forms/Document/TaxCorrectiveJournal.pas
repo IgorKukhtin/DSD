@@ -93,6 +93,7 @@ type
     Comment: TcxGridDBColumn;
     DateRegistered_notNull: TcxGridDBColumn;
     isCopy: TcxGridDBColumn;
+    colisPartner: TcxGridDBColumn;
   private
     { Private declarations }
   public

@@ -1,25 +1,25 @@
 inherited TaxCorrectiveForm: TTaxCorrectiveForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1050#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1082#1072' '#1082' '#1085#1072#1083#1086#1075#1086#1074#1086#1081' '#1085#1072#1082#1083#1072#1076#1085#1086#1081'>'
   ClientHeight = 668
-  ClientWidth = 1113
-  ExplicitWidth = 1129
-  ExplicitHeight = 703
+  ClientWidth = 1114
+  ExplicitWidth = 1130
+  ExplicitHeight = 706
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 163
-    Width = 1113
+    Width = 1114
     Height = 505
     ExplicitTop = 163
     ExplicitWidth = 1113
     ExplicitHeight = 505
     ClientRectBottom = 505
-    ClientRectRight = 1113
+    ClientRectRight = 1114
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 1113
       ExplicitHeight = 481
       inherited cxGrid: TcxGrid
-        Width = 1113
+        Width = 1114
         Height = 481
         ExplicitWidth = 1113
         ExplicitHeight = 481
@@ -151,7 +151,7 @@ inherited TaxCorrectiveForm: TTaxCorrectiveForm
     end
   end
   inherited DataPanel: TPanel
-    Width = 1113
+    Width = 1114
     Height = 137
     TabOrder = 3
     ExplicitWidth = 1113
@@ -278,6 +278,7 @@ inherited TaxCorrectiveForm: TTaxCorrectiveForm
     object edDateRegistered: TcxDateEdit
       Left = 189
       Top = 63
+      EditValue = 42342d
       Properties.ReadOnly = True
       Properties.SaveTime = False
       Properties.ShowTime = False
@@ -379,16 +380,24 @@ inherited TaxCorrectiveForm: TTaxCorrectiveForm
       Width = 73
     end
     object cxLabel16: TcxLabel
-      Left = 9
-      Top = 85
+      Left = 189
+      Top = 86
       Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
     end
     object ceComment: TcxTextEdit
-      Left = 9
+      Left = 189
       Top = 103
       TabOrder = 33
-      Width = 623
+      Width = 571
     end
+  end
+  object cbPartner: TcxCheckBox [2]
+    Left = 8
+    Top = 103
+    Caption = #1040#1082#1090' '#1085#1077#1076#1086#1074#1086#1079#1072
+    Properties.ReadOnly = True
+    TabOrder = 6
+    Width = 102
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 171
@@ -1025,6 +1034,12 @@ inherited TaxCorrectiveForm: TTaxCorrectiveForm
         Value = Null
         Component = ceComment
         DataType = ftString
+      end
+      item
+        Name = 'isPartner'
+        Value = Null
+        Component = cbPartner
+        DataType = ftBoolean
       end>
     Left = 208
     Top = 240

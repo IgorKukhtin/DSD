@@ -186,7 +186,7 @@ BEGIN
        )
 
       SELECT inMovementId AS inMovementId
-           , Movement.Id				                                    AS MovementId
+           , Movement.Id				                                AS MovementId
            , Movement.InvNumber				                                AS InvNumber
            , Movement.OperDate				                                AS OperDate
            , 'J1201006'::TVarChar                                           AS CHARCODE
@@ -198,6 +198,8 @@ BEGIN
                        THEN '«ÏiÌ‡ ˆiÌË'
                   WHEN MovementBoolean_isCopy.ValueData = TRUE
                        THEN '¬»œ–¿¬À≈ÕÕﬂ œŒÃ»À »'
+                  WHEN MovementBoolean_isPartner.ValueData = TRUE
+                       THEN 'Õ≈ƒŒ¬I«'
                   ELSE 'ÔÓ‚ÂÌÂÌÌˇ'
              END :: TVarChar AS KindName
            , MovementBoolean_PriceWithVAT.ValueData                         AS PriceWithVAT
@@ -357,6 +359,10 @@ BEGIN
             LEFT JOIN MovementBoolean AS MovementBoolean_isCopy
                                       ON MovementBoolean_isCopy.MovementId = tmpMovement.Id
                                      AND MovementBoolean_isCopy.DescId = zc_MovementBoolean_isCopy()
+
+            LEFT JOIN MovementBoolean AS MovementBoolean_isPartner
+                                      ON MovementBoolean_isPartner.MovementId = tmpMovement.Id
+                                     AND MovementBoolean_isPartner.DescId = zc_MovementBoolean_isPartner()
 
             LEFT JOIN MovementLinkMovement AS MovementLinkMovement_ChildEDI
                                            ON MovementLinkMovement_ChildEDI.MovementId = tmpMovement.Id
