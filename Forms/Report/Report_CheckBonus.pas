@@ -42,6 +42,9 @@ type
     clComment: TcxGridDBColumn;
     ExecuteDialog: TExecuteDialog;
     bbExecuteDialog: TdxBarButton;
+    cxLabel3: TcxLabel;
+    edPaidKind: TcxButtonEdit;
+    PaidKindGuides: TdsdGuides;
   private
     { Private declarations }
   public

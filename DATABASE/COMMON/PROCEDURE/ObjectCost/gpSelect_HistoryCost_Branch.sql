@@ -15,7 +15,6 @@ BEGIN
      -- PERFORM lpCheckRight (inSession, zc_Enum_InsertUpdate_HistoryCost());
 
 
-
      RETURN QUERY
      WITH tmpBranch AS (SELECT Object.Id AS BranchId
                         FROM Object

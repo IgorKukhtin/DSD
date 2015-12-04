@@ -1,27 +1,27 @@
 inherited Report_CheckBonusForm: TReport_CheckBonusForm
   Caption = #1054#1090#1095#1077#1090' <'#1055#1088#1086#1074#1077#1088#1082#1072' '#1085#1072#1095#1080#1089#1083#1077#1085#1080#1081' '#1087#1086' '#1073#1086#1085#1091#1089#1072#1084'>'
-  ClientHeight = 324
+  ClientHeight = 341
   ClientWidth = 1020
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   ExplicitWidth = 1036
-  ExplicitHeight = 359
+  ExplicitHeight = 379
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Width = 1020
-    Height = 267
+    Height = 284
     TabOrder = 3
     ExplicitTop = 57
     ExplicitWidth = 1020
     ExplicitHeight = 267
-    ClientRectBottom = 267
+    ClientRectBottom = 284
     ClientRectRight = 1020
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 1020
       ExplicitHeight = 267
       inherited cxGrid: TcxGrid
         Width = 1020
-        Height = 267
+        Height = 284
         ExplicitWidth = 1020
         ExplicitHeight = 267
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -296,6 +296,25 @@ inherited Report_CheckBonusForm: TReport_CheckBonusForm
       Width = 208
     end
   end
+  object cxLabel3: TcxLabel [2]
+    Left = 733
+    Top = 6
+    Caption = #1060#1086#1088#1084#1072' '#1086#1087#1083#1072#1090#1099':'
+    Visible = False
+  end
+  object edPaidKind: TcxButtonEdit [3]
+    Left = 816
+    Top = 5
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    Properties.ReadOnly = True
+    TabOrder = 7
+    Visible = False
+    Width = 114
+  end
   inherited ActionList: TActionList
     object actDocBonus: TdsdExecStoredProc
       Category = 'DSDLib'
@@ -360,6 +379,21 @@ inherited Report_CheckBonusForm: TReport_CheckBonusForm
           ComponentItem = 'TextValue'
           DataType = ftString
           ParamType = ptInput
+        end
+        item
+          Name = 'PaidKindId'
+          Value = Null
+          Component = PaidKindGuides
+          ComponentItem = 'Key'
+          ParamType = ptInput
+        end
+        item
+          Name = 'PaidKindName'
+          Value = Null
+          Component = PaidKindGuides
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          ParamType = ptInput
         end>
       isShowModal = True
       OpenBeforeShow = True
@@ -388,6 +422,13 @@ inherited Report_CheckBonusForm: TReport_CheckBonusForm
         Value = 41640d
         Component = deEnd
         DataType = ftDateTime
+        ParamType = ptInput
+      end
+      item
+        Name = 'inPaidKindId'
+        Value = Null
+        Component = PaidKindGuides
+        ComponentItem = 'Key'
         ParamType = ptInput
       end>
     Left = 112
@@ -520,5 +561,32 @@ inherited Report_CheckBonusForm: TReport_CheckBonusForm
     PackSize = 1
     Left = 368
     Top = 176
+  end
+  object PaidKindGuides: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edPaidKind
+    FormNameParam.Value = 'TPaidKindForm'
+    FormNameParam.DataType = ftString
+    FormName = 'TPaidKindForm'
+    PositionDataSet = 'MasterCDS'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = PaidKindGuides
+        ComponentItem = 'Key'
+        DataType = ftString
+        ParamType = ptInput
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = PaidKindGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+      end>
+    Left = 856
+    Top = 65528
   end
 end

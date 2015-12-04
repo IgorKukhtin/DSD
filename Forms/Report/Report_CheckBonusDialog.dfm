@@ -3,7 +3,7 @@ object Report_CheckBonusDialogForm: TReport_CheckBonusDialogForm
   Top = 0
   BorderStyle = bsDialog
   Caption = #1055#1072#1088#1072#1084#1077#1090#1088#1099' '#1086#1090#1095#1077#1090#1072' <'#1055#1088#1086#1074#1077#1088#1082#1072' '#1085#1072#1095#1080#1089#1083#1077#1085#1080#1081' '#1087#1086' '#1073#1086#1085#1091#1089#1072#1084'>'
-  ClientHeight = 132
+  ClientHeight = 220
   ClientWidth = 338
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -18,8 +18,8 @@ object Report_CheckBonusDialogForm: TReport_CheckBonusDialogForm
   PixelsPerInch = 96
   TextHeight = 13
   object cxButton1: TcxButton
-    Left = 50
-    Top = 99
+    Left = 58
+    Top = 179
     Width = 75
     Height = 25
     Caption = 'Ok'
@@ -28,8 +28,8 @@ object Report_CheckBonusDialogForm: TReport_CheckBonusDialogForm
     TabOrder = 0
   end
   object cxButton2: TcxButton
-    Left = 224
-    Top = 99
+    Left = 232
+    Top = 179
     Width = 75
     Height = 25
     Caption = #1054#1090#1084#1077#1085#1072
@@ -81,11 +81,30 @@ object Report_CheckBonusDialogForm: TReport_CheckBonusDialogForm
     Top = 7
     Caption = #1044#1072#1090#1072' '#1087#1086' :'
   end
+  object cxLabel1: TcxLabel
+    Left = 11
+    Top = 98
+    Caption = #1060#1086#1088#1084#1072' '#1086#1087#1083#1072#1090#1099':'
+    Visible = False
+  end
+  object edPaidKind: TcxButtonEdit
+    Left = 11
+    Top = 121
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    Properties.ReadOnly = True
+    TabOrder = 9
+    Visible = False
+    Width = 114
+  end
   object PeriodChoice: TPeriodChoice
     DateStart = deStart
     DateEnd = deEnd
-    Left = 168
-    Top = 64
+    Left = 16
+    Top = 168
   end
   object dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 216
@@ -101,8 +120,8 @@ object Report_CheckBonusDialogForm: TReport_CheckBonusDialogForm
       end>
     StorageName = 'cxPropertiesStore'
     StorageType = stStream
-    Left = 200
-    Top = 4
+    Left = 160
+    Top = 12
   end
   object FormParams: TdsdFormParams
     Params = <
@@ -134,6 +153,21 @@ object Report_CheckBonusDialogForm: TReport_CheckBonusDialogForm
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+      end
+      item
+        Name = 'PaidKindId'
+        Value = Null
+        Component = PaidKindGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+      end
+      item
+        Name = 'PaidKindName'
+        Value = Null
+        Component = PaidKindGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
       end>
     Left = 272
     Top = 16
@@ -162,7 +196,34 @@ object Report_CheckBonusDialogForm: TReport_CheckBonusDialogForm
         DataType = ftString
         ParamType = ptInput
       end>
-    Left = 88
+    Left = 120
     Top = 48
+  end
+  object PaidKindGuides: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edPaidKind
+    FormNameParam.Value = 'TPaidKindForm'
+    FormNameParam.DataType = ftString
+    FormName = 'TPaidKindForm'
+    PositionDataSet = 'MasterCDS'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = PaidKindGuides
+        ComponentItem = 'Key'
+        DataType = ftString
+        ParamType = ptInput
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = PaidKindGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+      end>
+    Left = 56
+    Top = 120
   end
 end

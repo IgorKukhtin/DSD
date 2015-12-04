@@ -26,6 +26,9 @@ type
     cxLabel6: TcxLabel;
     cxLabel7: TcxLabel;
     BonusKindGuides: TdsdGuides;
+    cxLabel1: TcxLabel;
+    edPaidKind: TcxButtonEdit;
+    PaidKindGuides: TdsdGuides;
   private
     { Private declarations }
   public
