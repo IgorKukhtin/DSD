@@ -13,7 +13,7 @@ CREATE OR REPLACE FUNCTION gpSelect_Report_Promo(
 )
 RETURNS TABLE(
      MovementId           Integer   --ИД документа акции
-    ,InvNumber            TVarChar  --№ документа акции
+    ,InvNumber            Integer   --№ документа акции
     ,UnitName             TVarChar  --Склад
     ,PersonalTradeName    TVarChar  --Ответственный представитель коммерческого отдела
     ,PersonalName         TVarChar  --Ответственный представитель маркетингового отдела	

@@ -3,7 +3,6 @@ inherited Report_PromoForm: TReport_PromoForm
   ClientHeight = 434
   ClientWidth = 833
   AddOnFormData.ExecuteDialogAction = actReport_PromoDialog
-  ExplicitLeft = -60
   ExplicitWidth = 849
   ExplicitHeight = 469
   PixelsPerInch = 96
@@ -466,8 +465,8 @@ inherited Report_PromoForm: TReport_PromoForm
     object actOpenPromo: TdsdOpenForm
       Category = 'DSDLib'
       MoveParams = <>
-      Caption = #1054#1090#1082#1088#1099#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090' '#1072#1082#1094#1080#1080
-      Hint = #1054#1090#1082#1088#1099#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090' '#1072#1082#1094#1080#1080
+      Caption = #1054#1090#1082#1088#1099#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090' <'#1040#1082#1094#1080#1103'>'
+      Hint = #1054#1090#1082#1088#1099#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090' <'#1040#1082#1094#1080#1103'>'
       ImageIndex = 1
       FormName = 'TPromoForm'
       FormNameParam.Value = 'TPromoForm'
@@ -549,11 +548,15 @@ inherited Report_PromoForm: TReport_PromoForm
         end
         item
           Visible = True
-          ItemName = 'bbRefresh'
+          ItemName = 'dxBarButton3'
         end
         item
           Visible = True
-          ItemName = 'dxBarButton3'
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbRefresh'
         end
         item
           Visible = True
@@ -605,6 +608,13 @@ inherited Report_PromoForm: TReport_PromoForm
     Top = 64
   end
   inherited RefreshDispatcher: TRefreshDispatcher
+    ComponentList = <
+      item
+        Component = PeriodChoice
+      end
+      item
+        Component = UnitGuides
+      end>
     Top = 184
   end
   object UnitGuides: TdsdGuides
