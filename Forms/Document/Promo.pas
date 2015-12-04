@@ -209,6 +209,11 @@ type
     colPartnerListIsErased: TcxGridDBColumn;
     dsdDBViewAddOnPartnerList: TdsdDBViewAddOn;
     actPartnerListRefresh: TdsdDataSetRefresh;
+    mactAddAllPartner: TMultiAction;
+    actChoiceRetailForm: TOpenChoiceForm;
+    actInsertUpdate_Movement_PromoPartnerFromRetail: TdsdExecStoredProc;
+    spInsertUpdate_Movement_PromoPartnerFromRetail: TdsdStoredProc;
+    dxBarButton12: TdxBarButton;
   private
     { Private declarations }
   public
