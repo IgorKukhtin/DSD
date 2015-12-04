@@ -284,6 +284,21 @@ inherited Report_Branch_App1Form: TReport_Branch_App1Form
               Format = ',0.####'
               Kind = skSum
               Column = WeightEnd_Vz
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = ReturnInRealSumm
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = ReturnIn_10300_Summ
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = ReturnIn_10200_Summ
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -542,6 +557,21 @@ inherited Report_Branch_App1Form: TReport_Branch_App1Form
               Format = ',0.####'
               Kind = skSum
               Column = WeightEnd_Vz
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = ReturnInRealSumm
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = ReturnIn_10300_Summ
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = ReturnIn_10200_Summ
             end>
           OptionsData.CancelOnExit = True
           OptionsData.Deleting = False
@@ -949,6 +979,38 @@ inherited Report_Branch_App1Form: TReport_Branch_App1Form
           object LossSumm: TcxGridDBColumn
             Caption = #1057#1087#1080#1089#1072#1085#1080#1077' ('#1075#1088#1085')'
             DataBinding.FieldName = 'LossSumm'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 60
+          end
+          object ReturnInRealSumm: TcxGridDBColumn
+            Caption = #1042#1086#1079#1074#1088#1072#1090' '#1089#1091#1084#1084#1072' '#1087#1086#1082'.  ('#1075#1088#1085')'
+            DataBinding.FieldName = 'ReturnInRealSumm'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 60
+          end
+          object ReturnIn_10300_Summ: TcxGridDBColumn
+            Caption = #1057#1082#1080#1076#1082#1072' '#1087#1086' '#1085#1072#1082#1083#1072#1076#1085'.  '#1074#1086#1079#1074#1088#1072#1090' ('#1075#1088#1085')'
+            DataBinding.FieldName = 'ReturnIn_10300_Summ'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 60
+          end
+          object ReturnIn_10200_Summ: TcxGridDBColumn
+            Caption = #1057#1091#1084#1084#1072' '#1072#1082#1094#1080#1080'  '#1074#1086#1079#1074#1088#1072#1090
+            DataBinding.FieldName = 'ReturnIn_10200_Summ'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.00##;-,0.00##; ;'

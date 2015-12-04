@@ -39,6 +39,9 @@ type
     cxLabel6: TcxLabel;
     cePersonalMarketing: TcxButtonEdit;
     PersonalMarketingGuides: TdsdGuides;
+    cxLabel7: TcxLabel;
+    cePersonalTrade: TcxButtonEdit;
+    PersonalTradeGuides: TdsdGuides;
   private
     { Private declarations }
   public

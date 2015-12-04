@@ -26,7 +26,6 @@ object RetailForm: TRetailForm
     TabOrder = 0
     LookAndFeel.NativeStyle = True
     LookAndFeel.SkinName = 'UserSkin'
-    ExplicitWidth = 659
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -93,9 +92,31 @@ object RetailForm: TRetailForm
       object PersonalMarketingName: TcxGridDBColumn
         Caption = #1054#1090#1074'.'#1089#1086#1090#1088#1091#1076#1085#1080#1082' '#1084#1072#1088#1082#1077#1090'. '#1086#1090#1076#1077#1083#1072
         DataBinding.FieldName = 'PersonalMarketingName'
+        PropertiesClassName = 'TcxButtonEditProperties'
+        Properties.Buttons = <
+          item
+            Action = actChoicePersonalMarketing
+            Default = True
+            Kind = bkEllipsis
+          end>
+        Properties.ReadOnly = True
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Options.Editing = False
+        Width = 100
+      end
+      object PersonalTradeName: TcxGridDBColumn
+        Caption = #1054#1090#1074'.'#1089#1086#1090#1088#1091#1076#1085#1080#1082' '#1082#1086#1084#1084#1077#1088#1095'. '#1086#1090#1076#1077#1083#1072
+        DataBinding.FieldName = 'PersonalTradeName'
+        PropertiesClassName = 'TcxButtonEditProperties'
+        Properties.Buttons = <
+          item
+            Action = actChoicePersonalTrade
+            Default = True
+            Kind = bkEllipsis
+          end>
+        Properties.ReadOnly = True
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
         Width = 100
       end
       object clOperDateOrder: TcxGridDBColumn
@@ -378,10 +399,10 @@ object RetailForm: TRetailForm
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
-      StoredProc = spUpdate
+      StoredProc = spUpdateGLNCode
       StoredProcList = <
         item
-          StoredProc = spUpdate
+          StoredProc = spUpdateGLNCode
         end>
       Caption = 'actUpdateDataSet'
       DataSource = DataSource
@@ -421,6 +442,54 @@ object RetailForm: TRetailForm
           ParamType = ptInput
         end>
       isShowModal = False
+    end
+    object actChoicePersonalTrade: TOpenChoiceForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = 'actChoicePersonalTrade'
+      FormName = 'TPersonal_ObjectForm'
+      FormNameParam.Value = 'TPersonal_ObjectForm'
+      FormNameParam.DataType = ftString
+      GuiParams = <
+        item
+          Name = 'Key'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'PersonalTradeId'
+        end
+        item
+          Name = 'TextValue'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'PersonalTradeName'
+          DataType = ftString
+        end>
+      isShowModal = True
+    end
+    object actChoicePersonalMarketing: TOpenChoiceForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = 'actChoicePersonalMarketing'
+      FormName = 'TPersonal_ObjectForm'
+      FormNameParam.Value = 'TPersonal_ObjectForm'
+      FormNameParam.DataType = ftString
+      GuiParams = <
+        item
+          Name = 'Key'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'PersonalMarketingId'
+        end
+        item
+          Name = 'TextValue'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'PersonalMarketingName'
+          DataType = ftString
+        end>
+      isShowModal = True
     end
     object actChoiceGoodsProperty: TOpenChoiceForm
       Category = 'DSDLib'
@@ -507,7 +576,7 @@ object RetailForm: TRetailForm
     Left = 48
     Top = 216
   end
-  object spUpdate: TdsdStoredProc
+  object spUpdateGLNCode: TdsdStoredProc
     StoredProcName = 'gpUpdate_Object_Retail_GLNCode'
     DataSets = <>
     OutputType = otResult
@@ -541,9 +610,23 @@ object RetailForm: TRetailForm
         Component = ClientDataSet
         ComponentItem = 'GoodsPropertyId'
         ParamType = ptInput
+      end
+      item
+        Name = 'inPersonalMarketingId'
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'PersonalMarketingId'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inPersonalTradeId'
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'PersonalTradeId'
+        ParamType = ptInput
       end>
     PackSize = 1
-    Left = 392
-    Top = 120
+    Left = 464
+    Top = 80
   end
 end

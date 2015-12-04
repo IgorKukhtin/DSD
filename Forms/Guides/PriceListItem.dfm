@@ -178,7 +178,7 @@ object PriceListItemForm: TPriceListItemForm
     object edShowDate: TcxDateEdit
       Left = 433
       Top = 9
-      EditValue = 42005d
+      EditValue = 42339d
       Properties.SaveTime = False
       Properties.ShowTime = False
       TabOrder = 2
@@ -263,8 +263,8 @@ object PriceListItemForm: TPriceListItemForm
     PopupMenuLinks = <>
     ShowShortCutInHint = True
     UseSystemFont = True
-    Left = 224
-    Top = 128
+    Left = 248
+    Top = 112
     DockControlHeights = (
       0
       0
@@ -313,6 +313,14 @@ object PriceListItemForm: TPriceListItemForm
         item
           Visible = True
           ItemName = 'bbPriceListTaxDialog'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbPrint'
         end
         item
           Visible = True
@@ -370,6 +378,11 @@ object PriceListItemForm: TPriceListItemForm
     object bbPriceListTaxDialog: TdxBarButton
       Action = PriceListTaxDialoglOpenForm
       Category = 0
+    end
+    object bbPrint: TdxBarButton
+      Action = actPrint
+      Category = 0
+      ImageIndex = 3
     end
   end
   object ActionList: TActionList
@@ -526,6 +539,42 @@ object PriceListItemForm: TPriceListItemForm
         end>
       isShowModal = False
     end
+    object actPrint: TdsdPrintAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = dsdStoredProcPrint
+      StoredProcList = <
+        item
+          StoredProc = dsdStoredProcPrint
+        end>
+      Caption = #1055#1077#1095#1072#1090#1100' '#1087#1088#1072#1081#1089#1072
+      Hint = #1055#1077#1095#1072#1090#1100' '#1087#1088#1072#1081#1089#1072
+      ImageIndex = 19
+      DataSets = <
+        item
+          DataSet = PrintItemsCDS
+          UserName = 'frxDBDMaster'
+          IndexFieldNames = 'GoodsGroupNameFull;GoodsName'
+        end>
+      Params = <
+        item
+          Name = 'PriceListName'
+          Value = Null
+          Component = PriceListGuides
+          ComponentItem = 'TextValue'
+          DataType = ftString
+        end
+        item
+          Name = 'ShowDate'
+          Value = 42339d
+          Component = edShowDate
+          DataType = ftDateTime
+        end>
+      ReportName = 'PrintObjectHistory_PriceListItem'
+      ReportNameParam.Name = 'PrintObjectHistory_PriceListItem'
+      ReportNameParam.Value = 'PrintObjectHistory_PriceListItem'
+      ReportNameParam.DataType = ftString
+    end
   end
   object dsdStoredProc: TdsdStoredProc
     StoredProcName = 'gpSelect_ObjectHistory_PriceListItem'
@@ -583,8 +632,8 @@ object PriceListItemForm: TPriceListItemForm
         Column = clPrice
       end>
     SummaryItemList = <>
-    Left = 168
-    Top = 240
+    Left = 192
+    Top = 256
   end
   object dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 296
@@ -614,7 +663,7 @@ object PriceListItemForm: TPriceListItemForm
         DataType = ftString
         ParamType = ptInput
       end>
-    Left = 232
+    Left = 224
     Top = 16
   end
   object spInsertUpdate: TdsdStoredProc
@@ -691,5 +740,37 @@ object PriceListItemForm: TPriceListItemForm
       end>
     Left = 536
     Top = 168
+  end
+  object dsdStoredProcPrint: TdsdStoredProc
+    StoredProcName = 'gpSelect_ObjectHistory_PriceListItem_Print'
+    DataSet = PrintItemsCDS
+    DataSets = <
+      item
+        DataSet = PrintItemsCDS
+      end>
+    Params = <
+      item
+        Name = 'inPriceListId'
+        Value = '0'
+        Component = PriceListGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inOperDate'
+        Value = 42005d
+        Component = edShowDate
+        DataType = ftDateTime
+        ParamType = ptInput
+      end>
+    PackSize = 1
+    Left = 144
+    Top = 160
+  end
+  object PrintItemsCDS: TClientDataSet
+    Aggregates = <>
+    Params = <>
+    Left = 708
+    Top = 270
   end
 end

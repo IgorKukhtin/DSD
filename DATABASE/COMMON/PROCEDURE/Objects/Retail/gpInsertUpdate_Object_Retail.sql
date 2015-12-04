@@ -2,6 +2,8 @@
 
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Retail(Integer, Integer, TVarChar, Boolean, TVarChar, TVarChar, Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Retail(Integer, Integer, TVarChar, Boolean, TVarChar, TVarChar, Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Retail(Integer, Integer, TVarChar, Boolean, TVarChar, TVarChar, Integer, Integer, Integer, TVarChar);
+
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Retail(
  INOUT ioId                    Integer   ,     -- ключ объекта <Торговая сеть> 
@@ -12,6 +14,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Retail(
     IN inGLNCodeCorporate      TVarChar  ,     -- Код GLN - Поставщик 
     IN inGoodsPropertyId       Integer   ,     -- Классификаторы свойств товаров
     IN inPersonalMarketingId   Integer   ,     -- Сотрудник (Ответственный представитель маркетингового отдела)
+    IN inPersonalTradeId       Integer   ,     -- Сотрудник (Ответственный представитель коммерческого отдела)
     IN inSession               TVarChar        -- сессия пользователя
 )
   RETURNS integer AS
@@ -49,6 +52,8 @@ BEGIN
    PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Retail_GoodsProperty(), ioId, inGoodsPropertyId);   
    -- сохранили связь с <Сотрудник (Ответственный представитель маркетингового отдела)>
    PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Retail_PersonalMarketing(), ioId, inPersonalMarketingId);  
+   -- сохранили связь с <Сотрудник (Ответственный представитель коммерческого отдела)>
+   PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Retail_PersonalTrade(), ioId, inPersonalTradeId);  
 
 
    -- сохранили протокол
