@@ -95,6 +95,7 @@ CREATE OR REPLACE VIEW Object_RoleAccessKeyDocument_View AS
                                                , zc_Enum_Process_Get_Movement_TransportService()
                                                , zc_Enum_Process_InsertUpdate_Movement_IncomeFuel()
                                                , zc_Enum_Process_InsertUpdate_Movement_TransportIncome()
+                                               , zc_Enum_Process_InsertUpdate_Movement_PersonalSendCash()
                                                 )
                                           THEN TRUE
                                      ELSE NULL
