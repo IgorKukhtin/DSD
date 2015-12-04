@@ -4,7 +4,7 @@ inherited PromoForm: TPromoForm
   ClientHeight = 599
   ClientWidth = 1204
   ExplicitWidth = 1220
-  ExplicitHeight = 637
+  ExplicitHeight = 634
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -357,7 +357,7 @@ inherited PromoForm: TPromoForm
                 Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
                 object colp_Area: TcxGridDBColumn
                   Caption = #1056#1077#1075#1080#1086#1085
-                  DataBinding.FieldName = 'Area'
+                  DataBinding.FieldName = 'AreaName'
                   HeaderAlignmentHorz = taCenter
                   HeaderAlignmentVert = vaCenter
                   Width = 70
@@ -1612,8 +1612,14 @@ inherited PromoForm: TPromoForm
         item
           Action = actRefresh
         end>
-      Caption = #1044#1086#1073#1072#1074#1080#1090#1100' '#1074#1089#1077#1093' '#1087#1072#1088#1090#1085#1077#1088#1086#1074' '#1089#1077#1090#1080
-      Hint = #1044#1086#1073#1072#1074#1080#1090#1100' '#1074#1089#1077#1093' '#1087#1072#1088#1090#1085#1077#1088#1086#1074' '#1089#1077#1090#1080
+      QuestionBeforeExecute = 
+        #1044#1077#1081#1089#1090#1074#1080#1090#1077#1083#1100#1085#1086' '#1091#1076#1072#1083#1080#1090#1100' '#1087#1088#1077#1076#1099#1076#1091#1097#1080#1093' <'#1055#1072#1088#1090#1085#1077#1088#1086#1074'> '#1080' '#1076#1086#1073#1072#1074#1080#1090#1100' '#1074#1089#1077#1093' '#1082#1086#1085 +
+        #1090#1088#1072#1075#1077#1085#1090#1086#1074' '#1074#1099#1073#1088#1072#1085#1085#1086#1081' <'#1058#1086#1088#1075#1086#1074#1086#1081' '#1089#1077#1090#1080'> ?'
+      InfoAfterExecute = 
+        #1055#1088#1077#1076#1099#1076#1091#1097#1080#1077' <'#1055#1072#1088#1090#1085#1077#1088#1099'> '#1091#1076#1072#1083#1077#1085#1099' '#1080' '#1076#1086#1073#1072#1074#1083#1077#1085#1099' '#1042#1057#1045' '#1082#1086#1085#1090#1088#1072#1075#1077#1085#1090#1099' <'#1058#1086#1088#1075#1086 +
+        #1074#1086#1081' '#1089#1077#1090#1080'>'
+      Caption = #1044#1086#1073#1072#1074#1080#1090#1100' '#1074#1089#1077#1093' '#1082#1086#1085#1090#1088#1072#1075#1077#1085#1090#1086#1074' '#1076#1083#1103' <'#1058#1086#1088#1075#1086#1074#1086#1081' '#1089#1077#1090#1080'>'
+      Hint = #1044#1086#1073#1072#1074#1080#1090#1100' '#1074#1089#1077#1093' '#1082#1086#1085#1090#1088#1072#1075#1077#1085#1090#1086#1074' '#1076#1083#1103' <'#1058#1086#1088#1075#1086#1074#1086#1081' '#1089#1077#1090#1080'>'
       ImageIndex = 74
     end
     object actChoiceRetailForm: TOpenChoiceForm
@@ -1726,11 +1732,15 @@ inherited PromoForm: TPromoForm
         end
         item
           Visible = True
-          ItemName = 'dxBarButton2'
+          ItemName = 'dxBarButton12'
         end
         item
           Visible = True
-          ItemName = 'dxBarButton12'
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarButton2'
         end
         item
           Visible = True
