@@ -10,11 +10,11 @@ AS
       , ROUND(Price_Value.ValueData,2)::TFloat AS Price
       , MCS_Value.ValueData                     AS MCSValue
 
-      , Object_Goods.Id                         AS GoodsId
+      , Price_Goods.ChildObjectId               AS GoodsId
       , Object_Goods.ObjectCode                 AS GoodsCode
       , Object_Goods.ValueData                  AS GoodsName
 
-      , Object_Unit.Id                          AS UnitId
+      , ObjectLink_Price_Unit.ChildObjectId     AS UnitId
       , Object_Unit.ObjectCode                  AS UnitCode
       , Object_Unit.ValueData                   AS UnitName
 

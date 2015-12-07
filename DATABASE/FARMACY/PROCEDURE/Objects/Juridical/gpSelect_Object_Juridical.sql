@@ -7,7 +7,7 @@ CREATE OR REPLACE FUNCTION gpSelect_Object_Juridical(
 )
 RETURNS TABLE (Id Integer, Code Integer, Name TVarChar,
                RetailId Integer, RetailName TVarChar,
-               isCorporate boolean,
+               isCorporate boolean, PayOrder TFloat,
                isErased boolean) AS
 $BODY$
 BEGIN
@@ -17,14 +17,15 @@ BEGIN
 
    RETURN QUERY 
        SELECT 
-             Object_Juridical.Id           AS Id
-           , Object_Juridical.ObjectCode   AS Code
-           , Object_Juridical.ValueData    AS Name
+             Object_Juridical.Id                 AS Id
+           , Object_Juridical.ObjectCode         AS Code
+           , Object_Juridical.ValueData          AS Name
          
-           , Object_Retail.Id  AS RetailId
-           , Object_Retail.ValueData  AS RetailName 
+           , Object_Retail.Id                    AS RetailId
+           , Object_Retail.ValueData             AS RetailName 
 
            , ObjectBoolean_isCorporate.ValueData AS isCorporate
+           , ObjectFloat_PayOrder.ValueData      AS PayOrder
            
            , Object_Juridical.isErased           AS isErased
            
@@ -37,6 +38,9 @@ BEGIN
            LEFT JOIN ObjectBoolean AS ObjectBoolean_isCorporate 
                                    ON ObjectBoolean_isCorporate.ObjectId = Object_Juridical.Id
                                   AND ObjectBoolean_isCorporate.DescId = zc_ObjectBoolean_Juridical_isCorporate()
+           LEFT JOIN ObjectFloat AS ObjectFloat_PayOrder
+                                   ON ObjectFloat_PayOrder.ObjectId = Object_Juridical.Id
+                                  AND ObjectFloat_PayOrder.DescId = zc_ObjectFloat_Juridical_PayOrder()
        WHERE Object_Juridical.DescId = zc_Object_Juridical();
   
 END;
@@ -48,7 +52,8 @@ ALTER FUNCTION gpSelect_Object_Juridical(TVarChar) OWNER TO postgres;
 /*-------------------------------------------------------------------------------*/
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Воробкало А.А.
+ 02.12.15                                                         * PayOrder
  01.07.14         *
 
 */

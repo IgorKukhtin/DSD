@@ -92,6 +92,10 @@ type
     colReasonDifferencesName: TcxGridDBColumn;
     colAmountDiff: TcxGridDBColumn;
     spUpdate_MovementItem_Income_AmountManual: TdsdStoredProc;
+    ceCorrBonus: TcxCurrencyEdit;
+    cxLabel14: TcxLabel;
+    cxLabel16: TcxLabel;
+    ceCorrOther: TcxCurrencyEdit;
   private
     { Private declarations }
   public

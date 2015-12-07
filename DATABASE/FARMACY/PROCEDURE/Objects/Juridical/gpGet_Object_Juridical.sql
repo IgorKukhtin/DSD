@@ -10,6 +10,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar,
                RetailId Integer, RetailName TVarChar,
                isCorporate boolean,
                Percent TFloat, 
+               PayOrder TFloat,
                isErased boolean) AS
 $BODY$
 BEGIN
@@ -29,6 +30,7 @@ BEGIN
 
            , CAST (False AS Boolean) AS isCorporate 
            , 0::TFloat               AS Percent    
+           , NULL::TFloat            AS PayOrder
        
            , CAST (NULL AS Boolean) AS isErased;
    
@@ -44,6 +46,7 @@ BEGIN
 
            , ObjectBoolean_isCorporate.ValueData AS isCorporate
            , ObjectFloat_Percent.ValueData       AS Percent
+           , ObjectFloat_PayOrder.ValueData      AS PayOrder
             
            , Object_Juridical.isErased           AS isErased
            
@@ -52,6 +55,10 @@ BEGIN
            LEFT JOIN ObjectFloat AS ObjectFloat_Percent
                                  ON ObjectFloat_Percent.ObjectId = Object_Juridical.Id
                                 AND ObjectFloat_Percent.DescId = zc_ObjectFloat_Juridical_Percent()
+
+           LEFT JOIN ObjectFloat AS ObjectFloat_PayOrder
+                                 ON ObjectFloat_PayOrder.ObjectId = Object_Juridical.Id
+                                AND ObjectFloat_PayOrder.DescId = zc_ObjectFloat_Juridical_PayOrder()
 
            LEFT JOIN ObjectLink AS ObjectLink_Juridical_Retail
                                 ON ObjectLink_Juridical_Retail.ObjectId = Object_Juridical.Id
@@ -74,7 +81,8 @@ ALTER FUNCTION gpGet_Object_Juridical (integer, TVarChar) OWNER TO postgres;
 /*-------------------------------------------------------------------------------*/
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.  Воробкало А.А.
+ 02.12.15                                                         * PayOrder               
  01.07.14         *
 
 */

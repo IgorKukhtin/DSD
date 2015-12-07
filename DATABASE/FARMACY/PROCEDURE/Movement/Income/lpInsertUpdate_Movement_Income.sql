@@ -11,6 +11,9 @@ DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_Income
 DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_Income 
     (Integer, TVarChar, TDateTime, Boolean, 
      Integer, Integer, Integer, Integer, TDateTime, Integer);
+DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_Income 
+    (Integer, TVarChar, TDateTime, Boolean, 
+     Integer, Integer, Integer, Integer, TDateTime, TFloat, TFloat, Integer);
 
 CREATE OR REPLACE FUNCTION lpInsertUpdate_Movement_Income(
  INOUT ioId                  Integer   , -- Ключ объекта <Документ Перемещение>
@@ -23,6 +26,8 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_Movement_Income(
     IN inContractId          Integer   , -- Договор
     IN inPaymentDate         TDateTime , -- Дата платежа
     IN inJuridicalId         Integer   , -- Юрлицо покупатель
+    IN inCorrBonus           TFloat    , -- Корректировка долга документа по бонусу
+    IN inCorrOther           TFloat    , -- Корректировка долга документа по прочим причинам
     IN inUserId              Integer     -- сессия пользователя
 )
 RETURNS Integer AS
@@ -53,6 +58,12 @@ BEGIN
      -- 
      PERFORM lpInsertUpdate_MovementDate (zc_MovementDate_Payment(), ioId, inPaymentDate);
 
+     -- сохранили значение <Корректировка долга документа по бонусу>
+     PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_CorrBonus(), ioId, inCorrBonus);
+     
+     -- сохранили значение <Корректировка долга документа по прочим причинам>
+     PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_CorrOther(), ioId, inCorrOther);
+
      -- сохранили связь с <Юрлицо покупатель>
      PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_Juridical(), ioId, inJuridicalId);
      
@@ -69,7 +80,8 @@ LANGUAGE PLPGSQL VOLATILE;
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.  Воробкало А.А.
+ 07.12.15                                                                       *
  24.12.14                         *
  02.12.14                        *
 

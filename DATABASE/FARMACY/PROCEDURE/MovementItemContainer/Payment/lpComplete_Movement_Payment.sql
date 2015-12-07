@@ -15,17 +15,9 @@ BEGIN
     
     --Проверяем, что бы все оплаты соответствовали тем, что в документе
     PERFORM
-        gpInsertUpdate_MovementItem_Payment(
-                                            ioId             := MI_Payment.Id, -- Ключ объекта <Элемент документа>
-                                            inMovementId     := MI_Payment.MovementId, -- Ключ объекта <Документ>
-                                            inIncomeId       := MI_Payment.IncomeId, -- Ключ документа <приходная накладная>
-                                            ioBankAccountId  := MI_Payment.BankAccountId, -- Ключ документа <Оплата по банку>
-                                            ioAccountId      := MI_Payment.AccountId, -- Ключ обьекта <Расчетный счет>
-                                            inSummaPay       := MI_Payment.SummaPay    , -- Сумма платежа
-                                            inNeedPay        := MI_Payment.NeedPay  , -- Нужно платить
-                                            inSession        := inUserId::TVarChar    -- сессия пользователя
-                                            )
-
+        lpInsertUpdate_MovementItem_Payment_Child(inId     := MI_Payment.Id, -- Ключ объекта <Элемент документа>
+                                                  inUserId := inUserId    -- сессия пользователя
+                                                  )
     FROM
         MovementItem_Payment_View AS MI_Payment
     WHERE
@@ -37,7 +29,7 @@ BEGIN
     PERFORM lpComplete_Movement_Finance_CreateTemp();
     -- проводим оплаты
     PERFORM
-        lpComplete_Movement_BankAccount (inMovementId := MI_Payment.BankAccountId
+        lpComplete_Movement_BankAccount (inMovementId := MI_Payment.MovementBankAccountId
                                        , inUserId     := inUserId)
     FROM
         MovementItem_Payment_View AS MI_Payment

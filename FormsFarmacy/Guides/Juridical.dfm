@@ -1,6 +1,8 @@
 inherited JuridicalForm: TJuridicalForm
   Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1070#1088#1080#1076#1080#1095#1077#1089#1082#1080#1077' '#1083#1080#1094#1072'>'
   AddOnFormData.ChoiceAction = dsdChoiceGuides
+  ExplicitWidth = 591
+  ExplicitHeight = 346
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -41,6 +43,11 @@ inherited JuridicalForm: TJuridicalForm
             Caption = #1059#1076#1072#1083#1077#1085
             DataBinding.FieldName = 'isErased'
             Width = 51
+          end
+          object colPayOrder: TcxGridDBColumn
+            Caption = #1054#1095#1077#1088#1077#1076#1100' '#1087#1083#1072#1090#1077#1078#1072
+            DataBinding.FieldName = 'PayOrder'
+            Options.Editing = False
           end
         end
       end

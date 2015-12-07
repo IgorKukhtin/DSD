@@ -7,20 +7,20 @@ inherited IncomeForm: TIncomeForm
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Top = 126
+    Top = 151
     Width = 904
-    Height = 400
+    Height = 375
     ExplicitTop = 126
     ExplicitWidth = 904
     ExplicitHeight = 400
-    ClientRectBottom = 400
+    ClientRectBottom = 375
     ClientRectRight = 904
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 904
       ExplicitHeight = 376
       inherited cxGrid: TcxGrid
         Width = 904
-        Height = 376
+        Height = 351
         ExplicitWidth = 904
         ExplicitHeight = 376
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -308,10 +308,10 @@ inherited IncomeForm: TIncomeForm
   end
   inherited DataPanel: TPanel
     Width = 904
-    Height = 100
+    Height = 125
     TabOrder = 3
     ExplicitWidth = 904
-    ExplicitHeight = 100
+    ExplicitHeight = 125
     inherited edInvNumber: TcxTextEdit
       Left = 8
       Properties.ReadOnly = False
@@ -333,9 +333,7 @@ inherited IncomeForm: TIncomeForm
     end
     inherited cxLabel2: TcxLabel
       Left = 84
-      Top = 0
       ExplicitLeft = 84
-      ExplicitTop = 0
     end
     inherited cxLabel15: TcxLabel
       Top = 45
@@ -561,6 +559,30 @@ inherited IncomeForm: TIncomeForm
         end>
       TabOrder = 28
       Width = 140
+    end
+    object ceCorrBonus: TcxCurrencyEdit
+      Left = 8
+      Top = 102
+      Properties.DisplayFormat = ',0.00;-,0.00'
+      TabOrder = 29
+      Width = 97
+    end
+    object cxLabel14: TcxLabel
+      Left = 8
+      Top = 85
+      Caption = #1050#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1082#1072' '#1087#1086' '#1073#1086#1085#1091#1089#1091
+    end
+    object cxLabel16: TcxLabel
+      Left = 160
+      Top = 85
+      Caption = #1050#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1082#1072' '#1087#1088#1086#1095#1072#1103
+    end
+    object ceCorrOther: TcxCurrencyEdit
+      Left = 160
+      Top = 102
+      Properties.DisplayFormat = ',0.00;-,0.00'
+      TabOrder = 32
+      Width = 97
     end
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
@@ -1018,12 +1040,12 @@ inherited IncomeForm: TIncomeForm
   end
   inherited StatusGuides: TdsdGuides
     Left = 80
-    Top = 48
+    Top = 32
   end
   inherited spChangeStatus: TdsdStoredProc
     StoredProcName = 'gpUpdate_Status_Income'
     Left = 128
-    Top = 56
+    Top = 32
   end
   inherited spGet: TdsdStoredProc
     StoredProcName = 'gpGet_Movement_Income'
@@ -1151,6 +1173,18 @@ inherited IncomeForm: TIncomeForm
         Component = GuidesJuridical
         ComponentItem = 'TextValue'
         DataType = ftString
+      end
+      item
+        Name = 'CorrBonus'
+        Value = Null
+        Component = ceCorrBonus
+        DataType = ftFloat
+      end
+      item
+        Name = 'CorrOther'
+        Value = Null
+        Component = ceCorrOther
+        DataType = ftFloat
       end>
     Left = 216
     Top = 248
@@ -1250,14 +1284,18 @@ inherited IncomeForm: TIncomeForm
         DataType = ftString
       end
       item
+        Name = 'inCorrBonus'
         Value = 'False'
-        DataType = ftBoolean
-        ParamType = ptUnknown
+        Component = ceCorrBonus
+        DataType = ftFloat
+        ParamType = ptInput
       end
       item
+        Name = 'inCorrOther'
         Value = ''
-        DataType = ftString
-        ParamType = ptUnknown
+        Component = ceCorrOther
+        DataType = ftFloat
+        ParamType = ptInput
       end
       item
         Value = ''
@@ -1312,8 +1350,10 @@ inherited IncomeForm: TIncomeForm
         Control = edJuridical
       end
       item
+        Control = ceCorrBonus
       end
       item
+        Control = ceCorrOther
       end
       item
       end

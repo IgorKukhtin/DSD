@@ -4,7 +4,7 @@
   ClientHeight = 312
   ClientWidth = 890
   ExplicitWidth = 896
-  ExplicitHeight = 337
+  ExplicitHeight = 340
   PixelsPerInch = 96
   TextHeight = 13
   inherited bbOk: TcxButton
@@ -329,7 +329,7 @@
         Kind = bkEllipsis
       end>
     Properties.ReadOnly = True
-    TabOrder = 11
+    TabOrder = 10
     Width = 273
   end
   object cePercent: TcxCurrencyEdit [10]
@@ -343,6 +343,20 @@
     Left = 112
     Top = 141
     Caption = '% '#1082#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1082#1080' '#1085#1072#1094#1077#1085#1082#1080
+  end
+  object cxLabel3: TcxLabel [12]
+    Left = 8
+    Top = 188
+    Caption = #1054#1095#1077#1088#1077#1076#1100' '#1087#1083#1072#1090#1077#1078#1072':'
+  end
+  object cePayOrder: TcxCurrencyEdit [13]
+    Left = 112
+    Top = 188
+    Properties.AssignedValues.MinValue = True
+    Properties.DecimalPlaces = 0
+    Properties.DisplayFormat = ',0'
+    TabOrder = 17
+    Width = 166
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 467
@@ -599,6 +613,13 @@
         Component = cePercent
         DataType = ftFloat
         ParamType = ptInput
+      end
+      item
+        Name = 'inPayOrder'
+        Value = Null
+        Component = cePayOrder
+        DataType = ftFloat
+        ParamType = ptInput
       end>
     PackSize = 1
     Left = 240
@@ -650,6 +671,12 @@
         Value = Null
         Component = cePercent
         DataType = ftFloat
+      end
+      item
+        Name = 'PayOrder'
+        Value = Null
+        Component = cePayOrder
+        DataType = ftFloat
       end>
     PackSize = 1
     Left = 240
@@ -658,8 +685,8 @@
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
-    Font.Height = -11
-    Font.Name = 'Tahoma'
+    Font.Height = -12
+    Font.Name = 'Segoe UI'
     Font.Style = []
     Categories.Strings = (
       'Default')
@@ -826,7 +853,7 @@
     ColumnEnterList = <>
     SummaryItemList = <>
     Left = 480
-    Top = 200
+    Top = 216
   end
   object spJuridicalDetailsIU: TdsdStoredProc
     StoredProcName = 'gpInsertUpdate_ObjectHistory_JuridicalDetails'
