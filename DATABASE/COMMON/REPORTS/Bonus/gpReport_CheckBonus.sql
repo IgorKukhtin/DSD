@@ -1,10 +1,13 @@
 -- FunctiON: gpReport_CheckBonus ()
 
 DROP FUNCTION IF EXISTS gpReport_CheckBonus (TDateTime, TDateTime, TVarChar);
+DROP FUNCTION IF EXISTS gpReport_CheckBonus (TDateTime, TDateTime, Integer, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpReport_CheckBonus (
     IN inStartDate           TDateTime ,  
     IN inEndDate             TDateTime ,
+    IN inPaidKindID          Integer   ,
+    IN inJuridicalId         Integer   ,
     IN inSessiON             TVarChar    -- ÒÂÒÒËˇ ÔÓÎ¸ÁÓ‚‡ÚÂÎˇ
 )
 RETURNS TABLE (ContractId_master Integer, ContractId_child Integer, ContractId_find Integer, InvNumber_master TVarChar, InvNumber_child TVarChar, InvNumber_find TVarChar
@@ -66,6 +69,7 @@ BEGIN
                                                                                                            , zc_Enum_InfoMoney_30201() -- ÃˇÒÌÓÂ Ò˚¸Â
                                                                                                             )
                                                                               )
+                                                                        --  AND (View_Contract.JuridicalId = inJuridicalId OR inJuridicalId = 0)
                                            INNER JOIN ObjectFloat AS ObjectFloat_Value 
                                                                   ON ObjectFloat_Value.ObjectId = Object_ContractCondition.Id
                                                                  AND ObjectFloat_Value.DescId = zc_ObjecTFloat_ContractCondition_Value()
@@ -167,6 +171,8 @@ BEGIN
                                , tmpContract.InfoMoneyId_child
                                , tmpContract.PaidKindId
                            FROM tmpContract
+                           WHERE (tmpContract.PaidKindId = inPaidKindId OR inPaidKindId = 0)
+                             AND (tmpContract.JuridicalId = inJuridicalId OR inJuridicalId = 0)
                            GROUP BY tmpContract.JuridicalId
                                   , tmpContract.ContractId_child
                                   , tmpContract.InfoMoneyId_child
@@ -415,9 +421,13 @@ BEGIN
             LEFT JOIN Object AS Object_InfoMoney_child ON Object_InfoMoney_child.Id = tmpAll.InfoMoneyId_child
             LEFT JOIN Object AS Object_InfoMoney_find ON Object_InfoMoney_find.Id = tmpAll.InfoMoneyId_find
 
-      WHERE tmpAll.Sum_CheckBonus > 0
+      WHERE (tmpAll.Sum_CheckBonus > 0
          OR tmpAll.Sum_Bonus > 0
-         OR tmpAll.Sum_BonusFact <> 0
+         OR tmpAll.Sum_BonusFact <> 0)
+        AND (tmpAll.PaidKindId = inPaidKindId OR inPaidKindId = 0)
+        AND (tmpAll.JuridicalId = inJuridicalId OR inJuridicalId = 0)
+        
+      
       GROUP BY  tmpAll.ContractId_master
               , tmpAll.ContractId_child
               , tmpAll.ContractId_find
@@ -454,7 +464,7 @@ BEGIN
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpReport_CheckBonus (TDateTime, TDateTime, TVarChar) OWNER TO postgres;
+--ALTER FUNCTION gpReport_CheckBonus (TDateTime, TDateTime, TVarChar) OWNER TO postgres;
 
 /*-------------------------------------------------------------------------------
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
