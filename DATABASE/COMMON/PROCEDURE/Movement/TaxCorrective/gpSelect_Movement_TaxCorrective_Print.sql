@@ -263,7 +263,7 @@ BEGIN
            , OH_JuridicalDetails_To.INN                                     AS INN_To
            , OH_JuridicalDetails_To.NumberVAT                               AS NumberVAT_To
          -- , COALESCE (Object_Personal_View.PersonalName, OH_JuridicalDetails_To.AccounterName) :: TVarChar AS AccounterName_To 
-           , COALESCE (zfConvert_FIO(Object_Personal_View.PersonalName,1), 'А.В. Марухно') :: TVarChar AS AccounterName_To
+           , CASE WHEN COALESCE(Object_Personal_View.PersonalName,'') <> '' THEN zfConvert_FIO(Object_Personal_View.PersonalName,1) ELSE 'А.В. Марухно' END  :: TVarChar AS AccounterName_To
            , OH_JuridicalDetails_To.BankAccount                             AS BankAccount_To
            , OH_JuridicalDetails_To.BankName                                AS BankName_To
            , OH_JuridicalDetails_To.MFO                                     AS BankMFO_To
