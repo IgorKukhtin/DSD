@@ -18,6 +18,9 @@ RETURNS TABLE (Id Integer, Value TFloat, ValueWeight TFloat, ValueWeight_calc TF
                Color_calc Integer,
                InsertName TVarChar, UpdateName TVarChar,
                InsertDate TDateTime, UpdateDate TDateTime,
+               Code_Parent Integer, Name_Parent TVarChar, ReceiptCode_Parent TVarChar, isMain_Parent Boolean,
+               GoodsCode_Parent Integer, GoodsName_Parent TVarChar, MeasureName_Parent TVarChar,
+               GoodsKindName_Parent TVarChar, GoodsKindCompleteName_Parent TVarChar,
                isErased Boolean) AS
 $BODY$
 BEGIN
@@ -78,6 +81,16 @@ BEGIN
          , Object_Update.ValueData   AS UpdateName
          , ObjectDate_Protocol_Insert.ValueData AS InsertDate
          , ObjectDate_Protocol_Update.ValueData AS UpdateDate
+
+         , Object_ReceiptChild_Parent.ObjectCode       AS Code_Parent
+         , Object_ReceiptChild_Parent.ValueData        AS Name_Parent
+         , ObjectString_Code_Parent.ValueData          AS ReceiptCode_Parent
+         , ObjectBoolean_Main_Parent.ValueData         AS isMain_Parent
+         , Object_Goods_Parent.ObjectCode              AS GoodsCode_Parent
+         , Object_Goods_Parent.ValueData               AS GoodsName_Parent
+         , Object_Measure_Parent.ValueData             AS MeasureName_Parent
+         , Object_GoodsKind_Parent.ValueData           AS GoodsKindName_Parent
+         , Object_GoodsKindComplete_Parent.ValueData   AS GoodsKindCompleteName_Parent
 
          , tmpReceiptChild.isErased
          
@@ -153,6 +166,40 @@ BEGIN
              AND (ObjectLink_ReceiptChild_Receipt.ChildObjectId = inReceiptId OR inReceiptId = 0)
           ) AS tmpReceiptChild
 
+          LEFT JOIN ObjectLink AS ObjectLink_ReceiptChild_Parent
+                               ON ObjectLink_ReceiptChild_Parent.ObjectId = tmpReceiptChild.Id
+                              AND ObjectLink_ReceiptChild_Parent.DescId = zc_ObjectLink_ReceiptChild_Parent()
+          LEFT JOIN Object AS Object_ReceiptChild_Parent ON Object_ReceiptChild_Parent.Id = ObjectLink_ReceiptChild_Parent.ChildObjectId
+
+          LEFT JOIN ObjectString AS ObjectString_Code_Parent
+                                 ON ObjectString_Code_Parent.ObjectId = Object_ReceiptChild_Parent.Id
+                                AND ObjectString_Code_Parent.DescId = zc_ObjectString_Receipt_Code()
+
+          LEFT JOIN ObjectLink AS ObjectLink_Receipt_Goods_Parent
+                               ON ObjectLink_Receipt_Goods_Parent.ObjectId = Object_ReceiptChild_Parent.Id
+                              AND ObjectLink_Receipt_Goods_Parent.DescId = zc_ObjectLink_Receipt_Goods()
+          LEFT JOIN Object AS Object_Goods_Parent ON Object_Goods_Parent.Id = ObjectLink_Receipt_Goods_Parent.ChildObjectId
+
+          LEFT JOIN ObjectLink AS ObjectLink_Goods_Measure_Parent
+                               ON ObjectLink_Goods_Measure_Parent.ObjectId = Object_Goods_Parent.Id 
+                              AND ObjectLink_Goods_Measure_Parent.DescId = zc_ObjectLink_Goods_Measure()
+          LEFT JOIN Object AS Object_Measure_Parent ON Object_Measure_Parent.Id = ObjectLink_Goods_Measure_Parent.ChildObjectId
+
+          LEFT JOIN ObjectLink AS ObjectLink_Receipt_GoodsKind_Parent
+                               ON ObjectLink_Receipt_GoodsKind_Parent.ObjectId = Object_ReceiptChild_Parent.Id
+                              AND ObjectLink_Receipt_GoodsKind_Parent.DescId = zc_ObjectLink_Receipt_GoodsKind()
+          LEFT JOIN Object AS Object_GoodsKind_Parent ON Object_GoodsKind_Parent.Id = ObjectLink_Receipt_GoodsKind_Parent.ChildObjectId
+
+          LEFT JOIN ObjectLink AS ObjectLink_Receipt_GoodsKindComplete_Parent
+                               ON ObjectLink_Receipt_GoodsKindComplete_Parent.ObjectId = Object_ReceiptChild_Parent.Id
+                              AND ObjectLink_Receipt_GoodsKindComplete_Parent.DescId = zc_ObjectLink_Receipt_GoodsKindComplete()
+          LEFT JOIN Object AS Object_GoodsKindComplete_Parent ON Object_GoodsKindComplete_Parent.Id = ObjectLink_Receipt_GoodsKindComplete_Parent.ChildObjectId
+
+          LEFT JOIN ObjectBoolean AS ObjectBoolean_Main_Parent
+                                  ON ObjectBoolean_Main_Parent.ObjectId = Object_ReceiptChild_Parent.Id
+                                 AND ObjectBoolean_Main_Parent.DescId = zc_ObjectBoolean_Receipt_Main()
+
+
           LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = tmpReceiptChild.GoodsId
           LEFT JOIN Object AS Object_GoodsKind ON Object_GoodsKind.Id = tmpReceiptChild.GoodsKindId
  
@@ -197,6 +244,7 @@ ALTER FUNCTION gpSelect_Object_ReceiptChild (Integer, Boolean, TVarChar) OWNER T
 /*-------------------------------------------------------------------------------
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».   Ã‡Ì¸ÍÓ ƒ.
+ 08.12.15         * add Parent
  12.11.15         * add ÔÓÚÓÍÓÎ 
  21.03.15                                       * add inReceiptId
  18.03.15                        * InfoMoneyName
