@@ -258,6 +258,8 @@ BEGIN
            , Object_Goods_income.ValueData    AS GoodsNameIncome
            , tmpIncomeAll.Amount_count        AS CountIncome
            , tmpIncomeAll.Amount_summ         AS SummIncome
+           , 0 :: Tfloat                      AS SummDop
+           
            , tmpIncomeAll.HeadCount           AS HeadCountIncome
            , tmpIncomeAll.CountPacker         AS CountPackerIncome
            , CASE WHEN tmpIncomeAll.HeadCount <> 0 THEN tmpIncomeAll.Amount_count / tmpIncomeAll.HeadCount ELSE 0 END AS HeadCount1 -- цена головы из Income
