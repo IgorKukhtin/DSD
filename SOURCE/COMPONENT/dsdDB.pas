@@ -837,7 +837,12 @@ begin
      end;
   end
   else
-    Result := FValue
+  Begin
+    if VarIsNull(FValue) AND (DataType = ftDateTime) then
+      Result := 'NULL'
+    else
+      Result := FValue
+  End;
 end;
 
 procedure TdsdParam.SetComponent(const Value: TComponent);
