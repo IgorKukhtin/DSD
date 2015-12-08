@@ -67,7 +67,7 @@ type
     FFormName: string;
     FLookupControl: TWinControl;
     FKeyField: string;
-    FChoiceAction: TObject;
+    FChoiceAction: TComponent;
     FFormNameParam: TdsdParam;
     FisShowModal: boolean;
     FDisableGuidesOpen: boolean;
@@ -529,7 +529,8 @@ end;
 
 procedure TCustomGuides.SetOwner(Owner: TObject);
 begin
-  FChoiceAction := Owner;
+  FChoiceAction := Owner as TComponent;
+  FChoiceAction.FreeNotification(Self);
 end;
 
 procedure TCustomGuides.OnButtonClick(Sender: TObject; AButtonIndex: Integer);
@@ -586,13 +587,14 @@ end;
 
 destructor TCustomGuides.Destroy;
 begin
+  // ”нижтожаем ссылку на себ€ в другом компоненте!
   try
-    // ”нижтожаем ссылку на себ€ в другом компоненте!
-    if Assigned(FChoiceAction) then
-       if FChoiceAction is TdsdChoiceGuides then
-          TdsdChoiceGuides(FChoiceAction).ChoiceCaller := nil;
-  except end;
-  //
+  if Assigned(FChoiceAction) then
+     if FChoiceAction is TdsdChoiceGuides then
+        TdsdChoiceGuides(FChoiceAction).ChoiceCaller := nil;
+  except
+
+  end;
   inherited;
 end;
 
@@ -639,6 +641,8 @@ begin
   if (Operation = opRemove) then begin
       if (AComponent = FLookupControl) then
          FLookupControl := nil;
+      if (AComponent = FChoiceAction) then
+         FChoiceAction := nil;
   end;
 end;
 
