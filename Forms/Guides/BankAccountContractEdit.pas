@@ -31,6 +31,9 @@ type
     cxPropertiesStore: TcxPropertiesStore;
     BankAccountGuides: TdsdGuides;
     ceBankAccount: TcxButtonEdit;
+    cxLabel1: TcxLabel;
+    edUnit: TcxButtonEdit;
+    UnitGuides: TdsdGuides;
   private
     { Private declarations }
   public

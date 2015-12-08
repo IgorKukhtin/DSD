@@ -20,6 +20,7 @@ type
     clisCorporate: TcxGridDBColumn;
     clRetailName: TcxGridDBColumn;
     clisErased: TcxGridDBColumn;
+    colPayOrder: TcxGridDBColumn;
   private
     { Private declarations }
   public

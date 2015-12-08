@@ -3,17 +3,18 @@
 DROP FUNCTION IF EXISTS gpSelect_Object_BankAccountContract(TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_Object_BankAccountContract(
-    IN inSession     TVarChar       -- СЃРµСЃСЃРёСЏ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ
+    IN inSession     TVarChar       -- 
 )
 RETURNS TABLE (Id Integer
              , BankAccountId Integer, BankAccountName TVarChar
              , InfoMoneyId Integer, InfoMoneyName TVarChar
+             , UnitId Integer, UnitName TVarChar
              , isErased boolean
                ) AS
 $BODY$
 BEGIN
 
-     -- РїСЂРѕРІРµСЂРєР° РїСЂР°РІ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ РЅР° РІС‹Р·РѕРІ РїСЂРѕС†РµРґСѓСЂС‹
+     -- проверка прав пользователя на вызов процедуры
      -- PERFORM lpCheckRight(inSession, zc_Enum_Process_Select_Object_BankAccountContract());
 
    RETURN QUERY 
@@ -25,6 +26,9 @@ BEGIN
 
          , Object_InfoMoney_View.InfoMoneyId        AS InfoMoneyId
          , Object_InfoMoney_View.InfoMoneyName_all  AS InfoMoneyName
+
+         , Object_Unit.Id         AS UnitId
+         , Object_Unit.ValueData  AS UnitName
       
          , Object_BankAccountContract.isErased AS isErased
          
@@ -39,6 +43,11 @@ BEGIN
                               AND ObjectLink_BankAccountContract_InfoMoney.DescId = zc_ObjectLink_BankAccountContract_InfoMoney()
           LEFT JOIN Object_InfoMoney_View AS Object_InfoMoney_View ON Object_InfoMoney_View.InfoMoneyId = ObjectLink_BankAccountContract_InfoMoney.ChildObjectId
      
+          LEFT JOIN ObjectLink AS ObjectLink_BankAccountContract_Unit
+                               ON ObjectLink_BankAccountContract_Unit.ObjectId = Object_BankAccountContract.Id
+                              AND ObjectLink_BankAccountContract_Unit.DescId = zc_ObjectLink_BankAccountContract_Unit()
+          LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = ObjectLink_BankAccountContract_Unit.ChildObjectId
+
      WHERE Object_BankAccountContract.DescId = zc_Object_BankAccountContract();
   
 END;
@@ -49,10 +58,11 @@ ALTER FUNCTION gpSelect_Object_BankAccountContract (TVarChar) OWNER TO postgres;
 
 
 /*-------------------------------------------------------------------------------
- РРЎРўРћР РРЇ Р РђР—Р РђР‘РћРўРљР: Р”РђРўРђ, РђР’РўРћР 
-               Р¤РµР»РѕРЅСЋРє Р.Р’.   РљСѓС…С‚РёРЅ Р.Р’.   РљР»РёРјРµРЅС‚СЊРµРІ Рљ.Р.
+  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 07.12.15         * add Unit
  25.04.14         * 
 */
 
--- С‚РµСЃС‚
+-- Тест
 -- SELECT * FROM gpSelect_Object_BankAccountContract ('2')

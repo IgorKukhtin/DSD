@@ -18,7 +18,7 @@ RETURNS TABLE (Id Integer, isMask Boolean, InvNumber TVarChar, OperDate TDateTim
              , FromId Integer, FromName TVarChar, PartnerId Integer, PartnerName TVarChar, ToId Integer, ToName TVarChar
              , ContractId Integer, ContractName TVarChar, ContractTagName TVarChar
              , TaxKindId Integer, TaxKindName TVarChar
-             , DocumentMasterId Integer, DocumentMasterName TVarChar
+             , DocumentMasterId Integer, DocumentMasterName TVarChar, isPartner Boolean
              , DocumentChildId Integer, DocumentChildName TVarChar
              , InvNumberBranch TVarChar
              , Comment TVarChar
@@ -72,6 +72,7 @@ BEGIN
              , CAST ('' as TVarChar) 				AS TaxKindName
              , 0                     				AS DocumentMasterId
              , CAST ('' as TVarChar) 				AS DocumentMasterName
+             , CAST (False as Boolean)                          AS isPartner     -- признак Акт недовоза из документа возврата
              , 0                     				AS DocumentChildId
              , CAST ('' as TVarChar) 				AS DocumentChildName
              , tmpInvNumber.InvNumberBranch
@@ -137,11 +138,12 @@ BEGIN
            , Object_Contract.ContractTagName
            , Object_TaxKind.Id                			                    AS TaxKindId
            , Object_TaxKind.ValueData         			                    AS TaxKindName
-           , Movement_DocumentMaster.Id                                     AS DocumentMasterId
-           , CAST(Movement_DocumentMaster.InvNumber as TVarChar)            AS DocumentMasterName
-           , Movement_DocumentChild.Id                                      AS DocumentChildId
-           , CAST(MS_DocumentChild_InvNumberPartner.ValueData as TVarChar)  AS DocumentChildName
-           , MovementString_InvNumberBranch.ValueData                       AS InvNumberBranch
+           , Movement_DocumentMaster.Id                                       AS DocumentMasterId
+           , CAST(Movement_DocumentMaster.InvNumber as TVarChar)              AS DocumentMasterName
+           , COALESCE (MovementBoolean_isPartner.ValueData, FALSE) :: Boolean AS isPartner     -- признак Акт недовоза из документа возврата
+           , Movement_DocumentChild.Id                                        AS DocumentChildId
+           , CAST(MS_DocumentChild_InvNumberPartner.ValueData as TVarChar)    AS DocumentChildName
+           , MovementString_InvNumberBranch.ValueData                         AS InvNumberBranch
 
            , MovementString_Comment.ValueData       AS Comment
 
@@ -226,6 +228,10 @@ BEGIN
 
             LEFT JOIN Movement AS Movement_DocumentMaster ON Movement_DocumentMaster.Id = MovementLinkMovement_DocumentMaster.MovementChildId
 
+            LEFT JOIN MovementBoolean AS MovementBoolean_isPartner
+                                      ON MovementBoolean_isPartner.MovementId = Movement_DocumentMaster.Id
+                                     AND MovementBoolean_isPartner.DescId = zc_MovementBoolean_isPartner()
+
             LEFT JOIN MovementLinkMovement AS MovementLinkMovement_DocumentChild
                                            ON MovementLinkMovement_DocumentChild.MovementId = Movement.Id
                                           AND MovementLinkMovement_DocumentChild.DescId = zc_MovementLinkMovement_Child()
@@ -250,6 +256,7 @@ ALTER FUNCTION gpGet_Movement_TaxCorrective (Integer, Boolean, TDateTime, TVarCh
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 04.12.15         * add isPartner
  16.03.15         * add inMask
  01.05.14                                        * add lpInsertFind_Object_InvNumberTax
  24.04.14                                                        * add zc_MovementString_InvNumberBranch

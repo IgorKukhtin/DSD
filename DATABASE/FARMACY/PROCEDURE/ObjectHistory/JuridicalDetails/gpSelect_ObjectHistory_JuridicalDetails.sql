@@ -10,7 +10,7 @@ CREATE OR REPLACE FUNCTION gpSelect_ObjectHistory_JuridicalDetails(
 )
 RETURNS TABLE (Id Integer, StartDate TDateTime, 
                FullName TVarChar, JuridicalAddress TVarChar, OKPO TVarChar, INN TVarChar,
-               NumberVAT TVarChar, AccounterName TVarChar, BankAccount TVarChar, Phone TVarChar)
+               NumberVAT TVarChar, AccounterName TVarChar, BankAccount TVarChar, Phone TVarChar, BankId Integer)
 AS
 $BODY$
 BEGIN
@@ -32,6 +32,7 @@ BEGIN
            , ObjectHistoryString_JuridicalDetails_AccounterName.ValueData                   AS AccounterName
            , ObjectHistoryString_JuridicalDetails_BankAccount.ValueData                     AS BankAccount
            , ObjectHistoryString_JuridicalDetails_Phone.ValueData                           AS Phone
+           , NULL::Integer                                                                  AS BankId
 
        FROM ObjectHistory_JuridicalDetails
   FULL JOIN (SELECT zc_DateStart() AS StartDate, inJuridicalId AS ObjectId ) AS Empty

@@ -40,6 +40,21 @@ inherited PaymentForm: TPaymentForm
               Format = ',0.00'
               Kind = skSum
               Column = colSummaPay
+            end
+            item
+              Format = '+,0.00;-,0.00; ;'
+              Kind = skSum
+              Column = colIncome_CorrBonus
+            end
+            item
+              Format = '+,0.00;-,0.00; ;'
+              Kind = skSum
+              Column = colIncome_CorrReturnOut
+            end
+            item
+              Format = '+,0.00;-,0.00; ;'
+              Kind = skSum
+              Column = colIncome_CorrOther
             end>
           Styles.Content = nil
           Styles.Inactive = nil
@@ -132,6 +147,30 @@ inherited PaymentForm: TPaymentForm
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
           end
+          object colIncome_CorrBonus: TcxGridDBColumn
+            Caption = #1050#1086#1088'. '#1087#1086' '#1073#1086#1085#1091#1089#1091
+            DataBinding.FieldName = 'Income_CorrBonus'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 67
+          end
+          object colIncome_CorrReturnOut: TcxGridDBColumn
+            Caption = #1050#1086#1088'. '#1087#1086' '#1074#1086#1079#1074#1088#1072#1090#1091
+            DataBinding.FieldName = 'Income_CorrReturnOut'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 69
+          end
+          object colIncome_CorrOther: TcxGridDBColumn
+            Caption = #1050#1086#1088'. '#1087#1088#1086#1095#1072#1103
+            DataBinding.FieldName = 'Income_CorrOther'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 71
+          end
           object colIncome_PaySumm: TcxGridDBColumn
             Caption = #1054#1089#1090#1072#1090#1086#1082
             DataBinding.FieldName = 'Income_PaySumm'
@@ -161,7 +200,7 @@ inherited PaymentForm: TPaymentForm
           end
           object colBankAccountName: TcxGridDBColumn
             Caption = #1056'/'#1057
-            DataBinding.FieldName = 'AccountName'
+            DataBinding.FieldName = 'BankAccountName'
             PropertiesClassName = 'TcxButtonEditProperties'
             Properties.Buttons = <
               item
@@ -181,6 +220,13 @@ inherited PaymentForm: TPaymentForm
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 77
+          end
+          object colIncome_PayOrder: TcxGridDBColumn
+            Caption = #1054#1095#1077#1088#1077#1076#1100' '#1087#1083#1072#1090#1077#1078#1072
+            DataBinding.FieldName = 'Income_PayOrder'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
           end
         end
       end
@@ -304,13 +350,13 @@ inherited PaymentForm: TPaymentForm
           Name = 'Key'
           Value = Null
           Component = MasterCDS
-          ComponentItem = 'AccountId'
+          ComponentItem = 'BankAccountId'
         end
         item
           Name = 'TextValue'
           Value = Null
           Component = MasterCDS
-          ComponentItem = 'AccountName'
+          ComponentItem = 'BankAccountName'
           DataType = ftString
         end
         item
@@ -322,6 +368,44 @@ inherited PaymentForm: TPaymentForm
           ParamType = ptInput
         end>
       isShowModal = False
+    end
+    object actSelectAllAndRefresh: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = mactSelectAll
+        end
+        item
+          Action = actRefresh
+        end>
+      QuestionBeforeExecute = #1042#1099#1076#1077#1083#1080#1090#1100' '#1074#1089#1077' '#1076#1086#1082#1091#1084#1077#1085#1090#1099' '#1076#1083#1103' '#1086#1087#1083#1072#1090#1099'?'
+      Caption = #1042#1099#1076#1077#1083#1080#1090#1100' '#1074#1089#1077' '#1076#1086#1082#1091#1084#1077#1085#1090#1099' '#1076#1083#1103' '#1086#1087#1083#1072#1090#1099
+      Hint = #1042#1099#1076#1077#1083#1080#1090#1100' '#1074#1089#1077' '#1076#1086#1082#1091#1084#1077#1085#1090#1099' '#1076#1083#1103' '#1086#1087#1083#1072#1090#1099
+      ImageIndex = 28
+    end
+    object mactSelectAll: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actInsertUpdate_MovementItem_Payment_NeedPay
+        end>
+      View = cxGridDBTableView
+      Caption = #1042#1099#1076#1077#1083#1080#1090#1100' '#1074#1089#1077' '#1076#1086#1082#1091#1084#1077#1085#1090#1099' '#1076#1083#1103' '#1086#1087#1083#1072#1090#1099
+      Hint = #1042#1099#1076#1077#1083#1080#1090#1100' '#1074#1089#1077' '#1076#1086#1082#1091#1084#1077#1085#1090#1099' '#1076#1083#1103' '#1086#1087#1083#1072#1090#1099
+      ImageIndex = 28
+    end
+    object actInsertUpdate_MovementItem_Payment_NeedPay: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = gpInsertUpdate_MovementItem_Payment_NeedPay
+      StoredProcList = <
+        item
+          StoredProc = gpInsertUpdate_MovementItem_Payment_NeedPay
+        end>
+      Caption = 'actInsertUpdate_MovementItem_Payment_NeedPay'
     end
   end
   inherited spSelect: TdsdStoredProc
@@ -456,6 +540,10 @@ inherited PaymentForm: TPaymentForm
         item
           Visible = True
           ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarButton1'
         end>
     end
     inherited bbAddMask: TdxBarButton
@@ -477,6 +565,10 @@ inherited PaymentForm: TPaymentForm
       Hint = 'New Item'
       Visible = ivAlways
       Control = deDateEnd
+    end
+    object dxBarButton1: TdxBarButton
+      Action = actSelectAllAndRefresh
+      Category = 0
     end
   end
   inherited FormParams: TdsdFormParams
@@ -722,17 +814,10 @@ inherited PaymentForm: TPaymentForm
         ParamType = ptInputOutput
       end
       item
-        Name = 'ioAccountId'
+        Name = 'outBankAccountName'
         Value = Null
         Component = MasterCDS
-        ComponentItem = 'AccountId'
-        ParamType = ptInputOutput
-      end
-      item
-        Name = 'outAccountName'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'AccountName'
+        ComponentItem = 'BankAccountName'
         DataType = ftString
       end
       item
@@ -757,6 +842,10 @@ inherited PaymentForm: TPaymentForm
         ComponentItem = 'NeedPay'
         DataType = ftBoolean
         ParamType = ptInput
+      end
+      item
+        Value = Null
+        ParamType = ptUnknown
       end>
     NeedResetData = True
     ParamKeyField = 'inMovementId'
@@ -879,5 +968,50 @@ inherited PaymentForm: TPaymentForm
     Params = <>
     Left = 516
     Top = 206
+  end
+  object gpInsertUpdate_MovementItem_Payment_NeedPay: TdsdStoredProc
+    StoredProcName = 'gpInsertUpdate_MovementItem_PaymentMulti'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inIncomeId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'IncomeId'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inBankAccountId'
+        Value = Null
+        ParamType = ptInput
+      end
+      item
+        Name = 'inSummaPay'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'SummaPay'
+        DataType = ftFloat
+        ParamType = ptInput
+      end>
+    PackSize = 25
+    NeedResetData = True
+    ParamKeyField = 'inMovementId'
+    Left = 400
+    Top = 368
   end
 end

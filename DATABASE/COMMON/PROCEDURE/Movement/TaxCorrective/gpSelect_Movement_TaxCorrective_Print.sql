@@ -186,7 +186,7 @@ BEGIN
        )
 
       SELECT inMovementId AS inMovementId
-           , Movement.Id				                                    AS MovementId
+           , Movement.Id				                                AS MovementId
            , Movement.InvNumber				                                AS InvNumber
            , Movement.OperDate				                                AS OperDate
            , 'J1201006'::TVarChar                                           AS CHARCODE
@@ -198,6 +198,8 @@ BEGIN
                        THEN 'Змiна цiни'
                   WHEN MovementBoolean_isCopy.ValueData = TRUE
                        THEN 'ВИПРАВЛЕННЯ ПОМИЛКИ'
+                  WHEN MovementBoolean_isPartner.ValueData = TRUE
+                       THEN 'НЕДОВIЗ'
                   ELSE 'повернення'
              END :: TVarChar AS KindName
            , MovementBoolean_PriceWithVAT.ValueData                         AS PriceWithVAT
@@ -261,7 +263,7 @@ BEGIN
            , OH_JuridicalDetails_To.INN                                     AS INN_To
            , OH_JuridicalDetails_To.NumberVAT                               AS NumberVAT_To
          -- , COALESCE (Object_Personal_View.PersonalName, OH_JuridicalDetails_To.AccounterName) :: TVarChar AS AccounterName_To 
-           , COALESCE (zfConvert_FIO(Object_Personal_View.PersonalName,1), 'А.В. Марухно') :: TVarChar AS AccounterName_To
+           , CASE WHEN COALESCE(Object_Personal_View.PersonalName,'') <> '' THEN zfConvert_FIO(Object_Personal_View.PersonalName,1) ELSE 'А.В. Марухно' END  :: TVarChar AS AccounterName_To
            , OH_JuridicalDetails_To.BankAccount                             AS BankAccount_To
            , OH_JuridicalDetails_To.BankName                                AS BankName_To
            , OH_JuridicalDetails_To.MFO                                     AS BankMFO_To
@@ -357,6 +359,10 @@ BEGIN
             LEFT JOIN MovementBoolean AS MovementBoolean_isCopy
                                       ON MovementBoolean_isCopy.MovementId = tmpMovement.Id
                                      AND MovementBoolean_isCopy.DescId = zc_MovementBoolean_isCopy()
+
+            LEFT JOIN MovementBoolean AS MovementBoolean_isPartner
+                                      ON MovementBoolean_isPartner.MovementId = tmpMovement.Id
+                                     AND MovementBoolean_isPartner.DescId = zc_MovementBoolean_isPartner()
 
             LEFT JOIN MovementLinkMovement AS MovementLinkMovement_ChildEDI
                                            ON MovementLinkMovement_ChildEDI.MovementId = tmpMovement.Id

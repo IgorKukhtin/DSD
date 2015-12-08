@@ -17,6 +17,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , ContractId Integer, ContractName TVarChar
              , PaymentDate TDateTime, PaySumm TFloat, SaleSumm TFloat
              , InvNumberBranch TVarChar, BranchDate TDateTime, Checked Boolean 
+             , CorrBonus TFloat, CorrOther TFloat
               )
 
 AS
@@ -66,6 +67,8 @@ BEGIN
            , Movement_Income_View.InvNumberBranch
            , Movement_Income_View.BranchDate
            , Movement_Income_View.Checked
+           , Movement_Income_View.CorrBonus
+           , Movement_Income_View.CorrOther
        FROM Movement_Income_View 
              JOIN tmpStatus ON tmpStatus.StatusId = Movement_Income_View.StatusId 
              WHERE Movement_Income_View.OperDate BETWEEN inStartDate AND inEndDate;

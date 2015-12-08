@@ -2,6 +2,7 @@
 
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Juridical (Integer, Integer, TVarChar, Boolean, Integer, tvarchar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Juridical (Integer, Integer, TVarChar, Boolean, Integer, TFloat, tvarchar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Juridical (Integer, Integer, TVarChar, Boolean, Integer, TFloat, TFloat, tvarchar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Juridical(
  INOUT ioId                      Integer   ,   	-- ключ объекта <Подразделение>
@@ -10,6 +11,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Juridical(
     IN inisCorporate             Boolean   ,    -- Признак наша ли собственность это юридическое лицо 
     IN inRetailId                Integer   ,    -- ссылка на подразделение
     IN inPercent                 TFloat    ,    
+    IN inPayOrder                TFloat    ,    -- Очередь платежа
     IN inSession                 TVarChar       -- сессия пользователя
 )
   RETURNS Integer AS
@@ -41,19 +43,23 @@ BEGIN
    
    -- сохранили свойство <>
    PERFORM lpInsertUpdate_ObjectFloat(zc_ObjectFloat_Juridical_Percent(), ioId, inPercent);
+   
+   -- сохранили свойство <Очередь платежа>
+   PERFORM lpInsertUpdate_ObjectFloat(zc_ObjectFloat_Juridical_PayOrder(), ioId, inPayOrder);
 
    -- сохранили протокол
    --PERFORM lpInsert_ObjectProtocol (ioId, vbUserId);
 END;$BODY$
 
 LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpInsertUpdate_Object_Juridical (Integer, Integer, TVarChar, Boolean, Integer, TFloat, tvarchar) OWNER TO postgres;
+ALTER FUNCTION gpInsertUpdate_Object_Juridical (Integer, Integer, TVarChar, Boolean, Integer, TFloat, TFloat, tvarchar) OWNER TO postgres;
 
 
 /*-------------------------------------------------------------------------------*/
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Воробкало А.А.
+ 02.12.15                                                         * PayOrder
  10.04.15                        * 
  01.07.14         * 
 

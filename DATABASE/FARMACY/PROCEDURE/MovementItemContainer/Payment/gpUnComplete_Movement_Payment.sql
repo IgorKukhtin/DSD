@@ -16,7 +16,7 @@ BEGIN
     vbUserId := inSession::Integer;
     -- распроводим оплаты
     PERFORM
-        lpUnComplete_Movement (inMovementId := MI_Payment.BankAccountId
+        lpUnComplete_Movement (inMovementId := MI_Payment.MovementBankAccountId
                               , inUserId     := vbUserId)
     FROM
         MovementItem_Payment_View AS MI_Payment

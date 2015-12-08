@@ -3,7 +3,7 @@ inherited TaxCorrectiveJournalForm: TTaxCorrectiveJournalForm
   ClientHeight = 535
   ClientWidth = 1118
   ExplicitWidth = 1134
-  ExplicitHeight = 570
+  ExplicitHeight = 573
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -407,6 +407,15 @@ inherited TaxCorrectiveJournalForm: TTaxCorrectiveJournalForm
             DataBinding.FieldName = 'DateRegistered_notNull'
             Visible = False
             VisibleForCustomization = False
+          end
+          object colisPartner: TcxGridDBColumn
+            Caption = #1040#1082#1090' '#1085#1077#1076#1086#1074#1086#1079#1072
+            DataBinding.FieldName = 'isPartner'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 30
           end
         end
       end

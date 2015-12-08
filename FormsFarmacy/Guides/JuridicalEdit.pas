@@ -11,7 +11,8 @@ uses
   cxCustomData, cxFilter, cxData, cxDataStorage, Data.DB, cxDBData, cxGridLevel,
   cxGridCustomView, cxGridCustomTableView, cxGridTableView, cxGridDBTableView,
   cxGrid, Datasnap.DBClient, dxBarExtItems, cxCalendar, dxSkinsCore,
-  dxSkinsDefaultPainters, cxImageComboBox;
+  dxSkinsDefaultPainters, cxImageComboBox, dxSkinscxPCPainter,
+  dxSkinsdxBarPainter;
 
 type
   TJuridicalEditForm = class(TAncestorDialogForm)
@@ -83,6 +84,8 @@ type
     colDeferment: TcxGridDBColumn;
     cePercent: TcxCurrencyEdit;
     cxLabel2: TcxLabel;
+    cxLabel3: TcxLabel;
+    cePayOrder: TcxCurrencyEdit;
   private
     { Private declarations }
   public

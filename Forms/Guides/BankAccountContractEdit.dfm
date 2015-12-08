@@ -2,7 +2,7 @@ object BankAccountContractEditForm: TBankAccountContractEditForm
   Left = 0
   Top = 0
   Caption = #1044#1086#1073#1072#1074#1080#1090#1100'/'#1048#1079#1084#1077#1085#1080#1090#1100' '#1056#1072#1089#1095#1077#1090#1085#1099#1077' '#1089#1095#1077#1090#1072' '#1076#1083#1103' '#1074#1089#1077#1093' ('#1074#1093'.'#1087#1083#1072#1090#1077#1078')'
-  ClientHeight = 179
+  ClientHeight = 248
   ClientWidth = 459
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -18,7 +18,7 @@ object BankAccountContractEditForm: TBankAccountContractEditForm
   TextHeight = 13
   object cxButton1: TcxButton
     Left = 128
-    Top = 137
+    Top = 203
     Width = 75
     Height = 25
     Action = dsdExecStoredProc
@@ -28,7 +28,7 @@ object BankAccountContractEditForm: TBankAccountContractEditForm
   end
   object cxButton2: TcxButton
     Left = 256
-    Top = 137
+    Top = 203
     Width = 75
     Height = 25
     Action = dsdFormClose
@@ -49,12 +49,13 @@ object BankAccountContractEditForm: TBankAccountContractEditForm
   end
   object edInfoMoney: TcxButtonEdit
     Left = 24
-    Top = 98
+    Top = 102
     Properties.Buttons = <
       item
         Default = True
         Kind = bkEllipsis
       end>
+    Properties.ReadOnly = True
     TabOrder = 4
     Width = 427
   end
@@ -66,7 +67,25 @@ object BankAccountContractEditForm: TBankAccountContractEditForm
         Default = True
         Kind = bkEllipsis
       end>
+    Properties.ReadOnly = True
     TabOrder = 5
+    Width = 427
+  end
+  object cxLabel1: TcxLabel
+    Left = 24
+    Top = 138
+    Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
+  end
+  object edUnit: TcxButtonEdit
+    Left = 24
+    Top = 157
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    Properties.ReadOnly = True
+    TabOrder = 7
     Width = 427
   end
   object ActionList: TActionList
@@ -90,6 +109,7 @@ object BankAccountContractEditForm: TBankAccountContractEditForm
     object dsdExecStoredProc: TdsdInsertUpdateGuides
       Category = 'DSDLib'
       MoveParams = <>
+      PostDataSetBeforeExecute = False
       StoredProc = spInsertUpdate
       StoredProcList = <
         item
@@ -99,6 +119,7 @@ object BankAccountContractEditForm: TBankAccountContractEditForm
     end
     object dsdFormClose: TdsdFormClose
       MoveParams = <>
+      PostDataSetBeforeExecute = False
     end
   end
   object spInsertUpdate: TdsdStoredProc
@@ -126,7 +147,15 @@ object BankAccountContractEditForm: TBankAccountContractEditForm
         Component = InfoMoneyGuides
         ComponentItem = 'Key'
         ParamType = ptInput
+      end
+      item
+        Name = 'inUnitId'
+        Value = Null
+        Component = UnitGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
       end>
+    PackSize = 1
     Left = 240
     Top = 48
   end
@@ -138,7 +167,7 @@ object BankAccountContractEditForm: TBankAccountContractEditForm
         ParamType = ptInputOutput
       end>
     Left = 16
-    Top = 136
+    Top = 202
   end
   object spGet: TdsdStoredProc
     StoredProcName = 'gpGet_Object_BankAccountContract'
@@ -175,7 +204,21 @@ object BankAccountContractEditForm: TBankAccountContractEditForm
         Value = ''
         Component = InfoMoneyGuides
         ComponentItem = 'TextValue'
+      end
+      item
+        Name = 'UnitId'
+        Value = Null
+        Component = UnitGuides
+        ComponentItem = 'Key'
+      end
+      item
+        Name = 'UnitName'
+        Value = Null
+        Component = UnitGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
       end>
+    PackSize = 1
     Left = 296
     Top = 72
   end
@@ -205,7 +248,7 @@ object BankAccountContractEditForm: TBankAccountContractEditForm
   end
   object dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 376
-    Top = 136
+    Top = 202
   end
   object cxPropertiesStore: TcxPropertiesStore
     Components = <
@@ -219,7 +262,7 @@ object BankAccountContractEditForm: TBankAccountContractEditForm
       end>
     StorageName = 'cxPropertiesStore'
     Left = 80
-    Top = 136
+    Top = 202
   end
   object BankAccountGuides: TdsdGuides
     KeyField = 'Id'
@@ -255,5 +298,29 @@ object BankAccountContractEditForm: TBankAccountContractEditForm
       end>
     Left = 160
     Top = 24
+  end
+  object UnitGuides: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edUnit
+    FormNameParam.Value = 'TUnit_ObjectForm'
+    FormNameParam.DataType = ftString
+    FormName = 'TUnit_ObjectForm'
+    PositionDataSet = 'MasterCDS'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = UnitGuides
+        ComponentItem = 'Key'
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = UnitGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+      end>
+    Left = 216
+    Top = 141
   end
 end

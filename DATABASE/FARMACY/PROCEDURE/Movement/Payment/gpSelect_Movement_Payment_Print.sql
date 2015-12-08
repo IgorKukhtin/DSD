@@ -41,10 +41,22 @@ BEGIN
           , MI_Payment.Income_InvNumber
           , MI_Payment.Income_OperDate
           , MI_Payment.Income_TotalSumm
-          , MI_Payment.Income_NDSKindName
+          , MI_Payment.Income_NDS
           , MI_Payment.SummaPay
+          , MI_Payment.Income_PayOrder
+          , MI_Payment.Income_DatePayment
+          , ObjectHistoryString_JuridicalDetails_OKPO.ValueData AS OKPO
+          , (MI_Payment.Income_JuridicalName||';'||CAST(MI_Payment.Income_NDS AS TVarChar))::TVarChar as JuridicalNDS
+          , ROUND(MI_Payment.SummaPay * (MI_Payment.Income_NDS/100),2)::TFloat AS NDSValue
         FROM
             MovementItem_Payment_View AS MI_Payment
+            LEFT OUTER JOIN ObjectHistory AS ObjectHistory_Juridical
+                                          ON ObjectHistory_Juridical.ObjectId = MI_Payment.Income_JuridicalId
+                                         AND ObjectHistory_Juridical.DescId = zc_ObjectHistory_JuridicalDetails()
+                                         AND CURRENT_DATE >= ObjectHistory_Juridical.StartDate AND CURRENT_DATE < ObjectHistory_Juridical.EndDate
+            LEFT JOIN ObjectHistoryString AS ObjectHistoryString_JuridicalDetails_OKPO
+                                          ON ObjectHistoryString_JuridicalDetails_OKPO.ObjectHistoryId = ObjectHistory_Juridical.Id
+                                         AND ObjectHistoryString_JuridicalDetails_OKPO.DescId = zc_ObjectHistoryString_JuridicalDetails_OKPO()
         WHERE
             MI_Payment.MovementId = inMovementId
             AND
@@ -52,7 +64,9 @@ BEGIN
             AND
             MI_Payment.NeedPay = TRUE
         ORDER BY
-            MI_Payment.Income_JuridicalName
+            MI_Payment.Income_PayOrder
+           ,MI_Payment.Income_JuridicalName
+           ,MI_Payment.Income_NDS
            ,MI_Payment.Income_OperDate
            ,MI_Payment.Income_InvNumber;
 

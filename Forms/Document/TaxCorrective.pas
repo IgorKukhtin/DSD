@@ -92,6 +92,7 @@ type
     clMeasureName: TcxGridDBColumn;
     cxLabel16: TcxLabel;
     ceComment: TcxTextEdit;
+    cbPartner: TcxCheckBox;
   private
     { Private declarations }
   public

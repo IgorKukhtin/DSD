@@ -1,29 +1,30 @@
 inherited Report_CheckBonusForm: TReport_CheckBonusForm
   Caption = #1054#1090#1095#1077#1090' <'#1055#1088#1086#1074#1077#1088#1082#1072' '#1085#1072#1095#1080#1089#1083#1077#1085#1080#1081' '#1087#1086' '#1073#1086#1085#1091#1089#1072#1084'>'
-  ClientHeight = 324
-  ClientWidth = 1020
+  ClientHeight = 341
+  ClientWidth = 1180
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
-  ExplicitWidth = 1036
-  ExplicitHeight = 359
+  ExplicitWidth = 1196
+  ExplicitHeight = 379
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Width = 1020
-    Height = 267
+    Top = 83
+    Width = 1180
+    Height = 258
     TabOrder = 3
-    ExplicitTop = 57
-    ExplicitWidth = 1020
-    ExplicitHeight = 267
-    ClientRectBottom = 267
-    ClientRectRight = 1020
+    ExplicitTop = 83
+    ExplicitWidth = 1180
+    ExplicitHeight = 258
+    ClientRectBottom = 258
+    ClientRectRight = 1180
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 1020
-      ExplicitHeight = 267
+      ExplicitWidth = 1180
+      ExplicitHeight = 258
       inherited cxGrid: TcxGrid
-        Width = 1020
-        Height = 267
-        ExplicitWidth = 1020
-        ExplicitHeight = 267
+        Width = 1180
+        Height = 258
+        ExplicitWidth = 1180
+        ExplicitHeight = 258
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -266,24 +267,42 @@ inherited Report_CheckBonusForm: TReport_CheckBonusForm
     end
   end
   inherited Panel: TPanel
-    Width = 1020
-    ExplicitWidth = 1020
+    Width = 1180
+    Height = 57
+    ExplicitWidth = 1180
+    ExplicitHeight = 57
     inherited deStart: TcxDateEdit
+      Left = 123
       EditValue = 42005d
       Properties.SaveTime = False
+      ExplicitLeft = 123
     end
     inherited deEnd: TcxDateEdit
+      Left = 123
+      Top = 31
       EditValue = 42005d
       Properties.SaveTime = False
+      ExplicitLeft = 123
+      ExplicitTop = 31
+    end
+    inherited cxLabel1: TcxLabel
+      Left = 29
+      ExplicitLeft = 29
+    end
+    inherited cxLabel2: TcxLabel
+      Left = 10
+      Top = 32
+      ExplicitLeft = 10
+      ExplicitTop = 32
     end
     object cxLabel4: TcxLabel
-      Left = 438
+      Left = 911
       Top = 6
       Caption = #1042#1080#1076' '#1041#1086#1085#1091#1089#1072':'
       Visible = False
     end
     object edBonusKind: TcxButtonEdit
-      Left = 509
+      Left = 982
       Top = 5
       Properties.Buttons = <
         item
@@ -295,6 +314,65 @@ inherited Report_CheckBonusForm: TReport_CheckBonusForm
       Visible = False
       Width = 208
     end
+  end
+  object cxLabel3: TcxLabel [2]
+    Left = 214
+    Top = 32
+    Caption = #1060#1086#1088#1084#1072' '#1086#1087#1083#1072#1090#1099':'
+  end
+  object edPaidKind: TcxButtonEdit [3]
+    Left = 298
+    Top = 31
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    Properties.ReadOnly = True
+    TabOrder = 7
+    Width = 114
+  end
+  object cxLabel5: TcxLabel [4]
+    Left = 240
+    Top = 6
+    Caption = #1070#1088'. '#1083#1080#1094#1086':'
+  end
+  object edJuridical: TcxButtonEdit [5]
+    Left = 298
+    Top = 5
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    Properties.ReadOnly = True
+    TabOrder = 9
+    Width = 287
+  end
+  inherited cxPropertiesStore: TcxPropertiesStore
+    Components = <
+      item
+        Component = deEnd
+        Properties.Strings = (
+          'Date')
+      end
+      item
+        Component = deStart
+        Properties.Strings = (
+          'Date')
+      end
+      item
+        Component = JuridicalGuides
+        Properties.Strings = (
+          'Key'
+          'TextValue')
+      end
+      item
+        Component = PaidKindGuides
+        Properties.Strings = (
+          'Key'
+          'TextValue')
+      end>
   end
   inherited ActionList: TActionList
     object actDocBonus: TdsdExecStoredProc
@@ -360,6 +438,36 @@ inherited Report_CheckBonusForm: TReport_CheckBonusForm
           ComponentItem = 'TextValue'
           DataType = ftString
           ParamType = ptInput
+        end
+        item
+          Name = 'PaidKindId'
+          Value = Null
+          Component = PaidKindGuides
+          ComponentItem = 'Key'
+          ParamType = ptInput
+        end
+        item
+          Name = 'PaidKindName'
+          Value = Null
+          Component = PaidKindGuides
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          ParamType = ptInput
+        end
+        item
+          Name = 'JuridicalId'
+          Value = Null
+          Component = JuridicalGuides
+          ComponentItem = 'Key'
+          ParamType = ptInput
+        end
+        item
+          Name = 'JuridicalName'
+          Value = Null
+          Component = JuridicalGuides
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          ParamType = ptInput
         end>
       isShowModal = True
       OpenBeforeShow = True
@@ -388,6 +496,20 @@ inherited Report_CheckBonusForm: TReport_CheckBonusForm
         Value = 41640d
         Component = deEnd
         DataType = ftDateTime
+        ParamType = ptInput
+      end
+      item
+        Name = 'inPaidKindId'
+        Value = Null
+        Component = PaidKindGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inJuridicalId'
+        Value = Null
+        Component = JuridicalGuides
+        ComponentItem = 'Key'
         ParamType = ptInput
       end>
     Left = 112
@@ -464,6 +586,12 @@ inherited Report_CheckBonusForm: TReport_CheckBonusForm
       end
       item
         Component = DocumentTaxKindGuides
+      end
+      item
+        Component = JuridicalGuides
+      end
+      item
+        Component = PaidKindGuides
       end>
     Left = 184
     Top = 136
@@ -492,8 +620,7 @@ inherited Report_CheckBonusForm: TReport_CheckBonusForm
         DataType = ftString
         ParamType = ptInput
       end>
-    Left = 640
-    Top = 65528
+    Left = 1064
   end
   object spInsertUpdate: TdsdStoredProc
     StoredProcName = 'gpInsertUpdate_Movement_ProfitLossService_ByReport'
@@ -520,5 +647,59 @@ inherited Report_CheckBonusForm: TReport_CheckBonusForm
     PackSize = 1
     Left = 368
     Top = 176
+  end
+  object PaidKindGuides: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edPaidKind
+    FormNameParam.Value = 'TPaidKindForm'
+    FormNameParam.DataType = ftString
+    FormName = 'TPaidKindForm'
+    PositionDataSet = 'MasterCDS'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = PaidKindGuides
+        ComponentItem = 'Key'
+        DataType = ftString
+        ParamType = ptInput
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = PaidKindGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+      end>
+    Left = 348
+    Top = 24
+  end
+  object JuridicalGuides: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edJuridical
+    FormNameParam.Value = 'TJuridical_ObjectForm'
+    FormNameParam.DataType = ftString
+    FormName = 'TJuridical_ObjectForm'
+    PositionDataSet = 'MasterCDS'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = JuridicalGuides
+        ComponentItem = 'Key'
+        DataType = ftString
+        ParamType = ptInput
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = JuridicalGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+      end>
+    Left = 453
+    Top = 65534
   end
 end

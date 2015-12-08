@@ -50,6 +50,15 @@ type
     actOpenBankAccount: TOpenChoiceForm;
     PrintItemsVATCDS: TClientDataSet;
     colIncome_PaymentDate: TcxGridDBColumn;
+    colIncome_PayOrder: TcxGridDBColumn;
+    colIncome_CorrBonus: TcxGridDBColumn;
+    colIncome_CorrOther: TcxGridDBColumn;
+    colIncome_CorrReturnOut: TcxGridDBColumn;
+    mactSelectAll: TMultiAction;
+    gpInsertUpdate_MovementItem_Payment_NeedPay: TdsdStoredProc;
+    actInsertUpdate_MovementItem_Payment_NeedPay: TdsdExecStoredProc;
+    dxBarButton1: TdxBarButton;
+    actSelectAllAndRefresh: TMultiAction;
   private
     { Private declarations }
   public

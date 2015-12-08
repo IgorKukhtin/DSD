@@ -31,7 +31,8 @@ CREATE OR REPLACE VIEW Movement_Income_View AS
        , MovementString_InvNumberBranch.ValueData   AS InvNumberBranch
        , MovementDate_Branch.ValueData              AS BranchDate
        , COALESCE(MovementBoolean_Checked.ValueData, false)   AS Checked
-
+       , MovementFloat_CorrBonus.ValueData          AS CorrBonus
+       , MovementFloat_CorrOther.ValueData          AS CorrOther
     FROM Movement 
         LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
 
@@ -103,7 +104,13 @@ CREATE OR REPLACE VIEW Movement_Income_View AS
         LEFT JOIN MovementString  AS MovementString_InvNumberBranch
                                   ON MovementString_InvNumberBranch.MovementId = Movement.Id
                                  AND MovementString_InvNumberBranch.DescId = zc_MovementString_InvNumberBranch()
-
+        LEFT OUTER JOIN MovementFloat AS MovementFloat_CorrBonus
+                                      ON MovementFloat_CorrBonus.MovementId = Movement.ID
+                                     AND MovementFloat_CorrBonus.DescId = zc_MovementFloat_CorrBonus()
+        LEFT OUTER JOIN MovementFloat AS MovementFloat_CorrOther
+                                      ON MovementFloat_CorrOther.MovementId = Movement.ID
+                                     AND MovementFloat_CorrOther.DescId = zc_MovementFloat_CorrOther()
+                             
         -- Партия накладной
         LEFT JOIN Object AS Object_Movement
                          ON Object_Movement.ObjectCode = Movement.Id 
@@ -120,7 +127,8 @@ ALTER TABLE Movement_Income_View
 /*-------------------------------------------------------------------------------*/
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.  Воробкало А.А.
+ 07.12.15                                                         *
  14.05.15                        * 
  11.02.15                        * 
  04.02.15                        * 

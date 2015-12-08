@@ -229,15 +229,15 @@ BEGIN
             Object_Goods.NDS                  AS NDS,
             CASE 
                 WHEN SelectMinPrice_AllGoods.isTop = TRUE
-                    THEN  COALESCE(Object_Goods.PercentMarkup, 0) - COALESCE(ObjectFloat_Percent.valuedata, 0)
+                    THEN  COALESCE(Object_Goods.PercentMarkup, 0) /*- COALESCE(ObjectFloat_Percent.valuedata, 0)*/
                 ELSE COALESCE(MarginCondition.MarginPercent,0) + COALESCE(ObjectFloat_Percent.valuedata, 0)
             END::TFloat AS MarginPercent,
-            (SelectMinPrice_AllGoods.SuperFinalPrice * (100 + Object_Goods.NDS)/100)::TFloat AS Juridical_Price,
-            zfCalc_SalePrice((SelectMinPrice_AllGoods.SuperFinalPrice * (100 + Object_Goods.NDS)/100), -- Цена С НДС
+            (SelectMinPrice_AllGoods.Price * (100 + Object_Goods.NDS)/100)::TFloat AS Juridical_Price,
+            zfCalc_SalePrice((SelectMinPrice_AllGoods.Price * (100 + Object_Goods.NDS)/100), -- Цена С НДС
                               MarginCondition.MarginPercent + COALESCE(ObjectFloat_Percent.valuedata, 0), -- % наценки
                               SelectMinPrice_AllGoods.isTop, -- ТОП позиция
                               Object_Goods.PercentMarkup, -- % наценки у товара
-                              ObjectFloat_Percent.valuedata,
+                              0 /*ObjectFloat_Percent.valuedata*/,
                               Object_Goods.Price)::TFloat AS NewPrice,
             SelectMinPrice_AllGoods.PartionGoodsDate         AS ExpirationDate,
             SelectMinPrice_AllGoods.JuridicalName            AS JuridicalName,
@@ -262,7 +262,7 @@ BEGIN
                                                      ON (Object_MarginCategoryLink.UnitId = inUnitId)    
                                                     AND Object_MarginCategoryLink.JuridicalId = SelectMinPrice_AllGoods.JuridicalId
             LEFT JOIN MarginCondition ON MarginCondition.MarginCategoryId = Object_MarginCategoryLink.MarginCategoryId
-                                      AND (SelectMinPrice_AllGoods.SuperFinalPrice * (100 + Object_Goods.NDS)/100)::TFloat BETWEEN MarginCondition.MinPrice AND MarginCondition.MaxPrice
+                                      AND (SelectMinPrice_AllGoods.Price * (100 + Object_Goods.NDS)/100)::TFloat BETWEEN MarginCondition.MinPrice AND MarginCondition.MaxPrice
     )
 
     SELECT

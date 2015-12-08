@@ -26,12 +26,6 @@ type
     cxLabel6: TcxLabel;
     cxLabel7: TcxLabel;
     BonusKindGuides: TdsdGuides;
-    cxLabel2: TcxLabel;
-    edPaidKind: TcxButtonEdit;
-    GuidesPaidKind: TdsdGuides;
-    cxLabel1: TcxLabel;
-    edJuridical: TcxButtonEdit;
-    JuridicalGuides: TdsdGuides;
   private
     { Private declarations }
   public

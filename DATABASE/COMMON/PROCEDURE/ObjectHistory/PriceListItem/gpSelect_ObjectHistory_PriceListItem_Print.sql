@@ -11,19 +11,31 @@ CREATE OR REPLACE FUNCTION gpSelect_ObjectHistory_PriceListItem_Print(
 RETURNS TABLE (Id Integer , ObjectId Integer
                 , GoodsId Integer, GoodsCode Integer, GoodsName TVarChar, GoodsGroupNameFull TVarChar
                 , TradeMarkName TVarChar
-                , MeasureName TVarChar, ValuePrice TFloat, Weight TFloat
+                , MeasureName TVarChar, ValuePrice TFloat, ValuePriceWithVAT TFloat
+                , Weight TFloat
+                , Value4 TVarChar, Value5 TVarChar, Value6 TVarChar
+                
                 
                )
 AS
 $BODY$
+   DECLARE vbPriceWithVAT_pl Boolean;
+   DECLARE vbVATPercent_pl TFloat;
 BEGIN
 
+     vbPriceWithVAT_pl:= (SELECT ObjectBoolean.ValueData FROM ObjectBoolean WHERE ObjectBoolean.ObjectId = inPriceListId AND ObjectBoolean.DescId = zc_ObjectBoolean_PriceList_PriceWithVAT());
+     -- 
+     vbVATPercent_pl:= (SELECT ObjectFloat.ValueData FROM ObjectFloat WHERE ObjectFloat.ObjectId = inPriceListId AND ObjectFloat.DescId = zc_ObjectFloat_PriceList_VATPercent());
      -- Выбираем данные
      RETURN QUERY 
+
+
+--select * from Object where Id = 44483
                  
        SELECT
              ObjectHistory_PriceListItem.Id
            , ObjectHistory_PriceListItem.ObjectId
+
            , ObjectLink_PriceListItem_Goods.ChildObjectId AS GoodsId
            , Object_Goods.ObjectCode AS GoodsCode
            , Object_Goods.ValueData  AS GoodsName
@@ -32,12 +44,20 @@ BEGIN
            , Object_TradeMark.ValueData      AS TradeMarkName
            , Object_Measure.ValueData     AS MeasureName
 
-           , ObjectHistoryFloat_PriceListItem_Value.ValueData AS ValuePrice
+           , CASE WHEN vbPriceWithVAT_pl = TRUE THEN COALESCE (ObjectHistoryFloat_PriceListItem_Value.ValueData, 0) / (1 + vbVATPercent_pl / 100) ELSE COALESCE (ObjectHistoryFloat_PriceListItem_Value.ValueData, 0) END :: TFloat  AS ValuePrice
+           , CASE WHEN vbPriceWithVAT_pl = FALSE THEN COALESCE (ObjectHistoryFloat_PriceListItem_Value.ValueData, 0) * (1 + vbVATPercent_pl / 100) ELSE COALESCE (ObjectHistoryFloat_PriceListItem_Value.ValueData, 0) END :: TFloat AS ValuePriceWithVAT
 
            , ObjectFloat_Weight.ValueData AS Weight
-           
 
+           , (COALESCE (ObjectString_Value4.ValueData,'')||'' )::  TVarChar AS Value4
+           , ObjectString_Value5.ValueData AS Value5
+           , ObjectString_Value6.ValueData AS Value6
+
+          
+          
        FROM ObjectLink AS ObjectLink_PriceListItem_PriceList
+
+                                   
             LEFT JOIN ObjectLink AS ObjectLink_PriceListItem_Goods
                                  ON ObjectLink_PriceListItem_Goods.ObjectId = ObjectLink_PriceListItem_PriceList.ObjectId
                                 AND ObjectLink_PriceListItem_Goods.DescId = zc_ObjectLink_PriceListItem_Goods()
@@ -68,7 +88,23 @@ BEGIN
 
             LEFT JOIN ObjectFloat AS ObjectFloat_Weight
                                   ON ObjectFloat_Weight.ObjectId = Object_Goods.Id 
-                                 AND ObjectFloat_Weight.DescId = zc_ObjectFloat_Goods_Weight()        
+                                 AND ObjectFloat_Weight.DescId = zc_ObjectFloat_Goods_Weight()     
+
+            LEFT JOIN ObjectLink AS GoodsQuality_Goods
+                                 ON GoodsQuality_Goods.ChildObjectId = Object_Goods.Id 
+                                AND GoodsQuality_Goods.DescId = zc_ObjectLink_GoodsQuality_Goods()  
+            LEFT JOIN ObjectString AS ObjectString_Value2							-- Термін зберігання 
+                                   ON ObjectString_Value2.ObjectId = GoodsQuality_Goods.ObjectId
+                                  AND ObjectString_Value2.DescId = zc_ObjectString_GoodsQuality_Value2() 
+            LEFT JOIN ObjectString AS ObjectString_Value4							-- Термін зберігання в газ.середовищ, №8
+                                   ON ObjectString_Value4.ObjectId = GoodsQuality_Goods.ObjectId
+                                  AND ObjectString_Value4.DescId = zc_ObjectString_GoodsQuality_Value4()
+            LEFT JOIN ObjectString AS ObjectString_Value5							-- Вакуумна упаковка - Термін зберігання цілим виробом, №10
+                                   ON ObjectString_Value5.ObjectId = GoodsQuality_Goods.ObjectId
+                                  AND ObjectString_Value5.DescId = zc_ObjectString_GoodsQuality_Value5()                             
+            LEFT JOIN ObjectString AS ObjectString_Value6							-- Вакуумна упаковка - Термін зберігання порційна нарізка, №11
+                                   ON ObjectString_Value6.ObjectId = GoodsQuality_Goods.ObjectId
+                                  AND ObjectString_Value6.DescId = zc_ObjectString_GoodsQuality_Value6()                           
                       
 
        WHERE ObjectLink_PriceListItem_PriceList.DescId = zc_ObjectLink_PriceListItem_PriceList()
