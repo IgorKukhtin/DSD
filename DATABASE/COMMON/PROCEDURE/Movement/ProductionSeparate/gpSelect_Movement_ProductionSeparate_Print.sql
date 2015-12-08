@@ -154,6 +154,7 @@ BEGIN
                            , CASE WHEN MIContainer.DescId = zc_MIContainer_Summ()  THEN SUM (MIContainer.Amount) ELSE 0 END AS Amount_summ
                            , SUM (COALESCE (MIFloat_AmountPacker.ValueData, 0)) AS CountPacker
                            , SUM (COALESCE (MIFloat_HeadCount.ValueData, 0))    AS HeadCount
+                           
                       FROM tmpContainer
                            INNER JOIN MovementItemContainer AS MIContainer
                                                             ON MIContainer.ContainerId = tmpContainer.ContainerId
@@ -168,6 +169,7 @@ BEGIN
                                                       AND MIFloat_HeadCount.DescId = zc_MIFloat_HeadCount()
                                                       AND MIContainer.DescId = zc_MIContainer_Count()
                                                       AND COALESCE (MIContainer.AnalyzerId, 0) = 0
+                   
                       GROUP BY tmpContainer.DescId, tmpContainer.ContainerId, MIContainer.MovementId, MIContainer.ObjectId_analyzer, MIContainer.DescId
                      UNION ALL
                       -- находим по партиям из документа (т.к. не партионный учет то проводок по партиям нет)
@@ -179,6 +181,7 @@ BEGIN
                            , CASE WHEN MIContainer.DescId = zc_MIContainer_Summ()  THEN SUM (MIContainer.Amount) ELSE 0 END AS Amount_summ
                            , SUM (COALESCE (MIFloat_AmountPacker.ValueData, 0)) AS CountPacker
                            , SUM (COALESCE (MIFloat_HeadCount.ValueData, 0))    AS HeadCount
+                          
                       FROM tmpMovement
                            LEFT JOIN tmpContainer ON 1 = 1
                            INNER JOIN Movement ON Movement.OperDate = tmpMovement.OperDate_partion
@@ -201,6 +204,7 @@ BEGIN
                                                        ON MIFloat_HeadCount.MovementItemId = MIContainer.MovementItemId
                                                       AND MIFloat_HeadCount.DescId = zc_MIFloat_HeadCount()
                                                       AND MIContainer.DescId = zc_MIContainer_Count()
+                                                     
                       WHERE tmpContainer.ContainerId IS NULL
                         AND tmpMovement.PartnerCode_partion > 0
                       GROUP BY MIContainer.MovementId, MIContainer.ObjectId_analyzer, MIContainer.DescId
@@ -260,7 +264,8 @@ BEGIN
 
            , tmpIncomeAll.Amount_summ / tmpIncomeAll.Amount_count                              AS PriceIncome
            , tmpIncomeAll.Amount_summ / (tmpIncomeAll.Amount_count - tmpIncomeAll.CountPacker) AS PriceIncome1
-
+           , 0 :: Tfloat                                                                       AS PriceTransport
+           
            , (tmpIncomeAll.Amount_count - tmpIncomeAll.CountPacker)      AS Count_CountPacker
            , 100 * tmpSeparateS.Amount_count / tmpIncomeAll.Amount_count AS PercentCount 
 
@@ -284,6 +289,7 @@ BEGIN
                            , MAX (COALESCE (MovementLinkObject_PersonalPacker.ObjectId, 0)) AS PersonalPackerId
                            , SUM (tmpIncome.Amount_count) AS Amount_count, SUM ( tmpIncome.Amount_summ) AS Amount_summ
                            , SUM (tmpIncome.CountPacker) AS CountPacker, SUM (tmpIncome.HeadCount) AS HeadCount
+                           
                       FROM tmpIncome
                            LEFT JOIN MovementLinkObject AS MovementLinkObject_From
                                                         ON MovementLinkObject_From.MovementId = tmpIncome.MovementId

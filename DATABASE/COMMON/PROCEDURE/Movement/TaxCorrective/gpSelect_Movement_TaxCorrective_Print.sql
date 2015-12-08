@@ -93,6 +93,7 @@ BEGIN
      OPEN Cursor1 FOR
      WITH tmpMovement AS
           (SELECT Movement_find.Id
+                , MovementBoolean_isPartner.ValueData AS isPartner
            FROM Movement
                 LEFT JOIN MovementLinkMovement AS MovementLinkMovement_Master
                                                ON MovementLinkMovement_Master.MovementId = Movement.Id
@@ -103,16 +104,25 @@ BEGIN
                                               AND MovementLinkMovement_Master_find.DescId = zc_MovementLinkMovement_Master()
                 INNER JOIN Movement AS Movement_find ON Movement_find.Id  = COALESCE (MovementLinkMovement_Master_find.MovementId, Movement.Id)
                                                     AND Movement_find.StatusId = zc_Enum_Status_Complete()
+                LEFT JOIN MovementBoolean AS MovementBoolean_isPartner
+                                          ON MovementBoolean_isPartner.MovementId = MovementLinkMovement_Master.MovementChildId
+                                         AND MovementBoolean_isPartner.DescId = zc_MovementBoolean_isPartner()
+                
            WHERE Movement.Id = inMovementId
              AND Movement.DescId = zc_Movement_TaxCorrective()
           UNION
            SELECT MovementLinkMovement_Master.MovementId AS Id
+                , MovementBoolean_isPartner.ValueData    AS isPartner
            FROM Movement
                 INNER JOIN MovementLinkMovement AS MovementLinkMovement_Master
                                                 ON MovementLinkMovement_Master.MovementChildId = Movement.Id
                                                AND MovementLinkMovement_Master.DescId = zc_MovementLinkMovement_Master()
                 INNER JOIN Movement AS Movement_Master ON Movement_Master.Id  = MovementLinkMovement_Master.MovementId
                                                       AND Movement_Master.StatusId = zc_Enum_Status_Complete()
+                LEFT JOIN MovementBoolean AS MovementBoolean_isPartner
+                                          ON MovementBoolean_isPartner.MovementId = Movement_Master.Id
+                                         AND MovementBoolean_isPartner.DescId = zc_MovementBoolean_isPartner()   
+
            WHERE Movement.Id = inMovementId
              AND Movement.DescId IN (zc_Movement_ReturnIn(), zc_Movement_TransferDebtIn(), zc_Movement_PriceCorrective())
           )
@@ -198,7 +208,7 @@ BEGIN
                        THEN '«ÏiÌ‡ ˆiÌË'
                   WHEN MovementBoolean_isCopy.ValueData = TRUE
                        THEN '¬»œ–¿¬À≈ÕÕﬂ œŒÃ»À »'
-                  WHEN MovementBoolean_isPartner.ValueData = TRUE
+                  WHEN tmpMovement.isPartner = TRUE
                        THEN 'Õ≈ƒŒ¬I«'
                   ELSE 'ÔÓ‚ÂÌÂÌÌˇ'
              END :: TVarChar AS KindName
@@ -359,10 +369,6 @@ BEGIN
             LEFT JOIN MovementBoolean AS MovementBoolean_isCopy
                                       ON MovementBoolean_isCopy.MovementId = tmpMovement.Id
                                      AND MovementBoolean_isCopy.DescId = zc_MovementBoolean_isCopy()
-
-            LEFT JOIN MovementBoolean AS MovementBoolean_isPartner
-                                      ON MovementBoolean_isPartner.MovementId = tmpMovement.Id
-                                     AND MovementBoolean_isPartner.DescId = zc_MovementBoolean_isPartner()
 
             LEFT JOIN MovementLinkMovement AS MovementLinkMovement_ChildEDI
                                            ON MovementLinkMovement_ChildEDI.MovementId = tmpMovement.Id
