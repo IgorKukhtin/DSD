@@ -257,7 +257,8 @@ var
   StringList: TStringList;
   OkpoFrom, OkpoTo, InvNumber, InvTaxNumber,
   Remark: string;
-  OperDate, PaymentDate, ExpirationDate: TDateTime;
+  OperDate, ExpirationDate: TDateTime;
+  PaymentDate: Variant;
   PriceWithVAT: boolean;
   SyncCode: Integer;
   ElementList: TStringDynArray;
@@ -307,7 +308,7 @@ begin
     OperDate := VarToDateTime(trim(ElementList[1]));
     InvTaxNumber := ElementList[2];
     if (ElementList[13] = '') or (ElementList[13] = '  .  .  ') then
-       PaymentDate := OperDate
+       PaymentDate := Null
     else
        PaymentDate := VarToDateTime(ElementList[13]);
 
@@ -350,7 +351,7 @@ begin
             FieldByName('InvNumber').AsString := InvNumber;
             FieldByName('OperDate').AsDateTime := OperDate;
             FieldByName('InvTaxNumber').AsString := InvTaxNumber;
-            FieldByName('PaymentDate').AsDateTime := PaymentDate;
+            FieldByName('PaymentDate').Value := PaymentDate;
             FieldByName('PriceWithVAT').AsBoolean := PriceWithVAT;
             FieldByName('SyncCode').AsInteger := SyncCode;
             FieldByName('Remark').AsString := Remark;
@@ -604,16 +605,19 @@ begin
                        raise Exception.Create('Не найдено значение для ячейки ' + TImportSettingsItems(Items[i]).ItemName);
                     case StoredProc.Params[i].DataType of
                       ftDateTime: begin
-                         try
-                           Value := Field.Value;
-                           D := VarToDateTime(Value);
-                           StoredProc.Params.Items[i].Value := D;
-                         except
-                           on E: EVariantTypeCastError do
-                              StoredProc.Params.Items[i].Value := Date;
-                           on E: Exception do
-                              raise E;
-                         end;
+                         if Field.Value = null then
+                             StoredProc.Params.Items[i].Value := Null
+                         else
+                           try
+                             Value := Field.Value;
+                             D := VarToDateTime(Value);
+                             StoredProc.Params.Items[i].Value := D;
+                           except
+                             on E: EVariantTypeCastError do
+                                StoredProc.Params.Items[i].Value := Date;
+                             on E: Exception do
+                                raise E;
+                           end;
                       end;
                       ftFloat: begin
                          try

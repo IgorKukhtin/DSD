@@ -113,6 +113,7 @@ CREATE OR REPLACE VIEW Object_RoleAccessKeyDocument_View AS
         INNER JOIN tmpProcessDoc ON tmpProcessDoc.isCash = tmpAccessKey.isCash
                                  OR tmpProcessDoc.isMovement = tmpAccessKey.isMovement
                                  OR tmpProcessDoc.isTransport = tmpAccessKey.isTransport
+   -- WHERE tmpAccessKey.Id NOT IN (zc_Enum_Process_AccessKey_DocumentAll())
   ;
 
 ALTER TABLE Object_RoleAccessKeyDocument_View OWNER TO postgres;

@@ -32,7 +32,7 @@ BEGIN
                        THEN 5
 
                   WHEN inInfoMoneyId = zc_Enum_InfoMoney_10201() -- Основное сырье + Прочее сырье + Специи
-                   AND inIsTaxExit = FALSE
+                   AND COALESCE (inIsTaxExit, FALSE) = FALSE
                        THEN 7
 
                   WHEN inInfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_10100() -- Основное сырье + Мясное сырье

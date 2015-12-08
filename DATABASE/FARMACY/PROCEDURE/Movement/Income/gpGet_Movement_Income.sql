@@ -16,7 +16,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , PaymentDate TDateTime
              , InvNumberBranch TVarChar, BranchDate TDateTime, Checked Boolean
              , JuridicalId Integer, JuridicalName TVarChar
-             , CorrBonus TFloat, CorrOther TFloat
+             , CorrBonus TFloat, CorrOther TFloat, IsPay Boolean, DateLastPay TDateTime
               )
 AS
 $BODY$
@@ -53,6 +53,8 @@ BEGIN
              , CAST('' as TVarChar)                             AS JuridicalName
              , 0::TFloat                                        AS CorrBonus
              , 0::TFloat                                        AS CorrOther
+             , False                                            AS isPay
+             , NULL::TDateTime                                  AS DateLastPay
           FROM lfGet_Object_Status(zc_Enum_Status_UnComplete()) AS Object_Status;
 
      ELSE
@@ -73,7 +75,10 @@ BEGIN
            , Movement_Income_View.NDSKindName
            , Movement_Income_View.ContractId
            , Movement_Income_View.ContractName
-           , Movement_Income_View.PaymentDate 
+           , CASE WHEN Movement_Income_View.PaySumm > 0.01 
+                    OR Movement_Income_View.StatusId <> zc_Enum_Status_Complete() 
+                  THEN Movement_Income_View.PaymentDate 
+             END::TDateTime AS PaymentDate
            , Movement_Income_View.InvNumberBranch
            , Movement_Income_View.BranchDate
            , COALESCE(Movement_Income_View.Checked, false)
@@ -81,6 +86,11 @@ BEGIN
            , Movement_Income_View.JuridicalName
            , Movement_Income_View.CorrBonus
            , Movement_Income_View.CorrOther
+           , CASE WHEN Movement_Income_View.PaySumm <= 0.01 then TRUE ELSE FALSE END AS isPay
+           , (SELECT MAX(MovementItemContainer.OperDate) 
+              FROM MovementItemContainer 
+              Where MovementItemContainer.ContainerId = Movement_Income_View.PaymentContainerId 
+                AND MovementItemContainer.MovementDescId = zc_Movement_BankAccount())::TDateTime AS DateLastPay
        FROM Movement_Income_View       
       WHERE Movement_Income_View.Id = inMovementId;
 

@@ -13,7 +13,8 @@ uses
   cxPropertiesStore, cxLabel, cxTextEdit, cxMaskEdit, cxDropDownEdit,
   cxCalendar, Vcl.ExtCtrls, cxGridLevel, cxGridCustomTableView, cxGridTableView,
   cxGridDBTableView, cxGridCustomView, cxGrid, cxPC, ExternalSave,
-  dxBarBuiltInMenu, cxNavigator;
+  dxBarBuiltInMenu, cxNavigator, dxSkinsCore, dxSkinsDefaultPainters,
+  dxSkinscxPCPainter, dxSkinsdxBarPainter;
 
 type
   TIncomeJournalForm = class(TAncestorJournalForm)
@@ -51,6 +52,7 @@ type
     colBranchDate: TcxGridDBColumn;
     colChecked: TcxGridDBColumn;
     colJuridicalName: TcxGridDBColumn;
+    colPayColor: TcxGridDBColumn;
   private
     { Private declarations }
   public

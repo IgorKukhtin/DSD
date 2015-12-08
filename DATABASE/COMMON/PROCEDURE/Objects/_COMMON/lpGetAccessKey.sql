@@ -138,6 +138,7 @@ BEGIN
                                                                                                  , zc_Enum_Process_Get_Movement_TransportService()
                                                                                                  , zc_Enum_Process_InsertUpdate_Movement_IncomeFuel()
                                                                                                  , zc_Enum_Process_InsertUpdate_Movement_TransportIncome()
+                                                                                                 , zc_Enum_Process_InsertUpdate_Movement_PersonalSendCash()
                                                                                                   )
                                                                                   )
                                                                                OR (AccessKeyId NOT IN (SELECT AccessKeyId FROM Object_RoleAccessKeyDocument_View WHERE ProcessId = inProcessId)
@@ -172,6 +173,7 @@ BEGIN
                                                                                                          , zc_Enum_Process_Get_Movement_TransportService()
                                                                                                          , zc_Enum_Process_InsertUpdate_Movement_IncomeFuel()
                                                                                                          , zc_Enum_Process_InsertUpdate_Movement_TransportIncome()
+                                                                                                         , zc_Enum_Process_InsertUpdate_Movement_PersonalSendCash()
                                                                                                           )
                                                                                   )
                                                                                  )
@@ -238,6 +240,7 @@ BEGIN
                                                                                                  , zc_Enum_Process_Get_Movement_TransportService()
                                                                                                  , zc_Enum_Process_InsertUpdate_Movement_IncomeFuel()
                                                                                                  , zc_Enum_Process_InsertUpdate_Movement_TransportIncome()
+                                                                                                 , zc_Enum_Process_InsertUpdate_Movement_PersonalSendCash()
                                                                                                    )
                                                                                   )
                                                                                OR (AccessKeyId NOT IN (SELECT AccessKeyId FROM Object_RoleAccessKeyDocument_View WHERE ProcessId = inProcessId)
@@ -272,6 +275,7 @@ BEGIN
                                                                                                          , zc_Enum_Process_Get_Movement_TransportService()
                                                                                                          , zc_Enum_Process_InsertUpdate_Movement_IncomeFuel()
                                                                                                          , zc_Enum_Process_InsertUpdate_Movement_TransportIncome()
+                                                                                                         , zc_Enum_Process_InsertUpdate_Movement_PersonalSendCash()
                                                                                                           )
                                                                                   )
                                                                                  )
@@ -316,4 +320,4 @@ ALTER FUNCTION lpGetAccessKey (Integer, Integer)  OWNER TO postgres;
 */
 
 -- тест
--- -- -- SELECT * FROM lpGetAccessKey (10895 :: Integer, zc_Enum_Process_AccessKey_TrasportDnepr())
+-- SELECT * FROM lpGetAccessKey (10895 :: Integer, zc_Enum_Process_AccessKey_TrasportDnepr())

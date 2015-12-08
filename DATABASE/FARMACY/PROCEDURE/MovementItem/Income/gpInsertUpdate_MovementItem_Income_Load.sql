@@ -171,11 +171,11 @@ BEGIN
           RAISE EXCEPTION 'Не установлено Подразделение';
        END IF;
         
-
+       
        IF COALESCE(vbContractId, 0) = 0 THEN
         -- А вот тут попытка угадать договор.
           -- Если даты не равны, то ищем любой договор с отсрочкой платежа
-          IF inPaymentDate > (inOperDate + interval '1 day') THEN
+          IF inPaymentDate is null or inPaymentDate > (inOperDate + interval '1 day') THEN
              SELECT MAX(Id) INTO vbContractId 
      	       FROM Object_Contract_View 
               WHERE Object_Contract_View.JuridicalId = inJuridicalId AND COALESCE(Deferment, 0) <> 0;
@@ -193,7 +193,22 @@ BEGIN
               WHERE Object_Contract_View.JuridicalId = inJuridicalId;
           END IF;
        END IF;
- 
+       --Если дата оплаты пустая - то вытягиваем её из договора
+       IF inPaymentDate is Null or inPaymentDate = '19000101'::TDateTime
+       THEN
+           SELECT
+               inOperDate::Date + COALESCE(Deferment, 0)::Integer
+           INTO
+               inPaymentDate
+           FROM
+               Object_Contract_View
+           WHERE
+               Object_Contract_View.Id = vbContractId;
+       END IF;
+       IF inPaymentDate IS NULL
+       THEN
+           inPaymentDate := inOperDate;
+       END IF;
        -- определяем НДС
        SELECT Id INTO vbNDSKindId 
          FROM Object_NDSKind_View

@@ -17,7 +17,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , ContractId Integer, ContractName TVarChar
              , PaymentDate TDateTime, PaySumm TFloat, SaleSumm TFloat
              , InvNumberBranch TVarChar, BranchDate TDateTime, Checked Boolean 
-             , CorrBonus TFloat, CorrOther TFloat
+             , CorrBonus TFloat, CorrOther TFloat, PayColor Integer
               )
 
 AS
@@ -61,7 +61,10 @@ BEGIN
            , Movement_Income_View.NDSKindName
            , Movement_Income_View.ContractId
            , Movement_Income_View.ContractName
-           , Movement_Income_View.PaymentDate
+           , CASE WHEN Movement_Income_View.PaySumm > 0.01
+                    OR Movement_Income_View.StatusId <> zc_Enum_Status_Complete()
+                  THEN Movement_Income_View.PaymentDate 
+             END::TDateTime AS PaymentDate
            , Movement_Income_View.PaySumm
            , Movement_Income_View.SaleSumm
            , Movement_Income_View.InvNumberBranch
@@ -69,6 +72,7 @@ BEGIN
            , Movement_Income_View.Checked
            , Movement_Income_View.CorrBonus
            , Movement_Income_View.CorrOther
+           , CASE WHEN Movement_Income_View.PaySumm <= 0.01 THEN zc_Color_Goods_Additional() END::Integer AS PayColor
        FROM Movement_Income_View 
              JOIN tmpStatus ON tmpStatus.StatusId = Movement_Income_View.StatusId 
              WHERE Movement_Income_View.OperDate BETWEEN inStartDate AND inEndDate;
@@ -82,7 +86,8 @@ ALTER FUNCTION gpSelect_Movement_Income (TDateTime, TDateTime, Boolean, TVarChar
 
 /*
  ÈÑÒÎÐÈß ÐÀÇÐÀÁÎÒÊÈ: ÄÀÒÀ, ÀÂÒÎÐ
-               Ôåëîíþê È.Â.   Êóõòèí È.Â.   Êëèìåíòüåâ Ê.È.   Ìàíüêî Ä.À.
+               Ôåëîíþê È.Â.   Êóõòèí È.Â.   Êëèìåíòüåâ Ê.È.   Ìàíüêî Ä.À.   Âîðîáêàëî À.À.
+ 08.12.15                                                                        *
  28.04.15                        *
  11.02.15                        *
  23.12.14                        *
