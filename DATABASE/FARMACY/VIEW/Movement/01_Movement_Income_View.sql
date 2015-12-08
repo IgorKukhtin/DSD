@@ -33,6 +33,7 @@ CREATE OR REPLACE VIEW Movement_Income_View AS
        , COALESCE(MovementBoolean_Checked.ValueData, false)   AS Checked
        , MovementFloat_CorrBonus.ValueData          AS CorrBonus
        , MovementFloat_CorrOther.ValueData          AS CorrOther
+       , Container.Id                               AS PaymentContainerId
     FROM Movement 
         LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
 

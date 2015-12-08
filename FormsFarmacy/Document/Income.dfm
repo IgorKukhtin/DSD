@@ -1,4 +1,4 @@
-inherited IncomeForm: TIncomeForm
+﻿inherited IncomeForm: TIncomeForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1055#1088#1080#1093#1086#1076'>'
   ClientHeight = 526
   ClientWidth = 904
@@ -10,19 +10,19 @@ inherited IncomeForm: TIncomeForm
     Top = 151
     Width = 904
     Height = 375
-    ExplicitTop = 126
+    ExplicitTop = 151
     ExplicitWidth = 904
-    ExplicitHeight = 400
+    ExplicitHeight = 375
     ClientRectBottom = 375
     ClientRectRight = 904
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 904
-      ExplicitHeight = 376
+      ExplicitHeight = 351
       inherited cxGrid: TcxGrid
         Width = 904
         Height = 351
         ExplicitWidth = 904
-        ExplicitHeight = 376
+        ExplicitHeight = 351
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -583,6 +583,29 @@ inherited IncomeForm: TIncomeForm
       Properties.DisplayFormat = ',0.00;-,0.00'
       TabOrder = 32
       Width = 97
+    end
+    object chbIsPay: TcxCheckBox
+      Left = 288
+      Top = 102
+      Caption = #1054#1087#1083#1072#1095#1077#1085#1072
+      Properties.ReadOnly = True
+      TabOrder = 33
+      Width = 81
+    end
+    object вуDateLastPay: TcxDateEdit
+      Left = 375
+      Top = 102
+      EditValue = 42144d
+      Properties.ReadOnly = True
+      Properties.SaveTime = False
+      Properties.ShowTime = False
+      TabOrder = 34
+      Width = 100
+    end
+    object cxLabel17: TcxLabel
+      Left = 375
+      Top = 85
+      Caption = #1044#1072#1090#1072' '#1086#1087#1083#1072#1090#1099' '#1087#1086' '#1073#1072#1085#1082#1091':'
     end
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
@@ -1185,6 +1208,18 @@ inherited IncomeForm: TIncomeForm
         Value = Null
         Component = ceCorrOther
         DataType = ftFloat
+      end
+      item
+        Name = 'isPay'
+        Value = Null
+        Component = chbIsPay
+        DataType = ftBoolean
+      end
+      item
+        Name = 'DateLastPay'
+        Value = Null
+        Component = вуDateLastPay
+        DataType = ftDateTime
       end>
     Left = 216
     Top = 248
@@ -1670,8 +1705,8 @@ inherited IncomeForm: TIncomeForm
         DataType = ftString
         ParamType = ptInput
       end>
-    Left = 464
-    Top = 80
+    Left = 648
+    Top = 88
   end
   object ContractGuides: TdsdGuides
     KeyField = 'Id'

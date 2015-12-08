@@ -2,8 +2,8 @@ inherited IncomeJournalForm: TIncomeJournalForm
   Caption = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' <'#1055#1088#1080#1093#1086#1076'>'
   ClientHeight = 469
   ClientWidth = 831
-  ExplicitWidth = 839
-  ExplicitHeight = 496
+  ExplicitWidth = 847
+  ExplicitHeight = 507
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -243,6 +243,11 @@ inherited IncomeJournalForm: TIncomeJournalForm
             DataBinding.FieldName = 'Checked'
             Options.Editing = False
             Width = 95
+          end
+          object colPayColor: TcxGridDBColumn
+            DataBinding.FieldName = 'PayColor'
+            Visible = False
+            VisibleForCustomization = False
           end
         end
       end
@@ -567,6 +572,11 @@ inherited IncomeJournalForm: TIncomeJournalForm
     end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
+    ColorRuleList = <
+      item
+        BackGroundValueColumn = colPayColor
+        ColorValueList = <>
+      end>
     Left = 320
     Top = 224
   end

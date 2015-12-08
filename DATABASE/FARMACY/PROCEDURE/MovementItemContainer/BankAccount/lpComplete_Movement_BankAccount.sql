@@ -38,7 +38,7 @@ BEGIN
     INSERT INTO _tmpMIContainer_insert(DescId, MovementDescId, MovementId, ContainerId, AccountId, Amount, OperDate)
          SELECT 
                 zc_Container_Summ()
-              , zc_Movement_Income()  
+              , zc_Movement_BankAccount()  
               , inMovementId
               , lpInsertFind_Container(
                           inContainerDescId := zc_Container_Summ(), -- DescId Остатка
@@ -73,7 +73,7 @@ BEGIN
     INSERT INTO _tmpMIContainer_insert(DescId, MovementDescId, MovementId, ContainerId, AccountId, Amount, OperDate)
          SELECT 
                 zc_Container_Summ()
-              , zc_Movement_Income()  
+              , zc_Movement_BankAccount()  
               , inMovementId
               , lpInsertFind_Container(
                           inContainerDescId := zc_Container_Summ(), -- DescId Остатка
@@ -94,7 +94,7 @@ BEGIN
     INSERT INTO _tmpMIContainer_insert(DescId, MovementDescId, MovementId, ContainerId, AccountId, Amount, OperDate)
          SELECT 
                 zc_Container_SummIncomeMovementPayment()
-              , zc_Movement_Income()  
+              , zc_Movement_BankAccount()  
               , inMovementId
               , lpInsertFind_Container(
                           inContainerDescId := zc_Container_SummIncomeMovementPayment(), -- DescId Остатка
@@ -123,7 +123,8 @@ END;$BODY$
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.     Воробкало А.А.
+ 08.12.15                                                            *
  13.02.15                         * 
 */
 
