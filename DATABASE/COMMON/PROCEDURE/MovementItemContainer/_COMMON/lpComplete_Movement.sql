@@ -88,14 +88,12 @@ BEGIN
   END IF;
   END IF;
 
-/*
+
   -- !!!временно!!!
-  IF inUserId IN (128491 -- Хохлова Е.Ю. !!!временно!!!
-                , 442559 -- Богатикова Н.В. -- 409618 -- Скрипник А.В. !!!временно!!!
-                 )
-  THEN RETURN;
-  END IF;
-*/
+  IF inUserId NOT IN (128491 -- Хохлова Е.Ю. !!!временно!!!
+                    , 5
+                     )
+  THEN
   -- !!!временно если БН начисления маркетинг!!!
   IF EXISTS (SELECT 1 FROM ObjectLink_UserRole_View AS View_UserRole WHERE View_UserRole.UserId = inUserId AND View_UserRole.RoleId = 82392) -- Начисления(п.б.)-ввод документов
      AND inDescId IN (zc_Movement_Service(), zc_Movement_ProfitLossService())
@@ -250,6 +248,7 @@ BEGIN
 
   END IF; -- по этим док-там !!!нет закрытия периода!!!
 
+  END IF; -- !!!временно!!!
 
   -- сохранили протокол
   PERFORM lpInsert_MovementProtocol (inMovementId, inUserId, FALSE);

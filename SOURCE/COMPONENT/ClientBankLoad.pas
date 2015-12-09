@@ -626,7 +626,7 @@ end;
 
 function TVostokBankLoad.GetOperDate: TDateTime;
 begin
-  result := FDataSet.FieldByName('DATE').AsDateTime
+  result := FDataSet.FieldByName('DATA').AsDateTime
 end;
 
 function TVostokBankLoad.GetOperSumm: real;

@@ -770,7 +770,9 @@ uses
   Report_Branch_App1 in '..\..\Forms\Report\Report_Branch_App1.pas' {Report_Branch_App1Form: TParentForm},
   Report_Branch_App7_New in '..\..\Forms\Report\Report_Branch_App7_New.pas' {Report_Branch_App7_NewForm: TParentForm},
   Report_Promo in '..\..\Forms\Report\Report_Promo.pas' {Report_PromoForm: TParentForm},
-  Report_PromoDialog in '..\..\Forms\Report\Report_PromoDialog.pas' {Report_PromoDialogForm: TParentForm};
+  Report_PromoDialog in '..\..\Forms\Report\Report_PromoDialog.pas' {Report_PromoDialogForm: TParentForm},
+  Report_SheetWorkTime in '..\..\Forms\Report\Report_SheetWorkTime.pas' {Report_SheetWorkTimeForm: TParentForm},
+  Report_SheetWorkTimeDialog in '..\..\Forms\Report\Report_SheetWorkTimeDialog.pas' {Report_SheetWorkTimeDialogForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}

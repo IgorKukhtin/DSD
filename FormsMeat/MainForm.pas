@@ -651,6 +651,8 @@ type
     N711: TMenuItem;
     actReport_Promo: TdsdOpenForm;
     N88: TMenuItem;
+    actReport_SheetWorkTime: TdsdOpenForm;
+    N89: TMenuItem;
     procedure actReport_OLAPSoldExecute(Sender: TObject);
     procedure FormShow(Sender: TObject);
   private
