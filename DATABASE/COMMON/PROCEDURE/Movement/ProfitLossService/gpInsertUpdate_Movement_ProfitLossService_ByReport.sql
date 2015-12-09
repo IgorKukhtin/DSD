@@ -49,7 +49,7 @@ BEGIN
                                                       , inContractChildId   := ContractId_Child
                                                       , inInfoMoneyId       := InfoMoneyId_find
                                                       , inJuridicalId       := JuridicalId
-                                                      , inPaidKindId        := zc_Enum_PaidKind_FirstForm()
+                                                      , inPaidKindId        := PaidKindID
                                                       , inUnitId            := 0 :: Integer
                                                       , inContractConditionKindId   := ConditionKindId
                                                       , inBonusKindId       := BonusKindId
