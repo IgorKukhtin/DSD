@@ -1895,7 +1895,7 @@ begin
             begin
               // тянем файл к нам
               Stream.Clear;
-              try
+              //try
                 FIdFTP.Get(List[i], Stream);
                 RECADV := LoadRECADV(Stream.DataString);
                 spHeader.ParamByName('inOrderInvNumber').Value := RECADV.ORDERNUMBER;
@@ -1903,9 +1903,9 @@ begin
                 spHeader.ParamByName('inGLNPlace').Value := RECADV.HEAD.DELIVERYPLACE;
                 spHeader.ParamByName('inDesadvNumber').Value := RECADV.NUMBER;
                 spHeader.Execute;
-              except
-                break;
-              end;
+              //except
+              // break;
+              //end;
               {}
               // теперь перенесли файл в директроию Archive
               try

@@ -564,18 +564,18 @@ BEGIN
 
                            , 0                                                   AS Amount_mi
                            , 0                                                   AS myId
-                      FROM (SELECT zc_MI_Master() AS DescId WHERE vbMovementDescId = zc_Movement_Inventory()
+                      FROM (SELECT zc_MI_Master() AS DescId, 0 AS Amount WHERE vbMovementDescId = zc_Movement_Inventory()
                            UNION
-                            SELECT zc_MI_Master() AS DescId WHERE vbMovementDescId = zc_Movement_ProductionUnion()
+                            SELECT zc_MI_Master() AS DescId, -1 AS Amount WHERE vbMovementDescId = zc_Movement_ProductionUnion()
                            UNION
-                            SELECT zc_MI_Master() AS DescId WHERE vbMovementDescId = zc_Movement_ProductionSeparate() AND vbIsProductionIn = FALSE AND 1 = 0 -- пока не надо суммировать
+                            SELECT zc_MI_Master() AS DescId, 0 AS Amount WHERE vbMovementDescId = zc_Movement_ProductionSeparate() AND vbIsProductionIn = FALSE AND 1 = 0 -- пока не надо суммировать
                            UNION
-                            SELECT zc_MI_Child() AS DescId WHERE vbMovementDescId = zc_Movement_ProductionSeparate() AND vbIsProductionIn = TRUE AND 1 = 0 -- пока не надо суммировать
+                            SELECT zc_MI_Child() AS DescId, 0 AS Amount WHERE vbMovementDescId = zc_Movement_ProductionSeparate() AND vbIsProductionIn = TRUE AND 1 = 0 -- пока не надо суммировать
                            ) AS tmp
                            INNER JOIN MovementItem ON MovementItem.MovementId = vbMovementId_find
                                                   AND MovementItem.DescId     = tmp.DescId
                                                   AND MovementItem.isErased   = FALSE
-                                                  AND MovementItem.Amount <> 0
+                                                  AND MovementItem.Amount <> tmp.Amount
                            LEFT JOIN MovementItemFloat AS MIFloat_Count
                                                        ON MIFloat_Count.MovementItemId = MovementItem.Id
                                                       AND MIFloat_Count.DescId = zc_MIFloat_Count()

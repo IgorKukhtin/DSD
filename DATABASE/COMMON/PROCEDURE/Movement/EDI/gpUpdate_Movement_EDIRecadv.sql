@@ -22,17 +22,29 @@ BEGIN
      vbMovementId := NULL;
 
      -- находим документ !!!по точке доставки!!!
-     vbMovementId:= (SELECT Movement.Id
-                     FROM Movement
+     IF EXISTS (SELECT COUNT (*)
+                FROM Movement
                           INNER JOIN MovementString AS MovementString_GLNPlaceCode
                                                     ON MovementString_GLNPlaceCode.MovementId =  Movement.Id
                                                    AND MovementString_GLNPlaceCode.DescId = zc_MovementString_GLNPlaceCode()
                                                    AND MovementString_GLNPlaceCode.ValueData = inGLNPlace
-                     WHERE Movement.DescId = zc_Movement_EDI()
-                       AND Movement.OperDate BETWEEN (inOperDate - (INTERVAL '7 DAY')) AND (inOperDate + (INTERVAL '7 DAY'))
-                       AND Movement.InvNumber = inOrderInvNumber
-                    );
-
+                WHERE Movement.DescId = zc_Movement_EDI()
+                  AND Movement.OperDate BETWEEN (inOperDate - (INTERVAL '7 DAY')) AND (inOperDate + (INTERVAL '7 DAY'))
+                  AND Movement.InvNumber = inOrderInvNumber
+                HAVING COUNT (*) = 1
+                )
+     THEN
+         vbMovementId:= (SELECT Movement.Id
+                         FROM Movement
+                              INNER JOIN MovementString AS MovementString_GLNPlaceCode
+                                                        ON MovementString_GLNPlaceCode.MovementId =  Movement.Id
+                                                       AND MovementString_GLNPlaceCode.DescId = zc_MovementString_GLNPlaceCode()
+                                                       AND MovementString_GLNPlaceCode.ValueData = inGLNPlace
+                         WHERE Movement.DescId = zc_Movement_EDI()
+                           AND Movement.OperDate BETWEEN (inOperDate - (INTERVAL '7 DAY')) AND (inOperDate + (INTERVAL '7 DAY'))
+                           AND Movement.InvNumber = inOrderInvNumber
+                        );
+     END IF;
 
      -- сохранили
      IF vbMovementId <> 0
