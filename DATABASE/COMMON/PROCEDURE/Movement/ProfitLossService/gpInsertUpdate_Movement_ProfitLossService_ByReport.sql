@@ -1,10 +1,13 @@
 -- Function: gpInsertUpdate_Movement_ProfitLossService_ByReport 
 
 DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_ProfitLossService_ByReport (TDateTime, TDateTime, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_ProfitLossService_ByReport (TDateTime, TDateTime, Integer, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_ProfitLossService_ByReport (
     IN inStartDate                TDateTime ,  
     IN inEndDate                  TDateTime ,
+    IN inPaidKindID               Integer   ,
+    IN inJuridicalId              Integer   ,
     IN inSession                  TVarChar        -- сессия пользователя
 )
 RETURNS VOID
@@ -53,7 +56,7 @@ BEGIN
                                                       , inIsLoad            := TRUE
                                                       , inUserId            := vbUserId
                                                        )
-     FROM gpReport_CheckBonus (inStartDate:= inStartDate, inEndDate:= inEndDate, inSession:= inSession) AS tmp
+     FROM gpReport_CheckBonus (inStartDate:= inStartDate, inEndDate:= inEndDate, inPaidKindID:= inPaidKindID, inJuridicalId:= inJuridicalId, inSession:= inSession) AS tmp
      WHERE Sum_Bonus <> 0
     ;
 
@@ -64,6 +67,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 09.12.15         * 
  03.12.14         *
 */
 
