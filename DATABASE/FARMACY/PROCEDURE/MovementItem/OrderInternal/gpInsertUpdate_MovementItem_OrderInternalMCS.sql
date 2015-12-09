@@ -143,6 +143,8 @@ BEGIN
             Object_Price.MCSIsClose = False 
             AND
             Object_Price.UnitId = inUnitId
+            AND
+            Object_Price.isErased = FALSE
         GROUP BY
             Object_Price.UnitId,
             Object_Price.GoodsId,
