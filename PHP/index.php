@@ -64,7 +64,14 @@ if ($OutputType=='otMultiExecute')
       $i = 0;
       // заполняем прорцедуру параметрами из $dataitem
       foreach($dataitem->childNodes as $param) {
-         $ParamValues[$i] = iconv ('utf-8', 'windows-1251', $param->getAttribute('Value'));
+         if ($param->getAttribute('Value') == 'NULL') 
+         { 
+             $ParamValues[$i] = NULL;
+         }
+         else
+         {
+             $ParamValues[$i] = iconv ('utf-8', 'windows-1251', $param->getAttribute('Value'));
+         };
          $i = $i + 1;
       };
      $result = pg_send_query_params ($dbconn, $query, $ParamValues);

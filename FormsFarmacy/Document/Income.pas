@@ -96,6 +96,9 @@ type
     cxLabel14: TcxLabel;
     cxLabel16: TcxLabel;
     ceCorrOther: TcxCurrencyEdit;
+    chbIsPay: TcxCheckBox;
+    ‚ÛDateLastPay: TcxDateEdit;
+    cxLabel17: TcxLabel;
   private
     { Private declarations }
   public
