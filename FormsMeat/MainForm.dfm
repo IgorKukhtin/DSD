@@ -3523,16 +3523,7 @@ inherited MainForm: TMainForm
       FormName = 'TReport_WageForm'
       FormNameParam.Value = 'TReport_WageForm'
       FormNameParam.DataType = ftString
-      GuiParams = <
-        item
-          Name = 'CashId_top'
-          Value = '280296'
-        end
-        item
-          Name = 'CashName_top'
-          Value = #1050#1072#1089#1089#1072' '#1054#1076#1077#1089#1089#1072
-          DataType = ftString
-        end>
+      GuiParams = <>
       isShowModal = False
     end
     object actReport_Branch_Cash: TdsdOpenForm
@@ -3541,6 +3532,17 @@ inherited MainForm: TMainForm
       Caption = #1050#1072#1089#1089#1072' ('#1092#1080#1083#1080#1072#1083#1099')'
       FormName = 'TReport_Branch_CashForm'
       FormNameParam.Value = 'TReport_Branch_CashForm'
+      FormNameParam.DataType = ftString
+      GuiParams = <>
+      isShowModal = False
+    end
+    object actReport_SheetWorkTime: TdsdOpenForm
+      Category = #1055#1077#1088#1089#1086#1085#1072#1083
+      MoveParams = <>
+      Caption = #1054#1090#1095#1077#1090' '#1087#1086' '#1090#1072#1073#1077#1083#1102' '#1091#1095#1077#1090#1072' '#1088#1072#1073#1086#1095#1077#1075#1086' '#1074#1088#1077#1084#1077#1085#1080
+      Hint = #1054#1090#1095#1077#1090' '#1087#1086' '#1090#1072#1073#1077#1083#1102' '#1091#1095#1077#1090#1072' '#1088#1072#1073#1086#1095#1077#1075#1086' '#1074#1088#1077#1084#1077#1085#1080
+      FormName = 'TReport_SheetWorkTimeForm'
+      FormNameParam.Value = 'TReport_SheetWorkTimeForm'
       FormNameParam.DataType = ftString
       GuiParams = <>
       isShowModal = False
@@ -4037,6 +4039,9 @@ inherited MainForm: TMainForm
       end
       object mniReport_Wage: TMenuItem
         Action = actReport_Wage
+      end
+      object N89: TMenuItem
+        Action = actReport_SheetWorkTime
       end
     end
     object miReportsProduction: TMenuItem [8]
