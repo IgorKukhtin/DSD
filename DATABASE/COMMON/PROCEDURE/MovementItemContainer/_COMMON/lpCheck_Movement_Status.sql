@@ -292,7 +292,8 @@ BEGIN
 
   -- !!!временно!!!
   IF inUserId IN (128491 -- Хохлова Е.Ю. !!!временно!!!
-                , 5
+                -- , 5
+                -- , zc_Enum_Process_Auto_Pack()
                  )
   THEN RETURN;
   END IF;
