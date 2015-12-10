@@ -76,6 +76,13 @@ type
     AmountSale_Sh: TcxGridDBColumn;
     ExecuteDialog: TExecuteDialog;
     bbExecuteDialog: TdxBarButton;
+    OperDatePartner: TcxGridDBColumn;
+    OperDate: TcxGridDBColumn;
+    SumSale: TcxGridDBColumn;
+    PriceSale: TcxGridDBColumn;
+    Article: TcxGridDBColumn;
+    InvNumberOrderPartner: TcxGridDBColumn;
+    InvNumber: TcxGridDBColumn;
   private
     { Private declarations }
   public

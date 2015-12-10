@@ -120,7 +120,7 @@ BEGIN
                 INNER JOIN Movement AS Movement_Master ON Movement_Master.Id  = MovementLinkMovement_Master.MovementId
                                                       AND Movement_Master.StatusId = zc_Enum_Status_Complete()
                 LEFT JOIN MovementBoolean AS MovementBoolean_isPartner
-                                          ON MovementBoolean_isPartner.MovementId = Movement_Master.Id
+                                          ON MovementBoolean_isPartner.MovementId = Movement.Id
                                          AND MovementBoolean_isPartner.DescId = zc_MovementBoolean_isPartner()   
 
            WHERE Movement.Id = inMovementId

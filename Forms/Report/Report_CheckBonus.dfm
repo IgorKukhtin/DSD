@@ -643,6 +643,20 @@ inherited Report_CheckBonusForm: TReport_CheckBonusForm
         Component = deEnd
         DataType = ftDateTime
         ParamType = ptInput
+      end
+      item
+        Name = 'inPaidKindId'
+        Value = Null
+        Component = PaidKindGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inJuridicalId'
+        Value = Null
+        Component = JuridicalGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
       end>
     PackSize = 1
     Left = 368

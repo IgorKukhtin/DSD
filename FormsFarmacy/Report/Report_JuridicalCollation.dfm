@@ -142,11 +142,38 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
               Format = ',0.00##'
               Kind = skSum
               Column = colSumm_Currency
+            end
+            item
+              Format = ',0.00'
+              Kind = skSum
+              FieldName = 'KreditFinal'
+              Column = colKredit
+            end
+            item
+              Format = ',0.00##;-,0.00##; '
+              Kind = skSum
+              Column = colCorrBonus
+            end
+            item
+              Format = ',0.00##;-,0.00##; '
+              Kind = skSum
+              Column = colSummaReturnOut
+            end
+            item
+              Format = ',0.00##;-,0.00##; '
+              Kind = skSum
+              Column = colCorrOther
+            end
+            item
+              Format = ',0.00##;-,0.00##; '
+              Kind = skSum
+              Column = colKreditFinal
             end>
           OptionsData.CancelOnExit = True
           OptionsData.Deleting = False
           OptionsData.DeletingConfirmation = False
           OptionsData.Editing = False
+          OptionsView.FooterMultiSummaries = True
           OptionsView.GroupByBox = True
           Styles.Content = nil
           Styles.Inactive = nil
@@ -225,6 +252,44 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 80
+          end
+          object colCorrBonus: TcxGridDBColumn
+            Caption = #1050#1086#1088#1088'. '#1087#1086' '#1073#1086#1085#1091#1089#1091
+            DataBinding.FieldName = 'CorrBonus'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.00##;-,0.00##; '
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 75
+          end
+          object colSummaReturnOut: TcxGridDBColumn
+            Caption = #1050#1086#1088#1088'. '#1087#1086' '#1074#1086#1079#1074#1088#1072#1090#1091
+            DataBinding.FieldName = 'SummaReturnOut'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.00##;-,0.00##; '
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+          end
+          object colCorrOther: TcxGridDBColumn
+            Caption = #1050#1086#1088#1088'. '#1087#1088#1086#1095#1072#1103
+            DataBinding.FieldName = 'CorrOther'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.00##;-,0.00##; '
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 75
+          end
+          object colKreditFinal: TcxGridDBColumn
+            Caption = #1050#1088#1077#1076#1080#1090' '#1073#1077#1079' '#1082#1086#1088#1088'.'
+            DataBinding.FieldName = 'KreditWithOutCorr'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.00##;-,0.00##; '
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 79
           end
           object colEndRemains: TcxGridDBColumn
             Caption = #1050#1086#1085'. '#1076#1086#1083#1075' ('#1040#1082#1090#1080#1074')'

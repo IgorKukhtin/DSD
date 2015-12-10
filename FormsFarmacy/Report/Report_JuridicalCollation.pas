@@ -83,6 +83,10 @@ type
     CurrencyName: TcxGridDBColumn;
     actPrintCurrency: TdsdPrintAction;
     bbPrintCurrency: TdxBarButton;
+    colCorrBonus: TcxGridDBColumn;
+    colCorrOther: TcxGridDBColumn;
+    colKreditFinal: TcxGridDBColumn;
+    colSummaReturnOut: TcxGridDBColumn;
   private
     { Private declarations }
   public
