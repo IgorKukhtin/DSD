@@ -361,6 +361,7 @@ BEGIN
                                                     -- AND MIContainer.OperDate BETWEEN inStartDate AND inEndDate
                                                     AND MIContainer.MovementDescId = zc_Movement_SendOnPrice()
                                                     AND COALESCE (MIContainer.AnalyzerId, 0) <> zc_Enum_AnalyzerId_LossCount_20200() -- Кол-во, списание при реализации/перемещении по цене
+                                                    -- AND COALESCE (MIContainer.AccountId, 0) <> 12102 -- 
                                                     AND MIContainer.isActive = TRUE
                                                         THEN MIContainer.Amount
                                                    ELSE 0
@@ -369,6 +370,7 @@ BEGIN
                                                     -- AND MIContainer.OperDate BETWEEN inStartDate AND inEndDate
                                                     AND MIContainer.MovementDescId = zc_Movement_SendOnPrice()
                                                     AND COALESCE (MIContainer.AnalyzerId, 0) <> zc_Enum_AnalyzerId_LossCount_20200() -- Кол-во, списание при реализации/перемещении по цене
+                                                    -- AND COALESCE (MIContainer.AccountId, 0) <> 12102 -- 
                                                     AND MIContainer.isActive = FALSE
                                                         THEN -1 * MIContainer.Amount
                                                    ELSE 0
@@ -524,12 +526,14 @@ BEGIN
                                                    AND MovementBoolean_HistoryCost.ValueData = TRUE
                                                    AND _tmpContainer.AccountGroupId = zc_Enum_AccountGroup_60000() -- Прибыль будущих периодов
                                                    AND COALESCE (MIContainer.AnalyzerId, 0) <> zc_Enum_AnalyzerId_LossSumm_20200() -- Сумма с/с, списание при реализации/перемещении по цене
+                                                   -- AND COALESCE (MIContainer.AccountId, 0) <> 12102 -- 
                                                        THEN MIContainer.Amount
                                                   WHEN _tmpContainer.ContainerDescId = zc_Container_Summ()
                                                    -- AND MIContainer.OperDate BETWEEN inStartDate AND inEndDate
                                                    AND MIContainer.MovementDescId = zc_Movement_SendOnPrice()
                                                    AND MIContainer.isActive = TRUE
                                                    AND _tmpContainer.AccountGroupId <> zc_Enum_AccountGroup_60000() -- Прибыль будущих периодов
+                                                   -- AND COALESCE (MIContainer.AccountId, 0) <> 12102 -- 
                                                    AND COALESCE (MIContainer.AnalyzerId, 0) <> zc_Enum_AnalyzerId_LossSumm_20200() -- Сумма с/с, списание при реализации/перемещении по цене
                                                        THEN MIContainer.Amount
                                                   ELSE 0
@@ -539,6 +543,7 @@ BEGIN
                                                    AND MIContainer.MovementDescId = zc_Movement_SendOnPrice()
                                                    AND COALESCE (MovementBoolean_HistoryCost.ValueData, FALSE) = FALSE
                                                    AND _tmpContainer.AccountGroupId = zc_Enum_AccountGroup_60000() -- Прибыль будущих периодов
+                                                   -- AND COALESCE (MIContainer.AccountId, 0) <> 12102 -- 
                                                    AND COALESCE (MIContainer.AnalyzerId, 0) <> zc_Enum_AnalyzerId_LossSumm_20200() -- Сумма с/с, списание при реализации/перемещении по цене
                                                        THEN -1 * MIContainer.Amount
                                                   WHEN _tmpContainer.ContainerDescId = zc_Container_Summ()
@@ -546,6 +551,7 @@ BEGIN
                                                    AND MIContainer.MovementDescId = zc_Movement_SendOnPrice()
                                                    AND MIContainer.isActive = FALSE
                                                    AND _tmpContainer.AccountGroupId <> zc_Enum_AccountGroup_60000() -- Прибыль будущих периодов
+                                                   -- AND COALESCE (MIContainer.AccountId, 0) <> 12102 -- 
                                                    AND COALESCE (MIContainer.AnalyzerId, 0) <> zc_Enum_AnalyzerId_LossSumm_20200() -- Сумма с/с, списание при реализации/перемещении по цене
                                                        THEN -1 * MIContainer.Amount
                                                   ELSE 0

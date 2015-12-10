@@ -274,6 +274,7 @@ BEGIN
                                                             AND MIContainer.isActive  = TRUE
                                                             AND MIContainer.WhereObjectId_analyzer = tmp.UnitId
                                                             AND MIContainer.ObjectExtId_Analyzer   = tmp.UnitId_by
+                                                            AND COALESCE (MIContainer.AccountId, 0) <> 12102 -- zc_Enum_AccountGroup_110000()
                             LEFT JOIN MovementItemFloat AS MIFloat_Price
                                                         ON MIFloat_Price.MovementItemId = MIContainer.MovementItemId
                                                        AND MIFloat_Price.DescId = zc_MIFloat_Price()
