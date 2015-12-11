@@ -4,7 +4,7 @@ DROP FUNCTION IF EXISTS gpSelect_Movement_Sale_Print (Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_Movement_Sale_Print(
     IN inMovementId        Integer  , -- ключ Документа
-    IN inSession       TVarChar    -- сессия пользователя
+    IN inSession           TVarChar    -- сессия пользователя
 )
 RETURNS SETOF refcursor
 AS
@@ -36,11 +36,14 @@ $BODY$
     DECLARE vbStoreKeeperName TVarChar;
     DECLARE vbIsInfoMoney_30201 Boolean;
 
+    DECLARE vbKh Integer;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Select_Movement_Sale());
      vbUserId:= lpGetUserBySession (inSession);
 
+     -- !!! для Харькова, выбираем склад ГП Харьков, понятно что временно!!! )))      
+     vbKh := (SELECT Object.Id FROM Object WHERE Object.DescId = zc_Object_Unit() AND Object.Id = 8425 );
 
      -- параметры из Взвешивания
      vbStoreKeeperName:= (SELECT Object_User.ValueData
@@ -429,6 +432,8 @@ BEGIN
              END AS Price_info
 
            , vbIsInfoMoney_30201 AS isInfoMoney_30201
+
+           , CASE WHEN Object_From.Id = vbKh THEN 'Дніпропетровськ' ELSE '' END :: TVarChar   AS PlaceOf 
        FROM Movement
             LEFT JOIN MovementLinkMovement AS MovementLinkMovement_Sale
                                            ON MovementLinkMovement_Sale.MovementId = Movement.Id

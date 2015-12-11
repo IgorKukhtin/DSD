@@ -201,6 +201,7 @@ inherited Report_UploadBaDMForm: TReport_UploadBaDMForm
       HideHeader = True
       Separator = ';'
       DefaultFileExt = 'csv'
+      EncodingANSI = True
     end
   end
   inherited MasterDS: TDataSource

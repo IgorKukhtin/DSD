@@ -158,6 +158,8 @@ begin
 end;
 
 procedure TForm1.btnBaDMExportClick(Sender: TObject);
+var
+  sl : TStringList;
 begin
   Add_Log('Начало выгрузки отчета БаДМ');
   if not ForceDirectories(SavePathBaDM) then
@@ -169,6 +171,13 @@ begin
   try
     try
       ExportGridToText(SavePathBaDM+FileNameBaDM,grBaDM,true,true,';','','','csv');
+      sl := TStringList.Create;
+      try
+        sl.LoadFromFile(SavePathBaDM+FileNameBaDM);
+        sl.SaveToFile(SavePathBaDM+FileNameBaDM,TEncoding.ANSI);
+      finally
+        sl.Free;
+      end;
     except ON E: Exception DO
       Begin
         Add_Log(E.Message);

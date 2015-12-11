@@ -19,7 +19,7 @@ object Form1: TForm1
     Top = 0
     Width = 909
     Height = 521
-    ActivePage = tsBaDM
+    ActivePage = tsOptima
     Align = alClient
     TabOrder = 0
     object tsOptima: TTabSheet
