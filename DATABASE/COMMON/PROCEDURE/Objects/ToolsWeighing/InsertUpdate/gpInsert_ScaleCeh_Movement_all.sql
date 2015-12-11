@@ -531,6 +531,7 @@ BEGIN
                                                         ON MIString_PartionGoods.MovementItemId = MovementItem.Id
                                                        AND MIString_PartionGoods.DescId = zc_MIString_PartionGoods()
                                                        AND vbMovementDescId <> zc_Movement_ProductionSeparate() -- !!!надо убрать партии, т.к. в UNION их нет!!!
+                                                       AND vbMovementDescId <> zc_Movement_ProductionUnion() -- !!!надо убрать партии, т.к. в UNION их нет!!!
 
                            LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
                                                             ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
@@ -657,7 +658,7 @@ BEGIN
                           SELECT MAX (MovementItem.Id) AS MovementItemId
                                , MovementItem.ObjectId AS GoodsId
                           FROM MovementItem
-                          WHERE MovementItem.MovementId = vbMovementId_find
+                          WHERE MovementItem.MovementId = vbMovementId_begin -- 
                             AND MovementItem.DescId     = zc_MI_Master()
                             AND MovementItem.isErased   = FALSE
                           GROUP BY MovementItem.ObjectId

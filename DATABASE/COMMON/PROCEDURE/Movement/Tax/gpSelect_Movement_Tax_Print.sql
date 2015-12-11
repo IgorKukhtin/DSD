@@ -133,7 +133,7 @@ BEGIN
            , Movement.OperDate                          AS OperDate
            , CASE WHEN Movement.OperDate < '01.01.2015' THEN 'J1201006' ELSE 'J1201007' END ::TVarChar AS CHARCODE
            -- , 'Неграш О.В.'::TVarChar                    AS N10
-           , COALESCE (Object_Personal_View.PersonalName, 'Рудик Н.В.') :: TVarChar AS N10
+           , CASE WHEN Object_Personal_View.PersonalName <> '' THEN zfConvert_FIO (Object_Personal_View.PersonalName, 1) ELSE 'Рудик Н.В.' END :: TVarChar AS N10
            , 'оплата з поточного рахунка'::TVarChar     AS N9
 /*
            , CASE WHEN OH_JuridicalDetails_To.INN = vbNotNDSPayer_INN
@@ -205,7 +205,7 @@ BEGIN
            , OH_JuridicalDetails_From.OKPO              AS OKPO_From
            , OH_JuridicalDetails_From.INN               AS INN_From
            , OH_JuridicalDetails_From.NumberVAT         AS NumberVAT_From
-           , COALESCE (zfConvert_FIO(Object_Personal_View.PersonalName,1), OH_JuridicalDetails_From.AccounterName) :: TVarChar AS AccounterName_From
+           , CASE WHEN Object_Personal_View.PersonalName <> '' THEN zfConvert_FIO (Object_Personal_View.PersonalName, 1) ELSE 'Рудик Н.В.' END :: TVarChar AS AccounterName_From
            , OH_JuridicalDetails_From.BankAccount       AS BankAccount_From
            , OH_JuridicalDetails_From.BankName          AS BankName_From
            , OH_JuridicalDetails_From.MFO               AS BankMFO_From
