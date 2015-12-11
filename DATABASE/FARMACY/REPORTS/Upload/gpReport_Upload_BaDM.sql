@@ -79,11 +79,11 @@ BEGIN
            ,Object_Goods_View.GoodsCode   AS GoodsCode
            ,Object_Goods_View.GoodsName   AS GoodsName
         FROM Object_Goods_View
-            JOIN Object_LinkGoods_View AS LinkGoods_Partner_Main
-                                       ON LinkGoods_Partner_Main.GoodsId = Object_Goods_View.id -- Связь товара поставщика с общим
-            JOIN Object_LinkGoods_View AS LinkGoods_Main_Retail -- связь товара сети с главным товаром
-                                       ON LinkGoods_Main_Retail.GoodsMainId = LinkGoods_Partner_Main.GoodsMainId
-                                      AND LinkGoods_Main_Retail.ObjectId = vbObjectIdRetail
+            LEFT JOIN Object_LinkGoods_View AS LinkGoods_Partner_Main
+                                            ON LinkGoods_Partner_Main.GoodsId = Object_Goods_View.id -- Связь товара поставщика с общим
+            LEFT JOIN Object_LinkGoods_View AS LinkGoods_Main_Retail -- связь товара сети с главным товаром
+                                            ON LinkGoods_Main_Retail.GoodsMainId = LinkGoods_Partner_Main.GoodsMainId
+                                           AND LinkGoods_Main_Retail.ObjectId = vbObjectIdRetail
         WHERE
             Object_Goods_View.ObjectId = inObjectId
             AND
@@ -210,8 +210,6 @@ BEGIN
             LEFT OUTER JOIN SaleAndRemains ON SaleAndRemains.UnitId = _Cross.UnitId
                                           AND SaleAndRemains.GoodsId = _Cross.GoodsId
                                           AND SaleAndRemains.OperCode = _Cross.OperCode
-            LEFT OUTER JOIN Object AS Object_Goods
-                                   ON Object_Goods.Id = _Cross.GoodsId
             LEFT OUTER JOIN Object AS Object_Unit
                                    ON Object_Unit.Id = _Cross.UnitId
         GROUP BY
