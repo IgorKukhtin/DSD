@@ -18,6 +18,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , PaymentDate TDateTime, PaySumm TFloat, SaleSumm TFloat
              , InvNumberBranch TVarChar, BranchDate TDateTime, Checked Boolean 
              , CorrBonus TFloat, CorrOther TFloat, PayColor Integer
+             , DateLastPay TDateTime
               )
 
 AS
@@ -41,6 +42,15 @@ BEGIN
         , tmpRoleAccessKey AS (SELECT AccessKeyId FROM Object_RoleAccessKey_View WHERE UserId = vbUserId AND NOT EXISTS (SELECT UserId FROM tmpUserAdmin) GROUP BY AccessKeyId
                          UNION SELECT AccessKeyId FROM Object_RoleAccessKey_View WHERE EXISTS (SELECT UserId FROM tmpUserAdmin) GROUP BY AccessKeyId
                               )
+        , MovementBankAccount AS (  SELECT MovementBankAccount.OperDate, MLM_BankAccount_Income.MovementChildId
+                                    FROM Movement AS MovementBankAccount
+                                        INNER JOIN MovementLinkMovement AS MLM_BankAccount_Income
+                                                                        ON MLM_BankAccount_Income.MovementId = MovementBankAccount.ID
+                                                                       AND MLM_BankAccount_Income.DescId = zc_MovementLinkMovement_Child()
+                                    WHERE
+                                        MovementBankAccount.DescId = zc_Movement_BankAccount()
+                                        AND
+                                        MovementBankAccount.StatusId = zc_Enum_Status_Complete())
 
        SELECT
              Movement_Income_View.Id
@@ -73,8 +83,10 @@ BEGIN
            , Movement_Income_View.CorrBonus
            , Movement_Income_View.CorrOther
            , CASE WHEN Movement_Income_View.PaySumm <= 0.01 THEN zc_Color_Goods_Additional() END::Integer AS PayColor
+           , MovementBankAccount.OperDate AS DateLastPay
        FROM Movement_Income_View 
              JOIN tmpStatus ON tmpStatus.StatusId = Movement_Income_View.StatusId 
+             LEFT OUTER JOIN MovementBankAccount ON MovementBankAccount.MovementChildId = Movement_Income_View.Id
              WHERE Movement_Income_View.OperDate BETWEEN inStartDate AND inEndDate;
 
 
@@ -87,6 +99,7 @@ ALTER FUNCTION gpSelect_Movement_Income (TDateTime, TDateTime, Boolean, TVarChar
 /*
  ÈÑÒÎÐÈß ÐÀÇÐÀÁÎÒÊÈ: ÄÀÒÀ, ÀÂÒÎÐ
                Ôåëîíþê È.Â.   Êóõòèí È.Â.   Êëèìåíòüåâ Ê.È.   Ìàíüêî Ä.À.   Âîðîáêàëî À.À.
+ 10.12.15                                                                        *
  08.12.15                                                                        *
  28.04.15                        *
  11.02.15                        *

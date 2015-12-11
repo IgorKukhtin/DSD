@@ -259,12 +259,15 @@ WITH LOSS AS ( SELECT
       END IF;    
    */
      PERFORM lpInsertUpdate_MovementItemContainer_byTable();
-    
+
      -- 5.2. ФИНИШ - Обязательно меняем статус документа + сохранили протокол
      PERFORM lpComplete_Movement (inMovementId := inMovementId
                                 , inDescId     := zc_Movement_Loss()
                                 , inUserId     := inUserId
                                  );
+    --пересчитываем сумму документа по приходным ценам
+    PERFORM lpInsertUpdate_MovementFloat_TotalSummLossAfterComplete(inMovementId);    
+    
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;

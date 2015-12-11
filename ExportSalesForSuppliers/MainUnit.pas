@@ -339,8 +339,8 @@ Begin
     BaDMID.Value := ini.ReadInteger('Options','BaDM_ID',59610);
     ini.WriteInteger('Options','BaDM_ID',BaDMID.Value);
 
-    BaDMID.Value := ini.ReadInteger('Options','Optima_ID',59611);
-    ini.WriteInteger('Options','Optima_ID',BaDMID.Value);
+    OptimaID.Value := ini.ReadInteger('Options','Optima_ID',59611);
+    ini.WriteInteger('Options','Optima_ID',OptimaID.Value);
 
     ZConnection1.Database := ini.ReadString('Connect','DataBase','farmacy');
     ini.WriteString('Connect','DataBase',ZConnection1.Database);

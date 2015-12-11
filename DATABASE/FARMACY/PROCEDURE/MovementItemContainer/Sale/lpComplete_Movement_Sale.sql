@@ -75,6 +75,8 @@ BEGIN
                     WHERE 
                         Container.Amount > 0 
                         AND
+                        Container.DescId = zc_Container_Count()
+                        AND
                         Container.WhereObjectId = vbUnitId
                 ), 
   
