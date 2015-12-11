@@ -158,6 +158,8 @@ begin
 end;
 
 procedure TForm1.btnBaDMExportClick(Sender: TObject);
+var
+  sl : TStringList;
 begin
   Add_Log('Начало выгрузки отчета БаДМ');
   if not ForceDirectories(SavePathBaDM) then
@@ -169,6 +171,13 @@ begin
   try
     try
       ExportGridToText(SavePathBaDM+FileNameBaDM,grBaDM,true,true,';','','','csv');
+      sl := TStringList.Create;
+      try
+        sl.LoadFromFile(SavePathBaDM+FileNameBaDM);
+        sl.SaveToFile(SavePathBaDM+FileNameBaDM,TEncoding.ANSI);
+      finally
+        sl.Free;
+      end;
     except ON E: Exception DO
       Begin
         Add_Log(E.Message);
@@ -330,8 +339,8 @@ Begin
     BaDMID.Value := ini.ReadInteger('Options','BaDM_ID',59610);
     ini.WriteInteger('Options','BaDM_ID',BaDMID.Value);
 
-    BaDMID.Value := ini.ReadInteger('Options','Optima_ID',59611);
-    ini.WriteInteger('Options','Optima_ID',BaDMID.Value);
+    OptimaID.Value := ini.ReadInteger('Options','Optima_ID',59611);
+    ini.WriteInteger('Options','Optima_ID',OptimaID.Value);
 
     ZConnection1.Database := ini.ReadString('Connect','DataBase','farmacy');
     ini.WriteString('Connect','DataBase',ZConnection1.Database);

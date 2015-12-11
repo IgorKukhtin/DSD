@@ -249,6 +249,11 @@ inherited IncomeJournalForm: TIncomeJournalForm
             Visible = False
             VisibleForCustomization = False
           end
+          object colDateLastPay: TcxGridDBColumn
+            Caption = #1044#1072#1090#1072' '#1086#1087#1083#1072#1090#1099' '#1087#1086' '#1073#1072#1085#1082#1091
+            DataBinding.FieldName = 'DateLastPay'
+            Width = 85
+          end
         end
       end
     end

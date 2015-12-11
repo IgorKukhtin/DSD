@@ -63,6 +63,9 @@ BEGIN
      -- Распроводим Документ
      PERFORM lpUnComplete_Movement (inMovementId := inMovementId
                                   , inUserId     := vbUserId);
+    --пересчитываем сумму документа по приходным ценам
+    PERFORM lpInsertUpdate_MovementFloat_TotalSummLossAfterComplete(inMovementId);    
+    
 
 END;
 $BODY$

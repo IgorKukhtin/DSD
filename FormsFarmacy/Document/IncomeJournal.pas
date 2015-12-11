@@ -53,6 +53,7 @@ type
     colChecked: TcxGridDBColumn;
     colJuridicalName: TcxGridDBColumn;
     colPayColor: TcxGridDBColumn;
+    colDateLastPay: TcxGridDBColumn;
   private
     { Private declarations }
   public

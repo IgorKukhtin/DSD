@@ -707,7 +707,7 @@ BEGIN
                                             THEN HistoryCost.Summ_diff -- !!!если есть "погрешность" при округлении, добавили сумму!!!
                                        ELSE COALESCE (HistoryCost.Summ_diff, 0) -- !!!временно не смотрим на знак!!!
                                   END)
-                    ELSE SUM (CAST (_tmpItem.OperCount * COALESCE (HistoryCost.Price, 0) AS NUMERIC (16,4)) -- ABS
+                   ELSE SUM (CAST (_tmpItem.OperCount * COALESCE (HistoryCost.Price, 0) AS NUMERIC (16,4)) -- ABS
                            + CASE WHEN _tmpItem.MovementItemId = HistoryCost.MovementItemId_diff AND CAST (_tmpItem.OperCount * COALESCE (HistoryCost.Price, 0) AS NUMERIC (16,4)) >= -1 * HistoryCost.Summ_diff
                                        THEN HistoryCost.Summ_diff -- !!!если есть "погрешность" при округлении, добавили сумму!!!
                                   ELSE COALESCE (HistoryCost.Summ_diff, 0) -- !!!временно не смотрим на знак!!!
@@ -974,7 +974,11 @@ BEGIN
                   , _tmpItemSumm.ContainerId_Transit
                   , zc_Enum_AnalyzerId_SendSumm_in()        AS AnalyzerId -- Сумма с/с, перемещение по цене, перемещение, пришло
                   , CASE WHEN _tmpItemSumm.isLossMaterials = TRUE OR _tmpItemSumm.isRestoreAccount_60000 = TRUE THEN 0 ELSE _tmpItemSumm.MIContainerId_To END AS ParentId -- хотя он здесь и так =0
-                  , _tmpItemSumm.OperSumm_Partner           AS OperSumm
+                  , CASE WHEN _tmpItemSumm.InfoMoneyId_From        = zc_Enum_InfoMoney_80401() -- прибыль текущего периода
+                           OR _tmpItemSumm.InfoMoneyId_Detail_From = zc_Enum_InfoMoney_80401() -- прибыль текущего периода
+                              THEN _tmpItemSumm.OperSumm
+                         ELSE _tmpItemSumm.OperSumm_Partner
+                    END AS OperSumm
                   , FALSE                                   AS isActive
              FROM _tmpItemSumm
              WHERE _tmpItemSumm.OperSumm_Partner <> 0   -- !!!нулевые не нужны!!!
@@ -991,6 +995,8 @@ BEGIN
                   , FALSE                                   AS isActive
              FROM _tmpItemSumm
              WHERE (_tmpItemSumm.OperSumm - _tmpItemSumm.OperSumm_ChangePercent) <> 0 -- !!!нулевые не нужны!!!
+               AND _tmpItemSumm.InfoMoneyId_From        <> zc_Enum_InfoMoney_80401() -- прибыль текущего периода
+               AND _tmpItemSumm.InfoMoneyId_Detail_From <> zc_Enum_InfoMoney_80401() -- прибыль текущего периода
                AND _tmpItemSumm.isLossMaterials = FALSE -- !!!если НЕ списание!!!
             UNION ALL
              SELECT _tmpItemSumm.MovementItemId
@@ -1004,6 +1010,8 @@ BEGIN
                   , FALSE                                  AS isActive
              FROM _tmpItemSumm
              WHERE (_tmpItemSumm.OperSumm_ChangePercent - _tmpItemSumm.OperSumm_Partner) <> 0 -- !!!нулевые не нужны!!!
+               AND _tmpItemSumm.InfoMoneyId_From        <> zc_Enum_InfoMoney_80401() -- прибыль текущего периода
+               AND _tmpItemSumm.InfoMoneyId_Detail_From <> zc_Enum_InfoMoney_80401() -- прибыль текущего периода
                AND _tmpItemSumm.isLossMaterials = FALSE -- !!!если НЕ списание!!!
             )
        -- результат

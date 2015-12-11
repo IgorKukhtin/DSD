@@ -201,7 +201,7 @@ BEGIN
            , Movement.OperDate				                                AS OperDate
            , 'J1201006'::TVarChar                                           AS CHARCODE
            -- , 'Неграш О.В.'::TVarChar                                        AS N10
-           , COALESCE (Object_Personal_View.PersonalName, 'Рудик Н.В.') :: TVarChar AS N10
+           , CASE WHEN Object_Personal_View.PersonalName <> '' THEN zfConvert_FIO (Object_Personal_View.PersonalName, 1) ELSE 'Рудик Н.В.' END :: TVarChar AS N10
            -- , 'А.В. МАРУХНО'::TVarChar                                        AS N10
            , 'оплата з поточного рахунка'::TVarChar                         AS N9
            , CASE WHEN MovementLinkObject_DocumentTaxKind.ObjectId = zc_Enum_DocumentTaxKind_CorrectivePrice()
@@ -273,7 +273,7 @@ BEGIN
            , OH_JuridicalDetails_To.INN                                     AS INN_To
            , OH_JuridicalDetails_To.NumberVAT                               AS NumberVAT_To
          -- , COALESCE (Object_Personal_View.PersonalName, OH_JuridicalDetails_To.AccounterName) :: TVarChar AS AccounterName_To 
-           , CASE WHEN COALESCE(Object_Personal_View.PersonalName,'') <> '' THEN zfConvert_FIO(Object_Personal_View.PersonalName,1) ELSE 'А.В. Марухно' END  :: TVarChar AS AccounterName_To
+           , CASE WHEN COALESCE (Object_Personal_View.PersonalName,'') <> '' THEN zfConvert_FIO (Object_Personal_View.PersonalName, 1) ELSE 'Рудик Н.В.' /*'А.В. Марухно'*/ END  :: TVarChar AS AccounterName_To
            , OH_JuridicalDetails_To.BankAccount                             AS BankAccount_To
            , OH_JuridicalDetails_To.BankName                                AS BankName_To
            , OH_JuridicalDetails_To.MFO                                     AS BankMFO_To

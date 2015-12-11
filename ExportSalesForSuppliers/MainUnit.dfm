@@ -394,13 +394,8 @@ object Form1: TForm1
   end
   object ZConnection1: TZConnection
     ControlsCodePage = cCP_UTF16
-    HostName = '91.210.37.210'
     Port = 5432
-    Database = 'farmacy_test'
-    User = 'postgres'
-    Password = 'postgres'
     Protocol = 'postgresql-9'
-    LibraryLocation = 'C:\POLAK\test\SavePriceToXls\Win32\Debug\libpq.dll'
     Left = 120
     Top = 112
   end

@@ -95,7 +95,8 @@ BEGIN
                         )
   , tmpMI_promo_all AS (SELECT MI_PromoGoods.Id AS MovementItemId
                              , MI_PromoGoods.GoodsId
-                             , COALESCE (MI_PromoGoods.GoodsKindId, 0) AS GoodsKindId
+                             -- !!!, COALESCE (MI_PromoGoods.GoodsKindId, 0) AS GoodsKindId
+                             , 0 AS GoodsKindId
                              , MI_PromoGoods.isErased
                         FROM MovementItem_PromoGoods_View AS MI_PromoGoods
                         WHERE MI_PromoGoods.MovementId = inMovementId

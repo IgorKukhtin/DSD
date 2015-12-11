@@ -39,6 +39,7 @@ BEGIN
                             LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
                                                              ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
                                                             AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
+                                                            AND 1 = 0 -- !!!
 
                        WHERE MovementDate_StartSale.ValueData <= inOperDate
                          AND MovementDate_StartSale.DescId = zc_MovementDate_StartSale()
@@ -65,7 +66,8 @@ BEGIN
                        WHERE (MILinkObject_Contract.ObjectId = inContractId OR COALESCE (MILinkObject_Contract.ObjectId, 0) = 0)
                          AND (MLO_Unit.ObjectId              = inUnitId     OR COALESCE (MLO_Unit.ObjectId, 0) = 0)
                       )
-        SELECT tmpResult.MovementId
+        SELECT DISTINCT
+               tmpResult.MovementId
              , tmpResult.TaxPromo
              , COALESCE (MIFloat_PriceWithOutVAT.ValueData, 0) :: TFloat AS PriceWithOutVAT
              , COALESCE (MIFloat_PriceWithVAT.ValueData, 0)    :: TFloat AS PriceWithVAT

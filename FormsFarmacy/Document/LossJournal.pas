@@ -14,7 +14,8 @@ uses
   cxCalendar, Vcl.ExtCtrls, cxGridLevel, cxGridCustomTableView, cxGridTableView,
   cxGridDBTableView, cxGridCustomView, cxGrid, cxPC, cxCheckBox, cxCurrencyEdit,
   cxButtonEdit, dsdGuides, frxClass, frxDBSet,
-  dxBarBuiltInMenu, cxNavigator;
+  dxBarBuiltInMenu, cxNavigator, dxSkinsCore, dxSkinsDefaultPainters,
+  dxSkinscxPCPainter, cxCalc;
 
 type
   TLossJournalForm = class(TAncestorJournalForm)
@@ -27,6 +28,7 @@ type
     bbPrint: TdxBarButton;
     ArticleLossName: TcxGridDBColumn;
     spGet: TdsdStoredProc;
+    colTotalSumm: TcxGridDBColumn;
   private
     { Private declarations }
   public

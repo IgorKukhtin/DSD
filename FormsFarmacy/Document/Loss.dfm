@@ -42,6 +42,16 @@ inherited LossForm: TLossForm
             item
               Format = ',0.####'
               Kind = skSum
+            end
+            item
+              Format = ',0.00'
+              Kind = skSum
+              Column = colSumm
+            end
+            item
+              Format = ',0.00'
+              Kind = skSum
+              Column = colSummIn
             end>
           OptionsBehavior.FocusCellOnCycle = False
           OptionsCustomize.DataRowSizing = False
@@ -59,14 +69,14 @@ inherited LossForm: TLossForm
             DataBinding.FieldName = 'GoodsCode'
             HeaderAlignmentHorz = taCenter
             Options.Editing = False
-            Width = 105
+            Width = 70
           end
           object colName: TcxGridDBColumn [1]
             Caption = #1058#1086#1074#1072#1088
             DataBinding.FieldName = 'GoodsName'
             HeaderAlignmentHorz = taCenter
             Options.Editing = False
-            Width = 458
+            Width = 253
           end
           object colAmount: TcxGridDBColumn [2]
             Caption = #1050#1086#1083'-'#1074#1086
@@ -77,19 +87,46 @@ inherited LossForm: TLossForm
             HeaderAlignmentHorz = taCenter
             Width = 93
           end
-          object colPrice: TcxGridDBColumn
-            Caption = #1062#1077#1085#1072
+          object colPrice: TcxGridDBColumn [3]
+            Caption = #1062#1077#1085#1072' '#1088#1077#1072#1083#1080#1079'.'
             DataBinding.FieldName = 'Price'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DisplayFormat = ',0.00;-,0.00'
+            HeaderAlignmentHorz = taCenter
             Options.Editing = False
-            Width = 42
+            Width = 68
           end
-          object colRemains_Amount: TcxGridDBColumn
+          object colSumm: TcxGridDBColumn [4]
+            Caption = #1057#1091#1084#1084#1072' '#1088#1077#1072#1083'.'
+            DataBinding.FieldName = 'Summ'
+            HeaderAlignmentHorz = taCenter
+            HeaderHint = #1057#1091#1084#1084#1072' '#1074' '#1094#1077#1085#1072#1093' '#1088#1077#1072#1083#1080#1079#1072#1094#1080#1080
+            Options.Editing = False
+            Width = 69
+          end
+          object colRemains_Amount: TcxGridDBColumn [5]
             Caption = #1054#1089#1090#1072#1090#1086#1082
             DataBinding.FieldName = 'Remains_Amount'
+            HeaderAlignmentHorz = taCenter
             Options.Editing = False
-            Width = 57
+            Width = 63
+          end
+          object colPriceIn: TcxGridDBColumn [6]
+            Caption = #1062#1077#1085#1072' '#1087#1088#1080#1093#1086#1076
+            DataBinding.FieldName = 'PriceIn'
+            HeaderAlignmentHorz = taCenter
+            Options.Editing = False
+            Width = 71
+          end
+          object colSummIn: TcxGridDBColumn [7]
+            Caption = #1057#1091#1084#1084#1072' '#1087#1088#1080#1093#1086#1076
+            DataBinding.FieldName = 'SummIn'
+            HeaderAlignmentHorz = taCenter
+            Options.Editing = False
+            Width = 71
+          end
+          inherited colIsErased: TcxGridDBColumn
+            HeaderAlignmentHorz = taCenter
           end
         end
       end
@@ -796,20 +833,34 @@ inherited LossForm: TLossForm
         ParamType = ptInput
       end
       item
+        Name = 'inPrice'
         Value = Null
-        ParamType = ptUnknown
+        Component = MasterCDS
+        ComponentItem = 'Price'
+        DataType = ftFloat
+        ParamType = ptInput
       end
       item
+        Name = 'inPriceIn'
         Value = Null
-        ParamType = ptUnknown
+        Component = MasterCDS
+        ComponentItem = 'PriceIn'
+        DataType = ftFloat
+        ParamType = ptInput
       end
       item
+        Name = 'outSumm'
         Value = Null
-        ParamType = ptUnknown
+        Component = MasterCDS
+        ComponentItem = 'Summ'
+        DataType = ftFloat
       end
       item
+        Name = 'outSummIn'
         Value = Null
-        ParamType = ptUnknown
+        Component = MasterCDS
+        ComponentItem = 'SummIn'
+        DataType = ftFloat
       end
       item
         Value = Null
