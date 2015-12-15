@@ -701,7 +701,7 @@ object Report_PersonalCompleteForm: TReport_PersonalCompleteForm
     Width = 945
     Height = 54
     Align = alTop
-    TabOrder = 6
+    TabOrder = 5
     object deStart: TcxDateEdit
       Left = 60
       Top = 5
@@ -830,6 +830,12 @@ object Report_PersonalCompleteForm: TReport_PersonalCompleteForm
           'Left'
           'Top'
           'Width')
+      end
+      item
+        Component = BranchGuides
+        Properties.Strings = (
+          'Key'
+          'TextValue')
       end>
     StorageName = 'cxPropertiesStore'
     StorageType = stStream
@@ -1043,6 +1049,21 @@ object Report_PersonalCompleteForm: TReport_PersonalCompleteForm
           Value = Null
           Component = cbinIsDay
           DataType = ftBoolean
+          ParamType = ptInput
+        end
+        item
+          Name = 'BranchId'
+          Value = Null
+          Component = BranchGuides
+          ComponentItem = 'Key'
+          ParamType = ptInput
+        end
+        item
+          Name = 'BranchName'
+          Value = Null
+          Component = BranchGuides
+          ComponentItem = 'TextValue'
+          DataType = ftString
           ParamType = ptInput
         end>
       isShowModal = True
