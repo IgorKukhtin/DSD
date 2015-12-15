@@ -12,6 +12,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , TotalCount TFloat
              , UnitId Integer, UnitName TVarChar
              , ArticleLossId Integer, ArticleLossName TVarChar
+             , TotalSumm TFloat
               )
 
 AS
@@ -43,7 +44,8 @@ BEGIN
            , Object_Unit.ValueData              AS UnitName
            , Object_ArticleLoss.Id              AS ArticleLossId
            , Object_ArticleLoss.ValueData       AS ArticleLossName
-
+           , MovementFloat_TotalSumm.ValueData  AS TotalSumm
+           
 
 
        FROM (SELECT Movement.id
@@ -59,6 +61,9 @@ BEGIN
             LEFT JOIN MovementFloat AS MovementFloat_TotalCount
                                     ON MovementFloat_TotalCount.MovementId =  Movement.Id
                                    AND MovementFloat_TotalCount.DescId = zc_MovementFloat_TotalCount()
+            LEFT JOIN MovementFloat AS MovementFloat_TotalSumm
+                                    ON MovementFloat_TotalSumm.MovementId =  Movement.Id
+                                   AND MovementFloat_TotalSumm.DescId = zc_MovementFloat_TotalSumm()
 
             LEFT JOIN MovementLinkObject AS MovementLinkObject_Unit
                                          ON MovementLinkObject_Unit.MovementId = Movement.Id
@@ -69,6 +74,7 @@ BEGIN
                                          ON MovementLinkObject_ArticleLoss.MovementId = Movement.Id
                                         AND MovementLinkObject_ArticleLoss.DescId = zc_MovementLinkObject_ArticleLoss()
             LEFT JOIN Object AS Object_ArticleLoss ON Object_ArticleLoss.Id = MovementLinkObject_ArticleLoss.ObjectId
+            
             ;
 END;
 $BODY$

@@ -1,29 +1,29 @@
 inherited LossJournalForm: TLossJournalForm
   Caption = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' <'#1057#1087#1080#1089#1072#1085#1080#1077'>'
   ClientHeight = 535
-  ClientWidth = 1020
+  ClientWidth = 821
   AddOnFormData.AddOnFormRefresh.SelfList = 'Loss'
   AddOnFormData.AddOnFormRefresh.DataSet = MasterCDS
   AddOnFormData.AddOnFormRefresh.KeyField = 'Id'
   AddOnFormData.AddOnFormRefresh.KeyParam = 'inMovementId'
   AddOnFormData.AddOnFormRefresh.GetStoredProc = spGet
-  ExplicitWidth = 1036
+  ExplicitWidth = 837
   ExplicitHeight = 573
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Width = 1020
+    Width = 821
     Height = 478
     TabOrder = 3
     ExplicitWidth = 1020
     ExplicitHeight = 478
     ClientRectBottom = 478
-    ClientRectRight = 1020
+    ClientRectRight = 821
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 1020
       ExplicitHeight = 478
       inherited cxGrid: TcxGrid
-        Width = 1020
+        Width = 821
         Height = 478
         ExplicitWidth = 1020
         ExplicitHeight = 478
@@ -40,9 +40,13 @@ inherited LossJournalForm: TLossJournalForm
             end>
           DataController.Summary.FooterSummaryItems = <
             item
-              Format = ',0.####'
               Kind = skSum
               Column = colTotalCount
+            end
+            item
+              Format = ',0.00'
+              Kind = skSum
+              Column = colTotalSumm
             end>
           OptionsBehavior.GoToNextCellOnEnter = False
           OptionsBehavior.FocusCellOnCycle = False
@@ -75,6 +79,7 @@ inherited LossJournalForm: TLossJournalForm
             Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
             DataBinding.FieldName = 'UnitName'
             HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
             Width = 130
           end
           object colTotalCount: TcxGridDBColumn
@@ -84,20 +89,32 @@ inherited LossJournalForm: TLossJournalForm
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
             Width = 70
           end
           object ArticleLossName: TcxGridDBColumn
             Caption = #1057#1090#1072#1090#1100#1103' '#1089#1087#1080#1089#1072#1085#1080#1103
             DataBinding.FieldName = 'ArticleLossName'
             HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
             Width = 276
+          end
+          object colTotalSumm: TcxGridDBColumn
+            Caption = #1057#1091#1084#1084#1072' '#1087#1088#1080#1093#1086#1076
+            DataBinding.FieldName = 'TotalSumm'
+            PropertiesClassName = 'TcxCalcEditProperties'
+            Properties.DisplayFormat = ',0.00'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 72
           end
         end
       end
     end
   end
   inherited Panel: TPanel
-    Width = 1020
+    Width = 821
     ExplicitWidth = 1020
     inherited deStart: TcxDateEdit
       EditValue = 42005d

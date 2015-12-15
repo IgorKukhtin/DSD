@@ -45,6 +45,12 @@ RETURNS TABLE (AccountGroupName TVarChar, AccountDirectionName TVarChar
 
              , CountSendOnPriceIn TFloat
              , CountSendOnPriceIn_Weight TFloat
+             
+             , CountSendOnPrice_10500 TFloat
+             , CountSendOnPrice_10500_Weight TFloat
+             , CountSendOnPrice_40200 TFloat
+             , CountSendOnPrice_40200_Weight TFloat
+             
              , CountSendOnPriceOut TFloat
              , CountSendOnPriceOut_Weight TFloat
 
@@ -84,6 +90,8 @@ RETURNS TABLE (AccountGroupName TVarChar, AccountDirectionName TVarChar
              , SummSendOut TFloat
              , SummSendOnPriceIn TFloat
              , SummSendOnPriceOut TFloat
+             , SummSendOnPrice_10500  TFloat
+             , SummSendOnPrice_40200  TFloat
              , SummSale TFloat
              , SummSale_10500 TFloat
              , SummSale_40208 TFloat
@@ -258,6 +266,8 @@ BEGIN
                             , COALESCE (tmpReport_count.CountSendOut,      tmpReport_summ.CountSendOut)      AS CountSendOut
 
                             , COALESCE (tmpReport_count.CountSendOnPriceIn,  tmpReport_summ.CountSendOnPriceIn)  AS CountSendOnPriceIn 
+                            , COALESCE (tmpReport_count.CountSendOnPrice_10500,  tmpReport_summ.CountSendOnPrice_10500)  AS CountSendOnPrice_10500 
+                            , COALESCE (tmpReport_count.CountSendOnPrice_40200,  tmpReport_summ.CountSendOnPrice_40200)  AS CountSendOnPrice_40200 
                             , COALESCE (tmpReport_count.CountSendOnPriceOut, tmpReport_summ.CountSendOnPriceOut) AS CountSendOnPriceOut
 
                             , COALESCE (tmpReport_count.CountSale,           tmpReport_summ.CountSale)           AS CountSale
@@ -290,6 +300,9 @@ BEGIN
 
                             , COALESCE (tmpReport_summ.SummSendOnPriceIn, 0)  AS SummSendOnPriceIn
                             , COALESCE (tmpReport_summ.SummSendOnPriceOut, 0) AS SummSendOnPriceOut
+
+                            , COALESCE (tmpReport_summ.SummSendOnPrice_10500, 0) AS SummSendOnPrice_10500 
+                            , COALESCE (tmpReport_summ.SummSendOnPrice_40200, 0) AS SummSendOnPrice_40200 
 
                             , COALESCE (tmpReport_summ.SummSale, 0)           AS SummSale           
                             , COALESCE (tmpReport_summ.SummSale_10500, 0)     AS SummSale_10500     
@@ -367,6 +380,13 @@ BEGIN
 
         , CAST (tmpMIContainer_group.CountSendOnPriceIn  AS TFloat) AS CountSendOnPriceIn
         , CAST (tmpMIContainer_group.CountSendOnPriceIn * CASE WHEN Object_Measure.Id = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END  AS TFloat) AS CountSendOnPriceIn_Weight
+
+        , CAST (tmpMIContainer_group.CountSendOnPrice_10500  AS TFloat) AS CountSendOnPrice_10500
+        , CAST (tmpMIContainer_group.CountSendOnPrice_10500 * CASE WHEN Object_Measure.Id = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END  AS TFloat) AS CountSendOnPrice_10500_Weight
+        , CAST (tmpMIContainer_group.CountSendOnPrice_40200  AS TFloat) AS CountSendOnPrice_40200
+        , CAST (tmpMIContainer_group.CountSendOnPrice_40200 * CASE WHEN Object_Measure.Id = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END  AS TFloat) AS CountSendOnPrice_40200_Weight
+        
+        
         , CAST (tmpMIContainer_group.CountSendOnPriceOut AS TFloat) AS CountSendOnPriceOut
         , CAST (tmpMIContainer_group.CountSendOnPriceOut * CASE WHEN Object_Measure.Id = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END AS TFloat) AS CountSendOnPriceOut_Weight
 
@@ -406,6 +426,8 @@ BEGIN
         , CAST (tmpMIContainer_group.SummSendOut          AS TFloat) AS SummSendOut
         , CAST (tmpMIContainer_group.SummSendOnPriceIn    AS TFloat) AS SummSendOnPriceIn
         , CAST (tmpMIContainer_group.SummSendOnPriceOut   AS TFloat) AS SummSendOnPriceOut
+        , CAST (tmpMIContainer_group.SummSendOnPrice_10500       AS TFloat) AS SummSendOnPrice_10500
+        , CAST (tmpMIContainer_group.SummSendOnPrice_40200       AS TFloat) AS SummSendOnPrice_40200
         , CAST (tmpMIContainer_group.SummSale             AS TFloat) AS SummSale
         , CAST (tmpMIContainer_group.SummSale_10500       AS TFloat) AS SummSale_10500
         , CAST (tmpMIContainer_group.SummSale_40208       AS TFloat) AS SummSale_40208
@@ -546,6 +568,8 @@ BEGIN
               , SUM (tmpMIContainer_all.CountSendOut)        AS CountSendOut
 
               , SUM (tmpMIContainer_all.CountSendOnPriceIn)  AS CountSendOnPriceIn
+              , SUM (tmpMIContainer_all.CountSendOnPrice_10500)  AS CountSendOnPrice_10500
+              , SUM (tmpMIContainer_all.CountSendOnPrice_40200)  AS CountSendOnPrice_40200
               , SUM (tmpMIContainer_all.CountSendOnPriceOut) AS CountSendOnPriceOut
 
               , SUM (tmpMIContainer_all.CountSale)           AS CountSale
@@ -648,6 +672,10 @@ BEGIN
               , SUM (tmpMIContainer_all.SummSendOut)         AS SummSendOut
               , SUM (tmpMIContainer_all.SummSendOnPriceIn)   AS SummSendOnPriceIn
               , SUM (tmpMIContainer_all.SummSendOnPriceOut)  AS SummSendOnPriceOut
+
+              , SUM (tmpMIContainer_all.SummSendOnPrice_10500)      AS SummSendOnPrice_10500
+              , SUM (tmpMIContainer_all.SummSendOnPrice_40200)      AS SummSendOnPrice_40200
+
               , SUM (tmpMIContainer_all.SummSale)            AS SummSale
               , SUM (tmpMIContainer_all.SummSale_10500)      AS SummSale_10500
               , SUM (tmpMIContainer_all.SummSale_40208)      AS SummSale_40208
