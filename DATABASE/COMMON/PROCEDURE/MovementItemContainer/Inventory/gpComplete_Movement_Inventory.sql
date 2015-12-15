@@ -542,6 +542,56 @@ BEGIN
                                                                               )
      WHERE _tmpRemainsCount.MovementItemId = 0;
 
+     -- !!!Проверка!!!
+     IF vbUserId <> zc_Enum_Process_Auto_PrimeCost()
+        AND EXISTS (SELECT tmp.ContainerId
+                    FROM (SELECT MovementItemFloat.ValueData AS ContainerId 
+                          FROM MovementItem
+                               INNER JOIN MovementItemFloat ON MovementItemFloat.MovementItemId = MovementItem.Id
+                                                           AND MovementItemFloat.DescId = zc_MIFloat_ContainerId()
+                                                           AND MovementItemFloat.ValueData <> 0 
+                          WHERE MovementItem.MovementId = inMovementId
+                               AND MovementItem.isErased = FALSE
+                          GROUP BY MovementItemFloat.ValueData
+                          HAVING COUNT (*) > 1
+                         ) AS tmp
+                         JOIN
+                         (SELECT DISTINCT MovementItemFloat.ValueData AS ContainerId 
+                          FROM MovementItem
+                               INNER JOIN MovementItemFloat ON MovementItemFloat.MovementItemId = MovementItem.Id
+                                                           AND MovementItemFloat.DescId = zc_MIFloat_ContainerId()
+                                                           AND MovementItemFloat.ValueData <> 0 
+                          WHERE MovementItem.MovementId = inMovementId
+                            AND MovementItem.isErased = FALSE
+                            AND MovementItem.Amount = 0
+                         ) AS tmp_find on  tmp_find.ContainerId = tmp.ContainerId
+                   )
+     THEN
+         RAISE EXCEPTION 'Ошибка.Дублирование элементов.Обратитесь к разработчику.<%>', (SELECT tmp.ContainerId :: Integer
+                                                                                         FROM (SELECT MovementItemFloat.ValueData AS ContainerId 
+                                                                                               FROM MovementItem
+                                                                                                    INNER JOIN MovementItemFloat ON MovementItemFloat.MovementItemId = MovementItem.Id
+                                                                                                                                AND MovementItemFloat.DescId = zc_MIFloat_ContainerId()
+                                                                                                                                AND MovementItemFloat.ValueData <> 0 
+                                                                                               WHERE MovementItem.MovementId = inMovementId
+                                                                                                 AND MovementItem.isErased = FALSE
+                                                                                               GROUP BY MovementItemFloat.ValueData
+                                                                                               HAVING COUNT (*) > 1
+                                                                                              ) AS tmp
+                                                                                             JOIN
+                                                                                             (SELECT DISTINCT MovementItemFloat.ValueData AS ContainerId 
+                                                                                              FROM MovementItem
+                                                                                                   INNER JOIN MovementItemFloat ON MovementItemFloat.MovementItemId = MovementItem.Id
+                                                                                                                               AND MovementItemFloat.DescId = zc_MIFloat_ContainerId()
+                                                                                                                               AND MovementItemFloat.ValueData <> 0 
+                                                                                              WHERE MovementItem.MovementId = inMovementId
+                                                                                                AND MovementItem.isErased = FALSE
+                                                                                                AND MovementItem.Amount = 0
+                                                                                             ) AS tmp_find on  tmp_find.ContainerId = tmp.ContainerId
+                                                                                         LIMIT 1
+                                                                                        );
+     END IF;
+
      -- добавляем в список для проводок те товары, которые только что были добавлены в строчную часть (MovementItem), причем !!!без!!! аналитик для суммовых проводок (т.к. они не нужны)
      INSERT INTO _tmpItem (MovementItemId
                          , ContainerId_Goods, GoodsId, GoodsKindId, GoodsKindId_complete, AssetId, PartionGoods, PartionGoodsDate
@@ -1467,7 +1517,7 @@ LANGUAGE PLPGSQL VOLATILE;
 UPDATE MovementItem SET isErased = TRUE
 from Movement
 WHERE Movement.Id = MovementId
-  AND Movement.OperDate BETWEEN '01.07.2015' AND '31.07.2015'
+  AND Movement.OperDate BETWEEN '01.11.2015' AND '31.12.2015'
   AND Movement.DescId = zc_Movement_Inventory()
   AND Movement.StatusId = zc_Enum_Status_Complete()
   AND isErased = FALSE

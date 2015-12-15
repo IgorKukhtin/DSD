@@ -35,4 +35,4 @@ END;$BODY$
 */
 
 -- тест
--- SELECT * FROM gpUpdate_Movement_ProductionUnion_Kopchenie (inStartDate:= '01.07.2015', inEndDate:= '19.07.2015', inUnitId:= 8450, inUserId:= zfCalc_UserAdmin()) -- ЦЕХ копчения
+-- SELECT * FROM gpUpdate_Movement_ProductionUnion_Kopchenie (inStartDate:= '30.11.2015', inEndDate:= '30.11.2015', inUnitId:= 8450, inSession:= zfCalc_UserAdmin() :: TvarChar) -- ЦЕХ копчения
