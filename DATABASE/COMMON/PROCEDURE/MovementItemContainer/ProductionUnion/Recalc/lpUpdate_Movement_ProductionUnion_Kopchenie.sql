@@ -74,7 +74,7 @@ BEGIN
                             GROUP BY tmpMI_all.ContainerId
                            )
          , tmpMI_result AS (-- данные по движению "Цех Копчения"
-                            SELECT COALESCE (MovementItem.MovementId, 0) AS MovementId
+                            SELECT COALESCE (MovementItem.MovementId, COALESCE (tmpMovement.MovementId, 0)) AS MovementId
                                  , COALESCE (MovementItem.ParentId, 0)   AS MovementItemId_master
                                  , COALESCE (MovementItem.Id, 0)         AS MovementItemId_child
                                  , tmpMI.ContainerId
@@ -84,6 +84,7 @@ BEGIN
                                  LEFT JOIN tmpRemains ON tmpRemains.ContainerId = tmpMI.ContainerId
                                  LEFT JOIN tmpMI_find ON tmpMI_find.ContainerId = tmpMI.ContainerId
                                  LEFT JOIN MovementItem ON MovementItem.Id = tmpMI_find.MovementItemId
+                                 LEFT JOIN tmpMovement ON 1 = 1
                             WHERE (tmpMI.OperCount_child + COALESCE (tmpRemains.Amount)) > 0 AND tmpMI.OperCount_master <> 0
                               AND tmpMI.OperCount_child <> tmpMI.OperCount_master
                            )

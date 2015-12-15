@@ -91,7 +91,7 @@ BEGIN
           , Movement.OperDate
           , Movement.InvNumber
           , MovementDesc.Code
-          , (MovementDesc.ItemName || ' ' || COALESCE (Object_From.ValueData, '') || ' ' || COALESCE (Object_To.ValueData, '')) ::TVarChar
+          , (MovementDesc.ItemName || ' ' || COALESCE (Object_From.ValueData, '') || ' ' || COALESCE (Object_To.ValueData, '')) ::TVarChar AS ItemName
      FROM Movement
           LEFT JOIN MovementLinkObject AS MLO_From ON MLO_From.MovementId = Movement.Id
                                                   AND MLO_From.DescId = zc_MovementLinkObject_From()
@@ -114,7 +114,7 @@ BEGIN
           , Movement.OperDate
           , Movement.InvNumber
           , MovementDesc.Code
-          , (MovementDesc.ItemName || ' ' || COALESCE (Object_From.ValueData, '') || ' ' || COALESCE (Object_To.ValueData, '')) ::TVarChar
+          , (MovementDesc.ItemName || ' ' || COALESCE (Object_From.ValueData, '') || ' ' || COALESCE (Object_To.ValueData, '')) ::TVarChar AS ItemName
      FROM Movement
           LEFT JOIN MovementLinkObject AS MLO_From ON MLO_From.MovementId = Movement.Id
                                                   AND MLO_From.DescId = zc_MovementLinkObject_From()
@@ -137,7 +137,7 @@ BEGIN
           , Movement.OperDate
           , Movement.InvNumber
           , MovementDesc.Code
-          , (MovementDesc.ItemName || ' ' || COALESCE (Object_From.ValueData, '') || ' ' || COALESCE (Object_To.ValueData, '')) ::TVarChar
+          , (MovementDesc.ItemName || ' ' || COALESCE (Object_From.ValueData, '') || ' ' || COALESCE (Object_To.ValueData, '')) ::TVarChar AS ItemName
      FROM Movement
           LEFT JOIN MovementLinkObject AS MLO_From ON MLO_From.MovementId = Movement.Id
                                                   AND MLO_From.DescId = zc_MovementLinkObject_From()
@@ -161,7 +161,7 @@ BEGIN
           , Movement.OperDate
           , Movement.InvNumber
           , MovementDesc.Code
-          , (MovementDesc.ItemName || ' ' || COALESCE (Object_From.ValueData, '') || ' ' || COALESCE (Object_To.ValueData, '')) ::TVarChar
+          , (MovementDesc.ItemName || ' ' || COALESCE (Object_From.ValueData, '') || ' ' || COALESCE (Object_To.ValueData, '')) ::TVarChar AS ItemName
      FROM Movement
           LEFT JOIN MovementLinkObject AS MLO_From ON MLO_From.MovementId = Movement.Id
                                                   AND MLO_From.DescId = zc_MovementLinkObject_From()
@@ -190,7 +190,7 @@ BEGIN
           , Movement.OperDate
           , Movement.InvNumber
           , MovementDesc.Code
-          , (MovementDesc.ItemName || ' ' || COALESCE (Object_From.ValueData, '') || ' ' || COALESCE (Object_To.ValueData, '')) ::TVarChar
+          , (MovementDesc.ItemName || ' ' || COALESCE (Object_From.ValueData, '') || ' ' || COALESCE (Object_To.ValueData, '')) ::TVarChar AS ItemName
      FROM Movement
           LEFT JOIN MovementLinkObject AS MLO_From ON MLO_From.MovementId = Movement.Id
                                                   AND MLO_From.DescId = zc_MovementLinkObject_From()
@@ -217,7 +217,7 @@ BEGIN
           , Movement.OperDate
           , Movement.InvNumber
           , MovementDesc.Code
-          , (MovementDesc.ItemName || ' ' || COALESCE (Object_From.ValueData, '') || ' ' || COALESCE (Object_To.ValueData, '')) ::TVarChar
+          , (MovementDesc.ItemName || ' ' || COALESCE (Object_From.ValueData, '') || ' ' || COALESCE (Object_To.ValueData, '')) ::TVarChar AS ItemName
      FROM Movement
           LEFT JOIN MovementLinkObject AS MLO_From ON MLO_From.MovementId = Movement.Id
                                                   AND MLO_From.DescId = zc_MovementLinkObject_From()
@@ -241,7 +241,7 @@ BEGIN
           , Movement.OperDate
           , Movement.InvNumber
           , MovementDesc.Code
-          , (MovementDesc.ItemName || ' ' || COALESCE (Object_From.ValueData, '') || ' ' || COALESCE (Object_To.ValueData, '')) ::TVarChar
+          , (MovementDesc.ItemName || ' ' || COALESCE (Object_From.ValueData, '') || ' ' || COALESCE (Object_To.ValueData, '')) ::TVarChar AS ItemName
      FROM Movement
           LEFT JOIN MovementLinkObject AS MLO_From ON MLO_From.MovementId = Movement.Id
                                                   AND MLO_From.DescId = zc_MovementLinkObject_From()
@@ -264,7 +264,7 @@ BEGIN
           , Movement.OperDate
           , Movement.InvNumber
           , MovementDesc.Code
-          , (MovementDesc.ItemName || ' ' || COALESCE (Object_From.ValueData, '') || ' ' || COALESCE (Object_To.ValueData, '')) ::TVarChar
+          , (MovementDesc.ItemName || ' ' || COALESCE (Object_From.ValueData, '') || ' ' || COALESCE (Object_To.ValueData, '')) ::TVarChar AS ItemName
      FROM Movement
           LEFT JOIN MovementLinkObject AS MLO_From ON MLO_From.MovementId = Movement.Id
                                                   AND MLO_From.DescId = zc_MovementLinkObject_From()
@@ -284,7 +284,7 @@ BEGIN
           , Movement.OperDate
           , Movement.InvNumber
           , MovementDesc.Code
-          , (MovementDesc.ItemName || ' ' || COALESCE (Object_From.ValueData, '') || ' ' || COALESCE (Object_To.ValueData, '')) ::TVarChar
+          , (MovementDesc.ItemName || ' ' || COALESCE (Object_From.ValueData, '') || ' ' || COALESCE (Object_To.ValueData, '')) ::TVarChar AS ItemName
      FROM Movement
           LEFT JOIN MovementLinkObject AS MLO_From ON MLO_From.MovementId = Movement.Id
                                                   AND MLO_From.DescId = zc_MovementLinkObject_From()
@@ -304,7 +304,7 @@ BEGIN
           , Movement.OperDate
           , Movement.InvNumber
           , MovementDesc.Code
-          , (MovementDesc.ItemName || ' ' || COALESCE (Object_From.ValueData, '') || ' ' || COALESCE (Object_To.ValueData, '')) ::TVarChar
+          , (MovementDesc.ItemName || ' ' || COALESCE (Object_From.ValueData, '') || ' ' || COALESCE (Object_To.ValueData, '')) ::TVarChar AS ItemName
      FROM Movement
           LEFT JOIN MovementLinkObject AS MLO_From ON MLO_From.MovementId = Movement.Id
                                                   AND MLO_From.DescId = zc_MovementLinkObject_From()
@@ -324,7 +324,7 @@ BEGIN
           , Movement.OperDate
           , Movement.InvNumber
           , MovementDesc.Code
-          , (MovementDesc.ItemName || ' ' || COALESCE (Object_From.ValueData, '') || ' ' || COALESCE (Object_To.ValueData, '')) ::TVarChar
+          , (MovementDesc.ItemName || ' ' || COALESCE (Object_From.ValueData, '') || ' ' || COALESCE (Object_To.ValueData, '')) ::TVarChar AS ItemName
      FROM Movement
           LEFT JOIN MovementLinkObject AS MLO_From ON MLO_From.MovementId = Movement.Id
                                                   AND MLO_From.DescId = zc_MovementLinkObject_From()
