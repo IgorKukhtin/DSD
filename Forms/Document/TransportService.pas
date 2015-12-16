@@ -26,7 +26,7 @@ type
     ceOperDate: TcxDateEdit;
     ceCar: TcxButtonEdit;
     cxLabel9: TcxLabel;
-    ContractConditionKindGuides: TdsdGuides;
+    ContractConditionKindGuides_Old: TdsdGuides;
     PaidKindGuides: TdsdGuides;
     RouteGuides: TdsdGuides;
     InfoMoneyGuides: TdsdGuides;
@@ -57,6 +57,7 @@ type
     edStartRun: TcxDateEdit;
     cxLabel16: TcxLabel;
     ceWeightTransport: TcxCurrencyEdit;
+    ContractConditionKindGuides: TdsdGuides;
   private
     { Private declarations }
   public

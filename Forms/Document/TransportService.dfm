@@ -678,9 +678,8 @@
     Left = 280
     Top = 108
   end
-  object ContractConditionKindGuides: TdsdGuides
+  object ContractConditionKindGuides_Old: TdsdGuides
     KeyField = 'Id'
-    LookupControl = ceContractConditionKind
     FormNameParam.Value = 'TContractConditionKindForm'
     FormNameParam.DataType = ftString
     FormName = 'TContractConditionKindForm'
@@ -689,13 +688,13 @@
       item
         Name = 'Key'
         Value = ''
-        Component = ContractConditionKindGuides
+        Component = ContractConditionKindGuides_Old
         ComponentItem = 'Key'
       end
       item
         Name = 'TextValue'
         Value = ''
-        Component = ContractConditionKindGuides
+        Component = ContractConditionKindGuides_Old
         ComponentItem = 'TextValue'
         DataType = ftString
       end
@@ -705,7 +704,7 @@
         Component = ContractGuides
         ComponentItem = 'Id'
       end>
-    Left = 160
+    Left = 192
     Top = 114
   end
   object PaidKindGuides: TdsdGuides
@@ -820,7 +819,7 @@
         Guides = RouteGuides
       end
       item
-        Guides = ContractConditionKindGuides
+        Guides = ContractConditionKindGuides_Old
       end
       item
         Guides = InfoMoneyGuides
@@ -986,5 +985,36 @@
       end>
     Left = 368
     Top = 160
+  end
+  object ContractConditionKindGuides: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = ceContractConditionKind
+    FormNameParam.Value = 'TContractConditionByContractForm'
+    FormNameParam.DataType = ftString
+    FormName = 'TContractConditionByContractForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = ContractConditionKindGuides
+        ComponentItem = 'Key'
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = ContractConditionKindGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+      end
+      item
+        Name = 'inContractId'
+        Value = ''
+        Component = ContractGuides
+        ComponentItem = 'Id'
+        ParamType = ptInput
+      end>
+    Left = 72
+    Top = 122
   end
 end
