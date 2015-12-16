@@ -9,7 +9,6 @@ uses
 
 const
   MY_MESSAGE = WM_USER + 1;
-
 type
 
   TParentForm = class(TForm)
@@ -27,6 +26,8 @@ type
     procedure SetSender(const Value: TComponent);
     property FormSender: TComponent read FSender write SetSender;
     procedure AfterShow(var a : TWMSHOWWINDOW); message MY_MESSAGE;
+    procedure InitHelpSystem;
+    procedure btnHelpClick(Sender: TObject);
   protected
     procedure Loaded; override;
     procedure Notification(AComponent: TComponent; Operation: TOperation); override;
@@ -55,7 +56,7 @@ uses
   cxButtonEdit, cxSplitter, Vcl.Menus, cxPC, frxDBSet, dxBarExtItems,
   cxDBPivotGrid, ChoicePeriod, cxGridDBBandedTableView,
   cxDBEdit, dsdAction, dsdGuides, cxDBVGrid,
-  Vcl.DBActns, cxMemo, cxGridDBChartView;
+  Vcl.DBActns, cxMemo, cxGridDBChartView, ShellAPI;
 
 {$R *.dfm}
 
@@ -74,6 +75,13 @@ begin
      exit;
   if Assigned(FonAfterShow) then
      FonAfterShow(Self);
+end;
+
+procedure TParentForm.btnHelpClick(Sender: TObject);
+begin
+  if Self.HelpFile = '' then exit;
+  ShellExecute(0, 'open', PChar(Self.HelpFile), '', '', 1);
+
 end;
 
 procedure TParentForm.CloseAction(Sender: TObject);
@@ -165,6 +173,45 @@ end;
 procedure TParentForm.FormShow(Sender: TObject);
 begin
   PostMessage(Handle, MY_MESSAGE, 0, 0);
+  InitHelpSystem;
+end;
+
+procedure TParentForm.InitHelpSystem;
+var
+  sp: TdsdStoredProc;
+  C: TComponent;
+  mni: TMenuItem;
+begin
+  //Вытащили путь к файлу помощи
+  sp := TdsdStoredProc.Create(nil);
+  try
+    sp.Params.AddParam('inFormName',ftString,ptInput,FormClassName);
+    sp.Params.AddParam('outHelpFile',ftString,ptOutput,Null);
+    sp.StoredProcName := 'gpGet_Object_Form_HelpFile';
+    sp.OutputType := otResult;
+    sp.Execute;
+    Self.HelpFile := VarToStr(sp.ParamByName('outHelpFile').Value);
+  finally
+    sp.Free;
+  end;
+  //Если форма имеет файл помощи то пытаемся создать пункт меню для вызова
+  if Self.HelpFile <> '' then
+  Begin
+    for C in Self do
+    begin
+      //Находим все контексные меню
+      if C is TPopupMenu then
+      Begin
+        mni := TMenuItem.Create(C);
+        mni.Caption := 'Помощь';
+        mni.ShortCut := ShortCut(VK_F1,[]);
+        mni.ImageIndex := 26;
+        mni.OnClick := btnHelpClick;
+        (C as TPopupMenu).Items.Add(mni);
+      End;
+    end;
+  End;
+
 end;
 
 procedure TParentForm.Loaded;
@@ -298,6 +345,7 @@ initialization
   RegisterClass (TRefreshDispatcher);
   RegisterClass (TUpdateRecord);
   RegisterClass (TAddOnFormRefresh);
+  RegisterClass (TShellExecuteAction);
 
 // ДЛЯ ТЕСТА
 
