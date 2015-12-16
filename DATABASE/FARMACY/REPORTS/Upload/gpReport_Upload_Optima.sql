@@ -101,18 +101,19 @@ BEGIN
     --Создали таблицу пустографку
     CREATE TEMP TABLE _Cross(
         GoodsId         Integer,
-        GoodsCode       TVarChar) ON COMMIT DROP;
+        GoodsCode       TVarChar,
+        GoodsName       TVarChar) ON COMMIT DROP;
     --Залили пустографку
     WITH Goods AS(
         SELECT DISTINCT
             LinkGoods_Main_Retail.GoodsId AS GoodsId,
-            LinkGoods_Partner_Main.GoodsCode
+            Object_Goods_View.GoodsCode
         FROM Object_Goods_View
-            JOIN Object_LinkGoods_View AS LinkGoods_Partner_Main
-                                       ON LinkGoods_Partner_Main.GoodsId = Object_Goods_View.id -- Связь товара поставщика с общим
-            JOIN Object_LinkGoods_View AS LinkGoods_Main_Retail -- связь товара сети с главным товаром
-                                       ON LinkGoods_Main_Retail.GoodsMainId = LinkGoods_Partner_Main.GoodsMainId
-                                      AND LinkGoods_Main_Retail.ObjectId = vbObjectIdRetail
+            LEFT OUTER JOIN Object_LinkGoods_View AS LinkGoods_Partner_Main
+                                                  ON LinkGoods_Partner_Main.GoodsId = Object_Goods_View.id -- Связь товара поставщика с общим
+            LEFT OUTER JOIN Object_LinkGoods_View AS LinkGoods_Main_Retail -- связь товара сети с главным товаром
+                                                  ON LinkGoods_Main_Retail.GoodsMainId = LinkGoods_Partner_Main.GoodsMainId
+                                                 AND LinkGoods_Main_Retail.ObjectId = vbObjectIdRetail
         WHERE
             Object_Goods_View.ObjectId = inObjectId
             AND
