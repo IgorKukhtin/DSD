@@ -3,6 +3,7 @@
 
 DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_TransportService (Integer, Integer, TVarChar, TDateTime, TFloat, TFloat, TFloat, TFloat, TFloat, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_TransportService (Integer, Integer, TVarChar, TDateTime, TDateTime, TFloat, TFloat, TFloat, TFloat, TFloat, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_TransportService (Integer, Integer, TVarChar, TDateTime, TDateTime, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar);
 
 
 
@@ -15,6 +16,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_TransportService(
     IN inStartRunPlan             TDateTime , -- Дата/Время выезда план
 
  INOUT ioAmount                   TFloat    , -- Сумма
+    IN inWeightTransport          TFloat    , -- Вывоз факт, кг
     IN inDistance                 TFloat    , -- Пробег факт, км
     IN inPrice                    TFloat    , -- Цена (топлива)
     IN inCountPoint               TFloat    , -- Кол-во точек
@@ -160,6 +162,9 @@ BEGIN
      -- сохранили <Элемент документа>
      ioMIId := lpInsertUpdate_MovementItem (ioMIId, zc_MI_Master(), inJuridicalId, ioId, ioAmount, NULL);
 
+
+     -- сохранили свойство <Вывоз факт, кг>
+     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_WeightTransport(), ioMIId, inWeightTransport);
      -- сохранили свойство <Пробег факт, км>
      PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_Distance(), ioMIId, inDistance);
      -- сохранили свойство <Цена (топлива)>
@@ -207,6 +212,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
+ 16.12.15         * add WeightTransport
  26.08.15         * add inStartRunPlan
  12.11.14                                        * add lpComplete_Movement_Finance_CreateTemp
  12.09.14                                        * add PositionId and ServiceDateId and BusinessId_... and BranchId_...

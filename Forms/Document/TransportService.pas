@@ -55,6 +55,8 @@ type
     edStartRunPlan: TcxDateEdit;
     cxLabel15: TcxLabel;
     edStartRun: TcxDateEdit;
+    cxLabel16: TcxLabel;
+    ceWeightTransport: TcxCurrencyEdit;
   private
     { Private declarations }
   public

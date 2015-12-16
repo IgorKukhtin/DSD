@@ -40,6 +40,7 @@ type
     clUnitForwardingName: TcxGridDBColumn;
     StartRun: TcxGridDBColumn;
     StartRunPlan: TcxGridDBColumn;
+    clWeightTransport: TcxGridDBColumn;
   private
     { Private declarations }
   public

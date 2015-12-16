@@ -40,7 +40,7 @@
   end
   object cxLabel3: TcxLabel [5]
     Left = 8
-    Top = 106
+    Top = 108
     Caption = #1059#1089#1083#1086#1074#1080#1103' '#1076#1086#1075#1086#1074#1086#1088#1072
   end
   object cxLabel2: TcxLabel [6]
@@ -181,38 +181,38 @@
   end
   object cxLabel4: TcxLabel [22]
     Left = 312
-    Top = 61
+    Top = 69
     Caption = #1055#1088#1086#1073#1077#1075' '#1092#1072#1082#1090', '#1082#1084
   end
   object ceDistance: TcxCurrencyEdit [23]
     Left = 312
-    Top = 79
+    Top = 87
     Properties.DecimalPlaces = 2
     Properties.DisplayFormat = ',0.00'
     TabOrder = 23
-    Width = 129
+    Width = 91
   end
   object cxLabel11: TcxLabel [24]
-    Left = 456
-    Top = 61
+    Left = 409
+    Top = 69
     Caption = #1062#1077#1085#1072' ('#1090#1086#1087#1083#1080#1074#1072')'
   end
   object cePrice: TcxCurrencyEdit [25]
-    Left = 456
-    Top = 79
+    Left = 409
+    Top = 87
     Properties.DecimalPlaces = 2
     Properties.DisplayFormat = ',0.00'
     TabOrder = 25
-    Width = 129
+    Width = 83
   end
   object cxLabel12: TcxLabel [26]
     Left = 312
-    Top = 106
+    Top = 108
     Caption = #1050#1086#1083'-'#1074#1086' '#1090#1086#1095#1077#1082
   end
   object ceCountPoint: TcxCurrencyEdit [27]
     Left = 312
-    Top = 126
+    Top = 129
     Properties.DecimalPlaces = 2
     Properties.DisplayFormat = ',0.00'
     TabOrder = 27
@@ -220,12 +220,12 @@
   end
   object cxLabel13: TcxLabel [28]
     Left = 456
-    Top = 106
+    Top = 108
     Caption = #1042#1088#1077#1084#1103' '#1074' '#1087#1091#1090#1080', '#1095#1072#1089#1086#1074
   end
   object ceTrevelTime: TcxCurrencyEdit [29]
     Left = 456
-    Top = 126
+    Top = 129
     Properties.DecimalPlaces = 2
     Properties.DisplayFormat = ',0.00'
     TabOrder = 29
@@ -282,6 +282,19 @@
     Properties.ReadOnly = True
     TabOrder = 35
     Width = 129
+  end
+  object cxLabel16: TcxLabel [36]
+    Left = 503
+    Top = 69
+    Caption = #1042#1099#1074#1086#1079' '#1092#1072#1082#1090', '#1082#1075
+  end
+  object ceWeightTransport: TcxCurrencyEdit [37]
+    Left = 503
+    Top = 87
+    Properties.DecimalPlaces = 2
+    Properties.DisplayFormat = ',0.00'
+    TabOrder = 37
+    Width = 82
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 59
@@ -358,6 +371,13 @@
         Value = 0.000000000000000000
         DataType = ftFloat
         ParamType = ptInputOutput
+      end
+      item
+        Name = 'inWeightTransport'
+        Value = Null
+        Component = ceWeightTransport
+        DataType = ftFloat
+        ParamType = ptInput
       end
       item
         Name = 'indistance'
@@ -501,6 +521,12 @@
       item
         Name = 'Amount'
         Value = 0.000000000000000000
+        DataType = ftFloat
+      end
+      item
+        Name = 'WeightTransport'
+        Value = Null
+        Component = ceWeightTransport
         DataType = ftFloat
       end
       item
