@@ -2,7 +2,7 @@
   Left = 0
   Top = 0
   Caption = #1044#1086#1073#1072#1074#1080#1090#1100'/'#1048#1079#1084#1077#1085#1080#1090#1100' <'#1060#1080#1083#1080#1072#1083'>'
-  ClientHeight = 241
+  ClientHeight = 204
   ClientWidth = 336
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -29,7 +29,7 @@
   end
   object cxButton1: TcxButton
     Left = 56
-    Top = 210
+    Top = 167
     Width = 75
     Height = 25
     Action = dsdInsertUpdateGuides
@@ -39,7 +39,7 @@
   end
   object cxButton2: TcxButton
     Left = 216
-    Top = 210
+    Top = 167
     Width = 75
     Height = 25
     Action = dsdFormClose
@@ -72,35 +72,18 @@
     Top = 10
     Caption = #1053#1072#1083#1086#1075#1086#1074#1099#1081' '#1082#1086#1076
   end
-  object edPersonalBookkeeper: TcxButtonEdit
-    Left = 21
-    Top = 122
-    Properties.Buttons = <
-      item
-        Default = True
-        Kind = bkEllipsis
-      end>
-    Properties.ReadOnly = True
-    TabOrder = 8
-    Width = 284
-  end
-  object cxLabel19: TcxLabel
-    Left = 21
-    Top = 102
-    Caption = #1060#1048#1054' '#1089#1086#1090#1088#1091#1076#1085#1080#1082' ('#1041#1091#1093#1075#1072#1083#1090#1077#1088')'
-  end
   object cbIsMedoc: TcxCheckBox
     Left = 21
-    Top = 149
+    Top = 106
     Caption = #1047#1072#1075#1088#1091#1079#1082#1072' '#1085#1072#1083#1086#1075#1086#1074#1099#1093' '#1080#1079' '#1084#1077#1076#1082#1072
-    TabOrder = 10
+    TabOrder = 8
     Width = 180
   end
   object cbisPartionDoc: TcxCheckBox
     Left = 21
-    Top = 176
+    Top = 133
     Caption = #1055#1072#1088#1090#1080#1086#1085#1085#1099#1081' '#1091#1095#1077#1090' '#1076#1086#1083#1075#1086#1074' '#1085#1072#1083
-    TabOrder = 11
+    TabOrder = 9
     Width = 180
   end
   object ActionList: TActionList
@@ -171,13 +154,6 @@
         ParamType = ptInput
       end
       item
-        Name = 'inPersonalBookkeeperId'
-        Value = Null
-        Component = PersonalBookkeeperGuides
-        ComponentItem = 'Key'
-        ParamType = ptInput
-      end
-      item
         Name = 'inIsMedoc'
         Value = Null
         Component = cbIsMedoc
@@ -234,19 +210,6 @@
         DataType = ftString
       end
       item
-        Name = 'PersonalBookkeeperId'
-        Value = Null
-        Component = PersonalBookkeeperGuides
-        ComponentItem = 'Key'
-      end
-      item
-        Name = 'PersonalBookkeeperName'
-        Value = Null
-        Component = PersonalBookkeeperGuides
-        ComponentItem = 'TextValue'
-        DataType = ftString
-      end
-      item
         Name = 'IsMedoc'
         Value = Null
         Component = cbIsMedoc
@@ -279,36 +242,9 @@
     StorageName = 'cxPropertiesStore'
     StorageType = stStream
     Left = 296
-    Top = 176
+    Top = 133
   end
   object dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Top = 48
-  end
-  object PersonalBookkeeperGuides: TdsdGuides
-    KeyField = 'Id'
-    LookupControl = edPersonalBookkeeper
-    FormNameParam.Value = 'TPersonal_ObjectForm'
-    FormNameParam.DataType = ftString
-    FormName = 'TPersonal_ObjectForm'
-    PositionDataSet = 'ClientDataSet'
-    Params = <
-      item
-        Name = 'Key'
-        Value = ''
-        Component = PersonalBookkeeperGuides
-        ComponentItem = 'Key'
-        DataType = ftString
-        ParamType = ptInput
-      end
-      item
-        Name = 'TextValue'
-        Value = ''
-        Component = PersonalBookkeeperGuides
-        ComponentItem = 'TextValue'
-        DataType = ftString
-        ParamType = ptInput
-      end>
-    Left = 144
-    Top = 103
   end
 end

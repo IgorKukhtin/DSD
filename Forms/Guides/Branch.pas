@@ -21,7 +21,7 @@ uses
   dxSkinSilver, dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008,
   dxSkinTheAsphaltWorld, dxSkinsDefaultPainters, dxSkinValentine, dxSkinVS2010,
   dxSkinWhiteprint, dxSkinXmas2008Blue, dxSkinscxPCPainter, dxSkinsdxBarPainter,
-  dsdAddOn, dxBarExtItems;
+  dsdAddOn, dxBarExtItems, cxButtonEdit;
 
 type
   TBranchForm = class(TParentForm)
@@ -62,6 +62,9 @@ type
     clPersonalBookkeeperName: TcxGridDBColumn;
     clIsMedoc: TcxGridDBColumn;
     clisPartionDoc: TcxGridDBColumn;
+    spUpdate: TdsdStoredProc;
+    actUpdatePersonal: TdsdUpdateDataSet;
+    PersonalBookkeeperChoice: TOpenChoiceForm;
   private
     { Private declarations }
   public
