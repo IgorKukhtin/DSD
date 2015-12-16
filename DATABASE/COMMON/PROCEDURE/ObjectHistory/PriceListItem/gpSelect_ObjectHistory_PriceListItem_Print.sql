@@ -11,9 +11,11 @@ CREATE OR REPLACE FUNCTION gpSelect_ObjectHistory_PriceListItem_Print(
 RETURNS TABLE (Id Integer , ObjectId Integer
                 , GoodsId Integer, GoodsCode Integer, GoodsName TVarChar, GoodsGroupNameFull TVarChar
                 , TradeMarkName TVarChar
-                , MeasureName TVarChar, ValuePrice TFloat, ValuePriceWithVAT TFloat
+                , MeasureName TVarChar
+                , ValuePrice TFloat, ValuePriceWithVAT TFloat
+                , ValuePrice_kg TFloat, ValuePriceWithVAT_kg TFloat
                 , Weight TFloat
-                , Value4 TVarChar, Value5 TVarChar, Value6 TVarChar
+                , Value1 TVarChar, Value2_4 TVarChar, Value5_6 TVarChar
                 
                 
                )
@@ -42,19 +44,26 @@ BEGIN
                     
            , ObjectString_Goods_GoodsGroupFull.ValueData AS GoodsGroupNameFull
            , Object_TradeMark.ValueData      AS TradeMarkName
-           , Object_Measure.ValueData     AS MeasureName
+           , Object_Measure.ValueData        AS MeasureName
 
            , CASE WHEN vbPriceWithVAT_pl = TRUE THEN COALESCE (ObjectHistoryFloat_PriceListItem_Value.ValueData, 0) / (1 + vbVATPercent_pl / 100) ELSE COALESCE (ObjectHistoryFloat_PriceListItem_Value.ValueData, 0) END :: TFloat  AS ValuePrice
            , CASE WHEN vbPriceWithVAT_pl = FALSE THEN COALESCE (ObjectHistoryFloat_PriceListItem_Value.ValueData, 0) * (1 + vbVATPercent_pl / 100) ELSE COALESCE (ObjectHistoryFloat_PriceListItem_Value.ValueData, 0) END :: TFloat AS ValuePriceWithVAT
 
+           , CASE WHEN Object_Measure.Id = zc_Measure_Sh() AND ObjectFloat_Weight.ValueData<>0 
+                     THEN (CASE WHEN vbPriceWithVAT_pl = TRUE THEN COALESCE (ObjectHistoryFloat_PriceListItem_Value.ValueData, 0) / (1 + vbVATPercent_pl / 100) ELSE COALESCE (ObjectHistoryFloat_PriceListItem_Value.ValueData, 0) END) / ObjectFloat_Weight.ValueData
+                     ELSE (CASE WHEN vbPriceWithVAT_pl = TRUE THEN COALESCE (ObjectHistoryFloat_PriceListItem_Value.ValueData, 0) / (1 + vbVATPercent_pl / 100) ELSE COALESCE (ObjectHistoryFloat_PriceListItem_Value.ValueData, 0) END) 
+             END   :: TFloat AS ValuePrice_kg
+           , CASE WHEN Object_Measure.Id = zc_Measure_Sh() AND ObjectFloat_Weight.ValueData<>0 
+                     THEN (CASE WHEN vbPriceWithVAT_pl = FALSE THEN COALESCE (ObjectHistoryFloat_PriceListItem_Value.ValueData, 0) * (1 + vbVATPercent_pl / 100) ELSE COALESCE (ObjectHistoryFloat_PriceListItem_Value.ValueData, 0) END) / ObjectFloat_Weight.ValueData
+                     ELSE (CASE WHEN vbPriceWithVAT_pl = FALSE THEN COALESCE (ObjectHistoryFloat_PriceListItem_Value.ValueData, 0) * (1 + vbVATPercent_pl / 100) ELSE COALESCE (ObjectHistoryFloat_PriceListItem_Value.ValueData, 0) END) 
+             END   :: TFloat AS ValuePriceWithVAT_kg
+             
            , ObjectFloat_Weight.ValueData AS Weight
+           , ObjectString_Value1.ValueData AS Value1
+           , (COALESCE (ObjectString_Value2.ValueData,'')||' / '||COALESCE (ObjectString_Value4.ValueData,'') )::  TVarChar AS Value2_4
+           , (COALESCE (ObjectString_Value5.ValueData,'')||' / '||COALESCE (ObjectString_Value6.ValueData,'') )::  TVarChar AS Value5_6
 
-           , (COALESCE (ObjectString_Value4.ValueData,'')||'' )::  TVarChar AS Value4
-           , ObjectString_Value5.ValueData AS Value5
-           , ObjectString_Value6.ValueData AS Value6
-
-          
-          
+           
        FROM ObjectLink AS ObjectLink_PriceListItem_PriceList
 
                                    
@@ -93,6 +102,9 @@ BEGIN
             LEFT JOIN ObjectLink AS GoodsQuality_Goods
                                  ON GoodsQuality_Goods.ChildObjectId = Object_Goods.Id 
                                 AND GoodsQuality_Goods.DescId = zc_ObjectLink_GoodsQuality_Goods()  
+            LEFT JOIN ObjectString AS ObjectString_Value1							-- Вид упаковки 
+                                   ON ObjectString_Value1.ObjectId = GoodsQuality_Goods.ObjectId
+                                  AND ObjectString_Value1.DescId = zc_ObjectString_GoodsQuality_Value1() 
             LEFT JOIN ObjectString AS ObjectString_Value2							-- Термін зберігання 
                                    ON ObjectString_Value2.ObjectId = GoodsQuality_Goods.ObjectId
                                   AND ObjectString_Value2.DescId = zc_ObjectString_GoodsQuality_Value2() 
