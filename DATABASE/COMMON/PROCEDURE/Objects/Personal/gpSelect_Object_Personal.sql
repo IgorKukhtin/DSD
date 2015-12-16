@@ -133,6 +133,37 @@ BEGIN
                                       )
                )
            )
+    UNION ALL
+        SELECT
+           0   AS Id
+         , 0 AS MemberCode
+         , CAST ('”ƒ¿À»“‹' as TVarChar)  AS MemberName
+         , CAST ('' as TVarChar) AS DriverCertificate
+         , 0 AS PositionId
+         , 0 AS PositionCode
+         , CAST ('' as TVarChar) AS PositionName
+         , 0 AS PositionLevelId
+         , 0 AS PositionLevelCode
+         , CAST ('' as TVarChar) AS PositionLevelName
+         , 0 AS UnitId
+         , 0 AS UnitCode
+         , CAST ('' as TVarChar) AS UnitName
+         , 0 AS PersonalGroupId
+         , 0 AS PersonalGroupCode
+         , CAST ('' as TVarChar) AS PersonalGroupName
+         , 0 AS PersonalServiceListId 
+         , CAST ('' as TVarChar) AS PersonalServiceListName 
+         , 0 AS PersonalServiceListOfficialId 
+         , CAST ('' as TVarChar) AS PersonalServiceListOfficialName 
+         , 0 AS InfoMoneyId
+         , CAST ('' as TVarChar) AS InfoMoneyName
+         , CAST ('' as TVarChar) AS InfoMoneyName_all
+         , CAST (NULL as TDateTime) AS DateIn
+         , CAST (NULL as TDateTime) AS DateOut
+         , FALSE AS isDateOut
+         , FALSE AS isMain
+         , FALSE AS isOfficial
+         , FALSE AS isErased
     ;
   
 END;

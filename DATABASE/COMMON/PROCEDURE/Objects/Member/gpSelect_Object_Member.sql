@@ -98,6 +98,21 @@ BEGIN
        AND (View_Personal_Branch.MemberId > 0
             OR vbIsConstraint = FALSE
            )
+  UNION ALL
+          SELECT
+             CAST (0 as Integer)    AS Id
+           , 0    AS Code
+           , CAST ('”ƒ¿À»“‹' as TVarChar)  AS NAME
+           , CAST ('' as TVarChar)  AS INN
+           , CAST ('' as TVarChar)  AS DriverCertificate
+           , CAST ('' as TVarChar)  AS Comment
+           , FALSE                  AS isOfficial
+           , CAST (0 as Integer)    AS InfoMoneyId
+           , CAST (0 as Integer)    AS InfoMoneyCode
+           , CAST ('' as TVarChar)  AS InfoMoneyName   
+           , CAST ('' as TVarChar)  AS InfoMoneyName_all       
+           , FALSE AS isErased
+
 
     ;
   
