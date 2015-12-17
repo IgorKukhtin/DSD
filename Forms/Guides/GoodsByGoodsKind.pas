@@ -23,7 +23,9 @@ type
     GoodsOpenChoice: TOpenChoiceForm;
     GoodsKindChoiceForm: TOpenChoiceForm;
     InsertRecord: TInsertRecord;
-    bb: TdxBarButton;
+    bbInsertRecord: TdxBarButton;
+    ProtocolOpenForm: TdsdOpenForm;
+    bbProtocol: TdxBarButton;
   private
     { Private declarations }
   public

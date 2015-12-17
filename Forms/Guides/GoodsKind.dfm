@@ -239,8 +239,8 @@ object GoodsKindForm: TGoodsKindForm
   end
   object ActionList: TActionList
     Images = dmMain.ImageList
-    Left = 104
-    Top = 200
+    Left = 120
+    Top = 248
     object actRefresh: TdsdDataSetRefresh
       Category = 'DSDLib'
       MoveParams = <>
@@ -390,7 +390,7 @@ object GoodsKindForm: TGoodsKindForm
       end>
     Params = <>
     PackSize = 1
-    Left = 48
+    Left = 80
     Top = 184
   end
   object dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
@@ -425,7 +425,7 @@ object GoodsKindForm: TGoodsKindForm
     Top = 168
   end
   object spErasedUnErased: TdsdStoredProc
-    StoredProcName = 'gpUpdateObjectIsErased'
+    StoredProcName = 'gpUpdate_Object_isErased_GoodsKind'
     DataSet = ClientDataSet
     DataSets = <
       item
