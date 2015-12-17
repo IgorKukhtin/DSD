@@ -133,6 +133,7 @@ type
     cxLabel21: TcxLabel;
     cxLabel22: TcxLabel;
     edMainName: TcxDBTextEdit;
+    cbisDiscountPrice: TcxCheckBox;
   private
     { Private declarations }
   public
