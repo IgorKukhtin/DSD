@@ -3558,6 +3558,39 @@ inherited MainForm: TMainForm
       GuiParams = <>
       isShowModal = False
     end
+    object actHelp: TShellExecuteAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      Param.Value = Null
+      Param.Component = FormParams
+      Param.ComponentItem = 'HelpFile'
+      Param.DataType = ftString
+      Caption = #1055#1086#1084#1086#1097#1100
+    end
+    object actGet_Object_Form_HelpFile: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spGet_Object_Form_HelpFile
+      StoredProcList = <
+        item
+          StoredProc = spGet_Object_Form_HelpFile
+        end>
+      Caption = 'actGet_Object_Form_HelpFile'
+    end
+    object mactHelp: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actGet_Object_Form_HelpFile
+        end
+        item
+          Action = actHelp
+        end>
+      Caption = #1055#1086#1084#1086#1097#1100
+      ShortCut = 112
+    end
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Active = False
@@ -4637,6 +4670,9 @@ inherited MainForm: TMainForm
       object N76: TMenuItem [28]
         Action = actReport_LoginProtocol
       end
+      object N91: TMenuItem
+        Action = mactHelp
+      end
     end
   end
   object spGetInfo: TdsdStoredProc
@@ -4679,5 +4715,37 @@ inherited MainForm: TMainForm
       Font.Style = [fsBold]
       TextColor = clInactiveCaption
     end
+  end
+  object spGet_Object_Form_HelpFile: TdsdStoredProc
+    StoredProcName = 'gpGet_Object_Form_HelpFile'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inFormName'
+        Value = 'TMainForm'
+        DataType = ftString
+        ParamType = ptInput
+      end
+      item
+        Name = 'outHelpFile'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'HelpFile'
+        DataType = ftString
+      end>
+    PackSize = 1
+    Left = 944
+    Top = 128
+  end
+  object FormParams: TdsdFormParams
+    Params = <
+      item
+        Name = 'HelpFile'
+        Value = Null
+        DataType = ftString
+      end>
+    Left = 904
+    Top = 128
   end
 end
