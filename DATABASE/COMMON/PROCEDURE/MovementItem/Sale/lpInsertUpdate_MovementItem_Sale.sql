@@ -35,7 +35,13 @@ $BODY$
    DECLARE vbIsInsert Boolean;
    DECLARE vbPriceWithVAT Boolean;
    DECLARE vbTaxPromo TFloat;
+   DECLARE vbPartnerId Integer;
+   DECLARE vbMovementId_Order Integer;
 BEGIN
+     -- Заявка
+     vbMovementId_Order:= (SELECT MLM.MovementChildId FROM MovementLinkMovement AS MLM WHERE MLM.MovementId = inMovementId AND MLM.DescId = zc_MovementLinkMovement_Order());
+     -- Контрагент
+     vbPartnerId:= (SELECT MLO.ObjectId FROM MovementLinkObject AS MLO WHERE MLO.MovementId = inMovementId AND MLO.DescId = zc_MovementLinkObject_To());
      -- Цены с НДС
      vbPriceWithVAT:= (SELECT MB.ValueData FROM MovementBoolean AS MB WHERE MB.MovementId = inMovementId AND MB.DescId = zc_MovementBoolean_PriceWithVAT());
      -- параметры акции
@@ -45,8 +51,22 @@ BEGIN
                             END
           , tmp.TaxPromo
             INTO outMovementId_Promo, outPricePromo, vbTaxPromo
-     FROM lpGet_Movement_Promo_Data (inOperDate   := (SELECT MD.ValueData FROM MovementDate AS MD WHERE MD.MovementId = inMovementId AND MD.DescId = zc_MovementDate_OperDatePartner())
-                                   , inPartnerId  := (SELECT MLO.ObjectId FROM MovementLinkObject AS MLO WHERE MLO.MovementId = inMovementId AND MLO.DescId = zc_MovementLinkObject_To())
+     FROM lpGet_Movement_Promo_Data (inOperDate   := CASE WHEN vbMovementId_Order <> 0
+                                                           AND TRUE = (SELECT ObjectBoolean_OperDateOrder.ValueData
+                                                                       FROM ObjectLink AS ObjectLink_Juridical
+                                                                            INNER JOIN ObjectLink AS ObjectLink_Retail
+                                                                                                  ON ObjectLink_Retail.ObjectId = ObjectLink_Juridical.ChildObjectId
+                                                                                                 AND ObjectLink_Retail.DescId = zc_ObjectLink_Juridical_Retail()
+                                                                            INNER JOIN ObjectBoolean AS ObjectBoolean_OperDateOrder
+                                                                                                     ON ObjectBoolean_OperDateOrder.ObjectId = ObjectLink_Retail.ChildObjectId
+                                                                                                    AND ObjectBoolean_OperDateOrder.DescId = zc_ObjectBoolean_Retail_OperDateOrder()
+                                                                       WHERE ObjectLink_Juridical.ObjectId = vbPartnerId
+                                                                         AND ObjectLink_Juridical.DescId = zc_ObjectLink_Partner_Juridical()
+                                                                      )
+                                                                THEN (SELECT Movement.OperDate FROM Movement WHERE Movement.Id = vbMovementId_Order)
+                                                          ELSE (SELECT MD.ValueData FROM MovementDate AS MD WHERE MD.MovementId = inMovementId AND MD.DescId = zc_MovementDate_OperDatePartner())
+                                                     END
+                                   , inPartnerId  := vbPartnerId
                                    , inContractId := (SELECT MLO.ObjectId FROM MovementLinkObject AS MLO WHERE MLO.MovementId = inMovementId AND MLO.DescId = zc_MovementLinkObject_Contract())
                                    , inUnitId     := (SELECT MLO.ObjectId FROM MovementLinkObject AS MLO WHERE MLO.MovementId = inMovementId AND MLO.DescId = zc_MovementLinkObject_From())
                                    , inGoodsId    := inGoodsId

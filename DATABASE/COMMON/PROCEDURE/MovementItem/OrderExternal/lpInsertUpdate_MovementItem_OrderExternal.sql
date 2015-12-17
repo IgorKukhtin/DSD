@@ -19,11 +19,10 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_MovementItem_OrderExternal(
 RETURNS RECORD AS
 $BODY$
    DECLARE vbIsInsert Boolean;
-   DECLARE vbPartnerId Integer;
    DECLARE vbPriceWithVAT Boolean;
    DECLARE vbTaxPromo TFloat;
+   DECLARE vbPartnerId Integer;
 BEGIN
-
      -- Контрагент
      vbPartnerId:= (SELECT MLO.ObjectId FROM MovementLinkObject AS MLO WHERE MLO.MovementId = inMovementId AND MLO.DescId = zc_MovementLinkObject_From());
      -- Цены с НДС
@@ -35,9 +34,22 @@ BEGIN
                             END
           , tmp.TaxPromo
             INTO outMovementId_Promo, outPricePromo, vbTaxPromo
-     FROM lpGet_Movement_Promo_Data (inOperDate   := (SELECT Movement.OperDate FROM Movement WHERE Movement.Id = inMovementId)
-                                                   + (COALESCE ((SELECT ObjectFloat.ValueData FROM ObjectFloat WHERE ObjectFloat.ObjectId = vbPartnerId AND ObjectFloat.DescId = zc_ObjectFloat_Partner_PrepareDayCount()),  0) :: TVarChar || ' DAY') :: INTERVAL
-                                                   + (COALESCE ((SELECT ObjectFloat.ValueData FROM ObjectFloat WHERE ObjectFloat.ObjectId = vbPartnerId AND ObjectFloat.DescId = zc_ObjectFloat_Partner_DocumentDayCount()), 0) :: TVarChar || ' DAY') :: INTERVAL
+     FROM lpGet_Movement_Promo_Data (inOperDate   := CASE WHEN TRUE = (SELECT ObjectBoolean_OperDateOrder.ValueData
+                                                                       FROM ObjectLink AS ObjectLink_Juridical
+                                                                            INNER JOIN ObjectLink AS ObjectLink_Retail
+                                                                                                  ON ObjectLink_Retail.ObjectId = ObjectLink_Juridical.ChildObjectId
+                                                                                                 AND ObjectLink_Retail.DescId = zc_ObjectLink_Juridical_Retail()
+                                                                            INNER JOIN ObjectBoolean AS ObjectBoolean_OperDateOrder
+                                                                                                     ON ObjectBoolean_OperDateOrder.ObjectId = ObjectLink_Retail.ChildObjectId
+                                                                                                    AND ObjectBoolean_OperDateOrder.DescId = zc_ObjectBoolean_Retail_OperDateOrder()
+                                                                       WHERE ObjectLink_Juridical.ObjectId = vbPartnerId
+                                                                         AND ObjectLink_Juridical.DescId = zc_ObjectLink_Partner_Juridical()
+                                                                      )
+                                                                THEN (SELECT Movement.OperDate FROM Movement WHERE Movement.Id = inMovementId)
+                                                          ELSE (SELECT Movement.OperDate FROM Movement WHERE Movement.Id = inMovementId)
+                                                             + (COALESCE ((SELECT ObjectFloat.ValueData FROM ObjectFloat WHERE ObjectFloat.ObjectId = vbPartnerId AND ObjectFloat.DescId = zc_ObjectFloat_Partner_PrepareDayCount()),  0) :: TVarChar || ' DAY') :: INTERVAL
+                                                             + (COALESCE ((SELECT ObjectFloat.ValueData FROM ObjectFloat WHERE ObjectFloat.ObjectId = vbPartnerId AND ObjectFloat.DescId = zc_ObjectFloat_Partner_DocumentDayCount()), 0) :: TVarChar || ' DAY') :: INTERVAL
+                                                     END
                                    , inPartnerId  := vbPartnerId
                                    , inContractId := (SELECT MLO.ObjectId FROM MovementLinkObject AS MLO WHERE MLO.MovementId = inMovementId AND MLO.DescId = zc_MovementLinkObject_Contract())
                                    , inUnitId     := (SELECT MLO.ObjectId FROM MovementLinkObject AS MLO WHERE MLO.MovementId = inMovementId AND MLO.DescId = zc_MovementLinkObject_To())

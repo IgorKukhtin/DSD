@@ -15,7 +15,7 @@ RETURNS TABLE (Id Integer, MIId Integer, InvNumber Integer, OperDate TDateTime
              , StartRunPlan TDateTime, StartRun TDateTime
              , Amount TFloat, WeightTransport TFloat, Distance TFloat, Price TFloat, CountPoint TFloat, TrevelTime TFloat
              , Comment TVarChar
-             , ContractId Integer, ContractName TVarChar
+             , ContractId Integer, ContractCode Integer, ContractName TVarChar
              , InfoMoneyId Integer, InfoMoneyCode Integer, InfoMoneyName TVarChar
              , JuridicalId Integer, JuridicalName TVarChar
              , PaidKindId Integer, PaidKindName TVarChar
@@ -63,7 +63,8 @@ BEGIN
            , MIString_Comment.ValueData  AS Comment
 
            , View_Contract_InvNumber.ContractId
-           , View_Contract_InvNumber.InvNumber AS ContractName
+           , View_Contract_InvNumber.ContractCode   AS ContractCode
+           , View_Contract_InvNumber.InvNumber      AS ContractName
 
            , View_InfoMoney.InfoMoneyId
            , View_InfoMoney.InfoMoneyCode
@@ -191,4 +192,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpSelect_Movement_TransportService (inStartDate:= '30.01.2013', inEndDate:= '01.02.2013', inSession:= zfCalc_UserAdmin())
+-- SELECT * FROM gpSelect_Movement_TransportService (inStartDate:= '30.01.2013', inEndDate:= '01.02.2013', inIsErased:= FALSE, inSession:= zfCalc_UserAdmin())
