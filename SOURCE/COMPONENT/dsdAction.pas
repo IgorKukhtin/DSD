@@ -660,6 +660,22 @@ type
     property Param: TdsdParam read FParam write FParam;
   end;
 
+  TShellExecuteAction = class(TdsdCustomAction)
+  private
+    FParam: TdsdParam;
+  protected
+    function LocalExecute: Boolean; override;
+  public
+    constructor Create(AOwner: TComponent); override;
+    destructor Destroy; override;
+  published
+    property Param: TdsdParam read FParam write FParam;
+    property Caption;
+    property Hint;
+    property ImageIndex;
+    property ShortCut;
+  end;
+
 procedure Register;
 
 implementation
@@ -698,6 +714,7 @@ begin
   RegisterActions('DSDLib', [TMultiAction], TMultiAction);
   RegisterActions('DSDLib', [TOpenChoiceForm], TOpenChoiceForm);
   RegisterActions('DSDLib', [TUpdateRecord], TUpdateRecord);
+  RegisterActions('DSDLib', [TShellExecuteAction], TShellExecuteAction);
 end;
 
 { TdsdCustomDataSetAction }
@@ -2745,6 +2762,30 @@ begin
   if Assigned(FReport) AND //ClosePreview повторно вызывается при удалении frxReport
      not Assigned(FReport.Designer) then //Не нужно самоубиваться, если в режиме дизайна
     Self.Destroy;
+end;
+
+{ TShellExecuteAction }
+
+constructor TShellExecuteAction.Create(AOwner: TComponent);
+begin
+  inherited;
+  FParam := TdsdParam.Create(nil);
+end;
+
+destructor TShellExecuteAction.Destroy;
+begin
+  FreeAndNil(FParam);
+  inherited;
+end;
+
+function TShellExecuteAction.LocalExecute: Boolean;
+begin
+  result := false;
+  if VarToStr(Param.Value) <> '' then
+  Begin
+    ShellExecute(0, 'open', PChar(VarToStr(Param.Value)), '', '', 1);
+    Result := True;
+  End;
 end;
 
 end.

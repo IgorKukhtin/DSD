@@ -1011,6 +1011,18 @@ CREATE OR REPLACE FUNCTION zc_ObjectLink_PersonalServiceList_Member() RETURNS In
   INSERT INTO ObjectLinkDesc(Code, ItemName, DescId, ChildObjectDescId)
   SELECT 'zc_ObjectLink_PersonalServiceList_Member', 'Связь Ведомости начисления с Физ лицом (пользователь)', zc_Object_PersonalServiceList(), zc_Object_Member() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_PersonalServiceList_Member');
 
+CREATE OR REPLACE FUNCTION zc_ObjectLink_PersonalServiceList_MemberHeadManager() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_PersonalServiceList_MemberHeadManager'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+  INSERT INTO ObjectLinkDesc(Code, ItemName, DescId, ChildObjectDescId)
+  SELECT 'zc_ObjectLink_PersonalServiceList_MemberHeadManager', 'Связь Ведомости начисления с Физ лицом (исполнительный директор)', zc_Object_PersonalServiceList(), zc_Object_Member() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_PersonalServiceList_MemberHeadManager');
+
+CREATE OR REPLACE FUNCTION zc_ObjectLink_PersonalServiceList_MemberManager() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_PersonalServiceList_MemberManager'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+  INSERT INTO ObjectLinkDesc(Code, ItemName, DescId, ChildObjectDescId)
+  SELECT 'zc_ObjectLink_PersonalServiceList_MemberManager', 'Связь Ведомости начисления с Физ лицом (директор)', zc_Object_PersonalServiceList(), zc_Object_Member() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_PersonalServiceList_MemberManager');
+
+CREATE OR REPLACE FUNCTION zc_ObjectLink_PersonalServiceList_MemberBookkeeper() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_PersonalServiceList_MemberBookkeeper'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+  INSERT INTO ObjectLinkDesc(Code, ItemName, DescId, ChildObjectDescId)
+  SELECT 'zc_ObjectLink_PersonalServiceList_MemberBookkeeper', 'Связь Ведомости начисления с Физ лицом (бухгалтер)', zc_Object_PersonalServiceList(), zc_Object_Member() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_PersonalServiceList_MemberBookkeeper');
+
 
 
 CREATE OR REPLACE FUNCTION zc_ObjectLink_GoodsQuality_Goods() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_GoodsQuality_Goods'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;

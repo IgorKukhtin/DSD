@@ -25,6 +25,8 @@ object BranchForm: TBranchForm
     Align = alClient
     TabOrder = 0
     LookAndFeel.NativeStyle = False
+    ExplicitLeft = 8
+    ExplicitTop = 50
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -37,9 +39,6 @@ object BranchForm: TBranchForm
       OptionsBehavior.IncSearchItem = clName
       OptionsCustomize.ColumnHiding = True
       OptionsCustomize.ColumnsQuickCustomization = True
-      OptionsData.Deleting = False
-      OptionsData.DeletingConfirmation = False
-      OptionsData.Editing = False
       OptionsData.Inserting = False
       OptionsSelection.InvertSelect = False
       OptionsView.ColumnAutoWidth = True
@@ -52,6 +51,7 @@ object BranchForm: TBranchForm
         DataBinding.FieldName = 'Code'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        Options.Editing = False
         Width = 45
       end
       object clName: TcxGridDBColumn
@@ -59,6 +59,7 @@ object BranchForm: TBranchForm
         DataBinding.FieldName = 'Name'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        Options.Editing = False
         Width = 150
       end
       object clInvNumber: TcxGridDBColumn
@@ -66,11 +67,20 @@ object BranchForm: TBranchForm
         DataBinding.FieldName = 'InvNumber'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        Options.Editing = False
         Width = 55
       end
       object clPersonalBookkeeperName: TcxGridDBColumn
         Caption = #1060#1048#1054' '#1089#1086#1090#1088#1091#1076#1085#1080#1082' ('#1041#1091#1093#1075#1072#1083#1090#1077#1088')'
         DataBinding.FieldName = 'PersonalBookkeeperName'
+        PropertiesClassName = 'TcxButtonEditProperties'
+        Properties.Buttons = <
+          item
+            Action = PersonalBookkeeperChoice
+            Default = True
+            Kind = bkEllipsis
+          end>
+        Properties.ReadOnly = True
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 100
@@ -88,6 +98,7 @@ object BranchForm: TBranchForm
         DataBinding.FieldName = 'IsMedoc'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        Options.Editing = False
         Width = 40
       end
       object clisPartionDoc: TcxGridDBColumn
@@ -95,6 +106,7 @@ object BranchForm: TBranchForm
         DataBinding.FieldName = 'isPartionDoc'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        Options.Editing = False
         Width = 60
       end
     end
@@ -415,6 +427,42 @@ object BranchForm: TBranchForm
         end>
       isShowModal = False
     end
+    object actUpdatePersonal: TdsdUpdateDataSet
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdate
+      StoredProcList = <
+        item
+          StoredProc = spUpdate
+        end>
+      Caption = 'actUpdateDataSet'
+      DataSource = DataSource
+    end
+    object PersonalBookkeeperChoice: TOpenChoiceForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = 'TPersonal_ObjectForm'
+      FormName = 'TPersonal_ObjectForm'
+      FormNameParam.Value = 'TPersonal_ObjectForm'
+      FormNameParam.DataType = ftString
+      GuiParams = <
+        item
+          Name = 'Key'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'PersonalBookkeeperId'
+        end
+        item
+          Name = 'TextValue'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'PersonalBookkeeperName'
+          DataType = ftString
+        end>
+      isShowModal = True
+    end
   end
   object dsdStoredProc: TdsdStoredProc
     StoredProcName = 'gpSelect_Object_Branch'
@@ -473,7 +521,30 @@ object BranchForm: TBranchForm
     ColumnAddOnList = <>
     ColumnEnterList = <>
     SummaryItemList = <>
-    Left = 216
-    Top = 240
+    Left = 224
+    Top = 272
+  end
+  object spUpdate: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Object_Branch_Personal'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inId'
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'Id'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inPersonalBookkeeperId'
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'PersonalBookkeeperId'
+        ParamType = ptInput
+      end>
+    PackSize = 1
+    Left = 459
+    Top = 118
   end
 end

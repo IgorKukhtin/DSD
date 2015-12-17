@@ -86,27 +86,38 @@ inherited TransportServiceJournalForm: TTransportServiceJournalForm
             Options.Editing = False
             Width = 71
           end
+          object clWeightTransport: TcxGridDBColumn
+            Caption = #1042#1099#1074#1086#1079' '#1092#1072#1082#1090', '#1082#1075
+            DataBinding.FieldName = 'WeightTransport'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 70
+          end
           object clDistance: TcxGridDBColumn
             Caption = #1055#1088#1086#1073#1077#1075' '#1092#1072#1082#1090', '#1082#1084
             DataBinding.FieldName = 'Distance'
+            HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 70
           end
           object clPrice: TcxGridDBColumn
             Caption = #1062#1077#1085#1072' ('#1090#1086#1087#1083#1080#1074#1072')'
             DataBinding.FieldName = 'Price'
+            HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 65
           end
           object clCountPoint: TcxGridDBColumn
             Caption = #1050#1086#1083'-'#1074#1086' '#1090#1086#1095#1077#1082
             DataBinding.FieldName = 'CountPoint'
+            HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 59
           end
           object clTrevelTime: TcxGridDBColumn
             Caption = #1042#1088#1077#1084#1103' '#1074' '#1087#1091#1090#1080', '#1095
             DataBinding.FieldName = 'TrevelTime'
+            HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 60
           end
@@ -653,6 +664,14 @@ inherited TransportServiceJournalForm: TTransportServiceJournalForm
         ComponentItem = 'Amount'
         DataType = ftFloat
         ParamType = ptInputOutput
+      end
+      item
+        Name = 'inWeightTransport'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'WeightTransport'
+        DataType = ftFloat
+        ParamType = ptInput
       end
       item
         Name = 'indistance'

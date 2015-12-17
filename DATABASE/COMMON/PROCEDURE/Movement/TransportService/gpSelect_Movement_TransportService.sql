@@ -13,7 +13,7 @@ CREATE OR REPLACE FUNCTION gpSelect_Movement_TransportService(
 RETURNS TABLE (Id Integer, MIId Integer, InvNumber Integer, OperDate TDateTime
              , StatusCode Integer, StatusName TVarChar
              , StartRunPlan TDateTime, StartRun TDateTime
-             , Amount TFloat, Distance TFloat, Price TFloat, CountPoint TFloat, TrevelTime TFloat
+             , Amount TFloat, WeightTransport TFloat, Distance TFloat, Price TFloat, CountPoint TFloat, TrevelTime TFloat
              , Comment TVarChar
              , ContractId Integer, ContractName TVarChar
              , InfoMoneyId Integer, InfoMoneyCode Integer, InfoMoneyName TVarChar
@@ -54,10 +54,11 @@ BEGIN
            , CAST (DATE_TRUNC ('MINUTE', MovementDate_StartRun.ValueData)     AS TDateTime) AS StartRun
 
            , MovementItem.Amount
-           , MIFloat_Distance.ValueData     AS Distance
-           , MIFloat_Price.ValueData        AS Price
-           , MIFloat_CountPoint.ValueData   AS CountPoint
-           , MIFloat_TrevelTime.ValueData   AS TrevelTime
+           , MIFloat_WeightTransport.ValueData     AS WeightTransport
+           , MIFloat_Distance.ValueData            AS Distance
+           , MIFloat_Price.ValueData               AS Price
+           , MIFloat_CountPoint.ValueData          AS CountPoint
+           , MIFloat_TrevelTime.ValueData          AS TrevelTime
 
            , MIString_Comment.ValueData  AS Comment
 
@@ -99,7 +100,11 @@ BEGIN
             LEFT JOIN MovementItem ON MovementItem.MovementId = Movement.Id
                                   AND MovementItem.DescId     = zc_MI_Master()
             LEFT JOIN Object AS Object_Juridical ON Object_Juridical.Id = MovementItem.ObjectId 
-                              
+ 
+            LEFT JOIN MovementItemFloat AS MIFloat_WeightTransport
+                                        ON MIFloat_WeightTransport.MovementItemId = MovementItem.Id
+                                       AND MIFloat_WeightTransport.DescId = zc_MIFloat_WeightTransport()
+                             
             LEFT JOIN MovementItemFloat AS MIFloat_Distance
                                         ON MIFloat_Distance.MovementItemId = MovementItem.Id
                                        AND MIFloat_Distance.DescId = zc_MIFloat_Distance()
@@ -177,6 +182,7 @@ $BODY$
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».   Ã‡Ì¸ÍÓ ƒ. 
+ 16.12.15         * add WeightTransport
  22.09.15         * add inIsErased
  25.01.14                                        * add zc_MovementLinkObject_UnitForwarding
  14.01.14                                        * add Object_Contract_InvNumber_View

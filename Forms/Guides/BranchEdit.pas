@@ -42,8 +42,6 @@ type
     dsdFormClose: TdsdFormClose;
     edInvNumber: TcxTextEdit;
     cxLabel2: TcxLabel;
-    edPersonalBookkeeper: TcxButtonEdit;
-    PersonalBookkeeperGuides: TdsdGuides;
     cxLabel19: TcxLabel;
     cbIsMedoc: TcxCheckBox;
     cbisPartionDoc: TcxCheckBox;

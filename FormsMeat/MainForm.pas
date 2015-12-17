@@ -653,6 +653,14 @@ type
     N88: TMenuItem;
     actReport_SheetWorkTime: TdsdOpenForm;
     N89: TMenuItem;
+    actForms: TdsdOpenForm;
+    N90: TMenuItem;
+    spGet_Object_Form_HelpFile: TdsdStoredProc;
+    actHelp: TShellExecuteAction;
+    actGet_Object_Form_HelpFile: TdsdExecStoredProc;
+    mactHelp: TMultiAction;
+    FormParams: TdsdFormParams;
+    N91: TMenuItem;
     procedure actReport_OLAPSoldExecute(Sender: TObject);
     procedure FormShow(Sender: TObject);
   private

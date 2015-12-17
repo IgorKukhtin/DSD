@@ -12,6 +12,9 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , BranchId Integer, BranchName TVarChar 
              , BankId Integer, BankName TVarChar
              , MemberId Integer, MemberName TVarChar
+             , MemberHeadManagerId Integer, MemberHeadManagerName TVarChar
+             , MemberManagerId Integer, MemberManagerName TVarChar
+             , MemberBookkeeperId Integer, MemberBookkeeperName TVarChar
              , isErased boolean) AS
 $BODY$
 BEGIN
@@ -38,6 +41,13 @@ BEGIN
            , 0                      AS MemberId
            , CAST ('' as TVarChar)  AS MemberName
 
+           , 0                      AS MemberHeadManagerId
+           , CAST ('' as TVarChar)  AS MemberHeadManagerName
+           , 0                      AS MemberManagerId
+           , CAST ('' as TVarChar)  AS MemberManagerName
+           , 0                      AS MemberId
+           , CAST ('' as TVarChar)  AS MemberName
+
            , CAST (NULL AS Boolean) AS isErased;
    ELSE
        RETURN QUERY 
@@ -57,6 +67,13 @@ BEGIN
 
            , Object_Member.Id                     AS MemberId
            , Object_Member.ValueData              AS MemberName
+
+           , Object_MemberHeadManager.Id          AS MemberHeadManagerId
+           , Object_MemberHeadManager.ValueData   AS MemberHeadManagerName
+           , Object_MemberManager.Id              AS MemberManagerId
+           , Object_MemberManager.ValueData       AS MemberManagerName
+           , Object_MemberBookkeeper.Id           AS MemberBookkeeperId
+           , Object_MemberBookkeeper.ValueData    AS MemberBookkeeperName
 
            , Object_PersonalServiceList.isErased   AS isErased
 
@@ -86,6 +103,21 @@ BEGIN
                                AND ObjectLink_PersonalServiceList_Member.DescId = zc_ObjectLink_PersonalServiceList_Member()
            LEFT JOIN Object AS Object_Member ON Object_Member.Id = ObjectLink_PersonalServiceList_Member.ChildObjectId
 
+           LEFT JOIN ObjectLink AS ObjectLink_PersonalServiceList_MemberHeadManager
+                                ON ObjectLink_PersonalServiceList_MemberHeadManager.ObjectId = Object_PersonalServiceList.Id 
+                               AND ObjectLink_PersonalServiceList_MemberHeadManager.DescId = zc_ObjectLink_PersonalServiceList_MemberHeadManager()
+           LEFT JOIN Object AS Object_MemberHeadManager ON Object_MemberHeadManager.Id = ObjectLink_PersonalServiceList_MemberHeadManager.ChildObjectId
+
+           LEFT JOIN ObjectLink AS ObjectLink_PersonalServiceList_MemberManager
+                                ON ObjectLink_PersonalServiceList_MemberManager.ObjectId = Object_PersonalServiceList.Id 
+                               AND ObjectLink_PersonalServiceList_MemberManager.DescId = zc_ObjectLink_PersonalServiceList_MemberManager()
+           LEFT JOIN Object AS Object_MemberManager ON Object_MemberManager.Id = ObjectLink_PersonalServiceList_MemberManager.ChildObjectId
+
+           LEFT JOIN ObjectLink AS ObjectLink_PersonalServiceList_MemberBookkeeper
+                                ON ObjectLink_PersonalServiceList_MemberBookkeeper.ObjectId = Object_PersonalServiceList.Id 
+                               AND ObjectLink_PersonalServiceList_MemberBookkeeper.DescId = zc_ObjectLink_PersonalServiceList_MemberBookkeeper()
+           LEFT JOIN Object AS Object_MemberBookkeeper ON Object_MemberBookkeeper.Id = ObjectLink_PersonalServiceList_MemberBookkeeper.ChildObjectId
+
        WHERE Object_PersonalServiceList.Id = inId;
    END IF; 
   
@@ -99,6 +131,7 @@ ALTER FUNCTION gpGet_Object_PersonalServiceList(integer, TVarChar) OWNER TO post
 /*-------------------------------------------------------------------------------
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 16.12.15         * add MemberHeadManager, MemberManager, MemberBookkeeper
  26.08.15         * add Member
  15.04.15         * add PaidKind, Branch, Bank
  30.09.14         * add Juridical               

@@ -1,6 +1,7 @@
 CREATE OR REPLACE FUNCTION zc_Enum_Process_InsertUpdate_Object_Branch() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_Process_InsertUpdate_Object_Branch' AND DescId = zc_ObjectString_Enum()); END; $BODY$ LANGUAGE plpgsql;
 CREATE OR REPLACE FUNCTION zc_Enum_Process_Get_Object_Branch() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_Process_Get_Object_Branch' AND DescId = zc_ObjectString_Enum()); END; $BODY$ LANGUAGE plpgsql;
 CREATE OR REPLACE FUNCTION zc_Enum_Process_Select_Object_Branch() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_Process_Select_Object_Branch' AND DescId = zc_ObjectString_Enum()); END; $BODY$ LANGUAGE plpgsql;
+CREATE OR REPLACE FUNCTION zc_Enum_Process_Update_Object_Branch_Personal() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_Process_Update_Object_Branch_Personal' AND DescId = zc_ObjectString_Enum()); END; $BODY$ LANGUAGE plpgsql;
 
 DO $$
 BEGIN
@@ -22,6 +23,12 @@ PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_Process_Select_Object_Branch(
                                   , inCode:= 3
                                   , inName:= 'Справочник <'||(SELECT ItemName FROM ObjectDesc WHERE Id = zc_Object_Branch())||'> - получение данных.'
                                   , inEnumName:= 'zc_Enum_Process_Select_Object_Branch');
+
+PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_Process_Update_Object_Branch_Personal()
+                                  , inDescId:= zc_Object_Process()
+                                  , inCode:= 1
+                                  , inName:= 'Справочник <'||(SELECT ItemName FROM ObjectDesc WHERE Id = zc_Object_Branch())||'> - сохранение данных.'
+                                  , inEnumName:= 'zc_Enum_Process_Update_Object_Branch_Personal');
                                   
  -- заливка прав - InsertUpdate
  PERFORM gpInsertUpdate_Object_RoleProcess (ioId        := tmpData.RoleRightId
@@ -93,5 +100,6 @@ END $$;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 16.12.15         * add 
  14.12.13                                        *
 */
