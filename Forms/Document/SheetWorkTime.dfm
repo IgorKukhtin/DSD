@@ -435,6 +435,13 @@ object SheetWorkTimeForm: TSheetWorkTimeForm
           Value = Null
           Component = CrossDBViewAddOn
           ComponentItem = 'TypeId'
+        end
+        item
+          Name = 'Value'
+          Value = Null
+          Component = CrossDBViewAddOn
+          ComponentItem = 'Value'
+          DataType = ftString
         end>
       isShowModal = True
     end
@@ -672,11 +679,11 @@ object SheetWorkTimeForm: TSheetWorkTimeForm
         ParamType = ptInputOutput
       end
       item
-        Name = 'inTypeId'
+        Name = 'ioTypeId'
         Value = Null
         Component = CrossDBViewAddOn
         ComponentItem = 'TypeId'
-        ParamType = ptInput
+        ParamType = ptInputOutput
       end>
     PackSize = 1
     Left = 374

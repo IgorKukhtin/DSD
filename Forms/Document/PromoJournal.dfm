@@ -18,6 +18,7 @@ inherited PromoJournalForm: TPromoJournalForm
           OptionsData.Deleting = False
           OptionsData.DeletingConfirmation = False
           OptionsData.Editing = False
+          OptionsView.GroupByBox = True
           Styles.Content = nil
           Styles.Inactive = nil
           Styles.Selection = nil
@@ -572,29 +573,6 @@ inherited PromoJournalForm: TPromoJournalForm
     PackSize = 1
     Left = 488
     Top = 216
-  end
-  object dsdStoredProc1: TdsdStoredProc
-    StoredProcName = 'gpUpdate_Movement_Promo_Data_before'
-    DataSets = <>
-    OutputType = otResult
-    Params = <
-      item
-        Name = 'inStartDate'
-        Value = 42309d
-        Component = deStart
-        DataType = ftDateTime
-        ParamType = ptInput
-      end
-      item
-        Name = 'inEndDate'
-        Value = 42309d
-        Component = deEnd
-        DataType = ftDateTime
-        ParamType = ptInput
-      end>
-    PackSize = 1
-    Left = 520
-    Top = 280
   end
   object spUpdate_Movement_Promo_Data_after: TdsdStoredProc
     StoredProcName = 'gpUpdate_Movement_Promo_Data_after'

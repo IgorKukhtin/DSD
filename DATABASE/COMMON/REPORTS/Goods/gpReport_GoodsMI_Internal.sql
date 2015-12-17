@@ -14,7 +14,7 @@ CREATE OR REPLACE FUNCTION gpReport_GoodsMI_Internal (
 )
 RETURNS TABLE (GoodsGroupName TVarChar, GoodsGroupNameFull TVarChar
              , GoodsId Integer, GoodsCode Integer, GoodsName TVarChar
-             , GoodsKindName TVarChar, MeasureName TVarChar
+             , GoodsKindId Integer, GoodsKindName TVarChar, MeasureName TVarChar
              , TradeMarkName TVarChar
              , PartionGoods TVarChar
              , LocationId Integer, LocationCode Integer, LocationName TVarChar
@@ -121,6 +121,7 @@ BEGIN
          , Object_Goods.Id                            AS GoodsId
          , Object_Goods.ObjectCode                    AS GoodsCode
          , Object_Goods.ValueData                     AS GoodsName
+         , Object_GoodsKind.Id                        AS GoodsKindId
          , Object_GoodsKind.ValueData                 AS GoodsKindName
          , Object_Measure.ValueData                   AS MeasureName
          , Object_TradeMark.ValueData                 AS TradeMarkName

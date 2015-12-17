@@ -7,6 +7,7 @@ CREATE OR REPLACE FUNCTION gpSelect_Object_WorkTimeKind(
 )
 RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , ShortName TVarChar
+             , Value     TVarChar
              , isErased Boolean) AS
 $BODY$BEGIN
 
@@ -17,9 +18,10 @@ $BODY$BEGIN
    SELECT
         Object_WorkTimeKind.Id           AS Id 
       , Object_WorkTimeKind.ObjectCode   AS Code
-      , Object_WorkTimeKind.ValueData    AS NAME
+      , Object_WorkTimeKind.ValueData    AS Name
       
       , ObjectString_ShortName.ValueData AS ShortName 
+      , zfCalc_ViewWorkHour (0, ObjectString_ShortName.ValueData) AS Value
       
       , Object_WorkTimeKind.isErased     AS isErased
       

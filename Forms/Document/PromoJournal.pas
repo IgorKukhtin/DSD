@@ -47,7 +47,6 @@ type
     chbPeriodForOperDate: TcxCheckBox;
     actUpdate_Promo_Data_before: TdsdExecStoredProc;
     spUpdate_Movement_Promo_Data_before: TdsdStoredProc;
-    dsdStoredProc1: TdsdStoredProc;
     spUpdate_Movement_Promo_Data_after: TdsdStoredProc;
     actUpdate_Promo_Data_after: TdsdExecStoredProc;
     mactUpdate_Movement_Promo_Data_all: TMultiAction;

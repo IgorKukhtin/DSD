@@ -91,4 +91,5 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM lpGet_Movement_Promo_Data (inOperDate:= CURRENT_DATE, inPartnerId:= 1, inContractId:= NULL, inGoodsId:= 1, inGoodsKindId:= NULL)
+-- SELECT * FROM lpGet_Movement_Promo_Data (inOperDate:= CURRENT_DATE, inPartnerId:= 536388, inContractId:= NULL, inUnitId:= 0, inGoodsId:= 2153, inGoodsKindId:= NULL)
+

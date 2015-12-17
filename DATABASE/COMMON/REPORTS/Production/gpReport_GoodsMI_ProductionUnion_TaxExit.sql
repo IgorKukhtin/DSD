@@ -143,10 +143,10 @@ BEGIN
                                                  ON ObjectLink_ReceiptChild_Goods.ObjectId = ObjectLink_ReceiptChild_Receipt.ObjectId
                                                 AND ObjectLink_ReceiptChild_Goods.DescId = zc_ObjectLink_ReceiptChild_Goods()
                                                 AND ObjectLink_ReceiptChild_Goods.ChildObjectId = ObjectLink_Receipt_Goods_parent.ChildObjectId
-
-                           LEFT JOIN ObjectFloat AS ObjectFloat_Value_child
-                                                 ON ObjectFloat_Value_child.ObjectId = ObjectLink_ReceiptChild_Receipt.ObjectId
-                                                AND ObjectFloat_Value_child.DescId = zc_ObjectFloat_ReceiptChild_Value()
+                           INNER JOIN ObjectFloat AS ObjectFloat_Value_child
+                                                  ON ObjectFloat_Value_child.ObjectId = ObjectLink_ReceiptChild_Receipt.ObjectId
+                                                 AND ObjectFloat_Value_child.DescId = zc_ObjectFloat_ReceiptChild_Value()
+                                                 AND ObjectFloat_Value_child.ValueData <> 0
                       GROUP BY tmpMI_WorkProgress_out.GoodsId
                              , tmpMI_WorkProgress_out.PartionGoodsId
                              , MIContainer.ObjectIntId_Analyzer

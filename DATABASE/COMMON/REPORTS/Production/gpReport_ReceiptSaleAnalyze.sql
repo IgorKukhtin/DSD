@@ -30,8 +30,8 @@ BEGIN
     PERFORM lpUpdate_Object_Receipt_Parent (0, 0, 0);
 
 
-     CREATE TEMP TABLE _tmpGoods (GoodsId Integer) ON COMMIT DROP;
-     CREATE TEMP TABLE _tmpUnit (UnitId Integer) ON COMMIT DROP;
+     CREATE TEMP TABLE _tmpGoods (GoodsId Integer, InfoMoneyId Integer, TradeMarkId Integer, MeasureId Integer, Weight TFloat) ON COMMIT DROP;
+     CREATE TEMP TABLE _tmpUnit (UnitId Integer, UnitId_by Integer, isActive Boolean) ON COMMIT DROP;
 
      CREATE TEMP TABLE tmpChildReceiptTable (ReceiptId_from Integer, ReceiptId Integer, GoodsId_in Integer, GoodsKindId_in Integer, Amount_in TFloat
                                            , ReceiptChildId integer, GoodsId_out Integer, GoodsKindId_out Integer, Amount_out TFloat, isStart Boolean, isCost Boolean
@@ -230,11 +230,100 @@ BEGIN
                   , tmpContainer.GoodsKindId
            )
 
+           , tmp_Send AS (SELECT gpReport.GoodsId, gpReport.GoodsKindId
+                               , SUM (gpReport.AmountOut)      AS Amount_Count
+                               , SUM (gpReport.SummIn_branch)  AS Amount_Summ
+                               , SUM (gpReport.SummOut_zavod)  AS Amount_SummIn
+                               , 0 AS Amount_CountRet
+                               , 0 AS Amount_SummRet
+                               , 0 AS Amount_SummInRet
+                          FROM gpReport_GoodsMI_Internal (inStartDate    := inStartDate
+                                                        , inEndDate      := inEndDate
+                                                        , inDescId       := zc_Movement_SendOnPrice()
+                                                        , inFromId       := -123
+                                                        , inToId         := 0
+                                                        , inGoodsGroupId := inGoodsGroupId
+                                                        , inIsMO_all     := FALSE
+                                                        , inSession      := inSession
+                                                         ) AS gpReport
+                          GROUP BY gpReport.GoodsId, gpReport.GoodsKindId
+                         UNION ALL
+                          SELECT MovementItem.ObjectId           AS GoodsId
+                               , MILinkObject_GoodsKind.ObjectId AS GoodsKindId
+
+                               , 0 AS Amount_Count
+                               , 0 AS Amount_Summ
+                               , 0 AS Amount_SummIn
+
+                               , SUM (COALESCE (MIFloat_AmountPartner.ValueData, 0) /*MovementItem.Amount*/) AS Amount_CountRet
+                               , SUM (COALESCE (MIFloat_AmountPartner.ValueData, 0) /*MovementItem.Amount*/
+                                    * CASE WHEN MIFloat_CountForPrice.ValueData > 0
+                                                THEN COALESCE (MIFloat_Price.ValueData, 0) / MIFloat_CountForPrice.ValueData
+                                           ELSE COALESCE (MIFloat_Price.ValueData, 0)
+                                      END * 1.2
+                                     ) AS Amount_SummRet
+                               , 0 AS Amount_SummInRet
+                          FROM Movement
+                               LEFT JOIN MovementLinkObject AS MovementLinkObject_From
+                                                             ON MovementLinkObject_From.MovementId = Movement.Id
+                                                            AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
+                               LEFT JOIN MovementLinkObject AS MovementLinkObject_To
+                                                            ON MovementLinkObject_To.MovementId = Movement.Id
+                                                           AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
+                               INNER JOIN _tmpUnit AS _tmpUnit_To ON _tmpUnit_To.UnitId = MovementLinkObject_To.ObjectId
+                                                                 AND _tmpUnit_To.UnitId > 0
+                               INNER JOIN MovementItem ON MovementItem.MovementId = Movement.Id
+                                                      AND MovementItem.DescId     = zc_MI_Master()
+                                                      AND MovementItem.isErased   = FALSE
+                               LEFT JOIN _tmpGoods ON _tmpGoods.GoodsId = MovementItem.ObjectId
+
+                               LEFT JOIN MovementItemFloat AS MIFloat_AmountPartner
+                                                           ON MIFloat_AmountPartner.MovementItemId = MovementItem.Id
+                                                          AND MIFloat_AmountPartner.DescId = zc_MIFloat_AmountPartner()
+
+                               LEFT JOIN MovementItemFloat AS MIFloat_Price
+                                                           ON MIFloat_Price.MovementItemId = MovementItem.Id
+                                                          AND MIFloat_Price.DescId = zc_MIFloat_Price()
+                               LEFT JOIN MovementItemFloat AS MIFloat_CountForPrice
+                                                           ON MIFloat_CountForPrice.MovementItemId = MovementItem.Id
+                                                          AND MIFloat_CountForPrice.DescId = zc_MIFloat_CountForPrice()
+                               LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
+                                            ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
+                                           AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
+
+                          WHERE Movement.OperDate BETWEEN inStartDate AND inEndDate
+                            AND Movement.StatusId = zc_Enum_Status_Complete()
+                            AND Movement.DescId = zc_Movement_SendOnPrice()
+                            AND (_tmpGoods.GoodsId > 0 OR COALESCE (inGoodsGroupId, 0) = 0)
+                          GROUP BY MovementItem.ObjectId
+                                 , MILinkObject_GoodsKind.ObjectId
+                         UNION ALL
+                          SELECT MIContainer.ObjectId_Analyzer    AS GoodsId
+                               , MIContainer.ObjectIntId_Analyzer AS GoodsKindId
+                               , 0 AS Amount_Count
+                               , 0 AS Amount_Summ
+                               , 0 AS Amount_SummIn
+
+                               , 0 AS Amount_CountRet
+                               , 0 AS Amount_SummRet
+                               , SUM (CASE WHEN MIContainer.isActive = TRUE THEN MIContainer.Amount ELSE 0 END) AS Amount_SummInRet
+                          FROM _tmpUnit
+                               INNER JOIN MovementItemContainer AS MIContainer
+                                                                ON MIContainer.WhereObjectId_analyzer = _tmpUnit.UnitId
+                                                               AND MIContainer.AnalyzerId = zc_Enum_AnalyzerId_SendSumm_in()
+                                                               AND MIContainer.OperDate BETWEEN inStartDate AND inEndDate
+                                                               AND MIContainer.isActive = TRUE
+                               LEFT JOIN _tmpGoods ON _tmpGoods.GoodsId = MIContainer.ObjectId_Analyzer
+                          WHERE (_tmpGoods.GoodsId > 0 OR COALESCE (inGoodsGroupId, 0) = 0)
+                          GROUP BY MIContainer.ObjectId_Analyzer
+                                 , MIContainer.ObjectIntId_Analyzer
+                         )
+/*
           , tmp_Send AS  (SELECT MovementItem.ObjectId                         AS GoodsId
                                , COALESCE (MILinkObject_GoodsKind.ObjectId, 0) AS GoodsKindId
 
-                               , SUM (CASE WHEN tmp_Unit_From.UnitId > 0 THEN COALESCE (MIFloat_AmountPartner.ValueData, 0) /*MovementItem.Amount*/ ELSE 0 END) AS Amount_Count
-                               , SUM (CASE WHEN tmp_Unit_From.UnitId > 0 THEN COALESCE (MIFloat_AmountPartner.ValueData, 0) /*MovementItem.Amount*/ ELSE 0 END
+                               , SUM (CASE WHEN tmp_Unit_From.UnitId > 0 THEN COALESCE (MIFloat_AmountPartner.ValueData, 0) -MovementItem.Amount- ELSE 0 END) AS Amount_Count
+                               , SUM (CASE WHEN tmp_Unit_From.UnitId > 0 THEN COALESCE (MIFloat_AmountPartner.ValueData, 0) -MovementItem.Amount- ELSE 0 END
                                     * CASE WHEN MIFloat_CountForPrice.ValueData > 0
                                                 THEN COALESCE (MIFloat_Price.ValueData, 0) / MIFloat_CountForPrice.ValueData
                                            ELSE COALESCE (MIFloat_Price.ValueData, 0)
@@ -242,8 +331,8 @@ BEGIN
                                      ) AS Amount_Summ
                                , 0 AS Amount_SummIn
 
-                               , SUM (CASE WHEN tmp_Unit_To.UnitId > 0 THEN COALESCE (MIFloat_AmountPartner.ValueData, 0) /*MovementItem.Amount*/ ELSE 0 END) AS Amount_CountRet
-                               , SUM (CASE WHEN tmp_Unit_To.UnitId > 0 THEN COALESCE (MIFloat_AmountPartner.ValueData, 0) /*MovementItem.Amount*/ ELSE 0 END
+                               , SUM (CASE WHEN tmp_Unit_To.UnitId > 0 THEN COALESCE (MIFloat_AmountPartner.ValueData, 0) -MovementItem.Amount- ELSE 0 END) AS Amount_CountRet
+                               , SUM (CASE WHEN tmp_Unit_To.UnitId > 0 THEN COALESCE (MIFloat_AmountPartner.ValueData, 0) -MovementItem.Amount- ELSE 0 END
                                     * CASE WHEN MIFloat_CountForPrice.ValueData > 0
                                                 THEN COALESCE (MIFloat_Price.ValueData, 0) / MIFloat_CountForPrice.ValueData
                                            ELSE COALESCE (MIFloat_Price.ValueData, 0)
@@ -308,6 +397,7 @@ BEGIN
                           GROUP BY MIContainer.ObjectId_Analyzer
                                  , MIContainer.ObjectIntId_Analyzer
                          )
+*/
         , tmpReceipt AS (SELECT tmp.GoodsId, tmp.GoodsKindId, MAX (ObjectLink_Receipt_Goods.ObjectId) AS ReceiptId
                          FROM (SELECT tmpMIContainer.GoodsId, tmpMIContainer.GoodsKindId FROM tmpMIContainer GROUP BY tmpMIContainer.GoodsId, tmpMIContainer.GoodsKindId
                               UNION 
@@ -901,4 +991,4 @@ ALTER FUNCTION gpReport_ReceiptSaleAnalyze (TDateTime, TDateTime, Integer, Integ
 */
 
 -- тест
--- SELECT * FROM gpReport_ReceiptSaleAnalyze (inStartDate:= '01.06.2014', inEndDate:= '01.06.2014', inUnitId_sale:= 8447, inUnitId_return:= 8447, inGoodsGroupId:= 0, inPriceListId_1:= 0, inPriceListId_2:= 0, inPriceListId_3:= 0, inPriceListId_sale:= 0, inIsGoodsKind:= FALSE, inSession:= zfCalc_UserAdmin())
+-- SELECT * FROM gpReport_ReceiptSaleAnalyze (inStartDate:= '01.11.2015', inEndDate:= '01.11.2015', inUnitId_sale:= 8447, inUnitId_return:= 8447, inGoodsGroupId:= 0, inPriceListId_1:= 0, inPriceListId_2:= 0, inPriceListId_3:= 0, inPriceListId_sale:= 0, inIsGoodsKind:= FALSE, inSession:= zfCalc_UserAdmin())
