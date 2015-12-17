@@ -9,7 +9,7 @@ CREATE OR REPLACE FUNCTION gpSelect_Object_Juridical(
 )
 RETURNS TABLE (Id Integer, Code Integer, Name TVarChar,
                DayTaxSummary TFloat,
-               GLNCode TVarChar, isCorporate Boolean, isTaxSummary Boolean,
+               GLNCode TVarChar, isCorporate Boolean, isTaxSummary Boolean, isDiscountPrice Boolean,
                JuridicalGroupId Integer, JuridicalGroupName TVarChar,
                GoodsPropertyId Integer, GoodsPropertyName TVarChar,
                RetailId Integer, RetailName TVarChar,
@@ -87,7 +87,8 @@ BEGIN
        , ObjectString_GLNCode.ValueData      AS GLNCode
        , ObjectBoolean_isCorporate.ValueData AS isCorporate
 
-       , COALESCE (ObjectBoolean_isTaxSummary.ValueData, False::Boolean)  AS isTaxSummary
+       , COALESCE (ObjectBoolean_isTaxSummary.ValueData, False::Boolean)     AS isTaxSummary
+       , COALESCE (ObjectBoolean_isDiscountPrice.ValueData, False::Boolean)  AS isDiscountPrice
 
        , COALESCE (ObjectLink_Juridical_JuridicalGroup.ChildObjectId, 0)  AS JuridicalGroupId
        , Object_JuridicalGroup.ValueData  AS JuridicalGroupName
@@ -147,6 +148,9 @@ BEGIN
         LEFT JOIN ObjectBoolean AS ObjectBoolean_isTaxSummary
                                 ON ObjectBoolean_isTaxSummary.ObjectId = Object_Juridical.Id 
                                AND ObjectBoolean_isTaxSummary.DescId = zc_ObjectBoolean_Juridical_isTaxSummary()
+        LEFT JOIN ObjectBoolean AS ObjectBoolean_isDiscountPrice
+                                ON ObjectBoolean_isDiscountPrice.ObjectId = Object_Juridical.Id 
+                               AND ObjectBoolean_isDiscountPrice.DescId = zc_ObjectBoolean_Juridical_isDiscountPrice()
 
         LEFT JOIN ObjectFloat AS ObjectFloat_DayTaxSummary 
                               ON ObjectFloat_DayTaxSummary.ObjectId = Object_Juridical.Id 
@@ -226,6 +230,7 @@ ALTER FUNCTION gpSelect_Object_Juridical (Boolean, TVarChar) OWNER TO postgres;
 /*-------------------------------------------------------------------------------
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».   Ã‡Ì¸ÍÓ ƒ.¿.
+ 17.12.15         * add isDiscountPrice
  05.10.15         * add inShowAll
  21.05.15         * add isTaxSummary
  02.02.15                                        * add tmpListBranch_Constraint

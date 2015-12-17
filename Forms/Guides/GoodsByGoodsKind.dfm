@@ -3,7 +3,7 @@ inherited GoodsByGoodsKindForm: TGoodsByGoodsKindForm
   ClientHeight = 420
   ClientWidth = 1030
   ExplicitWidth = 1046
-  ExplicitHeight = 455
+  ExplicitHeight = 458
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -328,6 +328,33 @@ inherited GoodsByGoodsKindForm: TGoodsByGoodsKindForm
       Hint = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1057#1074#1103#1079#1100'>'
       ImageIndex = 0
     end
+    object ProtocolOpenForm: TdsdOpenForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = #1055#1088#1086#1089#1084#1086#1090#1088' '#1087#1088#1086#1090#1086#1082#1086#1083#1072
+      Hint = #1055#1088#1086#1089#1084#1086#1090#1088' '#1087#1088#1086#1090#1086#1082#1086#1083#1072
+      ImageIndex = 34
+      FormName = 'TProtocolForm'
+      FormNameParam.Value = 'TProtocolForm'
+      FormNameParam.DataType = ftString
+      GuiParams = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'Id'
+          ParamType = ptInput
+        end
+        item
+          Name = 'TextValue'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'GoodsName'
+          DataType = ftString
+          ParamType = ptInput
+        end>
+      isShowModal = False
+    end
   end
   inherited MasterDS: TDataSource
     Left = 56
@@ -351,7 +378,7 @@ inherited GoodsByGoodsKindForm: TGoodsByGoodsKindForm
       ItemLinks = <
         item
           Visible = True
-          ItemName = 'bb'
+          ItemName = 'bbInsertRecord'
         end
         item
           Visible = True
@@ -367,6 +394,14 @@ inherited GoodsByGoodsKindForm: TGoodsByGoodsKindForm
         end
         item
           Visible = True
+          ItemName = 'bbProtocol'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbGridToExcel'
         end
         item
@@ -374,8 +409,12 @@ inherited GoodsByGoodsKindForm: TGoodsByGoodsKindForm
           ItemName = 'dxBarStatic'
         end>
     end
-    object bb: TdxBarButton
+    object bbInsertRecord: TdxBarButton
       Action = InsertRecord
+      Category = 0
+    end
+    object bbProtocol: TdxBarButton
+      Action = ProtocolOpenForm
       Category = 0
     end
   end

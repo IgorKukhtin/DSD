@@ -3,6 +3,8 @@
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Juridical (Integer, Integer, TVarChar, TVarChar, Boolean, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TDateTime, TDateTime, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Juridical (Integer, Integer, TVarChar, TVarChar, Boolean, Boolean, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TDateTime, TDateTime, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Juridical (Integer, Integer, TVarChar, TVarChar, Boolean, Boolean, TFloat, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TDateTime, TDateTime, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Juridical (Integer, Integer, TVarChar, TVarChar, Boolean, Boolean, Boolean, TFloat, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TDateTime, TDateTime, TVarChar);
+
 
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Juridical(
@@ -12,6 +14,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Juridical(
     IN inGLNCode             TVarChar  ,    -- Код GLN
     IN inisCorporate         Boolean   ,    -- Признак наша ли собственность это юридическое лицо
     IN inisTaxSummary        Boolean   ,    -- Признак сводная налоговая
+    IN inisDiscountPrice     Boolean   ,    -- Печать в накладной цену со скидкой
     IN inDayTaxSummary       TFloat    ,    -- Кол-во дней для сводной налоговой
     IN inJuridicalGroupId    Integer   ,    -- Группы юридических лиц
     IN inGoodsPropertyId     Integer   ,    -- Классификаторы свойств товаров
@@ -80,6 +83,8 @@ BEGIN
    PERFORM lpInsertUpdate_ObjectBoolean(zc_ObjectBoolean_Juridical_isCorporate(), ioId, inisCorporate);
    -- сохранили свойство <>
    PERFORM lpInsertUpdate_ObjectBoolean(zc_ObjectBoolean_Juridical_isTaxSummary(), ioId, inisTaxSummary);
+   -- сохранили свойство <>
+   PERFORM lpInsertUpdate_ObjectBoolean(zc_ObjectBoolean_Juridical_isDiscountPrice(), ioId, inisDiscountPrice);
 
    -- сохранили связь с <>
    PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_Juridical_JuridicalGroup(), ioId, inJuridicalGroupId);
@@ -108,13 +113,14 @@ BEGIN
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpInsertUpdate_Object_Juridical  (Integer, Integer, TVarChar, TVarChar, Boolean, Boolean, TFloat, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TDateTime, TDateTime, TVarChar) OWNER TO postgres;
+ALTER FUNCTION gpInsertUpdate_Object_Juridical  (Integer, Integer, TVarChar, TVarChar, Boolean, Boolean, Boolean, TFloat, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TDateTime, TDateTime, TVarChar) OWNER TO postgres;
 
   
 /*-------------------------------------------------------------------------------*/
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 17.12.15         * add isDiscountPrice 
  20.11.14         *
  07.11.14         * изменено RetailReport
  23.05.14         * add Retail

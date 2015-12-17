@@ -1,26 +1,26 @@
 ﻿inherited JuridicalEditForm: TJuridicalEditForm
   Caption = #1044#1086#1073#1072#1074#1080#1090#1100'/'#1048#1079#1084#1077#1085#1080#1090#1100' <'#1070#1088#1080#1076#1080#1095#1077#1089#1082#1086#1077' '#1083#1080#1094#1086'>'
-  ClientHeight = 578
+  ClientHeight = 613
   ClientWidth = 1127
   ExplicitWidth = 1133
-  ExplicitHeight = 606
+  ExplicitHeight = 641
   PixelsPerInch = 96
   TextHeight = 13
   inherited bbOk: TcxButton
-    Left = 48
-    Top = 546
+    Left = 39
+    Top = 575
     Action = InsertUpdateGuides
     TabOrder = 7
-    ExplicitLeft = 48
-    ExplicitTop = 546
+    ExplicitLeft = 39
+    ExplicitTop = 575
   end
   inherited bbCancel: TcxButton
-    Left = 159
-    Top = 546
+    Left = 150
+    Top = 575
     Action = actFormClose
     TabOrder = 8
-    ExplicitLeft = 159
-    ExplicitTop = 546
+    ExplicitLeft = 150
+    ExplicitTop = 575
   end
   object edName: TcxTextEdit [2]
     Left = 5
@@ -119,29 +119,30 @@
     Left = 284
     Top = 0
     Width = 843
-    Height = 578
+    Height = 613
     Align = alRight
     BevelEdges = [beLeft]
     BevelKind = bkTile
     BevelOuter = bvNone
     TabOrder = 15
+    ExplicitHeight = 578
     object PageControl: TcxPageControl
       Left = 0
       Top = 0
       Width = 841
-      Height = 578
+      Height = 613
       Align = alClient
       TabOrder = 0
       Properties.ActivePage = JuridicalDetailTS
       Properties.CustomButtons.Buttons = <>
-      ClientRectBottom = 578
+      ExplicitHeight = 578
+      ClientRectBottom = 613
       ClientRectRight = 841
       ClientRectTop = 24
       object JuridicalDetailTS: TcxTabSheet
         Caption = #1056#1077#1082#1074#1080#1079#1080#1090#1099
         ImageIndex = 0
-        ExplicitLeft = 3
-        ExplicitTop = 21
+        ExplicitHeight = 554
         object edFullName: TcxDBTextEdit
           Left = 16
           Top = 19
@@ -170,9 +171,10 @@
           Left = 456
           Top = 0
           Width = 385
-          Height = 554
+          Height = 589
           Align = alRight
           TabOrder = 8
+          ExplicitHeight = 554
           object JuridicalDetailsGridDBTableView: TcxGridDBTableView
             Navigator.Buttons.CustomButtons = <>
             DataController.DataSource = JuridicalDetailsDS
@@ -318,6 +320,7 @@
       object PartnerTS: TcxTabSheet
         Caption = #1050#1086#1085#1090#1088#1072#1075#1077#1085#1090#1099
         ImageIndex = 1
+        ExplicitHeight = 554
         object PartnerDockControl: TdxBarDockControl
           Left = 0
           Top = 0
@@ -330,9 +333,10 @@
           Left = 0
           Top = 26
           Width = 841
-          Height = 528
+          Height = 563
           Align = alClient
           TabOrder = 0
+          ExplicitHeight = 528
           object PartnerGridDBTableView: TcxGridDBTableView
             Navigator.Buttons.CustomButtons = <>
             DataController.DataSource = PartnerDS
@@ -373,6 +377,7 @@
       object ContractTS: TcxTabSheet
         Caption = #1044#1086#1075#1086#1074#1086#1088#1072
         ImageIndex = 2
+        ExplicitHeight = 554
         object ContractDockControl: TdxBarDockControl
           Left = 0
           Top = 0
@@ -385,9 +390,10 @@
           Left = 0
           Top = 26
           Width = 841
-          Height = 528
+          Height = 563
           Align = alClient
           TabOrder = 0
+          ExplicitHeight = 528
           object ContractGridDBTableView: TcxGridDBTableView
             Navigator.Buttons.CustomButtons = <>
             DataController.DataSource = ContractDS
@@ -701,7 +707,7 @@
     Left = 8
     Top = 114
     Caption = #1057#1074#1086#1076#1085#1072#1103' '#1053#1053
-    TabOrder = 30
+    TabOrder = 29
     Width = 90
   end
   object edDayTaxSummary: TcxCurrencyEdit [29]
@@ -718,6 +724,13 @@
     Left = 110
     Top = 94
     Caption = #1055#1077#1088#1080#1086#1076' '#1074' '#1076#1085'. '#1076#1083#1103' '#1089#1074#1086#1076#1085#1086#1081' '#1053#1053
+  end
+  object cbisDiscountPrice: TcxCheckBox [31]
+    Left = 8
+    Top = 540
+    Caption = #1055#1077#1095#1072#1090#1072#1090#1100' '#1094#1077#1085#1091' '#1089#1086' '#1089#1082#1080#1076#1082#1086#1081' '#1074' '#1085#1072#1082#1083#1072#1076#1085#1086#1081
+    TabOrder = 35
+    Width = 225
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 499
@@ -1084,6 +1097,13 @@
         ParamType = ptInput
       end
       item
+        Name = 'inisDiscountPrice'
+        Value = Null
+        Component = cbisDiscountPrice
+        DataType = ftBoolean
+        ParamType = ptInput
+      end
+      item
         Name = 'inDayTaxSummary'
         Value = Null
         Component = edDayTaxSummary
@@ -1308,6 +1328,12 @@
         Value = Null
         Component = edDayTaxSummary
         DataType = ftFloat
+      end
+      item
+        Name = 'isDiscountPrice'
+        Value = Null
+        Component = cbisDiscountPrice
+        DataType = ftBoolean
       end>
     PackSize = 1
     Left = 240
@@ -1699,7 +1725,7 @@
       end
       item
         Name = 'inoperdate'
-        Value = Null
+        Value = 'NULL'
         Component = JuridicalDetailsCDS
         ComponentItem = 'StartDate'
         DataType = ftDateTime
