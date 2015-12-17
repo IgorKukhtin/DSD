@@ -182,6 +182,8 @@ var
   C: TComponent;
   mni: TMenuItem;
 begin
+  //если хелпфайл заполнен, считаем что все уже отработано ранее
+  if Self.HelpFile <> '' then exit;
   //Вытащили путь к файлу помощи
   sp := TdsdStoredProc.Create(nil);
   try
