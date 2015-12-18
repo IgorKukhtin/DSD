@@ -772,7 +772,10 @@ uses
   Report_Promo in '..\..\Forms\Report\Report_Promo.pas' {Report_PromoForm: TParentForm},
   Report_PromoDialog in '..\..\Forms\Report\Report_PromoDialog.pas' {Report_PromoDialogForm: TParentForm},
   Report_SheetWorkTime in '..\..\Forms\Report\Report_SheetWorkTime.pas' {Report_SheetWorkTimeForm: TParentForm},
-  Report_SheetWorkTimeDialog in '..\..\Forms\Report\Report_SheetWorkTimeDialog.pas' {Report_SheetWorkTimeDialogForm: TParentForm};
+  Report_SheetWorkTimeDialog in '..\..\Forms\Report\Report_SheetWorkTimeDialog.pas' {Report_SheetWorkTimeDialogForm: TParentForm},
+  Report_Tara in '..\..\Forms\Report\Report_Tara.pas' {Report_TaraForm: TParentForm},
+  PartnerAndUnit in '..\..\Forms\Guides\PartnerAndUnit.pas' {PartnerAndUnitForm: TParentForm},
+  Report_TaraDialog in '..\..\Forms\Report\Report_TaraDialog.pas' {Report_TaraDialogForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}

@@ -110,6 +110,7 @@ type
     procedure LoadReportProductionOutAnalyzeFormTest;
     procedure LoadReportProductionOrderFormTest;
     procedure LoadReportPromoFormTest;
+    procedure LoadReportTaraFormTest;
     procedure LoadReportTransportFormTest;
     procedure LoadReportWageFormTest;
     procedure LoadReturnInFormTest;
@@ -1323,6 +1324,16 @@ begin
 
 end;
 
+
+procedure TLoadFormTest.LoadReportTaraFormTest;
+begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_TaraForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_TaraForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_TaraDialogForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_TaraDialogForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TPartnerAndUnitForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TPartnerAndUnitForm');
+end;
 
 procedure TLoadFormTest.LoadReportTransportFormTest;
 begin
