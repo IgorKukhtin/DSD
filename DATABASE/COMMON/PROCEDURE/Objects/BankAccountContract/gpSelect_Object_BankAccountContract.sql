@@ -1,4 +1,4 @@
-﻿-- Function: gpSelect_Object_BankAccountContract()
+-- Function: gpSelect_Object_BankAccountContract()
 
 DROP FUNCTION IF EXISTS gpSelect_Object_BankAccountContract(TVarChar);
 
