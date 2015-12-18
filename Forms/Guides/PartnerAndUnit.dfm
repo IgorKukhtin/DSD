@@ -367,7 +367,7 @@ object PartnerAndUnitForm: TPartnerAndUnitForm
     end
   end
   object dsdStoredProc: TdsdStoredProc
-    StoredProcName = 'gpSelect_Object_PartnerAndUnit'
+    StoredProcName = 'gpSelect_Object_TaraPlace'
     DataSet = ClientDataSet
     DataSets = <
       item

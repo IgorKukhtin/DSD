@@ -9,6 +9,18 @@ DROP FUNCTION IF EXISTS gpSelect_Report_Tara(
     Integer,   --Группа товара / Товар
     TVarChar   --сессия пользователя
 );
+DROP FUNCTION IF EXISTS gpSelect_Report_Tara(
+    TDateTime, --дата начала периода
+    TDateTime, --дата окончания периода
+    Boolean,   --По всем поставщикам
+    Boolean,   --По всем покупателям
+    Boolean,   --По всем складам
+    Boolean,   --По всем филиалам
+    Boolean,   --По всем МОЛ
+    Integer,   --По одному(группе) из объектов
+    Integer,   --Группа товара / Товар
+    TVarChar   --сессия пользователя
+);
 
 CREATE OR REPLACE FUNCTION gpSelect_Report_Tara(
     IN inStartDate      TDateTime, --дата начала периода
@@ -17,6 +29,7 @@ CREATE OR REPLACE FUNCTION gpSelect_Report_Tara(
     IN inWithBayer      Boolean,   --По всем покупателям
     IN inWithPlace      Boolean,   --По всем складам
     IN inWithBranch     Boolean,   --По всем филиалам
+    IN inWithMember     Boolean,   --По всем МОЛ
     IN inWhereObjectId  Integer,   --По одному(группе) из объектов
     IN inGoodsOrGroupId Integer,   --Группа товара / товар
     IN inSession        TVarChar   --сессия пользователя
@@ -80,7 +93,11 @@ BEGIN
         WHERE
             Object.Id = inWhereObjectId;
         
-        IF vbObjectDescId = zc_Object_Partner()
+        IF vbObjectDescId = zc_Object_Member()
+        THEN
+            INSERT INTO _Objects(Id, ContainerDesc, ContainerLinkDesc, ObjectType)
+            Values(inWhereObjectId, zc_Container_Count(), zc_ContainerLinkObject_Member(),'МОЛ');
+        ELSEIF vbObjectDescId = zc_Object_Partner()
         THEN
             IF EXISTS(SELECT 1 
                       FROM lfSelect_Object_Juridical_byGroup(8357) as Juridical 
@@ -223,6 +240,22 @@ BEGIN
                 AND
                 COALESCE(ObjectLink_Unit_Branch.ChildObjectId,0) <> zc_Branch_Basis();
         END IF;
+        IF inWithMember
+        THEN
+            INSERT INTO _Objects(Id, ContainerDesc, ContainerLinkDesc, ObjectType)
+            SELECT Object_Member.Id, zc_Container_Count(), zc_ContainerLinkObject_Member(), 'МОЛ'
+            FROM
+                Object AS Object_Member
+                INNER JOIN (SELECT DISTINCT CLO.ObjectId 
+                            FROM Container
+                                INNER JOIN ContainerLinkObject AS CLO
+                                                               ON CLO.ContainerId = Container.Id
+                                                              AND CLO.DescId = zc_ContainerLinkObject_Member()
+                            WHERE Container.DescId = zc_Container_Count()) AS CLO_Member
+                                                                           ON CLO_Member.ObjectId = Object_Member.ID
+            WHERE 
+                Object_Member.DescId = zc_Object_Member();
+        END IF;
     END IF;
     
     --Определить список товаров
@@ -322,7 +355,7 @@ BEGIN
                         INNER JOIN Container ON _Goods.Id = Container.ObjectId 
                                             AND Container.DescId in (zc_Container_Count(),zc_Container_CountSupplier())
                         INNER JOIN ContainerLinkObject ON ContainerLinkObject.ContainerId = Container.Id
-                                                      AND ContainerLinkObject.DescId in (zc_ContainerLinkObject_Partner(),zc_ContainerLinkObject_Unit())
+                                                      AND ContainerLinkObject.DescId in (zc_ContainerLinkObject_Partner(),zc_ContainerLinkObject_Unit(),zc_ContainerLinkObject_Member())
                         INNER JOIN _Objects ON Container.DescId = _Objects.ContainerDesc
                                            AND ContainerLinkObject.DescId = _Objects.ContainerLinkDesc
                                            AND ContainerLinkObject.ObjectId = _Objects.Id
@@ -420,11 +453,11 @@ BEGIN
 END;
 $BODY$
   LANGUAGE PLPGSQL VOLATILE;
-ALTER FUNCTION gpSelect_Report_Tara (TDateTime,TDateTime,Boolean,Boolean,Boolean,Boolean,Integer,Integer,TVarChar) OWNER TO postgres;
+ALTER FUNCTION gpSelect_Report_Tara (TDateTime,TDateTime,Boolean,Boolean,Boolean,Boolean,Boolean,Integer,Integer,TVarChar) OWNER TO postgres;
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.    Воробкало А.А.
  17.12.15                                                          *
 */
---Select * from gpSelect_Report_Tara(inStartDate := '20150101'::TDateTime,inEndDate:='20150131'::TDateTime,inWithSupplier:=TRUE,inWithBayer:=FALSE,inWithPlace:=FALSE,inWithBranch:=FALSE,inWhereObjectId:=0,inGoodsOrGroupId:=1865,inSession:='5'::TVarChar);
+--Select * from gpSelect_Report_Tara(inStartDate := '20150101'::TDateTime,inEndDate:='20150131'::TDateTime,inWithSupplier:=FALSE,inWithBayer:=FALSE,inWithPlace:=FALSE,inWithBranch:=FALSE,inWithMember:=TRUE,inWhereObjectId:=0,inGoodsOrGroupId:=1865,inSession:='5'::TVarChar);

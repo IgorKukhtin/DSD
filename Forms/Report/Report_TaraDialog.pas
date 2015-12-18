@@ -28,6 +28,7 @@ type
     edGoods: TcxButtonEdit;
     ObjectGuides: TdsdGuides;
     GoodsGuides: TdsdGuides;
+    chkWithMember: TcxCheckBox;
   private
     { Private declarations }
   public

@@ -45,28 +45,28 @@ inherited Report_TaraDialogForm: TReport_TaraDialogForm
     Width = 85
   end
   object chkWithSupplier: TcxCheckBox [6]
-    Left = 85
+    Left = 5
     Top = 35
     Caption = #1055#1086#1089#1090#1072#1074#1097#1080#1082#1080
     TabOrder = 6
     Width = 97
   end
   object chbWithBayer: TcxCheckBox [7]
-    Left = 188
+    Left = 108
     Top = 35
     Caption = #1055#1086#1082#1091#1087#1072#1090#1077#1083#1080
     TabOrder = 7
     Width = 90
   end
   object chbWithPlace: TcxCheckBox [8]
-    Left = 284
+    Left = 204
     Top = 35
     Caption = #1057#1082#1083#1072#1076#1099
     TabOrder = 8
     Width = 75
   end
   object chbWithBranch: TcxCheckBox [9]
-    Left = 354
+    Left = 274
     Top = 35
     Caption = #1060#1080#1083#1080#1072#1083#1099
     TabOrder = 9
@@ -105,6 +105,13 @@ inherited Report_TaraDialogForm: TReport_TaraDialogForm
     Properties.ReadOnly = True
     TabOrder = 13
     Width = 333
+  end
+  object chkWithMember: TcxCheckBox [14]
+    Left = 364
+    Top = 35
+    Caption = #1052#1054#1051
+    TabOrder = 14
+    Width = 53
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 64
@@ -234,6 +241,13 @@ inherited Report_TaraDialogForm: TReport_TaraDialogForm
         Component = chbWithBranch
         DataType = ftBoolean
         ParamType = ptInput
+      end
+      item
+        Name = 'WithMember'
+        Value = Null
+        Component = chkWithMember
+        DataType = ftBoolean
+        ParamType = ptInput
       end>
     Left = 5
     Top = 128
@@ -241,7 +255,8 @@ inherited Report_TaraDialogForm: TReport_TaraDialogForm
   object PeriodChoice: TPeriodChoice
     DateStart = deStart
     DateEnd = deEnd
-    Left = 120
+    Left = 184
+    Top = 120
   end
   object ObjectGuides: TdsdGuides
     KeyField = 'Id'
