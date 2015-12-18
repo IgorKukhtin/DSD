@@ -56,7 +56,7 @@ uses
   cxButtonEdit, cxSplitter, Vcl.Menus, cxPC, frxDBSet, dxBarExtItems,
   cxDBPivotGrid, ChoicePeriod, cxGridDBBandedTableView,
   cxDBEdit, dsdAction, dsdGuides, cxDBVGrid,
-  Vcl.DBActns, cxMemo, cxGridDBChartView, ShellAPI, DataModul;
+  Vcl.DBActns, cxMemo, cxGridDBChartView, ShellAPI;
 
 {$R *.dfm}
 
@@ -239,7 +239,7 @@ begin
       if not assigned(bb) then
       Begin
         pm := TPopupMenu.Create(Self);
-        pm.Images := dmMain.ImageList;
+        //pm.Images := dmMain.ImageList;
         Self.PopupMenu := pm;
         mni := TMenuItem.Create(pm);
         mni.Caption := 'Помощь';
