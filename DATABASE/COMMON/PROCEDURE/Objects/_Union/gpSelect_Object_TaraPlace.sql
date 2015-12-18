@@ -1,8 +1,9 @@
 -- Function: gpSelect_Object_PartnerAndUnit()
 
 DROP FUNCTION IF EXISTS gpSelect_Object_PartnerAndUnit (Boolean,TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_Object_TaraPlace (Boolean,TVarChar);
 
-CREATE OR REPLACE FUNCTION gpSelect_Object_PartnerAndUnit(
+CREATE OR REPLACE FUNCTION gpSelect_Object_TaraPlace(
     IN inisShowDel         Boolean,     -- показать все
     IN inSession           TVarChar     -- сессия пользователя
 )
@@ -84,12 +85,33 @@ BEGIN
                 Object_Unit.isErased = FALSE
                 OR
                 inisShowDel = TRUE
-            );
-
+            )
+        UNION ALL
+        SELECT 
+            Object_Member.Id
+          , Object_Member.ObjectCode  AS Code
+          , Object_Member.ValueData   AS Name
+          , Object_Member.DescId      AS DescId
+          , ObjectDesc.ItemName       AS DescName
+          , Object_Member.isErased
+          , NULL::TVarChar            AS Juridical_Name
+          , NULL::TVarChar            AS Retail_Name
+          , NULL::TVarChar            AS BranchName
+        FROM 
+            Object AS Object_Member
+            LEFT JOIN ObjectDesc ON ObjectDesc.Id = Object_Member.DescId
+            INNER JOIN (SELECT DISTINCT CLO.ObjectId
+                        FROM Container Inner Join ContainerLinkObject AS CLO
+                                                                      ON CLO.DescId = zc_ContainerLinkObject_Member()
+                                                                     AND CLO.ContainerId = Container.Id
+                        WHERE Container.DescId = zc_Container_Count()) AS CLO_Member
+                                                                             ON CLO_Member.ObjectId = Object_Member.Id
+        WHERE 
+            Object_Member.DescId = zc_Object_Member();
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpSelect_Object_PartnerAndUnit (Boolean,TVarChar) OWNER TO postgres;
+ALTER FUNCTION gpSelect_Object_TaraPlace (Boolean,TVarChar) OWNER TO postgres;
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
@@ -98,4 +120,4 @@ ALTER FUNCTION gpSelect_Object_PartnerAndUnit (Boolean,TVarChar) OWNER TO postgr
  */
 
 -- тест
--- SELECT * FROM gpSelect_Object_PartnerAndUnit (inisShowDel := FALSE, inSession := zfCalc_UserAdmin())
+-- SELECT * FROM gpSelect_Object_TaraPlace (inisShowDel := FALSE, inSession := zfCalc_UserAdmin())

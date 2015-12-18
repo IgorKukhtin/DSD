@@ -241,6 +241,8 @@ inherited Report_TaraForm: TReport_TaraForm
           object colRemainsInActive: TcxGridDBColumn
             Caption = #1054#1089#1090'. '#1085#1072#1095'. '#1072#1082#1090#1080#1074
             DataBinding.FieldName = 'RemainsInActive'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 50
@@ -248,6 +250,8 @@ inherited Report_TaraForm: TReport_TaraForm
           object colRemainsInPassive: TcxGridDBColumn
             Caption = #1054#1089#1090'. '#1085#1072#1095'. '#1087#1072#1089#1089#1080#1074
             DataBinding.FieldName = 'RemainsInPassive'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 50
@@ -255,34 +259,44 @@ inherited Report_TaraForm: TReport_TaraForm
           object colRemainsIn: TcxGridDBColumn
             Caption = #1054#1089#1090'. '#1085#1072#1095'.'
             DataBinding.FieldName = 'RemainsIn'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 50
           end
           object colAmountIn: TcxGridDBColumn
-            Caption = #1055#1088#1080#1093#1086#1076
+            Caption = #1055#1088#1080#1093#1086#1076' '#1074#1085#1091#1090#1088'.'
             DataBinding.FieldName = 'AmountIn'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 50
           end
           object colAmountInBay: TcxGridDBColumn
-            Caption = #1055#1086#1082#1091#1087#1082#1072
+            Caption = #1055#1088#1080#1093#1086#1076' '#1074#1085#1077#1096#1085'.'
             DataBinding.FieldName = 'AmountInBay'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 50
           end
           object colAmountOut: TcxGridDBColumn
-            Caption = #1056#1072#1089#1093#1086#1076
+            Caption = #1056#1072#1089#1093#1086#1076' '#1074#1085#1091#1090#1088'.'
             DataBinding.FieldName = 'AmountOut'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 50
           end
           object colAmountOutSale: TcxGridDBColumn
-            Caption = #1055#1088#1086#1076#1072#1078#1072
+            Caption = #1056#1072#1089#1093#1086#1076' '#1074#1085#1077#1096#1085'.'
             DataBinding.FieldName = 'AmountOutSale'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 50
@@ -290,6 +304,8 @@ inherited Report_TaraForm: TReport_TaraForm
           object colAmountInventory: TcxGridDBColumn
             Caption = #1048#1085#1074'.'
             DataBinding.FieldName = 'AmountInventory'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 50
@@ -297,6 +313,8 @@ inherited Report_TaraForm: TReport_TaraForm
           object colAmountLoss: TcxGridDBColumn
             Caption = #1057#1087#1080#1089#1072#1085#1080#1077
             DataBinding.FieldName = 'AmountLoss'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 50
@@ -304,6 +322,8 @@ inherited Report_TaraForm: TReport_TaraForm
           object colRemainsOutActive: TcxGridDBColumn
             Caption = #1054#1089#1090'. '#1082#1086#1085'. '#1072#1082#1090#1080#1074
             DataBinding.FieldName = 'RemainsOutActive'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 50
@@ -311,6 +331,8 @@ inherited Report_TaraForm: TReport_TaraForm
           object colRemainsOutPassive: TcxGridDBColumn
             Caption = #1054#1089#1090'. '#1082#1086#1085'. '#1087#1072#1089#1089#1080#1074
             DataBinding.FieldName = 'RemainsOutPassive'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 50
@@ -318,6 +340,8 @@ inherited Report_TaraForm: TReport_TaraForm
           object colRemainsOut: TcxGridDBColumn
             Caption = #1054#1089#1090'. '#1082#1086#1085'.'
             DataBinding.FieldName = 'RemainsOut'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 50
@@ -331,6 +355,12 @@ inherited Report_TaraForm: TReport_TaraForm
     Height = 57
     ExplicitWidth = 975
     ExplicitHeight = 57
+    inherited deStart: TcxDateEdit
+      EditValue = 42370d
+    end
+    inherited deEnd: TcxDateEdit
+      EditValue = 42370d
+    end
     object chkWithSupplier: TcxCheckBox
       Left = 408
       Top = 6
@@ -392,6 +422,13 @@ inherited Report_TaraForm: TReport_TaraForm
       Properties.ReadOnly = True
       TabOrder = 11
       Width = 380
+    end
+    object chkWithMember: TcxCheckBox
+      Left = 778
+      Top = 5
+      Caption = #1052#1054#1051
+      TabOrder = 12
+      Width = 53
     end
   end
   inherited cxPropertiesStore: TcxPropertiesStore
@@ -521,6 +558,13 @@ inherited Report_TaraForm: TReport_TaraForm
           Component = chbWithBranch
           DataType = ftBoolean
           ParamType = ptInput
+        end
+        item
+          Name = 'WithMember'
+          Value = Null
+          Component = chkWithMember
+          DataType = ftBoolean
+          ParamType = ptInput
         end>
       isShowModal = True
       RefreshDispatcher = RefreshDispatcher
@@ -575,6 +619,13 @@ inherited Report_TaraForm: TReport_TaraForm
         Name = 'inWithBranch'
         Value = Null
         Component = chbWithBranch
+        DataType = ftBoolean
+        ParamType = ptInput
+      end
+      item
+        Name = 'inWithMember'
+        Value = Null
+        Component = chkWithMember
         DataType = ftBoolean
         ParamType = ptInput
       end
@@ -658,6 +709,9 @@ inherited Report_TaraForm: TReport_TaraForm
       end
       item
         Component = chkWithSupplier
+      end
+      item
+        Component = chkWithMember
       end>
     Top = 184
   end
