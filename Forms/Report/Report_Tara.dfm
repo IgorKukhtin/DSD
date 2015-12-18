@@ -71,6 +71,21 @@ inherited Report_TaraForm: TReport_TaraForm
               Format = ',0.###'
               Kind = skSum
               Column = colRemainsOut
+            end
+            item
+              Format = ',0.###'
+              Kind = skSum
+              Column = colAmountInBay
+            end
+            item
+              Format = ',0.###'
+              Kind = skSum
+              Column = colAmountOutSale
+            end
+            item
+              Format = ',0.###'
+              Kind = skSum
+              Column = colAmountLoss
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -117,7 +132,25 @@ inherited Report_TaraForm: TReport_TaraForm
               Format = ',0.###'
               Kind = skSum
               Column = colRemainsOut
+            end
+            item
+              Format = ',0.###'
+              Kind = skSum
+              Column = colAmountInBay
+            end
+            item
+              Format = ',0.###'
+              Kind = skSum
+              Column = colAmountOutSale
+            end
+            item
+              Format = ',0.###'
+              Kind = skSum
+              Column = colAmountLoss
             end>
+          OptionsData.Deleting = False
+          OptionsData.DeletingConfirmation = False
+          OptionsData.Editing = False
           OptionsView.GroupByBox = True
           Styles.Content = nil
           Styles.Inactive = nil
@@ -233,6 +266,13 @@ inherited Report_TaraForm: TReport_TaraForm
             HeaderAlignmentVert = vaCenter
             Width = 50
           end
+          object colAmountInBay: TcxGridDBColumn
+            Caption = #1055#1086#1082#1091#1087#1082#1072
+            DataBinding.FieldName = 'AmountInBay'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 50
+          end
           object colAmountOut: TcxGridDBColumn
             Caption = #1056#1072#1089#1093#1086#1076
             DataBinding.FieldName = 'AmountOut'
@@ -240,9 +280,23 @@ inherited Report_TaraForm: TReport_TaraForm
             HeaderAlignmentVert = vaCenter
             Width = 50
           end
+          object colAmountOutSale: TcxGridDBColumn
+            Caption = #1055#1088#1086#1076#1072#1078#1072
+            DataBinding.FieldName = 'AmountOutSale'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 50
+          end
           object colAmountInventory: TcxGridDBColumn
             Caption = #1048#1085#1074'.'
             DataBinding.FieldName = 'AmountInventory'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 50
+          end
+          object colAmountLoss: TcxGridDBColumn
+            Caption = #1057#1087#1080#1089#1072#1085#1080#1077
+            DataBinding.FieldName = 'AmountLoss'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 50

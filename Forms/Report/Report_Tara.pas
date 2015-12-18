@@ -49,6 +49,9 @@ type
     colRemainsOut: TcxGridDBColumn;
     ExecuteDialog: TExecuteDialog;
     dxBarButton1: TdxBarButton;
+    colAmountInBay: TcxGridDBColumn;
+    colAmountOutSale: TcxGridDBColumn;
+    colAmountLoss: TcxGridDBColumn;
   private
     { Private declarations }
   public

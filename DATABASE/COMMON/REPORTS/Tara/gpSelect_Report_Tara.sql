@@ -42,8 +42,11 @@ RETURNS TABLE(
     ,RemainsInPassive  TFloat    --Остаток на начало пассив
     ,RemainsIn         TFloat    --Остаток на начало
     ,AmountIn          TFloat    --Приход
+    ,AmountInBay       TFloat    --Покупка
     ,AmountOut         TFloat    --Расход
+    ,AmountOutSale     TFloat    --Продажа
     ,AmountInventory   TFloat    --Инвентаризация
+    ,AmountLoss        TFloat    --Списание
     ,RemainsOutActive  TFloat    --Остаток на конец актив
     ,RemainsOutPassive TFloat    --Остаток на конец пассив
     ,RemainsOut        TFloat    --Остаток на конец
@@ -255,12 +258,15 @@ BEGIN
                ,DD.GoodsId
                ,DD.ObjectId
                ,DD.ObjectType
-               ,COALESCE(SUM(DD.ContainerAmount),0)::TFloat AS ContainerAmount
-               ,COALESCE(SUM(MIC_Amount_Start),0)::TFloat   AS MIC_Amount_Start
-               ,COALESCE(SUM(MIC_Amount_End),0)::TFloat     AS MIC_Amount_End
-               ,COALESCE(SUM(MIC_Amount_IN),0)::TFloat      AS MIC_Amount_IN
-               ,COALESCE(SUM(MIC_Amount_OUT),0)::TFloat     AS MIC_Amount_OUT
-               ,COALESCE(SUM(MIC_Amount_Inventory),0)::TFloat     AS MIC_Amount_Inventory
+               ,COALESCE(SUM(DD.ContainerAmount),0)::TFloat   AS ContainerAmount
+               ,COALESCE(SUM(MIC_Amount_Start),0)::TFloat     AS MIC_Amount_Start
+               ,COALESCE(SUM(MIC_Amount_End),0)::TFloat       AS MIC_Amount_End
+               ,COALESCE(SUM(MIC_Amount_IN),0)::TFloat        AS MIC_Amount_IN
+               ,COALESCE(SUM(MIC_Amount_INBay),0)::TFloat     AS MIC_Amount_INBay
+               ,COALESCE(SUM(MIC_Amount_OUT),0)::TFloat       AS MIC_Amount_OUT
+               ,COALESCE(SUM(MIC_Amount_OUTSale),0)::TFloat   AS MIC_Amount_OUTSale
+               ,COALESCE(SUM(MIC_Amount_Inventory),0)::TFloat AS MIC_Amount_Inventory
+               ,COALESCE(SUM(MIC_Amount_Loss),0)::TFloat      AS MIC_Amount_Loss
             FROM(
                     SELECT
                         Container.Id
@@ -275,17 +281,42 @@ BEGIN
                        ,SUM(CASE WHEN MovementItemContainer.OperDate <= inEndDate
                                   AND MovementItemContainer.IsActive = TRUE
                                   AND MovementItemContainer.MovementDescId <> zc_Movement_Inventory()
+                                  AND MovementItemContainer.MovementDescId <> zc_Movement_Loss()
+                                  AND NOT(MovementItemContainer.MovementDescId in (zc_Movement_Income(),zc_Movement_ReturnIn())
+                                          AND
+                                          COALESCE(MIFloat_Price.ValueData,0) > 0)
                                  THEN MovementItemContainer.Amount 
                             ELSE 0 END)                                          AS MIC_Amount_IN -- Приход за период
                        ,SUM(CASE WHEN MovementItemContainer.OperDate <= inEndDate
+                                  AND MovementItemContainer.IsActive = TRUE
+                                  AND MovementItemContainer.MovementDescId in (zc_Movement_Income(),zc_Movement_ReturnIn())
+                                  AND
+                                  COALESCE(MIFloat_Price.ValueData,0) > 0
+                                 THEN MovementItemContainer.Amount 
+                            ELSE 0 END)                                          AS MIC_Amount_INBay -- Покупка за период
+                       ,SUM(CASE WHEN MovementItemContainer.OperDate <= inEndDate
                                   AND MovementItemContainer.IsActive = FALSE
                                   AND MovementItemContainer.MovementDescId <> zc_Movement_Inventory()
+                                  AND MovementItemContainer.MovementDescId <> zc_Movement_Loss()
+                                  AND NOT(MovementItemContainer.MovementDescId in (zc_Movement_Sale(),zc_Movement_ReturnOut())
+                                          AND
+                                          COALESCE(MIFloat_Price.ValueData,0) > 0)
                                  THEN MovementItemContainer.Amount 
                             ELSE 0 END)                                          AS MIC_Amount_OUT --Расход за период
+                       ,SUM(CASE WHEN MovementItemContainer.OperDate <= inEndDate
+                                  AND MovementItemContainer.IsActive = FALSE
+                                  AND MovementItemContainer.MovementDescId in (zc_Movement_Sale(),zc_Movement_ReturnOut())
+                                  AND COALESCE(MIFloat_Price.ValueData,0) > 0
+                                 THEN MovementItemContainer.Amount 
+                            ELSE 0 END)                                          AS MIC_Amount_OUTSale --Продажа за период
                        ,SUM(CASE WHEN MovementItemContainer.OperDate <= inEndDate
                                   AND MovementItemContainer.MovementDescId = zc_Movement_Inventory()
                                  THEN MovementItemContainer.Amount 
                             ELSE 0 END)                                          AS MIC_Amount_Inventory --Инвентаризация за период
+                       ,SUM(CASE WHEN MovementItemContainer.OperDate <= inEndDate
+                                  AND MovementItemContainer.MovementDescId = zc_Movement_Loss()
+                                 THEN MovementItemContainer.Amount 
+                            ELSE 0 END)                                          AS MIC_Amount_Loss --Списание за период
                     FROM
                         _Goods
                         INNER JOIN Container ON _Goods.Id = Container.ObjectId 
@@ -297,6 +328,9 @@ BEGIN
                                            AND ContainerLinkObject.ObjectId = _Objects.Id
                         LEFT OUTER JOIN MovementItemContainer ON MovementItemContainer.ContainerId = Container.ID
                                                              AND MovementItemContainer.OperDate >= inStartDate
+                        LEFT OUTER JOIN MovementItemFloat AS MIFloat_Price
+                                                          ON MIFloat_Price.MovementItemId = MovementItemContainer.MovementItemId
+                                                         AND MIFloat_Price.DescId = zc_MIFloat_Price()
                     GROUP BY
                         Container.Id
                        ,Container.ObjectId --товар
@@ -313,8 +347,11 @@ BEGIN
                 (COALESCE(SUM(DD.ContainerAmount),0)-COALESCE(SUM(MIC_Amount_Start),0)) <> 0 OR
                 (COALESCE(SUM(DD.ContainerAmount),0)-COALESCE(SUM(MIC_Amount_End),0)) <> 0 OR
                 COALESCE(SUM(MIC_Amount_IN),0) <> 0 OR
+                COALESCE(SUM(MIC_Amount_INBay),0) <> 0 OR
                 COALESCE(SUM(MIC_Amount_OUT),0) <> 0 OR
-                COALESCE(SUM(MIC_Amount_Inventory),0) <> 0
+                COALESCE(SUM(MIC_Amount_OUTSale),0) <> 0 OR
+                COALESCE(SUM(MIC_Amount_Inventory),0) <> 0 OR
+                COALESCE(SUM(MIC_Amount_Loss),0) <> 0
         )
         SELECT
             Object_Goods.Id                                    AS GoodsId         --ИД товара
@@ -340,8 +377,11 @@ BEGIN
             END::TFloat                                        AS RemainsInPassive--Остаток на начало пассив
            ,(DDD.ContainerAmount-DDD.MIC_Amount_Start)::TFloat AS RemainsIn       --Остаток на начало
            ,DDD.MIC_Amount_IN                                  AS AmountIn        --Приход
-           ,(-DDD.MIC_Amount_OUT)::TFloat                        AS AmountOut       --Расход
+           ,DDD.MIC_Amount_INBay                               AS AmountInBay     --Покупка
+           ,(-DDD.MIC_Amount_OUT)::TFloat                      AS AmountOut       --Расход
+           ,(-DDD.MIC_Amount_OUTSale)::TFloat                  AS AmountOutSale   --Продажа
            ,DDD.MIC_Amount_Inventory                           AS AmountInventory --Инвентаризация
+           ,DDD.MIC_Amount_Loss                                AS AmountLoss      --Списание
            ,CASE WHEN (DDD.ContainerAmount-DDD.MIC_Amount_End)>0
                  THEN (DDD.ContainerAmount-DDD.MIC_Amount_End)
             END::TFloat                                        AS RemainsOutActive --Остаток на конец актив

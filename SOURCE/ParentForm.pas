@@ -56,7 +56,7 @@ uses
   cxButtonEdit, cxSplitter, Vcl.Menus, cxPC, frxDBSet, dxBarExtItems,
   cxDBPivotGrid, ChoicePeriod, cxGridDBBandedTableView,
   cxDBEdit, dsdAction, dsdGuides, cxDBVGrid,
-  Vcl.DBActns, cxMemo, cxGridDBChartView, ShellAPI;
+  Vcl.DBActns, cxMemo, cxGridDBChartView, ShellAPI{, DataModul};
 
 {$R *.dfm}
 
@@ -217,29 +217,29 @@ begin
     //Если не было создано ни одного пункта меню для вызова помощи (нет ни одного попап меню)
     if not assigned(mni) then
     Begin
-      //пробуем найти тулбар и в него добавить кнопку
-      for C in Self do
-      begin
-        //Находим все контексные меню
-        if C is TdxBarManager then
-        Begin
-          if (C as TdxBarManager).Bars.Count > 0 then
-          Begin
-            bb := (C as TdxBarManager).AddButton;
-            bb.Caption := 'Помощь';
-            bb.Hint := 'Помощь';
-            bb.ImageIndex := 26;
-            bb.ShortCut := ShortCut(VK_F1,[]);
-            bb.OnClick := btnHelpClick;
-            (C as TdxBarManager).Bars[0].ItemLinks.Add(bb);
-          End;
-        End;
-      end;
-      //Если и тулбара нет - то создаем свой попап меню и в него добавляем кнопку
-      if not assigned(bb) then
-      Begin
+//      //пробуем найти тулбар и в него добавить кнопку
+//      for C in Self do
+//      begin
+//        //Находим все контексные меню
+//        if C is TdxBarManager then
+//        Begin
+//          if (C as TdxBarManager).Bars.Count > 0 then
+//          Begin
+//            bb := (C as TdxBarManager).AddButton;
+//            bb.Caption := 'Помощь';
+//            bb.Hint := 'Помощь';
+//            bb.ImageIndex := 26;
+//            bb.ShortCut := ShortCut(VK_F1,[]);
+//            bb.OnClick := btnHelpClick;
+//            (C as TdxBarManager).Bars[0].ItemLinks.Add(bb);
+//          End;
+//        End;
+//      end;
+//      //Если и тулбара нет - то создаем свой попап меню и в него добавляем кнопку
+//      if not assigned(bb) then
+//      Begin
         pm := TPopupMenu.Create(Self);
-        //pm.Images := dmMain.ImageList;
+//        pm.Images := dmMain.ImageList;
         Self.PopupMenu := pm;
         mni := TMenuItem.Create(pm);
         mni.Caption := 'Помощь';
@@ -251,7 +251,7 @@ begin
           //Находим гриды и им присваиваем наше контекстное меню
           if C is TcxGrid then
             (C as TcxGrid).PopupMenu := pm;
-      End;
+//      End;
     End;
   End;
 
