@@ -342,6 +342,56 @@ BEGIN
        AND _tmpItem.ObjectId = 0
     ;
 
+     -- Проверка для НАЛ - если введено юр.лицо, контрагент определяется автоматом и он должен быть один
+     IF EXISTS (SELECT ObjectLink.ChildObjectId
+                FROM ObjectLink
+                     INNER JOIN Object ON Object.Id = ObjectLink.ObjectId AND Object.isErased = FALSE
+                WHERE ObjectLink.DescId = zc_ObjectLink_Partner_Juridical()
+                  AND ObjectLink.ChildObjectId IN (SELECT _tmpItem.ObjectId
+                                                   FROM _tmpItem
+                                                   WHERE _tmpItem.ObjectDescId IN (zc_Object_Juridical())
+                                                     AND _tmpItem.PaidKindId = zc_Enum_PaidKind_SecondForm()
+                                                     AND _tmpItem.AccountDirectionId <> zc_Enum_AccountDirection_30200()
+                                                  )
+                GROUP BY ObjectLink.ChildObjectId
+                HAVING COUNT (*) > 1
+               )
+     THEN
+         RAISE EXCEPTION 'Ошибка.Для формы оплаты <%> невозможно автоматически определить контрагента:%<%>%или%<%>'
+                       , lfGet_Object_ValueData (zc_Enum_PaidKind_SecondForm())
+                       , CHR (13)
+                       , lfGet_Object_ValueData ((SELECT MAX (ObjectLink.ObjectId)
+                                                  FROM ObjectLink
+                                                       INNER JOIN Object ON Object.Id = ObjectLink.ObjectId AND Object.isErased = FALSE
+                                                  WHERE ObjectLink.DescId = zc_ObjectLink_Partner_Juridical()
+                                                    AND ObjectLink.ChildObjectId IN (SELECT _tmpItem.ObjectId
+                                                                                     FROM _tmpItem
+                                                                                     WHERE _tmpItem.ObjectDescId IN (zc_Object_Juridical())
+                                                                                       AND _tmpItem.PaidKindId = zc_Enum_PaidKind_SecondForm()
+                                                                                       AND _tmpItem.AccountDirectionId <> zc_Enum_AccountDirection_30200()
+                                                                                    )
+                                                  GROUP BY ObjectLink.ChildObjectId
+                                                  HAVING COUNT (*) > 1
+                                                ))
+                       , CHR (13)
+                       , CHR (13)
+                       , lfGet_Object_ValueData ((SELECT MIN (ObjectLink.ObjectId)
+                                                  FROM ObjectLink
+                                                       INNER JOIN Object ON Object.Id = ObjectLink.ObjectId AND Object.isErased = FALSE
+                                                  WHERE ObjectLink.DescId = zc_ObjectLink_Partner_Juridical()
+                                                    AND ObjectLink.ChildObjectId IN (SELECT _tmpItem.ObjectId
+                                                                                     FROM _tmpItem
+                                                                                     WHERE _tmpItem.ObjectDescId IN (zc_Object_Juridical())
+                                                                                       AND _tmpItem.PaidKindId = zc_Enum_PaidKind_SecondForm()
+                                                                                       AND _tmpItem.AccountDirectionId <> zc_Enum_AccountDirection_30200()
+                                                                                    )
+                                                  GROUP BY ObjectLink.ChildObjectId
+                                                  HAVING COUNT (*) > 1
+                                                ))
+                        ;
+     END IF;
+
+
      -- 2.1. определяется ContainerId для проводок суммового учета - Суммовой учет
      UPDATE _tmpItem SET ContainerId = CASE WHEN _tmpItem.ContainerId <> 0
                                                  THEN _tmpItem.ContainerId
