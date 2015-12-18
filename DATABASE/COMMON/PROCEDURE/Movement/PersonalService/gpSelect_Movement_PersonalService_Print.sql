@@ -43,9 +43,9 @@ BEGIN
            , Object_PersonalServiceList.Id              AS PersonalServiceListId
            , Object_PersonalServiceList.ValueData       AS PersonalServiceListName
 
-           , CASE WHEN COALESCE (Object_MemberHeadManager.ValueData, '') <> '' THEN zfConvert_FIO (Object_MemberHeadManager.ValueData, 2) ELSE 'Махота Д.П.'    END  AS MemberHeadManagerName
-           , CASE WHEN COALESCE (Object_MemberManager.ValueData, '') <> ''     THEN zfConvert_FIO (Object_MemberManager.ValueData, 2)     ELSE 'Крыхта В.Н.'    END  AS MemberManagerName
-           , CASE WHEN COALESCE (Object_MemberBookkeeper.ValueData, '') <> ''  THEN zfConvert_FIO (Object_MemberBookkeeper.ValueData, 2)  ELSE 'Нагорнова Т.С.' END  AS MemberBookkeeperName
+           , CASE WHEN COALESCE (Object_MemberHeadManager.ValueData, '') <> '' THEN zfConvert_FIO (Object_MemberHeadManager.ValueData, 2) ELSE '' /*'Махота Д.П.'*/    END  AS MemberHeadManagerName
+           , CASE WHEN COALESCE (Object_MemberManager.ValueData, '') <> ''     THEN zfConvert_FIO (Object_MemberManager.ValueData, 2)     ELSE '' /*'Крыхта В.Н.'*/    END  AS MemberManagerName
+           , CASE WHEN COALESCE (Object_MemberBookkeeper.ValueData, '') <> ''  THEN zfConvert_FIO (Object_MemberBookkeeper.ValueData, 2)  ELSE '' /*'Нагорнова Т.С.'*/ END  AS MemberBookkeeperName
                       
            , Object_Juridical.Id                        AS JuridicalId
            , Object_Juridical.ValueData                 AS JuridicalName

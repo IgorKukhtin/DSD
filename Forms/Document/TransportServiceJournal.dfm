@@ -3,7 +3,7 @@ inherited TransportServiceJournalForm: TTransportServiceJournalForm
   ClientHeight = 336
   ClientWidth = 1212
   ExplicitWidth = 1228
-  ExplicitHeight = 374
+  ExplicitHeight = 371
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -25,16 +25,45 @@ inherited TransportServiceJournalForm: TTransportServiceJournalForm
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
-              Format = ',0.00'
+              Format = ',0.####'
               Kind = skSum
-              Position = spFooter
               Column = clAmount
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = clWeightTransport
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = clDistance
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = clCountPoint
             end>
           DataController.Summary.FooterSummaryItems = <
             item
-              Format = ',0.00'
+              Format = ',0.####'
               Kind = skSum
               Column = clAmount
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = clWeightTransport
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = clDistance
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = clCountPoint
             end>
           OptionsData.CancelOnExit = True
           OptionsData.Deleting = False
@@ -45,15 +74,18 @@ inherited TransportServiceJournalForm: TTransportServiceJournalForm
           Styles.Footer = nil
           Styles.Header = nil
           inherited colStatus: TcxGridDBColumn
+            HeaderAlignmentHorz = taCenter
             Options.Editing = False
             Width = 53
           end
           inherited colInvNumber: TcxGridDBColumn
             Visible = False
+            HeaderAlignmentHorz = taCenter
             Options.Editing = False
             Width = 53
           end
           inherited colOperDate: TcxGridDBColumn
+            HeaderAlignmentHorz = taCenter
             Options.Editing = False
             Width = 52
           end
@@ -80,8 +112,9 @@ inherited TransportServiceJournalForm: TTransportServiceJournalForm
             Caption = #1057#1091#1084#1084#1072
             DataBinding.FieldName = 'Amount'
             PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DisplayFormat = ',0.00'
-            HeaderAlignmentHorz = taRightJustify
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 71
@@ -89,6 +122,9 @@ inherited TransportServiceJournalForm: TTransportServiceJournalForm
           object clWeightTransport: TcxGridDBColumn
             Caption = #1042#1099#1074#1086#1079' '#1092#1072#1082#1090', '#1082#1075
             DataBinding.FieldName = 'WeightTransport'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 70
@@ -96,6 +132,9 @@ inherited TransportServiceJournalForm: TTransportServiceJournalForm
           object clDistance: TcxGridDBColumn
             Caption = #1055#1088#1086#1073#1077#1075' '#1092#1072#1082#1090', '#1082#1084
             DataBinding.FieldName = 'Distance'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 70
@@ -103,6 +142,9 @@ inherited TransportServiceJournalForm: TTransportServiceJournalForm
           object clPrice: TcxGridDBColumn
             Caption = #1062#1077#1085#1072' ('#1090#1086#1087#1083#1080#1074#1072')'
             DataBinding.FieldName = 'Price'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 65
@@ -110,6 +152,9 @@ inherited TransportServiceJournalForm: TTransportServiceJournalForm
           object clCountPoint: TcxGridDBColumn
             Caption = #1050#1086#1083'-'#1074#1086' '#1090#1086#1095#1077#1082
             DataBinding.FieldName = 'CountPoint'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 59
@@ -132,8 +177,17 @@ inherited TransportServiceJournalForm: TTransportServiceJournalForm
                 Kind = bkEllipsis
               end>
             Properties.ReadOnly = True
+            HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 92
+          end
+          object clContractCode: TcxGridDBColumn
+            Caption = #1050#1086#1076' '#1076#1086#1075'.'
+            DataBinding.FieldName = 'ContractCode'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 55
           end
           object clContractName: TcxGridDBColumn
             Caption = #8470' '#1076#1086#1075'.'
@@ -146,6 +200,7 @@ inherited TransportServiceJournalForm: TTransportServiceJournalForm
                 Kind = bkEllipsis
               end>
             Properties.ReadOnly = True
+            HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 55
@@ -161,12 +216,14 @@ inherited TransportServiceJournalForm: TTransportServiceJournalForm
                 Kind = bkEllipsis
               end>
             Properties.ReadOnly = True
+            HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 107
           end
           object clInfoMoneyCode: TcxGridDBColumn
             Caption = #1050#1086#1076' '#1059#1055
             DataBinding.FieldName = 'InfoMoneyCode'
+            HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 53
@@ -175,6 +232,7 @@ inherited TransportServiceJournalForm: TTransportServiceJournalForm
             Caption = #1059#1055' '#1075#1088#1091#1087#1087#1072' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
             DataBinding.FieldName = 'InfoMoneyGroupName'
             Visible = False
+            HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 70
@@ -183,6 +241,7 @@ inherited TransportServiceJournalForm: TTransportServiceJournalForm
             Caption = #1059#1055' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1077
             DataBinding.FieldName = 'InfoMoneyDestinationName'
             Visible = False
+            HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 70
@@ -199,6 +258,7 @@ inherited TransportServiceJournalForm: TTransportServiceJournalForm
               end>
             Properties.ReadOnly = True
             FooterAlignmentHorz = taCenter
+            HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 82
@@ -215,6 +275,7 @@ inherited TransportServiceJournalForm: TTransportServiceJournalForm
               end>
             Properties.ReadOnly = True
             FooterAlignmentHorz = taCenter
+            HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 54
@@ -231,6 +292,7 @@ inherited TransportServiceJournalForm: TTransportServiceJournalForm
               end>
             Properties.ReadOnly = True
             FooterAlignmentHorz = taCenter
+            HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 79
           end
@@ -238,6 +300,7 @@ inherited TransportServiceJournalForm: TTransportServiceJournalForm
             Caption = #1052#1072#1088#1082#1072' '#1072#1074#1090#1086
             DataBinding.FieldName = 'CarModelName'
             FooterAlignmentHorz = taCenter
+            HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 59
@@ -254,6 +317,7 @@ inherited TransportServiceJournalForm: TTransportServiceJournalForm
               end>
             Properties.ReadOnly = True
             FooterAlignmentHorz = taCenter
+            HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 82
           end
@@ -261,6 +325,7 @@ inherited TransportServiceJournalForm: TTransportServiceJournalForm
             Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077' ('#1052#1077#1089#1090#1086' '#1086#1090#1087#1088#1072#1074#1082#1080')'
             DataBinding.FieldName = 'UnitForwardingName'
             Visible = False
+            HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 80
@@ -268,6 +333,7 @@ inherited TransportServiceJournalForm: TTransportServiceJournalForm
           object clComment: TcxGridDBColumn
             Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
             DataBinding.FieldName = 'Comment'
+            HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 102
@@ -643,7 +709,7 @@ inherited TransportServiceJournalForm: TTransportServiceJournalForm
       end
       item
         Name = 'inoperdate'
-        Value = Null
+        Value = 'NULL'
         Component = MasterCDS
         ComponentItem = 'OperDate'
         DataType = ftDateTime
@@ -651,7 +717,7 @@ inherited TransportServiceJournalForm: TTransportServiceJournalForm
       end
       item
         Name = 'inStartRunPlan'
-        Value = Null
+        Value = 'NULL'
         Component = MasterCDS
         ComponentItem = 'StartRunPlan'
         DataType = ftDateTime

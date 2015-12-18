@@ -61,7 +61,6 @@ object TransportJournalForm: TTransportJournalForm
     Align = alClient
     PopupMenu = PopupMenu
     TabOrder = 0
-    ExplicitTop = 63
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -71,23 +70,23 @@ object TransportJournalForm: TTransportJournalForm
       DataController.Filter.TranslateLike = True
       DataController.Summary.DefaultGroupSummaryItems = <
         item
-          Format = ',0.00'
+          Format = ',0.####'
           Kind = skSum
           Column = HoursWork
         end
         item
-          Format = ',0.00'
+          Format = ',0.####'
           Kind = skSum
           Column = HoursAdd
         end>
       DataController.Summary.FooterSummaryItems = <
         item
-          Format = ',0.00'
+          Format = ',0.####'
           Kind = skSum
           Column = HoursWork
         end
         item
-          Format = ',0.00'
+          Format = ',0.####'
           Kind = skSum
           Column = HoursAdd
         end>
@@ -241,7 +240,7 @@ object TransportJournalForm: TTransportJournalForm
         Caption = #1050#1086#1083'-'#1074#1086' '#1095#1072#1089#1086#1074
         DataBinding.FieldName = 'HoursWork'
         PropertiesClassName = 'TcxCurrencyEditProperties'
-        Properties.DisplayFormat = ',0.00;-,0.00'
+        Properties.DisplayFormat = ',0.####;-,0.####; ;'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 45
@@ -250,7 +249,7 @@ object TransportJournalForm: TTransportJournalForm
         Caption = #1050#1086#1083'-'#1074#1086' '#1076#1086#1073#1072#1074#1083#1077#1085#1085#1099#1093' '#1095#1072#1089#1086#1074
         DataBinding.FieldName = 'HoursAdd'
         PropertiesClassName = 'TcxCurrencyEditProperties'
-        Properties.DisplayFormat = ',0.00;-,0.00'
+        Properties.DisplayFormat = ',0.####;-,0.####; ;'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 45

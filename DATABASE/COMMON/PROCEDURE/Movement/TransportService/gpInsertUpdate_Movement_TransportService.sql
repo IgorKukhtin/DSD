@@ -47,6 +47,23 @@ BEGIN
      vbAccessKeyId:= lpGetAccessKey (vbUserId, zc_Enum_Process_InsertUpdate_Movement_TransportService());
 
      -- Расчитываем Сумму
+     IF inContractConditionKindId IN (zc_Enum_ContractConditionKind_TransportWeight())
+     THEN
+                    -- по условиям в договоре "Ставка за вывоз, грн/кг"
+         ioAmount:= COALESCE (inWeightTransport, 0)
+                  * COALESCE ((SELECT ObjectFloat_Value.ValueData
+                               FROM ObjectLink AS ObjectLink_ContractCondition_Contract
+                                    JOIN ObjectLink AS ObjectLink_ContractCondition_ContractConditionKind
+                                                    ON ObjectLink_ContractCondition_ContractConditionKind.ObjectId = ObjectLink_ContractCondition_Contract.ObjectId
+                                                   AND ObjectLink_ContractCondition_ContractConditionKind.ChildObjectId = inContractConditionKindId
+                                                   AND ObjectLink_ContractCondition_ContractConditionKind.DescId = zc_ObjectLink_ContractCondition_ContractConditionKind()
+                                    LEFT JOIN ObjectFloat AS ObjectFloat_Value 
+                                                          ON ObjectFloat_Value.ObjectId = ObjectLink_ContractCondition_Contract.ObjectId
+                                                         AND ObjectFloat_Value.DescId = zc_ObjectFloat_ContractCondition_Value()
+                               WHERE ObjectLink_ContractCondition_Contract.DescId = zc_ObjectLink_ContractCondition_Contract()
+                                 AND ObjectLink_ContractCondition_Contract.ChildObjectId = inContractId
+                              ), 0);
+     ELSE
      IF inContractConditionKindId IN (zc_Enum_ContractConditionKind_TransportOneTrip(), zc_Enum_ContractConditionKind_TransportRoundTrip())
      THEN
                     -- по условиям в договоре "Ставка за маршрут..."
@@ -113,6 +130,7 @@ BEGIN
                                  AND ObjectLink_ContractCondition_Contract.ChildObjectId = inContractId
                               ), 0) * COALESCE (inDistance, 0)
          ;
+     END IF;
      END IF;
 
 

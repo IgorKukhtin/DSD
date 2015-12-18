@@ -88,9 +88,10 @@ BEGIN
             '5' :: TVarChar AS LineNo,
             ''::TVarChar as GroupName,
             'Условия участия (в счет маркетингового бюджета или по выставленному счету)'::TVarChar as LineName,
-            (SELECT Movement_Promo.PromoKindName
-             FROM Movement_Promo_View AS Movement_Promo
-             WHERE Movement_Promo.Id = inMovementId) :: TEXT AS LineValue
+            (SELECT STRING_AGG(MovementItem_PromoCondition.ConditionPromoName||': '||replace(TO_CHAR(MovementItem_PromoCondition.Amount,'FM9990D09')||' ','.0 ',''), chr(13)||chr(10)) 
+             FROM MovementItem_PromoCondition_View AS MovementItem_PromoCondition 
+             WHERE MovementItem_PromoCondition.MovementId = inMovementId
+               AND MovementItem_PromoCondition.IsErased = FALSE)::TEXT AS LineValue
         UNION ALL
         SELECT
             '6' :: TVarChar AS LineNo,
@@ -155,6 +156,7 @@ BEGIN
              WHERE MI_PromoGoods.MovementId = inMovementId
                AND MI_PromoGoods.IsErased = FALSE)::TEXT AS LineValue
 /*         UNION ALL
+        UNION ALL
         SELECT
             '12' :: TVarChar AS LineNo,
             ''::TVarChar as GroupName,

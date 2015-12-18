@@ -15,7 +15,7 @@ RETURNS TABLE (Id Integer, MIId Integer, InvNumber Integer, OperDate TDateTime
              , StartRunPlan TDateTime, StartRun TDateTime
              , Amount TFloat, WeightTransport TFloat, Distance TFloat, Price TFloat, CountPoint TFloat, TrevelTime TFloat
              , Comment TVarChar
-             , ContractId Integer, ContractName TVarChar
+             , ContractId Integer, ContractCode Integer, ContractName TVarChar
              , InfoMoneyId Integer, InfoMoneyCode Integer, InfoMoneyName TVarChar
              , JuridicalId Integer, JuridicalName TVarChar
              , PaidKindId Integer, PaidKindName TVarChar
@@ -28,10 +28,18 @@ RETURNS TABLE (Id Integer, MIId Integer, InvNumber Integer, OperDate TDateTime
 AS
 $BODY$
    DECLARE vbUserId Integer;
+   DECLARE vbAccessKeyId Integer;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Select_Movement_TransportService());
      vbUserId:= lpGetUserBySession (inSession);
+
+     -- определяется - может ли пользовать видеть все документы
+     IF zfCalc_AccessKey_TransportAll (vbUserId) = TRUE
+     THEN vbAccessKeyId:= 0;
+     ELSE vbAccessKeyId:= lpGetAccessKey (vbUserId, zc_Enum_Process_InsertUpdate_Movement_TransportService());
+     END IF;
+
 
      -- Результат
      RETURN QUERY 
@@ -63,7 +71,8 @@ BEGIN
            , MIString_Comment.ValueData  AS Comment
 
            , View_Contract_InvNumber.ContractId
-           , View_Contract_InvNumber.InvNumber AS ContractName
+           , View_Contract_InvNumber.ContractCode   AS ContractCode
+           , View_Contract_InvNumber.InvNumber      AS ContractName
 
            , View_InfoMoney.InfoMoneyId
            , View_InfoMoney.InfoMoneyCode
@@ -93,7 +102,8 @@ BEGIN
             INNER JOIN Movement ON  Movement.DescId = zc_Movement_TransportService()
                                AND Movement.OperDate BETWEEN inStartDate AND inEndDate
                                AND Movement.StatusId = tmpStatus.StatusId
-            JOIN (SELECT AccessKeyId FROM Object_RoleAccessKey_View WHERE UserId = vbUserId GROUP BY AccessKeyId) AS tmpRoleAccessKey ON tmpRoleAccessKey.AccessKeyId = Movement.AccessKeyId
+                               AND (Movement.AccessKeyId = vbAccessKeyId OR vbAccessKeyId = 0)
+            -- JOIN (SELECT AccessKeyId FROM Object_RoleAccessKey_View WHERE UserId = vbUserId GROUP BY AccessKeyId) AS tmpRoleAccessKey ON tmpRoleAccessKey.AccessKeyId = Movement.AccessKeyId
 
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
 
@@ -170,7 +180,6 @@ BEGIN
             LEFT JOIN MovementDate AS MovementDate_StartRun
                                    ON MovementDate_StartRun.MovementId = Movement.Id
                                   AND MovementDate_StartRun.DescId = zc_MovementDate_StartRun()
-
       ;
   
 END;
@@ -191,4 +200,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpSelect_Movement_TransportService (inStartDate:= '30.01.2013', inEndDate:= '01.02.2013', inSession:= zfCalc_UserAdmin())
+-- SELECT * FROM gpSelect_Movement_TransportService (inStartDate:= '30.01.2013', inEndDate:= '01.02.2013', inIsErased:= FALSE, inSession:= zfCalc_UserAdmin())

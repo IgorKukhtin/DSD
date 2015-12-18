@@ -736,11 +736,11 @@ BEGIN
 
    -- Условия участия   
    -- PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_ConditionPromo_Discount(),  inDescId:= zc_Object_ConditionPromo(), inCode:= 1, inName:= 'Скидка', inEnumName:= 'zc_Enum_ConditionPromo_Discount');
-   PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_ConditionPromo_Budget()                  , inDescId:= zc_Object_ConditionPromo(), inCode:= 2, inName:= 'компенсация в счет маркетингового бюджета'         , inEnumName:= 'zc_Enum_ConditionPromo_Budget');
    -- PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_ConditionPromo_BudgetBill()              , inDescId:= zc_Object_ConditionPromo(), inCode:= 3, inName:= 'В счет маркетингового бюджета по выставленному счету', inEnumName:= 'zc_Enum_ConditionPromo_BudgetBill');
-   UPDATE Object SET isErased = TRUE WHERE Id = zc_Enum_ConditionPromo_BudgetBill();
-   PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_ConditionPromo_Bill()                    , inDescId:= zc_Object_ConditionPromo(), inCode:= 4, inName:= 'компенсация по счету по итогам продаж'                 , inEnumName:= 'zc_Enum_ConditionPromo_Bill');
-   PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_ConditionPromo_ContractChangePercentOff(), inDescId:= zc_Object_ConditionPromo(), inCode:= 6, inName:= 'без учета % скидки по договору'          , inEnumName:= 'zc_Enum_ConditionPromo_ContractChangePercentOff');
+   PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_ConditionPromo_Budget()                  , inDescId:= zc_Object_ConditionPromo(), inCode:= 1, inName:= 'компенсация в счет маркетингового бюджета'   , inEnumName:= 'zc_Enum_ConditionPromo_Budget');
+   PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_ConditionPromo_Bill()                    , inDescId:= zc_Object_ConditionPromo(), inCode:= 2, inName:= 'компенсация по счету по итогам продаж'       , inEnumName:= 'zc_Enum_ConditionPromo_Bill');
+   PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_ConditionPromo_ContractChangePercentOff(), inDescId:= zc_Object_ConditionPromo(), inCode:= 3, inName:= 'без учета % скидки по договору'              , inEnumName:= 'zc_Enum_ConditionPromo_ContractChangePercentOff');
+   PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_ConditionPromo_BonusOff()                , inDescId:= zc_Object_ConditionPromo(), inCode:= 4, inName:= 'предоставление скидки без начисления бонусов', inEnumName:= 'zc_Enum_ConditionPromo_BonusOff');
 
 END $$;
 
