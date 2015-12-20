@@ -441,7 +441,9 @@ BEGIN
 
            , vbIsInfoMoney_30201 AS isInfoMoney_30201
 
-           , CASE WHEN Object_From.Id = vbKh THEN 'ƒн≥пропетровськ' ELSE '' END :: TVarChar   AS PlaceOf 
+           , CASE WHEN COALESCE (ObjectString_PlaceOf.ValueData, '') <> '' THEN COALESCE (ObjectString_PlaceOf.ValueData, '') 
+                  ELSE CASE WHEN Object_From.Id = vbKh THEN 'ƒн≥пропетровськ' ELSE '' END
+                  END  :: TVarChar   AS PlaceOf 
        FROM Movement
             LEFT JOIN MovementLinkMovement AS MovementLinkMovement_Sale
                                            ON MovementLinkMovement_Sale.MovementId = Movement.Id
@@ -494,10 +496,18 @@ BEGIN
                                          ON MovementLinkObject_From.MovementId = Movement.Id
                                         AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
             LEFT JOIN Object AS Object_From ON Object_From.Id = MovementLinkObject_From.ObjectId
+
             LEFT JOIN ObjectLink AS ObjectLink_Unit_Juridical
                                  ON ObjectLink_Unit_Juridical.ObjectId = Object_From.Id
                                 AND ObjectLink_Unit_Juridical.DescId = zc_ObjectLink_Unit_Juridical()
                                 AND vbContractId = 0
+
+            LEFT JOIN ObjectLink AS ObjectLink_Unit_Branch
+                                 ON ObjectLink_Unit_Branch.ObjectId = Object_From.Id
+                                AND ObjectLink_Unit_Branch.DescId = zc_ObjectLink_Unit_Branch()
+        LEFT JOIN ObjectString AS ObjectString_PlaceOf
+                               ON ObjectString_PlaceOf.ObjectId = ObjectLink_Unit_Branch.ChildObjectId
+                              AND ObjectString_PlaceOf.DescId = zc_objectString_Branch_PlaceOf()                                 
 
             LEFT JOIN MovementLinkObject AS MovementLinkObject_ArticleLoss
                                          ON MovementLinkObject_ArticleLoss.MovementId = Movement.Id
