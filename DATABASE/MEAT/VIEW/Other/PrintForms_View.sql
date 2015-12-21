@@ -218,6 +218,20 @@ AS
        AND OH_JuridicalDetails.OKPO IN ('22447463', '37223357', '37223320')
       WHERE Object_Juridical.DescId = zc_Object_Juridical()
       UNION
+-- Новус
+      SELECT
+             zc_movement_sale()
+           , CAST ('Sale' AS TVarChar)
+           , CAST ('01.01.2000' AS TDateTime)
+           , CAST ('01.01.2200' AS TDateTime)
+           , CAST (Object_Juridical.Id AS INTEGER)
+           , zc_Enum_PaidKind_FirstForm()
+           , CAST ('PrintMovement_Sale36003603' AS TVarChar)
+      FROM Object AS Object_Juridical
+      JOIN ObjectHistory_JuridicalDetails_View AS OH_JuridicalDetails ON OH_JuridicalDetails.JuridicalId = Object_Juridical.Id
+       AND OH_JuridicalDetails.OKPO IN ('36003603')
+      WHERE Object_Juridical.DescId = zc_Object_Juridical()
+      UNION
 
 --налоговая
       SELECT
@@ -425,6 +439,7 @@ ALTER TABLE PrintForms_View OWNER TO postgres;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 21.12.15         * add PrintMovement_Sale36003603 Новус
  18.12.15         * add PrintMovement_Sale2DiscountPrice
  28.01.15                                                        * + PrintMovement_ReturnIn32049199
  25.11.14                                                        * + new nalog forms
