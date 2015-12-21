@@ -150,7 +150,6 @@ inherited Report_TaraForm: TReport_TaraForm
             end>
           OptionsData.Deleting = False
           OptionsData.DeletingConfirmation = False
-          OptionsData.Editing = False
           OptionsView.GroupByBox = True
           Styles.Content = nil
           Styles.Inactive = nil
@@ -163,6 +162,7 @@ inherited Report_TaraForm: TReport_TaraForm
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 31
           end
           object colGoodsName: TcxGridDBColumn
@@ -170,6 +170,7 @@ inherited Report_TaraForm: TReport_TaraForm
             DataBinding.FieldName = 'GoodsName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 102
           end
           object colGoodsGroupCode: TcxGridDBColumn
@@ -178,6 +179,7 @@ inherited Report_TaraForm: TReport_TaraForm
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 29
           end
           object colGoodsGroupName: TcxGridDBColumn
@@ -185,6 +187,7 @@ inherited Report_TaraForm: TReport_TaraForm
             DataBinding.FieldName = 'GoodsGroupName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 73
           end
           object colObjectCode: TcxGridDBColumn
@@ -193,6 +196,7 @@ inherited Report_TaraForm: TReport_TaraForm
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 31
           end
           object colObjectName: TcxGridDBColumn
@@ -200,6 +204,7 @@ inherited Report_TaraForm: TReport_TaraForm
             DataBinding.FieldName = 'ObjectName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 88
           end
           object colObjectDescName: TcxGridDBColumn
@@ -208,6 +213,7 @@ inherited Report_TaraForm: TReport_TaraForm
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 58
           end
           object colObjectType: TcxGridDBColumn
@@ -215,6 +221,7 @@ inherited Report_TaraForm: TReport_TaraForm
             DataBinding.FieldName = 'ObjectType'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 50
           end
           object colBranchName: TcxGridDBColumn
@@ -222,6 +229,7 @@ inherited Report_TaraForm: TReport_TaraForm
             DataBinding.FieldName = 'BranchName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 60
           end
           object colJuridicalName: TcxGridDBColumn
@@ -229,6 +237,7 @@ inherited Report_TaraForm: TReport_TaraForm
             DataBinding.FieldName = 'JuridicalName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 60
           end
           object colRetailName: TcxGridDBColumn
@@ -236,6 +245,7 @@ inherited Report_TaraForm: TReport_TaraForm
             DataBinding.FieldName = 'RetailName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 60
           end
           object colRemainsInActive: TcxGridDBColumn
@@ -245,6 +255,7 @@ inherited Report_TaraForm: TReport_TaraForm
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 50
           end
           object colRemainsInPassive: TcxGridDBColumn
@@ -254,6 +265,7 @@ inherited Report_TaraForm: TReport_TaraForm
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 50
           end
           object colRemainsIn: TcxGridDBColumn
@@ -263,6 +275,7 @@ inherited Report_TaraForm: TReport_TaraForm
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 50
           end
           object colAmountIn: TcxGridDBColumn
@@ -270,6 +283,7 @@ inherited Report_TaraForm: TReport_TaraForm
             DataBinding.FieldName = 'AmountIn'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Properties.ReadOnly = True
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 50
@@ -279,6 +293,7 @@ inherited Report_TaraForm: TReport_TaraForm
             DataBinding.FieldName = 'AmountInBay'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Properties.ReadOnly = True
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 50
@@ -288,6 +303,7 @@ inherited Report_TaraForm: TReport_TaraForm
             DataBinding.FieldName = 'AmountOut'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Properties.ReadOnly = True
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 50
@@ -297,6 +313,7 @@ inherited Report_TaraForm: TReport_TaraForm
             DataBinding.FieldName = 'AmountOutSale'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Properties.ReadOnly = True
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 50
@@ -306,6 +323,7 @@ inherited Report_TaraForm: TReport_TaraForm
             DataBinding.FieldName = 'AmountInventory'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Properties.ReadOnly = True
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 50
@@ -315,6 +333,7 @@ inherited Report_TaraForm: TReport_TaraForm
             DataBinding.FieldName = 'AmountLoss'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Properties.ReadOnly = True
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 50
@@ -326,6 +345,7 @@ inherited Report_TaraForm: TReport_TaraForm
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 50
           end
           object colRemainsOutPassive: TcxGridDBColumn
@@ -335,6 +355,7 @@ inherited Report_TaraForm: TReport_TaraForm
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 50
           end
           object colRemainsOut: TcxGridDBColumn
@@ -344,6 +365,7 @@ inherited Report_TaraForm: TReport_TaraForm
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 50
           end
         end
@@ -477,6 +499,15 @@ inherited Report_TaraForm: TReport_TaraForm
       end>
   end
   inherited ActionList: TActionList
+    inherited actRefresh: TdsdDataSetRefresh
+      StoredProcList = <
+        item
+          StoredProc = spSelect
+        end
+        item
+          StoredProc = spGetTaraMovementDescSets
+        end>
+    end
     object ExecuteDialog: TExecuteDialog
       Category = 'DSDLib'
       MoveParams = <>
@@ -569,6 +600,384 @@ inherited Report_TaraForm: TReport_TaraForm
       isShowModal = True
       RefreshDispatcher = RefreshDispatcher
       OpenBeforeShow = True
+    end
+    object MovementTara_In_Form: TdsdOpenForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = 'IncomeJournal'
+      FormName = 'TReport_TaraMovementForm'
+      FormNameParam.Value = 'TReport_TaraMovementForm'
+      FormNameParam.DataType = ftString
+      GuiParams = <
+        item
+          Name = 'StartDate'
+          Value = 42370d
+          Component = FormParams
+          ComponentItem = 'StartDate'
+          DataType = ftDateTime
+        end
+        item
+          Name = 'EndDate'
+          Value = 42370d
+          Component = FormParams
+          ComponentItem = 'EndDate'
+          DataType = ftDateTime
+        end
+        item
+          Name = 'GoodsId'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'GoodsId'
+        end
+        item
+          Name = 'GoodsName'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'GoodsName'
+          DataType = ftString
+        end
+        item
+          Name = 'ObjectId'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'ObjectId'
+        end
+        item
+          Name = 'ObjectName'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'ObjectName'
+          DataType = ftString
+        end
+        item
+          Name = 'DescSet'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'InDesc'
+          DataType = ftString
+        end
+        item
+          Name = 'MLODesc'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'InMLODesc'
+        end>
+      isShowModal = False
+    end
+    object MovementTara_InBay_Form: TdsdOpenForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = 'IncomeJournal'
+      FormName = 'TReport_TaraMovementForm'
+      FormNameParam.Value = 'TReport_TaraMovementForm'
+      FormNameParam.DataType = ftString
+      GuiParams = <
+        item
+          Name = 'StartDate'
+          Value = 42370d
+          Component = FormParams
+          ComponentItem = 'StartDate'
+          DataType = ftDateTime
+        end
+        item
+          Name = 'EndDate'
+          Value = 42370d
+          Component = FormParams
+          ComponentItem = 'EndDate'
+          DataType = ftDateTime
+        end
+        item
+          Name = 'GoodsId'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'GoodsId'
+        end
+        item
+          Name = 'GoodsName'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'GoodsName'
+          DataType = ftString
+        end
+        item
+          Name = 'ObjectId'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'ObjectId'
+        end
+        item
+          Name = 'ObjectName'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'ObjectName'
+          DataType = ftString
+        end
+        item
+          Name = 'DescSet'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'InBayDesc'
+          DataType = ftString
+        end
+        item
+          Name = 'MLODesc'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'InMLODesc'
+        end>
+      isShowModal = False
+    end
+    object MovementTara_Out_Form: TdsdOpenForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = 'IncomeJournal'
+      FormName = 'TReport_TaraMovementForm'
+      FormNameParam.Value = 'TReport_TaraMovementForm'
+      FormNameParam.DataType = ftString
+      GuiParams = <
+        item
+          Name = 'StartDate'
+          Value = 42370d
+          Component = FormParams
+          ComponentItem = 'StartDate'
+          DataType = ftDateTime
+        end
+        item
+          Name = 'EndDate'
+          Value = 42370d
+          Component = FormParams
+          ComponentItem = 'EndDate'
+          DataType = ftDateTime
+        end
+        item
+          Name = 'GoodsId'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'GoodsId'
+        end
+        item
+          Name = 'GoodsName'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'GoodsName'
+          DataType = ftString
+        end
+        item
+          Name = 'ObjectId'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'ObjectId'
+        end
+        item
+          Name = 'ObjectName'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'ObjectName'
+          DataType = ftString
+        end
+        item
+          Name = 'DescSet'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'OutDesc'
+          DataType = ftString
+        end
+        item
+          Name = 'MLODesc'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'OutMLODesc'
+        end>
+      isShowModal = False
+    end
+    object MovementTara_OutSale_Form: TdsdOpenForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = 'IncomeJournal'
+      FormName = 'TReport_TaraMovementForm'
+      FormNameParam.Value = 'TReport_TaraMovementForm'
+      FormNameParam.DataType = ftString
+      GuiParams = <
+        item
+          Name = 'StartDate'
+          Value = 42370d
+          Component = FormParams
+          ComponentItem = 'StartDate'
+          DataType = ftDateTime
+        end
+        item
+          Name = 'EndDate'
+          Value = 42370d
+          Component = FormParams
+          ComponentItem = 'EndDate'
+          DataType = ftDateTime
+        end
+        item
+          Name = 'GoodsId'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'GoodsId'
+        end
+        item
+          Name = 'GoodsName'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'GoodsName'
+          DataType = ftString
+        end
+        item
+          Name = 'ObjectId'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'ObjectId'
+        end
+        item
+          Name = 'ObjectName'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'ObjectName'
+          DataType = ftString
+        end
+        item
+          Name = 'DescSet'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'OutSaleDesc'
+          DataType = ftString
+        end
+        item
+          Name = 'MLODesc'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'OutMLODesc'
+        end>
+      isShowModal = False
+    end
+    object MovementTara_Inventory_Form: TdsdOpenForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = 'IncomeJournal'
+      FormName = 'TReport_TaraMovementForm'
+      FormNameParam.Value = 'TReport_TaraMovementForm'
+      FormNameParam.DataType = ftString
+      GuiParams = <
+        item
+          Name = 'StartDate'
+          Value = 42370d
+          Component = FormParams
+          ComponentItem = 'StartDate'
+          DataType = ftDateTime
+        end
+        item
+          Name = 'EndDate'
+          Value = 42370d
+          Component = FormParams
+          ComponentItem = 'EndDate'
+          DataType = ftDateTime
+        end
+        item
+          Name = 'GoodsId'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'GoodsId'
+        end
+        item
+          Name = 'GoodsName'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'GoodsName'
+          DataType = ftString
+        end
+        item
+          Name = 'ObjectId'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'ObjectId'
+        end
+        item
+          Name = 'ObjectName'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'ObjectName'
+          DataType = ftString
+        end
+        item
+          Name = 'DescSet'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'InventoryDesc'
+          DataType = ftString
+        end
+        item
+          Name = 'MLODesc'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'InventoryMLODesc'
+        end>
+      isShowModal = False
+    end
+    object MovementTara_Loss_Form: TdsdOpenForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = 'IncomeJournal'
+      FormName = 'TReport_TaraMovementForm'
+      FormNameParam.Value = 'TReport_TaraMovementForm'
+      FormNameParam.DataType = ftString
+      GuiParams = <
+        item
+          Name = 'StartDate'
+          Value = 42370d
+          Component = FormParams
+          ComponentItem = 'StartDate'
+          DataType = ftDateTime
+        end
+        item
+          Name = 'EndDate'
+          Value = 42370d
+          Component = FormParams
+          ComponentItem = 'EndDate'
+          DataType = ftDateTime
+        end
+        item
+          Name = 'GoodsId'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'GoodsId'
+        end
+        item
+          Name = 'GoodsName'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'GoodsName'
+          DataType = ftString
+        end
+        item
+          Name = 'ObjectId'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'ObjectId'
+        end
+        item
+          Name = 'ObjectName'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'ObjectName'
+          DataType = ftString
+        end
+        item
+          Name = 'DescSet'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'LossDesc'
+          DataType = ftString
+        end
+        item
+          Name = 'MLODesc'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'LossMLODesc'
+        end>
+      isShowModal = False
     end
   end
   inherited MasterDS: TDataSource
@@ -684,6 +1093,45 @@ inherited Report_TaraForm: TReport_TaraForm
       Category = 0
     end
   end
+  inherited DBViewAddOn: TdsdDBViewAddOn
+    ColumnAddOnList = <
+      item
+        Column = colAmountIn
+        Action = MovementTara_In_Form
+        onExitColumn.Active = False
+        onExitColumn.AfterEmptyValue = False
+      end
+      item
+        Column = colAmountInBay
+        Action = MovementTara_InBay_Form
+        onExitColumn.Active = False
+        onExitColumn.AfterEmptyValue = False
+      end
+      item
+        Column = colAmountOut
+        Action = MovementTara_Out_Form
+        onExitColumn.Active = False
+        onExitColumn.AfterEmptyValue = False
+      end
+      item
+        Column = colAmountOutSale
+        Action = MovementTara_OutSale_Form
+        onExitColumn.Active = False
+        onExitColumn.AfterEmptyValue = False
+      end
+      item
+        Column = colAmountInventory
+        Action = MovementTara_Inventory_Form
+        onExitColumn.Active = False
+        onExitColumn.AfterEmptyValue = False
+      end
+      item
+        Column = colAmountLoss
+        Action = MovementTara_Loss_Form
+        onExitColumn.Active = False
+        onExitColumn.AfterEmptyValue = False
+      end>
+  end
   inherited PeriodChoice: TPeriodChoice
     Top = 176
   end
@@ -766,5 +1214,169 @@ inherited Report_TaraForm: TReport_TaraForm
       end>
     Left = 656
     Top = 32
+  end
+  object FormParams: TdsdFormParams
+    Params = <
+      item
+        Name = 'StartDate'
+        Value = 'NULL'
+        Component = deStart
+        DataType = ftDateTime
+      end
+      item
+        Name = 'EndDate'
+        Value = 'NULL'
+        Component = deEnd
+        DataType = ftDateTime
+      end
+      item
+        Name = 'GoodsId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'GoodsId'
+      end
+      item
+        Name = 'GoodsName'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'GoodsName'
+        DataType = ftString
+      end
+      item
+        Name = 'ObjectId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'ObjectId'
+      end
+      item
+        Name = 'ObjectName'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'ObjectName'
+        DataType = ftString
+      end
+      item
+        Name = 'InDesc'
+        Value = Null
+        DataType = ftString
+      end
+      item
+        Name = 'InBayDesc'
+        Value = Null
+        DataType = ftString
+      end
+      item
+        Name = 'OutDesc'
+        Value = Null
+        DataType = ftString
+      end
+      item
+        Name = 'OutSaleDesc'
+        Value = Null
+        DataType = ftString
+      end
+      item
+        Name = 'InventoryDesc'
+        Value = Null
+        DataType = ftString
+      end
+      item
+        Name = 'LossDesc'
+        Value = Null
+        DataType = ftString
+      end
+      item
+        Name = 'InMLODesc'
+        Value = Null
+      end
+      item
+        Name = 'OutMLODesc'
+        Value = Null
+      end
+      item
+        Name = 'InventoryMLODesc'
+        Value = Null
+      end
+      item
+        Name = 'LossMLODesc'
+        Value = Null
+      end>
+    Left = 24
+    Top = 328
+  end
+  object spGetTaraMovementDescSets: TdsdStoredProc
+    StoredProcName = 'gpGetTaraMovementDescSets'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'InDesc'
+        Value = 42370d
+        Component = FormParams
+        ComponentItem = 'InDesc'
+        DataType = ftString
+      end
+      item
+        Name = 'InBayDesc'
+        Value = 42370d
+        Component = FormParams
+        ComponentItem = 'InBayDesc'
+        DataType = ftString
+      end
+      item
+        Name = 'OutDesc'
+        Value = 'False'
+        Component = FormParams
+        ComponentItem = 'OutDesc'
+        DataType = ftString
+      end
+      item
+        Name = 'OutSaleDesc'
+        Value = 'False'
+        Component = FormParams
+        ComponentItem = 'OutSaleDesc'
+        DataType = ftString
+      end
+      item
+        Name = 'InventoryDesc'
+        Value = 'False'
+        Component = FormParams
+        ComponentItem = 'InventoryDesc'
+        DataType = ftString
+      end
+      item
+        Name = 'LossDesc'
+        Value = 'False'
+        Component = FormParams
+        ComponentItem = 'LossDesc'
+        DataType = ftString
+      end
+      item
+        Name = 'InMLODesc'
+        Value = 'False'
+        Component = FormParams
+        ComponentItem = 'InMLODesc'
+      end
+      item
+        Name = 'OutMLODesc'
+        Value = ''
+        Component = FormParams
+        ComponentItem = 'OutMLODesc'
+      end
+      item
+        Name = 'InventoryMLODesc'
+        Value = ''
+        Component = FormParams
+        ComponentItem = 'InventoryMLODesc'
+      end
+      item
+        Name = 'LossMLODesc'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'LossMLODesc'
+      end>
+    PackSize = 1
+    Left = 264
+    Top = 264
   end
 end

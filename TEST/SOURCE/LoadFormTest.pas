@@ -1333,6 +1333,8 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TReport_TaraDialogForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TPartnerAndUnitForm'));
   TdsdFormStorageFactory.GetStorage.Load('TPartnerAndUnitForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_TaraMovementForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_TaraMovementForm');
 end;
 
 procedure TLoadFormTest.LoadReportTransportFormTest;

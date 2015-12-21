@@ -53,14 +53,19 @@ type
     colAmountOutSale: TcxGridDBColumn;
     colAmountLoss: TcxGridDBColumn;
     chkWithMember: TcxCheckBox;
+    FormParams: TdsdFormParams;
+    spGetTaraMovementDescSets: TdsdStoredProc;
+    MovementTara_In_Form: TdsdOpenForm;
+    MovementTara_InBay_Form: TdsdOpenForm;
+    MovementTara_Out_Form: TdsdOpenForm;
+    MovementTara_OutSale_Form: TdsdOpenForm;
+    MovementTara_Inventory_Form: TdsdOpenForm;
+    MovementTara_Loss_Form: TdsdOpenForm;
   private
     { Private declarations }
   public
     { Public declarations }
   end;
-
-var
-  Report_TaraForm: TReport_TaraForm;
 
 implementation
 

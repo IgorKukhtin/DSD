@@ -1,0 +1,204 @@
+DROP FUNCTION IF EXISTS gpSelect_Report_TaraMovement(
+    TDateTime, --дата начала периода
+    TDateTime, --дата окончания периода
+    Integer,   --Объект анализа
+    Integer,   --Товар
+    TVarChar,  --Типы документов
+    Integer,   --Тип связи для "От кого / кому"
+    TVarChar   --сессия пользователя
+);
+
+CREATE OR REPLACE FUNCTION gpSelect_Report_TaraMovement(
+    IN inStartDate      TDateTime, --дата начала периода
+    IN inEndDate        TDateTime, --дата окончания периода
+    IN inWhereObjectId  Integer,   --Объект анализа
+    IN inGoodsId        Integer,   --Товар
+    IN inDescSet        TVarChar,  --Типы документов
+    IN inMLODesc        Integer,   --Тип связи для "От кого / кому"
+    IN inSession        TVarChar   --сессия пользователя
+)
+RETURNS TABLE(
+     MovementId        Integer    --ИД документа
+    ,InvNumber         TVarChar   --Номер документа
+    ,OperDate          TDateTime  --Дата документа
+    ,MovementDescId    Integer    --ИД типа документа
+    ,MovementDescName  TVarChar   --Тип документа
+    ,LocationDescName  TVarChar   --Тип объекта анализа
+    ,LocationCode      Integer    --Код объекта анализа
+    ,LocationName      TVarChar   --Объект анализа
+    ,ObjectByDescName  TVarChar   --ИД "от кого / кому"
+    ,ObjectByCode      Integer    --Код "от кого / кому"
+    ,ObjectByName      TVarChar   --Наименование "от кого / кому"
+    ,PaidKindName      TVarChar   --Тип оплаты
+    ,GoodsCode         Integer    --Код товара
+    ,GoodsName         TVarChar   --Наименование товара
+    ,AmountIn          TFloat     --Кол-во приход
+    ,AmountOut         TFloat     --Кол-во расход
+    ,Price             TFloat     --Цена
+    )
+AS
+$BODY$
+    DECLARE vbUserId Integer;
+    DECLARE vbIndex Integer;
+    DECLARE vbDescId Integer;
+    DECLARE vbContainerLinkObjectDesc Integer;
+    DECLARE vbObjectDescId Integer;
+    DECLARE vbMovementLinkObjectDesc Integer;
+    DECLARE vbDirectMovement Integer;
+    DECLARE vbIOMovement Integer;
+BEGIN
+    -- проверка прав пользователя на вызов процедуры
+    -- PERFORM lpCheckRight (inSession, zc_Enum_Process_Select_MI_SheetWorkTime());
+    vbUserId:= lpGetUserBySession (inSession);
+
+
+    SELECT
+        Object.DescId
+    INTO
+        vbObjectDescId
+    FROM 
+        Object
+    WHERE
+        Object.Id = inWhereObjectId;
+    
+    IF vbObjectDescId = zc_Object_Partner()
+    THEN
+        vbContainerLinkObjectDesc := zc_ContainerLinkObject_Partner();
+    ELSEIF vbObjectDescId = zc_Object_Unit()
+    THEN
+        vbContainerLinkObjectDesc := zc_ContainerLinkObject_Unit();
+    ELSEIF vbObjectDescId = zc_Object_Member()
+    THEN
+        vbContainerLinkObjectDesc := zc_ContainerLinkObject_Member();
+    END IF;
+    
+    vbDirectMovement := 0;
+    vbIOMovement := 0;
+    -- таблица - MovementDesc - типы документов
+    CREATE TEMP TABLE _tmpMovementDesc (DescId Integer) ON COMMIT DROP;
+    -- парсим типы документов
+    vbIndex := 1;
+    WHILE split_part (inDescSet, ';', vbIndex) <> '' LOOP
+        IF split_part (inDescSet, ';', vbIndex) = 'ExternalMovement'
+        THEN 
+            vbIOMovement := 1;
+        ELSEIF split_part (inDescSet, ';', vbIndex) = 'InternalMovement'
+        THEN
+            vbIOMovement := 2;
+        ELSEIF split_part (inDescSet, ';', vbIndex) = 'IN'
+        THEN
+            vbDirectMovement := 1;
+        ELSEIF split_part (inDescSet, ';', vbIndex) = 'OUT'
+        THEN
+            vbDirectMovement := 2;
+        ELSE
+            -- парсим
+            EXECUTE 'SELECT ' || split_part (inDescSet, ';', vbIndex) INTO vbDescId;
+            -- добавляем то что нашли
+            INSERT INTO _tmpMovementDesc SELECT vbDescId;
+        END IF;
+        -- теперь следуюющий
+        vbIndex := vbIndex + 1;
+    END LOOP;
+
+    
+    -- Результат
+    RETURN QUERY
+        SELECT
+            Movement.Id                                       AS MovementId    --ИД документа
+           ,Movement.InvNumber                                AS InvNumber   --Номер документа
+           ,Movement.OperDate                                 AS OperDate  --Дата документа
+           ,MovementDesc.Id                                   AS MovementDescId    --ИД типа документа
+           ,MovementDesc.ItemName                             AS MovementDescName   --Тип документа
+           ,ObjectDesc.ItemName                               AS LocationDescName   --Тип объекта анализа
+           ,Object.ObjectCode                                 AS LocationCode    --Код объекта анализа
+           ,Object.ValueData                                  AS LocationName   --Объект анализа
+           ,ObjectByDesc.ItemName                             AS ObjectByDescName   --ИД "от кого / кому"
+           ,ObjectBy.ObjectCode                               AS ObjectByCode    --Код "от кого / кому"
+           ,ObjectBy.ValueData                                AS ObjectByName   --Наименование "от кого / кому"
+           ,Object_PaidKind.ValueData                         AS PaidKindName   --Тип оплаты
+           ,Object_Goods.ObjectCode                           AS GoodsCode    --Код товара
+           ,Object_Goods.ValueData                            AS GoodsName    --Наименование товара
+           ,CASE WHEN MovementItemContainer.IsActive = TRUE 
+                THEN MovementItemContainer.Amount
+            ELSE 0
+            END::TFloat                                       AS AmountIn     --Кол-во приход
+           ,CASE WHEN MovementItemContainer.IsActive = FALSE
+                THEN -MovementItemContainer.Amount
+            ELSE 0
+            END::TFloat                                       AS AmountOut   --Кол-во расход
+           ,MIFloat_Price.ValueData                           AS Price     --Цена
+        FROM
+            _tmpMovementDesc
+            INNER JOIN MovementItemContainer ON MovementItemContainer.MovementDescId = _tmpMovementDesc.DescId
+                                            AND MovementItemContainer.Operdate between inStartDate AND inEndDate
+            INNER JOIN MovementItem ON MovementItem.Id = MovementItemContainer.MovementItemId
+                                   AND MovementItem.DescId = zc_MI_Master()
+                                   AND MovementItem.ObjectId = inGoodsId
+            INNER JOIN Object AS Object_Goods
+                              ON Object_Goods.Id = MovementItem.ObjectId
+            INNER JOIN Movement ON MovementItemContainer.MovementId = Movement.Id
+            INNER JOIN MovementDesc ON Movement.DescId = MovementDesc.Id
+            INNER JOIN ContainerLinkObject ON ContainerLinkObject.ContainerId = MovementItemContainer.ContainerId
+                                          AND ContainerLinkObject.Descid = vbContainerLinkObjectDesc
+                                          AND ContainerLinkObject.ObjectId = inWhereObjectId
+            INNER JOIN Object ON ContainerLinkObject.ObjectId = Object.Id
+            INNER JOIN ObjectDesc ON ObjectDesc.Id = Object.DescId
+            LEFT OUTER JOIN MovementLinkObject ON MovementLinkObject.MovementId = Movement.Id
+                                              AND MovementLinkObject.DescId = inMLODesc
+            LEFT OUTER JOIN Object AS ObjectBy
+                                   ON ObjectBy.Id = MovementLinkObject.ObjectId
+            LEFT OUTER JOIN ObjectDesc AS ObjectByDesc
+                                       ON ObjectByDesc.Id = ObjectBy.DescId
+            LEFT OUTER JOIN MovementLinkObject AS MovementLinkObject_PaidKind
+                                               ON MovementLinkObject_PaidKind.MovementId = Movement.ID
+                                              AND MovementLinkObject_PaidKind.DescId = zc_MovementLinkObject_PaidKind()
+            LEFT OUTER JOIN Object AS Object_PaidKind
+                                   ON Object_PaidKind.Id = MovementLinkObject_PaidKind.ObjectId
+            LEFT OUTER JOIN MovementItemFloat AS MIFloat_Price
+                                              ON MIFloat_Price.MovementItemId = MovementItemContainer.MovementItemId
+                                             AND MIFloat_Price.DescId = zc_MIFloat_Price()
+        WHERE
+            (
+                vbIOMovement = 0 --Внутренние и внешние операции
+                OR
+                (
+                    vbIOMovement = 1 --Только внешние операции
+                    AND
+                    COALESCE(MIFloat_Price.ValueData,0)>0
+                )
+                OR
+                (
+                    vbIOMovement = 2 --Только внутренние операции
+                    AND
+                    COALESCE(MIFloat_Price.ValueData,0)=0
+                )
+            )
+            AND
+            (
+                vbDirectMovement = 0 --Приход и расход
+                OR
+                (
+                    vbDirectMovement = 1 -- Только приходы
+                    AND
+                    MovementItemContainer.IsActive = TRUE
+                )
+                OR
+                (
+                    vbDirectMovement = 2 --только расходы
+                    AND
+                    MovementItemContainer.IsActive = FALSE
+                )
+            );
+                                              
+END;
+$BODY$
+  LANGUAGE PLPGSQL VOLATILE;
+ALTER FUNCTION gpSelect_Report_TaraMovement (TDateTime,TDateTime,Integer,Integer,TVarChar,Integer,TVarChar) OWNER TO postgres;
+
+/*
+ ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.    Воробкало А.А.
+ 17.12.15                                                          *
+*/
+--Select * from gpSelect_Report_TaraMovement(inStartDate := '20150801'::TDateTime,inEndDate:='20150831'::TDateTime,inWhereObjectId:=80604::Integer,inGoodsId:=7946::Integer,inDescSet:='1'::TVarChar,inMLODesc:=2::Integer,inSession:= '5'::TVarChar);

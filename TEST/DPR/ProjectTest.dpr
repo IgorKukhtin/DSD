@@ -775,7 +775,8 @@ uses
   Report_SheetWorkTimeDialog in '..\..\Forms\Report\Report_SheetWorkTimeDialog.pas' {Report_SheetWorkTimeDialogForm: TParentForm},
   Report_Tara in '..\..\Forms\Report\Report_Tara.pas' {Report_TaraForm: TParentForm},
   PartnerAndUnit in '..\..\Forms\Guides\PartnerAndUnit.pas' {PartnerAndUnitForm: TParentForm},
-  Report_TaraDialog in '..\..\Forms\Report\Report_TaraDialog.pas' {Report_TaraDialogForm: TParentForm};
+  Report_TaraDialog in '..\..\Forms\Report\Report_TaraDialog.pas' {Report_TaraDialogForm: TParentForm},
+  Report_TaraMovement in '..\..\Forms\Report\Report_TaraMovement.pas' {Report_TaraMovementForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}
