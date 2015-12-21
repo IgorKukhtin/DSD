@@ -10,6 +10,8 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , PersonalId Integer, PersonalName TVarChar
              , PersonalStoreId Integer, PersonalStoreName TVarChar
              , PersonalBookkeeperId Integer, PersonalBookkeeperName TVarChar
+             , UnitId Integer, UnitName TVarChar
+             , UnitReturnId Integer, UnitReturnName TVarChar
              , IsMedoc boolean, IsPartionDoc boolean
              , isErased boolean)
 AS
@@ -40,6 +42,12 @@ BEGIN
 
         , Object_PersonalBookkeeper_View.PersonalId    AS PersonalBookkeeperId
         , Object_PersonalBookkeeper_View.PersonalName  AS PersonalBookkeeperName
+
+        , Object_Unit.Id         AS UnitId
+        , Object_Unit.ValueData  AS UnitName
+
+        , Object_UnitReturn.Id         AS UnitReturnId
+        , Object_UnitReturn.ValueData  AS UnitReturnName
        
         , COALESCE (ObjectBoolean_Medoc.ValueData, False)      AS IsMedoc
         , COALESCE (ObjectBoolean_PartionDoc.ValueData, False) AS IsPartionDoc
@@ -79,6 +87,17 @@ BEGIN
                              ON ObjectLink_Branch_PersonalBookkeeper.ObjectId = Object_Branch.Id
                             AND ObjectLink_Branch_PersonalBookkeeper.DescId = zc_ObjectLink_Branch_PersonalBookkeeper()
         LEFT JOIN Object_Personal_View AS Object_PersonalBookkeeper_View ON Object_PersonalBookkeeper_View.PersonalId = ObjectLink_Branch_PersonalBookkeeper.ChildObjectId                     
+
+        LEFT JOIN ObjectLink AS ObjectLink_Branch_Unit
+                             ON ObjectLink_Branch_Unit.ObjectId = Object_Branch.Id
+                            AND ObjectLink_Branch_Unit.DescId = zc_ObjectLink_Branch_Unit()
+        LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = ObjectLink_Branch_Unit.ChildObjectId
+
+        LEFT JOIN ObjectLink AS ObjectLink_Branch_UnitReturn
+                             ON ObjectLink_Branch_UnitReturn.ObjectId = Object_Branch.Id
+                            AND ObjectLink_Branch_UnitReturn.DescId = zc_ObjectLink_Branch_UnitReturn()
+        LEFT JOIN Object AS Object_UnitReturn ON Object_UnitReturn.Id = ObjectLink_Branch_UnitReturn.ChildObjectId
+
         
    WHERE Object_Branch.DescId = zc_Object_Branch()
      AND (tmpRoleAccessKey.AccessKeyId IS NOT NULL OR vbAccessKeyAll = TRUE)
@@ -93,6 +112,7 @@ ALTER FUNCTION gpSelect_Object_Branch(TVarChar) OWNER TO postgres;
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 21.12.15         * add Unit, UnitReturn
  20.12.15         * add Personal, PersonalStore, PlaceOf
  28.04.15         * add PartionDoc
  17.04.15         * add IsMedoc
