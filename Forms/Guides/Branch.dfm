@@ -3,7 +3,7 @@ object BranchForm: TBranchForm
   Top = 0
   Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1060#1080#1083#1080#1072#1083#1099'>'
   ClientHeight = 374
-  ClientWidth = 624
+  ClientWidth = 737
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -20,13 +20,11 @@ object BranchForm: TBranchForm
   object cxGrid: TcxGrid
     Left = 0
     Top = 26
-    Width = 624
+    Width = 737
     Height = 348
     Align = alClient
     TabOrder = 0
     LookAndFeel.NativeStyle = False
-    ExplicitLeft = 8
-    ExplicitTop = 50
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -52,7 +50,7 @@ object BranchForm: TBranchForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 45
+        Width = 60
       end
       object clName: TcxGridDBColumn
         Caption = #1053#1072#1079#1074#1072#1085#1080#1077
@@ -60,7 +58,7 @@ object BranchForm: TBranchForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 150
+        Width = 201
       end
       object clInvNumber: TcxGridDBColumn
         Caption = #1053#1072#1083#1086#1075#1086#1074#1099#1081' '#1082#1086#1076
@@ -68,10 +66,47 @@ object BranchForm: TBranchForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 55
+        Width = 74
+      end
+      object clPlaceOf: TcxGridDBColumn
+        Caption = #1052#1077#1089#1090#1086' '#1089#1086#1089#1090#1072#1074#1083#1077#1085#1080#1103' '#1076#1086#1082'.'
+        DataBinding.FieldName = 'PlaceOf'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 96
+      end
+      object clPersonalName: TcxGridDBColumn
+        Caption = #1060#1048#1054' '#1041#1091#1093#1075#1072#1083#1090#1077#1088' '#1088#1072#1089#1093'. '#1085#1072#1082#1083'.'
+        DataBinding.FieldName = 'PersonalName'
+        PropertiesClassName = 'TcxButtonEditProperties'
+        Properties.Buttons = <
+          item
+            Action = PersonalChoice
+            Default = True
+            Kind = bkEllipsis
+          end>
+        Properties.ReadOnly = True
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 122
+      end
+      object clPersonalStoreName: TcxGridDBColumn
+        Caption = #1060#1048#1054' '#1089#1086#1090#1088#1091#1076#1085#1080#1082' ('#1050#1083#1072#1076#1086#1074#1097#1080#1082')'
+        DataBinding.FieldName = 'PersonalStoreName'
+        PropertiesClassName = 'TcxButtonEditProperties'
+        Properties.Buttons = <
+          item
+            Action = PersonalStoreChoice
+            Default = True
+            Kind = bkEllipsis
+          end>
+        Properties.ReadOnly = True
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 122
       end
       object clPersonalBookkeeperName: TcxGridDBColumn
-        Caption = #1060#1048#1054' '#1089#1086#1090#1088#1091#1076#1085#1080#1082' ('#1041#1091#1093#1075#1072#1083#1090#1077#1088')'
+        Caption = #1060#1048#1054' '#1089#1086#1090#1088#1091#1076#1085#1080#1082' ('#1041#1091#1093#1075#1072#1083#1090#1077#1088') '#1085#1072#1083#1086#1075'. '#1085#1072#1082#1083'.'
         DataBinding.FieldName = 'PersonalBookkeeperName'
         PropertiesClassName = 'TcxButtonEditProperties'
         Properties.Buttons = <
@@ -83,7 +118,7 @@ object BranchForm: TBranchForm
         Properties.ReadOnly = True
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 100
+        Width = 122
       end
       object clErased: TcxGridDBColumn
         Caption = #1059#1076#1072#1083#1077#1085
@@ -99,7 +134,7 @@ object BranchForm: TBranchForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 40
+        Width = 48
       end
       object clisPartionDoc: TcxGridDBColumn
         Caption = #1055#1072#1088#1090#1080#1086#1085#1085#1099#1081' '#1091#1095#1077#1090' '#1076#1086#1083#1075#1086#1074
@@ -107,7 +142,7 @@ object BranchForm: TBranchForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 60
+        Width = 122
       end
     end
     object cxGridLevel: TcxGridLevel
@@ -463,6 +498,54 @@ object BranchForm: TBranchForm
         end>
       isShowModal = True
     end
+    object PersonalChoice: TOpenChoiceForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = 'TPersonal_ObjectForm'
+      FormName = 'TPersonal_ObjectForm'
+      FormNameParam.Value = 'TPersonal_ObjectForm'
+      FormNameParam.DataType = ftString
+      GuiParams = <
+        item
+          Name = 'Key'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'PersonalId'
+        end
+        item
+          Name = 'TextValue'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'PersonalName'
+          DataType = ftString
+        end>
+      isShowModal = True
+    end
+    object PersonalStoreChoice: TOpenChoiceForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = 'TPersonal_ObjectForm'
+      FormName = 'TPersonal_ObjectForm'
+      FormNameParam.Value = 'TPersonal_ObjectForm'
+      FormNameParam.DataType = ftString
+      GuiParams = <
+        item
+          Name = 'Key'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'PersonalStoreId'
+        end
+        item
+          Name = 'TextValue'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'PersonalStoreName'
+          DataType = ftString
+        end>
+      isShowModal = True
+    end
   end
   object dsdStoredProc: TdsdStoredProc
     StoredProcName = 'gpSelect_Object_Branch'
@@ -537,10 +620,32 @@ object BranchForm: TBranchForm
         ParamType = ptInput
       end
       item
+        Name = 'inPersonalId'
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'PersonalId'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inPersonalStoreId'
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'PersonalStoreId'
+        ParamType = ptInput
+      end
+      item
         Name = 'inPersonalBookkeeperId'
         Value = Null
         Component = ClientDataSet
         ComponentItem = 'PersonalBookkeeperId'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inPlaceOf'
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'PlaceOf'
+        DataType = ftString
         ParamType = ptInput
       end>
     PackSize = 1

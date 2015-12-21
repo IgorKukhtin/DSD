@@ -65,6 +65,7 @@ type
     spUpdate: TdsdStoredProc;
     actUpdatePersonal: TdsdUpdateDataSet;
     PersonalBookkeeperChoice: TOpenChoiceForm;
+    clPlaceOf: TcxGridDBColumn;
   private
     { Private declarations }
   public
