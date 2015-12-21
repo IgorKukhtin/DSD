@@ -128,7 +128,7 @@ AS
            , CAST ('PrintMovement_Sale35275230' AS TVarChar)
       FROM Object AS Object_Juridical
       JOIN ObjectHistory_JuridicalDetails_View AS OH_JuridicalDetails ON OH_JuridicalDetails.JuridicalId = Object_Juridical.Id
-       AND OH_JuridicalDetails.OKPO IN ('35275230','25288083','35231874', '39143745')
+       AND OH_JuridicalDetails.OKPO IN ('35275230','25288083','35231874')    --, '39143745' перенесли в др.группу ритейл
       WHERE Object_Juridical.DescId = zc_Object_Juridical()
       UNION
 -- Omega+РТЦ ТОВ(Варус)
@@ -230,6 +230,20 @@ AS
       FROM Object AS Object_Juridical
       JOIN ObjectHistory_JuridicalDetails_View AS OH_JuridicalDetails ON OH_JuridicalDetails.JuridicalId = Object_Juridical.Id
        AND OH_JuridicalDetails.OKPO IN ('36003603')
+      WHERE Object_Juridical.DescId = zc_Object_Juridical()
+      UNION
+-- Лабр+Твич+Финест+Джуна+Группа Ритейлу Украины
+      SELECT
+             zc_movement_sale()
+           , CAST ('Sale' AS TVarChar)
+           , CAST ('01.01.2000' AS TDateTime)
+           , CAST ('01.01.2200' AS TDateTime)
+           , CAST (Object_Juridical.Id AS INTEGER)
+           , zc_Enum_PaidKind_FirstForm()
+           , CAST ('PrintMovement_Sale39118745' AS TVarChar)
+      FROM Object AS Object_Juridical
+      JOIN ObjectHistory_JuridicalDetails_View AS OH_JuridicalDetails ON OH_JuridicalDetails.JuridicalId = Object_Juridical.Id
+       AND OH_JuridicalDetails.OKPO IN ('39118745','39118195','39117631', '39118572', '39143745')
       WHERE Object_Juridical.DescId = zc_Object_Juridical()
       UNION
 
@@ -440,6 +454,7 @@ ALTER TABLE PrintForms_View OWNER TO postgres;
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
  21.12.15         * add PrintMovement_Sale36003603 Новус
+                      , PrintMovement_Sale39118745 
  18.12.15         * add PrintMovement_Sale2DiscountPrice
  28.01.15                                                        * + PrintMovement_ReturnIn32049199
  25.11.14                                                        * + new nalog forms
