@@ -200,6 +200,9 @@ type
     cbPromo: TcxCheckBox;
     MovementPromo: TcxGridDBColumn;
     PricePromo: TcxGridDBColumn;
+    cbPrinted: TcxCheckBox;
+    spSavePrintState: TdsdStoredProc;
+    actSPSavePrintState: TdsdExecStoredProc;
   private
     { Private declarations }
   public

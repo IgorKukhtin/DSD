@@ -2,7 +2,7 @@
   Left = 0
   Top = 0
   Caption = #1044#1086#1073#1072#1074#1080#1090#1100'/'#1048#1079#1084#1077#1085#1080#1090#1100' <'#1060#1080#1083#1080#1072#1083'>'
-  ClientHeight = 204
+  ClientHeight = 295
   ClientWidth = 336
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -28,8 +28,8 @@
     Caption = #1053#1072#1079#1074#1072#1085#1080#1077
   end
   object cxButton1: TcxButton
-    Left = 56
-    Top = 167
+    Left = 40
+    Top = 263
     Width = 75
     Height = 25
     Action = dsdInsertUpdateGuides
@@ -38,8 +38,8 @@
     TabOrder = 2
   end
   object cxButton2: TcxButton
-    Left = 216
-    Top = 167
+    Left = 200
+    Top = 263
     Width = 75
     Height = 25
     Action = dsdFormClose
@@ -85,6 +85,40 @@
     Caption = #1055#1072#1088#1090#1080#1086#1085#1085#1099#1081' '#1091#1095#1077#1090' '#1076#1086#1083#1075#1086#1074' '#1085#1072#1083
     TabOrder = 9
     Width = 180
+  end
+  object cxLabel3: TcxLabel
+    Left = 21
+    Top = 159
+    Caption = #1054#1089#1085#1086#1074#1085#1086#1081' '#1089#1082#1083#1072#1076
+  end
+  object edUnit: TcxButtonEdit
+    Left = 21
+    Top = 181
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    Properties.ReadOnly = True
+    TabOrder = 11
+    Width = 284
+  end
+  object cxLabel4: TcxLabel
+    Left = 21
+    Top = 206
+    Caption = #1057#1082#1083#1072#1076' '#1074#1086#1079#1074#1088#1072#1090#1086#1074
+  end
+  object edUnitReturn: TcxButtonEdit
+    Left = 21
+    Top = 228
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    Properties.ReadOnly = True
+    TabOrder = 13
+    Width = 284
   end
   object ActionList: TActionList
     Left = 256
@@ -166,6 +200,20 @@
         Component = cbisPartionDoc
         DataType = ftBoolean
         ParamType = ptInput
+      end
+      item
+        Name = 'inUnitId'
+        Value = Null
+        Component = UnitGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inUnitReturnId'
+        Value = Null
+        Component = UnitReturnGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
       end>
     PackSize = 1
     Left = 293
@@ -178,7 +226,7 @@
         Value = Null
         ParamType = ptInputOutput
       end>
-    Top = 96
+    Top = 72
   end
   object spGet: TdsdStoredProc
     StoredProcName = 'gpGet_Object_Branch'
@@ -220,6 +268,32 @@
         Value = Null
         Component = cbisPartionDoc
         DataType = ftBoolean
+      end
+      item
+        Name = 'UnitId'
+        Value = Null
+        Component = UnitGuides
+        ComponentItem = 'Key'
+      end
+      item
+        Name = 'UnitName'
+        Value = Null
+        Component = UnitGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+      end
+      item
+        Name = 'UnitReturnId'
+        Value = Null
+        Component = UnitReturnGuides
+        ComponentItem = 'Key'
+      end
+      item
+        Name = 'UnitReturnName'
+        Value = Null
+        Component = UnitReturnGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
       end>
     PackSize = 1
     Left = 224
@@ -245,6 +319,54 @@
     Top = 133
   end
   object dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
-    Top = 48
+    Top = 8
+  end
+  object UnitGuides: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edUnit
+    FormNameParam.Value = 'TUnit_ObjectForm'
+    FormNameParam.DataType = ftString
+    FormName = 'TUnit_ObjectForm'
+    PositionDataSet = 'MasterCDS'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = UnitGuides
+        ComponentItem = 'Key'
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = UnitGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+      end>
+    Left = 128
+    Top = 165
+  end
+  object UnitReturnGuides: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edUnitReturn
+    FormNameParam.Value = 'TUnit_ObjectForm'
+    FormNameParam.DataType = ftString
+    FormName = 'TUnit_ObjectForm'
+    PositionDataSet = 'MasterCDS'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = UnitReturnGuides
+        ComponentItem = 'Key'
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = UnitReturnGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+      end>
+    Left = 192
+    Top = 213
   end
 end

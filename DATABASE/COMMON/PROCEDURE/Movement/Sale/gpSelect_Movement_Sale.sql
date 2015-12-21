@@ -44,6 +44,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , EdiOrdspr Boolean, EdiInvoice Boolean, EdiDesadv Boolean
              , isEdiOrdspr_partner Boolean, isEdiInvoice_partner Boolean, isEdiDesadv_partner Boolean
              , isError Boolean
+             , isPrinted Boolean
              , isPromo Boolean
              , MovementPromo TVarChar
              , InsertDate TDateTime
@@ -194,7 +195,7 @@ BEGIN
                         THEN TRUE
                         ELSE FALSE
                    END AS Boolean) AS isError
-
+           , COALESCE (MovementBoolean_Print.ValueData, False) AS isPrinted
            , COALESCE (MovementBoolean_Promo.ValueData, False) AS isPromo
            , zfCalc_PromoMovementName (NULL, Movement_Promo.InvNumber :: TVarChar, Movement_Promo.OperDate, MD_StartSale.ValueData, MD_EndSale.ValueData) AS MovementPromo
 
@@ -239,6 +240,10 @@ BEGIN
             LEFT JOIN MovementBoolean AS MovementBoolean_EdiDesadv
                                       ON MovementBoolean_EdiDesadv.MovementId =  Movement.Id
                                      AND MovementBoolean_EdiDesadv.DescId = zc_MovementBoolean_EdiDesadv()
+
+            LEFT JOIN MovementBoolean AS MovementBoolean_Print
+                                      ON MovementBoolean_Print.MovementId =  Movement.Id
+                                     AND MovementBoolean_Print.DescId = zc_MovementBoolean_Print()
 
             LEFT JOIN MovementBoolean AS MovementBoolean_Promo
                                       ON MovementBoolean_Promo.MovementId =  Movement.Id
@@ -484,6 +489,7 @@ ALTER FUNCTION gpSelect_Movement_Sale (TDateTime, TDateTime, Boolean, Boolean, T
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».   Ã‡Ì¸ÍÓ ƒ.¿.
+ 21.12.15         * add isPrinted
  25.11.15         * add Promo
  13.11.14                                        * add zc_Enum_Process_AccessKey_DocumentAll
  21.08.14                                        * add RouteName

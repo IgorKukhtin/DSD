@@ -318,13 +318,14 @@ BEGIN
            , ObjectDate_Signing.ValueData               AS ContractSigningDate
            , View_Contract.ContractKindName             AS ContractKind
 
-           , Object_RouteSorting.ValueData 		        AS RouteSortingName
+           , Object_RouteSorting.ValueData 	        AS RouteSortingName
 
            , /*CASE WHEN View_Contract.InfoMoneyId = zc_Enum_InfoMoney_30101() AND Object_From.Id = 8459
                    AND OH_JuridicalDetails_To.OKPO NOT IN ('32516492', '39135315', '39622918')
                        THEN 'Бабенко В.П.'
                   ELSE ''
-             END*/ vbStoreKeeperName AS StoreKeeper -- кладовщик
+             END*/
+             CASE WHEN COALESCE (Object_PersonalStore_View.PersonalName, '') <> '' THEN zfConvert_FIO (Object_PersonalStore_View.PersonalName,2) ELSE vbStoreKeeperName END  AS StoreKeeper -- кладовщик
            , '' :: TVarChar                             AS Through     -- через кого
            , CASE WHEN OH_JuridicalDetails_To.OKPO IN ('32516492', '39135315', '39622918') THEN 'м. Київ, вул Ольжича, 18/22' ELSE '' END :: TVarChar  AS UnitAddress -- адреса складання
 
@@ -442,8 +443,9 @@ BEGIN
            , vbIsInfoMoney_30201 AS isInfoMoney_30201
 
            , CASE WHEN COALESCE (ObjectString_PlaceOf.ValueData, '') <> '' THEN COALESCE (ObjectString_PlaceOf.ValueData, '') 
-                  ELSE CASE WHEN Object_From.Id = vbKh THEN 'Дніпропетровськ' ELSE '' END
+                  ELSE 'м.Днiпропетровськ' 
                   END  :: TVarChar   AS PlaceOf 
+           , CASE WHEN COALESCE (Object_Personal_View.PersonalName, '') <> '' THEN zfConvert_FIO (Object_Personal_View.PersonalName,2) ELSE '' END AS PersonalBookkeeperName   -- бухгалтер из спр.Филиалы 
        FROM Movement
             LEFT JOIN MovementLinkMovement AS MovementLinkMovement_Sale
                                            ON MovementLinkMovement_Sale.MovementId = Movement.Id
@@ -505,9 +507,20 @@ BEGIN
             LEFT JOIN ObjectLink AS ObjectLink_Unit_Branch
                                  ON ObjectLink_Unit_Branch.ObjectId = Object_From.Id
                                 AND ObjectLink_Unit_Branch.DescId = zc_ObjectLink_Unit_Branch()
-        LEFT JOIN ObjectString AS ObjectString_PlaceOf
-                               ON ObjectString_PlaceOf.ObjectId = ObjectLink_Unit_Branch.ChildObjectId
-                              AND ObjectString_PlaceOf.DescId = zc_objectString_Branch_PlaceOf()                                 
+            LEFT JOIN ObjectString AS ObjectString_PlaceOf
+                                   ON ObjectString_PlaceOf.ObjectId = ObjectLink_Unit_Branch.ChildObjectId
+                                  AND ObjectString_PlaceOf.DescId = zc_objectString_Branch_PlaceOf()      
+        LEFT JOIN ObjectLink AS ObjectLink_Branch_Personal
+                             ON ObjectLink_Branch_Personal.ObjectId = ObjectLink_Unit_Branch.ChildObjectId
+                            AND ObjectLink_Branch_Personal.DescId = zc_ObjectLink_Branch_Personal()
+        LEFT JOIN Object_Personal_View ON Object_Personal_View.PersonalId = ObjectLink_Branch_Personal.ChildObjectId     
+        LEFT JOIN ObjectLink AS ObjectLink_Branch_PersonalStore
+                             ON ObjectLink_Branch_PersonalStore.ObjectId = ObjectLink_Unit_Branch.ChildObjectId
+                            AND ObjectLink_Branch_PersonalStore.DescId = zc_ObjectLink_Branch_PersonalStore()
+        LEFT JOIN Object_Personal_View AS Object_PersonalStore_View ON Object_PersonalStore_View.PersonalId = ObjectLink_Branch_PersonalStore.ChildObjectId  
+
+
+                                                             
 
             LEFT JOIN MovementLinkObject AS MovementLinkObject_ArticleLoss
                                          ON MovementLinkObject_ArticleLoss.MovementId = Movement.Id

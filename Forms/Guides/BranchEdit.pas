@@ -45,6 +45,12 @@ type
     cxLabel19: TcxLabel;
     cbIsMedoc: TcxCheckBox;
     cbisPartionDoc: TcxCheckBox;
+    cxLabel3: TcxLabel;
+    edUnit: TcxButtonEdit;
+    cxLabel4: TcxLabel;
+    edUnitReturn: TcxButtonEdit;
+    UnitGuides: TdsdGuides;
+    UnitReturnGuides: TdsdGuides;
   private
     { Private declarations }
   public

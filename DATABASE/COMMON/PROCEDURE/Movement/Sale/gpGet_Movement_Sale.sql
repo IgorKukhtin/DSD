@@ -30,7 +30,9 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , InvNumber_TransportGoods TVarChar
              , OperDate_TransportGoods TDateTime
              , MovementId_Transport Integer, InvNumber_Transport TVarChar
-             , isCOMDOC Boolean, isPromo Boolean
+             , isCOMDOC Boolean
+             , isPrinted Boolean
+             , isPromo Boolean
              , Comment TVarChar
               )
 AS
@@ -91,6 +93,7 @@ BEGIN
              , 0                   			    AS MovementId_Transport
              , '' :: TVarChar                     	    AS InvNumber_Transport 
              , FALSE                                        AS isCOMDOC
+             , CAST (FALSE AS Boolean)                      AS isPrinted
              , CAST (FALSE AS Boolean)                      AS isPromo 
              , CAST ('' as TVarChar) 		            AS Comment
 
@@ -161,6 +164,7 @@ BEGIN
            , ('π ' || Movement_Transport.InvNumber || ' ÓÚ ' || Movement_Transport.OperDate  :: Date :: TVarChar ) :: TVarChar AS InvNumber_Transport
 
            , COALESCE (MovementLinkMovement_Sale.MovementChildId, 0) <> 0 AS isCOMDOC
+           , COALESCE (MovementBoolean_Print.ValueData, FALSE)            AS isPrinted
            , COALESCE (MovementBoolean_Promo.ValueData, FALSE)            AS isPromo
            , MovementString_Comment.ValueData       AS Comment
 
@@ -190,6 +194,10 @@ BEGIN
             LEFT JOIN MovementBoolean AS MovementBoolean_PriceWithVAT
                                       ON MovementBoolean_PriceWithVAT.MovementId =  Movement.Id
                                      AND MovementBoolean_PriceWithVAT.DescId = zc_MovementBoolean_PriceWithVAT()
+
+            LEFT JOIN MovementBoolean AS MovementBoolean_Print
+                                      ON MovementBoolean_Print.MovementId =  Movement.Id
+                                     AND MovementBoolean_Print.DescId = zc_MovementBoolean_Print()
 
             LEFT JOIN MovementBoolean AS MovementBoolean_Promo
                                       ON MovementBoolean_Promo.MovementId =  Movement.Id
@@ -309,6 +317,7 @@ ALTER FUNCTION gpGet_Movement_Sale (Integer, TDateTime, TFloat, TVarChar) OWNER 
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».   Ã‡Ì¸ÍÓ ƒ.¿.
+ 21.12.15         * add Print
  26.06.15         * add inChangePercentAmount
  24.07.14         * add zc_MovementFloat_CurrencyValue
                         zc_MovementLinkObject_CurrencyDocument

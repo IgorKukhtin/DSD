@@ -4,7 +4,7 @@
   ClientWidth = 1366
   AddOnFormData.OnLoadAction = actSetDefaults
   ExplicitWidth = 1382
-  ExplicitHeight = 703
+  ExplicitHeight = 706
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -650,7 +650,7 @@
     end
     object edIsChecked: TcxCheckBox
       Left = 683
-      Top = 52
+      Top = 49
       Caption = #1055#1088#1086#1074#1077#1088#1077#1085' ('#1076#1072'/'#1085#1077#1090')'
       TabOrder = 24
       Width = 118
@@ -895,11 +895,19 @@
   end
   object cbPromo: TcxCheckBox [16]
     Left = 683
-    Top = 73
+    Top = 71
     Caption = #1040#1082#1094#1080#1103' ('#1076#1072'/'#1085#1077#1090')'
     Properties.ReadOnly = True
     TabOrder = 20
     Width = 100
+  end
+  object cbPrinted: TcxCheckBox [17]
+    Left = 1075
+    Top = 103
+    Caption = #1056#1072#1089#1087#1077#1095#1072#1090#1072#1085' ('#1076#1072'/'#1085#1077#1090')'
+    Properties.ReadOnly = True
+    TabOrder = 21
+    Width = 128
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 171
@@ -1159,6 +1167,9 @@
         end
         item
           Action = actPrint
+        end
+        item
+          Action = actSPSavePrintState
         end>
       Caption = #1055#1077#1095#1072#1090#1100' '#1053#1072#1082#1083#1072#1076#1085#1072#1103
       Hint = #1055#1077#1095#1072#1090#1100' '#1053#1072#1082#1083#1072#1076#1085#1072#1103
@@ -1635,7 +1646,7 @@
         end
         item
           Name = 'OperDate'
-          Value = Null
+          Value = 'NULL'
           Component = FormParams
           ComponentItem = 'OperDate_TransportGoods'
           DataType = ftDateTime
@@ -1751,6 +1762,17 @@
       ReportNameParam.Value = 'PrintMovement_ReturnInDay'
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
+    end
+    object actSPSavePrintState: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spSavePrintState
+      StoredProcList = <
+        item
+          StoredProc = spSavePrintState
+        end>
+      Caption = 'actSPSavePrintState'
     end
   end
   inherited MasterDS: TDataSource
@@ -2151,7 +2173,7 @@
       end
       item
         Name = 'OperDate_TransportGoods'
-        Value = Null
+        Value = 'NULL'
         DataType = ftDateTime
       end
       item
@@ -2161,8 +2183,10 @@
         ParamType = ptInputOutput
       end
       item
-        Value = Null
-        ParamType = ptUnknown
+        Name = 'isPrinted'
+        Value = 'True'
+        DataType = ftBoolean
+        ParamType = ptInputOutput
       end>
     Left = 40
     Top = 344
@@ -2188,7 +2212,7 @@
       end
       item
         Name = 'inOperDate'
-        Value = Null
+        Value = 'NULL'
         Component = FormParams
         ComponentItem = 'inOperDate'
         DataType = ftDateTime
@@ -2438,7 +2462,7 @@
       end
       item
         Name = 'OperDate_TransportGoods'
-        Value = Null
+        Value = 'NULL'
         Component = FormParams
         ComponentItem = 'OperDate_TransportGoods'
         DataType = ftDateTime
@@ -2478,6 +2502,12 @@
         Name = 'isPromo'
         Value = Null
         Component = cbPromo
+        DataType = ftBoolean
+      end
+      item
+        Name = 'isPrinted'
+        Value = Null
+        Component = cbPrinted
         DataType = ftBoolean
       end>
     Left = 216
@@ -3686,8 +3716,7 @@
         DataType = ftString
       end>
     PackSize = 1
-    Left = 720
-    Top = 16
+    Left = 728
   end
   object CurrencyDocumentGuides: TdsdGuides
     KeyField = 'Id'
@@ -3754,7 +3783,7 @@
       end
       item
         Name = 'inOperDate'
-        Value = Null
+        Value = 'NULL'
         Component = edOperDatePartner
         DataType = ftDateTime
       end
@@ -4274,5 +4303,35 @@
     PackSize = 1
     Left = 287
     Top = 264
+  end
+  object spSavePrintState: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Movement_Sale_Print'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inNewPrinted'
+        Value = True
+        Component = FormParams
+        ComponentItem = 'isPrinted'
+        DataType = ftBoolean
+        ParamType = ptInput
+      end
+      item
+        Name = 'outPrinted'
+        Value = 'False'
+        Component = cbPrinted
+        DataType = ftBoolean
+      end>
+    PackSize = 1
+    Left = 952
+    Top = 400
   end
 end

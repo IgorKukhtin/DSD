@@ -5,7 +5,7 @@ DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Branch (Integer, Integer, TVarChar
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Branch (Integer, Integer, TVarChar,  TVarChar, Integer, Boolean, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Branch (Integer, Integer, TVarChar,  TVarChar, Integer, Boolean, Boolean, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Branch (Integer, Integer, TVarChar,  TVarChar, Boolean, Boolean, TVarChar);
-
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Branch (Integer, Integer, TVarChar,  TVarChar, Boolean, Boolean, Integer, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Branch(
  INOUT ioId                     Integer,       -- ключ объекта <Филиал>
@@ -14,6 +14,8 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Branch(
     IN inInvNumber              TVarChar,      -- Номер филиала в налоговой
     IN inIsMedoc                Boolean,       -- загрузка налоговых из медка
     IN inIsPartionDoc           Boolean,       -- Партионный учет долгов нал
+    IN inUnitId                 Integer,       -- ссылка на Подразделение (основной склад) 
+    IN inUnitReturnId           Integer,       -- ссылка на Подразделение (склад возвратов)
     IN inSession                TVarChar       -- сессия пользователя
 )
 RETURNS integer AS
@@ -76,6 +78,11 @@ BEGIN
    -- сохранили связь с <>
    --PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Branch_PersonalBookkeeper(), ioId, inPersonalBookkeeperId);
 
+   -- сохранили связь с <Подразделением>
+   PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Branch_Unit(), ioId, inUnitId);
+   -- сохранили связь с <Подразделением>
+   PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Branch_UnitReturn(), ioId, inUnitReturnId);
+
    -- сохранили свойство <>
    PERFORM lpInsertUpdate_ObjectBoolean (zc_ObjectBoolean_Branch_Medoc(), ioId, inIsMedoc);
 
@@ -93,6 +100,7 @@ END;$BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 21.12.15         * add Unit, UnitReturn
  16.12.15         * del inPersonalBookkeeperId (перееносим в отдельную процку)
  28.04.15         * add PartionDoc
  17.04.15         * add IsMedoc
