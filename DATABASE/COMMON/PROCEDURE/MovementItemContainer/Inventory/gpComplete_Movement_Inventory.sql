@@ -1517,7 +1517,7 @@ LANGUAGE PLPGSQL VOLATILE;
 UPDATE MovementItem SET isErased = TRUE
 from Movement
 WHERE Movement.Id = MovementId
-  AND Movement.OperDate BETWEEN '01.11.2015' AND '31.12.2015'
+  AND Movement.OperDate BETWEEN '01.12.2015' AND '31.12.2015'
   AND Movement.DescId = zc_Movement_Inventory()
   AND Movement.StatusId = zc_Enum_Status_Complete()
   AND isErased = FALSE
