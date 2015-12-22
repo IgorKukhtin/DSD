@@ -4,7 +4,7 @@
   ClientWidth = 1366
   AddOnFormData.OnLoadAction = actSetDefaults
   ExplicitWidth = 1382
-  ExplicitHeight = 706
+  ExplicitHeight = 703
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -902,8 +902,8 @@
     Width = 100
   end
   object cbPrinted: TcxCheckBox [17]
-    Left = 1075
-    Top = 103
+    Left = 8
+    Top = 84
     Caption = #1056#1072#1089#1087#1077#1095#1072#1090#1072#1085' ('#1076#1072'/'#1085#1077#1090')'
     Properties.ReadOnly = True
     TabOrder = 21
@@ -2197,6 +2197,27 @@
   end
   inherited spChangeStatus: TdsdStoredProc
     StoredProcName = 'gpUpdate_Status_Sale'
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inStatusCode'
+        Value = ''
+        Component = StatusGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+      end
+      item
+        Name = 'outPrinted'
+        Value = Null
+        Component = cbPrinted
+        DataType = ftBoolean
+      end>
     Left = 192
     Top = 56
   end

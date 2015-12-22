@@ -3,7 +3,7 @@ inherited Sale_OrderForm: TSale_OrderForm
   ClientHeight = 668
   ClientWidth = 1356
   ExplicitWidth = 1372
-  ExplicitHeight = 706
+  ExplicitHeight = 703
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -814,8 +814,8 @@ inherited Sale_OrderForm: TSale_OrderForm
     Width = 100
   end
   object cbPrinted: TcxCheckBox [5]
-    Left = 1075
-    Top = 103
+    Left = 8
+    Top = 84
     Caption = #1056#1072#1089#1087#1077#1095#1072#1090#1072#1085' ('#1076#1072'/'#1085#1077#1090')'
     Properties.ReadOnly = True
     TabOrder = 9
@@ -2049,6 +2049,27 @@ inherited Sale_OrderForm: TSale_OrderForm
   end
   inherited spChangeStatus: TdsdStoredProc
     StoredProcName = 'gpUpdate_Status_Sale'
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inStatusCode'
+        Value = ''
+        Component = StatusGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+      end
+      item
+        Name = 'outPrinted'
+        Value = Null
+        Component = cbPrinted
+        DataType = ftBoolean
+      end>
     Left = 128
     Top = 56
   end

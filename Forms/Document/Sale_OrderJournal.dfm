@@ -4,7 +4,7 @@ inherited Sale_OrderJournalForm: TSale_OrderJournalForm
   ClientWidth = 1177
   AddOnFormData.Params = FormParams
   ExplicitWidth = 1193
-  ExplicitHeight = 573
+  ExplicitHeight = 570
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -2373,6 +2373,13 @@ inherited Sale_OrderJournalForm: TSale_OrderJournalForm
         Component = MasterCDS
         ComponentItem = 'Id'
         ParamType = ptInput
+      end
+      item
+        Name = 'outPrinted'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'isPrinted'
+        DataType = ftBoolean
       end>
     Left = 80
     Top = 410

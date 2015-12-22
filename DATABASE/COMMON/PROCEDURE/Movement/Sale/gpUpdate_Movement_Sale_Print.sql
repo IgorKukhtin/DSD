@@ -14,7 +14,9 @@ AS
 $BODY$
    DECLARE vbUserId Integer;
 BEGIN
-     vbUserId:= lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Movement_Sale());
+     -- проверка прав пользователя на вызов процедуры
+     -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Movement_Sale());
+     vbUserId:= lpGetUserBySession (inSession);
 
      -- определили признак
      outPrinted := inNewPrinted;

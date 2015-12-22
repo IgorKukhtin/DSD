@@ -5,11 +5,15 @@ DROP FUNCTION IF EXISTS gpUpdate_Status_Sale (Integer, Integer, TVarChar);
 CREATE OR REPLACE FUNCTION gpUpdate_Status_Sale(
     IN inMovementId          Integer   , -- Ключ объекта <Документ>
     IN inStatusCode          Integer   , -- Статус документа. Возвращается который должен быть
+   OUT outPrinted            Boolean   ,
     IN inSession             TVarChar    -- сессия пользователя
 )
-RETURNS VOID AS
+RETURNS Boolean AS
 $BODY$
 BEGIN
+     --
+     outPrinted := FALSE;
+     --
      CASE inStatusCode
          WHEN zc_Enum_StatusCode_UnComplete() THEN
             PERFORM gpUnComplete_Movement_Sale (inMovementId, inSession);
