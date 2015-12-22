@@ -8,7 +8,9 @@ RETURNS TABLE (Id Integer, Price TFloat, MCSValue TFloat
              , GoodsId Integer, GoodsCode Integer, GoodsName TVarChar
              , UnitId Integer, UnitCode Integer, UnitName TVarChar
              , DateChange tdatetime, MCSDateChange TDateTime
-             , MCSIsClose Boolean, MCSNotRecalc Boolean, Fix Boolean
+             , MCSIsClose Boolean, MCSIsCloseDateChange TDateTime
+             , MCSNotRecalc Boolean, MCSNotRecalcDateChange TDateTime
+             , Fix Boolean, FixDateChange TDateTime
              , isErased boolean
              ) AS
 $BODY$
@@ -37,9 +39,12 @@ BEGIN
           , CAST (Null as TDateTime) AS MCSDateChange
 
           , CAST (False as Boolean)  AS MCSIsClose
+          , CAST (Null as TDateTime) AS MCSIsCloseDateChange
           , CAST (False as Boolean)  AS MCSNotRecalc
+          , CAST (Null as TDateTime) AS MCSNotRecalcDateChange
            
           , CAST (False as Boolean)  AS Fix
+          , CAST (Null as TDateTime) AS FixDateChange
 
           , CAST (NULL AS Boolean)   AS isErased;
     ELSE
@@ -61,9 +66,13 @@ BEGIN
            ,object_price_view.MCSDateChange
 
            ,object_price_view.MCSIsClose
+           ,object_price_view.MCSIsCloseDateChange
+           
            ,object_price_view.MCSNotRecalc
+           ,object_price_view.MCSNotRecalcDateChange
            
            ,object_price_view.Fix
+           ,object_price_view.FixDateChange
            
            ,Object_Price_View.isErased
 
@@ -80,6 +89,7 @@ ALTER FUNCTION gpGet_Object_Price (Integer, TVarChar) OWNER TO postgres;
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.  Воробкало А.А.
+22.12.2015                                                       *
 29.08.2015                                                       * + MCSIsClose, MCSNotRecalc
  31.07.15                                                        *
 */

@@ -31,7 +31,6 @@ inherited PriceForm: TPriceForm
           OptionsData.Deleting = False
           OptionsData.DeletingConfirmation = False
           OptionsView.CellEndEllipsis = True
-          OptionsView.ColumnAutoWidth = True
           Styles.Content = nil
           Styles.Inactive = nil
           Styles.Selection = nil
@@ -101,12 +100,28 @@ inherited PriceForm: TPriceForm
             HeaderAlignmentHorz = taCenter
             Width = 34
           end
+          object colMCSIsCloseDateChange: TcxGridDBColumn
+            Caption = #1044#1072#1090#1072' "'#1091#1073#1080#1090#1100' '#1082#1086#1076'"'
+            DataBinding.FieldName = 'MCSIsCloseDateChange'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
+          end
           object clMCSNotRecalc: TcxGridDBColumn
             Caption = #1057#1087#1077#1094#1082#1086#1085#1090#1088#1086#1083#1100' '#1082#1086#1076#1072
             DataBinding.FieldName = 'MCSNotRecalc'
             HeaderAlignmentHorz = taCenter
             HeaderHint = #1053#1077' '#1087#1077#1088#1077#1089#1095#1080#1090#1099#1074#1072#1090#1100' '#1053#1058#1047
             Width = 59
+          end
+          object colMCSNotRecalcDateChange: TcxGridDBColumn
+            Caption = #1044#1072#1090#1072' "'#1057#1087#1077#1094#1082#1086#1085#1090#1088#1086#1083#1100' '#1082#1086#1076#1072'"'
+            DataBinding.FieldName = 'MCSNotRecalcDateChange'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
           end
           object colRemains: TcxGridDBColumn
             Caption = #1054#1089#1090#1072#1090#1086#1082
@@ -121,6 +136,14 @@ inherited PriceForm: TPriceForm
             HeaderAlignmentHorz = taCenter
             HeaderHint = #1060#1080#1082#1089#1080#1088#1086#1074#1072#1085#1085#1072#1103' '#1094#1077#1085#1072
             Width = 48
+          end
+          object colFixDateChange: TcxGridDBColumn
+            Caption = #1044#1072#1090#1072' "'#1060#1080#1082#1089'. '#1094#1077#1085#1072'"'
+            DataBinding.FieldName = 'FixDateChange'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
           end
         end
       end
@@ -604,26 +627,47 @@ inherited PriceForm: TPriceForm
         ParamType = ptInput
       end
       item
-        Name = 'outDateChange'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'DateChange'
-        DataType = ftDateTime
-      end
-      item
-        Name = 'outMCSDateChange'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'MCSDateChange'
-        DataType = ftDateTime
-      end
-      item
         Name = 'inFix'
         Value = Null
         Component = MasterCDS
         ComponentItem = 'Fix'
         DataType = ftBoolean
         ParamType = ptInput
+      end
+      item
+        Name = 'outDateChange'
+        Value = 'NULL'
+        Component = MasterCDS
+        ComponentItem = 'DateChange'
+        DataType = ftDateTime
+      end
+      item
+        Name = 'outMCSDateChange'
+        Value = 'NULL'
+        Component = MasterCDS
+        ComponentItem = 'MCSDateChange'
+        DataType = ftDateTime
+      end
+      item
+        Name = 'outMCSIsCloseDateChange'
+        Value = 'NULL'
+        Component = MasterCDS
+        ComponentItem = 'MCSIsCloseDateChange'
+        DataType = ftDateTime
+      end
+      item
+        Name = 'outMCSNotRecalcDateChange'
+        Value = 'NULL'
+        Component = MasterCDS
+        ComponentItem = 'MCSNotRecalcDateChange'
+        DataType = ftDateTime
+      end
+      item
+        Name = 'outFixDateChange'
+        Value = 'NULL'
+        Component = MasterCDS
+        ComponentItem = 'FixDateChange'
+        DataType = ftDateTime
       end>
     PackSize = 1
     Left = 264

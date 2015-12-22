@@ -11,7 +11,9 @@ CREATE OR REPLACE FUNCTION gpSelect_Object_Price(
 RETURNS TABLE (Id Integer, Price TFloat, MCSValue Tfloat
              , GoodsId Integer, GoodsCode Integer, GoodsName TVarChar
              , DateChange TDateTime, MCSDateChange TDateTime
-             , MCSIsClose Boolean, MCSNotRecalc Boolean, Fix Boolean
+             , MCSIsClose Boolean, MCSIsCloseDateChange TDateTime
+             , MCSNotRecalc Boolean, MCSNotRecalcDateChange TDateTime
+             , Fix Boolean, FixDateChange TDateTime
              , Remains TFloat, isErased boolean
              ) AS
 $BODY$
@@ -43,8 +45,11 @@ BEGIN
                ,NULL::TDateTime                  AS DateChange
                ,NULL::TDateTime                  AS MCSDateChange
                ,NULL::Boolean                    AS MCSIsClose
+               ,NULL::TDateTime                  AS MCSIsCloseDateChange
                ,NULL::Boolean                    AS MCSNotRecalc
+               ,NULL::TDateTime                  AS MCSNotRecalcDateChange
                ,NULL::Boolean                    AS Fix
+               ,NULL::TDateTime                  AS FixDateChange
                ,NULL::TFloat                     AS Remains
                ,NULL::Boolean                    AS isErased
             WHERE 1=0;
@@ -61,8 +66,11 @@ BEGIN
                ,Object_Price_View.DateChange                    AS DateChange
                ,Object_Price_View.MCSDateChange                 AS MCSDateChange
                ,COALESCE(Object_Price_View.MCSIsClose,False)    AS MCSIsClose
+               ,Object_Price_View.MCSIsCloseDateChange          AS MCSIsCloseDateChange
                ,COALESCE(Object_Price_View.MCSNotRecalc,False)  AS MCSNotRecalc
+               ,Object_Price_View.MCSNotRecalcDateChange        AS MCSNotRecalcDateChange
                ,COALESCE(Object_Price_View.Fix,False)           AS Fix
+               ,Object_Price_View.FixDateChange                 AS FixDateChange
                ,Object_Remains.Remains                          AS Remains
                ,Object_Goods.isErased                           AS isErased 
             FROM Object AS Object_Goods
@@ -100,19 +108,22 @@ BEGIN
     ELSE
         RETURN QUERY
             SELECT
-                Object_Price_View.Id             AS Id
-               ,Object_Price_View.Price          AS Price 
-               ,Object_Price_View.MCSValue       AS MCSValue
-               ,Object_Goods.id                  AS GoodsId
-               ,Object_Goods.ObjectCode          AS GoodsCode
-               ,object_goods.ValueData           AS GoodsName
-               ,Object_Price_View.DateChange     AS DateChange
-               ,Object_Price_View.MCSDateChange  AS MCSDateChange
-               ,Object_Price_View.MCSIsClose     AS MCSIsClose
-               ,Object_Price_View.MCSNotRecalc   AS MCSNotRecalc
-               ,Object_Price_View.Fix            AS Fix
-               ,Object_Remains.Remains           AS Remains
-               ,Object_Goods.isErased            AS isErased 
+                Object_Price_View.Id                     AS Id
+               ,Object_Price_View.Price                  AS Price 
+               ,Object_Price_View.MCSValue               AS MCSValue
+               ,Object_Goods.id                          AS GoodsId
+               ,Object_Goods.ObjectCode                  AS GoodsCode
+               ,object_goods.ValueData                   AS GoodsName
+               ,Object_Price_View.DateChange             AS DateChange
+               ,Object_Price_View.MCSDateChange          AS MCSDateChange
+               ,Object_Price_View.MCSIsClose             AS MCSIsClose
+               ,Object_Price_View.MCSIsCloseDateChange   AS MCSIsCloseDateChange
+               ,Object_Price_View.MCSNotRecalc           AS MCSNotRecalc
+               ,Object_Price_View.MCSNotRecalcDateChange AS MCSNotRecalcDateChange
+               ,Object_Price_View.Fix                    AS Fix
+               ,Object_Price_View.FixDateChange          AS FixDateChange
+               ,Object_Remains.Remains                   AS Remains
+               ,Object_Goods.isErased                    AS isErased 
             FROM Object_Price_View
                 LEFT OUTER JOIN Object AS Object_Goods ON Object_Goods.id = object_price_view.goodsid
                 LEFT OUTER JOIN (
@@ -150,6 +161,7 @@ ALTER FUNCTION gpSelect_Object_Price(Integer, Boolean,Boolean,TVarChar) OWNER TO
 /*-------------------------------------------------------------------------------
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».  ¬ÓÓ·Í‡ÎÓ ¿.¿. 
+ 22.12.15                                                         *
  29.08.15                                                         * + MCSIsClose, MCSNotRecalc
  09.06.15                        *
 
