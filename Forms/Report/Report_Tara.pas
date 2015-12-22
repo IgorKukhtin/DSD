@@ -61,6 +61,11 @@ type
     MovementTara_OutSale_Form: TdsdOpenForm;
     MovementTara_Inventory_Form: TdsdOpenForm;
     MovementTara_Loss_Form: TdsdOpenForm;
+    ceAccountGroup: TcxButtonEdit;
+    cxLabel5: TcxLabel;
+    AccountGroupGuides: TdsdGuides;
+    colAccountGroupName: TcxGridDBColumn;
+    colAccountGroupCode: TcxGridDBColumn;
   private
     { Private declarations }
   public

@@ -44,6 +44,11 @@ type
     actMovementForm: TdsdExecStoredProc;
     spGet_Movement_Form: TdsdStoredProc;
     dxBarButton1: TdxBarButton;
+    cxLabel5: TcxLabel;
+    ceAccountGroup: TcxButtonEdit;
+    AccountGroupGuides: TdsdGuides;
+    colAccountGroupCode: TcxGridDBColumn;
+    colAccountGroupName: TcxGridDBColumn;
   private
     { Private declarations }
   public
