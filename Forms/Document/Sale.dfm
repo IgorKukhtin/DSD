@@ -4,7 +4,7 @@
   ClientWidth = 1366
   AddOnFormData.OnLoadAction = actSetDefaults
   ExplicitWidth = 1382
-  ExplicitHeight = 703
+  ExplicitHeight = 706
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -2108,6 +2108,14 @@
     end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
+    OnlyEditingCellOnEnter = True
+    ColumnEnterList = <
+      item
+        Column = colName
+      end
+      item
+        Column = colAmountPartner
+      end>
     SummaryItemList = <
       item
         Param.Value = Null

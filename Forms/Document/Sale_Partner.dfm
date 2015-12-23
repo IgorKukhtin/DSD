@@ -1483,7 +1483,7 @@ inherited Sale_PartnerForm: TSale_PartnerForm
         end
         item
           Name = 'OperDate'
-          Value = Null
+          Value = 'NULL'
           Component = FormParams
           ComponentItem = 'OperDate_TransportGoods'
           DataType = ftDateTime
@@ -1786,6 +1786,14 @@ inherited Sale_PartnerForm: TSale_PartnerForm
     end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
+    OnlyEditingCellOnEnter = True
+    ColumnEnterList = <
+      item
+        Column = colName
+      end
+      item
+        Column = colAmountPartner
+      end>
     SummaryItemList = <
       item
         Param.Value = Null
@@ -1875,7 +1883,7 @@ inherited Sale_PartnerForm: TSale_PartnerForm
       end
       item
         Name = 'inOperDate'
-        Value = Null
+        Value = 'NULL'
         Component = FormParams
         ComponentItem = 'inOperDate'
         DataType = ftDateTime
@@ -2119,7 +2127,7 @@ inherited Sale_PartnerForm: TSale_PartnerForm
       end
       item
         Name = 'OperDate_TransportGoods'
-        Value = Null
+        Value = 'NULL'
         Component = FormParams
         ComponentItem = 'OperDate_TransportGoods'
         DataType = ftDateTime
@@ -3214,7 +3222,7 @@ inherited Sale_PartnerForm: TSale_PartnerForm
       end
       item
         Name = 'inOperDate'
-        Value = Null
+        Value = 'NULL'
         Component = edOperDatePartner
         DataType = ftDateTime
       end
