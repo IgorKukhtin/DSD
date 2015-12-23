@@ -1975,6 +1975,9 @@ inherited Sale_OrderForm: TSale_OrderForm
         Column = colName
       end
       item
+        Column = colAmount
+      end
+      item
         Column = colAmountPartner
       end>
     SummaryItemList = <

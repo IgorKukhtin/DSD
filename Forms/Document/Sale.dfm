@@ -2114,6 +2114,9 @@
         Column = colName
       end
       item
+        Column = colAmount
+      end
+      item
         Column = colAmountPartner
       end>
     SummaryItemList = <
