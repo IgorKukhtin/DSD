@@ -128,7 +128,7 @@ AS
            , CAST ('PrintMovement_Sale35275230' AS TVarChar)
       FROM Object AS Object_Juridical
       JOIN ObjectHistory_JuridicalDetails_View AS OH_JuridicalDetails ON OH_JuridicalDetails.JuridicalId = Object_Juridical.Id
-       AND OH_JuridicalDetails.OKPO IN ('35275230','25288083','35231874')    --, '39143745' перенесли в др.группу ритейл
+       AND OH_JuridicalDetails.OKPO IN ('35275230','25288083','35231874') -- '39143745' перенесли в др.группу ритейл
       WHERE Object_Juridical.DescId = zc_Object_Juridical()
       UNION
 -- Omega+РТЦ ТОВ(Варус)
@@ -243,7 +243,7 @@ AS
            , CAST ('PrintMovement_Sale39118745' AS TVarChar)
       FROM Object AS Object_Juridical
       JOIN ObjectHistory_JuridicalDetails_View AS OH_JuridicalDetails ON OH_JuridicalDetails.JuridicalId = Object_Juridical.Id
-       AND OH_JuridicalDetails.OKPO IN ('39118745','39118195','39117631', '39118572', '39143745')
+       AND OH_JuridicalDetails.OKPO IN ('39118745','39118195','39117631', '39118572', '39143745')  -- убрали из др.группу ритейл
       WHERE Object_Juridical.DescId = zc_Object_Juridical()
       UNION
 
