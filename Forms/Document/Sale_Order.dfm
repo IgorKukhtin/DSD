@@ -3,7 +3,7 @@ inherited Sale_OrderForm: TSale_OrderForm
   ClientHeight = 668
   ClientWidth = 1356
   ExplicitWidth = 1372
-  ExplicitHeight = 703
+  ExplicitHeight = 706
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -1969,6 +1969,17 @@ inherited Sale_OrderForm: TSale_OrderForm
     end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
+    OnlyEditingCellOnEnter = True
+    ColumnEnterList = <
+      item
+        Column = colName
+      end
+      item
+        Column = colAmount
+      end
+      item
+        Column = colAmountPartner
+      end>
     SummaryItemList = <
       item
         Param.Value = Null
