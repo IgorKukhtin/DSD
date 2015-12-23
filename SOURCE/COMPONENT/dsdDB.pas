@@ -735,6 +735,10 @@ function TdsdParam.GetFromCrossDBViewAddOn: Variant;
 var CrossDBViewAddOn: TCrossDBViewAddOn;
 begin
   CrossDBViewAddOn := TCrossDBViewAddOn(Component);
+  // Ничего лучшего не нашел пока. Если ячейка грида находится в редиме редактирования
+  // и выполняется Post, то вот тут данных в датасете еще нифига нет!
+  // Поэтому надо дернуть грид и уговорить его поставить
+  CrossDBViewAddOn.View.DataController.UpdateData;
   if CrossDBViewAddOn.HeaderDataSet.Active then
      result := GetFromDataSet(CrossDBViewAddOn.DataSet, ComponentItem + IntToStr(CrossDBViewAddOn.HeaderDataSet.RecNo));
 end;

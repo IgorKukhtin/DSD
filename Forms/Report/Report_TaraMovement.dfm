@@ -159,6 +159,20 @@ inherited Report_TaraMovementForm: TReport_TaraMovementForm
             HeaderAlignmentVert = vaCenter
             Width = 46
           end
+          object colAccountGroupCode: TcxGridDBColumn
+            Caption = #1050#1086#1076' '#1075#1088#1091#1087#1087#1099' '#1089#1095#1077#1090#1086#1074
+            DataBinding.FieldName = 'AccountGroupCode'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 60
+          end
+          object colAccountGroupName: TcxGridDBColumn
+            Caption = #1057#1095#1077#1090' '#1075#1088#1091#1087#1087#1072
+            DataBinding.FieldName = 'AccountGroupName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 83
+          end
         end
       end
     end
@@ -199,15 +213,15 @@ inherited Report_TaraMovementForm: TReport_TaraMovementForm
         end>
       Properties.ReadOnly = True
       TabOrder = 5
-      Width = 335
+      Width = 215
     end
     object cxLabel4: TcxLabel
-      Left = 567
-      Top = 3
+      Left = 447
+      Top = 6
       Caption = #1058#1086#1074#1072#1088':'
     end
     object edGoods: TcxButtonEdit
-      Left = 567
+      Left = 447
       Top = 26
       Properties.Buttons = <
         item
@@ -216,7 +230,24 @@ inherited Report_TaraMovementForm: TReport_TaraMovementForm
         end>
       Properties.ReadOnly = True
       TabOrder = 7
-      Width = 349
+      Width = 186
+    end
+    object cxLabel5: TcxLabel
+      Left = 639
+      Top = 6
+      Caption = #1057#1095#1077#1090' '#1075#1088#1091#1087#1087#1072':'
+    end
+    object ceAccountGroup: TcxButtonEdit
+      Left = 639
+      Top = 26
+      Properties.Buttons = <
+        item
+          Default = True
+          Kind = bkEllipsis
+        end>
+      Properties.ReadOnly = True
+      TabOrder = 9
+      Width = 218
     end
   end
   inherited ActionList: TActionList
@@ -333,6 +364,13 @@ inherited Report_TaraMovementForm: TReport_TaraMovementForm
         Component = FormParams
         ComponentItem = 'MLODesc'
         ParamType = ptInput
+      end
+      item
+        Name = 'inAccountGroupId'
+        Value = Null
+        Component = AccountGroupGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
       end>
     Top = 144
   end
@@ -448,6 +486,21 @@ inherited Report_TaraMovementForm: TReport_TaraMovementForm
         Name = 'FormName'
         Value = Null
         DataType = ftString
+      end
+      item
+        Name = 'AccountGroupId'
+        Value = Null
+        Component = AccountGroupGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+      end
+      item
+        Name = 'AccountGroupName'
+        Value = Null
+        Component = AccountGroupGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
       end>
     Left = 232
     Top = 144
@@ -501,8 +554,8 @@ inherited Report_TaraMovementForm: TReport_TaraMovementForm
         DataType = ftString
         ParamType = ptInput
       end>
-    Left = 656
-    Top = 32
+    Left = 472
+    Top = 24
   end
   object spGet_Movement_Form: TdsdStoredProc
     StoredProcName = 'gpGet_Movement_Form'
@@ -526,5 +579,36 @@ inherited Report_TaraMovementForm: TReport_TaraMovementForm
     PackSize = 1
     Left = 344
     Top = 128
+  end
+  object AccountGroupGuides: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = ceAccountGroup
+    FormNameParam.Value = 'TAccountGroup_ObjectDescForm'
+    FormNameParam.DataType = ftString
+    FormName = 'TAccountGroup_ObjectDescForm'
+    PositionDataSet = 'MasterCDS'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = AccountGroupGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = AccountGroupGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+      end
+      item
+        Name = 'inDescCode'
+        Value = 'zc_Object_Goods'
+        DataType = ftString
+      end>
+    Left = 736
+    Top = 21
   end
 end

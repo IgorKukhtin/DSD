@@ -8,23 +8,23 @@ inherited Report_TaraForm: TReport_TaraForm
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Top = 83
+    Top = 90
     Width = 975
-    Height = 490
+    Height = 483
     TabOrder = 3
-    ExplicitTop = 83
+    ExplicitTop = 90
     ExplicitWidth = 975
-    ExplicitHeight = 490
-    ClientRectBottom = 490
+    ExplicitHeight = 483
+    ClientRectBottom = 483
     ClientRectRight = 975
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 975
-      ExplicitHeight = 490
+      ExplicitHeight = 483
       inherited cxGrid: TcxGrid
         Width = 975
-        Height = 490
+        Height = 483
         ExplicitWidth = 975
-        ExplicitHeight = 490
+        ExplicitHeight = 483
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -368,15 +368,29 @@ inherited Report_TaraForm: TReport_TaraForm
             Options.Editing = False
             Width = 50
           end
+          object colAccountGroupCode: TcxGridDBColumn
+            Caption = #1050#1086#1076' '#1075#1088#1091#1087#1087#1099' '#1089#1095#1077#1090#1086#1074
+            DataBinding.FieldName = 'AccountGroupCode'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 60
+          end
+          object colAccountGroupName: TcxGridDBColumn
+            Caption = #1057#1095#1077#1090' '#1075#1088#1091#1087#1087#1072
+            DataBinding.FieldName = 'AccountGroupName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 80
+          end
         end
       end
     end
   end
   inherited Panel: TPanel
     Width = 975
-    Height = 57
+    Height = 64
     ExplicitWidth = 975
-    ExplicitHeight = 57
+    ExplicitHeight = 64
     inherited deStart: TcxDateEdit
       EditValue = 42370d
     end
@@ -413,12 +427,12 @@ inherited Report_TaraForm: TReport_TaraForm
     end
     object cxLabel3: TcxLabel
       Left = 10
-      Top = 32
+      Top = 25
       Caption = #1054#1073#1098#1077#1082#1090' '#1072#1085#1072#1083#1080#1079#1072':'
     end
     object edObject: TcxButtonEdit
-      Left = 101
-      Top = 32
+      Left = 10
+      Top = 41
       Properties.Buttons = <
         item
           Default = True
@@ -426,16 +440,16 @@ inherited Report_TaraForm: TReport_TaraForm
         end>
       Properties.ReadOnly = True
       TabOrder = 9
-      Width = 377
+      Width = 332
     end
     object cxLabel4: TcxLabel
-      Left = 492
-      Top = 33
+      Left = 348
+      Top = 25
       Caption = #1058#1086#1074#1072#1088' / '#1075#1088#1091#1087#1087#1072':'
     end
     object edGoods: TcxButtonEdit
-      Left = 581
-      Top = 32
+      Left = 348
+      Top = 41
       Properties.Buttons = <
         item
           Default = True
@@ -443,7 +457,7 @@ inherited Report_TaraForm: TReport_TaraForm
         end>
       Properties.ReadOnly = True
       TabOrder = 11
-      Width = 380
+      Width = 253
     end
     object chkWithMember: TcxCheckBox
       Left = 778
@@ -451,6 +465,23 @@ inherited Report_TaraForm: TReport_TaraForm
       Caption = #1052#1054#1051
       TabOrder = 12
       Width = 53
+    end
+    object ceAccountGroup: TcxButtonEdit
+      Left = 607
+      Top = 41
+      Properties.Buttons = <
+        item
+          Default = True
+          Kind = bkEllipsis
+        end>
+      Properties.ReadOnly = True
+      TabOrder = 13
+      Width = 218
+    end
+    object cxLabel5: TcxLabel
+      Left = 607
+      Top = 25
+      Caption = #1057#1095#1077#1090' '#1075#1088#1091#1087#1087#1072':'
     end
   end
   inherited cxPropertiesStore: TcxPropertiesStore
@@ -596,6 +627,20 @@ inherited Report_TaraForm: TReport_TaraForm
           Component = chkWithMember
           DataType = ftBoolean
           ParamType = ptInput
+        end
+        item
+          Name = 'AccountGroupId'
+          Value = Null
+          Component = AccountGroupGuides
+          ComponentItem = 'Key'
+          ParamType = ptInput
+        end
+        item
+          Name = 'AccountGroupName'
+          Value = Null
+          Component = AccountGroupGuides
+          ComponentItem = 'TextValue'
+          ParamType = ptInput
         end>
       isShowModal = True
       RefreshDispatcher = RefreshDispatcher
@@ -661,6 +706,19 @@ inherited Report_TaraForm: TReport_TaraForm
           Value = Null
           Component = FormParams
           ComponentItem = 'InMLODesc'
+        end
+        item
+          Name = 'AccountGroupId'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'AccountGroupId'
+        end
+        item
+          Name = 'AccountGroupName'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'AccountGroupName'
+          DataType = ftString
         end>
       isShowModal = False
     end
@@ -724,6 +782,19 @@ inherited Report_TaraForm: TReport_TaraForm
           Value = Null
           Component = FormParams
           ComponentItem = 'InMLODesc'
+        end
+        item
+          Name = 'AccountGroupId'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'AccountGroupId'
+        end
+        item
+          Name = 'AccountGroupName'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'AccountGroupName'
+          DataType = ftString
         end>
       isShowModal = False
     end
@@ -787,6 +858,19 @@ inherited Report_TaraForm: TReport_TaraForm
           Value = Null
           Component = FormParams
           ComponentItem = 'OutMLODesc'
+        end
+        item
+          Name = 'AccountGroupId'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'AccountGroupId'
+        end
+        item
+          Name = 'AccountGroupName'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'AccountGroupName'
+          DataType = ftString
         end>
       isShowModal = False
     end
@@ -850,6 +934,19 @@ inherited Report_TaraForm: TReport_TaraForm
           Value = Null
           Component = FormParams
           ComponentItem = 'OutMLODesc'
+        end
+        item
+          Name = 'AccountGroupId'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'AccountGroupId'
+        end
+        item
+          Name = 'AccountGroupName'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'AccountGroupName'
+          DataType = ftString
         end>
       isShowModal = False
     end
@@ -913,6 +1010,19 @@ inherited Report_TaraForm: TReport_TaraForm
           Value = Null
           Component = FormParams
           ComponentItem = 'InventoryMLODesc'
+        end
+        item
+          Name = 'AccountGroupId'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'AccountGroupId'
+        end
+        item
+          Name = 'AccountGroupName'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'AccountGroupName'
+          DataType = ftString
         end>
       isShowModal = False
     end
@@ -976,6 +1086,19 @@ inherited Report_TaraForm: TReport_TaraForm
           Value = Null
           Component = FormParams
           ComponentItem = 'LossMLODesc'
+        end
+        item
+          Name = 'AccountGroupId'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'AccountGroupId'
+        end
+        item
+          Name = 'AccountGroupName'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'AccountGroupName'
+          DataType = ftString
         end>
       isShowModal = False
     end
@@ -1049,6 +1172,13 @@ inherited Report_TaraForm: TReport_TaraForm
         Name = 'inGoodsOrGroupId'
         Value = Null
         Component = GoodsGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inAccountGroup'
+        Value = Null
+        Component = AccountGroupGuides
         ComponentItem = 'Key'
         ParamType = ptInput
       end>
@@ -1160,6 +1290,9 @@ inherited Report_TaraForm: TReport_TaraForm
       end
       item
         Component = chkWithMember
+      end
+      item
+        Component = AccountGroupGuides
       end>
     Top = 184
   end
@@ -1212,7 +1345,7 @@ inherited Report_TaraForm: TReport_TaraForm
         DataType = ftString
         ParamType = ptInput
       end>
-    Left = 656
+    Left = 440
     Top = 32
   end
   object FormParams: TdsdFormParams
@@ -1300,6 +1433,19 @@ inherited Report_TaraForm: TReport_TaraForm
       item
         Name = 'LossMLODesc'
         Value = Null
+      end
+      item
+        Name = 'AccountGroupId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'AccountGroupId'
+      end
+      item
+        Name = 'AccountGroupName'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'AccountGroupName'
+        DataType = ftString
       end>
     Left = 24
     Top = 328
@@ -1378,5 +1524,36 @@ inherited Report_TaraForm: TReport_TaraForm
     PackSize = 1
     Left = 264
     Top = 264
+  end
+  object AccountGroupGuides: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = ceAccountGroup
+    FormNameParam.Value = 'TAccountGroup_ObjectDescForm'
+    FormNameParam.DataType = ftString
+    FormName = 'TAccountGroup_ObjectDescForm'
+    PositionDataSet = 'MasterCDS'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = AccountGroupGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = AccountGroupGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+      end
+      item
+        Name = 'inDescCode'
+        Value = 'zc_Object_Goods'
+        DataType = ftString
+      end>
+    Left = 728
+    Top = 37
   end
 end

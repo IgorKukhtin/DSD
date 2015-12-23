@@ -1,22 +1,22 @@
 inherited Report_TaraDialogForm: TReport_TaraDialogForm
   Caption = #1054#1090#1095#1077#1090' '#1087#1086' '#1072#1082#1094#1080#1103#1084
-  ClientHeight = 170
+  ClientHeight = 193
   ClientWidth = 446
   ExplicitWidth = 452
-  ExplicitHeight = 198
+  ExplicitHeight = 221
   PixelsPerInch = 96
   TextHeight = 13
   inherited bbOk: TcxButton
-    Left = 106
-    Top = 128
-    ExplicitLeft = 106
-    ExplicitTop = 128
+    Left = 105
+    Top = 160
+    ExplicitLeft = 105
+    ExplicitTop = 160
   end
   inherited bbCancel: TcxButton
     Left = 250
-    Top = 128
+    Top = 160
     ExplicitLeft = 250
-    ExplicitTop = 128
+    ExplicitTop = 160
   end
   object cxLabel1: TcxLabel [2]
     Left = 26
@@ -113,12 +113,35 @@ inherited Report_TaraDialogForm: TReport_TaraDialogForm
     TabOrder = 14
     Width = 53
   end
+  object cxLabel5: TcxLabel [15]
+    Left = 8
+    Top = 112
+    Caption = #1057#1095#1077#1090' '#1075#1088#1091#1087#1087#1072':'
+  end
+  object ceAccountGroup: TcxButtonEdit [16]
+    Left = 105
+    Top = 111
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    Properties.ReadOnly = True
+    TabOrder = 16
+    Width = 333
+  end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 64
     Top = 120
   end
   inherited cxPropertiesStore: TcxPropertiesStore
     Components = <
+      item
+        Component = AccountGroupGuides
+        Properties.Strings = (
+          'Key'
+          'TextValue')
+      end
       item
         Component = chbWithBayer
         Properties.Strings = (
@@ -131,6 +154,11 @@ inherited Report_TaraDialogForm: TReport_TaraDialogForm
       end
       item
         Component = chbWithPlace
+        Properties.Strings = (
+          'Checked')
+      end
+      item
+        Component = chkWithMember
         Properties.Strings = (
           'Checked')
       end
@@ -248,6 +276,21 @@ inherited Report_TaraDialogForm: TReport_TaraDialogForm
         Component = chkWithMember
         DataType = ftBoolean
         ParamType = ptInput
+      end
+      item
+        Name = 'AccountGroupId'
+        Value = Null
+        Component = AccountGroupGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+      end
+      item
+        Name = 'AccountGroupName'
+        Value = Null
+        Component = AccountGroupGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
       end>
     Left = 5
     Top = 128
@@ -309,5 +352,36 @@ inherited Report_TaraDialogForm: TReport_TaraDialogForm
       end>
     Left = 328
     Top = 96
+  end
+  object AccountGroupGuides: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = ceAccountGroup
+    FormNameParam.Value = 'TAccountGroup_ObjectDescForm'
+    FormNameParam.DataType = ftString
+    FormName = 'TAccountGroup_ObjectDescForm'
+    PositionDataSet = 'MasterCDS'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = AccountGroupGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = AccountGroupGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+      end
+      item
+        Name = 'inDescCode'
+        Value = 'zc_Object_Goods'
+        DataType = ftString
+      end>
+    Left = 384
+    Top = 117
   end
 end

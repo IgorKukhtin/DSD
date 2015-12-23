@@ -24,8 +24,13 @@ AS
       , Object_Goods.isErased                   AS isErased
 
       , COALESCE(MCS_isClose.ValueData,False)   AS MCSIsClose
+      , MCSIsClose_DateChange.valuedata         AS MCSIsCloseDateChange
+
       , COALESCE(MCS_NotRecalc.ValueData,False) AS MCSNotRecalc
+      , MCSNotRecalc_DateChange.valuedata       AS MCSNotRecalcDateChange
+      
       , COALESCE(Price_Fix.ValueData,False)     AS Fix
+      , Fix_DateChange.valuedata                AS FixDateChange
     FROM Object AS Object_Price
         LEFT JOIN ObjectFloat       AS Price_Value
                                     ON Price_Value.ObjectId = Object_Price.Id
@@ -53,13 +58,22 @@ AS
         LEFT JOIN ObjectBoolean      AS MCS_isClose
                                     ON MCS_isClose.ObjectId = Object_Price.Id
                                    AND MCS_isClose.DescId = zc_ObjectBoolean_Price_MCSIsClose()
-        LEFT JOIN ObjectBoolean      AS MCS_NotRecalc
+        LEFT JOIN ObjectDate        AS MCSIsClose_DateChange
+                                    ON MCSIsClose_DateChange.ObjectId = Object_Price.Id
+                                   AND MCSIsClose_DateChange.DescId = zc_ObjectDate_Price_MCSIsCloseDateChange()
+        LEFT JOIN ObjectBoolean     AS MCS_NotRecalc
                                     ON MCS_NotRecalc.ObjectId = Object_Price.Id
                                    AND MCS_NotRecalc.DescId = zc_ObjectBoolean_Price_MCSNotRecalc()
-        LEFT JOIN ObjectBoolean      AS Price_Fix
+        LEFT JOIN ObjectDate        AS MCSNotRecalc_DateChange
+                                    ON MCSNotRecalc_DateChange.ObjectId = Object_Price.Id
+                                   AND MCSNotRecalc_DateChange.DescId = zc_ObjectDate_Price_MCSNotRecalcDateChange()
+        LEFT JOIN ObjectBoolean     AS Price_Fix
                                     ON Price_Fix.ObjectId = Object_Price.Id
                                    AND Price_Fix.DescId = zc_ObjectBoolean_Price_Fix()
-
+        LEFT JOIN ObjectDate        AS Fix_DateChange
+                                    ON Fix_DateChange.ObjectId = Object_Price.Id
+                                   AND Fix_DateChange.DescId = zc_ObjectDate_Price_FixDateChange()
+        
     WHERE 
         Object_Price.DescId = zc_Object_Price();
 

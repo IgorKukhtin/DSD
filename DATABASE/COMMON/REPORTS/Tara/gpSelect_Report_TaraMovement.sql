@@ -7,6 +7,16 @@ DROP FUNCTION IF EXISTS gpSelect_Report_TaraMovement(
     Integer,   --Тип связи для "От кого / кому"
     TVarChar   --сессия пользователя
 );
+DROP FUNCTION IF EXISTS gpSelect_Report_TaraMovement(
+    TDateTime, --дата начала периода
+    TDateTime, --дата окончания периода
+    Integer,   --Объект анализа
+    Integer,   --Товар
+    TVarChar,  --Типы документов
+    Integer,   --Тип связи для "От кого / кому"
+    Integer,   --Группа счетов
+    TVarChar   --сессия пользователя
+);
 
 CREATE OR REPLACE FUNCTION gpSelect_Report_TaraMovement(
     IN inStartDate      TDateTime, --дата начала периода
@@ -15,6 +25,7 @@ CREATE OR REPLACE FUNCTION gpSelect_Report_TaraMovement(
     IN inGoodsId        Integer,   --Товар
     IN inDescSet        TVarChar,  --Типы документов
     IN inMLODesc        Integer,   --Тип связи для "От кого / кому"
+    IN inAccountGroupId Integer,   --Группа счетов
     IN inSession        TVarChar   --сессия пользователя
 )
 RETURNS TABLE(
@@ -32,6 +43,8 @@ RETURNS TABLE(
     ,PaidKindName      TVarChar   --Тип оплаты
     ,GoodsCode         Integer    --Код товара
     ,GoodsName         TVarChar   --Наименование товара
+    ,AccountGroupCode  Integer    --Код группы счетов
+    ,AccountGroupName  TVarChar   --Наименование группы счетов
     ,AmountIn          TFloat     --Кол-во приход
     ,AmountOut         TFloat     --Кол-во расход
     ,Price             TFloat     --Цена
@@ -119,6 +132,8 @@ BEGIN
            ,Object_PaidKind.ValueData                         AS PaidKindName   --Тип оплаты
            ,Object_Goods.ObjectCode                           AS GoodsCode    --Код товара
            ,Object_Goods.ValueData                            AS GoodsName    --Наименование товара
+           ,Object_AccountGroup.ObjectCode                    AS AccountGroupCode --Код группы счетов
+           ,Object_AccountGroup.ValueData                     AS AccountGroupName --Наименование группы счетов
            ,CASE WHEN MovementItemContainer.IsActive = TRUE 
                 THEN MovementItemContainer.Amount
             ELSE 0
@@ -158,6 +173,14 @@ BEGIN
             LEFT OUTER JOIN MovementItemFloat AS MIFloat_Price
                                               ON MIFloat_Price.MovementItemId = MovementItemContainer.MovementItemId
                                              AND MIFloat_Price.DescId = zc_MIFloat_Price()
+            LEFT OUTER JOIN ContainerLinkObject AS CLO_Account
+                                                ON CLO_Account.ContainerId = MovementItemContainer.ContainerId
+                                               AND CLO_Account.DescId = zc_ContainerLinkObject_Account()
+            LEFT OUTER JOIN ObjectLink AS ObjectLink_Account_AccountGroup
+                                       ON ObjectLink_Account_AccountGroup.ObjectId = CLO_Account.ObjectId
+                                      AND ObjectLink_Account_AccountGroup.DescId = zc_ObjectLink_Account_AccountGroup()
+            LEFT OUTER JOIN Object AS Object_AccountGroup
+                                   ON Object_AccountGroup.Id = COALESCE(ObjectLink_Account_AccountGroup.ChildObjectId,zc_Enum_AccountGroup_20000())
         WHERE
             (
                 vbIOMovement = 0 --Внутренние и внешние операции
@@ -189,12 +212,18 @@ BEGIN
                     AND
                     MovementItemContainer.IsActive = FALSE
                 )
+            )
+            AND
+            (
+                inAccountGroupId = 0
+                OR
+                COALESCE(ObjectLink_Account_AccountGroup.ChildObjectId,zc_Enum_AccountGroup_20000()) = inAccountGroupId
             );
                                               
 END;
 $BODY$
   LANGUAGE PLPGSQL VOLATILE;
-ALTER FUNCTION gpSelect_Report_TaraMovement (TDateTime,TDateTime,Integer,Integer,TVarChar,Integer,TVarChar) OWNER TO postgres;
+ALTER FUNCTION gpSelect_Report_TaraMovement (TDateTime,TDateTime,Integer,Integer,TVarChar,Integer,Integer,TVarChar) OWNER TO postgres;
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР

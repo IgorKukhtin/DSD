@@ -23,10 +23,12 @@ BEGIN
 		AND
 	    ObjectId in (SELECT ID FROM Object_Price_View WHERE UnitId = inUnitID);
 	
-	-- Удаляем данные по датам НТЗ
+	-- Удаляем данные по датам НТЗ / 
 	DELETE FROM ObjectDate
     WHERE 
-	    DescId = zc_ObjectDate_Price_MCSDateChange()
+	    DescId in (zc_ObjectDate_Price_MCSDateChange()
+                  ,zc_ObjectDate_Price_MCSIsCloseDateChange()
+                  ,zc_ObjectDate_Price_MCSNotRecalcDateChange())
 	    AND
 	    ObjectId in (SELECT ID FROM Object_Price_View WHERE UnitId = inUnitID);
 	

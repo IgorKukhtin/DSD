@@ -21,6 +21,19 @@ DROP FUNCTION IF EXISTS gpSelect_Report_Tara(
     Integer,   --Группа товара / Товар
     TVarChar   --сессия пользователя
 );
+DROP FUNCTION IF EXISTS gpSelect_Report_Tara(
+    TDateTime, --дата начала периода
+    TDateTime, --дата окончания периода
+    Boolean,   --По всем поставщикам
+    Boolean,   --По всем покупателям
+    Boolean,   --По всем складам
+    Boolean,   --По всем филиалам
+    Boolean,   --По всем МОЛ
+    Integer,   --По одному(группе) из объектов
+    Integer,   --Группа товара / Товар
+    Integer,   --Группа счетов
+    TVarChar   --сессия пользователя
+);
 
 CREATE OR REPLACE FUNCTION gpSelect_Report_Tara(
     IN inStartDate      TDateTime, --дата начала периода
@@ -32,6 +45,7 @@ CREATE OR REPLACE FUNCTION gpSelect_Report_Tara(
     IN inWithMember     Boolean,   --По всем МОЛ
     IN inWhereObjectId  Integer,   --По одному(группе) из объектов
     IN inGoodsOrGroupId Integer,   --Группа товара / товар
+    IN inAccountGroupId Integer,   --Группа счетов
     IN inSession        TVarChar   --сессия пользователя
 )
 RETURNS TABLE(
@@ -50,6 +64,9 @@ RETURNS TABLE(
     ,BranchName        TVarChar  --Филиал (для складов)
     ,JuridicalName     TVarChar  --Юрлицо (для партнеров)
     ,RetailName        TVarChar  --Торговая сеть (для партнеров)
+    ,AccountGroupId    Integer   --ИД группы счетов
+    ,AccountGroupCode  Integer   --Код группы счетов
+    ,AccountGroupName  TVarChar  --Наименование группы счетов
     
     ,RemainsInActive   TFloat    --Остаток на начало актив
     ,RemainsInPassive  TFloat    --Остаток на начало пассив
@@ -291,6 +308,7 @@ BEGIN
                ,DD.GoodsId
                ,DD.ObjectId
                ,DD.ObjectType
+               ,DD.AccountGroupId
                ,COALESCE(SUM(DD.ContainerAmount),0)::TFloat   AS ContainerAmount
                ,COALESCE(SUM(MIC_Amount_Start),0)::TFloat     AS MIC_Amount_Start
                ,COALESCE(SUM(MIC_Amount_End),0)::TFloat       AS MIC_Amount_End
@@ -306,6 +324,7 @@ BEGIN
                        ,Container.ObjectId AS GoodsId --товар
                        ,_Objects.Id         AS ObjectId --Объект анализа
                        ,_Objects.ObjectType AS ObjectType --тип объекта анализа
+                       ,COALESCE(ObjectLink_Account_AccountGroup.ChildObjectId,zc_Enum_AccountGroup_20000()) AS AccountGroupId --группа счетов
                        ,Container.Amount                                        AS ContainerAmount --текущий остаток
                        ,SUM(MovementItemContainer.Amount)                        AS MIC_Amount_Start--Все движение после начала 
                        ,SUM(CASE WHEN MovementItemContainer.OperDate > inEndDate 
@@ -364,18 +383,32 @@ BEGIN
                         LEFT OUTER JOIN MovementItemFloat AS MIFloat_Price
                                                           ON MIFloat_Price.MovementItemId = MovementItemContainer.MovementItemId
                                                          AND MIFloat_Price.DescId = zc_MIFloat_Price()
+                        LEFT OUTER JOIN ContainerLinkObject AS CLO_Account
+                                                            ON CLO_Account.ContainerId = Container.ID
+                                                           AND CLO_Account.DescId = zc_ContainerLinkObject_Account()
+                        LEFT OUTER JOIN ObjectLink AS ObjectLink_Account_AccountGroup
+                                                   ON ObjectLink_Account_AccountGroup.ObjectId = CLO_Account.ObjectId
+                                                  AND ObjectLink_Account_AccountGroup.DescId = zc_ObjectLink_Account_AccountGroup()
+                    WHERE
+                        (
+                            inAccountGroupId = 0
+                            OR
+                            COALESCE(ObjectLink_Account_AccountGroup.ChildObjectId,zc_Enum_AccountGroup_20000()) = inAccountGroupId
+                        )
                     GROUP BY
                         Container.Id
                        ,Container.ObjectId --товар
                        ,_Objects.Id
                        ,_Objects.ObjectType
                        ,Container.Amount
+                       ,COALESCE(ObjectLink_Account_AccountGroup.ChildObjectId,zc_Enum_AccountGroup_20000())
                 ) AS DD
             GROUP BY
                 DD.Id
                ,DD.GoodsId 
                ,DD.ObjectId
                ,DD.ObjectType
+               ,DD.AccountGroupId
             HAVING
                 (COALESCE(SUM(DD.ContainerAmount),0)-COALESCE(SUM(MIC_Amount_Start),0)) <> 0 OR
                 (COALESCE(SUM(DD.ContainerAmount),0)-COALESCE(SUM(MIC_Amount_End),0)) <> 0 OR
@@ -402,6 +435,9 @@ BEGIN
            ,Object_Branch.ValueData                            AS BranchName      --Филиал (для складов)
            ,Object_Juridical.ValueData                         AS JuridicalName   --Юрлицо (для партнеров)
            ,Object_Retail.ValueData                            AS RetailName      --Торговая сеть (для партнеров)
+           ,Object_AccountGroup.Id                             AS AccountGroupId  --ИД Группы счетов
+           ,Object_AccountGroup.ObjectCode                     AS AccountGroupCode--Код Группы счетов
+           ,Object_AccountGroup.ValueData                      AS AccountGroupName--Наименование Группы счетов
            ,CASE WHEN (DDD.ContainerAmount-DDD.MIC_Amount_Start)>0
                  THEN (DDD.ContainerAmount-DDD.MIC_Amount_Start)
             END::TFloat                                        AS RemainsInActive --Остаток на начало актив
@@ -436,24 +472,26 @@ BEGIN
                                        ON ObjectLink_Unit_Branch.ObjectId = Object_UnitOrPartner.ID
                                       AND ObjectLink_Unit_Branch.DescId = zc_ObjectLink_Unit_Branch()
                                       AND Object_UnitOrPartner.DescId = zc_Object_Unit()
-            Left Outer Join Object AS Object_Branch
+            LEFT OUTER JOIN OBJECT AS Object_Branch
                                    ON Object_Branch.Id = ObjectLink_Unit_Branch.ChildObjectId 
             LEFT OUTER JOIN ObjectLink AS ObjectLink_Partner_Juridical
                                        ON ObjectLink_Partner_Juridical.ObjectId = Object_UnitOrPartner.ID
                                       AND ObjectLink_Partner_Juridical.DescId = zc_ObjectLink_Partner_Juridical()
                                       AND Object_UnitOrPartner.DescId = zc_Object_Partner()
-            Left Outer Join Object AS Object_Juridical
+            LEFT OUTER JOIN OBJECT AS Object_Juridical
                                    ON Object_Juridical.Id = ObjectLink_Partner_Juridical.ChildObjectId
             LEFT OUTER JOIN ObjectLink AS ObjectLink_Juridical_Retail
                                        ON ObjectLink_Juridical_Retail.ObjectId = Object_Juridical.ID
                                       AND ObjectLink_Juridical_Retail.DescId = zc_ObjectLink_Juridical_Retail()
                                       AND Object_UnitOrPartner.DescId = zc_Object_Partner()
-            Left Outer Join Object AS Object_Retail
-                                   ON Object_Retail.Id = ObjectLink_Juridical_Retail.ChildObjectId;
+            LEFT OUTER JOIN OBJECT AS Object_Retail
+                                   ON Object_Retail.Id = ObjectLink_Juridical_Retail.ChildObjectId
+            LEFT OUTER JOIN OBJECT AS Object_AccountGroup
+                                   ON Object_AccountGroup.Id = DDD.AccountGroupId;
 END;
 $BODY$
   LANGUAGE PLPGSQL VOLATILE;
-ALTER FUNCTION gpSelect_Report_Tara (TDateTime,TDateTime,Boolean,Boolean,Boolean,Boolean,Boolean,Integer,Integer,TVarChar) OWNER TO postgres;
+ALTER FUNCTION gpSelect_Report_Tara (TDateTime,TDateTime,Boolean,Boolean,Boolean,Boolean,Boolean,Integer,Integer,Integer,TVarChar) OWNER TO postgres;
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР

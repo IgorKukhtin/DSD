@@ -29,6 +29,9 @@ type
     ObjectGuides: TdsdGuides;
     GoodsGuides: TdsdGuides;
     chkWithMember: TcxCheckBox;
+    cxLabel5: TcxLabel;
+    ceAccountGroup: TcxButtonEdit;
+    AccountGroupGuides: TdsdGuides;
   private
     { Private declarations }
   public
