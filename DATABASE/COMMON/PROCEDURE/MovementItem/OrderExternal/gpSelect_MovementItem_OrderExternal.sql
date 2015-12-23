@@ -31,7 +31,7 @@ $BODY$
    DECLARE vbPartnerId Integer;
    DECLARE vbContractId Integer;
    DECLARE vbPriceWithVAT Boolean;
-   DECLARE vbOperDatePartner_sale TDateTime;
+   DECLARE vbOperDate_promo TDateTime;
 
 BEGIN
      -- проверка прав пользователя на вызов процедуры
@@ -59,11 +59,23 @@ BEGIN
      vbContractId:= (SELECT MLO.ObjectId FROM MovementLinkObject AS MLO WHERE MLO.MovementId = inMovementId AND MLO.DescId = zc_MovementLinkObject_Contract());
      -- Цены с НДС
      vbPriceWithVAT:= (SELECT MB.ValueData FROM MovementBoolean AS MB WHERE MB.MovementId = inMovementId AND MB.DescId = zc_MovementBoolean_PriceWithVAT());
-     -- Дата покупателя в продаже (для поиска акций)
-     vbOperDatePartner_sale:= (SELECT Movement.OperDate FROM Movement WHERE Movement.Id = inMovementId)
-                            + (COALESCE ((SELECT ObjectFloat.ValueData FROM ObjectFloat WHERE ObjectFloat.ObjectId = vbPartnerId AND ObjectFloat.DescId = zc_ObjectFloat_Partner_PrepareDayCount()),  0) :: TVarChar || ' DAY') :: INTERVAL
-                            + (COALESCE ((SELECT ObjectFloat.ValueData FROM ObjectFloat WHERE ObjectFloat.ObjectId = vbPartnerId AND ObjectFloat.DescId = zc_ObjectFloat_Partner_DocumentDayCount()), 0) :: TVarChar || ' DAY') :: INTERVAL
-                             ;
+     -- Дата для поиска акций - или <Дата покупателя в продаже> или <Дата заявки>
+     vbOperDate_promo:= CASE WHEN TRUE = (SELECT ObjectBoolean_OperDateOrder.ValueData
+                                          FROM ObjectLink AS ObjectLink_Juridical
+                                               INNER JOIN ObjectLink AS ObjectLink_Retail
+                                                                     ON ObjectLink_Retail.ObjectId = ObjectLink_Juridical.ChildObjectId
+                                                                    AND ObjectLink_Retail.DescId = zc_ObjectLink_Juridical_Retail()
+                                               INNER JOIN ObjectBoolean AS ObjectBoolean_OperDateOrder
+                                                                        ON ObjectBoolean_OperDateOrder.ObjectId = ObjectLink_Retail.ChildObjectId
+                                                                       AND ObjectBoolean_OperDateOrder.DescId = zc_ObjectBoolean_Retail_OperDateOrder()
+                                          WHERE ObjectLink_Juridical.ObjectId = vbPartnerId
+                                            AND ObjectLink_Juridical.DescId = zc_ObjectLink_Partner_Juridical()
+                                         )
+                                  THEN (SELECT Movement.OperDate FROM Movement WHERE Movement.Id = inMovementId)
+                             ELSE (SELECT Movement.OperDate FROM Movement WHERE Movement.Id = inMovementId)
+                                + (COALESCE ((SELECT ObjectFloat.ValueData FROM ObjectFloat WHERE ObjectFloat.ObjectId = vbPartnerId AND ObjectFloat.DescId = zc_ObjectFloat_Partner_PrepareDayCount()),  0) :: TVarChar || ' DAY') :: INTERVAL
+                                + (COALESCE ((SELECT ObjectFloat.ValueData FROM ObjectFloat WHERE ObjectFloat.ObjectId = vbPartnerId AND ObjectFloat.DescId = zc_ObjectFloat_Partner_DocumentDayCount()), 0) :: TVarChar || ' DAY') :: INTERVAL
+                        END;
 
      -- определяется
      vbGoodsPropertyId:= zfCalc_GoodsPropertyId ((SELECT MovementLinkObject.ObjectId FROM MovementLinkObject WHERE MovementLinkObject.MovementId = inMovementId AND MovementLinkObject.DescId = zc_MovementLinkObject_Contract())
@@ -88,7 +100,7 @@ BEGIN
      -- Результат такой
      RETURN QUERY
       WITH tmpPromo AS (SELECT tmp.*
-                        FROM lpSelect_Movement_Promo_Data (inOperDate   := vbOperDatePartner_sale
+                        FROM lpSelect_Movement_Promo_Data (inOperDate   := vbOperDate_promo
                                                          , inPartnerId  := vbPartnerId
                                                          , inContractId := vbContractId
                                                          , inUnitId     := vbUnitId

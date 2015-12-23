@@ -35,7 +35,7 @@ $BODY$
    DECLARE vbPartnerId Integer;
    DECLARE vbContractId Integer;
    DECLARE vbPriceWithVAT Boolean;
-   DECLARE vbOperDatePartner_sale TDateTime;
+   DECLARE vbOperDate_promo TDateTime;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Select_MI_Sale());
@@ -46,7 +46,7 @@ BEGIN
      vbIsB:= EXISTS (SELECT UserId FROM ObjectLink_UserRole_View WHERE UserId = vbUserId AND RoleId IN (300364, 442931, 343951, zc_Enum_Role_Admin())); -- Склад Специй (Баранченко) + Накладные полный доступ СЫРЬЕ - Кисличная Т.А. + Экономист (производство)
 
      -- находим заявку
-     vbMovementId_order:= (SELECT MLM_Order.MovementChildId FROM MovementLinkMovement AS MLM_Order WHERE MLM_Order.MovementId = inMovementId AND MLM_Order.DescId = zc_MovementLinkMovement_Order());
+     vbMovementId_order:= (SELECT MLM_Order.MovementChildId FROM MovementLinkMovement AS MLM_Order INNER JOIN Movement ON Movement.Id = MLM_Order.MovementId AND Movement.StatusId = zc_Enum_Status_Complete() WHERE MLM_Order.MovementId = inMovementId AND MLM_Order.DescId = zc_MovementLinkMovement_Order());
      -- меняется параметр
      -- !!!замена!!!
      SELECT tmp.PriceListId, tmp.OperDate
@@ -75,8 +75,22 @@ BEGIN
      vbContractId:= (SELECT MLO.ObjectId FROM MovementLinkObject AS MLO WHERE MLO.MovementId = inMovementId AND MLO.DescId = zc_MovementLinkObject_Contract());
      -- Цены с НДС
      vbPriceWithVAT:= (SELECT MB.ValueData FROM MovementBoolean AS MB WHERE MB.MovementId = inMovementId AND MB.DescId = zc_MovementBoolean_PriceWithVAT());
-     -- Дата покупателя в продаже (для поиска акций)
-     vbOperDatePartner_sale:= (SELECT MD.ValueData FROM MovementDate AS MD WHERE MD.MovementId = inMovementId AND MD.DescId = zc_MovementDate_OperDatePartner());
+     -- Дата для поиска акций - или <Дата покупателя в продаже> или <Дата заявки>
+     vbOperDate_promo:= CASE WHEN vbMovementId_order <> 0
+                              AND TRUE = (SELECT ObjectBoolean_OperDateOrder.ValueData
+                                          FROM ObjectLink AS ObjectLink_Juridical
+                                               INNER JOIN ObjectLink AS ObjectLink_Retail
+                                                                     ON ObjectLink_Retail.ObjectId = ObjectLink_Juridical.ChildObjectId
+                                                                    AND ObjectLink_Retail.DescId = zc_ObjectLink_Juridical_Retail()
+                                               INNER JOIN ObjectBoolean AS ObjectBoolean_OperDateOrder
+                                                                        ON ObjectBoolean_OperDateOrder.ObjectId = ObjectLink_Retail.ChildObjectId
+                                                                       AND ObjectBoolean_OperDateOrder.DescId = zc_ObjectBoolean_Retail_OperDateOrder()
+                                          WHERE ObjectLink_Juridical.ObjectId = vbPartnerId
+                                            AND ObjectLink_Juridical.DescId = zc_ObjectLink_Partner_Juridical()
+                                         )
+                                  THEN (SELECT Movement.OperDate FROM Movement WHERE Movement.Id = vbMovementId_Order)
+                             ELSE (SELECT MD.ValueData FROM MovementDate AS MD WHERE MD.MovementId = inMovementId AND MD.DescId = zc_MovementDate_OperDatePartner())
+                        END;
 
 
      -- меняется параметр
@@ -92,7 +106,7 @@ BEGIN
      
      -- себестоимость 
      WITH tmpPromo AS (SELECT tmp.*
-                        FROM lpSelect_Movement_Promo_Data (inOperDate   := vbOperDatePartner_sale
+                        FROM lpSelect_Movement_Promo_Data (inOperDate   := vbOperDate_promo
                                                          , inPartnerId  := vbPartnerId
                                                          , inContractId := vbContractId
                                                          , inUnitId     := vbUnitId

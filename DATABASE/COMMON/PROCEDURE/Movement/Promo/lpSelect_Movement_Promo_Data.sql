@@ -1,3 +1,4 @@
+-- Все Акции на дату по Контрагент + Договор + Подразделение
 -- Function: lpSelect_Movement_Promo_Data()
 
 DROP FUNCTION IF EXISTS lpSelect_Movement_Promo_Data (TDateTime, Integer, Integer, Integer);
@@ -35,41 +36,79 @@ BEGIN
                             INNER JOIN Movement ON Movement.DescId = zc_Movement_Promo()
                                                AND Movement.Id = MovementDate_StartSale.MovementId
                                                AND Movement.StatusId = zc_Enum_Status_Complete()
-                            INNER JOIN Movement AS Movement_PromoPartner
-                                                ON Movement_PromoPartner.ParentId = MovementDate_StartSale.MovementId
-                                               AND Movement_PromoPartner.DescId = zc_Movement_PromoPartner()
-                                               AND Movement_PromoPartner.StatusId <> zc_Enum_Status_Erased()
-                            INNER JOIN MovementItem ON MovementItem.MovementId = Movement_PromoPartner.Id
-                                                   AND MovementItem.DescId = zc_MI_Master()
-                                                   AND MovementItem.ObjectId = inPartnerId
-                                                   AND MovementItem.isErased = FALSE
-                            LEFT JOIN MovementItemLinkObject AS MILinkObject_Contract
-                                                             ON MILinkObject_Contract.MovementItemId = MovementItem.Id
-                                                            AND MILinkObject_Contract.DescId = zc_MILinkObject_Contract()
-                            LEFT JOIN MovementLinkObject AS MLO_Unit
-                                                         ON MLO_Unit.MovementId = MovementDate_StartSale.MovementId
-                                                        AND MLO_Unit.DescId = zc_MovementLinkObject_Unit()
                        WHERE MovementDate_StartSale.ValueData <= inOperDate
                          AND MovementDate_StartSale.DescId = zc_MovementDate_StartSale()
-                         AND (MILinkObject_Contract.ObjectId = inContractId OR COALESCE (MILinkObject_Contract.ObjectId, 0) = 0)
-                         AND (MLO_Unit.ObjectId              = inUnitId     OR COALESCE (MLO_Unit.ObjectId, 0) = 0)
+                      )
+       , tmpPartner_all AS 
+                      (SELECT tmpMovement.MovementId
+                            , tmpMovement.MovementPromo
+                            , COALESCE (MLO_Partner.ObjectId, 0) AS ObjectId
+                            , Object_by.DescId                   AS ObjectDescId
+                       FROM tmpMovement
+                            INNER JOIN Movement AS Movement_PromoPartner
+                                                ON Movement_PromoPartner.ParentId = tmpMovement.MovementId
+                                               AND Movement_PromoPartner.DescId   = zc_Movement_PromoPartner()
+                                               AND Movement_PromoPartner.StatusId <> zc_Enum_Status_Erased()
+                            LEFT JOIN MovementLinkObject AS MLO_Partner
+                                                         ON MLO_Partner.MovementId = Movement_PromoPartner.Id
+                                                        AND MLO_Partner.DescId     = zc_MovementLinkObject_Partner()
+                            LEFT JOIN Object AS Object_by ON Object_by.Id = MLO_Partner.ObjectId
+                            LEFT JOIN MovementLinkObject AS MLO_Contract
+                                                         ON MLO_Contract.MovementId = Movement_PromoPartner.Id
+                                                        AND MLO_Contract.DescId     = zc_MovementLinkObject_Contract()
+                            LEFT JOIN MovementLinkObject AS MLO_Unit
+                                                         ON MLO_Unit.MovementId = tmpMovement.MovementId
+                                                        AND MLO_Unit.DescId = zc_MovementLinkObject_Unit()
+                       WHERE (MLO_Contract.ObjectId = inContractId OR COALESCE (MLO_Contract.ObjectId, 0) = 0)
+                         AND (MLO_Unit.ObjectId     = inUnitId     OR COALESCE (MLO_Unit.ObjectId, 0) = 0)
+                         AND (MLO_Partner.ObjectId  = inPartnerId  OR Object_by.DescId <> zc_Object_Partner())
+                      )
+      , tmpPartner AS (-- Контрагенты
+                       SELECT tmpPartner_all.MovementId
+                            , tmpPartner_all.MovementPromo
+                       FROM tmpPartner_all
+                       WHERE tmpPartner_all.ObjectDescId = zc_Object_Partner()
+                      UNION
+                       -- из Юр. лиц
+                       SELECT tmpPartner_all.MovementId
+                            , tmpPartner_all.MovementPromo
+                       FROM tmpPartner_all
+                            INNER JOIN ObjectLink AS ObjectLink_Partner_Juridical
+                                                  ON ObjectLink_Partner_Juridical.ChildObjectId = tmpPartner_all.ObjectId
+                                                 AND ObjectLink_Partner_Juridical.DescId        = zc_ObjectLink_Partner_Juridical()
+                                                 AND ObjectLink_Partner_Juridical.ObjectId      = inPartnerId
+                       WHERE tmpPartner_all.ObjectDescId = zc_Object_Juridical()
+                      UNION
+                       -- из Торговой сети
+                       SELECT tmpPartner_all.MovementId
+                            , tmpPartner_all.MovementPromo
+                       FROM tmpPartner_all
+                            INNER JOIN ObjectLink AS ObjectLink_Juridical_Retail
+                                                  ON ObjectLink_Juridical_Retail.ChildObjectId = tmpPartner_all.ObjectId
+                                                 AND ObjectLink_Juridical_Retail.DescId        = zc_ObjectLink_Juridical_Retail()
+                            INNER JOIN ObjectLink AS ObjectLink_Partner_Juridical
+                                                  ON ObjectLink_Partner_Juridical.ChildObjectId = ObjectLink_Juridical_Retail.ObjectId
+                                                 AND ObjectLink_Partner_Juridical.DescId        = zc_ObjectLink_Partner_Juridical()
+                                                 AND ObjectLink_Partner_Juridical.ObjectId      = inPartnerId
+                       WHERE tmpPartner_all.ObjectDescId = zc_Object_Retail()
                       )
        , tmpResult AS (SELECT DISTINCT
-                              tmpMovement.MovementId
-                            , tmpMovement.MovementPromo
+                              tmpPartner.MovementId
+                            , tmpPartner.MovementPromo
                             , MovementItem.Amount   AS TaxPromo
                             , MovementItem.ObjectId AS GoodsId
-                            , COALESCE (MILinkObject_GoodsKind.ObjectId, 0)   AS GoodsKindId
+                            , 0                     AS GoodsKindId
+                            -- , COALESCE (MILinkObject_GoodsKind.ObjectId, 0)   AS GoodsKindId
                             , COALESCE (MIFloat_PriceWithOutVAT.ValueData, 0) AS PriceWithOutVAT
                             , COALESCE (MIFloat_PriceWithVAT.ValueData, 0)    AS PriceWithVAT
-                       FROM tmpMovement
-                            INNER JOIN MovementItem ON MovementItem.MovementId = tmpMovement.MovementId
+                       FROM tmpPartner
+                            INNER JOIN MovementItem ON MovementItem.MovementId = tmpPartner.MovementId
                                                    AND MovementItem.DescId = zc_MI_Master()
                                                    AND MovementItem.isErased = FALSE
-                            LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
+                            /*LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
                                                              ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
                                                             AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
-                                                            AND 1 = 0 -- !!!
+                                                            AND 1 = 0 -- !!!*/
                             LEFT JOIN MovementItemFloat AS MIFloat_PriceWithOutVAT
                                                         ON MIFloat_PriceWithOutVAT.MovementItemId = MovementItem.Id
                                                        AND MIFloat_PriceWithOutVAT.DescId = zc_MIFloat_PriceWithOutVAT()
@@ -98,4 +137,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM lpSelect_Movement_Promo_Data (inOperDate:= CURRENT_DATE, inPartnerId:= 404781, inContractId:= 404777, inUnitId:= 346093) AS tmp LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = GoodsId LEFT JOIN Object AS Object_GoodsKind ON Object_GoodsKind.Id = GoodsKindId 
+-- SELECT * FROM lpSelect_Movement_Promo_Data (inOperDate:= CURRENT_DATE, inPartnerId:= 324124, inContractId:= 0, inUnitId:= 0) AS tmp LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = GoodsId LEFT JOIN Object AS Object_GoodsKind ON Object_GoodsKind.Id = GoodsKindId LEFT JOIN Movement ON Movement.Id = MovementId

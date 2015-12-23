@@ -287,7 +287,7 @@ BEGIN
                IF vbMovementDescId = zc_Movement_Sale() AND vbMovementDescId = vbMovementDescId_find
                THEN
                -- сохранили Ёлемент документа - Sale
-               PERFORM lpInsertUpdate_MovementItem_Sale (ioId := 0, inMovementId := vbMovementId, inGoodsId := vbGoodsId
+               PERFORM lpInsertUpdate_MovementItem_Sale_BBB (ioId := 0, inMovementId := vbMovementId, inGoodsId := vbGoodsId
                                                        , inAmount := vbOperCount, inAmountPartner := vbOperCount, inAmountChangePercent := vbOperCount
                                                        , inChangePercentAmount := 0
                                                        , ioPrice := CASE WHEN vbPaidKindId = zc_Enum_PaidKind_SecondForm() AND vbDiscount_min = vbDiscount_max THEN vbOperPrice
