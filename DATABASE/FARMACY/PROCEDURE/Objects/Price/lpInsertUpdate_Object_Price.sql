@@ -61,7 +61,7 @@ BEGIN
                     inOperDate := CURRENT_TIMESTAMP::TDateTime,  -- Дата действия прайса
                     inPrice    := inPrice::TFloat,     -- Цена
                     inMCSValue := vbMCSValue::TFloat,     -- НТЗ
-                    inSession  := inSession);            
+                    inSession  := inUserId::TVarChar);            
         END IF;
 
         -- сохранили св-во < Дата изменения >

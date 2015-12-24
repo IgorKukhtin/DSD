@@ -20,8 +20,9 @@ inherited PaymentForm: TPaymentForm
       ExplicitWidth = 1005
       ExplicitHeight = 523
       inherited cxGrid: TcxGrid
+        Top = 61
         Width = 1005
-        Height = 478
+        Height = 462
         ExplicitWidth = 1005
         ExplicitHeight = 478
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -229,10 +230,10 @@ inherited PaymentForm: TPaymentForm
       end
       object cxGrid1: TcxGrid
         Left = 0
-        Top = 478
+        Top = 0
         Width = 1005
-        Height = 45
-        Align = alBottom
+        Height = 53
+        Align = alTop
         PopupMenu = PopupMenu
         TabOrder = 1
         object cxGridDBTableView1: TcxGridDBTableView
@@ -327,7 +328,7 @@ inherited PaymentForm: TPaymentForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1048#1089#1087#1086#1083#1100#1079#1086#1074#1072#1085#1099#1081' '#1074#1086#1079#1074#1088#1072#1090' '#1074' '#1090#1077#1082#1091#1097#1077#1084' '#1076#1086#1082#1091#1084#1077#1085#1090#1077
-            Width = 100
+            Width = 98
           end
           object colCorrOther: TcxGridDBColumn
             Caption = #1048#1089#1087'. '#1087#1088#1086#1095#1077#1077
@@ -373,6 +374,17 @@ inherited PaymentForm: TPaymentForm
         object cxGridLevel1: TcxGridLevel
           GridView = cxGridDBTableView1
         end
+      end
+      object cxSplitter1: TcxSplitter
+        Left = 0
+        Top = 53
+        Width = 1005
+        Height = 8
+        HotZoneClassName = 'TcxMediaPlayer8Style'
+        AlignSplitter = salTop
+        Control = cxGrid1
+        ExplicitTop = 57
+        ExplicitWidth = 466
       end
     end
   end

@@ -13,7 +13,7 @@ uses
   cxMaskEdit, cxDropDownEdit, cxCalendar, cxLabel, cxTextEdit, Vcl.ExtCtrls,
   cxGridLevel, cxGridCustomTableView, cxGridTableView, cxGridDBTableView,
   cxGridCustomView, cxGrid, cxPC, dxSkinsCore, dxSkinsDefaultPainters,
-  dxSkinscxPCPainter, dxSkinsdxBarPainter, ChoicePeriod, cxCheckBox;
+  dxSkinscxPCPainter, dxSkinsdxBarPainter, ChoicePeriod, cxCheckBox, cxSplitter;
 
 type
   TPaymentForm = class(TAncestorDocumentForm)
@@ -79,6 +79,7 @@ type
     colLeftCorrReturnOut: TcxGridDBColumn;
     colCorrOther: TcxGridDBColumn;
     colLeftCorrOther: TcxGridDBColumn;
+    cxSplitter1: TcxSplitter;
   private
     { Private declarations }
   public
