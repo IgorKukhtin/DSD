@@ -360,7 +360,8 @@ uses
   ChangeIncomePaymentKind in '..\..\FormsFarmacy\Guides\ChangeIncomePaymentKind.pas' {ChangeIncomePaymentKindForm: TParentForm},
   ChangeIncomePaymentTest in '..\SOURCE\Movement\All\Farmacy\ChangeIncomePaymentTest.pas',
   ChangeIncomePaymentJournal in '..\..\FormsFarmacy\Document\ChangeIncomePaymentJournal.pas' {ChangeIncomePaymentJournalForm: TParentForm},
-  ChangeIncomePayment in '..\..\FormsFarmacy\Document\ChangeIncomePayment.pas' {ChangeIncomePaymentForm: TParentForm};
+  ChangeIncomePayment in '..\..\FormsFarmacy\Document\ChangeIncomePayment.pas' {ChangeIncomePaymentForm: TParentForm},
+  PriceHistory in '..\..\FormsFarmacy\Guides\PriceHistory.pas' {PriceHistoryForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}

@@ -16,6 +16,22 @@ BEGIN
     THEN
         RAISE EXCEPTION 'Ошибка. Сначала выберите подразделение';
     END IF;
+    -- записываем в историю 
+    PERFORM
+        gpInsertUpdate_ObjectHistory_Price(
+            ioId       := 0::Integer,    -- ключ объекта <Элемент истории прайса>
+            inPriceId  := Object_Price_View.ID::Integer,    -- Прайс
+            inOperDate := CURRENT_TIMESTAMP::TDateTime,  -- Дата действия прайса
+            inPrice    := Object_Price_View.Price::TFloat,     -- Цена
+            inMCSValue := NULL::TFloat,     -- НТЗ
+            inSession  := inSession)
+    FROM
+        Object_Price_View 
+    WHERE 
+        UnitId = inUnitID
+        AND
+        MCSValue is not null;
+        
     -- Удаляем данные по НТЗ
 	DELETE FROM ObjectFloat
     WHERE 

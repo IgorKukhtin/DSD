@@ -10,7 +10,7 @@ CREATE OR REPLACE FUNCTION gpSelect_Object_Goods_For_Site(
 )
 RETURNS TABLE (id Integer, article Integer, name TVarChar, foto TVarChar, thumb TVarChar,
                description TBlob, manufacturer	TVarChar, appointment_id Integer, category_id Integer,
-               --price TFloat, supplier_id Integer, dateadd TDateTime, user_id Integer,
+               price TFloat, supplier_id Integer, dateadd TDateTime, user_id Integer,
                published Boolean, deleted Boolean) AS
 $BODY$
     DECLARE vbObjectId Integer;
@@ -32,13 +32,13 @@ BEGIN
            ,T0.manufacturer    --производитель(текстом)
            ,T0.appointment_id  --ИД назначение препарарат. ссылка на ИД в другой таблице
            ,T0.category_id     --ИД категории
-           --,T0.price	float     --Цена
-           --,T0.supplier_id     --ИД поставщика 
-           --,T0.common_name     --общее название(алиас чтоли) типа другое название товара
-           --,T0.dateadd         --дата добавления
-           --,T0.user_id         --ИД юзера, какого юзера фиг его знает
-           ,T0.published         --товар опубликован (для отображения)
-           ,T0.deleted           --товар удален если =1
+           ,T0.price           --Цена
+           ,T0.supplier_id     --ИД поставщика 
+           ,T0.common_name     --общее название(алиас чтоли) типа другое название товара
+           ,T0.dateadd         --дата добавления
+           ,T0.user_id         --ИД юзера, какого юзера фиг его знает
+           ,T0.published       --товар опубликован (для отображения)
+           ,T0.deleted         --товар удален если =1
         FROM(
                 SELECT 
                     Object_Goods.Id                                         as id
@@ -50,6 +50,11 @@ BEGIN
                    ,Object_Goods.MakerName                                  as manufacturer
                    ,ObjectLink_Goods_Appointment.ChildObjectId              as appointment_id
                    ,Object_Goods.GoodsGroupId                               as category_id
+                   ,NULL::TFloat                                            AS Price
+                   ,NULL::Integer                                           AS supplier_id
+                   ,NULL::TVarChar                                          AS common_name
+                   ,NULL::TDateTime                                         AS dateadd
+                   ,NULL::Integer                                           AS user_id
                    ,COALESCE(ObjectBoolean_Goods_Published.ValueData,FALSE) as published
                    ,Object_Goods.isErased                                   as deleted
                    ,ROW_NUMBER()OVER(ORDER BY Object_Goods.Id)              as RecNo

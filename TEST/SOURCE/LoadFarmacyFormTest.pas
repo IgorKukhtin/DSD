@@ -640,6 +640,8 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TMCSForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TRecalcMCS_DialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TRecalcMCS_DialogForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TPriceHistoryForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TPriceHistoryForm');
 end;
 
 procedure TLoadFormTest.LoadAlternativeGroupFormTest;

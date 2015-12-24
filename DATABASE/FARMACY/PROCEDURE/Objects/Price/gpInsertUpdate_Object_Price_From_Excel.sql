@@ -16,6 +16,7 @@ $BODY$
       vbObjectId Integer;
       vbId Integer;
       vbPriceValue TFloat;
+      vbMCSValue TFloat;
 BEGIN
     vbUserId := lpGetUserBySession (inSession);
     vbObjectId := lpGet_DefaultValue('zc_Object_Retail', vbUserId);
@@ -38,8 +39,8 @@ BEGIN
     END IF;
    
     -- Если такая запись есть - достаем её
-    SELECT Id, Price
-      INTO vbId, vbPriceValue
+    SELECT Id, Price, MCSValue
+      INTO vbId, vbPriceValue, vbMCSValue
     from Object_Price_View
     Where
         GoodsId = vbGoodsId
@@ -60,6 +61,15 @@ BEGIN
         PERFORM lpInsertUpdate_objectFloat(zc_ObjectFloat_Price_Value(), vbId, inPriceValue);
         -- сохранили св-во < Дата изменения цены>
         PERFORM lpInsertUpdate_objectDate(zc_ObjectDate_Price_DateChange(), vbId, CURRENT_DATE);
+        --сохранили историю
+        PERFORM
+            gpInsertUpdate_ObjectHistory_Price(
+                ioId       := 0::Integer,    -- ключ объекта <Элемент истории прайса>
+                inPriceId  := vbId,    -- Прайс
+                inOperDate := CURRENT_TIMESTAMP::TDateTime,  -- Дата действия прайса
+                inPrice    := inPriceValue::TFloat,     -- Цена
+                inMCSValue := vbMCSValue::TFloat,     -- НТЗ
+                inSession  := inSession);
     END IF;
     -- сохранили протокол
     PERFORM lpInsert_ObjectProtocol (vbId, vbUserId);

@@ -1,0 +1,42 @@
+-- Function: gpInsertUpdate_ObjectHistory_Price ()
+DROP FUNCTION IF EXISTS gpInsertUpdate_ObjectHistory_Price (Integer, Integer, TDateTime, TFloat, TFloat, TVarChar);
+
+CREATE OR REPLACE FUNCTION gpInsertUpdate_ObjectHistory_Price(
+ INOUT ioId       Integer,    -- ключ объекта <Элемент истории прайса>
+    IN inPriceId  Integer,    -- Прайс
+    IN inOperDate TDateTime,  -- Дата действия прайса
+    IN inPrice    TFloat,     -- Цена
+    IN inMCSValue TFloat,     -- НТЗ
+    IN inSession  TVarChar    -- сессия пользователя
+)
+  RETURNS integer AS
+$BODY$
+    DECLARE vbUserId Integer;
+BEGIN
+   -- проверка прав пользователя на вызов процедуры
+   -- PERFORM lpCheckRight(inSession, zc_Enum_Process_Account());
+    vbUserId := inSession::Integer;
+
+   -- проверка
+   IF COALESCE (inPriceId, 0) = 0
+   THEN
+       RAISE EXCEPTION 'Ошибка.Не установлен <прайс>.';
+   END IF;
+   -- Вставляем или меняем объект историю
+   ioId := lpInsertUpdate_ObjectHistory(ioId, zc_ObjectHistory_Price(), inPriceId, inOperDate, vbUserId);
+   -- Цена
+   PERFORM lpInsertUpdate_ObjectHistoryFloat(zc_ObjectHistoryFloat_Price_Value(), ioId, inPrice);
+   -- НТЗ
+   PERFORM lpInsertUpdate_ObjectHistoryFloat(zc_ObjectHistoryFloat_Price_MCSValue(), ioId, inMCSValue);
+
+END;
+$BODY$
+  LANGUAGE plpgsql VOLATILE;
+
+/*-------------------------------------------------------------------------------*/
+/*
+ ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 04.07.14         *
+
+*/
