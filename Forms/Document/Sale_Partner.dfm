@@ -1,26 +1,27 @@
 inherited Sale_PartnerForm: TSale_PartnerForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1055#1088#1086#1076#1072#1078#1072' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1102' ('#1073#1091#1093#1075#1072#1083#1090#1077#1088')>'
-  ClientHeight = 668
-  ClientWidth = 1355
-  ExplicitWidth = 1371
-  ExplicitHeight = 706
+  ClientHeight = 412
+  ClientWidth = 1259
+  ExplicitLeft = -467
+  ExplicitWidth = 1275
+  ExplicitHeight = 447
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 166
-    Width = 1355
-    Height = 502
+    Width = 1259
+    Height = 246
     ExplicitTop = 166
     ExplicitWidth = 1355
     ExplicitHeight = 502
-    ClientRectBottom = 502
-    ClientRectRight = 1355
+    ClientRectBottom = 246
+    ClientRectRight = 1259
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 1355
       ExplicitHeight = 478
       inherited cxGrid: TcxGrid
-        Width = 1355
-        Height = 478
+        Width = 1259
+        Height = 222
         ExplicitWidth = 1355
         ExplicitHeight = 478
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -325,7 +326,7 @@ inherited Sale_PartnerForm: TSale_PartnerForm
             HeaderAlignmentVert = vaCenter
           end
           object isCheck_Pricelist: TcxGridDBColumn [19]
-            Caption = #1054#1090#1082#1083#1086#1085#1077#1085#1080#1077' '#1086#1090' '#1087#1088#1072#1081#1089#1072
+            Caption = #1054#1096#1080#1073#1082#1072' '#1074' '#1094#1077#1085#1077
             DataBinding.FieldName = 'isCheck_Pricelist'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
@@ -409,7 +410,7 @@ inherited Sale_PartnerForm: TSale_PartnerForm
     end
   end
   inherited DataPanel: TPanel
-    Width = 1355
+    Width = 1259
     Height = 140
     TabOrder = 3
     ExplicitWidth = 1355
@@ -486,7 +487,7 @@ inherited Sale_PartnerForm: TSale_PartnerForm
       Caption = #1050#1086#1084#1091
     end
     object edContract: TcxButtonEdit
-      Left = 899
+      Left = 948
       Top = 23
       Properties.Buttons = <
         item
@@ -496,10 +497,10 @@ inherited Sale_PartnerForm: TSale_PartnerForm
         end>
       Properties.ReadOnly = True
       TabOrder = 10
-      Width = 68
+      Width = 120
     end
     object cxLabel9: TcxLabel
-      Left = 899
+      Left = 948
       Top = 5
       Caption = #1044#1086#1075#1086#1074#1086#1088
     end
@@ -519,7 +520,7 @@ inherited Sale_PartnerForm: TSale_PartnerForm
         end>
       Properties.ReadOnly = True
       TabOrder = 13
-      Width = 89
+      Width = 140
     end
     object cxLabel5: TcxLabel
       Left = 171
@@ -563,13 +564,14 @@ inherited Sale_PartnerForm: TSale_PartnerForm
       Caption = '(-)% '#1057#1082#1080#1076#1082#1080' (+)% '#1053#1072#1094#1077#1085#1082#1080
     end
     object cxLabel13: TcxLabel
-      Left = 899
-      Top = 45
+      Left = 1254
+      Top = 85
       Caption = #1057#1086#1088#1090#1080#1088#1086#1074#1082#1072' '#1084#1072#1088#1096#1088#1091#1090#1072
+      Visible = False
     end
     object edRouteSorting: TcxButtonEdit
-      Left = 899
-      Top = 63
+      Left = 1254
+      Top = 103
       Properties.Buttons = <
         item
           Default = True
@@ -578,6 +580,7 @@ inherited Sale_PartnerForm: TSale_PartnerForm
         end>
       Properties.ReadOnly = True
       TabOrder = 21
+      Visible = False
       Width = 170
     end
     object edOperDatePartner: TcxDateEdit
@@ -615,7 +618,7 @@ inherited Sale_PartnerForm: TSale_PartnerForm
         end>
       Properties.ReadOnly = True
       TabOrder = 26
-      Width = 89
+      Width = 140
     end
     object cxLabel12: TcxLabel
       Left = 85
@@ -629,8 +632,8 @@ inherited Sale_PartnerForm: TSale_PartnerForm
       Width = 84
     end
     object edDocumentTaxKind: TcxButtonEdit
-      Left = 1260
-      Top = 63
+      Left = 1072
+      Top = 103
       Properties.Buttons = <
         item
           Default = True
@@ -638,24 +641,24 @@ inherited Sale_PartnerForm: TSale_PartnerForm
         end>
       Properties.ReadOnly = True
       TabOrder = 29
-      Width = 114
+      Width = 180
     end
     object cxLabel14: TcxLabel
-      Left = 1260
-      Top = 45
+      Left = 1072
+      Top = 85
       Caption = #1058#1080#1087' '#1085#1072#1083#1086#1075'. '#1076#1086#1082'.'
     end
     object cxLabel16: TcxLabel
-      Left = 1260
-      Top = 5
+      Left = 950
+      Top = 85
       Caption = #8470' '#1085#1072#1083#1086#1075#1086#1074#1086#1081
     end
     object edTax: TcxTextEdit
-      Left = 1260
-      Top = 23
+      Left = 950
+      Top = 103
       Properties.ReadOnly = True
       TabOrder = 32
-      Width = 114
+      Width = 118
     end
     object cbCOMDOC: TcxCheckBox
       Left = 171
@@ -700,7 +703,7 @@ inherited Sale_PartnerForm: TSale_PartnerForm
       Caption = #1050#1091#1088#1089
     end
     object edCurrencyPartner: TcxButtonEdit
-      Left = 1075
+      Left = 1072
       Top = 23
       Properties.Buttons = <
         item
@@ -709,7 +712,7 @@ inherited Sale_PartnerForm: TSale_PartnerForm
         end>
       Properties.ReadOnly = True
       TabOrder = 38
-      Width = 75
+      Width = 78
     end
     object cxLabel19: TcxLabel
       Left = 1072
@@ -717,13 +720,13 @@ inherited Sale_PartnerForm: TSale_PartnerForm
       Caption = #1042#1072#1083#1102#1090#1072' ('#1087#1086#1082')'
     end
     object cxLabel20: TcxLabel
-      Left = 972
-      Top = 5
+      Left = 948
+      Top = 45
       Caption = #1055#1088#1080#1079#1085#1072#1082' '#1076#1086#1075#1086#1074#1086#1088#1072
     end
     object edContractTag: TcxButtonEdit
-      Left = 972
-      Top = 23
+      Left = 948
+      Top = 63
       Properties.Buttons = <
         item
           Default = True
@@ -732,7 +735,7 @@ inherited Sale_PartnerForm: TSale_PartnerForm
         end>
       Properties.ReadOnly = True
       TabOrder = 41
-      Width = 97
+      Width = 120
     end
     object edInvNumberOrder: TcxButtonEdit
       Left = 171
@@ -760,7 +763,7 @@ inherited Sale_PartnerForm: TSale_PartnerForm
       Properties.DisplayFormat = ',0.'
       Properties.ReadOnly = False
       TabOrder = 44
-      Width = 47
+      Width = 50
     end
     object cxLabel22: TcxLabel
       Left = 535
@@ -771,7 +774,7 @@ inherited Sale_PartnerForm: TSale_PartnerForm
       Left = 535
       Top = 103
       TabOrder = 46
-      Width = 545
+      Width = 409
     end
     object cbCalcAmountPartner: TcxCheckBox
       Left = 8
@@ -3286,7 +3289,7 @@ inherited Sale_PartnerForm: TSale_PartnerForm
         ParamType = ptInput
       end>
     Left = 995
-    Top = 4
+    Top = 36
   end
   object spSelectPrint_ExpPack: TdsdStoredProc
     StoredProcName = 'gpSelect_Movement_Sale_ExpPack_Print'

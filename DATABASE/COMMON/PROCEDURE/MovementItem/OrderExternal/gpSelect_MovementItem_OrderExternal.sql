@@ -99,17 +99,20 @@ BEGIN
 
      -- Результат такой
      RETURN QUERY
-      WITH tmpPromo AS (SELECT tmp.*
+      WITH -- Акции по товарам на дату
+           tmpPromo AS (SELECT tmp.*
                         FROM lpSelect_Movement_Promo_Data (inOperDate   := vbOperDate_promo
                                                          , inPartnerId  := vbPartnerId
                                                          , inContractId := vbContractId
                                                          , inUnitId     := vbUnitId
                                                           ) AS tmp
                        )
-     , tmpPriceList AS (SELECT lfSelect.GoodsId              AS GoodsId
-                             , lfSelect.ValuePrice :: TFloat AS Price_PriceList
-                        FROM lfSelect_ObjectHistory_PriceListItem (inPriceListId:= inPriceListId, inOperDate:= inOperDate) AS lfSelect 
-                       )
+            -- Цены из прайса
+          , tmpPriceList AS (SELECT lfSelect.GoodsId    AS GoodsId
+                                  , lfSelect.ValuePrice AS Price_PriceList
+                             FROM lfSelect_ObjectHistory_PriceListItem (inPriceListId:= inPriceListId, inOperDate:= inOperDate) AS lfSelect 
+                            )
+           -- Ограничение - какие товары показать
          , tmpInfoMoney AS (SELECT View_InfoMoney.InfoMoneyGroupId
                                  , View_InfoMoney.InfoMoneyDestinationId
                                  , View_InfoMoney.InfoMoneyId
@@ -148,6 +151,16 @@ BEGIN
                                                                                        )
 
                            )
+            -- Ограничение для ГП - какие товары показать
+          , tmpGoodsByGoodsKind AS (SELECT Object_GoodsByGoodsKind_View.GoodsId
+                                         , COALESCE (Object_GoodsByGoodsKind_View.GoodsKindId, 0) AS GoodsKindId
+                                    FROM ObjectBoolean AS ObjectBoolean_Order
+                                         LEFT JOIN Object_GoodsByGoodsKind_View ON Object_GoodsByGoodsKind_View.Id = ObjectBoolean_Order.ObjectId
+                                    WHERE ObjectBoolean_Order.ValueData = TRUE
+                                      AND ObjectBoolean_Order.DescId = zc_ObjectBoolean_GoodsByGoodsKind_Order()
+                                      -- AND vbIsOrderDnepr = TRUE
+                                   )
+            -- Существующие MovementItem
           , tmpMI_Goods AS (SELECT MovementItem.Id                               AS MovementItemId
                                  , MovementItem.ObjectId                         AS GoodsId
                                  , MovementItem.Amount                           AS Amount
@@ -181,6 +194,7 @@ BEGIN
                                                              ON MIFloat_PromoMovement.MovementItemId = MovementItem.Id
                                                             AND MIFloat_PromoMovement.DescId = zc_MIFloat_PromoMovementId()
                            )
+           -- Связь с акциями для существующих MovementItem
          , tmpMIPromo_all AS (SELECT tmp.MovementId_Promo                          AS MovementId_Promo
                                    , MovementItem.Id                               AS MovementItemId
                                    , MovementItem.ObjectId                         AS GoodsId
@@ -194,6 +208,7 @@ BEGIN
                                                                     ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
                                                                    AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
                              )
+               -- Акции по товарам для существующих MovementItem
              , tmpMIPromo AS (SELECT DISTINCT 
                                      tmpMIPromo_all.MovementId_Promo
                                    , tmpMIPromo_all.GoodsId
@@ -204,15 +219,8 @@ BEGIN
                                                                ON MIFloat_PriceWithOutVAT.MovementItemId = tmpMIPromo_all.MovementItemId
                                                               AND MIFloat_PriceWithOutVAT.DescId = zc_MIFloat_PriceWithOutVAT()
                              )
-          , tmpGoodsByGoodsKind AS (SELECT Object_GoodsByGoodsKind_View.GoodsId
-                                         , COALESCE (Object_GoodsByGoodsKind_View.GoodsKindId, 0) AS GoodsKindId
-                                    FROM ObjectBoolean AS ObjectBoolean_Order
-                                         LEFT JOIN Object_GoodsByGoodsKind_View ON Object_GoodsByGoodsKind_View.Id = ObjectBoolean_Order.ObjectId
-                                    WHERE ObjectBoolean_Order.ValueData = TRUE
-                                      AND ObjectBoolean_Order.DescId = zc_ObjectBoolean_GoodsByGoodsKind_Order()
-                                      -- AND vbIsOrderDnepr = TRUE
-                                   )
 
+            -- Остатки
           , tmpRemains AS (SELECT Container.ObjectId                          AS GoodsId
                                 , Container.Amount                            AS Amount
                                 , COALESCE (CLO_GoodsKind.ObjectId, 0)        AS GoodsKindId
@@ -229,6 +237,7 @@ BEGIN
                              AND CLO_Account.ContainerId IS NULL -- !!!т.е. без счета Транзит!!!
                              AND vbIsOrderDnepr = FALSE
                           )
+            -- LEFT JOIN Товаров из заявки - Акции + Остатки
           , tmpMI AS (SELECT COALESCE (tmpMI_Goods.MovementItemId, 0)                   AS MovementItemId
                            , COALESCE (tmpMI_Goods.GoodsId, tmpRemains.GoodsId)         AS GoodsId
                            , COALESCE (tmpMI_Goods.Amount, 0)                           AS Amount
@@ -259,6 +268,7 @@ BEGIN
                                                                                   ELSE 0
                                                                              END
                      )
+            -- Товары из EDI
           , tmpMI_EDI AS (SELECT MovementItem.ObjectId                         AS GoodsId
                                , SUM (MovementItem.Amount)                     AS Amount
                                , COALESCE (MILinkObject_GoodsKind.ObjectId, 0) AS GoodsKindId
@@ -286,6 +296,7 @@ BEGIN
                                  , COALESCE (MIFloat_Price.ValueData, 0)
                                  , CASE WHEN MIFloat_CountForPrice.ValueData > 0 THEN MIFloat_CountForPrice.ValueData ELSE 1 END
                          )
+            -- поиск для Товаров из EDI - MovementItemId из заявки
           , tmpMI_EDI_find AS (SELECT tmpMI_EDI.GoodsId
                                     , tmpMI_EDI.Amount
                                     , tmpMI_EDI.GoodsKindId
@@ -306,6 +317,7 @@ BEGIN
                                                         AND tmpMI.GoodsKindId = tmpMI_EDI.GoodsKindId
                                                         AND tmpMI.Price       = tmpMI_EDI.Price
                               )
+            -- FULL JOIN Товаров EDI - MovementItemId из заявки
           , tmpMI_all AS (SELECT tmpMI.MovementItemId
                                , COALESCE (tmpMI.GoodsId, tmpMI_EDI_find.GoodsId) AS GoodsId
                                , tmpMI.AmountRemains               AS AmountRemains
@@ -323,6 +335,7 @@ BEGIN
                           FROM tmpMI
                                FULL JOIN tmpMI_EDI_find ON tmpMI_EDI_find.MovementItemId = tmpMI.MovementItemId
                          )
+            -- Артикул GLN
           , tmpGoodsPropertyValue AS (SELECT ObjectLink_GoodsPropertyValue_Goods.ChildObjectId                   AS GoodsId
                                            , COALESCE (ObjectLink_GoodsPropertyValue_GoodsKind.ChildObjectId, 0) AS GoodsKindId
                                            , ObjectString_ArticleGLN.ValueData                                   AS ArticleGLN
@@ -478,12 +491,27 @@ BEGIN
 
            , tmpGoodsPropertyValue.ArticleGLN
            
-           , zfCalc_PromoMovementName (NULL, Movement_Promo_View.InvNumber :: TVarChar, Movement_Promo_View.OperDate, Movement_Promo_View.StartSale, Movement_Promo_View.EndSale) AS MovementPromo
-           , tmpMI.PricePromo :: TFloat         AS PricePromo
+           , CASE WHEN tmpMI.MovementId_Promo = tmpPromo.MovementId
+                       THEN tmpPromo.MovementPromo
+                  WHEN tmpMI.MovementId_Promo <> COALESCE (tmpPromo.MovementId, 0) AND tmpMI.MovementId_Promo <> 0
+                       THEN 'ОШИБКА ' || zfCalc_PromoMovementName (NULL, Movement_Promo_View.InvNumber :: TVarChar, Movement_Promo_View.OperDate, Movement_Promo_View.StartSale, Movement_Promo_View.EndSale)
+                  WHEN COALESCE (tmpMI.MovementId_Promo, 0) <> tmpPromo.MovementId
+                       THEN 'ОШИБКА ' || tmpPromo.MovementPromo
+                  ELSE ''
+             END :: TVarChar AS MovementPromo
+
+           , CASE WHEN 1 = 0 AND tmpMI.PricePromo <> 0 THEN tmpMI.PricePromo
+                  WHEN tmpPromo.TaxPromo <> 0 AND vbPriceWithVAT = TRUE THEN tmpPromo.PriceWithVAT
+                  WHEN tmpPromo.TaxPromo <> 0 THEN tmpPromo.PriceWithOutVAT
+                  ELSE 0
+             END :: TFloat AS PricePromo
 
            , tmpMI.isErased
 
        FROM tmpMI_all AS tmpMI
+            LEFT JOIN tmpPromo ON tmpPromo.GoodsId      = tmpMI.GoodsId
+                              AND (tmpPromo.GoodsKindId = tmpMI.GoodsKindId OR tmpPromo.GoodsKindId = 0)
+
             LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = tmpMI.GoodsId
             LEFT JOIN Object AS Object_GoodsKind ON Object_GoodsKind.Id = tmpMI.GoodsKindId
 
@@ -510,7 +538,16 @@ BEGIN
 
      -- Результат другой
      RETURN QUERY
- WITH tmpMI_Goods AS (SELECT MovementItem.Id                               AS MovementItemId
+      WITH -- Акции по товарам на дату
+           tmpPromo AS (SELECT tmp.*
+                        FROM lpSelect_Movement_Promo_Data (inOperDate   := vbOperDate_promo
+                                                         , inPartnerId  := vbPartnerId
+                                                         , inContractId := vbContractId
+                                                         , inUnitId     := vbUnitId
+                                                          ) AS tmp
+                       )
+            -- Существующие MovementItem
+          , tmpMI_Goods AS (SELECT MovementItem.Id                               AS MovementItemId
                            , MovementItem.ObjectId                         AS GoodsId
                            , MovementItem.Amount                           AS Amount
                            , COALESCE (MILinkObject_GoodsKind.ObjectId, 0) AS GoodsKindId
@@ -543,6 +580,7 @@ BEGIN
                                                         ON MIFloat_PromoMovement.MovementItemId = MovementItem.Id
                                                        AND MIFloat_PromoMovement.DescId = zc_MIFloat_PromoMovementId()
                      )
+           -- Связь с акциями для существующих MovementItem
          , tmpMIPromo_all AS (SELECT tmp.MovementId_Promo                          AS MovementId_Promo
                                    , MovementItem.Id                               AS MovementItemId
                                    , MovementItem.ObjectId                         AS GoodsId
@@ -556,6 +594,7 @@ BEGIN
                                                                     ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
                                                                    AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
                              )
+               -- Акции по товарам для существующих MovementItem
              , tmpMIPromo AS (SELECT DISTINCT 
                                      tmpMIPromo_all.MovementId_Promo
                                    , tmpMIPromo_all.GoodsId
@@ -566,6 +605,7 @@ BEGIN
                                                                ON MIFloat_PriceWithOutVAT.MovementItemId = tmpMIPromo_all.MovementItemId
                                                               AND MIFloat_PriceWithOutVAT.DescId = zc_MIFloat_PriceWithOutVAT()
                              )
+            -- Остатки
           , tmpRemains AS (SELECT tmpMI_Goods.MovementItemId
                                 , Container.Amount AS Amount
                            FROM tmpMI_Goods
@@ -586,6 +626,7 @@ BEGIN
                              AND CLO_Account.ContainerId IS NULL -- !!!т.е. без счета Транзит!!!
                              AND vbIsOrderDnepr = FALSE
                           )
+            -- LEFT JOIN Товаров из заявки + Акции + Остатки
           , tmpMI AS (SELECT COALESCE (tmpMI_Goods.MovementItemId, 0)                   AS MovementItemId
                            , COALESCE (tmpMI_Goods.GoodsId, 0)                          AS GoodsId
                            , COALESCE (tmpMI_Goods.Amount, 0)                           AS Amount
@@ -606,6 +647,7 @@ BEGIN
                                                   OR tmpMIPromo.GoodsKindId     = 0)
                             LEFT JOIN tmpRemains ON tmpRemains.MovementItemId = tmpMI_Goods.MovementItemId
                      )
+            -- Товары из EDI
           , tmpMI_EDI AS (SELECT MovementItem.ObjectId                         AS GoodsId
                                , SUM (MovementItem.Amount)                     AS Amount
                                , COALESCE (MILinkObject_GoodsKind.ObjectId, 0) AS GoodsKindId
@@ -633,6 +675,7 @@ BEGIN
                                  , COALESCE (MIFloat_Price.ValueData, 0)
                                  , CASE WHEN MIFloat_CountForPrice.ValueData > 0 THEN MIFloat_CountForPrice.ValueData ELSE 1 END
                          )
+            -- поиск для Товаров из EDI - MovementItemId из заявки
           , tmpMI_EDI_find AS (SELECT tmpMI_EDI.GoodsId
                                     , tmpMI_EDI.Amount
                                     , tmpMI_EDI.GoodsKindId
@@ -653,6 +696,7 @@ BEGIN
                                                         AND tmpMI.GoodsKindId = tmpMI_EDI.GoodsKindId
                                                         AND tmpMI.Price       = tmpMI_EDI.Price
                               )
+            -- FULL JOIN Товаров EDI - MovementItemId из заявки
           , tmpMI_all AS (SELECT tmpMI.MovementItemId
                                , COALESCE (tmpMI.GoodsId, tmpMI_EDI_find.GoodsId) AS GoodsId
                                , tmpMI.AmountRemains               AS AmountRemains
@@ -670,6 +714,7 @@ BEGIN
                           FROM tmpMI
                                FULL JOIN tmpMI_EDI_find ON tmpMI_EDI_find.MovementItemId = tmpMI.MovementItemId
                          )
+            -- Артикул GLN
           , tmpGoodsPropertyValue AS (SELECT ObjectLink_GoodsPropertyValue_Goods.ChildObjectId                   AS GoodsId
                                            , COALESCE (ObjectLink_GoodsPropertyValue_GoodsKind.ChildObjectId, 0) AS GoodsKindId
                                            , ObjectString_ArticleGLN.ValueData                                   AS ArticleGLN
@@ -715,12 +760,27 @@ BEGIN
 
            , tmpGoodsPropertyValue.ArticleGLN
 
-           , zfCalc_PromoMovementName (NULL, Movement_Promo_View.InvNumber :: TVarChar, Movement_Promo_View.OperDate, Movement_Promo_View.StartSale, Movement_Promo_View.EndSale) AS MovementPromo
-           , tmpMI.PricePromo :: TFloat         AS PricePromo
+           , CASE WHEN tmpMI.MovementId_Promo = tmpPromo.MovementId
+                       THEN tmpPromo.MovementPromo
+                  WHEN tmpMI.MovementId_Promo <> COALESCE (tmpPromo.MovementId, 0) AND tmpMI.MovementId_Promo <> 0
+                       THEN 'ОШИБКА ' || zfCalc_PromoMovementName (NULL, Movement_Promo_View.InvNumber :: TVarChar, Movement_Promo_View.OperDate, Movement_Promo_View.StartSale, Movement_Promo_View.EndSale)
+                  WHEN COALESCE (tmpMI.MovementId_Promo, 0) <> tmpPromo.MovementId
+                       THEN 'ОШИБКА ' || tmpPromo.MovementPromo
+                  ELSE ''
+             END :: TVarChar AS MovementPromo
+
+           , CASE WHEN 1 = 0 AND tmpMI.PricePromo <> 0 THEN tmpMI.PricePromo
+                  WHEN tmpPromo.TaxPromo <> 0 AND vbPriceWithVAT = TRUE THEN tmpPromo.PriceWithVAT
+                  WHEN tmpPromo.TaxPromo <> 0 THEN tmpPromo.PriceWithOutVAT
+                  ELSE 0
+             END :: TFloat AS PricePromo
 
            , tmpMI.isErased
 
        FROM tmpMI_all AS tmpMI
+            LEFT JOIN tmpPromo ON tmpPromo.GoodsId      = tmpMI.GoodsId
+                              AND (tmpPromo.GoodsKindId = tmpMI.GoodsKindId OR tmpPromo.GoodsKindId = 0)
+
             LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = tmpMI.GoodsId
             LEFT JOIN Object AS Object_GoodsKind ON Object_GoodsKind.Id = tmpMI.GoodsKindId
 

@@ -104,22 +104,8 @@ BEGIN
 
      RETURN QUERY
      
-     -- себестоимость 
-     WITH tmpPromo AS (SELECT tmp.*
-                        FROM lpSelect_Movement_Promo_Data (inOperDate   := vbOperDate_promo
-                                                         , inPartnerId  := vbPartnerId
-                                                         , inContractId := vbContractId
-                                                         , inUnitId     := vbUnitId
-                                                          ) AS tmp
-                      )
-          , tmpGoodsByGoodsKind AS (SELECT Object_GoodsByGoodsKind_View.GoodsId
-                                         , COALESCE (Object_GoodsByGoodsKind_View.GoodsKindId, 0) AS GoodsKindId
-                                    FROM ObjectBoolean AS ObjectBoolean_Order
-                                         LEFT JOIN Object_GoodsByGoodsKind_View ON Object_GoodsByGoodsKind_View.Id = ObjectBoolean_Order.ObjectId
-                                    WHERE ObjectBoolean_Order.ValueData = TRUE
-                                      AND ObjectBoolean_Order.DescId = zc_ObjectBoolean_GoodsByGoodsKind_Order()
-                                   )
-        , tmpPriceCost AS (SELECT MIContainer.MovementItemId, -1 * SUM (MIContainer.Amount) AS SumCost 
+     WITH -- себестоимость 
+          tmpPriceCost AS (SELECT MIContainer.MovementItemId, -1 * SUM (MIContainer.Amount) AS SumCost 
                            FROM MovementItemContainer AS MIContainer
                            WHERE MIContainer.MovementId = inMovementId 
                              and MIContainer.DescId = zc_MIContainer_Summ()
@@ -127,10 +113,28 @@ BEGIN
                              and MIContainer.AccountId <> zc_Enum_Account_100301()
                            GROUP BY MIContainer.MovementItemId
                            )
-     , tmpPriceList AS (SELECT lfSelect.GoodsId    AS GoodsId
-                             , lfSelect.ValuePrice AS Price_PriceList
-                        FROM lfSelect_ObjectHistory_PriceListItem (inPriceListId:= inPriceListId, inOperDate:= inOperDate) AS lfSelect 
-                       )
+           -- Акции по товарам на дату
+         , tmpPromo AS (SELECT tmp.*
+                        FROM lpSelect_Movement_Promo_Data (inOperDate   := vbOperDate_promo
+                                                         , inPartnerId  := vbPartnerId
+                                                         , inContractId := vbContractId
+                                                         , inUnitId     := vbUnitId
+                                                          ) AS tmp
+                      )
+            -- Ограничение для ГП - какие товары показать
+          , tmpGoodsByGoodsKind AS (SELECT Object_GoodsByGoodsKind_View.GoodsId
+                                         , COALESCE (Object_GoodsByGoodsKind_View.GoodsKindId, 0) AS GoodsKindId
+                                    FROM ObjectBoolean AS ObjectBoolean_Order
+                                         LEFT JOIN Object_GoodsByGoodsKind_View ON Object_GoodsByGoodsKind_View.Id = ObjectBoolean_Order.ObjectId
+                                    WHERE ObjectBoolean_Order.ValueData = TRUE
+                                      AND ObjectBoolean_Order.DescId = zc_ObjectBoolean_GoodsByGoodsKind_Order()
+                                   )
+            -- Цены из прайса
+          , tmpPriceList AS (SELECT lfSelect.GoodsId    AS GoodsId
+                                  , lfSelect.ValuePrice AS Price_PriceList
+                             FROM lfSelect_ObjectHistory_PriceListItem (inPriceListId:= inPriceListId, inOperDate:= inOperDate) AS lfSelect 
+                            )
+            -- Существующие MovementItem
           , tmpMI_Goods AS (SELECT MovementItem.Id                               AS MovementItemId
                                  , MovementItem.ObjectId                         AS GoodsId
                                  , MovementItem.Amount                           AS Amount
@@ -210,6 +214,7 @@ BEGIN
                                                              ON MIFloat_PromoMovement.MovementItemId = MovementItem.Id
                                                             AND MIFloat_PromoMovement.DescId = zc_MIFloat_PromoMovementId()
                            )
+           -- Связь с акциями для существующих MovementItem
          , tmpMIPromo_all AS (SELECT tmp.MovementId_Promo                          AS MovementId_Promo
                                    , MovementItem.Id                               AS MovementItemId
                                    , MovementItem.ObjectId                         AS GoodsId
@@ -223,6 +228,7 @@ BEGIN
                                                                     ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
                                                                    AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
                              )
+               -- Акции по товарам для существующих MovementItem
              , tmpMIPromo AS (SELECT DISTINCT 
                                      tmpMIPromo_all.MovementId_Promo
                                    , tmpMIPromo_all.GoodsId
@@ -342,7 +348,6 @@ BEGIN
            , tmpMI_Goods.HeadCount
            , tmpMI_Goods.BoxCount
 
-
            , tmpMI_Goods.PartionGoods
            , Object_GoodsKind.Id                    AS GoodsKindId
            , Object_GoodsKind.ValueData             AS GoodsKindName
@@ -354,7 +359,6 @@ BEGIN
            , Object_Box.Id                          AS BoxId
            , Object_Box.ValueData                   AS BoxName
 
-
            , CAST (CASE WHEN tmpMI_Goods.CountForPrice > 0
                            THEN CAST ( (COALESCE (tmpMI_Goods.AmountPartner, 0)) * tmpMI_Goods.Price / tmpMI_Goods.CountForPrice AS NUMERIC (16, 2))
                            ELSE CAST ( (COALESCE (tmpMI_Goods.AmountPartner, 0)) * tmpMI_Goods.Price AS NUMERIC (16, 2))
@@ -365,10 +369,29 @@ BEGIN
            , tmpMI_Goods.WeightPack
            , tmpMI_Goods.isBarCode
 
-           , CASE WHEN COALESCE (tmpMI_Goods.Price, 0) = COALESCE (tmpPriceList.Price_Pricelist, 0) THEN FALSE ELSE TRUE END AS isCheck_PricelistBoolean
+           , CASE WHEN tmpPromo.TaxPromo <> 0 AND vbPriceWithVAT = TRUE AND tmpPromo.PriceWithVAT = tmpMI_Goods.Price
+                       THEN FALSE
+                  WHEN tmpPromo.TaxPromo <> 0 AND tmpPromo.PriceWithOutVAT = tmpMI_Goods.Price
+                       THEN FALSE
+                  WHEN COALESCE (tmpMI_Goods.Price, 0) = COALESCE (tmpPriceList.Price_Pricelist, 0)
+                       THEN FALSE
+                  ELSE TRUE
+             END :: Boolean AS isCheck_PricelistBoolean
 
-           , zfCalc_PromoMovementName (NULL, Movement_Promo_View.InvNumber :: TVarChar, Movement_Promo_View.OperDate, Movement_Promo_View.StartSale, Movement_Promo_View.EndSale) AS MovementPromo
-           , tmpMIPromo.PricePromo :: TFloat    AS PricePromo
+           , CASE WHEN tmpMIPromo.MovementId_Promo = tmpPromo.MovementId
+                       THEN tmpPromo.MovementPromo
+                  WHEN tmpMIPromo.MovementId_Promo <> COALESCE (tmpPromo.MovementId, 0)
+                       THEN 'ОШИБКА ' || zfCalc_PromoMovementName (NULL, Movement_Promo_View.InvNumber :: TVarChar, Movement_Promo_View.OperDate, Movement_Promo_View.StartSale, Movement_Promo_View.EndSale)
+                  WHEN COALESCE (tmpMIPromo.MovementId_Promo, 0) <> tmpPromo.MovementId
+                       THEN 'ОШИБКА ' || tmpPromo.MovementPromo
+                  ELSE ''
+             END :: TVarChar AS MovementPromo
+
+           , CASE WHEN 1 = 0 AND tmpMIPromo.PricePromo <> 0 THEN tmpMIPromo.PricePromo
+                  WHEN tmpPromo.TaxPromo <> 0 AND vbPriceWithVAT = TRUE THEN tmpPromo.PriceWithVAT
+                  WHEN tmpPromo.TaxPromo <> 0 THEN tmpPromo.PriceWithOutVAT
+                  ELSE 0
+             END :: TFloat AS PricePromo
 
            , tmpMI_Goods.isErased
 
@@ -377,6 +400,8 @@ BEGIN
                                 AND tmpMIPromo.GoodsId          = tmpMI_Goods.GoodsId
                                 AND (tmpMIPromo.GoodsKindId     = tmpMI_Goods.GoodsKindId
                                   OR tmpMIPromo.GoodsKindId     = 0)
+            LEFT JOIN tmpPromo ON tmpPromo.GoodsId      = tmpMI_Goods.GoodsId
+                              AND (tmpPromo.GoodsKindId = tmpMI_Goods.GoodsKindId OR tmpPromo.GoodsKindId = 0)
 
             LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = tmpMI_Goods.GoodsId
             LEFT JOIN ObjectLink AS ObjectLink_Goods_Measure
@@ -403,8 +428,9 @@ BEGIN
 
      RETURN QUERY
 
-     -- себестоимость 
-     WITH tmpPriceCost AS (SELECT MIC.MovementItemId, Sum ( MIC.Amount) *(-1) AS SumCost 
+     
+     WITH -- себестоимость
+          tmpPriceCost AS (SELECT MIC.MovementItemId, Sum ( MIC.Amount) *(-1) AS SumCost 
                            FROM MovementItemContainer AS MIC
                            WHERE MIC.MovementId = inMovementId 
                              and MIC.DescId = zc_MIContainer_Summ()
@@ -412,10 +438,20 @@ BEGIN
                              and MIC.AccountId <> zc_Enum_Account_100301 ()
                            GROUP BY MIC.MovementItemId
                            )
-     , tmpPriceList AS (SELECT lfSelect.GoodsId    AS GoodsId
-                             , lfSelect.ValuePrice AS Price_PriceList
-                        FROM lfSelect_ObjectHistory_PriceListItem (inPriceListId:= inPriceListId, inOperDate:= inOperDate) AS lfSelect 
-                       )
+            -- Акции по товарам на дату
+          , tmpPromo AS (SELECT tmp.*
+                         FROM lpSelect_Movement_Promo_Data (inOperDate   := vbOperDate_promo
+                                                          , inPartnerId  := vbPartnerId
+                                                          , inContractId := vbContractId
+                                                          , inUnitId     := vbUnitId
+                                                           ) AS tmp
+                        )
+            -- Цены из прайса
+          , tmpPriceList AS (SELECT lfSelect.GoodsId    AS GoodsId
+                                  , lfSelect.ValuePrice AS Price_PriceList
+                             FROM lfSelect_ObjectHistory_PriceListItem (inPriceListId:= inPriceListId, inOperDate:= inOperDate) AS lfSelect
+                            )
+            -- Существующие MovementItem
           , tmpMI_Goods AS (SELECT MovementItem.Id                               AS MovementItemId
                                  , MovementItem.ObjectId                         AS GoodsId
                                  , MovementItem.Amount                           AS Amount
@@ -495,6 +531,7 @@ BEGIN
                                                              ON MIFloat_PromoMovement.MovementItemId = MovementItem.Id
                                                             AND MIFloat_PromoMovement.DescId = zc_MIFloat_PromoMovementId()
                            )
+           -- Связь с акциями для существующих MovementItem
          , tmpMIPromo_all AS (SELECT tmp.MovementId_Promo                          AS MovementId_Promo
                                    , MovementItem.Id                               AS MovementItemId
                                    , MovementItem.ObjectId                         AS GoodsId
@@ -508,6 +545,7 @@ BEGIN
                                                                     ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
                                                                    AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
                              )
+               -- Акции по товарам для существующих MovementItem
              , tmpMIPromo AS (SELECT DISTINCT 
                                      tmpMIPromo_all.MovementId_Promo
                                    , tmpMIPromo_all.GoodsId
@@ -563,10 +601,29 @@ BEGIN
            , tmpMI_Goods.WeightPack
            , tmpMI_Goods.isBarCode
 
-           , CASE WHEN COALESCE (tmpMI_Goods.Price, 0) = COALESCE (tmpPriceList.Price_Pricelist, 0) THEN FALSE ELSE TRUE END AS isCheck_PricelistBoolean
+           , CASE WHEN tmpPromo.TaxPromo <> 0 AND vbPriceWithVAT = TRUE AND tmpPromo.PriceWithVAT = tmpMI_Goods.Price
+                       THEN FALSE
+                  WHEN tmpPromo.TaxPromo <> 0 AND tmpPromo.PriceWithOutVAT = tmpMI_Goods.Price
+                       THEN FALSE
+                  WHEN COALESCE (tmpMI_Goods.Price, 0) = COALESCE (tmpPriceList.Price_Pricelist, 0)
+                       THEN FALSE
+                  ELSE TRUE
+             END :: Boolean AS isCheck_PricelistBoolean
 
-           , zfCalc_PromoMovementName (NULL, Movement_Promo_View.InvNumber :: TVarChar, Movement_Promo_View.OperDate, Movement_Promo_View.StartSale, Movement_Promo_View.EndSale) AS MovementPromo
-           , tmpMIPromo.PricePromo :: TFloat    AS PricePromo
+           , CASE WHEN tmpMIPromo.MovementId_Promo = tmpPromo.MovementId
+                       THEN tmpPromo.MovementPromo
+                  WHEN tmpMIPromo.MovementId_Promo <> COALESCE (tmpPromo.MovementId, 0)
+                       THEN 'ОШИБКА ' || zfCalc_PromoMovementName (NULL, Movement_Promo_View.InvNumber :: TVarChar, Movement_Promo_View.OperDate, Movement_Promo_View.StartSale, Movement_Promo_View.EndSale)
+                  WHEN COALESCE (tmpMIPromo.MovementId_Promo, 0) <> tmpPromo.MovementId
+                       THEN 'ОШИБКА ' || tmpPromo.MovementPromo
+                  ELSE ''
+             END :: TVarChar AS MovementPromo
+
+           , CASE WHEN 1 = 0 AND tmpMIPromo.PricePromo <> 0 THEN tmpMIPromo.PricePromo
+                  WHEN tmpPromo.TaxPromo <> 0 AND vbPriceWithVAT = TRUE THEN tmpPromo.PriceWithVAT
+                  WHEN tmpPromo.TaxPromo <> 0 THEN tmpPromo.PriceWithOutVAT
+                  ELSE 0
+             END :: TFloat AS PricePromo
 
            , tmpMI_Goods.isErased
 
@@ -575,6 +632,8 @@ BEGIN
                                 AND tmpMIPromo.GoodsId          = tmpMI_Goods.GoodsId
                                 AND (tmpMIPromo.GoodsKindId     = tmpMI_Goods.GoodsKindId
                                   OR tmpMIPromo.GoodsKindId     = 0)
+            LEFT JOIN tmpPromo ON tmpPromo.GoodsId      = tmpMI_Goods.GoodsId
+                              AND (tmpPromo.GoodsKindId = tmpMI_Goods.GoodsKindId OR tmpPromo.GoodsKindId = 0)
 
             LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = tmpMI_Goods.GoodsId
             LEFT JOIN ObjectLink AS ObjectLink_Goods_Measure

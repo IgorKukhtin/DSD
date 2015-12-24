@@ -122,7 +122,7 @@ BEGIN
                                       AND ObjectBoolean_Order.DescId = zc_ObjectBoolean_GoodsByGoodsKind_Order()
                                    )
             -- ÷ены из прайса
-          , tmpPriceList AS (SELECT lfSelect.GoodsId AS GoodsId
+          , tmpPriceList AS (SELECT lfSelect.GoodsId    AS GoodsId
                                   , lfSelect.ValuePrice AS Price_PriceList
                              FROM lfSelect_ObjectHistory_PriceListItem (inPriceListId:= inPriceListId, inOperDate:= inOperDate) AS lfSelect
                             )
@@ -380,10 +380,10 @@ BEGIN
            , tmpMI.Price              :: TFloat AS Price
            , tmpMI.CountForPrice      :: TFloat AS CountForPrice
 
+           , tmpPriceList.Price_Pricelist :: TFloat AS Price_Pricelist
+
            , tmpMI.HeadCount          :: TFloat AS HeadCount
            , tmpMI.BoxCount           :: TFloat AS BoxCount
-
-           , tmpPriceList.Price_Pricelist :: TFloat AS Price_Pricelist
 
            , tmpMI.PartionGoods
            , Object_GoodsKind.Id                    AS GoodsKindId
@@ -446,7 +446,7 @@ BEGIN
                                                            ) AS tmp
                         )
             -- ÷ены из прайса
-          , tmpPriceList AS (SELECT lfSelect.GoodsId AS GoodsId
+          , tmpPriceList AS (SELECT lfSelect.GoodsId    AS GoodsId
                                   , lfSelect.ValuePrice AS Price_PriceList
                              FROM lfSelect_ObjectHistory_PriceListItem (inPriceListId:= inPriceListId, inOperDate:= inOperDate) AS lfSelect
                             )
@@ -632,10 +632,10 @@ BEGIN
            , tmpMI.Price              :: TFloat AS Price
            , tmpMI.CountForPrice      :: TFloat AS CountForPrice
 
+           , tmpPriceList.Price_Pricelist :: TFloat AS Price_Pricelist
+
            , tmpMI.HeadCount          :: TFloat AS HeadCount
            , tmpMI.BoxCount           :: TFloat AS BoxCount
-
-           , tmpPriceList.Price_Pricelist :: TFloat AS Price_Pricelist
 
            , tmpMI.PartionGoods
            , Object_GoodsKind.Id                    AS GoodsKindId
@@ -671,7 +671,7 @@ BEGIN
                   ELSE ''
              END :: TVarChar AS MovementPromo
 
-           , CASE WHEN tmpMIPromo.PricePromo <> 0 THEN tmpMIPromo.PricePromo
+           , CASE WHEN 1 = 0 AND tmpMIPromo.PricePromo <> 0 THEN tmpMIPromo.PricePromo
                   WHEN tmpPromo.TaxPromo <> 0 AND vbPriceWithVAT = TRUE THEN tmpPromo.PriceWithVAT
                   WHEN tmpPromo.TaxPromo <> 0 THEN tmpPromo.PriceWithOutVAT
                   ELSE 0

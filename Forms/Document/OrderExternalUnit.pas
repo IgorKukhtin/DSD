@@ -110,15 +110,15 @@ type
     AmountForecastOrder: TcxGridDBColumn;
     AmountCalcOrder: TcxGridDBColumn;
     GoodsGroupNameFull: TcxGridDBColumn;
-    cxLabel21: TcxLabel;
     edPartner: TcxButtonEdit;
     PartnerGuides: TdsdGuides;
-    cxLabel22: TcxLabel;
     edRetail: TcxButtonEdit;
     RetailGuides: TdsdGuides;
     ArticleGLN: TcxGridDBColumn;
     cxLabel23: TcxLabel;
     ceComment: TcxTextEdit;
+    cxLabel21: TcxLabel;
+    cxLabel22: TcxLabel;
   private
     { Private declarations }
   public

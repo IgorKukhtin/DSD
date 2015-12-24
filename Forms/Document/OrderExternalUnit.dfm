@@ -1,25 +1,26 @@
 inherited OrderExternalUnitForm: TOrderExternalUnitForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1047#1072#1103#1074#1082#1072' '#1089#1090#1086#1088#1086#1085#1085#1103#1103' ('#1085#1072' '#1075#1083'.'#1089#1082#1083#1072#1076')>'
   ClientHeight = 668
-  ClientWidth = 1366
-  ExplicitWidth = 1382
+  ClientWidth = 1031
+  ExplicitLeft = -258
+  ExplicitWidth = 1047
   ExplicitHeight = 703
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 166
-    Width = 1366
+    Width = 1031
     Height = 502
     ExplicitTop = 166
     ExplicitWidth = 1366
     ExplicitHeight = 502
     ClientRectBottom = 502
-    ClientRectRight = 1366
+    ClientRectRight = 1031
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 1366
       ExplicitHeight = 478
       inherited cxGrid: TcxGrid
-        Width = 1366
+        Width = 1031
         Height = 478
         ExplicitWidth = 1366
         ExplicitHeight = 478
@@ -363,9 +364,11 @@ inherited OrderExternalUnitForm: TOrderExternalUnitForm
     end
   end
   inherited DataPanel: TPanel
-    Width = 1366
+    Width = 1031
     Height = 140
     TabOrder = 3
+    ExplicitLeft = -304
+    ExplicitTop = 88
     ExplicitWidth = 1366
     ExplicitHeight = 140
     inherited edInvNumber: TcxTextEdit
@@ -415,17 +418,17 @@ inherited OrderExternalUnitForm: TOrderExternalUnitForm
       Width = 88
     end
     object cxLabel3: TcxLabel
-      Left = 1009
-      Top = 5
-      Caption = #1044#1072#1090#1072' '#1084#1072#1088#1082#1080#1088#1086#1074#1082#1080
+      Left = 385
+      Top = 86
+      Caption = #1044#1072#1090#1072' '#1084#1072#1088#1082#1080#1088#1086#1074'.'
     end
     object edOperDateMark: TcxDateEdit
-      Left = 1009
-      Top = 23
+      Left = 387
+      Top = 103
       Properties.SaveTime = False
       Properties.ShowTime = False
       TabOrder = 9
-      Width = 130
+      Width = 80
     end
     object cxLabel10: TcxLabel
       Left = 180
@@ -460,12 +463,12 @@ inherited OrderExternalUnitForm: TOrderExternalUnitForm
       Width = 200
     end
     object cxLabel6: TcxLabel
-      Left = 602
+      Left = 606
       Top = 45
       Caption = #1060#1086#1088#1084#1072' '#1086#1087#1083#1072#1090#1099
     end
     object edPaidKind: TcxButtonEdit
-      Left = 602
+      Left = 606
       Top = 63
       Properties.Buttons = <
         item
@@ -477,12 +480,12 @@ inherited OrderExternalUnitForm: TOrderExternalUnitForm
       Width = 77
     end
     object cxLabel9: TcxLabel
-      Left = 602
+      Left = 606
       Top = 5
       Caption = #1044#1086#1075#1086#1074#1086#1088
     end
     object edContract: TcxButtonEdit
-      Left = 602
+      Left = 606
       Top = 23
       Properties.Buttons = <
         item
@@ -495,14 +498,14 @@ inherited OrderExternalUnitForm: TOrderExternalUnitForm
       Width = 77
     end
     object cxLabel13: TcxLabel
-      Left = 1292
-      Top = 45
+      Left = 1007
+      Top = 85
       Caption = #1057#1086#1088#1090#1080#1088#1086#1074#1082#1072' '#1084#1072#1088#1096#1088#1091#1090#1072
       Visible = False
     end
     object edRouteSorting: TcxButtonEdit
-      Left = 1292
-      Top = 63
+      Left = 1007
+      Top = 103
       Properties.Buttons = <
         item
           Default = True
@@ -515,12 +518,12 @@ inherited OrderExternalUnitForm: TOrderExternalUnitForm
       Width = 118
     end
     object cxLabel7: TcxLabel
-      Left = 474
+      Left = 472
       Top = 45
       Caption = #1052#1072#1088#1096#1088#1091#1090
     end
     object edRoute: TcxButtonEdit
-      Left = 474
+      Left = 472
       Top = 63
       Properties.Buttons = <
         item
@@ -530,16 +533,16 @@ inherited OrderExternalUnitForm: TOrderExternalUnitForm
         end>
       Properties.ReadOnly = True
       TabOrder = 21
-      Width = 125
+      Width = 130
     end
     object cxLabel16: TcxLabel
-      Left = 1009
-      Top = 45
+      Left = 472
+      Top = 85
       Caption = #1057#1086#1090#1088#1091#1076#1085#1080#1082' ('#1101#1082#1089#1087#1077#1076#1080#1090#1086#1088')'
     end
     object edPersonal: TcxButtonEdit
-      Left = 1009
-      Top = 63
+      Left = 472
+      Top = 103
       Properties.Buttons = <
         item
           Default = True
@@ -567,12 +570,12 @@ inherited OrderExternalUnitForm: TOrderExternalUnitForm
       Width = 168
     end
     object cxLabel8: TcxLabel
-      Left = 474
+      Left = 472
       Top = 5
       Caption = #1050#1086#1084#1091
     end
     object edTo: TcxButtonEdit
-      Left = 474
+      Left = 472
       Top = 23
       Properties.Buttons = <
         item
@@ -581,7 +584,7 @@ inherited OrderExternalUnitForm: TOrderExternalUnitForm
         end>
       Properties.ReadOnly = True
       TabOrder = 27
-      Width = 125
+      Width = 130
     end
     object edPriceWithVAT: TcxCheckBox
       Left = 829
@@ -687,8 +690,8 @@ inherited OrderExternalUnitForm: TOrderExternalUnitForm
       Width = 82
     end
     object edPartner: TcxButtonEdit
-      Left = 1146
-      Top = 23
+      Left = 833
+      Top = 103
       Properties.Buttons = <
         item
           Default = True
@@ -697,11 +700,11 @@ inherited OrderExternalUnitForm: TOrderExternalUnitForm
       Properties.ReadOnly = True
       TabOrder = 42
       Text = ' '
-      Width = 140
+      Width = 168
     end
     object edRetail: TcxButtonEdit
-      Left = 1146
-      Top = 63
+      Left = 606
+      Top = 103
       Properties.Buttons = <
         item
           Default = True
@@ -709,7 +712,7 @@ inherited OrderExternalUnitForm: TOrderExternalUnitForm
         end>
       Properties.ReadOnly = True
       TabOrder = 43
-      Width = 140
+      Width = 222
     end
     object cxLabel23: TcxLabel
       Left = 8
@@ -720,18 +723,18 @@ inherited OrderExternalUnitForm: TOrderExternalUnitForm
       Left = 8
       Top = 103
       TabOrder = 45
-      Width = 591
+      Width = 375
     end
-  end
-  object cxLabel21: TcxLabel [2]
-    Left = 1146
-    Top = 5
-    Caption = #1050#1086#1085#1090#1088#1072#1075#1077#1085#1090
-  end
-  object cxLabel22: TcxLabel [3]
-    Left = 1146
-    Top = 45
-    Caption = #1058#1086#1088#1075#1086#1074#1072#1103' '#1089#1077#1090#1100
+    object cxLabel21: TcxLabel
+      Left = 833
+      Top = 86
+      Caption = #1050#1086#1085#1090#1088#1072#1075#1077#1085#1090
+    end
+    object cxLabel22: TcxLabel
+      Left = 606
+      Top = 85
+      Caption = #1058#1086#1088#1075#1086#1074#1072#1103' '#1089#1077#1090#1100
+    end
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 171
@@ -1285,7 +1288,7 @@ inherited OrderExternalUnitForm: TOrderExternalUnitForm
       end
       item
         Name = 'inOperDate'
-        Value = Null
+        Value = 'NULL'
         Component = FormParams
         ComponentItem = 'inOperDate'
         DataType = ftDateTime
@@ -1472,13 +1475,13 @@ inherited OrderExternalUnitForm: TOrderExternalUnitForm
       end
       item
         Name = 'OperDateStart'
-        Value = Null
+        Value = 'NULL'
         Component = edOperDateStart
         DataType = ftDateTime
       end
       item
         Name = 'OperDateEnd'
-        Value = Null
+        Value = 'NULL'
         Component = edOperDateEnd
         DataType = ftDateTime
       end
@@ -1564,14 +1567,14 @@ inherited OrderExternalUnitForm: TOrderExternalUnitForm
       end
       item
         Name = 'inOperDateStart'
-        Value = Null
+        Value = 'NULL'
         Component = edOperDateStart
         DataType = ftDateTime
         ParamType = ptInput
       end
       item
         Name = 'inOperDateEnd'
-        Value = Null
+        Value = 'NULL'
         Component = edOperDateEnd
         DataType = ftDateTime
         ParamType = ptInput
@@ -2006,8 +2009,8 @@ inherited OrderExternalUnitForm: TOrderExternalUnitForm
         DataType = ftString
         ParamType = ptInput
       end>
-    Left = 720
-    Top = 88
+    Left = 672
+    Top = 128
   end
   object ContractGuides: TdsdGuides
     KeyField = 'Id'
@@ -2060,8 +2063,8 @@ inherited OrderExternalUnitForm: TOrderExternalUnitForm
         DataType = ftString
         ParamType = ptInput
       end>
-    Left = 1336
-    Top = 56
+    Left = 1048
+    Top = 104
   end
   object GuidesFrom: TdsdGuides
     KeyField = 'Id'
@@ -2164,8 +2167,8 @@ inherited OrderExternalUnitForm: TOrderExternalUnitForm
         DataType = ftString
         ParamType = ptInput
       end>
-    Left = 1050
-    Top = 67
+    Left = 514
+    Top = 99
   end
   object PriceListGuides: TdsdGuides
     KeyField = 'Id'
@@ -2205,8 +2208,8 @@ inherited OrderExternalUnitForm: TOrderExternalUnitForm
         DataType = ftFloat
         ParamType = ptInput
       end>
-    Left = 980
-    Top = 65532
+    Left = 924
+    Top = 4
   end
   object GuidesTo: TdsdGuides
     KeyField = 'Id'
@@ -2259,8 +2262,8 @@ inherited OrderExternalUnitForm: TOrderExternalUnitForm
         DataType = ftString
         ParamType = ptInput
       end>
-    Left = 811
-    Top = 84
+    Left = 739
+    Top = 65532
   end
   object spSavePrintState: TdsdStoredProc
     StoredProcName = 'gpUpdate_Movement_OrderExternal_Print'
@@ -2306,7 +2309,7 @@ inherited OrderExternalUnitForm: TOrderExternalUnitForm
       end
       item
         Name = 'inOperDate'
-        Value = Null
+        Value = 'NULL'
         Component = edOperDate
         DataType = ftDateTime
         ParamType = ptInput
@@ -2373,7 +2376,7 @@ inherited OrderExternalUnitForm: TOrderExternalUnitForm
       end
       item
         Name = 'inEndDate'
-        Value = Null
+        Value = 'NULL'
         Component = edOperDateEnd
         DataType = ftDateTime
         ParamType = ptInput
@@ -2430,8 +2433,8 @@ inherited OrderExternalUnitForm: TOrderExternalUnitForm
         DataType = ftString
         ParamType = ptInput
       end>
-    Left = 1220
-    Top = 65532
+    Left = 892
+    Top = 100
   end
   object RetailGuides: TdsdGuides
     KeyField = 'Id'
@@ -2472,7 +2475,7 @@ inherited OrderExternalUnitForm: TOrderExternalUnitForm
         DataType = ftString
         ParamType = ptInput
       end>
-    Left = 1212
-    Top = 60
+    Left = 692
+    Top = 100
   end
 end
