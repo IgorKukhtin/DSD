@@ -24,7 +24,7 @@ BEGIN
      DELETE FROM _tmpItem;
 
 
-   -- Проводки по суммам документа
+/*    -- Проводки по суммам документа
    
    INSERT INTO _tmpItem(ObjectId, OperSumm, AccountId, JuridicalId_Basis, OperDate)   
    SELECT Movement_ReturnOut_View.ToId
@@ -62,10 +62,9 @@ BEGIN
                  
            SELECT SUM(OperSumm) INTO vbOperSumm_Partner
              FROM _tmpItem;
-             
+ */             
 
-
-    -- Сумма платежа
+    /* -- Сумма платежа
     INSERT INTO _tmpMIContainer_insert(DescId, MovementDescId, MovementId, ContainerId, AccountId, Amount, OperDate)
          SELECT 
                 zc_Container_SummIncomeMovementPayment()
@@ -83,7 +82,7 @@ BEGIN
               , - OperSumm
               , _tmpItem.OperDate
            FROM _tmpItem, Movement_ReturnOut_View
-         WHERE Movement_ReturnOut_View.Id =  inMovementId;
+         WHERE Movement_ReturnOut_View.Id =  inMovementId; */
                  
  /*    CREATE TEMP TABLE _tmpItem (MovementDescId Integer, OperDate TDateTime, ObjectId Integer, ObjectDescId Integer, OperSumm TFloat, OperSumm_Currency TFloat, OperSumm_Diff TFloat
                                , MovementItemId Integer, ContainerId Integer, ContainerId_Currency Integer, ContainerId_Diff Integer, ProfitLossId_Diff Integer

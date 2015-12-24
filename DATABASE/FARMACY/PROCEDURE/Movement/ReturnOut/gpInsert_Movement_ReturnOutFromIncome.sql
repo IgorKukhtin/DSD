@@ -20,7 +20,7 @@ BEGIN
    
 
     SELECT lpInsertUpdate_Movement_ReturnOut(0, CAST (NEXTVAL ('movement_ReturnOut_seq') AS TVarChar) , Current_Date
-                                             , Movement_Income.InvNumber, Movement_Income.OperDate, Movement_Income.PriceWithVAT
+                                             , NULL::TVarChar, NULL::TDateTime, Movement_Income.PriceWithVAT
                                              , Movement_Income.ToId, Movement_Income.FromId
                                              , Movement_Income.NDSKindId, inParentId, NULL, vbUserId) INTO outId
      FROM  Movement_Income_View AS Movement_Income 

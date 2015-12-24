@@ -197,7 +197,7 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
             Width = 70
           end
           object colInvNumberPartner: TcxGridDBColumn
-            Caption = #8470' '#1076#1086#1082'.'#1091' '#1087#1086#1082#1091#1087'.'
+            Caption = #8470' '#1076#1086#1082'.'#1091' '#1087#1072#1088#1090#1085#1077#1088#1072
             DataBinding.FieldName = 'InvNumberPartner'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
@@ -762,7 +762,7 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
         end
         item
           Name = 'inOperDate'
-          Value = Null
+          Value = 'NULL'
           Component = MasterCDS
           ComponentItem = 'OperDate'
           DataType = ftDateTime
@@ -917,7 +917,7 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
         end
         item
           Name = 'ContractSigningDate'
-          Value = Null
+          Value = 'NULL'
           Component = FormParams
           ComponentItem = 'ContractSigningDate'
           DataType = ftDateTime
@@ -1074,7 +1074,7 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
         end
         item
           Name = 'ContractSigningDate'
-          Value = Null
+          Value = 'NULL'
           Component = FormParams
           ComponentItem = 'ContractSigningDate'
           DataType = ftDateTime
@@ -1238,7 +1238,7 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
         end
         item
           Name = 'ContractSigningDate'
-          Value = Null
+          Value = 'NULL'
           Component = FormParams
           ComponentItem = 'ContractSigningDate'
           DataType = ftDateTime
@@ -1389,7 +1389,7 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
         end
         item
           Name = 'ContractSigningDate'
-          Value = Null
+          Value = 'NULL'
           Component = FormParams
           ComponentItem = 'ContractSigningDate'
           DataType = ftDateTime
@@ -1723,7 +1723,7 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
       end
       item
         Name = 'ContractSigningDate'
-        Value = Null
+        Value = 'NULL'
         DataType = ftDateTime
         ParamType = ptInputOutput
       end>
@@ -1863,7 +1863,7 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
       end
       item
         Name = 'outContractSigningDate'
-        Value = Null
+        Value = 'NULL'
         Component = FormParams
         ComponentItem = 'ContractSigningDate'
         DataType = ftDateTime

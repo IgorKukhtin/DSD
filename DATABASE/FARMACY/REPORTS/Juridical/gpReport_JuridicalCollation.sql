@@ -256,7 +256,7 @@ BEGIN
             CASE 
                 WHEN Operation.OperationSort = -1
                     THEN ' Долг:'
-            ELSE MovementDesc.ItemName
+            ELSE COALESCE(Object_ChangeIncomePaymentKind.ValueData,MovementDesc.ItemName)
             END::TVarChar  AS ItemName,     
             Operation.OperationSort, 
             (Object_From.ValueData || CASE WHEN Object_From.DescId = zc_Object_BankAccount() THEN ' * ' || Object_Bank.ValueData ELSE '' END) :: TVarChar AS FromName, 
@@ -407,6 +407,11 @@ BEGIN
       LEFT JOIN Object_InfoMoney_View ON Object_InfoMoney_View.InfoMoneyId = Operation.InfoMoneyId
       LEFT JOIN Movement ON Movement.Id = Operation.MovementId
       LEFT JOIN MovementDesc ON Movement.DescId = MovementDesc.Id
+      LEFT OUTER JOIN MovementLinkObject AS MLO_ChangeIncomePaymentKind
+                                         ON MLO_ChangeIncomePaymentKind.MovementId = Movement.ID
+                                        AND MLO_ChangeIncomePaymentKind.DescId = zc_MovementLinkObject_ChangeIncomePaymentKind()
+      LEFT OUTER JOIN Object AS Object_ChangeIncomePaymentKind
+                             ON Object_ChangeIncomePaymentKind.Id = MLO_ChangeIncomePaymentKind.ObjectId
       LEFT JOIN MovementString AS MovementString_InvNumberPartner
                                ON MovementString_InvNumberPartner.MovementId =  Operation.MovementId
                               AND MovementString_InvNumberPartner.DescId = zc_MovementString_InvNumberPartner()
