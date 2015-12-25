@@ -342,52 +342,51 @@ BEGIN
                        , SUM (CASE WHEN MIContainer.OperDate > inEndDate 
                                   THEN MIContainer.Amount 
                              ELSE 0 END)                                          AS MIC_Amount_End --Все движение после окончания
+
                        , SUM (CASE WHEN MIContainer.OperDate <= inEndDate
                                   AND MIContainer.IsActive = TRUE
                                   AND MIContainer.MovementDescId <> zc_Movement_Inventory()
                                   AND MIContainer.MovementDescId <> zc_Movement_Loss()
-                                  AND NOT(MIContainer.MovementDescId in (zc_Movement_Income(),zc_Movement_ReturnIn())
+                                  AND NOT (MIContainer.MovementDescId IN (zc_Movement_Income(), zc_Movement_ReturnIn())
                                           AND
-                                          COALESCE(MIFloat_Price.ValueData,0) > 0)
+                                          COALESCE (MIContainer.AnalyzerId, 0) <> zc_Enum_AnalyzerId_TareReturning())
                                  THEN MIContainer.Amount 
-                            ELSE 0 END)                                          AS MIC_Amount_IN -- Приход за период
+                            ELSE 0 END)                                          AS MIC_Amount_IN -- Возвратная: Поставщик, Покупатель за период
                        , SUM (CASE WHEN MIContainer.OperDate <= inEndDate
                                   AND MIContainer.IsActive = TRUE
-                                  AND MIContainer.MovementDescId in (zc_Movement_Income(),zc_Movement_ReturnIn())
-                                  AND
-                                  COALESCE(MIFloat_Price.ValueData,0) > 0
+                                  AND MIContainer.MovementDescId IN (zc_Movement_Income(), zc_Movement_ReturnIn())
+                                  AND COALESCE (MIContainer.AnalyzerId, 0) <> zc_Enum_AnalyzerId_TareReturning()
                                  THEN MIContainer.Amount 
-                            ELSE 0 END)                                          AS MIC_Amount_INBay -- Покупка за период
+                            ELSE 0 END)                                          AS MIC_Amount_INBay -- С ценой: Поставщик, Покупатель за период
+
                        , SUM (CASE WHEN MIContainer.OperDate <= inEndDate
                                   AND MIContainer.IsActive = FALSE
                                   AND MIContainer.MovementDescId <> zc_Movement_Inventory()
                                   AND MIContainer.MovementDescId <> zc_Movement_Loss()
-                                  AND NOT(MIContainer.MovementDescId in (zc_Movement_Sale(),zc_Movement_ReturnOut())
+                                  AND NOT (MIContainer.MovementDescId IN (zc_Movement_Sale(), zc_Movement_ReturnOut())
                                           AND
-                                          COALESCE(MIFloat_Price.ValueData,0) > 0)
+                                          COALESCE (MIContainer.AnalyzerId, 0) <> zc_Enum_AnalyzerId_TareReturning())
                                  THEN MIContainer.Amount 
-                            ELSE 0 END)                                          AS MIC_Amount_OUT --Расход за период
+                            ELSE 0 END)                                          AS MIC_Amount_OUT -- Возвратная: Поставщик, Покупатель за период
                        , SUM (CASE WHEN MIContainer.OperDate <= inEndDate
                                   AND MIContainer.IsActive = FALSE
-                                  AND MIContainer.MovementDescId in (zc_Movement_Sale(),zc_Movement_ReturnOut())
-                                  AND COALESCE(MIFloat_Price.ValueData,0) > 0
+                                  AND MIContainer.MovementDescId IN (zc_Movement_Sale(), zc_Movement_ReturnOut())
+                                  AND COALESCE (MIContainer.AnalyzerId, 0) <> zc_Enum_AnalyzerId_TareReturning()
                                  THEN MIContainer.Amount 
-                            ELSE 0 END)                                          AS MIC_Amount_OUTSale --Продажа за период
+                            ELSE 0 END)                                          AS MIC_Amount_OUTSale -- С ценой: Поставщик, Покупатель за период
+
                        ,SUM (CASE WHEN MIContainer.OperDate <= inEndDate
                                   AND MIContainer.MovementDescId = zc_Movement_Inventory()
                                  THEN MIContainer.Amount 
-                            ELSE 0 END)                                          AS MIC_Amount_Inventory --Инвентаризация за период
+                            ELSE 0 END)                                          AS MIC_Amount_Inventory -- Инвентаризация за период
                        , SUM (CASE WHEN MIContainer.OperDate <= inEndDate
                                   AND MIContainer.MovementDescId = zc_Movement_Loss()
                                  THEN MIContainer.Amount 
-                            ELSE 0 END)                                          AS MIC_Amount_Loss --Списание за период
+                            ELSE 0 END)                                          AS MIC_Amount_Loss -- Списание за период
                     FROM tmpContainer
                         LEFT OUTER JOIN MovementItemContainer AS MIContainer
                                                               ON MIContainer.ContainerId = tmpContainer.Id
                                                              AND MIContainer.OperDate >= inStartDate
-                        LEFT OUTER JOIN MovementItemFloat AS MIFloat_Price
-                                                          ON MIFloat_Price.MovementItemId = MIContainer.MovementItemId
-                                                         AND MIFloat_Price.DescId = zc_MIFloat_Price()
                     GROUP BY
                          tmpContainer.Id
                        , tmpContainer.GoodsId
@@ -494,4 +493,6 @@ ALTER FUNCTION gpSelect_Report_Tara (TDateTime,TDateTime,Boolean,Boolean,Boolean
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.    Воробкало А.А.
  17.12.15                                                          *
 */
---Select * from gpSelect_Report_Tara(inStartDate := '20150101'::TDateTime,inEndDate:='20150131'::TDateTime,inWithSupplier:=FALSE,inWithBayer:=FALSE,inWithPlace:=FALSE,inWithBranch:=FALSE,inWithMember:=TRUE,inWhereObjectId:=0,inGoodsOrGroupId:=1865,inSession:='5'::TVarChar);
+
+-- тест
+-- SELECT * FROM gpSelect_Report_Tara (inStartDate := '20150101'::TDateTime, inEndDate:='20150131'::TDateTime, inWithSupplier:=FALSE, inWithBayer:=FALSE, inWithPlace:=FALSE, inWithBranch:=FALSE, inWithMember:=TRUE, inWhereObjectId:=0, inGoodsOrGroupId:=1865, inAccountGroupId:= 0, inSession:='5'::TVarChar);

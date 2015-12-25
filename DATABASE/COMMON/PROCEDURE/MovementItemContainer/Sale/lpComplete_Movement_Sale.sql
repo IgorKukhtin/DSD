@@ -1130,7 +1130,7 @@ BEGIN
        SELECT 0, zc_MIContainer_Count() AS DescId, vbMovementDescId, inMovementId, MovementItemId
             , ContainerId_GoodsPartner
             , 0                                       AS AccountId                -- нет счета
-            , 0                                       AS AnalyzerId               -- нет аналитики
+            , zc_Enum_AnalyzerId_TareReturning()      AS AnalyzerId               -- есть аналитика
             , _tmpItem.GoodsId                        AS ObjectId_Analyzer        -- Товар
             , CASE WHEN vbMemberId_To <> 0 THEN vbMemberId_To ELSE vbPartnerId_To END AS WhereObjectId_Analyzer -- Покупатель или Физ.лицо
             , 0                                       AS ContainerId_Analyzer     -- !!!нет!!!

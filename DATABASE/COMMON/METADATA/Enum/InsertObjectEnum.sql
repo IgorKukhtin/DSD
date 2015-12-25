@@ -169,14 +169,15 @@ BEGIN
      PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_AnalyzerId_SummIn_110101() , inDescId:= zc_Object_AnalyzerId(), inCode:= 1051, inName:= 'Сумма, забалансовый счет, приход транзит', inEnumName:= 'zc_Enum_AnalyzerId_SummIn_110101');
      PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_AnalyzerId_SummOut_110101(), inDescId:= zc_Object_AnalyzerId(), inCode:= 1052, inName:= 'Сумма, забалансовый счет, расход транзит', inEnumName:= 'zc_Enum_AnalyzerId_SummOut_110101');
      --
-     PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_AnalyzerId_SendCount_in(),    inDescId:= zc_Object_AnalyzerId(), inCode:= 1101, inName:= 'Кол-во, перемещение по цене, перемещение, пришло', inEnumName:= 'zc_Enum_AnalyzerId_SendCount_in');
-     PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_AnalyzerId_SendCount_10500(), inDescId:= zc_Object_AnalyzerId(), inCode:= 1102, inName:= 'Кол-во, перемещение по цене, перемещение, Скидка за вес', inEnumName:= 'zc_Enum_AnalyzerId_SendCount_10500');
-     PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_AnalyzerId_SendCount_40200(), inDescId:= zc_Object_AnalyzerId(), inCode:= 1103, inName:= 'Кол-во, перемещение по цене, перемещение, Разница в весе', inEnumName:= 'zc_Enum_AnalyzerId_SendCount_40200');
+     PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_AnalyzerId_SendCount_in(),    inDescId:= zc_Object_AnalyzerId(), inCode:= 1101, inName:= 'Кол-во, перемещение по цене or перемещение, пришло', inEnumName:= 'zc_Enum_AnalyzerId_SendCount_in');
+     PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_AnalyzerId_SendCount_10500(), inDescId:= zc_Object_AnalyzerId(), inCode:= 1102, inName:= 'Кол-во, перемещение по цене or перемещение, Скидка за вес', inEnumName:= 'zc_Enum_AnalyzerId_SendCount_10500');
+     PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_AnalyzerId_SendCount_40200(), inDescId:= zc_Object_AnalyzerId(), inCode:= 1103, inName:= 'Кол-во, перемещение по цене or перемещение, Разница в весе', inEnumName:= 'zc_Enum_AnalyzerId_SendCount_40200');
 
-     PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_AnalyzerId_SendSumm_in(),    inDescId:= zc_Object_AnalyzerId(), inCode:= 1111, inName:= 'Сумма с/с, перемещение по цене, перемещение, пришло', inEnumName:= 'zc_Enum_AnalyzerId_SendSumm_in');
-     PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_AnalyzerId_SendSumm_10500(), inDescId:= zc_Object_AnalyzerId(), inCode:= 1112, inName:= 'Сумма с/с, перемещение по цене, перемещение, Скидка за вес', inEnumName:= 'zc_Enum_AnalyzerId_SendSumm_10500');
-     PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_AnalyzerId_SendSumm_40200(), inDescId:= zc_Object_AnalyzerId(), inCode:= 1113, inName:= 'Сумма с/с, перемещение по цене, перемещение, Разница в весе', inEnumName:= 'zc_Enum_AnalyzerId_SendSumm_40200');
-
+     PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_AnalyzerId_SendSumm_in(),    inDescId:= zc_Object_AnalyzerId(), inCode:= 1111, inName:= 'Сумма с/с, перемещение по цене or перемещение, пришло', inEnumName:= 'zc_Enum_AnalyzerId_SendSumm_in');
+     PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_AnalyzerId_SendSumm_10500(), inDescId:= zc_Object_AnalyzerId(), inCode:= 1112, inName:= 'Сумма с/с, перемещение по цене or перемещение, Скидка за вес', inEnumName:= 'zc_Enum_AnalyzerId_SendSumm_10500');
+     PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_AnalyzerId_SendSumm_40200(), inDescId:= zc_Object_AnalyzerId(), inCode:= 1113, inName:= 'Сумма с/с, перемещение по цене or перемещение, Разница в весе', inEnumName:= 'zc_Enum_AnalyzerId_SendSumm_40200');
+     --
+     PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_AnalyzerId_TareReturning(), inDescId:= zc_Object_AnalyzerId(), inCode:= 1113, inName:= 'Кол-во, возвратная тара', inEnumName:= 'zc_Enum_AnalyzerId_TareReturning');
      
      -- !!! формы оплаты
      PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_PaidKind_FirstForm(),  inDescId:= zc_Object_PaidKind(), inCode:= 1, inName:= 'БН', inEnumName:= 'zc_Enum_PaidKind_FirstForm');

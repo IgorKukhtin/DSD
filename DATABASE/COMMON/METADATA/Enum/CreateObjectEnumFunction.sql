@@ -79,20 +79,23 @@ CREATE OR REPLACE FUNCTION zc_Enum_AnalyzerId_SummIn_110101()  RETURNS integer A
 CREATE OR REPLACE FUNCTION zc_Enum_AnalyzerId_SummOut_110101() RETURNS integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_AnalyzerId_SummOut_110101' AND DescId = zc_ObjectString_Enum()); END;  $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 
 
--- Кол-во, перемещение по цене, перемещение, пришло 
+-- Кол-во, перемещение по цене or перемещение, пришло 
 CREATE OR REPLACE FUNCTION zc_Enum_AnalyzerId_SendCount_in()  RETURNS integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_AnalyzerId_SendCount_in' AND DescId = zc_ObjectString_Enum()); END;  $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
--- Кол-во, перемещение по цене, перемещение, Скидка за вес
+-- Кол-во, перемещение по цене or перемещение, Скидка за вес
 CREATE OR REPLACE FUNCTION zc_Enum_AnalyzerId_SendCount_10500() RETURNS integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_AnalyzerId_SendCount_10500' AND DescId = zc_ObjectString_Enum()); END;  $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
--- Кол-во, перемещение по цене, перемещение, Разница в весе
+-- Кол-во, перемещение по цене or перемещение, Разница в весе
 CREATE OR REPLACE FUNCTION zc_Enum_AnalyzerId_SendCount_40200() RETURNS integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_AnalyzerId_SendCount_40200' AND DescId = zc_ObjectString_Enum()); END;  $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 
--- Сумма с/с, перемещение по цене, перемещение, пришло
+-- Сумма с/с, перемещение по цене or перемещение, пришло
 CREATE OR REPLACE FUNCTION zc_Enum_AnalyzerId_SendSumm_in()  RETURNS integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_AnalyzerId_SendSumm_in' AND DescId = zc_ObjectString_Enum()); END;  $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
--- Сумма с/с, перемещение по цене, перемещение, Скидка за вес
+-- Сумма с/с, перемещение по цене or перемещение, Скидка за вес
 CREATE OR REPLACE FUNCTION zc_Enum_AnalyzerId_SendSumm_10500() RETURNS integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_AnalyzerId_SendSumm_10500' AND DescId = zc_ObjectString_Enum()); END;  $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
--- Сумма с/с, перемещение по цене, перемещение, Разница в весе
+-- Сумма с/с, перемещение по цене or перемещение, Разница в весе
 CREATE OR REPLACE FUNCTION zc_Enum_AnalyzerId_SendSumm_40200() RETURNS integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_AnalyzerId_SendSumm_40200' AND DescId = zc_ObjectString_Enum()); END;  $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 
+
+-- Кол-во, возвратная тара
+CREATE OR REPLACE FUNCTION zc_Enum_AnalyzerId_TareReturning()  RETURNS integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_AnalyzerId_TareReturning' AND DescId = zc_ObjectString_Enum()); END;  $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 
 -- !!!
 -- !!! Типы оплат

@@ -1,9 +1,9 @@
 inherited Report_TaraDialogForm: TReport_TaraDialogForm
-  Caption = #1054#1090#1095#1077#1090' '#1087#1086' '#1072#1082#1094#1080#1103#1084
+  Caption = #1054#1090#1095#1077#1090' '#1087#1086' '#1090#1072#1088#1077' ('#1082#1086#1083'-'#1074#1086')'
   ClientHeight = 193
   ClientWidth = 446
   ExplicitWidth = 452
-  ExplicitHeight = 221
+  ExplicitHeight = 218
   PixelsPerInch = 96
   TextHeight = 13
   inherited bbOk: TcxButton
@@ -75,7 +75,7 @@ inherited Report_TaraDialogForm: TReport_TaraDialogForm
   object cxLabel3: TcxLabel [10]
     Left = 8
     Top = 62
-    Caption = #1054#1073#1098#1077#1082#1090' '#1072#1085#1072#1083#1080#1079#1072':'
+    Caption = #1052#1077#1089#1090#1086' '#1091#1095#1077#1090#1072':'
   end
   object edObject: TcxButtonEdit [11]
     Left = 105
@@ -92,7 +92,7 @@ inherited Report_TaraDialogForm: TReport_TaraDialogForm
   object cxLabel4: TcxLabel [12]
     Left = 8
     Top = 87
-    Caption = #1058#1086#1074#1072#1088' / '#1075#1088#1091#1087#1087#1072':'
+    Caption = #1058#1086#1074#1072#1088' / '#1043#1088#1091#1087#1087#1072':'
   end
   object edGoods: TcxButtonEdit [13]
     Left = 105

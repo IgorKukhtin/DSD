@@ -851,7 +851,7 @@ BEGIN
        SELECT 0, zc_MIContainer_CountSupplier() AS DescId, vbMovementDescId, inMovementId, MovementItemId
             , ContainerId_GoodsPartner
             , 0                                       AS AccountId                -- нет счета
-            , 0                                       AS AnalyzerId               -- нет аналитики
+            , zc_Enum_AnalyzerId_TareReturning()      AS AnalyzerId               -- есть аналитика
             , _tmpItem.GoodsId                        AS ObjectId_Analyzer        -- Товар
             , vbPartnerId_To                          AS WhereObjectId_Analyzer   -- Поставщик
             , 0                                       AS ContainerId_Analyzer     -- !!!нет!!!
