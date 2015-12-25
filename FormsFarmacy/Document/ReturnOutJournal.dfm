@@ -197,6 +197,20 @@ inherited ReturnOutJournalForm: TReturnOutJournalForm
             DataBinding.FieldName = 'JuridicalName'
             Width = 159
           end
+          object colInvNumberPartner: TcxGridDBColumn
+            Caption = #8470' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072
+            DataBinding.FieldName = 'InvNumberPartner'
+            HeaderAlignmentHorz = taCenter
+            Options.Editing = False
+            Width = 80
+          end
+          object colOperDatePartner: TcxGridDBColumn
+            Caption = #1044#1072#1090#1072' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072
+            DataBinding.FieldName = 'OperDatePartner'
+            HeaderAlignmentHorz = taCenter
+            Options.Editing = False
+            Width = 85
+          end
         end
       end
     end
@@ -326,8 +340,8 @@ inherited ReturnOutJournalForm: TReturnOutJournalForm
         item
           StoredProc = spSelectPrint
         end>
-      Caption = #1055#1077#1095#1072#1090#1100' '#1056#1072#1089#1093#1086#1076#1085#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103
-      Hint = #1055#1077#1095#1072#1090#1100' '#1056#1072#1089#1093#1086#1076#1085#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103
+      Caption = #1055#1077#1095#1072#1090#1100' '#1042#1086#1079#1074#1088#1072#1090#1085#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103
+      Hint = #1055#1077#1095#1072#1090#1100' '#1042#1086#1079#1074#1088#1072#1090#1085#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103
       ImageIndex = 3
       ShortCut = 16464
       DataSets = <
@@ -346,9 +360,9 @@ inherited ReturnOutJournalForm: TReturnOutJournalForm
           Component = FormParams
           ComponentItem = 'Id'
         end>
-      ReportName = 'PrintMovement_Sale2'
+      ReportName = #1042#1086#1079#1074#1088#1072#1090#1085#1072#1103'_'#1085#1072#1082#1083#1072#1076#1085#1072#1103
       ReportNameParam.Name = #1056#1072#1089#1093#1086#1076#1085#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103
-      ReportNameParam.Value = 'PrintMovement_Sale2'
+      ReportNameParam.Value = #1042#1086#1079#1074#1088#1072#1090#1085#1072#1103'_'#1085#1072#1082#1083#1072#1076#1085#1072#1103
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
     end
@@ -577,7 +591,6 @@ inherited ReturnOutJournalForm: TReturnOutJournalForm
     object bbPrint: TdxBarButton
       Action = actPrint
       Category = 0
-      Visible = ivNever
     end
     object bbPrintTax_Us: TdxBarButton
       Caption = #1053#1072#1083#1086#1075#1086#1074#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103' ('#1087#1088#1086#1076#1072#1074#1077#1094')'
@@ -721,7 +734,7 @@ inherited ReturnOutJournalForm: TReturnOutJournalForm
     Top = 270
   end
   object spSelectPrint: TdsdStoredProc
-    StoredProcName = 'gpSelect_Movement_Sale_Print'
+    StoredProcName = 'gpSelect_Movement_ReturnOut_Print'
     DataSet = PrintHeaderCDS
     DataSets = <
       item
@@ -740,8 +753,8 @@ inherited ReturnOutJournalForm: TReturnOutJournalForm
         ParamType = ptInput
       end>
     PackSize = 1
-    Left = 535
-    Top = 248
+    Left = 607
+    Top = 224
   end
   object PrintItemsSverkaCDS: TClientDataSet
     Aggregates = <>

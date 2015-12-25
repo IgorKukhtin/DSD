@@ -42,15 +42,24 @@ BEGIN
         , tmpRoleAccessKey AS (SELECT AccessKeyId FROM Object_RoleAccessKey_View WHERE UserId = vbUserId AND NOT EXISTS (SELECT UserId FROM tmpUserAdmin) GROUP BY AccessKeyId
                          UNION SELECT AccessKeyId FROM Object_RoleAccessKey_View WHERE EXISTS (SELECT UserId FROM tmpUserAdmin) GROUP BY AccessKeyId
                               )
-        , MovementBankAccount AS (  SELECT MovementBankAccount.OperDate, MLM_BankAccount_Income.MovementChildId
-                                    FROM Movement AS MovementBankAccount
-                                        INNER JOIN MovementLinkMovement AS MLM_BankAccount_Income
-                                                                        ON MLM_BankAccount_Income.MovementId = MovementBankAccount.ID
-                                                                       AND MLM_BankAccount_Income.DescId = zc_MovementLinkMovement_Child()
-                                    WHERE
-                                        MovementBankAccount.DescId = zc_Movement_BankAccount()
-                                        AND
-                                        MovementBankAccount.StatusId = zc_Enum_Status_Complete())
+        , MovementPayment AS (  SELECT MovementPayment.OperDate, MIFloat_IncomeId.ValueData::Integer AS MovementId
+                                FROM 
+                                    Movement AS MovementPayment
+                                    INNER JOIN MovementItem ON MovementItem.MovementId = MovementPayment.Id
+                                                           AND MovementItem.DescId = zc_MI_Master()
+                                                           AND MovementItem.IsErased = FALSE
+                                    INNER JOIN MovementItemBoolean AS MIBoolean_NeedPay
+                                                                   ON MIBoolean_NeedPay.MovementItemId = MovementItem.ID
+                                                                  AND MIBoolean_NeedPay.DescId = zc_MIBoolean_NeedPay()
+                                                                  AND MIBoolean_NeedPay.ValueData = TRUE
+                                    INNER JOIN MovementItemFloat AS MIFloat_IncomeId
+                                                                 ON MIFloat_IncomeId.MovementItemId = MovementItem.ID
+                                                                AND MIFloat_IncomeId.DescId = zc_MIFloat_MovementId()
+                                WHERE
+                                    MovementPayment.DescId = zc_Movement_Payment()
+                                    AND
+                                    MovementPayment.StatusId = zc_Enum_Status_Complete()
+                              )
 
        SELECT
              Movement_Income_View.Id
@@ -81,11 +90,11 @@ BEGIN
            , Movement_Income_View.BranchDate
            , Movement_Income_View.Checked
            , CASE WHEN Movement_Income_View.PaySumm <= 0.01 THEN zc_Color_Goods_Additional() END::Integer AS PayColor
-           , MovementBankAccount.OperDate AS DateLastPay
+           , MovementPayment.OperDate AS DateLastPay
        FROM Movement_Income_View 
              JOIN tmpStatus ON tmpStatus.StatusId = Movement_Income_View.StatusId 
-             LEFT OUTER JOIN MovementBankAccount ON MovementBankAccount.MovementChildId = Movement_Income_View.Id
-             WHERE Movement_Income_View.OperDate BETWEEN inStartDate AND inEndDate;
+             LEFT OUTER JOIN MovementPayment ON MovementPayment.MovementId = Movement_Income_View.Id
+       WHERE Movement_Income_View.OperDate BETWEEN inStartDate AND inEndDate;
 
 
 END;

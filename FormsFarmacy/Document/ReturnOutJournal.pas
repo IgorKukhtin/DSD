@@ -45,6 +45,8 @@ type
     spInsertMovement: TdsdStoredProc;
     actChoiceIncomeMovement: TOpenChoiceForm;
     colJuridicalName: TcxGridDBColumn;
+    colInvNumberPartner: TcxGridDBColumn;
+    colOperDatePartner: TcxGridDBColumn;
   private
     { Private declarations }
   public

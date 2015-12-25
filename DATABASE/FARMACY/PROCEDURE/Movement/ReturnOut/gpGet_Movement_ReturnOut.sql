@@ -39,7 +39,7 @@ BEGIN
              , CAST (NEXTVAL ('movement_ReturnOut_seq') AS TVarChar) AS InvNumber
              , ''::TVarChar                                     AS InvNumberPartner
              , CURRENT_DATE::TDateTime                          AS OperDate
-             , CURRENT_DATE::TDateTime                          AS OperDatePartner
+             , NULL::TDateTime                                  AS OperDatePartner
              , Object_Status.Code                               AS StatusCode
              , Object_Status.Name                               AS StatusName
              , CAST (False as Boolean)                          AS PriceWithVAT
