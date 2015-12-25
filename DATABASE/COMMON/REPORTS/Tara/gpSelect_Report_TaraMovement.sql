@@ -147,22 +147,24 @@ BEGIN
             _tmpMovementDesc
             INNER JOIN MovementItemContainer ON MovementItemContainer.MovementDescId = _tmpMovementDesc.DescId
                                             AND MovementItemContainer.Operdate between inStartDate AND inEndDate
-            INNER JOIN MovementItem ON MovementItem.Id = MovementItemContainer.MovementItemId
+                                            AND MovementItemContainer.ObjectId_Analyzer = inGoodsId
+                                            AND MovementItemContainer.WhereObjectId_Analyzer = inWhereObjectId
+            /*INNER JOIN MovementItem ON MovementItem.Id = MovementItemContainer.MovementItemId
                                    AND MovementItem.DescId = zc_MI_Master()
-                                   AND MovementItem.ObjectId = inGoodsId
-            INNER JOIN Object AS Object_Goods
-                              ON Object_Goods.Id = MovementItem.ObjectId
-            INNER JOIN Movement ON MovementItemContainer.MovementId = Movement.Id
-            INNER JOIN MovementDesc ON Movement.DescId = MovementDesc.Id
-            INNER JOIN ContainerLinkObject ON ContainerLinkObject.ContainerId = MovementItemContainer.ContainerId
+                                   AND MovementItem.ObjectId = inGoodsId*/
+            LEFT JOIN Object AS Object_Goods
+                              ON Object_Goods.Id = MovementItemContainer.ObjectId_Analyzer -- MovementItem.ObjectId
+            LEFT JOIN Movement ON MovementItemContainer.MovementId = Movement.Id
+            LEFT JOIN MovementDesc ON Movement.DescId = MovementDesc.Id
+            /*INNER JOIN ContainerLinkObject ON ContainerLinkObject.ContainerId = MovementItemContainer.ContainerId
                                           AND ContainerLinkObject.Descid = vbContainerLinkObjectDesc
-                                          AND ContainerLinkObject.ObjectId = inWhereObjectId
-            INNER JOIN Object ON ContainerLinkObject.ObjectId = Object.Id
-            INNER JOIN ObjectDesc ON ObjectDesc.Id = Object.DescId
-            LEFT OUTER JOIN MovementLinkObject ON MovementLinkObject.MovementId = Movement.Id
-                                              AND MovementLinkObject.DescId = inMLODesc
+                                          AND ContainerLinkObject.ObjectId = inWhereObjectId*/
+            LEFT JOIN Object ON Object.Id = MovementItemContainer.WhereObjectId_Analyzer -- ContainerLinkObject.ObjectId
+            LEFT JOIN ObjectDesc ON ObjectDesc.Id = Object.DescId
+            /*LEFT OUTER JOIN MovementLinkObject ON MovementLinkObject.MovementId = Movement.Id
+                                              AND MovementLinkObject.DescId = inMLODesc*/
             LEFT OUTER JOIN Object AS ObjectBy
-                                   ON ObjectBy.Id = MovementLinkObject.ObjectId
+                                   ON ObjectBy.Id = MovementItemContainer.ObjectExtId_Analyzer -- MovementLinkObject.ObjectId
             LEFT OUTER JOIN ObjectDesc AS ObjectByDesc
                                        ON ObjectByDesc.Id = ObjectBy.DescId
             LEFT OUTER JOIN MovementLinkObject AS MovementLinkObject_PaidKind
@@ -230,4 +232,4 @@ ALTER FUNCTION gpSelect_Report_TaraMovement (TDateTime,TDateTime,Integer,Integer
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.    Воробкало А.А.
  17.12.15                                                          *
 */
---Select * from gpSelect_Report_TaraMovement(inStartDate := '20150801'::TDateTime,inEndDate:='20150831'::TDateTime,inWhereObjectId:=80604::Integer,inGoodsId:=7946::Integer,inDescSet:='1'::TVarChar,inMLODesc:=2::Integer,inSession:= '5'::TVarChar);
+--Select * from gpSelect_Report_TaraMovement (inStartDate := '20150801'::TDateTime,inEndDate:='20150831'::TDateTime,inWhereObjectId:=80604::Integer,inGoodsId:=7946::Integer,inDescSet:='1'::TVarChar,inMLODesc:=2::Integer,inSession:= '5'::TVarChar);

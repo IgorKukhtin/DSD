@@ -145,6 +145,7 @@ BEGIN
                            FROM tmpInfoMoney
                                 LEFT JOIN Object_Contract_View AS View_Contract ON View_Contract.InfoMoneyId = tmpInfoMoney.InfoMoneyId
                                                                                AND View_Contract.isErased = FALSE
+                                                                               AND View_Contract.ContractStateKindId <> zc_Enum_ContractStateKind_Close()
                                 LEFT JOIN tmpContractPartner ON tmpContractPartner.ContractId = View_Contract.ContractId
                                                             AND tmpContractPartner.JuridicalId = View_Contract.JuridicalId
                                 LEFT JOIN ObjectLink AS ObjectLink_Partner_Juridical

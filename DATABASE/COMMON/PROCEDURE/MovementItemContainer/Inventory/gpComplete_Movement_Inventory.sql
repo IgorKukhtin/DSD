@@ -47,6 +47,13 @@ BEGIN
      PERFORM lpComplete_Movement_Inventory_CreateTemp();
 
 
+     -- !!!ВРЕМЕННО, исправляется ошибка!!!!
+     UPDATE MovementItem SET isErased = TRUE
+     WHERE MovementItem.isErased = FALSE
+       AND MovementItem.Amount = 0
+       AND MovementItem.Id = inMovementId;
+
+
      -- Эти параметры нужны для расчета остатка
      SELECT Movement.DescId
           , Movement.StatusId
