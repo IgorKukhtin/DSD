@@ -108,6 +108,20 @@ BEGIN
         outMCSDateChange := CURRENT_DATE;
         PERFORM lpInsertUpdate_objectDate(zc_ObjectDate_Price_MCSDateChange(), ioId, outMCSDateChange);
     END IF;
+    --сохранили историю
+    IF ((inPrice is not null) AND (inPrice <> COALESCE(vbPrice,0))) 
+       OR
+       ((inMCSValue is not null) AND (inMCSValue <> COALESCE(vbMCSValue,0)))
+    THEN
+        PERFORM
+            gpInsertUpdate_ObjectHistory_Price(
+                ioId       := 0::Integer,    -- ключ объекта <Элемент истории прайса>
+                inPriceId  := ioId,    -- Прайс
+                inOperDate := CURRENT_TIMESTAMP::TDateTime,  -- Дата действия прайса
+                inPrice    := COALESCE(inPrice,vbPrice)::TFloat,     -- Цена
+                inMCSValue := COALESCE(inMCSValue,vbMCSValue)::TFloat,     -- НТЗ
+                inSession  := inSession);
+    END IF;
     IF (inMCSIsClose is not null) AND (COALESCE(vbMCSIsClose,False) <> inMCSIsClose)
     THEN
         PERFORM lpInsertUpdate_objectBoolean(zc_ObjectBoolean_Price_MCSIsClose(), ioId, inMCSIsClose);

@@ -16,7 +16,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , PaymentDate TDateTime
              , InvNumberBranch TVarChar, BranchDate TDateTime, Checked Boolean
              , JuridicalId Integer, JuridicalName TVarChar
-             , CorrBonus TFloat, CorrOther TFloat, IsPay Boolean, DateLastPay TDateTime
+             , IsPay Boolean, DateLastPay TDateTime
               )
 AS
 $BODY$
@@ -51,8 +51,6 @@ BEGIN
              , false                                            AS Checked
              , 0                                                AS JuridicalId
              , CAST('' as TVarChar)                             AS JuridicalName
-             , 0::TFloat                                        AS CorrBonus
-             , 0::TFloat                                        AS CorrOther
              , False                                            AS isPay
              , NULL::TDateTime                                  AS DateLastPay
           FROM lfGet_Object_Status(zc_Enum_Status_UnComplete()) AS Object_Status;
@@ -84,8 +82,6 @@ BEGIN
            , COALESCE(Movement_Income_View.Checked, false)
            , Movement_Income_View.JuridicalId
            , Movement_Income_View.JuridicalName
-           , Movement_Income_View.CorrBonus
-           , Movement_Income_View.CorrOther
            , CASE WHEN Movement_Income_View.PaySumm <= 0.01 then TRUE ELSE FALSE END AS isPay
            , (SELECT MAX(MovementItemContainer.OperDate) 
               FROM MovementItemContainer 
@@ -105,6 +101,7 @@ ALTER FUNCTION gpGet_Movement_Income (Integer, TVarChar) OWNER TO postgres;
 /*
  ÈÑÒÎÐÈß ÐÀÇÐÀÁÎÒÊÈ: ÄÀÒÀ, ÀÂÒÎÐ
                Ôåëîíþê È.Â.   Êóõòèí È.Â.   Êëèìåíòüåâ Ê.È.   Ìàíüêî Ä.À.  Âîðîáêàëî À.À.
+ 21.12.15                                                                       *
  07.12.15                                                                       *
  21.05.15                         *
  03.07.14                                                        *

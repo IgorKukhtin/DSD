@@ -29,6 +29,8 @@ begin
   inherited;
   ScriptDirectory := localProcedurePath + 'ObjectHistory\JuridicalDetails\';
   inherited;
+  ScriptDirectory := localProcedurePath + 'ObjectHistory\Price\';
+  inherited;
 end;
 
 { TObjectHistoryTest }

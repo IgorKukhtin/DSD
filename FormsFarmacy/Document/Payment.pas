@@ -13,7 +13,7 @@ uses
   cxMaskEdit, cxDropDownEdit, cxCalendar, cxLabel, cxTextEdit, Vcl.ExtCtrls,
   cxGridLevel, cxGridCustomTableView, cxGridTableView, cxGridDBTableView,
   cxGridCustomView, cxGrid, cxPC, dxSkinsCore, dxSkinsDefaultPainters,
-  dxSkinscxPCPainter, dxSkinsdxBarPainter, ChoicePeriod, cxCheckBox;
+  dxSkinscxPCPainter, dxSkinsdxBarPainter, ChoicePeriod, cxCheckBox, cxSplitter;
 
 type
   TPaymentForm = class(TAncestorDocumentForm)
@@ -51,14 +51,35 @@ type
     PrintItemsVATCDS: TClientDataSet;
     colIncome_PaymentDate: TcxGridDBColumn;
     colIncome_PayOrder: TcxGridDBColumn;
-    colIncome_CorrBonus: TcxGridDBColumn;
-    colIncome_CorrOther: TcxGridDBColumn;
-    colIncome_CorrReturnOut: TcxGridDBColumn;
+    colSummaCorrBonus: TcxGridDBColumn;
+    colSummaCorrOther: TcxGridDBColumn;
+    colSummaCorrReturnOut: TcxGridDBColumn;
     mactSelectAll: TMultiAction;
     gpInsertUpdate_MovementItem_Payment_NeedPay: TdsdStoredProc;
     actInsertUpdate_MovementItem_Payment_NeedPay: TdsdExecStoredProc;
     dxBarButton1: TdxBarButton;
     actSelectAllAndRefresh: TMultiAction;
+    spGet_Payment_Detail: TdsdStoredProc;
+    spInsertUpdate_MovementFloat_TotalSummPayment: TdsdStoredProc;
+    actGet_Payment_Detail: TdsdExecStoredProc;
+    actInsertUpdate_MovementFloat_TotalSummPayment: TdsdExecStoredProc;
+    spSelect_PaymentCorrSumm: TdsdStoredProc;
+    PaymentCorrSummCDS: TClientDataSet;
+    PaymentCorrSummDS: TDataSource;
+    actSelect_PaymentCorrSumm: TdsdExecStoredProc;
+    cxGrid1: TcxGrid;
+    cxGridDBTableView1: TcxGridDBTableView;
+    cxGridLevel1: TcxGridLevel;
+    colContainerAmountBonus: TcxGridDBColumn;
+    colContainerAmountReturnOut: TcxGridDBColumn;
+    colContainerAmountOther: TcxGridDBColumn;
+    colCorrBonus: TcxGridDBColumn;
+    colLeftCorrBonus: TcxGridDBColumn;
+    colCorrReturnOut: TcxGridDBColumn;
+    colLeftCorrReturnOut: TcxGridDBColumn;
+    colCorrOther: TcxGridDBColumn;
+    colLeftCorrOther: TcxGridDBColumn;
+    cxSplitter1: TcxSplitter;
   private
     { Private declarations }
   public

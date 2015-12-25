@@ -59,6 +59,8 @@ type
     colMCSIsCloseDateChange: TcxGridDBColumn;
     colMCSNotRecalcDateChange: TcxGridDBColumn;
     colFixDateChange: TcxGridDBColumn;
+    actPriceHistoryOpen: TdsdOpenForm;
+    dxBarButton7: TdxBarButton;
   private
     { Private declarations }
   public

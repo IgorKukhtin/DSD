@@ -26,6 +26,8 @@ type
     procedure LoadBankAccountDocumentFormTest;
     procedure LoadBankStatementFormTest;
     procedure LoadCashRegisterFormTest;
+    procedure LoadChangeIncomePaymentKindFormTest;
+    procedure LoadChangeIncomePaymentFormTest;
     procedure LoadCheckFormTest;
     procedure LoadCheckDeferredFormTest;
     procedure LoadCheckVIPFormTest;
@@ -638,6 +640,8 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TMCSForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TRecalcMCS_DialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TRecalcMCS_DialogForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TPriceHistoryForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TPriceHistoryForm');
 end;
 
 procedure TLoadFormTest.LoadAlternativeGroupFormTest;
@@ -670,6 +674,20 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TPaymentJournalForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TPaymentForm'));
   TdsdFormStorageFactory.GetStorage.Load('TPaymentForm');
+end;
+
+procedure TLoadFormTest.LoadChangeIncomePaymentFormTest;
+begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TChangeIncomePaymentJournalForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TChangeIncomePaymentJournalForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TChangeIncomePaymentForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TChangeIncomePaymentForm');
+end;
+
+procedure TLoadFormTest.LoadChangeIncomePaymentKindFormTest;
+begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TChangeIncomePaymentKindForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TChangeIncomePaymentKindForm');
 end;
 
 procedure TLoadFormTest.LoadCheckDeferredFormTest;

@@ -13,53 +13,13 @@ $BODY$
   DECLARE vbJuridicalId Integer;
   DECLARE vbUnit Integer;
   DECLARE vbOperDate  TDateTime;
+  DECLARE vbChangeIncomePaymentId Integer;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
 --     vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Complete_ReturnOut());
      vbUserId:= inSession;
      -- Проверили перед проведением на достаточность наличия, НДС и пр.
      PERFORM lpCheckComplete_Movement_ReturnOut (inMovementId);
-     
-    -- Проверить, что бы не было переучета позже даты документа
-    SELECT
-        Movement.OperDate,
-        Movement_Unit.ObjectId AS Unit
-    INTO
-        vbOperDate,
-        vbUnit
-    FROM Movement
-        INNER JOIN MovementLinkObject AS Movement_Unit
-                                      ON Movement_Unit.MovementId = Movement.Id
-                                     AND Movement_Unit.DescId = zc_MovementLinkObject_Unit()
-    WHERE Movement.Id = inMovementId;
-
-    /*IF EXISTS(SELECT 1
-              FROM Movement AS Movement_Inventory
-                  INNER JOIN MovementItem AS MI_Inventory
-                                          ON MI_Inventory.MovementId = Movement_Inventory.Id
-                                         AND MI_Inventory.DescId = zc_MI_Master()
-                                         AND MI_Inventory.IsErased = FALSE
-                  INNER JOIN MovementLinkObject AS Movement_Inventory_Unit
-                                                ON Movement_Inventory_Unit.MovementId = Movement_Inventory.Id
-                                               AND Movement_Inventory_Unit.DescId = zc_MovementLinkObject_Unit()
-                                               AND Movement_Inventory_Unit.ObjectId = vbUnit
-                  Inner Join MovementItem AS MI_Send
-                                          ON MI_Inventory.ObjectId = MI_Send.ObjectId
-                                         AND MI_Send.DescId = zc_MI_Master()
-                                         AND MI_Send.IsErased = FALSE
-                                         AND MI_Send.Amount > 0
-                                         AND MI_Send.MovementId = inMovementId
-                                         
-              WHERE
-                  Movement_Inventory.DescId = zc_Movement_Inventory()
-                  AND
-                  Movement_Inventory.OperDate >= vbOperDate
-                  AND
-                  Movement_Inventory.StatusId = zc_Enum_Status_Complete()
-              )
-    THEN
-        RAISE EXCEPTION 'Ошибка. По одному или более товарам есть документ переучета позже даты текущего возврата. Проведение документа запрещено!';
-    END IF;*/
      
       -- пересчитали Итоговые суммы
      PERFORM lpInsertUpdate_MovementFloat_TotalSumm (inMovementId);
@@ -70,6 +30,41 @@ BEGIN
 
      UPDATE Movement SET StatusId = zc_Enum_Status_Complete() WHERE Id = inMovementId AND StatusId IN (zc_Enum_Status_UnComplete(), zc_Enum_Status_Erased());
 
+    --Если в документе установлена дата возврата поставщика - то создаем документ на изменение долга 
+    IF EXISTS(SELECT 1 FROM Movement_ReturnOut_View WHERE Id = inMovementId AND OperDatePartner is not null)
+    THEN
+
+    --Создали документ на изменение долга по приходам
+        SELECT 
+            lpInsertUpdate_Movement_ChangeIncomePayment(
+                ioId := COALESCE(ChangeIncomePayment.Id,0), -- Ключ объекта <Документ изменения долга по приходам>
+                inInvNumber := COALESCE(ChangeIncomePayment.InvNumber, NEXTVAL('movement_ChangeIncomePayment_seq')::TVarChar), -- Номер документа
+                inOperDate := ReturnOut.OperDatePartner, -- Дата документа
+                inTotalSumm := ReturnOut.TotalSumm, -- Сумма изменения долга
+                inFromId := ReturnOut.ToId, -- От кого (в документе)
+                inJuridicalId := ReturnOut.JuridicalId, -- Для какого юрлица
+                inChangeIncomePaymentKindId := zc_Enum_ChangeIncomePaymentKind_ReturnOut(), -- Типы изменения суммы долга
+                inComment := NULL::TVarChar, -- Комментарий
+                inUserId := vbUserId)
+        INTO
+            vbChangeIncomePaymentId
+        FROM
+            Movement_ReturnOut_View AS ReturnOut
+            LEFT OUTER JOIN MovementLinkMovement AS NLN_ChangeIncomePayment
+                                                 ON NLN_ChangeIncomePayment.MovementId = ReturnOut.ID
+                                                AND NLN_ChangeIncomePayment.DescId = zc_MovementLinkMovement_ChangeIncomePayment()
+            LEFT OUTER JOIN Movement AS ChangeIncomePayment
+                                     ON ChangeIncomePayment.Id = NLN_ChangeIncomePayment.MovementChildId
+        WHERE
+            ReturnOut.Id = inMovementId;
+        --Прописали номер поставщика, для акта сверки
+        PERFORM lpInsertUpdate_MovementString(zc_MovementString_InvNumberPartner(),vbChangeIncomePaymentId,(SELECT InvNumberPartner FROM Movement_ReturnOut_View WHERE Id = inMovementId));
+        
+        --Связали возврат и документ на изменение долга по приходам
+        PERFORM lpInsertUpdate_MovementLinkMovement(zc_MovementLinkMovement_ChangeIncomePayment(),inMovementId,vbChangeIncomePaymentId);
+        --Провели документ на изменение долга по приходам
+        PERFORM lpComplete_Movement_ChangeIncomePayment(vbChangeIncomePaymentId,vbUserId);
+    END IF;
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;

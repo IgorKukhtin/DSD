@@ -4,6 +4,7 @@ DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_Income(Integer, TVarChar, TDateT
 DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_Income(Integer, TVarChar, TDateTime, Boolean, Integer, Integer, Integer, Integer, TDateTime, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_Income(Integer, TVarChar, TDateTime, Boolean, Integer, Integer, Integer, Integer, TDateTime, Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_Income(Integer, TVarChar, TDateTime, Boolean, Integer, Integer, Integer, Integer, TDateTime, Integer, TFloat, TFloat, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_Income(Integer, TVarChar, TDateTime, Boolean, Integer, Integer, Integer, Integer, TDateTime, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_Income(
  INOUT ioId                  Integer   , -- Ключ объекта <Документ Перемещение>
@@ -19,8 +20,6 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_Income(
     IN inOperDateBranch      TDateTime , -- Дата документа
  INOUT ioJuridicalId         Integer   , -- Юрлицо покупатель
    OUT outJuridicalName      TVarChar  , -- Юрлицо покупатель
-    IN inCorrBonus           TFloat    , -- Корректировка долга документа по бонусу
-    IN inCorrOther           TFloat    , -- Корректировка долга документа по прочим причинам
     IN inSession             TVarChar    -- сессия пользователя
 )
 AS
@@ -65,7 +64,7 @@ BEGIN
     
     ioId := lpInsertUpdate_Movement_Income(ioId, inInvNumber, inOperDate, inPriceWithVAT
                                          , inFromId, inToId, inNDSKindId, inContractId, inPaymentDate
-                                         , ioJuridicalId, inCorrBonus, inCorrOther, vbUserId);
+                                         , ioJuridicalId, vbUserId);
 
     PERFORM lpInsertUpdate_MovementString (zc_MovementString_InvNumberBranch(), ioId, inInvNumberBranch);
 
@@ -80,6 +79,7 @@ LANGUAGE PLPGSQL VOLATILE;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.  Воробкало А.А.
+ 21.12.15                                                                       *
  07.12.15                                                                       *
  20.05.15                         *
  24.12.14                         *

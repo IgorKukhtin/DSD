@@ -10,19 +10,19 @@ inherited ReturnOutForm: TReturnOutForm
     Top = 123
     Width = 851
     Height = 403
-    ExplicitTop = 126
+    ExplicitTop = 123
     ExplicitWidth = 851
-    ExplicitHeight = 400
+    ExplicitHeight = 403
     ClientRectBottom = 403
     ClientRectRight = 851
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 851
-      ExplicitHeight = 376
+      ExplicitHeight = 379
       inherited cxGrid: TcxGrid
         Width = 851
         Height = 379
         ExplicitWidth = 851
-        ExplicitHeight = 376
+        ExplicitHeight = 379
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -941,7 +941,7 @@ inherited ReturnOutForm: TReturnOutForm
       end
       item
         Name = 'OperDatePartner'
-        Value = Null
+        Value = 'NULL'
         Component = edOperDatePartner
         DataType = ftDateTime
       end
@@ -1101,8 +1101,10 @@ inherited ReturnOutForm: TReturnOutForm
         Control = edPriceWithVAT
       end
       item
+        Control = edInvNumberPartner
       end
       item
+        Control = edOperDatePartner
       end
       item
       end
