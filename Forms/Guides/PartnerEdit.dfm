@@ -3,7 +3,7 @@
   ClientHeight = 462
   ClientWidth = 727
   ExplicitWidth = 733
-  ExplicitHeight = 487
+  ExplicitHeight = 490
   PixelsPerInch = 96
   TextHeight = 13
   inherited bbOk: TcxButton
@@ -157,17 +157,17 @@
   end
   object cxLabel9: TcxLabel [20]
     Left = 380
-    Top = 281
+    Top = 309
     Caption = #1055#1088#1072#1081#1089'-'#1083#1080#1089#1090
   end
   object cxLabel10: TcxLabel [21]
     Left = 380
-    Top = 311
+    Top = 339
     Caption = #1055#1088#1072#1081#1089'-'#1083#1080#1089#1090' ('#1040#1082#1094#1080#1086#1085#1085#1099#1081')'
   end
   object cePriceList: TcxButtonEdit [22]
     Left = 515
-    Top = 280
+    Top = 308
     Properties.Buttons = <
       item
         Default = True
@@ -179,7 +179,7 @@
   end
   object cePriceListPromo: TcxButtonEdit [23]
     Left = 515
-    Top = 310
+    Top = 338
     Properties.Buttons = <
       item
         Default = True
@@ -191,17 +191,17 @@
   end
   object cxLabel11: TcxLabel [24]
     Left = 380
-    Top = 341
+    Top = 363
     Caption = #1044#1072#1090#1072' '#1085#1072#1095#1072#1083#1072' '#1072#1082#1094#1080#1080
   end
   object cxLabel12: TcxLabel [25]
     Left = 569
-    Top = 341
+    Top = 363
     Caption = #1044#1072#1090#1072' '#1079#1072#1074#1077#1088#1096#1077#1085#1080#1103' '#1072#1082#1094#1080#1080
   end
   object edStartPromo: TcxDateEdit [26]
     Left = 380
-    Top = 370
+    Top = 384
     EditValue = 0d
     Properties.SaveTime = False
     Properties.ShowTime = False
@@ -211,7 +211,7 @@
   end
   object edEndPromo: TcxDateEdit [27]
     Left = 569
-    Top = 369
+    Top = 383
     EditValue = 0d
     Properties.SaveTime = False
     Properties.ShowTime = False
@@ -514,6 +514,23 @@
     Top = 54
     Caption = 'GLN - '#1087#1086#1089#1090#1072#1074#1097#1080#1082
   end
+  object cxLabel32: TcxLabel [69]
+    Left = 380
+    Top = 279
+    Caption = #1050#1083#1072#1089#1089#1080#1092#1080#1082#1072#1090#1086#1088'  '#1089#1074'-'#1074' '#1090#1086#1074'.'
+  end
+  object ceGoodsProperty: TcxButtonEdit [70]
+    Left = 515
+    Top = 278
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    Properties.ReadOnly = True
+    TabOrder = 70
+    Width = 204
+  end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 379
     Top = 419
@@ -742,6 +759,13 @@
         ParamType = ptInput
       end
       item
+        Name = 'inGoodsPropertyId'
+        Value = Null
+        Component = GoodsPropertyGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+      end
+      item
         Name = 'inPriceListId'
         Value = ''
         Component = dsdPriceListGuides
@@ -826,7 +850,7 @@
         ParamType = ptInput
       end>
     Left = 664
-    Top = 398
+    Top = 395
   end
   inherited spGet: TdsdStoredProc
     StoredProcName = 'gpGet_Object_Partner'
@@ -1055,6 +1079,19 @@
         DataType = ftString
       end
       item
+        Name = 'GoodsPropertyId'
+        Value = Null
+        Component = GoodsPropertyGuides
+        ComponentItem = 'Key'
+      end
+      item
+        Name = 'GoodsPropertyName'
+        Value = Null
+        Component = GoodsPropertyGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+      end
+      item
         Name = 'PriceListId'
         Value = ''
         Component = dsdPriceListGuides
@@ -1153,7 +1190,7 @@
         ComponentItem = 'Key'
       end>
     Left = 528
-    Top = 403
+    Top = 400
   end
   object dsdJuridicalGuides: TdsdGuides
     KeyField = 'Id'
@@ -1288,7 +1325,7 @@
         ParamType = ptInput
       end>
     Left = 520
-    Top = 291
+    Top = 326
   end
   object dsdPriceListPromoGuides: TdsdGuides
     KeyField = 'Id'
@@ -1315,7 +1352,7 @@
         ParamType = ptInput
       end>
     Left = 656
-    Top = 291
+    Top = 326
   end
   object StreetGuides: TdsdGuides
     KeyField = 'Id'
@@ -1422,7 +1459,7 @@
         ParamType = ptInput
       end>
     Left = 248
-    Top = 415
+    Top = 383
   end
   object PartnerTagGuides: TdsdGuides
     KeyField = 'Id'
@@ -1606,5 +1643,32 @@
       end>
     Left = 648
     Top = 163
+  end
+  object GoodsPropertyGuides: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = ceGoodsProperty
+    FormNameParam.Value = 'TGoodsPropertyForm'
+    FormNameParam.DataType = ftString
+    FormName = 'TGoodsPropertyForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GoodsPropertyGuides
+        ComponentItem = 'Key'
+        DataType = ftString
+        ParamType = ptInput
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GoodsPropertyGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+      end>
+    Left = 600
+    Top = 274
   end
 end

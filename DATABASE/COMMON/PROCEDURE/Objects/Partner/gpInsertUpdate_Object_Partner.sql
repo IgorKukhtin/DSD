@@ -35,6 +35,8 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Partner(
     IN inPersonalTradeId     Integer   ,    -- Физ лицо(торговый)
     IN inAreaId              Integer   ,    -- Регион
     IN inPartnerTagId        Integer   ,    -- Признак торговой точки 
+
+    IN inGoodsPropertyId     Integer   ,    -- Классификаторы свойств товаров
     
     IN inPriceListId         Integer   ,    -- Прайс-лист
     IN inPriceListPromoId    Integer   ,    -- Прайс-лист(Акционный)
@@ -89,7 +91,7 @@ BEGIN
                                         , inPersonalTradeId := inPersonalTradeId
                                         , inAreaId          := inAreaId
                                         , inPartnerTagId    := inPartnerTagId
-           
+                                        , inGoodsPropertyId := inGoodsPropertyId           
                                         , inPriceListId     := inPriceListId
                                         , inPriceListPromoId:= inPriceListPromoId
                                         , inStartPromo      := inStartPromo
@@ -128,6 +130,7 @@ $BODY$
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 25.12.15         * add inGoodsPropertyId
  06.02.15         * add inEdiOrdspr, inEdiInvoice, inEdiDesadv
 
  22.11.14                                        * all

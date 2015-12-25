@@ -25,6 +25,8 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, ShortName TVarChar,
                PersonalTradeId Integer, PersonalTradeName TVarChar,
                AreaId Integer, AreaName TVarChar,
                PartnerTagId Integer, PartnerTagName TVarChar,
+
+               GoodsPropertyId Integer, GoodsPropertyName TVarChar,
               
                PriceListId Integer, PriceListName TVarChar, 
                PriceListPromoId Integer, PriceListPromoName TVarChar,
@@ -96,6 +98,9 @@ BEGIN
         
            , CAST (0 as Integer)    AS PartnerTagId
            , CAST ('' as TVarChar)  AS PartnerTagName  
+
+           , CAST (0 as Integer)    AS GoodsPropertyId 
+           , CAST ('' as TVarChar)  AS GoodsPropertyName
 
            , CAST (0 as Integer)    AS PriceListId 
            , CAST ('' as TVarChar)  AS PriceListName 
@@ -170,6 +175,9 @@ BEGIN
         
            , Object_PartnerTag.Id            AS PartnerTagId
            , Object_PartnerTag.ValueData     AS PartnerTagName           
+
+           , Object_GoodsProperty.Id         AS GoodsPropertyId
+           , Object_GoodsProperty.ValueData  AS GoodsPropertyName
            
            , Object_PriceList.Id         AS PriceListId 
            , Object_PriceList.ValueData  AS PriceListName 
@@ -307,7 +315,12 @@ BEGIN
                                 ON ObjectLink_Partner_PriceListPromo.ObjectId = Object_Partner.Id 
                                AND ObjectLink_Partner_PriceListPromo.DescId = zc_ObjectLink_Partner_PriceListPromo()
            LEFT JOIN Object AS Object_PriceListPromo ON Object_PriceListPromo.Id = ObjectLink_Partner_PriceListPromo.ChildObjectId 
-         
+
+           LEFT JOIN ObjectLink AS ObjectLink_Partner_GoodsProperty
+                                ON ObjectLink_Partner_GoodsProperty.ObjectId = Object_Partner.Id 
+                               AND ObjectLink_Partner_GoodsProperty.DescId = zc_ObjectLink_Partner_GoodsProperty()
+           LEFT JOIN Object AS Object_GoodsProperty ON Object_GoodsProperty.Id = ObjectLink_Partner_GoodsProperty.ChildObjectId
+        
          
            LEFT JOIN ObjectLink AS ObjectLink_City_CityKind                                          -- по улице
                                 ON ObjectLink_City_CityKind.ObjectId = Object_Street_View.CityId
@@ -338,6 +351,7 @@ ALTER FUNCTION gpGet_Object_Partner (Integer, Integer, TVarChar) OWNER TO postgr
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 25.12.15         * add GoodsProperty
  10.02.15         * add remine  05.02.15
  20.11.14         * add remine 
  11.11.14         * add поля адреса

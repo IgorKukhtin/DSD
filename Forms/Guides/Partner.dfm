@@ -128,6 +128,15 @@ object PartnerForm: TPartnerForm
         HeaderAlignmentVert = vaCenter
         Width = 120
       end
+      object clGoodsPropertyName: TcxGridDBColumn
+        Caption = #1050#1083#1072#1089#1089#1080#1092#1080#1082#1072#1090#1086#1088' '#1089#1074#1086#1081#1089#1090#1074' '#1090#1086#1074#1072#1088#1072
+        DataBinding.FieldName = 'GoodsPropertyName'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 80
+      end
       object clPriceListName: TcxGridDBColumn
         Caption = #1055#1088#1072#1081#1089'-'#1083#1080#1089#1090
         DataBinding.FieldName = 'PriceListName'

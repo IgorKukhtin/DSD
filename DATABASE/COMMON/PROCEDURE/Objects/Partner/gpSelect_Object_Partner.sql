@@ -28,6 +28,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar,
                PersonalTradeId Integer, PersonalTradeCode Integer, PersonalTradeName TVarChar,
                AreaId Integer, AreaName TVarChar,
                PartnerTagId Integer, PartnerTagName TVarChar,
+               GoodsPropertyId Integer, GoodsPropertyName TVarChar,
                
                OKPO TVarChar,
                PriceListId Integer, PriceListName TVarChar, 
@@ -148,6 +149,9 @@ BEGIN
         
          , Object_PartnerTag.Id            AS PartnerTagId
          , Object_PartnerTag.ValueData     AS PartnerTagName
+
+         , Object_GoodsProperty.Id         AS GoodsPropertyId
+         , Object_GoodsProperty.ValueData  AS GoodsPropertyName
                   
          , ObjectHistory_JuridicalDetails_View.OKPO
 
@@ -341,6 +345,12 @@ BEGIN
                              AND ObjectLink_Partner_Unit.DescId = zc_ObjectLink_Partner_Unit()
          LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = ObjectLink_Partner_Unit.ChildObjectId
 
+         LEFT JOIN ObjectLink AS ObjectLink_Partner_GoodsProperty
+                              ON ObjectLink_Partner_GoodsProperty.ObjectId = Object_Partner.Id 
+                             AND ObjectLink_Partner_GoodsProperty.DescId = zc_ObjectLink_Partner_GoodsProperty()
+         LEFT JOIN Object AS Object_GoodsProperty ON Object_GoodsProperty.Id = ObjectLink_Partner_GoodsProperty.ChildObjectId
+        
+
     WHERE (inJuridicalId = 0 OR inJuridicalId = ObjectLink_Partner_Juridical.ChildObjectId)
       AND (ObjectLink_Juridical_JuridicalGroup.ChildObjectId = vbObjectId_Constraint
            OR Object_PersonalTrade.BranchId = vbBranchId_Constraint
@@ -355,6 +365,7 @@ ALTER FUNCTION gpSelect_Object_Partner (integer, Boolean, TVarChar) OWNER TO pos
 /*-------------------------------------------------------------------------------
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 25.12.15         * add GoodsProperty
  06.10.15         * add inShowAll
  06.02.15         * add redmine 
  20.11.14         * add redmine 
