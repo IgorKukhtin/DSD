@@ -129,6 +129,8 @@ BEGIN
         AND
         MI_Payment.NeedPay = TRUE
         AND
+        MI_Payment.SummaPay > 0
+        AND
         COALESCE(MI_Payment.BankAccountId,0) > 0;
     -- Создаем проводки переброски сумм с документов корректировки долга на приходы
     -- !!!обязательно!!! очистили таблицу проводок

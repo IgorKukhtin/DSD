@@ -58,6 +58,26 @@ BEGIN
      ELSE
 
      RETURN QUERY
+        WITH 
+        MovementPayment AS (  SELECT MovementPayment.OperDate, MIFloat_IncomeId.ValueData::Integer AS MovementId
+                                FROM 
+                                    Movement AS MovementPayment
+                                    INNER JOIN MovementItem ON MovementItem.MovementId = MovementPayment.Id
+                                                           AND MovementItem.DescId = zc_MI_Master()
+                                                           AND MovementItem.IsErased = FALSE
+                                    INNER JOIN MovementItemFloat AS MIFloat_IncomeId
+                                                                 ON MIFloat_IncomeId.MovementItemId = MovementItem.ID
+                                                                AND MIFloat_IncomeId.DescId = zc_MIFloat_MovementId()
+                                                                AND MIFloat_IncomeId.ValueData = inMovementId
+                                    INNER JOIN MovementItemBoolean AS MIBoolean_NeedPay
+                                                                   ON MIBoolean_NeedPay.MovementItemId = MovementItem.ID
+                                                                  AND MIBoolean_NeedPay.DescId = zc_MIBoolean_NeedPay()
+                                                                  AND MIBoolean_NeedPay.ValueData = TRUE
+                                WHERE
+                                    MovementPayment.DescId = zc_Movement_Payment()
+                                    AND
+                                    MovementPayment.StatusId = zc_Enum_Status_Complete()
+                              )
        SELECT
              Movement_Income_View.Id
            , Movement_Income_View.InvNumber
@@ -83,11 +103,9 @@ BEGIN
            , Movement_Income_View.JuridicalId
            , Movement_Income_View.JuridicalName
            , CASE WHEN Movement_Income_View.PaySumm <= 0.01 then TRUE ELSE FALSE END AS isPay
-           , (SELECT MAX(MovementItemContainer.OperDate) 
-              FROM MovementItemContainer 
-              Where MovementItemContainer.ContainerId = Movement_Income_View.PaymentContainerId 
-                AND MovementItemContainer.MovementDescId = zc_Movement_BankAccount())::TDateTime AS DateLastPay
-       FROM Movement_Income_View       
+           , MovementPayment.OperDate AS DateLastPay
+       FROM Movement_Income_View
+           LEFT OUTER JOIN MovementPayment ON MovementPayment.MovementId = Movement_Income_View.Id
       WHERE Movement_Income_View.Id = inMovementId;
 
        END IF;

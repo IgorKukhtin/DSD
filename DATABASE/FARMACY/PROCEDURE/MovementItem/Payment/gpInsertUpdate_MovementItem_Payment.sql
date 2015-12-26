@@ -65,14 +65,13 @@ BEGIN
         MovementItem
     WHERE
         MovementItem.Id = ioId;
-    IF COALESCE(vbOldSummaPay,ioSummaPay) = ioSummaPay
+
+    ioSummaPay := COALESCE(inIncome_PaySumm,0)-COALESCE(inSummaCorrBonus,0)-COALESCE(inSummaCorrReturnOut,0)-COALESCE(inSummaCorrOther,0);
+    IF ioSummaPay < 0 
     THEN
-        ioSummaPay := COALESCE(inIncome_PaySumm,0)-COALESCE(inSummaCorrBonus,0)-COALESCE(inSummaCorrReturnOut,0)-COALESCE(inSummaCorrOther,0);
-        IF ioSummaPay < 0 
-        THEN
-            ioSummaPay := 0;
-        END IF;
+        RAISE EXCEPTION 'Ошибка! Общая сумма платежа не должна превышать долг по накладной.';
     END IF;
+
     IF COALESCE(ioID,0) = 0 
     THEN
         ioNeedPay := TRUE;

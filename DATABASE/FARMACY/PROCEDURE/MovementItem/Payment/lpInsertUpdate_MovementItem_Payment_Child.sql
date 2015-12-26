@@ -68,7 +68,7 @@ BEGIN
     --нашли подчиненную строку
     vbChildId := lpInsertUpdate_MovementItem (COALESCE(vbChildId,0), zc_MI_Child(), NULL, vbMovementId, vbSummaPay, inId);
     
-    IF vbNeedPay = TRUE
+    IF (vbNeedPay = TRUE) AND COALESCE(vbSummaPay,0)>0
     THEN
         --дата операции оплаты
         SELECT
