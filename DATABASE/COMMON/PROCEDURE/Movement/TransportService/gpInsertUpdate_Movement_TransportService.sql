@@ -108,7 +108,10 @@ BEGIN
                                                     ON ObjectLink_ContractCondition_ContractConditionKind.ObjectId = ObjectLink_ContractCondition_Contract.ObjectId
                                                    AND ObjectLink_ContractCondition_ContractConditionKind.ChildObjectId = inContractConditionKindId
                                                    AND ObjectLink_ContractCondition_ContractConditionKind.DescId = zc_ObjectLink_ContractCondition_ContractConditionKind()
-                                                   AND inContractConditionKindId NOT IN (zc_Enum_ContractConditionKind_TransportDistance())
+                                                   AND inContractConditionKindId NOT IN (zc_Enum_ContractConditionKind_TransportDistance()
+                                                                                       , zc_Enum_ContractConditionKind_TransportDistanceInt()
+                                                                                       , zc_Enum_ContractConditionKind_TransportDistanceExt()
+                                                                                        )
                                     LEFT JOIN ObjectFloat AS ObjectFloat_Value
                                                           ON ObjectFloat_Value.ObjectId = ObjectLink_ContractCondition_Contract.ObjectId
                                                          AND ObjectFloat_Value.DescId = zc_ObjectFloat_ContractCondition_Value()
@@ -122,7 +125,10 @@ BEGIN
                                                     ON ObjectLink_ContractCondition_ContractConditionKind.ObjectId = ObjectLink_ContractCondition_Contract.ObjectId
                                                    AND ObjectLink_ContractCondition_ContractConditionKind.ChildObjectId = inContractConditionKindId
                                                    AND ObjectLink_ContractCondition_ContractConditionKind.DescId = zc_ObjectLink_ContractCondition_ContractConditionKind()
-                                                   AND inContractConditionKindId IN (zc_Enum_ContractConditionKind_TransportDistance())
+                                                   AND inContractConditionKindId IN (zc_Enum_ContractConditionKind_TransportDistance()
+                                                                                   , zc_Enum_ContractConditionKind_TransportDistanceInt()
+                                                                                   , zc_Enum_ContractConditionKind_TransportDistanceExt()
+                                                                                    )
                                     LEFT JOIN ObjectFloat AS ObjectFloat_Value 
                                                           ON ObjectFloat_Value.ObjectId = ObjectLink_ContractCondition_Contract.ObjectId
                                                          AND ObjectFloat_Value.DescId = zc_ObjectFloat_ContractCondition_Value()
@@ -142,7 +148,10 @@ BEGIN
                                                     ON ObjectLink_ContractCondition_ContractConditionKind.ObjectId = ObjectLink_ContractCondition_Contract.ObjectId
                                                    AND ObjectLink_ContractCondition_ContractConditionKind.ChildObjectId = inContractConditionKindId
                                                    AND ObjectLink_ContractCondition_ContractConditionKind.DescId = zc_ObjectLink_ContractCondition_ContractConditionKind()
-                                                   AND inContractConditionKindId IN (zc_Enum_ContractConditionKind_TransportDistance())
+                                                   AND inContractConditionKindId IN (zc_Enum_ContractConditionKind_TransportDistance()
+                                                                                   , zc_Enum_ContractConditionKind_TransportDistanceInt()
+                                                                                   , zc_Enum_ContractConditionKind_TransportDistanceExt()
+                                                                                    )
                                     JOIN ObjectFloat AS ObjectFloat_Value
                                                      ON ObjectFloat_Value.ObjectId = ObjectLink_ContractCondition_Contract.ObjectId
                                                     AND ObjectFloat_Value.DescId = zc_ObjectFloat_ContractCondition_Value()
