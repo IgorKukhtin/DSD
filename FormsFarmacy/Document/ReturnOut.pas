@@ -69,6 +69,8 @@ type
     cxLabel12: TcxLabel;
     edJuridical: TcxButtonEdit;
     GuidesJuridical: TdsdGuides;
+    cxLabel13: TcxLabel;
+    deIncomeOperDate: TcxDateEdit;
   private
     { Private declarations }
   public

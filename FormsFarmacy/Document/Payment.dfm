@@ -23,8 +23,9 @@ inherited PaymentForm: TPaymentForm
         Top = 61
         Width = 1005
         Height = 462
+        ExplicitTop = 61
         ExplicitWidth = 1005
-        ExplicitHeight = 478
+        ExplicitHeight = 462
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.FooterSummaryItems = <
             item
@@ -186,6 +187,7 @@ inherited PaymentForm: TPaymentForm
             Properties.DisplayFormat = ',0.00'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 61
           end
           object colNeedPay: TcxGridDBColumn
@@ -383,8 +385,6 @@ inherited PaymentForm: TPaymentForm
         HotZoneClassName = 'TcxMediaPlayer8Style'
         AlignSplitter = salTop
         Control = cxGrid1
-        ExplicitTop = 57
-        ExplicitWidth = 466
       end
     end
   end
