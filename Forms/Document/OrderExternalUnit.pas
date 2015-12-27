@@ -85,7 +85,7 @@ type
     cbPrinted: TcxCheckBox;
     edDayCount: TcxCurrencyEdit;
     cxLabel18: TcxLabel;
-    AmountPartner: TcxGridDBColumn;
+    clAmountPartner: TcxGridDBColumn;
     AmountForecast: TcxGridDBColumn;
     spUpdateAmountRemains: TdsdStoredProc;
     actUpdateAmountRemains: TdsdExecStoredProc;
@@ -119,6 +119,10 @@ type
     ceComment: TcxTextEdit;
     cxLabel21: TcxLabel;
     cxLabel22: TcxLabel;
+    bb: TdxBarButton;
+    mactUpdateFromOrder: TMultiAction;
+    actInsertFromOrder: TdsdExecStoredProc;
+    spInsertFromOrder: TdsdStoredProc;
   private
     { Private declarations }
   public

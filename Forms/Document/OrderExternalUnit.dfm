@@ -2,9 +2,8 @@ inherited OrderExternalUnitForm: TOrderExternalUnitForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1047#1072#1103#1074#1082#1072' '#1089#1090#1086#1088#1086#1085#1085#1103#1103' ('#1085#1072' '#1075#1083'.'#1089#1082#1083#1072#1076')>'
   ClientHeight = 668
   ClientWidth = 1031
-  ExplicitLeft = -258
   ExplicitWidth = 1047
-  ExplicitHeight = 703
+  ExplicitHeight = 706
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -12,17 +11,17 @@ inherited OrderExternalUnitForm: TOrderExternalUnitForm
     Width = 1031
     Height = 502
     ExplicitTop = 166
-    ExplicitWidth = 1366
+    ExplicitWidth = 1031
     ExplicitHeight = 502
     ClientRectBottom = 502
     ClientRectRight = 1031
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 1366
+      ExplicitWidth = 1031
       ExplicitHeight = 478
       inherited cxGrid: TcxGrid
         Width = 1031
         Height = 478
-        ExplicitWidth = 1366
+        ExplicitWidth = 1031
         ExplicitHeight = 478
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
@@ -54,7 +53,7 @@ inherited OrderExternalUnitForm: TOrderExternalUnitForm
             item
               Format = ',0.####'
               Kind = skSum
-              Column = AmountPartner
+              Column = clAmountPartner
             end
             item
               Format = ',0.####'
@@ -105,7 +104,7 @@ inherited OrderExternalUnitForm: TOrderExternalUnitForm
             item
               Format = ',0.####'
               Kind = skSum
-              Column = AmountPartner
+              Column = AmountRemains
             end
             item
               Format = ',0.####'
@@ -126,6 +125,11 @@ inherited OrderExternalUnitForm: TOrderExternalUnitForm
               Format = ',0.####'
               Kind = skSum
               Column = AmountCalcOrder
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = clAmountPartner
             end>
           OptionsBehavior.FocusCellOnCycle = False
           OptionsCustomize.DataRowSizing = False
@@ -199,17 +203,19 @@ inherited OrderExternalUnitForm: TOrderExternalUnitForm
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            GroupSummaryAlignment = taRightJustify
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 70
           end
-          object AmountPartner: TcxGridDBColumn [7]
+          object clAmountPartner: TcxGridDBColumn [7]
             Caption = #1047#1072#1082#1072#1079' '#1087#1086#1082#1091#1087'.'
             DataBinding.FieldName = 'AmountPartner'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            GroupSummaryAlignment = taRightJustify
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
@@ -367,9 +373,7 @@ inherited OrderExternalUnitForm: TOrderExternalUnitForm
     Width = 1031
     Height = 140
     TabOrder = 3
-    ExplicitLeft = -304
-    ExplicitTop = 88
-    ExplicitWidth = 1366
+    ExplicitWidth = 1031
     ExplicitHeight = 140
     inherited edInvNumber: TcxTextEdit
       Left = 8
@@ -980,6 +984,32 @@ inherited OrderExternalUnitForm: TOrderExternalUnitForm
       Hint = #1057#1092#1086#1088#1084#1080#1088#1086#1074#1072#1090#1100' <'#1042#1089#1077'> '#1088#1072#1089#1095#1077#1090#1085#1099#1077' '#1076#1072#1085#1085#1099#1077
       ImageIndex = 50
     end
+    object mactUpdateFromOrder: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actInsertFromOrder
+        end
+        item
+          Action = dsdRefreshMI
+        end>
+      Caption = #1055#1077#1088#1077#1085#1077#1089#1090#1080' '#1076#1072#1085#1085#1099#1077' '#1080#1079' '#1079#1072#1103#1074#1082#1080' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1103
+      Hint = #1055#1077#1088#1077#1085#1077#1089#1090#1080' '#1076#1072#1085#1085#1099#1077' '#1080#1079' '#1079#1072#1103#1074#1082#1080' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1103
+      ImageIndex = 59
+    end
+    object actInsertFromOrder: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spInsertFromOrder
+      StoredProcList = <
+        item
+          StoredProc = spInsertFromOrder
+        end>
+      Caption = 'actInsertFromOrder'
+      Hint = 'aaInsertFromOrder'
+    end
   end
   inherited MasterDS: TDataSource
     Left = 32
@@ -1060,6 +1090,14 @@ inherited OrderExternalUnitForm: TOrderExternalUnitForm
         item
           Visible = True
           ItemName = 'bbAddMask'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bb'
         end
         item
           Visible = True
@@ -1153,6 +1191,10 @@ inherited OrderExternalUnitForm: TOrderExternalUnitForm
       Action = actUpdateAmountAll
       Category = 0
     end
+    object bb: TdxBarButton
+      Action = mactUpdateFromOrder
+      Category = 0
+    end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
     OnlyEditingCellOnEnter = True
@@ -1198,7 +1240,6 @@ inherited OrderExternalUnitForm: TOrderExternalUnitForm
     Params = <
       item
         Name = 'Id'
-        Value = Null
         ParamType = ptInputOutput
       end
       item
@@ -2322,8 +2363,8 @@ inherited OrderExternalUnitForm: TOrderExternalUnitForm
         ParamType = ptInput
       end>
     PackSize = 1
-    Left = 730
-    Top = 200
+    Left = 762
+    Top = 192
   end
   object spUpdateAmountPartner: TdsdStoredProc
     StoredProcName = 'gpUpdateMI_OrderExternal_AmountPartner'
@@ -2477,5 +2518,21 @@ inherited OrderExternalUnitForm: TOrderExternalUnitForm
       end>
     Left = 692
     Top = 100
+  end
+  object spInsertFromOrder: TdsdStoredProc
+    StoredProcName = 'gpInsert_MI_OrderExternalUnit'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+      end>
+    PackSize = 1
+    Left = 458
+    Top = 400
   end
 end
