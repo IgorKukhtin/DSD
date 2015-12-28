@@ -19,7 +19,7 @@ CREATE OR REPLACE FUNCTION gpReport_JuridicalSold(
     IN inIsPartionMovement        Boolean   ,
     IN inSession                  TVarChar    -- сессия пользователя
 )
-RETURNS TABLE (ContainerId Integer, JuridicalCode Integer, JuridicalName TVarChar, OKPO TVarChar, JuridicalGroupName TVarChar
+RETURNS TABLE (ContainerId Integer, JuridicalCode Integer, JuridicalName TVarChar, OKPO TVarChar, INN TVarChar, JuridicalGroupName TVarChar
              , RetailName TVarChar, RetailReportName TVarChar
              , PartnerCode Integer, PartnerName TVarChar
              , JuridicalPartnerlName TVarChar
@@ -109,11 +109,13 @@ BEGIN
                                        GROUP BY ObjectLink_Contract_Personal.ObjectId
                                       )
         , View_InfoMoney AS (SELECT * FROM Object_InfoMoney_View)
+
      SELECT 
         Operation.ContainerId,
         Object_Juridical.ObjectCode AS JuridicalCode,   
         Object_Juridical.ValueData AS JuridicalName,
         ObjectHistory_JuridicalDetails_View.OKPO,
+        ObjectHistory_JuridicalDetails_View.INN, 
         Object_JuridicalGroup.ValueData  AS JuridicalGroupName,
         Object_Retail.ValueData       AS RetailName,
         Object_RetailReport.ValueData AS RetailReportName,

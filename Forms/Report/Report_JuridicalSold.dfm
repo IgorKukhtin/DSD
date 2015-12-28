@@ -4,7 +4,7 @@ inherited Report_JuridicalSoldForm: TReport_JuridicalSoldForm
   ClientWidth = 1118
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   ExplicitWidth = 1134
-  ExplicitHeight = 591
+  ExplicitHeight = 594
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -378,6 +378,15 @@ inherited Report_JuridicalSoldForm: TReport_JuridicalSoldForm
           object colOKPO: TcxGridDBColumn
             Caption = #1054#1050#1055#1054
             DataBinding.FieldName = 'OKPO'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 55
+          end
+          object colINN: TcxGridDBColumn
+            Caption = #1048#1053#1053
+            DataBinding.FieldName = 'INN'
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
