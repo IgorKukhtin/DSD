@@ -776,7 +776,8 @@ uses
   Report_Tara in '..\..\Forms\Report\Report_Tara.pas' {Report_TaraForm: TParentForm},
   PartnerAndUnit in '..\..\Forms\Guides\PartnerAndUnit.pas' {PartnerAndUnitForm: TParentForm},
   Report_TaraDialog in '..\..\Forms\Report\Report_TaraDialog.pas' {Report_TaraDialogForm: TParentForm},
-  Report_TaraMovement in '..\..\Forms\Report\Report_TaraMovement.pas' {Report_TaraMovementForm: TParentForm};
+  Report_TaraMovement in '..\..\Forms\Report\Report_TaraMovement.pas' {Report_TaraMovementForm: TParentForm},
+  GoodsExternal in '..\..\Forms\Guides\GoodsExternal.pas' {GoodsExternalForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}
