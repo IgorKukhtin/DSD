@@ -381,6 +381,7 @@ IF inPersonalTrade = 'Пономаренко Вікторія' THEN inPersonalTrade:= 'Пономаренко 
                                         , inPersonalTradeId := NULL
                                         , inAreaId          := NULL
                                         , inPartnerTagId    := NULL
+                                        , inGoodsPropertyId := NULL
            
                                         , inPriceListId     := NULL
                                         , inPriceListPromoId:= NULL

@@ -760,7 +760,7 @@ BEGIN
              , tmpObject_GoodsPropertyValue.BarCode
              , tmpObject_GoodsPropertyValue.BarCodeGLN
              , tmpObject_GoodsPropertyValue.BoxCount             
-        FROM (SELECT MAX (tmpObject_GoodsPropertyValue.ObjectId) AS ObjectId, GoodsId FROM tmpObject_GoodsPropertyValue WHERE Article <> '' OR ArticleGLN <> '' OR BarCodeGLN <> '' GROUP BY GoodsId
+        FROM (SELECT MAX (tmpObject_GoodsPropertyValue.ObjectId) AS ObjectId, GoodsId FROM tmpObject_GoodsPropertyValue WHERE Article <> '' OR ArticleGLN <> '' OR BarCode <> '' OR BarCodeGLN <> '' GROUP BY GoodsId
              ) AS tmpGoodsProperty_find
              LEFT JOIN tmpObject_GoodsPropertyValue ON tmpObject_GoodsPropertyValue.ObjectId =  tmpGoodsProperty_find.ObjectId
        )
@@ -970,6 +970,7 @@ BEGIN
             LEFT JOIN tmpObject_GoodsPropertyValue ON tmpObject_GoodsPropertyValue.GoodsId = tmpMI.GoodsId
                                                   AND tmpObject_GoodsPropertyValue.GoodsKindId = tmpMI.GoodsKindId
                                                   AND (tmpObject_GoodsPropertyValue.Article <> ''
+                                                    OR tmpObject_GoodsPropertyValue.BarCode <> ''
                                                     OR tmpObject_GoodsPropertyValue.ArticleGLN <> ''
                                                     OR tmpObject_GoodsPropertyValue.Name <> '')
             LEFT JOIN tmpObject_GoodsPropertyValueGroup ON tmpObject_GoodsPropertyValueGroup.GoodsId = tmpMI.GoodsId

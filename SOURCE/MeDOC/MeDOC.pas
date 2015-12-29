@@ -917,9 +917,9 @@ begin
            CreateNodeROW_XML(ZVIT.ORG.CARD.DOCUMENT, '1', IntToStr(i), 'TAB1_A6', ReplaceStr(FormatFloat('0.00', FieldByName('Price').AsFloat), FormatSettings.DecimalSeparator, '.'));
 
            //Коригування кількості (зміна кількості, об'єму, обсягу)
-           CreateNodeROW_XML(ZVIT.ORG.CARD.DOCUMENT, '1', IntToStr(i), 'TAB1_A7', ReplaceStr(FormatFloat('0.00', FieldByName('Amount_for_PriceCor').AsFloat), FormatSettings.DecimalSeparator, '.'));
+           CreateNodeROW_XML(ZVIT.ORG.CARD.DOCUMENT, '1', IntToStr(i), 'TAB1_A7', ReplaceStr(FormatFloat('0.00', -1 * FieldByName('Price_for_PriceCor').AsFloat), FormatSettings.DecimalSeparator, '.'));
            //Коригування кількості  (ціна постачання одиниці товару\послуги):
-           CreateNodeROW_XML(ZVIT.ORG.CARD.DOCUMENT, '1', IntToStr(i), 'TAB1_A8', ReplaceStr(FormatFloat('0.00', - FieldByName('Price_for_PriceCor').AsFloat), FormatSettings.DecimalSeparator, '.'));
+           CreateNodeROW_XML(ZVIT.ORG.CARD.DOCUMENT, '1', IntToStr(i), 'TAB1_A8', ReplaceStr(FormatFloat('0.00', 1 * FieldByName('Amount_for_PriceCor').AsFloat), FormatSettings.DecimalSeparator, '.'));
 
            //Підлягають кориг. обсяги постачання без урахування ПДВ (за основною ставкою):
            CreateNodeROW_XML(ZVIT.ORG.CARD.DOCUMENT, '1', IntToStr(i), 'TAB1_A9', ReplaceStr(FormatFloat('0.00', - FieldByName('AmountSumm').AsFloat), FormatSettings.DecimalSeparator, '.'));
