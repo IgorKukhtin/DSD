@@ -9,7 +9,7 @@ CREATE OR REPLACE FUNCTION gpUpdate_Object_GoodsExternal(
     IN inGoodsKindId           Integer   ,     -- Вид товара
     IN inSession               TVarChar        -- сессия пользователя
 )
-  RETURNS integer AS
+  RETURNS VOID AS
 $BODY$
    DECLARE vbUserId Integer;
    
@@ -17,9 +17,6 @@ BEGIN
    -- проверка прав пользователя на вызов процедуры
    vbUserId := lpCheckRight(inSession, zc_Enum_Process_Update_Object_GoodsExternal());
 
-   -- пытаемся найти код
-   IF inId <> 0 AND COALESCE (inCode, 0) = 0 THEN inCode := (SELECT ObjectCode FROM Object WHERE Id = inId); END IF;
-  
    -- сохранили связь с <>
    PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_GoodsExternal_Goods(), inId, inGoodsId);  
    -- сохранили связь с <>

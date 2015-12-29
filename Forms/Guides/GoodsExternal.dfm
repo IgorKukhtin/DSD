@@ -27,7 +27,6 @@ inherited GoodsExternalForm: TGoodsExternalForm
           OptionsData.CancelOnExit = True
           OptionsData.Deleting = False
           OptionsData.DeletingConfirmation = False
-          OptionsData.Editing = False
           Styles.Content = nil
           Styles.Inactive = nil
           Styles.Selection = nil
@@ -36,6 +35,7 @@ inherited GoodsExternalForm: TGoodsExternalForm
           object Code: TcxGridDBColumn
             Caption = #1050#1086#1076
             DataBinding.FieldName = 'Code'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
@@ -47,7 +47,7 @@ inherited GoodsExternalForm: TGoodsExternalForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 150
+            Width = 282
           end
           object clGoodsName: TcxGridDBColumn
             Caption = #1058#1086#1074#1072#1088
@@ -62,7 +62,7 @@ inherited GoodsExternalForm: TGoodsExternalForm
             Properties.ReadOnly = True
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 220
+            Width = 330
           end
           object colGoodskindName: TcxGridDBColumn
             Caption = #1042#1080#1076' '#1090#1086#1074#1072#1088#1072
@@ -77,7 +77,7 @@ inherited GoodsExternalForm: TGoodsExternalForm
             Properties.ReadOnly = True
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 144
+            Width = 95
           end
           object colisErased: TcxGridDBColumn
             Caption = #1059#1076#1072#1083#1077#1085
@@ -98,78 +98,6 @@ inherited GoodsExternalForm: TGoodsExternalForm
   end
   inherited ActionList: TActionList
     Left = 95
-    inherited ChoiceGuides: TdsdChoiceGuides
-      Params = <
-        item
-          Name = 'Key'
-          Value = Null
-          Component = MasterCDS
-          ComponentItem = 'Id'
-        end
-        item
-          Name = 'TextValue'
-          Value = Null
-          Component = MasterCDS
-          ComponentItem = 'InvNumber'
-          DataType = ftString
-        end
-        item
-          Name = 'Price'
-          Value = Null
-          Component = MasterCDS
-          ComponentItem = 'Price'
-          DataType = ftFloat
-        end
-        item
-          Name = 'StorageName'
-          Value = Null
-          Component = MasterCDS
-          ComponentItem = 'StorageName'
-          DataType = ftString
-        end
-        item
-          Name = 'OperDatePartion'
-          Value = 'NULL'
-          Component = MasterCDS
-          ComponentItem = 'OperDate'
-          DataType = ftDateTime
-        end
-        item
-          Name = 'UnitName'
-          Value = Null
-          Component = MasterCDS
-          ComponentItem = 'UnitName'
-          DataType = ftString
-        end
-        item
-          Value = Null
-          ParamType = ptUnknown
-        end
-        item
-          Value = Null
-          DataType = ftString
-          ParamType = ptUnknown
-        end
-        item
-          Value = Null
-          ParamType = ptUnknown
-        end
-        item
-          Value = Null
-          DataType = ftString
-          ParamType = ptUnknown
-        end
-        item
-          Value = Null
-          DataType = ftString
-          ParamType = ptUnknown
-        end
-        item
-          Value = Null
-          DataType = ftFloat
-          ParamType = ptUnknown
-        end>
-    end
     object actShowAll: TBooleanStoredProcAction
       Category = 'DSDLib'
       MoveParams = <>
@@ -199,6 +127,7 @@ inherited GoodsExternalForm: TGoodsExternalForm
           StoredProc = spUpdate
         end>
       Caption = 'actUpdateDataSet'
+      DataSource = MasterDS
     end
     object GoodsChoice: TOpenChoiceForm
       Category = 'DSDLib'
@@ -258,28 +187,6 @@ inherited GoodsExternalForm: TGoodsExternalForm
   end
   inherited spSelect: TdsdStoredProc
     StoredProcName = 'gpSelect_Object_GoodsExternal'
-    Params = <
-      item
-        Name = 'inGoodsId'
-        Value = '0'
-        Component = FormParams
-        ComponentItem = 'inGoodsId'
-        ParamType = ptInput
-      end
-      item
-        Name = 'inUnitId'
-        Value = '0'
-        Component = FormParams
-        ComponentItem = 'inUnitId'
-        ParamType = ptInput
-      end
-      item
-        Name = 'inShowAll'
-        Value = False
-        Component = actShowAll
-        DataType = ftBoolean
-        ParamType = ptInput
-      end>
     Left = 112
     Top = 82
   end
@@ -361,6 +268,7 @@ inherited GoodsExternalForm: TGoodsExternalForm
       item
         Name = 'inId'
         Value = Null
+        Component = MasterCDS
         ComponentItem = 'Id'
         ParamType = ptInput
       end

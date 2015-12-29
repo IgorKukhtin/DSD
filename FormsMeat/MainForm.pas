@@ -663,6 +663,8 @@ type
     N91: TMenuItem;
     actReport_Tara: TdsdOpenForm;
     N92: TMenuItem;
+    actGoodsExternal: TdsdOpenForm;
+    N93: TMenuItem;
     procedure actReport_OLAPSoldExecute(Sender: TObject);
     procedure FormShow(Sender: TObject);
   private
