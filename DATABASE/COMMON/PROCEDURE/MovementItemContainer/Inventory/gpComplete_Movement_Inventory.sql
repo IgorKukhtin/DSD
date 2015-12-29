@@ -51,7 +51,7 @@ BEGIN
      UPDATE MovementItem SET isErased = TRUE
      WHERE MovementItem.isErased = FALSE
        AND MovementItem.Amount = 0
-       AND MovementItem.Id = inMovementId;
+       AND MovementItem.MovementId = inMovementId;
 
 
      -- Эти параметры нужны для расчета остатка

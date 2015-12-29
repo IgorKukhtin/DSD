@@ -24,6 +24,7 @@ RETURNS TABLE (Id Integer, GoodsId Integer, GoodsCode Integer, GoodsName TVarCha
 AS
 $BODY$
   DECLARE vbUserId Integer;
+  DECLARE vbGoodsPropertyId Integer;
   DECLARE vbIsOrderDnepr Boolean;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
@@ -36,12 +37,34 @@ BEGIN
 
      -- определяется
      vbIsOrderDnepr:= EXISTS (SELECT UserId FROM ObjectLink_UserRole_View WHERE UserId = vbUserId AND RoleId IN (402720, zc_Enum_Role_Admin())); -- Заявки-Днепр
+     -- определяется
+     vbGoodsPropertyId:= zfCalc_GoodsPropertyId (0, (SELECT ObjectLink_Partner_Juridical.ChildObjectId FROM MovementLinkObject LEFT JOIN ObjectLink AS ObjectLink_Partner_Juridical ON ObjectLink_Partner_Juridical.ObjectId = MovementLinkObject.ObjectId AND ObjectLink_Partner_Juridical.DescId = zc_ObjectLink_Partner_Juridical() WHERE MovementLinkObject.MovementId = inMovementId AND MovementLinkObject.DescId = zc_MovementLinkObject_Partner())
+                                                );
 
 
      IF inShowAll THEN
 
      RETURN QUERY
-       WITH tmpGoodsByGoodsKind AS (SELECT Object_GoodsByGoodsKind_View.GoodsId
+       WITH tmpGoodsPropertyValue AS (SELECT ObjectLink_GoodsPropertyValue_Goods.ChildObjectId                   AS GoodsId
+                                           , COALESCE (ObjectLink_GoodsPropertyValue_GoodsKind.ChildObjectId, 0) AS GoodsKindId
+                                           , ObjectString_ArticleGLN.ValueData                                   AS ArticleGLN
+                                      FROM (SELECT vbGoodsPropertyId AS GoodsPropertyId WHERE vbGoodsPropertyId <> 0
+                                           ) AS tmpGoodsProperty
+                                           INNER JOIN ObjectLink AS ObjectLink_GoodsPropertyValue_GoodsProperty
+                                                                 ON ObjectLink_GoodsPropertyValue_GoodsProperty.ChildObjectId = tmpGoodsProperty.GoodsPropertyId
+                                                                AND ObjectLink_GoodsPropertyValue_GoodsProperty.DescId = zc_ObjectLink_GoodsPropertyValue_GoodsProperty()
+                                           LEFT JOIN ObjectString AS ObjectString_ArticleGLN
+                                                                  ON ObjectString_ArticleGLN.ObjectId = ObjectLink_GoodsPropertyValue_GoodsProperty.ObjectId
+                                                                 AND ObjectString_ArticleGLN.DescId = zc_ObjectString_GoodsPropertyValue_ArticleGLN()
+                                           LEFT JOIN ObjectLink AS ObjectLink_GoodsPropertyValue_Goods
+                                                                ON ObjectLink_GoodsPropertyValue_Goods.ObjectId = ObjectLink_GoodsPropertyValue_GoodsProperty.ObjectId
+                                                               AND ObjectLink_GoodsPropertyValue_Goods.DescId = zc_ObjectLink_GoodsPropertyValue_Goods()
+                                           LEFT JOIN ObjectLink AS ObjectLink_GoodsPropertyValue_GoodsKind
+                                                                ON ObjectLink_GoodsPropertyValue_GoodsKind.ObjectId = ObjectLink_GoodsPropertyValue_GoodsProperty.ObjectId
+                                                               AND ObjectLink_GoodsPropertyValue_GoodsKind.DescId = zc_ObjectLink_GoodsPropertyValue_GoodsKind()
+                                      WHERE ObjectString_ArticleGLN.ValueData <> ''
+                                     )
+          , tmpGoodsByGoodsKind AS (SELECT Object_GoodsByGoodsKind_View.GoodsId
                                          , COALESCE (Object_GoodsByGoodsKind_View.GoodsKindId, 0) AS GoodsKindId
                                     FROM ObjectBoolean AS ObjectBoolean_Order
                                          LEFT JOIN Object_GoodsByGoodsKind_View ON Object_GoodsByGoodsKind_View.Id = ObjectBoolean_Order.ObjectId
@@ -81,7 +104,7 @@ BEGIN
            , Object_InfoMoney_View.InfoMoneyDestinationName
            , Object_InfoMoney_View.InfoMoneyName
 
-           , '' :: TVarChar AS ArticleGLN
+           , tmpGoodsPropertyValue.ArticleGLN
 
            , FALSE                      AS isErased
 
@@ -129,6 +152,9 @@ BEGIN
                                 AND ObjectLink_Goods_InfoMoney.DescId = zc_ObjectLink_Goods_InfoMoney()
             LEFT JOIN Object_InfoMoney_View ON Object_InfoMoney_View.InfoMoneyId = ObjectLink_Goods_InfoMoney.ChildObjectId
 
+            LEFT JOIN tmpGoodsPropertyValue ON tmpGoodsPropertyValue.GoodsId     = tmpGoods.GoodsId
+                                           AND tmpGoodsPropertyValue.GoodsKindId = tmpGoods.GoodsKindId
+
        WHERE tmpMI.GoodsId IS NULL
 
       UNION ALL
@@ -164,7 +190,7 @@ BEGIN
            , Object_InfoMoney_View.InfoMoneyDestinationName
            , Object_InfoMoney_View.InfoMoneyName
 
-           , '' :: TVarChar AS ArticleGLN
+           , tmpGoodsPropertyValue.ArticleGLN
 
            , MovementItem.isErased                  AS isErased
 
@@ -218,10 +244,31 @@ BEGIN
                                 AND ObjectLink_Goods_InfoMoney.DescId = zc_ObjectLink_Goods_InfoMoney()
             LEFT JOIN Object_InfoMoney_View ON Object_InfoMoney_View.InfoMoneyId = ObjectLink_Goods_InfoMoney.ChildObjectId
 
+            LEFT JOIN tmpGoodsPropertyValue ON tmpGoodsPropertyValue.GoodsId     = MovementItem.ObjectId
+                                           AND tmpGoodsPropertyValue.GoodsKindId = COALESCE (MILinkObject_GoodsKind.ObjectId, 0)
             ;
      ELSE
 
      RETURN QUERY
+       WITH tmpGoodsPropertyValue AS (SELECT ObjectLink_GoodsPropertyValue_Goods.ChildObjectId                   AS GoodsId
+                                           , COALESCE (ObjectLink_GoodsPropertyValue_GoodsKind.ChildObjectId, 0) AS GoodsKindId
+                                           , ObjectString_ArticleGLN.ValueData                                   AS ArticleGLN
+                                      FROM (SELECT vbGoodsPropertyId AS GoodsPropertyId WHERE vbGoodsPropertyId <> 0
+                                           ) AS tmpGoodsProperty
+                                           INNER JOIN ObjectLink AS ObjectLink_GoodsPropertyValue_GoodsProperty
+                                                                 ON ObjectLink_GoodsPropertyValue_GoodsProperty.ChildObjectId = tmpGoodsProperty.GoodsPropertyId
+                                                                AND ObjectLink_GoodsPropertyValue_GoodsProperty.DescId = zc_ObjectLink_GoodsPropertyValue_GoodsProperty()
+                                           LEFT JOIN ObjectString AS ObjectString_ArticleGLN
+                                                                  ON ObjectString_ArticleGLN.ObjectId = ObjectLink_GoodsPropertyValue_GoodsProperty.ObjectId
+                                                                 AND ObjectString_ArticleGLN.DescId = zc_ObjectString_GoodsPropertyValue_ArticleGLN()
+                                           LEFT JOIN ObjectLink AS ObjectLink_GoodsPropertyValue_Goods
+                                                                ON ObjectLink_GoodsPropertyValue_Goods.ObjectId = ObjectLink_GoodsPropertyValue_GoodsProperty.ObjectId
+                                                               AND ObjectLink_GoodsPropertyValue_Goods.DescId = zc_ObjectLink_GoodsPropertyValue_Goods()
+                                           LEFT JOIN ObjectLink AS ObjectLink_GoodsPropertyValue_GoodsKind
+                                                                ON ObjectLink_GoodsPropertyValue_GoodsKind.ObjectId = ObjectLink_GoodsPropertyValue_GoodsProperty.ObjectId
+                                                               AND ObjectLink_GoodsPropertyValue_GoodsKind.DescId = zc_ObjectLink_GoodsPropertyValue_GoodsKind()
+                                      WHERE ObjectString_ArticleGLN.ValueData <> ''
+                                     )
        SELECT
              MovementItem.Id                        AS Id
            , Object_Goods.Id                        AS GoodsId
@@ -254,7 +301,7 @@ BEGIN
            , Object_InfoMoney_View.InfoMoneyDestinationName
            , Object_InfoMoney_View.InfoMoneyName
 
-           , '' :: TVarChar AS ArticleGLN
+           , tmpGoodsPropertyValue.ArticleGLN
 
            , MovementItem.isErased
 
@@ -307,6 +354,9 @@ BEGIN
                                  ON ObjectLink_Goods_InfoMoney.ObjectId = Object_Goods.Id
                                 AND ObjectLink_Goods_InfoMoney.DescId = zc_ObjectLink_Goods_InfoMoney()
             LEFT JOIN Object_InfoMoney_View ON Object_InfoMoney_View.InfoMoneyId = ObjectLink_Goods_InfoMoney.ChildObjectId
+
+            LEFT JOIN tmpGoodsPropertyValue ON tmpGoodsPropertyValue.GoodsId     = MovementItem.ObjectId
+                                           AND tmpGoodsPropertyValue.GoodsKindId = COALESCE (MILinkObject_GoodsKind.ObjectId, 0)
            ;
 
      END IF;
