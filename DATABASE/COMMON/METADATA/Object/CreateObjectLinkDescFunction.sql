@@ -1274,10 +1274,20 @@ CREATE OR REPLACE FUNCTION zc_ObjectLink_PriceList_Currency() RETURNS Integer AS
 INSERT INTO ObjectLinkDesc (Code, ItemName, DescId, ChildObjectDescId)
 SELECT 'zc_ObjectLink_PriceList_Currency', 'Валюта', zc_Object_PriceList(), zc_Object_Currency() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_PriceList_Currency');
 
+CREATE OR REPLACE FUNCTION zc_ObjectLink_GoodsExternal_Goods() RETURNS Integer AS $BODY$BEGIN  RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_GoodsExternal_Goods'); END; $BODY$  LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectLinkDesc (Code, ItemName, DescId, ChildObjectDescId)
+SELECT 'zc_ObjectLink_GoodsExternal_Goods', 'Товар', zc_Object_GoodsExternal(), zc_Object_Goods() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_GoodsExternal_Goods');
+
+CREATE OR REPLACE FUNCTION zc_ObjectLink_GoodsExternal_GoodsKind() RETURNS Integer AS $BODY$BEGIN  RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_GoodsExternal_GoodsKind'); END; $BODY$  LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectLinkDesc (Code, ItemName, DescId, ChildObjectDescId)
+SELECT 'zc_ObjectLink_GoodsExternal_GoodsKind', 'Виды Товара', zc_Object_GoodsExternal(), zc_Object_GoodsKind() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_GoodsExternal_GoodsKind');
+
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А.А.
+ 29.12.15         * add zc_ObjectLink_GoodsExternal_Goods
+                      , zc_ObjectLink_GoodsExternal_GoodsKind
  07.12.15         * add zc_ObjectLink_BankAccountContract_Unit
  24.11.15         * add zc_ObjectLink_Unit_PersonalSheetWorkTime, zc_ObjectLink_Retail_PersonalMarketing
  18.11.15         * add zc_ObjectLink_GoodsGroup_InfoMoney
