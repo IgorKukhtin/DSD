@@ -11,10 +11,35 @@ CREATE OR REPLACE FUNCTION gpUpdate_Movement_EDI_Params(
 RETURNS VOID AS
 $BODY$
    DECLARE vbUserId Integer;
+
+   DECLARE vbPartnerId Integer;
+   DECLARE vbJuridicalId Integer;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Update_Movement_EDI_Params());
      vbUserId:= lpGetUserBySession (inSession);
+
+
+     -- Пытаемся установить связь с точкой доставки
+     vbPartnerId:= (SELECT MIN (ObjectString.ObjectId)
+                    FROM MovementString AS MovementString_GLNPlaceCode
+                         INNER JOIN ObjectString ON ObjectString.DescId = zc_ObjectString_Partner_GLNCode() AND ObjectString.ValueData = MovementString_GLNPlaceCode.ValueData
+                    WHERE MovementString_GLNPlaceCode.MovementId =  inMovementId
+                      AND MovementString_GLNPlaceCode.DescId = zc_MovementString_GLNPlaceCode()
+                   );
+     IF vbPartnerId <> 0 THEN
+        PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_Partner(), inMovementId, vbPartnerId);
+        --
+        vbJuridicalId := COALESCE((SELECT ChildObjectId FROM ObjectLink WHERE DescId = zc_ObjectLink_Partner_Juridical() AND ObjectId = vbPartnerId), 0);
+        IF COALESCE (vbJuridicalId, 0) <> 0 THEN
+           -- сохранили <Юр лицо>
+           PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_Juridical(), vbMovementId, vbJuridicalId);
+
+           -- сохранили <ОКПО>
+           PERFORM lpInsertUpdate_MovementString (zc_MovementString_OKPO(), vbMovementId, (SELECT OKPO FROM ObjectHistory_JuridicalDetails_View WHERE JuridicalId = vbJuridicalId));
+
+         END IF;
+     END IF;
 
 
      -- сохранили

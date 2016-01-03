@@ -19,8 +19,15 @@ BEGIN
      -- всегда 1-е число месяца
      vbOperDate:= DATE_TRUNC ('MONTH', inOperDate);
 
-     -- всегда 
-     inInvNumberBranch:= TRIM (COALESCE (inInvNumberBranch, ''));
+     -- с 01.01.2016 деления по филиалам не будет
+     IF vbOperDate >= '01.01.2016'
+     THEN 
+         inInvNumberBranch:= '';
+     ELSE
+         -- всегда 
+         inInvNumberBranch:= TRIM (COALESCE (inInvNumberBranch, ''));
+     END IF;
+
      /*IF inInvNumberBranch <> '6' -- !!!Одесса!!!
      THEN inInvNumberBranch:= '';
      END IF;*/

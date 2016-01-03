@@ -31,10 +31,13 @@ BEGIN
        FROM Object_Contract_View 
       WHERE Object_Contract_View.JuridicalId = inToId AND Object_Contract_View.InvNumber = inContract;
 
-     SELECT ObjectId INTO vbBranchId 
-        FROM ObjectString AS ObjectString_InvNumber
-                               WHERE ObjectString_InvNumber.DescId = zc_objectString_Branch_InvNumber()    
-                                 AND ObjectString_InvNumber.ValueData = inInvNumberBranch;   
+     IF inOperDate < '01.01.2016'
+     THEN
+         SELECT ObjectId INTO vbBranchId
+         FROM ObjectString AS ObjectString_InvNumber
+         WHERE ObjectString_InvNumber.DescId = zc_objectString_Branch_InvNumber()    
+           AND ObjectString_InvNumber.ValueData = inInvNumberBranch;   
+     END IF;
 
      -- определяем признак Создание/Корректировка
      vbIsInsert := true;

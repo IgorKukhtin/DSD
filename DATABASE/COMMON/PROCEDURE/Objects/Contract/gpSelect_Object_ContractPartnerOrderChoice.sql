@@ -61,7 +61,9 @@ BEGIN
    IF inShowAll= TRUE THEN
    -- Результат такой
    RETURN QUERY
-   WITH tmpContractPartner_Juridical AS (SELECT ObjectLink_Partner_Juridical.ChildObjectId AS JuridicalId
+   WITH tmpContractPartner_Juridical AS (SELECT DISTINCT
+                                                ObjectLink_Partner_Juridical.ObjectId      AS PartnerId
+                                              , ObjectLink_Partner_Juridical.ChildObjectId AS JuridicalId
                                          FROM ObjectLink AS ObjectLink_ContractPartner_Partner
                                               INNER JOIN ObjectLink AS ObjectLink_Partner_Juridical
                                                                     ON ObjectLink_Partner_Juridical.ObjectId = ObjectLink_ContractPartner_Partner.ChildObjectId
@@ -69,7 +71,6 @@ BEGIN
                                               INNER JOIN Object AS Object_ContractPartner ON Object_ContractPartner.Id = ObjectLink_ContractPartner_Partner.ObjectId
                                                                                          AND Object_ContractPartner.isErased = FALSE
                                          WHERE ObjectLink_ContractPartner_Partner.DescId = zc_ObjectLink_ContractPartner_Partner()
-                                         GROUP BY ObjectLink_Partner_Juridical.ChildObjectId
                                         )
    SELECT
          Object_Contract_View.ContractId      :: Integer   AS Id
@@ -214,6 +215,7 @@ BEGIN
                               ON ObjectLink_Partner_Juridical.ObjectId = Object_Partner.Id
                              AND ObjectLink_Partner_Juridical.DescId = zc_ObjectLink_Partner_Juridical()
          LEFT JOIN tmpContractPartner_Juridical ON tmpContractPartner_Juridical.JuridicalId = ObjectLink_Partner_Juridical.ChildObjectId
+                                               AND tmpContractPartner_Juridical.PartnerId   = ObjectLink_Partner_Juridical.ObjectId
 
          LEFT JOIN Object_Contract_View ON Object_Contract_View.JuridicalId = ObjectLink_Partner_Juridical.ChildObjectId
                                        AND Object_Contract_View.ContractStateKindId <> zc_Enum_ContractStateKind_Close()
@@ -377,7 +379,9 @@ BEGIN
    ELSE
    -- Результат другой
    RETURN QUERY
-   WITH tmpContractPartner_Juridical AS (SELECT ObjectLink_Partner_Juridical.ChildObjectId AS JuridicalId
+   WITH tmpContractPartner_Juridical AS (SELECT DISTINCT
+                                                ObjectLink_Partner_Juridical.ObjectId      AS PartnerId
+                                              , ObjectLink_Partner_Juridical.ChildObjectId AS JuridicalId
                                          FROM ObjectLink AS ObjectLink_ContractPartner_Partner
                                               INNER JOIN ObjectLink AS ObjectLink_Partner_Juridical
                                                                     ON ObjectLink_Partner_Juridical.ObjectId = ObjectLink_ContractPartner_Partner.ChildObjectId
@@ -385,7 +389,6 @@ BEGIN
                                               INNER JOIN Object AS Object_ContractPartner ON Object_ContractPartner.Id = ObjectLink_ContractPartner_Partner.ObjectId
                                                                                          AND Object_ContractPartner.isErased = FALSE
                                          WHERE ObjectLink_ContractPartner_Partner.DescId = zc_ObjectLink_ContractPartner_Partner()
-                                         GROUP BY ObjectLink_Partner_Juridical.ChildObjectId
                                         )
    SELECT
          Object_Contract_View.ContractId      :: Integer   AS Id
@@ -529,6 +532,7 @@ BEGIN
                               ON ObjectLink_Partner_Juridical.ObjectId = Object_Partner.Id
                              AND ObjectLink_Partner_Juridical.DescId = zc_ObjectLink_Partner_Juridical()
          LEFT JOIN tmpContractPartner_Juridical ON tmpContractPartner_Juridical.JuridicalId = ObjectLink_Partner_Juridical.ChildObjectId
+                                               AND tmpContractPartner_Juridical.PartnerId   = ObjectLink_Partner_Juridical.ObjectId
 
          LEFT JOIN Object_Contract_View ON Object_Contract_View.JuridicalId = ObjectLink_Partner_Juridical.ChildObjectId
                                        AND Object_Contract_View.ContractStateKindId <> zc_Enum_ContractStateKind_Close()
@@ -709,3 +713,4 @@ ALTER FUNCTION gpSelect_Object_ContractPartnerOrderChoice (Boolean, TVarChar) OW
 
 -- тест
 -- SELECT * FROM gpSelect_Object_ContractPartnerOrderChoice (inShowAll:= FALSE, inSession := zfCalc_UserAdmin())
+-- WHERE PartnerId = 464943

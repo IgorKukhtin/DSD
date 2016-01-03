@@ -129,7 +129,7 @@ BEGIN
                                       , ObjectLink_Partner_Juridical.ChildObjectId AS JuridicalId
 
                                       , MovementLinkObject_Contract.ObjectId AS ContractId -- значение - то что сохранилось при создании
-                                      , zfCalc_GoodsPropertyId (MovementLinkObject_Contract.ObjectId, ObjectLink_Partner_Juridical.ChildObjectId) AS GoodsPropertyId
+                                      , zfCalc_GoodsPropertyId (MovementLinkObject_Contract.ObjectId, ObjectLink_Partner_Juridical.ChildObjectId, ObjectLink_Partner_Juridical.ObjectId) AS GoodsPropertyId
 
                                       , MovementLinkMovement_Order.MovementChildId     AS MovementId_Order
                                       , MovementLinkMovement_Transport.MovementChildId AS MovementId_Transport

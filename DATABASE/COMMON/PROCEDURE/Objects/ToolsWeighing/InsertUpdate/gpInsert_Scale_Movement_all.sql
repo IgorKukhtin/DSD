@@ -1,4 +1,4 @@
--- Function: gpInsert_Scale_Movement_all()
+ -- Function: gpInsert_Scale_Movement_all()
 
 DROP FUNCTION IF EXISTS gpInsert_Scale_Movement_all (Integer, TDateTime, TVarChar);
 DROP FUNCTION IF EXISTS gpInsert_Scale_Movement_all (Integer, Integer, TDateTime, TVarChar);
@@ -165,6 +165,11 @@ BEGIN
         SELECT 8415   -- Склад ГП ф.Черкассы (Кировоград)
        UNION
         SELECT 428363 -- Склад возвратов ф.Черкассы (Кировоград)
+
+       UNION
+        SELECT 8411   -- Склад ГП ф.Киев
+       UNION
+        SELECT 428365 -- Склад возвратов ф.Киев
     ;
 
 

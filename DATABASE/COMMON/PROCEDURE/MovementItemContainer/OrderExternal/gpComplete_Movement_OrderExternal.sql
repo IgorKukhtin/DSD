@@ -226,6 +226,8 @@ BEGIN
 
      -- кроме Админа
      IF EXISTS (SELECT _tmpItem.Price FROM _tmpItem WHERE _tmpItem.Price = 0) -- AND vbUserId <> 5
+           -- филиал Киев
+       -- AND 8379 <> COALESCE ((SELECT Object_RoleAccessKeyGuide_View.BranchId FROM Object_RoleAccessKeyGuide_View WHERE Object_RoleAccessKeyGuide_View.UserId = vbUserId AND Object_RoleAccessKeyGuide_View.BranchId <> 0 LIMIT 1), 0)
      THEN
          RAISE EXCEPTION 'Ошибка.%В документе покупателя <%>%для товара <%> <%>%с количеством <%> установлена цена = 0.'
                                                                                            , CHR(13)

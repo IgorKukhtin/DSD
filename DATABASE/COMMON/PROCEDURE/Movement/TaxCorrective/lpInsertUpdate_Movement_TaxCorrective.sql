@@ -73,11 +73,12 @@ BEGIN
      END IF;
 
      -- определяется  Номер филиала
-     IF COALESCE (ioId, 0) = 0
+     IF COALESCE (ioId, 0) = 0 AND inOperDate < '01.01.2016'
      THEN
          inInvNumberBranch:= (SELECT ObjectString.ValueData FROM ObjectString WHERE ObjectString.DescId = zc_objectString_Branch_InvNumber() AND ObjectString.ObjectId = vbBranchId);
+     ELSE
+         inInvNumberBranch:='';
      END IF;
-
 
      -- если надо, создаем <Номер документа>
      IF COALESCE (inInvNumber, '') = ''

@@ -82,7 +82,7 @@ BEGIN
           , ObjectLink_Partner_RouteSorting.ChildObjectId    AS RouteSortingId
           , ObjectLink_Partner_MemberTake.ChildObjectId      AS MemberTakeId
           -- , ObjectLink_Juridical_GoodsProperty.ChildObjectId AS GoodsPropertyId
-          , zfCalc_GoodsPropertyId (vbContractId, ObjectLink_Partner_Juridical.ChildObjectId) AS GoodsPropertyId
+          , zfCalc_GoodsPropertyId (vbContractId, ObjectLink_Partner_Juridical.ChildObjectId, ObjectString_Partner_GLNCode.ObjectId) AS GoodsPropertyId
           , ObjectHistory_JuridicalDetails_View.OKPO         AS OKPO
           , zfCalc_GLNCodeJuridical (inGLNCode                  := ObjectString_Partner_GLNCode.ValueData
                                    , inGLNCodeJuridical_partner := ObjectString_Partner_GLNCodeJuridical.ValueData

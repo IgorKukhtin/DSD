@@ -27,7 +27,7 @@ BEGIN
                                     , Object_Partner.ObjectCode     AS PartnerCode
                                     , Object_Partner.ValueData      AS PartnerName
                                     , lfGet_Object_Partner_PriceList_record (inContractId, Object_Partner.Id, inOperDate) AS PriceListId
-                                    , zfCalc_GoodsPropertyId (inContractId, ObjectLink_Partner_Juridical.ChildObjectId) AS GoodsPropertyId
+                                    , zfCalc_GoodsPropertyId (inContractId, ObjectLink_Partner_Juridical.ChildObjectId, inPartnerId) AS GoodsPropertyId
                                FROM Object AS Object_Partner
                                     LEFT JOIN ObjectLink AS ObjectLink_Partner_Juridical
                                                          ON ObjectLink_Partner_Juridical.ObjectId = Object_Partner.Id

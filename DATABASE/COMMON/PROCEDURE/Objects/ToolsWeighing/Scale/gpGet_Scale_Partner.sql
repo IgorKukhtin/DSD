@@ -201,7 +201,7 @@ BEGIN
                   , tmpPartnerContract_find.PaidKindId
                   , tmpPartnerContract_find.InfoMoneyId
                   , tmpPartnerContract_find.JuridicalId
-                  , zfCalc_GoodsPropertyId (tmpPartnerContract_find.ContractId, tmpPartnerContract_find.JuridicalId) AS GoodsPropertyId
+                  , zfCalc_GoodsPropertyId (tmpPartnerContract_find.ContractId, tmpPartnerContract_find.JuridicalId, tmpPartnerContract_find.PartnerId) AS GoodsPropertyId
                   , lfGet_Object_Partner_PriceList_record (tmpPartnerContract_find.ContractId, tmpPartnerContract_find.PartnerId, inOperDate) AS PriceListId
 
              FROM tmpPartnerContract_find
