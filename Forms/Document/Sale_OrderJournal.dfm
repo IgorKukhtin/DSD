@@ -4,7 +4,7 @@ inherited Sale_OrderJournalForm: TSale_OrderJournalForm
   ClientWidth = 1177
   AddOnFormData.Params = FormParams
   ExplicitWidth = 1193
-  ExplicitHeight = 570
+  ExplicitHeight = 573
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -21,6 +21,7 @@ inherited Sale_OrderJournalForm: TSale_OrderJournalForm
       inherited cxGrid: TcxGrid
         Width = 1177
         Height = 478
+        ExplicitLeft = -3
         ExplicitWidth = 1177
         ExplicitHeight = 478
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -1176,6 +1177,9 @@ inherited Sale_OrderJournalForm: TSale_OrderJournalForm
         end
         item
           Action = actPrint
+        end
+        item
+          Action = actSPSavePrintState
         end>
       Caption = #1055#1077#1095#1072#1090#1100' '#1053#1072#1082#1083#1072#1076#1085#1072#1103
       Hint = #1055#1077#1095#1072#1090#1100' '#1053#1072#1082#1083#1072#1076#1085#1072#1103
@@ -1977,6 +1981,17 @@ inherited Sale_OrderJournalForm: TSale_OrderJournalForm
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
     end
+    object actSPSavePrintState: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spSavePrintState
+      StoredProcList = <
+        item
+          StoredProc = spSavePrintState
+        end>
+      Caption = 'actSPSavePrintState'
+    end
   end
   inherited MasterDS: TDataSource
     Left = 64
@@ -2432,6 +2447,12 @@ inherited Sale_OrderJournalForm: TSale_OrderJournalForm
         Name = 'inChangePercentAmount'
         Value = Null
         DataType = ftFloat
+        ParamType = ptInput
+      end
+      item
+        Name = 'isPrinted'
+        Value = 'True'
+        DataType = ftString
         ParamType = ptInput
       end>
     Left = 400
@@ -3113,5 +3134,36 @@ inherited Sale_OrderJournalForm: TSale_OrderJournalForm
     PackSize = 1
     Left = 535
     Top = 208
+  end
+  object spSavePrintState: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Movement_Sale_Print'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inNewPrinted'
+        Value = 'True'
+        Component = FormParams
+        ComponentItem = 'isPrinted'
+        DataType = ftBoolean
+        ParamType = ptInput
+      end
+      item
+        Name = 'outPrinted'
+        Value = 'False'
+        Component = MasterCDS
+        ComponentItem = 'isPrinted'
+        DataType = ftBoolean
+      end>
+    PackSize = 1
+    Left = 840
+    Top = 408
   end
 end

@@ -4,7 +4,7 @@ inherited SaleJournalForm: TSaleJournalForm
   ClientWidth = 1242
   AddOnFormData.Params = FormParams
   ExplicitWidth = 1258
-  ExplicitHeight = 676
+  ExplicitHeight = 679
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -21,6 +21,7 @@ inherited SaleJournalForm: TSaleJournalForm
       inherited cxGrid: TcxGrid
         Width = 1242
         Height = 584
+        ExplicitLeft = -3
         ExplicitWidth = 1242
         ExplicitHeight = 584
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -1191,6 +1192,9 @@ inherited SaleJournalForm: TSaleJournalForm
         end
         item
           Action = actPrint
+        end
+        item
+          Action = actSPSavePrintState
         end>
       Caption = #1055#1077#1095#1072#1090#1100' '#1053#1072#1082#1083#1072#1076#1085#1072#1103
       Hint = #1055#1077#1095#1072#1090#1100' '#1053#1072#1082#1083#1072#1076#1085#1072#1103
@@ -2035,6 +2039,17 @@ inherited SaleJournalForm: TSaleJournalForm
       Hint = #1055#1077#1095#1072#1090#1100' '#1050#1072#1095#1077#1089#1090#1074#1077#1085#1085#1086#1077' '#1091#1076#1086#1089#1090#1086#1074#1077#1088#1077#1085#1080#1077
       ImageIndex = 16
     end
+    object actSPSavePrintState: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spSavePrintState
+      StoredProcList = <
+        item
+          StoredProc = spSavePrintState
+        end>
+      Caption = 'actSPSavePrintState'
+    end
   end
   inherited MasterDS: TDataSource
     Left = 64
@@ -2502,6 +2517,12 @@ inherited SaleJournalForm: TSaleJournalForm
         Value = Null
         DataType = ftFloat
         ParamType = ptInput
+      end
+      item
+        Name = 'isPrinted'
+        Value = 'True'
+        DataType = ftBoolean
+        ParamType = ptInputOutput
       end>
     Left = 400
     Top = 216
@@ -2668,8 +2689,8 @@ inherited SaleJournalForm: TSaleJournalForm
         ParamType = ptInput
       end>
     PackSize = 1
-    Left = 351
-    Top = 424
+    Left = 271
+    Top = 368
   end
   object spSelectTax_Client: TdsdStoredProc
     StoredProcName = 'gpSelect_Movement_Tax_Print'
@@ -3244,5 +3265,36 @@ inherited SaleJournalForm: TSaleJournalForm
     PackSize = 1
     Left = 535
     Top = 216
+  end
+  object spSavePrintState: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Movement_Sale_Print'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inNewPrinted'
+        Value = 'True'
+        Component = FormParams
+        ComponentItem = 'isPrinted'
+        DataType = ftBoolean
+        ParamType = ptInput
+      end
+      item
+        Name = 'outPrinted'
+        Value = 'False'
+        Component = MasterCDS
+        ComponentItem = 'isPrinted'
+        DataType = ftBoolean
+      end>
+    PackSize = 1
+    Left = 840
+    Top = 352
   end
 end
