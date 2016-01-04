@@ -1,10 +1,10 @@
--- Function: gpReport_Sale_OrderExternal_Journal()
+-- Function: gpReport_Sale_OrderExternal_List()
 
 
-DROP FUNCTION IF EXISTS gpReport_Sale_OrderExternal_Journal (TDateTime, TDateTime, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpReport_Sale_OrderExternal_List (TDateTime, TDateTime, Integer, TVarChar);
 
 
-CREATE OR REPLACE FUNCTION gpReport_Sale_OrderExternal_Journal(
+CREATE OR REPLACE FUNCTION gpReport_Sale_OrderExternal_List(
     IN inStartDate   TDateTime , --
     IN inEndDate     TDateTime , --
     IN inUnitId      Integer   , -- филиал
@@ -91,7 +91,7 @@ BEGIN
                               AND Movement.OperDate BETWEEN inStartDate AND inEndDate   
                               AND Movement.StatusId = zc_Enum_Status_Complete()
                               AND COALESCE (Object_From.DescId, 0) <> zc_Object_Unit()
-                              AND (MovementLinkObject_From.ObjectId = inUnitId OR inUnitId = 0) 
+                              AND (MovementLinkObject_To.ObjectId = inUnitId OR inUnitId = 0) 
                           )
                           
    , tmpSale AS (SELECT Movement.Id
@@ -165,7 +165,7 @@ BEGIN
      WHERE Movement.OperDate BETWEEN inStartDate AND inEndDate  
        AND Movement.DescId = zc_Movement_Sale() 
        AND Movement.StatusId = zc_Enum_Status_Complete()
-       AND (MovementLinkObject_To.ObjectId = inUnitId OR inUnitId = 0) 
+       AND (MovementLinkObject_From.ObjectId = inUnitId OR inUnitId = 0) 
        )
                              
    , tmpList AS (SELECT tmpOrderExternal.InvNumber
@@ -246,4 +246,4 @@ $BODY$
 */
 
 -- тест
- --SELECT * FROM gpReport_Sale_OrderExternal_Journal (inStartDate:= '01.08.2015', inEndDate:= '01.08.2015', inUnitId:=0 ,inSession:= zfCalc_UserAdmin())
+ --SELECT * FROM gpReport_Sale_OrderExternal_List (inStartDate:= '01.08.2015', inEndDate:= '01.08.2015', inUnitId:=0 ,inSession:= zfCalc_UserAdmin())

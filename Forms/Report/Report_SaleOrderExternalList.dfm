@@ -941,7 +941,7 @@ object Report_SaleOrderExternalListForm: TReport_SaleOrderExternalListForm
     FormNameParam.Value = 'TUnit_ObjectForm'
     FormNameParam.DataType = ftString
     FormName = 'TUnit_ObjectForm'
-    PositionDataSet = 'ClientDataSet'
+    PositionDataSet = 'MasterCDS'
     Params = <
       item
         Name = 'Key'
@@ -960,6 +960,6 @@ object Report_SaleOrderExternalListForm: TReport_SaleOrderExternalListForm
         ParamType = ptInput
       end>
     Left = 592
-    Top = 19
+    Top = 11
   end
 end
