@@ -24,8 +24,7 @@ object Report_SaleOrderExternalListForm: TReport_SaleOrderExternalListForm
     Height = 338
     Align = alClient
     TabOrder = 0
-    ExplicitLeft = 136
-    ExplicitTop = 63
+    ExplicitTop = 56
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
