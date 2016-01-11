@@ -59,8 +59,7 @@ SELECT distinct MovementItem.ObjectId
             inner JOIN MovementLinkObject AS MovementLinkObject_Branch
                                          ON MovementLinkObject_Branch.MovementId = Movement.Id
                                         AND MovementLinkObject_Branch.DescId = zc_MovementLinkObject_Branch()
-                                        AND MovementLinkObject_Branch.ObjectId = 8379
-
+                                        AND MovementLinkObject_Branch.ObjectId = 8379 -- филиал Киев
 
                         INNER join MovementItem on MovementItem.MovementId = Movement.Id
                                           AND MovementItem.isErased = FALSE
