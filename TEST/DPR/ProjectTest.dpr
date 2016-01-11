@@ -777,7 +777,9 @@ uses
   PartnerAndUnit in '..\..\Forms\Guides\PartnerAndUnit.pas' {PartnerAndUnitForm: TParentForm},
   Report_TaraDialog in '..\..\Forms\Report\Report_TaraDialog.pas' {Report_TaraDialogForm: TParentForm},
   Report_TaraMovement in '..\..\Forms\Report\Report_TaraMovement.pas' {Report_TaraMovementForm: TParentForm},
-  GoodsExternal in '..\..\Forms\Guides\GoodsExternal.pas' {GoodsExternalForm: TParentForm};
+  GoodsExternal in '..\..\Forms\Guides\GoodsExternal.pas' {GoodsExternalForm: TParentForm},
+  Report_SaleOrderExternalList in '..\..\Forms\Report\Report_SaleOrderExternalList.pas' {Report_SaleOrderExternalListForm: TParentForm},
+  Report_SaleOrderExternalListDialog in '..\..\Forms\Report\Report_SaleOrderExternalListDialog.pas' {Report_SaleOrderExternalListDialogForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}

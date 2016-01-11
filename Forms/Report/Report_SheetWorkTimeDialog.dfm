@@ -1,5 +1,5 @@
 inherited Report_SheetWorkTimeDialogForm: TReport_SheetWorkTimeDialogForm
-  Caption = #1054#1090#1095#1077#1090' '#1087#1086' '#1072#1082#1094#1080#1103#1084
+  Caption = #1055#1072#1088#1072#1084#1077#1090#1088#1099' <'#1054#1090#1095#1077#1090#1072' '#1087#1086' '#1090#1072#1073#1077#1083#1102' '#1088#1072#1073#1086#1095#1077#1075#1086' '#1074#1088#1077#1084#1077#1085#1080'>'
   ClientHeight = 133
   ClientWidth = 446
   ExplicitWidth = 452
@@ -77,14 +77,14 @@ inherited Report_SheetWorkTimeDialogForm: TReport_SheetWorkTimeDialogForm
     Params = <
       item
         Name = 'StartDate'
-        Value = Null
+        Value = 'NULL'
         Component = deStart
         DataType = ftDateTime
         ParamType = ptInput
       end
       item
         Name = 'EndDate'
-        Value = Null
+        Value = 'NULL'
         Component = deEnd
         DataType = ftDateTime
         ParamType = ptInput
