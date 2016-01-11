@@ -4,7 +4,6 @@ inherited Sale_OrderForm: TSale_OrderForm
   ClientWidth = 1261
   ExplicitLeft = -471
   ExplicitWidth = 1277
-  ExplicitHeight = 443
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl

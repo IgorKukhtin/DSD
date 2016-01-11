@@ -1416,13 +1416,13 @@ inherited OrderExternalUnitForm: TOrderExternalUnitForm
         DataType = ftString
       end
       item
-        Name = 'RouteId'
+        Name = 'RouteId_OrderUnit'
         Value = ''
         Component = GuidesRoute
         ComponentItem = 'Key'
       end
       item
-        Name = 'RouteName'
+        Name = 'RouteName_OrderUnit'
         Value = ''
         Component = GuidesRoute
         ComponentItem = 'TextValue'

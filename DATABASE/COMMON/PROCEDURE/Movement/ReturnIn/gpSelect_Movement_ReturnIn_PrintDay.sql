@@ -498,25 +498,7 @@ BEGIN
                                  ON ObjectLink_Contract_BankAccount.ObjectId = View_Contract.ContractId
                                 AND ObjectLink_Contract_BankAccount.DescId = zc_ObjectLink_Contract_BankAccount()
 
-            LEFT JOIN ObjectLink AS ObjectLink_BankAccountContract_InfoMoney
-                                 ON ObjectLink_BankAccountContract_InfoMoney.DescId = zc_ObjectLink_BankAccountContract_InfoMoney()
-                                AND ObjectLink_BankAccountContract_InfoMoney.ChildObjectId = View_Contract.InfoMoneyId
-                                AND ObjectLink_Contract_BankAccount.ChildObjectId IS NULL
-            LEFT JOIN ObjectLink AS ObjectLink_BankAccountContract_BankAccount
-                                 ON ObjectLink_BankAccountContract_BankAccount.DescId = zc_ObjectLink_BankAccountContract_BankAccount()
-                                AND ObjectLink_BankAccountContract_BankAccount.ObjectId = ObjectLink_BankAccountContract_InfoMoney.ObjectId
-            LEFT JOIN (SELECT ObjectLink_BankAccountContract_BankAccount.ChildObjectId
-                       FROM ObjectLink AS ObjectLink_BankAccountContract_InfoMoney
-                            JOIN ObjectLink AS ObjectLink_BankAccountContract_BankAccount
-                                                 ON ObjectLink_BankAccountContract_BankAccount.DescId = zc_ObjectLink_BankAccountContract_BankAccount()
-                                                AND ObjectLink_BankAccountContract_BankAccount.ObjectId = ObjectLink_BankAccountContract_InfoMoney.ObjectId
-                                                AND ObjectLink_BankAccountContract_BankAccount.ChildObjectId IS NOT NULL
-
-                       WHERE ObjectLink_BankAccountContract_InfoMoney.DescId = zc_ObjectLink_BankAccountContract_InfoMoney()
-                         AND ObjectLink_BankAccountContract_InfoMoney.ChildObjectId IS NULL
-                      ) AS ObjectLink_BankAccountContract_BankAccount_all ON ObjectLink_BankAccountContract_BankAccount.ChildObjectId IS NULL -- !!!не ошибка!!!, выбирается с пустой УП
-                                                                         AND ObjectLink_Contract_BankAccount.ChildObjectId IS NULL
-            LEFT JOIN Object_BankAccount_View AS Object_BankAccount ON Object_BankAccount.Id = COALESCE (ObjectLink_Contract_BankAccount.ChildObjectId, COALESCE (ObjectLink_BankAccountContract_BankAccount.ChildObjectId, ObjectLink_BankAccountContract_BankAccount_all.ChildObjectId))
+            LEFT JOIN Object_BankAccount_View AS Object_BankAccount ON Object_BankAccount.Id = ObjectLink_Contract_BankAccount.ChildObjectId
 
 --СТРОКИ документов 
             INNER JOIN tmpMI ON tmpMI.MovementId = tmpMovement.MovementId 

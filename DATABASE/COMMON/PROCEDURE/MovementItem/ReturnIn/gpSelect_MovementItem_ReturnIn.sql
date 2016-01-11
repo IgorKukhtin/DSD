@@ -18,7 +18,7 @@ CREATE OR REPLACE FUNCTION gpSelect_MovementItem_ReturnIn(
 RETURNS TABLE (Id Integer, LineNum Integer, GoodsId Integer, GoodsCode Integer, GoodsName TVarChar
              , GoodsGroupNameFull TVarChar             
              , Amount TFloat, AmountPartner TFloat
-             , Price TFloat, CountForPrice TFloat, Price_Pricelist TFloat, isCheck_Pricelist Boolean
+             , Price TFloat, CountForPrice TFloat, Price_Pricelist TFloat, Price_Pricelist_vat TFloat, isCheck_Pricelist Boolean
              , HeadCount TFloat
              , PartionGoods TVarChar, GoodsKindId Integer, GoodsKindName  TVarChar, MeasureName TVarChar
              , AssetId Integer, AssetName TVarChar
@@ -33,12 +33,22 @@ $BODY$
 
   DECLARE vbMovementId_parent Integer;
   DECLARE vbIsB Boolean;
+
+  DECLARE vbPriceWithVAT Boolean;
+  DECLARE vbPriceWithVAT_pl Boolean;
+  DECLARE vbVATPercent_pl TFloat;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      -- PERFORM lpCheckRight (inSession, zc_Enum_Process_Select_MovementItem_ReturnIn());
      vbUserId:= lpGetUserBySession (inSession);
 
 
+     -- Цены с НДС
+     vbPriceWithVAT:= (SELECT MB.ValueData FROM MovementBoolean AS MB WHERE MB.MovementId = inMovementId AND MB.DescId = zc_MovementBoolean_PriceWithVAT());
+     -- Цены с НДС (прайс)
+     vbPriceWithVAT_pl:= COALESCE ((SELECT OB.ValueData FROM ObjectBoolean AS OB WHERE OB.ObjectId = inPriceListId AND OB.DescId = zc_ObjectBoolean_PriceList_PriceWithVAT()), FALSE);
+     -- Цены (прайс)
+     vbVATPercent_pl:= 1 + COALESCE ((SELECT ObjectFloat.ValueData FROM ObjectFloat WHERE ObjectFloat.ObjectId = inPriceListId AND ObjectFloat.DescId = zc_ObjectFloat_PriceList_VATPercent()), 0) / 100;
      -- определяется
      vbIsB:= EXISTS (SELECT UserId FROM ObjectLink_UserRole_View WHERE UserId = vbUserId AND RoleId IN (300364, 442931, 343951, zc_Enum_Role_Admin())); -- Склад Специй (Баранченко) + Накладные полный доступ СЫРЬЕ - Кисличная Т.А. + Экономист (производство)
 
@@ -164,7 +174,9 @@ BEGIN
                    FROM tmpMI
                         FULL JOIN tmpMI_parent_find ON tmpMI_parent_find.MovementItemId = tmpMI.MovementItemId
                   )
-   , tmpPrice AS (SELECT lfSelect.*
+   , tmpPrice AS (SELECT lfSelect.GoodsId    AS GoodsId
+                       , CASE WHEN vbPriceWithVAT_pl = FALSE OR vbVATPercent_pl = 0 THEN lfSelect.ValuePrice ELSE lfSelect.ValuePrice / vbVATPercent_pl END AS Price_PriceList
+                       , CASE WHEN vbPriceWithVAT_pl = TRUE  OR vbVATPercent_pl = 0 THEN lfSelect.ValuePrice ELSE lfSelect.ValuePrice * vbVATPercent_pl END AS Price_PriceList_vat
                   FROM lfSelect_ObjectHistory_PriceListItem (inPriceListId:= inPriceListId, inOperDate:= inOperDate) AS lfSelect
                  )
           , tmpGoodsByGoodsKind AS (SELECT Object_GoodsByGoodsKind_View.GoodsId
@@ -198,10 +210,15 @@ BEGIN
 
            , CAST (NULL AS TFloat)      AS Amount
            , CAST (NULL AS TFloat)      AS AmountPartner
-           , tmpPrice.ValuePrice        AS Price
+           , CASE WHEN vbPriceWithVAT = FALSE THEN tmpPrice.Price_Pricelist
+                  WHEN vbPriceWithVAT = TRUE  THEN tmpPrice.Price_Pricelist_vat
+             END :: TFloat              AS Price
            , CAST (NULL AS TFloat)      AS CountForPrice
-           , CAST (tmpPrice.ValuePrice AS TFloat) AS Price_Pricelist
-           , FALSE                      AS isCheck_PricelistBoolean
+
+           , CAST (tmpPrice.Price_Pricelist AS TFloat)     AS Price_Pricelist
+           , CAST (tmpPrice.Price_Pricelist_vat AS TFloat) AS Price_Pricelist_vat
+
+           , FALSE                      AS isCheck_Pricelist
 
            , CAST (NULL AS TFloat)      AS HeadCount
            , CAST (NULL AS TVarChar)    AS PartionGoods
@@ -248,8 +265,15 @@ BEGIN
            , tmpResult.AmountPartner :: TFloat  AS AmountPartner
            , tmpResult.Price         :: TFloat  AS Price
            , tmpResult.CountForPrice :: TFloat  AS CountForPrice
-           , tmpPrice.ValuePrice     :: TFloat  AS Price_Pricelist
-           , CASE WHEN COALESCE (tmpResult.Price, 0) = COALESCE (tmpPrice.ValuePrice, 0) THEN FALSE ELSE TRUE END AS isCheck_PricelistBoolean
+
+           , tmpPrice.Price_Pricelist     :: TFloat AS Price_Pricelist
+           , tmpPrice.Price_Pricelist_vat :: TFloat AS Price_Pricelist_vat
+
+           , CASE WHEN (COALESCE (tmpResult.Price, 0) = COALESCE (tmpPrice.Price_Pricelist, 0)     AND vbPriceWithVAT = FALSE)
+                    OR (COALESCE (tmpResult.Price, 0) = COALESCE (tmpPrice.Price_Pricelist_vat, 0) AND vbPriceWithVAT = TRUE)
+                       THEN FALSE
+                  ELSE TRUE
+             END :: Boolean AS isCheck_Pricelist
 
            , 0  :: TFloat         		AS HeadCount
            , '' :: TVarChar         		AS PartionGoods
@@ -405,7 +429,9 @@ BEGIN
                    FROM tmpMI
                         FULL JOIN tmpMI_parent_find ON tmpMI_parent_find.MovementItemId = tmpMI.MovementItemId
                   )
-   , tmpPrice AS (SELECT lfSelect.*
+   , tmpPrice AS (SELECT lfSelect.GoodsId    AS GoodsId
+                       , CASE WHEN vbPriceWithVAT_pl = FALSE OR vbVATPercent_pl = 0 THEN lfSelect.ValuePrice ELSE lfSelect.ValuePrice / vbVATPercent_pl END AS Price_PriceList
+                       , CASE WHEN vbPriceWithVAT_pl = TRUE  OR vbVATPercent_pl = 0 THEN lfSelect.ValuePrice ELSE lfSelect.ValuePrice * vbVATPercent_pl END AS Price_PriceList_vat
                   FROM lfSelect_ObjectHistory_PriceListItem (inPriceListId:= inPriceListId, inOperDate:= inOperDate) AS lfSelect
                  )
        SELECT
@@ -420,8 +446,15 @@ BEGIN
            , tmpResult.AmountPartner :: TFloat  AS AmountPartner
            , tmpResult.Price         :: TFloat  AS Price
            , tmpResult.CountForPrice :: TFloat  AS CountForPrice
-           , tmpPrice.ValuePrice     :: TFloat  AS Price_Pricelist
-           , CASE WHEN COALESCE (tmpResult.Price, 0) = COALESCE (tmpPrice.ValuePrice, 0) THEN FALSE ELSE TRUE END AS isCheck_PricelistBoolean
+
+           , tmpPrice.Price_Pricelist     :: TFloat AS Price_Pricelist
+           , tmpPrice.Price_Pricelist_vat :: TFloat AS Price_Pricelist_vat
+
+           , CASE WHEN (COALESCE (tmpResult.Price, 0) = COALESCE (tmpPrice.Price_Pricelist, 0)     AND vbPriceWithVAT = FALSE)
+                    OR (COALESCE (tmpResult.Price, 0) = COALESCE (tmpPrice.Price_Pricelist_vat, 0) AND vbPriceWithVAT = TRUE)
+                       THEN FALSE
+                  ELSE TRUE
+             END :: Boolean AS isCheck_Pricelist
 
            , 0  :: TFloat         		AS HeadCount
            , '' :: TVarChar         		AS PartionGoods

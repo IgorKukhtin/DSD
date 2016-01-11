@@ -2,8 +2,10 @@ inherited ReturnIn_PartnerForm: TReturnIn_PartnerForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1042#1086#1079#1074#1088#1072#1090' '#1086#1090' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1103' ('#1073#1091#1093#1075#1072#1083#1090#1077#1088')>'
   ClientHeight = 637
   ClientWidth = 1145
+  ExplicitLeft = -372
+  ExplicitTop = -215
   ExplicitWidth = 1161
-  ExplicitHeight = 675
+  ExplicitHeight = 672
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -193,15 +195,29 @@ inherited ReturnIn_PartnerForm: TReturnIn_PartnerForm
             Options.Editing = False
             Width = 91
           end
-          object Price_Pricelist: TcxGridDBColumn
+          object Price_Pricelist: TcxGridDBColumn [11]
             Caption = #1062#1077#1085#1072' '#1087#1086' '#1087#1088#1072#1081#1089#1091
             DataBinding.FieldName = 'Price_Pricelist'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 62
+            Width = 70
           end
-          object isCheck_Pricelist: TcxGridDBColumn
+          object Price_Pricelist_vat: TcxGridDBColumn [12]
+            Caption = #1062#1077#1085#1072' '#1087#1086' '#1087#1088#1072#1081#1089#1091' ('#1089' '#1053#1044#1057')'
+            DataBinding.FieldName = 'Price_Pricelist_vat'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
+          end
+          object isCheck_Pricelist: TcxGridDBColumn [13]
             Caption = #1054#1090#1082#1083#1086#1085#1077#1085#1080#1077' '#1086#1090' '#1087#1088#1072#1081#1089#1072
             DataBinding.FieldName = 'isCheck_Pricelist'
             HeaderAlignmentHorz = taCenter
@@ -209,7 +225,7 @@ inherited ReturnIn_PartnerForm: TReturnIn_PartnerForm
             Options.Editing = False
             Width = 59
           end
-          object PricePromo: TcxGridDBColumn
+          object PricePromo: TcxGridDBColumn [14]
             Caption = #1062#1077#1085#1072' '#1072#1082#1094#1080#1103
             DataBinding.FieldName = 'PricePromo'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -220,7 +236,7 @@ inherited ReturnIn_PartnerForm: TReturnIn_PartnerForm
             Options.Editing = False
             Width = 70
           end
-          object MovementPromo: TcxGridDBColumn
+          object MovementPromo: TcxGridDBColumn [15]
             Caption = #8470' '#1076#1086#1082'. '#1072#1082#1094#1080#1103
             DataBinding.FieldName = 'MovementPromo'
             HeaderAlignmentHorz = taCenter
@@ -1044,7 +1060,7 @@ inherited ReturnIn_PartnerForm: TReturnIn_PartnerForm
         end
         item
           Name = 'inOperDate'
-          Value = Null
+          Value = 'NULL'
           Component = TaxCorrectiveCDS
           ComponentItem = 'OperDate'
           DataType = ftDateTime
@@ -1254,7 +1270,7 @@ inherited ReturnIn_PartnerForm: TReturnIn_PartnerForm
         end
         item
           Name = 'OperDate_Tax'
-          Value = Null
+          Value = 'NULL'
           Component = TaxCorrectiveCDS
           ComponentItem = 'OperDate_Child'
           DataType = ftDateTime
@@ -1935,7 +1951,7 @@ inherited ReturnIn_PartnerForm: TReturnIn_PartnerForm
       end
       item
         Name = 'inOperDate'
-        Value = Null
+        Value = 'NULL'
         Component = FormParams
         ComponentItem = 'inOperDate'
         DataType = ftDateTime
@@ -3287,7 +3303,7 @@ inherited ReturnIn_PartnerForm: TReturnIn_PartnerForm
       end
       item
         Name = 'OperDate'
-        Value = Null
+        Value = 'NULL'
         Component = edOperDate
         DataType = ftDateTime
       end
@@ -3306,13 +3322,13 @@ inherited ReturnIn_PartnerForm: TReturnIn_PartnerForm
       end
       item
         Name = 'inStartDate'
-        Value = Null
+        Value = 'NULL'
         Component = edOperDate
         DataType = ftDateTime
       end
       item
         Name = 'inEndDate'
-        Value = Null
+        Value = 'NULL'
         Component = edOperDate
         DataType = ftDateTime
       end

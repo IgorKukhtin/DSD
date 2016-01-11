@@ -161,6 +161,7 @@ type
     bbUpdateAmountPartner: TdxBarButton;
     cbPromo: TcxCheckBox;
     MovementPromo: TcxGridDBColumn;
+    Price_Pricelist_vat: TcxGridDBColumn;
   private
     { Private declarations }
   public

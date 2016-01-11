@@ -389,7 +389,8 @@ BEGIN
        ;
 
      -- Ошибка !!! Recycled !!!
-     DELETE FROM _tmpMaster WHERE _tmpMaster.ContainerId IN (590440, 588860, 590399, 548263, 678215);
+     DELETE FROM _tmpMaster WHERE _tmpMaster.ContainerId IN (640297, 178398
+                                                           , 590440, 588860, 590399, 548263, 678215);
      /*DELETE FROM _tmpMaster WHERE _tmpMaster.ContainerId IN (250904, 244751
                                                            , 140871, 132557, 278535, 204974
                                                            , 240687, 250652

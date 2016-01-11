@@ -152,6 +152,7 @@ type
     actUpdateAmountPartner: TdsdExecStoredProc;
     bbUpdateAmountPartner: TdxBarButton;
     cbPromo: TcxCheckBox;
+    Price_Pricelist_vat: TcxGridDBColumn;
   private
     { Private declarations }
   public
