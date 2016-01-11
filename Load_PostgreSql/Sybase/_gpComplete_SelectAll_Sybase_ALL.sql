@@ -208,8 +208,8 @@ BEGIN
      WHERE Movement.OperDate BETWEEN inStartDate AND inEndDate
        AND Movement.StatusId = zc_Enum_Status_Complete()
        AND Movement.DescId IN (zc_Movement_Send(), zc_Movement_ProductionUnion(), zc_Movement_ProductionSeparate())
-       -- AND inIsBefoHistoryCost = TRUE -- !!!***
-       -- AND tmpUnit_pack_from.UnitId IS NULL AND tmpUnit_pack_To.UnitId IS NULL -- !!!***
+       AND inIsBefoHistoryCost = TRUE -- !!!***
+       AND tmpUnit_pack_from.UnitId IS NULL AND tmpUnit_pack_To.UnitId IS NULL -- !!!***
 
     UNION
      -- 2.2. !!!Internal - SendOnPrice!!!
@@ -232,7 +232,7 @@ BEGIN
      WHERE Movement.OperDate BETWEEN inStartDate AND inEndDate
        AND Movement.DescId IN (zc_Movement_SendOnPrice())
        AND Movement.StatusId = zc_Enum_Status_Complete()
-       -- AND inIsBefoHistoryCost = TRUE -- !!!***
+       AND inIsBefoHistoryCost = TRUE -- !!!***
        AND (tmpUnit_from.UnitId > 0 OR tmpUnit_To.UnitId > 0)
 
     UNION
@@ -382,5 +382,5 @@ create table dba._pgMovementReComlete
           LEFT JOIN MovementDesc ON MovementDesc.Id = Movement.DescId
 */
 -- тест
--- SELECT * FROM gpComplete_SelectAll_Sybase (inStartDate:= '01.07.2015', inEndDate:= '31.07.2015', inIsBefoHistoryCost:= TRUE)
+-- SELECT * FROM gpComplete_SelectAll_Sybase (inStartDate:= '01.12.2015', inEndDate:= '31.12.2015', inIsBefoHistoryCost:= TRUE)
 -- SELECT * FROM gpComplete_SelectAll_Sybase (inStartDate:= '01.11.2015', inEndDate:= '01.11.2015', inIsBefoHistoryCost:= FALSE)

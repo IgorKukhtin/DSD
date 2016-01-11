@@ -1380,7 +1380,6 @@ object IncomeFuelForm: TIncomeFuelForm
     Top = 221
   end
   object RefreshAddOn: TRefreshAddOn
-    FormName = 'IncomeFuelJournalForm'
     DataSet = 'ClientDataSet'
     KeyField = 'Id'
     RefreshAction = 'actRefresh'

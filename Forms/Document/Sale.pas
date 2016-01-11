@@ -196,13 +196,15 @@ type
     CountPack: TcxGridDBColumn;
     WeightTotal: TcxGridDBColumn;
     WeightPack: TcxGridDBColumn;
-    TotalPercentAmount: TcxGridDBColumn;
+    colTotalPercentAmount: TcxGridDBColumn;
     cbPromo: TcxCheckBox;
     MovementPromo: TcxGridDBColumn;
     PricePromo: TcxGridDBColumn;
     cbPrinted: TcxCheckBox;
     spSavePrintState: TdsdStoredProc;
     actSPSavePrintState: TdsdExecStoredProc;
+    colChangePercent: TcxGridDBColumn;
+    Price_Pricelist_vat: TcxGridDBColumn;
   private
     { Private declarations }
   public

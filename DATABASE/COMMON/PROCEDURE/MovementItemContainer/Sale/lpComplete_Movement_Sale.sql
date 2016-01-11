@@ -38,6 +38,7 @@ $BODY$
   DECLARE vbVATPercent TFloat;
   DECLARE vbDiscountPercent TFloat;
   DECLARE vbExtraChargesPercent TFloat;
+  DECLARE vbIsChangePrice Boolean;
 
   DECLARE vbOperDate TDateTime;
   DECLARE vbOperDatePartner TDateTime;
@@ -397,7 +398,7 @@ BEGIN
 
      -- заполняем таблицу - количественные элементы документа, со всеми свойствами для формирования Аналитик в проводках
      INSERT INTO _tmpItem (MovementItemId
-                         , ContainerId_Goods, ContainerId_GoodsPartner, ContainerId_GoodsTransit, GoodsId, GoodsKindId, AssetId, PartionGoods, PartionGoodsDate
+                         , ContainerId_Goods, ContainerId_GoodsPartner, ContainerId_GoodsTransit, GoodsId, GoodsKindId, AssetId, PartionGoods, PartionGoodsDate, ChangePercent, isChangePrice
                          , OperCount, OperCount_ChangePercent, OperCount_Partner, tmpOperSumm_PriceList, OperSumm_PriceList, tmpOperSumm_Partner, tmpOperSumm_Partner_Currency, tmpOperSumm_Partner_original, OperSumm_Partner, OperSumm_Partner_ChangePercent, OperSumm_Currency, OperSumm_80103
                          , ContainerId_ProfitLoss_10100, ContainerId_ProfitLoss_10200, ContainerId_ProfitLoss_10300, ContainerId_ProfitLoss_80103
                          , ContainerId_Partner, ContainerId_Currency, AccountId_Partner, InfoMoneyDestinationId, InfoMoneyId
@@ -405,6 +406,89 @@ BEGIN
                          , isPartionCount, isPartionSumm, isTareReturning, isLossMaterials
                          , PartionGoodsId
                          , PriceListPrice, Price, Price_Currency, Price_original, CountForPrice)
+
+    WITH tmpMI_all AS (SELECT (MovementItem.Id)                             AS MovementItemId
+                            , MovementItem.ObjectId                         AS GoodsId
+                            , COALESCE (MILinkObject_GoodsKind.ObjectId, 0) AS GoodsKindId
+                            , COALESCE (MIFloat_ChangePercent.ValueData, 0) AS ChangePercent
+
+                            , (MovementItem.Amount)                                  AS OperCount
+                            , (COALESCE (MIFloat_AmountChangePercent.ValueData, 0))  AS OperCount_ChangePercent
+                            , (COALESCE (MIFloat_AmountPartner.ValueData, 0))        AS OperCount_Partner
+
+                            , COALESCE (MIFloat_Price.ValueData, 0)                  AS Price_original
+                            , COALESCE (MIFloat_CountForPrice.ValueData, 0)          AS CountForPrice
+
+                            , COALESCE (MILinkObject_Asset.ObjectId, 0)              AS AssetId
+                            , COALESCE (MIString_PartionGoods.ValueData, '')         AS PartionGoods
+                            , COALESCE (MIDate_PartionGoods.ValueData, zc_DateEnd()) AS PartionGoodsDate
+
+                       FROM MovementItem
+                            LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
+                                                             ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
+                                                            AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
+
+                            LEFT JOIN MovementItemFloat AS MIFloat_AmountChangePercent
+                                                        ON MIFloat_AmountChangePercent.MovementItemId = MovementItem.Id
+                                                       AND MIFloat_AmountChangePercent.DescId = zc_MIFloat_AmountChangePercent()
+                            LEFT JOIN MovementItemFloat AS MIFloat_AmountPartner
+                                                        ON MIFloat_AmountPartner.MovementItemId = MovementItem.Id
+                                                       AND MIFloat_AmountPartner.DescId = zc_MIFloat_AmountPartner()
+
+                            LEFT JOIN MovementItemFloat AS MIFloat_ChangePercent
+                                                        ON MIFloat_ChangePercent.MovementItemId = MovementItem.Id
+                                                       AND MIFloat_ChangePercent.DescId = zc_MIFloat_ChangePercent()
+
+                            LEFT JOIN MovementItemFloat AS MIFloat_Price
+                                                        ON MIFloat_Price.MovementItemId = MovementItem.Id
+                                                       AND MIFloat_Price.DescId = zc_MIFloat_Price()
+                            LEFT JOIN MovementItemFloat AS MIFloat_CountForPrice
+                                                        ON MIFloat_CountForPrice.MovementItemId = MovementItem.Id
+                                                       AND MIFloat_CountForPrice.DescId = zc_MIFloat_CountForPrice()
+
+                            LEFT JOIN MovementItemLinkObject AS MILinkObject_Asset
+                                                             ON MILinkObject_Asset.MovementItemId = MovementItem.Id
+                                                            AND MILinkObject_Asset.DescId = zc_MILinkObject_Asset()
+
+                            LEFT JOIN MovementItemString AS MIString_PartionGoods
+                                                         ON MIString_PartionGoods.MovementItemId = MovementItem.Id
+                                                        AND MIString_PartionGoods.DescId = zc_MIString_PartionGoods()
+                            LEFT JOIN MovementItemDate AS MIDate_PartionGoods
+                                                       ON MIDate_PartionGoods.MovementItemId = MovementItem.Id
+                                                      AND MIDate_PartionGoods.DescId = zc_MIDate_PartionGoods()
+
+                       WHERE MovementItem.MovementId = inMovementId
+                         AND MovementItem.DescId     = zc_MI_Master()
+                         AND MovementItem.isErased   = FALSE
+                         AND vbMovementDescId        = zc_Movement_Sale()
+                      )
+  , tmpChangePrice AS (SELECT TRUE AS isChangePrice
+                       FROM tmpMI_all
+                       WHERE (tmpMI_all.ChangePercent = 0 OR vbPaidKindId = zc_Enum_PaidKind_FirstForm())
+                         AND (vbDiscountPercent <> 0 OR vbExtraChargesPercent <> 0)
+                       LIMIT 1
+                      )
+     , tmpPL_Basis AS (-- цены из прайса напрямую, для скорости
+                       SELECT DISTINCT
+                              tmpMI_all.GoodsId
+                            , COALESCE (ObjectHistoryFloat_PriceListItem_Value.ValueData, 0) AS PriceListPrice
+                       FROM tmpMI_all
+                            INNER JOIN ObjectLink AS ObjectLink_PriceListItem_Goods
+                                                  ON ObjectLink_PriceListItem_Goods.ChildObjectId = tmpMI_all.GoodsId
+                                                 AND ObjectLink_PriceListItem_Goods.DescId = zc_ObjectLink_PriceListItem_Goods()
+                            INNER JOIN ObjectLink AS ObjectLink_PriceListItem_PriceList
+                                                  ON ObjectLink_PriceListItem_PriceList.ObjectId = ObjectLink_PriceListItem_Goods.ObjectId
+                                                 AND ObjectLink_PriceListItem_PriceList.ChildObjectId = zc_PriceList_Basis()
+                                                 AND ObjectLink_PriceListItem_PriceList.DescId = zc_ObjectLink_PriceListItem_PriceList()
+                            LEFT JOIN ObjectHistory AS ObjectHistory_PriceListItem
+                                                    ON ObjectHistory_PriceListItem.ObjectId = ObjectLink_PriceListItem_Goods.ObjectId
+                                                   AND ObjectHistory_PriceListItem.DescId = zc_ObjectHistory_PriceListItem()
+                                                   AND vbOperDatePartner >= ObjectHistory_PriceListItem.StartDate AND vbOperDatePartner < ObjectHistory_PriceListItem.EndDate
+                            LEFT JOIN ObjectHistoryFloat AS ObjectHistoryFloat_PriceListItem_Value
+                                                         ON ObjectHistoryFloat_PriceListItem_Value.ObjectHistoryId = ObjectHistory_PriceListItem.Id
+                                                        AND ObjectHistoryFloat_PriceListItem_Value.DescId = zc_ObjectHistoryFloat_PriceListItem_Value()
+                       
+                      )
         SELECT
               _tmp.MovementItemId
             , 0 AS ContainerId_Goods
@@ -415,6 +499,8 @@ BEGIN
             , _tmp.AssetId
             , _tmp.PartionGoods
             , _tmp.PartionGoodsDate
+            , _tmp.ChangePercent
+            , _tmp.isChangePrice
 
             , _tmp.OperCount
             , _tmp.OperCount_ChangePercent
@@ -454,14 +540,14 @@ BEGIN
             , CAST
              (CASE WHEN vbPriceWithVAT = TRUE OR vbVATPercent = 0
                       -- если цены с НДС или %НДС=0, тогда учитываем или % Скидки или % Наценки !!!но для БН скидка/наценка учтена в цене!!!
-                      THEN CASE WHEN vbPaidKindId = zc_Enum_PaidKind_SecondForm() AND vbDiscountPercent > 0 THEN CAST ( (1 - vbDiscountPercent / 100) * _tmp.tmpOperSumm_Partner AS NUMERIC (16, 2))
-                                WHEN vbPaidKindId = zc_Enum_PaidKind_SecondForm() AND vbExtraChargesPercent > 0 THEN CAST ( (1 + vbExtraChargesPercent / 100) * _tmp.tmpOperSumm_Partner AS NUMERIC (16, 2))
+                      THEN CASE WHEN _tmp.isChangePrice = FALSE AND _tmp.ChangePercent <> 0 THEN CAST ( (1 + _tmp.ChangePercent / 100) * _tmp.tmpOperSumm_Partner AS NUMERIC (16, 2))
+                                -- WHEN vbPaidKindId = zc_Enum_PaidKind_SecondForm() AND vbExtraChargesPercent > 0 THEN CAST ( (1 + vbExtraChargesPercent / 100) * _tmp.tmpOperSumm_Partner AS NUMERIC (16, 2))
                                 ELSE _tmp.tmpOperSumm_Partner
                            END
                    WHEN vbVATPercent > 0
                       -- если цены без НДС, тогда учитываем или % Скидки или % Наценки для суммы с НДС (этот вариант будет и для НАЛ и для БН) !!!но для БН скидка/наценка учтена в цене!!!
-                      THEN CASE WHEN vbPaidKindId = zc_Enum_PaidKind_SecondForm() AND vbDiscountPercent > 0 THEN CAST ( (1 - vbDiscountPercent/100) * (CAST ( (1 + vbVATPercent / 100) * _tmp.tmpOperSumm_Partner AS NUMERIC (16, 2))) AS NUMERIC (16, 2))
-                                WHEN vbPaidKindId = zc_Enum_PaidKind_SecondForm() AND vbExtraChargesPercent > 0 THEN CAST ( (1 + vbExtraChargesPercent/100) * (CAST ( (1 + vbVATPercent / 100) * _tmp.tmpOperSumm_Partner AS NUMERIC (16, 2))) AS NUMERIC (16, 2))
+                      THEN CASE WHEN _tmp.isChangePrice = FALSE AND _tmp.ChangePercent <> 0 THEN CAST ( (1 + _tmp.ChangePercent / 100) * (CAST ( (1 + vbVATPercent / 100) * _tmp.tmpOperSumm_Partner AS NUMERIC (16, 2))) AS NUMERIC (16, 2))
+                                -- WHEN vbPaidKindId = zc_Enum_PaidKind_SecondForm() AND vbExtraChargesPercent > 0 THEN CAST ( (1 + vbExtraChargesPercent/100) * (CAST ( (1 + vbVATPercent / 100) * _tmp.tmpOperSumm_Partner AS NUMERIC (16, 2))) AS NUMERIC (16, 2))
                                 ELSE CAST ( (1 + vbVATPercent / 100) * _tmp.tmpOperSumm_Partner AS NUMERIC (16, 2))
                            END
                    WHEN vbVATPercent > 0
@@ -478,14 +564,14 @@ BEGIN
             , CAST
              (CASE WHEN vbPriceWithVAT = TRUE OR vbVATPercent = 0
                       -- если цены с НДС или %НДС=0, тогда учитываем или % Скидки или % Наценки !!!но для БН скидка/наценка учтена в цене!!!
-                      THEN CASE WHEN vbPaidKindId = zc_Enum_PaidKind_SecondForm() AND vbDiscountPercent > 0 THEN CAST ( (1 - vbDiscountPercent / 100) * _tmp.tmpOperSumm_Partner_Currency AS NUMERIC (16, 2))
-                                WHEN vbPaidKindId = zc_Enum_PaidKind_SecondForm() AND vbExtraChargesPercent > 0 THEN CAST ( (1 + vbExtraChargesPercent / 100) * _tmp.tmpOperSumm_Partner_Currency AS NUMERIC (16, 2))
+                      THEN CASE WHEN _tmp.isChangePrice = FALSE AND _tmp.ChangePercent <> 0 THEN CAST ( (1 + _tmp.ChangePercent / 100) * _tmp.tmpOperSumm_Partner_Currency AS NUMERIC (16, 2))
+                                -- WHEN vbPaidKindId = zc_Enum_PaidKind_SecondForm() AND vbExtraChargesPercent > 0 THEN CAST ( (1 + vbExtraChargesPercent / 100) * _tmp.tmpOperSumm_Partner_Currency AS NUMERIC (16, 2))
                                 ELSE _tmp.tmpOperSumm_Partner_Currency
                            END
                    WHEN vbVATPercent > 0
                       -- если цены без НДС, тогда учитываем или % Скидки или % Наценки для суммы с НДС (этот вариант будет и для НАЛ и для БН) !!!но для БН скидка/наценка учтена в цене!!!
-                      THEN CASE WHEN vbPaidKindId = zc_Enum_PaidKind_SecondForm() AND vbDiscountPercent > 0 THEN CAST ( (1 - vbDiscountPercent/100) * (CAST ( (1 + vbVATPercent / 100) * _tmp.tmpOperSumm_Partner_Currency AS NUMERIC (16, 2))) AS NUMERIC (16, 2))
-                                WHEN vbPaidKindId = zc_Enum_PaidKind_SecondForm() AND vbExtraChargesPercent > 0 THEN CAST ( (1 + vbExtraChargesPercent/100) * (CAST ( (1 + vbVATPercent / 100) * _tmp.tmpOperSumm_Partner_Currency AS NUMERIC (16, 2))) AS NUMERIC (16, 2))
+                      THEN CASE WHEN _tmp.isChangePrice = FALSE AND _tmp.ChangePercent <> 0 THEN CAST ( (1 + _tmp.ChangePercent / 100) * (CAST ( (1 + vbVATPercent / 100) * _tmp.tmpOperSumm_Partner_Currency AS NUMERIC (16, 2))) AS NUMERIC (16, 2))
+                                -- WHEN vbPaidKindId = zc_Enum_PaidKind_SecondForm() AND vbExtraChargesPercent > 0 THEN CAST ( (1 + vbExtraChargesPercent/100) * (CAST ( (1 + vbVATPercent / 100) * _tmp.tmpOperSumm_Partner_Currency AS NUMERIC (16, 2))) AS NUMERIC (16, 2))
                                 ELSE CAST ( (1 + vbVATPercent / 100) * _tmp.tmpOperSumm_Partner_Currency AS NUMERIC (16, 2))
                            END
                    WHEN vbVATPercent > 0
@@ -555,11 +641,13 @@ BEGIN
                     tmpMI.MovementItemId
                   , tmpMI.GoodsId
                   , CASE WHEN View_InfoMoney.InfoMoneyId IN (zc_Enum_InfoMoney_20901(), zc_Enum_InfoMoney_30101(), zc_Enum_InfoMoney_30201()) THEN tmpMI.GoodsKindId ELSE 0 END AS GoodsKindId -- Ирна + Готовая продукция + Доходы Мясное сырье
-                  , COALESCE (MILinkObject_Asset.ObjectId, 0) AS AssetId
-                  , COALESCE (MIString_PartionGoods.ValueData, '') AS PartionGoods
-                  , COALESCE (MIDate_PartionGoods.ValueData, zc_DateEnd()) AS PartionGoodsDate
+                  , tmpMI.AssetId
+                  , tmpMI.PartionGoods
+                  , tmpMI.PartionGoodsDate
+                  , tmpMI.ChangePercent
+                  , tmpMI.isChangePrice
  
-                  , lfObjectHistory_PriceListItem.ValuePrice AS PriceListPrice
+                  , COALESCE (tmpPL_Basis.PriceListPrice, 0) AS PriceListPrice
                   , tmpMI.Price
                   , tmpMI.Price_original
                   , tmpMI.Price_Currency
@@ -572,7 +660,7 @@ BEGIN
                   , tmpMI.OperCount_Partner
 
                     -- промежуточная сумма прайс-листа по Контрагенту - с округлением до 2-х знаков
-                  , COALESCE (CAST (tmpMI.OperCount_Partner * lfObjectHistory_PriceListItem.ValuePrice AS NUMERIC (16, 2)), 0) AS tmpOperSumm_PriceList
+                  , COALESCE (CAST (tmpMI.OperCount_Partner * tmpPL_Basis.PriceListPrice AS NUMERIC (16, 2)), 0) AS tmpOperSumm_PriceList
                     -- промежуточная сумма по Контрагенту - с округлением до 2-х знаков + учтена скидка в цене (!!!если надо!!!)
                   , CASE WHEN tmpMI.CountForPrice <> 0 THEN CAST (tmpMI.OperCount_Partner * tmpMI.Price / tmpMI.CountForPrice AS NUMERIC (16, 2))
                                                        ELSE CAST (tmpMI.OperCount_Partner * tmpMI.Price AS NUMERIC (16, 2))
@@ -598,13 +686,18 @@ BEGIN
                   , COALESCE (ObjectBoolean_PartionSumm.ValueData, FALSE)       AS isPartionSumm
 
               FROM
-             (SELECT MovementItemId
-                   , GoodsId
-                   , GoodsKindId
+             (SELECT tmpMI.MovementItemId
+                   , tmpMI.GoodsId
+                   , tmpMI.GoodsKindId
+                   , tmpMI.AssetId
+                   , tmpMI.PartionGoods
+                   , tmpMI.PartionGoodsDate
+                   , tmpMI.ChangePercent
+                   , tmpMI.isChangePrice
 
-                   , OperCount
-                   , OperCount_ChangePercent
-                   , OperCount_Partner
+                   , tmpMI.OperCount
+                   , tmpMI.OperCount_ChangePercent
+                   , tmpMI.OperCount_Partner
                        , CASE WHEN vbCurrencyDocumentId <> zc_Enum_Currency_Basis()
                                    -- так переводится в валюту zc_Enum_Currency_Basis
                                    THEN CAST (tmpMI.Price * CASE WHEN vbParValue = 0 THEN 0 ELSE vbCurrencyValue / vbParValue END AS NUMERIC (16, 2))
@@ -616,65 +709,31 @@ BEGIN
                               ELSE tmpMI.Price_original
                          END AS Price_original
                        , tmpMI.Price AS Price_Currency
-                   , CountForPrice
+                   , tmpMI.CountForPrice
               FROM
-             (SELECT (MovementItem.Id) AS MovementItemId
-                   , MovementItem.ObjectId AS GoodsId
-                   , COALESCE (MILinkObject_GoodsKind.ObjectId, 0) AS GoodsKindId
+             (SELECT tmpMI_all.MovementItemId
+                   , tmpMI_all.GoodsId
+                   , tmpMI_all.GoodsKindId
+                   , tmpMI_all.AssetId
+                   , tmpMI_all.PartionGoods
+                   , tmpMI_all.PartionGoodsDate
+                   , tmpMI_all.ChangePercent
+                   , COALESCE (tmpChangePrice.isChangePrice, FALSE) AS isChangePrice
 
-                   , SUM (MovementItem.Amount) AS OperCount
-                   , SUM (COALESCE (MIFloat_AmountChangePercent.ValueData, 0)) AS OperCount_ChangePercent
-                   , SUM (COALESCE (MIFloat_AmountPartner.ValueData, 0)) AS OperCount_Partner
-                   , CASE WHEN vbDiscountPercent <> 0 AND vbPaidKindId <> zc_Enum_PaidKind_SecondForm() -- !!!для НАЛ не учитываем!!!
-                               THEN CAST ( (1 - vbDiscountPercent / 100) * COALESCE (MIFloat_Price.ValueData, 0) AS NUMERIC (16, 2))
-                          WHEN vbExtraChargesPercent <> 0 AND vbPaidKindId <> zc_Enum_PaidKind_SecondForm() -- !!!для НАЛ не учитываем!!!
-                               THEN CAST ( (1 + vbExtraChargesPercent / 100) * COALESCE (MIFloat_Price.ValueData, 0) AS NUMERIC (16, 2))
-                          ELSE COALESCE (MIFloat_Price.ValueData, 0)
+                   , tmpMI_all.OperCount
+                   , tmpMI_all.OperCount_ChangePercent
+                   , tmpMI_all.OperCount_Partner
+                   , CASE WHEN tmpChangePrice.isChangePrice = TRUE -- !!!для НАЛ не учитываем, или...!!!
+                               THEN CAST ( (1 + tmpMI_all.ChangePercent / 100) * tmpMI_all.Price_original AS NUMERIC (16, 2))
+                          ELSE tmpMI_all.Price_original
                      END AS Price
-                   , COALESCE (MIFloat_Price.ValueData, 0) AS Price_original
-                   , COALESCE (MIFloat_CountForPrice.ValueData, 0) AS CountForPrice
+                   , tmpMI_all.Price_original
+                   , tmpMI_all.CountForPrice
 
-              FROM Movement
-                   JOIN MovementItem ON MovementItem.MovementId = Movement.Id AND MovementItem.DescId = zc_MI_Master() AND MovementItem.isErased = FALSE
-
-                   LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
-                                                    ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
-                                                   AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
-
-                   LEFT JOIN MovementItemFloat AS MIFloat_AmountChangePercent
-                                               ON MIFloat_AmountChangePercent.MovementItemId = MovementItem.Id
-                                              AND MIFloat_AmountChangePercent.DescId = zc_MIFloat_AmountChangePercent()
-                   LEFT JOIN MovementItemFloat AS MIFloat_AmountPartner
-                                               ON MIFloat_AmountPartner.MovementItemId = MovementItem.Id
-                                              AND MIFloat_AmountPartner.DescId = zc_MIFloat_AmountPartner()
-
-                   LEFT JOIN MovementItemFloat AS MIFloat_Price
-                                               ON MIFloat_Price.MovementItemId = MovementItem.Id
-                                              AND MIFloat_Price.DescId = zc_MIFloat_Price()
-                   LEFT JOIN MovementItemFloat AS MIFloat_CountForPrice
-                                               ON MIFloat_CountForPrice.MovementItemId = MovementItem.Id
-                                              AND MIFloat_CountForPrice.DescId = zc_MIFloat_CountForPrice()
-              WHERE Movement.Id = inMovementId
-                AND Movement.DescId = zc_Movement_Sale()
-                AND Movement.StatusId IN (zc_Enum_Status_UnComplete(), zc_Enum_Status_Erased())
-              GROUP BY MovementItem.Id
-                     , MovementItem.ObjectId
-                     , MILinkObject_GoodsKind.ObjectId
-                     , MIFloat_Price.ValueData
-                     , MIFloat_CountForPrice.ValueData
+              FROM tmpMI_all
+                   LEFT JOIN tmpChangePrice ON tmpChangePrice.isChangePrice = TRUE
              ) AS tmpMI
              ) AS tmpMI
-
-                   LEFT JOIN MovementItemLinkObject AS MILinkObject_Asset
-                                                    ON MILinkObject_Asset.MovementItemId = tmpMI.MovementItemId
-                                                   AND MILinkObject_Asset.DescId = zc_MILinkObject_Asset()
-
-                   LEFT JOIN MovementItemString AS MIString_PartionGoods
-                                                ON MIString_PartionGoods.MovementItemId = tmpMI.MovementItemId
-                                               AND MIString_PartionGoods.DescId = zc_MIString_PartionGoods()
-                   LEFT JOIN MovementItemDate AS MIDate_PartionGoods
-                                              ON MIDate_PartionGoods.MovementItemId = tmpMI.MovementItemId
-                                             AND MIDate_PartionGoods.DescId = zc_MIDate_PartionGoods()
 
                    LEFT JOIN ObjectBoolean AS ObjectBoolean_PartionCount
                                            ON ObjectBoolean_PartionCount.ObjectId = tmpMI.GoodsId
@@ -691,10 +750,11 @@ BEGIN
                                        AND ObjectLink_Goods_InfoMoney.DescId = zc_ObjectLink_Goods_InfoMoney()
                    LEFT JOIN Object_InfoMoney_View AS View_InfoMoney ON View_InfoMoney.InfoMoneyId = ObjectLink_Goods_InfoMoney.ChildObjectId
 
-                   LEFT JOIN lfSelect_ObjectHistory_PriceListItem (inPriceListId:= zc_PriceList_Basis(), inOperDate:= vbOperDatePartner)
-                          AS lfObjectHistory_PriceListItem ON lfObjectHistory_PriceListItem.GoodsId = tmpMI.GoodsId
+                   LEFT JOIN tmpPL_Basis ON tmpPL_Basis.GoodsId = tmpMI.GoodsId
              ) AS _tmp;
 
+     -- !!!надо определить - есть ли скидка в цене!!!
+     vbIsChangePrice:= (SELECT _tmpItem.isChangePrice FROM _tmpItem LIMIT 1);
 
      -- проверка
      IF COALESCE (vbContractId, 0) = 0 AND (EXISTS (SELECT _tmpItem.isTareReturning FROM _tmpItem WHERE _tmpItem.isTareReturning = FALSE))
@@ -733,14 +793,14 @@ BEGIN
           , CAST
            (CASE WHEN vbPriceWithVAT OR vbVATPercent = 0
                     -- если цены с НДС или %НДС=0, тогда учитываем или % Скидки или % Наценки !!!но для БН скидка/наценка учтена в цене!!!
-                    THEN CASE WHEN vbPaidKindId = zc_Enum_PaidKind_SecondForm() AND vbDiscountPercent > 0 THEN CAST ( (1 - vbDiscountPercent / 100) * _tmpItem.tmpOperSumm_Partner AS NUMERIC (16, 2))
-                              WHEN vbPaidKindId = zc_Enum_PaidKind_SecondForm() AND vbExtraChargesPercent > 0 THEN CAST ( (1 + vbExtraChargesPercent / 100) * _tmpItem.tmpOperSumm_Partner AS NUMERIC (16, 2))
+                    THEN CASE WHEN vbIsChangePrice = FALSE AND vbDiscountPercent     > 0 THEN CAST ( (1 - vbDiscountPercent     / 100) * _tmpItem.tmpOperSumm_Partner AS NUMERIC (16, 2))
+                              WHEN vbIsChangePrice = FALSE AND vbExtraChargesPercent > 0 THEN CAST ( (1 + vbExtraChargesPercent / 100) * _tmpItem.tmpOperSumm_Partner AS NUMERIC (16, 2))
                               ELSE _tmpItem.tmpOperSumm_Partner
                          END
                  WHEN vbVATPercent > 0
                     -- если цены без НДС, тогда учитываем или % Скидки или % Наценки для суммы с НДС (этот вариант будет и для НАЛ и для БН) !!!но для БН скидка/наценка учтена в цене!!!
-                    THEN CASE WHEN vbPaidKindId = zc_Enum_PaidKind_SecondForm() AND vbDiscountPercent > 0 THEN CAST ( (1 - vbDiscountPercent/100) * (CAST ( (1 + vbVATPercent / 100) * _tmpItem.tmpOperSumm_Partner AS NUMERIC (16, 2))) AS NUMERIC (16, 2))
-                              WHEN vbPaidKindId = zc_Enum_PaidKind_SecondForm() AND vbExtraChargesPercent > 0 THEN CAST ( (1 + vbExtraChargesPercent/100) * (CAST ( (1 + vbVATPercent / 100) * _tmpItem.tmpOperSumm_Partner AS NUMERIC (16, 2))) AS NUMERIC (16, 2))
+                    THEN CASE WHEN vbIsChangePrice = FALSE AND vbDiscountPercent     > 0 THEN CAST ( (1 - vbDiscountPercent     / 100) * (CAST ( (1 + vbVATPercent / 100) * _tmpItem.tmpOperSumm_Partner AS NUMERIC (16, 2))) AS NUMERIC (16, 2))
+                              WHEN vbIsChangePrice = FALSE AND vbExtraChargesPercent > 0 THEN CAST ( (1 + vbExtraChargesPercent / 100) * (CAST ( (1 + vbVATPercent / 100) * _tmpItem.tmpOperSumm_Partner AS NUMERIC (16, 2))) AS NUMERIC (16, 2))
                               ELSE CAST ( (1 + vbVATPercent / 100) * _tmpItem.tmpOperSumm_Partner AS NUMERIC (16, 2))
                          END
                  WHEN vbVATPercent > 0
@@ -757,14 +817,14 @@ BEGIN
           , CAST
            (CASE WHEN vbPriceWithVAT OR vbVATPercent = 0
                     -- если цены с НДС или %НДС=0, тогда учитываем или % Скидки или % Наценки !!!но для БН скидка/наценка учтена в цене!!!
-                    THEN CASE WHEN vbPaidKindId = zc_Enum_PaidKind_SecondForm() AND vbDiscountPercent > 0 THEN CAST ( (1 - vbDiscountPercent / 100) * _tmpItem.tmpOperSumm_Partner_Currency AS NUMERIC (16, 2))
-                              WHEN vbPaidKindId = zc_Enum_PaidKind_SecondForm() AND vbExtraChargesPercent > 0 THEN CAST ( (1 + vbExtraChargesPercent / 100) * _tmpItem.tmpOperSumm_Partner_Currency AS NUMERIC (16, 2))
+                    THEN CASE WHEN vbIsChangePrice = FALSE AND vbDiscountPercent     > 0 THEN CAST ( (1 - vbDiscountPercent     / 100) * _tmpItem.tmpOperSumm_Partner_Currency AS NUMERIC (16, 2))
+                              WHEN vbIsChangePrice = FALSE AND vbExtraChargesPercent > 0 THEN CAST ( (1 + vbExtraChargesPercent / 100) * _tmpItem.tmpOperSumm_Partner_Currency AS NUMERIC (16, 2))
                               ELSE _tmpItem.tmpOperSumm_Partner_Currency
                          END
                  WHEN vbVATPercent > 0
                     -- если цены без НДС, тогда учитываем или % Скидки или % Наценки для суммы с НДС (этот вариант будет и для НАЛ и для БН) !!!но для БН скидка/наценка учтена в цене!!!
-                    THEN CASE WHEN vbPaidKindId = zc_Enum_PaidKind_SecondForm() AND vbDiscountPercent > 0 THEN CAST ( (1 - vbDiscountPercent/100) * (CAST ( (1 + vbVATPercent / 100) * _tmpItem.tmpOperSumm_Partner_Currency AS NUMERIC (16, 2))) AS NUMERIC (16, 2))
-                              WHEN vbPaidKindId = zc_Enum_PaidKind_SecondForm() AND vbExtraChargesPercent > 0 THEN CAST ( (1 + vbExtraChargesPercent/100) * (CAST ( (1 + vbVATPercent / 100) * _tmpItem.tmpOperSumm_Partner_Currency AS NUMERIC (16, 2))) AS NUMERIC (16, 2))
+                    THEN CASE WHEN vbIsChangePrice = FALSE AND vbDiscountPercent     > 0 THEN CAST ( (1 - vbDiscountPercent     / 100) * (CAST ( (1 + vbVATPercent / 100) * _tmpItem.tmpOperSumm_Partner_Currency AS NUMERIC (16, 2))) AS NUMERIC (16, 2))
+                              WHEN vbIsChangePrice = FALSE AND vbExtraChargesPercent > 0 THEN CAST ( (1 + vbExtraChargesPercent / 100) * (CAST ( (1 + vbVATPercent / 100) * _tmpItem.tmpOperSumm_Partner_Currency AS NUMERIC (16, 2))) AS NUMERIC (16, 2))
                               ELSE CAST ( (1 + vbVATPercent / 100) * _tmpItem.tmpOperSumm_Partner_Currency AS NUMERIC (16, 2))
                          END
                  WHEN vbVATPercent > 0
@@ -2819,6 +2879,10 @@ BEGIN
      -- !!!6.0.3. формируются свойства в элементах документа из данных для проводок!!!
      PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_Business(), _tmpItem.MovementItemId, _tmpItem.BusinessId_From)
      FROM _tmpItem;
+     -- !!!6.0.4. формируется свойство <zc_MIFloat_Summ - Сумма> + <zc_MIFloat_SummPriceList - Сумма по прайсу>!!!
+     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_Summ(), _tmpItem.MovementItemId, _tmpItem.OperSumm_Partner)
+           , lpInsertUpdate_MovementItemFloat (zc_MIFloat_SummPriceList(), _tmpItem.MovementItemId, _tmpItem.OperSumm_PriceList)
+     FROM _tmpItem;
 
 
      -- 6.1. ФИНИШ - Обязательно сохраняем Проводки
@@ -2922,6 +2986,25 @@ $BODY$
  14.02.14                                        *
 */
 
+/*
+select Movement.*
+--     , lpInsertUpdate_MovementItemFloat (zc_MIFloat_ChangePercent(), MovementItem.Id, MovementFloat_ChangePercent.ValueData)
+     FROM Movement
+         inner JOIN MovementFloat AS MovementFloat_ChangePercent
+                                  ON MovementFloat_ChangePercent.MovementId = Movement.Id
+                                 AND MovementFloat_ChangePercent.DescId = zc_MovementFloat_ChangePercent()
+                                 AND MovementFloat_ChangePercent.ValueData <> 0
+          inner JOIN MovementItem ON MovementItem.MovementId = Movement.Id
+                                 AND MovementItem.DescId = zc_MI_Master()
+
+          LEFT JOIN MovementItemFloat AS MIFloat_PromoMovement
+                                      ON MIFloat_PromoMovement.MovementItemId = MovementItem.Id
+                                     AND MIFloat_PromoMovement.DescId = zc_MIFloat_ChangePercent()
+
+where Movement.DescId = zc_Movement_Sale()
+  and Movement.OperDate >= '01.01.2016'
+and coalesce (MIFloat_PromoMovement.ValueData, 0) <> MovementFloat_ChangePercent.ValueData
+*/
 -- тест
 -- SELECT * FROM gpUnComplete_Movement (inMovementId:= 122175 , inSession:= '2')
 -- SELECT * FROM lpComplete_Movement_Sale (inMovementId:= 122175, inIsLastComplete:= FALSE, inSession:= zfCalc_UserAdmin())

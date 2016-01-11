@@ -2,7 +2,6 @@ inherited OrderExternalJournalForm: TOrderExternalJournalForm
   Caption = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' <'#1047#1072#1103#1074#1082#1072' '#1089#1090#1086#1088#1086#1085#1085#1103#1103' ('#1086#1090' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1103')>'
   ClientHeight = 661
   ClientWidth = 1072
-  ExplicitLeft = -298
   ExplicitWidth = 1088
   ExplicitHeight = 696
   PixelsPerInch = 96
@@ -11,17 +10,17 @@ inherited OrderExternalJournalForm: TOrderExternalJournalForm
     Width = 1072
     Height = 604
     TabOrder = 3
-    ExplicitWidth = 1064
+    ExplicitWidth = 1072
     ExplicitHeight = 604
     ClientRectBottom = 604
     ClientRectRight = 1072
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 1064
+      ExplicitWidth = 1072
       ExplicitHeight = 604
       inherited cxGrid: TcxGrid
         Width = 1072
         Height = 604
-        ExplicitWidth = 1064
+        ExplicitWidth = 1072
         ExplicitHeight = 604
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Filter.Options = [fcoCaseInsensitive, fcoShowOperatorDescription]
@@ -439,12 +438,12 @@ inherited OrderExternalJournalForm: TOrderExternalJournalForm
   end
   inherited Panel: TPanel
     Width = 1072
-    ExplicitWidth = 1064
+    ExplicitWidth = 1072
     inherited deStart: TcxDateEdit
-      EditValue = 42005d
+      EditValue = 42370d
     end
     inherited deEnd: TcxDateEdit
-      EditValue = 42005d
+      EditValue = 42370d
     end
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
@@ -598,7 +597,7 @@ inherited OrderExternalJournalForm: TOrderExternalJournalForm
         item
           DataSet = PrintItemsCDS
           UserName = 'frxDBDMaster'
-          IndexFieldNames = 'GoodsGroupNameFull;GoodsName;GoodsKindName'
+          IndexFieldNames = 'LineNum;GoodsGroupNameFull;GoodsName;GoodsKindName'
         end>
       Params = <
         item

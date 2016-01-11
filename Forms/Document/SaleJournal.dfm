@@ -4,7 +4,7 @@ inherited SaleJournalForm: TSaleJournalForm
   ClientWidth = 1242
   AddOnFormData.Params = FormParams
   ExplicitWidth = 1258
-  ExplicitHeight = 679
+  ExplicitHeight = 676
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -21,7 +21,6 @@ inherited SaleJournalForm: TSaleJournalForm
       inherited cxGrid: TcxGrid
         Width = 1242
         Height = 584
-        ExplicitLeft = -3
         ExplicitWidth = 1242
         ExplicitHeight = 584
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -745,10 +744,10 @@ inherited SaleJournalForm: TSaleJournalForm
     Width = 1242
     ExplicitWidth = 1242
     inherited deStart: TcxDateEdit
-      EditValue = 42005d
+      EditValue = 42370d
     end
     inherited deEnd: TcxDateEdit
-      EditValue = 42005d
+      EditValue = 42370d
     end
     object edIsPartnerDate: TcxCheckBox
       Left = 404

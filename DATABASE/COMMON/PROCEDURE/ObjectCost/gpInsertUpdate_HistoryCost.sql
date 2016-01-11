@@ -389,6 +389,7 @@ BEGIN
        ;
 
      -- Ошибка !!! Recycled !!!
+     DELETE FROM _tmpMaster WHERE _tmpMaster.ContainerId IN (590440, 588860, 590399, 548263, 678215);
      /*DELETE FROM _tmpMaster WHERE _tmpMaster.ContainerId IN (250904, 244751
                                                            , 140871, 132557, 278535, 204974
                                                            , 240687, 250652
@@ -1004,4 +1005,4 @@ LANGUAGE PLPGSQL VOLATILE;
 -- UPDATE HistoryCost SET Price = 100 WHERE Price > 100 AND StartDate = '01.06.2014' AND EndDate = '30.06.2014'
 -- тест
 -- SELECT * FROM gpInsertUpdate_HistoryCost (inStartDate:= '01.06.2014', inEndDate:= '30.06.2014', inBranchId:= 0, inItearationCount:= 500, inInsert:= -1, inDiffSumm:= 0, inSession:= '2')  WHERE Price <> PriceNext
--- SELECT * FROM gpInsertUpdate_HistoryCost (inStartDate:= '01.08.2015', inEndDate:= '31.08.2015', inBranchId:= 0, inItearationCount:= 30, inInsert:= -1, inDiffSumm:= 0.009, inSession:= '2') -- WHERE CalcSummCurrent <> CalcSummNext
+-- SELECT * FROM gpInsertUpdate_HistoryCost (inStartDate:= '01.01.2016', inEndDate:= '31.01.2016', inBranchId:= 0, inItearationCount:= 30, inInsert:= -1, inDiffSumm:= 0.009, inSession:= '2') -- WHERE CalcSummCurrent <> CalcSummNext

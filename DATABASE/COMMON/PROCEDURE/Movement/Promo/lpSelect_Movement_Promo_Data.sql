@@ -16,6 +16,7 @@ RETURNS TABLE (MovementId          Integer -- Документ
              , TaxPromo            TFloat  
              , PriceWithOutVAT     TFloat  -- Цена отгрузки без учета НДС, с учетом скидки, грн
              , PriceWithVAT        TFloat  -- Цена отгрузки с учетом НДС, с учетом скидки, грн
+             , isChangePercent     Boolean -- учитывать % скидки по договору
               )
 AS
 $BODY$
@@ -38,6 +39,15 @@ BEGIN
                                                AND Movement.StatusId = zc_Enum_Status_Complete()
                        WHERE MovementDate_StartSale.ValueData <= inOperDate
                          AND MovementDate_StartSale.DescId = zc_MovementDate_StartSale()
+                      )
+       , tmpChangePercent AS 
+                      (SELECT DISTINCT
+                              tmpMovement.MovementId
+                       FROM tmpMovement
+                            INNER JOIN MovementItem AS MI_Child
+                                                    ON MI_Child.MovementId = tmpMovement.MovementId
+                                                   AND MI_Child.ObjectId = zc_Enum_ConditionPromo_ContractChangePercentOff() -- без учета % скидки по договору
+                                                   AND MI_Child.isErased   = FALSE
                       )
        , tmpPartner_all AS 
                       (SELECT tmpMovement.MovementId
@@ -123,7 +133,9 @@ BEGIN
              , tmpResult.TaxPromo
              , tmpResult.PriceWithOutVAT :: TFloat AS PriceWithOutVAT
              , tmpResult.PriceWithVAT    :: TFloat AS PriceWithVAT
+             , CASE WHEN tmpChangePercent.MovementId > 0 THEN FALSE ELSE TRUE END :: Boolean AS isChangePercent
         FROM tmpResult
+             LEFT JOIN tmpChangePercent ON tmpChangePercent.MovementId = tmpResult.MovementId
        ;
 
 END;

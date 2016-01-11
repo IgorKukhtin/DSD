@@ -3,7 +3,7 @@ inherited OrderExternalUnitForm: TOrderExternalUnitForm
   ClientHeight = 668
   ClientWidth = 1031
   ExplicitWidth = 1047
-  ExplicitHeight = 706
+  ExplicitHeight = 703
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -994,6 +994,8 @@ inherited OrderExternalUnitForm: TOrderExternalUnitForm
         item
           Action = dsdRefreshMI
         end>
+      QuestionBeforeExecute = #1044#1077#1081#1089#1090#1074#1080#1090#1077#1083#1100#1085#1086' '#1087#1077#1088#1077#1085#1077#1089#1090#1080' '#1076#1072#1085#1085#1099#1077' '#1080#1079' '#1079#1072#1103#1074#1082#1080' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1103' ?'
+      InfoAfterExecute = #1044#1072#1085#1085#1099#1077' '#1080#1079' '#1079#1072#1103#1074#1082#1080' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1103' '#1087#1077#1088#1077#1085#1077#1089#1077#1085#1099' '#1091#1089#1087#1077#1096#1085#1086
       Caption = #1055#1077#1088#1077#1085#1077#1089#1090#1080' '#1076#1072#1085#1085#1099#1077' '#1080#1079' '#1079#1072#1103#1074#1082#1080' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1103
       Hint = #1055#1077#1088#1077#1085#1077#1089#1090#1080' '#1076#1072#1085#1085#1099#1077' '#1080#1079' '#1079#1072#1103#1074#1082#1080' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1103
       ImageIndex = 59
@@ -1240,6 +1242,7 @@ inherited OrderExternalUnitForm: TOrderExternalUnitForm
     Params = <
       item
         Name = 'Id'
+        Value = Null
         ParamType = ptInputOutput
       end
       item

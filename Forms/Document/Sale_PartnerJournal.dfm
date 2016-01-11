@@ -4,7 +4,7 @@ inherited Sale_PartnerJournalForm: TSale_PartnerJournalForm
   ClientWidth = 1020
   AddOnFormData.Params = FormParams
   ExplicitWidth = 1036
-  ExplicitHeight = 573
+  ExplicitHeight = 570
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -688,10 +688,10 @@ inherited Sale_PartnerJournalForm: TSale_PartnerJournalForm
     Width = 1020
     ExplicitWidth = 1020
     inherited deStart: TcxDateEdit
-      EditValue = 42005d
+      EditValue = 42370d
     end
     inherited deEnd: TcxDateEdit
-      EditValue = 42005d
+      EditValue = 42370d
     end
     object edIsPartnerDate: TcxCheckBox
       Left = 427
@@ -1435,7 +1435,7 @@ inherited Sale_PartnerJournalForm: TSale_PartnerJournalForm
         end
         item
           Name = 'OperDate'
-          Value = Null
+          Value = 'NULL'
           Component = MasterCDS
           ComponentItem = 'OperDate_TransportGoods_calc'
           DataType = ftDateTime
@@ -2359,7 +2359,7 @@ inherited Sale_PartnerJournalForm: TSale_PartnerJournalForm
       end
       item
         Name = 'inOperDate'
-        Value = Null
+        Value = 'NULL'
         Component = MasterCDS
         ComponentItem = 'OperDate'
         DataType = ftDateTime
@@ -2388,7 +2388,7 @@ inherited Sale_PartnerJournalForm: TSale_PartnerJournalForm
       end
       item
         Name = 'OperDate_TransportGoods'
-        Value = Null
+        Value = 'NULL'
         Component = MasterCDS
         ComponentItem = 'OperDate_TransportGoods'
         DataType = ftDateTime

@@ -199,6 +199,22 @@ BEGIN
      -- сохранили связь с документом <Заявки сторонние>
      PERFORM lpInsertUpdate_MovementLinkMovement (zc_MovementLinkMovement_Order(), ioId, inMovementId_Order);
 
+     -- !!!пересчитали!!!
+     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_ChangePercent(), MovementItem.Id
+                                             , CASE WHEN MIFloat_PromoMovement.ValueData > 0
+                                                         THEN CASE WHEN zc_Enum_ConditionPromo_ContractChangePercentOff() = (SELECT MI_Child.ObjectId FROM MovementItem AS MI_Child WHERE MI_Child.MovementId = MIFloat_PromoMovement.ValueData AND MI_Child.ObjectId = zc_Enum_ConditionPromo_ContractChangePercentOff() AND MI_Child.isErased = FALSE LIMIT 1)
+                                                                        THEN 0  -- без учета % скидки по договору
+                                                                   ELSE inChangePercent
+                                                              END
+                                                    ELSE inChangePercent
+                                               END)
+     FROM MovementItem
+          LEFT JOIN MovementItemFloat AS MIFloat_PromoMovement
+                                      ON MIFloat_PromoMovement.MovementItemId = MovementItem.Id
+                                     AND MIFloat_PromoMovement.DescId = zc_MIFloat_PromoMovementId()
+     WHERE MovementItem.MovementId = ioId
+       AND MovementItem.DescId = zc_MI_Master();
+
      -- пересчитали Итоговые суммы по накладной
      PERFORM lpInsertUpdate_MovementFloat_TotalSumm (ioId);
 

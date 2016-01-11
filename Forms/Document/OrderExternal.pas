@@ -96,6 +96,7 @@ type
     cbPromo: TcxCheckBox;
     MovementPromo: TcxGridDBColumn;
     PricePromo: TcxGridDBColumn;
+    LineNum: TcxGridDBColumn;
   private
     { Private declarations }
   public

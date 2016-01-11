@@ -93,6 +93,7 @@ BEGIN
             LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = MovementItem.ObjectId
             LEFT JOIN MovementItemContainer AS MIContainer_Count ON MIContainer_Count.MovementItemId = MovementItem.Id
                                                                 AND MIContainer_Count.DescId = zc_MIContainer_Count()
+                                                                AND MIContainer_Count.isActive = TRUE
             LEFT JOIN Container AS Container_Count ON Container_Count.Id = MIContainer_Count.ContainerId
             LEFT JOIN Object AS Object_Fuel ON Object_Fuel.Id = Container_Count.ObjectId
 

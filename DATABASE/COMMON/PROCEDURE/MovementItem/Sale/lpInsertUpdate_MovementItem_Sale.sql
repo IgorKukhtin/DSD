@@ -35,6 +35,8 @@ AS
 $BODY$
    DECLARE vbIsInsert Boolean;
    DECLARE vbPriceWithVAT Boolean;
+   DECLARE vbChangePercent TFloat;
+   DECLARE vbIsChangePercent_Promo Boolean;
    DECLARE vbTaxPromo TFloat;
    DECLARE vbPartnerId Integer;
    DECLARE vbMovementId_Order Integer;
@@ -51,7 +53,8 @@ BEGIN
                                  ELSE 0
                             END
           , tmp.TaxPromo
-            INTO outMovementId_Promo, outPricePromo, vbTaxPromo
+          , tmp.isChangePercent
+            INTO outMovementId_Promo, outPricePromo, vbTaxPromo, vbIsChangePercent_Promo
      FROM lpGet_Movement_Promo_Data (inOperDate   := CASE WHEN vbMovementId_Order <> 0
                                                            AND TRUE = (SELECT ObjectBoolean_OperDateOrder.ValueData
                                                                        FROM ObjectLink AS ObjectLink_Juridical
@@ -72,6 +75,10 @@ BEGIN
                                    , inUnitId     := (SELECT MLO.ObjectId FROM MovementLinkObject AS MLO WHERE MLO.MovementId = inMovementId AND MLO.DescId = zc_MovementLinkObject_From())
                                    , inGoodsId    := inGoodsId
                                    , inGoodsKindId:= inGoodsKindId) AS tmp;
+
+     -- (-)% Скидки (+)% Наценки
+     vbChangePercent:= CASE WHEN COALESCE (vbIsChangePercent_Promo, TRUE) = TRUE THEN COALESCE ((SELECT MF.ValueData FROM MovementFloat AS MF WHERE MF.MovementId = inMovementId AND MF.DescId = zc_MovementFloat_ChangePercent()), 0) ELSE 0 END;
+     
 
      -- !!!замена для акции!!
      IF outMovementId_Promo > 0 THEN
@@ -101,6 +108,8 @@ BEGIN
      PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_AmountChangePercent(), ioId, inAmountChangePercent);
      -- сохранили свойство <% скидки для кол-ва>
      PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_ChangePercentAmount(), ioId, inChangePercentAmount);
+     -- сохранили свойство <(-)% Скидки (+)% Наценки>
+     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_ChangePercent(), ioId, vbChangePercent);
 
      -- сохранили свойство <Цена>
      PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_Price(), ioId, ioPrice);
@@ -171,4 +180,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpInsertUpdate_MovementItem_Sale (ioId:= 0, inMovementId:= 10, inGoodsId:= 1, inAmount:= 0, inAmountPartner:= 0, inAmountPacker:= 0, ioPrice:= 1, inCountForPrice:= 1, inLiveWeight:= 0, inHeadCount:= 0, inPartionGoods:= '', inGoodsKindId:= 0, inAssetId:= 0, inSession:= '2')
+-- SELECT * FROM lpInsertUpdate_MovementItem_Sale (ioId:= 0, inMovementId:= 10, inGoodsId:= 1, inAmount:= 0, inAmountPartner:= 0, inAmountPacker:= 0, ioPrice:= 1, inCountForPrice:= 1, inLiveWeight:= 0, inHeadCount:= 0, inPartionGoods:= '', inGoodsKindId:= 0, inAssetId:= 0, inSession:= '2')

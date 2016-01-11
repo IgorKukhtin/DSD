@@ -50,6 +50,7 @@ type
     spUpdate_Movement_Promo_Data_after: TdsdStoredProc;
     actUpdate_Promo_Data_after: TdsdExecStoredProc;
     mactUpdate_Movement_Promo_Data_all: TMultiAction;
+    colChangePercentName: TcxGridDBColumn;
   private
     { Private declarations }
   public

@@ -16,6 +16,7 @@ RETURNS TABLE (MovementId          Integer -- Документ
              , TaxPromo            TFloat  
              , PriceWithOutVAT     TFloat  -- Цена отгрузки без учета НДС, с учетом скидки, грн
              , PriceWithVAT        TFloat  -- Цена отгрузки с учетом НДС, с учетом скидки, грн
+             , isChangePercent     Boolean -- учитывать % скидки по договору
               )
 AS
 $BODY$
@@ -103,11 +104,21 @@ BEGIN
                                                  AND ObjectLink_Partner_Juridical.ObjectId      = inPartnerId
                        WHERE tmpPartner_all.ObjectDescId = zc_Object_Retail()
                       )
+       , tmpChangePercent AS 
+                      (SELECT DISTINCT
+                              tmpResult.MovementId
+                       FROM tmpResult
+                            INNER JOIN MovementItem AS MI_Child
+                                                    ON MI_Child.MovementId = tmpResult.MovementId
+                                                   AND MI_Child.ObjectId = zc_Enum_ConditionPromo_ContractChangePercentOff() -- без учета % скидки по договору
+                                                   AND MI_Child.isErased   = FALSE
+                      )
         SELECT DISTINCT
                tmpResult.MovementId
              , tmpResult.TaxPromo
              , COALESCE (MIFloat_PriceWithOutVAT.ValueData, 0) :: TFloat AS PriceWithOutVAT
              , COALESCE (MIFloat_PriceWithVAT.ValueData, 0)    :: TFloat AS PriceWithVAT
+             , CASE WHEN tmpChangePercent.MovementId > 0 THEN FALSE ELSE TRUE END :: Boolean AS isChangePercent
         FROM tmpResult
              LEFT JOIN MovementItemFloat AS MIFloat_PriceWithOutVAT
                                          ON MIFloat_PriceWithOutVAT.MovementItemId = tmpResult.MovementItemId
@@ -115,6 +126,7 @@ BEGIN
              LEFT JOIN MovementItemFloat AS MIFloat_PriceWithVAT
                                          ON MIFloat_PriceWithVAT.MovementItemId = tmpResult.MovementItemId
                                         AND MIFloat_PriceWithVAT.DescId = zc_MIFloat_PriceWithVAT()
+             LEFT JOIN tmpChangePercent ON tmpChangePercent.MovementId = tmpResult.MovementId
        ;
 
 END;

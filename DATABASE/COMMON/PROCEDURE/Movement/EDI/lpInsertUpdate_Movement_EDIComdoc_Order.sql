@@ -413,6 +413,7 @@ BEGIN
            GROUP BY tmpMI.GoodsId
                   , tmpMI.GoodsKindId
                   -- , tmpMI.Price
+           ORDER BY 2, 1
           ) AS tmpMI
      ;
      ELSE

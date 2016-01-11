@@ -37,7 +37,9 @@ BEGIN
                          WHERE Movement.OperDate = DATE_TRUNC ('MONTH', inStartDate) + INTERVAL '1 MONTH' - INTERVAL '1 DAY'
                            AND Movement.StatusId <> zc_Enum_Status_Erased()
                            AND Movement.DescId = zc_Movement_Inventory()
-                           AND EXTRACT (MONTH FROM Movement.OperDate) < EXTRACT (MONTH FROM CURRENT_DATE)
+                           AND (EXTRACT (MONTH FROM Movement.OperDate) < EXTRACT (MONTH FROM CURRENT_DATE)
+                             OR EXTRACT (YEAR FROM Movement.OperDate)  < EXTRACT (YEAR FROM CURRENT_DATE)
+                               )
                          LIMIT 1
                         );
 

@@ -10,7 +10,7 @@ CREATE OR REPLACE FUNCTION gpSelect_MovementItem_OrderExternal(
     IN inIsErased    Boolean      , --
     IN inSession     TVarChar       -- сессия пользователя
 )
-RETURNS TABLE (Id Integer, GoodsId Integer, GoodsCode Integer, GoodsName TVarChar
+RETURNS TABLE (Id Integer, LineNum Integer, GoodsId Integer, GoodsCode Integer, GoodsName TVarChar
              , GoodsGroupNameFull TVarChar
              , AmountRemains TFloat, Amount TFloat, AmountEDI TFloat, AmountSecond TFloat
              , GoodsKindId Integer, GoodsKindName  TVarChar, MeasureName TVarChar
@@ -358,6 +358,7 @@ BEGIN
                                      )
        SELECT
              0 :: Integer               AS Id
+           , 0 :: Integer               AS LineNum
            , tmpGoods.GoodsId           AS GoodsId
            , tmpGoods.GoodsCode         AS GoodsCode
            , tmpGoods.GoodsName         AS GoodsName
@@ -468,6 +469,7 @@ BEGIN
       UNION ALL
        SELECT
              tmpMI.MovementItemId :: Integer    AS Id
+           , CAST (row_number() OVER (ORDER BY tmpMI.MovementItemId) AS Integer) AS LineNum
            , Object_Goods.Id                    AS GoodsId
            , Object_Goods.ObjectCode            AS GoodsCode
            , Object_Goods.ValueData             AS GoodsName
@@ -737,6 +739,7 @@ BEGIN
                                      )
        SELECT
              tmpMI.MovementItemId :: Integer    AS Id
+           , CAST (row_number() OVER (ORDER BY tmpMI.MovementItemId) AS Integer) AS LineNum
            , Object_Goods.Id                    AS GoodsId
            , Object_Goods.ObjectCode            AS GoodsCode
            , Object_Goods.ValueData             AS GoodsName

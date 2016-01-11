@@ -1,4 +1,4 @@
--- Function: gpInsertUpdate_MovementItem_SheetWorkTime()
+-- Function: gpInsertUpdate_SheetWorkTime_FromTransport()
 
 DROP FUNCTION IF EXISTS gpInsertUpdate_SheetWorkTime_FromTransport(INTEGER, TDateTime, TVarChar);
 
@@ -31,8 +31,8 @@ BEGIN
               inUnitId          := inUnitId                            , -- Подразделение
               inPersonalGroupId := View_PersonalDriver.PersonalGroupId , -- Группировка Сотрудника
               inOperDate        := Movement.OperDate                   , -- дата установки часов
-              ioValue           := SUM(CAST (COALESCE (MovementFloat_HoursWork.ValueData, 0) + COALESCE (MovementFloat_HoursAdd.ValueData, 0) AS TFloat))::TVarChar                    , -- часы
-              inTypeId          := zc_Enum_WorkTimeKind_Work()         , 
+              ioValue           := SUM (CAST (COALESCE (MovementFloat_HoursWork.ValueData, 0) + COALESCE (MovementFloat_HoursAdd.ValueData, 0) AS TFloat))::TVarChar                    , -- часы
+              ioTypeId          := zc_Enum_WorkTimeKind_Work()         , 
               inSession         := inSession)    -- сессия пользователя
        FROM Movement
             LEFT JOIN MovementFloat AS MovementFloat_HoursWork
@@ -65,7 +65,7 @@ BEGIN
               inPersonalGroupId := View_PersonalDriver.PersonalGroupId , -- Группировка Сотрудника
               inOperDate        := Movement.OperDate                   , -- дата установки часов
               ioValue           := SUM(CAST (COALESCE (MovementFloat_HoursWork.ValueData, 0) + COALESCE (MovementFloat_HoursAdd.ValueData, 0) AS TFloat))::TVarChar                    , -- часы
-              inTypeId          := zc_Enum_WorkTimeKind_Work()         , 
+              ioTypeId          := zc_Enum_WorkTimeKind_Work()         , 
               inSession         := inSession)    -- сессия пользователя
        FROM Movement
             LEFT JOIN MovementFloat AS MovementFloat_HoursWork
@@ -99,7 +99,7 @@ BEGIN
               inPersonalGroupId := View_PersonalDriver.PersonalGroupId , -- Группировка Сотрудника
               inOperDate        := Movement.OperDate                   , -- дата установки часов
               ioValue           := SUM(CAST (COALESCE (MovementFloat_HoursWork.ValueData, 0) + COALESCE (MovementFloat_HoursAdd.ValueData, 0) AS TFloat))::TVarChar                    , -- часы
-              inTypeId          := zc_Enum_WorkTimeKind_Work()         , 
+              ioTypeId          := zc_Enum_WorkTimeKind_Work()         , 
               inSession         := inSession)    -- сессия пользователя
        FROM Movement
             LEFT JOIN MovementFloat AS MovementFloat_HoursWork

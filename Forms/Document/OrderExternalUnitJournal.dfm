@@ -464,10 +464,10 @@ inherited OrderExternalUnitJournalForm: TOrderExternalUnitJournalForm
     Width = 1064
     ExplicitWidth = 1064
     inherited deStart: TcxDateEdit
-      EditValue = 42005d
+      EditValue = 42370d
     end
     inherited deEnd: TcxDateEdit
-      EditValue = 42005d
+      EditValue = 42370d
     end
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
