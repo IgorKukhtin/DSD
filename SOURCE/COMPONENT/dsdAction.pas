@@ -2005,6 +2005,7 @@ var
   i: Integer;
 begin
   result := true;
+  if not assigned(FView) then exit;
   if Assigned(FView.Owner) and (FView.Owner is TForm) then
     TForm(FView.Owner).ActiveControl := FView.Control;
   if Assigned(FView) then

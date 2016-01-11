@@ -10,19 +10,19 @@ inherited ReturnOutForm: TReturnOutForm
     Top = 115
     Width = 1001
     Height = 411
-    ExplicitTop = 123
-    ExplicitWidth = 851
-    ExplicitHeight = 403
+    ExplicitTop = 115
+    ExplicitWidth = 1001
+    ExplicitHeight = 411
     ClientRectBottom = 411
     ClientRectRight = 1001
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 851
-      ExplicitHeight = 379
+      ExplicitWidth = 1001
+      ExplicitHeight = 387
       inherited cxGrid: TcxGrid
         Width = 1001
         Height = 387
-        ExplicitWidth = 851
-        ExplicitHeight = 379
+        ExplicitWidth = 1001
+        ExplicitHeight = 387
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -233,19 +233,6 @@ inherited ReturnOutForm: TReturnOutForm
       Caption = #1070#1088'. '#1083#1080#1094#1086' '#1087#1086#1089#1090#1072#1074#1097#1080#1082
     end
     object edFrom: TcxButtonEdit
-      Left = 434
-      Top = 22
-      Enabled = False
-      Properties.Buttons = <
-        item
-          Default = True
-          Kind = bkEllipsis
-        end>
-      Properties.ReadOnly = True
-      TabOrder = 4
-      Width = 174
-    end
-    object edTo: TcxButtonEdit
       Left = 614
       Top = 22
       Enabled = False
@@ -255,8 +242,21 @@ inherited ReturnOutForm: TReturnOutForm
           Kind = bkEllipsis
         end>
       Properties.ReadOnly = True
+      TabOrder = 4
+      Width = 170
+    end
+    object edTo: TcxButtonEdit
+      Left = 434
+      Top = 22
+      Enabled = False
+      Properties.Buttons = <
+        item
+          Default = True
+          Kind = bkEllipsis
+        end>
+      Properties.ReadOnly = True
       TabOrder = 5
-      Width = 171
+      Width = 154
     end
     object cxLabel4: TcxLabel
       Left = 614
