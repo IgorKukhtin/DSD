@@ -326,9 +326,9 @@ begin
                     ParamByName('InfoMoneyId').AsInteger      := 0;
                     ParamByName('InfoMoneyCode').AsInteger    := 0;
                     ParamByName('InfoMoneyName').asString     := '';
-                    //!!!!!!!ParamByName('ChangePercentAmount').asFloat:= 0;
-                    if ParamByName('isSendOnPriceIn').asBoolean = TRUE
-                    then ParamByName('ChangePercentAmount').asFloat:= 0;
+                    ParamByName('ChangePercentAmount').asFloat:= 0;
+                    //!!!!!!!if ParamByName('isSendOnPriceIn').asBoolean = TRUE
+                    //!!!!!!!then ParamByName('ChangePercentAmount').asFloat:= 0;
 
                     {ParamByName('OrderExternalId').AsInteger        := 0;
                     ParamByName('OrderExternal_DescId').AsInteger   := 0;

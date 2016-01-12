@@ -55,7 +55,7 @@ BEGIN
                   AND MovementLinkObject_Contract.ObjectId <> MovementLinkObject_Contract_find.ObjectId)
      THEN 
          -- сохранили связь с <Договора>
-         PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_Contract(), inMovementId, MovementLinkObject_Contract.ObjectId)
+         PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_Contract(), inMovementId, MovementLinkObject_Contract_find.ObjectId)
          FROM MovementLinkMovement AS MovementLinkMovement_Order
                      LEFT JOIN MovementLinkObject AS MovementLinkObject_Contract
                                                   ON MovementLinkObject_Contract.MovementId = inMovementId
@@ -238,7 +238,7 @@ BEGIN
                                   AND Movement.StatusId IN (zc_Enum_Status_UnComplete(), zc_Enum_Status_Complete()));
      END IF;
 
-     -- это только "главный" филиал формирует на основании Заявки
+     -- это <Перемещение по цене> на основании <Перемещение по цене>
      IF vbMovementDescId = zc_Movement_SendOnPrice() AND EXISTS (SELECT MLM_Order.MovementChildId
                                                                  FROM MovementLinkMovement AS MLM_Order
                                                                       JOIN Movement ON Movement.Id = MLM_Order.MovementChildId
@@ -271,6 +271,7 @@ BEGIN
                RAISE EXCEPTION 'vbMovementId_find <%>', vbMovementId_find;
           END IF;
      ELSE
+     -- это <Перемещение по цене> на основании <Заявки>
      IF vbMovementDescId = zc_Movement_SendOnPrice()
      THEN
           -- поиск существующего документа <Перемещение по цене> по Заявке

@@ -407,7 +407,7 @@ BEGIN
                                             , 8415   -- 22041	Склад ГП ф.Черкассы (Кировоград)	филиал Черкассы (Кировоград)
                                              )
                         THEN 0
-                        ELSE 1
+                        ELSE 0
               END :: TFloat AS ChangePercentAmount
 
             , FALSE       :: Boolean AS isEdiOrdspr

@@ -22,6 +22,12 @@ RETURNS TABLE (GoodsGroupName TVarChar, GoodsGroupNameFull TVarChar
              , ArticleLossCode Integer, ArticleLossName TVarChar
              , AmountOut TFloat, AmountOut_Weight TFloat, AmountOut_Sh TFloat, SummOut_zavod TFloat, SummOut_branch TFloat, SummOut_60000 TFloat 
              , AmountIn TFloat, AmountIn_Weight TFloat, AmountIn_Sh TFloat,  SummIn_zavod TFloat, SummIn_branch TFloat, SummIn_60000 TFloat
+             , AmountIn_10500 TFloat
+             , AmountIn_10500_Weight TFloat
+             , AmountIn_40200 TFloat
+             , AmountIn_40200_Weight TFloat
+             , SummIn_10500 TFloat
+             , SummIn_40200 TFloat
              , Summ_calc TFloat
              , PriceOut_zavod TFloat, PriceOut_branch TFloat, PriceIn_zavod TFloat, PriceIn_branch TFloat
              , ProfitLossCode Integer, ProfitLossGroupName TVarChar, ProfitLossDirectionName TVarChar, ProfitLossName TVarChar
@@ -150,6 +156,13 @@ BEGIN
          , tmpOperationGroup.SummIn_branch   :: TFloat AS SummIn_branch
          , tmpOperationGroup.SummIn_60000    :: TFloat AS SummIn_60000
 
+         , tmpOperationGroup.AmountIn_10500  :: TFloat AS AmountIn_10500
+         , tmpOperationGroup.AmountIn_10500_Weight  :: TFloat AS AmountIn_10500_Weight
+         , tmpOperationGroup.AmountIn_40200  :: TFloat AS AmountIn_40200
+         , tmpOperationGroup.AmountIn_40200_Weight  :: TFloat AS AmountIn_40200_Weight
+         , tmpOperationGroup.SummIn_10500    :: TFloat AS SummIn_10500
+         , tmpOperationGroup.SummIn_40200    :: TFloat AS SummIn_40200
+
          , tmpOperationGroup.Summ_calc     :: TFloat AS Summ_calc
 
          , CASE WHEN tmpOperationGroup.AmountOut <> 0 THEN tmpOperationGroup.SummOut_zavod  / tmpOperationGroup.AmountOut ELSE 0 END :: TFloat AS PriceOut_zavod
@@ -182,6 +195,13 @@ BEGIN
                 , SUM (CASE WHEN COALESCE (Object_Account_View.AccountDirectionId, 0) <> zc_Enum_AccountDirection_60200() THEN tmpContainer.SummIn ELSE 0 END) AS SummIn_branch
                 , SUM (CASE WHEN Object_Account_View.AccountDirectionId = zc_Enum_AccountDirection_60200() THEN tmpContainer.SummIn ELSE 0 END)                AS SummIn_60000
                 
+                , SUM (tmpContainer.AmountIn_10500) AS AmountIn_10500
+                , SUM (tmpContainer.AmountIn_10500_Weight) AS AmountIn_10500_Weight
+                , SUM (tmpContainer.AmountIn_40200) AS AmountIn_40200
+                , SUM (tmpContainer.AmountIn_40200_Weight) AS AmountIn_40200_Weight
+                , SUM (tmpContainer.SummIn_10500)   AS SummIn_10500
+                , SUM (tmpContainer.SummIn_40200)   AS SummIn_40200
+
                 , SUM (tmpContainer.Summ_calc) AS Summ_calc
 
            FROM (SELECT tmpMI.ContainerId
@@ -203,10 +223,17 @@ BEGIN
                       , CASE WHEN _tmpGoods.MeasureId = zc_Measure_Sh() THEN tmpMI.AmountIn ELSE 0 END AS AmountIn_sh
                       , tmpMI.SummIn
 
+                      , tmpMI.AmountIn_10500
+                      , tmpMI.AmountIn_10500 * CASE WHEN _tmpGoods.MeasureId = zc_Measure_Sh() THEN _tmpGoods.Weight ELSE 1 END AS AmountIn_10500_Weight
+                      , tmpMI.AmountIn_40200
+                      , tmpMI.AmountIn_40200 * CASE WHEN _tmpGoods.MeasureId = zc_Measure_Sh() THEN _tmpGoods.Weight ELSE 1 END AS AmountIn_40200_Weight
+                      , tmpMI.SummIn_10500
+                      , tmpMI.SummIn_40200
+
                       , 0 AS Summ_calc
                  FROM (SELECT CASE WHEN vbIsGroup = TRUE THEN 0 ELSE MIContainer.ContainerId END AS ContainerId
-                            , CASE WHEN MIContainer.isActive = FALSE THEN MIContainer.WhereObjectId_analyzer ELSE MIContainer.ObjectExtId_Analyzer END AS UnitId
-                            , CASE WHEN MIContainer.isActive = TRUE  THEN MIContainer.WhereObjectId_analyzer ELSE MIContainer.ObjectExtId_Analyzer END AS UnitId_by
+                            , CASE WHEN MIContainer.AccountId = zc_Enum_Account_110101() THEN MIContainer.WhereObjectId_analyzer WHEN MIContainer.isActive = FALSE THEN MIContainer.WhereObjectId_analyzer ELSE MIContainer.ObjectExtId_Analyzer END AS UnitId
+                            , CASE WHEN MIContainer.AccountId = zc_Enum_Account_110101() THEN MIContainer.ObjectExtId_Analyzer   WHEN MIContainer.isActive = TRUE  THEN MIContainer.WhereObjectId_analyzer ELSE MIContainer.ObjectExtId_Analyzer END AS UnitId_by
                             , MIContainer.ObjectId_analyzer AS GoodsId
                             , CASE WHEN vbIsGroup = TRUE THEN 0 ELSE MIContainer.ObjectIntId_Analyzer END AS GoodsKindId
                             , COALESCE (MIContainer.AccountId, 0)  AS AccountId
@@ -216,18 +243,25 @@ BEGIN
                             , SUM (CASE WHEN MIContainer.isActive = FALSE AND MIContainer.DescId = zc_MIContainer_Count() THEN -1 * MIContainer.Amount ELSE 0 END) AS AmountOut
                             , SUM (CASE WHEN MIContainer.isActive = FALSE AND MIContainer.DescId = zc_MIContainer_Summ()  THEN -1 * MIContainer.Amount ELSE 0 END) AS SummOut
 
-                            , SUM (CASE WHEN MIContainer.isActive = TRUE AND MIContainer.DescId = zc_MIContainer_Count() THEN MIContainer.Amount ELSE 0 END) AS AmountIn
-                            , SUM (CASE WHEN MIContainer.isActive = TRUE AND MIContainer.DescId = zc_MIContainer_Summ()  THEN MIContainer.Amount ELSE 0 END) AS SummIn
+                            , SUM (CASE WHEN MIContainer.isActive = TRUE AND MIContainer.DescId = zc_MIContainer_Count() AND COALESCE (MIContainer.AnalyzerId, 0) NOT IN (zc_Enum_AnalyzerId_SendCount_10500(), zc_Enum_AnalyzerId_SendCount_40200()) THEN MIContainer.Amount ELSE 0 END) AS AmountIn
+                            , SUM (CASE WHEN MIContainer.isActive = TRUE AND MIContainer.DescId = zc_MIContainer_Summ()  AND COALESCE (MIContainer.AnalyzerId, 0) NOT IN (zc_Enum_AnalyzerId_SendCount_10500(), zc_Enum_AnalyzerId_SendCount_40200()) THEN MIContainer.Amount ELSE 0 END) AS SummIn
+
+                            , SUM (CASE WHEN MIContainer.isActive = TRUE AND MIContainer.DescId = zc_MIContainer_Count() AND COALESCE (MIContainer.AnalyzerId, 0) IN (zc_Enum_AnalyzerId_SendCount_10500()) THEN MIContainer.Amount ELSE 0 END) AS AmountIn_10500
+                            , SUM (CASE WHEN MIContainer.isActive = TRUE AND MIContainer.DescId = zc_MIContainer_Count() AND COALESCE (MIContainer.AnalyzerId, 0) IN (zc_Enum_AnalyzerId_SendCount_40200()) THEN MIContainer.Amount ELSE 0 END) AS AmountIn_40200
+                            , SUM (CASE WHEN MIContainer.isActive = TRUE AND MIContainer.DescId = zc_MIContainer_Summ()  AND COALESCE (MIContainer.AnalyzerId, 0) IN (zc_Enum_AnalyzerId_SendCount_10500()) THEN MIContainer.Amount ELSE 0 END) AS SummIn_10500
+                            , SUM (CASE WHEN MIContainer.isActive = TRUE AND MIContainer.DescId = zc_MIContainer_Summ()  AND COALESCE (MIContainer.AnalyzerId, 0) IN (zc_Enum_AnalyzerId_SendCount_40200()) THEN MIContainer.Amount ELSE 0 END) AS SummIn_40200
                        FROM MovementItemContainer AS MIContainer
                             INNER JOIN _tmpUnit ON _tmpUnit.UnitId    = MIContainer.WhereObjectId_analyzer
                                                AND (_tmpUnit.UnitId_by = COALESCE (MIContainer.ObjectExtId_Analyzer, 0) OR _tmpUnit.UnitId_by = 0)
-                                               AND _tmpUnit.isActive  = MIContainer.isActive
-                       WHERE MIContainer.OperDate BETWEEN inStartDate AND inEndDate  
+                                               -- AND _tmpUnit.isActive  = MIContainer.isActive
+                            INNER JOIN Movement ON Movement.Id = MIContainer.MovementId
+                                               AND Movement.OperDate = MIContainer.OperDate
+                       WHERE MIContainer.OperDate BETWEEN inStartDate AND inEndDate
                          AND MIContainer.MovementDescId = inDescId
-                         AND COALESCE (MIContainer.AccountId,0) NOT IN (12102, zc_Enum_Account_100301 ()) -- Прибыль текущего периода
+                         AND COALESCE (MIContainer.AccountId, 0) NOT IN (/*zc_Enum_Account_110101(), */zc_Enum_Account_100301 ()) -- товар в пути + Прибыль текущего периода
                        GROUP BY CASE WHEN vbIsGroup = TRUE THEN 0 ELSE MIContainer.ContainerId END
-                              , CASE WHEN MIContainer.isActive = FALSE THEN MIContainer.WhereObjectId_analyzer ELSE MIContainer.ObjectExtId_Analyzer END
-                              , CASE WHEN MIContainer.isActive = TRUE  THEN MIContainer.WhereObjectId_analyzer ELSE MIContainer.ObjectExtId_Analyzer END
+                              , CASE WHEN MIContainer.AccountId = zc_Enum_Account_110101() THEN MIContainer.WhereObjectId_analyzer WHEN MIContainer.isActive = FALSE THEN MIContainer.WhereObjectId_analyzer ELSE MIContainer.ObjectExtId_Analyzer END
+                              , CASE WHEN MIContainer.AccountId = zc_Enum_Account_110101() THEN MIContainer.ObjectExtId_Analyzer   WHEN MIContainer.isActive = TRUE  THEN MIContainer.WhereObjectId_analyzer ELSE MIContainer.ObjectExtId_Analyzer END
                               , MIContainer.ObjectId_analyzer
                               , CASE WHEN vbIsGroup = TRUE THEN 0 ELSE MIContainer.ObjectIntId_Analyzer END
                               , COALESCE (MIContainer.AccountId, 0)
@@ -254,6 +288,13 @@ BEGIN
                       , 0 AS AmountIn_Weight
                       , 0 AS AmountIn_sh
                       , 0 AS SummIn
+
+                      , 0 AS AmountIn_10500
+                      , 0 AS AmountIn_10500_Weight
+                      , 0 AS AmountIn_40200
+                      , 0 AS AmountIn_40200_Weight
+                      , 0 AS SummIn_10500
+                      , 0 AS SummIn_40200
 
                       , tmpMI.Summ_calc
 
