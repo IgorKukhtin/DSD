@@ -79,7 +79,7 @@ type
     bbPrintDiff: TdxBarButton;
     spUpdateMIAmountPartner: TdsdStoredProc;
     actInsertUpdateMIAmount: TdsdExecStoredProc;
-    bb: TdxBarButton;
+    bbInsertUpdateMIAmount: TdxBarButton;
   private
     { Private declarations }
   public

@@ -894,7 +894,7 @@ inherited SendOnPrice_BranchForm: TSendOnPrice_BranchForm
         end
         item
           Visible = True
-          ItemName = 'bb'
+          ItemName = 'bbInsertUpdateMIAmount'
         end
         item
           Visible = True
@@ -989,7 +989,7 @@ inherited SendOnPrice_BranchForm: TSendOnPrice_BranchForm
       Action = actPrintDiff
       Category = 0
     end
-    object bb: TdxBarButton
+    object bbInsertUpdateMIAmount: TdxBarButton
       Action = actInsertUpdateMIAmount
       Category = 0
     end
