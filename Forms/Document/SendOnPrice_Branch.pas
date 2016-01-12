@@ -77,6 +77,9 @@ type
     HeaderSaver2: THeaderSaver;
     actPrintDiff: TdsdPrintAction;
     bbPrintDiff: TdxBarButton;
+    spUpdateMIAmountPartner: TdsdStoredProc;
+    actInsertUpdateMIAmount: TdsdExecStoredProc;
+    bb: TdxBarButton;
   private
     { Private declarations }
   public
