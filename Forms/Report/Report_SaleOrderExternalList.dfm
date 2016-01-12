@@ -2,8 +2,8 @@ object Report_SaleOrderExternalListForm: TReport_SaleOrderExternalListForm
   Left = 0
   Top = 0
   Caption = #1054#1090#1095#1077#1090' <'#1057#1088#1072#1074#1085#1077#1085#1080#1077' '#1079#1072#1103#1074#1086#1082' '#1080' '#1087#1088#1086#1076#1072#1078'>'
-  ClientHeight = 395
-  ClientWidth = 886
+  ClientHeight = 393
+  ClientWidth = 1080
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -19,12 +19,12 @@ object Report_SaleOrderExternalListForm: TReport_SaleOrderExternalListForm
   TextHeight = 13
   object cxGrid: TcxGrid
     Left = 0
-    Top = 57
-    Width = 886
-    Height = 338
+    Top = 84
+    Width = 1080
+    Height = 309
     Align = alClient
     TabOrder = 0
-    ExplicitTop = 56
+    ExplicitTop = 81
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -487,7 +487,7 @@ object Report_SaleOrderExternalListForm: TReport_SaleOrderExternalListForm
         Width = 75
       end
       object colSale_TotalCount: TcxGridDBColumn
-        Caption = #1050#1086#1083'-'#1074#1086' ('#1087#1088#1086#1076'.)'
+        Caption = #1050#1086#1083'-'#1074#1086' ('#1089#1082#1083#1072#1076') ('#1087#1088#1086#1076'.)'
         DataBinding.FieldName = 'Sale_TotalCount'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DecimalPlaces = 4
@@ -497,7 +497,7 @@ object Report_SaleOrderExternalListForm: TReport_SaleOrderExternalListForm
         Width = 60
       end
       object colSale_TotalCountPartner: TcxGridDBColumn
-        Caption = #1050#1086#1083'-'#1074#1086' ('#1087#1086#1082#1091#1087'.) ('#1087#1088#1086#1076'.)'
+        Caption = #1050#1086#1083'-'#1074#1086' ('#1091' '#1087#1086#1082#1091#1087'.) ('#1087#1088#1086#1076'.)'
         DataBinding.FieldName = 'Sale_TotalCountPartner'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DecimalPlaces = 4
@@ -507,7 +507,7 @@ object Report_SaleOrderExternalListForm: TReport_SaleOrderExternalListForm
         Width = 65
       end
       object colSale_TotalCountSh: TcxGridDBColumn
-        Caption = #1050#1086#1083'-'#1074#1086' '#1096#1090'. ('#1087#1088#1086#1076'.)'
+        Caption = #1050#1086#1083'-'#1074#1086' '#1096#1090'. ('#1091' '#1087#1086#1082#1091#1087'.) ('#1087#1088#1086#1076'.)'
         DataBinding.FieldName = 'Sale_TotalCountSh'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DecimalPlaces = 4
@@ -517,7 +517,7 @@ object Report_SaleOrderExternalListForm: TReport_SaleOrderExternalListForm
         Width = 50
       end
       object colSale_TotalCountKg: TcxGridDBColumn
-        Caption = #1050#1086#1083'-'#1074#1086' '#1074#1077#1089' ('#1087#1088#1086#1076'.)'
+        Caption = #1050#1086#1083'-'#1074#1086' '#1074#1077#1089' ('#1091' '#1087#1086#1082#1091#1087'.) ('#1087#1088#1086#1076'.)'
         DataBinding.FieldName = 'Sale_TotalCountKg'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DecimalPlaces = 4
@@ -562,12 +562,12 @@ object Report_SaleOrderExternalListForm: TReport_SaleOrderExternalListForm
   object Panel1: TPanel
     Left = 0
     Top = 26
-    Width = 886
-    Height = 31
+    Width = 1080
+    Height = 58
     Align = alTop
-    TabOrder = 5
+    TabOrder = 1
     object deStart: TcxDateEdit
-      Left = 101
+      Left = 118
       Top = 5
       EditValue = 42217d
       Properties.SaveTime = False
@@ -576,8 +576,8 @@ object Report_SaleOrderExternalListForm: TReport_SaleOrderExternalListForm
       Width = 85
     end
     object deEnd: TcxDateEdit
-      Left = 316
-      Top = 4
+      Left = 118
+      Top = 31
       EditValue = 42217d
       Properties.SaveTime = False
       Properties.ShowTime = False
@@ -590,18 +590,18 @@ object Report_SaleOrderExternalListForm: TReport_SaleOrderExternalListForm
       Caption = #1053#1072#1095#1072#1083#1086' '#1087#1077#1088#1080#1086#1076#1072':'
     end
     object cxLabel2: TcxLabel
-      Left = 200
-      Top = 6
+      Left = 10
+      Top = 32
       Caption = #1054#1082#1086#1085#1095#1072#1085#1080#1077' '#1087#1077#1088#1080#1086#1076#1072':'
     end
     object cxLabel5: TcxLabel
-      Left = 424
-      Top = 7
+      Left = 403
+      Top = 9
       Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077':'
     end
     object edUnit: TcxButtonEdit
-      Left = 516
-      Top = 4
+      Left = 492
+      Top = 5
       Properties.Buttons = <
         item
           Default = True
@@ -609,13 +609,33 @@ object Report_SaleOrderExternalListForm: TReport_SaleOrderExternalListForm
         end>
       Properties.ReadOnly = True
       TabOrder = 5
-      Width = 195
+      Width = 236
     end
+  end
+  object cbSale: TcxCheckBox
+    Left = 229
+    Top = 31
+    Hint = #1086#1090#1075#1088#1091#1078#1077#1085#1085#1099#1077' '#1079#1072#1103#1074#1082#1080
+    Action = actRefresh
+    Caption = #1086#1090#1075#1088#1091#1078#1077#1085#1085#1099#1077' '#1079#1072#1103#1074#1082#1080
+    Properties.ReadOnly = False
+    TabOrder = 3
+    Width = 131
+  end
+  object cbNoSale: TcxCheckBox
+    Left = 229
+    Top = 57
+    Hint = #1085#1077' '#1086#1090#1075#1088#1091#1078#1077#1085#1085#1099#1077' '#1079#1072#1103#1074#1082#1080
+    Action = actRefresh
+    Caption = #1085#1077' '#1086#1090#1075#1088#1091#1078#1077#1085#1085#1099#1077' '#1079#1072#1103#1074#1082#1080
+    Properties.ReadOnly = False
+    TabOrder = 7
+    Width = 146
   end
   object DataSource: TDataSource
     DataSet = ClientDataSet
-    Left = 48
-    Top = 48
+    Left = 24
+    Top = 208
   end
   object ClientDataSet: TClientDataSet
     Aggregates = <>
@@ -648,6 +668,12 @@ object Report_SaleOrderExternalListForm: TReport_SaleOrderExternalListForm
           'Left'
           'Top'
           'Width')
+      end
+      item
+        Component = cbSale
+      end
+      item
+        Component = cbNoSale
       end>
     StorageName = 'cxPropertiesStore'
     StorageType = stStream
@@ -712,7 +738,7 @@ object Report_SaleOrderExternalListForm: TReport_SaleOrderExternalListForm
         end
         item
           Visible = True
-          ItemName = 'bbPrint'
+          ItemName = 'bbtPrintSaleOrder'
         end
         item
           Visible = True
@@ -746,10 +772,17 @@ object Report_SaleOrderExternalListForm: TReport_SaleOrderExternalListForm
       Action = ExecuteDialog
       Category = 0
     end
-    object bbPrint: TdxBarButton
-      Action = actPrint
+    object bbtPrintSaleOrder: TdxBarButton
+      Action = actPrintSaleOrder
       Category = 0
-      Visible = ivNever
+    end
+    object bbPrintSaleOrder: TdxBarButton
+      Caption = #1047#1072#1103#1074#1082#1072'/'#1086#1090#1075#1088#1091#1079#1082#1072
+      Category = 0
+      Hint = #1047#1072#1103#1074#1082#1072'/'#1086#1090#1075#1088#1091#1079#1082#1072
+      Visible = ivAlways
+      ImageIndex = 21
+      ShortCut = 16464
     end
   end
   object ActionList: TActionList
@@ -855,6 +888,47 @@ object Report_SaleOrderExternalListForm: TReport_SaleOrderExternalListForm
       ReportNameParam.Value = #1056#1077#1077#1089#1090#1088' '#1087#1091#1090#1077#1074#1099#1093' '#1080' '#1085#1072#1077#1084#1085#1086#1075#1086' '#1090#1088#1072#1085#1089#1087#1086#1088#1090#1072
       ReportNameParam.DataType = ftString
     end
+    object actPrintSaleOrder: TdsdPrintAction
+      Category = 'DSDLib'
+      MoveParams = <
+        item
+          FromParam.Name = 'id'
+          FromParam.Value = Null
+          FromParam.ComponentItem = 'id'
+          ToParam.Value = Null
+          ToParam.ComponentItem = 'Id'
+          ToParam.ParamType = ptInputOutput
+        end>
+      StoredProc = spSelectPrint_SaleOrder
+      StoredProcList = <
+        item
+          StoredProc = spSelectPrint_SaleOrder
+        end>
+      Caption = #1047#1072#1103#1074#1082#1072'/'#1086#1090#1075#1088#1091#1079#1082#1072
+      Hint = #1047#1072#1103#1074#1082#1072'/'#1086#1090#1075#1088#1091#1079#1082#1072
+      ImageIndex = 21
+      ShortCut = 16464
+      DataSets = <
+        item
+          DataSet = PrintHeaderCDS
+          UserName = 'frxDBDHeader'
+        end
+        item
+          DataSet = PrintItemsCDS
+          UserName = 'frxDBDMaster'
+          IndexFieldNames = 'GoodsGroupNameFull;GoodsName;GoodsKindName;PartionGoods'
+        end>
+      Params = <
+        item
+          Name = 'Id'
+          Value = Null
+          ComponentItem = 'Id'
+        end>
+      ReportName = 'PrintMovement_Sale_Order'
+      ReportNameParam.Value = 'PrintMovement_Sale_Order'
+      ReportNameParam.DataType = ftString
+      ReportNameParam.ParamType = ptInput
+    end
   end
   object dsdStoredProc: TdsdStoredProc
     StoredProcName = 'gpReport_Sale_OrderExternal_List'
@@ -884,10 +958,24 @@ object Report_SaleOrderExternalListForm: TReport_SaleOrderExternalListForm
         Component = UnitGuides
         ComponentItem = 'Key'
         ParamType = ptInput
+      end
+      item
+        Name = 'inisSale'
+        Value = Null
+        Component = cbSale
+        DataType = ftBoolean
+        ParamType = ptInput
+      end
+      item
+        Name = 'inisNoSale'
+        Value = Null
+        Component = cbNoSale
+        DataType = ftBoolean
+        ParamType = ptInput
       end>
     PackSize = 1
     Left = 152
-    Top = 248
+    Top = 256
   end
   object dsdDBViewAddOn: TdsdDBViewAddOn
     ErasedFieldName = 'isErased'
@@ -910,8 +998,8 @@ object Report_SaleOrderExternalListForm: TReport_SaleOrderExternalListForm
   object PeriodChoice: TPeriodChoice
     DateStart = deStart
     DateEnd = deEnd
-    Left = 200
-    Top = 64
+    Left = 176
+    Top = 192
   end
   object RefreshDispatcher: TRefreshDispatcher
     IdParam.Value = Null
@@ -930,9 +1018,13 @@ object Report_SaleOrderExternalListForm: TReport_SaleOrderExternalListForm
         Component = UnitGuides
       end
       item
+        Component = cbNoSale
+      end
+      item
+        Component = cbSale
       end>
-    Left = 248
-    Top = 16
+    Left = 504
+    Top = 216
   end
   object UnitGuides: TdsdGuides
     KeyField = 'Id'
@@ -960,5 +1052,51 @@ object Report_SaleOrderExternalListForm: TReport_SaleOrderExternalListForm
       end>
     Left = 592
     Top = 11
+  end
+  object PrintHeaderCDS: TClientDataSet
+    Aggregates = <>
+    Params = <>
+    Left = 708
+    Top = 217
+  end
+  object PrintItemsCDS: TClientDataSet
+    Aggregates = <>
+    Params = <>
+    Left = 708
+    Top = 270
+  end
+  object spSelectPrint_SaleOrder: TdsdStoredProc
+    StoredProcName = 'gpSelect_Movement_Sale_Order_Print'
+    DataSet = PrintHeaderCDS
+    DataSets = <
+      item
+        DataSet = PrintHeaderCDS
+      end
+      item
+        DataSet = PrintItemsCDS
+      end>
+    OutputType = otMultiDataSet
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'MovementId_Order'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inMovementId_Weighing'
+        Value = '0'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inIsDiff'
+        Value = False
+        DataType = ftBoolean
+        ParamType = ptInput
+      end>
+    PackSize = 1
+    Left = 615
+    Top = 200
   end
 end

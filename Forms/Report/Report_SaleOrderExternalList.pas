@@ -23,7 +23,7 @@ uses
   dxSkinXmas2008Blue, dxSkinscxPCPainter, dxSkinsdxBarPainter, dsdAddOn,
   cxContainer, Vcl.ComCtrls, dxCore, cxDateUtils, cxTextEdit, cxMaskEdit,
   cxDropDownEdit, cxCalendar, Vcl.ExtCtrls, cxCurrencyEdit, dsdGuides,
-  cxButtonEdit, ChoicePeriod, cxLabel, dxBarExtItems;
+  cxButtonEdit, ChoicePeriod, cxLabel, dxBarExtItems, cxCheckBox;
 
 type
   TReport_SaleOrderExternalListForm = class(TParentForm)
@@ -58,8 +58,15 @@ type
     ExecuteDialog: TExecuteDialog;
     dxBarStatic1: TdxBarStatic;
     actPrint: TdsdPrintAction;
-    bbPrint: TdxBarButton;
+    bbtPrintSaleOrder: TdxBarButton;
     cxGridDBTableViewColumn1: TcxGridDBColumn;
+    cbSale: TcxCheckBox;
+    cbNoSale: TcxCheckBox;
+    bbPrintSaleOrder: TdxBarButton;
+    PrintHeaderCDS: TClientDataSet;
+    PrintItemsCDS: TClientDataSet;
+    spSelectPrint_SaleOrder: TdsdStoredProc;
+    actPrintSaleOrder: TdsdPrintAction;
   private
   public
   end;
