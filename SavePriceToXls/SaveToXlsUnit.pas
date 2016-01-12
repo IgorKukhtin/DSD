@@ -10,7 +10,7 @@ uses
   Data.DB, cxDBData, Vcl.ExtCtrls, cxGridLevel, cxClasses, cxGridCustomView,
   cxGridCustomTableView, cxGridTableView, cxGridDBTableView, cxGrid,
   ZAbstractRODataset, ZAbstractDataset, ZDataset, ZAbstractConnection,
-  ZConnection, cxGridExportLink, cxCurrencyEdit;
+  ZConnection, cxGridExportLink, cxCurrencyEdit, Vcl.ComCtrls;
 
 type
   TForm1 = class(TForm)
@@ -33,6 +33,18 @@ type
     colRemains: TcxGridDBColumn;
     colFix: TcxGridDBColumn;
     cxGridLevel: TcxGridLevel;
+    PageControl1: TPageControl;
+    TabSheet1: TTabSheet;
+    TabSheet2: TTabSheet;
+    qryJuridical: TZQuery;
+    dsJuridicalPrice: TDataSource;
+    qryJuridicalPrice: TZQuery;
+    cxGrid1: TcxGrid;
+    cxGridDBTableView1: TcxGridDBTableView;
+    colCode: TcxGridDBColumn;
+    colName: TcxGridDBColumn;
+    colPrice: TcxGridDBColumn;
+    cxGridLevel1: TcxGridLevel;
     procedure Timer1Timer(Sender: TObject);
     procedure FormCreate(Sender: TObject);
   private
@@ -82,6 +94,8 @@ var
   SavePath: String;
   FileName: String;
   ini: TIniFile;
+  sl : TStringList;
+
   function GetCorrectNameFile(AName: String): String;
   var
     j: Integer;
@@ -162,6 +176,48 @@ begin
       End;
       qryUnit.Next;
     End;
+
+    try
+      qryJuridical.Open;
+    except ON E:Exception DO
+    Begin
+      Add_Log(E.Message);
+      Exit;
+    End;
+    end;
+    qryJuridical.First;
+    while not qryJuridical.Eof do
+    Begin
+      qryJuridicalPrice.Close;
+      qryJuridicalPrice.SQL.Text := 'Select * from gpSelect_LastPriceOut('+qryJuridical.FieldByName('Id').AsString+',''3'');';
+      try
+        qryJuridicalPrice.Open;
+      except on E: Exception do
+        Begin
+          Add_Log(E.Message);
+        End;
+      end;
+      if not qryJuridicalPrice.IsEmpty then
+      Begin
+        FileName := SavePath + GetCorrectNameFile(qryJuridical.fieldByName('FileName').AsString);
+        try
+          ExportGridToText(FileName, cxGrid1, True, True, ';','','','csv');
+          sl := TStringList.Create;
+          try
+            sl.LoadFromFile(FileName);
+            sl.SaveToFile(FileName,TEncoding.UTF8);
+          finally
+            sl.Free;
+          end;
+        except on E:Exception DO
+          Begin
+            Add_Log(E.Message);
+          end;
+        end;
+      End;
+      qryJuridical.Next;
+    End;
+
   finally
     Close;
   end;
