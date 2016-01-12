@@ -67,6 +67,7 @@ RETURNS TABLE(
     ,AccountGroupId    Integer   --ИД группы счетов
     ,AccountGroupCode  Integer   --Код группы счетов
     ,AccountGroupName  TVarChar  --Наименование группы счетов
+    ,PaidKindName      TVarChar
     
     ,RemainsInActive   TFloat    --Остаток на начало актив
     ,RemainsInPassive  TFloat    --Остаток на начало пассив
@@ -285,9 +286,10 @@ BEGIN
     RETURN QUERY
         WITH tmpContainer AS (SELECT Container.Id
                                    , Container.ObjectId        AS GoodsId       -- товар
-                                   , _tmpWhereOject.Id         AS WhereObjectId  -- Объект анализа
+                                   , _tmpWhereOject.Id         AS WhereObjectId -- Объект анализа
                                    , _tmpWhereOject.ObjectType AS ObjectType    -- тип объекта анализа
                                    , CLO_Branch.ObjectId       AS BranchId      -- только для zc_ContainerLinkObject_Partner
+                                   , CLO_PaidKind.ObjectId     AS PaidKindId    -- только для zc_ContainerLinkObject_Partner
                                    , COALESCE (ObjectLink_Account_AccountGroup.ChildObjectId, zc_Enum_AccountGroup_20000()) AS AccountGroupId -- группа счетов
                                    , Container.Amount          AS Amount        -- текущий остаток
                               FROM _tmpOject
@@ -301,6 +303,9 @@ BEGIN
                                    LEFT JOIN ContainerLinkObject AS CLO_Branch
                                                                  ON CLO_Branch.ContainerId = Container.Id
                                                                 AND CLO_Branch.DescId = zc_ContainerLinkObject_Branch()
+                                   LEFT JOIN ContainerLinkObject AS CLO_PaidKind
+                                                                 ON CLO_PaidKind.ContainerId = Container.Id
+                                                                AND CLO_PaidKind.DescId = zc_ContainerLinkObject_PaidKind()
                                    LEFT JOIN ContainerLinkObject AS CLO_Account
                                                                  ON CLO_Account.ContainerId = Container.Id
                                                                 AND CLO_Account.DescId = zc_ContainerLinkObject_Account()
@@ -320,6 +325,7 @@ BEGIN
                ,DD.ObjectType
                ,DD.AccountGroupId
                ,DD.BranchId
+               ,DD.PaidKindId
                , COALESCE (SUM (DD.Amount), 0) :: TFloat            AS Amount
                , COALESCE (SUM (MIC_Amount_Start), 0) :: TFloat     AS MIC_Amount_Start
                , COALESCE (SUM (MIC_Amount_End), 0) :: TFloat       AS MIC_Amount_End
@@ -337,6 +343,7 @@ BEGIN
                        , tmpContainer.ObjectType
                        , tmpContainer.Amount
                        , tmpContainer.BranchId
+                       , tmpContainer.PaidKindId
                        , tmpContainer.AccountGroupId
                        , SUM (MIContainer.Amount) AS MIC_Amount_Start--Все движение после начала 
                        , SUM (CASE WHEN MIContainer.OperDate > inEndDate 
@@ -394,6 +401,7 @@ BEGIN
                        , tmpContainer.ObjectType
                        , tmpContainer.Amount
                        , tmpContainer.BranchId
+                       , tmpContainer.PaidKindId
                        , tmpContainer.AccountGroupId
                 ) AS DD
             GROUP BY
@@ -403,6 +411,7 @@ BEGIN
                ,DD.ObjectType
                ,DD.AccountGroupId
                ,DD.BranchId
+               ,DD.PaidKindId
                ,DD.Amount
             HAVING
                 (COALESCE(SUM(DD.Amount),0)-COALESCE(SUM(MIC_Amount_Start),0)) <> 0 OR
@@ -433,6 +442,7 @@ BEGIN
            ,Object_AccountGroup.Id                             AS AccountGroupId  --ИД Группы счетов
            ,Object_AccountGroup.ObjectCode                     AS AccountGroupCode--Код Группы счетов
            ,Object_AccountGroup.ValueData                      AS AccountGroupName--Наименование Группы счетов
+           ,Object_PaidKind.ValueData                          AS PaidKindName
            ,CASE WHEN (DDD.Amount-DDD.MIC_Amount_Start)>0
                  THEN (DDD.Amount-DDD.MIC_Amount_Start)
             END::TFloat                                        AS RemainsInActive --Остаток на начало актив
@@ -469,6 +479,8 @@ BEGIN
                                       AND Object_UnitOrPartner.DescId = zc_Object_Unit()
             LEFT OUTER JOIN OBJECT AS Object_Branch
                                    ON Object_Branch.Id = COALESCE (ObjectLink_Unit_Branch.ChildObjectId, DDD.BranchId)
+            LEFT JOIN Object AS Object_PaidKind ON Object_PaidKind.Id = DDD.PaidKindId
+
             LEFT OUTER JOIN ObjectLink AS ObjectLink_Partner_Juridical
                                        ON ObjectLink_Partner_Juridical.ObjectId = Object_UnitOrPartner.Id
                                       AND ObjectLink_Partner_Juridical.DescId = zc_ObjectLink_Partner_Juridical()

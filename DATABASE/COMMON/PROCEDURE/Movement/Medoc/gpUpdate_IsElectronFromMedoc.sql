@@ -62,7 +62,7 @@ BEGIN
 -- end if;
 
    -- Если ключ пустой, то добавили новый ключ МЕДОК
-   IF COALESCE(vbMedocId, 0) = 0
+   IF COALESCE (vbMedocId, 0) = 0 OR (vbAccessKey <> 0 AND EXISTS (SELECT 1 FROM Movement WHERE Movement.Id = vbMedocId AND Movement.ParentId IS NULL))
    THEN 
       vbMedocId := lpInsertUpdate_Movement_Medoc(vbMedocId, inMedocCode, inInvNumber, inOperDate,
                            inFromINN, inToINN, inInvNumberBranch, inInvNumberRegistered, inDateRegistered, inDocKind, inContract, 

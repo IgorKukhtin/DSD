@@ -1178,6 +1178,8 @@ BEGIN
                                                                           , inObjectId_1        := CASE WHEN vbMemberId_To <> 0 THEN vbMemberId_To ELSE vbPartnerId_To END
                                                                           , inDescId_2          := zc_ContainerLinkObject_Branch()
                                                                           , inObjectId_2        := vbBranchId_From
+                                                                          , inDescId_3          := zc_ContainerLinkObject_PaidKind()
+                                                                          , inObjectId_3        := vbPaidKindId
                                                                            )
      WHERE _tmpItem.isTareReturning = TRUE AND _tmpItem.OperCount <> 0
        AND vbPartnerId_From = 0 -- !!!если НЕ продажа от Контрагента -> Контрагенту!!!

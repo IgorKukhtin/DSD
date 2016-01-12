@@ -1249,6 +1249,8 @@ BEGIN
                                                                            , inObjectId_1        := vbPartnerId_From
                                                                            , inDescId_2          := zc_ContainerLinkObject_Branch()
                                                                            , inObjectId_2        := zc_Branch_Basis() -- долг Поставщика всегда на Главном филиале
+                                                                           , inDescId_3          := zc_ContainerLinkObject_PaidKind()
+                                                                           , inObjectId_3        := vbPaidKindId
                                                                             )
      WHERE _tmpItem.isTareReturning = TRUE AND _tmpItem.OperCount <> 0;
 

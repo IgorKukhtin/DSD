@@ -66,6 +66,7 @@ type
     AccountGroupGuides: TdsdGuides;
     colAccountGroupName: TcxGridDBColumn;
     colAccountGroupCode: TcxGridDBColumn;
+    colPaidKindName: TcxGridDBColumn;
   private
     { Private declarations }
   public

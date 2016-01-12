@@ -3,6 +3,7 @@ inherited Report_TaraForm: TReport_TaraForm
   ClientHeight = 490
   ClientWidth = 975
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
+  ExplicitTop = -68
   ExplicitWidth = 991
   ExplicitHeight = 525
   PixelsPerInch = 96
@@ -14,17 +15,17 @@ inherited Report_TaraForm: TReport_TaraForm
     TabOrder = 3
     ExplicitTop = 90
     ExplicitWidth = 975
-    ExplicitHeight = 483
+    ExplicitHeight = 400
     ClientRectBottom = 400
     ClientRectRight = 975
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 975
-      ExplicitHeight = 483
+      ExplicitHeight = 400
       inherited cxGrid: TcxGrid
         Width = 975
         Height = 400
         ExplicitWidth = 975
-        ExplicitHeight = 483
+        ExplicitHeight = 400
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -170,6 +171,14 @@ inherited Report_TaraForm: TReport_TaraForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 100
+          end
+          object colPaidKindName: TcxGridDBColumn
+            Caption = #1060#1086#1088#1084#1072' '#1086#1087#1083#1072#1090#1099
+            DataBinding.FieldName = 'PaidKindName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 55
           end
           object colGoodsGroupCode: TcxGridDBColumn
             Caption = #1050#1086#1076' '#1075#1088'.'
