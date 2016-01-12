@@ -154,13 +154,15 @@ inherited ReturnOutJournalForm: TReturnOutJournalForm
             Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
             DataBinding.FieldName = 'FromName'
             HeaderAlignmentHorz = taCenter
-            Width = 187
+            HeaderAlignmentVert = vaCenter
+            Width = 125
           end
           object colToName: TcxGridDBColumn
             Caption = #1070#1088' '#1083#1080#1094#1086' '#1087#1086#1089#1090'-'#1082
             DataBinding.FieldName = 'ToName'
             HeaderAlignmentHorz = taCenter
-            Width = 200
+            HeaderAlignmentVert = vaCenter
+            Width = 143
           end
           object colTotalCount: TcxGridDBColumn
             Caption = #1050#1086#1083'-'#1074#1086
@@ -169,6 +171,7 @@ inherited ReturnOutJournalForm: TReturnOutJournalForm
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
             Width = 60
           end
           object colTotalSummMVAT: TcxGridDBColumn
@@ -176,7 +179,9 @@ inherited ReturnOutJournalForm: TReturnOutJournalForm
             DataBinding.FieldName = 'TotalSummMVAT'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DisplayFormat = ',0.00;-,0.00; ;'
-            Width = 111
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 65
           end
           object colTotalSumm: TcxGridDBColumn
             Caption = #1057#1091#1084#1084#1072' '#1089' '#1053#1044#1057
@@ -185,22 +190,28 @@ inherited ReturnOutJournalForm: TReturnOutJournalForm
             Properties.DecimalPlaces = 2
             Properties.DisplayFormat = ',0.00;-,0.00; ;'
             HeaderAlignmentHorz = taCenter
-            Width = 109
+            HeaderAlignmentVert = vaCenter
+            Width = 65
           end
           object colNDSKindName: TcxGridDBColumn
             Caption = #1053#1044#1057
             DataBinding.FieldName = 'NDSKindName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
             Width = 56
           end
           object colJuridicalName: TcxGridDBColumn
             Caption = #1070#1088'.'#1083#1080#1094#1086' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1100
             DataBinding.FieldName = 'JuridicalName'
-            Width = 159
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 113
           end
           object colInvNumberPartner: TcxGridDBColumn
             Caption = #8470' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072
             DataBinding.FieldName = 'InvNumberPartner'
             HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 80
           end
@@ -208,8 +219,30 @@ inherited ReturnOutJournalForm: TReturnOutJournalForm
             Caption = #1044#1072#1090#1072' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072
             DataBinding.FieldName = 'OperDatePartner'
             HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 85
+          end
+          object colIncomeOperDate: TcxGridDBColumn
+            Caption = #1044#1072#1090#1072' '#1055#1053
+            DataBinding.FieldName = 'IncomeOperDate'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 71
+          end
+          object colIncomeInvNumber: TcxGridDBColumn
+            Caption = #8470' '#1055#1053
+            DataBinding.FieldName = 'IncomeInvNumber'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 77
+          end
+          object colReturnTypeName: TcxGridDBColumn
+            Caption = #1058#1080#1087' '#1074#1086#1079#1074#1088#1072#1090#1072
+            DataBinding.FieldName = 'ReturnTypeName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 70
           end
         end
       end
@@ -445,6 +478,61 @@ inherited ReturnOutJournalForm: TReturnOutJournalForm
         end>
       isShowModal = True
     end
+    object mactEditPartnerData: TMultiAction
+      Category = 'PartnerData'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actPartnerDataDialog
+        end
+        item
+          Action = actUpdateReturnOut_PartnerData
+        end
+        item
+          Action = actRefresh
+        end>
+      Caption = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#8470' '#1080' '#1076#1072#1090#1091' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072
+      Hint = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#8470' '#1080' '#1076#1072#1090#1091' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072
+      ImageIndex = 35
+    end
+    object actPartnerDataDialog: TExecuteDialog
+      Category = 'PartnerData'
+      MoveParams = <>
+      Caption = 'actPartnerDataDialog'
+      FormName = 'TReturnOutPartnerDataDialogForm'
+      FormNameParam.Value = 'TReturnOutPartnerDataDialogForm'
+      FormNameParam.DataType = ftString
+      GuiParams = <
+        item
+          Name = 'InvNumberPartner'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'InvNumberPartner'
+          DataType = ftString
+          ParamType = ptInput
+        end
+        item
+          Name = 'OperDatePartner'
+          Value = 'NULL'
+          Component = FormParams
+          ComponentItem = 'OperDatePartner'
+          DataType = ftDateTime
+          ParamType = ptInput
+        end>
+      isShowModal = True
+      OpenBeforeShow = True
+    end
+    object actUpdateReturnOut_PartnerData: TdsdExecStoredProc
+      Category = 'PartnerData'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdateReturnOut_PartnerData
+      StoredProcList = <
+        item
+          StoredProc = spUpdateReturnOut_PartnerData
+        end>
+      Caption = 'actUpdateReturnOut_PartnerData'
+    end
   end
   inherited MasterDS: TDataSource
     Left = 64
@@ -563,6 +651,10 @@ inherited ReturnOutJournalForm: TReturnOutJournalForm
         end
         item
           Visible = True
+          ItemName = 'dxBarButton1'
+        end
+        item
+          Visible = True
           ItemName = 'dxBarStatic'
         end
         item
@@ -615,6 +707,11 @@ inherited ReturnOutJournalForm: TReturnOutJournalForm
     end
     object bbSendData: TdxBarButton
       Action = mactSendOneDoc
+      Category = 0
+      Visible = ivNever
+    end
+    object dxBarButton1: TdxBarButton
+      Action = mactEditPartnerData
       Category = 0
     end
   end
@@ -717,6 +814,20 @@ inherited ReturnOutJournalForm: TReturnOutJournalForm
         Name = 'IncomeMovementId'
         Value = Null
         ParamType = ptInput
+      end
+      item
+        Name = 'InvNumberPartner'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'InvNumberPartner'
+        DataType = ftString
+      end
+      item
+        Name = 'OperDatePartner'
+        Value = 'NULL'
+        Component = MasterCDS
+        ComponentItem = 'OperDatePartner'
+        DataType = ftDateTime
       end>
     Left = 400
     Top = 200
@@ -812,5 +923,37 @@ inherited ReturnOutJournalForm: TReturnOutJournalForm
     PackSize = 1
     Left = 192
     Top = 288
+  end
+  object spUpdateReturnOut_PartnerData: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Movement_ReturnOut_PartnerData'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inInvNumberPartner'
+        Value = ''
+        Component = FormParams
+        ComponentItem = 'InvNumberPartner'
+        DataType = ftString
+        ParamType = ptInput
+      end
+      item
+        Name = 'inOperDatePartner'
+        Value = 42381d
+        Component = FormParams
+        ComponentItem = 'OperDatePartner'
+        DataType = ftDateTime
+        ParamType = ptInput
+      end>
+    PackSize = 1
+    Left = 416
+    Top = 400
   end
 end
