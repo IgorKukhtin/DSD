@@ -1,7 +1,7 @@
-﻿DROP FUNCTION IF EXISTS gpSelect_Cash_Goods_Alternative(TVarChar);
-DROP FUNCTION IF EXISTS gpSelect_Cash_Goods_Alternative(Integer,TVarChar);
+﻿DROP FUNCTION IF EXISTS gpSelect_Cash_Goods_Alternative_ver2(TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_Cash_Goods_Alternative_ver2(Integer,TVarChar);
 
-CREATE OR REPLACE FUNCTION gpSelect_Cash_Goods_Alternative (inMovementId Integer, inSession Tvarchar)
+CREATE OR REPLACE FUNCTION gpSelect_Cash_Goods_Alternative_ver2 (inMovementId Integer, inSession Tvarchar)
 RETURNS TABLE (
   LinkType           integer,
   MainGoodsID        Integer,
@@ -11,7 +11,8 @@ RETURNS TABLE (
   GoodsName          TVarChar,
   Price              TFloat,
   Remains            TFloat,
-  TypeColor          Integer
+  TypeColor          Integer,
+  NDS                TFloat
 ) AS
 $body$
   DECLARE vbUserId Integer;
@@ -28,21 +29,6 @@ BEGIN
   vbObjectId := lpGet_DefaultValue('zc_Object_Retail', vbUserId);
   RETURN QUERY
     WITH
-    CurrentMovement
-    AS
-    (
-        SELECT
-            ObjectId,
-            SUM(Amount)::TFloat as Amount
-        FROM
-            MovementItem
-        WHERE
-            MovementId = inMovementId
-            AND
-            Amount <> 0
-        Group By
-            ObjectId
-    ),
     RESERVE
     AS
     (
@@ -62,33 +48,31 @@ BEGIN
         SELECT
             Container.ObjectId    AS GoodsId
            ,(SUM(Container.amount) 
-             - COALESCE(CurrentMovement.Amount,0) 
              - COALESCE(Reserve.Amount,0))::TFloat as Remains
         from Container
             Inner Join object ON Container.ObjectId = object.Id
             LEFT OUTER JOIN RESERVE ON container.objectid = RESERVE.GoodsId
-            LEFT OUTER JOIN CurrentMovement ON container.objectid = CurrentMovement.ObjectId                            
         WHERE
             container.descid = zc_container_count()
             AND
             Container.WhereObjectId = vbUnitId
         GROUP BY
             Container.ObjectId
-           ,CurrentMovement.Amount
            ,Reserve.Amount
         HAVING
             SUM(Container.Amount)>0
       )
     SELECT
-      RES.LinkType                   as LinkType
-      ,RES.maingoodsid               as MainGoodsId
-      ,RES.AlternativeGroupId        as AlternativeGroupId
-      ,Object_Goods.Id               as Id
-      ,Object_Goods.objectcode       as GoodsCode
-      ,Object_Goods.valuedata        as GoodsName
-      ,Object_Price_View.price       as Price
-      ,RES.remains::TFloat           as Remains
-      ,RES.TypeColor::Integer        as TypeColor
+      RES.LinkType                       as LinkType
+      ,RES.maingoodsid                   as MainGoodsId
+      ,RES.AlternativeGroupId            as AlternativeGroupId
+      ,Object_Goods.Id                   as Id
+      ,Object_Goods.objectcode           as GoodsCode
+      ,Object_Goods.valuedata            as GoodsName
+      ,Object_Price_View.price           as Price
+      ,RES.remains::TFloat               as Remains
+      ,RES.TypeColor::Integer            as TypeColor
+      ,ObjectFloat_NDSKind_NDS.ValueData AS NDS
     FROM(  
             Select --Additional Goods
                 0                                       as LinkType
@@ -120,6 +104,12 @@ BEGIN
                           ON RES.GoodsId = Object_Goods.id
         LEFT OUTER JOIN Object_Price_View ON RES.GoodsId = Object_Price_View.goodsid
                                          AND Object_Price_View.unitid = vbUnitId
+        LEFT OUTER JOIN ObjectLink AS ObjectLink_Goods_NDSKind
+                                   ON ObjectLink_Goods_NDSKind.ObjectId = Object_Goods.Id
+                                  AND ObjectLink_Goods_NDSKind.DescId = zc_ObjectLink_Goods_NDSKind()
+        LEFT OUTER JOIN ObjectFloat AS ObjectFloat_NDSKind_NDS
+                                    ON ObjectFloat_NDSKind_NDS.ObjectId = ObjectLink_Goods_NDSKind.ChildObjectId 
+
     WHERE
         Object_Goods.IsErased = False                                   
     ORDER BY
@@ -133,7 +123,7 @@ END;
 $body$
 LANGUAGE plpgsql VOLATILE;
 
-ALTER FUNCTION gpSelect_Cash_Goods_Alternative(Integer, TVarChar) OWNER TO postgres;
+ALTER FUNCTION gpSelect_Cash_Goods_Alternative_ver2(Integer, TVarChar) OWNER TO postgres;
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР

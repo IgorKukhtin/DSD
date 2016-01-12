@@ -34,6 +34,8 @@ type
     N13: TMenuItem;
     colBayer: TcxGridDBColumn;
     colCashMember: TcxGridDBColumn;
+    colFiscalCheckNumber: TcxGridDBColumn;
+    colNotMCS: TcxGridDBColumn;
   private
     { Private declarations }
   public

@@ -16,18 +16,22 @@ function iniSoldParallel:Boolean;
 function iniPortNumber:String;
 //возвращает скорость порта
 function iniPortSpeed:String;
+//Возвращает путь к локальной базе данных
+function iniLocalDataBaseHead: String;
+function iniLocalDataBaseBody: String;
 
 implementation
 
 uses
   iniFiles, Classes, SysUtils, Forms, vcl.Dialogs;
-
+const
+  FileName: String = '\DEFAULTS.INI';
+  LocalDBNameHead: String = 'FarmacyCashHead.dbf';
+  LocalDBNameBody: String = 'FarmacyCashBody.dbf';
 function GetIniFile(out AIniFileName: String):boolean;
 var
   dir: string;
   f: TIniFile;
-CONST
-  FileName: String = '\DEFAULTS.INI';
 Begin
   result := False;
   dir := ExtractFilePath(Application.exeName)+'ini';
@@ -40,13 +44,15 @@ Begin
   End;
   if not FileExists(dir + FileName) then
   Begin
+    f := TiniFile.Create(dir + FileName);
     try
       try
-        f := TiniFile.Create(dir + FileName);
         AIniFileName := dir + FileName;
+        F.WriteString('Common','SoldParallel','false');
+        F.WriteString('Common','LocalDataBaseHead',ExtractFilePath(Application.ExeName)+LocalDBNameHead);
+        F.WriteString('Common','LocalDataBaseBody',ExtractFilePath(Application.ExeName)+LocalDBNameBody);
         F.WriteString('TSoldWithCompMainForm','CashType','FP3530T_NEW');
         F.WriteString('TSoldWithCompMainForm','CashId','0');
-        F.WriteString('Common','SoldParallel','false');
         F.WriteString('TSoldWithCompMainForm','PortNumber','1');
         F.WriteString('TSoldWithCompMainForm','PortSpeed','19200');
       Except
@@ -101,6 +107,41 @@ end;
 function iniPortSpeed:String;
 begin
   Result := GetValue('TSoldWithCompMainForm','PortSpeed','19200');
+end;
+
+//Возвращает путь к локальной базе данных
+function iniLocalDataBaseHead: String;
+var
+  f: TIniFile;
+begin
+  Result := GetValue('Common','LocalDatBaseHead','');
+  if Result = '' then
+  Begin
+    Result := ExtractFilePath(Application.ExeName)+LocalDBNameHead;
+    f := TIniFile.Create(ExtractFilePath(Application.ExeName)+'ini\'+FileName);
+    try
+      f.WriteString('Common','LocalDatBaseHead',Result);
+    finally
+      f.Free;
+    end;
+  End;
+end;
+
+function iniLocalDataBaseBody: String;
+var
+  f: TIniFile;
+begin
+  Result := GetValue('Common','LocalDatBaseBody','');
+  if Result = '' then
+  Begin
+    Result := ExtractFilePath(Application.ExeName)+LocalDBNameBody;
+    f := TIniFile.Create(ExtractFilePath(Application.ExeName)+'ini\'+FileName);
+    try
+      f.WriteString('Common','LocalDatBaseBody',Result);
+    finally
+      f.Free;
+    end;
+  End;
 end;
 
 end.

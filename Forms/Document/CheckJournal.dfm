@@ -13,18 +13,18 @@ inherited CheckJournalForm: TCheckJournalForm
     Height = 477
     TabOrder = 3
     ExplicitTop = 77
-    ExplicitWidth = 726
-    ExplicitHeight = 598
+    ExplicitWidth = 831
+    ExplicitHeight = 477
     ClientRectBottom = 477
     ClientRectRight = 831
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 726
-      ExplicitHeight = 598
+      ExplicitWidth = 831
+      ExplicitHeight = 477
       inherited cxGrid: TcxGrid
         Width = 831
         Height = 477
-        ExplicitWidth = 726
-        ExplicitHeight = 598
+        ExplicitWidth = 831
+        ExplicitHeight = 477
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.FooterSummaryItems = <
             item
@@ -93,6 +93,16 @@ inherited CheckJournalForm: TCheckJournalForm
             Options.Editing = False
             Width = 91
           end
+          object colFiscalCheckNumber: TcxGridDBColumn
+            Caption = #8470' '#1092#1080#1089#1082#1072#1083#1100#1085#1086#1075#1086' '#1095#1077#1082#1072
+            DataBinding.FieldName = 'FiscalCheckNumber'
+            Width = 103
+          end
+          object colNotMCS: TcxGridDBColumn
+            Caption = #1053#1077' '#1076#1083#1103' '#1053#1058#1047
+            DataBinding.FieldName = 'NotMCS'
+            Width = 51
+          end
         end
       end
     end
@@ -100,7 +110,7 @@ inherited CheckJournalForm: TCheckJournalForm
   inherited Panel: TPanel
     Width = 831
     Height = 51
-    ExplicitWidth = 726
+    ExplicitWidth = 831
     ExplicitHeight = 51
     object ceUnit: TcxButtonEdit
       Left = 107

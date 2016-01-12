@@ -8,7 +8,8 @@ uses
   cxLookAndFeels, cxLookAndFeelPainters, cxContainer, cxEdit, Vcl.Menus,
   Vcl.ExtCtrls, Vcl.StdCtrls, cxButtons, cxGroupBox, cxRadioGroup, cxLabel,
   cxTextEdit, cxCurrencyEdit, Vcl.ActnList, dsdAction, cxClasses,
-  cxPropertiesStore, dsdAddOn, CashInterface, AncestorBase, dsdDB;
+  cxPropertiesStore, dsdAddOn, CashInterface, AncestorBase, dsdDB, dxSkinsCore,
+  dxSkinsDefaultPainters;
 
 type
   TCashCloseDialogForm = class(TAncestorDialogForm)
@@ -23,7 +24,7 @@ type
     procedure ParentFormKeyDown(Sender: TObject; var Key: Word;
       Shift: TShiftState);
   private
-    FSummaTotal: Real;
+    FSummaTotal: Currency;
     { Private declarations }
   public
     { Public declarations }
@@ -31,7 +32,7 @@ type
 
 //var
 //  CashCloseDialogForm: TCashCloseDialogForm;
-function CashCloseDialogExecute(ASummaTotal: Real; Var ASalerCash: Real; var APaidType: TPaidType):Boolean;
+function CashCloseDialogExecute(ASummaTotal: Currency; Var ASalerCash: Currency; var APaidType: TPaidType):Boolean;
 
 implementation
 
@@ -39,7 +40,7 @@ implementation
 
 uses DataModul;
 
-function CashCloseDialogExecute(ASummaTotal: Real; Var ASalerCash: Real; var APaidType: TPaidType):Boolean;
+function CashCloseDialogExecute(ASummaTotal: Currency; Var ASalerCash: Currency; var APaidType: TPaidType):Boolean;
 Begin
   With TCashCloseDialogForm.Create(nil) do
   Begin
@@ -63,11 +64,14 @@ Begin
 End;
 
 procedure TCashCloseDialogForm.edSalerCashPropertiesChange(Sender: TObject);
+var
+  tmpVal: Currency;
 begin
-  bbOk.Enabled := ((edSalerCash.Value - FSummaTotal)>=0) or
+  tmpVal := edSalerCash.Value;
+  bbOk.Enabled := ((tmpVal - FSummaTotal)>=0) or
     (rgPaidType.ItemIndex = 1);
-  if FSummaTotal <= edSalerCash.Value then
-    lblSdacha.Caption := FormatCurr('0.00',edSalerCash.Value - FSummaTotal)
+  if FSummaTotal <= tmpVal then
+    lblSdacha.Caption := FormatCurr('0.00',tmpVal - FSummaTotal)
   else
     lblSdacha.Caption := 'нет';
 end;
