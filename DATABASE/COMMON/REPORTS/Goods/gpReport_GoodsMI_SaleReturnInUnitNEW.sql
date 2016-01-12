@@ -369,6 +369,10 @@ BEGIN
                                      , gpReport.LocationId_by, gpReport.LocationCode_by, gpReport.LocationName_by
                                      , gpReport.AmountOut, gpReport.AmountOut_Weight, gpReport.AmountOut_Sh, gpReport.SummOut_zavod, gpReport.SummOut_branch, gpReport.SummOut_60000 
                                      , gpReport.AmountIn, gpReport.AmountIn_Weight, gpReport.AmountIn_Sh, gpReport. SummIn_zavod, gpReport.SummIn_branch, gpReport.SummIn_60000
+                                     , gpReport.AmountIn_10500_Weight
+                                     , gpReport.AmountIn_40200_Weight
+                                     , gpReport.SummIn_10500
+                                     , gpReport.SummIn_40200
                                      , gpReport.Summ_calc
                                          FROM gpReport_GoodsMI_Internal (inStartDate    := inStartDate
                                                                        , inEndDate      := inEndDate
@@ -402,6 +406,10 @@ BEGIN
                                      , (tmp_Send.Amount_CountRet * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END) AS AmountIn_Weight
                                      , (CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN tmp_Send.Amount_CountRet ELSE 0 END) AS AmountIn_Sh
                                      , tmp_Send.Amount_SummRet AS SummIn_zavod, tmp_Send.Amount_SummRet AS SummIn_branch, 0 AS SummIn_60000
+                                     , 0 AS AmountIn_10500_Weight
+                                     , 0 AS AmountIn_40200_Weight
+                                     , 0 AS SummIn_10500
+                                     , 0 AS SummIn_40200
                                      , tmp_Send.Amount_SummRet AS Summ_calc
      FROM tmp_Send
           LEFT JOIN ObjectFloat AS ObjectFloat_Weight
@@ -462,11 +470,11 @@ BEGIN
 
                                  , SUM (CASE WHEN isSale = TRUE THEN SummIn_branch             ELSE 0 END) AS Sale_Summ
                                  , SUM (CASE WHEN isSale = TRUE THEN SummIn_branch - Summ_calc ELSE 0 END) AS Sale_Summ_10200
-                                 , 0                                                                 AS Sale_Summ_10300
+                                 , 0                                                                       AS Sale_Summ_10300
 
                                  , SUM (CASE WHEN isSale = TRUE THEN SummOut_zavod                ELSE 0 END) AS Sale_SummCost
-                                 , SUM (CASE WHEN isSale = TRUE THEN SummOut_zavod - SummIn_zavod ELSE 0 END) AS Sale_SummCost_10500
-                                 , 0                                                                    AS Sale_SummCost_40200
+                                 , SUM (CASE WHEN isSale = TRUE THEN SummIn_10500 /*SummOut_zavod - SummIn_zavod*/ ELSE 0 END) AS Sale_SummCost_10500
+                                 , SUM (CASE WHEN isSale = TRUE THEN SummIn_40200 /*0*/ ELSE 0 END) AS Sale_SummCost_40200
 
                                  , SUM (CASE WHEN isSale = TRUE THEN AmountOut_Weight ELSE 0 END) AS Sale_Amount_Weight
                                  , SUM (CASE WHEN isSale = TRUE THEN AmountOut_Sh     ELSE 0 END) AS Sale_Amount_Sh
@@ -476,7 +484,7 @@ BEGIN
 
 
                                  , SUM (CASE WHEN isSale = FALSE THEN SummOut_branch ELSE 0 END) AS Return_Summ
-                                 , 0                                                       AS Return_Summ_10300
+                                 , 0                                                             AS Return_Summ_10300
 
                                  , SUM (CASE WHEN isSale = FALSE THEN SummOut_zavod ELSE 0 END) AS Return_SummCost
                                  , 0                                                      AS Return_SummCost_40200
@@ -487,8 +495,8 @@ BEGIN
                                  , SUM (CASE WHEN isSale = FALSE THEN AmountOut_Weight ELSE 0 END) AS Return_AmountPartner_Weight
                                  , SUM (CASE WHEN isSale = FALSE THEN AmountOut_Sh     ELSE 0 END) AS Return_AmountPartner_Sh
 
-                                 , SUM (CASE WHEN isSale = TRUE  THEN AmountOut_Weight - AmountIn_Weight ELSE 0 END) AS Sale_Amount_10500_Weight
-                                 , 0                                                                                 AS Sale_Amount_40200_Weight
+                                 , SUM (CASE WHEN isSale = TRUE  THEN AmountIn_10500_Weight /*AmountOut_Weight - AmountIn_Weight*/ ELSE 0 END) AS Sale_Amount_10500_Weight
+                                 , SUM (CASE WHEN isSale = TRUE  THEN AmountIn_40200_Weight /*0*/ ELSE 0 END) AS Sale_Amount_40200_Weight
                                  , SUM (CASE WHEN isSale = FALSE THEN AmountIn_Weight - AmountOut_Weight ELSE 0 END) AS Return_Amount_40200_Weight
 
                             FROM tmpSendOnPrice
