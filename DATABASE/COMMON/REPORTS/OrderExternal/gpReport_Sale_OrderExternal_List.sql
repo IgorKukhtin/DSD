@@ -2,15 +2,18 @@
 
 
 DROP FUNCTION IF EXISTS gpReport_Sale_OrderExternal_List (TDateTime, TDateTime, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpReport_Sale_OrderExternal_List (TDateTime, TDateTime, Integer, Boolean, Boolean, TVarChar);
 
 
 CREATE OR REPLACE FUNCTION gpReport_Sale_OrderExternal_List(
     IN inStartDate   TDateTime , --
     IN inEndDate     TDateTime , --
     IN inUnitId      Integer   , -- филиал
+    IN inisSale      Boolean   ,
+    IN inisNoSale    Boolean   ,
     IN inSession     TVarChar    -- сессия пользователя
 )
-RETURNS TABLE (InvNumber TVarChar, OperDate TDateTime, OperDatePartner TDateTime
+RETURNS TABLE (MovementId_Order Integer, InvNumber TVarChar, OperDate TDateTime, OperDatePartner TDateTime
              , FromName TVarChar, ToName TVarChar
              , TotalSummPVAT TFloat, TotalSumm TFloat
              , TotalCountKg TFloat, TotalCountSh TFloat, TotalCount TFloat, TotalCountSecond TFloat
@@ -93,7 +96,9 @@ BEGIN
                               AND COALESCE (Object_From.DescId, 0) <> zc_Object_Unit()
                               AND (MovementLinkObject_To.ObjectId = inUnitId OR inUnitId = 0) 
                           )
-                          
+
+
+                              
    , tmpSale AS (SELECT Movement.Id
            , Movement.InvNumber                             AS InvNumber
            , Movement.OperDate                              AS OperDate
@@ -114,7 +119,12 @@ BEGIN
            , Object_To.Id                                   AS ToId
            , Object_To.ValueData                            AS ToName
           
-       FROM Movement
+       FROM ( SELECT MovementLinkMovement_Order.MovementId
+              FROM tmpOrderExternal 
+              INNER JOIN MovementLinkMovement AS MovementLinkMovement_Order 
+                                              ON MovementLinkMovement_Order.MovementChildId = tmpOrderExternal.Id
+             ) AS tmpMovementSale
+            INNER JOIN Movement ON Movement.Id = tmpMovementSale.MovementId
             LEFT JOIN MovementDate AS MovementDate_OperDatePartner
                                    ON MovementDate_OperDatePartner.MovementId =  Movement.Id
                                   AND MovementDate_OperDatePartner.DescId = zc_MovementDate_OperDatePartner()
@@ -162,13 +172,13 @@ BEGIN
                                            ON MovementLinkMovement_Order.MovementId = Movement.Id 
                                           AND MovementLinkMovement_Order.DescId = zc_MovementLinkMovement_Order()
 
-     WHERE Movement.OperDate BETWEEN inStartDate AND inEndDate  
-       AND Movement.DescId = zc_Movement_Sale() 
+     WHERE Movement.DescId = zc_Movement_Sale() 
        AND Movement.StatusId = zc_Enum_Status_Complete()
        AND (MovementLinkObject_From.ObjectId = inUnitId OR inUnitId = 0) 
        )
                              
-   , tmpList AS (SELECT tmpOrderExternal.InvNumber
+   , tmpList AS (SELECT tmpOrderExternal.Id AS MovementId_Order 
+                      , tmpOrderExternal.InvNumber
                       , tmpOrderExternal.OperDate
                       , tmpOrderExternal.OperDatePartner
                       , tmpOrderExternal.FromName
@@ -202,7 +212,8 @@ BEGIN
                             
                             )
 
-        SELECT tmpList.InvNumber
+                 SELECT tmpList.MovementId_Order
+                      , tmpList.InvNumber
                       , tmpList.OperDate
                       , tmpList.OperDatePartner
                       , tmpList.FromName
@@ -230,7 +241,10 @@ BEGIN
        
                       , tmpList.Sale_InvNumberOrder
         
-        FROM tmpList
+                 FROM tmpList
+                 WHERE ( COALESCE (tmpList.Sale_InvNumber,'') <> '' AND inisSale = True)
+                    OR ( COALESCE (tmpList.Sale_InvNumber,'') = '' AND inisNoSale = True)
+                    OR (inisSale = False and inisNoSale = False)
     
         
       ;
