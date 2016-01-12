@@ -10,19 +10,19 @@ inherited ReturnOutForm: TReturnOutForm
     Top = 115
     Width = 1001
     Height = 411
-    ExplicitTop = 123
-    ExplicitWidth = 851
-    ExplicitHeight = 403
+    ExplicitTop = 115
+    ExplicitWidth = 1001
+    ExplicitHeight = 411
     ClientRectBottom = 411
     ClientRectRight = 1001
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 851
-      ExplicitHeight = 379
+      ExplicitWidth = 1001
+      ExplicitHeight = 387
       inherited cxGrid: TcxGrid
         Width = 1001
         Height = 387
-        ExplicitWidth = 851
-        ExplicitHeight = 379
+        ExplicitWidth = 1001
+        ExplicitHeight = 387
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -233,19 +233,6 @@ inherited ReturnOutForm: TReturnOutForm
       Caption = #1070#1088'. '#1083#1080#1094#1086' '#1087#1086#1089#1090#1072#1074#1097#1080#1082
     end
     object edFrom: TcxButtonEdit
-      Left = 434
-      Top = 22
-      Enabled = False
-      Properties.Buttons = <
-        item
-          Default = True
-          Kind = bkEllipsis
-        end>
-      Properties.ReadOnly = True
-      TabOrder = 4
-      Width = 174
-    end
-    object edTo: TcxButtonEdit
       Left = 614
       Top = 22
       Enabled = False
@@ -255,8 +242,21 @@ inherited ReturnOutForm: TReturnOutForm
           Kind = bkEllipsis
         end>
       Properties.ReadOnly = True
+      TabOrder = 4
+      Width = 170
+    end
+    object edTo: TcxButtonEdit
+      Left = 434
+      Top = 22
+      Enabled = False
+      Properties.Buttons = <
+        item
+          Default = True
+          Kind = bkEllipsis
+        end>
+      Properties.ReadOnly = True
       TabOrder = 5
-      Width = 171
+      Width = 154
     end
     object cxLabel4: TcxLabel
       Left = 614
@@ -406,6 +406,7 @@ inherited ReturnOutForm: TReturnOutForm
     object edOperDatePartner: TcxDateEdit
       Left = 327
       Top = 22
+      EditValue = 42381d
       Properties.SaveTime = False
       Properties.ShowTime = False
       TabOrder = 24
@@ -599,6 +600,61 @@ inherited ReturnOutForm: TReturnOutForm
       Caption = #1055#1077#1088#1077#1089#1095#1077#1090' '#1082#1086#1076#1086#1074
       ImageIndex = 43
     end
+    object mactEditPartnerData: TMultiAction
+      Category = 'PartnerData'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actPartnerDataDialog
+        end
+        item
+          Action = actUpdateReturnOut_PartnerData
+        end
+        item
+          Action = actRefresh
+        end>
+      Caption = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#8470' '#1080' '#1076#1072#1090#1091' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072
+      Hint = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#8470' '#1080' '#1076#1072#1090#1091' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072
+      ImageIndex = 35
+    end
+    object actPartnerDataDialog: TExecuteDialog
+      Category = 'PartnerData'
+      MoveParams = <>
+      Caption = 'actPartnerDataDialog'
+      FormName = 'TReturnOutPartnerDataDialogForm'
+      FormNameParam.Value = 'TReturnOutPartnerDataDialogForm'
+      FormNameParam.DataType = ftString
+      GuiParams = <
+        item
+          Name = 'InvNumberPartner'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'InvNumberPartner'
+          DataType = ftString
+          ParamType = ptInput
+        end
+        item
+          Name = 'OperDatePartner'
+          Value = 'NULL'
+          Component = FormParams
+          ComponentItem = 'OperDatePartner'
+          DataType = ftDateTime
+          ParamType = ptInput
+        end>
+      isShowModal = True
+      OpenBeforeShow = True
+    end
+    object actUpdateReturnOut_PartnerData: TdsdExecStoredProc
+      Category = 'PartnerData'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdateReturnOut_PartnerData
+      StoredProcList = <
+        item
+          StoredProc = spUpdateReturnOut_PartnerData
+        end>
+      Caption = 'actUpdateReturnOut_PartnerData'
+    end
   end
   inherited MasterDS: TDataSource
     Top = 448
@@ -717,6 +773,10 @@ inherited ReturnOutForm: TReturnOutForm
         end
         item
           Visible = True
+          ItemName = 'dxBarButton1'
+        end
+        item
+          Visible = True
           ItemName = 'dxBarStatic'
         end
         item
@@ -761,6 +821,10 @@ inherited ReturnOutForm: TReturnOutForm
     end
     object bbRefreshGoodsCode: TdxBarButton
       Action = actRefreshGoodsCode
+      Category = 0
+    end
+    object dxBarButton1: TdxBarButton
+      Action = mactEditPartnerData
       Category = 0
     end
   end
@@ -828,6 +892,18 @@ inherited ReturnOutForm: TReturnOutForm
         Value = Null
         DataType = ftString
         ParamType = ptInput
+      end
+      item
+        Name = 'InvNumberPartner'
+        Value = Null
+        Component = edInvNumberPartner
+        DataType = ftString
+      end
+      item
+        Name = 'OperDatePartner'
+        Value = 'NULL'
+        Component = edOperDatePartner
+        DataType = ftDateTime
       end>
     Left = 280
     Top = 416
@@ -1442,7 +1518,7 @@ inherited ReturnOutForm: TReturnOutForm
         ParamType = ptInput
       end>
     Left = 304
-    Top = 64
+    Top = 48
   end
   object ContractGuides: TdsdGuides
     KeyField = 'Id'
@@ -1537,7 +1613,7 @@ inherited ReturnOutForm: TReturnOutForm
         ParamType = ptInput
       end>
     Left = 408
-    Top = 56
+    Top = 48
   end
   object GuidesJuridical: TdsdGuides
     KeyField = 'Id'
@@ -1564,5 +1640,37 @@ inherited ReturnOutForm: TReturnOutForm
       end>
     Left = 696
     Top = 56
+  end
+  object spUpdateReturnOut_PartnerData: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Movement_ReturnOut_PartnerData'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inInvNumberPartner'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'InvNumberPartner'
+        DataType = ftString
+        ParamType = ptInput
+      end
+      item
+        Name = 'inOperDatePartner'
+        Value = 'NULL'
+        Component = FormParams
+        ComponentItem = 'OperDatePartner'
+        DataType = ftDateTime
+        ParamType = ptInput
+      end>
+    PackSize = 1
+    Left = 712
+    Top = 424
   end
 end

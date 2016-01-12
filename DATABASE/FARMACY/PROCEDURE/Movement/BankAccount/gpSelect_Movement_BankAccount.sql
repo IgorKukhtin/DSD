@@ -26,6 +26,8 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, InvNumber_Parent TVarChar, Parent
              , CurrencyValue TFloat, ParValue TFloat
              , CurrencyPartnerValue TFloat, ParPartnerValue TFloat
              , PartnerBankName TVarChar, PartnerBankMFO TVarChar, PartnerBankAccountName TVarChar
+             , Income_JuridicalName TVarChar, Income_OperDate TDateTime, Income_InvNumber TVarChar, Income_NDSKindName TVarChar
+             , Income_SummWithOutVAT TFloat, Income_SummVAT TFloat
               )
 AS
 $BODY$
@@ -78,17 +80,25 @@ BEGIN
            , Object_InfoMoney_View.InfoMoneyName
            , Object_InfoMoney_View.InfoMoneyName_all
            , Object_Contract_InvNumber_View.ContractCode
-           , Object_Contract_InvNumber_View.InvNumber  AS ContractInvNumber
+           , Object_Contract_InvNumber_View.InvNumber          AS ContractInvNumber
            , Object_Contract_InvNumber_View.ContractTagName
-           , Object_Unit.ValueData             AS UnitName
-           , Object_Currency.ValueData         AS CurrencyName 
+           , Object_Unit.ValueData                             AS UnitName
+           , Object_Currency.ValueData                         AS CurrencyName 
            , MovementFloat_CurrencyValue.ValueData             AS CurrencyValue
            , MovementFloat_ParValue.ValueData                  AS ParValue
            , MovementFloat_CurrencyPartnerValue.ValueData      AS CurrencyPartnerValue
            , MovementFloat_ParPartnerValue.ValueData           AS ParPartnerValue
            , Partner_BankAccount_View.BankName
            , Partner_BankAccount_View.MFO
-           , Partner_BankAccount_View.Name      AS BankAccountName
+           , Partner_BankAccount_View.Name                     AS BankAccountName
+           
+           , Object_Juridical.ValueData                        AS Income_JuridicalName
+           , Movement_Income.OperDate                          AS Income_OperDate
+           , Movement_Income.InvNumber                         AS Income_InvNumber
+           , Object_NDSKind.ValueData                          AS Income_NDSKindName
+           , MovementFloat_TotalSummMVAT.ValueData             AS Income_SummWithOutVAT
+           , (MovementFloat_TotalSumm.ValueData - MovementFloat_TotalSummMVAT.ValueData)::TFloat AS Income_SummVAT
+             
        FROM tmpStatus
             JOIN Movement ON Movement.DescId = zc_Movement_BankAccount()
                          AND Movement.OperDate BETWEEN inStartDate AND inEndDate
@@ -161,8 +171,31 @@ BEGIN
             LEFT JOIN MovementItemLinkObject AS MILinkObject_BankAccount
                                          ON MILinkObject_BankAccount.MovementItemId = MovementItem.Id
                                         AND MILinkObject_BankAccount.DescId = zc_MILinkObject_BankAccount()
-            LEFT JOIN Object_BankAccount_View AS Partner_BankAccount_View ON Partner_BankAccount_View.Id = MILinkObject_BankAccount.ObjectId;
+            LEFT JOIN Object_BankAccount_View AS Partner_BankAccount_View ON Partner_BankAccount_View.Id = MILinkObject_BankAccount.ObjectId
   
+            LEFT JOIN MovementLinkMovement AS MovementLinkMovement_Child
+                                           ON MovementLinkMovement_Child.MovementId = Movement.Id
+                                          AND MovementLinkMovement_Child.DescId = zc_MovementLinkMovement_Child()
+
+            LEFT JOIN Movement AS Movement_Income 
+                               ON Movement_Income.Id = MovementLinkMovement_Child.MovementChildId
+            LEFT JOIN MovementLinkObject AS MovementLinkObject_Juridical
+                                         ON MovementLinkObject_Juridical.MovementId = Movement_Income.Id
+                                        AND MovementLinkObject_Juridical.DescId = zc_MovementLinkObject_Juridical()
+            LEFT JOIN Object AS Object_Juridical ON Object_Juridical.Id = MovementLinkObject_Juridical.ObjectId
+ 
+            LEFT JOIN MovementLinkObject AS MovementLinkObject_NDSKind
+                                         ON MovementLinkObject_NDSKind.MovementId = Movement_Income.Id
+                                        AND MovementLinkObject_NDSKind.DescId = zc_MovementLinkObject_NDSKind()
+            LEFT JOIN Object AS Object_NDSKind ON Object_NDSKind.Id = MovementLinkObject_NDSKind.ObjectId
+            
+            LEFT JOIN MovementFloat AS MovementFloat_TotalSummMVAT
+                                    ON MovementFloat_TotalSummMVAT.MovementId =  Movement_Income.Id
+                                   AND MovementFloat_TotalSummMVAT.DescId = zc_MovementFloat_TotalSummMVAT()
+            LEFT JOIN MovementFloat AS MovementFloat_TotalSumm
+                                    ON MovementFloat_TotalSumm.MovementId =  Movement_Income.Id
+                                   AND MovementFloat_TotalSumm.DescId = zc_MovementFloat_TotalSumm();
+            
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
@@ -170,7 +203,8 @@ ALTER FUNCTION gpSelect_Movement_BankAccount (TDateTime, TDateTime, Boolean, TVa
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д. Воробкало А.А.
+ 11.01.15                                                                    *Income_...
  14.11.14                                        * add Currency...
  27.09.14                                        * add ContractTagName
  18.06.14                         * add Object_BankAccount_View

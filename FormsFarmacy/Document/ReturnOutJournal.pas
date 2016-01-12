@@ -47,6 +47,14 @@ type
     colJuridicalName: TcxGridDBColumn;
     colInvNumberPartner: TcxGridDBColumn;
     colOperDatePartner: TcxGridDBColumn;
+    colIncomeOperDate: TcxGridDBColumn;
+    colIncomeInvNumber: TcxGridDBColumn;
+    colReturnTypeName: TcxGridDBColumn;
+    mactEditPartnerData: TMultiAction;
+    actPartnerDataDialog: TExecuteDialog;
+    actUpdateReturnOut_PartnerData: TdsdExecStoredProc;
+    spUpdateReturnOut_PartnerData: TdsdStoredProc;
+    dxBarButton1: TdxBarButton;
   private
     { Private declarations }
   public

@@ -37,7 +37,7 @@ BEGIN
     END IF;
     
     -- Проверить, что бы не было переучета позже даты документа
-    SELECT
+    /*SELECT
         date_trunc('day', Movement.OperDate),
         Movement_Unit.ObjectId AS Unit
     INTO
@@ -75,7 +75,7 @@ BEGIN
               )
     THEN
         RAISE EXCEPTION 'Ошибка. По одному или более товарам есть документ переучета позже даты текущей продажи. Проведение документа запрещено!';
-    END IF;    
+    END IF; */   
     
     --прописали тип оплаты
     if inPaidType = 0 then

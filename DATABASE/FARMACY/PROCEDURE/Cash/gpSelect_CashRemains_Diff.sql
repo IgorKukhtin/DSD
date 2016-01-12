@@ -1,8 +1,8 @@
 -- Function: gpSelect_Movement_Income()
 
-DROP FUNCTION IF EXISTS gpSelect_CashRemains_Diff (Integer, TVarChar, TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_CashRemains_Diff_ver2 (Integer, TVarChar, TVarChar);
 
-CREATE OR REPLACE FUNCTION gpSelect_CashRemains_Diff(
+CREATE OR REPLACE FUNCTION gpSelect_CashRemains_Diff_ver2(
     IN inMovementId    Integer,    -- Текущая накладная
     IN inCashSessionId TVarChar,   -- Сессия кассового места
     IN inSession       TVarChar    -- сессия пользователя
@@ -52,11 +52,8 @@ BEGIN
         SELECT 
             SUM(Amount) AS Remains, 
             container.objectid 
-        FROM container
-            -- INNER JOIN containerlinkobject AS CLO_Unit
-                                           -- ON CLO_Unit.containerid = container.id 
-                                          -- AND CLO_Unit.descid = zc_ContainerLinkObject_Unit()
-                                          -- AND CLO_Unit.objectid = vbUnitId
+        FROM 
+            container
         WHERE 
             container.descid = zc_container_count() 
             AND
@@ -157,30 +154,16 @@ BEGIN
             _DIFF.GoodsCode,
             _DIFF.GoodsName,
             _DIFF.Price,
-            (_DIFF.Remains - COALESCE(CurrentMovement.Amount,0))::TFloat AS Remains,
+            _DIFF.Remains,
             _DIFF.MCSValue,
             _DIFF.Reserved,
             _DIFF.NewRow
         FROM
-            _DIFF
-            LEFT OUTER JOIN (
-                                SELECT
-                                    ObjectId,
-                                    SUM(Amount)::TFloat as Amount
-                                FROM
-                                    MovementItem
-                                WHERE
-                                    MovementId = inMovementId
-                                    AND
-                                    Amount <> 0
-                                Group By
-                                    ObjectId
-                            ) AS CurrentMovement
-                              ON CurrentMovement.ObjectId = _DIFF.ObjectId;
+            _DIFF;
 END;
 $BODY$
   LANGUAGE PLPGSQL VOLATILE;
-ALTER FUNCTION gpSelect_CashRemains_Diff (Integer, TVarChar, TVarChar) OWNER TO postgres;
+ALTER FUNCTION gpSelect_CashRemains_Diff_ver2 (Integer, TVarChar, TVarChar) OWNER TO postgres;
 
 
 /*

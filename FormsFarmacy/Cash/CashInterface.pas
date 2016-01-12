@@ -14,6 +14,7 @@ type
      function ChangePrice(const GoodsCode: integer; const Price: double): boolean;
      function OpenReceipt(const isFiscal: boolean = true): boolean;
      function CloseReceipt: boolean;
+     function CloseReceiptEx(out CheckId: String): boolean;
      function CashInputOutput(const Summa: double): boolean;
      function ClosureFiscal: boolean;
      function XReport: boolean;

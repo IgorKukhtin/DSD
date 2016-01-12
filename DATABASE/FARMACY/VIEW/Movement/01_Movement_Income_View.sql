@@ -18,8 +18,8 @@ CREATE OR REPLACE VIEW Movement_Income_View AS
        , Object_From.ValueData                      AS FromName
        , MovementLinkObject_To.ObjectId             AS ToId
        , Object_To.Name                             AS ToName
-       , COALESCE(MovementLinkObject_Juridical.ObjectId, Object_To.JuridicalId) AS JuridicalId
-       , COALESCE(Object_Juridical.ValueData, Object_To.JuridicalName)          AS JuridicalName
+       , MovementLinkObject_Juridical.ObjectId      AS JuridicalId
+       , Object_Juridical.ValueData                 AS JuridicalName
        , MovementLinkObject_NDSKind.ObjectId        AS NDSKindId
        , Object_NDSKind.ValueData                   AS NDSKindName
        , ObjectFloat_NDSKind_NDS.ValueData          AS NDS
@@ -110,7 +110,7 @@ CREATE OR REPLACE VIEW Movement_Income_View AS
                         AND Object_Movement.DescId = zc_Object_PartionMovement()
         LEFT JOIN Container ON Container.DescId = zc_Container_SummIncomeMovementPayment()
                            AND Container.ObjectId = Object_Movement.Id
-                           AND Container.KeyValue like '%,'||COALESCE(MovementLinkObject_Juridical.ObjectId, Object_To.JuridicalId)||';%'
+                           AND Container.KeyValue like '%,'||MovementLinkObject_Juridical.ObjectId||';%'
     WHERE 
         Movement.DescId = zc_Movement_Income();
 
@@ -121,6 +121,7 @@ ALTER TABLE Movement_Income_View
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.  Воробкало А.А.
+ 11.01.15                                                         *
  07.12.15                                                         *
  14.05.15                        * 
  11.02.15                        * 

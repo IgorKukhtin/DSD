@@ -12,7 +12,8 @@ uses
   dsdAction, Vcl.ActnList, cxPropertiesStore, cxButtonEdit, cxMaskEdit,
   cxDropDownEdit, cxCalendar, cxLabel, cxTextEdit, Vcl.ExtCtrls, cxGridLevel,
   cxGridCustomTableView, cxGridTableView, cxGridDBTableView, cxGridCustomView,
-  cxGrid, cxPC, cxCurrencyEdit, dxBarBuiltInMenu, cxNavigator;
+  cxGrid, cxPC, cxCurrencyEdit, dxBarBuiltInMenu, cxNavigator, dxSkinsCore,
+  dxSkinsDefaultPainters, dxSkinscxPCPainter, dxSkinsdxBarPainter, cxCheckBox;
 
 type
   TCheckForm = class(TAncestorDocumentForm)
@@ -32,6 +33,9 @@ type
     edCashMember: TcxTextEdit;
     lblBayer: TcxLabel;
     edBayer: TcxTextEdit;
+    cxLabel6: TcxLabel;
+    edFiscalCheckNumber: TcxTextEdit;
+    chbNotMCS: TcxCheckBox;
   private
     { Private declarations }
   public

@@ -1,0 +1,55 @@
+-- Function: gpUpdate_Movement_ReturnOut_PartnerData()
+
+DROP FUNCTION IF EXISTS gpUpdate_Movement_ReturnOut_PartnerData
+   (Integer, TVarChar, TDateTime, TVarChar);
+
+CREATE OR REPLACE FUNCTION gpUpdate_Movement_ReturnOut_PartnerData(
+    IN inMovementId                  Integer   , -- Ключ объекта <Документ Перемещение>
+    IN inInvNumberPartner    TVarChar  , -- Номер документа
+    IN inOperDatePartner     TDateTime , -- Дата документа
+    IN inSession             TVarChar    -- сессия пользователя
+)
+RETURNS VOID AS
+$BODY$
+   DECLARE vbUserId Integer;
+   DECLARE vbNeedComplete Boolean;
+BEGIN
+    -- проверка прав пользователя на вызов процедуры
+    -- PERFORM lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Movement_ReturnOut());
+    vbUserId := inSession;
+    
+    IF COALESCE(inMovementId,0) = 0
+    THEN
+        RAISE EXCEPTION 'Ошибка. Документ не сохранен!';
+    END IF;
+    --Если документ проведен - распроводим его и отмечаем что в конце нужено его провести
+    IF EXISTS(SELECT 1 FROM Movement Where Id = inMovementId AND StatusId = zc_Enum_Status_Complete())
+    THEN
+        PERFORM gpUnComplete_Movement_ReturnOut (inMovementId := inMovementId, inSession := inSession);
+        vbNeedComplete := TRUE;
+    ELSE
+        vbNeedComplete := FALSE;
+    END IF;
+    
+    --Сохранили дату партнера
+    PERFORM lpInsertUpdate_MovementDate (zc_MovementDate_OperDatePartner(), inMovementId, inOperDatePartner);
+    
+    --Сохранили № документа партнера
+    PERFORM lpInsertUpdate_MovementString (zc_MovementString_InvNumberPartner(), inMovementId, inInvNumberPartner);
+
+    --Если документ был распроведен - то проводим его
+    IF vbNeedComplete = TRUE
+    THEN
+        PERFORM gpComplete_Movement_ReturnOut (inMovementId := inMovementId, inSession := inSession);
+    END IF;
+END;
+$BODY$
+LANGUAGE PLPGSQL VOLATILE;
+
+
+/*
+ ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.  Воробкало А.А.
+ 12.01.16                                                                        *
+
+*/

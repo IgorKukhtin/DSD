@@ -96,6 +96,8 @@ type
     actChangeSignAmount: TdsdExecStoredProc;
     spUpdateMIAmountSign: TdsdStoredProc;
     bbChangeSignAmount: TdxBarButton;
+    actOpenTax: TdsdOpenForm;
+    bbOpenTax: TdxBarButton;
   private
     { Private declarations }
   public

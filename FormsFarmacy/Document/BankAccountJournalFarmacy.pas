@@ -17,6 +17,12 @@ uses
 
 type
   TBankAccountJournalFarmacyForm = class(TBankAccountJournalForm)
+    colIncome_JuridicalName: TcxGridDBColumn;
+    colIncome_OperDate: TcxGridDBColumn;
+    colIncome_InvNumber: TcxGridDBColumn;
+    colIncome_NDSKindName: TcxGridDBColumn;
+    colIncome_SummWithOutVAT: TcxGridDBColumn;
+    colIncome_SummVAT: TcxGridDBColumn;
   private
     { Private declarations }
   public

@@ -1760,6 +1760,10 @@ begin
         FOnChange := TcxDateEdit(FComponent).Properties.OnChange;
         TcxDateEdit(FComponent).Properties.OnChange := OnChange;
      end;
+     if FComponent is TcxCurrencyEdit then begin
+        FOnChange := TcxCurrencyEdit(FComponent).Properties.OnEditValueChanged;
+        TcxCurrencyEdit(FComponent).Properties.OnEditValueChanged := OnChange;
+     end;
   end;
 end;
 
