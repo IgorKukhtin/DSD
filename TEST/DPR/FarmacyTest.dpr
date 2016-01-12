@@ -361,7 +361,8 @@ uses
   ChangeIncomePaymentTest in '..\SOURCE\Movement\All\Farmacy\ChangeIncomePaymentTest.pas',
   ChangeIncomePaymentJournal in '..\..\FormsFarmacy\Document\ChangeIncomePaymentJournal.pas' {ChangeIncomePaymentJournalForm: TParentForm},
   ChangeIncomePayment in '..\..\FormsFarmacy\Document\ChangeIncomePayment.pas' {ChangeIncomePaymentForm: TParentForm},
-  PriceHistory in '..\..\FormsFarmacy\Guides\PriceHistory.pas' {PriceHistoryForm: TParentForm};
+  PriceHistory in '..\..\FormsFarmacy\Guides\PriceHistory.pas' {PriceHistoryForm: TParentForm},
+  ReturnOutPartnerDataDialog in '..\..\FormsFarmacy\Document\ReturnOutPartnerDataDialog.pas' {ReturnOutPartnerDataDialogForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}

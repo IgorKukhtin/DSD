@@ -1,8 +1,6 @@
--- Function: gpInsertUpdate_MovementItem_Income()
+DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_Check_Site(Integer, Integer, Integer, TFloat, TFloat, TVarChar);
 
-DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_Check_ver2(Integer, Integer, Integer, TFloat, TFloat, TVarChar);
-
-CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_Check_ver2(
+CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_Check_Site(
  INOUT ioId                  Integer   , -- Ключ объекта <строка документа>
     IN inMovementId          Integer   , -- Ключ объекта <Документ>
     IN inGoodsId             Integer   , -- Товары
@@ -13,10 +11,6 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_Check_ver2(
 AS
 $BODY$
    DECLARE vbUserId Integer;
-   DECLARE vbUnitId Integer;
-   DECLARE vbReserve TFloat;
-   DECLARE vbRemains TFloat;
-   
 BEGIN
 
     -- проверка прав пользователя на вызов процедуры
@@ -49,12 +43,11 @@ BEGIN
 END;
 $BODY$
 LANGUAGE PLPGSQL VOLATILE;
-ALTER FUNCTION gpInsertUpdate_MovementItem_Check_ver2(Integer, Integer, Integer, TFloat, TFloat, TVarChar) OWNER TO postgres;
+ALTER FUNCTION gpInsertUpdate_MovementItem_Check_Site(Integer, Integer, Integer, TFloat, TFloat, TVarChar) OWNER TO postgres;
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А.А.
- 03.11.2015                                                                      *
- 07.08.2015                                                                      *
- 26.05.15                        *
+ 17.12.2015                                                                      *
 */
+--Select * from gpInsertUpdate_MovementItem_Check_Site(ioId := 0, inMovementId := 506887, inGoodsId := 364, inAmount :=1::TFloat, inPrice := 1.0::TFloat, inSession := '3'::TVarChar)

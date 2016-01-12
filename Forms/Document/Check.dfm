@@ -1,5 +1,7 @@
 inherited CheckForm: TCheckForm
   Caption = #1050#1072#1089#1089#1086#1074#1099#1081' '#1095#1077#1082
+  ExplicitWidth = 845
+  ExplicitHeight = 454
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -96,22 +98,30 @@ inherited CheckForm: TCheckForm
     Height = 64
     ExplicitHeight = 64
     inherited edInvNumber: TcxTextEdit
+      Left = 159
       Top = 14
       Text = 'edInvNumber'
+      ExplicitLeft = 159
       ExplicitTop = 14
     end
     inherited cxLabel1: TcxLabel
+      Left = 159
       Top = -1
+      ExplicitLeft = 159
       ExplicitTop = -1
     end
     inherited edOperDate: TcxDateEdit
+      Left = 248
       Top = 14
       EditValue = 42261d
       Properties.ReadOnly = True
+      ExplicitLeft = 248
       ExplicitTop = 14
     end
     inherited cxLabel2: TcxLabel
+      Left = 248
       Top = -1
+      ExplicitLeft = 248
       ExplicitTop = -1
     end
     inherited cxLabel15: TcxLabel
@@ -125,7 +135,7 @@ inherited CheckForm: TCheckForm
       ExplicitHeight = 22
     end
     object edUnitName: TcxTextEdit
-      Left = 384
+      Left = 347
       Top = 14
       Properties.ReadOnly = True
       TabOrder = 6
@@ -133,7 +143,7 @@ inherited CheckForm: TCheckForm
       Width = 121
     end
     object edCashRegisterName: TcxTextEdit
-      Left = 656
+      Left = 587
       Top = 14
       Properties.ReadOnly = True
       TabOrder = 7
@@ -141,22 +151,22 @@ inherited CheckForm: TCheckForm
       Width = 121
     end
     object cxLabel3: TcxLabel
-      Left = 385
+      Left = 348
       Top = -1
       Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
     end
     object cxLabel4: TcxLabel
-      Left = 520
+      Left = 467
       Top = -1
       Caption = #1058#1080#1087' '#1086#1087#1083#1072#1090#1099
     end
     object cxLabel5: TcxLabel
-      Left = 656
+      Left = 587
       Top = -1
       Caption = #1050#1072#1089#1089#1072
     end
     object edPaidTypeName: TcxTextEdit
-      Left = 520
+      Left = 467
       Top = 14
       Properties.ReadOnly = True
       TabOrder = 11
@@ -173,19 +183,40 @@ inherited CheckForm: TCheckForm
       Top = 42
       Properties.ReadOnly = True
       TabOrder = 13
-      Width = 298
+      Width = 276
     end
     object lblBayer: TcxLabel
-      Left = 384
+      Left = 352
       Top = 43
       Caption = #1055#1086#1082#1091#1087#1072#1090#1077#1083#1100
     end
     object edBayer: TcxTextEdit
-      Left = 448
+      Left = 416
       Top = 42
       Properties.ReadOnly = True
       TabOrder = 15
-      Width = 329
+      Width = 233
+    end
+    object cxLabel6: TcxLabel
+      Left = 708
+      Top = -1
+      Caption = #8470' '#1092#1080#1089#1082'. '#1095#1077#1082#1072
+    end
+    object edFiscalCheckNumber: TcxTextEdit
+      Left = 708
+      Top = 14
+      Properties.ReadOnly = True
+      TabOrder = 17
+      Text = 'edFiscalCheckNumber'
+      Width = 93
+    end
+    object chbNotMCS: TcxCheckBox
+      Left = 663
+      Top = 41
+      Caption = #1053#1077' '#1076#1083#1103' '#1053#1058#1047
+      Properties.ReadOnly = True
+      TabOrder = 18
+      Width = 82
     end
   end
   inherited ActionList: TActionList
@@ -489,6 +520,18 @@ inherited CheckForm: TCheckForm
         Value = Null
         Component = edBayer
         DataType = ftString
+      end
+      item
+        Name = 'FiscalCheckNumber'
+        Value = Null
+        Component = edFiscalCheckNumber
+        DataType = ftString
+      end
+      item
+        Name = 'NotMCS'
+        Value = Null
+        Component = chbNotMCS
+        DataType = ftBoolean
       end>
   end
   inherited spInsertUpdateMovement: TdsdStoredProc

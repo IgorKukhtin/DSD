@@ -15,6 +15,7 @@ type
     function ChangePrice(const GoodsCode: integer; const Price: double): boolean;
     function OpenReceipt(const isFiscal: boolean = true): boolean;
     function CloseReceipt: boolean;
+    function CloseReceiptEx(out CheckId: String): boolean;
     function CashInputOutput(const Summa: double): boolean;
     function ProgrammingGoods(const GoodsCode: integer; const GoodsName: string; const Price, NDS: double): boolean;
     function ClosureFiscal: boolean;
@@ -223,6 +224,12 @@ begin
        result := false;
     end;
   end;
+end;
+
+function TCashFP3530T.CloseReceiptEx(out CheckId: String): boolean;
+begin
+  CheckId := '';
+  result := CloseReceipt;
 end;
 
 function TCashFP3530T.GetAlwaysSold: boolean;

@@ -190,7 +190,20 @@ inherited CheckVIPForm: TCheckVIPForm
           Name = 'TextValue'
           Value = Null
           Component = MasterCDS
-          ComponentItem = 'CashRegisterName'
+          ComponentItem = 'Bayer'
+        end
+        item
+          Name = 'CashMemberId'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'CashMemberId'
+        end
+        item
+          Name = 'CashMember'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'CashMember'
+          DataType = ftString
         end>
       Caption = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1074' '#1088#1072#1073#1086#1090#1091
       Hint = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1074' '#1088#1072#1073#1086#1090#1091

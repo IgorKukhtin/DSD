@@ -25,7 +25,8 @@ SELECT
 		   , MovementString_Bayer.ValueData             AS Bayer
 		   , MovementLinkObject_PaidType.ObjectId       AS PaidTypeId  
            , Object_PaidType.ValueData                  AS PaidTypeName 
-           
+           , MovementString_FiscalCheckNumber.ValueData  AS FiscalCheckNumber
+           , COALESCE(MovementBoolean_NotMCS.ValueData,FALSE) AS NotMCS
        FROM Movement 
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
 
@@ -70,7 +71,15 @@ SELECT
                                         AND MovementLinkObject_PaidType.DescId = zc_MovementLinkObject_PaidType()
             LEFT JOIN Object AS Object_PaidType ON Object_PaidType.Id = MovementLinkObject_PaidType.ObjectId								  
 			
-           WHERE Movement.DescId = zc_Movement_Check();
+            LEFT OUTER JOIN MovementString AS MovementString_FiscalCheckNumber
+                                           ON MovementString_FiscalCheckNumber.MovementId = Movement.ID
+                                          AND MovementString_FiscalCheckNumber.DescId = zc_MovementString_FiscalCheckNumber()
+                                          
+            LEFT OUTER JOIN MovementBoolean AS MovementBoolean_NotMCS
+                                           ON MovementBoolean_NotMCS.MovementId = Movement.ID
+                                          AND MovementBoolean_NotMCS.DescId = zc_MovementBoolean_NotMCS()
+                                          
+        WHERE Movement.DescId = zc_Movement_Check();
 
 ALTER TABLE Movement_Check_View
   OWNER TO postgres;

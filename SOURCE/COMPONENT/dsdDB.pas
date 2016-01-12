@@ -933,7 +933,7 @@ begin
         if VarType(FValue) = vtObject then
           (Component as TcxDateEdit).Date := FValue
         else begin
-          if FValue <> '' then
+          if (FValue <> '') AND (FValue <> 'NULL') then
              (Component as TcxDateEdit).Date := gfXSStrToDate(FValue) // convert to TDateTime
           else
              (Component as TcxDateEdit).Text := '';

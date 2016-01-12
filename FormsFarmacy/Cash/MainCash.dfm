@@ -8,6 +8,7 @@ inherited MainCashForm: TMainCashForm
   OnCreate = FormCreate
   OnKeyDown = ParentFormKeyDown
   AddOnFormData.Params = FormParams
+  AddOnFormData.AddOnFormRefresh.SelfList = 'MainCheck'
   ExplicitWidth = 788
   ExplicitHeight = 453
   PixelsPerInch = 96
@@ -163,9 +164,9 @@ inherited MainCashForm: TMainCashForm
   end
   object MainPanel: TPanel [2]
     Left = 0
-    Top = 0
+    Top = 17
     Width = 772
-    Height = 216
+    Height = 199
     Align = alClient
     BevelOuter = bvNone
     TabOrder = 0
@@ -173,7 +174,7 @@ inherited MainCashForm: TMainCashForm
       Left = 0
       Top = 0
       Width = 772
-      Height = 183
+      Height = 166
       Align = alClient
       TabOrder = 0
       object MainGridDBTableView: TcxGridDBTableView
@@ -245,13 +246,13 @@ inherited MainCashForm: TMainCashForm
     end
     object SearchPanel: TPanel
       Left = 0
-      Top = 183
+      Top = 166
       Width = 772
       Height = 33
       Align = alBottom
       TabOrder = 1
       object ShapeState: TShape
-        Left = 744
+        Left = 758
         Top = 12
         Width = 10
         Height = 10
@@ -298,6 +299,7 @@ inherited MainCashForm: TMainCashForm
         Properties.ListOptions.SyncMode = True
         Properties.ListSource = RemainsDS
         TabOrder = 0
+        OnEnter = lcNameEnter
         OnExit = lcNameExit
         OnKeyDown = lcNameKeyDown
         Width = 210
@@ -359,16 +361,6 @@ inherited MainCashForm: TMainCashForm
         LookAndFeel.Kind = lfStandard
         TabOrder = 7
       end
-      object btnLoadDeferred: TcxButton
-        Left = 664
-        Top = 6
-        Width = 34
-        Height = 20
-        Action = actLoadDeferred
-        LookAndFeel.Kind = lfStandard
-        TabOrder = 8
-        Visible = False
-      end
       object lblMoneyInCash: TcxLabel
         Left = 476
         Top = 7
@@ -385,14 +377,86 @@ inherited MainCashForm: TMainCashForm
         Style.IsFontAssigned = True
       end
       object btnOpenMCSForm: TcxButton
-        Left = 704
+        Left = 722
         Top = 6
         Width = 34
         Height = 20
         Action = actOpenMCSForm
         LookAndFeel.Kind = lfStandard
-        TabOrder = 10
+        TabOrder = 9
       end
+      object chbNotMCS: TcxCheckBox
+        Left = 667
+        Top = 6
+        Hint = #1055#1088#1086#1076#1072#1078#1072' '#1085#1077' '#1091#1095#1072#1089#1090#1074#1091#1077#1090' '#1074' '#1088#1072#1089#1095#1077#1090#1077' '#1053#1058#1047
+        Caption = #1085#1077' '#1053#1058#1047
+        TabOrder = 10
+        OnClick = actSpecExecute
+        Width = 57
+      end
+    end
+  end
+  object pnlVIP: TPanel [3]
+    Left = 0
+    Top = 0
+    Width = 772
+    Height = 17
+    Align = alTop
+    Color = 15656679
+    ParentBackground = False
+    TabOrder = 3
+    Visible = False
+    object Label1: TLabel
+      Left = 16
+      Top = 0
+      Width = 53
+      Height = 13
+      Caption = #1052#1077#1085#1077#1076#1078#1077#1088
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clGray
+      Font.Height = -11
+      Font.Name = 'Tahoma'
+      Font.Style = []
+      ParentFont = False
+    end
+    object lblCashMember: TLabel
+      Left = 80
+      Top = 0
+      Width = 12
+      Height = 13
+      Caption = '...'
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clBlue
+      Font.Height = -11
+      Font.Name = 'Tahoma'
+      Font.Style = [fsItalic]
+      ParentFont = False
+    end
+    object Label2: TLabel
+      Left = 432
+      Top = 0
+      Width = 61
+      Height = 13
+      Caption = #1055#1086#1082#1091#1087#1072#1090#1077#1083#1100
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clGray
+      Font.Height = -11
+      Font.Name = 'Tahoma'
+      Font.Style = []
+      ParentFont = False
+    end
+    object lblBayer: TLabel
+      Left = 496
+      Top = 0
+      Width = 12
+      Height = 13
+      Caption = '...'
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clBlue
+      Font.Height = -11
+      Font.Name = 'Tahoma'
+      Font.Style = [fsItalic]
+      ParentFont = False
     end
   end
   inherited cxPropertiesStore: TcxPropertiesStore
@@ -461,11 +525,8 @@ inherited MainCashForm: TMainCashForm
     end
     inherited actRefresh: TdsdDataSetRefresh
       Enabled = False
-      StoredProc = spSelectCheck
+      StoredProc = spSelectRemains
       StoredProcList = <
-        item
-          StoredProc = spSelectCheck
-        end
         item
           StoredProc = spSelectRemains
         end
@@ -490,7 +551,6 @@ inherited MainCashForm: TMainCashForm
       Hint = #1055#1086#1089#1090#1072#1074#1080#1090#1100' '#1095#1077#1082' '#1086#1090#1083#1086#1078#1077#1085#1085#1099#1084
       ShortCut = 119
       Visible = False
-      OnExecute = actDeferrentExecute
     end
     object actOpenCheckVIP: TOpenChoiceForm
       Category = #1044#1086#1082#1091#1084#1077#1085#1090#1099
@@ -511,7 +571,25 @@ inherited MainCashForm: TMainCashForm
         item
           Name = 'TextValue'
           Value = Null
+          Component = FormParams
+          ComponentItem = 'BayerName'
           DataType = ftString
+          ParamType = ptInput
+        end
+        item
+          Name = 'CashMemberId'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'ManagerId'
+          ParamType = ptInput
+        end
+        item
+          Name = 'CashMember'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'CashMember'
+          DataType = ftString
+          ParamType = ptInput
         end>
       isShowModal = True
     end
@@ -521,6 +599,9 @@ inherited MainCashForm: TMainCashForm
       ActionList = <
         item
           Action = actOpenCheckVIP
+        end
+        item
+          Action = actSelectCheck
         end
         item
           Action = actRefreshLite
@@ -535,50 +616,6 @@ inherited MainCashForm: TMainCashForm
           Action = actSetFocus
         end>
       Caption = 'VIP'
-    end
-    object actOpenCheckDeferred: TOpenChoiceForm
-      Category = #1044#1086#1082#1091#1084#1077#1085#1090#1099
-      MoveParams = <>
-      PostDataSetBeforeExecute = False
-      Caption = 'actOpenCheckDeferred'
-      FormName = 'TCheckDeferredForm'
-      FormNameParam.Value = 'TCheckDeferredForm'
-      FormNameParam.DataType = ftString
-      GuiParams = <
-        item
-          Name = 'Key'
-          Value = Null
-          Component = FormParams
-          ComponentItem = 'CheckId'
-          ParamType = ptInput
-        end
-        item
-          Name = 'TextValue'
-          Value = Null
-          DataType = ftString
-        end>
-      isShowModal = True
-    end
-    object actLoadDeferred: TMultiAction
-      Category = #1044#1086#1082#1091#1084#1077#1085#1090#1099
-      MoveParams = <>
-      ActionList = <
-        item
-          Action = actOpenCheckDeferred
-        end
-        item
-          Action = actRefreshLite
-        end
-        item
-          Action = actUpdateRemains
-        end
-        item
-          Action = actCalcTotalSumm
-        end
-        item
-          Action = actSetFocus
-        end>
-      Caption = #1054#1090#1083'.'
     end
     object actUpdateRemains: TAction
       Category = 'DSDLib'
@@ -622,11 +659,8 @@ inherited MainCashForm: TMainCashForm
     object actRefreshLite: TdsdDataSetRefresh
       Category = 'DSDLib'
       MoveParams = <>
-      StoredProc = spSelectCheck
+      StoredProc = spSelect_CashRemains_Diff
       StoredProcList = <
-        item
-          StoredProc = spSelectCheck
-        end
         item
           StoredProc = spSelect_CashRemains_Diff
         end>
@@ -662,6 +696,16 @@ inherited MainCashForm: TMainCashForm
       Caption = 'VIP'
       OnExecute = actExecuteLoadVIPExecute
     end
+    object actSelectCheck: TdsdExecStoredProc
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spSelectCheck
+      StoredProcList = <
+        item
+          StoredProc = spSelectCheck
+        end>
+      Caption = 'actSelectCheck'
+    end
   end
   object dsdDBViewAddOnMain: TdsdDBViewAddOn
     ErasedFieldName = 'isErased'
@@ -682,11 +726,11 @@ inherited MainCashForm: TMainCashForm
     ColumnEnterList = <>
     SummaryItemList = <>
     SearchAsFilter = False
-    Left = 280
-    Top = 96
+    Left = 728
+    Top = 104
   end
   object spSelectRemains: TdsdStoredProc
-    StoredProcName = 'gpSelect_CashRemains'
+    StoredProcName = 'gpSelect_CashRemains_ver2'
     DataSet = RemainsCDS
     DataSets = <
       item
@@ -710,13 +754,13 @@ inherited MainCashForm: TMainCashForm
       end>
     PackSize = 1
     AutoWidth = True
-    Left = 232
-    Top = 96
+    Left = 152
+    Top = 24
   end
   object RemainsDS: TDataSource
     DataSet = RemainsCDS
-    Left = 256
-    Top = 136
+    Left = 216
+    Top = 24
   end
   object RemainsCDS: TClientDataSet
     Aggregates = <>
@@ -728,12 +772,12 @@ inherited MainCashForm: TMainCashForm
     Params = <>
     StoreDefs = True
     AfterScroll = RemainsCDSAfterScroll
-    Left = 304
-    Top = 136
+    Left = 184
+    Top = 24
   end
   object PopupMenu: TPopupMenu
-    Left = 176
-    Top = 96
+    Left = 104
+    Top = 264
     object N1: TMenuItem
       Action = actRefreshAll
     end
@@ -761,9 +805,11 @@ inherited MainCashForm: TMainCashForm
     end
     object N5: TMenuItem
       Caption = '-'
+      Visible = False
     end
     object actSold1: TMenuItem
       Action = actSold
+      Visible = False
     end
     object N6: TMenuItem
       Caption = '-'
@@ -771,21 +817,6 @@ inherited MainCashForm: TMainCashForm
     object N10: TMenuItem
       Action = actRefreshRemains
     end
-  end
-  object spNewCheck: TdsdStoredProc
-    StoredProcName = 'gpInsert_Movement_Check'
-    DataSets = <>
-    OutputType = otResult
-    Params = <
-      item
-        Name = 'Id'
-        Value = Null
-        Component = FormParams
-        ComponentItem = 'CheckId'
-      end>
-    PackSize = 1
-    Left = 384
-    Top = 128
   end
   object FormParams: TdsdFormParams
     Params = <
@@ -808,28 +839,24 @@ inherited MainCashForm: TMainCashForm
       item
         Name = 'ClosedCheckId'
         Value = Null
-      end>
-    Left = 48
-    Top = 104
-  end
-  object spGoodsRemains: TdsdStoredProc
-    StoredProcName = 'gpGet_GoodsOnUnitRemains'
-    DataSets = <>
-    OutputType = otResult
-    Params = <
-      item
-        Name = 'inGoodsId'
-        Value = Null
-        ParamType = ptInput
       end
       item
-        Name = 'outRemains'
+        Name = 'ManagerId'
         Value = Null
-        DataType = ftFloat
+      end
+      item
+        Name = 'BayerName'
+        Value = Null
+        DataType = ftString
+      end
+      item
+        Name = 'CashMember'
+        Value = Null
+        DataType = ftString
+        ParamType = ptInput
       end>
-    PackSize = 1
-    Left = 400
-    Top = 80
+    Left = 32
+    Top = 72
   end
   object spSelectCheck: TdsdStoredProc
     StoredProcName = 'gpSelect_MovementItem_Check'
@@ -853,77 +880,59 @@ inherited MainCashForm: TMainCashForm
   end
   object CheckDS: TDataSource
     DataSet = CheckCDS
-    Left = 200
-    Top = 296
+    Left = 240
+    Top = 256
   end
   object CheckCDS: TClientDataSet
     Aggregates = <>
     Filter = 'Amount > 0'
     Filtered = True
-    Params = <>
-    Left = 248
-    Top = 296
-  end
-  object spInsertUpdateCheckItems: TdsdStoredProc
-    StoredProcName = 'gpInsertUpdate_MovementItem_Check'
-    DataSets = <>
-    OutputType = otResult
-    Params = <
+    FieldDefs = <
       item
-        Name = 'inMovementId'
-        Value = Null
-        Component = FormParams
-        ComponentItem = 'CheckId'
-        ParamType = ptInput
+        Name = 'Id'
+        DataType = ftInteger
       end
       item
-        Name = 'inGoodsId'
-        Value = Null
-        ParamType = ptInput
+        Name = 'ParentId'
+        DataType = ftInteger
       end
       item
-        Name = 'inAmount'
-        Value = Null
-        DataType = ftFloat
-        ParamType = ptInput
+        Name = 'GoodsId'
+        DataType = ftInteger
       end
       item
-        Name = 'inPrice'
-        Value = Null
-        DataType = ftFloat
-        ParamType = ptInput
+        Name = 'GoodsCode'
+        DataType = ftInteger
       end
       item
-        Name = 'outMovementItemId'
-        Value = Null
+        Name = 'GoodsName'
+        DataType = ftString
+        Size = 250
       end
       item
-        Name = 'outAmount'
-        Value = Null
+        Name = 'Amount'
         DataType = ftFloat
       end
       item
-        Name = 'outSumm'
-        Value = Null
+        Name = 'Price'
         DataType = ftFloat
       end
       item
-        Name = 'outRemains'
-        Value = Null
+        Name = 'Summ'
         DataType = ftFloat
       end
       item
-        Name = 'outTotalSummCheck'
-        Value = Null
+        Name = 'NDS'
         DataType = ftFloat
       end
       item
-        Name = 'outNDS'
-        Value = Null
-        DataType = ftFloat
+        Name = 'isErased'
+        DataType = ftBoolean
       end>
-    PackSize = 1
-    Left = 240
+    IndexDefs = <>
+    Params = <>
+    StoreDefs = True
+    Left = 208
     Top = 256
   end
   object dsdDBViewAddOnCheck: TdsdDBViewAddOn
@@ -945,8 +954,8 @@ inherited MainCashForm: TMainCashForm
     ColumnEnterList = <>
     SummaryItemList = <>
     SearchAsFilter = False
-    Left = 304
-    Top = 256
+    Left = 472
+    Top = 336
   end
   object AlternativeCDS: TClientDataSet
     Aggregates = <>
@@ -959,16 +968,16 @@ inherited MainCashForm: TMainCashForm
       end>
     Params = <>
     StoreDefs = True
-    Left = 648
+    Left = 584
     Top = 264
   end
   object AlternativeDS: TDataSource
     DataSet = AlternativeCDS
-    Left = 600
+    Left = 616
     Top = 264
   end
   object spSelect_Alternative: TdsdStoredProc
-    StoredProcName = 'gpSelect_Cash_Goods_Alternative'
+    StoredProcName = 'gpSelect_Cash_Goods_Alternative_ver2'
     DataSet = AlternativeCDS
     DataSets = <
       item
@@ -984,7 +993,7 @@ inherited MainCashForm: TMainCashForm
       end>
     PackSize = 1
     AutoWidth = True
-    Left = 704
+    Left = 552
     Top = 264
   end
   object dsdDBViewAddOnAlternative: TdsdDBViewAddOn
@@ -1010,107 +1019,8 @@ inherited MainCashForm: TMainCashForm
     ColumnEnterList = <>
     SummaryItemList = <>
     SearchAsFilter = False
-    Left = 536
-    Top = 264
-  end
-  object spComplete_Movement_Check: TdsdStoredProc
-    StoredProcName = 'gpComplete_Movement_Check'
-    DataSet = DiffCDS
-    DataSets = <
-      item
-        DataSet = DiffCDS
-      end>
-    Params = <
-      item
-        Name = 'inMovementId'
-        Value = Null
-        Component = FormParams
-        ComponentItem = 'ClosedCheckId'
-        ParamType = ptInput
-      end
-      item
-        Name = 'inPaidType'
-        Value = Null
-        ParamType = ptInput
-      end
-      item
-        Name = 'inCashRegisterId'
-        Value = Null
-        ParamType = ptInput
-      end
-      item
-        Name = 'inCashSessionId'
-        Value = Null
-        Component = FormParams
-        ComponentItem = 'CashSessionId'
-        DataType = ftString
-        ParamType = ptInput
-      end>
-    PackSize = 1
-    Left = 376
-    Top = 256
-  end
-  object spUpdateMovementVIP: TdsdStoredProc
-    StoredProcName = 'gpUpdate_Movement_VIP'
-    DataSets = <>
-    OutputType = otResult
-    Params = <
-      item
-        Name = 'inMovementId'
-        Value = Null
-        Component = FormParams
-        ComponentItem = 'CheckId'
-        ParamType = ptInput
-      end
-      item
-        Name = 'inManagerId'
-        Value = Null
-        ParamType = ptInput
-      end
-      item
-        Name = 'inBayerName'
-        Value = Null
-        DataType = ftString
-        ParamType = ptInput
-      end>
-    PackSize = 1
-    Left = 376
-    Top = 304
-  end
-  object spMovementSetErased: TdsdStoredProc
-    StoredProcName = 'gpSetErased_Movement_Check'
-    DataSets = <>
-    OutputType = otResult
-    Params = <
-      item
-        Name = 'inmovementid'
-        Value = Null
-        Component = FormParams
-        ComponentItem = 'CheckId'
-        ParamType = ptInput
-      end>
-    PackSize = 1
-    Left = 40
+    Left = 592
     Top = 320
-  end
-  object spGet_Object_CashRegister_By_Serial: TdsdStoredProc
-    StoredProcName = 'gpGet_Object_CashRegister_By_Serial'
-    DataSets = <>
-    OutputType = otResult
-    Params = <
-      item
-        Name = 'inSerial'
-        Value = Null
-        DataType = ftString
-        ParamType = ptInput
-      end
-      item
-        Name = 'outId'
-        Value = Null
-      end>
-    PackSize = 1
-    Left = 488
-    Top = 80
   end
   object spGetMoneyInCash: TdsdStoredProc
     StoredProcName = 'gpGet_Money_in_Cash'
@@ -1129,8 +1039,8 @@ inherited MainCashForm: TMainCashForm
         ParamType = ptInput
       end>
     PackSize = 1
-    Left = 608
-    Top = 80
+    Left = 152
+    Top = 120
   end
   object spGet_Password_MoneyInCash: TdsdStoredProc
     StoredProcName = 'gpGet_Password_MoneyInCash'
@@ -1143,36 +1053,8 @@ inherited MainCashForm: TMainCashForm
         DataType = ftString
       end>
     PackSize = 1
-    Left = 696
-    Top = 56
-  end
-  object spSelectRemains_Lite: TdsdStoredProc
-    StoredProcName = 'gpSelect_CashRemains_Lite'
-    DataSet = Remains_LiteCDS
-    DataSets = <
-      item
-        DataSet = Remains_LiteCDS
-      end>
-    Params = <
-      item
-        Name = 'inMovementId'
-        Value = Null
-        Component = FormParams
-        ComponentItem = 'CheckId'
-        ParamType = ptInput
-      end>
-    PackSize = 1
-    AutoWidth = True
-    Left = 232
-    Top = 48
-  end
-  object Remains_LiteCDS: TClientDataSet
-    Aggregates = <>
-    IndexFieldNames = 'Id'
-    Params = <>
-    AfterScroll = RemainsCDSAfterScroll
-    Left = 304
-    Top = 48
+    Left = 184
+    Top = 120
   end
   object spGet_User_IsAdmin: TdsdStoredProc
     StoredProcName = 'gpGet_User_IsAdmin'
@@ -1185,8 +1067,8 @@ inherited MainCashForm: TMainCashForm
         DataType = ftBoolean
       end>
     PackSize = 1
-    Left = 440
-    Top = 256
+    Left = 40
+    Top = 328
   end
   object spDelete_CashSession: TdsdStoredProc
     StoredProcName = 'gpDelete_CashSession'
@@ -1207,8 +1089,8 @@ inherited MainCashForm: TMainCashForm
       end>
     PackSize = 1
     AutoWidth = True
-    Left = 128
-    Top = 96
+    Left = 32
+    Top = 120
   end
   object DiffCDS: TClientDataSet
     Aggregates = <>
@@ -1217,12 +1099,11 @@ inherited MainCashForm: TMainCashForm
     IndexFieldNames = 'Id'
     Params = <>
     StoreDefs = True
-    AfterScroll = RemainsCDSAfterScroll
-    Left = 336
-    Top = 304
+    Left = 184
+    Top = 72
   end
   object spSelect_CashRemains_Diff: TdsdStoredProc
-    StoredProcName = 'gpSelect_CashRemains_Diff'
+    StoredProcName = 'gpSelect_CashRemains_Diff_ver2'
     DataSet = DiffCDS
     DataSets = <
       item
@@ -1246,13 +1127,14 @@ inherited MainCashForm: TMainCashForm
       end>
     PackSize = 1
     AutoWidth = True
-    Left = 200
-    Top = 48
+    Left = 152
+    Top = 72
   end
-  object mdClosedCheck: TdxMemData
-    Indexes = <>
-    SortOptions = []
-    Left = 200
-    Top = 344
+  object TimerSaveAll: TTimer
+    Enabled = False
+    Interval = 360000
+    OnTimer = TimerSaveAllTimer
+    Left = 32
+    Top = 24
   end
 end

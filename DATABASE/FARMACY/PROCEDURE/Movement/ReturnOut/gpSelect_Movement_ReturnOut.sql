@@ -21,6 +21,7 @@ RETURNS TABLE (Id Integer
              , NDSKindId Integer, NDSKindName TVarChar
              , IncomeOperDate TDateTime, IncomeInvNumber TVarChar
              , JuridicalName TVarChar
+             , ReturnTypeName TVarChar
               )
 
 AS
@@ -66,6 +67,7 @@ BEGIN
            , Movement_ReturnOut_View.IncomeOperDate
            , Movement_ReturnOut_View.IncomeInvNumber
            , Movement_ReturnOut_View.JuridicalName
+           , Movement_ReturnOut_View.ReturnTypeName
        FROM Movement_ReturnOut_View 
              JOIN tmpStatus ON tmpStatus.StatusId = Movement_ReturnOut_View.StatusId 
             WHERE Movement_ReturnOut_View.OperDate BETWEEN inStartDate AND inEndDate;
