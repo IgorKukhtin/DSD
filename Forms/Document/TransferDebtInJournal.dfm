@@ -1055,6 +1055,12 @@ inherited TransferDebtInJournalForm: TTransferDebtInJournalForm
         Value = Null
         DataType = ftString
         ParamType = ptInput
+      end
+      item
+        Name = 'inMask'
+        Value = 'False'
+        DataType = ftBoolean
+        ParamType = ptInput
       end>
     Left = 400
     Top = 200
@@ -1096,6 +1102,7 @@ inherited TransferDebtInJournalForm: TTransferDebtInJournalForm
       end
       item
         Name = 'inDescName'
+        Value = Null
         DataType = ftString
         ParamType = ptInput
       end
