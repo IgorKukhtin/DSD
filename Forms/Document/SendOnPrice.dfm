@@ -149,7 +149,6 @@ inherited SendOnPriceForm: TSendOnPriceForm
             Properties.ReadOnly = True
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Options.Editing = False
             Width = 80
           end
           object colPartionGoods: TcxGridDBColumn [4]
@@ -1136,7 +1135,7 @@ inherited SendOnPriceForm: TSendOnPriceForm
       end
       item
         Name = 'inOperDate'
-        Value = Null
+        Value = 'NULL'
         Component = FormParams
         ComponentItem = 'inOperDate'
         DataType = ftDateTime
@@ -1807,8 +1806,8 @@ inherited SendOnPriceForm: TSendOnPriceForm
         ParamType = ptInput
       end>
     PackSize = 1
-    Left = 319
-    Top = 208
+    Left = 279
+    Top = 312
   end
   object GuidesFrom: TdsdGuides
     KeyField = 'Id'
@@ -2127,8 +2126,8 @@ inherited SendOnPriceForm: TSendOnPriceForm
         Control = edInvNumberTransport
       end>
     GetStoredProc = spGet
-    Left = 320
-    Top = 177
+    Left = 296
+    Top = 257
   end
   object spUpdateMask: TdsdStoredProc
     StoredProcName = 'gpUpdate_MI_SendOnPrice_isMask'

@@ -145,7 +145,6 @@ inherited SendOnPrice_BranchForm: TSendOnPrice_BranchForm
             Properties.ReadOnly = True
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Options.Editing = False
             Width = 100
           end
           object colPartionGoods: TcxGridDBColumn [4]
