@@ -15,6 +15,12 @@ BEGIN
      -- проверка прав пользователя на вызов процедуры
      vbUserId:= inSession;  --  lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Movement_Sale());
 
+    -- проверка
+     IF COALESCE (ioId, 0) = 0
+     THEN
+         RAISE EXCEPTION 'Ошибка. Не установлен налоговый документ.';
+     END IF;
+
      -- определили признак
      inElectron:= NOT inElectron;
 
