@@ -366,10 +366,10 @@ object Report_SaleOrderExternalListForm: TReport_SaleOrderExternalListForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 46
+        Width = 60
       end
       object colOperDatePartner: TcxGridDBColumn
-        Caption = #1044#1072#1090#1072' '#1086#1090#1075#1088#1091#1079#1082#1080' ('#1079#1072#1103#1074#1082#1072')'
+        Caption = #1044#1072#1090#1072' '#1089#1082#1083#1072#1076' ('#1079#1072#1103#1074#1082#1072')'
         DataBinding.FieldName = 'OperDatePartner'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
@@ -395,12 +395,13 @@ object Report_SaleOrderExternalListForm: TReport_SaleOrderExternalListForm
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DecimalPlaces = 4
         Properties.DisplayFormat = ',0.####;-,0.####; ;'
+        Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 60
       end
       object colTotalCountSecond: TcxGridDBColumn
-        Caption = #1050#1086#1083'-'#1074#1086' ('#1076#1086#1079#1072#1082#1072#1079') ('#1079#1072#1103#1074#1082#1072')'
+        Caption = #1050#1086#1083'-'#1074#1086' ('#1076#1086#1079#1072#1082#1072#1079')'
         DataBinding.FieldName = 'TotalCountSecond'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DecimalPlaces = 4
@@ -415,9 +416,10 @@ object Report_SaleOrderExternalListForm: TReport_SaleOrderExternalListForm
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DecimalPlaces = 4
         Properties.DisplayFormat = ',0.####;-,0.####; ;'
+        Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 50
+        Width = 70
       end
       object TotalCountKg: TcxGridDBColumn
         Caption = #1050#1086#1083'-'#1074#1086' '#1074#1077#1089' ('#1079#1072#1103#1074#1082#1072')'
@@ -427,7 +429,7 @@ object Report_SaleOrderExternalListForm: TReport_SaleOrderExternalListForm
         Properties.DisplayFormat = ',0.####;-,0.####; ;'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 50
+        Width = 70
       end
       object TotalSumm: TcxGridDBColumn
         Caption = #1057#1091#1084#1084#1072' '#1089' '#1053#1044#1057' ('#1080#1090#1086#1075') ('#1079#1072#1103#1074#1082#1072')'
@@ -435,6 +437,7 @@ object Report_SaleOrderExternalListForm: TReport_SaleOrderExternalListForm
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DecimalPlaces = 4
         Properties.DisplayFormat = ',0.####;-,0.####; ;'
+        Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 80
@@ -445,9 +448,25 @@ object Report_SaleOrderExternalListForm: TReport_SaleOrderExternalListForm
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DecimalPlaces = 4
         Properties.DisplayFormat = ',0.####;-,0.####; ;'
+        Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 60
+      end
+      object clSale_OperDate: TcxGridDBColumn
+        Caption = #1044#1072#1090#1072' '#1089#1082#1083#1072#1076' ('#1087#1088#1086#1076'.)'
+        DataBinding.FieldName = 'Sale_OperDate'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 60
+      end
+      object colSale_OperDatePartner: TcxGridDBColumn
+        Caption = #1044#1072#1090#1072' '#1076#1086#1082'. '#1091' '#1087#1086#1082#1091#1087'. ('#1087#1088#1086#1076'.)'
+        DataBinding.FieldName = 'Sale_OperDatePartner'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 70
       end
       object colSale_InvNumber: TcxGridDBColumn
         Caption = #8470' '#1076#1086#1082'. ('#1087#1088#1086#1076'.)'
@@ -456,24 +475,18 @@ object Report_SaleOrderExternalListForm: TReport_SaleOrderExternalListForm
         HeaderAlignmentVert = vaCenter
         Width = 70
       end
-      object clSale_OperDate: TcxGridDBColumn
-        Caption = #1044#1072#1090#1072' ('#1087#1088#1086#1076'.)'
-        DataBinding.FieldName = 'Sale_OperDate'
+      object Sale_InvNumberOrder: TcxGridDBColumn
+        Caption = #8470' '#1079#1072#1103#1074'.'#1091' '#1087#1086#1082#1091#1087'.'
+        DataBinding.FieldName = 'Sale_InvNumberOrder'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 46
-      end
-      object colSale_OperDatePartner: TcxGridDBColumn
-        Caption = #1044#1072#1090#1072' '#1086#1090#1075#1088#1091#1079#1082#1080' ('#1087#1088#1086#1076'.)'
-        DataBinding.FieldName = 'Sale_OperDatePartner'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Width = 70
+        Width = 60
       end
       object colSale_FromName: TcxGridDBColumn
         Caption = #1054#1090' '#1082#1086#1075#1086' ('#1087#1088#1086#1076'.)'
         DataBinding.FieldName = 'Sale_FromName'
+        Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 90
@@ -483,17 +496,18 @@ object Report_SaleOrderExternalListForm: TReport_SaleOrderExternalListForm
         DataBinding.FieldName = 'Sale_ToName'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 75
+        Width = 120
       end
       object colSale_TotalCount: TcxGridDBColumn
-        Caption = #1050#1086#1083'-'#1074#1086' ('#1089#1082#1083#1072#1076') ('#1087#1088#1086#1076'.)'
+        Caption = #1050#1086#1083'-'#1074#1086' '#1089#1082#1083#1072#1076' ('#1087#1088#1086#1076'.)'
         DataBinding.FieldName = 'Sale_TotalCount'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DecimalPlaces = 4
         Properties.DisplayFormat = ',0.####;-,0.####; ;'
+        Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 60
+        Width = 80
       end
       object colSale_TotalCountPartner: TcxGridDBColumn
         Caption = #1050#1086#1083'-'#1074#1086' ('#1091' '#1087#1086#1082#1091#1087'.) ('#1087#1088#1086#1076'.)'
@@ -501,9 +515,10 @@ object Report_SaleOrderExternalListForm: TReport_SaleOrderExternalListForm
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DecimalPlaces = 4
         Properties.DisplayFormat = ',0.####;-,0.####; ;'
+        Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 65
+        Width = 80
       end
       object colSale_TotalCountSh: TcxGridDBColumn
         Caption = #1050#1086#1083'-'#1074#1086' '#1096#1090'. ('#1091' '#1087#1086#1082#1091#1087'.) ('#1087#1088#1086#1076'.)'
@@ -511,9 +526,10 @@ object Report_SaleOrderExternalListForm: TReport_SaleOrderExternalListForm
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DecimalPlaces = 4
         Properties.DisplayFormat = ',0.####;-,0.####; ;'
+        Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 50
+        Width = 80
       end
       object colSale_TotalCountKg: TcxGridDBColumn
         Caption = #1050#1086#1083'-'#1074#1086' '#1074#1077#1089' ('#1091' '#1087#1086#1082#1091#1087'.) ('#1087#1088#1086#1076'.)'
@@ -523,7 +539,7 @@ object Report_SaleOrderExternalListForm: TReport_SaleOrderExternalListForm
         Properties.DisplayFormat = ',0.####;-,0.####; ;'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 50
+        Width = 80
       end
       object colSale_TotalSumm: TcxGridDBColumn
         Caption = #1057#1091#1084#1084#1072' '#1089' '#1053#1044#1057' ('#1080#1090#1086#1075') ('#1087#1088#1086#1076'.)'
@@ -531,6 +547,7 @@ object Report_SaleOrderExternalListForm: TReport_SaleOrderExternalListForm
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DecimalPlaces = 4
         Properties.DisplayFormat = ',0.####;-,0.####; ;'
+        Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 80
@@ -541,17 +558,10 @@ object Report_SaleOrderExternalListForm: TReport_SaleOrderExternalListForm
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DecimalPlaces = 4
         Properties.DisplayFormat = ',0.####;-,0.####; ;'
+        Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 60
-      end
-      object cxGridDBTableViewColumn1: TcxGridDBColumn
-        Caption = #8470' '#1076#1086#1082'. '#1079#1072#1103#1074#1082#1072' ('#1087#1088#1086#1076'.)'
-        DataBinding.FieldName = 'Sale_InvNumberOrder'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Options.Editing = False
-        Width = 60
+        Width = 80
       end
     end
     object cxGridLevel: TcxGridLevel
@@ -568,7 +578,7 @@ object Report_SaleOrderExternalListForm: TReport_SaleOrderExternalListForm
     object deStart: TcxDateEdit
       Left = 118
       Top = 5
-      EditValue = 42217d
+      EditValue = 42370d
       Properties.SaveTime = False
       Properties.ShowTime = False
       TabOrder = 0
@@ -577,7 +587,7 @@ object Report_SaleOrderExternalListForm: TReport_SaleOrderExternalListForm
     object deEnd: TcxDateEdit
       Left = 118
       Top = 31
-      EditValue = 42217d
+      EditValue = 42370d
       Properties.SaveTime = False
       Properties.ShowTime = False
       TabOrder = 1

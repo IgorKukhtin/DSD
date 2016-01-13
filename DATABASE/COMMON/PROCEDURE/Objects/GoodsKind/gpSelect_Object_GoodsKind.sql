@@ -14,7 +14,7 @@ BEGIN
    vbUserId:= lpGetUserBySession (inSession);
 
 
-   IF EXISTS (SELECT BranchId FROM Object_RoleAccessKeyGuide_View WHERE UserId = vbUserId AND BranchId <> 0)
+   IF EXISTS (SELECT BranchId FROM Object_RoleAccessKeyGuide_View WHERE UserId = vbUserId AND BranchId <> 0 AND BranchId <> 301310) -- филиал Запорожье
    THEN
        -- результат такой
        RETURN QUERY 

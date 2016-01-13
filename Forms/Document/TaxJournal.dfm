@@ -406,6 +406,12 @@ inherited TaxJournalForm: TTaxJournalForm
     Height = 51
     ExplicitWidth = 1110
     ExplicitHeight = 51
+    inherited deStart: TcxDateEdit
+      EditValue = 42370d
+    end
+    inherited deEnd: TcxDateEdit
+      EditValue = 42370d
+    end
     object edIsRegisterDate: TcxCheckBox
       Left = 427
       Top = 5
@@ -599,7 +605,7 @@ inherited TaxJournalForm: TTaxJournalForm
         end
         item
           Name = 'inOperDate'
-          Value = Null
+          Value = 'NULL'
           Component = deStart
           DataType = ftDateTime
         end>
@@ -861,7 +867,7 @@ inherited TaxJournalForm: TTaxJournalForm
         end
         item
           Name = 'OperDate'
-          Value = Null
+          Value = 'NULL'
           Component = MasterCDS
           ComponentItem = 'OperDate'
           DataType = ftDateTime
@@ -1697,7 +1703,7 @@ inherited TaxJournalForm: TTaxJournalForm
     Params = <
       item
         Name = 'inDate'
-        Value = Null
+        Value = 'NULL'
         Component = deEnd
         DataType = ftDateTime
         ParamType = ptInput
