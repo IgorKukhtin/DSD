@@ -12,7 +12,8 @@ uses
   dsdAction, Vcl.ActnList, cxPropertiesStore, cxLabel, cxTextEdit, cxMaskEdit,
   cxDropDownEdit, cxCalendar, Vcl.ExtCtrls, cxGridLevel, cxGridCustomView,
   cxGridCustomTableView, cxGridTableView, cxGridDBTableView, cxGrid, cxPC,
-  cxButtonEdit, dsdGuides, cxCurrencyEdit, dxBarBuiltInMenu, cxNavigator;
+  cxButtonEdit, dsdGuides, cxCurrencyEdit, dxBarBuiltInMenu, cxNavigator,
+  dxSkinsCore, dxSkinsDefaultPainters, dxSkinscxPCPainter, dxSkinsdxBarPainter;
 
 type
   TReport_GoodsRemainsForm = class(TAncestorReportForm)
@@ -28,6 +29,7 @@ type
     bbGoodsPartyReport: TdxBarButton;
     colPriceSale: TcxGridDBColumn;
     colSumSale: TcxGridDBColumn;
+    colNDSKindName: TcxGridDBColumn;
   private
     { Private declarations }
   public
