@@ -85,7 +85,7 @@ BEGIN
         IF COALESCE (ioId, 0) = 0 AND vbTaxPromo <> 0
         THEN
             ioPrice:= outPricePromo;
-        ELSE IF ioId <> 0 AND ioPrice <> outPricePromo AND vbTaxPromo <> 0
+        ELSE IF ioId <> 0 AND ioPrice < outPricePromo AND vbTaxPromo <> 0
              THEN
                  RAISE EXCEPTION 'Ошибка.Для товара = <%> <%> необходимо ввести акционную цену = <%>.', lfGet_Object_ValueData (inGoodsId), lfGet_Object_ValueData (inGoodsKindId), TFloat (outPricePromo);
              END IF;

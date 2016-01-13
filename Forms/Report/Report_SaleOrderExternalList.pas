@@ -59,7 +59,7 @@ type
     dxBarStatic1: TdxBarStatic;
     actPrint: TdsdPrintAction;
     bbtPrintSaleOrder: TdxBarButton;
-    cxGridDBTableViewColumn1: TcxGridDBColumn;
+    Sale_InvNumberOrder: TcxGridDBColumn;
     cbSale: TcxCheckBox;
     cbNoSale: TcxCheckBox;
     bbPrintSaleOrder: TdxBarButton;

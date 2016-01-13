@@ -123,6 +123,7 @@ type
     bbMIContainer: TdxBarButton;
     clContractCode: TcxGridDBColumn;
     ContractChoiceForm: TOpenChoiceForm;
+    clPartnerCode: TcxGridDBColumn;
   private
   public
   end;

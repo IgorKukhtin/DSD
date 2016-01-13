@@ -2,8 +2,6 @@ inherited ReturnIn_PartnerJournalForm: TReturnIn_PartnerJournalForm
   Caption = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' <'#1042#1086#1079#1074#1088#1072#1090' '#1086#1090' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1103' ('#1073#1091#1093#1075#1072#1083#1090#1077#1088')>'
   ClientHeight = 535
   ClientWidth = 1106
-  ExplicitLeft = -332
-  ExplicitTop = -113
   ExplicitWidth = 1122
   ExplicitHeight = 570
   PixelsPerInch = 96
@@ -488,10 +486,10 @@ inherited ReturnIn_PartnerJournalForm: TReturnIn_PartnerJournalForm
     Width = 1106
     ExplicitWidth = 1106
     inherited deStart: TcxDateEdit
-      EditValue = 42005d
+      EditValue = 42370d
     end
     inherited deEnd: TcxDateEdit
-      EditValue = 42005d
+      EditValue = 42370d
     end
     object edIsPartnerDate: TcxCheckBox
       Left = 427

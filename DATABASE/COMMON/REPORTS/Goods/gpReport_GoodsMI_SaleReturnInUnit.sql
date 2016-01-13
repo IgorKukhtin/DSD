@@ -56,7 +56,7 @@ BEGIN
 
 
 
-    IF vbUserId = 5 THEN
+    IF 1=0 AND vbUserId = 5 THEN
        RETURN QUERY
        SELECT * FROM gpReport_GoodsMI_SaleReturnInUnitNEW (inStartDate
                                                       , inEndDate

@@ -1125,7 +1125,11 @@ end;
 
 procedure TLoadFormTest.LoadReportFormTest;
 begin
-//  exit;
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_SaleOrderExternalListForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_SaleOrderExternalListForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_SaleOrderExternalListDialogForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_SaleOrderExternalListDialogForm');
+  exit;
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_BalanceForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_BalanceForm');
@@ -1257,6 +1261,11 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TReport_GoodsMI_OrderExternal_SaleForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_GoodsMI_OrderExternal_SaleDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_GoodsMI_OrderExternal_SaleDialogForm');
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_SaleOrderExternalListForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_SaleOrderExternalListForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_SaleOrderExternalListDialogForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_SaleOrderExternalListDialogForm');
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_GoodsMI_ProductionForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_GoodsMI_ProductionForm');
