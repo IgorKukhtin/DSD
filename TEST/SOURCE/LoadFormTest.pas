@@ -1127,6 +1127,11 @@ procedure TLoadFormTest.LoadReportFormTest;
 begin
 //  exit;
 
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_SaleOrderExternalListForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_SaleOrderExternalListForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_SaleOrderExternalListDialogForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_SaleOrderExternalListDialogForm');
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_BalanceForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_BalanceForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_ProfitLossForm'));

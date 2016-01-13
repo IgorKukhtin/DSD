@@ -26,6 +26,8 @@ type
     cxLabel8: TcxLabel;
     edUnit: TcxButtonEdit;
     GuidesUnit: TdsdGuides;
+    cbSale: TcxCheckBox;
+    cbNoSale: TcxCheckBox;
   private
     { Private declarations }
   public

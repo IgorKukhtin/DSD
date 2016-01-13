@@ -24,7 +24,6 @@ object Report_SaleOrderExternalListForm: TReport_SaleOrderExternalListForm
     Height = 309
     Align = alClient
     TabOrder = 0
-    ExplicitTop = 81
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -596,7 +595,7 @@ object Report_SaleOrderExternalListForm: TReport_SaleOrderExternalListForm
     end
     object cxLabel5: TcxLabel
       Left = 403
-      Top = 9
+      Top = 6
       Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077':'
     end
     object edUnit: TcxButtonEdit
@@ -619,7 +618,7 @@ object Report_SaleOrderExternalListForm: TReport_SaleOrderExternalListForm
     Action = actRefresh
     Caption = #1086#1090#1075#1088#1091#1078#1077#1085#1085#1099#1077' '#1079#1072#1103#1074#1082#1080
     Properties.ReadOnly = False
-    TabOrder = 3
+    TabOrder = 2
     Width = 131
   end
   object cbNoSale: TcxCheckBox
@@ -849,6 +848,20 @@ object Report_SaleOrderExternalListForm: TReport_SaleOrderExternalListForm
           Component = UnitGuides
           ComponentItem = 'TextValue'
           DataType = ftString
+          ParamType = ptInput
+        end
+        item
+          Name = 'isSale'
+          Value = Null
+          Component = cbSale
+          DataType = ftBoolean
+          ParamType = ptInput
+        end
+        item
+          Name = 'isNoSale'
+          Value = Null
+          Component = cbNoSale
+          DataType = ftBoolean
           ParamType = ptInput
         end>
       isShowModal = True
