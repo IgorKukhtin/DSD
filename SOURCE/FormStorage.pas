@@ -173,7 +173,7 @@ begin
         end;
   end;
   LoadStoredProc.ParamByName('FormName').Value := FormName;
-    for AttemptCount := 1 to 10 do
+    for AttemptCount := 1 to 3 do
       try
         try
           // Создаем форму
@@ -199,7 +199,7 @@ begin
       except
         on E: Exception do begin
           FreeAndNil(Result);
-          if AttemptCount > 9 then
+          if AttemptCount > 2 then
              raise Exception.Create(FormName + ' TdsdFormStorage.Load ' + E.Message);
         end;
       end;

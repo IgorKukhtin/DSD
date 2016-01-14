@@ -64,6 +64,8 @@ type
       Instance: TStorage;
   private
     FConnection: String;
+    FConnections: TStringList;
+    FActiveConnection: Integer;
     IdHTTP: TIdHTTP;
     FSendList: TStringList;
     FReceiveStream: TStringStream;
@@ -101,13 +103,46 @@ class function TStorage.NewInstance: TObject;
 var
   StringList: TStringList;
   ConnectionString: string;
+  i: Integer;
+  StartPHP: Boolean;
 begin
   if not Assigned(Instance) then begin
     Instance := TStorage(inherited NewInstance);
+    Instance.FConnections := TStringList.Create;
+    Instance.FActiveConnection := 0;
     try
       StringList := TStringList.Create;
       try
         StringList.LoadFromFile(ConnectionPath);
+        //составление списка возможных альтернативных серверов
+        StartPHP := False;
+        for i := 0 to StringList.Count-1 do
+        Begin
+          if not StartPHP AND (pos('<?php',StringList.Strings[i]) = 1) then
+            StartPHP := True
+          else
+          if StartPHP AND (pos('?>',StringList.Strings[i]) = 1) then
+            StartPHP := False
+          else
+          Begin
+            if StartPHP AND (pos('$host',StringList.Strings[i])>0) then
+            Begin
+              ConnectionString := Copy(StringList.Strings[i],pos('$host',StringList.Strings[i])+5,maxInt);
+              delete(ConnectionString,1,pos('"',ConnectionString));
+              ConnectionString := Copy(ConnectionString,1,pos('"',ConnectionString)-1);
+              Instance.FConnections.Add(trim(ConnectionString));
+            End
+            else
+            if not StartPHP then
+            Begin
+              Instance.FConnections.Add(trim(StringList.Strings[i]));
+            end;
+          End;
+        End;
+        if Instance.FConnections.Count = 0 then
+          Instance.FConnections.Add('http://localhost/dsd/index.php');
+        ConnectionString := Instance.FConnections.Strings[0];
+        (*
         if StringList.Count = 1 then
            ConnectionString := StringList[0]
         else begin
@@ -115,15 +150,19 @@ begin
            ConnectionString := StringList[2];
            ConnectionString := Copy(ConnectionString, Pos('=', ConnectionString) + 3, maxint);
            ConnectionString := Copy(ConnectionString, 1, length(ConnectionString) - 2);
-        end;
+        end;*)
       finally
         StringList.Free;
       end;
     except
-      ConnectionString := 'http://localhost/dsd/index.php';
+      if Instance.FConnections.Count = 0 then
+        Instance.FConnections.Add('http://localhost/dsd/index.php');
+      ConnectionString := Instance.FConnections.Strings[0];
+      //ConnectionString := 'http://localhost/dsd/index.php';
     end;
     Instance.FConnection := ConnectionString;
     Instance.IdHTTP := TIdHTTP.Create(nil);
+    Instance.IdHTTP.ConnectTimeout := 2000;
     Instance.IdHTTP.Response.CharSet := 'windows-1251';// 'Content-Type: text/xml; charset=utf-8'
     with Instance.IdHTTP.Request do
     begin
@@ -238,6 +277,21 @@ function TStorage.ExecuteProc(pData: String; pExecOnServer: boolean = false): Va
 var
   ResultType: String;
   AttemptCount: integer;
+  ok: Boolean;
+  StartActiveConnection: Integer;
+  LastError: integer;
+  function NextActiveConnection: Integer;
+  Begin
+    Result := (FActiveConnection+1) mod FConnections.Count;
+  End;
+  function LastAttempt: Boolean;
+  Begin
+    Result := (AttemptCount = 10) AND (NextActiveConnection = StartActiveConnection);
+  End;
+  function Midle: Boolean;
+  Begin
+    Result := (AttemptCount = 5);
+  End;
 begin
   FCriticalSection.Enter;
   try
@@ -249,7 +303,65 @@ begin
     FReceiveStream.Clear;
     IdHTTPWork.FExecOnServer := pExecOnServer;
     AttemptCount := 0;
+    ok := False;
+    StartActiveConnection := FActiveConnection;
     try
+      repeat
+        for AttemptCount := 1 to 10 do
+        Begin
+          try
+            idHTTP.Post(FConnection + GetAddConnectString(pExecOnServer), FSendList, FReceiveStream, TIdTextEncoding.GetEncoding(1251));
+            ok := true;
+            break;
+          except
+            on E: EIdSocketError do
+            Begin
+              if LastAttempt then
+              Begin
+                case E.LastError of
+                  10051: raise EStorageException.Create('Отсутсвует подключение к сети. Обратитесь к системному администратору. context TStorage. ' + E.Message, );
+                  10054: raise EStorageException.Create('Соединение сброшено сервером. Попробуйте действие еще раз. context TStorage. ' + E.Message);
+                  10060: raise EStorageException.Create('Нет доступа к серверу. Обратитесь к системному администратору. context TStorage. ' + E.Message);
+                  11001: raise EStorageException.Create('Нет доступа к серверу. Обратитесь к системному администратору. context TStorage. ' + E.Message);
+                  10065: raise EStorageException.Create('Нет соединения с интернетом. Обратитесь к системному администратору. context TStorage. ' + E.Message);
+                  10061: raise EStorageException.Create('Потеряно соединения с WEB сервером. Необходимо перезайти в программу после восстановления соединения.');
+                else
+                  raise E;
+                end;
+              End
+              else
+              Begin
+                if Midle then
+                  idHTTP.Disconnect;
+                Sleep(1000);
+              End;
+            End;
+            on E: Exception do
+            Begin
+              if LastAttempt then
+              Begin
+                raise Exception.Create('Ошибка соединения с Web сервером.'+#10+#13+'Обратитесь к разработчику.'+#10+#13+E.Message);
+              End
+              else
+              Begin
+                if Midle then
+                  idHTTP.Disconnect;
+                Sleep(1000);
+              End;
+            End;
+          end;
+        End;
+        if not Ok AND Not LastAttempt then
+        Begin
+          FActiveConnection := NextActiveConnection;
+          FConnection := FConnections.Strings[FActiveConnection];
+          try
+            idHTTP.Disconnect;
+          except
+          end;
+        end;
+      until ok or LastAttempt;
+      (*
       for AttemptCount := 1 to 10 do
         try
           idHTTP.Post(FConnection + GetAddConnectString(pExecOnServer), FSendList, FReceiveStream, TIdTextEncoding.GetEncoding(1251));
@@ -273,6 +385,7 @@ begin
           on E: Exception do
                 raise Exception.Create('Ошибка соединения с Web сервером.'+#10+#13+'Обратитесь к разработчику.'+#10+#13+E.Message);
         end;
+      *)
     finally
       if IdHTTPWork.FExecOnServer then
          IdHTTPWork.Gauge.Finish;
