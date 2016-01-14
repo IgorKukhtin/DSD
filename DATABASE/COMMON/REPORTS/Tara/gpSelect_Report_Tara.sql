@@ -1,4 +1,4 @@
-DROP FUNCTION IF EXISTS gpSelect_Report_Tara(
+ DROP FUNCTION IF EXISTS gpSelect_Report_Tara(
     TDateTime, --дата начала периода
     TDateTime, --дата окончания периода
     Boolean,   --По всем поставщикам

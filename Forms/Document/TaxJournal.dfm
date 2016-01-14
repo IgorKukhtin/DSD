@@ -1380,6 +1380,9 @@ inherited TaxJournalForm: TTaxJournalForm
     Left = 312
     Top = 168
   end
+  inherited spMovementReComplete: TdsdStoredProc
+    StoredProcName = 'gpReComplete_Movement_Tax'
+  end
   object PrintHeaderCDS: TClientDataSet
     Aggregates = <>
     Params = <>

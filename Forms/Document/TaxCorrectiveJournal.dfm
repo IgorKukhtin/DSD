@@ -1378,6 +1378,9 @@ inherited TaxCorrectiveJournalForm: TTaxCorrectiveJournalForm
     Left = 376
     Top = 168
   end
+  inherited spMovementReComplete: TdsdStoredProc
+    StoredProcName = 'gpReComplete_Movement_TaxCorrective'
+  end
   object spSelectPrintTaxCorrective_Us: TdsdStoredProc
     StoredProcName = 'gpSelect_Movement_TaxCorrective_Print'
     DataSet = PrintItemsCDS

@@ -63,7 +63,7 @@ BEGIN
     vbIsMovement:= (((zc_Enum_Account_100301() NOT IN (SELECT AccountId FROM Object_Account_View WHERE (AccountGroupId = COALESCE (inAccountGroupId, 0) AND COALESCE (inAccountDirectionId, 0) = 0 AND COALESCE (inAccountId, 0) = 0)
                                                                                                     OR (AccountDirectionId = COALESCE (inAccountDirectionId, 0) AND COALESCE (inAccountId, 0) = 0)
                                                                                                      OR AccountId = COALESCE (inAccountId, 0))
-                      AND (COALESCE (inAccountId, 0) <> 0 OR COALESCE (inAccountDirectionId, 0) <> 0)
+                      AND (COALESCE (inAccountId, 0) <> 0 AND COALESCE (inAccountDirectionId, 0) = 0 AND COALESCE (inAccountGroupId, 0) = 0) -- OR COALESCE (inAccountDirectionId, 0) <> 0)
                      )
                   OR (zc_Enum_Account_100301() IN (SELECT AccountId FROM Object_Account_View WHERE (AccountGroupId = COALESCE (inAccountGroupId, 0) AND COALESCE (inAccountDirectionId, 0) = 0 AND COALESCE (inAccountId, 0) = 0)
                                                                                                 OR (AccountDirectionId = COALESCE (inAccountDirectionId, 0) AND COALESCE (inAccountId, 0) = 0)

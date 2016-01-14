@@ -1,4 +1,4 @@
--- Function: gpComplete_SelectAll_Sybase()
+-- Function: gpComplete_SelectAll_Sybase_PACK()
 
 DROP FUNCTION IF EXISTS gpComplete_SelectAll_Sybase (TDateTime, TDateTime, Boolean);
 
