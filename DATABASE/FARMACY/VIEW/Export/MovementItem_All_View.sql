@@ -3,6 +3,7 @@ DROP VIEW IF EXISTS MovementItem_All_Operate;
 CREATE OR REPLACE VIEW MovementItem_All_Operate AS
     SELECT
         CLO_Unit.ObjectId                             AS UnitId
+       ,MovementDesc.Id                               AS MovementDescId
        ,MovementDesc.Code                             AS MovementDescCode
        ,MovementDesc.ItemName                         AS MovementItemNAme
        ,MIC_Count.Amount                              AS Amount
