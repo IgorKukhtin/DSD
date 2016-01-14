@@ -1,12 +1,15 @@
 -- Function: gpInsertUpdate_Object_CardFuel(Integer, Integer, TVarChar, Integer, Integer, Integer, TVarChar)
 
 DROP FUNCTION IF EXISTS  gpInsertUpdate_Object_CardFuel (Integer, Integer, TVarChar, TFloat, Integer, Integer, Integer, Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS  gpInsertUpdate_Object_CardFuel (Integer, Integer, TVarChar, TFloat, TFloat, Integer, Integer, Integer, Integer, Integer, TVarChar);
+
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_CardFuel(
  INOUT ioId                Integer   , -- Ключ объекта <Топливные карты>
     IN inCode              Integer   , -- свойство <Код >
     IN inName              TVarChar  , -- свойство <Наименование>
-    IN inLimit             TFloat    , -- Лимит
+    IN inLimit             TFloat    , -- Лимит, грн
+    IN inLimitFuel         TFloat    , -- Лимит, литры
     IN inPersonalDriverId  Integer   , -- ссылка на сотрудника
     IN inCarId             Integer   , -- ссылка на авто
     IN inPaidKindId        Integer   , -- ссылка на Виды форм оплаты
@@ -42,8 +45,11 @@ BEGIN
    ioId := lpInsertUpdate_Object (ioId, zc_Object_CardFuel(), vbCode_calc, inName
                                 , inAccessKeyId:= COALESCE ((SELECT Object_Branch.AccessKeyId FROM ObjectLink LEFT JOIN ObjectLink AS ObjectLink_Unit_Branch ON ObjectLink_Unit_Branch.ObjectId = ObjectLink.ChildObjectId AND ObjectLink_Unit_Branch.DescId = zc_ObjectLink_Unit_Branch() LEFT JOIN Object AS Object_Branch ON Object_Branch.Id = ObjectLink_Unit_Branch.ChildObjectId WHERE ObjectLink.ObjectId = inCarId AND ObjectLink.DescId = zc_ObjectLink_Car_Unit()), zc_Enum_Process_AccessKey_TrasportDnepr()));
 
-   -- сохранили свойство <Лимит>
+   -- сохранили свойство <Лимит? грн>
    PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_CardFuel_Limit(), ioId, inLimit);
+
+   -- сохранили свойство <Лимит, литры>
+   PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_CardFuel_LimitFuel(), ioId, inLimitFuel);
 
    -- сохранили связь с <сотрудником>
    PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_CardFuel_PersonalDriver(), ioId, inPersonalDriverId);
@@ -65,13 +71,14 @@ BEGIN
 
 END;$BODY$
   LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpInsertUpdate_Object_CardFuel (Integer, Integer, TVarChar, TFloat, Integer, Integer, Integer, Integer, Integer,TVarChar) OWNER TO postgres;
+ALTER FUNCTION gpInsertUpdate_Object_CardFuel (Integer, Integer, TVarChar, TFloat, TFloat, Integer, Integer, Integer, Integer, Integer,TVarChar) OWNER TO postgres;
 
 
 /*-------------------------------------------------------------------------------*/
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 14.01.16         * add inLimitFuel
  08.12.13                                        * add inAccessKeyId
  16.10.13                                        * add inLimit
  14.10.13         * 

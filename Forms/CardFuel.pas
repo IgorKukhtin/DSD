@@ -61,7 +61,7 @@ type
     clJuridicalName: TcxGridDBColumn;
     clGoodsName: TcxGridDBColumn;
     clCarModelName: TcxGridDBColumn;
-    clCardFuelLimit: TcxGridDBColumn;
+    clLimitMoney: TcxGridDBColumn;
     ProtocolOpenForm: TdsdOpenForm;
     bbProtocolOpenForm: TdxBarButton;
 
