@@ -1814,6 +1814,9 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TMember_ObjectDescForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TMember_ContainerForm'));
   TdsdFormStorageFactory.GetStorage.Load('TMember_ContainerForm');
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TMember_TrasportForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TMember_TrasportForm');
 end;
 
 procedure TLoadFormTest.LoadMemberExternalFormTest;

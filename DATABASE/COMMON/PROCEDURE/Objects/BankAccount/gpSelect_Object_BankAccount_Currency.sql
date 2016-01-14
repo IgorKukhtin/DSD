@@ -9,7 +9,7 @@ CREATE OR REPLACE FUNCTION gpSelect_Object_BankAccount_Currency(
 )
 RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, NameAll TVarChar, isErased Boolean
              , BankId Integer, BankName TVarChar, CurrencyId Integer, CurrencyName TVarChar
-             , CurrencyValue TFloat, ParValue TFloat, JuridicalId Integer
+             , CurrencyValue TFloat, ParValue TFloat, JuridicalId Integer, JuridicalName TVarChar
               )
 AS
 $BODY$
@@ -86,6 +86,7 @@ BEGIN
            , tmpCurrency.Amount   :: TFloat AS CurrencyValue
            , tmpCurrency.ParValue :: TFloat AS ParValue
            , Object_BankAccount_View.JuridicalId
+           , Object_BankAccount_View.JuridicalName
      FROM Object_BankAccount_View
           -- ѕокажем счета только по внутренним фирмам
           INNER JOIN ObjectBoolean AS ObjectBoolean_isCorporate

@@ -1,4 +1,4 @@
-unit CardFuel;
+unit Member_Trasport;
 
 interface
 
@@ -20,10 +20,11 @@ uses
   cxDataStorage, cxEdit, Data.DB, cxDBData, dxSkinsdxBarPainter, dsdAddOn,
   dsdDB, dsdAction, Vcl.ActnList, dxBarExtItems, dxBar, cxClasses,
   cxPropertiesStore, Datasnap.DBClient, cxGridLevel, cxGridCustomTableView,
-  cxGridTableView, cxGridDBTableView, cxGridCustomView, cxGrid, cxCheckBox;
+  cxGridTableView, cxGridDBTableView, cxGridCustomView, cxGrid, cxCheckBox,
+  DataModul, cxButtonEdit, cxCurrencyEdit;
 
 type
-  TCardFuelForm = class(TParentForm)
+  TMember_TrasportForm = class(TParentForm)
     cxGrid: TcxGrid;
     cxGridDBTableView: TcxGridDBTableView;
     clCode: TcxGridDBColumn;
@@ -49,22 +50,37 @@ type
     dsdSetErased: TdsdUpdateErased;
     dsdSetUnErased: TdsdUpdateErased;
     dsdGridToExcel: TdsdGridToExcel;
-    dsdStoredProc: TdsdStoredProc;
+    spSelect: TdsdStoredProc;
     dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn;
+    clMember_INN: TcxGridDBColumn;
     dsdChoiceGuides: TdsdChoiceGuides;
     clErased: TcxGridDBColumn;
     spErasedUnErased: TdsdStoredProc;
     dsdDBViewAddOn: TdsdDBViewAddOn;
-    clPersonalDriver: TcxGridDBColumn;
-    clCarName: TcxGridDBColumn;
-    clPaidKindName: TcxGridDBColumn;
-    clJuridicalName: TcxGridDBColumn;
-    clGoodsName: TcxGridDBColumn;
-    clCarModelName: TcxGridDBColumn;
-    clLimitMoney: TcxGridDBColumn;
+    clDriverCertificate: TcxGridDBColumn;
+    clComment: TcxGridDBColumn;
+    spInsertUpdate: TdsdStoredProc;
+    actUpdateDataSet: TdsdUpdateDataSet;
+    actShowAll: TBooleanStoredProcAction;
+    bbShowAll: TdxBarButton;
+    clIsOfficial: TcxGridDBColumn;
+    bbUpdateIsOfficial: TdxBarButton;
+    spUpdateIsOfficial: TdsdStoredProc;
+    actUpdateIsOfficial: TdsdExecStoredProc;
+    clInfoMoneyName_all: TcxGridDBColumn;
+    clInfoMoneyCode: TcxGridDBColumn;
+    actChoiceInfoMoneyForm: TOpenChoiceForm;
     ProtocolOpenForm: TdsdOpenForm;
     bbProtocolOpenForm: TdxBarButton;
-
+    StartSummerDate: TcxGridDBColumn;
+    EndSummerDate: TcxGridDBColumn;
+    SummerFuel: TcxGridDBColumn;
+    WinterFuel: TcxGridDBColumn;
+    Reparation: TcxGridDBColumn;
+    LimitMoney: TcxGridDBColumn;
+    LimitFuel: TcxGridDBColumn;
+    CarName: TcxGridDBColumn;
+    CarModelName: TcxGridDBColumn;
   private
     { Private declarations }
   public
@@ -72,10 +88,12 @@ type
   end;
 
 
+
 implementation
 
 {$R *.dfm}
 
 initialization
-  RegisterClass(TCardFuelForm);
+  RegisterClass(TMember_TrasportForm);
+
 end.

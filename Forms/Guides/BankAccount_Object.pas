@@ -46,6 +46,7 @@ type
     CurrencyValue: TcxGridDBColumn;
     ParValue: TcxGridDBColumn;
     FormParams: TdsdFormParams;
+    colJuridicalName: TcxGridDBColumn;
   private
     { Private declarations }
   public

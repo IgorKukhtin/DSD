@@ -195,10 +195,6 @@ object Form1: TForm1
           object colPrice: TcxGridDBColumn
             Caption = #1062#1077#1085#1072
             DataBinding.FieldName = 'Price'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 2
-            Properties.DisplayFormat = ',0.00'
-            Properties.MinValue = 0.010000000000000000
             HeaderAlignmentHorz = taCenter
             Width = 76
           end

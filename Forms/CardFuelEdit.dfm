@@ -2,7 +2,7 @@
   Left = 0
   Top = 0
   Caption = #1044#1086#1073#1072#1074#1080#1090#1100'/'#1048#1079#1084#1077#1085#1080#1090#1100' <'#1058#1086#1087#1083#1080#1074#1085#1099#1077' '#1082#1072#1088#1090#1099'>'
-  ClientHeight = 435
+  ClientHeight = 463
   ClientWidth = 369
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -20,7 +20,7 @@
     Left = 32
     Top = 88
     TabOrder = 0
-    Width = 209
+    Width = 273
   end
   object cxLabel1: TcxLabel
     Left = 32
@@ -29,7 +29,7 @@
   end
   object cxButton1: TcxButton
     Left = 80
-    Top = 397
+    Top = 427
     Width = 75
     Height = 25
     Action = dsdInsertUpdateGuides
@@ -39,7 +39,7 @@
   end
   object cxButton2: TcxButton
     Left = 224
-    Top = 397
+    Top = 427
     Width = 75
     Height = 25
     Action = dsdFormClose1
@@ -63,7 +63,7 @@
   end
   object ceGoods: TcxButtonEdit
     Left = 35
-    Top = 352
+    Top = 382
     Properties.Buttons = <
       item
         Default = True
@@ -74,17 +74,17 @@
   end
   object cxLabel7: TcxLabel
     Left = 35
-    Top = 329
+    Top = 359
     Caption = #1058#1086#1074#1072#1088
   end
   object cxLabel2: TcxLabel
     Left = 32
-    Top = 123
+    Top = 153
     Caption = #1057#1086#1090#1088#1091#1076#1085#1080#1082' ('#1074#1086#1076#1080#1090#1077#1083#1100')'
   end
   object cePersonalDriver: TcxButtonEdit
     Left = 32
-    Top = 146
+    Top = 176
     Properties.Buttons = <
       item
         Default = True
@@ -95,12 +95,12 @@
   end
   object cxLabel3: TcxLabel
     Left = 35
-    Top = 179
+    Top = 209
     Caption = #1040#1074#1090#1086#1084#1086#1073#1080#1083#1080
   end
   object ceCar: TcxButtonEdit
     Left = 35
-    Top = 202
+    Top = 232
     Properties.Buttons = <
       item
         Default = True
@@ -111,12 +111,12 @@
   end
   object cxLabel4: TcxLabel
     Left = 35
-    Top = 229
+    Top = 259
     Caption = #1060#1086#1088#1084#1072' '#1086#1087#1083#1072#1090#1099' '
   end
   object cePaidKind: TcxButtonEdit
     Left = 35
-    Top = 252
+    Top = 282
     Properties.Buttons = <
       item
         Default = True
@@ -127,12 +127,12 @@
   end
   object cxLabel5: TcxLabel
     Left = 35
-    Top = 279
+    Top = 309
     Caption = #1070#1088#1080#1076#1080#1095#1077#1089#1082#1086#1077' '#1083#1080#1094#1086
   end
   object ceJuridical: TcxButtonEdit
     Left = 35
-    Top = 302
+    Top = 332
     Properties.Buttons = <
       item
         Default = True
@@ -142,17 +142,30 @@
     Width = 273
   end
   object ceLimit: TcxCurrencyEdit
-    Left = 256
-    Top = 88
+    Left = 95
+    Top = 126
     Properties.DecimalPlaces = 4
     Properties.DisplayFormat = ',0.####'
     TabOrder = 16
-    Width = 49
+    Width = 56
   end
   object cxLabel6: TcxLabel
-    Left = 256
-    Top = 68
-    Caption = #1051#1080#1084#1080#1090
+    Left = 35
+    Top = 127
+    Caption = #1051#1080#1084#1080#1090', '#1075#1088#1085
+  end
+  object cxLabel8: TcxLabel
+    Left = 174
+    Top = 127
+    Caption = #1051#1080#1084#1080#1090', '#1083#1080#1090#1088#1099
+  end
+  object ceLimitFuel: TcxCurrencyEdit
+    Left = 249
+    Top = 126
+    Properties.DecimalPlaces = 4
+    Properties.DisplayFormat = ',0.####'
+    TabOrder = 19
+    Width = 56
   end
   object ActionList: TActionList
     Left = 320
@@ -172,10 +185,12 @@
     end
     object dsdFormClose1: TdsdFormClose
       MoveParams = <>
+      PostDataSetBeforeExecute = False
     end
     object dsdInsertUpdateGuides: TdsdInsertUpdateGuides
       Category = 'DSDLib'
       MoveParams = <>
+      PostDataSetBeforeExecute = False
       StoredProc = spInsertUpdate
       StoredProcList = <
         item
@@ -210,9 +225,16 @@
         ParamType = ptInput
       end
       item
-        Name = 'inCardFuelLimit'
+        Name = 'inLimit'
         Value = 0.000000000000000000
         Component = ceLimit
+        DataType = ftFloat
+        ParamType = ptInput
+      end
+      item
+        Name = 'inLimitFuel'
+        Value = Null
+        Component = ceLimitFuel
         DataType = ftFloat
         ParamType = ptInput
       end
@@ -248,7 +270,7 @@
       end>
     PackSize = 1
     Left = 320
-    Top = 40
+    Top = 24
   end
   object dsdFormParams: TdsdFormParams
     Params = <
@@ -349,14 +371,20 @@
         DataType = ftString
       end
       item
-        Name = 'CardFuelLimit'
+        Name = 'LimitMoney'
         Value = 0.000000000000000000
         Component = ceLimit
+        DataType = ftFloat
+      end
+      item
+        Name = 'LimitFuel'
+        Value = Null
+        Component = ceLimitFuel
         DataType = ftFloat
       end>
     PackSize = 1
     Left = 320
-    Top = 160
+    Top = 190
   end
   object cxPropertiesStore: TcxPropertiesStore
     Components = <
@@ -402,7 +430,7 @@
         ParamType = ptInput
       end>
     Left = 207
-    Top = 343
+    Top = 373
   end
   object PersonalDriverGuides: TdsdGuides
     KeyField = 'Id'
@@ -429,7 +457,7 @@
         ParamType = ptInput
       end>
     Left = 183
-    Top = 135
+    Top = 165
   end
   object CarGuides: TdsdGuides
     KeyField = 'Id'
@@ -456,7 +484,7 @@
         ParamType = ptInput
       end>
     Left = 167
-    Top = 191
+    Top = 221
   end
   object PaidKindGuides: TdsdGuides
     KeyField = 'Id'
@@ -483,7 +511,7 @@
         ParamType = ptInput
       end>
     Left = 215
-    Top = 239
+    Top = 269
   end
   object JuridicalGuides: TdsdGuides
     KeyField = 'Id'
@@ -510,6 +538,6 @@
         ParamType = ptInput
       end>
     Left = 159
-    Top = 295
+    Top = 325
   end
 end

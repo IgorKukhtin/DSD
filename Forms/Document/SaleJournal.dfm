@@ -4,7 +4,7 @@ inherited SaleJournalForm: TSaleJournalForm
   ClientWidth = 1242
   AddOnFormData.Params = FormParams
   ExplicitWidth = 1258
-  ExplicitHeight = 676
+  ExplicitHeight = 679
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -2049,6 +2049,19 @@ inherited SaleJournalForm: TSaleJournalForm
         end>
       Caption = 'actSPSavePrintState'
     end
+    object actElectron: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spElectron
+      StoredProcList = <
+        item
+          StoredProc = spElectron
+        end>
+      Caption = #1044#1083#1103' '#1085#1072#1083#1086#1075'. '#1048#1079#1084#1077#1085#1080#1090#1100' "'#1069#1083#1077#1082#1090#1088#1086#1085#1085#1072#1103' '#1044#1072'/'#1053#1077#1090'"'
+      Hint = #1044#1083#1103' '#1085#1072#1083#1086#1075'. '#1048#1079#1084#1077#1085#1080#1090#1100' "'#1069#1083#1077#1082#1090#1088#1086#1085#1085#1072#1103' '#1044#1072'/'#1053#1077#1090'"'
+      ImageIndex = 52
+    end
   end
   inherited MasterDS: TDataSource
     Left = 64
@@ -2170,6 +2183,14 @@ inherited SaleJournalForm: TSaleJournalForm
         item
           Visible = True
           ItemName = 'bbspChecked'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbElectron'
         end
         item
           Visible = True
@@ -2390,6 +2411,10 @@ inherited SaleJournalForm: TSaleJournalForm
     end
     object bbPrintReturnInDay: TdxBarButton
       Action = actPrintReturnInDay
+      Category = 0
+    end
+    object bbElectron: TdxBarButton
+      Action = actElectron
       Category = 0
     end
   end
@@ -3295,5 +3320,29 @@ inherited SaleJournalForm: TSaleJournalForm
     PackSize = 1
     Left = 840
     Top = 352
+  end
+  object spElectron: TdsdStoredProc
+    StoredProcName = 'gpUpdateMovement_Electron'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'ioId '
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'MovementId_Master'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inElectron'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'isElectron'
+        DataType = ftBoolean
+        ParamType = ptInputOutput
+      end>
+    PackSize = 1
+    Left = 1040
+    Top = 195
   end
 end

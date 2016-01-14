@@ -1,9 +1,11 @@
 -- Function: gpGet_Movement_TransferDebtOut()
 
 DROP FUNCTION IF EXISTS gpGet_Movement_TransferDebtOut (Integer, TDateTime, TVarChar);
+DROP FUNCTION IF EXISTS gpGet_Movement_TransferDebtOut (Integer,  Boolean, TDateTime, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpGet_Movement_TransferDebtOut(
     IN inMovementId        Integer  , -- ключ Документа
+    IN inMask              Boolean  ,
     IN inOperDate          TDateTime, -- ключ Документа
     IN inSession           TVarChar   -- сессия пользователя
 )
@@ -31,6 +33,14 @@ $BODY$
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      vbUserId:= lpGetUserBySession (inSession);
+
+     IF COALESCE (inMask, False) = True
+     THEN
+     inMovementId := gpInsert_Movement_TransferDebtOut_Mask (ioId        := inMovementId
+                                                           , inOperDate  := inOperDate
+                                                           , inSession   := inSession); 
+     END IF;
+
 
      IF COALESCE (inMovementId, 0) = 0
      THEN
@@ -286,12 +296,13 @@ BEGIN
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpGet_Movement_TransferDebtOut (Integer, TDateTime, TVarChar) OWNER TO postgres;
+ALTER FUNCTION gpGet_Movement_TransferDebtOut (Integer, Boolean, TDateTime, TVarChar) OWNER TO postgres;
 
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 13.01.16         * add inMask
  14.01.15         * add MovementId_Order
  17.12.14         * add InvNumberOrder
  03.09.14         * add Checked

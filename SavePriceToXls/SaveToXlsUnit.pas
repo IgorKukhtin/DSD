@@ -92,6 +92,7 @@ end;
 procedure TForm1.Timer1Timer(Sender: TObject);
 var
   SavePath: String;
+  SavePath2: String;
   FileName: String;
   ini: TIniFile;
   sl : TStringList;
@@ -110,6 +111,9 @@ begin
   try
     SavePath := ini.readString('Options','Path','D:\Прайсы\');
     ini.WriteString('Options','Path',SavePath);
+
+    SavePath2 := ini.readString('Options','Path2','D:\ConsolidationInfo\ftp_neboley\pricesForSite_new\');
+    ini.WriteString('Options','Path2',SavePath2);
 
     ZConnection1.Database := ini.ReadString('Connect','DataBase','farmacy');
     ini.WriteString('Connect','DataBase',ZConnection1.Database);
@@ -131,7 +135,12 @@ begin
     Add_Log('Начало выгрузки');
     if not ForceDirectories(SavePath) then
     Begin
-      Add_Log('Не могу создать директорию выгрузки');
+      Add_Log('Не могу создать директорию выгрузки {'+SavePath+'}');
+      exit;
+    end;
+    if not ForceDirectories(SavePath2) then
+    Begin
+      Add_Log('Не могу создать директорию выгрузки {'+SavePath2+'}');
       exit;
     end;
 
@@ -199,7 +208,7 @@ begin
       end;
       if not qryJuridicalPrice.IsEmpty then
       Begin
-        FileName := SavePath + GetCorrectNameFile(qryJuridical.fieldByName('FileName').AsString);
+        FileName := SavePath2 + GetCorrectNameFile(qryJuridical.fieldByName('FileName').AsString);
         try
           ExportGridToText(FileName, cxGrid1, True, True, ';','','','csv');
           sl := TStringList.Create;

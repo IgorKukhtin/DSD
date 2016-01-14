@@ -779,7 +779,8 @@ uses
   Report_TaraMovement in '..\..\Forms\Report\Report_TaraMovement.pas' {Report_TaraMovementForm: TParentForm},
   GoodsExternal in '..\..\Forms\Guides\GoodsExternal.pas' {GoodsExternalForm: TParentForm},
   Report_SaleOrderExternalList in '..\..\Forms\Report\Report_SaleOrderExternalList.pas' {Report_SaleOrderExternalListForm: TParentForm},
-  Report_SaleOrderExternalListDialog in '..\..\Forms\Report\Report_SaleOrderExternalListDialog.pas' {Report_SaleOrderExternalListDialogForm: TParentForm};
+  Report_SaleOrderExternalListDialog in '..\..\Forms\Report\Report_SaleOrderExternalListDialog.pas' {Report_SaleOrderExternalListDialogForm: TParentForm},
+  Member_Trasport in '..\..\Forms\Guides\Member_Trasport.pas' {Member_TrasportForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}

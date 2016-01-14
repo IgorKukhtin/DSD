@@ -1,25 +1,25 @@
 inherited Sale_PartnerJournalForm: TSale_PartnerJournalForm
   Caption = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' <'#1055#1088#1086#1076#1072#1078#1072' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1102' ('#1073#1091#1093#1075#1072#1083#1090#1077#1088')>'
   ClientHeight = 535
-  ClientWidth = 1020
+  ClientWidth = 1098
   AddOnFormData.Params = FormParams
-  ExplicitWidth = 1036
-  ExplicitHeight = 570
+  ExplicitWidth = 1114
+  ExplicitHeight = 573
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Width = 1020
+    Width = 1098
     Height = 478
     TabOrder = 3
     ExplicitWidth = 1020
     ExplicitHeight = 478
     ClientRectBottom = 478
-    ClientRectRight = 1020
+    ClientRectRight = 1098
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 1020
       ExplicitHeight = 478
       inherited cxGrid: TcxGrid
-        Width = 1020
+        Width = 1098
         Height = 478
         ExplicitWidth = 1020
         ExplicitHeight = 478
@@ -685,7 +685,7 @@ inherited Sale_PartnerJournalForm: TSale_PartnerJournalForm
     end
   end
   inherited Panel: TPanel
-    Width = 1020
+    Width = 1098
     ExplicitWidth = 1020
     inherited deStart: TcxDateEdit
       EditValue = 42370d
@@ -873,6 +873,19 @@ inherited Sale_PartnerJournalForm: TSale_PartnerJournalForm
       Hint = #1048#1079#1084#1077#1085#1080#1090#1100' "'#1055#1088#1086#1074#1077#1088#1077#1085' '#1044#1072'/'#1053#1077#1090'"'
       ImageIndex = 58
     end
+    object actElectron: TdsdExecStoredProc [7]
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spElectron
+      StoredProcList = <
+        item
+          StoredProc = spElectron
+        end>
+      Caption = #1044#1083#1103' '#1085#1072#1083#1086#1075'. '#1048#1079#1084#1077#1085#1080#1090#1100' "'#1069#1083#1077#1082#1090#1088#1086#1085#1085#1072#1103' '#1044#1072'/'#1053#1077#1090'"'
+      Hint = #1044#1083#1103' '#1085#1072#1083#1086#1075'. '#1048#1079#1084#1077#1085#1080#1090#1100' "'#1069#1083#1077#1082#1090#1088#1086#1085#1085#1072#1103' '#1044#1072'/'#1053#1077#1090'"'
+      ImageIndex = 52
+    end
     inherited actUpdate: TdsdInsertUpdateAction
       FormName = 'TSale_PartnerForm'
       FormNameParam.Value = 'TSale_PartnerForm'
@@ -904,7 +917,7 @@ inherited Sale_PartnerJournalForm: TSale_PartnerJournalForm
           ParamType = ptInput
         end>
     end
-    object actMovementCheck: TdsdOpenForm [15]
+    object actMovementCheck: TdsdOpenForm [16]
       Category = 'DSDLib'
       MoveParams = <>
       Caption = #1054#1096#1080#1073#1082#1080
@@ -1660,6 +1673,14 @@ inherited Sale_PartnerJournalForm: TSale_PartnerJournalForm
         end
         item
           Visible = True
+          ItemName = 'bbElectron'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbPrint'
         end
         item
@@ -1802,6 +1823,10 @@ inherited Sale_PartnerJournalForm: TSale_PartnerJournalForm
     end
     object bbPrint_Quality: TdxBarButton
       Action = mactPrint_QualityDoc
+      Category = 0
+    end
+    object bbElectron: TdxBarButton
+      Action = actElectron
       Category = 0
     end
   end
@@ -2396,5 +2421,29 @@ inherited Sale_PartnerJournalForm: TSale_PartnerJournalForm
     PackSize = 1
     Left = 208
     Top = 288
+  end
+  object spElectron: TdsdStoredProc
+    StoredProcName = 'gpUpdateMovement_Electron'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'ioId '
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'MovementId_Master'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inElectron'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'isElectron'
+        DataType = ftBoolean
+        ParamType = ptInputOutput
+      end>
+    PackSize = 1
+    Left = 792
+    Top = 171
   end
 end

@@ -139,6 +139,9 @@ type
     Comment: TcxGridDBColumn;
     actDialog_QualityDoc: TdsdOpenForm;
     mactPrint_QualityDoc: TMultiAction;
+    spElectron: TdsdStoredProc;
+    actElectron: TdsdExecStoredProc;
+    bbElectron: TdxBarButton;
   private
     { Private declarations }
   public

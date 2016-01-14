@@ -667,6 +667,8 @@ type
     N93: TMenuItem;
     actReport_SaleOrderExternalList: TdsdOpenForm;
     N94: TMenuItem;
+    actMember_Trasport: TdsdOpenForm;
+    N95: TMenuItem;
     procedure actReport_OLAPSoldExecute(Sender: TObject);
     procedure FormShow(Sender: TObject);
   private
