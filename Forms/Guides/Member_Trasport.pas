@@ -21,7 +21,7 @@ uses
   dsdDB, dsdAction, Vcl.ActnList, dxBarExtItems, dxBar, cxClasses,
   cxPropertiesStore, Datasnap.DBClient, cxGridLevel, cxGridCustomTableView,
   cxGridTableView, cxGridDBTableView, cxGridCustomView, cxGrid, cxCheckBox,
-  DataModul, cxButtonEdit;
+  DataModul, cxButtonEdit, cxCurrencyEdit;
 
 type
   TMember_TrasportForm = class(TParentForm)
@@ -72,13 +72,15 @@ type
     actChoiceInfoMoneyForm: TOpenChoiceForm;
     ProtocolOpenForm: TdsdOpenForm;
     bbProtocolOpenForm: TdxBarButton;
-    StartSummer: TcxGridDBColumn;
-    EndSummer: TcxGridDBColumn;
+    StartSummerDate: TcxGridDBColumn;
+    EndSummerDate: TcxGridDBColumn;
     SummerFuel: TcxGridDBColumn;
     WinterFuel: TcxGridDBColumn;
     Reparation: TcxGridDBColumn;
     LimitMoney: TcxGridDBColumn;
     LimitFuel: TcxGridDBColumn;
+    CarName: TcxGridDBColumn;
+    CarModelName: TcxGridDBColumn;
   private
     { Private declarations }
   public

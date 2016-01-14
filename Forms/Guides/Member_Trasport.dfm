@@ -60,6 +60,7 @@ object Member_TrasportForm: TMember_TrasportForm
       object clName: TcxGridDBColumn
         Caption = #1060#1048#1054
         DataBinding.FieldName = 'Name'
+        HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
         Width = 103
@@ -67,7 +68,9 @@ object Member_TrasportForm: TMember_TrasportForm
       object clMember_INN: TcxGridDBColumn
         Caption = #1048#1053#1053
         DataBinding.FieldName = 'INN'
+        HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        Options.Editing = False
         Width = 75
       end
       object clDriverCertificate: TcxGridDBColumn
@@ -104,18 +107,19 @@ object Member_TrasportForm: TMember_TrasportForm
           end>
         Properties.ReadOnly = True
         HeaderAlignmentVert = vaCenter
+        Options.Editing = False
         Width = 98
       end
-      object StartSummer: TcxGridDBColumn
+      object StartSummerDate: TcxGridDBColumn
         Caption = #1053#1072#1095#1072#1083#1100#1085#1072#1103' '#1076#1072#1090#1072' '#1076#1083#1103' '#1085#1086#1088#1084#1099' '#1072#1074#1090#1086' '#1083#1077#1090#1086
-        DataBinding.FieldName = 'StartSummer'
+        DataBinding.FieldName = 'StartSummerDate'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 74
       end
-      object EndSummer: TcxGridDBColumn
+      object EndSummerDate: TcxGridDBColumn
         Caption = #1050#1086#1085#1077#1095#1085#1072#1103' '#1076#1072#1090#1072' '#1076#1083#1103' '#1085#1086#1088#1084#1099' '#1072#1074#1090#1086' '#1083#1077#1090#1086
-        DataBinding.FieldName = 'EndSummer'
+        DataBinding.FieldName = 'EndSummerDate'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 61
@@ -123,6 +127,9 @@ object Member_TrasportForm: TMember_TrasportForm
       object SummerFuel: TcxGridDBColumn
         Caption = #1053#1086#1088#1084#1072' '#1072#1074#1090#1086' '#1083#1080#1090#1088#1099' '#1083#1077#1090#1086
         DataBinding.FieldName = 'SummerFuel'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 63
@@ -130,6 +137,9 @@ object Member_TrasportForm: TMember_TrasportForm
       object WinterFuel: TcxGridDBColumn
         Caption = #1053#1086#1088#1084#1072' '#1072#1074#1090#1086' '#1083#1080#1090#1088#1099' '#1079#1080#1084#1072
         DataBinding.FieldName = 'WinterFuel'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 62
@@ -137,6 +147,9 @@ object Member_TrasportForm: TMember_TrasportForm
       object Reparation: TcxGridDBColumn
         Caption = #1040#1084#1086#1088#1090#1080#1079#1072#1094#1080#1103' '#1079#1072' 1 '#1082#1084'., '#1075#1088#1085'.'
         DataBinding.FieldName = 'Reparation'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 86
@@ -144,6 +157,9 @@ object Member_TrasportForm: TMember_TrasportForm
       object LimitMoney: TcxGridDBColumn
         Caption = #1051#1080#1084#1080#1090', '#1075#1088#1085
         DataBinding.FieldName = 'LimitMoney'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 56
@@ -151,6 +167,9 @@ object Member_TrasportForm: TMember_TrasportForm
       object LimitFuel: TcxGridDBColumn
         Caption = #1051#1080#1084#1080#1090', '#1083#1080#1090#1088#1099
         DataBinding.FieldName = 'LimitFuel'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 55
@@ -159,6 +178,7 @@ object Member_TrasportForm: TMember_TrasportForm
         Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
         DataBinding.FieldName = 'Comment'
         HeaderAlignmentVert = vaCenter
+        Options.Editing = False
         Width = 77
       end
       object clErased: TcxGridDBColumn
@@ -168,6 +188,22 @@ object Member_TrasportForm: TMember_TrasportForm
         Visible = False
         HeaderAlignmentVert = vaCenter
         Width = 58
+      end
+      object CarName: TcxGridDBColumn
+        Caption = #1043#1086#1089'. '#1085#1086#1084#1077#1088' '#1072#1074#1090#1086#1084#1086#1073#1080#1083#1103
+        DataBinding.FieldName = 'CarName'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 60
+      end
+      object CarModelName: TcxGridDBColumn
+        Caption = #1052#1072#1088#1082#1072' '#1072#1074#1090#1086#1084#1086#1073#1080#1083#1103
+        DataBinding.FieldName = 'CarModelName'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 60
       end
     end
     object cxGridLevel: TcxGridLevel
@@ -237,15 +273,6 @@ object Member_TrasportForm: TMember_TrasportForm
       FloatClientHeight = 0
       ItemLinks = <
         item
-          Visible = True
-          ItemName = 'bbErased'
-        end
-        item
-          Visible = True
-          ItemName = 'bbUnErased'
-        end
-        item
-          BeginGroup = True
           Visible = True
           ItemName = 'dxBarStatic'
         end
@@ -650,47 +677,16 @@ object Member_TrasportForm: TMember_TrasportForm
     Top = 264
   end
   object spInsertUpdate: TdsdStoredProc
-    StoredProcName = 'gpInsertUpdate_Object_Member'
+    StoredProcName = 'gpUpdate_Object_Member_Transport'
     DataSets = <>
     OutputType = otResult
     Params = <
       item
-        Name = 'ioId'
+        Name = 'inId'
         Value = Null
         Component = ClientDataSet
         ComponentItem = 'Id'
         ParamType = ptInputOutput
-      end
-      item
-        Name = 'inCode'
-        Value = Null
-        Component = ClientDataSet
-        ComponentItem = 'Code'
-        ParamType = ptInput
-      end
-      item
-        Name = 'inName'
-        Value = Null
-        Component = ClientDataSet
-        ComponentItem = 'Name'
-        DataType = ftString
-        ParamType = ptInput
-      end
-      item
-        Name = 'inIsOfficial'
-        Value = Null
-        Component = ClientDataSet
-        ComponentItem = 'isOfficial'
-        DataType = ftBoolean
-        ParamType = ptInput
-      end
-      item
-        Name = 'inINN'
-        Value = Null
-        Component = ClientDataSet
-        ComponentItem = 'INN'
-        DataType = ftString
-        ParamType = ptInput
       end
       item
         Name = 'inDriverCertificate'
@@ -701,18 +697,59 @@ object Member_TrasportForm: TMember_TrasportForm
         ParamType = ptInput
       end
       item
-        Name = 'inComment'
-        Value = Null
+        Name = 'inStartSummerDate'
+        Value = 'NULL'
         Component = ClientDataSet
-        ComponentItem = 'Comment'
-        DataType = ftString
+        ComponentItem = 'StartSummerDate'
+        DataType = ftDateTime
         ParamType = ptInput
       end
       item
-        Name = 'inInfoMoneyId'
+        Name = 'inEndSummerDate'
+        Value = 'NULL'
+        Component = ClientDataSet
+        ComponentItem = 'EndSummerDate'
+        DataType = ftDateTime
+        ParamType = ptInput
+      end
+      item
+        Name = 'inSummerFuel'
         Value = Null
         Component = ClientDataSet
-        ComponentItem = 'InfoMoneyId'
+        ComponentItem = 'SummerFuel'
+        DataType = ftFloat
+        ParamType = ptInput
+      end
+      item
+        Name = 'inWinterFuel'
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'WinterFuel'
+        DataType = ftFloat
+        ParamType = ptInput
+      end
+      item
+        Name = 'inReparation'
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'Reparation'
+        DataType = ftFloat
+        ParamType = ptInput
+      end
+      item
+        Name = 'inLimit'
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'LimitMoney'
+        DataType = ftFloat
+        ParamType = ptInput
+      end
+      item
+        Name = 'inLimitFuel'
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'LimitFuel'
+        DataType = ftFloat
         ParamType = ptInput
       end>
     PackSize = 1
