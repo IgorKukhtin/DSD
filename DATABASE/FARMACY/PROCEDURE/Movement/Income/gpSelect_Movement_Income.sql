@@ -42,61 +42,98 @@ BEGIN
         , tmpRoleAccessKey AS (SELECT AccessKeyId FROM Object_RoleAccessKey_View WHERE UserId = vbUserId AND NOT EXISTS (SELECT UserId FROM tmpUserAdmin) GROUP BY AccessKeyId
                          UNION SELECT AccessKeyId FROM Object_RoleAccessKey_View WHERE EXISTS (SELECT UserId FROM tmpUserAdmin) GROUP BY AccessKeyId
                               )
-        , MovementPayment AS (  SELECT MovementPayment.OperDate, MIFloat_IncomeId.ValueData::Integer AS MovementId
-                                FROM 
-                                    Movement AS MovementPayment
-                                    INNER JOIN MovementItem ON MovementItem.MovementId = MovementPayment.Id
-                                                           AND MovementItem.DescId = zc_MI_Master()
-                                                           AND MovementItem.IsErased = FALSE
-                                    INNER JOIN MovementItemBoolean AS MIBoolean_NeedPay
-                                                                   ON MIBoolean_NeedPay.MovementItemId = MovementItem.ID
-                                                                  AND MIBoolean_NeedPay.DescId = zc_MIBoolean_NeedPay()
-                                                                  AND MIBoolean_NeedPay.ValueData = TRUE
-                                    INNER JOIN MovementItemFloat AS MIFloat_IncomeId
-                                                                 ON MIFloat_IncomeId.MovementItemId = MovementItem.ID
-                                                                AND MIFloat_IncomeId.DescId = zc_MIFloat_MovementId()
-                                WHERE
-                                    MovementPayment.DescId = zc_Movement_Payment()
-                                    AND
-                                    MovementPayment.StatusId = zc_Enum_Status_Complete()
+        , Movement_Income AS (
+                               SELECT
+                                     Movement_Income_View.Id
+                                   , Movement_Income_View.InvNumber
+                                   , Movement_Income_View.OperDate
+                                   , Movement_Income_View.StatusCode
+                                   , Movement_Income_View.StatusName
+                                   , Movement_Income_View.TotalCount
+                                   , Movement_Income_View.TotalSummMVAT
+                                   , Movement_Income_View.TotalSumm
+                                   , Movement_Income_View.PriceWithVAT
+                                   , Movement_Income_View.FromId
+                                   , Movement_Income_View.FromName
+                                   , Movement_Income_View.ToId
+                                   , Movement_Income_View.ToName
+                                   , Movement_Income_View.JuridicalName
+                                   , Movement_Income_View.NDSKindId
+                                   , Movement_Income_View.NDSKindName
+                                   , Movement_Income_View.ContractId
+                                   , Movement_Income_View.ContractName
+                                   , CASE WHEN Movement_Income_View.PaySumm > 0.01
+                                            OR Movement_Income_View.StatusId <> zc_Enum_Status_Complete()
+                                          THEN Movement_Income_View.PaymentDate 
+                                     END::TDateTime AS PaymentDate
+                                   , Movement_Income_View.PaySumm
+                                   , Movement_Income_View.SaleSumm
+                                   , Movement_Income_View.InvNumberBranch
+                                   , Movement_Income_View.BranchDate
+                                   , Movement_Income_View.Checked
+                                   , CASE WHEN Movement_Income_View.PaySumm <= 0.01 THEN zc_Color_Goods_Additional() END::Integer AS PayColor
+                                   , Movement_Income_View.PaymentContainerId
+                               FROM Movement_Income_View 
+                                     JOIN tmpStatus ON tmpStatus.StatusId = Movement_Income_View.StatusId 
+                               WHERE Movement_Income_View.OperDate BETWEEN inStartDate AND inEndDate
                               )
-
-       SELECT
-             Movement_Income_View.Id
-           , Movement_Income_View.InvNumber
-           , Movement_Income_View.OperDate
-           , Movement_Income_View.StatusCode
-           , Movement_Income_View.StatusName
-           , Movement_Income_View.TotalCount
-           , Movement_Income_View.TotalSummMVAT
-           , Movement_Income_View.TotalSumm
-           , Movement_Income_View.PriceWithVAT
-           , Movement_Income_View.FromId
-           , Movement_Income_View.FromName
-           , Movement_Income_View.ToId
-           , Movement_Income_View.ToName
-           , Movement_Income_View.JuridicalName
-           , Movement_Income_View.NDSKindId
-           , Movement_Income_View.NDSKindName
-           , Movement_Income_View.ContractId
-           , Movement_Income_View.ContractName
-           , CASE WHEN Movement_Income_View.PaySumm > 0.01
-                    OR Movement_Income_View.StatusId <> zc_Enum_Status_Complete()
-                  THEN Movement_Income_View.PaymentDate 
-             END::TDateTime AS PaymentDate
-           , Movement_Income_View.PaySumm
-           , Movement_Income_View.SaleSumm
-           , Movement_Income_View.InvNumberBranch
-           , Movement_Income_View.BranchDate
-           , Movement_Income_View.Checked
-           , CASE WHEN Movement_Income_View.PaySumm <= 0.01 THEN zc_Color_Goods_Additional() END::Integer AS PayColor
-           , MovementPayment.OperDate AS DateLastPay
-       FROM Movement_Income_View 
-             JOIN tmpStatus ON tmpStatus.StatusId = Movement_Income_View.StatusId 
-             LEFT OUTER JOIN MovementPayment ON MovementPayment.MovementId = Movement_Income_View.Id
-       WHERE Movement_Income_View.OperDate BETWEEN inStartDate AND inEndDate;
-
-
+        SELECT 
+            Movement_Income.Id
+          , Movement_Income.InvNumber
+          , Movement_Income.OperDate
+          , Movement_Income.StatusCode
+          , Movement_Income.StatusName
+          , Movement_Income.TotalCount
+          , Movement_Income.TotalSummMVAT
+          , Movement_Income.TotalSumm
+          , Movement_Income.PriceWithVAT
+          , Movement_Income.FromId
+          , Movement_Income.FromName
+          , Movement_Income.ToId
+          , Movement_Income.ToName
+          , Movement_Income.JuridicalName
+          , Movement_Income.NDSKindId
+          , Movement_Income.NDSKindName
+          , Movement_Income.ContractId
+          , Movement_Income.ContractName
+          , Movement_Income.PaymentDate
+          , Movement_Income.PaySumm
+          , Movement_Income.SaleSumm
+          , Movement_Income.InvNumberBranch
+          , Movement_Income.BranchDate
+          , Movement_Income.Checked
+          , Movement_Income.PayColor
+          , MAX(MovementItemContainer.OperDate)::TDateTime AS LastDatePay
+        FROM
+            Movement_Income
+            LEFT OUTER JOIN MovementItemContainer ON MovementItemContainer.ContainerId = Movement_Income.PaymentContainerId
+                                                 AND MovementItemContainer.MovementDescId in (zc_Movement_BankAccount(), zc_Movement_Payment())
+        GROUP BY
+            Movement_Income.Id
+          , Movement_Income.InvNumber
+          , Movement_Income.OperDate
+          , Movement_Income.StatusCode
+          , Movement_Income.StatusName
+          , Movement_Income.TotalCount
+          , Movement_Income.TotalSummMVAT
+          , Movement_Income.TotalSumm
+          , Movement_Income.PriceWithVAT
+          , Movement_Income.FromId
+          , Movement_Income.FromName
+          , Movement_Income.ToId
+          , Movement_Income.ToName
+          , Movement_Income.JuridicalName
+          , Movement_Income.NDSKindId
+          , Movement_Income.NDSKindName
+          , Movement_Income.ContractId
+          , Movement_Income.ContractName
+          , Movement_Income.PaymentDate
+          , Movement_Income.PaySumm
+          , Movement_Income.SaleSumm
+          , Movement_Income.InvNumberBranch
+          , Movement_Income.BranchDate
+          , Movement_Income.Checked
+          , Movement_Income.PayColor;
 END;
 $BODY$
   LANGUAGE PLPGSQL VOLATILE;
