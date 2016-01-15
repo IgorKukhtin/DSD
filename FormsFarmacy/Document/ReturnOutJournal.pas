@@ -14,7 +14,7 @@ uses
   cxCalendar, Vcl.ExtCtrls, cxGridLevel, cxGridCustomTableView, cxGridTableView,
   cxGridDBTableView, cxGridCustomView, cxGrid, cxPC, ExternalSave,
   dxBarBuiltInMenu, cxNavigator, dxSkinsCore, dxSkinsDefaultPainters,
-  dxSkinscxPCPainter, dxSkinsdxBarPainter;
+  dxSkinscxPCPainter, dxSkinsdxBarPainter, Vcl.DBActns;
 
 type
   TReturnOutJournalForm = class(TAncestorJournalForm)
@@ -55,6 +55,7 @@ type
     actUpdateReturnOut_PartnerData: TdsdExecStoredProc;
     spUpdateReturnOut_PartnerData: TdsdStoredProc;
     dxBarButton1: TdxBarButton;
+    DataSetPost1: TDataSetPost;
   private
     { Private declarations }
   public

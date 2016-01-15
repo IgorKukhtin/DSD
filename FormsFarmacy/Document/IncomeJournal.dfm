@@ -401,6 +401,68 @@ inherited IncomeJournalForm: TIncomeJournalForm
       ActionList = <>
       Caption = 'MultiAction2'
     end
+    object mactEditPartnerData: TMultiAction
+      Category = 'PartnerData'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actPartnerDataDialod
+        end
+        item
+          Action = actUpdateIncome_PartnerData
+        end
+        item
+          Action = DataSetPost1
+        end>
+      Caption = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#8470' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' '#1080' '#1076#1072#1090#1091' '#1086#1087#1083#1072#1090#1099
+      Hint = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#8470' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' '#1080' '#1076#1072#1090#1091' '#1086#1087#1083#1072#1090#1099
+      ImageIndex = 35
+    end
+    object actPartnerDataDialod: TExecuteDialog
+      Category = 'PartnerData'
+      MoveParams = <>
+      Caption = 'actPartnerDataDialog'
+      FormName = 'TIncomePartnerDataDialogForm'
+      FormNameParam.Value = 'TIncomePartnerDataDialogForm'
+      FormNameParam.DataType = ftString
+      GuiParams = <
+        item
+          Name = 'InvNumber'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'InvNumber'
+          DataType = ftString
+          ParamType = ptInput
+        end
+        item
+          Name = 'PaymentDate'
+          Value = 'NULL'
+          Component = FormParams
+          ComponentItem = 'PaymentDate'
+          DataType = ftDateTime
+          ParamType = ptInput
+        end>
+      isShowModal = True
+      OpenBeforeShow = True
+    end
+    object actUpdateIncome_PartnerData: TdsdExecStoredProc
+      Category = 'PartnerData'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdateIncome_PartnerData
+      StoredProcList = <
+        item
+          StoredProc = spUpdateIncome_PartnerData
+        end>
+      Caption = 'actUpdateReturnOut_PartnerData'
+    end
+    object DataSetPost1: TDataSetPost
+      Category = 'PartnerData'
+      Caption = 'P&ost'
+      Hint = 'Post'
+      ImageIndex = 77
+      DataSource = MasterDS
+    end
   end
   inherited MasterDS: TDataSource
     Left = 64
@@ -519,6 +581,10 @@ inherited IncomeJournalForm: TIncomeJournalForm
         end
         item
           Visible = True
+          ItemName = 'dxBarButton1'
+        end
+        item
+          Visible = True
           ItemName = 'dxBarStatic'
         end
         item
@@ -573,6 +639,10 @@ inherited IncomeJournalForm: TIncomeJournalForm
     end
     object bbNewSend: TdxBarButton
       Action = mactSendOneDocNEW
+      Category = 0
+    end
+    object dxBarButton1: TdxBarButton
+      Action = mactEditPartnerData
       Category = 0
     end
   end
@@ -672,6 +742,20 @@ inherited IncomeJournalForm: TIncomeJournalForm
         Value = Null
         DataType = ftString
         ParamType = ptInput
+      end
+      item
+        Name = 'InvNumber'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'InvNumber'
+        DataType = ftString
+      end
+      item
+        Name = 'PaymentDate'
+        Value = 'NULL'
+        Component = MasterCDS
+        ComponentItem = 'PaymentDate'
+        DataType = ftDateTime
       end>
     Left = 400
     Top = 200
@@ -774,5 +858,37 @@ inherited IncomeJournalForm: TIncomeJournalForm
     PackSize = 1
     Left = 440
     Top = 88
+  end
+  object spUpdateIncome_PartnerData: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Movement_Income_PartnerData'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inInvNumber'
+        Value = ''
+        Component = FormParams
+        ComponentItem = 'InvNumber'
+        DataType = ftString
+        ParamType = ptInput
+      end
+      item
+        Name = 'inPaymentDate'
+        Value = 42144d
+        Component = FormParams
+        ComponentItem = 'PaymentDate'
+        DataType = ftDateTime
+        ParamType = ptInput
+      end>
+    PackSize = 1
+    Left = 536
+    Top = 296
   end
 end

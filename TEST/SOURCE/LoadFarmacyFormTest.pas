@@ -626,6 +626,8 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TIncomeJournalChoiceForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TIncome_AmountTroubleForm'));
   TdsdFormStorageFactory.GetStorage.Load('TIncome_AmountTroubleForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TIncomePartnerDataDialogForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TIncomePartnerDataDialogForm');
 end;
 
 procedure TLoadFormTest.LoadAdditionalGoodsFormTest;

@@ -102,6 +102,7 @@ type
     FAutoWidth: boolean;
     FNeedResetData: Boolean;
     FParamKeyField: String;
+    FAfterExecute: TNotifyEvent;
     // Возвращает XML строку заполненных параметров
     function FillParams: String;
     procedure FillOutputParams(XML: String);
@@ -143,6 +144,8 @@ type
     property NeedResetData: Boolean read FNeedResetData write FNeedResetData Default False;
     //Имя параметра, в котором ИД записи (нужно для перечитывания форм)
     property ParamKeyField: String read FParamKeyField write FParamKeyField;
+    //процедура, которая вызовется после экзекюта
+    property AfterExecute: TNotifyEvent read FAfterExecute write FAfterExecute;
   end;
 
   procedure Register;
@@ -263,6 +266,8 @@ begin
      ShowMessage('Время выполнения ' + StoredProcName + ' - ' + FloatToStr((GetTickCount - TickCount)/1000) + ' сек ' ); ;
   if NeedResetData then
     ResetData;
+  if assigned(AfterExecute) then
+    AfterExecute(self);
 end;
 
 procedure TdsdStoredProc.FillOutputParams(XML: String);
