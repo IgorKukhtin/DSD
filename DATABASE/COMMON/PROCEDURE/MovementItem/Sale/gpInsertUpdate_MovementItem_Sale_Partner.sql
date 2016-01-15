@@ -42,7 +42,9 @@ BEGIN
                         WHERE MovementItem.Id = ioId
                           AND MovementItem.ObjectId = inGoodsId
                           AND COALESCE (MILinkObject_GoodsKind.ObjectId, 0) = COALESCE (inGoodsKindId, 0)
-                          AND COALESCE (MIFloat_Price.ValueData, 0) = COALESCE (ioPrice, 0)
+                          AND (COALESCE (MIFloat_Price.ValueData, 0) = COALESCE (ioPrice, 0)
+                            OR vbUserId = 12120 -- Нагорнова Т.С. !!!временно!!!
+                              )
                        )
          THEN
              RAISE EXCEPTION 'Ошибка.Нет прав корректировать <Элемент>.';

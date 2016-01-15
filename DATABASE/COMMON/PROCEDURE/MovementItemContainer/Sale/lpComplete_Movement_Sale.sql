@@ -1276,7 +1276,7 @@ BEGIN
                   , ContainerId_Goods
                   , ContainerId_GoodsTransit
                   , GoodsId, GoodsKindId
-                  , CASE WHEN isTareReturning = TRUE THEN 0 ELSE zc_Enum_AnalyzerId_SaleCount_10400() END AS AnalyzerId --  Кол-во, реализация, у покупателя
+                  , CASE WHEN isTareReturning = TRUE THEN zc_Enum_AnalyzerId_TareReturning() ELSE zc_Enum_AnalyzerId_SaleCount_10400() END AS AnalyzerId --  Кол-во, реализация, у покупателя
                   , 0 AS ParentId
                   , -1 * OperCount_Partner AS Amount
                   , FALSE                  AS isActive
@@ -1290,7 +1290,7 @@ BEGIN
                   , ContainerId_Goods
                   , ContainerId_GoodsTransit
                   , GoodsId, GoodsKindId
-                  , CASE WHEN isTareReturning = TRUE THEN 0 ELSE zc_Enum_AnalyzerId_SaleCount_10500() END AS AnalyzerId --  Кол-во, реализация, Скидка за вес
+                  , CASE WHEN isTareReturning = TRUE THEN zc_Enum_AnalyzerId_TareReturning() ELSE zc_Enum_AnalyzerId_SaleCount_10500() END AS AnalyzerId --  Кол-во, реализация, Скидка за вес
                   , 0 AS ParentId
                   , -1 * (OperCount - OperCount_ChangePercent) AS Amount
                   , FALSE                                      AS isActive
@@ -1303,7 +1303,7 @@ BEGIN
                   , ContainerId_Goods
                   , ContainerId_GoodsTransit
                   , GoodsId, GoodsKindId
-                  , CASE WHEN isTareReturning = TRUE THEN 0 ELSE zc_Enum_AnalyzerId_SaleCount_40200() END AS AnalyzerId -- Кол-во, реализация, Разница в весе
+                  , CASE WHEN isTareReturning = TRUE THEN zc_Enum_AnalyzerId_TareReturning() ELSE zc_Enum_AnalyzerId_SaleCount_40200() END AS AnalyzerId -- Кол-во, реализация, Разница в весе
                   , 0 AS ParentId
                   , -1 * (OperCount_ChangePercent - OperCount_Partner) AS Amount
                   , FALSE                                              AS isActive

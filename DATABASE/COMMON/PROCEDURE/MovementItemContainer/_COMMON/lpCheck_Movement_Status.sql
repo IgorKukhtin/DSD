@@ -291,7 +291,7 @@ BEGIN
 
 
   -- !!!временно!!!
-  IF inUserId IN (128491 -- Хохлова Е.Ю. !!!временно!!!
+  IF inUserId IN (-1 -- 128491 -- Хохлова Е.Ю. !!!временно!!!
                 -- , 5
                 -- , zc_Enum_Process_Auto_Pack()
                  )
@@ -332,6 +332,7 @@ BEGIN
   ELSE
   -- !!!временно если ФИЛИАЛ НАЛ + БН!!!
   IF inUserId NOT IN (zc_Enum_Process_Auto_PrimeCost()) -- !!!Админу временно можно!!!
+     AND inUserId <> 12120 -- Нагорнова Т.С. !!!временно!!!
      AND (EXISTS (SELECT Object_RoleAccessKeyGuide_View.BranchId FROM Object_RoleAccessKeyGuide_View WHERE Object_RoleAccessKeyGuide_View.UserId = inUserId AND Object_RoleAccessKeyGuide_View.BranchId <> 0)
        OR vbAccessKeyId <> zc_Enum_Process_AccessKey_DocumentDnepr()
          )

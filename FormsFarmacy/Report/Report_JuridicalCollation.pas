@@ -47,6 +47,9 @@ type
     colInvNumberPartner: TcxGridDBColumn;
     actPrintCurrency: TdsdPrintAction;
     bbPrintCurrency: TdxBarButton;
+    edJuridicalBasis: TcxButtonEdit;
+    cxLabel3: TcxLabel;
+    JuridicalBasisGuide: TdsdGuides;
   private
     { Private declarations }
   public

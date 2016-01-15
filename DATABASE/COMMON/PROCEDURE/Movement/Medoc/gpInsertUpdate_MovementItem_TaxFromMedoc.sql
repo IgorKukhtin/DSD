@@ -72,4 +72,27 @@ SELECT distinct MovementItem.ObjectId
 where tmp.ObjectId = Object.Id
   and STRPOS (ValueData, ' *** ส่ๅโ') = 0
 
+
+
+select  Object.*
+, substring(Object.ValueData from 1 for STRPOS (Object.ValueData, ' *** ส่ๅโ') - 1)
+
+, lpInsertUpdate_ObjectLink (zc_ObjectLink_GoodsExternal_Goods(), Object2.Id, ObjectLink_GoodsExternal_Goods.ChildObjectId)
+, lpInsertUpdate_ObjectLink (zc_ObjectLink_GoodsExternal_GoodsKind(), Object2.Id, ObjectLink_GoodsExternal_GoodsKind.ChildObjectId)
+
+from Object 
+join Object as Object2 on  Object2.ValueData =  substring(Object.ValueData from 1 for STRPOS (Object.ValueData, ' *** ส่ๅโ') - 1)
+and Object2.DescId = zc_Object_GoodsExternal()
+
+        LEFT JOIN ObjectLink AS ObjectLink_GoodsExternal_Goods
+                             ON ObjectLink_GoodsExternal_Goods.ObjectId = Object.Id 
+                            AND ObjectLink_GoodsExternal_Goods.DescId = zc_ObjectLink_GoodsExternal_Goods()
+
+        LEFT JOIN ObjectLink AS ObjectLink_GoodsExternal_GoodsKind
+                             ON ObjectLink_GoodsExternal_GoodsKind.ObjectId = Object.Id 
+                            AND ObjectLink_GoodsExternal_GoodsKind.DescId = zc_ObjectLink_GoodsExternal_GoodsKind()
+
+
+where Object.DescId = zc_Object_GoodsExternal()
+and STRPOS (Object.ValueData, ' *** ส่ๅโ') <> 0
 */

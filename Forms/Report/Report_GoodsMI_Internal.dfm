@@ -83,6 +83,26 @@ inherited Report_GoodsMI_InternalForm: TReport_GoodsMI_InternalForm
               Format = ',0.####'
               Kind = skSum
               Column = Summ_calc
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = AmountIn_10500_Weight
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = SummIn_10500
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = AmountIn_40200_Weight
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = SummIn_40200
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -139,6 +159,26 @@ inherited Report_GoodsMI_InternalForm: TReport_GoodsMI_InternalForm
               Format = ',0.####'
               Kind = skSum
               Column = Summ_calc
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = AmountIn_10500_Weight
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = SummIn_10500
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = AmountIn_40200_Weight
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = SummIn_40200
             end>
           OptionsData.CancelOnExit = True
           OptionsData.Deleting = False
@@ -432,6 +472,68 @@ inherited Report_GoodsMI_InternalForm: TReport_GoodsMI_InternalForm
             HeaderAlignmentVert = vaCenter
             Width = 70
           end
+          object AmountIn_10500: TcxGridDBColumn
+            Caption = #1050#1086#1083'.  ('#1089#1082'.1%)'
+            DataBinding.FieldName = 'AmountIn_10500'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 70
+          end
+          object AmountIn_10500_Weight: TcxGridDBColumn
+            Caption = #1050#1086#1083'. '#1074#1077#1089'  ('#1089#1082'.1%)'
+            DataBinding.FieldName = 'AmountIn_10500_Weight'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 70
+          end
+          object SummIn_10500: TcxGridDBColumn
+            Caption = #1057#1091#1084#1084#1072' '#1089'/'#1089' ('#1089#1082'.1%)'
+            DataBinding.FieldName = 'SummIn_10500'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 70
+          end
+          object AmountIn_40200: TcxGridDBColumn
+            Caption = #1050#1086#1083'. (-)'#1091#1073#1099#1083#1100' (+)'#1101#1082#1086#1085#1086#1084'.'
+            DataBinding.FieldName = 'AmountIn_40200'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 70
+          end
+          object AmountIn_40200_Weight: TcxGridDBColumn
+            Caption = #1050#1086#1083'. '#1074#1077#1089' (-)'#1091#1073#1099#1083#1100' (+)'#1101#1082#1086#1085#1086#1084'.'
+            DataBinding.FieldName = 'AmountIn_40200_Weight'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 70
+          end
+          object SummIn_40200: TcxGridDBColumn
+            Caption = #1057#1091#1084#1084#1072' '#1089'/'#1089' (-)'#1091#1073#1099#1083#1100' (+)'#1101#1082#1086#1085#1086#1084'.'
+            DataBinding.FieldName = 'SummIn_40200'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 70
+          end
           object clTradeMarkName: TcxGridDBColumn
             Caption = #1058#1086#1088#1075#1086#1074#1072#1103' '#1084#1072#1088#1082#1072
             DataBinding.FieldName = 'TradeMarkName'
@@ -663,6 +765,24 @@ inherited Report_GoodsMI_InternalForm: TReport_GoodsMI_InternalForm
         Component = deStart
         Properties.Strings = (
           'Date')
+      end
+      item
+        Component = FromGuides
+        Properties.Strings = (
+          'Key'
+          'TextValue')
+      end
+      item
+        Component = GoodsGroupGuides
+        Properties.Strings = (
+          'Key'
+          'TextValue')
+      end
+      item
+        Component = ToGuides
+        Properties.Strings = (
+          'Key'
+          'TextValue')
       end>
   end
   inherited ActionList: TActionList
@@ -770,7 +890,7 @@ inherited Report_GoodsMI_InternalForm: TReport_GoodsMI_InternalForm
           FromParam.Component = deStart
           FromParam.DataType = ftDateTime
           ToParam.Name = 'StartDate'
-          ToParam.Value = Null
+          ToParam.Value = 'NULL'
           ToParam.DataType = ftDateTime
           ToParam.ParamType = ptInputOutput
         end
@@ -779,7 +899,7 @@ inherited Report_GoodsMI_InternalForm: TReport_GoodsMI_InternalForm
           FromParam.Component = deEnd
           FromParam.DataType = ftDateTime
           ToParam.Name = 'EndDate'
-          ToParam.Value = Null
+          ToParam.Value = 'NULL'
           ToParam.DataType = ftDateTime
           ToParam.ParamType = ptInputOutput
         end>

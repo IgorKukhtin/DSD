@@ -8,6 +8,8 @@ CREATE OR REPLACE FUNCTION gpSelect_Movement_Medoc(
     IN inSession        TVarChar    -- сессия пользователя
 )
 RETURNS TABLE (Id Integer
+           , StatusCode Integer
+           , StatusName TVarChar 
            , InvNumber TVarChar 
            , OperDate TDateTime
            , InvNumberPartner TVarChar
@@ -36,6 +38,8 @@ BEGIN
      RETURN QUERY
      SELECT
              Movement_Medoc.Id
+           , Movement_Medoc.StatusCode
+           , Movement_Medoc.StatusName
            , Movement_Medoc.InvNumber
            , Movement_Medoc.OperDate
            , Movement_Medoc.InvNumberPartner

@@ -3,6 +3,7 @@ inherited Report_TaraForm: TReport_TaraForm
   ClientHeight = 490
   ClientWidth = 975
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
+  ExplicitLeft = -202
   ExplicitTop = -68
   ExplicitWidth = 991
   ExplicitHeight = 525
@@ -163,6 +164,7 @@ inherited Report_TaraForm: TReport_TaraForm
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 60
           end
           object colAccountGroupName: TcxGridDBColumn
@@ -170,6 +172,7 @@ inherited Report_TaraForm: TReport_TaraForm
             DataBinding.FieldName = 'AccountGroupName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 100
           end
           object colPaidKindName: TcxGridDBColumn

@@ -7,22 +7,23 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
+    Top = 77
     Width = 893
-    Height = 332
+    Height = 312
     TabOrder = 3
-    ExplicitTop = 80
-    ExplicitWidth = 1112
-    ExplicitHeight = 309
-    ClientRectBottom = 332
+    ExplicitTop = 57
+    ExplicitWidth = 893
+    ExplicitHeight = 332
+    ClientRectBottom = 312
     ClientRectRight = 893
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 1112
-      ExplicitHeight = 309
+      ExplicitWidth = 893
+      ExplicitHeight = 332
       inherited cxGrid: TcxGrid
         Width = 893
-        Height = 332
-        ExplicitWidth = 1112
-        ExplicitHeight = 309
+        Height = 312
+        ExplicitWidth = 893
+        ExplicitHeight = 332
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.FooterSummaryItems = <
             item
@@ -100,7 +101,7 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
             Width = 80
           end
           object colDebet: TcxGridDBColumn
-            Caption = #1044#1077#1073#1077#1090
+            Caption = #1044#1077#1073#1077#1090' ('#1054#1087#1083#1072#1090#1072')'
             DataBinding.FieldName = 'Debet'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
@@ -111,7 +112,7 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
             Width = 80
           end
           object colKredit: TcxGridDBColumn
-            Caption = #1050#1088#1077#1076#1080#1090
+            Caption = #1050#1088#1077#1076#1080#1090' ('#1055#1088#1080#1093#1086#1076')'
             DataBinding.FieldName = 'Kredit'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
@@ -162,7 +163,9 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
   end
   inherited Panel: TPanel
     Width = 893
+    Height = 51
     ExplicitWidth = 893
+    ExplicitHeight = 51
     inherited deStart: TcxDateEdit
       Left = 118
       EditValue = 41640d
@@ -170,26 +173,30 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
       ExplicitLeft = 118
     end
     inherited deEnd: TcxDateEdit
-      Left = 326
+      Left = 118
+      Top = 25
       EditValue = 41640d
       Properties.SaveTime = False
-      ExplicitLeft = 326
+      ExplicitLeft = 118
+      ExplicitTop = 25
     end
     inherited cxLabel1: TcxLabel
       Left = 25
       ExplicitLeft = 25
     end
     inherited cxLabel2: TcxLabel
-      Left = 214
-      ExplicitLeft = 214
+      Left = 6
+      Top = 26
+      ExplicitLeft = 6
+      ExplicitTop = 26
     end
     object cxLabel6: TcxLabel
-      Left = 439
+      Left = 231
       Top = 6
-      Caption = #1070#1088#1080#1076#1080#1095#1077#1089#1082#1086#1077' '#1083#1080#1094#1086':'
+      Caption = #1070#1088#1080#1076#1080#1095#1077#1089#1082#1086#1077' '#1083#1080#1094#1086' ('#1082#1083#1080#1077#1085#1090'):'
     end
     object edJuridical: TcxButtonEdit
-      Left = 546
+      Left = 386
       Top = 5
       Properties.Buttons = <
         item
@@ -199,6 +206,23 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
       Properties.ReadOnly = True
       TabOrder = 5
       Width = 210
+    end
+    object edJuridicalBasis: TcxButtonEdit
+      Left = 386
+      Top = 25
+      Properties.Buttons = <
+        item
+          Default = True
+          Kind = bkEllipsis
+        end>
+      Properties.ReadOnly = True
+      TabOrder = 6
+      Width = 210
+    end
+    object cxLabel3: TcxLabel
+      Left = 231
+      Top = 26
+      Caption = #1070#1088#1080#1076#1080#1095#1077#1089#1082#1086#1077' '#1083#1080#1094#1086' ('#1085#1072#1096#1077'):'
     end
   end
   inherited cxPropertiesStore: TcxPropertiesStore
@@ -212,6 +236,12 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
         Component = deStart
         Properties.Strings = (
           'Date')
+      end
+      item
+        Component = JuridicalBasisGuide
+        Properties.Strings = (
+          'Key'
+          'TextValue')
       end
       item
         Component = JuridicalGuides
@@ -918,6 +948,13 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
         Component = JuridicalGuides
         ComponentItem = 'Key'
         ParamType = ptInput
+      end
+      item
+        Name = 'inJuridical_BasisId'
+        Value = Null
+        Component = JuridicalBasisGuide
+        ComponentItem = 'Key'
+        ParamType = ptInput
       end>
     Left = 184
     Top = 196
@@ -1040,6 +1077,9 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
       end
       item
         Component = JuridicalGuides
+      end
+      item
+        Component = JuridicalBasisGuide
       end>
     Left = 408
     Top = 72
@@ -1066,30 +1106,8 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
-      end
-      item
-        Name = 'ContractId'
-        Value = Null
-        ParamType = ptInput
-      end
-      item
-        Name = 'ContractName'
-        Value = Null
-        DataType = ftString
-        ParamType = ptInput
-      end
-      item
-        Name = 'PartnerId'
-        Value = Null
-        ParamType = ptInput
-      end
-      item
-        Name = 'PartnerName'
-        Value = Null
-        DataType = ftString
-        ParamType = ptInput
       end>
-    Left = 744
+    Left = 624
   end
   object getMovementForm: TdsdStoredProc
     StoredProcName = 'gpGet_Movement_Form'
@@ -1188,5 +1206,31 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
     PackSize = 1
     Left = 296
     Top = 240
+  end
+  object JuridicalBasisGuide: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edJuridicalBasis
+    FormNameParam.Value = 'TJuridicalCorporateForm'
+    FormNameParam.DataType = ftString
+    FormName = 'TJuridicalCorporateForm'
+    PositionDataSet = 'MasterCDS'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = JuridicalBasisGuide
+        ComponentItem = 'Key'
+        ParamType = ptInput
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = JuridicalBasisGuide
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+      end>
+    Left = 688
+    Top = 16
   end
 end
