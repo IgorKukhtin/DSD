@@ -132,6 +132,10 @@ BEGIN
                                                                                                                        -- , 8379 -- филиал Киев
                                                                                                                         )
                                                                                             THEN inGoodsKindId
+                                                                                       WHEN inOperDate >= '01.01.2016' AND inBranchId IN (
+                                                                                                                        8379 -- филиал Киев
+                                                                                                                        )
+                                                                                           THEN inGoodsKindId
                                                                                        ELSE 0
                                                                                   END 
                                                                 , inDescId_5   := zc_ContainerLinkObject_InfoMoney()

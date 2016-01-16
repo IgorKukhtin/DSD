@@ -328,7 +328,7 @@ object UtilPrintForm: TUtilPrintForm
       end
       item
         Name = 'OperDate'
-        Value = Null
+        Value = 'NULL'
         DataType = ftDateTime
       end
       item
@@ -428,7 +428,7 @@ object UtilPrintForm: TUtilPrintForm
         end
         item
           Name = 'OperDate'
-          Value = Null
+          Value = 'NULL'
           Component = FormParams
           ComponentItem = 'OperDate'
           DataType = ftDateTime
