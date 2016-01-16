@@ -362,7 +362,8 @@ uses
   ChangeIncomePaymentJournal in '..\..\FormsFarmacy\Document\ChangeIncomePaymentJournal.pas' {ChangeIncomePaymentJournalForm: TParentForm},
   ChangeIncomePayment in '..\..\FormsFarmacy\Document\ChangeIncomePayment.pas' {ChangeIncomePaymentForm: TParentForm},
   PriceHistory in '..\..\FormsFarmacy\Guides\PriceHistory.pas' {PriceHistoryForm: TParentForm},
-  ReturnOutPartnerDataDialog in '..\..\FormsFarmacy\Document\ReturnOutPartnerDataDialog.pas' {ReturnOutPartnerDataDialogForm: TParentForm};
+  ReturnOutPartnerDataDialog in '..\..\FormsFarmacy\Document\ReturnOutPartnerDataDialog.pas' {ReturnOutPartnerDataDialogForm: TParentForm},
+  IncomePartnerDataDialog in '..\..\FormsFarmacy\Document\IncomePartnerDataDialog.pas' {IncomePartnerDataDialogForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}

@@ -1817,6 +1817,10 @@ begin
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TMember_TrasportForm'));
   TdsdFormStorageFactory.GetStorage.Load('TMember_TrasportForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TMember_TrasportDialogForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TMember_TrasportDialogForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TMember_TrasportDateDialogForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TMember_TrasportDateDialogForm');
 end;
 
 procedure TLoadFormTest.LoadMemberExternalFormTest;

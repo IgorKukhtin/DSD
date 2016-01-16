@@ -81,6 +81,20 @@ type
     LimitFuel: TcxGridDBColumn;
     CarName: TcxGridDBColumn;
     CarModelName: TcxGridDBColumn;
+    actUpdateParams: TdsdOpenForm;
+    bbUpdateParams: TdxBarButton;
+    spInsertUpdateParam: TdsdStoredProc;
+    actDialog: TExecuteDialog;
+    actRecalc: TdsdExecStoredProc;
+    actStartRecalc: TMultiAction;
+    FormParams: TdsdFormParams;
+    actRecalcMulti: TMultiAction;
+    actDialogDate: TExecuteDialog;
+    actRecalcDate: TdsdExecStoredProc;
+    spInsertUpdateDate: TdsdStoredProc;
+    actRecalcDateMulti: TMultiAction;
+    actStartRecalcDate: TMultiAction;
+    bbStartRecalcDate: TdxBarButton;
   private
     { Private declarations }
   public

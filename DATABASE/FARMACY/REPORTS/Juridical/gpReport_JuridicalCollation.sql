@@ -5,11 +5,13 @@ DROP FUNCTION IF EXISTS gpReport_JuridicalCollation (TDateTime, TDateTime, Integ
 DROP FUNCTION IF EXISTS gpReport_JuridicalCollation (TDateTime, TDateTime, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpReport_JuridicalCollation (TDateTime, TDateTime, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpReport_JuridicalCollation (TDateTime, TDateTime, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpReport_JuridicalCollation (TDateTime, TDateTime, Integer, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpReport_JuridicalCollation(
     IN inStartDate TDateTime,
     IN inEndDate TDateTime,
     IN inJuridicalId Integer,
+    IN inJuridical_BasisId Integer,
     IN insession TVarChar)
 RETURNS TABLE(
     MovementSumm TFloat
@@ -45,10 +47,19 @@ BEGIN
             FROM ContainerLinkObject AS CLO_Juridical
                 INNER JOIN Container ON Container.Id = CLO_Juridical.ContainerId
                                     AND Container.DescId = zc_Container_Summ()
+                LEFT OUTER JOIN ContainerLinkObject AS CLO_JuridicalBasis
+                                                    ON CLO_JuridicalBasis.ContainerId = Container.ID
+                                                   AND CLO_JuridicalBasis.DescId = zc_ContainerLinkObject_JuridicalBasis()
             WHERE 
                 CLO_Juridical.ObjectId = inJuridicalId AND inJuridicalId <> 0
                 AND 
                 CLO_Juridical.DescId = zc_ContainerLinkObject_Juridical() 
+                AND
+                (
+                    CLO_JuridicalBasis.ObjectId = inJuridical_BasisId
+                    OR
+                    inJuridical_BasisId = 0
+                )
         )
         SELECT 
             CASE 
@@ -64,14 +75,21 @@ BEGIN
                 WHEN Operation.OperationSort = 0 
                      AND 
                      Operation.MovementSumm > 0
-                    THEN Operation.MovementSumm
+                     AND
+                     Movement.DescId <> zc_Movement_ChangeIncomePayment()
+                     
+                     THEN Operation.MovementSumm
             ELSE 0
             END :: TFloat                                  AS Debet,
 
             CASE 
                 WHEN Operation.OperationSort = 0 
                      AND 
-                     Operation.MovementSumm < 0
+                     (
+                         Operation.MovementSumm < 0
+                         OR
+                         Movement.DescId = zc_Movement_ChangeIncomePayment()
+                     )
                     THEN -1 * Operation.MovementSumm
             ELSE 0
             END :: TFloat                                  AS Kredit,
@@ -160,7 +178,7 @@ $BODY$
   LANGUAGE plpgsql VOLATILE
   COST 100
   ROWS 1000;
-ALTER FUNCTION gpreport_juridicalcollation(TDateTime, TDateTime, Integer, TVarChar)
+ALTER FUNCTION gpreport_juridicalcollation(TDateTime, TDateTime, Integer, Integer, TVarChar)
   OWNER TO postgres;
 
 
@@ -184,4 +202,4 @@ ALTER FUNCTION gpreport_juridicalcollation(TDateTime, TDateTime, Integer, TVarCh
 */
 
 -- тест
--- SELECT * FROM gpReport_JuridicalCollation (inStartDate:= '01.12.2015', inEndDate:= '01.01.2016', inJuridicalId:= 59610, inSession:= zfCalc_UserAdmin());
+-- SELECT * FROM gpReport_JuridicalCollation (inStartDate:= '01.12.2015', inEndDate:= '01.01.2016', inJuridicalId:= 59610, inJuridical_BasisId := 0, inSession:= zfCalc_UserAdmin());

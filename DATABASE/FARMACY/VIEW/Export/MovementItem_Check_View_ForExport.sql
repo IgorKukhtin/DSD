@@ -3,12 +3,13 @@ DROP VIEW IF EXISTS MovementItem_Check_View_ForExport;
 CREATE OR REPLACE VIEW MovementItem_Check_View_ForExport AS
     SELECT
         MLO_Unit.ObjectId                                   AS UnitId
+       ,ObjectLink_Unit_Juridical.ChildObjectId             AS JuridicalId
        ,MIC_Check.MovementId                                AS CheckId
        ,DATE_TRUNC('day',MIC_Check.OperDate)                AS CheckDate
        ,MIC_Check.OperDate::TIME                            AS CheckTime
        ,COALESCE(MovementBoolean_Deferred.ValueData,False)  AS IsDeferred
        ,MI_Check.ObjectId                                   AS GoodsId
-       ,MIC_Check.Amount                                     AS Amount
+       ,MIC_Check.Amount                                    AS Amount
        ,MIFloat_Price.ValueData                             AS Price
        ,(((COALESCE (MIC_Check.Amount, 0)) * MIFloat_Price.ValueData)::NUMERIC (16, 2))::TFloat AS Summ
     FROM
@@ -16,6 +17,9 @@ CREATE OR REPLACE VIEW MovementItem_Check_View_ForExport AS
         INNER JOIN MovementLinkObject AS MLO_Unit
                                       ON MLO_Unit.MovementId = MIC_Check.MovementId
                                      AND MLO_Unit.DescId = zc_MovementLinkObject_Unit()
+        INNER JOIN ObjectLink AS ObjectLink_Unit_Juridical
+                              ON ObjectLink_Unit_Juridical.ObjectId = MLO_Unit.ObjectId
+                             AND ObjectLink_Unit_Juridical.DescId = zc_ObjectLink_Unit_Juridical() 
         INNER JOIN MovementItem AS MI_Check
                                 ON MI_Check.MovementId = MIC_Check.MovementId
         LEFT JOIN MovementItemFloat AS MIFloat_Price

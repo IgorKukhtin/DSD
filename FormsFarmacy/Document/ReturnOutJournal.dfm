@@ -489,7 +489,7 @@ inherited ReturnOutJournalForm: TReturnOutJournalForm
           Action = actUpdateReturnOut_PartnerData
         end
         item
-          Action = actRefresh
+          Action = DataSetPost1
         end>
       Caption = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#8470' '#1080' '#1076#1072#1090#1091' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072
       Hint = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#8470' '#1080' '#1076#1072#1090#1091' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072
@@ -532,6 +532,13 @@ inherited ReturnOutJournalForm: TReturnOutJournalForm
           StoredProc = spUpdateReturnOut_PartnerData
         end>
       Caption = 'actUpdateReturnOut_PartnerData'
+    end
+    object DataSetPost1: TDataSetPost
+      Category = 'PartnerData'
+      Caption = 'P&ost'
+      Hint = 'Post'
+      ImageIndex = 78
+      DataSource = MasterDS
     end
   end
   inherited MasterDS: TDataSource

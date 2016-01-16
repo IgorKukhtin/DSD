@@ -15,6 +15,7 @@ object Member_TrasportForm: TMember_TrasportForm
   AddOnFormData.isAlwaysRefresh = False
   AddOnFormData.RefreshAction = actRefresh
   AddOnFormData.ChoiceAction = dsdChoiceGuides
+  AddOnFormData.Params = FormParams
   PixelsPerInch = 96
   TextHeight = 13
   object cxGrid: TcxGrid
@@ -27,8 +28,6 @@ object Member_TrasportForm: TMember_TrasportForm
     LookAndFeel.Kind = lfStandard
     LookAndFeel.NativeStyle = False
     LookAndFeel.SkinName = ''
-    ExplicitWidth = 777
-    ExplicitHeight = 494
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -55,7 +54,7 @@ object Member_TrasportForm: TMember_TrasportForm
         DataBinding.FieldName = 'Code'
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 36
+        Width = 32
       end
       object clName: TcxGridDBColumn
         Caption = #1060#1048#1054
@@ -63,7 +62,7 @@ object Member_TrasportForm: TMember_TrasportForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 103
+        Width = 92
       end
       object clMember_INN: TcxGridDBColumn
         Caption = #1048#1053#1053
@@ -71,13 +70,13 @@ object Member_TrasportForm: TMember_TrasportForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 75
+        Width = 68
       end
       object clDriverCertificate: TcxGridDBColumn
         Caption = #1042#1086#1076#1080#1090#1077#1083#1100#1089#1082#1086#1077' '#1091#1076#1086#1089#1090#1086#1074#1077#1088#1077#1085#1080#1077
         DataBinding.FieldName = 'DriverCertificate'
         HeaderAlignmentVert = vaCenter
-        Width = 101
+        Width = 96
       end
       object clIsOfficial: TcxGridDBColumn
         Caption = #1054#1092#1086#1088#1084#1083#1077#1085' '#1086#1092#1080#1094#1080#1072#1083#1100#1085#1086
@@ -85,7 +84,7 @@ object Member_TrasportForm: TMember_TrasportForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 79
+        Width = 70
       end
       object clInfoMoneyCode: TcxGridDBColumn
         Caption = #1050#1086#1076' '#1059#1055
@@ -108,21 +107,21 @@ object Member_TrasportForm: TMember_TrasportForm
         Properties.ReadOnly = True
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 98
+        Width = 69
       end
       object StartSummerDate: TcxGridDBColumn
         Caption = #1053#1072#1095#1072#1083#1100#1085#1072#1103' '#1076#1072#1090#1072' '#1076#1083#1103' '#1085#1086#1088#1084#1099' '#1072#1074#1090#1086' '#1083#1077#1090#1086
         DataBinding.FieldName = 'StartSummerDate'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 74
+        Width = 98
       end
       object EndSummerDate: TcxGridDBColumn
         Caption = #1050#1086#1085#1077#1095#1085#1072#1103' '#1076#1072#1090#1072' '#1076#1083#1103' '#1085#1086#1088#1084#1099' '#1072#1074#1090#1086' '#1083#1077#1090#1086
         DataBinding.FieldName = 'EndSummerDate'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 61
+        Width = 82
       end
       object SummerFuel: TcxGridDBColumn
         Caption = #1053#1086#1088#1084#1072' '#1072#1074#1090#1086' '#1083#1080#1090#1088#1099' '#1083#1077#1090#1086
@@ -132,7 +131,7 @@ object Member_TrasportForm: TMember_TrasportForm
         Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 63
+        Width = 51
       end
       object WinterFuel: TcxGridDBColumn
         Caption = #1053#1086#1088#1084#1072' '#1072#1074#1090#1086' '#1083#1080#1090#1088#1099' '#1079#1080#1084#1072
@@ -142,7 +141,7 @@ object Member_TrasportForm: TMember_TrasportForm
         Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 62
+        Width = 50
       end
       object Reparation: TcxGridDBColumn
         Caption = #1040#1084#1086#1088#1090#1080#1079#1072#1094#1080#1103' '#1079#1072' 1 '#1082#1084'., '#1075#1088#1085'.'
@@ -152,7 +151,7 @@ object Member_TrasportForm: TMember_TrasportForm
         Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 86
+        Width = 69
       end
       object LimitMoney: TcxGridDBColumn
         Caption = #1051#1080#1084#1080#1090', '#1075#1088#1085
@@ -162,7 +161,7 @@ object Member_TrasportForm: TMember_TrasportForm
         Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 56
+        Width = 46
       end
       object LimitFuel: TcxGridDBColumn
         Caption = #1051#1080#1084#1080#1090', '#1083#1080#1090#1088#1099
@@ -172,14 +171,14 @@ object Member_TrasportForm: TMember_TrasportForm
         Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 55
+        Width = 43
       end
       object clComment: TcxGridDBColumn
         Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
         DataBinding.FieldName = 'Comment'
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 77
+        Width = 64
       end
       object clErased: TcxGridDBColumn
         Caption = #1059#1076#1072#1083#1077#1085
@@ -195,7 +194,7 @@ object Member_TrasportForm: TMember_TrasportForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 60
+        Width = 48
       end
       object CarModelName: TcxGridDBColumn
         Caption = #1052#1072#1088#1082#1072' '#1072#1074#1090#1086#1084#1086#1073#1080#1083#1103
@@ -203,7 +202,7 @@ object Member_TrasportForm: TMember_TrasportForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 60
+        Width = 48
       end
     end
     object cxGridLevel: TcxGridLevel
@@ -272,6 +271,22 @@ object Member_TrasportForm: TMember_TrasportForm
       FloatClientWidth = 0
       FloatClientHeight = 0
       ItemLinks = <
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbStartRecalcDate'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbUpdateParams'
+        end
         item
           Visible = True
           ItemName = 'dxBarStatic'
@@ -376,11 +391,59 @@ object Member_TrasportForm: TMember_TrasportForm
       Action = ProtocolOpenForm
       Category = 0
     end
+    object bbUpdateParams: TdxBarButton
+      Action = actStartRecalc
+      Category = 0
+    end
+    object bbStartRecalcDate: TdxBarButton
+      Action = actStartRecalcDate
+      Category = 0
+    end
   end
   object ActionList: TActionList
     Images = dmMain.ImageList
     Left = 288
     Top = 160
+    object actDialogDate: TExecuteDialog
+      Category = 'Recalc'
+      MoveParams = <>
+      Caption = 'actRecalcDialog'
+      FormName = 'TMember_TrasportDateDialogForm'
+      FormNameParam.Name = 'TMember_TrasportDialogForm'
+      FormNameParam.Value = 'TMember_TrasportDateDialogForm'
+      FormNameParam.DataType = ftString
+      GuiParams = <
+        item
+          Name = 'StartSummerDate'
+          Value = 42370d
+          Component = FormParams
+          ComponentItem = 'StartSummerDate'
+          DataType = ftDateTime
+          ParamType = ptInputOutput
+        end
+        item
+          Name = 'EndSummerDate'
+          Value = 42370d
+          Component = FormParams
+          ComponentItem = 'EndSummerDate'
+          DataType = ftDateTime
+          ParamType = ptInputOutput
+        end>
+      isShowModal = True
+      OpenBeforeShow = True
+    end
+    object actRecalcDate: TdsdExecStoredProc
+      Category = 'Recalc'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spInsertUpdateDate
+      StoredProcList = <
+        item
+          StoredProc = spInsertUpdateDate
+        end>
+      Caption = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1087#1072#1088#1072#1084#1077#1090#1088#1099' '#1085#1086#1088#1084' '#1072#1074#1090#1086
+      Hint = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1087#1072#1088#1072#1084#1077#1090#1088#1099' '#1085#1086#1088#1084' '#1072#1074#1090#1086
+    end
     object actRefresh: TdsdDataSetRefresh
       Category = 'DSDLib'
       MoveParams = <>
@@ -394,6 +457,17 @@ object Member_TrasportForm: TMember_TrasportForm
       ImageIndex = 4
       ShortCut = 116
       RefreshOnTabSetChanges = False
+    end
+    object actRecalcDateMulti: TMultiAction
+      Category = 'Recalc'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actRecalcDate
+        end>
+      View = cxGridDBTableView
+      Caption = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1076#1072#1090#1099' '#1076#1083#1103' '#1085#1086#1088#1084' '#1072#1074#1090#1086
+      Hint = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1076#1072#1090#1099' '#1076#1083#1103' '#1085#1086#1088#1084' '#1072#1074#1090#1086
     end
     object actInsert: TdsdInsertUpdateAction
       Category = 'DSDLib'
@@ -413,6 +487,98 @@ object Member_TrasportForm: TMember_TrasportForm
       DataSource = DataSource
       DataSetRefresh = actRefresh
       IdFieldName = 'Id'
+    end
+    object actStartRecalcDate: TMultiAction
+      Category = 'Recalc'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actDialogDate
+        end
+        item
+          Action = actRecalcDateMulti
+        end
+        item
+          Action = actRefresh
+        end>
+      Caption = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1076#1072#1090#1099' '#1076#1083#1103' '#1085#1086#1088#1084' '#1072#1074#1090#1086
+      Hint = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1076#1072#1090#1099' '#1076#1083#1103' '#1085#1086#1088#1084' '#1072#1074#1090#1086
+      ImageIndex = 42
+    end
+    object actDialog: TExecuteDialog
+      Category = 'Recalc'
+      MoveParams = <>
+      Caption = 'actRecalcDialog'
+      FormName = 'TMember_TrasportDialogForm'
+      FormNameParam.Name = 'TMember_TrasportDialogForm'
+      FormNameParam.Value = 'TMember_TrasportDialogForm'
+      FormNameParam.DataType = ftString
+      GuiParams = <
+        item
+          Name = 'SummerFuel'
+          Value = '0'
+          Component = FormParams
+          ComponentItem = 'SummerFuel'
+          DataType = ftFloat
+          ParamType = ptInputOutput
+        end
+        item
+          Name = 'WinterFuel'
+          Value = '0'
+          Component = FormParams
+          ComponentItem = 'WinterFuel'
+          DataType = ftFloat
+          ParamType = ptInputOutput
+        end
+        item
+          Name = 'Reparation'
+          Value = '0'
+          Component = FormParams
+          ComponentItem = 'Reparation'
+          DataType = ftFloat
+          ParamType = ptInputOutput
+        end
+        item
+          Name = 'LimitMoney'
+          Value = '0'
+          Component = FormParams
+          ComponentItem = 'LimitMoney'
+          DataType = ftFloat
+          ParamType = ptInputOutput
+        end
+        item
+          Name = 'LimitFuel'
+          Value = '0'
+          Component = FormParams
+          ComponentItem = 'LimitFuel'
+          DataType = ftFloat
+          ParamType = ptInputOutput
+        end>
+      isShowModal = True
+      OpenBeforeShow = True
+    end
+    object actRecalc: TdsdExecStoredProc
+      Category = 'Recalc'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spInsertUpdateParam
+      StoredProcList = <
+        item
+          StoredProc = spInsertUpdateParam
+        end>
+      Caption = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1087#1072#1088#1072#1084#1077#1090#1088#1099' '#1085#1086#1088#1084' '#1072#1074#1090#1086
+      Hint = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1087#1072#1088#1072#1084#1077#1090#1088#1099' '#1085#1086#1088#1084' '#1072#1074#1090#1086
+    end
+    object actRecalcMulti: TMultiAction
+      Category = 'Recalc'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actRecalc
+        end>
+      View = cxGridDBTableView
+      Caption = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1087#1072#1088#1072#1084#1077#1090#1088#1099' '#1085#1086#1088#1084' '#1072#1074#1090#1086
+      Hint = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1087#1072#1088#1072#1084#1077#1090#1088#1099' '#1085#1086#1088#1084' '#1072#1074#1090#1086
     end
     object actUpdate: TdsdInsertUpdateAction
       Category = 'DSDLib'
@@ -482,6 +648,18 @@ object Member_TrasportForm: TMember_TrasportForm
       ShortCut = 46
       ErasedFieldName = 'isErased'
       DataSource = DataSource
+    end
+    object actUpdateParams: TdsdOpenForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = #1043#1088#1091#1087#1087#1086#1074#1072#1103' '#1091#1089#1090#1072#1085#1086#1074#1082#1072' '#1087#1072#1088#1072#1084#1077#1090#1088#1086#1074
+      Hint = #1043#1088#1091#1087#1087#1086#1074#1072#1103' '#1091#1089#1090#1072#1085#1086#1074#1082#1072' '#1087#1072#1088#1072#1084#1077#1090#1088#1086#1074
+      ImageIndex = 43
+      FormName = 'TMember_TrasportEditForm'
+      FormNameParam.Value = 'TMember_TrasportEditForm'
+      FormNameParam.DataType = ftString
+      GuiParams = <>
+      isShowModal = False
     end
     object ProtocolOpenForm: TdsdOpenForm
       Category = 'DSDLib'
@@ -607,6 +785,23 @@ object Member_TrasportForm: TMember_TrasportForm
       Caption = #1048#1079#1084#1077#1085#1080#1090#1100' "'#1054#1092#1080#1094#1080#1072#1083#1100#1085#1086' '#1044#1072'/'#1053#1077#1090'"'
       Hint = #1048#1079#1084#1077#1085#1080#1090#1100' "'#1054#1092#1080#1094#1080#1072#1083#1100#1085#1086' '#1044#1072'/'#1053#1077#1090'"'
       ImageIndex = 52
+    end
+    object actStartRecalc: TMultiAction
+      Category = 'Recalc'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actDialog
+        end
+        item
+          Action = actRecalcMulti
+        end
+        item
+          Action = actRefresh
+        end>
+      Caption = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1087#1072#1088#1072#1084#1077#1090#1088#1099' '#1085#1086#1088#1084' '#1072#1074#1090#1086
+      Hint = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1087#1072#1088#1072#1084#1077#1090#1088#1099' '#1085#1086#1088#1084' '#1072#1074#1090#1086
+      ImageIndex = 41
     end
   end
   object spSelect: TdsdStoredProc
@@ -753,8 +948,8 @@ object Member_TrasportForm: TMember_TrasportForm
         ParamType = ptInput
       end>
     PackSize = 1
-    Left = 560
-    Top = 152
+    Left = 568
+    Top = 144
   end
   object spUpdateIsOfficial: TdsdStoredProc
     StoredProcName = 'gpUpdate_Object_Member_isOfficial'
@@ -779,5 +974,215 @@ object Member_TrasportForm: TMember_TrasportForm
     PackSize = 1
     Left = 200
     Top = 307
+  end
+  object spInsertUpdateParam: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Object_Member_TransportParam'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inId'
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'Id'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inisDate'
+        Value = 'False'
+        DataType = ftBoolean
+        ParamType = ptInput
+      end
+      item
+        Name = 'inStartSummerDate'
+        Value = 42384d
+        Component = FormParams
+        ComponentItem = 'StartSummerDate'
+        DataType = ftDateTime
+        ParamType = ptInput
+      end
+      item
+        Name = 'inEndSummerDate'
+        Value = 42370d
+        Component = FormParams
+        ComponentItem = 'EndSummerDate'
+        DataType = ftDateTime
+        ParamType = ptInput
+      end
+      item
+        Name = 'inSummerFuel'
+        Value = '1'
+        Component = FormParams
+        ComponentItem = 'SummerFuel'
+        DataType = ftFloat
+        ParamType = ptInput
+      end
+      item
+        Name = 'inWinterFuel'
+        Value = '1'
+        Component = FormParams
+        ComponentItem = 'WinterFuel'
+        DataType = ftFloat
+        ParamType = ptInput
+      end
+      item
+        Name = 'inReparation'
+        Value = '1'
+        Component = FormParams
+        ComponentItem = 'Reparation'
+        DataType = ftFloat
+        ParamType = ptInput
+      end
+      item
+        Name = 'inLimit'
+        Value = '1'
+        Component = FormParams
+        ComponentItem = 'LimitMoney'
+        DataType = ftFloat
+        ParamType = ptInput
+      end
+      item
+        Name = 'inLimitFuel'
+        Value = '1'
+        Component = FormParams
+        ComponentItem = 'LimitFuel'
+        DataType = ftFloat
+        ParamType = ptInput
+      end>
+    PackSize = 1
+    Left = 688
+    Top = 144
+  end
+  object FormParams: TdsdFormParams
+    Params = <
+      item
+        Name = 'Id'
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'id'
+        ParamType = ptInputOutput
+      end
+      item
+        Name = 'StartSummerDate'
+        Value = 42370d
+        DataType = ftDateTime
+        ParamType = ptInput
+      end
+      item
+        Name = 'EndSummerDate'
+        Value = 42370d
+        DataType = ftDateTime
+        ParamType = ptInput
+      end
+      item
+        Name = 'SummerFuel'
+        Value = '0'
+        DataType = ftFloat
+        ParamType = ptInput
+      end
+      item
+        Name = 'WinterFuel'
+        Value = '0'
+        DataType = ftFloat
+        ParamType = ptInput
+      end
+      item
+        Name = 'Reparation'
+        Value = '0'
+        DataType = ftFloat
+        ParamType = ptInput
+      end
+      item
+        Name = 'LimitMoney'
+        Value = '0'
+        DataType = ftFloat
+        ParamType = ptInput
+      end
+      item
+        Name = 'LimitFuel'
+        Value = '0'
+        DataType = ftFloat
+        ParamType = ptInput
+      end>
+    Left = 128
+    Top = 256
+  end
+  object spInsertUpdateDate: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Object_Member_TransportParam'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inId'
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'Id'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inisDate'
+        Value = 'True'
+        DataType = ftBoolean
+        ParamType = ptInput
+      end
+      item
+        Name = 'inStartSummerDate'
+        Value = 42370d
+        Component = FormParams
+        ComponentItem = 'StartSummerDate'
+        DataType = ftDateTime
+        ParamType = ptInput
+      end
+      item
+        Name = 'inEndSummerDate'
+        Value = 42370d
+        Component = FormParams
+        ComponentItem = 'EndSummerDate'
+        DataType = ftDateTime
+        ParamType = ptInput
+      end
+      item
+        Name = 'inSummerFuel'
+        Value = '0'
+        Component = FormParams
+        ComponentItem = 'SummerFuel'
+        DataType = ftFloat
+        ParamType = ptInput
+      end
+      item
+        Name = 'inWinterFuel'
+        Value = '0'
+        Component = FormParams
+        ComponentItem = 'WinterFuel'
+        DataType = ftFloat
+        ParamType = ptInput
+      end
+      item
+        Name = 'inReparation'
+        Value = '0'
+        Component = FormParams
+        ComponentItem = 'Reparation'
+        DataType = ftFloat
+        ParamType = ptInput
+      end
+      item
+        Name = 'inLimit'
+        Value = '0'
+        Component = FormParams
+        ComponentItem = 'LimitMoney'
+        DataType = ftFloat
+        ParamType = ptInput
+      end
+      item
+        Name = 'inLimitFuel'
+        Value = '0'
+        Component = FormParams
+        ComponentItem = 'LimitFuel'
+        DataType = ftFloat
+        ParamType = ptInput
+      end>
+    PackSize = 1
+    Left = 672
+    Top = 200
   end
 end

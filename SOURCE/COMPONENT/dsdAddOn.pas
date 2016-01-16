@@ -338,11 +338,14 @@ type
     FOnAfterShow: TNotifyEvent;
     FParam: TdsdParam;
     FGetStoredProc: TdsdStoredProc;
+    FAfterExecute: TNotifyEvent;
     procedure OnEnter(Sender: TObject);
     procedure OnExit(Sender: TObject);
     // процедура вызывается после открытия формы и заполняет FEnterValue начальными параметрами
     procedure OnAfterShow(Sender: TObject);
     procedure WndMethod(var Msg: TMessage);
+    procedure SetGetStoredProc(Value: TdsdStoredProc);
+    procedure AfterGetExecute(Sender: TObject);
   protected
     procedure Notification(AComponent: TComponent; Operation: TOperation); override;
   public
@@ -354,7 +357,7 @@ type
     property IdParam: TdsdParam read FParam write FParam;
     property StoredProc: TdsdStoredProc read FStoredProc write FStoredProc;
     property ControlList: TControlList read FControlList write FControlList;
-    property GetStoredProc: TdsdStoredProc read FGetStoredProc write FGetStoredProc;
+    property GetStoredProc: TdsdStoredProc read FGetStoredProc write SetGetStoredProc;
   end;
 
   TRefreshAddOn = class(TComponent)
@@ -1295,6 +1298,13 @@ end;
 
 { THeaderSaver }
 
+procedure THeaderSaver.AfterGetExecute(Sender: TObject);
+begin
+  if Assigned(FAfterExecute) then
+     FAfterExecute(Sender);
+  EnterAll;
+end;
+
 constructor THeaderSaver.Create(AOwner: TComponent);
 begin
   inherited;
@@ -1409,6 +1419,22 @@ begin
   end;
   FNotSave := true;
   PostMessage(FHWnd, WM_SETFLAGHeaderSaver, 0, 0);
+end;
+
+procedure THeaderSaver.SetGetStoredProc(Value: TdsdStoredProc);
+begin
+  //Если ничего не поменялось - выходим
+  if Value = FGetStoredProc then exit;
+  //если меняется процедура - возвращаем старой процедуре её афтерэкзекют
+  if FGetStoredProc <> nil then
+    FGetStoredProc.AfterExecute := FAfterExecute;
+  FGetStoredProc := Value;
+  //Если процедура установлена - меняем ей афтерэкзекют
+  if Assigned(FGetStoredProc) then
+  Begin
+    FAfterExecute := FGetStoredProc.AfterExecute;
+    FGetStoredProc.AfterExecute := AfterGetExecute;
+  End;
 end;
 
 procedure THeaderSaver.WndMethod(var Msg: TMessage);

@@ -780,7 +780,9 @@ uses
   GoodsExternal in '..\..\Forms\Guides\GoodsExternal.pas' {GoodsExternalForm: TParentForm},
   Report_SaleOrderExternalList in '..\..\Forms\Report\Report_SaleOrderExternalList.pas' {Report_SaleOrderExternalListForm: TParentForm},
   Report_SaleOrderExternalListDialog in '..\..\Forms\Report\Report_SaleOrderExternalListDialog.pas' {Report_SaleOrderExternalListDialogForm: TParentForm},
-  Member_Trasport in '..\..\Forms\Guides\Member_Trasport.pas' {Member_TrasportForm: TParentForm};
+  Member_Trasport in '..\..\Forms\Guides\Member_Trasport.pas' {Member_TrasportForm: TParentForm},
+  Member_TrasportDialog in '..\..\Forms\Guides\Member_TrasportDialog.pas' {Member_TrasportDialog1Form: TParentForm},
+  Member_TrasportDateDialog in '..\..\Forms\Guides\Member_TrasportDateDialog.pas' {Member_TrasportDateDialogForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}

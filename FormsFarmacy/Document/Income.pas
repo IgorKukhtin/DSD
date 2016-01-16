@@ -95,6 +95,11 @@ type
     chbIsPay: TcxCheckBox;
     ‚ÛDateLastPay: TcxDateEdit;
     cxLabel17: TcxLabel;
+    spUpdateIncome_PartnerData: TdsdStoredProc;
+    mactEditPartnerData: TMultiAction;
+    actPartnerDataDialod: TExecuteDialog;
+    actUpdateIncome_PartnerData: TdsdExecStoredProc;
+    dxBarButton1: TdxBarButton;
   private
     { Private declarations }
   public
