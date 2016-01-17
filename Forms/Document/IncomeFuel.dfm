@@ -2,8 +2,8 @@ object IncomeFuelForm: TIncomeFuelForm
   Left = 0
   Top = 0
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1055#1088#1080#1093#1086#1076' '#1086#1090' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072' ('#1047#1072#1087#1088#1072#1074#1082#1072' '#1072#1074#1090#1086')>'
-  ClientHeight = 396
-  ClientWidth = 876
+  ClientHeight = 502
+  ClientWidth = 879
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -21,8 +21,8 @@ object IncomeFuelForm: TIncomeFuelForm
   object DataPanel: TPanel
     Left = 0
     Top = 0
-    Width = 876
-    Height = 100
+    Width = 879
+    Height = 133
     Align = alTop
     BevelOuter = bvNone
     TabOrder = 0
@@ -195,7 +195,7 @@ object IncomeFuelForm: TIncomeFuelForm
       Caption = #1057#1082#1080#1076#1082#1072' '#1074' '#1094#1077#1085#1077', '#1075#1088#1085' '#1079#1072' 1'#1083'.'
     end
     object edChangePrice: TcxCurrencyEdit
-      Left = 455
+      Left = 458
       Top = 63
       Properties.Alignment.Horz = taRightJustify
       Properties.Alignment.Vert = taVCenter
@@ -241,29 +241,179 @@ object IncomeFuelForm: TIncomeFuelForm
       TabOrder = 26
       Width = 163
     end
+    object edLimit: TcxCurrencyEdit
+      Left = 191
+      Top = 106
+      Properties.Alignment.Horz = taRightJustify
+      Properties.Alignment.Vert = taVCenter
+      Properties.DecimalPlaces = 3
+      Properties.DisplayFormat = ',0.###'
+      Properties.ReadOnly = True
+      TabOrder = 27
+      Width = 59
+    end
+    object cxLabel19: TcxLabel
+      Left = 191
+      Top = 88
+      Caption = #1051#1080#1084#1080#1090', '#1075#1088#1085
+    end
   end
   object cxPageControl: TcxPageControl
     Left = 0
-    Top = 126
-    Width = 876
-    Height = 270
+    Top = 159
+    Width = 879
+    Height = 343
     Align = alClient
     TabOrder = 2
     Properties.ActivePage = cxTabSheetMain
     Properties.CustomButtons.Buttons = <>
-    ClientRectBottom = 270
-    ClientRectRight = 876
+    ClientRectBottom = 343
+    ClientRectRight = 879
     ClientRectTop = 24
     object cxTabSheetMain: TcxTabSheet
       Caption = #1057#1090#1088#1086#1095#1085#1072#1103' '#1095#1072#1089#1090#1100
       ImageIndex = 0
+      object cxGridChild: TcxGrid
+        Left = 0
+        Top = 212
+        Width = 879
+        Height = 107
+        Align = alBottom
+        TabOrder = 0
+        object cxGridDBTableViewChild: TcxGridDBTableView
+          Navigator.Buttons.CustomButtons = <>
+          DataController.DataSource = ChildDS
+          DataController.Filter.Options = [fcoCaseInsensitive]
+          DataController.Summary.DefaultGroupSummaryItems = <
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = clAmount
+            end
+            item
+              Kind = skSum
+              Column = clOperDate
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = clDistance_calc
+            end>
+          DataController.Summary.FooterSummaryItems = <
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = clAmount
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = clDistance_calc
+            end>
+          DataController.Summary.SummaryGroups = <>
+          Images = dmMain.SortImageList
+          OptionsBehavior.GoToNextCellOnEnter = True
+          OptionsCustomize.ColumnHiding = True
+          OptionsCustomize.ColumnsQuickCustomization = True
+          OptionsData.Appending = True
+          OptionsData.DeletingConfirmation = False
+          OptionsView.CellAutoHeight = True
+          OptionsView.ColumnAutoWidth = True
+          OptionsView.Footer = True
+          OptionsView.GroupByBox = False
+          OptionsView.HeaderAutoHeight = True
+          OptionsView.Indicator = True
+          Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
+          object clOperDate: TcxGridDBColumn
+            Caption = #1044#1072#1090#1072
+            DataBinding.FieldName = 'OperDate'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 81
+          end
+          object clRouteMemberCode: TcxGridDBColumn
+            Caption = #1050#1086#1076
+            DataBinding.FieldName = 'RouteMemberCode'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 87
+          end
+          object clRouteMemberName: TcxGridDBColumn
+            Caption = #1052#1072#1088#1096#1088#1091#1090' ('#1089#1086#1090#1088#1091#1076#1085#1080#1082#1086#1074')'
+            DataBinding.FieldName = 'RouteMemberName'
+            PropertiesClassName = 'TcxButtonEditProperties'
+            Properties.Buttons = <
+              item
+                Action = RouteMemberChoiceForm
+                Default = True
+                Kind = bkEllipsis
+              end>
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 229
+          end
+          object clStartOdometre: TcxGridDBColumn
+            Caption = #1057#1087#1080#1076#1086#1084#1077#1090#1088' '#1085#1072#1095'. '#1087#1086#1082#1072#1079#1072#1085#1080#1077', '#1082#1084
+            DataBinding.FieldName = 'StartOdometre'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 142
+          end
+          object clEndOdometre: TcxGridDBColumn
+            Caption = #1057#1087#1080#1076#1086#1084#1077#1090#1088' '#1082#1086#1085#1077#1095'. '#1087#1086#1082#1072#1079#1072#1085#1080#1077', '#1082#1084
+            DataBinding.FieldName = 'EndOdometre'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 0
+            Properties.DisplayFormat = '0;;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 141
+          end
+          object clDistance_calc: TcxGridDBColumn
+            Caption = #1055#1088#1086#1073#1077#1075' '#1092#1072#1082#1090', '#1082#1084
+            DataBinding.FieldName = 'Distance_calc'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 67
+          end
+          object clAmount: TcxGridDBColumn
+            Caption = #1047#1072#1087#1088#1072#1074#1082#1072', '#1083
+            DataBinding.FieldName = 'Amount'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 118
+          end
+        end
+        object cxGridLevelChild: TcxGridLevel
+          GridView = cxGridDBTableViewChild
+        end
+      end
+      object cxSplitterChild: TcxSplitter
+        Left = 0
+        Top = 203
+        Width = 879
+        Height = 9
+        AlignSplitter = salBottom
+        Control = cxGridChild
+      end
       object cxGrid: TcxGrid
         Left = 0
         Top = 0
-        Width = 876
-        Height = 246
+        Width = 879
+        Height = 203
         Align = alClient
-        TabOrder = 0
+        TabOrder = 2
         object cxGridDBTableView: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = MasterDS
@@ -398,6 +548,133 @@ object IncomeFuelForm: TIncomeFuelForm
       end
     end
   end
+  object cxLabel14: TcxLabel
+    Left = 556
+    Top = 88
+    Caption = #1057#1087#1080#1076#1086#1084#1077#1090#1088' '#1085#1072#1095'. '#1082#1084
+  end
+  object edStartOdometre: TcxCurrencyEdit
+    Left = 556
+    Top = 106
+    Properties.Alignment.Horz = taRightJustify
+    Properties.Alignment.Vert = taVCenter
+    Properties.DecimalPlaces = 3
+    Properties.DisplayFormat = ',0.###'
+    Properties.ReadOnly = True
+    TabOrder = 4
+    Width = 100
+  end
+  object cxLabel15: TcxLabel
+    Left = 662
+    Top = 88
+    Caption = #1057#1087#1080#1076#1086#1084#1077#1090#1088' '#1082#1086#1085'. '#1082#1084
+  end
+  object edEndOdometre: TcxCurrencyEdit
+    Left = 662
+    Top = 106
+    Properties.Alignment.Horz = taRightJustify
+    Properties.Alignment.Vert = taVCenter
+    Properties.DecimalPlaces = 3
+    Properties.DisplayFormat = ',0.###'
+    Properties.ReadOnly = True
+    TabOrder = 6
+    Width = 100
+  end
+  object cxLabel16: TcxLabel
+    Left = 9
+    Top = 88
+    Caption = #1053#1086#1088#1084#1072' '#1072#1074#1090#1086
+  end
+  object edAmountFuel: TcxCurrencyEdit
+    Left = 9
+    Top = 106
+    Properties.Alignment.Horz = taRightJustify
+    Properties.Alignment.Vert = taVCenter
+    Properties.DecimalPlaces = 3
+    Properties.DisplayFormat = ',0.###'
+    Properties.ReadOnly = True
+    TabOrder = 8
+    Width = 62
+  end
+  object edReparation: TcxCurrencyEdit
+    Left = 79
+    Top = 106
+    Properties.Alignment.Horz = taRightJustify
+    Properties.Alignment.Vert = taVCenter
+    Properties.DecimalPlaces = 3
+    Properties.DisplayFormat = ',0.###'
+    Properties.ReadOnly = True
+    TabOrder = 9
+    Width = 105
+  end
+  object cxLabel17: TcxLabel
+    Left = 79
+    Top = 88
+    Caption = #1040#1084#1086#1088#1090'. '#1079#1072' 1 '#1082#1084', '#1075#1088#1085'.'
+  end
+  object edLimitFuel: TcxCurrencyEdit
+    Left = 356
+    Top = 106
+    Properties.Alignment.Horz = taRightJustify
+    Properties.Alignment.Vert = taVCenter
+    Properties.DecimalPlaces = 3
+    Properties.DisplayFormat = ',0.###'
+    Properties.ReadOnly = True
+    TabOrder = 11
+    Width = 74
+  end
+  object cxLabel20: TcxLabel
+    Left = 356
+    Top = 88
+    Caption = #1051#1080#1084#1080#1090', '#1083#1080#1090#1088#1099
+  end
+  object edLimitChange: TcxCurrencyEdit
+    Left = 256
+    Top = 106
+    Properties.Alignment.Horz = taRightJustify
+    Properties.Alignment.Vert = taVCenter
+    Properties.DecimalPlaces = 3
+    Properties.DisplayFormat = ',0.###'
+    Properties.ReadOnly = False
+    TabOrder = 13
+    Width = 94
+  end
+  object cxLabel21: TcxLabel
+    Left = 256
+    Top = 88
+    Caption = #1051#1080#1084#1080#1090' ('#1089#1083#1091#1078'.) '#1075#1088#1085
+  end
+  object edLimitFuelChange: TcxCurrencyEdit
+    Left = 437
+    Top = 106
+    Properties.Alignment.Horz = taRightJustify
+    Properties.Alignment.Vert = taVCenter
+    Properties.DecimalPlaces = 3
+    Properties.DisplayFormat = ',0.###'
+    TabOrder = 16
+    Width = 109
+  end
+  object cxLabel22: TcxLabel
+    Left = 437
+    Top = 88
+    Caption = #1051#1080#1084#1080#1090' ('#1089#1083#1091#1078'.) '#1083#1080#1090#1088#1099
+  end
+  object edDistanceDiff: TcxCurrencyEdit
+    Left = 768
+    Top = 106
+    Properties.Alignment.Horz = taRightJustify
+    Properties.Alignment.Vert = taVCenter
+    Properties.DecimalPlaces = 3
+    Properties.DisplayFormat = ',0.###'
+    Properties.ReadOnly = True
+    TabOrder = 20
+    Width = 100
+  end
+  object cxLabel23: TcxLabel
+    Left = 768
+    Top = 88
+    Caption = #1055#1088#1086#1073#1077#1075' '#1080#1090#1086#1075#1086', '#1082#1084
+  end
   object FormParams: TdsdFormParams
     Params = <
       item
@@ -417,8 +694,8 @@ object IncomeFuelForm: TIncomeFuelForm
         Value = '0'
         ParamType = ptInput
       end>
-    Left = 216
-    Top = 327
+    Left = 160
+    Top = 311
   end
   object spSelectMI: TdsdStoredProc
     StoredProcName = 'gpSelect_MovementItem_IncomeFuel'
@@ -451,7 +728,7 @@ object IncomeFuelForm: TIncomeFuelForm
         ParamType = ptInput
       end>
     PackSize = 1
-    Left = 108
+    Left = 92
     Top = 272
   end
   object dxBarManager: TdxBarManager
@@ -515,6 +792,22 @@ object IncomeFuelForm: TIncomeFuelForm
         item
           Visible = True
           ItemName = 'bbUnErased'
+        end
+        item
+          Visible = True
+          ItemName = 'bbStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbInsertRecordChild'
+        end
+        item
+          Visible = True
+          ItemName = 'bbSetErasedChild'
+        end
+        item
+          Visible = True
+          ItemName = 'bbSetUnErasedChild'
         end
         item
           Visible = True
@@ -597,6 +890,18 @@ object IncomeFuelForm: TIncomeFuelForm
     end
     object bbMIContainer: TdxBarButton
       Action = actMIContainer
+      Category = 0
+    end
+    object bbInsertRecordChild: TdxBarButton
+      Action = InsertRecordChild
+      Category = 0
+    end
+    object bbSetErasedChild: TdxBarButton
+      Action = SetErasedChild
+      Category = 0
+    end
+    object bbSetUnErasedChild: TdxBarButton
+      Action = SetUnErasedChild
       Category = 0
     end
   end
@@ -701,6 +1006,9 @@ object IncomeFuelForm: TIncomeFuelForm
         end
         item
           StoredProc = spSelectMI
+        end
+        item
+          StoredProc = spSelectMIChild
         end>
       Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
       Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
@@ -748,7 +1056,6 @@ object IncomeFuelForm: TIncomeFuelForm
       Category = 'DSDLib'
       TabSheet = cxTabSheetMain
       MoveParams = <>
-      Grid = cxGrid
       Caption = #1042#1099#1075#1088#1091#1079#1082#1072' '#1074' Excel'
       Hint = #1042#1099#1075#1088#1091#1079#1082#1072' '#1074' Excel'
       ImageIndex = 6
@@ -866,6 +1173,94 @@ object IncomeFuelForm: TIncomeFuelForm
         end>
       isShowModal = False
     end
+    object RouteMemberChoiceForm: TOpenChoiceForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = 'RouteMemberForm'
+      FormName = 'TRouteMemberForm'
+      FormNameParam.Value = 'TRouteMemberForm'
+      FormNameParam.DataType = ftString
+      GuiParams = <
+        item
+          Name = 'Key'
+          Value = Null
+          Component = ChildCDS
+          ComponentItem = 'RouteMemberId'
+        end
+        item
+          Name = 'TextValue'
+          Value = Null
+          Component = ChildCDS
+          ComponentItem = 'RouteMemberName'
+          DataType = ftWideString
+        end
+        item
+          Name = 'Code'
+          Value = Null
+          Component = ChildCDS
+          ComponentItem = 'RouteMemberCode'
+        end>
+      isShowModal = True
+    end
+    object InsertRecordChild: TInsertRecord
+      Category = 'DSDLib'
+      TabSheet = cxTabSheetMain
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      View = cxGridDBTableViewChild
+      Action = RouteMemberChoiceForm
+      Params = <>
+      Caption = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1052#1072#1088#1096#1088#1091#1090'('#1089#1086#1090#1088#1091#1076#1085#1080#1082#1072')>'
+      Hint = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1052#1072#1088#1096#1088#1091#1090'('#1089#1086#1090#1088#1091#1076#1085#1080#1082#1072')>'
+      ShortCut = 45
+      ImageIndex = 0
+    end
+    object SetErasedChild: TdsdUpdateErased
+      Category = 'DSDLib'
+      TabSheet = cxTabSheetMain
+      MoveParams = <>
+      StoredProc = spErasedMIChild
+      StoredProcList = <
+        item
+          StoredProc = spErasedMIChild
+        end>
+      Caption = #1059#1076#1072#1083#1080#1090#1100' <'#1052#1072#1088#1096#1088#1091#1090'('#1089#1086#1090#1088#1091#1076#1085#1080#1082#1072')>'
+      Hint = #1059#1076#1072#1083#1080#1090#1100' <'#1052#1072#1088#1096#1088#1091#1090'('#1089#1086#1090#1088#1091#1076#1085#1080#1082#1072')>'
+      ImageIndex = 2
+      ShortCut = 46
+      ErasedFieldName = 'isErased'
+      DataSource = ChildDS
+    end
+    object SetUnErasedChild: TdsdUpdateErased
+      Category = 'DSDLib'
+      TabSheet = cxTabSheetMain
+      MoveParams = <>
+      StoredProc = spUnErasedMIChild
+      StoredProcList = <
+        item
+          StoredProc = spUnErasedMIChild
+        end>
+      Caption = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100
+      Hint = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
+      ImageIndex = 8
+      ShortCut = 46
+      ErasedFieldName = 'isErased'
+      isSetErased = False
+      DataSource = ChildDS
+    end
+    object actUpdateChildDS: TdsdUpdateDataSet
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spInsertUpdateMIChild
+      StoredProcList = <
+        item
+          StoredProc = spInsertUpdateMIChild
+        end>
+      Caption = 'actUpdateChildDS'
+      DataSource = ChildDS
+    end
   end
   object MasterDS: TDataSource
     DataSet = MasterCDS
@@ -944,7 +1339,7 @@ object IncomeFuelForm: TIncomeFuelForm
         DataType = ftDateTime
       end>
     Left = 336
-    Top = 88
+    Top = 32
   end
   object GuidesTo: TdsdGuides
     KeyField = 'Id'
@@ -970,8 +1365,8 @@ object IncomeFuelForm: TIncomeFuelForm
         DataType = ftString
         ParamType = ptInput
       end>
-    Left = 400
-    Top = 88
+    Left = 408
+    Top = 16
   end
   object PopupMenu: TPopupMenu
     Images = dmMain.ImageList
@@ -1039,12 +1434,11 @@ object IncomeFuelForm: TIncomeFuelForm
         DataType = ftFloat
       end>
     PackSize = 1
-    Left = 78
+    Left = 134
     Top = 272
   end
   object MasterViewAddOn: TdsdDBViewAddOn
     ErasedFieldName = 'isErased'
-    View = cxGridDBTableView
     OnDblClickActionList = <
       item
       end>
@@ -1064,15 +1458,15 @@ object IncomeFuelForm: TIncomeFuelForm
         Param.DataType = ftString
         DataSummaryItemIndex = 2
       end>
-    Left = 280
-    Top = 311
+    Left = 192
+    Top = 183
   end
   object UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 108
     Top = 218
   end
   object spInsertUpdateMovement: TdsdStoredProc
-    StoredProcName = 'gpInsertUpdate_Movement_IncomeFuel'
+    StoredProcName = 'gpInsertUpdate_Movement_IncomeMemberFuel'
     DataSets = <>
     OutputType = otResult
     Params = <
@@ -1129,6 +1523,20 @@ object IncomeFuelForm: TIncomeFuelForm
         Name = 'inChangePrice'
         Value = 0.000000000000000000
         Component = edChangePrice
+        DataType = ftFloat
+        ParamType = ptInput
+      end
+      item
+        Name = 'inLimitChange'
+        Value = Null
+        Component = edLimitChange
+        DataType = ftFloat
+        ParamType = ptInput
+      end
+      item
+        Name = 'inLimitFuelChange'
+        Value = Null
+        Component = edLimitFuelChange
         DataType = ftFloat
         ParamType = ptInput
       end
@@ -1435,8 +1843,8 @@ object IncomeFuelForm: TIncomeFuelForm
         Component = FormParams
         ComponentItem = 'inPaidKindId'
       end>
-    Left = 648
-    Top = 88
+    Left = 640
+    Top = 40
   end
   object GuidesPaidKind: TdsdGuides
     KeyField = 'Id'
@@ -1462,8 +1870,8 @@ object IncomeFuelForm: TIncomeFuelForm
         DataType = ftString
         ParamType = ptInput
       end>
-    Left = 712
-    Top = 88
+    Left = 736
+    Top = 40
   end
   object GuidesPersonalDriver: TdsdGuides
     KeyField = 'Id'
@@ -1489,8 +1897,8 @@ object IncomeFuelForm: TIncomeFuelForm
         DataType = ftString
         ParamType = ptInput
       end>
-    Left = 552
-    Top = 88
+    Left = 560
+    Top = 40
   end
   object GuidesRoute: TdsdGuides
     KeyField = 'Id'
@@ -1516,8 +1924,8 @@ object IncomeFuelForm: TIncomeFuelForm
         DataType = ftString
         ParamType = ptInput
       end>
-    Left = 495
-    Top = 93
+    Left = 487
+    Top = 37
   end
   object spErasedMIMaster: TdsdStoredProc
     StoredProcName = 'gpSetErased_MovementItem'
@@ -1573,7 +1981,7 @@ object IncomeFuelForm: TIncomeFuelForm
     PositionDataSet = 'ClientDataSet'
     Params = <>
     Left = 31
-    Top = 65
+    Top = 41
   end
   object spChangeStatus: TdsdStoredProc
     StoredProcName = 'gpUpdate_Status_Income'
@@ -1596,7 +2004,7 @@ object IncomeFuelForm: TIncomeFuelForm
       end>
     PackSize = 1
     Left = 71
-    Top = 65
+    Top = 41
   end
   object spGetTotalSumm: TdsdStoredProc
     StoredProcName = 'gpGet_Movement_TotalSumm'
@@ -1620,5 +2028,194 @@ object IncomeFuelForm: TIncomeFuelForm
     PackSize = 1
     Left = 444
     Top = 188
+  end
+  object ChildViewAddOn: TdsdDBViewAddOn
+    ErasedFieldName = 'isErased'
+    View = cxGridDBTableViewChild
+    OnDblClickActionList = <
+      item
+      end>
+    ActionItemList = <
+      item
+      end>
+    SortImages = dmMain.SortImageList
+    OnlyEditingCellOnEnter = False
+    ColorRuleList = <>
+    ColumnAddOnList = <>
+    ColumnEnterList = <>
+    SummaryItemList = <>
+    Left = 288
+    Top = 431
+  end
+  object ChildCDS: TClientDataSet
+    Aggregates = <>
+    Params = <>
+    Left = 32
+    Top = 408
+  end
+  object ChildDS: TDataSource
+    DataSet = ChildCDS
+    Left = 84
+    Top = 438
+  end
+  object spInsertUpdateMIChild: TdsdStoredProc
+    StoredProcName = 'gpInsertUpdate_MI_IncomeFuel_Child'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'ioId'
+        Value = Null
+        Component = ChildCDS
+        ComponentItem = 'Id'
+        ParamType = ptInputOutput
+      end
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inOperDate'
+        Value = 'NULL'
+        Component = ChildCDS
+        ComponentItem = 'OperDate'
+        DataType = ftDateTime
+        ParamType = ptInput
+      end
+      item
+        Name = 'inRouteMemberName'
+        Value = Null
+        Component = ChildCDS
+        ComponentItem = 'RouteMemberName'
+        DataType = ftWideString
+        ParamType = ptInput
+      end
+      item
+        Name = 'inStartOdometre'
+        Value = Null
+        Component = ChildCDS
+        ComponentItem = 'StartOdometre'
+        DataType = ftFloat
+        ParamType = ptInput
+      end
+      item
+        Name = 'inEndOdometre'
+        Value = Null
+        Component = ChildCDS
+        ComponentItem = 'EndOdometre'
+        DataType = ftFloat
+        ParamType = ptInput
+      end
+      item
+        Name = 'inAmount'
+        Value = Null
+        Component = ChildCDS
+        ComponentItem = 'Amount'
+        DataType = ftFloat
+        ParamType = ptInput
+      end
+      item
+        Name = 'outDistance_calc'
+        Value = Null
+        Component = ChildCDS
+        ComponentItem = 'Distance_calc'
+        DataType = ftFloat
+      end
+      item
+        Name = 'outStartOdometre_calc'
+        Value = Null
+        Component = edStartOdometre
+        DataType = ftFloat
+      end
+      item
+        Name = 'outEndOdometre_calc'
+        Value = Null
+        Component = edEndOdometre
+        DataType = ftFloat
+      end
+      item
+        Name = 'outDistanceDiff'
+        Value = Null
+        Component = edDistanceDiff
+        DataType = ftFloat
+      end>
+    PackSize = 1
+    Left = 186
+    Top = 445
+  end
+  object spSelectMIChild: TdsdStoredProc
+    StoredProcName = 'gpSelect_MI_IncomeFuel_Child'
+    DataSet = ChildCDS
+    DataSets = <
+      item
+        DataSet = ChildCDS
+      end>
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inIsErased'
+        Value = False
+        Component = actShowErased
+        DataType = ftBoolean
+        ParamType = ptInput
+      end>
+    PackSize = 1
+    Left = 556
+    Top = 440
+  end
+  object spErasedMIChild: TdsdStoredProc
+    StoredProcName = 'gpSetErased_MovementItem'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementItemId'
+        Value = Null
+        Component = ChildCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+      end
+      item
+        Name = 'outIsErased'
+        Value = Null
+        Component = ChildCDS
+        ComponentItem = 'isErased'
+        DataType = ftBoolean
+      end>
+    PackSize = 1
+    Left = 390
+    Top = 428
+  end
+  object spUnErasedMIChild: TdsdStoredProc
+    StoredProcName = 'gpSetUnErased_MovementItem'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementItemId'
+        Value = Null
+        Component = ChildCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+      end
+      item
+        Name = 'outIsErased'
+        Value = Null
+        Component = ChildCDS
+        ComponentItem = 'isErased'
+        DataType = ftBoolean
+      end>
+    PackSize = 1
+    Left = 470
+    Top = 436
   end
 end

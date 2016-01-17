@@ -23,7 +23,7 @@ uses
   dxSkinSilver, dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008,
   dxSkinTheAsphaltWorld, dxSkinsDefaultPainters, dxSkinValentine, dxSkinVS2010,
   dxSkinWhiteprint, dxSkinXmas2008Blue, dxSkinscxPCPainter, dxSkinsdxBarPainter,
-  DataModul, dxBarExtItems, dsdAddOn, cxCheckBox, cxCurrencyEdit;
+  DataModul, dxBarExtItems, dsdAddOn, cxCheckBox, cxCurrencyEdit, cxSplitter;
 
 type
   TIncomeFuelForm = class(TParentForm)
@@ -52,19 +52,10 @@ type
     N1: TMenuItem;
     cxPageControl: TcxPageControl;
     cxTabSheetMain: TcxTabSheet;
-    cxGrid: TcxGrid;
-    cxGridDBTableView: TcxGridDBTableView;
-    colCode: TcxGridDBColumn;
-    colName: TcxGridDBColumn;
-    colAmount: TcxGridDBColumn;
-    colPrice: TcxGridDBColumn;
-    colAmountSumm: TcxGridDBColumn;
-    cxGridLevel: TcxGridLevel;
     actUpdateMasterDS: TdsdUpdateDataSet;
     spInsertUpdateMIMaster: TdsdStoredProc;
     actPrint: TdsdPrintAction;
     bbPrint: TdxBarButton;
-    colCountForPrice: TcxGridDBColumn;
     bbShowAll: TdxBarButton;
     bbStatic: TdxBarStatic;
     actShowAll: TBooleanStoredProcAction;
@@ -94,7 +85,6 @@ type
     edRoute: TcxButtonEdit;
     cxLabel5: TcxLabel;
     GuidesRoute: TdsdGuides;
-    colFuelName: TcxGridDBColumn;
     SetErased: TdsdUpdateErased;
     SetUnErased: TdsdUpdateErased;
     actShowErased: TBooleanStoredProcAction;
@@ -106,7 +96,6 @@ type
     cxLabel8: TcxLabel;
     spErasedMIMaster: TdsdStoredProc;
     spUnErasedMIMaster: TdsdStoredProc;
-    colIsErased: TcxGridDBColumn;
     cxLabel11: TcxLabel;
     edChangePrice: TcxCurrencyEdit;
     edOperDatePartner: TcxDateEdit;
@@ -117,10 +106,65 @@ type
     CompleteMovement: TChangeGuidesStatus;
     DeleteMovement: TChangeGuidesStatus;
     ceStatus: TcxButtonEdit;
-    colMeasureName: TcxGridDBColumn;
     spGetTotalSumm: TdsdStoredProc;
     actMIContainer: TdsdOpenForm;
     bbMIContainer: TdxBarButton;
+    cxGridChild: TcxGrid;
+    cxGridDBTableViewChild: TcxGridDBTableView;
+    clRouteMemberCode: TcxGridDBColumn;
+    clAmount: TcxGridDBColumn;
+    clStartOdometre: TcxGridDBColumn;
+    clEndOdometre: TcxGridDBColumn;
+    clOperDate: TcxGridDBColumn;
+    cxGridLevelChild: TcxGridLevel;
+    ChildViewAddOn: TdsdDBViewAddOn;
+    ChildCDS: TClientDataSet;
+    ChildDS: TDataSource;
+    spInsertUpdateMIChild: TdsdStoredProc;
+    cxSplitterChild: TcxSplitter;
+    cxGrid: TcxGrid;
+    cxGridDBTableView: TcxGridDBTableView;
+    colCode: TcxGridDBColumn;
+    colName: TcxGridDBColumn;
+    colFuelName: TcxGridDBColumn;
+    colMeasureName: TcxGridDBColumn;
+    colAmount: TcxGridDBColumn;
+    colPrice: TcxGridDBColumn;
+    colCountForPrice: TcxGridDBColumn;
+    colAmountSumm: TcxGridDBColumn;
+    colIsErased: TcxGridDBColumn;
+    cxGridLevel: TcxGridLevel;
+    RouteMemberChoiceForm: TOpenChoiceForm;
+    spSelectMIChild: TdsdStoredProc;
+    cxLabel14: TcxLabel;
+    edStartOdometre: TcxCurrencyEdit;
+    cxLabel15: TcxLabel;
+    edEndOdometre: TcxCurrencyEdit;
+    cxLabel16: TcxLabel;
+    edAmountFuel: TcxCurrencyEdit;
+    edReparation: TcxCurrencyEdit;
+    cxLabel17: TcxLabel;
+    edLimit: TcxCurrencyEdit;
+    cxLabel19: TcxLabel;
+    edLimitFuel: TcxCurrencyEdit;
+    cxLabel20: TcxLabel;
+    edLimitChange: TcxCurrencyEdit;
+    cxLabel21: TcxLabel;
+    edLimitFuelChange: TcxCurrencyEdit;
+    cxLabel22: TcxLabel;
+    edDistanceDiff: TcxCurrencyEdit;
+    cxLabel23: TcxLabel;
+    clDistance_calc: TcxGridDBColumn;
+    InsertRecordChild: TInsertRecord;
+    SetErasedChild: TdsdUpdateErased;
+    spErasedMIChild: TdsdStoredProc;
+    spUnErasedMIChild: TdsdStoredProc;
+    SetUnErasedChild: TdsdUpdateErased;
+    bbInsertRecordChild: TdxBarButton;
+    bbSetErasedChild: TdxBarButton;
+    bbSetUnErasedChild: TdxBarButton;
+    actUpdateChildDS: TdsdUpdateDataSet;
+    clRouteMemberName: TcxGridDBColumn;
   private
   public
   end;

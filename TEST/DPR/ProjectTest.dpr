@@ -782,7 +782,9 @@ uses
   Report_SaleOrderExternalListDialog in '..\..\Forms\Report\Report_SaleOrderExternalListDialog.pas' {Report_SaleOrderExternalListDialogForm: TParentForm},
   Member_Trasport in '..\..\Forms\Guides\Member_Trasport.pas' {Member_TrasportForm: TParentForm},
   Member_TrasportDialog in '..\..\Forms\Guides\Member_TrasportDialog.pas' {Member_TrasportDialog1Form: TParentForm},
-  Member_TrasportDateDialog in '..\..\Forms\Guides\Member_TrasportDateDialog.pas' {Member_TrasportDateDialogForm: TParentForm};
+  Member_TrasportDateDialog in '..\..\Forms\Guides\Member_TrasportDateDialog.pas' {Member_TrasportDateDialogForm: TParentForm},
+  RouteMember in '..\..\Forms\Guides\RouteMember.pas' {RouteMemberForm: TParentForm},
+  RouteMemberEdit in '..\..\Forms\Guides\RouteMemberEdit.pas' {RouteMemberEditForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}
