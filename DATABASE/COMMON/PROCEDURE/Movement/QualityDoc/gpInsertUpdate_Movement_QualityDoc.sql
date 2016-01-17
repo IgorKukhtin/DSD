@@ -42,17 +42,20 @@ BEGIN
        WITH -- элементы документа inMovementId_Sale
             tmpMI AS (SELECT MovementItem.*
                       FROM MovementItem
+                           INNER JOIN Movement ON Movement.Id = MovementItem.MovementId
                            INNER JOIN MovementItemFloat AS MIFloat_Price
                                                         ON MIFloat_Price.MovementItemId = MovementItem.Id
                                                        AND MIFloat_Price.DescId = zc_MIFloat_Price()
                                                        AND MIFloat_Price.ValueData <> 0
-                           INNER JOIN MovementItemFloat AS MIFloat_AmountPartner
-                                                        ON MIFloat_AmountPartner.MovementItemId = MovementItem.Id
-                                                       AND MIFloat_AmountPartner.DescId = zc_MIFloat_AmountPartner()
-                                                       AND MIFloat_AmountPartner.ValueData <> 0
+                           LEFT JOIN MovementItemFloat AS MIFloat_AmountPartner
+                                                       ON MIFloat_AmountPartner.MovementItemId = MovementItem.Id
+                                                      AND MIFloat_AmountPartner.DescId = zc_MIFloat_AmountPartner()
                       WHERE MovementItem.MovementId =  inMovementId_Sale
                         AND MovementItem.DescId     = zc_MI_Master()
                         AND MovementItem.isErased   = FALSE
+                        AND ((MIFloat_AmountPartner.ValueData <> 0 AND Movement.DescId <> zc_Movement_SendOnPrice())
+                          OR (MovementItem.Amount <> 0 AND Movement.DescId = zc_Movement_SendOnPrice())
+                            )
                      )
             -- получили список Goods
           , tmpMIGoods AS (SELECT DISTINCT tmpMI.ObjectId AS GoodsId FROM tmpMI)

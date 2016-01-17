@@ -63,19 +63,22 @@ BEGIN
      OPEN Cursor1 FOR
        WITH tmpMI AS
             (SELECT MovementItem.*
-                  , MIFloat_AmountPartner.ValueData AS AmountPartner
+                  , CASE WHEN Movement.DescId = zc_Movement_SendOnPrice() THEN MovementItem.Amount ELSE MIFloat_AmountPartner.ValueData END AS AmountPartner
              FROM MovementItem
+                  INNER JOIN Movement ON Movement.Id = MovementItem.MovementId
                   INNER JOIN MovementItemFloat AS MIFloat_Price
                                                ON MIFloat_Price.MovementItemId = MovementItem.Id
                                               AND MIFloat_Price.DescId = zc_MIFloat_Price()
                                               AND MIFloat_Price.ValueData <> 0
-                  INNER JOIN MovementItemFloat AS MIFloat_AmountPartner
-                                               ON MIFloat_AmountPartner.MovementItemId = MovementItem.Id
-                                              AND MIFloat_AmountPartner.DescId = zc_MIFloat_AmountPartner()
-                                              AND MIFloat_AmountPartner.ValueData <> 0
+                  LEFT JOIN MovementItemFloat AS MIFloat_AmountPartner
+                                              ON MIFloat_AmountPartner.MovementItemId = MovementItem.Id
+                                             AND MIFloat_AmountPartner.DescId = zc_MIFloat_AmountPartner()
              WHERE MovementItem.MovementId =  inMovementId
                AND MovementItem.DescId     = zc_MI_Master()
                AND MovementItem.isErased   = FALSE
+               AND ((MIFloat_AmountPartner.ValueData <> 0 AND Movement.DescId <> zc_Movement_SendOnPrice())
+                 OR (MovementItem.Amount <> 0 AND Movement.DescId = zc_Movement_SendOnPrice())
+                   )
             )
           , tmpMIGoods AS (SELECT DISTINCT tmpMI.ObjectId AS GoodsId FROM tmpMI)
           , tmpGoodsQuality AS
@@ -374,19 +377,22 @@ BEGIN
      OPEN Cursor2 FOR
        WITH tmpMI AS
             (SELECT MovementItem.*
-                  , MIFloat_AmountPartner.ValueData AS AmountPartner
+                  , CASE WHEN Movement.DescId = zc_Movement_SendOnPrice() THEN MovementItem.Amount ELSE MIFloat_AmountPartner.ValueData END AS AmountPartner
              FROM MovementItem
+                  INNER JOIN Movement ON Movement.Id = MovementItem.MovementId
                   INNER JOIN MovementItemFloat AS MIFloat_Price
                                                ON MIFloat_Price.MovementItemId = MovementItem.Id
                                               AND MIFloat_Price.DescId = zc_MIFloat_Price()
                                               AND MIFloat_Price.ValueData <> 0
-                  INNER JOIN MovementItemFloat AS MIFloat_AmountPartner
-                                               ON MIFloat_AmountPartner.MovementItemId = MovementItem.Id
-                                              AND MIFloat_AmountPartner.DescId = zc_MIFloat_AmountPartner()
-                                              AND MIFloat_AmountPartner.ValueData <> 0
+                  LEFT JOIN MovementItemFloat AS MIFloat_AmountPartner
+                                              ON MIFloat_AmountPartner.MovementItemId = MovementItem.Id
+                                             AND MIFloat_AmountPartner.DescId = zc_MIFloat_AmountPartner()
              WHERE MovementItem.MovementId =  inMovementId
                AND MovementItem.DescId     = zc_MI_Master()
                AND MovementItem.isErased   = FALSE
+               AND ((MIFloat_AmountPartner.ValueData <> 0 AND Movement.DescId <> zc_Movement_SendOnPrice())
+                 OR (MovementItem.Amount <> 0 AND Movement.DescId = zc_Movement_SendOnPrice())
+                   )
             )
           , tmpMIGoods AS (SELECT DISTINCT tmpMI.ObjectId AS GoodsId FROM tmpMI)
           , tmpGoodsQuality AS

@@ -5,7 +5,7 @@ inherited Report_JuridicalDefermentPaymentForm: TReport_JuridicalDefermentPaymen
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
   ExplicitWidth = 1139
-  ExplicitHeight = 432
+  ExplicitHeight = 429
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -403,6 +403,23 @@ inherited Report_JuridicalDefermentPaymentForm: TReport_JuridicalDefermentPaymen
             Options.Editing = False
             Width = 55
           end
+          object ContractJuridicalDocCode: TcxGridDBColumn
+            Caption = #1050#1086#1076' '#1102#1088'. '#1083'. ('#1095#1077#1088#1077#1079' '#1082#1086#1075#1086')'
+            DataBinding.FieldName = 'ContractJuridicalDocCode'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 55
+          end
+          object ContractJuridicalDocName: TcxGridDBColumn
+            Caption = #1070#1088#1080#1076#1080#1095#1077#1089#1082#1086#1077' '#1083#1080#1094#1086' ('#1095#1077#1088#1077#1079' '#1082#1086#1075#1086')'
+            DataBinding.FieldName = 'ContractJuridicalDocName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 100
+          end
           object colDebetRemains: TcxGridDBColumn
             Caption = #1053#1072#1095'. '#1076#1086#1083#1075' ('#1044#1077#1073#1077#1090')'
             DataBinding.FieldName = 'DebetRemains'
@@ -705,7 +722,7 @@ inherited Report_JuridicalDefermentPaymentForm: TReport_JuridicalDefermentPaymen
         end
         item
           Name = 'StartContractDate'
-          Value = Null
+          Value = 'NULL'
           Component = MasterCDS
           ComponentItem = 'StartContractDate'
           DataType = ftDateTime
@@ -796,7 +813,7 @@ inherited Report_JuridicalDefermentPaymentForm: TReport_JuridicalDefermentPaymen
         end
         item
           Name = 'StartContractDate'
-          Value = Null
+          Value = 'NULL'
           Component = MasterCDS
           ComponentItem = 'StartContractDate'
           DataType = ftDateTime
@@ -887,7 +904,7 @@ inherited Report_JuridicalDefermentPaymentForm: TReport_JuridicalDefermentPaymen
         end
         item
           Name = 'StartContractDate'
-          Value = Null
+          Value = 'NULL'
           Component = MasterCDS
           ComponentItem = 'StartContractDate'
           DataType = ftDateTime
@@ -978,7 +995,7 @@ inherited Report_JuridicalDefermentPaymentForm: TReport_JuridicalDefermentPaymen
         end
         item
           Name = 'StartContractDate'
-          Value = Null
+          Value = 'NULL'
           Component = MasterCDS
           ComponentItem = 'StartContractDate'
           DataType = ftDateTime
@@ -1069,7 +1086,7 @@ inherited Report_JuridicalDefermentPaymentForm: TReport_JuridicalDefermentPaymen
         end
         item
           Name = 'StartContractDate'
-          Value = Null
+          Value = 'NULL'
           Component = MasterCDS
           ComponentItem = 'StartContractDate'
           DataType = ftDateTime
@@ -1225,7 +1242,7 @@ inherited Report_JuridicalDefermentPaymentForm: TReport_JuridicalDefermentPaymen
         end
         item
           Name = 'StartContractDate'
-          Value = Null
+          Value = 'NULL'
           Component = MasterCDS
           ComponentItem = 'StartContractDate'
           DataType = ftDateTime
@@ -1685,7 +1702,7 @@ inherited Report_JuridicalDefermentPaymentForm: TReport_JuridicalDefermentPaymen
       end
       item
         Name = 'inContractDate'
-        Value = Null
+        Value = 'NULL'
         Component = MasterCDS
         ComponentItem = 'StartContractDate'
         DataType = ftDateTime
@@ -1775,7 +1792,7 @@ inherited Report_JuridicalDefermentPaymentForm: TReport_JuridicalDefermentPaymen
     Params = <
       item
         Name = 'inStartDate'
-        Value = Null
+        Value = 'NULL'
         Component = MasterCDS
         ComponentItem = 'StartContractDate'
         DataType = ftDateTime

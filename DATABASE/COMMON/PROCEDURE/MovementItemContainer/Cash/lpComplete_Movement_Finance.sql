@@ -32,11 +32,12 @@ BEGIN
 
                                                       WHEN _tmpItem.ObjectDescId = zc_Object_BankAccount()
                                                            THEN zc_Enum_AccountDirection_40300() -- рассчетный счет
-                                                      WHEN _tmpItem.ObjectDescId = zc_Object_Cash() AND _tmpItem.PaidKindId = zc_Enum_PaidKind_FirstForm()
-                                                           THEN zc_Enum_AccountDirection_40500() -- касса БН
 
                                                       WHEN _tmpItem.ObjectDescId = zc_Object_Cash() AND _tmpItem.BusinessId_Balance <> 0
-                                                           THEN zc_Enum_AccountDirection_40600() -- касса Павильонов
+                                                           THEN zc_Enum_AccountDirection_40600() -- касса Павильонов !!!важно до "касса БН"!!!
+
+                                                      WHEN _tmpItem.ObjectDescId = zc_Object_Cash() AND _tmpItem.PaidKindId = zc_Enum_PaidKind_FirstForm()
+                                                           THEN zc_Enum_AccountDirection_40500() -- касса БН
 
                                                       WHEN _tmpItem.ObjectDescId = zc_Object_Cash() AND ObjectLink_Cash_Branch.ChildObjectId IS NOT NULL
                                                            THEN zc_Enum_AccountDirection_40200() -- касса филиалов

@@ -1218,3 +1218,101 @@ $BODY$
 */
 -- тест
 -- SELECT * FROM gpInsert_Scale_Movement_all (ioId:= 0, inMovementId:= 10, inGoodsId:= 1, inAmount:= 0, inAmountPartner:= 0, inAmountPacker:= 0, inPrice:= 1, inCountForPrice:= 1, inLiveWeight:= 0, inHeadCount:= 0, inPartionGoods:= '', inGoodsKindId:= 0, inAssetId:= 0, inSession:= '2')
+/*
+SELECT 
+                                Movement.*
+, MovementFloat_MovementDescNumber.*
+, gpInsert_Scale_Movement_all(
+     inBranchCode          := 2
+    , inMovementId         := Movement.Id
+    , inOperDate           := Movement.OperDate
+    , inSession            := '5')
+
+
+                          FROM Movement
+                               inner JOIN MovementLinkObject AS MovementLinkObject_From
+                                                             ON MovementLinkObject_From.MovementId = Movement.Id
+                                                            AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
+                                                            AND MovementLinkObject_From.ObjectId = 8459 -- Склад Реализации
+                               inner JOIN MovementLinkObject AS MovementLinkObject_To
+                                                             ON MovementLinkObject_To.MovementId = Movement.Id
+                                                            AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
+                                                            AND MovementLinkObject_To.ObjectId = 8411 -- Склад ГП ф.Киев
+
+            LEFT JOIN MovementFloat AS MovementFloat_MovementDescNumber
+                                    ON MovementFloat_MovementDescNumber.MovementId =  Movement.Id
+                                   AND MovementFloat_MovementDescNumber.DescId = zc_MovementFloat_MovementDescNumber()
+
+
+                          WHERE Movement.OperDate BETWEEN '12.01.2016' AND '15.01.2016'
+                            AND Movement.StatusId = zc_Enum_Status_Complete()
+                            AND Movement.DescId = zc_Movement_WeighingPartner()
+  and MovementFloat_MovementDescNumber.ValueData <> 32
+ -- and Movement.ParentId = 2980515  
+
+
+
+SELECT  MovementItem.*
+
+-- , case when tmp.MovementItemId = MovementItem.Id then true else lpSetErased_MovementItem (MovementItem.Id, 5)  end
+-- update MovementItem set isErased = false, Amount = 0  where MovementId = 2878806 and isErased = true;
+-- update MovementItem set isErased = false where MovementId = 2879224  and isErased = true;
+
+ , lpInsertUpdate_MovementItemFloat (zc_MIFloat_AmountPartner(), MovementItem.Id, 0)
+ , lpInsertUpdate_MovementItemFloat (zc_MIFloat_ChangePercentAmount(), MovementItem.Id, 0)
+ , case when MIFloat_ChangePercentAmount.ValueData <> 0 then lpInsertUpdate_MovementItemFloat (zc_MIFloat_AmountChangePercent(), MovementItem.Id, MovementItem.Amount) else false end
+
+                               
+                          FROM Movement
+                               inner JOIN MovementLinkObject AS MovementLinkObject_From
+                                                             ON MovementLinkObject_From.MovementId = Movement.Id
+                                                            AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
+                                                            AND MovementLinkObject_From.ObjectId = 8459 -- Склад Реализации
+                               inner JOIN MovementLinkObject AS MovementLinkObject_To
+                                                             ON MovementLinkObject_To.MovementId = Movement.Id
+                                                            AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
+                                                            AND MovementLinkObject_To.ObjectId = 8411 -- Склад ГП ф.Киев
+
+                               INNER JOIN MovementItem ON MovementItem.MovementId = Movement.Id
+                                                      AND MovementItem.DescId     = zc_MI_Master()
+                                                      -- AND MovementItem.isErased   = FALSE
+
+                               left JOIN MovementItemFloat AS MIFloat_ChangePercentAmount
+                                                           ON MIFloat_ChangePercentAmount.MovementItemId = MovementItem.Id
+                                                          AND MIFloat_ChangePercentAmount.DescId = zc_MIFloat_ChangePercentAmount()
+                                                          -- and MIFloat_ChangePercentAmount.ValueData <> 0
+
+                          WHERE Movement.OperDate BETWEEN '01.01.2016' AND '31.01.2016'
+                           -- AND Movement.StatusId = zc_Enum_Status_Complete()
+                            AND Movement.DescId = zc_Movement_SendOnPrice()
+                          AND Movement.Id = 2879224  
+-- and MovementItem.Id = 41798151
+
+
+
+
+update MovementItem set isErased = true
+from
+(select MovementItem.Id
+                          FROM Movement
+                               inner JOIN MovementLinkObject AS MovementLinkObject_From
+                                                             ON MovementLinkObject_From.MovementId = Movement.Id
+                                                            AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
+                                                            AND MovementLinkObject_From.ObjectId = 8459 -- Склад Реализации
+                               inner JOIN MovementLinkObject AS MovementLinkObject_To
+                                                             ON MovementLinkObject_To.MovementId = Movement.Id
+                                                            AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
+                                                            AND MovementLinkObject_To.ObjectId = 8411 -- Склад ГП ф.Киев
+                               INNER JOIN MovementItem ON MovementItem.MovementId = Movement.Id
+                                                      AND MovementItem.DescId     = zc_MI_Master()
+                                                      AND MovementItem.isErased   = FALSE
+                                                      AND MovementItem.Amount = 0
+                          WHERE Movement.OperDate BETWEEN '01.01.2016' AND '31.01.2016'
+                           -- AND Movement.StatusId = zc_Enum_Status_Complete()
+                            AND Movement.DescId = zc_Movement_SendOnPrice()
+--                            AND Movement.Id = 2888531
+-- and MovementItem.Id = 41798151
+) as tmp
+where tmp.Id =  MovementItem.Id
+
+*/
