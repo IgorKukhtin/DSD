@@ -23,6 +23,9 @@ uses UnilWin, VCL.Dialogs, Controls, StdCtrls, FormStorage, SysUtils, forms,
 class procedure TUpdater.AutomaticCheckConnect;
 var StoredProc: TdsdStoredProc;
     Connection: String;
+    StringList: TStringList;
+    i:Integer;
+    fFind:Boolean;
 begin
   StoredProc := TdsdStoredProc.Create(nil);
   try
@@ -42,7 +45,16 @@ begin
           raise;
     end;
     Connection := StoredProc.ParamByName('gpGetConstName').AsString;
-    if    (TStorageFactory.GetStorage.Connection <> Connection)
+    //
+    StringList := TStringList.Create;
+    with StringList do begin
+       LoadFromFile(ConnectionPath);
+       fFind:=false;
+       for i:=0 to Count-1
+       do fFind:= (fFind) or (StringList[i] = Connection);
+       StringList.Free;
+    end;
+    if    (TStorageFactory.GetStorage.Connection <> Connection)and(fFind = FALSE)
       // and (TStorageFactory.GetStorage.Connection <> ReplaceStr(Connection,'srv.alan','srv2.alan'))
     then
        UpdateConnect(Connection);
@@ -73,6 +85,7 @@ var StringList: TStringList;
 begin
   StringList := TStringList.Create;
   try
+    if Pos('srv2.alan', Connection) > 0 then Connection:=ReplaceStr(Connection,'srv2.alan','srv.alan');
     StringList.Add(Connection);
     if Pos('srv2.alan', Connection) > 0 then StringList.Add(ReplaceStr(Connection,'srv2.alan','srv.alan'));
     if Pos('srv.alan', Connection) > 0 then StringList.Add(ReplaceStr(Connection,'srv.alan','srv2.alan'));
@@ -80,7 +93,7 @@ begin
   finally
     StringList.Free;
   end;
-  ShowMessage('Путь к серверу приложений изменен. Нажмите кнопку для перезапуска');
+  ShowMessage('Путь к серверу приложений изменен с <'+TStorageFactory.GetStorage.Connection+'> на <'+Connection+'>. Нажмите кнопку для перезапуска');
   Application.Terminate;
   ShellExecute(Application.Handle, 'open', PWideChar(Application.ExeName), nil, nil, SW_SHOWNORMAl);
 end;

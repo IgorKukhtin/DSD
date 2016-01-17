@@ -32,6 +32,7 @@ BEGIN
        WHERE Object_GlobalConst.DescId = zc_Object_GlobalConst()
          AND Object_GlobalConst.ObjectCode < 100
          AND (tmpRoleAccessKey_all.AccessKeyId > 0 OR tmpUser_Admin.Id = 1)
+       ORDER BY 1
       ;
   
 END;
@@ -48,3 +49,4 @@ ALTER FUNCTION gpSelect_Object_GlobalConst_user(TVarChar) OWNER TO postgres;
 
 -- тест
 -- SELECT * FROM gpSelect_Object_GlobalConst_user (zfCalc_UserAdmin())
+

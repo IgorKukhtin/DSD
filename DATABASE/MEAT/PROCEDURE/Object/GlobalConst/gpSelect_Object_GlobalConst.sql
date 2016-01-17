@@ -70,6 +70,7 @@ BEGIN
                                   AND ObjectString.DescId = zc_ObjectString_Enum()
        WHERE Object_GlobalConst.DescId = zc_Object_GlobalConst()
          AND Object_GlobalConst.ObjectCode < 100
+       ORDER BY 1
       ;
   
 END;
@@ -87,3 +88,6 @@ ALTER FUNCTION gpSelect_Object_GlobalConst(TVarChar) OWNER TO postgres;
 
 -- тест
 -- SELECT * FROM gpSelect_Object_GlobalConst (zfCalc_UserAdmin())
+-- select *  from  Object where Id = zc_Enum_GlobalConst_ConnectParam() 
+-- update Object set valuedata = 'http://integer-srv.alan.dp.ua' where Id = zc_Enum_GlobalConst_ConnectParam() 
+-- update Object set valuedata = 'http://integer-srv2.alan.dp.ua' where Id = zc_Enum_GlobalConst_ConnectParam() 
