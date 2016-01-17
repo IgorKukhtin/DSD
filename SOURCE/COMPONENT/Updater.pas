@@ -16,8 +16,8 @@ type
 implementation
 
 uses UnilWin, VCL.Dialogs, Controls, StdCtrls, FormStorage, SysUtils, forms,
-     MessagesUnit, dsdDB, DB, Storage, UtilConst, Classes, ShellApi, Windows;
-
+     MessagesUnit, dsdDB, DB, Storage, UtilConst, Classes, ShellApi, Windows,
+     StrUtils;
 { TUpdater }
 
 class procedure TUpdater.AutomaticCheckConnect;
@@ -42,7 +42,9 @@ begin
           raise;
     end;
     Connection := StoredProc.ParamByName('gpGetConstName').AsString;
-    if TStorageFactory.GetStorage.Connection <> Connection then
+    if    (TStorageFactory.GetStorage.Connection <> Connection)
+      // and (TStorageFactory.GetStorage.Connection <> ReplaceStr(Connection,'srv.alan','srv2.alan'))
+    then
        UpdateConnect(Connection);
   finally
     StoredProc.Free;
@@ -72,6 +74,8 @@ begin
   StringList := TStringList.Create;
   try
     StringList.Add(Connection);
+    if Pos('srv2.alan', Connection) > 0 then StringList.Add(ReplaceStr(Connection,'srv2.alan','srv.alan'));
+    if Pos('srv.alan', Connection) > 0 then StringList.Add(ReplaceStr(Connection,'srv.alan','srv2.alan'));
     StringList.SaveToFile(ConnectionPath);
   finally
     StringList.Free;
