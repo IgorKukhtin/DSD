@@ -30,7 +30,7 @@ BEGIN
      RETURN QUERY
      SELECT
              (row_number() OVER ())::TVarChar
-           , MovementString_InvNumberPartner.ValueData  AS InvNumber
+           , (MovementString_InvNumberPartner.ValueData || CASE WHEN MovementString_InvNumberBranch.ValueData <> '' THEN '/' || MovementString_InvNumberBranch.ValueData ELSE '' END) :: TVarChar  AS InvNumber
            , Movement.OperDate				AS OperDate
            , ObjectHistoryString_JuridicalDetails_FullName.ValueData   AS ToName
            , ObjectHistoryString_JuridicalDetails_INN.ValueData        AS INN
@@ -71,6 +71,10 @@ BEGIN
                                                                                 AND (View_Contract_InvNumber.InfoMoneyId NOT IN (zc_Enum_InfoMoney_30201()) -- ћ€сное сырье
                                                                                   OR inInfoMoneyId <> 0
                                                                                     )
+
+            LEFT JOIN MovementString AS MovementString_InvNumberBranch
+                                     ON MovementString_InvNumberBranch.MovementId =  Movement.Id
+                                    AND MovementString_InvNumberBranch.DescId = zc_MovementString_InvNumberBranch()
 
             LEFT JOIN MovementLinkObject AS MovementLinkObject_To
                                          ON MovementLinkObject_To.MovementId = Movement.Id
@@ -130,6 +134,7 @@ BEGIN
         AND (View_Contract_InvNumber.InfoMoneyId = inInfoMoneyId OR COALESCE (inInfoMoneyId, 0) = 0)
         -- AND (MovementLinkObject_PaidKind.ObjectId = inPaidKindId OR COALESCE (inPaidKindId, 0) = 0)
         AND MovementFloat_TotalSummPVAT.ValueData <> 0
+        AND COALESCE (MovementString_InvNumberBranch, '') <> '2'
      ;
 
 END;

@@ -94,7 +94,7 @@ BEGIN
 
 
   -- !!!временно!!!
-  IF inUserId NOT IN (-1 -- 128491 -- Хохлова Е.Ю. !!!временно!!!
+  IF inUserId NOT IN (128491 -- Хохлова Е.Ю. !!!временно!!!
                     -- , 5
                     -- , zc_Enum_Process_Auto_Pack()
                      )

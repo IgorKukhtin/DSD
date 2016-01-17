@@ -38,7 +38,12 @@ BEGIN
      , tmpUnit_pack AS (SELECT 8451 AS UnitId, NULL AS isMain  -- Цех Упаковки
                   UNION SELECT 8450 AS UnitId, NULL AS isMain  -- ЦЕХ копчения
                        )
-     , tmpUnit_branch AS (SELECT 301309 AS UnitId, NULL AS isMain  -- Склад ГП ф.Запорожье
+     , tmpUnit_branch AS (SELECT ObjectLink.ObjectId AS UnitId, NULL AS isMain
+                          FROM ObjectLink
+                          WHERE  ObjectLink.DescId = zc_ObjectLink_Unit_Branch()
+                             AND ObjectLink.ChildObjectId > 0 
+                             AND ObjectLink.ChildObjectId <> zc_Branch_Basis()
+                        /*SELECT 301309 AS UnitId, NULL AS isMain  -- Склад ГП ф.Запорожье
                     UNION SELECT 309599 AS UnitId, NULL AS isMain  -- Склад возвратов ф.Запорожье
                     UNION SELECT 346093  AS UnitId, NULL AS isMain  -- Склад ГП ф.Одесса
                     UNION SELECT 346094  AS UnitId, NULL AS isMain  -- Склад возвратов ф.Одесса
@@ -53,7 +58,7 @@ BEGIN
                     UNION SELECT 428364 AS UnitId, NULL AS isMain  -- Склад возвратов ф.Николаев (Херсон)
 
                     UNION SELECT 8425 AS UnitId, NULL AS isMain  -- Склад ГП ф.Харьков
-                    UNION SELECT 409007 AS UnitId, NULL AS isMain  -- Склад возвратов ф.Харьков
+                    UNION SELECT 409007 AS UnitId, NULL AS isMain  -- Склад возвратов ф.Харьков*/
                    )
      SELECT tmp.MovementId
           , tmp.OperDate

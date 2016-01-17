@@ -63,6 +63,13 @@ BEGIN
      vbUserId:= lpGetUserBySession (inSession);
 
 
+     -- проверка
+     IF inRealWeight > 1000000
+     THEN
+         RAISE EXCEPTION 'Ошибка Вес <%>.', inRealWeight;
+     END IF;
+
+
      -- определили
      SELECT Movement.OperDate, MovementFloat.ValueData :: Integer, COALESCE (MLM_Order.MovementChildId, 0)
           , ObjectLink_Juridical_Retail.ChildObjectId AS RetailId

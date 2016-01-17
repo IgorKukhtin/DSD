@@ -15,8 +15,11 @@ BEGIN
      vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MI_SendOnPrice_Branch());
 
      -- сохранили
-     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_AmountPartner(), MovementItem.Id, COALESCE (MovementItem.Amount, 0))
+     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_AmountPartner(), MovementItem.Id, COALESCE (MIFloat_AmountChangePercent.ValueData, 0))
      FROM MovementItem
+          LEFT JOIN MovementItemFloat AS MIFloat_AmountChangePercent
+                                      ON MIFloat_AmountChangePercent.MovementItemId = MovementItem.Id
+                                     AND MIFloat_AmountChangePercent.DescId = zc_MIFloat_AmountChangePercent()
      WHERE MovementId = inMovementId;
 
 

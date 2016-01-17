@@ -235,14 +235,21 @@ BEGIN
                       , tmpMI.ArticleLossId
                       , tmpMI.ContainerId_Analyzer
 
-                      , tmpMI.AmountOut
+                      , 0 AS AmountOut
+                      , 0 AS AmountOut_Weight
+                      , 0 AS AmountOut_sh
+                      /*, tmpMI.AmountOut
                       , tmpMI.AmountOut * CASE WHEN _tmpGoods.MeasureId = zc_Measure_Sh() THEN _tmpGoods.Weight ELSE 1 END AS AmountOut_Weight
-                      , CASE WHEN _tmpGoods.MeasureId = zc_Measure_Sh() THEN tmpMI.AmountOut ELSE 0 END AS AmountOut_sh
+                      , CASE WHEN _tmpGoods.MeasureId = zc_Measure_Sh() THEN tmpMI.AmountOut ELSE 0 END AS AmountOut_sh*/
+
                       , tmpMI.SummOut
 
-                      , tmpMI.AmountIn
+                      , 0 AS AmountIn
+                      , 0 AS AmountIn_Weight
+                      , 0 AS AmountIn_sh
+                      /*, tmpMI.AmountIn
                       , tmpMI.AmountIn * CASE WHEN _tmpGoods.MeasureId = zc_Measure_Sh() THEN _tmpGoods.Weight ELSE 1 END AS AmountIn_Weight
-                      , CASE WHEN _tmpGoods.MeasureId = zc_Measure_Sh() THEN tmpMI.AmountIn ELSE 0 END AS AmountIn_sh
+                      , CASE WHEN _tmpGoods.MeasureId = zc_Measure_Sh() THEN tmpMI.AmountIn ELSE 0 END AS AmountIn_sh*/
                       , tmpMI.SummIn
 
                       , tmpMI.AmountIn_10500
@@ -302,14 +309,20 @@ BEGIN
                       , 0 AS ArticleLossId
                       , 0 AS ContainerId_Analyzer
 
-                      , 0 AS AmountOut
+                      , tmpMI.AmountOut_real AS AmountOut
+                      , tmpMI.AmountOut_real * CASE WHEN _tmpGoods.MeasureId = zc_Measure_Sh() THEN _tmpGoods.Weight ELSE 1 END AS AmountOut_Weight
+                      , CASE WHEN _tmpGoods.MeasureId = zc_Measure_Sh() THEN tmpMI.AmountOut_real ELSE 1 END AS AmountOut_sh
+                      /*, 0 AS AmountOut
                       , 0 AS AmountOut_Weight
-                      , 0 AS AmountOut_sh
+                      , 0 AS AmountOut_sh*/
                       , 0 AS SummOut
 
-                      , 0 AS AmountIn
+                      , tmpMI.AmountIn_real AS AmountIn
+                      , tmpMI.AmountIn_real * CASE WHEN _tmpGoods.MeasureId = zc_Measure_Sh() THEN _tmpGoods.Weight ELSE 1 END AS AmountIn_Weight
+                      , CASE WHEN _tmpGoods.MeasureId = zc_Measure_Sh() THEN tmpMI.AmountIn_real ELSE 1 END AS AmountIn_sh
+                      /*, 0 AS AmountIn
                       , 0 AS AmountIn_Weight
-                      , 0 AS AmountIn_sh
+                      , 0 AS AmountIn_sh*/
                       , 0 AS SummIn
 
                       , 0 AS AmountIn_10500
@@ -328,6 +341,8 @@ BEGIN
                               , MILinkObject_GoodsKind.ObjectId AS GoodsKindId
                               , SUM (COALESCE (MIFloat_SummPriceList.ValueData, 0)) AS Summ_calc
                               , SUM (COALESCE (MIFloat_Summ.ValueData, 0)) AS Summ_calc_real
+                              , SUM (MovementItem.Amount) AS AmountOut_real
+                              , SUM (COALESCE (MIFloat_AmountPartner.ValueData, 0)) AS AmountIn_real
                                
 --                          FROM Movement
                           FROM MovementDate AS MovementDate_OperDatePartner
@@ -338,8 +353,8 @@ BEGIN
                                INNER JOIN MovementLinkObject AS MovementLinkObject_From
                                                              ON MovementLinkObject_From.MovementId = Movement.Id
                                                             AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
-                                                            -- AND MovementLinkObject_From.ObjectId = 8459
-                      INNER JOIN _tmpUnit_localFrom AS _tmpFrom ON _tmpFrom.UnitId = MovementLinkObject_From.ObjectId
+                                                            AND MovementLinkObject_From.ObjectId = 8459
+                      -- INNER JOIN _tmpUnit_localFrom AS _tmpFrom ON _tmpFrom.UnitId = MovementLinkObject_From.ObjectId
 
                                LEFT JOIN MovementLinkObject AS MovementLinkObject_To
                                                              ON MovementLinkObject_To.MovementId = Movement.Id
@@ -350,6 +365,10 @@ BEGIN
                                LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
                                             ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
                                            AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
+
+                               LEFT JOIN MovementItemFloat AS MIFloat_AmountPartner
+                                                           ON MIFloat_AmountPartner.MovementItemId = MovementItem.Id
+                                                          AND MIFloat_AmountPartner.DescId = zc_MIFloat_AmountPartner()
 
                                LEFT JOIN MovementItemFloat AS MIFloat_Summ
                                                            ON MIFloat_Summ.MovementItemId = MovementItem.Id
