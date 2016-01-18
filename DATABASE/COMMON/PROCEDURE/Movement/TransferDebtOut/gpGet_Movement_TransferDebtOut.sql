@@ -9,7 +9,7 @@ CREATE OR REPLACE FUNCTION gpGet_Movement_TransferDebtOut(
     IN inOperDate          TDateTime, -- ключ Документа
     IN inSession           TVarChar   -- сессия пользователя
 )
-RETURNS TABLE (Id Integer, InvNumber TVarChar, InvNumberPartner TVarChar, InvNumberOrder TVarChar
+RETURNS TABLE (Id Integer, isMask Boolean, InvNumber TVarChar, InvNumberPartner TVarChar, InvNumberOrder TVarChar
              , OperDate TDateTime, StatusCode Integer, StatusName TVarChar
              , Checked Boolean
              , PriceWithVAT Boolean, VATPercent TFloat, ChangePercent TFloat
@@ -51,7 +51,8 @@ BEGIN
                               WHERE EXISTS (SELECT 1 FROM ObjectLink_UserRole_View WHERE RoleId = zc_Enum_Role_Bread() AND UserId = vbUserId)
                              )
          SELECT
-               0 	     	                        AS Id
+               0 	     	                    AS Id
+             , FALSE                                AS isMask
              , tmpInvNum.InvNumber                  AS InvNumber
              , CAST ('' as TVarChar)                AS InvNumberPartner
              , CAST ('' as TVarChar)                AS InvNumberOrder 
@@ -119,14 +120,15 @@ BEGIN
                               WHERE EXISTS (SELECT 1 FROM ObjectLink_UserRole_View WHERE RoleId = zc_Enum_Role_Bread() AND UserId = vbUserId)
                              )
        SELECT
-             Movement.Id				                AS Id
-           , Movement.InvNumber				            AS InvNumber
+             Movement.Id		                AS Id
+           , FALSE                                      AS isMask
+           , Movement.InvNumber			        AS InvNumber
            , MovementString_InvNumberPartner.ValueData  AS InvNumberPartner
            , MovementString_InvNumberOrder.ValueData    AS InvNumberOrder
-           , Movement.OperDate				        AS OperDate
+           , Movement.OperDate			        AS OperDate
           
-           , Object_Status.ObjectCode    		        AS StatusCode
-           , Object_Status.ValueData     		        AS StatusName
+           , Object_Status.ObjectCode    	        AS StatusCode
+           , Object_Status.ValueData     	        AS StatusName
            , COALESCE (MovementBoolean_Checked.ValueData, FALSE)        AS Checked
            , COALESCE (MovementBoolean_PriceWithVAT.ValueData, FALSE)   AS PriceWithVAT
            , MovementFloat_VATPercent.ValueData         AS VATPercent

@@ -1,26 +1,25 @@
 inherited TransferDebtOutJournalForm: TTransferDebtOutJournalForm
   Caption = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' <'#1055#1077#1088#1077#1074#1086#1076' '#1076#1086#1083#1075#1072' ('#1088#1072#1089#1093#1086#1076')>'
   ClientHeight = 535
-  ClientWidth = 1073
-  ExplicitWidth = 1089
+  ClientWidth = 1043
+  ExplicitWidth = 1059
   ExplicitHeight = 573
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Width = 1073
+    Width = 1043
     Height = 478
     TabOrder = 3
     ExplicitWidth = 1073
     ExplicitHeight = 478
     ClientRectBottom = 478
-    ClientRectRight = 1073
+    ClientRectRight = 1043
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 1073
       ExplicitHeight = 478
       inherited cxGrid: TcxGrid
-        Width = 1073
+        Width = 1043
         Height = 478
-        ExplicitLeft = -3
         ExplicitWidth = 1073
         ExplicitHeight = 478
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -459,8 +458,7 @@ inherited TransferDebtOutJournalForm: TTransferDebtOutJournalForm
     end
   end
   inherited Panel: TPanel
-    Width = 1073
-    ExplicitTop = 8
+    Width = 1043
     ExplicitWidth = 1073
     inherited deStart: TcxDateEdit
       EditValue = 42005d
@@ -960,6 +958,51 @@ inherited TransferDebtOutJournalForm: TTransferDebtOutJournalForm
       Caption = #1055#1077#1095#1072#1090#1100' '#1058#1058#1053
       Hint = #1055#1077#1095#1072#1090#1100' '#1058#1058#1053
       ImageIndex = 15
+    end
+    object actInsertMaskMulti_New: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actInsertMask_New
+        end>
+      QuestionBeforeExecute = #1044#1077#1081#1089#1090#1074#1080#1090#1077#1083#1100#1085#1086' '#1076#1086#1073#1072#1074#1080#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090' '#1087#1086' '#1084#1072#1089#1082#1077'? '
+      InfoAfterExecute = #1044#1086#1082#1091#1084#1077#1085#1090' '#1087#1086' '#1084#1072#1089#1082#1077' '#1076#1086#1073#1072#1074#1083#1077#1085
+      Caption = #1044#1086#1073#1072#1074#1080#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090' '#1087#1086' '#1084#1072#1089#1082#1077
+      Hint = #1044#1086#1073#1072#1074#1080#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090' '#1087#1086' '#1084#1072#1089#1082#1077
+      ImageIndex = 54
+    end
+    object actInsertMask_New: TdsdInsertUpdateAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = #1044#1086#1073#1072#1074#1080#1090#1100' '#1087#1086' '#1084#1072#1089#1082#1077
+      Hint = #1044#1086#1073#1072#1074#1080#1090#1100' '#1087#1086' '#1084#1072#1089#1082#1077
+      ShortCut = 16429
+      FormName = 'TTransferDebtOutForm'
+      FormNameParam.Value = 'TTransferDebtOutForm'
+      FormNameParam.DataType = ftString
+      GuiParams = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'Id'
+        end
+        item
+          Name = 'inMask'
+          Value = 'True'
+          DataType = ftBoolean
+        end
+        item
+          Name = 'inOperDate'
+          Value = 42005d
+          Component = deStart
+          DataType = ftDateTime
+        end>
+      isShowModal = False
+      DataSource = MasterDS
+      DataSetRefresh = actRefresh
+      IdFieldName = 'Id'
     end
     object actDialog_TTN: TdsdOpenForm
       Category = 'DSDLib'
