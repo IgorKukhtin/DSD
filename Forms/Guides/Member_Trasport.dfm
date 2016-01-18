@@ -12,7 +12,6 @@ object Member_TrasportForm: TMember_TrasportForm
   Font.Style = []
   KeyPreview = True
   OldCreateOrder = False
-  AddOnFormData.isAlwaysRefresh = False
   AddOnFormData.RefreshAction = actRefresh
   AddOnFormData.ChoiceAction = dsdChoiceGuides
   AddOnFormData.Params = FormParams
@@ -163,22 +162,22 @@ object Member_TrasportForm: TMember_TrasportForm
         HeaderAlignmentVert = vaCenter
         Width = 46
       end
-      object LimitFuel: TcxGridDBColumn
-        Caption = #1051#1080#1084#1080#1090', '#1083#1080#1090#1088#1099
-        DataBinding.FieldName = 'LimitFuel'
+      object LimitDistance: TcxGridDBColumn
+        Caption = #1051#1080#1084#1080#1090', '#1082#1084
+        DataBinding.FieldName = 'LimitDistance'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DecimalPlaces = 4
         Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 43
+        Width = 58
       end
       object clComment: TcxGridDBColumn
         Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
         DataBinding.FieldName = 'Comment'
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 64
+        Width = 58
       end
       object clErased: TcxGridDBColumn
         Caption = #1059#1076#1072#1083#1077#1085
@@ -194,7 +193,7 @@ object Member_TrasportForm: TMember_TrasportForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 48
+        Width = 44
       end
       object CarModelName: TcxGridDBColumn
         Caption = #1052#1072#1088#1082#1072' '#1072#1074#1090#1086#1084#1086#1073#1080#1083#1103
@@ -202,7 +201,7 @@ object Member_TrasportForm: TMember_TrasportForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 48
+        Width = 43
       end
     end
     object cxGridLevel: TcxGridLevel
@@ -547,10 +546,10 @@ object Member_TrasportForm: TMember_TrasportForm
           ParamType = ptInputOutput
         end
         item
-          Name = 'LimitFuel'
+          Name = 'LimitDistance'
           Value = '0'
           Component = FormParams
-          ComponentItem = 'LimitFuel'
+          ComponentItem = 'LimitDistance'
           DataType = ftFloat
           ParamType = ptInputOutput
         end>
@@ -940,10 +939,10 @@ object Member_TrasportForm: TMember_TrasportForm
         ParamType = ptInput
       end
       item
-        Name = 'inLimitFuel'
+        Name = 'inLimitDistance'
         Value = Null
         Component = ClientDataSet
-        ComponentItem = 'LimitFuel'
+        ComponentItem = 'LimitDistance'
         DataType = ftFloat
         ParamType = ptInput
       end>
@@ -1042,10 +1041,10 @@ object Member_TrasportForm: TMember_TrasportForm
         ParamType = ptInput
       end
       item
-        Name = 'inLimitFuel'
+        Name = 'inLimitDistance'
         Value = '1'
         Component = FormParams
-        ComponentItem = 'LimitFuel'
+        ComponentItem = 'LimitDistance'
         DataType = ftFloat
         ParamType = ptInput
       end>
@@ -1099,7 +1098,7 @@ object Member_TrasportForm: TMember_TrasportForm
         ParamType = ptInput
       end
       item
-        Name = 'LimitFuel'
+        Name = 'LimitDistance'
         Value = '0'
         DataType = ftFloat
         ParamType = ptInput

@@ -146,11 +146,11 @@ type
     cxLabel17: TcxLabel;
     edLimit: TcxCurrencyEdit;
     cxLabel19: TcxLabel;
-    edLimitFuel: TcxCurrencyEdit;
+    edLimitDistance: TcxCurrencyEdit;
     cxLabel20: TcxLabel;
     edLimitChange: TcxCurrencyEdit;
     cxLabel21: TcxLabel;
-    edLimitFuelChange: TcxCurrencyEdit;
+    edLimitDistanceChange: TcxCurrencyEdit;
     cxLabel22: TcxLabel;
     edDistanceDiff: TcxCurrencyEdit;
     cxLabel23: TcxLabel;

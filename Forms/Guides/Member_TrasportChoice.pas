@@ -1,4 +1,4 @@
-unit Member_Trasport;
+unit Member_TrasportChoice;
 
 interface
 
@@ -21,10 +21,12 @@ uses
   dsdDB, dsdAction, Vcl.ActnList, dxBarExtItems, dxBar, cxClasses,
   cxPropertiesStore, Datasnap.DBClient, cxGridLevel, cxGridCustomTableView,
   cxGridTableView, cxGridDBTableView, cxGridCustomView, cxGrid, cxCheckBox,
-  DataModul, cxButtonEdit, cxCurrencyEdit;
+  DataModul, cxButtonEdit, cxCurrencyEdit, cxContainer, Vcl.ComCtrls, dxCore,
+  cxDateUtils, cxLabel, cxTextEdit, cxMaskEdit, cxDropDownEdit, cxCalendar,
+  Vcl.ExtCtrls;
 
 type
-  TMember_TrasportForm = class(TParentForm)
+  TMember_TrasportChoiceForm = class(TParentForm)
     cxGrid: TcxGrid;
     cxGridDBTableView: TcxGridDBTableView;
     clCode: TcxGridDBColumn;
@@ -45,9 +47,6 @@ type
     bbChoiceGuides: TdxBarButton;
     ActionList: TActionList;
     actRefresh: TdsdDataSetRefresh;
-    actInsert: TdsdInsertUpdateAction;
-    actUpdate: TdsdInsertUpdateAction;
-    dsdSetErased: TdsdUpdateErased;
     dsdSetUnErased: TdsdUpdateErased;
     dsdGridToExcel: TdsdGridToExcel;
     spSelect: TdsdStoredProc;
@@ -59,42 +58,29 @@ type
     dsdDBViewAddOn: TdsdDBViewAddOn;
     clDriverCertificate: TcxGridDBColumn;
     clComment: TcxGridDBColumn;
-    spInsertUpdate: TdsdStoredProc;
     actUpdateDataSet: TdsdUpdateDataSet;
     actShowAll: TBooleanStoredProcAction;
     bbShowAll: TdxBarButton;
     clIsOfficial: TcxGridDBColumn;
     bbUpdateIsOfficial: TdxBarButton;
-    spUpdateIsOfficial: TdsdStoredProc;
-    actUpdateIsOfficial: TdsdExecStoredProc;
     clInfoMoneyName_all: TcxGridDBColumn;
     clInfoMoneyCode: TcxGridDBColumn;
-    actChoiceInfoMoneyForm: TOpenChoiceForm;
     ProtocolOpenForm: TdsdOpenForm;
     bbProtocolOpenForm: TdxBarButton;
     StartSummerDate: TcxGridDBColumn;
     EndSummerDate: TcxGridDBColumn;
-    SummerFuel: TcxGridDBColumn;
-    WinterFuel: TcxGridDBColumn;
+    AmountFuel: TcxGridDBColumn;
     Reparation: TcxGridDBColumn;
     LimitMoney: TcxGridDBColumn;
     LimitDistance: TcxGridDBColumn;
     CarName: TcxGridDBColumn;
     CarModelName: TcxGridDBColumn;
-    actUpdateParams: TdsdOpenForm;
     bbUpdateParams: TdxBarButton;
-    spInsertUpdateParam: TdsdStoredProc;
-    actDialog: TExecuteDialog;
-    actRecalc: TdsdExecStoredProc;
-    actStartRecalc: TMultiAction;
     FormParams: TdsdFormParams;
-    actRecalcMulti: TMultiAction;
-    actDialogDate: TExecuteDialog;
-    actRecalcDate: TdsdExecStoredProc;
-    spInsertUpdateDate: TdsdStoredProc;
-    actRecalcDateMulti: TMultiAction;
-    actStartRecalcDate: TMultiAction;
     bbStartRecalcDate: TdxBarButton;
+    Panel: TPanel;
+    deOperDate: TcxDateEdit;
+    cxLabel1: TcxLabel;
   private
     { Private declarations }
   public
@@ -108,6 +94,6 @@ implementation
 {$R *.dfm}
 
 initialization
-  RegisterClass(TMember_TrasportForm);
+  RegisterClass(TMember_TrasportChoiceForm);
 
 end.

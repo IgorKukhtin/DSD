@@ -23,7 +23,7 @@ type
     edReparation: TcxCurrencyEdit;
     edSummerFuel: TcxCurrencyEdit;
     edWinterFuel: TcxCurrencyEdit;
-    edLimitFuel: TcxCurrencyEdit;
+    edLimitDistance: TcxCurrencyEdit;
   private
     { Private declarations }
   public

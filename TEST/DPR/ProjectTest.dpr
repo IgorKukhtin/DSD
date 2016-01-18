@@ -784,7 +784,8 @@ uses
   Member_TrasportDialog in '..\..\Forms\Guides\Member_TrasportDialog.pas' {Member_TrasportDialog1Form: TParentForm},
   Member_TrasportDateDialog in '..\..\Forms\Guides\Member_TrasportDateDialog.pas' {Member_TrasportDateDialogForm: TParentForm},
   RouteMember in '..\..\Forms\Guides\RouteMember.pas' {RouteMemberForm: TParentForm},
-  RouteMemberEdit in '..\..\Forms\Guides\RouteMemberEdit.pas' {RouteMemberEditForm: TParentForm};
+  RouteMemberEdit in '..\..\Forms\Guides\RouteMemberEdit.pas' {RouteMemberEditForm: TParentForm},
+  Member_TrasportChoice in '..\..\Forms\Guides\Member_TrasportChoice.pas' {Member_TrasportChoiceForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}

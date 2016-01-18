@@ -26,7 +26,7 @@ inherited Member_TrasportDialogForm: TMember_TrasportDialogForm
   object cxLabel8: TcxLabel [3]
     Left = 28
     Top = 129
-    Caption = #1051#1080#1084#1080#1090', '#1083#1080#1090#1088#1099
+    Caption = #1051#1080#1084#1080#1090', '#1082#1084
   end
   object cxLabel4: TcxLabel [4]
     Left = 28
@@ -79,7 +79,7 @@ inherited Member_TrasportDialogForm: TMember_TrasportDialogForm
     TabOrder = 10
     Width = 100
   end
-  object edLimitFuel: TcxCurrencyEdit [11]
+  object edLimitDistance: TcxCurrencyEdit [11]
     Left = 197
     Top = 124
     EditValue = '0'
@@ -131,9 +131,9 @@ inherited Member_TrasportDialogForm: TMember_TrasportDialogForm
         ParamType = ptInput
       end
       item
-        Name = 'LimitFuel'
+        Name = 'LimitDistance'
         Value = 30
-        Component = edLimitFuel
+        Component = edLimitDistance
         DataType = ftFloat
         ParamType = ptInput
       end>
