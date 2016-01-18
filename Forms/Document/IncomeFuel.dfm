@@ -342,13 +342,6 @@ object IncomeFuelForm: TIncomeFuelForm
           object clRouteMemberName: TcxGridDBColumn
             Caption = #1052#1072#1088#1096#1088#1091#1090' ('#1089#1086#1090#1088#1091#1076#1085#1080#1082#1086#1074')'
             DataBinding.FieldName = 'RouteMemberName'
-            PropertiesClassName = 'TcxButtonEditProperties'
-            Properties.Buttons = <
-              item
-                Action = RouteMemberChoiceForm
-                Default = True
-                Kind = bkEllipsis
-              end>
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 229
@@ -593,7 +586,7 @@ object IncomeFuelForm: TIncomeFuelForm
     Properties.DecimalPlaces = 3
     Properties.DisplayFormat = ',0.###'
     Properties.ReadOnly = True
-    TabOrder = 8
+    TabOrder = 7
     Width = 62
   end
   object edReparation: TcxCurrencyEdit
@@ -651,7 +644,7 @@ object IncomeFuelForm: TIncomeFuelForm
     Properties.Alignment.Vert = taVCenter
     Properties.DecimalPlaces = 3
     Properties.DisplayFormat = ',0.###'
-    TabOrder = 16
+    TabOrder = 15
     Width = 109
   end
   object cxLabel22: TcxLabel
@@ -946,6 +939,9 @@ object IncomeFuelForm: TIncomeFuelForm
       StoredProcList = <
         item
           StoredProc = spSelectMI
+        end
+        item
+          StoredProc = spSelectMIChild
         end>
       Caption = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1089#1077
       Hint = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1089#1077
@@ -1257,6 +1253,9 @@ object IncomeFuelForm: TIncomeFuelForm
       StoredProcList = <
         item
           StoredProc = spInsertUpdateMIChild
+        end
+        item
+          StoredProc = spSelectMIChild
         end>
       Caption = 'actUpdateChildDS'
       DataSource = ChildDS
