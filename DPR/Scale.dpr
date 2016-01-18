@@ -96,6 +96,7 @@ begin
   begin
          TAuthentication.CheckLogin(TStorageFactory.GetStorage, 'Админ', 'qsxqsxw1', gc_User);
          TUpdater.AutomaticUpdateProgram;
+         TUpdater.AutomaticCheckConnect;
          //
          if gpCheck_BranchCode = FALSE then exit;
          //
@@ -127,6 +128,7 @@ begin
     if ShowModal = mrOk then
     begin
          TUpdater.AutomaticUpdateProgram;
+         TUpdater.AutomaticCheckConnect;
          //
          if gpCheck_BranchCode = FALSE then exit;
          //

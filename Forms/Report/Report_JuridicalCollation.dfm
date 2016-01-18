@@ -3,8 +3,9 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
   ClientHeight = 410
   ClientWidth = 1020
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
+  ExplicitLeft = -230
   ExplicitWidth = 1036
-  ExplicitHeight = 448
+  ExplicitHeight = 445
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -745,7 +746,7 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
         end
         item
           Name = 'inOperDate'
-          Value = Null
+          Value = 'NULL'
           Component = MasterCDS
           ComponentItem = 'OperDate'
           DataType = ftDateTime
@@ -1084,7 +1085,7 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
         end
         item
           Name = 'ContractSigningDate'
-          Value = Null
+          Value = 'NULL'
           Component = FormParams
           ComponentItem = 'ContractSigningDate'
           DataType = ftDateTime
@@ -1255,7 +1256,7 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
         end
         item
           Name = 'ContractSigningDate'
-          Value = Null
+          Value = 'NULL'
           Component = FormParams
           ComponentItem = 'ContractSigningDate'
           DataType = ftDateTime
@@ -1413,7 +1414,7 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
         end
         item
           Name = 'ContractSigningDate'
-          Value = Null
+          Value = 'NULL'
           Component = FormParams
           ComponentItem = 'ContractSigningDate'
           DataType = ftDateTime
@@ -2027,7 +2028,7 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
       end
       item
         Name = 'outContractSigningDate'
-        Value = Null
+        Value = 'NULL'
         Component = FormParams
         ComponentItem = 'ContractSigningDate'
         DataType = ftDateTime
@@ -2091,21 +2092,6 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
         Name = 'JuridicalName'
         Value = Null
         Component = JuridicalGuides
-        ComponentItem = 'TextValue'
-        DataType = ftString
-        ParamType = ptInput
-      end
-      item
-        Name = 'ContractId'
-        Value = Null
-        Component = ContractGuides
-        ComponentItem = 'Key'
-        ParamType = ptInput
-      end
-      item
-        Name = 'ContractName'
-        Value = Null
-        Component = ContractGuides
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
@@ -2230,20 +2216,6 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
         Value = ''
         Component = JuridicalGuides
         ComponentItem = 'TextValue'
-      end
-      item
-        Name = 'PartnerId'
-        Value = ''
-        Component = PartnerGuides
-        ComponentItem = 'Key'
-        ParamType = ptInput
-      end
-      item
-        Name = 'PartnerName'
-        Value = ''
-        Component = PartnerGuides
-        ComponentItem = 'TextValue'
-        ParamType = ptInput
       end>
     Left = 944
     Top = 65534
