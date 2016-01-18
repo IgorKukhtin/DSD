@@ -38,7 +38,10 @@ BEGIN
 
 
      -- определяем ключ доступа
-     vbAccessKeyId:= lpGetAccessKey (inUserId, zc_Enum_Process_InsertUpdate_Movement_TaxCorrective());
+     IF COALESCE (ioId, 0) = 0
+     THEN vbAccessKeyId:= lpGetAccessKey (inUserId, zc_Enum_Process_InsertUpdate_Movement_TaxCorrective());
+     ELSE vbAccessKeyId:= (SELECT Movement.AccessKeyId FROM Movement WHERE Movement.Id = ioId);
+     END IF;
 
      -- определяется филиал
      vbBranchId:= CASE WHEN vbAccessKeyId = zc_Enum_Process_AccessKey_DocumentBread()
@@ -73,7 +76,7 @@ BEGIN
      END IF;
 
      -- определяется  Номер филиала
-     IF COALESCE (ioId, 0) = 0 AND inOperDate < '01.01.2016'
+     IF inOperDate < '01.01.2016'
      THEN
          inInvNumberBranch:= (SELECT ObjectString.ValueData FROM ObjectString WHERE ObjectString.DescId = zc_objectString_Branch_InvNumber() AND ObjectString.ObjectId = vbBranchId);
      ELSE

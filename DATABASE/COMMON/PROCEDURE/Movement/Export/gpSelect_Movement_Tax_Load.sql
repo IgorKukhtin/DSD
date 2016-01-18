@@ -71,7 +71,6 @@ BEGIN
                                                                                 AND (View_Contract_InvNumber.InfoMoneyId NOT IN (zc_Enum_InfoMoney_30201()) -- ћ€сное сырье
                                                                                   OR inInfoMoneyId <> 0
                                                                                     )
-
             LEFT JOIN MovementString AS MovementString_InvNumberBranch
                                      ON MovementString_InvNumberBranch.MovementId =  Movement.Id
                                     AND MovementString_InvNumberBranch.DescId = zc_MovementString_InvNumberBranch()
@@ -134,7 +133,7 @@ BEGIN
         AND (View_Contract_InvNumber.InfoMoneyId = inInfoMoneyId OR COALESCE (inInfoMoneyId, 0) = 0)
         -- AND (MovementLinkObject_PaidKind.ObjectId = inPaidKindId OR COALESCE (inPaidKindId, 0) = 0)
         AND MovementFloat_TotalSummPVAT.ValueData <> 0
-        AND COALESCE (MovementString_InvNumberBranch, '') <> '2'
+        AND COALESCE (MovementString_InvNumberBranch.ValueData, '') <> '2'
      ;
 
 END;

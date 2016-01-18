@@ -231,7 +231,7 @@ BEGIN
            )
 
            , tmp_Send AS (SELECT gpReport.GoodsId, gpReport.GoodsKindId
-                               , SUM (gpReport.AmountOut)      AS Amount_Count
+                               , SUM (gpReport.AmountIn)       AS Amount_Count
                                , SUM (gpReport.SummIn_branch)  AS Amount_Summ
                                , SUM (gpReport.SummOut_zavod)  AS Amount_SummIn
                                , 0 AS Amount_CountRet
