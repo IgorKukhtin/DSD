@@ -11,7 +11,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , isOfficial Boolean
              , InfoMoneyId Integer, InfoMoneyCode Integer, InfoMoneyName TVarChar, InfoMoneyName_all TVarChar
              , StartSummerDate TDateTime, EndSummerDate TDateTime
-             , SummerFuel TFloat, WinterFuel TFloat, Reparation TFloat, LimitMoney TFloat, LimitFuel TFloat
+             , SummerFuel TFloat, WinterFuel TFloat, Reparation TFloat, LimitMoney TFloat, LimitDistance TFloat
              , CarNameAll TVarChar, CarName TVarChar, CarModelName TVarChar
              , isErased boolean) AS
 $BODY$
@@ -66,7 +66,7 @@ BEGIN
          , COALESCE(ObjectFloat_WinterFuel.ValueData, 0) ::TFloat  AS WinterFuel
          , COALESCE(ObjectFloat_Reparation.ValueData, 0) ::TFloat  AS Reparation
          , COALESCE(ObjectFloat_Limit.ValueData, 0) ::TFloat       AS LimitMoney
-         , COALESCE(ObjectFloat_LimitFuel.ValueData, 0) ::TFloat   AS LimitFuel
+         , COALESCE(ObjectFloat_LimitDistance.ValueData, 0) ::TFloat   AS LimitDistance
 
          , (COALESCE (Object_CarModel.ValueData, '') || ' ' || COALESCE (Object_Car.ValueData, '')) :: TVarChar AS CarNameAll
          , Object_Car.ValueData       AS CarName
@@ -140,9 +140,9 @@ BEGIN
                                ON ObjectFloat_Limit.ObjectId = Object_Member.Id
                               AND ObjectFloat_Limit.DescId = zc_ObjectFloat_Member_Limit()
                               
-         LEFT JOIN ObjectFloat AS ObjectFloat_LimitFuel
-                               ON ObjectFloat_LimitFuel.ObjectId = Object_Member.Id
-                              AND ObjectFloat_LimitFuel.DescId = zc_ObjectFloat_Member_LimitFuel()
+         LEFT JOIN ObjectFloat AS ObjectFloat_LimitDistance
+                               ON ObjectFloat_LimitDistance.ObjectId = Object_Member.Id
+                              AND ObjectFloat_LimitDistance.DescId = zc_ObjectFloat_Member_LimitDistance()
 
          LEFT JOIN tmpCar ON tmpCar.MemberId = Object_Member.Id
          
@@ -182,7 +182,7 @@ BEGIN
            , CAST (0 as TFloat) AS WinterFuel
            , CAST (0 as TFloat) AS Reparation
            , CAST (0 as TFloat) AS LimitMoney
-           , CAST (0 as TFloat) AS LimitFuel
+           , CAST (0 as TFloat) AS LimitDistance
            , CAST ('' as TVarChar)  AS CarNameAll
            , CAST ('' as TVarChar)  AS CarName
            , CAST ('' as TVarChar)  AS CarModelName
@@ -201,7 +201,7 @@ ALTER FUNCTION gpSelect_Object_Member (Boolean, TVarChar) OWNER TO postgres;
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
  14.01.16         * add Car, StartSummerDate, EndSummerDate 
-                           , SummerFuel, WinterFuel, Reparation, LimitMoney, LimitFuel
+                           , SummerFuel, WinterFuel, Reparation, LimitMoney, LimitDistance
  19.02.15         * add InfoMoney
  24.09.13                                        * add vbIsAllUnit
  12.09.14                                        * add isOfficial

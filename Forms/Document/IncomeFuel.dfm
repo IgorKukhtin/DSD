@@ -41,6 +41,7 @@ object IncomeFuelForm: TIncomeFuelForm
     object edOperDate: TcxDateEdit
       Left = 177
       Top = 23
+      EditValue = 42387d
       Properties.SaveTime = False
       Properties.ShowTime = False
       TabOrder = 1
@@ -275,9 +276,9 @@ object IncomeFuelForm: TIncomeFuelForm
       ImageIndex = 0
       object cxGridChild: TcxGrid
         Left = 0
-        Top = 212
+        Top = 160
         Width = 879
-        Height = 107
+        Height = 159
         Align = alBottom
         TabOrder = 0
         object cxGridDBTableViewChild: TcxGridDBTableView
@@ -342,13 +343,6 @@ object IncomeFuelForm: TIncomeFuelForm
           object clRouteMemberName: TcxGridDBColumn
             Caption = #1052#1072#1088#1096#1088#1091#1090' ('#1089#1086#1090#1088#1091#1076#1085#1080#1082#1086#1074')'
             DataBinding.FieldName = 'RouteMemberName'
-            PropertiesClassName = 'TcxButtonEditProperties'
-            Properties.Buttons = <
-              item
-                Action = RouteMemberChoiceForm
-                Default = True
-                Kind = bkEllipsis
-              end>
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 229
@@ -401,9 +395,9 @@ object IncomeFuelForm: TIncomeFuelForm
       end
       object cxSplitterChild: TcxSplitter
         Left = 0
-        Top = 203
+        Top = 152
         Width = 879
-        Height = 9
+        Height = 8
         AlignSplitter = salBottom
         Control = cxGridChild
       end
@@ -411,9 +405,10 @@ object IncomeFuelForm: TIncomeFuelForm
         Left = 0
         Top = 0
         Width = 879
-        Height = 203
+        Height = 152
         Align = alClient
         TabOrder = 2
+        ExplicitHeight = 154
         object cxGridDBTableView: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = MasterDS
@@ -593,7 +588,7 @@ object IncomeFuelForm: TIncomeFuelForm
     Properties.DecimalPlaces = 3
     Properties.DisplayFormat = ',0.###'
     Properties.ReadOnly = True
-    TabOrder = 8
+    TabOrder = 7
     Width = 62
   end
   object edReparation: TcxCurrencyEdit
@@ -612,7 +607,7 @@ object IncomeFuelForm: TIncomeFuelForm
     Top = 88
     Caption = #1040#1084#1086#1088#1090'. '#1079#1072' 1 '#1082#1084', '#1075#1088#1085'.'
   end
-  object edLimitFuel: TcxCurrencyEdit
+  object edLimitDistance: TcxCurrencyEdit
     Left = 356
     Top = 106
     Properties.Alignment.Horz = taRightJustify
@@ -626,7 +621,7 @@ object IncomeFuelForm: TIncomeFuelForm
   object cxLabel20: TcxLabel
     Left = 356
     Top = 88
-    Caption = #1051#1080#1084#1080#1090', '#1083#1080#1090#1088#1099
+    Caption = #1051#1080#1084#1080#1090', '#1082#1084
   end
   object edLimitChange: TcxCurrencyEdit
     Left = 256
@@ -644,20 +639,20 @@ object IncomeFuelForm: TIncomeFuelForm
     Top = 88
     Caption = #1051#1080#1084#1080#1090' ('#1089#1083#1091#1078'.) '#1075#1088#1085
   end
-  object edLimitFuelChange: TcxCurrencyEdit
+  object edLimitDistanceChange: TcxCurrencyEdit
     Left = 437
     Top = 106
     Properties.Alignment.Horz = taRightJustify
     Properties.Alignment.Vert = taVCenter
     Properties.DecimalPlaces = 3
     Properties.DisplayFormat = ',0.###'
-    TabOrder = 16
+    TabOrder = 15
     Width = 109
   end
   object cxLabel22: TcxLabel
     Left = 437
     Top = 88
-    Caption = #1051#1080#1084#1080#1090' ('#1089#1083#1091#1078'.) '#1083#1080#1090#1088#1099
+    Caption = #1051#1080#1084#1080#1090' ('#1089#1083#1091#1078'.) '#1082#1084
   end
   object edDistanceDiff: TcxCurrencyEdit
     Left = 768
@@ -946,6 +941,9 @@ object IncomeFuelForm: TIncomeFuelForm
       StoredProcList = <
         item
           StoredProc = spSelectMI
+        end
+        item
+          StoredProc = spSelectMIChild
         end>
       Caption = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1089#1077
       Hint = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1089#1077
@@ -1257,6 +1255,9 @@ object IncomeFuelForm: TIncomeFuelForm
       StoredProcList = <
         item
           StoredProc = spInsertUpdateMIChild
+        end
+        item
+          StoredProc = spSelectMIChild
         end>
       Caption = 'actUpdateChildDS'
       DataSource = ChildDS
@@ -1344,11 +1345,19 @@ object IncomeFuelForm: TIncomeFuelForm
   object GuidesTo: TdsdGuides
     KeyField = 'Id'
     LookupControl = edTo
-    FormNameParam.Value = 'TStoragePlace_ObjectForm'
+    FormNameParam.Value = 'TMember_TrasportChoiceForm'
     FormNameParam.DataType = ftString
-    FormName = 'TStoragePlace_ObjectForm'
+    FormNameParam.ParamType = ptInputOutput
+    FormName = 'TMember_TrasportChoiceForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
+      item
+        Name = 'inOperDate'
+        Value = 'NULL'
+        Component = edOperDate
+        DataType = ftDateTime
+        ParamType = ptInputOutput
+      end
       item
         Name = 'Key'
         Value = ''
@@ -1364,9 +1373,37 @@ object IncomeFuelForm: TIncomeFuelForm
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+      end
+      item
+        Name = 'AmountFuel'
+        Value = Null
+        Component = edAmountFuel
+        DataType = ftFloat
+        ParamType = ptInput
+      end
+      item
+        Name = 'Reparation'
+        Value = Null
+        Component = edReparation
+        DataType = ftFloat
+        ParamType = ptInput
+      end
+      item
+        Name = 'LimitMoney'
+        Value = Null
+        Component = edLimit
+        DataType = ftFloat
+        ParamType = ptInput
+      end
+      item
+        Name = 'LimitDistance'
+        Value = Null
+        Component = edLimitDistance
+        DataType = ftFloat
+        ParamType = ptInput
       end>
-    Left = 408
-    Top = 16
+    Left = 416
+    Top = 24
   end
   object PopupMenu: TPopupMenu
     Images = dmMain.ImageList
@@ -1527,6 +1564,48 @@ object IncomeFuelForm: TIncomeFuelForm
         ParamType = ptInput
       end
       item
+        Name = 'inStartOdometre'
+        Value = Null
+        Component = edStartOdometre
+        DataType = ftFloat
+        ParamType = ptInput
+      end
+      item
+        Name = 'inEndOdometre'
+        Value = Null
+        Component = edEndOdometre
+        DataType = ftFloat
+        ParamType = ptInput
+      end
+      item
+        Name = 'inAmountFuel'
+        Value = Null
+        Component = edAmountFuel
+        DataType = ftFloat
+        ParamType = ptInput
+      end
+      item
+        Name = 'inReparation'
+        Value = Null
+        Component = edReparation
+        DataType = ftFloat
+        ParamType = ptInput
+      end
+      item
+        Name = 'inLimit'
+        Value = Null
+        Component = edLimit
+        DataType = ftFloat
+        ParamType = ptInput
+      end
+      item
+        Name = 'inLimitDistance'
+        Value = Null
+        Component = edLimitDistance
+        DataType = ftFloat
+        ParamType = ptInput
+      end
+      item
         Name = 'inLimitChange'
         Value = Null
         Component = edLimitChange
@@ -1534,9 +1613,9 @@ object IncomeFuelForm: TIncomeFuelForm
         ParamType = ptInput
       end
       item
-        Name = 'inLimitFuelChange'
+        Name = 'inLimitDistanceChange'
         Value = Null
-        Component = edLimitFuelChange
+        Component = edLimitDistanceChange
         DataType = ftFloat
         ParamType = ptInput
       end
@@ -1630,6 +1709,24 @@ object IncomeFuelForm: TIncomeFuelForm
       end
       item
         Control = edDriver
+      end
+      item
+        Control = edAmountFuel
+      end
+      item
+        Control = edReparation
+      end
+      item
+        Control = edLimit
+      end
+      item
+        Control = edLimitChange
+      end
+      item
+        Control = edLimitDistance
+      end
+      item
+        Control = edLimitDistanceChange
       end>
     GetStoredProc = spGet
     Left = 296
@@ -1782,6 +1879,60 @@ object IncomeFuelForm: TIncomeFuelForm
         Component = StatusGuides
         ComponentItem = 'TextValue'
         DataType = ftString
+      end
+      item
+        Name = 'AmountFuel'
+        Value = Null
+        Component = edAmountFuel
+        DataType = ftFloat
+      end
+      item
+        Name = 'Reparation'
+        Value = Null
+        Component = edReparation
+        DataType = ftFloat
+      end
+      item
+        Name = 'LimitMoney'
+        Value = Null
+        Component = edLimit
+        DataType = ftFloat
+      end
+      item
+        Name = 'LimitChange'
+        Value = Null
+        Component = edLimitChange
+        DataType = ftFloat
+      end
+      item
+        Name = 'LimitDistance'
+        Value = Null
+        Component = edLimitDistance
+        DataType = ftFloat
+      end
+      item
+        Name = 'LimitDistanceChange'
+        Value = Null
+        Component = edLimitDistanceChange
+        DataType = ftFloat
+      end
+      item
+        Name = 'StartOdometre'
+        Value = Null
+        Component = edStartOdometre
+        DataType = ftFloat
+      end
+      item
+        Name = 'EndOdometre'
+        Value = Null
+        Component = edEndOdometre
+        DataType = ftFloat
+      end
+      item
+        Name = 'DistanceDiff'
+        Value = Null
+        Component = edDistanceDiff
+        DataType = ftFloat
       end>
     PackSize = 1
     Left = 216
@@ -1792,8 +1943,8 @@ object IncomeFuelForm: TIncomeFuelForm
     KeyField = 'Id'
     RefreshAction = 'actRefresh'
     FormParams = 'FormParams'
-    Left = 408
-    Top = 279
+    Left = 432
+    Top = 247
   end
   object GuidesFiller: TGuidesFiller
     IdParam.Value = Null

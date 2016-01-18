@@ -1,6 +1,8 @@
 -- Function: gpInsertUpdate_Movement_IncomeMemberFuel()
 
 DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_IncomeMemberFuel(Integer,TVarChar,TDateTime,TDateTime,TVarChar,Boolean,TFloat,TFloat,TFloat,TFloat,Integer,Integer,Integer,Integer,Integer,Integer,TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_IncomeMemberFuel(Integer,TVarChar,TDateTime,TDateTime,TVarChar,Boolean,TFloat,TFloat,TFloat,TFloat,TFloat,TFloat,TFloat,TFloat,TFloat,TFloat,Integer,Integer,Integer,Integer,Integer,Integer,TVarChar);
+
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_IncomeMemberFuel(
  INOUT ioId                  Integer   , -- Ключ объекта <Документ>
@@ -14,8 +16,15 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_IncomeMemberFuel(
     IN inVATPercent          TFloat    , -- % НДС
     IN inChangePrice         TFloat    , -- Скидка в цене
 
+    IN inStartOdometre       TFloat    , --
+    IN inEndOdometre         TFloat    , --
+    IN inAmountFuel          TFloat    , -- норма авто
+    IN inReparation          TFloat    , -- амортизация
+    IN inLimit               TFloat    , -- лимит грн
+    IN inLimitDistance       TFloat    , -- лимит литры
+
     IN inLimitChange         TFloat    , -- лимит (по служебке) грн
-    IN inLimitFuelChange     TFloat    , -- лимит (по служебке) литры
+    IN inLimitDistanceChange TFloat    , -- лимит (по служебке) литры
 
     IN inFromId              Integer   , -- От кого (в документе)
     IN inToId                Integer   , -- Кому (в документе)
@@ -30,12 +39,15 @@ AS
 $BODY$
    DECLARE vbUserId Integer;
    DECLARE vbAccessKeyId Integer;
+   DECLARE vbIsInsert Boolean;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Movement_IncomeFuel());
      -- определяем ключ доступа
      vbAccessKeyId:= lpGetAccessKey (vbUserId, zc_Enum_Process_InsertUpdate_Movement_IncomeFuel());
 
+    -- определяется признак Создание/Корректировка
+     vbIsInsert:= COALESCE (ioId, 0) = 0;
 
      -- проверка - связанные документы Изменять нельзя
      PERFORM lfCheck_Movement_Parent (inMovementId:= ioId, inComment:= 'изменение');
@@ -61,9 +73,29 @@ BEGIN
                                                 );
 
      -- сохранили свойство <>
+     PERFORM lpInsertUpdate_MovemenTFloat (zc_MovemenTFloat_StartOdometre(), ioId, inStartOdometre);
+     -- сохранили свойство <>
+     PERFORM lpInsertUpdate_MovemenTFloat (zc_MovemenTFloat_EndOdometre(), ioId, inEndOdometre);
+  
+     -- сохранили свойство <>
+     PERFORM lpInsertUpdate_MovemenTFloat (zc_MovemenTFloat_AmountFuel(), ioId, inAmountFuel);
+     -- сохранили свойство <>
+     PERFORM lpInsertUpdate_MovemenTFloat (zc_MovemenTFloat_Reparation(), ioId, inReparation);
+
+
+     -- сохранили свойство <>
      PERFORM lpInsertUpdate_MovemenTFloat (zc_MovemenTFloat_LimitChange(), ioId, inLimitChange);
      -- сохранили свойство <>
-     PERFORM lpInsertUpdate_MovemenTFloat (zc_MovemenTFloat_LimitFuelChange(), ioId, inLimitFuelChange);
+     PERFORM lpInsertUpdate_MovemenTFloat (zc_MovemenTFloat_LimitDistanceChange(), ioId, inLimitDistanceChange);
+
+     -- сохранили свойство <>
+     PERFORM lpInsertUpdate_MovemenTFloat (zc_MovemenTFloat_Limit(), ioId, inLimit);
+     -- сохранили свойство <>
+     PERFORM lpInsertUpdate_MovemenTFloat (zc_MovemenTFloat_LimitDistance(), ioId, inLimitDistance);
+
+     -- сохранили протокол
+     PERFORM lpInsert_MovementProtocol (ioId, vbUserId, vbIsInsert);
+
 
 END;
 $BODY$

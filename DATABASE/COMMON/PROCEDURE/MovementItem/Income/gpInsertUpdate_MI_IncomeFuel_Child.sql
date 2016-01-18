@@ -55,9 +55,9 @@ BEGIN
      -- сохранили свойство <Дата накладной у контрагента>
      PERFORM lpInsertUpdate_MovementItemDate (zc_MIDate_OperDate(), ioId, inOperDate);
 
-     -- рассчитываем пробег, км
+     -- рассчитываем пробег, км 
      outDistance_calc:= inEndOdometre - inStartOdometre;
-
+   
      -- рассчитываем нач. и кон. показания спидометра, пробег,км
      SELECT MIN (MIFloat_StartOdometre.ValueData), MAX(MIFloat_EndOdometre.ValueData)
    INTO outStartOdometre_calc, outEndOdometre_calc 
@@ -73,7 +73,6 @@ BEGIN
                              AND MovementItem.isErased   = False;
 
      outDistanceDiff:= outEndOdometre_calc - outStartOdometre_calc;
-
 
      -- сохранили протокол
      PERFORM lpInsert_MovementItemProtocol (ioId, vbUserId, vbIsInsert);

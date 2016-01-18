@@ -1687,6 +1687,12 @@ inherited TransferDebtOutForm: TTransferDebtOutForm
         Value = Null
         DataType = ftString
         ParamType = ptInput
+      end
+      item
+        Name = 'inMask'
+        Value = 'false'
+        DataType = ftBoolean
+        ParamType = ptInput
       end>
     Left = 56
     Top = 352
@@ -1725,6 +1731,19 @@ inherited TransferDebtOutForm: TTransferDebtOutForm
         ComponentItem = 'inOperDate'
         DataType = ftDateTime
         ParamType = ptInput
+      end
+      item
+        Name = 'Id'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+      end
+      item
+        Name = 'isMask'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'inMask'
+        DataType = ftBoolean
       end
       item
         Name = 'InvNumber'

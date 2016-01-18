@@ -13,7 +13,7 @@ CREATE OR REPLACE FUNCTION gpUpdate_Object_Member_TransportParam(
     IN inWinterFuel          Tfloat    ,    -- норма авто литры зима
     IN inReparation          Tfloat    ,    -- амортизация за 1 км., грн.
     IN inLimit               Tfloat    ,    -- лимит грн
-    IN inLimitFuel           Tfloat    ,    -- лимит литры
+    IN inLimitDistance       Tfloat    ,    -- лимит км
     IN inSession             TVarChar    -- сессия пользователя
 )
 RETURNS VOID AS
@@ -24,42 +24,24 @@ BEGIN
      -- проверка прав пользователя на вызов процедуры
      vbUserId := lpCheckRight (inSession, zc_Enum_Process_Update_Object_Member_Transport());
 
-   
+     
      -- сохранили свойство <>
 
-     IF inisDate = True
+     IF inisDate = True and inId <> 0
      THEN
          PERFORM lpInsertUpdate_ObjectDate( zc_ObjectDate_Member_StartSummer(), inId, inStartSummerDate);
          PERFORM lpInsertUpdate_ObjectDate( zc_ObjectDate_Member_EndSummer(), inId, inEndSummerDate); 
      END IF;
 
      
-    IF inisDate = False
+    IF inisDate = False and inId <> 0
     THEN 
-	IF COALESCE (inSummerFuel, 0) <> 0 
-	THEN
-	    PERFORM lpInsertUpdate_ObjectFloat( zc_ObjectFloat_Member_Summer(), inId, inSummerFuel);
-	END IF;
-     
-	IF COALESCE (inWinterFuel, 0) <> 0 
-	THEN
-	    PERFORM lpInsertUpdate_ObjectFloat( zc_ObjectFloat_Member_Winter(), inId, inWinterFuel);
-        END IF;
-
-        IF COALESCE (inReparation, 0) <> 0 
-        THEN
-            PERFORM lpInsertUpdate_ObjectFloat( zc_ObjectFloat_Member_Reparation(), inId, inReparation);
-        END IF;
-
-        IF COALESCE (inLimit, 0) <> 0 
-        THEN
-            PERFORM lpInsertUpdate_ObjectFloat( zc_ObjectFloat_Member_Limit(), inId, inLimit);
-        END IF;
-
-        IF COALESCE (inLimitFuel, 0) <> 0 
-        THEN
-            PERFORM lpInsertUpdate_ObjectFloat( zc_ObjectFloat_Member_LimitFuel(), inId, inLimitFuel);
-        END IF;
+	PERFORM lpInsertUpdate_ObjectFloat( zc_ObjectFloat_Member_Summer(), inId, inSummerFuel);
+	PERFORM lpInsertUpdate_ObjectFloat( zc_ObjectFloat_Member_Winter(), inId, inWinterFuel);
+        PERFORM lpInsertUpdate_ObjectFloat( zc_ObjectFloat_Member_Reparation(), inId, inReparation);
+        PERFORM lpInsertUpdate_ObjectFloat( zc_ObjectFloat_Member_Limit(), inId, inLimit);
+        PERFORM lpInsertUpdate_ObjectFloat( zc_ObjectFloat_Member_LimitDistance(), inId, inLimitDistance);
+ 
      
     END IF;
 

@@ -1826,6 +1826,9 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TMember_TrasportDialogForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TMember_TrasportDateDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TMember_TrasportDateDialogForm');
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TMember_TrasportChoiceForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TMember_TrasportChoiceForm');
 end;
 
 procedure TLoadFormTest.LoadMemberExternalFormTest;

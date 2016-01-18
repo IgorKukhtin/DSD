@@ -13,7 +13,7 @@ CREATE OR REPLACE FUNCTION gpUpdate_Object_Member_Transport(
     IN inWinterFuel          Tfloat    ,    -- норма авто литры зима
     IN inReparation          Tfloat    ,    -- амортизация за 1 км., грн.
     IN inLimit               Tfloat    ,    -- лимит грн
-    IN inLimitFuel           Tfloat    ,    -- лимит литры
+    IN inLimitDistance       Tfloat    ,    -- лимит литры
     IN inSession             TVarChar       -- сессия пользователя
 )
   RETURNS VOID AS
@@ -51,7 +51,7 @@ BEGIN
    PERFORM lpInsertUpdate_ObjectFloat( zc_ObjectFloat_Member_Limit(), inId, inLimit);
 
    -- сохранили свойство <>
-   PERFORM lpInsertUpdate_ObjectFloat( zc_ObjectFloat_Member_LimitFuel(), inId, inLimitFuel);
+   PERFORM lpInsertUpdate_ObjectFloat( zc_ObjectFloat_Member_LimitDistance(), inId, inLimitDistance);
 
 
    -- сохранили протокол
