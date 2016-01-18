@@ -849,7 +849,7 @@ inherited TransferDebtInForm: TTransferDebtInForm
         end
         item
           Name = 'OperDate_Tax'
-          Value = Null
+          Value = 'NULL'
           Component = TaxCorrectiveCDS
           ComponentItem = 'OperDate_Child'
           DataType = ftDateTime
@@ -985,7 +985,7 @@ inherited TransferDebtInForm: TTransferDebtInForm
         end
         item
           Name = 'inOperDate'
-          Value = Null
+          Value = 'NULL'
           Component = TaxCorrectiveCDS
           ComponentItem = 'OperDate'
           DataType = ftDateTime
@@ -1599,6 +1599,12 @@ inherited TransferDebtInForm: TTransferDebtInForm
         Value = 'PrintMovement_TaxCorrective'
         DataType = ftString
         ParamType = ptInput
+      end
+      item
+        Name = 'inMask'
+        Value = 'False'
+        DataType = ftBoolean
+        ParamType = ptInput
       end>
     Left = 280
     Top = 552
@@ -1623,12 +1629,33 @@ inherited TransferDebtInForm: TTransferDebtInForm
         ParamType = ptInput
       end
       item
-        Name = 'inOperDate'
+        Name = 'inMask'
         Value = Null
+        Component = FormParams
+        ComponentItem = 'inMask'
+        DataType = ftBoolean
+        ParamType = ptInput
+      end
+      item
+        Name = 'inOperDate'
+        Value = 'NULL'
         Component = FormParams
         ComponentItem = 'inOperDate'
         DataType = ftDateTime
         ParamType = ptInput
+      end
+      item
+        Name = 'Id'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+      end
+      item
+        Name = 'isMask'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'inMask'
+        DataType = ftBoolean
       end
       item
         Name = 'InvNumber'

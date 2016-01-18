@@ -434,7 +434,7 @@ inherited TransferDebtInJournalForm: TTransferDebtInJournalForm
       EditValue = 42005d
     end
     inherited deEnd: TcxDateEdit
-      EditValue = 42005d
+      EditValue = 42370d
     end
     object cxLabel14: TcxLabel
       Left = 615
@@ -466,6 +466,41 @@ inherited TransferDebtInJournalForm: TTransferDebtInJournalForm
       FormName = 'TTransferDebtInForm'
       FormNameParam.Value = 'TTransferDebtInForm'
     end
+    object actInsertMaskMulti: TMultiAction [3]
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actInsertMask
+        end>
+      QuestionBeforeExecute = #1044#1077#1081#1089#1090#1074#1080#1090#1077#1083#1100#1085#1086' '#1076#1086#1073#1072#1074#1080#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090' '#1087#1086' '#1084#1072#1089#1082#1077'? '
+      InfoAfterExecute = #1044#1086#1082#1091#1084#1077#1085#1090' '#1087#1086' '#1084#1072#1089#1082#1077' '#1076#1086#1073#1072#1074#1083#1077#1085
+      Caption = #1044#1086#1073#1072#1074#1080#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090' '#1087#1086' '#1084#1072#1089#1082#1077
+      Hint = #1044#1086#1073#1072#1074#1080#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090' '#1087#1086' '#1084#1072#1089#1082#1077
+      ImageIndex = 54
+    end
+    inherited actInsertMask: TdsdInsertUpdateAction
+      FormName = 'TTransferDebtInForm'
+      FormNameParam.Value = 'TTransferDebtInForm'
+      GuiParams = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'Id'
+        end
+        item
+          Name = 'inMask'
+          Value = 'True'
+          DataType = ftBoolean
+        end
+        item
+          Name = 'inOperDate'
+          Value = 42370d
+          Component = deEnd
+          DataType = ftDateTime
+        end>
+    end
     inherited actUpdate: TdsdInsertUpdateAction
       FormName = 'TTransferDebtInForm'
       FormNameParam.Value = 'TTransferDebtInForm'
@@ -489,7 +524,7 @@ inherited TransferDebtInJournalForm: TTransferDebtInJournalForm
           DataType = ftDateTime
         end>
     end
-    object actChecked: TdsdExecStoredProc [6]
+    object actChecked: TdsdExecStoredProc [7]
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -502,7 +537,7 @@ inherited TransferDebtInJournalForm: TTransferDebtInJournalForm
       Hint = #1048#1079#1084#1077#1085#1080#1090#1100' "'#1055#1088#1086#1074#1077#1088#1077#1085' '#1044#1072'/'#1053#1077#1090'"'
       ImageIndex = 58
     end
-    object actTaxCorrective: TdsdExecStoredProc [10]
+    object actTaxCorrective: TdsdExecStoredProc [11]
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -521,7 +556,7 @@ inherited TransferDebtInJournalForm: TTransferDebtInJournalForm
         #1047#1072#1074#1077#1088#1096#1077#1085#1086' '#1092#1086#1088#1084#1080#1088#1086#1074#1072#1085#1080#1077' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' <'#1050#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1082#1072' '#1082' '#1085#1072#1083#1086#1075#1086#1074#1086#1081'('#1089' '#1087#1088 +
         #1080#1074#1103#1079#1082#1086#1081')>.'
     end
-    object actCorrective: TdsdExecStoredProc [11]
+    object actCorrective: TdsdExecStoredProc [12]
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -849,6 +884,14 @@ inherited TransferDebtInJournalForm: TTransferDebtInJournalForm
         end
         item
           Visible = True
+          ItemName = 'bbInsertMask'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbComplete'
         end
         item
@@ -952,6 +995,9 @@ inherited TransferDebtInJournalForm: TTransferDebtInJournalForm
           Visible = True
           ItemName = 'dxBarStatic'
         end>
+    end
+    inherited bbInsertMask: TdxBarButton
+      Action = actInsertMaskMulti
     end
     object bbPrint: TdxBarButton
       Action = mactPrint
