@@ -80,6 +80,9 @@ type
     spUpdateMIAmountPartner: TdsdStoredProc;
     actInsertUpdateMIAmount: TdsdExecStoredProc;
     bbInsertUpdateMIAmount: TdxBarButton;
+    spSelectPrint_SaleOrder: TdsdStoredProc;
+    actPrintSaleOrder: TdsdPrintAction;
+    bbPrintSaleOrder: TdxBarButton;
   private
     { Private declarations }
   public
