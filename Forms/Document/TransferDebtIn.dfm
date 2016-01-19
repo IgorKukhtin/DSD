@@ -825,7 +825,46 @@ inherited TransferDebtInForm: TTransferDebtInForm
       HeaderDataSet = PrintItemsCDS
       ItemsDataSet = PrintItemsCDS
     end
-    object actTaxJournalChoice: TOpenChoiceForm [7]
+    object actOpenTax: TdsdOpenForm [7]
+      Category = 'DSDLib'
+      TabSheet = cxTabSheetTaxCorrective
+      MoveParams = <>
+      Caption = #1055#1088#1086#1089#1084#1086#1090#1088' <'#1053#1072#1083#1086#1075#1086#1074#1086#1081' '#1085#1072#1082#1083#1072#1076#1085#1086#1081'>'
+      Hint = #1055#1088#1086#1089#1084#1086#1090#1088' <'#1053#1072#1083#1086#1075#1086#1074#1086#1081' '#1085#1072#1082#1083#1072#1076#1085#1086#1081'>'
+      ImageIndex = 26
+      FormName = 'TTaxForm'
+      FormNameParam.Value = 'TTaxForm'
+      FormNameParam.DataType = ftString
+      GuiParams = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = TaxCorrectiveCDS
+          ComponentItem = 'DocumentChildId'
+          ParamType = ptInput
+        end
+        item
+          Name = 'inmask'
+          Value = 'False'
+          DataType = ftBoolean
+          ParamType = ptInput
+        end
+        item
+          Name = 'ShowAll'
+          Value = 'False'
+          DataType = ftBoolean
+        end
+        item
+          Name = 'inOperDate'
+          Value = 'NULL'
+          Component = TaxCorrectiveCDS
+          ComponentItem = 'OperDate_Child'
+          DataType = ftDateTime
+          ParamType = ptInput
+        end>
+      isShowModal = False
+    end
+    object actTaxJournalChoice: TOpenChoiceForm [8]
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -901,7 +940,7 @@ inherited TransferDebtInForm: TTransferDebtInForm
       ReportNameParam.ComponentItem = 'ReportName'
       ReportNameParam.ParamType = ptInput
     end
-    object mactPrint: TMultiAction [11]
+    object mactPrint: TMultiAction [12]
       Category = 'DSDLib'
       MoveParams = <>
       ActionList = <
@@ -931,7 +970,7 @@ inherited TransferDebtInForm: TTransferDebtInForm
         item
         end>
     end
-    object actGoodsKindChoice: TOpenChoiceForm [14]
+    object actGoodsKindChoice: TOpenChoiceForm [15]
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -1439,6 +1478,10 @@ inherited TransferDebtInForm: TTransferDebtInForm
         end
         item
           Visible = True
+          ItemName = 'bbOpenTax'
+        end
+        item
+          Visible = True
           ItemName = 'bbOpenTaxCorrective'
         end
         item
@@ -1531,6 +1574,10 @@ inherited TransferDebtInForm: TTransferDebtInForm
     end
     object bbOpenTaxCorrective: TdxBarButton
       Action = actOpenTaxCorrective
+      Category = 0
+    end
+    object bbOpenTax: TdxBarButton
+      Action = actOpenTax
       Category = 0
     end
   end
