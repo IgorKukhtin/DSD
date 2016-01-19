@@ -790,12 +790,13 @@ BEGIN
        )
      , tmpObject_GoodsPropertyValueGroup AS
        (SELECT tmpObject_GoodsPropertyValue.GoodsId
+             , tmpObject_GoodsPropertyValue.Name             
              , tmpObject_GoodsPropertyValue.Article
              , tmpObject_GoodsPropertyValue.ArticleGLN
              , tmpObject_GoodsPropertyValue.BarCode
              , tmpObject_GoodsPropertyValue.BarCodeGLN
              , tmpObject_GoodsPropertyValue.BoxCount             
-        FROM (SELECT MAX (tmpObject_GoodsPropertyValue.ObjectId) AS ObjectId, GoodsId FROM tmpObject_GoodsPropertyValue WHERE Article <> '' OR ArticleGLN <> '' OR BarCode <> '' OR BarCodeGLN <> '' GROUP BY GoodsId
+        FROM (SELECT MAX (tmpObject_GoodsPropertyValue.ObjectId) AS ObjectId, GoodsId FROM tmpObject_GoodsPropertyValue WHERE Article <> '' OR ArticleGLN <> '' OR BarCode <> '' OR BarCodeGLN <> '' OR Name <> '' GROUP BY GoodsId
              ) AS tmpGoodsProperty_find
              LEFT JOIN tmpObject_GoodsPropertyValue ON tmpObject_GoodsPropertyValue.ObjectId =  tmpGoodsProperty_find.ObjectId
        )
@@ -855,8 +856,8 @@ BEGIN
            , Object_Goods.ObjectCode         AS GoodsCode
            , tmpObject_GoodsPropertyValue_basis.BarCode AS BarCode_Main
 
-           , (CASE WHEN tmpObject_GoodsPropertyValue.Name <> '' THEN tmpObject_GoodsPropertyValue.Name WHEN tmpObject_GoodsPropertyValue_basis.Name <> '' THEN tmpObject_GoodsPropertyValue_basis.Name ELSE Object_Goods.ValueData END || CASE WHEN COALESCE (Object_GoodsKind.Id, zc_Enum_GoodsKind_Main()) = zc_Enum_GoodsKind_Main() THEN '' ELSE ' ' || Object_GoodsKind.ValueData END) :: TVarChar AS GoodsName
-           , CASE WHEN tmpObject_GoodsPropertyValue.Name <> '' THEN tmpObject_GoodsPropertyValue.Name WHEN tmpObject_GoodsPropertyValue_basis.Name <> '' THEN tmpObject_GoodsPropertyValue_basis.Name ELSE Object_Goods.ValueData END AS GoodsName_two
+           , (CASE WHEN tmpObject_GoodsPropertyValue.Name <> '' THEN tmpObject_GoodsPropertyValue.Name WHEN tmpObject_GoodsPropertyValueGroup.Name <> '' THEN tmpObject_GoodsPropertyValueGroup.Name WHEN tmpObject_GoodsPropertyValue_basis.Name <> '' THEN tmpObject_GoodsPropertyValue_basis.Name ELSE Object_Goods.ValueData END || CASE WHEN COALESCE (Object_GoodsKind.Id, zc_Enum_GoodsKind_Main()) = zc_Enum_GoodsKind_Main() THEN '' ELSE ' ' || Object_GoodsKind.ValueData END) :: TVarChar AS GoodsName
+           , (CASE WHEN tmpObject_GoodsPropertyValue.Name <> '' THEN tmpObject_GoodsPropertyValue.Name WHEN tmpObject_GoodsPropertyValueGroup.Name <> '' THEN tmpObject_GoodsPropertyValueGroup.Name WHEN tmpObject_GoodsPropertyValue_basis.Name <> '' THEN tmpObject_GoodsPropertyValue_basis.Name ELSE Object_Goods.ValueData END) :: TVarChar AS GoodsName_two
            , Object_GoodsKind.ValueData      AS GoodsKindName
            , Object_Measure.ValueData        AS MeasureName
            , OS_Measure_InternalCode.ValueData  AS MeasureIntCode
@@ -876,7 +877,7 @@ BEGIN
              END AS AmountBox
            , COALESCE (tmpObject_GoodsPropertyValue.Name, '')       AS GoodsName_Juridical
            , COALESCE (tmpObject_GoodsPropertyValue.Amount, 0)      AS AmountInPack_Juridical
-           , COALESCE (tmpObject_GoodsPropertyValue.BoxCount, COALESCE (tmpObject_GoodsPropertyValueGroup.BoxCount, 0))       AS BoxCount_Juridical
+           , COALESCE (tmpObject_GoodsPropertyValue.BoxCount, COALESCE (tmpObject_GoodsPropertyValueGroup.BoxCount, 0))      AS BoxCount_Juridical
            , COALESCE (tmpObject_GoodsPropertyValueGroup.Article,    COALESCE (tmpObject_GoodsPropertyValue.Article, ''))    AS Article_Juridical
            , COALESCE (tmpObject_GoodsPropertyValueGroup.BarCode,    COALESCE (tmpObject_GoodsPropertyValue.BarCode, ''))    AS BarCode_Juridical
            , COALESCE (tmpObject_GoodsPropertyValueGroup.ArticleGLN, COALESCE (tmpObject_GoodsPropertyValue.ArticleGLN, '')) AS ArticleGLN_Juridical
