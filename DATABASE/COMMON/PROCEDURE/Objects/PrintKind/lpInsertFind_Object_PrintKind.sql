@@ -1,15 +1,23 @@
 -- Function: lpInsertFind_Object_PrintKindItem (Boolean, Boolean, Boolean, Boolean, Boolean, Boolean, Boolean)
 
-DROP FUNCTION IF EXISTS lpInsertFind_Object_PrintKindItem (Boolean, Boolean, Boolean, Boolean, Boolean, Boolean, Boolean);
+-- DROP FUNCTION IF EXISTS lpInsertFind_Object_PrintKindItem (Boolean, Boolean, Boolean, Boolean, Boolean, Boolean, Boolean);
+DROP FUNCTION IF EXISTS lpInsertFind_Object_PrintKindItem (Boolean, Boolean, Boolean, Boolean, Boolean, Boolean, Boolean, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat);
 
 CREATE OR REPLACE FUNCTION lpInsertFind_Object_PrintKindItem(
-    IN inIsMovement   Boolean,   -- Накладная
-    IN inIsAccount    Boolean,   -- Счет
-    IN inIsTransport  Boolean,   -- ТТН
-    IN inIsQuality    Boolean,   -- Качественное
-    IN inIsPack       Boolean,   -- Упаковочный
-    IN inIsSpec       Boolean,   -- Спецификация
-    IN inIsTax        Boolean    -- Налоговая
+    IN inIsMovement      Boolean,   -- Накладная
+    IN inIsAccount       Boolean,   -- Счет
+    IN inIsTransport     Boolean,   -- ТТН
+    IN inIsQuality       Boolean,   -- Качественное
+    IN inIsPack          Boolean,   -- Упаковочный
+    IN inIsSpec          Boolean,   -- Спецификация
+    IN inIsTax           Boolean    -- Налоговая
+    IN inCountMovement   TFloat,   -- Накладная
+    IN inCountAccount    TFloat,   -- Счет
+    IN inCountTransport  TFloat,   -- ТТН
+    IN inCountQuality    TFloat,   -- Качественное
+    IN inCountPack       TFloat,   -- Упаковочный
+    IN inCountSpec       TFloat,   -- Спецификация
+    IN inCountTax        TFloat    -- Налоговая
 )
 RETURNS Integer
 AS
