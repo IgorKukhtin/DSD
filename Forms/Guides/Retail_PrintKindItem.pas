@@ -11,7 +11,8 @@ uses
   cxGrid, Datasnap.DBClient, cxPropertiesStore, dxBar,
   Vcl.ActnList, DataModul, ParentForm, dsdDB, dsdAction, dsdAddOn, dxBarExtItems,
   cxGridBandedTableView, cxGridDBBandedTableView, cxCheckBox, dxSkinsCore,
-  dxSkinsDefaultPainters, dxSkinscxPCPainter, dxSkinsdxBarPainter, cxButtonEdit;
+  dxSkinsDefaultPainters, dxSkinscxPCPainter, dxSkinsdxBarPainter, cxButtonEdit,
+  cxCurrencyEdit;
 
 type
   TRetail_PrintKindItemForm = class(TParentForm)

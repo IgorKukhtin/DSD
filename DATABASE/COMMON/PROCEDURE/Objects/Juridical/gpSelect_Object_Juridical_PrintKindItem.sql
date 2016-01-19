@@ -22,6 +22,10 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar,
                isMovement boolean, isAccount boolean, isTransport boolean,
                isQuality boolean, isPack boolean, isSpec boolean, isTax boolean,   
 
+
+               CountMovement Tfloat, CountAccount Tfloat, CountTransport Tfloat,
+               CountQuality Tfloat, CountPack Tfloat, CountSpec Tfloat, CountTax Tfloat,  
+
                isErased Boolean
               )
 AS
@@ -79,6 +83,8 @@ BEGIN
   , tmpPrintKindItem AS( SELECT tmp.Id
                               , tmp.isMovement, tmp.isAccount, tmp.isTransport
                               , tmp.isQuality, tmp.isPack, tmp.isSpec, tmp.isTax
+                              , tmp.CountMovement, tmp.CountAccount, tmp.CountTransport
+                              , tmp.CountQuality, tmp.CountPack, tmp.CountSpec, tmp.CountTax
                          FROM lpSelect_Object_PrintKindItem() AS tmp
                                 )
 
@@ -131,6 +137,14 @@ BEGIN
        , COALESCE (tmpPrintKindItem.isPack, CAST (False AS Boolean))       AS isPack
        , COALESCE (tmpPrintKindItem.isSpec, CAST (False AS Boolean))       AS isSpec
        , COALESCE (tmpPrintKindItem.isTax, CAST (False AS Boolean))        AS isTax     
+
+       , COALESCE (tmpPrintKindItem.CountMovement, CAST (0 AS TFloat))   AS CountMovement
+       , COALESCE (tmpPrintKindItem.CountAccount, CAST (0 AS TFloat))    AS CountAccount
+       , COALESCE (tmpPrintKindItem.CountTransport, CAST (0 AS TFloat))  AS CountTransport
+       , COALESCE (tmpPrintKindItem.CountQuality, CAST (0 AS TFloat))    AS CountQuality
+       , COALESCE (tmpPrintKindItem.CountPack, CAST (0 AS TFloat))       AS CountPack
+       , COALESCE (tmpPrintKindItem.CountSpec, CAST (0 AS TFloat))       AS CountSpec
+       , COALESCE (tmpPrintKindItem.CountTax, CAST (0 AS TFloat))        AS CountTax
 
        , Object_Juridical.isErased AS isErased
        
@@ -211,6 +225,7 @@ ALTER FUNCTION gpSelect_Object_Juridical_PrintKindItem (TVarChar) OWNER TO postg
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 19.01.16         * add кол-во накладных
  21.05.15         *
 
 */
