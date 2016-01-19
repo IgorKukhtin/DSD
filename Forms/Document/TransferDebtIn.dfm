@@ -825,7 +825,46 @@ inherited TransferDebtInForm: TTransferDebtInForm
       HeaderDataSet = PrintItemsCDS
       ItemsDataSet = PrintItemsCDS
     end
-    object actTaxJournalChoice: TOpenChoiceForm [7]
+    object actOpenTax: TdsdOpenForm [7]
+      Category = 'DSDLib'
+      TabSheet = cxTabSheetTaxCorrective
+      MoveParams = <>
+      Caption = #1055#1088#1086#1089#1084#1086#1090#1088' <'#1053#1072#1083#1086#1075#1086#1074#1086#1081' '#1085#1072#1082#1083#1072#1076#1085#1086#1081'>'
+      Hint = #1055#1088#1086#1089#1084#1086#1090#1088' <'#1053#1072#1083#1086#1075#1086#1074#1086#1081' '#1085#1072#1082#1083#1072#1076#1085#1086#1081'>'
+      ImageIndex = 26
+      FormName = 'TTaxForm'
+      FormNameParam.Value = 'TTaxForm'
+      FormNameParam.DataType = ftString
+      GuiParams = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = TaxCorrectiveCDS
+          ComponentItem = 'DocumentChildId'
+          ParamType = ptInput
+        end
+        item
+          Name = 'inmask'
+          Value = 'False'
+          DataType = ftBoolean
+          ParamType = ptInput
+        end
+        item
+          Name = 'ShowAll'
+          Value = 'False'
+          DataType = ftBoolean
+        end
+        item
+          Name = 'inOperDate'
+          Value = 'NULL'
+          Component = TaxCorrectiveCDS
+          ComponentItem = 'OperDate_Child'
+          DataType = ftDateTime
+          ParamType = ptInput
+        end>
+      isShowModal = False
+    end
+    object actTaxJournalChoice: TOpenChoiceForm [8]
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -849,7 +888,7 @@ inherited TransferDebtInForm: TTransferDebtInForm
         end
         item
           Name = 'OperDate_Tax'
-          Value = Null
+          Value = 'NULL'
           Component = TaxCorrectiveCDS
           ComponentItem = 'OperDate_Child'
           DataType = ftDateTime
@@ -901,7 +940,7 @@ inherited TransferDebtInForm: TTransferDebtInForm
       ReportNameParam.ComponentItem = 'ReportName'
       ReportNameParam.ParamType = ptInput
     end
-    object mactPrint: TMultiAction [11]
+    object mactPrint: TMultiAction [12]
       Category = 'DSDLib'
       MoveParams = <>
       ActionList = <
@@ -931,7 +970,7 @@ inherited TransferDebtInForm: TTransferDebtInForm
         item
         end>
     end
-    object actGoodsKindChoice: TOpenChoiceForm [14]
+    object actGoodsKindChoice: TOpenChoiceForm [15]
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -985,7 +1024,7 @@ inherited TransferDebtInForm: TTransferDebtInForm
         end
         item
           Name = 'inOperDate'
-          Value = Null
+          Value = 'NULL'
           Component = TaxCorrectiveCDS
           ComponentItem = 'OperDate'
           DataType = ftDateTime
@@ -1439,6 +1478,10 @@ inherited TransferDebtInForm: TTransferDebtInForm
         end
         item
           Visible = True
+          ItemName = 'bbOpenTax'
+        end
+        item
+          Visible = True
           ItemName = 'bbOpenTaxCorrective'
         end
         item
@@ -1533,6 +1576,10 @@ inherited TransferDebtInForm: TTransferDebtInForm
       Action = actOpenTaxCorrective
       Category = 0
     end
+    object bbOpenTax: TdxBarButton
+      Action = actOpenTax
+      Category = 0
+    end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
     SummaryItemList = <
@@ -1599,6 +1646,12 @@ inherited TransferDebtInForm: TTransferDebtInForm
         Value = 'PrintMovement_TaxCorrective'
         DataType = ftString
         ParamType = ptInput
+      end
+      item
+        Name = 'inMask'
+        Value = 'False'
+        DataType = ftBoolean
+        ParamType = ptInput
       end>
     Left = 280
     Top = 552
@@ -1623,12 +1676,33 @@ inherited TransferDebtInForm: TTransferDebtInForm
         ParamType = ptInput
       end
       item
-        Name = 'inOperDate'
+        Name = 'inMask'
         Value = Null
+        Component = FormParams
+        ComponentItem = 'inMask'
+        DataType = ftBoolean
+        ParamType = ptInput
+      end
+      item
+        Name = 'inOperDate'
+        Value = 'NULL'
         Component = FormParams
         ComponentItem = 'inOperDate'
         DataType = ftDateTime
         ParamType = ptInput
+      end
+      item
+        Name = 'Id'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+      end
+      item
+        Name = 'isMask'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'inMask'
+        DataType = ftBoolean
       end
       item
         Name = 'InvNumber'

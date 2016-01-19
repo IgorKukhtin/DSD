@@ -708,7 +708,8 @@ object SheetWorkTimeForm: TSheetWorkTimeForm
         DataType = ftString
         ParamType = ptInput
       end>
-    Left = 280
+    Left = 200
+    Top = 8
   end
   object spInsertUpdateMI: TdsdStoredProc
     StoredProcName = 'gpInsertUpdate_MovementItem_SheetWorkTime'

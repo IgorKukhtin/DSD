@@ -100,6 +100,8 @@ type
     mactPrintReturnIn: TMultiAction;
     actSPPrintProcNameReturnIn: TdsdExecStoredProc;
     bbPrintReturnIn: TdxBarButton;
+    actOpenTax: TdsdOpenForm;
+    bbOpenTax: TdxBarButton;
   private
     { Private declarations }
   public

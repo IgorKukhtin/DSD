@@ -81,6 +81,9 @@ type
     Comment: TcxGridDBColumn;
     actPrinDiff: TdsdPrintAction;
     bbPrinDiff: TdxBarButton;
+    spSelectPrint_SaleOrder: TdsdStoredProc;
+    actPrintSaleOrder: TdsdPrintAction;
+    bbPrintSaleOrder: TdxBarButton;
   private
     { Private declarations }
   public

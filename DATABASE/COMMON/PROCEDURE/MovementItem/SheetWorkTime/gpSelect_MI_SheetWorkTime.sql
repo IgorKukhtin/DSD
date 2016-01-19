@@ -60,7 +60,8 @@ BEGIN
                , Object_PositionLevel.Id         AS PositionLevelId
                , Object_PositionLevel.ValueData  AS PositionLevelName
                , Object_PersonalGroup.Id         AS PersonalGroupId
-               , Object_PersonalGroup.ValueData  AS PersonalGroupName'
+               , Object_PersonalGroup.ValueData  AS PersonalGroupName
+               , False AS isErased '
                || vbFieldNameText ||
         ' FROM
          (SELECT * FROM CROSSTAB (''

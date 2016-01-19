@@ -119,6 +119,8 @@ type
     ceComment: TcxTextEdit;
     bbOpenTaxCorrective: TdxBarButton;
     actOpenTaxCorrective: TdsdOpenForm;
+    actOpenTax: TdsdOpenForm;
+    bbOpenTax: TdxBarButton;
   private
     { Private declarations }
   public
