@@ -906,6 +906,22 @@ inherited TransferDebtInForm: TTransferDebtInForm
           Component = TaxCorrectiveCDS
           ComponentItem = 'PartnerId'
           ParamType = ptInput
+        end
+        item
+          Name = 'PartnerName'
+          Value = Null
+          Component = TaxCorrectiveCDS
+          ComponentItem = 'PartnerName'
+          DataType = ftString
+          ParamType = ptInput
+        end
+        item
+          Name = 'JuridicalName'
+          Value = Null
+          Component = TaxCorrectiveCDS
+          ComponentItem = 'FromName'
+          DataType = ftString
+          ParamType = ptInput
         end>
       isShowModal = True
     end

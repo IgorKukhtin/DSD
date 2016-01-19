@@ -3,7 +3,7 @@ inherited TaxCorrectiveForm: TTaxCorrectiveForm
   ClientHeight = 668
   ClientWidth = 1114
   ExplicitWidth = 1130
-  ExplicitHeight = 703
+  ExplicitHeight = 706
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -1701,6 +1701,13 @@ inherited TaxCorrectiveForm: TTaxCorrectiveForm
         Value = '0'
         Component = GuidesFrom
         ComponentItem = 'Key'
+      end
+      item
+        Name = 'JuridicalName'
+        Value = Null
+        Component = GuidesFrom
+        ComponentItem = 'TextValue'
+        DataType = ftString
         ParamType = ptInput
       end
       item
@@ -1709,6 +1716,13 @@ inherited TaxCorrectiveForm: TTaxCorrectiveForm
         Component = GuidesPartner
         ComponentItem = 'Key'
         ParamType = ptInput
+      end
+      item
+        Name = 'PartnerName'
+        Value = Null
+        Component = GuidesPartner
+        ComponentItem = 'TextValue'
+        DataType = ftString
       end>
     Left = 912
     Top = 56
