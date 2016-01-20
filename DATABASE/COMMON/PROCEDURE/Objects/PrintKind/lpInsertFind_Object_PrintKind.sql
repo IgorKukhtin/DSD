@@ -29,7 +29,7 @@ BEGIN
      -- !!!определяется КЛЮЧ!!!
      vbKeyValue = (SELECT STRING_AGG (tmp.Value, ';')
                    FROM (SELECT tmp.ValueId :: TVarChar AS Value
-                         FROM     (SELECT zc_Enum_PrintKind_Movement()  :: TVarChar || '+' || CASE WHEN inCountMovement  > 0 THEN inCountMovement  ELSE 1 END :: TVarChar AS ValueId WHERE inIsMovement = TRUE
+                         FROM     (SELECT zc_Enum_PrintKind_Movement()  :: TVarChar || '+' || CASE WHEN inCountMovement  > 0 THEN inCountMovement  ELSE 2 END :: TVarChar AS ValueId WHERE inIsMovement = TRUE
                          UNION ALL SELECT zc_Enum_PrintKind_Account()   :: TVarChar || '+' || CASE WHEN inCountAccount   > 0 THEN inCountAccount   ELSE 1 END :: TVarChar AS ValueId WHERE inIsAccount = TRUE
                          UNION ALL SELECT zc_Enum_PrintKind_Transport() :: TVarChar || '+' || CASE WHEN inCountTransport > 0 THEN inCountTransport ELSE 1 END :: TVarChar AS ValueId WHERE inIsTransport = TRUE
                          UNION ALL SELECT zc_Enum_PrintKind_Quality()   :: TVarChar || '+' || CASE WHEN inCountQuality   > 0 THEN inCountQuality   ELSE 1 END :: TVarChar AS ValueId WHERE inIsQuality = TRUE
@@ -69,4 +69,5 @@ $BODY$
 
 -- тест
 -- SELECT * FROM Object WHERE DescId = zc_Object_PrintKind()
+-- SELECT * FROM Object WHERE DescId = zc_Object_PrintKindItem()
 -- SELECT * FROM lpInsertFind_Object_PrintKindItem (TRUE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE)

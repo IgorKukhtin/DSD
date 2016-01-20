@@ -1,6 +1,7 @@
 -- Function: gpUpdate_Scale_Partner_print()
 
-DROP FUNCTION IF EXISTS gpUpdate_Scale_Partner_print (Integer, Boolean, Boolean, Boolean, Boolean, Boolean, Boolean, Boolean, TVarChar);
+-- DROP FUNCTION IF EXISTS gpUpdate_Scale_Partner_print (Integer, Boolean, Boolean, Boolean, Boolean, Boolean, Boolean, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpUpdate_Scale_Partner_print (Integer, Boolean, Boolean, Boolean, Boolean, Boolean, Boolean, Boolean, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpUpdate_Scale_Partner_print(
     IN inPartnerId           Integer   , -- Ключ объекта <Документ>
@@ -10,7 +11,14 @@ CREATE OR REPLACE FUNCTION gpUpdate_Scale_Partner_print(
     IN inIsQuality           Boolean   , 
     IN inIsPack              Boolean   , 
     IN inIsSpec              Boolean   , 
-    IN inIsTax               Boolean   ,
+    IN inIsTax               Boolean   , 
+    IN inCountMovement       TFloat    , -- Накладная
+    IN inCountAccount        TFloat    , -- Счет
+    IN inCountTransport      TFloat    , -- ТТН
+    IN inCountQuality        TFloat    , -- Качественное
+    IN inCountPack           TFloat    , -- Упаковочный
+    IN inCountSpec           TFloat    , -- Спецификация
+    IN inCountTax            TFloat    , -- Налоговая
     IN inSession             TVarChar    -- сессия пользователя
 )                              
 RETURNS VOID
@@ -33,6 +41,13 @@ BEGIN
                                                                      , inIsPack     := inIsPack
                                                                      , inIsSpec     := inIsSpec
                                                                      , inIsTax      := inIsTax
+                                                                     , inCountMovement   := inCountMovement
+                                                                     , inCountAccount    := inCountAccount
+                                                                     , inCountTransport  := inCountTransport
+                                                                     , inCountQuality    := inCountQuality
+                                                                     , inCountPack       := inCountPack
+                                                                     , inCountSpec       := inCountSpec
+                                                                     , inCountTax        := inCountTax
                                                                      , inUserId     := vbUserId
                                                                       )
                  ELSE lpInsertUpdate_Object_Juridical_PrintKindItem (ioId         := ObjectLink_Partner_Juridical.ChildObjectId
@@ -43,6 +58,13 @@ BEGIN
                                                                    , inIsPack     := inIsPack
                                                                    , inIsSpec     := inIsSpec
                                                                    , inIsTax      := inIsTax
+                                                                   , inCountMovement   := inCountMovement
+                                                                   , inCountAccount    := inCountAccount
+                                                                   , inCountTransport  := inCountTransport
+                                                                   , inCountQuality    := inCountQuality
+                                                                   , inCountPack       := inCountPack
+                                                                   , inCountSpec       := inCountSpec
+                                                                   , inCountTax        := inCountTax
                                                                    , inUserId     := vbUserId
                                                                     )
             END

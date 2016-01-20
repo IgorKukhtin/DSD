@@ -24,13 +24,13 @@ RETURNS TABLE (PartnerId     Integer
              , isEdiInvoice  Boolean
              , isEdiDesadv   Boolean
 
-             , isMovement    Boolean   -- Накладная
-             , isAccount     Boolean   -- Счет
-             , isTransport   Boolean   -- ТТН
-             , isQuality     Boolean   -- Качественное
-             , isPack        Boolean   -- Упаковочный
-             , isSpec        Boolean   -- Спецификация
-             , isTax         Boolean   -- Налоговая
+             , isMovement    Boolean, CountMovement   TFloat   -- Накладная
+             , isAccount     Boolean, CountAccount    TFloat   -- Счет
+             , isTransport   Boolean, CountTransport  TFloat   -- ТТН
+             , isQuality     Boolean, CountQuality    TFloat   -- Качественное
+             , isPack        Boolean, CountPack       TFloat   -- Упаковочный
+             , isSpec        Boolean, CountSpec       TFloat   -- Спецификация
+             , isTax         Boolean, CountTax        TFloat   -- Налоговая
 
              , ObjectDescId   Integer
              , MovementDescId Integer
@@ -181,7 +181,7 @@ BEGIN
                                   , tmpInfoMoney.InfoMoneyId
                                   , tmpInfoMoney.MovementDescId*/
                           )
-          , tmpPrintKindItem AS (SELECT tmp.Id, tmp.isMovement, tmp.isAccount, tmp.isTransport, tmp.isQuality, tmp.isPack, tmp.isSpec, tmp.isTax FROM lpSelect_Object_PrintKindItem() AS tmp)
+          , tmpPrintKindItem AS (SELECT * FROM lpSelect_Object_PrintKindItem())
 
        SELECT tmpPartner.PartnerId
             , tmpPartner.PartnerCode
@@ -219,12 +219,13 @@ BEGIN
             , COALESCE (ObjectBoolean_Partner_EdiDesadv.ValueData, FALSE)  :: Boolean AS isEdiDesadv
 
             , CASE WHEN tmpPrintKindItem.isPack = TRUE OR tmpPrintKindItem.isSpec = TRUE THEN COALESCE (tmpPrintKindItem.isMovement, FALSE) ELSE TRUE END :: Boolean AS isMovement
-            , COALESCE (tmpPrintKindItem.isAccount, FALSE)   :: Boolean AS isAccount
-            , COALESCE (tmpPrintKindItem.isTransport, FALSE) :: Boolean AS isTransport
-            , COALESCE (tmpPrintKindItem.isQuality, FALSE)   :: Boolean AS isQuality
-            , COALESCE (tmpPrintKindItem.isPack, FALSE)      :: Boolean AS isPack
-            , COALESCE (tmpPrintKindItem.isSpec, FALSE)      :: Boolean AS isSpec
-            , COALESCE (tmpPrintKindItem.isTax, FALSE)       :: Boolean AS isTax
+            , COALESCE (tmpPrintKindItem.CountMovement, 0) :: TFloat AS CountMovement
+            , COALESCE (tmpPrintKindItem.isAccount, FALSE)   :: Boolean AS isAccount,   COALESCE (tmpPrintKindItem.CountAccount, 0)   :: TFloat AS CountAccount
+            , COALESCE (tmpPrintKindItem.isTransport, FALSE) :: Boolean AS isTransport, COALESCE (tmpPrintKindItem.CountTransport, 0) :: TFloat AS CountTransport
+            , COALESCE (tmpPrintKindItem.isQuality, FALSE)   :: Boolean AS isQuality  , COALESCE (tmpPrintKindItem.CountQuality, 0)   :: TFloat AS CountQuality
+            , COALESCE (tmpPrintKindItem.isPack, FALSE)      :: Boolean AS isPack     , COALESCE (tmpPrintKindItem.CountPack, 0)      :: TFloat AS CountPack
+            , COALESCE (tmpPrintKindItem.isSpec, FALSE)      :: Boolean AS isSpec     , COALESCE (tmpPrintKindItem.CountSpec, 0)      :: TFloat AS CountSpec
+            , COALESCE (tmpPrintKindItem.isTax, FALSE)       :: Boolean AS isTax      , COALESCE (tmpPrintKindItem.CountTax, 0)       :: TFloat AS CountTax
 
             , ObjectDesc.Id AS ObjectDescId
             , tmpPartner.MovementDescId
@@ -287,13 +288,13 @@ BEGIN
             , FALSE       :: Boolean AS isEdiInvoice
             , FALSE       :: Boolean AS isEdiDesadv
 
-            , TRUE        :: Boolean AS isMovement
-            , FALSE       :: Boolean AS isAccount
-            , FALSE       :: Boolean AS isTransport
-            , FALSE       :: Boolean AS isQuality
-            , FALSE       :: Boolean AS isPack
-            , FALSE       :: Boolean AS isSpec
-            , FALSE       :: Boolean AS isTax
+            , TRUE        :: Boolean AS isMovement,  2 :: TFloat AS CountMovement
+            , FALSE       :: Boolean AS isAccount,   0 :: TFloat AS CountAccount
+            , FALSE       :: Boolean AS isTransport, 0 :: TFloat AS CountTransport
+            , FALSE       :: Boolean AS isQuality,   0 :: TFloat AS CountQuality
+            , FALSE       :: Boolean AS isPack   ,   0 :: TFloat AS CountPack
+            , FALSE       :: Boolean AS isSpec   ,   0 :: TFloat AS CountSpec
+            , FALSE       :: Boolean AS isTax    ,   0 :: TFloat AS CountTax
 
             , ObjectDesc.Id AS ObjectDescId
             , zc_Movement_Loss() AS MovementDescId
@@ -348,13 +349,13 @@ BEGIN
             , FALSE       :: Boolean AS isEdiInvoice
             , FALSE       :: Boolean AS isEdiDesadv
 
-            , TRUE        :: Boolean AS isMovement
-            , FALSE       :: Boolean AS isAccount
-            , FALSE       :: Boolean AS isTransport
-            , FALSE       :: Boolean AS isQuality
-            , FALSE       :: Boolean AS isPack
-            , FALSE       :: Boolean AS isSpec
-            , FALSE       :: Boolean AS isTax
+            , TRUE        :: Boolean AS isMovement,  2 :: TFloat AS CountMovement
+            , FALSE       :: Boolean AS isAccount,   0 :: TFloat AS CountAccount
+            , FALSE       :: Boolean AS isTransport, 0 :: TFloat AS CountTransport
+            , FALSE       :: Boolean AS isQuality,   0 :: TFloat AS CountQuality
+            , FALSE       :: Boolean AS isPack   ,   0 :: TFloat AS CountPack
+            , FALSE       :: Boolean AS isSpec   ,   0 :: TFloat AS CountSpec
+            , FALSE       :: Boolean AS isTax    ,   0 :: TFloat AS CountTax
 
             , ObjectDesc.Id             AS ObjectDescId
             , zc_Movement_SendOnPrice() AS MovementDescId

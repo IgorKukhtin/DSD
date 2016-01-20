@@ -56,6 +56,13 @@ type
     isTax: TcxGridDBColumn;
     bb: TSpeedButton;
     ItemName: TcxGridDBColumn;
+    CountMovement: TcxGridDBColumn;
+    CountAccount: TcxGridDBColumn;
+    CountTransport: TcxGridDBColumn;
+    CountQuality: TcxGridDBColumn;
+    CountPack: TcxGridDBColumn;
+    CountSpec: TcxGridDBColumn;
+    CountTax: TcxGridDBColumn;
     procedure FormCreate(Sender: TObject);
     procedure EditPartnerNameEnter(Sender: TObject);
     procedure FormKeyDown(Sender: TObject; var Key: Word;
@@ -244,7 +251,14 @@ begin
                                                      ,FieldByName('isQuality').AsBoolean
                                                      ,FieldByName('isPack').AsBoolean
                                                      ,FieldByName('isSpec').AsBoolean
-                                                     ,FieldByName('isTax').AsBoolean);
+                                                     ,FieldByName('isTax').AsBoolean
+                                                     ,FieldByName('CountMovement').AsInteger
+                                                     ,FieldByName('CountAccount').AsInteger
+                                                     ,FieldByName('CountTransport').AsInteger
+                                                     ,FieldByName('CountQuality').AsInteger
+                                                     ,FieldByName('CountPack').AsInteger
+                                                     ,FieldByName('CountSpec').AsInteger
+                                                     ,FieldByName('CountTax').AsInteger);
      end;
 end;
 {------------------------------------------------------------------------------}
@@ -289,6 +303,14 @@ begin
                ParamByName('isPack').asBoolean:= CDS.FieldByName('isPack').asBoolean;
                ParamByName('isSpec').asBoolean:= CDS.FieldByName('isSpec').asBoolean;
                ParamByName('isTax').asBoolean:= CDS.FieldByName('isTax').asBoolean;
+
+               ParamByName('CountMovement').asInteger:= CDS.FieldByName('CountMovement').asInteger;
+               ParamByName('CountAccount').asInteger:= CDS.FieldByName('CountAccount').asInteger;
+               ParamByName('CountTransport').asInteger:= CDS.FieldByName('CountTransport').asInteger;
+               ParamByName('CountQuality').asInteger:= CDS.FieldByName('CountQuality').asInteger;
+               ParamByName('CountPack').asInteger:= CDS.FieldByName('CountPack').asInteger;
+               ParamByName('CountSpec').asInteger:= CDS.FieldByName('CountSpec').asInteger;
+               ParamByName('CountTax').asInteger:= CDS.FieldByName('CountTax').asInteger;
 
                ParamByName('PaidKindId').AsInteger:= CDS.FieldByName('PaidKindId').asInteger;
                ParamByName('PaidKindName').asString:= CDS.FieldByName('PaidKindName').asString;

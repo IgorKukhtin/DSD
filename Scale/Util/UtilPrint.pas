@@ -144,9 +144,13 @@ begin
   UtilPrintForm.actPrint_ReturnOut.Execute;
 end;
 //------------------------------------------------------------------------------------------------
-procedure Print_Sale (MovementId: Integer);
+procedure Print_Sale (MovementId: Integer; myPrintCount:Integer; isPreview:Boolean);
 begin
+  if myPrintCount <= 0 then myPrintCount:=1;
+  //
   UtilPrintForm.FormParams.ParamByName('Id').Value := MovementId;
+  UtilPrintForm.actPrint_Sale.CopiesCount:=myPrintCount;
+  UtilPrintForm.actPrint_Sale.WithOutPreview:= not isPreview;
   UtilPrintForm.mactPrint_Sale.Execute;
 end;
 //------------------------------------------------------------------------------------------------
@@ -172,43 +176,67 @@ begin
   UtilPrintForm.actPrint_ProductionSeparate.Execute;
 end;
 //------------------------------------------------------------------------------------------------
-procedure Print_TaxDocument (MovementId: Integer);
+procedure Print_TaxDocument (MovementId: Integer; myPrintCount:Integer; isPreview:Boolean);
 begin
+  if myPrintCount <= 0 then myPrintCount:=1;
+  //
   UtilPrintForm.FormParams.ParamByName('Id').Value := MovementId;
+  UtilPrintForm.actPrintTax_Client.CopiesCount:=myPrintCount;
+  UtilPrintForm.actPrintTax_Client.WithOutPreview:= not isPreview;
   UtilPrintForm.mactPrint_Tax_Client.Execute;
 end;
 //------------------------------------------------------------------------------------------------
-procedure Print_AccountDocument (MovementId: Integer);
+procedure Print_AccountDocument (MovementId: Integer; myPrintCount:Integer; isPreview:Boolean);
 begin
+  if myPrintCount <= 0 then myPrintCount:=1;
+  //
   UtilPrintForm.FormParams.ParamByName('Id').Value := MovementId;
+  UtilPrintForm.actPrint_Account.CopiesCount:=myPrintCount;
+  UtilPrintForm.actPrint_Account.WithOutPreview:= not isPreview;
   UtilPrintForm.mactPrint_Account.Execute;
 end;
 //------------------------------------------------------------------------------------------------
-procedure Print_PackDocument (MovementId,MovementId_by:Integer);
+procedure Print_PackDocument (MovementId,MovementId_by:Integer; myPrintCount:Integer; isPreview:Boolean);
 begin
+  if myPrintCount <= 0 then myPrintCount:=1;
+  //
   UtilPrintForm.FormParams.ParamByName('Id').Value := MovementId;
   UtilPrintForm.FormParams.ParamByName('MovementId_by').Value := MovementId_by;
+  UtilPrintForm.actPrint_Pack.CopiesCount:=myPrintCount;
+  UtilPrintForm.actPrint_Pack.WithOutPreview:= not isPreview;
   UtilPrintForm.actPrint_Pack.Execute;
 end;
 //------------------------------------------------------------------------------------------------
-procedure Print_SpecDocument (MovementId,MovementId_by:Integer);
+procedure Print_SpecDocument (MovementId,MovementId_by:Integer; myPrintCount:Integer; isPreview:Boolean);
 begin
+  if myPrintCount <= 0 then myPrintCount:=1;
+  //
   UtilPrintForm.FormParams.ParamByName('Id').Value := MovementId;
   UtilPrintForm.FormParams.ParamByName('MovementId_by').Value := MovementId_by;
+  UtilPrintForm.actPrint_Spec.CopiesCount:=myPrintCount;
+  UtilPrintForm.actPrint_Spec.WithOutPreview:= not isPreview;
   UtilPrintForm.actPrint_Spec.Execute;
 end;
 //------------------------------------------------------------------------------------------------
-procedure Print_TransportDocument (MovementId,MovementId_sale: Integer;OperDate:TDateTime);
+procedure Print_TransportDocument (MovementId,MovementId_sale: Integer;OperDate:TDateTime; myPrintCount:Integer; isPreview:Boolean);
 begin
+  if myPrintCount <= 0 then myPrintCount:=1;
+  //
   UtilPrintForm.FormParams.ParamByName('MovementId_by').Value := MovementId;
   UtilPrintForm.FormParams.ParamByName('Id').Value := MovementId_sale;
   UtilPrintForm.FormParams.ParamByName('OperDate').Value := OperDate;
+  UtilPrintForm.actPrint_TTN.CopiesCount:=myPrintCount;
+  UtilPrintForm.actPrint_TTN.WithOutPreview:= not isPreview;
   UtilPrintForm.mactPrint_TTN.Execute;
 end;
 //------------------------------------------------------------------------------------------------
-procedure Print_QualityDocument (MovementId: Integer);
+procedure Print_QualityDocument (MovementId: Integer; myPrintCount:Integer; isPreview:Boolean);
 begin
+  if myPrintCount <= 0 then myPrintCount:=1;
+  //
   UtilPrintForm.FormParams.ParamByName('Id').Value := MovementId;
+  UtilPrintForm.actPrint_QualityDoc.CopiesCount:=myPrintCount;
+  UtilPrintForm.actPrint_QualityDoc.WithOutPreview:= not isPreview;
   UtilPrintForm.mactPrint_QualityDoc.Execute;
 end;
 //------------------------------------------------------------------------------------------------
@@ -232,7 +260,7 @@ begin
              //Print
              if (MovementDescId = zc_Movement_Sale)
              or (MovementDescId = zc_Movement_Loss)and(SettingMain.isCeh=false)and(SettingMain.isGoodsComplete=true)
-             then Print_Sale(MovementId)
+             then Print_Sale(MovementId,myPrintCount,isPreview)
              else if MovementDescId = zc_Movement_ReturnIn
                   then Print_ReturnIn(MovementId)
                   else if MovementDescId = zc_Movement_SendOnPrice
@@ -271,7 +299,7 @@ begin
           try
              //Print
              if MovementDescId = zc_Movement_Sale
-             then Print_TaxDocument(MovementId)
+             then Print_TaxDocument(MovementId,myPrintCount,isPreview)
              else begin ShowMessage ('Ошибка.Форма печати <Налоговая> не найдена.');exit;end;
           except
                 ShowMessage('Ошибка.Печать <Налоговая> не сформирована.');
@@ -291,7 +319,7 @@ begin
           try
              //Print
              if MovementDescId = zc_Movement_Sale
-             then Print_AccountDocument(MovementId)
+             then Print_AccountDocument(MovementId,myPrintCount,isPreview)
              else begin ShowMessage ('Ошибка.Форма печати <Счет> не найдена.');exit;end;
           except
                 ShowMessage('Ошибка.Печать <Счет> не сформирована.');
@@ -311,7 +339,7 @@ begin
           try
              //Print
              if (MovementDescId = zc_Movement_Sale)or(MovementDescId = zc_Movement_SendOnPrice)
-             then Print_SpecDocument(MovementId,MovementId_by)
+             then Print_SpecDocument(MovementId,MovementId_by,myPrintCount,isPreview)
              else begin ShowMessage ('Ошибка.Форма печати <Спецификация> не найдена.');exit;end;
           except
                 ShowMessage('Ошибка.Печать <Спецификация> не сформирована.');
@@ -331,7 +359,7 @@ begin
           try
              //Print
              if (MovementDescId = zc_Movement_Sale)or(MovementDescId = zc_Movement_SendOnPrice)
-             then Print_PackDocument(MovementId,MovementId_by)
+             then Print_PackDocument(MovementId,MovementId_by,myPrintCount,isPreview)
              else begin ShowMessage ('Ошибка.Форма печати <Упаковочный лист> не найдена.');exit;end;
           except
                 ShowMessage('Ошибка.Печать не <Упаковочный лист> сформирована.');
@@ -351,7 +379,7 @@ begin
           try
              //Print
              if MovementDescId = zc_Movement_Sale
-             then Print_TransportDocument(MovementId,MovementId_sale,OperDate)
+             then Print_TransportDocument(MovementId,MovementId_sale,OperDate,myPrintCount,isPreview)
              else begin ShowMessage ('Ошибка.Форма печати <ТТН> не найдена.');exit;end;
           except
                 ShowMessage('Ошибка.Печать <ТТН> не сформирована.');
@@ -371,7 +399,7 @@ begin
           try
              //Print
              if (MovementDescId = zc_Movement_Sale) or (MovementDescId = zc_Movement_Loss) or (MovementDescId = zc_Movement_SendOnPrice)
-             then Print_QualityDocument(MovementId)
+             then Print_QualityDocument(MovementId,myPrintCount,isPreview)
              else begin ShowMessage ('Ошибка.Форма печати <Качественное> не найдена.');exit;end;
           except
                 ShowMessage('Ошибка.Печать <Качественное> не сформирована.');

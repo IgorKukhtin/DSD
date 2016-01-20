@@ -16,13 +16,21 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , isPack       Boolean   -- Упаковочный
              , isSpec       Boolean   -- Спецификация
              , isTax        Boolean   -- Налоговая
+             , CountMovement   TFloat    -- Накладная
+             , CountAccount    TFloat    -- Счет
+             , CountTransport  TFloat    -- ТТН
+             , CountQuality    TFloat    -- Качественное
+             , CountPack       TFloat    -- Упаковочный
+             , CountSpec       TFloat    -- Спецификация
+             , CountTax        TFloat    -- Налоговая
                ) AS
 $BODY$
 BEGIN
    -- проверка прав пользователя на вызов процедуры
    -- PERFORM lpCheckRight (inSession, zc_Enum_Process_Get_Object_Juridical_PrintKindItem());
      
-       RETURN QUERY 
+       RETURN QUERY
+       WITH tmpPrintKindItem AS (SELECT * FROM lpSelect_Object_PrintKindItem())
        SELECT
              Object_Juridical.Id             AS Id
            , Object_Juridical.ObjectCode     AS Code
@@ -31,16 +39,24 @@ BEGIN
            , Object_Retail.Id                AS RetailId
            , Object_Retail.ValueData         AS RetailName
 
-           , Object_PrintKindItem.Id         AS PrintKindItemId
-           , Object_PrintKindItem.ValueData  AS PrintKindItemName
+           , tmpPrintKindItem.Id             AS PrintKindItemId
+           , tmpPrintKindItem.Name           AS PrintKindItemName
 
-           , CASE WHEN STRPOS (Object_PrintKindItem.ValueData, ';' || zc_Enum_PrintKind_Movement()  :: TVarChar|| ';') > 0 THEN TRUE ELSE FALSE END AS isMovement
-           , CASE WHEN STRPOS (Object_PrintKindItem.ValueData, ';' || zc_Enum_PrintKind_Account()   :: TVarChar|| ';') > 0 THEN TRUE ELSE FALSE END AS isAccount
-           , CASE WHEN STRPOS (Object_PrintKindItem.ValueData, ';' || zc_Enum_PrintKind_Transport() :: TVarChar|| ';') > 0 THEN TRUE ELSE FALSE END AS isTransport
-           , CASE WHEN STRPOS (Object_PrintKindItem.ValueData, ';' || zc_Enum_PrintKind_Quality()   :: TVarChar|| ';') > 0 THEN TRUE ELSE FALSE END AS isQuality
-           , CASE WHEN STRPOS (Object_PrintKindItem.ValueData, ';' || zc_Enum_PrintKind_Pack()      :: TVarChar|| ';') > 0 THEN TRUE ELSE FALSE END AS isPack
-           , CASE WHEN STRPOS (Object_PrintKindItem.ValueData, ';' || zc_Enum_PrintKind_Spec()      :: TVarChar|| ';') > 0 THEN TRUE ELSE FALSE END AS isSpec
-           , CASE WHEN STRPOS (Object_PrintKindItem.ValueData, ';' || zc_Enum_PrintKind_Tax()       :: TVarChar|| ';') > 0 THEN TRUE ELSE FALSE END AS isTax
+           , tmpPrintKindItem.isMovement
+           , tmpPrintKindItem.isAccount
+           , tmpPrintKindItem.isTransport
+           , tmpPrintKindItem.isQuality
+           , tmpPrintKindItem.isPack
+           , tmpPrintKindItem.isSpec
+           , tmpPrintKindItem.isTax
+
+           , tmpPrintKindItem.CountMovement
+           , tmpPrintKindItem.CountAccount
+           , tmpPrintKindItem.CountTransport
+           , tmpPrintKindItem.CountQuality
+           , tmpPrintKindItem.CountPack
+           , tmpPrintKindItem.CountSpec
+           , tmpPrintKindItem.CountTax
 
        FROM Object AS Object_Juridical
             LEFT JOIN ObjectLink AS ObjectLink_Juridical_Retail
@@ -55,7 +71,7 @@ BEGIN
                                  ON ObjectLink_Juridical_PrintKindItem.ObjectId = Object_Juridical.Id
                                 AND ObjectLink_Juridical_PrintKindItem.DescId = zc_ObjectLink_Juridical_PrintKindItem()
 
-            LEFT JOIN Object AS Object_PrintKindItem ON Object_PrintKindItem.Id = CASE WHEN ObjectLink_Juridical_Retail.ChildObjectId > 0 THEN ObjectLink_Retail_PrintKindItem.ChildObjectId ELSE ObjectLink_Juridical_PrintKindItem.ChildObjectId END
+            LEFT JOIN tmpPrintKindItem ON tmpPrintKindItem.Id = CASE WHEN ObjectLink_Juridical_Retail.ChildObjectId > 0 THEN ObjectLink_Retail_PrintKindItem.ChildObjectId ELSE ObjectLink_Juridical_PrintKindItem.ChildObjectId END
 
        WHERE Object_Juridical.Id = inId;
 

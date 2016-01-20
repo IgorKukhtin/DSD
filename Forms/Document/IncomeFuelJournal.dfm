@@ -26,7 +26,7 @@ object IncomeFuelJournalForm: TIncomeFuelJournalForm
     object deStart: TcxDateEdit
       Left = 101
       Top = 5
-      EditValue = 42005d
+      EditValue = 42370d
       Properties.SaveTime = False
       Properties.ShowTime = False
       TabOrder = 0
@@ -35,7 +35,7 @@ object IncomeFuelJournalForm: TIncomeFuelJournalForm
     object deEnd: TcxDateEdit
       Left = 310
       Top = 5
-      EditValue = 42005d
+      EditValue = 42370d
       Properties.SaveTime = False
       Properties.ShowTime = False
       TabOrder = 1

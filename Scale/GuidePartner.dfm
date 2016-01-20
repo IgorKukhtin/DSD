@@ -179,6 +179,9 @@ object GuidePartnerForm: TGuidePartnerForm
         object ChangePercent: TcxGridDBColumn
           Caption = '% '#1089#1082'.'
           DataBinding.FieldName = 'ChangePercent'
+          PropertiesClassName = 'TcxCurrencyEditProperties'
+          Properties.DecimalPlaces = 4
+          Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
           HeaderAlignmentHorz = taCenter
           HeaderAlignmentVert = vaCenter
           Width = 45
@@ -186,6 +189,9 @@ object GuidePartnerForm: TGuidePartnerForm
         object ChangePercentAmount: TcxGridDBColumn
           Caption = '% '#1089#1082'. '#1074#1077#1089
           DataBinding.FieldName = 'ChangePercentAmount'
+          PropertiesClassName = 'TcxCurrencyEditProperties'
+          Properties.DecimalPlaces = 4
+          Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
           HeaderAlignmentHorz = taCenter
           HeaderAlignmentVert = vaCenter
           Width = 45
@@ -205,60 +211,128 @@ object GuidePartnerForm: TGuidePartnerForm
           Width = 150
         end
         object isMovement: TcxGridDBColumn
-          Caption = #1076#1086#1082
+          Caption = #1076#1086#1082'.'
           DataBinding.FieldName = 'isMovement'
-          Visible = False
           HeaderAlignmentHorz = taCenter
           HeaderAlignmentVert = vaCenter
           Width = 40
         end
-        object isAccount: TcxGridDBColumn
-          Caption = #1089#1095
-          DataBinding.FieldName = 'isAccount'
-          Visible = False
-          HeaderAlignmentHorz = taCenter
-          HeaderAlignmentVert = vaCenter
-          Width = 40
-        end
-        object isTransport: TcxGridDBColumn
-          Caption = #1090#1090#1085
-          DataBinding.FieldName = 'isTransport'
-          Visible = False
-          HeaderAlignmentHorz = taCenter
-          HeaderAlignmentVert = vaCenter
-          Width = 40
-        end
-        object isQuality: TcxGridDBColumn
-          Caption = #1082#1072#1095
-          DataBinding.FieldName = 'isQuality'
-          Visible = False
-          HeaderAlignmentHorz = taCenter
-          HeaderAlignmentVert = vaCenter
-          Width = 40
-        end
-        object isPack: TcxGridDBColumn
-          Caption = #1091#1087#1072#1082
-          DataBinding.FieldName = 'isPack'
-          Visible = False
-          HeaderAlignmentHorz = taCenter
-          HeaderAlignmentVert = vaCenter
-          Width = 40
-        end
-        object isSpec: TcxGridDBColumn
-          Caption = #1089#1087#1077#1094
-          DataBinding.FieldName = 'isSpec'
+        object CountMovement: TcxGridDBColumn
+          Caption = #1076#1086#1082'. '#1082#1086#1083'.'
+          DataBinding.FieldName = 'CountMovement'
+          PropertiesClassName = 'TcxCurrencyEditProperties'
+          Properties.DecimalPlaces = 4
+          Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
           Visible = False
           HeaderAlignmentHorz = taCenter
           HeaderAlignmentVert = vaCenter
           Width = 40
         end
         object isTax: TcxGridDBColumn
-          Caption = #1085#1072#1083#1086#1075
+          Caption = #1085#1072#1083#1086#1075'.'
           DataBinding.FieldName = 'isTax'
+          HeaderAlignmentHorz = taCenter
+          HeaderAlignmentVert = vaCenter
+          Width = 40
+        end
+        object CountTax: TcxGridDBColumn
+          Caption = #1085#1072#1083#1086#1075'. '#1082#1086#1083'.'
+          DataBinding.FieldName = 'CountTax'
+          PropertiesClassName = 'TcxCurrencyEditProperties'
+          Properties.DecimalPlaces = 4
+          Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+          Visible = False
+          Width = 40
+        end
+        object isTransport: TcxGridDBColumn
+          Caption = #1090#1090#1085
+          DataBinding.FieldName = 'isTransport'
+          HeaderAlignmentHorz = taCenter
+          HeaderAlignmentVert = vaCenter
+          Width = 40
+        end
+        object CountTransport: TcxGridDBColumn
+          Caption = #1090#1090#1085' '#1082#1086#1083'.'
+          DataBinding.FieldName = 'CountTransport'
+          PropertiesClassName = 'TcxCurrencyEditProperties'
+          Properties.DecimalPlaces = 4
+          Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
           Visible = False
           HeaderAlignmentHorz = taCenter
           HeaderAlignmentVert = vaCenter
-          Width = 45
+          Width = 40
+        end
+        object isQuality: TcxGridDBColumn
+          Caption = #1082#1072#1095'.'
+          DataBinding.FieldName = 'isQuality'
+          HeaderAlignmentHorz = taCenter
+          HeaderAlignmentVert = vaCenter
+          Width = 40
+        end
+        object CountQuality: TcxGridDBColumn
+          Caption = #1082#1072#1095'. '#1082#1086#1083'.'
+          DataBinding.FieldName = 'CountQuality'
+          PropertiesClassName = 'TcxCurrencyEditProperties'
+          Properties.DecimalPlaces = 4
+          Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+          Visible = False
+          HeaderAlignmentHorz = taCenter
+          HeaderAlignmentVert = vaCenter
+          Width = 40
+        end
+        object isPack: TcxGridDBColumn
+          Caption = #1091#1087#1072#1082'.'
+          DataBinding.FieldName = 'isPack'
+          HeaderAlignmentHorz = taCenter
+          HeaderAlignmentVert = vaCenter
+          Width = 40
+        end
+        object CountPack: TcxGridDBColumn
+          Caption = #1091#1087#1072#1082'. '#1082#1086#1083'.'
+          DataBinding.FieldName = 'CountPack'
+          PropertiesClassName = 'TcxCurrencyEditProperties'
+          Properties.DecimalPlaces = 4
+          Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+          Visible = False
+          HeaderAlignmentHorz = taCenter
+          HeaderAlignmentVert = vaCenter
+          Width = 40
+        end
+        object isSpec: TcxGridDBColumn
+          Caption = #1089#1087#1077#1094'.'
+          DataBinding.FieldName = 'isSpec'
+          HeaderAlignmentHorz = taCenter
+          HeaderAlignmentVert = vaCenter
+          Width = 40
+        end
+        object CountSpec: TcxGridDBColumn
+          Caption = #1089#1087#1077#1094'. '#1082#1086#1083'.'
+          DataBinding.FieldName = 'CountSpec'
+          PropertiesClassName = 'TcxCurrencyEditProperties'
+          Properties.DecimalPlaces = 4
+          Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+          Visible = False
+          HeaderAlignmentHorz = taCenter
+          HeaderAlignmentVert = vaCenter
+          Width = 40
+        end
+        object isAccount: TcxGridDBColumn
+          Caption = #1089#1095'.'
+          DataBinding.FieldName = 'isAccount'
+          HeaderAlignmentHorz = taCenter
+          HeaderAlignmentVert = vaCenter
+          Width = 40
+        end
+        object CountAccount: TcxGridDBColumn
+          Caption = #1089#1095'. '#1082#1086#1083'.'
+          DataBinding.FieldName = 'CountAccount'
+          PropertiesClassName = 'TcxCurrencyEditProperties'
+          Properties.DecimalPlaces = 4
+          Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+          Visible = False
+          HeaderAlignmentHorz = taCenter
+          HeaderAlignmentVert = vaCenter
+          Width = 40
         end
         object ItemName: TcxGridDBColumn
           Caption = #1069#1083#1077#1084#1077#1085#1090

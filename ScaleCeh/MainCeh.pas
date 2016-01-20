@@ -494,6 +494,7 @@ begin
 
      //параметры для печати
      if not DialogPrintForm.Execute(ParamsMovement.ParamByName('MovementDescId').asInteger
+                                   ,1
                                    ,ParamsMovement.ParamByName('isMovement').asBoolean
                                    ,ParamsMovement.ParamByName('isAccount').asBoolean
                                    ,ParamsMovement.ParamByName('isTransport').asBoolean

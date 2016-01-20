@@ -39,7 +39,7 @@ type
     function gpGet_Scale_GoodsRetail(var execParamsMovement:TParams;var execParams:TParams;inBarCode:String): Boolean;
     function gpGet_Scale_Personal(var execParams:TParams;inPersonalCode:Integer): Boolean;
     // !!!Scale + ScaleCeh!!!
-    function gpUpdate_Scale_Partner_print(PartnerId : Integer; isMovement,isAccount,isTransport,isQuality,isPack,isSpec,isTax : Boolean): Boolean;
+    function gpUpdate_Scale_Partner_print(PartnerId : Integer; isMovement,isAccount,isTransport,isQuality,isPack,isSpec,isTax : Boolean; CountMovement,CountAccount,CountTransport,CountQuality,CountPack,CountSpec,CountTax : Integer): Boolean;
     //
     // +++Scale+++
     function gpGet_Scale_Movement(var execParamsMovement:TParams;isLast,isNext:Boolean): Boolean;
@@ -148,6 +148,14 @@ begin
          ParamByName('isPack').asBoolean:= DataSet.FieldByName('isPack').asBoolean;
          ParamByName('isSpec').asBoolean:= DataSet.FieldByName('isSpec').asBoolean;
          ParamByName('isTax').asBoolean:= DataSet.FieldByName('isTax').asBoolean;
+
+         ParamByName('CountMovement').asInteger:= DataSet.FieldByName('CountMovement').asInteger;
+         ParamByName('CountAccount').asInteger:= DataSet.FieldByName('CountAccount').asInteger;
+         ParamByName('CountTransport').asInteger:= DataSet.FieldByName('CountTransport').asInteger;
+         ParamByName('CountQuality').asInteger:= DataSet.FieldByName('CountQuality').asInteger;
+         ParamByName('CountPack').asInteger:= DataSet.FieldByName('CountPack').asInteger;
+         ParamByName('CountSpec').asInteger:= DataSet.FieldByName('CountSpec').asInteger;
+         ParamByName('CountTax').asInteger:= DataSet.FieldByName('CountTax').asInteger;
 
          ParamByName('OrderExternalId').AsInteger        := DataSet.FieldByName('MovementId_Order').asInteger;
          ParamByName('OrderExternal_DescId').AsInteger   := DataSet.FieldByName('MovementDescId_Order').asInteger;
@@ -355,7 +363,7 @@ begin
      execParams.Free;
 end;
 {------------------------------------------------------------------------}
-function TDMMainScaleForm.gpUpdate_Scale_Partner_print(PartnerId : Integer; isMovement,isAccount,isTransport,isQuality,isPack,isSpec,isTax : Boolean): Boolean;
+function TDMMainScaleForm.gpUpdate_Scale_Partner_print(PartnerId : Integer; isMovement,isAccount,isTransport,isQuality,isPack,isSpec,isTax : Boolean; CountMovement,CountAccount,CountTransport,CountQuality,CountPack,CountSpec,CountTax : Integer): Boolean;
 begin
     Result:=false;
 
@@ -371,6 +379,13 @@ begin
        Params.AddParam('inIsPack', ftBoolean, ptInput, isPack);
        Params.AddParam('inIsSpec', ftBoolean, ptInput, isSpec);
        Params.AddParam('inIsTax', ftBoolean, ptInput, isTax);
+       Params.AddParam('inCountMovement', ftFloat, ptInput, CountMovement);
+       Params.AddParam('inCountAccount', ftFloat, ptInput, CountAccount);
+       Params.AddParam('inCountTransport', ftFloat, ptInput, CountTransport);
+       Params.AddParam('inCountQuality', ftFloat, ptInput, CountQuality);
+       Params.AddParam('inCountPack', ftFloat, ptInput, CountPack);
+       Params.AddParam('inCountSpec', ftFloat, ptInput, CountSpec);
+       Params.AddParam('inCountTax', ftFloat, ptInput, CountTax);
        //try
          Execute;
        {except
@@ -748,6 +763,14 @@ begin
          ParamByName('isPack').asBoolean:= DataSet.FieldByName('isPack').asBoolean;
          ParamByName('isSpec').asBoolean:= DataSet.FieldByName('isSpec').asBoolean;
          ParamByName('isTax').asBoolean:= DataSet.FieldByName('isTax').asBoolean;
+
+         ParamByName('CountMovement').asInteger:= DataSet.FieldByName('CountMovement').asInteger;
+         ParamByName('CountAccount').asInteger:= DataSet.FieldByName('CountAccount').asInteger;
+         ParamByName('CountTransport').asInteger:= DataSet.FieldByName('CountTransport').asInteger;
+         ParamByName('CountQuality').asInteger:= DataSet.FieldByName('CountQuality').asInteger;
+         ParamByName('CountPack').asInteger:= DataSet.FieldByName('CountPack').asInteger;
+         ParamByName('CountSpec').asInteger:= DataSet.FieldByName('CountSpec').asInteger;
+         ParamByName('CountTax').asInteger:= DataSet.FieldByName('CountTax').asInteger;
 
          ParamByName('PaidKindId').AsInteger:= DataSet.FieldByName('PaidKindId').asInteger;
          ParamByName('PaidKindName').asString:= DataSet.FieldByName('PaidKindName').asString;

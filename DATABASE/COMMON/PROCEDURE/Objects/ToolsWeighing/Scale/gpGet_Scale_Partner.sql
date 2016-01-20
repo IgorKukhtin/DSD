@@ -31,13 +31,13 @@ RETURNS TABLE (ObjectDescId Integer
              , isEdiInvoice     Boolean
              , isEdiDesadv      Boolean
 
-             , isMovement    Boolean   -- Накладная
-             , isAccount     Boolean   -- Счет
-             , isTransport   Boolean   -- ТТН
-             , isQuality     Boolean   -- Качественное
-             , isPack        Boolean   -- Упаковочный
-             , isSpec        Boolean   -- Спецификация
-             , isTax         Boolean   -- Налоговая
+             , isMovement    Boolean, CountMovement   TFloat   -- Накладная
+             , isAccount     Boolean, CountAccount    TFloat   -- Счет
+             , isTransport   Boolean, CountTransport  TFloat   -- ТТН
+             , isQuality     Boolean, CountQuality    TFloat   -- Качественное
+             , isPack        Boolean, CountPack       TFloat   -- Упаковочный
+             , isSpec        Boolean, CountSpec       TFloat   -- Спецификация
+             , isTax         Boolean, CountTax        TFloat   -- Налоговая
               )
 AS
 $BODY$
@@ -87,13 +87,13 @@ BEGIN
                                                              AND ObjectLink_Partner_Juridical.DescId = zc_ObjectLink_Partner_Juridical()
                                   )
            , tmpJuridicalPrint AS (SELECT tmp.Id AS JuridicalId
-                                        , tmp.isMovement
-                                        , tmp.isAccount
-                                        , tmp.isTransport
-                                        , tmp.isQuality
-                                        , tmp.isPack
-                                        , tmp.isSpec
-                                        , tmp.isTax
+                                        , tmp.isMovement, tmp.CountMovement
+                                        , tmp.isAccount, tmp.CountAccount
+                                        , tmp.isTransport, tmp.CountTransport
+                                        , tmp.isQuality, tmp.CountQuality
+                                        , tmp.isPack, tmp.CountPack
+                                        , tmp.isSpec, tmp.CountSpec
+                                        , tmp.isTax, tmp.CountTax
                                    FROM lpGet_Object_Juridical_PrintKindItem ((SELECT tmpPartnerJuridical.JuridicalId FROM tmpPartnerJuridical LIMIT 1)) AS tmp
                                   )
            , tmpPartnerContract AS (SELECT tmpPartnerJuridical.ObjectDescId
@@ -183,13 +183,13 @@ BEGIN
             , COALESCE (ObjectBoolean_Partner_EdiDesadv.ValueData,  FALSE) :: Boolean AS isEdiDesadv
 
             , CASE WHEN tmpJuridicalPrint.isPack = TRUE OR tmpJuridicalPrint.isSpec = TRUE THEN COALESCE (tmpJuridicalPrint.isMovement, FALSE) ELSE TRUE END :: Boolean AS isMovement
-            , COALESCE (tmpJuridicalPrint.isAccount,   FALSE) :: Boolean AS isAccount
-            , COALESCE (tmpJuridicalPrint.isTransport, FALSE) :: Boolean AS isTransport
-            , COALESCE (tmpJuridicalPrint.isQuality,   FALSE) :: Boolean AS isQuality
-            , COALESCE (tmpJuridicalPrint.isPack,      FALSE) :: Boolean AS isPack
-            , COALESCE (tmpJuridicalPrint.isSpec,      FALSE) :: Boolean AS isSpec
-            , COALESCE (tmpJuridicalPrint.isTax,       FALSE) :: Boolean AS isTax
-
+            , COALESCE (tmpJuridicalPrint.CountMovement, 0) :: TFloat AS CountMovement
+            , COALESCE (tmpJuridicalPrint.isAccount,   FALSE) :: Boolean AS isAccount,   COALESCE (tmpJuridicalPrint.CountAccount, 0)   :: TFloat AS CountAccount
+            , COALESCE (tmpJuridicalPrint.isTransport, FALSE) :: Boolean AS isTransport, COALESCE (tmpJuridicalPrint.CountTransport, 0) :: TFloat AS CountTransport
+            , COALESCE (tmpJuridicalPrint.isQuality,   FALSE) :: Boolean AS isQuality  , COALESCE (tmpJuridicalPrint.CountQuality, 0)   :: TFloat AS CountQuality
+            , COALESCE (tmpJuridicalPrint.isPack,      FALSE) :: Boolean AS isPack     , COALESCE (tmpJuridicalPrint.CountPack, 0)      :: TFloat AS CountPack
+            , COALESCE (tmpJuridicalPrint.isSpec,      FALSE) :: Boolean AS isSpec     , COALESCE (tmpJuridicalPrint.CountSpec, 0)      :: TFloat AS CountSpec
+            , COALESCE (tmpJuridicalPrint.isTax,       FALSE) :: Boolean AS isTax      , COALESCE (tmpJuridicalPrint.CountTax, 0)       :: TFloat AS CountTax
        FROM (SELECT tmpPartnerContract_find.ObjectDescId
                   , tmpPartnerContract_find.PartnerId
                   , tmpPartnerContract_find.PartnerCode
@@ -274,13 +274,13 @@ BEGIN
             , FALSE       :: Boolean AS isEdiInvoice
             , FALSE       :: Boolean AS isEdiDesadv
 
-            , TRUE        :: Boolean AS isMovement
-            , FALSE       :: Boolean AS isAccount
-            , FALSE       :: Boolean AS isTransport
-            , FALSE       :: Boolean AS isQuality
-            , FALSE       :: Boolean AS isPack
-            , FALSE       :: Boolean AS isSpec
-            , FALSE       :: Boolean AS isTax
+            , TRUE        :: Boolean AS isMovement,  2 :: TFloat AS CountMovement
+            , FALSE       :: Boolean AS isAccount,   0 :: TFloat AS CountAccount
+            , FALSE       :: Boolean AS isTransport, 0 :: TFloat AS CountTransport
+            , FALSE       :: Boolean AS isQuality,   0 :: TFloat AS CountQuality
+            , FALSE       :: Boolean AS isPack   ,   0 :: TFloat AS CountPack
+            , FALSE       :: Boolean AS isSpec   ,   0 :: TFloat AS CountSpec
+            , FALSE       :: Boolean AS isTax    ,   0 :: TFloat AS CountTax
 
        FROM tmpArticleLoss
             LEFT JOIN Object AS Object_PriceList ON Object_PriceList.Id = zc_PriceList_Basis()
@@ -414,13 +414,13 @@ BEGIN
             , FALSE       :: Boolean AS isEdiInvoice
             , FALSE       :: Boolean AS isEdiDesadv
 
-            , TRUE        :: Boolean AS isMovement
-            , FALSE       :: Boolean AS isAccount
-            , FALSE       :: Boolean AS isTransport
-            , FALSE       :: Boolean AS isQuality
-            , FALSE       :: Boolean AS isPack
-            , FALSE       :: Boolean AS isSpec
-            , FALSE       :: Boolean AS isTax
+            , TRUE        :: Boolean AS isMovement,  2 :: TFloat AS CountMovement
+            , FALSE       :: Boolean AS isAccount,   0 :: TFloat AS CountAccount
+            , FALSE       :: Boolean AS isTransport, 0 :: TFloat AS CountTransport
+            , FALSE       :: Boolean AS isQuality,   0 :: TFloat AS CountQuality
+            , FALSE       :: Boolean AS isPack   ,   0 :: TFloat AS CountPack
+            , FALSE       :: Boolean AS isSpec   ,   0 :: TFloat AS CountSpec
+            , FALSE       :: Boolean AS isTax    ,   0 :: TFloat AS CountTax
 
        FROM tmpUnit
             LEFT JOIN Object AS Object_PriceList ON Object_PriceList.Id = zc_PriceList_Basis()

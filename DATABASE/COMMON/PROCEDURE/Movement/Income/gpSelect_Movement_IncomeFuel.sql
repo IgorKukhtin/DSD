@@ -21,8 +21,8 @@ RETURNS TABLE (Id Integer, InvNumber Integer, OperDate TDateTime, InvNumberMaste
              , GoodsCode Integer, GoodsName TVarChar
              , FuelCode Integer, FuelName TVarChar
              , StartOdometre TFloat, EndOdometre TFloat, AmountFuel TFloat
-             , Reparation TFloat, LimitMoney TFloat, LimitFuel TFloat
-             , LimitChange TFloat, LimitFuelChange TFloat, Distance TFloat
+             , Reparation TFloat, LimitMoney TFloat/*, LimitFuel TFloat*/
+             , LimitChange TFloat, /*LimitFuelChange TFloat, */Distance TFloat
               )
 AS
 $BODY$
@@ -89,9 +89,9 @@ BEGIN
            , MovementFloat_AmountFuel.ValueData          AS AmountFuel
            , MovementFloat_Reparation.ValueData          AS Reparation
            , MovementFloat_Limit.ValueData               AS LimitMoney
-           , MovementFloat_LimitFuel.ValueData           AS LimitFuel
+           -- , MovementFloat_LimitFuel.ValueData           AS LimitFuel
            , MovementFloat_LimitChange.ValueData         AS LimitChange
-           , MovementFloat_LimitFuelChange.ValueData     AS LimitFuelChange
+           -- , MovementFloat_LimitFuelChange.ValueData     AS LimitFuelChange
            , MovementFloat_Distance.ValueData            AS Distance
 
        FROM Movement
@@ -155,15 +155,15 @@ BEGIN
             LEFT JOIN MovementFloat AS MovementFloat_Limit
                                     ON MovementFloat_Limit.MovementId =  Movement.Id
                                    AND MovementFloat_Limit.DescId = zc_MovementFloat_Limit()
-            LEFT JOIN MovementFloat AS MovementFloat_LimitFuel
-                                    ON MovementFloat_LimitFuel.MovementId =  Movement.Id
-                                   AND MovementFloat_LimitFuel.DescId = zc_MovementFloat_LimitFuel()
             LEFT JOIN MovementFloat AS MovementFloat_LimitChange
                                     ON MovementFloat_LimitChange.MovementId =  Movement.Id
                                    AND MovementFloat_LimitChange.DescId = zc_MovementFloat_LimitChange()
+            /*LEFT JOIN MovementFloat AS MovementFloat_LimitFuel
+                                    ON MovementFloat_LimitFuel.MovementId =  Movement.Id
+                                   AND MovementFloat_LimitFuel.DescId = zc_MovementFloat_LimitFuel()
             LEFT JOIN MovementFloat AS MovementFloat_LimitFuelChange
                                     ON MovementFloat_LimitFuelChange.MovementId =  Movement.Id
-                                   AND MovementFloat_LimitFuelChange.DescId = zc_MovementFloat_LimitFuelChange()
+                                   AND MovementFloat_LimitFuelChange.DescId = zc_MovementFloat_LimitFuelChange()*/
             LEFT JOIN MovementFloat AS MovementFloat_Distance
                                     ON MovementFloat_Distance.MovementId =  Movement.Id
                                    AND MovementFloat_Distance.DescId = zc_MovementFloat_Distance()
