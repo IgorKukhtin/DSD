@@ -11,6 +11,9 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , INN TVarChar, DriverCertificate TVarChar, Comment TVarChar
              , isOfficial Boolean
              , InfoMoneyId Integer, InfoMoneyCode Integer, InfoMoneyName TVarChar, InfoMoneyName_all TVarChar
+             , StartSummerDate TDateTime, EndSummerDate TDateTime
+             , SummerFuel TFloat, WinterFuel TFloat, Reparation TFloat, LimitMoney TFloat, LimitDistance TFloat
+             , CarNameAll TVarChar, CarName TVarChar, CarModelName TVarChar
              , isErased boolean) AS
 $BODY$
    DECLARE vbUserId Integer;

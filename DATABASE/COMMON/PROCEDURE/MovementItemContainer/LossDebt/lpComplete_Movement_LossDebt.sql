@@ -19,7 +19,7 @@ BEGIN
      END IF;
 
      -- проверка
-     vbIsLossOnly:= (SELECT Movement.OperDate FROM Movement WHERE Movement.Id = inMovementId) >= '01.01.2015';
+     vbIsLossOnly:= (SELECT Movement.OperDate FROM Movement WHERE Movement.Id = inMovementId) >= '01.01.2015' AND inMovementId <> 2943608; -- № 43 от 30.11.2015 (Киев нал)
      IF vbIsLossOnly = TRUE
         AND EXISTS (SELECT MovementItem.MovementId
                     FROM MovementItem
@@ -142,7 +142,7 @@ BEGIN
                                      END AS BranchId
                                    , COALESCE (MILinkObject_Contract.ObjectId, 0)  AS ContractId
                                    , COALESCE (MILinkObject_PaidKind.ObjectId, 0)  AS PaidKindId
-                                   , lpInsertFind_Object_PartionMovement (COALESCE (MIFloat_MovementId.ValueData, 0), NULL) AS PartionMovementId
+                                   , lpInsertFind_Object_PartionMovement (COALESCE (MIFloat_MovementId.ValueData, 0) :: Integer, NULL) AS PartionMovementId
                                    , MIBoolean_Calculated.ValueData AS isCalculated
                               FROM tmpMovement
                                    JOIN MovementItem ON MovementItem.MovementId = tmpMovement.MovementId
@@ -196,7 +196,7 @@ BEGIN
                                     , tmpMovementItem.JuridicalId_Basis
                                     , tmpMovementItem.PartionMovementId
                                     , tmpMovementItem.BusinessId
-                               FROM (SELECT ObjectId AS JuridicalId, InfoMoneyId, PaidKindId, JuridicalId_Basis, BranchId, BusinessId, PartionMovementId, AccountId FROM tmpMovementItem WHERE isCalculated = TRUE GROUP BY ObjectId, InfoMoneyId, PaidKindId, JuridicalId_Basis, BranchId, BusinessId, PartionMovementId, AccountId
+                               FROM (SELECT DISTINCT ObjectId AS JuridicalId, InfoMoneyId, PaidKindId, JuridicalId_Basis, BranchId, BusinessId, PartionMovementId, AccountId FROM tmpMovementItem WHERE isCalculated = TRUE
                                     ) AS tmpMovementItem
                                     JOIN ContainerLinkObject AS ContainerLO_Juridical
                                                              ON ContainerLO_Juridical.DescId = zc_ContainerLinkObject_Juridical()
@@ -289,7 +289,10 @@ BEGIN
                                    OR (ContainerLO_Branch.ObjectId IN (8378) -- Донецк
                                        AND tmpMovement.MovementId = 1374968 -- № 36 от 31.12.2014
                                       )
-                                   OR tmpMovement.MovementId NOT IN (1110118, 1374968) -- № 27 от 31.12.2014 + № 36 от 31.12.2014
+                                   OR (ContainerLO_Branch.ObjectId IN (8379) -- филиал Киев
+                                       AND tmpMovement.MovementId = 2943608 -- № 43 от 30.11.2015 (Киев нал)
+                                      )
+                                   OR tmpMovement.MovementId NOT IN (1110118, 1374968, 2943608) -- № 27 от 31.12.2014 + № 36 от 31.12.2014 + № 43 от 30.11.2015
                                      )
                               UNION
                                -- Все контейнеры - для Вид формы оплаты, если пустой счет
@@ -705,3 +708,6 @@ order by 3, 2
 -- SELECT * FROM gpUnComplete_Movement (inMovementId:= 103, inSession:= zfCalc_UserAdmin())
 -- SELECT * FROM lpComplete_Movement_LossDebt (inMovementId:= 103, inUserId:= zfCalc_UserAdmin())
 -- SELECT * FROM gpSelect_MovementItemContainer_Movement (inMovementId:= 103, inSession:= zfCalc_UserAdmin())
+-- (Киев нал)
+-- select * from gpUpdate_Status_LossDebt (inMovementId:= 2943608, inStatusCode:= 1, inSession:= zc_Enum_Process_Auto_PrimeCost() :: TVarChar);
+-- select * from gpComplete_Movement_LossDebt (inMovementId:= 2943608, inSession:= zc_Enum_Process_Auto_PrimeCost() :: TVarChar);
