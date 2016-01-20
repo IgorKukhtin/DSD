@@ -3,16 +3,15 @@
 DROP FUNCTION IF EXISTS gpUpdate_Object_Juridical_PrintKindItem (Integer, Boolean, boolean, boolean, boolean, boolean, boolean, boolean, TVarChar);
 DROP FUNCTION IF EXISTS gpUpdate_Object_Juridical_PrintKindItem (Integer, Boolean, boolean, boolean, boolean, boolean, boolean, boolean, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TVarChar);
 
-
 CREATE OR REPLACE FUNCTION gpUpdate_Object_Juridical_PrintKindItem(
     INOUT ioId                  Integer   ,  -- ключ объекта <> 
-    INOUT ioisMovement          boolean   , 
-    INOUT ioisAccount           boolean   ,
-    INOUT ioisTransport         boolean   , 
-    INOUT ioisQuality           boolean   , 
-    INOUT ioisPack              boolean   , 
-    INOUT ioisSpec              boolean   , 
-    INOUT ioisTax               boolean   ,
+    INOUT ioIsMovement          boolean   , 
+    INOUT ioIsAccount           boolean   ,
+    INOUT ioIsTransport         boolean   , 
+    INOUT ioIsQuality           boolean   , 
+    INOUT ioIsPack              boolean   , 
+    INOUT ioIsSpec              boolean   , 
+    INOUT ioIsTax               boolean   ,
     INOUT ioCountMovement       TFloat    , 
     INOUT ioCountAccount        TFloat    ,
     INOUT ioCountTransport      TFloat    , 
@@ -41,15 +40,15 @@ BEGIN
        RAISE EXCEPTION 'Ошибка. У юр.лица установлена сеть. Данные вводятся в справочнике <Торговая сеть (Элементы печати)>';
    END IF; 
 
-    -- сохранили <Объект>
+   -- сохранили <Объект>
    ioId := lpInsertUpdate_Object_Juridical_PrintKindItem (ioId	         := ioId
-                                                     , inisMovement      := ioisMovement
-                                                     , inisAccount       := ioisAccount
-                                                     , inisTransport     := ioisTransport
-                                                     , inisQuality       := ioisQuality
-                                                     , inisPack          := ioisPack
-                                                     , inisSpec          := ioisSpec
-                                                     , inisTax           := ioisTax
+                                                     , inIsMovement      := ioIsMovement
+                                                     , inIsAccount       := ioIsAccount
+                                                     , inIsTransport     := ioIsTransport
+                                                     , inIsQuality       := ioIsQuality
+                                                     , inIsPack          := ioIsPack
+                                                     , inIsSpec          := ioIsSpec
+                                                     , inIsTax           := ioIsTax
                                                      , inCountMovement   := ioCountMovement
                                                      , inCountAccount    := ioCountAccount
                                                      , inCountTransport  := ioCountTransport
@@ -65,7 +64,7 @@ BEGIN
           , tmp.isQuality, tmp.isPack, tmp.isSpec, tmp.isTax
           , tmp.CountMovement, tmp.CountAccount, tmp.CountTransport
           , tmp.CountQuality, tmp.CountPack, tmp.CountSpec, tmp.CountTax
-    INTO ioisMovement, ioisAccount, ioisTransport, ioisQuality, ioisPack, ioisSpec, ioisTax
+    INTO ioIsMovement, ioIsAccount, ioIsTransport, ioIsQuality, ioIsPack, ioIsSpec, ioIsTax
        , ioCountMovement,ioCountAccount, ioCountTransport, ioCountQuality, ioCountPack, ioCountSpec, ioCountTax 
     FROM ObjectLink
        INNER JOIN lpSelect_Object_PrintKindItem() AS tmp ON tmp.Id = ObjectLink.ChildObjectId

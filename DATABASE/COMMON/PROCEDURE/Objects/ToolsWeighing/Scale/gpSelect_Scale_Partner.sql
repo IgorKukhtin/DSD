@@ -219,7 +219,7 @@ BEGIN
             , COALESCE (ObjectBoolean_Partner_EdiDesadv.ValueData, FALSE)  :: Boolean AS isEdiDesadv
 
             , CASE WHEN tmpPrintKindItem.isPack = TRUE OR tmpPrintKindItem.isSpec = TRUE THEN COALESCE (tmpPrintKindItem.isMovement, FALSE) ELSE TRUE END :: Boolean AS isMovement
-            , COALESCE (tmpPrintKindItem.CountMovement, 0) :: TFloat AS CountMovement
+            , CASE WHEN tmpPrintKindItem.CountMovement > 0 THEN tmpPrintKindItem.CountMovement ELSE 2 END :: TFloat AS CountMovement
             , COALESCE (tmpPrintKindItem.isAccount, FALSE)   :: Boolean AS isAccount,   COALESCE (tmpPrintKindItem.CountAccount, 0)   :: TFloat AS CountAccount
             , COALESCE (tmpPrintKindItem.isTransport, FALSE) :: Boolean AS isTransport, COALESCE (tmpPrintKindItem.CountTransport, 0) :: TFloat AS CountTransport
             , COALESCE (tmpPrintKindItem.isQuality, FALSE)   :: Boolean AS isQuality  , COALESCE (tmpPrintKindItem.CountQuality, 0)   :: TFloat AS CountQuality

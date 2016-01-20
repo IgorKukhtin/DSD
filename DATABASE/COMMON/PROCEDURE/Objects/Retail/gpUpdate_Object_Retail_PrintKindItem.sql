@@ -3,7 +3,6 @@
 DROP FUNCTION IF EXISTS gpUpdate_Object_Retail_PrintKindItem (Integer, Boolean, boolean, boolean, boolean, boolean, boolean, boolean, TVarChar);
 DROP FUNCTION IF EXISTS gpUpdate_Object_Retail_PrintKindItem (Integer, Boolean, boolean, boolean, boolean, boolean, boolean, boolean, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TVarChar);
 
-
 CREATE OR REPLACE FUNCTION gpUpdate_Object_Retail_PrintKindItem(
  INOUT ioId                  Integer   ,  -- ключ объекта <Торговая сеть> 
     INOUT ioisMovement          boolean   , 

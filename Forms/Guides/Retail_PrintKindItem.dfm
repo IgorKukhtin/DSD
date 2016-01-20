@@ -39,7 +39,6 @@ object Retail_PrintKindItemForm: TRetail_PrintKindItemForm
       OptionsData.Deleting = False
       OptionsData.DeletingConfirmation = False
       OptionsData.Inserting = False
-      OptionsView.ColumnAutoWidth = True
       OptionsView.GroupByBox = False
       OptionsView.HeaderHeight = 40
       OptionsView.Indicator = True
@@ -58,11 +57,12 @@ object Retail_PrintKindItemForm: TRetail_PrintKindItemForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 146
+        Width = 150
       end
       object GLNCode: TcxGridDBColumn
         Caption = #1050#1086#1076' GLN '#1055#1086#1083#1091#1095#1072#1090#1077#1083#1100
         DataBinding.FieldName = 'GLNCode'
+        Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
@@ -71,6 +71,7 @@ object Retail_PrintKindItemForm: TRetail_PrintKindItemForm
       object GLNCodeCorporate: TcxGridDBColumn
         Caption = #1050#1086#1076' GLN '#1055#1086#1089#1090#1072#1074#1097#1080#1082' '
         DataBinding.FieldName = 'GLNCodeCorporate'
+        Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
@@ -87,6 +88,7 @@ object Retail_PrintKindItemForm: TRetail_PrintKindItemForm
             Kind = bkEllipsis
           end>
         Properties.ReadOnly = True
+        Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
@@ -95,26 +97,18 @@ object Retail_PrintKindItemForm: TRetail_PrintKindItemForm
       object clOperDateOrder: TcxGridDBColumn
         Caption = #1062#1077#1085#1072' '#1087#1086' '#1076#1072#1090#1077' '#1079#1072#1103#1074#1082#1080
         DataBinding.FieldName = 'OperDateOrder'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Options.Editing = False
-        Width = 80
-      end
-      object isErased: TcxGridDBColumn
-        Caption = #1059#1076#1072#1083#1077#1085
-        DataBinding.FieldName = 'isErased'
-        PropertiesClassName = 'TcxCheckBoxProperties'
         Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 68
+        Width = 80
       end
       object isMovement: TcxGridDBColumn
         Caption = #1053#1072#1082#1083#1072#1076#1085#1072#1103
         DataBinding.FieldName = 'isMovement'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        Options.Editing = False
         Width = 70
       end
       object CountMovement: TcxGridDBColumn
@@ -133,6 +127,7 @@ object Retail_PrintKindItemForm: TRetail_PrintKindItemForm
         DataBinding.FieldName = 'isAccount'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        Options.Editing = False
         Width = 70
       end
       object CountAccount: TcxGridDBColumn
@@ -151,6 +146,7 @@ object Retail_PrintKindItemForm: TRetail_PrintKindItemForm
         DataBinding.FieldName = 'isTransport'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        Options.Editing = False
         Width = 70
       end
       object CountTransport: TcxGridDBColumn
@@ -169,6 +165,7 @@ object Retail_PrintKindItemForm: TRetail_PrintKindItemForm
         DataBinding.FieldName = 'isQuality'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        Options.Editing = False
         Width = 70
       end
       object CountQuality: TcxGridDBColumn
@@ -187,6 +184,7 @@ object Retail_PrintKindItemForm: TRetail_PrintKindItemForm
         DataBinding.FieldName = 'isPack'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        Options.Editing = False
         Width = 70
       end
       object CountPack: TcxGridDBColumn
@@ -205,6 +203,7 @@ object Retail_PrintKindItemForm: TRetail_PrintKindItemForm
         DataBinding.FieldName = 'isSpec'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        Options.Editing = False
         Width = 70
       end
       object CountSpec: TcxGridDBColumn
@@ -223,6 +222,7 @@ object Retail_PrintKindItemForm: TRetail_PrintKindItemForm
         DataBinding.FieldName = 'isTax'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        Options.Editing = False
         Width = 70
       end
       object CountTax: TcxGridDBColumn
@@ -235,6 +235,16 @@ object Retail_PrintKindItemForm: TRetail_PrintKindItemForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 70
+      end
+      object isErased: TcxGridDBColumn
+        Caption = #1059#1076#1072#1083#1077#1085
+        DataBinding.FieldName = 'isErased'
+        PropertiesClassName = 'TcxCheckBoxProperties'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 68
       end
     end
     object cxGridLevel: TcxGridLevel

@@ -24,7 +24,6 @@ object GoodsPropertyValueForm: TGoodsPropertyValueForm
     Height = 404
     Align = alClient
     TabOrder = 1
-    ExplicitHeight = 438
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -762,6 +761,13 @@ object GoodsPropertyValueForm: TGoodsPropertyValueForm
         ComponentItem = 'BoxCount'
         DataType = ftFloat
         ParamType = ptInput
+      end
+      item
+        Name = 'outBarCodeShort'
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'BarCodeShort'
+        DataType = ftString
       end
       item
         Name = 'inBarCode'
