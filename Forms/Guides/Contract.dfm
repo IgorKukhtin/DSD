@@ -25,8 +25,6 @@ object ContractForm: TContractForm
     Align = alTop
     TabOrder = 0
     LookAndFeel.NativeStyle = False
-    ExplicitLeft = -8
-    ExplicitTop = 25
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -291,6 +289,21 @@ object ContractForm: TContractForm
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
         Width = 80
+      end
+      object clContractTermKindName: TcxGridDBColumn
+        Caption = #1058#1080#1087' '#1087#1088#1086#1083#1086#1085#1075'. '#1076#1086#1075'.'
+        DataBinding.FieldName = 'ContractTermKindName'
+        Options.Editing = False
+        Width = 50
+      end
+      object clTerm: TcxGridDBColumn
+        Caption = ' '#1055#1077#1088#1080#1086#1076' '#1087#1088#1086#1083#1086#1085#1075'. '#1076#1086#1075'.'
+        DataBinding.FieldName = 'Term'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.#;-,0.#; ;'
+        Options.Editing = False
+        Width = 45
       end
       object clInfoMoneyCode: TcxGridDBColumn
         Caption = #1050#1086#1076' '#1059#1055

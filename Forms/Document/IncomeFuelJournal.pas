@@ -104,6 +104,15 @@ type
     colTotalCountPartner: TcxGridDBColumn;
     actMIContainer: TdsdOpenForm;
     bbMIContainer: TdxBarButton;
+    clStartOdometre: TcxGridDBColumn;
+    clEndOdometre: TcxGridDBColumn;
+    clAmountFuel: TcxGridDBColumn;
+    clReparation: TcxGridDBColumn;
+    clLimitMoney: TcxGridDBColumn;
+    clLimitDistance: TcxGridDBColumn;
+    clLimitChange: TcxGridDBColumn;
+    clLimitDistanceChange: TcxGridDBColumn;
+    clDistance: TcxGridDBColumn;
   private
   public
   end;

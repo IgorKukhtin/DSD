@@ -2,8 +2,9 @@ inherited ContractEditForm: TContractEditForm
   Caption = #1044#1086#1073#1072#1074#1080#1090#1100'/'#1048#1079#1084#1077#1085#1080#1090#1100' <'#1044#1086#1075#1086#1074#1086#1088'>'
   ClientHeight = 668
   ClientWidth = 911
+  ExplicitTop = -10
   ExplicitWidth = 917
-  ExplicitHeight = 693
+  ExplicitHeight = 696
   PixelsPerInch = 96
   TextHeight = 13
   inherited bbOk: TcxButton
@@ -25,39 +26,39 @@ inherited ContractEditForm: TContractEditForm
   end
   object edInvNumber: TcxTextEdit [2]
     Left = 16
-    Top = 85
+    Top = 80
     TabOrder = 0
     Width = 104
   end
   object LbInvNumber: TcxLabel [3]
     Left = 16
-    Top = 68
+    Top = 63
     Caption = #8470' '#1076#1086#1075#1086#1074#1086#1088#1072
   end
   object cxLabel3: TcxLabel [4]
     Left = 16
-    Top = 226
+    Top = 263
     Caption = #1042#1080#1076' '#1076#1086#1075#1086#1074#1086#1088#1072
   end
   object cxLabel4: TcxLabel [5]
     Left = 127
-    Top = 147
+    Top = 184
     Caption = #1070#1088#1080#1076#1080#1095#1077#1089#1082#1086#1077' '#1083#1080#1094#1086
   end
   object ceComment: TcxTextEdit [6]
     Left = 16
-    Top = 487
+    Top = 524
     TabOrder = 4
     Width = 162
   end
   object cxLabel5: TcxLabel [7]
-    Left = 16
-    Top = 473
+    Left = 18
+    Top = 510
     Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
   end
   object edContractKind: TcxButtonEdit [8]
     Left = 16
-    Top = 244
+    Top = 281
     Properties.Buttons = <
       item
         Default = True
@@ -69,7 +70,7 @@ inherited ContractEditForm: TContractEditForm
   end
   object edJuridical: TcxButtonEdit [9]
     Left = 127
-    Top = 164
+    Top = 201
     Properties.Buttons = <
       item
         Default = True
@@ -81,7 +82,7 @@ inherited ContractEditForm: TContractEditForm
   end
   object edSigningDate: TcxDateEdit [10]
     Left = 16
-    Top = 124
+    Top = 119
     EditValue = 0d
     Properties.SaveTime = False
     Properties.ShowTime = False
@@ -90,17 +91,17 @@ inherited ContractEditForm: TContractEditForm
   end
   object cxLabel1: TcxLabel [11]
     Left = 16
-    Top = 106
+    Top = 101
     Caption = #1044#1072#1090#1072' '#1079#1072#1082#1083#1102#1095#1077#1085#1080#1103
   end
   object cxLabel2: TcxLabel [12]
     Left = 127
-    Top = 106
+    Top = 101
     Caption = #1044#1077#1081#1089#1090#1074#1091#1077#1090' '#1089
   end
   object edStartDate: TcxDateEdit [13]
     Left = 127
-    Top = 124
+    Top = 119
     EditValue = 0d
     Properties.SaveTime = False
     Properties.ShowTime = False
@@ -109,7 +110,7 @@ inherited ContractEditForm: TContractEditForm
   end
   object edEndDate: TcxDateEdit [14]
     Left = 241
-    Top = 124
+    Top = 119
     EditValue = 0d
     Properties.SaveTime = False
     Properties.ShowTime = False
@@ -118,17 +119,17 @@ inherited ContractEditForm: TContractEditForm
   end
   object cxLabel6: TcxLabel [15]
     Left = 241
-    Top = 106
+    Top = 101
     Caption = #1044#1077#1081#1089#1090#1074#1091#1077#1090' '#1076#1086
   end
   object cxLabel9: TcxLabel [16]
     Left = 18
-    Top = 187
+    Top = 224
     Caption = #1059#1055' '#1089#1090#1072#1090#1100#1103' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
   end
   object edInfoMoney: TcxButtonEdit [17]
     Left = 16
-    Top = 203
+    Top = 240
     Properties.Buttons = <
       item
         Default = True
@@ -140,7 +141,7 @@ inherited ContractEditForm: TContractEditForm
   end
   object edPaidKind: TcxButtonEdit [18]
     Left = 16
-    Top = 164
+    Top = 201
     Properties.Buttons = <
       item
         Default = True
@@ -151,8 +152,8 @@ inherited ContractEditForm: TContractEditForm
     Width = 104
   end
   object cxLabel10: TcxLabel [19]
-    Left = 18
-    Top = 147
+    Left = 17
+    Top = 184
     Caption = #1060#1086#1088#1084#1072' '#1086#1087#1083#1072#1090#1099
   end
   object cxLabel11: TcxLabel [20]
@@ -171,23 +172,23 @@ inherited ContractEditForm: TContractEditForm
   end
   object cxLabel12: TcxLabel [22]
     Left = 183
-    Top = 226
+    Top = 263
     Caption = #1055#1086#1088#1103#1076#1082#1086#1074#1099#1081' '#8470
   end
   object edInvNumberArchive: TcxTextEdit [23]
     Left = 183
-    Top = 245
+    Top = 282
     TabOrder = 21
     Width = 161
   end
   object cxLabel7: TcxLabel [24]
     Left = 16
-    Top = 309
+    Top = 346
     Caption = #1054#1090#1074#1077#1090#1089#1090#1074#1077#1085#1085#1099#1081' ('#1089#1086#1090#1088#1091#1076#1085#1080#1082')'
   end
   object edPersonal: TcxButtonEdit [25]
     Left = 16
-    Top = 326
+    Top = 363
     Properties.Buttons = <
       item
         Default = True
@@ -199,12 +200,12 @@ inherited ContractEditForm: TContractEditForm
   end
   object cxLabel8: TcxLabel [26]
     Left = 184
-    Top = 310
+    Top = 347
     Caption = #1056#1077#1075#1080#1086#1085' ('#1076#1086#1075#1086#1074#1086#1088')'
   end
   object edAreaContract: TcxButtonEdit [27]
     Left = 183
-    Top = 328
+    Top = 365
     Properties.Buttons = <
       item
         Default = True
@@ -216,12 +217,12 @@ inherited ContractEditForm: TContractEditForm
   end
   object cxLabel13: TcxLabel [28]
     Left = 18
-    Top = 267
+    Top = 304
     Caption = #1055#1088#1077#1076#1084#1077#1090' '#1076#1086#1075#1086#1074#1086#1088#1072
   end
   object edContractArticle: TcxButtonEdit [29]
     Left = 16
-    Top = 284
+    Top = 321
     Properties.Buttons = <
       item
         Default = True
@@ -233,12 +234,12 @@ inherited ContractEditForm: TContractEditForm
   end
   object cxLabel14: TcxLabel [30]
     Left = 183
-    Top = 267
+    Top = 304
     Caption = #1057#1086#1089#1090#1086#1103#1085#1080#1077' '#1076#1086#1075#1086#1074#1086#1088#1072
   end
   object edContractStateKind: TcxButtonEdit [31]
     Left = 183
-    Top = 285
+    Top = 322
     Properties.Buttons = <
       item
         Action = actGetStateKindUnSigned
@@ -430,12 +431,12 @@ inherited ContractEditForm: TContractEditForm
   end
   object cxLabel15: TcxLabel [33]
     Left = 184
-    Top = 473
+    Top = 510
     Caption = #1043#1083#1072#1074#1085#1086#1077' '#1102#1088#1080#1076#1080#1095#1077#1089#1082#1086#1077' '#1083#1080#1094#1086
   end
   object edMainJuridical: TcxButtonEdit [34]
     Left = 183
-    Top = 487
+    Top = 524
     Enabled = False
     Properties.Buttons = <
       item
@@ -447,13 +448,13 @@ inherited ContractEditForm: TContractEditForm
     Width = 163
   end
   object cxLabel16: TcxLabel [35]
-    Left = 16
-    Top = 432
+    Left = 18
+    Top = 469
     Caption = #1041#1072#1085#1082' ('#1080#1089#1093'.'#1087#1083#1072#1090#1077#1078')'
   end
   object edBankId: TcxButtonEdit [36]
     Left = 16
-    Top = 449
+    Top = 486
     Properties.Buttons = <
       item
         Default = True
@@ -465,13 +466,13 @@ inherited ContractEditForm: TContractEditForm
   end
   object edBankAccountExternal: TcxTextEdit [37]
     Left = 183
-    Top = 449
+    Top = 486
     TabOrder = 38
     Width = 161
   end
   object cxLabel17: TcxLabel [38]
     Left = 184
-    Top = 432
+    Top = 469
     Caption = #1056#1072#1089#1095#1077#1090#1085#1099#1081' '#1089#1095#1077#1090' ('#1080#1089#1093'.'#1087#1083#1072#1090#1077#1078')'
   end
   object cbisDefault: TcxCheckBox [39]
@@ -490,17 +491,17 @@ inherited ContractEditForm: TContractEditForm
   end
   object cxLabel18: TcxLabel [41]
     Left = 184
-    Top = 353
+    Top = 390
     Caption = #1058#1055' ('#1089#1086#1090#1088#1091#1076#1085#1080#1082')'
   end
   object cxLabel19: TcxLabel [42]
-    Left = 16
-    Top = 353
+    Left = 18
+    Top = 390
     Caption = #1041#1091#1093#1075'.'#1089#1074#1077#1088#1082#1072' ('#1089#1086#1090#1088#1091#1076#1085#1080#1082')'
   end
   object edPersonalTrade: TcxButtonEdit [43]
     Left = 183
-    Top = 370
+    Top = 407
     Properties.Buttons = <
       item
         Default = True
@@ -512,7 +513,7 @@ inherited ContractEditForm: TContractEditForm
   end
   object edPersonalCollation: TcxButtonEdit [44]
     Left = 16
-    Top = 370
+    Top = 407
     Properties.Buttons = <
       item
         Default = True
@@ -524,17 +525,17 @@ inherited ContractEditForm: TContractEditForm
   end
   object cxLabel20: TcxLabel [45]
     Left = 18
-    Top = 394
+    Top = 431
     Caption = #1056#1072#1089#1095#1077#1090#1085#1099#1081' '#1089#1095#1077#1090' ('#1074#1093'.'#1087#1083#1072#1090#1077#1078')'
   end
   object cxLabel21: TcxLabel [46]
     Left = 127
-    Top = 67
+    Top = 62
     Caption = #1055#1088#1080#1079#1085#1072#1082' '#1076#1086#1075#1086#1074#1086#1088#1072
   end
   object edContractTag: TcxButtonEdit [47]
     Left = 127
-    Top = 85
+    Top = 80
     Properties.Buttons = <
       item
         Default = True
@@ -546,7 +547,7 @@ inherited ContractEditForm: TContractEditForm
   end
   object ceBankAccount: TcxButtonEdit [48]
     Left = 16
-    Top = 409
+    Top = 446
     Properties.Buttons = <
       item
         Default = True
@@ -572,23 +573,23 @@ inherited ContractEditForm: TContractEditForm
   end
   object cxLabel22: TcxLabel [51]
     Left = 185
-    Top = 394
+    Top = 431
     Caption = #1050#1086#1076' GLN - '#1087#1086#1089#1090#1072#1074#1097#1080#1082
   end
   object edGLNCode: TcxTextEdit [52]
     Left = 183
-    Top = 409
+    Top = 446
     TabOrder = 53
     Width = 161
   end
   object cxLabel23: TcxLabel [53]
     Left = 183
-    Top = 187
+    Top = 224
     Caption = #1070#1088'. '#1083#1080#1094#1086'('#1087#1077#1095#1072#1090#1100' '#1076#1086#1082'.)'
   end
   object edJuridicalDocument: TcxButtonEdit [54]
     Left = 183
-    Top = 203
+    Top = 240
     Properties.Buttons = <
       item
         Default = True
@@ -600,12 +601,12 @@ inherited ContractEditForm: TContractEditForm
   end
   object cxLabel24: TcxLabel [55]
     Left = 18
-    Top = 509
+    Top = 549
     Caption = #1055#1088#1072#1081#1089'-'#1083#1080#1089#1090
   end
   object cePriceList: TcxButtonEdit [56]
     Left = 18
-    Top = 525
+    Top = 565
     Properties.Buttons = <
       item
         Default = True
@@ -613,16 +614,17 @@ inherited ContractEditForm: TContractEditForm
       end>
     Properties.ReadOnly = True
     TabOrder = 57
-    Width = 160
+    Width = 328
   end
   object cxLabel25: TcxLabel [57]
-    Left = 184
-    Top = 509
+    Left = 352
+    Top = 526
     Caption = #1055#1088#1072#1081#1089'-'#1083#1080#1089#1090' ('#1040#1082#1094#1080#1086#1085#1085#1099#1081')'
+    Visible = False
   end
   object cePriceListPromo: TcxButtonEdit [58]
-    Left = 183
-    Top = 525
+    Left = 367
+    Top = 540
     Properties.Buttons = <
       item
         Default = True
@@ -630,36 +632,40 @@ inherited ContractEditForm: TContractEditForm
       end>
     Properties.ReadOnly = True
     TabOrder = 59
+    Visible = False
     Width = 161
   end
   object cxLabel26: TcxLabel [59]
-    Left = 18
-    Top = 547
+    Left = 352
+    Top = 567
     Caption = #1044#1072#1090#1072' '#1085#1072#1095#1072#1083#1072' '#1072#1082#1094#1080#1080
+    Visible = False
   end
   object edStartPromo: TcxDateEdit [60]
-    Left = 18
-    Top = 566
+    Left = 352
+    Top = 582
     EditValue = 0d
     Properties.SaveTime = False
     Properties.ShowTime = False
     Properties.ValidateOnEnter = False
     TabOrder = 61
+    Visible = False
     Width = 100
   end
   object cxLabel27: TcxLabel [61]
-    Left = 184
-    Top = 547
+    Left = 458
+    Top = 567
     Caption = #1044#1072#1090#1072' '#1079#1072#1074#1077#1088#1096#1077#1085#1080#1103' '#1072#1082#1094#1080#1080
   end
   object edEndPromo: TcxDateEdit [62]
-    Left = 183
-    Top = 566
+    Left = 460
+    Top = 582
     EditValue = 0d
     Properties.SaveTime = False
     Properties.ShowTime = False
     Properties.ValidateOnEnter = False
-    TabOrder = 64
+    TabOrder = 63
+    Visible = False
     Width = 100
   end
   object cxLabel28: TcxLabel [63]
@@ -668,7 +674,7 @@ inherited ContractEditForm: TContractEditForm
     Caption = #1050#1083#1072#1089#1089#1080#1092#1080#1082#1072#1090#1086#1088' '#1089#1074#1086#1081#1089#1090#1074' '#1090#1086#1074#1072#1088#1072
   end
   object ceGoodsProperty: TcxButtonEdit [64]
-    Left = 20
+    Left = 18
     Top = 609
     Properties.Buttons = <
       item
@@ -679,6 +685,38 @@ inherited ContractEditForm: TContractEditForm
     Properties.ReadOnly = True
     TabOrder = 68
     Width = 326
+  end
+  object edTerm: TcxCurrencyEdit [65]
+    Left = 16
+    Top = 161
+    Properties.Alignment.Horz = taRightJustify
+    Properties.Alignment.Vert = taVCenter
+    Properties.DecimalPlaces = 3
+    Properties.DisplayFormat = ',0.###'
+    TabOrder = 69
+    Width = 104
+  end
+  object cxLabel29: TcxLabel [66]
+    Left = 18
+    Top = 142
+    Caption = #1055#1077#1088#1080#1086#1076' '#1087#1088#1086#1083#1086#1085#1075'.'
+  end
+  object cxLabel30: TcxLabel [67]
+    Left = 127
+    Top = 144
+    Caption = #1058#1080#1087' '#1087#1088#1086#1083#1086#1085#1075#1072#1094#1080#1080
+  end
+  object edContractTermKind: TcxButtonEdit [68]
+    Left = 127
+    Top = 161
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    Properties.ReadOnly = True
+    TabOrder = 72
+    Width = 217
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 499
@@ -1056,6 +1094,13 @@ inherited ContractEditForm: TContractEditForm
         ParamType = ptInput
       end
       item
+        Name = 'inTerm'
+        Value = Null
+        Component = edTerm
+        DataType = ftFloat
+        ParamType = ptInput
+      end
+      item
         Name = 'inSigningDate'
         Value = 0d
         Component = edSigningDate
@@ -1163,6 +1208,13 @@ inherited ContractEditForm: TContractEditForm
         ParamType = ptInput
       end
       item
+        Name = 'inContractTermKindId'
+        Value = Null
+        Component = ContractTermKindGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+      end
+      item
         Name = 'inBankId'
         Value = ''
         Component = BankGuides
@@ -1212,14 +1264,14 @@ inherited ContractEditForm: TContractEditForm
       end
       item
         Name = 'inStartPromo'
-        Value = Null
+        Value = 'NULL'
         Component = edStartPromo
         DataType = ftDateTime
         ParamType = ptInput
       end
       item
         Name = 'InEndPromo'
-        Value = Null
+        Value = 'NULL'
         Component = edEndPromo
         DataType = ftDateTime
         ParamType = ptInput
@@ -1524,13 +1576,13 @@ inherited ContractEditForm: TContractEditForm
       end
       item
         Name = 'StartPromo'
-        Value = Null
+        Value = 'NULL'
         Component = edStartPromo
         DataType = ftDateTime
       end
       item
         Name = 'EndPromo'
-        Value = Null
+        Value = 'NULL'
         Component = edEndPromo
         DataType = ftDateTime
       end
@@ -1544,6 +1596,25 @@ inherited ContractEditForm: TContractEditForm
         Name = 'GoodsPropertyName'
         Value = Null
         Component = GoodsPropertyGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+      end
+      item
+        Name = 'Term'
+        Value = Null
+        Component = edTerm
+        DataType = ftFloat
+      end
+      item
+        Name = 'ContractTermKindId'
+        Value = Null
+        Component = ContractTermKindGuides
+        ComponentItem = 'Key'
+      end
+      item
+        Name = 'ContractTermKindName'
+        Value = Null
+        Component = ContractTermKindGuides
         ComponentItem = 'TextValue'
         DataType = ftString
       end>
@@ -1575,7 +1646,7 @@ inherited ContractEditForm: TContractEditForm
         ParamType = ptInput
       end>
     Left = 245
-    Top = 132
+    Top = 169
   end
   object InfoMoneyGuides: TdsdGuides
     KeyField = 'Id'
@@ -1602,7 +1673,7 @@ inherited ContractEditForm: TContractEditForm
         ParamType = ptInput
       end>
     Left = 46
-    Top = 181
+    Top = 218
   end
   object ContractKindGuides: TdsdGuides
     KeyField = 'Id'
@@ -1633,7 +1704,7 @@ inherited ContractEditForm: TContractEditForm
         Value = 0
       end>
     Left = 96
-    Top = 220
+    Top = 257
   end
   object PersonalGuides: TdsdGuides
     KeyField = 'Id'
@@ -1660,7 +1731,7 @@ inherited ContractEditForm: TContractEditForm
         ParamType = ptInput
       end>
     Left = 128
-    Top = 314
+    Top = 351
   end
   object AreaContractGuides: TdsdGuides
     KeyField = 'Id'
@@ -1687,7 +1758,7 @@ inherited ContractEditForm: TContractEditForm
         ParamType = ptInput
       end>
     Left = 245
-    Top = 312
+    Top = 349
   end
   object ContractArticleGuides: TdsdGuides
     KeyField = 'Id'
@@ -1714,7 +1785,7 @@ inherited ContractEditForm: TContractEditForm
         ParamType = ptInput
       end>
     Left = 128
-    Top = 267
+    Top = 304
   end
   object ContractStateKindGuides: TdsdGuides
     KeyField = 'Id'
@@ -1767,8 +1838,8 @@ inherited ContractEditForm: TContractEditForm
         DataType = ftString
         ParamType = ptInput
       end>
-    Left = 88
-    Top = 141
+    Left = 64
+    Top = 194
   end
   object ContractConditionDS: TDataSource
     DataSet = ContractConditionCDS
@@ -2123,8 +2194,8 @@ inherited ContractEditForm: TContractEditForm
         DataType = ftString
         ParamType = ptInput
       end>
-    Left = 256
-    Top = 463
+    Left = 232
+    Top = 500
   end
   object spErasedUnErasedCondition: TdsdStoredProc
     StoredProcName = 'gpUpdate_Object_isErased_ContractCondition'
@@ -2317,7 +2388,7 @@ inherited ContractEditForm: TContractEditForm
         ParamType = ptInput
       end>
     Left = 128
-    Top = 437
+    Top = 474
   end
   object PersonalTradeGuides: TdsdGuides
     KeyField = 'Id'
@@ -2344,7 +2415,7 @@ inherited ContractEditForm: TContractEditForm
         ParamType = ptInput
       end>
     Left = 348
-    Top = 331
+    Top = 368
   end
   object PersonalCollationGuides: TdsdGuides
     KeyField = 'Id'
@@ -2371,7 +2442,7 @@ inherited ContractEditForm: TContractEditForm
         ParamType = ptInput
       end>
     Left = 128
-    Top = 358
+    Top = 395
   end
   object BankAccountGuides: TdsdGuides
     KeyField = 'Id'
@@ -2398,7 +2469,7 @@ inherited ContractEditForm: TContractEditForm
         ParamType = ptInput
       end>
     Left = 67
-    Top = 395
+    Top = 432
   end
   object ContractTagGuides: TdsdGuides
     KeyField = 'Id'
@@ -2425,7 +2496,7 @@ inherited ContractEditForm: TContractEditForm
         ParamType = ptInput
       end>
     Left = 344
-    Top = 52
+    Top = 47
   end
   object JuridicalDocumentGuides: TdsdGuides
     KeyField = 'Id'
@@ -2451,8 +2522,8 @@ inherited ContractEditForm: TContractEditForm
         DataType = ftString
         ParamType = ptInput
       end>
-    Left = 245
-    Top = 196
+    Left = 269
+    Top = 225
   end
   object dsdPriceListGuides: TdsdGuides
     KeyField = 'Id'
@@ -2479,7 +2550,7 @@ inherited ContractEditForm: TContractEditForm
         ParamType = ptInput
       end>
     Left = 97
-    Top = 506
+    Top = 546
   end
   object dsdPriceListPromoGuides: TdsdGuides
     KeyField = 'Id'
@@ -2505,8 +2576,8 @@ inherited ContractEditForm: TContractEditForm
         DataType = ftString
         ParamType = ptInput
       end>
-    Left = 280
-    Top = 490
+    Left = 472
+    Top = 522
   end
   object GoodsPropertyGuides: TdsdGuides
     KeyField = 'Id'
@@ -2534,5 +2605,32 @@ inherited ContractEditForm: TContractEditForm
       end>
     Left = 152
     Top = 592
+  end
+  object ContractTermKindGuides: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edContractTermKind
+    FormNameParam.Value = 'TContractTermKindForm'
+    FormNameParam.DataType = ftString
+    FormName = 'TContractTermKindForm'
+    PositionDataSet = 'MasterCDS'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = ContractTermKindGuides
+        ComponentItem = 'Key'
+        DataType = ftString
+        ParamType = ptInput
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = ContractTermKindGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+      end>
+    Left = 192
+    Top = 146
   end
 end

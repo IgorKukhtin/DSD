@@ -12,7 +12,8 @@ uses
   cxCheckBox, cxLabel, cxTextEdit, cxMaskEdit, cxDropDownEdit, cxCalendar,
   cxGridLevel, cxGridCustomTableView, cxGridTableView, cxGridDBTableView,
   cxGridCustomView, Vcl.Controls, cxGrid, dxSkinsCore, dxSkinsDefaultPainters,
-  dxSkinscxPCPainter, dxSkinsdxBarPainter, cxSplitter, Vcl.ExtCtrls;
+  dxSkinscxPCPainter, dxSkinsdxBarPainter, cxSplitter, Vcl.ExtCtrls,
+  cxCurrencyEdit;
 
 type
   TContractForm = class(TParentForm)
@@ -198,6 +199,8 @@ type
     clGoodsPropertyName: TcxGridDBColumn;
     clRetailName: TcxGridDBColumn;
     GoodsPropertyChoiceForm: TOpenChoiceForm;
+    clContractTermKindName: TcxGridDBColumn;
+    clTerm: TcxGridDBColumn;
 
   private
     { Private declarations }

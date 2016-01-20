@@ -785,7 +785,8 @@ uses
   Member_TrasportDateDialog in '..\..\Forms\Guides\Member_TrasportDateDialog.pas' {Member_TrasportDateDialogForm: TParentForm},
   RouteMember in '..\..\Forms\Guides\RouteMember.pas' {RouteMemberForm: TParentForm},
   RouteMemberEdit in '..\..\Forms\Guides\RouteMemberEdit.pas' {RouteMemberEditForm: TParentForm},
-  Member_TrasportChoice in '..\..\Forms\Guides\Member_TrasportChoice.pas' {Member_TrasportChoiceForm: TParentForm};
+  Member_TrasportChoice in '..\..\Forms\Guides\Member_TrasportChoice.pas' {Member_TrasportChoiceForm: TParentForm},
+  ContractTermKind in '..\..\Forms\Kind\ContractTermKind.pas' {ContractTermKindForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}

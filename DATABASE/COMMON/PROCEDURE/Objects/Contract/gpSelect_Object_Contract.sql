@@ -16,6 +16,7 @@ RETURNS TABLE (Id Integer, Code Integer
              , InvNumber_Key TVarChar, ContractStateKindCode_Key Integer
 
              , Comment TVarChar, BankAccountExternal TVarChar, GLNCode TVarChar
+             , Term TFloat
              , SigningDate TDateTime, StartDate TDateTime, EndDate TDateTime
                          
              , ContractKindId Integer, ContractKindName TVarChar
@@ -39,6 +40,8 @@ RETURNS TABLE (Id Integer, Code Integer
              , AreaContractId Integer, AreaContractName TVarChar
              , ContractArticleId Integer, ContractArticleName TVarChar
              , ContractStateKindId Integer, ContractStateKindCode Integer
+             , ContractTermKindId Integer, ContractTermKindName TVarChar
+             
              , OKPO TVarChar
              , BankId Integer, BankName TVarChar
              , InsertName TVarChar, UpdateName TVarChar
@@ -125,6 +128,7 @@ BEGIN
        , ObjectString_Comment.ValueData            AS Comment 
        , ObjectString_BankAccount.ValueData        AS BankAccountExternal
        , ObjectString_GLNCode.ValueData            AS GLNCode 
+       , ObjectFloat_Term.ValueData                AS Term
 
        , ObjectDate_Signing.ValueData AS SigningDate
        , Object_Contract_View.StartDate
@@ -186,6 +190,9 @@ BEGIN
 
        , Object_Contract_View.ContractStateKindId
        , Object_Contract_View.ContractStateKindCode
+
+       , Object_ContractTermKind.Id          AS ContractTermKindId
+       , Object_ContractTermKind.ValueData   AS ContractTermKindName
 
        , ObjectHistory_JuridicalDetails_View.OKPO
 
@@ -251,6 +258,10 @@ BEGIN
         LEFT JOIN ObjectString AS ObjectString_GLNCode
                                ON ObjectString_GLNCode.ObjectId = Object_Contract_View.ContractId
                               AND ObjectString_GLNCode.DescId = zc_objectString_Contract_GLNCode()
+
+        LEFT JOIN ObjectFloat AS ObjectFloat_Term
+                              ON ObjectFloat_Term.ObjectId = Object_Contract_View.ContractId
+                             AND ObjectFloat_Term.DescId = zc_ObjectFloat_Contract_Term()
 
         LEFT JOIN ObjectBoolean AS ObjectBoolean_Default
                                 ON ObjectBoolean_Default.ObjectId = Object_Contract_View.ContractId
@@ -341,6 +352,11 @@ BEGIN
                              ON ObjectLink_Contract_JuridicalDocument.ObjectId = Object_Contract_View.ContractId 
                             AND ObjectLink_Contract_JuridicalDocument.DescId = zc_ObjectLink_Contract_JuridicalDocument()
         LEFT JOIN Object AS Object_JuridicalDocument ON Object_JuridicalDocument.Id = ObjectLink_Contract_JuridicalDocument.ChildObjectId
+
+        LEFT JOIN ObjectLink AS ObjectLink_Contract_ContractTermKind
+                             ON ObjectLink_Contract_ContractTermKind.ObjectId = Object_Contract_View.ContractId
+                            AND ObjectLink_Contract_ContractTermKind.DescId = zc_ObjectLink_Contract_ContractTermKind()
+        LEFT JOIN Object AS Object_ContractTermKind ON Object_ContractTermKind.Id = ObjectLink_Contract_ContractTermKind.ChildObjectId
 
         LEFT JOIN ObjectDate AS ObjectDate_StartPromo
                              ON ObjectDate_StartPromo.ObjectId = Object_Contract_View.ContractId

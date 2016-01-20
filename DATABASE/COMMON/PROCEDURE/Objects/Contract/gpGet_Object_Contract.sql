@@ -9,6 +9,7 @@ CREATE OR REPLACE FUNCTION gpGet_Object_Contract(
 RETURNS TABLE (Id Integer, Code Integer
              , InvNumber TVarChar, InvNumberArchive TVarChar
              , Comment TVarChar, BankAccountExternal TVarChar, GLNCode TVarChar
+             , Term TFloat
              , SigningDate TDateTime, StartDate TDateTime, EndDate TDateTime
              
              , ContractKindId Integer, ContractKindName TVarChar
@@ -29,6 +30,8 @@ RETURNS TABLE (Id Integer, Code Integer
              , AreaContractId Integer, AreaContractName TVarChar
              , ContractArticleId Integer, ContractArticleName TVarChar
              , ContractStateKindId Integer, ContractStateKindName TVarChar
+             , ContractTermKindId Integer, ContractTermKindName TVarChar
+
              , BankId Integer, BankName TVarChar
              , isDefault Boolean
              , isStandart Boolean
@@ -60,6 +63,7 @@ BEGIN
            , '' :: TVarChar  AS Comment
            , '' :: TVarChar  AS BankAccountExternal
            , '' :: TVarChar  AS GLNCode
+           , CAST (0 as Tfloat)        AS Term
 
            , CURRENT_DATE :: TDateTime AS SigningDate
            , CURRENT_DATE :: TDateTime AS StartDate
@@ -103,7 +107,9 @@ BEGIN
            , 0 :: Integer   AS ContractArticleId
            , '' :: TVarChar AS ContractArticleName
            , 0 :: Integer   AS ContractStateKindId
-           , '' :: TVarChar AS ContractStateKindName          
+           , '' :: TVarChar AS ContractStateKindName 
+           , 0 :: Integer   AS ContractTermKindId
+           , '' :: TVarChar AS ContractTermKindName         
 
            , 0 :: Integer   AS BankId
            , '' :: TVarChar AS BankName
@@ -141,6 +147,7 @@ BEGIN
            , ObjectString_Comment.ValueData          AS Comment
            , ObjectString_BankAccount.ValueData      AS BankAccountExternal
            , ObjectString_GLNCode.ValueData          AS GLNCode
+           , ObjectFloat_Term.ValueData              AS Term
                       
            , ObjectDate_Signing.ValueData AS SigningDate
            , ObjectDate_Start.ValueData   AS StartDate -- Object_Contract_View.StartDate
@@ -186,6 +193,9 @@ BEGIN
            , Object_ContractArticle.ValueData   AS ContractArticleName
            , Object_Contract_View.ContractStateKindId
            , Object_Contract_View.ContractStateKindName
+
+           , Object_ContractTermKind.Id          AS ContractTermKindId
+           , Object_ContractTermKind.ValueData   AS ContractTermKindName
 
            , Object_Bank.Id          AS BankId
            , Object_Bank.ValueData   AS BankName
@@ -237,6 +247,10 @@ BEGIN
             LEFT JOIN ObjectString AS ObjectString_GLNCode
                                    ON ObjectString_GLNCode.ObjectId = Object_Contract_View.ContractId
                                   AND ObjectString_GLNCode.DescId = zc_objectString_Contract_GLNCode()                                  
+
+            LEFT JOIN ObjectFloat AS ObjectFloat_Term
+                                  ON ObjectFloat_Term.ObjectId = Object_Contract_View.ContractId
+                                 AND ObjectFloat_Term.DescId = zc_ObjectFloat_Contract_Term()
 
             LEFT JOIN ObjectBoolean AS ObjectBoolean_Default
                                     ON ObjectBoolean_Default.ObjectId = Object_Contract_View.ContractId
@@ -299,6 +313,11 @@ BEGIN
                                 AND ObjectLink_Contract_GoodsProperty.DescId = zc_ObjectLink_Contract_GoodsProperty()
             LEFT JOIN Object AS Object_GoodsProperty ON Object_GoodsProperty.Id = ObjectLink_Contract_GoodsProperty.ChildObjectId 
 
+            LEFT JOIN ObjectLink AS ObjectLink_Contract_ContractTermKind
+                                 ON ObjectLink_Contract_ContractTermKind.ObjectId = Object_Contract_View.ContractId
+                                AND ObjectLink_Contract_ContractTermKind.DescId = zc_ObjectLink_Contract_ContractTermKind()
+            LEFT JOIN Object AS Object_ContractTermKind ON Object_ContractTermKind.Id = ObjectLink_Contract_ContractTermKind.ChildObjectId
+
             LEFT JOIN ObjectDate AS ObjectDate_StartPromo
                                  ON ObjectDate_StartPromo.ObjectId = Object_Contract_View.ContractId
                                 AND ObjectDate_StartPromo.DescId = zc_ObjectDate_Contract_StartPromo()
@@ -334,6 +353,7 @@ ALTER FUNCTION gpGet_Object_Contract (Integer, TVarChar) OWNER TO postgres;
 /*-------------------------------------------------------------------------------
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 20.01.16         *
  05.05.15         * add GoodsProperty
  12.02.15         * add StartPromo, EndPromo,
                         PriceList, PriceListPromo
