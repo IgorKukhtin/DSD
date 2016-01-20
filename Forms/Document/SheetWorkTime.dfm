@@ -241,6 +241,13 @@ object SheetWorkTimeForm: TSheetWorkTimeForm
         Component = GuidesUnit
         ComponentItem = 'Key'
         ParamType = ptInput
+      end
+      item
+        Name = 'inisErased'
+        Value = Null
+        Component = actShowErased
+        DataType = ftBoolean
+        ParamType = ptInput
       end>
     PackSize = 1
     Left = 448
@@ -834,8 +841,8 @@ object SheetWorkTimeForm: TSheetWorkTimeForm
         ParamType = ptInput
       end>
     PackSize = 1
-    Left = 80
-    Top = 296
+    Left = 160
+    Top = 352
   end
   object spErasedMIMaster: TdsdStoredProc
     StoredProcName = 'gpMI_SheetWorkTime_SetErased'
