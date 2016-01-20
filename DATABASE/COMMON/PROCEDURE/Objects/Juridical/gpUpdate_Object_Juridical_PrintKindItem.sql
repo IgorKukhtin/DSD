@@ -5,48 +5,72 @@ DROP FUNCTION IF EXISTS gpUpdate_Object_Juridical_PrintKindItem (Integer, Boolea
 
 
 CREATE OR REPLACE FUNCTION gpUpdate_Object_Juridical_PrintKindItem(
- INOUT ioId                  Integer   ,  -- ключ объекта <Торговая сеть> 
-    IN inisMovement          boolean   , 
-    IN inisAccount           boolean   ,
-    IN inisTransport         boolean   , 
-    IN inisQuality           boolean   , 
-    IN inisPack              boolean   , 
-    IN inisSpec              boolean   , 
-    IN inisTax               boolean   ,
-    IN inCountMovement       TFloat    , 
-    IN inCountAccount        TFloat    ,
-    IN inCountTransport      TFloat    , 
-    IN inCountQuality        TFloat    , 
-    IN inCountPack           TFloat    , 
-    IN inCountSpec           TFloat    , 
-    IN inCountTax            TFloat    ,
-    IN inSession             TVarChar     -- сессия пользователя
+    INOUT ioId                  Integer   ,  -- ключ объекта <> 
+    INOUT ioisMovement          boolean   , 
+    INOUT ioisAccount           boolean   ,
+    INOUT ioisTransport         boolean   , 
+    INOUT ioisQuality           boolean   , 
+    INOUT ioisPack              boolean   , 
+    INOUT ioisSpec              boolean   , 
+    INOUT ioisTax               boolean   ,
+    INOUT ioCountMovement       TFloat    , 
+    INOUT ioCountAccount        TFloat    ,
+    INOUT ioCountTransport      TFloat    , 
+    INOUT ioCountQuality        TFloat    , 
+    INOUT ioCountPack           TFloat    , 
+    INOUT ioCountSpec           TFloat    , 
+    INOUT ioCountTax            TFloat    ,
+    IN inSession                TVarChar     -- сессия пользователя
 )
-  RETURNS Integer AS
+  RETURNS RECORD AS
 $BODY$
    DECLARE vbUserId Integer;
+   DECLARE vbRetailId Integer;
 BEGIN
    -- проверка прав пользователя на вызов процедуры
    vbUserId := lpCheckRight(inSession, zc_Enum_Process_Update_Object_Juridical_PrintKindItem());
 
+
+   vbRetailId := (SELECT OL_Juridical_Retail.ChildObjectId 
+              FROM ObjectLink AS OL_Juridical_Retail 
+              WHERE OL_Juridical_Retail.ObjectId = ioId 
+                AND OL_Juridical_Retail.DescId = zc_ObjectLink_Juridical_Retail());
+
+   IF  COALESCE (vbRetailId, 0) <> 0
+   THEN
+       RAISE EXCEPTION 'Ошибка. У юр.лица установлена сеть. Данные вводятся в справочнике <Торговая сеть (Элементы печати)>';
+   END IF; 
+
     -- сохранили <Объект>
-   ioId := lpInsertUpdate_Object_Juridical_PrintKindItem (ioId	      := ioId
-                                                     , inisMovement   := inisMovement
-                                                     , inisAccount    := inisAccount
-                                                     , inisTransport  := inisTransport
-                                                     , inisQuality    := inisQuality
-                                                     , inisPack       := inisPack
-                                                     , inisSpec       := inisSpec
-                                                     , inisTax        := inisTax
-                                                     , inCountMovement   := inCountMovement
-                                                     , inCountAccount    := inCountAccount
-                                                     , inCountTransport  := inCountTransport
-                                                     , inCountQuality    := inCountQuality
-                                                     , inCountPack       := inCountPack
-                                                     , inCountSpec       := inCountSpec
-                                                     , inCountTax        := inCountTax
-                                                     , inUserId       := vbUserId
+   ioId := lpInsertUpdate_Object_Juridical_PrintKindItem (ioId	         := ioId
+                                                     , inisMovement      := ioisMovement
+                                                     , inisAccount       := ioisAccount
+                                                     , inisTransport     := ioisTransport
+                                                     , inisQuality       := ioisQuality
+                                                     , inisPack          := ioisPack
+                                                     , inisSpec          := ioisSpec
+                                                     , inisTax           := ioisTax
+                                                     , inCountMovement   := ioCountMovement
+                                                     , inCountAccount    := ioCountAccount
+                                                     , inCountTransport  := ioCountTransport
+                                                     , inCountQuality    := ioCountQuality
+                                                     , inCountPack       := ioCountPack
+                                                     , inCountSpec       := ioCountSpec
+                                                     , inCountTax        := ioCountTax
+                                                     , inUserId          := vbUserId
                                                       );
+
+     -- возвращаем параметры
+     SELECT tmp.isMovement, tmp.isAccount, tmp.isTransport
+          , tmp.isQuality, tmp.isPack, tmp.isSpec, tmp.isTax
+          , tmp.CountMovement, tmp.CountAccount, tmp.CountTransport
+          , tmp.CountQuality, tmp.CountPack, tmp.CountSpec, tmp.CountTax
+    INTO ioisMovement, ioisAccount, ioisTransport, ioisQuality, ioisPack, ioisSpec, ioisTax
+       , ioCountMovement,ioCountAccount, ioCountTransport, ioCountQuality, ioCountPack, ioCountSpec, ioCountTax 
+    FROM ObjectLink
+       INNER JOIN lpSelect_Object_PrintKindItem() AS tmp ON tmp.Id = ObjectLink.ChildObjectId
+    WHERE ObjectLink.DescId = zc_ObjectLink_Juridical_PrintKindItem()
+    and ObjectLink.ObjectId = ioId;
 
    -- сохранили протокол
    PERFORM lpInsert_ObjectProtocol (ioId, vbUserId);

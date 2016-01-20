@@ -901,116 +901,116 @@ object Juridical_PrintKindItemForm: TJuridical_PrintKindItemForm
         ParamType = ptInputOutput
       end
       item
-        Name = 'inisMovement'
+        Name = 'ioisMovement'
         Value = Null
         Component = MasterCDS
         ComponentItem = 'isMovement'
         DataType = ftBoolean
-        ParamType = ptInput
+        ParamType = ptInputOutput
       end
       item
-        Name = 'inisAccount'
+        Name = 'ioisAccount'
         Value = Null
         Component = MasterCDS
         ComponentItem = 'isAccount'
         DataType = ftBoolean
-        ParamType = ptInput
+        ParamType = ptInputOutput
       end
       item
-        Name = 'inisTransport'
+        Name = 'ioisTransport'
         Value = Null
         Component = MasterCDS
         ComponentItem = 'isTransport'
         DataType = ftBoolean
-        ParamType = ptInput
+        ParamType = ptInputOutput
       end
       item
-        Name = 'inisQuality'
+        Name = 'ioisQuality'
         Value = Null
         Component = MasterCDS
         ComponentItem = 'isQuality'
         DataType = ftBoolean
-        ParamType = ptInput
+        ParamType = ptInputOutput
       end
       item
-        Name = 'inisPack'
+        Name = 'ioisPack'
         Value = Null
         Component = MasterCDS
         ComponentItem = 'isPack'
         DataType = ftBoolean
-        ParamType = ptInput
+        ParamType = ptInputOutput
       end
       item
-        Name = 'inisSpec'
+        Name = 'ioisSpec'
         Value = Null
         Component = MasterCDS
         ComponentItem = 'isSpec'
         DataType = ftBoolean
-        ParamType = ptInput
+        ParamType = ptInputOutput
       end
       item
-        Name = 'inisTax'
+        Name = 'ioisTax'
         Value = Null
         Component = MasterCDS
         ComponentItem = 'isTax'
         DataType = ftBoolean
-        ParamType = ptInput
+        ParamType = ptInputOutput
       end
       item
-        Name = 'inCountMovement'
+        Name = 'ioCountMovement'
         Value = Null
         Component = MasterCDS
         ComponentItem = 'CountMovement'
         DataType = ftFloat
-        ParamType = ptInput
+        ParamType = ptInputOutput
       end
       item
-        Name = 'inCountAccount'
+        Name = 'ioCountAccount'
         Value = Null
         Component = MasterCDS
         ComponentItem = 'CountAccount'
         DataType = ftFloat
-        ParamType = ptInput
+        ParamType = ptInputOutput
       end
       item
-        Name = 'inCountTransport'
+        Name = 'ioCountTransport'
         Value = Null
         Component = MasterCDS
         ComponentItem = 'CountTransport'
         DataType = ftFloat
-        ParamType = ptInput
+        ParamType = ptInputOutput
       end
       item
-        Name = 'inCountQuality'
+        Name = 'ioCountQuality'
         Value = Null
         Component = MasterCDS
         ComponentItem = 'CountQuality'
         DataType = ftFloat
-        ParamType = ptInput
+        ParamType = ptInputOutput
       end
       item
-        Name = 'inCountPack'
+        Name = 'ioCountPack'
         Value = Null
         Component = MasterCDS
         ComponentItem = 'CountPack'
         DataType = ftFloat
-        ParamType = ptInput
+        ParamType = ptInputOutput
       end
       item
-        Name = 'inCountSpec'
+        Name = 'ioCountSpec'
         Value = Null
         Component = MasterCDS
         ComponentItem = 'CountSpec'
         DataType = ftFloat
-        ParamType = ptInput
+        ParamType = ptInputOutput
       end
       item
-        Name = 'inCountTax'
+        Name = 'ioCountTax'
         Value = Null
         Component = MasterCDS
         ComponentItem = 'CountTax'
         DataType = ftFloat
-        ParamType = ptInput
+        ParamType = ptInputOutput
       end>
     PackSize = 1
     Left = 376
