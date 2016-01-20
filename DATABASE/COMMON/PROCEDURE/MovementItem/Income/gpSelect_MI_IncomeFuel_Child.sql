@@ -7,7 +7,7 @@ CREATE OR REPLACE FUNCTION gpSelect_MI_IncomeFuel_Child(
     IN inIsErased    Boolean      , -- 
     IN inSession     TVarChar       -- сессия пользователя
 )
-RETURNS TABLE (Id Integer, RouteMemberId Integer, RouteMemberCode TVarChar, RouteMemberName TBlob
+RETURNS TABLE (Id Integer, LineNum Integer, RouteMemberId Integer, RouteMemberCode TVarChar, RouteMemberName TBlob
              , OperDate TDateTime
              , Amount TFloat, StartOdometre TFloat, EndOdometre TFloat
              , Distance_calc TFloat
@@ -25,6 +25,7 @@ BEGIN
      RETURN QUERY 
        SELECT
              MovementItem.Id
+           , CASE WHEN MovementItem.Id <> 0 THEN CAST (row_number() OVER (ORDER BY MovementItem.Id) AS Integer) ELSE 0 END AS LineNum
            , Object_RouteMember.Id                      AS RouteMemberId
            , Object_RouteMember.ObjectCode ::TVarChar   AS RouteMemberCode
            , OB_RouteMember_Description.ValueData       AS RouteMemberName

@@ -23,6 +23,7 @@ $BODY$
    DECLARE vbUserId Integer;
    DECLARE vbRouteMemberId Integer;
    DECLARE vbIsInsert Boolean;
+   DECLARE vbDistance Tfloat;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MI_IncomeFuel());
@@ -57,6 +58,24 @@ BEGIN
 
      -- рассчитываем пробег, км 
      outDistance_calc:= inEndOdometre - inStartOdometre;
+
+     -- рассчитываем и записываем, пробег факт ,км
+     SELECT SUM(MIFloat_EndOdometre.ValueData - MIFloat_StartOdometre.ValueData) 
+     Into vbDistance
+     FROM MovementItem 
+            LEFT JOIN MovementItemFloat AS MIFloat_StartOdometre
+                                        ON MIFloat_StartOdometre.MovementItemId = MovementItem.Id
+                                       AND MIFloat_StartOdometre.DescId = zc_MIFloat_StartOdometre()
+            LEFT JOIN MovementItemFloat AS MIFloat_EndOdometre
+                                        ON MIFloat_EndOdometre.MovementItemId = MovementItem.Id
+                                       AND MIFloat_EndOdometre.DescId = zc_MIFloat_EndOdometre()
+     WHERE MovementItem.MovementId = inMovementId
+                             AND MovementItem.DescId     = zc_MI_Child()
+                             AND MovementItem.isErased   = False;
+     --
+     PERFORM lpInsertUpdate_MovemenTFloat (zc_MovemenTFloat_Distance(), inMovementId, vbDistance);
+
+
    
      -- рассчитываем нач. и кон. показания спидометра, пробег,км
      SELECT MIN (MIFloat_StartOdometre.ValueData), MAX(MIFloat_EndOdometre.ValueData)
