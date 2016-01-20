@@ -2,7 +2,7 @@ object IncomeFuelForm: TIncomeFuelForm
   Left = 0
   Top = 0
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1055#1088#1080#1093#1086#1076' '#1086#1090' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072' ('#1047#1072#1087#1088#1072#1074#1082#1072' '#1072#1074#1090#1086')>'
-  ClientHeight = 502
+  ClientHeight = 597
   ClientWidth = 879
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -263,24 +263,27 @@ object IncomeFuelForm: TIncomeFuelForm
     Left = 0
     Top = 159
     Width = 879
-    Height = 343
+    Height = 438
     Align = alClient
     TabOrder = 2
     Properties.ActivePage = cxTabSheetMain
     Properties.CustomButtons.Buttons = <>
-    ClientRectBottom = 343
+    ExplicitHeight = 343
+    ClientRectBottom = 438
     ClientRectRight = 879
     ClientRectTop = 24
     object cxTabSheetMain: TcxTabSheet
       Caption = #1057#1090#1088#1086#1095#1085#1072#1103' '#1095#1072#1089#1090#1100
       ImageIndex = 0
+      ExplicitHeight = 319
       object cxGridChild: TcxGrid
         Left = 0
-        Top = 160
+        Top = 163
         Width = 879
-        Height = 159
+        Height = 251
         Align = alBottom
         TabOrder = 0
+        ExplicitTop = 176
         object cxGridDBTableViewChild: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = ChildDS
@@ -325,27 +328,47 @@ object IncomeFuelForm: TIncomeFuelForm
           OptionsView.HeaderAutoHeight = True
           OptionsView.Indicator = True
           Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
+          object colLineNum: TcxGridDBColumn
+            Caption = #8470' '#1087'/'#1087
+            DataBinding.FieldName = 'LineNum'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 0
+            Properties.DisplayFormat = '0.;-0.; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 50
+          end
+          object clDayOfWeekName: TcxGridDBColumn
+            Caption = #1044#1077#1085#1100' '#1085#1077#1076#1077#1083#1080
+            DataBinding.FieldName = 'DayOfWeekName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 63
+          end
           object clOperDate: TcxGridDBColumn
             Caption = #1044#1072#1090#1072
             DataBinding.FieldName = 'OperDate'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 81
+            Width = 71
           end
           object clRouteMemberCode: TcxGridDBColumn
             Caption = #1050#1086#1076
             DataBinding.FieldName = 'RouteMemberCode'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 87
+            Width = 49
           end
           object clRouteMemberName: TcxGridDBColumn
             Caption = #1052#1072#1088#1096#1088#1091#1090' ('#1089#1086#1090#1088#1091#1076#1085#1080#1082#1086#1074')'
             DataBinding.FieldName = 'RouteMemberName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 229
+            Width = 208
           end
           object clStartOdometre: TcxGridDBColumn
             Caption = #1057#1087#1080#1076#1086#1084#1077#1090#1088' '#1085#1072#1095'. '#1087#1086#1082#1072#1079#1072#1085#1080#1077', '#1082#1084
@@ -355,7 +378,7 @@ object IncomeFuelForm: TIncomeFuelForm
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 142
+            Width = 129
           end
           object clEndOdometre: TcxGridDBColumn
             Caption = #1057#1087#1080#1076#1086#1084#1077#1090#1088' '#1082#1086#1085#1077#1095'. '#1087#1086#1082#1072#1079#1072#1085#1080#1077', '#1082#1084
@@ -365,7 +388,7 @@ object IncomeFuelForm: TIncomeFuelForm
             Properties.DisplayFormat = '0;;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 141
+            Width = 128
           end
           object clDistance_calc: TcxGridDBColumn
             Caption = #1055#1088#1086#1073#1077#1075' '#1092#1072#1082#1090', '#1082#1084
@@ -376,7 +399,7 @@ object IncomeFuelForm: TIncomeFuelForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 67
+            Width = 61
           end
           object clAmount: TcxGridDBColumn
             Caption = #1047#1072#1087#1088#1072#1074#1082#1072', '#1083
@@ -386,7 +409,7 @@ object IncomeFuelForm: TIncomeFuelForm
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 118
+            Width = 106
           end
         end
         object cxGridLevelChild: TcxGridLevel
@@ -395,20 +418,21 @@ object IncomeFuelForm: TIncomeFuelForm
       end
       object cxSplitterChild: TcxSplitter
         Left = 0
-        Top = 152
+        Top = 155
         Width = 879
         Height = 8
         AlignSplitter = salBottom
         Control = cxGridChild
+        ExplicitTop = 152
       end
       object cxGrid: TcxGrid
         Left = 0
         Top = 0
         Width = 879
-        Height = 152
+        Height = 155
         Align = alClient
         TabOrder = 2
-        ExplicitHeight = 154
+        ExplicitHeight = 152
         object cxGridDBTableView: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = MasterDS
@@ -1727,6 +1751,12 @@ object IncomeFuelForm: TIncomeFuelForm
       end
       item
         Control = edLimitDistanceChange
+      end
+      item
+        Control = edEndOdometre
+      end
+      item
+        Control = edStartOdometre
       end>
     GetStoredProc = spGet
     Left = 296
@@ -2343,8 +2373,8 @@ object IncomeFuelForm: TIncomeFuelForm
         DataType = ftBoolean
       end>
     PackSize = 1
-    Left = 390
-    Top = 428
+    Left = 342
+    Top = 404
   end
   object spUnErasedMIChild: TdsdStoredProc
     StoredProcName = 'gpSetUnErased_MovementItem'
@@ -2366,7 +2396,7 @@ object IncomeFuelForm: TIncomeFuelForm
         DataType = ftBoolean
       end>
     PackSize = 1
-    Left = 470
-    Top = 436
+    Left = 494
+    Top = 388
   end
 end

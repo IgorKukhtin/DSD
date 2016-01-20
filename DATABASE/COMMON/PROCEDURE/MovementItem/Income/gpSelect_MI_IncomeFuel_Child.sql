@@ -8,7 +8,7 @@ CREATE OR REPLACE FUNCTION gpSelect_MI_IncomeFuel_Child(
     IN inSession     TVarChar       -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, LineNum Integer, RouteMemberId Integer, RouteMemberCode TVarChar, RouteMemberName TBlob
-             , OperDate TDateTime
+             , OperDate TDateTime, DayOfWeekName TVarChar
              , Amount TFloat, StartOdometre TFloat, EndOdometre TFloat
              , Distance_calc TFloat
              , isErased Boolean
@@ -30,6 +30,7 @@ BEGIN
            , Object_RouteMember.ObjectCode ::TVarChar   AS RouteMemberCode
            , OB_RouteMember_Description.ValueData       AS RouteMemberName
            , MIDate_OperDate.ValueData                  AS OperDate
+           , zfCalc_DayOfWeekName(MIDate_OperDate.ValueData) AS DayOfWeekName
            , MovementItem.Amount
            , MIFloat_StartOdometre.ValueData    AS StartOdometre
            , MIFloat_EndOdometre.ValueData      AS EndOdometre

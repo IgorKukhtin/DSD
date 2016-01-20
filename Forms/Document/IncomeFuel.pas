@@ -165,6 +165,7 @@ type
     bbSetUnErasedChild: TdxBarButton;
     actUpdateChildDS: TdsdUpdateDataSet;
     clRouteMemberName: TcxGridDBColumn;
+    clDayOfWeekName: TcxGridDBColumn;
   private
   public
   end;
