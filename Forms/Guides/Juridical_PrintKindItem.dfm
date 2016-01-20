@@ -265,9 +265,31 @@ object Juridical_PrintKindItemForm: TJuridical_PrintKindItemForm
         HeaderAlignmentVert = vaCenter
         Width = 70
       end
+      object CountMovement: TcxGridDBColumn
+        Caption = #1053#1072#1082#1083#1072#1076#1085#1072#1103' '#1082#1086#1083'. '#1082#1086#1087#1080#1081
+        DataBinding.FieldName = 'CountMovement'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.AssignedValues.EditFormat = True
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.;-,0.; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 70
+      end
       object isAccount: TcxGridDBColumn
         Caption = #1057#1095#1077#1090
         DataBinding.FieldName = 'isAccount'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 70
+      end
+      object CountAccount: TcxGridDBColumn
+        Caption = #1057#1095#1077#1090' '#1082#1086#1083'. '#1082#1086#1087#1080#1081
+        DataBinding.FieldName = 'CountAccount'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.AssignedValues.EditFormat = True
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.;-,0.; ;'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 70
@@ -279,9 +301,31 @@ object Juridical_PrintKindItemForm: TJuridical_PrintKindItemForm
         HeaderAlignmentVert = vaCenter
         Width = 70
       end
+      object CountTransport: TcxGridDBColumn
+        Caption = #1058#1058#1053' '#1082#1086#1083'. '#1082#1086#1087#1080#1081
+        DataBinding.FieldName = 'CountTransport'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.AssignedValues.EditFormat = True
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.;-,0.; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 70
+      end
       object isQuality: TcxGridDBColumn
         Caption = #1050#1072#1095#1077#1089#1090#1074#1077#1085#1085#1086#1077
         DataBinding.FieldName = 'isQuality'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 70
+      end
+      object CountQuality: TcxGridDBColumn
+        Caption = #1050#1072#1095#1077#1089#1090#1074#1077#1085#1085#1086#1077' '#1082#1086#1083'. '#1082#1086#1087#1080#1081
+        DataBinding.FieldName = 'CountQuality'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.AssignedValues.EditFormat = True
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.;-,0.; ;'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 70
@@ -293,6 +337,17 @@ object Juridical_PrintKindItemForm: TJuridical_PrintKindItemForm
         HeaderAlignmentVert = vaCenter
         Width = 70
       end
+      object CountPack: TcxGridDBColumn
+        Caption = #1059#1087#1072#1082#1086#1074#1086#1095#1085#1099#1081' '#1082#1086#1083'. '#1082#1086#1087#1080#1081
+        DataBinding.FieldName = 'CountPack'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.AssignedValues.EditFormat = True
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.;-,0.; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 70
+      end
       object isSpec: TcxGridDBColumn
         Caption = #1057#1087#1077#1094#1080#1092#1080#1082#1072#1094#1080#1103
         DataBinding.FieldName = 'isSpec'
@@ -300,9 +355,31 @@ object Juridical_PrintKindItemForm: TJuridical_PrintKindItemForm
         HeaderAlignmentVert = vaCenter
         Width = 70
       end
+      object CountSpec: TcxGridDBColumn
+        Caption = #1057#1087#1077#1094#1080#1092#1080#1082#1072#1094#1080#1103' '#1082#1086#1083'. '#1082#1086#1087#1080#1081
+        DataBinding.FieldName = 'CountSpec'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.AssignedValues.EditFormat = True
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.;-,0.; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 70
+      end
       object isTax: TcxGridDBColumn
         Caption = #1053#1072#1083#1086#1075#1086#1074#1072#1103
         DataBinding.FieldName = 'isTax'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 70
+      end
+      object CountTax: TcxGridDBColumn
+        Caption = #1053#1072#1083#1086#1075#1086#1074#1072#1103' '#1082#1086#1083'. '#1082#1086#1087#1080#1081
+        DataBinding.FieldName = 'CountTax'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.AssignedValues.EditFormat = True
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.;-,0.; ;'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 70
@@ -877,6 +954,62 @@ object Juridical_PrintKindItemForm: TJuridical_PrintKindItemForm
         Component = MasterCDS
         ComponentItem = 'isTax'
         DataType = ftBoolean
+        ParamType = ptInput
+      end
+      item
+        Name = 'inCountMovement'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'CountMovement'
+        DataType = ftFloat
+        ParamType = ptInput
+      end
+      item
+        Name = 'inCountAccount'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'CountAccount'
+        DataType = ftFloat
+        ParamType = ptInput
+      end
+      item
+        Name = 'inCountTransport'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'CountTransport'
+        DataType = ftFloat
+        ParamType = ptInput
+      end
+      item
+        Name = 'inCountQuality'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'CountQuality'
+        DataType = ftFloat
+        ParamType = ptInput
+      end
+      item
+        Name = 'inCountPack'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'CountPack'
+        DataType = ftFloat
+        ParamType = ptInput
+      end
+      item
+        Name = 'inCountSpec'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'CountSpec'
+        DataType = ftFloat
+        ParamType = ptInput
+      end
+      item
+        Name = 'inCountTax'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'CountTax'
+        DataType = ftFloat
         ParamType = ptInput
       end>
     PackSize = 1

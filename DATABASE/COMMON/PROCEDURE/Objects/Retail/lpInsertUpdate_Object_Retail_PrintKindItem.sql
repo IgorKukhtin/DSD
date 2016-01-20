@@ -1,6 +1,7 @@
 -- Function: lpInsertUpdate_Object_Retail_PrintKindItem()
 
 DROP FUNCTION IF EXISTS lpInsertUpdate_Object_Retail_PrintKindItem(Integer, Boolean, boolean, boolean, boolean, boolean, boolean, boolean, Integer);
+DROP FUNCTION IF EXISTS lpInsertUpdate_Object_Retail_PrintKindItem(Integer, Boolean, boolean, boolean, boolean, boolean, boolean, boolean, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, Integer);
 
 CREATE OR REPLACE FUNCTION lpInsertUpdate_Object_Retail_PrintKindItem(
  INOUT ioId                  Integer   ,     -- ключ объекта <Торговая сеть> 
@@ -11,6 +12,13 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_Object_Retail_PrintKindItem(
     IN inisPack              boolean   , 
     IN inisSpec              boolean   , 
     IN inisTax               boolean   ,
+    IN inCountMovement       TFloat    , 
+    IN inCountAccount        TFloat    ,
+    IN inCountTransport      TFloat    , 
+    IN inCountQuality        TFloat    , 
+    IN inCountPack           TFloat    , 
+    IN inCountSpec           TFloat    , 
+    IN inCountTax            TFloat    ,
     IN inUserId              Integer       -- сессия пользователя
 )
   RETURNS integer AS
@@ -18,7 +26,7 @@ $BODY$
    DECLARE vbId_calc Integer;   
 BEGIN
    
-   vbId_calc := lpInsertFind_Object_PrintKindItem(inisMovement, inisAccount, inisTransport, inisQuality, inisPack, inisSpec, inisTax );
+   vbId_calc := lpInsertFind_Object_PrintKindItem(inisMovement, inisAccount, inisTransport, inisQuality, inisPack, inisSpec, inisTax , inCountMovement, inCountAccount, inCountTransport, inCountQuality, inCountPack, inCountSpec, inCountTax);
    
    -- сохранили св-во <>
    PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Retail_PrintKindItem(), ioId, vbId_calc);
@@ -34,6 +42,7 @@ END;$BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 19.01.16         * 
  21.05.15         * 
 */
 

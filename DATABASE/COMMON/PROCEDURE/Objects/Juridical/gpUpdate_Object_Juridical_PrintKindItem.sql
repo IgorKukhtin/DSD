@@ -1,6 +1,8 @@
 -- Function: gpUpdate_Object_Juridical_PrintKindItem()
 
 DROP FUNCTION IF EXISTS gpUpdate_Object_Juridical_PrintKindItem (Integer, Boolean, boolean, boolean, boolean, boolean, boolean, boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpUpdate_Object_Juridical_PrintKindItem (Integer, Boolean, boolean, boolean, boolean, boolean, boolean, boolean, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TVarChar);
+
 
 CREATE OR REPLACE FUNCTION gpUpdate_Object_Juridical_PrintKindItem(
  INOUT ioId                  Integer   ,  -- ключ объекта <Торговая сеть> 
@@ -11,6 +13,13 @@ CREATE OR REPLACE FUNCTION gpUpdate_Object_Juridical_PrintKindItem(
     IN inisPack              boolean   , 
     IN inisSpec              boolean   , 
     IN inisTax               boolean   ,
+    IN inCountMovement       TFloat    , 
+    IN inCountAccount        TFloat    ,
+    IN inCountTransport      TFloat    , 
+    IN inCountQuality        TFloat    , 
+    IN inCountPack           TFloat    , 
+    IN inCountSpec           TFloat    , 
+    IN inCountTax            TFloat    ,
     IN inSession             TVarChar     -- сессия пользователя
 )
   RETURNS Integer AS
@@ -29,6 +38,13 @@ BEGIN
                                                      , inisPack       := inisPack
                                                      , inisSpec       := inisSpec
                                                      , inisTax        := inisTax
+                                                     , inCountMovement   := inCountMovement
+                                                     , inCountAccount    := inCountAccount
+                                                     , inCountTransport  := inCountTransport
+                                                     , inCountQuality    := inCountQuality
+                                                     , inCountPack       := inCountPack
+                                                     , inCountSpec       := inCountSpec
+                                                     , inCountTax        := inCountTax
                                                      , inUserId       := vbUserId
                                                       );
 
@@ -43,6 +59,7 @@ END;$BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 19.01.16
  21.05.15         *
 */
 
