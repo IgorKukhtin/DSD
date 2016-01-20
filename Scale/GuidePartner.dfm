@@ -181,7 +181,7 @@ object GuidePartnerForm: TGuidePartnerForm
           DataBinding.FieldName = 'ChangePercent'
           PropertiesClassName = 'TcxCurrencyEditProperties'
           Properties.DecimalPlaces = 4
-          Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+          Properties.DisplayFormat = ',0.####;-,0.####; ;'
           HeaderAlignmentHorz = taCenter
           HeaderAlignmentVert = vaCenter
           Width = 45
@@ -191,7 +191,7 @@ object GuidePartnerForm: TGuidePartnerForm
           DataBinding.FieldName = 'ChangePercentAmount'
           PropertiesClassName = 'TcxCurrencyEditProperties'
           Properties.DecimalPlaces = 4
-          Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+          Properties.DisplayFormat = ',0.####;-,0.####; ;'
           HeaderAlignmentHorz = taCenter
           HeaderAlignmentVert = vaCenter
           Width = 45
@@ -215,6 +215,7 @@ object GuidePartnerForm: TGuidePartnerForm
           DataBinding.FieldName = 'isMovement'
           HeaderAlignmentHorz = taCenter
           HeaderAlignmentVert = vaCenter
+          Options.Editing = False
           Width = 40
         end
         object CountMovement: TcxGridDBColumn
@@ -222,8 +223,7 @@ object GuidePartnerForm: TGuidePartnerForm
           DataBinding.FieldName = 'CountMovement'
           PropertiesClassName = 'TcxCurrencyEditProperties'
           Properties.DecimalPlaces = 4
-          Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
-          Visible = False
+          Properties.DisplayFormat = ',0.####;-,0.####; ;'
           HeaderAlignmentHorz = taCenter
           HeaderAlignmentVert = vaCenter
           Width = 40
@@ -233,6 +233,7 @@ object GuidePartnerForm: TGuidePartnerForm
           DataBinding.FieldName = 'isTax'
           HeaderAlignmentHorz = taCenter
           HeaderAlignmentVert = vaCenter
+          Options.Editing = False
           Width = 40
         end
         object CountTax: TcxGridDBColumn
@@ -240,7 +241,7 @@ object GuidePartnerForm: TGuidePartnerForm
           DataBinding.FieldName = 'CountTax'
           PropertiesClassName = 'TcxCurrencyEditProperties'
           Properties.DecimalPlaces = 4
-          Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+          Properties.DisplayFormat = ',0.####;-,0.####; ;'
           Visible = False
           Width = 40
         end
@@ -249,6 +250,7 @@ object GuidePartnerForm: TGuidePartnerForm
           DataBinding.FieldName = 'isTransport'
           HeaderAlignmentHorz = taCenter
           HeaderAlignmentVert = vaCenter
+          Options.Editing = False
           Width = 40
         end
         object CountTransport: TcxGridDBColumn
@@ -256,7 +258,7 @@ object GuidePartnerForm: TGuidePartnerForm
           DataBinding.FieldName = 'CountTransport'
           PropertiesClassName = 'TcxCurrencyEditProperties'
           Properties.DecimalPlaces = 4
-          Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+          Properties.DisplayFormat = ',0.####;-,0.####; ;'
           Visible = False
           HeaderAlignmentHorz = taCenter
           HeaderAlignmentVert = vaCenter
@@ -267,6 +269,7 @@ object GuidePartnerForm: TGuidePartnerForm
           DataBinding.FieldName = 'isQuality'
           HeaderAlignmentHorz = taCenter
           HeaderAlignmentVert = vaCenter
+          Options.Editing = False
           Width = 40
         end
         object CountQuality: TcxGridDBColumn
@@ -274,7 +277,7 @@ object GuidePartnerForm: TGuidePartnerForm
           DataBinding.FieldName = 'CountQuality'
           PropertiesClassName = 'TcxCurrencyEditProperties'
           Properties.DecimalPlaces = 4
-          Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+          Properties.DisplayFormat = ',0.####;-,0.####; ;'
           Visible = False
           HeaderAlignmentHorz = taCenter
           HeaderAlignmentVert = vaCenter
@@ -285,6 +288,7 @@ object GuidePartnerForm: TGuidePartnerForm
           DataBinding.FieldName = 'isPack'
           HeaderAlignmentHorz = taCenter
           HeaderAlignmentVert = vaCenter
+          Options.Editing = False
           Width = 40
         end
         object CountPack: TcxGridDBColumn
@@ -292,7 +296,7 @@ object GuidePartnerForm: TGuidePartnerForm
           DataBinding.FieldName = 'CountPack'
           PropertiesClassName = 'TcxCurrencyEditProperties'
           Properties.DecimalPlaces = 4
-          Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+          Properties.DisplayFormat = ',0.####;-,0.####; ;'
           Visible = False
           HeaderAlignmentHorz = taCenter
           HeaderAlignmentVert = vaCenter
@@ -303,6 +307,7 @@ object GuidePartnerForm: TGuidePartnerForm
           DataBinding.FieldName = 'isSpec'
           HeaderAlignmentHorz = taCenter
           HeaderAlignmentVert = vaCenter
+          Options.Editing = False
           Width = 40
         end
         object CountSpec: TcxGridDBColumn
@@ -310,7 +315,7 @@ object GuidePartnerForm: TGuidePartnerForm
           DataBinding.FieldName = 'CountSpec'
           PropertiesClassName = 'TcxCurrencyEditProperties'
           Properties.DecimalPlaces = 4
-          Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+          Properties.DisplayFormat = ',0.####;-,0.####; ;'
           Visible = False
           HeaderAlignmentHorz = taCenter
           HeaderAlignmentVert = vaCenter
@@ -321,6 +326,7 @@ object GuidePartnerForm: TGuidePartnerForm
           DataBinding.FieldName = 'isAccount'
           HeaderAlignmentHorz = taCenter
           HeaderAlignmentVert = vaCenter
+          Options.Editing = False
           Width = 40
         end
         object CountAccount: TcxGridDBColumn
@@ -328,7 +334,7 @@ object GuidePartnerForm: TGuidePartnerForm
           DataBinding.FieldName = 'CountAccount'
           PropertiesClassName = 'TcxCurrencyEditProperties'
           Properties.DecimalPlaces = 4
-          Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+          Properties.DisplayFormat = ',0.####;-,0.####; ;'
           Visible = False
           HeaderAlignmentHorz = taCenter
           HeaderAlignmentVert = vaCenter

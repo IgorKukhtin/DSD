@@ -183,7 +183,7 @@ BEGIN
             , COALESCE (ObjectBoolean_Partner_EdiDesadv.ValueData,  FALSE) :: Boolean AS isEdiDesadv
 
             , CASE WHEN tmpJuridicalPrint.isPack = TRUE OR tmpJuridicalPrint.isSpec = TRUE THEN COALESCE (tmpJuridicalPrint.isMovement, FALSE) ELSE TRUE END :: Boolean AS isMovement
-            , COALESCE (tmpJuridicalPrint.CountMovement, 0) :: TFloat AS CountMovement
+            , CASE WHEN tmpJuridicalPrint.CountMovement > 0 THEN tmpJuridicalPrint.CountMovement ELSE 2 END :: TFloat AS CountMovement
             , COALESCE (tmpJuridicalPrint.isAccount,   FALSE) :: Boolean AS isAccount,   COALESCE (tmpJuridicalPrint.CountAccount, 0)   :: TFloat AS CountAccount
             , COALESCE (tmpJuridicalPrint.isTransport, FALSE) :: Boolean AS isTransport, COALESCE (tmpJuridicalPrint.CountTransport, 0) :: TFloat AS CountTransport
             , COALESCE (tmpJuridicalPrint.isQuality,   FALSE) :: Boolean AS isQuality  , COALESCE (tmpJuridicalPrint.CountQuality, 0)   :: TFloat AS CountQuality

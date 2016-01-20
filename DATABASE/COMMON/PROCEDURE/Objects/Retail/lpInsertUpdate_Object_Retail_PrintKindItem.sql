@@ -25,7 +25,16 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_Object_Retail_PrintKindItem(
 $BODY$
    DECLARE vbId_calc Integer;   
 BEGIN
+   -- !!!замена!!!
+   IF inCountMovement  > 0 THEN inIsMovement:= TRUE;  ELSE inIsMovement:= FALSE; END IF;
+   IF inCountAccount   > 0 THEN inIsAccount:= TRUE;   ELSE inIsAccount:= FALSE; END IF;
+   IF inCountTransport > 0 THEN inIsTransport:= TRUE; ELSE inIsTransport:= FALSE; END IF; 
+   IF inCountQuality   > 0 THEN inIsQuality:= TRUE;   ELSE inIsQuality:= FALSE; END IF;
+   IF inCountPack      > 0 THEN inIsPack:= TRUE;      ELSE inIsPack:= FALSE; END IF;
+   IF inCountSpec      > 0 THEN inIsSpec:= TRUE;      ELSE inIsSpec:= FALSE; END IF;
+   IF inCountTax       > 0 THEN inIsTax:= TRUE;       ELSE inIsTax:= FALSE; END IF;
    
+   -- !!!поиск или создание!!!
    vbId_calc := lpInsertFind_Object_PrintKindItem(inisMovement, inisAccount, inisTransport, inisQuality, inisPack, inisSpec, inisTax , inCountMovement, inCountAccount, inCountTransport, inCountQuality, inCountPack, inCountSpec, inCountTax);
    
    -- сохранили св-во <>
