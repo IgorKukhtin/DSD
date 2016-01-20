@@ -1,10 +1,12 @@
 -- Function: gpSelect_MovementItem_SheetWorkTime()
 
 DROP FUNCTION IF EXISTS gpSelect_MovementItem_SheetWorkTime(TDateTime, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_MovementItem_SheetWorkTime(TDateTime, Integer, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_MovementItem_SheetWorkTime(
     IN inDate        TDateTime , --
     IN inUnitId      Integer   , --
+    IN inisErased    Boolean   , --
     IN inSession     TVarChar    -- сессия пользователя
 )
   RETURNS SETOF refcursor 
@@ -148,12 +150,13 @@ BEGIN
 END;
 $BODY$
   LANGUAGE PLPGSQL VOLATILE;
-ALTER FUNCTION gpSelect_MovementItem_SheetWorkTime (TDateTime, Integer, TVarChar) OWNER TO postgres;
+ALTER FUNCTION gpSelect_MovementItem_SheetWorkTime (TDateTime, Integer, Boolean, TVarChar) OWNER TO postgres;
 
 
 /*   
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 20.01.16         * 
  07.01.14                         * Replace inPersonalId <> inMemberId
  30.11.13                                        * add isErased = FALSE
  30.11.13                                        * parse
