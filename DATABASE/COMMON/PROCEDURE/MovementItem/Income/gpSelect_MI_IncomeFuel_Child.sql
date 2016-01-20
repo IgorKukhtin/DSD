@@ -25,7 +25,7 @@ BEGIN
      RETURN QUERY 
        SELECT
              MovementItem.Id
-           , CASE WHEN MovementItem.Id <> 0 THEN CAST (row_number() OVER (ORDER BY MovementItem.Id) AS Integer) ELSE 0 END AS LineNum
+           , CASE WHEN MovementItem.Id <> 0 THEN CAST (row_number() OVER (ORDER BY MIDate_OperDate.ValueData) AS Integer) ELSE 0 END AS LineNum
            , Object_RouteMember.Id                      AS RouteMemberId
            , Object_RouteMember.ObjectCode ::TVarChar   AS RouteMemberCode
            , OB_RouteMember_Description.ValueData       AS RouteMemberName

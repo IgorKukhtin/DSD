@@ -45,7 +45,6 @@ BEGIN
      END IF;
 
      -- сохранили <Элемент документа>
-     --ioId := lpInsertUpdate_MovementItem (ioId, zc_MI_Child(), inFuelId, inMovementId, ioAmount, inParentId);
      ioId := lpInsertUpdate_MovementItem (ioId, zc_MI_Child(), vbRouteMemberId, inMovementId, inAmount, NULL);
    
      -- сохранили свойство <>
