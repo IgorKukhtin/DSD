@@ -313,6 +313,10 @@ BEGIN
      PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_ContractConditionKind_TransportPoint()    , inDescId:= zc_Object_ContractConditionKind(), inCode:= 110, inName:= 'Ставка за точку, грн'   , inEnumName:= 'zc_Enum_ContractConditionKind_TransportPoint');
      PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_ContractConditionKind_TransportWeight()   , inDescId:= zc_Object_ContractConditionKind(), inCode:= 111, inName:= 'Ставка за вывоз, грн/кг'   , inEnumName:= 'zc_Enum_ContractConditionKind_TransportWeight');
 
+     -- !!! Типы пролонгаций договоров
+     PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_ContractTermKind_Long(), inDescId:= zc_Object_ContractTermKind(), inCode:= 1, inName:= 'Бессрочный' , inEnumName:= 'zc_Enum_ContractTermKind_Long');
+     PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_ContractTermKind_Month(), inDescId:= zc_Object_ContractTermKind(), inCode:= 2, inName:= 'На период в месяцах' , inEnumName:= 'zc_Enum_ContractTermKind_Month');
+   
 
      -- !!! Типы рецептур
      PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_ReceiptKind_Complete(),  inDescId:= zc_Object_ReceiptKind(), inCode:= 1, inName:= 'Смешивание', inEnumName:= 'zc_Enum_ReceiptKind_Complete');
