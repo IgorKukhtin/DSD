@@ -325,12 +325,31 @@ object IncomeFuelForm: TIncomeFuelForm
           OptionsView.HeaderAutoHeight = True
           OptionsView.Indicator = True
           Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
+          object colLineNum: TcxGridDBColumn
+            Caption = #8470' '#1087'/'#1087
+            DataBinding.FieldName = 'LineNum'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 0
+            Properties.DisplayFormat = '0.;-0.; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 50
+          end
+          object clDayOfWeekName: TcxGridDBColumn
+            Caption = #1044#1077#1085#1100' '#1085#1077#1076#1077#1083#1080
+            DataBinding.FieldName = 'DayOfWeekName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 63
+          end
           object clOperDate: TcxGridDBColumn
             Caption = #1044#1072#1090#1072
             DataBinding.FieldName = 'OperDate'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 81
+            Width = 71
           end
           object clRouteMemberCode: TcxGridDBColumn
             Caption = #1050#1086#1076
@@ -338,14 +357,14 @@ object IncomeFuelForm: TIncomeFuelForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 87
+            Width = 75
           end
           object clRouteMemberName: TcxGridDBColumn
             Caption = #1052#1072#1088#1096#1088#1091#1090' ('#1089#1086#1090#1088#1091#1076#1085#1080#1082#1086#1074')'
             DataBinding.FieldName = 'RouteMemberName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 229
+            Width = 199
           end
           object clStartOdometre: TcxGridDBColumn
             Caption = #1057#1087#1080#1076#1086#1084#1077#1090#1088' '#1085#1072#1095'. '#1087#1086#1082#1072#1079#1072#1085#1080#1077', '#1082#1084
@@ -355,7 +374,7 @@ object IncomeFuelForm: TIncomeFuelForm
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 142
+            Width = 124
           end
           object clEndOdometre: TcxGridDBColumn
             Caption = #1057#1087#1080#1076#1086#1084#1077#1090#1088' '#1082#1086#1085#1077#1095'. '#1087#1086#1082#1072#1079#1072#1085#1080#1077', '#1082#1084
@@ -365,7 +384,7 @@ object IncomeFuelForm: TIncomeFuelForm
             Properties.DisplayFormat = '0;;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 141
+            Width = 123
           end
           object clDistance_calc: TcxGridDBColumn
             Caption = #1055#1088#1086#1073#1077#1075' '#1092#1072#1082#1090', '#1082#1084
@@ -376,7 +395,7 @@ object IncomeFuelForm: TIncomeFuelForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 67
+            Width = 58
           end
           object clAmount: TcxGridDBColumn
             Caption = #1047#1072#1087#1088#1072#1074#1082#1072', '#1083
@@ -386,7 +405,7 @@ object IncomeFuelForm: TIncomeFuelForm
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 118
+            Width = 102
           end
         end
         object cxGridLevelChild: TcxGridLevel
@@ -408,7 +427,6 @@ object IncomeFuelForm: TIncomeFuelForm
         Height = 152
         Align = alClient
         TabOrder = 2
-        ExplicitHeight = 154
         object cxGridDBTableView: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = MasterDS
