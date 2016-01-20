@@ -16,7 +16,7 @@ RETURNS TABLE (Id Integer, Code Integer
              , InvNumber_Key TVarChar, ContractStateKindCode_Key Integer
 
              , Comment TVarChar, BankAccountExternal TVarChar, GLNCode TVarChar
-             , Term TFloat
+             , Term TFloat, EndDate_Term TDateTime
              , SigningDate TDateTime, StartDate TDateTime, EndDate TDateTime
                          
              , ContractKindId Integer, ContractKindName TVarChar
@@ -54,8 +54,8 @@ RETURNS TABLE (Id Integer, Code Integer
              , DocumentCount TFloat, DateDocument TDateTime
 
              , PriceListId Integer, PriceListName TVarChar
-             , PriceListPromoId Integer, PriceListPromoName TVarChar
-             , StartPromo TDateTime, EndPromo TDateTime
+             -- , PriceListPromoId Integer, PriceListPromoName TVarChar
+             -- , StartPromo TDateTime, EndPromo TDateTime
              
              , isErased Boolean 
               )
@@ -128,7 +128,8 @@ BEGIN
        , ObjectString_Comment.ValueData            AS Comment 
        , ObjectString_BankAccount.ValueData        AS BankAccountExternal
        , ObjectString_GLNCode.ValueData            AS GLNCode 
-       , ObjectFloat_Term.ValueData                AS Term
+       , Object_Contract_View.Term
+       , CASE WHEN Object_Contract_View.ContractTermKindId > 0 THEN Object_Contract_View.EndDate_Term ELSE NULL END ::TDateTime AS EndDate_Term
 
        , ObjectDate_Signing.ValueData AS SigningDate
        , Object_Contract_View.StartDate
@@ -216,11 +217,11 @@ BEGIN
        , Object_PriceList.Id         AS PriceListId 
        , Object_PriceList.ValueData  AS PriceListName 
 
-       , Object_PriceListPromo.Id         AS PriceListPromoId 
-       , Object_PriceListPromo.ValueData  AS PriceListPromoName 
+       -- , Object_PriceListPromo.Id         AS PriceListPromoId 
+       -- , Object_PriceListPromo.ValueData  AS PriceListPromoName 
        
-       , COALESCE (ObjectDate_StartPromo.ValueData,CAST (CURRENT_DATE as TDateTime)) AS StartPromo
-       , COALESCE (ObjectDate_EndPromo.ValueData,CAST (CURRENT_DATE as TDateTime))   AS EndPromo        
+       -- , COALESCE (ObjectDate_StartPromo.ValueData,CAST (CURRENT_DATE as TDateTime)) AS StartPromo
+       -- , COALESCE (ObjectDate_EndPromo.ValueData,CAST (CURRENT_DATE as TDateTime))   AS EndPromo        
 
        , Object_Contract_View.isErased
        
@@ -258,10 +259,6 @@ BEGIN
         LEFT JOIN ObjectString AS ObjectString_GLNCode
                                ON ObjectString_GLNCode.ObjectId = Object_Contract_View.ContractId
                               AND ObjectString_GLNCode.DescId = zc_objectString_Contract_GLNCode()
-
-        LEFT JOIN ObjectFloat AS ObjectFloat_Term
-                              ON ObjectFloat_Term.ObjectId = Object_Contract_View.ContractId
-                             AND ObjectFloat_Term.DescId = zc_ObjectFloat_Contract_Term()
 
         LEFT JOIN ObjectBoolean AS ObjectBoolean_Default
                                 ON ObjectBoolean_Default.ObjectId = Object_Contract_View.ContractId
@@ -353,32 +350,31 @@ BEGIN
                             AND ObjectLink_Contract_JuridicalDocument.DescId = zc_ObjectLink_Contract_JuridicalDocument()
         LEFT JOIN Object AS Object_JuridicalDocument ON Object_JuridicalDocument.Id = ObjectLink_Contract_JuridicalDocument.ChildObjectId
 
-        LEFT JOIN ObjectLink AS ObjectLink_Contract_ContractTermKind
-                             ON ObjectLink_Contract_ContractTermKind.ObjectId = Object_Contract_View.ContractId
-                            AND ObjectLink_Contract_ContractTermKind.DescId = zc_ObjectLink_Contract_ContractTermKind()
-        LEFT JOIN Object AS Object_ContractTermKind ON Object_ContractTermKind.Id = ObjectLink_Contract_ContractTermKind.ChildObjectId
+        LEFT JOIN Object AS Object_ContractTermKind ON Object_ContractTermKind.Id = Object_Contract_View.ContractTermKindId
 
-        LEFT JOIN ObjectDate AS ObjectDate_StartPromo
+        /*LEFT JOIN ObjectDate AS ObjectDate_StartPromo
                              ON ObjectDate_StartPromo.ObjectId = Object_Contract_View.ContractId
                             AND ObjectDate_StartPromo.DescId = zc_ObjectDate_Contract_StartPromo()
         LEFT JOIN ObjectDate AS ObjectDate_EndPromo
                              ON ObjectDate_EndPromo.ObjectId = Object_Contract_View.ContractId
-                            AND ObjectDate_EndPromo.DescId = zc_ObjectDate_Contract_EndPromo()
+                            AND ObjectDate_EndPromo.DescId = zc_ObjectDate_Contract_EndPromo()*/
                                 
         LEFT JOIN ObjectLink AS ObjectLink_Contract_PriceList
                              ON ObjectLink_Contract_PriceList.ObjectId = Object_Contract_View.ContractId
                             AND ObjectLink_Contract_PriceList.DescId = zc_ObjectLink_Contract_PriceList()
         LEFT JOIN Object AS Object_PriceList ON Object_PriceList.Id = ObjectLink_Contract_PriceList.ChildObjectId
-        LEFT JOIN ObjectLink AS ObjectLink_Contract_PriceListPromo
+        /*LEFT JOIN ObjectLink AS ObjectLink_Contract_PriceListPromo
                              ON ObjectLink_Contract_PriceListPromo.ObjectId = Object_Contract_View.ContractId
                             AND ObjectLink_Contract_PriceListPromo.DescId = zc_ObjectLink_Contract_PriceListPromo()
-        LEFT JOIN Object AS Object_PriceListPromo ON Object_PriceListPromo.Id = ObjectLink_Contract_PriceListPromo.ChildObjectId
+        LEFT JOIN Object AS Object_PriceListPromo ON Object_PriceListPromo.Id = ObjectLink_Contract_PriceListPromo.ChildObjectId*/
 
         LEFT JOIN ObjectHistory_JuridicalDetails_View ON ObjectHistory_JuridicalDetails_View.JuridicalId = Object_Juridical.Id 
         LEFT JOIN Object_Contract_InvNumber_Key_View AS View_Contract_InvNumber_Key ON View_Contract_InvNumber_Key.ContractId = Object_Contract_View.ContractId
 
-   WHERE ((inIsPeriod = TRUE AND Object_Contract_View.EndDate BETWEEN inStartDate AND inEndDate AND Object_Contract_View.ContractStateKindId <> zc_Enum_ContractStateKind_Close()) OR inIsPeriod = FALSE)
-     AND ((inIsEndDate = TRUE AND Object_Contract_View.EndDate <= inEndDate  AND Object_Contract_View.ContractStateKindId <> zc_Enum_ContractStateKind_Close()) OR inIsEndDate = FALSE)
+   WHERE ((inIsPeriod = TRUE AND Object_Contract_View.EndDate_Term BETWEEN inStartDate AND inEndDate AND Object_Contract_View.ContractStateKindId <> zc_Enum_ContractStateKind_Close()
+          ) OR inIsPeriod = FALSE)
+     AND ((inIsEndDate = TRUE AND Object_Contract_View.EndDate_Term <= inEndDate AND Object_Contract_View.ContractStateKindId <> zc_Enum_ContractStateKind_Close()
+          ) OR inIsEndDate = FALSE)
 
      AND (Object_InfoMoney_View.InfoMoneyDestinationId IN (zc_Enum_InfoMoneyDestination_21500(), zc_Enum_InfoMoneyDestination_30100()) -- Общефирменные + Маркетинг OR Доходы + Продукция
           OR vbIsCommerce = FALSE)

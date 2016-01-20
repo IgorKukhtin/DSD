@@ -192,15 +192,13 @@ type
     bbProtocolOpenFormPartner: TdxBarButton;
     bbProtocolOpenFormGoods: TdxBarButton;
     clPriceListName: TcxGridDBColumn;
-    clPriceListPromoName: TcxGridDBColumn;
-    clStartPromo: TcxGridDBColumn;
-    clEndPromo: TcxGridDBColumn;
     isConnected: TcxGridDBColumn;
     clGoodsPropertyName: TcxGridDBColumn;
     clRetailName: TcxGridDBColumn;
     GoodsPropertyChoiceForm: TOpenChoiceForm;
     clContractTermKindName: TcxGridDBColumn;
     clTerm: TcxGridDBColumn;
+    clEndDate_Term: TcxGridDBColumn;
 
   private
     { Private declarations }

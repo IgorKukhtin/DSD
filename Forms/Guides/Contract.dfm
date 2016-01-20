@@ -231,6 +231,33 @@ object ContractForm: TContractForm
         Options.Editing = False
         Width = 60
       end
+      object clEndDate_Term: TcxGridDBColumn
+        Caption = #1044#1077#1081#1089#1090#1074'. '#1076#1086' ('#1089' '#1087#1088#1086#1083#1086#1085#1075#1072#1094#1080#1077#1081')'
+        DataBinding.FieldName = 'EndDate_Term'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 70
+      end
+      object clContractTermKindName: TcxGridDBColumn
+        Caption = #1058#1080#1087' '#1087#1088#1086#1083#1086#1085#1075#1072#1094#1080#1080
+        DataBinding.FieldName = 'ContractTermKindName'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 50
+      end
+      object clTerm: TcxGridDBColumn
+        Caption = #1055#1077#1088#1080#1086#1076' '#1087#1088#1086#1083#1086#1085#1075#1072#1094#1080#1080
+        DataBinding.FieldName = 'Term'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.#;-,0.#; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 45
+      end
       object clContractKindName: TcxGridDBColumn
         Caption = #1042#1080#1076' '#1076#1086#1075'.'
         DataBinding.FieldName = 'ContractKindName'
@@ -289,21 +316,6 @@ object ContractForm: TContractForm
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
         Width = 80
-      end
-      object clContractTermKindName: TcxGridDBColumn
-        Caption = #1058#1080#1087' '#1087#1088#1086#1083#1086#1085#1075'. '#1076#1086#1075'.'
-        DataBinding.FieldName = 'ContractTermKindName'
-        Options.Editing = False
-        Width = 50
-      end
-      object clTerm: TcxGridDBColumn
-        Caption = ' '#1055#1077#1088#1080#1086#1076' '#1087#1088#1086#1083#1086#1085#1075'. '#1076#1086#1075'.'
-        DataBinding.FieldName = 'Term'
-        PropertiesClassName = 'TcxCurrencyEditProperties'
-        Properties.DecimalPlaces = 4
-        Properties.DisplayFormat = ',0.#;-,0.#; ;'
-        Options.Editing = False
-        Width = 45
       end
       object clInfoMoneyCode: TcxGridDBColumn
         Caption = #1050#1086#1076' '#1059#1055
@@ -605,15 +617,6 @@ object ContractForm: TContractForm
         Options.Editing = False
         Width = 80
       end
-      object clIsErased: TcxGridDBColumn
-        Caption = #1059#1076#1072#1083#1077#1085
-        DataBinding.FieldName = 'isErased'
-        Visible = False
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Options.Editing = False
-        Width = 40
-      end
       object clPriceListName: TcxGridDBColumn
         Caption = #1055#1088#1072#1081#1089'-'#1083#1080#1089#1090
         DataBinding.FieldName = 'PriceListName'
@@ -622,33 +625,6 @@ object ContractForm: TContractForm
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
         Width = 60
-      end
-      object clPriceListPromoName: TcxGridDBColumn
-        Caption = #1055#1088#1072#1081#1089'-'#1083#1080#1089#1090'('#1040#1082#1094#1080#1086#1085#1085#1099#1081')'
-        DataBinding.FieldName = 'PriceListPromoName'
-        Visible = False
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Options.Editing = False
-        Width = 60
-      end
-      object clStartPromo: TcxGridDBColumn
-        Caption = #1044#1072#1090#1072' '#1085#1072#1095'. '#1072#1082#1094#1080#1080
-        DataBinding.FieldName = 'StartPromo'
-        Visible = False
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Options.Editing = False
-        Width = 30
-      end
-      object clEndPromo: TcxGridDBColumn
-        Caption = #1044#1072#1090#1072' '#1079#1072#1074'. '#1072#1082#1094#1080#1080
-        DataBinding.FieldName = 'EndPromo'
-        Visible = False
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Options.Editing = False
-        Width = 30
       end
       object clGoodsPropertyName: TcxGridDBColumn
         Caption = #1050#1083#1072#1089#1089#1080#1092#1080#1082#1072#1090#1086#1088' '#1089#1074#1086#1081#1089#1090#1074' '#1090#1086#1074#1072#1088#1072
@@ -664,6 +640,15 @@ object ContractForm: TContractForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 60
+      end
+      object clIsErased: TcxGridDBColumn
+        Caption = #1059#1076#1072#1083#1077#1085
+        DataBinding.FieldName = 'isErased'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 40
       end
     end
     object cxGridLevel: TcxGridLevel
