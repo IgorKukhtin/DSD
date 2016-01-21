@@ -21,15 +21,14 @@ object ContractForm: TContractForm
     Left = 0
     Top = 0
     Width = 1209
-    Height = 58
+    Height = 30
     Align = alTop
     BevelOuter = bvNone
     TabOrder = 14
-    ExplicitTop = 4
   end
   object cxGrid: TcxGrid
     Left = 0
-    Top = 84
+    Top = 56
     Width = 1209
     Height = 303
     Align = alTop
@@ -668,9 +667,9 @@ object ContractForm: TContractForm
   end
   object cxGridContractCondition: TcxGrid
     Left = 0
-    Top = 392
+    Top = 364
     Width = 611
-    Height = 126
+    Height = 154
     Align = alClient
     TabOrder = 1
     LookAndFeel.Kind = lfStandard
@@ -828,8 +827,8 @@ object ContractForm: TContractForm
     Width = 218
   end
   object cbEndDate: TcxCheckBox
-    Left = 18
-    Top = 31
+    Left = 450
+    Top = 4
     Action = actRefresh
     Caption = '<'#1044#1086#1075#1086#1074#1086#1088' '#1076#1077#1081#1089#1090#1074#1091#1077#1090' '#1076#1086'> '#1087#1086' '#1076#1072#1090#1091' '#1074#1082#1083#1102#1095#1080#1090#1077#1083#1100#1085#1086
     TabOrder = 7
@@ -837,9 +836,9 @@ object ContractForm: TContractForm
   end
   object Panel: TPanel
     Left = 615
-    Top = 392
+    Top = 364
     Width = 594
-    Height = 126
+    Height = 154
     Align = alRight
     BevelOuter = bvNone
     TabOrder = 6
@@ -849,7 +848,7 @@ object ContractForm: TContractForm
       Left = 0
       Top = 0
       Width = 241
-      Height = 126
+      Height = 154
       Align = alLeft
       TabOrder = 0
       LookAndFeel.Kind = lfStandard
@@ -931,7 +930,7 @@ object ContractForm: TContractForm
       Left = 246
       Top = 0
       Width = 348
-      Height = 126
+      Height = 154
       Align = alClient
       TabOrder = 1
       LookAndFeel.Kind = lfStandard
@@ -1024,14 +1023,14 @@ object ContractForm: TContractForm
       Left = 241
       Top = 0
       Width = 5
-      Height = 126
+      Height = 154
       Control = cxGridPartner
       ExplicitHeight = 184
     end
   end
   object cxTopSplitter: TcxSplitter
     Left = 0
-    Top = 387
+    Top = 359
     Width = 1209
     Height = 5
     AlignSplitter = salTop
@@ -1040,9 +1039,9 @@ object ContractForm: TContractForm
   end
   object cxRightSplitter: TcxSplitter
     Left = 611
-    Top = 392
+    Top = 364
     Width = 4
-    Height = 126
+    Height = 154
     AlignSplitter = salRight
     Control = Panel
     ExplicitTop = 334
