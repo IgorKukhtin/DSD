@@ -268,14 +268,12 @@ object IncomeFuelForm: TIncomeFuelForm
     TabOrder = 2
     Properties.ActivePage = cxTabSheetMain
     Properties.CustomButtons.Buttons = <>
-    ExplicitHeight = 343
     ClientRectBottom = 438
     ClientRectRight = 879
     ClientRectTop = 24
     object cxTabSheetMain: TcxTabSheet
       Caption = #1057#1090#1088#1086#1095#1085#1072#1103' '#1095#1072#1089#1090#1100
       ImageIndex = 0
-      ExplicitHeight = 319
       object cxGridChild: TcxGrid
         Left = 0
         Top = 163
@@ -283,7 +281,6 @@ object IncomeFuelForm: TIncomeFuelForm
         Height = 251
         Align = alBottom
         TabOrder = 0
-        ExplicitTop = 176
         object cxGridDBTableViewChild: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = ChildDS
@@ -423,7 +420,6 @@ object IncomeFuelForm: TIncomeFuelForm
         Height = 8
         AlignSplitter = salBottom
         Control = cxGridChild
-        ExplicitTop = 152
       end
       object cxGrid: TcxGrid
         Left = 0
@@ -432,7 +428,6 @@ object IncomeFuelForm: TIncomeFuelForm
         Height = 155
         Align = alClient
         TabOrder = 2
-        ExplicitHeight = 152
         object cxGridDBTableView: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = MasterDS
@@ -1281,6 +1276,9 @@ object IncomeFuelForm: TIncomeFuelForm
           StoredProc = spInsertUpdateMIChild
         end
         item
+          StoredProc = spInsertUpdateMovement
+        end
+        item
           StoredProc = spSelectMIChild
         end>
       Caption = 'actUpdateChildDS'
@@ -1757,6 +1755,9 @@ object IncomeFuelForm: TIncomeFuelForm
       end
       item
         Control = edStartOdometre
+      end
+      item
+        Control = edDistanceDiff
       end>
     GetStoredProc = spGet
     Left = 296
@@ -2373,8 +2374,8 @@ object IncomeFuelForm: TIncomeFuelForm
         DataType = ftBoolean
       end>
     PackSize = 1
-    Left = 342
-    Top = 404
+    Left = 366
+    Top = 396
   end
   object spUnErasedMIChild: TdsdStoredProc
     StoredProcName = 'gpSetUnErased_MovementItem'

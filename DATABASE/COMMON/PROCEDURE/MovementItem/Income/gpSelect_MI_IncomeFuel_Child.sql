@@ -30,7 +30,7 @@ BEGIN
            , Object_RouteMember.ObjectCode ::TVarChar   AS RouteMemberCode
            , OB_RouteMember_Description.ValueData       AS RouteMemberName
            , MIDate_OperDate.ValueData                  AS OperDate
-           , zfCalc_DayOfWeekName(MIDate_OperDate.ValueData) AS DayOfWeekName
+           , tmpWeekDay.DayOfWeekName_Full              AS DayOfWeekName
            , MovementItem.Amount
            , MIFloat_StartOdometre.ValueData    AS StartOdometre
            , MIFloat_EndOdometre.ValueData      AS EndOdometre
@@ -57,6 +57,7 @@ BEGIN
             LEFT JOIN MovementItemDate AS MIDate_OperDate
                                         ON MIDate_OperDate.MovementItemId = MovementItem.Id
                                        AND MIDate_OperDate.DescId = zc_MIDate_OperDate()
+            LEFT JOIN zfCalc_DayOfWeekName (MIDate_OperDate.ValueData) AS tmpWeekDay ON 1=1
 
       ;
 
