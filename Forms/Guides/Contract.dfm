@@ -17,14 +17,25 @@ object ContractForm: TContractForm
   AddOnFormData.ChoiceAction = dsdChoiceGuides
   PixelsPerInch = 96
   TextHeight = 13
+  object Panel1: TPanel
+    Left = 0
+    Top = 0
+    Width = 1209
+    Height = 58
+    Align = alTop
+    BevelOuter = bvNone
+    TabOrder = 14
+    ExplicitTop = 4
+  end
   object cxGrid: TcxGrid
     Left = 0
-    Top = 26
+    Top = 84
     Width = 1209
     Height = 303
     Align = alTop
     TabOrder = 0
     LookAndFeel.NativeStyle = False
+    ExplicitTop = 26
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -657,14 +668,16 @@ object ContractForm: TContractForm
   end
   object cxGridContractCondition: TcxGrid
     Left = 0
-    Top = 334
+    Top = 392
     Width = 611
-    Height = 184
+    Height = 126
     Align = alClient
     TabOrder = 1
     LookAndFeel.Kind = lfStandard
     LookAndFeel.NativeStyle = False
     LookAndFeel.SkinName = ''
+    ExplicitTop = 334
+    ExplicitHeight = 184
     object cxGridDBTableViewContractCondition: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = ContractConditionDS
@@ -779,8 +792,8 @@ object ContractForm: TContractForm
     end
   end
   object deStart: TcxDateEdit
-    Left = 373
-    Top = 30
+    Left = 238
+    Top = 4
     EditValue = 41852d
     Properties.SaveTime = False
     Properties.ShowTime = False
@@ -788,18 +801,18 @@ object ContractForm: TContractForm
     Width = 85
   end
   object cxlEnd: TcxLabel
-    Left = 464
-    Top = 30
+    Left = 329
+    Top = 4
     AutoSize = False
     Caption = #1087#1086
     Properties.Alignment.Vert = taVCenter
     Height = 21
     Width = 21
-    AnchorY = 41
+    AnchorY = 15
   end
   object deEnd: TcxDateEdit
-    Left = 491
-    Top = 30
+    Left = 351
+    Top = 4
     EditValue = 41852d
     Properties.SaveTime = False
     Properties.ShowTime = False
@@ -807,16 +820,16 @@ object ContractForm: TContractForm
     Width = 85
   end
   object cbPeriod: TcxCheckBox
-    Left = 130
-    Top = 30
+    Left = 18
+    Top = 4
     Action = actRefresh
     Caption = '<'#1044#1086#1075#1086#1074#1086#1088' '#1076#1077#1081#1089#1090#1074#1091#1077#1090' '#1076#1086'> '#1079#1072' '#1087#1077#1088#1080#1086#1076' '#1089
     TabOrder = 5
     Width = 218
   end
   object cbEndDate: TcxCheckBox
-    Left = 582
-    Top = 30
+    Left = 18
+    Top = 31
     Action = actRefresh
     Caption = '<'#1044#1086#1075#1086#1074#1086#1088' '#1076#1077#1081#1089#1090#1074#1091#1077#1090' '#1076#1086'> '#1087#1086' '#1076#1072#1090#1091' '#1074#1082#1083#1102#1095#1080#1090#1077#1083#1100#1085#1086
     TabOrder = 7
@@ -824,22 +837,25 @@ object ContractForm: TContractForm
   end
   object Panel: TPanel
     Left = 615
-    Top = 334
+    Top = 392
     Width = 594
-    Height = 184
+    Height = 126
     Align = alRight
     BevelOuter = bvNone
     TabOrder = 6
+    ExplicitTop = 334
+    ExplicitHeight = 184
     object cxGridPartner: TcxGrid
       Left = 0
       Top = 0
       Width = 241
-      Height = 184
+      Height = 126
       Align = alLeft
       TabOrder = 0
       LookAndFeel.Kind = lfStandard
       LookAndFeel.NativeStyle = False
       LookAndFeel.SkinName = ''
+      ExplicitHeight = 184
       object cxGridDBTableViewPartner: TcxGridDBTableView
         Navigator.Buttons.CustomButtons = <>
         DataController.DataSource = DataSourcePartner
@@ -915,12 +931,13 @@ object ContractForm: TContractForm
       Left = 246
       Top = 0
       Width = 348
-      Height = 184
+      Height = 126
       Align = alClient
       TabOrder = 1
       LookAndFeel.Kind = lfStandard
       LookAndFeel.NativeStyle = False
       LookAndFeel.SkinName = ''
+      ExplicitHeight = 184
       object cxGridDBTableViewGoods: TcxGridDBTableView
         Navigator.Buttons.CustomButtons = <>
         DataController.DataSource = DataSourceGoods
@@ -1007,25 +1024,29 @@ object ContractForm: TContractForm
       Left = 241
       Top = 0
       Width = 5
-      Height = 184
+      Height = 126
       Control = cxGridPartner
+      ExplicitHeight = 184
     end
   end
   object cxTopSplitter: TcxSplitter
     Left = 0
-    Top = 329
+    Top = 387
     Width = 1209
     Height = 5
     AlignSplitter = salTop
     Control = cxGrid
+    ExplicitTop = 329
   end
   object cxRightSplitter: TcxSplitter
     Left = 611
-    Top = 334
+    Top = 392
     Width = 4
-    Height = 184
+    Height = 126
     AlignSplitter = salRight
     Control = Panel
+    ExplicitTop = 334
+    ExplicitHeight = 184
   end
   object DataSource: TDataSource
     DataSet = ClientDataSet
@@ -1219,34 +1240,6 @@ object ContractForm: TContractForm
         item
           Visible = True
           ItemName = 'bbChoiceGuides'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarStatic1'
-        end
-        item
-          Visible = True
-          ItemName = 'bbIsPeriod'
-        end
-        item
-          Visible = True
-          ItemName = 'bbStartDate'
-        end
-        item
-          Visible = True
-          ItemName = 'bbEnd'
-        end
-        item
-          Visible = True
-          ItemName = 'bbEndDate'
-        end
-        item
-          Visible = True
-          ItemName = 'bbIsEndDate'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarStatic1'
         end
         item
           Visible = True
