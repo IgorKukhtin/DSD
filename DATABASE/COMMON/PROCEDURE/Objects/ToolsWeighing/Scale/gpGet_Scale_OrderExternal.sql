@@ -90,7 +90,7 @@ BEGIN
                                        ) AS tmp
                                        INNER JOIN Movement ON Movement.Id = tmp.MovementId
                                                           AND Movement.DescId IN (zc_Movement_OrderExternal(), zc_Movement_SendOnPrice())
-                                                          AND Movement.OperDate BETWEEN inOperDate - INTERVAL '3 DAY' AND inOperDate + INTERVAL '3 DAY'
+                                                          AND Movement.OperDate BETWEEN inOperDate - INTERVAL '8 DAY' AND inOperDate + INTERVAL '8 DAY'
                                                           AND Movement.StatusId <> zc_Enum_Status_Erased()
                                  UNION
                                   SELECT Movement.Id
@@ -101,7 +101,7 @@ BEGIN
                                        ) AS tmp
                                        INNER JOIN Movement ON Movement.InvNumber = tmp.BarCode
                                                           AND Movement.DescId IN (zc_Movement_OrderExternal(), zc_Movement_SendOnPrice())
-                                                          AND Movement.OperDate BETWEEN inOperDate - INTERVAL '3 DAY' AND inOperDate + INTERVAL '3 DAY'
+                                                          AND Movement.OperDate BETWEEN inOperDate - INTERVAL '8 DAY' AND inOperDate + INTERVAL '8 DAY'
                                                           AND Movement.StatusId <> zc_Enum_Status_Erased()
                                  ) AS tmpMovement
                                  LEFT JOIN MovementLinkObject AS MovementLinkObject_Contract

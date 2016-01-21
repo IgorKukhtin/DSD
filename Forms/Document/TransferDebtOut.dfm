@@ -3,14 +3,13 @@ inherited TransferDebtOutForm: TTransferDebtOutForm
   ClientHeight = 668
   ClientWidth = 1268
   ExplicitWidth = 1284
-  ExplicitHeight = 706
+  ExplicitHeight = 703
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 166
     Width = 1268
     Height = 502
-    Properties.ActivePage = cxTabSheetTaxCorrective
     ExplicitTop = 166
     ExplicitWidth = 1268
     ExplicitHeight = 502
@@ -827,23 +826,19 @@ inherited TransferDebtOutForm: TTransferDebtOutForm
         end>
       RefreshOnTabSetChanges = True
     end
-    inherited actGridToExcel: TdsdGridToExcel
-      Enabled = False
-    end
     inherited actMISetErased: TdsdUpdateErased
       TabSheet = tsMain
-      Enabled = False
     end
     inherited actMISetUnErased: TdsdUpdateErased
       TabSheet = tsMain
-      Enabled = False
     end
     object actOpenTax: TdsdOpenForm [6]
       Category = 'DSDLib'
       TabSheet = cxTabSheetTaxCorrective
       MoveParams = <>
-      Caption = #1055#1088#1086#1089#1084#1086#1090#1088' <'#1053#1072#1083#1086#1075#1086#1074#1086#1081' '#1085#1072#1082#1083#1072#1076#1085#1086#1081'>'
-      Hint = #1055#1088#1086#1089#1084#1086#1090#1088' <'#1053#1072#1083#1086#1075#1086#1074#1086#1081' '#1085#1072#1082#1083#1072#1076#1085#1086#1081'>'
+      Enabled = False
+      Caption = '<'#1053#1072#1083#1086#1075#1086#1074#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103'>'
+      Hint = '<'#1053#1072#1083#1086#1075#1086#1074#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103'>'
       ImageIndex = 26
       FormName = 'TTaxForm'
       FormNameParam.Value = 'TTaxForm'
@@ -1183,7 +1178,6 @@ inherited TransferDebtOutForm: TTransferDebtOutForm
     end
     inherited actAddMask: TdsdExecStoredProc
       TabSheet = tsMain
-      Enabled = False
     end
     object actSPPrintSaleBillProcName: TdsdExecStoredProc
       Category = 'DSDLib'
@@ -1250,6 +1244,7 @@ inherited TransferDebtOutForm: TTransferDebtOutForm
       Category = 'DSDLib'
       TabSheet = cxTabSheetTaxCorrective
       MoveParams = <>
+      Enabled = False
       StoredProc = spMovementUnCompleteTax
       StoredProcList = <
         item
@@ -1268,6 +1263,7 @@ inherited TransferDebtOutForm: TTransferDebtOutForm
       Category = 'DSDLib'
       TabSheet = cxTabSheetTaxCorrective
       MoveParams = <>
+      Enabled = False
       StoredProc = spMovementSetErasedTax
       StoredProcList = <
         item
@@ -1287,6 +1283,7 @@ inherited TransferDebtOutForm: TTransferDebtOutForm
       Category = 'DSDLib'
       TabSheet = cxTabSheetTaxCorrective
       MoveParams = <>
+      Enabled = False
       StoredProc = spMovementCompleteTax
       StoredProcList = <
         item
@@ -1403,6 +1400,7 @@ inherited TransferDebtOutForm: TTransferDebtOutForm
       Category = 'TaxLib'
       TabSheet = cxTabSheetTaxCorrective
       MoveParams = <>
+      Enabled = False
       ActionList = <
         item
           Action = actMedocProcedure
