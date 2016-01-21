@@ -122,6 +122,8 @@ type
     ExecuteDialog: TExecuteDialog;
     bbExecuteDialog: TdxBarButton;
     GoodsPlatformName: TcxGridDBColumn;
+    cbContract: TcxCheckBox;
+    bbContract: TdxBarControlContainerItem;
   private
     { Private declarations }
   public
