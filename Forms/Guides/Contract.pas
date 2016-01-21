@@ -199,6 +199,7 @@ type
     clContractTermKindName: TcxGridDBColumn;
     clTerm: TcxGridDBColumn;
     clEndDate_Term: TcxGridDBColumn;
+    Panel1: TPanel;
 
   private
     { Private declarations }
