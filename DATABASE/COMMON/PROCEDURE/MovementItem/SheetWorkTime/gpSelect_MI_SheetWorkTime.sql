@@ -81,8 +81,17 @@ BEGIN
 
      -- возвращаем заголовки столбцов и даты
      OPEN cur1 FOR SELECT tmpOperDate.OperDate::TDateTime, 
-                          (EXTRACT(DAY FROM tmpOperDate.OperDate))::TVarChar AS ValueField
-               FROM tmpOperDate;  
+                          (EXTRACT(DAY FROM tmpOperDate.OperDate))||case when ObjectBoolean_Working.ValueData = False then ' *' else ' ' END||tmpWeekDay.DayOfWeekName ::TVarChar AS ValueField
+               FROM tmpOperDate
+                   LEFT JOIN zfCalc_DayOfWeekName (tmpOperDate.OperDate) AS tmpWeekDay ON 1=1
+                   LEFT JOIN ObjectDate ON 1=1 
+                                       AND ObjectDate.descid = zc_ObjectDate_Calendar_Value()
+                   LEFT JOIN ObjectBoolean AS ObjectBoolean_Working 
+                                           ON ObjectBoolean_Working.ObjectId = ObjectDate.ObjectId    --Object_Calendar.Id 
+                                          AND ObjectBoolean_Working.DescId = zc_ObjectBoolean_Calendar_Working()
+          
+               WHERE ObjectDate.ValueData = tmpOperDate.OperDate
+      ;  
      RETURN NEXT cur1;
     
 
