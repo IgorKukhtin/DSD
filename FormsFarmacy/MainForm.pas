@@ -210,6 +210,8 @@ type
     N80: TMenuItem;
     actMember: TdsdOpenForm;
     N81: TMenuItem;
+    actWorkTimeKind: TdsdOpenForm;
+    N82: TMenuItem;
     procedure actSaveDataExecute(Sender: TObject);
     procedure miRepriceClick(Sender: TObject);
   private

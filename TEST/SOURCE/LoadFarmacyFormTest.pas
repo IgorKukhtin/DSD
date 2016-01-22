@@ -54,6 +54,7 @@ type
     procedure LoadMargineCategory;
     procedure LoadMeasureFormTest;
     procedure LoadMemberFormTest;
+    procedure LoadKindFormTest;
     procedure LoadOrderInternalFormTest;
     procedure LoadOrderExternalFormTest;
     procedure LoadObjectUnionFormTest;
@@ -299,6 +300,15 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TMeasureForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TMeasureEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TMeasureEditForm');
+end;
+
+procedure TLoadFormTest.LoadKindFormTest;
+begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TWorkTimeKind_ObjectForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TWorkTimeKind_ObjectForm');
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TWorkTimeKindForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TWorkTimeKindForm');
 end;
 
 procedure TLoadFormTest.LoadGoodsGroupFormTest;

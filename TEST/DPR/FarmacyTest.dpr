@@ -373,7 +373,9 @@ uses
   EducationEdit in '..\..\FormsFarmacy\Guides\EducationEdit.pas' {EducationEditForm: TParentForm},
   Position in '..\..\FormsFarmacy\Guides\Position.pas' {PositionForm: TParentForm},
   PositionEdit in '..\..\FormsFarmacy\Guides\PositionEdit.pas' {PositionEditForm: TParentForm},
-  Calendar in '..\..\FormsFarmacy\Guides\Calendar.pas' {CalendarForm: TParentForm};
+  Calendar in '..\..\FormsFarmacy\Guides\Calendar.pas' {CalendarForm: TParentForm},
+  WorkTimeKind_Object in '..\..\FormsFarmacy\Kind\WorkTimeKind_Object.pas' {WorkTimeKind_ObjectForm: TParentForm},
+  WorkTimeKind in '..\..\FormsFarmacy\Kind\WorkTimeKind.pas' {WorkTimeKindForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}
