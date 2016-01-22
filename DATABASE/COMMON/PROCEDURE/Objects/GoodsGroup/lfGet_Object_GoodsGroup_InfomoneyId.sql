@@ -42,4 +42,4 @@ $BODY$
 */
 
 -- тест
- --SELECT * FROM lfGet_Object_GoodsGroup_InfomoneyId (137023)
+-- SELECT * FROM lfGet_Object_GoodsGroup_InfomoneyId (137023)

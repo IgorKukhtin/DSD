@@ -111,6 +111,7 @@
   object сеTradeMark: TcxButtonEdit
     Left = 40
     Top = 202
+    Enabled = False
     Properties.Buttons = <
       item
         Default = True
@@ -128,6 +129,7 @@
   object ceInfoMoney: TcxButtonEdit
     Left = 159
     Top = 202
+    Enabled = False
     Properties.Buttons = <
       item
         Default = True
@@ -201,6 +203,7 @@
   object ceGoodsTag: TcxButtonEdit
     Left = 40
     Top = 336
+    Enabled = False
     Properties.Buttons = <
       item
         Default = True
@@ -411,7 +414,7 @@
       end
       item
         Name = 'inStartDate'
-        Value = Null
+        Value = 'NULL'
         Component = edStartDate
         DataType = ftDateTime
         ParamType = ptInput
