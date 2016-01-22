@@ -6,7 +6,7 @@
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
   ExplicitWidth = 1386
-  ExplicitHeight = 422
+  ExplicitHeight = 425
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -1100,6 +1100,14 @@
     TabOrder = 9
     Width = 113
   end
+  object cbContract: TcxCheckBox [6]
+    Left = 562
+    Top = 87
+    Caption = #1087#1086' '#1044#1086#1075#1086#1074#1086#1088#1072#1084
+    Properties.ReadOnly = False
+    TabOrder = 10
+    Width = 113
+  end
   inherited cxPropertiesStore: TcxPropertiesStore
     Components = <
       item
@@ -1484,6 +1492,7 @@
           ParamType = ptInputOutput
         end>
       isShowModal = True
+      RefreshDispatcher = RefreshDispatcher
       OpenBeforeShow = True
     end
   end
@@ -1603,14 +1612,21 @@
         Component = cbGoodsKind
         DataType = ftBoolean
         ParamType = ptInput
+      end
+      item
+        Name = 'inisContract'
+        Value = Null
+        Component = cbContract
+        DataType = ftBoolean
+        ParamType = ptInput
       end>
     AutoWidth = True
     Left = 176
     Top = 200
   end
   inherited BarManager: TdxBarManager
-    Left = 200
-    Top = 208
+    Left = 224
+    Top = 200
     DockControlHeights = (
       0
       0
@@ -1653,6 +1669,10 @@
         item
           Visible = True
           ItemName = 'bbGoodsKind'
+        end
+        item
+          Visible = True
+          ItemName = 'bbContract'
         end
         item
           Visible = True
@@ -1742,6 +1762,13 @@
       Hint = #1087#1086' '#1042#1080#1076#1072#1084
       Visible = ivAlways
       Control = cbGoodsKind
+    end
+    object bbContract: TdxBarControlContainerItem
+      Caption = #1087#1086' '#1044#1086#1075#1086#1074#1086#1088#1072#1084
+      Category = 0
+      Hint = #1087#1086' '#1044#1086#1075#1086#1074#1086#1088#1072#1084
+      Visible = ivAlways
+      Control = cbContract
     end
     object bbExecuteDialog: TdxBarButton
       Action = ExecuteDialog
