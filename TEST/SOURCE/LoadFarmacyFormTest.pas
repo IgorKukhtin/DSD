@@ -25,6 +25,7 @@ type
     procedure LoadBankAccountFormTest;
     procedure LoadBankAccountDocumentFormTest;
     procedure LoadBankStatementFormTest;
+    procedure LoadCalendarFormTest;
     procedure LoadCashRegisterFormTest;
     procedure LoadChangeIncomePaymentKindFormTest;
     procedure LoadChangeIncomePaymentFormTest;
@@ -59,6 +60,9 @@ type
     procedure LoadPaidKindFormTest;
     procedure LoadPaidTypeFormTest;
     procedure LoadPaymentFormTest;
+    procedure LoadPersonalFormTest;
+    procedure LoadPersonalGroupFormTest;
+    procedure LoadPositionEducationFormTest;
     procedure LoadPriceListFormTest;
     procedure LoadPriceFormTest;
     procedure LoadProfitLossFormTest;
@@ -183,6 +187,12 @@ begin
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TCashRegisterKindForm'));
   TdsdFormStorageFactory.GetStorage.Load('TCashRegisterKindForm');
+end;
+
+procedure TLoadFormTest.LoadCalendarFormTest;
+begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TCalendarForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TCalendarForm');
 end;
 
 procedure TLoadFormTest.LoadCheckFormTest;
@@ -679,6 +689,36 @@ begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TPaymentForm'));
   TdsdFormStorageFactory.GetStorage.Load('TPaymentForm');
 end;
+
+procedure TLoadFormTest.LoadPersonalFormTest;
+begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TPersonalForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TPersonalForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TPersonalEditForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TPersonalEditForm');
+end;
+
+procedure TLoadFormTest.LoadPersonalGroupFormTest;
+begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TPersonalGroupForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TPersonalGroupForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TPersonalGroupEditForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TPersonalGroupEditForm');
+end;
+
+procedure TLoadFormTest.LoadPositionEducationFormTest;
+begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TPositionForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TPositionForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TPositionEditForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TPositionEditForm');
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TEducationForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TEducationForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TEducationEditForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TEducationEditForm');
+end;
+
 
 procedure TLoadFormTest.LoadChangeIncomePaymentFormTest;
 begin

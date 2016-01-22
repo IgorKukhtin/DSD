@@ -9,7 +9,7 @@ uses
   dxSkinsDefaultPainters, cxControls, cxContainer, cxEdit, cxCheckBox,
   dsdGuides, cxMaskEdit, cxButtonEdit, cxTextEdit, cxCurrencyEdit, cxLabel,
   dsdDB, dsdAction, Vcl.ActnList, cxPropertiesStore, dsdAddOn, Vcl.StdCtrls,
-  cxButtons;
+  cxButtons, Vcl.ComCtrls, dxCore, cxDateUtils, cxDropDownEdit, cxCalendar;
 
 type
   TContractEditForm = class(TAncestorEditDialogForm)
@@ -27,6 +27,10 @@ type
     JuridicalGuides: TdsdGuides;
     cxLabel6: TcxLabel;
     ceDeferment: TcxCurrencyEdit;
+    cxLabel7: TcxLabel;
+    edStartDate: TcxDateEdit;
+    cxLabel8: TcxLabel;
+    edEndDate: TcxDateEdit;
   private
     { Private declarations }
   public
