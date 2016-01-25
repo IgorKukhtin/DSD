@@ -155,7 +155,7 @@ inherited ProductionUnionJournalForm: TProductionUnionJournalForm
             Width = 150
           end
           object colTotalCount: TcxGridDBColumn
-            Caption = #1050#1086#1083'-'#1074#1086' ('#1088#1072#1089#1093#1086#1076')'
+            Caption = #1050#1086#1083'-'#1074#1086' ('#1087#1088#1080#1093#1086#1076')'
             DataBinding.FieldName = 'TotalCount'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
@@ -165,7 +165,7 @@ inherited ProductionUnionJournalForm: TProductionUnionJournalForm
             Width = 70
           end
           object colTotalCountChild: TcxGridDBColumn
-            Caption = #1050#1086#1083'-'#1074#1086' ('#1087#1088#1080#1093#1086#1076')'
+            Caption = #1050#1086#1083'-'#1074#1086' ('#1088#1072#1089#1093#1086#1076')'
             DataBinding.FieldName = 'TotalCountChild'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4

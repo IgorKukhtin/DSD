@@ -19,6 +19,7 @@ RETURNS TABLE (Id Integer, GoodsId Integer, GoodsCode Integer, GoodsName TVarCha
              , UnitId Integer, UnitName TVarChar
              , AmountSumm TFloat
              , CountPack TFloat, WeightTotal TFloat, WeightPack TFloat, isBarCode Boolean 
+             , InfoMoneyCode Integer, InfoMoneyGroupName TVarChar, InfoMoneyDestinationName TVarChar, InfoMoneyName TVarChar, InfoMoneyName_all TVarChar
              , isErased Boolean
               )
 AS
@@ -85,6 +86,12 @@ BEGIN
            , CAST (NULL AS TFloat)      AS WeightPack
            , FALSE                      AS isBarCode
 
+           , tmpGoods.InfoMoneyCode
+           , tmpGoods.InfoMoneyGroupName
+           , tmpGoods.InfoMoneyDestinationName
+           , tmpGoods.InfoMoneyName
+           , tmpGoods.InfoMoneyName_all
+
            , FALSE                      AS isErased
 
        FROM (SELECT Object_Goods.Id                                                   AS GoodsId
@@ -92,6 +99,12 @@ BEGIN
                   , Object_Goods.ValueData                                            AS GoodsName
                   -- , COALESCE (Object_GoodsByGoodsKind_View.GoodsKindId, 0)            AS GoodsKindId
                   , COALESCE (tmpGoodsByGoodsKind.GoodsKindId, 0)                     AS GoodsKindId
+
+                  , Object_InfoMoney_View.InfoMoneyCode
+                  , Object_InfoMoney_View.InfoMoneyGroupName
+                  , Object_InfoMoney_View.InfoMoneyDestinationName
+                  , Object_InfoMoney_View.InfoMoneyName
+                  , Object_InfoMoney_View.InfoMoneyName_all
              FROM Object_InfoMoney_View
                   JOIN ObjectLink AS ObjectLink_Goods_InfoMoney
                                   ON ObjectLink_Goods_InfoMoney.ChildObjectId = Object_InfoMoney_View.InfoMoneyId
@@ -154,6 +167,12 @@ BEGIN
            , MIFloat_WeightPack.ValueData       AS WeightPack
            , MIBoolean_BarCode.ValueData        AS isBarCode
 
+           , Object_InfoMoney_View.InfoMoneyCode
+           , Object_InfoMoney_View.InfoMoneyGroupName
+           , Object_InfoMoney_View.InfoMoneyDestinationName
+           , Object_InfoMoney_View.InfoMoneyName
+           , Object_InfoMoney_View.InfoMoneyName_all
+
            , MovementItem.isErased
 
        FROM (SELECT FALSE AS isErased UNION ALL SELECT inIsErased AS isErased WHERE inIsErased = TRUE) AS tmpIsErased
@@ -214,6 +233,10 @@ BEGIN
             LEFT JOIN MovementItemBoolean AS MIBoolean_BarCode 
                                           ON MIBoolean_BarCode.MovementItemId = MovementItem.Id
                                          AND MIBoolean_BarCode.DescId = zc_MIBoolean_BarCode()
+            LEFT JOIN ObjectLink AS ObjectLink_Goods_InfoMoney
+                                 ON ObjectLink_Goods_InfoMoney.ObjectId = Object_Goods.Id
+                                AND ObjectLink_Goods_InfoMoney.DescId = zc_ObjectLink_Goods_InfoMoney()
+            LEFT JOIN Object_InfoMoney_View ON Object_InfoMoney_View.InfoMoneyId = ObjectLink_Goods_InfoMoney.ChildObjectId
             ;
      ELSE
 
@@ -252,6 +275,12 @@ BEGIN
            , MIFloat_WeightPack.ValueData       AS WeightPack
            , MIBoolean_BarCode.ValueData        AS isBarCode
 
+           , Object_InfoMoney_View.InfoMoneyCode
+           , Object_InfoMoney_View.InfoMoneyGroupName
+           , Object_InfoMoney_View.InfoMoneyDestinationName
+           , Object_InfoMoney_View.InfoMoneyName
+           , Object_InfoMoney_View.InfoMoneyName_all
+
            , MovementItem.isErased
 
        FROM (SELECT FALSE AS isErased UNION ALL SELECT inIsErased AS isErased WHERE inIsErased = TRUE) AS tmpIsErased
@@ -311,6 +340,10 @@ BEGIN
             LEFT JOIN MovementItemBoolean AS MIBoolean_BarCode 
                                           ON MIBoolean_BarCode.MovementItemId = MovementItem.Id
                                          AND MIBoolean_BarCode.DescId = zc_MIBoolean_BarCode()
+            LEFT JOIN ObjectLink AS ObjectLink_Goods_InfoMoney
+                                 ON ObjectLink_Goods_InfoMoney.ObjectId = Object_Goods.Id
+                                AND ObjectLink_Goods_InfoMoney.DescId = zc_ObjectLink_Goods_InfoMoney()
+            LEFT JOIN Object_InfoMoney_View ON Object_InfoMoney_View.InfoMoneyId = ObjectLink_Goods_InfoMoney.ChildObjectId
             ;
 
      END IF;
