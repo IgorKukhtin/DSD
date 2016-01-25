@@ -2,7 +2,7 @@ object CalendarForm: TCalendarForm
   Left = 0
   Top = 0
   Caption = #1050#1072#1083#1077#1085#1076#1072#1088#1100' '#1088#1072#1073#1086#1095#1080#1093' '#1076#1085#1077#1081
-  ClientHeight = 545
+  ClientHeight = 509
   ClientWidth = 385
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -20,7 +20,7 @@ object CalendarForm: TCalendarForm
     Left = 0
     Top = 89
     Width = 385
-    Height = 456
+    Height = 420
     Align = alClient
     TabOrder = 0
     object cxGridDBTableView: TcxGridDBTableView
@@ -204,7 +204,7 @@ object CalendarForm: TCalendarForm
         HeaderAlignmentVert = vaCenter
         HeaderGlyphAlignmentHorz = taCenter
         Options.Editing = False
-        Width = 80
+        Width = 156
       end
       object clWorking: TcxGridDBColumn
         Caption = #1056#1072#1073#1086#1095#1080#1081' '#1076#1077#1085#1100
@@ -212,7 +212,7 @@ object CalendarForm: TCalendarForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         HeaderGlyphAlignmentHorz = taCenter
-        Width = 80
+        Width = 100
       end
       object clDayOfWeekName: TcxGridDBColumn
         Caption = #1044#1077#1085#1100' '#1085#1077#1076#1077#1083#1080
@@ -243,7 +243,7 @@ object CalendarForm: TCalendarForm
     object deStart: TcxDateEdit
       Left = 126
       Top = 9
-      EditValue = 41640d
+      EditValue = 42370d
       Properties.ShowTime = False
       TabOrder = 0
       Width = 85
@@ -251,7 +251,7 @@ object CalendarForm: TCalendarForm
     object deEnd: TcxDateEdit
       Left = 126
       Top = 36
-      EditValue = 41670d
+      EditValue = 42400d
       Properties.ShowTime = False
       TabOrder = 1
       Width = 85

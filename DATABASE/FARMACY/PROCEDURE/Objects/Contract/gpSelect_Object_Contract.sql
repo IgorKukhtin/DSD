@@ -9,6 +9,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar,
                JuridicalBasisId Integer, JuridicalBasisName TVarChar,
                JuridicalId Integer, JuridicalName TVarChar, Deferment Integer, 
                Comment TVarChar,
+               StartDate TDateTime, EndDate TDateTime,
                isErased boolean) AS
 $BODY$
 BEGIN
@@ -30,9 +31,19 @@ BEGIN
            , Object_Contract_View.Deferment
 
            , Object_Contract_View.Comment
+
+           , ObjectDate_Start.ValueData   AS StartDate 
+           , ObjectDate_End.ValueData     AS EndDate   
            
            , Object_Contract_View.isErased
-       FROM Object_Contract_View;
+       FROM Object_Contract_View
+            LEFT JOIN ObjectDate AS ObjectDate_Start
+                                 ON ObjectDate_Start.ObjectId = Object_Contract_View.ContractId
+                                AND ObjectDate_Start.DescId = zc_ObjectDate_Contract_Start()
+            LEFT JOIN ObjectDate AS ObjectDate_End
+                                 ON ObjectDate_End.ObjectId = Object_Contract_View.ContractId
+                                AND ObjectDate_End.DescId = zc_ObjectDate_Contract_End()  
+;
   
 END;
 $BODY$

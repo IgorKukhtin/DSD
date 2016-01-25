@@ -1,20 +1,21 @@
-п»ї-- Function: gpGet_Object_Contract()
+-- Function: gpGet_Object_Contract()
 
 DROP FUNCTION IF EXISTS gpGet_Object_Contract(integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpGet_Object_Contract(
-    IN inId          Integer,       -- РџРѕРґСЂР°Р·РґРµР»РµРЅРёРµ 
-    IN inSession     TVarChar       -- СЃРµСЃСЃРёСЏ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ 
+    IN inId          Integer,       -- Подразделение 
+    IN inSession     TVarChar       -- сессия пользователя 
 )
 RETURNS TABLE (Id Integer, Code Integer, Name TVarChar,  
                JuridicalBasisId Integer, JuridicalBasisName TVarChar,
                JuridicalId Integer, JuridicalName TVarChar, Deferment Integer, 
                Comment TVarChar,
+               StartDate TDateTime, EndDate TDateTime,
                isErased boolean) AS
 $BODY$
 BEGIN
 
-  -- РїСЂРѕРІРµСЂРєР° РїСЂР°РІ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ РЅР° РІС‹Р·РѕРІ РїСЂРѕС†РµРґСѓСЂС‹
+  -- проверка прав пользователя на вызов процедуры
    -- PERFORM lpCheckRight(inSession, zc_Enum_Process_Get_Object_Contract());
    IF COALESCE (inId, 0) = 0
    THEN
@@ -31,7 +32,10 @@ BEGIN
            , CAST ('' as TVarChar) AS JuridicalName
            , 0                     AS Deferment
 
-           , CAST (NULL AS TVarChar) AS Comment     
+           , CAST (NULL AS TVarChar) AS Comment  
+
+           , CURRENT_DATE :: TDateTime AS StartDate
+           , CURRENT_DATE :: TDateTime AS EndDate   
        
            , CAST (NULL AS Boolean) AS isErased;
    
@@ -50,10 +54,18 @@ BEGIN
            , Object_Contract_View.Deferment
 
            , Object_Contract_View.Comment
+
+           , COALESCE (ObjectDate_Start.ValueData, CURRENT_DATE) :: TDateTime   AS StartDate 
+           , COALESCE (ObjectDate_End.ValueData, CURRENT_DATE) :: TDateTime     AS EndDate   
            
            , Object_Contract_View.isErased
        FROM Object_Contract_View
-                                  
+            LEFT JOIN ObjectDate AS ObjectDate_Start
+                                 ON ObjectDate_Start.ObjectId = Object_Contract_View.ContractId
+                                AND ObjectDate_Start.DescId = zc_ObjectDate_Contract_Start()
+            LEFT JOIN ObjectDate AS ObjectDate_End
+                                 ON ObjectDate_End.ObjectId = Object_Contract_View.ContractId
+                                AND ObjectDate_End.DescId = zc_ObjectDate_Contract_End()      
       WHERE Object_Contract_View.Id = inId;
    END IF;
   
@@ -66,11 +78,11 @@ ALTER FUNCTION gpGet_Object_Contract (integer, TVarChar) OWNER TO postgres;
 
 /*-------------------------------------------------------------------------------*/
 /*
- РРЎРўРћР РРЇ Р РђР—Р РђР‘РћРўРљР: Р”РђРўРђ, РђР’РўРћР 
-               Р¤РµР»РѕРЅСЋРє Р.Р’.   РљСѓС…С‚РёРЅ Р.Р’.   РљР»РёРјРµРЅС‚СЊРµРІ Рљ.Р.
+ ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
  01.07.14         *
 
 */
 
--- С‚РµСЃС‚
+-- тест
 -- SELECT * FROM gpGet_Object_Contract(0,'2')

@@ -247,6 +247,13 @@ begin
 
   DirectoryLoad(FarmacyProcedurePath + 'OBJECTS\Union\');
 
+  DirectoryLoad(FarmacyProcedurePath + 'OBJECTS\Contract\');
+  DirectoryLoad(FarmacyProcedurePath + 'OBJECTS\Personal\');
+  DirectoryLoad(FarmacyProcedurePath + 'OBJECTS\PersonalGroup\');
+  DirectoryLoad(FarmacyProcedurePath + 'OBJECTS\Position\');
+  DirectoryLoad(FarmacyProcedurePath + 'OBJECTS\Education\');
+  DirectoryLoad(FarmacyProcedurePath + 'OBJECTS\Calendar\');
+
   ZQuery.SQL.LoadFromFile(FarmacyProcedurePath + 'OBJECTS\PartionGoods\gpSelect_Object_PartionGoods.sql');
   ZQuery.ExecSQL;
 end;
