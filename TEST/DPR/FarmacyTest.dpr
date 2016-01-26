@@ -3,6 +3,7 @@ program FarmacyTest;
 uses
   Forms,
   DUnitTestRunner,
+  SysUtils,
   dbCreateStructureTest in '..\SOURCE\STRUCTURE\dbCreateStructureTest.pas',
   dbMetadataTest in '..\SOURCE\METADATA\dbMetadataTest.pas',
   zLibUtil in '..\SOURCE\zLibUtil.pas',
@@ -383,7 +384,7 @@ uses
 {$R DevExpressRus.res}
 
 begin
-  ConnectionPath := '..\INIT\testfarmacy_init.php';
+  ConnectionPath := '..\INIT\farmacy_init.php';
   EnumPath := '..\DATABASE\FARMACY\METADATA\Enum\';
   CreateStructurePath := '..\DATABASE\FARMACY\STRUCTURE\';
   LocalViewPath := '..\DATABASE\FARMACY\View\';
@@ -391,7 +392,10 @@ begin
   LocalProcessPath := '..\DATABASE\COMMON\PROCESS\';
   dsdProject := prFarmacy;
 
-  gc_AdminPassword := 'Админ1111';
+  if FindCmdLineSwitch('realfarmacy', true)
+  then gc_AdminPassword := 'Админ1234'
+  else gc_AdminPassword := 'Админ1111';
+
   gc_ProgramName := 'Farmacy.exe';
 
   Application.Initialize;

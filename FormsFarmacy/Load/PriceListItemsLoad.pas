@@ -12,7 +12,8 @@ uses
   cxGridCustomView, cxGridCustomTableView, cxGridTableView, cxGridDBTableView,
   cxGrid, cxPC, Vcl.ExtCtrls, cxButtonEdit, cxContainer, Vcl.ComCtrls, dxCore,
   cxDateUtils, cxTextEdit, cxMaskEdit, cxDropDownEdit, cxCalendar, cxLabel,
-  dsdGuides, cxCurrencyEdit, Vcl.DBActns;
+  dsdGuides, cxCurrencyEdit, Vcl.DBActns, dxSkinsCore, dxSkinsDefaultPainters,
+  dxSkinscxPCPainter, dxSkinsdxBarPainter;
 
 type
   TPriceListItemsLoadForm = class(TAncestorDBGridForm)
