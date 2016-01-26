@@ -18,6 +18,11 @@ CREATE OR REPLACE FUNCTION zc_ObjectBlob_Member_EMailSign() RETURNS Integer AS $
 INSERT INTO ObjectBlobDesc (Code, DescId, ItemName)
   SELECT 'zc_ObjectBlob_Member_EMailSign', zc_object_Member(), 'Подпись E-mail' WHERE NOT EXISTS (SELECT * FROM ObjectBlobDesc WHERE Code = 'zc_ObjectBlob_Member_EMailSign');
 
+CREATE OR REPLACE FUNCTION zc_ObjectBlob_Member_Photo() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectBlobDesc WHERE Code = 'zc_ObjectBlob_Member_Photo'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectBlobDesc (Code, DescId, ItemName)
+  SELECT 'zc_ObjectBlob_Member_Photo', zc_object_Member(), 'Фото' WHERE NOT EXISTS (SELECT * FROM ObjectBlobDesc WHERE Code = 'zc_ObjectBlob_Member_Photo');
+
+
 CREATE OR REPLACE FUNCTION zc_objectBlob_Program_data() RETURNS integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectBlobDesc WHERE Code = 'zc_objectBlob_Program_Data'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 INSERT INTO ObjectBLOBDesc (DescId, Code ,itemname)
    SELECT zc_object_Program(), 'zc_objectBlob_Program_Data','Данные формы' WHERE NOT EXISTS (SELECT * FROM ObjectBlobDesc WHERE Code = 'zc_objectBlob_Program_Data');

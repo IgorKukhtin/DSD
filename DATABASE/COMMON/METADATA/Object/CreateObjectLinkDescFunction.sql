@@ -1242,6 +1242,10 @@ CREATE OR REPLACE FUNCTION zc_ObjectLink_Unit_MarginCategory() RETURNS Integer A
 INSERT INTO ObjectLinkDesc(Code, ItemName, DescId, ChildObjectDescId)
 SELECT 'zc_ObjectLink_Unit_MarginCategory', 'Категория для переоценки', zc_Object_Unit(), zc_Object_MarginCategory() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_Unit_MarginCategory');
 
+CREATE OR REPLACE FUNCTION zc_ObjectLink_Member_Education() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_Member_Education'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectLinkDesc(Code, ItemName, DescId, ChildObjectDescId)
+SELECT 'zc_ObjectLink_Member_Education', 'Связь физ.лиц со Специальностью', zc_Object_Member(), zc_Object_Education() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_Member_Education');
+
 --------------------------- !!!!!!!!!!!!!!!!!!!!!!!!!
 --------------------------- !!! ВРЕМЕННЫЕ ОБЪЕКТЫ !!!
 --------------------------- !!!!!!!!!!!!!!!!!!!!!!!!!

@@ -212,6 +212,8 @@ type
     N81: TMenuItem;
     actWorkTimeKind: TdsdOpenForm;
     N82: TMenuItem;
+    actSheetWorkTime: TdsdOpenForm;
+    N83: TMenuItem;
     procedure actSaveDataExecute(Sender: TObject);
     procedure miRepriceClick(Sender: TObject);
   private
