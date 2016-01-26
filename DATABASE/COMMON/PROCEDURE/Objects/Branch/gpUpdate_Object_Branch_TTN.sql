@@ -1,7 +1,7 @@
 -- Function: gpUpdate_Object_Branch_TTN()
 
 DROP FUNCTION IF EXISTS gpUpdate_Object_Branch_TTN (Integer, Integer, Integer, Integer, Integer, Integer, TVarChar);
-
+DROP FUNCTION IF EXISTS gpUpdate_Object_Branch_TTN (Integer, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpUpdate_Object_Branch_TTN(
     IN inId                    Integer   ,     -- ключ объекта <> 
@@ -10,6 +10,7 @@ CREATE OR REPLACE FUNCTION gpUpdate_Object_Branch_TTN(
     IN inMember2Id             Integer   ,     -- Бухгалтер
     IN inMember3Id             Integer   ,     -- Ответственное лицо(відпуск дозволив)
     IN inMember4Id             Integer   ,     -- Ответственное лицо(здав)
+    IN inCarId                 Integer   ,     -- Автомобиль 
     IN inSession               TVarChar        -- сессия пользователя
 )
   RETURNS VOID AS
@@ -29,7 +30,8 @@ BEGIN
    PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_Branch_Member3(), inId, inMember3Id);
    -- сохранили св-во 
    PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_Branch_Member4(), inId, inMember4Id);
-
+   -- сохранили св-во 
+   PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_Branch_Car(), inId, inCarId);
 
 
         

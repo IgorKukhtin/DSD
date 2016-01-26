@@ -10,6 +10,14 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , PersonalId Integer, PersonalName TVarChar
              , PersonalStoreId Integer, PersonalStoreName TVarChar
              , PersonalBookkeeperId Integer, PersonalBookkeeperName TVarChar
+
+             , PersonalDriverId Integer, PersonalDriverName TVarChar
+             , Member1Id Integer, Member1Name TVarChar
+             , Member2Id Integer, Member2Name TVarChar
+             , Member3Id Integer, Member3Name TVarChar
+             , Member4Id Integer, Member4Name TVarChar
+             , CarId Integer, CarName TVarChar
+
              , UnitId Integer, UnitName TVarChar
              , UnitReturnId Integer, UnitReturnName TVarChar
              , IsMedoc boolean, IsPartionDoc boolean
@@ -42,6 +50,19 @@ BEGIN
 
         , Object_PersonalBookkeeper_View.PersonalId    AS PersonalBookkeeperId
         , Object_PersonalBookkeeper_View.PersonalName  AS PersonalBookkeeperName
+
+        , Object_PersonalDriver.Id         AS PersonalDriverId
+        , Object_PersonalDriver.ValueData  AS PersonalDriverName 
+        , Object_Member1.Id                AS Member1Id
+        , Object_Member1.ValueData         AS Member1Name 
+        , Object_Member2.Id                AS Member2Id
+        , Object_Member2.ValueData         AS Member2Name 
+        , Object_Member3.Id                AS Member3Id
+        , Object_Member3.ValueData         AS Member3Name 
+        , Object_Member4.Id                AS Member4Id
+        , Object_Member4.ValueData         AS Member4Name 
+        , Object_Car.Id                    AS CarId
+        , Object_Car.ValueData             AS CarName
 
         , Object_Unit.Id         AS UnitId
         , Object_Unit.ValueData  AS UnitName
@@ -87,6 +108,32 @@ BEGIN
                              ON ObjectLink_Branch_PersonalBookkeeper.ObjectId = Object_Branch.Id
                             AND ObjectLink_Branch_PersonalBookkeeper.DescId = zc_ObjectLink_Branch_PersonalBookkeeper()
         LEFT JOIN Object_Personal_View AS Object_PersonalBookkeeper_View ON Object_PersonalBookkeeper_View.PersonalId = ObjectLink_Branch_PersonalBookkeeper.ChildObjectId                     
+
+        LEFT JOIN ObjectLink AS ObjectLink_Branch_PersonalDriver
+                             ON ObjectLink_Branch_PersonalDriver.ObjectId = Object_Branch.Id
+                            AND ObjectLink_Branch_PersonalDriver.DescId = zc_ObjectLink_Branch_PersonalDriver()
+        LEFT JOIN Object AS Object_PersonalDriver ON Object_PersonalDriver.Id = ObjectLink_Branch_PersonalDriver.ChildObjectId
+
+        LEFT JOIN ObjectLink AS ObjectLink_Branch_Member1
+                             ON ObjectLink_Branch_Member1.ObjectId = Object_Branch.Id
+                            AND ObjectLink_Branch_Member1.DescId = zc_ObjectLink_Branch_Member1()
+        LEFT JOIN Object AS Object_Member1 ON Object_Member1.Id = ObjectLink_Branch_Member1.ChildObjectId
+        LEFT JOIN ObjectLink AS ObjectLink_Branch_Member2
+                             ON ObjectLink_Branch_Member2.ObjectId = Object_Branch.Id
+                            AND ObjectLink_Branch_Member2.DescId = zc_ObjectLink_Branch_Member2()
+        LEFT JOIN Object AS Object_Member2 ON Object_Member2.Id = ObjectLink_Branch_Member2.ChildObjectId
+        LEFT JOIN ObjectLink AS ObjectLink_Branch_Member3
+                             ON ObjectLink_Branch_Member3.ObjectId = Object_Branch.Id
+                            AND ObjectLink_Branch_Member3.DescId = zc_ObjectLink_Branch_Member3()
+        LEFT JOIN Object AS Object_Member3 ON Object_Member3.Id = ObjectLink_Branch_Member3.ChildObjectId
+        LEFT JOIN ObjectLink AS ObjectLink_Branch_Member4
+                             ON ObjectLink_Branch_Member4.ObjectId = Object_Branch.Id
+                            AND ObjectLink_Branch_Member4.DescId = zc_ObjectLink_Branch_Member4()
+        LEFT JOIN Object AS Object_Member4 ON Object_Member4.Id = ObjectLink_Branch_Member4.ChildObjectId
+        LEFT JOIN ObjectLink AS ObjectLink_Branch_Car
+                             ON ObjectLink_Branch_Car.ObjectId = Object_Branch.Id
+                            AND ObjectLink_Branch_Car.DescId = zc_ObjectLink_Branch_Car()
+        LEFT JOIN Object AS Object_Car ON Object_Car.Id = ObjectLink_Branch_Car.ChildObjectId
 
         LEFT JOIN ObjectLink AS ObjectLink_Branch_Unit
                              ON ObjectLink_Branch_Unit.ObjectId = Object_Branch.Id

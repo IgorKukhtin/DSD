@@ -2,7 +2,7 @@ object Branch_TTNDialogForm: TBranch_TTNDialogForm
   Left = 0
   Top = 0
   Caption = #1044#1072#1085#1085#1099#1077' '#1076#1083#1103' '#1079#1072#1087#1083#1086#1085#1077#1085#1080#1103' '#1058#1058#1053
-  ClientHeight = 301
+  ClientHeight = 361
   ClientWidth = 320
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -17,8 +17,8 @@ object Branch_TTNDialogForm: TBranch_TTNDialogForm
   PixelsPerInch = 96
   TextHeight = 13
   object cxButton1: TcxButton
-    Left = 41
-    Top = 268
+    Left = 37
+    Top = 316
     Width = 75
     Height = 25
     Action = dsdInsertUpdateGuides
@@ -26,8 +26,8 @@ object Branch_TTNDialogForm: TBranch_TTNDialogForm
     TabOrder = 0
   end
   object cxButton2: TcxButton
-    Left = 185
-    Top = 268
+    Left = 181
+    Top = 316
     Width = 75
     Height = 25
     Action = dsdFormClose
@@ -116,6 +116,23 @@ object Branch_TTNDialogForm: TBranch_TTNDialogForm
     TabOrder = 11
     Width = 267
   end
+  object cxLabel9: TcxLabel
+    Left = 19
+    Top = 255
+    Caption = #1040#1074#1090#1086#1084#1086#1073#1080#1083#1100
+  end
+  object edCar: TcxButtonEdit
+    Left = 19
+    Top = 272
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    Properties.ReadOnly = True
+    TabOrder = 13
+    Width = 267
+  end
   object ActionList: TActionList
     Left = 240
     Top = 208
@@ -192,6 +209,13 @@ object Branch_TTNDialogForm: TBranch_TTNDialogForm
         Component = GuideMember4
         ComponentItem = 'Key'
         ParamType = ptInput
+      end
+      item
+        Name = 'inCarId'
+        Value = Null
+        Component = GuideCar
+        ComponentItem = 'Key'
+        ParamType = ptInput
       end>
     PackSize = 1
     Left = 120
@@ -205,10 +229,11 @@ object Branch_TTNDialogForm: TBranch_TTNDialogForm
         ParamType = ptInputOutput
       end
       item
-        Name = 'PersonalDriver'
+        Name = 'PersonalDriverId'
         Value = Null
         Component = GuidePersonalDriver
         ComponentItem = 'Key'
+        ParamType = ptInputOutput
       end
       item
         Name = 'Member1Id'
@@ -240,6 +265,7 @@ object Branch_TTNDialogForm: TBranch_TTNDialogForm
         Component = GuidePersonalDriver
         ComponentItem = 'TextValue'
         DataType = ftString
+        ParamType = ptInputOutput
       end
       item
         Name = 'Member1Name'
@@ -268,6 +294,19 @@ object Branch_TTNDialogForm: TBranch_TTNDialogForm
         Component = GuideMember4
         ComponentItem = 'TextValue'
         DataType = ftString
+      end
+      item
+        Name = 'CarId'
+        Value = Null
+        Component = GuideCar
+        ComponentItem = 'Key'
+      end
+      item
+        Name = 'CarName'
+        Value = Null
+        Component = GuideCar
+        ComponentItem = 'TextValue'
+        DataType = ftString
       end>
     Left = 272
     Top = 40
@@ -284,12 +323,12 @@ object Branch_TTNDialogForm: TBranch_TTNDialogForm
       end>
     StorageName = 'cxPropertiesStore'
     StorageType = stStream
-    Left = 160
-    Top = 272
+    Left = 156
+    Top = 320
   end
   object dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
-    Left = 40
-    Top = 216
+    Left = 288
+    Top = 144
   end
   object GuidePersonalDriver: TdsdGuides
     KeyField = 'Id'
@@ -341,7 +380,7 @@ object Branch_TTNDialogForm: TBranch_TTNDialogForm
         ParamType = ptInput
       end>
     Left = 168
-    Top = 75
+    Top = 67
   end
   object GuideMember2: TdsdGuides
     KeyField = 'Id'
@@ -420,5 +459,35 @@ object Branch_TTNDialogForm: TBranch_TTNDialogForm
       end>
     Left = 198
     Top = 197
+  end
+  object GuideCar: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edCar
+    FormNameParam.Value = 'TCarForm'
+    FormNameParam.DataType = ftString
+    FormName = 'TCarForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GuideCar
+        ComponentItem = 'Key'
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuideCar
+        ComponentItem = 'TextValue'
+        DataType = ftString
+      end
+      item
+        Name = 'CarModelName'
+        Value = ''
+        ComponentItem = 'TextValue'
+        DataType = ftString
+      end>
+    Left = 144
+    Top = 266
   end
 end

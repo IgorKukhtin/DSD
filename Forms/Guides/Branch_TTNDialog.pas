@@ -48,6 +48,9 @@ type
     GuideMember2: TdsdGuides;
     GuideMember3: TdsdGuides;
     GuideMember4: TdsdGuides;
+    cxLabel9: TcxLabel;
+    edCar: TcxButtonEdit;
+    GuideCar: TdsdGuides;
   private
     { Private declarations }
   public

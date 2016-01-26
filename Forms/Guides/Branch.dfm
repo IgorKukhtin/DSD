@@ -12,8 +12,8 @@ object BranchForm: TBranchForm
   Font.Style = []
   KeyPreview = True
   OldCreateOrder = False
-  AddOnFormData.isAlwaysRefresh = False
   AddOnFormData.RefreshAction = actRefresh
+  AddOnFormData.isSingle = False
   AddOnFormData.ChoiceAction = dsdChoiceGuides
   PixelsPerInch = 96
   TextHeight = 13
@@ -25,7 +25,6 @@ object BranchForm: TBranchForm
     Align = alClient
     TabOrder = 0
     LookAndFeel.NativeStyle = False
-    ExplicitWidth = 861
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -201,6 +200,14 @@ object BranchForm: TBranchForm
         Options.Editing = False
         Width = 76
       end
+      object clCarName: TcxGridDBColumn
+        Caption = #1040#1074#1090#1086#1084#1086#1073#1080#1083#1100' ('#1058#1058#1053')'
+        DataBinding.FieldName = 'CarName'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 76
+      end
     end
     object cxGridLevel: TcxGridLevel
       GridView = cxGridDBTableView
@@ -214,8 +221,8 @@ object BranchForm: TBranchForm
   object ClientDataSet: TClientDataSet
     Aggregates = <>
     Params = <>
-    Left = 96
-    Top = 144
+    Left = 88
+    Top = 160
   end
   object cxPropertiesStore: TcxPropertiesStore
     Components = <
@@ -379,7 +386,7 @@ object BranchForm: TBranchForm
       Category = 0
     end
     object bbOpenFormTTN: TdxBarButton
-      Action = OpenFormTTN
+      Action = MultiActionTtn
       Category = 0
     end
   end
@@ -390,6 +397,8 @@ object BranchForm: TBranchForm
     object actRefresh: TdsdDataSetRefresh
       Category = 'DSDLib'
       MoveParams = <>
+      PostDataSetBeforeExecute = False
+      PostDataSetAfterExecute = True
       StoredProc = dsdStoredProc
       StoredProcList = <
         item
@@ -618,6 +627,8 @@ object BranchForm: TBranchForm
     object OpenFormTTN: TdsdOpenForm
       Category = 'DSDLib'
       MoveParams = <>
+      PostDataSetBeforeExecute = False
+      PostDataSetAfterExecute = True
       Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1076#1072#1085#1085#1099#1077' '#1079#1072#1087#1086#1083#1085#1077#1085#1080#1103' '#1058#1058#1053
       Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1076#1072#1085#1085#1099#1077' '#1079#1072#1087#1086#1083#1085#1077#1085#1080#1103' '#1058#1058#1053
       ImageIndex = 42
@@ -636,6 +647,7 @@ object BranchForm: TBranchForm
           Value = '0'
           Component = ClientDataSet
           ComponentItem = 'PersonalDriverId'
+          ParamType = ptInputOutput
         end
         item
           Name = 'Member1Id'
@@ -667,6 +679,7 @@ object BranchForm: TBranchForm
           Component = ClientDataSet
           ComponentItem = 'PersonalDriverName'
           DataType = ftString
+          ParamType = ptInputOutput
         end
         item
           Name = 'Member1Name'
@@ -694,8 +707,37 @@ object BranchForm: TBranchForm
           Value = Null
           Component = ClientDataSet
           ComponentItem = 'Member4Name'
+        end
+        item
+          Name = 'CarId'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'CarId'
+        end
+        item
+          Name = 'CarName'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'CarName'
+          DataType = ftString
         end>
-      isShowModal = False
+      isShowModal = True
+    end
+    object MultiActionTtn: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      PostDataSetAfterExecute = True
+      ActionList = <
+        item
+          Action = OpenFormTTN
+        end
+        item
+          Action = actRefresh
+        end>
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1076#1072#1085#1085#1099#1077' '#1079#1072#1087#1086#1083#1085#1077#1085#1080#1103' '#1058#1058#1053
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1076#1072#1085#1085#1099#1077' '#1079#1072#1087#1086#1083#1085#1077#1085#1080#1103' '#1058#1058#1053
+      ImageIndex = 42
     end
   end
   object dsdStoredProc: TdsdStoredProc
@@ -707,8 +749,8 @@ object BranchForm: TBranchForm
       end>
     Params = <>
     PackSize = 1
-    Left = 200
-    Top = 192
+    Left = 184
+    Top = 200
   end
   object dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 120
