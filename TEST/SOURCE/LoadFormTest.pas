@@ -237,6 +237,8 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TBranch_ObjectForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TBranchEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TBranchEditForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TBranch_TTNDialogForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TBranch_TTNDialogForm');
 end;
 
 procedure TLoadFormTest.LoadBusinessFormTest;

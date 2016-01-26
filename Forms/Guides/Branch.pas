@@ -66,6 +66,8 @@ type
     actUpdatePersonal: TdsdUpdateDataSet;
     PersonalBookkeeperChoice: TOpenChoiceForm;
     clPlaceOf: TcxGridDBColumn;
+    OpenFormTTN: TdsdOpenForm;
+    bbOpenFormTTN: TdxBarButton;
   private
     { Private declarations }
   public
