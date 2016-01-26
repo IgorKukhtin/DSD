@@ -181,9 +181,7 @@ uses
   OrderXML in '..\..\SOURCE\EDI\OrderXML.pas',
   OrdrspXML in '..\..\SOURCE\EDI\OrdrspXML.pas',
   dsdInternetAction in '..\..\SOURCE\COMPONENT\dsdInternetAction.pas',
-  Member in '..\..\Forms\Guides\Member.pas' {MemberForm: TParentForm},
   Member_Object in '..\..\Forms\Guides\Member_Object.pas' {Member_ObjectForm: TParentForm},
-  MemberEdit in '..\..\Forms\Guides\MemberEdit.pas' {MemberEditForm: TParentForm},
   MemberTest in '..\SOURCE\Objects\All\MemberTest.pas',
   Process in '..\..\Forms\Kind\Process.pas' {ProcessForm: TParentForm},
   NDSKindTest in '..\SOURCE\Objects\All\NDSKindTest.pas',
@@ -375,7 +373,11 @@ uses
   PositionEdit in '..\..\FormsFarmacy\Guides\PositionEdit.pas' {PositionEditForm: TParentForm},
   Calendar in '..\..\FormsFarmacy\Guides\Calendar.pas' {CalendarForm: TParentForm},
   WorkTimeKind_Object in '..\..\FormsFarmacy\Kind\WorkTimeKind_Object.pas' {WorkTimeKind_ObjectForm: TParentForm},
-  WorkTimeKind in '..\..\FormsFarmacy\Kind\WorkTimeKind.pas' {WorkTimeKindForm: TParentForm};
+  WorkTimeKind in '..\..\FormsFarmacy\Kind\WorkTimeKind.pas' {WorkTimeKindForm: TParentForm},
+  Member in '..\..\FormsFarmacy\Guides\Member.pas' {MemberForm: TParentForm},
+  MemberEdit in '..\..\FormsFarmacy\Guides\MemberEdit.pas' {MemberEditForm: TParentForm},
+  SheetWorkTimeJournal in '..\..\FormsFarmacy\Document\SheetWorkTimeJournal.pas' {SheetWorkTimeJournalForm: TParentForm},
+  SheetWorkTime in '..\..\FormsFarmacy\Document\SheetWorkTime.pas' {SheetWorkTimeForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}

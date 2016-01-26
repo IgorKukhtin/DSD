@@ -1131,6 +1131,30 @@ CREATE OR REPLACE FUNCTION zc_ObjectLink_Branch_UnitReturn() RETURNS Integer AS 
 INSERT INTO ObjectLinkDesc(Code, ItemName, DescId, ChildObjectDescId)
 SELECT 'zc_ObjectLink_Branch_UnitReturn', 'Связь филиала с подразделением (склад возвратов)', zc_Object_Branch(), zc_Object_Unit() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_Branch_UnitReturn');
 
+CREATE OR REPLACE FUNCTION zc_ObjectLink_Branch_PersonalDriver() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_Branch_PersonalDriver'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+  INSERT INTO ObjectLinkDesc(Code, ItemName, DescId, ChildObjectDescId)
+  SELECT 'zc_ObjectLink_Branch_PersonalDriver', 'Водитель ТТН', zc_Object_Branch(), zc_Object_Personal() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_Branch_PersonalDriver');
+
+CREATE OR REPLACE FUNCTION zc_ObjectLink_Branch_Member1() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_Branch_Member1'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+  INSERT INTO ObjectLinkDesc(Code, ItemName, DescId, ChildObjectDescId)
+  SELECT 'zc_ObjectLink_Branch_Member1', 'Водитель/Экспедитор ТТН', zc_Object_Branch(), zc_Object_Personal() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_Branch_Member1');
+
+CREATE OR REPLACE FUNCTION zc_ObjectLink_Branch_Member2() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_Branch_Member2'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+  INSERT INTO ObjectLinkDesc(Code, ItemName, DescId, ChildObjectDescId)
+  SELECT 'zc_ObjectLink_Branch_Member2', 'Бухгалтер ТТН', zc_Object_Branch(), zc_Object_Personal() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_Branch_Member2');
+
+CREATE OR REPLACE FUNCTION zc_ObjectLink_Branch_Member3() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_Branch_Member3'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+  INSERT INTO ObjectLinkDesc(Code, ItemName, DescId, ChildObjectDescId)
+  SELECT 'zc_ObjectLink_Branch_Member3', 'Ответственное лицо(відпуск дозволив) ТТН', zc_Object_Branch(), zc_Object_Personal() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_Branch_Member3');
+
+CREATE OR REPLACE FUNCTION zc_ObjectLink_Branch_Member4() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_Branch_Member4'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+  INSERT INTO ObjectLinkDesc(Code, ItemName, DescId, ChildObjectDescId)
+  SELECT 'zc_ObjectLink_Branch_Member4', 'Ответственное лицо(здав) ТТН', zc_Object_Branch(), zc_Object_Personal() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_Branch_Member4');
+
+CREATE OR REPLACE FUNCTION zc_ObjectLink_Branch_Car() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_Branch_Car'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+  INSERT INTO ObjectLinkDesc(Code, ItemName, DescId, ChildObjectDescId)
+  SELECT 'zc_ObjectLink_Branch_Car', 'Автомобиль ТТН', zc_Object_Branch(), zc_Object_Personal() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_Branch_Car');
+
 --!!! АПТЕКА
 
 CREATE OR REPLACE FUNCTION zc_ObjectLink_Goods_NDSKind() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_Goods_NDSKind'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
@@ -1241,6 +1265,10 @@ SELECT 'zc_ObjectLink_Goods_Appointment', 'Назначение товара', zc_Object_Goods()
 CREATE OR REPLACE FUNCTION zc_ObjectLink_Unit_MarginCategory() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_Unit_MarginCategory'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 INSERT INTO ObjectLinkDesc(Code, ItemName, DescId, ChildObjectDescId)
 SELECT 'zc_ObjectLink_Unit_MarginCategory', 'Категория для переоценки', zc_Object_Unit(), zc_Object_MarginCategory() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_Unit_MarginCategory');
+
+CREATE OR REPLACE FUNCTION zc_ObjectLink_Member_Education() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_Member_Education'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectLinkDesc(Code, ItemName, DescId, ChildObjectDescId)
+SELECT 'zc_ObjectLink_Member_Education', 'Связь физ.лиц со Специальностью', zc_Object_Member(), zc_Object_Education() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_Member_Education');
 
 --------------------------- !!!!!!!!!!!!!!!!!!!!!!!!!
 --------------------------- !!! ВРЕМЕННЫЕ ОБЪЕКТЫ !!!

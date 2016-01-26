@@ -1,4 +1,4 @@
-unit Branch;
+unit SheetWorkTimeJournal;
 
 interface
 
@@ -9,7 +9,10 @@ uses
   cxDataStorage, cxEdit, Data.DB, cxDBData, cxGridLevel, cxClasses,
   cxGridCustomView, cxGridCustomTableView, cxGridTableView, cxGridDBTableView,
   cxGrid, Datasnap.DBClient, cxPropertiesStore, dxBar,
-  Vcl.ActnList, DataModul, ParentForm, dsdDB, dsdAction, dxSkinsCore,
+  Vcl.ActnList, DataModul, cxTL, cxTLdxBarBuiltInMenu,
+  cxInplaceContainer, cxTLData, cxDBTL, cxMaskEdit, ParentForm, dsdDB, dsdAction,
+  cxContainer, Vcl.ComCtrls, dxCore, cxDateUtils, cxTextEdit, cxDropDownEdit,
+  cxCalendar, Vcl.ExtCtrls, cxImageComboBox, Vcl.Menus, dsdAddOn, dxSkinsCore,
   dxSkinBlack, dxSkinBlue, dxSkinBlueprint, dxSkinCaramel, dxSkinCoffee,
   dxSkinDarkRoom, dxSkinDarkSide, dxSkinDevExpressDarkStyle,
   dxSkinDevExpressStyle, dxSkinFoggy, dxSkinGlassOceans, dxSkinHighContrast,
@@ -21,58 +24,43 @@ uses
   dxSkinSilver, dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008,
   dxSkinTheAsphaltWorld, dxSkinsDefaultPainters, dxSkinValentine, dxSkinVS2010,
   dxSkinWhiteprint, dxSkinXmas2008Blue, dxSkinscxPCPainter, dxSkinsdxBarPainter,
-  dsdAddOn, dxBarExtItems, cxButtonEdit;
+  dxBarExtItems, cxCurrencyEdit, ChoicePeriod, System.Contnrs, cxLabel;
 
 type
-  TBranchForm = class(TParentForm)
-    cxGridDBTableView: TcxGridDBTableView;
-    cxGridLevel: TcxGridLevel;
-    cxGrid: TcxGrid;
-    clName: TcxGridDBColumn;
+  TSheetWorkTimeJournalForm = class(TParentForm)
     DataSource: TDataSource;
     ClientDataSet: TClientDataSet;
     cxPropertiesStore: TcxPropertiesStore;
     dxBarManager: TdxBarManager;
-    dxBarManagerBar1: TdxBar;
+    dxBarManagerBar: TdxBar;
     ActionList: TActionList;
     bbRefresh: TdxBarButton;
     actRefresh: TdsdDataSetRefresh;
-    actInsert: TdsdInsertUpdateAction;
-    bbInsert: TdxBarButton;
     dsdStoredProc: TdsdStoredProc;
-    actUpdate: TdsdInsertUpdateAction;
-    bbEdit: TdxBarButton;
-    clErased: TcxGridDBColumn;
-    clCode: TcxGridDBColumn;
-    bbErased: TdxBarButton;
-    bbUnErased: TdxBarButton;
-    dsdSetErased: TdsdUpdateErased;
-    dsdSetUnErased: TdsdUpdateErased;
+    cxGridDBTableView: TcxGridDBTableView;
+    cxGridLevel: TcxGridLevel;
+    cxGrid: TcxGrid;
+    colOperDate: TcxGridDBColumn;
+    colUnitName: TcxGridDBColumn;
+    Panel1: TPanel;
+    deStart: TcxDateEdit;
+    deEnd: TcxDateEdit;
+    PopupMenu: TPopupMenu;
+    N1: TMenuItem;
+    N2: TMenuItem;
     dsdGridToExcel: TdsdGridToExcel;
-    dxBarStatic: TdxBarStatic;
     bbGridToExcel: TdxBarButton;
-    bbChoiceGuides: TdxBarButton;
     dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn;
-    spErasedUnErased: TdsdStoredProc;
-    dsdChoiceGuides: TdsdChoiceGuides;
     dsdDBViewAddOn: TdsdDBViewAddOn;
-    ProtocolOpenForm: TdsdOpenForm;
-    bbProtocolOpenForm: TdxBarButton;
-    clInvNumber: TcxGridDBColumn;
-    clPersonalBookkeeperName: TcxGridDBColumn;
-    clIsMedoc: TcxGridDBColumn;
-    clisPartionDoc: TcxGridDBColumn;
-    spUpdate: TdsdStoredProc;
-    actUpdatePersonal: TdsdUpdateDataSet;
-    PersonalBookkeeperChoice: TOpenChoiceForm;
-    clPlaceOf: TcxGridDBColumn;
-    OpenFormTTN: TdsdOpenForm;
-    bbOpenFormTTN: TdxBarButton;
-    MultiActionTtn: TMultiAction;
+    PeriodChoice: TPeriodChoice;
+    RefreshDispatcher: TRefreshDispatcher;
+    cxLabel2: TcxLabel;
+    cxLabel1: TcxLabel;
+    UpdateAction: TdsdInsertUpdateAction;
+    bbStatic: TdxBarStatic;
+    bbEdit: TdxBarButton;
   private
-    { Private declarations }
   public
-    { Public declarations }
   end;
 
 implementation
@@ -80,6 +68,6 @@ implementation
 {$R *.dfm}
 
 initialization
-  RegisterClass(TBranchForm);
+  RegisterClass(TSheetWorkTimeJournalForm);
 
 end.

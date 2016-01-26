@@ -81,6 +81,7 @@ type
     procedure LoadServiceFormTest;
     procedure LoadSendFormTest;
     procedure LoadSendOnPriceFormTest;
+    procedure LoadSheetWorkTimeFormTest;
     procedure LoadUnitFormTest;
     procedure FormTest;
   end;
@@ -781,6 +782,14 @@ begin
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TSendOnPriceForm'));
   TdsdFormStorageFactory.GetStorage.Load('TSendOnPriceForm');
+end;
+
+procedure TLoadFormTest.LoadSheetWorkTimeFormTest;
+begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TSheetWorkTimeJournalForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TSheetWorkTimeJournalForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TSheetWorkTimeForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TSheetWorkTimeForm');
 end;
 
 procedure TLoadFormTest.LoadServiceFormTest;
