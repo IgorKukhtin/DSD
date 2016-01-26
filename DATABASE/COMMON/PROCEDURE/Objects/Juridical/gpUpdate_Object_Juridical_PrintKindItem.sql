@@ -66,10 +66,19 @@ BEGIN
           , tmp.CountQuality, tmp.CountPack, tmp.CountSpec, tmp.CountTax
     INTO ioIsMovement, ioIsAccount, ioIsTransport, ioIsQuality, ioIsPack, ioIsSpec, ioIsTax
        , ioCountMovement,ioCountAccount, ioCountTransport, ioCountQuality, ioCountPack, ioCountSpec, ioCountTax 
-    FROM ObjectLink
-       INNER JOIN lpSelect_Object_PrintKindItem() AS tmp ON tmp.Id = ObjectLink.ChildObjectId
-    WHERE ObjectLink.DescId = zc_ObjectLink_Juridical_PrintKindItem()
-    and ObjectLink.ObjectId = ioId;
+    FROM Object AS Object_Juridical
+         LEFT JOIN ObjectLink AS ObjectLink_Juridical_PrintKindItem
+                              ON ObjectLink_Juridical_PrintKindItem.ObjectId = Object_Juridical.Id
+                             AND ObjectLink_Juridical_PrintKindItem.DescId = zc_ObjectLink_Juridical_PrintKindItem()
+         LEFT JOIN ObjectLink AS ObjectLink_Juridical_Retail
+                              ON ObjectLink_Juridical_Retail.ObjectId = Object_Juridical.Id
+                             AND ObjectLink_Juridical_Retail.DescId = zc_ObjectLink_Juridical_Retail()
+         LEFT JOIN ObjectLink AS ObjectLink_Retail_PrintKindItem
+                              ON ObjectLink_Retail_PrintKindItem.ObjectId = ObjectLink_Juridical_Retail.ChildObjectId
+                             AND ObjectLink_Retail_PrintKindItem.DescId = zc_ObjectLink_Retail_PrintKindItem()
+         LEFT JOIN lpSelect_Object_PrintKindItem() AS tmp ON tmp.Id = CASE WHEN ObjectLink_Juridical_Retail.ChildObjectId > 0 THEN ObjectLink_Retail_PrintKindItem.ChildObjectId ELSE ObjectLink_Juridical_PrintKindItem.ChildObjectId END
+
+    WHERE Object_Juridical.Id = ioId;
 
    -- сохранили протокол
    PERFORM lpInsert_ObjectProtocol (ioId, vbUserId);
