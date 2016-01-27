@@ -22,6 +22,12 @@ type
     colChangeIncomePaymentKindName: TcxGridDBColumn;
     colTotalSumm: TcxGridDBColumn;
     colComment: TcxGridDBColumn;
+    clReturnOutInvNumber: TcxGridDBColumn;
+    clReturnOutInvNumberPartner: TcxGridDBColumn;
+    clReturnOutOperDate: TcxGridDBColumn;
+    clReturnOutOperDatePartner: TcxGridDBColumn;
+    clIncomeOperDate: TcxGridDBColumn;
+    clIncomeInvNumber: TcxGridDBColumn;
   private
     { Private declarations }
   public

@@ -80,6 +80,54 @@ inherited ChangeIncomePaymentJournalForm: TChangeIncomePaymentJournalForm
             Options.Editing = False
             Width = 135
           end
+          object clReturnOutInvNumber: TcxGridDBColumn
+            Caption = #8470' '#1074#1086#1079#1074#1088#1072#1090#1072' '#1087#1086#1089#1090'.'
+            DataBinding.FieldName = 'ReturnOutInvNumber'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 80
+          end
+          object clReturnOutOperDate: TcxGridDBColumn
+            Caption = #1044#1072#1090#1072' '#1074#1086#1079#1074#1088#1072#1090#1072' '#1087#1086#1089#1090'.'
+            DataBinding.FieldName = 'ReturnOutOperDate'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 80
+          end
+          object clReturnOutInvNumberPartner: TcxGridDBColumn
+            Caption = #8470' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072
+            DataBinding.FieldName = 'ReturnOutInvNumberPartner'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 80
+          end
+          object clReturnOutOperDatePartner: TcxGridDBColumn
+            Caption = #1044#1072#1090#1072' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072
+            DataBinding.FieldName = 'ReturnOutOperDatePartner'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 80
+          end
+          object clIncomeOperDate: TcxGridDBColumn
+            Caption = #1044#1072#1090#1072' '#1055#1053
+            DataBinding.FieldName = 'IncomeOperDate'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 80
+          end
+          object clIncomeInvNumber: TcxGridDBColumn
+            Caption = #8470' '#1055#1053
+            DataBinding.FieldName = 'IncomeInvNumber'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 80
+          end
         end
       end
     end
