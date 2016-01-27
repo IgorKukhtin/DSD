@@ -8,7 +8,7 @@ uses
   cxLookAndFeelPainters, cxContainer, cxEdit, Vcl.ComCtrls, dxCore, cxDateUtils,
   cxTextEdit, cxMaskEdit, cxDropDownEdit, cxCalendar, Vcl.StdCtrls, Data.DB,
   Data.Win.ADODB, Vcl.Grids, Vcl.DBGrids, Vcl.ExtCtrls, Vcl.Samples.Gauges,
-  dsdDB;
+  dsdDB, dxSkinsCore, dxSkinsDefaultPainters;
 
 type
   TMainForm = class(TForm)

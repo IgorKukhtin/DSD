@@ -242,7 +242,7 @@ BEGIN
             LEFT JOIN ObjectLink AS ObjectLink_Juridical_PrintKindItem
                                  ON ObjectLink_Juridical_PrintKindItem.ObjectId = tmpPartner.JuridicalId
                                 AND ObjectLink_Juridical_PrintKindItem.DescId = zc_ObjectLink_Juridical_PrintKindItem()
-            LEFT JOIN tmpPrintKindItem ON tmpPrintKindItem.Id = COALESCE (ObjectLink_Retail_PrintKindItem.ChildObjectId, ObjectLink_Juridical_PrintKindItem.ChildObjectId)
+            LEFT JOIN tmpPrintKindItem ON tmpPrintKindItem.Id = CASE WHEN ObjectLink_Juridical_Retail.ChildObjectId > 0 THEN ObjectLink_Retail_PrintKindItem.ChildObjectId ELSE ObjectLink_Juridical_PrintKindItem.ChildObjectId END
 
             LEFT JOIN Object_InfoMoney_View AS View_InfoMoney ON View_InfoMoney.InfoMoneyId = tmpPartner.InfoMoneyId
             LEFT JOIN Object_ContractCondition_PercentView ON Object_ContractCondition_PercentView.ContractId = tmpPartner.ContractId

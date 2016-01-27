@@ -182,6 +182,9 @@ BEGIN
                              ON ObjectLink_Juridical_Retail.ObjectId = Object_Juridical.Id 
                             AND ObjectLink_Juridical_Retail.DescId = zc_ObjectLink_Juridical_Retail()
         LEFT JOIN Object AS Object_Retail ON Object_Retail.Id = ObjectLink_Juridical_Retail.ChildObjectId
+        LEFT JOIN ObjectLink AS ObjectLink_Retail_PrintKindItem
+                             ON ObjectLink_Retail_PrintKindItem.ObjectId = ObjectLink_Juridical_Retail.ChildObjectId
+                            AND ObjectLink_Retail_PrintKindItem.DescId = zc_ObjectLink_Retail_PrintKindItem()
 
         LEFT JOIN ObjectLink AS ObjectLink_Juridical_RetailReport
                              ON ObjectLink_Juridical_RetailReport.ObjectId = Object_Juridical.Id 
@@ -208,7 +211,8 @@ BEGIN
         LEFT JOIN ObjectLink AS ObjectLink_Juridical_PrintKindItem
                              ON ObjectLink_Juridical_PrintKindItem.ObjectId = Object_Juridical.Id 
                             AND ObjectLink_Juridical_PrintKindItem.DescId = zc_ObjectLink_Juridical_PrintKindItem()
-	LEFT JOIN tmpPrintKindItem ON tmpPrintKindItem.Id =  ObjectLink_Juridical_PrintKindItem.ChildObjectId
+
+	LEFT JOIN tmpPrintKindItem ON tmpPrintKindItem.Id = CASE WHEN ObjectLink_Juridical_Retail.ChildObjectId > 0 THEN ObjectLink_Retail_PrintKindItem.ChildObjectId ELSE ObjectLink_Juridical_PrintKindItem.ChildObjectId END
 
     WHERE Object_Juridical.DescId = zc_Object_Juridical()
       AND (ObjectLink_Juridical_JuridicalGroup.ChildObjectId = vbObjectId_Constraint
