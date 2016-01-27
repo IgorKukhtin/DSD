@@ -1,14 +1,18 @@
 -- Function: gpInsertUpdate_Object_Unit()
 
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_JuridicalSettings(Integer, Integer, Integer, Integer, Boolean, TFloat, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_JuridicalSettings(Integer, TVarChar, Integer, Integer, Integer, Boolean, TFloat, TDateTime, TDateTime, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_JuridicalSettings(
  INOUT ioId                      Integer   ,   	-- ключ объекта <Установки для ценовых групп>
+    IN inName                    TVarChar  ,    -- Наименование (Номер договора)
     IN inJuridicalId             Integer   ,    -- Юр. лицо
     IN inMainJuridicalId         Integer   ,    -- Юр. лицо
     IN inContractId              Integer   ,    -- Договор
     IN inisPriceClose            Boolean   ,    -- Закрыт прайс
     IN inBonus                   TFloat    ,    -- % бонусирования
+    IN inStartDate               TDateTime ,    -- 
+    IN inEndDate                 TDateTime ,    -- 
     IN inSession                 TVarChar       -- сессия пользователя
 )
   RETURNS Integer AS
@@ -22,7 +26,7 @@ BEGIN
    vbObjectId := lpGet_DefaultValue('zc_Object_Retail', vbUserId);
 
    -- сохранили объект
-   ioId := lpInsertUpdate_Object (ioId, zc_Object_JuridicalSettings(), 0, '');
+   ioId := lpInsertUpdate_Object (ioId, zc_Object_JuridicalSettings(), 0, inName);
 
    -- сохранили связь с <Торговой сетью>
    PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_JuridicalSettings_Retail(), ioId, vbObjectId);
@@ -42,6 +46,11 @@ BEGIN
    -- % бонусирования
    PERFORM lpInsertUpdate_ObjectFloat(zc_ObjectFloat_JuridicalSettings_Bonus(), ioId, inBonus);
 
+   -- сохранили свойство <>
+   PERFORM lpInsertUpdate_ObjectDate (zc_ObjectDate_Contract_Start(), ioId, inStartDate);
+   -- сохранили свойство <>
+   PERFORM lpInsertUpdate_ObjectDate (zc_ObjectDate_Contract_End(), ioId, inEndDate);
+   
    -- сохранили протокол
    PERFORM lpInsert_ObjectProtocol (ioId, vbUserId);
 END;$BODY$
@@ -54,6 +63,7 @@ ALTER FUNCTION gpInsertUpdate_Object_JuridicalSettings_PriceList(Integer, Intege
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 26.01.16         *                
  17.02.15                          *
  21.01.15                          *
  13.10.14                          *
@@ -61,4 +71,6 @@ ALTER FUNCTION gpInsertUpdate_Object_JuridicalSettings_PriceList(Integer, Intege
 */
 
 -- тест
--- SELECT * FROM gpInsertUpdate_Object_JuridicalSettings ()                            
+-- SELECT * FROM gpInsertUpdate_Object_JuridicalSettings ()           
+
+--select * from gpInsertUpdate_Object_JuridicalSettings(ioId := 390626 , inName := '4456' , inJuridicalId := 59610 , inMainJuridicalId := 393053 , inContractId := 183275 , inisPriceClose := 'False' , inBonus := 0 , InStartDate := ('NULL')::TDateTime , inEndDate := ('NULL')::TDateTime ,  inSession := '3');                 

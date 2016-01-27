@@ -1,26 +1,31 @@
 inherited JuridicalSettingsForm: TJuridicalSettingsForm
   Caption = #1059#1089#1090#1072#1085#1086#1074#1082#1080' '#1102#1088' '#1083#1080#1094
-  ClientWidth = 653
-  ExplicitWidth = 661
-  ExplicitHeight = 335
+  ClientWidth = 793
+  ExplicitWidth = 809
+  ExplicitHeight = 346
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Width = 653
-    ExplicitWidth = 584
-    ClientRectRight = 653
+    Width = 793
+    ExplicitWidth = 653
+    ClientRectRight = 793
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 584
+      ExplicitWidth = 653
       ExplicitHeight = 282
       inherited cxGrid: TcxGrid
-        Width = 653
-        ExplicitWidth = 584
+        Width = 793
+        ExplicitWidth = 653
         inherited cxGridDBTableView: TcxGridDBTableView
           Styles.Content = nil
           Styles.Inactive = nil
           Styles.Selection = nil
           Styles.Footer = nil
           Styles.Header = nil
+          object colName: TcxGridDBColumn
+            Caption = #8470' '#1076#1086#1075'.'
+            DataBinding.FieldName = 'Name'
+            Width = 70
+          end
           object colMainJuridical: TcxGridDBColumn
             Caption = #1053#1072#1096#1077' '#1102#1088'. '#1083#1080#1094#1086
             DataBinding.FieldName = 'MainJuridicalName'
@@ -55,6 +60,16 @@ inherited JuridicalSettingsForm: TJuridicalSettingsForm
             HeaderAlignmentVert = vaCenter
             Width = 73
           end
+          object colStartDate: TcxGridDBColumn
+            Caption = #1044#1077#1081#1089#1090#1074'. '#1089
+            DataBinding.FieldName = 'StartDate'
+            Width = 65
+          end
+          object colEndDate: TcxGridDBColumn
+            Caption = #1044#1077#1081#1089#1090#1074'. '#1076#1086
+            DataBinding.FieldName = 'EndDate'
+            Width = 74
+          end
         end
       end
     end
@@ -63,6 +78,7 @@ inherited JuridicalSettingsForm: TJuridicalSettingsForm
     object UpdateDataSet: TdsdUpdateDataSet
       Category = 'DSDLib'
       MoveParams = <>
+      PostDataSetBeforeExecute = False
       StoredProc = spInsertUpdate
       StoredProcList = <
         item
@@ -73,16 +89,20 @@ inherited JuridicalSettingsForm: TJuridicalSettingsForm
     end
   end
   inherited MasterDS: TDataSource
-    Top = 8
+    Left = 88
+    Top = 80
   end
   inherited MasterCDS: TClientDataSet
-    Top = 8
+    Top = 80
   end
   inherited spSelect: TdsdStoredProc
     StoredProcName = 'gpSelect_Object_JuridicalSettings'
-    Top = 0
+    Left = 152
+    Top = 64
   end
   inherited BarManager: TdxBarManager
+    Left = 160
+    Top = 65528
     DockControlHeights = (
       0
       0
@@ -100,6 +120,14 @@ inherited JuridicalSettingsForm: TJuridicalSettingsForm
         Component = MasterCDS
         ComponentItem = 'Id'
         ParamType = ptInputOutput
+      end
+      item
+        Name = 'inName'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Name'
+        DataType = ftString
+        ParamType = ptInput
       end
       item
         Name = 'inJuridicalId'
@@ -136,6 +164,22 @@ inherited JuridicalSettingsForm: TJuridicalSettingsForm
         Component = MasterCDS
         ComponentItem = 'Bonus'
         DataType = ftFloat
+        ParamType = ptInput
+      end
+      item
+        Name = 'InStartDate'
+        Value = 'Null'
+        Component = MasterCDS
+        ComponentItem = 'StartDate'
+        DataType = ftDateTime
+        ParamType = ptInput
+      end
+      item
+        Name = 'inEndDate'
+        Value = 0
+        Component = MasterCDS
+        ComponentItem = 'EndDate'
+        DataType = ftDateTime
         ParamType = ptInput
       end>
     PackSize = 1
