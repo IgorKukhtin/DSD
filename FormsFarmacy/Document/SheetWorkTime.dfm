@@ -312,14 +312,6 @@ object SheetWorkTimeForm: TSheetWorkTimeForm
         end
         item
           Visible = True
-          ItemName = 'bbLoadFromTransport'
-        end
-        item
-          Visible = True
-          ItemName = 'bbStatic'
-        end
-        item
-          Visible = True
           ItemName = 'bbGridToExel'
         end
         item
@@ -519,10 +511,6 @@ object SheetWorkTimeForm: TSheetWorkTimeForm
           Value = 0
         end
         item
-          Name = 'PositionLevelId'
-          Value = 0
-        end
-        item
           Name = 'PersonalGroupId'
           Value = '0'
         end
@@ -564,12 +552,6 @@ object SheetWorkTimeForm: TSheetWorkTimeForm
           Value = Null
           Component = MasterCDS
           ComponentItem = 'PositionId'
-        end
-        item
-          Name = 'PositionLevelId'
-          Value = Null
-          Component = MasterCDS
-          ComponentItem = 'PositionLevelId'
         end
         item
           Name = 'PersonalGroupId'
@@ -722,13 +704,6 @@ object SheetWorkTimeForm: TSheetWorkTimeForm
         ParamType = ptInput
       end
       item
-        Name = 'inPositionLevelId'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'PositionLevelId'
-        ParamType = ptInput
-      end
-      item
         Name = 'inUnitId'
         Value = ''
         Component = GuidesUnit
@@ -845,13 +820,6 @@ object SheetWorkTimeForm: TSheetWorkTimeForm
         Value = Null
         Component = MasterCDS
         ComponentItem = 'PositionId'
-        ParamType = ptInput
-      end
-      item
-        Name = 'inPositionLevelId'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'PositionLevelId'
         ParamType = ptInput
       end
       item

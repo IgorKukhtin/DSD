@@ -2,11 +2,11 @@
 
 DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_SheetWorkTime(INTEGER, INTEGER, INTEGER, INTEGER, TDateTime, TVarChar, INTEGER, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_SheetWorkTime(INTEGER, INTEGER, INTEGER, INTEGER, INTEGER, TDateTime, TVarChar, INTEGER, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_SheetWorkTime(INTEGER, INTEGER, INTEGER, INTEGER, TDateTime, TVarChar, INTEGER, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_SheetWorkTime(
     IN inMemberId            Integer   , -- Ключ физ. лицо
     IN inPositionId          Integer   , -- Должность
-    IN inPositionLevelId     Integer   , -- Разряд
     IN inUnitId              Integer   , -- Подразделение
     IN inPersonalGroupId     Integer   , -- Группировка Сотрудника
     IN inOperDate            TDateTime , -- дата
@@ -88,10 +88,7 @@ BEGIN
                                                                      ON MIObject_Position.MovementItemId = MI_SheetWorkTime.Id 
                                                                     AND COALESCE (MIObject_Position.ObjectId, 0) = COALESCE (inPositionId, 0)
                                                                     AND MIObject_Position.DescId = zc_MILinkObject_Position() 
-                              LEFT OUTER JOIN MovementItemLinkObject AS MIObject_PositionLevel
-                                                                     ON MIObject_PositionLevel.MovementItemId = MI_SheetWorkTime.Id 
-                                                                    AND COALESCE (MIObject_PositionLevel.ObjectId, 0) = COALESCE (inPositionLevelId, 0)
-                                                                    AND MIObject_PositionLevel.DescId = zc_MILinkObject_PositionLevel() 
+                             
                               LEFT OUTER JOIN MovementItemLinkObject AS MIObject_PersonalGroup
                                                                      ON MIObject_PersonalGroup.MovementItemId = MI_SheetWorkTime.Id 
                                                                     AND COALESCE (MIObject_PersonalGroup.ObjectId, 0) = COALESCE (inPersonalGroupId, 0)
@@ -109,7 +106,6 @@ BEGIN
                                                      , inMovementId          := vbMovementId      -- ключ Документа
                                                      , inMemberId            := inMemberId        -- Физ. лицо
                                                      , inPositionId          := inPositionId      -- Должность
-                                                     , inPositionLevelId     := inPositionLevelId -- Разряд
                                                      , inPersonalGroupId     := inPersonalGroupId -- Группировка Сотрудника
                                                      , inAmount              := vbValue           -- Количество часов факт
                                                      , inWorkTimeKindId      := ioTypeId          -- Типы рабочего времени
@@ -131,8 +127,8 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 26.01.16         * 
  07.01.14                         * Replace inPersonalId <> inMemberId
- 25.11.13                         * Add inPositionLevelId
  17.10.13                         *
  03.10.13         *
 
