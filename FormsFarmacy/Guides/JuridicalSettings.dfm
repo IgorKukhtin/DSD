@@ -2,19 +2,18 @@ inherited JuridicalSettingsForm: TJuridicalSettingsForm
   Caption = #1059#1089#1090#1072#1085#1086#1074#1082#1080' '#1102#1088' '#1083#1080#1094
   ClientWidth = 793
   ExplicitWidth = 809
-  ExplicitHeight = 346
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Width = 793
-    ExplicitWidth = 653
+    ExplicitWidth = 793
     ClientRectRight = 793
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 653
+      ExplicitWidth = 793
       ExplicitHeight = 282
       inherited cxGrid: TcxGrid
         Width = 793
-        ExplicitWidth = 653
+        ExplicitWidth = 793
         inherited cxGridDBTableView: TcxGridDBTableView
           Styles.Content = nil
           Styles.Inactive = nil
@@ -29,6 +28,7 @@ inherited JuridicalSettingsForm: TJuridicalSettingsForm
           object colMainJuridical: TcxGridDBColumn
             Caption = #1053#1072#1096#1077' '#1102#1088'. '#1083#1080#1094#1086
             DataBinding.FieldName = 'MainJuridicalName'
+            Options.Editing = False
             Width = 122
           end
           object colJuridicalName: TcxGridDBColumn
