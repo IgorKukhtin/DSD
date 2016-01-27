@@ -81,7 +81,7 @@ inherited ChangeIncomePaymentJournalForm: TChangeIncomePaymentJournalForm
             Width = 135
           end
           object clReturnOutInvNumber: TcxGridDBColumn
-            Caption = #8470' '#1074#1086#1079#1074#1088#1072#1090#1072' '#1087#1086#1089#1090'.'
+            Caption = #8470' '#1074#1086#1079#1074#1088#1072#1090#1072' '#1053#1040#1064
             DataBinding.FieldName = 'ReturnOutInvNumber'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
@@ -89,7 +89,7 @@ inherited ChangeIncomePaymentJournalForm: TChangeIncomePaymentJournalForm
             Width = 80
           end
           object clReturnOutOperDate: TcxGridDBColumn
-            Caption = #1044#1072#1090#1072' '#1074#1086#1079#1074#1088#1072#1090#1072' '#1087#1086#1089#1090'.'
+            Caption = #1044#1072#1090#1072' '#1074#1086#1079#1074#1088#1072#1090#1072' '#1053#1040#1064
             DataBinding.FieldName = 'ReturnOutOperDate'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter

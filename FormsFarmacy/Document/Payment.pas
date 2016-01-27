@@ -80,6 +80,9 @@ type
     colCorrOther: TcxGridDBColumn;
     colLeftCorrOther: TcxGridDBColumn;
     cxSplitter1: TcxSplitter;
+    clContractNumber: TcxGridDBColumn;
+    clContractStartDate: TcxGridDBColumn;
+    clContractEndDate: TcxGridDBColumn;
   private
     { Private declarations }
   public

@@ -34,6 +34,9 @@ RETURNS TABLE (Id                    Integer
               , BankName             TVarChar
               , isErased             Boolean
               , NeedPay              Boolean
+              , ContractNumber       TVarChar
+              , ContractStartDate    TDateTime
+              , ContractEndDate      TDateTime
               )
 AS
 $BODY$
@@ -44,10 +47,6 @@ BEGIN
     -- vbUserId := PERFORM lpCheckRight (inSession, zc_Enum_Process_Select_MovementItem_Payment());
     vbUserId:= lpGetUserBySession (inSession);
 
-    
-    
-    -- Результат
-    IF inShowAll THEN
         SELECT
             Movement_Payment.JuridicalId
         INTO
@@ -56,6 +55,10 @@ BEGIN
             Movement_Payment_View AS Movement_Payment
         WHERE
             Movement_Payment.Id = inMovementId;
+    
+    
+    -- Результат
+    IF inShowAll THEN
         
         -- Результат такой
         RETURN QUERY
@@ -103,7 +106,18 @@ BEGIN
                         or
                         inIsErased = TRUE
                     )
-            )
+            ),
+        tmpJuridicalSettings AS 
+            (SELECT distinct tmp.JuridicalId
+                  , Max(tmp.Name)      ::TVarChar   AS InvNumber
+                  , Max(tmp.StartDate) ::TDateTime  AS StartDate
+                  , Max(tmp.EndDate)   ::TDateTime  AS EndDate
+             FROM gpSelect_Object_JuridicalSettings (inSession) as tmp
+             WHERE tmp.MainJuridicalId = vbJuridicalId
+               AND Coalesce (tmp.Name, '') <> '' 
+             GROUP BY tmp.JuridicalId
+             )
+      
                 
             SELECT
                 0                    AS Id
@@ -130,8 +144,12 @@ BEGIN
               , NULL::TVarChar       AS BankName
               , FALSE                AS isErased
               , FALSE                AS NeedPay
+              , tmpJuridicalSettings.InvNumber AS ContractNumber
+              , tmpJuridicalSettings.StartDate AS ContractStartDate
+              , tmpJuridicalSettings.EndDate   AS ContractEndDate
             FROM Income
                 LEFT OUTER JOIN MI_SavedPayment ON Income.Id = MI_SavedPayment.IncomeId
+                LEFT JOIN tmpJuridicalSettings ON tmpJuridicalSettings.JuridicalId = Income.FromId 
             WHERE
                 MI_SavedPayment.IncomeId IS NULL
             UNION ALL
@@ -160,8 +178,12 @@ BEGIN
               , MI_Payment.BankName
               , MI_Payment.isErased
               , MI_Payment.NeedPay
+              , tmpJuridicalSettings.InvNumber AS ContractNumber
+              , tmpJuridicalSettings.StartDate AS ContractStartDate
+              , tmpJuridicalSettings.EndDate   AS ContractEndDate
             FROM 
                 MovementItem_Payment_View AS MI_Payment
+                LEFT JOIN tmpJuridicalSettings ON tmpJuridicalSettings.JuridicalId = MI_Payment.Income_JuridicalId
             WHERE
                 MI_Payment.MovementId = inMovementId
                 AND
@@ -176,6 +198,18 @@ BEGIN
     ELSE
         -- Результат другой
         RETURN QUERY
+    WITH  tmpJuridicalSettings AS 
+            (SELECT distinct tmp.JuridicalId
+                  , Max(tmp.Name)      ::TVarChar    AS InvNumber
+                  , Max(tmp.StartDate) ::TDateTime   AS StartDate
+                  , Max(tmp.EndDate)   ::TDateTime   AS EndDate
+             FROM gpSelect_Object_JuridicalSettings (inSession) as tmp
+             WHERE tmp.MainJuridicalId = vbJuridicalId
+               AND Coalesce (tmp.Name, '') <> '' 
+             GROUP BY tmp.JuridicalId
+             )
+
+
             SELECT
                 MI_Payment.Id
               , MI_Payment.IncomeId
@@ -201,7 +235,12 @@ BEGIN
               , MI_Payment.BankName
               , MI_Payment.isErased
               , MI_Payment.NeedPay
+              , tmpJuridicalSettings.InvNumber AS ContractNumber
+              , tmpJuridicalSettings.StartDate AS ContractStartDate
+              , tmpJuridicalSettings.EndDate   AS ContractEndDate
+
             FROM MovementItem_Payment_View AS MI_Payment
+                 LEFT JOIN tmpJuridicalSettings ON tmpJuridicalSettings.JuridicalId = MI_Payment.Income_JuridicalId
             WHERE 
                 MI_Payment.MovementId = inMovementId
                 AND
@@ -228,3 +267,6 @@ ALTER FUNCTION gpSelect_MovementItem_Payment (Integer, Boolean, Boolean, TDateTi
  07.12.15                                                          *
  29.10.15                                                          *
 */
+
+
+--select * from gpSelect_MovementItem_Payment(inMovementId := 506904 , inShowAll := 'False' , inIsErased := 'False' , inDateStart := ('08.05.2015')::TDateTime , inDateEnd := ('08.05.2015')::TDateTime ,  inSession := '3');
