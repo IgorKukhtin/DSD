@@ -81,7 +81,7 @@ BEGIN
             FROM Object_Goods_View
                 INNER JOIN ObjectLink ON ObjectLink.ObjectId = Object_Goods_View.Id 
                                      AND ObjectLink.ChildObjectId = vbObjectId
-                LEFT OUTER JOIN Object_Price_View ON Object_Goods.id = object_price_view.goodsid
+                LEFT OUTER JOIN Object_Price_View ON Object_Goods_View.id = object_price_view.goodsid
                                                  AND Object_Price_View.unitid = inUnitId
                 LEFT OUTER JOIN (
                                     SELECT 
@@ -99,7 +99,7 @@ BEGIN
                                     GROUP BY 
                                         container.objectid
                                 ) AS Object_Remains
-                                  ON Object_Remains.ObjectId = Object_Goods.Id
+                                  ON Object_Remains.ObjectId = Object_Goods_View.Id
             WHERE (inisShowDel = True
                     OR
                     Object_Goods_View.isErased = False
