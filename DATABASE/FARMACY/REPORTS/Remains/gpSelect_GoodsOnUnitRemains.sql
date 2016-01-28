@@ -9,15 +9,19 @@ CREATE OR REPLACE FUNCTION gpSelect_GoodsOnUnitRemains(
 )
 RETURNS TABLE (Id integer, GoodsCode Integer, GoodsName TVarChar, GoodsGroupName TVarChar
              , OperAmount TFloat, Price TFloat, NDSKindName TVarChar
-             , OperSum TFloat, PriceOut TFloat, SumOut TFloat)
+             , OperSum TFloat, PriceOut TFloat, SumOut TFloat
+             , MinExpirationDate TDateTime)
 AS
 $BODY$
    DECLARE vbUserId Integer;
+   DECLARE vbObjectId Integer;
 BEGIN
 
     -- проверка прав пользователя на вызов процедуры
     -- PERFORM lpCheckRight (inSession, zc_Enum_Process_Select_Movement_Income());
     vbUserId:= lpGetUserBySession (inSession);
+    -- Ограничение на просмотр товарного справочника
+    vbObjectId := lpGet_DefaultValue('zc_Object_Retail', vbUserId);
 
     -- Результат
     RETURN QUERY
@@ -67,6 +71,7 @@ BEGIN
              , DD.OperSum::TFloat                           as OperSum
              , Object_Price.Price                           as PriceOut
              , (DD.OperAmount * Object_Price.Price)::TFloat as SumOut
+             , SelectMinPrice_AllGoods.MinExpirationDate    AS MinExpirationDate
         FROM(
             SELECT 
                 SUM(DD.OperAmount) AS OperAmount, 
@@ -115,7 +120,14 @@ BEGIN
 
             LEFT OUTER JOIN Object_Price_View AS Object_Price
                                               ON DD.ObjectId = Object_Price.GoodsId
-                                             AND Object_Price.UnitId = inUnitId;
+                                             AND Object_Price.UnitId = inUnitId
+
+            LEFT JOIN lpSelectMinPrice_AllGoods(inUnitId := inUnitId,
+                                                inObjectId := vbObjectId, 
+                                                inUserId := vbUserId) AS SelectMinPrice_AllGoods
+                                                                      ON SelectMinPrice_AllGoods.GoodsId = Object_Goods_View.Id
+
+;
 
 END;
 $BODY$
@@ -132,4 +144,4 @@ ALTER FUNCTION gpSelect_GoodsOnUnitRemains (Integer, TDateTime, TVarChar) OWNER 
 */
 
 -- тест
--- SELECT * FROM gpSelect_CashRemains (inSession:= '2')
+--select * from gpSelect_GoodsOnUnitRemains(inUnitId := 377613 , inRemainsDate := ('16.09.2015')::TDateTime ,  inSession := '3');

@@ -15,6 +15,7 @@ RETURNS TABLE (Id Integer, Price TFloat, MCSValue Tfloat
              , MCSIsClose Boolean, MCSIsCloseDateChange TDateTime
              , MCSNotRecalc Boolean, MCSNotRecalcDateChange TDateTime
              , Fix Boolean, FixDateChange TDateTime
+             , MinExpirationDate TDateTime
              , Remains TFloat, isErased boolean
              ) AS
 $BODY$
@@ -53,6 +54,7 @@ BEGIN
                ,NULL::TDateTime                  AS MCSNotRecalcDateChange
                ,NULL::Boolean                    AS Fix
                ,NULL::TDateTime                  AS FixDateChange
+               ,NULL::TDateTime                  AS MinExpirationDate
                ,NULL::TFloat                     AS Remains
                ,NULL::Boolean                    AS isErased
             WHERE 1=0;
@@ -76,6 +78,7 @@ BEGIN
                ,Object_Price_View.MCSNotRecalcDateChange        AS MCSNotRecalcDateChange
                ,COALESCE(Object_Price_View.Fix,False)           AS Fix
                ,Object_Price_View.FixDateChange                 AS FixDateChange
+               ,SelectMinPrice_AllGoods.MinExpirationDate       AS MinExpirationDate
                ,Object_Remains.Remains                          AS Remains
                ,Object_Goods_View.isErased                      AS isErased 
             FROM Object_Goods_View
@@ -100,6 +103,11 @@ BEGIN
                                         container.objectid
                                 ) AS Object_Remains
                                   ON Object_Remains.ObjectId = Object_Goods_View.Id
+   
+                 LEFT JOIN lpSelectMinPrice_AllGoods(inUnitId := inUnitId,
+                                                     inObjectId := vbObjectId, 
+                                                     inUserId := vbUserId) AS SelectMinPrice_AllGoods
+                                                                           ON SelectMinPrice_AllGoods.GoodsId = Object_Goods_View.Id
             WHERE (inisShowDel = True
                     OR
                     Object_Goods_View.isErased = False
@@ -109,24 +117,25 @@ BEGIN
     ELSE
         RETURN QUERY
             SELECT
-                Object_Price_View.Id                     AS Id
-               ,Object_Price_View.Price                  AS Price 
-               ,Object_Price_View.MCSValue               AS MCSValue
-               ,Object_Goods_View.id                     AS GoodsId
-               ,Object_Goods_View.GoodsCodeInt           AS GoodsCode
-               ,Object_Goods_View.GoodsName              AS GoodsName
-               ,Object_Goods_View.GoodsGroupName         AS GoodsGroupName
-               ,Object_Goods_View.NDSKindName            AS NDSKindName
-               ,Object_Price_View.DateChange             AS DateChange
-               ,Object_Price_View.MCSDateChange          AS MCSDateChange
-               ,Object_Price_View.MCSIsClose             AS MCSIsClose
-               ,Object_Price_View.MCSIsCloseDateChange   AS MCSIsCloseDateChange
-               ,Object_Price_View.MCSNotRecalc           AS MCSNotRecalc
-               ,Object_Price_View.MCSNotRecalcDateChange AS MCSNotRecalcDateChange
-               ,Object_Price_View.Fix                    AS Fix
-               ,Object_Price_View.FixDateChange          AS FixDateChange
-               ,Object_Remains.Remains                   AS Remains
-               ,Object_Goods_View.isErased                    AS isErased 
+                Object_Price_View.Id                      AS Id
+               ,Object_Price_View.Price                   AS Price 
+               ,Object_Price_View.MCSValue                AS MCSValue
+               ,Object_Goods_View.id                      AS GoodsId
+               ,Object_Goods_View.GoodsCodeInt            AS GoodsCode
+               ,Object_Goods_View.GoodsName               AS GoodsName
+               ,Object_Goods_View.GoodsGroupName          AS GoodsGroupName
+               ,Object_Goods_View.NDSKindName             AS NDSKindName
+               ,Object_Price_View.DateChange              AS DateChange
+               ,Object_Price_View.MCSDateChange           AS MCSDateChange
+               ,Object_Price_View.MCSIsClose              AS MCSIsClose
+               ,Object_Price_View.MCSIsCloseDateChange    AS MCSIsCloseDateChange
+               ,Object_Price_View.MCSNotRecalc            AS MCSNotRecalc
+               ,Object_Price_View.MCSNotRecalcDateChange  AS MCSNotRecalcDateChange
+               ,Object_Price_View.Fix                     AS Fix
+               ,Object_Price_View.FixDateChange           AS FixDateChange
+               ,SelectMinPrice_AllGoods.MinExpirationDate AS MinExpirationDate
+               ,Object_Remains.Remains                    AS Remains
+               ,Object_Goods_View.isErased                AS isErased 
             FROM Object_Price_View
                 LEFT OUTER JOIN Object_Goods_View ON Object_Goods_View.id = object_price_view.goodsid
                 LEFT OUTER JOIN (
@@ -146,6 +155,12 @@ BEGIN
                                         container.objectid
                                 ) AS Object_Remains
                                   ON Object_Remains.ObjectId = Object_Price_View.GoodsId
+
+                 LEFT JOIN lpSelectMinPrice_AllGoods(inUnitId := inUnitId,
+                                                     inObjectId := vbObjectId, 
+                                                     inUserId := vbUserId) AS SelectMinPrice_AllGoods 
+                                                                           ON SelectMinPrice_AllGoods.GoodsId = Object_Goods_View.Id
+
             WHERE
                 Object_Price_View.unitid = inUnitId
                 AND
