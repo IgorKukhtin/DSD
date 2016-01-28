@@ -12,7 +12,9 @@ uses
   Datasnap.DBClient, dsdAction, Vcl.ActnList, cxPropertiesStore, cxLabel,
   cxTextEdit, cxMaskEdit, cxDropDownEdit, cxCalendar, Vcl.ExtCtrls, cxGridLevel,
   cxGridCustomView, cxGridCustomTableView, cxGridTableView, cxGridDBTableView,
-  cxGrid, cxPC, dsdGuides, cxButtonEdit, cxCurrencyEdit;
+  cxGrid, cxPC, dsdGuides, cxButtonEdit, cxCurrencyEdit, dxSkinsCore,
+  dxSkinsDefaultPainters, dxSkinscxPCPainter, cxPCdxBarPopupMenu,
+  dxSkinsdxBarPainter;
 
 type
   TReportMovementCheckForm = class(TAncestorReportForm)
@@ -39,6 +41,8 @@ type
     spGet_UserUnit: TdsdStoredProc;
     actGet_UserUnit: TdsdExecStoredProc;
     actRefreshStart: TdsdDataSetRefresh;
+    clGoodsGroupName: TcxGridDBColumn;
+    clNDSKindName: TcxGridDBColumn;
   private
     { Private declarations }
   public

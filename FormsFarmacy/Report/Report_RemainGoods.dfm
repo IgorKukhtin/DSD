@@ -41,21 +41,31 @@ inherited Report_GoodsRemainsForm: TReport_GoodsRemainsForm
           Styles.Selection = nil
           Styles.Footer = nil
           Styles.Header = nil
+          object clGoodsGroupName: TcxGridDBColumn
+            Caption = #1043#1088#1091#1087#1087#1072' '#1090#1086#1074#1072#1088#1072
+            DataBinding.FieldName = 'GoodsGroupName'
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 100
+          end
           object colGoodsCode: TcxGridDBColumn
             Caption = #1050#1086#1076' '#1090#1086#1074#1072#1088#1072
             DataBinding.FieldName = 'GoodsCode'
+            HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 94
           end
           object colGoodsName: TcxGridDBColumn
             Caption = #1053#1072#1080#1084#1077#1085#1086#1074#1072#1085#1080#1077
             DataBinding.FieldName = 'GoodsName'
+            HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 214
           end
           object colNDSKindName: TcxGridDBColumn
             Caption = #1053#1044#1057
             DataBinding.FieldName = 'NDSKindName'
+            HeaderAlignmentVert = vaCenter
             Width = 42
           end
           object colOperAmount: TcxGridDBColumn
@@ -64,6 +74,7 @@ inherited Report_GoodsRemainsForm: TReport_GoodsRemainsForm
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####;-,0.####'
+            HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 80
           end
@@ -72,6 +83,7 @@ inherited Report_GoodsRemainsForm: TReport_GoodsRemainsForm
             DataBinding.FieldName = 'Price'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DisplayFormat = ',0.00;-,0.00'
+            HeaderAlignmentVert = vaCenter
             Options.Editing = False
           end
           object colOperSum: TcxGridDBColumn
@@ -79,6 +91,7 @@ inherited Report_GoodsRemainsForm: TReport_GoodsRemainsForm
             DataBinding.FieldName = 'OperSum'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DisplayFormat = ',0.00;-,0.00'
+            HeaderAlignmentVert = vaCenter
             Options.Editing = False
           end
           object colPriceSale: TcxGridDBColumn
@@ -86,6 +99,7 @@ inherited Report_GoodsRemainsForm: TReport_GoodsRemainsForm
             DataBinding.FieldName = 'PriceOut'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DisplayFormat = ',0.00;-,0.00'
+            HeaderAlignmentVert = vaCenter
             Options.Editing = False
           end
           object colSumSale: TcxGridDBColumn
@@ -93,6 +107,7 @@ inherited Report_GoodsRemainsForm: TReport_GoodsRemainsForm
             DataBinding.FieldName = 'SumOut'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DisplayFormat = ',0.00;-,0.00'
+            HeaderAlignmentVert = vaCenter
             Options.Editing = False
           end
         end

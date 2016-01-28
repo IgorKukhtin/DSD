@@ -1,23 +1,23 @@
 inherited PriceForm: TPriceForm
   Caption = #1055#1088#1072#1081#1089' - '#1083#1080#1089#1090
   ClientHeight = 385
-  ClientWidth = 752
-  ExplicitWidth = 768
+  ClientWidth = 831
+  ExplicitWidth = 847
   ExplicitHeight = 423
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Width = 752
+    Width = 831
     Height = 359
     ExplicitWidth = 752
     ExplicitHeight = 359
     ClientRectBottom = 359
-    ClientRectRight = 752
+    ClientRectRight = 831
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 752
       ExplicitHeight = 359
       inherited cxGrid: TcxGrid
-        Width = 752
+        Width = 831
         Height = 359
         ExplicitWidth = 752
         ExplicitHeight = 359
@@ -36,10 +36,18 @@ inherited PriceForm: TPriceForm
           Styles.Selection = nil
           Styles.Footer = nil
           Styles.Header = nil
+          object clGoodsGroupName: TcxGridDBColumn
+            Caption = #1043#1088#1091#1087#1087#1072' '#1090#1086#1074#1072#1088#1072
+            DataBinding.FieldName = 'GoodsGroupName'
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 101
+          end
           object clGoodsCode: TcxGridDBColumn
             Caption = #1050#1086#1076' '#1090#1086#1074#1072#1088#1072
             DataBinding.FieldName = 'GoodsCode'
             HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 62
           end
@@ -47,8 +55,16 @@ inherited PriceForm: TPriceForm
             Caption = #1053#1072#1080#1084#1077#1085#1086#1074#1072#1085#1080#1077' '#1090#1086#1074#1072#1088#1072
             DataBinding.FieldName = 'GoodsName'
             HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 234
+          end
+          object clNDSKindName: TcxGridDBColumn
+            Caption = #1053#1044#1057
+            DataBinding.FieldName = 'NDSKindName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 60
           end
           object clPrice: TcxGridDBColumn
             Caption = #1062#1077#1085#1072
@@ -58,12 +74,14 @@ inherited PriceForm: TPriceForm
             Properties.DisplayFormat = ',0.00'
             Properties.MinValue = 0.010000000000000000
             HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
             Width = 56
           end
           object clDateChange: TcxGridDBColumn
             Caption = #1044#1072#1090#1072' '#1087#1086#1089#1083'. '#1080#1079#1084'. '#1094#1077#1085#1099
             DataBinding.FieldName = 'DateChange'
             HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 71
           end
@@ -72,6 +90,7 @@ inherited PriceForm: TPriceForm
             Caption = #1053#1058#1047
             DataBinding.FieldName = 'MCSValue'
             HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
             HeaderHint = #1053#1077#1089#1085#1080#1078#1072#1077#1084#1099#1081' '#1090#1086#1074#1072#1088#1085#1099#1081' '#1079#1072#1087#1072#1089
             Width = 53
           end
@@ -80,6 +99,7 @@ inherited PriceForm: TPriceForm
             Caption = #1044#1072#1090#1072' '#1087#1086#1089#1083'. '#1080#1079#1084'. '#1053#1058#1047
             DataBinding.FieldName = 'MCSDateChange'
             HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
             HeaderHint = #1044#1072#1090#1072' '#1087#1086#1089#1083#1077#1076#1085#1077#1075#1086' '#1080#1079#1084#1077#1085#1077#1085#1080#1103' '#1085#1077#1089#1085#1080#1078#1072#1077#1084#1086#1075#1086' '#1090#1086#1074#1072#1088#1085#1086#1075#1086' '#1079#1072#1087#1072#1089#1072
             Options.Editing = False
             Width = 81
@@ -90,6 +110,7 @@ inherited PriceForm: TPriceForm
             DataBinding.FieldName = 'isErased'
             Visible = False
             HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
             HeaderHint = #1058#1086#1074#1072#1088' '#1091#1076#1072#1083#1077#1085
             Options.Editing = False
             Width = 27
@@ -98,7 +119,8 @@ inherited PriceForm: TPriceForm
             Caption = #1059#1073#1080#1090#1100' '#1082#1086#1076
             DataBinding.FieldName = 'MCSIsClose'
             HeaderAlignmentHorz = taCenter
-            Width = 34
+            HeaderAlignmentVert = vaCenter
+            Width = 44
           end
           object colMCSIsCloseDateChange: TcxGridDBColumn
             Caption = #1044#1072#1090#1072' "'#1091#1073#1080#1090#1100' '#1082#1086#1076'"'
@@ -112,6 +134,7 @@ inherited PriceForm: TPriceForm
             Caption = #1057#1087#1077#1094#1082#1086#1085#1090#1088#1086#1083#1100' '#1082#1086#1076#1072
             DataBinding.FieldName = 'MCSNotRecalc'
             HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
             HeaderHint = #1053#1077' '#1087#1077#1088#1077#1089#1095#1080#1090#1099#1074#1072#1090#1100' '#1053#1058#1047
             Width = 59
           end
@@ -121,11 +144,12 @@ inherited PriceForm: TPriceForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 70
+            Width = 85
           end
           object colRemains: TcxGridDBColumn
             Caption = #1054#1089#1090#1072#1090#1086#1082
             DataBinding.FieldName = 'Remains'
+            HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 40
           end
@@ -134,6 +158,7 @@ inherited PriceForm: TPriceForm
             Caption = #1060#1080#1082#1089'. '#1094#1077#1085#1072
             DataBinding.FieldName = 'Fix'
             HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
             HeaderHint = #1060#1080#1082#1089#1080#1088#1086#1074#1072#1085#1085#1072#1103' '#1094#1077#1085#1072
             Width = 48
           end

@@ -9,15 +9,17 @@ CREATE OR REPLACE FUNCTION  gpReport_Movement_Check(
     IN inSession          TVarChar    -- сессия пользователя
 )
 RETURNS TABLE (
-  GoodsId       integer, 
-  GoodsCode     Integer, 
-  GoodsName     TVarChar, 
-  Amount        TFloat,
-  Price         TFloat,
-  PriceSale     TFloat,
-  Summa         TFloat,
-  SummaSale     TFloat,
-  SummaMargin   TFloat)
+  GoodsId        integer, 
+  GoodsCode      Integer, 
+  GoodsName      TVarChar,
+  GoodsGroupName TVarChar, 
+  NDSKindName    TVarChar,
+  Amount         TFloat,
+  Price          TFloat,
+  PriceSale      TFloat,
+  Summa          TFloat,
+  SummaSale      TFloat,
+  SummaMargin    TFloat)
 AS
 $BODY$
    DECLARE vbUserId Integer;
@@ -30,9 +32,13 @@ BEGIN
     -- Результат
     RETURN QUERY
         SELECT
-            Object_Goods.Id                                                 AS GoodsId
-           ,Object_Goods.ObjectCode::Integer                                AS GoodsCode
-           ,Object_Goods.ValueData                                          AS GoodsName
+            Object_Goods_View.Id                                                AS GoodsId
+           ,Object_Goods_View.GoodsCodeInt  ::Integer                           AS GoodsCode
+           ,Object_Goods_View.GoodsName                                         AS GoodsName
+           ,Object_Goods_View.GoodsGroupName                                    AS GoodsGroupName
+
+           ,Object_Goods_View.NDSKindName                                       AS NDSKindName
+
            ,SUM(-MIContainer.Amount)::TFloat                                    AS Amount
            ,(SUM(-MIContainer.Amount*MIFloat_Income_Price.ValueData)
              / SUM(-MIContainer.Amount))::TFloat                                AS Price
@@ -70,8 +76,7 @@ BEGIN
             LEFT OUTER JOIN MovementItemFloat AS MIFloat_Income_Price 
                                               ON MIFloat_Income_Price.MovementItemId = MI_Income.Id
                                              AND MIFloat_Income_Price.DescId = zc_MIFloat_Price() 
-            LEFT OUTER JOIN Object AS Object_Goods
-                                   ON Object_Goods.Id = MI_Check.ObjectId
+            LEFT OUTER JOIN Object_Goods_View ON Object_Goods_View.Id = MI_Check.ObjectId
         WHERE
             Movement_Check.DescId = zc_Movement_Check()
             AND
@@ -79,13 +84,15 @@ BEGIN
             AND
             Movement_Check.StatusId = zc_Enum_Status_Complete()
         GROUP BY
-            Object_Goods.Id
-           ,Object_Goods.ObjectCode
-           ,Object_Goods.ValueData
+            Object_Goods_View.Id
+           ,Object_Goods_View.GoodsCodeInt
+           ,Object_Goods_View.GoodsName
+           ,Object_Goods_View.GoodsGroupName
+           ,Object_Goods_View.NDSKindName 
         HAVING
            SUM(MI_Check.Amount) <> 0 
         ORDER BY
-            GoodsName;
+            GoodsGroupName, GoodsName;
 END;
 $BODY$
   LANGUAGE PLPGSQL VOLATILE;
@@ -95,6 +102,7 @@ ALTER FUNCTION  gpReport_Movement_Check (Integer, TDateTime, TDateTime, TVarChar
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.  Воробкало А.А.
+ 28.01.16         * 
  11.08.15                                                                       *
 
 */
