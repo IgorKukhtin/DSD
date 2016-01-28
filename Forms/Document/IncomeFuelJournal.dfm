@@ -71,56 +71,6 @@ object IncomeFuelJournalForm: TIncomeFuelJournalForm
         item
           Format = ',0.####'
           Kind = skSum
-          Column = colTotalCount
-        end
-        item
-          Format = ',0.####'
-          Kind = skSum
-          Column = colTotalSumm
-        end
-        item
-          Format = ',0.####'
-          Kind = skSum
-          Column = colTotalSummPVAT
-        end
-        item
-          Format = ',0.####'
-          Kind = skSum
-          Column = colTotalSummMVAT
-        end
-        item
-          Format = ',0.####'
-          Kind = skSum
-          Column = colTotalSummVAT
-        end
-        item
-          Format = ',0.####'
-          Kind = skSum
-          Column = colTotalCountPartner
-        end
-        item
-          Format = ',0.####'
-          Kind = skSum
-          Column = clStartOdometre
-        end
-        item
-          Format = ',0.####'
-          Kind = skSum
-          Column = clEndOdometre
-        end
-        item
-          Format = ',0.####'
-          Kind = skSum
-          Column = clAmountFuel
-        end
-        item
-          Format = ',0.####'
-          Kind = skSum
-          Column = clReparation
-        end
-        item
-          Format = ',0.####'
-          Kind = skSum
           Column = clLimitMoney
         end
         item
@@ -131,7 +81,7 @@ object IncomeFuelJournalForm: TIncomeFuelJournalForm
         item
           Format = ',0.####'
           Kind = skSum
-          Column = clLimitChange
+          Column = clLimitMoneyChange
         end
         item
           Format = ',0.####'
@@ -142,61 +92,66 @@ object IncomeFuelJournalForm: TIncomeFuelJournalForm
           Format = ',0.####'
           Kind = skSum
           Column = clDistance
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = clDistanceReal
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = clFuelCalc
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = clFuelRealCalc
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = clFuelReal
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = clSummReal
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = clFuelDiff
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = clFuelSummDiff
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = clSummDiff
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = clSummDiffTotal
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = clSummReparation
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = clSummPersonal
         end>
       DataController.Summary.FooterSummaryItems = <
         item
           Format = ',0.####'
           Kind = skSum
-          Column = colTotalCount
-        end
-        item
-          Format = ',0.####'
-          Kind = skSum
-          Column = colTotalSumm
-        end
-        item
-          Format = ',0.####'
-          Kind = skSum
-          Column = colTotalSummPVAT
-        end
-        item
-          Format = ',0.####'
-          Kind = skSum
-          Column = colTotalSummMVAT
-        end
-        item
-          Format = ',0.####'
-          Kind = skSum
-          Column = colTotalSummVAT
-        end
-        item
-          Format = ',0.####'
-          Kind = skSum
-          Column = colTotalCountPartner
-        end
-        item
-          Format = ',0.####'
-          Kind = skSum
-          Column = clStartOdometre
-        end
-        item
-          Format = ',0.####'
-          Kind = skSum
-          Column = clEndOdometre
-        end
-        item
-          Format = ',0.####'
-          Kind = skSum
-          Column = clAmountFuel
-        end
-        item
-          Format = ',0.####'
-          Kind = skSum
-          Column = clReparation
-        end
-        item
-          Format = ',0.####'
-          Kind = skSum
           Column = clLimitMoney
         end
         item
@@ -207,7 +162,7 @@ object IncomeFuelJournalForm: TIncomeFuelJournalForm
         item
           Format = ',0.####'
           Kind = skSum
-          Column = clLimitChange
+          Column = clLimitMoneyChange
         end
         item
           Format = ',0.####'
@@ -218,6 +173,61 @@ object IncomeFuelJournalForm: TIncomeFuelJournalForm
           Format = ',0.####'
           Kind = skSum
           Column = clDistance
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = clDistanceReal
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = clFuelCalc
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = clFuelRealCalc
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = clFuelReal
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = clSummReal
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = clFuelDiff
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = clFuelSummDiff
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = clSummDiff
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = clSummDiffTotal
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = clSummReparation
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = clSummPersonal
         end>
       DataController.Summary.SummaryGroups = <>
       Images = dmMain.SortImageList
@@ -227,7 +237,6 @@ object IncomeFuelJournalForm: TIncomeFuelJournalForm
       OptionsData.DeletingConfirmation = False
       OptionsData.Editing = False
       OptionsData.Inserting = False
-      OptionsView.ColumnAutoWidth = True
       OptionsView.Footer = True
       OptionsView.GroupSummaryLayout = gslAlignWithColumns
       OptionsView.HeaderAutoHeight = True
@@ -316,6 +325,7 @@ object IncomeFuelJournalForm: TIncomeFuelJournalForm
       object colRouteName: TcxGridDBColumn
         Caption = #1052#1072#1088#1096#1088#1091#1090
         DataBinding.FieldName = 'RouteName'
+        Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 70
@@ -323,6 +333,7 @@ object IncomeFuelJournalForm: TIncomeFuelJournalForm
       object colPersonalDriverName: TcxGridDBColumn
         Caption = #1057#1086#1090#1088#1091#1076#1085#1080#1082' ('#1042#1086#1076#1080#1090#1077#1083#1100')'
         DataBinding.FieldName = 'PersonalDriverName'
+        Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 70
@@ -338,6 +349,7 @@ object IncomeFuelJournalForm: TIncomeFuelJournalForm
       object colBranchName: TcxGridDBColumn
         Caption = #1060#1080#1083#1080#1072#1083
         DataBinding.FieldName = 'BranchName'
+        Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 70
@@ -347,7 +359,7 @@ object IncomeFuelJournalForm: TIncomeFuelJournalForm
         DataBinding.FieldName = 'PaidKindName'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 45
+        Width = 55
       end
       object colContractName: TcxGridDBColumn
         Caption = #8470' '#1076#1086#1075'.'
@@ -370,6 +382,7 @@ object IncomeFuelJournalForm: TIncomeFuelJournalForm
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DecimalPlaces = 4
         Properties.DisplayFormat = ',0.####;-,0.####; ;'
+        Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 45
@@ -391,6 +404,7 @@ object IncomeFuelJournalForm: TIncomeFuelJournalForm
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DecimalPlaces = 4
         Properties.DisplayFormat = ',0.####;-,0.####; ;'
+        Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 60
@@ -431,6 +445,7 @@ object IncomeFuelJournalForm: TIncomeFuelJournalForm
       object colPriceWithVAT: TcxGridDBColumn
         Caption = #1062#1077#1085#1099' '#1089' '#1053#1044#1057' ('#1076#1072'/'#1085#1077#1090')'
         DataBinding.FieldName = 'PriceWithVAT'
+        Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 60
@@ -438,6 +453,7 @@ object IncomeFuelJournalForm: TIncomeFuelJournalForm
       object colVATPercent: TcxGridDBColumn
         Caption = '% '#1053#1044#1057
         DataBinding.FieldName = 'VATPercent'
+        Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 40
@@ -510,99 +526,219 @@ object IncomeFuelJournalForm: TIncomeFuelJournalForm
         DataBinding.FieldName = 'StartOdometre'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DecimalPlaces = 4
-        Properties.DisplayFormat = ',0.###;-,0.###; ;'
+        Properties.DisplayFormat = ',0.####;-,0.####; ;'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 60
+        Width = 75
       end
       object clEndOdometre: TcxGridDBColumn
         Caption = #1057#1087#1080#1076#1086#1084#1077#1090#1088' '#1082#1086#1085'. '#1082#1084
         DataBinding.FieldName = 'EndOdometre'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DecimalPlaces = 4
-        Properties.DisplayFormat = ',0.###;-,0.###; ;'
+        Properties.DisplayFormat = ',0.####;-,0.####; ;'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 60
+        Width = 75
       end
       object clAmountFuel: TcxGridDBColumn
-        Caption = #1053#1086#1088#1084#1072' '#1072#1074#1090#1086
+        Caption = #1053#1086#1088#1084#1072' '#1072#1074#1090#1086#1084'.'
         DataBinding.FieldName = 'AmountFuel'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DecimalPlaces = 4
-        Properties.DisplayFormat = ',0.###;-,0.###; ;'
+        Properties.DisplayFormat = ',0.####;-,0.####; ;'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 60
+        Width = 50
       end
       object clReparation: TcxGridDBColumn
         Caption = #1040#1084#1086#1088#1090'. '#1079#1072' 1 '#1082#1084', '#1075#1088#1085'.'
         DataBinding.FieldName = 'Reparation'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DecimalPlaces = 4
-        Properties.DisplayFormat = ',0.###;-,0.###; ;'
+        Properties.DisplayFormat = ',0.####;-,0.####; ;'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 60
-      end
-      object clLimitMoney: TcxGridDBColumn
-        Caption = #1051#1080#1084#1080#1090', '#1075#1088#1085
-        DataBinding.FieldName = 'LimitMoney'
-        PropertiesClassName = 'TcxCurrencyEditProperties'
-        Properties.DecimalPlaces = 4
-        Properties.DisplayFormat = ',0.###;-,0.###; ;'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Options.Editing = False
-        Width = 60
+        Width = 55
       end
       object clLimitDistance: TcxGridDBColumn
-        Caption = #1051#1080#1084#1080#1090', '#1082#1084
+        Caption = #1051#1080#1084#1080#1090' '#1082#1084
         DataBinding.FieldName = 'LimitDistance'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DecimalPlaces = 4
-        Properties.DisplayFormat = ',0.###;-,0.###; ;'
+        Properties.DisplayFormat = ',0.####;-,0.####; ;'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 60
-      end
-      object clLimitChange: TcxGridDBColumn
-        Caption = #1051#1080#1084#1080#1090' ('#1089#1083#1091#1078'.) '#1075#1088#1085
-        DataBinding.FieldName = 'LimitChange'
-        PropertiesClassName = 'TcxCurrencyEditProperties'
-        Properties.DecimalPlaces = 4
-        Properties.DisplayFormat = ',0.###;-,0.###; ;'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Options.Editing = False
-        Width = 60
+        Width = 55
       end
       object clLimitDistanceChange: TcxGridDBColumn
         Caption = #1051#1080#1084#1080#1090' ('#1089#1083#1091#1078'.) '#1082#1084
         DataBinding.FieldName = 'LimitDistanceChange'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DecimalPlaces = 4
-        Properties.DisplayFormat = ',0.###;-,0.###; ;'
+        Properties.DisplayFormat = ',0.####;-,0.####; ;'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 60
+        Width = 55
+      end
+      object clLimitMoney: TcxGridDBColumn
+        Caption = #1051#1080#1084#1080#1090' '#1075#1088#1085
+        DataBinding.FieldName = 'LimitMoney'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.####;-,0.####; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 55
+      end
+      object clLimitMoneyChange: TcxGridDBColumn
+        Caption = #1051#1080#1084#1080#1090' ('#1089#1083#1091#1078'.) '#1075#1088#1085
+        DataBinding.FieldName = 'LimitMoneyChange'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.####;-,0.####; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 55
+      end
+      object clDistanceReal: TcxGridDBColumn
+        Caption = #1055#1088#1086#1073#1077#1075' '#1086#1073#1097#1080#1081' '#1082#1084
+        DataBinding.FieldName = 'DistanceReal'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.####;-,0.####; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 55
       end
       object clDistance: TcxGridDBColumn
-        Caption = #1055#1088#1086#1073#1077#1075' '#1092#1072#1082#1090', '#1082#1084
+        Caption = #1055#1088#1086#1073#1077#1075' '#1092#1072#1082#1090' '#1082#1084
         DataBinding.FieldName = 'Distance'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DecimalPlaces = 4
-        Properties.DisplayFormat = ',0.###;-,0.###; ;'
+        Properties.DisplayFormat = ',0.####;-,0.####; ;'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 60
+        Width = 55
+      end
+      object clFuelCalc: TcxGridDBColumn
+        Caption = #1050#1086#1083'-'#1074#1086' '#1083'. ('#1088#1072#1089#1095'. '#1085#1072' '#1087#1088#1086#1073#1077#1075' '#1092'.)'
+        DataBinding.FieldName = 'FuelCalc'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.####;-,0.####; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 70
+      end
+      object clFuelRealCalc: TcxGridDBColumn
+        Caption = #1050#1086#1083'-'#1074#1086' '#1083'. ('#1080#1089#1087#1086#1083#1100#1079#1086#1074#1072#1085#1086')'
+        DataBinding.FieldName = 'FuelRealCalc'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.####;-,0.####; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 70
+      end
+      object clFuelReal: TcxGridDBColumn
+        Caption = #1050#1086#1083'-'#1074#1086' '#1083'. ('#1079#1072#1087#1088#1072#1074#1082#1072')'
+        DataBinding.FieldName = 'FuelReal'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.####;-,0.####; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 70
+      end
+      object clPriceCalc: TcxGridDBColumn
+        Caption = #1062#1077#1085#1072' '#1079#1072#1087#1088#1072#1074'.'
+        DataBinding.FieldName = 'PriceCalc'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.####;-,0.####; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 55
+      end
+      object clSummReal: TcxGridDBColumn
+        Caption = #1057#1091#1084#1084#1072' '#1079#1072#1087#1088#1072#1074#1082#1080
+        DataBinding.FieldName = 'SummReal'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.####;-,0.####; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 70
+      end
+      object clFuelDiff: TcxGridDBColumn
+        Caption = #1050#1086#1083'-'#1074#1086' '#1083'. ('#1086#1089#1090#1072#1090#1086#1082' '#1083#1080#1084'. '#1082#1084'.)'
+        DataBinding.FieldName = 'FuelDiff'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.####;-,0.####; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 70
+      end
+      object clFuelSummDiff: TcxGridDBColumn
+        Caption = #1057#1091#1084#1084#1072' '#1075#1088#1085' ('#1086#1089#1090#1072#1090#1086#1082' '#1083#1080#1084'. '#1082#1084'.)'
+        DataBinding.FieldName = 'FuelSummDiff'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.####;-,0.####; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 70
+      end
+      object clSummDiff: TcxGridDBColumn
+        Caption = #1057#1091#1084#1084#1072' '#1075#1088#1085' ('#1086#1089#1090#1072#1090#1086#1082' '#1083#1080#1084'. '#1075#1088#1085')'
+        DataBinding.FieldName = 'SummDiff'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.####;-,0.####; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 70
+      end
+      object clSummDiffTotal: TcxGridDBColumn
+        Caption = #1057#1091#1084#1084#1072' '#1075#1088#1085' ('#1086#1089#1090#1072#1090#1086#1082' '#1048#1058#1054#1043#1054')'
+        DataBinding.FieldName = 'SummDiffTotal'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.####;-,0.####; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 70
+      end
+      object clSummReparation: TcxGridDBColumn
+        Caption = #1057#1091#1084#1084#1072' '#1075#1088#1085' ('#1072#1084#1086#1088#1090#1080#1079#1072#1094#1080#1103')'
+        DataBinding.FieldName = 'SummReparation'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.####;-,0.####; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 70
+      end
+      object clSummPersonal: TcxGridDBColumn
+        Caption = #1057#1091#1084#1084#1072' '#1075#1088#1085' ('#1047#1055' '#1080#1090#1086#1075')'
+        DataBinding.FieldName = 'SummPersonal'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.####;-,0.####; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 70
       end
     end
     object cxGridLevel: TcxGridLevel

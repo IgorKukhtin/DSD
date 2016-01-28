@@ -19,12 +19,57 @@ object ContractForm: TContractForm
   TextHeight = 13
   object Panel1: TPanel
     Left = 0
-    Top = 0
+    Top = 26
     Width = 1209
     Height = 30
     Align = alTop
     BevelOuter = bvNone
-    TabOrder = 14
+    TabOrder = 2
+    ExplicitTop = 40
+    object deStart: TcxDateEdit
+      Left = 238
+      Top = 4
+      EditValue = 42370d
+      Properties.SaveTime = False
+      Properties.ShowTime = False
+      TabOrder = 1
+      Width = 85
+    end
+    object cxlEnd: TcxLabel
+      Left = 329
+      Top = 4
+      AutoSize = False
+      Caption = #1087#1086
+      Properties.Alignment.Vert = taVCenter
+      Height = 21
+      Width = 21
+      AnchorY = 15
+    end
+    object deEnd: TcxDateEdit
+      Left = 351
+      Top = 4
+      EditValue = 42370d
+      Properties.SaveTime = False
+      Properties.ShowTime = False
+      TabOrder = 2
+      Width = 85
+    end
+    object cbPeriod: TcxCheckBox
+      Left = 18
+      Top = 4
+      Action = actRefresh
+      Caption = '<'#1044#1086#1075#1086#1074#1086#1088' '#1076#1077#1081#1089#1090#1074#1091#1077#1090' '#1076#1086'> '#1079#1072' '#1087#1077#1088#1080#1086#1076' '#1089
+      TabOrder = 4
+      Width = 218
+    end
+    object cbEndDate: TcxCheckBox
+      Left = 442
+      Top = 4
+      Action = actRefresh
+      Caption = '<'#1044#1086#1075#1086#1074#1086#1088' '#1076#1077#1081#1089#1090#1074#1091#1077#1090' '#1076#1086'> '#1087#1086' '#1076#1072#1090#1091' '#1074#1082#1083#1102#1095#1080#1090#1077#1083#1100#1085#1086
+      TabOrder = 3
+      Width = 278
+    end
   end
   object cxGrid: TcxGrid
     Left = 0
@@ -34,7 +79,6 @@ object ContractForm: TContractForm
     Align = alTop
     TabOrder = 0
     LookAndFeel.NativeStyle = False
-    ExplicitTop = 26
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -675,8 +719,6 @@ object ContractForm: TContractForm
     LookAndFeel.Kind = lfStandard
     LookAndFeel.NativeStyle = False
     LookAndFeel.SkinName = ''
-    ExplicitTop = 334
-    ExplicitHeight = 184
     object cxGridDBTableViewContractCondition: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = ContractConditionDS
@@ -790,50 +832,6 @@ object ContractForm: TContractForm
       GridView = cxGridDBTableViewContractCondition
     end
   end
-  object deStart: TcxDateEdit
-    Left = 238
-    Top = 4
-    EditValue = 41852d
-    Properties.SaveTime = False
-    Properties.ShowTime = False
-    TabOrder = 3
-    Width = 85
-  end
-  object cxlEnd: TcxLabel
-    Left = 329
-    Top = 4
-    AutoSize = False
-    Caption = #1087#1086
-    Properties.Alignment.Vert = taVCenter
-    Height = 21
-    Width = 21
-    AnchorY = 15
-  end
-  object deEnd: TcxDateEdit
-    Left = 351
-    Top = 4
-    EditValue = 41852d
-    Properties.SaveTime = False
-    Properties.ShowTime = False
-    TabOrder = 4
-    Width = 85
-  end
-  object cbPeriod: TcxCheckBox
-    Left = 18
-    Top = 4
-    Action = actRefresh
-    Caption = '<'#1044#1086#1075#1086#1074#1086#1088' '#1076#1077#1081#1089#1090#1074#1091#1077#1090' '#1076#1086'> '#1079#1072' '#1087#1077#1088#1080#1086#1076' '#1089
-    TabOrder = 5
-    Width = 218
-  end
-  object cbEndDate: TcxCheckBox
-    Left = 450
-    Top = 4
-    Action = actRefresh
-    Caption = '<'#1044#1086#1075#1086#1074#1086#1088' '#1076#1077#1081#1089#1090#1074#1091#1077#1090' '#1076#1086'> '#1087#1086' '#1076#1072#1090#1091' '#1074#1082#1083#1102#1095#1080#1090#1077#1083#1100#1085#1086
-    TabOrder = 7
-    Width = 278
-  end
   object Panel: TPanel
     Left = 615
     Top = 364
@@ -841,9 +839,7 @@ object ContractForm: TContractForm
     Height = 154
     Align = alRight
     BevelOuter = bvNone
-    TabOrder = 6
-    ExplicitTop = 334
-    ExplicitHeight = 184
+    TabOrder = 5
     object cxGridPartner: TcxGrid
       Left = 0
       Top = 0
@@ -854,7 +850,6 @@ object ContractForm: TContractForm
       LookAndFeel.Kind = lfStandard
       LookAndFeel.NativeStyle = False
       LookAndFeel.SkinName = ''
-      ExplicitHeight = 184
       object cxGridDBTableViewPartner: TcxGridDBTableView
         Navigator.Buttons.CustomButtons = <>
         DataController.DataSource = DataSourcePartner
@@ -936,7 +931,6 @@ object ContractForm: TContractForm
       LookAndFeel.Kind = lfStandard
       LookAndFeel.NativeStyle = False
       LookAndFeel.SkinName = ''
-      ExplicitHeight = 184
       object cxGridDBTableViewGoods: TcxGridDBTableView
         Navigator.Buttons.CustomButtons = <>
         DataController.DataSource = DataSourceGoods
@@ -1025,7 +1019,6 @@ object ContractForm: TContractForm
       Width = 5
       Height = 154
       Control = cxGridPartner
-      ExplicitHeight = 184
     end
   end
   object cxTopSplitter: TcxSplitter
@@ -1035,7 +1028,6 @@ object ContractForm: TContractForm
     Height = 5
     AlignSplitter = salTop
     Control = cxGrid
-    ExplicitTop = 329
   end
   object cxRightSplitter: TcxSplitter
     Left = 611
@@ -1044,8 +1036,6 @@ object ContractForm: TContractForm
     Height = 154
     AlignSplitter = salRight
     Control = Panel
-    ExplicitTop = 334
-    ExplicitHeight = 184
   end
   object DataSource: TDataSource
     DataSet = ClientDataSet

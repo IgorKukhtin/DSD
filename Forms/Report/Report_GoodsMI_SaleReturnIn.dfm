@@ -1,31 +1,31 @@
 ﻿inherited Report_GoodsMI_SaleReturnInForm: TReport_GoodsMI_SaleReturnInForm
   Caption = #1054#1090#1095#1077#1090' <'#1055#1088#1086#1076#1072#1078#1072' / '#1042#1086#1079#1074#1088#1072#1090' '#1087#1086' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1103#1084'>'
   ClientHeight = 387
-  ClientWidth = 1370
+  ClientWidth = 1366
   AddOnFormData.isSingle = False
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
-  ExplicitWidth = 1386
-  ExplicitHeight = 425
+  ExplicitWidth = 1382
+  ExplicitHeight = 422
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 80
-    Width = 1370
+    Width = 1366
     Height = 307
     TabOrder = 3
     ExplicitTop = 80
-    ExplicitWidth = 1370
+    ExplicitWidth = 1366
     ExplicitHeight = 307
     ClientRectBottom = 307
-    ClientRectRight = 1370
+    ClientRectRight = 1366
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 1370
+      ExplicitWidth = 1366
       ExplicitHeight = 307
       inherited cxGrid: TcxGrid
-        Width = 1370
+        Width = 1366
         Height = 307
-        ExplicitWidth = 1370
+        ExplicitWidth = 1366
         ExplicitHeight = 307
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
@@ -899,20 +899,20 @@
     end
   end
   inherited Panel: TPanel
-    Width = 1370
+    Width = 1366
     Height = 54
-    ExplicitWidth = 1370
+    ExplicitWidth = 1366
     ExplicitHeight = 54
     inherited deStart: TcxDateEdit
       Left = 60
-      EditValue = 42005d
+      EditValue = 42370d
       Properties.SaveTime = False
       ExplicitLeft = 60
     end
     inherited deEnd: TcxDateEdit
       Left = 60
       Top = 30
-      EditValue = 42005d
+      EditValue = 42370d
       Properties.SaveTime = False
       ExplicitLeft = 60
       ExplicitTop = 30
@@ -1069,7 +1069,7 @@
     end
   end
   object cbPartner: TcxCheckBox [2]
-    Left = 76
+    Left = 212
     Top = 87
     Caption = #1087#1086' '#1050#1086#1085#1090#1088#1072#1075#1077#1085#1090#1072#1084
     Properties.ReadOnly = False
@@ -1077,7 +1077,7 @@
     Width = 118
   end
   object cbGoods: TcxCheckBox [3]
-    Left = 351
+    Left = 487
     Top = 87
     Caption = #1087#1086' '#1058#1086#1074#1072#1088#1072#1084
     Properties.ReadOnly = False
@@ -1085,7 +1085,7 @@
     Width = 88
   end
   object cbTradeMark: TcxCheckBox [4]
-    Left = 200
+    Left = 336
     Top = 87
     Caption = #1087#1086' '#1058#1086#1088#1075#1086#1074#1099#1084' '#1084#1072#1088#1082#1072#1084
     Properties.ReadOnly = False
@@ -1093,7 +1093,7 @@
     Width = 137
   end
   object cbGoodsKind: TcxCheckBox [5]
-    Left = 445
+    Left = 581
     Top = 87
     Caption = #1087#1086' '#1042#1080#1076#1072#1084' '#1090#1086#1074#1072#1088#1072
     Properties.ReadOnly = False
@@ -1101,26 +1101,19 @@
     Width = 113
   end
   object cbContract: TcxCheckBox [6]
-    Left = 562
+    Left = 104
     Top = 87
     Caption = #1087#1086' '#1044#1086#1075#1086#1074#1086#1088#1072#1084
     Properties.ReadOnly = False
     TabOrder = 10
-    Width = 113
+    Width = 102
   end
   inherited cxPropertiesStore: TcxPropertiesStore
     Components = <
       item
-        Component = GuidesArea
+        Component = cbContract
         Properties.Strings = (
-          'Key'
-          'TextValue')
-      end
-      item
-        Component = GuidesBranch
-        Properties.Strings = (
-          'Key'
-          'TextValue')
+          'Checked')
       end
       item
         Component = cbGoods
@@ -1151,6 +1144,18 @@
         Component = deStart
         Properties.Strings = (
           'Date')
+      end
+      item
+        Component = GuidesArea
+        Properties.Strings = (
+          'Key'
+          'TextValue')
+      end
+      item
+        Component = GuidesBranch
+        Properties.Strings = (
+          'Key'
+          'TextValue')
       end
       item
         Component = GuidesGoodsGroup
@@ -1656,6 +1661,10 @@
         end
         item
           Visible = True
+          ItemName = 'bbContract'
+        end
+        item
+          Visible = True
           ItemName = 'bbPartner'
         end
         item
@@ -1669,10 +1678,6 @@
         item
           Visible = True
           ItemName = 'bbGoodsKind'
-        end
-        item
-          Visible = True
-          ItemName = 'bbContract'
         end
         item
           Visible = True

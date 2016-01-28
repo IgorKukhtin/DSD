@@ -73,9 +73,9 @@ BEGIN
                                                 );
 
      -- сохранили свойство <>
-     PERFORM lpInsertUpdate_MovemenTFloat (zc_MovemenTFloat_StartOdometre(), ioId, inStartOdometre);
+     -- PERFORM lpInsertUpdate_MovemenTFloat (zc_MovemenTFloat_StartOdometre(), ioId, inStartOdometre);
      -- сохранили свойство <>
-     PERFORM lpInsertUpdate_MovemenTFloat (zc_MovemenTFloat_EndOdometre(), ioId, inEndOdometre);
+     -- PERFORM lpInsertUpdate_MovemenTFloat (zc_MovemenTFloat_EndOdometre(), ioId, inEndOdometre);
   
      -- сохранили свойство <>
      PERFORM lpInsertUpdate_MovemenTFloat (zc_MovemenTFloat_AmountFuel(), ioId, inAmountFuel);
@@ -96,11 +96,9 @@ BEGIN
      -- сохранили протокол
      PERFORM lpInsert_MovementProtocol (ioId, vbUserId, vbIsInsert);
 
-
 END;
 $BODY$
-LANGUAGE PLPGSQL VOLATILE;
-
+ LANGUAGE PLPGSQL VOLATILE;
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР

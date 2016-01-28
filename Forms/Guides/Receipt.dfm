@@ -787,12 +787,6 @@ object ReceiptForm: TReceiptForm
         Options.Editing = False
         Width = 90
       end
-      object clIsErasedChild: TcxGridDBColumn
-        Caption = #1059#1076#1072#1083#1077#1085
-        DataBinding.FieldName = 'isErased'
-        Visible = False
-        Width = 60
-      end
       object clUpdateDate: TcxGridDBColumn
         Caption = #1044#1072#1090#1072' ('#1082#1086#1088#1088'.)'
         DataBinding.FieldName = 'UpdateDate'
@@ -826,6 +820,12 @@ object ReceiptForm: TReceiptForm
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
         Width = 70
+      end
+      object clIsErasedChild: TcxGridDBColumn
+        Caption = #1059#1076#1072#1083#1077#1085
+        DataBinding.FieldName = 'isErased'
+        Visible = False
+        Width = 60
       end
     end
     object cxGridLevel2: TcxGridLevel
@@ -1693,7 +1693,7 @@ object ReceiptForm: TReceiptForm
       end
       item
         Name = 'inStartDate'
-        Value = Null
+        Value = 'NULL'
         Component = ChildCDS
         ComponentItem = 'StartDate'
         DataType = ftDateTime
@@ -1701,7 +1701,7 @@ object ReceiptForm: TReceiptForm
       end
       item
         Name = 'inEndDate'
-        Value = Null
+        Value = 'NULL'
         Component = ChildCDS
         ComponentItem = 'EndDate'
         DataType = ftDateTime

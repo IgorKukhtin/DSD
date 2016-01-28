@@ -21,6 +21,22 @@ BEGIN
      -- PERFORM lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MovementItem_EDI());
      vbUserId := inSession;
 
+
+     -- Проверка
+     IF 1 < (SELECT COUNT (*)
+             FROM MovementItemString 
+                  INNER JOIN MovementItem ON MovementItem.Id = MovementItemString.MovementItemId 
+                                         AND MovementItem.MovementId = inMovementId
+                                         AND MovementItem.DescId = zc_MI_Master() 
+                                         AND MovementItem.isErased = FALSE
+             WHERE MovementItemString.ValueData = inGLNCode
+               AND MovementItemString.DescId = zc_MIString_GLNCode())
+     THEN
+         RAISE EXCEPTION 'Ошибка.В документе EDI № <%> от <%> дублирование товара с GLN = <%>', (SELECT Movement.InvNumber FROM Movement WHERE Movement.Id = inMovementId AND Movement.DescId = zc_Movement_EDI())
+                                                                                              , DATE ((SELECT Movement.OperDate  FROM Movement WHERE Movement.Id = inMovementId AND Movement.DescId = zc_Movement_EDI()))
+                                                                                              , inGLNCode;
+     END IF;
+
      -- находим элемент (по идее один товар - один GLN-код)
      vbMovementItemId := COALESCE((SELECT MovementItem.Id
                                    FROM MovementItemString 
@@ -29,7 +45,7 @@ BEGIN
                                                          AND MovementItem.DescId = zc_MI_Master() 
                                                          AND MovementItem.isErased = FALSE
                                    WHERE MovementItemString.ValueData = inGLNCode
-                                     AND MovementItemString.DescId = zc_MIString_GLNCode() LIMIT 2), 0);
+                                     AND MovementItemString.DescId = zc_MIString_GLNCode()), 0);
 
      -- если есть классификатор
      IF COALESCE (inGoodsPropertyId, 0) <> 0
@@ -65,6 +81,23 @@ BEGIN
 
      -- сохранили связь с <Виды товаров>
      PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_GoodsKind(), vbMovementItemId, vbGoodsKindId);
+
+
+     -- Проверка
+     IF 1 < (SELECT COUNT (*)
+             FROM MovementItemString 
+                  INNER JOIN MovementItem ON MovementItem.Id = MovementItemString.MovementItemId 
+                                         AND MovementItem.MovementId = inMovementId
+                                         AND MovementItem.DescId = zc_MI_Master() 
+                                         AND MovementItem.isErased = FALSE
+             WHERE MovementItemString.ValueData = inGLNCode
+               AND MovementItemString.DescId = zc_MIString_GLNCode())
+     THEN
+         RAISE EXCEPTION 'Ошибка.В документе EDI № <%> от <%> дублирование товара с GLN = <%>. Повторите действие через 25 сек.'
+                                                                                              , (SELECT Movement.InvNumber FROM Movement WHERE Movement.Id = inMovementId AND Movement.DescId = zc_Movement_EDI())
+                                                                                              , DATE ((SELECT Movement.OperDate  FROM Movement WHERE Movement.Id = inMovementId AND Movement.DescId = zc_Movement_EDI()))
+                                                                                              , inGLNCode;
+     END IF;
 
      -- сохранили протокол
      -- PERFORM lpInsert_MovementItemProtocol (ioId, vbUserId);

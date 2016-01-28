@@ -200,9 +200,9 @@ object IncomeFuelForm: TIncomeFuelForm
       Top = 63
       Properties.Alignment.Horz = taRightJustify
       Properties.Alignment.Vert = taVCenter
-      Properties.DecimalPlaces = 3
-      Properties.DisplayFormat = ',0.###'
-      Properties.ReadOnly = True
+      Properties.DecimalPlaces = 4
+      Properties.DisplayFormat = ',0.####'
+      Properties.ReadOnly = False
       TabOrder = 23
       Width = 135
     end
@@ -251,12 +251,12 @@ object IncomeFuelForm: TIncomeFuelForm
       Properties.DisplayFormat = ',0.###'
       Properties.ReadOnly = True
       TabOrder = 27
-      Width = 59
+      Width = 55
     end
     object cxLabel19: TcxLabel
       Left = 191
       Top = 88
-      Caption = #1051#1080#1084#1080#1090', '#1075#1088#1085
+      Caption = #1051#1080#1084#1080#1090' '#1075#1088#1085
     end
   end
   object cxPageControl: TcxPageControl
@@ -388,7 +388,7 @@ object IncomeFuelForm: TIncomeFuelForm
             Width = 128
           end
           object clDistance_calc: TcxGridDBColumn
-            Caption = #1055#1088#1086#1073#1077#1075' '#1092#1072#1082#1090', '#1082#1084
+            Caption = #1055#1088#1086#1073#1077#1075' '#1092#1072#1082#1090' '#1082#1084
             DataBinding.FieldName = 'Distance_calc'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
@@ -640,10 +640,10 @@ object IncomeFuelForm: TIncomeFuelForm
   object cxLabel20: TcxLabel
     Left = 356
     Top = 88
-    Caption = #1051#1080#1084#1080#1090', '#1082#1084
+    Caption = #1051#1080#1084#1080#1090' '#1082#1084
   end
   object edLimitChange: TcxCurrencyEdit
-    Left = 256
+    Left = 254
     Top = 106
     Properties.Alignment.Horz = taRightJustify
     Properties.Alignment.Vert = taVCenter
@@ -651,10 +651,10 @@ object IncomeFuelForm: TIncomeFuelForm
     Properties.DisplayFormat = ',0.###'
     Properties.ReadOnly = False
     TabOrder = 13
-    Width = 94
+    Width = 95
   end
   object cxLabel21: TcxLabel
-    Left = 256
+    Left = 254
     Top = 88
     Caption = #1051#1080#1084#1080#1090' ('#1089#1083#1091#1078'.) '#1075#1088#1085
   end
@@ -687,7 +687,7 @@ object IncomeFuelForm: TIncomeFuelForm
   object cxLabel23: TcxLabel
     Left = 768
     Top = 88
-    Caption = #1055#1088#1086#1073#1077#1075' '#1080#1090#1086#1075#1086', '#1082#1084
+    Caption = #1055#1088#1086#1073#1077#1075' '#1086#1073#1097#1080#1081' '#1082#1084
   end
   object FormParams: TdsdFormParams
     Params = <

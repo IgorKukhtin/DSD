@@ -110,9 +110,21 @@ type
     clReparation: TcxGridDBColumn;
     clLimitMoney: TcxGridDBColumn;
     clLimitDistance: TcxGridDBColumn;
-    clLimitChange: TcxGridDBColumn;
+    clLimitMoneyChange: TcxGridDBColumn;
     clLimitDistanceChange: TcxGridDBColumn;
     clDistance: TcxGridDBColumn;
+    clDistanceReal: TcxGridDBColumn;
+    clFuelCalc: TcxGridDBColumn;
+    clPriceCalc: TcxGridDBColumn;
+    clSummReal: TcxGridDBColumn;
+    clFuelReal: TcxGridDBColumn;
+    clFuelRealCalc: TcxGridDBColumn;
+    clFuelDiff: TcxGridDBColumn;
+    clFuelSummDiff: TcxGridDBColumn;
+    clSummDiff: TcxGridDBColumn;
+    clSummDiffTotal: TcxGridDBColumn;
+    clSummReparation: TcxGridDBColumn;
+    clSummPersonal: TcxGridDBColumn;
   private
   public
   end;

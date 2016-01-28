@@ -341,7 +341,17 @@ BEGIN
                   LEFT JOIN tmpGoodsByGoodsKind ON tmpGoodsByGoodsKind.GoodsId = Object_Goods.Id
                   /*LEFT JOIN Object_GoodsByGoodsKind_View ON Object_GoodsByGoodsKind_View.GoodsId = Object_Goods.Id
                                                         AND Object_InfoMoney_View.InfoMoneyId IN (zc_Enum_InfoMoney_20901(), zc_Enum_InfoMoney_30101(), zc_Enum_InfoMoney_30201()) -- Ирна + Готовая продукция + Доходы Мясное сырье*/
-             WHERE (tmpGoodsByGoodsKind.GoodsId > 0 AND Object_InfoMoney_View.InfoMoneyDestinationId IN (zc_Enum_InfoMoneyDestination_20900(), zc_Enum_InfoMoneyDestination_21000(), zc_Enum_InfoMoneyDestination_21100(), zc_Enum_InfoMoneyDestination_30100(), zc_Enum_InfoMoneyDestination_30200()))
+             WHERE (tmpGoodsByGoodsKind.GoodsId > 0 AND Object_InfoMoney_View.InfoMoneyDestinationId IN (zc_Enum_InfoMoneyDestination_20900()
+                                                                                                       , zc_Enum_InfoMoneyDestination_21000()
+                                                                                                       , zc_Enum_InfoMoneyDestination_21100()
+                                                                                                       , zc_Enum_InfoMoneyDestination_30100()
+                                                                                                       , zc_Enum_InfoMoneyDestination_30200()
+                                                                                                       -- , zc_Enum_InfoMoneyDestination_20500() -- Общефирменные + Оборотная тара
+                                                                                                       -- , zc_Enum_InfoMoneyDestination_20600() -- Общефирменные + Прочие материалы
+                                                                                                        ))
+                -- OR Object_InfoMoney_View.InfoMoneyDestinationId IN  (zc_Enum_InfoMoneyDestination_20500() -- Общефирменные + Оборотная тара
+                --                                                    , zc_Enum_InfoMoneyDestination_20600() -- Общефирменные + Прочие материалы
+                --                                                     )
                 OR vbIsB = TRUE
             ) AS tmpGoods
             LEFT JOIN tmpMI_Goods AS tmpMI ON tmpMI.GoodsId     = tmpGoods.GoodsId

@@ -47,13 +47,16 @@ BEGIN
              INNER JOIN Object AS Object_Receipt_find ON Object_Receipt_find.Id = ObjectLink_Receipt_Goods_find.ObjectId
                                                      AND Object_Receipt_find.isErased = FALSE
              INNER JOIN ObjectFloat AS ObjectFloat_Value_find
-                                    ON ObjectFloat_Value_find.ObjectId = Object_Receipt_find.Id 
+                                    ON ObjectFloat_Value_find.ObjectId = Object_Receipt_find.Id
                                    AND ObjectFloat_Value_find.DescId = zc_ObjectFloat_Receipt_Value()
                                    AND ObjectFloat_Value_find.ValueData > 0
              LEFT JOIN ObjectBoolean AS ObjectBoolean_Main_find
                                       ON ObjectBoolean_Main_find.ObjectId = Object_Receipt_find.Id
                                      AND ObjectBoolean_Main_find.DescId = zc_ObjectBoolean_Receipt_Main()
                                      AND ObjectBoolean_Main_find.ValueData = TRUE
+             LEFT JOIN ObjectLink AS ObjectLink_Receipt_GoodsKindComplete_find
+                                  ON ObjectLink_Receipt_GoodsKindComplete_find.ObjectId = Object_Receipt_find.Id
+                                 AND ObjectLink_Receipt_GoodsKindComplete_find.DescId = zc_ObjectLink_Receipt_GoodsKindComplete()
 
                  INNER JOIN ObjectLink AS ObjectLink_Receipt_Goods_parent
                                        ON ObjectLink_Receipt_Goods_parent.ChildObjectId = ObjectLink_Receipt_Goods_find.ChildObjectId
@@ -62,6 +65,10 @@ BEGIN
                                        ON ObjectLink_Receipt_GoodsKind_parent.ObjectId = ObjectLink_Receipt_Goods_parent.ObjectId
                                       AND ObjectLink_Receipt_GoodsKind_parent.ChildObjectId = ObjectLink_Receipt_GoodsKind_find.ChildObjectId
                                       AND ObjectLink_Receipt_GoodsKind_parent.DescId = zc_ObjectLink_Receipt_GoodsKind()
+                 LEFT JOIN ObjectLink AS ObjectLink_Receipt_GoodsKindComplete_parent
+                                      ON ObjectLink_Receipt_GoodsKindComplete_parent.ObjectId = ObjectLink_Receipt_Goods_parent.ObjectId
+                                     AND ObjectLink_Receipt_GoodsKindComplete_parent.DescId = zc_ObjectLink_Receipt_GoodsKindComplete()
+
                  INNER JOIN ObjectLink AS ObjectLink_Receipt_Parent
                                        ON ObjectLink_Receipt_Parent.ChildObjectId = ObjectLink_Receipt_Goods_parent.ObjectId
                                       AND ObjectLink_Receipt_Parent.DescId = zc_ObjectLink_Receipt_Parent()
@@ -72,6 +79,7 @@ BEGIN
 
         WHERE ObjectLink_Receipt_Goods_find.DescId = zc_ObjectLink_Receipt_Goods()
           AND ObjectBoolean_Main_find.ObjectId IS NULL
+          AND COALESCE (ObjectLink_Receipt_GoodsKindComplete_find.ChildObjectId, zc_GoodsKind_Basis()) = COALESCE (ObjectLink_Receipt_GoodsKindComplete_parent.ChildObjectId, zc_GoodsKind_Basis())
        ;
        END IF;
 

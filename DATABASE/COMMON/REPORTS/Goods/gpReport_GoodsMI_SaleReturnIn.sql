@@ -1,6 +1,6 @@
 -- Function: gpReport_Goods_Movement ()
 
-DROP FUNCTION IF EXISTS gpReport_GoodsMI_SaleReturnIn (TDateTime, TDateTime, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Boolean, Boolean, Boolean, Boolean, TVarChar);
+-- DROP FUNCTION IF EXISTS gpReport_GoodsMI_SaleReturnIn (TDateTime, TDateTime, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Boolean, Boolean, Boolean, Boolean, TVarChar);
 DROP FUNCTION IF EXISTS gpReport_GoodsMI_SaleReturnIn (TDateTime, TDateTime, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Boolean, Boolean, Boolean, Boolean, Boolean, TVarChar);
 
 
@@ -314,6 +314,8 @@ BEGIN
     ANALYZE _tmpGoods;
     ANALYZE _tmpPartner;
     ANALYZE _tmpJuridical;
+    ANALYZE _tmpJuridicalBranch;
+
 
 
     -- Результат
@@ -402,9 +404,9 @@ BEGIN
                                 -- , MIContainer.AccountId
                         )
 
- , tmpOperationGroup AS (SELECT CASE WHEN inIsPartner = TRUE THEN tmpOperationGroup2.JuridicalId ELSE 0 END AS JuridicalId
-                              , CASE WHEN inIsPartner = TRUE THEN ContainerLinkObject_Contract.ObjectId ELSE 0 END AS ContractId
-                              , CASE WHEN inIsPartner = FALSE THEN 0 ELSE tmpOperationGroup2.PartnerId END AS PartnerId
+ , tmpOperationGroup AS (SELECT CASE WHEN inIsPartner  = TRUE  THEN tmpOperationGroup2.JuridicalId ELSE 0 END AS JuridicalId
+                              , CASE WHEN inIsContract = TRUE  THEN ContainerLinkObject_Contract.ObjectId ELSE 0 END AS ContractId
+                              , CASE WHEN inIsPartner  = FALSE THEN 0 ELSE tmpOperationGroup2.PartnerId END AS PartnerId
 
                               , tmpOperationGroup2.InfoMoneyId
                               , tmpOperationGroup2.BranchId
@@ -459,9 +461,9 @@ BEGIN
 
                          WHERE (_tmpPartner.PartnerId > 0 OR vbIsPartner = FALSE)
                            AND (_tmpGoods.GoodsId > 0 OR vbIsGoods = FALSE)
-                         GROUP BY CASE WHEN inIsPartner = TRUE THEN tmpOperationGroup2.JuridicalId ELSE 0 END
-                                , CASE WHEN inIsPartner = TRUE THEN ContainerLinkObject_Contract.ObjectId ELSE 0 END
-                                , CASE WHEN inIsPartner = FALSE THEN 0 ELSE tmpOperationGroup2.PartnerId END
+                         GROUP BY CASE WHEN inIsPartner  = TRUE  THEN tmpOperationGroup2.JuridicalId ELSE 0 END
+                                , CASE WHEN inIsContract = TRUE  THEN ContainerLinkObject_Contract.ObjectId ELSE 0 END
+                                , CASE WHEN inIsPartner  = FALSE THEN 0 ELSE tmpOperationGroup2.PartnerId END
                                 , tmpOperationGroup2.InfoMoneyId
                                 , tmpOperationGroup2.BranchId
                                 , tmpOperationGroup2.ChildAccountId
@@ -558,7 +560,7 @@ BEGIN
          , CAST (CASE WHEN tmpOperationGroup.Sale_AmountPartner_Weight > 0 THEN 100 * tmpOperationGroup.Return_AmountPartner_Weight / tmpOperationGroup.Sale_AmountPartner_Weight ELSE 0 END AS NUMERIC (16, 1)) :: TFloat AS ReturnPercent
 
      FROM tmpOperationGroup
-          LEFT JOIN _tmp_noDELETE_Partner ON _tmp_noDELETE_Partner.FromId = tmpOperationGroup.PartnerId AND 1 = 0
+          -- LEFT JOIN _tmp_noDELETE_Partner ON _tmp_noDELETE_Partner.FromId = tmpOperationGroup.PartnerId AND 1 = 0
 
           LEFT JOIN Object AS Object_Branch ON Object_Branch.Id = tmpOperationGroup.BranchId
           LEFT JOIN Object AS Object_Goods on Object_Goods.Id = tmpOperationGroup.GoodsId
@@ -605,12 +607,14 @@ BEGIN
                                  ON ObjectString_Goods_GroupNameFull.ObjectId = Object_Goods.Id
                                 AND ObjectString_Goods_GroupNameFull.DescId = zc_ObjectString_Goods_GroupNameFull()
 
-          LEFT JOIN tmpPartnerAddress AS View_Partner_Address ON View_Partner_Address.PartnerId = COALESCE (_tmp_noDELETE_Partner.ToId, tmpOperationGroup.PartnerId)
+          -- LEFT JOIN Object AS Object_Partner ON Object_Partner.Id = COALESCE (_tmp_noDELETE_Partner.ToId, tmpOperationGroup.PartnerId)
+          LEFT JOIN Object AS Object_Partner ON Object_Partner.Id = tmpOperationGroup.PartnerId
+
+          LEFT JOIN tmpPartnerAddress AS View_Partner_Address ON View_Partner_Address.PartnerId = tmpOperationGroup.PartnerId
           LEFT JOIN ObjectString AS ObjectString_Address
-                                 ON ObjectString_Address.ObjectId = COALESCE (_tmp_noDELETE_Partner.ToId, tmpOperationGroup.PartnerId)
+                                 ON ObjectString_Address.ObjectId = Object_Partner.Id
                                 AND ObjectString_Address.DescId = zc_ObjectString_Partner_Address()
 
-          LEFT JOIN Object AS Object_Partner ON Object_Partner.Id = COALESCE (_tmp_noDELETE_Partner.ToId, tmpOperationGroup.PartnerId)
 
           LEFT JOIN ObjectLink AS ObjectLink_Juridical_Retail
                                ON ObjectLink_Juridical_Retail.ObjectId = Object_Juridical.Id
@@ -631,7 +635,7 @@ BEGIN
           LEFT JOIN Object_InfoMoney_View AS View_InfoMoney ON View_InfoMoney.InfoMoneyId = tmpOperationGroup.InfoMoneyId
 
           LEFT JOIN ObjectLink AS ObjectLink_Partner_Personal
-                               ON ObjectLink_Partner_Personal.ObjectId = COALESCE (_tmp_noDELETE_Partner.ToId, tmpOperationGroup.PartnerId)
+                               ON ObjectLink_Partner_Personal.ObjectId = Object_Partner.Id
                               AND ObjectLink_Partner_Personal.DescId = zc_ObjectLink_Partner_Personal()
           LEFT JOIN Object_Personal_View AS View_Personal ON View_Personal.PersonalId = ObjectLink_Partner_Personal.ChildObjectId
           LEFT JOIN ObjectLink AS ObjectLink_Unit_Branch
@@ -640,7 +644,7 @@ BEGIN
           LEFT JOIN Object AS Object_BranchPersonal ON Object_BranchPersonal.Id = ObjectLink_Unit_Branch.ChildObjectId
 
           LEFT JOIN ObjectLink AS ObjectLink_Partner_PersonalTrade
-                               ON ObjectLink_Partner_PersonalTrade.ObjectId = COALESCE (_tmp_noDELETE_Partner.ToId, tmpOperationGroup.PartnerId)
+                               ON ObjectLink_Partner_PersonalTrade.ObjectId = Object_Partner.Id
                               AND ObjectLink_Partner_PersonalTrade.DescId = zc_ObjectLink_Partner_PersonalTrade()
           LEFT JOIN Object_Personal_View AS View_PersonalTrade ON View_PersonalTrade.PersonalId = ObjectLink_Partner_PersonalTrade.ChildObjectId
 
@@ -667,4 +671,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpReport_GoodsMI_SaleReturnIn (inStartDate:= '01.07.2015', inEndDate:= '31.07.2015', inBranchId:= 0, inAreaId:= 0, inRetailId:= 0, inJuridicalId:= 0, inPaidKindId:= zc_Enum_PaidKind_FirstForm(), inTradeMarkId:= 0, inGoodsGroupId:= 0, inInfoMoneyId:= zc_Enum_InfoMoney_30101(), inIsPartner:= TRUE, inIsTradeMark:= TRUE, inIsGoods:= TRUE, inIsGoodsKind:= TRUE, inSession:= zfCalc_UserAdmin());
+-- SELECT * FROM gpReport_GoodsMI_SaleReturnIn (inStartDate:= '01.07.2015', inEndDate:= '31.07.2015', inBranchId:= 0, inAreaId:= 0, inRetailId:= 0, inJuridicalId:= 0, inPaidKindId:= zc_Enum_PaidKind_FirstForm(), inTradeMarkId:= 0, inGoodsGroupId:= 0, inInfoMoneyId:= zc_Enum_InfoMoney_30101(), inIsPartner:= TRUE, inIsTradeMark:= TRUE, inIsGoods:= TRUE, inIsGoodsKind:= TRUE, inIsContract:= FALSE, inSession:= zfCalc_UserAdmin());

@@ -411,7 +411,7 @@ BEGIN
      UPDATE _tmpItem SET ContainerId_Goods = 0 WHERE OperCount <> 0;
 
      -- определяется ContainerId_Goods для количественного учета
-     UPDATE _tmpItem SET ContainerId_Goods = lpInsertUpdate_ContainerCount_Goods (inOperDate               := CASE WHEN vbOperDate = '31.10.2015' THEN '01.11.2015' ELSE vbOperDate END -- !!!только для филиалов 1 раз!!!
+     UPDATE _tmpItem SET ContainerId_Goods = lpInsertUpdate_ContainerCount_Goods (inOperDate               := CASE WHEN vbOperDate = '31.10.2015' THEN '01.11.2015' WHEN vbOperDate = '31.12.2015' THEN '01.01.2016' ELSE vbOperDate END -- !!!только для филиалов 1 раз!!!
                                                                                 , inUnitId                 := CASE WHEN vbMemberId <> 0 THEN _tmpItem.UnitId_Item ELSE vbUnitId END
                                                                                 , inCarId                  := vbCarId
                                                                                 , inMemberId               := vbMemberId
@@ -969,7 +969,7 @@ BEGIN
        AND _tmpItemSumm.ContainerId = 0;
 
      -- 3.3. создаем контейнеры для суммового учета + Аналитика <элемент с/с>, причем !!!только!!! когда ContainerId=0 и !!!есть!!! разница по остатку
-     UPDATE _tmpItemSumm SET ContainerId = lpInsertUpdate_ContainerSumm_Goods (inOperDate               := CASE WHEN vbOperDate = '31.10.2015' THEN '01.11.2015' ELSE vbOperDate END -- !!!только для филиалов 1 раз!!!
+     UPDATE _tmpItemSumm SET ContainerId = lpInsertUpdate_ContainerSumm_Goods (inOperDate               := CASE WHEN vbOperDate = '31.10.2015' THEN '01.11.2015' WHEN vbOperDate = '31.12.2015' THEN '01.01.2016' ELSE vbOperDate END -- !!!только для филиалов 1 раз!!!
                                                                              , inUnitId                 := CASE WHEN vbMemberId <> 0 THEN _tmpItem.UnitId_Item ELSE vbUnitId END
                                                                              , inCarId                  := vbCarId
                                                                              , inMemberId               := vbMemberId
@@ -1334,7 +1334,7 @@ BEGIN
 
      -- 4.3. создаем контейнеры для суммового учета + Аналитика <элемент с/с>, причем !!!только!!! когда ContainerId=0 и !!!есть!!! разница по остатку
      UPDATE _tmpItemSummRePrice SET ContainerId_Active =
-                                           lpInsertUpdate_ContainerSumm_Goods (inOperDate               := CASE WHEN vbOperDate = '31.10.2015' THEN '01.11.2015' ELSE vbOperDate END -- !!!только для филиалов 1 раз!!!
+                                           lpInsertUpdate_ContainerSumm_Goods (inOperDate               := CASE WHEN vbOperDate = '31.10.2015' THEN '01.11.2015' WHEN vbOperDate = '31.12.2015' THEN '01.01.2016' ELSE vbOperDate END -- !!!только для филиалов 1 раз!!!
                                                                              , inUnitId                 := CASE WHEN vbMemberId <> 0 THEN _tmpItem.UnitId_Item ELSE vbUnitId END
                                                                              , inCarId                  := vbCarId
                                                                              , inMemberId               := vbMemberId
@@ -1353,7 +1353,7 @@ BEGIN
                                                                              , inAssetId                := _tmpItem.AssetId
                                                                               )
                                   , ContainerId_Passive =
-                                           lpInsertUpdate_ContainerSumm_Goods (inOperDate               := CASE WHEN vbOperDate = '31.10.2015' THEN '01.11.2015' ELSE vbOperDate END -- !!!только для филиалов 1 раз!!!
+                                           lpInsertUpdate_ContainerSumm_Goods (inOperDate               := CASE WHEN vbOperDate = '31.10.2015' THEN '01.11.2015' WHEN vbOperDate = '31.12.2015' THEN '01.01.2016' ELSE vbOperDate END -- !!!только для филиалов 1 раз!!!
                                                                              , inUnitId                 := CASE WHEN vbMemberId <> 0 THEN _tmpItem.UnitId_Item ELSE vbUnitId END
                                                                              , inCarId                  := vbCarId
                                                                              , inMemberId               := vbMemberId
