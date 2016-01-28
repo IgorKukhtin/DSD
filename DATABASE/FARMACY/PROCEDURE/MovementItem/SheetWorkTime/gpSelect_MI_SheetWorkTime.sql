@@ -35,7 +35,6 @@ BEGIN
                                                , MI_SheetWorkTime.Amount
                                                , COALESCE(MI_SheetWorkTime.ObjectId, 0) AS MemberId
                                                , COALESCE(MIObject_Position.ObjectId, 0) AS PositionId
-                                     
                                                , COALESCE(MIObject_PersonalGroup.ObjectId, 0) AS PersonalGroupId
                                                , MIObject_WorkTimeKind.ObjectId
                                                , ObjectString_WorkTimeKind_ShortName.ValueData AS ShortName
@@ -50,7 +49,6 @@ BEGIN
                                                LEFT JOIN MovementItemLinkObject AS MIObject_Position
                                                                                 ON MIObject_Position.MovementItemId = MI_SheetWorkTime.Id 
                                                                                AND MIObject_Position.DescId = zc_MILinkObject_Position() 
-                                             
                                                LEFT JOIN MovementItemLinkObject AS MIObject_WorkTimeKind
                                                                                 ON MIObject_WorkTimeKind.MovementItemId = MI_SheetWorkTime.Id 
                                                                                AND MIObject_WorkTimeKind.DescId = zc_MILinkObject_WorkTimeKind() 
@@ -79,7 +77,7 @@ BEGIN
 
      -- возвращаем заголовки столбцов и даты
      OPEN cur1 FOR SELECT tmpOperDate.OperDate::TDateTime, 
-                          (EXTRACT(DAY FROM tmpOperDate.OperDate))||case when tmpCalendar.Working = False then ' *' else ' ' END||tmpWeekDay.DayOfWeekName ::TVarChar AS ValueField
+                          ((EXTRACT(DAY FROM tmpOperDate.OperDate))||case when tmpCalendar.Working = False then ' *' else ' ' END||tmpWeekDay.DayOfWeekName) ::TVarChar AS ValueField
                FROM tmpOperDate
                    LEFT JOIN zfCalc_DayOfWeekName (tmpOperDate.OperDate) AS tmpWeekDay ON 1=1
                    LEFT JOIN gpSelect_Object_Calendar(tmpOperDate.OperDate,tmpOperDate.OperDate,inSession) tmpCalendar ON 1=1 
@@ -94,7 +92,6 @@ BEGIN
                , Object_Member.ValueData    AS MemberName
                , Object_Position.Id         AS PositionId
                , Object_Position.ValueData  AS PositionName
-               
                , Object_PersonalGroup.Id         AS PersonalGroupId
                , Object_PersonalGroup.ValueData  AS PersonalGroupName
                , CASE WHEN tmp.isErased = 0 THEN TRUE ELSE FALSE END AS isErased'
@@ -103,7 +100,6 @@ BEGIN
          (SELECT * FROM CROSSTAB (''
                                     SELECT ARRAY[COALESCE (Movement_Data.MemberId, Object_Data.MemberId)               -- AS MemberId
                                                , COALESCE (Movement_Data.PositionId, Object_Data.PositionId)           -- AS PositionId
-                                               
                                                , COALESCE (Movement_Data.PersonalGroupId, Object_Data.PersonalGroupId) -- AS PersonalGroupId
                                                 ] :: Integer[]
                                          , COALESCE (Movement_Data.OperDate, Object_Data.OperDate) AS OperDate
@@ -115,7 +111,6 @@ BEGIN
                                          (SELECT tmpOperDate.operdate, 0, 
                                                  COALESCE(MemberId, 0) AS MemberId, 
                                                  COALESCE(ObjectLink_Personal_Position.ChildObjectId, 0) AS PositionId, 
-                                                
                                                  COALESCE(ObjectLink_Personal_PersonalGroup.ChildObjectId, 0)  AS PersonalGroupId  
                                             FROM tmpOperDate, Object_Personal_View 
                                                  LEFT JOIN ObjectLink AS ObjectLink_Personal_Position
@@ -140,13 +135,13 @@ BEGIN
          ) AS D
          LEFT JOIN Object AS Object_Member ON Object_Member.Id = D.Key[1]
          LEFT JOIN Object AS Object_Position ON Object_Position.Id = D.Key[2]
-         LEFT JOIN Object AS Object_PersonalGroup ON Object_PersonalGroup.Id = D.Key[3]
+         LEFT JOIN Object AS Object_PersonalGroup ON Object_PersonalGroup.Id = D.Key[4]
          LEFT JOIN (SELECT DISTINCT tmpMI.MemberId, tmpMI.PositionId, tmpMI.PersonalGroupId, tmpMI.isErased
                     FROM tmpMI
                     WHERE tmpMI.isErased = 1 OR ' || inisErased :: TVarChar || ' = TRUE
                    ) AS tmp ON tmp.MemberId = D.Key[1]
                            AND tmp.PositionId = D.Key[2]
-                           AND tmp.PersonalGroupId = D.Key[3]
+                           AND tmp.PersonalGroupId = D.Key[4]
         ';
 
 

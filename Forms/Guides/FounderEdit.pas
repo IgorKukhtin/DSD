@@ -33,6 +33,8 @@ type
     cxLabel5: TcxLabel;
     ceInfoMoney: TcxButtonEdit;
     InfoMoneyGuides: TdsdGuides;
+    cxLabel4: TcxLabel;
+    edLimit: TcxCurrencyEdit;
   private
     { Private declarations }
   public

@@ -7,7 +7,8 @@ CREATE OR REPLACE FUNCTION gpGet_Object_Founder(
     IN inSession     TVarChar       -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
-             , InfoMoneyId Integer, InfoMoneyName TVarChar)
+             , InfoMoneyId Integer, InfoMoneyName TVarChar
+             , LimitMoney TFloat)
 AS
 $BODY$
 BEGIN
@@ -24,7 +25,9 @@ BEGIN
            , CAST ('' AS TVarChar)  AS Name
           
            , CAST (0 AS Integer)    AS InfoMoneyId
-           , CAST ('' AS TVarChar)  AS InfoMoneyName;
+           , CAST ('' AS TVarChar)  AS InfoMoneyName
+
+           , CAST (0 AS TFloat)     AS LimitMoney;
    ELSE
        RETURN QUERY
        SELECT
@@ -35,11 +38,18 @@ BEGIN
            , Object_InfoMoney_View.InfoMoneyId
            , Object_InfoMoney_View.InfoMoneyName_all AS InfoMoneyName
 
+           , COALESCE(ObjectFloat_Limit.ValueData, 0) ::TFloat AS LimitMoney
+
        FROM Object AS Object_Founder
            LEFT JOIN ObjectLink AS ObjectLink_Founder_InfoMoney
                                 ON ObjectLink_Founder_InfoMoney.ObjectId = Object_Founder.Id
                                AND ObjectLink_Founder_InfoMoney.DescId = zc_ObjectLink_Founder_InfoMoney()
            LEFT JOIN Object_InfoMoney_View ON Object_InfoMoney_View.InfoMoneyId = ObjectLink_Founder_InfoMoney.ChildObjectId
+
+           LEFT JOIN ObjectFloat AS ObjectFloat_Limit
+                                 ON ObjectFloat_Limit.ObjectId = Object_Founder.Id
+                                AND ObjectFloat_Limit.DescId = zc_ObjectFloat_Founder_Limit()
+
        WHERE Object_Founder.Id = inId;
    END IF;
 
@@ -51,6 +61,7 @@ ALTER FUNCTION gpGet_Object_Founder (Integer, TVarChar) OWNER TO postgres;
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 28.01.16         * 
  21.09.14                                        *
  01.09.14         *
 */

@@ -228,6 +228,28 @@ inherited PaymentForm: TPaymentForm
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
           end
+          object clContractNumber: TcxGridDBColumn
+            Caption = #8470' '#1076#1086#1075'.'
+            DataBinding.FieldName = 'ContractNumber'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 60
+          end
+          object clContractStartDate: TcxGridDBColumn
+            Caption = #1044#1077#1081#1089#1090#1074'. '#1089
+            DataBinding.FieldName = 'ContractStartDate'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 60
+          end
+          object clContractEndDate: TcxGridDBColumn
+            Caption = #1044#1077#1081#1089#1090#1074'. '#1076#1086
+            DataBinding.FieldName = 'ContractEndDate'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 60
+          end
         end
       end
       object cxGrid1: TcxGrid
@@ -1205,8 +1227,8 @@ inherited PaymentForm: TPaymentForm
         DataType = ftString
         ParamType = ptInput
       end>
-    Left = 64
-    Top = 56
+    Left = 480
+    Top = 16
   end
   object spSelectPrint: TdsdStoredProc
     StoredProcName = 'gpSelect_Movement_Payment_Print'
