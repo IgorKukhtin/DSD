@@ -47,13 +47,13 @@ inherited ContractEditForm: TContractEditForm
   end
   object ceComment: TcxTextEdit [6]
     Left = 16
-    Top = 524
+    Top = 566
     TabOrder = 4
     Width = 162
   end
   object cxLabel5: TcxLabel [7]
-    Left = 18
-    Top = 510
+    Left = 16
+    Top = 549
     Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
   end
   object edContractKind: TcxButtonEdit [8]
@@ -431,7 +431,7 @@ inherited ContractEditForm: TContractEditForm
   end
   object cxLabel15: TcxLabel [33]
     Left = 184
-    Top = 510
+    Top = 509
     Caption = #1043#1083#1072#1074#1085#1086#1077' '#1102#1088#1080#1076#1080#1095#1077#1089#1082#1086#1077' '#1083#1080#1094#1086
   end
   object edMainJuridical: TcxButtonEdit [34]
@@ -448,13 +448,13 @@ inherited ContractEditForm: TContractEditForm
     Width = 163
   end
   object cxLabel16: TcxLabel [35]
-    Left = 18
-    Top = 469
+    Left = 16
+    Top = 509
     Caption = #1041#1072#1085#1082' ('#1080#1089#1093'.'#1087#1083#1072#1090#1077#1078')'
   end
   object edBankId: TcxButtonEdit [36]
     Left = 16
-    Top = 486
+    Top = 525
     Properties.Buttons = <
       item
         Default = True
@@ -524,8 +524,8 @@ inherited ContractEditForm: TContractEditForm
     Width = 162
   end
   object cxLabel20: TcxLabel [45]
-    Left = 18
-    Top = 431
+    Left = 16
+    Top = 469
     Caption = #1056#1072#1089#1095#1077#1090#1085#1099#1081' '#1089#1095#1077#1090' ('#1074#1093'.'#1087#1083#1072#1090#1077#1078')'
   end
   object cxLabel21: TcxLabel [46]
@@ -547,7 +547,7 @@ inherited ContractEditForm: TContractEditForm
   end
   object ceBankAccount: TcxButtonEdit [48]
     Left = 16
-    Top = 446
+    Top = 485
     Properties.Buttons = <
       item
         Default = True
@@ -600,13 +600,13 @@ inherited ContractEditForm: TContractEditForm
     Width = 163
   end
   object cxLabel24: TcxLabel [55]
-    Left = 18
+    Left = 185
     Top = 549
     Caption = #1055#1088#1072#1081#1089'-'#1083#1080#1089#1090
   end
   object cePriceList: TcxButtonEdit [56]
-    Left = 18
-    Top = 565
+    Left = 185
+    Top = 566
     Properties.Buttons = <
       item
         Default = True
@@ -614,7 +614,7 @@ inherited ContractEditForm: TContractEditForm
       end>
     Properties.ReadOnly = True
     TabOrder = 57
-    Width = 328
+    Width = 161
   end
   object cxLabel25: TcxLabel [57]
     Left = 352
@@ -669,13 +669,13 @@ inherited ContractEditForm: TContractEditForm
     Width = 100
   end
   object cxLabel28: TcxLabel [63]
-    Left = 18
+    Left = 16
     Top = 590
     Caption = #1050#1083#1072#1089#1089#1080#1092#1080#1082#1072#1090#1086#1088' '#1089#1074#1086#1081#1089#1090#1074' '#1090#1086#1074#1072#1088#1072
   end
   object ceGoodsProperty: TcxButtonEdit [64]
-    Left = 18
-    Top = 609
+    Left = 17
+    Top = 607
     Properties.Buttons = <
       item
         Default = True
@@ -683,8 +683,8 @@ inherited ContractEditForm: TContractEditForm
         Kind = bkEllipsis
       end>
     Properties.ReadOnly = True
-    TabOrder = 68
-    Width = 326
+    TabOrder = 66
+    Width = 327
   end
   object edTerm: TcxCurrencyEdit [65]
     Left = 16
@@ -693,7 +693,7 @@ inherited ContractEditForm: TContractEditForm
     Properties.Alignment.Vert = taVCenter
     Properties.DecimalPlaces = 3
     Properties.DisplayFormat = ',0.###'
-    TabOrder = 69
+    TabOrder = 68
     Width = 104
   end
   object cxLabel29: TcxLabel [66]
@@ -717,6 +717,23 @@ inherited ContractEditForm: TContractEditForm
     Properties.ReadOnly = True
     TabOrder = 72
     Width = 217
+  end
+  object cxLabel31: TcxLabel [69]
+    Left = 17
+    Top = 431
+    Caption = 'C'#1086#1090#1088#1091#1076#1085#1080#1082' ('#1087#1086#1076#1087#1080#1089#1072#1085#1090')'
+  end
+  object edPersonalSigning: TcxButtonEdit [70]
+    Left = 16
+    Top = 446
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    Properties.ReadOnly = True
+    TabOrder = 74
+    Width = 162
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 499
@@ -1178,6 +1195,13 @@ inherited ContractEditForm: TContractEditForm
         ParamType = ptInput
       end
       item
+        Name = 'inPersonalSigningId'
+        Value = Null
+        Component = PersonalSigningGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+      end
+      item
         Name = 'inBankAccountId'
         Value = ''
         Component = BankAccountGuides
@@ -1399,6 +1423,19 @@ inherited ContractEditForm: TContractEditForm
         Name = 'PersonalCollationName'
         Value = ''
         Component = PersonalCollationGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+      end
+      item
+        Name = 'PersonalSigningId'
+        Value = Null
+        Component = PersonalSigningGuides
+        ComponentItem = 'Key'
+      end
+      item
+        Name = 'PersonalSigningName'
+        Value = Null
+        Component = PersonalSigningGuides
         ComponentItem = 'TextValue'
         DataType = ftString
       end
@@ -2468,8 +2505,8 @@ inherited ContractEditForm: TContractEditForm
         DataType = ftString
         ParamType = ptInput
       end>
-    Left = 67
-    Top = 432
+    Left = 59
+    Top = 504
   end
   object ContractTagGuides: TdsdGuides
     KeyField = 'Id'
@@ -2549,8 +2586,8 @@ inherited ContractEditForm: TContractEditForm
         DataType = ftString
         ParamType = ptInput
       end>
-    Left = 97
-    Top = 546
+    Left = 249
+    Top = 554
   end
   object dsdPriceListPromoGuides: TdsdGuides
     KeyField = 'Id'
@@ -2632,5 +2669,32 @@ inherited ContractEditForm: TContractEditForm
       end>
     Left = 192
     Top = 146
+  end
+  object PersonalSigningGuides: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edPersonalSigning
+    FormNameParam.Value = 'TPersonal_ObjectForm'
+    FormNameParam.DataType = ftString
+    FormName = 'TPersonal_ObjectForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = PersonalSigningGuides
+        ComponentItem = 'Key'
+        DataType = ftString
+        ParamType = ptInput
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = PersonalSigningGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+      end>
+    Left = 80
+    Top = 443
   end
 end

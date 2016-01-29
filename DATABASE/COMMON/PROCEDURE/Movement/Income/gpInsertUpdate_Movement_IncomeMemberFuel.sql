@@ -2,6 +2,7 @@
 
 DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_IncomeMemberFuel(Integer,TVarChar,TDateTime,TDateTime,TVarChar,Boolean,TFloat,TFloat,TFloat,TFloat,Integer,Integer,Integer,Integer,Integer,Integer,TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_IncomeMemberFuel(Integer,TVarChar,TDateTime,TDateTime,TVarChar,Boolean,TFloat,TFloat,TFloat,TFloat,TFloat,TFloat,TFloat,TFloat,TFloat,TFloat,Integer,Integer,Integer,Integer,Integer,Integer,TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_IncomeMemberFuel(Integer,TVarChar,TDateTime,TDateTime,TVarChar,Boolean,TFloat,TFloat,TFloat,TFloat,TFloat,TFloat,TFloat,TFloat,Integer,Integer,Integer,Integer,Integer,Integer,TVarChar);
 
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_IncomeMemberFuel(
@@ -16,8 +17,8 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_IncomeMemberFuel(
     IN inVATPercent          TFloat    , -- % НДС
     IN inChangePrice         TFloat    , -- Скидка в цене
 
-    IN inStartOdometre       TFloat    , --
-    IN inEndOdometre         TFloat    , --
+   -- IN inStartOdometre       TFloat    , --
+   -- IN inEndOdometre         TFloat    , --
     IN inAmountFuel          TFloat    , -- норма авто
     IN inReparation          TFloat    , -- амортизация
     IN inLimit               TFloat    , -- лимит грн

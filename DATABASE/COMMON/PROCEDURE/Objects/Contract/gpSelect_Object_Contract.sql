@@ -34,6 +34,8 @@ RETURNS TABLE (Id Integer, Code Integer
                           
              , PersonalTradeId Integer, PersonalTradeCode Integer, PersonalTradeName TVarChar
              , PersonalCollationId Integer, PersonalCollationCode Integer, PersonalCollationName TVarChar
+             , PersonalSigningId Integer, PersonalSigningCode Integer, PersonalSigningName TVarChar
+            
              , BankAccountId Integer, BankAccountName TVarChar
              , ContractTagId Integer, ContractTagName TVarChar, ContractTagGroupName TVarChar
                           
@@ -176,6 +178,10 @@ BEGIN
        , Object_PersonalCollation.PersonalCode  AS PersonalCollationCode
        , Object_PersonalCollation.PersonalName  AS PersonalCollationName
 
+       , Object_PersonalSigning.PersonalId      AS PersonalSigningId
+       , Object_PersonalSigning.PersonalCode    AS PersonalSigningCode
+       , Object_PersonalSigning.PersonalName    AS PersonalSigningName
+
        , Object_BankAccount.Id              AS BankAccountId
        , Object_BankAccount.ValueData       AS BankAccountName
 
@@ -303,6 +309,11 @@ BEGIN
                             AND ObjectLink_Contract_PersonalCollation.DescId = zc_ObjectLink_Contract_PersonalCollation()
         LEFT JOIN Object_Personal_View AS Object_PersonalCollation ON Object_PersonalCollation.PersonalId = ObjectLink_Contract_PersonalCollation.ChildObjectId        
         
+        LEFT JOIN ObjectLink AS ObjectLink_Contract_PersonalSigning
+                             ON ObjectLink_Contract_PersonalSigning.ObjectId = Object_Contract_View.ContractId 
+                            AND ObjectLink_Contract_PersonalSigning.DescId = zc_ObjectLink_Contract_PersonalSigning()
+        LEFT JOIN Object_Personal_View AS Object_PersonalSigning ON Object_PersonalSigning.PersonalId = ObjectLink_Contract_PersonalSigning.ChildObjectId   
+
         LEFT JOIN ObjectLink AS ObjectLink_Contract_BankAccount
                              ON ObjectLink_Contract_BankAccount.ObjectId = Object_Contract_View.ContractId 
                             AND ObjectLink_Contract_BankAccount.DescId = zc_ObjectLink_Contract_BankAccount()
