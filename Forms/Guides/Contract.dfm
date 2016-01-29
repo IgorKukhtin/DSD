@@ -25,7 +25,6 @@ object ContractForm: TContractForm
     Align = alTop
     BevelOuter = bvNone
     TabOrder = 2
-    ExplicitTop = 40
     object deStart: TcxDateEdit
       Left = 238
       Top = 4
@@ -447,6 +446,14 @@ object ContractForm: TContractForm
         Properties.ReadOnly = True
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        Width = 60
+      end
+      object clPersonalSigningName: TcxGridDBColumn
+        Caption = #1057#1086#1090#1088#1091#1076#1085#1080#1082' ('#1087#1086#1076#1087#1080#1089#1072#1085#1090')'
+        DataBinding.FieldName = 'PersonalSigningName'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
         Width = 60
       end
       object clAreaContractName: TcxGridDBColumn
