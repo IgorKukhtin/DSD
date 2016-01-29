@@ -14,6 +14,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , StartSummerDate TDateTime, EndSummerDate TDateTime
              , AmountFuel TFloat, Reparation TFloat, LimitMoney TFloat, LimitDistance TFloat
              , CarName TVarChar, CarModelName TVarChar
+             , DescName TVarChar
              , isErased Boolean
               )
 AS
@@ -53,10 +54,12 @@ BEGIN
          , tmpMemberTransport.CarName
          , tmpMemberTransport.CarModelName
          
+         , ObjectDesc.ItemName     AS DescName 
+
          , tmpMemberTransport.isErased
 
      FROM gpSelect_Object_Member(inIsShowAll, inSession) AS tmpMemberTransport
-      
+       LEFT JOIN ObjectDesc ON ObjectDesc.Id = zc_Object_Member()
   UNION 
      
      SELECT   
@@ -87,9 +90,11 @@ BEGIN
          , CAST ('' as TVarChar)    AS CarName
          , CAST ('' as TVarChar)    AS CarModelName
          
+         , ObjectDesc.ItemName     AS DescName 
          , tmpFounder.isErased
 
      FROM gpSelect_Object_Founder(inSession) AS tmpFounder
+        LEFT JOIN ObjectDesc ON ObjectDesc.Id = zc_Object_Founder()
   
     ;
 

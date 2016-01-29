@@ -82,7 +82,7 @@ object IncomeFuelForm: TIncomeFuelForm
     object cxLabel4: TcxLabel
       Left = 455
       Top = 5
-      Caption = #1050#1086#1084#1091' ('#1040#1074#1090#1086#1084#1086#1073#1080#1083#1100', '#1060#1080#1079'.'#1083'.)'
+      Caption = #1050#1086#1084#1091' ('#1060#1080#1079'.'#1083'., '#1091#1095#1088#1077#1076'.)'
     end
     object edPriceWithVAT: TcxCheckBox
       Left = 274
@@ -209,7 +209,7 @@ object IncomeFuelForm: TIncomeFuelForm
     object edOperDatePartner: TcxDateEdit
       Left = 177
       Top = 63
-      EditValue = 42244d
+      EditValue = 42387d
       Properties.SaveTime = False
       Properties.ShowTime = False
       TabOrder = 24
@@ -407,6 +407,15 @@ object IncomeFuelForm: TIncomeFuelForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 106
+          end
+          object clisErased: TcxGridDBColumn
+            Caption = #1059#1076#1072#1083#1077#1085
+            DataBinding.FieldName = 'isErased'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 30
           end
         end
         object cxGridLevelChild: TcxGridLevel
@@ -2355,7 +2364,7 @@ object IncomeFuelForm: TIncomeFuelForm
     Top = 440
   end
   object spErasedMIChild: TdsdStoredProc
-    StoredProcName = 'gpSetErased_MovementItem'
+    StoredProcName = 'gpMovementItem_IncomeFuel_SetErased'
     DataSets = <>
     OutputType = otResult
     Params = <
@@ -2372,13 +2381,31 @@ object IncomeFuelForm: TIncomeFuelForm
         Component = ChildCDS
         ComponentItem = 'isErased'
         DataType = ftBoolean
+      end
+      item
+        Name = 'outStartOdometre_calc'
+        Value = Null
+        Component = edStartOdometre
+        DataType = ftFloat
+      end
+      item
+        Name = 'outEndOdometre_calc'
+        Value = Null
+        Component = edEndOdometre
+        DataType = ftFloat
+      end
+      item
+        Name = 'outDistanceDiff'
+        Value = Null
+        Component = edDistanceDiff
+        DataType = ftFloat
       end>
     PackSize = 1
     Left = 366
     Top = 396
   end
   object spUnErasedMIChild: TdsdStoredProc
-    StoredProcName = 'gpSetUnErased_MovementItem'
+    StoredProcName = 'gpMovementItem_IncomeFuel_SetUnErased'
     DataSets = <>
     OutputType = otResult
     Params = <
@@ -2395,6 +2422,24 @@ object IncomeFuelForm: TIncomeFuelForm
         Component = ChildCDS
         ComponentItem = 'isErased'
         DataType = ftBoolean
+      end
+      item
+        Name = 'outStartOdometre_calc'
+        Value = Null
+        Component = edStartOdometre
+        DataType = ftFloat
+      end
+      item
+        Name = 'outEndOdometre_calc'
+        Value = Null
+        Component = edEndOdometre
+        DataType = ftFloat
+      end
+      item
+        Name = 'outDistanceDiff'
+        Value = Null
+        Component = edDistanceDiff
+        DataType = ftFloat
       end>
     PackSize = 1
     Left = 494

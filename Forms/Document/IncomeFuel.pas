@@ -166,6 +166,7 @@ type
     actUpdateChildDS: TdsdUpdateDataSet;
     clRouteMemberName: TcxGridDBColumn;
     clDayOfWeekName: TcxGridDBColumn;
+    clisErased: TcxGridDBColumn;
   private
   public
   end;
