@@ -20,6 +20,9 @@ RETURNS TABLE (Id Integer, InvNumber Integer, OperDate TDateTime, InvNumberMaste
              , BranchCode Integer, BranchName TVarChar
              , GoodsCode Integer, GoodsName TVarChar
              , FuelCode Integer, FuelName TVarChar
+             , StartOdometre TFloat, EndOdometre TFloat, AmountFuel TFloat
+             , Reparation TFloat, LimitMoney TFloat, LimitFuel TFloat
+             , LimitChange TFloat, LimitFuelChange TFloat, Distance TFloat
               )
 AS
 $BODY$
@@ -31,6 +34,15 @@ BEGIN
 
      -- –ÂÁÛÎ¸Ú‡Ú
      RETURN QUERY 
+     WITH tmpRoleAccessKey_all AS (SELECT AccessKeyId, UserId FROM Object_RoleAccessKey_View)
+        , tmpRoleAccessKey_user AS (SELECT AccessKeyId FROM tmpRoleAccessKey_all WHERE UserId = vbUserId GROUP BY AccessKeyId)
+        , tmpAccessKey_IsDocumentAll AS (SELECT 1 AS Id FROM ObjectLink_UserRole_View WHERE RoleId = zc_Enum_Role_Admin() AND UserId = vbUserId
+                                   UNION SELECT 1 AS Id FROM tmpRoleAccessKey_user WHERE AccessKeyId = zc_Enum_Process_AccessKey_DocumentAll()
+                                        )
+        , tmpRoleAccessKey AS (SELECT tmpRoleAccessKey_user.AccessKeyId FROM tmpRoleAccessKey_user WHERE NOT EXISTS (SELECT tmpAccessKey_IsDocumentAll.Id FROM tmpAccessKey_IsDocumentAll)
+                         UNION SELECT tmpRoleAccessKey_all.AccessKeyId FROM tmpRoleAccessKey_all WHERE EXISTS (SELECT tmpAccessKey_IsDocumentAll.Id FROM tmpAccessKey_IsDocumentAll) GROUP BY tmpRoleAccessKey_all.AccessKeyId
+                         UNION SELECT 0 AS AccessKeyId WHERE EXISTS (SELECT tmpAccessKey_IsDocumentAll.Id FROM tmpAccessKey_IsDocumentAll)
+                              )
        SELECT
              Movement.Id
            , zfConvert_StringToNumber (Movement.InvNumber) AS InvNumber
@@ -72,8 +84,19 @@ BEGIN
            , Object_Fuel.ObjectCode  AS FuelCode
            , Object_Fuel.ValueData   AS FuelName
 
+           , MovementFloat_StartOdometre.ValueData       AS StartOdometre
+           , MovementFloat_EndOdometre.ValueData         AS EndOdometre
+           , MovementFloat_AmountFuel.ValueData          AS AmountFuel
+           , MovementFloat_Reparation.ValueData          AS Reparation
+           , MovementFloat_Limit.ValueData               AS LimitMoney
+           , MovementFloat_LimitFuel.ValueData           AS LimitFuel
+           , MovementFloat_LimitChange.ValueData         AS LimitChange
+           , MovementFloat_LimitFuelChange.ValueData     AS LimitFuelChange
+           , MovementFloat_Distance.ValueData            AS Distance
+
        FROM Movement
-            JOIN (SELECT AccessKeyId FROM Object_RoleAccessKey_View WHERE UserId = vbUserId GROUP BY AccessKeyId) AS tmpRoleAccessKey ON tmpRoleAccessKey.AccessKeyId = Movement.AccessKeyId
+            -- JOIN (SELECT AccessKeyId FROM Object_RoleAccessKey_View WHERE UserId = vbUserId GROUP BY AccessKeyId) AS tmpRoleAccessKey ON tmpRoleAccessKey.AccessKeyId = Movement.AccessKeyId
+            INNER JOIN tmpRoleAccessKey ON tmpRoleAccessKey.AccessKeyId = COALESCE (Movement.AccessKeyId, 0)
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
 
             LEFT JOIN Movement AS Movement_Master ON Movement_Master.Id = Movement.ParentId
@@ -83,6 +106,7 @@ BEGIN
             LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = MovementItem.ObjectId
             LEFT JOIN MovementItemContainer AS MIContainer_Count ON MIContainer_Count.MovementItemId = MovementItem.Id
                                                                 AND MIContainer_Count.DescId = zc_MIContainer_Count()
+                                                                AND MIContainer_Count.isActive = TRUE
             LEFT JOIN Container AS Container_Count ON Container_Count.Id = MIContainer_Count.ContainerId
             LEFT JOIN Object AS Object_Fuel ON Object_Fuel.Id = Container_Count.ObjectId
 
@@ -115,6 +139,34 @@ BEGIN
             LEFT JOIN MovementFloat AS MovementFloat_TotalSumm
                                     ON MovementFloat_TotalSumm.MovementId =  Movement.Id
                                    AND MovementFloat_TotalSumm.DescId = zc_MovementFloat_TotalSumm()
+
+            LEFT JOIN MovementFloat AS MovementFloat_StartOdometre
+                                    ON MovementFloat_StartOdometre.MovementId =  Movement.Id
+                                   AND MovementFloat_StartOdometre.DescId = zc_MovementFloat_StartOdometre()
+            LEFT JOIN MovementFloat AS MovementFloat_EndOdometre
+                                    ON MovementFloat_EndOdometre.MovementId =  Movement.Id
+                                   AND MovementFloat_EndOdometre.DescId = zc_MovementFloat_EndOdometre()
+            LEFT JOIN MovementFloat AS MovementFloat_AmountFuel
+                                    ON MovementFloat_AmountFuel.MovementId =  Movement.Id
+                                   AND MovementFloat_AmountFuel.DescId = zc_MovementFloat_AmountFuel()
+            LEFT JOIN MovementFloat AS MovementFloat_Reparation
+                                    ON MovementFloat_Reparation.MovementId =  Movement.Id
+                                   AND MovementFloat_Reparation.DescId = zc_MovementFloat_Reparation()
+            LEFT JOIN MovementFloat AS MovementFloat_Limit
+                                    ON MovementFloat_Limit.MovementId =  Movement.Id
+                                   AND MovementFloat_Limit.DescId = zc_MovementFloat_Limit()
+            LEFT JOIN MovementFloat AS MovementFloat_LimitFuel
+                                    ON MovementFloat_LimitFuel.MovementId =  Movement.Id
+                                   AND MovementFloat_LimitFuel.DescId = zc_MovementFloat_LimitFuel()
+            LEFT JOIN MovementFloat AS MovementFloat_LimitChange
+                                    ON MovementFloat_LimitChange.MovementId =  Movement.Id
+                                   AND MovementFloat_LimitChange.DescId = zc_MovementFloat_LimitChange()
+            LEFT JOIN MovementFloat AS MovementFloat_LimitFuelChange
+                                    ON MovementFloat_LimitFuelChange.MovementId =  Movement.Id
+                                   AND MovementFloat_LimitFuelChange.DescId = zc_MovementFloat_LimitFuelChange()
+            LEFT JOIN MovementFloat AS MovementFloat_Distance
+                                    ON MovementFloat_Distance.MovementId =  Movement.Id
+                                   AND MovementFloat_Distance.DescId = zc_MovementFloat_Distance()
 
             LEFT JOIN MovementLinkObject AS MovementLinkObject_From
                                          ON MovementLinkObject_From.MovementId = Movement.Id
@@ -164,6 +216,7 @@ ALTER FUNCTION gpSelect_Movement_IncomeFuel (TDateTime, TDateTime, TVarChar) OWN
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».   Ã‡Ì¸ÍÓ ƒ.
+ 15.01.16         * add               
  10.02.14                                        * add Û·‡Î !!!—¿ÃŒ≈ Õ≈ –¿—»¬Œ≈ –≈ÿ≈Õ»≈!!!, Ú.Í. AccessKeyId ·Û‰ÂÚ ‰ÓÒÚ‡ÚÓ˜ÌÓ
  09.02.14                                        * add Object_Contract_InvNumber_View and Object_InfoMoney_View
  06.02.14                                        * add Branch...
@@ -181,3 +234,4 @@ ALTER FUNCTION gpSelect_Movement_IncomeFuel (TDateTime, TDateTime, TVarChar) OWN
 
 -- ÚÂÒÚ
 -- SELECT * FROM gpSelect_Movement_IncomeFuel (inStartDate:= '01.01.2015', inEndDate:= '31.01.2015', inSession:= zfCalc_UserAdmin())
+-- select * from gpSelect_Movement_IncomeFuel(inStartDate := ('21.12.2015')::TDateTime , inEndDate := ('23.12.2015')::TDateTime ,  inSession := '5');

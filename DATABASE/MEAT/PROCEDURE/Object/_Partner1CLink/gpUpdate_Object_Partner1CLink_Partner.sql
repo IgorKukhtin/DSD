@@ -165,6 +165,7 @@ BEGIN
                                                               , inGLNCode         := NULL
                                                               , inisCorporate     := FALSE
                                                               , inisTaxSummary     := NULL
+                                                              , inisDiscountPrice  := NULL
                                                               , inDayTaxSummary    := 0
                                                               , inJuridicalGroupId:= vbJuridicalGroupId
                                                               , inGoodsPropertyId := NULL

@@ -52,42 +52,42 @@ object BankAccount_ObjectForm: TBankAccount_ObjectForm
         DataBinding.FieldName = 'Code'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 47
+        Width = 65
       end
       object clName: TcxGridDBColumn
         Caption = #1056#1072#1089#1095#1077#1090#1085#1099#1081' '#1089#1095#1077#1090
         DataBinding.FieldName = 'Name'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 134
+        Width = 184
       end
       object clCurrency: TcxGridDBColumn
         Caption = #1042#1072#1083#1102#1090#1072
         DataBinding.FieldName = 'CurrencyName'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 55
+        Width = 76
       end
       object CurrencyValue: TcxGridDBColumn
         Caption = #1050#1091#1088#1089
         DataBinding.FieldName = 'CurrencyValue'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 55
+        Width = 75
       end
       object ParValue: TcxGridDBColumn
         Caption = #1053#1086#1084#1080#1085#1072#1083
         DataBinding.FieldName = 'ParValue'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 55
+        Width = 76
       end
       object clBankName: TcxGridDBColumn
         Caption = #1041#1072#1085#1082
         DataBinding.FieldName = 'BankName'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 96
+        Width = 114
       end
       object clJuridicalName: TcxGridDBColumn
         Caption = #1070#1088#1080#1076#1080#1095#1077#1089#1082#1086#1077' '#1083#1080#1094#1086
@@ -104,6 +104,12 @@ object BankAccount_ObjectForm: TBankAccount_ObjectForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 88
+      end
+      object colJuridicalName: TcxGridDBColumn
+        Caption = #1070#1088#1083#1080#1094#1086
+        DataBinding.FieldName = 'JuridicalName'
+        HeaderAlignmentHorz = taCenter
+        Width = 106
       end
     end
     object cxGridLevel: TcxGridLevel
@@ -368,7 +374,7 @@ object BankAccount_ObjectForm: TBankAccount_ObjectForm
     Params = <
       item
         Name = 'inOperDate'
-        Value = Null
+        Value = 'NULL'
         Component = FormParams
         ComponentItem = 'inOperDate'
         DataType = ftDateTime

@@ -71,7 +71,7 @@ BEGIN
                                  , MovementLinkObject_From.ObjectId           AS FromId
                                  , MovementLinkObject_To.ObjectId             AS ToId
                                  , ObjectLink_Partner_Juridical.ChildObjectId AS JuridicalId
-                                 , zfCalc_GoodsPropertyId (MovementLinkObject_Contract.ObjectId, ObjectLink_Partner_Juridical.ChildObjectId) AS GoodsPropertyId
+                                 , zfCalc_GoodsPropertyId (MovementLinkObject_Contract.ObjectId, ObjectLink_Partner_Juridical.ChildObjectId, ObjectLink_Partner_Juridical.ObjectId) AS GoodsPropertyId
                                    -- вот таким сложным CASE определяется приход или расход
                                  , CASE WHEN ObjectLink_UnitFrom_Branch.ChildObjectId = vbBranchId
                                              THEN NULL -- FALSE -- для филиала - расход с него !!!блокируется!!!
@@ -362,4 +362,4 @@ ALTER FUNCTION gpGet_Scale_OrderExternal (TDateTime, Integer, TVarChar, TVarChar
 
 -- тест
 -- select * from gpGet_Scale_OrderExternal (inOperDate := ('01.07.2015')::TDateTime , inBranchCode := 1 , inBarCode := '2020018777013' ,  inSession := '5');
--- select * from gpGet_Scale_OrderExternal(inOperDate := ('01.07.2015')::TDateTime , inBranchCode := 1 , inBarCode := '2020018803347' ,  inSession := '5');
+-- select * from gpGet_Scale_OrderExternal(inOperDate := ('03.01.2016')::TDateTime , inBranchCode := 2 , inBarCode := '6245' ,  inSession := '5');

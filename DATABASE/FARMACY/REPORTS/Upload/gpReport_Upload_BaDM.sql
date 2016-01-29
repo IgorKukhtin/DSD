@@ -10,9 +10,9 @@ CREATE OR REPLACE FUNCTION  gpReport_Upload_BaDM(
 RETURNS TABLE (
   OperDate      TDateTime, --Дата - дата операционного дня к которой относится произведенная операция 
   JuridicalCode TVarChar,  --Контрагент - код юр.лица в учетной системе БаДМ, к которому относится аптека, предоставляется БаДМ при построении системы
-  UnitCode      Integer,   --Код склада - код аптеки в учетной системе компании Клиента
+  UnitCode      TVarChar,  --Код склада - код аптеки в учетной системе компании Клиента
   UnitName      TVarChar,  --Наименование склада - наименование аптеки в учетной системе компании Клиента
-  GoodsCode     Integer,   --Код товара - код товара в учетной системе компании Клиент. Соотнесение кодов товар компаний Клиент и БаДМ осуществляется на стороне компании БаДМ
+  GoodsCode     TVarChar,  --Код товара - код товара в учетной системе компании Клиент. Соотнесение кодов товар компаний Клиент и БаДМ осуществляется на стороне компании БаДМ
   GoodsName     TVarChar,  --Наименование товара - наименование товара в учетной системе компании Клиента
   OperCode      Integer,   --Тип операции - код товарной операции в соответствии с таблицей типов операций, которая приведена на листе Типы операций.
                            --Код типа операции  Наименование операции           Единица измерения
@@ -40,7 +40,10 @@ BEGIN
     CREATE TEMP TABLE _Cross(
         JuridicalCode TVarChar,
         UnitId        Integer,
+        UnitCode      TVarChar,
         GoodsId       Integer,
+        GoodsCode     TVarChar,
+        GoodsName     TVarChar,
         OperCode      Integer) ON COMMIT DROP;
     --Залили пустографку
     WITH Oper AS (
@@ -52,36 +55,48 @@ BEGIN
         Select 
             Object_ImportExportLink.StringKey  AS JuridicalCode
            ,ObjectLink_Unit_Juridical.ObjectId AS UnitId
+           ,Object_ImportExportLink_Unit.StringKey AS UnitCode
         FROM Object_ImportExportLink_View AS Object_ImportExportLink
             Inner Join Object ON Object_ImportExportLink.MainId = Object.ID
                              AND Object.DescId = zc_Object_Juridical()
             LEFT OUTER JOIN ObjectLink AS ObjectLink_Unit_Juridical
                                        ON ObjectLink_Unit_Juridical.ChildObjectId = Object.ID
                                       AND ObjectLink_Unit_Juridical.DescId = zc_ObjectLink_Unit_Juridical()
+            LEFT OUTER JOIN Object_ImportExportLink_View AS Object_ImportExportLink_Unit
+                                                         ON Object_ImportExportLink_Unit.MainId = ObjectLink_Unit_Juridical.ObjectId
+                                                        AND Object_ImportExportLink_Unit.LinkTypeId = zc_Enum_ImportExportLinkType_UploadCompliance()
+                                                        AND Object_ImportExportLink_Unit.ValueId = inObjectId
         WHERE
             Object_ImportExportLink.LinkTypeId = zc_Enum_ImportExportLinkType_UploadCompliance()
             AND
             Object_ImportExportLink.ValueId = inObjectId
+            AND
+            COALESCE(Object_ImportExportLink_Unit.StringKey,'') <> ''
     ),
     Goods AS(
         SELECT DISTINCT
             LinkGoods_Main_Retail.GoodsId AS GoodsId
+           ,Object_Goods_View.GoodsCode   AS GoodsCode
+           ,Object_Goods_View.GoodsName   AS GoodsName
         FROM Object_Goods_View
-            JOIN Object_LinkGoods_View AS LinkGoods_Partner_Main
-                                       ON LinkGoods_Partner_Main.GoodsId = Object_Goods_View.id -- Связь товара поставщика с общим
-            JOIN Object_LinkGoods_View AS LinkGoods_Main_Retail -- связь товара сети с главным товаром
-                                       ON LinkGoods_Main_Retail.GoodsMainId = LinkGoods_Partner_Main.GoodsMainId
-                                      AND LinkGoods_Main_Retail.ObjectId = vbObjectIdRetail
+            LEFT JOIN Object_LinkGoods_View AS LinkGoods_Partner_Main
+                                            ON LinkGoods_Partner_Main.GoodsId = Object_Goods_View.id -- Связь товара поставщика с общим
+            LEFT JOIN Object_LinkGoods_View AS LinkGoods_Main_Retail -- связь товара сети с главным товаром
+                                            ON LinkGoods_Main_Retail.GoodsMainId = LinkGoods_Partner_Main.GoodsMainId
+                                           AND LinkGoods_Main_Retail.ObjectId = vbObjectIdRetail
         WHERE
             Object_Goods_View.ObjectId = inObjectId
             AND
             Object_Goods_View.IsUpload = TRUE
     )
-    INSERT INTO _Cross (JuridicalCode, UnitId, GoodsId, OperCode)
+    INSERT INTO _Cross (JuridicalCode, UnitId, UnitCode, GoodsId, GoodsCode, GoodsName, OperCode)
     SELECT
         Juridical.JuridicalCode
       , Juridical.UnitId
+      , Juridical.UnitCode
       , Goods.GoodsId
+      , Goods.GoodsCode
+      , Goods.GoodsName
       , Oper.OperCode
     FROM 
       Oper
@@ -110,7 +125,7 @@ BEGIN
                 INNER JOIN MovementItemContainer AS MIContainer
                                                  ON MIContainer.MovementItemId = MI_Check.Id
                                                 AND MIContainer.DescId = zc_MIContainer_Count() 
-                INNER JOIN containerlinkobject AS ContainerLinkObject_MovementItem 
+                /*INNER JOIN containerlinkobject AS ContainerLinkObject_MovementItem 
                                                ON ContainerLinkObject_MovementItem.containerid = MIContainer.ContainerId
                                               AND ContainerLinkObject_MovementItem.descid = zc_ContainerLinkObject_PartionMovementItem()
                 INNER JOIN OBJECT AS Object_PartionMovementItem 
@@ -120,7 +135,7 @@ BEGIN
                 INNER JOIN MovementLinkObject AS MovementLinkObject_Income_From
                                               ON MovementLinkObject_Income_From.MovementId = MI_Income.MovementId
                                              AND MovementLinkObject_Income_From.DescId = zc_MovementLinkObject_From()
-                                             AND MovementLinkObject_Income_From.ObjectId = inObjectId
+                                             AND MovementLinkObject_Income_From.ObjectId = inObjectId */
                                              
             WHERE
                 Movement_Check.DescId in (zc_Movement_Check(),zc_Movement_Sale())
@@ -149,7 +164,7 @@ BEGIN
                         Container
                         LEFT OUTER JOIN MovementItemContainer ON MovementItemContainer.ContainerId = Container.ID
                                                              AND date_trunc('day', MovementItemContainer.OperDate) > inDate
-                        INNER JOIN containerlinkobject AS ContainerLinkObject_MovementItem 
+                        /* INNER JOIN containerlinkobject AS ContainerLinkObject_MovementItem 
                                                        ON ContainerLinkObject_MovementItem.containerid = Container.Id
                                                       AND ContainerLinkObject_MovementItem.descid = zc_ContainerLinkObject_PartionMovementItem()
                         INNER JOIN OBJECT AS Object_PartionMovementItem 
@@ -159,7 +174,7 @@ BEGIN
                         INNER JOIN MovementLinkObject AS MovementLinkObject_Income_From
                                                       ON MovementLinkObject_Income_From.MovementId = MI_Income.MovementId
                                                      AND MovementLinkObject_Income_From.DescId = zc_MovementLinkObject_From()
-                                                     AND MovementLinkObject_Income_From.ObjectId = inObjectId
+                                                     AND MovementLinkObject_Income_From.ObjectId = inObjectId */
                     WHERE
                         Container.DescId = zc_Container_Count()
                     GROUP BY
@@ -178,12 +193,12 @@ BEGIN
         SELECT
             inDate                                    AS OperDate
            ,_Cross.JuridicalCode
-           ,Object_Unit.ObjectCode::Integer           AS UnitCode
+           ,_Cross.UnitCode                           AS UnitCode
            ,Object_Unit.ValueData                     AS UnitName
-           ,Object_Goods.ObjectCode::Integer          AS GoodsCode
-           ,Object_Goods.ValueData                    AS GoodsName
+           ,_Cross.GoodsCode                          AS GoodsCode
+           ,_Cross.GoodsName                          AS GoodsName
            ,_Cross.OperCode
-           ,COALESCE(SaleAndRemains.Amount,0)::TFloat AS Amount
+           ,SUM(COALESCE(SaleAndRemains.Amount,0))::TFloat AS Amount
            ,0::TFloat                                 AS Segment1
            ,0::TFloat                                 AS Segment2
            ,0::TFloat                                 AS Segment3
@@ -195,11 +210,15 @@ BEGIN
             LEFT OUTER JOIN SaleAndRemains ON SaleAndRemains.UnitId = _Cross.UnitId
                                           AND SaleAndRemains.GoodsId = _Cross.GoodsId
                                           AND SaleAndRemains.OperCode = _Cross.OperCode
-            LEFT OUTER JOIN Object AS Object_Goods
-                                   ON Object_Goods.Id = _Cross.GoodsId
             LEFT OUTER JOIN Object AS Object_Unit
                                    ON Object_Unit.Id = _Cross.UnitId
-        ;
+        GROUP BY
+            _Cross.JuridicalCode
+           ,_Cross.UnitCode
+           ,Object_Unit.ValueData
+           ,_Cross.GoodsCode
+           ,_Cross.GoodsName
+           ,_Cross.OperCode;
 END;
 $BODY$
   LANGUAGE PLPGSQL VOLATILE;

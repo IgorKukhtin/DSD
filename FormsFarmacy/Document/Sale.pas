@@ -13,7 +13,7 @@ uses
   cxMaskEdit, cxDropDownEdit, cxCalendar, cxLabel, cxTextEdit, Vcl.ExtCtrls,
   cxGridLevel, cxGridCustomTableView, cxGridTableView, cxGridDBTableView,
   cxGridCustomView, cxGrid, cxPC, dxSkinsCore, dxSkinsDefaultPainters,
-  dxSkinscxPCPainter, dxSkinsdxBarPainter;
+  dxSkinscxPCPainter, dxSkinsdxBarPainter, cxSplitter;
 
 type
   TSaleForm = class(TAncestorDocumentForm)
@@ -43,6 +43,21 @@ type
     PrintHeaderCDS: TClientDataSet;
     cxLabel7: TcxLabel;
     edComment: TcxTextEdit;
+    cxGrid1: TcxGrid;
+    cxGridDBTableView1: TcxGridDBTableView;
+    colRemains: TcxGridDBColumn;
+    colPriceWithVAT: TcxGridDBColumn;
+    colSummWithVAT: TcxGridDBColumn;
+    colSummOut: TcxGridDBColumn;
+    colFromName: TcxGridDBColumn;
+    colMargin: TcxGridDBColumn;
+    colMarginPercent: TcxGridDBColumn;
+    cxGridLevel1: TcxGridLevel;
+    DetailDCS: TClientDataSet;
+    DetailDS: TDataSource;
+    spSelect_MovementItem_SalePartion: TdsdStoredProc;
+    cxSplitter1: TcxSplitter;
+    dsdDBViewAddOn1: TdsdDBViewAddOn;
   private
     { Private declarations }
   public

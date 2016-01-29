@@ -31,7 +31,6 @@ inherited PriceForm: TPriceForm
           OptionsData.Deleting = False
           OptionsData.DeletingConfirmation = False
           OptionsView.CellEndEllipsis = True
-          OptionsView.ColumnAutoWidth = True
           Styles.Content = nil
           Styles.Inactive = nil
           Styles.Selection = nil
@@ -101,12 +100,28 @@ inherited PriceForm: TPriceForm
             HeaderAlignmentHorz = taCenter
             Width = 34
           end
+          object colMCSIsCloseDateChange: TcxGridDBColumn
+            Caption = #1044#1072#1090#1072' "'#1091#1073#1080#1090#1100' '#1082#1086#1076'"'
+            DataBinding.FieldName = 'MCSIsCloseDateChange'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
+          end
           object clMCSNotRecalc: TcxGridDBColumn
             Caption = #1057#1087#1077#1094#1082#1086#1085#1090#1088#1086#1083#1100' '#1082#1086#1076#1072
             DataBinding.FieldName = 'MCSNotRecalc'
             HeaderAlignmentHorz = taCenter
             HeaderHint = #1053#1077' '#1087#1077#1088#1077#1089#1095#1080#1090#1099#1074#1072#1090#1100' '#1053#1058#1047
             Width = 59
+          end
+          object colMCSNotRecalcDateChange: TcxGridDBColumn
+            Caption = #1044#1072#1090#1072' "'#1057#1087#1077#1094#1082#1086#1085#1090#1088#1086#1083#1100' '#1082#1086#1076#1072'"'
+            DataBinding.FieldName = 'MCSNotRecalcDateChange'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
           end
           object colRemains: TcxGridDBColumn
             Caption = #1054#1089#1090#1072#1090#1086#1082
@@ -121,6 +136,14 @@ inherited PriceForm: TPriceForm
             HeaderAlignmentHorz = taCenter
             HeaderHint = #1060#1080#1082#1089#1080#1088#1086#1074#1072#1085#1085#1072#1103' '#1094#1077#1085#1072
             Width = 48
+          end
+          object colFixDateChange: TcxGridDBColumn
+            Caption = #1044#1072#1090#1072' "'#1060#1080#1082#1089'. '#1094#1077#1085#1072'"'
+            DataBinding.FieldName = 'FixDateChange'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
           end
         end
       end
@@ -139,7 +162,7 @@ inherited PriceForm: TPriceForm
     Properties.UseNullString = True
     TabOrder = 5
     Text = '<'#1042#1099#1073#1077#1088#1080#1090#1077' '#1087#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077'>'
-    Width = 299
+    Width = 195
   end
   inherited cxPropertiesStore: TcxPropertiesStore
     Components = <
@@ -363,6 +386,25 @@ inherited PriceForm: TPriceForm
       QuestionBeforeExecute = #1059#1076#1072#1083#1080#1090#1100' '#1074#1089#1077' '#1076#1072#1085#1085#1099#1077' '#1087#1086' '#1053#1058#1047' '#1076#1083#1103' '#1074#1099#1073#1088#1072#1085#1085#1086#1075#1086' '#1087#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1103'?'
       InfoAfterExecute = #1044#1072#1085#1085#1099#1077' '#1087#1086' '#1053#1058#1047' '#1076#1083#1103' '#1074#1099#1073#1088#1072#1085#1085#1086#1075#1086' '#1087#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1103' '#1073#1099#1083#1080' '#1091#1089#1087#1077#1096#1085#1086' '#1086#1095#1080#1097#1077#1085#1099'.'
     end
+    object actPriceHistoryOpen: TdsdOpenForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = #1048#1089#1090#1086#1088#1080#1103' '#1080#1079#1084#1077#1085#1077#1085#1080#1103' '#1094#1077#1085' '#1080' '#1053#1058#1047
+      Hint = #1048#1089#1090#1086#1088#1080#1103' '#1080#1079#1084#1077#1085#1077#1085#1080#1103' '#1094#1077#1085' '#1080' '#1053#1058#1047
+      ImageIndex = 35
+      FormName = 'TPriceHistoryForm'
+      FormNameParam.Value = 'TPriceHistoryForm'
+      FormNameParam.DataType = ftString
+      GuiParams = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'Id'
+          ParamType = ptInput
+        end>
+      isShowModal = False
+    end
   end
   inherited spSelect: TdsdStoredProc
     StoredProcName = 'gpSelect_Object_Price'
@@ -412,6 +454,10 @@ inherited PriceForm: TPriceForm
         item
           Visible = True
           ItemName = 'bbGridToExcel'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarButton7'
         end
         item
           Visible = True
@@ -480,6 +526,10 @@ inherited PriceForm: TPriceForm
     end
     object dxBarButton6: TdxBarButton
       Action = actDelete_Object_MCS
+      Category = 0
+    end
+    object dxBarButton7: TdxBarButton
+      Action = actPriceHistoryOpen
       Category = 0
     end
   end
@@ -604,26 +654,47 @@ inherited PriceForm: TPriceForm
         ParamType = ptInput
       end
       item
-        Name = 'outDateChange'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'DateChange'
-        DataType = ftDateTime
-      end
-      item
-        Name = 'outMCSDateChange'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'MCSDateChange'
-        DataType = ftDateTime
-      end
-      item
         Name = 'inFix'
         Value = Null
         Component = MasterCDS
         ComponentItem = 'Fix'
         DataType = ftBoolean
         ParamType = ptInput
+      end
+      item
+        Name = 'outDateChange'
+        Value = 'NULL'
+        Component = MasterCDS
+        ComponentItem = 'DateChange'
+        DataType = ftDateTime
+      end
+      item
+        Name = 'outMCSDateChange'
+        Value = 'NULL'
+        Component = MasterCDS
+        ComponentItem = 'MCSDateChange'
+        DataType = ftDateTime
+      end
+      item
+        Name = 'outMCSIsCloseDateChange'
+        Value = 'NULL'
+        Component = MasterCDS
+        ComponentItem = 'MCSIsCloseDateChange'
+        DataType = ftDateTime
+      end
+      item
+        Name = 'outMCSNotRecalcDateChange'
+        Value = 'NULL'
+        Component = MasterCDS
+        ComponentItem = 'MCSNotRecalcDateChange'
+        DataType = ftDateTime
+      end
+      item
+        Name = 'outFixDateChange'
+        Value = 'NULL'
+        Component = MasterCDS
+        ComponentItem = 'FixDateChange'
+        DataType = ftDateTime
       end>
     PackSize = 1
     Left = 264

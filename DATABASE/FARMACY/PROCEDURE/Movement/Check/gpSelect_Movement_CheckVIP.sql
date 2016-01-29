@@ -1,4 +1,4 @@
-DROP FUNCTION IF EXISTS gpSelect_Movement_CheckVIP (Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_Movement_CheckVIP(Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_Movement_CheckVIP(
     IN inIsErased      Boolean ,
@@ -13,6 +13,7 @@ RETURNS TABLE (
   TotalSumm TFloat, 
   UnitName TVarChar, 
   CashRegisterName TVarChar,
+  CashMemberId Integer,
   CashMember TVarCHar,
   Bayer TVarChar,
   StatusId Integer)
@@ -47,6 +48,7 @@ BEGIN
            , Movement_Check.TotalSumm
            , Movement_Check.UnitName
            , Movement_Check.CashRegisterName
+           , Movement_Check.CashMemberId
 		   , Movement_Check.CashMember
 		   , Movement_Check.Bayer
 		   , Movement_Check.StatusId

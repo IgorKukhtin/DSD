@@ -86,8 +86,8 @@ BEGIN
                                                                                            WHEN vbIsOd = TRUE
                                                                                                 THEN 427054 -- Строкун Артем Миколайович
                                                                                            WHEN vbIsNik = TRUE
-                                                                                                THEN 149822  -- Бойченко Денис Анатолійович
-                                                                                                --THEN 518520  -- Флера Сергей Владимирович
+                                                                                               -- THEN 149822  -- Бойченко Денис Анатолійович
+                                                                                                THEN 518520  -- Флера Сергей Владимирович
                                                                                            ELSE NULL
                                                                                       END
                                                                , inRouteId         := (SELECT MLO.ObjectId FROM MovementLinkObject AS MLO WHERE MLO.MovementId = inMovementId_Sale AND MLO.DescId = zc_MovementLinkObject_Route())
@@ -102,7 +102,8 @@ BEGIN
                                                                                            WHEN vbIsOd = TRUE
                                                                                                 THEN 427054 -- Строкун Артем Миколайович
                                                                                            WHEN vbIsNik = TRUE
-                                                                                                THEN 149822  -- Бойченко Денис Анатолійович
+                                                                                                --THEN 149822  -- Бойченко Денис Анатолійович
+                                                                                               THEN 518520  -- Флера Сергей Владимирович
                                                                                            ELSE NULL
                                                                                       END
                                                                , inMemberId2       := CASE WHEN vbIsOd = TRUE

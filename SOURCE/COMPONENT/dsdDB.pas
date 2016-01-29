@@ -102,6 +102,7 @@ type
     FAutoWidth: boolean;
     FNeedResetData: Boolean;
     FParamKeyField: String;
+    FAfterExecute: TNotifyEvent;
     // Возвращает XML строку заполненных параметров
     function FillParams: String;
     procedure FillOutputParams(XML: String);
@@ -143,6 +144,8 @@ type
     property NeedResetData: Boolean read FNeedResetData write FNeedResetData Default False;
     //Имя параметра, в котором ИД записи (нужно для перечитывания форм)
     property ParamKeyField: String read FParamKeyField write FParamKeyField;
+    //процедура, которая вызовется после экзекюта
+    property AfterExecute: TNotifyEvent read FAfterExecute write FAfterExecute;
   end;
 
   procedure Register;
@@ -263,6 +266,8 @@ begin
      ShowMessage('Время выполнения ' + StoredProcName + ' - ' + FloatToStr((GetTickCount - TickCount)/1000) + ' сек ' ); ;
   if NeedResetData then
     ResetData;
+  if assigned(AfterExecute) then
+    AfterExecute(self);
 end;
 
 procedure TdsdStoredProc.FillOutputParams(XML: String);
@@ -735,6 +740,10 @@ function TdsdParam.GetFromCrossDBViewAddOn: Variant;
 var CrossDBViewAddOn: TCrossDBViewAddOn;
 begin
   CrossDBViewAddOn := TCrossDBViewAddOn(Component);
+  // Ничего лучшего не нашел пока. Если ячейка грида находится в редиме редактирования
+  // и выполняется Post, то вот тут данных в датасете еще нифига нет!
+  // Поэтому надо дернуть грид и уговорить его поставить
+  CrossDBViewAddOn.View.DataController.UpdateData;
   if CrossDBViewAddOn.HeaderDataSet.Active then
      result := GetFromDataSet(CrossDBViewAddOn.DataSet, ComponentItem + IntToStr(CrossDBViewAddOn.HeaderDataSet.RecNo));
 end;
@@ -929,7 +938,7 @@ begin
         if VarType(FValue) = vtObject then
           (Component as TcxDateEdit).Date := FValue
         else begin
-          if FValue <> '' then
+          if (FValue <> '') AND (FValue <> 'NULL') then
              (Component as TcxDateEdit).Date := gfXSStrToDate(FValue) // convert to TDateTime
           else
              (Component as TcxDateEdit).Text := '';

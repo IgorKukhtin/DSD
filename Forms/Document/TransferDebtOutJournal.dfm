@@ -1,24 +1,24 @@
 inherited TransferDebtOutJournalForm: TTransferDebtOutJournalForm
   Caption = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' <'#1055#1077#1088#1077#1074#1086#1076' '#1076#1086#1083#1075#1072' ('#1088#1072#1089#1093#1086#1076')>'
   ClientHeight = 535
-  ClientWidth = 1073
-  ExplicitWidth = 1089
+  ClientWidth = 1043
+  ExplicitWidth = 1059
   ExplicitHeight = 573
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Width = 1073
+    Width = 1043
     Height = 478
     TabOrder = 3
     ExplicitWidth = 1073
     ExplicitHeight = 478
     ClientRectBottom = 478
-    ClientRectRight = 1073
+    ClientRectRight = 1043
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 1073
       ExplicitHeight = 478
       inherited cxGrid: TcxGrid
-        Width = 1073
+        Width = 1043
         Height = 478
         ExplicitWidth = 1073
         ExplicitHeight = 478
@@ -458,13 +458,13 @@ inherited TransferDebtOutJournalForm: TTransferDebtOutJournalForm
     end
   end
   inherited Panel: TPanel
-    Width = 1073
+    Width = 1043
     ExplicitWidth = 1073
     inherited deStart: TcxDateEdit
       EditValue = 42005d
     end
     inherited deEnd: TcxDateEdit
-      EditValue = 42005d
+      EditValue = 42370d
     end
     object cxLabel14: TcxLabel
       Left = 615
@@ -496,6 +496,63 @@ inherited TransferDebtOutJournalForm: TTransferDebtOutJournalForm
     inherited actInsert: TdsdInsertUpdateAction
       FormName = 'TTransferDebtOutForm'
       FormNameParam.Value = 'TTransferDebtOutForm'
+      GuiParams = <
+        item
+          Name = 'Id'
+          Value = Null
+        end
+        item
+          Name = 'inMask'
+          Value = 'False'
+          DataType = ftBoolean
+        end
+        item
+          Name = 'ShowAll'
+          Value = True
+          DataType = ftBoolean
+        end
+        item
+          Name = 'inOperDate'
+          Value = 41640d
+          Component = deEnd
+          DataType = ftDateTime
+        end>
+    end
+    object actInsertMaskMulti: TMultiAction [3]
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actInsertMask
+        end>
+      QuestionBeforeExecute = #1044#1077#1081#1089#1090#1074#1080#1090#1077#1083#1100#1085#1086' '#1076#1086#1073#1072#1074#1080#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090' '#1087#1086' '#1084#1072#1089#1082#1077'? '
+      InfoAfterExecute = #1044#1086#1082#1091#1084#1077#1085#1090' '#1087#1086' '#1084#1072#1089#1082#1077' '#1076#1086#1073#1072#1074#1083#1077#1085
+      Caption = #1044#1086#1073#1072#1074#1080#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090' '#1087#1086' '#1084#1072#1089#1082#1077
+      Hint = #1044#1086#1073#1072#1074#1080#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090' '#1087#1086' '#1084#1072#1089#1082#1077
+      ImageIndex = 54
+    end
+    inherited actInsertMask: TdsdInsertUpdateAction
+      ImageIndex = -1
+      FormName = 'TTransferDebtOutForm'
+      FormNameParam.Value = 'TTransferDebtOutForm'
+      GuiParams = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'Id'
+        end
+        item
+          Name = 'inMask'
+          Value = 'True'
+          DataType = ftBoolean
+        end
+        item
+          Name = 'inOperDate'
+          Value = 42370d
+          Component = deEnd
+          DataType = ftDateTime
+        end>
     end
     inherited actUpdate: TdsdInsertUpdateAction
       FormName = 'TTransferDebtOutForm'
@@ -509,6 +566,11 @@ inherited TransferDebtOutJournalForm: TTransferDebtOutJournalForm
           ParamType = ptInput
         end
         item
+          Name = 'inMask'
+          Value = 'False'
+          DataType = ftBoolean
+        end
+        item
           Name = 'ShowAll'
           Value = False
           DataType = ftBoolean
@@ -520,7 +582,7 @@ inherited TransferDebtOutJournalForm: TTransferDebtOutJournalForm
           DataType = ftDateTime
         end>
     end
-    object actChecked: TdsdExecStoredProc [6]
+    object actChecked: TdsdExecStoredProc [7]
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -668,7 +730,6 @@ inherited TransferDebtOutJournalForm: TTransferDebtOutJournalForm
           DataSet = PrintItemsSverkaCDS
           UserName = 'frxDBDSverka'
         end>
-      CopiesCount = 1
       Params = <
         item
           Name = 'Id'
@@ -708,7 +769,6 @@ inherited TransferDebtOutJournalForm: TTransferDebtOutJournalForm
           DataSet = PrintItemsSverkaCDS
           UserName = 'frxDBDSverka'
         end>
-      CopiesCount = 1
       Params = <
         item
           Name = 'Id'
@@ -745,7 +805,6 @@ inherited TransferDebtOutJournalForm: TTransferDebtOutJournalForm
           DataSet = PrintItemsCDS
           UserName = 'frxDBDMaster'
         end>
-      CopiesCount = 1
       Params = <
         item
           Name = 'Id'
@@ -782,7 +841,6 @@ inherited TransferDebtOutJournalForm: TTransferDebtOutJournalForm
           DataSet = PrintItemsCDS
           UserName = 'frxDBDMaster'
         end>
-      CopiesCount = 1
       Params = <
         item
           Name = 'Id'
@@ -862,7 +920,6 @@ inherited TransferDebtOutJournalForm: TTransferDebtOutJournalForm
           DataSet = PrintItemsCDS
           UserName = 'frxDBDMaster'
         end>
-      CopiesCount = 1
       Params = <
         item
           Name = 'Id'
@@ -925,7 +982,7 @@ inherited TransferDebtOutJournalForm: TTransferDebtOutJournalForm
         end
         item
           Name = 'OperDate'
-          Value = Null
+          Value = 'NULL'
           Component = MasterCDS
           ComponentItem = 'OperDate_TransportGoods_calc'
           DataType = ftDateTime
@@ -965,7 +1022,6 @@ inherited TransferDebtOutJournalForm: TTransferDebtOutJournalForm
           DataSet = PrintItemsCDS
           UserName = 'frxDBDMaster'
         end>
-      CopiesCount = 1
       Params = <
         item
           Name = 'Id'
@@ -1033,6 +1089,14 @@ inherited TransferDebtOutJournalForm: TTransferDebtOutJournalForm
         end
         item
           BeginGroup = True
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbInsertMaskMulti'
+        end
+        item
           Visible = True
           ItemName = 'dxBarStatic'
         end
@@ -1180,6 +1244,10 @@ inherited TransferDebtOutJournalForm: TTransferDebtOutJournalForm
     end
     object bbPrint_TTN: TdxBarButton
       Action = mactPrint_TTN
+      Category = 0
+    end
+    object bbInsertMaskMulti: TdxBarButton
+      Action = actInsertMaskMulti
       Category = 0
     end
   end
@@ -1570,7 +1638,7 @@ inherited TransferDebtOutJournalForm: TTransferDebtOutJournalForm
       end
       item
         Name = 'inOperDate'
-        Value = Null
+        Value = 'NULL'
         Component = MasterCDS
         ComponentItem = 'OperDate'
         DataType = ftDateTime
@@ -1591,7 +1659,7 @@ inherited TransferDebtOutJournalForm: TTransferDebtOutJournalForm
       end
       item
         Name = 'OperDate_TransportGoods'
-        Value = Null
+        Value = 'NULL'
         Component = MasterCDS
         ComponentItem = 'OperDate_TransportGoods'
         DataType = ftDateTime

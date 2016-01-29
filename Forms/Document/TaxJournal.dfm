@@ -3,7 +3,7 @@ inherited TaxJournalForm: TTaxJournalForm
   ClientHeight = 535
   ClientWidth = 1110
   ExplicitWidth = 1126
-  ExplicitHeight = 570
+  ExplicitHeight = 573
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -406,6 +406,12 @@ inherited TaxJournalForm: TTaxJournalForm
     Height = 51
     ExplicitWidth = 1110
     ExplicitHeight = 51
+    inherited deStart: TcxDateEdit
+      EditValue = 42370d
+    end
+    inherited deEnd: TcxDateEdit
+      EditValue = 42370d
+    end
     object edIsRegisterDate: TcxCheckBox
       Left = 427
       Top = 5
@@ -599,7 +605,7 @@ inherited TaxJournalForm: TTaxJournalForm
         end
         item
           Name = 'inOperDate'
-          Value = Null
+          Value = 'NULL'
           Component = deStart
           DataType = ftDateTime
         end>
@@ -861,7 +867,7 @@ inherited TaxJournalForm: TTaxJournalForm
         end
         item
           Name = 'OperDate'
-          Value = Null
+          Value = 'NULL'
           Component = MasterCDS
           ComponentItem = 'OperDate'
           DataType = ftDateTime
@@ -1374,6 +1380,9 @@ inherited TaxJournalForm: TTaxJournalForm
     Left = 312
     Top = 168
   end
+  inherited spMovementReComplete: TdsdStoredProc
+    StoredProcName = 'gpReComplete_Movement_Tax'
+  end
   object PrintHeaderCDS: TClientDataSet
     Aggregates = <>
     Params = <>
@@ -1697,7 +1706,7 @@ inherited TaxJournalForm: TTaxJournalForm
     Params = <
       item
         Name = 'inDate'
-        Value = Null
+        Value = 'NULL'
         Component = deEnd
         DataType = ftDateTime
         ParamType = ptInput

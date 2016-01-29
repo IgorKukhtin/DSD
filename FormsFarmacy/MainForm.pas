@@ -192,6 +192,10 @@ type
     N71: TMenuItem;
     actRepriceJournal: TdsdOpenForm;
     N72: TMenuItem;
+    actChangeIncomePaymentJournal: TdsdOpenForm;
+    N73: TMenuItem;
+    actForms: TdsdOpenForm;
+    N74: TMenuItem;
     procedure actSaveDataExecute(Sender: TObject);
     procedure miRepriceClick(Sender: TObject);
   private

@@ -4,8 +4,8 @@ inherited ProtocolForm: TProtocolForm
   ClientWidth = 933
   AddOnFormData.isSingle = False
   AddOnFormData.Params = FormParams
-  ExplicitWidth = 941
-  ExplicitHeight = 393
+  ExplicitWidth = 949
+  ExplicitHeight = 397
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -194,6 +194,9 @@ inherited ProtocolForm: TProtocolForm
       Caption = #1069#1083#1077#1084#1077#1085#1090' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072':'
     end
   end
+  inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
+    Top = 216
+  end
   inherited MasterDS: TDataSource
     Top = 55
   end
@@ -269,6 +272,12 @@ inherited ProtocolForm: TProtocolForm
       end
       item
         Component = ObjectDescGuides
+      end
+      item
+        Component = deStart
+      end
+      item
+        Component = deEnd
       end>
     Left = 128
     Top = 144

@@ -839,6 +839,8 @@ BEGIN
                                                                           , inObjectId_1        := vbPartnerId_To
                                                                           , inDescId_2          := zc_ContainerLinkObject_Branch()
                                                                           , inObjectId_2        := zc_Branch_Basis() -- долг Поставщика всегда на главном филиале
+                                                                          , inDescId_3          := zc_ContainerLinkObject_PaidKind()
+                                                                          , inObjectId_3        := vbPaidKindId
                                                                            )
      WHERE _tmpItem.isTareReturning = TRUE AND _tmpItem.OperCount <> 0
        AND vbPartnerId_From = 0 -- !!!если НЕ ПОКУПАТЕЛЮ!!!
@@ -851,7 +853,7 @@ BEGIN
        SELECT 0, zc_MIContainer_CountSupplier() AS DescId, vbMovementDescId, inMovementId, MovementItemId
             , ContainerId_GoodsPartner
             , 0                                       AS AccountId                -- нет счета
-            , 0                                       AS AnalyzerId               -- нет аналитики
+            , zc_Enum_AnalyzerId_TareReturning()      AS AnalyzerId               -- есть аналитика
             , _tmpItem.GoodsId                        AS ObjectId_Analyzer        -- Товар
             , vbPartnerId_To                          AS WhereObjectId_Analyzer   -- Поставщик
             , 0                                       AS ContainerId_Analyzer     -- !!!нет!!!
@@ -890,7 +892,7 @@ BEGIN
        SELECT 0, zc_MIContainer_Count() AS DescId, vbMovementDescId, inMovementId, MovementItemId
             , ContainerId_Goods
             , 0                                       AS AccountId                -- нет счета
-            , 0                                       AS AnalyzerId               -- нет аналитики, т.е. деление Поставщик, Заготовитель, Покупатель, Талоны пока не надо
+            , CASE WHEN _tmpItem.isTareReturning = TRUE THEN zc_Enum_AnalyzerId_TareReturning() ELSE 0 END AS AnalyzerId               -- нет аналитики, т.е. деление Поставщик, Заготовитель, Покупатель, Талоны пока не надо
             , _tmpItem.GoodsId                        AS ObjectId_Analyzer        -- Товар
             , vbWhereObjectId_Analyzer                AS WhereObjectId_Analyzer   -- Подраделение или...
             , vbContainerId_Analyzer                  AS ContainerId_Analyzer     -- Контейнер - по долгам поставщика

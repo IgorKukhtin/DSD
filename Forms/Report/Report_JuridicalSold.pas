@@ -128,6 +128,8 @@ type
     ExecuteDialog: TExecuteDialog;
     bbExecuteDialog: TdxBarButton;
     cbPartionMovement: TcxCheckBox;
+    ContractJuridicalDocCode: TcxGridDBColumn;
+    ContractJuridicalDocName: TcxGridDBColumn;
   private
     { Private declarations }
   public

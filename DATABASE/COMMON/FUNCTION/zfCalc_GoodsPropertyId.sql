@@ -1,20 +1,26 @@
 -- Function: zfCalc_GoodsPropertyId
 
-DROP FUNCTION IF EXISTS zfCalc_GoodsPropertyId (Integer, Integer);
+-- DROP FUNCTION IF EXISTS zfCalc_GoodsPropertyId (Integer, Integer);
+DROP FUNCTION IF EXISTS zfCalc_GoodsPropertyId (Integer, Integer, Integer);
 
 CREATE OR REPLACE FUNCTION zfCalc_GoodsPropertyId(
     IN inContractId                Integer,  -- 
-    IN inJuridicalId               Integer   -- 
+    IN inJuridicalId               Integer,  -- 
+    IN inPartnerId                 Integer   -- 
 )
 RETURNS Integer AS
 $BODY$
 BEGIN
      -- возвращаем результат
-     RETURN (SELECT COALESCE (ObjectLink_Contract_GoodsProperty.ChildObjectId
+     RETURN (SELECT COALESCE (ObjectLink_Partner_GoodsProperty.ChildObjectId
+                  , COALESCE (ObjectLink_Contract_GoodsProperty.ChildObjectId
                   , COALESCE (ObjectLink_Juridical_GoodsProperty.ChildObjectId
-                  , COALESCE (ObjectLink_Retail_GoodsProperty.ChildObjectId)))
+                  , COALESCE (ObjectLink_Retail_GoodsProperty.ChildObjectId))))
                             -- , ObjectLink_JuridicalBasis_GoodsProperty.ChildObjectId))))
-             FROM (SELECT inJuridicalId AS JuridicalId) AS tmp
+             FROM (SELECT inJuridicalId AS JuridicalId, inPartnerId AS PartnerId) AS tmp
+                  LEFT JOIN ObjectLink AS ObjectLink_Partner_GoodsProperty
+                                       ON ObjectLink_Partner_GoodsProperty.ObjectId = tmp.PartnerId
+                                      AND ObjectLink_Partner_GoodsProperty.DescId = zc_ObjectLink_Partner_GoodsProperty()
                   LEFT JOIN ObjectLink AS ObjectLink_Juridical_GoodsProperty
                                        ON ObjectLink_Juridical_GoodsProperty.ObjectId = tmp.JuridicalId
                                       AND ObjectLink_Juridical_GoodsProperty.DescId = zc_ObjectLink_Juridical_GoodsProperty()
@@ -35,7 +41,7 @@ BEGIN
 END;
 $BODY$
   LANGUAGE PLPGSQL IMMUTABLE;
-ALTER FUNCTION zfCalc_GoodsPropertyId (Integer, Integer) OWNER TO postgres;
+ALTER FUNCTION zfCalc_GoodsPropertyId (Integer, Integer, Integer) OWNER TO postgres;
 
 /*-------------------------------------------------------------------------------*/
 /*
@@ -45,4 +51,4 @@ ALTER FUNCTION zfCalc_GoodsPropertyId (Integer, Integer) OWNER TO postgres;
 */
 
 -- тест
--- SELECT * FROM zfCalc_GoodsPropertyId (0, zc_Juridical_Basis())
+-- SELECT * FROM zfCalc_GoodsPropertyId (0, zc_Juridical_Basis(), 0)

@@ -60,7 +60,9 @@ SELECT
                                       ON MovementBoolean_isIncome.MovementId = Movement.Id
                                      AND MovementBoolean_isIncome.DescId = zc_MovementBoolean_isIncome()
 
-           WHERE Movement.DescId = zc_Movement_Medoc();
+           WHERE Movement.DescId = zc_Movement_Medoc()
+             -- AND Movement.StatusId <> zc_Enum_Status_Erased()
+          ;
 
 ALTER TABLE Movement_Medoc_View
   OWNER TO postgres;

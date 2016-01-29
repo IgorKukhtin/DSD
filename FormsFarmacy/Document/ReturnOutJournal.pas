@@ -14,7 +14,7 @@ uses
   cxCalendar, Vcl.ExtCtrls, cxGridLevel, cxGridCustomTableView, cxGridTableView,
   cxGridDBTableView, cxGridCustomView, cxGrid, cxPC, ExternalSave,
   dxBarBuiltInMenu, cxNavigator, dxSkinsCore, dxSkinsDefaultPainters,
-  dxSkinscxPCPainter, dxSkinsdxBarPainter;
+  dxSkinscxPCPainter, dxSkinsdxBarPainter, Vcl.DBActns;
 
 type
   TReturnOutJournalForm = class(TAncestorJournalForm)
@@ -45,6 +45,17 @@ type
     spInsertMovement: TdsdStoredProc;
     actChoiceIncomeMovement: TOpenChoiceForm;
     colJuridicalName: TcxGridDBColumn;
+    colInvNumberPartner: TcxGridDBColumn;
+    colOperDatePartner: TcxGridDBColumn;
+    colIncomeOperDate: TcxGridDBColumn;
+    colIncomeInvNumber: TcxGridDBColumn;
+    colReturnTypeName: TcxGridDBColumn;
+    mactEditPartnerData: TMultiAction;
+    actPartnerDataDialog: TExecuteDialog;
+    actUpdateReturnOut_PartnerData: TdsdExecStoredProc;
+    spUpdateReturnOut_PartnerData: TdsdStoredProc;
+    dxBarButton1: TdxBarButton;
+    DataSetPost1: TDataSetPost;
   private
     { Private declarations }
   public

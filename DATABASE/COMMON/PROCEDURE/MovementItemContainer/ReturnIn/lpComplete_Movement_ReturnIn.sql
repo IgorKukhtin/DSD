@@ -976,7 +976,7 @@ BEGIN
      vbAccountId_GoodsTransit:= CASE WHEN vbOperDate <> vbOperDatePartner AND vbMemberId_From = 0 AND vbMemberId_To = 0 THEN zc_Enum_Account_110101() ELSE 0 END;
 
 
-     -- 1.1.1. определяется ContainerId_GoodsPartner для !!!забалансовой!!! проводки по количественному учету - долги Покупателя или Физ.лица
+     -- 1.1.1. определяется ContainerId_GoodsPartner для !!!НЕ забалансовой!!! проводки по количественному учету - долги Покупателя или Физ.лица
      UPDATE _tmpItem SET ContainerId_GoodsPartner = -- 0)Товар 1)Покупатель
                                                     -- 0)Товар 1)Физ.лицо
                                                     lpInsertFind_Container (inContainerDescId   := zc_Container_Count()
@@ -990,19 +990,21 @@ BEGIN
                                                                           , inObjectId_1        := CASE WHEN vbMemberId_From <> 0 THEN vbMemberId_From ELSE vbPartnerId_From END
                                                                           , inDescId_2          := zc_ContainerLinkObject_Branch()
                                                                           , inObjectId_2        := vbBranchId_To
+                                                                          , inDescId_3          := zc_ContainerLinkObject_PaidKind()
+                                                                          , inObjectId_3        := vbPaidKindId
                                                                            )
      WHERE _tmpItem.isTareReturning = TRUE AND _tmpItem.OperCount <> 0
        AND vbPartnerId_To = 0 -- !!!если НЕ возврат от Контрагента -> Контрагенту!!!
     ;
 
-     -- 1.1.2. формируются Проводки для количественного учета - долги Покупателя или Физ.лицо
+     -- 1.1.2. формируются !!!НЕ забалансовые!!! Проводки для количественного учета - долги Покупателя или Физ.лица
      INSERT INTO _tmpMIContainer_insert (Id, DescId, MovementDescId, MovementId, MovementItemId, ContainerId
                                        , AccountId, AnalyzerId, ObjectId_Analyzer, WhereObjectId_Analyzer, ContainerId_Analyzer, ObjectIntId_Analyzer, ObjectExtId_Analyzer, ContainerIntId_Analyzer
                                        , ParentId, Amount, OperDate, isActive)
-       SELECT 0, zc_MIContainer_CountSupplier() AS DescId, vbMovementDescId, inMovementId, MovementItemId
+       SELECT 0, zc_MIContainer_Count() AS DescId, vbMovementDescId, inMovementId, MovementItemId
             , ContainerId_GoodsPartner
             , 0                                       AS AccountId                -- нет счета
-            , 0                                       AS AnalyzerId               -- нет аналитики
+            , zc_Enum_AnalyzerId_TareReturning()      AS AnalyzerId               -- есть аналитика
             , _tmpItem.GoodsId                        AS ObjectId_Analyzer        -- Товар
             , CASE WHEN vbMemberId_From <> 0 THEN vbMemberId_From ELSE vbPartnerId_From END AS WhereObjectId_Analyzer -- Покупатель или Физ.лицо
             , 0                                       AS ContainerId_Analyzer     -- !!!нет!!!
@@ -1011,7 +1013,7 @@ BEGIN
             , ContainerId_GoodsPartner                AS ContainerIntId_Analyzer  -- Контейнер "товар" - тот же самый
             , 0                                       AS ParentId
             , -1 * OperCount                          AS Amount
-            , vbOperDate                              AS OperDate               -- т.е. по "Дате склад"
+            , vbOperDatePartner                       AS OperDate                 -- т.е. по "Дате покупателя"
             , FALSE                                   AS isActive
        FROM _tmpItem
        WHERE _tmpItem.isTareReturning = TRUE AND _tmpItem.OperCount <> 0

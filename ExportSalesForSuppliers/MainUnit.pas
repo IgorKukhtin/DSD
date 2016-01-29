@@ -158,6 +158,8 @@ begin
 end;
 
 procedure TForm1.btnBaDMExportClick(Sender: TObject);
+var
+  sl : TStringList;
 begin
   Add_Log('Начало выгрузки отчета БаДМ');
   if not ForceDirectories(SavePathBaDM) then
@@ -169,6 +171,13 @@ begin
   try
     try
       ExportGridToText(SavePathBaDM+FileNameBaDM,grBaDM,true,true,';','','','csv');
+      sl := TStringList.Create;
+      try
+        sl.LoadFromFile(SavePathBaDM+FileNameBaDM);
+        sl.SaveToFile(SavePathBaDM+FileNameBaDM,TEncoding.ANSI);
+      finally
+        sl.Free;
+      end;
     except ON E: Exception DO
       Begin
         Add_Log(E.Message);
@@ -330,8 +339,8 @@ Begin
     BaDMID.Value := ini.ReadInteger('Options','BaDM_ID',59610);
     ini.WriteInteger('Options','BaDM_ID',BaDMID.Value);
 
-    BaDMID.Value := ini.ReadInteger('Options','Optima_ID',59611);
-    ini.WriteInteger('Options','Optima_ID',BaDMID.Value);
+    OptimaID.Value := ini.ReadInteger('Options','Optima_ID',59611);
+    ini.WriteInteger('Options','Optima_ID',OptimaID.Value);
 
     ZConnection1.Database := ini.ReadString('Connect','DataBase','farmacy');
     ini.WriteString('Connect','DataBase',ZConnection1.Database);
@@ -479,46 +488,52 @@ begin
   EMsg.OnInitializeISO := Self.LInitializeISO;
 
   try
-    EMsg.CharSet := 'Windows-1251';
-    EMsg.Subject := Subject;
-    EMsg.ContentTransferEncoding  := '8bit';
+    try
+      EMsg.CharSet := 'Windows-1251';
+      EMsg.Subject := Subject;
+      EMsg.ContentTransferEncoding  := '8bit';
 
-    EText := TIdText.Create(EMsg.MessageParts);
+      EText := TIdText.Create(EMsg.MessageParts);
 
-    EText.Body.Text :=
-              '<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">'+
-              '<html><head>'+
-                              '<meta http-equiv="content-type" content="text/html; charset=Windows-1251">'+
-                              '<title>' + Subject + '</title></head>'+
-              '<body bgcolor="#ffffff">'+
-              ReplaceStr(MessageText, #10, '<br>') + '</body></html>';
+      EText.Body.Text :=
+                '<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">'+
+                '<html><head>'+
+                                '<meta http-equiv="content-type" content="text/html; charset=Windows-1251">'+
+                                '<title>' + Subject + '</title></head>'+
+                '<body bgcolor="#ffffff">'+
+                ReplaceStr(MessageText, #10, '<br>') + '</body></html>';
 
-    EText.ContentType := 'text/html';
-    EText.CharSet := 'Windows-1251';
-    EText.ContentTransfer := '8bit';
-    for i := 0 to high(Recipients) do
-        EMsg.Recipients.Add.Address :=Recipients[i];
-    EMsg.From.Address := FromAdres;
-    EMsg.Body.Clear;
-    EMsg.Date := now;
-    for i := 0 to high(Attachments) do
-      if FileExists(Trim(Attachments[i])) then begin
-         Stream := TFileStream.Create(Attachments[i], fmOpenReadWrite);
-         try
-            with TIdAttachmentFile.Create(EMsg.MessageParts) do begin
-                 FileName := ExtractFileName(Attachments[i]);
-                 LoadFromStream(Stream);
-            end;
-         finally
-            FreeAndNil(Stream);
-         end;
+      EText.ContentType := 'text/html';
+      EText.CharSet := 'Windows-1251';
+      EText.ContentTransfer := '8bit';
+      for i := 0 to high(Recipients) do
+          EMsg.Recipients.Add.Address :=Recipients[i];
+      EMsg.From.Address := FromAdres;
+      EMsg.Body.Clear;
+      EMsg.Date := now;
+      for i := 0 to high(Attachments) do
+        if FileExists(Trim(Attachments[i])) then begin
+           Stream := TFileStream.Create(Attachments[i], fmOpenReadWrite);
+           try
+              with TIdAttachmentFile.Create(EMsg.MessageParts) do begin
+                   FileName := ExtractFileName(Attachments[i]);
+                   LoadFromStream(Stream);
+              end;
+           finally
+              FreeAndNil(Stream);
+           end;
+        end;
+      EMsg.AfterConstruction;
+
+      FIdSMTP.Connect;
+      if FIdSMTP.Connected then begin
+         FIdSMTP.Send(EMsg);
+         result := true;
       end;
-    EMsg.AfterConstruction;
-
-    FIdSMTP.Connect;
-    if FIdSMTP.Connected then begin
-       FIdSMTP.Send(EMsg);
-       result := true;
+    Except ON E:Exception DO
+      Begin
+        Add_Log(E.Message);
+      end;
     end;
   finally
     FIdSMTP.Disconnect;

@@ -9,7 +9,8 @@ CREATE OR REPLACE FUNCTION gpSelect_MovementItem_Loss(
     IN inSession     TVarChar       -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, GoodsId Integer, GoodsCode Integer, GoodsName TVarChar
-             , Amount TFloat, Price TFloat, Remains_Amount TFloat
+             , Amount TFloat, Price TFloat, Summ TFloat 
+             , Remains_Amount TFloat, PriceIn TFloat, SummIn TFloat
              , isErased Boolean
               )
 AS
@@ -34,7 +35,7 @@ BEGIN
     FROM
         Movement AS Movement_Loss
         INNER JOIN MovementLinkObject AS MovementLinkObject_Unit
-                                      ON  MovementLinkObject_Unit.MovementId = Movement_Loss.Id
+                                      ON MovementLinkObject_Unit.MovementId = Movement_Loss.Id
                                      AND MovementLinkObject_Unit.DescId = zc_MovementLinkObject_Unit()
     WHERE 
         Movement_Loss.Id = inMovementId;
@@ -47,11 +48,16 @@ BEGIN
                                 SELECT 
                                     T0.ObjectId
                                    ,SUM(T0.Amount)::TFloat as Amount
+                                   ,SUM(T0.Summ)::TFloat as Summ
+                                   ,CASE WHEN SUM(T0.Amount) <> 0
+                                        THEN SUM(T0.Summ) / SUM(T0.Amount)
+                                    END AS Price
                                 FROM(
                                         SELECT 
                                             Container.Id 
                                            ,Container.ObjectId --Товар
                                            ,(Container.Amount - COALESCE(SUM(MovementItemContainer.amount),0.0))::TFloat as Amount  --Тек. остаток - Движение после даты переучета
+                                           ,(Container.Amount * COALESCE(MIFloat_Income_Price.ValueData,0) - COALESCE(SUM(MovementItemContainer.amount * COALESCE(MIFloat_Income_Price.ValueData,0)),0.0))::TFloat as Summ  --Тек. остаток - Движение после даты переучета
                                         FROM Container
                                             LEFT OUTER JOIN MovementItemContainer ON Container.Id = MovementItemContainer.ContainerId
                                                                                  AND 
@@ -60,15 +66,23 @@ BEGIN
                                                                                     OR
                                                                                     MovementItemContainer.MovementId = inMovementId
                                                                                  )
-                                            JOIN ContainerLinkObject AS CLI_Unit 
-                                                                     ON CLI_Unit.containerid = Container.Id
-                                                                    AND CLI_Unit.descid = zc_ContainerLinkObject_Unit()
-                                                                    AND CLI_Unit.ObjectId = vbUnitId                                   
+                                            LEFT OUTER JOIN containerlinkobject AS CLI_MI 
+                                                                                ON CLI_MI.containerid = Container.Id
+                                                                               AND CLI_MI.descid = zc_ContainerLinkObject_PartionMovementItem()
+                                            LEFT OUTER JOIN OBJECT AS Object_PartionMovementItem ON Object_PartionMovementItem.Id = CLI_MI.ObjectId
+                                            LEFT OUTER JOIN MovementitemFloat AS MIFloat_Income_Price
+                                                                              ON MIFloat_Income_Price.MovementItemId = Object_PartionMovementItem.ObjectCode
+                                                                             AND MIFloat_Income_Price.DescId = zc_MIFloat_Price()
+                                            
                                         WHERE 
                                             Container.DescID = zc_Container_Count()
+                                            AND
+                                            Container.WhereObjectId = vbUnitId
                                         GROUP BY 
                                             Container.Id 
                                            ,Container.ObjectId
+                                           ,Container.Amount
+                                           ,MIFloat_Income_Price.ValueData
                                     ) as T0
                                 GROUP By ObjectId
                                 HAVING SUM(T0.Amount) <> 0
@@ -77,15 +91,38 @@ BEGIN
                                 SELECT Object_Price_View.GoodsId, Object_Price_View.Price
                                 FROM Object_Price_View
                                 WHERE Object_Price_View.UnitId = vbUnitId
-                            )
+                            ),
+                 MIContainer AS ( 
+                                    SELECT
+                                        MovementItemContainer.MovementItemId,
+                                        CASE WHEN  SUM(-MovementItemContainer.Amount) <> 0 
+                                            THEN SUM(-MovementItemContainer.Amount * MIFloat_Income_Price.ValueData)
+                                                 / SUM(-MovementItemContainer.Amount)
+                                        END::TFloat AS Price
+                                    FROM MovementItemContainer 
+                                        LEFT OUTER JOIN containerlinkobject AS CLI_MI 
+                                                                            ON CLI_MI.containerid = MovementItemContainer.ContainerId
+                                                                           AND CLI_MI.descid = zc_ContainerLinkObject_PartionMovementItem()
+                                        LEFT OUTER JOIN OBJECT AS Object_PartionMovementItem ON Object_PartionMovementItem.Id = CLI_MI.ObjectId
+                                        LEFT OUTER JOIN MovementitemFloat AS MIFloat_Income_Price
+                                                                              ON MIFloat_Income_Price.MovementItemId = Object_PartionMovementItem.ObjectCode
+                                                                             AND MIFloat_Income_Price.DescId = zc_MIFloat_Price()
+                                    WHERE MovementItemContainer.MovementId = inMovementId
+                                      AND MovementItemContainer.DescId = zc_MIContainer_Count()
+                                    GROUP BY
+                                        MovementItemContainer.MovementItemId
+                                )
             SELECT
                     COALESCE(MovementItem.Id,0)           AS Id
                   , Object_Goods_View.Id                  AS GoodsId
                   , Object_Goods_View.GoodsCodeInt        AS GoodsCode
                   , Object_Goods_View.GoodsName           AS GoodsName
                   , MovementItem.Amount                   AS Amount
-                  , CurrPRICE.Price                           AS Price
-                  , REMAINS.Amount                        AS Remains_Amount 
+                  , CurrPRICE.Price                       AS Price
+                  , (MovementItem.Amount*CurrPRICE.Price)::TFloat                           AS Summ
+                  , REMAINS.Amount                                                          AS Remains_Amount 
+                  , COALESCE(MIContainer.Price,REMAINS.Price)::TFloat                       AS PriceIn
+                  , (MovementItem.Amount*COALESCE(MIContainer.Price,REMAINS.Price))::TFloat AS SummIn
                   , COALESCE(MovementItem.IsErased,FALSE) AS isErased
             FROM Object_Goods_View
                 LEFT JOIN MovementItem ON Object_Goods_View.Id = MovementItem.ObjectId 
@@ -94,6 +131,7 @@ BEGIN
                                        AND (MovementItem.isErased = FALSE or inIsErased = TRUE)
                 LEFT OUTER JOIN CurrPRICE ON object_Goods_View.Id = CurrPRICE.GoodsId
                 LEFT OUTER JOIN REMAINS ON object_Goods_View.Id = REMAINS.ObjectId 
+                LEFT OUTER JOIN MIContainer ON MIContainer.MovementItemId = MovementItem.Id
             WHERE 
                 Object_Goods_View.ObjectId = vbObjectId
                 AND 
@@ -109,11 +147,16 @@ BEGIN
                                 SELECT 
                                     T0.ObjectId
                                    ,SUM(T0.Amount)::TFloat as Amount
+                                   ,SUM(T0.Summ)::TFloat as Summ
+                                   ,CASE WHEN SUM(T0.Amount) <> 0
+                                        THEN SUM(T0.Summ) / SUM(T0.Amount)
+                                    END AS Price
                                 FROM(
                                         SELECT 
                                             Container.Id 
                                            ,Container.ObjectId --Товар
                                            ,(Container.Amount - COALESCE(SUM(MovementItemContainer.amount),0.0))::TFloat as Amount  --Тек. остаток - Движение после даты переучета
+                                           ,(Container.Amount * COALESCE(MIFloat_Income_Price.ValueData,0) - COALESCE(SUM(MovementItemContainer.amount * COALESCE(MIFloat_Income_Price.ValueData,0)),0.0))::TFloat as Summ  --Тек. остаток - Движение после даты переучета
                                         FROM Container
                                             LEFT OUTER JOIN MovementItemContainer ON Container.Id = MovementItemContainer.ContainerId
                                                                                  AND 
@@ -122,15 +165,22 @@ BEGIN
                                                                                     OR
                                                                                     MovementItemContainer.MovementId = inMovementId
                                                                                  )
-                                            JOIN ContainerLinkObject AS CLI_Unit 
-                                                                     ON CLI_Unit.containerid = Container.Id
-                                                                    AND CLI_Unit.descid = zc_ContainerLinkObject_Unit()
-                                                                    AND CLI_Unit.ObjectId = vbUnitId                                   
+                                            LEFT OUTER JOIN containerlinkobject AS CLI_MI 
+                                                                                ON CLI_MI.containerid = Container.Id
+                                                                               AND CLI_MI.descid = zc_ContainerLinkObject_PartionMovementItem()
+                                            LEFT OUTER JOIN OBJECT AS Object_PartionMovementItem ON Object_PartionMovementItem.Id = CLI_MI.ObjectId
+                                            LEFT OUTER JOIN MovementitemFloat AS MIFloat_Income_Price
+                                                                              ON MIFloat_Income_Price.MovementItemId = Object_PartionMovementItem.ObjectCode
+                                                                             AND MIFloat_Income_Price.DescId = zc_MIFloat_Price()
                                         WHERE 
                                             Container.DescID = zc_Container_Count()
+                                            AND
+                                            Container.WhereObjectId = vbUnitId
                                         GROUP BY 
                                             Container.Id 
                                            ,Container.ObjectId
+                                           ,Container.Amount
+                                           ,MIFloat_Income_Price.ValueData
                                     ) as T0
                                 GROUP By ObjectId
                                 HAVING SUM(T0.Amount) <> 0
@@ -139,7 +189,27 @@ BEGIN
                                 SELECT Object_Price_View.GoodsId, Object_Price_View.Price
                                 FROM Object_Price_View
                                 WHERE Object_Price_View.UnitId = vbUnitId
-                            )
+                            ),
+                 MIContainer AS ( 
+                                    SELECT
+                                        MovementItemContainer.MovementItemId,
+                                        CASE WHEN  SUM(-MovementItemContainer.Amount) <> 0 
+                                            THEN SUM(-MovementItemContainer.Amount * MIFloat_Income_Price.ValueData)
+                                                 / SUM(-MovementItemContainer.Amount)
+                                        END::TFloat AS Price
+                                    FROM MovementItemContainer 
+                                        LEFT OUTER JOIN containerlinkobject AS CLI_MI 
+                                                                            ON CLI_MI.containerid = MovementItemContainer.ContainerId
+                                                                           AND CLI_MI.descid = zc_ContainerLinkObject_PartionMovementItem()
+                                        LEFT OUTER JOIN OBJECT AS Object_PartionMovementItem ON Object_PartionMovementItem.Id = CLI_MI.ObjectId
+                                        LEFT OUTER JOIN MovementitemFloat AS MIFloat_Income_Price
+                                                                              ON MIFloat_Income_Price.MovementItemId = Object_PartionMovementItem.ObjectCode
+                                                                             AND MIFloat_Income_Price.DescId = zc_MIFloat_Price()
+                                    WHERE MovementItemContainer.MovementId = inMovementId
+                                      AND MovementItemContainer.DescId = zc_MIContainer_Count()
+                                    GROUP BY
+                                        MovementItemContainer.MovementItemId
+                                )
         SELECT
             MovementItem.Id                       AS Id
           , Object_Goods_View.Id                  AS GoodsId
@@ -147,13 +217,17 @@ BEGIN
           , Object_Goods_View.GoodsName           AS GoodsName
           , MovementItem.Amount                   AS Amount
           , CurrPRICE.Price                       AS Price
-          , REMAINS.Amount                        AS Remains_Amount
+          , (MovementItem.Amount*CurrPRICE.Price)::TFloat                           AS Summ
+          , REMAINS.Amount                                                          AS Remains_Amount
+          , COALESCE(MIContainer.Price,REMAINS.Price)::TFloat                       AS PriceIn
+          , (MovementItem.Amount*COALESCE(MIContainer.Price,REMAINS.Price))::TFloat AS SummIn
           , COALESCE(MovementItem.IsErased,FALSE) AS isErased
         FROM MovementItem
             LEFT JOIN Object_Goods_View ON Object_Goods_View.Id = MovementItem.ObjectId 
                                        AND Object_Goods_View.ObjectId = vbObjectId
             LEFT OUTER JOIN CurrPRICE ON object_Goods_View.Id = CurrPRICE.GoodsId
             LEFT OUTER JOIN REMAINS ON MovementItem.ObjectId = REMAINS.ObjectId
+            LEFT OUTER JOIN MIContainer ON MIContainer.MovementItemId = MovementItem.Id
         WHERE 
             MovementItem.MovementId = inMovementId
             AND 

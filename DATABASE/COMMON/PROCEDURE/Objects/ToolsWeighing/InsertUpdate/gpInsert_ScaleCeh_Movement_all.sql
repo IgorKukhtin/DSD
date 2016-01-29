@@ -531,6 +531,7 @@ BEGIN
                                                         ON MIString_PartionGoods.MovementItemId = MovementItem.Id
                                                        AND MIString_PartionGoods.DescId = zc_MIString_PartionGoods()
                                                        AND vbMovementDescId <> zc_Movement_ProductionSeparate() -- !!!надо убрать партии, т.к. в UNION их нет!!!
+                                                       AND vbMovementDescId <> zc_Movement_ProductionUnion() -- !!!надо убрать партии, т.к. в UNION их нет!!!
 
                            LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
                                                             ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
@@ -564,18 +565,18 @@ BEGIN
 
                            , 0                                                   AS Amount_mi
                            , 0                                                   AS myId
-                      FROM (SELECT zc_MI_Master() AS DescId WHERE vbMovementDescId = zc_Movement_Inventory()
+                      FROM (SELECT zc_MI_Master() AS DescId, 0 AS Amount WHERE vbMovementDescId = zc_Movement_Inventory()
                            UNION
-                            SELECT zc_MI_Master() AS DescId WHERE vbMovementDescId = zc_Movement_ProductionUnion()
+                            SELECT zc_MI_Master() AS DescId, -1 AS Amount WHERE vbMovementDescId = zc_Movement_ProductionUnion()
                            UNION
-                            SELECT zc_MI_Master() AS DescId WHERE vbMovementDescId = zc_Movement_ProductionSeparate() AND vbIsProductionIn = FALSE AND 1 = 0 -- пока не надо суммировать
+                            SELECT zc_MI_Master() AS DescId, 0 AS Amount WHERE vbMovementDescId = zc_Movement_ProductionSeparate() AND vbIsProductionIn = FALSE AND 1 = 0 -- пока не надо суммировать
                            UNION
-                            SELECT zc_MI_Child() AS DescId WHERE vbMovementDescId = zc_Movement_ProductionSeparate() AND vbIsProductionIn = TRUE AND 1 = 0 -- пока не надо суммировать
+                            SELECT zc_MI_Child() AS DescId, 0 AS Amount WHERE vbMovementDescId = zc_Movement_ProductionSeparate() AND vbIsProductionIn = TRUE AND 1 = 0 -- пока не надо суммировать
                            ) AS tmp
                            INNER JOIN MovementItem ON MovementItem.MovementId = vbMovementId_find
                                                   AND MovementItem.DescId     = tmp.DescId
                                                   AND MovementItem.isErased   = FALSE
-                                                  AND MovementItem.Amount <> 0
+                                                  AND MovementItem.Amount <> tmp.Amount
                            LEFT JOIN MovementItemFloat AS MIFloat_Count
                                                        ON MIFloat_Count.MovementItemId = MovementItem.Id
                                                       AND MIFloat_Count.DescId = zc_MIFloat_Count()
@@ -657,7 +658,7 @@ BEGIN
                           SELECT MAX (MovementItem.Id) AS MovementItemId
                                , MovementItem.ObjectId AS GoodsId
                           FROM MovementItem
-                          WHERE MovementItem.MovementId = vbMovementId_find
+                          WHERE MovementItem.MovementId = vbMovementId_begin -- 
                             AND MovementItem.DescId     = zc_MI_Master()
                             AND MovementItem.isErased   = FALSE
                           GROUP BY MovementItem.ObjectId

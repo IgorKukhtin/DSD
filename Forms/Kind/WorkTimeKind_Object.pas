@@ -10,11 +10,13 @@ uses
   dxBarExtItems, dxBar, cxClasses, dsdDB, Datasnap.DBClient, dsdAction,
   System.Classes, Vcl.ActnList, cxPropertiesStore, cxGridLevel,
   cxGridCustomView, cxGrid, Vcl.Controls, dxSkinsCore, dxSkinsDefaultPainters,
-  dxSkinscxPCPainter, dxSkinsdxBarPainter;
+  dxSkinscxPCPainter, dxSkinsdxBarPainter, Vcl.Menus;
 
 type
   TWorkTimeKind_ObjectForm = class(TAncestorEnumForm)
     spInsertUpdateObject: TdsdStoredProc;
+    FormParams: TdsdFormParams;
+    clValue: TcxGridDBColumn;
   private
     { Private declarations }
   public

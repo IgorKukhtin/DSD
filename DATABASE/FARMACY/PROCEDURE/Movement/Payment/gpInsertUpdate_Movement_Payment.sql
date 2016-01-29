@@ -29,7 +29,7 @@ BEGIN
     END IF;
     
     --поискали такой документ в указаном дне
-    IF EXISTS(SELECT 1 
+/*     IF EXISTS(SELECT 1 
               FROM Movement_Payment_View AS Movement
               WHERE
                   Movement.OperDate = inOperdate
@@ -41,7 +41,7 @@ BEGIN
                   Movement.Id <> COALESCE(ioId,0))
     THEN
         RAISE EXCEPTION 'Ошибка. В одной дате <%>, по одному юрлицу <%> может быть только один документ оплаты.', inOperDate,(Select ValueData from Object Where Id = inJuridicalId);
-    END IF;
+    END IF; */
     -- сохранили <Документ>
     ioId := lpInsertUpdate_Movement_Payment (ioId          := ioId
                                            , inInvNumber   := inInvNumber

@@ -125,7 +125,8 @@ BEGIN
                                   WHERE ObjectLink_ContractPartner_Partner.DescId = zc_ObjectLink_ContractPartner_Partner()
                                     AND ObjectLink_ContractPartner_Partner.ChildObjectId >0
                                  )
-          , tmpPartner AS (SELECT Object_Partner.Id         AS PartnerId
+          , tmpPartner AS (SELECT DISTINCT
+                                  Object_Partner.Id         AS PartnerId
                                 , Object_Partner.ObjectCode AS PartnerCode
                                 , Object_Partner.ValueData  AS PartnerName
                                 , View_Contract.JuridicalId AS JuridicalId
@@ -140,10 +141,11 @@ BEGIN
                                   END AS InfoMoneyId*/
                                 , tmpInfoMoney.InfoMoneyId
                                 , tmpInfoMoney.MovementDescId
-                                , MAX (View_Contract.ContractId) AS ContractId
+                                , (View_Contract.ContractId) AS ContractId
                            FROM tmpInfoMoney
                                 LEFT JOIN Object_Contract_View AS View_Contract ON View_Contract.InfoMoneyId = tmpInfoMoney.InfoMoneyId
                                                                                AND View_Contract.isErased = FALSE
+                                                                               AND View_Contract.ContractStateKindId <> zc_Enum_ContractStateKind_Close()
                                 LEFT JOIN tmpContractPartner ON tmpContractPartner.ContractId = View_Contract.ContractId
                                                             AND tmpContractPartner.JuridicalId = View_Contract.JuridicalId
                                 LEFT JOIN ObjectLink AS ObjectLink_Partner_Juridical
@@ -171,13 +173,13 @@ BEGIN
                                   OR ObjectLink_Unit_Branch_PersonalTrade.ChildObjectId = vbBranchId_Constraint
                                   OR vbIsConstraint = FALSE
                                  )
-                           GROUP BY Object_Partner.Id
+                           /*GROUP BY Object_Partner.Id
                                   , Object_Partner.ObjectCode
                                   , Object_Partner.ValueData
                                   , View_Contract.JuridicalId
                                   , View_Contract.PaidKindId
                                   , tmpInfoMoney.InfoMoneyId
-                                  , tmpInfoMoney.MovementDescId
+                                  , tmpInfoMoney.MovementDescId*/
                           )
           , tmpPrintKindItem AS (SELECT tmp.Id, tmp.isMovement, tmp.isAccount, tmp.isTransport, tmp.isQuality, tmp.isPack, tmp.isSpec, tmp.isTax FROM lpSelect_Object_PrintKindItem() AS tmp)
 
@@ -339,7 +341,7 @@ BEGIN
                                          , 8415   -- 22041	Склад ГП ф.Черкассы (Кировоград)	филиал Черкассы (Кировоград)
                                           )
                         THEN 0
-                        ELSE 1
+                        ELSE 0
               END :: TFloat AS ChangePercentAmount
 
             , FALSE       :: Boolean AS isEdiOrdspr

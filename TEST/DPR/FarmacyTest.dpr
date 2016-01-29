@@ -355,7 +355,15 @@ uses
   RepriceTest in '..\SOURCE\Movement\All\Farmacy\RepriceTest.pas',
   RepriceMovementItemTest in '..\SOURCE\MovementItem\All\Farmacy\RepriceMovementItemTest.pas',
   RepriceJournal in '..\..\FormsFarmacy\Document\RepriceJournal.pas' {RepriceJournalForm: TParentForm},
-  Reprice in '..\..\FormsFarmacy\Document\Reprice.pas' {RepriceForm: TParentForm};
+  Reprice in '..\..\FormsFarmacy\Document\Reprice.pas' {RepriceForm: TParentForm},
+  ChangeIncomePaymentKindTest in '..\SOURCE\Objects\All\Farmacy\ChangeIncomePaymentKindTest.pas',
+  ChangeIncomePaymentKind in '..\..\FormsFarmacy\Guides\ChangeIncomePaymentKind.pas' {ChangeIncomePaymentKindForm: TParentForm},
+  ChangeIncomePaymentTest in '..\SOURCE\Movement\All\Farmacy\ChangeIncomePaymentTest.pas',
+  ChangeIncomePaymentJournal in '..\..\FormsFarmacy\Document\ChangeIncomePaymentJournal.pas' {ChangeIncomePaymentJournalForm: TParentForm},
+  ChangeIncomePayment in '..\..\FormsFarmacy\Document\ChangeIncomePayment.pas' {ChangeIncomePaymentForm: TParentForm},
+  PriceHistory in '..\..\FormsFarmacy\Guides\PriceHistory.pas' {PriceHistoryForm: TParentForm},
+  ReturnOutPartnerDataDialog in '..\..\FormsFarmacy\Document\ReturnOutPartnerDataDialog.pas' {ReturnOutPartnerDataDialogForm: TParentForm},
+  IncomePartnerDataDialog in '..\..\FormsFarmacy\Document\IncomePartnerDataDialog.pas' {IncomePartnerDataDialogForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}

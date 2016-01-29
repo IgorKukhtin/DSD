@@ -93,6 +93,11 @@ type
     cxLabel16: TcxLabel;
     ceComment: TcxTextEdit;
     cbPartner: TcxCheckBox;
+    actChangeSignAmount: TdsdExecStoredProc;
+    spUpdateMIAmountSign: TdsdStoredProc;
+    bbChangeSignAmount: TdxBarButton;
+    actOpenTax: TdsdOpenForm;
+    bbOpenTax: TdxBarButton;
   private
     { Private declarations }
   public

@@ -14,7 +14,7 @@ uses
   cxCalendar, Vcl.ExtCtrls, cxGridLevel, cxGridCustomTableView, cxGridTableView,
   cxGridDBTableView, cxGridCustomView, cxGrid, cxPC, ExternalSave,
   dxBarBuiltInMenu, cxNavigator, dxSkinsCore, dxSkinsDefaultPainters,
-  dxSkinscxPCPainter, dxSkinsdxBarPainter;
+  dxSkinscxPCPainter, dxSkinsdxBarPainter, Vcl.DBActns;
 
 type
   TIncomeJournalForm = class(TAncestorJournalForm)
@@ -53,6 +53,13 @@ type
     colChecked: TcxGridDBColumn;
     colJuridicalName: TcxGridDBColumn;
     colPayColor: TcxGridDBColumn;
+    colDateLastPay: TcxGridDBColumn;
+    spUpdateIncome_PartnerData: TdsdStoredProc;
+    mactEditPartnerData: TMultiAction;
+    actPartnerDataDialod: TExecuteDialog;
+    actUpdateIncome_PartnerData: TdsdExecStoredProc;
+    dxBarButton1: TdxBarButton;
+    DataSetPost1: TDataSetPost;
   private
     { Private declarations }
   public

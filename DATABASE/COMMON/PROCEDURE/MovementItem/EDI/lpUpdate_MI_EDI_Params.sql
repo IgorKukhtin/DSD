@@ -24,7 +24,7 @@ BEGIN
 
 
      -- Поиск <Классификатор товаров>
-     vbGoodsPropertyId := zfCalc_GoodsPropertyId (inContractId, inJuridicalId);
+     vbGoodsPropertyId := zfCalc_GoodsPropertyId (inContractId, inJuridicalId, (SELECT MLO_Partner.ObjectId FROM MovementLinkObject AS MLO_Partner WHERE MLO_Partner.MovementId = inMovementId AND MLO_Partner.DescId = zc_MovementLinkObject_Partner()));
      -- сохранили <Классификатор товаров>
      PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_GoodsProperty(), inMovementId, vbGoodsPropertyId);
 

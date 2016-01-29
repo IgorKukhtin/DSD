@@ -57,6 +57,7 @@ BEGIN
              -- создаются временные таблицы - для формирование данных для проводок
              PERFORM lpComplete_Movement_SendOnPrice_CreateTemp();
              -- !!! проводим - SendOnPrice !!!
+             -- PERFORM lpComplete_Movement_SendOnPrice_Price (inMovementId     := inMovementId
              PERFORM lpComplete_Movement_SendOnPrice (inMovementId     := inMovementId
                                                     , inUserId         := zc_Enum_Process_Auto_PrimeCost() :: Integer);
 

@@ -474,8 +474,8 @@ BEGIN
         , CAST (SUM (tmpAll.SummEnd)           AS TFloat) AS SummEnd
         , CAST (SUM (tmpAll.CountEnd)          AS TFloat) AS WeightEnd
 
-        , CAST (SUM (tmpAll.SummSendOnPriceIn)            AS TFloat) AS SummSendOnPriceInSumm
-        , CAST (SUM (tmpAll.CountSendOnPriceIn)           AS TFloat) AS IncomeWeight
+        , CAST (SUM (tmpAll.SummSendOnPriceIn)            AS TFloat) AS SendOnPriceInSumm
+        , CAST (SUM (tmpAll.CountSendOnPriceIn)           AS TFloat) AS SendOnPriceInWeight
         
         , CAST (SUM (tmpAll.SummReturnIn)                 AS TFloat) AS ReturnInSumm
         , CAST (SUM (tmpAll.CountReturnIn)                AS TFloat) AS ReturnInWeight

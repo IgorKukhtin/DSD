@@ -86,14 +86,12 @@ BEGIN
                         JOIN containerlinkobject AS CLI_MI 
                                                  ON CLI_MI.containerid = Container.Id
                                                 AND CLI_MI.descid = zc_ContainerLinkObject_PartionMovementItem()
-                        JOIN containerlinkobject AS CLI_Unit 
-			                                     ON CLI_Unit.containerid = Container.Id
-                                                AND CLI_Unit.descid = zc_ContainerLinkObject_Unit()
-                                                AND CLI_Unit.ObjectId = vbUnitFromId
                         JOIN OBJECT AS Object_PartionMovementItem ON Object_PartionMovementItem.Id = CLI_MI.ObjectId
                         JOIN movementitem ON movementitem.Id = Object_PartionMovementItem.ObjectCode
                         JOIN Movement ON Movement.Id = movementitem.movementid
                     WHERE Container.Amount > 0
+                      AND Container.DescId = zc_Container_Count()
+                      AND Container.WhereObjectId = vbUnitFromId
                 ), 
   
         tmpItem AS ( -- контейнеры и кол-во(Сумма), которое с них будет списано (с подразделения "From")

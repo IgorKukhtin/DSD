@@ -18,8 +18,8 @@ CREATE OR REPLACE VIEW Movement_Income_View AS
        , Object_From.ValueData                      AS FromName
        , MovementLinkObject_To.ObjectId             AS ToId
        , Object_To.Name                             AS ToName
-       , COALESCE(MovementLinkObject_Juridical.ObjectId, Object_To.JuridicalId) AS JuridicalId
-       , COALESCE(Object_Juridical.ValueData, Object_To.JuridicalName)          AS JuridicalName
+       , MovementLinkObject_Juridical.ObjectId      AS JuridicalId
+       , Object_Juridical.ValueData                 AS JuridicalName
        , MovementLinkObject_NDSKind.ObjectId        AS NDSKindId
        , Object_NDSKind.ValueData                   AS NDSKindName
        , ObjectFloat_NDSKind_NDS.ValueData          AS NDS
@@ -31,8 +31,6 @@ CREATE OR REPLACE VIEW Movement_Income_View AS
        , MovementString_InvNumberBranch.ValueData   AS InvNumberBranch
        , MovementDate_Branch.ValueData              AS BranchDate
        , COALESCE(MovementBoolean_Checked.ValueData, false)   AS Checked
-       , MovementFloat_CorrBonus.ValueData          AS CorrBonus
-       , MovementFloat_CorrOther.ValueData          AS CorrOther
        , Container.Id                               AS PaymentContainerId
     FROM Movement 
         LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
@@ -105,12 +103,6 @@ CREATE OR REPLACE VIEW Movement_Income_View AS
         LEFT JOIN MovementString  AS MovementString_InvNumberBranch
                                   ON MovementString_InvNumberBranch.MovementId = Movement.Id
                                  AND MovementString_InvNumberBranch.DescId = zc_MovementString_InvNumberBranch()
-        LEFT OUTER JOIN MovementFloat AS MovementFloat_CorrBonus
-                                      ON MovementFloat_CorrBonus.MovementId = Movement.ID
-                                     AND MovementFloat_CorrBonus.DescId = zc_MovementFloat_CorrBonus()
-        LEFT OUTER JOIN MovementFloat AS MovementFloat_CorrOther
-                                      ON MovementFloat_CorrOther.MovementId = Movement.ID
-                                     AND MovementFloat_CorrOther.DescId = zc_MovementFloat_CorrOther()
                              
         -- Партия накладной
         LEFT JOIN Object AS Object_Movement
@@ -118,7 +110,7 @@ CREATE OR REPLACE VIEW Movement_Income_View AS
                         AND Object_Movement.DescId = zc_Object_PartionMovement()
         LEFT JOIN Container ON Container.DescId = zc_Container_SummIncomeMovementPayment()
                            AND Container.ObjectId = Object_Movement.Id
-                           AND Container.KeyValue like '%,'||COALESCE(MovementLinkObject_Juridical.ObjectId, Object_To.JuridicalId)||';%'
+                           AND Container.KeyValue like '%,'||MovementLinkObject_Juridical.ObjectId||';%'
     WHERE 
         Movement.DescId = zc_Movement_Income();
 
@@ -129,6 +121,7 @@ ALTER TABLE Movement_Income_View
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.  Воробкало А.А.
+ 11.01.15                                                         *
  07.12.15                                                         *
  14.05.15                        * 
  11.02.15                        * 

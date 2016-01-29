@@ -401,7 +401,8 @@ group by tmp.ContainerId
 
 
 -- update Container set MasterKeyValue = zfCalc_FromHex (SUBSTRING (md5 (KeyValue) FROM 1 FOR 8)), ChildKeyValue = zfCalc_FromHex (SUBSTRING (md5 (KeyValue) FROM 9 FOR 8))
--- select * from Container where coalesce (MasterKeyValue, 0) = 0 or coalesce (ChildKeyValue, 0) = 0
+-- select * from Container where coalesce (MasterKeyValue, 0) = 0 or coalesce (ChildKeyValue, 0) = 0 or coalesce (KeyValue, '') = ''
 -- select MasterKeyValue, ChildKeyValue from Container group by MasterKeyValue, ChildKeyValue having count (*) > 1
+-- select * from Container where MasterKeyValue <> zfCalc_FromHex (SUBSTRING (md5 (KeyValue) FROM 1 FOR 8)) or ChildKeyValue <> zfCalc_FromHex (SUBSTRING (md5 (KeyValue) FROM 9 FOR 8))
 
 */

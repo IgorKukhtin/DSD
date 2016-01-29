@@ -72,6 +72,14 @@ type
     spInsertUpdate_SheetWorkTime_FromTransport: TdsdStoredProc;
     actInsertUpdate_SheetWorkTime_FromTransport: TdsdExecStoredProc;
     bbLoadFromTransport: TdxBarButton;
+    actMISetErased: TdsdUpdateErased;
+    actMISetUnErased: TdsdUpdateErased;
+    spErasedMIMaster: TdsdStoredProc;
+    bbMISetErased: TdxBarButton;
+    bbMISetUnErased: TdxBarButton;
+    isErased: TcxGridDBBandedColumn;
+    actShowErased: TBooleanStoredProcAction;
+    bbShowErased: TdxBarButton;
   private
   public
   end;

@@ -152,6 +152,9 @@ type
     actUpdateAmountPartner: TdsdExecStoredProc;
     bbUpdateAmountPartner: TdxBarButton;
     cbPromo: TcxCheckBox;
+    Price_Pricelist_vat: TcxGridDBColumn;
+    actOpenTax: TdsdOpenForm;
+    bbOpenTax: TdxBarButton;
   private
     { Private declarations }
   public

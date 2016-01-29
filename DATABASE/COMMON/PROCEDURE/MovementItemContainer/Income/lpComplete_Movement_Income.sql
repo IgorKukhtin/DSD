@@ -332,7 +332,7 @@ BEGIN
                          , OperCount, OperCount_Partner, OperCount_Packer, tmpOperSumm_Partner, OperSumm_Partner, tmpOperSumm_Packer, OperSumm_Packer, tmpOperSumm_PartnerTo, OperSumm_PartnerTo
                          , AccountId, InfoMoneyGroupId, InfoMoneyDestinationId, InfoMoneyId, InfoMoneyGroupId_Detail, InfoMoneyDestinationId_Detail, InfoMoneyId_Detail
                          , BusinessId, UnitId_Asset
-                         , isPartionCount, isPartionSumm, isCountSupplier
+                         , isPartionCount, isPartionSumm, isTareReturning
                          , PartionGoodsId)
         SELECT
               _tmp.MovementItemId
@@ -438,7 +438,7 @@ BEGIN
                     AND _tmp.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_20500() -- 20500; "Оборотная тара"
                         THEN TRUE
                    ELSE FALSE
-               END AS isCountSupplier
+               END AS isTareReturning
 
             , 0 AS PartionGoodsId -- Партии товара, сформируем позже
 
@@ -576,7 +576,7 @@ BEGIN
      WHERE vbPartnerId_To <> 0;
 
      -- проверка
-     IF 1=0 AND COALESCE (vbContractId, 0) = 0 AND (EXISTS (SELECT _tmpItem.isCountSupplier FROM _tmpItem WHERE _tmpItem.isCountSupplier = FALSE AND OperSumm_Partner <> 0)
+     IF 1=0 AND COALESCE (vbContractId, 0) = 0 AND (EXISTS (SELECT _tmpItem.isTareReturning FROM _tmpItem WHERE _tmpItem.isTareReturning = FALSE AND OperSumm_Partner <> 0)
                                        -- AND vbPaidKindId <> zc_Enum_PaidKind_SecondForm() -- !!! НАЛ !!!
                                            )
      THEN
@@ -1249,8 +1249,10 @@ BEGIN
                                                                            , inObjectId_1        := vbPartnerId_From
                                                                            , inDescId_2          := zc_ContainerLinkObject_Branch()
                                                                            , inObjectId_2        := zc_Branch_Basis() -- долг Поставщика всегда на Главном филиале
+                                                                           , inDescId_3          := zc_ContainerLinkObject_PaidKind()
+                                                                           , inObjectId_3        := vbPaidKindId
                                                                             )
-     WHERE _tmpItem.isCountSupplier = TRUE AND _tmpItem.OperCount <> 0;
+     WHERE _tmpItem.isTareReturning = TRUE AND _tmpItem.OperCount <> 0;
 
      -- 1.1.2. формируются !!!забалансовые!!! Проводки для количественного учета - долги поставщику
      INSERT INTO _tmpMIContainer_insert (Id, DescId, MovementDescId, MovementId, MovementItemId, ContainerId
@@ -1259,7 +1261,7 @@ BEGIN
        SELECT 0, zc_MIContainer_CountSupplier() AS DescId, vbMovementDescId, inMovementId, MovementItemId
             , ContainerId_CountSupplier
             , 0                                       AS AccountId                -- нет счета
-            , 0                                       AS AnalyzerId               -- нет аналитики
+            , zc_Enum_AnalyzerId_TareReturning()      AS AnalyzerId               -- есть аналитика
             , _tmpItem.GoodsId                        AS ObjectId_Analyzer        -- Товар
             , vbPartnerId_From                        AS WhereObjectId_Analyzer   -- Поставщик
             , 0                                       AS ContainerId_Analyzer     -- !!!нет!!!
@@ -1271,7 +1273,7 @@ BEGIN
             , vbOperDate                              AS OperDate                 -- т.е. по "Дате склад"
             , FALSE                                   AS isActive
        FROM _tmpItem
-       WHERE _tmpItem.isCountSupplier = TRUE AND _tmpItem.OperCount <> 0;
+       WHERE _tmpItem.isTareReturning = TRUE AND _tmpItem.OperCount <> 0;
 
 
      -- 1.2.1. определяется ContainerId_Goods для проводок по количественному учету
@@ -1297,7 +1299,7 @@ BEGIN
        SELECT 0, zc_MIContainer_Count() AS DescId, vbMovementDescId, inMovementId, MovementItemId
             , ContainerId_Goods
             , 0                                       AS AccountId              -- нет счета
-            , 0                                       AS AnalyzerId             -- нет аналитики, т.е. деление Поставщик, Заготовитель, Покупатель, Талоны пока не надо
+            , CASE WHEN _tmpItem.isTareReturning = TRUE THEN zc_Enum_AnalyzerId_TareReturning() ELSE 0 END AS AnalyzerId             -- нет аналитики, т.е. деление Поставщик, Заготовитель, Покупатель, Талоны пока не надо
             , _tmpItem.GoodsId                        AS ObjectId_Analyzer      -- Товар
             , vbWhereObjectId_Analyzer                AS WhereObjectId_Analyzer -- Подраделение или...
             , vbContainerId_Analyzer                  AS ContainerId_Analyzer   -- Контейнер - по долгам поставщика
@@ -2132,7 +2134,7 @@ $BODY$
  30.09.13                                        * add vbCarId and vbMemberId_Driver
  17.09.13                                        * add lpInsertUpdate_ContainerCount_Goods and lpInsertUpdate_ContainerSumm_Goods
  15.09.13                                        * all
- 14.09.13                                        * add vbBusinessId_To + isCountSupplier
+ 14.09.13                                        * add vbBusinessId_To + isTareReturning
  02.09.13                                        * add lpInsertUpdate_MovementItemContainer_byTable
  29.08.13                                        * add lpInsertUpdate_MovementItemReport
  09.08.13                                        * add zc_isHistoryCost and zc_isHistoryCost_byInfoMoneyDetail

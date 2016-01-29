@@ -3,6 +3,8 @@ inherited Report_JuridicalSoldForm: TReport_JuridicalSoldForm
   ClientHeight = 556
   ClientWidth = 1118
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
+  ExplicitLeft = -440
+  ExplicitTop = -134
   ExplicitWidth = 1134
   ExplicitHeight = 591
   PixelsPerInch = 96
@@ -384,6 +386,15 @@ inherited Report_JuridicalSoldForm: TReport_JuridicalSoldForm
             Options.Editing = False
             Width = 55
           end
+          object colINN: TcxGridDBColumn
+            Caption = #1048#1053#1053
+            DataBinding.FieldName = 'INN'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 55
+          end
           object clPartnerCode: TcxGridDBColumn
             Caption = #1050#1086#1076' '#1082#1086#1085#1090#1088#1072#1075#1077#1085#1090#1072
             DataBinding.FieldName = 'PartnerCode'
@@ -410,6 +421,23 @@ inherited Report_JuridicalSoldForm: TReport_JuridicalSoldForm
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 55
+          end
+          object ContractJuridicalDocCode: TcxGridDBColumn
+            Caption = #1050#1086#1076' '#1102#1088'. '#1083'. ('#1095#1077#1088#1077#1079' '#1082#1086#1075#1086')'
+            DataBinding.FieldName = 'ContractJuridicalDocCode'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 55
+          end
+          object ContractJuridicalDocName: TcxGridDBColumn
+            Caption = #1070#1088#1080#1076#1080#1095#1077#1089#1082#1086#1077' '#1083#1080#1094#1086' ('#1095#1077#1088#1077#1079' '#1082#1086#1075#1086')'
+            DataBinding.FieldName = 'ContractJuridicalDocName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 100
           end
           object clPartionMovementName: TcxGridDBColumn
             Caption = #1054#1089#1085#1086#1074#1072#1085#1080#1077

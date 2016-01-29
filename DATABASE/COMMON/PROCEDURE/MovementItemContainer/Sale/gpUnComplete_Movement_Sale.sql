@@ -4,15 +4,19 @@ DROP FUNCTION IF EXISTS gpUnComplete_Movement_Sale (Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpUnComplete_Movement_Sale(
     IN inMovementId        Integer               , -- ключ Документа
+   OUT outPrinted          Boolean               ,
     IN inSession           TVarChar DEFAULT ''     -- сессия пользователя
 )
-RETURNS VOID
+RETURNS Boolean
 AS
 $BODY$
    DECLARE vbUserId Integer;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      vbUserId:= lpCheckRight(inSession, zc_Enum_Process_UnComplete_Sale());
+
+     --
+     outPrinted := gpUpdate_Movement_Sale_Print (inId := inMovementId, inNewPrinted := FALSE, inSession := inSession);
 
      -- проверка - если <Master> Удален, то <Ошибка>
      -- PERFORM lfCheck_Movement_ParentStatus (inMovementId:= inMovementId, inNewStatusId:= zc_Enum_Status_UnComplete(), inComment:= 'распровести');

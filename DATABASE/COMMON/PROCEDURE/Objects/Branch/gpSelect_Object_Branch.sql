@@ -6,8 +6,12 @@ CREATE OR REPLACE FUNCTION gpSelect_Object_Branch(
     IN inSession     TVarChar       -- ñåññèÿ ïîëüçîâàòåëÿ
 )
 RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
-             , InvNumber TVarChar
+             , InvNumber TVarChar, PlaceOf TVarChar
+             , PersonalId Integer, PersonalName TVarChar
+             , PersonalStoreId Integer, PersonalStoreName TVarChar
              , PersonalBookkeeperId Integer, PersonalBookkeeperName TVarChar
+             , UnitId Integer, UnitName TVarChar
+             , UnitReturnId Integer, UnitReturnName TVarChar
              , IsMedoc boolean, IsPartionDoc boolean
              , isErased boolean)
 AS
@@ -28,8 +32,23 @@ BEGIN
         , Object_Branch.ValueData    AS NAME
         
         , ObjectString_InvNumber.ValueData  AS InvNumber
-        , Object_Personal_View.PersonalId    AS PersonalBookkeeperId
-        , Object_Personal_View.PersonalName  AS PersonalBookkeeperName        
+        , ObjectString_PlaceOf.ValueData    AS PlaceOf
+
+        , Object_Personal_View.PersonalId    AS PersonalId
+        , Object_Personal_View.PersonalName  AS PersonalName 
+
+        , Object_PersonalStore_View.PersonalId    AS PersonalStoreId
+        , Object_PersonalStore_View.PersonalName  AS PersonalStoreName
+
+        , Object_PersonalBookkeeper_View.PersonalId    AS PersonalBookkeeperId
+        , Object_PersonalBookkeeper_View.PersonalName  AS PersonalBookkeeperName
+
+        , Object_Unit.Id         AS UnitId
+        , Object_Unit.ValueData  AS UnitName
+
+        , Object_UnitReturn.Id         AS UnitReturnId
+        , Object_UnitReturn.ValueData  AS UnitReturnName
+       
         , COALESCE (ObjectBoolean_Medoc.ValueData, False)      AS IsMedoc
         , COALESCE (ObjectBoolean_PartionDoc.ValueData, False) AS IsPartionDoc
         , Object_Branch.isErased             AS isErased
@@ -41,7 +60,10 @@ BEGIN
 
         LEFT JOIN ObjectString AS ObjectString_InvNumber
                                ON ObjectString_InvNumber.ObjectId = Object_Branch.Id
-                              AND ObjectString_InvNumber.DescId = zc_objectString_Branch_InvNumber()              
+                              AND ObjectString_InvNumber.DescId = zc_objectString_Branch_InvNumber()       
+        LEFT JOIN ObjectString AS ObjectString_PlaceOf
+                               ON ObjectString_PlaceOf.ObjectId = Object_Branch.Id
+                              AND ObjectString_PlaceOf.DescId = zc_objectString_Branch_PlaceOf()       
 
         LEFT JOIN ObjectBoolean AS ObjectBoolean_Medoc
                                 ON ObjectBoolean_Medoc.ObjectId = Object_Branch.Id
@@ -51,10 +73,31 @@ BEGIN
                                 ON ObjectBoolean_PartionDoc.ObjectId = Object_Branch.Id
                                AND ObjectBoolean_PartionDoc.DescId = zc_ObjectBoolean_Branch_PartionDoc() 
 
+        LEFT JOIN ObjectLink AS ObjectLink_Branch_Personal
+                             ON ObjectLink_Branch_Personal.ObjectId = Object_Branch.Id
+                            AND ObjectLink_Branch_Personal.DescId = zc_ObjectLink_Branch_Personal()
+        LEFT JOIN Object_Personal_View ON Object_Personal_View.PersonalId = ObjectLink_Branch_Personal.ChildObjectId     
+
+        LEFT JOIN ObjectLink AS ObjectLink_Branch_PersonalStore
+                             ON ObjectLink_Branch_PersonalStore.ObjectId = Object_Branch.Id
+                            AND ObjectLink_Branch_PersonalStore.DescId = zc_ObjectLink_Branch_PersonalStore()
+        LEFT JOIN Object_Personal_View AS Object_PersonalStore_View ON Object_PersonalStore_View.PersonalId = ObjectLink_Branch_PersonalStore.ChildObjectId  
+
         LEFT JOIN ObjectLink AS ObjectLink_Branch_PersonalBookkeeper
                              ON ObjectLink_Branch_PersonalBookkeeper.ObjectId = Object_Branch.Id
                             AND ObjectLink_Branch_PersonalBookkeeper.DescId = zc_ObjectLink_Branch_PersonalBookkeeper()
-        LEFT JOIN Object_Personal_View ON Object_Personal_View.PersonalId = ObjectLink_Branch_PersonalBookkeeper.ChildObjectId                        
+        LEFT JOIN Object_Personal_View AS Object_PersonalBookkeeper_View ON Object_PersonalBookkeeper_View.PersonalId = ObjectLink_Branch_PersonalBookkeeper.ChildObjectId                     
+
+        LEFT JOIN ObjectLink AS ObjectLink_Branch_Unit
+                             ON ObjectLink_Branch_Unit.ObjectId = Object_Branch.Id
+                            AND ObjectLink_Branch_Unit.DescId = zc_ObjectLink_Branch_Unit()
+        LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = ObjectLink_Branch_Unit.ChildObjectId
+
+        LEFT JOIN ObjectLink AS ObjectLink_Branch_UnitReturn
+                             ON ObjectLink_Branch_UnitReturn.ObjectId = Object_Branch.Id
+                            AND ObjectLink_Branch_UnitReturn.DescId = zc_ObjectLink_Branch_UnitReturn()
+        LEFT JOIN Object AS Object_UnitReturn ON Object_UnitReturn.Id = ObjectLink_Branch_UnitReturn.ChildObjectId
+
         
    WHERE Object_Branch.DescId = zc_Object_Branch()
      AND (tmpRoleAccessKey.AccessKeyId IS NOT NULL OR vbAccessKeyAll = TRUE)
@@ -69,6 +112,8 @@ ALTER FUNCTION gpSelect_Object_Branch(TVarChar) OWNER TO postgres;
 /*
  ÈÑÒÎÐÈß ÐÀÇÐÀÁÎÒÊÈ: ÄÀÒÀ, ÀÂÒÎÐ
                Ôåëîíþê È.Â.   Êóõòèí È.Â.   Êëèìåíòüåâ Ê.È.
+ 21.12.15         * add Unit, UnitReturn
+ 20.12.15         * add Personal, PersonalStore, PlaceOf
  28.04.15         * add PartionDoc
  17.04.15         * add IsMedoc
  18.03.15         * add InvNumber, PersonalBookkeeper               

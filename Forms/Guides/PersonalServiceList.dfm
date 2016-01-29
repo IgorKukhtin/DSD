@@ -2,8 +2,8 @@ object PersonalServiceListForm: TPersonalServiceListForm
   Left = 0
   Top = 0
   Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1042#1077#1076#1086#1084#1086#1089#1090#1080' '#1085#1072#1095#1080#1089#1083#1077#1085#1080#1103'>'
-  ClientHeight = 321
-  ClientWidth = 728
+  ClientHeight = 320
+  ClientWidth = 986
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -20,13 +20,14 @@ object PersonalServiceListForm: TPersonalServiceListForm
   object cxGrid: TcxGrid
     Left = 0
     Top = 26
-    Width = 728
-    Height = 295
+    Width = 986
+    Height = 294
     Align = alClient
     TabOrder = 0
     LookAndFeel.NativeStyle = True
     LookAndFeel.SkinName = 'UserSkin'
-    ExplicitWidth = 627
+    ExplicitWidth = 728
+    ExplicitHeight = 295
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -51,21 +52,21 @@ object PersonalServiceListForm: TPersonalServiceListForm
         HeaderAlignmentHorz = taRightJustify
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 62
+        Width = 70
       end
       object clName: TcxGridDBColumn
         Caption = #1053#1072#1079#1074#1072#1085#1080#1077
         DataBinding.FieldName = 'Name'
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 187
+        Width = 162
       end
       object clJuridicalName: TcxGridDBColumn
         Caption = #1070#1088'.'#1083#1080#1094#1086
         DataBinding.FieldName = 'JuridicalName'
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 95
+        Width = 113
       end
       object clErased: TcxGridDBColumn
         Caption = #1059#1076#1072#1083#1077#1085
@@ -83,7 +84,7 @@ object PersonalServiceListForm: TPersonalServiceListForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 76
+        Width = 80
       end
       object clBankName: TcxGridDBColumn
         Caption = #1041#1072#1085#1082
@@ -99,7 +100,7 @@ object PersonalServiceListForm: TPersonalServiceListForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 57
+        Width = 51
       end
       object MemberName: TcxGridDBColumn
         Caption = #1060#1080#1079'.'#1083#1080#1094#1086' ('#1087#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1100') '
@@ -114,7 +115,52 @@ object PersonalServiceListForm: TPersonalServiceListForm
         Properties.ReadOnly = True
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 95
+        Width = 110
+      end
+      object MemberHeadManagerName: TcxGridDBColumn
+        Caption = #1060#1080#1079'.'#1083#1080#1094#1086' ('#1080#1089#1087'. '#1076#1080#1088#1077#1082#1090#1086#1088') '
+        DataBinding.FieldName = 'MemberHeadManagerName'
+        PropertiesClassName = 'TcxButtonEditProperties'
+        Properties.Buttons = <
+          item
+            Action = MemberHeadManagerChoice
+            Default = True
+            Kind = bkEllipsis
+          end>
+        Properties.ReadOnly = True
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 110
+      end
+      object MemberManagerName: TcxGridDBColumn
+        Caption = #1060#1080#1079'.'#1083#1080#1094#1086' ('#1076#1080#1088#1077#1082#1090#1086#1088') '
+        DataBinding.FieldName = 'MemberManagerName'
+        PropertiesClassName = 'TcxButtonEditProperties'
+        Properties.Buttons = <
+          item
+            Action = MemberManagerChoice
+            Default = True
+            Kind = bkEllipsis
+          end>
+        Properties.ReadOnly = True
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 110
+      end
+      object MemberBookkeeperName: TcxGridDBColumn
+        Caption = #1060#1080#1079'.'#1083#1080#1094#1086' ('#1073#1091#1093#1075#1072#1083#1090#1077#1088') '
+        DataBinding.FieldName = 'MemberBookkeeperName'
+        PropertiesClassName = 'TcxButtonEditProperties'
+        Properties.Buttons = <
+          item
+            Action = MemberBookkeeperChoice
+            Default = True
+            Kind = bkEllipsis
+          end>
+        Properties.ReadOnly = True
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 110
       end
     end
     object cxGridLevel: TcxGridLevel
@@ -450,6 +496,78 @@ object PersonalServiceListForm: TPersonalServiceListForm
         end>
       isShowModal = True
     end
+    object MemberHeadManagerChoice: TOpenChoiceForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = 'TMember_ObjectForm'
+      FormName = 'TMember_ObjectForm'
+      FormNameParam.Value = 'TMember_ObjectForm'
+      FormNameParam.DataType = ftString
+      GuiParams = <
+        item
+          Name = 'Key'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'MemberHeadManagerId'
+        end
+        item
+          Name = 'TextValue'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'MemberHeadManagerName'
+          DataType = ftString
+        end>
+      isShowModal = True
+    end
+    object MemberManagerChoice: TOpenChoiceForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = 'TMember_ObjectForm'
+      FormName = 'TMember_ObjectForm'
+      FormNameParam.Value = 'TMember_ObjectForm'
+      FormNameParam.DataType = ftString
+      GuiParams = <
+        item
+          Name = 'Key'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'MemberManagerId'
+        end
+        item
+          Name = 'TextValue'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'MemberManagerName'
+          DataType = ftString
+        end>
+      isShowModal = True
+    end
+    object MemberBookkeeperChoice: TOpenChoiceForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = 'TMember_ObjectForm'
+      FormName = 'TMember_ObjectForm'
+      FormNameParam.Value = 'TMember_ObjectForm'
+      FormNameParam.DataType = ftString
+      GuiParams = <
+        item
+          Name = 'Key'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'MemberBookkeeperId'
+        end
+        item
+          Name = 'TextValue'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'MemberBookkeeperName'
+          DataType = ftString
+        end>
+      isShowModal = True
+    end
     object actUpdateMember: TdsdUpdateDataSet
       Category = 'DSDLib'
       MoveParams = <>
@@ -540,6 +658,27 @@ object PersonalServiceListForm: TPersonalServiceListForm
         Value = Null
         Component = ClientDataSet
         ComponentItem = 'MemberId'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inMemberHeadManagerId'
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'MemberHeadManagerId'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inMemberManagerId'
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'MemberManagerId'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inMemberBookkeeperId'
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'MemberBookkeeperId'
         ParamType = ptInput
       end>
     PackSize = 1

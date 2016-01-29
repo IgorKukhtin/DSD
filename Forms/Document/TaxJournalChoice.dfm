@@ -5,7 +5,7 @@ inherited TaxJournalChoiceForm: TTaxJournalChoiceForm
   AddOnFormData.ChoiceAction = dsdChoiceGuides
   AddOnFormData.Params = FormParams
   ExplicitWidth = 1126
-  ExplicitHeight = 573
+  ExplicitHeight = 570
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -350,10 +350,10 @@ inherited TaxJournalChoiceForm: TTaxJournalChoiceForm
     Width = 1110
     ExplicitWidth = 1110
     inherited deStart: TcxDateEdit
-      EditValue = 42005d
+      EditValue = 42370d
     end
     inherited deEnd: TcxDateEdit
-      EditValue = 42005d
+      EditValue = 42370d
     end
     object edIsRegisterDate: TcxCheckBox
       Left = 427
@@ -453,7 +453,7 @@ inherited TaxJournalChoiceForm: TTaxJournalChoiceForm
         end
         item
           Name = 'OperDate_Tax'
-          Value = Null
+          Value = 'NULL'
           Component = MasterCDS
           ComponentItem = 'OperDate'
           DataType = ftDateTime

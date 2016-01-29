@@ -87,10 +87,28 @@ BEGIN
                LEFT JOIN Object AS Object_PriceList ON Object_PriceList.Id = zc_PriceList_Basis()
                LEFT JOIN Object AS Object_To ON Object_To.Id = CASE WHEN 0 = COALESCE ((SELECT BranchId FROM tmpBranch), 0)
                                                                          THEN 8461 -- !!!Склад Возвратов!!!
+
                                                                     WHEN 8374 = COALESCE ((SELECT BranchId FROM tmpBranch), 0) -- филиал Одесса
                                                                          THEN 346094 -- !!!Склад возвратов ф.Одесса!!!
+
                                                                     WHEN 301310 = (SELECT BranchId FROM tmpBranch) -- филиал Запорожье
                                                                          THEN 309599 -- !!!Склад возвратов ф.Запорожье!!!
+
+                                                                    WHEN 8377 = (SELECT BranchId FROM tmpBranch) -- филиал Кр.Рог
+                                                                         THEN 428366 -- Склад возвратов ф.Кривой Рог
+
+                                                                    WHEN 8373 = (SELECT BranchId FROM tmpBranch) -- филиал Николаев (Херсон)
+                                                                         THEN 428364 -- Склад возвратов ф.Николаев (Херсон)
+
+                                                                    WHEN 8381 = (SELECT BranchId FROM tmpBranch) -- филиал Харьков
+                                                                         THEN 409007 -- Склад возвратов ф.Харьков
+
+                                                                    WHEN 8375 = (SELECT BranchId FROM tmpBranch) -- филиал Черкассы (Кировоград)
+                                                                         THEN 428363 -- Склад возвратов ф.Черкассы (Кировоград)
+
+                                                                    WHEN 8379  = (SELECT BranchId FROM tmpBranch) -- филиал Киев
+                                                                         THEN 428365 -- Склад возвратов ф.Киев
+
                                                                     ELSE 0
                                                                END
                LEFT JOIN Object AS ObjectCurrency ON ObjectCurrency.descid= zc_Object_Currency()

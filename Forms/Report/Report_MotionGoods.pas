@@ -209,6 +209,10 @@ type
     actPrint_Inventory: TdsdPrintAction;
     bbPrint_Inventory: TdxBarButton;
     AssetToName: TcxGridDBColumn;
+    SummSendOnPrice_10500: TcxGridDBColumn;
+    SummSendOnPrice_40200: TcxGridDBColumn;
+    CountSendOnPrice_10500_Weight: TcxGridDBColumn;
+    CountSendOnPrice_10500: TcxGridDBColumn;
   private
   public
   end;

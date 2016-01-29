@@ -3,7 +3,7 @@ inherited TaxCorrectiveForm: TTaxCorrectiveForm
   ClientHeight = 668
   ClientWidth = 1114
   ExplicitWidth = 1130
-  ExplicitHeight = 706
+  ExplicitHeight = 703
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -11,17 +11,17 @@ inherited TaxCorrectiveForm: TTaxCorrectiveForm
     Width = 1114
     Height = 505
     ExplicitTop = 163
-    ExplicitWidth = 1113
+    ExplicitWidth = 1114
     ExplicitHeight = 505
     ClientRectBottom = 505
     ClientRectRight = 1114
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 1113
+      ExplicitWidth = 1114
       ExplicitHeight = 481
       inherited cxGrid: TcxGrid
         Width = 1114
         Height = 481
-        ExplicitWidth = 1113
+        ExplicitWidth = 1114
         ExplicitHeight = 481
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
@@ -154,7 +154,7 @@ inherited TaxCorrectiveForm: TTaxCorrectiveForm
     Width = 1114
     Height = 137
     TabOrder = 3
-    ExplicitWidth = 1113
+    ExplicitWidth = 1114
     ExplicitHeight = 137
     inherited edInvNumber: TcxTextEdit
       Left = 8
@@ -617,6 +617,61 @@ inherited TaxCorrectiveForm: TTaxCorrectiveForm
       Hint = #1050#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1082#1072' '#1082' '#1085#1072#1083#1086#1075#1086#1074#1086#1081' ('#1087#1088#1086#1076#1072#1074#1077#1094')'
       ImageIndex = 19
     end
+    object actOpenTax: TdsdOpenForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = #1055#1088#1086#1089#1084#1086#1090#1088' <'#1053#1072#1083#1086#1075#1086#1074#1086#1081' '#1085#1072#1082#1083#1072#1076#1085#1086#1081'>'
+      Hint = #1055#1088#1086#1089#1084#1086#1090#1088' <'#1053#1072#1083#1086#1075#1086#1074#1086#1081' '#1085#1072#1082#1083#1072#1076#1085#1086#1081'>'
+      ImageIndex = 26
+      FormName = 'TTaxForm'
+      FormNameParam.Value = 'TTaxForm'
+      FormNameParam.DataType = ftString
+      GuiParams = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = DocumentTaxGuides
+          ComponentItem = 'Key'
+          ParamType = ptInput
+        end
+        item
+          Name = 'inmask'
+          Value = 'False'
+          DataType = ftBoolean
+          ParamType = ptInput
+        end
+        item
+          Name = 'inOperDate'
+          Value = 'NULL'
+          Component = edOperDate
+          DataType = ftDateTime
+          ParamType = ptInput
+        end
+        item
+          Name = 'ShowAll'
+          Value = 'False'
+          DataType = ftBoolean
+        end>
+      isShowModal = False
+    end
+    object actChangeSignAmount: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdateMIAmountSign
+      StoredProcList = <
+        item
+          StoredProc = spUpdateMIAmountSign
+        end
+        item
+          StoredProc = spSelect
+        end>
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1079#1085#1072#1082' '#1076#1083#1103' '#1082#1086#1083#1080#1095#1077#1089#1090#1074#1072' '#1085#1072' '#1087#1088#1086#1090#1080#1074#1086#1087#1086#1083#1086#1078#1085#1099#1081
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1079#1085#1072#1082' '#1076#1083#1103' '#1082#1086#1083#1080#1095#1077#1089#1090#1074#1072' '#1085#1072' '#1087#1088#1086#1090#1080#1074#1086#1087#1086#1083#1086#1078#1085#1099#1081
+      ImageIndex = 27
+      QuestionBeforeExecute = #1044#1077#1081#1089#1090#1074#1080#1090#1077#1083#1100#1085#1086' '#1080#1079#1084#1077#1085#1080#1090#1100' '#1079#1085#1072#1082' '#1076#1083#1103' '#1082#1086#1083#1080#1095#1077#1089#1090#1074#1072' '#1085#1072' '#1087#1088#1086#1090#1080#1074#1086#1087#1086#1083#1086#1078#1085#1099#1081'?'
+      InfoAfterExecute = #1047#1085#1072#1082' '#1076#1083#1103' '#1082#1086#1083#1080#1095#1077#1089#1090#1074#1072' '#1080#1079#1084#1077#1085#1080#1083#1089#1103' '#1085#1072' '#1087#1088#1086#1090#1080#1074#1086#1087#1086#1083#1086#1078#1085#1099#1081
+    end
   end
   inherited MasterDS: TDataSource
     Left = 32
@@ -694,6 +749,14 @@ inherited TaxCorrectiveForm: TTaxCorrectiveForm
         end
         item
           Visible = True
+          ItemName = 'bbChangeSignAmount'
+        end
+        item
+          Visible = True
+          ItemName = 'bbStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbErased'
         end
         item
@@ -707,6 +770,14 @@ inherited TaxCorrectiveForm: TTaxCorrectiveForm
         item
           Visible = True
           ItemName = 'bbRefresh'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbOpenTax'
         end
         item
           Visible = True
@@ -747,6 +818,14 @@ inherited TaxCorrectiveForm: TTaxCorrectiveForm
     end
     object bbPrint_TaxCorrective_Client: TdxBarButton [5]
       Action = mactPrint_TaxCorrective_Client
+      Category = 0
+    end
+    object bbChangeSignAmount: TdxBarButton
+      Action = actChangeSignAmount
+      Category = 0
+    end
+    object bbOpenTax: TdxBarButton
+      Action = actOpenTax
       Category = 0
     end
   end
@@ -853,7 +932,7 @@ inherited TaxCorrectiveForm: TTaxCorrectiveForm
       end
       item
         Name = 'inOperDate'
-        Value = Null
+        Value = 'NULL'
         Component = FormParams
         ComponentItem = 'inOperDate'
         DataType = ftDateTime
@@ -1851,5 +1930,21 @@ inherited TaxCorrectiveForm: TTaxCorrectiveForm
     PackSize = 1
     Left = 400
     Top = 520
+  end
+  object spUpdateMIAmountSign: TdsdStoredProc
+    StoredProcName = 'gpUpdate_MI_TaxCorrective_AmountSign'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+      end>
+    PackSize = 1
+    Left = 226
+    Top = 472
   end
 end

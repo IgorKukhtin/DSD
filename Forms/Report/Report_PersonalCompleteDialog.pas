@@ -30,6 +30,9 @@ type
     cxLabel6: TcxLabel;
     cxLabel7: TcxLabel;
     cbinIsDay: TcxCheckBox;
+    cxLabel2: TcxLabel;
+    edBranch: TcxButtonEdit;
+    BranchGuides: TdsdGuides;
   private
     { Private declarations }
   public

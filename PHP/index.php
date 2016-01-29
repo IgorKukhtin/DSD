@@ -30,7 +30,7 @@ pg_free_result($result);
 
 
 $doc = new DOMDocument('1.0','windows-1251');
-$doc->loadXML($_POST["XML"]);
+$doc->loadXML($_POST["XML"],LIBXML_PARSEHUGE);
 
 $Session = $doc->documentElement->getAttribute('Session');
 $AutoWidht = ($doc->documentElement->getAttribute('AutoWidth') == 'true');

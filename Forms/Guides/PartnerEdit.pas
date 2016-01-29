@@ -96,6 +96,9 @@ type
     edGLNCodeRetail: TcxTextEdit;
     edGLNCodeCorporate: TcxTextEdit;
     cxLabel31: TcxLabel;
+    cxLabel32: TcxLabel;
+    ceGoodsProperty: TcxButtonEdit;
+    GoodsPropertyGuides: TdsdGuides;
 
   private
     { Private declarations }

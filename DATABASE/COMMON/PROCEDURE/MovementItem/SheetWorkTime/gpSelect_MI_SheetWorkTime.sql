@@ -71,7 +71,7 @@ BEGIN
                                                 ] :: Integer[]
                                          , COALESCE (Movement_Data.OperDate, Object_Data.OperDate) AS OperDate
                                          , ARRAY[zfCalc_ViewWorkHour (COALESCE(Movement_Data.Amount, 0), Movement_Data.ShortName) :: VarChar
-                                               , COALESCE (Movement_Data.ObjectId, zc_Enum_WorkTimeKind_Work()) :: VarChar
+                                               , COALESCE (Movement_Data.ObjectId, 0) :: VarChar
                                                 ] :: TVarChar
                                     FROM (SELECT tmpOperDate.operdate
                                                , MI_SheetWorkTime.Amount

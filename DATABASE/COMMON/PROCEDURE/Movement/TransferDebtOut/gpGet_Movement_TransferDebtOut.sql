@@ -1,13 +1,15 @@
 -- Function: gpGet_Movement_TransferDebtOut()
 
 DROP FUNCTION IF EXISTS gpGet_Movement_TransferDebtOut (Integer, TDateTime, TVarChar);
+DROP FUNCTION IF EXISTS gpGet_Movement_TransferDebtOut (Integer,  Boolean, TDateTime, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpGet_Movement_TransferDebtOut(
     IN inMovementId        Integer  , -- ключ Документа
+    IN inMask              Boolean  ,
     IN inOperDate          TDateTime, -- ключ Документа
     IN inSession           TVarChar   -- сессия пользователя
 )
-RETURNS TABLE (Id Integer, InvNumber TVarChar, InvNumberPartner TVarChar, InvNumberOrder TVarChar
+RETURNS TABLE (Id Integer, isMask Boolean, InvNumber TVarChar, InvNumberPartner TVarChar, InvNumberOrder TVarChar
              , OperDate TDateTime, StatusCode Integer, StatusName TVarChar
              , Checked Boolean
              , PriceWithVAT Boolean, VATPercent TFloat, ChangePercent TFloat
@@ -32,6 +34,14 @@ BEGIN
      -- проверка прав пользователя на вызов процедуры
      vbUserId:= lpGetUserBySession (inSession);
 
+     IF COALESCE (inMask, False) = True
+     THEN
+     inMovementId := gpInsert_Movement_TransferDebtOut_Mask (ioId        := inMovementId
+                                                           , inOperDate  := inOperDate
+                                                           , inSession   := inSession); 
+     END IF;
+
+
      IF COALESCE (inMovementId, 0) = 0
      THEN
          RETURN QUERY
@@ -41,7 +51,8 @@ BEGIN
                               WHERE EXISTS (SELECT 1 FROM ObjectLink_UserRole_View WHERE RoleId = zc_Enum_Role_Bread() AND UserId = vbUserId)
                              )
          SELECT
-               0 	     	                        AS Id
+               0 	     	                    AS Id
+             , FALSE                                AS isMask
              , tmpInvNum.InvNumber                  AS InvNumber
              , CAST ('' as TVarChar)                AS InvNumberPartner
              , CAST ('' as TVarChar)                AS InvNumberOrder 
@@ -109,14 +120,15 @@ BEGIN
                               WHERE EXISTS (SELECT 1 FROM ObjectLink_UserRole_View WHERE RoleId = zc_Enum_Role_Bread() AND UserId = vbUserId)
                              )
        SELECT
-             Movement.Id				                AS Id
-           , Movement.InvNumber				            AS InvNumber
+             Movement.Id		                AS Id
+           , FALSE                                      AS isMask
+           , Movement.InvNumber			        AS InvNumber
            , MovementString_InvNumberPartner.ValueData  AS InvNumberPartner
            , MovementString_InvNumberOrder.ValueData    AS InvNumberOrder
-           , Movement.OperDate				        AS OperDate
+           , Movement.OperDate			        AS OperDate
           
-           , Object_Status.ObjectCode    		        AS StatusCode
-           , Object_Status.ValueData     		        AS StatusName
+           , Object_Status.ObjectCode    	        AS StatusCode
+           , Object_Status.ValueData     	        AS StatusName
            , COALESCE (MovementBoolean_Checked.ValueData, FALSE)        AS Checked
            , COALESCE (MovementBoolean_PriceWithVAT.ValueData, FALSE)   AS PriceWithVAT
            , MovementFloat_VATPercent.ValueData         AS VATPercent
@@ -286,12 +298,13 @@ BEGIN
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpGet_Movement_TransferDebtOut (Integer, TDateTime, TVarChar) OWNER TO postgres;
+ALTER FUNCTION gpGet_Movement_TransferDebtOut (Integer, Boolean, TDateTime, TVarChar) OWNER TO postgres;
 
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 13.01.16         * add inMask
  14.01.15         * add MovementId_Order
  17.12.14         * add InvNumberOrder
  03.09.14         * add Checked

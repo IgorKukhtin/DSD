@@ -13,9 +13,13 @@ $BODY$
   DECLARE vbOperDate    TDateTime;
   DECLARE vbUnit        Integer;
 BEGIN
-     -- проверка прав пользователя на вызов процедуры
-     vbUserId:= lpCheckRight(inSession, zc_Enum_Process_UnComplete_Income());
-     --vbUserId:=inSession::Integer;
+    -- проверка прав пользователя на вызов процедуры
+    IF (SELECT Movement.StatusId FROM Movement WHERE Movement.Id = inMovementId) = zc_Enum_Status_Complete()
+    THEN
+        vbUserId:= lpCheckRight(inSession, zc_Enum_Process_UnComplete_Income());
+    ELSE
+        vbUserId:=inSession::Integer;
+    END IF;
      -- проверка - если <Master> Удален, то <Ошибка>
      PERFORM lfCheck_Movement_ParentStatus (inMovementId:= inMovementId, inNewStatusId:= zc_Enum_Status_UnComplete(), inComment:= 'распровести');
     -- Проверить, что бы не было переучета позже даты документа
@@ -31,7 +35,7 @@ BEGIN
                                      AND Movement_Unit.DescId = zc_MovementLinkObject_Unit()
     WHERE Movement.Id = inMovementId;
 
-    IF EXISTS(SELECT 1
+/*    IF EXISTS(SELECT 1
               FROM Movement AS Movement_Inventory
                   INNER JOIN MovementItem AS MI_Inventory
                                           ON MI_Inventory.MovementId = Movement_Inventory.Id
@@ -57,7 +61,7 @@ BEGIN
               )
     THEN
         RAISE EXCEPTION 'Ошибка. По одному или более товарам есть документ переучета позже даты текущей продажи. Отмена проведения документа запрещена!';
-    END IF;
+    END IF;*/
      -- Распроводим Документ
      PERFORM lpUnComplete_Movement (inMovementId := inMovementId
                                   , inUserId     := vbUserId);

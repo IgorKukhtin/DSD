@@ -34,9 +34,11 @@ BEGIN
                       FROM ObjectLink AS ObjectLink_User_Member
                       WHERE ObjectLink_User_Member.DescId = zc_ObjectLink_User_Member()
                         AND ObjectLink_User_Member.ObjectId = vbUserId
-                        AND vbUserId NOT IN (439994 -- Опимах А.М.
-                                           , 300527 -- Пономаренко А.Р.
-                                            )
+                         AND vbUserId NOT IN (439994 -- Опимах А.М.
+                                            , 300527 -- Пономаренко А.Р.
+                                            , 439923 -- Васильева Л.Я.
+                                            , 439925 -- Новиков Д.В.
+                                             )
                      UNION
                       SELECT ObjectLink_User_Member.ChildObjectId
                       FROM ObjectLink AS ObjectLink_User_Member
@@ -45,9 +47,13 @@ BEGIN
                                                                         THEN 439613 -- Шворников Р.И.
                                                                    WHEN vbUserId = 300527 -- Пономаренко А.Р.
                                                                         THEN 300523 -- Бабенко В.П.
+                                                                   WHEN vbUserId IN (439923, 439925) -- Васильева Л.Я. + Новиков Д.В.
+                                                                        THEN 439917 -- Маховская М.В.
                                                               END
                         AND vbUserId IN (439994 -- Опимах А.М.
                                        , 300527 -- Пономаренко А.Р.
+                                       , 439923 -- Васильева Л.Я.
+                                       , 439925 -- Новиков Д.В.
                                         )
                      );
     END IF;

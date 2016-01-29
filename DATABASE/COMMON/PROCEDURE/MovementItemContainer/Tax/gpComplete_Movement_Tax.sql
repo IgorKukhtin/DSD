@@ -15,6 +15,7 @@ BEGIN
      -- проверка прав пользователя на вызов процедуры
      vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Complete_Tax());
 
+
      -- Проводим Документ
      PERFORM lpComplete_Movement_Tax (inMovementId := inMovementId
                                     , inUserId     := vbUserId);

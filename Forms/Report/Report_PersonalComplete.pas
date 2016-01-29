@@ -77,6 +77,10 @@ type
     CountMI1: TcxGridDBColumn;
     CountMovement1: TcxGridDBColumn;
     actPrint1: TdsdPrintAction;
+    cxLabel1: TcxLabel;
+    edBranch: TcxButtonEdit;
+    BranchGuides: TdsdGuides;
+    BranchName: TcxGridDBColumn;
   private
   public
   end;

@@ -169,14 +169,15 @@ BEGIN
      PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_AnalyzerId_SummIn_110101() , inDescId:= zc_Object_AnalyzerId(), inCode:= 1051, inName:= 'Сумма, забалансовый счет, приход транзит', inEnumName:= 'zc_Enum_AnalyzerId_SummIn_110101');
      PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_AnalyzerId_SummOut_110101(), inDescId:= zc_Object_AnalyzerId(), inCode:= 1052, inName:= 'Сумма, забалансовый счет, расход транзит', inEnumName:= 'zc_Enum_AnalyzerId_SummOut_110101');
      --
-     PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_AnalyzerId_SendCount_in(),    inDescId:= zc_Object_AnalyzerId(), inCode:= 1101, inName:= 'Кол-во, перемещение по цене, перемещение, пришло', inEnumName:= 'zc_Enum_AnalyzerId_SendCount_in');
-     PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_AnalyzerId_SendCount_10500(), inDescId:= zc_Object_AnalyzerId(), inCode:= 1102, inName:= 'Кол-во, перемещение по цене, перемещение, Скидка за вес', inEnumName:= 'zc_Enum_AnalyzerId_SendCount_10500');
-     PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_AnalyzerId_SendCount_40200(), inDescId:= zc_Object_AnalyzerId(), inCode:= 1103, inName:= 'Кол-во, перемещение по цене, перемещение, Разница в весе', inEnumName:= 'zc_Enum_AnalyzerId_SendCount_40200');
+     PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_AnalyzerId_SendCount_in(),    inDescId:= zc_Object_AnalyzerId(), inCode:= 1101, inName:= 'Кол-во, перемещение по цене or перемещение, пришло', inEnumName:= 'zc_Enum_AnalyzerId_SendCount_in');
+     PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_AnalyzerId_SendCount_10500(), inDescId:= zc_Object_AnalyzerId(), inCode:= 1102, inName:= 'Кол-во, перемещение по цене or перемещение, Скидка за вес', inEnumName:= 'zc_Enum_AnalyzerId_SendCount_10500');
+     PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_AnalyzerId_SendCount_40200(), inDescId:= zc_Object_AnalyzerId(), inCode:= 1103, inName:= 'Кол-во, перемещение по цене or перемещение, Разница в весе', inEnumName:= 'zc_Enum_AnalyzerId_SendCount_40200');
 
-     PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_AnalyzerId_SendSumm_in(),    inDescId:= zc_Object_AnalyzerId(), inCode:= 1111, inName:= 'Сумма с/с, перемещение по цене, перемещение, пришло', inEnumName:= 'zc_Enum_AnalyzerId_SendSumm_in');
-     PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_AnalyzerId_SendSumm_10500(), inDescId:= zc_Object_AnalyzerId(), inCode:= 1112, inName:= 'Сумма с/с, перемещение по цене, перемещение, Скидка за вес', inEnumName:= 'zc_Enum_AnalyzerId_SendSumm_10500');
-     PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_AnalyzerId_SendSumm_40200(), inDescId:= zc_Object_AnalyzerId(), inCode:= 1113, inName:= 'Сумма с/с, перемещение по цене, перемещение, Разница в весе', inEnumName:= 'zc_Enum_AnalyzerId_SendSumm_40200');
-
+     PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_AnalyzerId_SendSumm_in(),    inDescId:= zc_Object_AnalyzerId(), inCode:= 1111, inName:= 'Сумма с/с, перемещение по цене or перемещение, пришло', inEnumName:= 'zc_Enum_AnalyzerId_SendSumm_in');
+     PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_AnalyzerId_SendSumm_10500(), inDescId:= zc_Object_AnalyzerId(), inCode:= 1112, inName:= 'Сумма с/с, перемещение по цене or перемещение, Скидка за вес', inEnumName:= 'zc_Enum_AnalyzerId_SendSumm_10500');
+     PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_AnalyzerId_SendSumm_40200(), inDescId:= zc_Object_AnalyzerId(), inCode:= 1113, inName:= 'Сумма с/с, перемещение по цене or перемещение, Разница в весе', inEnumName:= 'zc_Enum_AnalyzerId_SendSumm_40200');
+     --
+     PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_AnalyzerId_TareReturning(), inDescId:= zc_Object_AnalyzerId(), inCode:= 1113, inName:= 'Кол-во, возвратная тара', inEnumName:= 'zc_Enum_AnalyzerId_TareReturning');
      
      -- !!! формы оплаты
      PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_PaidKind_FirstForm(),  inDescId:= zc_Object_PaidKind(), inCode:= 1, inName:= 'БН', inEnumName:= 'zc_Enum_PaidKind_FirstForm');
@@ -303,10 +304,14 @@ BEGIN
      PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_ContractConditionKind_TransportTime2()    , inDescId:= zc_Object_ContractConditionKind(), inCode:= 102, inName:= 'Ставка за время (с экспедитором без холодильника), грн/ч'  , inEnumName:= 'zc_Enum_ContractConditionKind_TransportTime2');
      PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_ContractConditionKind_TransportTime3()    , inDescId:= zc_Object_ContractConditionKind(), inCode:= 103, inName:= 'Ставка за время (без экспедитора без холодильника), грн/ч' , inEnumName:= 'zc_Enum_ContractConditionKind_TransportTime3');
      PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_ContractConditionKind_TransportTime4()    , inDescId:= zc_Object_ContractConditionKind(), inCode:= 104, inName:= 'Ставка за время (с экспедитором с холодильником), грн/ч'   , inEnumName:= 'zc_Enum_ContractConditionKind_TransportTime4');
-     PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_ContractConditionKind_TransportDistance() , inDescId:= zc_Object_ContractConditionKind(), inCode:= 105, inName:= 'Ставка за пробег, грн/км'   , inEnumName:= 'zc_Enum_ContractConditionKind_TransportDistance');
-     PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_ContractConditionKind_TransportOneTrip()  , inDescId:= zc_Object_ContractConditionKind(), inCode:= 106, inName:= 'Ставка за маршрут в одну сторону, грн'   , inEnumName:= 'zc_Enum_ContractConditionKind_TransportOneTrip');
-     PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_ContractConditionKind_TransportRoundTrip(), inDescId:= zc_Object_ContractConditionKind(), inCode:= 107, inName:= 'Ставка за маршрут в обе стороны, грн'   , inEnumName:= 'zc_Enum_ContractConditionKind_TransportRoundTrip');
-     PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_ContractConditionKind_TransportPoint()    , inDescId:= zc_Object_ContractConditionKind(), inCode:= 108, inName:= 'Ставка за точку, грн'   , inEnumName:= 'zc_Enum_ContractConditionKind_TransportPoint');
+     PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_ContractConditionKind_TransportDistance()    , inDescId:= zc_Object_ContractConditionKind(), inCode:= 105, inName:= 'Ставка за пробег, грн/км'         , inEnumName:= 'zc_Enum_ContractConditionKind_TransportDistance');
+     PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_ContractConditionKind_TransportDistanceInt() , inDescId:= zc_Object_ContractConditionKind(), inCode:= 106, inName:= 'Ставка за пробег, грн/км город'   , inEnumName:= 'zc_Enum_ContractConditionKind_TransportDistanceInt');
+     PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_ContractConditionKind_TransportDistanceExt() , inDescId:= zc_Object_ContractConditionKind(), inCode:= 107, inName:= 'Ставка за пробег, грн/км межгород', inEnumName:= 'zc_Enum_ContractConditionKind_TransportDistanceExt');
+
+     PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_ContractConditionKind_TransportOneTrip()  , inDescId:= zc_Object_ContractConditionKind(), inCode:= 108, inName:= 'Ставка за маршрут в одну сторону, грн'   , inEnumName:= 'zc_Enum_ContractConditionKind_TransportOneTrip');
+     PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_ContractConditionKind_TransportRoundTrip(), inDescId:= zc_Object_ContractConditionKind(), inCode:= 109, inName:= 'Ставка за маршрут в обе стороны, грн'   , inEnumName:= 'zc_Enum_ContractConditionKind_TransportRoundTrip');
+     PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_ContractConditionKind_TransportPoint()    , inDescId:= zc_Object_ContractConditionKind(), inCode:= 110, inName:= 'Ставка за точку, грн'   , inEnumName:= 'zc_Enum_ContractConditionKind_TransportPoint');
+     PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_ContractConditionKind_TransportWeight()   , inDescId:= zc_Object_ContractConditionKind(), inCode:= 111, inName:= 'Ставка за вывоз, грн/кг'   , inEnumName:= 'zc_Enum_ContractConditionKind_TransportWeight');
 
 
      -- !!! Типы рецептур
@@ -735,11 +740,11 @@ BEGIN
 
    -- Условия участия   
    -- PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_ConditionPromo_Discount(),  inDescId:= zc_Object_ConditionPromo(), inCode:= 1, inName:= 'Скидка', inEnumName:= 'zc_Enum_ConditionPromo_Discount');
-   PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_ConditionPromo_Budget()                  , inDescId:= zc_Object_ConditionPromo(), inCode:= 2, inName:= 'компенсация в счет маркетингового бюджета'         , inEnumName:= 'zc_Enum_ConditionPromo_Budget');
    -- PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_ConditionPromo_BudgetBill()              , inDescId:= zc_Object_ConditionPromo(), inCode:= 3, inName:= 'В счет маркетингового бюджета по выставленному счету', inEnumName:= 'zc_Enum_ConditionPromo_BudgetBill');
-   UPDATE Object SET isErased = TRUE WHERE Id = zc_Enum_ConditionPromo_BudgetBill();
-   PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_ConditionPromo_Bill()                    , inDescId:= zc_Object_ConditionPromo(), inCode:= 4, inName:= 'компенсация по счету по итогам продаж'                 , inEnumName:= 'zc_Enum_ConditionPromo_Bill');
-   PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_ConditionPromo_ContractChangePercentOff(), inDescId:= zc_Object_ConditionPromo(), inCode:= 6, inName:= 'без учета % скидки по договору'          , inEnumName:= 'zc_Enum_ConditionPromo_ContractChangePercentOff');
+   PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_ConditionPromo_Budget()                  , inDescId:= zc_Object_ConditionPromo(), inCode:= 1, inName:= 'компенсация в счет маркетингового бюджета'   , inEnumName:= 'zc_Enum_ConditionPromo_Budget');
+   PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_ConditionPromo_Bill()                    , inDescId:= zc_Object_ConditionPromo(), inCode:= 2, inName:= 'компенсация по счету по итогам продаж'       , inEnumName:= 'zc_Enum_ConditionPromo_Bill');
+   PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_ConditionPromo_ContractChangePercentOff(), inDescId:= zc_Object_ConditionPromo(), inCode:= 3, inName:= 'без учета % скидки по договору'              , inEnumName:= 'zc_Enum_ConditionPromo_ContractChangePercentOff');
+   PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_ConditionPromo_BonusOff()                , inDescId:= zc_Object_ConditionPromo(), inCode:= 4, inName:= 'предоставление скидки без начисления бонусов', inEnumName:= 'zc_Enum_ConditionPromo_BonusOff');
 
 END $$;
 

@@ -69,6 +69,13 @@ type
     cxLabel12: TcxLabel;
     edJuridical: TcxButtonEdit;
     GuidesJuridical: TdsdGuides;
+    cxLabel13: TcxLabel;
+    deIncomeOperDate: TcxDateEdit;
+    mactEditPartnerData: TMultiAction;
+    dxBarButton1: TdxBarButton;
+    actPartnerDataDialog: TExecuteDialog;
+    spUpdateReturnOut_PartnerData: TdsdStoredProc;
+    actUpdateReturnOut_PartnerData: TdsdExecStoredProc;
   private
     { Private declarations }
   public

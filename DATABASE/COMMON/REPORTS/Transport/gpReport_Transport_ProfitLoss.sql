@@ -104,6 +104,7 @@ BEGIN
                                           , MovementLinkObject_PersonalDriver.ObjectId   
                             ) AS tmpContainer   
                                  LEFT JOIN MovementItem ON MovementItem.MovementId = tmpContainer.MovementId
+                                                       AND MovementItem.ObjectId   = tmpContainer.RouteId
                                                        AND MovementItem.DescId     = zc_MI_Master()
                                                        AND MovementItem.isErased   = False
                                  LEFT JOIN MovementItemFloat AS MIFloat_Distance

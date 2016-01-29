@@ -770,7 +770,22 @@ uses
   Report_Branch_App1 in '..\..\Forms\Report\Report_Branch_App1.pas' {Report_Branch_App1Form: TParentForm},
   Report_Branch_App7_New in '..\..\Forms\Report\Report_Branch_App7_New.pas' {Report_Branch_App7_NewForm: TParentForm},
   Report_Promo in '..\..\Forms\Report\Report_Promo.pas' {Report_PromoForm: TParentForm},
-  Report_PromoDialog in '..\..\Forms\Report\Report_PromoDialog.pas' {Report_PromoDialogForm: TParentForm};
+  Report_PromoDialog in '..\..\Forms\Report\Report_PromoDialog.pas' {Report_PromoDialogForm: TParentForm},
+  Report_SheetWorkTime in '..\..\Forms\Report\Report_SheetWorkTime.pas' {Report_SheetWorkTimeForm: TParentForm},
+  Report_SheetWorkTimeDialog in '..\..\Forms\Report\Report_SheetWorkTimeDialog.pas' {Report_SheetWorkTimeDialogForm: TParentForm},
+  Report_Tara in '..\..\Forms\Report\Report_Tara.pas' {Report_TaraForm: TParentForm},
+  PartnerAndUnit in '..\..\Forms\Guides\PartnerAndUnit.pas' {PartnerAndUnitForm: TParentForm},
+  Report_TaraDialog in '..\..\Forms\Report\Report_TaraDialog.pas' {Report_TaraDialogForm: TParentForm},
+  Report_TaraMovement in '..\..\Forms\Report\Report_TaraMovement.pas' {Report_TaraMovementForm: TParentForm},
+  GoodsExternal in '..\..\Forms\Guides\GoodsExternal.pas' {GoodsExternalForm: TParentForm},
+  Report_SaleOrderExternalList in '..\..\Forms\Report\Report_SaleOrderExternalList.pas' {Report_SaleOrderExternalListForm: TParentForm},
+  Report_SaleOrderExternalListDialog in '..\..\Forms\Report\Report_SaleOrderExternalListDialog.pas' {Report_SaleOrderExternalListDialogForm: TParentForm},
+  Member_Trasport in '..\..\Forms\Guides\Member_Trasport.pas' {Member_TrasportForm: TParentForm},
+  Member_TrasportDialog in '..\..\Forms\Guides\Member_TrasportDialog.pas' {Member_TrasportDialog1Form: TParentForm},
+  Member_TrasportDateDialog in '..\..\Forms\Guides\Member_TrasportDateDialog.pas' {Member_TrasportDateDialogForm: TParentForm},
+  RouteMember in '..\..\Forms\Guides\RouteMember.pas' {RouteMemberForm: TParentForm},
+  RouteMemberEdit in '..\..\Forms\Guides\RouteMemberEdit.pas' {RouteMemberEditForm: TParentForm},
+  Member_TrasportChoice in '..\..\Forms\Guides\Member_TrasportChoice.pas' {Member_TrasportChoiceForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}

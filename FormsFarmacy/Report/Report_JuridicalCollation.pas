@@ -34,55 +34,22 @@ type
     actGetForm: TdsdExecStoredProc;
     actOpenDocument: TMultiAction;
     bbOpenDocument: TdxBarButton;
-    colAccountName: TcxGridDBColumn;
-    colContractName: TcxGridDBColumn;
-    colInfoMoneyCode: TcxGridDBColumn;
-    colInfoMoneyName: TcxGridDBColumn;
-    colInfoMoneyGroupCode: TcxGridDBColumn;
-    colInfoMoneyGroupName: TcxGridDBColumn;
-    colInfoMoneyDestinationCode: TcxGridDBColumn;
-    colInfoMoneyDestinationName: TcxGridDBColumn;
     spJuridicalBalance: TdsdStoredProc;
-    cxLabel3: TcxLabel;
-    edPartner: TcxButtonEdit;
-    PartnerGuides: TdsdGuides;
     actPrint: TdsdPrintAction;
     bbPrint: TdxBarButton;
-    cxLabel4: TcxLabel;
-    edAccount: TcxButtonEdit;
-    AccountGuides: TdsdGuides;
-    cxLabel8: TcxLabel;
-    ceContract: TcxButtonEdit;
-    ContractGuides: TdsdGuides;
     colStartRemains: TcxGridDBColumn;
     colEndRemains: TcxGridDBColumn;
     colFromName: TcxGridDBColumn;
-    colPaidKindName: TcxGridDBColumn;
     colToName: TcxGridDBColumn;
-    cxLabel5: TcxLabel;
-    edPaidKind: TcxButtonEdit;
-    PaidKindGuides: TdsdGuides;
-    cxLabel7: TcxLabel;
-    ceInfoMoney: TcxButtonEdit;
-    InfoMoneyGuides: TdsdGuides;
     actPrintTurnover: TdsdPrintAction;
     bbPrintTurnover: TdxBarButton;
-    colSumm: TcxGridDBColumn;
     colOperationSort: TcxGridDBColumn;
     colInvNumberPartner: TcxGridDBColumn;
-    colContractComment: TcxGridDBColumn;
-    cxLabel10: TcxLabel;
-    edCurrency: TcxButtonEdit;
-    CurrencyGuides: TdsdGuides;
-
-    colDebet_Currency: TcxGridDBColumn;
-    colKredit_Currency: TcxGridDBColumn;
-    colStartRemains_Currency: TcxGridDBColumn;
-    colEndRemains_Currency: TcxGridDBColumn;
-    colSumm_Currency: TcxGridDBColumn;
-    CurrencyName: TcxGridDBColumn;
     actPrintCurrency: TdsdPrintAction;
     bbPrintCurrency: TdxBarButton;
+    edJuridicalBasis: TcxButtonEdit;
+    cxLabel3: TcxLabel;
+    JuridicalBasisGuide: TdsdGuides;
   private
     { Private declarations }
   public

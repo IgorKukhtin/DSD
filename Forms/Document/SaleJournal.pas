@@ -184,6 +184,11 @@ type
     mactPrint_QualityDoc: TMultiAction;
     isPromo: TcxGridDBColumn;
     MovementPromo: TcxGridDBColumn;
+    spSavePrintState: TdsdStoredProc;
+    actSPSavePrintState: TdsdExecStoredProc;
+    spElectron: TdsdStoredProc;
+    actElectron: TdsdExecStoredProc;
+    bbElectron: TdxBarButton;
   private
     { Private declarations }
   public

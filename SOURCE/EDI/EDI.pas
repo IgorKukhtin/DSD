@@ -1364,11 +1364,16 @@ end;
 procedure TEDI.InitializeComSigner;
 var
   privateKey: string;
-  FileName: string;
+  FileName, Error: string;
+
 begin
   ComSigner := CreateOleObject('EUTaxServiceFile.Library.1');
 
   ComSigner.Initialize(caType);
+
+
+  ComSigner.SetUIMode(true);
+  ComSigner.SetSettings;
   ComSigner.SetUIMode(false);
 
   try
@@ -1497,6 +1502,9 @@ begin
     // Установка ключей
     FileName := ExtractFilePath(ParamStr(0)) + 'Ключ - Неграш О.В..ZS2';
 	  ComSigner.SetPrivateKeyFile (euKeyTypeAccountant, FileName, '24447183', false); // бухгалтер
+    Error := ComSigner.GetLastErrorDescription;
+    ShowMessage(Error);
+
   except
     on E: Exception do
     begin
@@ -1511,6 +1519,8 @@ begin
     FileName := ExtractFilePath(ParamStr(0)) +
       'Ключ - для в_дтиску - Товариство з обмеженою в_дпов_дальн_стю АЛАН.ZS2';
 	  ComSigner.SetPrivateKeyFile (euKeyTypeDigitalStamp, FileName, '24447183', false); // Печать
+    Error := ComSigner.GetLastErrorDescription;
+    ShowMessage(Error);
   except
     on E: Exception do
     begin
@@ -1525,6 +1535,8 @@ begin
     FileName := ExtractFilePath(ParamStr(0)) +
       'Ключ - для шифрування - Товариство з обмеженою в_дпов_дальн_стю АЛАН.ZS2';
 	  ComSigner.SetPrivateKeyFile (euKeyTypeDigitalStamp, FileName, '24447183', false); // Печать
+    Error := ComSigner.GetLastErrorDescription;
+    ShowMessage(Error);
   except
     on E: Exception do
     begin
@@ -1895,7 +1907,7 @@ begin
             begin
               // тянем файл к нам
               Stream.Clear;
-              try
+              //try
                 FIdFTP.Get(List[i], Stream);
                 RECADV := LoadRECADV(Stream.DataString);
                 spHeader.ParamByName('inOrderInvNumber').Value := RECADV.ORDERNUMBER;
@@ -1903,9 +1915,9 @@ begin
                 spHeader.ParamByName('inGLNPlace').Value := RECADV.HEAD.DELIVERYPLACE;
                 spHeader.ParamByName('inDesadvNumber').Value := RECADV.NUMBER;
                 spHeader.Execute;
-              except
-                break;
-              end;
+              //except
+              // break;
+              //end;
               {}
               // теперь перенесли файл в директроию Archive
               try
@@ -2098,6 +2110,7 @@ procedure TEDI.SignFile(FileName: string; SignType: TSignType);
 var
   vbSignType: integer;
   i: integer;
+  Error: string;
   EUTaxService_СертификатExite, EUTaxService_СертификатМДС: string;
   ddd: OleVariant;
 begin
@@ -2114,8 +2127,14 @@ begin
     try
       if SignType = stComDoc then begin
           ComSigner.SetFilesOptions(False);
+    Error := ComSigner.GetLastErrorDescription;
+    ShowMessage(Error);
           ComSigner.SignFilesByAccountant(FileName);
+    Error := ComSigner.GetLastErrorDescription;
+    ShowMessage(Error);
           ComSigner.SignFilesByDigitalStamp(FileName);
+    Error := ComSigner.GetLastErrorDescription;
+    ShowMessage(Error);
       end;
       if SignType = stDeclar then begin
          // O=Фізична особа ;OU=Фізична особа;Title=підписувач;CN=Алієв Арсен Шакірович;SN=Алієв;GivenName=Арсен Шакірович;Serial=1497059;C=UA;L=Крюківщина;ST=Київська

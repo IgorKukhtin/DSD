@@ -94,6 +94,7 @@ type
     DayTaxSummary: TcxGridDBColumn;
     actShowAll: TBooleanStoredProcAction;
     bbShowAll: TdxBarButton;
+    clisDiscountPrice: TcxGridDBColumn;
   private
     { Private declarations }
   public

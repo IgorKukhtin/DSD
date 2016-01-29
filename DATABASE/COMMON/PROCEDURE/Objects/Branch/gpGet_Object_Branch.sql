@@ -9,6 +9,8 @@ CREATE OR REPLACE FUNCTION gpGet_Object_Branch(
 RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , InvNumber TVarChar
              , PersonalBookkeeperId Integer, PersonalBookkeeperName TVarChar
+             , UnitId Integer, UnitName TVarChar
+             , UnitReturnId Integer, UnitReturnName TVarChar
              , IsMedoc boolean, IsPartionDoc boolean
              , isErased boolean) AS
 $BODY$BEGIN
@@ -27,6 +29,13 @@ $BODY$BEGIN
            , CAST ('' as TVarChar)   AS InvNumber
            , CAST (0 as Integer)     AS PersonalBookkeeperId
            , CAST ('' as TVarChar)   AS PersonalBookkeeperName
+
+           , CAST (0 as Integer)     AS UnitId
+           , CAST ('' as TVarChar)   AS UnitName
+ 
+           , CAST (0 as Integer)     AS UnitReturnId
+           , CAST ('' as TVarChar)   AS UnitReturnName
+
            , CAST (False AS Boolean) AS IsMedoc
            , CAST (False AS Boolean) AS IsPartionDoc
            , CAST (NULL AS Boolean)  AS isErased;
@@ -40,6 +49,13 @@ $BODY$BEGIN
            , ObjectString_InvNumber.ValueData  AS InvNumber
            , Object_Personal_View.PersonalId    AS PersonalBookkeeperId
            , Object_Personal_View.PersonalName  AS PersonalBookkeeperName
+
+           , Object_Unit.Id         AS UnitId
+           , Object_Unit.ValueData  AS UnitName
+
+           , Object_UnitReturn.Id         AS UnitReturnId
+           , Object_UnitReturn.ValueData  AS UnitReturnName
+
            , COALESCE (ObjectBoolean_Medoc.ValueData, False)      AS IsMedoc     
            , COALESCE (ObjectBoolean_PartionDoc.ValueData, False) AS IsPartionDoc 
            , Object_Branch.isErased
@@ -62,6 +78,16 @@ $BODY$BEGIN
                            AND ObjectLink_Branch_PersonalBookkeeper.DescId = zc_ObjectLink_Branch_PersonalBookkeeper()
             LEFT JOIN Object_Personal_View ON Object_Personal_View.PersonalId = ObjectLink_Branch_PersonalBookkeeper.ChildObjectId               
        
+            LEFT JOIN ObjectLink AS ObjectLink_Branch_Unit
+                                 ON ObjectLink_Branch_Unit.ObjectId = Object_Branch.Id
+                                AND ObjectLink_Branch_Unit.DescId = zc_ObjectLink_Branch_Unit()
+            LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = ObjectLink_Branch_Unit.ChildObjectId
+
+            LEFT JOIN ObjectLink AS ObjectLink_Branch_UnitReturn
+                                 ON ObjectLink_Branch_UnitReturn.ObjectId = Object_Branch.Id
+                                AND ObjectLink_Branch_UnitReturn.DescId = zc_ObjectLink_Branch_UnitReturn()
+            LEFT JOIN Object AS Object_UnitReturn ON Object_UnitReturn.Id = ObjectLink_Branch_UnitReturn.ChildObjectId
+
       WHERE Object_Branch.Id = inId;
    END IF;
      
@@ -75,6 +101,7 @@ ALTER FUNCTION gpGet_Object_Branch (integer, TVarChar) OWNER TO postgres;
 /*-------------------------------------------------------------------------------
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 21.12.15         * add Unit, UnitReturn
  17.04.15         * add IsMedoc
  18.03.15         * add InvNumber, PersonalBookkeeper
  14.12.13                                        * Cyr1251

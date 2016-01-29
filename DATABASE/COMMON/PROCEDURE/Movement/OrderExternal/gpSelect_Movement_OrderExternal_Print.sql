@@ -26,6 +26,7 @@ $BODY$
     DECLARE vbContractId Integer;
     DECLARE vbRetailId Integer;
     DECLARE vbFromId Integer;
+    DECLARE vbIsOrderByLine Boolean;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Select_Movement_OrderExternal());
@@ -39,14 +40,15 @@ BEGIN
           , COALESCE (MovementFloat_VATPercent.ValueData, 0)        AS VATPercent
           , CASE WHEN COALESCE (MovementFloat_ChangePercent.ValueData, 0) < 0 THEN -MovementFloat_ChangePercent.ValueData ELSE 0 END AS DiscountPercent
           , CASE WHEN COALESCE (MovementFloat_ChangePercent.ValueData, 0) > 0 THEN MovementFloat_ChangePercent.ValueData ELSE 0 END  AS ExtraChargesPercent
-          , zfCalc_GoodsPropertyId (MovementLinkObject_Contract.ObjectId, COALESCE (ObjectLink_Partner_Juridical.ChildObjectId, MovementLinkObject_From.ObjectId)) AS GoodsPropertyId
-          , zfCalc_GoodsPropertyId (0, zc_Juridical_Basis())        AS GoodsPropertyId_basis
+          , zfCalc_GoodsPropertyId (MovementLinkObject_Contract.ObjectId, COALESCE (ObjectLink_Partner_Juridical.ChildObjectId, MovementLinkObject_From.ObjectId), MovementLinkObject_From.ObjectId) AS GoodsPropertyId
+          , zfCalc_GoodsPropertyId (0, zc_Juridical_Basis(), 0)      AS GoodsPropertyId_basis
           , COALESCE (MovementLinkObject_Contract.ObjectId, 0)      AS ContractId
           , COALESCE (MovementLinkObject_Retail.ObjectId, 0)        AS RetailId
           , COALESCE (MovementLinkObject_From.ObjectId, 0)          AS FromId
           -- , ObjectLink_Juridical_GoodsProperty.ChildObjectId AS GoodsPropertyId
           -- , ObjectLink_JuridicalBasis_GoodsProperty.ChildObjectId AS GoodsPropertyId_basis
-            INTO vbDescId, vbStatusId, vbPriceWithVAT, vbVATPercent, vbDiscountPercent, vbExtraChargesPercent, vbGoodsPropertyId, vbGoodsPropertyId_basis, vbContractId, vbRetailId, vbFromId
+          , CASE WHEN Movement.AccessKeyId = zc_Enum_Process_AccessKey_DocumentKiev() THEN TRUE ELSE FALSE END AS isOrderByLine
+            INTO vbDescId, vbStatusId, vbPriceWithVAT, vbVATPercent, vbDiscountPercent, vbExtraChargesPercent, vbGoodsPropertyId, vbGoodsPropertyId_basis, vbContractId, vbRetailId, vbFromId, vbIsOrderByLine
      FROM Movement
           LEFT JOIN MovementBoolean AS MovementBoolean_PriceWithVAT
                                     ON MovementBoolean_PriceWithVAT.MovementId = Movement.Id
@@ -156,6 +158,8 @@ BEGIN
            , Object_Personal.ValueData                  AS PersonalName
            , Object_Route.ValueData                     AS RouteName
            , Object_RouteSorting.ValueData              AS RouteSortingName
+
+           , vbIsOrderByLine                            AS isOrderByLine
 
        FROM (SELECT inMovementId AS MovementId
                   , SUM (COALESCE (MovementFloat_TotalCount.ValueData, 0))         AS TotalCount
@@ -351,7 +355,8 @@ BEGIN
                             SELECT inMovementId AS MovementId WHERE vbRetailId = 0
                            )
        SELECT
-             zfFormat_BarCode (zc_BarCodePref_Object(), COALESCE (View_GoodsByGoodsKind.Id, Object_Goods.Id)) AS IdBarCode
+             CASE WHEN vbIsOrderByLine = TRUE THEN row_number() OVER (ORDER BY tmpMI.MovementItemId) ELSE 0 END :: Integer AS LineNum
+           , zfFormat_BarCode (zc_BarCodePref_Object(), COALESCE (View_GoodsByGoodsKind.Id, Object_Goods.Id)) AS IdBarCode
            , ObjectString_Goods_GroupNameFull.ValueData AS GoodsGroupNameFull
            , Object_GoodsGroup.ValueData                AS GoodsGroupName
            , Object_Goods.ObjectCode  			AS GoodsCode
@@ -373,7 +378,8 @@ BEGIN
              END AS SummMVAT
            , tmpMI.Summ AS SummPVAT
 
-       FROM (SELECT tmpMI.GoodsId
+       FROM (SELECT tmpMI.MovementItemId
+                  , tmpMI.GoodsId
                   , tmpMI.GoodsKindId
                   , tmpMI.Price
                   , tmpMI.CountForPrice
@@ -382,7 +388,8 @@ BEGIN
                   , tmpMI.Summ
                   , CAST ((tmpMI.Amount + tmpMI.AmountSecond) * tmpMI.Price / CASE WHEN tmpMI.CountForPrice <> 0 THEN tmpMI.CountForPrice ELSE 1 END AS NUMERIC (16, 2)) AS AmountSumm
              FROM
-            (SELECT MovementItem.ObjectId AS GoodsId
+            (SELECT MAX (MovementItem.Id) AS MovementItemId
+                  , MovementItem.ObjectId AS GoodsId
                   , COALESCE (MILinkObject_GoodsKind.ObjectId, 0) AS GoodsKindId
                   , CASE WHEN vbDiscountPercent <> 0
                               THEN CAST ( (1 - vbDiscountPercent / 100) * COALESCE (MIFloat_Price.ValueData, 0) AS NUMERIC (16, 2))

@@ -122,6 +122,11 @@ BEGIN
      PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_NDSKind_Common(),  inDescId:= zc_Object_NDSKind(), inCode:= 1, inName:= '20% - общее основание', inEnumName:= 'zc_Enum_NDSKind_Common');
      PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_NDSKind_Medical(), inDescId:= zc_Object_NDSKind(), inCode:= 2, inName:= '7% - медикаменты', inEnumName:= 'zc_Enum_NDSKind_Medical');
 
+     -- !!! Типы корректировок долга по приходной накладной
+     PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_ChangeIncomePaymentKind_Bonus(), inDescId:= zc_Object_ChangeIncomePaymentKind(), inCode:= 1, inName:= 'Корректировка по бонусу', inEnumName:= 'zc_Enum_ChangeIncomePaymentKind_Bonus');
+     PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_ChangeIncomePaymentKind_Other(), inDescId:= zc_Object_ChangeIncomePaymentKind(), inCode:= 2, inName:= 'Корректировка по прочим причинам', inEnumName:= 'zc_Enum_ChangeIncomePaymentKind_Other');
+     PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_ChangeIncomePaymentKind_ReturnOut(), inDescId:= zc_Object_ChangeIncomePaymentKind(), inCode:= 3, inName:= 'Корректировка по возвратам', inEnumName:= 'zc_Enum_ChangeIncomePaymentKind_ReturnOut');
+     
      PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_NDSKind_NDS(), zc_Enum_NDSKind_Common(), 20);
      PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_NDSKind_NDS(), zc_Enum_NDSKind_Medical(), 7);
 

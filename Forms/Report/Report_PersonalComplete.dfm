@@ -559,6 +559,14 @@ object Report_PersonalCompleteForm: TReport_PersonalCompleteForm
       OptionsView.HeaderAutoHeight = True
       OptionsView.Indicator = True
       Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
+      object BranchName: TcxGridDBColumn
+        Caption = #1060#1080#1083#1080#1072#1083
+        DataBinding.FieldName = 'BranchName'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 80
+      end
       object OperDate: TcxGridDBColumn
         Caption = #1044#1072#1090#1072
         DataBinding.FieldName = 'OperDate'
@@ -693,7 +701,7 @@ object Report_PersonalCompleteForm: TReport_PersonalCompleteForm
     Width = 945
     Height = 54
     Align = alTop
-    TabOrder = 6
+    TabOrder = 5
     object deStart: TcxDateEdit
       Left = 60
       Top = 5
@@ -714,7 +722,7 @@ object Report_PersonalCompleteForm: TReport_PersonalCompleteForm
     end
     object edPersonal: TcxButtonEdit
       Left = 242
-      Top = 3
+      Top = 5
       Properties.Buttons = <
         item
           Default = True
@@ -756,6 +764,23 @@ object Report_PersonalCompleteForm: TReport_PersonalCompleteForm
       Top = 31
       Caption = #1044#1072#1090#1072' '#1087#1086' :'
     end
+  end
+  object cxLabel1: TcxLabel
+    Left = 472
+    Top = 6
+    Caption = #1060#1080#1083#1080#1072#1083':'
+  end
+  object edBranch: TcxButtonEdit
+    Left = 522
+    Top = 5
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    Properties.ReadOnly = True
+    TabOrder = 8
+    Width = 251
   end
   object MasterDS: TDataSource
     DataSet = MasterCDS
@@ -805,6 +830,12 @@ object Report_PersonalCompleteForm: TReport_PersonalCompleteForm
           'Left'
           'Top'
           'Width')
+      end
+      item
+        Component = BranchGuides
+        Properties.Strings = (
+          'Key'
+          'TextValue')
       end>
     StorageName = 'cxPropertiesStore'
     StorageType = stStream
@@ -1018,6 +1049,21 @@ object Report_PersonalCompleteForm: TReport_PersonalCompleteForm
           Value = Null
           Component = cbinIsDay
           DataType = ftBoolean
+          ParamType = ptInput
+        end
+        item
+          Name = 'BranchId'
+          Value = Null
+          Component = BranchGuides
+          ComponentItem = 'Key'
+          ParamType = ptInput
+        end
+        item
+          Name = 'BranchName'
+          Value = Null
+          Component = BranchGuides
+          ComponentItem = 'TextValue'
+          DataType = ftString
           ParamType = ptInput
         end>
       isShowModal = True
@@ -1301,6 +1347,13 @@ object Report_PersonalCompleteForm: TReport_PersonalCompleteForm
         ParamType = ptInput
       end
       item
+        Name = 'inBranchId'
+        Value = '0'
+        Component = BranchGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+      end
+      item
         Name = 'inIsDay'
         Value = Null
         Component = cbinIsDay
@@ -1428,6 +1481,9 @@ object Report_PersonalCompleteForm: TReport_PersonalCompleteForm
       end
       item
         Component = cbinIsDay
+      end
+      item
+        Component = BranchGuides
       end>
     Left = 144
     Top = 344
@@ -1550,5 +1606,33 @@ object Report_PersonalCompleteForm: TReport_PersonalCompleteForm
     PackSize = 1
     Left = 528
     Top = 272
+  end
+  object BranchGuides: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edBranch
+    Key = '0'
+    FormNameParam.Value = 'TBranch_ObjectForm'
+    FormNameParam.DataType = ftString
+    FormName = 'TBranch_ObjectForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = BranchGuides
+        ComponentItem = 'Key'
+        DataType = ftString
+        ParamType = ptInput
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = BranchGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+      end>
+    Left = 576
+    Top = 16
   end
 end

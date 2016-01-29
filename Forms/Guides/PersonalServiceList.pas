@@ -54,6 +54,9 @@ type
     MemberChoice: TOpenChoiceForm;
     actUpdateMember: TdsdUpdateDataSet;
     spUpdate: TdsdStoredProc;
+    MemberHeadManagerChoice: TOpenChoiceForm;
+    MemberManagerChoice: TOpenChoiceForm;
+    MemberBookkeeperChoice: TOpenChoiceForm;
   private
     { Private declarations }
   public

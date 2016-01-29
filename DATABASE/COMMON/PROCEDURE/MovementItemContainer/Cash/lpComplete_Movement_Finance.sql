@@ -32,11 +32,12 @@ BEGIN
 
                                                       WHEN _tmpItem.ObjectDescId = zc_Object_BankAccount()
                                                            THEN zc_Enum_AccountDirection_40300() -- рассчетный счет
-                                                      WHEN _tmpItem.ObjectDescId = zc_Object_Cash() AND _tmpItem.PaidKindId = zc_Enum_PaidKind_FirstForm()
-                                                           THEN zc_Enum_AccountDirection_40500() -- касса БН
 
                                                       WHEN _tmpItem.ObjectDescId = zc_Object_Cash() AND _tmpItem.BusinessId_Balance <> 0
-                                                           THEN zc_Enum_AccountDirection_40600() -- касса Павильонов
+                                                           THEN zc_Enum_AccountDirection_40600() -- касса Павильонов !!!важно до "касса БН"!!!
+
+                                                      WHEN _tmpItem.ObjectDescId = zc_Object_Cash() AND _tmpItem.PaidKindId = zc_Enum_PaidKind_FirstForm()
+                                                           THEN zc_Enum_AccountDirection_40500() -- касса БН
 
                                                       WHEN _tmpItem.ObjectDescId = zc_Object_Cash() AND ObjectLink_Cash_Branch.ChildObjectId IS NOT NULL
                                                            THEN zc_Enum_AccountDirection_40200() -- касса филиалов
@@ -342,6 +343,56 @@ BEGIN
        AND _tmpItem.ObjectId = 0
     ;
 
+     -- Проверка для НАЛ - если введено юр.лицо, контрагент определяется автоматом и он должен быть один
+     IF EXISTS (SELECT ObjectLink.ChildObjectId
+                FROM ObjectLink
+                     INNER JOIN Object ON Object.Id = ObjectLink.ObjectId AND Object.isErased = FALSE
+                WHERE ObjectLink.DescId = zc_ObjectLink_Partner_Juridical()
+                  AND ObjectLink.ChildObjectId IN (SELECT _tmpItem.ObjectId
+                                                   FROM _tmpItem
+                                                   WHERE _tmpItem.ObjectDescId IN (zc_Object_Juridical())
+                                                     AND _tmpItem.PaidKindId = zc_Enum_PaidKind_SecondForm()
+                                                     AND _tmpItem.AccountDirectionId <> zc_Enum_AccountDirection_30200()
+                                                  )
+                GROUP BY ObjectLink.ChildObjectId
+                HAVING COUNT (*) > 1
+               )
+     THEN
+         RAISE EXCEPTION 'Ошибка.Для формы оплаты <%> невозможно автоматически определить контрагента:%<%>%или%<%>'
+                       , lfGet_Object_ValueData (zc_Enum_PaidKind_SecondForm())
+                       , CHR (13)
+                       , lfGet_Object_ValueData ((SELECT MAX (ObjectLink.ObjectId)
+                                                  FROM ObjectLink
+                                                       INNER JOIN Object ON Object.Id = ObjectLink.ObjectId AND Object.isErased = FALSE
+                                                  WHERE ObjectLink.DescId = zc_ObjectLink_Partner_Juridical()
+                                                    AND ObjectLink.ChildObjectId IN (SELECT _tmpItem.ObjectId
+                                                                                     FROM _tmpItem
+                                                                                     WHERE _tmpItem.ObjectDescId IN (zc_Object_Juridical())
+                                                                                       AND _tmpItem.PaidKindId = zc_Enum_PaidKind_SecondForm()
+                                                                                       AND _tmpItem.AccountDirectionId <> zc_Enum_AccountDirection_30200()
+                                                                                    )
+                                                  GROUP BY ObjectLink.ChildObjectId
+                                                  HAVING COUNT (*) > 1
+                                                ))
+                       , CHR (13)
+                       , CHR (13)
+                       , lfGet_Object_ValueData ((SELECT MIN (ObjectLink.ObjectId)
+                                                  FROM ObjectLink
+                                                       INNER JOIN Object ON Object.Id = ObjectLink.ObjectId AND Object.isErased = FALSE
+                                                  WHERE ObjectLink.DescId = zc_ObjectLink_Partner_Juridical()
+                                                    AND ObjectLink.ChildObjectId IN (SELECT _tmpItem.ObjectId
+                                                                                     FROM _tmpItem
+                                                                                     WHERE _tmpItem.ObjectDescId IN (zc_Object_Juridical())
+                                                                                       AND _tmpItem.PaidKindId = zc_Enum_PaidKind_SecondForm()
+                                                                                       AND _tmpItem.AccountDirectionId <> zc_Enum_AccountDirection_30200()
+                                                                                    )
+                                                  GROUP BY ObjectLink.ChildObjectId
+                                                  HAVING COUNT (*) > 1
+                                                ))
+                        ;
+     END IF;
+
+
      -- 2.1. определяется ContainerId для проводок суммового учета - Суммовой учет
      UPDATE _tmpItem SET ContainerId = CASE WHEN _tmpItem.ContainerId <> 0
                                                  THEN _tmpItem.ContainerId
@@ -485,7 +536,7 @@ BEGIN
                                                                             , inDescId_6          := CASE WHEN COALESCE (_tmpItem.CurrencyId, zc_Enum_Currency_Basis()) = zc_Enum_Currency_Basis() THEN NULL ELSE zc_ContainerLinkObject_Currency() END
                                                                             , inObjectId_6        := CASE WHEN COALESCE (_tmpItem.CurrencyId, zc_Enum_Currency_Basis()) = zc_Enum_Currency_Basis() THEN NULL ELSE _tmpItem.CurrencyId END
                                                                             , inDescId_7          := CASE WHEN _tmpItem.PaidKindId = zc_Enum_PaidKind_SecondForm() AND _tmpItem.AccountDirectionId <> zc_Enum_AccountDirection_30200() THEN zc_ContainerLinkObject_Partner() ELSE NULL END -- and <> наши компании
-                                                                            , inObjectId_7        := CASE WHEN _tmpItem.PaidKindId = zc_Enum_PaidKind_SecondForm() AND _tmpItem.AccountDirectionId <> zc_Enum_AccountDirection_30200() THEN CASE WHEN _tmpItem.ObjectDescId = zc_Object_Juridical() THEN (SELECT (ObjectLink.ObjectId) FROM ObjectLink WHERE ObjectLink.ChildObjectId = _tmpItem.ObjectId AND ObjectLink.DescId = zc_ObjectLink_Partner_Juridical()) ELSE _tmpItem.ObjectId END ELSE NULL END -- and <> наши компании
+                                                                            , inObjectId_7        := CASE WHEN _tmpItem.PaidKindId = zc_Enum_PaidKind_SecondForm() AND _tmpItem.AccountDirectionId <> zc_Enum_AccountDirection_30200() THEN CASE WHEN _tmpItem.ObjectDescId = zc_Object_Juridical() THEN (SELECT (ObjectLink.ObjectId) FROM ObjectLink JOIN Object ON Object.Id = ObjectLink.ObjectId AND Object.isErased = FALSE WHERE ObjectLink.ChildObjectId = _tmpItem.ObjectId AND ObjectLink.DescId = zc_ObjectLink_Partner_Juridical()) ELSE _tmpItem.ObjectId END ELSE NULL END -- and <> наши компании
                                                                             , inDescId_8          := CASE WHEN _tmpItem.PaidKindId = zc_Enum_PaidKind_SecondForm() AND _tmpItem.AccountDirectionId <> zc_Enum_AccountDirection_30200() THEN zc_ContainerLinkObject_Branch() ELSE NULL END -- and <> наши компании
                                                                             , inObjectId_8        := CASE WHEN _tmpItem.PaidKindId = zc_Enum_PaidKind_SecondForm() AND _tmpItem.AccountDirectionId <> zc_Enum_AccountDirection_30200() THEN _tmpItem.BranchId_Balance ELSE NULL END -- and <> наши компании
                                                                              )

@@ -3,7 +3,7 @@ inherited TaxCorrectiveJournalForm: TTaxCorrectiveJournalForm
   ClientHeight = 535
   ClientWidth = 1118
   ExplicitWidth = 1134
-  ExplicitHeight = 573
+  ExplicitHeight = 570
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -425,10 +425,10 @@ inherited TaxCorrectiveJournalForm: TTaxCorrectiveJournalForm
     Width = 1118
     ExplicitWidth = 1118
     inherited deStart: TcxDateEdit
-      EditValue = 42005d
+      EditValue = 42370d
     end
     inherited deEnd: TcxDateEdit
-      EditValue = 42005d
+      EditValue = 42370d
     end
     object edIsRegisterDate: TcxCheckBox
       Left = 427
@@ -588,7 +588,7 @@ inherited TaxCorrectiveJournalForm: TTaxCorrectiveJournalForm
         end
         item
           Name = 'inOperDate'
-          Value = Null
+          Value = 'NULL'
           Component = deEnd
           DataType = ftDateTime
         end>
@@ -703,7 +703,7 @@ inherited TaxCorrectiveJournalForm: TTaxCorrectiveJournalForm
         end
         item
           Name = 'DateRegistered'
-          Value = Null
+          Value = 'NULL'
           Component = MasterCDS
           ComponentItem = 'DateRegistered_notNull'
           DataType = ftDateTime
@@ -725,7 +725,7 @@ inherited TaxCorrectiveJournalForm: TTaxCorrectiveJournalForm
         end
         item
           Name = 'OperDate'
-          Value = Null
+          Value = 'NULL'
           Component = MasterCDS
           ComponentItem = 'OperDate'
           DataType = ftDateTime
@@ -1378,6 +1378,9 @@ inherited TaxCorrectiveJournalForm: TTaxCorrectiveJournalForm
     Left = 376
     Top = 168
   end
+  inherited spMovementReComplete: TdsdStoredProc
+    StoredProcName = 'gpReComplete_Movement_TaxCorrective'
+  end
   object spSelectPrintTaxCorrective_Us: TdsdStoredProc
     StoredProcName = 'gpSelect_Movement_TaxCorrective_Print'
     DataSet = PrintItemsCDS
@@ -1619,7 +1622,7 @@ inherited TaxCorrectiveJournalForm: TTaxCorrectiveJournalForm
     Params = <
       item
         Name = 'inDate'
-        Value = Null
+        Value = 'NULL'
         Component = deEnd
         DataType = ftDateTime
         ParamType = ptInput

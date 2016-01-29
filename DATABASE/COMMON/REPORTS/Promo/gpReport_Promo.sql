@@ -180,10 +180,10 @@ BEGIN
                                                         AND MI_PromoGoods.IsErased = FALSE
         WHERE
             (
-                Movement_Promo.EndSale BETWEEN inStartDate AND inEndDate
-                /*Movement_Promo.StartSale BETWEEN inStartDate AND inEndDate
+                -- Movement_Promo.EndSale BETWEEN inStartDate AND inEndDate
+                Movement_Promo.StartSale BETWEEN inStartDate AND inEndDate
                 OR
-                inStartDate BETWEEN Movement_Promo.StartSale AND Movement_Promo.EndSale*/
+                inStartDate BETWEEN Movement_Promo.StartSale AND Movement_Promo.EndSale
             )
             AND
             (

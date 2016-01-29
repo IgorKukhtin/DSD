@@ -3,6 +3,7 @@
 
 DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_TransportService (Integer, Integer, TVarChar, TDateTime, TFloat, TFloat, TFloat, TFloat, TFloat, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_TransportService (Integer, Integer, TVarChar, TDateTime, TDateTime, TFloat, TFloat, TFloat, TFloat, TFloat, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_TransportService (Integer, Integer, TVarChar, TDateTime, TDateTime, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar);
 
 
 
@@ -15,6 +16,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_TransportService(
     IN inStartRunPlan             TDateTime , -- Дата/Время выезда план
 
  INOUT ioAmount                   TFloat    , -- Сумма
+    IN inWeightTransport          TFloat    , -- Вывоз факт, кг
     IN inDistance                 TFloat    , -- Пробег факт, км
     IN inPrice                    TFloat    , -- Цена (топлива)
     IN inCountPoint               TFloat    , -- Кол-во точек
@@ -45,6 +47,23 @@ BEGIN
      vbAccessKeyId:= lpGetAccessKey (vbUserId, zc_Enum_Process_InsertUpdate_Movement_TransportService());
 
      -- Расчитываем Сумму
+     IF inContractConditionKindId IN (zc_Enum_ContractConditionKind_TransportWeight())
+     THEN
+                    -- по условиям в договоре "Ставка за вывоз, грн/кг"
+         ioAmount:= COALESCE (inWeightTransport, 0)
+                  * COALESCE ((SELECT ObjectFloat_Value.ValueData
+                               FROM ObjectLink AS ObjectLink_ContractCondition_Contract
+                                    JOIN ObjectLink AS ObjectLink_ContractCondition_ContractConditionKind
+                                                    ON ObjectLink_ContractCondition_ContractConditionKind.ObjectId = ObjectLink_ContractCondition_Contract.ObjectId
+                                                   AND ObjectLink_ContractCondition_ContractConditionKind.ChildObjectId = inContractConditionKindId
+                                                   AND ObjectLink_ContractCondition_ContractConditionKind.DescId = zc_ObjectLink_ContractCondition_ContractConditionKind()
+                                    LEFT JOIN ObjectFloat AS ObjectFloat_Value 
+                                                          ON ObjectFloat_Value.ObjectId = ObjectLink_ContractCondition_Contract.ObjectId
+                                                         AND ObjectFloat_Value.DescId = zc_ObjectFloat_ContractCondition_Value()
+                               WHERE ObjectLink_ContractCondition_Contract.DescId = zc_ObjectLink_ContractCondition_Contract()
+                                 AND ObjectLink_ContractCondition_Contract.ChildObjectId = inContractId
+                              ), 0);
+     ELSE
      IF inContractConditionKindId IN (zc_Enum_ContractConditionKind_TransportOneTrip(), zc_Enum_ContractConditionKind_TransportRoundTrip())
      THEN
                     -- по условиям в договоре "Ставка за маршрут..."
@@ -89,7 +108,10 @@ BEGIN
                                                     ON ObjectLink_ContractCondition_ContractConditionKind.ObjectId = ObjectLink_ContractCondition_Contract.ObjectId
                                                    AND ObjectLink_ContractCondition_ContractConditionKind.ChildObjectId = inContractConditionKindId
                                                    AND ObjectLink_ContractCondition_ContractConditionKind.DescId = zc_ObjectLink_ContractCondition_ContractConditionKind()
-                                                   AND inContractConditionKindId NOT IN (zc_Enum_ContractConditionKind_TransportDistance())
+                                                   AND inContractConditionKindId NOT IN (zc_Enum_ContractConditionKind_TransportDistance()
+                                                                                       , zc_Enum_ContractConditionKind_TransportDistanceInt()
+                                                                                       , zc_Enum_ContractConditionKind_TransportDistanceExt()
+                                                                                        )
                                     LEFT JOIN ObjectFloat AS ObjectFloat_Value
                                                           ON ObjectFloat_Value.ObjectId = ObjectLink_ContractCondition_Contract.ObjectId
                                                          AND ObjectFloat_Value.DescId = zc_ObjectFloat_ContractCondition_Value()
@@ -103,7 +125,10 @@ BEGIN
                                                     ON ObjectLink_ContractCondition_ContractConditionKind.ObjectId = ObjectLink_ContractCondition_Contract.ObjectId
                                                    AND ObjectLink_ContractCondition_ContractConditionKind.ChildObjectId = inContractConditionKindId
                                                    AND ObjectLink_ContractCondition_ContractConditionKind.DescId = zc_ObjectLink_ContractCondition_ContractConditionKind()
-                                                   AND inContractConditionKindId IN (zc_Enum_ContractConditionKind_TransportDistance())
+                                                   AND inContractConditionKindId IN (zc_Enum_ContractConditionKind_TransportDistance()
+                                                                                   , zc_Enum_ContractConditionKind_TransportDistanceInt()
+                                                                                   , zc_Enum_ContractConditionKind_TransportDistanceExt()
+                                                                                    )
                                     LEFT JOIN ObjectFloat AS ObjectFloat_Value 
                                                           ON ObjectFloat_Value.ObjectId = ObjectLink_ContractCondition_Contract.ObjectId
                                                          AND ObjectFloat_Value.DescId = zc_ObjectFloat_ContractCondition_Value()
@@ -111,6 +136,7 @@ BEGIN
                                  AND ObjectLink_ContractCondition_Contract.ChildObjectId = inContractId
                               ), 0) * COALESCE (inDistance, 0)
          ;
+     END IF;
      END IF;
 
 
@@ -122,7 +148,10 @@ BEGIN
                                                     ON ObjectLink_ContractCondition_ContractConditionKind.ObjectId = ObjectLink_ContractCondition_Contract.ObjectId
                                                    AND ObjectLink_ContractCondition_ContractConditionKind.ChildObjectId = inContractConditionKindId
                                                    AND ObjectLink_ContractCondition_ContractConditionKind.DescId = zc_ObjectLink_ContractCondition_ContractConditionKind()
-                                                   AND inContractConditionKindId IN (zc_Enum_ContractConditionKind_TransportDistance())
+                                                   AND inContractConditionKindId IN (zc_Enum_ContractConditionKind_TransportDistance()
+                                                                                   , zc_Enum_ContractConditionKind_TransportDistanceInt()
+                                                                                   , zc_Enum_ContractConditionKind_TransportDistanceExt()
+                                                                                    )
                                     JOIN ObjectFloat AS ObjectFloat_Value
                                                      ON ObjectFloat_Value.ObjectId = ObjectLink_ContractCondition_Contract.ObjectId
                                                     AND ObjectFloat_Value.DescId = zc_ObjectFloat_ContractCondition_Value()
@@ -160,6 +189,9 @@ BEGIN
      -- сохранили <Элемент документа>
      ioMIId := lpInsertUpdate_MovementItem (ioMIId, zc_MI_Master(), inJuridicalId, ioId, ioAmount, NULL);
 
+
+     -- сохранили свойство <Вывоз факт, кг>
+     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_WeightTransport(), ioMIId, inWeightTransport);
      -- сохранили свойство <Пробег факт, км>
      PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_Distance(), ioMIId, inDistance);
      -- сохранили свойство <Цена (топлива)>
@@ -207,6 +239,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
+ 16.12.15         * add WeightTransport
  26.08.15         * add inStartRunPlan
  12.11.14                                        * add lpComplete_Movement_Finance_CreateTemp
  12.09.14                                        * add PositionId and ServiceDateId and BusinessId_... and BranchId_...

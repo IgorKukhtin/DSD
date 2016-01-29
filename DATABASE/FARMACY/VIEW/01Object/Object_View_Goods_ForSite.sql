@@ -13,6 +13,11 @@ CREATE OR REPLACE VIEW Object_Goods_View_ForSite AS
        ,Object_Goods.MakerName                                  as manufacturer
        ,ObjectLink_Goods_Appointment.ChildObjectId              as appointment_id
        ,Object_Goods.GoodsGroupId                               as category_id
+       ,NULL::TFloat                                            AS Price
+       ,NULL::Integer                                           AS supplier_id
+       ,NULL::TVarChar                                          AS common_name
+       ,NULL::TDateTime                                         AS dateadd
+       ,NULL::Integer                                           AS user_id
        ,CASE WHEN COALESCE(ObjectBoolean_Goods_Published.ValueData,FALSE)=TRUE THEN 1::Integer ELSE 0::Integer END as published
        ,CASE WHEN Object_Goods.isErased=TRUE THEN 1::Integer ELSE 0::Integer END                                   as deleted
        ,Object_Goods.ObjectId                                   as ObjectId

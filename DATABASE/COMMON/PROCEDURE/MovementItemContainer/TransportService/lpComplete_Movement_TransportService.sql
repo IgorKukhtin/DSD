@@ -64,8 +64,8 @@ BEGIN
                END AS UnitId   -- Подраделение (ОПиУ), а могло быть UnitId_Route (здесь не используется, используется в следующей проводки)
              , 0 AS PositionId -- не используется
 
-               -- Филиал Баланс: пока "Главный филиал" (нужен для НАЛ долгов)
-             , zc_Branch_Basis() AS BranchId_Balance
+               -- Филиал Баланс: по "месту отправки" (нужен для НАЛ долгов)
+             , COALESCE (ObjectLink_UnitForwarding_Branch.ChildObjectId, zc_Branch_Basis()) AS BranchId_Balance
                -- Филиал ОПиУ: не используется
              , 0 AS BranchId_ProfitLoss
 
@@ -109,6 +109,10 @@ BEGIN
              LEFT JOIN MovementLinkObject AS MovementLinkObject_UnitForwarding
                                           ON MovementLinkObject_UnitForwarding.MovementId = inMovementId
                                          AND MovementLinkObject_UnitForwarding.DescId = zc_MovementLinkObject_UnitForwarding()
+             LEFT JOIN ObjectLink AS ObjectLink_UnitForwarding_Branch
+                                  ON ObjectLink_UnitForwarding_Branch.ObjectId = MovementLinkObject_UnitForwarding.ObjectId
+                                 AND ObjectLink_UnitForwarding_Branch.DescId = zc_ObjectLink_Unit_Branch()
+
              LEFT JOIN MovementItemLinkObject AS MILinkObject_Route
                                               ON MILinkObject_Route.MovementItemId = MovementItem.Id
                                              AND MILinkObject_Route.DescId = zc_MILinkObject_Route()

@@ -15,6 +15,9 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Price(
     IN inFix                      Boolean   ,    -- Фиксированная цена
    OUT outDateChange              TDateTime ,    -- Дата изменения цены
    OUT outMCSDateChange           TDateTime ,    -- Дата изменения неснижаемого товарного запаса
+   OUT outMCSIsCloseDateChange    TDateTime ,    -- Дата изменения признака "Убить код"
+   OUT outMCSNotRecalcDateChange  TDateTime ,    -- Дата изменения признака "Спецконтроль кода"
+   OUT outFixDateChange           TDateTime ,    -- Дата изменения признака "Фиксированная цена"
     IN inSession                  TVarChar       -- сессия пользователя
 )
 AS
@@ -25,6 +28,7 @@ $BODY$
         vbMCSValue TFloat;
         vbMCSIsClose Boolean;
         vbMCSNotRecalc Boolean;
+        vbFix Boolean;
 BEGIN
     -- проверка прав пользователя на вызов процедуры
     vbUserId := inSession;
@@ -51,7 +55,8 @@ BEGIN
         DateChange, 
         MCSDateChange, 
         MCSIsClose, 
-        MCSNotRecalc
+        MCSNotRecalc,
+        Fix
     INTO 
         ioId, 
         vbPrice, 
@@ -59,7 +64,8 @@ BEGIN
         outDateChange, 
         outMCSDateChange,
         vbMCSIsClose, 
-        vbMCSNotRecalc
+        vbMCSNotRecalc,
+        vbFix
     FROM Object_Price_View
     WHERE
         GoodsId = inGoodsId
@@ -77,8 +83,14 @@ BEGIN
         PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_Price_Unit(), ioId, inUnitId);
     END IF;
     
-    -- сохранили свойство <фиксированная цена>
-    PERFORM lpInsertUpdate_objectBoolean(zc_ObjectBoolean_Price_Fix(), ioId, inFix);
+    IF vbFix is null or (vbFix <> COALESCE(inFix,FALSE))
+    THEN
+        -- сохранили свойство <фиксированная цена>
+        PERFORM lpInsertUpdate_objectBoolean(zc_ObjectBoolean_Price_Fix(), ioId, inFix);
+        -- сохранили дату изменения <фиксированная цена>
+        outFixDateChange := CURRENT_DATE;
+        PERFORM lpInsertUpdate_objectDate(zc_ObjectDate_Price_FixDateChange(), ioId, outFixDateChange);
+    END IF;    
 
     -- сохранили св-во < Цена >
     IF (inPrice is not null) AND (inPrice <> COALESCE(vbPrice,0))
@@ -96,14 +108,32 @@ BEGIN
         outMCSDateChange := CURRENT_DATE;
         PERFORM lpInsertUpdate_objectDate(zc_ObjectDate_Price_MCSDateChange(), ioId, outMCSDateChange);
     END IF;
+    --сохранили историю
+    IF ((inPrice is not null) AND (inPrice <> COALESCE(vbPrice,0))) 
+       OR
+       ((inMCSValue is not null) AND (inMCSValue <> COALESCE(vbMCSValue,0)))
+    THEN
+        PERFORM
+            gpInsertUpdate_ObjectHistory_Price(
+                ioId       := 0::Integer,    -- ключ объекта <Элемент истории прайса>
+                inPriceId  := ioId,    -- Прайс
+                inOperDate := CURRENT_TIMESTAMP::TDateTime,  -- Дата действия прайса
+                inPrice    := COALESCE(inPrice,vbPrice)::TFloat,     -- Цена
+                inMCSValue := COALESCE(inMCSValue,vbMCSValue)::TFloat,     -- НТЗ
+                inSession  := inSession);
+    END IF;
     IF (inMCSIsClose is not null) AND (COALESCE(vbMCSIsClose,False) <> inMCSIsClose)
     THEN
         PERFORM lpInsertUpdate_objectBoolean(zc_ObjectBoolean_Price_MCSIsClose(), ioId, inMCSIsClose);
+        outMCSIsCloseDateChange := CURRENT_DATE;
+        PERFORM lpInsertUpdate_objectDate(zc_ObjectDate_Price_MCSIsCloseDateChange(), ioId, outMCSIsCloseDateChange);
     END IF;
     
     IF (inMCSNotRecalc is not null) AND (COALESCE(vbMCSNotRecalc,False) <> inMCSNotRecalc)
     THEN
         PERFORM lpInsertUpdate_objectBoolean(zc_ObjectBoolean_Price_MCSNotRecalc(), ioId, inMCSNotRecalc);
+        outMCSNotRecalcDateChange := CURRENT_DATE;
+        PERFORM lpInsertUpdate_objectDate(zc_ObjectDate_Price_MCSNotRecalcDateChange(), ioId, outMCSNotRecalcDateChange);
     END IF;
     
     -- сохранили протокол
@@ -117,6 +147,7 @@ ALTER FUNCTION gpInsertUpdate_Object_Price (Integer, TFloat, TFloat, Integer, In
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.  Воробкало А.А.
+ 22.12.15                                                         *
  29.08.15                                                         *
  08.06.15                        *
 */

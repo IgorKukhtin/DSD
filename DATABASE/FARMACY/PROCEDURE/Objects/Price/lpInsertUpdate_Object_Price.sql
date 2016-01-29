@@ -16,16 +16,19 @@ $BODY$
     DECLARE vbId Integer;
     DECLARE vbPrice_Value TFloat;
     DECLARE vbDateChange TDateTime;
+    DECLARE vbMCSValue TFloat;
 BEGIN
     -- Если такая запись есть - достаем её ключу подр.-товар
     SELECT
         Id, 
         price, 
-        DateChange 
+        DateChange,
+        MCSValue
     INTO 
         vbId, 
         vbPrice_Value, 
-        vbDateChange
+        vbDateChange,
+        vbMCSValue
     FROM 
         Object_Price_View
     WHERE
@@ -50,6 +53,15 @@ BEGIN
         THEN
             -- сохранили св-во < Цена >
             PERFORM lpInsertUpdate_objectFloat(zc_ObjectFloat_Price_Value(), vbId, inPrice);
+            --сохранили историю
+            PERFORM
+                gpInsertUpdate_ObjectHistory_Price(
+                    ioId       := 0::Integer,    -- ключ объекта <Элемент истории прайса>
+                    inPriceId  := vbId,    -- Прайс
+                    inOperDate := CURRENT_TIMESTAMP::TDateTime,  -- Дата действия прайса
+                    inPrice    := inPrice::TFloat,     -- Цена
+                    inMCSValue := vbMCSValue::TFloat,     -- НТЗ
+                    inSession  := inUserId::TVarChar);            
         END IF;
 
         -- сохранили св-во < Дата изменения >
@@ -64,7 +76,8 @@ $BODY$
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.  Воробкало А.А.
+ 22.12.15                                                                      *
  11.02.14                        *
  05.02.14                        *
 */

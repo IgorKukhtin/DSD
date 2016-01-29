@@ -82,6 +82,8 @@ type
     clAreaName_Partner: TcxGridDBColumn;
     ExecuteDialog: TExecuteDialog;
     bbExecuteDialog: TdxBarButton;
+    ContractJuridicalDocCode: TcxGridDBColumn;
+    ContractJuridicalDocName: TcxGridDBColumn;
   private
     { Private declarations }
   public

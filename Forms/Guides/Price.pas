@@ -56,6 +56,11 @@ type
     actDelete_Object_MCS: TdsdExecStoredProc;
     dxBarButton6: TdxBarButton;
     colFix: TcxGridDBColumn;
+    colMCSIsCloseDateChange: TcxGridDBColumn;
+    colMCSNotRecalcDateChange: TcxGridDBColumn;
+    colFixDateChange: TcxGridDBColumn;
+    actPriceHistoryOpen: TdsdOpenForm;
+    dxBarButton7: TdxBarButton;
   private
     { Private declarations }
   public

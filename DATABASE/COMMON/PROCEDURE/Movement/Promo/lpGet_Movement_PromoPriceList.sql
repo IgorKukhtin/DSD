@@ -1,3 +1,4 @@
+-- расчет Прайс-лист для документа Акции
 -- Function: lpGet_Movement_PromoPriceList()
 
 DROP FUNCTION IF EXISTS lpGet_Movement_PromoPriceList (Integer, integer);
@@ -85,10 +86,9 @@ $BODY$
   LANGUAGE plpgsql VOLATILE;
 ALTER FUNCTION lpGet_Movement_PromoPriceList (Integer, Integer) OWNER TO postgres;
 
-
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.  Воробкало А.А.
  26.11.15                                                                        *
 */
---Select * from lpGet_Movement_PromoPriceList(2139686,5);
+-- SELECT * FROM lpGet_Movement_PromoPriceList (2641111, 5);

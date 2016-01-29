@@ -142,7 +142,7 @@ object SheetWorkTimeForm: TSheetWorkTimeForm
         MinWidth = 64
         Options.Editing = False
         Options.Moving = False
-        Width = 115
+        Width = 103
         Position.BandIndex = 0
         Position.ColIndex = 3
         Position.RowIndex = 0
@@ -175,6 +175,16 @@ object SheetWorkTimeForm: TSheetWorkTimeForm
         Width = 40
         Position.BandIndex = 1
         Position.ColIndex = 0
+        Position.RowIndex = 0
+      end
+      object isErased: TcxGridDBBandedColumn
+        Caption = #1059#1076#1072#1083#1077#1085
+        DataBinding.FieldName = 'isErased'
+        Visible = False
+        Options.Editing = False
+        Width = 50
+        Position.BandIndex = 0
+        Position.ColIndex = 5
         Position.RowIndex = 0
       end
     end
@@ -233,8 +243,8 @@ object SheetWorkTimeForm: TSheetWorkTimeForm
         ParamType = ptInput
       end>
     PackSize = 1
-    Left = 408
-    Top = 191
+    Left = 448
+    Top = 151
   end
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
@@ -287,7 +297,27 @@ object SheetWorkTimeForm: TSheetWorkTimeForm
         end
         item
           Visible = True
+          ItemName = 'bbMISetErased'
+        end
+        item
+          Visible = True
+          ItemName = 'bbMISetUnErased'
+        end
+        item
+          Visible = True
+          ItemName = 'bbStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbLoadFromTransport'
+        end
+        item
+          Visible = True
+          ItemName = 'bbStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbShowErased'
         end
         item
           Visible = True
@@ -342,6 +372,18 @@ object SheetWorkTimeForm: TSheetWorkTimeForm
     end
     object bbLoadFromTransport: TdxBarButton
       Action = actInsertUpdate_SheetWorkTime_FromTransport
+      Category = 0
+    end
+    object bbMISetErased: TdxBarButton
+      Action = actMISetErased
+      Category = 0
+    end
+    object bbMISetUnErased: TdxBarButton
+      Action = actMISetUnErased
+      Category = 0
+    end
+    object bbShowErased: TdxBarButton
+      Action = actShowErased
       Category = 0
     end
   end
@@ -435,6 +477,13 @@ object SheetWorkTimeForm: TSheetWorkTimeForm
           Value = Null
           Component = CrossDBViewAddOn
           ComponentItem = 'TypeId'
+        end
+        item
+          Name = 'Value'
+          Value = Null
+          Component = CrossDBViewAddOn
+          ComponentItem = 'Value'
+          DataType = ftString
         end>
       isShowModal = True
     end
@@ -576,6 +625,53 @@ object SheetWorkTimeForm: TSheetWorkTimeForm
       QuestionBeforeExecute = #1042#1099' '#1076#1077#1081#1089#1090#1074#1080#1090#1077#1083#1100#1085#1086' '#1093#1086#1090#1080#1090#1077' '#1079#1072#1075#1088#1091#1079#1080#1090#1100' '#1076#1072#1085#1085#1099#1077' '#1080#1079' '#1087#1091#1090#1077#1074#1099#1093' '#1083#1080#1089#1090#1086#1074'?'
       InfoAfterExecute = #1044#1072#1085#1085#1099#1077' '#1079#1072#1075#1088#1091#1078#1077#1085#1099
     end
+    object actMISetErased: TdsdUpdateErased
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spErasedMIMaster
+      StoredProcList = <
+        item
+          StoredProc = spErasedMIMaster
+        end>
+      Caption = #1059#1076#1072#1083#1080#1090#1100' <'#1069#1083#1077#1084#1077#1085#1090'>'
+      Hint = #1059#1076#1072#1083#1080#1090#1100' <'#1069#1083#1077#1084#1077#1085#1090'>'
+      ImageIndex = 2
+      ShortCut = 46
+      ErasedFieldName = 'isErased'
+      DataSource = MasterDS
+      QuestionBeforeExecute = #1042#1099' '#1091#1074#1077#1088#1077#1085#1099' '#1074' '#1091#1076#1072#1083#1077#1085#1080#1080'?'
+    end
+    object actMISetUnErased: TdsdUpdateErased
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spErasedMIMaster
+      StoredProcList = <
+        item
+          StoredProc = spErasedMIMaster
+        end>
+      Caption = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100
+      Hint = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
+      ImageIndex = 8
+      ShortCut = 46
+      ErasedFieldName = 'isErased'
+      isSetErased = False
+      DataSource = MasterDS
+    end
+    object actShowErased: TBooleanStoredProcAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProcList = <>
+      Caption = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1089#1077
+      Hint = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1089#1077
+      ImageIndex = 64
+      Value = False
+      HintTrue = #1055#1086#1082#1072#1079#1072#1090#1100' '#1085#1077' '#1091#1076#1072#1083#1077#1085#1085#1099#1077
+      HintFalse = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1089#1077
+      CaptionTrue = #1055#1086#1082#1072#1079#1072#1090#1100' '#1085#1077' '#1091#1076#1072#1083#1077#1085#1085#1099#1077
+      CaptionFalse = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1089#1077
+      ImageIndexTrue = 65
+      ImageIndexFalse = 64
+    end
   end
   object MasterDS: TDataSource
     DataSet = MasterCDS
@@ -612,8 +708,7 @@ object SheetWorkTimeForm: TSheetWorkTimeForm
         DataType = ftString
         ParamType = ptInput
       end>
-    Left = 208
-    Top = 16
+    Left = 280
   end
   object spInsertUpdateMI: TdsdStoredProc
     StoredProcName = 'gpInsertUpdate_MovementItem_SheetWorkTime'
@@ -656,8 +751,8 @@ object SheetWorkTimeForm: TSheetWorkTimeForm
         ParamType = ptInput
       end
       item
-        Name = 'inStartDate'
-        Value = Null
+        Name = 'inOperDate'
+        Value = 'NULL'
         Component = HeaderCDS
         ComponentItem = 'OperDate'
         DataType = ftDateTime
@@ -672,15 +767,15 @@ object SheetWorkTimeForm: TSheetWorkTimeForm
         ParamType = ptInputOutput
       end
       item
-        Name = 'inTypeId'
+        Name = 'ioTypeId'
         Value = Null
         Component = CrossDBViewAddOn
         ComponentItem = 'TypeId'
-        ParamType = ptInput
+        ParamType = ptInputOutput
       end>
     PackSize = 1
-    Left = 374
-    Top = 183
+    Left = 398
+    Top = 199
   end
   object CrossDBViewAddOn: TCrossDBViewAddOn
     ErasedFieldName = 'isErased'
@@ -740,5 +835,65 @@ object SheetWorkTimeForm: TSheetWorkTimeForm
     PackSize = 1
     Left = 80
     Top = 296
+  end
+  object spErasedMIMaster: TdsdStoredProc
+    StoredProcName = 'gpMI_SheetWorkTime_SetErased'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMemberId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'MemberId'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inPositionId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'PositionId'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inPositionLevelId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'PositionLevelId'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inUnitId'
+        Value = ''
+        Component = GuidesUnit
+        ComponentItem = 'Key'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inPersonalGroupId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'PersonalGroupId'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inOperDate'
+        Value = 'NULL'
+        Component = HeaderCDS
+        ComponentItem = 'OperDate'
+        DataType = ftDateTime
+        ParamType = ptInput
+      end
+      item
+        Name = 'ioIsErased'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'isErased'
+        DataType = ftBoolean
+        ParamType = ptInputOutput
+      end>
+    PackSize = 1
+    Left = 518
+    Top = 207
   end
 end

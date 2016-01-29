@@ -87,7 +87,7 @@ BEGIN
             LEFT OUTER JOIN Container ON Container.WhereObjectId = Object_Price.UnitId
                                      AND Container.ObjectId = Object_Price.GoodsId
                                      AND Container.DescId = zc_Container_Count() 
-                                     AND Container.Amount > 0
+                                     AND Container.Amount <> 0
             LEFT OUTER JOIN (
                                 SELECT 
                                     T1.Id,
@@ -143,6 +143,8 @@ BEGIN
             Object_Price.MCSIsClose = False 
             AND
             Object_Price.UnitId = inUnitId
+            AND
+            Object_Price.isErased = FALSE
         GROUP BY
             Object_Price.UnitId,
             Object_Price.GoodsId,

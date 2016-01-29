@@ -1,3 +1,4 @@
+-- расчет всех Контрагентов для документа Акции
 -- Function: lpSelect_Movement_PromoPartner_Detail()
 
 DROP FUNCTION IF EXISTS lpSelect_Movement_PromoPartner_Detail (Integer);

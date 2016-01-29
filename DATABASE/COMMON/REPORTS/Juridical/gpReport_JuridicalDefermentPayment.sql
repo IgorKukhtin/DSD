@@ -18,6 +18,7 @@ RETURNS TABLE (AccountId Integer, AccountName TVarChar, JuridicalId Integer, Jur
              , PaidKindId Integer, PaidKindName TVarChar
              , ContractId Integer, ContractCode Integer, ContractNumber TVarChar
              , ContractTagGroupName TVarChar, ContractTagName TVarChar, ContractStateKindCode Integer
+             , ContractJuridicalDocId Integer, ContractJuridicalDocCode Integer, ContractJuridicalDocName TVarChar
              , PersonalName TVarChar
              , PersonalTradeName TVarChar
              , PersonalCollationName TVarChar
@@ -87,6 +88,7 @@ BEGIN
              , a.PaidKindId, a.PaidKindName
              , a.ContractId, a.ContractCode, a.ContractNumber
              , a.ContractTagGroupName, a.ContractTagName, a.ContractStateKindCode
+             , a.ContractJuridicalDocId, a.ContractJuridicalDocCode, a.ContractJuridicalDocName
              , a.PersonalName
              , a.PersonalTradeName
              , a.PersonalCollationName
@@ -122,6 +124,9 @@ from (
    , View_Contract.ContractTagGroupName
    , View_Contract.ContractTagName
    , View_Contract.ContractStateKindCode
+   , Object_JuridicalDocument.Id            AS ContractJuridicalDocId
+   , Object_JuridicalDocument.ObjectCode    AS ContractJuridicalDocCode
+   , Object_JuridicalDocument.ValueData     AS ContractJuridicalDocName
    , Object_Personal.ValueData              AS PersonalName
    , Object_PersonalTrade.ValueData         AS PersonalTradeName
    , Object_PersonalCollation.ValueData     AS PersonalCollationName
@@ -350,6 +355,11 @@ from (
                                AND ObjectLink_Contract_PersonalCollation.DescId = zc_ObjectLink_Contract_PersonalCollation()
            LEFT JOIN Object AS Object_PersonalCollation ON Object_PersonalCollation.Id = ObjectLink_Contract_PersonalCollation.ChildObjectId
 
+           LEFT JOIN ObjectLink AS ObjectLink_Contract_JuridicalDocument
+                                ON ObjectLink_Contract_JuridicalDocument.ObjectId = RESULT.ContractId
+                               AND ObjectLink_Contract_JuridicalDocument.DescId = zc_ObjectLink_Contract_JuridicalDocument()
+           LEFT JOIN Object AS Object_JuridicalDocument ON Object_JuridicalDocument.Id = ObjectLink_Contract_JuridicalDocument.ChildObjectId
+
            LEFT JOIN ObjectHistory_JuridicalDetails_View ON ObjectHistory_JuridicalDetails_View.JuridicalId = Object_Juridical.Id
 
            LEFT JOIN Object_InfoMoney_View ON Object_InfoMoney_View.InfoMoneyId = RESULT.InfoMoneyId
@@ -412,4 +422,4 @@ ALTER FUNCTION gpReport_JuridicalDefermentPayment (TDateTime, TDateTime, Integer
 
 -- тест
 -- SELECT * FROM gpReport_JuridicalDefermentPayment (inOperDate:= '01.06.2015', inEmptyParam:= NULL :: TDateTime, inAccountId:= 0, inPaidKindId:= zc_Enum_PaidKind_FirstForm(),  inBranchId:= 0, inJuridicalGroupId:= null, inSession:= zfCalc_UserAdmin());
--- SELECT * FROM gpReport_JuridicalDefermentPayment (inOperDate:= '01.06.2015', inEmptyParam:= NULL :: TDateTime, inAccountId:= 0, inPaidKindId:= zc_Enum_PaidKind_SecondForm(), inBranchId:= 0, inJuridicalGroupId:= null, inSession:= zfCalc_UserAdmin());
+-- SELECT * FROM gpReport_JuridicalDefermentPayment (inOperDate:= '01.01.2016', inEmptyParam:= NULL :: TDateTime, inAccountId:= 0, inPaidKindId:= zc_Enum_PaidKind_SecondForm(), inBranchId:= 0, inJuridicalGroupId:= null, inSession:= zfCalc_UserAdmin());

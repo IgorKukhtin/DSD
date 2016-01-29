@@ -17,6 +17,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , ToId_OrderUnit Integer, ToName_OrderUnit TVarChar
              , PersonalId Integer, PersonalName TVarChar
              , RouteId Integer, RouteName TVarChar
+             , RouteId_OrderUnit Integer, RouteName_OrderUnit TVarChar
              , RouteSortingId Integer, RouteSortingName TVarChar
              , PaidKindId Integer, PaidKindName TVarChar
              , ContractId Integer, ContractName TVarChar, ContractTagName TVarChar
@@ -69,6 +70,8 @@ BEGIN
              , CAST ('' AS TVarChar) 				AS PersonalName
              , 0                     				AS RouteId
              , CAST ('' AS TVarChar) 				AS RouteName
+             , Object_Route.Id               			AS RouteId_OrderUnit
+             , Object_Route.ValueData        			AS RouteName_OrderUnit
              , 0                     				AS RouteSortingId
              , CAST ('' AS TVarChar) 				AS RouteSortingName
              , 0                     				AS PaidKindId
@@ -116,6 +119,10 @@ BEGIN
                                                                     ELSE 8459 -- Склад Реализации
                                                                END
                LEFT JOIN Object AS Object_StoreMain ON Object_StoreMain.Id = 8459 -- Склад Реализации
+               LEFT JOIN ObjectLink AS ObjectLink_Unit_Route
+                                    ON ObjectLink_Unit_Route.ObjectId = Object_To.Id
+                                   AND ObjectLink_Unit_Route.DescId = zc_ObjectLink_Unit_Route()
+               LEFT JOIN Object AS Object_Route ON Object_Route.Id = ObjectLink_Unit_Route.ChildObjectId
          ;
 
      ELSE
@@ -145,6 +152,8 @@ BEGIN
            , Object_Personal.ValueData                  AS PersonalName
            , Object_Route.Id                            AS RouteId
            , Object_Route.ValueData                     AS RouteName
+           , Object_Route.Id                            AS RouteId_OrderUnit
+           , Object_Route.ValueData                     AS RouteName_OrderUnit
            , Object_RouteSorting.Id                     AS RouteSortingId
            , Object_RouteSorting.ValueData              AS RouteSortingName
            , Object_PaidKind.Id                         AS PaidKindId

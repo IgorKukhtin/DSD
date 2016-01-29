@@ -3,10 +3,8 @@ inherited SaleJournalForm: TSaleJournalForm
   ClientHeight = 641
   ClientWidth = 1242
   AddOnFormData.Params = FormParams
-  ExplicitLeft = -458
-  ExplicitTop = -219
   ExplicitWidth = 1258
-  ExplicitHeight = 676
+  ExplicitHeight = 679
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -731,6 +729,13 @@ inherited SaleJournalForm: TSaleJournalForm
             HeaderAlignmentVert = vaCenter
             Width = 80
           end
+          object isPrinted: TcxGridDBColumn
+            Caption = #1056#1072#1089#1087#1077#1095#1072#1090#1072#1085
+            DataBinding.FieldName = 'isPrinted'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 80
+          end
         end
       end
     end
@@ -739,10 +744,10 @@ inherited SaleJournalForm: TSaleJournalForm
     Width = 1242
     ExplicitWidth = 1242
     inherited deStart: TcxDateEdit
-      EditValue = 42005d
+      EditValue = 42370d
     end
     inherited deEnd: TcxDateEdit
-      EditValue = 42005d
+      EditValue = 42370d
     end
     object edIsPartnerDate: TcxCheckBox
       Left = 404
@@ -1186,6 +1191,9 @@ inherited SaleJournalForm: TSaleJournalForm
         end
         item
           Action = actPrint
+        end
+        item
+          Action = actSPSavePrintState
         end>
       Caption = #1055#1077#1095#1072#1090#1100' '#1053#1072#1082#1083#1072#1076#1085#1072#1103
       Hint = #1055#1077#1095#1072#1090#1100' '#1053#1072#1082#1083#1072#1076#1085#1072#1103
@@ -1544,7 +1552,7 @@ inherited SaleJournalForm: TSaleJournalForm
         end
         item
           Name = 'OperDate'
-          Value = Null
+          Value = 'NULL'
           Component = MasterCDS
           ComponentItem = 'OperDate_TransportGoods_calc'
           DataType = ftDateTime
@@ -2030,6 +2038,30 @@ inherited SaleJournalForm: TSaleJournalForm
       Hint = #1055#1077#1095#1072#1090#1100' '#1050#1072#1095#1077#1089#1090#1074#1077#1085#1085#1086#1077' '#1091#1076#1086#1089#1090#1086#1074#1077#1088#1077#1085#1080#1077
       ImageIndex = 16
     end
+    object actSPSavePrintState: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spSavePrintState
+      StoredProcList = <
+        item
+          StoredProc = spSavePrintState
+        end>
+      Caption = 'actSPSavePrintState'
+    end
+    object actElectron: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spElectron
+      StoredProcList = <
+        item
+          StoredProc = spElectron
+        end>
+      Caption = #1044#1083#1103' '#1085#1072#1083#1086#1075'. '#1048#1079#1084#1077#1085#1080#1090#1100' "'#1069#1083#1077#1082#1090#1088#1086#1085#1085#1072#1103' '#1044#1072'/'#1053#1077#1090'"'
+      Hint = #1044#1083#1103' '#1085#1072#1083#1086#1075'. '#1048#1079#1084#1077#1085#1080#1090#1100' "'#1069#1083#1077#1082#1090#1088#1086#1085#1085#1072#1103' '#1044#1072'/'#1053#1077#1090'"'
+      ImageIndex = 52
+    end
   end
   inherited MasterDS: TDataSource
     Left = 64
@@ -2151,6 +2183,14 @@ inherited SaleJournalForm: TSaleJournalForm
         item
           Visible = True
           ItemName = 'bbspChecked'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbElectron'
         end
         item
           Visible = True
@@ -2373,6 +2413,10 @@ inherited SaleJournalForm: TSaleJournalForm
       Action = actPrintReturnInDay
       Category = 0
     end
+    object bbElectron: TdxBarButton
+      Action = actElectron
+      Category = 0
+    end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
     Left = 320
@@ -2437,6 +2481,13 @@ inherited SaleJournalForm: TSaleJournalForm
         Component = MasterCDS
         ComponentItem = 'Id'
         ParamType = ptInput
+      end
+      item
+        Name = 'outPrinted'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'isPrinted'
+        DataType = ftBoolean
       end>
     Left = 65
     Top = 434
@@ -2490,6 +2541,12 @@ inherited SaleJournalForm: TSaleJournalForm
         Value = Null
         DataType = ftFloat
         ParamType = ptInput
+      end
+      item
+        Name = 'isPrinted'
+        Value = 'True'
+        DataType = ftBoolean
+        ParamType = ptInputOutput
       end>
     Left = 400
     Top = 216
@@ -2656,8 +2713,8 @@ inherited SaleJournalForm: TSaleJournalForm
         ParamType = ptInput
       end>
     PackSize = 1
-    Left = 351
-    Top = 424
+    Left = 271
+    Top = 368
   end
   object spSelectTax_Client: TdsdStoredProc
     StoredProcName = 'gpSelect_Movement_Tax_Print'
@@ -2941,7 +2998,7 @@ inherited SaleJournalForm: TSaleJournalForm
       end
       item
         Name = 'inOperDate'
-        Value = Null
+        Value = 'NULL'
         Component = MasterCDS
         ComponentItem = 'OperDate'
         DataType = ftDateTime
@@ -2970,7 +3027,7 @@ inherited SaleJournalForm: TSaleJournalForm
       end
       item
         Name = 'OperDate_TransportGoods'
-        Value = Null
+        Value = 'NULL'
         Component = MasterCDS
         ComponentItem = 'OperDate_TransportGoods'
         DataType = ftDateTime
@@ -3232,5 +3289,60 @@ inherited SaleJournalForm: TSaleJournalForm
     PackSize = 1
     Left = 535
     Top = 216
+  end
+  object spSavePrintState: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Movement_Sale_Print'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inNewPrinted'
+        Value = 'True'
+        Component = FormParams
+        ComponentItem = 'isPrinted'
+        DataType = ftBoolean
+        ParamType = ptInput
+      end
+      item
+        Name = 'outPrinted'
+        Value = 'False'
+        Component = MasterCDS
+        ComponentItem = 'isPrinted'
+        DataType = ftBoolean
+      end>
+    PackSize = 1
+    Left = 840
+    Top = 352
+  end
+  object spElectron: TdsdStoredProc
+    StoredProcName = 'gpUpdateMovement_Electron'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'ioId '
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'MovementId_Master'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inElectron'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'isElectron'
+        DataType = ftBoolean
+        ParamType = ptInputOutput
+      end>
+    PackSize = 1
+    Left = 1040
+    Top = 195
   end
 end

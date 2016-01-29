@@ -11,7 +11,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime
              , StatusCode Integer, StatusName TVarChar
              , TotalCount TFloat, TotalSumm TFloat
              , UnitName TVarChar, CashRegisterName TVarChar, PaidKindName TVarChar, PaidTypeName TVarChar
-             , CashMember TVarChar, Bayer TVarChar)
+             , CashMember TVarChar, Bayer TVarChar, FiscalCheckNumber TVarChar, NotMCS Boolean)
 AS
 $BODY$
   DECLARE vbUserId Integer;
@@ -36,7 +36,8 @@ BEGIN
            , Movement_Check.PaidTypeName
            , Movement_Check.CashMember
            , Movement_Check.Bayer
-           
+           , Movement_Check.FiscalCheckNumber
+           , Movement_Check.NotMCS
         FROM Movement_Check_View AS Movement_Check 
        WHERE Movement_Check.Id =  inMovementId;
 

@@ -85,7 +85,7 @@ type
     cbPrinted: TcxCheckBox;
     edDayCount: TcxCurrencyEdit;
     cxLabel18: TcxLabel;
-    AmountPartner: TcxGridDBColumn;
+    clAmountPartner: TcxGridDBColumn;
     AmountForecast: TcxGridDBColumn;
     spUpdateAmountRemains: TdsdStoredProc;
     actUpdateAmountRemains: TdsdExecStoredProc;
@@ -110,15 +110,19 @@ type
     AmountForecastOrder: TcxGridDBColumn;
     AmountCalcOrder: TcxGridDBColumn;
     GoodsGroupNameFull: TcxGridDBColumn;
-    cxLabel21: TcxLabel;
     edPartner: TcxButtonEdit;
     PartnerGuides: TdsdGuides;
-    cxLabel22: TcxLabel;
     edRetail: TcxButtonEdit;
     RetailGuides: TdsdGuides;
     ArticleGLN: TcxGridDBColumn;
     cxLabel23: TcxLabel;
     ceComment: TcxTextEdit;
+    cxLabel21: TcxLabel;
+    cxLabel22: TcxLabel;
+    bb: TdxBarButton;
+    mactUpdateFromOrder: TMultiAction;
+    actInsertFromOrder: TdsdExecStoredProc;
+    spInsertFromOrder: TdsdStoredProc;
   private
     { Private declarations }
   public

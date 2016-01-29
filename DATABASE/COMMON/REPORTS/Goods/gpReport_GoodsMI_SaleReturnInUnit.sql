@@ -56,7 +56,7 @@ BEGIN
 
 
 
-    IF vbUserId = 5 THEN
+    IF 1=0 AND vbUserId = 5 THEN
        RETURN QUERY
        SELECT * FROM gpReport_GoodsMI_SaleReturnInUnitNEW (inStartDate
                                                       , inEndDate
@@ -156,8 +156,8 @@ BEGIN
                                , MovementItem.ObjectId AS GoodsId
                                , CASE WHEN inIsGoodsKind = TRUE THEN MILinkObject_GoodsKind.ObjectId ELSE 0 END AS GoodsKindId
 
-                               , SUM (CASE WHEN tmp_Unit_From.UnitId > 0 THEN COALESCE (MIFloat_AmountPartner.ValueData, 0) /*MovementItem.Amount*/ ELSE 0 END) AS Amount_Count
-                               , SUM (CASE WHEN tmp_Unit_From.UnitId > 0 THEN COALESCE (MIFloat_AmountPartner.ValueData, 0) /*MovementItem.Amount*/ ELSE 0 END
+                               , SUM (CASE WHEN tmp_Unit_From.UnitId > 0 THEN /*COALESCE (MIFloat_AmountPartner.ValueData, 0)*/ MovementItem.Amount ELSE 0 END) AS Amount_Count
+                               , SUM (CASE WHEN tmp_Unit_From.UnitId > 0 THEN /*COALESCE (MIFloat_AmountPartner.ValueData, 0)*/ MovementItem.Amount ELSE 0 END
                                     * CASE WHEN MIFloat_CountForPrice.ValueData > 0
                                                 THEN COALESCE (MIFloat_Price.ValueData, 0) / MIFloat_CountForPrice.ValueData
                                            ELSE COALESCE (MIFloat_Price.ValueData, 0)

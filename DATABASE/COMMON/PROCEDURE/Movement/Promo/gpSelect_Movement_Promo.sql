@@ -39,6 +39,7 @@ RETURNS TABLE (Id               Integer     --Идентификатор
              , ContractName     TVarChar     --№ договора
              , ContractTagName  TVarChar     --признак договора
              , isFirst          Boolean      --Первый документ в группе (для автопересчета данных)
+             , ChangePercentName TVarChar    -- Скидка по договору
               )
 
 AS
@@ -84,11 +85,16 @@ BEGIN
                     THEN TRUE
             ELSE FALSE
             END as IsFirst
+          , COALESCE (Object_ChangePercent.ValueData, 'ДА') :: TVarChar AS ChangePercentName
         FROM
             Movement_Promo_View AS Movement_Promo
             INNER JOIN tmpStatus ON Movement_Promo.StatusId = tmpStatus.StatusId
-            Left Outer Join Movement_PromoPartner_View AS Movement_PromoPartner
-                                                       ON Movement_PromoPartner.ParentId = Movement_Promo.ID
+            LEFT JOIN Movement_PromoPartner_View AS Movement_PromoPartner ON Movement_PromoPartner.ParentId = Movement_Promo.Id
+            LEFT JOIN MovementItem AS MI_Child
+                                   ON MI_Child.MovementId = Movement_Promo.Id
+                                  AND MI_Child.ObjectId = zc_Enum_ConditionPromo_ContractChangePercentOff() -- без учета % скидки по договору
+                                  AND MI_Child.isErased   = FALSE
+            LEFT JOIN Object AS Object_ChangePercent ON Object_ChangePercent.Id = MI_Child.ObjectId
         WHERE
             (
                 inPeriodForOperDate = TRUE

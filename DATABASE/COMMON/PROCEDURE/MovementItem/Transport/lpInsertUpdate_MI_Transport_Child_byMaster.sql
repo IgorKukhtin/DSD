@@ -82,7 +82,7 @@ BEGIN
              -- выбрали у нормы дл€ топлива - % дополнительного расхода в св€зи с сезоном/температурой
              LEFT JOIN ObjectFloat AS ObjectFloat_RateFuelKind_Tax ON ObjectFloat_RateFuelKind_Tax.ObjectId = ObjectLink_Fuel_RateFuelKind.ChildObjectId
                                                                   AND ObjectFloat_RateFuelKind_Tax.DescId = zc_ObjectFloat_RateFuelKind_Tax()
-                                                                  AND vbBranchId = zc_Branch_Basis()
+                                                                  -- AND vbBranchId = zc_Branch_Basis()
 
              -- выбрали норму дл€ автомобиль + “ип маршрута
              LEFT JOIN (SELECT ObjectLink_RateFuel_Car.ChildObjectId       AS CarId
@@ -185,7 +185,7 @@ BEGIN
              -- выбрали у нормы дл€ топлива - % дополнительного расхода в св€зи с сезоном/температурой
              LEFT JOIN ObjectFloat AS ObjectFloat_RateFuelKind_Tax ON ObjectFloat_RateFuelKind_Tax.ObjectId = ObjectLink_Fuel_RateFuelKind.ChildObjectId
                                                                   AND ObjectFloat_RateFuelKind_Tax.DescId = zc_ObjectFloat_RateFuelKind_Tax()
-                                                                  AND vbBranchId = zc_Branch_Basis()
+                                                                  -- AND vbBranchId = zc_Branch_Basis()
             -- этот нужен что б отбросить уже введенный вид топлива (если удален/не удален)
              LEFT JOIN MovementItem AS MovementItem_Find ON MovementItem_Find.MovementId = inMovementId
                                                         AND MovementItem_Find.ParentId   = inParentId

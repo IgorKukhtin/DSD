@@ -94,6 +94,8 @@ type
     colContractFromCode: TcxGridDBColumn;
     colContractToCode: TcxGridDBColumn;
     Comment: TcxGridDBColumn;
+    actInsertMaskMulti: TMultiAction;
+    bbInsertMaskMulti: TdxBarButton;
   private
     { Private declarations }
   public

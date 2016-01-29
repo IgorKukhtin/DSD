@@ -92,13 +92,14 @@ type
     colReasonDifferencesName: TcxGridDBColumn;
     colAmountDiff: TcxGridDBColumn;
     spUpdate_MovementItem_Income_AmountManual: TdsdStoredProc;
-    ceCorrBonus: TcxCurrencyEdit;
-    cxLabel14: TcxLabel;
-    cxLabel16: TcxLabel;
-    ceCorrOther: TcxCurrencyEdit;
     chbIsPay: TcxCheckBox;
     ‚ÛDateLastPay: TcxDateEdit;
     cxLabel17: TcxLabel;
+    spUpdateIncome_PartnerData: TdsdStoredProc;
+    mactEditPartnerData: TMultiAction;
+    actPartnerDataDialod: TExecuteDialog;
+    actUpdateIncome_PartnerData: TdsdExecStoredProc;
+    dxBarButton1: TdxBarButton;
   private
     { Private declarations }
   public

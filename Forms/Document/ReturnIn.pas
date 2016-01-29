@@ -161,6 +161,9 @@ type
     bbUpdateAmountPartner: TdxBarButton;
     cbPromo: TcxCheckBox;
     MovementPromo: TcxGridDBColumn;
+    Price_Pricelist_vat: TcxGridDBColumn;
+    actOpenTax: TdsdOpenForm;
+    bbOpenTax: TdxBarButton;
   private
     { Private declarations }
   public

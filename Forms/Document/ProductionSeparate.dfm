@@ -2,7 +2,7 @@ inherited ProductionSeparateForm: TProductionSeparateForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1055#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1086' - '#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077'>'
   ClientHeight = 678
   ClientWidth = 903
-  ExplicitTop = -230
+  ExplicitTop = -256
   ExplicitWidth = 919
   ExplicitHeight = 713
   PixelsPerInch = 96
@@ -491,7 +491,7 @@ inherited ProductionSeparateForm: TProductionSeparateForm
       end
       item
         Name = 'inOperDate'
-        Value = Null
+        Value = 'NULL'
         Component = FormParams
         ComponentItem = 'inOperDate'
         DataType = ftDateTime
@@ -691,6 +691,7 @@ inherited ProductionSeparateForm: TProductionSeparateForm
         Value = Null
         Component = MasterCDS
         ComponentItem = 'HeadCount'
+        DataType = ftFloat
         ParamType = ptInput
       end>
   end

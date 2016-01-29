@@ -10,19 +10,19 @@ inherited TransferDebtOutForm: TTransferDebtOutForm
     Top = 166
     Width = 1268
     Height = 502
-    ExplicitTop = 131
+    ExplicitTop = 166
     ExplicitWidth = 1268
-    ExplicitHeight = 537
+    ExplicitHeight = 502
     ClientRectBottom = 502
     ClientRectRight = 1268
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 1268
-      ExplicitHeight = 513
+      ExplicitHeight = 478
       inherited cxGrid: TcxGrid
         Width = 1268
         Height = 478
         ExplicitWidth = 1268
-        ExplicitHeight = 513
+        ExplicitHeight = 478
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -186,7 +186,6 @@ inherited TransferDebtOutForm: TTransferDebtOutForm
     object cxTabSheetTaxCorrective: TcxTabSheet
       Caption = #1053#1072#1083#1086#1075#1086#1074#1099#1077
       ImageIndex = 2
-      ExplicitHeight = 513
       object cxGridTaxCorrective: TcxGrid
         Left = 0
         Top = 0
@@ -194,7 +193,6 @@ inherited TransferDebtOutForm: TTransferDebtOutForm
         Height = 478
         Align = alClient
         TabOrder = 0
-        ExplicitHeight = 513
         object cxGridTaxCorrectiveDBTableView: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = TaxDS
@@ -976,7 +974,6 @@ inherited TransferDebtOutForm: TTransferDebtOutForm
           DataSet = PrintItemsSverkaCDS
           UserName = 'frxDBDSverka'
         end>
-      CopiesCount = 1
       Params = <
         item
           Name = 'Id'
@@ -1016,7 +1013,6 @@ inherited TransferDebtOutForm: TTransferDebtOutForm
           DataSet = PrintItemsSverkaCDS
           UserName = 'frxDBDSverka'
         end>
-      CopiesCount = 1
       Params = <
         item
           Name = 'Id'
@@ -1053,7 +1049,6 @@ inherited TransferDebtOutForm: TTransferDebtOutForm
           DataSet = PrintItemsCDS
           UserName = 'frxDBDMaster'
         end>
-      CopiesCount = 1
       Params = <
         item
           Name = 'Id'
@@ -1095,7 +1090,6 @@ inherited TransferDebtOutForm: TTransferDebtOutForm
           DataSet = PrintItemsCDS
           UserName = 'frxDBDMaster'
         end>
-      CopiesCount = 1
       Params = <
         item
           Name = 'Id'
@@ -1302,7 +1296,7 @@ inherited TransferDebtOutForm: TTransferDebtOutForm
         end
         item
           Name = 'OperDate'
-          Value = Null
+          Value = 'NULL'
           Component = FormParams
           ComponentItem = 'OperDate_TransportGoods'
           DataType = ftDateTime
@@ -1329,7 +1323,6 @@ inherited TransferDebtOutForm: TTransferDebtOutForm
           DataSet = PrintItemsCDS
           UserName = 'frxDBDMaster'
         end>
-      CopiesCount = 1
       Params = <
         item
           Name = 'Id'
@@ -1694,6 +1687,12 @@ inherited TransferDebtOutForm: TTransferDebtOutForm
         Value = Null
         DataType = ftString
         ParamType = ptInput
+      end
+      item
+        Name = 'inMask'
+        Value = 'false'
+        DataType = ftBoolean
+        ParamType = ptInput
       end>
     Left = 56
     Top = 352
@@ -1718,12 +1717,33 @@ inherited TransferDebtOutForm: TTransferDebtOutForm
         ParamType = ptInput
       end
       item
-        Name = 'inOperDate'
+        Name = 'inMask'
         Value = Null
+        Component = FormParams
+        ComponentItem = 'inMask'
+        DataType = ftBoolean
+        ParamType = ptInput
+      end
+      item
+        Name = 'inOperDate'
+        Value = 'NULL'
         Component = FormParams
         ComponentItem = 'inOperDate'
         DataType = ftDateTime
         ParamType = ptInput
+      end
+      item
+        Name = 'Id'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+      end
+      item
+        Name = 'isMask'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'inMask'
+        DataType = ftBoolean
       end
       item
         Name = 'InvNumber'
@@ -1919,7 +1939,7 @@ inherited TransferDebtOutForm: TTransferDebtOutForm
       end
       item
         Name = 'OperDate_TransportGoods'
-        Value = Null
+        Value = 'NULL'
         Component = FormParams
         ComponentItem = 'OperDate_TransportGoods'
         DataType = ftDateTime
@@ -2279,10 +2299,25 @@ inherited TransferDebtOutForm: TTransferDebtOutForm
         DataType = ftFloat
       end
       item
+        Name = 'inBoxCount'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'BoxCount'
+        DataType = ftFloat
+        ParamType = ptInput
+      end
+      item
         Name = 'inGoodsKindId'
         Value = Null
         Component = MasterCDS
         ComponentItem = 'GoodsKindId'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inBoxId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'BoxId'
         ParamType = ptInput
       end>
   end

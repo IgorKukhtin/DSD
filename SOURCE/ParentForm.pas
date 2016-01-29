@@ -9,7 +9,6 @@ uses
 
 const
   MY_MESSAGE = WM_USER + 1;
-
 type
 
   TParentForm = class(TForm)
@@ -27,6 +26,8 @@ type
     procedure SetSender(const Value: TComponent);
     property FormSender: TComponent read FSender write SetSender;
     procedure AfterShow(var a : TWMSHOWWINDOW); message MY_MESSAGE;
+    procedure InitHelpSystem;
+    procedure btnHelpClick(Sender: TObject);
   protected
     procedure Loaded; override;
     procedure Notification(AComponent: TComponent; Operation: TOperation); override;
@@ -55,7 +56,7 @@ uses
   cxButtonEdit, cxSplitter, Vcl.Menus, cxPC, frxDBSet, dxBarExtItems,
   cxDBPivotGrid, ChoicePeriod, cxGridDBBandedTableView,
   cxDBEdit, dsdAction, dsdGuides, cxDBVGrid,
-  Vcl.DBActns, cxMemo, cxGridDBChartView;
+  Vcl.DBActns, cxMemo, cxGridDBChartView, ShellAPI{, DataModul};
 
 {$R *.dfm}
 
@@ -74,6 +75,13 @@ begin
      exit;
   if Assigned(FonAfterShow) then
      FonAfterShow(Self);
+end;
+
+procedure TParentForm.btnHelpClick(Sender: TObject);
+begin
+  if Self.HelpFile = '' then exit;
+  ShellExecute(0, 'open', PChar(Self.HelpFile), '', '', 1);
+
 end;
 
 procedure TParentForm.CloseAction(Sender: TObject);
@@ -165,6 +173,88 @@ end;
 procedure TParentForm.FormShow(Sender: TObject);
 begin
   PostMessage(Handle, MY_MESSAGE, 0, 0);
+  InitHelpSystem;
+end;
+
+procedure TParentForm.InitHelpSystem;
+var
+  sp: TdsdStoredProc;
+  C: TComponent;
+  mni: TMenuItem;
+  bb: TdxBarButton;
+  pm: TPopupMenu;
+begin
+  //если хелпфайл заполнен, считаем что все уже отработано ранее
+  if Self.HelpFile <> '' then exit;
+  //Вытащили путь к файлу помощи
+  sp := TdsdStoredProc.Create(nil);
+  try
+    sp.Params.AddParam('inFormName',ftString,ptInput,FormClassName);
+    sp.Params.AddParam('outHelpFile',ftString,ptOutput,Null);
+    sp.StoredProcName := 'gpGet_Object_Form_HelpFile';
+    sp.OutputType := otResult;
+    sp.Execute;
+    Self.HelpFile := VarToStr(sp.ParamByName('outHelpFile').Value);
+  finally
+    sp.Free;
+  end;
+  //Если форма имеет файл помощи то пытаемся создать пункт меню для вызова
+  if Self.HelpFile <> '' then
+  Begin
+    for C in Self do
+    begin
+      //Находим все контексные меню
+      if C is TPopupMenu then
+      Begin
+        mni := TMenuItem.Create(C);
+        mni.Caption := 'Помощь';
+        mni.ShortCut := ShortCut(VK_F1,[]);
+        mni.ImageIndex := 26;
+        mni.OnClick := btnHelpClick;
+        (C as TPopupMenu).Items.Add(mni);
+      End;
+    end;
+    //Если не было создано ни одного пункта меню для вызова помощи (нет ни одного попап меню)
+    if not assigned(mni) then
+    Begin
+//      //пробуем найти тулбар и в него добавить кнопку
+//      for C in Self do
+//      begin
+//        //Находим все контексные меню
+//        if C is TdxBarManager then
+//        Begin
+//          if (C as TdxBarManager).Bars.Count > 0 then
+//          Begin
+//            bb := (C as TdxBarManager).AddButton;
+//            bb.Caption := 'Помощь';
+//            bb.Hint := 'Помощь';
+//            bb.ImageIndex := 26;
+//            bb.ShortCut := ShortCut(VK_F1,[]);
+//            bb.OnClick := btnHelpClick;
+//            (C as TdxBarManager).Bars[0].ItemLinks.Add(bb);
+//          End;
+//        End;
+//      end;
+//      //Если и тулбара нет - то создаем свой попап меню и в него добавляем кнопку
+//      if not assigned(bb) then
+//      Begin
+        pm := TPopupMenu.Create(Self);
+//        pm.Images := dmMain.ImageList;
+        Self.PopupMenu := pm;
+        mni := TMenuItem.Create(pm);
+        mni.Caption := 'Помощь';
+        mni.ShortCut := ShortCut(VK_F1,[]);
+        mni.ImageIndex := 26;
+        mni.OnClick := btnHelpClick;
+        pm.Items.Add(mni);
+        for C in Self do
+          //Находим гриды и им присваиваем наше контекстное меню
+          if C is TcxGrid then
+            (C as TcxGrid).PopupMenu := pm;
+//      End;
+    End;
+  End;
+
 end;
 
 procedure TParentForm.Loaded;
@@ -298,6 +388,7 @@ initialization
   RegisterClass (TRefreshDispatcher);
   RegisterClass (TUpdateRecord);
   RegisterClass (TAddOnFormRefresh);
+  RegisterClass (TShellExecuteAction);
 
 // ДЛЯ ТЕСТА
 

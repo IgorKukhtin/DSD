@@ -11,7 +11,9 @@ CREATE OR REPLACE FUNCTION gpUpdate_Status_OrderExternal(
 RETURNS Boolean AS
 $BODY$
 BEGIN
-     outPrinted := False;
+     --
+     outPrinted := FALSE;
+     --
      CASE inStatusCode
          WHEN zc_Enum_StatusCode_UnComplete() THEN
             PERFORM gpUnComplete_Movement_OrderExternal (inMovementId, inSession);

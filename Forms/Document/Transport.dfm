@@ -26,8 +26,6 @@
     Align = alTop
     BevelOuter = bvNone
     TabOrder = 0
-    ExplicitLeft = -8
-    ExplicitTop = -40
     object edInvNumber: TcxTextEdit
       Left = 8
       Top = 23
@@ -1934,7 +1932,7 @@
         end
         item
           Name = 'inOperDate'
-          Value = Null
+          Value = 'NULL'
           Component = IncomeCDS
           ComponentItem = 'OperDate'
           DataType = ftDateTime
@@ -3379,7 +3377,7 @@
       end
       item
         Name = 'ioOperDatePartner'
-        Value = Null
+        Value = 'NULL'
         Component = IncomeCDS
         ComponentItem = 'OperDatePartner'
         DataType = ftDateTime

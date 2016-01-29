@@ -12,9 +12,9 @@ RETURNS TABLE (Id Integer
              , InfoMoneyGroupName TVarChar
              , InfoMoneyDestinationName TVarChar
              , InfoMoneyId Integer, InfoMoneyCode Integer, InfoMoneyName TVarChar
-             , ContractId Integer, ContractName TVarChar, ContractTagName TVarChar
-             , JuridicalId Integer, JuridicalName TVarChar, OKPO TVarChar, JuridicalGroupName TVarChar
-             , PartnerId Integer, PartnerName TVarChar
+             , ContractId Integer, ContractCode Integer, ContractName TVarChar, ContractTagName TVarChar
+             , JuridicalId Integer, JuridicalCode Integer, JuridicalName TVarChar, OKPO TVarChar, JuridicalGroupName TVarChar
+             , PartnerId Integer, PartnerCode Integer, PartnerName TVarChar
              , BranchId Integer, BranchName TVarChar
              , PaidKindId Integer, PaidKindName TVarChar
              , UnitId Integer, UnitName TVarChar
@@ -45,14 +45,17 @@ BEGIN
             , View_InfoMoney.InfoMoneyName
 
             , View_Contract.ContractId
+            , View_Contract.ContractCode
             , View_Contract.InvNumber AS ContractName
             , View_Contract.ContractTagName
 
             , Object_Juridical.Id         AS JuridicalId
+            , Object_Juridical.ObjectCode AS JuridicalCode
             , Object_Juridical.ValueData  AS JuridicalName
             , ObjectHistory_JuridicalDetails_View.OKPO
             , Object_JuridicalGroup.ValueData AS JuridicalGroupName
             , 0 :: Integer                AS PartnerId
+            , 0 :: Integer                AS PartnerCode
             , '' :: TVarChar              AS PartnerName
             , 0 :: Integer                AS BranchId
             , '' :: TVarChar              AS BranchName
@@ -120,14 +123,17 @@ BEGIN
             , View_InfoMoney.InfoMoneyName
 
             , View_Contract_InvNumber.ContractId
+            , View_Contract_InvNumber.ContractCode
             , View_Contract_InvNumber.InvNumber AS ContractName
             , View_Contract_InvNumber.ContractTagName
 
             , Object_Juridical.Id         AS JuridicalId
+            , Object_Juridical.ObjectCode AS JuridicalCode
             , Object_Juridical.ValueData  AS JuridicalName
             , ObjectHistory_JuridicalDetails_View.OKPO
             , Object_JuridicalGroup.ValueData AS JuridicalGroupName
             , Object_Partner.Id           AS PartnerId
+            , Object_Partner.ObjectCode   AS PartnerCode
             , Object_Partner.ValueData    AS PartnerName
             , Object_Branch.Id            AS BranchId
             , Object_Branch.ValueData     AS BranchName
@@ -225,14 +231,17 @@ BEGIN
             , View_InfoMoney.InfoMoneyName
 
             , View_Contract_InvNumber.ContractId
+            , View_Contract_InvNumber.ContractCode
             , View_Contract_InvNumber.InvNumber AS ContractName
             , View_Contract_InvNumber.ContractTagName
 
             , Object_Juridical.Id         AS JuridicalId
+            , Object_Juridical.ObjectCode AS JuridicalCode
             , Object_Juridical.ValueData  AS JuridicalName
             , ObjectHistory_JuridicalDetails_View.OKPO
             , Object_JuridicalGroup.ValueData AS JuridicalGroupName
             , Object_Partner.Id           AS PartnerId
+            , Object_Partner.ObjectCode   AS PartnerCode
             , Object_Partner.ValueData    AS PartnerName
             , Object_Branch.Id            AS BranchId
             , Object_Branch.ValueData     AS BranchName

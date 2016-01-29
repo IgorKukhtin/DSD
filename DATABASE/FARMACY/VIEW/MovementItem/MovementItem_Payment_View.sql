@@ -22,9 +22,9 @@ CREATE OR REPLACE VIEW MovementItem_Payment_View AS
       , Object_Contract.ValueData                   AS Income_ContractName
       , MovementFloat_TotalSumm.ValueData           AS Income_TotalSumm
       , Container.Amount                            AS Income_PaySumm
-      , MovementFloat_CorrBonus.ValueData           AS Income_CorrBonus
-      , ReturnOut.SummaReturnOut                    AS Income_CorrReturnOut
-      , MovementFloat_CorrOther.ValueData           AS Income_CorrOther
+      , MIFloat_CorrBonus.ValueData                 AS SummaCorrBonus
+      , MIFloat_CorrReturnOut.ValueData             AS SummaCorrReturnOut
+      , MIFloat_CorrOther.ValueData                 AS SummaCorrOther
       , MI_Income.Amount                            AS SummaPay
       , MILinkObject_BankAccount.ObjectId           AS BankAccountId
       , Object_BankAccount.Name                     AS BankAccountName
@@ -82,12 +82,15 @@ CREATE OR REPLACE VIEW MovementItem_Payment_View AS
                            AND Container.ObjectId = Object_Movement.Id
                            AND Container.KeyValue like '%,'||Object_To.JuridicalId::TVarChar||';%'
         
-        LEFT OUTER JOIN MovementFloat AS MovementFloat_CorrBonus
-                                      ON MovementFloat_CorrBonus.MovementId = Movement_Income.ID
-                                     AND MovementFloat_CorrBonus.DescId = zc_MovementFloat_CorrBonus()
-        LEFT OUTER JOIN MovementFloat AS MovementFloat_CorrOther
-                                      ON MovementFloat_CorrOther.MovementId = Movement_Income.ID
-                                     AND MovementFloat_CorrOther.DescId = zc_MovementFloat_CorrOther()
+        LEFT OUTER JOIN MovementItemFloat AS MIFloat_CorrBonus
+                                          ON MIFloat_CorrBonus.MovementItemId = MI_Income.ID
+                                         AND MIFloat_CorrBonus.DescId = zc_MIFloat_CorrBonus()
+        LEFT OUTER JOIN MovementItemFloat AS MIFloat_CorrReturnOut
+                                          ON MIFloat_CorrReturnOut.MovementItemId = MI_Income.ID
+                                         AND MIFloat_CorrReturnOut.DescId = zc_MIFloat_CorrReturnOut()
+        LEFT OUTER JOIN MovementItemFloat AS MIFloat_CorrOther
+                                          ON MIFloat_CorrOther.MovementItemId = MI_Income.ID
+                                         AND MIFloat_CorrOther.DescId = zc_MIFloat_CorrOther()
         LEFT OUTER JOIN MovementitemLinkObject AS MILinkObject_BankAccount
                                                ON MILinkObject_BankAccount.MovementItemId = MI_Income.ID
                                               AND MILinkObject_BankAccount.DescId = zc_MILinkObject_BankAccount()
@@ -106,22 +109,7 @@ CREATE OR REPLACE VIEW MovementItem_Payment_View AS
         LEFT OUTER JOIN MovementItemFloat AS MIFloat_MovementBankAccount
                                           ON MIFloat_MovementBankAccount.MovementItemId = MI_MovementBankAccount.ID
                                          AND MIFloat_MovementBankAccount.DescId = zc_MIFloat_MovementId()                  
-        LEFT OUTER JOIN (
-                            SELECT
-                                MovementReturnOut.ParentId,
-                                SUM(-MovementFloat_ReturnSummaTotal.ValueData)::TFloat AS SummaReturnOut
-                            FROM
-                                Movement AS MovementReturnOut
-                                LEFT OUTER JOIN MovementFloat AS MovementFloat_ReturnSummaTotal
-                                                              ON MovementFloat_ReturnSummaTotal.MovementId = MovementReturnOut.ID
-                                                             AND MovementFloat_ReturnSummaTotal.DescId = zc_MovementFloat_TotalSumm()
-                            WHERE
-                                MovementReturnOut.DescId = zc_Movement_ReturnOut()
-                                AND 
-                                MovementReturnOut.StatusId = zc_Enum_Status_Complete()
-                            GROUP BY
-                                MovementReturnOut.ParentId
-                        ) AS ReturnOut ON Movement_Income.Id = ReturnOut.ParentId  
+        
     WHERE
         MI_Income.DescId = zc_MI_Master()
     ;

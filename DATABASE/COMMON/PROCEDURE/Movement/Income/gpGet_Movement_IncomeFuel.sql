@@ -13,6 +13,10 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , PaidKindId Integer, PaidKindName TVarChar, ContractId Integer, ContractName TVarChar
              , RouteId Integer, RouteName TVarChar
              , PersonalDriverId Integer, PersonalDriverName TVarChar
+             , StartOdometre TFloat, EndOdometre TFloat, AmountFuel TFloat
+             , Reparation TFloat, LimitMoney TFloat, LimitDistance TFloat
+             , LimitChange TFloat, LimitDistanceChange TFloat, Distance TFloat, DistanceDiff TFloat
+
               )
 AS
 $BODY$
@@ -53,6 +57,18 @@ BEGIN
              , CAST ('' AS TVarChar) AS RouteName
              , 0                     AS PersonalDriverId
              , CAST ('' AS TVarChar) AS PersonalDriverName
+
+             , CAST (0 AS TFloat)     AS StartOdometre
+             , CAST (0 AS TFloat)     AS EndOdometre
+             , CAST (0 AS TFloat)     AS AmountFuel
+             , CAST (0 AS TFloat)     AS Reparation
+             , CAST (0 AS TFloat)     AS LimitMoney
+             , CAST (0 AS TFloat)     AS LimitDistance
+             , CAST (0 AS TFloat)     AS LimitChange
+             , CAST (0 AS TFloat)     AS LimitDistanceChange
+             , CAST (0 AS TFloat)     AS Distance
+             , CAST (0 AS TFloat)     AS DistanceDiff
+
           FROM lfGet_Object_Status(zc_Enum_Status_UnComplete()) AS Object_Status;
      ELSE
        RETURN QUERY 
@@ -83,6 +99,19 @@ BEGIN
              , Object_Route.ValueData             AS RouteName
              , View_PersonalDriver.PersonalId     AS PersonalDriverId
              , View_PersonalDriver.PersonalName   AS PersonalDriverName
+
+             , MovementFloat_StartOdometre.ValueData       AS StartOdometre
+             , MovementFloat_EndOdometre.ValueData         AS EndOdometre
+             , MovementFloat_AmountFuel.ValueData          AS AmountFuel
+             , MovementFloat_Reparation.ValueData          AS Reparation
+             , MovementFloat_Limit.ValueData               AS LimitMoney
+             , MovementFloat_LimitDistance.ValueData           AS LimitDistance
+             , MovementFloat_LimitChange.ValueData         AS LimitChange
+             , MovementFloat_LimitDistanceChange.ValueData     AS LimitDistanceChange
+             , MovementFloat_Distance.ValueData            AS Distance
+             , COALESCE (MovementFloat_EndOdometre.ValueData - MovementFloat_StartOdometre.ValueData, 0)  ::TFloat    AS DistanceDiff
+
+
        FROM Movement
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
 
@@ -102,6 +131,34 @@ BEGIN
             LEFT JOIN MovementFloat AS MovementFloat_ChangePrice
                                     ON MovementFloat_ChangePrice.MovementId =  Movement.Id
                                    AND MovementFloat_ChangePrice.DescId = zc_MovementFloat_ChangePrice()
+
+            LEFT JOIN MovementFloat AS MovementFloat_StartOdometre
+                                    ON MovementFloat_StartOdometre.MovementId =  Movement.Id
+                                   AND MovementFloat_StartOdometre.DescId = zc_MovementFloat_StartOdometre()
+            LEFT JOIN MovementFloat AS MovementFloat_EndOdometre
+                                    ON MovementFloat_EndOdometre.MovementId =  Movement.Id
+                                   AND MovementFloat_EndOdometre.DescId = zc_MovementFloat_EndOdometre()
+            LEFT JOIN MovementFloat AS MovementFloat_AmountFuel
+                                    ON MovementFloat_AmountFuel.MovementId =  Movement.Id
+                                   AND MovementFloat_AmountFuel.DescId = zc_MovementFloat_AmountFuel()
+            LEFT JOIN MovementFloat AS MovementFloat_Reparation
+                                    ON MovementFloat_Reparation.MovementId =  Movement.Id
+                                   AND MovementFloat_Reparation.DescId = zc_MovementFloat_Reparation()
+            LEFT JOIN MovementFloat AS MovementFloat_Limit
+                                    ON MovementFloat_Limit.MovementId =  Movement.Id
+                                   AND MovementFloat_Limit.DescId = zc_MovementFloat_Limit()
+            LEFT JOIN MovementFloat AS MovementFloat_LimitDistance
+                                    ON MovementFloat_LimitDistance.MovementId =  Movement.Id
+                                   AND MovementFloat_LimitDistance.DescId = zc_MovementFloat_LimitDistance()
+            LEFT JOIN MovementFloat AS MovementFloat_LimitChange
+                                    ON MovementFloat_LimitChange.MovementId =  Movement.Id
+                                   AND MovementFloat_LimitChange.DescId = zc_MovementFloat_LimitChange()
+            LEFT JOIN MovementFloat AS MovementFloat_LimitDistanceChange
+                                    ON MovementFloat_LimitDistanceChange.MovementId =  Movement.Id
+                                   AND MovementFloat_LimitDistanceChange.DescId = zc_MovementFloat_LimitDistanceChange()
+            LEFT JOIN MovementFloat AS MovementFloat_Distance
+                                    ON MovementFloat_Distance.MovementId =  Movement.Id
+                                   AND MovementFloat_Distance.DescId = zc_MovementFloat_Distance()
 
             LEFT JOIN MovementLinkObject AS MovementLinkObject_From
                                          ON MovementLinkObject_From.MovementId = Movement.Id
@@ -144,6 +201,7 @@ ALTER FUNCTION gpGet_Movement_IncomeFuel (Integer, TVarChar) OWNER TO postgres;
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».   Ã‡Ì¸ÍÓ ƒ.
+ 15.01.16         * add
  09.02.14                                        * add Object_Contract_InvNumber_View
  31.10.13                                        * add OperDatePartner
  23.10.13                                        * add NEXTVAL
@@ -159,3 +217,5 @@ ALTER FUNCTION gpGet_Movement_IncomeFuel (Integer, TVarChar) OWNER TO postgres;
 
 -- ÚÂÒÚ
 -- SELECT * FROM gpGet_Movement_IncomeFuel (inMovementId := 0, inSession:= zfCalc_UserAdmin())
+
+--select * from gpGet_Movement_IncomeFuel(inId := 2858432 ,  inSession := '5');

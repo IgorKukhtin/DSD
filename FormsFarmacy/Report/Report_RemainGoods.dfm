@@ -2,8 +2,8 @@ inherited Report_GoodsRemainsForm: TReport_GoodsRemainsForm
   Caption = #1054#1089#1090#1072#1090#1082#1080' '#1090#1086#1074#1072#1088#1086#1074
   ClientHeight = 364
   ClientWidth = 676
-  ExplicitWidth = 684
-  ExplicitHeight = 391
+  ExplicitWidth = 692
+  ExplicitHeight = 402
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -53,6 +53,11 @@ inherited Report_GoodsRemainsForm: TReport_GoodsRemainsForm
             Options.Editing = False
             Width = 214
           end
+          object colNDSKindName: TcxGridDBColumn
+            Caption = #1053#1044#1057
+            DataBinding.FieldName = 'NDSKindName'
+            Width = 42
+          end
           object colOperAmount: TcxGridDBColumn
             Caption = #1050#1086#1083#1080#1095#1077#1089#1090#1074#1086
             DataBinding.FieldName = 'OperAmount'
@@ -63,14 +68,14 @@ inherited Report_GoodsRemainsForm: TReport_GoodsRemainsForm
             Width = 80
           end
           object colPrice: TcxGridDBColumn
-            Caption = #1062#1077#1085#1072
+            Caption = #1062#1077#1085#1072' '#1073'/'#1053#1044#1057
             DataBinding.FieldName = 'Price'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DisplayFormat = ',0.00;-,0.00'
             Options.Editing = False
           end
           object colOperSum: TcxGridDBColumn
-            Caption = #1057#1091#1084#1084#1072
+            Caption = #1057#1091#1084#1084#1072' '#1073'/'#1053#1044#1057
             DataBinding.FieldName = 'OperSum'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DisplayFormat = ',0.00;-,0.00'

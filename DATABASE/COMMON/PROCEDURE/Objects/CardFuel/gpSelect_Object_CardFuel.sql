@@ -6,7 +6,7 @@ CREATE OR REPLACE FUNCTION gpSelect_Object_CardFuel(
     IN inSession        TVarChar       -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
-             , CardFuelLimit TFloat
+             , LimitMoney TFloat, LimitFuel TFloat
              , PersonalDriverId Integer, PersonalDriverCode Integer, PersonalDriverName TVarChar
              , CarId Integer, CarCode Integer, CarName TVarChar, CarModelName TVarChar
              , PaidKindId Integer, PaidKindCode Integer, PaidKindName TVarChar
@@ -31,7 +31,8 @@ BEGIN
            , Object_CardFuel.ObjectCode AS Code
            , Object_CardFuel.ValueData  AS NAME
                       
-           , ObjectFloat_CardFuel_Limit.ValueData AS CardFuelLimit
+           , ObjectFloat_CardFuel_Limit.ValueData      AS LimitMoney
+           , ObjectFloat_CardFuel_LimitFuel.ValueData  AS LimitFuel
 
            , View_PersonalDriver.PersonalId   AS PersonalDriverId 
            , View_PersonalDriver.PersonalCode AS PersonalDriverCode
@@ -61,6 +62,8 @@ BEGIN
 
             LEFT JOIN ObjectFloat AS ObjectFloat_CardFuel_Limit ON ObjectFloat_CardFuel_Limit.ObjectId = Object_CardFuel.Id
                                                                AND ObjectFloat_CardFuel_Limit.DescId = zc_ObjectFloat_CardFuel_Limit()
+            LEFT JOIN ObjectFloat AS ObjectFloat_CardFuel_LimitFuel ON ObjectFloat_CardFuel_LimitFuel.ObjectId = Object_CardFuel.Id
+                                                                   AND ObjectFloat_CardFuel_LimitFuel.DescId = zc_ObjectFloat_CardFuel_LimitFuel()
 
             LEFT JOIN ObjectLink AS ObjectLink_CardFuel_PersonalDriver ON ObjectLink_CardFuel_PersonalDriver.ObjectId = Object_CardFuel.Id
                                                                       AND ObjectLink_CardFuel_PersonalDriver.DescId = zc_ObjectLink_CardFuel_PersonalDriver()
@@ -100,11 +103,12 @@ ALTER FUNCTION gpSelect_Object_CardFuel (TVarChar) OWNER TO postgres;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 14.01.16         * add LimitFuel
  02.09.14                                        * rem AccessKey...
  14.12.13                                        * add vbAccessKeyAll
  14.12.13                                        * add CardFuelLimit
  18.10.13                                        * add CarModelName
- 14.10.13          *
+ 14.10.13         *
 */
 /*
 UPDATE Object SET AccessKeyId = CASE WHEN ObjectLink.ChildObjectId IS NOT NULL THEN COALESCE (Object_Branch.AccessKeyId, zc_Enum_Process_AccessKey_TrasportDnepr()) END FROM ObjectLink LEFT JOIN ObjectLink AS ObjectLink_Car_Unit ON ObjectLink_Car_Unit.ObjectId = ObjectLink.ChildObjectId AND ObjectLink_Car_Unit.DescId = zc_ObjectLink_Car_Unit() LEFT JOIN ObjectLink AS ObjectLink2 ON ObjectLink2.ObjectId = ObjectLink_Car_Unit.ChildObjectId AND ObjectLink2.DescId = zc_ObjectLink_Unit_Branch() LEFT JOIN Object AS Object_Branch ON Object_Branch.Id = ObjectLink2.ChildObjectId WHERE ObjectLink.ObjectId = Object.Id AND ObjectLink.DescId = zc_ObjectLink_CardFuel_Car() AND Object.DescId = zc_Object_CardFuel();

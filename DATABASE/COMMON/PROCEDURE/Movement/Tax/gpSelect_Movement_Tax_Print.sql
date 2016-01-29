@@ -44,8 +44,8 @@ BEGIN
           , COALESCE (MovementBoolean_PriceWithVAT.ValueData, TRUE)   AS PriceWithVAT
           , COALESCE (MovementFloat_VATPercent.ValueData, 0)          AS VATPercent
           , COALESCE (MovementLinkObject_CurrencyPartner.ObjectId, zc_Enum_Currency_Basis()) AS CurrencyPartnerId
-          , zfCalc_GoodsPropertyId (MovementLinkObject_Contract.ObjectId, MovementLinkObject_To.ObjectId) AS GoodsPropertyId
-          , zfCalc_GoodsPropertyId (0, zc_Juridical_Basis())          AS GoodsPropertyId_basis
+          , zfCalc_GoodsPropertyId (MovementLinkObject_Contract.ObjectId, MovementLinkObject_To.ObjectId, 0) AS GoodsPropertyId
+          , zfCalc_GoodsPropertyId (0, zc_Juridical_Basis(), 0)       AS GoodsPropertyId_basis
           -- , ObjectLink_Juridical_GoodsProperty.ChildObjectId         AS GoodsPropertyId
           -- , ObjectLink_JuridicalBasis_GoodsProperty.ChildObjectId    AS GoodsPropertyId_basis
             INTO vbMovementId_Tax, vbStatusId_Tax, vbDocumentTaxKindId, vbPriceWithVAT, vbVATPercent, vbCurrencyPartnerId, vbGoodsPropertyId, vbGoodsPropertyId_basis
@@ -133,7 +133,7 @@ BEGIN
            , Movement.OperDate                          AS OperDate
            , CASE WHEN Movement.OperDate < '01.01.2015' THEN 'J1201006' ELSE 'J1201007' END ::TVarChar AS CHARCODE
            -- , 'Неграш О.В.'::TVarChar                    AS N10
-           , COALESCE (Object_Personal_View.PersonalName, 'Рудик Н.В.') :: TVarChar AS N10
+           , CASE WHEN Object_Personal_View.PersonalName <> '' THEN zfConvert_FIO (Object_Personal_View.PersonalName, 1) ELSE 'Рудик Н.В.' END :: TVarChar AS N10
            , 'оплата з поточного рахунка'::TVarChar     AS N9
 /*
            , CASE WHEN OH_JuridicalDetails_To.INN = vbNotNDSPayer_INN
@@ -205,7 +205,7 @@ BEGIN
            , OH_JuridicalDetails_From.OKPO              AS OKPO_From
            , OH_JuridicalDetails_From.INN               AS INN_From
            , OH_JuridicalDetails_From.NumberVAT         AS NumberVAT_From
-           , COALESCE (zfConvert_FIO(Object_Personal_View.PersonalName,1), OH_JuridicalDetails_From.AccounterName) :: TVarChar AS AccounterName_From
+           , CASE WHEN Object_Personal_View.PersonalName <> '' THEN zfConvert_FIO (Object_Personal_View.PersonalName, 1) ELSE 'Рудик Н.В.' END :: TVarChar AS AccounterName_From
            , OH_JuridicalDetails_From.BankAccount       AS BankAccount_From
            , OH_JuridicalDetails_From.BankName          AS BankName_From
            , OH_JuridicalDetails_From.MFO               AS BankMFO_From

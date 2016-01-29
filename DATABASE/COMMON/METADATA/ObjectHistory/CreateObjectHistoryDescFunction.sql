@@ -6,8 +6,13 @@ CREATE OR REPLACE FUNCTION zc_ObjectHistory_JuridicalDetails() RETURNS Integer A
 INSERT INTO ObjectHistoryDesc(Code, ItemName)
 SELECT 'zc_ObjectHistory_JuridicalDetails', 'Реквизиты юридических лиц' WHERE NOT EXISTS (SELECT * FROM ObjectHistoryDesc WHERE Id = zc_ObjectHistory_JuridicalDetails());
 
+CREATE OR REPLACE FUNCTION zc_ObjectHistory_Price() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectHistoryDesc WHERE Code = 'zc_ObjectHistory_Price'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectHistoryDesc(Code, ItemName)
+SELECT 'zc_ObjectHistory_Price', 'Данные по ценам и НТЗ на торговых точках' WHERE NOT EXISTS (SELECT * FROM ObjectHistoryDesc WHERE Id = zc_ObjectHistory_Price());
+
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Воробкало А.А.
+ 22.12.15                                                          *zc_ObjectHistory_Price
  15.12.13                                        * !!!rename!!!
 */

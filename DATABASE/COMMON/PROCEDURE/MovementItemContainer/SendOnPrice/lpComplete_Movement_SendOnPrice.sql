@@ -1,5 +1,6 @@
 -- Function: lpComplete_Movement_SendOnPrice()
 
+DROP FUNCTION IF EXISTS lpComplete_Movement_SendOnPrice_Price (Integer, Integer);
 DROP FUNCTION IF EXISTS lpComplete_Movement_SendOnPrice (Integer, Integer);
 
 CREATE OR REPLACE FUNCTION lpComplete_Movement_SendOnPrice(
@@ -681,7 +682,7 @@ BEGIN
         SELECT
               _tmpItem.MovementItemId
             , _tmpItem.isLossMaterials
-            , CASE WHEN ContainerLinkObject_InfoMoney.ObjectId = zc_Enum_InfoMoney_80401()       -- прибыль текущего периода
+            , CASE WHEN ContainerLinkObject_InfoMoney.ObjectId       = zc_Enum_InfoMoney_80401() -- прибыль текущего периода
                      OR ContainerLinkObject_InfoMoneyDetail.ObjectId = zc_Enum_InfoMoney_80401() -- прибыль текущего периода
                         THEN TRUE
                    ELSE FALSE
@@ -974,10 +975,18 @@ BEGIN
                   , _tmpItemSumm.ContainerId_Transit
                   , zc_Enum_AnalyzerId_SendSumm_in()        AS AnalyzerId -- Сумма с/с, перемещение по цене, перемещение, пришло
                   , CASE WHEN _tmpItemSumm.isLossMaterials = TRUE OR _tmpItemSumm.isRestoreAccount_60000 = TRUE THEN 0 ELSE _tmpItemSumm.MIContainerId_To END AS ParentId -- хотя он здесь и так =0
-                  , _tmpItemSumm.OperSumm_Partner           AS OperSumm
+                  , CASE WHEN _tmpItemSumm.InfoMoneyId_From        = zc_Enum_InfoMoney_80401() -- прибыль текущего периода
+                           OR _tmpItemSumm.InfoMoneyId_Detail_From = zc_Enum_InfoMoney_80401() -- прибыль текущего периода
+                              THEN _tmpItemSumm.OperSumm
+                         ELSE _tmpItemSumm.OperSumm_Partner
+                    END AS OperSumm
                   , FALSE                                   AS isActive
              FROM _tmpItemSumm
-             WHERE _tmpItemSumm.OperSumm_Partner <> 0   -- !!!нулевые не нужны!!!
+             WHERE CASE WHEN _tmpItemSumm.InfoMoneyId_From        = zc_Enum_InfoMoney_80401() -- прибыль текущего периода
+                          OR _tmpItemSumm.InfoMoneyId_Detail_From = zc_Enum_InfoMoney_80401() -- прибыль текущего периода
+                             THEN _tmpItemSumm.OperSumm
+                        ELSE _tmpItemSumm.OperSumm_Partner
+                   END <> 0 -- !!!нулевые не нужны!!!
                AND _tmpItemSumm.isLossMaterials = FALSE -- !!!если НЕ списание!!!
             UNION ALL
              SELECT _tmpItemSumm.MovementItemId
@@ -991,6 +1000,8 @@ BEGIN
                   , FALSE                                   AS isActive
              FROM _tmpItemSumm
              WHERE (_tmpItemSumm.OperSumm - _tmpItemSumm.OperSumm_ChangePercent) <> 0 -- !!!нулевые не нужны!!!
+               AND _tmpItemSumm.InfoMoneyId_From        <> zc_Enum_InfoMoney_80401() -- прибыль текущего периода
+               AND _tmpItemSumm.InfoMoneyId_Detail_From <> zc_Enum_InfoMoney_80401() -- прибыль текущего периода
                AND _tmpItemSumm.isLossMaterials = FALSE -- !!!если НЕ списание!!!
             UNION ALL
              SELECT _tmpItemSumm.MovementItemId
@@ -1004,6 +1015,8 @@ BEGIN
                   , FALSE                                  AS isActive
              FROM _tmpItemSumm
              WHERE (_tmpItemSumm.OperSumm_ChangePercent - _tmpItemSumm.OperSumm_Partner) <> 0 -- !!!нулевые не нужны!!!
+               AND _tmpItemSumm.InfoMoneyId_From        <> zc_Enum_InfoMoney_80401() -- прибыль текущего периода
+               AND _tmpItemSumm.InfoMoneyId_Detail_From <> zc_Enum_InfoMoney_80401() -- прибыль текущего периода
                AND _tmpItemSumm.isLossMaterials = FALSE -- !!!если НЕ списание!!!
             )
        -- результат
@@ -1628,8 +1641,13 @@ BEGIN
 
      END IF; -- if vbIsHistoryCost = TRUE -- !!!не всегда Проводки для отчета!!!
 
-     -- !!!6.0. формируется свойство <Спец. алгоритм для расчета с/с (да/нет)>!!!
+     -- !!!6.0.1. формируется свойство <Спец. алгоритм для расчета с/с (да/нет)>!!!
      PERFORM lpInsertUpdate_MovementBoolean (zc_MovementBoolean_HistoryCost(), inMovementId, CASE WHEN vbBranchId_From = 0 OR vbBranchId_From = zc_Branch_Basis() THEN TRUE ELSE FALSE END);
+
+     -- !!!6.0.2. формируется свойство <zc_MIFloat_Summ - Сумма> + <zc_MIFloat_SummPriceList - Сумма по прайсу>!!!
+     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_Summ(), _tmpItem.MovementItemId, _tmpItem.OperSumm_Partner)
+           , lpInsertUpdate_MovementItemFloat (zc_MIFloat_SummPriceList(), _tmpItem.MovementItemId, _tmpItem.OperSumm_PriceList)
+     FROM _tmpItem;
 
 
      -- 6.1. ФИНИШ - Обязательно сохраняем Проводки

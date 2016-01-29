@@ -39,7 +39,7 @@ BEGIN
     vbUserId:= lpGetUserBySession(inSession);
 
    CASE WHEN inInvNumberBranch  = '1' AND inOperDate < '01.11.2015' THEN vbAccessKey := zc_Enum_Process_AccessKey_DocumentKharkov();
-        WHEN inInvNumberBranch  = '2' THEN vbAccessKey := zc_Enum_Process_AccessKey_DocumentKiev();
+        WHEN inInvNumberBranch  = '2' AND inOperDate < '01.01.2016' THEN vbAccessKey := zc_Enum_Process_AccessKey_DocumentKiev();
         WHEN inInvNumberBranch  = '5' AND inOperDate < '01.11.2015' THEN vbAccessKey := zc_Enum_Process_AccessKey_DocumentNikolaev();
         WHEN inInvNumberBranch  = '8' AND inOperDate < '01.11.2015' THEN vbAccessKey := zc_Enum_Process_AccessKey_DocumentKrRog();
         WHEN inInvNumberBranch  = '9' AND inOperDate < '01.11.2015' THEN vbAccessKey := zc_Enum_Process_AccessKey_DocumentCherkassi();
@@ -51,7 +51,7 @@ BEGIN
    SELECT Movement_Medoc_View.Id
           INTO vbMedocId 
    FROM Movement_Medoc_View 
-   WHERE zfConvert_StringToNumber(InvNumber) = inMedocCode; 
+   WHERE zfConvert_StringToNumber(InvNumber) = inMedocCode AND InvNumberBranch = inInvNumberBranch;
 
 
 -- IF TRIM (inInvNumberRegistered) = '9159204066'
@@ -62,7 +62,7 @@ BEGIN
 -- end if;
 
    -- Если ключ пустой, то добавили новый ключ МЕДОК
-   IF COALESCE(vbMedocId, 0) = 0
+   IF COALESCE (vbMedocId, 0) = 0 -- OR (vbAccessKey = zc_Enum_Process_AccessKey_DocumentKiev() AND EXISTS (SELECT 1 FROM Movement WHERE Movement.Id = vbMedocId AND Movement.ParentId IS NULL))
    THEN 
       vbMedocId := lpInsertUpdate_Movement_Medoc(vbMedocId, inMedocCode, inInvNumber, inOperDate,
                            inFromINN, inToINN, inInvNumberBranch, inInvNumberRegistered, inDateRegistered, inDocKind, inContract, 

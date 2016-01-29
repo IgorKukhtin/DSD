@@ -37,9 +37,9 @@ BEGIN
                                            ioId                := 0
                                          , inMovementId         := vbMovementId
                                          , inGoodsId            := tmp.GoodsId
-                                         , inAmount             := tmp.Amount
-                                         , inPrice              := tmp.Price
-                                         , ioCountForPrice      := tmp.CountForPrice
+                                         , inAmount             := COALESCE (tmp.Amount, 0)
+                                         , inPrice              := COALESCE (tmp.Price, 0)
+                                         , ioCountForPrice      := COALESCE (tmp.CountForPrice, 1)
                                          , inGoodsKindId        := tmp.GoodsKindId
                                          , inUserId             := vbUserId
                                           ) 

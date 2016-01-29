@@ -35,6 +35,10 @@ $BODY$
    DECLARE vbIsFindPartnerContract Boolean;
    DECLARE vbGoodsPropertyId  Integer;
    DECLARE vbOKPO             TVarChar;
+   DECLARE vbGLNCodeJuridical TVarChar;
+   DECLARE vbGLNCodeJuridical1 TVarChar;
+   DECLARE vbGLNCodeJuridical2 TVarChar;
+   DECLARE vbGLNCodeJuridical3 TVarChar;
 BEGIN
 
      -- Определяются параметры (отдельно)
@@ -78,11 +82,19 @@ BEGIN
           , ObjectLink_Partner_RouteSorting.ChildObjectId    AS RouteSortingId
           , ObjectLink_Partner_MemberTake.ChildObjectId      AS MemberTakeId
           -- , ObjectLink_Juridical_GoodsProperty.ChildObjectId AS GoodsPropertyId
-          , zfCalc_GoodsPropertyId (vbContractId, ObjectLink_Partner_Juridical.ChildObjectId) AS GoodsPropertyId
+          , zfCalc_GoodsPropertyId (vbContractId, ObjectLink_Partner_Juridical.ChildObjectId, ObjectString_Partner_GLNCode.ObjectId) AS GoodsPropertyId
           , ObjectHistory_JuridicalDetails_View.OKPO         AS OKPO
+          , zfCalc_GLNCodeJuridical (inGLNCode                  := ObjectString_Partner_GLNCode.ValueData
+                                   , inGLNCodeJuridical_partner := ObjectString_Partner_GLNCodeJuridical.ValueData
+                                   , inGLNCodeJuridical         := ObjectString_Juridical_GLNCode.ValueData
+                                    ) AS GLNCodeJuridical
+          , ObjectString_Partner_GLNCode.ValueData
+          , ObjectString_Partner_GLNCodeJuridical.ValueData
+          , ObjectString_Juridical_GLNCode.ValueData
             INTO vbInvNumber, vbOperDate, vbOperDatePartner, vbPartnerId, vbJuridicalId, vbUnitId, vbPaidKindId, vbChangePercent
                , vbRouteId, vbRouteSortingId, vbMemberTakeId
                , vbGoodsPropertyId, vbOKPO
+               , vbGLNCodeJuridical, vbGLNCodeJuridical1, vbGLNCodeJuridical2, vbGLNCodeJuridical3
      FROM Movement
           LEFT JOIN MovementLinkObject AS MovementLinkObject_Unit
                                        ON MovementLinkObject_Unit.MovementId = Movement.Id
@@ -257,7 +269,7 @@ BEGIN
      -- Проверка
      IF COALESCE (vbJuridicalId, 0) = 0
      THEN
-         RAISE EXCEPTION 'Ошибка.В документе EDI № <%> от <%> у контрагента <%> для значения GLN - покупатель (EDI) = <%>  не определено <Юридическое лицо>.', (SELECT InvNumber FROM Movement WHERE Id = inMovementId), DATE ((SELECT OperDate FROM Movement WHERE Id = inMovementId)), lfGet_Object_ValueData (vbPartnerId), (SELECT ValueData FROM MovementString WHERE MovementId = inMovementId AND DescId = zc_MovementString_GLNCode());
+         RAISE EXCEPTION 'Ошибка.В документе EDI № <%> от <%> у контрагента <%> для значения GLN - покупатель (EDI) = <%>  не определено <Юридическое лицо> <%> 1.<%> 2.<%> 3.<%>.', (SELECT InvNumber FROM Movement WHERE Id = inMovementId), DATE ((SELECT OperDate FROM Movement WHERE Id = inMovementId)), lfGet_Object_ValueData (vbPartnerId), (SELECT ValueData FROM MovementString WHERE MovementId = inMovementId AND DescId = zc_MovementString_GLNCode()), vbGLNCodeJuridical, vbGLNCodeJuridical1, vbGLNCodeJuridical2, vbGLNCodeJuridical3;
      END IF;
      -- Проверка
      IF COALESCE (vbContractId, 0) = 0
@@ -401,6 +413,7 @@ BEGIN
            GROUP BY tmpMI.GoodsId
                   , tmpMI.GoodsKindId
                   -- , tmpMI.Price
+           ORDER BY 2, 1
           ) AS tmpMI
      ;
      ELSE

@@ -27,10 +27,10 @@ BEGIN
     WHERE Object_Goods_View.ObjectId = inObjectId
       AND Object_Goods_View.GoodsCode = inGoodsCode;   
 
-    -- IF COALESCE(vbGoodsId,0) = 0
-    -- THEN
-        -- RAISE EXCEPTION 'Ошибка. В базе данных не найден товар с кодом <%>', inGoodsCode;
-    -- END IF;
+/*     IF COALESCE(vbGoodsId,0) = 0
+    THEN
+        RAISE EXCEPTION 'Ошибка. В базе данных не найден товар с кодом <%>', inGoodsCode;
+    END IF; */
     IF COALESCE(vbGoodsId,0) <> 0
     THEN
         PERFORM lpInsertUpdate_objectBoolean(zc_ObjectBoolean_Goods_IsUpload(), vbGoodsId, inIsUpload);    

@@ -30,7 +30,7 @@ BEGIN
    
    INSERT INTO _tmpItem(ObjectId, OperSumm, AccountId, JuridicalId_Basis, OperDate)   
    SELECT Movement_Income_View.FromId
-        , Movement_Income_View.TotalSumm + COALESCE(Movement_Income_View.CorrBonus,0) + COALESCE(Movement_Income_View.CorrOther,0)
+        , Movement_Income_View.TotalSumm
         , lpInsertFind_Object_Account (inAccountGroupId         := zc_Enum_AccountGroup_70000()
                                      , inAccountDirectionId     := zc_Enum_AccountDirection_70100()
                                      , inInfoMoneyDestinationId := zc_Enum_InfoMoneyDestination_10200()

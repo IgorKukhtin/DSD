@@ -7,22 +7,22 @@
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Top = 151
+    Top = 132
     Width = 904
-    Height = 375
-    ExplicitTop = 151
+    Height = 394
+    ExplicitTop = 132
     ExplicitWidth = 904
-    ExplicitHeight = 375
-    ClientRectBottom = 375
+    ExplicitHeight = 394
+    ClientRectBottom = 394
     ClientRectRight = 904
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 904
-      ExplicitHeight = 351
+      ExplicitHeight = 370
       inherited cxGrid: TcxGrid
         Width = 904
-        Height = 351
+        Height = 370
         ExplicitWidth = 904
-        ExplicitHeight = 351
+        ExplicitHeight = 370
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -308,10 +308,10 @@
   end
   inherited DataPanel: TPanel
     Width = 904
-    Height = 125
+    Height = 106
     TabOrder = 3
     ExplicitWidth = 904
-    ExplicitHeight = 125
+    ExplicitHeight = 106
     inherited edInvNumber: TcxTextEdit
       Left = 8
       Properties.ReadOnly = False
@@ -560,50 +560,26 @@
       TabOrder = 28
       Width = 140
     end
-    object ceCorrBonus: TcxCurrencyEdit
-      Left = 8
-      Top = 102
-      Properties.DisplayFormat = ',0.00;-,0.00'
-      TabOrder = 29
-      Width = 97
-    end
-    object cxLabel14: TcxLabel
-      Left = 8
-      Top = 85
-      Caption = #1050#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1082#1072' '#1087#1086' '#1073#1086#1085#1091#1089#1091
-    end
-    object cxLabel16: TcxLabel
-      Left = 160
-      Top = 85
-      Caption = #1050#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1082#1072' '#1087#1088#1086#1095#1072#1103
-    end
-    object ceCorrOther: TcxCurrencyEdit
-      Left = 160
-      Top = 102
-      Properties.DisplayFormat = ',0.00;-,0.00'
-      TabOrder = 32
-      Width = 97
-    end
     object chbIsPay: TcxCheckBox
-      Left = 288
-      Top = 102
+      Left = 8
+      Top = 84
       Caption = #1054#1087#1083#1072#1095#1077#1085#1072
       Properties.ReadOnly = True
-      TabOrder = 33
+      TabOrder = 29
       Width = 81
     end
     object вуDateLastPay: TcxDateEdit
-      Left = 375
-      Top = 102
+      Left = 220
+      Top = 84
       EditValue = 42144d
       Properties.ReadOnly = True
       Properties.SaveTime = False
       Properties.ShowTime = False
-      TabOrder = 34
-      Width = 100
+      TabOrder = 30
+      Width = 99
     end
     object cxLabel17: TcxLabel
-      Left = 375
+      Left = 96
       Top = 85
       Caption = #1044#1072#1090#1072' '#1086#1087#1083#1072#1090#1099' '#1087#1086' '#1073#1072#1085#1082#1091':'
     end
@@ -816,6 +792,61 @@
       QuestionBeforeExecute = #1042#1099' '#1091#1074#1077#1088#1077#1085#1099' '#1074' '#1087#1077#1088#1077#1089#1095#1077#1090#1077' '#1094#1077#1085'?'
       InfoAfterExecute = #1062#1077#1085#1099' '#1088#1077#1072#1083#1080#1079#1072#1094#1080#1080' '#1087#1077#1088#1077#1089#1095#1080#1090#1072#1085#1099
     end
+    object mactEditPartnerData: TMultiAction
+      Category = 'PartnerData'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actPartnerDataDialod
+        end
+        item
+          Action = actUpdateIncome_PartnerData
+        end
+        item
+          Action = actRefresh
+        end>
+      Caption = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#8470' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' '#1080' '#1076#1072#1090#1091' '#1086#1087#1083#1072#1090#1099
+      Hint = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#8470' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' '#1080' '#1076#1072#1090#1091' '#1086#1087#1083#1072#1090#1099
+      ImageIndex = 35
+    end
+    object actPartnerDataDialod: TExecuteDialog
+      Category = 'PartnerData'
+      MoveParams = <>
+      Caption = 'actPartnerDataDialog'
+      FormName = 'TIncomePartnerDataDialogForm'
+      FormNameParam.Value = 'TIncomePartnerDataDialogForm'
+      FormNameParam.DataType = ftString
+      GuiParams = <
+        item
+          Name = 'InvNumber'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'InvNumber'
+          DataType = ftString
+          ParamType = ptInput
+        end
+        item
+          Name = 'PaymentDate'
+          Value = 'NULL'
+          Component = FormParams
+          ComponentItem = 'PaymentDate'
+          DataType = ftDateTime
+          ParamType = ptInput
+        end>
+      isShowModal = True
+      OpenBeforeShow = True
+    end
+    object actUpdateIncome_PartnerData: TdsdExecStoredProc
+      Category = 'PartnerData'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdateIncome_PartnerData
+      StoredProcList = <
+        item
+          StoredProc = spUpdateIncome_PartnerData
+        end>
+      Caption = 'actUpdateReturnOut_PartnerData'
+    end
   end
   inherited MasterDS: TDataSource
     Top = 448
@@ -942,6 +973,10 @@
         end
         item
           Visible = True
+          ItemName = 'dxBarButton1'
+        end
+        item
+          Visible = True
           ItemName = 'dxBarStatic'
         end
         item
@@ -986,6 +1021,10 @@
     end
     object bbCalculateSalePrice: TdxBarButton
       Action = actCalculateSalePrice
+      Category = 0
+    end
+    object dxBarButton1: TdxBarButton
+      Action = mactEditPartnerData
       Category = 0
     end
   end
@@ -1056,6 +1095,20 @@
         Name = 'ReportNameIncomeBill'
         Value = Null
         DataType = ftString
+        ParamType = ptInput
+      end
+      item
+        Name = 'InvNumber'
+        Value = Null
+        Component = edInvNumber
+        DataType = ftString
+        ParamType = ptInput
+      end
+      item
+        Name = 'PaymentDate'
+        Value = 'NULL'
+        Component = edPaymentDate
+        DataType = ftDateTime
         ParamType = ptInput
       end>
     Left = 280
@@ -1165,7 +1218,7 @@
       end
       item
         Name = 'PaymentDate'
-        Value = Null
+        Value = 'NULL'
         Component = edPaymentDate
         DataType = ftDateTime
       end
@@ -1198,18 +1251,6 @@
         DataType = ftString
       end
       item
-        Name = 'CorrBonus'
-        Value = Null
-        Component = ceCorrBonus
-        DataType = ftFloat
-      end
-      item
-        Name = 'CorrOther'
-        Value = Null
-        Component = ceCorrOther
-        DataType = ftFloat
-      end
-      item
         Name = 'isPay'
         Value = Null
         Component = chbIsPay
@@ -1217,7 +1258,7 @@
       end
       item
         Name = 'DateLastPay'
-        Value = Null
+        Value = 'NULL'
         Component = вуDateLastPay
         DataType = ftDateTime
       end>
@@ -1319,20 +1360,6 @@
         DataType = ftString
       end
       item
-        Name = 'inCorrBonus'
-        Value = 'False'
-        Component = ceCorrBonus
-        DataType = ftFloat
-        ParamType = ptInput
-      end
-      item
-        Name = 'inCorrOther'
-        Value = ''
-        Component = ceCorrOther
-        DataType = ftFloat
-        ParamType = ptInput
-      end
-      item
         Value = ''
         ParamType = ptUnknown
       end
@@ -1385,10 +1412,8 @@
         Control = edJuridical
       end
       item
-        Control = ceCorrBonus
       end
       item
-        Control = ceCorrOther
       end
       item
       end
@@ -1832,45 +1857,41 @@
         Component = MasterCDS
         ComponentItem = 'AmountDiff'
         DataType = ftFloat
-      end
-      item
-        Value = Null
-        ParamType = ptUnknown
-      end
-      item
-        Value = Null
-        ParamType = ptUnknown
-      end
-      item
-        Value = Null
-        ParamType = ptUnknown
-      end
-      item
-        Value = Null
-        ParamType = ptUnknown
-      end
-      item
-        Value = Null
-        ParamType = ptUnknown
-      end
-      item
-        Value = Null
-        ParamType = ptUnknown
-      end
-      item
-        Value = Null
-        ParamType = ptUnknown
-      end
-      item
-        Value = Null
-        ParamType = ptUnknown
-      end
-      item
-        Value = Null
-        ParamType = ptUnknown
       end>
     PackSize = 1
     Left = 512
     Top = 384
+  end
+  object spUpdateIncome_PartnerData: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Movement_Income_PartnerData'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inInvNumber'
+        Value = ''
+        Component = FormParams
+        ComponentItem = 'InvNumber'
+        DataType = ftString
+        ParamType = ptInput
+      end
+      item
+        Name = 'inPaymentDate'
+        Value = 42381d
+        Component = FormParams
+        ComponentItem = 'PaymentDate'
+        DataType = ftDateTime
+        ParamType = ptInput
+      end>
+    PackSize = 1
+    Left = 712
+    Top = 424
   end
 end

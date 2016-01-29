@@ -69,7 +69,7 @@ BEGIN
 */
 
      -- определяется параметр
-     vbGoodsPropertyId:= (SELECT zfCalc_GoodsPropertyId (MovementLinkObject_Contract.ObjectId, COALESCE (ObjectLink_Partner_Juridical.ChildObjectId, MovementLinkObject_From.ObjectId)) -- ObjectLink_Juridical_GoodsProperty.ChildObjectId
+     vbGoodsPropertyId:= (SELECT zfCalc_GoodsPropertyId (MovementLinkObject_Contract.ObjectId, COALESCE (ObjectLink_Partner_Juridical.ChildObjectId, MovementLinkObject_From.ObjectId), 0) -- ObjectLink_Juridical_GoodsProperty.ChildObjectId
                           FROM Movement
                                LEFT JOIN MovementLinkObject AS MovementLinkObject_Contract
                                                             ON MovementLinkObject_Contract.MovementId = Movement.Id
@@ -86,13 +86,14 @@ BEGIN
                           WHERE Movement.Id = inMovementId
                          );
      -- определяется параметр
-     vbGoodsPropertyId_basis:= zfCalc_GoodsPropertyId (0, zc_Juridical_Basis()); -- (SELECT ChildObjectId FROM ObjectLink WHERE ObjectId = zc_Juridical_Basis() AND DescId = zc_ObjectLink_Juridical_GoodsProperty());
+     vbGoodsPropertyId_basis:= zfCalc_GoodsPropertyId (0, zc_Juridical_Basis(), 0); -- (SELECT ChildObjectId FROM ObjectLink WHERE ObjectId = zc_Juridical_Basis() AND DescId = zc_ObjectLink_Juridical_GoodsProperty());
 
 
      -- Данные по Всем корректировкам + налоговым: заголовок + строчная часть
      OPEN Cursor1 FOR
      WITH tmpMovement AS
           (SELECT Movement_find.Id
+                , MovementBoolean_isPartner.ValueData AS isPartner
            FROM Movement
                 LEFT JOIN MovementLinkMovement AS MovementLinkMovement_Master
                                                ON MovementLinkMovement_Master.MovementId = Movement.Id
@@ -103,16 +104,25 @@ BEGIN
                                               AND MovementLinkMovement_Master_find.DescId = zc_MovementLinkMovement_Master()
                 INNER JOIN Movement AS Movement_find ON Movement_find.Id  = COALESCE (MovementLinkMovement_Master_find.MovementId, Movement.Id)
                                                     AND Movement_find.StatusId = zc_Enum_Status_Complete()
+                LEFT JOIN MovementBoolean AS MovementBoolean_isPartner
+                                          ON MovementBoolean_isPartner.MovementId = MovementLinkMovement_Master.MovementChildId
+                                         AND MovementBoolean_isPartner.DescId = zc_MovementBoolean_isPartner()
+                
            WHERE Movement.Id = inMovementId
              AND Movement.DescId = zc_Movement_TaxCorrective()
           UNION
            SELECT MovementLinkMovement_Master.MovementId AS Id
+                , MovementBoolean_isPartner.ValueData    AS isPartner
            FROM Movement
                 INNER JOIN MovementLinkMovement AS MovementLinkMovement_Master
                                                 ON MovementLinkMovement_Master.MovementChildId = Movement.Id
                                                AND MovementLinkMovement_Master.DescId = zc_MovementLinkMovement_Master()
                 INNER JOIN Movement AS Movement_Master ON Movement_Master.Id  = MovementLinkMovement_Master.MovementId
                                                       AND Movement_Master.StatusId = zc_Enum_Status_Complete()
+                LEFT JOIN MovementBoolean AS MovementBoolean_isPartner
+                                          ON MovementBoolean_isPartner.MovementId = Movement.Id
+                                         AND MovementBoolean_isPartner.DescId = zc_MovementBoolean_isPartner()   
+
            WHERE Movement.Id = inMovementId
              AND Movement.DescId IN (zc_Movement_ReturnIn(), zc_Movement_TransferDebtIn(), zc_Movement_PriceCorrective())
           )
@@ -191,14 +201,14 @@ BEGIN
            , Movement.OperDate				                                AS OperDate
            , 'J1201006'::TVarChar                                           AS CHARCODE
            -- , 'Неграш О.В.'::TVarChar                                        AS N10
-           , COALESCE (Object_Personal_View.PersonalName, 'Рудик Н.В.') :: TVarChar AS N10
+           , CASE WHEN Object_Personal_View.PersonalName <> '' THEN zfConvert_FIO (Object_Personal_View.PersonalName, 1) ELSE 'Рудик Н.В.' END :: TVarChar AS N10
            -- , 'А.В. МАРУХНО'::TVarChar                                        AS N10
            , 'оплата з поточного рахунка'::TVarChar                         AS N9
            , CASE WHEN MovementLinkObject_DocumentTaxKind.ObjectId = zc_Enum_DocumentTaxKind_CorrectivePrice()
                        THEN 'Змiна цiни'
                   WHEN MovementBoolean_isCopy.ValueData = TRUE
                        THEN 'ВИПРАВЛЕННЯ ПОМИЛКИ'
-                  WHEN MovementBoolean_isPartner.ValueData = TRUE
+                  WHEN tmpMovement.isPartner = TRUE
                        THEN 'НЕДОВIЗ'
                   ELSE 'повернення'
              END :: TVarChar AS KindName
@@ -263,7 +273,7 @@ BEGIN
            , OH_JuridicalDetails_To.INN                                     AS INN_To
            , OH_JuridicalDetails_To.NumberVAT                               AS NumberVAT_To
          -- , COALESCE (Object_Personal_View.PersonalName, OH_JuridicalDetails_To.AccounterName) :: TVarChar AS AccounterName_To 
-           , CASE WHEN COALESCE(Object_Personal_View.PersonalName,'') <> '' THEN zfConvert_FIO(Object_Personal_View.PersonalName,1) ELSE 'А.В. Марухно' END  :: TVarChar AS AccounterName_To
+           , CASE WHEN COALESCE (Object_Personal_View.PersonalName,'') <> '' THEN zfConvert_FIO (Object_Personal_View.PersonalName, 1) ELSE 'Рудик Н.В.' /*'А.В. Марухно'*/ END  :: TVarChar AS AccounterName_To
            , OH_JuridicalDetails_To.BankAccount                             AS BankAccount_To
            , OH_JuridicalDetails_To.BankName                                AS BankName_To
            , OH_JuridicalDetails_To.MFO                                     AS BankMFO_To
@@ -359,10 +369,6 @@ BEGIN
             LEFT JOIN MovementBoolean AS MovementBoolean_isCopy
                                       ON MovementBoolean_isCopy.MovementId = tmpMovement.Id
                                      AND MovementBoolean_isCopy.DescId = zc_MovementBoolean_isCopy()
-
-            LEFT JOIN MovementBoolean AS MovementBoolean_isPartner
-                                      ON MovementBoolean_isPartner.MovementId = tmpMovement.Id
-                                     AND MovementBoolean_isPartner.DescId = zc_MovementBoolean_isPartner()
 
             LEFT JOIN MovementLinkMovement AS MovementLinkMovement_ChildEDI
                                            ON MovementLinkMovement_ChildEDI.MovementId = tmpMovement.Id

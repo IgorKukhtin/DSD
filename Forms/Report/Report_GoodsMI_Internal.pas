@@ -71,6 +71,12 @@ type
     Summ_calc: TcxGridDBColumn;
     AmountOut: TcxGridDBColumn;
     AmountIn: TcxGridDBColumn;
+    AmountIn_10500: TcxGridDBColumn;
+    AmountIn_10500_Weight: TcxGridDBColumn;
+    AmountIn_40200: TcxGridDBColumn;
+    AmountIn_40200_Weight: TcxGridDBColumn;
+    SummIn_10500: TcxGridDBColumn;
+    SummIn_40200: TcxGridDBColumn;
   private
     { Private declarations }
   public

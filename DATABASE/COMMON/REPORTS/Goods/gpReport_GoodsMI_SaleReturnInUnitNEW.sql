@@ -369,6 +369,10 @@ BEGIN
                                      , gpReport.LocationId_by, gpReport.LocationCode_by, gpReport.LocationName_by
                                      , gpReport.AmountOut, gpReport.AmountOut_Weight, gpReport.AmountOut_Sh, gpReport.SummOut_zavod, gpReport.SummOut_branch, gpReport.SummOut_60000 
                                      , gpReport.AmountIn, gpReport.AmountIn_Weight, gpReport.AmountIn_Sh, gpReport. SummIn_zavod, gpReport.SummIn_branch, gpReport.SummIn_60000
+                                     , gpReport.AmountIn_10500_Weight
+                                     , gpReport.AmountIn_40200_Weight
+                                     , gpReport.SummIn_10500
+                                     , gpReport.SummIn_40200
                                      , gpReport.Summ_calc
                                          FROM gpReport_GoodsMI_Internal (inStartDate    := inStartDate
                                                                        , inEndDate      := inEndDate
@@ -402,6 +406,10 @@ BEGIN
                                      , (tmp_Send.Amount_CountRet * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END) AS AmountIn_Weight
                                      , (CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN tmp_Send.Amount_CountRet ELSE 0 END) AS AmountIn_Sh
                                      , tmp_Send.Amount_SummRet AS SummIn_zavod, tmp_Send.Amount_SummRet AS SummIn_branch, 0 AS SummIn_60000
+                                     , 0 AS AmountIn_10500_Weight
+                                     , 0 AS AmountIn_40200_Weight
+                                     , 0 AS SummIn_10500
+                                     , 0 AS SummIn_40200
                                      , tmp_Send.Amount_SummRet AS Summ_calc
      FROM tmp_Send
           LEFT JOIN ObjectFloat AS ObjectFloat_Weight
@@ -443,6 +451,292 @@ BEGIN
                                                                        , inSession      := inSession
                                                                         ) AS gpReport*/
         )
+ , tmpSendOnPrice_group AS (SELECT tmpSendOnPrice.GoodsGroupName, tmpSendOnPrice.GoodsGroupNameFull
+                                 , tmpSendOnPrice.GoodsId, tmpSendOnPrice.GoodsCode, tmpSendOnPrice.GoodsName
+                                 , tmpSendOnPrice.GoodsKindName, tmpSendOnPrice.MeasureName
+                                 , tmpSendOnPrice.TradeMarkName
+
+                                 -- , CASE WHEN isSale = TRUE THEN tmpSendOnPrice.LocationId   ELSE tmpSendOnPrice.LocationId_by END AS LocationId
+                                 -- , CASE WHEN isSale = TRUE THEN tmpSendOnPrice.LocationCode ELSE tmpSendOnPrice.LocationCode_by END AS LocationCode
+                                 -- , CASE WHEN isSale = TRUE THEN tmpSendOnPrice.LocationName ELSE tmpSendOnPrice.LocationName_by END AS LocationName
+
+                                 , 0  AS LocationId
+                                 , 0  AS LocationCode
+                                 , '' AS LocationName
+
+                                 , CASE WHEN isSale = TRUE THEN tmpSendOnPrice.LocationId_by ELSE tmpSendOnPrice.LocationId END AS LocationId_by
+                                 , CASE WHEN isSale = TRUE THEN tmpSendOnPrice.LocationCode_by ELSE tmpSendOnPrice.LocationCode END AS LocationCode_by
+                                 , CASE WHEN isSale = TRUE THEN tmpSendOnPrice.LocationName_by ELSE tmpSendOnPrice.LocationName END AS LocationName_by
+
+                                 , SUM (CASE WHEN isSale = TRUE THEN SummIn_branch             ELSE 0 END) AS Sale_Summ
+                                 , SUM (CASE WHEN isSale = TRUE THEN SummIn_branch - Summ_calc ELSE 0 END) AS Sale_Summ_10200
+                                 , 0                                                                       AS Sale_Summ_10300
+
+                                 , SUM (CASE WHEN isSale = TRUE THEN SummOut_zavod                ELSE 0 END) AS Sale_SummCost
+                                 , SUM (CASE WHEN isSale = TRUE THEN SummIn_10500 /*SummOut_zavod - SummIn_zavod*/ ELSE 0 END) AS Sale_SummCost_10500
+                                 , SUM (CASE WHEN isSale = TRUE THEN SummIn_40200 /*0*/ ELSE 0 END) AS Sale_SummCost_40200
+
+                                 , SUM (CASE WHEN isSale = TRUE THEN AmountOut_Weight ELSE 0 END) AS Sale_Amount_Weight
+                                 , SUM (CASE WHEN isSale = TRUE THEN AmountOut_Sh     ELSE 0 END) AS Sale_Amount_Sh
+
+                                 , SUM (CASE WHEN isSale = TRUE THEN AmountIn_Weight  ELSE 0 END) AS Sale_AmountPartner_Weight
+                                 , SUM (CASE WHEN isSale = TRUE THEN AmountIn_Sh      ELSE 0 END) AS Sale_AmountPartner_Sh
+
+
+                                 , SUM (CASE WHEN isSale = FALSE THEN SummOut_branch ELSE 0 END) AS Return_Summ
+                                 , 0                                                             AS Return_Summ_10300
+
+                                 , SUM (CASE WHEN isSale = FALSE THEN SummOut_zavod ELSE 0 END) AS Return_SummCost
+                                 , 0                                                      AS Return_SummCost_40200
+
+                                 , SUM (CASE WHEN isSale = FALSE THEN AmountIn_Weight ELSE 0 END) AS Return_Amount_Weight
+                                 , SUM (CASE WHEN isSale = FALSE THEN AmountIn_Sh     ELSE 0 END) AS Return_Amount_Sh
+
+                                 , SUM (CASE WHEN isSale = FALSE THEN AmountOut_Weight ELSE 0 END) AS Return_AmountPartner_Weight
+                                 , SUM (CASE WHEN isSale = FALSE THEN AmountOut_Sh     ELSE 0 END) AS Return_AmountPartner_Sh
+
+                                 , SUM (CASE WHEN isSale = TRUE  THEN AmountIn_10500_Weight /*AmountOut_Weight - AmountIn_Weight*/ ELSE 0 END) AS Sale_Amount_10500_Weight
+                                 , SUM (CASE WHEN isSale = TRUE  THEN AmountIn_40200_Weight /*0*/ ELSE 0 END) AS Sale_Amount_40200_Weight
+                                 , SUM (CASE WHEN isSale = FALSE THEN AmountIn_Weight - AmountOut_Weight ELSE 0 END) AS Return_Amount_40200_Weight
+
+                            FROM tmpSendOnPrice
+                            GROUP BY tmpSendOnPrice.GoodsGroupName, tmpSendOnPrice.GoodsGroupNameFull
+                                   , tmpSendOnPrice.GoodsId, tmpSendOnPrice.GoodsCode, tmpSendOnPrice.GoodsName
+                                   , tmpSendOnPrice.GoodsKindName, tmpSendOnPrice.MeasureName
+                                   , tmpSendOnPrice.TradeMarkName
+                                   -- , CASE WHEN isSale = TRUE THEN tmpSendOnPrice.LocationId ELSE tmpSendOnPrice.LocationId_by END
+                                   -- , CASE WHEN isSale = TRUE THEN tmpSendOnPrice.LocationCode ELSE tmpSendOnPrice.LocationCode_by END
+                                   -- , CASE WHEN isSale = TRUE THEN tmpSendOnPrice.LocationName ELSE tmpSendOnPrice.LocationName_by END
+
+                                   , CASE WHEN isSale = TRUE THEN tmpSendOnPrice.LocationId_by ELSE tmpSendOnPrice.LocationId END
+                                   , CASE WHEN isSale = TRUE THEN tmpSendOnPrice.LocationCode_by ELSE tmpSendOnPrice.LocationCode END
+                                   , CASE WHEN isSale = TRUE THEN tmpSendOnPrice.LocationName_by ELSE tmpSendOnPrice.LocationName END
+                           )
+
+         /*, tmpMISendOnPrice AS (SELECT MIContainer.ObjectExtId_Analyzer              AS LocationId_by
+                                     , MIContainer.ObjectId_Analyzer                 AS GoodsId
+                                     , CASE WHEN inIsGoodsKind = TRUE THEN MIContainer.ObjectIntId_Analyzer ELSE 0 END AS GoodsKindId
+
+                                     , 0 AS Sale_Summ
+                                     , 0 AS Sale_Summ_10200
+                                     , 0 AS Sale_Summ_10300
+
+                                     , SUM (CASE WHEN MIContainer.isActive = FALSE AND MIContainer.DescId = zc_MIContainer_Summ() THEN -1 * MIContainer.Amount ELSE 0 END) AS Sale_SummCost
+                                     , SUM (CASE WHEN MIContainer.isActive = FALSE AND MIContainer.AnalyzerId = zc_Enum_AnalyzerId_SendSumm_10500() THEN -1 * MIContainer.Amount ELSE 0 END) AS Sale_SummCost_10500
+                                     , SUM (CASE WHEN MIContainer.isActive = FALSE AND MIContainer.AnalyzerId = zc_Enum_AnalyzerId_SendSumm_40200() THEN -1 * MIContainer.Amount ELSE 0 END) AS Sale_SummCost_40200
+
+                                     , SUM (CASE WHEN MIContainer.isActive = FALSE AND MIContainer.DescId = zc_MIContainer_Count() THEN -1 * MIContainer.Amount ELSE 0 END) AS Sale_Amount
+                                     , SUM (CASE WHEN MIContainer.isActive = FALSE AND MIContainer.DescId = zc_MIContainer_Count() AND MIContainer.AnalyzerId = zc_Enum_AnalyzerId_SendCount_in() THEN -1 * MIContainer.Amount ELSE 0 END) AS Sale_AmountPartner
+                                     , SUM (CASE WHEN MIContainer.isActive = FALSE AND MIContainer.DescId = zc_MIContainer_Count() AND MIContainer.AnalyzerId = zc_Enum_AnalyzerId_SendCount_10500() THEN -1 * MIContainer.Amount ELSE 0 END) AS Sale_Amount_10500
+                                     , SUM (CASE WHEN MIContainer.isActive = FALSE AND MIContainer.DescId = zc_MIContainer_Count() AND MIContainer.AnalyzerId = zc_Enum_AnalyzerId_SendCount_40200() THEN -1 * MIContainer.Amount ELSE 0 END) AS Sale_Amount_40200
+
+                                     , 0 AS Return_Summ
+                                     , 0 AS Return_Summ_10300
+
+                                     , SUM (CASE WHEN MIContainer.isActive = TRUE AND MIContainer.DescId = zc_MIContainer_Summ() THEN MIContainer.Amount ELSE 0 END) AS Return_SummCost
+                                     , 0 AS Return_SummCost_40200
+
+                                     , SUM (CASE WHEN MIContainer.isActive = TRUE AND MIContainer.DescId = zc_MIContainer_Count() THEN MIContainer.Amount ELSE 0 END) AS Return_Amount
+                                     , SUM (CASE WHEN MIContainer.isActive = TRUE AND MIContainer.DescId = zc_MIContainer_Count() THEN MIContainer.Amount ELSE 0 END) AS Return_AmountPartner
+                                     , 0 AS Return_Amount_40200
+
+                                FROM tmp_Unit
+                                     INNER JOIN MovementItemContainer AS MIContainer
+                                                                      ON MIContainer.WhereObjectId_analyzer = tmp_Unit.UnitId
+                                                                     AND MIContainer.OperDate BETWEEN inStartDate AND inEndDate
+                                                                     AND MIContainer.MovementDescId = zc_Movement_SendOnPrice()
+                                                                     AND COALESCE (MIContainer.AccountId, 0) <> zc_Enum_Account_110101() -- Транзит + товар в пути
+                                GROUP BY MIContainer.ObjectId_Analyzer
+                                       , CASE WHEN inIsGoodsKind = TRUE THEN MIContainer.ObjectIntId_Analyzer ELSE 0 END
+                                       , MIContainer.ObjectExtId_Analyzer
+                               UNION ALL
+                                SELECT CASE WHEN tmp_Unit_To.UnitId > 0
+                                                 THEN MovementLinkObject_From.ObjectId
+                                            WHEN tmp_Unit_From.UnitId > 0
+                                                 THEN MovementLinkObject_To.ObjectId
+                                            ELSE 0
+                                       END AS LocationId_by
+
+                                     , MovementItem.ObjectId AS GoodsId
+                                     , CASE WHEN inIsGoodsKind = TRUE THEN MILinkObject_GoodsKind.ObjectId ELSE 0 END AS GoodsKindId
+
+                                     , SUM (CASE WHEN tmp_Unit_From.UnitId > 0
+                                                 THEN COALESCE (MIFloat_Summ.ValueData, 0)
+                                                 ELSE 0
+                                            END) AS Sale_Summ
+                                     , SUM (CASE WHEN tmp_Unit_From.UnitId > 0
+                                                 THEN COALESCE (MIFloat_Summ.ValueData, 0) - COALESCE (MIFloat_SummPriceList.ValueData, 0)
+                                                 ELSE 0
+                                            END) AS Sale_Summ_10200
+                                     , 0 AS Sale_Summ_10300
+
+                                     , 0 AS Sale_SummCost
+                                     , 0 AS Sale_SummCost_10500
+                                     , 0 AS Sale_SummCost_40200
+
+                                     , 0 AS Sale_Amount
+                                     , 0 AS Sale_AmountPartner
+                                     , 0 AS Sale_Amount_10500
+                                     , 0 AS Sale_Amount_40200
+
+                                     , 0 AS Return_Summ
+                                     , 0 AS Return_Summ_10300
+
+                                     , 0 AS Return_SummCost
+                                     , 0 AS Return_SummCost_40200
+
+                                     , 0 AS Return_Amount
+                                     , 0 AS Return_AmountPartner
+                                     , 0 AS Return_Amount_40200
+
+                                FROM Movement
+                                     LEFT JOIN MovementLinkObject AS MovementLinkObject_From
+                                                                   ON MovementLinkObject_From.MovementId = Movement.Id
+                                                                  AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
+                                     LEFT JOIN tmp_Unit AS tmp_Unit_From ON tmp_Unit_From.UnitId = MovementLinkObject_From.ObjectId
+                                     LEFT JOIN MovementLinkObject AS MovementLinkObject_To
+                                                                  ON MovementLinkObject_To.MovementId = Movement.Id
+                                                                 AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
+                                     LEFT JOIN tmp_Unit AS tmp_Unit_To ON tmp_Unit_To.UnitId = MovementLinkObject_To.ObjectId
+
+                                     INNER JOIN MovementItem ON MovementItem.MovementId = Movement.Id
+                                                            AND MovementItem.DescId     = zc_MI_Master()
+                                                            AND MovementItem.isErased   = FALSE
+
+                                     LEFT JOIN MovementItemFloat AS MIFloat_Summ
+                                                                 ON MIFloat_Summ.MovementItemId = MovementItem.Id
+                                                                AND MIFloat_Summ.DescId = zc_MIFloat_Summ()
+                                     LEFT JOIN MovementItemFloat AS MIFloat_SummPriceList
+                                                                 ON MIFloat_SummPriceList.MovementItemId = MovementItem.Id
+                                                                AND MIFloat_SummPriceList.DescId = zc_MIFloat_SummPriceList()
+
+                                     LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
+                                                  ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
+                                                 AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
+
+                                WHERE Movement.OperDate BETWEEN inStartDate AND inEndDate
+                                  AND Movement.StatusId = zc_Enum_Status_Complete()
+                                  AND Movement.DescId = zc_Movement_SendOnPrice()
+                                  AND (tmp_Unit_From.UnitId >0 OR tmp_Unit_To.UnitId > 0)
+                                GROUP BY CASE WHEN tmp_Unit_To.UnitId > 0
+                                                   THEN MovementLinkObject_From.ObjectId
+                                              WHEN tmp_Unit_From.UnitId > 0
+                                                   THEN MovementLinkObject_To.ObjectId
+                                              ELSE 0
+                                         END
+
+                                       , MovementItem.ObjectId
+                                       , CASE WHEN inIsGoodsKind = TRUE THEN MILinkObject_GoodsKind.ObjectId ELSE 0 END
+                               )
+
+     , tmpSendOnPrice_group AS (SELECT Object_GoodsGroup.ValueData        AS GoodsGroupName
+                                     , ObjectString_Goods_GroupNameFull.ValueData AS GoodsGroupNameFull
+                                     , Object_Goods.Id                    AS GoodsId
+                                     , Object_Goods.ObjectCode            AS GoodsCode
+                                     , Object_Goods.ValueData             AS GoodsName
+                                     , Object_GoodsKind.ValueData         AS GoodsKindName
+                                     , Object_Measure.ValueData           AS MeasureName
+                                     , Object_TradeMark.ValueData         AS TradeMarkName
+
+                                     , 0  AS LocationId
+                                     , 0  AS LocationCode
+                                     , '' AS LocationName
+
+                                     , Object_Location_by.Id AS LocationId_by, Object_Location_by.ObjectCode AS LocationCode_by, Object_Location_by.ValueData AS LocationName_by
+
+                                     , tmp_Send.Sale_Summ
+                                     , tmp_Send.Sale_Summ_10200
+                                     , tmp_Send.Sale_Summ_10300
+
+                                     , tmp_Send.Sale_SummCost
+                                     , tmp_Send.Sale_SummCost_10500
+                                     , tmp_Send.Sale_SummCost_40200
+
+                                     , (tmp_Send.Sale_Amount * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END) AS Sale_Amount_Weight
+                                     , (CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN tmp_Send.Sale_Amount ELSE 0 END) AS Sale_Amount_Sh
+
+                                     , (tmp_Send.Sale_AmountPartner * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END) AS Sale_AmountPartner_Weight
+                                     , (CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN tmp_Send.Sale_AmountPartner ELSE 0 END) AS Sale_AmountPartner_Sh
+
+                                     , tmp_Send.Return_Summ
+                                     , tmp_Send.Return_Summ_10300
+
+                                     , tmp_Send.Return_SummCost
+                                     , tmp_Send.Return_SummCost_40200
+
+                                     , (tmp_Send.Return_Amount * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END) AS Return_Amount_Weight
+                                     , (CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN tmp_Send.Return_Amount ELSE 0 END) AS Return_Amount_Sh
+
+                                     , (tmp_Send.Return_AmountPartner * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END) AS Return_AmountPartner_Weight
+                                     , (CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN tmp_Send.Return_AmountPartner ELSE 0 END) AS Return_AmountPartner_Sh
+
+                                     , (tmp_Send.Sale_Amount_10500 * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END) AS Sale_Amount_10500_Weight
+                                     , (tmp_Send.Sale_Amount_40200 * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END) AS Sale_Amount_40200_Weight
+                                     , (tmp_Send.Return_Amount_40200 * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END) AS Return_Amount_40200_Weight
+
+                                FROM (SELECT tmpMISendOnPrice.LocationId_by
+                                           , tmpMISendOnPrice.GoodsId
+                                           , tmpMISendOnPrice.GoodsKindId
+
+                                           , SUM (tmpMISendOnPrice.Sale_Summ)       AS Sale_Summ
+                                           , SUM (tmpMISendOnPrice.Sale_Summ_10200) AS Sale_Summ_10200
+                                           , SUM (tmpMISendOnPrice.Sale_Summ_10300) AS Sale_Summ_10300
+
+                                           , SUM (tmpMISendOnPrice.Sale_SummCost)       AS Sale_SummCost
+                                           , SUM (tmpMISendOnPrice.Sale_SummCost_10500) AS Sale_SummCost_10500
+                                           , SUM (tmpMISendOnPrice.Sale_SummCost_40200) AS Sale_SummCost_40200
+
+                                           , SUM (tmpMISendOnPrice.Sale_Amount)        AS Sale_Amount
+                                           , SUM (tmpMISendOnPrice.Sale_AmountPartner) AS Sale_AmountPartner
+                                           , SUM (tmpMISendOnPrice.Sale_Amount_10500)  AS Sale_Amount_10500
+                                           , SUM (tmpMISendOnPrice.Sale_Amount_40200)  AS Sale_Amount_40200
+
+                                           , SUM (tmpMISendOnPrice.Return_Summ) AS Return_Summ
+                                           , SUM (tmpMISendOnPrice.Return_Summ_10300) AS Return_Summ_10300
+
+                                           , SUM (tmpMISendOnPrice.Return_SummCost) AS Return_SummCost
+                                           , SUM (tmpMISendOnPrice.Return_SummCost_40200) AS Return_SummCost_40200
+                           
+                                           , SUM (tmpMISendOnPrice.Return_Amount)        AS Return_Amount
+                                           , SUM (tmpMISendOnPrice.Return_AmountPartner) AS Return_AmountPartner
+                                           , SUM (tmpMISendOnPrice.Return_Amount_40200)  AS Return_Amount_40200
+
+                                      FROM tmpMISendOnPrice
+                                           LEFT JOIN _tmpGoods ON _tmpGoods.GoodsId = tmpMISendOnPrice.GoodsId
+                                      WHERE (_tmpGoods.GoodsId > 0 OR vbIsGoods = FALSE)
+                                      GROUP BY tmpMISendOnPrice.LocationId_by
+                                             , tmpMISendOnPrice.GoodsId
+                                             , tmpMISendOnPrice.GoodsKindId
+                                     ) AS tmp_Send
+                                     LEFT JOIN ObjectFloat AS ObjectFloat_Weight
+                                                           ON ObjectFloat_Weight.ObjectId = tmp_Send.GoodsId
+                                                          AND ObjectFloat_Weight.DescId = zc_ObjectFloat_Goods_Weight()
+
+                                     LEFT JOIN Object AS Object_Goods on Object_Goods.Id = tmp_Send.GoodsId
+                                     LEFT JOIN Object AS Object_GoodsKind ON Object_GoodsKind.Id = tmp_Send.GoodsKindId
+
+                                     LEFT JOIN Object AS Object_Location_by ON Object_Location_by.Id = tmp_Send.LocationId_by
+
+                                     LEFT JOIN ObjectString AS ObjectString_Goods_GroupNameFull
+                                                            ON ObjectString_Goods_GroupNameFull.ObjectId = Object_Goods.Id
+                                                           AND ObjectString_Goods_GroupNameFull.DescId = zc_ObjectString_Goods_GroupNameFull()
+
+                                     LEFT JOIN ObjectLink AS ObjectLink_Goods_TradeMark
+                                                          ON ObjectLink_Goods_TradeMark.ObjectId = Object_Goods.Id
+                                                         AND ObjectLink_Goods_TradeMark.DescId = zc_ObjectLink_Goods_TradeMark()
+                                     LEFT JOIN Object AS Object_TradeMark ON Object_TradeMark.Id = ObjectLink_Goods_TradeMark.ChildObjectId
+
+                                     LEFT JOIN ObjectLink AS ObjectLink_Goods_Measure
+                                                          ON ObjectLink_Goods_Measure.ObjectId = Object_Goods.Id
+                                                         AND ObjectLink_Goods_Measure.DescId = zc_ObjectLink_Goods_Measure()
+                                     LEFT JOIN Object AS Object_Measure ON Object_Measure.Id = ObjectLink_Goods_Measure.ChildObjectId
+
+                                     LEFT JOIN ObjectLink AS ObjectLink_Goods_GoodsGroup
+                                                          ON ObjectLink_Goods_GoodsGroup.ObjectId = Object_Goods.Id
+                                                         AND ObjectLink_Goods_GoodsGroup.DescId = zc_ObjectLink_Goods_GoodsGroup()
+                                     LEFT JOIN Object AS Object_GoodsGroup ON Object_GoodsGroup.Id = ObjectLink_Goods_GoodsGroup.ChildObjectId
+                               )*/
+
 , tmpOperationGroup2 AS (SELECT MIContainer.ContainerId_Analyzer
                               , MIContainer.ObjectId_Analyzer                 AS GoodsId
                               , MIContainer.ObjectIntId_Analyzer              AS GoodsKindId -- COALESCE (MILinkObject_GoodsKind.ObjectId, 0) AS GoodsKindId
@@ -465,12 +759,12 @@ BEGIN
                               , SUM (CASE WHEN tmpAnalyzer.AnalyzerId = zc_Enum_AnalyzerId_ReturnInSumm_40200() AND tmpAccount.AccountGroupId IS NULL THEN  1 * COALESCE (MIContainer.Amount, 0) ELSE 0 END) AS Return_SummCost_40200
 
                               , SUM (CASE WHEN tmpAnalyzer.isCost = FALSE AND MIContainer.MovementDescId = zc_Movement_Sale()     AND MIContainer.DescId = zc_MIContainer_Summ() AND MIContainer.AnalyzerId <> zc_Enum_AnalyzerId_LossSumm_20200() THEN 1 * MIContainer.Amount ELSE 0 END
-                                   + CASE WHEN tmpAnalyzer.isCost = FALSE AND MIContainer.MovementDescId = zc_Movement_Sale()     AND MIContainer.DescId = zc_MIContainer_Summ() AND MIContainer.AnalyzerId <> zc_Enum_AnalyzerId_LossSumm_20200() AND MIContainer.AccountId = zc_Enum_AnalyzerId_SummIn_110101()  AND MIContainer.isActive = TRUE THEN 1 * MIContainer.Amount ELSE 0 END
-                                   - CASE WHEN tmpAnalyzer.isCost = FALSE AND MIContainer.MovementDescId = zc_Movement_Sale()     AND MIContainer.DescId = zc_MIContainer_Summ() AND MIContainer.AnalyzerId <> zc_Enum_AnalyzerId_LossSumm_20200() AND MIContainer.AccountId = zc_Enum_AnalyzerId_SummOut_110101() AND MIContainer.isActive = TRUE THEN 1 * MIContainer.Amount ELSE 0 END
+                                   + CASE WHEN tmpAnalyzer.isCost = FALSE AND MIContainer.MovementDescId = zc_Movement_Sale()     AND MIContainer.DescId = zc_MIContainer_Summ() AND MIContainer.AnalyzerId <> zc_Enum_AnalyzerId_LossSumm_20200() AND MIContainer.AccountId = zc_Enum_AnalyzerId_SummIn_110101()  AND MIContainer.isActive = TRUE  THEN  1 * MIContainer.Amount ELSE 0 END
+                                   - CASE WHEN tmpAnalyzer.isCost = FALSE AND MIContainer.MovementDescId = zc_Movement_Sale()     AND MIContainer.DescId = zc_MIContainer_Summ() AND MIContainer.AnalyzerId <> zc_Enum_AnalyzerId_LossSumm_20200() AND MIContainer.AccountId = zc_Enum_AnalyzerId_SummOut_110101() AND MIContainer.isActive = FALSE THEN -1 * MIContainer.Amount ELSE 0 END
                                     ) AS Sale_Summ
                               , SUM (CASE WHEN tmpAnalyzer.isCost = FALSE AND MIContainer.MovementDescId = zc_Movement_ReturnIn() AND MIContainer.DescId = zc_MIContainer_Summ() AND MIContainer.AnalyzerId <> zc_Enum_AnalyzerId_LossSumm_20200() THEN -1 * MIContainer.Amount ELSE 0 END
-                                   + CASE WHEN tmpAnalyzer.isCost = FALSE AND MIContainer.MovementDescId = zc_Movement_ReturnIn() AND MIContainer.DescId = zc_MIContainer_Summ() AND MIContainer.AnalyzerId <> zc_Enum_AnalyzerId_LossSumm_20200() AND MIContainer.AccountId = zc_Enum_AnalyzerId_SummIn_110101()  AND MIContainer.isActive = TRUE THEN -1 * MIContainer.Amount ELSE 0 END
-                                   - CASE WHEN tmpAnalyzer.isCost = FALSE AND MIContainer.MovementDescId = zc_Movement_ReturnIn() AND MIContainer.DescId = zc_MIContainer_Summ() AND MIContainer.AnalyzerId <> zc_Enum_AnalyzerId_LossSumm_20200() AND MIContainer.AccountId = zc_Enum_AnalyzerId_SummOut_110101() AND MIContainer.isActive = TRUE THEN -1 * MIContainer.Amount ELSE 0 END
+                                   + CASE WHEN tmpAnalyzer.isCost = FALSE AND MIContainer.MovementDescId = zc_Movement_ReturnIn() AND MIContainer.DescId = zc_MIContainer_Summ() AND MIContainer.AnalyzerId <> zc_Enum_AnalyzerId_LossSumm_20200() AND MIContainer.AccountId = zc_Enum_AnalyzerId_SummIn_110101()  AND MIContainer.isActive = TRUE  THEN  1 * MIContainer.Amount ELSE 0 END
+                                   - CASE WHEN tmpAnalyzer.isCost = FALSE AND MIContainer.MovementDescId = zc_Movement_ReturnIn() AND MIContainer.DescId = zc_MIContainer_Summ() AND MIContainer.AnalyzerId <> zc_Enum_AnalyzerId_LossSumm_20200() AND MIContainer.AccountId = zc_Enum_AnalyzerId_SummOut_110101() AND MIContainer.isActive = FALSE THEN -1 * MIContainer.Amount ELSE 0 END
                                     ) AS Return_Summ
 
                               , SUM (CASE WHEN tmpAnalyzer.AnalyzerId = zc_Enum_AnalyzerId_SaleSumm_10200()     THEN 1 * MIContainer.Amount ELSE 0 END
@@ -591,67 +885,6 @@ BEGIN
                                 , CASE WHEN inIsGoods = TRUE THEN tmpOperationGroup2.GoodsId ELSE 0 END    
                                 , CASE WHEN inIsGoodsKind = TRUE THEN tmpOperationGroup2.GoodsKindId ELSE 0 END
                         )
- , tmpSendOnPrice_group AS (SELECT tmpSendOnPrice.GoodsGroupName, tmpSendOnPrice.GoodsGroupNameFull
-                                 , tmpSendOnPrice.GoodsId, tmpSendOnPrice.GoodsCode, tmpSendOnPrice.GoodsName
-                                 , tmpSendOnPrice.GoodsKindName, tmpSendOnPrice.MeasureName
-                                 , tmpSendOnPrice.TradeMarkName
-
-                                 -- , CASE WHEN isSale = TRUE THEN tmpSendOnPrice.LocationId   ELSE tmpSendOnPrice.LocationId_by END AS LocationId
-                                 -- , CASE WHEN isSale = TRUE THEN tmpSendOnPrice.LocationCode ELSE tmpSendOnPrice.LocationCode_by END AS LocationCode
-                                 -- , CASE WHEN isSale = TRUE THEN tmpSendOnPrice.LocationName ELSE tmpSendOnPrice.LocationName_by END AS LocationName
-
-                                 , 0  AS LocationId
-                                 , 0  AS LocationCode
-                                 , '' AS LocationName
-
-                                 , CASE WHEN isSale = TRUE THEN tmpSendOnPrice.LocationId_by ELSE tmpSendOnPrice.LocationId END AS LocationId_by
-                                 , CASE WHEN isSale = TRUE THEN tmpSendOnPrice.LocationCode_by ELSE tmpSendOnPrice.LocationCode END AS LocationCode_by
-                                 , CASE WHEN isSale = TRUE THEN tmpSendOnPrice.LocationName_by ELSE tmpSendOnPrice.LocationName END AS LocationName_by
-
-                                 , SUM (CASE WHEN isSale = TRUE THEN SummIn_branch             ELSE 0 END) AS Sale_Summ
-                                 , SUM (CASE WHEN isSale = TRUE THEN SummIn_branch - Summ_calc ELSE 0 END) AS Sale_Summ_10200
-                                 , 0                                                                 AS Sale_Summ_10300
-
-                                 , SUM (CASE WHEN isSale = TRUE THEN SummOut_zavod                ELSE 0 END) AS Sale_SummCost
-                                 , SUM (CASE WHEN isSale = TRUE THEN SummOut_zavod - SummIn_zavod ELSE 0 END) AS Sale_SummCost_10500
-                                 , 0                                                                    AS Sale_SummCost_40200
-
-                                 , SUM (CASE WHEN isSale = TRUE THEN AmountOut_Weight ELSE 0 END) AS Sale_Amount_Weight
-                                 , SUM (CASE WHEN isSale = TRUE THEN AmountOut_Sh     ELSE 0 END) AS Sale_Amount_Sh
-
-                                 , SUM (CASE WHEN isSale = TRUE THEN AmountIn_Weight  ELSE 0 END) AS Sale_AmountPartner_Weight
-                                 , SUM (CASE WHEN isSale = TRUE THEN AmountIn_Sh      ELSE 0 END) AS Sale_AmountPartner_Sh
-
-
-                                 , SUM (CASE WHEN isSale = FALSE THEN SummOut_branch ELSE 0 END) AS Return_Summ
-                                 , 0                                                       AS Return_Summ_10300
-
-                                 , SUM (CASE WHEN isSale = FALSE THEN SummOut_zavod ELSE 0 END) AS Return_SummCost
-                                 , 0                                                      AS Return_SummCost_40200
-
-                                 , SUM (CASE WHEN isSale = FALSE THEN AmountIn_Weight ELSE 0 END) AS Return_Amount_Weight
-                                 , SUM (CASE WHEN isSale = FALSE THEN AmountIn_Sh     ELSE 0 END) AS Return_Amount_Sh
-
-                                 , SUM (CASE WHEN isSale = FALSE THEN AmountOut_Weight ELSE 0 END) AS Return_AmountPartner_Weight
-                                 , SUM (CASE WHEN isSale = FALSE THEN AmountOut_Sh     ELSE 0 END) AS Return_AmountPartner_Sh
-
-                                 , SUM (CASE WHEN isSale = TRUE  THEN AmountOut_Weight - AmountIn_Weight ELSE 0 END) AS Sale_Amount_10500_Weight
-                                 , 0                                                                                 AS Sale_Amount_40200_Weight
-                                 , SUM (CASE WHEN isSale = FALSE THEN AmountIn_Weight - AmountOut_Weight ELSE 0 END) AS Return_Amount_40200_Weight
-
-                            FROM tmpSendOnPrice
-                            GROUP BY tmpSendOnPrice.GoodsGroupName, tmpSendOnPrice.GoodsGroupNameFull
-                                   , tmpSendOnPrice.GoodsId, tmpSendOnPrice.GoodsCode, tmpSendOnPrice.GoodsName
-                                   , tmpSendOnPrice.GoodsKindName, tmpSendOnPrice.MeasureName
-                                   , tmpSendOnPrice.TradeMarkName
-                                   -- , CASE WHEN isSale = TRUE THEN tmpSendOnPrice.LocationId ELSE tmpSendOnPrice.LocationId_by END
-                                   -- , CASE WHEN isSale = TRUE THEN tmpSendOnPrice.LocationCode ELSE tmpSendOnPrice.LocationCode_by END
-                                   -- , CASE WHEN isSale = TRUE THEN tmpSendOnPrice.LocationName ELSE tmpSendOnPrice.LocationName_by END
-
-                                   , CASE WHEN isSale = TRUE THEN tmpSendOnPrice.LocationId_by ELSE tmpSendOnPrice.LocationId END
-                                   , CASE WHEN isSale = TRUE THEN tmpSendOnPrice.LocationCode_by ELSE tmpSendOnPrice.LocationCode END
-                                   , CASE WHEN isSale = TRUE THEN tmpSendOnPrice.LocationName_by ELSE tmpSendOnPrice.LocationName END
-                           )
 
      SELECT Object_GoodsGroup.ValueData        AS GoodsGroupName
           , ObjectString_Goods_GroupNameFull.ValueData AS GoodsGroupNameFull
@@ -967,4 +1200,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpReport_GoodsMI_SaleReturnInUnitNEW (inStartDate:= '31.08.2015', inEndDate:= '31.08.2015', inBranchId:= 0, inAreaId:= 0, inRetailId:= 0, inJuridicalId:= 0, inPaidKindId:= zc_Enum_PaidKind_FirstForm(), inTradeMarkId:= 0, inGoodsGroupId:= 0, inInfoMoneyId:= zc_Enum_InfoMoney_30101(), inIsPartner:= TRUE, inIsTradeMark:= TRUE, inIsGoods:= TRUE, inIsGoodsKind:= TRUE, inSession:= zfCalc_UserAdmin());
+-- SELECT * FROM gpReport_GoodsMI_SaleReturnInUnitNEW (inStartDate:= '30.11.2015', inEndDate:= '30.11.2015', inBranchId:= 0, inAreaId:= 0, inRetailId:= 0, inJuridicalId:= 0, inPaidKindId:= zc_Enum_PaidKind_FirstForm(), inTradeMarkId:= 0, inGoodsGroupId:= 0, inInfoMoneyId:= zc_Enum_InfoMoney_30101(), inIsPartner:= TRUE, inIsTradeMark:= TRUE, inIsGoods:= TRUE, inIsGoodsKind:= TRUE, inSession:= zfCalc_UserAdmin());

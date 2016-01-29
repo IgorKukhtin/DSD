@@ -310,7 +310,7 @@ BEGIN
 
          -- Поиск <Классификатор товаров>
          -- vbGoodsPropertyId := (SELECT ChildObjectId FROM ObjectLink WHERE DescId = zc_ObjectLink_Juridical_GoodsProperty() AND ObjectId = vbJuridicalId);
-         vbGoodsPropertyId := zfCalc_GoodsPropertyId (vbContractId, vbJuridicalId);
+         vbGoodsPropertyId := zfCalc_GoodsPropertyId (vbContractId, vbJuridicalId, vbPartnerId);
 
      END IF;
 
