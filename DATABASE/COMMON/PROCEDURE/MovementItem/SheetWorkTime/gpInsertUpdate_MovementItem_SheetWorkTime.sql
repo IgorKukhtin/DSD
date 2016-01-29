@@ -9,7 +9,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_SheetWorkTime(
     IN inPositionLevelId     Integer   , -- Разряд
     IN inUnitId              Integer   , -- Подразделение
     IN inPersonalGroupId     Integer   , -- Группировка Сотрудника
-    IN inOperDate            TDateTime , -- дата установки часов
+    IN inOperDate            TDateTime , -- дата
  INOUT ioValue               TVarChar  , -- часы
  INOUT ioTypeId              Integer   , 
     IN inSession             TVarChar    -- сессия пользователя

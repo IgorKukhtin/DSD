@@ -25,6 +25,7 @@ type
     procedure LoadBankAccountFormTest;
     procedure LoadBankAccountDocumentFormTest;
     procedure LoadBankStatementFormTest;
+    procedure LoadCalendarFormTest;
     procedure LoadCashRegisterFormTest;
     procedure LoadChangeIncomePaymentKindFormTest;
     procedure LoadChangeIncomePaymentFormTest;
@@ -53,12 +54,16 @@ type
     procedure LoadMargineCategory;
     procedure LoadMeasureFormTest;
     procedure LoadMemberFormTest;
+    procedure LoadKindFormTest;
     procedure LoadOrderInternalFormTest;
     procedure LoadOrderExternalFormTest;
     procedure LoadObjectUnionFormTest;
     procedure LoadPaidKindFormTest;
     procedure LoadPaidTypeFormTest;
     procedure LoadPaymentFormTest;
+    procedure LoadPersonalFormTest;
+    procedure LoadPersonalGroupFormTest;
+    procedure LoadPositionEducationFormTest;
     procedure LoadPriceListFormTest;
     procedure LoadPriceFormTest;
     procedure LoadProfitLossFormTest;
@@ -76,6 +81,7 @@ type
     procedure LoadServiceFormTest;
     procedure LoadSendFormTest;
     procedure LoadSendOnPriceFormTest;
+    procedure LoadSheetWorkTimeFormTest;
     procedure LoadUnitFormTest;
     procedure FormTest;
   end;
@@ -185,6 +191,12 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TCashRegisterKindForm');
 end;
 
+procedure TLoadFormTest.LoadCalendarFormTest;
+begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TCalendarForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TCalendarForm');
+end;
+
 procedure TLoadFormTest.LoadCheckFormTest;
 begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TCheckJournalForm'));
@@ -289,6 +301,15 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TMeasureForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TMeasureEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TMeasureEditForm');
+end;
+
+procedure TLoadFormTest.LoadKindFormTest;
+begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TWorkTimeKind_ObjectForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TWorkTimeKind_ObjectForm');
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TWorkTimeKindForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TWorkTimeKindForm');
 end;
 
 procedure TLoadFormTest.LoadGoodsGroupFormTest;
@@ -680,6 +701,36 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TPaymentForm');
 end;
 
+procedure TLoadFormTest.LoadPersonalFormTest;
+begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TPersonalForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TPersonalForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TPersonalEditForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TPersonalEditForm');
+end;
+
+procedure TLoadFormTest.LoadPersonalGroupFormTest;
+begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TPersonalGroupForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TPersonalGroupForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TPersonalGroupEditForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TPersonalGroupEditForm');
+end;
+
+procedure TLoadFormTest.LoadPositionEducationFormTest;
+begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TPositionForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TPositionForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TPositionEditForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TPositionEditForm');
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TEducationForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TEducationForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TEducationEditForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TEducationEditForm');
+end;
+
+
 procedure TLoadFormTest.LoadChangeIncomePaymentFormTest;
 begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TChangeIncomePaymentJournalForm'));
@@ -731,6 +782,14 @@ begin
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TSendOnPriceForm'));
   TdsdFormStorageFactory.GetStorage.Load('TSendOnPriceForm');
+end;
+
+procedure TLoadFormTest.LoadSheetWorkTimeFormTest;
+begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TSheetWorkTimeJournalForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TSheetWorkTimeJournalForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TSheetWorkTimeForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TSheetWorkTimeForm');
 end;
 
 procedure TLoadFormTest.LoadServiceFormTest;

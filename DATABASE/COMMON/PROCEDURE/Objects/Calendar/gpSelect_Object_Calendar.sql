@@ -10,6 +10,8 @@ CREATE OR REPLACE FUNCTION gpSelect_Object_Calendar(
 RETURNS TABLE (Id Integer
              , Working Boolean
              , Value TDateTime
+             , DayOfWeekName TVarChar
+             , Color_calc Integer
              , isErased Boolean
              ) AS
 $BODY$
@@ -23,11 +25,12 @@ BEGIN
    
      SELECT 
            Object_Calendar.Id         AS Id
-  
          , ObjectBoolean_Working.ValueData     AS Working  
-         
          , ObjectDate_Value.ValueData      AS Value
-                                                        
+         , tmpWeekDay.DayOfWeekName_Full ::TVarChar AS DayOfWeekName  
+      
+         , CASE WHEN ObjectBoolean_Working.ValueData = False THEN 15993821  ELSE 0 /*clBlack*/   END :: Integer AS Color_calc                                                      
+  
          , Object_Calendar.isErased AS isErased
          
      FROM ObjectDate AS ObjectDate_Period
@@ -41,13 +44,11 @@ BEGIN
           LEFT JOIN ObjectBoolean AS ObjectBoolean_Working 
                                 ON ObjectBoolean_Working.ObjectId = Object_Calendar.Id 
                                AND ObjectBoolean_Working.DescId = zc_ObjectBoolean_Calendar_Working()
-          
+
+          LEFT JOIN zfCalc_DayOfWeekName (ObjectDate_period.ValueData) AS tmpWeekDay ON 1=1
+
      WHERE ObjectDate_period.ValueData BETWEEN inStartDate AND inEndDate
        AND Object_Calendar.DescId = zc_Object_Calendar();
-     
-     
-     
-     
   
 END;
 $BODY$

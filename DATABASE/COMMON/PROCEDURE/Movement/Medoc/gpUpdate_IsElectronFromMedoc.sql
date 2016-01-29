@@ -62,7 +62,7 @@ BEGIN
 -- end if;
 
    -- Если ключ пустой, то добавили новый ключ МЕДОК
-   IF COALESCE (vbMedocId, 0) = 0 -- OR (vbAccessKey = zc_Enum_Process_AccessKey_DocumentKiev() AND EXISTS (SELECT 1 FROM Movement WHERE Movement.Id = vbMedocId AND Movement.ParentId IS NULL))
+   IF COALESCE (vbMedocId, 0) = 0 OR (inInvNumberBranch  = '2' AND inOperDate < '01.12.2015') -- OR (vbAccessKey = zc_Enum_Process_AccessKey_DocumentKiev() AND EXISTS (SELECT 1 FROM Movement WHERE Movement.Id = vbMedocId AND Movement.ParentId IS NULL))
    THEN 
       vbMedocId := lpInsertUpdate_Movement_Medoc(vbMedocId, inMedocCode, inInvNumber, inOperDate,
                            inFromINN, inToINN, inInvNumberBranch, inInvNumberRegistered, inDateRegistered, inDocKind, inContract, 

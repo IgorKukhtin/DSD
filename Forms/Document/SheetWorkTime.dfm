@@ -241,6 +241,13 @@ object SheetWorkTimeForm: TSheetWorkTimeForm
         Component = GuidesUnit
         ComponentItem = 'Key'
         ParamType = ptInput
+      end
+      item
+        Name = 'inisErased'
+        Value = Null
+        Component = actShowErased
+        DataType = ftBoolean
+        ParamType = ptInput
       end>
     PackSize = 1
     Left = 448
@@ -285,14 +292,6 @@ object SheetWorkTimeForm: TSheetWorkTimeForm
       ItemLinks = <
         item
           Visible = True
-          ItemName = 'bbInsert'
-        end
-        item
-          Visible = True
-          ItemName = 'bbUpdate'
-        end
-        item
-          Visible = True
           ItemName = 'bbStatic'
         end
         item
@@ -309,14 +308,6 @@ object SheetWorkTimeForm: TSheetWorkTimeForm
         end
         item
           Visible = True
-          ItemName = 'bbLoadFromTransport'
-        end
-        item
-          Visible = True
-          ItemName = 'bbStatic'
-        end
-        item
-          Visible = True
           ItemName = 'bbShowErased'
         end
         item
@@ -326,6 +317,14 @@ object SheetWorkTimeForm: TSheetWorkTimeForm
         item
           Visible = True
           ItemName = 'bbRefresh'
+        end
+        item
+          Visible = True
+          ItemName = 'bbStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbLoadFromTransport'
         end
         item
           Visible = True
@@ -515,9 +514,9 @@ object SheetWorkTimeForm: TSheetWorkTimeForm
     object InsertAction: TdsdInsertUpdateAction
       Category = 'DSDLib'
       MoveParams = <>
+      Enabled = False
       Caption = #1044#1086#1073#1072#1074#1080#1090#1100
       Hint = #1044#1086#1073#1072#1074#1080#1090#1100' '#1089#1086#1090#1088#1091#1076#1085#1080#1082#1072' '#1074' '#1090#1072#1073#1077#1083#1100
-      ShortCut = 45
       ImageIndex = 0
       FormName = 'TSheetWorkTimeAddRecordForm'
       FormNameParam.Value = ''
@@ -558,9 +557,9 @@ object SheetWorkTimeForm: TSheetWorkTimeForm
     object UpdateAction: TdsdInsertUpdateAction
       Category = 'DSDLib'
       MoveParams = <>
+      Enabled = False
       Caption = #1048#1079#1084#1077#1085#1080#1090#1100
       Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1076#1072#1085#1085#1099#1077' '#1087#1086' '#1089#1086#1090#1088#1091#1076#1085#1080#1082#1091
-      ShortCut = 115
       ImageIndex = 1
       FormName = 'TSheetWorkTimeAddRecordForm'
       FormNameParam.Value = ''
@@ -660,7 +659,11 @@ object SheetWorkTimeForm: TSheetWorkTimeForm
     object actShowErased: TBooleanStoredProcAction
       Category = 'DSDLib'
       MoveParams = <>
-      StoredProcList = <>
+      StoredProc = spSelectMI
+      StoredProcList = <
+        item
+          StoredProc = spSelectMI
+        end>
       Caption = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1089#1077
       Hint = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1089#1077
       ImageIndex = 64
@@ -708,7 +711,8 @@ object SheetWorkTimeForm: TSheetWorkTimeForm
         DataType = ftString
         ParamType = ptInput
       end>
-    Left = 280
+    Left = 200
+    Top = 8
   end
   object spInsertUpdateMI: TdsdStoredProc
     StoredProcName = 'gpInsertUpdate_MovementItem_SheetWorkTime'
@@ -833,8 +837,8 @@ object SheetWorkTimeForm: TSheetWorkTimeForm
         ParamType = ptInput
       end>
     PackSize = 1
-    Left = 80
-    Top = 296
+    Left = 160
+    Top = 352
   end
   object spErasedMIMaster: TdsdStoredProc
     StoredProcName = 'gpMI_SheetWorkTime_SetErased'
@@ -879,8 +883,7 @@ object SheetWorkTimeForm: TSheetWorkTimeForm
       item
         Name = 'inOperDate'
         Value = 'NULL'
-        Component = HeaderCDS
-        ComponentItem = 'OperDate'
+        Component = edOperDate
         DataType = ftDateTime
         ParamType = ptInput
       end

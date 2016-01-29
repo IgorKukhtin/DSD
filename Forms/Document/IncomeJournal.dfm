@@ -26,7 +26,7 @@ object IncomeJournalForm: TIncomeJournalForm
     object deStart: TcxDateEdit
       Left = 101
       Top = 5
-      EditValue = 42005d
+      EditValue = 42370d
       Properties.ReadOnly = True
       Properties.SaveTime = False
       Properties.ShowTime = False
@@ -36,7 +36,7 @@ object IncomeJournalForm: TIncomeJournalForm
     object deEnd: TcxDateEdit
       Left = 310
       Top = 5
-      EditValue = 42005d
+      EditValue = 42370d
       Properties.ReadOnly = True
       Properties.SaveTime = False
       Properties.ShowTime = False

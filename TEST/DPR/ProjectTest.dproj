@@ -737,10 +737,6 @@
 				<Form>BranchEditForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
-			<DCCReference Include="..\..\Forms\Guides\Branch.pas">
-				<Form>BranchForm</Form>
-				<DesignClass>TParentForm</DesignClass>
-			</DCCReference>
 			<DCCReference Include="..\..\Forms\Guides\Branch_Object.pas">
 				<Form>Branch_ObjectForm</Form>
 				<DesignClass>TParentForm</DesignClass>
@@ -2483,6 +2479,18 @@
 			</DCCReference>
 			<DCCReference Include="..\..\Forms\Guides\Member_TrasportChoice.pas">
 				<Form>Member_TrasportChoiceForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Kind\ContractTermKind.pas">
+				<Form>ContractTermKindForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Guides\Branch_TTNDialog.pas">
+				<Form>Branch_TTNDialogForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Guides\Branch.pas">
+				<Form>BranchForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<BuildConfiguration Include="Release">

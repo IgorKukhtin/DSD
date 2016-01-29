@@ -155,6 +155,14 @@ type
     cxLabel28: TcxLabel;
     ceGoodsProperty: TcxButtonEdit;
     GoodsPropertyGuides: TdsdGuides;
+    edTerm: TcxCurrencyEdit;
+    cxLabel29: TcxLabel;
+    cxLabel30: TcxLabel;
+    edContractTermKind: TcxButtonEdit;
+    ContractTermKindGuides: TdsdGuides;
+    cxLabel31: TcxLabel;
+    edPersonalSigning: TcxButtonEdit;
+    PersonalSigningGuides: TdsdGuides;
   private
     { Private declarations }
   public

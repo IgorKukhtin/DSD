@@ -1,26 +1,26 @@
 inherited ReportMovementCheckForm: TReportMovementCheckForm
   Caption = #1054#1090#1095#1077#1090' '#1087#1086' '#1087#1088#1086#1076#1072#1078#1072#1084' '#1085#1072' '#1082#1072#1089#1089#1072#1093
-  ClientWidth = 702
+  ClientWidth = 736
   AddOnFormData.RefreshAction = actRefreshStart
-  ExplicitWidth = 710
-  ExplicitHeight = 335
+  ExplicitWidth = 752
+  ExplicitHeight = 346
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 58
-    Width = 702
+    Width = 736
     Height = 250
     TabOrder = 3
     ExplicitTop = 58
     ExplicitWidth = 702
     ExplicitHeight = 250
     ClientRectBottom = 250
-    ClientRectRight = 702
+    ClientRectRight = 736
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 702
       ExplicitHeight = 250
       inherited cxGrid: TcxGrid
-        Width = 702
+        Width = 736
         Height = 250
         ExplicitWidth = 702
         ExplicitHeight = 250
@@ -54,25 +54,44 @@ inherited ReportMovementCheckForm: TReportMovementCheckForm
           Styles.Selection = nil
           Styles.Footer = nil
           Styles.Header = nil
+          object clGoodsGroupName: TcxGridDBColumn
+            Caption = #1043#1088#1091#1087#1087#1072' '#1090#1086#1074#1072#1088#1072
+            DataBinding.FieldName = 'GoodsGroupName'
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 100
+          end
           object colGoodsId: TcxGridDBColumn
             Caption = #1048#1044' '#1090#1086#1074#1072#1088#1072
             DataBinding.FieldName = 'GoodsId'
             Visible = False
+            HeaderAlignmentVert = vaCenter
             Width = 27
           end
           object colGoodsCode: TcxGridDBColumn
             Caption = #1050#1086#1076' '#1090#1086#1074#1072#1088#1072
             DataBinding.FieldName = 'GoodsCode'
+            HeaderAlignmentVert = vaCenter
             Width = 50
           end
           object colGoodsName: TcxGridDBColumn
             Caption = #1053#1072#1080#1084#1077#1085#1086#1074#1072#1085#1080#1077' '#1090#1086#1074#1072#1088#1072
             DataBinding.FieldName = 'GoodsName'
+            HeaderAlignmentVert = vaCenter
             Width = 151
+          end
+          object clNDSKindName: TcxGridDBColumn
+            Caption = #1053#1044#1057
+            DataBinding.FieldName = 'NDSKindName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 60
           end
           object colAmount: TcxGridDBColumn
             Caption = #1050#1086#1083'-'#1074#1086
             DataBinding.FieldName = 'Amount'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
             Width = 49
           end
           object colPrice: TcxGridDBColumn
@@ -80,6 +99,8 @@ inherited ReportMovementCheckForm: TReportMovementCheckForm
             DataBinding.FieldName = 'Price'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DisplayFormat = ',0.00'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
             Width = 62
           end
           object colPriceSale: TcxGridDBColumn
@@ -87,6 +108,8 @@ inherited ReportMovementCheckForm: TReportMovementCheckForm
             DataBinding.FieldName = 'PriceSale'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DisplayFormat = ',0.00'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
             Width = 66
           end
           object colSumma: TcxGridDBColumn
@@ -94,6 +117,8 @@ inherited ReportMovementCheckForm: TReportMovementCheckForm
             DataBinding.FieldName = 'Summa'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DisplayFormat = ',0.00'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
             Width = 66
           end
           object colSummaSale: TcxGridDBColumn
@@ -101,6 +126,8 @@ inherited ReportMovementCheckForm: TReportMovementCheckForm
             DataBinding.FieldName = 'SummaSale'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DisplayFormat = ',0.00'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
             Width = 72
           end
           object colSummaMargin: TcxGridDBColumn
@@ -108,6 +135,8 @@ inherited ReportMovementCheckForm: TReportMovementCheckForm
             DataBinding.FieldName = 'SummaMargin'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DisplayFormat = ',0.00'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
             Width = 78
           end
         end
@@ -115,7 +144,7 @@ inherited ReportMovementCheckForm: TReportMovementCheckForm
     end
   end
   inherited Panel: TPanel
-    Width = 702
+    Width = 736
     Height = 32
     Visible = False
     ExplicitWidth = 702
@@ -155,6 +184,7 @@ inherited ReportMovementCheckForm: TReportMovementCheckForm
       Properties.ReadOnly = True
       Properties.UseNullString = True
       TabOrder = 5
+      Text = '<'#1042#1099#1073#1077#1088#1080#1090#1077' '#1087#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077'>'
       Width = 188
     end
   end
@@ -206,14 +236,14 @@ inherited ReportMovementCheckForm: TReportMovementCheckForm
         ParamType = ptInput
       end
       item
-        Name = 'inStartDate'
+        Name = 'inDateStart'
         Value = 41395d
         Component = deStart
         DataType = ftDateTime
         ParamType = ptInput
       end
       item
-        Name = 'inEndDate'
+        Name = 'inDateFinal'
         Value = 41395d
         Component = deEnd
         DataType = ftDateTime

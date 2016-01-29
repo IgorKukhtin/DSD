@@ -321,6 +321,7 @@ begin
 
      //параметры для печати
      if not DialogPrintForm.Execute(ParamsMovement.ParamByName('MovementDescId').asInteger
+                                   ,ParamsMovement.ParamByName('CountMovement').asInteger
                                    ,ParamsMovement.ParamByName('isMovement').asBoolean
                                    ,ParamsMovement.ParamByName('isAccount').asBoolean
                                    ,ParamsMovement.ParamByName('isTransport').asBoolean
@@ -393,7 +394,7 @@ begin
      if (DialogPrintForm.cbPrintTax.Checked) and (Result = TRUE)
      then Result:=Print_Tax (ParamsMovement.ParamByName('MovementDescId').AsInteger
                            , ParamsMovement.ParamByName('MovementId_begin').AsInteger
-                           , StrToInt(DialogPrintForm.PrintCountEdit.Text)
+                           , ParamsMovement.ParamByName('CountTax').AsInteger
                            , DialogPrintForm.cbPrintPreview.Checked
                             );
      //
@@ -401,7 +402,7 @@ begin
      if (DialogPrintForm.cbPrintAccount.Checked) and (Result = TRUE)
      then Result:=Print_Account (ParamsMovement.ParamByName('MovementDescId').AsInteger
                                , ParamsMovement.ParamByName('MovementId_begin').AsInteger
-                               , StrToInt(DialogPrintForm.PrintCountEdit.Text)
+                               , ParamsMovement.ParamByName('CountAccount').AsInteger
                                , DialogPrintForm.cbPrintPreview.Checked
                                 );
      //
@@ -410,7 +411,7 @@ begin
      then Result:=Print_Pack (ParamsMovement.ParamByName('MovementDescId').AsInteger
                             , ParamsMovement.ParamByName('MovementId_begin').AsInteger // MovementId
                             , ParamsMovement.ParamByName('MovementId').AsInteger       // MovementId_by
-                            , StrToInt(DialogPrintForm.PrintCountEdit.Text)
+                            , ParamsMovement.ParamByName('CountPack').AsInteger
                             , DialogPrintForm.cbPrintPreview.Checked
                              );
      //
@@ -419,7 +420,7 @@ begin
      then Result:=Print_Spec (ParamsMovement.ParamByName('MovementDescId').AsInteger
                             , ParamsMovement.ParamByName('MovementId_begin').AsInteger // MovementId
                             , ParamsMovement.ParamByName('MovementId').AsInteger       // MovementId_by
-                            , StrToInt(DialogPrintForm.PrintCountEdit.Text)
+                            , ParamsMovement.ParamByName('CountSpec').AsInteger
                             , DialogPrintForm.cbPrintPreview.Checked
                              );
      //
@@ -429,7 +430,7 @@ begin
                                  , 0                                                        // MovementId
                                  , ParamsMovement.ParamByName('MovementId_begin').AsInteger // MovementId_sale
                                  , ParamsMovement.ParamByName('OperDate').AsDateTime
-                                 , StrToInt(DialogPrintForm.PrintCountEdit.Text)
+                                 , ParamsMovement.ParamByName('CountTransport').AsInteger
                                  , DialogPrintForm.cbPrintPreview.Checked
                                   );
      //
@@ -437,7 +438,7 @@ begin
      if (DialogPrintForm.cbPrintQuality.Checked) and (Result = TRUE)
      then Result:=Print_Quality (ParamsMovement.ParamByName('MovementDescId').AsInteger
                                , ParamsMovement.ParamByName('MovementId_begin').AsInteger
-                               , StrToInt(DialogPrintForm.PrintCountEdit.Text)
+                               , ParamsMovement.ParamByName('CountQuality').AsInteger
                                , DialogPrintForm.cbPrintPreview.Checked
                                 );
      //

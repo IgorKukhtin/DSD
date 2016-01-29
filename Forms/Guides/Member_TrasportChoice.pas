@@ -81,6 +81,7 @@ type
     Panel: TPanel;
     deOperDate: TcxDateEdit;
     cxLabel1: TcxLabel;
+    clDescName: TcxGridDBColumn;
   private
     { Private declarations }
   public

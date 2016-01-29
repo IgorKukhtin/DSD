@@ -10,6 +10,7 @@ RETURNS SETOF refcursor
 AS
 $BODY$
     DECLARE vbUserId Integer;
+    DECLARE vbJuridicalId Integer;
 
     DECLARE Cursor1 refcursor;
     DECLARE Cursor2 refcursor;
@@ -18,6 +19,11 @@ BEGIN
     -- проверка прав пользователя на вызов процедуры
     -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Select_Movement_Payment());
     vbUserId:= inSession;
+
+        SELECT Movement_Payment.JuridicalId
+          INTO vbJuridicalId
+        FROM Movement_Payment_View AS Movement_Payment
+        WHERE Movement_Payment.Id = inMovementId;
 
     OPEN Cursor1 FOR
         SELECT
@@ -35,6 +41,17 @@ BEGIN
 
 
     OPEN Cursor2 FOR
+      WITH tmpJuridicalSettings AS 
+            (SELECT distinct tmp.JuridicalId
+                  , Max(tmp.Name)      ::TVarChar   AS InvNumber
+                  , Max(tmp.StartDate) ::TDateTime  AS StartDate
+                  , Max(tmp.EndDate)   ::TDateTime  AS EndDate
+             FROM gpSelect_Object_JuridicalSettings (inSession) as tmp
+             WHERE tmp.MainJuridicalId = vbJuridicalId
+               AND Coalesce (tmp.Name, '') <> '' 
+             GROUP BY tmp.JuridicalId
+             )
+
         SELECT
             MI_Payment.Income_JuridicalName
           , MI_Payment.Income_UnitName
@@ -48,6 +65,10 @@ BEGIN
           , ObjectHistoryString_JuridicalDetails_OKPO.ValueData AS OKPO
           , (MI_Payment.Income_JuridicalName||';'||CAST(MI_Payment.Income_NDS AS TVarChar))::TVarChar as JuridicalNDS
           , ROUND(MI_Payment.SummaPay * (MI_Payment.Income_NDS/100),2)::TFloat AS NDSValue
+             
+          , tmpJuridicalSettings.InvNumber AS ContractNumber
+          , tmpJuridicalSettings.StartDate AS ContractStartDate
+          , tmpJuridicalSettings.EndDate   AS ContractEndDate
         FROM
             MovementItem_Payment_View AS MI_Payment
             LEFT OUTER JOIN ObjectHistory AS ObjectHistory_Juridical
@@ -57,6 +78,7 @@ BEGIN
             LEFT JOIN ObjectHistoryString AS ObjectHistoryString_JuridicalDetails_OKPO
                                           ON ObjectHistoryString_JuridicalDetails_OKPO.ObjectHistoryId = ObjectHistory_Juridical.Id
                                          AND ObjectHistoryString_JuridicalDetails_OKPO.DescId = zc_ObjectHistoryString_JuridicalDetails_OKPO()
+            LEFT JOIN tmpJuridicalSettings ON tmpJuridicalSettings.JuridicalId = MI_Payment.Income_JuridicalId 
         WHERE
             MI_Payment.MovementId = inMovementId
             AND

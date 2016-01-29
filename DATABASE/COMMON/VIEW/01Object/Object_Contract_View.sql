@@ -7,6 +7,12 @@ CREATE OR REPLACE VIEW Object_Contract_View AS
        , Object_Contract_InvNumber_View.isErased
        , ObjectDate_Start.ValueData                  AS StartDate
        , ObjectDate_End.ValueData                    AS EndDate
+       , CASE WHEN ObjectLink_Contract_ContractTermKind.ChildObjectId = zc_Enum_ContractTermKind_Long()
+                   THEN zc_DateEnd()
+              WHEN ObjectLink_Contract_ContractTermKind.ChildObjectId = zc_Enum_ContractTermKind_Month() AND ObjectFloat_Term.ValueData > 0
+                   THEN ObjectDate_End.ValueData + ((ObjectFloat_Term.ValueData :: Integer) :: TVarChar || ' MONTH') :: INTERVAL
+              ELSE ObjectDate_End.ValueData
+         END :: TDateTime AS EndDate_Term
 
        , ObjectLink_Contract_Juridical.ChildObjectId         AS JuridicalId
        , ObjectLink_Contract_JuridicalBasis.ChildObjectId    AS JuridicalBasisId
@@ -28,6 +34,9 @@ CREATE OR REPLACE VIEW Object_Contract_View AS
        , Object_ContractKind.Id              AS ContractKindId
        , Object_ContractKind.ObjectCode      AS ContractKindCode
        , Object_ContractKind.ValueData       AS ContractKindName
+
+       , COALESCE (ObjectFloat_Term.ValueData, 0) :: TFloat AS Term
+       , ObjectLink_Contract_ContractTermKind.ChildObjectId AS ContractTermKindId
 
          -- !!!¬–≈Ã≈ÕÕŒ ¬Œ——“¿ÕŒ¬»À!!!
        , ObjectFloat_ChangePercent.ValueData         AS ChangePercent
@@ -56,9 +65,15 @@ CREATE OR REPLACE VIEW Object_Contract_View AS
                            AND ObjectLink_Contract_JuridicalBasis.DescId = zc_ObjectLink_Contract_JuridicalBasis()
 
        LEFT JOIN ObjectLink AS ObjectLink_Contract_PaidKind
-                            ON ObjectLink_Contract_PaidKind.ObjectId = Object_Contract_InvNumber_View.ContractId 
+                            ON ObjectLink_Contract_PaidKind.ObjectId = Object_Contract_InvNumber_View.ContractId
                            AND ObjectLink_Contract_PaidKind.DescId = zc_ObjectLink_Contract_PaidKind()
 
+       LEFT JOIN ObjectFloat AS ObjectFloat_Term
+                             ON ObjectFloat_Term.ObjectId = Object_Contract_InvNumber_View.ContractId
+                            AND ObjectFloat_Term.DescId = zc_ObjectFloat_Contract_Term()
+       LEFT JOIN ObjectLink AS ObjectLink_Contract_ContractTermKind
+                            ON ObjectLink_Contract_ContractTermKind.ObjectId = Object_Contract_InvNumber_View.ContractId
+                           AND ObjectLink_Contract_ContractTermKind.DescId = zc_ObjectLink_Contract_ContractTermKind()
 
        -- !!!¬–≈Ã≈ÕÕŒ ¬Œ——“¿ÕŒ¬»À!!!
        LEFT JOIN ObjectFloat AS ObjectFloat_ChangePercent

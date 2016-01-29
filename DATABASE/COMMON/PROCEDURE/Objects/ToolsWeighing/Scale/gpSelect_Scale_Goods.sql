@@ -107,7 +107,7 @@ BEGIN
                            UNION
                             SELECT inOrderExternalId AS MovementId WHERE vbRetailId = 0
                            )
-          , tmpMI_Order AS (SELECT MovementItem.ObjectId                                                AS GoodsId
+          , tmpMI_Order2 AS (SELECT MovementItem.ObjectId                                                AS GoodsId
                                  , COALESCE (MILinkObject_GoodsKind.ObjectId, CASE WHEN inIsGoodsComplete = FALSE THEN 0 ELSE zc_Enum_GoodsKind_Main() END) AS GoodsKindId
                                  , MovementItem.Amount + COALESCE (MIFloat_AmountSecond.ValueData, 0)   AS Amount
                                  , COALESCE (MIFloat_Price.ValueData, 0)                                AS Price
@@ -134,6 +134,15 @@ BEGIN
                                                              ON MIFloat_PromoMovement.MovementItemId = MovementItem.Id
                                                             AND MIFloat_PromoMovement.DescId = zc_MIFloat_PromoMovementId()
                             WHERE MovementItem.Amount <> 0 OR COALESCE (MIFloat_AmountSecond.ValueData, 0) <> 0
+                           )
+          , tmpMI_Order AS (SELECT tmpMI_Order2.GoodsId
+                                 , tmpMI_Order2.GoodsKindId
+                                 , tmpMI_Order2.Amount
+                                 , tmpMI_Order2.Price
+                                 , tmpMI_Order2.CountForPrice
+                                 , tmpMI_Order2.MovementId_Promo
+                                 , tmpMI_Order2.isTare
+                            FROM tmpMI_Order2
                            UNION ALL
                             SELECT Object_Goods.Id AS GoodsId
                                  , CASE WHEN inIsGoodsComplete = FALSE THEN 0 ELSE zc_Enum_GoodsKind_Main() END  AS GoodsKindId
@@ -152,6 +161,7 @@ BEGIN
                             WHERE View_InfoMoney.InfoMoneyDestinationId IN (zc_Enum_InfoMoneyDestination_20500() -- Общефирменные + Оборотная тара
                                                                           , zc_Enum_InfoMoneyDestination_20600() -- Общефирменные + Прочие материалы
                                                                            )
+                             AND Object_Goods.Id NOT IN (SELECT tmpMI_Order2.GoodsId FROM tmpMI_Order2)
                               -- AND vbUserId = 5
                            )
        , tmpMI_Weighing AS (SELECT MovementItem.ObjectId                         AS GoodsId

@@ -1,18 +1,19 @@
 -- Function: gpSelect_MovementItem_SheetWorkTime()
 
 DROP FUNCTION IF EXISTS gpSelect_MovementItem_SheetWorkTime(TDateTime, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_MovementItem_SheetWorkTime(TDateTime, Integer, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_MovementItem_SheetWorkTime(
     IN inDate        TDateTime , --
     IN inUnitId      Integer   , --
+    IN inisErased    Boolean   , --
     IN inSession     TVarChar    -- сессия пользователя
 )
   RETURNS SETOF refcursor 
 AS
 $BODY$
-  DECLARE vbStartDate TDateTime;
-          vbEndDate TDateTime;
-          cur1 refcursor; 
+  DECLARE vbUserId Integer;
+  DECLARE cur1 refcursor; 
           cur2 refcursor; 
           vbIndex Integer;
           vbDayCount Integer;
@@ -20,60 +21,17 @@ $BODY$
           vbQueryText Text;
           vbFieldNameText Text;
 BEGIN
-
      -- проверка прав пользователя на вызов процедуры
-     -- PERFORM lpCheckRight (inSession, zc_Enum_Process_Select_MI_SheetWorkTime());
+     -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Select_MI_SheetWorkTime());
 
-     vbStartDate := date_trunc('month', inDate)                                ;    -- первое число месяца
-     vbEndDate := vbStartDate + interval '1 month' - interval '1 microseconds' ;    -- последнее число месяца
 
-     CREATE TEMP TABLE tmpOperDate ON COMMIT DROP
-       AS SELECT generate_series(vbStartDate, vbEndDate, '1 DAY'::interval) OperDate;
+     -- 
+     CREATE TEMP TABLE tmpOperDate ON COMMIT DROP AS
+        SELECT GENERATE_SERIES (DATE_TRUNC ('MONTH', inDate), DATE_TRUNC ('MONTH', inDate) + INTERVAL '1 MONTH' - INTERVAL '1 DAY', '1 DAY' :: INTERVAL) AS OperDate;
 
-     -- возвращаем заголовки столбцов и даты
-     OPEN cur1 FOR SELECT tmpOperDate.OperDate::TDateTime, 
-                          (EXTRACT(DAY FROM tmpOperDate.OperDate))::TVarChar AS ValueField
-               FROM tmpOperDate;  
-     RETURN NEXT cur1;
-    
-     vbIndex := 0;
-     -- именно так, из-за перехода времени кол-во дней может быть разное
-     vbDayCount := (SELECT count(*) 
-                     FROM tmpOperDate);
-
-     vbCrossString := 'Key Integer[]';
-     vbFieldNameText := '';
-     -- строим строчку для кросса
-     WHILE (vbIndex < vbDayCount) LOOP
-       vbIndex := vbIndex + 1;
-       vbCrossString := vbCrossString || ', DAY' || vbIndex || ' VarChar[]'; 
-       vbFieldNameText := vbFieldNameText || ', DAY' || vbIndex || '[1] AS Value'||vbIndex||'  '||
-                          ', DAY' || vbIndex || '[2]::Integer  AS TypeId'||vbIndex||' ';
-     END LOOP;
-
-     vbQueryText := '
-          SELECT Object_Member.Id           AS MemberId
-               , Object_Member.ObjectCode   AS MemberCode
-               , Object_Member.ValueData    AS MemberName
-               , Object_Position.Id         AS PositionId
-               , Object_Position.ValueData  AS PositionName
-               , Object_PositionLevel.Id         AS PositionLevelId
-               , Object_PositionLevel.ValueData  AS PositionLevelName
-               , Object_PersonalGroup.Id         AS PersonalGroupId
-               , Object_PersonalGroup.ValueData  AS PersonalGroupName'
-               || vbFieldNameText ||
-        ' FROM
-         (SELECT * FROM CROSSTAB (''
-                                    SELECT ARRAY[COALESCE (Movement_Data.MemberId, Object_Data.MemberId)               -- AS MemberId
-                                               , COALESCE (Movement_Data.PositionId, Object_Data.PositionId)           -- AS PositionId
-                                               , COALESCE (Movement_Data.PositionLevelId, Object_Data.PositionLevelId) -- AS PositionLevelId
-                                               , COALESCE (Movement_Data.PersonalGroupId, Object_Data.PersonalGroupId) -- AS PersonalGroupId
-                                                ] :: Integer[]
-                                         , COALESCE (Movement_Data.OperDate, Object_Data.OperDate) AS OperDate
-                                         , ARRAY[zfCalc_ViewWorkHour (COALESCE(Movement_Data.Amount, 0), Movement_Data.ShortName) :: VarChar
-                                               , COALESCE (Movement_Data.ObjectId, 0) :: VarChar
-                                                ] :: TVarChar
-                                    FROM (SELECT tmpOperDate.operdate
+     -- все данные за месяц
+     CREATE TEMP TABLE tmpMI ON COMMIT DROP AS
+                                          SELECT tmpOperDate.operdate
                                                , MI_SheetWorkTime.Amount
                                                , COALESCE(MI_SheetWorkTime.ObjectId, 0) AS MemberId
                                                , COALESCE(MIObject_Position.ObjectId, 0) AS PositionId
@@ -81,6 +39,7 @@ BEGIN
                                                , COALESCE(MIObject_PersonalGroup.ObjectId, 0) AS PersonalGroupId
                                                , MIObject_WorkTimeKind.ObjectId
                                                , ObjectString_WorkTimeKind_ShortName.ValueData AS ShortName
+                                               , CASE WHEN MI_SheetWorkTime.isErased = TRUE THEN 0 ELSE 1 END AS isErased
                                           FROM tmpOperDate
                                                JOIN Movement ON Movement.operDate = tmpOperDate.OperDate
                                                              AND Movement.DescId = zc_Movement_SheetWorkTime()
@@ -103,8 +62,58 @@ BEGIN
                                                LEFT JOIN MovementItemLinkObject AS MIObject_PersonalGroup
                                                                                 ON MIObject_PersonalGroup.MovementItemId = MI_SheetWorkTime.Id 
                                                                                AND MIObject_PersonalGroup.DescId = zc_MILinkObject_PersonalGroup() 
-                                          WHERE MovementLinkObject_Unit.ObjectId = '|| inUnitId :: TVarChar ||
-                                        ') AS Movement_Data
+                                          WHERE MovementLinkObject_Unit.ObjectId = inUnitId;
+
+     vbIndex := 0;
+     -- именно так, из-за перехода времени кол-во дней может быть разное
+     vbDayCount := (SELECT COUNT(*) FROM tmpOperDate);
+
+     vbCrossString := 'Key Integer[]';
+     vbFieldNameText := '';
+     -- строим строчку для кросса
+     WHILE (vbIndex < vbDayCount) LOOP
+       vbIndex := vbIndex + 1;
+       vbCrossString := vbCrossString || ', DAY' || vbIndex || ' VarChar[]'; 
+       vbFieldNameText := vbFieldNameText || ', DAY' || vbIndex || '[1] AS Value'||vbIndex||'  '||
+                          ', DAY' || vbIndex || '[2]::Integer  AS TypeId'||vbIndex||' ';
+     END LOOP;
+
+
+     -- возвращаем заголовки столбцов и даты
+     OPEN cur1 FOR SELECT tmpOperDate.OperDate::TDateTime, 
+                          ((EXTRACT(DAY FROM tmpOperDate.OperDate))||case when tmpCalendar.Working = False then ' *' else ' ' END||tmpWeekDay.DayOfWeekName) ::TVarChar AS ValueField
+               FROM tmpOperDate
+                   LEFT JOIN zfCalc_DayOfWeekName (tmpOperDate.OperDate) AS tmpWeekDay ON 1=1
+                   LEFT JOIN gpSelect_Object_Calendar(tmpOperDate.OperDate,tmpOperDate.OperDate,inSession) tmpCalendar ON 1=1 
+                                     
+      ;  
+     RETURN NEXT cur1;
+    
+
+     vbQueryText := '
+        SELECT Object_Member.Id             AS MemberId
+               , Object_Member.ObjectCode   AS MemberCode
+               , Object_Member.ValueData    AS MemberName
+               , Object_Position.Id         AS PositionId
+               , Object_Position.ValueData  AS PositionName
+               , Object_PositionLevel.Id         AS PositionLevelId
+               , Object_PositionLevel.ValueData  AS PositionLevelName
+               , Object_PersonalGroup.Id         AS PersonalGroupId
+               , Object_PersonalGroup.ValueData  AS PersonalGroupName
+               , CASE WHEN tmp.isErased = 0 THEN TRUE ELSE FALSE END AS isErased'
+               || vbFieldNameText ||
+        ' FROM
+         (SELECT * FROM CROSSTAB (''
+                                    SELECT ARRAY[COALESCE (Movement_Data.MemberId, Object_Data.MemberId)               -- AS MemberId
+                                               , COALESCE (Movement_Data.PositionId, Object_Data.PositionId)           -- AS PositionId
+                                               , COALESCE (Movement_Data.PositionLevelId, Object_Data.PositionLevelId) -- AS PositionLevelId
+                                               , COALESCE (Movement_Data.PersonalGroupId, Object_Data.PersonalGroupId) -- AS PersonalGroupId
+                                                ] :: Integer[]
+                                         , COALESCE (Movement_Data.OperDate, Object_Data.OperDate) AS OperDate
+                                         , ARRAY[zfCalc_ViewWorkHour (COALESCE(Movement_Data.Amount, 0), Movement_Data.ShortName) :: VarChar
+                                               , COALESCE (Movement_Data.ObjectId, 0) :: VarChar
+                                                ] :: TVarChar
+                                    FROM (SELECT * FROM tmpMI WHERE tmpMI.isErased = 1 OR ' || inisErased :: TVarChar || ' = TRUE) AS Movement_Data
                                         FULL JOIN  
                                          (SELECT tmpOperDate.operdate, 0, 
                                                  COALESCE(MemberId, 0) AS MemberId, 
@@ -139,7 +148,16 @@ BEGIN
          LEFT JOIN Object AS Object_Member ON Object_Member.Id = D.Key[1]
          LEFT JOIN Object AS Object_Position ON Object_Position.Id = D.Key[2]
          LEFT JOIN Object AS Object_PositionLevel ON Object_PositionLevel.Id = D.Key[3]
-         LEFT JOIN Object AS Object_PersonalGroup ON Object_PersonalGroup.Id = D.Key[4]';
+         LEFT JOIN Object AS Object_PersonalGroup ON Object_PersonalGroup.Id = D.Key[4]
+         LEFT JOIN (SELECT DISTINCT tmpMI.MemberId, tmpMI.PositionId, tmpMI.PositionLevelId, tmpMI.PersonalGroupId, tmpMI.isErased
+                    FROM tmpMI
+                    WHERE tmpMI.isErased = 1 OR ' || inisErased :: TVarChar || ' = TRUE
+                   ) AS tmp ON tmp.MemberId = D.Key[1]
+                           AND tmp.PositionId = D.Key[2]
+                           AND tmp.PositionLevelId = D.Key[3]
+                           AND tmp.PersonalGroupId = D.Key[4]
+        ';
+
 
      OPEN cur2 FOR EXECUTE vbQueryText;  
      RETURN NEXT cur2;
@@ -147,12 +165,13 @@ BEGIN
 END;
 $BODY$
   LANGUAGE PLPGSQL VOLATILE;
-ALTER FUNCTION gpSelect_MovementItem_SheetWorkTime (TDateTime, Integer, TVarChar) OWNER TO postgres;
+ALTER FUNCTION gpSelect_MovementItem_SheetWorkTime (TDateTime, Integer, Boolean, TVarChar) OWNER TO postgres;
 
 
 /*   
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 20.01.16         * 
  07.01.14                         * Replace inPersonalId <> inMemberId
  30.11.13                                        * add isErased = FALSE
  30.11.13                                        * parse
@@ -163,8 +182,4 @@ ALTER FUNCTION gpSelect_MovementItem_SheetWorkTime (TDateTime, Integer, TVarChar
 */
 
 -- тест
--- BEGIN;
---  SELECT * FROM gpSelect_MovementItem_SheetWorkTime(now(), 0, '');
---  fetch all "<unnamed portal 10>";
--- END;
-
+-- SELECT * FROM gpSelect_MovementItem_SheetWorkTime(now(), 0, FALSE, '');

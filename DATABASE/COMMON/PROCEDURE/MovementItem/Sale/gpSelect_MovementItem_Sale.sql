@@ -23,6 +23,7 @@ RETURNS TABLE (Id Integer, LineNum Integer, GoodsId Integer, GoodsCode Integer, 
              , CountPack TFloat, WeightTotal TFloat, WeightPack TFloat, isBarCode Boolean 
              , isCheck_Pricelist Boolean
              , MovementPromo TVarChar, PricePromo TFloat
+             , InfoMoneyCode Integer, InfoMoneyGroupName TVarChar, InfoMoneyDestinationName TVarChar, InfoMoneyName TVarChar, InfoMoneyName_all TVarChar
              , isErased Boolean
               )
 AS
@@ -310,6 +311,12 @@ BEGIN
                   ELSE 0
              END :: TFloat AS PricePromo
 
+           , tmpGoods.InfoMoneyCode
+           , tmpGoods.InfoMoneyGroupName
+           , tmpGoods.InfoMoneyDestinationName
+           , tmpGoods.InfoMoneyName
+           , tmpGoods.InfoMoneyName_all
+
            , FALSE AS isErased
 
        FROM (SELECT Object_Goods.Id                                        AS GoodsId
@@ -318,6 +325,13 @@ BEGIN
                   , COALESCE (tmpGoodsByGoodsKind.GoodsKindId, 0)          AS GoodsKindId
                   -- , CASE WHEN ObjectLink_Goods_InfoMoney.ChildObjectId IN (zc_Enum_InfoMoney_20901(), zc_Enum_InfoMoney_30101(), zc_Enum_InfoMoney_30201()) THEN zc_Enum_GoodsKind_Main() ELSE 0 END AS GoodsKindId -- Ирна + Готовая продукция + Доходы Мясное сырье
                   -- , COALESCE (Object_GoodsByGoodsKind_View.GoodsKindId, 0) AS GoodsKindId
+
+                  , Object_InfoMoney_View.InfoMoneyCode
+                  , Object_InfoMoney_View.InfoMoneyGroupName
+                  , Object_InfoMoney_View.InfoMoneyDestinationName
+                  , Object_InfoMoney_View.InfoMoneyName
+                  , Object_InfoMoney_View.InfoMoneyName_all
+
              FROM Object_InfoMoney_View
                   JOIN ObjectLink AS ObjectLink_Goods_InfoMoney
                                   ON ObjectLink_Goods_InfoMoney.ChildObjectId = Object_InfoMoney_View.InfoMoneyId
@@ -327,7 +341,17 @@ BEGIN
                   LEFT JOIN tmpGoodsByGoodsKind ON tmpGoodsByGoodsKind.GoodsId = Object_Goods.Id
                   /*LEFT JOIN Object_GoodsByGoodsKind_View ON Object_GoodsByGoodsKind_View.GoodsId = Object_Goods.Id
                                                         AND Object_InfoMoney_View.InfoMoneyId IN (zc_Enum_InfoMoney_20901(), zc_Enum_InfoMoney_30101(), zc_Enum_InfoMoney_30201()) -- Ирна + Готовая продукция + Доходы Мясное сырье*/
-             WHERE (tmpGoodsByGoodsKind.GoodsId > 0 AND Object_InfoMoney_View.InfoMoneyDestinationId IN (zc_Enum_InfoMoneyDestination_20900(), zc_Enum_InfoMoneyDestination_21000(), zc_Enum_InfoMoneyDestination_21100(), zc_Enum_InfoMoneyDestination_30100(), zc_Enum_InfoMoneyDestination_30200()))
+             WHERE (tmpGoodsByGoodsKind.GoodsId > 0 AND Object_InfoMoney_View.InfoMoneyDestinationId IN (zc_Enum_InfoMoneyDestination_20900()
+                                                                                                       , zc_Enum_InfoMoneyDestination_21000()
+                                                                                                       , zc_Enum_InfoMoneyDestination_21100()
+                                                                                                       , zc_Enum_InfoMoneyDestination_30100()
+                                                                                                       , zc_Enum_InfoMoneyDestination_30200()
+                                                                                                       -- , zc_Enum_InfoMoneyDestination_20500() -- Общефирменные + Оборотная тара
+                                                                                                       -- , zc_Enum_InfoMoneyDestination_20600() -- Общефирменные + Прочие материалы
+                                                                                                        ))
+                -- OR Object_InfoMoney_View.InfoMoneyDestinationId IN  (zc_Enum_InfoMoneyDestination_20500() -- Общефирменные + Оборотная тара
+                --                                                    , zc_Enum_InfoMoneyDestination_20600() -- Общефирменные + Прочие материалы
+                --                                                     )
                 OR vbIsB = TRUE
             ) AS tmpGoods
             LEFT JOIN tmpMI_Goods AS tmpMI ON tmpMI.GoodsId     = tmpGoods.GoodsId
@@ -363,7 +387,7 @@ BEGIN
            , tmpMI_Goods.AmountPartner
            , tmpMI_Goods.ChangePercentAmount
            , (tmpMI_Goods.Amount - COALESCE (tmpMI_Goods.AmountChangePercent, 0)) :: TFloat AS TotalPercentAmount
-           , tmpMI.ChangePercent      :: TFloat AS ChangePercent
+           , tmpMI_Goods.ChangePercent :: TFloat AS ChangePercent
 
            , tmpMI_Goods.Price
            , tmpMI_Goods.CountForPrice
@@ -402,14 +426,14 @@ BEGIN
                        THEN FALSE
                   WHEN tmpPromo.TaxPromo <> 0 AND tmpPromo.PriceWithOutVAT = tmpMI_Goods.Price
                        THEN FALSE
-                  WHEN (COALESCE (tmpMI.Price, 0) = COALESCE (tmpPriceList.Price_Pricelist, 0)     AND vbPriceWithVAT = FALSE)
-                    OR (COALESCE (tmpMI.Price, 0) = COALESCE (tmpPriceList.Price_Pricelist_vat, 0) AND vbPriceWithVAT = TRUE)
+                  WHEN (COALESCE (tmpMI_Goods.Price, 0) = COALESCE (tmpPriceList.Price_Pricelist, 0)     AND vbPriceWithVAT = FALSE)
+                    OR (COALESCE (tmpMI_Goods.Price, 0) = COALESCE (tmpPriceList.Price_Pricelist_vat, 0) AND vbPriceWithVAT = TRUE)
                        THEN FALSE
                   ELSE TRUE
              END :: Boolean AS isCheck_PricelistBoolean
 
-           , (CASE WHEN (tmpPromo.isChangePercent = TRUE  AND tmpMI.ChangePercent <> vbChangePercent)
-                     OR (tmpPromo.isChangePercent = FALSE AND tmpMI.ChangePercent <> 0)
+           , (CASE WHEN (tmpPromo.isChangePercent = TRUE  AND tmpMI_Goods.ChangePercent <> vbChangePercent)
+                     OR (tmpPromo.isChangePercent = FALSE AND tmpMI_Goods.ChangePercent <> 0)
                         THEN 'ОШИБКА <(-)% Скидки (+)% Наценки>'
                    ELSE ''
               END
@@ -427,6 +451,12 @@ BEGIN
                   WHEN tmpPromo.TaxPromo <> 0 THEN tmpPromo.PriceWithOutVAT
                   ELSE 0
              END :: TFloat AS PricePromo
+
+           , Object_InfoMoney_View.InfoMoneyCode
+           , Object_InfoMoney_View.InfoMoneyGroupName
+           , Object_InfoMoney_View.InfoMoneyDestinationName
+           , Object_InfoMoney_View.InfoMoneyName
+           , Object_InfoMoney_View.InfoMoneyName_all
 
            , tmpMI_Goods.isErased
 
@@ -458,6 +488,11 @@ BEGIN
                                   
             LEFT JOIN tmpPriceCost ON tmpPriceCost.MovementItemId = tmpMI_Goods.MovementItemId
             LEFT JOIN tmpPriceList ON tmpPriceList.GoodsId = tmpMI_Goods.GoodsId
+
+            LEFT JOIN ObjectLink AS ObjectLink_Goods_InfoMoney
+                                 ON ObjectLink_Goods_InfoMoney.ObjectId = Object_Goods.Id
+                                AND ObjectLink_Goods_InfoMoney.DescId = zc_ObjectLink_Goods_InfoMoney()
+            LEFT JOIN Object_InfoMoney_View ON Object_InfoMoney_View.InfoMoneyId = ObjectLink_Goods_InfoMoney.ChildObjectId
            ;
      ELSE
 
@@ -657,8 +692,8 @@ BEGIN
                   ELSE TRUE
              END :: Boolean AS isCheck_PricelistBoolean
 
-           , (CASE WHEN (tmpPromo.isChangePercent = TRUE  AND tmpMI.ChangePercent <> vbChangePercent)
-                     OR (tmpPromo.isChangePercent = FALSE AND tmpMI.ChangePercent <> 0)
+           , (CASE WHEN (tmpPromo.isChangePercent = TRUE  AND tmpMI_Goods.ChangePercent <> vbChangePercent)
+                     OR (tmpPromo.isChangePercent = FALSE AND tmpMI_Goods.ChangePercent <> 0)
                         THEN 'ОШИБКА <(-)% Скидки (+)% Наценки>'
                    ELSE ''
               END
@@ -676,6 +711,12 @@ BEGIN
                   WHEN tmpPromo.TaxPromo <> 0 THEN tmpPromo.PriceWithOutVAT
                   ELSE 0
              END :: TFloat AS PricePromo
+
+           , Object_InfoMoney_View.InfoMoneyCode
+           , Object_InfoMoney_View.InfoMoneyGroupName
+           , Object_InfoMoney_View.InfoMoneyDestinationName
+           , Object_InfoMoney_View.InfoMoneyName
+           , Object_InfoMoney_View.InfoMoneyName_all
 
            , tmpMI_Goods.isErased
 
@@ -707,6 +748,11 @@ BEGIN
                                   
             LEFT JOIN tmpPriceCost ON tmpPriceCost.MovementItemId = tmpMI_Goods.MovementItemId
             LEFT JOIN tmpPriceList ON tmpPriceList.GoodsId = tmpMI_Goods.GoodsId
+
+            LEFT JOIN ObjectLink AS ObjectLink_Goods_InfoMoney
+                                 ON ObjectLink_Goods_InfoMoney.ObjectId = Object_Goods.Id
+                                AND ObjectLink_Goods_InfoMoney.DescId = zc_ObjectLink_Goods_InfoMoney()
+            LEFT JOIN Object_InfoMoney_View ON Object_InfoMoney_View.InfoMoneyId = ObjectLink_Goods_InfoMoney.ChildObjectId
            ;
 
      END IF;

@@ -3,9 +3,8 @@ inherited PriceListItemsLoadForm: TPriceListItemsLoadForm
   ClientHeight = 410
   ClientWidth = 908
   AddOnFormData.Params = FormParams
-  ExplicitLeft = -126
-  ExplicitWidth = 916
-  ExplicitHeight = 437
+  ExplicitWidth = 924
+  ExplicitHeight = 445
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -33,7 +32,7 @@ inherited PriceListItemsLoadForm: TPriceListItemsLoadForm
           Styles.Footer = nil
           Styles.Header = nil
           object colCommonCode: TcxGridDBColumn
-            Caption = #1054#1073#1097#1080#1081' '#1082#1086#1076
+            Caption = #1082#1086#1076' '#1052#1086#1088#1080#1086#1085
             DataBinding.FieldName = 'CommonCode'
             HeaderAlignmentHorz = taRightJustify
             HeaderAlignmentVert = vaCenter
@@ -95,7 +94,7 @@ inherited PriceListItemsLoadForm: TPriceListItemsLoadForm
             Width = 144
           end
           object colPrice: TcxGridDBColumn
-            Caption = #1062#1077#1085#1072
+            Caption = #1062#1077#1085#1072' '#1073#1077#1079' '#1053#1044#1057
             DataBinding.FieldName = 'Price'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DisplayFormat = ',0.00'
@@ -176,6 +175,7 @@ inherited PriceListItemsLoadForm: TPriceListItemsLoadForm
     object actChoiceGoods: TOpenChoiceForm
       Category = 'DSDLib'
       MoveParams = <>
+      PostDataSetBeforeExecute = False
       Caption = 'actChoiceGoods'
       FormName = 'TGoodsMainForm'
       FormNameParam.Value = 'TGoodsMainForm'
@@ -206,6 +206,7 @@ inherited PriceListItemsLoadForm: TPriceListItemsLoadForm
     object actUpdate: TdsdUpdateDataSet
       Category = 'DSDLib'
       MoveParams = <>
+      PostDataSetBeforeExecute = False
       StoredProc = spUpdatePriceListItem
       StoredProcList = <
         item

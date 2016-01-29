@@ -84,6 +84,7 @@
   object ceGroupStat: TcxButtonEdit
     Left = 8
     Top = 163
+    Enabled = False
     Properties.Buttons = <
       item
         Default = True
@@ -135,7 +136,6 @@
   object ceGoodsGroupAnalyst: TcxButtonEdit
     Left = 8
     Top = 209
-    Enabled = False
     Properties.Buttons = <
       item
         Default = True

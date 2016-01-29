@@ -196,6 +196,24 @@ type
     N73: TMenuItem;
     actForms: TdsdOpenForm;
     N74: TMenuItem;
+    miPersonal: TMenuItem;
+    actEducation: TdsdOpenForm;
+    N75: TMenuItem;
+    actPersonalGroup: TdsdOpenForm;
+    actCalendar: TdsdOpenForm;
+    actPosition: TdsdOpenForm;
+    actPersonal: TdsdOpenForm;
+    N76: TMenuItem;
+    N77: TMenuItem;
+    N78: TMenuItem;
+    N79: TMenuItem;
+    N80: TMenuItem;
+    actMember: TdsdOpenForm;
+    N81: TMenuItem;
+    actWorkTimeKind: TdsdOpenForm;
+    N82: TMenuItem;
+    actSheetWorkTime: TdsdOpenForm;
+    N83: TMenuItem;
     procedure actSaveDataExecute(Sender: TObject);
     procedure miRepriceClick(Sender: TObject);
   private

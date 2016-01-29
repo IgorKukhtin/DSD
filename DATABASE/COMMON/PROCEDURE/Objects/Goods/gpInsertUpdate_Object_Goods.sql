@@ -1,11 +1,10 @@
- -- Function: gpInsertUpdate_Object_Goods()
+-- Function: gpInsertUpdate_Object_Goods()
 
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Goods(Integer, Integer, TVarChar, TFloat, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Goods(Integer, Integer, TVarChar, TFloat, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Goods(Integer, Integer, TVarChar, TFloat, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Goods(Integer, Integer, TVarChar, TFloat, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Goods(Integer, Integer, TVarChar, TFloat, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TDateTime, TFloat, TVarChar);
-
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Goods(
  INOUT ioId                  Integer   , -- ключ объекта <Товар>
@@ -15,12 +14,12 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Goods(
     IN inGoodsGroupId        Integer   , -- ссылка на группу Товаров
     IN inGroupStatId         Integer   , -- ссылка на группу Товаров (статистика)   
     IN inMeasureId           Integer   , -- ссылка на единицу измерения
-    IN inTradeMarkId         Integer   , -- ссылка на Торговые марки
-    IN inInfoMoneyId         Integer   , -- Управленческие аналитики
+    IN inTradeMarkId         Integer   , -- ***Торговая марка
+    IN inInfoMoneyId         Integer   , -- ***УП статья назначения
     IN inBusinessId          Integer   , -- Бизнесы
     IN inFuelId              Integer   , -- Вид топлива
-    IN inGoodsTagId          Integer   , -- ссылка на признак товара 
-    IN inGoodsGroupAnalystId Integer   , -- ссылка на группу Товаров (аналитика)
+    IN inGoodsTagId          Integer   , -- ***Признак товара
+    IN inGoodsGroupAnalystId Integer   , -- ***Группа аналитики
     IN inPriceListId         Integer   , -- прайс
     IN inStartDate           TDateTime , -- дата прайса
     IN inValuePrice          TFloat    , -- значение цены
@@ -32,19 +31,18 @@ $BODY$
    DECLARE vbCode Integer;   
    DECLARE vbGroupNameFull TVarChar;   
    DECLARE vbIsUpdate Boolean;  
+   DECLARE vbGoodsPlatformId Integer; -- ***Производственная площадка
 BEGIN
    -- проверка прав пользователя на вызов процедуры
    vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Object_Goods());
    
    -- !!! Если код не установлен, определяем его как последний+1 (!!! ПОТОМ НАДО БУДЕТ ЭТО ВКЛЮЧИТЬ !!!)
-   -- !!! vbCode:=lfGet_ObjectCode (inCode, zc_Object_Goods());
-   IF COALESCE (inCode, 0) = 0  THEN vbCode := 0; ELSE vbCode := inCode; END IF; -- !!! А ЭТО УБРАТЬ !!!
+   vbCode:=lfGet_ObjectCode (inCode, zc_Object_Goods());
    
-   -- !!! проверка уникальности <Наименование>
-   -- !!! PERFORM lpCheckUnique_Object_ValueData (ioId, zc_Object_Goods(), inName);
-
    -- проверка уникальности <Код>
    PERFORM lpCheckUnique_Object_ObjectCode (ioId, zc_Object_Goods(), vbCode);
+   -- !!! проверка уникальности <Наименование>
+   PERFORM lpCheckUnique_Object_ValueData (ioId, zc_Object_Goods(), inName);
 
    -- проверка <inName>
    IF TRIM (COALESCE (inName, '')) = ''
@@ -57,27 +55,33 @@ BEGIN
    THEN
        RAISE EXCEPTION 'Ошибка.Значение <Группа товаров> должно быть установлено.';
    END IF;
-
-   -- проверка <InfoMoney>   не вводится , берется из ближайшей группы где установлено
-   IF COALESCE (inInfoMoneyId, 0) = 0
-   THEN
-       vbInfomoneyId := (SELECT lfGet_Object_GoodsGroup_InfomoneyId (inGoodsGroupId));
-       --RAISE EXCEPTION 'Ошибка.Значение <УП статья назначения> должно быть установлено.';
-   END IF;
-
    -- проверка <Measure>
    IF COALESCE (inMeasureId, 0) = 0
    THEN
        RAISE EXCEPTION 'Ошибка.Значение <Единица измерения> должно быть установлено.';
    END IF;
-
    -- проверка <Measure>
    IF inMeasureId = zc_Measure_Sh() AND COALESCE (inWeight, 0) <= 0
    THEN
        RAISE EXCEPTION 'Ошибка.Для единицы измерения <%> должно быть установлено значение <Вес>.', lfGet_Object_ValueData (inMeasureId);
    END IF;
 
-  
+   -- из ближайшей группы где установлено <УП статья назначения>
+   inInfomoneyId:= lfGet_Object_GoodsGroup_InfomoneyId (inGoodsGroupId);
+   -- проверка <InfoMoneyId>
+   IF COALESCE (inInfomoneyId, 0) = 0
+   THEN
+       RAISE EXCEPTION 'Ошибка.Значение <УП статья назначения> не найдена для группы <%>.', lfGet_Object_ValueData (inGoodsGroupId);
+   END IF;
+   -- из ближайшей группы где установлено <Торговая марка>
+   inTradeMarkId:= lfGet_Object_GoodsGroup_TradeMarkId (inGoodsGroupId);
+   -- из ближайшей группы где установлено <Признак товара>
+   inGoodsTagId:= lfGet_Object_GoodsGroup_GoodsTagId (inGoodsGroupId);
+   -- из ближайшей группы где установлено <Группа аналитики>
+   inGoodsGroupAnalystId:= lfGet_Object_GoodsGroup_GoodsGroupAnalystId (inGoodsGroupId);
+   -- из ближайшей группы где установлено <Производственная площадка>
+   vbGoodsPlatformId:= lfGet_Object_GoodsGroup_GoodsPlatformId (inGoodsGroupId);
+
    -- расчетно свойство <Полное название группы>
    vbGroupNameFull:= lfGet_Object_TreeNameFull (inGoodsGroupId, zc_ObjectLink_GoodsGroup_Parent());
 
@@ -100,22 +104,25 @@ BEGIN
    PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Goods_GoodsGroupStat(), ioId, inGroupStatId);
    -- сохранили связь с <Единицей измерения>
    PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Goods_Measure(), ioId, inMeasureId);
-   -- сохранили связь с <Торговые марки>
-   PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Goods_TradeMark(), ioId, inTradeMarkId);   
-   -- сохранили связь с <Управленческие аналитики>
-   PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Goods_InfoMoney(), ioId, vbInfomoneyId);
-   -- сохранили связь с <Бизнесы>
+   -- сохранили вязь с <Бизнесы>
    PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Goods_Business(), ioId, inBusinessId);
    -- сохранили связь с <Вид топлива>
    PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Goods_Fuel(), ioId, inFuelId);
-   -- сохранили связь с <>
-   PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Goods_GoodsTag(), ioId, inGoodsTagId);   
-   -- сохранили связь с <>
-   PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Goods_GoodsGroupAnalyst(), ioId, inGoodsGroupAnalystId);  
 
- IF COALESCE (inValuePrice, 0) <> 0 
-   AND ((vbIsUpdate = False) OR NOT EXISTS (SELECT * 
-                                        FROM gpSelect_ObjectHistory_PriceListGoodsItem(inPriceListId := inPriceListId, inGoodsId :=ioId, inSession := inSession) as tmp LIMIT 1))
+   -- сохранили связь с ***<УП статья назначения>
+   PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Goods_InfoMoney(), ioId, inInfomoneyId);
+   -- сохранили связь с ***<Торговая марка>
+   PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Goods_TradeMark(), ioId, inTradeMarkId);
+   -- сохранили связь с ***<Признак товара>
+   PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Goods_GoodsTag(), ioId, inGoodsTagId);
+   -- сохранили связь с ***<Группа аналитики>
+   PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Goods_GoodsGroupAnalyst(), ioId, inGoodsGroupAnalystId);
+   -- изменили свойство ***<Производственная площадка>
+   PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Goods_GoodsPlatform(), ioId, vbGoodsPlatformId);
+
+
+   IF inValuePrice <> 0 AND inPriceListId <> 0
+      AND ((vbIsUpdate = FALSE) OR NOT EXISTS (SELECT 1 FROM gpSelect_ObjectHistory_PriceListGoodsItem(inPriceListId := inPriceListId, inGoodsId :=ioId, inSession := inSession) as tmp LIMIT 1))
    THEN
        PERFORM lpInsertUpdate_ObjectHistory_PriceListItem (ioId := 0
                                                          , inPriceListId := inPriceListId
@@ -123,8 +130,7 @@ BEGIN
                                                          , inOperDate    := inStartDate
                                                          , inValue       := inValuePrice
                                                          , inUserId      := vbUserId
-                                                           );
- 
+                                                          );
    END IF;
   
 

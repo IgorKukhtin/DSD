@@ -22,6 +22,10 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar,
                isMovement boolean, isAccount boolean, isTransport boolean,
                isQuality boolean, isPack boolean, isSpec boolean, isTax boolean,   
 
+
+               CountMovement Tfloat, CountAccount Tfloat, CountTransport Tfloat,
+               CountQuality Tfloat, CountPack Tfloat, CountSpec Tfloat, CountTax Tfloat,  
+
                isErased Boolean
               )
 AS
@@ -79,6 +83,8 @@ BEGIN
   , tmpPrintKindItem AS( SELECT tmp.Id
                               , tmp.isMovement, tmp.isAccount, tmp.isTransport
                               , tmp.isQuality, tmp.isPack, tmp.isSpec, tmp.isTax
+                              , tmp.CountMovement, tmp.CountAccount, tmp.CountTransport
+                              , tmp.CountQuality, tmp.CountPack, tmp.CountSpec, tmp.CountTax
                          FROM lpSelect_Object_PrintKindItem() AS tmp
                                 )
 
@@ -132,6 +138,14 @@ BEGIN
        , COALESCE (tmpPrintKindItem.isSpec, CAST (False AS Boolean))       AS isSpec
        , COALESCE (tmpPrintKindItem.isTax, CAST (False AS Boolean))        AS isTax     
 
+       , COALESCE (tmpPrintKindItem.CountMovement, CAST (0 AS TFloat))   AS CountMovement
+       , COALESCE (tmpPrintKindItem.CountAccount, CAST (0 AS TFloat))    AS CountAccount
+       , COALESCE (tmpPrintKindItem.CountTransport, CAST (0 AS TFloat))  AS CountTransport
+       , COALESCE (tmpPrintKindItem.CountQuality, CAST (0 AS TFloat))    AS CountQuality
+       , COALESCE (tmpPrintKindItem.CountPack, CAST (0 AS TFloat))       AS CountPack
+       , COALESCE (tmpPrintKindItem.CountSpec, CAST (0 AS TFloat))       AS CountSpec
+       , COALESCE (tmpPrintKindItem.CountTax, CAST (0 AS TFloat))        AS CountTax
+
        , Object_Juridical.isErased AS isErased
        
    FROM Object AS Object_Juridical
@@ -168,6 +182,9 @@ BEGIN
                              ON ObjectLink_Juridical_Retail.ObjectId = Object_Juridical.Id 
                             AND ObjectLink_Juridical_Retail.DescId = zc_ObjectLink_Juridical_Retail()
         LEFT JOIN Object AS Object_Retail ON Object_Retail.Id = ObjectLink_Juridical_Retail.ChildObjectId
+        LEFT JOIN ObjectLink AS ObjectLink_Retail_PrintKindItem
+                             ON ObjectLink_Retail_PrintKindItem.ObjectId = ObjectLink_Juridical_Retail.ChildObjectId
+                            AND ObjectLink_Retail_PrintKindItem.DescId = zc_ObjectLink_Retail_PrintKindItem()
 
         LEFT JOIN ObjectLink AS ObjectLink_Juridical_RetailReport
                              ON ObjectLink_Juridical_RetailReport.ObjectId = Object_Juridical.Id 
@@ -194,7 +211,8 @@ BEGIN
         LEFT JOIN ObjectLink AS ObjectLink_Juridical_PrintKindItem
                              ON ObjectLink_Juridical_PrintKindItem.ObjectId = Object_Juridical.Id 
                             AND ObjectLink_Juridical_PrintKindItem.DescId = zc_ObjectLink_Juridical_PrintKindItem()
-	LEFT JOIN tmpPrintKindItem ON tmpPrintKindItem.Id =  ObjectLink_Juridical_PrintKindItem.ChildObjectId
+
+	LEFT JOIN tmpPrintKindItem ON tmpPrintKindItem.Id = CASE WHEN ObjectLink_Juridical_Retail.ChildObjectId > 0 THEN ObjectLink_Retail_PrintKindItem.ChildObjectId ELSE ObjectLink_Juridical_PrintKindItem.ChildObjectId END
 
     WHERE Object_Juridical.DescId = zc_Object_Juridical()
       AND (ObjectLink_Juridical_JuridicalGroup.ChildObjectId = vbObjectId_Constraint
@@ -211,6 +229,7 @@ ALTER FUNCTION gpSelect_Object_Juridical_PrintKindItem (TVarChar) OWNER TO postg
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 19.01.16         * add кол-во накладных
  21.05.15         *
 
 */

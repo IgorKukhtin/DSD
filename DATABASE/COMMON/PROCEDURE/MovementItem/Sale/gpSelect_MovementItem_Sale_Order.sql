@@ -22,6 +22,7 @@ RETURNS TABLE (Id Integer, LineNum Integer, GoodsId Integer, GoodsCode Integer, 
              , AmountSumm TFloat
              , isCheck_Pricelist Boolean
              , MovementPromo TVarChar, PricePromo TFloat
+             , InfoMoneyCode Integer, InfoMoneyGroupName TVarChar, InfoMoneyDestinationName TVarChar, InfoMoneyName TVarChar, InfoMoneyName_all TVarChar
              , isErased Boolean
               )
 AS
@@ -350,6 +351,12 @@ BEGIN
                   ELSE 0
              END :: TFloat AS PricePromo
 
+           , tmpGoods.InfoMoneyCode
+           , tmpGoods.InfoMoneyGroupName
+           , tmpGoods.InfoMoneyDestinationName
+           , tmpGoods.InfoMoneyName
+           , tmpGoods.InfoMoneyName_all
+
            , FALSE AS isErased
 
        FROM (SELECT Object_Goods.Id                                        AS GoodsId
@@ -357,6 +364,13 @@ BEGIN
                   , Object_Goods.ValueData                                 AS GoodsName
                   , COALESCE (tmpGoodsByGoodsKind.GoodsKindId, 0)          AS GoodsKindId
                   -- , COALESCE (Object_GoodsByGoodsKind_View.GoodsKindId, 0)            AS GoodsKindId
+
+                  , Object_InfoMoney_View.InfoMoneyCode
+                  , Object_InfoMoney_View.InfoMoneyGroupName
+                  , Object_InfoMoney_View.InfoMoneyDestinationName
+                  , Object_InfoMoney_View.InfoMoneyName
+                  , Object_InfoMoney_View.InfoMoneyName_all
+
              FROM Object_InfoMoney_View
                   JOIN ObjectLink AS ObjectLink_Goods_InfoMoney
                                   ON ObjectLink_Goods_InfoMoney.ChildObjectId = Object_InfoMoney_View.InfoMoneyId
@@ -460,6 +474,12 @@ BEGIN
                   ELSE 0
              END :: TFloat AS PricePromo
 
+           , Object_InfoMoney_View.InfoMoneyCode
+           , Object_InfoMoney_View.InfoMoneyGroupName
+           , Object_InfoMoney_View.InfoMoneyDestinationName
+           , Object_InfoMoney_View.InfoMoneyName
+           , Object_InfoMoney_View.InfoMoneyName_all
+
            , tmpMI.isErased                     AS isErased
 
        FROM tmpMI_all AS tmpMI
@@ -488,6 +508,11 @@ BEGIN
             LEFT JOIN Movement_Promo_View ON Movement_Promo_View.Id = tmpMI.MovementId_Promo  
 
             LEFT JOIN tmpPriceList ON tmpPriceList.GoodsId = tmpMI.GoodsId
+
+            LEFT JOIN ObjectLink AS ObjectLink_Goods_InfoMoney
+                                 ON ObjectLink_Goods_InfoMoney.ObjectId = Object_Goods.Id
+                                AND ObjectLink_Goods_InfoMoney.DescId = zc_ObjectLink_Goods_InfoMoney()
+            LEFT JOIN Object_InfoMoney_View ON Object_InfoMoney_View.InfoMoneyId = ObjectLink_Goods_InfoMoney.ChildObjectId
            ;
 
      ELSE
@@ -751,6 +776,12 @@ BEGIN
                   ELSE 0
              END :: TFloat AS PricePromo
 
+           , Object_InfoMoney_View.InfoMoneyCode
+           , Object_InfoMoney_View.InfoMoneyGroupName
+           , Object_InfoMoney_View.InfoMoneyDestinationName
+           , Object_InfoMoney_View.InfoMoneyName
+           , Object_InfoMoney_View.InfoMoneyName_all
+
            , tmpMI.isErased                     AS isErased
 
        FROM tmpMI_all AS tmpMI
@@ -779,6 +810,11 @@ BEGIN
             LEFT JOIN Movement_Promo_View ON Movement_Promo_View.Id = tmpMI.MovementId_Promo  
 
             LEFT JOIN tmpPriceList ON tmpPriceList.GoodsId = tmpMI.GoodsId
+
+            LEFT JOIN ObjectLink AS ObjectLink_Goods_InfoMoney
+                                 ON ObjectLink_Goods_InfoMoney.ObjectId = Object_Goods.Id
+                                AND ObjectLink_Goods_InfoMoney.DescId = zc_ObjectLink_Goods_InfoMoney()
+            LEFT JOIN Object_InfoMoney_View ON Object_InfoMoney_View.InfoMoneyId = ObjectLink_Goods_InfoMoney.ChildObjectId
            ;
 
      END IF;

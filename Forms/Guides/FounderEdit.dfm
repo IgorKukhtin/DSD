@@ -59,7 +59,7 @@
     Properties.DecimalPlaces = 0
     Properties.DisplayFormat = '0'
     TabOrder = 5
-    Width = 296
+    Width = 145
   end
   object cxLabel5: TcxLabel
     Left = 40
@@ -77,6 +77,20 @@
     Properties.ReadOnly = True
     TabOrder = 7
     Width = 296
+  end
+  object cxLabel4: TcxLabel
+    Left = 200
+    Top = 5
+    Caption = #1051#1080#1084#1080#1090', '#1075#1088#1085
+  end
+  object edLimit: TcxCurrencyEdit
+    Left = 200
+    Top = 26
+    EditValue = '0'
+    Properties.DecimalPlaces = 4
+    Properties.DisplayFormat = ',0.####'
+    TabOrder = 9
+    Width = 136
   end
   object ActionList: TActionList
     Left = 272
@@ -97,6 +111,7 @@
     object dsdInsertUpdateGuides: TdsdInsertUpdateGuides
       Category = 'DSDLib'
       MoveParams = <>
+      PostDataSetBeforeExecute = False
       StoredProc = spInsertUpdate
       StoredProcList = <
         item
@@ -107,6 +122,7 @@
     object dsdFormClose: TdsdFormClose
       Category = 'DSDLib'
       MoveParams = <>
+      PostDataSetBeforeExecute = False
     end
   end
   object spInsertUpdate: TdsdStoredProc
@@ -140,7 +156,15 @@
         Component = InfoMoneyGuides
         ComponentItem = 'Key'
         ParamType = ptInput
+      end
+      item
+        Name = 'inLimitMoney'
+        Value = Null
+        Component = edLimit
+        DataType = ftFloat
+        ParamType = ptInput
       end>
+    PackSize = 1
     Left = 344
     Top = 112
   end
@@ -189,13 +213,19 @@
         Component = InfoMoneyGuides
         ComponentItem = 'TextValue'
         DataType = ftString
+      end
+      item
+        Name = 'LimitMoney'
+        Value = Null
+        Component = edLimit
+        DataType = ftFloat
       end>
+    PackSize = 1
     Left = 344
     Top = 16
   end
   object dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
-    Left = 208
-    Top = 7
+    Top = 31
   end
   object cxPropertiesStore: TcxPropertiesStore
     Components = <

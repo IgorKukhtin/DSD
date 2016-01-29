@@ -25,6 +25,22 @@ BEGIN
 
      vbMovementId := NULL;
 
+
+     -- Проверка
+     IF 1 < (SELECT COUNT (*)
+             FROM Movement
+                  INNER JOIN MovementString AS MovementString_GLNPlaceCode
+                                            ON MovementString_GLNPlaceCode.MovementId =  Movement.Id
+                                           AND MovementString_GLNPlaceCode.DescId = zc_MovementString_GLNPlaceCode()
+                                           AND MovementString_GLNPlaceCode.ValueData = inGLNPlace
+             WHERE Movement.DescId = zc_Movement_EDI()
+               AND Movement.OperDate = inOrderOperDate
+               AND Movement.InvNumber = inOrderInvNumber
+               AND Movement.StatusId <> zc_Enum_Status_Erased())
+     THEN
+         RAISE EXCEPTION 'Ошибка.Документ EDI № <%> от <%> для точки доставки с GLN = <%> загружен больше 1 раза.', inOrderInvNumber, DATE (inOrderOperDate), inGLNPlace;
+     END IF;
+
      -- находим документ (по идее один товар - один GLN-код) + !!!по точке доставки!!!
      vbMovementId:= (SELECT Movement.Id
                      FROM Movement
@@ -35,7 +51,7 @@ BEGIN
                      WHERE Movement.DescId = zc_Movement_EDI()
                        AND Movement.OperDate = inOrderOperDate
                        AND Movement.InvNumber = inOrderInvNumber
-                    );
+                       AND Movement.StatusId <> zc_Enum_Status_Erased());
 
      -- определяется параметр
      vbDescCode:= (SELECT MovementDesc.Code FROM MovementDesc WHERE Id = zc_Movement_OrderExternal());
@@ -91,6 +107,22 @@ BEGIN
      END IF;
 
      PERFORM lpInsert_Movement_EDIEvents(vbMovementId, 'Загрузка ORDER из EDI', vbUserId);
+
+
+     -- Проверка
+     IF 1 < (SELECT COUNT (*)
+             FROM Movement
+                  INNER JOIN MovementString AS MovementString_GLNPlaceCode
+                                            ON MovementString_GLNPlaceCode.MovementId =  Movement.Id
+                                           AND MovementString_GLNPlaceCode.DescId = zc_MovementString_GLNPlaceCode()
+                                           AND MovementString_GLNPlaceCode.ValueData = inGLNPlace
+             WHERE Movement.DescId = zc_Movement_EDI()
+               AND Movement.OperDate = inOrderOperDate
+               AND Movement.InvNumber = inOrderInvNumber
+               AND Movement.StatusId <> zc_Enum_Status_Erased())
+     THEN
+         RAISE EXCEPTION 'Ошибка.Документ EDI № <%> от <%> для точки доставки с GLN = <%> загружен больше 1 раза. Повторите действие через 25 сек.', inOrderInvNumber, DATE (inOrderOperDate), inGLNPlace;
+     END IF;
 
      RETURN QUERY 
      SELECT vbMovementId, vbGoodsPropertyID;

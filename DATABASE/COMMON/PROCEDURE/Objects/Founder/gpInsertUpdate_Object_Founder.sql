@@ -1,12 +1,15 @@
 -- Function: gpInsertUpdate_Object_Founder()
 
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Founder (Integer, Integer, TVarChar, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Founder (Integer, Integer, TVarChar, Integer, Tfloat, TVarChar);
+
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Founder(
  INOUT ioId             Integer   ,     -- ключ объекта <Учредители>
     IN inCode           Integer   ,     -- Код объекта
     IN inName           TVarChar  ,     -- Название объекта
     IN inInfoMoneyId    Integer   ,     -- Статьи назначения
+    IN inLimitMoney     Tfloat    ,     -- лимит грн
     IN inSession        TVarChar        -- сессия пользователя
 )
   RETURNS integer AS
@@ -43,12 +46,16 @@ BEGIN
    -- сохранили связь с <>
    PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Founder_InfoMoney(), ioId, inInfoMoneyId);
 
+   -- сохранили свойство <>
+   PERFORM lpInsertUpdate_ObjectFloat( zc_ObjectFloat_Founder_Limit(), ioId, inLimitMoney);
+
+
    -- сохранили протокол
    PERFORM lpInsert_ObjectProtocol (ioId, vbUserId);
 
 END;$BODY$
   LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpInsertUpdate_Object_Founder (Integer, Integer, TVarChar, Integer, TVarChar) OWNER TO postgres;
+--ALTER FUNCTION gpInsertUpdate_Object_Founder (Integer, Integer, TVarChar, Integer, TVarChar) OWNER TO postgres;
 
 /*-------------------------------------------------------------------------------*/
 /*

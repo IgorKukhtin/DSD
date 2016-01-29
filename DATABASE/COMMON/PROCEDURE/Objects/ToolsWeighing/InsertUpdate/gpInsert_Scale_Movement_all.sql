@@ -245,7 +245,7 @@ BEGIN
                                                                  FROM MovementLinkMovement AS MLM_Order
                                                                       JOIN Movement ON Movement.Id = MLM_Order.MovementChildId
                                                                                    AND Movement.DescId = zc_Movement_SendOnPrice()
-                                                                                   AND Movement.OperDate BETWEEN inOperDate - INTERVAL '4 DAY' AND inOperDate
+                                                                                   AND Movement.OperDate BETWEEN inOperDate - INTERVAL '8 DAY' AND inOperDate
                                                                  WHERE MLM_Order.MovementId = inMovementId AND MLM_Order.DescId = zc_MovementLinkMovement_Order())
           THEN
               -- на основании <Перемещение по цене> - поиск существующего документа <Перемещение по цене> !!!сразу получаем ключ!!!
@@ -1118,7 +1118,7 @@ BEGIN
                END IF;
      END IF;
 
-if vbUserId <> 5 then
+-- if vbUserId <> 5 then
      -- финиш - сохранили <Документ> - <Взвешивание (контрагент)> - только дату + ParentId + AccessKeyId
      PERFORM lpInsertUpdate_Movement (Movement.Id, Movement.DescId, Movement.InvNumber, vbOperDate_scale, vbMovementId_begin, Movement_begin.AccessKeyId)
      FROM Movement
@@ -1133,7 +1133,7 @@ if vbUserId <> 5 then
                                 , inDescId     := zc_Movement_WeighingPartner()
                                 , inUserId     := vbUserId
                                  );
-end if;
+-- end if;
 
      -- !!!Проверка что документ один!!!
      IF vbMovementDescId = zc_Movement_Inventory()

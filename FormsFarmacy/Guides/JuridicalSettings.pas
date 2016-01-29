@@ -10,7 +10,8 @@ uses
   Vcl.Menus, dsdAddOn, dxBarExtItems, dxBar, cxClasses, dsdDB,
   Datasnap.DBClient, dsdAction, Vcl.ActnList, cxPropertiesStore, cxGridLevel,
   cxGridCustomView, cxGridCustomTableView, cxGridTableView, cxGridDBTableView,
-  cxGrid, cxPC, cxCheckBox;
+  cxGrid, cxPC, cxCheckBox, dxSkinsCore, dxSkinsDefaultPainters,
+  dxSkinscxPCPainter, dxSkinsdxBarPainter;
 
 type
   TJuridicalSettingsForm = class(TAncestorEnumForm)
@@ -21,6 +22,9 @@ type
     colisPriceClose: TcxGridDBColumn;
     colMainJuridical: TcxGridDBColumn;
     colBonus: TcxGridDBColumn;
+    colStartDate: TcxGridDBColumn;
+    colEndDate: TcxGridDBColumn;
+    colName: TcxGridDBColumn;
   private
     { Private declarations }
   public

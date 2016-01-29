@@ -36,13 +36,13 @@ RETURNS TABLE (MovementId            Integer
              , isEdiInvoice     Boolean
              , isEdiDesadv      Boolean
 
-             , isMovement    Boolean   -- Накладная
-             , isAccount     Boolean   -- Счет
-             , isTransport   Boolean   -- ТТН
-             , isQuality     Boolean   -- Качественное
-             , isPack        Boolean   -- Упаковочный
-             , isSpec        Boolean   -- Спецификация
-             , isTax         Boolean   -- Налоговая
+             , isMovement    Boolean, CountMovement   TFloat   -- Накладная
+             , isAccount     Boolean, CountAccount    TFloat   -- Счет
+             , isTransport   Boolean, CountTransport  TFloat   -- ТТН
+             , isQuality     Boolean, CountQuality    TFloat   -- Качественное
+             , isPack        Boolean, CountPack       TFloat   -- Упаковочный
+             , isSpec        Boolean, CountSpec       TFloat   -- Спецификация
+             , isTax         Boolean, CountTax        TFloat   -- Налоговая
 
              , OrderExternalName_master TVarChar
               )
@@ -90,7 +90,7 @@ BEGIN
                                        ) AS tmp
                                        INNER JOIN Movement ON Movement.Id = tmp.MovementId
                                                           AND Movement.DescId IN (zc_Movement_OrderExternal(), zc_Movement_SendOnPrice())
-                                                          AND Movement.OperDate BETWEEN inOperDate - INTERVAL '3 DAY' AND inOperDate + INTERVAL '3 DAY'
+                                                          AND Movement.OperDate BETWEEN inOperDate - INTERVAL '8 DAY' AND inOperDate + INTERVAL '8 DAY'
                                                           AND Movement.StatusId <> zc_Enum_Status_Erased()
                                  UNION
                                   SELECT Movement.Id
@@ -101,7 +101,7 @@ BEGIN
                                        ) AS tmp
                                        INNER JOIN Movement ON Movement.InvNumber = tmp.BarCode
                                                           AND Movement.DescId IN (zc_Movement_OrderExternal(), zc_Movement_SendOnPrice())
-                                                          AND Movement.OperDate BETWEEN inOperDate - INTERVAL '3 DAY' AND inOperDate + INTERVAL '3 DAY'
+                                                          AND Movement.OperDate BETWEEN inOperDate - INTERVAL '8 DAY' AND inOperDate + INTERVAL '8 DAY'
                                                           AND Movement.StatusId <> zc_Enum_Status_Erased()
                                  ) AS tmpMovement
                                  LEFT JOIN MovementLinkObject AS MovementLinkObject_Contract
@@ -142,13 +142,13 @@ BEGIN
                                               AND MovementLinkObject_User.ObjectId = vbUserId
                                  )
            , tmpJuridicalPrint AS (SELECT tmpGet.Id AS JuridicalId
-                                        , tmpGet.isMovement
-                                        , tmpGet.isAccount
-                                        , tmpGet.isTransport
-                                        , tmpGet.isQuality
-                                        , tmpGet.isPack
-                                        , tmpGet.isSpec
-                                        , tmpGet.isTax
+                                        , tmpGet.isMovement, tmpGet.CountMovement
+                                        , tmpGet.isAccount, tmpGet.CountAccount
+                                        , tmpGet.isTransport, tmpGet.CountTransport
+                                        , tmpGet.isQuality, tmpGet.CountQuality
+                                        , tmpGet.isPack, tmpGet.CountPack
+                                        , tmpGet.isSpec, tmpGet.CountSpec
+                                        , tmpGet.isTax, tmpGet.CountTax
                                    FROM (SELECT tmpMovement.JuridicalId FROM tmpMovement WHERE tmpMovement.DescId = zc_Movement_OrderExternal() LIMIT 1) AS tmp
                                         INNER JOIN lpGet_Object_Juridical_PrintKindItem ((SELECT tmpMovement.JuridicalId FROM tmpMovement LIMIT 1)) AS tmpGet ON tmpGet.Id = tmp.JuridicalId
                                   )
@@ -284,12 +284,13 @@ BEGIN
             , COALESCE (ObjectBoolean_Partner_EdiDesadv.ValueData, FALSE)  :: Boolean AS isEdiDesadv
 
             , CASE WHEN tmpJuridicalPrint.isPack = TRUE OR tmpJuridicalPrint.isSpec = TRUE THEN COALESCE (tmpJuridicalPrint.isMovement, FALSE) ELSE TRUE END :: Boolean AS isMovement
-            , COALESCE (tmpJuridicalPrint.isAccount,   FALSE) :: Boolean AS isAccount
-            , COALESCE (tmpJuridicalPrint.isTransport, FALSE) :: Boolean AS isTransport
-            , COALESCE (tmpJuridicalPrint.isQuality,   FALSE) :: Boolean AS isQuality
-            , COALESCE (tmpJuridicalPrint.isPack,      FALSE) :: Boolean AS isPack
-            , COALESCE (tmpJuridicalPrint.isSpec,      FALSE) :: Boolean AS isSpec
-            , COALESCE (tmpJuridicalPrint.isTax,       FALSE) :: Boolean AS isTax
+            , CASE WHEN tmpJuridicalPrint.CountMovement > 0 THEN tmpJuridicalPrint.CountMovement ELSE 2 END :: TFloat AS CountMovement
+            , COALESCE (tmpJuridicalPrint.isAccount,   FALSE) :: Boolean AS isAccount,   COALESCE (tmpJuridicalPrint.CountAccount, 0)   :: TFloat AS CountAccount
+            , COALESCE (tmpJuridicalPrint.isTransport, FALSE) :: Boolean AS isTransport, COALESCE (tmpJuridicalPrint.CountTransport, 0) :: TFloat AS CountTransport
+            , COALESCE (tmpJuridicalPrint.isQuality,   FALSE) :: Boolean AS isQuality  , COALESCE (tmpJuridicalPrint.CountQuality, 0)   :: TFloat AS CountQuality
+            , COALESCE (tmpJuridicalPrint.isPack,      FALSE) :: Boolean AS isPack     , COALESCE (tmpJuridicalPrint.CountPack, 0)      :: TFloat AS CountPack
+            , COALESCE (tmpJuridicalPrint.isSpec,      FALSE) :: Boolean AS isSpec     , COALESCE (tmpJuridicalPrint.CountSpec, 0)      :: TFloat AS CountSpec
+            , COALESCE (tmpJuridicalPrint.isTax,       FALSE) :: Boolean AS isTax      , COALESCE (tmpJuridicalPrint.CountTax, 0)       :: TFloat AS CountTax
 
             , ('№ <' || tmpMovement.InvNumber || '>' || ' от <' || DATE (tmpMovement.OperDate) :: TVarChar || '>' || ' '|| COALESCE (Object_Personal.ValueData, '')) :: TVarChar AS OrderExternalName_master
 

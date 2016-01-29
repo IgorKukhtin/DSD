@@ -2,7 +2,6 @@ inherited Sale_PartnerForm: TSale_PartnerForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1055#1088#1086#1076#1072#1078#1072' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1102' ('#1073#1091#1093#1075#1072#1083#1090#1077#1088')>'
   ClientHeight = 412
   ClientWidth = 1259
-  ExplicitLeft = -467
   ExplicitWidth = 1275
   ExplicitHeight = 447
   PixelsPerInch = 96
@@ -12,18 +11,18 @@ inherited Sale_PartnerForm: TSale_PartnerForm
     Width = 1259
     Height = 246
     ExplicitTop = 166
-    ExplicitWidth = 1355
-    ExplicitHeight = 502
+    ExplicitWidth = 1259
+    ExplicitHeight = 246
     ClientRectBottom = 246
     ClientRectRight = 1259
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 1355
-      ExplicitHeight = 478
+      ExplicitWidth = 1259
+      ExplicitHeight = 222
       inherited cxGrid: TcxGrid
         Width = 1259
         Height = 222
-        ExplicitWidth = 1355
-        ExplicitHeight = 478
+        ExplicitWidth = 1259
+        ExplicitHeight = 222
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -405,6 +404,51 @@ inherited Sale_PartnerForm: TSale_PartnerForm
             Options.Editing = False
             Width = 100
           end
+          object clInfoMoneyCode: TcxGridDBColumn
+            Caption = #1050#1086#1076' '#1059#1055
+            DataBinding.FieldName = 'InfoMoneyCode'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 45
+          end
+          object clInfoMoneyGroupName: TcxGridDBColumn
+            Caption = #1059#1055' '#1075#1088#1091#1087#1087#1072' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
+            DataBinding.FieldName = 'InfoMoneyGroupName'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
+          end
+          object clInfoMoneyDestinationName: TcxGridDBColumn
+            Caption = #1059#1055' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1077
+            DataBinding.FieldName = 'InfoMoneyDestinationName'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
+          end
+          object clInfoMoneyName: TcxGridDBColumn
+            Caption = #1059#1055' '#1089#1090#1072#1090#1100#1103' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
+            DataBinding.FieldName = 'InfoMoneyName'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 100
+          end
+          object clInfoMoneyName_all: TcxGridDBColumn
+            Caption = #1059#1055' '#1089#1090#1072#1090#1100#1103
+            DataBinding.FieldName = 'InfoMoneyName_all'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 90
+          end
         end
       end
     end
@@ -413,7 +457,7 @@ inherited Sale_PartnerForm: TSale_PartnerForm
     Width = 1259
     Height = 140
     TabOrder = 3
-    ExplicitWidth = 1355
+    ExplicitWidth = 1259
     ExplicitHeight = 140
     inherited edInvNumber: TcxTextEdit
       Left = 8

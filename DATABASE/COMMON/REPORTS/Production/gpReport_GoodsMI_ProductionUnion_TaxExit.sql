@@ -97,6 +97,8 @@ BEGIN
          -- расходы п/ф ГП в разрезе ParentId
        , tmpMI_WorkProgress_out AS
                      (SELECT MIContainer.ParentId
+                           , tmpMI_WorkProgress_in_group.ContainerId
+                           -- , 0 AS ContainerId
                            , tmpMI_WorkProgress_in_group.GoodsId
                            , tmpMI_WorkProgress_in_group.PartionGoodsId
                            , SUM (MIContainer.Amount) AS Amount
@@ -106,8 +108,21 @@ BEGIN
                                                            AND MIContainer.MovementDescId = zc_Movement_ProductionUnion()
                                                            AND MIContainer.IsActive = FALSE
                      GROUP BY MIContainer.ParentId
+                            , tmpMI_WorkProgress_in_group.ContainerId
                             , tmpMI_WorkProgress_in_group.GoodsId
                             , tmpMI_WorkProgress_in_group.PartionGoodsId
+                     )
+         -- подразделения из группы "Участок мясного сырья"
+       , tmpUnit_oth AS (SELECT tmpSelect.UnitId FROM lfSelect_Object_Unit_byGroup (8439) AS tmpSelect)
+         -- расходы п/ф ГП в разрезе ParentId - если они ушли на "переработку"
+       , tmpMI_WorkProgress_oth AS
+                     (SELECT tmpMI_WorkProgress_out.ContainerId
+                           , -1 * SUM (tmpMI_WorkProgress_out.Amount) AS Amount
+                      FROM tmpMI_WorkProgress_out
+                           INNER JOIN MovementItemContainer AS MIContainer
+                                                            ON MIContainer.Id = tmpMI_WorkProgress_out.ParentId
+                           INNER JOIN tmpUnit_oth ON tmpUnit_oth.UnitId = MIContainer.WhereObjectId_Analyzer
+                     GROUP BY tmpMI_WorkProgress_out.ContainerId
                      )
          -- приходы ГП в разрезе GoodsId (п/ф ГП) + GoodsKindId_Complete + !!!если "производство ГП"!!!
        , tmpMI_GP_in AS
@@ -176,7 +191,7 @@ BEGIN
                            , SUM (COALESCE (MIFloat_CuterCount.ValueData, 0))   AS CuterCount
                            , SUM (COALESCE (MIFloat_RealWeight.ValueData, 0))   AS RealWeight
                            , SUM (CASE WHEN ObjectFloat_TotalWeight.ValueData <> 0
-                                            THEN tmpMI_WorkProgress_in.Amount * COALESCE (ObjectFloat_TaxExit.ValueData, 0) / ObjectFloat_TotalWeight.ValueData
+                                            THEN (tmpMI_WorkProgress_in.Amount - COALESCE (tmpMI_WorkProgress_oth.Amount, 0)) * COALESCE (ObjectFloat_TaxExit.ValueData, 0) / ObjectFloat_TotalWeight.ValueData
                                        ELSE 0
                                   END)                                          AS Amount_GP_in_calc
                            , AVG (COALESCE (ObjectFloat_TaxExit.ValueData, 0))  AS TaxExit
@@ -186,6 +201,8 @@ BEGIN
                            , 0                                                  AS Amount_GP_in
                            , 0                                                  AS AmountReceipt_out
                       FROM tmpMI_WorkProgress_in
+                           LEFT JOIN tmpMI_WorkProgress_oth ON tmpMI_WorkProgress_oth.ContainerId = tmpMI_WorkProgress_in.ContainerId
+
                            LEFT JOIN MovementItemFloat AS MIFloat_CuterCount
                                                        ON MIFloat_CuterCount.MovementItemId = tmpMI_WorkProgress_in.MovementItemId
                                                       AND MIFloat_CuterCount.DescId = zc_MIFloat_CuterCount()

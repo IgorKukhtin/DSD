@@ -135,8 +135,8 @@ procedure TdbProcedureTest.CreateMovementItemProcedure;
 begin
   ScriptDirectory := FarmacyProcedurePath + 'MovementItem\Income\';
   ProcedureLoad;
-  ScriptDirectory := FarmacyProcedurePath + 'MovementItem\Check\';
-  ProcedureLoad;
+ // ScriptDirectory := FarmacyProcedurePath + 'MovementItem\Check\';
+ // ProcedureLoad;
   ScriptDirectory := FarmacyProcedurePath + 'MovementItem\Inventory\';
   ProcedureLoad;
   ScriptDirectory := FarmacyProcedurePath + 'MovementItem\Loss\';
@@ -151,7 +151,8 @@ begin
   ProcedureLoad;
   ScriptDirectory := FarmacyProcedurePath + 'MovementItem\BankAccount\';
   ProcedureLoad;
-
+  ScriptDirectory := FarmacyProcedurePath + 'MovementItem\SheetWorkTime\';
+  ProcedureLoad;
 
   {
   ZQuery.SQL.LoadFromFile(ProcedurePath + 'MovementItem\InsertUpdate\lpInsertUpdate_MovementItem.sql');
@@ -186,8 +187,8 @@ procedure TdbProcedureTest.CreateMovementProcedure;
 begin
   ScriptDirectory := FarmacyProcedurePath + 'Movement\Income\';
   ProcedureLoad;
-  ScriptDirectory := FarmacyProcedurePath + 'Movement\Check\';
-  ProcedureLoad;
+  //ScriptDirectory := FarmacyProcedurePath + 'Movement\Check\';
+  //ProcedureLoad;
   ScriptDirectory := FarmacyProcedurePath + 'Movement\Inventory\';
   ProcedureLoad;
   ScriptDirectory := FarmacyProcedurePath + 'Movement\Loss\';
@@ -202,7 +203,8 @@ begin
   ProcedureLoad;
   ScriptDirectory := FarmacyProcedurePath + 'Movement\BankAccount\';
   ProcedureLoad;
-
+  ScriptDirectory := FarmacyProcedurePath + 'Movement\SheetWorkTime\';
+  ProcedureLoad;
 {
   ZQuery.SQL.LoadFromFile(ProcedurePath + 'Movement\InsertUpdate\lpInsertUpdate_Movement.sql');
   ZQuery.ExecSQL;
@@ -246,6 +248,14 @@ begin
   DirectoryLoad(CommonProcedurePath + 'OBJECTS\Role\');
 
   DirectoryLoad(FarmacyProcedurePath + 'OBJECTS\Union\');
+
+  DirectoryLoad(FarmacyProcedurePath + 'OBJECTS\Contract\');
+  DirectoryLoad(FarmacyProcedurePath + 'OBJECTS\Personal\');
+  DirectoryLoad(FarmacyProcedurePath + 'OBJECTS\PersonalGroup\');
+  DirectoryLoad(FarmacyProcedurePath + 'OBJECTS\Position\');
+  DirectoryLoad(FarmacyProcedurePath + 'OBJECTS\Education\');
+  DirectoryLoad(FarmacyProcedurePath + 'OBJECTS\Calendar\');
+  DirectoryLoad(FarmacyProcedurePath + 'OBJECTS\Member\');
 
   ZQuery.SQL.LoadFromFile(FarmacyProcedurePath + 'OBJECTS\PartionGoods\gpSelect_Object_PartionGoods.sql');
   ZQuery.ExecSQL;

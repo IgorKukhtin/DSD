@@ -3,7 +3,7 @@ object BranchForm: TBranchForm
   Top = 0
   Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1060#1080#1083#1080#1072#1083#1099'>'
   ClientHeight = 374
-  ClientWidth = 861
+  ClientWidth = 950
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -12,15 +12,15 @@ object BranchForm: TBranchForm
   Font.Style = []
   KeyPreview = True
   OldCreateOrder = False
-  AddOnFormData.isAlwaysRefresh = False
   AddOnFormData.RefreshAction = actRefresh
+  AddOnFormData.isSingle = False
   AddOnFormData.ChoiceAction = dsdChoiceGuides
   PixelsPerInch = 96
   TextHeight = 13
   object cxGrid: TcxGrid
     Left = 0
     Top = 26
-    Width = 861
+    Width = 950
     Height = 348
     Align = alClient
     TabOrder = 0
@@ -160,6 +160,54 @@ object BranchForm: TBranchForm
         Options.Editing = False
         Width = 107
       end
+      object clPersonalDriverName: TcxGridDBColumn
+        Caption = #1042#1086#1076#1080#1090#1077#1083#1100' ('#1058#1058#1053')'
+        DataBinding.FieldName = 'PersonalDriverName'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 76
+      end
+      object clMember1Name: TcxGridDBColumn
+        Caption = #1042#1086#1076#1080#1090#1077#1083#1100'/'#1101#1082#1089#1087#1077#1076#1080#1090#1086#1088' ('#1058#1058#1053')'
+        DataBinding.FieldName = 'Member1Name'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 76
+      end
+      object clMember2Name: TcxGridDBColumn
+        Caption = #1041#1091#1093#1075#1072#1083#1090#1077#1088' ('#1058#1058#1053')'
+        DataBinding.FieldName = 'Member2Name'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 76
+      end
+      object clMember3Name: TcxGridDBColumn
+        Caption = #1054#1090#1074#1077#1090#1089#1090#1074#1077#1085#1085#1086#1077' '#1083#1080#1094#1086'('#1074#1110#1076#1087#1091#1089#1082' '#1076#1086#1079#1074#1086#1083#1080#1074') ('#1058#1058#1053')'
+        DataBinding.FieldName = 'Member3Name'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 76
+      end
+      object clMember4Name: TcxGridDBColumn
+        Caption = #1054#1090#1074#1077#1090#1089#1090#1074#1077#1085#1085#1086#1077' '#1083#1080#1094#1086'('#1079#1076#1072#1074') ('#1058#1058#1053')'
+        DataBinding.FieldName = 'Member4Name'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 76
+      end
+      object clCarName: TcxGridDBColumn
+        Caption = #1040#1074#1090#1086#1084#1086#1073#1080#1083#1100' ('#1058#1058#1053')'
+        DataBinding.FieldName = 'CarName'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 76
+      end
     end
     object cxGridLevel: TcxGridLevel
       GridView = cxGridDBTableView
@@ -173,8 +221,8 @@ object BranchForm: TBranchForm
   object ClientDataSet: TClientDataSet
     Aggregates = <>
     Params = <>
-    Left = 96
-    Top = 144
+    Left = 88
+    Top = 160
   end
   object cxPropertiesStore: TcxPropertiesStore
     Components = <
@@ -255,6 +303,14 @@ object BranchForm: TBranchForm
         end
         item
           Visible = True
+          ItemName = 'bbOpenFormTTN'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbRefresh'
         end
         item
@@ -329,6 +385,10 @@ object BranchForm: TBranchForm
       Action = ProtocolOpenForm
       Category = 0
     end
+    object bbOpenFormTTN: TdxBarButton
+      Action = MultiActionTtn
+      Category = 0
+    end
   end
   object ActionList: TActionList
     Images = dmMain.ImageList
@@ -337,6 +397,8 @@ object BranchForm: TBranchForm
     object actRefresh: TdsdDataSetRefresh
       Category = 'DSDLib'
       MoveParams = <>
+      PostDataSetBeforeExecute = False
+      PostDataSetAfterExecute = True
       StoredProc = dsdStoredProc
       StoredProcList = <
         item
@@ -562,6 +624,121 @@ object BranchForm: TBranchForm
         end>
       isShowModal = True
     end
+    object OpenFormTTN: TdsdOpenForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      PostDataSetAfterExecute = True
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1076#1072#1085#1085#1099#1077' '#1079#1072#1087#1086#1083#1085#1077#1085#1080#1103' '#1058#1058#1053
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1076#1072#1085#1085#1099#1077' '#1079#1072#1087#1086#1083#1085#1077#1085#1080#1103' '#1058#1058#1053
+      ImageIndex = 42
+      FormName = 'TBranch_TTNDialogForm'
+      FormNameParam.Value = 'TBranch_TTNDialogForm'
+      FormNameParam.DataType = ftString
+      GuiParams = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'Id'
+        end
+        item
+          Name = 'PersonalDriverId'
+          Value = '0'
+          Component = ClientDataSet
+          ComponentItem = 'PersonalDriverId'
+          ParamType = ptInputOutput
+        end
+        item
+          Name = 'Member1Id'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'Member1Id'
+        end
+        item
+          Name = 'Member2Id'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'Member2Id'
+        end
+        item
+          Name = 'Member3Id'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'Member3Id'
+        end
+        item
+          Name = 'Member4Id'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'Member4Id'
+        end
+        item
+          Name = 'PersonalDriverName'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'PersonalDriverName'
+          DataType = ftString
+          ParamType = ptInputOutput
+        end
+        item
+          Name = 'Member1Name'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'Member1Name'
+          ParamType = ptInput
+        end
+        item
+          Name = 'Member2Name'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'Member2Name'
+          DataType = ftString
+        end
+        item
+          Name = 'Member3Name'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'Member3Name'
+          DataType = ftString
+        end
+        item
+          Name = 'Member4Name'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'Member4Name'
+        end
+        item
+          Name = 'CarId'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'CarId'
+        end
+        item
+          Name = 'CarName'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'CarName'
+          DataType = ftString
+        end>
+      isShowModal = True
+    end
+    object MultiActionTtn: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      PostDataSetAfterExecute = True
+      ActionList = <
+        item
+          Action = OpenFormTTN
+        end
+        item
+          Action = actRefresh
+        end>
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1076#1072#1085#1085#1099#1077' '#1079#1072#1087#1086#1083#1085#1077#1085#1080#1103' '#1058#1058#1053
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1076#1072#1085#1085#1099#1077' '#1079#1072#1087#1086#1083#1085#1077#1085#1080#1103' '#1058#1058#1053
+      ImageIndex = 42
+    end
   end
   object dsdStoredProc: TdsdStoredProc
     StoredProcName = 'gpSelect_Object_Branch'
@@ -572,8 +749,8 @@ object BranchForm: TBranchForm
       end>
     Params = <>
     PackSize = 1
-    Left = 200
-    Top = 192
+    Left = 184
+    Top = 200
   end
   object dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 120

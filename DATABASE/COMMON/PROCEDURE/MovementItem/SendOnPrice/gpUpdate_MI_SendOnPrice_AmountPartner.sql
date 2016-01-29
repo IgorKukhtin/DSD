@@ -14,6 +14,9 @@ BEGIN
      -- проверка прав пользователя на вызов процедуры
      vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MI_SendOnPrice_Branch());
 
+     -- распровели
+     PERFORM gpUnComplete_Movement_SendOnPrice (inMovementId:= inMovementId, inSession:= inSession);
+
      -- сохранили
      PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_AmountPartner(), MovementItem.Id, COALESCE (MIFloat_AmountChangePercent.ValueData, 0))
      FROM MovementItem
@@ -22,6 +25,12 @@ BEGIN
                                      AND MIFloat_AmountChangePercent.DescId = zc_MIFloat_AmountChangePercent()
      WHERE MovementId = inMovementId;
 
+
+     -- пересчитали Итоговые суммы по накладной
+     PERFORM lpInsertUpdate_MovementFloat_TotalSumm (inMovementId);
+
+     -- провели
+     PERFORM gpComplete_Movement_SendOnPrice (inMovementId:= inMovementId, inSession:= inSession);
 
      -- сохранили протокол
      PERFORM lpInsert_MovementItemProtocol (MovementItem.Id, vbUserId, FALSE)

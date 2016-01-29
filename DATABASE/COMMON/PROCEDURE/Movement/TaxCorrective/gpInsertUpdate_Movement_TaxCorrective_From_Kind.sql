@@ -230,7 +230,7 @@ BEGIN
                               INNER JOIN Movement ON Movement.Id = MovementLinkMovement_Master.MovementChildId
                                                  AND Movement.DescId = zc_Movement_Tax()
                                                  AND Movement.StatusId = zc_Enum_Status_Complete()
-                                                 AND Movement.OperDate BETWEEN '01.08.2013' :: TDateTime AND vbOperDate - interval '1 day'
+                                                 AND Movement.OperDate BETWEEN  - INERVAL '12 MONTH' AND vbOperDate - INERVAL '1 DAY'
                               INNER JOIN MovementLinkObject AS MovementLinkObject_Contract
                                                             ON MovementLinkObject_Contract.MovementId = Movement.Id
                                                            AND MovementLinkObject_Contract.DescId = zc_MovementLinkObject_Contract()

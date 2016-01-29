@@ -274,7 +274,6 @@ uses
   UnionDesc in '..\..\Forms\System\UnionDesc.pas' {UnionDescForm: TParentForm},
   SendDebtJournal in '..\..\Forms\Document\SendDebtJournal.pas' {SendDebtJournalForm: TParentForm},
   BranchEdit in '..\..\Forms\Guides\BranchEdit.pas' {BranchEditForm: TParentForm},
-  Branch in '..\..\Forms\Guides\Branch.pas' {BranchForm: TParentForm},
   Branch_Object in '..\..\Forms\Guides\Branch_Object.pas' {Branch_ObjectForm: TParentForm},
   Cash in '..\..\Forms\Guides\Cash.pas' {CashForm: TParentForm},
   CashEdit in '..\..\Forms\Guides\CashEdit.pas' {CashEditForm: TParentForm},
@@ -785,7 +784,10 @@ uses
   Member_TrasportDateDialog in '..\..\Forms\Guides\Member_TrasportDateDialog.pas' {Member_TrasportDateDialogForm: TParentForm},
   RouteMember in '..\..\Forms\Guides\RouteMember.pas' {RouteMemberForm: TParentForm},
   RouteMemberEdit in '..\..\Forms\Guides\RouteMemberEdit.pas' {RouteMemberEditForm: TParentForm},
-  Member_TrasportChoice in '..\..\Forms\Guides\Member_TrasportChoice.pas' {Member_TrasportChoiceForm: TParentForm};
+  Member_TrasportChoice in '..\..\Forms\Guides\Member_TrasportChoice.pas' {Member_TrasportChoiceForm: TParentForm},
+  ContractTermKind in '..\..\Forms\Kind\ContractTermKind.pas' {ContractTermKindForm: TParentForm},
+  Branch_TTNDialog in '..\..\Forms\Guides\Branch_TTNDialog.pas' {Branch_TTNDialogForm: TParentForm},
+  Branch in '..\..\Forms\Guides\Branch.pas' {BranchForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}

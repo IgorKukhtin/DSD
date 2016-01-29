@@ -45,7 +45,9 @@ object RouteMemberForm: TRouteMemberForm
       OptionsData.Editing = False
       OptionsData.Inserting = False
       OptionsSelection.InvertSelect = False
+      OptionsView.CellAutoHeight = True
       OptionsView.ColumnAutoWidth = True
+      OptionsView.HeaderAutoHeight = True
       OptionsView.HeaderHeight = 40
       OptionsView.Indicator = True
       Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet

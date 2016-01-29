@@ -70,7 +70,6 @@ BEGIN
                                               INNER JOIN Object AS Object_ContractPartner ON Object_ContractPartner.Id = ObjectLink_ContractPartner_Partner.ObjectId
                                                                                          AND Object_ContractPartner.isErased = FALSE
                                          WHERE ObjectLink_ContractPartner_Partner.DescId = zc_ObjectLink_ContractPartner_Partner()
-                                         GROUP BY ObjectLink_Partner_Juridical.ChildObjectId
                                         )
    SELECT
          Object_Contract_View.ContractId      :: Integer   AS Id

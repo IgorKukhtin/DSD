@@ -23,6 +23,7 @@ $BODY$
    DECLARE vbUserId Integer;
    DECLARE vbRouteMemberId Integer;
    DECLARE vbIsInsert Boolean;
+   DECLARE vbDistance Tfloat;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MI_IncomeFuel());
@@ -44,7 +45,6 @@ BEGIN
      END IF;
 
      -- сохранили <Элемент документа>
-     --ioId := lpInsertUpdate_MovementItem (ioId, zc_MI_Child(), inFuelId, inMovementId, ioAmount, inParentId);
      ioId := lpInsertUpdate_MovementItem (ioId, zc_MI_Child(), vbRouteMemberId, inMovementId, inAmount, NULL);
    
      -- сохранили свойство <>
@@ -52,15 +52,17 @@ BEGIN
      -- сохранили свойство <>
      PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_EndOdometre(), ioId, inEndOdometre);
 
-     -- сохранили свойство <Дата накладной у контрагента>
+     -- сохранили свойство <Дата>
      PERFORM lpInsertUpdate_MovementItemDate (zc_MIDate_OperDate(), ioId, inOperDate);
 
-     -- рассчитываем пробег, км 
+     -- рассчитываем пробег, км - только для ioId
      outDistance_calc:= inEndOdometre - inStartOdometre;
-   
-     -- рассчитываем нач. и кон. показания спидометра, пробег,км
-     SELECT MIN (MIFloat_StartOdometre.ValueData), MAX(MIFloat_EndOdometre.ValueData)
-   INTO outStartOdometre_calc, outEndOdometre_calc 
+
+
+     -- рассчитываем для ВСЕХ MovementItem
+     SELECT SUM (COALESCE (MIFloat_EndOdometre.ValueData, 0) - COALESCE (MIFloat_StartOdometre.ValueData, 0))      -- пробег факт ,км
+          , MIN (COALESCE (MIFloat_StartOdometre.ValueData, 0)), MAX (COALESCE (MIFloat_EndOdometre.ValueData, 0)) -- нач. и кон. показания спидометра
+            INTO vbDistance, outStartOdometre_calc, outEndOdometre_calc 
      FROM MovementItem 
             LEFT JOIN MovementItemFloat AS MIFloat_StartOdometre
                                         ON MIFloat_StartOdometre.MovementItemId = MovementItem.Id
@@ -71,24 +73,28 @@ BEGIN
      WHERE MovementItem.MovementId = inMovementId
                              AND MovementItem.DescId     = zc_MI_Child()
                              AND MovementItem.isErased   = False;
+     -- сохранение
+     PERFORM lpInsertUpdate_MovemenTFloat (zc_MovementFloat_Distance(), inMovementId, vbDistance);
+     -- сохранили свойство <>
+     PERFORM lpInsertUpdate_MovemenTFloat (zc_MovementFloat_StartOdometre(), inMovementId, outStartOdometre_calc);
+     -- сохранили свойство <>
+     PERFORM lpInsertUpdate_MovemenTFloat (zc_MovementFloat_EndOdometre(), inMovementId, outEndOdometre_calc);
 
+     -- рассчитываем Пробег итог, км - для ВСЕХ MovementItem
      outDistanceDiff:= outEndOdometre_calc - outStartOdometre_calc;
+
 
      -- сохранили протокол
      PERFORM lpInsert_MovementItemProtocol (ioId, vbUserId, vbIsInsert);
-
-
 
 END;
 $BODY$
   LANGUAGE PLPGSQL VOLATILE;
 
-
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
  15.01.16         * 
-
 */
 
 -- тест

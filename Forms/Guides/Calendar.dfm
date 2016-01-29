@@ -214,6 +214,20 @@ object CalendarForm: TCalendarForm
         HeaderGlyphAlignmentHorz = taCenter
         Width = 80
       end
+      object clDayOfWeekName: TcxGridDBColumn
+        Caption = #1044#1077#1085#1100' '#1085#1077#1076#1077#1083#1080
+        DataBinding.FieldName = 'DayOfWeekName'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 115
+      end
+      object clColor_calc: TcxGridDBColumn
+        DataBinding.FieldName = 'Color_calc'
+        Visible = False
+        VisibleForCustomization = False
+        Width = 55
+      end
     end
     object cxGridLevel: TcxGridLevel
       GridView = cxGridDBTableView
@@ -394,8 +408,8 @@ object CalendarForm: TCalendarForm
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
-    Font.Height = -11
-    Font.Name = 'Tahoma'
+    Font.Height = -12
+    Font.Name = 'Segoe UI'
     Font.Style = []
     Categories.Strings = (
       'Default')
@@ -488,6 +502,7 @@ object CalendarForm: TCalendarForm
     object dsdExecStoredProcIns: TdsdExecStoredProc
       Category = 'DSDLib'
       MoveParams = <>
+      PostDataSetBeforeExecute = False
       StoredProc = dsdStoredProcInsCalendar
       StoredProcList = <
         item
@@ -501,6 +516,7 @@ object CalendarForm: TCalendarForm
     object dsdUpdateDataSet1: TdsdUpdateDataSet
       Category = 'DSDLib'
       MoveParams = <>
+      PostDataSetBeforeExecute = False
       StoredProc = dsdStoredProcUpdCalendar
       StoredProcList = <
         item
@@ -535,6 +551,7 @@ object CalendarForm: TCalendarForm
         DataType = ftDateTime
         ParamType = ptInput
       end>
+    PackSize = 1
     Left = 152
     Top = 248
   end
@@ -545,8 +562,20 @@ object CalendarForm: TCalendarForm
     ActionItemList = <>
     SortImages = dmMain.SortImageList
     OnlyEditingCellOnEnter = False
-    ColorRuleList = <>
+    ColorRuleList = <
+      item
+        ColorColumn = clDayOfWeekName
+        ValueColumn = clColor_calc
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = clValue
+        ValueColumn = clColor_calc
+        ColorValueList = <>
+      end>
     ColumnAddOnList = <>
+    ColumnEnterList = <>
+    SummaryItemList = <>
     Left = 184
     Top = 160
   end
@@ -561,6 +590,7 @@ object CalendarForm: TCalendarForm
     Top = 40
   end
   object RefreshDispatcher: TRefreshDispatcher
+    IdParam.Value = Null
     RefreshAction = actRefresh
     ComponentList = <
       item
@@ -585,17 +615,20 @@ object CalendarForm: TCalendarForm
     Params = <
       item
         Name = 'inId'
+        Value = Null
         Component = ClientDataSet
         ComponentItem = 'Id'
         ParamType = ptInput
       end
       item
         Name = 'inWorking'
+        Value = Null
         Component = ClientDataSet
         ComponentItem = 'Working'
         DataType = ftBoolean
         ParamType = ptInput
       end>
+    PackSize = 1
     Left = 248
     Top = 328
   end
@@ -621,6 +654,7 @@ object CalendarForm: TCalendarForm
         DataType = ftDateTime
         ParamType = ptInput
       end>
+    PackSize = 1
     Left = 160
     Top = 400
   end

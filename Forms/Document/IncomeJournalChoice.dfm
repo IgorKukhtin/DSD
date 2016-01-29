@@ -495,10 +495,10 @@ inherited IncomeJournalChoiceForm: TIncomeJournalChoiceForm
     Width = 1110
     ExplicitWidth = 1110
     inherited deStart: TcxDateEdit
-      EditValue = 42005d
+      EditValue = 42370d
     end
     inherited deEnd: TcxDateEdit
-      EditValue = 42005d
+      EditValue = 42370d
     end
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
@@ -574,7 +574,7 @@ inherited IncomeJournalChoiceForm: TIncomeJournalChoiceForm
         end
         item
           Name = 'OperDate'
-          Value = Null
+          Value = 'NULL'
           Component = MasterCDS
           ComponentItem = 'OperDate'
           DataType = ftDateTime
@@ -796,13 +796,13 @@ inherited IncomeJournalChoiceForm: TIncomeJournalChoiceForm
     Params = <
       item
         Name = 'inStartDate'
-        Value = Null
+        Value = 'NULL'
         Component = deStart
         DataType = ftDateTime
       end
       item
         Name = 'inEndDate'
-        Value = Null
+        Value = 'NULL'
         Component = deEnd
         DataType = ftDateTime
       end

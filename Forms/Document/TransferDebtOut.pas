@@ -141,6 +141,8 @@ type
     mactPrint_TTN: TMultiAction;
     cxLabel18: TcxLabel;
     ceComment: TcxTextEdit;
+    actOpenTax: TdsdOpenForm;
+    bbOpenTax: TdxBarButton;
   private
     { Private declarations }
   public

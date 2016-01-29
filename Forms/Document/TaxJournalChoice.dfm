@@ -5,23 +5,24 @@ inherited TaxJournalChoiceForm: TTaxJournalChoiceForm
   AddOnFormData.ChoiceAction = dsdChoiceGuides
   AddOnFormData.Params = FormParams
   ExplicitWidth = 1126
-  ExplicitHeight = 570
+  ExplicitHeight = 573
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
+    Top = 86
     Width = 1110
-    Height = 478
+    Height = 449
     TabOrder = 3
     ExplicitWidth = 1110
     ExplicitHeight = 478
-    ClientRectBottom = 478
+    ClientRectBottom = 449
     ClientRectRight = 1110
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 1110
       ExplicitHeight = 478
       inherited cxGrid: TcxGrid
         Width = 1110
-        Height = 478
+        Height = 449
         ExplicitWidth = 1110
         ExplicitHeight = 478
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -348,20 +349,73 @@ inherited TaxJournalChoiceForm: TTaxJournalChoiceForm
   end
   inherited Panel: TPanel
     Width = 1110
+    Height = 60
     ExplicitWidth = 1110
+    ExplicitHeight = 60
     inherited deStart: TcxDateEdit
+      Left = 110
       EditValue = 42370d
+      ExplicitLeft = 110
     end
     inherited deEnd: TcxDateEdit
+      Left = 110
+      Top = 34
       EditValue = 42370d
+      ExplicitLeft = 110
+      ExplicitTop = 34
+    end
+    inherited cxLabel1: TcxLabel
+      Left = 19
+      ExplicitLeft = 19
+    end
+    inherited cxLabel2: TcxLabel
+      Left = 0
+      Top = 35
+      ExplicitLeft = 0
+      ExplicitTop = 35
     end
     object edIsRegisterDate: TcxCheckBox
-      Left = 427
+      Left = 210
       Top = 5
       Action = actRefresh
       Caption = #1055#1077#1088#1080#1086#1076' '#1087#1086' <'#1044#1072#1090#1072' '#1088#1077#1075#1080#1089#1090#1088#1072#1094#1080#1080'>'
       TabOrder = 4
-      Width = 262
+      Width = 192
+    end
+    object cxLabel5: TcxLabel
+      Left = 425
+      Top = 6
+      Caption = #1070#1088'.'#1051#1080#1094#1086':'
+    end
+    object edJuridical: TcxButtonEdit
+      Left = 480
+      Top = 5
+      Properties.Buttons = <
+        item
+          Default = True
+          Enabled = False
+          Kind = bkEllipsis
+        end>
+      Properties.ReadOnly = True
+      TabOrder = 6
+      Width = 273
+    end
+    object cxLabel3: TcxLabel
+      Left = 410
+      Top = 35
+      Caption = #1050#1086#1085#1090#1088#1072#1075#1077#1085#1090':'
+    end
+    object edPartner: TcxButtonEdit
+      Left = 480
+      Top = 34
+      Properties.Buttons = <
+        item
+          Default = True
+          Kind = bkEllipsis
+        end>
+      Properties.ReadOnly = True
+      TabOrder = 8
+      Width = 273
     end
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
@@ -505,15 +559,15 @@ inherited TaxJournalChoiceForm: TTaxJournalChoiceForm
       item
         Name = 'inJuridicalId'
         Value = Null
-        Component = FormParams
-        ComponentItem = 'JuridicalId'
+        Component = JuridicalGuides
+        ComponentItem = 'Key'
         ParamType = ptInput
       end
       item
         Name = 'inPartnerId'
         Value = Null
-        Component = FormParams
-        ComponentItem = 'PartnerId'
+        Component = PartnerGuides
+        ComponentItem = 'Key'
         ParamType = ptInput
       end>
     Left = 104
@@ -638,6 +692,9 @@ inherited TaxJournalChoiceForm: TTaxJournalChoiceForm
       end
       item
         Component = edIsRegisterDate
+      end
+      item
+        Component = PartnerGuides
       end>
     Left = 408
     Top = 344
@@ -706,14 +763,101 @@ inherited TaxJournalChoiceForm: TTaxJournalChoiceForm
       item
         Name = 'JuridicalId'
         Value = Null
-        ParamType = ptInput
+        Component = JuridicalGuides
+        ComponentItem = 'Key'
+        ParamType = ptInputOutput
+      end
+      item
+        Name = 'JuridicalName'
+        Value = Null
+        Component = JuridicalGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
       end
       item
         Name = 'PartnerId'
         Value = Null
-        ParamType = ptInput
+        Component = PartnerGuides
+        ComponentItem = 'Key'
+        ParamType = ptInputOutput
+      end
+      item
+        Name = 'PartnerName'
+        Value = Null
+        Component = PartnerGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
       end>
     Left = 304
     Top = 288
+  end
+  inherited spMovementReComplete: TdsdStoredProc
+    Top = 96
+  end
+  object JuridicalGuides: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edJuridical
+    FormNameParam.Name = 'TJuridical_ObjectForm'
+    FormNameParam.Value = 'TJuridical_ObjectForm'
+    FormNameParam.DataType = ftString
+    FormName = 'TJuridical_ObjectForm'
+    PositionDataSet = 'MasterCDS'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = JuridicalGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = JuridicalGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+      end>
+    Left = 577
+  end
+  object PartnerGuides: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edPartner
+    FormNameParam.Name = 'TPartner_ObjectForm'
+    FormNameParam.Value = 'TPartner_ObjectForm'
+    FormNameParam.DataType = ftString
+    FormName = 'TPartner_ObjectForm'
+    PositionDataSet = 'MasterCDS'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = PartnerGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = PartnerGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+      end
+      item
+        Name = 'MasterJuridicalId'
+        Value = Null
+        Component = JuridicalGuides
+        ComponentItem = 'Key'
+      end
+      item
+        Name = 'MasterJuridicalName'
+        Value = Null
+        Component = JuridicalGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+      end>
+    Left = 649
+    Top = 24
   end
 end

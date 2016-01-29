@@ -10,7 +10,8 @@ uses
   cxGridCustomTableView, cxGridTableView, cxGridDBTableView, Vcl.Menus,
   dsdAddOn, dxBarExtItems, dxBar, cxClasses, dsdDB, Datasnap.DBClient,
   dsdAction, Vcl.ActnList, cxPropertiesStore, cxGridLevel, cxGridCustomView,
-  cxGrid, cxPC, cxPCdxBarPopupMenu;
+  cxGrid, cxPC, cxPCdxBarPopupMenu, dxSkinsDefaultPainters, dxSkinscxPCPainter,
+  dxSkinsdxBarPainter;
 
 type
   TContractForm = class(TAncestorGuidesForm)

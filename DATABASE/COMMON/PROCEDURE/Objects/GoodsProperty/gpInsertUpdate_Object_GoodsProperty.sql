@@ -51,6 +51,9 @@ BEGIN
    -- сохранили свойство <>
    PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_GoodsProperty_EndPosIdent(), ioId, inEndPosIdent);
 
+   -- обновили
+   PERFORM lpUpdate_Object_GoodsPropertyValue_BarCodeShort (ioId, 0, vbUserId);
+
    -- сохранили протокол
    PERFORM lpInsert_ObjectProtocol (ioId, vbUserId);
     

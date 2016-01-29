@@ -191,6 +191,14 @@ begin
      ParamAdd(Params,'isSpec',ftBoolean);      //Спецификация
      ParamAdd(Params,'isTax',ftBoolean);       //Налоговая
 
+     ParamAdd(Params,'CountMovement',ftInteger);  //Накладная
+     ParamAdd(Params,'CountAccount',ftInteger);   //Счет
+     ParamAdd(Params,'CountTransport',ftInteger); //ТТН
+     ParamAdd(Params,'CountQuality',ftInteger);   //Качественное
+     ParamAdd(Params,'CountPack',ftInteger);      //Упаковочный
+     ParamAdd(Params,'CountSpec',ftInteger);      //Спецификация
+     ParamAdd(Params,'CountTax',ftInteger);       //Налоговая
+
      ParamAdd(Params,'isSendOnPriceIn',ftBoolean);
      ParamAdd(Params,'isPartionGoodsDate',ftBoolean);
 

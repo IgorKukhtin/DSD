@@ -39,7 +39,6 @@ object Retail_PrintKindItemForm: TRetail_PrintKindItemForm
       OptionsData.Deleting = False
       OptionsData.DeletingConfirmation = False
       OptionsData.Inserting = False
-      OptionsView.ColumnAutoWidth = True
       OptionsView.GroupByBox = False
       OptionsView.HeaderHeight = 40
       OptionsView.Indicator = True
@@ -58,11 +57,12 @@ object Retail_PrintKindItemForm: TRetail_PrintKindItemForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 146
+        Width = 150
       end
       object GLNCode: TcxGridDBColumn
         Caption = #1050#1086#1076' GLN '#1055#1086#1083#1091#1095#1072#1090#1077#1083#1100
         DataBinding.FieldName = 'GLNCode'
+        Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
@@ -71,6 +71,7 @@ object Retail_PrintKindItemForm: TRetail_PrintKindItemForm
       object GLNCodeCorporate: TcxGridDBColumn
         Caption = #1050#1086#1076' GLN '#1055#1086#1089#1090#1072#1074#1097#1080#1082' '
         DataBinding.FieldName = 'GLNCodeCorporate'
+        Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
@@ -87,6 +88,7 @@ object Retail_PrintKindItemForm: TRetail_PrintKindItemForm
             Kind = bkEllipsis
           end>
         Properties.ReadOnly = True
+        Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
@@ -95,10 +97,144 @@ object Retail_PrintKindItemForm: TRetail_PrintKindItemForm
       object clOperDateOrder: TcxGridDBColumn
         Caption = #1062#1077#1085#1072' '#1087#1086' '#1076#1072#1090#1077' '#1079#1072#1103#1074#1082#1080
         DataBinding.FieldName = 'OperDateOrder'
+        Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
         Width = 80
+      end
+      object isMovement: TcxGridDBColumn
+        Caption = #1053#1072#1082#1083#1072#1076#1085#1072#1103
+        DataBinding.FieldName = 'isMovement'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 70
+      end
+      object CountMovement: TcxGridDBColumn
+        Caption = #1053#1072#1082#1083#1072#1076#1085#1072#1103' '#1082#1086#1083'. '#1082#1086#1087#1080#1081
+        DataBinding.FieldName = 'CountMovement'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.AssignedValues.EditFormat = True
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.;-,0.; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 70
+      end
+      object isAccount: TcxGridDBColumn
+        Caption = #1057#1095#1077#1090
+        DataBinding.FieldName = 'isAccount'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 70
+      end
+      object CountAccount: TcxGridDBColumn
+        Caption = #1057#1095#1077#1090' '#1082#1086#1083'. '#1082#1086#1087#1080#1081
+        DataBinding.FieldName = 'CountAccount'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.AssignedValues.EditFormat = True
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.;-,0.; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 70
+      end
+      object isTransport: TcxGridDBColumn
+        Caption = #1058#1058#1053
+        DataBinding.FieldName = 'isTransport'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 70
+      end
+      object CountTransport: TcxGridDBColumn
+        Caption = #1058#1058#1053' '#1082#1086#1083'. '#1082#1086#1087#1080#1081
+        DataBinding.FieldName = 'CountTransport'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.AssignedValues.EditFormat = True
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.;-,0.; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 70
+      end
+      object isQuality: TcxGridDBColumn
+        Caption = #1050#1072#1095#1077#1089#1090#1074#1077#1085#1085#1086#1077
+        DataBinding.FieldName = 'isQuality'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 70
+      end
+      object CountQuality: TcxGridDBColumn
+        Caption = #1050#1072#1095#1077#1089#1090#1074#1077#1085#1085#1086#1077' '#1082#1086#1083'. '#1082#1086#1087#1080#1081
+        DataBinding.FieldName = 'CountQuality'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.AssignedValues.EditFormat = True
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.;-,0.; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 70
+      end
+      object isPack: TcxGridDBColumn
+        Caption = #1059#1087#1072#1082#1086#1074#1086#1095#1085#1099#1081
+        DataBinding.FieldName = 'isPack'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 70
+      end
+      object CountPack: TcxGridDBColumn
+        Caption = #1059#1087#1072#1082#1086#1074#1086#1095#1085#1099#1081' '#1082#1086#1083'. '#1082#1086#1087#1080#1081
+        DataBinding.FieldName = 'CountPack'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.AssignedValues.EditFormat = True
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.;-,0.; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 70
+      end
+      object isSpec: TcxGridDBColumn
+        Caption = #1057#1087#1077#1094#1080#1092#1080#1082#1072#1094#1080#1103
+        DataBinding.FieldName = 'isSpec'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 70
+      end
+      object CountSpec: TcxGridDBColumn
+        Caption = #1057#1087#1077#1094#1080#1092#1080#1082#1072#1094#1080#1103' '#1082#1086#1083'. '#1082#1086#1087#1080#1081
+        DataBinding.FieldName = 'CountSpec'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.AssignedValues.EditFormat = True
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.;-,0.; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 70
+      end
+      object isTax: TcxGridDBColumn
+        Caption = #1053#1072#1083#1086#1075#1086#1074#1072#1103
+        DataBinding.FieldName = 'isTax'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 70
+      end
+      object CountTax: TcxGridDBColumn
+        Caption = #1053#1072#1083#1086#1075#1086#1074#1072#1103' '#1082#1086#1083'. '#1082#1086#1087#1080#1081
+        DataBinding.FieldName = 'CountTax'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.AssignedValues.EditFormat = True
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.;-,0.; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 70
       end
       object isErased: TcxGridDBColumn
         Caption = #1059#1076#1072#1083#1077#1085
@@ -109,55 +245,6 @@ object Retail_PrintKindItemForm: TRetail_PrintKindItemForm
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
         Width = 68
-      end
-      object isMovement: TcxGridDBColumn
-        Caption = #1053#1072#1082#1083#1072#1076#1085#1072#1103
-        DataBinding.FieldName = 'isMovement'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Width = 70
-      end
-      object isAccount: TcxGridDBColumn
-        Caption = #1057#1095#1077#1090
-        DataBinding.FieldName = 'isAccount'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Width = 70
-      end
-      object isTransport: TcxGridDBColumn
-        Caption = #1058#1058#1053
-        DataBinding.FieldName = 'isTransport'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Width = 70
-      end
-      object isQuality: TcxGridDBColumn
-        Caption = #1050#1072#1095#1077#1089#1090#1074#1077#1085#1085#1086#1077
-        DataBinding.FieldName = 'isQuality'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Width = 70
-      end
-      object isPack: TcxGridDBColumn
-        Caption = #1059#1087#1072#1082#1086#1074#1086#1095#1085#1099#1081
-        DataBinding.FieldName = 'isPack'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Width = 70
-      end
-      object isSpec: TcxGridDBColumn
-        Caption = #1057#1087#1077#1094#1080#1092#1080#1082#1072#1094#1080#1103
-        DataBinding.FieldName = 'isSpec'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Width = 70
-      end
-      object isTax: TcxGridDBColumn
-        Caption = #1053#1072#1083#1086#1075#1086#1074#1072#1103
-        DataBinding.FieldName = 'isTax'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Width = 70
       end
     end
     object cxGridLevel: TcxGridLevel
@@ -231,9 +318,12 @@ object Retail_PrintKindItemForm: TRetail_PrintKindItemForm
           ItemName = 'dxBarStatic'
         end
         item
-          BeginGroup = True
           Visible = True
           ItemName = 'bbRefresh'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
         end
         item
           Visible = True
@@ -538,60 +628,116 @@ object Retail_PrintKindItemForm: TRetail_PrintKindItemForm
         ParamType = ptInputOutput
       end
       item
-        Name = 'inisMovement'
+        Name = 'ioisMovement'
         Value = Null
         Component = ClientDataSet
         ComponentItem = 'isMovement'
         DataType = ftBoolean
-        ParamType = ptInput
+        ParamType = ptInputOutput
       end
       item
-        Name = 'inisAccount'
+        Name = 'ioisAccount'
         Value = Null
         Component = ClientDataSet
         ComponentItem = 'isAccount'
         DataType = ftBoolean
-        ParamType = ptInput
+        ParamType = ptInputOutput
       end
       item
-        Name = 'inisTransport'
+        Name = 'ioisTransport'
         Value = Null
         Component = ClientDataSet
         ComponentItem = 'isTransport'
         DataType = ftBoolean
-        ParamType = ptInput
+        ParamType = ptInputOutput
       end
       item
-        Name = 'inisQuality'
+        Name = 'ioisQuality'
         Value = Null
         Component = ClientDataSet
         ComponentItem = 'isQuality'
         DataType = ftBoolean
-        ParamType = ptInput
+        ParamType = ptInputOutput
       end
       item
-        Name = 'inisPack'
+        Name = 'ioisPack'
         Value = Null
         Component = ClientDataSet
         ComponentItem = 'isPack'
         DataType = ftBoolean
-        ParamType = ptInput
+        ParamType = ptInputOutput
       end
       item
-        Name = 'inisSpec'
+        Name = 'ioisSpec'
         Value = Null
         Component = ClientDataSet
         ComponentItem = 'isSpec'
         DataType = ftBoolean
-        ParamType = ptInput
+        ParamType = ptInputOutput
       end
       item
-        Name = 'inisTax'
+        Name = 'ioisTax'
         Value = Null
         Component = ClientDataSet
         ComponentItem = 'isTax'
         DataType = ftBoolean
-        ParamType = ptInput
+        ParamType = ptInputOutput
+      end
+      item
+        Name = 'ioCountMovement'
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'CountMovement'
+        DataType = ftFloat
+        ParamType = ptInputOutput
+      end
+      item
+        Name = 'ioCountAccount'
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'CountAccount'
+        DataType = ftFloat
+        ParamType = ptInputOutput
+      end
+      item
+        Name = 'ioCountTransport'
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'CountTransport'
+        DataType = ftFloat
+        ParamType = ptInputOutput
+      end
+      item
+        Name = 'ioCountQuality'
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'CountQuality'
+        DataType = ftFloat
+        ParamType = ptInputOutput
+      end
+      item
+        Name = 'ioCountPack'
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'CountPack'
+        DataType = ftFloat
+        ParamType = ptInputOutput
+      end
+      item
+        Name = 'ioCountSpec'
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'CountSpec'
+        DataType = ftFloat
+        ParamType = ptInputOutput
+      end
+      item
+        Name = 'ioCountTax'
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'CountTax'
+        DataType = ftFloat
+        ParamType = ptInputOutput
       end>
     PackSize = 1
     Left = 392

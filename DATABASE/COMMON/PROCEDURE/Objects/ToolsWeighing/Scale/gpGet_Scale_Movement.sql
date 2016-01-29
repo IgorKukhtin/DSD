@@ -36,13 +36,13 @@ RETURNS TABLE (MovementId       Integer
              , isEdiInvoice     Boolean
              , isEdiDesadv      Boolean
 
-             , isMovement    Boolean   -- Накладная
-             , isAccount     Boolean   -- Счет
-             , isTransport   Boolean   -- ТТН
-             , isQuality     Boolean   -- Качественное
-             , isPack        Boolean   -- Упаковочный
-             , isSpec        Boolean   -- Спецификация
-             , isTax         Boolean   -- Налоговая
+             , isMovement    Boolean, CountMovement   TFloat   -- Накладная
+             , isAccount     Boolean, CountAccount    TFloat   -- Счет
+             , isTransport   Boolean, CountTransport  TFloat   -- ТТН
+             , isQuality     Boolean, CountQuality    TFloat   -- Качественное
+             , isPack        Boolean, CountPack       TFloat   -- Упаковочный
+             , isSpec        Boolean, CountSpec       TFloat   -- Спецификация
+             , isTax         Boolean, CountTax        TFloat   -- Налоговая
 
              , MovementId_Order Integer
              , MovementDescId_Order Integer
@@ -207,13 +207,13 @@ BEGIN
                                      )
                                            
            , tmpJuridicalPrint AS (SELECT tmp.Id AS JuridicalId
-                                        , tmp.isMovement
-                                        , tmp.isAccount
-                                        , tmp.isTransport
-                                        , tmp.isQuality
-                                        , tmp.isPack
-                                        , tmp.isSpec
-                                        , tmp.isTax
+                                        , tmp.isMovement, tmp.CountMovement
+                                        , tmp.isAccount, tmp.CountAccount
+                                        , tmp.isTransport, tmp.CountTransport
+                                        , tmp.isQuality, tmp.CountQuality
+                                        , tmp.isPack, tmp.CountPack
+                                        , tmp.isSpec, tmp.CountSpec
+                                        , tmp.isTax, tmp.CountTax
                                    FROM lpGet_Object_Juridical_PrintKindItem ((SELECT tmpMovement.JuridicalId FROM tmpMovement LIMIT 1)) AS tmp
                                   )
        SELECT tmpMovement.Id                                 AS MovementId
@@ -265,12 +265,13 @@ BEGIN
             , COALESCE (ObjectBoolean_Partner_EdiDesadv.ValueData, FALSE)  :: Boolean AS isEdiDesadv
 
             , CASE WHEN tmpJuridicalPrint.isPack = TRUE OR tmpJuridicalPrint.isSpec = TRUE THEN COALESCE (tmpJuridicalPrint.isMovement, FALSE) ELSE TRUE END :: Boolean AS isMovement
-            , COALESCE (tmpJuridicalPrint.isAccount,   FALSE) :: Boolean AS isAccount
-            , COALESCE (tmpJuridicalPrint.isTransport, FALSE) :: Boolean AS isTransport
-            , COALESCE (tmpJuridicalPrint.isQuality,   FALSE) :: Boolean AS isQuality
-            , COALESCE (tmpJuridicalPrint.isPack,      FALSE) :: Boolean AS isPack
-            , COALESCE (tmpJuridicalPrint.isSpec,      FALSE) :: Boolean AS isSpec
-            , COALESCE (tmpJuridicalPrint.isTax,       FALSE) :: Boolean AS isTax
+            , CASE WHEN tmpJuridicalPrint.CountMovement > 0 THEN tmpJuridicalPrint.CountMovement ELSE 2 END :: TFloat AS CountMovement
+            , COALESCE (tmpJuridicalPrint.isAccount,   FALSE) :: Boolean AS isAccount,   COALESCE (tmpJuridicalPrint.CountAccount, 0)   :: TFloat AS CountAccount
+            , COALESCE (tmpJuridicalPrint.isTransport, FALSE) :: Boolean AS isTransport, COALESCE (tmpJuridicalPrint.CountTransport, 0) :: TFloat AS CountTransport
+            , COALESCE (tmpJuridicalPrint.isQuality,   FALSE) :: Boolean AS isQuality  , COALESCE (tmpJuridicalPrint.CountQuality, 0)   :: TFloat AS CountQuality
+            , COALESCE (tmpJuridicalPrint.isPack,      FALSE) :: Boolean AS isPack     , COALESCE (tmpJuridicalPrint.CountPack, 0)      :: TFloat AS CountPack
+            , COALESCE (tmpJuridicalPrint.isSpec,      FALSE) :: Boolean AS isSpec     , COALESCE (tmpJuridicalPrint.CountSpec, 0)      :: TFloat AS CountSpec
+            , COALESCE (tmpJuridicalPrint.isTax,       FALSE) :: Boolean AS isTax      , COALESCE (tmpJuridicalPrint.CountTax, 0)       :: TFloat AS CountTax
 
             , tmpMovement.MovementId_Order AS MovementId_Order
             , Movement_Order.DescId        AS MovementDescId_Order

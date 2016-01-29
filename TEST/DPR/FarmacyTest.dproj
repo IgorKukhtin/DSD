@@ -509,16 +509,8 @@
 			<DCCReference Include="..\..\SOURCE\EDI\OrderXML.pas"/>
 			<DCCReference Include="..\..\SOURCE\EDI\OrdrspXML.pas"/>
 			<DCCReference Include="..\..\SOURCE\COMPONENT\dsdInternetAction.pas"/>
-			<DCCReference Include="..\..\Forms\Guides\Member.pas">
-				<Form>MemberForm</Form>
-				<DesignClass>TParentForm</DesignClass>
-			</DCCReference>
 			<DCCReference Include="..\..\Forms\Guides\Member_Object.pas">
 				<Form>Member_ObjectForm</Form>
-				<DesignClass>TParentForm</DesignClass>
-			</DCCReference>
-			<DCCReference Include="..\..\Forms\Guides\MemberEdit.pas">
-				<Form>MemberEditForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<DCCReference Include="..\SOURCE\Objects\All\MemberTest.pas"/>
@@ -1082,6 +1074,70 @@
 			</DCCReference>
 			<DCCReference Include="..\..\FormsFarmacy\Document\IncomePartnerDataDialog.pas">
 				<Form>IncomePartnerDataDialogForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Guides\PersonalGroupEdit.pas">
+				<Form>PersonalGroupEditForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Guides\PersonalGroup.pas">
+				<Form>PersonalGroupForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Guides\PersonalEdit.pas">
+				<Form>PersonalEditForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Guides\Personal_Object.pas">
+				<Form>Personal_ObjectForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Guides\Personal.pas">
+				<Form>PersonalForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Guides\Education.pas">
+				<Form>EducationForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Guides\EducationEdit.pas">
+				<Form>EducationEditForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Guides\Position.pas">
+				<Form>PositionForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Guides\PositionEdit.pas">
+				<Form>PositionEditForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Guides\Calendar.pas">
+				<Form>CalendarForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Kind\WorkTimeKind_Object.pas">
+				<Form>WorkTimeKind_ObjectForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Kind\WorkTimeKind.pas">
+				<Form>WorkTimeKindForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Guides\Member.pas">
+				<Form>MemberForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Guides\MemberEdit.pas">
+				<Form>MemberEditForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Document\SheetWorkTimeJournal.pas">
+				<Form>SheetWorkTimeJournalForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Document\SheetWorkTime.pas">
+				<Form>SheetWorkTimeForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<BuildConfiguration Include="Release">

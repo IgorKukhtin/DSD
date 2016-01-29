@@ -3,6 +3,7 @@ program FarmacyTest;
 uses
   Forms,
   DUnitTestRunner,
+  SysUtils,
   dbCreateStructureTest in '..\SOURCE\STRUCTURE\dbCreateStructureTest.pas',
   dbMetadataTest in '..\SOURCE\METADATA\dbMetadataTest.pas',
   zLibUtil in '..\SOURCE\zLibUtil.pas',
@@ -181,9 +182,7 @@ uses
   OrderXML in '..\..\SOURCE\EDI\OrderXML.pas',
   OrdrspXML in '..\..\SOURCE\EDI\OrdrspXML.pas',
   dsdInternetAction in '..\..\SOURCE\COMPONENT\dsdInternetAction.pas',
-  Member in '..\..\Forms\Guides\Member.pas' {MemberForm: TParentForm},
   Member_Object in '..\..\Forms\Guides\Member_Object.pas' {Member_ObjectForm: TParentForm},
-  MemberEdit in '..\..\Forms\Guides\MemberEdit.pas' {MemberEditForm: TParentForm},
   MemberTest in '..\SOURCE\Objects\All\MemberTest.pas',
   Process in '..\..\Forms\Kind\Process.pas' {ProcessForm: TParentForm},
   NDSKindTest in '..\SOURCE\Objects\All\NDSKindTest.pas',
@@ -363,13 +362,29 @@ uses
   ChangeIncomePayment in '..\..\FormsFarmacy\Document\ChangeIncomePayment.pas' {ChangeIncomePaymentForm: TParentForm},
   PriceHistory in '..\..\FormsFarmacy\Guides\PriceHistory.pas' {PriceHistoryForm: TParentForm},
   ReturnOutPartnerDataDialog in '..\..\FormsFarmacy\Document\ReturnOutPartnerDataDialog.pas' {ReturnOutPartnerDataDialogForm: TParentForm},
-  IncomePartnerDataDialog in '..\..\FormsFarmacy\Document\IncomePartnerDataDialog.pas' {IncomePartnerDataDialogForm: TParentForm};
+  IncomePartnerDataDialog in '..\..\FormsFarmacy\Document\IncomePartnerDataDialog.pas' {IncomePartnerDataDialogForm: TParentForm},
+  PersonalGroupEdit in '..\..\FormsFarmacy\Guides\PersonalGroupEdit.pas' {PersonalGroupEditForm: TParentForm},
+  PersonalGroup in '..\..\FormsFarmacy\Guides\PersonalGroup.pas' {PersonalGroupForm: TParentForm},
+  PersonalEdit in '..\..\FormsFarmacy\Guides\PersonalEdit.pas' {PersonalEditForm: TParentForm},
+  Personal_Object in '..\..\FormsFarmacy\Guides\Personal_Object.pas' {Personal_ObjectForm: TParentForm},
+  Personal in '..\..\FormsFarmacy\Guides\Personal.pas' {PersonalForm: TParentForm},
+  Education in '..\..\FormsFarmacy\Guides\Education.pas' {EducationForm: TParentForm},
+  EducationEdit in '..\..\FormsFarmacy\Guides\EducationEdit.pas' {EducationEditForm: TParentForm},
+  Position in '..\..\FormsFarmacy\Guides\Position.pas' {PositionForm: TParentForm},
+  PositionEdit in '..\..\FormsFarmacy\Guides\PositionEdit.pas' {PositionEditForm: TParentForm},
+  Calendar in '..\..\FormsFarmacy\Guides\Calendar.pas' {CalendarForm: TParentForm},
+  WorkTimeKind_Object in '..\..\FormsFarmacy\Kind\WorkTimeKind_Object.pas' {WorkTimeKind_ObjectForm: TParentForm},
+  WorkTimeKind in '..\..\FormsFarmacy\Kind\WorkTimeKind.pas' {WorkTimeKindForm: TParentForm},
+  Member in '..\..\FormsFarmacy\Guides\Member.pas' {MemberForm: TParentForm},
+  MemberEdit in '..\..\FormsFarmacy\Guides\MemberEdit.pas' {MemberEditForm: TParentForm},
+  SheetWorkTimeJournal in '..\..\FormsFarmacy\Document\SheetWorkTimeJournal.pas' {SheetWorkTimeJournalForm: TParentForm},
+  SheetWorkTime in '..\..\FormsFarmacy\Document\SheetWorkTime.pas' {SheetWorkTimeForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}
 
 begin
-  ConnectionPath := '..\INIT\realfarmacy_init.php';
+  ConnectionPath := '..\INIT\farmacy_init.php';
   EnumPath := '..\DATABASE\FARMACY\METADATA\Enum\';
   CreateStructurePath := '..\DATABASE\FARMACY\STRUCTURE\';
   LocalViewPath := '..\DATABASE\FARMACY\View\';
@@ -377,7 +392,10 @@ begin
   LocalProcessPath := '..\DATABASE\COMMON\PROCESS\';
   dsdProject := prFarmacy;
 
-  gc_AdminPassword := 'Админ1234';
+  if FindCmdLineSwitch('realfarmacy', true)
+  then gc_AdminPassword := 'Админ1234'
+  else gc_AdminPassword := 'Админ1111';
+
   gc_ProgramName := 'Farmacy.exe';
 
   Application.Initialize;

@@ -23,6 +23,7 @@ RETURNS TABLE (Id Integer, GoodsCode Integer, GoodsName TVarChar
              , InsertDate TDateTime, UpdateDate TDateTime
              , MovementPromo TVarChar, PricePromo TFloat
              , isBarCode Boolean
+             , InfoMoneyCode Integer, InfoMoneyGroupName TVarChar, InfoMoneyDestinationName TVarChar, InfoMoneyName TVarChar, InfoMoneyName_all TVarChar
              , isErased Boolean
               )
 AS
@@ -121,6 +122,12 @@ BEGIN
            , tmpMIPromo.PricePromo :: TFloat AS PricePromo
 
            , tmpMI.isBarCode
+
+           , Object_InfoMoney_View.InfoMoneyCode
+           , Object_InfoMoney_View.InfoMoneyGroupName
+           , Object_InfoMoney_View.InfoMoneyDestinationName
+           , Object_InfoMoney_View.InfoMoneyName
+           , Object_InfoMoney_View.InfoMoneyName_all
 
            , tmpMI.isErased
 
@@ -422,6 +429,11 @@ BEGIN
                                 AND tmpMIPromo.GoodsId          = Object_Goods.Id
                                 AND (tmpMIPromo.GoodsKindId     = Object_GoodsKind.Id
                                   OR tmpMIPromo.GoodsKindId     = 0)
+
+            LEFT JOIN ObjectLink AS ObjectLink_Goods_InfoMoney
+                                 ON ObjectLink_Goods_InfoMoney.ObjectId = Object_Goods.Id 
+                                AND ObjectLink_Goods_InfoMoney.DescId = zc_ObjectLink_Goods_InfoMoney()
+            LEFT JOIN Object_InfoMoney_View ON Object_InfoMoney_View.InfoMoneyId = ObjectLink_Goods_InfoMoney.ChildObjectId
 
      ;
 

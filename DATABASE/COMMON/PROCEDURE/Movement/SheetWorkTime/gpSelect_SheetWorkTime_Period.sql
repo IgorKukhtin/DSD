@@ -58,22 +58,18 @@ BEGIN
      vbEndDate := date_trunc ('MONTH', inEndDate);        -- последнее число мес€ца
  
      RETURN QUERY 
-       WITH tmpList AS (SELECT DISTINCT ObjectLink.ObjectId AS UnitId
-                        FROM ObjectLink
-                             LEFT JOIN ObjectLink AS ObjectLink_Personal_Member
-                                                  ON ObjectLink_Personal_Member.ObjectId = ObjectLink.ChildObjectId
-                                                 AND ObjectLink_Personal_Member.DescId = zc_ObjectLink_Personal_Member()
-                        WHERE ObjectLink.DescId = zc_ObjectLink_Unit_PersonalSheetWorkTime()
-                          AND (ObjectLink_Personal_Member.ChildObjectId = vbMemberId OR vbMemberId = 0)
+       WITH tmpList AS (SELECT DISTINCT  Object_Personal_View.UnitId 
+                        FROM Object_Personal_View
+                        WHERE (Object_Personal_View.MemberId = vbMemberId OR vbMemberId = 0)
                        )
        SELECT
              Period.OperDate::TDateTime
            , Object_Unit.Id           AS UnitId
            , Object_Unit.ValueData    AS UnitName
        FROM (SELECT generate_series(vbStartDate, vbEndDate, '1 MONTH'::interval) OperDate) AS Period
-          , (SELECT DISTINCT ChildObjectId AS UnitId FROM ObjectLink WHERE DescId = zc_ObjectLink_StaffList_Unit() AND ChildObjectId > 0 AND vbMemberId = 0
+          , (/*SELECT DISTINCT ChildObjectId AS UnitId FROM ObjectLink WHERE DescId = zc_ObjectLink_StaffList_Unit() AND ChildObjectId > 0 AND vbMemberId = 0
             UNION
-             SELECT tmpList.UnitId FROM tmpList
+             */SELECT tmpList.UnitId FROM tmpList
             UNION
              SELECT DISTINCT MovementLinkObject_Unit.ObjectId AS UnitId
              FROM Movement

@@ -1,19 +1,27 @@
 -- Function: gpUpdate_Object_Retail_PrintKindItem()
 
 DROP FUNCTION IF EXISTS gpUpdate_Object_Retail_PrintKindItem (Integer, Boolean, boolean, boolean, boolean, boolean, boolean, boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpUpdate_Object_Retail_PrintKindItem (Integer, Boolean, boolean, boolean, boolean, boolean, boolean, boolean, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpUpdate_Object_Retail_PrintKindItem(
  INOUT ioId                  Integer   ,  -- ключ объекта <Торговая сеть> 
-    IN inisMovement          boolean   , 
-    IN inisAccount           boolean   ,
-    IN inisTransport         boolean   , 
-    IN inisQuality           boolean   , 
-    IN inisPack              boolean   , 
-    IN inisSpec              boolean   , 
-    IN inisTax               boolean   ,
-    IN inSession             TVarChar     -- сессия пользователя
+    INOUT ioisMovement          boolean   , 
+    INOUT ioisAccount           boolean   ,
+    INOUT ioisTransport         boolean   , 
+    INOUT ioisQuality           boolean   , 
+    INOUT ioisPack              boolean   , 
+    INOUT ioisSpec              boolean   , 
+    INOUT ioisTax               boolean   ,
+    INOUT ioCountMovement       TFloat    ,  -- Накладная
+    INOUT ioCountAccount        TFloat    ,  -- Счет
+    INOUT ioCountTransport      TFloat    ,  -- ТТН
+    INOUT ioCountQuality        TFloat    ,  -- Качественное
+    INOUT ioCountPack           TFloat    ,  -- Упаковочный
+    INOUT ioCountSpec           TFloat    ,  -- Спецификация
+    INOUT ioCountTax            TFloat    ,  -- Налоговая
+       IN inSession             TVarChar     -- сессия пользователя
 )
-  RETURNS Integer AS
+  RETURNS RECORD AS
 $BODY$
    DECLARE vbUserId Integer;
 BEGIN
@@ -21,16 +29,35 @@ BEGIN
    vbUserId := lpCheckRight(inSession, zc_Enum_Process_Update_Object_Retail_PrintKindItem());
 
     -- сохранили <Объект>
-   ioId := lpInsertUpdate_Object_Retail_PrintKindItem (ioId	      := ioId
-                                                     , inisMovement   := inisMovement
-                                                     , inisAccount    := inisAccount
-                                                     , inisTransport  := inisTransport
-                                                     , inisQuality    := inisQuality
-                                                     , inisPack       := inisPack
-                                                     , inisSpec       := inisSpec
-                                                     , inisTax        := inisTax
-                                                     , inUserId       := vbUserId
+   ioId := lpInsertUpdate_Object_Retail_PrintKindItem (ioId	         := ioId
+                                                     , inisMovement      := ioisMovement
+                                                     , inisAccount       := ioisAccount
+                                                     , inisTransport     := ioisTransport
+                                                     , inisQuality       := ioisQuality
+                                                     , inisPack          := ioisPack
+                                                     , inisSpec          := ioisSpec
+                                                     , inisTax           := ioisTax
+                                                     , inCountMovement   := ioCountMovement
+                                                     , inCountAccount    := ioCountAccount
+                                                     , inCountTransport  := ioCountTransport
+                                                     , inCountQuality    := ioCountQuality
+                                                     , inCountPack       := ioCountPack
+                                                     , inCountSpec       := ioCountSpec
+                                                     , inCountTax        := ioCountTax
+                                                     , inUserId          := vbUserId
                                                       );
+
+     -- возвращаем параметры
+     SELECT tmp.isMovement, tmp.isAccount, tmp.isTransport
+          , tmp.isQuality, tmp.isPack, tmp.isSpec, tmp.isTax
+          , tmp.CountMovement, tmp.CountAccount, tmp.CountTransport
+          , tmp.CountQuality, tmp.CountPack, tmp.CountSpec, tmp.CountTax
+    INTO ioisMovement, ioisAccount, ioisTransport, ioisQuality, ioisPack, ioisSpec, ioisTax
+       , ioCountMovement,ioCountAccount, ioCountTransport, ioCountQuality, ioCountPack, ioCountSpec, ioCountTax 
+    FROM ObjectLink
+       INNER JOIN lpSelect_Object_PrintKindItem() AS tmp ON tmp.Id = ObjectLink.ChildObjectId
+    WHERE ObjectLink.DescId = zc_ObjectLink_Retail_PrintKindItem()
+    and ObjectLink.ObjectId = ioId;
 
    -- сохранили протокол
    PERFORM lpInsert_ObjectProtocol (ioId, vbUserId);
@@ -43,6 +70,7 @@ END;$BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 19.01.16         *
  21.05.15         *
 */
 

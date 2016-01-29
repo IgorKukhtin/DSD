@@ -20,9 +20,27 @@ RETURNS TABLE (Id Integer, InvNumber Integer, OperDate TDateTime, InvNumberMaste
              , BranchCode Integer, BranchName TVarChar
              , GoodsCode Integer, GoodsName TVarChar
              , FuelCode Integer, FuelName TVarChar
-             , StartOdometre TFloat, EndOdometre TFloat, AmountFuel TFloat
-             , Reparation TFloat, LimitMoney TFloat, LimitFuel TFloat
-             , LimitChange TFloat, LimitFuelChange TFloat, Distance TFloat
+             , StartOdometre TFloat, EndOdometre TFloat
+             , AmountFuel TFloat    -- норма авто
+             , Reparation TFloat    -- амортизация за 1 км., грн.
+             , Distance   TFloat    -- ***Пробег факт км
+             , LimitMoney    TFloat, LimitMoneyChange    TFloat -- лимит грн
+             , LimitDistance TFloat, LimitDistanceChange TFloat -- лимит км
+
+             , DistanceReal   TFloat -- *Пробег общий км
+             , FuelCalc       TFloat -- *Кол-во л. (расч. на пробег ф.)
+             , FuelRealCalc   TFloat -- *Кол-во л. (использовано)
+
+             , FuelDiff       TFloat -- *Кол-во л. (остаток лим. км.)
+             , FuelSummDiff   TFloat -- *Сумма грн (остаток лим. км.)
+             , SummDiff       TFloat -- *Сумма грн (остаток лим. грн)
+             , SummDiffTotal  TFloat -- *Сумма грн (остаток ИТОГО)
+             , SummReparation TFloat -- *Сумма грн (амортизация)
+             , SummPersonal   TFloat -- *Сумма грн (ЗП итог)
+
+             , FuelReal       TFloat -- Кол-во л. (заправка)
+             , PriceCalc      TFloat -- Цена заправки
+             , SummReal       TFloat -- Сумма заправки
               )
 AS
 $BODY$
@@ -86,13 +104,92 @@ BEGIN
 
            , MovementFloat_StartOdometre.ValueData       AS StartOdometre
            , MovementFloat_EndOdometre.ValueData         AS EndOdometre
-           , MovementFloat_AmountFuel.ValueData          AS AmountFuel
-           , MovementFloat_Reparation.ValueData          AS Reparation
-           , MovementFloat_Limit.ValueData               AS LimitMoney
-           , MovementFloat_LimitFuel.ValueData           AS LimitFuel
-           , MovementFloat_LimitChange.ValueData         AS LimitChange
-           , MovementFloat_LimitFuelChange.ValueData     AS LimitFuelChange
-           , MovementFloat_Distance.ValueData            AS Distance
+           , MovementFloat_AmountFuel.ValueData          AS AmountFuel     -- норма авто
+           , MovementFloat_Reparation.ValueData          AS Reparation     -- амортизация за 1 км., грн.
+           , MovementFloat_Distance.ValueData            AS Distance       -- ***Пробег факт км
+
+           , MovementFloat_Limit.ValueData               AS LimitMoney            -- лимит грн
+           , MovementFloat_LimitChange.ValueData         AS LimitMoneyChange      -- лимит грн
+           , MovementFloat_LimitDistance.ValueData       AS LimitDistance         -- лимит км
+           , MovementFloat_LimitDistanceChange.ValueData AS LimitDistanceChange   -- лимит км
+
+           , (COALESCE (MovementFloat_EndOdometre.ValueData , 0) - COALESCE (MovementFloat_StartOdometre.ValueData , 0)) :: TFloat AS DistanceReal -- *Пробег общий км
+           , (MovementFloat_Distance.ValueData * COALESCE (MovementFloat_AmountFuel.ValueData, 0) / 100)                 :: TFloat AS FuelCalc     -- *Кол-во л. (расч. на пробег ф.)
+           , CASE WHEN COALESCE (MovementFloat_LimitDistance.ValueData, 0) = 0 AND COALESCE (MovementFloat_LimitDistanceChange.ValueData, 0)  = 0
+                       THEN 0
+                  WHEN COALESCE (MovementFloat_LimitDistance.ValueData, 0) + COALESCE (MovementFloat_LimitDistanceChange.ValueData, 0) < COALESCE (MovementFloat_Distance.ValueData, 0)
+                       THEN (COALESCE (MovementFloat_LimitDistance.ValueData, 0) + COALESCE (MovementFloat_LimitDistanceChange.ValueData, 0)) * COALESCE (MovementFloat_AmountFuel.ValueData, 0) / 100
+                  ELSE COALESCE (MovementFloat_Distance.ValueData, 0) * COALESCE (MovementFloat_AmountFuel.ValueData, 0) / 100
+             END :: TFloat AS FuelRealCalc -- *Кол-во л. (использовано)
+           , (CASE WHEN COALESCE (MovementFloat_LimitDistance.ValueData, 0) = 0 AND COALESCE (MovementFloat_LimitDistanceChange.ValueData, 0)  = 0
+                       THEN 0
+                  WHEN COALESCE (MovementFloat_LimitDistance.ValueData, 0) + COALESCE (MovementFloat_LimitDistanceChange.ValueData, 0) < COALESCE (MovementFloat_Distance.ValueData, 0)
+                       THEN COALESCE (MovementItem.Amount, 0) - (COALESCE (MovementFloat_LimitDistance.ValueData, 0) + COALESCE (MovementFloat_LimitDistanceChange.ValueData, 0)) * COALESCE (MovementFloat_AmountFuel.ValueData, 0) / 100
+                  ELSE COALESCE (MovementItem.Amount, 0) - COALESCE (MovementFloat_Distance.ValueData, 0) * COALESCE (MovementFloat_AmountFuel.ValueData, 0) / 100
+             END) :: TFloat AS FuelDiff -- *Кол-во л. (остаток лим. км.)
+           , (CASE WHEN COALESCE (MovementFloat_LimitDistance.ValueData, 0) = 0 AND COALESCE (MovementFloat_LimitDistanceChange.ValueData, 0)  = 0
+                       THEN 0
+                  WHEN COALESCE (MovementFloat_LimitDistance.ValueData, 0) + COALESCE (MovementFloat_LimitDistanceChange.ValueData, 0) < COALESCE (MovementFloat_Distance.ValueData, 0)
+                       THEN COALESCE (MovementItem.Amount, 0) - (COALESCE (MovementFloat_LimitDistance.ValueData, 0) + COALESCE (MovementFloat_LimitDistanceChange.ValueData, 0)) * COALESCE (MovementFloat_AmountFuel.ValueData, 0) / 100
+                  ELSE COALESCE (MovementItem.Amount, 0) - COALESCE (MovementFloat_Distance.ValueData, 0) * COALESCE (MovementFloat_AmountFuel.ValueData, 0) / 100
+             END
+           * CASE WHEN MovementFloat_TotalCount.ValueData <> 0 THEN COALESCE (MovementFloat_TotalSumm.ValueData, 0) / MovementFloat_TotalCount.ValueData ELSE 0 END
+             ) :: TFloat AS FuelSummDiff -- *Сумма грн (остаток лим. км.)
+
+           , (CASE WHEN COALESCE (MovementFloat_Limit.ValueData, 0) + COALESCE (MovementFloat_LimitChange.ValueData, 0) < COALESCE (MovementFloat_TotalSumm.ValueData, 0)
+                   AND (MovementFloat_Limit.ValueData <> 0 OR MovementFloat_LimitChange.ValueData <> 0)
+                       THEN COALESCE (MovementFloat_TotalSumm.ValueData, 0) - COALESCE (MovementFloat_Limit.ValueData, 0) - COALESCE (MovementFloat_LimitChange.ValueData, 0)
+                  ELSE 0
+             END) :: TFloat AS SummDiff -- *Сумма грн (остаток лим. грн)
+
+           , (CASE WHEN COALESCE (MovementFloat_LimitDistance.ValueData, 0) = 0 AND COALESCE (MovementFloat_LimitDistanceChange.ValueData, 0)  = 0
+                       THEN 0
+                  WHEN COALESCE (MovementFloat_LimitDistance.ValueData, 0) + COALESCE (MovementFloat_LimitDistanceChange.ValueData, 0) < COALESCE (MovementFloat_Distance.ValueData, 0)
+                       THEN COALESCE (MovementItem.Amount, 0) - (COALESCE (MovementFloat_LimitDistance.ValueData, 0) + COALESCE (MovementFloat_LimitDistanceChange.ValueData, 0)) * COALESCE (MovementFloat_AmountFuel.ValueData, 0) / 100
+                  ELSE COALESCE (MovementItem.Amount, 0) - COALESCE (MovementFloat_Distance.ValueData, 0) * COALESCE (MovementFloat_AmountFuel.ValueData, 0) / 100
+             END
+           * CASE WHEN MovementFloat_TotalCount.ValueData <> 0 THEN COALESCE (MovementFloat_TotalSumm.ValueData, 0) / MovementFloat_TotalCount.ValueData ELSE 0 END
+           + CASE WHEN COALESCE (MovementFloat_Limit.ValueData, 0) + COALESCE (MovementFloat_LimitChange.ValueData, 0) < COALESCE (MovementFloat_TotalSumm.ValueData, 0)
+                   AND (MovementFloat_Limit.ValueData <> 0 OR MovementFloat_LimitChange.ValueData <> 0)
+                       THEN COALESCE (MovementFloat_TotalSumm.ValueData, 0) - COALESCE (MovementFloat_Limit.ValueData, 0) - COALESCE (MovementFloat_LimitChange.ValueData, 0)
+                  ELSE 0
+             END) :: TFloat AS SummDiffTotal -- *Сумма грн (остаток ИТОГО)
+
+           , (CASE WHEN COALESCE (MovementFloat_LimitDistance.ValueData, 0) = 0 AND COALESCE (MovementFloat_LimitDistanceChange.ValueData, 0)  = 0
+                       THEN 0
+                  WHEN COALESCE (MovementFloat_LimitDistance.ValueData, 0) + COALESCE (MovementFloat_LimitDistanceChange.ValueData, 0) < COALESCE (MovementFloat_Distance.ValueData, 0)
+                       THEN (COALESCE (MovementFloat_LimitDistance.ValueData, 0) + COALESCE (MovementFloat_LimitDistanceChange.ValueData, 0))
+                  ELSE COALESCE (MovementFloat_Distance.ValueData, 0)
+             END * COALESCE (MovementFloat_Reparation.ValueData, 0)) :: TFloat AS SummReparation -- *Сумма грн (амортизация)
+
+           , ((CASE WHEN COALESCE (MovementFloat_LimitDistance.ValueData, 0) = 0 AND COALESCE (MovementFloat_LimitDistanceChange.ValueData, 0)  = 0
+                       THEN 0
+                  WHEN COALESCE (MovementFloat_LimitDistance.ValueData, 0) + COALESCE (MovementFloat_LimitDistanceChange.ValueData, 0) < COALESCE (MovementFloat_Distance.ValueData, 0)
+                       THEN COALESCE (MovementItem.Amount, 0) - (COALESCE (MovementFloat_LimitDistance.ValueData, 0) + COALESCE (MovementFloat_LimitDistanceChange.ValueData, 0)) * COALESCE (MovementFloat_AmountFuel.ValueData, 0) / 100
+                  ELSE COALESCE (MovementItem.Amount, 0) - COALESCE (MovementFloat_Distance.ValueData, 0) * COALESCE (MovementFloat_AmountFuel.ValueData, 0) / 100
+             END
+           * CASE WHEN MovementFloat_TotalCount.ValueData <> 0 THEN COALESCE (MovementFloat_TotalSumm.ValueData, 0) / MovementFloat_TotalCount.ValueData ELSE 0 END
+           + CASE WHEN COALESCE (MovementFloat_Limit.ValueData, 0) + COALESCE (MovementFloat_LimitChange.ValueData, 0) < COALESCE (MovementFloat_TotalSumm.ValueData, 0)
+                   AND (MovementFloat_Limit.ValueData <> 0 OR MovementFloat_LimitChange.ValueData <> 0)
+                       THEN COALESCE (MovementFloat_TotalSumm.ValueData, 0) - COALESCE (MovementFloat_Limit.ValueData, 0) - COALESCE (MovementFloat_LimitChange.ValueData, 0)
+                  ELSE 0
+             END
+           - CASE WHEN COALESCE (MovementFloat_LimitDistance.ValueData, 0) = 0 AND COALESCE (MovementFloat_LimitDistanceChange.ValueData, 0)  = 0
+                       THEN 0
+                  WHEN COALESCE (MovementFloat_LimitDistance.ValueData, 0) + COALESCE (MovementFloat_LimitDistanceChange.ValueData, 0) < COALESCE (MovementFloat_Distance.ValueData, 0)
+                       THEN (COALESCE (MovementFloat_LimitDistance.ValueData, 0) + COALESCE (MovementFloat_LimitDistanceChange.ValueData, 0))
+                  ELSE COALESCE (MovementFloat_Distance.ValueData, 0)
+             END * COALESCE (MovementFloat_Reparation.ValueData, 0)
+           + CASE WHEN MovementFloat_LimitDistance.ValueData <> 0 OR MovementFloat_LimitDistanceChange.ValueData <> 0
+                    OR MovementFloat_Limit.ValueData <> 0 OR MovementFloat_LimitChange.ValueData <> 0
+                       THEN 0
+                  ELSE COALESCE (MovementFloat_TotalSumm.ValueData, 0)
+             END
+             ) * -1) :: TFloat AS SummPersonal -- *Сумма грн (ЗП итог)
+
+           , COALESCE (MovementItem.Amount, 0) :: TFloat AS FuelReal -- Кол-во л. (заправка)
+           , CASE WHEN MovementFloat_TotalCount.ValueData <> 0 THEN COALESCE (MovementFloat_TotalSumm.ValueData, 0) / MovementFloat_TotalCount.ValueData ELSE 0 END :: TFloat AS PriceCalc -- Цена заправки
+           , MovementFloat_TotalSumm.ValueData AS SummReal -- Сумма заправки
 
        FROM Movement
             -- JOIN (SELECT AccessKeyId FROM Object_RoleAccessKey_View WHERE UserId = vbUserId GROUP BY AccessKeyId) AS tmpRoleAccessKey ON tmpRoleAccessKey.AccessKeyId = Movement.AccessKeyId
@@ -155,15 +252,15 @@ BEGIN
             LEFT JOIN MovementFloat AS MovementFloat_Limit
                                     ON MovementFloat_Limit.MovementId =  Movement.Id
                                    AND MovementFloat_Limit.DescId = zc_MovementFloat_Limit()
-            LEFT JOIN MovementFloat AS MovementFloat_LimitFuel
-                                    ON MovementFloat_LimitFuel.MovementId =  Movement.Id
-                                   AND MovementFloat_LimitFuel.DescId = zc_MovementFloat_LimitFuel()
             LEFT JOIN MovementFloat AS MovementFloat_LimitChange
                                     ON MovementFloat_LimitChange.MovementId =  Movement.Id
                                    AND MovementFloat_LimitChange.DescId = zc_MovementFloat_LimitChange()
-            LEFT JOIN MovementFloat AS MovementFloat_LimitFuelChange
-                                    ON MovementFloat_LimitFuelChange.MovementId =  Movement.Id
-                                   AND MovementFloat_LimitFuelChange.DescId = zc_MovementFloat_LimitFuelChange()
+            LEFT JOIN MovementFloat AS MovementFloat_LimitDistance
+                                    ON MovementFloat_LimitDistance.MovementId =  Movement.Id
+                                   AND MovementFloat_LimitDistance.DescId = zc_MovementFloat_LimitDistance()
+            LEFT JOIN MovementFloat AS MovementFloat_LimitDistanceChange
+                                    ON MovementFloat_LimitDistanceChange.MovementId =  Movement.Id
+                                   AND MovementFloat_LimitDistanceChange.DescId = zc_MovementFloat_LimitDistanceChange()
             LEFT JOIN MovementFloat AS MovementFloat_Distance
                                     ON MovementFloat_Distance.MovementId =  Movement.Id
                                    AND MovementFloat_Distance.DescId = zc_MovementFloat_Distance()
@@ -205,7 +302,7 @@ BEGIN
        WHERE Movement.DescId = zc_Movement_Income()
          AND Movement.OperDate BETWEEN inStartDate AND inEndDate
          -- AND View_InfoMoney.InfoMoneyId = zc_Enum_InfoMoney_20401() -- !!!САМОЕ НЕКРАСИВОЕ РЕШЕНИЕ!!!
-         AND COALESCE (Object_To.DescId, 0) IN (0, zc_Object_Car(), zc_Object_Member()) -- !!!САМОЕ НЕКРАСИВОЕ РЕШЕНИЕ!!!
+         AND COALESCE (Object_To.DescId, 0) IN (0, zc_Object_Car(), zc_Object_Member(), zc_Object_Founder()) -- !!!САМОЕ НЕКРАСИВОЕ РЕШЕНИЕ!!!
       ;
   
 END;

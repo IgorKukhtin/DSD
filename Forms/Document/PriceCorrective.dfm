@@ -3,7 +3,7 @@ inherited PriceCorrectiveForm: TPriceCorrectiveForm
   ClientHeight = 542
   ClientWidth = 1042
   ExplicitWidth = 1058
-  ExplicitHeight = 580
+  ExplicitHeight = 577
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -834,7 +834,7 @@ inherited PriceCorrectiveForm: TPriceCorrectiveForm
         end
         item
           Name = 'OperDate_Tax'
-          Value = Null
+          Value = 'NULL'
           Component = TaxCorrectiveCDS
           ComponentItem = 'OperDate_Child'
           DataType = ftDateTime
@@ -895,13 +895,53 @@ inherited PriceCorrectiveForm: TPriceCorrectiveForm
         end>
       isShowModal = True
     end
-    object actOpenTaxCorrective: TdsdOpenForm [17]
+    object actOpenTax: TdsdOpenForm [17]
       Category = 'DSDLib'
       TabSheet = cxTabSheetTaxCorrective
       MoveParams = <>
       Enabled = False
-      Caption = #1055#1088#1086#1089#1084#1086#1090#1088' <'#1044#1086#1082#1091#1084#1077#1085#1090#1072' '#1082#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1082#1080'>'
-      Hint = #1055#1088#1086#1089#1084#1086#1090#1088' <'#1044#1086#1082#1091#1084#1077#1085#1090#1072' '#1082#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1082#1080'>'
+      Caption = #1055#1088#1086#1089#1084#1086#1090#1088' <'#1053#1072#1083#1086#1075#1086#1074#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103'>'
+      Hint = #1055#1088#1086#1089#1084#1086#1090#1088' <'#1053#1072#1083#1086#1075#1086#1074#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103'>'
+      ImageIndex = 26
+      FormName = 'TTaxForm'
+      FormNameParam.Value = 'TTaxForm'
+      FormNameParam.DataType = ftString
+      GuiParams = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = TaxCorrectiveCDS
+          ComponentItem = 'DocumentChildId'
+          ParamType = ptInput
+        end
+        item
+          Name = 'inmask'
+          Value = 'False'
+          DataType = ftBoolean
+          ParamType = ptInput
+        end
+        item
+          Name = 'ShowAll'
+          Value = 'False'
+          DataType = ftBoolean
+        end
+        item
+          Name = 'inOperDate'
+          Value = 'NULL'
+          Component = TaxCorrectiveCDS
+          ComponentItem = 'OperDate_Child'
+          DataType = ftDateTime
+          ParamType = ptInput
+        end>
+      isShowModal = False
+    end
+    object actOpenTaxCorrective: TdsdOpenForm [18]
+      Category = 'DSDLib'
+      TabSheet = cxTabSheetTaxCorrective
+      MoveParams = <>
+      Enabled = False
+      Caption = #1055#1088#1086#1089#1084#1086#1090#1088' <'#1050#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1082#1072' '#1082' '#1085#1072#1083#1086#1075#1086#1074#1086#1081'>'
+      Hint = #1055#1088#1086#1089#1084#1086#1090#1088' <'#1050#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1082#1072' '#1082' '#1085#1072#1083#1086#1075#1086#1074#1086#1081'>'
       ImageIndex = 1
       FormName = 'TTaxCorrectiveForm'
       FormNameParam.Value = 'TTaxCorrectiveForm'
@@ -922,7 +962,7 @@ inherited PriceCorrectiveForm: TPriceCorrectiveForm
         end
         item
           Name = 'inOperDate'
-          Value = Null
+          Value = 'NULL'
           Component = TaxCorrectiveCDS
           ComponentItem = 'OperDate'
           DataType = ftDateTime
@@ -1275,6 +1315,10 @@ inherited PriceCorrectiveForm: TPriceCorrectiveForm
         end
         item
           Visible = True
+          ItemName = 'bbOpenTax'
+        end
+        item
+          Visible = True
           ItemName = 'bbOpenTaxCorrective'
         end
         item
@@ -1369,6 +1413,10 @@ inherited PriceCorrectiveForm: TPriceCorrectiveForm
       Action = mactPrintReturnIn
       Category = 0
     end
+    object bbOpenTax: TdxBarButton
+      Action = actOpenTax
+      Category = 0
+    end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
     SummaryItemList = <
@@ -1460,7 +1508,7 @@ inherited PriceCorrectiveForm: TPriceCorrectiveForm
       end
       item
         Name = 'inOperDate'
-        Value = Null
+        Value = 'NULL'
         Component = FormParams
         ComponentItem = 'inOperDate'
         DataType = ftDateTime

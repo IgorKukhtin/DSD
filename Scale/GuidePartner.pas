@@ -56,6 +56,13 @@ type
     isTax: TcxGridDBColumn;
     bb: TSpeedButton;
     ItemName: TcxGridDBColumn;
+    CountMovement: TcxGridDBColumn;
+    CountAccount: TcxGridDBColumn;
+    CountTransport: TcxGridDBColumn;
+    CountQuality: TcxGridDBColumn;
+    CountPack: TcxGridDBColumn;
+    CountSpec: TcxGridDBColumn;
+    CountTax: TcxGridDBColumn;
     procedure FormCreate(Sender: TObject);
     procedure EditPartnerNameEnter(Sender: TObject);
     procedure FormKeyDown(Sender: TObject; var Key: Word;
@@ -187,6 +194,9 @@ begin
          if cxDBGridDBTableView.Columns[cxDBGridDBTableView.GetColumnByFieldName('isMovement').Index].Focused = TRUE then
          begin
             Edit;
+            if FieldByName('isMovement').AsBoolean = true
+            then FieldByName('CountMovement').AsInteger:= 0
+            else FieldByName('CountMovement').AsInteger:= 1;
             FieldByName('isMovement').AsBoolean:=not FieldByName('isMovement').AsBoolean;
             Post;
          end
@@ -194,6 +204,9 @@ begin
          if cxDBGridDBTableView.Columns[cxDBGridDBTableView.GetColumnByFieldName('isAccount').Index].Focused = TRUE then
          begin
             Edit;
+            if FieldByName('isAccount').AsBoolean = true
+            then FieldByName('CountAccount').AsInteger:= 0
+            else FieldByName('CountAccount').AsInteger:= 1;
             FieldByName('isAccount').AsBoolean:=not FieldByName('isAccount').AsBoolean;
             Post;
          end
@@ -201,6 +214,9 @@ begin
          if cxDBGridDBTableView.Columns[cxDBGridDBTableView.GetColumnByFieldName('isTransport').Index].Focused = TRUE then
          begin
             Edit;
+            if FieldByName('isTransport').AsBoolean = true
+            then FieldByName('CountTransport').AsInteger:= 0
+            else FieldByName('CountTransport').AsInteger:= 1;
             FieldByName('isTransport').AsBoolean:=not FieldByName('isTransport').AsBoolean;
             Post;
          end
@@ -208,6 +224,9 @@ begin
          if cxDBGridDBTableView.Columns[cxDBGridDBTableView.GetColumnByFieldName('isQuality').Index].Focused = TRUE then
          begin
             Edit;
+            if FieldByName('isQuality').AsBoolean = true
+            then FieldByName('CountQuality').AsInteger:= 0
+            else FieldByName('CountQuality').AsInteger:= 1;
             FieldByName('isQuality').AsBoolean:=not FieldByName('isQuality').AsBoolean;
             Post;
          end
@@ -215,6 +234,9 @@ begin
          if cxDBGridDBTableView.Columns[cxDBGridDBTableView.GetColumnByFieldName('isPack').Index].Focused = TRUE then
          begin
             Edit;
+            if FieldByName('isPack').AsBoolean = true
+            then FieldByName('CountPack').AsInteger:= 0
+            else FieldByName('CountPack').AsInteger:= 1;
             FieldByName('isPack').AsBoolean:=not FieldByName('isPack').AsBoolean;
             Post;
          end
@@ -222,6 +244,9 @@ begin
          if cxDBGridDBTableView.Columns[cxDBGridDBTableView.GetColumnByFieldName('isSpec').Index].Focused = TRUE then
          begin
             Edit;
+            if FieldByName('isSpec').AsBoolean = true
+            then FieldByName('CountSpec').AsInteger:= 0
+            else FieldByName('CountSpec').AsInteger:= 1;
             FieldByName('isSpec').AsBoolean:=not FieldByName('isSpec').AsBoolean;
             Post;
          end
@@ -229,6 +254,9 @@ begin
          if cxDBGridDBTableView.Columns[cxDBGridDBTableView.GetColumnByFieldName('isTax').Index].Focused = TRUE then
          begin
             Edit;
+            if FieldByName('isTax').AsBoolean = true
+            then FieldByName('CountTax').AsInteger:= 0
+            else FieldByName('CountTax').AsInteger:= 1;
             FieldByName('isTax').AsBoolean:=not FieldByName('isTax').AsBoolean;
             Post;
          end
@@ -244,7 +272,14 @@ begin
                                                      ,FieldByName('isQuality').AsBoolean
                                                      ,FieldByName('isPack').AsBoolean
                                                      ,FieldByName('isSpec').AsBoolean
-                                                     ,FieldByName('isTax').AsBoolean);
+                                                     ,FieldByName('isTax').AsBoolean
+                                                     ,FieldByName('CountMovement').AsInteger
+                                                     ,FieldByName('CountAccount').AsInteger
+                                                     ,FieldByName('CountTransport').AsInteger
+                                                     ,FieldByName('CountQuality').AsInteger
+                                                     ,FieldByName('CountPack').AsInteger
+                                                     ,FieldByName('CountSpec').AsInteger
+                                                     ,FieldByName('CountTax').AsInteger);
      end;
 end;
 {------------------------------------------------------------------------------}
@@ -289,6 +324,14 @@ begin
                ParamByName('isPack').asBoolean:= CDS.FieldByName('isPack').asBoolean;
                ParamByName('isSpec').asBoolean:= CDS.FieldByName('isSpec').asBoolean;
                ParamByName('isTax').asBoolean:= CDS.FieldByName('isTax').asBoolean;
+
+               ParamByName('CountMovement').asInteger:= CDS.FieldByName('CountMovement').asInteger;
+               ParamByName('CountAccount').asInteger:= CDS.FieldByName('CountAccount').asInteger;
+               ParamByName('CountTransport').asInteger:= CDS.FieldByName('CountTransport').asInteger;
+               ParamByName('CountQuality').asInteger:= CDS.FieldByName('CountQuality').asInteger;
+               ParamByName('CountPack').asInteger:= CDS.FieldByName('CountPack').asInteger;
+               ParamByName('CountSpec').asInteger:= CDS.FieldByName('CountSpec').asInteger;
+               ParamByName('CountTax').asInteger:= CDS.FieldByName('CountTax').asInteger;
 
                ParamByName('PaidKindId').AsInteger:= CDS.FieldByName('PaidKindId').asInteger;
                ParamByName('PaidKindName').asString:= CDS.FieldByName('PaidKindName').asString;

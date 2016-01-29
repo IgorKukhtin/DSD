@@ -33,7 +33,7 @@ type
   private
     function Checked: boolean; override;//Проверка корректного ввода в Edit
   public
-    function Execute(MovementDescId:Integer;isMovement, isAccount, isTransport, isQuality, isPack, isSpec, isTax : Boolean): Boolean; virtual;
+    function Execute(MovementDescId:Integer;CountMovement:Integer; isMovement, isAccount, isTransport, isQuality, isPack, isSpec, isTax : Boolean): Boolean; virtual;
   end;
 
 var
@@ -43,7 +43,7 @@ implementation
 {$R *.dfm}
 uses UtilScale;
 {------------------------------------------------------------------------------}
-function TDialogPrintForm.Execute(MovementDescId:Integer;isMovement, isAccount, isTransport, isQuality, isPack, isSpec, isTax : Boolean): Boolean; //Проверка корректного ввода в Edit
+function TDialogPrintForm.Execute(MovementDescId:Integer;CountMovement:Integer; isMovement, isAccount, isTransport, isQuality, isPack, isSpec, isTax : Boolean): Boolean; //Проверка корректного ввода в Edit
 begin
      // для ScaleCeh только одна печать
      if (SettingMain.isCeh = TRUE)or((MovementDescId<>zc_Movement_Sale)and(MovementDescId<>zc_Movement_SendOnPrice))
@@ -65,7 +65,9 @@ begin
      cbPrintTax.Checked:=(isTax) and (cbPrintTax.Enabled);
      //
      cbPrintPreview.Checked:=GetArrayList_Value_byName(Default_Array,'isPrintPreview') = AnsiUpperCase('TRUE');
-     PrintCountEdit.Text:=GetArrayList_Value_byName(Default_Array,'PrintCount');
+     if SettingMain.isCeh = FALSE
+     then PrintCountEdit.Text:=IntToStr(CountMovement)
+     else PrintCountEdit.Text:=GetArrayList_Value_byName(Default_Array,'PrintCount');
      //
      ActiveControl:=PrintCountEdit;
      //
