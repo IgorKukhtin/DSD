@@ -29,8 +29,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , SummReparation TFloat -- *Сумма грн (амортизация)
              , SummPersonal   TFloat -- *Сумма грн (ЗП итог)
 
-
-              )
+             )
 AS
 $BODY$
    DECLARE vbUserId Integer;
@@ -80,7 +79,17 @@ BEGIN
              , CAST (0 AS TFloat)     AS LimitChange
              , CAST (0 AS TFloat)     AS LimitDistanceChange
              , CAST (0 AS TFloat)     AS Distance
-             , CAST (0 AS TFloat)     AS DistanceDiff
+
+             , CAST (0 AS TFloat)     AS DistanceReal
+             , CAST (0 AS TFloat)     AS FuelCalc       
+             , CAST (0 AS TFloat)     AS FuelRealCalc 
+
+             , CAST (0 AS TFloat)     AS FuelDiff      
+             , CAST (0 AS TFloat)     AS FuelSummDiff  
+             , CAST (0 AS TFloat)     AS SummDiff      
+             , CAST (0 AS TFloat)     AS SummDiffTotal 
+             , CAST (0 AS TFloat)     AS SummReparation
+             , CAST (0 AS TFloat)     AS SummPersonal  
 
           FROM lfGet_Object_Status(zc_Enum_Status_UnComplete()) AS Object_Status;
      ELSE
@@ -118,9 +127,9 @@ BEGIN
              , MovementFloat_AmountFuel.ValueData          AS AmountFuel
              , MovementFloat_Reparation.ValueData          AS Reparation
              , MovementFloat_Limit.ValueData               AS LimitMoney
-             , MovementFloat_LimitDistance.ValueData           AS LimitDistance
+             , MovementFloat_LimitDistance.ValueData       AS LimitDistance
              , MovementFloat_LimitChange.ValueData         AS LimitChange
-             , MovementFloat_LimitDistanceChange.ValueData     AS LimitDistanceChange
+             , MovementFloat_LimitDistanceChange.ValueData AS LimitDistanceChange
              , MovementFloat_Distance.ValueData            AS Distance
             -- , COALESCE (MovementFloat_EndOdometre.ValueData - MovementFloat_StartOdometre.ValueData, 0)  ::TFloat    AS DistanceDiff
 

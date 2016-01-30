@@ -125,6 +125,8 @@ type
     clSummDiffTotal: TcxGridDBColumn;
     clSummReparation: TcxGridDBColumn;
     clSummPersonal: TcxGridDBColumn;
+    MovementProtocolOpenForm: TdsdOpenForm;
+    bbProtocol: TdxBarButton;
   private
   public
   end;

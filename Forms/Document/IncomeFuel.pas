@@ -175,6 +175,10 @@ type
     colSummReparation: TcxGridDBColumn;
     colSummPersonal: TcxGridDBColumn;
     actUpdateInfoDs: TdsdUpdateDataSet;
+    MIProtocolOpenForm: TdsdOpenForm;
+    MIChildProtocolOpenForm: TdsdOpenForm;
+    bbMIProtocol: TdxBarButton;
+    bbMIChildProtocol: TdxBarButton;
   private
   public
   end;
