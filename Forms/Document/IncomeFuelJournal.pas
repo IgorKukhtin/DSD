@@ -127,6 +127,8 @@ type
     clSummPersonal: TcxGridDBColumn;
     MovementProtocolOpenForm: TdsdOpenForm;
     bbProtocol: TdxBarButton;
+    actShowErased: TBooleanStoredProcAction;
+    bbShowErased: TdxBarButton;
   private
   public
   end;

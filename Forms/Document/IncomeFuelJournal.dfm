@@ -850,6 +850,10 @@ object IncomeFuelJournalForm: TIncomeFuelJournalForm
         end
         item
           Visible = True
+          ItemName = 'bbShowErased'
+        end
+        item
+          Visible = True
           ItemName = 'bbRefresh'
         end
         item
@@ -931,6 +935,10 @@ object IncomeFuelJournalForm: TIncomeFuelJournalForm
     end
     object bbProtocol: TdxBarButton
       Action = MovementProtocolOpenForm
+      Category = 0
+    end
+    object bbShowErased: TdxBarButton
+      Action = actShowErased
       Category = 0
     end
   end
@@ -1117,6 +1125,25 @@ object IncomeFuelJournalForm: TIncomeFuelJournalForm
         end>
       isShowModal = False
     end
+    object actShowErased: TBooleanStoredProcAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = dsdStoredProc
+      StoredProcList = <
+        item
+          StoredProc = dsdStoredProc
+        end>
+      Caption = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1089#1077
+      Hint = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1089#1077
+      ImageIndex = 64
+      Value = False
+      HintTrue = #1055#1086#1082#1072#1079#1072#1090#1100' '#1085#1077' '#1091#1076#1072#1083#1077#1085#1085#1099#1077
+      HintFalse = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1089#1077
+      CaptionTrue = #1055#1086#1082#1072#1079#1072#1090#1100' '#1085#1077' '#1091#1076#1072#1083#1077#1085#1085#1099#1077
+      CaptionFalse = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1089#1077
+      ImageIndexTrue = 65
+      ImageIndexFalse = 64
+    end
   end
   object dsdStoredProc: TdsdStoredProc
     StoredProcName = 'gpSelect_Movement_IncomeFuel'
@@ -1138,6 +1165,13 @@ object IncomeFuelJournalForm: TIncomeFuelJournalForm
         Value = 41640d
         Component = deEnd
         DataType = ftDateTime
+        ParamType = ptInput
+      end
+      item
+        Name = 'inIsErased'
+        Value = Null
+        Component = actShowErased
+        DataType = ftBoolean
         ParamType = ptInput
       end>
     PackSize = 1
