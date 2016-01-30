@@ -3,7 +3,7 @@ object MainForm: TMainForm
   Top = 0
   Caption = 'MainForm'
   ClientHeight = 399
-  ClientWidth = 830
+  ClientWidth = 884
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -15,13 +15,14 @@ object MainForm: TMainForm
   PixelsPerInch = 96
   TextHeight = 13
   object GuidePanel: TPanel
-    Left = 376
+    Left = 458
     Top = 0
-    Width = 229
+    Width = 195
     Height = 343
     Align = alRight
     BevelOuter = bvNone
     TabOrder = 0
+    ExplicitLeft = 430
     object cbAllGuide: TCheckBox
       Tag = 1
       Left = 15
@@ -191,7 +192,7 @@ object MainForm: TMainForm
   object DBGrid: TDBGrid
     Left = 0
     Top = 0
-    Width = 376
+    Width = 458
     Height = 343
     Align = alClient
     DataSource = DataSource
@@ -203,13 +204,14 @@ object MainForm: TMainForm
     TitleFont.Style = []
   end
   object DocumentPanel: TPanel
-    Left = 605
+    Left = 653
     Top = 0
-    Width = 225
+    Width = 231
     Height = 343
     Align = alRight
     BevelOuter = bvNone
     TabOrder = 2
+    ExplicitLeft = 654
     object Label1: TLabel
       Left = 6
       Top = 24
@@ -246,6 +248,7 @@ object MainForm: TMainForm
       Width = 194
       Height = 17
       Caption = '1. '#1055#1088#1080#1093#1086#1076' '#1086#1090' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072
+      Enabled = False
       Font.Charset = DEFAULT_CHARSET
       Font.Color = clWindowText
       Font.Height = -11
@@ -266,60 +269,93 @@ object MainForm: TMainForm
       TabOrder = 3
       Width = 90
     end
+    object cbCashOperation: TCheckBox
+      Tag = 20
+      Left = 15
+      Top = 125
+      Width = 194
+      Height = 17
+      Caption = '1.1. CashOperation'
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -11
+      Font.Name = 'MS Sans Serif'
+      Font.Style = []
+      ParentFont = False
+      TabOrder = 4
+    end
+    object cbBill: TCheckBox
+      Tag = 20
+      Left = 15
+      Top = 148
+      Width = 194
+      Height = 17
+      Caption = '1.2. Bill'
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -11
+      Font.Name = 'MS Sans Serif'
+      Font.Style = []
+      ParentFont = False
+      TabOrder = 5
+    end
   end
   object ButtonPanel: TPanel
     Left = 0
     Top = 343
-    Width = 830
+    Width = 884
     Height = 56
     Align = alBottom
     BevelOuter = bvNone
     TabOrder = 3
+    ExplicitWidth = 974
     object Gauge: TGauge
       Left = 0
       Top = 0
-      Width = 830
+      Width = 884
       Height = 19
       Align = alTop
       Progress = 50
       ExplicitWidth = 1307
     end
     object OKGuideButton: TButton
-      Left = 56
+      Left = 32
       Top = 25
-      Width = 171
+      Width = 137
       Height = 25
       Caption = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1080
       TabOrder = 0
       OnClick = OKGuideButtonClick
     end
     object StopButton: TButton
-      Left = 489
-      Top = 26
-      Width = 137
+      Left = 350
+      Top = 25
+      Width = 131
       Height = 25
       Caption = #1054#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1079#1072#1075#1088#1091#1079#1082#1091
       TabOrder = 1
+      OnClick = StopButtonClick
     end
     object CloseButton: TButton
-      Left = 654
-      Top = 27
-      Width = 87
+      Left = 505
+      Top = 25
+      Width = 64
       Height = 25
       Caption = #1042#1099#1093#1086#1076
       TabOrder = 2
       OnClick = CloseButtonClick
     end
     object cbSetNull_Id_Postgres: TCheckBox
-      Left = 775
+      Left = 579
       Top = 20
       Width = 292
       Height = 17
       Caption = #1044#1083#1103' '#1087#1077#1088#1074#1086#1075#1086' '#1088#1072#1079#1072' set Sybase.'#1042#1057#1045#1052'.Id_Postgres = null'
+      Enabled = False
       TabOrder = 3
     end
     object cbOnlyOpen: TCheckBox
-      Left = 775
+      Left = 579
       Top = 39
       Width = 292
       Height = 17
@@ -327,18 +363,19 @@ object MainForm: TMainForm
       TabOrder = 4
     end
     object OKDocumentButton: TButton
-      Left = 273
+      Left = 193
       Top = 25
-      Width = 171
+      Width = 136
       Height = 25
       Caption = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090#1099
       TabOrder = 5
+      OnClick = OKDocumentButtonClick
     end
   end
   object DataSource: TDataSource
     DataSet = fromQuery
-    Left = 256
-    Top = 225
+    Left = 144
+    Top = 233
   end
   object fromADOConnection: TADOConnection
     ConnectionString = 
@@ -346,8 +383,8 @@ object MainForm: TMainForm
       'ID=dba;Data Source=CodeDS'
     LoginPrompt = False
     Provider = 'MSDASQL.1'
-    Left = 352
-    Top = 281
+    Left = 344
+    Top = 145
   end
   object fromSqlQuery: TADOQuery
     Connection = fromADOConnection
@@ -361,8 +398,8 @@ object MainForm: TMainForm
     Parameters = <>
     SQL.Strings = (
       'select * from Goods where HasChildren<>-1 order by 1 desc')
-    Left = 304
-    Top = 320
+    Left = 256
+    Top = 224
   end
   object toStoredProc: TdsdStoredProc
     DataSets = <>
@@ -378,5 +415,18 @@ object MainForm: TMainForm
     PackSize = 1
     Left = 72
     Top = 160
+  end
+  object toZConnection: TZConnection
+    ControlsCodePage = cCP_UTF16
+    UTF8StringsAsWideField = True
+    Catalog = 'public'
+    DesignConnection = True
+    HostName = 'localhost'
+    Port = 0
+    User = 'postgres'
+    Password = 'postgres'
+    Protocol = 'postgresql-9'
+    Left = 128
+    Top = 48
   end
 end

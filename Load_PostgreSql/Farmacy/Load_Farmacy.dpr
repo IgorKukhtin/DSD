@@ -50,7 +50,10 @@ uses
   OrderXML in '..\..\SOURCE\EDI\OrderXML.pas',
   OrdrspXML in '..\..\SOURCE\EDI\OrdrspXML.pas',
   InvoiceXML in '..\..\SOURCE\EDI\InvoiceXML.pas',
-  dsdException in '..\SOURCE\dsdException.pas';
+  dsdDataSetDataLink in '..\..\SOURCE\COMPONENT\dsdDataSetDataLink.pas',
+  dsdException in '..\..\SOURCE\dsdException.pas',
+  StatusXML in '..\..\SOURCE\EDI\StatusXML.pas',
+  RecadvXML in '..\..\SOURCE\EDI\RecadvXML.pas';
 
 {$R *.res}
 
