@@ -678,7 +678,7 @@ object IncomeForm: TIncomeForm
     Caption = #1040#1074#1090#1086' '#1079#1072#1087#1086#1083#1085#1077#1085#1080#1077'  <'#1050#1086#1083'-'#1074#1086' '#1091' '#1087#1086#1089#1090'.>'
     Properties.ReadOnly = False
     State = cbsChecked
-    TabOrder = 5
+    TabOrder = 4
     Width = 220
   end
   object cxLabel25: TcxLabel
@@ -1695,6 +1695,14 @@ object IncomeForm: TIncomeForm
         Value = Null
         Component = FormParams
         ComponentItem = 'Id'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inOperDate'
+        Value = 'NULL'
+        Component = FormParams
+        ComponentItem = 'inOperDate'
+        DataType = ftDateTime
         ParamType = ptInput
       end
       item

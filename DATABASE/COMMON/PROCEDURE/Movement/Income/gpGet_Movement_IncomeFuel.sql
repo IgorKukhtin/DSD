@@ -1,9 +1,11 @@
 -- Function: gpGet_Movement_IncomeFuel (Integer, TVarChar)
 
 DROP FUNCTION IF EXISTS gpGet_Movement_IncomeFuel (Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpGet_Movement_IncomeFuel (Integer, TDateTime, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpGet_Movement_IncomeFuel(
     IN inMovementId        Integer  , -- ключ Документа
+    IN inOperDate          TDateTime, -- ключ Документа
     IN inSession           TVarChar   -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode Integer, StatusName TVarChar
@@ -45,16 +47,16 @@ BEGIN
          SELECT
                0 AS Id
              , CAST (NEXTVAL ('Movement_Income_seq') AS TVarChar) AS InvNumber
-             , CAST (CURRENT_DATE AS TDateTime) AS OperDate
+             , inOperDate                       AS OperDate
              , Object_Status.Code               AS StatusCode
              , Object_Status.Name               AS StatusName
 
-             , CAST (CURRENT_DATE AS TDateTime) AS OperDatePartner
-             , CAST ('' AS TVarChar) AS InvNumberPartner
+             , inOperDate             AS OperDatePartner
+             , CAST ('' AS TVarChar)  AS InvNumberPartner
 
              , CAST (TRUE AS Boolean) AS PriceWithVAT
-             , CAST (20 AS TFloat)     AS VATPercent
-             , CAST (0 AS TFloat)      AS ChangePrice
+             , CAST (20 AS TFloat)    AS VATPercent
+             , CAST (0 AS TFloat)     AS ChangePrice
 
              , 0                     AS FromId
              , CAST ('' AS TVarChar) AS FromName
@@ -319,11 +321,12 @@ BEGIN
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpGet_Movement_IncomeFuel (Integer, TVarChar) OWNER TO postgres;
+--ALTER FUNCTION gpGet_Movement_IncomeFuel (Integer, TVarChar) OWNER TO postgres;
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
+ 30.01.16         * 
  15.01.16         * add
  09.02.14                                        * add Object_Contract_InvNumber_View
  31.10.13                                        * add OperDatePartner

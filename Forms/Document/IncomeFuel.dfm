@@ -41,7 +41,7 @@ object IncomeFuelForm: TIncomeFuelForm
     object edOperDate: TcxDateEdit
       Left = 177
       Top = 23
-      EditValue = 42387d
+      EditValue = 42370d
       Properties.SaveTime = False
       Properties.ShowTime = False
       TabOrder = 1
@@ -1946,6 +1946,14 @@ object IncomeFuelForm: TIncomeFuelForm
         ParamType = ptInput
       end
       item
+        Name = 'inOperDate'
+        Value = 'NULL'
+        Component = FormParams
+        ComponentItem = 'inOperDate'
+        DataType = ftDateTime
+        ParamType = ptInput
+      end
+      item
         Name = 'InvNumber'
         Value = ''
         Component = edInvNumber
@@ -2153,7 +2161,7 @@ object IncomeFuelForm: TIncomeFuelForm
       item
         Action = actInsertUpdateMovement
       end>
-    Left = 192
+    Left = 168
     Top = 53
   end
   object GuidesContract: TdsdGuides
@@ -2727,6 +2735,13 @@ object IncomeFuelForm: TIncomeFuelForm
         Component = InfoCDS
         ComponentItem = 'SummPersonal'
         DataType = ftFloat
+      end
+      item
+        Name = 'inOperDate'
+        Value = 42370d
+        Component = edOperDate
+        DataType = ftDateTime
+        ParamType = ptInput
       end>
     PackSize = 1
     Left = 584
