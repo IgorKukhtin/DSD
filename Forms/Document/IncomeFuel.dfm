@@ -899,6 +899,10 @@ object IncomeFuelForm: TIncomeFuelForm
         end
         item
           Visible = True
+          ItemName = 'bbRouteMember'
+        end
+        item
+          Visible = True
           ItemName = 'bbSetErasedChild'
         end
         item
@@ -1014,6 +1018,10 @@ object IncomeFuelForm: TIncomeFuelForm
     end
     object bbMIChildProtocol: TdxBarButton
       Action = MIChildProtocolOpenForm
+      Category = 0
+    end
+    object bbRouteMember: TdxBarButton
+      Action = RouteMemberChoiceForm
       Category = 0
     end
   end
@@ -1295,7 +1303,9 @@ object IncomeFuelForm: TIncomeFuelForm
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
-      Caption = 'RouteMemberForm'
+      Caption = #1056#1077#1076#1072#1082#1090#1080#1088#1086#1074#1072#1090#1100' <'#1052#1072#1088#1096#1088#1091#1090'('#1089#1086#1090#1088#1091#1076#1085#1080#1082#1072')>'
+      Hint = #1056#1077#1076#1072#1082#1090#1080#1088#1086#1074#1072#1090#1100' <'#1052#1072#1088#1096#1088#1091#1090'('#1089#1086#1090#1088#1091#1076#1085#1080#1082#1072')>'
+      ImageIndex = 1
       FormName = 'TRouteMemberForm'
       FormNameParam.Value = 'TRouteMemberForm'
       FormNameParam.DataType = ftString
@@ -1327,7 +1337,6 @@ object IncomeFuelForm: TIncomeFuelForm
       MoveParams = <>
       PostDataSetBeforeExecute = False
       View = cxGridDBTableViewChild
-      Action = RouteMemberChoiceForm
       Params = <>
       Caption = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1052#1072#1088#1096#1088#1091#1090'('#1089#1086#1090#1088#1091#1076#1085#1080#1082#1072')>'
       Hint = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1052#1072#1088#1096#1088#1091#1090'('#1089#1086#1090#1088#1091#1076#1085#1080#1082#1072')>'
