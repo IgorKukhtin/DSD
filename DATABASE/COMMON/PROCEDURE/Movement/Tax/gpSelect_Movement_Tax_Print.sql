@@ -133,7 +133,13 @@ BEGIN
            , Movement.OperDate                          AS OperDate
            , CASE WHEN Movement.OperDate < '01.01.2015' THEN 'J1201006' ELSE 'J1201007' END ::TVarChar AS CHARCODE
            -- , 'Неграш О.В.'::TVarChar                    AS N10
-           , CASE WHEN Object_Personal_View.PersonalName <> '' THEN zfConvert_FIO (Object_Personal_View.PersonalName, 1) ELSE 'Рудик Н.В.' END :: TVarChar AS N10
+           , CASE WHEN Object_PersonalSigning.PersonalName <> '' 
+                  THEN zfConvert_FIO (Object_PersonalSigning.PersonalName, 1)
+                  ELSE CASE WHEN Object_PersonalBookkeeper_View.PersonalName <> '' 
+                            THEN zfConvert_FIO (Object_PersonalBookkeeper_View.PersonalName, 1)
+                            ELSE 'Рудик Н.В.' 
+                       END 
+             END                            :: TVarChar AS N10
            , 'оплата з поточного рахунка'::TVarChar     AS N9
 /*
            , CASE WHEN OH_JuridicalDetails_To.INN = vbNotNDSPayer_INN
@@ -205,7 +211,13 @@ BEGIN
            , OH_JuridicalDetails_From.OKPO              AS OKPO_From
            , OH_JuridicalDetails_From.INN               AS INN_From
            , OH_JuridicalDetails_From.NumberVAT         AS NumberVAT_From
-           , CASE WHEN Object_Personal_View.PersonalName <> '' THEN zfConvert_FIO (Object_Personal_View.PersonalName, 1) ELSE 'Рудик Н.В.' END :: TVarChar AS AccounterName_From
+           , CASE WHEN Object_PersonalSigning.PersonalName <> '' 
+                  THEN zfConvert_FIO (Object_PersonalSigning.PersonalName, 1)
+                  ELSE CASE WHEN Object_PersonalBookkeeper_View.PersonalName <> '' 
+                            THEN zfConvert_FIO (Object_PersonalBookkeeper_View.PersonalName, 1)
+                            ELSE 'Рудик Н.В.' 
+                       END
+              END                           :: TVarChar AS AccounterName_From
            , OH_JuridicalDetails_From.BankAccount       AS BankAccount_From
            , OH_JuridicalDetails_From.BankName          AS BankName_From
            , OH_JuridicalDetails_From.MFO               AS BankMFO_From
@@ -293,7 +305,7 @@ BEGIN
             LEFT JOIN ObjectLink AS ObjectLink_Branch_PersonalBookkeeper
                                  ON ObjectLink_Branch_PersonalBookkeeper.ObjectId = MovementLinkObject_Branch.ObjectId
                                 AND ObjectLink_Branch_PersonalBookkeeper.DescId = zc_ObjectLink_Branch_PersonalBookkeeper()
-            LEFT JOIN Object_Personal_View ON Object_Personal_View.PersonalId = ObjectLink_Branch_PersonalBookkeeper.ChildObjectId
+            LEFT JOIN Object_Personal_View AS Object_PersonalBookkeeper_View ON Object_PersonalBookkeeper_View.PersonalId = ObjectLink_Branch_PersonalBookkeeper.ChildObjectId
 
 
             LEFT JOIN MovementLinkObject AS MovementLinkObject_Partner
@@ -355,6 +367,11 @@ BEGIN
                                  ON ObjectDate_Signing.ObjectId = MovementLinkObject_Contract.ObjectId
                                 AND ObjectDate_Signing.DescId = zc_ObjectDate_Contract_Signing()
                                 AND View_Contract.InvNumber <> '-'
+
+            LEFT JOIN ObjectLink AS ObjectLink_Contract_PersonalSigning
+                                 ON ObjectLink_Contract_PersonalSigning.ObjectId = View_Contract.ContractId
+                                AND ObjectLink_Contract_PersonalSigning.DescId = zc_ObjectLink_Contract_PersonalSigning()
+            LEFT JOIN Object_Personal_View AS Object_PersonalSigning ON Object_PersonalSigning.PersonalId = ObjectLink_Contract_PersonalSigning.ChildObjectId   
 
        WHERE Movement.Id =  vbMovementId_Tax
          AND Movement.StatusId = zc_Enum_Status_Complete()
@@ -642,6 +659,7 @@ ALTER FUNCTION gpSelect_Movement_Tax_Print (Integer, Boolean, TVarChar) OWNER TO
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 29.01.16         *
  21.04.15                        * add MovementDate_COMDOC
  14.01.15                                                       *
  30.12.14                                                       * add MeasureCode

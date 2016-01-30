@@ -111,6 +111,7 @@ type
     mactCopyTaxCorrective: TMultiAction;
     bbCopyTaxCorrective: TdxBarButton;
     isCopy: TcxGridDBColumn;
+    colPersonalSigningName: TcxGridDBColumn;
   private
     { Private declarations }
   public
