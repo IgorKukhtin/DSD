@@ -14,7 +14,9 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , ToId Integer, ToName TVarChar, JuridicalName TVarChar
              , NDSKindId Integer, NDSKindName TVarChar
              , SaleSumm TFloat
-             , InvNumberBranch TVarChar, BranchDate TDateTime, Checked Boolean 
+             , InvNumberBranch TVarChar, BranchDate TDateTime
+             , Checked Boolean 
+             , isDocument Boolean
               )
 
 AS
@@ -64,6 +66,7 @@ BEGIN
            , Movement_Income_View.InvNumberBranch
            , Movement_Income_View.BranchDate
            , Movement_Income_View.Checked
+           , Movement_Income_View.isDocument
        FROM Movement_Income_View 
              JOIN tmpStatus ON tmpStatus.StatusId = Movement_Income_View.StatusId 
              WHERE Movement_Income_View.OperDate BETWEEN inStartDate AND inEndDate 

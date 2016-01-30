@@ -60,6 +60,9 @@ type
     actUpdateIncome_PartnerData: TdsdExecStoredProc;
     dxBarButton1: TdxBarButton;
     DataSetPost1: TDataSetPost;
+    spisDocument: TdsdStoredProc;
+    actisDocument: TdsdExecStoredProc;
+    bbisDocument: TdxBarButton;
   private
     { Private declarations }
   public

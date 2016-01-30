@@ -433,7 +433,7 @@
       Caption = #1044#1072#1090#1072' '#1086#1087#1083#1072#1090#1099
     end
     object ceTotalSummMVAT: TcxCurrencyEdit
-      Left = 747
+      Left = 756
       Top = 50
       EditValue = 1111111.000000000000000000
       Enabled = False
@@ -454,7 +454,7 @@
       Width = 94
     end
     object ceTotalSummPVAT: TcxCurrencyEdit
-      Left = 747
+      Left = 756
       Top = 69
       EditValue = 1111111.000000000000000000
       Enabled = False
@@ -582,6 +582,14 @@
       Left = 96
       Top = 85
       Caption = #1044#1072#1090#1072' '#1086#1087#1083#1072#1090#1099' '#1087#1086' '#1073#1072#1085#1082#1091':'
+    end
+    object cbisDocument: TcxCheckBox
+      Left = 327
+      Top = 84
+      Caption = #1054#1088#1080#1075#1080#1085#1072#1083' '#1085#1072#1082#1083'. ('#1076#1072'/'#1085#1077#1090')'
+      Properties.ReadOnly = True
+      TabOrder = 32
+      Width = 154
     end
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
@@ -770,6 +778,19 @@
       Caption = #1055#1077#1088#1077#1089#1095#1077#1090' '#1082#1086#1076#1086#1074
       Hint = #1055#1077#1088#1077#1089#1095#1077#1090' '#1082#1086#1076#1086#1074
       ImageIndex = 43
+    end
+    object actisDocument: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spisDocument
+      StoredProcList = <
+        item
+          StoredProc = spisDocument
+        end>
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' "'#1054#1088#1080#1075#1080#1085#1072#1083' '#1044#1072'/'#1053#1077#1090'"'
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' "'#1054#1088#1080#1075#1080#1085#1072#1083' '#1044#1072'/'#1053#1077#1090'"'
+      ImageIndex = 58
     end
     object actCalculateSalePrice: TdsdExecStoredProc
       Category = 'DSDLib'
@@ -981,6 +1002,14 @@
         end
         item
           Visible = True
+          ItemName = 'bbisDocument'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbGridToExcel'
         end>
     end
@@ -1025,6 +1054,10 @@
     end
     object dxBarButton1: TdxBarButton
       Action = mactEditPartnerData
+      Category = 0
+    end
+    object bbisDocument: TdxBarButton
+      Action = actisDocument
       Category = 0
     end
   end
@@ -1236,6 +1269,12 @@
         Name = 'Checked'
         Value = Null
         Component = cbFarmacyShow
+      end
+      item
+        Name = 'isDocument'
+        Value = Null
+        Component = cbisDocument
+        DataType = ftBoolean
       end
       item
         Name = 'JuridicalId'
@@ -1893,5 +1932,28 @@
     PackSize = 1
     Left = 712
     Top = 424
+  end
+  object spisDocument: TdsdStoredProc
+    StoredProcName = 'gpUpdateMovement_isDocument'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'ioId '
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inisDocument'
+        Value = Null
+        Component = cbisDocument
+        DataType = ftBoolean
+        ParamType = ptInputOutput
+      end>
+    PackSize = 1
+    Left = 752
+    Top = 203
   end
 end

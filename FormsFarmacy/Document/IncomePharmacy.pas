@@ -77,6 +77,10 @@ type
     actUpdate_MovementItem_Income_SetEqualAmount: TdsdExecStoredProc;
     spUpdate_MovementItem_Income_SetEqualAmount: TdsdStoredProc;
     dxBarButton2: TdxBarButton;
+    cbisDocument: TcxCheckBox;
+    spisDocument: TdsdStoredProc;
+    actisDocument: TdsdExecStoredProc;
+    bbisDocument: TdxBarButton;
   private
     { Private declarations }
   public

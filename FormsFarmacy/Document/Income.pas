@@ -100,6 +100,10 @@ type
     actPartnerDataDialod: TExecuteDialog;
     actUpdateIncome_PartnerData: TdsdExecStoredProc;
     dxBarButton1: TdxBarButton;
+    cbisDocument: TcxCheckBox;
+    spisDocument: TdsdStoredProc;
+    actisDocument: TdsdExecStoredProc;
+    bbisDocument: TdxBarButton;
   private
     { Private declarations }
   public
