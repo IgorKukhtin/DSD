@@ -727,7 +727,7 @@
         DataType = ftString
       end>
     Left = 192
-    Top = 232
+    Top = 248
   end
   object FuelGuides: TdsdGuides
     KeyField = 'Id'
@@ -750,15 +750,15 @@
         ComponentItem = 'TextValue'
         DataType = ftString
       end>
-    Left = 128
+    Left = 112
     Top = 280
   end
   object GoodsGroupGuides: TdsdGuides
     KeyField = 'Id'
     LookupControl = ceParentGroup
-    FormNameParam.Value = 'TGoodsGroupForm'
+    FormNameParam.Value = 'TGoodsGroup_ObjectForm'
     FormNameParam.DataType = ftString
-    FormName = 'TGoodsGroupForm'
+    FormName = 'TGoodsGroup_ObjectForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
       item

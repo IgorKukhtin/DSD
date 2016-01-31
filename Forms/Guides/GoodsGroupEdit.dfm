@@ -421,9 +421,9 @@
   object GoodsGroupGuides: TdsdGuides
     KeyField = 'Id'
     LookupControl = ceParentGroup
-    FormNameParam.Value = 'TGoodsGroupForm'
+    FormNameParam.Value = 'TGoodsGroup_ObjectForm'
     FormNameParam.DataType = ftString
-    FormName = 'TGoodsGroupForm'
+    FormName = 'TGoodsGroup_ObjectForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
       item
@@ -506,7 +506,7 @@
         ComponentItem = 'TextValue'
         DataType = ftString
       end>
-    Left = 176
+    Left = 152
     Top = 286
   end
   object GoodsTagGuides: TdsdGuides
