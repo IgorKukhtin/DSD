@@ -789,7 +789,9 @@ uses
   Branch_TTNDialog in '..\..\Forms\Guides\Branch_TTNDialog.pas' {Branch_TTNDialogForm: TParentForm},
   Branch in '..\..\Forms\Guides\Branch.pas' {BranchForm: TParentForm},
   Report_GoodsMI_SendOnPrice in '..\..\Forms\Report\Report_GoodsMI_SendOnPrice.pas' {Report_GoodsMI_SendOnPriceForm: TParentForm},
-  Report_GoodsMI_SendOnPriceDialog in '..\..\Forms\Report\Report_GoodsMI_SendOnPriceDialog.pas' {Report_GoodsMI_SendOnPriceDialogForm: TParentForm};
+  Report_GoodsMI_SendOnPriceDialog in '..\..\Forms\Report\Report_GoodsMI_SendOnPriceDialog.pas' {Report_GoodsMI_SendOnPriceDialogForm: TParentForm},
+  BranchJuridical in '..\..\Forms\Guides\BranchJuridical.pas' {BranchJuridicalForm: TParentForm},
+  BranchJuridicalEdit in '..\..\Forms\Guides\BranchJuridicalEdit.pas' {BranchJuridicalEditForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}
