@@ -502,9 +502,21 @@ BEGIN
             , _tmp.ChangePercent
             , _tmp.isChangePrice
 
+              -- количество с остатка
             , _tmp.OperCount
-            , _tmp.OperCount_ChangePercent
-            , _tmp.OperCount_Partner
+              -- количество с учетом % скидки
+            , CASE WHEN _tmp.Price = 0
+                    AND _tmp.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_20500() -- 20500; "ќборотна€ тара"
+                        THEN _tmp.OperCount
+                   ELSE _tmp.OperCount_ChangePercent
+              END AS OperCount_ChangePercent
+              -- количество у контрагента
+            , CASE WHEN _tmp.Price = 0
+                    AND _tmp.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_20500() -- 20500; "ќборотна€ тара"
+                        THEN _tmp.OperCount
+                   ELSE _tmp.OperCount_Partner
+              END AS OperCount_Partner
+
               -- промежуточна€ (в ценах док-та) сумма прайс-листа по  онтрагенту !!!без скидки!!! - с округлением до 2-х знаков
             , _tmp.tmpOperSumm_PriceList
               -- конечна€ сумма прайс-листа по  онтрагенту !!! без скидки !!!

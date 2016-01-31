@@ -4,7 +4,7 @@ inherited MainForm: TMainForm
   KeyPreview = True
   Position = poDesigned
   ExplicitWidth = 1109
-  ExplicitHeight = 265
+  ExplicitHeight = 262
   PixelsPerInch = 96
   TextHeight = 13
   object cxGrid: TcxGrid [0]
@@ -91,8 +91,8 @@ inherited MainForm: TMainForm
       MoveParams = <>
       Caption = #1055#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077' '#1087#1086' '#1094#1077#1085#1077
       Hint = #1055#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077' '#1087#1086' '#1094#1077#1085#1077
-      FormName = 'TReport_GoodsMI_InternalForm'
-      FormNameParam.Value = 'TReport_GoodsMI_InternalForm'
+      FormName = 'TReport_GoodsMI_SendOnPriceForm'
+      FormNameParam.Value = 'TReport_GoodsMI_SendOnPriceForm'
       FormNameParam.DataType = ftString
       FormNameParam.ParamType = ptResult
       GuiParams = <

@@ -15,10 +15,10 @@ CREATE OR REPLACE FUNCTION gpReport_GoodsMI_SendOnPrice (
     IN inIsMovement        Boolean   , --
     IN inSession           TVarChar    -- сессия пользователя
 )
-RETURNS TABLE (GoodsGroupName TVarChar, GoodsGroupNameFull TVarChar
+RETURNS TABLE (InvNumber TVarChar, OperDate TDateTime, OperDatePartner TDateTime
+             , GoodsGroupName TVarChar, GoodsGroupNameFull TVarChar
              , GoodsCode Integer, GoodsName TVarChar, GoodsKindName TVarChar, MeasureName TVarChar
              , TradeMarkName TVarChar
-             , PartionGoods TVarChar
              , FromCode Integer, FromName TVarChar
              , ToCode Integer, ToName TVarChar
 
@@ -187,7 +187,10 @@ BEGIN
                         UNION
                          SELECT 0 AS AccountGroupId, zc_Enum_AnalyzerId_SummOut_110101() AS AccountId -- Сумма, забалансовый счет, расходтранзит, хотя поле пишется в AccountId, при этом ContainerId - стандартный и в нем другой AccountId
                         ) 
-       SELECT Object_GoodsGroup.ValueData             AS GoodsGroupName 
+       SELECT Movement.InvNumber
+         , Movement.OperDate
+         , MovementDate_OperDatePartner.ValueData AS OperDatePartner
+         , Object_GoodsGroup.ValueData             AS GoodsGroupName 
          , ObjectString_Goods_GroupNameFull.ValueData AS GoodsGroupNameFull
          , Object_Goods.ObjectCode                    AS GoodsCode
          , Object_Goods.ValueData                     AS GoodsName
@@ -203,10 +206,10 @@ BEGIN
 
            -- 1.1. вес, без AnalyzerId, т.е. это со склада, на транзит, с транзита
          , (tmpOperationGroup.OperCount_real) :: TFloat AS OperCount_total
-         , ((tmpOperationGroup.OperCount_real     - tmpOperationGroup.OperCount_Change          + tmpOperationGroup.OperCount_40200          * CASE WHEN inDescId = zc_Movement_Sale() THEN 1 ELSE -1 END)) :: TFloat AS OperCount_real
-         , ((tmpOperationGroup.OperCount_110000_A - tmpOperationGroup.OperCount_Change_110000_A + tmpOperationGroup.OperCount_40200_110000_A * CASE WHEN inDescId = zc_Movement_Sale() THEN 1 ELSE -1 END)) :: TFloat AS OperCount_110000_A
-         , ((tmpOperationGroup.OperCount_110000_P - tmpOperationGroup.OperCount_Change_110000_P + tmpOperationGroup.OperCount_40200_110000_P * CASE WHEN inDescId = zc_Movement_Sale() THEN 1 ELSE -1 END)) :: TFloat AS OperCount_110000_P
-         , ((tmpOperationGroup.OperCount          - tmpOperationGroup.OperCount_Change_real     + tmpOperationGroup.OperCount_40200_real     * CASE WHEN inDescId = zc_Movement_Sale() THEN 1 ELSE -1 END)) :: TFloat AS OperCount
+         , ((tmpOperationGroup.OperCount_real     - tmpOperationGroup.OperCount_Change          + tmpOperationGroup.OperCount_40200          * -1)) :: TFloat AS OperCount_real
+         , ((tmpOperationGroup.OperCount_110000_A - tmpOperationGroup.OperCount_Change_110000_A + tmpOperationGroup.OperCount_40200_110000_A * -1)) :: TFloat AS OperCount_110000_A
+         , ((tmpOperationGroup.OperCount_110000_P - tmpOperationGroup.OperCount_Change_110000_P + tmpOperationGroup.OperCount_40200_110000_P * -1)) :: TFloat AS OperCount_110000_P
+         , ((tmpOperationGroup.OperCount          - tmpOperationGroup.OperCount_Change_real     + tmpOperationGroup.OperCount_40200_real     * -1)) :: TFloat AS OperCount
 
            -- 2.1. вес - Скидка за вес
          , (tmpOperationGroup.OperCount_Change)          :: TFloat AS OperCount_Change
@@ -237,9 +240,9 @@ BEGIN
          , (tmpOperationGroup.SummIn_real)                                        :: TFloat AS SummIn_branch_total  -- склад (итог: с потерями и скидкой) Себестоимость филиальная (для подразделений завода здесь заводская)
          , (tmpOperationGroup.SummIn_real + tmpOperationGroup.SummIn_60000)       :: TFloat AS SummIn_zavod_total   -- склад (итог: с потерями и скидкой) Себестоимость к заводская
 
-         , (tmpOperationGroup.SummIn_real  - tmpOperationGroup.SummIn_Change       + tmpOperationGroup.SummIn_40200       * CASE WHEN inDescId = zc_Movement_Sale() THEN 1 ELSE -1 END) :: TFloat AS SummIn_branch_real   -- филиальная (для подразделений завода здесь заводская)
-         , (tmpOperationGroup.SummIn_real  - tmpOperationGroup.SummIn_Change       + tmpOperationGroup.SummIn_40200       * CASE WHEN inDescId = zc_Movement_Sale() THEN 1 ELSE -1 END
-          + tmpOperationGroup.SummIn_60000 - tmpOperationGroup.SummIn_Change_60000 + tmpOperationGroup.SummIn_40200_60000 * CASE WHEN inDescId = zc_Movement_Sale() THEN 1 ELSE -1 END) :: TFloat AS SummIn_zavod_real    -- к филиальной добавили заводскую
+         , (tmpOperationGroup.SummIn_real  - tmpOperationGroup.SummIn_Change       + tmpOperationGroup.SummIn_40200       * -1) :: TFloat AS SummIn_branch_real   -- филиальная (для подразделений завода здесь заводская)
+         , (tmpOperationGroup.SummIn_real  - tmpOperationGroup.SummIn_Change       + tmpOperationGroup.SummIn_40200       * -1
+          + tmpOperationGroup.SummIn_60000 - tmpOperationGroup.SummIn_Change_60000 + tmpOperationGroup.SummIn_40200_60000 * -1) :: TFloat AS SummIn_zavod_real    -- к филиальной добавили заводскую
 
          , (tmpOperationGroup.SummIn_110000_A + tmpOperationGroup.SummIn_60000_A) :: TFloat AS SummIn_110000_A -- здесь уже филиальная + заводская
          , (tmpOperationGroup.SummIn_110000_P + tmpOperationGroup.SummIn_60000_P) :: TFloat AS SummIn_110000_P -- здесь уже филиальная + заводская
@@ -371,17 +374,17 @@ BEGIN
                       , COALESCE (MIContainer.AccountId, 0) AS AccountId
 
                         -- 1.1. Кол-во, без AnalyzerId
-                      , SUM (CASE MIContainer.AnalyzerId <> zc_Enum_AnalyzerId_LossCount_20200()
+                      , SUM (CASE WHEN MIContainer.AnalyzerId <> zc_Enum_AnalyzerId_LossCount_20200()
                                        THEN -1 * MIContainer.Amount
                                   ELSE 0
                              END) AS OperCount
                         -- 1.2. Себестоимость, без AnalyzerId
-                      , SUM (CASE WHEN MIContainer.AnalyserId NOT IN (zc_Enum_AnalyzerId_SummOut_110101(), zc_Enum_AnalyzerId_SummIn_110101(), zc_Enum_AnalyzerId_LossSumm_20200()) AND MIContainer.DescId = zc_MIContainer_Summ()
+                      , SUM (CASE WHEN MIContainer.AnalyzerId NOT IN (zc_Enum_AnalyzerId_SummOut_110101(), zc_Enum_AnalyzerId_SummIn_110101(), zc_Enum_AnalyzerId_LossSumm_20200()) AND MIContainer.DescId = zc_MIContainer_Summ()
                                        THEN -1 * MIContainer.Amount
                                   ELSE 0
                              END) AS SummIn
                         -- 1.3. Сумма***, без AnalyzerId (на самом деле для OperCount_Partner)
-                      , SUM (CASE WHEN MIContainer.AnalyserId = zc_Enum_AnalyzerId_SummOut_110101() AND MIContainer.isActive = FALSE AND MIContainer.DescId = zc_MIContainer_Summ() AND MIContainer.AnalyzerId <> zc_Enum_AnalyzerId_LossSumm_20200()
+                      , SUM (CASE WHEN MIContainer.AnalyzerId = zc_Enum_AnalyzerId_SummOut_110101() AND MIContainer.isActive = FALSE AND MIContainer.DescId = zc_MIContainer_Summ() AND MIContainer.AnalyzerId <> zc_Enum_AnalyzerId_LossSumm_20200()
                                        THEN -1 * MIContainer.Amount
                                   ELSE 0
                              END) AS SummOut_Partner_60000
@@ -428,9 +431,9 @@ BEGIN
                                                       AND MIContainer.OperDate BETWEEN inStartDate AND inEndDate
                                                       AND MIContainer.WhereObjectId_analyzer = _tmpUnit.UnitId
                                                       AND MIContainer.ObjectExtId_Analyzer   = _tmpUnit.UnitId_by
-                                                      AND ((MIContainer.isActive = FALSE AND MIContainer.AnalyserId <> zc_Enum_AnalyzerId_SummIn_110101())
-                                                        OR (MIContainer.isActive = TRUE  AND MIContainer.AnalyserId =  zc_Enum_AnalyzerId_SummIn_110101()))
-                 GROUP BY CASE WHEN inIsMovement = TRUE THEN MIContainer.MovementId ELSE 0 END AS MovementId
+                                                      AND ((MIContainer.isActive = FALSE AND MIContainer.AnalyzerId <> zc_Enum_AnalyzerId_SummIn_110101())
+                                                        OR (MIContainer.isActive = TRUE  AND MIContainer.AnalyzerId =  zc_Enum_AnalyzerId_SummIn_110101()))
+                 GROUP BY CASE WHEN inIsMovement = TRUE THEN MIContainer.MovementId ELSE 0 END
                         , MIContainer.WhereObjectId_analyzer
                         , MIContainer.ObjectExtId_Analyzer
                         , MIContainer.ObjectId_analyzer
@@ -449,7 +452,6 @@ BEGIN
                              , tmpContainer.ToId
                              , CASE WHEN inIsGoods = TRUE THEN tmpContainer.GoodsId ELSE 0 END
                              , tmpContainer.GoodsKindId
-                             , tmpContainer.PartnerId
 
                              , _tmpGoods.InfoMoneyId
                              , CASE WHEN inIsTradeMark = TRUE OR inIsGoods = TRUE THEN _tmpGoods.TradeMarkId ELSE 0 END
@@ -477,6 +479,11 @@ BEGIN
                                 AND ObjectString_Goods_GroupNameFull.DescId = zc_ObjectString_Goods_GroupNameFull()
 
           LEFT JOIN Object_InfoMoney_View AS View_InfoMoney_Goods ON View_InfoMoney_Goods.InfoMoneyId = tmpOperationGroup.InfoMoneyId_goods
+
+          LEFT JOIN Movement ON Movement.Id = tmpOperationGroup.MovementId
+          LEFT JOIN MovementDate AS MovementDate_OperDatePartner
+                                 ON MovementDate_OperDatePartner.MovementId =  tmpOperationGroup.MovementId
+                                AND MovementDate_OperDatePartner.DescId = zc_MovementDate_OperDatePartner()
   ;
          
 END;
@@ -486,19 +493,8 @@ $BODY$
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
- 02.08.15         * add inIsPartner, inIsTradeMark, inIsGoods, inIsGoodsKind, inIsPartionGoods
- 27.07.14                                        * all
- 22.07.15         *                
- 15.12.14                                        * all
- 13.05.14                                        * all
- 16.04.14         add inUnitId
- 13.04.14                                        * add zc_MovementFloat_ChangePercent
- 08.04.14                                        * all
- 05.04.14         * add SummPartner_calc. AmountChangePercent
- 04.02.14         * 
- 01.02.14                                        * All
- 22.01.14         *
+ 31.01.16                                        *
 */
 
 -- тест
--- SELECT * FROM gpReport_GoodsMI_SendOnPrice (inStartDate:= '01.07.2015', inEndDate:= '01.07.2015',  inDescId:= 5, inJuridicalId:=0, inPaidKindId:=0, inInfoMoneyId:=0, inUnitGroupId:=0, inUnitId:= 8459, inGoodsGroupId:= 0, inIsPartner:= TRUE, inIsTradeMark:= TRUE, inIsGoods:= TRUE, inIsGoodsKind:= TRUE, inIsPartionGoods:= TRUE, inSession:= zfCalc_UserAdmin()); -- Склад Реализации
+-- SELECT * FROM gpReport_GoodsMI_SendOnPrice (inStartDate:= '01.01.2016', inEndDate:= '01.01.2016', inFromId:= 8459, inToId:= 0, inGoodsGroupId:= 0, inIsTradeMark:= TRUE, inIsGoods:= TRUE, inIsGoodsKind:= TRUE, inIsMovement:= FALSE, inSession:= zfCalc_UserAdmin()); -- Склад Реализации

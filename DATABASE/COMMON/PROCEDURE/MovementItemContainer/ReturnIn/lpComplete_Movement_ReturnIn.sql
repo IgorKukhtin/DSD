@@ -368,8 +368,14 @@ BEGIN
             , _tmp.PartionGoods
             , _tmp.PartionGoodsDate
 
+              -- количество с остатка
             , _tmp.OperCount
-            , _tmp.OperCount_Partner
+              -- количество у контрагента
+            , CASE WHEN _tmp.Price = 0
+                    AND _tmp.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_20500() -- 20500; "Оборотная тара"
+                        THEN _tmp.OperCount
+                   ELSE _tmp.OperCount_Partner
+              END AS OperCount_Partner
 
               -- промежуточная (в ценах док-та) сумма прайс-листа по Контрагенту !!!без скидки!!! - с округлением до 2-х знаков
             , _tmp.tmpOperSumm_PriceList
