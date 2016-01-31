@@ -77,6 +77,9 @@ type
     AmountIn_40200_Weight: TcxGridDBColumn;
     SummIn_10500: TcxGridDBColumn;
     SummIn_40200: TcxGridDBColumn;
+    cxLabel7: TcxLabel;
+    edPriceList: TcxButtonEdit;
+    PriceListGuides: TdsdGuides;
   private
     { Private declarations }
   public

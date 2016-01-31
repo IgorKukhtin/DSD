@@ -1,6 +1,7 @@
 -- Function: gpReport_GoodsMI_Internal ()
 
 DROP FUNCTION IF EXISTS gpReport_GoodsMI_Internal (TDateTime, TDateTime, Integer, Integer, Integer, Integer, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpReport_GoodsMI_Internal (TDateTime, TDateTime, Integer, Integer, Integer, Integer, Integer, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpReport_GoodsMI_Internal (
     IN inStartDate    TDateTime ,  
@@ -9,6 +10,7 @@ CREATE OR REPLACE FUNCTION gpReport_GoodsMI_Internal (
     IN inFromId       Integer   ,
     IN inToId         Integer   ,
     IN inGoodsGroupId Integer   ,
+    IN inPriceListId  Integer   ,
     IN inIsMO_all     Boolean   ,
     IN inSession      TVarChar    -- сессия пользователя
 )
@@ -473,6 +475,7 @@ $BODY$
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 31.01.16         * add inPriceListId
  12.08.15                                        * all
  19.07.15         * 
 */

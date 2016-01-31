@@ -35,6 +35,9 @@ type
     GuidesPaidKind: TdsdGuides;
     GuidesFrom: TdsdGuides;
     GuidesTo: TdsdGuides;
+    cxLabel5: TcxLabel;
+    edPriceList: TcxButtonEdit;
+    PriceListGuides: TdsdGuides;
   private
     { Private declarations }
   public
