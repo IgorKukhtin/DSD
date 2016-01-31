@@ -8,7 +8,7 @@ uses
   cxLookAndFeelPainters, cxContainer, cxEdit, Vcl.ComCtrls, dxCore, cxDateUtils,
   cxTextEdit, cxMaskEdit, cxDropDownEdit, cxCalendar, Vcl.StdCtrls, Data.DB,
   Data.Win.ADODB, Vcl.Grids, Vcl.DBGrids, Vcl.ExtCtrls, Vcl.Samples.Gauges,
-  dsdDB, dxSkinsCore, dxSkinsDefaultPainters;
+  dsdDB, dxSkinsCore, dxSkinsDefaultPainters, ZAbstractConnection, ZConnection;
 
 type
   TMainForm = class(TForm)
@@ -51,11 +51,18 @@ type
     toStoredProc: TdsdStoredProc;
     toTwoStoredProc: TdsdStoredProc;
     cbLinkGoods: TCheckBox;
+    cbCashOperation: TCheckBox;
+    cbBill: TCheckBox;
+    toZConnection: TZConnection;
     procedure OKGuideButtonClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure CloseButtonClick(Sender: TObject);
+    procedure OKDocumentButtonClick(Sender: TObject);
+    procedure StopButtonClick(Sender: TObject);
   private
     fStop:Boolean;
+    function FormatToDateServer_notNULL(_Date:TDateTime):string;
+
     procedure pSetNullGuide_Id_Postgres;
     procedure pSetNullDocument_Id_Postgres;
     function fExecSqFromQuery(mySql: String): Boolean;
@@ -69,6 +76,9 @@ type
     procedure pLoadGuide_GoodsPartnerCode;
     procedure pLoadGuide_LinkGoods;
     procedure pLoadUnit;
+
+    procedure pLoadDocument_CashOperation;
+    procedure pLoadDocument_Bill;
   public
     { Public declarations }
   end;
@@ -400,6 +410,43 @@ begin
      myDisabledCB(cbUnit);
 end;
 
+procedure TMainForm.OKDocumentButtonClick(Sender: TObject);
+var tmpDate1,tmpDate2:TDateTime;
+    Year, Month, Day, Hour, Min, Sec, MSec: Word;
+    StrTime:String;
+    myRecordCount1,myRecordCount2:Integer;
+begin
+     if MessageDlg('Действительно загрузить выбранные документы?',mtConfirmation,[mbYes,mbNo],0)<>mrYes then exit;
+     //
+     fStop:=false;
+     DBGrid.Enabled:=false;
+     OKGuideButton.Enabled:=false;
+     OKDocumentButton.Enabled:=false;
+     //
+     Gauge.Visible:=true;
+     //
+     tmpDate1:=NOw;
+     //
+     if not fStop then pLoadDocument_CashOperation;
+     if not fStop then pLoadDocument_Bill;
+     //
+     Gauge.Visible:=false;
+     DBGrid.Enabled:=true;
+     OKGuideButton.Enabled:=true;
+     OKDocumentButton.Enabled:=true;
+     //
+     tmpDate2:=NOw;
+     if (tmpDate2-tmpDate1)>=1
+     then StrTime:=DateTimeToStr(tmpDate2-tmpDate1)
+     else begin
+               DecodeTime(tmpDate2-tmpDate1, Hour, Min, Sec, MSec);
+               StrTime:=IntToStr(Hour)+':'+IntToStr(Min)+':'+IntToStr(Sec);
+     end;
+     if fStop then ShowMessage('Документы НЕ загружены. Time=('+StrTime+').')
+     else ShowMessage('Документы загружены. Time=('+StrTime+').');
+     //
+end;
+
 procedure TMainForm.OKGuideButtonClick(Sender: TObject);
 begin
   if MessageDlg('Действительно загрузить выбранные справочники?',mtConfirmation,[mbYes,mbNo],0)<>mrYes then exit;
@@ -449,13 +496,219 @@ begin
      Result:=true;
 end;
 
-  {------------------------------------------------------------------------}
-//функция возвращает строковое значение поля ReturnValue в SQL запросе
+{------------------------------------------------------------------------}
 procedure TMainForm.FormCreate(Sender: TObject);
+var
+  Present: TDateTime;
+  Year, Month, Day, Hour, Min, Sec, MSec: Word;
 begin
-  TAuthentication.CheckLogin(TStorageFactory.GetStorage, 'Админ', 'Админ', gc_User);
+     Gauge.Visible:=false;
+     Gauge.Progress:=0;
+     //
+     fStop:=true;
+     //
+     if FindCmdLineSwitch('realfarmacy', true)
+     then TAuthentication.CheckLogin(TStorageFactory.GetStorage, 'Админ', 'Админ1234', gc_User)
+     else TAuthentication.CheckLogin(TStorageFactory.GetStorage, 'Админ', 'Админ1111', gc_User);
+     //
+     with toZConnection do begin
+        Connected:=false;//http://91.210.37.210/farmacy/index.php
+        HostName:='91.210.37.210';
+        User:='postgres';
+        Password:='postgres';
+        if FindCmdLineSwitch('realfarmacy', true)
+        then Database:='farmacy'
+        else Database:='farmacy_test';
+        try Connected:=true; except ShowMessage ('not Connected');end;
+        //
+        if Connected
+        then Self.Caption:= Self.Caption + ' : ' + HostName + ' : ' + Database + ' : TRUE'
+        else Self.Caption:= Self.Caption + ' : ' + HostName + ' : ' + Database + ' : FALSE';
+        //
+        Connected:=false;
+     end;
+     //
+     Present:= Now;
+     DecodeDate(Present, Year, Month, Day);
+     StartDateEdit.Text:=DateToStr(StrToDate('01.'+IntToStr(Month)+'.'+IntToStr(Year)));
+     if Month=12 then begin Month:=1;Year:=Year+1;end else Month:=Month+1;
+     EndDateEdit.Text:=DateToStr(StrToDate('01.'+IntToStr(Month)+'.'+IntToStr(Year))-1);
 end;
+{------------------------------------------------------------------------}
+function TMainForm.FormatToDateServer_notNULL(_Date:TDateTime):string;
+var
+  Year, Month, Day: Word;
+begin
+     DecodeDate(_Date,Year,Month,Day);
+     result:=chr(39)+IntToStr(Year)+'-'+IntToStr(Month)+'-'+IntToStr(Day)+chr(39);
+end;
+//----------------------------------------------------------------------------------------------------------------------------------------------------
+procedure TMainForm.pLoadDocument_CashOperation;
+begin
+     if (not cbCashOperation.Checked)or(not cbCashOperation.Enabled) then exit;
+     //
+     myEnabledCB(cbCashOperation);
+     //
+     with fromQuery,Sql do begin
+        Close;
+        Clear;
+        Add('select CashOperation.*');
+        Add('from dba.CashOperation');
+        Add('where CashOperation.OperDate between '+FormatToDateServer_notNULL(StrToDate(StartDateEdit.Text))+' and '+FormatToDateServer_notNULL(StrToDate(EndDateEdit.Text)));
+        Add('order by OperDate,Id');
+        Open;
+        cbCashOperation.Caption:='1.1. ('+IntToStr(RecordCount)+') CashOperation';
+        //
+        fStop:=cbOnlyOpen.Checked;
+        if cbOnlyOpen.Checked then exit;
+        //
+        Gauge.Progress:=0;
+        Gauge.MaxValue:=RecordCount;
+        //
+        toStoredProc.StoredProcName:='gpInsertSybase_CashOperation';
+        toStoredProc.OutputType := otResult;
+        toStoredProc.Params.Clear;
+        toStoredProc.Params.AddParam ('inId',ftInteger,ptInputOutput, 0);
+        toStoredProc.Params.AddParam ('inCashID',ftInteger,ptInput, 0);
+        toStoredProc.Params.AddParam ('inOperDate',ftDateTime,ptInput, '');
+        toStoredProc.Params.AddParam ('inClientID',ftInteger,ptInput, 0);
+        toStoredProc.Params.AddParam ('inSpendingID',ftInteger,ptInput, 0);
+        toStoredProc.Params.AddParam ('inOperSumm',ftFloat,ptInput, 0);
+        toStoredProc.Params.AddParam ('inDocumentID',ftInteger,ptInput, 0);
+        toStoredProc.Params.AddParam ('inRemark',ftString,ptInput, '');
+        toStoredProc.Params.AddParam ('inisPlat',ftInteger,ptInput, 0);
+        toStoredProc.Params.AddParam ('inPlatNumber',ftInteger,ptInput, 0);
+        toStoredProc.Params.AddParam ('inContragentSumm',ftFloat,ptInput, 0);
+        //
+        //DisableControls;
+        while not EOF do
+        begin
+             //!!!
+             if fStop then begin {EnableControls;}exit;end;
+             //
+             toStoredProc.Params.ParamByName('inId').Value            :=FieldByName('Id').AsInteger;
+             toStoredProc.Params.ParamByName('inCashID').Value        :=FieldByName('CashID').AsInteger;
+             toStoredProc.Params.ParamByName('inOperDate').Value      :=FieldByName('OperDate').AsDateTime;
+             toStoredProc.Params.ParamByName('inClientID').Value      :=FieldByName('ClientID').AsInteger;
+             toStoredProc.Params.ParamByName('inSpendingID').Value    :=FieldByName('SpendingID').AsInteger;
+             toStoredProc.Params.ParamByName('inOperSumm').Value      :=FieldByName('OperSumm').AsFloat;
+             toStoredProc.Params.ParamByName('inDocumentID').Value    :=FieldByName('DocumentID').AsInteger;
+             toStoredProc.Params.ParamByName('inRemark').Value        :=FieldByName('Remark').AsString;
+             toStoredProc.Params.ParamByName('inisPlat').Value        :=FieldByName('isPlat').AsInteger;
+             toStoredProc.Params.ParamByName('inPlatNumber').Value    :=FieldByName('PlatNumber').AsInteger;
+             toStoredProc.Params.ParamByName('inContragentSumm').Value:=FieldByName('ContragentSumm').AsFloat;
+             if not myExecToStoredProc then ;//exit;
+             //
+             Next;
+             Application.ProcessMessages;
+             Gauge.Progress:=Gauge.Progress+1;
+             Application.ProcessMessages;
+        end;
+     end;
+     //
+     myDisabledCB(cbCashOperation);
+end;
+{------------------------------------------------------------------------}
+procedure TMainForm.pLoadDocument_Bill;
+begin
+     if (not cbBill.Checked)or(not cbBill.Enabled) then exit;
+     //
+     myEnabledCB(cbBill);
+     //
+     with fromQuery,Sql do begin
+        Close;
+        Clear;
+        Add('select ID,BillDate,BillNumber,BillKind,BillSumm,FromID,ToID,IsNds,Nds,isBlocking');
+        Add('      ,case when Bill.isDistribution is null then IntNULL else Bill.isDistribution end as isDistribution');
+        Add('      ,ParentId');
+        Add('      ,case when Bill.isMark is null then IntNULL else Bill.isMark end as isMark');
+        Add('      ,case when Bill.IncomeCheck is null then IntNULL else Bill.IncomeCheck end as IncomeCheck');
+        Add('      ,ReturnTypeId');
+        Add('      ,ContragentSumm');
+        Add('      ,case when Bill.RepriceClosed is null then IntNULL else Bill.RepriceClosed end as RepriceClosed');
+        Add('      ,case when Bill.ClientDate is null then DateNULL else Bill.ClientDate end as ClientDate');
+        Add('      ,ClientNumber');
+        Add('      ,ManagerId');
+        Add('      ,cast ('+FormatToDateServer_notNULL(StrToDate('01.01.1990'))+' as date) as DateNULL');
+        Add('      ,-12345 AS IntNULL');
+        Add('from dba.Bill');
 
+        Add('where Bill.BillDate between '+FormatToDateServer_notNULL(StrToDate(StartDateEdit.Text))+' and '+FormatToDateServer_notNULL(StrToDate(EndDateEdit.Text)));
+        Add('order by BillDate,Id');
+        Open;
+        cbBill.Caption:='1.2. ('+IntToStr(RecordCount)+') Bill';
+        //
+        fStop:=cbOnlyOpen.Checked;
+        if cbOnlyOpen.Checked then exit;
+        //
+        Gauge.Progress:=0;
+        Gauge.MaxValue:=RecordCount;
+        //
+        toStoredProc.StoredProcName:='gpInsertSybase_Bill';
+        toStoredProc.OutputType := otResult;
+        toStoredProc.Params.Clear;
+        toStoredProc.Params.AddParam ('inId',ftInteger,ptInputOutput, 0);
+        toStoredProc.Params.AddParam ('inBillDate',ftDateTime,ptInput, '');
+        toStoredProc.Params.AddParam ('inBillNumber',ftString,ptInput, '');
+        toStoredProc.Params.AddParam ('inBillKind',ftInteger,ptInput, 0);
+        toStoredProc.Params.AddParam ('inBillSumm',ftFloat,ptInput, 0);
+        toStoredProc.Params.AddParam ('inFromId',ftInteger,ptInput, 0);
+        toStoredProc.Params.AddParam ('inToId',ftInteger,ptInput, 0);
+        toStoredProc.Params.AddParam ('inisNDS',ftInteger,ptInput, 0);
+        toStoredProc.Params.AddParam ('inNds',ftFloat,ptInput, 0);
+        toStoredProc.Params.AddParam ('inisBlocking',ftInteger,ptInput, 0);
+        toStoredProc.Params.AddParam ('inisDistribution',ftInteger,ptInput, 0);
+        toStoredProc.Params.AddParam ('inParentId',ftInteger,ptInput, 0);
+        toStoredProc.Params.AddParam ('inisMark',ftInteger,ptInput, 0);
+        toStoredProc.Params.AddParam ('inIncomeCheck',ftInteger,ptInput, 0);
+        toStoredProc.Params.AddParam ('inReturnTypeId',ftInteger,ptInput, 0);
+        toStoredProc.Params.AddParam ('inContragentSumm',ftFloat,ptInput, 0);
+        toStoredProc.Params.AddParam ('inRepriceClosed',ftInteger,ptInput, 0);
+        toStoredProc.Params.AddParam ('inClientDate',ftDateTime,ptInput, '');
+        toStoredProc.Params.AddParam ('inClientNumber',ftString,ptInput, '');
+        toStoredProc.Params.AddParam ('inManagerId',ftInteger,ptInput, 0);
+        toStoredProc.Params.AddParam ('inDateNULL',ftDateTime,ptInput, '');
+        toStoredProc.Params.AddParam ('inIntNULL',ftInteger,ptInput, 0);
+        //
+        while not EOF do
+        begin
+             //!!!
+             if fStop then begin {EnableControls;}exit;end;
+             //
+             toStoredProc.Params.ParamByName('inId').Value            :=FieldByName('Id').AsInteger;
+             toStoredProc.Params.ParamByName('inBillDate').Value      :=FieldByName('BillDate').AsDateTime;
+             toStoredProc.Params.ParamByName('inBillNumber').Value    :=FieldByName('BillNumber').AsString;
+             toStoredProc.Params.ParamByName('inBillKind').Value      :=FieldByName('BillKind').AsInteger;
+             toStoredProc.Params.ParamByName('inBillSumm').Value      :=FieldByName('BillSumm').AsFloat;
+             toStoredProc.Params.ParamByName('inFromId').Value        :=FieldByName('FromId').AsInteger;
+             toStoredProc.Params.ParamByName('inToId').Value          :=FieldByName('ToId').AsInteger;
+             toStoredProc.Params.ParamByName('inisNDS').Value         :=FieldByName('isNDS').AsInteger;
+             toStoredProc.Params.ParamByName('inNds').Value           :=FieldByName('Nds').AsFloat;
+             toStoredProc.Params.ParamByName('inisBlocking').Value    :=FieldByName('isBlocking').AsInteger;
+             toStoredProc.Params.ParamByName('inisDistribution').Value:=FieldByName('isDistribution').AsInteger;
+             toStoredProc.Params.ParamByName('inParentId').Value      :=FieldByName('ParentId').AsInteger;
+             toStoredProc.Params.ParamByName('inisMark').Value        :=FieldByName('isMark').AsInteger;
+             toStoredProc.Params.ParamByName('inIncomeCheck').Value   :=FieldByName('IncomeCheck').AsInteger;
+             toStoredProc.Params.ParamByName('inReturnTypeId').Value  :=FieldByName('ReturnTypeId').AsInteger;
+             toStoredProc.Params.ParamByName('inContragentSumm').Value:=FieldByName('ContragentSumm').AsFloat;
+             toStoredProc.Params.ParamByName('inRepriceClosed').Value :=FieldByName('RepriceClosed').AsInteger;
+             toStoredProc.Params.ParamByName('inClientDate').Value    :=FieldByName('ClientDate').AsDateTime;
+             toStoredProc.Params.ParamByName('inClientNumber').Value  :=FieldByName('ClientNumber').AsString;
+             toStoredProc.Params.ParamByName('inManagerId').Value     :=FieldByName('ManagerId').AsInteger;
+             toStoredProc.Params.ParamByName('inDateNULL').Value      :=FieldByName('DateNULL').AsDateTime;
+             toStoredProc.Params.ParamByName('inIntNULL').Value       :=FieldByName('IntNULL').AsInteger;
+             if not myExecToStoredProc then ;//exit;
+             //
+             Next;
+             Application.ProcessMessages;
+             Gauge.Progress:=Gauge.Progress+1;
+             Application.ProcessMessages;
+        end;
+     end;
+     //
+     myDisabledCB(cbBill);
+end;
+{------------------------------------------------------------------------}
 function TMainForm.GetRetailId: integer;
 var DataSet: TClientDataSet;
 begin
@@ -512,6 +765,15 @@ begin
   fExecSqFromQuery('update dba.ExtraChargeCategories set Id_Postgres = null');
   fExecSqFromQuery('update dba.GoodsProperty set Id_Postgres = null');
   fExecSqFromQuery('update dba.Unit set Id_Postgres = null');
+end;
+
+procedure TMainForm.StopButtonClick(Sender: TObject);
+begin
+     if MessageDlg('Действительно остановить загрузку?',mtConfirmation,[mbYes,mbNo],0)<>mrYes then exit;
+     fStop:=true;
+     DBGrid.Enabled:=true;
+     OKGuideButton.Enabled:=true;
+     OKDocumentButton.Enabled:=true;
 end;
 
 end.

@@ -31,6 +31,7 @@ type
     procedure LoadBankStatementFormTest;
     procedure LoadBonusKindFormTest;
     procedure LoadBranchFormTest;
+    procedure LoadBranchJuridicalFormTest;
     procedure LoadBusinessFormTest;
     procedure LoadBoxFormTest;
     procedure LoadCashFormTest;
@@ -239,6 +240,14 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TBranchEditForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TBranch_TTNDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TBranch_TTNDialogForm');
+end;
+
+procedure TLoadFormTest.LoadBranchJuridicalFormTest;
+begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TBranchJuridicalForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TBranchJuridicalForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TBranchJuridicalEditForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TBranchJuridicalEditForm');
 end;
 
 procedure TLoadFormTest.LoadBusinessFormTest;
@@ -1134,7 +1143,11 @@ end;
 
 procedure TLoadFormTest.LoadReportFormTest;
 begin
-//  exit;
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_GoodsMI_SendOnPriceForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_GoodsMI_SendOnPriceForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_GoodsMI_SendOnPriceDialogForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_GoodsMI_SendOnPriceDialogForm');
+  exit;
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_SaleOrderExternalListForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_SaleOrderExternalListForm');
@@ -1193,6 +1206,11 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TReport_GoodsMIForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_GoodsMI_DialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_GoodsMI_DialogForm');
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_GoodsMI_SendOnPriceForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_GoodsMI_SendOnPriceForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_GoodsMI_SendOnPriceDialogForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_GoodsMI_SendOnPriceDialogForm');
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_GoodsMI_byMovementForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_GoodsMI_byMovementForm');

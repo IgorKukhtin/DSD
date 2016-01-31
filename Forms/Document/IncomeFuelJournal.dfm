@@ -850,6 +850,10 @@ object IncomeFuelJournalForm: TIncomeFuelJournalForm
         end
         item
           Visible = True
+          ItemName = 'bbShowErased'
+        end
+        item
+          Visible = True
           ItemName = 'bbRefresh'
         end
         item
@@ -859,6 +863,14 @@ object IncomeFuelJournalForm: TIncomeFuelJournalForm
         item
           Visible = True
           ItemName = 'bbMIContainer'
+        end
+        item
+          Visible = True
+          ItemName = 'bbStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbProtocol'
         end
         item
           Visible = True
@@ -921,6 +933,14 @@ object IncomeFuelJournalForm: TIncomeFuelJournalForm
       Action = actMIContainer
       Category = 0
     end
+    object bbProtocol: TdxBarButton
+      Action = MovementProtocolOpenForm
+      Category = 0
+    end
+    object bbShowErased: TdxBarButton
+      Action = actShowErased
+      Category = 0
+    end
   end
   object ActionList: TActionList
     Images = dmMain.ImageList
@@ -966,6 +986,12 @@ object IncomeFuelJournalForm: TIncomeFuelJournalForm
           Name = 'ShowAll'
           Value = True
           DataType = ftBoolean
+        end
+        item
+          Name = 'inOperDate'
+          Value = 'NULL'
+          Component = deEnd
+          DataType = ftDateTime
         end>
       isShowModal = False
       DataSource = DataSource
@@ -1072,6 +1098,52 @@ object IncomeFuelJournalForm: TIncomeFuelJournalForm
         end>
       isShowModal = False
     end
+    object MovementProtocolOpenForm: TdsdOpenForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = #1055#1088#1086#1089#1084#1086#1090#1088' <'#1055#1088#1086#1090#1086#1082#1086#1083#1072' '#1076#1086#1082#1091#1084#1077#1085#1090#1072'>'
+      Hint = #1055#1088#1086#1089#1084#1086#1090#1088' <'#1055#1088#1086#1090#1086#1082#1086#1083#1072' '#1076#1086#1082#1091#1084#1077#1085#1090#1072'>'
+      ImageIndex = 34
+      FormName = 'TMovementProtocolForm'
+      FormNameParam.Value = 'TMovementProtocolForm'
+      FormNameParam.DataType = ftString
+      GuiParams = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'Id'
+          ParamType = ptInput
+        end
+        item
+          Name = 'InvNumber'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'InvNumber'
+          DataType = ftString
+          ParamType = ptInput
+        end>
+      isShowModal = False
+    end
+    object actShowErased: TBooleanStoredProcAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = dsdStoredProc
+      StoredProcList = <
+        item
+          StoredProc = dsdStoredProc
+        end>
+      Caption = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1089#1077
+      Hint = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1089#1077
+      ImageIndex = 64
+      Value = False
+      HintTrue = #1055#1086#1082#1072#1079#1072#1090#1100' '#1085#1077' '#1091#1076#1072#1083#1077#1085#1085#1099#1077
+      HintFalse = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1089#1077
+      CaptionTrue = #1055#1086#1082#1072#1079#1072#1090#1100' '#1085#1077' '#1091#1076#1072#1083#1077#1085#1085#1099#1077
+      CaptionFalse = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1089#1077
+      ImageIndexTrue = 65
+      ImageIndexFalse = 64
+    end
   end
   object dsdStoredProc: TdsdStoredProc
     StoredProcName = 'gpSelect_Movement_IncomeFuel'
@@ -1093,6 +1165,13 @@ object IncomeFuelJournalForm: TIncomeFuelJournalForm
         Value = 41640d
         Component = deEnd
         DataType = ftDateTime
+        ParamType = ptInput
+      end
+      item
+        Name = 'inIsErased'
+        Value = Null
+        Component = actShowErased
+        DataType = ftBoolean
         ParamType = ptInput
       end>
     PackSize = 1

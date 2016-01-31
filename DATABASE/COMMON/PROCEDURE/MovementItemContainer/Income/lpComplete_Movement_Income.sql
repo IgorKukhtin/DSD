@@ -348,8 +348,16 @@ BEGIN
             , 0 AS ContainerId_GoodsTicketFuel
             , _tmp.GoodsId_TicketFuel
 
+              -- количество с остатка
             , _tmp.OperCount
-            , _tmp.OperCount_Partner
+              -- количество у контрагента
+            , CASE WHEN _tmp.Price = 0
+                    AND vbMemberId_From = 0
+                    AND _tmp.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_20500() -- 20500; "Оборотная тара"
+                        THEN _tmp.OperCount
+                   ELSE _tmp.OperCount_Partner
+               END AS OperCount_Partner
+              -- количество у заготовителя
             , _tmp.OperCount_Packer
 
               -- промежуточная сумма по Контрагенту - с округлением до 2-х знаков

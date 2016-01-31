@@ -43,6 +43,12 @@ BEGIN
      THEN
          RAISE EXCEPTION 'Ошибка.Нет прав менять <Вид документа>.';
      END IF;
+     -- Проверка
+     IF EXISTS (SELECT 1 FROM MovementLinkMovement AS MLM JOIN Movement ON Movement.Id = MLM.MovementChildId AND Movement.StatusId <> zc_Enum_Status_Erased() WHERE MLM.MovementId = inMovementId AND MLM.DescId = zc_MovementLinkMovement_Master())
+     THEN
+         RAISE EXCEPTION 'Ошибка. Найден документ <Налоговая накладная> № <%> от <%>.', (SELECT MovementString.ValueData FROM MovementLinkMovement AS MLM JOIN MovementString ON MovementString.MovementId = MLM.MovementChildId AND MovementString.DescId = zc_MovementString_InNumberPartner() WHERE MLM.MovementId = inMovementId AND MLM.DescId = zc_MovementLinkMovement_Master())
+                                                                                      , DATE ((SELECT Movement.OperDate FROM MovementLinkMovement AS MLM JOIN Movement ON Movement.Id = MLM.MovementChildId AND Movement.StatusId <> zc_Enum_Status_Erased() WHERE MLM.MovementId = inMovementId AND MLM.DescId = zc_MovementLinkMovement_Master()));
+     END IF;
 
 
      IF vbUserId = lpCheckRight(inSession, zc_Enum_Process_UnComplete_Send())
@@ -56,7 +62,7 @@ BEGIN
      -- сохранили <Документ>
      IF COALESCE (inMovementId, 0) <> COALESCE ((SELECT lpInsertUpdate_Movement (inMovementId, zc_Movement_SendOnPrice(), Movement.InvNumber, Movement.OperDate, Movement.ParentId, Movement.AccessKeyId) FROM Movement WHERE Movement.Id = inMovementId), -1)
      THEN
-         RAISE EXCEPTION 'Ошибка. inMovementId.';
+         RAISE EXCEPTION 'Ошибка. Найден документ <Налоговая>.';
      END IF;
 
      -- сохранили связь с <Кому (в документе)>

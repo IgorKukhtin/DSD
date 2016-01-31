@@ -130,6 +130,23 @@ object Report_GoodsMI_InternalDialogForm: TReport_GoodsMI_InternalDialogForm
     Top = 117
     Caption = #1060#1086#1088#1084#1072' '#1086#1087#1083#1072#1090#1099':'
   end
+  object cxLabel5: TcxLabel
+    Left = 233
+    Top = 7
+    Caption = #1055#1088#1072#1081#1089'-'#1083#1080#1089#1090':'
+  end
+  object edPriceList: TcxButtonEdit
+    Left = 232
+    Top = 27
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    Properties.ReadOnly = True
+    TabOrder = 15
+    Width = 200
+  end
   object PeriodChoice: TPeriodChoice
     DateStart = deStart
     DateEnd = deEnd
@@ -224,6 +241,21 @@ object Report_GoodsMI_InternalDialogForm: TReport_GoodsMI_InternalDialogForm
         Name = 'PaidKindName'
         Value = Null
         Component = GuidesPaidKind
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+      end
+      item
+        Name = 'PriceListId'
+        Value = Null
+        Component = PriceListGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+      end
+      item
+        Name = 'PriceListName'
+        Value = Null
+        Component = PriceListGuides
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
@@ -336,5 +368,31 @@ object Report_GoodsMI_InternalDialogForm: TReport_GoodsMI_InternalDialogForm
       end>
     Left = 320
     Top = 72
+  end
+  object PriceListGuides: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edPriceList
+    FormNameParam.Value = 'TPriceList_ObjectForm'
+    FormNameParam.DataType = ftString
+    FormName = 'TPriceList_ObjectForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = PriceListGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = PriceListGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+      end>
+    Left = 312
+    Top = 8
   end
 end

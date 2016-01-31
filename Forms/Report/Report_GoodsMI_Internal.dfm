@@ -1,31 +1,33 @@
 inherited Report_GoodsMI_InternalForm: TReport_GoodsMI_InternalForm
   Caption = #1054#1090#1095#1077#1090' <'#1087#1086' '#1090#1086#1074#1072#1088#1072#1084'>'
   ClientHeight = 352
-  ClientWidth = 1020
+  ClientWidth = 1076
   AddOnFormData.isSingle = False
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
-  ExplicitWidth = 1036
-  ExplicitHeight = 387
+  ExplicitWidth = 1092
+  ExplicitHeight = 390
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 99
-    Width = 1020
+    Width = 1076
     Height = 253
     TabOrder = 3
     ExplicitTop = 99
     ExplicitWidth = 1020
     ExplicitHeight = 253
     ClientRectBottom = 253
-    ClientRectRight = 1020
+    ClientRectRight = 1076
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 1020
       ExplicitHeight = 253
       inherited cxGrid: TcxGrid
-        Width = 1020
+        Width = 1076
         Height = 253
-        ExplicitWidth = 1020
+        ExplicitLeft = 111
+        ExplicitTop = 16
+        ExplicitWidth = 1101
         ExplicitHeight = 253
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
@@ -613,8 +615,9 @@ inherited Report_GoodsMI_InternalForm: TReport_GoodsMI_InternalForm
     end
   end
   inherited Panel: TPanel
-    Width = 1020
+    Width = 1076
     Height = 73
+    ExplicitLeft = -1
     ExplicitWidth = 1020
     ExplicitHeight = 73
     inherited deStart: TcxDateEdit
@@ -638,12 +641,12 @@ inherited Report_GoodsMI_InternalForm: TReport_GoodsMI_InternalForm
       ExplicitTop = 31
     end
     object cxLabel4: TcxLabel
-      Left = 517
+      Left = 481
       Top = 9
       Caption = #1043#1088#1091#1087#1087#1072' '#1090#1086#1074#1072#1088#1086#1074':'
     end
     object edGoodsGroup: TcxButtonEdit
-      Left = 610
+      Left = 571
       Top = 5
       Properties.Buttons = <
         item
@@ -652,12 +655,12 @@ inherited Report_GoodsMI_InternalForm: TReport_GoodsMI_InternalForm
         end>
       Properties.ReadOnly = True
       TabOrder = 5
-      Width = 221
+      Width = 196
     end
     object edInDescName: TcxTextEdit
       AlignWithMargins = True
-      Left = 863
-      Top = 3
+      Left = 786
+      Top = 5
       ParentCustomHint = False
       BeepOnEnter = False
       Enabled = False
@@ -673,12 +676,12 @@ inherited Report_GoodsMI_InternalForm: TReport_GoodsMI_InternalForm
       Width = 231
     end
     object cxLabel3: TcxLabel
-      Left = 236
+      Left = 226
       Top = 31
       Caption = #1050#1086#1084#1091':'
     end
     object edTo: TcxButtonEdit
-      Left = 275
+      Left = 258
       Top = 30
       Properties.Buttons = <
         item
@@ -687,15 +690,15 @@ inherited Report_GoodsMI_InternalForm: TReport_GoodsMI_InternalForm
         end>
       Properties.ReadOnly = True
       TabOrder = 8
-      Width = 223
+      Width = 214
     end
     object cxLabel5: TcxLabel
-      Left = 221
+      Left = 211
       Top = 6
       Caption = #1054#1090' '#1082#1086#1075#1086':'
     end
     object edFrom: TcxButtonEdit
-      Left = 275
+      Left = 258
       Top = 5
       Properties.Buttons = <
         item
@@ -704,17 +707,17 @@ inherited Report_GoodsMI_InternalForm: TReport_GoodsMI_InternalForm
         end>
       Properties.ReadOnly = True
       TabOrder = 10
-      Width = 223
+      Width = 214
     end
     object cxLabel6: TcxLabel
-      Left = 863
-      Top = 31
-      Caption = #1060#1086#1088#1084#1072' '#1086#1087#1083#1072#1090#1099':'
+      Left = 743
+      Top = 53
+      Caption = #1060#1054':'
       Visible = False
     end
     object edPaidKind: TcxButtonEdit
-      Left = 948
-      Top = 30
+      Left = 768
+      Top = 52
       Properties.Buttons = <
         item
           Default = True
@@ -723,16 +726,33 @@ inherited Report_GoodsMI_InternalForm: TReport_GoodsMI_InternalForm
       Properties.ReadOnly = True
       TabOrder = 12
       Visible = False
-      Width = 101
+      Width = 73
     end
     object cbMO_all: TcxCheckBox
-      Left = 517
+      Left = 786
       Top = 32
       Caption = #1042#1057#1045' '#1052#1072#1090#1077#1088#1080#1072#1083#1100#1085#1086' '#1086#1090#1074#1077#1089#1090#1074#1077#1085#1085#1099#1077
       Properties.ReadOnly = False
       TabOrder = 13
       Width = 196
     end
+  end
+  object cxLabel7: TcxLabel [2]
+    Left = 505
+    Top = 31
+    Caption = #1055#1088#1072#1081#1089'-'#1083#1080#1089#1090':'
+  end
+  object edPriceList: TcxButtonEdit [3]
+    Left = 571
+    Top = 32
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    Properties.ReadOnly = True
+    TabOrder = 7
+    Width = 196
   end
   inherited cxPropertiesStore: TcxPropertiesStore
     Components = <
@@ -866,6 +886,21 @@ inherited Report_GoodsMI_InternalForm: TReport_GoodsMI_InternalForm
           Name = 'ToName'
           Value = ''
           Component = ToGuides
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          ParamType = ptInputOutput
+        end
+        item
+          Name = 'PriceListId'
+          Value = Null
+          Component = PriceListGuides
+          ComponentItem = 'Key'
+          ParamType = ptInputOutput
+        end
+        item
+          Name = 'PriceListName'
+          Value = Null
+          Component = PriceListGuides
           ComponentItem = 'TextValue'
           DataType = ftString
           ParamType = ptInputOutput
@@ -1037,6 +1072,13 @@ inherited Report_GoodsMI_InternalForm: TReport_GoodsMI_InternalForm
         ParamType = ptInput
       end
       item
+        Name = 'inPriceListId'
+        Value = Null
+        Component = PriceListGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+      end
+      item
         Name = 'inIsMO_all'
         Value = Null
         Component = cbMO_all
@@ -1144,8 +1186,8 @@ inherited Report_GoodsMI_InternalForm: TReport_GoodsMI_InternalForm
     Top = 232
   end
   inherited PeriodChoice: TPeriodChoice
-    Left = 72
-    Top = 8
+    Left = 48
+    Top = 32
   end
   inherited RefreshDispatcher: TRefreshDispatcher
     ComponentList = <
@@ -1288,5 +1330,31 @@ inherited Report_GoodsMI_InternalForm: TReport_GoodsMI_InternalForm
       end>
     Left = 656
     Top = 136
+  end
+  object PriceListGuides: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edPriceList
+    FormNameParam.Value = 'TPriceList_ObjectForm'
+    FormNameParam.DataType = ftString
+    FormName = 'TPriceList_ObjectForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = PriceListGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = PriceListGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+      end>
+    Left = 608
+    Top = 24
   end
 end

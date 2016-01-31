@@ -1519,6 +1519,7 @@ begin
         if Connected
         then Self.Caption:= Self.Caption + ' : ' + HostName + ' : TRUE'
         else Self.Caption:= Self.Caption + ' : ' + HostName + ' : FALSE';
+        Connected:=false;
      end
      else
      if ParamStr(1)='alan_dp_ua_test' then
@@ -1533,6 +1534,7 @@ begin
         if Connected
         then Self.Caption:= Self.Caption + ' : ' + HostName + ' : TRUE'
         else Self.Caption:= Self.Caption + ' : ' + HostName + ' : FALSE';
+        Connected:=false;
      end
      else
      with toZConnection do begin
@@ -1547,6 +1549,8 @@ begin
         if Connected
         then Self.Caption:= Self.Caption + ' : ' + HostName + ' : TRUE'
         else Self.Caption:= Self.Caption + ' : ' + HostName + ' : FALSE';
+        //
+        Connected:=false;
      end;
      //
      //cbAllGuide.Checked:=true;

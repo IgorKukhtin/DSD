@@ -29,6 +29,7 @@ RETURNS TABLE (Id Integer, InvNumber Integer, OperDate TDateTime, StatusCode Int
              , isMedoc Boolean
              , isCopy Boolean
              , Comment TVarChar
+             , PersonalSigningName TVarChar
               )
 AS
 $BODY$
@@ -132,6 +133,8 @@ BEGIN
            , COALESCE(MovementBoolean_isCopy.ValueData, FALSE)    :: Boolean  AS isCopy
            , MovementString_Comment.ValueData                                 AS Comment
 
+           , COALESCE (Object_PersonalSigning.PersonalName, COALESCE (Object_PersonalBookkeeper_View.PersonalName, ''))  ::TVarChar    AS PersonalSigningName
+
        FROM (SELECT Movement.Id
              FROM tmpStatus
                   JOIN Movement ON Movement.OperDate BETWEEN inStartDate AND inEndDate AND Movement.DescId = zc_Movement_TaxCorrective() AND Movement.StatusId = tmpStatus.StatusId
@@ -233,6 +236,11 @@ BEGIN
             LEFT JOIN Object_Contract_InvNumber_View AS View_Contract_InvNumber ON View_Contract_InvNumber.ContractId = MovementLinkObject_Contract.ObjectId
             LEFT JOIN Object_InfoMoney_View AS View_InfoMoney ON View_InfoMoney.InfoMoneyId = View_Contract_InvNumber.InfoMoneyId
 
+            LEFT JOIN ObjectLink AS ObjectLink_Contract_PersonalSigning
+                                 ON ObjectLink_Contract_PersonalSigning.ObjectId = View_Contract_InvNumber.ContractId
+                                AND ObjectLink_Contract_PersonalSigning.DescId = zc_ObjectLink_Contract_PersonalSigning()
+            LEFT JOIN Object_Personal_View AS Object_PersonalSigning ON Object_PersonalSigning.PersonalId = ObjectLink_Contract_PersonalSigning.ChildObjectId   
+
             LEFT JOIN MovementLinkMovement AS MovementLinkMovement_Master
                                            ON MovementLinkMovement_Master.MovementId = Movement.Id
                                           AND MovementLinkMovement_Master.DescId = zc_MovementLinkMovement_Master()
@@ -269,6 +277,11 @@ BEGIN
                                          ON MovementLinkObject_Branch.MovementId = Movement.Id
                                         AND MovementLinkObject_Branch.DescId = zc_MovementLinkObject_Branch()
             LEFT JOIN Object AS Object_Branch ON Object_Branch.Id = MovementLinkObject_Branch.ObjectId
+
+            LEFT JOIN ObjectLink AS ObjectLink_Branch_PersonalBookkeeper
+                                 ON ObjectLink_Branch_PersonalBookkeeper.ObjectId = Object_Branch.Id
+                                AND ObjectLink_Branch_PersonalBookkeeper.DescId = zc_ObjectLink_Branch_PersonalBookkeeper()
+            LEFT JOIN Object_Personal_View AS Object_PersonalBookkeeper_View ON Object_PersonalBookkeeper_View.PersonalId = ObjectLink_Branch_PersonalBookkeeper.ChildObjectId                     
 
             LEFT JOIN MovementLinkMovement AS MovementLinkMovement_Child
                                            ON MovementLinkMovement_Child.MovementId = Movement.Id

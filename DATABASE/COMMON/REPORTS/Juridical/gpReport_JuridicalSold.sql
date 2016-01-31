@@ -27,7 +27,7 @@ RETURNS TABLE (ContainerId Integer, JuridicalCode Integer, JuridicalName TVarCha
              , ContractCode Integer, ContractNumber TVarChar
              , ContractTagGroupName TVarChar, ContractTagName TVarChar, ContractStateKindCode Integer
              , ContractJuridicalDocId Integer, ContractJuridicalDocCode Integer, ContractJuridicalDocName TVarChar
-             , PersonalName TVarChar, PersonalTradeName TVarChar, PersonalCollationName TVarChar, PersonalTradeName_Partner TVarChar
+             , PersonalName TVarChar, PersonalTradeName TVarChar, PersonalCollationName TVarChar, PersonalTradeName_Partner TVarChar, PersonalSigningName TVarChar
              , StartDate TDateTime, EndDate TDateTime
              , PaidKindName TVarChar, AccountName TVarChar
              , InfoMoneyGroupName TVarChar, InfoMoneyDestinationName TVarChar, InfoMoneyCode Integer, InfoMoneyName TVarChar, InfoMoneyName_all TVarChar
@@ -137,6 +137,7 @@ BEGIN
         Object_PersonalTrade.ValueData         AS PersonalTradeName,
         Object_PersonalCollation.ValueData     AS PersonalCollationName,
         Object_PersonalTrade_Partner.ValueData AS PersonalTradeName_Partner,
+        Object_PersonalSigning.PersonalName    AS PersonalSigningName,
         View_Contract.StartDate,
         View_Contract.EndDate,
         Object_PaidKind.ValueData AS PaidKindName,
@@ -355,6 +356,11 @@ BEGIN
                                 ON ObjectLink_Contract_PersonalCollation.ObjectId = Operation.ContractId
                                AND ObjectLink_Contract_PersonalCollation.DescId = zc_ObjectLink_Contract_PersonalCollation()
            LEFT JOIN Object AS Object_PersonalCollation ON Object_PersonalCollation.Id = ObjectLink_Contract_PersonalCollation.ChildObjectId
+
+           LEFT JOIN ObjectLink AS ObjectLink_Contract_PersonalSigning
+                                ON ObjectLink_Contract_PersonalSigning.ObjectId = Operation.ContractId
+                               AND ObjectLink_Contract_PersonalSigning.DescId = zc_ObjectLink_Contract_PersonalSigning()
+           LEFT JOIN Object_Personal_View AS Object_PersonalSigning ON Object_PersonalSigning.PersonalId = ObjectLink_Contract_PersonalSigning.ChildObjectId   
 
            LEFT JOIN ObjectLink AS ObjectLink_Contract_JuridicalDocument
                                 ON ObjectLink_Contract_JuridicalDocument.ObjectId = Operation.ContractId

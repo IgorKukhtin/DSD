@@ -671,6 +671,8 @@ type
     N95: TMenuItem;
     actRouteMember: TdsdOpenForm;
     N96: TMenuItem;
+    actBranchJuridical: TdsdOpenForm;
+    N97: TMenuItem;
     procedure actReport_OLAPSoldExecute(Sender: TObject);
     procedure FormShow(Sender: TObject);
   private

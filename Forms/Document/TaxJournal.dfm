@@ -383,6 +383,14 @@ inherited TaxJournalForm: TTaxJournalForm
             HeaderAlignmentVert = vaCenter
             Width = 65
           end
+          object colPersonalSigningName: TcxGridDBColumn
+            Caption = #1057#1086#1090#1088#1091#1076#1085#1080#1082' ('#1087#1086#1076#1087#1080#1089#1072#1085#1090')'
+            DataBinding.FieldName = 'PersonalSigningName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 80
+          end
           object Comment: TcxGridDBColumn
             Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
             DataBinding.FieldName = 'Comment'

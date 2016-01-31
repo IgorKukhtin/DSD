@@ -16,10 +16,11 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , NDSKindId Integer, NDSKindName TVarChar
              , ContractId Integer, ContractName TVarChar
              , PaymentDate TDateTime, PaySumm TFloat, SaleSumm TFloat
-             , InvNumberBranch TVarChar, BranchDate TDateTime, Checked Boolean 
+             , InvNumberBranch TVarChar, BranchDate TDateTime
+             , Checked Boolean, isDocument Boolean 
              , PayColor Integer
              , DateLastPay TDateTime
-              )
+             )
 
 AS
 $BODY$
@@ -71,6 +72,7 @@ BEGIN
                                    , Movement_Income_View.InvNumberBranch
                                    , Movement_Income_View.BranchDate
                                    , Movement_Income_View.Checked
+                                   , Movement_Income_View.isDocument
                                    , CASE WHEN Movement_Income_View.PaySumm <= 0.01 THEN zc_Color_Goods_Additional() END::Integer AS PayColor
                                    , Movement_Income_View.PaymentContainerId
                                FROM Movement_Income_View 
@@ -102,6 +104,7 @@ BEGIN
           , Movement_Income.InvNumberBranch
           , Movement_Income.BranchDate
           , Movement_Income.Checked
+          , Movement_Income.isDocument
           , Movement_Income.PayColor
           , MAX(MovementItemContainer.OperDate)::TDateTime AS LastDatePay
         FROM
@@ -133,6 +136,7 @@ BEGIN
           , Movement_Income.InvNumberBranch
           , Movement_Income.BranchDate
           , Movement_Income.Checked
+          , Movement_Income.isDocument
           , Movement_Income.PayColor;
 END;
 $BODY$
@@ -143,6 +147,7 @@ ALTER FUNCTION gpSelect_Movement_Income (TDateTime, TDateTime, Boolean, TVarChar
 /*
  ÈÑÒÎÐÈß ÐÀÇÐÀÁÎÒÊÈ: ÄÀÒÀ, ÀÂÒÎÐ
                Ôåëîíþê È.Â.   Êóõòèí È.Â.   Êëèìåíòüåâ Ê.È.   Ìàíüêî Ä.À.   Âîðîáêàëî À.À.
+ 30.01.16         * 
  21.12.15                                                                        *
  10.12.15                                                                        *
  08.12.15                                                                        *

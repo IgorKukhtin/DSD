@@ -14,7 +14,8 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , NDSKindId Integer, NDSKindName TVarChar
              , ContractId Integer, ContractName TVarChar
              , PaymentDate TDateTime
-             , InvNumberBranch TVarChar, BranchDate TDateTime, Checked Boolean
+             , InvNumberBranch TVarChar, BranchDate TDateTime
+             , Checked Boolean, isDocument Boolean
              , JuridicalId Integer, JuridicalName TVarChar
              , IsPay Boolean, DateLastPay TDateTime
               )
@@ -49,6 +50,7 @@ BEGIN
              , ''::TVarChar                                     AS InvNumberBranch
              , CURRENT_DATE::TDateTime                          AS BranchDate
              , false                                            AS Checked
+             , false                                            AS isDocument  
              , 0                                                AS JuridicalId
              , CAST('' as TVarChar)                             AS JuridicalName
              , False                                            AS isPay
@@ -81,7 +83,8 @@ BEGIN
                              END::TDateTime AS PaymentDate
                            , Movement_Income_View.InvNumberBranch
                            , Movement_Income_View.BranchDate
-                           , COALESCE(Movement_Income_View.Checked, false) AS Checked
+                           , COALESCE(Movement_Income_View.Checked, false)    AS Checked
+                           , COALESCE(Movement_Income_View.isDocument, false) AS isDocument
                            , Movement_Income_View.JuridicalId
                            , Movement_Income_View.JuridicalName
                            , CASE WHEN Movement_Income_View.PaySumm <= 0.01 then TRUE ELSE FALSE END AS isPay
@@ -108,6 +111,7 @@ BEGIN
           , Movement_Income.InvNumberBranch
           , Movement_Income.BranchDate
           , Movement_Income.Checked
+          , Movement_Income.isDocument
           , Movement_Income.JuridicalId
           , Movement_Income.JuridicalName
           , Movement_Income.isPay
@@ -135,6 +139,7 @@ BEGIN
           , Movement_Income.InvNumberBranch
           , Movement_Income.BranchDate
           , Movement_Income.Checked
+          , Movement_Income.isDocument
           , Movement_Income.JuridicalId
           , Movement_Income.JuridicalName
           , Movement_Income.isPay;
@@ -149,6 +154,7 @@ ALTER FUNCTION gpGet_Movement_Income (Integer, TVarChar) OWNER TO postgres;
 /*
  ÈÑÒÎÐÈß ÐÀÇÐÀÁÎÒÊÈ: ÄÀÒÀ, ÀÂÒÎÐ
                Ôåëîíþê È.Â.   Êóõòèí È.Â.   Êëèìåíòüåâ Ê.È.   Ìàíüêî Ä.À.  Âîðîáêàëî À.À.
+ 30.01.16         *
  21.12.15                                                                       *
  07.12.15                                                                       *
  21.05.15                         *

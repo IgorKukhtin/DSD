@@ -201,7 +201,13 @@ BEGIN
            , Movement.OperDate				                                AS OperDate
            , 'J1201006'::TVarChar                                           AS CHARCODE
            -- , 'Неграш О.В.'::TVarChar                                        AS N10
-           , CASE WHEN Object_Personal_View.PersonalName <> '' THEN zfConvert_FIO (Object_Personal_View.PersonalName, 1) ELSE 'Рудик Н.В.' END :: TVarChar AS N10
+           , CASE WHEN Object_PersonalSigning.PersonalName <> '' 
+                  THEN zfConvert_FIO (Object_PersonalSigning.PersonalName, 1)
+                  ELSE CASE WHEN Object_PersonalBookkeeper_View.PersonalName <> '' 
+                            THEN zfConvert_FIO (Object_PersonalBookkeeper_View.PersonalName, 1) 
+                            ELSE 'Рудик Н.В.' 
+                       END
+             END                                                :: TVarChar AS N10
            -- , 'А.В. МАРУХНО'::TVarChar                                        AS N10
            , 'оплата з поточного рахунка'::TVarChar                         AS N9
            , CASE WHEN MovementLinkObject_DocumentTaxKind.ObjectId = zc_Enum_DocumentTaxKind_CorrectivePrice()
@@ -273,7 +279,13 @@ BEGIN
            , OH_JuridicalDetails_To.INN                                     AS INN_To
            , OH_JuridicalDetails_To.NumberVAT                               AS NumberVAT_To
          -- , COALESCE (Object_Personal_View.PersonalName, OH_JuridicalDetails_To.AccounterName) :: TVarChar AS AccounterName_To 
-           , CASE WHEN COALESCE (Object_Personal_View.PersonalName,'') <> '' THEN zfConvert_FIO (Object_Personal_View.PersonalName, 1) ELSE 'Рудик Н.В.' /*'А.В. Марухно'*/ END  :: TVarChar AS AccounterName_To
+           , CASE WHEN Object_PersonalSigning.PersonalName <> '' 
+                  THEN zfConvert_FIO (Object_PersonalSigning.PersonalName, 1)
+                  ELSE CASE WHEN COALESCE (Object_PersonalBookkeeper_View.PersonalName,'') <> '' 
+                            THEN zfConvert_FIO (Object_PersonalBookkeeper_View.PersonalName, 1)
+                            ELSE 'Рудик Н.В.' /*'А.В. Марухно'*/ 
+                       END  
+             END                                                :: TVarChar AS AccounterName_To
            , OH_JuridicalDetails_To.BankAccount                             AS BankAccount_To
            , OH_JuridicalDetails_To.BankName                                AS BankName_To
            , OH_JuridicalDetails_To.MFO                                     AS BankMFO_To
@@ -457,7 +469,7 @@ BEGIN
             LEFT JOIN ObjectLink AS ObjectLink_Branch_PersonalBookkeeper
                                  ON ObjectLink_Branch_PersonalBookkeeper.ObjectId = MovementLinkObject_Branch.ObjectId
                                 AND ObjectLink_Branch_PersonalBookkeeper.DescId = zc_ObjectLink_Branch_PersonalBookkeeper()
-            LEFT JOIN Object_Personal_View ON Object_Personal_View.PersonalId = ObjectLink_Branch_PersonalBookkeeper.ChildObjectId
+            LEFT JOIN Object_Personal_View AS Object_PersonalBookkeeper_View ON Object_PersonalBookkeeper_View.PersonalId = ObjectLink_Branch_PersonalBookkeeper.ChildObjectId
 
             LEFT JOIN MovementLinkObject AS MovementLinkObject_From
                                          ON MovementLinkObject_From.MovementId = Movement.Id
@@ -521,6 +533,11 @@ BEGIN
                                  ON ObjectDate_Signing.ObjectId = MovementLinkObject_Contract.ObjectId
                                 AND ObjectDate_Signing.DescId = zc_ObjectDate_Contract_Signing()
                                 AND View_Contract.InvNumber <> '-'
+
+            LEFT JOIN ObjectLink AS ObjectLink_Contract_PersonalSigning
+                                 ON ObjectLink_Contract_PersonalSigning.ObjectId = View_Contract.ContractId
+                                AND ObjectLink_Contract_PersonalSigning.DescId = zc_ObjectLink_Contract_PersonalSigning()
+            LEFT JOIN Object_Personal_View AS Object_PersonalSigning ON Object_PersonalSigning.PersonalId = ObjectLink_Contract_PersonalSigning.ChildObjectId   
 
             LEFT JOIN MovementLinkMovement AS MovementLinkMovement_child
                                            ON MovementLinkMovement_child.MovementId = Movement.Id
@@ -729,6 +746,7 @@ ALTER FUNCTION gpSelect_Movement_TaxCorrective_Print (Integer, Boolean, TVarChar
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 29.01.16         *
  14.01.15                                                       *
  16.07.14                                        * add tmpObject_GoodsPropertyValueGroup
  09.07.14                                                       *

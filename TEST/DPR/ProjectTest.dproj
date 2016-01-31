@@ -2493,6 +2493,22 @@
 				<Form>BranchForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
+			<DCCReference Include="..\..\Forms\Report\Report_GoodsMI_SendOnPrice.pas">
+				<Form>Report_GoodsMI_SendOnPriceForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Report\Report_GoodsMI_SendOnPriceDialog.pas">
+				<Form>Report_GoodsMI_SendOnPriceDialogForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Guides\BranchJuridical.pas">
+				<Form>BranchJuridicalForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Guides\BranchJuridicalEdit.pas">
+				<Form>BranchJuridicalEditForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
 			<BuildConfiguration Include="Release">
 				<Key>Cfg_2</Key>
 				<CfgParent>Base</CfgParent>

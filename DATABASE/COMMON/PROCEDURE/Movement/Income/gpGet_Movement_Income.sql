@@ -1,9 +1,11 @@
 -- Function: gpGet_Movement_Income (Integer, TVarChar)
 
 DROP FUNCTION IF EXISTS gpGet_Movement_Income (Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpGet_Movement_Income (Integer, TDateTime, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpGet_Movement_Income(
     IN inMovementId        Integer  , -- ключ Документа
+    IN inOperDate          TDateTime, -- ключ Документа
     IN inSession           TVarChar   -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode Integer, StatusName TVarChar
@@ -35,18 +37,18 @@ BEGIN
          SELECT
                0 AS Id
              , CAST (NEXTVAL ('Movement_Income_seq') AS TVarChar) AS InvNumber
-             , CAST (CURRENT_DATE as TDateTime) AS OperDate
+             , inOperDate                       AS OperDate
              , Object_Status.Code               AS StatusCode
              , Object_Status.Name               AS StatusName
 
-             , CAST (CURRENT_DATE as TDateTime)      AS OperDatePartner
-             , CAST ('' as TVarChar)                 AS InvNumberPartner
+             , inOperDate                       AS OperDatePartner
+             , CAST ('' as TVarChar)            AS InvNumberPartner
 
-             , CAST (False as Boolean)               AS PriceWithVAT
-             , CAST (20 as TFloat)                   AS VATPercent
-             , CAST (0 as TFloat)                    AS ChangePercent
+             , CAST (False as Boolean)          AS PriceWithVAT
+             , CAST (20 as TFloat)              AS VATPercent
+             , CAST (0 as TFloat)               AS ChangePercent
              
-             , CAST (1 as TFloat)                    AS CurrencyValue
+             , CAST (1 as TFloat)               AS CurrencyValue
 
              , 0                     AS FromId
              , CAST ('' as TVarChar) AS FromName
@@ -219,11 +221,12 @@ BEGIN
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpGet_Movement_Income (Integer, TVarChar) OWNER TO postgres;
+--ALTER FUNCTION gpGet_Movement_Income (Integer, TVarChar) OWNER TO postgres;
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
+ 30.01.16         * inOperDate
  23.07.14         * add zc_MovementFloat_CurrencyValue
                         zc_MovementLinkObject_CurrencyDocument
                         zc_MovementLinkObject_CurrencyPartner
