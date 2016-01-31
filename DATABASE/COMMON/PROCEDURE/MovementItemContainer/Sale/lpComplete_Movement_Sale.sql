@@ -1462,8 +1462,9 @@ BEGIN
                                                                                      , inPartionGoodsId         := CLO_PartionGoods.ObjectId
                                                                                      , inAssetId                := CLO_Asset.ObjectId
                                                                                       )
-     FROM _tmpItem
-          INNER JOIN _tmpItemSumm AS _tmpItemSumm_find ON _tmpItemSumm_find.MovementItemId = _tmpItem.MovementItemId
+     FROM (SELECT _tmpItemSumm.MovementItemId, _tmpItemSumm.ContainerId FROM _tmpItemSumm) AS _tmpItemSumm_find
+          INNER JOIN _tmpItem ON _tmpItem.MovementItemId = _tmpItemSumm_find.MovementItemId
+                             AND _tmpItem.isLossMaterials = FALSE -- !!!если НЕ списание!!!
           LEFT JOIN ContainerLinkObject AS CLO_JuridicalBasis ON CLO_JuridicalBasis.ContainerId = _tmpItemSumm_find.ContainerId
                                                              AND CLO_JuridicalBasis.DescId = zc_ContainerLinkObject_JuridicalBasis()
           LEFT JOIN ContainerLinkObject AS CLO_Business ON CLO_Business.ContainerId = _tmpItemSumm_find.ContainerId
@@ -1486,8 +1487,8 @@ BEGIN
                                                   AND CLO_Car.DescId = zc_ContainerLinkObject_Car()
           LEFT JOIN ContainerLinkObject AS CLO_Member ON CLO_Member.ContainerId = _tmpItemSumm_find.ContainerId
                                                      AND CLO_Member.DescId = zc_ContainerLinkObject_Member()
-     WHERE _tmpItem.MovementItemId = _tmpItemSumm.MovementItemId
-       AND _tmpItem.isLossMaterials = FALSE -- !!!если НЕ списание!!!
+     WHERE _tmpItemSumm.MovementItemId = _tmpItemSumm_find.MovementItemId
+       AND _tmpItemSumm.ContainerId    = _tmpItemSumm_find.ContainerId
        AND vbAccountId_GoodsTransit <> 0
     ;
 
@@ -2068,7 +2069,7 @@ BEGIN
             , vbObjectExtId_Analyzer             AS ObjectExtId_Analyzer   -- покупатель / физ.лицо
             , _tmpItem_group.ContainerId_Goods   AS ContainerIntId_Analyzer  -- Контейнер "товар"
             , 0                                  AS ParentId
-            , _tmpItem_group.OperSumm * CASE WHEN tmpTransit.isActive = TRUE THEN 1 ELSE -1 END AS Amount
+            , _tmpItem_group.OperSumm * CASE WHEN tmpTransit.AccountId = zc_Enum_AnalyzerId_SummOut_110101() THEN -1 ELSE 1 END AS Amount
             , tmpTransit.OperDate                AS OperDate               -- т.е. по "определенной" Дате
             , tmpTransit.isActive                AS isActive               -- TRUE будет всегда, остальные зависят от даты
        FROM (SELECT _tmpItem.MovementItemId, _tmpItem.ContainerId_Partner, _tmpItem.AccountId_Partner, _tmpItem.ContainerId_Goods, _tmpItem.GoodsId, _tmpItem.GoodsKindId
@@ -2116,8 +2117,8 @@ BEGIN
             ) AS _tmpItem_group
             LEFT JOIN (SELECT -1                                  AS AccountId, TRUE  AS isActive, CASE WHEN vbAccountId_GoodsTransit <> 0 THEN vbOperDatePartner ELSE vbOperDate END AS OperDate
              UNION ALL SELECT zc_Enum_AnalyzerId_SummIn_110101()  AS AccountId, TRUE  AS isActive, vbOperDate        AS OperDate WHERE vbAccountId_GoodsTransit <> 0
-             UNION ALL SELECT zc_Enum_AnalyzerId_SummIn_110101()  AS AccountId, FALSE AS isActive, vbOperDate        AS OperDate WHERE vbAccountId_GoodsTransit <> 0
-             UNION ALL SELECT zc_Enum_AnalyzerId_SummOut_110101() AS AccountId, TRUE  AS isActive, vbOperDatePartner AS OperDate WHERE vbAccountId_GoodsTransit <> 0
+             UNION ALL SELECT zc_Enum_AnalyzerId_SummOut_110101() AS AccountId, TRUE  AS isActive, vbOperDate        AS OperDate WHERE vbAccountId_GoodsTransit <> 0
+             UNION ALL SELECT zc_Enum_AnalyzerId_SummIn_110101()  AS AccountId, FALSE AS isActive, vbOperDatePartner AS OperDate WHERE vbAccountId_GoodsTransit <> 0
              UNION ALL SELECT zc_Enum_AnalyzerId_SummOut_110101() AS AccountId, FALSE AS isActive, vbOperDatePartner AS OperDate WHERE vbAccountId_GoodsTransit <> 0
                       ) AS tmpTransit ON tmpTransit.AccountId <> 0
      UNION ALL
