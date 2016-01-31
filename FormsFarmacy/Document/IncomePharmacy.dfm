@@ -313,10 +313,10 @@ inherited IncomePharmacyForm: TIncomePharmacyForm
           Kind = bkEllipsis
         end>
       TabOrder = 4
-      Width = 174
+      Width = 194
     end
     object edTo: TcxButtonEdit
-      Left = 512
+      Left = 530
       Top = 23
       Enabled = False
       Properties.Buttons = <
@@ -328,18 +328,18 @@ inherited IncomePharmacyForm: TIncomePharmacyForm
       Width = 184
     end
     object cxLabel4: TcxLabel
-      Left = 512
+      Left = 530
       Top = 5
       Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
     end
     object cxLabel10: TcxLabel
-      Left = 330
-      Top = 47
+      Left = 530
+      Top = 46
       Caption = #1058#1080#1087' '#1053#1044#1057
     end
     object edNDSKind: TcxButtonEdit
-      Left = 330
-      Top = 64
+      Left = 530
+      Top = 63
       Enabled = False
       Properties.Buttons = <
         item
@@ -350,9 +350,9 @@ inherited IncomePharmacyForm: TIncomePharmacyForm
       Width = 86
     end
     object cxLabel12: TcxLabel
-      Left = 164
-      Top = 47
-      Caption = #1055#1088#1086#1074#1077#1088#1077#1085':'
+      Left = 209
+      Top = 65
+      Caption = #1055#1088#1086#1074#1077#1088#1077#1085
     end
     object cxLabel11: TcxLabel
       Left = 224
@@ -370,24 +370,32 @@ inherited IncomePharmacyForm: TIncomePharmacyForm
       Width = 100
     end
     object cxLabel9: TcxLabel
-      Left = 225
-      Top = 47
+      Left = 425
+      Top = 46
       Caption = #8470' '#1074' '#1072#1087#1090#1077#1082#1077
     end
     object edPointNumber: TcxTextEdit
-      Left = 225
-      Top = 64
+      Left = 425
+      Top = 63
       Enabled = False
       Properties.ReadOnly = False
       TabOrder = 16
       Width = 99
     end
     object cbFarmacyShow: TcxCheckBox
-      Left = 189
-      Top = 64
+      Left = 192
+      Top = 63
       Action = mactFarmacyShow
       TabOrder = 17
-      Width = 30
+      Width = 17
+    end
+    object cbisDocument: TcxCheckBox
+      Left = 268
+      Top = 63
+      Caption = #1054#1088#1080#1075#1080#1085#1072#1083' '#1085#1072#1082#1083'. ('#1076#1072'/'#1085#1077#1090')'
+      Properties.ReadOnly = True
+      TabOrder = 18
+      Width = 154
     end
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
@@ -559,6 +567,19 @@ inherited IncomePharmacyForm: TIncomePharmacyForm
           ParamType = ptInput
         end>
       isShowModal = False
+    end
+    object actisDocument: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spisDocument
+      StoredProcList = <
+        item
+          StoredProc = spisDocument
+        end>
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' "'#1054#1088#1080#1075#1080#1085#1072#1083' '#1044#1072'/'#1053#1077#1090'"'
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' "'#1054#1088#1080#1075#1080#1085#1072#1083' '#1044#1072'/'#1053#1077#1090'"'
+      ImageIndex = 58
     end
     object actSetAmountEqual: TdsdExecStoredProc
       Category = 'DSDLib'
@@ -772,6 +793,10 @@ inherited IncomePharmacyForm: TIncomePharmacyForm
         end
         item
           Visible = True
+          ItemName = 'bbisDocument'
+        end
+        item
+          Visible = True
           ItemName = 'dxBarStatic'
         end
         item
@@ -817,6 +842,10 @@ inherited IncomePharmacyForm: TIncomePharmacyForm
     end
     object dxBarButton2: TdxBarButton
       Action = actUpdate_MovementItem_Income_SetEqualAmount
+      Category = 0
+    end
+    object bbisDocument: TdxBarButton
+      Action = actisDocument
       Category = 0
     end
   end
@@ -995,7 +1024,7 @@ inherited IncomePharmacyForm: TIncomePharmacyForm
       end
       item
         Name = 'PaymentDate'
-        Value = Null
+        Value = 'NULL'
         DataType = ftDateTime
       end
       item
@@ -1012,6 +1041,12 @@ inherited IncomePharmacyForm: TIncomePharmacyForm
         Name = 'Checked'
         Value = Null
         Component = cbFarmacyShow
+      end
+      item
+        Name = 'isDocument'
+        Value = Null
+        Component = cbisDocument
+        DataType = ftBoolean
       end>
     Left = 216
     Top = 248
@@ -1546,5 +1581,28 @@ inherited IncomePharmacyForm: TIncomePharmacyForm
     PackSize = 1
     Left = 368
     Top = 432
+  end
+  object spisDocument: TdsdStoredProc
+    StoredProcName = 'gpUpdateMovement_isDocument'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'ioId '
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inisDocument'
+        Value = 'False'
+        Component = cbisDocument
+        DataType = ftBoolean
+        ParamType = ptInputOutput
+      end>
+    PackSize = 1
+    Left = 800
+    Top = 203
   end
 end

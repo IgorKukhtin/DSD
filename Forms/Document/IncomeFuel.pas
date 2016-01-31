@@ -23,7 +23,8 @@ uses
   dxSkinSilver, dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008,
   dxSkinTheAsphaltWorld, dxSkinsDefaultPainters, dxSkinValentine, dxSkinVS2010,
   dxSkinWhiteprint, dxSkinXmas2008Blue, dxSkinscxPCPainter, dxSkinsdxBarPainter,
-  DataModul, dxBarExtItems, dsdAddOn, cxCheckBox, cxCurrencyEdit, cxSplitter;
+  DataModul, dxBarExtItems, dsdAddOn, cxCheckBox, cxCurrencyEdit, cxSplitter,
+  cxBlobEdit;
 
 type
   TIncomeFuelForm = class(TParentForm)
@@ -175,6 +176,11 @@ type
     colSummReparation: TcxGridDBColumn;
     colSummPersonal: TcxGridDBColumn;
     actUpdateInfoDs: TdsdUpdateDataSet;
+    MIProtocolOpenForm: TdsdOpenForm;
+    MIChildProtocolOpenForm: TdsdOpenForm;
+    bbMIProtocol: TdxBarButton;
+    bbMIChildProtocol: TdxBarButton;
+    bbRouteMember: TdxBarButton;
   private
   public
   end;

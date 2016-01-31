@@ -45,6 +45,9 @@ type
     actaOpen_Income_AmountTroubleForm: TdsdOpenForm;
     spGet_Movement_ManualAmountTrouble: TdsdStoredProc;
     colButton: TcxGridDBColumn;
+    spisDocument: TdsdStoredProc;
+    actisDocument: TdsdExecStoredProc;
+    bbisDocument: TdxBarButton;
   private
     { Private declarations }
   public

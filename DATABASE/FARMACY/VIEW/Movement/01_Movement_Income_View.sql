@@ -31,6 +31,7 @@ CREATE OR REPLACE VIEW Movement_Income_View AS
        , MovementString_InvNumberBranch.ValueData   AS InvNumberBranch
        , MovementDate_Branch.ValueData              AS BranchDate
        , COALESCE(MovementBoolean_Checked.ValueData, false)   AS Checked
+       , COALESCE(MovementBoolean_Document.ValueData, false)  AS isDocument
        , Container.Id                               AS PaymentContainerId
     FROM Movement 
         LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
@@ -92,6 +93,10 @@ CREATE OR REPLACE VIEW Movement_Income_View AS
                                   ON MovementBoolean_Checked.MovementId =  Movement.Id
                                  AND MovementBoolean_Checked.DescId = zc_MovementBoolean_Checked()
 
+        LEFT JOIN MovementBoolean AS MovementBoolean_Document
+                                  ON MovementBoolean_Document.MovementId =  Movement.Id
+                                 AND MovementBoolean_Document.DescId = zc_MovementBoolean_Document()
+
         LEFT JOIN MovementDate    AS MovementDate_Payment
                                   ON MovementDate_Payment.MovementId =  Movement.Id
                                  AND MovementDate_Payment.DescId = zc_MovementDate_Payment()
@@ -121,6 +126,7 @@ ALTER TABLE Movement_Income_View
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.  Воробкало А.А.
+ 30.01.16         *
  11.01.15                                                         *
  07.12.15                                                         *
  14.05.15                        * 

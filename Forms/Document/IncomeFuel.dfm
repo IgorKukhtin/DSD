@@ -26,7 +26,6 @@ object IncomeFuelForm: TIncomeFuelForm
     Align = alTop
     BevelOuter = bvNone
     TabOrder = 0
-    ExplicitWidth = 879
     object edInvNumber: TcxTextEdit
       Left = 8
       Top = 23
@@ -42,7 +41,7 @@ object IncomeFuelForm: TIncomeFuelForm
     object edOperDate: TcxDateEdit
       Left = 177
       Top = 23
-      EditValue = 42387d
+      EditValue = 42370d
       Properties.SaveTime = False
       Properties.ShowTime = False
       TabOrder = 1
@@ -253,14 +252,12 @@ object IncomeFuelForm: TIncomeFuelForm
     TabOrder = 1
     Properties.ActivePage = cxTabSheetMain
     Properties.CustomButtons.Buttons = <>
-    ExplicitWidth = 879
     ClientRectBottom = 481
     ClientRectRight = 1052
     ClientRectTop = 24
     object cxTabSheetMain: TcxTabSheet
       Caption = #1057#1090#1088#1086#1095#1085#1072#1103' '#1095#1072#1089#1090#1100
       ImageIndex = 0
-      ExplicitWidth = 879
       object cxGridChild: TcxGrid
         Left = 0
         Top = 288
@@ -268,6 +265,7 @@ object IncomeFuelForm: TIncomeFuelForm
         Height = 169
         Align = alBottom
         TabOrder = 0
+        ExplicitTop = 286
         object cxGridDBTableViewChild: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = ChildDS
@@ -416,8 +414,6 @@ object IncomeFuelForm: TIncomeFuelForm
         Height = 8
         AlignSplitter = salBottom
         Control = cxGridChild
-        ExplicitTop = 198
-        ExplicitWidth = 879
       end
       object cxGrid: TcxGrid
         Left = 0
@@ -426,9 +422,6 @@ object IncomeFuelForm: TIncomeFuelForm
         Height = 132
         Align = alClient
         TabOrder = 2
-        ExplicitTop = 164
-        ExplicitWidth = 879
-        ExplicitHeight = 110
         object cxGridDBTableView: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = MasterDS
@@ -664,7 +657,7 @@ object IncomeFuelForm: TIncomeFuelForm
             Caption = #1057#1087#1080#1076#1086#1084#1077#1090#1088' '#1085#1072#1095'. '#1082#1084
             DataBinding.FieldName = 'StartOdometre'
             PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DisplayFormat = ',0.00##'
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
             GroupSummaryAlignment = taCenter
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
@@ -675,7 +668,7 @@ object IncomeFuelForm: TIncomeFuelForm
             Caption = #1057#1087#1080#1076#1086#1084#1077#1090#1088' '#1082#1086#1085'. '#1082#1084
             DataBinding.FieldName = 'EndOdometre'
             PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DisplayFormat = ',0.00##'
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
             GroupSummaryAlignment = taCenter
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
@@ -767,7 +760,6 @@ object IncomeFuelForm: TIncomeFuelForm
         HotZoneClassName = 'TcxMediaPlayer8Style'
         AlignSplitter = salTop
         Control = cxGrid1
-        ExplicitTop = 86
       end
     end
   end
@@ -895,7 +887,19 @@ object IncomeFuelForm: TIncomeFuelForm
         end
         item
           Visible = True
+          ItemName = 'bbMIProtocol'
+        end
+        item
+          Visible = True
+          ItemName = 'bbStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbInsertRecordChild'
+        end
+        item
+          Visible = True
+          ItemName = 'bbRouteMember'
         end
         item
           Visible = True
@@ -904,6 +908,14 @@ object IncomeFuelForm: TIncomeFuelForm
         item
           Visible = True
           ItemName = 'bbSetUnErasedChild'
+        end
+        item
+          Visible = True
+          ItemName = 'bbStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbMIChildProtocol'
         end
         item
           Visible = True
@@ -998,6 +1010,18 @@ object IncomeFuelForm: TIncomeFuelForm
     end
     object bbSetUnErasedChild: TdxBarButton
       Action = SetUnErasedChild
+      Category = 0
+    end
+    object bbMIProtocol: TdxBarButton
+      Action = MIProtocolOpenForm
+      Category = 0
+    end
+    object bbMIChildProtocol: TdxBarButton
+      Action = MIChildProtocolOpenForm
+      Category = 0
+    end
+    object bbRouteMember: TdxBarButton
+      Action = RouteMemberChoiceForm
       Category = 0
     end
   end
@@ -1279,7 +1303,9 @@ object IncomeFuelForm: TIncomeFuelForm
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
-      Caption = 'RouteMemberForm'
+      Caption = #1056#1077#1076#1072#1082#1090#1080#1088#1086#1074#1072#1090#1100' <'#1052#1072#1088#1096#1088#1091#1090'('#1089#1086#1090#1088#1091#1076#1085#1080#1082#1072')>'
+      Hint = #1056#1077#1076#1072#1082#1090#1080#1088#1086#1074#1072#1090#1100' <'#1052#1072#1088#1096#1088#1091#1090'('#1089#1086#1090#1088#1091#1076#1085#1080#1082#1072')>'
+      ImageIndex = 1
       FormName = 'TRouteMemberForm'
       FormNameParam.Value = 'TRouteMemberForm'
       FormNameParam.DataType = ftString
@@ -1311,7 +1337,6 @@ object IncomeFuelForm: TIncomeFuelForm
       MoveParams = <>
       PostDataSetBeforeExecute = False
       View = cxGridDBTableViewChild
-      Action = RouteMemberChoiceForm
       Params = <>
       Caption = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1052#1072#1088#1096#1088#1091#1090'('#1089#1086#1090#1088#1091#1076#1085#1080#1082#1072')>'
       Hint = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1052#1072#1088#1096#1088#1091#1090'('#1089#1086#1090#1088#1091#1076#1085#1080#1082#1072')>'
@@ -1365,15 +1390,9 @@ object IncomeFuelForm: TIncomeFuelForm
       StoredProcList = <
         item
           StoredProc = spInsertUpdateMovement
-        end
-        item
-          StoredProc = spInsertUpdateMovement
-        end
-        item
-          StoredProc = spSelectMIChild
         end>
-      Caption = 'actUpdateChildDS'
-      DataSource = ChildDS
+      Caption = 'actUpdateInfoDS'
+      DataSource = InfoDS
     end
     object actUpdateChildDS: TdsdUpdateDataSet
       Category = 'DSDLib'
@@ -1392,6 +1411,60 @@ object IncomeFuelForm: TIncomeFuelForm
         end>
       Caption = 'actUpdateChildDS'
       DataSource = ChildDS
+    end
+    object MIChildProtocolOpenForm: TdsdOpenForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = #1055#1088#1086#1089#1084#1086#1090#1088' <'#1055#1088#1086#1090#1086#1082#1086#1083#1072' '#1052#1072#1088#1096#1088#1091#1090#1086#1074' ('#1089#1086#1090#1088#1091#1076#1085#1080#1082#1086#1074')>'
+      Hint = #1055#1088#1086#1089#1084#1086#1090#1088' <'#1055#1088#1086#1090#1086#1082#1086#1083#1072' '#1052#1072#1088#1096#1088#1091#1090#1086#1074' ('#1089#1086#1090#1088#1091#1076#1085#1080#1082#1086#1074')>'
+      ImageIndex = 34
+      FormName = 'TMovementItemProtocolForm'
+      FormNameParam.Value = 'TMovementItemProtocolForm'
+      FormNameParam.DataType = ftString
+      GuiParams = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = ChildCDS
+          ComponentItem = 'Id'
+          ParamType = ptInput
+        end
+        item
+          Name = 'GoodsName'
+          Value = Null
+          Component = ChildCDS
+          ComponentItem = 'RouteMemberName'
+          DataType = ftString
+          ParamType = ptInput
+        end>
+      isShowModal = False
+    end
+    object MIProtocolOpenForm: TdsdOpenForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = #1055#1088#1086#1089#1084#1086#1090#1088' <'#1055#1088#1086#1090#1086#1082#1086#1083#1072' '#1089#1090#1088#1086#1082' '#1076#1086#1082#1091#1084#1077#1085#1090#1072'>'
+      Hint = #1055#1088#1086#1089#1084#1086#1090#1088' <'#1055#1088#1086#1090#1086#1082#1086#1083#1072' '#1089#1090#1088#1086#1082' '#1076#1086#1082#1091#1084#1077#1085#1090#1072'>'
+      ImageIndex = 34
+      FormName = 'TMovementItemProtocolForm'
+      FormNameParam.Value = 'TMovementItemProtocolForm'
+      FormNameParam.DataType = ftString
+      GuiParams = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'Id'
+          ParamType = ptInput
+        end
+        item
+          Name = 'GoodsName'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'GoodsName'
+          DataType = ftString
+          ParamType = ptInput
+        end>
+      isShowModal = False
     end
   end
   object MasterDS: TDataSource
@@ -1542,7 +1615,7 @@ object IncomeFuelForm: TIncomeFuelForm
   end
   object PopupMenu: TPopupMenu
     Images = dmMain.ImageList
-    Left = 736
+    Left = 760
     Top = 87
     object N1: TMenuItem
       Action = actRefresh
@@ -1789,8 +1862,8 @@ object IncomeFuelForm: TIncomeFuelForm
         ParamType = ptInput
       end>
     PackSize = 1
-    Left = 826
-    Top = 128
+    Left = 922
+    Top = 72
   end
   object HeaderSaver: THeaderSaver
     IdParam.Value = Null
@@ -1870,6 +1943,14 @@ object IncomeFuelForm: TIncomeFuelForm
         Value = Null
         Component = FormParams
         ComponentItem = 'Id'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inOperDate'
+        Value = 'NULL'
+        Component = FormParams
+        ComponentItem = 'inOperDate'
+        DataType = ftDateTime
         ParamType = ptInput
       end
       item
@@ -2054,16 +2135,16 @@ object IncomeFuelForm: TIncomeFuelForm
         DataType = ftFloat
       end>
     PackSize = 1
-    Left = 792
-    Top = 125
+    Left = 992
+    Top = 61
   end
   object RefreshAddOn: TRefreshAddOn
     DataSet = 'ClientDataSet'
     KeyField = 'Id'
     RefreshAction = 'actRefresh'
     FormParams = 'FormParams'
-    Left = 736
-    Top = 127
+    Left = 864
+    Top = 79
   end
   object GuidesFiller: TGuidesFiller
     IdParam.Value = Null
@@ -2080,7 +2161,7 @@ object IncomeFuelForm: TIncomeFuelForm
       item
         Action = actInsertUpdateMovement
       end>
-    Left = 192
+    Left = 168
     Top = 53
   end
   object GuidesContract: TdsdGuides
@@ -2397,16 +2478,22 @@ object IncomeFuelForm: TIncomeFuelForm
       item
         Name = 'outStartOdometre_calc'
         Value = Null
+        Component = InfoCDS
+        ComponentItem = 'StartOdometre'
         DataType = ftFloat
       end
       item
         Name = 'outEndOdometre_calc'
         Value = Null
+        Component = InfoCDS
+        ComponentItem = 'EndOdometre'
         DataType = ftFloat
       end
       item
         Name = 'outDistanceDiff'
         Value = Null
+        Component = InfoCDS
+        ComponentItem = 'DistanceReal'
         DataType = ftFloat
       end>
     PackSize = 1
@@ -2648,6 +2735,13 @@ object IncomeFuelForm: TIncomeFuelForm
         Component = InfoCDS
         ComponentItem = 'SummPersonal'
         DataType = ftFloat
+      end
+      item
+        Name = 'inOperDate'
+        Value = 42370d
+        Component = edOperDate
+        DataType = ftDateTime
+        ParamType = ptInput
       end>
     PackSize = 1
     Left = 584
