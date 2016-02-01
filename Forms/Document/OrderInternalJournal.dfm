@@ -4,7 +4,7 @@ inherited OrderInternalJournalForm: TOrderInternalJournalForm
   ClientWidth = 1073
   AddOnFormData.Params = FormParams
   ExplicitWidth = 1089
-  ExplicitHeight = 573
+  ExplicitHeight = 570
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -176,7 +176,7 @@ inherited OrderInternalJournalForm: TOrderInternalJournalForm
             Width = 60
           end
           object Comment: TcxGridDBColumn
-            Caption = #1055#1088#1080#1077#1095#1072#1085#1080#1077
+            Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
             DataBinding.FieldName = 'Comment'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
