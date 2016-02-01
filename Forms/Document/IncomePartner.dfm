@@ -1611,6 +1611,14 @@ object IncomePartnerForm: TIncomePartnerForm
         ParamType = ptInput
       end
       item
+        Name = 'inOperDate'
+        Value = 'NULL'
+        Component = FormParams
+        ComponentItem = 'inOperDate'
+        DataType = ftDateTime
+        ParamType = ptInput
+      end
+      item
         Name = 'InvNumber'
         Value = ''
         Component = edInvNumber

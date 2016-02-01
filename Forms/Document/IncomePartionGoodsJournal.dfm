@@ -808,6 +808,12 @@ object IncomePartionGoodsJournalForm: TIncomePartionGoodsJournalForm
           Name = 'ShowAll'
           Value = True
           DataType = ftBoolean
+        end
+        item
+          Name = 'inOperDate'
+          Value = 'NULL'
+          Component = deEnd
+          DataType = ftDateTime
         end>
       isShowModal = False
       DataSource = DataSource
@@ -860,6 +866,12 @@ object IncomePartionGoodsJournalForm: TIncomePartionGoodsJournalForm
           Name = 'ShowAll'
           Value = False
           DataType = ftBoolean
+        end
+        item
+          Name = 'inOperDate'
+          Value = 'NULL'
+          Component = deEnd
+          DataType = ftDateTime
         end>
       isShowModal = False
       ActionType = acUpdate

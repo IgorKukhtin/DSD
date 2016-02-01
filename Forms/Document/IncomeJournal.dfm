@@ -895,6 +895,12 @@ object IncomeJournalForm: TIncomeJournalForm
           Name = 'ShowAll'
           Value = False
           DataType = ftBoolean
+        end
+        item
+          Name = 'inOperDate'
+          Value = 'NULL'
+          Component = deEnd
+          DataType = ftDateTime
         end>
       isShowModal = False
       ActionType = acUpdate

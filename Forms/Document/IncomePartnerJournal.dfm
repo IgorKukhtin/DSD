@@ -769,6 +769,12 @@ object IncomePartnerJournalForm: TIncomePartnerJournalForm
           Name = 'ShowAll'
           Value = True
           DataType = ftBoolean
+        end
+        item
+          Name = 'inOperDate'
+          Value = 'NULL'
+          Component = deEnd
+          DataType = ftDateTime
         end>
       isShowModal = False
       DataSource = DataSource
@@ -821,6 +827,12 @@ object IncomePartnerJournalForm: TIncomePartnerJournalForm
           Name = 'ShowAll'
           Value = False
           DataType = ftBoolean
+        end
+        item
+          Name = 'inOperDate'
+          Value = 'NULL'
+          Component = deEnd
+          DataType = ftDateTime
         end>
       isShowModal = False
       ActionType = acUpdate
