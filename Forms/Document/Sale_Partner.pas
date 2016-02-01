@@ -167,6 +167,11 @@ type
     spInsertUpdateMovement_Params: TdsdStoredProc;
     HeaderSaver2: THeaderSaver;
     cbPromo: TcxCheckBox;
+    spGetReportNameTransport: TdsdStoredProc;
+    bbPrint_Transport: TdxBarButton;
+    actPrint_Transport: TdsdPrintAction;
+    actPrint_Transport_ReportName: TdsdExecStoredProc;
+    mactPrint_Transport: TMultiAction;
   private
     { Private declarations }
   public

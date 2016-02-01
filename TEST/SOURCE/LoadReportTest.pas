@@ -248,6 +248,13 @@ begin
   for i := Low(OKPO) to High(OKPO) do
     LoadReportFromFile('PrintMovement_Sale' + OKPO[i], ReportPath + '\Товарный Учет\PrintMovement_Sale' + OKPO[i] + '.fr3');
 
+  LoadReportFromFile('PrintMovement_Transport', ReportPath + '\Товарный Учет\PrintMovement_Transport.fr3');
+
+  TStrArrAdd(['32516492','39135315','32049199','36003603','36387249', '36387233', '38916558' ]);
+  for i := Low(OKPO) to High(OKPO) do
+    LoadReportFromFile('PrintMovement_Transport' + OKPO[i], ReportPath + '\Товарный Учет\PrintMovement_Transport' + OKPO[i] + '.fr3');
+
+
 end;
 
 procedure TLoadReportTest.SetUp;

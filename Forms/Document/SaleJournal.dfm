@@ -1320,7 +1320,31 @@ inherited SaleJournalForm: TSaleJournalForm
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
     end
-    object actPrint_Account: TdsdPrintAction [35]
+    object mactPrint_Transport: TMultiAction [35]
+      Category = 'Print_TTN'
+      MoveParams = <
+        item
+          FromParam.Name = 'id'
+          FromParam.Value = Null
+          FromParam.Component = MasterCDS
+          FromParam.ComponentItem = 'id'
+          ToParam.Value = Null
+          ToParam.Component = FormParams
+          ToParam.ComponentItem = 'Id'
+          ToParam.ParamType = ptInputOutput
+        end>
+      ActionList = <
+        item
+          Action = actPrint_Transport_ReportName
+        end
+        item
+          Action = actPrint_Transport
+        end>
+      Caption = #1055#1077#1095#1072#1090#1100' '#1058#1088#1072#1085#1089#1087#1086#1088#1090#1085#1086#1081
+      Hint = #1055#1077#1095#1072#1090#1100' '#1058#1088#1072#1085#1089#1087#1086#1088#1090#1085#1086#1081
+      ImageIndex = 20
+    end
+    object actPrint_Account: TdsdPrintAction [36]
       Category = 'Print_Account'
       MoveParams = <>
       StoredProc = spSelectPrint
@@ -1355,7 +1379,42 @@ inherited SaleJournalForm: TSaleJournalForm
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
     end
-    object actSPPrintSaleProcName: TdsdExecStoredProc [36]
+    object actPrint_Transport: TdsdPrintAction [37]
+      Category = 'Print_TTN'
+      MoveParams = <>
+      StoredProc = spSelectPrint
+      StoredProcList = <
+        item
+          StoredProc = spSelectPrint
+        end>
+      Caption = #1055#1077#1095#1072#1090#1100' '#1058#1088#1072#1085#1089#1087#1086#1088#1090#1085#1086#1081
+      Hint = #1055#1077#1095#1072#1090#1100' '#1058#1088#1072#1085#1089#1087#1086#1088#1090#1085#1086#1081
+      ShortCut = 16464
+      DataSets = <
+        item
+          DataSet = PrintHeaderCDS
+          UserName = 'frxDBDHeader'
+        end
+        item
+          DataSet = PrintItemsCDS
+          UserName = 'frxDBDMaster'
+        end>
+      Params = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'Id'
+        end>
+      ReportName = 'NULL'
+      ReportNameParam.Name = #1057#1095#1077#1090
+      ReportNameParam.Value = ''
+      ReportNameParam.Component = FormParams
+      ReportNameParam.ComponentItem = 'ReportNameTransport'
+      ReportNameParam.DataType = ftString
+      ReportNameParam.ParamType = ptInput
+    end
+    object actSPPrintSaleProcName: TdsdExecStoredProc [38]
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -1366,7 +1425,7 @@ inherited SaleJournalForm: TSaleJournalForm
         end>
       Caption = 'actSPPrintSaleProcName'
     end
-    object actPrint_Account_ReportName: TdsdExecStoredProc [37]
+    object actPrint_Account_ReportName: TdsdExecStoredProc [39]
       Category = 'Print_Account'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -1377,7 +1436,18 @@ inherited SaleJournalForm: TSaleJournalForm
         end>
       Caption = 'actPrint_Account_ReportName'
     end
-    object actPrint_ExpPack: TdsdPrintAction [38]
+    object actPrint_Transport_ReportName: TdsdExecStoredProc [40]
+      Category = 'Print_TTN'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spGetReportNameTransport
+      StoredProcList = <
+        item
+          StoredProc = spGetReportNameTransport
+        end>
+      Caption = 'actPrint_Transport_ReportName'
+    end
+    object actPrint_ExpPack: TdsdPrintAction [41]
       Category = 'Print_Export'
       MoveParams = <
         item
@@ -1418,7 +1488,7 @@ inherited SaleJournalForm: TSaleJournalForm
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
     end
-    object actPrint_Spec: TdsdPrintAction [39]
+    object actPrint_Spec: TdsdPrintAction [42]
       Category = 'Print_Fozzy'
       MoveParams = <
         item
@@ -2210,6 +2280,10 @@ inherited SaleJournalForm: TSaleJournalForm
         end
         item
           Visible = True
+          ItemName = 'bbPrint_Transport'
+        end
+        item
+          Visible = True
           ItemName = 'dxBarStatic'
         end
         item
@@ -2417,6 +2491,10 @@ inherited SaleJournalForm: TSaleJournalForm
       Action = actElectron
       Category = 0
     end
+    object bbPrint_Transport: TdxBarButton
+      Action = mactPrint_Transport
+      Category = 0
+    end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
     Left = 320
@@ -2532,6 +2610,12 @@ inherited SaleJournalForm: TSaleJournalForm
       end
       item
         Name = 'ReportNameSaleTax'
+        Value = Null
+        DataType = ftString
+        ParamType = ptInput
+      end
+      item
+        Name = 'ReportNameTransport'
         Value = Null
         DataType = ftString
         ParamType = ptInput
@@ -3344,5 +3428,28 @@ inherited SaleJournalForm: TSaleJournalForm
     PackSize = 1
     Left = 1040
     Top = 195
+  end
+  object spGetReportNameTransport: TdsdStoredProc
+    StoredProcName = 'gpGet_Movement_Transport_ReportName'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+      end
+      item
+        Name = 'gpGet_Movement_Transport_ReportName'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'ReportNameTransport'
+        DataType = ftString
+      end>
+    PackSize = 1
+    Left = 824
+    Top = 448
   end
 end

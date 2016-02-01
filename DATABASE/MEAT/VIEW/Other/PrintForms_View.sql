@@ -440,6 +440,67 @@ AS
            , CAST (0 AS INTEGER)
            , CAST ('PrintMovement_ProfitLossService' AS TVarChar)
 
+-- Транспортная Amstor
+      SELECT
+             zc_movement_sale()
+           , CAST ('Transport' AS TVarChar)
+           , CAST ('01.01.2000' AS TDateTime)
+           , CAST ('01.01.2200' AS TDateTime)
+           , CAST (Object_Juridical.Id AS INTEGER)
+           , CAST (0 AS INTEGER)
+           , CAST ('PrintMovement_Transport32516492' AS TVarChar)
+      FROM Object AS Object_Juridical
+      JOIN ObjectHistory_JuridicalDetails_View AS OH_JuridicalDetails ON OH_JuridicalDetails.JuridicalId = Object_Juridical.Id
+       AND OH_JuridicalDetails.OKPO IN ('32516492', '39135315')        
+      WHERE Object_Juridical.DescId = zc_Object_Juridical()
+    
+      UNION
+-- Транспортная Метро
+      SELECT
+             zc_movement_sale()
+           , CAST ('Transport' AS TVarChar)
+           , CAST ('01.01.2000' AS TDateTime)
+           , CAST ('01.01.2200' AS TDateTime)
+           , CAST (Object_Juridical.Id AS INTEGER)
+           , CAST (0 AS INTEGER)
+           , CAST ('PrintMovement_Transport32049199' AS TVarChar)
+      FROM Object AS Object_Juridical
+      JOIN ObjectHistory_JuridicalDetails_View AS OH_JuridicalDetails ON OH_JuridicalDetails.JuridicalId = Object_Juridical.Id
+       AND OH_JuridicalDetails.OKPO IN ('32049199')        
+      WHERE Object_Juridical.DescId = zc_Object_Juridical()
+
+      UNION
+-- Транспортная Новус
+      SELECT
+             zc_movement_sale()
+           , CAST ('Transport' AS TVarChar)
+           , CAST ('01.01.2000' AS TDateTime)
+           , CAST ('01.01.2200' AS TDateTime)
+           , CAST (Object_Juridical.Id AS INTEGER)
+           , CAST (0 AS INTEGER)
+           , CAST ('PrintMovement_Transport36003603' AS TVarChar)
+      FROM Object AS Object_Juridical
+      JOIN ObjectHistory_JuridicalDetails_View AS OH_JuridicalDetails ON OH_JuridicalDetails.JuridicalId = Object_Juridical.Id
+       AND OH_JuridicalDetails.OKPO IN ('36003603')        
+      WHERE Object_Juridical.DescId = zc_Object_Juridical()
+
+      UNION
+-- Транспортная Фудмережа, Альвар
+      SELECT
+             zc_movement_sale()
+           , CAST ('Transport' AS TVarChar)
+           , CAST ('01.01.2000' AS TDateTime)
+           , CAST ('01.01.2200' AS TDateTime)
+           , CAST (Object_Juridical.Id AS INTEGER)
+           , CAST (0 AS INTEGER)
+           , CAST ('PrintMovement_Transport36387249' AS TVarChar)
+      FROM Object AS Object_Juridical
+      JOIN ObjectHistory_JuridicalDetails_View AS OH_JuridicalDetails ON OH_JuridicalDetails.JuridicalId = Object_Juridical.Id
+       AND OH_JuridicalDetails.OKPO IN ('36387249', '36387233', '38916558')        
+      WHERE Object_Juridical.DescId = zc_Object_Juridical()
+
+
+
 
 --       ORDER BY 1,2,4
 
@@ -453,6 +514,7 @@ ALTER TABLE PrintForms_View OWNER TO postgres;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 01.02.16         * add PrintMovement_Transport
  21.12.15         * add PrintMovement_Sale36003603 Новус
                       , PrintMovement_Sale39118745 
  18.12.15         * add PrintMovement_Sale2DiscountPrice

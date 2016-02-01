@@ -11,17 +11,17 @@ inherited Sale_PartnerJournalForm: TSale_PartnerJournalForm
     Width = 1098
     Height = 478
     TabOrder = 3
-    ExplicitWidth = 1020
+    ExplicitWidth = 1098
     ExplicitHeight = 478
     ClientRectBottom = 478
     ClientRectRight = 1098
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 1020
+      ExplicitWidth = 1098
       ExplicitHeight = 478
       inherited cxGrid: TcxGrid
         Width = 1098
         Height = 478
-        ExplicitWidth = 1020
+        ExplicitWidth = 1098
         ExplicitHeight = 478
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Filter.Options = [fcoCaseInsensitive, fcoShowOperatorDescription]
@@ -686,7 +686,7 @@ inherited Sale_PartnerJournalForm: TSale_PartnerJournalForm
   end
   inherited Panel: TPanel
     Width = 1098
-    ExplicitWidth = 1020
+    ExplicitWidth = 1098
     inherited deStart: TcxDateEdit
       EditValue = 42370d
     end
@@ -1545,6 +1545,76 @@ inherited Sale_PartnerJournalForm: TSale_PartnerJournalForm
       Hint = #1055#1077#1095#1072#1090#1100' '#1050#1072#1095#1077#1089#1090#1074#1077#1085#1085#1086#1077' '#1091#1076#1086#1089#1090#1086#1074#1077#1088#1077#1085#1080#1077
       ImageIndex = 16
     end
+    object actPrint_Transport: TdsdPrintAction
+      Category = 'Print_TTN'
+      MoveParams = <>
+      StoredProc = spSelectPrint
+      StoredProcList = <
+        item
+          StoredProc = spSelectPrint
+        end>
+      Caption = #1055#1077#1095#1072#1090#1100' '#1058#1088#1072#1085#1089#1087#1086#1088#1090#1085#1086#1081
+      Hint = #1055#1077#1095#1072#1090#1100' '#1058#1088#1072#1085#1089#1087#1086#1088#1090#1085#1086#1081
+      ShortCut = 16464
+      DataSets = <
+        item
+          DataSet = PrintHeaderCDS
+          UserName = 'frxDBDHeader'
+        end
+        item
+          DataSet = PrintItemsCDS
+          UserName = 'frxDBDMaster'
+        end>
+      Params = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'Id'
+        end>
+      ReportName = 'NULL'
+      ReportNameParam.Name = #1057#1095#1077#1090
+      ReportNameParam.Value = Null
+      ReportNameParam.Component = FormParams
+      ReportNameParam.ComponentItem = 'ReportNameTransport'
+      ReportNameParam.DataType = ftString
+      ReportNameParam.ParamType = ptInput
+    end
+    object actPrint_Transport_ReportName: TdsdExecStoredProc
+      Category = 'Print_TTN'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spGetReportNameTransport
+      StoredProcList = <
+        item
+          StoredProc = spGetReportNameTransport
+        end>
+      Caption = 'actPrint_Transport_ReportName'
+    end
+    object mactPrint_Transport: TMultiAction
+      Category = 'Print_TTN'
+      MoveParams = <
+        item
+          FromParam.Name = 'id'
+          FromParam.Value = Null
+          FromParam.Component = MasterCDS
+          FromParam.ComponentItem = 'id'
+          ToParam.Value = Null
+          ToParam.Component = FormParams
+          ToParam.ComponentItem = 'Id'
+          ToParam.ParamType = ptInputOutput
+        end>
+      ActionList = <
+        item
+          Action = actPrint_Transport_ReportName
+        end
+        item
+          Action = actPrint_Transport
+        end>
+      Caption = #1055#1077#1095#1072#1090#1100' '#1058#1088#1072#1085#1089#1087#1086#1088#1090#1085#1086#1081
+      Hint = #1055#1077#1095#1072#1090#1100' '#1058#1088#1072#1085#1089#1087#1086#1088#1090#1085#1086#1081
+      ImageIndex = 20
+    end
   end
   inherited MasterDS: TDataSource
     Left = 64
@@ -1682,6 +1752,10 @@ inherited Sale_PartnerJournalForm: TSale_PartnerJournalForm
         item
           Visible = True
           ItemName = 'bbPrint'
+        end
+        item
+          Visible = True
+          ItemName = 'bbPrint_Transport'
         end
         item
           Visible = True
@@ -1829,6 +1903,10 @@ inherited Sale_PartnerJournalForm: TSale_PartnerJournalForm
       Action = actElectron
       Category = 0
     end
+    object bbPrint_Transport: TdxBarButton
+      Action = mactPrint_Transport
+      Category = 0
+    end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
     Left = 320
@@ -1933,6 +2011,12 @@ inherited Sale_PartnerJournalForm: TSale_PartnerJournalForm
         Name = 'inChangePercentAmount'
         Value = Null
         DataType = ftFloat
+        ParamType = ptInput
+      end
+      item
+        Name = 'ReportNameTransport'
+        Value = Null
+        DataType = ftString
         ParamType = ptInput
       end>
     Left = 400
@@ -2445,5 +2529,28 @@ inherited Sale_PartnerJournalForm: TSale_PartnerJournalForm
     PackSize = 1
     Left = 792
     Top = 171
+  end
+  object spGetReportNameTransport: TdsdStoredProc
+    StoredProcName = 'gpGet_Movement_Transport_ReportName'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+      end
+      item
+        Name = 'gpGet_Movement_Transport_ReportName'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'ReportNameTransport'
+        DataType = ftString
+      end>
+    PackSize = 1
+    Left = 824
+    Top = 432
   end
 end
