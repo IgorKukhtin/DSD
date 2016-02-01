@@ -61,6 +61,7 @@ type
     actUpdateAmountChangePercentList: TMultiAction;
     N13: TMenuItem;
     N14: TMenuItem;
+    N15: TMenuItem;
   private
     { Private declarations }
   public
