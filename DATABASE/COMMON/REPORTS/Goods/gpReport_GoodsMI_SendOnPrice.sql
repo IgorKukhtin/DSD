@@ -374,7 +374,7 @@ BEGIN
                       , COALESCE (MIContainer.AccountId, 0) AS AccountId
 
                         -- 1.1. Кол-во, без AnalyzerId
-                      , SUM (CASE WHEN MIContainer.AnalyzerId <> zc_Enum_AnalyzerId_LossCount_20200()
+                      , SUM (CASE WHEN MIContainer.AnalyzerId <> zc_Enum_AnalyzerId_LossCount_20200() AND MIContainer.DescId = zc_MIContainer_Count()
                                        THEN -1 * MIContainer.Amount
                                   ELSE 0
                              END) AS OperCount
@@ -431,8 +431,10 @@ BEGIN
                                                       AND MIContainer.OperDate BETWEEN inStartDate AND inEndDate
                                                       AND MIContainer.WhereObjectId_analyzer = _tmpUnit.UnitId
                                                       AND MIContainer.ObjectExtId_Analyzer   = _tmpUnit.UnitId_by
-                                                      AND ((MIContainer.isActive = FALSE AND MIContainer.AnalyzerId <> zc_Enum_AnalyzerId_SummIn_110101())
-                                                        OR (MIContainer.isActive = TRUE  AND MIContainer.AnalyzerId =  zc_Enum_AnalyzerId_SummIn_110101()))
+                                                      -- AND ((MIContainer.isActive = FALSE AND MIContainer.AnalyzerId <> zc_Enum_AnalyzerId_SummIn_110101())
+                                                      --   OR (MIContainer.isActive = TRUE  AND MIContainer.AnalyzerId =  zc_Enum_AnalyzerId_SummIn_110101()))
+                                                      AND (MIContainer.isActive = FALSE
+                                                        OR (MIContainer.isActive = TRUE AND MIContainer.AccountId =  zc_Enum_Account_110101()))
                  GROUP BY CASE WHEN inIsMovement = TRUE THEN MIContainer.MovementId ELSE 0 END
                         , MIContainer.WhereObjectId_analyzer
                         , MIContainer.ObjectExtId_Analyzer
