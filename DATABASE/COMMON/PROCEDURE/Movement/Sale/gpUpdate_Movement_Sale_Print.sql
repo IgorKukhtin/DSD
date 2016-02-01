@@ -18,6 +18,11 @@ BEGIN
      -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Movement_Sale());
      vbUserId:= lpGetUserBySession (inSession);
 
+     IF vbUserId = 5
+     THEN
+     -- определили признак
+     outPrinted := COALESCE ((SELECT MovementBoolean.ValueData FROM MovementBoolean WHERE MovementBoolean.MovementId =  inId AND MovementBoolean.DescId = zc_MovementBoolean_Print()), FALSE);
+     ELSE
      -- определили признак
      outPrinted := inNewPrinted;
 
@@ -25,6 +30,7 @@ BEGIN
 
      -- сохранили протокол
      PERFORM lpInsert_MovementProtocol (inId, vbUserId, FALSE);
+     END IF;
 
 END;
 $BODY$
