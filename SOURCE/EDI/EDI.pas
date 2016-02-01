@@ -2,7 +2,7 @@ unit EDI;
 
 interface
 
-uses DBClient, Classes, DB, dsdAction, IdFTP, ComDocXML, dsdDb, OrderXML;
+uses DBClient, Classes, DB, dsdAction, IdFTP, ComDocXML, dsdDb, OrderXML, UtilConst;
 
 type
 
@@ -47,8 +47,8 @@ type
     function InsertUpdateComDoc(ЕлектроннийДокумент
       : IXMLЕлектроннийДокументType; spHeader, spList: TdsdStoredProc): integer;
     procedure FTPSetConnection;
-    procedure InitializeComSigner;
-    procedure SignFile(FileName: string; SignType: TSignType);
+    procedure InitializeComSigner(DebugMode: boolean);
+    procedure SignFile(FileName: string; SignType: TSignType; DebugMode: boolean);
     procedure PutFileToFTP(FileName: string; Directory: string);
     procedure PutStreamToFTP(Stream: TStream; FileName: string;
       Directory: string);
@@ -61,14 +61,14 @@ type
     procedure ORDRSPSave(HeaderDataSet, ItemsDataSet: TDataSet);
     procedure INVOICESave(HeaderDataSet, ItemsDataSet: TDataSet);
     procedure COMDOCSave(HeaderDataSet, ItemsDataSet: TDataSet;
-      Directory: String);
+      Directory: String; DebugMode: boolean);
     // квитанция
     procedure ReceiptLoad(spProtocol: TdsdStoredProc; Directory: String);
     procedure RecadvLoad(spHeader: TdsdStoredProc; Directory: String);
     procedure DeclarSave(HeaderDataSet, ItemsDataSet: TDataSet; StoredProc: TdsdStoredProc;
-      Directory: String);
+      Directory: String; DebugMode: boolean);
     procedure DeclarReturnSave(HeaderDataSet, ItemsDataSet: TDataSet;  StoredProc: TdsdStoredProc;
-      Directory: String);
+      Directory: String; DebugMode: boolean);
     //
     procedure ComdocLoad(spHeader, spList: TdsdStoredProc; Directory: String;
       StartDate, EndDate: TDateTime);
@@ -76,7 +76,7 @@ type
     procedure OrderLoad(spHeader, spList: TdsdStoredProc; Directory: String;
       StartDate, EndDate: TDateTime);
     procedure ReturnSave(MovementDataSet: TDataSet;
-      spFileInfo, spFileBlob: TdsdStoredProc; Directory: string);
+      spFileInfo, spFileBlob: TdsdStoredProc; Directory: string; DebugMode: boolean);
     procedure ErrorLoad(Directory: string);
   published
     property ConnectionParams: TConnectionParams read FConnectionParams
@@ -123,6 +123,7 @@ const
 	euKeyTypeAccountant = 1;  // для подписи бухгалтера
 	euKeyTypeDirector   = 2;     // для подписи директора
 	euKeyTypeDigitalStamp = 3;   // для подписи печати
+  okError = 'Виконано успішно';
 
 implementation
 
@@ -145,7 +146,7 @@ begin
 end;
 
 procedure TEDI.COMDOCSave(HeaderDataSet, ItemsDataSet: TDataSet;
-  Directory: String);
+  Directory: String; DebugMode: boolean);
 var
   ЕлектроннийДокумент: IXMLЕлектроннийДокументType;
   i: integer;
@@ -209,7 +210,7 @@ begin
   P7SFileName := StringReplace(XMLFileName, 'xml', 'p7s', [rfIgnoreCase]);
   try
     // подписать
-    SignFile(XMLFileName, stComDoc);
+    SignFile(XMLFileName, stComDoc, DebugMode);
     if HeaderDataSet.FieldByName('EDIId').asInteger <> 0 then
     begin
       FInsertEDIEvents.ParamByName('inMovementId').Value :=
@@ -401,7 +402,7 @@ begin
 end;
 
 procedure TEDI.DeclarReturnSave(HeaderDataSet, ItemsDataSet: TDataSet;
-  StoredProc: TdsdStoredProc; Directory: String);
+  StoredProc: TdsdStoredProc; Directory: String; DebugMode: boolean);
 const
   C_DOC = 'J12';
   C_DOC_SUB = '012';
@@ -694,7 +695,7 @@ begin
 //  P7SFileName := StringReplace(XMLFileName, 'xml', 'p7s', [rfIgnoreCase]);
   try
     // подписать
-    SignFile(XMLFileName, stDeclar);
+    SignFile(XMLFileName, stDeclar, DebugMode);
     if HeaderDataSet.FieldByName('EDIId').asInteger <> 0 then
     begin
       FInsertEDIEvents.ParamByName('inMovementId').Value :=
@@ -736,7 +737,7 @@ begin
 end;
 
 procedure TEDI.DeclarSave(HeaderDataSet, ItemsDataSet: TDataSet;
-     StoredProc: TdsdStoredProc;  Directory: String);
+     StoredProc: TdsdStoredProc;  Directory: String; DebugMode: boolean);
 const
   C_DOC = 'J12';
   C_DOC_SUB = '010';
@@ -961,7 +962,7 @@ begin
   P7SFileName := XMLFileName; //StringReplace(XMLFileName, 'xml', 'p7s', [rfIgnoreCase]);
   try
     // подписать
-    SignFile(XMLFileName, stDeclar);
+    SignFile(XMLFileName, stDeclar, DebugMode);
     if HeaderDataSet.FieldByName('EDIId').asInteger <> 0 then
     begin
       FInsertEDIEvents.ParamByName('inMovementId').Value :=
@@ -1372,8 +1373,11 @@ begin
   ComSigner.Initialize(caType);
 
 
-  ComSigner.SetUIMode(true);
-  ComSigner.SetSettings;
+  if DebugMode then begin
+     ComSigner.SetUIMode(true);
+     ComSigner.SetSettings;
+  end;
+
   ComSigner.SetUIMode(false);
 
   try
@@ -1412,99 +1416,13 @@ begin
     end;
   end;
 
-
-(*
-  // Установка сетификатов
-  try
-    FileName := ExtractFilePath(ParamStr(0)) +
-      'tsp_acsk_062220.cer';
-    ComSigner.SaveCert(FileName);
-  except
-    on E: Exception do
-    begin
-      ComSigner := null;
-      raise Exception.Create('Ошибка библиотеки Exite. ComSigner.SaveCert ' +
-        FileName + #10#13 + E.Message);
-    end;
-  end;
-
-  // Установка сетификатов
-  try
-    FileName := ExtractFilePath(ParamStr(0)) +
-      'Товариство з обмеженою відповідальністю АЛАН.cer';
-    ComSigner.SaveCert(FileName);
-  except
-    on E: Exception do
-    begin
-      ComSigner := null;
-      raise Exception.Create('Ошибка библиотеки Exite. ComSigner.SaveCert ' +
-        FileName + #10#13 + E.Message);
-    end;
-  end;
-
-  // Установка сетификатов
-  try
-    FileName := ExtractFilePath(ParamStr(0)) +
-      'Товариство з обмеженою відповідальністю АЛАН1.cer';
-    ComSigner.SaveCert(FileName);
-  except
-    on E: Exception do
-    begin
-      ComSigner := null;
-      raise Exception.Create('Ошибка библиотеки Exite. ComSigner.SaveCert ' +
-        FileName + #10#13 + E.Message);
-    end;
-  end;
-
-  // Установка сетификатов
-  try
-    FileName := ExtractFilePath(ParamStr(0)) + 'Неграш О.В..cer';
-    ComSigner.SaveCert(FileName);
-  except
-    on E: Exception do
-    begin
-      ComSigner := null;
-      raise Exception.Create('Ошибка библиотеки Exite. ComSigner.SaveCert ' +
-        FileName + #10#13 + E.Message);
-    end;
-  end;
-
-  // Установка сетификатов
-  try
-    FileName := ExtractFilePath(ParamStr(0)) + 'Exite_Для Шифрования.cer';
-    ComSigner.SetCryptToCertCert(FileName);
-  except
-    on E: Exception do
-    begin
-      ComSigner := null;
-      raise Exception.Create
-        ('Ошибка библиотеки Exite. ComSigner.SetCryptToCertCert ' + FileName +
-        #10#13 + E.Message);
-    end;
-  end;
-
-  // Установка сетификатов
-  try
-    FileName := ExtractFilePath(ParamStr(0)) + '27399.cer';
-    ComSigner.SetCryptToCertCert(FileName);
-  except
-    on E: Exception do
-    begin
-      ComSigner := null;
-      raise Exception.Create
-        ('Ошибка библиотеки Exite. ComSigner.SetCryptToCertCert ' + FileName +
-        #10#13 + E.Message);
-    end;
-  end;
-*)
-
   try
     // Установка ключей
     FileName := ExtractFilePath(ParamStr(0)) + 'Ключ - Неграш О.В..ZS2';
 	  ComSigner.SetPrivateKeyFile (euKeyTypeAccountant, FileName, '24447183', false); // бухгалтер
     Error := ComSigner.GetLastErrorDescription;
-    ShowMessage(Error);
-
+    if Error <> okError then
+       raise Exception.Create(Error);
   except
     on E: Exception do
     begin
@@ -1520,7 +1438,8 @@ begin
       'Ключ - для в_дтиску - Товариство з обмеженою в_дпов_дальн_стю АЛАН.ZS2';
 	  ComSigner.SetPrivateKeyFile (euKeyTypeDigitalStamp, FileName, '24447183', false); // Печать
     Error := ComSigner.GetLastErrorDescription;
-    ShowMessage(Error);
+    if Error <> okError then
+       raise Exception.Create(Error);
   except
     on E: Exception do
     begin
@@ -1536,7 +1455,8 @@ begin
       'Ключ - для шифрування - Товариство з обмеженою в_дпов_дальн_стю АЛАН.ZS2';
 	  ComSigner.SetPrivateKeyFile (euKeyTypeDigitalStamp, FileName, '24447183', false); // Печать
     Error := ComSigner.GetLastErrorDescription;
-    ShowMessage(Error);
+    if Error <> okError then
+       raise Exception.Create(Error);
   except
     on E: Exception do
     begin
@@ -2064,7 +1984,7 @@ begin
 end;
 
 procedure TEDI.ReturnSave(MovementDataSet: TDataSet;
-  spFileInfo, spFileBlob: TdsdStoredProc; Directory: string);
+  spFileInfo, spFileBlob: TdsdStoredProc; Directory: string; DebugMode: boolean);
 var
   MovementId: integer;
   FileName: String;
@@ -2082,7 +2002,7 @@ begin
   try
 
     // Подписылаем его
-    SignFile(FileName, stComDoc);
+    SignFile(FileName, stComDoc, DebugMode);
     FInsertEDIEvents.ParamByName('inMovementId').Value := MovementId;
     FInsertEDIEvents.ParamByName('inEDIEvent').Value :=
       'Документ сформирован и подписан';
@@ -2106,7 +2026,7 @@ begin
   FDirectory := Value;
 end;
 
-procedure TEDI.SignFile(FileName: string; SignType: TSignType);
+procedure TEDI.SignFile(FileName: string; SignType: TSignType; DebugMode: boolean);
 var
   vbSignType: integer;
   i: integer;
@@ -2115,7 +2035,7 @@ var
   ddd: OleVariant;
 begin
   if VarIsNull(ComSigner) then
-    InitializeComSigner;
+    InitializeComSigner(DebugMode);
 
   if SignType = stDeclar then
     vbSignType := 1;
@@ -2127,14 +2047,19 @@ begin
     try
       if SignType = stComDoc then begin
           ComSigner.SetFilesOptions(False);
-    Error := ComSigner.GetLastErrorDescription;
-    ShowMessage(Error);
+          Error := ComSigner.GetLastErrorDescription;
+          if Error <> okError then
+             raise Exception.Create('ComSigner.SetFilesOptions(False) ' + Error);
+
           ComSigner.SignFilesByAccountant(FileName);
-    Error := ComSigner.GetLastErrorDescription;
-    ShowMessage(Error);
+          Error := ComSigner.GetLastErrorDescription;
+          if Error <> okError then
+             raise Exception.Create('ComSigner.SignFilesByAccountant(FileName) ' + Error);
+
           ComSigner.SignFilesByDigitalStamp(FileName);
-    Error := ComSigner.GetLastErrorDescription;
-    ShowMessage(Error);
+          Error := ComSigner.GetLastErrorDescription;
+          if Error <> okError then
+             raise Exception.Create('ComSigner.SignFilesByDigitalStamp(FileName) ' + Error);
       end;
       if SignType = stDeclar then begin
          // O=Фізична особа ;OU=Фізична особа;Title=підписувач;CN=Алієв Арсен Шакірович;SN=Алієв;GivenName=Арсен Шакірович;Serial=1497059;C=UA;L=Крюківщина;ST=Київська
@@ -2187,15 +2112,15 @@ begin
       EDI.ComdocLoad(spHeader, spList, Directory, StartDateParam.Value,
         EndDateParam.Value);
     ediComDocSave:
-      EDI.COMDOCSave(HeaderDataSet, ListDataSet, Directory);
+      EDI.COMDOCSave(HeaderDataSet, ListDataSet, Directory, ShiftDown);
     ediDeclar:
-      EDI.DeclarSave(HeaderDataSet, ListDataSet, spHeader, Directory);
+      EDI.DeclarSave(HeaderDataSet, ListDataSet, spHeader, Directory, ShiftDown);
     ediReceipt:
       EDI.ReceiptLoad(spHeader, Directory);
     ediReturnComDoc:
-      EDI.ReturnSave(HeaderDataSet, spHeader, spList, Directory);
+      EDI.ReturnSave(HeaderDataSet, spHeader, spList, Directory, ShiftDown);
     ediDeclarReturn:
-      EDI.DeclarReturnSave(HeaderDataSet, ListDataSet, spHeader, Directory);
+      EDI.DeclarReturnSave(HeaderDataSet, ListDataSet, spHeader, Directory, ShiftDown);
     ediDesadv:
       EDI.DESADVSave(HeaderDataSet, ListDataSet);
     ediOrdrsp:

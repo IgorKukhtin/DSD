@@ -31,6 +31,7 @@ type
     procedure LoadBankStatementFormTest;
     procedure LoadBonusKindFormTest;
     procedure LoadBranchFormTest;
+    procedure LoadBranchJuridicalFormTest;
     procedure LoadBusinessFormTest;
     procedure LoadBoxFormTest;
     procedure LoadCashFormTest;
@@ -239,6 +240,14 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TBranchEditForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TBranch_TTNDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TBranch_TTNDialogForm');
+end;
+
+procedure TLoadFormTest.LoadBranchJuridicalFormTest;
+begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TBranchJuridicalForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TBranchJuridicalForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TBranchJuridicalEditForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TBranchJuridicalEditForm');
 end;
 
 procedure TLoadFormTest.LoadBusinessFormTest;
