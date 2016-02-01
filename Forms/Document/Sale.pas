@@ -205,6 +205,11 @@ type
     actSPSavePrintState: TdsdExecStoredProc;
     colChangePercent: TcxGridDBColumn;
     Price_Pricelist_vat: TcxGridDBColumn;
+    spGetReportNameTransport: TdsdStoredProc;
+    bbPrint_Transport: TdxBarButton;
+    mactPrint_Transport: TMultiAction;
+    actPrint_Transport: TdsdPrintAction;
+    actPrint_Transport_ReportName: TdsdExecStoredProc;
   private
     { Private declarations }
   public

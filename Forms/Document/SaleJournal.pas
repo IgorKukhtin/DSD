@@ -189,6 +189,11 @@ type
     spElectron: TdsdStoredProc;
     actElectron: TdsdExecStoredProc;
     bbElectron: TdxBarButton;
+    spGetReportNameTransport: TdsdStoredProc;
+    actPrint_Transport_ReportName: TdsdExecStoredProc;
+    actPrint_Transport: TdsdPrintAction;
+    mactPrint_Transport: TMultiAction;
+    bbPrint_Transport: TdxBarButton;
   private
     { Private declarations }
   public

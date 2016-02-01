@@ -3,7 +3,7 @@ inherited SendOnPrice_BranchForm: TSendOnPrice_BranchForm
   ClientHeight = 668
   ClientWidth = 944
   ExplicitWidth = 960
-  ExplicitHeight = 703
+  ExplicitHeight = 706
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -864,7 +864,33 @@ inherited SendOnPrice_BranchForm: TSendOnPrice_BranchForm
       ShortCut = 116
       RefreshOnTabSetChanges = False
     end
-    object actInsertUpdateMIAmount: TdsdExecStoredProc
+    object actInsertUpdateMIAmountChangePercent: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdateMIAmountChangePercent
+      StoredProcList = <
+        item
+          StoredProc = spUpdateMIAmountChangePercent
+        end
+        item
+          StoredProc = spSelect
+        end>
+      Caption = 
+        #1055#1077#1088#1077#1085#1077#1089#1090#1080' '#1076#1083#1103' '#1042#1057#1045#1061' <'#1050#1086#1083'-'#1074#1086' ('#1087#1088#1080#1093#1086#1076')> '#1074' <'#1050#1086#1083'-'#1074#1086' ('#1088#1072#1089#1093#1086#1076')> '#1080' <'#1050#1086#1083'-' +
+        #1074#1086' '#1089#1086' '#1089#1082#1080#1076#1082#1086#1081' ('#1088#1072#1089#1093#1086#1076')>'
+      Hint = 
+        #1055#1077#1088#1077#1085#1077#1089#1090#1080' '#1076#1083#1103' '#1042#1057#1045#1061' <'#1050#1086#1083'-'#1074#1086' ('#1087#1088#1080#1093#1086#1076')> '#1074' <'#1050#1086#1083'-'#1074#1086' ('#1088#1072#1089#1093#1086#1076')> '#1080' <'#1050#1086#1083'-' +
+        #1074#1086' '#1089#1086' '#1089#1082#1080#1076#1082#1086#1081' ('#1088#1072#1089#1093#1086#1076')>'
+      ImageIndex = 42
+      QuestionBeforeExecute = 
+        #1044#1077#1081#1089#1090#1074#1080#1090#1077#1083#1100#1085#1086' '#1087#1077#1088#1077#1085#1077#1089#1090#1080' '#1076#1083#1103' '#1042#1057#1045#1061' <'#1050#1086#1083'-'#1074#1086' ('#1087#1088#1080#1093#1086#1076')> '#1074' <'#1050#1086#1083'-'#1074#1086' ('#1088#1072 +
+        #1089#1093#1086#1076')> '#1080' <'#1050#1086#1083'-'#1074#1086' '#1089#1086' '#1089#1082#1080#1076#1082#1086#1081' ('#1088#1072#1089#1093#1086#1076')>?'
+      InfoAfterExecute = 
+        #1044#1083#1103' '#1042#1057#1045#1061' <'#1050#1086#1083'-'#1074#1086' ('#1087#1088#1080#1093#1086#1076')> '#1074' <'#1050#1086#1083'-'#1074#1086' ('#1088#1072#1089#1093#1086#1076')> '#1080' <'#1050#1086#1083'-'#1074#1086' '#1089#1086' '#1089#1082#1080#1076 +
+        #1082#1086#1081' ('#1088#1072#1089#1093#1086#1076')> '#1087#1077#1088#1077#1085#1077#1089#1083#1080' '#1091#1089#1087#1077#1096#1085#1086'.'
+    end
+    object actInsertUpdateMIAmountPartner: TdsdExecStoredProc
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -981,6 +1007,10 @@ inherited SendOnPrice_BranchForm: TSendOnPrice_BranchForm
         end
         item
           Visible = True
+          ItemName = 'bb'
+        end
+        item
+          Visible = True
           ItemName = 'dxBarStatic'
         end
         item
@@ -1081,11 +1111,15 @@ inherited SendOnPrice_BranchForm: TSendOnPrice_BranchForm
       Category = 0
     end
     object bbInsertUpdateMIAmount: TdxBarButton
-      Action = actInsertUpdateMIAmount
+      Action = actInsertUpdateMIAmountPartner
       Category = 0
     end
     object bbPrintSaleOrder: TdxBarButton
       Action = actPrintSaleOrder
+      Category = 0
+    end
+    object bb: TdxBarButton
+      Action = actInsertUpdateMIAmountChangePercent
       Category = 0
     end
   end
@@ -2183,7 +2217,7 @@ inherited SendOnPrice_BranchForm: TSendOnPrice_BranchForm
       end>
     PackSize = 1
     Left = 330
-    Top = 368
+    Top = 328
   end
   object spSelectPrint_SaleOrder: TdsdStoredProc
     StoredProcName = 'gpSelect_Movement_Sale_Order_Print'
@@ -2218,5 +2252,21 @@ inherited SendOnPrice_BranchForm: TSendOnPrice_BranchForm
     PackSize = 1
     Left = 687
     Top = 248
+  end
+  object spUpdateMIAmountChangePercent: TdsdStoredProc
+    StoredProcName = 'gpUpdate_MI_SendOnPrice_AmountChangePercent'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+      end>
+    PackSize = 1
+    Left = 330
+    Top = 376
   end
 end

@@ -382,6 +382,56 @@ inherited SendOnPrice_BranchJournalForm: TSendOnPrice_BranchJournalForm
   end
   inherited ActionList: TActionList
     Left = 471
+    object actUpdateAmountChangePercentList: TMultiAction [0]
+      Category = 'UpdateAmount'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = spUpdateAmountChangePercentList
+        end
+        item
+          Action = actRefresh
+        end>
+      QuestionBeforeExecute = 
+        #1042#1099' '#1091#1074#1077#1088#1077#1085#1099' '#1074' '#1087#1077#1088#1077#1085#1086#1089#1077' '#1076#1083#1103' '#1042#1057#1045#1061'  <'#1050#1086#1083'-'#1074#1086' ('#1087#1088#1080#1093#1086#1076')> '#1074' <'#1050#1086#1083'-'#1074#1086' ('#1088#1072#1089 +
+        #1093#1086#1076')> '#1080' <'#1050#1086#1083'-'#1074#1086' '#1089#1086' '#1089#1082#1080#1076#1082#1086#1081' ('#1088#1072#1089#1093#1086#1076')>?'
+      InfoAfterExecute = 
+        #1044#1083#1103' '#1042#1057#1045#1061' <'#1050#1086#1083'-'#1074#1086' ('#1087#1088#1080#1093#1086#1076')> '#1074' <'#1050#1086#1083'-'#1074#1086' ('#1088#1072#1089#1093#1086#1076')> '#1080' <'#1050#1086#1083'-'#1074#1086' '#1089#1086' '#1089#1082#1080#1076 +
+        #1082#1086#1081' ('#1088#1072#1089#1093#1086#1076')> '#1087#1077#1088#1077#1085#1077#1089#1083#1080' '#1091#1089#1087#1077#1096#1085#1086'.'
+      Caption = 
+        #1055#1077#1088#1077#1085#1077#1089#1090#1080' '#1076#1083#1103' '#1042#1057#1045#1061' <'#1050#1086#1083'-'#1074#1086' ('#1087#1088#1080#1093#1086#1076')> '#1074' <'#1050#1086#1083'-'#1074#1086' ('#1088#1072#1089#1093#1086#1076')> '#1080' <'#1050#1086#1083'-' +
+        #1074#1086' '#1089#1086' '#1089#1082#1080#1076#1082#1086#1081' ('#1088#1072#1089#1093#1086#1076')>'
+      Hint = 
+        #1055#1077#1088#1077#1085#1077#1089#1090#1080' '#1076#1083#1103' '#1042#1057#1045#1061' <'#1050#1086#1083'-'#1074#1086' ('#1087#1088#1080#1093#1086#1076')> '#1074' <'#1050#1086#1083'-'#1074#1086' ('#1088#1072#1089#1093#1086#1076')> '#1080' <'#1050#1086#1083'-' +
+        #1074#1086' '#1089#1086' '#1089#1082#1080#1076#1082#1086#1081' ('#1088#1072#1089#1093#1086#1076')>'
+      ImageIndex = 42
+    end
+    object spUpdateAmountChangePercent: TdsdExecStoredProc [1]
+      Category = 'UpdateAmount'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdateMIAmountChangePercent
+      StoredProcList = <
+        item
+          StoredProc = spUpdateMIAmountChangePercent
+        end>
+      Caption = 'spUpdateAmountPartner'
+    end
+    object spUpdateAmountChangePercentList: TMultiAction [3]
+      Category = 'UpdateAmount'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = spUpdateAmountChangePercent
+        end>
+      View = cxGridDBTableView
+      Caption = 
+        #1055#1077#1088#1077#1085#1077#1089#1090#1080' '#1076#1083#1103' '#1042#1057#1045#1061' <'#1050#1086#1083'-'#1074#1086' ('#1087#1088#1080#1093#1086#1076')> '#1074' <'#1050#1086#1083'-'#1074#1086' ('#1088#1072#1089#1093#1086#1076')> '#1080' <'#1050#1086#1083'-' +
+        #1074#1086' '#1089#1086' '#1089#1082#1080#1076#1082#1086#1081' ('#1088#1072#1089#1093#1086#1076')>'
+      Hint = 
+        #1055#1077#1088#1077#1085#1077#1089#1090#1080' '#1076#1083#1103' '#1042#1057#1045#1061' <'#1050#1086#1083'-'#1074#1086' ('#1087#1088#1080#1093#1086#1076')> '#1074' <'#1050#1086#1083'-'#1074#1086' ('#1088#1072#1089#1093#1086#1076')> '#1080' <'#1050#1086#1083'-' +
+        #1074#1086' '#1089#1086' '#1089#1082#1080#1076#1082#1086#1081' ('#1088#1072#1089#1093#1086#1076')>'
+    end
     inherited actInsert: TdsdInsertUpdateAction
       FormName = 'TSendOnPrice_BranchForm'
       FormNameParam.Value = 'TSendOnPrice_BranchForm'
@@ -439,6 +489,56 @@ inherited SendOnPrice_BranchJournalForm: TSendOnPrice_BranchJournalForm
           DataType = ftFloat
           ParamType = ptInput
         end>
+    end
+    object actUpdateAmountPartnerList: TMultiAction [10]
+      Category = 'UpdateAmount'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = spUpdateAmountPartnerList
+        end
+        item
+          Action = actRefresh
+        end>
+      QuestionBeforeExecute = 
+        #1042#1099' '#1091#1074#1077#1088#1077#1085#1099' '#1074' '#1087#1077#1088#1077#1085#1086#1089#1077' '#1076#1083#1103' '#1042#1057#1045#1061' <'#1050#1086#1083'-'#1074#1086' '#1089#1086' '#1089#1082#1080#1076#1082#1086#1081' ('#1088#1072#1089#1093#1086#1076')> '#1074' <'#1050 +
+        #1086#1083'-'#1074#1086' ('#1087#1088#1080#1093#1086#1076')>?'
+      InfoAfterExecute = 
+        #1044#1083#1103' '#1042#1057#1045#1061' <'#1050#1086#1083'-'#1074#1086' '#1089#1086' '#1089#1082#1080#1076#1082#1086#1081' ('#1088#1072#1089#1093#1086#1076')> '#1074' <'#1050#1086#1083'-'#1074#1086' ('#1087#1088#1080#1093#1086#1076')> '#1087#1077#1088#1077#1085#1077 +
+        #1089#1083#1080' '#1091#1089#1087#1077#1096#1085#1086'.'
+      Caption = 
+        #1055#1077#1088#1077#1085#1077#1089#1090#1080' '#1076#1083#1103' '#1042#1057#1045#1061' <'#1050#1086#1083'-'#1074#1086' '#1089#1086' '#1089#1082#1080#1076#1082#1086#1081' ('#1088#1072#1089#1093#1086#1076')> '#1074' <'#1050#1086#1083'-'#1074#1086' ('#1087#1088#1080#1093#1086 +
+        #1076')>'
+      Hint = 
+        #1055#1077#1088#1077#1085#1077#1089#1090#1080' '#1076#1083#1103' '#1042#1057#1045#1061' <'#1050#1086#1083'-'#1074#1086' '#1089#1086' '#1089#1082#1080#1076#1082#1086#1081' ('#1088#1072#1089#1093#1086#1076')> '#1074' <'#1050#1086#1083'-'#1074#1086' ('#1087#1088#1080#1093#1086 +
+        #1076')>'
+      ImageIndex = 41
+    end
+    object spUpdateAmountPartner: TdsdExecStoredProc [20]
+      Category = 'UpdateAmount'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdateMIAmountPartner
+      StoredProcList = <
+        item
+          StoredProc = spUpdateMIAmountPartner
+        end>
+      Caption = 'spUpdateAmountPartner'
+    end
+    object spUpdateAmountPartnerList: TMultiAction [22]
+      Category = 'UpdateAmount'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = spUpdateAmountPartner
+        end>
+      View = cxGridDBTableView
+      Caption = 
+        #1055#1077#1088#1077#1085#1077#1089#1090#1080' '#1076#1083#1103' '#1042#1057#1045#1061' <'#1050#1086#1083'-'#1074#1086' '#1089#1086' '#1089#1082#1080#1076#1082#1086#1081' ('#1088#1072#1089#1093#1086#1076')> '#1074' <'#1050#1086#1083'-'#1074#1086' ('#1087#1088#1080#1093#1086 +
+        #1076')>'
+      Hint = 
+        #1055#1077#1088#1077#1085#1077#1089#1090#1080' '#1076#1083#1103' '#1042#1057#1045#1061' <'#1050#1086#1083'-'#1074#1086' '#1089#1086' '#1089#1082#1080#1076#1082#1086#1081' ('#1088#1072#1089#1093#1086#1076')> '#1074' <'#1050#1086#1083'-'#1074#1086' ('#1087#1088#1080#1093#1086 +
+        #1076')>'
     end
     object actPrintDiff: TdsdPrintAction
       Category = 'DSDLib'
@@ -804,6 +904,12 @@ inherited SendOnPrice_BranchJournalForm: TSendOnPrice_BranchJournalForm
   inherited PopupMenu: TPopupMenu
     Left = 640
     Top = 152
+    object N13: TMenuItem
+      Action = actUpdateAmountPartnerList
+    end
+    object N14: TMenuItem
+      Action = actUpdateAmountChangePercentList
+    end
   end
   inherited PeriodChoice: TPeriodChoice
     Left = 288
@@ -1015,5 +1121,37 @@ inherited SendOnPrice_BranchJournalForm: TSendOnPrice_BranchJournalForm
     PackSize = 1
     Left = 527
     Top = 152
+  end
+  object spUpdateMIAmountChangePercent: TdsdStoredProc
+    StoredProcName = 'gpUpdate_MI_SendOnPrice_AmountChangePercent'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+      end>
+    PackSize = 1
+    Left = 858
+    Top = 264
+  end
+  object spUpdateMIAmountPartner: TdsdStoredProc
+    StoredProcName = 'gpUpdate_MI_SendOnPrice_AmountPartner'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+      end>
+    PackSize = 1
+    Left = 858
+    Top = 216
   end
 end

@@ -78,11 +78,14 @@ type
     actPrintDiff: TdsdPrintAction;
     bbPrintDiff: TdxBarButton;
     spUpdateMIAmountPartner: TdsdStoredProc;
-    actInsertUpdateMIAmount: TdsdExecStoredProc;
+    actInsertUpdateMIAmountPartner: TdsdExecStoredProc;
     bbInsertUpdateMIAmount: TdxBarButton;
     spSelectPrint_SaleOrder: TdsdStoredProc;
     actPrintSaleOrder: TdsdPrintAction;
     bbPrintSaleOrder: TdxBarButton;
+    spUpdateMIAmountChangePercent: TdsdStoredProc;
+    actInsertUpdateMIAmountChangePercent: TdsdExecStoredProc;
+    bb: TdxBarButton;
   private
     { Private declarations }
   public

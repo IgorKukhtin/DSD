@@ -1,8 +1,8 @@
--- Function: gpUpdate_MI_SendOnPrice_AmountPartner (Integer, Integer, TVarChar)
+-- Function: gpUpdate_MI_SendOnPrice_AmountChangePercent (Integer, Integer, TVarChar)
 
-DROP FUNCTION IF EXISTS gpUpdate_MI_SendOnPrice_AmountPartner (Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpUpdate_MI_SendOnPrice_AmountChangePercent (Integer, TVarChar);
 
-CREATE OR REPLACE FUNCTION gpUpdate_MI_SendOnPrice_AmountPartner(
+CREATE OR REPLACE FUNCTION gpUpdate_MI_SendOnPrice_AmountChangePercent(
     IN inMovementId          Integer   , -- Ключ объекта <Документ>
     IN inSession             TVarChar    -- сессия пользователя
 )
@@ -35,18 +35,27 @@ BEGIN
      WHERE Movement.Id = inMovementId; 
 
 
-     IF (vbBranchFromId = zc_Branch_Basis()) AND (vbBranchToId <> zc_Branch_Basis())
+     IF (vbBranchFromId <> zc_Branch_Basis()) AND (vbBranchToId = zc_Branch_Basis())
      THEN
 
      -- распровели
      PERFORM gpUnComplete_Movement_SendOnPrice (inMovementId:= inMovementId, inSession:= inSession);
 
-     -- сохранили
-     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_AmountPartner(), MovementItem.Id, COALESCE (MIFloat_AmountChangePercent.ValueData, 0))
+
+     -- сохранили <Элемент документа> записали Amount
+     PERFORM lpInsertUpdate_MovementItem (MovementItem.Id, zc_MI_Master(), MovementItem.ObjectId, inMovementId, COALESCE (MIFloat_AmountPartner.ValueData, 0), NULL)
      FROM MovementItem
-          LEFT JOIN MovementItemFloat AS MIFloat_AmountChangePercent
-                                      ON MIFloat_AmountChangePercent.MovementItemId = MovementItem.Id
-                                     AND MIFloat_AmountChangePercent.DescId = zc_MIFloat_AmountChangePercent()
+          LEFT JOIN MovementItemFloat AS MIFloat_AmountPartner
+                                      ON MIFloat_AmountPartner.MovementItemId = MovementItem.Id
+                                     AND MIFloat_AmountPartner.DescId = zc_MIFloat_AmountPartner()
+     WHERE MovementId = inMovementId;
+
+     -- сохранили  свойство <Количество c учетом % скидки>
+     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_AmountChangePercent(), MovementItem.Id, COALESCE (MIFloat_AmountPartner.ValueData, 0))
+     FROM MovementItem
+          LEFT JOIN MovementItemFloat AS MIFloat_AmountPartner
+                                      ON MIFloat_AmountPartner.MovementItemId = MovementItem.Id
+                                     AND MIFloat_AmountPartner.DescId = zc_MIFloat_AmountPartner()
      WHERE MovementId = inMovementId;
 
 
@@ -62,7 +71,7 @@ BEGIN
      WHERE MovementId = inMovementId;
 
      ELSE 
-        RAISE EXCEPTION 'Перенос данных запрещен.Приход не на филиал.';
+        RAISE EXCEPTION 'Перенос данных запрещен.Расход не с филиала.';
      END IF;
 
 END;
@@ -76,4 +85,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpUpdate_MI_SendOnPrice_AmountPartner
+-- SELECT * FROM gpUpdate_MI_SendOnPrice_AmountChangePercent

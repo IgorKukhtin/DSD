@@ -51,6 +51,16 @@ type
     actPrintSaleOrder: TdsdPrintAction;
     spSelectPrint_SaleOrder: TdsdStoredProc;
     bbPrintSaleOrder: TdxBarButton;
+    spUpdateMIAmountChangePercent: TdsdStoredProc;
+    spUpdateMIAmountPartner: TdsdStoredProc;
+    spUpdateAmountPartner: TdsdExecStoredProc;
+    spUpdateAmountChangePercent: TdsdExecStoredProc;
+    spUpdateAmountPartnerList: TMultiAction;
+    spUpdateAmountChangePercentList: TMultiAction;
+    actUpdateAmountPartnerList: TMultiAction;
+    actUpdateAmountChangePercentList: TMultiAction;
+    N13: TMenuItem;
+    N14: TMenuItem;
   private
     { Private declarations }
   public
