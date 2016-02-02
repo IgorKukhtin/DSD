@@ -384,6 +384,25 @@ object Juridical_PrintKindItemForm: TJuridical_PrintKindItemForm
         HeaderAlignmentVert = vaCenter
         Width = 70
       end
+      object isTransportBill: TcxGridDBColumn
+        Caption = #1058#1088#1072#1085#1089#1087#1086#1088#1090#1085#1072#1103
+        DataBinding.FieldName = 'isTransportBill'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 70
+      end
+      object CountTransportBill: TcxGridDBColumn
+        Caption = #1058#1088#1072#1085#1089#1087#1086#1088#1090#1085#1072#1103' '#1082#1086#1083'. '#1082#1086#1087#1080#1081
+        DataBinding.FieldName = 'CountTransportBill'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.AssignedValues.EditFormat = True
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.;-,0.; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 70
+      end
       object ceIsErased: TcxGridDBColumn
         Caption = #1059#1076#1072#1083#1077#1085
         DataBinding.FieldName = 'isErased'
@@ -892,7 +911,14 @@ object Juridical_PrintKindItemForm: TJuridical_PrintKindItemForm
       item
         DataSet = MasterCDS
       end>
-    Params = <>
+    Params = <
+      item
+        Name = 'inBranchId'
+        Value = Null
+        Component = GuidesBranch
+        ComponentItem = 'Key'
+        ParamType = ptInput
+      end>
     PackSize = 1
     Left = 152
     Top = 136
@@ -954,6 +980,27 @@ object Juridical_PrintKindItemForm: TJuridical_PrintKindItemForm
         ParamType = ptInputOutput
       end
       item
+        Name = 'inBranchId'
+        Value = Null
+        Component = GuidesBranch
+        ComponentItem = 'Key'
+        ParamType = ptInput
+      end
+      item
+        Name = 'outBranchName'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'BranchName'
+        DataType = ftString
+      end
+      item
+        Name = 'inJuridicalId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+      end
+      item
         Name = 'ioisMovement'
         Value = Null
         Component = MasterCDS
@@ -1010,6 +1057,14 @@ object Juridical_PrintKindItemForm: TJuridical_PrintKindItemForm
         ParamType = ptInputOutput
       end
       item
+        Name = 'ioisTransportBill'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'isTransportBill'
+        DataType = ftBoolean
+        ParamType = ptInputOutput
+      end
+      item
         Name = 'ioCountMovement'
         Value = Null
         Component = MasterCDS
@@ -1062,6 +1117,14 @@ object Juridical_PrintKindItemForm: TJuridical_PrintKindItemForm
         Value = Null
         Component = MasterCDS
         ComponentItem = 'CountTax'
+        DataType = ftFloat
+        ParamType = ptInputOutput
+      end
+      item
+        Name = 'ioCountTransportBill'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'CountTransportBill'
         DataType = ftFloat
         ParamType = ptInputOutput
       end>

@@ -37,6 +37,7 @@ BEGIN
                                                    , inContractFromId   := tmp.ContractFromId
                                                    , inContractToId     := tmp.ContractToId
                                                    , inPartnerId        := tmp.PartnerId
+                                                   , inPartnerId        := tmp.PartnerFromId
                                                    , inUserId           := vbUserId
                                                     )
      INTO vbMovementId

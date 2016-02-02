@@ -1,8 +1,7 @@
 -- Function: gpInsertUpdate_Movement_TransferDebtOut()
 
 DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_TransferDebtOut_Order (integer, TVarChar, TVarChar, TVarChar, TDateTime, Boolean, Boolean, TFloat, TFloat, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar);
-
-
+DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_TransferDebtOut_Order (integer, TVarChar, TVarChar, TVarChar, TDateTime, Boolean, Boolean, TFloat, TFloat, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_TransferDebtOut_Order(
  INOUT ioId                    Integer   , -- Ключ объекта <Документ Перевод долга (расход)>
@@ -20,7 +19,8 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_TransferDebtOut_Order(
     IN inContractToId          Integer   , -- Договор (кому)
     IN inPaidKindFromId        Integer   , -- Виды форм оплаты (от кого)
     IN inPaidKindToId          Integer   , -- Виды форм оплаты (кому)
-    IN inPartnerId             Integer   , -- Контрагент
+    IN inPartnerId             Integer   , -- Контрагент (кому)
+    IN inPartnerFromId         Integer   , -- Контрагент (от кого)
     IN inDocumentTaxKindId_inf Integer   , -- Тип формирования налогового документа
     IN inMovementId_Order      Integer   , -- ключ Документа
     IN inSession               TVarChar    -- сессия пользователя
@@ -56,6 +56,7 @@ BEGIN
                                                    , inContractFromId   := inContractFromId
                                                    , inContractToId     := inContractToId
                                                    , inPartnerId        := inPartnerId
+                                                   , inPartnerFromId    := inPartnerFromId
                                                    , inUserId           := vbUserId
                                                     );
 

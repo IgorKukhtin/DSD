@@ -17,6 +17,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , FromId Integer, FromName TVarChar, OKPO_From TVarChar
              , ToId Integer, ToName TVarChar, OKPO_To TVarChar
              , PartnerCode Integer, PartnerName TVarChar
+             , PartnerFromCode Integer, PartnerFromName TVarChar
              , ContractFromId Integer, ContractFromCode Integer, ContractFromName TVarChar, ContractTagFromName TVarChar
              , ContractToId Integer, ContractToCode Integer, ContractToName TVarChar, ContractTagToName TVarChar
              , PaidKindFromName TVarChar, PaidKindToName TVarChar
@@ -82,6 +83,8 @@ BEGIN
 
            , Object_Partner.ObjectCode                  AS PartnerCode
            , Object_Partner.ValueData               	AS PartnerName
+           , Object_PartnerFrom.ObjectCode              AS PartnerFromCode
+           , Object_PartnerFrom.ValueData              	AS PartnerFromName
 
            , View_Contract_InvNumberFrom.ContractId      AS ContractFromId
            , View_Contract_InvNumberFrom.ContractCode    AS ContractFromCode
@@ -206,6 +209,11 @@ BEGIN
                                          ON MovementLinkObject_Partner.MovementId = Movement.Id
                                         AND MovementLinkObject_Partner.DescId = zc_MovementLinkObject_Partner()
             LEFT JOIN Object AS Object_Partner ON Object_Partner.Id = MovementLinkObject_Partner.ObjectId
+
+            LEFT JOIN MovementLinkObject AS MovementLinkObject_PartnerFrom						--Контрагент(от кого)
+                                         ON MovementLinkObject_PartnerFrom.MovementId = Movement.Id
+                                        AND MovementLinkObject_PartnerFrom.DescId = zc_MovementLinkObject_PartnerFrom()
+            LEFT JOIN Object AS Object_PartnerFrom ON Object_PartnerFrom.Id = MovementLinkObject_PartnerFrom.ObjectId
 
             LEFT JOIN MovementLinkObject AS MovementLinkObject_ContractFrom
                                          ON MovementLinkObject_ContractFrom.MovementId = Movement.Id

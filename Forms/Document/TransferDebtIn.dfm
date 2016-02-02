@@ -1,28 +1,28 @@
 inherited TransferDebtInForm: TTransferDebtInForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1055#1077#1088#1077#1074#1086#1076' '#1076#1086#1083#1075#1072' ('#1087#1088#1080#1093#1086#1076')>'
-  ClientHeight = 662
-  ClientWidth = 1020
-  ExplicitWidth = 1036
-  ExplicitHeight = 697
+  ClientHeight = 532
+  ClientWidth = 1140
+  ExplicitWidth = 1156
+  ExplicitHeight = 570
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 166
-    Width = 1020
-    Height = 496
+    Width = 1140
+    Height = 366
     ExplicitTop = 166
-    ExplicitWidth = 1020
-    ExplicitHeight = 496
-    ClientRectBottom = 496
-    ClientRectRight = 1020
+    ExplicitWidth = 1140
+    ExplicitHeight = 366
+    ClientRectBottom = 366
+    ClientRectRight = 1140
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 1020
-      ExplicitHeight = 472
+      ExplicitWidth = 1140
+      ExplicitHeight = 342
       inherited cxGrid: TcxGrid
-        Width = 1020
-        Height = 472
-        ExplicitWidth = 1020
-        ExplicitHeight = 472
+        Width = 1140
+        Height = 342
+        ExplicitWidth = 1140
+        ExplicitHeight = 342
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -155,8 +155,8 @@ inherited TransferDebtInForm: TTransferDebtInForm
       object cxGridTaxCorrective: TcxGrid
         Left = 0
         Top = 0
-        Width = 1020
-        Height = 472
+        Width = 1140
+        Height = 342
         Align = alClient
         TabOrder = 0
         object cxGridTaxCorrectiveDBTableView: TcxGridDBTableView
@@ -510,10 +510,10 @@ inherited TransferDebtInForm: TTransferDebtInForm
     end
   end
   inherited DataPanel: TPanel
-    Width = 1020
+    Width = 1140
     Height = 140
     TabOrder = 3
-    ExplicitWidth = 1020
+    ExplicitWidth = 1140
     ExplicitHeight = 140
     inherited edInvNumber: TcxTextEdit
       Left = 8
@@ -680,8 +680,8 @@ inherited TransferDebtInForm: TTransferDebtInForm
       TabOrder = 22
       Width = 114
     end
-    object edPartner: TcxButtonEdit
-      Left = 257
+    object edPartnerFrom: TcxButtonEdit
+      Left = 255
       Top = 23
       Properties.Buttons = <
         item
@@ -695,7 +695,7 @@ inherited TransferDebtInForm: TTransferDebtInForm
     object cxLabel12: TcxLabel
       Left = 257
       Top = 5
-      Caption = #1050#1086#1085#1090#1088#1072#1075#1077#1085#1090
+      Caption = #1050#1086#1085#1090#1088#1072#1075#1077#1085#1090' ('#1086#1090' '#1082#1086#1075#1086')'
     end
     object cxLabel13: TcxLabel
       Left = 956
@@ -714,48 +714,65 @@ inherited TransferDebtInForm: TTransferDebtInForm
       Width = 93
     end
     object edIsChecked: TcxCheckBox
-      Left = 1055
-      Top = 63
+      Left = 258
+      Top = 106
       Caption = #1055#1088#1086#1074#1077#1088#1077#1085' ('#1076#1072'/'#1085#1077#1090')'
       TabOrder = 27
       Width = 118
     end
     object cxLabel17: TcxLabel
-      Left = 9
+      Left = 383
       Top = 88
       Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
     end
     object ceComment: TcxTextEdit
-      Left = 9
+      Left = 383
       Top = 106
       TabOrder = 29
       Width = 584
     end
+    object cxLabel18: TcxLabel
+      Left = 859
+      Top = 5
+      Caption = #1050#1086#1085#1090#1088#1072#1075#1077#1085#1090' ('#1082#1086#1084#1091')'
+    end
+    object edPartner: TcxButtonEdit
+      Left = 859
+      Top = 23
+      Properties.Buttons = <
+        item
+          Default = True
+          Kind = bkEllipsis
+        end>
+      TabOrder = 31
+      Text = ' '
+      Width = 190
+    end
   end
   object cxLabel5: TcxLabel [2]
-    Left = 862
-    Top = 5
+    Left = 105
+    Top = 88
     Caption = #1055#1088#1072#1081#1089'-'#1083#1080#1089#1090
   end
   object edPriceList: TcxButtonEdit [3]
-    Left = 862
-    Top = 23
+    Left = 105
+    Top = 106
     Properties.Buttons = <
       item
         Default = True
         Kind = bkEllipsis
       end>
     TabOrder = 7
-    Width = 187
+    Width = 144
   end
   object cxLabel14: TcxLabel [4]
-    Left = 1055
-    Top = 5
+    Left = 8
+    Top = 88
     Caption = #8470' '#1076#1086#1082'.'#1091' '#1082#1086#1085#1090#1088'.'
   end
   object edInvNumberPartner: TcxTextEdit [5]
-    Left = 1055
-    Top = 23
+    Left = 8
+    Top = 106
     TabOrder = 9
     Width = 84
   end
@@ -771,8 +788,8 @@ inherited TransferDebtInForm: TTransferDebtInForm
     Width = 63
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
-    Left = 171
-    Top = 552
+    Left = 195
+    Top = 456
   end
   inherited cxPropertiesStore: TcxPropertiesStore
     Components = <
@@ -784,8 +801,8 @@ inherited TransferDebtInForm: TTransferDebtInForm
           'Top'
           'Width')
       end>
-    Left = 56
-    Top = 584
+    Left = 32
+    Top = 384
   end
   inherited ActionList: TActionList
     Left = 55
@@ -1348,12 +1365,12 @@ inherited TransferDebtInForm: TTransferDebtInForm
     end
   end
   inherited MasterDS: TDataSource
-    Left = 32
-    Top = 512
+    Left = 56
+    Top = 440
   end
   inherited MasterCDS: TClientDataSet
-    Left = 88
-    Top = 512
+    Left = 112
+    Top = 440
   end
   inherited spSelect: TdsdStoredProc
     StoredProcName = 'gpSelect_MovementItem_TransferDebtIn'
@@ -1605,8 +1622,8 @@ inherited TransferDebtInForm: TTransferDebtInForm
         Param.DataType = ftString
         DataSummaryItemIndex = 2
       end>
-    Left = 470
-    Top = 513
+    Left = 494
+    Top = 441
   end
   inherited PopupMenu: TPopupMenu
     Left = 776
@@ -1668,8 +1685,8 @@ inherited TransferDebtInForm: TTransferDebtInForm
         DataType = ftBoolean
         ParamType = ptInput
       end>
-    Left = 280
-    Top = 552
+    Left = 32
+    Top = 248
   end
   inherited StatusGuides: TdsdGuides
     Left = 64
@@ -1886,6 +1903,19 @@ inherited TransferDebtInForm: TTransferDebtInForm
         DataType = ftString
       end
       item
+        Name = 'PartnerFromId'
+        Value = '0'
+        Component = GuidesPartnerFrom
+        ComponentItem = 'Key'
+      end
+      item
+        Name = 'PartnerFromName'
+        Value = ' '
+        Component = GuidesPartnerFrom
+        ComponentItem = 'TextValue'
+        DataType = ftString
+      end
+      item
         Name = 'DocumentTaxKindId'
         Value = ''
         Component = DocumentTaxKindGuides
@@ -2023,6 +2053,13 @@ inherited TransferDebtInForm: TTransferDebtInForm
         ParamType = ptInput
       end
       item
+        Name = 'inPartnerFromId'
+        Value = '0'
+        Component = GuidesPartnerFrom
+        ComponentItem = 'Key'
+        ParamType = ptInput
+      end
+      item
         Name = 'inComment'
         Value = Null
         Component = ceComment
@@ -2076,7 +2113,7 @@ inherited TransferDebtInForm: TTransferDebtInForm
         Control = edContractTo
       end
       item
-        Control = edPartner
+        Control = edPartnerFrom
       end
       item
         Control = edPriceWithVAT
@@ -2092,24 +2129,27 @@ inherited TransferDebtInForm: TTransferDebtInForm
       end
       item
         Control = ceComment
+      end
+      item
+        Control = edPartner
       end>
     Left = 232
     Top = 193
   end
   inherited RefreshAddOn: TRefreshAddOn
     DataSet = ''
-    Left = 544
-    Top = 520
+    Left = 568
+    Top = 448
   end
   inherited spErasedMIMaster: TdsdStoredProc
     StoredProcName = 'gpMovementItem_TransferDebtOut_SetErased'
-    Left = 718
-    Top = 512
+    Left = 830
+    Top = 336
   end
   inherited spUnErasedMIMaster: TdsdStoredProc
     StoredProcName = 'gpMovementItem_TransferDebtOut_SetUnErased'
-    Left = 718
-    Top = 464
+    Left = 758
+    Top = 344
   end
   inherited spInsertUpdateMIMaster: TdsdStoredProc
     StoredProcName = 'gpInsertUpdate_MovementItem_TransferDebtIn'
@@ -2571,11 +2611,12 @@ inherited TransferDebtInForm: TTransferDebtInForm
         DataType = ftString
         ParamType = ptInput
       end>
-    Left = 972
+    Left = 164
+    Top = 96
   end
-  object GuidesPartner: TdsdGuides
+  object GuidesPartnerFrom: TdsdGuides
     KeyField = 'Id'
-    LookupControl = edPartner
+    LookupControl = edPartnerFrom
     Key = '0'
     TextValue = ' '
     FormNameParam.Value = 'TPartner_ObjectForm'
@@ -2586,14 +2627,14 @@ inherited TransferDebtInForm: TTransferDebtInForm
       item
         Name = 'Key'
         Value = '0'
-        Component = GuidesPartner
+        Component = GuidesPartnerFrom
         ComponentItem = 'Key'
         ParamType = ptInput
       end
       item
         Name = 'TextValue'
         Value = ' '
-        Component = GuidesPartner
+        Component = GuidesPartnerFrom
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
@@ -2611,7 +2652,7 @@ inherited TransferDebtInForm: TTransferDebtInForm
         ComponentItem = 'TextValue'
         DataType = ftString
       end>
-    Left = 344
+    Left = 328
     Top = 16
   end
   object DocumentTaxKindGuides: TdsdGuides
@@ -2938,8 +2979,8 @@ inherited TransferDebtInForm: TTransferDebtInForm
         DataType = ftString
       end>
     PackSize = 1
-    Left = 400
-    Top = 520
+    Left = 424
+    Top = 448
   end
   object spUpdateIsMedoc: TdsdStoredProc
     StoredProcName = 'gpUpdate_IsMedoc'
@@ -2954,7 +2995,48 @@ inherited TransferDebtInForm: TTransferDebtInForm
         ParamType = ptInput
       end>
     PackSize = 1
-    Left = 808
-    Top = 464
+    Left = 752
+    Top = 264
+  end
+  object GuidesPartner: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edPartner
+    Key = '0'
+    TextValue = ' '
+    FormNameParam.Value = 'TPartner_ObjectForm'
+    FormNameParam.DataType = ftString
+    FormName = 'TPartner_ObjectForm'
+    PositionDataSet = 'MasterCDS'
+    Params = <
+      item
+        Name = 'Key'
+        Value = '0'
+        Component = GuidesPartner
+        ComponentItem = 'Key'
+        ParamType = ptInput
+      end
+      item
+        Name = 'TextValue'
+        Value = ' '
+        Component = GuidesPartner
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+      end
+      item
+        Name = 'MasterJuridicalId'
+        Value = ''
+        Component = GuidesTo
+        ComponentItem = 'Key'
+      end
+      item
+        Name = 'MasterJuridicalName'
+        Value = ''
+        Component = GuidesTo
+        ComponentItem = 'TextValue'
+        DataType = ftString
+      end>
+    Left = 920
+    Top = 16
   end
 end

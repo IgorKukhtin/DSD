@@ -37,6 +37,7 @@ BEGIN
                                                    , inContractFromId   := tmp.ContractFromId
                                                    , inContractToId     := tmp.ContractToId
                                                    , inPartnerId        := tmp.PartnerId
+                                                   , inPartnerFromId    := tmp.PartnerFromId
                                                    , inUserId           := vbUserId
                                                     )
      INTO vbMovementId
@@ -64,6 +65,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+  02.02.16        * PartnerFromId
   19.01.16        *
 */
 

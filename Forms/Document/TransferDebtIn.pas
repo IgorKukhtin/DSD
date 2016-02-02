@@ -66,9 +66,9 @@ type
     cxLabel5: TcxLabel;
     edPriceList: TcxButtonEdit;
     PriceListGuides: TdsdGuides;
-    edPartner: TcxButtonEdit;
+    edPartnerFrom: TcxButtonEdit;
     cxLabel12: TcxLabel;
-    GuidesPartner: TdsdGuides;
+    GuidesPartnerFrom: TdsdGuides;
     mactPrint: TMultiAction;
     actSPPrintProcName: TdsdExecStoredProc;
     cxLabel13: TcxLabel;
@@ -121,6 +121,9 @@ type
     actOpenTaxCorrective: TdsdOpenForm;
     actOpenTax: TdsdOpenForm;
     bbOpenTax: TdxBarButton;
+    cxLabel18: TcxLabel;
+    edPartner: TcxButtonEdit;
+    GuidesPartner: TdsdGuides;
   private
     { Private declarations }
   public

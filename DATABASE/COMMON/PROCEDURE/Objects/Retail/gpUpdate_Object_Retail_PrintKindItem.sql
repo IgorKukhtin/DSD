@@ -34,6 +34,13 @@ BEGIN
    -- проверка прав пользователя на вызов процедуры
    vbUserId := lpCheckRight(inSession, zc_Enum_Process_Update_Object_Retail_PrintKindItem());
 
+    -- проверка, если не выбран филиал данные не записываем
+    IF COALESCE (inBranchId,0) = 0
+    THEN
+      RAISE EXCEPTION 'Не выбран Филиал.';
+     END IF;
+
+
     -- сохранили <Объект>
    ioId := lpInsertUpdate_Object_Retail_PrintKindItem (ioId	         := ioId
                                                      , inBranchId        := inBranchId

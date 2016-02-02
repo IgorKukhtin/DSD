@@ -15,7 +15,9 @@ RETURNS TABLE (Id Integer, isMask Boolean, InvNumber TVarChar, InvNumberPartner 
              , PriceWithVAT Boolean, VATPercent TFloat, ChangePercent TFloat
              , TotalCountKg TFloat, TotalCountSh TFloat, TotalCount TFloat
              , TotalSummMVAT TFloat, TotalSummPVAT TFloat, TotalSumm TFloat
-             , FromId Integer, FromName TVarChar, ToId Integer, ToName TVarChar, PartnerId Integer, PartnerName TVarChar
+             , FromId Integer, FromName TVarChar, ToId Integer, ToName TVarChar
+             , PartnerId Integer, PartnerName TVarChar
+             , PartnerFromId Integer, PartnerFromName TVarChar
              , ContractFromId Integer, ContractFromName TVarChar, ContractToId Integer, ContractToName TVarChar
              , PaidKindFromId Integer, PaidKindFromName TVarChar, PaidKindToId Integer, PaidKindToName TVarChar
              , PriceListId Integer, PriceListName TVarChar
@@ -78,6 +80,8 @@ BEGIN
              , CAST ('' as TVarChar)                AS ToName
              , 0                               	    AS PartnerId
              , CAST ('' as TVarChar)           	    AS PartnerName
+             , 0                                    AS PartnerFromId
+             , CAST ('' as TVarChar)                AS PartnerFromName
 
              , View_Contract_InvNumber.ContractId   AS ContractFromId
              , View_Contract_InvNumber.InvNumber    AS ContractFromName
@@ -148,6 +152,9 @@ BEGIN
            , Object_To.ValueData               		AS ToName
            , Object_Partner.Id                     	AS PartnerId
            , Object_Partner.ValueData              	AS PartnerName
+
+           , Object_PartnerFrom.Id                     	AS PartnerFromId
+           , Object_PartnerFrom.ValueData              	AS PartnerFromName
 
            , View_ContractFrom.ContractId     	        AS ContractFromId
            , View_ContractFrom.InvNumber                AS ContractFromName
@@ -243,6 +250,11 @@ BEGIN
                                          ON MovementLinkObject_Partner.MovementId = Movement.Id
                                         AND MovementLinkObject_Partner.DescId = zc_MovementLinkObject_Partner()
             LEFT JOIN Object AS Object_Partner ON Object_Partner.Id = MovementLinkObject_Partner.ObjectId
+
+            LEFT JOIN MovementLinkObject AS MovementLinkObject_PartnerFrom						--Контрагент(от кого)
+                                         ON MovementLinkObject_PartnerFrom.MovementId = Movement.Id
+                                        AND MovementLinkObject_PartnerFrom.DescId = zc_MovementLinkObject_PartnerFrom()
+            LEFT JOIN Object AS Object_PartnerFrom ON Object_PartnerFrom.Id = MovementLinkObject_PartnerFrom.ObjectId
 
             LEFT JOIN MovementLinkObject AS MovementLinkObject_ContractFrom
                                          ON MovementLinkObject_ContractFrom.MovementId = Movement.Id
