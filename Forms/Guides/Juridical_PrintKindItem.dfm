@@ -399,6 +399,23 @@ object Juridical_PrintKindItemForm: TJuridical_PrintKindItemForm
       GridView = cxGridDBTableView
     end
   end
+  object cxLabel6: TcxLabel
+    Left = 642
+    Top = 134
+    Caption = #1060#1080#1083#1080#1072#1083':'
+  end
+  object edBranch: TcxButtonEdit
+    Left = 694
+    Top = 133
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    Properties.ReadOnly = True
+    TabOrder = 7
+    Width = 236
+  end
   object cxPropertiesStore: TcxPropertiesStore
     Components = <
       item
@@ -457,6 +474,18 @@ object Juridical_PrintKindItemForm: TJuridical_PrintKindItemForm
         item
           Visible = True
           ItemName = 'bbRefresh'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbBranchLabel'
+        end
+        item
+          Visible = True
+          ItemName = 'bbBranch'
         end
         item
           Visible = True
@@ -529,6 +558,20 @@ object Juridical_PrintKindItemForm: TJuridical_PrintKindItemForm
     object bbProtocolOpen: TdxBarButton
       Action = ProtocolOpenForm
       Category = 0
+    end
+    object bbBranchLabel: TdxBarControlContainerItem
+      Caption = 'New Item'
+      Category = 0
+      Hint = 'New Item'
+      Visible = ivAlways
+      Control = cxLabel6
+    end
+    object bbBranch: TdxBarControlContainerItem
+      Caption = 'New Item'
+      Category = 0
+      Hint = 'New Item'
+      Visible = ivAlways
+      Control = edBranch
     end
   end
   object ActionList: TActionList
@@ -1025,5 +1068,49 @@ object Juridical_PrintKindItemForm: TJuridical_PrintKindItemForm
     PackSize = 1
     Left = 376
     Top = 160
+  end
+  object GuidesBranch: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edBranch
+    FormNameParam.Value = 'TBranch_ObjectForm'
+    FormNameParam.DataType = ftString
+    FormName = 'TBranch_ObjectForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GuidesBranch
+        ComponentItem = 'Key'
+        ParamType = ptInput
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesBranch
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+      end
+      item
+        Name = 'inDescCode'
+        Value = 'zc_Object_Member'
+        DataType = ftString
+      end>
+    Left = 768
+    Top = 120
+  end
+  object RefreshDispatcher: TRefreshDispatcher
+    IdParam.Value = Null
+    RefreshAction = actRefresh
+    ComponentList = <
+      item
+        Component = GuidesBranch
+      end
+      item
+        Component = edBranch
+      end>
+    Left = 480
+    Top = 144
   end
 end

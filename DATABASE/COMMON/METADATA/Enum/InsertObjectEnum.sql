@@ -213,6 +213,7 @@ BEGIN
      PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_PrintKind_Pack(), inDescId:= zc_Object_PrintKind(), inCode:= 5, inName:= 'Упаковочный', inEnumName:= 'zc_Enum_PrintKind_Pack');
      PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_PrintKind_Spec(), inDescId:= zc_Object_PrintKind(), inCode:= 6, inName:= 'Спецификация', inEnumName:= 'zc_Enum_PrintKind_Spec');
      PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_PrintKind_Tax(), inDescId:= zc_Object_PrintKind(), inCode:= 7, inName:= 'Налоговая', inEnumName:= 'zc_Enum_PrintKind_Tax');
+     PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_PrintKind_TransportBill(), inDescId:= zc_Object_PrintKind(), inCode:= 8, inName:= 'Транспортная', inEnumName:= 'zc_Enum_PrintKind_TransportBill');
 
      -- !!! Типы счетов
      PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_AccountKind_Active(), inDescId:= zc_Object_AccountKind(), inCode:= 1, inName:= 'Активный', inEnumName:= 'zc_Enum_AccountKind_Active');

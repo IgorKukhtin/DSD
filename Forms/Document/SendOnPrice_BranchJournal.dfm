@@ -904,6 +904,9 @@ inherited SendOnPrice_BranchJournalForm: TSendOnPrice_BranchJournalForm
   inherited PopupMenu: TPopupMenu
     Left = 640
     Top = 152
+    object N15: TMenuItem
+      Caption = '-'
+    end
     object N13: TMenuItem
       Action = actUpdateAmountPartnerList
     end

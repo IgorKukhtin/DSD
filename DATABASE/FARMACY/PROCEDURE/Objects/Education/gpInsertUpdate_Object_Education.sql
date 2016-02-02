@@ -1,6 +1,6 @@
 -- Function: gpInsertUpdate_Object_Education()
 
-DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Education();
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Education(Integer ,Integer ,TVarChar,TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Education(
  INOUT ioId	             Integer   ,    -- ключ объекта <Должности> 

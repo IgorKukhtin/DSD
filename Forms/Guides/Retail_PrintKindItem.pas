@@ -12,7 +12,7 @@ uses
   Vcl.ActnList, DataModul, ParentForm, dsdDB, dsdAction, dsdAddOn, dxBarExtItems,
   cxGridBandedTableView, cxGridDBBandedTableView, cxCheckBox, dxSkinsCore,
   dxSkinsDefaultPainters, dxSkinscxPCPainter, dxSkinsdxBarPainter, cxButtonEdit,
-  cxCurrencyEdit;
+  cxCurrencyEdit, cxContainer, dsdGuides, cxTextEdit, cxMaskEdit, cxLabel;
 
 type
   TRetail_PrintKindItemForm = class(TParentForm)
@@ -45,15 +45,12 @@ type
     dsdChoiceGuides: TdsdChoiceGuides;
     dsdDBViewAddOn: TdsdDBViewAddOn;
     actInsert: TdsdInsertUpdateAction;
-    GLNCode: TcxGridDBColumn;
-    GoodsPropertyName: TcxGridDBColumn;
+    BranchName: TcxGridDBColumn;
     ProtocolOpenForm: TdsdOpenForm;
     bbProtocolOpenForm: TdxBarButton;
     spUpdate: TdsdStoredProc;
     actUpdateDataSet: TdsdUpdateDataSet;
-    GLNCodeCorporate: TcxGridDBColumn;
     actChoiceGoodsProperty: TOpenChoiceForm;
-    clOperDateOrder: TcxGridDBColumn;
     isMovement: TcxGridDBColumn;
     isAccount: TcxGridDBColumn;
     isTransport: TcxGridDBColumn;
@@ -61,6 +58,12 @@ type
     isPack: TcxGridDBColumn;
     isSpec: TcxGridDBColumn;
     isTax: TcxGridDBColumn;
+    cxLabel6: TcxLabel;
+    edBranch: TcxButtonEdit;
+    GuidesBranch: TdsdGuides;
+    bbBranchLabel: TdxBarControlContainerItem;
+    bbBranch: TdxBarControlContainerItem;
+    RefreshDispatcher: TRefreshDispatcher;
   private
     { Private declarations }
   public

@@ -13,6 +13,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , isPack          Boolean   -- Упаковочный
              , isSpec          Boolean   -- Спецификация
              , isTax           Boolean   -- Налоговая
+             , isTransportBill Boolean   -- Транспортная
              , CountMovement   TFloat    -- Накладная
              , CountAccount    TFloat    -- Счет
              , CountTransport  TFloat    -- ТТН
@@ -20,6 +21,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , CountPack       TFloat    -- Упаковочный
              , CountSpec       TFloat    -- Спецификация
              , CountTax        TFloat    -- Налоговая
+             , CountTransportBill TFloat    -- Транспортная
              , isErased        Boolean
              ) AS
 $BODY$
@@ -39,6 +41,7 @@ BEGIN
            , Object_PrintKindItem.isPack
            , Object_PrintKindItem.isSpec
            , Object_PrintKindItem.isTax
+           , Object_PrintKindItem.isTransportBill
 
            , CASE WHEN MovementPos  > 0 THEN LEFT (MovementStr,  STRPOS (MovementStr,  ';') - 1) :: TFloat ELSE 0 END :: TFloat AS CountMovement
            , CASE WHEN AccountPos   > 0 THEN LEFT (AccountStr,   STRPOS (AccountStr,   ';') - 1) :: TFloat ELSE 0 END :: TFloat AS CountAccount
@@ -47,6 +50,7 @@ BEGIN
            , CASE WHEN PackPos      > 0 THEN LEFT (PackStr,      STRPOS (PackStr,      ';') - 1) :: TFloat ELSE 0 END :: TFloat AS CountPack
            , CASE WHEN SpecPos      > 0 THEN LEFT (SpecStr,      STRPOS (SpecStr,      ';') - 1) :: TFloat ELSE 0 END :: TFloat AS CountSpec
            , CASE WHEN TaxPos       > 0 THEN LEFT (TaxStr,       STRPOS (TaxStr,       ';') - 1) :: TFloat ELSE 0 END :: TFloat AS CountTax
+           , CASE WHEN TransportBillPos > 0 THEN LEFT (TransportBillStr, STRPOS (TransportBillStr, ';') - 1) :: TFloat ELSE 0 END :: TFloat AS CountTransportBill
 
            , Object_PrintKindItem.isErased
 
@@ -59,6 +63,7 @@ BEGIN
            , CASE WHEN PackPos      > 0 THEN TRUE ELSE FALSE END AS isPack
            , CASE WHEN SpecPos      > 0 THEN TRUE ELSE FALSE END AS isSpec
            , CASE WHEN TaxPos       > 0 THEN TRUE ELSE FALSE END AS isTax
+           , CASE WHEN TransportBillPos > 0 THEN TRUE ELSE FALSE END AS isTransportBill
 
            , CASE WHEN MovementPos  > 0 THEN RIGHT (ValueData, LENGTH (ValueData) + 1 - MovementPos  - LENGTH (MovementFind))  ELSE '' END AS MovementStr
            , CASE WHEN AccountPos   > 0 THEN RIGHT (ValueData, LENGTH (ValueData) + 1 - AccountPos   - LENGTH (AccountFind))   ELSE '' END AS AccountStr
@@ -67,6 +72,7 @@ BEGIN
            , CASE WHEN PackPos      > 0 THEN RIGHT (ValueData, LENGTH (ValueData) + 1 - PackPos      - LENGTH (PackFind))      ELSE '' END AS PackStr
            , CASE WHEN SpecPos      > 0 THEN RIGHT (ValueData, LENGTH (ValueData) + 1 - SpecPos      - LENGTH (SpecFind))      ELSE '' END AS SpecStr
            , CASE WHEN TaxPos       > 0 THEN RIGHT (ValueData, LENGTH (ValueData) + 1 - TaxPos       - LENGTH (TaxFind))       ELSE '' END AS TaxStr
+           , CASE WHEN TransportBillPos > 0 THEN RIGHT (ValueData, LENGTH (ValueData) + 1 - TransportBillPos - LENGTH (TransportBillFind)) ELSE '' END AS TransportBillStr
       FROM
      (SELECT Object_PrintKindItem.*
            , STRPOS (Object_PrintKindItem.ValueData, MovementFind)  AS MovementPos
@@ -76,6 +82,7 @@ BEGIN
            , STRPOS (Object_PrintKindItem.ValueData, PackFind)      AS PackPos
            , STRPOS (Object_PrintKindItem.ValueData, SpecFind)      AS SpecPos
            , STRPOS (Object_PrintKindItem.ValueData, TaxFind)       AS TaxPos
+           , STRPOS (Object_PrintKindItem.ValueData, TransportBillFind) AS TransportBillPos
 
       FROM
      (SELECT Object_PrintKindItem.*
@@ -86,6 +93,7 @@ BEGIN
            , ';' || zc_Enum_PrintKind_Pack()      :: TVarChar || '+' AS PackFind
            , ';' || zc_Enum_PrintKind_Spec()      :: TVarChar || '+' AS SpecFind
            , ';' || zc_Enum_PrintKind_Tax()       :: TVarChar || '+' AS TaxFind
+           , ';' || zc_Enum_PrintKind_TransportBill() :: TVarChar || '+' AS TransportBillFind
       FROM Object AS Object_PrintKindItem
       WHERE Object_PrintKindItem.DescId = zc_Object_PrintKindItem()
       ) AS Object_PrintKindItem
@@ -101,6 +109,7 @@ ALTER FUNCTION lpSelect_Object_PrintKindItem () OWNER TO postgres;
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 02.02.16         * add  TransportBill
  20.05.15                                        *
 */
 
