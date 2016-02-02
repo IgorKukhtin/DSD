@@ -988,10 +988,10 @@ BEGIN
                   , CASE WHEN tmpAccount_60000.AccountId > 0
                          AND  (_tmpItemSumm.InfoMoneyId_From        = zc_Enum_InfoMoney_80401()  -- прибыль текущего периода
                             OR _tmpItemSumm.InfoMoneyId_Detail_From = zc_Enum_InfoMoney_80401()) -- прибыль текущего периода
-                              THEN zc_Enum_AnalyzerId_SummIn_110101() -- Сумма, забалансовый счет, приход транзит !!!хотя все не так, надо выделить "прибыль б.п."!!!
+                              THEN zc_Enum_AnalyzerId_SummOut_80401() -- Сумма, не совсем забалансовый счет, расход приб. буд. периодов
                          WHEN _tmpItemSumm.InfoMoneyId_From        = zc_Enum_InfoMoney_80401() -- прибыль текущего периода
                            OR _tmpItemSumm.InfoMoneyId_Detail_From = zc_Enum_InfoMoney_80401() -- прибыль текущего периода
-                              THEN zc_Enum_AnalyzerId_SummOut_110101() -- Сумма, забалансовый счет, расход транзит !!!хотя все не так, надо выделить "прибыль б.п."!!!
+                              THEN zc_Enum_AnalyzerId_SummIn_80401() -- Сумма, не совсем забалансовый счет, приход приб. буд. периодов
                          ELSE zc_Enum_AnalyzerId_SendSumm_in() -- Сумма с/с, перемещение по цене, перемещение, пришло
                     END AS AnalyzerId
                   , CASE WHEN _tmpItemSumm.isLossMaterials = TRUE OR _tmpItemSumm.isRestoreAccount_60000 = TRUE THEN 0 ELSE _tmpItemSumm.MIContainerId_To END AS ParentId -- хотя он здесь и так =0
@@ -1107,24 +1107,27 @@ BEGIN
      UNION ALL
        -- это 2 или 4 проводки для расчета суммы по ценам (!!!нужна при расчете суммы "ушло"!!!)
        SELECT 0, zc_MIContainer_Summ() AS DescId, vbMovementDescId, inMovementId, _tmpItemSumm.MovementItemId
-            , _tmpItemSumm.ContainerId_To             AS ContainerId            -- !!!не ошибка, т.к. это виртуальная проводка!!!
-            , CASE WHEN vbAccountId_GoodsTransit <> 0 THEN vbAccountId_GoodsTransit ELSE _tmpItemSumm.AccountId_To END AS AccountId -- есть счет (т.е. в отчетах определяется "транзит")
-            , tmpAnalyzer.AnalyzerId                  AS AnalyzerId             -- есть аналитика
+            , _tmpItemSumm.ContainerId_To             AS ContainerId            -- !!!не ошибка, т.к. это виртуальная проводка, а ContainerId_From иногда = 0!!!
+            , tmpTransit.AnalyzerId                   AS AccountId              -- есть счет
+            , tmpTransit.AnalyzerId                   AS AnalyzerId             -- есть аналитика
             , _tmpItem.GoodsId                        AS ObjectId_Analyzer
             , vbWhereObjectId_Analyzer_From           AS WhereObjectId_Analyzer -- Подраделение !!!не ошибка, т.к. надо при расчете суммы "ушло"!!!
             , 0                                       AS ContainerId_Analyzer   -- пока не нужен
             , _tmpItem.GoodsKindId                    AS ObjectIntId_Analyzer   -- вид товара
             , vbWhereObjectId_Analyzer_To             AS ObjectExtId_Analyzer   -- Подраделение "Кому" !!!не ошибка, т.к. надо при расчете суммы "ушло"!!!
             , NULL                                    AS ParentId               -- !!!т.е. не будут привязаны к "приходу"!!!
-            , _tmpItemSumm.OperSumm_Account_60000 * CASE WHEN tmpAnalyzer.AnalyzerId = zc_Enum_AnalyzerId_SummIn_110101() THEN 1 ELSE -1 END AS Amount -- "виртуальная" с обратным знаком
-            , tmpOperDate.OperDate                    AS OperDate               -- !!!две проводки за разные даты!!!
-            , CASE WHEN tmpOperDate.OperDate = vbOperDatePartner THEN FALSE ELSE TRUE END AS isActive
-       FROM (SELECT vbOperDate AS OperDate UNION SELECT vbOperDatePartner AS OperDate WHERE vbAccountId_GoodsTransit <> 0) AS tmpOperDate
-            INNER JOIN _tmpItemSumm ON _tmpItemSumm.OperSumm_Account_60000 <> 0 -- !!!нулевые не нужны!!!
+            , _tmpItemSumm.OperSumm_Account_60000 * CASE WHEN tmpTransit.AnalyzerId = zc_Enum_AnalyzerId_SummOut_80401() THEN -1 ELSE 1 END AS Amount -- "виртуальная" с обратным знаком
+            , tmpTransit.OperDate                     AS OperDate               -- т.е. по "определенной" Дате
+            , tmpTransit.isActive                     AS isActive               -- зависят от даты
+       FROM _tmpItemSumm
             INNER JOIN _tmpItem ON _tmpItem.MovementItemId = _tmpItemSumm.MovementItemId
-            LEFT JOIN (SELECT zc_Enum_AnalyzerId_SummIn_110101()  AS AnalyzerId
-             UNION ALL SELECT zc_Enum_AnalyzerId_SummOut_110101() AS AnalyzerId
-                      ) AS tmpAnalyzer ON tmpAnalyzer.AnalyzerId <> 0
+
+            LEFT JOIN (SELECT zc_Enum_AnalyzerId_SummIn_80401()  AS AnalyzerId, TRUE  AS isActive, vbOperDate        AS OperDate
+             UNION ALL SELECT zc_Enum_AnalyzerId_SummOut_80401() AS AnalyzerId, TRUE  AS isActive, vbOperDate        AS OperDate
+             UNION ALL SELECT zc_Enum_AnalyzerId_SummIn_80401()  AS AnalyzerId, FALSE AS isActive, vbOperDatePartner AS OperDate WHERE vbAccountId_GoodsTransit <> 0
+             UNION ALL SELECT zc_Enum_AnalyzerId_SummOut_80401() AS AnalyzerId, FALSE AS isActive, vbOperDatePartner AS OperDate WHERE vbAccountId_GoodsTransit <> 0
+                      ) AS tmpTransit ON tmpTransit.AnalyzerId <> 0
+       WHERE _tmpItemSumm.OperSumm_Account_60000 <> 0 -- !!!нулевые не нужны!!!
       ;
 
 

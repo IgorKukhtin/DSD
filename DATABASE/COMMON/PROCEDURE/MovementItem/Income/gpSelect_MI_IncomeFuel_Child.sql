@@ -35,7 +35,7 @@ BEGIN
            , MIFloat_StartOdometre.ValueData    AS StartOdometre
            , MIFloat_EndOdometre.ValueData      AS EndOdometre
 
-           , CAST ((MIFloat_EndOdometre.ValueData -MIFloat_StartOdometre.ValueData)  AS TFloat) AS Distance_calc
+           , CAST ((COALESCE (MIFloat_EndOdometre.ValueData, 0) - COALESCE (MIFloat_StartOdometre.ValueData, 0))  AS TFloat) AS Distance_calc
 
            , MovementItem.isErased
 

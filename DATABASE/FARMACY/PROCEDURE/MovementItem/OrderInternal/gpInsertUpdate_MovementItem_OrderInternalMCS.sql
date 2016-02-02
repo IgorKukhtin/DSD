@@ -102,6 +102,7 @@ BEGIN
                                             MovementItem
                                         WHERE
                                             MovementItem.MovementId = vbMovementId
+                                        AND MovementItem_Income.isErased = FALSE
                                       ) AS T1
                                 WHERE
                                     T1.Ord = 1
@@ -201,6 +202,7 @@ LANGUAGE PLPGSQL VOLATILE;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А.А.
+ 02.02.16                                        * add MovementItem_Income.isErased = FALSE
  29.08.15                                                                        * ObjectPrice.MCSIsClose = False
  31.07.15                                                                        *
 */

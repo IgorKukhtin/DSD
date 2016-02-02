@@ -2,10 +2,8 @@ inherited ProductionUnionTechJournalForm: TProductionUnionTechJournalForm
   Caption = #1055#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1086' - '#1058#1077#1093#1085#1086#1083#1086#1075
   ClientHeight = 685
   ClientWidth = 1020
-  ExplicitLeft = -14
-  ExplicitTop = -46
   ExplicitWidth = 1036
-  ExplicitHeight = 723
+  ExplicitHeight = 720
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -225,7 +223,7 @@ inherited ProductionUnionTechJournalForm: TProductionUnionTechJournalForm
             Width = 60
           end
           object colCuterCount: TcxGridDBColumn [13]
-            Caption = #1050#1091#1090#1077#1088#1086#1074' '#1092#1072#1082#1090
+            Caption = #1050#1091#1090#1090#1077#1088#1086#1074' '#1092#1072#1082#1090
             DataBinding.FieldName = 'CuterCount'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
@@ -289,7 +287,7 @@ inherited ProductionUnionTechJournalForm: TProductionUnionTechJournalForm
             Width = 50
           end
           object colCuterCount_order: TcxGridDBColumn [19]
-            Caption = #1050#1091#1090#1077#1088#1086#1074' '#1079#1072#1103#1074#1082#1072
+            Caption = #1050#1091#1090#1090#1077#1088#1086#1074' '#1079#1072#1103#1074#1082#1072
             DataBinding.FieldName = 'CuterCount_order'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
@@ -827,13 +825,13 @@ inherited ProductionUnionTechJournalForm: TProductionUnionTechJournalForm
       Params = <
         item
           Name = 'StartDate'
-          Value = Null
+          Value = 'NULL'
           Component = deStart
           DataType = ftDateTime
         end
         item
           Name = 'EndDate'
-          Value = Null
+          Value = 'NULL'
           Component = deEnd
           DataType = ftDateTime
         end
@@ -1065,7 +1063,7 @@ inherited ProductionUnionTechJournalForm: TProductionUnionTechJournalForm
         end
         item
           Name = 'OperDate'
-          Value = Null
+          Value = 'NULL'
           Component = deEnd
           DataType = ftDateTime
           ParamType = ptInput
@@ -2165,7 +2163,7 @@ inherited ProductionUnionTechJournalForm: TProductionUnionTechJournalForm
       end
       item
         Name = 'inPartionGoodsDate'
-        Value = Null
+        Value = 'NULL'
         Component = ChildCDS
         ComponentItem = 'PartionGoodsDate'
         DataType = ftDateTime

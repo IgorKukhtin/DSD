@@ -98,7 +98,7 @@ BEGIN
            , 0 :: Integer     AS PersonalCollationId
            , '' :: TVarChar   AS PersonalCollationName
 
-           , O0 :: Integer    AS PersonalSigningId
+           , 0 :: Integer    AS PersonalSigningId
            , '' :: TVarChar   AS PersonalSigningName
 
            , 0 :: Integer     AS BankAccountId

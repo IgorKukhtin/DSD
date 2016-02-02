@@ -744,7 +744,7 @@ BEGIN
                                    ON ObjectString_Goods_GoodsGroupFull.ObjectId = tmpMI_Goods.GoodsId
                                   AND ObjectString_Goods_GoodsGroupFull.DescId = zc_ObjectString_Goods_GroupNameFull()
 
-            LEFT JOIN Movement_Promo_View ON Movement_Promo_View.Id = tmpMI_Goods.MovementId_Promo
+            LEFT JOIN Movement_Promo_View ON Movement_Promo_View.Id = COALESCE (tmpPromo.MovementId, tmpMI_Goods.MovementId_Promo)
                                   
             LEFT JOIN tmpPriceCost ON tmpPriceCost.MovementItemId = tmpMI_Goods.MovementItemId
             LEFT JOIN tmpPriceList ON tmpPriceList.GoodsId = tmpMI_Goods.GoodsId

@@ -43,7 +43,6 @@ object Member_TrasportForm: TMember_TrasportForm
       OptionsData.Deleting = False
       OptionsData.DeletingConfirmation = False
       OptionsData.Inserting = False
-      OptionsView.ColumnAutoWidth = True
       OptionsView.GroupByBox = False
       OptionsView.HeaderAutoHeight = True
       OptionsView.Indicator = True
@@ -61,11 +60,12 @@ object Member_TrasportForm: TMember_TrasportForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 92
+        Width = 150
       end
       object clMember_INN: TcxGridDBColumn
         Caption = #1048#1053#1053
         DataBinding.FieldName = 'INN'
+        Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
@@ -74,12 +74,15 @@ object Member_TrasportForm: TMember_TrasportForm
       object clDriverCertificate: TcxGridDBColumn
         Caption = #1042#1086#1076#1080#1090#1077#1083#1100#1089#1082#1086#1077' '#1091#1076#1086#1089#1090#1086#1074#1077#1088#1077#1085#1080#1077
         DataBinding.FieldName = 'DriverCertificate'
+        Visible = False
         HeaderAlignmentVert = vaCenter
+        Options.Editing = False
         Width = 96
       end
       object clIsOfficial: TcxGridDBColumn
         Caption = #1054#1092#1086#1088#1084#1083#1077#1085' '#1086#1092#1080#1094#1080#1072#1083#1100#1085#1086
         DataBinding.FieldName = 'isOfficial'
+        Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
@@ -99,11 +102,12 @@ object Member_TrasportForm: TMember_TrasportForm
         PropertiesClassName = 'TcxButtonEditProperties'
         Properties.Buttons = <
           item
-            Action = actChoiceInfoMoneyForm
+            Caption = 'InfoMoneyChoiceForm'
             Default = True
             Kind = bkEllipsis
           end>
         Properties.ReadOnly = True
+        Visible = False
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
         Width = 69
@@ -177,15 +181,7 @@ object Member_TrasportForm: TMember_TrasportForm
         DataBinding.FieldName = 'Comment'
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 58
-      end
-      object clErased: TcxGridDBColumn
-        Caption = #1059#1076#1072#1083#1077#1085
-        DataBinding.FieldName = 'isErased'
-        PropertiesClassName = 'TcxCheckBoxProperties'
-        Visible = False
-        HeaderAlignmentVert = vaCenter
-        Width = 58
+        Width = 100
       end
       object CarName: TcxGridDBColumn
         Caption = #1043#1086#1089'. '#1085#1086#1084#1077#1088' '#1072#1074#1090#1086#1084#1086#1073#1080#1083#1103
@@ -193,7 +189,7 @@ object Member_TrasportForm: TMember_TrasportForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 44
+        Width = 100
       end
       object CarModelName: TcxGridDBColumn
         Caption = #1052#1072#1088#1082#1072' '#1072#1074#1090#1086#1084#1086#1073#1080#1083#1103
@@ -201,7 +197,16 @@ object Member_TrasportForm: TMember_TrasportForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 43
+        Width = 80
+      end
+      object clErased: TcxGridDBColumn
+        Caption = #1059#1076#1072#1083#1077#1085
+        DataBinding.FieldName = 'isErased'
+        PropertiesClassName = 'TcxCheckBoxProperties'
+        Visible = False
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 58
       end
     end
     object cxGridLevel: TcxGridLevel
@@ -308,14 +313,6 @@ object Member_TrasportForm: TMember_TrasportForm
         end
         item
           Visible = True
-          ItemName = 'bbUpdateIsOfficial'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarStatic'
-        end
-        item
-          Visible = True
           ItemName = 'bbChoiceGuides'
         end
         item
@@ -348,22 +345,6 @@ object Member_TrasportForm: TMember_TrasportForm
       Action = actRefresh
       Category = 0
     end
-    object bbInsert: TdxBarButton
-      Action = actInsert
-      Category = 0
-    end
-    object bbEdit: TdxBarButton
-      Action = actUpdate
-      Category = 0
-    end
-    object bbErased: TdxBarButton
-      Action = dsdSetErased
-      Category = 0
-    end
-    object bbUnErased: TdxBarButton
-      Action = dsdSetUnErased
-      Category = 0
-    end
     object bbGridToExcel: TdxBarButton
       Action = dsdGridToExcel
       Category = 0
@@ -380,10 +361,6 @@ object Member_TrasportForm: TMember_TrasportForm
     end
     object bbShowAll: TdxBarButton
       Action = actShowAll
-      Category = 0
-    end
-    object bbUpdateIsOfficial: TdxBarButton
-      Action = actUpdateIsOfficial
       Category = 0
     end
     object bbProtocolOpenForm: TdxBarButton
@@ -467,25 +444,6 @@ object Member_TrasportForm: TMember_TrasportForm
       View = cxGridDBTableView
       Caption = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1076#1072#1090#1099' '#1076#1083#1103' '#1085#1086#1088#1084' '#1072#1074#1090#1086
       Hint = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1076#1072#1090#1099' '#1076#1083#1103' '#1085#1086#1088#1084' '#1072#1074#1090#1086
-    end
-    object actInsert: TdsdInsertUpdateAction
-      Category = 'DSDLib'
-      MoveParams = <>
-      Caption = #1044#1086#1073#1072#1074#1080#1090#1100
-      ShortCut = 45
-      ImageIndex = 0
-      FormName = 'TMemberEditForm'
-      FormNameParam.Value = ''
-      FormNameParam.DataType = ftString
-      GuiParams = <
-        item
-          Name = 'Id'
-          Value = Null
-        end>
-      isShowModal = True
-      DataSource = DataSource
-      DataSetRefresh = actRefresh
-      IdFieldName = 'Id'
     end
     object actStartRecalcDate: TMultiAction
       Category = 'Recalc'
@@ -579,87 +537,6 @@ object Member_TrasportForm: TMember_TrasportForm
       Caption = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1087#1072#1088#1072#1084#1077#1090#1088#1099' '#1085#1086#1088#1084' '#1072#1074#1090#1086
       Hint = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1087#1072#1088#1072#1084#1077#1090#1088#1099' '#1085#1086#1088#1084' '#1072#1074#1090#1086
     end
-    object actUpdate: TdsdInsertUpdateAction
-      Category = 'DSDLib'
-      MoveParams = <>
-      Caption = #1048#1079#1084#1077#1085#1080#1090#1100
-      ShortCut = 115
-      ImageIndex = 1
-      FormName = 'TMemberEditForm'
-      FormNameParam.Value = ''
-      FormNameParam.DataType = ftString
-      GuiParams = <
-        item
-          Name = 'Id'
-          Value = Null
-          Component = ClientDataSet
-          ComponentItem = 'Id'
-          ParamType = ptInput
-        end>
-      isShowModal = False
-      ActionType = acUpdate
-      DataSource = DataSource
-      DataSetRefresh = actRefresh
-      IdFieldName = 'Id'
-    end
-    object actChoiceInfoMoneyForm: TOpenChoiceForm
-      Category = 'DSDLib'
-      MoveParams = <>
-      PostDataSetBeforeExecute = False
-      Caption = 'InfoMoneyChoiceForm'
-      FormName = 'TInfoMoney_ObjectForm'
-      FormNameParam.Value = 'TInfoMoney_ObjectForm'
-      FormNameParam.DataType = ftString
-      GuiParams = <
-        item
-          Name = 'Key'
-          Value = Null
-          Component = ClientDataSet
-          ComponentItem = 'InfoMoneyId'
-        end
-        item
-          Name = 'TextValue'
-          Value = Null
-          Component = ClientDataSet
-          ComponentItem = 'InfoMoneyName_all'
-          DataType = ftString
-        end
-        item
-          Name = 'InfoMoneyCode'
-          Value = Null
-          Component = ClientDataSet
-          ComponentItem = 'InfoMoneyCode'
-          DataType = ftString
-        end>
-      isShowModal = True
-    end
-    object dsdSetErased: TdsdUpdateErased
-      Category = 'DSDLib'
-      MoveParams = <>
-      StoredProc = spErasedUnErased
-      StoredProcList = <
-        item
-          StoredProc = spErasedUnErased
-        end>
-      Caption = #1059#1076#1072#1083#1080#1090#1100
-      Hint = #1059#1076#1072#1083#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
-      ImageIndex = 2
-      ShortCut = 46
-      ErasedFieldName = 'isErased'
-      DataSource = DataSource
-    end
-    object actUpdateParams: TdsdOpenForm
-      Category = 'DSDLib'
-      MoveParams = <>
-      Caption = #1043#1088#1091#1087#1087#1086#1074#1072#1103' '#1091#1089#1090#1072#1085#1086#1074#1082#1072' '#1087#1072#1088#1072#1084#1077#1090#1088#1086#1074
-      Hint = #1043#1088#1091#1087#1087#1086#1074#1072#1103' '#1091#1089#1090#1072#1085#1086#1074#1082#1072' '#1087#1072#1088#1072#1084#1077#1090#1088#1086#1074
-      ImageIndex = 43
-      FormName = 'TMember_TrasportEditForm'
-      FormNameParam.Value = 'TMember_TrasportEditForm'
-      FormNameParam.DataType = ftString
-      GuiParams = <>
-      isShowModal = False
-    end
     object ProtocolOpenForm: TdsdOpenForm
       Category = 'DSDLib'
       MoveParams = <>
@@ -686,22 +563,6 @@ object Member_TrasportForm: TMember_TrasportForm
           ParamType = ptInput
         end>
       isShowModal = False
-    end
-    object dsdSetUnErased: TdsdUpdateErased
-      Category = 'DSDLib'
-      MoveParams = <>
-      StoredProc = spErasedUnErased
-      StoredProcList = <
-        item
-          StoredProc = spErasedUnErased
-        end>
-      Caption = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100
-      Hint = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
-      ImageIndex = 8
-      ShortCut = 32776
-      ErasedFieldName = 'isErased'
-      isSetErased = False
-      DataSource = DataSource
     end
     object dsdChoiceGuides: TdsdChoiceGuides
       Category = 'DSDLib'
@@ -772,19 +633,6 @@ object Member_TrasportForm: TMember_TrasportForm
       ImageIndexTrue = 62
       ImageIndexFalse = 63
     end
-    object actUpdateIsOfficial: TdsdExecStoredProc
-      Category = 'DSDLib'
-      MoveParams = <>
-      PostDataSetBeforeExecute = False
-      StoredProc = spUpdateIsOfficial
-      StoredProcList = <
-        item
-          StoredProc = spUpdateIsOfficial
-        end>
-      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' "'#1054#1092#1080#1094#1080#1072#1083#1100#1085#1086' '#1044#1072'/'#1053#1077#1090'"'
-      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' "'#1054#1092#1080#1094#1080#1072#1083#1100#1085#1086' '#1044#1072'/'#1053#1077#1090'"'
-      ImageIndex = 52
-    end
     object actStartRecalc: TMultiAction
       Category = 'Recalc'
       MoveParams = <>
@@ -826,22 +674,6 @@ object Member_TrasportForm: TMember_TrasportForm
     Left = 168
     Top = 160
   end
-  object spErasedUnErased: TdsdStoredProc
-    StoredProcName = 'gpUpdateObjectIsErased'
-    DataSets = <>
-    OutputType = otResult
-    Params = <
-      item
-        Name = 'inObjectId'
-        Value = Null
-        Component = ClientDataSet
-        ComponentItem = 'Id'
-        ParamType = ptInput
-      end>
-    PackSize = 1
-    Left = 288
-    Top = 208
-  end
   object dsdDBViewAddOn: TdsdDBViewAddOn
     ErasedFieldName = 'isErased'
     View = cxGridDBTableView
@@ -850,7 +682,6 @@ object Member_TrasportForm: TMember_TrasportForm
         Action = dsdChoiceGuides
       end
       item
-        Action = actUpdate
       end>
     ActionItemList = <
       item
@@ -858,7 +689,6 @@ object Member_TrasportForm: TMember_TrasportForm
         ShortCut = 13
       end
       item
-        Action = actUpdate
         ShortCut = 13
       end>
     SortImages = dmMain.SortImageList
@@ -949,30 +779,6 @@ object Member_TrasportForm: TMember_TrasportForm
     PackSize = 1
     Left = 568
     Top = 144
-  end
-  object spUpdateIsOfficial: TdsdStoredProc
-    StoredProcName = 'gpUpdate_Object_Member_isOfficial'
-    DataSets = <>
-    OutputType = otResult
-    Params = <
-      item
-        Name = 'ioId '
-        Value = Null
-        Component = ClientDataSet
-        ComponentItem = 'Id'
-        ParamType = ptInput
-      end
-      item
-        Name = 'ioIsOfficial'
-        Value = Null
-        Component = ClientDataSet
-        ComponentItem = 'IsOfficial'
-        DataType = ftBoolean
-        ParamType = ptInputOutput
-      end>
-    PackSize = 1
-    Left = 200
-    Top = 307
   end
   object spInsertUpdateParam: TdsdStoredProc
     StoredProcName = 'gpUpdate_Object_Member_TransportParam'
